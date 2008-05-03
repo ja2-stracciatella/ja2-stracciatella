@@ -19,18 +19,14 @@ extern SGPVSurface* g_mouse_buffer;
 
 struct SGPVSurface
 {
+	UINT8 BPP() const { return surface->format->BitsPerPixel; }
+
 	SDL_Surface* surface;
 	UINT16       usHeight;      // Height of Video Surface
 	UINT16       usWidth;       // Width of Video Surface
 	SDL_Color*   pPalette;
 	UINT16*      p16BPPPalette; // A 16BPP palette used for 8->16 blits
 };
-
-
-static inline UINT8 GetVSurfaceBPP(const SGPVSurface* const vs)
-{
-	return vs->surface->format->BitsPerPixel;
-}
 
 
 #ifdef __cplusplus

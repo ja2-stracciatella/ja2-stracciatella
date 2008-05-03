@@ -222,8 +222,8 @@ void DeleteVideoObject(SGPVObject* const vo)
 
 BOOLEAN BltVideoObject(SGPVSurface* const dst, const SGPVObject* const src, const UINT16 usRegionIndex, const INT32 iDestX, const INT32 iDestY)
 {
-	Assert(src->ubBitDepth     ==  8);
-	Assert(GetVSurfaceBPP(dst) == 16);
+	Assert(src->ubBitDepth ==  8);
+	Assert(dst->BPP()      == 16);
 
 	UINT32 uiPitch;
 	UINT16* pBuffer = (UINT16*)LockVideoSurface(dst, &uiPitch);

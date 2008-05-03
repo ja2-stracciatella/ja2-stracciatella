@@ -359,7 +359,7 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 	CHECKF(hImage->usWidth  >= hVSurface->usWidth);
 	CHECKF(hImage->usHeight >= hVSurface->usHeight);
 
-	const UINT8 dst_bpp = GetVSurfaceBPP(hVSurface);
+	const UINT8 dst_bpp = hVSurface->BPP();
 
 	UINT32 buffer_bpp;
 	switch (dst_bpp)
@@ -443,7 +443,7 @@ static BOOLEAN SetVideoSurfaceTransparencyColor(HVSURFACE hVSurface, COLORVAL Tr
 
 	// Get right pixel format, based on bit depth
 	Uint32 ColorKey;
-	switch (GetVSurfaceBPP(hVSurface))
+	switch (hVSurface->BPP())
 	{
 		case  8: ColorKey = TransColor;                break;
 		case 16: ColorKey = Get16BPPColor(TransColor); break;
@@ -563,8 +563,8 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 		src_rect.h = src->usHeight;
 	}
 
-	const UINT8 src_bpp = GetVSurfaceBPP(src);
-	const UINT8 dst_bpp = GetVSurfaceBPP(dst);
+	const UINT8 src_bpp = src->BPP();
+	const UINT8 dst_bpp = dst->BPP();
 	if (src_bpp == dst_bpp)
 	{
 		SDL_Rect dstrect;
@@ -661,7 +661,7 @@ BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(SGPVSurface* const dst, const
 
 BOOLEAN BltStretchVideoSurface(SGPVSurface* const dst, const SGPVSurface* const src, SGPRect* const SrcRect, SGPRect* const DestRect)
 {
-	if (GetVSurfaceBPP(dst) != 16 || GetVSurfaceBPP(src) != 16) return FALSE;
+	if (dst->BPP() != 16 || src->BPP() != 16) return FALSE;
 
 	const UINT32  s_pitch = src->surface->pitch >> 1;
 	const UINT32  d_pitch = dst->surface->pitch >> 1;
