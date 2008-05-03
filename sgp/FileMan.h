@@ -1,6 +1,7 @@
 #ifndef FILEMAN_H
 #define FILEMAN_H
 
+#include "AutoObj.h"
 #include "Types.h"
 
 
@@ -109,6 +110,8 @@ FILE* GetRealFileHandleFromFileManFileHandle(HWFILE hFile);
 UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
 
 const char* GetBinDataPath(void);
+
+typedef SGP::AutoObj<SGPFile, FileClose>::Type AutoSGPFile;
 
 #ifdef __cplusplus
 }

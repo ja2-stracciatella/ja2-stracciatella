@@ -2831,7 +2831,7 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 		fFirstTimeIn = FALSE;
 	}
 
-	const HWFILE hFile = FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
+	AutoSGPFile hFile(FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
 	if( !hFile )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to open Quest Debug File %s", QUEST_DEBUG_FILE) );
@@ -2843,7 +2843,6 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 
 	if (!FileWrite(hFile, DestString, strlen(DestString)))
 	{
-		FileClose(hFile);
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE) );
 		return;
 	}
@@ -2854,12 +2853,9 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 	//append to file
 	if (!FileWrite(hFile, DestString, strlen(DestString)))
 	{
-		FileClose(hFile);
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE) );
 		return;
 	}
-
-	FileClose( hFile );
 }
 
 
@@ -2887,7 +2883,7 @@ void NpcRecordLogging(UINT8 ubApproach, const char *pStringA, ...)
 	vsprintf(TempString, pStringA, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
-	const HWFILE hFile = FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
+	AutoSGPFile hFile(FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
 	if( !hFile )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to open Quest Debug File %s", QUEST_DEBUG_FILE) );
@@ -2899,12 +2895,9 @@ void NpcRecordLogging(UINT8 ubApproach, const char *pStringA, ...)
 	//append to file
 	if (!FileWrite(hFile, DestString, strlen(DestString)))
 	{
-		FileClose(hFile);
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE) );
 		return;
 	}
-
-	FileClose(hFile);
 }
 
 

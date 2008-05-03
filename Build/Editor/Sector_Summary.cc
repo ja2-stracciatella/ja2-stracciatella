@@ -2101,20 +2101,21 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 {
 	char filename[40];
 
-	sprintf(filename, "Maps/%c%d%s.dat", 'A' + y, x + 1, suffix);
-	const HWFILE f_map = FileOpen(filename, FILE_ACCESS_READ);
-
-	sprintf(filename, DEVINFO_DIR "/%c%d%s.sum", 'A' + y, x + 1, suffix);
-
-	if (!f_map)
-	{
-		FileDelete(filename);
-		return FALSE;
-	}
-
 	FLOAT dMajorMapVersion;
-	FileRead(f_map, &dMajorMapVersion, sizeof(FLOAT));
-	FileClose(f_map);
+	{
+		sprintf(filename, "Maps/%c%d%s.dat", 'A' + y, x + 1, suffix);
+		AutoSGPFile f_map(FileOpen(filename, FILE_ACCESS_READ));
+
+		sprintf(filename, DEVINFO_DIR "/%c%d%s.sum", 'A' + y, x + 1, suffix);
+
+		if (!f_map)
+		{
+			FileDelete(filename);
+			return FALSE;
+		}
+
+		FileRead(f_map, &dMajorMapVersion, sizeof(FLOAT));
+	}
 
 	FILE* const f_sum = fopen(filename, "rb");
 	if (!f_sum)
@@ -2531,7 +2532,6 @@ void ApologizeOverrideAndForceUpdateEverything()
 
 static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 {
-	HWFILE hfile;
 	UINT32 uiNumItems;
 	BASIC_SOLDIERCREATE_STRUCT basic;
 	SOLDIERCREATE_STRUCT priority;
@@ -2570,7 +2570,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//Open the original map for the sector
 	char szFilename[40];
 	sprintf( szFilename, "MAPS/%ls", gszFilename );
-	hfile = FileOpen(szFilename, FILE_ACCESS_READ);
+	AutoSGPFile hfile(FileOpen(szFilename, FILE_ACCESS_READ));
 	if( !hfile )
 	{ //The file couldn't be found!
 		return;
@@ -2578,13 +2578,11 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//Now fileseek directly to the file position where the number of world items are stored
 	if( !FileSeek( hfile, gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START ) )
 	{ //Position couldn't be found!
-		FileClose( hfile );
 		return;
 	}
 	//Now load the number of world items from the map.
 	if (!FileRead(hfile, &uiNumItems, 4))
 	{ //Invalid situation.
-		FileClose( hfile );
 		return;
 	}
 	//Now compare this number with the number the summary thinks we should have.  If they are different,
@@ -2592,7 +2590,6 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//match
 	if( uiNumItems != gpCurrentSectorSummary->usNumItems && fAllowRecursion )
 	{
-		FileClose( hfile );
 		gpCurrentSectorSummary->uiNumItemsPosition = 0;
 		SetupItemDetailsMode( FALSE );
 		return;
@@ -2615,21 +2612,18 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//PASS #1
 	if( !FileSeek( hfile, gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START ) )
 	{ //Position couldn't be found!
-		FileClose( hfile );
 		return;
 	}
 	for( i = 0; i < gpCurrentSectorSummary->MapInfo.ubNumIndividuals ; i++ )
 	{
 		if (!FileRead(hfile, &basic, sizeof(BASIC_SOLDIERCREATE_STRUCT)))
 		{ //Invalid situation.
-			FileClose( hfile );
 			return;
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
 			if (!ExtractSoldierCreateFromFileUTF16(hfile, &priority))
 			{ //Invalid situation.
-				FileClose( hfile );
 				return;
 			}
 		}
@@ -2675,21 +2669,18 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	usPEnemyIndex = usNEnemyIndex = 0;
 	if( !FileSeek( hfile, gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START ) )
 	{ //Position couldn't be found!
-		FileClose( hfile );
 		return;
 	}
 	for( i = 0; i < gpCurrentSectorSummary->MapInfo.ubNumIndividuals ; i++ )
 	{
 		if (!FileRead(hfile, &basic, sizeof(BASIC_SOLDIERCREATE_STRUCT)))
 		{ //Invalid situation.
-			FileClose( hfile );
 			return;
 		}
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
 			if (!ExtractSoldierCreateFromFileUTF16(hfile, &priority))
 			{ //Invalid situation.
-				FileClose( hfile );
 				return;
 			}
 		}
@@ -2720,7 +2711,6 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 			}
 		}
 	}
-	FileClose( hfile );
 }
 
 #endif

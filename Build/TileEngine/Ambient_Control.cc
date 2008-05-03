@@ -14,32 +14,25 @@ INT16									gsNumAmbData = 0;
 
 static BOOLEAN LoadAmbientControlFile(UINT8 ubAmbientID)
 {
-	BOOLEAN Ret = FALSE;
-
 	SGPFILENAME zFilename;
 	sprintf(zFilename, "AMBIENT/%d.bad", ubAmbientID);
 
-	HWFILE hFile = FileOpen(zFilename, FILE_ACCESS_READ);
-	if (!hFile) goto ret_only;
+	AutoSGPFile hFile(FileOpen(zFilename, FILE_ACCESS_READ));
+	if (!hFile) return FALSE;
 
 	// READ #
-	if (!FileRead(hFile, &gsNumAmbData, sizeof(INT16))) goto ret_close;
+	if (!FileRead(hFile, &gsNumAmbData, sizeof(INT16))) return FALSE;
 
 	// LOOP FOR OTHERS
 	for (INT32 cnt = 0; cnt < gsNumAmbData; cnt++)
 	{
-		if (!FileRead(hFile, &gAmbData[cnt], sizeof(AMBIENTDATA_STRUCT))) goto ret_close;
+		if (!FileRead(hFile, &gAmbData[cnt], sizeof(AMBIENTDATA_STRUCT))) return FALSE;
 
 		sprintf(zFilename, "AMBIENT/%s", gAmbData[cnt].zFilename);
 		strcpy(gAmbData[cnt].zFilename, zFilename);
 	}
 
-	Ret = TRUE;
-
-ret_close:
-	FileClose(hFile);
-ret_only:
-	return Ret;
+	return TRUE;
 }
 
 

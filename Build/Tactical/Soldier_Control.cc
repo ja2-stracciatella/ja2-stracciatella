@@ -5216,10 +5216,9 @@ void SetSoldierAniSpeed(SOLDIERTYPE* pSoldier)
 ///////////////////////////////////////////////////////
 BOOLEAN LoadPaletteData( )
 {
-	HWFILE		hFile;
 	UINT32			cnt, cnt2;
 
-	hFile = FileOpen(PALETTEFILENAME, FILE_ACCESS_READ);
+	AutoSGPFile hFile(FileOpen(PALETTEFILENAME, FILE_ACCESS_READ));
 
 	// Read # of types
 	if (!FileRead(hFile, &guiNumPaletteSubRanges, sizeof(guiNumPaletteSubRanges)))
@@ -5299,10 +5298,9 @@ BOOLEAN LoadPaletteData( )
 
 	}
 
-	FileClose( hFile );
-
-	return( TRUE );
+	return TRUE;
 }
+
 
 BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalRep )
 {

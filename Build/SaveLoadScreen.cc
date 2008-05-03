@@ -1260,17 +1260,12 @@ static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const h
 		char zSavedGameName[512];
 		CreateSavedGameFileNameFromNumber(bEntry, zSavedGameName);
 
-		const HWFILE f = FileOpen(zSavedGameName, FILE_ACCESS_READ);
-		if (f)
+		AutoSGPFile f(FileOpen(zSavedGameName, FILE_ACCESS_READ));
+		if (f && FileRead(f, header, sizeof(*header)))
 		{
-			const BOOLEAN success_read = FileRead(f, header, sizeof(*header));
-			FileClose(f);
-			if (success_read)
-			{
-				endof(header->zGameVersionNumber)[-1] =  '\0';
-				endof(header->sSavedGameDesc)[-1]     = L'\0';
-				return TRUE;
-			}
+			endof(header->zGameVersionNumber)[-1] =  '\0';
+			endof(header->sSavedGameDesc)[-1]     = L'\0';
+			return TRUE;
 		}
 
 		gbSaveGameArray[bEntry] = FALSE;

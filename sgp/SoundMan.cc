@@ -220,8 +220,7 @@ UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, U
 	SOUNDTAG* const channel = SoundGetFreeChannel();
 	if (channel == NULL) return SOUND_ERROR;
 
-	//Open the file
-	HWFILE hFile = FileOpen(pFilename, FILE_ACCESS_READ);
+	AutoSGPFile hFile = FileOpen(pFilename, FILE_ACCESS_READ);
 	if (!hFile)
 	{
 		FastDebugMsg(String("\n*******\nSoundPlayStreamedFile():  ERROR:  Couldnt open '%s' in SoundPlayStreamedFile()\n", pFilename ) );
@@ -232,7 +231,6 @@ UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, U
 	// so if the file isn't in a library, play it normally
 	if (DB_EXTRACT_LIBRARY(hFile) == REAL_FILE_LIBRARY_ID)
 	{
-		FileClose(hFile);
 		return SoundStartStream(pFilename, channel, volume, pan, loop, end_callback, data);
 	}
 
@@ -254,11 +252,7 @@ UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, U
 	//if it succeeded, record the file handle
 	if (uiRetVal != SOUND_ERROR)
 	{
-		channel->hFile = hFile;
-	}
-	else
-	{
-		FileClose(hFile);
+		channel->hFile = hFile.Release();
 	}
 
 	return uiRetVal;
@@ -726,7 +720,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 {
 	Assert(pFilename != NULL);
 
-	HWFILE hFile = FileOpen(pFilename, FILE_ACCESS_READ);
+	AutoSGPFile hFile(FileOpen(pFilename, FILE_ACCESS_READ));
 	if (hFile == 0) return NULL;
 
 	UINT32 uiSize = FileGetSize(hFile);
@@ -739,120 +733,112 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		{
 			SNDDBG("Not enough memory. Size: %u, Used: %u, Max: %u\n", uiSize, guiSoundMemoryUsed, guiSoundMemoryLimit);
 			FastDebugMsg(String("SoundLoadDisk:  ERROR:  trying to play %s, not enough memory\n", pFilename));
-			goto error_out;
+			return NULL;
 		}
 	}
 
+	// if all the sample slots are full, unloading one
+	SAMPLETAG* s = SoundGetEmptySample();
+	if (s == NULL)
 	{
-		// if all the sample slots are full, unloading one
-		SAMPLETAG* s = SoundGetEmptySample();
-		if (s == NULL)
+		SoundCleanCache();
+		s = SoundGetEmptySample();
+	}
+
+	// if we still don't have a sample slot
+	if (s == NULL)
+	{
+		FastDebugMsg(String("SoundLoadDisk:  ERROR: Trying to play %s, sound channels are full\n", pFilename));
+		return NULL;
+	}
+
+	memset(s, 0, sizeof(*s));
+
+	if (!FileSeek(hFile, 12, FILE_SEEK_FROM_CURRENT)) return NULL;
+
+	UINT16 FormatTag = WAVE_FORMAT_UNKNOWN;
+	UINT16 BlockAlign = 0;
+	for (;;)
+	{
+		UINT32 Tag;
+		UINT32 Size;
+
+		if (!FileRead(hFile, &Tag, sizeof(Tag)))   return NULL;
+		if (!FileRead(hFile, &Size, sizeof(Size))) return NULL;
+
+		switch (Tag)
 		{
-			SoundCleanCache();
-			s = SoundGetEmptySample();
-		}
-
-		// if we still don't have a sample slot
-		if (s == NULL)
-		{
-			FastDebugMsg(String("SoundLoadDisk:  ERROR: Trying to play %s, sound channels are full\n", pFilename));
-			goto error_out;
-		}
-
-		memset(s, 0, sizeof(*s));
-
-		if (FileSeek(hFile, 12, FILE_SEEK_FROM_CURRENT))
-		{
-			UINT16 FormatTag = WAVE_FORMAT_UNKNOWN;
-			UINT16 BlockAlign = 0;
-			for (;;)
-			{
-				UINT32 Tag;
-				UINT32 Size;
-
-				if (!FileRead(hFile, &Tag, sizeof(Tag)))   goto error_out;
-				if (!FileRead(hFile, &Size, sizeof(Size))) goto error_out;
-
-				switch (Tag)
+			case FOURCC('f', 'm', 't', ' '):
 				{
-					case FOURCC('f', 'm', 't', ' '):
-						{
-							UINT16 Channels;
-							UINT32 Rate;
-							UINT16 BitsPerSample;
+					UINT16 Channels;
+					UINT32 Rate;
+					UINT16 BitsPerSample;
 
-							if (!FileRead(hFile, &FormatTag,     sizeof(FormatTag)))     goto error_out;
-							if (!FileRead(hFile, &Channels,      sizeof(Channels)))      goto error_out;
-							if (!FileRead(hFile, &Rate,          sizeof(Rate)))          goto error_out;
-							if (!FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT))            goto error_out;
-							if (!FileRead(hFile, &BlockAlign,    sizeof(BlockAlign)))    goto error_out;
-							if (!FileRead(hFile, &BitsPerSample, sizeof(BitsPerSample))) goto error_out;
-							SNDDBG("LOAD file \"%s\" format %u channels %u rate %u bits %u to slot %u\n", pFilename, FormatTag, Channels, Rate, BitsPerSample, s - pSampleList);
-							switch (FormatTag)
-							{
-								case WAVE_FORMAT_PCM: break;
+					if (!FileRead(hFile, &FormatTag,     sizeof(FormatTag)))     return NULL;
+					if (!FileRead(hFile, &Channels,      sizeof(Channels)))      return NULL;
+					if (!FileRead(hFile, &Rate,          sizeof(Rate)))          return NULL;
+					if (!FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT))            return NULL;
+					if (!FileRead(hFile, &BlockAlign,    sizeof(BlockAlign)))    return NULL;
+					if (!FileRead(hFile, &BitsPerSample, sizeof(BitsPerSample))) return NULL;
+					SNDDBG("LOAD file \"%s\" format %u channels %u rate %u bits %u to slot %u\n", pFilename, FormatTag, Channels, Rate, BitsPerSample, s - pSampleList);
+					switch (FormatTag)
+					{
+						case WAVE_FORMAT_PCM: break;
 
-								case WAVE_FORMAT_DVI_ADPCM:
-																			if (!FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT)) goto error_out;
-																			break;
-
-								default: goto error_out;
-							}
-
-							s->uiSpeed = Rate;
-							if (Channels      !=  1) s->uiFlags |= SAMPLE_STEREO;
-							if (BitsPerSample == 16) s->uiFlags |= SAMPLE_16BIT;
+						case WAVE_FORMAT_DVI_ADPCM:
+							if (!FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT)) return NULL;
 							break;
-						}
 
-					case FOURCC('f', 'a', 'c', 't'):
-						{
-							UINT32 Samples;
-							if (!FileRead(hFile, &Samples, sizeof(Samples))) goto error_out;
-							s->n_samples = Samples;
-							break;
-						}
+						default: return NULL;
+					}
 
-					case FOURCC('d', 'a', 't', 'a'):
-						{
-							switch (FormatTag)
-							{
-								case WAVE_FORMAT_PCM:
-									if (!LoadPCM(s, hFile, Size)) goto error_out;
-									goto sound_loaded;
-
-								case WAVE_FORMAT_DVI_ADPCM:
-									if (!LoadDVIADPCM(s, hFile, BlockAlign)) goto error_out;
-									goto sound_loaded;
-
-								default: goto error_out;
-							}
-						}
-
-					default:
-						if (!FileSeek(hFile, Size, FILE_SEEK_FROM_CURRENT)) goto error_out;
-						break;
+					s->uiSpeed = Rate;
+					if (Channels      !=  1) s->uiFlags |= SAMPLE_STEREO;
+					if (BitsPerSample == 16) s->uiFlags |= SAMPLE_16BIT;
+					break;
 				}
-			}
+
+			case FOURCC('f', 'a', 'c', 't'):
+				{
+					UINT32 Samples;
+					if (!FileRead(hFile, &Samples, sizeof(Samples))) return NULL;
+					s->n_samples = Samples;
+					break;
+				}
+
+			case FOURCC('d', 'a', 't', 'a'):
+				{
+					switch (FormatTag)
+					{
+						case WAVE_FORMAT_PCM:
+							if (!LoadPCM(s, hFile, Size)) return NULL;
+							goto sound_loaded;
+
+						case WAVE_FORMAT_DVI_ADPCM:
+							if (!LoadDVIADPCM(s, hFile, BlockAlign)) return NULL;
+							goto sound_loaded;
+
+						default: return NULL;
+					}
+				}
+
+			default:
+				if (!FileSeek(hFile, Size, FILE_SEEK_FROM_CURRENT)) return NULL;
+				break;
+		}
+	}
 
 sound_loaded:
-			FileClose(hFile);
-			strcpy(s->pName, pFilename);
-			if (s->uiSpeed == 44100 && !HalfSampleRate(s))
-			{
-				free(s->pData);
-				return NULL;
-			}
-			guiSoundMemoryUsed += s->n_samples * GetSampleSize(s);
-			s->uiFlags     |= SAMPLE_ALLOCATED;
-			s->uiInstances  = 0;
-			return s;
-		}
+	strcpy(s->pName, pFilename);
+	if (s->uiSpeed == 44100 && !HalfSampleRate(s))
+	{
+		free(s->pData);
+		return NULL;
 	}
-
-error_out:
-	FileClose(hFile);
-	return NULL;
+	guiSoundMemoryUsed += s->n_samples * GetSampleSize(s);
+	s->uiFlags     |= SAMPLE_ALLOCATED;
+	s->uiInstances  = 0;
+	return s;
 }
 
 
@@ -1173,12 +1159,10 @@ static UINT32 SoundGetUniqueID(void)
  * Returns: TRUE if it should be streamed, FALSE if loaded. */
 static BOOLEAN SoundPlayStreamed(const char* pFilename)
 {
-	HWFILE hDisk = FileOpen(pFilename, FILE_ACCESS_READ);
+	AutoSGPFile hDisk(FileOpen(pFilename, FILE_ACCESS_READ));
 	if (hDisk == 0) return FALSE;
 
-	UINT32 uiFilesize = FileGetSize(hDisk);
-	FileClose(hDisk);
-	return uiFilesize >= guiSoundCacheThreshold;
+	return FileGetSize(hDisk) >= guiSoundCacheThreshold;
 }
 
 

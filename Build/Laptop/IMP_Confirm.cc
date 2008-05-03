@@ -442,36 +442,32 @@ static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT* pProfile, UINT16 usItem
 static void WriteOutCurrentImpCharacter(INT32 iProfileId)
 {
 	// grab the profile number and write out what is contained there in
-	HWFILE hFile = FileOpen(IMP_MERC_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
+	AutoSGPFile hFile(FileOpen(IMP_MERC_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 
 	// Write the profile id, portrait id and the profile itself. Abort on error
 	FileWrite(hFile, &iProfileId, sizeof(INT32)) &&
 	FileWrite(hFile, &iPortraitNumber, sizeof(INT32)) &&
 	InjectMercProfileIntoFile(hFile, &gMercProfiles[iProfileId]);
-
-	FileClose(hFile);
 }
 
 
 static void LoadInCurrentImpCharacter(void)
 {
 	INT32 iProfileId = 0;
-	HWFILE hFile;
 
-	// open the file for writing
-	hFile = FileOpen(IMP_MERC_FILE, FILE_ACCESS_READ);
-	if (hFile == 0) return;
+	{
+		AutoSGPFile hFile(FileOpen(IMP_MERC_FILE, FILE_ACCESS_READ));
+		if (hFile == 0) return;
 
-	// read in the profile
-	if (!FileRead(hFile, &iProfileId, sizeof(INT32))) return;
+		// read in the profile
+		if (!FileRead(hFile, &iProfileId, sizeof(INT32))) return;
 
-	// read in the portrait
-	if (!FileRead(hFile, &iPortraitNumber, sizeof(INT32))) return;
+		// read in the portrait
+		if (!FileRead(hFile, &iPortraitNumber, sizeof(INT32))) return;
 
-	// read in the profile
-	if (!ExtractMercProfileFromFile(hFile, &gMercProfiles[iProfileId])) return;
-
-	FileClose(hFile);
+		// read in the profile
+		if (!ExtractMercProfileFromFile(hFile, &gMercProfiles[iProfileId])) return;
+	}
 
 	if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )
 	{

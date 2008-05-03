@@ -353,7 +353,7 @@ static void OpenAndReadHistoryFile(void)
 {
 	ClearHistoryList();
 
-	const HWFILE f = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ));
 	if (!f) return;
 
 	UINT entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
@@ -380,8 +380,6 @@ static void OpenAndReadHistoryFile(void)
 
 		ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSectorX, sSectorY, bSectorZ);
 	}
-
-	FileClose(f);
 }
 
 
@@ -731,16 +729,12 @@ static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage)
 	// check if bad page
 	if (uiPage == 0) return FALSE;
 
-	const HWFILE f = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ));
 	if (!f) return FALSE;
 
 	UINT       entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
 	UINT const skip        = (uiPage - 1) * NUM_RECORDS_PER_PAGE;
-	if (entry_count <= skip)
-	{
-		FileClose(f);
-		return FALSE;
-	}
+	if (entry_count <= skip) return FALSE;
 
 	FileSeek(f, skip * SIZE_OF_HISTORY_FILE_RECORD, FILE_SEEK_FROM_START);
 	entry_count -= skip;
@@ -771,7 +765,6 @@ static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage)
 		ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, bSectorZ);
 	}
 
-	FileClose(f);
 	return TRUE;
 }
 
@@ -804,7 +797,7 @@ static void LoadPreviousHistoryPage(void)
 
 static void AppendHistoryToEndOfFile(void)
 {
-	const HWFILE f = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
+	AutoSGPFile f(FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
 	if (!f) return;
 
 	const HistoryUnit* const h = pHistoryListHead;
@@ -825,7 +818,6 @@ static void AppendHistoryToEndOfFile(void)
 	Assert(d == endof(data));
 
 	FileWrite(f, data, sizeof(data));
-	FileClose(f);
 }
 
 
@@ -880,11 +872,10 @@ static void PerformCheckOnHistoryRecord(UINT32 uiErrorCode, INT16 sSectorX, INT1
 
 static INT32 GetNumberOfHistoryPages(void)
 {
-	const HWFILE f = FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ));
 	if (!f) return 1;
 
 	const UINT32 uiFileSize = FileGetSize(f) - 1;
-	FileClose(f);
 
 	if (uiFileSize == 0) return 1;
 

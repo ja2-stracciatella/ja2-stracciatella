@@ -435,29 +435,27 @@ BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile )
 
 BOOLEAN SaveWorldItemsToTempItemFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const UINT32 uiNumberOfItems, const WORLDITEM* const pData)
 {
-	char filename[128];
-	GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, sMapX, sMapY, bMapZ);
-	const HWFILE f = FileOpen(filename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-	if (f == 0) goto fail;
-
-	// Save the size of the item table
-	if (!FileWrite(f, &uiNumberOfItems, sizeof(UINT32))) goto fail_close;
-
-	if (uiNumberOfItems != 0 && // If there are items to save
-			!FileWrite(f, pData, uiNumberOfItems * sizeof(WORLDITEM)))
 	{
-		goto fail_close;
+		char filename[128];
+		GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, sMapX, sMapY, bMapZ);
+		AutoSGPFile f(FileOpen(filename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+		if (f == 0) return FALSE;
+
+		// Save the size of the item table
+		if (!FileWrite(f, &uiNumberOfItems, sizeof(UINT32))) return FALSE;
+
+		if (uiNumberOfItems != 0 && // If there are items to save
+				!FileWrite(f, pData, uiNumberOfItems * sizeof(WORLDITEM)))
+		{
+			return FALSE;
+		}
+		/* Close the file before
+		 * SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems() reads it */
 	}
 
-	FileClose(f);
 	SetSectorFlag(sMapX, sMapY, bMapZ, SF_ITEM_TEMP_FILE_EXISTS);
 	SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(sMapX, sMapY, bMapZ, FALSE);
 	return TRUE;
-
-fail_close:
-	FileClose(f);
-fail:
-	return FALSE;
 }
 
 
@@ -466,28 +464,30 @@ BOOLEAN LoadWorldItemsFromTempItemFile(const INT16 x, const INT16 y, const INT8 
 	char filename[128];
 	GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, x, y, z);
 
-	HWFILE     f;
 	UINT32     l_item_count;
 	WORLDITEM* l_items;
 	// If the file doesn't exists, it's no problem
 	if (FileExists(filename))
 	{
-		f = FileOpen(filename, FILE_ACCESS_READ);
-		if (f == 0) goto fail;
+		AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
+		if (f == 0) return FALSE;
 
-		if (!FileRead(f, &l_item_count, sizeof(l_item_count))) goto fail_close;
+		if (!FileRead(f, &l_item_count, sizeof(l_item_count))) return FALSE;
 		if (l_item_count != 0)
 		{
 			l_items = MALLOCN(WORLDITEM, l_item_count);
-			if (l_items == NULL) goto fail_close;
+			if (l_items == NULL) return FALSE;
 
-			if (!FileRead(f, l_items, l_item_count * sizeof(*l_items))) goto fail_free;
+			if (!FileRead(f, l_items, l_item_count * sizeof(*l_items)))
+			{
+				MemFree(l_items);
+				return FALSE;
+			}
 		}
 		else
 		{
 			l_items = NULL;
 		}
-		FileClose(f);
 	}
 	else
 	{
@@ -497,13 +497,6 @@ BOOLEAN LoadWorldItemsFromTempItemFile(const INT16 x, const INT16 y, const INT8 
 	*item_count = l_item_count;
 	*items      = l_items;
 	return TRUE;
-
-fail_free:
-	MemFree(l_items);
-fail_close:
-	FileClose(f);
-fail:
-	return FALSE;
 }
 
 
@@ -1165,49 +1158,32 @@ static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8
 
 	GetMapTempFileName( SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
-	const HWFILE hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-	if( hFile == 0 )
-	{
-		//Error opening map modification file
-		return( FALSE );
-	}
+	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	if (!hFile) return FALSE;
 
 	//Determine how many rotting corpses there are
 	UINT32 uiNumberOfCorpses = 0;
 	CFOR_ALL_ROTTING_CORPSES(c) ++uiNumberOfCorpses;
 
 	//Save the number of the Rotting Corpses array table
-	if (!FileWrite(hFile, &uiNumberOfCorpses, sizeof(UINT32)))
-	{
-		//Error Writing size of array to disk
-		FileClose( hFile );
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, &uiNumberOfCorpses, sizeof(UINT32))) return FALSE;
 
 	//Loop through all the carcases in the array and save the active ones
 	CFOR_ALL_ROTTING_CORPSES(c)
 	{
 		//Save the RottingCorpse info array
-		if (!InjectRottingCorpseIntoFile(hFile, &c->def))
-		{
-			FileClose(hFile);
-			return FALSE;
-		}
+		if (!InjectRottingCorpseIntoFile(hFile, &c->def)) return FALSE;
 	}
-
-	FileClose( hFile );
 
 	// Set the flag indicating that there is a rotting corpse Temp File
 //	SectorInfo[ SECTOR( sMapX,sMapY) ].uiFlags |= SF_ROTTING_CORPSE_TEMP_FILE_EXISTS;
 	SetSectorFlag( sMapX, sMapY, bMapZ, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS );
-
-	return( TRUE );
+	return TRUE;
 }
 
 
 static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
 {
-	HWFILE	hFile;
 	CHAR8		zMapName[ 128 ];
 	UINT32	uiNumberOfCorpses=0;
 	UINT32		cnt;
@@ -1227,21 +1203,11 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 		return( TRUE );
 	}
 
-	//Open the file for reading
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
-	if( hFile == 0 )
-	{
-		//Error opening map modification file,
-		return( FALSE );
-	}
+	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
+	if (!hFile) return FALSE;
 
 	// Load the number of Rotting corpses
-	if (!FileRead(hFile, &uiNumberOfCorpses, sizeof(UINT32)))
-	{
-		//Error Writing size of array to disk
-		FileClose( hFile );
-		return( FALSE );
-	}
+	if (!FileRead(hFile, &uiNumberOfCorpses, sizeof(UINT32))) return FALSE;
 
   // Get town ID for use later....
 	bTownId = GetTownIdForSector( gWorldSectorX, gWorldSectorY );
@@ -1252,13 +1218,7 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 
 		// Load the Rotting corpses info
 		ROTTING_CORPSE_DEFINITION def;
-		if (!ExtractRottingCorpseFromFile(hFile, &def))
-		{
-			//Error Writing size of array to disk
-			FileClose( hFile );
-			return( FALSE );
-		}
-
+		if (!ExtractRottingCorpseFromFile(hFile, &def)) return FALSE;
 
 		//Check the flags to see if we have to find a gridno to place the rotting corpses at
 		if( def.usFlags & ROTTING_CORPSE_FIND_SWEETSPOT_FROM_GRIDNO )
@@ -1315,17 +1275,9 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 			if (AddRottingCorpse(&def) == NULL)
 		  {
 			  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Failed to add a corpse to GridNo # %d", def.sGridNo ) );
-
-  /*
-			  Assert( 0 );
-			  FileClose( hFile );
-			  return( FALSE );
-  */
 		  }
     }
 	}
-
-	FileClose( hFile );
 
 	//Check to see if we have to start decomposing the corpses
 	HandleRottingCorpses( );
@@ -1409,13 +1361,8 @@ static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void)
 	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
 	UINT16	usCnt1;
 
-	const HWFILE hFile = FileOpen(NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-	if( hFile == 0 )
-	{
-		//Error opening temp npc quote info
-		return( FALSE );
-	}
-
+	AutoSGPFile hFile(FileOpen(NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	if (!hFile) return FALSE;
 
 	//loop through all the npc accounts and write the temp array to disk
 	for( usCnt1=0; usCnt1< ( NUM_PROFILES-FIRST_RPC ); usCnt1++)
@@ -1435,15 +1382,10 @@ static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void)
 		}
 
 		//Save the array to a temp file
-		if (!FileWrite(hFile, TempNpcQuote, uiSizeOfTempArray))
-		{
-			FileClose( hFile );
-			return( FALSE );
-		}
+		if (!FileWrite(hFile, TempNpcQuote, uiSizeOfTempArray)) return FALSE;
 	}
 
-	FileClose( hFile );
-	return( TRUE );
+	return TRUE;
 }
 
 
@@ -1453,18 +1395,12 @@ static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId)
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
 	UINT32	uiSizeOfTempArray = sizeof( TempNPCQuoteInfoSave ) * NUM_NPC_QUOTE_RECORDS;
 	UINT32	uiSpotInFile = ubNpcId - FIRST_RPC;
-	HWFILE	hFile=0;
 
 	//if there are records to save
 	if( gpNPCQuoteInfoArray[ ubNpcId ] )
 	{
-
-		hFile = FileOpen(NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
-		if( hFile == 0 )
-		{
-			//Error opening temp npc quote info
-			return( FALSE );
-		}
+		AutoSGPFile hFile(FileOpen(NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS));
+		if (!hFile) return FALSE;
 
 		memset( TempNpcQuote, 0, uiSizeOfTempArray );
 
@@ -1480,20 +1416,13 @@ static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId)
 		FileSeek( hFile, uiSpotInFile * uiSizeOfTempArray, FILE_SEEK_FROM_START );
 
 		//Save the array to a temp file
-		if (!FileWrite(hFile, TempNpcQuote, uiSizeOfTempArray))
-		{
-			FileClose( hFile );
-			return( FALSE );
-		}
+		if (!FileWrite(hFile, TempNpcQuote, uiSizeOfTempArray)) return FALSE;
 
 		//Set the fact that the merc has the temp npc quote data
 		gMercProfiles[ ubNpcId ].ubMiscFlags |= PROFILE_MISC_FLAG_TEMP_NPC_QUOTE_DATA_EXISTS;
-
-		FileClose( hFile );
 	}
 
-
-	return( TRUE );
+	return TRUE;
 }
 
 
@@ -1520,13 +1449,13 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile(const INT16 sMapX, co
 	char map_name[128];
 	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, sMapX, sMapY, bMapZ);
 
-	const HWFILE f = FileOpen(map_name, FILE_ACCESS_READWRITE | FILE_OPEN_ALWAYS);
-	if (f == 0) return FALSE;
+	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_READWRITE | FILE_OPEN_ALWAYS));
+	if (!f) return FALSE;
 
 	UINT32 corpse_count;
 	if (FileGetSize(f) != 0)
 	{
-		if (!FileRead(f, &corpse_count, sizeof(corpse_count))) goto fail_close;
+		if (!FileRead(f, &corpse_count, sizeof(corpse_count))) return FALSE;
 		FileSeek(f, 0, FILE_SEEK_FROM_START);
 	}
 	else
@@ -1535,18 +1464,13 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile(const INT16 sMapX, co
 	}
 
 	++corpse_count;
-	if (!FileWrite(f, &corpse_count, sizeof(corpse_count))) goto fail_close;
+	if (!FileWrite(f, &corpse_count, sizeof(corpse_count))) return FALSE;
 
 	FileSeek(f, 0, FILE_SEEK_FROM_END);
-	if (!InjectRottingCorpseIntoFile(f, corpse_def)) goto fail_close;
+	if (!InjectRottingCorpseIntoFile(f, corpse_def)) return FALSE;
 
-	FileClose(f);
 	SetSectorFlag(sMapX, sMapY, bMapZ, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS);
 	return TRUE;
-
-fail_close:
-	FileClose(f);
-	return FALSE;
 }
 
 

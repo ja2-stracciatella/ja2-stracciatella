@@ -85,7 +85,6 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	INT32 i;
 	INT32 slots = 0;
 	UINT32 uiTimeStamp;
-	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
 	CHAR8		zMapName[ 128 ];
 	#ifdef JA2TESTVERSION
@@ -102,12 +101,8 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 
 	GetMapTempFileName( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
-	//Open the file for reading
-	hfile = FileOpen(zMapName, FILE_ACCESS_READ);
-	if( hfile == 0 )
-	{	//Error opening map modification file
-		return FALSE;
-	}
+	AutoSGPFile hfile(FileOpen(zMapName, FILE_ACCESS_READ));
+	if (!hfile) return FALSE;
 
 	//STEP TWO:  determine whether or not we should use this data.
 	//because it is the demo, it is automatically used.
@@ -172,7 +167,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 
 	if( GetWorldTotalMin() > uiTimeStamp + 300 )
 	{ //the file has aged.  Use the regular method for adding soldiers.
-		FileClose( hfile );
+		hfile.Deallocate(); // Close the file before deleting it
 		RemoveEnemySoldierTempFile( sSectorX, sSectorY, bSectorZ );
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
 		return TRUE;
@@ -189,7 +184,6 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	if( !slots )
 	{ //no need to restore the enemy's to the map.  This means we are restoring a saved game.
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
-		FileClose( hfile );
 		return TRUE;
 	}
 	if( slots < 0 || slots >= 64 )
@@ -371,15 +365,12 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 		ubStrategicCreatures;  //not sure if this wil ever happen.  If so, needs to be handled.
 	}
 
-	//successful
-	FileClose( hfile );
 	return TRUE;
 
 	FAIL_LOAD:
 		//The temp file load failed either because of IO problems related to hacking/logic, or
 		//various checks failed for hacker validation.  If we reach this point, the "error: exit game"
 		//dialog would appear in a non-testversion.
-		FileClose( hfile );
 		#ifdef JA2TESTVERSION
 			AssertMsg( 0, zReason );
 		#endif
@@ -424,7 +415,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 			sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)  KM", gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 		#endif
 
-			goto FAIL_LOAD_NO_CLOSE;
+			goto FAIL_LOAD;
 		}
 	}
 	else
@@ -456,12 +447,8 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	ubNumElites = ubNumTroops = ubNumAdmins = ubNumCreatures = 0;
 
 	{
-		//Open the file for reading
-		const HWFILE hfile = FileOpen(zMapName, FILE_ACCESS_READ);
-		if( hfile == 0 )
-		{	//Error opening map modification file
-			return FALSE;
-		}
+		AutoSGPFile hfile(FileOpen(zMapName, FILE_ACCESS_READ));
+		if (!hfile) return FALSE;
 
 		//STEP TWO:  determine whether or not we should use this data.
 		//because it is the demo, it is automatically used.
@@ -534,7 +521,6 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 		if( GetWorldTotalMin() > uiTimeStamp + 300 )
 		{ //the file has aged.  Use the regular method for adding soldiers.
-			FileClose( hfile );
 			RemoveEnemySoldierTempFile( sSectorX, sSectorY, bSectorZ );
 			gfRestoringEnemySoldiersFromTempFile = FALSE;
 			return TRUE;
@@ -543,7 +529,6 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 		if( !slots )
 		{ //no need to restore the enemy's to the map.  This means we are restoring a saved game.
 			gfRestoringEnemySoldiersFromTempFile = FALSE;
-			FileClose( hfile );
 			return TRUE;
 		}
 
@@ -753,18 +738,13 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 		//if in battle, what about the ubNumInBAttle
 
-
-		//successful
-		FileClose( hfile );
 		return TRUE;
-
-FAIL_LOAD:
-		//The temp file load failed either because of IO problems related to hacking/logic, or
-		//various checks failed for hacker validation.  If we reach this point, the "error: exit game"
-		//dialog would appear in a non-testversion.
-		FileClose( hfile );
 	}
-FAIL_LOAD_NO_CLOSE:
+
+	//The temp file load failed either because of IO problems related to hacking/logic, or
+	//various checks failed for hacker validation.  If we reach this point, the "error: exit game"
+	//dialog would appear in a non-testversion.
+FAIL_LOAD:
 		#ifdef JA2TESTVERSION
 			AssertMsg( 0, zReason );
 		#endif
@@ -781,7 +761,6 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	INT32 slots = 0;
 	UINT32 uiTimeStamp;
 	UINT32 uiTimeSinceLastLoaded;
-	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
 	CHAR8		zMapName[ 128 ];
 	#ifdef JA2TESTVERSION
@@ -797,12 +776,8 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 	GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
-	//Open the file for reading
-	hfile = FileOpen(zMapName, FILE_ACCESS_READ);
-	if( hfile == 0 )
-	{	//Error opening map modification file
-		return FALSE;
-	}
+	AutoSGPFile hfile(FileOpen(zMapName, FILE_ACCESS_READ));
+	if (!hfile) return FALSE;
 
 	//STEP TWO:  determine whether or not we should use this data.
 	//because it is the demo, it is automatically used.
@@ -879,7 +854,6 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	{
 		//no need to restore the enemy's to the map.  This means we are restoring a saved game.
 		gfRestoringCiviliansFromTempFile = FALSE;
-		FileClose( hfile );
 		return TRUE;
 	}
 	if( slots < 0 || slots >= 64 )
@@ -1018,15 +992,12 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	}
 	*/
 
-	//successful
-	FileClose( hfile );
 	return TRUE;
 
 	FAIL_LOAD:
 		//The temp file load failed either because of IO problems related to hacking/logic, or
 		//various checks failed for hacker validation.  If we reach this point, the "error: exit game"
 		//dialog would appear in a non-testversion.
-		FileClose( hfile );
 		#ifdef JA2TESTVERSION
 			AssertMsg( 0, zReason );
 		#endif
@@ -1187,20 +1158,17 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 	}
 
-	const HWFILE hfile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-	if( hfile == 0 )
-	{	//Error opening map modification file
-		return FALSE;
-	}
+	AutoSGPFile hfile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	if (!hfile) return FALSE;
 
-	if (!FileWrite(hfile, &sSectorY, 2)) goto FAIL_SAVE;
+	if (!FileWrite(hfile, &sSectorY, 2)) return FALSE;
 
 	//STEP THREE:  Save the data
 
 	//this works for both civs and enemies
 	SaveSoldierInitListLinks( hfile );
 
-	if (!FileWrite(hfile, &sSectorX, 2)) goto FAIL_SAVE;
+	if (!FileWrite(hfile, &sSectorX, 2)) return FALSE;
 
 	//This check may appear confusing.  It is intended to abort if the player is saving the game.  It is only
 	//supposed to preserve the links to the placement list, so when we finally do leave the level with enemies remaining,
@@ -1210,19 +1178,18 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		slots = 0;
 	}
 
-	if (!FileWrite(hfile, &slots, 4)) goto FAIL_SAVE;
+	if (!FileWrite(hfile, &slots, 4)) return FALSE;
 
 	uiTimeStamp = GetWorldTotalMin();
-	if (!FileWrite(hfile, &uiTimeStamp, 4)) goto FAIL_SAVE;
+	if (!FileWrite(hfile, &uiTimeStamp, 4)) return FALSE;
 
-	if (!FileWrite(hfile, &bSectorZ, 1)) goto FAIL_SAVE;
+	if (!FileWrite(hfile, &bSectorZ, 1)) return FALSE;
 
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 	{
 		//if we are saving the game, we don't need to preserve the soldier information, just
 		//preserve the links to the placement list.
 		slots = 0;
-		FileClose( hfile );
 
 		if( fEnemy )
 		{
@@ -1246,18 +1213,16 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 			if (curr && pSoldier->ubProfile == NO_PROFILE)
 			{
 				//found a match.
-				if (!InjectSoldierCreateIntoFile(hfile, curr->pDetailedPlacement)) goto FAIL_SAVE;
+				if (!InjectSoldierCreateIntoFile(hfile, curr->pDetailedPlacement)) return FALSE;
 				//insert a checksum equation (anti-hack)
 				const UINT16 usCheckSum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
-				if (!FileWrite(hfile, &usCheckSum, 2)) goto FAIL_SAVE;
+				if (!FileWrite(hfile, &usCheckSum, 2)) return FALSE;
 			}
 		}
 	}
 
 	ubSectorID = SECTOR( sSectorX, sSectorY );
-	if (!FileWrite(hfile, &ubSectorID, 1)) goto FAIL_SAVE;
-
-	FileClose( hfile );
+	if (!FileWrite(hfile, &ubSectorID, 1)) return FALSE;
 
 	if( fEnemy )
 	{
@@ -1269,10 +1234,6 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 	}
 
 	return TRUE;
-
-	FAIL_SAVE:
-		FileClose( hfile );
-		return FALSE;
 }
 
 
@@ -1283,7 +1244,6 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 	INT32 i;
 	INT32 slots = 0;
 	UINT32 uiTimeStamp;
-	HWFILE hfile;
 	INT16 sSectorX, sSectorY;
 	UINT16 usCheckSum;
 	CHAR8		zMapName[ 128 ];
@@ -1307,12 +1267,8 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 
 	GetMapTempFileName( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
-	//Open the file for reading
-	hfile = FileOpen(zMapName, FILE_ACCESS_READ);
-	if( hfile == 0 )
-	{	//Error opening map modification file
-		return FALSE;
-	}
+	AutoSGPFile hfile(FileOpen(zMapName, FILE_ACCESS_READ));
+	if (!hfile) return FALSE;
 
 	//STEP TWO:  determine whether or not we should use this data.
 	//because it is the demo, it is automatically used.
@@ -1388,7 +1344,6 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 	if( !slots )
 	{
 		//no need to restore the enemy's to the map.  This means we are restoring a saved game.
-		FileClose( hfile );
 		return TRUE;
 	}
 
@@ -1566,15 +1521,12 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 		goto FAIL_LOAD;
 	}
 
-	//successful
-	FileClose( hfile );
 	return TRUE;
 
 	FAIL_LOAD:
 		//The temp file load failed either because of IO problems related to hacking/logic, or
 		//various checks failed for hacker validation.  If we reach this point, the "error: exit game"
 		//dialog would appear in a non-testversion.
-		FileClose( hfile );
 		#ifdef JA2TESTVERSION
 			AssertMsg( 0, zReason );
 		#endif

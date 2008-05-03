@@ -15,30 +15,27 @@
 
 BOOLEAN CreateSGPPaletteFromCOLFile(SGPPaletteEntry* const pal, const char* const col_file)
 {
-	const HWFILE f = FileOpen(col_file, FILE_ACCESS_READ);
-	if (f == 0)
+	AutoSGPFile f(FileOpen(col_file, FILE_ACCESS_READ));
+	if (!f)
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot open COL file");
 		return FALSE;
 	}
 
 	BYTE data[776];
-	const BOOLEAN ret = FileRead(f, data, sizeof(data));
-	if (ret)
-	{
-		const BYTE* d = data;
-		EXTR_SKIP(d, 8); // skip header
-		for (UINT i = 0; i != 256; ++i)
-		{
-			EXTR_U8(d, pal[i].peRed)
-			EXTR_U8(d, pal[i].peGreen)
-			EXTR_U8(d, pal[i].peBlue)
-		}
-		Assert(d == endof(data));
-	}
+	if (!FileRead(f, data, sizeof(data))) return FALSE;
 
-	FileClose(f);
-	return ret;
+	const BYTE* d = data;
+	EXTR_SKIP(d, 8); // skip header
+	for (UINT i = 0; i != 256; ++i)
+	{
+		EXTR_U8(d, pal[i].peRed)
+		EXTR_U8(d, pal[i].peGreen)
+		EXTR_U8(d, pal[i].peBlue)
+	}
+	Assert(d == endof(data));
+
+	return TRUE;
 }
 
 

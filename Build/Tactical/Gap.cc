@@ -25,7 +25,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 	dot[3] = 'p';
 	dot[4] = '\0';
 
-	const HWFILE f = FileOpen(sFileName, FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen(sFileName, FILE_ACCESS_READ));
 	if (f)
 	{
 		// gap file exists
@@ -34,7 +34,6 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 
 		BYTE data[size];
 		FileRead(f, data, size);
-		FileClose(f);
 
 		const UINT32 count = size / 8;
 		if (count > 0)

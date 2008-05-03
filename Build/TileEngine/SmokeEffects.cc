@@ -588,40 +588,19 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		return( TRUE );
 	}
 
-	const HWFILE hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-	if( hFile == 0 )
-	{
-		//Error opening file
-		return( FALSE );
-	}
-
+	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	if (!hFile) return FALSE;
 
 	//Save the Number of Smoke Effects
-	if (!FileWrite(hFile, &uiNumSmokeEffects, sizeof(UINT32)))
-	{
-		//Close the file
-		FileClose( hFile );
-
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, &uiNumSmokeEffects, sizeof(UINT32))) return FALSE;
 
 	CFOR_ALL_SMOKE_EFFECTS(s)
 	{
-		if (!InjectSmokeEffectIntoFile(hFile, s))
-		{
-			//Close the file
-			FileClose( hFile );
-
-			return( FALSE );
-		}
+		if (!InjectSmokeEffectIntoFile(hFile, s)) return FALSE;
 	}
 
-	//Close the file
-	FileClose( hFile );
-
 	SetSectorFlag( sMapX, sMapY, bMapZ, SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS );
-
-	return( TRUE );
+	return TRUE;
 }
 
 
@@ -629,38 +608,24 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
 	UINT32	uiCnt=0;
-	HWFILE	hFile;
 	CHAR8		zMapName[ 128 ];
 
 	GetMapTempFileName( SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
-	//Open the file for reading, Create it if it doesnt exist
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
-	if( hFile == 0 )
-	{
-		//Error opening map modification file
-		return( FALSE );
-	}
+	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
+	if (!hFile) return FALSE;
 
 	//Clear out the old list
 	ResetSmokeEffects();
 
 
 	//Load the Number of Smoke Effects
-	if (!FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32)))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
+	if (!FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32))) return FALSE;
 
 	//loop through and load the list
 	for( uiCnt=0; uiCnt<guiNumSmokeEffects;uiCnt++)
 	{
-		if (!ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[uiCnt]))
-		{
-			FileClose( hFile );
-			return( FALSE );
-		}
+		if (!ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[uiCnt])) return FALSE;
 	}
 
 	//loop through and apply the smoke effects to the map
@@ -670,9 +635,7 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		SpreadEffectSmoke(s, TRUE, bLevel);
 	}
 
-	FileClose( hFile );
-
-	return( TRUE );
+	return TRUE;
 }
 
 

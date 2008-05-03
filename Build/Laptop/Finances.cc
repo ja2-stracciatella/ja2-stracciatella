@@ -943,13 +943,9 @@ static void DisplayFinancePageNumberAndDateRange(void)
 static BOOLEAN WriteBalanceToDisk(void)
 {
 	// will write the current balance to disk
-	const HWFILE hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS);
-
-	// write balance to disk
+	AutoSGPFile hFileHandle(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS));
 	FileWrite(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
-
-  FileClose( hFileHandle );
-  return( TRUE );
+  return TRUE;
 }
 
 
@@ -958,9 +954,7 @@ static void GetBalanceFromDisk(void)
 	// will grab the current blanace from disk
 	// assuming file already openned
   // this procedure will open and read in data to the finance list
-  HWFILE hFileHandle;
-
-	hFileHandle = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	AutoSGPFile hFileHandle(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
 	if (!hFileHandle)
 	{
 		LaptopSaveInfo.iCurrentBalance = 0;
@@ -969,15 +963,13 @@ static void GetBalanceFromDisk(void)
 
 	// get balance from disk first
   FileRead(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
-
-  FileClose( hFileHandle );
 }
 
 
 // will write the current finance to disk
 static void AppendFinanceToEndOfFile(void)
 {
-	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
+	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
 	if (!f) return;
 
 	const FinanceUnit* const fu = pFinanceListHead;
@@ -991,14 +983,13 @@ static void AppendFinanceToEndOfFile(void)
 	Assert(d == endof(data));
 
 	FileWrite(f, data, sizeof(data));
-	FileClose(f);
 }
 
 
 // Grabs the size of the file and interprets number of pages it will take up
 static void SetLastPageInRecords(void)
 {
-	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
 	if (!f)
 	{
 		LaptopSaveInfo.iCurrentBalance = 0;
@@ -1006,7 +997,6 @@ static void SetLastPageInRecords(void)
 	}
 
 	const UINT32 size = FileGetSize(f);
-	FileClose(f);
 
 	if (size < FINANCE_HEADER_SIZE + FINANCE_RECORD_SIZE)
 	{
@@ -1075,7 +1065,7 @@ static BOOLEAN LoadInRecords(const UINT32 page)
 {
 	if (page == 0) return FALSE; // check if bad page
 
-	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
 	if (!f) return FALSE;
 
 	BOOLEAN      ret  = FALSE;
@@ -1113,7 +1103,6 @@ static BOOLEAN LoadInRecords(const UINT32 page)
 			ret = TRUE;
 		}
 	}
-	FileClose(f);
 	return ret;
 }
 
@@ -1172,7 +1161,7 @@ static INT32 GetPreviousDaysBalance(void)
 
 	if (date_in_days < 2) return 0;
 
-	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
 	if (!f) return 0;
 	const UINT32 size = FileGetSize(f);
 
@@ -1207,7 +1196,6 @@ static INT32 GetPreviousDaysBalance(void)
 		if (date / (24 * 60) < date_in_days - 2) break;
 	}
 
-	FileClose(f);
 	return balance;
 }
 
@@ -1217,7 +1205,7 @@ static INT32 GetTodaysBalance(void)
 	const UINT32 date_in_minutes = GetWorldTotalMin();
 	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
 	if (!f) return 0;
 	const UINT32 size = FileGetSize(f);
 
@@ -1248,7 +1236,6 @@ static INT32 GetTodaysBalance(void)
 		}
 	}
 
-	FileClose(f);
 	return balance;
 }
 
@@ -1260,7 +1247,7 @@ static INT32 GetPreviousDaysIncome(void)
 	const UINT32 date_in_minutes = GetWorldTotalMin();
 	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
 	if (!f) return 0;
 	const UINT32 size = FileGetSize(f);
 
@@ -1300,7 +1287,6 @@ static INT32 GetPreviousDaysIncome(void)
 		if (date / (24 * 60) <= date_in_days - 2) break;
 	}
 
-	FileClose(f);
 	return iTotalPreviousIncome;
 }
 
@@ -1310,7 +1296,7 @@ static INT32 GetTodaysDaysIncome(void)
   const UINT32 date_in_minutes = GetWorldTotalMin();
   const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
 	if (!f) return 0;
 	const UINT32 size = FileGetSize(f);
 
@@ -1350,7 +1336,6 @@ static INT32 GetTodaysDaysIncome(void)
 		if (date / (24 * 60) == date_in_days - 1) break;
 	}
 
-	FileClose(f);
 	return iTotalIncome;
 }
 
@@ -1397,7 +1382,7 @@ static INT32 GetTodaysOtherDeposits(void)
   const UINT32 date_in_minutes = GetWorldTotalMin();
   const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
 	if (!f) return 0;
 	const UINT32 size = FileGetSize(f);
 
@@ -1439,7 +1424,6 @@ static INT32 GetTodaysOtherDeposits(void)
 		if (date / (24 * 60) == date_in_days - 1) break;
 	}
 
-	FileClose(f);
 	return iTotalIncome;
 }
 
@@ -1449,7 +1433,7 @@ static INT32 GetYesterdaysOtherDeposits(void)
   const UINT32 iDateInMinutes = GetWorldTotalMin();
   const UINT32 date_in_days   = iDateInMinutes / (24 * 60);
 
-	const HWFILE f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
 	if (!f) return 0;
 
 	INT32 iTotalPreviousIncome = 0;
@@ -1490,7 +1474,6 @@ static INT32 GetYesterdaysOtherDeposits(void)
 		if (date / (24 * 60) <= date_in_days - 2) break;
 	}
 
-	FileClose(f);
 	return iTotalPreviousIncome;
 }
 

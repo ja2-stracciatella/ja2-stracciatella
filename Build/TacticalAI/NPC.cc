@@ -107,7 +107,6 @@ BOOLEAN gfDisplayScreenMsgOnRecordUsage = FALSE;
 static NPCQuoteInfo* LoadQuoteFile(UINT8 ubNPC)
 {
 	CHAR8						zFileName[255];
-	HWFILE					hFile;
 
 	if ( ubNPC == PETER || ubNPC == ALBERTO || ubNPC == CARLO )
 	{
@@ -140,15 +139,14 @@ static NPCQuoteInfo* LoadQuoteFile(UINT8 ubNPC)
 
 	}
 
-	hFile = FileOpen(zFileName, FILE_ACCESS_READ);
+	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_READ));
 	CHECKN( hFile );
 
 	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
+	if (!buf) return NULL;
 	const UINT32 uiFileSize = sizeof(*buf) * NUM_NPC_QUOTE_RECORDS;
-	NPCQuoteInfo* const ret =
-		buf && FileRead(hFile, buf, uiFileSize) ? buf.Release() : NULL;
-	FileClose(hFile);
-	return ret;
+	if (!FileRead(hFile, buf, uiFileSize)) return NULL;
+	return buf.Release();
 }
 
 
@@ -312,7 +310,6 @@ static BOOLEAN RefreshNPCScriptRecord(UINT8 ubNPC, UINT8 ubRecord)
 static NPCQuoteInfo* LoadCivQuoteFile(UINT8 ubIndex)
 {
 	CHAR8						zFileName[255];
-	HWFILE					hFile;
 
   if ( ubIndex == MINERS_CIV_QUOTE_INDEX )
   {
@@ -323,15 +320,14 @@ static NPCQuoteInfo* LoadCivQuoteFile(UINT8 ubIndex)
 	  sprintf( zFileName, "NPCData/%c%d.npc", 'A' + ( gsCivQuoteSector[ ubIndex ][ 1 ] - 1 ), gsCivQuoteSector[ ubIndex ][ 0 ] );
   }
 
-	hFile = FileOpen(zFileName, FILE_ACCESS_READ);
+	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_READ));
 	CHECKN( hFile );
 
 	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
+	if (!buf) return NULL;
 	const UINT32 uiFileSize = sizeof(*buf) * NUM_NPC_QUOTE_RECORDS;
-	NPCQuoteInfo* const ret =
-		buf && FileRead(hFile, buf, uiFileSize) ? buf.Release() : NULL;
-	FileClose(hFile);
-	return ret;
+	if (!FileRead(hFile, buf, uiFileSize)) return NULL;
+	return buf.Release();
 }
 
 

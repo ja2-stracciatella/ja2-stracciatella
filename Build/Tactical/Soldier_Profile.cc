@@ -185,100 +185,99 @@ BOOLEAN LoadMercProfiles(void)
 {
 	const char* const pFileName = "BINARYDATA/Prof.dat";
 
-	const HWFILE fptr = FileOpen(pFileName, FILE_ACCESS_READ);
-	if (!fptr)
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to LoadMercProfiles from file %s", pFileName));
-		return FALSE;
-	}
-
-	for (UINT32 uiLoop = 0; uiLoop < NUM_PROFILES; ++uiLoop)
-	{
-#ifdef JA2DEMO
-		BYTE data[696];
-		if (!FileRead(fptr, &data, sizeof(data)))
-#else
-		BYTE data[716];
-		if (!JA2EncryptedFileRead(fptr, &data, sizeof(data)))
-#endif
+		AutoSGPFile fptr(FileOpen(pFileName, FILE_ACCESS_READ));
+		if (!fptr)
 		{
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s", uiLoop, pFileName));
-			FileClose(fptr);
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to LoadMercProfiles from file %s", pFileName));
 			return FALSE;
 		}
 
-		MERCPROFILESTRUCT* const p = GetProfile(uiLoop);
-		ExtractMercProfileUTF16(data, p);
+		for (UINT32 uiLoop = 0; uiLoop < NUM_PROFILES; ++uiLoop)
+		{
+#ifdef JA2DEMO
+			BYTE data[696];
+			if (!FileRead(fptr, &data, sizeof(data)))
+#else
+				BYTE data[716];
+			if (!JA2EncryptedFileRead(fptr, &data, sizeof(data)))
+#endif
+			{
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s", uiLoop, pFileName));
+				return FALSE;
+			}
 
-		// If the dialogue exists for the merc, allow the merc to be hired
-		p->bMercStatus = (FileExists(GetDialogueDataFilename(uiLoop, 0, FALSE)) ? 0 : MERC_HAS_NO_TEXT_FILE);
+			MERCPROFILESTRUCT* const p = GetProfile(uiLoop);
+			ExtractMercProfileUTF16(data, p);
 
-		p->sMedicalDepositAmount = (p->bMedicalDeposit ? CalcMedicalDeposit(p) : 0);
+			// If the dialogue exists for the merc, allow the merc to be hired
+			p->bMercStatus = (FileExists(GetDialogueDataFilename(uiLoop, 0, FALSE)) ? 0 : MERC_HAS_NO_TEXT_FILE);
 
-		// ATE: New, face display independent of ID num now
-		// Setup face index value
-		// Default is the ubCharNum
-		p->ubFaceIndex = (UINT8)uiLoop;
+			p->sMedicalDepositAmount = (p->bMedicalDeposit ? CalcMedicalDeposit(p) : 0);
+
+			// ATE: New, face display independent of ID num now
+			// Setup face index value
+			// Default is the ubCharNum
+			p->ubFaceIndex = (UINT8)uiLoop;
 
 #ifndef JA2DEMO
-		if (!gGameOptions.fGunNut)
-		{
-			// CJC: replace guns in profile if they aren't available
+			if (!gGameOptions.fGunNut)
+			{
+				// CJC: replace guns in profile if they aren't available
+				for (UINT32 uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; ++uiLoop2)
+				{
+					const UINT16 usItem = p->inv[uiLoop2];
+					if (!(Item[usItem].usItemClass & IC_GUN) || !ExtendedGunListGun(usItem)) continue;
+
+					const UINT16 usNewGun = StandardGunListReplacement(usItem);
+					if (usNewGun == NOTHING) continue;
+
+					p->inv[uiLoop2] = usNewGun;
+
+					// must search through inventory and replace ammo accordingly
+					for (UINT32 uiLoop3 = 0; uiLoop3 < NUM_INV_SLOTS; ++uiLoop3)
+					{
+						const UINT16 usAmmo = p->inv[uiLoop3];
+						if (!(Item[usAmmo].usItemClass & IC_AMMO)) continue;
+
+						const UINT16 usNewAmmo = FindReplacementMagazineIfNecessary(usItem, usAmmo, usNewGun);
+						if (usNewAmmo == NOTHING) continue;
+
+						// found a new magazine, replace...
+						p->inv[uiLoop3] = usNewAmmo;
+					}
+				}
+			}
+#endif
+
+			/* Calculate inital attractiveness for the merc's initial gun and armour.
+			 * Calculate the optional gear cost. */
+			p->bMainGunAttractiveness = -1;
+			p->bArmourAttractiveness  = -1;
+			p->usOptionalGearCost     =  0;
 			for (UINT32 uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; ++uiLoop2)
 			{
 				const UINT16 usItem = p->inv[uiLoop2];
-				if (!(Item[usItem].usItemClass & IC_GUN) || !ExtendedGunListGun(usItem)) continue;
+				if (usItem == NOTHING) continue;
+				const INVTYPE* const item = &Item[usItem];
 
-				const UINT16 usNewGun = StandardGunListReplacement(usItem);
-				if (usNewGun == NOTHING) continue;
+				if (item->usItemClass & IC_GUN)    p->bMainGunAttractiveness = Weapon[usItem].ubDeadliness;
+				if (item->usItemClass & IC_ARMOUR) p->bArmourAttractiveness  = Armour[item->ubClassIndex].ubProtection;
 
-				p->inv[uiLoop2] = usNewGun;
-
-				// must search through inventory and replace ammo accordingly
-				for (UINT32 uiLoop3 = 0; uiLoop3 < NUM_INV_SLOTS; ++uiLoop3)
-				{
-					const UINT16 usAmmo = p->inv[uiLoop3];
-					if (!(Item[usAmmo].usItemClass & IC_AMMO)) continue;
-
-					const UINT16 usNewAmmo = FindReplacementMagazineIfNecessary(usItem, usAmmo, usNewGun);
-					if (usNewAmmo == NOTHING) continue;
-
-					// found a new magazine, replace...
-					p->inv[uiLoop3] = usNewAmmo;
-				}
+				p->usOptionalGearCost += item->usPrice;
 			}
+
+			//These variables to get loaded in
+			p->fUseProfileInsertionInfo = FALSE;
+			p->sGridNo                  = 0;
+
+			// ARM: this is also being done inside the profile editor, but put it here too, so this project's code makes sense
+			p->bHatedCount[0]    = p->bHatedTime[0];
+			p->bHatedCount[1]    = p->bHatedTime[1];
+			p->bLearnToHateCount = p->bLearnToHateTime;
+			p->bLearnToLikeCount = p->bLearnToLikeTime;
 		}
-#endif
-
-		/* Calculate inital attractiveness for the merc's initial gun and armour.
-		 * Calculate the optional gear cost. */
-		p->bMainGunAttractiveness = -1;
-		p->bArmourAttractiveness  = -1;
-		p->usOptionalGearCost     =  0;
-		for (UINT32 uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; ++uiLoop2)
-		{
-			const UINT16 usItem = p->inv[uiLoop2];
-			if (usItem == NOTHING) continue;
-			const INVTYPE* const item = &Item[usItem];
-
-			if (item->usItemClass & IC_GUN)    p->bMainGunAttractiveness = Weapon[usItem].ubDeadliness;
-			if (item->usItemClass & IC_ARMOUR) p->bArmourAttractiveness  = Armour[item->ubClassIndex].ubProtection;
-
-			p->usOptionalGearCost += item->usPrice;
-		}
-
-		//These variables to get loaded in
-		p->fUseProfileInsertionInfo = FALSE;
-		p->sGridNo                  = 0;
-
-		// ARM: this is also being done inside the profile editor, but put it here too, so this project's code makes sense
-		p->bHatedCount[0]    = p->bHatedTime[0];
-		p->bHatedCount[1]    = p->bHatedTime[1];
-		p->bLearnToHateCount = p->bLearnToHateTime;
-		p->bLearnToLikeCount = p->bLearnToLikeTime;
 	}
-
-	FileClose(fptr);
 
 #ifndef JA2DEMO
 	DecideActiveTerrorists();

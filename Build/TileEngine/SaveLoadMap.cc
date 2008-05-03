@@ -45,26 +45,13 @@ static BOOLEAN SaveModifiedMapStructToMapTempFile(MODIFY_MAP* pMap, INT16 sSecto
 
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
-	//Open the file for writing, Create it if it doesnt exist
-	const HWFILE hFile = FileOpen(zMapName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS);
-	if( hFile == 0 )
-	{
-		//Error opening map modification file
-		return( FALSE );
-	}
+	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+	if (!hFile) return FALSE;
 
-	if (!FileWrite(hFile, pMap, sizeof(MODIFY_MAP)))
-	{
-		//Error Writing size of array to disk
-		FileClose( hFile );
-		return( FALSE );
-	}
-
-	FileClose( hFile );
+	if (!FileWrite(hFile, pMap, sizeof(MODIFY_MAP))) return FALSE;
 
 	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS );
-
-	return( TRUE );
+	return TRUE;
 }
 
 
@@ -79,7 +66,6 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 {
 	CHAR8		zMapName[ 128 ];
-	HWFILE	hFile;
 	UINT32	uiNumberOfElementsSavedBackToFile = 0;	// added becuase if no files get saved back to disk, the flag needs to be erased
 	UINT32	cnt;
 	MODIFY_MAP *pMap;
@@ -94,34 +80,28 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 		return( TRUE );
 	}
 
-	//Open the file for reading
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
-	if( hFile == 0 )
+	UINT32                  uiNumberOfElements;
+	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
-		//Error opening map modification file,
-		return( FALSE );
+		AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
+		if (!hFile) return FALSE;
+
+		//Get the size of the file
+		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
+
+		pTempArrayOfMaps.Allocate(uiNumberOfElements);
+		if( pTempArrayOfMaps == NULL )
+		{
+			Assert( 0 );
+			return( TRUE );
+		}
+
+		//Read the map temp file into a buffer
+		if (!FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements))
+		{
+			return FALSE;
+		}
 	}
-
-	//Get the size of the file
-	const UINT32 uiFileSize         = FileGetSize(hFile);
-	const UINT32 uiNumberOfElements = uiFileSize / sizeof(MODIFY_MAP);
-
-	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps(uiNumberOfElements);
-	if( pTempArrayOfMaps == NULL )
-	{
-		Assert( 0 );
-		return( TRUE );
-	}
-
-	//Read the map temp file into a buffer
-	if (!FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
-
-	//Close the file
-	FileClose( hFile );
 
 	//Delete the file
 	FileDelete( zMapName );
@@ -526,23 +506,11 @@ BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSector
 
 	GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
-	const HWFILE hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-	if( hFile == 0 )
-	{
-		//Error opening map modification file
-		return( FALSE );
-	}
-
+	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	if (!hFile) return FALSE;
 
 	//Write the revealed array to the Revealed temp file
-	if (!FileWrite(hFile, gpRevealedMap, NUM_REVEALED_BYTES))
-	{
-		//Error Writing size of array to disk
-		FileClose( hFile );
-		return( FALSE );
-	}
-
-	FileClose( hFile );
+	if (!FileWrite(hFile, gpRevealedMap, NUM_REVEALED_BYTES)) return FALSE;
 
 	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_REVEALED_STATUS_TEMP_FILE_EXISTS );
 
@@ -559,7 +527,6 @@ static void SetMapRevealedStatus(void);
 BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 {
 	CHAR8		zMapName[ 128 ];
-	HWFILE	hFile;
 
 	GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
@@ -570,25 +537,18 @@ BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 		return( TRUE );
 	}
 
-	//Open the file for reading
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
-	if( hFile == 0 )
 	{
-		//Error opening map modification file,
-		return( FALSE );
+		AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
+		if (!hFile) return FALSE;
+
+		//Allocate memory
+		Assert( gpRevealedMap == NULL );
+		gpRevealedMap = MALLOCNZ(UINT8, NUM_REVEALED_BYTES);
+		AssertMsg(gpRevealedMap != NULL, "Failed allocating memory for the revealed map");
+
+		// Load the Reveal map array structure
+		if (!FileRead(hFile, gpRevealedMap, NUM_REVEALED_BYTES)) return FALSE;
 	}
-
-	//Allocate memory
-	Assert( gpRevealedMap == NULL );
-	gpRevealedMap = MALLOCNZ(UINT8, NUM_REVEALED_BYTES);
-	AssertMsg(gpRevealedMap != NULL, "Failed allocating memory for the revealed map");
-
-
-	// Load the Reveal map array structure
-	if (!FileRead(hFile, gpRevealedMap, NUM_REVEALED_BYTES)) return FALSE;
-
-	FileClose( hFile );
-
 
 	//Loop through and set the bits in the map that are revealed
 	SetMapRevealedStatus();
@@ -759,44 +719,35 @@ void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, INT16 sSect
 BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ )
 {
 	CHAR8		zMapName[ 128 ];
-	HWFILE	hFile;
 	MODIFY_MAP *pMap;
 	BOOLEAN	fRetVal=FALSE;
 	UINT32	cnt;
 
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, ubSectorZ );
 
-	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
-	if( hFile == 0 )
+	UINT32                  uiNumberOfElements;
+	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
-		//Error opening map modification file
-		return( FALSE );
+		AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
+		if (!hFile) return FALSE;
+
+		//Get the number of elements in the file
+		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
+
+		//Allocate memory for the buffer
+		pTempArrayOfMaps.Allocate(uiNumberOfElements);
+		if( pTempArrayOfMaps == NULL )
+		{
+			Assert( 0 );
+			return( FALSE );
+		}
+
+		//Read the map temp file into a buffer
+		if (!FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements))
+		{
+			return FALSE;
+		}
 	}
-
-	//Get the size of the temp file
-	const UINT32 uiFileSize = FileGetSize(hFile);
-
-	//Get the number of elements in the file
-	const UINT32 uiNumberOfElements = uiFileSize / sizeof(MODIFY_MAP);
-
-	//Allocate memory for the buffer
-	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps(uiNumberOfElements);
-	if( pTempArrayOfMaps == NULL )
-	{
-		Assert( 0 );
-		return( FALSE );
-	}
-
-	//Read the map temp file into a buffer
-	if (!FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
-
-	//Close the file
-	FileClose( hFile );
 
 	//Delete the file
 	FileDelete( zMapName );
@@ -933,19 +884,19 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector(const UINT16 usSectorX, con
 	// If the file doesn't exists, it's no problem.
 	if (!FileExists(map_name)) return TRUE;
 
-	// Read the map temp file into a buffer
-	const HWFILE src = FileOpen(map_name, FILE_ACCESS_READ);
-	if (src == 0) return FALSE;
+	UINT32                  uiNumberOfElements;
+	SGP::Buffer<MODIFY_MAP> mm;
+	{
+		// Read the map temp file into a buffer
+		AutoSGPFile src(FileOpen(map_name, FILE_ACCESS_READ));
+		if (src == 0) return FALSE;
 
-	const UINT32 uiFileSize         = FileGetSize(src);
-	const UINT32 uiNumberOfElements = uiFileSize / sizeof(MODIFY_MAP);
+		uiNumberOfElements = FileGetSize(src) / sizeof(MODIFY_MAP);
 
-	SGP::Buffer<MODIFY_MAP> mm(uiNumberOfElements);
-	const BOOLEAN success_read =
-		mm != NULL &&
-		FileRead(src, mm, sizeof(*mm) * uiNumberOfElements);
-	FileClose(src);
-	if (!success_read) return FALSE;
+		mm.Allocate(uiNumberOfElements);
+		if (!mm) return FALSE;
+		if (!FileRead(src, mm, sizeof(*mm) * uiNumberOfElements)) return FALSE;
+	}
 
 	for (UINT32 i = 0; i < uiNumberOfElements; ++i)
 	{
@@ -958,10 +909,8 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector(const UINT16 usSectorX, con
 		break;
 	}
 
-	const HWFILE dst = FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
+	AutoSGPFile dst(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 	if (dst == 0) return FALSE;
 
-	const BOOLEAN success_write = FileWrite(dst, mm, uiFileSize);
-	FileClose(dst);
-	return success_write;
+	return FileWrite(dst, mm, sizeof(*mm) * uiNumberOfElements);
 }

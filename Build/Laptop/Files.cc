@@ -394,7 +394,7 @@ static void OpenAndReadFilesFile(void)
 {
 	ClearFilesList();
 
-	const HWFILE f = FileOpen(FILES_DAT_FILE, FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen(FILES_DAT_FILE, FILE_ACCESS_READ));
 	if (!f) return;
 
 	// file exists, read in data, continue until file end
@@ -414,14 +414,12 @@ static void OpenAndReadFilesFile(void)
 
 		ProcessAndEnterAFilesRecord(code, already_read);
 	}
-
-	FileClose(f);
 }
 
 
 static void OpenAndWriteFilesFile(void)
 {
-	const HWFILE f = FileOpen(FILES_DAT_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
+	AutoSGPFile f(FileOpen(FILES_DAT_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 	if (!f) return;
 
   for (const FilesUnit* i = pFilesListHead; i; i = i->Next)
@@ -436,7 +434,6 @@ static void OpenAndWriteFilesFile(void)
 		FileWrite(f, data, sizeof(data));
 	}
 
-  FileClose(f);
 	ClearFilesList();
 }
 

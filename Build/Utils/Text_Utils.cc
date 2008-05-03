@@ -14,7 +14,7 @@ BOOLEAN LoadItemInfo(UINT16 ubIndex, wchar_t Info[])
 
 static void LoadAllItemNames(void)
 {
-	HWFILE File = FileOpen(ITEMSTRINGFILENAME, FILE_ACCESS_READ);
+	AutoSGPFile File(FileOpen(ITEMSTRINGFILENAME, FILE_ACCESS_READ));
 #ifdef JA2DEMO
 	UINT32 i;
 	for (i = 0; i != SILVER_PLATTER; ++i)
@@ -33,7 +33,6 @@ static void LoadAllItemNames(void)
 		wcscpy(ItemNames[i],      L"<unknown>");
 	}
 #endif
-	FileClose(File);
 }
 
 

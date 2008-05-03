@@ -781,42 +781,36 @@ void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID )
 
 static BOOLEAN LoadAnimationProfiles(void)
 {
-	const HWFILE f = FileOpen(ANIMPROFILEFILENAME, FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen(ANIMPROFILEFILENAME, FILE_ACCESS_READ));
 	if (!f) return FALSE;
 
-	if (FileRead(f, &gubNumAnimProfiles, sizeof(gubNumAnimProfiles)))
+	if (!FileRead(f, &gubNumAnimProfiles, sizeof(gubNumAnimProfiles))) return FALSE;
+
+	ANIM_PROF* const aps = MALLOCN(ANIM_PROF, gubNumAnimProfiles);
+	gpAnimProfiles = aps;
+
+	for (INT32 profile_idx = 0; profile_idx < gubNumAnimProfiles; ++profile_idx)
 	{
-		ANIM_PROF* const aps = MALLOCN(ANIM_PROF, gubNumAnimProfiles);
-		gpAnimProfiles = aps;
-
-		for (INT32 profile_idx = 0; profile_idx < gubNumAnimProfiles; ++profile_idx)
+		ANIM_PROF* const ap = &aps[profile_idx];
+		for (INT32 direction_idx = 0; direction_idx < 8; ++direction_idx)
 		{
-			ANIM_PROF* const ap = &aps[profile_idx];
-			for (INT32 direction_idx = 0; direction_idx < 8; ++direction_idx)
+			ANIM_PROF_DIR* const apd = &ap->Dirs[direction_idx];
+
+			if (!FileRead(f, &apd->ubNumTiles, sizeof(UINT8))) return FALSE;
+			ANIM_PROF_TILE* const apts = MALLOCN(ANIM_PROF_TILE, apd->ubNumTiles);
+			apd->pTiles = apts;
+
+			for (INT32 tile_idx = 0; tile_idx < apd->ubNumTiles; ++tile_idx)
 			{
-				ANIM_PROF_DIR* const apd = &ap->Dirs[direction_idx];
-
-				if (!FileRead(f, &apd->ubNumTiles, sizeof(UINT8))) goto fail_close;
-				ANIM_PROF_TILE* const apts = MALLOCN(ANIM_PROF_TILE, apd->ubNumTiles);
-				apd->pTiles = apts;
-
-				for (INT32 tile_idx = 0; tile_idx < apd->ubNumTiles; ++tile_idx)
-				{
-					ANIM_PROF_TILE* const apt = &apts[tile_idx];
-					if (!FileRead(f, &apt->usTileFlags, sizeof(UINT16))) goto fail_close;
-					if (!FileRead(f, &apt->bTileX,      sizeof(INT8)))   goto fail_close;
-					if (!FileRead(f, &apt->bTileY,      sizeof(INT8)))   goto fail_close;
-				}
+				ANIM_PROF_TILE* const apt = &apts[tile_idx];
+				if (!FileRead(f, &apt->usTileFlags, sizeof(UINT16))) return FALSE;
+				if (!FileRead(f, &apt->bTileX,      sizeof(INT8)))   return FALSE;
+				if (!FileRead(f, &apt->bTileY,      sizeof(INT8)))   return FALSE;
 			}
 		}
-
-		FileClose(f);
-		return TRUE;
 	}
 
-fail_close:
-	FileClose(f);
-	return FALSE;
+	return TRUE;
 }
 
 

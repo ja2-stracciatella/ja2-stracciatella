@@ -1366,7 +1366,6 @@ BOOLEAN SaveWorld(const char *puiFilename)
 	UINT32		uiSoldierSize;
 	UINT32		uiFlags;
 	UINT32		uiNumWarningsCaught = 0;
-	HWFILE		hfile;
 	LEVELNODE	*pLand;
 	LEVELNODE	*pObject;
 	LEVELNODE	*pStruct;
@@ -1391,13 +1390,8 @@ BOOLEAN SaveWorld(const char *puiFilename)
 
 	sprintf( aFilename, "MAPS/%s", puiFilename );
 
-	// Open file
-	hfile = FileOpen(aFilename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-
-	if ( !hfile )
-	{
-		return( FALSE );
-	}
+	AutoSGPFile hfile(FileOpen(aFilename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	if (!hfile) return FALSE;
 
 	// Write JA2 Version ID
 	FileWrite(hfile, &gdMajorMapVersion, sizeof(FLOAT));
@@ -1457,7 +1451,6 @@ BOOLEAN SaveWorld(const char *puiFilename)
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				LayerCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
-			FileClose( hfile );
 			return FALSE;
 		}
 		if( LayerCount > 10 )
@@ -1496,7 +1489,6 @@ BOOLEAN SaveWorld(const char *puiFilename)
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				ObjectCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
-			FileClose( hfile );
 			return FALSE;
 		}
 		if( ObjectCount > 10 )
@@ -1526,7 +1518,6 @@ BOOLEAN SaveWorld(const char *puiFilename)
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				StructCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
-			FileClose( hfile );
 			return FALSE;
 		}
 		if( StructCount > 10 )
@@ -1561,7 +1552,6 @@ BOOLEAN SaveWorld(const char *puiFilename)
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				ShadowCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
-			FileClose( hfile );
 			return FALSE;
 		}
 		if( ShadowCount > 10 )
@@ -1591,7 +1581,6 @@ BOOLEAN SaveWorld(const char *puiFilename)
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				RoofCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
-			FileClose( hfile );
 			return FALSE;
 		}
 		if( RoofCount > 10 )
@@ -1624,7 +1613,6 @@ BOOLEAN SaveWorld(const char *puiFilename)
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				OnRoofCount, cnt, uiNumWarningsCaught );
 			gfErrorCatch = TRUE;
-			FileClose( hfile );
 			return FALSE;
 		}
 		if( OnRoofCount > 10 )
@@ -1845,11 +1833,8 @@ BOOLEAN SaveWorld(const char *puiFilename)
 		SaveSchedules( hfile );
 	}
 
-	FileClose( hfile );
-
 	strlcpy(g_filename, puiFilename, lengthof(g_filename));
-
-	return( TRUE );
+	return TRUE;
 }
 
 #endif
@@ -1956,7 +1941,6 @@ extern BOOLEAN gfUpdatingNow;
 BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 {
 	FLOAT	dMajorMapVersion;
-	HWFILE	hfile;
 	MAPCREATE_STRUCT mapInfo;
 	UINT32					uiFileSize;
 	UINT32 uiFlags;
@@ -1994,15 +1978,17 @@ BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
 		SaveWorld( szFilename );
 	}
 
-	hfile = FileOpen(szDirFilename, FILE_ACCESS_READ);
-	if( !hfile )
-		return FALSE;
+	INT8* pBuffer;
+	{
+		AutoSGPFile hfile(FileOpen(szDirFilename, FILE_ACCESS_READ));
+		if (!hfile) return FALSE;
 
-	uiFileSize = FileGetSize( hfile );
-	INT8*       pBuffer     = MALLOCN(INT8, uiFileSize);
+		uiFileSize = FileGetSize( hfile );
+		pBuffer    = MALLOCN(INT8, uiFileSize);
+		FileRead(hfile, pBuffer, uiFileSize);
+	}
+
 	INT8* const pBufferHead = pBuffer;
-	FileRead(hfile, pBuffer, uiFileSize);
-	FileClose( hfile );
 
 	swprintf(str, lengthof(str), L"Analyzing map %hs", szFilename);
 	if( !gfUpdatingNow )
@@ -2356,7 +2342,6 @@ static void LoadMapLights(INT8** hBuffer);
 
 BOOLEAN LoadWorld(const char *puiFilename)
 {
-	HWFILE					hfile;
 	FLOAT						dMajorMapVersion;
 	UINT32					uiFlags;
 	UINT32					uiSoldierSize;
@@ -2388,34 +2373,34 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	gfBasement = FALSE;
 	gfCaves = FALSE;
 
-	// Open file
-	hfile = FileOpen(aFilename, FILE_ACCESS_READ);
-
-	if ( !hfile )
+	SGP::Buffer<INT8> pBufferHead;
 	{
-		SET_ERROR("Could not load map file %s", aFilename);
-		return( FALSE );
+		AutoSGPFile hfile(FileOpen(aFilename, FILE_ACCESS_READ));
+		if (!hfile)
+		{
+			SET_ERROR("Could not load map file %s", aFilename);
+			return( FALSE );
+		}
+
+		SetRelativeStartAndEndPercentage( 0, 0, 1, L"Trashing world..." );
+#ifdef JA2TESTVERSION
+		uiStartTime = GetJA2Clock();
+#endif
+
+		TrashWorld();
+
+#ifdef JA2TESTVERSION
+		uiTrashWorldTime = GetJA2Clock() - uiStartTime;
+#endif
+
+		LightReset();
+
+		//Get the file size and alloc one huge buffer for it.
+		//We will use this buffer to transfer all of the data from.
+		uiFileSize = FileGetSize( hfile );
+		pBufferHead.Allocate(uiFileSize);
+		FileRead(hfile, pBufferHead, uiFileSize);
 	}
-
-	SetRelativeStartAndEndPercentage( 0, 0, 1, L"Trashing world..." );
-#ifdef JA2TESTVERSION
-	uiStartTime = GetJA2Clock();
-#endif
-
-	TrashWorld();
-
-#ifdef JA2TESTVERSION
-	uiTrashWorldTime = GetJA2Clock() - uiStartTime;
-#endif
-
-	LightReset();
-
-	//Get the file size and alloc one huge buffer for it.
-	//We will use this buffer to transfer all of the data from.
-	uiFileSize = FileGetSize( hfile );
-	SGP::Buffer<INT8> pBufferHead(uiFileSize);
-	FileRead(hfile, pBufferHead, uiFileSize);
-	FileClose( hfile );
 
 	INT8* pBuffer = pBufferHead;
 

@@ -2372,15 +2372,13 @@ BOOLEAN LightSave(const LightTemplate* const t, const char* const pFilename)
 	if (t->lights == NULL) return FALSE;
 
 	const char* const pName = (pFilename != NULL ? pFilename : t->name);
-	const HWFILE      hFile = FileOpen(pName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-	if (hFile == 0) return FALSE;
+	AutoSGPFile hFile(FileOpen(pName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	if (!hFile) return FALSE;
 
 	FileWrite(hFile, &t->n_lights, sizeof(t->n_lights));
 	FileWrite(hFile, t->lights,    sizeof(*t->lights) * t->n_lights);
 	FileWrite(hFile, &t->n_rays,   sizeof(t->n_rays));
 	FileWrite(hFile, t->rays,      sizeof(*t->rays)   * t->n_rays);
-
-	FileClose(hFile);
 	return TRUE;
 }
 
@@ -2392,7 +2390,7 @@ static LightTemplate* LightLoad(const char* pFilename)
 	INT32 iLight = LightGetFree();
 	if (iLight == -1) return NULL;
 
-	const HWFILE hFile = FileOpen(pFilename, FILE_ACCESS_READ);
+	AutoSGPFile hFile(FileOpen(pFilename, FILE_ACCESS_READ));
 	if (hFile == 0) return NULL;
 
 	LightTemplate* const t = &g_light_templates[iLight];
@@ -2416,8 +2414,6 @@ static LightTemplate* LightLoad(const char* pFilename)
 		return NULL;
 	}
 	FileRead(hFile, t->rays, sizeof(*t->rays) * t->n_rays);
-
-	FileClose(hFile);
 
 	t->name = MALLOCN(char, strlen(pFilename) + 1);
 	strcpy(t->name, pFilename);

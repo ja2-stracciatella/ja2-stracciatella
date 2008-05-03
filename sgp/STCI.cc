@@ -15,14 +15,14 @@ BOOLEAN LoadSTCIFileToImage(const HIMAGE image, const UINT16 fContents)
 {
 	Assert(image != NULL);
 
-	const HWFILE f = FileOpen(image->ImageFile, FILE_ACCESS_READ);
-	if (!f) goto fail;
+	AutoSGPFile f(FileOpen(image->ImageFile, FILE_ACCESS_READ));
+	if (!f) return FALSE;
 
 	STCIHeader header;
 	if (!FileRead(f, &header, sizeof(header)) || memcmp(header.cID, STCI_ID_STRING, STCI_ID_LEN) != 0)
 	{
 		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem reading STCI header.");
-		goto fail_close;
+		return FALSE;
 	}
 
 	// Determine from the header the data stored in the file. and run the appropriate loader
@@ -31,7 +31,7 @@ BOOLEAN LoadSTCIFileToImage(const HIMAGE image, const UINT16 fContents)
 		if (!STCILoadRGB(image, fContents, f, &header))
 		{
 			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading RGB image.");
-			goto fail_close;
+			return FALSE;
 		}
 	}
 	else if (header.fFlags & STCI_INDEXED)
@@ -39,29 +39,21 @@ BOOLEAN LoadSTCIFileToImage(const HIMAGE image, const UINT16 fContents)
 		if (!STCILoadIndexed(image, fContents, f, &header))
 		{
 			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading palettized image.");
-			goto fail_close;
+			return FALSE;
 		}
 	}
 	else
 	{
 		// Unsupported type of data, or the right flags weren't set!
 		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Unknown data organization in STCI file.");
-		goto fail_close;
+		return FALSE;
 	}
-
-	// Requested data loaded successfully.
-	FileClose(f);
 
 	if (header.fFlags & STCI_ZLIB_COMPRESSED) image->fFlags |= IMAGE_COMPRESSED;
 	image->usWidth    = header.usWidth;
 	image->usHeight   = header.usHeight;
 	image->ubBitDepth = header.ubDepth;
 	return TRUE;
-
-fail_close:
-	FileClose(f);
-fail:
-	return FALSE;
 }
 
 

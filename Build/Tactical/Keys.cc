@@ -137,11 +137,10 @@ BOOLEAN LoadLockTable( void )
 {
 	UINT32	uiBytesToRead;
 	const char *pFileName = "BINARYDATA/Locks.bin";
-	HWFILE	hFile;
 
 	// Load the Lock Table
 
-	hFile = FileOpen(pFileName, FILE_ACCESS_READ);
+	AutoSGPFile hFile(FileOpen(pFileName, FILE_ACCESS_READ));
 	if( !hFile )
 	{
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to LoadLockTable from file %s", pFileName) );
@@ -149,11 +148,7 @@ BOOLEAN LoadLockTable( void )
 	}
 
 	uiBytesToRead = sizeof( LOCK ) * NUM_LOCKS;
-	BOOLEAN Ret = FileRead(hFile, LockTable, uiBytesToRead);
-
-	FileClose( hFile );
-
-	return Ret;
+	return FileRead(hFile, LockTable, uiBytesToRead);
 }
 
 
@@ -893,7 +888,6 @@ BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 
 {
 	UINT32	uiSizeToSave=0;
 	CHAR8		zMapName[ 128 ];
-	HWFILE	hFile;
 
 //	return( TRUE );
 
@@ -901,48 +895,24 @@ BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 
 
 	GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
-	//Open the file for writing, Create it if it doesnt exist
-	hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-	if( hFile == 0 )
-	{
-		//Error opening map modification file
-		return( FALSE );
-	}
-
+	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	if (hFile == 0) return FALSE;
 
 	//Save the number of doors
-	if (!FileWrite(hFile, &gubNumDoors, sizeof(UINT8)))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
-
+	if (!FileWrite(hFile, &gubNumDoors, sizeof(UINT8))) return FALSE;
 
 	//if there are doors to save
-	if( uiSizeToSave != 0 )
-	{
-		//Save the door table
-		if (!FileWrite(hFile, DoorTable, uiSizeToSave))
-		{
-			FileClose( hFile );
-			return( FALSE );
-		}
-	}
-
+	if (uiSizeToSave != 0 && !FileWrite(hFile, DoorTable, uiSizeToSave)) return FALSE;
 
 	//Set the sector flag indicating that there is a Door table temp file present
 	SetSectorFlag( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_DOOR_TABLE_TEMP_FILES_EXISTS );
-
-	FileClose( hFile );
-
-	return( TRUE );
+	return TRUE;
 }
 
 
 
 BOOLEAN LoadDoorTableFromDoorTableTempFile( )
 {
-	HWFILE	hFile;
 	CHAR8		zMapName[ 128 ];
 
 //	return( TRUE );
@@ -959,20 +929,11 @@ BOOLEAN LoadDoorTableFromDoorTableTempFile( )
 	//Get rid of the existing door table
 	TrashDoorTable();
 
-	//Open the file for reading
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
-	if( hFile == 0 )
-	{
-		//Error opening map modification file,
-		return( FALSE );
-	}
+	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
+	if (hFile == 0) return FALSE;
 
 	//Read in the number of doors
-	if (!FileRead(hFile, &gubMaxDoors, sizeof(UINT8)))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
+	if (!FileRead(hFile, &gubMaxDoors, sizeof(UINT8))) return FALSE;
 
 	gubNumDoors = gubMaxDoors;
 
@@ -981,27 +942,14 @@ BOOLEAN LoadDoorTableFromDoorTableTempFile( )
 	{
 		//Allocate space for the door table
 		DoorTable = MALLOCN(DOOR, gubMaxDoors);
-		if( DoorTable == NULL )
-		{
-			FileClose( hFile );
-			return( FALSE );
-		}
-
+		if (DoorTable == NULL) return FALSE;
 
 		//Read in the number of doors
-		if (!FileRead(hFile, DoorTable, sizeof(DOOR) * gubMaxDoors))
-		{
-			FileClose( hFile );
-			return( FALSE );
-		}
+		if (!FileRead(hFile, DoorTable, sizeof(DOOR) * gubMaxDoors)) return FALSE;
 	}
 
-	FileClose( hFile );
-
-	return( TRUE );
+	return TRUE;
 }
-
-
 
 
 // fOpen is True if the door is open, false if it is closed
@@ -1531,48 +1479,28 @@ BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY,
 
 	GetMapTempFileName( SF_DOOR_STATUS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
-	//Open the file for writing, Create it if it doesnt exist
-	const HWFILE hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-	if( hFile == 0 )
-	{
-		//Error opening map modification file
-		return( FALSE );
-	}
-
+	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	if (hFile == 0) return FALSE;
 
 	//Save the number of elements in the door array
-	if (!FileWrite(hFile, &gubNumDoorStatus, sizeof(UINT8)))
-	{
-		//Error Writing size of array to disk
-		FileClose( hFile );
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, &gubNumDoorStatus, sizeof(UINT8))) return FALSE;
 
 	//if there is some to save
 	if( gubNumDoorStatus != 0 )
 	{
 		//Save the door array
-		if (!FileWrite(hFile, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus))
-		{
-			//Error Writing size of array to disk
-			FileClose( hFile );
-			return( FALSE );
-		}
+		if (!FileWrite(hFile, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus)) return FALSE;
 	}
-
-	FileClose( hFile );
 
 	//Set the flag indicating that there is a door status array
 	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_DOOR_STATUS_TEMP_FILE_EXISTS );
-
-	return( TRUE );
+	return TRUE;
 }
 
 
 BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
 {
 	CHAR8		zMapName[ 128 ];
-	HWFILE	hFile;
 	UINT8		ubLoop;
 
 	GetMapTempFileName( SF_DOOR_STATUS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
@@ -1580,41 +1508,20 @@ BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
 	//Get rid of the existing door array
 	TrashDoorStatusArray( );
 
-	//Open the file for reading
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
-	if( hFile == 0 )
-	{
-		//Error opening map modification file,
-		return( FALSE );
-	}
-
+	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
+	if (hFile == 0) return FALSE;
 
 	// Load the number of elements in the door status array
-	if (!FileRead(hFile, &gubNumDoorStatus, sizeof(UINT8)))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
+	if (!FileRead(hFile, &gubNumDoorStatus, sizeof(UINT8))) return FALSE;
 
-	if( gubNumDoorStatus == 0 )
-	{
-		FileClose( hFile );
-		return( TRUE );
-	}
-
+	if (gubNumDoorStatus == 0) return TRUE;
 
 	//Allocate space for the door status array
 	gpDoorStatus = MALLOCNZ(DOOR_STATUS, gubNumDoorStatus);
 	AssertMsg(gpDoorStatus != NULL , "Error Allocating memory for the gpDoorStatus");
 
 	// Load the number of elements in the door status array
-	if (!FileRead(hFile, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
-
-	FileClose( hFile );
+	if (!FileRead(hFile, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus)) return FALSE;
 
 	// the graphics will be updated later in the loading process.
 

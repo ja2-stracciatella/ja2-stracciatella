@@ -1206,11 +1206,8 @@ void CalcDistancesBetweenTowns( void )
 
 void WriteOutDistancesBetweenTowns( void )
 {
-	const HWFILE hFileHandle = FileOpen("BinaryData/TownDistances.dat", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-
+	AutoSGPFile hFileHandle(FileOpen("BinaryData/TownDistances.dat", FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 	FileWrite(hFileHandle, &iTownDistances, sizeof(INT32) * NUM_TOWNS * NUM_TOWNS);
-
-  FileClose( hFileHandle );
 }
 
 
@@ -1263,14 +1260,8 @@ void DumpDistancesBetweenTowns(void)
 
 void ReadInDistancesBetweenTowns( void )
 {
-	HWFILE hFileHandle;
-
-	hFileHandle = FileOpen("BinaryData/TownDistances.dat", FILE_ACCESS_READ);
-
+	AutoSGPFile hFileHandle(FileOpen("BinaryData/TownDistances.dat", FILE_ACCESS_READ));
 	FileRead(hFileHandle, &iTownDistances, sizeof(INT32) * NUM_TOWNS * NUM_TOWNS);
-
-  FileClose( hFileHandle );
-	return;
 }
 
 

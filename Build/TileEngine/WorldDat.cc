@@ -18,7 +18,7 @@ static void SetTilesetTwoTerrainValues(void);
 
 void InitEngineTilesets(void)
 {
-	const HWFILE f = FileOpen("BINARYDATA/JA2SET.DAT", FILE_ACCESS_READ);
+	AutoSGPFile f(FileOpen("BINARYDATA/JA2SET.DAT", FILE_ACCESS_READ));
 	if (!f)
 	{
 		SET_ERROR("Cannot open tileset data file");
@@ -31,7 +31,7 @@ void InitEngineTilesets(void)
 	if (ubNumSets != NUM_TILESETS)
 	{
 		SET_ERROR("Number of tilesets in code does not match data file");
-		goto ret_close;
+		return;
 	}
 
 	// READ #files
@@ -40,7 +40,7 @@ void InitEngineTilesets(void)
 	if (uiNumFiles != NUMBEROFTILETYPES)
 	{
 		SET_ERROR("Number of tilesets slots in code does not match data file");
-		goto ret_close;
+		return;
 	}
 
 	// Loop through each tileset, load name then files
@@ -75,9 +75,6 @@ void InitEngineTilesets(void)
 	gTilesets[TEMP_29      ].MovementCostFnc = SetTilesetThreeTerrainValues;
 	gTilesets[TROPICAL_1   ].MovementCostFnc = SetTilesetFourTerrainValues;
 	gTilesets[TEMP_20      ].MovementCostFnc = SetTilesetFourTerrainValues;
-
-ret_close:
-	FileClose(f);
 }
 
 

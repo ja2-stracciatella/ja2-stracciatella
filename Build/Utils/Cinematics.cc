@@ -126,39 +126,36 @@ static SMKFLIC* SmkOpenFlic(const char* const filename)
 		return NULL;
 	}
 
-	sf->hFileHandle = FileOpen(filename, FILE_ACCESS_READ);
-	if (!sf->hFileHandle)
+	AutoSGPFile file(FileOpen(filename, FILE_ACCESS_READ));
+	if (!file)
 	{
 		FastDebugMsg("SMK ERROR: Can't open the SMK file");
 		return NULL;
 	}
 
-	FILE* const f = GetRealFileHandleFromFileManFileHandle(sf->hFileHandle);
+	FILE* const f = GetRealFileHandleFromFileManFileHandle(file);
 
 	// Allocate a Smacker buffer for video decompression
 	sf->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
 	if (sf->SmackBuffer == NULL)
 	{
 		FastDebugMsg("SMK ERROR: Can't allocate a Smacker decompression buffer");
-		goto fail_close;
+		return NULL;
 	}
 
 	sf->SmackHandle = SmackOpen((char*)f, SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA);
 	if (!sf->SmackHandle)
 	{
 		FastDebugMsg("SMK ERROR: Smacker won't open the SMK file");
-		goto fail_close;
+		return NULL;
 	}
 
 	// Make sure we have a video surface
 	SmkSetupVideo();
 
-	sf->uiFlags |= SMK_FLIC_OPEN;
+	sf->hFileHandle  = file.Release();
+	sf->uiFlags     |= SMK_FLIC_OPEN;
 	return sf;
-
-fail_close:
-	FileClose(sf->hFileHandle);
-	return NULL;
 }
 
 

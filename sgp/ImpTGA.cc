@@ -16,19 +16,18 @@ static BOOLEAN ReadRLERGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8
 
 BOOLEAN LoadTGAFileToImage( HIMAGE hImage, UINT16 fContents )
 {
-	HWFILE	hFile;
 	UINT8		uiImgID, uiColMap, uiType;
-	BOOLEAN fReturnVal = FALSE;
 
 	Assert( hImage != NULL );
 
-	hFile = FileOpen(hImage->ImageFile, FILE_ACCESS_READ);
+	AutoSGPFile hFile(FileOpen(hImage->ImageFile, FILE_ACCESS_READ));
 	CHECKF( hFile );
 
-	if (!FileRead(hFile, &uiImgID,  sizeof(UINT8))) goto end;
-	if (!FileRead(hFile, &uiColMap, sizeof(UINT8))) goto end;
-	if (!FileRead(hFile, &uiType,   sizeof(UINT8))) goto end;
+	if (!FileRead(hFile, &uiImgID,  sizeof(UINT8))) return FALSE;
+	if (!FileRead(hFile, &uiColMap, sizeof(UINT8))) return FALSE;
+	if (!FileRead(hFile, &uiType,   sizeof(UINT8))) return FALSE;
 
+	BOOLEAN fReturnVal = FALSE;
 	switch( uiType )
 	{
 	case 1:
@@ -47,10 +46,6 @@ BOOLEAN LoadTGAFileToImage( HIMAGE hImage, UINT16 fContents )
 		break;
 	}
 
-  // Set remaining values
-
-end:
-	FileClose( hFile );
 	return( fReturnVal );
 }
 

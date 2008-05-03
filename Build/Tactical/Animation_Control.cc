@@ -2412,13 +2412,10 @@ void	InitAnimationSurfacesPerBodytype( )
 
 BOOLEAN LoadAnimationStateInstructions( )
 {
-	HWFILE hFile = FileOpen(ANIMFILENAME, FILE_ACCESS_READ);
+	AutoSGPFile hFile(FileOpen(ANIMFILENAME, FILE_ACCESS_READ));
 	if (!hFile) return FALSE;
 
-	BOOLEAN Ret = FileRead(hFile, gusAnimInst, sizeof(gusAnimInst));
-
-	FileClose(hFile);
-	return Ret;
+	return FileRead(hFile, gusAnimInst, sizeof(gusAnimInst));
 }
 
 BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState )

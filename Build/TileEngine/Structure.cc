@@ -275,41 +275,34 @@ CASSERT(sizeof(STRUCTURE_FILE_HEADER) == 16)
 
 static BOOLEAN LoadStructureData(const char* szFileName, STRUCTURE_FILE_REF* pFileRef, UINT32* puiStructureDataSize)
 { // Loads a structure file's data as a honking chunk o' memory
-	HWFILE										hInput;
 	STRUCTURE_FILE_HEADER			Header;
 	UINT32										uiDataSize;
 	BOOLEAN										fOk;
 
 	CHECKF( szFileName );
 	CHECKF( pFileRef );
-	hInput = FileOpen(szFileName, FILE_ACCESS_READ);
-	if (hInput == 0)
-	{
-		return( FALSE );
-	}
+	AutoSGPFile hInput(FileOpen(szFileName, FILE_ACCESS_READ));
+	if (!hInput) return FALSE;
+
 	fOk = FileRead(hInput, &Header, sizeof(STRUCTURE_FILE_HEADER));
 	if (!fOk || strncmp(Header.szId, STRUCTURE_FILE_ID, STRUCTURE_FILE_ID_LEN) != 0 || Header.usNumberOfStructures == 0)
 	{
-		FileClose( hInput );
-		return( FALSE );
+		return FALSE;
 	}
 	pFileRef->usNumberOfStructures = Header.usNumberOfStructures;
 	if (Header.fFlags & STRUCTURE_FILE_CONTAINS_AUXIMAGEDATA)
 	{
 		uiDataSize = sizeof( AuxObjectData ) * Header.usNumberOfImages;
 		pFileRef->pAuxData = MALLOCN(AuxObjectData, Header.usNumberOfImages);
-		if (pFileRef->pAuxData == NULL)
-		{
-			FileClose( hInput );
-			return( FALSE );
-		}
+		if (pFileRef->pAuxData == NULL) return FALSE;
+
 		fOk = FileRead(hInput, pFileRef->pAuxData, uiDataSize);
 		if (!fOk)
 		{
 			MemFree( pFileRef->pAuxData );
-			FileClose( hInput );
-			return( FALSE );
+			return FALSE;
 		}
+
 		if (Header.usNumberOfImageTileLocsStored > 0)
 		{
 			uiDataSize = sizeof( RelTileLoc ) * Header.usNumberOfImageTileLocsStored;
@@ -317,15 +310,14 @@ static BOOLEAN LoadStructureData(const char* szFileName, STRUCTURE_FILE_REF* pFi
 			if (pFileRef->pTileLocData == NULL)
 			{
 				MemFree( pFileRef->pAuxData );
-				FileClose( hInput );
-				return( FALSE );
+				return FALSE;
 			}
+
 			fOk = FileRead(hInput, pFileRef->pTileLocData, uiDataSize);
 			if (!fOk)
 			{
 				MemFree( pFileRef->pAuxData );
-				FileClose( hInput );
-				return( FALSE );
+				return FALSE;
 			}
 		}
 	}
@@ -338,7 +330,6 @@ static BOOLEAN LoadStructureData(const char* szFileName, STRUCTURE_FILE_REF* pFi
 		pFileRef->pubStructureData = MALLOCN(UINT8, uiDataSize);
 		if (pFileRef->pubStructureData == NULL)
 		{
-			FileClose( hInput );
 			if (pFileRef->pAuxData != NULL)
 			{
 				MemFree( pFileRef->pAuxData );
@@ -347,8 +338,9 @@ static BOOLEAN LoadStructureData(const char* szFileName, STRUCTURE_FILE_REF* pFi
 					MemFree( pFileRef->pTileLocData );
 				}
 			}
-			return( FALSE );
+			return FALSE;
 		}
+
 		fOk = FileRead(hInput, pFileRef->pubStructureData, uiDataSize);
 		if (!fOk)
 		{
@@ -361,13 +353,12 @@ static BOOLEAN LoadStructureData(const char* szFileName, STRUCTURE_FILE_REF* pFi
 					MemFree( pFileRef->pTileLocData );
 				}
 			}
-			FileClose( hInput );
-			return( FALSE );
+			return FALSE;
 		}
+
 		*puiStructureDataSize = uiDataSize;
 	}
-	FileClose( hInput );
-	return( TRUE );
+	return TRUE;
 }
 
 

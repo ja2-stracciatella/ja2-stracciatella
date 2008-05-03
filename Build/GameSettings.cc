@@ -39,14 +39,14 @@ static void InitGameSettings(void);
 
 void LoadGameSettings(void)
 {
-	const HWFILE f = FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_READ);
-	if (f)
 	{
+		AutoSGPFile f(FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_READ));
+		if (!f) goto fail;
+
 		GAME_SETTINGS* const g = &gGameSettings;
-		if (FileGetSize(f) != sizeof(*g))                              goto fail_close;
-		if (!FileRead(f, g, sizeof(*g)))                               goto fail_close;
-		if (g->uiSettingsVersionNumber < GAME_SETTING_CURRENT_VERSION) goto fail_close;
-		FileClose(f);
+		if (FileGetSize(f) != sizeof(*g))                              goto fail;
+		if (!FileRead(f, g, sizeof(*g)))                               goto fail;
+		if (g->uiSettingsVersionNumber < GAME_SETTING_CURRENT_VERSION) goto fail;
 
 		// Do checking to make sure the settings are valid
 		if (g->bLastSavedGameSlot < 0 || NUM_SAVE_GAMES <= g->bLastSavedGameSlot) g->bLastSavedGameSlot = -1;
@@ -77,17 +77,16 @@ void LoadGameSettings(void)
 			gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen = 0xffff;
 		}
 		return;
-
-fail_close:
-		FileClose(f);
 	}
+
+fail:
 	InitGameSettings();
 }
 
 
 void SaveGameSettings(void)
 {
-	const HWFILE f = FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
+	AutoSGPFile f(FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 	if (!f) return;
 
 	// Record the current settings into the game settins structure
@@ -100,7 +99,6 @@ void SaveGameSettings(void)
 
 	// Write the game settings to disk
 	FileWrite(f, g, sizeof(*g));
-	FileClose(f);
 }
 
 

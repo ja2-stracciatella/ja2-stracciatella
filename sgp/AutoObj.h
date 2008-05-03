@@ -8,9 +8,11 @@ namespace SGP
 		public:
 			typedef AutoObj<T, dealloc> Type;
 
-			AutoObj(T* const p = 0) : p_(p) {}
+			explicit AutoObj(T* const p = 0) : p_(p) {}
 
 			~AutoObj() { if (p_) dealloc(p_); }
+
+			void Deallocate() { *this = 0; }
 
 			T* Release()
 			{

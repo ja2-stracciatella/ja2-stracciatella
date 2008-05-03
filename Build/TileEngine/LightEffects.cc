@@ -225,39 +225,20 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		return( TRUE );
 	}
 
-	const HWFILE hFile = FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS);
-	if( hFile == 0 )
-	{
-		//Error opening map modification file
-		return( FALSE );
-	}
-
+	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	if (!hFile) return FALSE;
 
 	//Save the Number of Light Effects
-	if (!FileWrite(hFile, &uiNumLightEffects, sizeof(UINT32)))
-	{
-		//Close the file
-		FileClose( hFile );
-
-		return( FALSE );
-	}
+	if (!FileWrite(hFile, &uiNumLightEffects, sizeof(UINT32))) return FALSE;
 
 	//loop through and save the number of Light effects
 	CFOR_ALL_LIGHTEFFECTS(l)
 	{
-		if (!InjectLightEffectIntoFile(hFile, l))
-		{
-			FileClose(hFile);
-			return FALSE;
-		}
+		if (!InjectLightEffectIntoFile(hFile, l)) return FALSE;
 	}
 
-	//Close the file
-	FileClose( hFile );
-
 	SetSectorFlag( sMapX, sMapY, bMapZ, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS );
-
-	return( TRUE );
+	return TRUE;
 }
 
 
@@ -265,38 +246,23 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
 	UINT32	uiCnt=0;
-	HWFILE	hFile;
 	CHAR8		zMapName[ 128 ];
 
 	GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
-	//Open the file for reading, Create it if it doesnt exist
-	hFile = FileOpen(zMapName, FILE_ACCESS_READ);
-	if( hFile == 0 )
-	{
-		//Error opening file
-		return( FALSE );
-	}
+	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
+	if (!hFile) return FALSE;
 
 	//Clear out the old list
 	ResetLightEffects();
 
-
 	//Load the Number of Light Effects
-	if (!FileRead(hFile, &guiNumLightEffects, sizeof(UINT32)))
-	{
-		FileClose( hFile );
-		return( FALSE );
-	}
+	if (!FileRead(hFile, &guiNumLightEffects, sizeof(UINT32))) return FALSE;
 
 	//loop through and load the list
 	for( uiCnt=0; uiCnt<guiNumLightEffects;uiCnt++)
 	{
-		if (!ExtractLightEffectFromFile(hFile, &gLightEffectData[uiCnt]))
-		{
-			FileClose( hFile );
-			return( FALSE );
-		}
+		if (!ExtractLightEffectFromFile(hFile, &gLightEffectData[uiCnt])) return FALSE;
 	}
 
 	//loop through and apply the light effects to the map
@@ -305,9 +271,7 @@ BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		UpdateLightingSprite(l);
 	}
 
-	FileClose( hFile );
-
-	return( TRUE );
+	return TRUE;
 }
 
 
