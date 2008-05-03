@@ -1887,61 +1887,22 @@ BOOLEAN JA2EncryptedFileRead(const HWFILE f, void* const pDest, const UINT32 uiB
 }
 
 
-BOOLEAN JA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
+BOOLEAN JA2EncryptedFileWrite(const HWFILE hFile, const void* const data, const UINT32 uiBytesToWrite)
 {
-	UINT32	uiLoop;
-	UINT8		ubArrayIndex = 0;
-	//UINT8		ubLastNonBlank = 0;
-	UINT8		ubLastByte = 0;//, ubTemp;
-	BOOLEAN	fRet;
+	SGP::Buffer<UINT8> buf(uiBytesToWrite);
+	if (!buf) return FALSE;
 
-	UINT8* const pMemBlock = MALLOCNZ(UINT8, uiBytesToWrite);
-	if ( !pMemBlock )
+	const UINT8* src          = static_cast<const UINT8*>(data);
+	UINT8        ubArrayIndex = 0;
+	UINT8        last_byte    = 0;
+	for (UINT32 i = 0; i < uiBytesToWrite; ++i)
 	{
-		return( FALSE );
+		buf[i] += src[i] + last_byte + ubRotationArray[ubArrayIndex];
+		last_byte = buf[i];
+		if (++ubArrayIndex >= ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
 	}
 
-	memcpy( pMemBlock, pDest, uiBytesToWrite );
-	for ( uiLoop = 0; uiLoop < uiBytesToWrite; uiLoop++ )
-	{
-		//ubTemp = pMemBlock[ uiLoop ];
-		pMemBlock[ uiLoop ] += ubLastByte + ubRotationArray[ ubArrayIndex ];
-		ubArrayIndex++;
-		if ( ubArrayIndex >= ROTATION_ARRAY_SIZE )
-		{
-			ubArrayIndex = 0;
-		}
-		ubLastByte = pMemBlock[ uiLoop ];
-		/*
-		if ( pMemBlock[ uiLoop ] )
-		{
-			// store last non blank
-			ubLastNonBlank = pMemBlock[ uiLoop ];
-
-			pMemBlock[ uiLoop ] += ubRotationArray[ ubArrayIndex ];
-			ubArrayIndex++;
-			if ( ubArrayIndex >= ROTATION_ARRAY_SIZE )
-			{
-				ubArrayIndex = 0;
-			}
-		}
-		else // zero byte
-		{
-			pMemBlock[ uiLoop ] = ubLastNonBlank + ubRotationArray[ ubArrayIndex ];
-			ubArrayIndex++;
-			if ( ubArrayIndex >= ROTATION_ARRAY_SIZE )
-			{
-				ubArrayIndex = 0;
-			}
-		}
-		*/
-	}
-
-	fRet = FileWrite(hFile, pMemBlock, uiBytesToWrite);
-
-	MemFree( pMemBlock );
-
-	return( fRet );
+	return FileWrite(hFile, buf, uiBytesToWrite);
 }
 
 
