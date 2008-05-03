@@ -1,4 +1,5 @@
 #include "Auto_Resolve.h"
+#include "Buffer.h"
 #include "Font.h"
 #include "HImage.h"
 #include "Handle_Items.h"
@@ -391,11 +392,11 @@ static void SaveSeenAndUnseenItems(void)
 	const INT32 iTotalNumberItems = GetTotalNumberOfItems();
 
 	// if there are seen items, build a temp world items list of them and save them
-	INT32      iItemCount = 0;
-	WORLDITEM* pSeenItemsList;
+	INT32                  iItemCount = 0;
+	SGP::Buffer<WORLDITEM> pSeenItemsList;
 	if (iTotalNumberItems > 0)
 	{
-		pSeenItemsList = MALLOCN(WORLDITEM, iTotalNumberItems);
+		pSeenItemsList.Allocate(iTotalNumberItems);
 
 		// copy
 		for (INT32 iCounter = 0; iCounter < iTotalNumberOfSlots; ++iCounter)
@@ -424,10 +425,6 @@ static void SaveSeenAndUnseenItems(void)
 			si->bVisible = TRUE;
 		}
 	}
-	else
-	{
-		pSeenItemsList = NULL;
-	}
 
 	// if this is the loaded sector handle here
 	if (gWorldSectorX  == sSelMapX &&
@@ -442,8 +439,6 @@ static void SaveSeenAndUnseenItems(void)
 		SaveWorldItemsToTempItemFile( sSelMapX, sSelMapY, iCurrentMapSectorZ, uiNumberOfUnSeenItems, pUnSeenItems);
 		AddWorldItemsToUnLoadedSector(sSelMapX, sSelMapY, iCurrentMapSectorZ, iItemCount,            pSeenItemsList);
 	}
-
-	if (pSeenItemsList != NULL) MemFree(pSeenItemsList);
 }
 
 
