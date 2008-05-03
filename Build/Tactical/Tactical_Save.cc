@@ -1,3 +1,4 @@
+#include "Buffer.h"
 #include "Font_Control.h"
 #include "LoadSaveRottingCorpse.h"
 #include "Soldier_Init_List.h"
@@ -1844,39 +1845,23 @@ BOOLEAN NewJA2EncryptedFileRead(const HWFILE f, void* const pDest, const UINT32 
 }
 
 
-BOOLEAN NewJA2EncryptedFileWrite(HWFILE hFile, PTR pDest, UINT32 uiBytesToWrite)
+BOOLEAN NewJA2EncryptedFileWrite(const HWFILE hFile, const void* const data, const UINT32 uiBytesToWrite)
 {
-	UINT32	uiLoop;
-	UINT8		ubArrayIndex = 0;
-	UINT8		ubLastByte = 0;//, ubTemp;
-	BOOLEAN	fRet;
+	SGP::Buffer<UINT8> buf(uiBytesToWrite);
+	if (!buf) return FALSE;
 
-	UINT8* const pMemBlock = MALLOCNZ(UINT8, uiBytesToWrite);
-	if ( !pMemBlock )
+	const UINT8* const src              = static_cast<const UINT8*>(data);
+	const UINT8* const pubRotationArray = GetRotationArray();
+	UINT8              ubArrayIndex     = 0;
+	UINT8              last_byte        = 0;
+	for (UINT32 i = 0; i < uiBytesToWrite; ++i)
 	{
-		return( FALSE );
+		buf[i] = src[i] + last_byte + pubRotationArray[ubArrayIndex];
+		last_byte = buf[i];
+		if (++ubArrayIndex >= NEW_ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
 	}
 
-	const UINT8* pubRotationArray = GetRotationArray();
-
-	memcpy( pMemBlock, pDest, uiBytesToWrite );
-	for ( uiLoop = 0; uiLoop < uiBytesToWrite; uiLoop++ )
-	{
-		pMemBlock[ uiLoop ] += ubLastByte + pubRotationArray[ ubArrayIndex ];
-		ubArrayIndex++;
-		if ( ubArrayIndex >= NEW_ROTATION_ARRAY_SIZE )
-		{
-			ubArrayIndex = 0;
-		}
-		ubLastByte = pMemBlock[ uiLoop ];
-	}
-
-	fRet = FileWrite(hFile, pMemBlock, uiBytesToWrite);
-
-	MemFree( pMemBlock );
-
-	return( fRet );
-
+	return FileWrite(hFile, buf, uiBytesToWrite);
 }
 
 
