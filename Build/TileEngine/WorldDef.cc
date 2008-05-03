@@ -1929,411 +1929,388 @@ void InitLoadedWorld(void)
 	SetBlueFlagFlags();
 }
 
+
 #ifdef JA2EDITOR
-//This is a specialty function that is very similar to LoadWorld, except that it
-//doesn't actually load the world, it instead evaluates the map and generates summary
-//information for use within the summary editor.  The header is defined in Summary Info.h,
-//not worlddef.h -- though it's not likely this is going to be used anywhere where it would
-//matter.
+
 extern double MasterStart, MasterEnd;
 extern BOOLEAN gfUpdatingNow;
 
-BOOLEAN EvaluateWorld(const char* pSector, UINT8 ubLevel)
+/* This is a specialty function that is very similar to LoadWorld, except that
+ * it doesn't actually load the world, it instead evaluates the map and
+ * generates summary information for use within the summary editor.  The header
+ * is defined in Summary Info.h, not worlddef.h -- though it's not likely this
+ * is going to be used anywhere where it would matter. */
+BOOLEAN EvaluateWorld(const char* const pSector, const UINT8 ubLevel)
 {
-	FLOAT	dMajorMapVersion;
-	MAPCREATE_STRUCT mapInfo;
-	UINT32					uiFileSize;
-	UINT32 uiFlags;
-	INT32 cnt;
-	INT32 i;
-	INT32 iTilesetID;
-	wchar_t str[40];
-	UINT8	bCounts[ WORLD_MAX ][8];
-	UINT8 ubCombine;
-	UINT8 ubMinorMapVersion;
+	// Make sure the file exists... if not, then return false
+	char filename[40];
+	snprintf(filename, lengthof(filename), "%s%s%.0d%s.dat",
+		pSector,
+		ubLevel % 4 != 0 ? "_b" : "",
+		ubLevel % 4,
+		ubLevel     >= 4 ? "_a" : ""
+	);
 
-
-	//Make sure the file exists... if not, then return false
-	char szFilename[40];
-	strlcpy(szFilename, pSector, lengthof(szFilename));
-	if( ubLevel % 4  )
-	{
-		char str[4];
-		sprintf( str, "_b%d", ubLevel % 4 );
-		strcat( szFilename, str );
-	}
-	if( ubLevel >= 4 )
-	{
-		strcat( szFilename, "_a" );
-	}
-	strcat( szFilename, ".dat" );
 	char szDirFilename[50];
-	sprintf( szDirFilename, "MAPS/%s", szFilename );
+	sprintf(szDirFilename, "MAPS/%s", filename);
 
-	if( gfMajorUpdate )
+	if (gfMajorUpdate)
 	{
-		if( !LoadWorld( szFilename ) ) //error
-			return FALSE;
-		FileClearAttributes( szDirFilename );
-		SaveWorld( szFilename );
+		if (!LoadWorld(filename)) return FALSE; // error
+		FileClearAttributes(szDirFilename);
+		SaveWorld(filename);
 	}
 
-	INT8* pBuffer;
+	SGP::Buffer<INT8> pBufferHead;
 	{
-		AutoSGPFile hfile(FileOpen(szDirFilename, FILE_ACCESS_READ));
-		if (!hfile) return FALSE;
+		AutoSGPFile f(FileOpen(szDirFilename, FILE_ACCESS_READ));
+		if (!f) return FALSE;
 
-		uiFileSize = FileGetSize( hfile );
-		pBuffer    = MALLOCN(INT8, uiFileSize);
-		FileRead(hfile, pBuffer, uiFileSize);
+		const UINT32 uiFileSize = FileGetSize(f);
+		pBufferHead.Allocate(uiFileSize);
+		FileRead(f, pBufferHead, uiFileSize);
 	}
 
-	INT8* const pBufferHead = pBuffer;
+	INT8* pBuffer = pBufferHead;
 
-	swprintf(str, lengthof(str), L"Analyzing map %hs", szFilename);
-	if( !gfUpdatingNow )
-		SetRelativeStartAndEndPercentage( 0, 0, 100, str );
+	wchar_t str[40];
+	swprintf(str, lengthof(str), L"Analyzing map %hs", filename);
+	if (!gfUpdatingNow)
+	{
+		SetRelativeStartAndEndPercentage(0, 0, 100, str);
+	}
 	else
-		SetRelativeStartAndEndPercentage( 0, (UINT16)MasterStart, (UINT16)MasterEnd, str );
+	{
+		SetRelativeStartAndEndPercentage(0, (UINT16)MasterStart, (UINT16)MasterEnd, str);
+	}
 
-	RenderProgressBar( 0, 0 );
-	//RenderProgressBar( 1, 0 );
+	RenderProgressBar(0, 0);
 
 	//clear the summary file info
 	SUMMARYFILE* const pSummary = MALLOCZ(SUMMARYFILE);
-	Assert( pSummary );
+	Assert(pSummary);
 	pSummary->ubSummaryVersion = GLOBAL_SUMMARY_VERSION;
 	pSummary->dMajorMapVersion = gdMajorMapVersion;
 
 	//skip JA2 Version ID
-	LOADDATA( &dMajorMapVersion, pBuffer, sizeof( FLOAT ) );
-	if( dMajorMapVersion >= 4.00 )
+	FLOAT	dMajorMapVersion;
+	LOADDATA(&dMajorMapVersion, pBuffer, sizeof(FLOAT));
+	if (dMajorMapVersion >= 4.00)
 	{
-		LOADDATA( &ubMinorMapVersion, pBuffer, sizeof( UINT8 ) );
+		UINT8 ubMinorMapVersion;
+		LOADDATA(&ubMinorMapVersion, pBuffer, sizeof(UINT8));
 	}
 
 	//Read FLAGS FOR WORLD
-	LOADDATA( &uiFlags, pBuffer, sizeof( INT32 ) );
+	UINT32 uiFlags;
+	LOADDATA(&uiFlags, pBuffer, sizeof(INT32));
 
 	//Read tilesetID
-	LOADDATA( &iTilesetID, pBuffer, sizeof( INT32 ) );
+	INT32 iTilesetID;
+	LOADDATA(&iTilesetID, pBuffer, sizeof(INT32));
 	pSummary->ubTilesetID = (UINT8)iTilesetID;
 
 	//skip soldier size
-	pBuffer += sizeof( INT32 );
+	pBuffer += sizeof(INT32);
 
 	//skip height values
-	pBuffer += sizeof( INT16 ) * WORLD_MAX;
+	pBuffer += sizeof(INT16) * WORLD_MAX;
 
 	//read layer counts
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	UINT8	bCounts[WORLD_MAX][8];
+	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
   {
-		if( !( cnt % 2560 ) )
-		{
-			RenderProgressBar( 0, (cnt / 2560)+1 ); //1 - 10
-			//RenderProgressBar( 1, (cnt / 2560)+1 ); //1 - 10
-		}
+		if (cnt % 2560 == 0) RenderProgressBar(0, cnt / 2560 + 1); //1 - 10
+		UINT8 ubCombine;
+
 		// Read combination of land/world flags
-		LOADDATA( &ubCombine, pBuffer, sizeof( UINT8 ) );
+		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
 		// split
-		bCounts[ cnt ][0] = (UINT8)(ubCombine&0xf);
-		gpWorldLevelData[ cnt ].uiFlags |= (UINT8)((ubCombine&0xf0)>>4);
+		bCounts[cnt][0]                = (ubCombine & 0x0F);
+		gpWorldLevelData[cnt].uiFlags |= (ubCombine & 0xF0) >> 4;
 		// Read #objects, structs
-		LOADDATA( &ubCombine, pBuffer, sizeof( UINT8 ) );
+		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
 		// split
-		bCounts[ cnt ][1] = (UINT8)(ubCombine&0xf);
-		bCounts[ cnt ][2] = (UINT8)((ubCombine&0xf0)>>4);
+		bCounts[cnt][1] = (ubCombine & 0x0F);
+		bCounts[cnt][2] = (ubCombine & 0xF0) >> 4;
 		// Read shadows, roof
-		LOADDATA( &ubCombine, pBuffer, sizeof( UINT8 ) );
+		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
 		// split
-		bCounts[ cnt ][3] = (UINT8)(ubCombine&0xf);
-		bCounts[ cnt ][4] = (UINT8)((ubCombine&0xf0)>>4);
+		bCounts[cnt][3] = (ubCombine & 0x0F);
+		bCounts[cnt][4] = (ubCombine & 0xF0) >> 4;
   	// Read OnRoof, nothing
-		LOADDATA( &ubCombine, pBuffer, sizeof( UINT8 ) );
+		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
 		// split
-		bCounts[ cnt ][5] = (UINT8)(ubCombine&0xf);
-		//bCounts[ cnt ][4] = (UINT8)((ubCombine&0xf0)>>4);
-		bCounts[ cnt ][6] = bCounts[cnt][0] + bCounts[cnt][1] +
-												bCounts[cnt][2] + bCounts[cnt][3] +
-												bCounts[cnt][4] + bCounts[cnt][5];
+		bCounts[cnt][5] = (ubCombine & 0x0F);
+
+		bCounts[cnt][6] =
+			bCounts[cnt][0] + bCounts[cnt][1] +
+			bCounts[cnt][2] + bCounts[cnt][3] +
+			bCounts[cnt][4] + bCounts[cnt][5];
 	}
+
 	//skip all layers
-	for( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
 	{
-		if( !( cnt % 320 ) )
-		{
-			RenderProgressBar( 0, (cnt / 320)+11 ); //11 - 90
-			//RenderProgressBar( 1, (cnt / 320)+11 ); //11 - 90
-		}
-		pBuffer += sizeof( UINT16 ) * bCounts[cnt][6];
+		if (cnt % 320 == 0) RenderProgressBar(0, cnt / 320 + 11); //11 - 90
+
+		pBuffer += sizeof(UINT16) * bCounts[cnt][6];
 		pBuffer += bCounts[cnt][1];
 	}
 
 	//extract highest room number
+	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
 	{
 		UINT8 ubRoomNum;
-		for( cnt = 0; cnt < WORLD_MAX; cnt++ )
+		LOADDATA(&ubRoomNum, pBuffer, 1);
+		if (ubRoomNum > pSummary->ubNumRooms)
 		{
-			LOADDATA( &ubRoomNum, pBuffer, 1 );
-			if( ubRoomNum > pSummary->ubNumRooms )
-			{
-				pSummary->ubNumRooms = ubRoomNum;
-			}
+			pSummary->ubNumRooms = ubRoomNum;
 		}
 	}
 
-	if( uiFlags & MAP_WORLDITEMS_SAVED )
+	if (uiFlags & MAP_WORLDITEMS_SAVED)
 	{
-		UINT32 temp;
-		RenderProgressBar( 0, 91 );
-		//RenderProgressBar( 1, 91 );
+		RenderProgressBar(0, 91);
 		//get number of items (for now)
-		LOADDATA( &temp, pBuffer, 4 );
+		UINT32 temp;
+		LOADDATA(&temp, pBuffer, 4);
 		pSummary->usNumItems = (UINT16)temp;
 		//Important:  Saves the file position (byte offset) of the position where the numitems
 		//            resides.  Checking this value and comparing to usNumItems will ensure validity.
-		if( pSummary->usNumItems )
+		if (pSummary->usNumItems)
 		{
 			pSummary->uiNumItemsPosition = pBuffer - pBufferHead - 4;
 		}
 		//Skip the contents of the world items.
-		pBuffer += sizeof( WORLDITEM ) * pSummary->usNumItems;
+		pBuffer += sizeof(WORLDITEM) * pSummary->usNumItems;
 	}
 
-	if( uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED )
-	{
-		pBuffer += 3;
-	}
+	if (uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED) pBuffer += 3;
 
-	if( uiFlags & MAP_WORLDLIGHTS_SAVED )
+	if (uiFlags & MAP_WORLDLIGHTS_SAVED)
 	{
-		UINT8 ubTemp;
-		RenderProgressBar( 0, 92 );
-		//RenderProgressBar( 1, 92 );
+		RenderProgressBar(0, 92);
 		//skip number of light palette entries
-		LOADDATA( &ubTemp, pBuffer, 1 );
-		pBuffer += sizeof( SGPPaletteEntry ) * ubTemp;
+		UINT8 ubTemp;
+		LOADDATA(&ubTemp, pBuffer, 1);
+		pBuffer += sizeof(SGPPaletteEntry) * ubTemp;
 		//get number of lights
-		LOADDATA( &pSummary->usNumLights, pBuffer, 2 );
+		LOADDATA(&pSummary->usNumLights, pBuffer, 2);
 		//skip the light loading
-		for( cnt = 0; cnt < pSummary->usNumLights; cnt++ )
+		for (INT32 cnt = 0; cnt < pSummary->usNumLights; ++cnt)
 		{
-			UINT8 ubStrLen;
 			pBuffer += 24; // size of a LIGHT_SPRITE on disk
-			LOADDATA( &ubStrLen, pBuffer, 1 );
-			if( ubStrLen )
-			{
-				pBuffer += ubStrLen;
-			}
+			UINT8 ubStrLen;
+			LOADDATA(&ubStrLen, pBuffer, 1);
+			pBuffer += ubStrLen;
 		}
 	}
 
 	//read the mapinformation
-	LOADDATA( &mapInfo, pBuffer, sizeof( MAPCREATE_STRUCT ) );
+	MAPCREATE_STRUCT mapInfo;
+	LOADDATA(&mapInfo, pBuffer, sizeof(MAPCREATE_STRUCT));
 
 	pSummary->MapInfo = mapInfo;
 
-	if( uiFlags & MAP_FULLSOLDIER_SAVED )
+	if (uiFlags & MAP_FULLSOLDIER_SAVED)
 	{
-		TEAMSUMMARY *pTeam=NULL;
-		BASIC_SOLDIERCREATE_STRUCT basic;
-		SOLDIERCREATE_STRUCT priority;
-		RenderProgressBar( 0, 94 );
-		//RenderProgressBar( 1, 94 );
+		RenderProgressBar(0, 94);
 
 		pSummary->uiEnemyPlacementPosition = pBuffer - pBufferHead;
 
-		for( i=0; i < pSummary->MapInfo.ubNumIndividuals ; i++ )
+		for (INT32 i = 0; i < pSummary->MapInfo.ubNumIndividuals; ++i)
 		{
-			LOADDATA( &basic, pBuffer, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
+			BASIC_SOLDIERCREATE_STRUCT basic;
+			LOADDATA(&basic, pBuffer, sizeof(BASIC_SOLDIERCREATE_STRUCT));
 
-			switch( basic.bTeam )
+			TEAMSUMMARY* pTeam = NULL;
+			switch (basic.bTeam)
 			{
-				case ENEMY_TEAM:		pTeam = &pSummary->EnemyTeam;			break;
-				case CREATURE_TEAM:	pTeam = &pSummary->CreatureTeam;	break;
-				case MILITIA_TEAM:	pTeam = &pSummary->RebelTeam;			break;
-				case CIV_TEAM:			pTeam = &pSummary->CivTeam;				break;
+				case ENEMY_TEAM:    pTeam = &pSummary->EnemyTeam;    break;
+				case CREATURE_TEAM: pTeam = &pSummary->CreatureTeam; break;
+				case MILITIA_TEAM:  pTeam = &pSummary->RebelTeam;    break;
+				case CIV_TEAM:      pTeam = &pSummary->CivTeam;      break;
 			}
-			if( basic.bOrders == RNDPTPATROL || basic.bOrders == POINTPATROL )
+
+			if (basic.bOrders == RNDPTPATROL || basic.bOrders == POINTPATROL)
 			{ //make sure the placement has at least one waypoint.
-				if( !basic.bPatrolCnt )
+				if (!basic.bPatrolCnt)
 				{
-					pSummary->ubEnemiesReqWaypoints++;
+					++pSummary->ubEnemiesReqWaypoints;
 				}
 			}
-			else if( basic.bPatrolCnt )
+			else if (basic.bPatrolCnt)
 			{
-				pSummary->ubEnemiesHaveWaypoints++;
+				++pSummary->ubEnemiesHaveWaypoints;
 			}
-			if( basic.fPriorityExistance )
-				pTeam->ubExistance++;
-			switch( basic.bRelativeAttributeLevel )
+
+			if (basic.fPriorityExistance) ++pTeam->ubExistance;
+
+			switch (basic.bRelativeAttributeLevel)
 			{
-				case 0:	pTeam->ubBadA++;		break;
-				case 1:	pTeam->ubPoorA++;		break;
-				case 2:	pTeam->ubAvgA++;		break;
-				case 3:	pTeam->ubGoodA++;		break;
-				case 4:	pTeam->ubGreatA++;	break;
+				case 0:	++pTeam->ubBadA;   break;
+				case 1:	++pTeam->ubPoorA;  break;
+				case 2:	++pTeam->ubAvgA;   break;
+				case 3:	++pTeam->ubGoodA;  break;
+				case 4:	++pTeam->ubGreatA; break;
 			}
-			switch( basic.bRelativeEquipmentLevel )
+
+			switch (basic.bRelativeEquipmentLevel)
 			{
-				case 0:	pTeam->ubBadE++;		break;
-				case 1:	pTeam->ubPoorE++;		break;
-				case 2:	pTeam->ubAvgE++;		break;
-				case 3:	pTeam->ubGoodE++;		break;
-				case 4:	pTeam->ubGreatE++;	break;
+				case 0:	++pTeam->ubBadE;   break;
+				case 1:	++pTeam->ubPoorE;  break;
+				case 2:	++pTeam->ubAvgE;   break;
+				case 3:	++pTeam->ubGoodE;  break;
+				case 4:	++pTeam->ubGreatE; break;
 			}
-			if( basic.fDetailedPlacement )
+
+			SOLDIERCREATE_STRUCT priority;
+			if (basic.fDetailedPlacement)
 			{ //skip static priority placement
 				BYTE Data[1040];
 				LOADDATA(Data, pBuffer, sizeof(Data));
 				ExtractSoldierCreateUTF16(Data, &priority);
-				if( priority.ubProfile != NO_PROFILE )
-					pTeam->ubProfile++;
+
+				if (priority.ubProfile != NO_PROFILE)
+					++pTeam->ubProfile;
 				else
-					pTeam->ubDetailed++;
-				if( basic.bTeam == CIV_TEAM )
-				{
-					if( priority.ubScheduleID )
-						pSummary->ubCivSchedules++;
-					if( priority.bBodyType == COW )
-						pSummary->ubCivCows++;
-					else if( priority.bBodyType == BLOODCAT )
-						pSummary->ubCivBloodcats++;
-				}
-			}
-			if( basic.bTeam == ENEMY_TEAM )
-			{
-				switch( basic.ubSoldierClass )
-				{
-					case SOLDIER_CLASS_ADMINISTRATOR:
-						pSummary->ubNumAdmins++;
-						if( basic.fPriorityExistance )
-							pSummary->ubAdminExistance++;
-						if( basic.fDetailedPlacement )
-						{
-							if( priority.ubProfile != NO_PROFILE )
-								pSummary->ubAdminProfile++;
-							else
-								pSummary->ubAdminDetailed++;
-						}
-						break;
-					case SOLDIER_CLASS_ELITE:
-						pSummary->ubNumElites++;
-						if( basic.fPriorityExistance )
-							pSummary->ubEliteExistance++;
-						if( basic.fDetailedPlacement )
-						{
-							if( priority.ubProfile != NO_PROFILE )
-								pSummary->ubEliteProfile++;
-							else
-								pSummary->ubEliteDetailed++;
-						}
-						break;
-					case SOLDIER_CLASS_ARMY:
-						pSummary->ubNumTroops++;
-						if( basic.fPriorityExistance )
-							pSummary->ubTroopExistance++;
-						if( basic.fDetailedPlacement )
-						{
-							if( priority.ubProfile != NO_PROFILE )
-								pSummary->ubTroopProfile++;
-							else
-								pSummary->ubTroopDetailed++;
-						}
-						break;
-				}
-			}
-			else if( basic.bTeam == CREATURE_TEAM )
-			{
-				if( basic.bBodyType == BLOODCAT )
-					pTeam->ubNumAnimals++;
-			}
-			pTeam->ubTotal++;
-		}
-		RenderProgressBar( 0, 96 );
-		//RenderProgressBar( 1, 96 );
-	}
+					++pTeam->ubDetailed;
 
-	if( uiFlags & MAP_EXITGRIDS_SAVED )
-	{
-		EXITGRID exitGrid;
-		INT32 loop;
-		UINT16 usMapIndex;
-		BOOLEAN fExitGridFound;
-		RenderProgressBar( 0, 98 );
-		//RenderProgressBar( 1, 98 );
-
-		LOADDATA( &cnt, pBuffer, 2 );
-
-		for( i = 0; i < cnt; i++ )
-		{
-			LOADDATA( &usMapIndex, pBuffer, 2 );
-			LOADDATA( &exitGrid, pBuffer, 5 );
-			fExitGridFound = FALSE;
-			for( loop = 0; loop < pSummary->ubNumExitGridDests; loop++ )
-			{
-				if( pSummary->ExitGrid[ loop ].usGridNo == exitGrid.usGridNo &&
-						pSummary->ExitGrid[ loop ].ubGotoSectorX == exitGrid.ubGotoSectorX &&
-						pSummary->ExitGrid[ loop ].ubGotoSectorY == exitGrid.ubGotoSectorY &&
-						pSummary->ExitGrid[ loop ].ubGotoSectorZ == exitGrid.ubGotoSectorZ )
-				{ //same destination.
-					pSummary->usExitGridSize[ loop ]++;
-					fExitGridFound = TRUE;
-					break;
-				}
-			}
-			if( !fExitGridFound )
-			{
-				if( loop >= 4 )
+				if (basic.bTeam == CIV_TEAM)
 				{
-					pSummary->fTooManyExitGridDests = TRUE;
-				}
-				else
-				{
-					pSummary->ubNumExitGridDests++;
-					pSummary->usExitGridSize[ loop ]++;
-					pSummary->ExitGrid[ loop ].usGridNo = exitGrid.usGridNo;
-					pSummary->ExitGrid[ loop ].ubGotoSectorX = exitGrid.ubGotoSectorX;
-					pSummary->ExitGrid[ loop ].ubGotoSectorY = exitGrid.ubGotoSectorY;
-					pSummary->ExitGrid[ loop ].ubGotoSectorZ = exitGrid.ubGotoSectorZ;
-					if( pSummary->ExitGrid[ loop ].ubGotoSectorX != exitGrid.ubGotoSectorX ||
-							pSummary->ExitGrid[ loop ].ubGotoSectorY != exitGrid.ubGotoSectorY )
+					if (priority.ubScheduleID) ++pSummary->ubCivSchedules;
+					switch (priority.bBodyType)
 					{
-						pSummary->fInvalidDest[ loop ] = TRUE;
+						case COW:      ++pSummary->ubCivCows;
+						case BLOODCAT: ++pSummary->ubCivBloodcats;
 					}
 				}
 			}
+
+			if (basic.bTeam == ENEMY_TEAM)
+			{
+				switch (basic.ubSoldierClass)
+				{
+					case SOLDIER_CLASS_ADMINISTRATOR:
+						++pSummary->ubNumAdmins;
+						if (basic.fPriorityExistance) ++pSummary->ubAdminExistance;
+						if (basic.fDetailedPlacement)
+						{
+							if (priority.ubProfile != NO_PROFILE)
+								++pSummary->ubAdminProfile;
+							else
+								++pSummary->ubAdminDetailed;
+						}
+						break;
+
+					case SOLDIER_CLASS_ELITE:
+						++pSummary->ubNumElites;
+						if (basic.fPriorityExistance) ++pSummary->ubEliteExistance;
+						if (basic.fDetailedPlacement)
+						{
+							if (priority.ubProfile != NO_PROFILE)
+								++pSummary->ubEliteProfile;
+							else
+								++pSummary->ubEliteDetailed;
+						}
+						break;
+
+					case SOLDIER_CLASS_ARMY:
+						++pSummary->ubNumTroops;
+						if (basic.fPriorityExistance) ++pSummary->ubTroopExistance;
+						if (basic.fDetailedPlacement)
+						{
+							if (priority.ubProfile != NO_PROFILE)
+								++pSummary->ubTroopProfile;
+							else
+								++pSummary->ubTroopDetailed;
+						}
+						break;
+				}
+			}
+			else if (basic.bTeam == CREATURE_TEAM)
+			{
+				if (basic.bBodyType == BLOODCAT) ++pTeam->ubNumAnimals;
+			}
+			++pTeam->ubTotal;
 		}
+		RenderProgressBar(0, 96);
 	}
 
-	if( uiFlags & MAP_DOORTABLE_SAVED )
+	if (uiFlags & MAP_EXITGRIDS_SAVED)
 	{
-		DOOR Door;
+		RenderProgressBar(0, 98);
 
-		LOADDATA( &pSummary->ubNumDoors, pBuffer, 1 );
+		UINT16 cnt;
+		LOADDATA(&cnt, pBuffer, 2);
 
-		for( cnt = 0; cnt < pSummary->ubNumDoors; cnt++ )
+		for (INT32 i = 0; i < cnt; i++)
 		{
-			LOADDATA( &Door, pBuffer, sizeof( DOOR ) );
+			UINT16 usMapIndex;
+			LOADDATA(&usMapIndex, pBuffer, 2);
+			EXITGRID exitGrid;
+			LOADDATA(&exitGrid, pBuffer, 5);
+			for (INT32 loop = 0;; ++loop)
+			{
+				if (loop >= pSummary->ubNumExitGridDests)
+				{
+					if (loop >= 4)
+					{
+						pSummary->fTooManyExitGridDests = TRUE;
+					}
+					else
+					{
+						++pSummary->ubNumExitGridDests;
+						++pSummary->usExitGridSize[loop];
+						EXITGRID* const eg = &pSummary->ExitGrid[loop];
+						eg->usGridNo      = exitGrid.usGridNo;
+						eg->ubGotoSectorX = exitGrid.ubGotoSectorX;
+						eg->ubGotoSectorY = exitGrid.ubGotoSectorY;
+						eg->ubGotoSectorZ = exitGrid.ubGotoSectorZ;
+						if (eg->ubGotoSectorX != exitGrid.ubGotoSectorX ||
+								eg->ubGotoSectorY != exitGrid.ubGotoSectorY)
+						{
+							pSummary->fInvalidDest[loop] = TRUE;
+						}
+					}
+					break;
+				}
 
-			if( Door.ubTrapID && Door.ubLockID )
-				pSummary->ubNumDoorsLockedAndTrapped++;
-			else if( Door.ubLockID )
-				pSummary->ubNumDoorsLocked++;
-			else if( Door.ubTrapID )
-				pSummary->ubNumDoorsTrapped++;
+				const EXITGRID* const eg = &pSummary->ExitGrid[loop];
+				if (eg->usGridNo      == exitGrid.usGridNo      &&
+						eg->ubGotoSectorX == exitGrid.ubGotoSectorX &&
+						eg->ubGotoSectorY == exitGrid.ubGotoSectorY &&
+						eg->ubGotoSectorZ == exitGrid.ubGotoSectorZ)
+				{ //same destination.
+					++pSummary->usExitGridSize[loop];
+					break;
+				}
+			}
 		}
 	}
 
-	RenderProgressBar( 0, 100 );
-	//RenderProgressBar( 1, 100 );
+	if (uiFlags & MAP_DOORTABLE_SAVED)
+	{
+		LOADDATA(&pSummary->ubNumDoors, pBuffer, 1);
 
-	MemFree( pBufferHead );
+		for (INT32 cnt = 0; cnt < pSummary->ubNumDoors; ++cnt)
+		{
+			DOOR Door;
+			LOADDATA(&Door, pBuffer, sizeof(DOOR));
 
-	WriteSectorSummaryUpdate( szFilename, ubLevel, pSummary );
+			if      (Door.ubLockID && Door.ubTrapID) ++pSummary->ubNumDoorsLockedAndTrapped;
+			else if (Door.ubLockID)                  ++pSummary->ubNumDoorsLocked;
+			else if (Door.ubTrapID)                  ++pSummary->ubNumDoorsTrapped;
+		}
+	}
+
+	RenderProgressBar(0, 100);
+
+	WriteSectorSummaryUpdate(filename, ubLevel, pSummary);
 	return TRUE;
 }
+
 #endif
 
 
