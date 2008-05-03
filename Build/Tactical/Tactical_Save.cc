@@ -465,8 +465,8 @@ BOOLEAN LoadWorldItemsFromTempItemFile(const INT16 x, const INT16 y, const INT8 
 	char filename[128];
 	GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, x, y, z);
 
-	UINT32     l_item_count;
-	WORLDITEM* l_items;
+	UINT32                 l_item_count;
+	SGP::Buffer<WORLDITEM> l_items;
 	// If the file doesn't exists, it's no problem
 	if (FileExists(filename))
 	{
@@ -476,27 +476,18 @@ BOOLEAN LoadWorldItemsFromTempItemFile(const INT16 x, const INT16 y, const INT8 
 		if (!FileRead(f, &l_item_count, sizeof(l_item_count))) return FALSE;
 		if (l_item_count != 0)
 		{
-			l_items = MALLOCN(WORLDITEM, l_item_count);
+			l_items.Allocate(l_item_count);
 			if (l_items == NULL) return FALSE;
 
-			if (!FileRead(f, l_items, l_item_count * sizeof(*l_items)))
-			{
-				MemFree(l_items);
-				return FALSE;
-			}
-		}
-		else
-		{
-			l_items = NULL;
+			if (!FileRead(f, l_items, l_item_count * sizeof(*l_items))) return FALSE;
 		}
 	}
 	else
 	{
 		l_item_count = 0;
-		l_items      = NULL;
 	}
 	*item_count = l_item_count;
-	*items      = l_items;
+	*items      = l_items.Release();
 	return TRUE;
 }
 
