@@ -418,7 +418,7 @@ void SetIntroType( INT8 bIntroType )
 
 static void DisplaySirtechSplashScreen(void)
 {
-	FillSurface(FRAME_BUFFER, 0);
+	FRAME_BUFFER->Fill(0);
 	if (!BltVideoObjectOnce(FRAME_BUFFER, "INTERFACE/SirtechSplash.sti", 0, 0, 0)) return;
 	InvalidateScreen();
 	RefreshScreen();

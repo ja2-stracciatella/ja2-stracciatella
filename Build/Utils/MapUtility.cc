@@ -71,7 +71,7 @@ UINT32	MapUtilScreenHandle( )
 	sDest16BPPColor = -1;
 	bAvR = bAvG = bAvB = 0;
 
-	FillSurface(FRAME_BUFFER, Get16BPPColor(FROMRGB(0, 0, 0)));
+	FRAME_BUFFER->Fill(Get16BPPColor(FROMRGB(0, 0, 0)));
 
 	if ( fNewMap )
 	{

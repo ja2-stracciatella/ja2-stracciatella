@@ -59,6 +59,12 @@ void SGPVSurface::SetTransparency(const COLORVAL colour)
 }
 
 
+void SGPVSurface::Fill(const UINT16 colour)
+{
+	SDL_FillRect(surface, NULL, colour);
+}
+
+
 static void DeletePrimaryVideoSurfaces(void);
 
 
@@ -258,12 +264,6 @@ void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, const I
 	}
 	UnLockVideoSurface(dst);
 	UnLockVideoSurface(src);
-}
-
-
-void FillSurface(SGPVSurface* const vs, const UINT16 Colour)
-{
-	SDL_FillRect(vs->surface, NULL, Colour);
 }
 
 

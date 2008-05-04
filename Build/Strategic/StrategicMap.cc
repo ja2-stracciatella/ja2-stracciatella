@@ -404,7 +404,7 @@ void BeginLoadScreen( )
 			RefreshScreen();
 		}
 	}
-	FillSurface(FRAME_BUFFER, Get16BPPColor(FROMRGB(0, 0, 0)));
+	FRAME_BUFFER->Fill(Get16BPPColor(FROMRGB(0, 0, 0)));
 	InvalidateScreen( );
 	RefreshScreen();
 

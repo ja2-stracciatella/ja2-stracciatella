@@ -2015,8 +2015,8 @@ UINT32 MapScreenHandle(void)
 		// create merc remove box
 		CreateMercRemoveAssignBox( );
 
-		FillSurface(guiSAVEBUFFER, Get16BPPColor(RGB_NEAR_BLACK));
-		FillSurface(FRAME_BUFFER,  Get16BPPColor(RGB_NEAR_BLACK));
+		guiSAVEBUFFER->Fill(Get16BPPColor(RGB_NEAR_BLACK));
+		FRAME_BUFFER->Fill( Get16BPPColor(RGB_NEAR_BLACK));
 
 		if( gpCurrentTalkingFace != NULL )
 		{

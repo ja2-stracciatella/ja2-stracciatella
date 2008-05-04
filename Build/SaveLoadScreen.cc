@@ -593,7 +593,7 @@ Removed so that the user can click on it and get displayed a message that the qu
 		ButtonList[ guiSlgCancelBtn ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
 		ButtonList[ guiSlgSaveLoadBtn ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
 
-		FillSurface(FRAME_BUFFER, 0);
+		FRAME_BUFFER->Fill(0);
 	}
 
 	gfGettingNameFromSaveLoadScreen = FALSE;

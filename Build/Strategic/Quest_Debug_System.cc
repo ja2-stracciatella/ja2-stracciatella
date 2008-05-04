@@ -1000,7 +1000,7 @@ static void DisplaySectionLine(void);
 
 static void RenderQuestDebugSystem(void)
 {
-	FillSurface(ButtonDestBuffer, gusQuestDebugBlue);
+	ButtonDestBuffer->Fill(gusQuestDebugBlue);
 
 	//display the title
 	DisplayWrappedString(0, 5, SCREEN_WIDTH, 2, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_TITLE, QuestDebugText[QUEST_DBS_TITLE], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);

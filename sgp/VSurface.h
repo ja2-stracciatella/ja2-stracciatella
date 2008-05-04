@@ -40,6 +40,9 @@ class SGPVSurface
 
 		void SetTransparency(COLORVAL);
 
+		/* Fill an entire surface with a colour */
+		void Fill(UINT16 colour);
+
 	public:
 		SDL_Surface* surface;
 	private:
@@ -84,9 +87,6 @@ BOOLEAN BltVideoSurface(SGPVSurface* dst, SGPVSurface* src, INT32 iDestX, INT32 
  * If SrcRect is NULL the entire source surface is blitted.
  * Only blitting from 8bbp surfaces to 16bpp surfaces is supported. */
 void BltVideoSurfaceHalf(SGPVSurface* dst, SGPVSurface* src, INT32 DestX, INT32 DestY, const SGPRect* SrcRect);
-
-/* Fill an entire surface with a colour */
-void FillSurface(SGPVSurface*, UINT16 Colour);
 
 /* Fills an rectangular area with a specified color value. */
 BOOLEAN ColorFillVideoSurfaceArea(SGPVSurface*, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP);

@@ -31,7 +31,7 @@ static MOUSEBLT_HOOK gMouseBltOverride = NULL;
 
 static void EraseMouseCursor(void)
 {
-	FillSurface(MOUSE_BUFFER, 0);
+	MOUSE_BUFFER->Fill(0);
 }
 
 

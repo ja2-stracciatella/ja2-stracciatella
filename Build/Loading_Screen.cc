@@ -272,7 +272,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 		SetFont( FONT10ARIAL );
 		SetFontForeground( FONT_YELLOW );
 		SetFontShadow( FONT_NEARBLACK );
-		FillSurface(FRAME_BUFFER, 0);
+		FRAME_BUFFER->Fill(0);
 		mprintf(5, 5, L"Error loading save, attempting to patch save to version 1.02...");
 	}
 	else
@@ -283,7 +283,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 			SetFont( FONT10ARIAL );
 			SetFontForeground( FONT_YELLOW );
 			SetFontShadow( FONT_NEARBLACK );
-			FillSurface(FRAME_BUFFER, 0);
+			FRAME_BUFFER->Fill(0);
 			mprintf(5, 5, L"%hs loadscreen data file not found...", ImageFile);
 		}
 	}

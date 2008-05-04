@@ -369,7 +369,7 @@ static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	pNodeToAdd->uiVideoSurfaceImage = vs;
 
 	vs->SetTransparency(0);
-	FillSurface(vs, 0);
+	vs->Fill(0);
 
 	//write the string onto the surface
 	SetFontDestBuffer(vs, 0, 0, CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString);

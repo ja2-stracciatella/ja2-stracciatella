@@ -1943,7 +1943,7 @@ static void ChangeHelpScreenSubPage(void)
 
 static void ClearHelpScreenTextBuffer(void)
 {
-	FillSurface(guiHelpScreenTextBufferSurface, 0);
+	guiHelpScreenTextBufferSurface->Fill(0);
 	InvalidateScreen();
 }
 

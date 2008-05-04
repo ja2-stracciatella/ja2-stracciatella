@@ -96,7 +96,7 @@ UINT32 MainMenuScreenHandle(void)
 		}
 		else if (guiSplashFrameFade > 1)
 		{
-			FillSurface(FRAME_BUFFER, 0);
+			FRAME_BUFFER->Fill(0);
 		}
 		else
 		{
@@ -318,7 +318,7 @@ static void HandleMainMenuInput(void)
 
 void ClearMainMenu(void)
 {
-	FillSurface(FRAME_BUFFER, 0);
+	FRAME_BUFFER->Fill(0);
 	InvalidateScreen();
 }
 

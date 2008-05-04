@@ -364,7 +364,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 		// Zero with yellow,
 		// Set source transparcenty
 		pPopUpTextBox->uiSourceBufferIndex->SetTransparency(FROMRGB(255, 255, 0));
-		FillSurface(pPopUpTextBox->uiSourceBufferIndex, Get16BPPColor(FROMRGB(255, 255, 0)));
+		pPopUpTextBox->uiSourceBufferIndex->Fill(Get16BPPColor(FROMRGB(255, 255, 0)));
 	}
 	else
 	{
