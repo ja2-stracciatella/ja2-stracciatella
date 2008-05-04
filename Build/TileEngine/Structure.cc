@@ -218,31 +218,17 @@ void FreeAllStructureFiles( void )
 }
 
 
-void FreeStructureFile(STRUCTURE_FILE_REF* const pStructureFile)
+void FreeStructureFile(STRUCTURE_FILE_REF* const sfr)
 {
-	CHECKV( pStructureFile );
+	CHECKV(sfr);
 
-	// unlink the file ref
-	if (pStructureFile->pPrev != NULL)
-	{
-		pStructureFile->pPrev->pNext = pStructureFile->pNext;
-	}
-	else
-	{
-		// freeing the head of the list!
-		gpStructureFileRefs = pStructureFile->pNext;
-	}
-	if (pStructureFile->pNext != NULL)
-	{
-		pStructureFile->pNext->pPrev = pStructureFile->pPrev;
-	}
-	if (pStructureFile->pPrev == NULL && pStructureFile->pNext == NULL)
-	{
-		// toasting the list!
-		gpStructureFileRefs = NULL;
-	}
-	// and free all the structures used!
-	FreeStructureFileRef( pStructureFile );
+	STRUCTURE_FILE_REF* const next = sfr->pNext;
+	STRUCTURE_FILE_REF* const prev = sfr->pPrev;
+	Assert((prev == NULL) == (gpStructureFileRefs == sfr));
+	(prev != NULL ? prev->pNext : gpStructureFileRefs) = next;
+	if (next) next->pPrev = prev;
+
+	FreeStructureFileRef(sfr);
 }
 
 
