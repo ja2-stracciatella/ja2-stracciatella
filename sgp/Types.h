@@ -127,8 +127,9 @@ typedef SGPImage*          HIMAGE;
 typedef struct SGPVObject  SGPVObject;
 typedef SGPVObject*        HVOBJECT;
 
-typedef struct SGPVSurface SGPVSurface;
-typedef SGPVSurface*       HVSURFACE;
+#ifdef __cplusplus
+class SGPVSurface;
+#endif
 
 typedef struct BUTTON_PICS BUTTON_PICS;
 

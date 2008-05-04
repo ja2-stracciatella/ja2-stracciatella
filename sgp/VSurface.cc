@@ -68,8 +68,8 @@ static void DeletePrimaryVideoSurfaces(void);
 
 typedef struct VSURFACE_NODE
 {
-	HVSURFACE hVSurface;
-  struct VSURFACE_NODE* next;
+	SGPVSurface*   hVSurface;
+	VSURFACE_NODE* next;
 
 #ifdef SGP_VIDEO_DEBUGGING
 	char* pName;
@@ -135,7 +135,7 @@ BOOLEAN ShutdownVideoSurfaceManager(void)
 }
 
 
-static void AddStandardVideoSurface(HVSURFACE hVSurface)
+static void AddStandardVideoSurface(SGPVSurface* const hVSurface)
 {
 	if (hVSurface == NULL) return;
 
@@ -163,7 +163,7 @@ static void AddStandardVideoSurface(HVSURFACE hVSurface)
 }
 
 
-static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBitDepth);
+static SGPVSurface* CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBitDepth);
 
 
 #undef AddVideoSurface
@@ -178,7 +178,7 @@ SGPVSurface* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth)
 }
 
 
-static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage, UINT16 usX, UINT16 usY, const SGPRect* pSrcRect);
+static BOOLEAN SetVideoSurfaceDataFromHImage(SGPVSurface* hVSurface, HIMAGE hImage, UINT16 usX, UINT16 usY, const SGPRect* pSrcRect);
 
 
 SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
@@ -295,7 +295,7 @@ BOOLEAN ColorFillVideoSurfaceArea(SGPVSurface* const dst, INT32 iDestX1, INT32 i
 }
 
 
-static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBitDepth)
+static SGPVSurface* CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBitDepth)
 {
 	Assert(usHeight > 0);
 	Assert(usWidth  > 0);
@@ -341,7 +341,7 @@ static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBit
 
 
 // Given an HIMAGE object, blit imagery into existing Video Surface. Can be from 8->16 BPP
-static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage, UINT16 usX, UINT16 usY, const SGPRect* pSrcRect)
+static BOOLEAN SetVideoSurfaceDataFromHImage(SGPVSurface* const hVSurface, const HIMAGE hImage, const UINT16 usX, const UINT16 usY, const SGPRect* const pSrcRect)
 {
 	Assert(hVSurface != NULL);
 	Assert(hImage != NULL);
@@ -391,7 +391,7 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 	BOOLEAN Ret = CopyImageToBuffer(hImage, buffer_bpp, pDest, usEffectiveWidth, hVSurface->Height(), usX, usY, &box);
 	if (!Ret)
 	{
-		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Error Occured Copying HIMAGE to HVSURFACE");
+		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Error Occured Copying HIMAGE to video surface");
 	}
 	return Ret;
 }

@@ -5188,7 +5188,7 @@ BlitDone:
 	Blits a subrect from a flat 8 bit surface to a 16-bit buffer.
 
 **********************************************************************************************/
-BOOLEAN Blt8BPPDataSubTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVSURFACE hSrcVSurface, UINT8 *pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY, SGPRect *pRect)
+BOOLEAN Blt8BPPDataSubTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPVSurface* hSrcVSurface, UINT8 *pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY, SGPRect *pRect)
 {
 	UINT16 *p16BPPPalette;
 	UINT8	 *SrcPtr, *DestPtr;
@@ -5287,7 +5287,7 @@ BlitLoop:
 	Blits from a flat surface to a 16-bit buffer.
 
 **********************************************************************************************/
-BOOLEAN Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVSURFACE hSrcVSurface, UINT8 *pSrcBuffer, INT32 iX, INT32 iY)
+BOOLEAN Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPVSurface* hSrcVSurface, UINT8 *pSrcBuffer, INT32 iX, INT32 iY)
 {
 	UINT16 *p16BPPPalette;
 //	UINT32 uiOffset;
@@ -5430,7 +5430,7 @@ DoneBlit:											// finished blit
 exactly half the size.
 
 **********************************************************************************************/
-BOOLEAN Blt8BPPDataTo16BPPBufferHalf(UINT16* pBuffer, UINT32 uiDestPitchBYTES, HVSURFACE hSrcVSurface, const UINT8* pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY)
+BOOLEAN Blt8BPPDataTo16BPPBufferHalf(UINT16* pBuffer, UINT32 uiDestPitchBYTES, SGPVSurface* hSrcVSurface, const UINT8* pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY)
 {
 	UINT16 *p16BPPPalette;
 	UINT8	 *SrcPtr, *DestPtr;
@@ -5537,7 +5537,7 @@ exactly half the size, from a sub-region.
 		number of pixels blitted to the destination.
 
 **********************************************************************************************/
-BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect(UINT16* pBuffer, UINT32 uiDestPitchBYTES, HVSURFACE hSrcVSurface, const UINT8* pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY, const SGPRect* pRect)
+BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect(UINT16* pBuffer, UINT32 uiDestPitchBYTES, SGPVSurface* hSrcVSurface, const UINT8* pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY, const SGPRect* pRect)
 {
 	UINT16 *p16BPPPalette;
 	UINT32 usHeight, usWidth;
