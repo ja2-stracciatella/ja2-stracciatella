@@ -9,6 +9,9 @@
 #	include <locale.h>
 #endif
 
+#include <exception>
+#include <new>
+
 #include "Button_System.h"
 #include "Debug.h"
 #include "FileMan.h"
@@ -232,43 +235,14 @@ static void ShutdownStandardGamingPlatform(void)
 }
 
 
-static BOOLEAN ParseParameters(char* const argv[]);
-
-
-int main(int argc, char* argv[])
+static void MainLoop()
 {
-#if defined BROKEN_SWPRINTF
-	if (setlocale(LC_CTYPE, "UTF-8") == NULL)
-	{
-		fprintf(stderr, "WARNING: Failed to set LC_CTYPE to UTF-8. Some strings might get garbled.\n");
-	}
-#endif
+	gfApplicationActive = TRUE;
+	gfProgramIsRunning  = TRUE;
 
-	if (!ParseParameters(argv)) return EXIT_FAILURE;
-	if (argc > 1 && argv[1] != NULL) strlcpy(gzCommandLine, argv[1], lengthof(gzCommandLine));
-
-  if (!InitializeStandardGamingPlatform())
-  {
-    return 0;
-  }
-
-#ifdef JA2
-	#ifdef ENGLISH
-		SetIntroType( INTRO_SPLASH );
-	#endif
-#endif
-
-  gfApplicationActive = TRUE;
-  gfProgramIsRunning = TRUE;
-
-  FastDebugMsg("Running Game");
-
-  // At this point the SGP is set up, which means all I/O, Memory, tools, etc... are available. All we need to do is
-  // attend to the gaming mechanics themselves
   while (gfProgramIsRunning)
   {
 		SDL_Event event;
-
 		if (SDL_PollEvent(&event))
 		{
 			switch (event.type)
@@ -310,15 +284,58 @@ int main(int argc, char* argv[])
 			}
 		}
   }
+}
 
-  // This is the normal exit point
-  FastDebugMsg("Exiting Game");
 
-	// SGPExit() will be called next through the atexit() mechanism...  This way we correctly process both normal exits and
-	// emergency aborts (such as those caused by a failed assertion).
+static BOOLEAN ParseParameters(char* const argv[]);
 
-	// return wParam of the last message received
-	return 0;
+
+int main(int argc, char* argv[])
+{
+	try
+	{
+#if defined BROKEN_SWPRINTF
+		if (setlocale(LC_CTYPE, "UTF-8") == NULL)
+		{
+			fprintf(stderr, "WARNING: Failed to set LC_CTYPE to UTF-8. Some strings might get garbled.\n");
+		}
+#endif
+
+		if (!ParseParameters(argv)) return EXIT_FAILURE;
+		if (argc > 1 && argv[1] != NULL) strlcpy(gzCommandLine, argv[1], lengthof(gzCommandLine));
+
+		if (!InitializeStandardGamingPlatform()) return EXIT_FAILURE;
+
+#if defined JA2 && defined ENGLISH
+		SetIntroType(INTRO_SPLASH);
+#endif
+
+		FastDebugMsg("Running Game");
+
+		/* At this point the SGP is set up, which means all I/O, Memory, tools, etc.
+		 * are available. All we need to do is attend to the gaming mechanics
+		 * themselves */
+		MainLoop();
+
+		FastDebugMsg("Exiting Game");
+
+		// SGPExit() will be called next through the atexit() mechanism
+		return EXIT_SUCCESS;
+	}
+	catch (const std::bad_alloc&)
+	{
+		fprintf(stderr, "ERROR: out of memory\n");
+	}
+	catch (const std::exception& e)
+	{
+		fprintf(stderr, "ERROR: caught unhandled exception \"%s\"", e.what());
+	}
+	catch (...)
+	{
+		fprintf(stderr, "ERROR: caught unhandled unknown exception\n");
+	}
+
+	return EXIT_FAILURE;
 }
 
 
