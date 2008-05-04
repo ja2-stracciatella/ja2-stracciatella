@@ -21,16 +21,16 @@ class SGPVSurface
 {
 	public:
 		SGPVSurface(SDL_Surface* s) :
-			surface(s),
+			surface_(s),
 			palette_(0),
 			p16BPPPalette(0)
 		{}
 
 		~SGPVSurface();
 
-		UINT16 Width()  const { return surface->w; }
-		UINT16 Height() const { return surface->h; }
-		UINT8  BPP()    const { return surface->format->BitsPerPixel; }
+		UINT16 Width()  const { return surface_->w; }
+		UINT16 Height() const { return surface_->h; }
+		UINT8  BPP()    const { return surface_->format->BitsPerPixel; }
 
 		// Set palette, also sets 16BPP palette
 		void SetPalette(const SGPPaletteEntry* src_pal);
@@ -43,12 +43,21 @@ class SGPVSurface
 		/* Fill an entire surface with a colour */
 		void Fill(UINT16 colour);
 
-	public:
-		SDL_Surface* surface;
+		/* Fills an rectangular area with a specified color value. */
+		friend BOOLEAN ColorFillVideoSurfaceArea(SGPVSurface*, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP);
+
+		// Blits a video Surface to another video Surface
+		friend BOOLEAN BltVideoSurface(SGPVSurface* dst, SGPVSurface* src, INT32 iDestX, INT32 iDestY, const SGPRect* SrcRect);
+
+		/* This function will stretch the source image to the size of the dest rect.
+		 * If the 2 images are not 16 Bpp, it returns false. */
+		friend BOOLEAN BltStretchVideoSurface(SGPVSurface* dst, const SGPVSurface* src, SGPRect* SrcRect, SGPRect* DestRect);
+
 	private:
-		SDL_Color*   palette_;
+		SGP::AutoObj<SDL_Surface, SDL_FreeSurface> surface_;
+		SDL_Color*                                 palette_;
 	public:
-		UINT16*      p16BPPPalette; // A 16BPP palette used for 8->16 blits
+		UINT16*                                    p16BPPPalette; // A 16BPP palette used for 8->16 blits
 
 
 	private:
@@ -76,7 +85,7 @@ class SGPVSurface
 		{
 			public:
 				explicit Lock(SGPVSurface* const vs) :
-					LockBase(vs->surface)
+					LockBase(vs->surface_)
 				{
 					SDL_LockSurface(surface_);
 				}
@@ -100,7 +109,7 @@ class SGPVSurface
 				void Lock(SGPVSurface* const vs)
 				{
 					if (surface_) SDL_UnlockSurface(surface_);
-					surface_ = vs->surface;
+					surface_ = vs->surface_;
 					if (surface_) SDL_LockSurface(surface_);
 				}
 		};
@@ -129,16 +138,10 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* Filename);
 	#define AddVideoSurfaceFromFile(a) AddAndRecordVSurfaceFromFile(a, __LINE__, __FILE__)
 #endif
 
-// Blits a video Surface to another video Surface
-BOOLEAN BltVideoSurface(SGPVSurface* dst, SGPVSurface* src, INT32 iDestX, INT32 iDestY, const SGPRect* SrcRect);
-
 /* Blits a video surface in half size to another video surface.
  * If SrcRect is NULL the entire source surface is blitted.
  * Only blitting from 8bbp surfaces to 16bpp surfaces is supported. */
 void BltVideoSurfaceHalf(SGPVSurface* dst, SGPVSurface* src, INT32 DestX, INT32 DestY, const SGPRect* SrcRect);
-
-/* Fills an rectangular area with a specified color value. */
-BOOLEAN ColorFillVideoSurfaceArea(SGPVSurface*, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP);
 
 // Deletes all data, including palettes
 void DeleteVideoSurface(SGPVSurface*);
@@ -146,10 +149,6 @@ void DeleteVideoSurface(SGPVSurface*);
 
 BOOLEAN ShadowVideoSurfaceRect(SGPVSurface*, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
 BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(SGPVSurface*, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
-
-/* This function will stretch the source image to the size of the dest rect.
- * If the 2 images are not 16 Bpp, it returns false. */
-BOOLEAN BltStretchVideoSurface(SGPVSurface* dst, const SGPVSurface* src, SGPRect* SrcRect, SGPRect* DestRect);
 
 BOOLEAN BltVideoSurfaceOnce(SGPVSurface* dst, const char* filename, INT32 x, INT32 y);
 

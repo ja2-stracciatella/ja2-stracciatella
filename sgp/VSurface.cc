@@ -10,7 +10,6 @@
 
 SGPVSurface::~SGPVSurface()
 {
-	SDL_FreeSurface(surface);
 	if (palette_)      MemFree(palette_);
 	if (p16BPPPalette) MemFree(p16BPPPalette);
 }
@@ -55,13 +54,13 @@ void SGPVSurface::SetTransparency(const COLORVAL colour)
 
 		default: abort(); // HACK000E
 	}
-	SDL_SetColorKey(surface, SDL_SRCCOLORKEY, colour_key);
+	SDL_SetColorKey(surface_, SDL_SRCCOLORKEY, colour_key);
 }
 
 
 void SGPVSurface::Fill(const UINT16 colour)
 {
-	SDL_FillRect(surface, NULL, colour);
+	SDL_FillRect(surface_, NULL, colour);
 }
 
 
@@ -291,7 +290,7 @@ BOOLEAN ColorFillVideoSurfaceArea(SGPVSurface* const dst, INT32 iDestX1, INT32 i
 	Rect.y = iDestY1;
 	Rect.w = iDestX2 - iDestX1;
 	Rect.h = iDestY2 - iDestY1;
-	SDL_FillRect(dst->surface, &Rect, Color16BPP);
+	SDL_FillRect(dst->surface_, &Rect, Color16BPP);
 
 	return TRUE;
 }
@@ -471,7 +470,7 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 		SDL_Rect dstrect;
 		dstrect.x = iDestX;
 		dstrect.y = iDestY;
-		SDL_BlitSurface(src->surface, &src_rect, dst->surface, &dstrect);
+		SDL_BlitSurface(src->surface_, &src_rect, dst->surface_, &dstrect);
 #if defined __GNUC__ && defined i386
 		__asm__ __volatile__("cld"); // XXX HACK000D
 #endif
@@ -543,19 +542,22 @@ BOOLEAN BltStretchVideoSurface(SGPVSurface* const dst, const SGPVSurface* const 
 {
 	if (dst->BPP() != 16 || src->BPP() != 16) return FALSE;
 
-	const UINT32  s_pitch = src->surface->pitch >> 1;
-	const UINT32  d_pitch = dst->surface->pitch >> 1;
-	const UINT16* os      = (const UINT16*)src->surface->pixels + s_pitch * SrcRect->iTop  + SrcRect->iLeft;
-	UINT16*       d       =       (UINT16*)dst->surface->pixels + d_pitch * DestRect->iTop + DestRect->iLeft;
+	SDL_Surface const* const ssurface = src->surface_;
+	SDL_Surface*       const dsurface = dst->surface_;
+
+	const UINT32  s_pitch = ssurface->pitch >> 1;
+	const UINT32  d_pitch = dsurface->pitch >> 1;
+	const UINT16* os      = (const UINT16*)ssurface->pixels + s_pitch * SrcRect->iTop  + SrcRect->iLeft;
+	UINT16*       d       =       (UINT16*)dsurface->pixels + d_pitch * DestRect->iTop + DestRect->iLeft;
 
 	const UINT width  = DestRect->iRight  - DestRect->iLeft;
 	const UINT height = DestRect->iBottom - DestRect->iTop;
 	const UINT dx = SrcRect->iRight  - SrcRect->iLeft;
 	const UINT dy = SrcRect->iBottom - SrcRect->iTop;
 	UINT py = 0;
-	if (src->surface->flags & SDL_SRCCOLORKEY)
+	if (ssurface->flags & SDL_SRCCOLORKEY)
 	{
-		const UINT16 key = src->surface->format->colorkey;
+		const UINT16 key = ssurface->format->colorkey;
 		for (UINT iy = 0; iy < height; ++iy)
 		{
 			const UINT16* s = os;
