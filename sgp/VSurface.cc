@@ -8,6 +8,43 @@
 #include "WCheck.h"
 
 
+SGPVSurface::~SGPVSurface()
+{
+	SDL_FreeSurface(surface);
+	if (palette_)      MemFree(palette_);
+	if (p16BPPPalette) MemFree(p16BPPPalette);
+}
+
+
+void SGPVSurface::SetPalette(const SGPPaletteEntry* const src_pal)
+{
+	// Create palette object if not already done so
+	if (palette_ == NULL) palette_ = MALLOCN(SDL_Color, 256);
+	SDL_Color* const p = palette_;
+	for (UINT32 i = 0; i < 256; i++)
+	{
+		p[i].r = src_pal[i].peRed;
+		p[i].g = src_pal[i].peGreen;
+		p[i].b = src_pal[i].peBlue;
+	}
+
+	if (p16BPPPalette != NULL) MemFree(p16BPPPalette);
+	p16BPPPalette = Create16BPPPalette(src_pal);
+}
+
+
+void SGPVSurface::GetPalette(SGPPaletteEntry* const dst_pal)
+{
+	const SDL_Color* const p = palette_;
+	for (UINT32 i = 0; i < 256; i++)
+	{
+		dst_pal[i].peRed   = p[i].r;
+		dst_pal[i].peGreen = p[i].g;
+		dst_pal[i].peBlue  = p[i].b;
+	}
+}
+
+
 static void DeletePrimaryVideoSurfaces(void);
 
 
@@ -145,10 +182,7 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 		tempRect.iBottom = hImage->usHeight - 1;
 		SetVideoSurfaceDataFromHImage(vs, hImage, 0, 0, &tempRect);
 
-		if (hImage->ubBitDepth == 8)
-		{
-			SetVideoSurfacePalette(vs, hImage->pPalette);
-		}
+		if (hImage->ubBitDepth == 8) vs->SetPalette(hImage->pPalette);
 	}
 
 	AddStandardVideoSurface(vs);
@@ -382,31 +416,6 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 }
 
 
-// Palette setting is expensive, need to set both DDPalette and create 16BPP palette
-BOOLEAN SetVideoSurfacePalette(SGPVSurface* const hVSurface, const SGPPaletteEntry* const pSrcPalette)
-{
-	Assert(hVSurface != NULL);
-
-	// Create palette object if not already done so
-	if (hVSurface->pPalette == NULL)
-	{
-		hVSurface->pPalette = MALLOCN(SDL_Color, 256);
-	}
-	for (UINT32 i = 0; i < 256; i++)
-	{
-		hVSurface->pPalette[i].r = pSrcPalette[i].peRed;
-		hVSurface->pPalette[i].g = pSrcPalette[i].peGreen;
-		hVSurface->pPalette[i].b = pSrcPalette[i].peBlue;
-	}
-
-	if (hVSurface->p16BPPPalette != NULL) MemFree(hVSurface->p16BPPPalette);
-	hVSurface->p16BPPPalette = Create16BPPPalette(pSrcPalette);
-
-	DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_3, "Video Surface Palette change successfull");
-	return TRUE;
-}
-
-
 // Transparency needs to take RGB value and find best fit and place it into DD Surface
 // colorkey value.
 static BOOLEAN SetVideoSurfaceTransparencyColor(HVSURFACE hVSurface, COLORVAL TransColor)
@@ -427,22 +436,6 @@ static BOOLEAN SetVideoSurfaceTransparencyColor(HVSURFACE hVSurface, COLORVAL Tr
 	}
 
 	SDL_SetColorKey(Surface, SDL_SRCCOLORKEY, ColorKey);
-
-	return TRUE;
-}
-
-
-BOOLEAN GetVSurfacePaletteEntries(const SGPVSurface* const src, SGPPaletteEntry* const pPalette)
-{
-	const SDL_Color* p = src->pPalette;
-	CHECKF(p != NULL);
-
-	for (UINT32 i = 0; i < 256; i++)
-	{
-		pPalette[i].peRed   = p[i].r;
-		pPalette[i].peGreen = p[i].g;
-		pPalette[i].peBlue  = p[i].b;
-	}
 
 	return TRUE;
 }
@@ -474,14 +467,6 @@ void DeleteVideoSurface(SGPVSurface* const vs)
 		prev = curr;
 		curr = curr->next;
 	}
-}
-
-
-SGPVSurface::~SGPVSurface()
-{
-	SDL_FreeSurface(surface);
-	if (pPalette)      MemFree(pPalette);
-	if (p16BPPPalette) MemFree(p16BPPPalette);
 }
 
 

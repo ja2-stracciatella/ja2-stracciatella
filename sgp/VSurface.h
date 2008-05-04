@@ -17,23 +17,33 @@ extern SGPVSurface* g_frame_buffer;
 extern SGPVSurface* g_mouse_buffer;
 
 
-struct SGPVSurface
+class SGPVSurface
 {
-	SGPVSurface(SDL_Surface* s) :
-		surface(s),
-		pPalette(0),
-		p16BPPPalette(0)
-	{}
+	public:
+		SGPVSurface(SDL_Surface* s) :
+			surface(s),
+			palette_(0),
+			p16BPPPalette(0)
+		{}
 
-	~SGPVSurface();
+		~SGPVSurface();
 
-	UINT16 Width()  const { return surface->w; }
-	UINT16 Height() const { return surface->h; }
-	UINT8  BPP()    const { return surface->format->BitsPerPixel; }
+		UINT16 Width()  const { return surface->w; }
+		UINT16 Height() const { return surface->h; }
+		UINT8  BPP()    const { return surface->format->BitsPerPixel; }
 
-	SDL_Surface* surface;
-	SDL_Color*   pPalette;
-	UINT16*      p16BPPPalette; // A 16BPP palette used for 8->16 blits
+		// Set palette, also sets 16BPP palette
+		void SetPalette(const SGPPaletteEntry* src_pal);
+
+		// Get the RGB palette entry values
+		void GetPalette(SGPPaletteEntry* dst_pal);
+
+	public:
+		SDL_Surface* surface;
+	private:
+		SDL_Color*   palette_;
+	public:
+		UINT16*      p16BPPPalette; // A 16BPP palette used for 8->16 blits
 };
 
 
@@ -81,12 +91,6 @@ BOOLEAN ColorFillVideoSurfaceArea(SGPVSurface*, INT32 iDestX1, INT32 iDestY1, IN
 
 // Sets transparency
 BOOLEAN SetVideoSurfaceTransparency(SGPVSurface*, COLORVAL TransColor);
-
-// Gets the RGB palette entry values
-BOOLEAN GetVSurfacePaletteEntries(const SGPVSurface*, SGPPaletteEntry* pPalette);
-
-// Sets HVSurface palette, creates if nessessary. Also sets 16BPP palette
-BOOLEAN SetVideoSurfacePalette(SGPVSurface* hVSurface, const SGPPaletteEntry* pSrcPalette);
 
 // Deletes all data, including palettes
 void DeleteVideoSurface(SGPVSurface*);

@@ -238,7 +238,7 @@ UINT32	MapUtilScreenHandle( )
 	pDataPtr = (UINT8*)LockVideoSurface(gi8BitMiniMap, &uiSrcPitchBYTES);
 	pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
 	QuantizeImage(pDataPtr, p24BitValues, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, pPalette);
-	SetVideoSurfacePalette(gi8BitMiniMap, pPalette);
+	gi8BitMiniMap->SetPalette(pPalette);
 	// Blit!
 	Blt8BPPDataTo16BPPBuffer(pDestBuf, uiDestPitchBYTES, gi8BitMiniMap, pDataPtr, 300, 360);
 

@@ -1220,7 +1220,7 @@ void InitializePalettesForMap(void)
 	CHECKV(uiTempMap != NO_VSURFACE);
 
 	SGPPaletteEntry pal[256];
-	GetVSurfacePaletteEntries(uiTempMap, pal);
+	uiTempMap->GetPalette(pal);
 
 	pMapLTRedPalette   = Create16BPPPaletteShaded(pal, 400,   0, 0, TRUE);
 	pMapDKRedPalette   = Create16BPPPaletteShaded(pal, 200,   0, 0, TRUE);
