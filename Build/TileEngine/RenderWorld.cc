@@ -1570,23 +1570,16 @@ next_node:
 						{
 							// ATE: Used here in the editor to denote when an area is not in the world
 							/* Kris:  Fixed a couple things here...
-							 * First, there was a problem with the FRAME_BUFFER already being
-							 * locked which caused failures, and eventual crashes, so if it
-							 * reaches this code, the buffer needs to be unlocked first, as it
-							 * gets locked and unlocked internally within
-							 * ColorFillVideoSurfaceArea().  I'm surprised this problem didn't
-							 * surface a long time ago.  Anyway, it seems that scrolling to
-							 * the bottom right hand corner of the map, would cause the end of
-							 * the world to be drawn.  Now, this would only crash on my
-							 * computer and not Emmons, so this should work.  Also, I changed
-							 * the color from fluorescent green to black, which is easier on
-							 * the eyes, and prevent the drawing of the end of the world if it
-							 * would be drawn on the editor's taskbar. */
+							 * It seems that scrolling to the bottom right hand corner of the
+							 * map, would cause the end of the world to be drawn.  Now, this
+							 * would only crash on my computer and not Emmons, so this should
+							 * work.  Also, I changed the color from fluorescent green to
+							 * black, which is easier on the eyes, and prevent the drawing of
+							 * the end of the world if it would be drawn on the editor's
+							 * taskbar. */
 							if (iTempPosY_S < 360)
 							{
-								if (!(uiFlags & TILES_DIRTY)) UnLockVideoSurface(FRAME_BUFFER);
 								ColorFillVideoSurfaceArea(FRAME_BUFFER, iTempPosX_S, iTempPosY_S, iTempPosX_S + 40, min(iTempPosY_S + 20, 360), Get16BPPColor(FROMRGB(0, 0, 0)));
-								if (!(uiFlags & TILES_DIRTY)) pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
 							}
 						}
 					}
