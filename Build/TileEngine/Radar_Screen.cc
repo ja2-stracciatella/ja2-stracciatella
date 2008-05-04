@@ -227,8 +227,6 @@ void RenderRadarScreen( )
 
 	INT16	sXSoldScreen, sYSoldScreen, sXSoldRadar, sYSoldRadar;
 
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
 	UINT16										 usLineColor;
 	INT16											 sHeight, sWidth, sX;
 	INT32											 iCounter = 0;
@@ -311,152 +309,152 @@ void RenderRadarScreen( )
 	sRadarBRX = (INT16)( ( sBottomRightWorldX * gdScaleX ) - sRadarCX + sX + ( sWidth /2 ) );
 	sRadarBRY = (INT16)( ( sBottomRightWorldY * gdScaleY ) - sRadarCY + gsRadarY + ( sHeight /2 ) );
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+	{ SGPVSurface::Lock l(FRAME_BUFFER);
 
+		SetClippingRegionAndImageWidth(l.Pitch(), RADAR_WINDOW_X, gsRadarY, RADAR_WINDOW_X + RADAR_WINDOW_WIDTH - 1, gsRadarY + RADAR_WINDOW_HEIGHT - 1);
+		UINT8* const pDestBuf = l.Buffer<UINT8>();
 
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, RADAR_WINDOW_X, gsRadarY, ( RADAR_WINDOW_X + RADAR_WINDOW_WIDTH - 1 ), ( gsRadarY + RADAR_WINDOW_HEIGHT - 1 ) );
-
-	if( !( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-	{
-		usLineColor = Get16BPPColor(FROMRGB(0, 255, 0));
-		RectangleDraw(TRUE, sRadarTLX, sRadarTLY, sRadarBRX, sRadarBRY - 1, usLineColor, pDestBuf);
-	}
-
-	// Cycle fFlash variable
-	if ( COUNTERDONE( RADAR_MAP_BLINK ) )
-	{
-		RESETCOUNTER( RADAR_MAP_BLINK );
-
-		gfRadarCurrentGuyFlash = !gfRadarCurrentGuyFlash;
-	}
-
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN && fShowMapInventoryPool)
-	{
-		for( iCounter = 0; iCounter < MAP_INVENTORY_POOL_SLOT_COUNT; iCounter++ )
+		if( !( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 		{
+			usLineColor = Get16BPPColor(FROMRGB(0, 255, 0));
+			RectangleDraw(TRUE, sRadarTLX, sRadarTLY, sRadarBRX, sRadarBRY - 1, usLineColor, pDestBuf);
+		}
 
-			iItemNumber = iCounter + iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT;
-			// stolen item
-			if( ( pInventoryPoolList[ iItemNumber ].o.ubNumberOfObjects == 0 )||( pInventoryPoolList[ iItemNumber ].sGridNo == 0 ) )
+		// Cycle fFlash variable
+		if ( COUNTERDONE( RADAR_MAP_BLINK ) )
+		{
+			RESETCOUNTER( RADAR_MAP_BLINK );
+
+			gfRadarCurrentGuyFlash = !gfRadarCurrentGuyFlash;
+		}
+
+		if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN && fShowMapInventoryPool)
+		{
+			for( iCounter = 0; iCounter < MAP_INVENTORY_POOL_SLOT_COUNT; iCounter++ )
 			{
-				// yep, continue on
-				continue;
+
+				iItemNumber = iCounter + iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT;
+				// stolen item
+				if( ( pInventoryPoolList[ iItemNumber ].o.ubNumberOfObjects == 0 )||( pInventoryPoolList[ iItemNumber ].sGridNo == 0 ) )
+				{
+					// yep, continue on
+					continue;
+				}
+
+				GetAbsoluteScreenXYFromMapPos(pInventoryPoolList[iItemNumber].sGridNo, &sXSoldScreen, &sYSoldScreen);
+
+				// get radar x and y postion
+				sXSoldRadar = (INT16)( sXSoldScreen * gdScaleX );
+				sYSoldRadar = (INT16)( sYSoldScreen * gdScaleY );
+
+
+				// Add starting relative to interface
+				sXSoldRadar += RADAR_WINDOW_X;
+				sYSoldRadar += gsRadarY;
+
+				if (fFlashHighLightInventoryItemOnradarMap)
+				{
+					usLineColor = Get16BPPColor(FROMRGB(0, 255, 0));
+				}
+				else
+				{
+					usLineColor = Get16BPPColor(FROMRGB(255, 255, 255));
+				}
+
+				if (iCurrentlyHighLightedItem == iCounter)
+				{
+					RectangleDraw(TRUE, sXSoldRadar, sYSoldRadar, sXSoldRadar + 1, sYSoldRadar + 1, usLineColor, pDestBuf);
+				}
 			}
+		}
 
-			GetAbsoluteScreenXYFromMapPos(pInventoryPoolList[iItemNumber].sGridNo, &sXSoldScreen, &sYSoldScreen);
-
-			// get radar x and y postion
-			sXSoldRadar = (INT16)( sXSoldScreen * gdScaleX );
-			sYSoldRadar = (INT16)( sYSoldScreen * gdScaleY );
-
-
-			// Add starting relative to interface
-			sXSoldRadar += RADAR_WINDOW_X;
-			sYSoldRadar += gsRadarY;
-
-			if (fFlashHighLightInventoryItemOnradarMap)
+		if( !( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+		{
+			// RE-RENDER RADAR
+			FOR_ALL_MERCS(i)
 			{
-				usLineColor = Get16BPPColor(FROMRGB(0, 255, 0));
-			}
-			else
-			{
-				usLineColor = Get16BPPColor(FROMRGB(255, 255, 255));
-			}
+				SOLDIERTYPE* const pSoldier = *i;
 
-			if (iCurrentlyHighLightedItem == iCounter)
-			{
+				// Don't place guys in radar until visible!
+				if ( pSoldier->bVisible == -1 && !(gTacticalStatus.uiFlags&SHOW_ALL_MERCS) && !(pSoldier->ubMiscSoldierFlags & SOLDIER_MISC_XRAYED) )
+				{
+					continue;
+				}
+
+				// Don't render guys if they are dead!
+				if ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
+				{
+					continue;
+				}
+
+				// Don't render crows
+				if ( pSoldier->ubBodyType == CROW )
+				{
+					continue;
+				}
+
+				// Get FULL screen coordinate for guy's position
+				GetAbsoluteScreenXYFromMapPos(pSoldier->sGridNo, &sXSoldScreen, &sYSoldScreen);
+
+				sXSoldRadar = (INT16)( sXSoldScreen * gdScaleX );
+				sYSoldRadar = (INT16)( sYSoldScreen * gdScaleY );
+
+				if ( !SoldierOnVisibleWorldTile( pSoldier ) )
+				{
+					continue;
+				}
+
+				// Add starting relative to interface
+				sXSoldRadar += RADAR_WINDOW_X;
+				sYSoldRadar += gsRadarY;
+
+				// Are we a selected guy?
+				if (pSoldier == GetSelectedMan())
+				{
+					if (gfRadarCurrentGuyFlash)
+					{
+						usLineColor = 0;
+					}
+					else
+					{
+						// If on roof, make darker....
+						if (pSoldier->bLevel > 0)
+						{
+							usLineColor = Get16BPPColor(FROMRGB(150, 150, 0));
+						}
+						else
+						{
+							usLineColor = Get16BPPColor(gTacticalStatus.Team[pSoldier->bTeam].RadarColor);
+						}
+					}
+				}
+				else
+				{
+					usLineColor = Get16BPPColor(gTacticalStatus.Team[pSoldier->bTeam].RadarColor);
+
+					// Override civ team with red if hostile...
+					if (pSoldier->bTeam == CIV_TEAM && !pSoldier->bNeutral && pSoldier->bSide != gbPlayerNum)
+					{
+						usLineColor = Get16BPPColor(FROMRGB(255, 0, 0));
+					}
+
+					// Render different color if an enemy and he's unconscious
+					if (pSoldier->bTeam != gbPlayerNum && pSoldier->bLife < OKLIFE)
+					{
+						usLineColor = Get16BPPColor(FROMRGB(128, 128, 128));
+					}
+
+					// If on roof, make darker....
+					if (pSoldier->bTeam == gbPlayerNum && pSoldier->bLevel > 0)
+					{
+						usLineColor = Get16BPPColor(FROMRGB(150, 150, 0));
+					}
+				}
+
 				RectangleDraw(TRUE, sXSoldRadar, sYSoldRadar, sXSoldRadar + 1, sYSoldRadar + 1, usLineColor, pDestBuf);
 			}
 		}
 	}
-
-	if( !( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-	{
-		// RE-RENDER RADAR
-		FOR_ALL_MERCS(i)
-		{
-			SOLDIERTYPE* const pSoldier = *i;
-
-			// Don't place guys in radar until visible!
-			if ( pSoldier->bVisible == -1 && !(gTacticalStatus.uiFlags&SHOW_ALL_MERCS) && !(pSoldier->ubMiscSoldierFlags & SOLDIER_MISC_XRAYED) )
-			{
-				continue;
-			}
-
-			// Don't render guys if they are dead!
-			if ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
-			{
-				continue;
-			}
-
-			// Don't render crows
-			if ( pSoldier->ubBodyType == CROW )
-			{
-				continue;
-			}
-
-			// Get FULL screen coordinate for guy's position
-			GetAbsoluteScreenXYFromMapPos(pSoldier->sGridNo, &sXSoldScreen, &sYSoldScreen);
-
-			sXSoldRadar = (INT16)( sXSoldScreen * gdScaleX );
-			sYSoldRadar = (INT16)( sYSoldScreen * gdScaleY );
-
-			if ( !SoldierOnVisibleWorldTile( pSoldier ) )
-			{
-				continue;
-			}
-
-			// Add starting relative to interface
-			sXSoldRadar += RADAR_WINDOW_X;
-			sYSoldRadar += gsRadarY;
-
-			// Are we a selected guy?
-			if (pSoldier == GetSelectedMan())
-			{
-				if (gfRadarCurrentGuyFlash)
-				{
-					usLineColor = 0;
-				}
-				else
-				{
-					// If on roof, make darker....
-					if (pSoldier->bLevel > 0)
-					{
-						usLineColor = Get16BPPColor(FROMRGB(150, 150, 0));
-					}
-					else
-					{
-						usLineColor = Get16BPPColor(gTacticalStatus.Team[pSoldier->bTeam].RadarColor);
-					}
-				}
-			}
-			else
-			{
-				usLineColor = Get16BPPColor(gTacticalStatus.Team[pSoldier->bTeam].RadarColor);
-
-				// Override civ team with red if hostile...
-				if (pSoldier->bTeam == CIV_TEAM && !pSoldier->bNeutral && pSoldier->bSide != gbPlayerNum)
-				{
-					usLineColor = Get16BPPColor(FROMRGB(255, 0, 0));
-				}
-
-				// Render different color if an enemy and he's unconscious
-				if (pSoldier->bTeam != gbPlayerNum && pSoldier->bLife < OKLIFE)
-				{
-					usLineColor = Get16BPPColor(FROMRGB(128, 128, 128));
-				}
-
-				// If on roof, make darker....
-				if (pSoldier->bTeam == gbPlayerNum && pSoldier->bLevel > 0)
-				{
-					usLineColor = Get16BPPColor(FROMRGB(150, 150, 0));
-				}
-			}
-
-			RectangleDraw(TRUE, sXSoldRadar, sYSoldRadar, sXSoldRadar + 1, sYSoldRadar + 1, usLineColor, pDestBuf);
-		}
-	}
-	UnLockVideoSurface( FRAME_BUFFER );
 
 	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN && fShowMapInventoryPool)
 	{

@@ -1034,15 +1034,15 @@ static BOOLEAN PixelateVideoMercImage(BOOLEAN fUp, UINT16 usPosX, UINT16 usPosY,
 {
 	static UINT32	uiLastTime;
 	UINT32	uiCurTime = GetJA2Clock();
-	UINT16 *pBuffer=NULL, DestColor;
-	UINT32 uiPitch;
+	UINT16 DestColor;
 	UINT16 i, j;
 	static UINT8 ubPixelationAmount=255;
 	BOOLEAN fReturnStatus=FALSE;
 	i=0;
 
-	pBuffer = (UINT16*)LockVideoSurface( FRAME_BUFFER, &uiPitch );
-	Assert( pBuffer );
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT16* const pBuffer = l.Buffer<UINT16>();
+	UINT32  const uiPitch = l.Pitch() / sizeof(UINT16);
 
 	if( ubPixelationAmount == 255 )
 	{
@@ -1090,7 +1090,6 @@ static BOOLEAN PixelateVideoMercImage(BOOLEAN fUp, UINT16 usPosX, UINT16 usPosY,
 	else
 		i=i;
 
-	uiPitch /= 2;
 	i=j=0;
 	DestColor = pBuffer[ (j*uiPitch) + i ];
 
@@ -1111,27 +1110,24 @@ static BOOLEAN PixelateVideoMercImage(BOOLEAN fUp, UINT16 usPosX, UINT16 usPosY,
 		}
 	}
 
-	UnLockVideoSurface( FRAME_BUFFER );
-
 	return( fReturnStatus );
 }
 
 
 static BOOLEAN DistortVideoMercImage(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usHeight)
 {
-	UINT32 uiPitch;
 	UINT16 i, j;
-	UINT16 *pBuffer=NULL, DestColor;
+	UINT16 DestColor;
 	UINT32 uiColor;
 	UINT8 red, green, blue;
 	static UINT16 usDistortionValue=255;
 	UINT8	uiReturnValue;
 	UINT16	usEndOnLine=0;
 
-	pBuffer = (UINT16*)LockVideoSurface( FRAME_BUFFER, &uiPitch );
-	Assert( pBuffer );
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT16* const pBuffer = l.Buffer<UINT16>();
+	UINT32  const uiPitch = l.Pitch() / sizeof(UINT16);
 
-	uiPitch /= 2;
 	j=MERC_VIDEO_FACE_Y;
 	i=MERC_VIDEO_FACE_X;
 
@@ -1173,7 +1169,6 @@ static BOOLEAN DistortVideoMercImage(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 			}
 		}
 	}
-	UnLockVideoSurface( FRAME_BUFFER );
 
 	return(uiReturnValue);
 }

@@ -807,9 +807,10 @@ static void RenderViewer(void)
 		RenderInfoInSector();
 	}
 
-	UINT32 uiDestPitchBYTES;
-	UINT8* pDestBuf = LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT8* const pDestBuf = l.Buffer<UINT8>();
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
 	//Render the grid for the sector if the mouse is over it (yellow).
 	if( gsHiSectorX > 0 )
 	{
@@ -824,7 +825,6 @@ static void RenderViewer(void)
 		y = VIEWER_TOP + (gsSelSectorY-1) * 22 ;
 		RectangleDraw( TRUE, x, y, x+26, y+22, Get16BPPColor( FROMRGB( 200, 50, 50 ) ), pDestBuf );
 	}
-	UnLockVideoSurface( FRAME_BUFFER );
 }
 
 

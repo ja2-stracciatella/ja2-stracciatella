@@ -712,8 +712,6 @@ void ShowCurrentDrawingMode( void )
 	INT32				iPicHeight, iPicWidth;
 	INT16				sTempOffsetX;
 	INT16				sTempOffsetY;
-	UINT32			uiDestPitchBYTES;
-	UINT8				*pDestBuf;
 	INT32				iIndexToUse;
 
 	// Set up a clipping rectangle for the display window.
@@ -953,10 +951,10 @@ void ShowCurrentDrawingMode( void )
 
 	// Set the color for the window's border. Blueish color = Normal, Red = Fake lighting is turned on
 	UINT16 usFillColor = GetGenericButtonFillColor();
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	RectangleDraw(FALSE, 0, 400, 99, 458, usFillColor, pDestBuf);
 
-	UnLockVideoSurface( FRAME_BUFFER );
+	{ SGPVSurface::Lock l(FRAME_BUFFER);
+		RectangleDraw(FALSE, 0, 400, 99, 458, usFillColor, l.Buffer<UINT8>());
+	}
 
 	InvalidateRegion( 0, 400, 100, 458 );
 	SetClippingRect(&ClipRect);

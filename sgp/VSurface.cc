@@ -250,10 +250,12 @@ static void DeletePrimaryVideoSurfaces(void)
 
 void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, const INT32 DestX, const INT32 DestY, const SGPRect* const SrcRect)
 {
-	UINT32 SrcPitchBYTES;
-	const UINT8* SrcBuf = LockVideoSurface(src, &SrcPitchBYTES);
-	UINT32 DestPitchBYTES;
-	UINT16* DestBuf = (UINT16*)LockVideoSurface(dst, &DestPitchBYTES);
+	SGPVSurface::Lock lsrc(src);
+	SGPVSurface::Lock ldst(dst);
+	UINT8*  const SrcBuf         = lsrc.Buffer<UINT8>();
+	UINT32  const SrcPitchBYTES  = lsrc.Pitch();
+	UINT16* const DestBuf        = ldst.Buffer<UINT16>();
+	UINT32  const DestPitchBYTES = ldst.Pitch();
 	if (SrcRect == NULL)
 	{
 		Blt8BPPDataTo16BPPBufferHalf(DestBuf, DestPitchBYTES, src, SrcBuf, SrcPitchBYTES, DestX, DestY);
@@ -262,8 +264,6 @@ void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, const I
 	{
 		Blt8BPPDataTo16BPPBufferHalfRect(DestBuf, DestPitchBYTES, src, SrcBuf, SrcPitchBYTES, DestX, DestY, SrcRect);
 	}
-	UnLockVideoSurface(dst);
-	UnLockVideoSurface(src);
 }
 
 
@@ -342,26 +342,6 @@ static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBit
 }
 
 
-BYTE* LockVideoSurface(SGPVSurface* const vs, UINT32* const pitch)
-{
-	Assert(vs    != NULL);
-	Assert(pitch != NULL);
-
-	SDL_Surface* const s = vs->surface;
-	SDL_LockSurface(s); // XXX necessary?
-	*pitch = s->pitch;
-	return (BYTE*)s->pixels;
-}
-
-
-void UnLockVideoSurface(SGPVSurface* const vs)
-{
-	Assert(vs != NULL);
-
-	SDL_UnlockSurface(vs->surface); // XXX necessary?
-}
-
-
 // Given an HIMAGE object, blit imagery into existing Video Surface. Can be from 8->16 BPP
 static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage, UINT16 usX, UINT16 usY, const SGPRect* pSrcRect)
 {
@@ -382,8 +362,9 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 		default: abort();
 	}
 
-	UINT32      uiPitch;
-	BYTE* const pDest = LockVideoSurface(hVSurface, &uiPitch);
+	SGPVSurface::Lock l(hVSurface);
+	UINT8* const pDest   = l.Buffer<UINT8>();
+	UINT32 const uiPitch = l.Pitch();
 
 	// Effective width ( in PIXELS ) is Pitch ( in bytes ) converted to pitch ( IN PIXELS )
 	const UINT16 usEffectiveWidth = uiPitch / (dst_bpp / 8);
@@ -414,8 +395,6 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 	{
 		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Error Occured Copying HIMAGE to HVSURFACE");
 	}
-
-	UnLockVideoSurface(hVSurface);
 	return Ret;
 }
 
@@ -505,13 +484,13 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 		r.iTop    = src_rect.y;
 		r.iRight  = src_rect.x + src_rect.w;
 		r.iBottom = src_rect.y + src_rect.h;
-		UINT32        spitch;
-		UINT8*  const s_buf = LockVideoSurface(src, &spitch);
-		UINT32        dpitch;
-		UINT16* const d_buf = (UINT16*)LockVideoSurface(dst, &dpitch);
+		SGPVSurface::Lock lsrc(src);
+		SGPVSurface::Lock ldst(dst);
+		UINT8*  const s_buf  = lsrc.Buffer<UINT8>();
+		UINT32  const spitch = lsrc.Pitch();
+		UINT16* const d_buf  = ldst.Buffer<UINT16>();
+		UINT32  const dpitch = ldst.Pitch();
 		Blt8BPPDataSubTo16BPPBuffer(d_buf, dpitch, src, s_buf, spitch, iDestX, iDestY, &r);
-		UnLockVideoSurface(dst);
-		UnLockVideoSurface(src);
 		return TRUE;
 	}
 
@@ -543,14 +522,8 @@ static BOOLEAN InternalShadowVideoSurfaceRect(SGPVSurface* const dst, INT32 X1, 
 	area.iLeft   = X1;
 	area.iRight  = X2;
 
-	UINT32 uiPitch;
-	UINT16* pBuffer = (UINT16*)LockVideoSurface(dst, &uiPitch);
-	if (pBuffer == NULL) return FALSE;
-
-	BOOLEAN Ret = Blt16BPPBufferFilterRect(pBuffer, uiPitch, filter_table, &area);
-
-	UnLockVideoSurface(dst);
-	return Ret;
+	SGPVSurface::Lock ldst(dst);
+	return Blt16BPPBufferFilterRect(ldst.Buffer<UINT16>(), ldst.Pitch(), filter_table, &area);
 }
 
 

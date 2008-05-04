@@ -1039,13 +1039,13 @@ static void DisplayFastHelp(MOUSE_REGION* region)
 		}
 		else
 		{
-			UINT8 *pDestBuf;
-			UINT32 uiDestPitchBYTES;
-			pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-			SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			RectangleDraw( TRUE, iX + 1, iY + 1, iX + iW - 1, iY + iH - 1, Get16BPPColor( FROMRGB( 65, 57, 15 ) ), pDestBuf );
-			RectangleDraw( TRUE, iX, iY, iX + iW - 2, iY + iH - 2, Get16BPPColor( FROMRGB( 227, 198, 88 ) ), pDestBuf );
-			UnLockVideoSurface( FRAME_BUFFER );
+			{ SGPVSurface::Lock l(FRAME_BUFFER);
+				UINT8* const pDestBuf         = l.Buffer<UINT8>();
+				UINT32 const uiDestPitchBYTES = l.Pitch();
+				SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				RectangleDraw( TRUE, iX + 1, iY + 1, iX + iW - 1, iY + iH - 1, Get16BPPColor( FROMRGB( 65, 57, 15 ) ), pDestBuf );
+				RectangleDraw( TRUE, iX, iY, iX + iW - 2, iY + iH - 2, Get16BPPColor( FROMRGB( 227, 198, 88 ) ), pDestBuf );
+			}
 			ShadowVideoSurfaceRect( FRAME_BUFFER, iX + 2, iY + 2, iX + iW - 3, iY + iH - 3 );
 			ShadowVideoSurfaceRect( FRAME_BUFFER, iX + 2, iY + 2, iX + iW - 3, iY + iH - 3 );
 

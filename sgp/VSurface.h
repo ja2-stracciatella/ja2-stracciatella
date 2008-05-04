@@ -49,6 +49,61 @@ class SGPVSurface
 		SDL_Color*   palette_;
 	public:
 		UINT16*      p16BPPPalette; // A 16BPP palette used for 8->16 blits
+
+
+	private:
+		class LockBase
+		{
+			public:
+				explicit LockBase(SDL_Surface* const s) : surface_(s) {}
+
+				template<typename T> T* Buffer()
+				{
+					return static_cast<T*>(surface_->pixels);
+				}
+
+				UINT32 Pitch()
+				{
+					return surface_->pitch;
+				}
+
+			protected:
+				SDL_Surface* surface_;
+		};
+
+	public:
+		class Lock : public LockBase
+		{
+			public:
+				explicit Lock(SGPVSurface* const vs) :
+					LockBase(vs->surface)
+				{
+					SDL_LockSurface(surface_);
+				}
+
+				~Lock()
+				{
+					SDL_UnlockSurface(surface_);
+				}
+		};
+
+		class Lockable : public LockBase
+		{
+			public:
+				explicit Lockable() : LockBase(0) {}
+
+				~Lockable()
+				{
+					if (surface_) SDL_UnlockSurface(surface_);
+				}
+
+				void Lock(SGPVSurface* const vs)
+				{
+					if (surface_) SDL_UnlockSurface(surface_);
+					surface_ = vs->surface;
+					if (surface_) SDL_LockSurface(surface_);
+				}
+		};
 };
 
 
@@ -73,12 +128,6 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* Filename);
 	#define AddVideoSurface(a, b, c) AddAndRecordVSurface(a, b, c, __LINE__, __FILE__)
 	#define AddVideoSurfaceFromFile(a) AddAndRecordVSurfaceFromFile(a, __LINE__, __FILE__)
 #endif
-
-/* Lock must be followed by release
- * Pitch MUST be used for all width calculations (pitch is in bytes)
- * The time between Locking and unlocking must be minimal */
-BYTE* LockVideoSurface(SGPVSurface*, UINT32* pitch);
-void UnLockVideoSurface(SGPVSurface*);
 
 // Blits a video Surface to another video Surface
 BOOLEAN BltVideoSurface(SGPVSurface* dst, SGPVSurface* src, INT32 iDestX, INT32 iDestY, const SGPRect* SrcRect);

@@ -177,10 +177,8 @@ static void DisplayPlayerActivationString(void)
 static void DisplayActivationStringCursor(void)
 {
 	// this procdure will draw the activation string cursor on the screen at position cursorx cursory
-  UINT32 uiDestPitchBYTES;
 	static UINT32 uiBaseTime = 0;
 	UINT32 uiDeltaTime = 0;
-	UINT8 *pDestBuf;
   static UINT32 iCurrentState = 0;
   static BOOLEAN fIncrement = TRUE;
 
@@ -219,15 +217,11 @@ static void DisplayActivationStringCursor(void)
 		uiBaseTime = GetJA2Clock( );
 	}
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-
-  // draw line in current state
-	LineDraw(TRUE, uiCursorPosition, CURSOR_Y, uiCursorPosition, CURSOR_Y + CURSOR_HEIGHT, Get16BPPColor(GlowColorsList[iCurrentState]), pDestBuf);
-
-	// unlock frame buffer
-	UnLockVideoSurface( FRAME_BUFFER );
+	{ SGPVSurface::Lock l(FRAME_BUFFER);
+		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		// draw line in current state
+		LineDraw(TRUE, uiCursorPosition, CURSOR_Y, uiCursorPosition, CURSOR_Y + CURSOR_HEIGHT, Get16BPPColor(GlowColorsList[iCurrentState]), l.Buffer<UINT8>());
+	}
 
   InvalidateRegion((UINT16) uiCursorPosition , CURSOR_Y , (UINT16)uiCursorPosition + 1, CURSOR_Y + CURSOR_HEIGHT + 1);
 }

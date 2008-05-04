@@ -2057,13 +2057,9 @@ static BOOLEAN PointInRect(SGPRect* pRect, INT32 x, INT32 y)
 
 static void DrawRect(SGPRect* pRect, INT16 color)
 {
-	UINT32	uiDestPitchBYTES;
-	UINT8		*pDestBuf;
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw( TRUE, pRect->iLeft+MERCPANEL_X, pRect->iTop+MERCPANEL_Y, pRect->iRight+MERCPANEL_X, pRect->iBottom+MERCPANEL_Y, color, pDestBuf );
-	UnLockVideoSurface( FRAME_BUFFER );
-	//InvalidateRegion( pRect->iLeft+175, pRect->iTop+361, pRect->iRight+176, pRect->iBottom+362 );
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	RectangleDraw(TRUE, pRect->iLeft + MERCPANEL_X, pRect->iTop + MERCPANEL_Y, pRect->iRight + MERCPANEL_X, pRect->iBottom + MERCPANEL_Y, color, l.Buffer<UINT8>());
 }
 
 

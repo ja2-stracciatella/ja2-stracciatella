@@ -1627,8 +1627,6 @@ static void SelectUpDownArrowOnScrollAreaRegionCallBack(MOUSE_REGION* pRegion, I
 
 static void DrawGoldRectangle(INT8 bCityNum)
 {
-  UINT32 uiDestPitchBYTES;
-  UINT8	 *pDestBuf;
 	UINT16 usWidth, usTempHeight, usTempPosY, usHeight;
 	UINT16 usPosX, usPosY;
 
@@ -1655,8 +1653,9 @@ static void DrawGoldRectangle(INT8 bCityNum)
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SCROLL_AREA_X, usPosY, BOBBYR_SCROLL_AREA_X+usWidth,	usPosY+usHeight, Get16BPPColor( FROMRGB( 186, 165, 68 ) ) );
 
 	//display the line
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT8* const pDestBuf = l.Buffer<UINT8>();
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
   // draw the gold highlite line on the top and left
 	LineDraw(FALSE, usPosX, usPosY, usPosX+usWidth, usPosY, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
@@ -1665,9 +1664,6 @@ static void DrawGoldRectangle(INT8 bCityNum)
   // draw the shadow line on the bottom and right
 	LineDraw(FALSE, usPosX, usPosY+usHeight, usPosX+usWidth, usPosY+usHeight, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
 	LineDraw(FALSE, usPosX+usWidth, usPosY, usPosX+usWidth, usPosY+usHeight, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
-
-	// unlock frame buffer
-	UnLockVideoSurface( FRAME_BUFFER );
 }
 
 

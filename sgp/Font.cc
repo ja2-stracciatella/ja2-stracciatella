@@ -317,9 +317,9 @@ UINT32 gprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 	INT32 destx = x;
 	INT32 desty = y;
 
-	// Lock the dest buffer
-	UINT32        uiDestPitchBYTES;
-	UINT16* const pDestBuf = (UINT16*)LockVideoSurface(FontDestBuffer, &uiDestPitchBYTES);
+	SGPVSurface::Lock l(FontDestBuffer);
+	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	for (const wchar_t* curletter = string; *curletter != L'\0'; curletter++)
 	{
@@ -328,7 +328,6 @@ UINT32 gprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 		destx += GetWidth(FontObjs[FontDefault], transletter);
 	}
 
-	UnLockVideoSurface(FontDestBuffer);
 	return 0;
 }
 
@@ -360,15 +359,15 @@ static UINT32 vmprintf_buffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x
  * than 512 word-characters. Uses monochrome font color settings */
 UINT32 mprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 {
-	UINT32  uiDestPitchBYTES;
-	UINT16* pDestBuf = (UINT16*)LockVideoSurface(FontDestBuffer, &uiDestPitchBYTES);
+	SGPVSurface::Lock l(FontDestBuffer);
+	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	va_list ArgPtr;
 	va_start(ArgPtr, pFontString);
 	UINT32 Ret = vmprintf_buffer(pDestBuf, uiDestPitchBYTES, x, y, pFontString, ArgPtr);
 	va_end(ArgPtr);
 
-	UnLockVideoSurface(FontDestBuffer);
 	return Ret;
 }
 
@@ -432,15 +431,15 @@ UINT32 mprintf_buffer_coded(UINT16* const pDestBuf, const UINT32 uiDestPitchBYTE
 
 UINT32 mprintf_coded(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 {
-	UINT32        uiDestPitchBYTES;
-	UINT16* const pDestBuf = (UINT16*)LockVideoSurface(FontDestBuffer, &uiDestPitchBYTES);
+	SGPVSurface::Lock l(FontDestBuffer);
+	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32        uiDestPitchBYTES = l.Pitch();
 
 	va_list ArgPtr;
 	va_start(ArgPtr, pFontString);
 	UINT32 Ret = vmprintf_buffer_coded(pDestBuf, uiDestPitchBYTES, x, y, pFontString, ArgPtr);
 	va_end(ArgPtr);
 
-	UnLockVideoSurface(FontDestBuffer);
 	return Ret;
 }
 

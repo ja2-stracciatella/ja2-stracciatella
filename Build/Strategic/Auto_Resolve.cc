@@ -1054,9 +1054,7 @@ static void BuildInterfaceBuffer(void)
 static void ExpandWindow(void)
 {
 	SGPRect OldRect;
-	UINT32	uiDestPitchBYTES;
 	UINT32 uiCurrentTime, uiTimeRange, uiPercent;
-	UINT8		*pDestBuf;
 	INT32 i;
 
 	if( !gpAR->ExRect.iLeft && !gpAR->ExRect.iRight )
@@ -1131,10 +1129,10 @@ static void ExpandWindow(void)
 	}
 
 	//The new rect now determines the state of the current rectangle.
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw( TRUE, gpAR->ExRect.iLeft, gpAR->ExRect.iTop, gpAR->ExRect.iRight, gpAR->ExRect.iBottom, Get16BPPColor( FROMRGB( 200, 200, 100 ) ), pDestBuf );
-	UnLockVideoSurface( FRAME_BUFFER );
+	{ SGPVSurface::Lock l(FRAME_BUFFER);
+		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		RectangleDraw(TRUE, gpAR->ExRect.iLeft, gpAR->ExRect.iTop, gpAR->ExRect.iRight, gpAR->ExRect.iBottom, Get16BPPColor( FROMRGB( 200, 200, 100 ) ), l.Buffer<UINT8>());
+	}
 	//left
 	InvalidateRegion( gpAR->ExRect.iLeft, gpAR->ExRect.iTop, gpAR->ExRect.iLeft+1, gpAR->ExRect.iBottom+1 );
 	//right

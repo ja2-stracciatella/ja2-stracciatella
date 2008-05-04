@@ -1273,8 +1273,6 @@ static void QuestDebug_EnterTactical(void)
 
 static void DisplaySectionLine(void)
 {
-  UINT32 uiDestPitchBYTES;
-  UINT8 *pDestBuf;
 	UINT16 usStartX;
 	UINT16 usStartY;
 	UINT16 usEndX;
@@ -1285,10 +1283,11 @@ static void DisplaySectionLine(void)
 	usStartY = QUEST_DBS_FIRST_COL_NUMBER_Y;
 	usEndY = 475;
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT8* const pDestBuf = l.Buffer<UINT8>();
 
   // draw the line in b/n the first and second section
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	LineDraw(FALSE, usStartX, usStartY, usEndX, usEndY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
 
   // draw the line in b/n the second and third section
@@ -1301,9 +1300,6 @@ static void DisplaySectionLine(void)
 	usEndX   = SCREEN_WIDTH - 1;
 	usStartY = usEndY = 75;
 	LineDraw(FALSE, usStartX, usStartY, usEndX, usEndY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
-
-	// unlock frame buffer
-	UnLockVideoSurface( FRAME_BUFFER );
 }
 
 
@@ -1863,8 +1859,6 @@ static void SelectNpcListMovementCallBack(MOUSE_REGION* pRegion, INT32 reason)
 
 static void DrawQdsScrollRectangle(void)
 {
-  UINT32 uiDestPitchBYTES;
-  UINT8	 *pDestBuf;
 	UINT16 usWidth, usTempPosY;
 	UINT16	usHeight, usPosY, usPosX;
 
@@ -1896,8 +1890,9 @@ static void DrawQdsScrollRectangle(void)
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, usPosX, usPosY, usPosX+usWidth-1,	usPosY+usHeight, Get16BPPColor( FROMRGB( 130, 132, 128 ) ) );
 
 	//display the line
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT8* const pDestBuf = l.Buffer<UINT8>();
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
   // draw the gold highlite line on the top and left
 	LineDraw(FALSE, usPosX, usPosY, usPosX+usWidth-1, usPosY, Get16BPPColor( FROMRGB( 255, 255, 255 ) ), pDestBuf);
@@ -1906,9 +1901,6 @@ static void DrawQdsScrollRectangle(void)
   // draw the shadow line on the bottom and right
 	LineDraw(FALSE, usPosX, usPosY+usHeight, usPosX+usWidth-1, usPosY+usHeight, Get16BPPColor( FROMRGB( 112, 110, 112 ) ), pDestBuf);
 	LineDraw(FALSE, usPosX+usWidth-1, usPosY, usPosX+usWidth-1, usPosY+usHeight, Get16BPPColor( FROMRGB( 112, 110, 112 ) ), pDestBuf);
-
-	// unlock frame buffer
-	UnLockVideoSurface( FRAME_BUFFER );
 }
 
 

@@ -576,16 +576,15 @@ static void BlinkAutoFace(FACETYPE* const f)
 
 static void DrawFaceRect(const FACETYPE* const f, SGPVSurface* const buffer, const INT16 x, const INT16 y, const UINT32 colour)
 {
-	UINT32       uiDestPitchBYTES;
-	UINT8* const pDestBuf = LockVideoSurface(buffer, &uiDestPitchBYTES);
+	SGPVSurface::Lock l(buffer);
+	UINT32 const uiDestPitchBYTES = l.Pitch();
+
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, x - 2, y - 1, x + f->usFaceWidth + 4, y + f->usFaceHeight + 4);
 
 	const UINT16 usLineColor = Get16BPPColor(colour);
-	RectangleDraw(TRUE, x - 2, y - 1, x + f->usFaceWidth + 1, y + f->usFaceHeight, usLineColor, pDestBuf);
+	RectangleDraw(TRUE, x - 2, y - 1, x + f->usFaceWidth + 1, y + f->usFaceHeight, usLineColor, l.Buffer<UINT8>());
 
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-	UnLockVideoSurface(buffer);
 }
 
 
@@ -889,14 +888,11 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 				// Draw box
-				UINT32       uiDestPitchBYTES;
-				UINT8* const pDestBuf = LockVideoSurface(uiRenderBuffer, &uiDestPitchBYTES);
-				SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				SGPVSurface::Lock l(uiRenderBuffer);
+				SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 				const UINT16 usLineColor = Get16BPPColor(FROMRGB(105, 8, 9));
-				RectangleDraw(TRUE, sX1, sY1, sX2, sY2, usLineColor, pDestBuf);
-
-				UnLockVideoSurface(uiRenderBuffer);
+				RectangleDraw(TRUE, sX1, sY1, sX2, sY2, usLineColor, l.Buffer<UINT8>());
 			}
 
 			if ((s->bInSector && (gTacticalStatus.ubCurrentTeam != OUR_TEAM || !OK_INTERRUPT_MERC(s)) && !gfHiddenInterrupt) ||

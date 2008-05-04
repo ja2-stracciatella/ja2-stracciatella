@@ -1482,18 +1482,14 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 
 	if ( gfSMDisableForItems && (*pfDirty) != DIRTYLEVEL0 )
 	{
-		UINT8	 *pDestBuf;
-		UINT32 uiDestPitchBYTES;
 		SGPRect ClipRect;
 
 		ClipRect.iLeft	 = 87;
 		ClipRect.iRight  = 536;
 		ClipRect.iTop		 = INV_INTERFACE_START_Y;
 		ClipRect.iBottom = SCREEN_HEIGHT;
-		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-		Blt16BPPBufferHatchRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect );
-		UnLockVideoSurface( FRAME_BUFFER );
-
+		SGPVSurface::Lock l(FRAME_BUFFER);
+		Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
 	}
 
 }

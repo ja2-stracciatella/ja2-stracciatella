@@ -50,9 +50,6 @@ UINT32	MapUtilScreenHandle( )
 	static FDLG_LIST *FListNode;
 	static INT16 sFiles = 0, sCurFile = 0;
 	static FDLG_LIST *FileList = NULL;
-	UINT32					uiDestPitchBYTES, uiSrcPitchBYTES;
-	UINT16						*pDestBuf, *pSrcBuf;
-	UINT8						*pDataPtr;
 
 	UINT32					uiRGBColor;
 
@@ -157,125 +154,127 @@ UINT32	MapUtilScreenHandle( )
 	dY = dStartY;
 
 
-	pDestBuf = (UINT16*)LockVideoSurface(giMiniMap, &uiDestPitchBYTES);
-	pSrcBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiSrcPitchBYTES);
+	{ SGPVSurface::Lock lsrc(FRAME_BUFFER);
+		SGPVSurface::Lock ldst(giMiniMap);
+		UINT16* const pSrcBuf          = lsrc.Buffer<UINT16>();
+		UINT32  const uiSrcPitchBYTES  = lsrc.Pitch();
+		UINT16* const pDestBuf         = ldst.Buffer<UINT16>();
+		UINT32  const uiDestPitchBYTES = ldst.Pitch();
 
-	for ( iX = 0; iX < 88; iX++ )
-	{
-		dY = dStartY;
-
-		for ( iY = 0; iY < 44; iY++ )
+		for ( iX = 0; iX < 88; iX++ )
 		{
-			//OK, AVERAGE PIXELS
-			iSubX1 = (INT32)dX - WINDOW_SIZE;
+			dY = dStartY;
 
-			iSubX2 = (INT32)dX + WINDOW_SIZE;
-
-			iSubY1 = (INT32)dY - WINDOW_SIZE;
-
-			iSubY2 = (INT32)dY + WINDOW_SIZE;
-
-			iCount = 0;
-			bR = bG = bB = 0;
-
-			for ( iWindowX = iSubX1; iWindowX < iSubX2; iWindowX++ )
+			for ( iY = 0; iY < 44; iY++ )
 			{
-				for ( iWindowY = iSubY1; iWindowY < iSubY2; iWindowY++ )
+				//OK, AVERAGE PIXELS
+				iSubX1 = (INT32)dX - WINDOW_SIZE;
+
+				iSubX2 = (INT32)dX + WINDOW_SIZE;
+
+				iSubY1 = (INT32)dY - WINDOW_SIZE;
+
+				iSubY2 = (INT32)dY + WINDOW_SIZE;
+
+				iCount = 0;
+				bR = bG = bB = 0;
+
+				for ( iWindowX = iSubX1; iWindowX < iSubX2; iWindowX++ )
 				{
-					if (0 <= iWindowX && iWindowX < SCREEN_WIDTH &&
-							0 <= iWindowY && iWindowY < 320)
+					for ( iWindowY = iSubY1; iWindowY < iSubY2; iWindowY++ )
 					{
-						s16BPPSrc = pSrcBuf[ ( iWindowY * (uiSrcPitchBYTES/2) ) + iWindowX ];
+						if (0 <= iWindowX && iWindowX < SCREEN_WIDTH &&
+								0 <= iWindowY && iWindowY < 320)
+						{
+							s16BPPSrc = pSrcBuf[ ( iWindowY * (uiSrcPitchBYTES/2) ) + iWindowX ];
 
-						uiRGBColor = GetRGBColor( s16BPPSrc );
+							uiRGBColor = GetRGBColor( s16BPPSrc );
 
-						bR += SGPGetRValue( uiRGBColor );
-						bG += SGPGetGValue( uiRGBColor );
-						bB += SGPGetBValue( uiRGBColor );
+							bR += SGPGetRValue( uiRGBColor );
+							bG += SGPGetGValue( uiRGBColor );
+							bB += SGPGetBValue( uiRGBColor );
 
-						// Average!
-						iCount++;
+							// Average!
+							iCount++;
+						}
 					}
+
 				}
 
+				if ( iCount > 0 )
+				{
+					bAvR = bR / (UINT8)iCount;
+					bAvG = bG / (UINT8)iCount;
+					bAvB = bB / (UINT8)iCount;
+
+					sDest16BPPColor = Get16BPPColor( FROMRGB( bAvR, bAvG, bAvB ) );
+				}
+
+				//Write into dest!
+				pDestBuf[ ( iY * (uiDestPitchBYTES/2) ) + iX ] = sDest16BPPColor;
+
+				SGPPaletteEntry* const dst = &p24BitValues[iY * (uiDestPitchBYTES / 2) + iX];
+				dst->peRed   = bAvR;
+				dst->peGreen = bAvG;
+				dst->peBlue  = bAvB;
+
+				//Increment
+				dY += gdYStep;
+
 			}
-
-			if ( iCount > 0 )
-			{
-				bAvR = bR / (UINT8)iCount;
-				bAvG = bG / (UINT8)iCount;
-				bAvB = bB / (UINT8)iCount;
-
-				sDest16BPPColor = Get16BPPColor( FROMRGB( bAvR, bAvG, bAvB ) );
-			}
-
-			//Write into dest!
-			pDestBuf[ ( iY * (uiDestPitchBYTES/2) ) + iX ] = sDest16BPPColor;
-
-			SGPPaletteEntry* const dst = &p24BitValues[iY * (uiDestPitchBYTES / 2) + iX];
-			dst->peRed   = bAvR;
-			dst->peGreen = bAvG;
-			dst->peBlue  = bAvB;
 
 			//Increment
-			dY += gdYStep;
-
+			dX += gdXStep;
 		}
-
-		//Increment
-		dX += gdXStep;
-
 	}
-
-	UnLockVideoSurface(giMiniMap);
-	UnLockVideoSurface(FRAME_BUFFER);
 
 	// RENDER!
 	BltVideoSurface(FRAME_BUFFER, giMiniMap, 20, 360, NULL);
 
 
-	//QUantize!
-	pDataPtr = (UINT8*)LockVideoSurface(gi8BitMiniMap, &uiSrcPitchBYTES);
-	pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
-	QuantizeImage(pDataPtr, p24BitValues, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, pPalette);
-	gi8BitMiniMap->SetPalette(pPalette);
-	// Blit!
-	Blt8BPPDataTo16BPPBuffer(pDestBuf, uiDestPitchBYTES, gi8BitMiniMap, pDataPtr, 300, 360);
-
-	// Write palette!
-	{
-		INT32 cnt;
-		INT32 sX = 0, sY = 420;
-		UINT16 usLineColor;
-
-		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-		for ( cnt = 0; cnt < 256; cnt++ )
-		{
-			usLineColor = Get16BPPColor( FROMRGB( pPalette[ cnt ].peRed, pPalette[ cnt ].peGreen, pPalette[ cnt ].peBlue ) );
-			RectangleDraw( TRUE, sX, sY, sX, (INT16)( sY+10 ), usLineColor, (UINT8*)pDestBuf );
-			sX++;
-			RectangleDraw( TRUE, sX, sY, sX, (INT16)( sY+10 ), usLineColor, (UINT8*)pDestBuf );
-			sX++;
-		}
-	}
-
-	UnLockVideoSurface(FRAME_BUFFER);
-
-	// Remove extension
-	for ( cnt = strlen( zFilename )-1; cnt >=0; cnt-- )
-	{
-		if ( zFilename[ cnt ] == '.' )
-		{
-			zFilename[ cnt ] = '\0';
-		}
-	}
-
 	char zFilename2[260];
-	sprintf( zFilename2, "RADARMAPS/%s.STI", zFilename );
-	WriteSTIFile( pDataPtr, pPalette, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, zFilename2, CONVERT_ETRLE_COMPRESS, 0 );
+	//QUantize!
+	{ SGPVSurface::Lock lsrc(gi8BitMiniMap);
+		UINT8* const pDataPtr = lsrc.Buffer<UINT8>();
+		{ SGPVSurface::Lock ldst(FRAME_BUFFER);
+			UINT16* const pDestBuf         = ldst.Buffer<UINT16>();
+			UINT32  const uiDestPitchBYTES = ldst.Pitch();
+			QuantizeImage(pDataPtr, p24BitValues, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, pPalette);
+			gi8BitMiniMap->SetPalette(pPalette);
+			// Blit!
+			Blt8BPPDataTo16BPPBuffer(pDestBuf, uiDestPitchBYTES, gi8BitMiniMap, pDataPtr, 300, 360);
 
-	UnLockVideoSurface(gi8BitMiniMap);
+			// Write palette!
+			{
+				INT32 cnt;
+				INT32 sX = 0, sY = 420;
+				UINT16 usLineColor;
+
+				SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+				for ( cnt = 0; cnt < 256; cnt++ )
+				{
+					usLineColor = Get16BPPColor( FROMRGB( pPalette[ cnt ].peRed, pPalette[ cnt ].peGreen, pPalette[ cnt ].peBlue ) );
+					RectangleDraw( TRUE, sX, sY, sX, (INT16)( sY+10 ), usLineColor, (UINT8*)pDestBuf );
+					sX++;
+					RectangleDraw( TRUE, sX, sY, sX, (INT16)( sY+10 ), usLineColor, (UINT8*)pDestBuf );
+					sX++;
+				}
+			}
+		}
+
+		// Remove extension
+		for ( cnt = strlen( zFilename )-1; cnt >=0; cnt-- )
+		{
+			if ( zFilename[ cnt ] == '.' )
+			{
+				zFilename[ cnt ] = '\0';
+			}
+		}
+
+		sprintf( zFilename2, "RADARMAPS/%s.STI", zFilename );
+		WriteSTIFile( pDataPtr, pPalette, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, zFilename2, CONVERT_ETRLE_COMPRESS, 0 );
+	}
 
 	SetFont( TINYFONT1 );
 	SetFontBackground( FONT_MCOLOR_BLACK );

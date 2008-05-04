@@ -297,21 +297,17 @@ void RemoveInsuranceDefaults()
 
 void DisplaySmallRedLineWithShadow( UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16 EndY)
 {
-  UINT32 uiDestPitchBYTES;
-  UINT8 *pDestBuf;
+	SGPVSurface::Lock l(FRAME_BUFFER);
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	UINT8* const pDestBuf = l.Buffer<UINT8>();
 
   // draw the red line
 	LineDraw(FALSE, usStartX, usStartY, EndX, EndY, Get16BPPColor( FROMRGB( 255, 0, 0 ) ), pDestBuf);
 
   // draw the black shadow line
 	LineDraw(FALSE, usStartX+1, usStartY+1, EndX+1, EndY+1, Get16BPPColor( FROMRGB( 0, 0, 0 ) ), pDestBuf);
-
-	// unlock frame buffer
-	UnLockVideoSurface( FRAME_BUFFER );
 }
 
 

@@ -240,8 +240,6 @@ static void RenderPopupMenu(void)
 {
 	UINT16 usX, usY;
 	UINT8 ubColumn, ubEntry, ubCounter;
-	UINT8 *pDestBuf;
-	UINT32 uiDestPitchBYTES;
 	UINT16 usLineColor;
 	UINT16 usStringWidth;
 	UINT16 usStart;
@@ -250,21 +248,24 @@ static void RenderPopupMenu(void)
 	ColorFillVideoSurfaceArea(FRAME_BUFFER,
 		gPopup.usLeft, gPopup.usTop, gPopup.usRight, gPopup.usBottom,
 		Get16BPPColor(FROMRGB(128, 128, 128) ) );
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	usLineColor = Get16BPPColor( FROMRGB( 64, 64, 64 ) );
-	RectangleDraw( TRUE, gPopup.usLeft, gPopup.usTop, gPopup.usRight, gPopup.usBottom,
-		usLineColor, pDestBuf );
-	if( gPopup.ubColumns > 1 )
-	{ //draw a vertical line between each column
-		usStart = gPopup.usLeft + gPopup.ubColumnWidth[ 0 ];
-		for( ubColumn = 1; ubColumn < gPopup.ubColumns; ubColumn++ )
-		{
-			LineDraw( TRUE, usStart, gPopup.usTop, usStart, gPopup.usBottom, usLineColor, pDestBuf );
+
+	{ SGPVSurface::Lock l(FRAME_BUFFER);
+		UINT8*  const pDestBuf         = l.Buffer<UINT8>();
+		UINT32  const uiDestPitchBYTES = l.Pitch();
+		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		usLineColor = Get16BPPColor( FROMRGB( 64, 64, 64 ) );
+		RectangleDraw( TRUE, gPopup.usLeft, gPopup.usTop, gPopup.usRight, gPopup.usBottom,
+				usLineColor, pDestBuf );
+		if( gPopup.ubColumns > 1 )
+		{ //draw a vertical line between each column
+			usStart = gPopup.usLeft + gPopup.ubColumnWidth[ 0 ];
+			for( ubColumn = 1; ubColumn < gPopup.ubColumns; ubColumn++ )
+			{
+				LineDraw( TRUE, usStart, gPopup.usTop, usStart, gPopup.usBottom, usLineColor, pDestBuf );
+			}
+			usStart += (UINT16)gPopup.ubColumnWidth[ ubColumn ];
 		}
-		usStart += (UINT16)gPopup.ubColumnWidth[ ubColumn ];
 	}
-	UnLockVideoSurface( FRAME_BUFFER );
 
 	//Set up the text attributes.
 	SetFont( gPopup.usFont);

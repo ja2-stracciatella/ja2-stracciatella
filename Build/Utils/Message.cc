@@ -128,16 +128,13 @@ static void BlitString(VIDEO_OVERLAY* pBlitter)
 {
 	if (fScrollMessagesHidden) return;
 
-	UINT32        uiDestPitchBYTES;
-	UINT16* const pDestBuf = (UINT16*)LockVideoSurface(pBlitter->uiDestBuff, &uiDestPitchBYTES);
 	SetFont(pBlitter->uiFontID);
-
 	SetFontBackground(pBlitter->ubFontBack);
 	SetFontForeground(pBlitter->ubFontFore);
 	SetFontShadow(DEFAULT_SHADOW);
-	mprintf_buffer_coded(pDestBuf, uiDestPitchBYTES, pBlitter->sX, pBlitter->sY, pBlitter->zText);
 
-	UnLockVideoSurface(pBlitter->uiDestBuff);
+	SGPVSurface::Lock l(pBlitter->uiDestBuff);
+	mprintf_buffer_coded(l.Buffer<UINT16>(), l.Pitch(), pBlitter->sX, pBlitter->sY, pBlitter->zText);
 }
 
 

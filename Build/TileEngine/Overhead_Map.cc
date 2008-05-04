@@ -552,28 +552,27 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 	BOOLEAN			fEndRenderRow = FALSE, fEndRenderCol = FALSE;
 	UINT32			usTileIndex;
 	INT16				sX, sY;
-	UINT32			uiDestPitchBYTES;
-	UINT8				*pDestBuf;
 	LEVELNODE		*pNode;
 	SMALL_TILE_DB	*pTile;
 	INT16				sHeight;
 	INT16				sX1, sX2, sY1, sY2;
 
-	if ( gfOverheadMapDirty )
-	{
-		// Black out.......
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, sStartPointX_S, sStartPointY_S, sEndXS,	sEndYS, 0 );
+	if (!gfOverheadMapDirty) return;
+	// Black out.......
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, sStartPointX_S, sStartPointY_S, sEndXS,	sEndYS, 0 );
 
-		InvalidateScreen( );
-		gfOverheadMapDirty = FALSE;
+	InvalidateScreen( );
+	gfOverheadMapDirty = FALSE;
 
-		// Begin Render Loop
-		sAnchorPosX_M = sStartPointX_M;
-		sAnchorPosY_M = sStartPointY_M;
-		sAnchorPosX_S = sStartPointX_S;
-		sAnchorPosY_S = sStartPointY_S;
+	// Begin Render Loop
+	sAnchorPosX_M = sStartPointX_M;
+	sAnchorPosY_M = sStartPointY_M;
+	sAnchorPosX_S = sStartPointX_S;
+	sAnchorPosY_S = sStartPointY_S;
 
-		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+	{ SGPVSurface::Lock l(FRAME_BUFFER);
+		UINT8* const pDestBuf         = l.Buffer<UINT8>();
+		UINT32 const uiDestPitchBYTES = l.Pitch();
 
 		do
 		{
@@ -838,30 +837,30 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 					{
 						sHeight=( GetOffsetLandHeight(usTileIndex) /5);
 
-					  pNode = gpWorldLevelData[ usTileIndex ].pRoofHead;
-					  while( pNode != NULL )
-					  {
-						  if ( pNode->usIndex < NUMBEROFTILES )
-						  {
-							  if ( !( pNode->uiFlags & LEVELNODE_HIDDEN ) )
-							  {
-								  pTile = &( gSmTileDB[ pNode->usIndex ] );
+						pNode = gpWorldLevelData[ usTileIndex ].pRoofHead;
+						while( pNode != NULL )
+						{
+							if ( pNode->usIndex < NUMBEROFTILES )
+							{
+								if ( !( pNode->uiFlags & LEVELNODE_HIDDEN ) )
+								{
+									pTile = &( gSmTileDB[ pNode->usIndex ] );
 
-								  sX = sTempPosX_S;
-								  sY = sTempPosY_S - (gTileDatabase[ pNode->usIndex ].sOffsetHeight/5) -sHeight;
+									sX = sTempPosX_S;
+									sY = sTempPosY_S - (gTileDatabase[ pNode->usIndex ].sOffsetHeight/5) -sHeight;
 
-								  sY -= ( WALL_HEIGHT/5 );
+									sY -= ( WALL_HEIGHT/5 );
 
-								  sY += ( gsRenderHeight / 5 );
+									sY += ( gsRenderHeight / 5 );
 
-								  pTile->vo->pShadeCurrent= gSmTileSurf[ pTile->fType ].vo->pShades[pNode->ubShadeLevel];
+									pTile->vo->pShadeCurrent= gSmTileSurf[ pTile->fType ].vo->pShades[pNode->ubShadeLevel];
 
-								  // RENDER!
-								  Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex );
-							  }
-						  }
-						  pNode = pNode->pNext;
-					  }
+									// RENDER!
+									Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex );
+								}
+							}
+							pNode = pNode->pNext;
+						}
 					}
 
 					sTempPosX_S += 8;
@@ -896,36 +895,33 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 			}
 			while( !fEndRenderCol );
 		}
-
-
-		UnLockVideoSurface( FRAME_BUFFER );
-
-		// OK, blacken out edges of smaller maps...
-		if ( gMapInformation.ubRestrictedScrollID != 0 )
-		{
-			CalculateRestrictedMapCoords( NORTH, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS );
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, sX1, sY1, sX2, sY2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-
-			CalculateRestrictedMapCoords( WEST, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS );
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, sX1, sY1, sX2, sY2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-
-			CalculateRestrictedMapCoords( SOUTH, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS );
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, sX1, sY1, sX2, sY2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-
-			CalculateRestrictedMapCoords( EAST, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS );
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, sX1, sY1, sX2, sY2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-
-		}
-
-		if ( !fFromMapUtility )
-		{
-			// Render border!
-			BltVideoObject(FRAME_BUFFER, uiOVERMAP, 0, 0, 0);
-		}
-
-    // Update the save buffer
-		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 	}
+
+	// OK, blacken out edges of smaller maps...
+	if ( gMapInformation.ubRestrictedScrollID != 0 )
+	{
+		CalculateRestrictedMapCoords( NORTH, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS );
+		ColorFillVideoSurfaceArea( FRAME_BUFFER, sX1, sY1, sX2, sY2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+
+		CalculateRestrictedMapCoords( WEST, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS );
+		ColorFillVideoSurfaceArea( FRAME_BUFFER, sX1, sY1, sX2, sY2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+
+		CalculateRestrictedMapCoords( SOUTH, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS );
+		ColorFillVideoSurfaceArea( FRAME_BUFFER, sX1, sY1, sX2, sY2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+
+		CalculateRestrictedMapCoords( EAST, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS );
+		ColorFillVideoSurfaceArea( FRAME_BUFFER, sX1, sY1, sX2, sY2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+
+	}
+
+	if ( !fFromMapUtility )
+	{
+		// Render border!
+		BltVideoObject(FRAME_BUFFER, uiOVERMAP, 0, 0, 0);
+	}
+
+	// Update the save buffer
+	BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 }
 
 
@@ -934,8 +930,9 @@ static void GetOverheadScreenXYFromGridNo(INT16 sGridNo, INT16* psScreenX, INT16
 
 static void RenderOverheadOverlays(void)
 {
-	UINT32        uiDestPitchBYTES;
-	UINT16* const pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	// Soldier overlay
 	SGPVObject* const marker = uiPERSONS;
@@ -1056,8 +1053,6 @@ static void RenderOverheadOverlays(void)
 			InvalidateRegion(sX, sY, sX + 1, sY + 1);
 		}
 	}
-
-	UnLockVideoSurface(FRAME_BUFFER);
 }
 
 
@@ -1072,13 +1067,15 @@ void RenderOverheadOverlays( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 s
 	BOOLEAN			fEndRenderRow = FALSE, fEndRenderCol = FALSE;
 	UINT32			usTileIndex;
 	INT16				sX, sY;
-	UINT32			uiDestPitchBYTES;
-	UINT8				*pDestBuf;
 	LEVELNODE		*pNode;
 	UINT16			usLineColor;
 	INT16				sHeight;
 	SOLDIERTYPE	*pSoldier;
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT8* const pDestBuf         = l.Buffer<UINT8>();
+	UINT32 const uiDestPitchBYTES = l.Pitch();
+
 	// Begin Render Loop
 	sAnchorPosX_M = sStartPointX_M;
 	sAnchorPosY_M = sStartPointY_M;
@@ -1236,7 +1233,6 @@ void RenderOverheadOverlays( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 s
 
 	}
 	while( !fEndRenderCol );
-	UnLockVideoSurface( FRAME_BUFFER );
 }
 */
 

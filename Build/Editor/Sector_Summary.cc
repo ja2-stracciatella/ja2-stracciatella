@@ -909,8 +909,6 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion);
 
 void RenderSummaryWindow()
 {
-	UINT8 *pDestBuf;
-	UINT32 uiDestPitchBYTES;
 	SGPRect ClipRect;
 	INT32 i, x, y;
 	if( (GetActiveFieldID() == 1 ) != gfTempFile )
@@ -1256,10 +1254,10 @@ void RenderSummaryWindow()
 		//Draw the mode tabs
 		SetFontForeground( FONT_YELLOW );
 		mprintf( 354, 18, L"Summary" );
-		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		RectangleDraw( TRUE, 350, 15, 405, 28, 0, pDestBuf );
-		UnLockVideoSurface( FRAME_BUFFER );
+		{ SGPVSurface::Lock l(FRAME_BUFFER);
+			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			RectangleDraw(TRUE, 350, 15, 405, 28, 0, l.Buffer<UINT8>());
+		}
 		ShadowVideoSurfaceRectUsingLowPercentTable( FRAME_BUFFER, 351, 16, 404, 27 );
 		if( gpCurrentSectorSummary )
 			/*&& gpCurrentSectorSummary->usNumItems ||
@@ -1273,10 +1271,10 @@ void RenderSummaryWindow()
 			SetFontForeground( FONT_RED );
 		}
 		mprintf( 354, 33, L"Items" );
-		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		RectangleDraw( TRUE, 350, 30, 405, 43, 0, pDestBuf );
-		UnLockVideoSurface( FRAME_BUFFER );
+		{ SGPVSurface::Lock l(FRAME_BUFFER);
+			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			RectangleDraw(TRUE, 350, 30, 405, 43, 0, l.Buffer<UINT8>());
+		}
 		if( gpCurrentSectorSummary )
 			/*&& gpCurrentSectorSummary->usNumItems ||
 				gpPEnemyItemsSummaryArray && gusPEnemyItemsSummaryArraySize ||
@@ -1315,8 +1313,9 @@ void RenderSummaryWindow()
 		if( gfRenderGrid )
 		{
 			UINT16 pos;
-			pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-			SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			SGPVSurface::Lock l(FRAME_BUFFER);
+			UINT8* const pDestBuf = l.Buffer<UINT8>();
+			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			for( i = 1; i <= 15; i++ )
 			{
 				//draw vertical lines
@@ -1326,7 +1325,6 @@ void RenderSummaryWindow()
 				pos = (UINT16)(i * 13 + MAP_TOP);
 				LineDraw( TRUE, MAP_LEFT, pos, MAP_RIGHT-1, pos, 0, pDestBuf );
 			}
-			UnLockVideoSurface( FRAME_BUFFER );
 		}
 		if( gfRenderProgress )
 		{
@@ -1399,8 +1397,9 @@ void RenderSummaryWindow()
 
 	if( gfGlobalSummaryExists )
 	{
-		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		SGPVSurface::Lock l(FRAME_BUFFER);
+		UINT8* const pDestBuf = l.Buffer<UINT8>();
+		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		//Render the grid for the map currently residing in memory (blue).
 		if( gfWorldLoaded && !gfTempFile && gsSectorX )
 		{
@@ -1424,7 +1423,6 @@ void RenderSummaryWindow()
 			y = MAP_TOP + (gsHiSectorY-1) * 13 - 1;
 			RectangleDraw( TRUE, x, y, x+15, y+15, Get16BPPColor( FROMRGB( 200, 200, 50 ) ), pDestBuf );
 		}
-		UnLockVideoSurface( FRAME_BUFFER );
 	}
 	//Check to see if the user clicked on one of the hot spot mode change areas.
 	if( gfLeftButtonState )

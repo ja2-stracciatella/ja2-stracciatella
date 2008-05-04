@@ -1432,17 +1432,15 @@ static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPo
 {
 	FLOAT											 dWidth, dPercentage;
 	//UINT16										 usLineColor;
-
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
 	UINT16										 usLineColor;
 	INT8											 bBandage;
 
 	// Draw breath points
 
 	// Draw new size
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y);
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT8* const pDestBuf = l.Buffer<UINT8>();
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y - gsVIEWPORT_WINDOW_START_Y);
 
 	// get amt bandaged
 	bBandage = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
@@ -1488,9 +1486,6 @@ static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPo
 	usLineColor = Get16BPPColor(FROMRGB(0, 250, 0));
 	RectangleDraw(TRUE, sXPos + 1, sYPos + 7, (INT32)(sXPos + dWidth + 1), sYPos + 7, usLineColor, pDestBuf);
 	*/
-
-	UnLockVideoSurface( FRAME_BUFFER );
-
 }
 
 

@@ -225,9 +225,9 @@ BOOLEAN BltVideoObject(SGPVSurface* const dst, const SGPVObject* const src, cons
 	Assert(src->ubBitDepth ==  8);
 	Assert(dst->BPP()      == 16);
 
-	UINT32 uiPitch;
-	UINT16* pBuffer = (UINT16*)LockVideoSurface(dst, &uiPitch);
-	if (pBuffer == NULL) return FALSE;
+	SGPVSurface::Lock l(dst);
+	UINT16* const pBuffer = l.Buffer<UINT16>();
+	UINT32  const uiPitch = l.Pitch();
 
 	if (BltIsClipped(src, iDestX, iDestY, usRegionIndex, &ClippingRect))
 	{
@@ -238,7 +238,6 @@ BOOLEAN BltVideoObject(SGPVSurface* const dst, const SGPVObject* const src, cons
 		Blt8BPPDataTo16BPPBufferTransparent(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex);
 	}
 
-	UnLockVideoSurface(dst);
 	return TRUE;
 }
 
@@ -404,9 +403,9 @@ const ETRLEObject* GetVideoObjectETRLESubregionProperties(const SGPVObject* cons
 
 BOOLEAN BltVideoObjectOutline(SGPVSurface* const dst, const SGPVObject* const hSrcVObject, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY, const INT16 s16BPPColor)
 {
-	UINT32 uiPitch;
-	UINT16* pBuffer = (UINT16*)LockVideoSurface(dst, &uiPitch);
-	if (pBuffer == NULL) return FALSE;
+	SGPVSurface::Lock l(dst);
+	UINT16* const pBuffer = l.Buffer<UINT16>();
+	UINT32  const uiPitch = l.Pitch();
 
 	if (BltIsClipped(hSrcVObject, iDestX, iDestY, usIndex, &ClippingRect))
 	{
@@ -417,16 +416,15 @@ BOOLEAN BltVideoObjectOutline(SGPVSurface* const dst, const SGPVObject* const hS
 		Blt8BPPDataTo16BPPBufferOutline(pBuffer, uiPitch, hSrcVObject, iDestX, iDestY, usIndex, s16BPPColor);
 	}
 
-	UnLockVideoSurface(dst);
 	return TRUE;
 }
 
 
 BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* const dst, const SGPVObject* const src, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY)
 {
-	UINT32 uiPitch;
-	UINT16* pBuffer = (UINT16*)LockVideoSurface(dst, &uiPitch);
-	if (pBuffer == NULL) return FALSE;
+	SGPVSurface::Lock l(dst);
+	UINT16* const pBuffer = l.Buffer<UINT16>();
+	UINT32  const uiPitch = l.Pitch();
 
 	if (BltIsClipped(src, iDestX, iDestY, usIndex, &ClippingRect))
 	{
@@ -437,7 +435,6 @@ BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* const dst, const SGPVObject* co
 		Blt8BPPDataTo16BPPBufferOutlineShadow(pBuffer, uiPitch, src, iDestX, iDestY, usIndex);
 	}
 
-	UnLockVideoSurface(dst);
 	return TRUE;
 }
 

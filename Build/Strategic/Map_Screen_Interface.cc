@@ -2070,9 +2070,6 @@ static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 {
 	UINT16 usFillColor;
 	INT32 iX,iY,iW,iH;
-	UINT8 *pDestBuf;
-	UINT32 uiDestPitchBYTES;
-
 
 	// grab the color for the background region
 	usFillColor = Get16BPPColor(FROMRGB(250, 240, 188));
@@ -2106,11 +2103,12 @@ static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 	if ( (iY + iH) >= SCREEN_HEIGHT )
 		iY = (SCREEN_HEIGHT - iH - 15);
 
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw( TRUE, iX + 1, iY + 1, iX + iW - 1, iY + iH - 1, Get16BPPColor( FROMRGB( 65, 57, 15 ) ), pDestBuf );
-	RectangleDraw( TRUE, iX, iY, iX + iW - 2, iY + iH - 2, Get16BPPColor( FROMRGB( 227, 198, 88 ) ), pDestBuf );
-	UnLockVideoSurface( FRAME_BUFFER );
+	{ SGPVSurface::Lock l(FRAME_BUFFER);
+		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		UINT8* const pDestBuf = l.Buffer<UINT8>();
+		RectangleDraw(TRUE, iX + 1, iY + 1, iX + iW - 1, iY + iH - 1, Get16BPPColor(FROMRGB( 65,  57, 15)), pDestBuf);
+		RectangleDraw(TRUE, iX,     iY,     iX + iW - 2, iY + iH - 2, Get16BPPColor(FROMRGB(227, 198, 88)), pDestBuf);
+	}
 	ShadowVideoSurfaceRect( FRAME_BUFFER, iX + 2, iY + 2, iX + iW - 3, iY + iH - 3 );
 	ShadowVideoSurfaceRect( FRAME_BUFFER, iX + 2, iY + 2, iX + iW - 3, iY + iH - 3 );
 

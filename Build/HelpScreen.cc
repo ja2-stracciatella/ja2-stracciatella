@@ -2008,8 +2008,6 @@ static void DisplayHelpScreenTextBufferScrollBox(void)
 {
 	INT32	iSizeOfBox;
 	INT32	iTopPosScrollBox=0;
-  UINT8	 *pDestBuf;
-  UINT32 uiDestPitchBYTES;
 	UINT16 usPosX;
 
 	if( gHelpScreen.bNumberOfButtons != 0 )
@@ -2037,7 +2035,9 @@ static void DisplayHelpScreenTextBufferScrollBox(void)
 		ColorFillVideoSurfaceArea( FRAME_BUFFER, usPosX, iTopPosScrollBox, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA,	iTopPosScrollBox+iSizeOfBox-1, Get16BPPColor( FROMRGB( 227, 198, 88 ) ) );
 
 		//display the line
-		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+		SGPVSurface::Lock l(FRAME_BUFFER);
+		UINT8* const pDestBuf         = l.Buffer<UINT8>();
+		UINT32 const uiDestPitchBYTES = l.Pitch();
 		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		// draw the gold highlite line on the top and left
@@ -2047,9 +2047,6 @@ static void DisplayHelpScreenTextBufferScrollBox(void)
 		// draw the shadow line on the bottom and right
 		LineDraw(FALSE, usPosX, iTopPosScrollBox+iSizeOfBox-1, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox+iSizeOfBox-1, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
 		LineDraw(FALSE, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox, usPosX+HLP_SCRN__WIDTH_OF_SCROLL_AREA, iTopPosScrollBox+iSizeOfBox-1, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
-
-		// unlock frame buffer
-		UnLockVideoSurface( FRAME_BUFFER );
 	}
 }
 

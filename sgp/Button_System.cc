@@ -1336,10 +1336,8 @@ static void DrawHatchOnButton(const GUI_BUTTON* b)
 	ClipRect.iRight  = b->Area.RegionBottomRightX - 1;
 	ClipRect.iTop    = b->Area.RegionTopLeftY;
 	ClipRect.iBottom = b->Area.RegionBottomRightY - 1;
-	UINT32 uiDestPitchBYTES;
-	UINT16* pDestBuf = (UINT16*)LockVideoSurface(ButtonDestBuffer, &uiDestPitchBYTES);
-	Blt16BPPBufferHatchRect(pDestBuf, uiDestPitchBYTES, &ClipRect);
-	UnLockVideoSurface(ButtonDestBuffer);
+	SGPVSurface::Lock l(ButtonDestBuffer);
+	Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
 }
 
 
@@ -1783,8 +1781,9 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	// Fill the button's area with the button's background color
 	ColorFillVideoSurfaceArea(ButtonDestBuffer, b->Area.RegionTopLeftX, b->Area.RegionTopLeftY, b->Area.RegionBottomRightX, b->Area.RegionBottomRightY, GenericButtonFillColors);
 
-	UINT32  uiDestPitchBYTES;
-	UINT16* pDestBuf = (UINT16*)LockVideoSurface(ButtonDestBuffer, &uiDestPitchBYTES);
+	SGPVSurface::Lock l(ButtonDestBuffer);
+	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	SGPRect ClipRect;
 	GetClippingRect(&ClipRect);
@@ -1816,8 +1815,6 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, b->XLoc, y, 3, &ClipRect);
 		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx,      y, 4, &ClipRect);
 	}
-
-	UnLockVideoSurface(ButtonDestBuffer);
 }
 
 

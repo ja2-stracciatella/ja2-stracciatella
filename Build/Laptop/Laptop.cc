@@ -1132,11 +1132,12 @@ UINT32 LaptopScreenHandle()
 			//SetFontForeground( FONT_YELLOW );
 			//SetFontShadow( FONT_NEARBLACK );
 			//mprintf( 10, 10, L"%d -> %d", iRealPercentage, iPercentage );
-			//pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-			//SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			//RectangleDraw( TRUE, SrcRect1.iLeft, SrcRect1.iTop, SrcRect1.iRight, SrcRect1.iBottom, Get16BPPColor( FROMRGB( 255, 100, 0 ) ), pDestBuf );
-			//RectangleDraw( TRUE, SrcRect2.iLeft, SrcRect2.iTop, SrcRect2.iRight, SrcRect2.iBottom, Get16BPPColor( FROMRGB( 100, 255, 0 ) ), pDestBuf );
-			//UnLockVideoSurface( FRAME_BUFFER );
+			//{ SGPVSurface::Lock(FRAME_BUFFER);
+			//	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			//	UINT8* const pDestBuf = l.Buffer<UINT8>();
+			//	RectangleDraw(TRUE, SrcRect1.iLeft, SrcRect1.iTop, SrcRect1.iRight, SrcRect1.iBottom, Get16BPPColor(FROMRGB(255, 100, 0)), pDestBuf);
+			//	RectangleDraw(TRUE, SrcRect2.iLeft, SrcRect2.iTop, SrcRect2.iRight, SrcRect2.iBottom, Get16BPPColor(FROMRGB(100, 255, 0)), pDestBuf);
+			//}
 
 			BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &DstRect, &SrcRect2);
 			InvalidateScreen();
@@ -1540,11 +1541,12 @@ BOOLEAN LeaveLapTopScreen(void)
 				//SetFontForeground( FONT_YELLOW );
 				//SetFontShadow( FONT_NEARBLACK );
 				//mprintf( 10, 10, L"%d -> %d", iRealPercentage, iPercentage );
-				//pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-				//SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-				//RectangleDraw( TRUE, SrcRect1.iLeft, SrcRect1.iTop, SrcRect1.iRight, SrcRect1.iBottom, Get16BPPColor( FROMRGB( 255, 100, 0 ) ), pDestBuf );
-				//RectangleDraw( TRUE, SrcRect2.iLeft, SrcRect2.iTop, SrcRect2.iRight, SrcRect2.iBottom, Get16BPPColor( FROMRGB( 100, 255, 0 ) ), pDestBuf );
-				//UnLockVideoSurface( FRAME_BUFFER );
+				//{ SGPVSurface::Lock(FRAME_BUFFER);
+				//	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				//	UINT8* const pDestBuf = l.Buffer<UINT8>();
+				//	RectangleDraw(TRUE, SrcRect1.iLeft, SrcRect1.iTop, SrcRect1.iRight, SrcRect1.iBottom, Get16BPPColor(FROMRGB(255, 100, 0)), pDestBuf);
+				//	RectangleDraw(TRUE, SrcRect2.iLeft, SrcRect2.iTop, SrcRect2.iRight, SrcRect2.iBottom, Get16BPPColor(FROMRGB(100, 255, 0)), pDestBuf);
+				//}
 
 				BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &DstRect, &SrcRect2);
 				InvalidateScreen();

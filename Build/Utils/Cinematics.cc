@@ -52,11 +52,10 @@ BOOLEAN SmkPollFlics(void)
 		Smack* const smk = i->SmackHandle;
 		if (SmackWait(smk)) continue;
 
-		UINT32        Pitch;
-		UINT16* const Dest = (UINT16*)LockVideoSurface(FRAME_BUFFER, &Pitch);
-		SmackToBuffer(smk, i->uiLeft, i->uiTop, Pitch, smk->Height, Dest, guiSmackPixelFormat);
-		SmackDoFrame(smk);
-		UnLockVideoSurface(FRAME_BUFFER);
+		{ SGPVSurface::Lock l(FRAME_BUFFER);
+			SmackToBuffer(smk, i->uiLeft, i->uiTop, l.Pitch(), smk->Height, l.Buffer<UINT16>(), guiSmackPixelFormat);
+			SmackDoFrame(smk);
+		}
 
 		// Check to see if the flic is done the last frame
 		if (smk->FrameNum == smk->Frames - 1)

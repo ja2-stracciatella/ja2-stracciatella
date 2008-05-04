@@ -532,8 +532,6 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 {
  static INT32 iColorNum =10;
  static BOOLEAN fDelta=FALSE;
- UINT32 uiDestPitchBYTES;
- UINT8	*pDestBuf;
  INT16 usY = 0;
  INT16 sYAdd = 0;
 
@@ -578,11 +576,10 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 
 	// glow contract box
 	UINT16 usColor = GlowColor(iColorNum);
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw( TRUE, TIME_REMAINING_X, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH, usY + GetFontHeight( MAP_SCREEN_FONT ) + 2, usColor, pDestBuf );
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	RectangleDraw(TRUE, TIME_REMAINING_X, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH, usY + GetFontHeight(MAP_SCREEN_FONT) + 2, usColor, l.Buffer<UINT8>());
 	InvalidateRegion(TIME_REMAINING_X - 1, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH + 1, usY + GetFontHeight( MAP_SCREEN_FONT ) + 3 );
-	UnLockVideoSurface( FRAME_BUFFER );
 }
 
 
@@ -591,8 +588,6 @@ static void GlowFace(void)
  static INT32 iColorNum =10;
  static BOOLEAN fDelta=FALSE;
  static BOOLEAN fOldFaceGlow = FALSE;
- UINT32 uiDestPitchBYTES;
- UINT8	*pDestBuf;
 
 	// not glowing right now, leave
 	if (!fShowFaceHightLight)
@@ -630,11 +625,11 @@ static void GlowFace(void)
 
 	// glow contract box
 	UINT16 usColor = GlowColor(iColorNum);
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw( TRUE, 9, 18, 60, 63 , usColor, pDestBuf );
-	InvalidateRegion( 9, 18, 61, 64 );
-	UnLockVideoSurface( FRAME_BUFFER );
+	{ SGPVSurface::Lock l(FRAME_BUFFER);
+		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		RectangleDraw(TRUE, 9, 18, 60, 63 , usColor, l.Buffer<UINT8>());
+		InvalidateRegion(9, 18, 61, 64);
+	}
 
 	// restore background
 	if((iColorNum==0)||(iColorNum==1))
@@ -650,8 +645,6 @@ static void GlowItem(void)
  static INT32 iColorNum =10;
  static BOOLEAN fDelta=FALSE;
  static BOOLEAN fOldItemGlow = FALSE;
- UINT32 uiDestPitchBYTES;
- UINT8	*pDestBuf;
 
 	// not glowing right now, leave
 	if (!fShowItemHighLight)
@@ -696,11 +689,10 @@ static void GlowItem(void)
 
 	// glow contract box
 	UINT16 usColor = GlowColor(iColorNum);
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw( TRUE, 3, 80, 64, 104 , usColor, pDestBuf );
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	RectangleDraw(TRUE, 3, 80, 64, 104, usColor, l.Buffer<UINT8>());
 	InvalidateRegion( 3, 80, 65, 105 );
-	UnLockVideoSurface( FRAME_BUFFER );
 }
 
 
@@ -708,8 +700,6 @@ static void GlowTrashCan(void)
 {
  static INT32 iColorNum =10;
  static BOOLEAN fOldTrashCanGlow = FALSE;
- UINT32 uiDestPitchBYTES;
- UINT8	*pDestBuf;
 
 	if (!fShowInventoryFlag) fShowTrashCanHighLight = FALSE;
 
@@ -736,11 +726,11 @@ static void GlowTrashCan(void)
 
 	// glow contract box
 	UINT16 usColor = GlowColor(iColorNum);
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw( TRUE, TRASH_CAN_X, TRASH_CAN_Y , TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT , usColor, pDestBuf );
-	InvalidateRegion( TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH + 1, TRASH_CAN_Y + TRASH_CAN_HEIGHT + 1 );
-	UnLockVideoSurface( FRAME_BUFFER );
+	{ SGPVSurface::Lock l(FRAME_BUFFER);
+		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		RectangleDraw(TRUE, TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT, usColor, l.Buffer<UINT8>());
+		InvalidateRegion( TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH + 1, TRASH_CAN_Y + TRASH_CAN_HEIGHT + 1 );
+	}
 
 	// restore background
 	if((iColorNum==0)||(iColorNum==1))
@@ -1366,8 +1356,6 @@ static void DisplayGroundEta(void)
 
 static void HighLightAssignLine(void)
 {
-	UINT32 uiDestPitchBYTES;
-	UINT8  *pDestBuf;
 	static INT32 iColorNum = STARTING_COLOR_NUM;
 	static BOOLEAN fDelta=FALSE;
 	static INT32 uiOldHighlight = MAX_CHARACTER_COUNT + 1;
@@ -1416,9 +1404,9 @@ static void HighLightAssignLine(void)
 		usY += 6;
 	}
 
-
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	UINT8* const pDestBuf = l.Buffer<UINT8>();
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
 	{
@@ -1449,15 +1437,11 @@ static void HighLightAssignLine(void)
 			InvalidateRegion( usX, usY, usX+ASSIGN_WIDTH+1, usY+GetFontHeight(MAP_SCREEN_FONT)+3);
 		}
 	}
-
-	UnLockVideoSurface( FRAME_BUFFER );
 }
 
 
 static void HighLightDestLine(void)
 {
-	UINT32 uiDestPitchBYTES;
-	UINT8  *pDestBuf;
 	static INT32 iColorNum = STARTING_COLOR_NUM;
 	static BOOLEAN fDelta=FALSE;
 	static INT32 uiOldHighlight = MAX_CHARACTER_COUNT + 1;
@@ -1496,9 +1480,9 @@ static void HighLightDestLine(void)
 	else
 		iColorNum--;
 
-
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	UINT8* const pDestBuf = l.Buffer<UINT8>();
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
 	{
@@ -1532,14 +1516,11 @@ static void HighLightDestLine(void)
 	}
 	//InvalidateRegion( usX+4, usY, DEST_ETA_WIDTH-10, usY+GetFontHeight(MAP_SCREEN_FONT)+3);
 	//InvalidateRegion( usX+10, usY, usX+ASSIGN_WIDTH, usY+GetFontHeight(MAP_SCREEN_FONT)+3);
-	UnLockVideoSurface( FRAME_BUFFER );
 }
 
 
 static void HighLightSleepLine(void)
 {
-	UINT32 uiDestPitchBYTES;
-	UINT8  *pDestBuf;
 	static INT32 iColorNum = STARTING_COLOR_NUM;
 	static BOOLEAN fDelta=FALSE;
 	static INT32 uiOldHighlight = MAX_CHARACTER_COUNT + 1;
@@ -1579,9 +1560,9 @@ static void HighLightSleepLine(void)
 	else
 		iColorNum--;
 
-
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	UINT8* const pDestBuf = l.Buffer<UINT8>();
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
 	{
@@ -1614,7 +1595,6 @@ static void HighLightSleepLine(void)
 			InvalidateRegion( usX, usY, usX2 + 5, usY + GetFontHeight(MAP_SCREEN_FONT)+3 );
 		}
 	}
-	UnLockVideoSurface( FRAME_BUFFER );
 }
 
 
@@ -4244,9 +4224,6 @@ static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOO
 {
 #ifndef JA2DEMO
 	INT16												sScreenX, sScreenY;
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
-
 
 	Assert( ( sMapX >= 1 ) && ( sMapX <= 16 ) );
 	Assert( ( sMapY >= 1 ) && ( sMapY <= 16 ) );
@@ -4285,7 +4262,9 @@ static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOO
 */
 
 	// blit in the highlighted sector
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT8* const pDestBuf         = l.Buffer<UINT8>();
+	UINT32 const uiDestPitchBYTES = l.Pitch();
 
 	// clip to view region
 	ClipBlitsToMapViewRegionForRectangleAndABit( uiDestPitchBYTES );
@@ -4306,8 +4285,6 @@ static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOO
 	}
 
 	RestoreClipRegionToFullScreenForRectangle( uiDestPitchBYTES );
-	UnLockVideoSurface( FRAME_BUFFER );
-
 #endif
 }
 
@@ -8083,9 +8060,6 @@ static void DisplayExitToTacticalGlowDuringDemo(void)
 {
   static INT32 iColorNum=10;
   static BOOLEAN fDelta=FALSE;
-	UINT32 uiDestPitchBYTES;
-  UINT8  *pDestBuf;
-
 
 	// if not ready to change glow phase yet, leave
 	if ( !gfGlowTimerExpired )
@@ -8105,11 +8079,10 @@ static void DisplayExitToTacticalGlowDuringDemo(void)
 		iColorNum--;
 
 	UINT16 usColor = GlowColor(iColorNum);
-  pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw(TRUE, 495, 409, 528, 442, usColor, pDestBuf);
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	RectangleDraw(TRUE, 495, 409, 528, 442, usColor, l.Buffer<UINT16>());
 	InvalidateRegion(495, 408, 529+1, 442+1);
-	UnLockVideoSurface( FRAME_BUFFER );
 }
 
 #endif
@@ -8133,13 +8106,10 @@ static void CheckForAndRenderNewMailOverlay(void)
 				BltVideoObject(FRAME_BUFFER, guiNewMailIcons, 0, 464, 417);
 				if( !(ButtonList[ guiMapBottomExitButtons[ MAP_EXIT_TO_LAPTOP ] ]->uiFlags & BUTTON_ENABLED ) )
 				{
-					UINT32 uiDestPitchBYTES;
-					UINT8  *pDestBuf;
 					SGPRect area = { 463, 417, 477, 425 };
 
-				  pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-					Blt16BPPBufferHatchRect( (UINT16*)pDestBuf, uiDestPitchBYTES, &area );
-					UnLockVideoSurface( FRAME_BUFFER );
+					SGPVSurface::Lock l(FRAME_BUFFER);
+					Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &area);
 				}
 				InvalidateRegion( 463, 417, 481, 430 );
 

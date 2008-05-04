@@ -349,8 +349,6 @@ UINT32	guiColors[ 12 ] =
 static void RenderRubberBanding(void)
 {
 	UINT16										 usLineColor;
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
 	INT16											 iLeft, iRight, iTop, iBottom;
 	static INT32							 iFlashColor = 0;
 	static INT32							 uiTimeOfLastUpdate = 0;
@@ -380,8 +378,9 @@ static void RenderRubberBanding(void)
 	}
 
 	// Draw rectangle.....
-	pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
-	SetClippingRegionAndImageWidth( uiDestPitchBYTES, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y );
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT8* const pDestBuf = l.Buffer<UINT8>();
+	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y );
 
 	usLineColor = Get16BPPColor( guiColors[ iFlashColor ] );
 
@@ -428,8 +427,6 @@ static void RenderRubberBanding(void)
 		LineDraw( TRUE, iRight, iTop, iRight, iBottom, usLineColor, pDestBuf );
 		RegisterBackgroundRectSingleFilled(iRight, iBottom, iRight + 1, iTop);
 	}
-
-	UnLockVideoSurface( FRAME_BUFFER );
 }
 
 

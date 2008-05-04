@@ -354,10 +354,8 @@ static void RenderTacticalPlacementGUI(void)
 	INT32 i, xp, yp, width;
 	INT32 iStartY;
 	SOLDIERTYPE *pSoldier;
-	UINT32 uiDestPitchBYTES;
 	UINT16 usHatchColor;
 	wchar_t str[ 128 ];
-	UINT8 *pDestBuf;
 	UINT8 ubColor;
 	if( gfTacticalPlacementFirstTime )
 	{
@@ -462,11 +460,12 @@ static void RenderTacticalPlacementGUI(void)
 				case INSERTION_CODE_WEST:		gTPClipRect.iLeft		= 30;			break;
 			}
 		}
-		pDestBuf = LockVideoSurface( FRAME_BUFFER, &uiDestPitchBYTES );
+		SGPVSurface::Lock l(FRAME_BUFFER);
+		UINT8* const pDestBuf         = l.Buffer<UINT8>();
+		UINT32 const uiDestPitchBYTES = l.Pitch();
 		Blt16BPPBufferLooseHatchRectWithColor( (UINT16*)pDestBuf, uiDestPitchBYTES, &gTPClipRect, usHatchColor );
 		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		RectangleDraw( TRUE, gTPClipRect.iLeft, gTPClipRect.iTop, gTPClipRect.iRight, gTPClipRect.iBottom, usHatchColor, pDestBuf );
-		UnLockVideoSurface( FRAME_BUFFER );
 	}
 	for( i = 0; i < giPlacements; i++ )
 	{ //Render the merc's names

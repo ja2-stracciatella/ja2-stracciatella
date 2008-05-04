@@ -3813,10 +3813,9 @@ static void DrawSite(const INT16 sector_x, const INT16 sector_y, const SGPVObjec
 	UINT8  vo_idx;
 	if (fZoomFlag)
 	{
-		UINT32 uiDestPitchBYTES;
-		LockVideoSurface(guiSAVEBUFFER, &uiDestPitchBYTES);
-		SetClippingRegionAndImageWidth(uiDestPitchBYTES, MAP_VIEW_START_X + MAP_GRID_X - 1, MAP_VIEW_START_Y + MAP_GRID_Y - 1, MAP_VIEW_WIDTH + 1, MAP_VIEW_HEIGHT - 9);
-		UnLockVideoSurface(guiSAVEBUFFER);
+		{ SGPVSurface::Lock l(guiSAVEBUFFER);
+			SetClippingRegionAndImageWidth(l.Pitch(), MAP_VIEW_START_X + MAP_GRID_X - 1, MAP_VIEW_START_Y + MAP_GRID_Y - 1, MAP_VIEW_WIDTH + 1, MAP_VIEW_HEIGHT - 9);
+		}
 
 		GetScreenXYFromMapXYStationary(sector_x, sector_y, &x, &y);
 		x -= MAP_GRID_X - 1;
@@ -3965,8 +3964,6 @@ static void AdjustXForLeftMapEdge(const wchar_t* wString, INT16* psX)
 static void BlitTownGridMarkers(void)
 {
 	INT16 sScreenX = 0, sScreenY = 0;
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
 	UINT16 usColor = 0;
 	INT32 iCounter = 0;
 	INT16 sWidth = 0, sHeight = 0;
@@ -3974,9 +3971,10 @@ static void BlitTownGridMarkers(void)
 	// get 16 bpp color
 	usColor = Get16BPPColor( FROMRGB( 100, 100, 100) );
 
-
 	// blit in the highlighted sector
-	pDestBuf = LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES );
+	SGPVSurface::Lock l(guiSAVEBUFFER);
+	UINT8* const pDestBuf         = l.Buffer<UINT8>();
+	UINT32 const uiDestPitchBYTES = l.Pitch();
 
 	// clip to view region
 	ClipBlitsToMapViewRegionForRectangleAndABit( uiDestPitchBYTES );
@@ -4033,17 +4031,12 @@ static void BlitTownGridMarkers(void)
 
 	// restore clips
 	RestoreClipRegionToFullScreenForRectangle( uiDestPitchBYTES );
-
-	// unlock surface
-	UnLockVideoSurface( guiSAVEBUFFER );
 }
 
 
 static void BlitMineGridMarkers(void)
 {
 	INT16 sScreenX = 0, sScreenY = 0;
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
 	UINT16 usColor = 0;
 	INT32 iCounter = 0;
 	INT16 sWidth = 0, sHeight = 0;
@@ -4053,7 +4046,8 @@ static void BlitMineGridMarkers(void)
 
 
 	// blit in the highlighted sector
-	pDestBuf = LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES );
+	SGPVSurface::Lock l(guiSAVEBUFFER);
+	UINT32 const uiDestPitchBYTES = l.Pitch();
 
 	// clip to view region
 	ClipBlitsToMapViewRegionForRectangleAndABit( uiDestPitchBYTES );
@@ -4079,14 +4073,11 @@ static void BlitMineGridMarkers(void)
 		}
 
 		// draw rectangle
-		RectangleDraw( TRUE, sScreenX, sScreenY - 1, sScreenX + sWidth, sScreenY + sHeight - 1, usColor, pDestBuf );
+		RectangleDraw(TRUE, sScreenX, sScreenY - 1, sScreenX + sWidth, sScreenY + sHeight - 1, usColor, l.Buffer<UINT8>());
 	}
 
 	// restore clips
 	RestoreClipRegionToFullScreenForRectangle( uiDestPitchBYTES );
-
-	// unlock surface
-	UnLockVideoSurface( guiSAVEBUFFER );
 }
 
 
@@ -5641,8 +5632,6 @@ static void ShowSAMSitesOnStrategicMap(void)
 static void BlitSAMGridMarkers(void)
 {
 	INT16 sScreenX = 0, sScreenY = 0;
-	UINT32										 uiDestPitchBYTES;
-	UINT8											 *pDestBuf;
 	UINT16 usColor = 0;
 	INT32 iCounter = 0;
 	INT16 sWidth = 0, sHeight = 0;
@@ -5651,7 +5640,8 @@ static void BlitSAMGridMarkers(void)
 	// get 16 bpp color
 	usColor = Get16BPPColor( FROMRGB( 100, 100, 100) );
 
-	pDestBuf = LockVideoSurface( guiSAVEBUFFER, &uiDestPitchBYTES );
+	SGPVSurface::Lock l(guiSAVEBUFFER);
+	UINT32 const uiDestPitchBYTES = l.Pitch();
 
 	// clip to view region
 	ClipBlitsToMapViewRegionForRectangleAndABit( uiDestPitchBYTES );
@@ -5682,14 +5672,11 @@ static void BlitSAMGridMarkers(void)
 		}
 
 		// draw rectangle
-		RectangleDraw( TRUE, sScreenX, sScreenY - 1, sScreenX + sWidth, sScreenY + sHeight - 1, usColor, pDestBuf );
+		RectangleDraw(TRUE, sScreenX, sScreenY - 1, sScreenX + sWidth, sScreenY + sHeight - 1, usColor, l.Buffer<UINT8>());
 	}
 
 	// restore clips
 	RestoreClipRegionToFullScreenForRectangle( uiDestPitchBYTES );
-
-	// unlock surface
-	UnLockVideoSurface( guiSAVEBUFFER );
 }
 
 

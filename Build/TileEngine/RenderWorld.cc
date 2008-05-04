@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "Animation_Control.h"
 #include "Animation_Data.h"
+#include "AutoPtr.h"
 #include "Debug.h"
 #include "English.h"
 #include "Font.h"
@@ -342,11 +343,14 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 	INT32 iAnchorPosX_S = iStartPointX_S;
 	INT32 iAnchorPosY_S = iStartPointY_S;
 
-	UINT32  uiDestPitchBYTES;
-	UINT16* pDestBuf = NULL;
+	UINT32                uiDestPitchBYTES = 0;
+	UINT16*               pDestBuf         = 0;
+	SGPVSurface::Lockable lock;
 	if  (!(uiFlags & TILES_DIRTY))
 	{
-		pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+		lock.Lock(FRAME_BUFFER);
+		pDestBuf         = lock.Buffer<UINT16>();
+		uiDestPitchBYTES = lock.Pitch();
 	}
 
 	BOOLEAN fCheckForMouseDetections = FALSE;
@@ -1326,13 +1330,10 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 
 													if (uiLevelNodeFlags & LEVELNODE_UPDATESAVEBUFFERONCE)
 													{
-														UINT32 uiSaveBufferPitchBYTES;
-														UINT16* pSaveBuf = (UINT16*)LockVideoSurface(guiSAVEBUFFER, &uiSaveBufferPitchBYTES);
+														SGPVSurface::Lock l(guiSAVEBUFFER);
 
 														// BLIT HERE
-														Blt8BPPDataTo16BPPBufferTransShadowClip(pSaveBuf, uiSaveBufferPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect, pShadeTable);
-
-														UnLockVideoSurface(guiSAVEBUFFER);
+														Blt8BPPDataTo16BPPBufferTransShadowClip(l.Buffer<UINT16>(), l.Pitch(), hVObject, sXPos, sYPos, usImageIndex, &gClippingRect, pShadeTable);
 
 														// Turn it off!
 														pNode->uiFlags &= ~LEVELNODE_UPDATESAVEBUFFERONCE;
@@ -1399,13 +1400,10 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 
 												if (uiLevelNodeFlags & LEVELNODE_UPDATESAVEBUFFERONCE)
 												{
-													UINT32 uiSaveBufferPitchBYTES;
-													UINT16* pSaveBuf = (UINT16*)LockVideoSurface(guiSAVEBUFFER, &uiSaveBufferPitchBYTES);
+													SGPVSurface::Lock l(guiSAVEBUFFER);
 
 													// BLIT HERE
-													Blt8BPPDataTo16BPPBufferTransZClip(pSaveBuf, uiSaveBufferPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
-
-													UnLockVideoSurface(guiSAVEBUFFER);
+													Blt8BPPDataTo16BPPBufferTransZClip(l.Buffer<UINT16>(), l.Pitch(), gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
 
 													// Turn it off!
 													pNode->uiFlags &= ~LEVELNODE_UPDATESAVEBUFFERONCE;
@@ -1451,13 +1449,10 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 
 													if (uiLevelNodeFlags & LEVELNODE_UPDATESAVEBUFFERONCE)
 													{
-														UINT32 uiSaveBufferPitchBYTES;
-														UINT16* pSaveBuf = (UINT16*)LockVideoSurface(guiSAVEBUFFER, &uiSaveBufferPitchBYTES);
+														SGPVSurface::Lock l(guiSAVEBUFFER);
 
 														// BLIT HERE
-														Blt8BPPDataTo16BPPBufferTransShadow(pSaveBuf, uiSaveBufferPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, pShadeTable);
-
-														UnLockVideoSurface(guiSAVEBUFFER);
+														Blt8BPPDataTo16BPPBufferTransShadow(l.Buffer<UINT16>(), l.Pitch(), hVObject, sXPos, sYPos, usImageIndex, pShadeTable);
 
 														// Turn it off!
 														pNode->uiFlags &= ~LEVELNODE_UPDATESAVEBUFFERONCE;
@@ -1524,13 +1519,10 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 
 												if (uiLevelNodeFlags & LEVELNODE_UPDATESAVEBUFFERONCE)
 												{
-													UINT32 uiSaveBufferPitchBYTES;
-													UINT16* pSaveBuf = (UINT16*)LockVideoSurface(guiSAVEBUFFER, &uiSaveBufferPitchBYTES);
+													SGPVSurface::Lock l(guiSAVEBUFFER);
 
 													// BLIT HERE
-													Blt8BPPDataTo16BPPBufferTransZ(pSaveBuf, uiSaveBufferPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
-
-													UnLockVideoSurface(guiSAVEBUFFER);
+													Blt8BPPDataTo16BPPBufferTransZ(l.Buffer<UINT16>(), l.Pitch(), gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex);
 
 													// Turn it off!
 													pNode->uiFlags &= ~LEVELNODE_UPDATESAVEBUFFERONCE;
@@ -1604,8 +1596,6 @@ next_node:
 		iAnchorPosY_S += 10;
 	}
 	while (iAnchorPosY_S < iEndYS);
-
-	if (!(uiFlags & TILES_DIRTY)) UnLockVideoSurface(FRAME_BUFFER);
 
 	if (uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE) EndCurInteractiveTileCheck();
 }
@@ -1763,15 +1753,13 @@ void RenderWorld(void)
 	if (gTacticalStatus.uiFlags & SHOW_Z_BUFFER)
 	{
 		// COPY Z BUFFER TO FRAME BUFFER
-		UINT32  uiDestPitchBYTES;
-		UINT16* pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+		SGPVSurface::Lock l(FRAME_BUFFER);
+		UINT16* const pDestBuf = l.Buffer<UINT16>();
 
 		for (UINT32 i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; ++i)
 		{
 			pDestBuf[i] = gpZBuffer[i];
 		}
-
-		UnLockVideoSurface(FRAME_BUFFER);
 	}
 }
 
@@ -5337,8 +5325,9 @@ static void RenderRoomInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sSt
 	INT16 sAnchorPosX_S = sStartPointX_S;
 	INT16 sAnchorPosY_S = sStartPointY_S;
 
-	UINT32 uiDestPitchBYTES;
-	UINT16* pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	BOOLEAN bXOddFlag = FALSE;
 	do
@@ -5398,8 +5387,6 @@ static void RenderRoomInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sSt
 		sAnchorPosY_S += 10;
 	}
 	while (sAnchorPosY_S < sEndYS);
-
-	UnLockVideoSurface(FRAME_BUFFER);
 }
 
 
@@ -5412,8 +5399,9 @@ static void RenderFOVDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16
 	INT16 sAnchorPosX_S = sStartPointX_S;
 	INT16 sAnchorPosY_S = sStartPointY_S;
 
-	UINT32 uiDestPitchBYTES;
-	UINT16* pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	BOOLEAN bXOddFlag = FALSE;
 	do
@@ -5477,8 +5465,6 @@ static void RenderFOVDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16
 		sAnchorPosY_S += 10;
 	}
 	while (sAnchorPosY_S < sEndYS);
-
-	UnLockVideoSurface(FRAME_BUFFER);
 }
 
 
@@ -5489,8 +5475,9 @@ static void RenderCoverDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT
 	INT16 sAnchorPosX_S = sStartPointX_S;
 	INT16 sAnchorPosY_S = sStartPointY_S;
 
-	UINT32 uiDestPitchBYTES;
-	UINT16* pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	BOOLEAN bXOddFlag = FALSE;
 	do
@@ -5554,8 +5541,6 @@ static void RenderCoverDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT
 		sAnchorPosY_S += 10;
 	}
 	while (sAnchorPosY_S < sEndYS);
-
-	UnLockVideoSurface(FRAME_BUFFER);
 }
 
 
@@ -5566,8 +5551,9 @@ static void RenderGridNoVisibleDebugInfo(INT16 sStartPointX_M, INT16 sStartPoint
 	INT16 sAnchorPosX_S = sStartPointX_S;
 	INT16 sAnchorPosY_S = sStartPointY_S;
 
-	UINT32 uiDestPitchBYTES;
-	UINT16* pDestBuf = (UINT16*)LockVideoSurface(FRAME_BUFFER, &uiDestPitchBYTES);
+	SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	BOOLEAN bXOddFlag = FALSE;
 	do
@@ -5625,8 +5611,6 @@ static void RenderGridNoVisibleDebugInfo(INT16 sStartPointX_M, INT16 sStartPoint
 		sAnchorPosY_S += 10;
 	}
 	while (sAnchorPosY_S < sEndYS);
-
-	UnLockVideoSurface(FRAME_BUFFER);
 }
 
 #endif

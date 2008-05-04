@@ -2580,17 +2580,14 @@ static BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement)
 
 void DrawHatchOnInventory(SGPVSurface* const uiSurface, const UINT16 usPosX, const UINT16 usPosY, const UINT16 usWidth, const UINT16 usHeight)
 {
-	UINT8	 *pDestBuf;
-	UINT32 uiDestPitchBYTES;
 	SGPRect ClipRect;
 	ClipRect.iLeft   = usPosX;
 	ClipRect.iRight  = usPosX + usWidth  - 1;
 	ClipRect.iTop    = usPosY;
 	ClipRect.iBottom = usPosY + usHeight - 1;
 
-	pDestBuf = LockVideoSurface( uiSurface, &uiDestPitchBYTES );
-	Blt16BPPBufferHatchRect((UINT16*)pDestBuf, uiDestPitchBYTES, &ClipRect);
-	UnLockVideoSurface( uiSurface );
+	SGPVSurface::Lock l(uiSurface);
+	Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
 }
 
 
