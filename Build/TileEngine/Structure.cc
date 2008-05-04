@@ -225,7 +225,7 @@ void FreeStructureFile(STRUCTURE_FILE_REF* const sfr)
 	STRUCTURE_FILE_REF* const next = sfr->pNext;
 	STRUCTURE_FILE_REF* const prev = sfr->pPrev;
 	Assert((prev == NULL) == (gpStructureFileRefs == sfr));
-	(prev != NULL ? prev->pNext : gpStructureFileRefs) = next;
+	*(prev != NULL ? &prev->pNext : &gpStructureFileRefs) = next;
 	if (next) next->pPrev = prev;
 
 	FreeStructureFileRef(sfr);
