@@ -10,7 +10,6 @@
 
 SGPVSurface::~SGPVSurface()
 {
-	if (palette_)      MemFree(palette_);
 	if (p16BPPPalette) MemFree(p16BPPPalette);
 }
 
@@ -18,7 +17,7 @@ SGPVSurface::~SGPVSurface()
 void SGPVSurface::SetPalette(const SGPPaletteEntry* const src_pal)
 {
 	// Create palette object if not already done so
-	if (palette_ == NULL) palette_ = MALLOCN(SDL_Color, 256);
+	if (!palette_) palette_.Allocate(256);
 	SDL_Color* const p = palette_;
 	for (UINT32 i = 0; i < 256; i++)
 	{

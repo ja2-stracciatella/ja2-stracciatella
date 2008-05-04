@@ -9,12 +9,12 @@ namespace SGP
 	template<typename T> class Buffer
 	{
 		public:
-			Buffer()         : buf_(0)             {}
-			Buffer(size_t n) : buf_(MALLOCN(T, n)) {}
+			explicit Buffer()         : buf_(0)             {}
+			explicit Buffer(size_t n) : buf_(MALLOCN(T, n)) {}
 
 			~Buffer() { if (buf_) MemFree(buf_); }
 
-			void Allocate(size_t n)
+			void Allocate(size_t const n)
 			{
 				if (buf_) MemFree(buf_);
 				buf_ = MALLOCN(T, n);
@@ -27,7 +27,8 @@ namespace SGP
 				return buf;
 			}
 
-			operator T*() { return buf_; }
+			operator T*()             { return buf_; }
+			operator T const*() const { return buf_; }
 
 		private:
 			T* buf_;

@@ -2,6 +2,7 @@
 #define VSURFACE_H
 
 #include "AutoObj.h"
+#include "Buffer.h"
 #include "Types.h"
 #include <SDL.h>
 
@@ -22,7 +23,6 @@ class SGPVSurface
 	public:
 		SGPVSurface(SDL_Surface* s) :
 			surface_(s),
-			palette_(0),
 			p16BPPPalette(0)
 		{}
 
@@ -55,7 +55,7 @@ class SGPVSurface
 
 	private:
 		SGP::AutoObj<SDL_Surface, SDL_FreeSurface> surface_;
-		SDL_Color*                                 palette_;
+		SGP::Buffer<SDL_Color>                     palette_;
 	public:
 		UINT16*                                    p16BPPPalette; // A 16BPP palette used for 8->16 blits
 
