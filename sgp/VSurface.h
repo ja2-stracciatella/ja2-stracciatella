@@ -36,7 +36,9 @@ class SGPVSurface
 		void SetPalette(const SGPPaletteEntry* src_pal);
 
 		// Get the RGB palette entry values
-		void GetPalette(SGPPaletteEntry* dst_pal);
+		void GetPalette(SGPPaletteEntry* dst_pal) const;
+
+		void SetTransparency(COLORVAL);
 
 	public:
 		SDL_Surface* surface;
@@ -88,9 +90,6 @@ void FillSurface(SGPVSurface*, UINT16 Colour);
 
 /* Fills an rectangular area with a specified color value. */
 BOOLEAN ColorFillVideoSurfaceArea(SGPVSurface*, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP);
-
-// Sets transparency
-BOOLEAN SetVideoSurfaceTransparency(SGPVSurface*, COLORVAL TransColor);
 
 // Deletes all data, including palettes
 void DeleteVideoSurface(SGPVSurface*);

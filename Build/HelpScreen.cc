@@ -1877,8 +1877,7 @@ static BOOLEAN CreateHelpScreenTextBuffer(void)
 {
 	guiHelpScreenTextBufferSurface = AddVideoSurface(HLP_SCRN__WIDTH_OF_TEXT_BUFFER, HLP_SCRN__HEIGHT_OF_TEXT_BUFFER, PIXEL_DEPTH);
 	CHECKF(guiHelpScreenTextBufferSurface != NO_VSURFACE);
-	SetVideoSurfaceTransparency(guiHelpScreenTextBufferSurface, 0);
-
+	guiHelpScreenTextBufferSurface->SetTransparency(0);
 	return( TRUE );
 }
 

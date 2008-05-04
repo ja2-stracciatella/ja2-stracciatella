@@ -33,7 +33,7 @@ void SGPVSurface::SetPalette(const SGPPaletteEntry* const src_pal)
 }
 
 
-void SGPVSurface::GetPalette(SGPPaletteEntry* const dst_pal)
+void SGPVSurface::GetPalette(SGPPaletteEntry* const dst_pal) const
 {
 	const SDL_Color* const p = palette_;
 	for (UINT32 i = 0; i < 256; i++)
@@ -42,6 +42,20 @@ void SGPVSurface::GetPalette(SGPPaletteEntry* const dst_pal)
 		dst_pal[i].peGreen = p[i].g;
 		dst_pal[i].peBlue  = p[i].b;
 	}
+}
+
+
+void SGPVSurface::SetTransparency(const COLORVAL colour)
+{
+	Uint32 colour_key;
+	switch (BPP())
+	{
+		case  8: colour_key = colour;                break;
+		case 16: colour_key = Get16BPPColor(colour); break;
+
+		default: abort(); // HACK000E
+	}
+	SDL_SetColorKey(surface, SDL_SRCCOLORKEY, colour_key);
 }
 
 
@@ -187,16 +201,6 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 
 	AddStandardVideoSurface(vs);
 	return vs;
-}
-
-
-static BOOLEAN SetVideoSurfaceTransparencyColor(HVSURFACE hVSurface, COLORVAL TransColor);
-
-
-BOOLEAN SetVideoSurfaceTransparency(SGPVSurface* const vs, const COLORVAL TransColor)
-{
-	SetVideoSurfaceTransparencyColor(vs, TransColor);
-	return TRUE;
 }
 
 
@@ -413,31 +417,6 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(HVSURFACE hVSurface, HIMAGE hImage,
 
 	UnLockVideoSurface(hVSurface);
 	return Ret;
-}
-
-
-// Transparency needs to take RGB value and find best fit and place it into DD Surface
-// colorkey value.
-static BOOLEAN SetVideoSurfaceTransparencyColor(HVSURFACE hVSurface, COLORVAL TransColor)
-{
-	Assert(hVSurface != NULL);
-
-	SDL_Surface* Surface = hVSurface->surface;
-	CHECKF(Surface != NULL);
-
-	// Get right pixel format, based on bit depth
-	Uint32 ColorKey;
-	switch (hVSurface->BPP())
-	{
-		case  8: ColorKey = TransColor;                break;
-		case 16: ColorKey = Get16BPPColor(TransColor); break;
-
-		default: abort(); // HACK000E
-	}
-
-	SDL_SetColorKey(Surface, SDL_SRCCOLORKEY, ColorKey);
-
-	return TRUE;
 }
 
 

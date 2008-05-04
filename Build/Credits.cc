@@ -368,7 +368,7 @@ static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	if (vs == NO_VSURFACE) return;
 	pNodeToAdd->uiVideoSurfaceImage = vs;
 
-	SetVideoSurfaceTransparency(vs, 0);
+	vs->SetTransparency(0);
 	FillSurface(vs, 0);
 
 	//write the string onto the surface
