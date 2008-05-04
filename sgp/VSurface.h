@@ -19,6 +19,14 @@ extern SGPVSurface* g_mouse_buffer;
 
 struct SGPVSurface
 {
+	SGPVSurface(SDL_Surface* s) :
+		surface(s),
+		pPalette(0),
+		p16BPPPalette(0)
+	{}
+
+	~SGPVSurface();
+
 	UINT16 Width()  const { return surface->w; }
 	UINT16 Height() const { return surface->h; }
 	UINT8  BPP()    const { return surface->format->BitsPerPixel; }

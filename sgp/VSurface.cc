@@ -55,9 +55,6 @@ BOOLEAN InitializeVideoSurfaceManager(void)
 }
 
 
-static BOOLEAN InternalDeleteVideoSurface(HVSURFACE hVSurface);
-
-
 BOOLEAN ShutdownVideoSurfaceManager(void)
 {
   DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_0, "Shutting down the Video Surface manager");
@@ -69,7 +66,7 @@ BOOLEAN ShutdownVideoSurfaceManager(void)
 	{
 		VSURFACE_NODE* curr = gpVSurfaceHead;
 		gpVSurfaceHead = gpVSurfaceHead->next;
-		InternalDeleteVideoSurface(curr->hVSurface);
+		delete curr->hVSurface;
 #ifdef SGP_VIDEO_DEBUGGING
 		if (curr->pName != NULL) MemFree(curr->pName);
 		if (curr->pCode != NULL) MemFree(curr->pCode);
@@ -169,9 +166,6 @@ BOOLEAN SetVideoSurfaceTransparency(SGPVSurface* const vs, const COLORVAL TransC
 }
 
 
-static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface);
-
-
 static BOOLEAN SetPrimaryVideoSurfaces(void)
 {
 	SDL_Surface* pSurface;
@@ -182,19 +176,16 @@ static BOOLEAN SetPrimaryVideoSurfaces(void)
 #ifdef JA2
 	pSurface = GetBackBufferObject();
 	CHECKF(pSurface != NULL);
-	g_back_buffer = CreateVideoSurfaceFromDDSurface(pSurface);
-	CHECKF(g_back_buffer != NULL);
+	g_back_buffer = new SGPVSurface(pSurface);
 
 	pSurface = GetMouseBufferObject();
 	CHECKF(pSurface != NULL);
-	g_mouse_buffer = CreateVideoSurfaceFromDDSurface(pSurface);
-	CHECKF(g_mouse_buffer != NULL);
+	g_mouse_buffer = new SGPVSurface(pSurface);
 #endif
 
 	pSurface = GetFrameBufferObject();
 	CHECKF(pSurface != NULL);
-	g_frame_buffer = CreateVideoSurfaceFromDDSurface(pSurface);
-	CHECKF(g_frame_buffer != NULL);
+	g_frame_buffer = new SGPVSurface(pSurface);
 
 	return TRUE;
 }
@@ -202,23 +193,14 @@ static BOOLEAN SetPrimaryVideoSurfaces(void)
 
 static void DeletePrimaryVideoSurfaces(void)
 {
-	if (g_back_buffer != NULL)
-	{
-		InternalDeleteVideoSurface(g_back_buffer);
-		g_back_buffer = NULL;
-	}
+	delete g_back_buffer;
+	g_back_buffer = NULL;
 
-  if (g_frame_buffer != NULL)
-	{
-		InternalDeleteVideoSurface(g_frame_buffer);
-		g_frame_buffer = NULL;
-	}
+	delete g_frame_buffer;
+	g_frame_buffer = NULL;
 
-	if (g_mouse_buffer != NULL)
-	{
-		InternalDeleteVideoSurface(g_mouse_buffer);
-		g_mouse_buffer = NULL;
-	}
+	delete g_mouse_buffer;
+	g_mouse_buffer = NULL;
 }
 
 
@@ -314,12 +296,7 @@ static HVSURFACE CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBit
 		uiRBitMask, uiGBitMask, uiBBitMask, 0
 	);
 
-	SGPVSurface* const hVSurface = MALLOC(SGPVSurface);
-	CHECKF(hVSurface != NULL);
-
-	hVSurface->surface       = surface;
-	hVSurface->pPalette      = NULL;
-	hVSurface->p16BPPPalette = NULL;
+	SGPVSurface* const hVSurface = new SGPVSurface(surface);
 
 	DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_3, "Success in Creating Video Surface");
 
@@ -479,7 +456,7 @@ void DeleteVideoSurface(SGPVSurface* const vs)
 	{
 		if (curr->hVSurface == vs)
 		{ //Found the node, so detach it and delete it.
-			InternalDeleteVideoSurface(vs);
+			delete vs;
 
 			if (curr == gpVSurfaceHead) gpVSurfaceHead = gpVSurfaceHead->next;
 			if (curr == gpVSurfaceTail) gpVSurfaceTail = prev;
@@ -500,28 +477,11 @@ void DeleteVideoSurface(SGPVSurface* const vs)
 }
 
 
-// Deletes all palettes and surfaces
-static BOOLEAN InternalDeleteVideoSurface(HVSURFACE hVSurface)
+SGPVSurface::~SGPVSurface()
 {
-	CHECKF(hVSurface != NULL);
-
-	SDL_FreeSurface(hVSurface->surface);
-
-	if (hVSurface->pPalette != NULL)
-	{
-		MemFree(hVSurface->pPalette);
-		hVSurface->pPalette = NULL;
-	}
-
-	if (hVSurface->p16BPPPalette != NULL)
-	{
-		MemFree(hVSurface->p16BPPPalette);
-		hVSurface->p16BPPPalette = NULL;
-	}
-
-	MemFree(hVSurface);
-
-	return TRUE;
+	SDL_FreeSurface(surface);
+	if (pPalette)      MemFree(pPalette);
+	if (p16BPPPalette) MemFree(p16BPPPalette);
 }
 
 
@@ -593,19 +553,6 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 
 	DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible BPP values with src and dest Video Surfaces for blitting");
 	return FALSE;
-}
-
-
-static HVSURFACE CreateVideoSurfaceFromDDSurface(SDL_Surface* surface)
-{
-	SGPVSurface* const hVSurface = MALLOC(SGPVSurface);
-	hVSurface->surface       = surface;
-	hVSurface->pPalette      = NULL;
-	hVSurface->p16BPPPalette = NULL;
-
-	DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_0, "Success in Creating Video Surface from DD Surface");
-
-	return hVSurface;
 }
 
 
