@@ -1,7 +1,6 @@
 #include <stdint.h>
 #include "Animation_Control.h"
 #include "Animation_Data.h"
-#include "AutoPtr.h"
 #include "Debug.h"
 #include "English.h"
 #include "Font.h"
