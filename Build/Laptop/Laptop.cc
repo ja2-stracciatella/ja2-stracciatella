@@ -61,7 +61,7 @@
 #include "Music_Control.h"
 #include "LaptopSave.h"
 #include "RenderWorld.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "English.h"
 #include "Random.h"
 #include "Merc_Hiring.h"

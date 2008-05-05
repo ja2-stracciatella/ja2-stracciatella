@@ -25,7 +25,7 @@
 #include "Map_Edgepoints.h"
 #include "Strategic.h"
 #include "StrategicMap.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "Message.h"
 #include "Map_Information.h"
 #include "Soldier_Add.h"

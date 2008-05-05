@@ -2,7 +2,7 @@
 #include "Handle_Items.h"
 #include "Local.h"
 #include "MapScreen.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "Merc_Hiring.h"
 #include "VObject.h"
 #include "WCheck.h"

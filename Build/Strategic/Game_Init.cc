@@ -24,7 +24,7 @@
 #include "Campaign_Init.h"
 #include "Strategic_Town_Loyalty.h"
 #include "Strategic_Mines.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "Random.h"
 #include "Map_Screen_Interface.h"
 #include "Tactical_Save.h"

@@ -2,7 +2,7 @@
 #include "Types.h"
 #include "ScreenIDs.h"
 #include "Sys_Globals.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 
 
 #ifdef JA2EDITOR

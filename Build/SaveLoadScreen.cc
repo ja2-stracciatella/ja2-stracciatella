@@ -28,7 +28,7 @@
 #include "GameSettings.h"
 #include "Fade_Screen.h"
 #include "English.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "Game_Init.h"
 #include "Sys_Globals.h"
 #include "Text.h"

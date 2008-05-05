@@ -16,7 +16,7 @@
 #include "Debug.h"
 #include "FileMan.h"
 #include "Font.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "Input.h"
 #include "Intro.h"
 #include "JA2_Splash.h"

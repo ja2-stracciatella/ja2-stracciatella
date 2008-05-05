@@ -8,7 +8,7 @@
 #include "Cursor_Control.h"
 #include "Music_Control.h"
 #include "Render_Dirty.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "VObject.h"
 #include "Video.h"
 #include "VSurface.h"

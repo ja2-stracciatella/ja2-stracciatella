@@ -45,7 +45,7 @@
 #include "Interface_Dialogue.h"
 #include "OppList.h"
 #include "MessageBoxScreen.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "Spread_Burst.h"
 #include "Tile_Animation.h"
 #include "Merc_Entering.h"

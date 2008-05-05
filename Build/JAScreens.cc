@@ -1,7 +1,7 @@
 #include "Handle_UI.h"
 #include "Local.h"
 #include "SGP.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "HImage.h"
 #include "VObject.h"
 #include "VSurface.h"

@@ -14,7 +14,7 @@
 #include "Game_Clock.h"
 #include "Map_Screen_Interface.h"
 #include "RenderWorld.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "English.h"
 #include "GameSettings.h"
 #include "Interface_Control.h"

@@ -47,7 +47,7 @@
 #include "Interface_Control.h"
 #include "Cursors.h"
 #include "Fade_Screen.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "SaveLoadMap.h"
 #include "Arms_Dealer_Init.h"
 #include "ShopKeeper_Interface.h"

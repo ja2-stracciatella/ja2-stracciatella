@@ -32,7 +32,7 @@
 #include "Environment.h"
 #include "Faces.h"
 #include "Squads.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "SysUtil.h"
 #include "Tile_Surface.h"
 #include "Button_System.h"

@@ -5,7 +5,7 @@
 #include "English.h"
 #include "Font_Control.h"
 #include "GameSettings.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "Input.h"
 #include "JA2_Splash.h"
 #include "JAScreens.h"

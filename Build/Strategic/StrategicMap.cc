@@ -59,7 +59,7 @@
 #include "Cursor_Control.h"
 #include "PreBattle_Interface.h"
 #include "Scheduling.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "Random.h"
 #include "AI.h"
 #include "OppList.h"

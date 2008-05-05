@@ -13,7 +13,7 @@
 #include "Player_Command.h"
 #include "MouseSystem.h"
 #include "Button_System.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "ScreenIDs.h"
 #include "MapScreen.h"
 #include "VObject.h"

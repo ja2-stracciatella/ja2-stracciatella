@@ -24,7 +24,7 @@
 #include "PreBattle_Interface.h"
 #include "Options_Screen.h"
 #include "Cursor_Control.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "AI.h"
 #include "Tactical_Save.h"
 #include "Campaign_Types.h"

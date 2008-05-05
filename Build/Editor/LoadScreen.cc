@@ -34,7 +34,7 @@
 #include "Edit_Sys.h"
 #include "EditorItems.h"
 #include "English.h"
-#include "Gameloop.h"
+#include "GameLoop.h"
 #include "Message.h"
 #include "Pits.h"
 #include "Item_Statistics.h"
