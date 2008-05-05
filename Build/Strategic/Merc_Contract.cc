@@ -24,7 +24,6 @@
 #include "Assignments.h"
 #include "Strategic_Movement.h"
 #include "Squads.h"
-#include "Gameloop.h"
 #include "Text.h"
 #include "Strategic_Status.h"
 #include "Mercs.h"

@@ -3,7 +3,6 @@
 #include "Handle_Items.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
-#include "Gameloop.h"
 #include "HImage.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "Text_Utils.h"

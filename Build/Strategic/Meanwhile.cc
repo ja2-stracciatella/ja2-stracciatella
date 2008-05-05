@@ -12,7 +12,6 @@
 #include "Soldier_Profile.h"
 #include "Overhead.h"
 #include "Dialogue_Control.h"
-#include "Gameloop.h"
 #include "Assignments.h"
 #include "Strategic.h"
 #include "Text.h"

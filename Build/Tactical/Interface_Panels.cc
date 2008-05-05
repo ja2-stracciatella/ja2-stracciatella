@@ -1,7 +1,6 @@
 #include "Font.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
-#include "Gameloop.h"
 #include "Soldier_Ani.h"
 #include "Timer_Control.h"
 #include "VObject.h"

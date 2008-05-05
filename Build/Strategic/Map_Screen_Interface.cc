@@ -35,7 +35,6 @@
 #include "Vehicles.h"
 #include "Line.h"
 #include "Text.h"
-#include "Gameloop.h"
 #include "Map_Screen_Helicopter.h"
 #include "PreBattle_Interface.h"
 #include "WordWrap.h"

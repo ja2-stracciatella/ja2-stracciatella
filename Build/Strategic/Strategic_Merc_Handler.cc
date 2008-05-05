@@ -32,7 +32,6 @@
 #include "Campaign.h"
 #include "Soldier_Add.h"
 #include "ScreenIDs.h"
-#include "Gameloop.h"
 #include "JAScreens.h"
 #include "Soldier_Macros.h"
 #include "Finances.h"

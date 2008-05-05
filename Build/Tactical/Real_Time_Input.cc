@@ -34,7 +34,6 @@
 #include "Dialogue_Control.h"
 #include "Interface_Dialogue.h"
 #include "MessageBoxScreen.h"
-#include "Gameloop.h"
 #include "Tile_Animation.h"
 #include "Merc_Entering.h"
 #include "Explosion_Control.h"

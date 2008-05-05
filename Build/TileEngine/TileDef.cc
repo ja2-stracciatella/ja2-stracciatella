@@ -6,7 +6,6 @@
 #include "WCheck.h"
 #include "Debug.h"
 #include "WorldMan.h"
-#include "Gameloop.h"
 #include "Edit_Sys.h"
 #include "PathAI.h"
 #include "Tile_Surface.h"
