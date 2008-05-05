@@ -31,7 +31,11 @@ const char* GetMLGFilename(const MultiLanguageGraphic id)
 		case MLG_SMALLTITLE:         s = "LAPTOP/SmallTitle.sti";            break;
 		case MLG_STATSBOX:           s = "LAPTOP/StatsBox.sti";              break;
 		case MLG_STOREPLAQUE:        s = "LAPTOP/BobbyStorePlaque.sti";      break;
+#	if defined JA2DEMO
 		case MLG_TITLETEXT:          s = "INTERFACE/titletext.sti";          break;
+#	else
+		case MLG_TITLETEXT:          s = "LOADSCREENS/titletext.sti";        break;
+#	endif
 		case MLG_TOALUMNI:           s = "LAPTOP/ToAlumni.sti";              break;
 		case MLG_TOMUGSHOTS:         s = "LAPTOP/ToMugShots.sti";            break;
 		case MLG_TOSTATS:            s = "LAPTOP/ToStats.sti";               break;
