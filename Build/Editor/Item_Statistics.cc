@@ -623,15 +623,38 @@ static void RemoveGameTypeFlags(void)
 }
 
 
-static void ReEvaluateAttachmentStatii(void);
+static INT32 MakeAttachmentButton(const UINT16 attachment, BOOLEAN& attached, const INT16 x, const INT16 y, const INT16 w, const wchar_t* const label, const GUI_CALLBACK click)
+{
+	if (!ValidAttachment(attachment, gpItem->usItem)) return BUTTON_NO_SLOT;
+
+	const INT32 btn = CreateTextButton(label, SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, x, y, w, 12, MSYS_PRIORITY_NORMAL, click);
+	if (FindAttachment(gpItem, attachment) != -1)
+	{
+		ButtonList[btn]->uiFlags |= BUTTON_CLICKED_ON;
+		attached = TRUE;
+	}
+	return btn;
+}
+
+
 static void ToggleAttachment(GUI_BUTTON* btn, INT32 reason);
+
+
+static INT32 MakeWeaponAttachmentButton(const UINT btn_idx, const UINT16 attachment, const INT16 y, const wchar_t* const label)
+{
+	gfAttachment[btn_idx] = FALSE;
+	const INT32 btn = MakeAttachmentButton(attachment, gfAttachment[btn_idx], 570, y, 60, label, ToggleAttachment);
+	guiAttachmentButton[btn_idx] = btn;
+	return btn != BUTTON_NO_SLOT;
+}
+
+
+static void ReEvaluateAttachmentStatii(void);
 
 
 static void SetupGunGUI(void)
 {
 	wchar_t str[20];
-	INT16 yp;
-	memset( gfAttachment, 0, NUM_ATTACHMENT_BUTTONS );
 	swprintf(str, lengthof(str), L"%d", gpItem->bGunStatus);
 	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf(str, lengthof(str), L"%d", gpItem->ubGunShotsLeft);
@@ -645,73 +668,14 @@ static void SetupGunGUI(void)
 	}
 	//Attachments are a dynamic part of guns.  None, some, or all attachments could be available
 	//for a particular weapon.  Show only the ones that we can apply to this gun.
-	yp = 383;
-	guiAttachmentButton[ SILENCER_ATTACHMENT_BUTTON ] = -1;
-	if( ValidAttachment( SILENCER, gpItem->usItem ) )
-	{
-		guiAttachmentButton[SILENCER_ATTACHMENT_BUTTON] = CreateTextButton(L"SILENCER", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, ToggleAttachment);
-		yp += 14;
-		if( FindAttachment( gpItem, SILENCER ) != -1 )
-		{
-			ButtonList[ guiAttachmentButton[ SILENCER_ATTACHMENT_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
-			gfAttachment[0] = TRUE;
-		}
-	}
-	guiAttachmentButton[ SNIPERSCOPE_ATTACHMENT_BUTTON ] = -1;
-	if( ValidAttachment( SNIPERSCOPE, gpItem->usItem ) )
-	{
-		guiAttachmentButton[SNIPERSCOPE_ATTACHMENT_BUTTON] = CreateTextButton(L"SNIPERSCOPE", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, ToggleAttachment);
-		yp += 14;
-		if( FindAttachment( gpItem, SNIPERSCOPE ) != -1 )
-		{
-			ButtonList[ guiAttachmentButton[ SNIPERSCOPE_ATTACHMENT_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
-			gfAttachment[1] = TRUE;
-		}
-	}
-	guiAttachmentButton[ LASERSCOPE_ATTACHMENT_BUTTON ] = -1;
-	if( ValidAttachment( LASERSCOPE, gpItem->usItem ) )
-	{
-		guiAttachmentButton[LASERSCOPE_ATTACHMENT_BUTTON] = CreateTextButton(L"LASERSCOPE", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, ToggleAttachment);
-		yp += 14;
-		if( FindAttachment( gpItem, LASERSCOPE ) != -1 )
-		{
-			ButtonList[ guiAttachmentButton[ LASERSCOPE_ATTACHMENT_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
-			gfAttachment[2] = TRUE;
-		}
-	}
-	guiAttachmentButton[ BIPOD_ATTACHMENT_BUTTON ] = -1;
-	if( ValidAttachment( BIPOD, gpItem->usItem ) )
-	{
-		guiAttachmentButton[BIPOD_ATTACHMENT_BUTTON] = CreateTextButton(L"BIPOD", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, ToggleAttachment);
-		yp += 14;
-		if( FindAttachment( gpItem, BIPOD ) != -1 )
-		{
-			ButtonList[ guiAttachmentButton[ BIPOD_ATTACHMENT_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
-			gfAttachment[3] = TRUE;
-		}
-	}
-	guiAttachmentButton[ DUCKBILL_ATTACHMENT_BUTTON ] = -1;
-	if( ValidAttachment( DUCKBILL, gpItem->usItem ) )
-	{
-		guiAttachmentButton[DUCKBILL_ATTACHMENT_BUTTON] = CreateTextButton(L"DUCKBILL", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, ToggleAttachment);
-		yp += 14;
-		if( FindAttachment( gpItem, DUCKBILL ) != -1 )
-		{
-			ButtonList[ guiAttachmentButton[ DUCKBILL_ATTACHMENT_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
-			gfAttachment[4] = TRUE;
-		}
-	}
-	guiAttachmentButton[ GLAUNCHER_ATTACHMENT_BUTTON ] = -1;
-	if( ValidAttachment( UNDER_GLAUNCHER, gpItem->usItem ) )
-	{
-		guiAttachmentButton[GLAUNCHER_ATTACHMENT_BUTTON] = CreateTextButton(L"G-LAUNCHER", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, ToggleAttachment);
-		yp += 14;
-		if( FindAttachment( gpItem, UNDER_GLAUNCHER ) != -1 )
-		{
-			ButtonList[ guiAttachmentButton[ GLAUNCHER_ATTACHMENT_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
-			gfAttachment[5] = TRUE;
-		}
-	}
+	INT16 yp = 383;
+	if (MakeWeaponAttachmentButton(SILENCER_ATTACHMENT_BUTTON,    SILENCER,        yp, L"SILENCER"))    yp += 14;
+	if (MakeWeaponAttachmentButton(SNIPERSCOPE_ATTACHMENT_BUTTON, SNIPERSCOPE,     yp, L"SNIPERSCOPE")) yp += 14;
+	if (MakeWeaponAttachmentButton(LASERSCOPE_ATTACHMENT_BUTTON,  LASERSCOPE,      yp, L"LASERSCOPE"))  yp += 14;
+	if (MakeWeaponAttachmentButton(BIPOD_ATTACHMENT_BUTTON,       BIPOD,           yp, L"BIPOD"))       yp += 14;
+	if (MakeWeaponAttachmentButton(DUCKBILL_ATTACHMENT_BUTTON,    DUCKBILL,        yp, L"DUCKBILL"))    yp += 14;
+	if (MakeWeaponAttachmentButton(GLAUNCHER_ATTACHMENT_BUTTON,   UNDER_GLAUNCHER, yp, L"G-LAUNCHER"))  yp += 14;
+
 	ReEvaluateAttachmentStatii();
 }
 
@@ -828,16 +792,7 @@ static void SetupArmourGUI(void)
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 
-	guiCeramicPlatesButton = -1;
-	if( ValidAttachment( CERAMIC_PLATES, gpItem->usItem ) )
-	{
-		guiCeramicPlatesButton = CreateTextButton(L"CERAMIC PLATES", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 558, 375, 72, 12, MSYS_PRIORITY_NORMAL, ToggleCeramicPlates);
-		if( FindAttachment( gpItem, CERAMIC_PLATES ) != -1 )
-		{
-			ButtonList[ guiCeramicPlatesButton ]->uiFlags |= BUTTON_CLICKED_ON;
-			gfCeramicPlates = TRUE;
-		}
-	}
+	guiCeramicPlatesButton = MakeAttachmentButton(CERAMIC_PLATES, gfCeramicPlates, 558, 375, 72, L"CERAMIC PLATES", ToggleCeramicPlates);
 }
 
 
@@ -930,7 +885,6 @@ static void ToggleDetonator(GUI_BUTTON* btn, INT32 reason);
 static void SetupExplosivesGUI(void)
 {
 	wchar_t str[20];
-	INT16 yp;
 	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
 	AddTextInputField( 485, 380, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	swprintf(str, lengthof(str), L"%d", gpItem->ubNumberOfObjects);
@@ -946,19 +900,9 @@ static void SetupExplosivesGUI(void)
 		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex)->ubNonExistChance);
 		AddTextInputField( 485, 440, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
-	yp = 375;
+
 	gfDetonator = FALSE;
-	guiDetonatorButton = -1;
-	if( ValidAttachment( DETONATOR, gpItem->usItem ) )
-	{
-		guiDetonatorButton = CreateTextButton(L"DETONATOR", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 570, yp, 60, 12, MSYS_PRIORITY_NORMAL, ToggleDetonator);
-		yp += 14;
-		if( FindAttachment( gpItem, DETONATOR ) != -1 )
-		{
-			ButtonList[ guiDetonatorButton ]->uiFlags |= BUTTON_CLICKED_ON;
-			gfDetonator = TRUE;
-		}
-	}
+	guiDetonatorButton = MakeAttachmentButton(DETONATOR, gfDetonator, 570, 375, 60, L"DETONATOR", ToggleDetonator);
 }
 
 
