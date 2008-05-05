@@ -1426,11 +1426,14 @@ BOOLEAN SaveWorld(const char *puiFilename)
 	// REMOVE WORLD VISIBILITY TILES
 	RemoveWorldWireFrameTiles( );
 
-
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
-  {
-		// Write out height values
-		FileWrite(hfile, &gpWorldLevelData[cnt].sHeight, sizeof(INT16));
+	{ // Write out height values
+		UINT8 heights[2 * WORLD_MAX];
+		for (cnt = 0; cnt < WORLD_MAX; ++cnt)
+		{
+			heights[2 * cnt]     = gpWorldLevelData[cnt].sHeight;
+			heights[2 * cnt + 1] = 0; // Filler byte
+		}
+		FileWrite(hfile, heights, sizeof(heights));
 	}
 
 	// Write out # values - we'll have no more than 15 per level!
@@ -2431,7 +2434,8 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
   {
 		// Read height values
-		LOADDATA( &gpWorldLevelData[ cnt ].sHeight, pBuffer, sizeof( INT16 ) );
+		gpWorldLevelData[cnt].sHeight = *pBuffer++;
+		++pBuffer; // Skip filler byte
 	}
 
 	//FP 0x00c810
