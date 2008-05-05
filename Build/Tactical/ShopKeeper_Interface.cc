@@ -2204,7 +2204,7 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 			else
 			{
 				// show the UNIT price, not the total value of all if stacked
-				uiItemCost = CalcShopKeeperItemPrice( DEALER_SELLING, TRUE, usItemIndex, ArmsDealerInfo[ gbSelectedArmsDealerID ].dSellModifier, pItemObject );
+				uiItemCost = CalcShopKeeperItemPrice(DEALER_SELLING, TRUE, usItemIndex, ArmsDealerInfo[gbSelectedArmsDealerID].u.price.sell, pItemObject);
 			}
 		}
 		else // UNDER REPAIR
@@ -2241,7 +2241,7 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 			uiItemCost = CalculateObjectItemRepairCost( gbSelectedArmsDealerID, pItemObject );
 		}
 		else
-			uiItemCost = CalcShopKeeperItemPrice( DEALER_SELLING, FALSE, usItemIndex, ArmsDealerInfo[ gbSelectedArmsDealerID ].dSellModifier, pItemObject );
+			uiItemCost = CalcShopKeeperItemPrice(DEALER_SELLING, FALSE, usItemIndex, ArmsDealerInfo[gbSelectedArmsDealerID].u.price.sell, pItemObject);
 
 	}
 
@@ -3212,7 +3212,7 @@ static UINT32 CalculateTotalArmsDealerCost(void)
 			}
 			else
 			{
-				uiTotal += CalcShopKeeperItemPrice(DEALER_SELLING, FALSE, a->sItemIndex, ArmsDealerInfo[gbSelectedArmsDealerID].dSellModifier, &a->ItemObject);
+				uiTotal += CalcShopKeeperItemPrice(DEALER_SELLING, FALSE, a->sItemIndex, ArmsDealerInfo[gbSelectedArmsDealerID].u.price.sell, &a->ItemObject);
 			}
 		}
 	}
@@ -6458,17 +6458,17 @@ static UINT32 EvaluateInvSlot(INVENTORY_IN_SLOT* pInvSlot)
 		if (s != NULL && GetDrunkLevel(s) == DRUNK)
 		{
 			//Micky is DRUNK, pays more!
-			dPriceModifier = ArmsDealerInfo[ gbSelectedArmsDealerID ].dSellModifier;
+			dPriceModifier = ArmsDealerInfo[gbSelectedArmsDealerID].u.price.sell;
 		}
 		else
 		{
 			// Micky isn't drunk, charge regular price
-			dPriceModifier = ArmsDealerInfo[ gbSelectedArmsDealerID ].dBuyModifier;
+			dPriceModifier = ArmsDealerInfo[gbSelectedArmsDealerID].u.price.buy;
 		}
 	}
 	else
 	{
-		dPriceModifier = ArmsDealerInfo[ gbSelectedArmsDealerID ].dBuyModifier;
+		dPriceModifier = ArmsDealerInfo[gbSelectedArmsDealerID].u.price.buy;
 	}
 
 

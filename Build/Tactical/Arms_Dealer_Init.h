@@ -130,15 +130,15 @@ typedef struct
 	{
 		struct
 		{
-			FLOAT		dBuyModifier;				// The price modifier used when this dealer is BUYING something.
-			FLOAT		dSellModifier;			// The price modifier used when this dealer is SELLING something.
-		};
+			FLOAT buy;  // The price modifier used when this dealer is BUYING something.
+			FLOAT sell; // The price modifier used when this dealer is SELLING something.
+		} price;
 		struct
 		{
-			FLOAT		dRepairSpeed;				// Modifier to the speed at which a repairman repairs things
-			FLOAT		dRepairCost;				// Modifier to the price a repairman charges for repairs
-		};
-	};
+			FLOAT speed; // Modifier to the speed at which a repairman repairs things
+			FLOAT cost;  // Modifier to the price a repairman charges for repairs
+		} repair;
+	} u;
 
 	UINT8		ubShopKeeperID;					// Merc Id for the dealer
 	UINT8		ubTypeOfArmsDealer;			// Whether he buys/sells, sells, buys, or repairs

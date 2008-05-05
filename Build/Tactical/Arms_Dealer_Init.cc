@@ -2164,7 +2164,7 @@ static UINT32 CalculateSimpleItemRepairTime(UINT8 ubArmsDealer, UINT16 usItemInd
 	// For a repairman, his BUY modifier controls his REPAIR SPEED (1.0 means minutes to repair = price in $)
 	// with a REPAIR SPEED of 1.0, typical gun price of $2000, and a REPAIR COST of 0.5 this works out to 16.6 hrs
 	//		 for a full 100% status repair...  Not bad.
-	uiTimeToRepair = (UINT32)( uiRepairCost * ArmsDealerInfo[ ubArmsDealer ].dRepairSpeed );
+	uiTimeToRepair = (UINT32)(uiRepairCost * ArmsDealerInfo[ubArmsDealer].u.repair.speed);
 
 	// repairs on electronic items take twice as long if the guy doesn't have the skill
 	// for dealers, this means anyone but Fredo the Electronics guy takes twice as long (but doesn't charge double)
@@ -2217,7 +2217,7 @@ static UINT32 CalculateSimpleItemRepairCost(UINT8 ubArmsDealer, UINT16 usItemInd
 
 	// figure out the full value of the item, modified by this dealer's personal Sell (i.e. repair cost) modifier
 	// don't use CalcShopKeeperItemPrice - we want FULL value!!!
-	uiItemCost = (UINT32)(( Item[ usItemIndex ].usPrice * ArmsDealerInfo[ ubArmsDealer ].dRepairCost ) );
+	uiItemCost = (UINT32)(Item[usItemIndex].usPrice * ArmsDealerInfo[ubArmsDealer].u.repair.cost);
 
 	// get item's repair ease, for each + point is 10% easier, each - point is 10% harder to repair
 	sRepairCostAdj = 100 - ( 10 * Item[ usItemIndex ].bRepairEase );
