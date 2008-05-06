@@ -16,10 +16,19 @@
 
 #define MAX_PROGRESSBARS 4
 
+enum ProgressBarFlags
+{
+	PROGRESS_NONE           = 0,
+	PROGRESS_PANEL          = 1 << 0,
+	PROGRESS_DISPLAY_TEXT   = 1 << 1,
+	PROGRESS_USE_SAVEBUFFER = 1 << 2  // use the save buffer when display the text
+};
+ENUM_BITSET(ProgressBarFlags)
+
 typedef struct PROGRESSBAR
 {
+	ProgressBarFlags flags;
 	UINT16 usBarLeft, usBarTop, usBarRight, usBarBottom;
-	BOOLEAN fPanel;
 	UINT16 usPanelLeft, usPanelTop, usPanelRight, usPanelBottom;
 	UINT16 usColor, usLtColor, usDkColor;
 	wchar_t *swzTitle;
@@ -31,8 +40,6 @@ typedef struct PROGRESSBAR
 	UINT8 ubColorFillGreen;
 	UINT8 ubColorFillBlue;
 	double rStart, rEnd;
-	BOOLEAN fDisplayText;
-	BOOLEAN fUseSaveBuffer;	//use the save buffer when display the text
 	double rLastActual;
 }PROGRESSBAR;
 
@@ -67,12 +74,12 @@ BOOLEAN CreateProgressBar( UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, U
 
 	pBar[ ubProgressBarID ] = pNew;
 	//Assign coordinates
+	pNew->flags = PROGRESS_NONE;
 	pNew->usBarLeft = usLeft;
 	pNew->usBarTop = usTop;
 	pNew->usBarRight = usRight;
 	pNew->usBarBottom = usBottom;
 	//Init default data
-	pNew->fPanel = FALSE;
 	pNew->usMsgFont = FONT12POINT1;
 	pNew->ubMsgFontForeColor = FONT_BLACK;
 	pNew->ubMsgFontShadowColor = 0;
@@ -83,8 +90,6 @@ BOOLEAN CreateProgressBar( UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, U
 	pNew->ubColorFillRed = 150;
 	pNew->ubColorFillGreen = 0;
 	pNew->ubColorFillBlue = 0;
-
-	pNew->fDisplayText = FALSE;
 
 	return TRUE;
 }
@@ -100,7 +105,7 @@ void DefineProgressBarPanel( UINT32 ubID, UINT8 r, UINT8 g, UINT8 b,
 	if( !pCurr )
 		return;
 
-	pCurr->fPanel = TRUE;
+	pCurr->flags |= PROGRESS_PANEL;
 	pCurr->usPanelLeft = usLeft;
 	pCurr->usPanelTop = usTop;
 	pCurr->usPanelRight = usRight;
@@ -187,7 +192,7 @@ void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32
 	pCurr->rEnd = uiRelEndPerc*0.01;
 
 	//Render the entire panel now, as it doesn't need update during the normal rendering
-	if( pCurr->fPanel )
+	if (pCurr->flags & PROGRESS_PANEL)
 	{
 		//Draw panel
 		ColorFillVideoSurfaceArea( FRAME_BUFFER,
@@ -213,12 +218,12 @@ void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32
 		}
 	}
 
-	if( pCurr->fDisplayText )
+	if (pCurr->flags & PROGRESS_DISPLAY_TEXT)
 	{
 		//Draw message
 		if( str )
 		{
-			if( pCurr->fUseSaveBuffer )
+			if (pCurr->flags & PROGRESS_USE_SAVEBUFFER)
 			{
 				UINT16 usFontHeight = GetFontHeight( pCurr->usMsgFont );
 				RestoreExternBackgroundRect(pCurr->usBarLeft, pCurr->usBarBottom, pCurr->usBarRight - pCurr->usBarLeft, usFontHeight + 3);
@@ -326,9 +331,10 @@ void SetProgressBarTextDisplayFlag( UINT8 ubID, BOOLEAN fDisplayText, BOOLEAN fU
 	if( pCurr == NULL )
 		return;
 
-	pCurr->fDisplayText = fDisplayText;
-
-	pCurr->fUseSaveBuffer = fUseSaveBuffer;
+	ProgressBarFlags flags = pCurr->flags & ~(PROGRESS_DISPLAY_TEXT | PROGRESS_USE_SAVEBUFFER);
+	if (fDisplayText)   flags |= PROGRESS_DISPLAY_TEXT;
+	if (fUseSaveBuffer) flags |= PROGRESS_USE_SAVEBUFFER;
+	pCurr->flags = flags;
 
 	//if we are to use the save buffer, blit the portion of the screen to the save buffer
 	if( fSaveScreenToFrameBuffer )
