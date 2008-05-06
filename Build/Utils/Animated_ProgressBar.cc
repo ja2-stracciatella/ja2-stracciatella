@@ -21,7 +21,8 @@ enum ProgressBarFlags
 	PROGRESS_NONE           = 0,
 	PROGRESS_PANEL          = 1 << 0,
 	PROGRESS_DISPLAY_TEXT   = 1 << 1,
-	PROGRESS_USE_SAVEBUFFER = 1 << 2  // use the save buffer when display the text
+	PROGRESS_USE_SAVEBUFFER = 1 << 2, // use the save buffer when display the text
+	PROGRESS_LOAD_BAR       = 1 << 3
 };
 ENUM_BITSET(ProgressBarFlags)
 
@@ -45,18 +46,15 @@ typedef struct PROGRESSBAR
 
 static PROGRESSBAR* pBar[MAX_PROGRESSBARS];
 
-BOOLEAN gfUseLoadScreenProgressBar = FALSE;
-
 
 void CreateLoadingScreenProgressBar()
 {
-	gfUseLoadScreenProgressBar = TRUE;
 	CreateProgressBar( 0, 162, 427, 480, 443 );
+	pBar[0]->flags |= PROGRESS_LOAD_BAR;
 }
 
 void RemoveLoadingScreenProgressBar()
 {
-	gfUseLoadScreenProgressBar = FALSE;
 	RemoveProgressBar( 0 );
 	SetFontShadow(DEFAULT_SHADOW);
 }
@@ -272,7 +270,7 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 		{
 			return;
 		}
-		if( gfUseLoadScreenProgressBar )
+		if (pCurr->flags & PROGRESS_LOAD_BAR)
 		{
 			ColorFillVideoSurfaceArea( FRAME_BUFFER,
 				pCurr->usBarLeft, pCurr->usBarTop, end, pCurr->usBarBottom,
