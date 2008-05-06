@@ -30,7 +30,7 @@ static inline BOOLEAN OkControllableMerc(const SOLDIERTYPE* const s)
 #define OK_CONTROLLABLE_MERC(s) ((s)->bActive && OkControllableMerc((s)))
 
 // Checkf if our guy can be selected and is not in a position where our team has an interupt and he does not have one...
-#define OK_INTERRUPT_MERC( p ) ( ( INTERRUPT_QUEUED != 0 ) ? ( ( p->bMoved ) ? FALSE : TRUE ) : TRUE )
+#define OK_INTERRUPT_MERC(p) (!INTERRUPT_QUEUED || !p->bMoved)
 
 #define CREATURE_OR_BLOODCAT( p ) ( (p->uiStatusFlags & SOLDIER_MONSTER) || p->ubBodyType == BLOODCAT )
 
