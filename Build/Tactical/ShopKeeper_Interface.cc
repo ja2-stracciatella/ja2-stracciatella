@@ -230,7 +230,6 @@ static BOOLEAN gfUserHasRequestedToLeave = FALSE;
 static BOOLEAN gfRenderScreenOnNextLoop = FALSE;
 
 UINT8			gubSkiDirtyLevel = SKI_DIRTY_LEVEL0;
-static INT32 giSKIMessageBox = -1;
 
 INT8			gbSelectedArmsDealerID = -1;		//Contains the enum value for the currently selected arms dealer
 
@@ -5056,17 +5055,14 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 }
 
 
-BOOLEAN DoSkiMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback)
+void DoSkiMessageBox(const UINT8 ubStyle, const wchar_t* const zString, const UINT32 uiExitScreen, const UINT8 ubFlags, const MSGBOX_CALLBACK ReturnCallback)
 {
 	// reset exit mode
 	gfExitSKIDueToMessageBox = TRUE;
 
 	// do message box and return
 	const SGPRect pCenteringRect = { 0, 0, SCREEN_WIDTH, 339 };
-	giSKIMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, &pCenteringRect);
-
-	// send back return state
-	return( ( giSKIMessageBox != -1 ) );
+	DoMessageBox(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, &pCenteringRect);
 }
 
 void ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack( UINT8 bExitValue )

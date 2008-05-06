@@ -141,8 +141,6 @@ BOOLEAN		gfExitOptionsAfterMessageBox = FALSE;
 UINT32		guiSoundFxSliderMoving = 0xffffffff;
 UINT32		guiSpeechSliderMoving = 0xffffffff;
 
-static INT32 giOptionsMessageBox = -1; // Options pop up messages index value
-
 INT8			gbHighLightedOptionText = -1;
 
 
@@ -638,7 +636,7 @@ static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, INT32 reason)
 
 
 static void ConfirmQuitToMainMenuMessageBoxCallBack(UINT8 bExitValue);
-static BOOLEAN DoOptionsMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
+static void DoOptionsMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
 
 
 static void BtnOptQuitCallback(GUI_BUTTON* btn, INT32 reason)
@@ -739,22 +737,19 @@ static void MusicSliderChangeCallBack(INT32 iNewValue)
 }
 
 
-BOOLEAN DoOptionsMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect)
+void DoOptionsMessageBoxWithRect(const UINT8 ubStyle, const wchar_t* const zString, const UINT32 uiExitScreen, const UINT16 usFlags, const MSGBOX_CALLBACK ReturnCallback, const SGPRect* const pCenteringRect)
 {
 	// reset exit mode
 	gfExitOptionsDueToMessageBox = TRUE;
 
 	// do message box and return
-	giOptionsMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
-
-	// send back return state
-	return giOptionsMessageBox != -1;
+	DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
 }
 
 
-static BOOLEAN DoOptionsMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
+static void DoOptionsMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
-	return DoOptionsMessageBoxWithRect(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
+	DoOptionsMessageBoxWithRect(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
 }
 
 

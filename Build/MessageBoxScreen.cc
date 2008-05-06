@@ -82,7 +82,7 @@ static INT32 MakeButton(const wchar_t* text, INT16 fore_colour, INT16 shadow_col
 }
 
 
-INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect)
+void DoMessageBox(const UINT8 ubStyle, const wchar_t* const zString, const UINT32 uiExitScreen, const UINT16 usFlags, const MSGBOX_CALLBACK ReturnCallback, const SGPRect* const pCenteringRect)
 {
 	GetMousePos(&pOldMousePosition);
 
@@ -91,10 +91,7 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 
 	SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 
-	if (gMsgBox.BackRegion.uiFlags & MSYS_REGION_EXISTS)
-	{
-		return 0;
-	}
+	if (gMsgBox.BackRegion.uiFlags & MSYS_REGION_EXISTS) return;
 
 	// Based on style....
 	UINT8  ubMercBoxBackground = BASIC_MERC_POPUP_BACKGROUND;
@@ -192,15 +189,14 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 	// Init message box
 	UINT16 usTextBoxWidth;
 	UINT16 usTextBoxHeight;
-	const INT32 iId = -1;
-	gMsgBox.iBoxId = PrepareMercPopupBox(iId, ubMercBoxBackground, ubMercBoxBorder, zString, MSGBOX_DEFAULT_WIDTH, 40, 10, 30, &usTextBoxWidth, &usTextBoxHeight);
+	gMsgBox.iBoxId = PrepareMercPopupBox(-1, ubMercBoxBackground, ubMercBoxBorder, zString, MSGBOX_DEFAULT_WIDTH, 40, 10, 30, &usTextBoxWidth, &usTextBoxHeight);
 
 	if (gMsgBox.iBoxId == -1)
 	{
 #ifdef JA2BETAVERSION
 		AssertMsg(0, "Failed in DoMessageBox().  Probable reason is because the string was too large to fit in max message box size.");
 #endif
-		return 0;
+		return;
 	}
 
 	// Save height,width
@@ -228,7 +224,7 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 
 	// Init save buffer
 	gMsgBox.uiSaveBuffer = AddVideoSurface(usTextBoxWidth, usTextBoxHeight, PIXEL_DEPTH);
-	if (gMsgBox.uiSaveBuffer == NO_VSURFACE) return -1;
+	if (gMsgBox.uiSaveBuffer == NO_VSURFACE) return;
 
   //Save what we have under here...
 	const SGPRect r = { gMsgBox.sX, gMsgBox.sY, gMsgBox.sX + usTextBoxWidth, gMsgBox.sY + usTextBoxHeight };
@@ -353,8 +349,6 @@ INT32 DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, U
 
 	gfNewMessageBox = TRUE;
 	gfInMsgBox     = TRUE;
-
-	return iId;
 }
 
 

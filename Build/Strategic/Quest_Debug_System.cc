@@ -440,7 +440,6 @@ extern SOLDIERTYPE* gpDestSoldier;
 static BOOLEAN gfBackgroundMaskEnabled = FALSE;
 
 static BOOLEAN gfExitQdsDueToMessageBox = FALSE;
-static INT32   giQdsMessageBox = -1; // Qds pop up messages index value
 
 static BOOLEAN gfInDropDownBox = FALSE;
 
@@ -1072,7 +1071,7 @@ static FACETYPE* GetQDSFace(const UINT8 panel_merc_should_use)
 }
 
 
-static BOOLEAN DoQDSMessageBox(UINT8 ubStyle, wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
+static void DoQDSMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
 static void IncrementActiveDropDownBox(INT16 sIncrementValue);
 static void SetTalkingMercPauseState(BOOLEAN fState);
 
@@ -2961,17 +2960,14 @@ static void EnableQDSButtons(void)
 }
 
 
-static BOOLEAN DoQDSMessageBox(UINT8 ubStyle, wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback)
+static void DoQDSMessageBox(const UINT8 ubStyle, const wchar_t* const zString, const UINT32 uiExitScreen, const UINT8 ubFlags, const MSGBOX_CALLBACK ReturnCallback)
 {
 	// reset exit mode
 	gfExitQdsDueToMessageBox = TRUE;
 	gfQuestDebugEntry = TRUE;
 
 	// do message box and return
-	giQdsMessageBox = DoMessageBox(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, NULL);
-
-	// send back return state
-	return( ( giQdsMessageBox != -1 ) );
+	DoMessageBox(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, NULL);
 }
 
 

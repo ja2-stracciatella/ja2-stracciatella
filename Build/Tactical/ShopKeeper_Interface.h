@@ -100,8 +100,8 @@ void AddShopkeeperToGridNo( UINT8 ubProfile, INT16 sGridNo );
 
 void RestrictSkiMouseCursor(void);
 
-BOOLEAN DoSkiMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
-void    StartSKIDescriptionBox(void);
+void DoSkiMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
+void StartSKIDescriptionBox(void);
 
 extern BOOLEAN gfSKIScreenExit;
 extern UINT32  guiSKI_TransactionButton;

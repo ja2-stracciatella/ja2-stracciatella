@@ -312,7 +312,7 @@ void DisableTeamInfoPanels( void );
 void EnableTeamInfoPanels( void );
 
 // do mapscreen message box
-INT32 DoMapMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback );
+void DoMapMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
 
 // hop up one leve,l int he map screen level interface
 void GoUpOneLevelInMap( void );

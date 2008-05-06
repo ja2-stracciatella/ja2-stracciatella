@@ -855,21 +855,21 @@ void EnableTeamInfoPanels( void )
 }
 
 
-INT32 DoMapMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect)
+void DoMapMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect)
 {	// reset the highlighted line
 	giHighLine = -1;
-	return DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
+	DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
 }
 
 
-INT32 DoMapMessageBox( UINT8 ubStyle, const wchar_t *zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback )
+void DoMapMessageBox(const UINT8 ubStyle, const wchar_t* const zString, const UINT32 uiExitScreen, const UINT16 usFlags, const MSGBOX_CALLBACK ReturnCallback)
 {
 	// reset the highlighted line
 	giHighLine = -1;
 
 	// do message box and return
 	const SGPRect CenteringRect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
-	return DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, &CenteringRect);
+	DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, &CenteringRect);
 }
 
 

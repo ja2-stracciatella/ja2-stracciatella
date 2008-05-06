@@ -53,7 +53,6 @@
 
 BOOLEAN gfErrorCatch = FALSE;
 wchar_t gzErrorCatchString[256] = L"";
-static INT32 giErrorCatchMessageBox = 0;
 
 
 enum{
@@ -861,7 +860,7 @@ static void SetGlobalSectorValues(const wchar_t* szFilename)
 
 static void InitErrorCatchDialog(void)
 {
-	giErrorCatchMessageBox = DoMessageBox(MSG_BOX_BASIC_STYLE, gzErrorCatchString, EDIT_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
+	DoMessageBox(MSG_BOX_BASIC_STYLE, gzErrorCatchString, EDIT_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
 	gfErrorCatch = FALSE;
 }
 

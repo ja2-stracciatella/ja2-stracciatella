@@ -73,9 +73,6 @@ typedef struct
 #define		NPC_TEMP_QUOTE_FILE			"Temp/NpcQuote.tmp"
 
 
-static INT32 giErrorMessageBox = 0;
-
-
 static BOOLEAN AddTempFileToSavedGame(HWFILE hFile, UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
@@ -1752,7 +1749,7 @@ static void TempFileLoadErrorMessageReturnCallback(UINT8 ubRetVal)
 //message appears.
 void InitExitGameDialogBecauseFileHackDetected()
 {
-	giErrorMessageBox = DoMessageBox(MSG_BOX_BASIC_STYLE, pAntiHackerString, GAME_SCREEN, MSG_BOX_FLAG_OK, TempFileLoadErrorMessageReturnCallback, NULL);
+	DoMessageBox(MSG_BOX_BASIC_STYLE, pAntiHackerString, GAME_SCREEN, MSG_BOX_FLAG_OK, TempFileLoadErrorMessageReturnCallback, NULL);
 }
 
 
