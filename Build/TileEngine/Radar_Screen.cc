@@ -581,68 +581,46 @@ static void CreateDestroyMouseRegionsForSquadList(void)
 }
 
 
+// show list of squads
 static void RenderSquadList(void)
 {
-	// show list of squads
-	INT16 sCounter = 0;
-	INT16 sX, sY;
+	INT16 const dx = RADAR_WINDOW_X;
+	INT16 const dy = gsRadarY;
 
-	// clear region
-	RestoreExternBackgroundRect( RADAR_WINDOW_X, gsRadarY, RADAR_WINDOW_WIDTH , SQUAD_REGION_HEIGHT );
+	RestoreExternBackgroundRect(dx, dy, RADAR_WINDOW_WIDTH, SQUAD_REGION_HEIGHT);
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, dx, dy, dx + RADAR_WINDOW_WIDTH, dy + SQUAD_REGION_HEIGHT, Get16BPPColor(FROMRGB(0, 0, 0)));
 
-	// fill area
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, RADAR_WINDOW_X, RADAR_WINDOW_TM_Y, RADAR_WINDOW_X + RADAR_WINDOW_WIDTH, RADAR_WINDOW_TM_Y + SQUAD_REGION_HEIGHT , Get16BPPColor( FROMRGB(0,0,0) ) );
+	SetFont(SQUAD_FONT);
+	SetFontBackground(FONT_BLACK);
 
-	// set font
-	SetFont( SQUAD_FONT );
-
-	for( sCounter = 0; sCounter < NUMBER_OF_SQUADS; sCounter++ )
+	for (UINT i = 0; i < NUMBER_OF_SQUADS; ++i)
 	{
-		// run through list of squads and place appropriatly
-			if( sCounter < NUMBER_OF_SQUADS / 2 )
-			{
-				FindFontCenterCoordinates(RADAR_WINDOW_X, SQUAD_WINDOW_TM_Y + sCounter * 2 * (SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST) / NUMBER_OF_SQUADS, RADAR_WINDOW_WIDTH / 2 - 1, 2 * (SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST) / NUMBER_OF_SQUADS, pSquadMenuStrings[sCounter], SQUAD_FONT, &sX, &sY);
-			}
-			else
-			{
-				FindFontCenterCoordinates(RADAR_WINDOW_X + RADAR_WINDOW_WIDTH / 2, SQUAD_WINDOW_TM_Y + (sCounter - NUMBER_OF_SQUADS / 2) * 2 * (SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST) / NUMBER_OF_SQUADS, RADAR_WINDOW_WIDTH / 2 - 1, 2 * (SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST) / NUMBER_OF_SQUADS, pSquadMenuStrings[sCounter], SQUAD_FONT, &sX, &sY);
-			}
+		const UINT8 colour =
+			sSelectedSquadLine == i         ? FONT_WHITE   : // highlight line?
+			!IsSquadOnCurrentTacticalMap(i) ? FONT_BLACK   :
+			CurrentSquad() == (INT32)i      ? FONT_LTGREEN :
+			                                  FONT_DKGREEN;
+		SetFontForeground(colour);
 
-			// highlight line?
-			if( sSelectedSquadLine == sCounter)
-			{
-				SetFontForeground( FONT_WHITE );
-			}
-			else
-			{
-				if (IsSquadOnCurrentTacticalMap(sCounter))
-				{
-					if( CurrentSquad( ) == ( INT32 ) sCounter )
-					{
-						SetFontForeground( FONT_LTGREEN );
-					}
-					else
-					{
-						SetFontForeground(  FONT_DKGREEN);
-					}
-				}
-				else
-				{
-					SetFontForeground( FONT_BLACK );
-				}
-			}
+		INT16 sX;
+		INT16 sY;
+		INT16       x = dx;
+		INT16       y = SQUAD_WINDOW_TM_Y;
+		INT16 const w = RADAR_WINDOW_WIDTH / 2 - 1;
+		INT16 const h = 2 * (SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST) / NUMBER_OF_SQUADS;
+		if (i < NUMBER_OF_SQUADS / 2)
+		{
+			y += i * h;
+		}
+		else
+		{
+			x += RADAR_WINDOW_WIDTH / 2;
+			y += (i - NUMBER_OF_SQUADS / 2) * h;
+		}
+		FindFontCenterCoordinates(x, y, w, h, pSquadMenuStrings[i], SQUAD_FONT, &sX, &sY);
 
-			SetFontBackground( FONT_BLACK );
-
-			if( sCounter < NUMBER_OF_SQUADS / 2 )
-			{
-				sX = RADAR_WINDOW_X + 2;
-			}
-			else
-			{
-				sX = RADAR_WINDOW_X + ( RADAR_WINDOW_WIDTH / 2 ) - 2;
-			}
-			mprintf( sX, sY , pSquadMenuStrings[ sCounter ]);
+		sX = dx + (i < NUMBER_OF_SQUADS / 2 ? 2 : RADAR_WINDOW_WIDTH / 2 - 2);
+		mprintf(sX, sY, pSquadMenuStrings[i]);
 	}
 }
 
