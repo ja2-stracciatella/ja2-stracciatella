@@ -57,9 +57,8 @@ void RemoveLoadingScreenProgressBar()
 	SetFontShadow(DEFAULT_SHADOW);
 }
 
-//This creates a single progress bar given the coordinates without a panel (containing a title and background).
-//A panel is automatically created if you specify a title using SetProgressBarTitle
-BOOLEAN CreateProgressBar( UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, UINT16 usRight, UINT16 usBottom )
+
+void CreateProgressBar(const UINT8 ubProgressBarID, const UINT16 usLeft, const UINT16 usTop, const UINT16 usRight, const UINT16 usBottom)
 {
 	//Allocate new progress bar
 	PROGRESSBAR* const pNew = MALLOCZ(PROGRESSBAR);
@@ -84,9 +83,8 @@ BOOLEAN CreateProgressBar( UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, U
 
 	//Default the progress bar's color to be red
 	pNew->fill_colour = FROMRGB(150, 0, 0);
-
-	return TRUE;
 }
+
 
 //You may also define a panel to go in behind the progress bar.  You can now assign a title to go with
 //the panel.
