@@ -31,7 +31,6 @@ typedef struct PROGRESSBAR
 	UINT8 ubTitleFontForeColor, ubTitleFontShadowColor;
 	UINT16 usMsgFont;
 	UINT8 ubMsgFontForeColor, ubMsgFontShadowColor;
-	UINT8 ubRelativeStartPercentage, ubRelativeEndPercentage;
 	UINT8 ubColorFillRed;
 	UINT8 ubColorFillGreen;
 	UINT8 ubColorFillBlue;
