@@ -986,11 +986,11 @@ BOOLEAN InitializeSMPanel(void)
 	// Create buttons
 	CHECKF(CreateSMPanelButtons());
 
+	const INT32 dy = INV_INTERFACE_START_Y;
+
 	// Set viewports
 	// Define region for panel
-	MSYS_DefineRegion(&gSMPanelRegion, 0, INV_INTERFACE_START_Y, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, InvPanelButtonClickCallback);
-
-	const INT32 dy = INV_INTERFACE_START_Y;
+	MSYS_DefineRegion(&gSMPanelRegion, 0, dy, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, InvPanelButtonClickCallback);
 
 	INT32 x;
 	INT32 y;
@@ -1017,7 +1017,7 @@ BOOLEAN InitializeSMPanel(void)
 	}
 
 	//DEfine region for selected guy panel
-	MSYS_DefineRegion(&gSM_SELMERCBarsRegion, 62, 342, 85, 391, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SelectedMercButtonCallback);
+	MSYS_DefineRegion(&gSM_SELMERCBarsRegion, 62, dy + 2, 85, dy + 51, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SelectedMercButtonCallback);
 
 	InitInvSlotInterface(gSMInvPocketXY, &gSMCamoXY, SMInvMoveCallback, SMInvClickCallback, SMInvMoveCamoCallback, SMInvClickCamoCallback);
 	InitKeyRingInterface(KeyRingItemPanelButtonCallback);
