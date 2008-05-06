@@ -132,10 +132,6 @@ typedef struct _MOUSE_REGION {
 #define MSYS_CALLBACK_REASON_WHEEL_DOWN          0x1000
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // Internal Functions
 void MSYS_SetCurrentCursor(UINT16 Cursor);
 
@@ -166,9 +162,5 @@ void RenderFastHelp(void);
 
 // Hook to the SGP's mouse handler
 void MouseSystemHook(UINT16 Type, UINT16 Xcoord, UINT16 Ycoord);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

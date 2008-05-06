@@ -51,11 +51,6 @@ typedef struct LibraryFile
 } LibraryFile;
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
 BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount);
 BOOLEAN ShutDownFileDatabase(void);
 BOOLEAN CheckIfFileExistInLibrary(const char *pFileName);
@@ -69,12 +64,5 @@ BOOLEAN LibraryFileSeek(LibraryFile*, INT32 distance, FileSeekMode);
 BOOLEAN IsLibraryOpened( INT16 sLibraryID );
 
 BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pLastWriteTime );
-
-
-#ifdef __cplusplus
-}
-#endif
-
-
 
 #endif

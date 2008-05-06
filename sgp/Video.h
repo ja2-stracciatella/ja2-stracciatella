@@ -8,10 +8,6 @@
 #define VIDEO_NO_CURSOR 0xFFFF
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void         VideoSetFullScreen(BOOLEAN enable);
 BOOLEAN      InitializeVideoManager(void);
 void         ShutdownVideoManager(void);
@@ -39,9 +35,5 @@ void InvalidateRegionEx(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBottom);
 void RefreshScreen(void);
 
 void FatalError(const char* pError, ...);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

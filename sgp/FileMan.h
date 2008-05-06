@@ -30,11 +30,6 @@ typedef struct SGP_FILETIME
 } SGP_FILETIME;
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
 BOOLEAN InitializeFileManager(void);
 
 /* Checks if a file exists. */
@@ -112,9 +107,5 @@ UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
 const char* GetBinDataPath(void);
 
 typedef SGP::AutoObj<SGPFile, FileClose>::Type AutoSGPFile;
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

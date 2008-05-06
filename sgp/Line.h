@@ -14,10 +14,6 @@
  */
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void SetClippingRegionAndImageWidth(int iImageWidth, int iClipStartX, int iClipStartY, int iClipWidth, int iClipHeight);
 
 // NOTE:
@@ -27,9 +23,5 @@ void SetClippingRegionAndImageWidth(int iImageWidth, int iClipStartX, int iClipS
 void PixelDraw(BOOLEAN fClip, INT32 xp, INT32 yp, INT16 sColor, UINT16* pScreen);
 void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT8* ScreenPtr);
 void RectangleDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT8* ScreenPtr);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

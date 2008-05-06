@@ -48,10 +48,6 @@ struct SGPVObject
 };
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // Creates a list to contain video objects
 BOOLEAN InitializeVideoObjectManager(void);
 
@@ -99,9 +95,5 @@ BOOLEAN BltVideoObjectOnce(SGPVSurface* dst, const char* filename, UINT16 region
 extern UINT32 guiVObjectSize;
 
 typedef SGP::AutoObj<SGPVObject, DeleteVideoObject>::Type AutoSGPVObject;
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

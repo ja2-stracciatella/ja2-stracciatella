@@ -37,10 +37,6 @@ typedef struct
 } InputAtom;
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern BOOLEAN			DequeueEvent(InputAtom *Event);
 
 void MouseButtonDown(const SDL_MouseButtonEvent*);
@@ -77,9 +73,5 @@ extern BOOLEAN   gfRightButtonState; // TRUE = Pressed, FALSE = Not Pressed
 #define _KeyDown(a)        gfKeyState[(a)]
 #define _LeftButtonDown    gfLeftButtonState
 #define _RightButtonDown   gfRightButtonState
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

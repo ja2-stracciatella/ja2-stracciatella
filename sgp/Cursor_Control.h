@@ -3,10 +3,6 @@
 
 #include "Types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 
 void    CursorDatabaseClear(void);
 BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex);
@@ -81,9 +77,5 @@ void InitCursorDatabase(CursorFileData* pCursorFileData, CursorData* pCursorData
 void SetMouseBltHook(MOUSEBLT_HOOK pMouseBltOverride);
 
 void SetExternVOData(UINT32 uiCursorIndex, HVOBJECT hVObject, UINT16 usSubIndex);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

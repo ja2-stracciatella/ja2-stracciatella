@@ -5,10 +5,6 @@
 
 #include "MouseSystem.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 
 #define MAX_BUTTONS     400
 #define MAX_BUTTON_PICS 256
@@ -252,9 +248,5 @@ const ButtonDimensions* GetDimensionsOfButtonPic(const BUTTON_PICS*);
 UINT16 GetGenericButtonFillColor(void);
 
 void ReleaseAnchorMode(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

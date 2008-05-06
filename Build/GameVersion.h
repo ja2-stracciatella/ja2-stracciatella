@@ -4,11 +4,6 @@
 #include "Types.h"
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
 //
 //	Keeps track of the game version
 //
@@ -23,10 +18,5 @@ extern const char g_version_number[];
 //
 
 extern const UINT32 guiSavedGameVersion;
-
-#ifdef __cplusplus
-}
-#endif
-
 
 #endif

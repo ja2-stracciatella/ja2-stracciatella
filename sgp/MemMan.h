@@ -9,10 +9,6 @@
 #include "Types.h"
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern size_t guiMemTotal;
 
 BOOLEAN InitializeMemoryManager(void);
@@ -66,9 +62,5 @@ static inline void* MallocZ(const size_t n)
 #define MALLOCZ(type)         (type*)MallocZ(sizeof(type))
 
 #define REALLOC(ptr, type, count) (type*)MemRealloc(ptr, sizeof(type) * (count))
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

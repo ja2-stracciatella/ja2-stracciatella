@@ -3,9 +3,6 @@
 
 #include "Types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #define MAXVOLUME 127
 
@@ -105,9 +102,5 @@ UINT32 SoundGetPosition(UINT32 uiSoundID);
 
 // Allows or disallows the startup of the sound hardware.
 void SoundEnableSound(BOOLEAN fEnable);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

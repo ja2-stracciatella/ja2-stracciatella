@@ -16,10 +16,6 @@
 typedef struct QueueHeader* HQUEUE;
 typedef struct ListHeader*  HLIST;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // Queue Functions
 // CreateQueue(estimated number of items in queue, size of each item
 // AddtoQueue(handle to container returned from CreateQueue, data to be passed in (must be void *))
@@ -54,9 +50,5 @@ extern BOOLEAN RemfromList(HLIST hList,void *data, UINT32 position);
 extern BOOLEAN PeekList(HLIST hList, void *data, UINT32 position);
 extern UINT32  ListSize(HLIST hList);
 extern BOOLEAN DeleteList(HLIST hList);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

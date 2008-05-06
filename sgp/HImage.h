@@ -120,10 +120,6 @@ struct SGPImage
 #define SGPGetGValue(rgb)   ((BYTE) (((UINT16) (rgb)) >> 8))
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // This function will return NULL if it fails, and call SetLastError() to set
 // error information
 SGPImage* CreateImage(const char* ImageFile, UINT16 fContents);
@@ -160,9 +156,5 @@ void ConvertRGBDistribution565To556( UINT16 * p16BPPData, UINT32 uiNumberOfPixel
 void ConvertRGBDistribution565ToAny( UINT16 * p16BPPData, UINT32 uiNumberOfPixels );
 
 typedef SGP::AutoObj<SGPImage, DestroyImage>::Type AutoSGPImage;
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

@@ -4,10 +4,6 @@
 #include "Types.h"
 #include "TopicIDs.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 
 #if defined ( _DEBUG ) || defined ( FORCE_ASSERTS_ON )
 
@@ -76,11 +72,6 @@ const char* String(const char* fmt, ...);
 #define DebugMsg(a, b, c)
 #define FastDebugMsg(a)
 
-#endif
-
-
-#ifdef __cplusplus
-}
 #endif
 
 #endif

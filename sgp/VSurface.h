@@ -116,10 +116,6 @@ class SGPVSurface
 };
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // Creates a list to contain video Surfaces
 BOOLEAN InitializeVideoSurfaceManager(void);
 
@@ -155,9 +151,5 @@ BOOLEAN BltVideoSurfaceOnce(SGPVSurface* dst, const char* filename, INT32 x, INT
 extern UINT32 guiVSurfaceSize;
 
 typedef SGP::AutoObj<SGPVSurface, DeleteVideoSurface>::Type AutoSGPVSurface;
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

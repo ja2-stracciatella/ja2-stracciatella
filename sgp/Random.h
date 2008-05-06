@@ -3,9 +3,6 @@
 
 #include "Types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 extern void InitializeRandom(void);
 extern UINT32 Random( UINT32 uiRange );
@@ -35,10 +32,6 @@ extern BOOLEAN Chance( UINT32 uiChance );
 		void CountRandomCalls(BOOLEAN fStart);
 		void GetRandomCalls(UINT32* puiRandoms, UINT32* puiPreRandoms);
 #	endif
-#endif
-
-#ifdef __cplusplus
-}
 #endif
 
 #endif
