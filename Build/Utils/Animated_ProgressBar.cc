@@ -37,9 +37,7 @@ typedef struct PROGRESSBAR
 	UINT8 ubTitleFontForeColor, ubTitleFontShadowColor;
 	UINT16 usMsgFont;
 	UINT8 ubMsgFontForeColor, ubMsgFontShadowColor;
-	UINT8 ubColorFillRed;
-	UINT8 ubColorFillGreen;
-	UINT8 ubColorFillBlue;
+	UINT32 fill_colour;
 	double rStart, rEnd;
 	double rLastActual;
 }PROGRESSBAR;
@@ -85,9 +83,7 @@ BOOLEAN CreateProgressBar( UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, U
 	pNew->swzTitle = NULL;
 
 	//Default the progress bar's color to be red
-	pNew->ubColorFillRed = 150;
-	pNew->ubColorFillGreen = 0;
-	pNew->ubColorFillBlue = 0;
+	pNew->fill_colour = FROMRGB(150, 0, 0);
 
 	return TRUE;
 }
@@ -272,9 +268,7 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 		}
 		if (pCurr->flags & PROGRESS_LOAD_BAR)
 		{
-			ColorFillVideoSurfaceArea( FRAME_BUFFER,
-				pCurr->usBarLeft, pCurr->usBarTop, end, pCurr->usBarBottom,
-				Get16BPPColor(FROMRGB( pCurr->ubColorFillRed, pCurr->ubColorFillGreen, pCurr->ubColorFillBlue )) );
+			ColorFillVideoSurfaceArea(FRAME_BUFFER, pCurr->usBarLeft, pCurr->usBarTop, end, pCurr->usBarBottom, Get16BPPColor(pCurr->fill_colour));
 		}
 		else
 		{
@@ -312,9 +306,7 @@ void SetProgressBarColor( UINT8 ubID, UINT8 ubColorFillRed, UINT8 ubColorFillGre
 	if( pCurr == NULL )
 		return;
 
-	pCurr->ubColorFillRed = ubColorFillRed;
-	pCurr->ubColorFillGreen = ubColorFillGreen;
-	pCurr->ubColorFillBlue = ubColorFillBlue;
+	pCurr->fill_colour = FROMRGB(ubColorFillRed, ubColorFillGreen, ubColorFillBlue);
 }
 
 
