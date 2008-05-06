@@ -60,23 +60,19 @@ static void RadarRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void RadarRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN InitRadarScreen( )
+void InitRadarScreen()
 {
-		// Add region for radar
-		MSYS_DefineRegion( &gRadarRegion, RADAR_WINDOW_X, RADAR_WINDOW_TM_Y,
-											 RADAR_WINDOW_X + RADAR_WINDOW_WIDTH,
-											 RADAR_WINDOW_TM_Y + RADAR_WINDOW_HEIGHT,
-											 MSYS_PRIORITY_HIGHEST, 0,
-											 RadarRegionMoveCallback,
-											 RadarRegionButtonCallback );
+	// Add region for radar
+	UINT16        const x = RADAR_WINDOW_X;
+	UINT16        const y = RADAR_WINDOW_TM_Y;
+	UINT16        const w = RADAR_WINDOW_WIDTH;
+	UINT16        const h = RADAR_WINDOW_HEIGHT;
+	MOUSE_REGION* const r = &gRadarRegion;
+	MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, 0, RadarRegionMoveCallback, RadarRegionButtonCallback);
+	MSYS_DisableRegion(r);
 
-		//disable the radar map
-		MSYS_DisableRegion(&gRadarRegion);
-
-		gsRadarX = RADAR_WINDOW_X;
-		gsRadarY = RADAR_WINDOW_TM_Y;
-
-		return( TRUE );
+	gsRadarX = x;
+	gsRadarY = y;
 }
 
 

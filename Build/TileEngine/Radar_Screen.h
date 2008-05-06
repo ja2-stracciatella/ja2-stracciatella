@@ -13,7 +13,7 @@ void LoadRadarScreenBitmap(const char* filename);
 #define RADAR_WINDOW_WIDTH		88
 #define RADAR_WINDOW_HEIGHT		44
 
-BOOLEAN InitRadarScreen(void);
+void InitRadarScreen(void);
 void RenderRadarScreen(void);
 void MoveRadarScreen(void);
 
