@@ -59,9 +59,6 @@ static const char* const zMercBackgroundPopupFilenames[ ] = {
 };
 
 
-// the pop up box structure
-MercPopUpBox	gBasicPopUpTextBox;
-
 // the current pop up box
 MercPopUpBox	*gPopUpTextBox = NULL;
 
