@@ -4,6 +4,7 @@
 #include "Merc_Hiring.h"
 #include "Mercs_Files.h"
 #include "Mercs.h"
+#include "MessageBoxScreen.h"
 #include "VObject.h"
 #include "WCheck.h"
 #include "WordWrap.h"

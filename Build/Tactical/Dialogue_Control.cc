@@ -5,6 +5,7 @@
 #include "Interface.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
+#include "MessageBoxScreen.h"
 #include "Soldier_Control.h"
 #include "Encrypted_File.h"
 #include "Faces.h"

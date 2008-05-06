@@ -4,6 +4,7 @@
 #include "IMP_HomePage.h"
 #include "IMPVideoObjects.h"
 #include "Local.h"
+#include "MessageBoxScreen.h"
 #include "Text.h"
 #include "VObject.h"
 #include "Debug.h"

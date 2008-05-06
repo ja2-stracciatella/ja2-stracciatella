@@ -1,7 +1,7 @@
 #ifndef _SAVE_LOAD_SCREEN__H_
 #define _SAVE_LOAD_SCREEN__H_
 
-#include  "MessageBoxScreen.h"
+#include "JA2Types.h"
 
 
 #define		NUM_SAVE_GAMES											11

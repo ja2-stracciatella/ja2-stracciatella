@@ -2,6 +2,7 @@
 #include "GameLoop.h"
 #include "HImage.h"
 #include "Local.h"
+#include "MessageBoxScreen.h"
 #include "Timer_Control.h"
 #include "Types.h"
 #include "SaveLoadScreen.h"

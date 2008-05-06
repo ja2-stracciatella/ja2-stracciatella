@@ -25,7 +25,6 @@
 #include "Message.h"
 #include "Text.h"
 #include "FOV.h"
-#include "MessageBoxScreen.h"
 #include "Interface_Control.h"
 #include "ShopKeeper_Interface.h"
 #include "GameSettings.h"

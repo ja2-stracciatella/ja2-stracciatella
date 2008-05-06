@@ -3,7 +3,6 @@
 
 #include "Item_Types.h"
 #include "JA2Types.h"
-#include "MessageBoxScreen.h"
 
 
 #define		SKI_NUM_TRADING_INV_SLOTS						12

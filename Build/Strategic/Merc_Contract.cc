@@ -1,3 +1,4 @@
+#include "MessageBoxScreen.h"
 #include "Overhead.h"
 #include "Types.h"
 #include "Merc_Contract.h"

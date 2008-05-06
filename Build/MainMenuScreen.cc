@@ -11,6 +11,7 @@
 #include "JAScreens.h"
 #include "Local.h"
 #include "MainMenuScreen.h"
+#include "MessageBoxScreen.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include "Music_Control.h"
 #include "Options_Screen.h"

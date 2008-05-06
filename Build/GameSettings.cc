@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "MessageBoxScreen.h"
 #include "Types.h"
 #include "GameSettings.h"
 #include "FileMan.h"

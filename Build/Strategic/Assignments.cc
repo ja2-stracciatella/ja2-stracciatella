@@ -4,6 +4,7 @@
 #include "Local.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "Map_Screen_Interface_TownMine_Info.h"
+#include "MessageBoxScreen.h"
 #include "PreBattle_Interface.h"
 #include "Soldier_Control.h"
 #include "Item_Types.h"

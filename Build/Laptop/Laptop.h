@@ -1,8 +1,9 @@
 #ifndef LAPTOP_H
 #define LAPTOP_H
 
-#include "MessageBoxScreen.h"
+#include "MouseSystem.h"
 #include "Types.h"
+
 
 void    ExitLaptop(void);
 void    SetBookMark(INT32 iBookId);

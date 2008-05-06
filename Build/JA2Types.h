@@ -33,4 +33,6 @@ typedef struct VIDEO_OVERLAY      VIDEO_OVERLAY;
 typedef struct SUMMARYFILE SUMMARYFILE;
 #endif
 
+typedef void (*MSGBOX_CALLBACK)(UINT8 bExitValue);
+
 #endif

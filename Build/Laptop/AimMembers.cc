@@ -7,6 +7,7 @@
 #include "AIMMembers.h"
 #include "AIM.h"
 #include "Local.h"
+#include "MessageBoxScreen.h"
 #include "Timer_Control.h"
 #include "WCheck.h"
 #include "Debug.h"

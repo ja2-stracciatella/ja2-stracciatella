@@ -2,6 +2,7 @@
 #include "IMP_MainPage.h"
 #include "CharProfile.h"
 #include "IMPVideoObjects.h"
+#include "MessageBoxScreen.h"
 #include "Overhead.h"
 #include "Text.h"
 #include "VObject.h"

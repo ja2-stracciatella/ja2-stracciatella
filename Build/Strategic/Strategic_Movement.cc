@@ -1,4 +1,5 @@
 #include "Map_Screen_Interface_Bottom.h"
+#include "MessageBoxScreen.h"
 #include "Strategic_Movement.h"
 #include "MemMan.h"
 #include "Debug.h"

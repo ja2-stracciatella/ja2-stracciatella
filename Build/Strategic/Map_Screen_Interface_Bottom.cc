@@ -3,6 +3,7 @@
 #include "Local.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "Map_Screen_Interface_Border.h"
+#include "MessageBoxScreen.h"
 #include "Timer_Control.h"
 #include "Types.h"
 #include "VObject.h"

@@ -54,7 +54,6 @@
 #include "HelpScreen.h"
 #include "PreBattle_Interface.h"
 #include "Sound_Control.h"
-#include "MessageBoxScreen.h"
 #include "Text.h"
 #include "GameSettings.h"
 #include "Debug.h"

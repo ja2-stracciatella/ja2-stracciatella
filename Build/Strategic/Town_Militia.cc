@@ -1,4 +1,5 @@
 #include "Local.h"
+#include "MessageBoxScreen.h"
 #include "Town_Militia.h"
 #include "Militia_Control.h"
 #include "Campaign_Types.h"

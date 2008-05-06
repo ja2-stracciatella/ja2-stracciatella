@@ -36,9 +36,6 @@ enum
 };
 
 
-typedef void (*MSGBOX_CALLBACK)(UINT8 bExitValue);
-
-
 typedef struct
 {
 	UINT16          usFlags;

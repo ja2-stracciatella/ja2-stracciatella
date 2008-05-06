@@ -4,6 +4,7 @@
 #include "BobbyRMailOrder.h"
 #include "BobbyR.h"
 #include "Local.h"
+#include "MessageBoxScreen.h"
 #include "VObject.h"
 #include "WCheck.h"
 #include "WordWrap.h"

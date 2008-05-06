@@ -9,7 +9,7 @@
 #include "Local.h"
 #include "Line.h"
 #include "MainMenuScreen.h"
-#include "MessageBoxScreen.h"
+#include "MouseSystem.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include "Music_Control.h"
 #include "Render_Dirty.h"

@@ -2,6 +2,7 @@
 #include "GameScreen.h"
 #include "Handle_Items.h"
 #include "Local.h"
+#include "MessageBoxScreen.h"
 #include "Timer_Control.h"
 #include "Types.h"
 #include "Options_Screen.h"

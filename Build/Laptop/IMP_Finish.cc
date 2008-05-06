@@ -5,6 +5,7 @@
 #include "IMP_MainPage.h"
 #include "IMP_Voices.h"
 #include "IMPVideoObjects.h"
+#include "MessageBoxScreen.h"
 #include "VObject.h"
 #include "WCheck.h"
 #include "Timer_Control.h"

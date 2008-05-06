@@ -1,6 +1,7 @@
 #include "GameLoop.h"
 #include "GameVersion.h"
 #include "Local.h"
+#include "MessageBoxScreen.h"
 #include "SGP.h"
 #include "GameLoop.h"
 #include "Screens.h"

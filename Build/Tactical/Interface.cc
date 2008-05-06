@@ -46,7 +46,6 @@
 #include "Map_Screen_Interface_Map.h"
 #include "Line.h"
 #include "Vehicles.h"
-#include "MessageBoxScreen.h"
 #include "GameSettings.h"
 #include "Squads.h"
 #include "Message.h"

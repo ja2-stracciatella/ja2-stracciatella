@@ -3,7 +3,7 @@
 
 #include "Item_Types.h"
 #include "JA2Types.h"
-#include "MessageBoxScreen.h"
+#include "MouseSystem.h"
 
 
 // char breath and life position

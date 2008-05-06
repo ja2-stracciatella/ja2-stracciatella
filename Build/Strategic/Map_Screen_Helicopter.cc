@@ -1,6 +1,7 @@
 #include "Font_Control.h"
 #include "Map_Screen_Helicopter.h"
 #include "LaptopSave.h"
+#include "MessageBoxScreen.h"
 #include "Vehicles.h"
 #include "Finances.h"
 #include "Quests.h"

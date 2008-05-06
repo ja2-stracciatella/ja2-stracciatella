@@ -1,6 +1,7 @@
 #include "Font_Control.h"
 #include "Debug.h"
 #include "math.h"
+#include "MessageBoxScreen.h"
 #include "WorldDef.h"
 #include "Assignments.h"
 #include "Soldier_Control.h"

@@ -33,7 +33,6 @@
 #include "Soldier_Add.h"
 #include "Dialogue_Control.h"
 #include "Interface_Dialogue.h"
-#include "MessageBoxScreen.h"
 #include "Tile_Animation.h"
 #include "Merc_Entering.h"
 #include "Explosion_Control.h"
