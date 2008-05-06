@@ -208,7 +208,7 @@ static void RadarRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static BOOLEAN CreateDestroyMouseRegionsForSquadList(void);
+static void CreateDestroyMouseRegionsForSquadList(void);
 static void RenderSquadList(void);
 
 
@@ -520,79 +520,64 @@ static void TacticalSquadListMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 // create destroy squad list regions as needed
-static BOOLEAN CreateDestroyMouseRegionsForSquadList(void)
+static void CreateDestroyMouseRegionsForSquadList(void)
 {
 	// will check the state of renderradarscreen flag and decide if we need to create mouse regions for
 	static BOOLEAN fCreated = FALSE;
-	INT16 sCounter = 0;
 
 	if (!fRenderRadarScreen && !fCreated)
 	{
-		CHECKF(BltVideoObjectOnce(guiSAVEBUFFER, "INTERFACE/squadpanel.sti", 0, 538, gsVIEWPORT_END_Y));
-		RestoreExternBackgroundRect(538, gsVIEWPORT_END_Y, SCREEN_WIDTH - 538, SCREEN_HEIGHT - gsVIEWPORT_END_Y);
+		CHECKV(BltVideoObjectOnce(guiSAVEBUFFER, "INTERFACE/squadpanel.sti", 0, 538, gsVIEWPORT_END_Y));
+		RestoreExternBackgroundRect(538, gsVIEWPORT_END_Y, 102, 120);
 
 		// create regions
-		for( sCounter = 0; sCounter < NUMBER_OF_SQUADS; sCounter++ )
+		INT16 const w = RADAR_WINDOW_WIDTH / 2 - 1;
+		INT16 const h = (SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST) / (NUMBER_OF_SQUADS / 2);
+		for (UINT i = 0; i < NUMBER_OF_SQUADS; ++i)
 		{
 			// run through list of squads and place appropriatly
-			if( sCounter < NUMBER_OF_SQUADS / 2 )
+			INT16 x = RADAR_WINDOW_X;
+			INT16 y = SQUAD_WINDOW_TM_Y;
+			if (i < NUMBER_OF_SQUADS / 2)
 			{
-
 				// left half of list
-				MSYS_DefineRegion( &gRadarRegionSquadList[ sCounter ], RADAR_WINDOW_X , ( INT16 )( SQUAD_WINDOW_TM_Y + ( sCounter * (  ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / ( NUMBER_OF_SQUADS / 2 ) ) ) ), RADAR_WINDOW_X + RADAR_WINDOW_WIDTH / 2 - 1, ( INT16 )( SQUAD_WINDOW_TM_Y + ( ( sCounter + 1 ) * ( ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / ( NUMBER_OF_SQUADS / 2 ) ) ) ) ,MSYS_PRIORITY_HIGHEST,
-							0, TacticalSquadListMvtCallback, TacticalSquadListBtnCallBack );
+				y += i * h;
 			}
 			else
 			{
-
 				// right half of list
-				MSYS_DefineRegion( &gRadarRegionSquadList[ sCounter ], RADAR_WINDOW_X + RADAR_WINDOW_WIDTH / 2, ( INT16 )( SQUAD_WINDOW_TM_Y + ( ( sCounter - ( NUMBER_OF_SQUADS / 2) ) * ( 2 * ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / NUMBER_OF_SQUADS ) ) ), RADAR_WINDOW_X + RADAR_WINDOW_WIDTH  - 1, ( INT16 )( SQUAD_WINDOW_TM_Y + ( ( ( sCounter + 1 ) - ( NUMBER_OF_SQUADS / 2) )* ( 2 * ( SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST ) / NUMBER_OF_SQUADS ) ) ), MSYS_PRIORITY_HIGHEST,
-						0, TacticalSquadListMvtCallback, TacticalSquadListBtnCallBack );
+				x += RADAR_WINDOW_WIDTH / 2;
+				y += (i - NUMBER_OF_SQUADS / 2) * h;
 			}
 
-			// set user data
-			MSYS_SetRegionUserData( &gRadarRegionSquadList[ sCounter ],0,sCounter);
-
+			MOUSE_REGION* const r = &gRadarRegionSquadList[i];
+			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, 0, TacticalSquadListMvtCallback, TacticalSquadListBtnCallBack);
+			MSYS_SetRegionUserData(r, 0, i);
 		}
 
-		// reset the highlighted line
 		sSelectedSquadLine = -1;
 
-		// set fact regions are created
 		fCreated = TRUE;
 	}
 	else if (fRenderRadarScreen && fCreated)
 	{
 		// destroy regions
-
-		for( sCounter = 0; sCounter < NUMBER_OF_SQUADS; sCounter++ )
+		for (UINT i = 0; i < NUMBER_OF_SQUADS; ++i)
 		{
-		  MSYS_RemoveRegion( &gRadarRegionSquadList[ sCounter ] );
+			MSYS_RemoveRegion(&gRadarRegionSquadList[i]);
 		}
 
-		// set fact regions are destroyed
-		fCreated = FALSE;
-
-
-		if ( guiCurrentScreen == GAME_SCREEN )
+		if (guiCurrentScreen == GAME_SCREEN)
 		{
-			// dirty region
 			fInterfacePanelDirty = DIRTYLEVEL2;
-
-			MarkButtonsDirty( );
-
-			// re render region
-			RenderTacticalInterface( );
-
-			RenderButtons( );
-
-			// if game is paused, then render paused game text
-			RenderPausedGameBox( );
+			MarkButtonsDirty();
+			RenderTacticalInterface();
+			RenderButtons();
+			RenderPausedGameBox();
 		}
 
+		fCreated = FALSE;
 	}
-
-	return( TRUE );
 }
 
 
