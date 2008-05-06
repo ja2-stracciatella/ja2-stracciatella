@@ -14,10 +14,6 @@
 #include "SysUtil.h"
 
 
-double rStart, rEnd;
-double rActual;
-
-
 #define MAX_PROGRESSBARS 4
 
 typedef struct PROGRESSBAR
