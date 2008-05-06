@@ -22,7 +22,6 @@ double rActual;
 
 typedef struct PROGRESSBAR
 {
-	UINT8 ubProgressBarID;
 	UINT16 usBarLeft, usBarTop, usBarRight, usBarBottom;
 	BOOLEAN fPanel;
 	UINT16 usPanelLeft, usPanelTop, usPanelRight, usPanelBottom;
@@ -74,7 +73,6 @@ BOOLEAN CreateProgressBar( UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, U
 		RemoveProgressBar( ubProgressBarID );
 
 	pBar[ ubProgressBarID ] = pNew;
-	pNew->ubProgressBarID = ubProgressBarID;
 	//Assign coordinates
 	pNew->usBarLeft = usLeft;
 	pNew->usBarTop = usTop;
@@ -85,7 +83,7 @@ BOOLEAN CreateProgressBar( UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, U
 	pNew->usMsgFont = FONT12POINT1;
 	pNew->ubMsgFontForeColor = FONT_BLACK;
 	pNew->ubMsgFontShadowColor = 0;
-	SetRelativeStartAndEndPercentage( pNew->ubProgressBarID, 0, 100, NULL );
+	SetRelativeStartAndEndPercentage(ubProgressBarID, 0, 100, NULL);
 	pNew->swzTitle = NULL;
 
 	//Default the progress bar's color to be red
