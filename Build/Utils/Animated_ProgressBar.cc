@@ -39,12 +39,10 @@ typedef struct PROGRESSBAR
 static PROGRESSBAR* pBar[MAX_PROGRESSBARS];
 
 BOOLEAN gfUseLoadScreenProgressBar = FALSE;
-UINT16 gusLeftmostShaded = 0;
 
 
 void CreateLoadingScreenProgressBar()
 {
-	gusLeftmostShaded = 162;
 	gfUseLoadScreenProgressBar = TRUE;
 	CreateProgressBar( 0, 162, 427, 480, 443 );
 }
@@ -274,11 +272,6 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 			ColorFillVideoSurfaceArea( FRAME_BUFFER,
 				pCurr->usBarLeft, pCurr->usBarTop, end, pCurr->usBarBottom,
 				Get16BPPColor(FROMRGB( pCurr->ubColorFillRed, pCurr->ubColorFillGreen, pCurr->ubColorFillBlue )) );
-			//if( pCurr->usBarRight > gusLeftmostShaded )
-			//{
-			//	ShadowVideoSurfaceRect( FRAME_BUFFER, gusLeftmostShaded+1, pCurr->usBarTop, end, pCurr->usBarBottom );
-			//	gusLeftmostShaded = (UINT16)end;
-			//}
 		}
 		else
 		{
