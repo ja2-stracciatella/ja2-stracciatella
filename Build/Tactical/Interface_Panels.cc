@@ -2506,6 +2506,19 @@ BOOLEAN ShutdownTEAMPanel(void)
 }
 
 
+static void RenderTeamSlotBorder(const SOLDIERTYPE* const s, const INT32 dx, const INT32 dy)
+{
+	UINT16 region;
+	if      (gTacticalStatus.ubCurrentTeam != OUR_TEAM) region = 1; // Hatch out
+	else if (INTERRUPT_QUEUED && (!s || s->bMoved))     region = 1; // Hatch out
+	else if (s && s == GetSelectedMan())                region = 0; // Active border
+	else                                                return;
+	const INT32 x = dx + TM_FACEHIGHTL_X;
+	const INT32 y = dy + TM_FACEHIGHTL_Y;
+	BltVideoObject(guiSAVEBUFFER, guiTEAMObjects, region, x, y);
+}
+
+
 static void RenderSoldierTeamInv(SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY, UINT8 ubPanelNum, BOOLEAN fDirty);
 static void UpdateTEAMPanel(void);
 
@@ -2527,20 +2540,19 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 			const INT32 dy = INTERFACE_START_Y;
 
 			const SOLDIERTYPE* const s = gTeamPanel[i].merc;
-			if (s == NULL)
+			if (s)
+			{
+				RenderSoldierFace(s, dx + TM_FACE_X, dy + TM_FACE_Y);
+			}
+			else
 			{
 				//BLIT CLOSE PANEL
 				BltVideoObject(guiSAVEBUFFER, guiCLOSE, 5, dx + TM_FACE_X, dy + TM_FACE_Y);
-
-				if (gTacticalStatus.ubCurrentTeam != OUR_TEAM || INTERRUPT_QUEUED)
-				{
-					// Hatch out...
-					const INT32 x = dx + TM_FACEHIGHTL_X;
-					const INT32 y = dy + TM_FACEHIGHTL_Y;
-					BltVideoObject(guiSAVEBUFFER, guiTEAMObjects, 1, x, y);
-				}
 			}
-			else
+
+			RenderTeamSlotBorder(s, dx, dy);
+
+			if (s)
 			{
 				const wchar_t* help;
 				wchar_t        help_buf[200];
@@ -2579,22 +2591,6 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 					help = help_buf;
 				}
 				SetRegionFastHelpText(&gTEAM_SecondHandInv[i], help);
-
-				// Render Selected guy if selected
-				if (GetSelectedMan() == s && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC(s))
-				{
-					const INT32 x = dx + TM_FACEHIGHTL_X;
-					const INT32 y = dy + TM_FACEHIGHTL_Y;
-					BltVideoObject(guiSAVEBUFFER, guiTEAMObjects, 0, x, y);
-				}
-				else if (gTacticalStatus.ubCurrentTeam != OUR_TEAM || !OK_INTERRUPT_MERC(s))
-				{
-					const INT32 x = dx + TM_FACEHIGHTL_X;
-					const INT32 y = dy + TM_FACEHIGHTL_Y;
-					BltVideoObject(guiSAVEBUFFER, guiTEAMObjects, 1, x, y);
-				}
-
-				RenderSoldierFace(s, dx + TM_FACE_X, dy + TM_FACE_Y);
 
 				// Restore AP/LIFE POSIITONS
 
