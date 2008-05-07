@@ -3850,114 +3850,88 @@ static void BlitMineIcon(INT16 sMapX, INT16 sMapY)
 }
 
 
-static void AdjustXForLeftMapEdge(const wchar_t* wString, INT16* psX);
+static void PrintStringCenteredBoxed(INT32 x, const INT32 y, const wchar_t* const string)
+{
+	x -= StringPixLength(string, MAP_FONT) / 2;
+	if (!fZoomFlag) // it's ok to cut strings off in zoomed mode
+	{
+		if (x < MAP_VIEW_START_X + 23) x = MAP_VIEW_START_X + 23;
+	}
+	mprintf(x, y, L"%ls", string);
+}
 
 
 static void BlitMineText(INT16 sMapX, INT16 sMapY)
 {
-	INT16 sScreenX, sScreenY;
-	CHAR16 wString[ 32 ], wSubString[ 32 ];
-	UINT8 ubMineIndex;
-	UINT8 ubLineCnt = 0;
-
-
-	if( fZoomFlag )
+	// set coordinates for start of mine text
+	INT16 sScreenX;
+	INT16 sScreenY;
+	if (fZoomFlag)
 	{
-		GetScreenXYFromMapXYStationary( ( INT16 )( sMapX ), ( INT16 )( sMapY ) , &sScreenX, &sScreenY );
-
-		// set coordinates for start of mine text
-		sScreenY += MAP_GRID_ZOOM_Y / 2 + 1;			// slightly below
+		GetScreenXYFromMapXYStationary(sMapX, sMapY, &sScreenX, &sScreenY);
+		sScreenY += MAP_GRID_ZOOM_Y / 2 + 1; // slightly below
 	}
 	else
 	{
-		GetScreenXYFromMapXY( ( INT16 )( sMapX ), ( INT16 )( sMapY ), &sScreenX, &sScreenY );
-
-		// set coordinates for start of mine text
-		sScreenX += MAP_GRID_X / 2;			// centered around middle of mine square
-		sScreenY += MAP_GRID_Y + 1;			// slightly below
+		GetScreenXYFromMapXY(sMapX, sMapY, &sScreenX, &sScreenY);
+		sScreenX += MAP_GRID_X / 2; // centered around middle of mine square
+		sScreenY += MAP_GRID_Y + 1; // slightly below
 	}
-
 
 	// show detailed mine info (name, production rate, daily production)
 
 	SetFontDestBuffer(guiSAVEBUFFER, MAP_VIEW_START_X, MAP_VIEW_START_Y, MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT + 7);
 
 	SetFont(MAP_FONT);
-	SetFontForeground( FONT_LTGREEN );
-	SetFontBackground( FONT_BLACK );
+	SetFontForeground(FONT_LTGREEN);
+	SetFontBackground(FONT_BLACK);
 
-
-	ubMineIndex = GetMineIndexForSector( sMapX, sMapY );
+	UINT8 const mine_idx = GetMineIndexForSector(sMapX, sMapY);
+	INT32 const x        = sScreenX;
+	INT32       y        = sScreenY;
+	INT32 const h        = GetFontHeight(MAP_FONT);
+	wchar_t     buf[32];
 
 	// display associated town name, followed by "mine"
-	swprintf( wString, lengthof(wString), L"%ls %ls", pTownNames[ GetTownAssociatedWithMine( GetMineIndexForSector( sMapX, sMapY ) ) ],  pwMineStrings[ 0 ] );
-	AdjustXForLeftMapEdge(wString, &sScreenX);
-	mprintf( ( sScreenX - StringPixLength( wString, MAP_FONT ) / 2 ) , sScreenY + ubLineCnt * GetFontHeight( MAP_FONT ) , wString );
-	ubLineCnt++;
-
+	swprintf(buf, lengthof(buf), L"%ls %ls", pTownNames[GetTownAssociatedWithMine(GetMineIndexForSector(sMapX, sMapY))],  pwMineStrings[0]);
+	PrintStringCenteredBoxed(x, y, buf);
+	y += h;
 
 	// check if mine is empty (abandoned) or running out
-	if (gMineStatus[ ubMineIndex ].fEmpty)
+	if (gMineStatus[mine_idx].fEmpty)
 	{
-		const wchar_t* String = pwMineStrings[5];
-		AdjustXForLeftMapEdge(String, &sScreenX);
-		mprintf(sScreenX - StringPixLength(String, MAP_FONT) / 2, sScreenY + ubLineCnt * GetFontHeight(MAP_FONT), String);
-		ubLineCnt++;
+		PrintStringCenteredBoxed(x, y, pwMineStrings[5]);
+		y += h;
 	}
-	else
-	if (gMineStatus[ ubMineIndex ].fShutDown)
+	else if (gMineStatus[mine_idx].fShutDown)
 	{
-		const wchar_t* String = pwMineStrings[6];
-		AdjustXForLeftMapEdge(String, &sScreenX);
-		mprintf(sScreenX - StringPixLength(String, MAP_FONT) / 2, sScreenY + ubLineCnt * GetFontHeight(MAP_FONT), String);
-		ubLineCnt++;
+		PrintStringCenteredBoxed(x, y, pwMineStrings[6]);
+		y += h;
 	}
-	else
-	if (gMineStatus[ ubMineIndex ].fRunningOut)
+	else if (gMineStatus[mine_idx].fRunningOut)
 	{
-		const wchar_t* String = pwMineStrings[7];
-		AdjustXForLeftMapEdge(String, &sScreenX);
-		mprintf(sScreenX - StringPixLength(String, MAP_FONT) / 2, sScreenY + ubLineCnt * GetFontHeight(MAP_FONT), String);
-		ubLineCnt++;
+		PrintStringCenteredBoxed(x, y, pwMineStrings[7]);
+		y += h;
 	}
-
 
 	// only show production if player controls it and it's actually producing
-	if (PlayerControlsMine(ubMineIndex) && !gMineStatus[ ubMineIndex ].fEmpty)
+	if (PlayerControlsMine(mine_idx) && !gMineStatus[mine_idx].fEmpty)
 	{
 		// show current production
-		SPrintMoney(wString, PredictDailyIncomeFromAMine(ubMineIndex));
-
-/*
-		// show maximum potential production
-		SPrintMoney(wSubString, GetMaxDailyRemovalFromMine(ubMineIndex));
-		wcscat( wString, L" / ");
-		wcscat( wString, wSubString );
-*/
+		SPrintMoney(buf, PredictDailyIncomeFromAMine(mine_idx));
 
 		// if potential is not nil, show percentage of the two
-		if (GetMaxPeriodicRemovalFromMine(ubMineIndex) > 0)
+		if (GetMaxPeriodicRemovalFromMine(mine_idx) > 0)
 		{
-			swprintf(wSubString, lengthof(wSubString), L" (%d%%)", PredictDailyIncomeFromAMine(ubMineIndex) * 100 / GetMaxDailyRemovalFromMine(ubMineIndex));
-			wcscat( wString, wSubString );
+			wchar_t wSubString[32];
+			swprintf(wSubString, lengthof(wSubString), L" (%d%%)", PredictDailyIncomeFromAMine(mine_idx) * 100 / GetMaxDailyRemovalFromMine(mine_idx));
+			wcscat(buf, wSubString);
 		}
 
-		AdjustXForLeftMapEdge(wString, &sScreenX);
-		mprintf(sScreenX - StringPixLength(wString, MAP_FONT) / 2, sScreenY + ubLineCnt * GetFontHeight(MAP_FONT), L"%ls", wString);
-		ubLineCnt++;
+		PrintStringCenteredBoxed(x, y, buf);
 	}
 
 	SetFontDestBuffer(FRAME_BUFFER, MAP_VIEW_START_X, MAP_VIEW_START_Y, MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT + 7);
-}
-
-
-static void AdjustXForLeftMapEdge(const wchar_t* wString, INT16* psX)
-{
-	// it's ok to cut strings off in zoomed mode
-	if (fZoomFlag) return;
-
-	INT16 MinX = MAP_VIEW_START_X + 23 + StringPixLength(wString, MAP_FONT) / 2;
-	if (*psX < MinX) *psX = MinX;
 }
 
 
