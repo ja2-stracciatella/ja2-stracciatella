@@ -3409,7 +3409,7 @@ static PopUpBox* CreateRepairBox(void);
 static BOOLEAN IsRobotInThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 
-static BOOLEAN DisplayRepairMenu(SOLDIERTYPE* pSoldier)
+static void DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 {
 	// run through list of vehicles in sector and add them to pop up box
 	// first, clear pop up box
@@ -3470,8 +3470,6 @@ static BOOLEAN DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 	ResizeBoxToText( ghRepairBox );
 
 	CheckAndUpdateTacticalAssignmentPopUpPositions( );
-
-	return TRUE;
 }
 
 
@@ -5662,13 +5660,8 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 						if( pSoldier -> bSectorZ ==0 )
 						{
-							fShowRepairMenu = FALSE;
-
-							if( DisplayRepairMenu( pSoldier ) )
-							{
-								fShowRepairMenu = TRUE;
-							}
-
+							fShowRepairMenu = TRUE;
+							DisplayRepairMenu(pSoldier);
 						}
 
 					}
