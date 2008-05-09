@@ -159,7 +159,7 @@ typedef enum{
 #define BUDDY_OPINION +25
 #define HATED_OPINION -25
 
-typedef struct
+struct MERCPROFILESTRUCT
 {
 	wchar_t	zName[ NAME_LENGTH ];
 	wchar_t	zNickname[ NICKNAME_LENGTH ];
@@ -338,7 +338,7 @@ typedef struct
 	INT32	iMercMercContractLength;		//Used for MERC mercs, specifies how many days the merc has gone since last page
 
 	UINT32	uiTotalCostToDate;			// The total amount of money that has been paid to the merc for their salary
-} MERCPROFILESTRUCT;
+};
 
 
 #define TIME_BETWEEN_HATED_COMPLAINTS 24

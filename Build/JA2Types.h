@@ -18,6 +18,7 @@ typedef struct GROUP              GROUP;
 typedef struct ITEM_POOL          ITEM_POOL;
 typedef struct LEVELNODE          LEVELNODE;
 typedef struct LIGHT_SPRITE       LIGHT_SPRITE;
+typedef struct MERCPROFILESTRUCT  MERCPROFILESTRUCT;
 typedef struct PathSt             PathSt;
 typedef struct PopUpBox           PopUpBox;
 typedef struct REAL_OBJECT        REAL_OBJECT;
