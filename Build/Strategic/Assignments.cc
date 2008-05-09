@@ -5745,7 +5745,6 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void RestorePopUpBoxes(void)
 {
-	ContractPosition.iX   = OrigContractPosition.iX;
 	TrainPosition.iX      = OrigTrainPosition.iX;
 	VehiclePosition.iX    = OrigVehiclePosition.iX;
 }
@@ -5920,11 +5919,9 @@ void CreateContractBox(const SOLDIERTYPE* const pCharacter)
 	wchar_t sString[ 50 ];
 	wchar_t sDollarString[ 50 ];
 
-	ContractPosition.iX = OrigContractPosition.iX;
-
 	if( giBoxY != 0 )
 	{
-		ContractPosition.iX = giBoxY;
+		ContractPosition.iY = giBoxY;
 	}
 
 	PopUpBox* const box = MakeBox(ContractPosition, 0);
