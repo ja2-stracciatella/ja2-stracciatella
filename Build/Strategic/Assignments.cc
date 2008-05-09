@@ -4561,68 +4561,50 @@ static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void CreateDestroyMouseRegionsForRemoveMenu(void)
 {
 	static BOOLEAN fCreated = FALSE;
-	UINT32 iCounter = 0;
-	INT32 iFontHeight = 0;
 
 	// will create/destroy mouse regions for the map screen attribute  menu
 	if ((fShowAssignmentMenu || fShowContractMenu) && !fCreated)
 	{
-
-		if( fShowContractMenu )
+		const SGPPoint* pos;
+		if (fShowContractMenu)
 		{
-			SetBoxXY(ghContractBox, ContractPosition.iX, ContractPosition.iY);
+			pos = &ContractPosition;
+			SetBoxXY(ghContractBox, pos->iX, pos->iY);
 		}
 		else
 		{
-			SetBoxXY(ghAssignmentBox, AssignmentPosition.iX, AssignmentPosition.iY);
+			pos = &AssignmentPosition,
+			SetBoxXY(ghAssignmentBox, pos->iX, pos->iY);
 		}
+		SetBoxXY(ghRemoveMercAssignBox, pos->iX, pos->iY);
 
-		if( fShowContractMenu )
-		{
-			// set box position to contract box position
-			SetBoxXY(ghRemoveMercAssignBox, ContractPosition.iX, ContractPosition.iY);
-		}
-		else
-		{
-			// set box position to contract box position
-			SetBoxXY(ghRemoveMercAssignBox, AssignmentPosition.iX, AssignmentPosition.iY);
-		}
+		CheckAndUpdateTacticalAssignmentPopUpPositions();
 
-		CheckAndUpdateTacticalAssignmentPopUpPositions( );
+		const SGPBox* const area = GetBoxArea(ghRemoveMercAssignBox);
+		INT32         const x    = area->x;
+		INT32               y    = area->y + GetTopMarginSize(ghAttributeBox);
+		INT32         const w    = area->w;
+		INT32         const h    = GetLineSpace(ghRemoveMercAssignBox) + GetFontHeight(GetBoxFont(ghRemoveMercAssignBox));
 
-		// grab height of font
-		iFontHeight = GetLineSpace( ghRemoveMercAssignBox ) + GetFontHeight( GetBoxFont( ghRemoveMercAssignBox ) );
-
-		const SGPBox* const area          = GetBoxArea(ghRemoveMercAssignBox);
-		INT32         const iBoxXPosition = area->x;
-		INT32         const iBoxYPosition = area->y;
-		INT32         const iBoxWidth     = area->w;
-
-		// define regions
-		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghRemoveMercAssignBox ); iCounter++ )
+		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(ghRemoveMercAssignBox); ++i)
 		{
 			// add mouse region for each line of text..and set user data
-
-
-			MSYS_DefineRegion(&gRemoveMercAssignRegion[iCounter], iBoxXPosition, iBoxYPosition + GetTopMarginSize(ghAttributeBox) + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + GetTopMarginSize(ghAttributeBox) + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST - 2, MSYS_NO_CURSOR, RemoveMercMenuMvtCallBack, RemoveMercMenuBtnCallback);
-
-			// set user defines
-			MSYS_SetRegionUserData( &gRemoveMercAssignRegion[ iCounter ], 0, iCounter );
+			MOUSE_REGION* const r = &gRemoveMercAssignRegion[i];
+			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 2, MSYS_NO_CURSOR, RemoveMercMenuMvtCallBack, RemoveMercMenuBtnCallback);
+			MSYS_SetRegionUserData(r, 0, i);
+			y += h;
 		}
 
-		// created
+		UnHighLightBox(ghRemoveMercAssignBox);
+
 		fCreated = TRUE;
-
-		// unhighlight all strings in box
-		UnHighLightBox( ghRemoveMercAssignBox );
-
 	}
 	else if (fCreated && !fShowAssignmentMenu && !fShowContractMenu)
 	{
 		// destroy
-		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghRemoveMercAssignBox ); iCounter++ )
+		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(ghRemoveMercAssignBox); ++i)
 		{
-			MSYS_RemoveRegion( &gRemoveMercAssignRegion[ iCounter ] );
+			MSYS_RemoveRegion(&gRemoveMercAssignRegion[i]);
 		}
 
 		fShownContractMenu = FALSE;
@@ -4630,29 +4612,22 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 		// stop showing  menu
 		if (!fShowRemoveMenu)
 		{
-			fShowAttributeMenu = FALSE;
-			fMapPanelDirty = TRUE;
+			fShowAttributeMenu  = FALSE;
 			gfRenderPBInterface = TRUE;
 		}
 
+		RestorePopUpBoxes();
 
-		RestorePopUpBoxes( );
+		fMapPanelDirty           = TRUE;
+		fCharacterInfoPanelDirty = TRUE;
+		fTeamPanelDirty          = TRUE;
+		fMapScreenBottomDirty    = TRUE;
 
-		fMapPanelDirty = TRUE;
-		fCharacterInfoPanelDirty= TRUE;
-		fTeamPanelDirty = TRUE;
-		fMapScreenBottomDirty = TRUE;
-
-		// turn off the GLOBAL fShowRemoveMenu flag!!!
-		fShowRemoveMenu = FALSE;
-		// and the assignment menu itself!!!
+		fShowRemoveMenu     = FALSE;
 		fShowAssignmentMenu = FALSE;
 
-		// not created
 		fCreated = FALSE;
 	}
-
-
 }
 
 
