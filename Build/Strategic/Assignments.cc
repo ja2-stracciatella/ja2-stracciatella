@@ -5746,9 +5746,6 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 static void RestorePopUpBoxes(void)
 {
 	ContractPosition.iX   = OrigContractPosition.iX;
-	AttributePosition.iX  = OrigAttributePosition.iX;
-	SquadPosition.iX      = OrigSquadPosition.iX;
-	AssignmentPosition.iX = OrigAssignmentPosition.iX;
 	TrainPosition.iX      = OrigTrainPosition.iX;
 	VehiclePosition.iX    = OrigVehiclePosition.iX;
 }
@@ -5991,8 +5988,6 @@ void CreateContractBox(const SOLDIERTYPE* const pCharacter)
 static void CreateAttributeBox(void)
 {
 	// will create attribute pop up menu for mapscreen assignments
-	AttributePosition.iX = OrigAttributePosition.iX;
-
 	if (giBoxY != 0)
 	{
 		AttributePosition.iY = giBoxY;
@@ -6048,8 +6043,6 @@ static void CreateTrainingBox(void)
 static void CreateAssignmentsBox(void)
 {
 	// will create attribute pop up menu for mapscreen assignments
-	AssignmentPosition.iX = OrigAssignmentPosition.iX;
-
 	if( giBoxY != 0 )
 	{
 		AssignmentPosition.iY = giBoxY;

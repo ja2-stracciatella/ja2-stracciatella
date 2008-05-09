@@ -228,9 +228,6 @@ extern SGPPoint SquadPosition ;
 extern SGPPoint RepairPosition;
 
 extern SGPPoint OrigContractPosition;
-extern SGPPoint OrigAttributePosition;
-extern SGPPoint OrigSquadPosition ;
-extern SGPPoint OrigAssignmentPosition ;
 extern SGPPoint OrigTrainPosition;
 extern SGPPoint OrigVehiclePosition;
 

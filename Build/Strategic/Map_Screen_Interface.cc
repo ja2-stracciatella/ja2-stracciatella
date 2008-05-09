@@ -288,9 +288,6 @@ SGPPoint AssignmentPosition = { 120, 150 };
 SGPPoint SquadPosition ={ 160, 150 };
 
 SGPPoint OrigContractPosition={120,50};
-SGPPoint OrigAttributePosition={220,150};
-SGPPoint OrigSquadPosition ={ 160, 150 };
-SGPPoint OrigAssignmentPosition = { 120, 150 };
 SGPPoint OrigTrainPosition={160,150};
 SGPPoint OrigVehiclePosition={160,150};
 
