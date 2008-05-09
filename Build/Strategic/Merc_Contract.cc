@@ -428,7 +428,7 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 		return FALSE;
 	}
 
-	const MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
+	MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
 
 	// WE CHECK FOR SOURCES OF UNHAPPINESS IN ORDER OF IMPORTANCE, which is:
 	// 1) Hated Mercs (Highest), 2) Death Rate, 3) Morale (lowest)
@@ -545,13 +545,13 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 		// check if we say the precedent for merc
 		UINT8 const quote_bit =
 			GetQuoteBitNumberFromQuoteID(fBuddyAround ? usBuddyQuote : usReasonQuote);
-		if (GetMercPrecedentQuoteBitStatus(s->ubProfile, quote_bit))
+		if (GetMercPrecedentQuoteBitStatus(p, quote_bit))
 		{
 			HandleImportantMercQuoteLocked(s, QUOTE_PRECEDENT_TO_REPEATING_ONESELF_RENEW);
 		}
 		else
 		{
-			SetMercPrecedentQuoteBitStatus(s->ubProfile, quote_bit);
+			SetMercPrecedentQuoteBitStatus(p, quote_bit);
 		}
 
 		// If a buddy is around, agree to renew, but tell us why we're doing it.

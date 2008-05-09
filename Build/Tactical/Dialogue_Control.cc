@@ -2461,20 +2461,15 @@ BOOLEAN IsMercSayingDialogue(UINT8 ubProfileID)
 }
 
 
-BOOLEAN GetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubQuoteBit )
+BOOLEAN GetMercPrecedentQuoteBitStatus(const MERCPROFILESTRUCT* const p, UINT8 const ubQuoteBit)
 {
-	if( gMercProfiles[ ubMercID ].uiPrecedentQuoteSaid & ( 1 << ( ubQuoteBit - 1 ) ) )
-		return( TRUE );
-	else
-		return( FALSE );
+	return (p->uiPrecedentQuoteSaid & 1 << (ubQuoteBit - 1)) != 0;
 }
 
-BOOLEAN SetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubBitToSet )
-{
-	//Set the bit
-	gMercProfiles[ ubMercID ].uiPrecedentQuoteSaid |= 1 << ( ubBitToSet - 1 );
 
-	return( TRUE );
+void SetMercPrecedentQuoteBitStatus(MERCPROFILESTRUCT* const p, UINT8 const ubBitToSet)
+{
+	p->uiPrecedentQuoteSaid |= 1 << (ubBitToSet - 1);
 }
 
 

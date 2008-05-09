@@ -311,8 +311,8 @@ extern INT32 giNPCSpecialReferenceCount;
 
 extern	UINT8	gubMercValidPrecedentQuoteID[ NUMBER_VALID_MERC_PRECEDENT_QUOTES ];
 
-BOOLEAN GetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubQuoteBit );
-BOOLEAN SetMercPrecedentQuoteBitStatus( UINT8 ubMercID, UINT8 ubBitToSet );
+BOOLEAN GetMercPrecedentQuoteBitStatus(const MERCPROFILESTRUCT*, UINT8 ubQuoteBit);
+void    SetMercPrecedentQuoteBitStatus(MERCPROFILESTRUCT*, UINT8 ubBitToSet);
 UINT8	GetQuoteBitNumberFromQuoteID( UINT32 uiQuoteID );
 void HandleShutDownOfMapScreenWhileExternfaceIsTalking( void );
 
