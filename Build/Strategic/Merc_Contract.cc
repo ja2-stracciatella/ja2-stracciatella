@@ -413,216 +413,158 @@ BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction )
 }
 
 
-BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
+BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 {
-	UINT8	i;
-	INT8	bMercID;
-	BOOLEAN fBuddyAround = FALSE;
-	BOOLEAN fUnhappy = FALSE;
-	UINT16 usBuddyQuote=0;
-	UINT16 usReasonQuote=0;
-	BOOLEAN fSayPrecedent = FALSE;
-
-	if( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
-		return( FALSE );
+	if (s->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) return FALSE;
 
 	// does the merc have another contract already lined up?
-	if( pSoldier->fSignedAnotherContract )
+	if (s->fSignedAnotherContract)
 	{
 		// NOTE: Having a buddy around will NOT stop a merc from leaving on another contract (IC's call)
-
-		if (fSayQuote)
+		if (say_quote)
 		{
-			HandleImportantMercQuoteLocked(pSoldier, QUOTE_WONT_RENEW_CONTRACT_LAME_REFUSAL);
+			HandleImportantMercQuoteLocked(s, QUOTE_WONT_RENEW_CONTRACT_LAME_REFUSAL);
 		}
-		return( FALSE );
+		return FALSE;
 	}
+
+	const MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
+
+	// WE CHECK FOR SOURCES OF UNHAPPINESS IN ORDER OF IMPORTANCE, which is:
+	// 1) Hated Mercs (Highest), 2) Death Rate, 3) Morale (lowest)
+	BOOLEAN fUnhappy      = FALSE;
+	UINT16  usReasonQuote = 0;
+
+	// see if someone the merc hates is on the team
+	// loop through the list of people the merc hates
+	for (UINT8 i = 0; i < 2; ++i)
+	{
+		INT8 const bMercID = p->bHated[i];
+		if (bMercID < 0) continue;
+
+		if (!IsMercOnTeamAndInOmertaAlreadyAndAlive(bMercID)) continue;
+
+		if (p->bHatedCount[i] == 0)
+		{
+			// our tolerance has run out!
+			fUnhappy = TRUE;
+		}
+		else // else tolerance is > 0, only gripe if in same sector
+		{
+			const SOLDIERTYPE* const pHated = FindSoldierByProfileIDOnPlayerTeam(bMercID);
+			if (pHated &&
+					pHated->sSectorX == s->sSectorX &&
+					pHated->sSectorY == s->sSectorY &&
+					pHated->bSectorZ == s->bSectorZ)
+			{
+				fUnhappy = TRUE;
+			}
+		}
+
+		if (fUnhappy)
+		{
+			usReasonQuote =
+				i == 0 ? QUOTE_HATE_MERC_1_ON_TEAM_WONT_RENEW :
+								 QUOTE_HATE_MERC_2_ON_TEAM_WONT_RENEW;
+			// use first hated in case there are multiple
+			break;
+		}
+	}
+
+	if (!fUnhappy)
+	{
+		// now check for learn to hate
+		INT8 const bMercID = p->bLearnToHate;
+		if (bMercID >= 0 &&
+				IsMercOnTeamAndInOmertaAlreadyAndAlive(bMercID))
+		{
+			if (p->bLearnToHateCount == 0)
+			{
+				// our tolerance has run out!
+				fUnhappy      = TRUE;
+				usReasonQuote = QUOTE_LEARNED_TO_HATE_MERC_1_ON_TEAM_WONT_RENEW;
+			}
+			else if (p->bLearnToHateCount <= p->bLearnToHateTime / 2)
+			{
+				const SOLDIERTYPE* const pHated = FindSoldierByProfileIDOnPlayerTeam(bMercID);
+				if (pHated &&
+						pHated->sSectorX == s->sSectorX &&
+						pHated->sSectorY == s->sSectorY &&
+						pHated->bSectorZ == s->bSectorZ)
+				{
+					fUnhappy      = TRUE;
+					usReasonQuote = QUOTE_LEARNED_TO_HATE_MERC_1_ON_TEAM_WONT_RENEW;
+				}
+			}
+		}
+	}
+
+	if (!fUnhappy && MercThinksDeathRateTooHigh(s->ubProfile))
+	{
+		fUnhappy      = TRUE;
+		usReasonQuote = QUOTE_DEATH_RATE_RENEWAL;
+	}
+
+	if (!fUnhappy && MercThinksHisMoraleIsTooLow(s))
+	{
+		fUnhappy      = TRUE;
+		usReasonQuote = QUOTE_REFUSAL_RENEW_DUE_TO_MORALE;
+	}
+
+	// happy? no problem
+	if (!fUnhappy) return TRUE;
+	Assert(usReasonQuote != 0);
 
 	// find out if the merc has a buddy working for the player
 	// loop through the list of people the merc considers buddies
-	for(i=0; i<5; i++)
+	BOOLEAN fBuddyAround  = FALSE;
+	UINT16  usBuddyQuote  = 0;
+	for (UINT8 i = 0; i < 5; ++i)
 	{
-		bMercID = gMercProfiles[ pSoldier->ubProfile ].bBuddy[i];
-
-		if( bMercID < 0 )
-			continue;
+		INT8 const bMercID = p->bBuddy[i];
+		if (bMercID < 0) continue;
 
 		// is this buddy on the team?
-		if( IsMercOnTeamAndAlive( (UINT8) bMercID) )
+		if (IsMercOnTeamAndAlive(bMercID))
 		{
 			fBuddyAround = TRUE;
 
-			if( i == 0 )
-				usBuddyQuote = QUOTE_RENEWING_CAUSE_BUDDY_1_ON_TEAM;
-			else if( i == 1 )
-				usBuddyQuote = QUOTE_RENEWING_CAUSE_BUDDY_2_ON_TEAM;
-			else
-				usBuddyQuote = QUOTE_RENEWING_CAUSE_LEARNED_TO_LIKE_BUDDY_ON_TEAM;
-
+			switch (i)
+			{
+				case 0:  usBuddyQuote = QUOTE_RENEWING_CAUSE_BUDDY_1_ON_TEAM;               break;
+				case 1:  usBuddyQuote = QUOTE_RENEWING_CAUSE_BUDDY_2_ON_TEAM;               break;
+				default: usBuddyQuote = QUOTE_RENEWING_CAUSE_LEARNED_TO_LIKE_BUDDY_ON_TEAM; break;
+			}
 			// use first buddy in case there are multiple
 			break;
 		}
 	}
 
-
-	// WE CHECK FOR SOURCES OF UNHAPPINESS IN ORDER OF IMPORTANCE, which is:
-	// 1) Hated Mercs (Highest), 2) Death Rate, 3) Morale (lowest)
-
-
-	// see if someone the merc hates is on the team
-	// loop through the list of people the merc hates
-	for(i=0; i<2; i++)
+	if (say_quote)
 	{
-		bMercID = gMercProfiles[ pSoldier->ubProfile ].bHated[ i ];
-
-		if( bMercID < 0 )
-			continue;
-
-		if( IsMercOnTeamAndInOmertaAlreadyAndAlive( (UINT8) bMercID ) )
+		// check if we say the precedent for merc
+		UINT8 const quote_bit =
+			GetQuoteBitNumberFromQuoteID(fBuddyAround ? usBuddyQuote : usReasonQuote);
+		if (GetMercPrecedentQuoteBitStatus(s->ubProfile, quote_bit))
 		{
-			if ( gMercProfiles[ pSoldier->ubProfile ].bHatedCount[ i ] == 0 )
-			{
-				// our tolerance has run out!
-				fUnhappy = TRUE;
-			}
-			else 			// else tolerance is > 0, only gripe if in same sector
-			{
-				const SOLDIERTYPE* const pHated = FindSoldierByProfileIDOnPlayerTeam(bMercID);
-				if ( pHated && pHated->sSectorX == pSoldier->sSectorX &&
-									pHated->sSectorY == pSoldier->sSectorY &&
-									pHated->bSectorZ == pSoldier->bSectorZ )
-				{
-					fUnhappy = TRUE;
-				}
-			}
-
-			if ( fUnhappy )
-			{
-				if( i == 0 )
-					usReasonQuote = QUOTE_HATE_MERC_1_ON_TEAM_WONT_RENEW;
-				else
-					usReasonQuote = QUOTE_HATE_MERC_2_ON_TEAM_WONT_RENEW;
-
-				// use first hated in case there are multiple
-				break;
-			}
-		}
-	}
-
-
-	if ( !fUnhappy )
-	{
-		// now check for learn to hate
-		bMercID = gMercProfiles[ pSoldier->ubProfile ].bLearnToHate;
-
-		if ( bMercID >= 0 )
-		{
-			if ( IsMercOnTeamAndInOmertaAlreadyAndAlive( (UINT8) bMercID ) )
-			{
-				if ( gMercProfiles[ pSoldier->ubProfile ].bLearnToHateCount == 0 )
-				{
-					// our tolerance has run out!
-					fUnhappy = TRUE;
-					usReasonQuote = QUOTE_LEARNED_TO_HATE_MERC_1_ON_TEAM_WONT_RENEW;
-
-        }
-				else if ( gMercProfiles[ pSoldier->ubProfile ].bLearnToHateCount <= gMercProfiles[ pSoldier->ubProfile ].bLearnToHateTime / 2 )
-				{
-					const SOLDIERTYPE* const pHated = FindSoldierByProfileIDOnPlayerTeam(bMercID);
-					if ( pHated && pHated->sSectorX == pSoldier->sSectorX &&
-										pHated->sSectorY == pSoldier->sSectorY &&
-										pHated->bSectorZ == pSoldier->bSectorZ )
-					{
-						fUnhappy = TRUE;
-						usReasonQuote = QUOTE_LEARNED_TO_HATE_MERC_1_ON_TEAM_WONT_RENEW;
-					}
-				}
-			}
-		}
-	}
-
-	// happy so far?
-	if (!fUnhappy)
-	{
-		// check if death rate is too high
-		if( MercThinksDeathRateTooHigh( pSoldier-> ubProfile ) )
-		{
-			fUnhappy = TRUE;
-			usReasonQuote = QUOTE_DEATH_RATE_RENEWAL;
-		}
-	}
-
-	// happy so far?
-	if (!fUnhappy)
-	{
-		// check if morale is too low
-		if( MercThinksHisMoraleIsTooLow( pSoldier ) )
-		{
-			fUnhappy = TRUE;
-			usReasonQuote = QUOTE_REFUSAL_RENEW_DUE_TO_MORALE;
-		}
-	}
-
-	// say the precedent?
-	fSayPrecedent = FALSE;
-
-	// check if we say the precdent for merc
-	if (fSayQuote && fUnhappy)
-	{
-		const UINT8 quote_bit = GetQuoteBitNumberFromQuoteID(fBuddyAround ? usBuddyQuote : usReasonQuote);
-		if (GetMercPrecedentQuoteBitStatus(pSoldier->ubProfile, quote_bit))
-		{
-			fSayPrecedent = TRUE;
+			HandleImportantMercQuoteLocked(s, QUOTE_PRECEDENT_TO_REPEATING_ONESELF_RENEW);
 		}
 		else
 		{
-			SetMercPrecedentQuoteBitStatus(pSoldier->ubProfile, quote_bit);
+			SetMercPrecedentQuoteBitStatus(s->ubProfile, quote_bit);
 		}
+
+		// If a buddy is around, agree to renew, but tell us why we're doing it.
+		UINT16 const quote =
+			fBuddyAround                            ? usBuddyQuote :
+#if 0 // ARM: Delay quote too vague, no longer to be used
+			SoldierWantsToDelayRenewalOfContract(s) ? QUOTE_DELAY_CONTRACT_RENEWAL :
+#endif
+			                                          usReasonQuote;
+		HandleImportantMercQuoteLocked(s, quote);
 	}
 
-	if (fSayPrecedent)
-	{
-		HandleImportantMercQuoteLocked(pSoldier, QUOTE_PRECEDENT_TO_REPEATING_ONESELF_RENEW);
-	}
-
-	// OK, we got all our info, let's make some decisions!
-	if (fUnhappy)
-	{
-		if (fBuddyAround)
-		{
-			// unhappy, but buddy's around, so will agree to renew, but tell us why we're doing it
-			if (fSayQuote)
-			{
-				HandleImportantMercQuoteLocked(pSoldier, usBuddyQuote);
-			}
-			return( TRUE );
-		}
-		else
-		{
-			// unhappy, no buddies, will refuse to renew
-			if (fSayQuote)
-			{
-/* ARM: Delay quote too vague, no longer to be used
-				if( ( SoldierWantsToDelayRenewalOfContract( pSoldier ) ) )
-				{
-					// has a new job lined up
-					HandleImportantMercQuoteLocked(pSoldier, QUOTE_DELAY_CONTRACT_RENEWAL);
-				}
-				else
-*/
-				{
-					Assert(usReasonQuote != 0);
-					HandleImportantMercQuoteLocked(pSoldier, usReasonQuote);
-				}
-			}
-			return(FALSE);
-		}
-	}
-	else
-	{
-		// happy, no problem
-		return( TRUE );
-	}
+	return fBuddyAround;
 }
 
 
