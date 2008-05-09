@@ -11,6 +11,7 @@
 #ifndef CONTAINER_H
 #define CONTAINER_H
 
+#include <stdexcept>
 #include "Types.h"
 
 typedef struct QueueHeader* HQUEUE;
@@ -25,12 +26,49 @@ typedef struct ListHeader*  HLIST;
 // QueueSize(handle to the queue) returns the queue size
 // DeleteQueue(handle to container) Delete the queue container
 // : returns BOOLEAN
-
 extern HQUEUE  CreateQueue(UINT32 num_of_elem, UINT32 siz_of_each);
-extern HQUEUE AddtoQueue(HQUEUE hQueue, void *data);
+extern HQUEUE  AddtoQueue(HQUEUE hQueue, void const* data);
 extern BOOLEAN RemfromQueue(HQUEUE hQueue,void *data);
 extern UINT32  QueueSize(HQUEUE hQueue);
 extern BOOLEAN DeleteQueue(HQUEUE hQueue);
+
+namespace SGP
+{
+	template<typename T> class Queue
+	{
+		public:
+			Queue(size_t const n_elements)
+			{
+				HQUEUE const q = CreateQueue(n_elements, sizeof(T));
+				if (!q) throw std::bad_alloc();
+				queue_ = q;
+			}
+
+			~Queue() { DeleteQueue(queue_); }
+
+			bool IsEmpty() const { return QueueSize(queue_) == 0; }
+
+			void Add(T const& data)
+			{
+				HQUEUE const q = AddtoQueue(queue_, &data);
+				if (!q) throw std::bad_alloc();
+				queue_ = q;
+			}
+
+			T Remove()
+			{
+				T data;
+				if (!RemfromQueue(queue_, &data))
+				{
+					throw std::logic_error("Tried to remove element from empty queue");
+				}
+				return data;
+			}
+
+		private:
+			HQUEUE queue_;
+	};
+}
 
 // List Functions
 // CreateList(estimated number of items in queue, size of each item

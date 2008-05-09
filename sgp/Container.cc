@@ -227,7 +227,7 @@ BOOLEAN RemfromQueue(HQUEUE hQueue, void *pdata)
 //									pdata - pointer to data to add to queue
 //
 // Return Value	pointer to queue with data added else	NULL
-HQUEUE AddtoQueue(HQUEUE hQueue, void *pdata)
+HQUEUE AddtoQueue(HQUEUE hQueue, void const* const pdata)
 {
 	// check for invalid handle = 0
 	if (hQueue == NULL)
