@@ -4913,70 +4913,45 @@ static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void BeginRemoveMercFromContract(SOLDIERTYPE* pSoldier)
+// Setup the quote, then start dialogue beginning the actual leave sequence
+static void BeginRemoveMercFromContract(SOLDIERTYPE* const s)
 {
-	// This function will setup the quote, then start dialogue beginning the actual leave sequence
-	if( ( pSoldier->bLife > 0 ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )
+	if (s->bLife <= 0 || s->bAssignment == ASSIGNMENT_POW) return;
+
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, 0, 0);
+	switch (s->ubWhatKindOfMercAmI)
 	{
-		if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC ) || ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC ) )
-		{
-			HandleImportantMercQuote( pSoldier,  QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO );
+		case MERC_TYPE__MERC:
+		case MERC_TYPE__NPC:
+			HandleImportantMercQuote(s, QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO);
+			break;
 
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
-			TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 1,0 );
-
-		}
-		else
-		// quote is different if he's fired in less than 48 hours
-		if( ( GetWorldTotalMin() - pSoldier->uiTimeOfLastContractUpdate ) < 60 * 48 )
-		{
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1 ,MAP_SCREEN ,0 ,0 ,0 );
-			if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) )
+		case MERC_TYPE__AIM_MERC:
+			if (WillMercRenew(s, FALSE)) // Only do this if they want to renew
 			{
-				// Only do this if they want to renew.....
-				if ( WillMercRenew( pSoldier, FALSE ) )
-				{
-					HandleImportantMercQuote( pSoldier, QUOTE_DEPART_COMMET_CONTRACT_NOT_RENEWED_OR_TERMINATED_UNDER_48 );
-				}
+				// Quote is different if he's fired in less than 48 hours
+				UINT16 const quote = GetWorldTotalMin() - s->uiTimeOfLastContractUpdate < 60 * 48 ?
+					QUOTE_DEPART_COMMET_CONTRACT_NOT_RENEWED_OR_TERMINATED_UNDER_48 :
+					QUOTE_DEPARTING_COMMENT_CONTRACT_NOT_RENEWED_OR_48_OR_MORE;
+				HandleImportantMercQuote(s, quote);
 			}
+			break;
+	}
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, 0, 0);
+	TacticalCharacterDialogueWithSpecialEvent(s, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 1, 0);
 
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
-			TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 1,0 );
+	if (GetWorldTotalMin() - s->uiTimeOfLastContractUpdate < 60 * 3)
+	{
+		/* This will cause him give us lame excuses for a while until he gets over
+		 * it.  3-6 days (but the first 1-2 days of that are spent "returning" home)
+		 */
+		gMercProfiles[s->ubProfile].ubDaysOfMoraleHangover = 3 + Random(4);
 
-		}
-		else
+		// if it's an AIM merc, word of this gets back to AIM...  Bad rep.
+		if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
 		{
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1 ,MAP_SCREEN ,0 ,0 ,0 );
-			if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) )
-			{
-				// Only do this if they want to renew.....
-				if ( WillMercRenew( pSoldier, FALSE ) )
-				{
-					HandleImportantMercQuote( pSoldier,  QUOTE_DEPARTING_COMMENT_CONTRACT_NOT_RENEWED_OR_48_OR_MORE );
-				}
-			}
-			else if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC ) || ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC ) )
-			{
-				HandleImportantMercQuote( pSoldier,  QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO );
-			}
-
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
-			TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 1,0 );
+			ModifyPlayerReputation(REPUTATION_EARLY_FIRING);
 		}
-
-		if( ( GetWorldTotalMin() - pSoldier->uiTimeOfLastContractUpdate ) < 60 * 3 )
-		{
-			// this will cause him give us lame excuses for a while until he gets over it
-			// 3-6 days (but the first 1-2 days of that are spent "returning" home)
-			gMercProfiles[ pSoldier->ubProfile ].ubDaysOfMoraleHangover = (UINT8) (3 + Random(4));
-
-			// if it's an AIM merc, word of this gets back to AIM...  Bad rep.
-			if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC )
-			{
-				ModifyPlayerReputation(REPUTATION_EARLY_FIRING);
-			}
-		}
-
 	}
 }
 
