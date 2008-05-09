@@ -4098,7 +4098,7 @@ static void ShowAssignmentBox(void)
 
 static void CreateDestroyMouseRegionsForTrainingMenu(void);
 static void CreateDestroyMouseRegionsForAttributeMenu(void);
-static void CreateDestroyMouseRegionsForSquadMenu(BOOLEAN fPositionBox);
+static void CreateDestroyMouseRegionsForSquadMenu();
 static BOOLEAN HandleShowingOfMovementBox(void);
 
 
@@ -4147,7 +4147,7 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 		CreateDestroyMouseRegionsForAssignmentMenu( );
 		CreateDestroyMouseRegionsForTrainingMenu( );
 		CreateDestroyMouseRegionsForAttributeMenu( );
-		CreateDestroyMouseRegionsForSquadMenu( TRUE );
+		CreateDestroyMouseRegionsForSquadMenu();
 		CreateDestroyMouseRegionForRepairMenu( );
 
 		// hide all boxes being shown
@@ -4180,7 +4180,7 @@ void DetermineWhichAssignmentMenusCanBeShown(void)
 	CreateDestroyMouseRegionsForAssignmentMenu( );
 	CreateDestroyMouseRegionsForTrainingMenu( );
 	CreateDestroyMouseRegionsForAttributeMenu( );
-	CreateDestroyMouseRegionsForSquadMenu( TRUE );
+	CreateDestroyMouseRegionsForSquadMenu();
 	CreateDestroyMouseRegionForRepairMenu(  );
 
 	ShowAssignmentBox();
@@ -4320,7 +4320,7 @@ void ClearScreenMaskForMapScreenExit( void )
 	CreateDestroyMouseRegionsForAssignmentMenu( );
 	CreateDestroyMouseRegionsForTrainingMenu( );
 	CreateDestroyMouseRegionsForAttributeMenu( );
-	CreateDestroyMouseRegionsForSquadMenu( TRUE );
+	CreateDestroyMouseRegionsForSquadMenu();
 	CreateDestroyMouseRegionForRepairMenu(  );
 }
 
@@ -4601,7 +4601,6 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 	}
 	else if (fCreated && !fShowAssignmentMenu && !fShowContractMenu)
 	{
-		// destroy
 		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(ghRemoveMercAssignBox); ++i)
 		{
 			MSYS_RemoveRegion(&gRemoveMercAssignRegion[i]);
@@ -4636,87 +4635,65 @@ static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void CreateSquadBox(void);
 
 
-static void CreateDestroyMouseRegionsForSquadMenu(BOOLEAN fPositionBox)
+static void CreateDestroyMouseRegionsForSquadMenu()
 {
 	static BOOLEAN fCreated = FALSE;
-	UINT32 iCounter = 0;
-	INT32 iFontHeight = 0;
-
-	// will create/destroy mouse regions for the map screen attribute  menu
 
 	if (fShowSquadMenu && !fCreated)
 	{
-		// create squad box
-		CreateSquadBox( );
+		CreateSquadBox();
+		CheckAndUpdateTacticalAssignmentPopUpPositions();
 
-		CheckAndUpdateTacticalAssignmentPopUpPositions( );
+		const SGPBox* const area = GetBoxArea(ghSquadBox);
+		INT32         const x    = area->x;
+		INT32               y    = area->y + GetTopMarginSize(ghSquadBox);
+		INT32         const w    = area->w;
+		INT32         const h    = GetLineSpace(ghSquadBox) + GetFontHeight(GetBoxFont(ghSquadBox));
 
-		// grab height of font
-		iFontHeight = GetLineSpace( ghSquadBox ) + GetFontHeight( GetBoxFont( ghSquadBox ) );
-
-		const SGPBox* const area          = GetBoxArea(ghSquadBox);
-		INT32         const iBoxXPosition = area->x;
-		INT32         const iBoxYPosition = area->y;
-		INT32         const iBoxWidth     = area->w;
-
-		// define regions
-		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghSquadBox ) - 1; iCounter++ )
+		UINT32 i;
+		for (i = 0; i < GetNumberOfLinesOfTextInBox(ghSquadBox) - 1; ++i)
 		{
-			// add mouse region for each line of text..and set user data
-			MSYS_DefineRegion(&gSquadMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + GetTopMarginSize(ghSquadBox) + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + GetTopMarginSize(ghSquadBox) + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST - 2, MSYS_NO_CURSOR, SquadMenuMvtCallBack, SquadMenuBtnCallback);
-
-			MSYS_SetRegionUserData( &gSquadMenuRegion[ iCounter ], 0, iCounter );
+			// add mouse region for each line of text
+			MOUSE_REGION* const r = &gSquadMenuRegion[i];
+			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 2, MSYS_NO_CURSOR, SquadMenuMvtCallBack, SquadMenuBtnCallback);
+			MSYS_SetRegionUserData(r, 0, i);
+			y += h;
 		}
 
 		// now create cancel region
-		MSYS_DefineRegion(&gSquadMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + GetTopMarginSize(ghSquadBox) + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + GetTopMarginSize(ghSquadBox) + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST - 2, MSYS_NO_CURSOR, SquadMenuMvtCallBack, SquadMenuBtnCallback);
+		MSYS_DefineRegion(&gSquadMenuRegion[i], x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 2, MSYS_NO_CURSOR, SquadMenuMvtCallBack, SquadMenuBtnCallback);
+		MSYS_SetRegionUserData(&gSquadMenuRegion[i], 0, SQUAD_MENU_CANCEL);
 
-		MSYS_SetRegionUserData( &gSquadMenuRegion[ iCounter ], 0, SQUAD_MENU_CANCEL );
+		ShowBox(ghSquadBox);
+		UnHighLightBox(ghSquadBox);
+		HandleShadingOfLinesForSquadMenu();
 
-
-		// created
 		fCreated = TRUE;
-
-		// show the box
-		ShowBox( ghSquadBox );
-
-		// unhighlight all strings in box
-		UnHighLightBox( ghSquadBox );
-
-		// update based on current squad
-		HandleShadingOfLinesForSquadMenu( );
 	}
 	else if ((!fShowAssignmentMenu || !fShowSquadMenu) && fCreated)
 	{
-		// destroy
-		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghSquadBox ); iCounter++ )
+		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(ghSquadBox); ++i)
 		{
-			MSYS_RemoveRegion( &gSquadMenuRegion[ iCounter ] );
+			MSYS_RemoveRegion(&gSquadMenuRegion[i]);
 		}
 
 		fShowSquadMenu = FALSE;
 
-		// remove squad box
 		RemoveBox(ghSquadBox);
 		ghSquadBox = NO_POPUP_BOX;
 
-		RestorePopUpBoxes( );
+		RestorePopUpBoxes();
 
-		fMapPanelDirty = TRUE;
-		fCharacterInfoPanelDirty= TRUE;
-		fTeamPanelDirty = TRUE;
-		fMapScreenBottomDirty = TRUE;
-		SetRenderFlags( RENDER_FLAG_FULL );
+		fMapPanelDirty           = TRUE;
+		fCharacterInfoPanelDirty = TRUE;
+		fTeamPanelDirty          = TRUE;
+		fMapScreenBottomDirty    = TRUE;
+		SetRenderFlags(RENDER_FLAG_FULL);
 
-		// not created
+		// remove highlight on the parent menu
+		if (fShowAssignmentMenu) UnHighLightBox(ghAssignmentBox);
+
 		fCreated = FALSE;
-		fMapPanelDirty = TRUE;
-
-		if ( fShowAssignmentMenu )
-		{
-			// remove highlight on the parent menu
-			UnHighLightBox( ghAssignmentBox );
-		}
 	}
 }
 
