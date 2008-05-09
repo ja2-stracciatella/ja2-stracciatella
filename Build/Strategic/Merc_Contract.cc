@@ -499,7 +499,7 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 		}
 	}
 
-	if (!fUnhappy && MercThinksDeathRateTooHigh(s->ubProfile))
+	if (!fUnhappy && MercThinksDeathRateTooHigh(p))
 	{
 		fUnhappy      = TRUE;
 		usReasonQuote = QUOTE_DEATH_RATE_RENEWAL;

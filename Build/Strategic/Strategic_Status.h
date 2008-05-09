@@ -117,8 +117,8 @@ UINT8 CalcDeathRate(void);
 
 void ModifyPlayerReputation(INT8 bRepChange);
 
-BOOLEAN MercThinksDeathRateTooHigh( UINT8 ubProfileID );
-BOOLEAN MercThinksBadReputationTooHigh( UINT8 ubProfileID );
+BOOLEAN MercThinksDeathRateTooHigh(MERCPROFILESTRUCT const*);
+BOOLEAN MercThinksBadReputationTooHigh(MERCPROFILESTRUCT const*);
 BOOLEAN MercThinksHisMoraleIsTooLow( SOLDIERTYPE *pSoldier );
 
 void HandleEnricoEmail(void);

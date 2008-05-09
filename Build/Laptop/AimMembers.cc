@@ -2017,7 +2017,7 @@ static BOOLEAN CanMercBeHired(void)
 	if (DoesMercHaveABuddyOnTheTeam(pid)) return TRUE;
 
 	// Check the players Death rate
-	if (MercThinksDeathRateTooHigh(pid))
+	if (MercThinksDeathRateTooHigh(p))
 	{
 		WaitForMercToFinishTalkingOrUserToClick();
 		InitVideoFaceTalking(pid, QUOTE_DEATH_RATE_REFUSAL);
@@ -2025,7 +2025,7 @@ static BOOLEAN CanMercBeHired(void)
 	}
 
 	// Check the players Reputation
-	if (MercThinksBadReputationTooHigh(pid))
+	if (MercThinksBadReputationTooHigh(p))
 	{
 		WaitForMercToFinishTalkingOrUserToClick();
 		InitVideoFaceTalking(pid, QUOTE_REPUTATION_REFUSAL);
