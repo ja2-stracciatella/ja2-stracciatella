@@ -4327,7 +4327,6 @@ void ClearScreenMaskForMapScreenExit( void )
 
 static void ContractMenuMvtCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void ContractMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void RestorePopUpBoxes(void);
 
 
 // Create/destroy mouse regions for the map screen Contract main menu
@@ -4377,8 +4376,6 @@ void CreateDestroyMouseRegionsForContractMenu(void)
 		fCharacterInfoPanelDirty = TRUE;
 		fTeamPanelDirty          = TRUE;
 		fMapScreenBottomDirty    = TRUE;
-
-		RestorePopUpBoxes();
 
 		fCreated = FALSE;
 	}
@@ -4445,8 +4442,6 @@ static void CreateDestroyMouseRegionsForTrainingMenu(void)
 
 		// stop showing training menu
 		if (!fShowAssignmentMenu) fShowTrainingMenu = FALSE;
-
-		RestorePopUpBoxes( );
 
 		fMapPanelDirty = TRUE;
 		fCharacterInfoPanelDirty= TRUE;
@@ -4532,9 +4527,6 @@ static void CreateDestroyMouseRegionsForAttributeMenu(void)
 			gfRenderPBInterface = TRUE;
 		}
 
-
-		RestorePopUpBoxes( );
-
 		fMapPanelDirty = TRUE;
 		fCharacterInfoPanelDirty= TRUE;
 		fTeamPanelDirty = TRUE;
@@ -4615,8 +4607,6 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 			gfRenderPBInterface = TRUE;
 		}
 
-		RestorePopUpBoxes();
-
 		fMapPanelDirty           = TRUE;
 		fCharacterInfoPanelDirty = TRUE;
 		fTeamPanelDirty          = TRUE;
@@ -4681,8 +4671,6 @@ static void CreateDestroyMouseRegionsForSquadMenu()
 
 		RemoveBox(ghSquadBox);
 		ghSquadBox = NO_POPUP_BOX;
-
-		RestorePopUpBoxes();
 
 		fMapPanelDirty           = TRUE;
 		fCharacterInfoPanelDirty = TRUE;
@@ -5740,12 +5728,6 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			fMapScreenBottomDirty = TRUE;
 		}
 	}
-}
-
-
-static void RestorePopUpBoxes(void)
-{
-	VehiclePosition.iX    = OrigVehiclePosition.iX;
 }
 
 

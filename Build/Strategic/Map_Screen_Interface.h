@@ -227,8 +227,6 @@ extern SGPPoint SquadPosition ;
 
 extern SGPPoint RepairPosition;
 
-extern SGPPoint OrigVehiclePosition;
-
 // disble team info panel due to showing of battle roster
 extern BOOLEAN fDisableDueToBattleRoster;
 

@@ -287,8 +287,6 @@ SGPPoint RepairPosition={160,150};
 SGPPoint AssignmentPosition = { 120, 150 };
 SGPPoint SquadPosition ={ 160, 150 };
 
-SGPPoint OrigVehiclePosition={160,150};
-
 
 // at least one merc was hired at some time
 BOOLEAN gfAtLeastOneMercWasHired = FALSE;
