@@ -227,7 +227,6 @@ extern SGPPoint SquadPosition ;
 
 extern SGPPoint RepairPosition;
 
-extern SGPPoint OrigTrainPosition;
 extern SGPPoint OrigVehiclePosition;
 
 // disble team info panel due to showing of battle roster

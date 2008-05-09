@@ -5745,7 +5745,6 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void RestorePopUpBoxes(void)
 {
-	TrainPosition.iX      = OrigTrainPosition.iX;
 	VehiclePosition.iX    = OrigVehiclePosition.iX;
 }
 
@@ -6012,8 +6011,6 @@ static void CreateAttributeBox(void)
 static void CreateTrainingBox(void)
 {
 	// will create attribute pop up menu for mapscreen assignments
-	TrainPosition.iX = OrigTrainPosition.iX;
-
 	if (giBoxY != 0)
 	{
 		TrainPosition.iY = giBoxY + ASSIGN_MENU_TRAIN * GetFontHeight(MAP_SCREEN_FONT);
@@ -6202,8 +6199,6 @@ void DetermineBoxPositions( void )
 		SetBoxXY(ghTrainingBox, x, y);
 		TrainPosition.iX = x;
 		TrainPosition.iY = y;
-		OrigTrainPosition.iY = y;
-		OrigTrainPosition.iX = x;
 
 		if (fShowAttributeMenu && ghAttributeBox != NO_POPUP_BOX)
 		{

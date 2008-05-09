@@ -287,7 +287,6 @@ SGPPoint RepairPosition={160,150};
 SGPPoint AssignmentPosition = { 120, 150 };
 SGPPoint SquadPosition ={ 160, 150 };
 
-SGPPoint OrigTrainPosition={160,150};
 SGPPoint OrigVehiclePosition={160,150};
 
 
