@@ -13,19 +13,22 @@ typedef struct
 	BYTE   Data[];
 } EVENT;
 
-#define			PRIMARY_EVENT_QUEUE			0
-#define			SECONDARY_EVENT_QUEUE		1
-#define			DEMAND_EVENT_QUEUE			2
+enum EventQueueID
+{
+	PRIMARY_EVENT_QUEUE,
+	SECONDARY_EVENT_QUEUE,
+	DEMAND_EVENT_QUEUE
+};
 
 #define			EVENT_EXPIRED						0x00000002
 
 BOOLEAN InitializeEventManager(void);
 void    ShutdownEventManager(void);
 
-BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, UINT8 ubQueueID);
-EVENT*  RemoveEvent(UINT32 uiIndex, UINT8 ubQueueID);
-EVENT*  PeekEvent(UINT32 uiIndex, UINT8 ubQueueID);
+BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, EventQueueID);
+EVENT*  RemoveEvent(UINT32 uiIndex, EventQueueID);
+EVENT*  PeekEvent(UINT32 uiIndex, EventQueueID);
 BOOLEAN FreeEvent(EVENT* pEvent);
-UINT32	EventQueueSize(UINT8 ubQueueID);
+UINT32	EventQueueSize(EventQueueID);
 
 #endif

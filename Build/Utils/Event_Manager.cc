@@ -43,10 +43,10 @@ void ShutdownEventManager(void)
 }
 
 
-static EventList* GetQueue(UINT8 ubQueueID);
+static EventList* GetQueue(EventQueueID ubQueueID);
 
 
-BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, UINT8 ubQueueID)
+BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, EventQueueID ubQueueID)
 {
 	EVENT* pEvent = MALLOCE(EVENT, uiDataSize);
 	CHECKF(pEvent != NULL);
@@ -66,7 +66,7 @@ BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSi
 }
 
 
-EVENT* RemoveEvent(UINT32 uiIndex, UINT8 ubQueueID)
+EVENT* RemoveEvent(UINT32 uiIndex, EventQueueID ubQueueID)
 {
 	try
 	{
@@ -79,7 +79,7 @@ EVENT* RemoveEvent(UINT32 uiIndex, UINT8 ubQueueID)
 }
 
 
-EVENT* PeekEvent(UINT32 uiIndex, UINT8 ubQueueID)
+EVENT* PeekEvent(UINT32 uiIndex, EventQueueID ubQueueID)
 {
 	try
 	{
@@ -101,13 +101,13 @@ BOOLEAN FreeEvent(EVENT* pEvent)
 }
 
 
-UINT32 EventQueueSize(UINT8 ubQueueID)
+UINT32 EventQueueSize(EventQueueID ubQueueID)
 {
 	return GetQueue(ubQueueID)->Size();
 }
 
 
-static EventList* GetQueue(UINT8 ubQueueID)
+static EventList* GetQueue(EventQueueID const ubQueueID)
 {
 	switch (ubQueueID)
 	{
@@ -115,8 +115,6 @@ static EventList* GetQueue(UINT8 ubQueueID)
 		case SECONDARY_EVENT_QUEUE: return hDelayEventQueue;
 		case DEMAND_EVENT_QUEUE:    return hDemandEventQueue;
 
-		default:
-			Assert(FALSE);
-			return NULL;
+		default: throw std::logic_error("Tried to get non-existent event queue");
 	}
 }

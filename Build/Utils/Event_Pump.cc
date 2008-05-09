@@ -9,7 +9,7 @@
 #include "Debug.h"
 
 
-static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT8 ubQueueID);
+static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, EventQueueID ubQueueID);
 
 
 BOOLEAN AddGameEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData)
@@ -30,7 +30,7 @@ BOOLEAN AddGameEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData)
 }
 
 
-static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT8 ubQueueID)
+static BOOLEAN AddGameEventToQueue(UINT32 const uiEvent, UINT16 const usDelay, PTR const pEventData, EventQueueID const ubQueueID)
 {
 	// Switch on event type and set size accordingly
 	UINT32 uiDataSize;
