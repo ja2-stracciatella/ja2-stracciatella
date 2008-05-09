@@ -394,30 +394,21 @@ static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum,
 static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, FACETYPE* face);
 
 
-void HandleDialogue( )
+void HandleDialogue()
 {
-	INT32 iQSize;
-	DIALOGUE_Q_STRUCT				*QItem;
-	static BOOLEAN					fOldEngagedInConvFlagOn = FALSE;
-	BOOLEAN fDoneTalking = FALSE;
-	CHAR16	zText[ 512 ];
-	CHAR16	zMoney[128];
+	static BOOLEAN fOldEngagedInConvFlagOn = FALSE;
 
 	// we don't want to just delay action of some events, we want to pause the whole queue, regardless of the event
-	if( gfDialogueQueuePaused )
+	if (gfDialogueQueuePaused) return;
+
+	INT32 const queue_size = QueueSize(ghDialogueQ);
+
+	if (queue_size == 0 && gpCurrentTalkingFace == NULL)
 	{
-		return;
+		HandlePendingInitConv();
 	}
 
-	iQSize = QueueSize( ghDialogueQ );
-
-
-	if ( iQSize == 0 && gpCurrentTalkingFace == NULL )
-	{
-		HandlePendingInitConv( );
-	}
-
-	HandleCivQuote( );
+	HandleCivQuote();
 
 	// Alrighty, check for a change in state, do stuff appropriately....
 	// Turned on
@@ -426,57 +417,56 @@ void HandleDialogue( )
 		// OK, we have just entered...
 		fOldEngagedInConvFlagOn = TRUE;
 
-		// pause game..
 		PauseGame();
-		LockPauseState( 14 );
+		LockPauseState(14);
 	}
 	else if (fOldEngagedInConvFlagOn && !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
 	{
 		// OK, we left...
 		fOldEngagedInConvFlagOn = FALSE;
 
-		// Unpause game..
 		UnLockPauseState();
 		UnPauseGame();
 
 		// if we're exiting boxing with the UI lock set then DON'T OVERRIDE THIS!
-		if ( !(gTacticalStatus.bBoxingState == WON_ROUND || gTacticalStatus.bBoxingState == LOST_ROUND || gTacticalStatus.bBoxingState == DISQUALIFIED) && !( gTacticalStatus.uiFlags & IGNORE_ENGAGED_IN_CONV_UI_UNLOCK ) )
+		if (!(gTacticalStatus.uiFlags & IGNORE_ENGAGED_IN_CONV_UI_UNLOCK))
 		{
-			guiPendingOverrideEvent = LU_ENDUILOCK;
-			HandleTacticalUI( );
-
-			// ATE: If this is NOT the player's turn.. engage AI UI lock!
-			if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
+			switch (gTacticalStatus.bBoxingState)
 			{
-				// Setup locked UI
-				guiPendingOverrideEvent = LU_BEGINUILOCK;
-				HandleTacticalUI( );
+				case WON_ROUND:
+				case LOST_ROUND:
+				case DISQUALIFIED:
+					guiPendingOverrideEvent = LU_ENDUILOCK;
+					HandleTacticalUI();
+
+					// ATE: If this is NOT the player's turn.. engage AI UI lock!
+					if (gTacticalStatus.ubCurrentTeam != gbPlayerNum)
+					{
+						// Setup locked UI
+						guiPendingOverrideEvent = LU_BEGINUILOCK;
+						HandleTacticalUI();
+					}
+					break;
 			}
 		}
 
-		gTacticalStatus.uiFlags &= ( ~IGNORE_ENGAGED_IN_CONV_UI_UNLOCK );
+		gTacticalStatus.uiFlags &= ~IGNORE_ENGAGED_IN_CONV_UI_UNLOCK;
 	}
 
-
-	if ( gTacticalStatus.uiFlags & ENGAGED_IN_CONV )
+	if (gTacticalStatus.uiFlags & ENGAGED_IN_CONV &&
+			!gfInTalkPanel                            && // Are we in here because of the dialogue system up?
+			guiPendingScreen != MSG_BOX_SCREEN        && // ATE: NOT if we have a message box pending
+			guiCurrentScreen != MSG_BOX_SCREEN)
 	{
-		// Are we in here because of the dialogue system up?
-		if ( !gfInTalkPanel )
-		{
-			// ATE: NOT if we have a message box pending....
-			if ( guiPendingScreen != MSG_BOX_SCREEN && guiCurrentScreen != MSG_BOX_SCREEN  )
-			{
-				// No, so we should lock the UI!
-				guiPendingOverrideEvent = LU_BEGINUILOCK;
-				HandleTacticalUI( );
-			}
-		}
+		// No, so we should lock the UI!
+		guiPendingOverrideEvent = LU_BEGINUILOCK;
+		HandleTacticalUI();
 	}
 
 	// OK, check if we are still taking
-	if ( gpCurrentTalkingFace != NULL )
+	if (gpCurrentTalkingFace != NULL)
 	{
-		if ( gpCurrentTalkingFace->fTalking )
+		if (gpCurrentTalkingFace->fTalking)
 		{
 			// ATE: OK, MANAGE THE DISPLAY OF OUR CURRENTLY ACTIVE FACE IF WE / IT CHANGES STATUS
 			// THINGS THAT CAN CHANGE STATUS:
@@ -486,17 +476,12 @@ void HandleDialogue( )
 			//    CHANGE FROM TEAM TO INV INTERFACE
 
 			// Where are we and where did this face once exist?
-			if ( guiScreenIDUsedWhenUICreated == GAME_SCREEN && guiCurrentScreen == MAP_SCREEN )
+			if (guiScreenIDUsedWhenUICreated == GAME_SCREEN && guiCurrentScreen == MAP_SCREEN)
 			{
 				// GO FROM GAMESCREEN TO MAPSCREEN
-				// REMOVE OLD UI
-				// Set face inactive!
-				//gpCurrentTalkingFace->fCanHandleInactiveNow = TRUE;
-				//SetAutoFaceInActive( gpCurrentTalkingFace->iID );
-				//gfFacePanelActive = FALSE;
 
 				// delete face panel if there is one!
-				if ( gfFacePanelActive )
+				if (gfFacePanelActive)
 				{
 					// Set face inactive!
 					if (gpCurrentTalkingFace->video_overlay != NULL)
@@ -505,10 +490,10 @@ void HandleDialogue( )
 						gpCurrentTalkingFace->video_overlay = NULL;
 					}
 
-					if ( fExternFaceBoxRegionCreated )
+					if (fExternFaceBoxRegionCreated)
 					{
 						fExternFaceBoxRegionCreated = FALSE;
-						MSYS_RemoveRegion(&(gFacePopupMouseRegion) );
+						MSYS_RemoveRegion(&gFacePopupMouseRegion);
 					}
 
 					// Set face inactive....
@@ -525,80 +510,68 @@ void HandleDialogue( )
 
 				guiScreenIDUsedWhenUICreated = guiCurrentScreen;
 			}
-			else if ( guiScreenIDUsedWhenUICreated == MAP_SCREEN && guiCurrentScreen == GAME_SCREEN )
+			else if (guiScreenIDUsedWhenUICreated == MAP_SCREEN && guiCurrentScreen == GAME_SCREEN)
 			{
 				HandleTacticalSpeechUI(gubCurrentTalkingID, gpCurrentTalkingFace);
 				guiScreenIDUsedWhenUICreated = guiCurrentScreen;
 			}
 			return;
 		}
-		else
+
+		// Check special flags
+		// If we are done, check special face flag for trigger NPC!
+		if (gpCurrentTalkingFace->uiFlags & FACE_PCTRIGGER_NPC)
 		{
-			// Check special flags
-			// If we are done, check special face flag for trigger NPC!
-			if ( gpCurrentTalkingFace->uiFlags & FACE_PCTRIGGER_NPC )
-			{
-				 // Decrement refrence count...
-				 giNPCReferenceCount--;
+			 // Decrement refrence count...
+			 giNPCReferenceCount--;
 
-				 TriggerNPCRecord( (UINT8)gpCurrentTalkingFace->uiUserData1, (UINT8)gpCurrentTalkingFace->uiUserData2 );
-				 //Reset flag!
-				 gpCurrentTalkingFace->uiFlags &= (~FACE_PCTRIGGER_NPC );
-			}
+			 TriggerNPCRecord((UINT8)gpCurrentTalkingFace->uiUserData1, (UINT8)gpCurrentTalkingFace->uiUserData2);
+			 //Reset flag!
+			 gpCurrentTalkingFace->uiFlags &= ~FACE_PCTRIGGER_NPC;
+		}
 
-			if ( gpCurrentTalkingFace->uiFlags & FACE_MODAL )
-			{
-			  gpCurrentTalkingFace->uiFlags &= (~FACE_MODAL );
+		if (gpCurrentTalkingFace->uiFlags & FACE_MODAL)
+		{
+			gpCurrentTalkingFace->uiFlags &= ~FACE_MODAL;
+			EndModalTactical();
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Ending Modal Tactical Quote.");
+		}
 
-				EndModalTactical( );
+		if (gpCurrentTalkingFace->uiFlags & FACE_TRIGGER_PREBATTLE_INT)
+		{
+			UnLockPauseState();
+			InitPreBattleInterface((GROUP*)gpCurrentTalkingFace->uiUserData1, TRUE);
+			//Reset flag!
+			gpCurrentTalkingFace->uiFlags &= ~FACE_TRIGGER_PREBATTLE_INT;
+		}
 
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Ending Modal Tactical Quote." );
+		gpCurrentTalkingFace = NULL;
+		gubCurrentTalkingID	 = NO_PROFILE;
+		gTacticalStatus.ubLastQuoteProfileNUm = NO_PROFILE;
 
-			}
-
-			if ( gpCurrentTalkingFace->uiFlags & FACE_TRIGGER_PREBATTLE_INT )
-			{
-				UnLockPauseState();
-				InitPreBattleInterface( (GROUP*)gpCurrentTalkingFace->uiUserData1, TRUE );
-				//Reset flag!
-				gpCurrentTalkingFace->uiFlags &= (~FACE_TRIGGER_PREBATTLE_INT );
-			}
-
-			gpCurrentTalkingFace = NULL;
-			gubCurrentTalkingID	 = NO_PROFILE;
-			gTacticalStatus.ubLastQuoteProfileNUm = NO_PROFILE;
-			fDoneTalking = TRUE;
+		if (fWasPausedDuringDialogue)
+		{
+			fWasPausedDuringDialogue = FALSE;
+			UnLockPauseState();
+			UnPauseGame();
 		}
 	}
 
-	if( ( fDoneTalking ) && ( fWasPausedDuringDialogue ) )
+	if (queue_size == 0)
 	{
-		fWasPausedDuringDialogue = FALSE;
-
-		// unlock pause state
-		UnLockPauseState();
-		UnPauseGame();
-
-	}
-
-	if ( iQSize == 0 )
-	{
-
-		if ( gfMikeShouldSayHi == TRUE )
+		if (gfMikeShouldSayHi == TRUE)
 		{
-			INT16	sPlayerGridNo;
-
 			SOLDIERTYPE* const pMike = FindSoldierByProfileID(MIKE);
-			if ( pMike )
+			if (pMike)
 			{
-				sPlayerGridNo = ClosestPC( pMike, NULL );
-				if (sPlayerGridNo != NOWHERE )
+				INT16 const sPlayerGridNo = ClosestPC(pMike, NULL);
+				if (sPlayerGridNo != NOWHERE)
 				{
 					SOLDIERTYPE* const player = WhoIsThere2(sPlayerGridNo, 0);
 					if (player != NULL)
 					{
 						InitiateConversation(pMike, player, NPC_INITIAL_QUOTE, 0);
-						gMercProfiles[ pMike->ubProfile ].ubMiscFlags2 |= PROFILE_MISC_FLAG2_SAID_FIRSTSEEN_QUOTE;
+						gMercProfiles[pMike->ubProfile].ubMiscFlags2 |= PROFILE_MISC_FLAG2_SAID_FIRSTSEEN_QUOTE;
 						// JA2Gold: special hack value of 2 to prevent dialogue from coming up more than once
 						gfMikeShouldSayHi = 2;
 					}
@@ -609,25 +582,20 @@ void HandleDialogue( )
 		return;
 	}
 
-  // ATE: Remove any civ quotes....
-  // ShutDownQuoteBoxIfActive( TRUE );
-
 	// If here, pick current one from queue and play
-
-	// Get new one
-	RemfromQueue( ghDialogueQ, &QItem );
+	DIALOGUE_Q_STRUCT* d;
+	RemfromQueue(ghDialogueQ, &d);
 
 	// If we are in auto bandage, ignore any quotes!
-	if ( gTacticalStatus.fAutoBandageMode )
+	if (gTacticalStatus.fAutoBandageMode)
 	{
-		if( QItem -> fPauseTime )
+		if (d->fPauseTime)
 		{
 			UnLockPauseState();
 			UnPauseGame();
 		}
 
-		// Delete memory
-		MemFree( QItem );
+		MemFree(d);
 		return;
 	}
 
@@ -635,496 +603,414 @@ void HandleDialogue( )
 
 	// Alrighty, check if this one is to be delayed until we gain control.
 	// If so, place it back in!
-	if ( QItem->fDelayed )
+	if (d->fDelayed &&
+			gTacticalStatus.ubCurrentTeam != gbPlayerNum) // Are we not in our turn and not interrupted
 	{
-		// Are we not in our turn and not interrupted
-		if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum )
-		{
-			//Place back in!
-			// Add to queue
-			ghDialogueQ = AddtoQueue( ghDialogueQ, &QItem );
-
-			return;
-		}
+		//Place back in!
+		ghDialogueQ = AddtoQueue(ghDialogueQ, &d);
+		return;
 	}
 
 	// ATE: OK: If a battle sound, and delay value was given, set time stamp
 	// now...
-	if ( QItem->uiSpecialEventFlag == DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND )
+	if (d->uiSpecialEventFlag == DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND &&
+			d->uiSpecialEventData2 != 0                                   &&
+			GetJA2Clock() - d->iTimeStamp < d->uiSpecialEventData2)
 	{
-		if ( QItem->uiSpecialEventData2 != 0 )
-		{
-			if ( ( GetJA2Clock( ) - QItem->iTimeStamp ) < QItem->uiSpecialEventData2 )
-			{
-				//Place back in!
-				// Add to queue
-				ghDialogueQ = AddtoQueue( ghDialogueQ, &QItem );
-
-				return;
-			}
-		}
+		//Place back in!
+		ghDialogueQ = AddtoQueue(ghDialogueQ, &d);
+		return;
 	}
 
 	// Try to find soldier...
-	SOLDIERTYPE* pSoldier = FindSoldierByProfileIDOnPlayerTeam(QItem->ubCharacterNum);
-
-	if ( pSoldier != NULL )
+	SOLDIERTYPE* s = FindSoldierByProfileIDOnPlayerTeam(d->ubCharacterNum);
+	if (s != NULL && SoundIsPlaying(s->uiBattleSoundID))
 	{
-		if ( SoundIsPlaying( pSoldier->uiBattleSoundID ) )
-		{
-			//Place back in!
-			// Add to queue
-			ghDialogueQ = AddtoQueue( ghDialogueQ, &QItem );
-
-			return;
-		}
+		//Place back in!
+		ghDialogueQ = AddtoQueue(ghDialogueQ, &d);
+		return;
 	}
 
-	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) && ( QItem->uiSpecialEventFlag == 0 ) )
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN &&
+			d->uiSpecialEventFlag == 0)
 	{
-		QItem-> fPauseTime = TRUE;
+		d->fPauseTime = TRUE;
 	}
 
-	if( QItem-> fPauseTime )
+	if (d->fPauseTime && !GamePaused())
 	{
-		if (!GamePaused())
-		{
-			PauseGame();
-			LockPauseState( 15 );
-			fWasPausedDuringDialogue = TRUE;
-		}
+		PauseGame();
+		LockPauseState(15);
+		fWasPausedDuringDialogue = TRUE;
 	}
 
 	// Now play first item in queue
 	// If it's not a 'special' dialogue event, continue
-	if ( QItem->uiSpecialEventFlag == 0 )
+	if (d->uiSpecialEventFlag == 0)
 	{
-		if( pSoldier )
+		if (s && s->fMercAsleep) // wake grunt up to say
 		{
-			// wake grunt up to say
-			if( pSoldier->fMercAsleep )
-			{
-				pSoldier->fMercAsleep = FALSE;
+			s->fMercAsleep = FALSE;
 
-				// refresh map screen
-				fCharacterInfoPanelDirty = TRUE;
-				fTeamPanelDirty = TRUE;
+			// refresh map screen
+			fCharacterInfoPanelDirty = TRUE;
+			fTeamPanelDirty = TRUE;
 
-				// allow them to go back to sleep
-				TacticalCharacterDialogueWithSpecialEvent( pSoldier, QItem->usQuoteNum, DIALOGUE_SPECIAL_EVENT_SLEEP, 1,0 );
-			}
+			// allow them to go back to sleep
+			TacticalCharacterDialogueWithSpecialEvent(s, d->usQuoteNum, DIALOGUE_SPECIAL_EVENT_SLEEP, 1, 0);
 		}
 
-		gTacticalStatus.ubLastQuoteSaid = (UINT8)QItem->usQuoteNum;
-		gTacticalStatus.ubLastQuoteProfileNUm = (UINT8)QItem->ubCharacterNum;
+		gTacticalStatus.ubLastQuoteSaid       = d->usQuoteNum;
+		gTacticalStatus.ubLastQuoteProfileNUm = d->ubCharacterNum;
 
 		// Setup face pointer
-		gpCurrentTalkingFace = QItem->face;
-		gubCurrentTalkingID   = QItem->ubCharacterNum;
+		gpCurrentTalkingFace = d->face;
+		gubCurrentTalkingID  = d->ubCharacterNum;
 
-		ExecuteCharacterDialogue(QItem->ubCharacterNum, QItem->usQuoteNum, QItem->face, QItem->bUIHandlerID, QItem->fFromSoldier);
+		ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
 	}
-	else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SKIP_A_FRAME )
+	else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SKIP_A_FRAME)
 	{
 
 	}
-	else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE )
+	else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE)
 	{
-		// locking or unlocking?
-		if( QItem->uiSpecialEventData )
+		BOOLEAN const lock = d->uiSpecialEventData != 0;
+		switch (d->uiSpecialEventData2)
 		{
-			switch( QItem->uiSpecialEventData2 )
-			{
-				case( MAP_SCREEN ):
-					fLockOutMapScreenInterface = TRUE;
-				break;
-			}
-		}
-		else
-		{
-			switch( QItem->uiSpecialEventData2 )
-			{
-				case( MAP_SCREEN ):
-					fLockOutMapScreenInterface = FALSE;
-				break;
-			}
+			case MAP_SCREEN: fLockOutMapScreenInterface = lock; break;
 		}
 	}
-	else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_REMOVE_EPC )
+	else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_REMOVE_EPC)
 	{
-		gMercProfiles[ (UINT8) QItem->uiSpecialEventData ].ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;
-		UnRecruitEPC( (UINT8) QItem->uiSpecialEventData );
+		gMercProfiles[(UINT8)d->uiSpecialEventData].ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;
+		UnRecruitEPC((UINT8)d->uiSpecialEventData);
 		ReBuildCharactersList();
 	}
-	else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_WANTS_TO_RENEW )
+	else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_WANTS_TO_RENEW)
 	{
-		HandleMercIsWillingToRenew( (UINT8)QItem->uiSpecialEventData );
+		HandleMercIsWillingToRenew((UINT8)d->uiSpecialEventData);
 	}
-	else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_NOGO_TO_RENEW )
+	else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_NOGO_TO_RENEW)
 	{
-		HandleMercIsNotWillingToRenew( (UINT8)QItem->uiSpecialEventData );
+		HandleMercIsNotWillingToRenew((UINT8)d->uiSpecialEventData);
 	}
 	else
 	{
-		if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES )
+		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES)
 		{
 			gfUseAlternateDialogueFile = TRUE;
 
 			// Setup face pointer
-			gpCurrentTalkingFace = QItem->face;
-			gubCurrentTalkingID   = QItem->ubCharacterNum;
+			gpCurrentTalkingFace = d->face;
+			gubCurrentTalkingID   = d->ubCharacterNum;
 
-			ExecuteCharacterDialogue(QItem->ubCharacterNum, QItem->usQuoteNum, QItem->face, QItem->bUIHandlerID, QItem->fFromSoldier);
+			ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
 
 			gfUseAlternateDialogueFile = FALSE;
-
 		}
 		// We could have a special flag, but dialogue as well
-		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC)
 		{
 			// Setup face pointer
-			gpCurrentTalkingFace = QItem->face;
-			gubCurrentTalkingID   = QItem->ubCharacterNum;
+			gpCurrentTalkingFace = d->face;
+			gubCurrentTalkingID  = d->ubCharacterNum;
 
-			ExecuteCharacterDialogue(QItem->ubCharacterNum, QItem->usQuoteNum, QItem->face, QItem->bUIHandlerID, QItem->fFromSoldier);
+			ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
 
 			// Setup face with data!
-			gpCurrentTalkingFace->uiFlags				|= FACE_PCTRIGGER_NPC;
-			gpCurrentTalkingFace->uiUserData1		 = QItem->uiSpecialEventData;
-			gpCurrentTalkingFace->uiUserData2		 = QItem->uiSpecialEventData2;
+			gpCurrentTalkingFace->uiFlags     |= FACE_PCTRIGGER_NPC;
+			gpCurrentTalkingFace->uiUserData1  = d->uiSpecialEventData;
+			gpCurrentTalkingFace->uiUserData2  = d->uiSpecialEventData2;
 
 		}
-		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU)
 		{
 			// Setup face pointer
 			// ATE: THis is working with MARK'S STUFF :(
 			// Need this stuff so that bSelectedInfoChar is set...
-			SetInfoChar(pSoldier);
+			SetInfoChar(s);
 
 			fShowContractMenu = TRUE;
-			RebuildContractBoxForMerc( pSoldier );
+			RebuildContractBoxForMerc(s);
 			bSelectedContractChar = bSelectedInfoChar;
 		}
-		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND)
 		{
-			// grab soldier ptr from profile ID
-			pSoldier = FindSoldierByProfileID(QItem->ubCharacterNum);
-
-			// Do battle snounds......
-			if ( pSoldier )
+			s = FindSoldierByProfileID(d->ubCharacterNum);
+			if (s)
 			{
-				InternalDoMercBattleSound( pSoldier,  (UINT8)QItem->uiSpecialEventData, 0 );
+				InternalDoMercBattleSound(s, (UINT8)d->uiSpecialEventData, 0);
 			}
 		}
 
-		if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START )
+		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START)
 		{
 			// Turn off item lock for locators...
 			gTacticalStatus.fLockItemLocators = FALSE;
 
-			SlideToLocation((UINT16)QItem->uiSpecialEventData);
+			SlideToLocation((UINT16)d->uiSpecialEventData);
 
-			gpCurrentTalkingFace = QItem->face;
-			gubCurrentTalkingID   = QItem->ubCharacterNum;
+			gpCurrentTalkingFace = d->face;
+			gubCurrentTalkingID  = d->ubCharacterNum;
 
-			ExecuteCharacterDialogue(QItem->ubCharacterNum, QItem->usQuoteNum, QItem->face, QItem->bUIHandlerID, QItem->fFromSoldier);
+			ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
 		}
 
-		if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_ENABLE_AI )
+		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_ENABLE_AI)
 		{
 			//OK, allow AI to work now....
 			UnPauseAI();
 		}
 
-		if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_TRIGGERPREBATTLEINTERFACE )
+		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_TRIGGERPREBATTLEINTERFACE)
 		{
 			UnLockPauseState();
-			InitPreBattleInterface( (GROUP*)QItem->uiSpecialEventData, TRUE );
+			InitPreBattleInterface((GROUP*)d->uiSpecialEventData, TRUE);
 		}
-		if( QItem->uiSpecialEventFlag & DIALOGUE_ADD_EVENT_FOR_SOLDIER_UPDATE_BOX )
+
+		if (d->uiSpecialEventFlag & DIALOGUE_ADD_EVENT_FOR_SOLDIER_UPDATE_BOX)
 		{
-			INT32 iReason = 0;
-
-			iReason = QItem->uiSpecialEventData;
-
-			switch( iReason )
+			INT32 const iReason = d->uiSpecialEventData;
+			switch (iReason)
 			{
-				case( UPDATE_BOX_REASON_ADDSOLDIER ):
+				case UPDATE_BOX_REASON_ADDSOLDIER:
 				{
-					SOLDIERTYPE* const pUpdateSoldier = GetMan(QItem->uiSpecialEventData2);
-					if (pUpdateSoldier->bActive)
-					{
-						AddSoldierToUpdateBox( pUpdateSoldier );
-					}
+					SOLDIERTYPE* const pUpdateSoldier = GetMan(d->uiSpecialEventData2);
+					if (pUpdateSoldier->bActive) AddSoldierToUpdateBox(pUpdateSoldier);
 					break;
 				}
 
-				case( UPDATE_BOX_REASON_SET_REASON ):
-					SetSoldierUpdateBoxReason( QItem->uiSpecialEventData2 );
-				break;
-				case( UPDATE_BOX_REASON_SHOW_BOX ):
-					ShowUpdateBox( );
-				break;
+				case UPDATE_BOX_REASON_SET_REASON:
+					SetSoldierUpdateBoxReason(d->uiSpecialEventData2);
+					break;
+
+				case UPDATE_BOX_REASON_SHOW_BOX:
+					ShowUpdateBox();
+					break;
 			}
 		}
-		if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_BEGINPREBATTLEINTERFACE )
+
+		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_BEGINPREBATTLEINTERFACE)
 		{
 			// Setup face pointer
-			gpCurrentTalkingFace = QItem->face;
-			gubCurrentTalkingID   = QItem->ubCharacterNum;
+			gpCurrentTalkingFace = d->face;
+			gubCurrentTalkingID  = d->ubCharacterNum;
 
-			ExecuteCharacterDialogue(QItem->ubCharacterNum, QItem->usQuoteNum, QItem->face, QItem->bUIHandlerID, QItem->fFromSoldier);
+			ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
 
 			// Setup face with data!
-			gpCurrentTalkingFace->uiFlags				|= FACE_TRIGGER_PREBATTLE_INT;
-			gpCurrentTalkingFace->uiUserData1		 = QItem->uiSpecialEventData;
-			gpCurrentTalkingFace->uiUserData2		 = QItem->uiSpecialEventData2;
+			gpCurrentTalkingFace->uiFlags     |= FACE_TRIGGER_PREBATTLE_INT;
+			gpCurrentTalkingFace->uiUserData1  = d->uiSpecialEventData;
+			gpCurrentTalkingFace->uiUserData2  = d->uiSpecialEventData2;
 		}
 
-		if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOPKEEPER )
+		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOPKEEPER)
 		{
-
-			if( QItem->uiSpecialEventData < 3 )
+			switch (d->uiSpecialEventData)
 			{
-				// post a notice if the player wants to withdraw money from thier account to cover the difference?
-				SPrintMoney(zMoney, QItem->uiSpecialEventData2);
-			}
+				wchar_t zMoney[128];
+				wchar_t zText[512];
 
-			switch( QItem->uiSpecialEventData  )
-			{
-				case( 0 ):
-						swprintf( zText, lengthof(zText), SkiMessageBoxText[ SKI_SHORT_FUNDS_TEXT ], zMoney );
+				case 0:
+					//popup a message stating the player doesnt have enough money
+					SPrintMoney(zMoney, d->uiSpecialEventData2);
+					swprintf(zText, lengthof(zText), SkiMessageBoxText[SKI_SHORT_FUNDS_TEXT], zMoney);
+					DoSkiMessageBox(MSG_BOX_BASIC_STYLE, zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack);
+					break;
 
-						//popup a message stating the player doesnt have enough money
-						DoSkiMessageBox( MSG_BOX_BASIC_STYLE, zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack );
-				break;
-				case( 1 ):
-						//if the player is trading items
-						swprintf( zText, lengthof(zText), SkiMessageBoxText[ SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_DIFFERENCE ], zMoney );
+				case 1:
+					/* if the player is trading items, ask them if we should deduct money
+					 * out the players account to cover the difference */
+					SPrintMoney(zMoney, d->uiSpecialEventData2);
+					swprintf(zText, lengthof(zText), SkiMessageBoxText[SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_DIFFERENCE], zMoney);
+					DoSkiMessageBox(MSG_BOX_BASIC_STYLE, zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack);
+					break;
 
-						//ask them if we should deduct money out the players account to cover the difference
-						DoSkiMessageBox( MSG_BOX_BASIC_STYLE, zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack );
+				case 2:
+					/* ask them if we should deduct money out the players account to cover
+					 * the difference */
+					SPrintMoney(zMoney, d->uiSpecialEventData2);
+					swprintf(zText, lengthof(zText), SkiMessageBoxText[SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_COST], zMoney);
+					DoSkiMessageBox(MSG_BOX_BASIC_STYLE, zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack);
+					break;
 
-				break;
-				case( 2 ):
-						swprintf( zText, lengthof(zText), SkiMessageBoxText[ SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_COST ], zMoney );
+				case 3: // this means a dialogue event is in progress
+					giShopKeepDialogueEventinProgress = d->uiSpecialEventData2;
+					break;
 
-						//ask them if we should deduct money out the players account to cover the difference
-						DoSkiMessageBox( MSG_BOX_BASIC_STYLE, zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack );
-				break;
-				case( 3 ):
-					// this means a dialogue event is in progress
-					giShopKeepDialogueEventinProgress = QItem->uiSpecialEventData2;
-				break;
-				case( 4 ):
-					// this means a dialogue event has ended
+				case 4: // this means a dialogue event has ended
 					giShopKeepDialogueEventinProgress = -1;
-				break;
-				case( 5 ):
-					// this means a dialogue event has ended
+					break;
+
+				case 5: // this means a dialogue event has ended
 					gfSKIScreenExit = TRUE;
-				break;
+					break;
 
-				case( 6 ):
-					if( guiCurrentScreen == SHOPKEEPER_SCREEN )
+				case 6:
+					if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 					{
-						DisableButton( guiSKI_TransactionButton );
+						DisableButton(guiSKI_TransactionButton);
 					}
-				break;
-				case( 7 ):
-					if( guiCurrentScreen == SHOPKEEPER_SCREEN )
+					break;
+
+				case 7:
+					if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 					{
-						EnableButton( guiSKI_TransactionButton );
+						EnableButton(guiSKI_TransactionButton);
 					}
-				break;
+					break;
 			}
-
 		}
 
-		if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_EXIT_MAP_SCREEN )
+		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_EXIT_MAP_SCREEN)
 		{
 			// select sector
-			ChangeSelectedMapSector( ( INT16 )QItem->uiSpecialEventData, ( INT16 )QItem->uiSpecialEventData2, ( INT8 )QItem->uiSpecialEventData3 );
-			RequestTriggerExitFromMapscreen( MAP_EXIT_TO_TACTICAL );
+			ChangeSelectedMapSector((INT16)d->uiSpecialEventData, (INT16)d->uiSpecialEventData2, (INT8)d->uiSpecialEventData3);
+			RequestTriggerExitFromMapscreen(MAP_EXIT_TO_TACTICAL);
 		}
-		else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DISPLAY_STAT_CHANGE )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DISPLAY_STAT_CHANGE)
 		{
-			// grab soldier ptr from profile ID
-			pSoldier = FindSoldierByProfileID(QItem->ubCharacterNum);
-
-			if ( pSoldier )
+			s = FindSoldierByProfileID(d->ubCharacterNum);
+			if (s)
 			{
-				CHAR16 wTempString[ 128 ];
-
 				// tell player about stat increase
-				BuildStatChangeString( wTempString, lengthof(wTempString), pSoldier->name, ( BOOLEAN ) QItem->uiSpecialEventData, ( INT16 ) QItem->uiSpecialEventData2, ( UINT8 ) QItem->uiSpecialEventData3 );
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, wTempString );
+				wchar_t wTempString[128];
+				BuildStatChangeString(wTempString, lengthof(wTempString), s->name, (BOOLEAN)d->uiSpecialEventData, (INT16)d->uiSpecialEventData2, (UINT8)d->uiSpecialEventData3);
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, wTempString);
 			}
 		}
-		else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_UNSET_ARRIVES_FLAG )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_UNSET_ARRIVES_FLAG)
 		{
 			gTacticalStatus.bMercArrivingQuoteBeingUsed = FALSE;
 		}
-
-		/*
-		else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DISPLAY_INVASION_MESSAGE )
-		{
-			HandlePlayerNotifyInvasionByEnemyForces( (INT16)(QItem->uiSpecialEventData % MAP_WORLD_X), (INT16)(QItem->uiSpecialEventData / MAP_WORLD_X), 0, NULL );
-		}
-		*/
-		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT)
 		{
 			// Setup face pointer
-			gpCurrentTalkingFace = QItem->face;
-			gubCurrentTalkingID   = QItem->ubCharacterNum;
+			gpCurrentTalkingFace = d->face;
+			gubCurrentTalkingID  = d->ubCharacterNum;
 
 			// handle the monologue event
-			HandleSkyRiderMonologueEvent( QItem->uiSpecialEventData, QItem->uiSpecialEventData2 );
+			HandleSkyRiderMonologueEvent(d->uiSpecialEventData, d->uiSpecialEventData2);
 		}
 
-		if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT )
+		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT)
 		{
 			// Setup face pointer
-			gpCurrentTalkingFace = QItem->face;
-			gubCurrentTalkingID   = QItem->ubCharacterNum;
+			gpCurrentTalkingFace = d->face;
+			gubCurrentTalkingID  = d->ubCharacterNum;
 
 			// set up the mine highlgith events
-			SetUpAnimationOfMineSectors( QItem->uiSpecialEventData );
+			SetUpAnimationOfMineSectors(d->uiSpecialEventData);
 		}
 
 		//Switch on our special events
-		if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_GIVE_ITEM )
+		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_GIVE_ITEM)
 		{
-			if ( QItem->bUIHandlerID == DIALOGUE_NPC_UI )
+			if (d->bUIHandlerID == DIALOGUE_NPC_UI)
 			{
-				HandleNPCItemGiven( (UINT8)QItem->uiSpecialEventData, (OBJECTTYPE*)QItem->uiSpecialEventData2, (INT8)QItem->uiSpecialEventData3 );
+				HandleNPCItemGiven((UINT8)d->uiSpecialEventData, (OBJECTTYPE*)d->uiSpecialEventData2, (INT8)d->uiSpecialEventData3);
 			}
 		}
-		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC)
 		{
-			if ( QItem->bUIHandlerID == DIALOGUE_NPC_UI )
+			if (d->bUIHandlerID == DIALOGUE_NPC_UI)
 			{
-				HandleNPCTriggerNPC( (UINT8)QItem->uiSpecialEventData, (UINT8)QItem->uiSpecialEventData2, (BOOLEAN)QItem->uiSpecialEventData3, (UINT8)QItem->uiSpecialEventData4 );
+				HandleNPCTriggerNPC((UINT8)d->uiSpecialEventData, (UINT8)d->uiSpecialEventData2, (BOOLEAN)d->uiSpecialEventData3, (UINT8)d->uiSpecialEventData4);
 			}
 		}
-		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO)
 		{
-			if ( QItem->bUIHandlerID == DIALOGUE_NPC_UI )
+			if (d->bUIHandlerID == DIALOGUE_NPC_UI)
 			{
-				HandleNPCGotoGridNo( (UINT8)QItem->uiSpecialEventData, (UINT16)QItem->uiSpecialEventData2, (UINT8)QItem->uiSpecialEventData3 );
+				HandleNPCGotoGridNo((UINT8)d->uiSpecialEventData, (UINT16)d->uiSpecialEventData2, (UINT8)d->uiSpecialEventData3);
 			}
 		}
-		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_ACTION )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_ACTION)
 		{
-			if ( QItem->bUIHandlerID == DIALOGUE_NPC_UI )
+			if (d->bUIHandlerID == DIALOGUE_NPC_UI)
 			{
-				HandleNPCDoAction( (UINT8)QItem->uiSpecialEventData, (UINT16)QItem->uiSpecialEventData2, (UINT8)QItem->uiSpecialEventData3 );
+				HandleNPCDoAction((UINT8)d->uiSpecialEventData, (UINT16)d->uiSpecialEventData2, (UINT8)d->uiSpecialEventData3);
 			}
 		}
-		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CLOSE_PANEL )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CLOSE_PANEL)
 		{
-			if ( QItem->bUIHandlerID == DIALOGUE_NPC_UI )
+			if (d->bUIHandlerID == DIALOGUE_NPC_UI)
 			{
-				HandleNPCClosePanel( );
+				HandleNPCClosePanel();
 			}
 		}
-		else if ( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU)
 		{
-			SetUpdateBoxFlag( TRUE );
+			SetUpdateBoxFlag(TRUE);
 		}
-		else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTINUE_TRAINING_MILITIA )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTINUE_TRAINING_MILITIA)
 		{
-			// grab soldier ptr from profile ID
-			pSoldier = FindSoldierByProfileID((UINT8)QItem->uiSpecialEventData);
-
-			// if soldier valid...
-			if( pSoldier != NULL )
+			s = FindSoldierByProfileID((UINT8)d->uiSpecialEventData);
+			if (s != NULL)
 			{
-				HandleInterfaceMessageForContinuingTrainingMilitia( pSoldier );
+				HandleInterfaceMessageForContinuingTrainingMilitia(s);
 			}
 		}
-		else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN)
 		{
-			if( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+			if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
 			{
-				gfEnteringMapScreen = TRUE;
+				gfEnteringMapScreen    = TRUE;
 				fEnterMapDueToContract = TRUE;
 			}
 		}
-		else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING)
 		{
-			// grab soldier ptr from profile ID
-			pSoldier = FindSoldierByProfileID(QItem->ubCharacterNum);
-
-			// if soldier valid...
-			if( pSoldier != NULL )
+			s = FindSoldierByProfileID(d->ubCharacterNum);
+			if (s != NULL)
 			{
 				// .. remove the fired soldier again
-				BeginStrategicRemoveMerc( pSoldier, (UINT8)QItem->uiSpecialEventData );
+				BeginStrategicRemoveMerc(s, (UINT8)d->uiSpecialEventData);
 			}
 		}
-		else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP)
 		{
-			// grab soldier ptr from profile ID
-			pSoldier = FindSoldierByProfileID(QItem->ubCharacterNum);
-
-			// if soldier valid...
-			if( pSoldier != NULL )
+			s = FindSoldierByProfileID(d->ubCharacterNum);
+			if (s != NULL)
 			{
 				// .. remove the fired soldier again
-				StrategicRemoveMerc( pSoldier );
+				StrategicRemoveMerc(s);
 			}
 		}
-		else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_MULTIPURPOSE )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_MULTIPURPOSE)
 		{
-			if ( QItem->uiSpecialEventData & MULTIPURPOSE_SPECIAL_EVENT_DONE_KILLING_DEIDRANNA )
+			if (d->uiSpecialEventData & MULTIPURPOSE_SPECIAL_EVENT_DONE_KILLING_DEIDRANNA)
 			{
-				HandleDoneLastKilledQueenQuote( );
+				HandleDoneLastKilledQueenQuote();
 			}
-			else if ( QItem->uiSpecialEventData & MULTIPURPOSE_SPECIAL_EVENT_TEAM_MEMBERS_DONE_TALKING )
+			else if (d->uiSpecialEventData & MULTIPURPOSE_SPECIAL_EVENT_TEAM_MEMBERS_DONE_TALKING)
 			{
-				HandleDoneLastEndGameQuote( );
+				HandleDoneLastEndGameQuote();
 			}
 		}
-		else if( QItem->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SLEEP )
+		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SLEEP)
 		{
-			// no soldier, leave now
-			if( pSoldier == NULL )
-			{
-				return;
-			}
+			if (s == NULL) return;
 
 			// wake merc up or put them back down?
-			if( QItem->uiSpecialEventData == 1 )
-			{
-				pSoldier -> fMercAsleep = TRUE;
-			}
-			else
-			{
-				pSoldier -> fMercAsleep = FALSE;
-			}
+			s->fMercAsleep = (d->uiSpecialEventData != 0);
 
 			// refresh map screen
 			fCharacterInfoPanelDirty = TRUE;
-			fTeamPanelDirty = TRUE;
+			fTeamPanelDirty          = TRUE;
 		}
 	}
 
-	// grab soldier ptr from profile ID
-	pSoldier = FindSoldierByProfileID(QItem->ubCharacterNum);
-
-	if ( pSoldier && pSoldier->bTeam == gbPlayerNum )
+	s = FindSoldierByProfileID(d->ubCharacterNum);
+	if (s && s->bTeam == gbPlayerNum)
 	{
-		CheckForStopTimeQuotes( QItem->usQuoteNum );
+		CheckForStopTimeQuotes(d->usQuoteNum);
 	}
 
-	if( QItem -> fPauseTime )
-	{
-		fWasPausedDuringDialogue = TRUE;
-	}
+	if (d->fPauseTime) fWasPausedDuringDialogue = TRUE;
 
-	// Delete memory
-	MemFree( QItem );
+	MemFree(d);
 }
 
 
