@@ -328,7 +328,7 @@ int main(int argc, char* argv[])
 	}
 	catch (const std::exception& e)
 	{
-		fprintf(stderr, "ERROR: caught unhandled exception \"%s\"", e.what());
+		fprintf(stderr, "ERROR: caught unhandled exception: \"%s\"\n", e.what());
 	}
 	catch (...)
 	{
