@@ -2520,6 +2520,14 @@ void HandleImportantMercQuote( SOLDIERTYPE * pSoldier, UINT16 usQuoteNumber )
 }
 
 
+void HandleImportantMercQuoteLocked(SOLDIERTYPE* const s, UINT16 const quote)
+{
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, 0, 0);
+	HandleImportantMercQuote(s, quote);
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, 0, 0);
+}
+
+
 // handle pausing of the dialogue queue
 void PauseDialogueQueue( void )
 {

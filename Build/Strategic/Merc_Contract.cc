@@ -185,16 +185,12 @@ void HandleContractRenewalSequence( )
 					// If we have not used this one before....
 					if ( pSoldier->ubContractRenewalQuoteCode == SOLDIER_CONTRACT_RENEW_QUOTE_NOT_USED )
 					{
-						SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1 ,MAP_SCREEN ,0 ,0 ,0 );
-						HandleImportantMercQuote( pSoldier, QUOTE_CONTRACTS_OVER );
-						SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
+						HandleImportantMercQuoteLocked(pSoldier, QUOTE_CONTRACTS_OVER);
 					}
 					// Else if we have said 89 already......
 					else if ( pSoldier->ubContractRenewalQuoteCode == SOLDIER_CONTRACT_RENEW_QUOTE_89_USED )
 					{
-						SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1 ,MAP_SCREEN ,0 ,0 ,0 );
-						HandleImportantMercQuote( pSoldier, QUOTE_MERC_LEAVING_ALSUCO_SOON );
-						SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
+						HandleImportantMercQuoteLocked(pSoldier, QUOTE_MERC_LEAVING_ALSUCO_SOON);
 					}
 
 					// Do special dialogue event...
@@ -437,9 +433,7 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 
 		if (fSayQuote)
 		{
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1 ,MAP_SCREEN ,0 ,0 ,0 );
-			HandleImportantMercQuote( pSoldier, QUOTE_WONT_RENEW_CONTRACT_LAME_REFUSAL );
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
+			HandleImportantMercQuoteLocked(pSoldier, QUOTE_WONT_RENEW_CONTRACT_LAME_REFUSAL);
 		}
 		return( FALSE );
 	}
@@ -586,14 +580,10 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 		}
 	}
 
-	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1 ,MAP_SCREEN ,0 ,0 ,0 );
-
-	if( fSayPrecedent )
+	if (fSayPrecedent)
 	{
-		HandleImportantMercQuote( pSoldier, QUOTE_PRECEDENT_TO_REPEATING_ONESELF_RENEW );
+		HandleImportantMercQuoteLocked(pSoldier, QUOTE_PRECEDENT_TO_REPEATING_ONESELF_RENEW);
 	}
-
-	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
 
 	// OK, we got all our info, let's make some decisions!
 	if (fUnhappy)
@@ -603,10 +593,7 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 			// unhappy, but buddy's around, so will agree to renew, but tell us why we're doing it
 			if (fSayQuote)
 			{
-				SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1,MAP_SCREEN,0,0,0 );
-				HandleImportantMercQuote( pSoldier, usBuddyQuote);
-				SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0,MAP_SCREEN,0,0,0 );
-
+				HandleImportantMercQuoteLocked(pSoldier, usBuddyQuote);
 			}
 			return( TRUE );
 		}
@@ -615,22 +602,18 @@ BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote )
 			// unhappy, no buddies, will refuse to renew
 			if (fSayQuote)
 			{
-				SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1 ,MAP_SCREEN ,0 ,0 ,0 );
-
 /* ARM: Delay quote too vague, no longer to be used
 				if( ( SoldierWantsToDelayRenewalOfContract( pSoldier ) ) )
 				{
 					// has a new job lined up
-					HandleImportantMercQuote( pSoldier, QUOTE_DELAY_CONTRACT_RENEWAL );
+					HandleImportantMercQuoteLocked(pSoldier, QUOTE_DELAY_CONTRACT_RENEWAL);
 				}
 				else
 */
 				{
-					Assert( usReasonQuote != 0 );
-					HandleImportantMercQuote( pSoldier, usReasonQuote );
+					Assert(usReasonQuote != 0);
+					HandleImportantMercQuoteLocked(pSoldier, usReasonQuote);
 				}
-				SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
-
 			}
 			return(FALSE);
 		}
@@ -1228,9 +1211,7 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
 		{
 			SOLDIERTYPE* const chosen = potential_mercs[Random(ubNumMercs)];
 
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1 ,MAP_SCREEN ,0 ,0 ,0 );
-			HandleImportantMercQuote(chosen, QUOTE_CONTRACTS_OVER);
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
+			HandleImportantMercQuoteLocked(chosen, QUOTE_CONTRACTS_OVER);
 
 			AddReasonToWaitingListQueue( CONTRACT_EXPIRE_WARNING_REASON );
 			TacticalCharacterDialogueWithSpecialEvent(chosen, 0, DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU, 0, 0);

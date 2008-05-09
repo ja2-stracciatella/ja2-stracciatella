@@ -232,6 +232,7 @@ void ShutdownDialogueControl(void);
 void EmptyDialogueQueue(void);
 void HandleDialogue(void);
 void HandleImportantMercQuote( SOLDIERTYPE * pSoldier, UINT16 usQuoteNumber );
+void HandleImportantMercQuoteLocked(SOLDIERTYPE*, UINT16 quote);
 
 
 const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile);

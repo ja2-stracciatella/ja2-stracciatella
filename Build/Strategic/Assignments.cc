@@ -4918,12 +4918,11 @@ static void BeginRemoveMercFromContract(SOLDIERTYPE* const s)
 {
 	if (s->bLife <= 0 || s->bAssignment == ASSIGNMENT_POW) return;
 
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, 0, 0);
 	switch (s->ubWhatKindOfMercAmI)
 	{
 		case MERC_TYPE__MERC:
 		case MERC_TYPE__NPC:
-			HandleImportantMercQuote(s, QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO);
+			HandleImportantMercQuoteLocked(s, QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO);
 			break;
 
 		case MERC_TYPE__AIM_MERC:
@@ -4933,11 +4932,10 @@ static void BeginRemoveMercFromContract(SOLDIERTYPE* const s)
 				UINT16 const quote = GetWorldTotalMin() - s->uiTimeOfLastContractUpdate < 60 * 48 ?
 					QUOTE_DEPART_COMMET_CONTRACT_NOT_RENEWED_OR_TERMINATED_UNDER_48 :
 					QUOTE_DEPARTING_COMMENT_CONTRACT_NOT_RENEWED_OR_48_OR_MORE;
-				HandleImportantMercQuote(s, quote);
+				HandleImportantMercQuoteLocked(s, quote);
 			}
 			break;
 	}
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, 0, 0);
 	TacticalCharacterDialogueWithSpecialEvent(s, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 1, 0);
 
 	if (GetWorldTotalMin() - s->uiTimeOfLastContractUpdate < 60 * 3)
