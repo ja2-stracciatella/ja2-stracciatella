@@ -83,10 +83,60 @@ namespace SGP
 // DeleteList(handle to the list) Delete the list container
 
 extern HLIST   CreateList(UINT32 num_of_elem, UINT32 siz_of_each);
-extern HLIST   AddtoList(HLIST hList, void *data, UINT32 position);
+extern HLIST   AddtoList(HLIST hList, void const* data, UINT32 position);
 extern BOOLEAN RemfromList(HLIST hList,void *data, UINT32 position);
 extern BOOLEAN PeekList(HLIST hList, void *data, UINT32 position);
 extern UINT32  ListSize(HLIST hList);
 extern BOOLEAN DeleteList(HLIST hList);
+
+namespace SGP
+{
+	template<typename T> class List
+	{
+		public:
+			List(size_t const n_elements)
+			{
+				HLIST const l = CreateList(n_elements, sizeof(T));
+				if (!l) throw std::bad_alloc();
+				list_ = l;
+			}
+
+			~List() { DeleteList(list_); }
+
+			size_t Size() const { return ListSize(list_); }
+
+			void Add(T const& data, size_t const pos)
+			{
+				HLIST l = AddtoList(list_, &data, pos);
+				/* XXX cannot distinguish between invalid pos and failed memory
+				 * allocation here */
+				if (!l) throw std::runtime_error("Failed to add element to list");
+				list_ = l;
+			}
+
+			T Remove(size_t const pos)
+			{
+				T data;
+				if (!RemfromList(list_, &data, pos))
+				{
+					throw std::logic_error("Tried to remove non-existent element from list");
+				}
+				return data;
+			}
+
+			T Peek(size_t const pos)
+			{
+				T data;
+				if (!PeekList(list_, &data, pos))
+				{
+					throw std::logic_error("Tried to peek at non-existent element in list");
+				}
+				return data;
+			}
+
+		private:
+			HLIST list_;
+	};
+}
 
 #endif

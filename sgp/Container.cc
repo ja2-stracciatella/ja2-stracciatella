@@ -343,7 +343,7 @@ UINT32 ListSize(HLIST hList)
 // Parameter List : HCONTAINER - handle to list container
 //									data - data to add to queue
 //									position - position after which data is to added
-HLIST AddtoList(HLIST hList, void *pdata, UINT32 uiPos)
+HLIST AddtoList(HLIST hList, void const* pdata, UINT32 const uiPos)
 {
 	UINT32 uiOffsetDst;
 	UINT32 uiFinalLoc = 0;

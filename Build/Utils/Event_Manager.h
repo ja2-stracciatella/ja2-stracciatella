@@ -20,7 +20,7 @@ typedef struct
 #define			EVENT_EXPIRED						0x00000002
 
 BOOLEAN InitializeEventManager(void);
-BOOLEAN ShutdownEventManager(void);
+void    ShutdownEventManager(void);
 
 BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, UINT8 ubQueueID);
 EVENT*  RemoveEvent(UINT32 uiIndex, UINT8 ubQueueID);

@@ -6,9 +6,12 @@
 #include "MemMan.h"
 
 
-static HLIST hEventQueue       = NULL;
-static HLIST hDelayEventQueue  = NULL;
-static HLIST hDemandEventQueue = NULL;
+typedef SGP::List<EVENT*> EventList;
+
+
+static EventList* hEventQueue       = NULL;
+static EventList* hDelayEventQueue  = NULL;
+static EventList* hDemandEventQueue = NULL;
 
 
 #define QUEUE_RESIZE		20
@@ -16,34 +19,31 @@ static HLIST hDemandEventQueue = NULL;
 
 BOOLEAN InitializeEventManager(void)
 {
-	// Create Queue
-	hEventQueue = CreateList(QUEUE_RESIZE, sizeof(EVENT*));
-	if (hEventQueue == NULL) return FALSE;
-
-	// Create Delay Queue
-	hDelayEventQueue = CreateList(QUEUE_RESIZE, sizeof(EVENT*));
-	if (hDelayEventQueue == NULL) return FALSE;
-
-	// Create Demand Queue (events on this queue are only processed when specifically
-	// called for by code)
-	hDemandEventQueue = CreateList(QUEUE_RESIZE, sizeof(EVENT*));
-	if (hDemandEventQueue == NULL) return FALSE;
-
-	return TRUE;
+	try
+	{
+		hEventQueue       = new EventList(QUEUE_RESIZE);
+		hDelayEventQueue  = new EventList(QUEUE_RESIZE);
+		/* Events on this queue are only processed when specifically called for by
+		 * code */
+		hDemandEventQueue = new EventList(QUEUE_RESIZE);
+		return TRUE;
+	}
+	catch (const std::exception&)
+	{
+		return FALSE;
+	}
 }
 
 
-BOOLEAN ShutdownEventManager(void)
+void ShutdownEventManager(void)
 {
-	if (hEventQueue       != NULL) DeleteList(hEventQueue);
-	if (hDelayEventQueue  != NULL) DeleteList(hDelayEventQueue);
-	if (hDemandEventQueue != NULL) DeleteList(hDemandEventQueue);
-	return TRUE;
+	delete hEventQueue;
+	delete hDelayEventQueue;
+	delete hDemandEventQueue;
 }
 
 
-static HLIST GetQueue(UINT8 ubQueueID);
-static void SetQueue(UINT8 ubQueueID, HLIST hQueue);
+static EventList* GetQueue(UINT8 ubQueueID);
 
 
 BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, UINT8 ubQueueID)
@@ -60,33 +60,35 @@ BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSi
 	memcpy(pEvent->Data, pEventData, uiDataSize);
 
 	// Add event to queue
-	HLIST hQueue = GetQueue(ubQueueID);
-	hQueue = AddtoList(hQueue, &pEvent, ListSize(hQueue));
-	SetQueue(ubQueueID, hQueue);
-
+	EventList* const hQueue = GetQueue(ubQueueID);
+	hQueue->Add(pEvent, hQueue->Size());
 	return TRUE;
 }
 
 
 EVENT* RemoveEvent(UINT32 uiIndex, UINT8 ubQueueID)
 {
-	// Get an event from queue, if one exists
-	HLIST hQueue = GetQueue(ubQueueID);
-
-	EVENT* Event;
-	CHECKN(RemfromList(hQueue, &Event, uiIndex));
-	return Event;
+	try
+	{
+		return GetQueue(ubQueueID)->Remove(uiIndex);
+	}
+	catch (const std::exception&)
+	{
+		return 0;
+	}
 }
 
 
 EVENT* PeekEvent(UINT32 uiIndex, UINT8 ubQueueID)
 {
-	// Get an event from queue, if one exists
-	HLIST hQueue = GetQueue(ubQueueID);
-
-	EVENT* Event;
-	CHECKN(PeekList(hQueue, &Event, uiIndex));
-	return Event;
+	try
+	{
+		return GetQueue(ubQueueID)->Peek(uiIndex);
+	}
+	catch (const std::exception&)
+	{
+		return 0;
+	}
 }
 
 
@@ -101,13 +103,11 @@ BOOLEAN FreeEvent(EVENT* pEvent)
 
 UINT32 EventQueueSize(UINT8 ubQueueID)
 {
-	HLIST hQueue = GetQueue(ubQueueID);
-	UINT32 uiQueueSize = ListSize(hQueue);
-	return uiQueueSize;
+	return GetQueue(ubQueueID)->Size();
 }
 
 
-static HLIST GetQueue(UINT8 ubQueueID)
+static EventList* GetQueue(UINT8 ubQueueID)
 {
 	switch (ubQueueID)
 	{
@@ -118,20 +118,5 @@ static HLIST GetQueue(UINT8 ubQueueID)
 		default:
 			Assert(FALSE);
 			return NULL;
-	}
-}
-
-
-static void SetQueue(UINT8 ubQueueID, HLIST hQueue)
-{
-	switch (ubQueueID)
-	{
-		case PRIMARY_EVENT_QUEUE:   hEventQueue       = hQueue; break;
-		case SECONDARY_EVENT_QUEUE: hDelayEventQueue  = hQueue; break;
-		case DEMAND_EVENT_QUEUE:    hDemandEventQueue = hQueue; break;
-
-		default:
-			Assert(FALSE);
-			break;
 	}
 }
