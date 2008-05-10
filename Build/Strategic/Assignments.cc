@@ -6124,22 +6124,16 @@ BOOLEAN CreateDestroyAssignmentPopUpBoxes( void )
 }
 
 
-
-void DetermineBoxPositions( void )
+void DetermineBoxPositions()
 {
 	// depending on how many boxes there are, reposition as needed
-	SOLDIERTYPE *pSoldier = NULL;
-
 	if (!fShowAssignmentMenu || ghAssignmentBox == NO_POPUP_BOX) return;
 
-	pSoldier = GetSelectedAssignSoldier( TRUE );
-	// pSoldier NULL is legal here!  Gets called during every mapscreen initialization even when nobody is assign char
-	if ( pSoldier == NULL )
-	{
-		return;
-	}
+	SOLDIERTYPE const* const s = GetSelectedAssignSoldier(TRUE);
+	// no soldier is legal here!  Gets called during every mapscreen initialization even when nobody is assign char
+	if (s == NULL) return;
 
-	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
 	{
 		const SGPBox* const area = GetBoxArea(ghAssignmentBox);
 		gsAssignmentBoxesX = area->x;
@@ -6149,7 +6143,7 @@ void DetermineBoxPositions( void )
 	INT16 x = gsAssignmentBoxesX;
 	INT16 y = gsAssignmentBoxesY;
 
-	PopUpBox* const box = (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox);
+	PopUpBox* const box = (s->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox);
 	SetBoxXY(box, x, y);
 
 	// hang it right beside the assignment/EPC box menu
@@ -6162,9 +6156,8 @@ void DetermineBoxPositions( void )
 
 	if (fShowRepairMenu && ghRepairBox != NO_POPUP_BOX)
 	{
-		CreateDestroyMouseRegionForRepairMenu( );
+		CreateDestroyMouseRegionForRepairMenu();
 		y += (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_REPAIR;
-
 		SetBoxXY(ghRepairBox, x, y);
 	}
 
