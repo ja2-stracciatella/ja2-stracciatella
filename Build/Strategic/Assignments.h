@@ -93,15 +93,6 @@ typedef struct TOWN_TRAINER_TYPE
 // can character train militia?
 BOOLEAN CanCharacterTrainMilitia(const SOLDIERTYPE* s);
 
-#define CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT -6
-#define CHARACTER_CANT_JOIN_SQUAD_SQUAD_MOVING -5
-#define CHARACTER_CANT_JOIN_SQUAD_MOVING -4
-#define CHARACTER_CANT_JOIN_SQUAD_VEHICLE -3
-#define CHARACTER_CANT_JOIN_SQUAD_TOO_FAR -2
-#define CHARACTER_CANT_JOIN_SQUAD_FULL -1
-#define CHARACTER_CANT_JOIN_SQUAD 0
-#define CHARACTER_CAN_JOIN_SQUAD 1
-
 // if merc could train militia here, do they have sufficient loyalty?
 BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(const SOLDIERTYPE* s);
 

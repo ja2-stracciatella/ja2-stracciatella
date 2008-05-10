@@ -909,8 +909,21 @@ static BOOLEAN CanCharacterVehicle(const SOLDIERTYPE* const s)
 }
 
 
+enum JoinSquadResult
+{
+	CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT = -6,
+	CHARACTER_CANT_JOIN_SQUAD_SQUAD_MOVING  = -5,
+	CHARACTER_CANT_JOIN_SQUAD_MOVING        = -4,
+	CHARACTER_CANT_JOIN_SQUAD_VEHICLE       = -3,
+	CHARACTER_CANT_JOIN_SQUAD_TOO_FAR       = -2,
+	CHARACTER_CANT_JOIN_SQUAD_FULL          = -1,
+	CHARACTER_CANT_JOIN_SQUAD               =  0,
+	CHARACTER_CAN_JOIN_SQUAD                =  1
+};
+
+
 // can character be added to squad
-static INT8 CanCharacterSquad(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
+static JoinSquadResult CanCharacterSquad(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 {
 	// can character join this squad?
 	Assert( bSquadValue < ON_DUTY );
@@ -5073,7 +5086,6 @@ static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	INT32 iValue = -1;
 	SOLDIERTYPE * pSoldier = NULL;
 	CHAR16 sString[ 128 ];
-	INT8	bCanJoinSquad;
 
 	pSoldier = GetSelectedAssignSoldier( FALSE );
 
@@ -5098,7 +5110,7 @@ static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			return;
 		}
 
-		bCanJoinSquad =  CanCharacterSquad( pSoldier, ( INT8 )iValue );
+		JoinSquadResult const bCanJoinSquad = CanCharacterSquad( pSoldier, ( INT8 )iValue );
 		// can the character join this squad?  (If already in it, accept that as a legal choice and exit menu)
 		if (bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD ||
 				bCanJoinSquad == CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT)
@@ -5767,7 +5779,7 @@ static void HandleShadingOfLinesForSquadMenu(void)
 	UINT32 uiCounter;
 	SOLDIERTYPE *pSoldier = NULL;
 	UINT32 uiMaxSquad;
-	INT8 bResult;
+	JoinSquadResult bResult;
 
 	if (!fShowSquadMenu || ghSquadBox == NO_POPUP_BOX) return;
 
@@ -7744,6 +7756,8 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 						fItWorked        = TRUE;
 						fRemoveFromSquad = FALSE; // already done, would screw it up!
 						break;
+
+					default: break;
 				}
 				break;
 
