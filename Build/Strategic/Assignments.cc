@@ -1098,7 +1098,7 @@ void VerifyTownTrainingIsPaidFor( void )
 #endif
 
 
-static BOOLEAN CanSoldierBeHealedByDoctor(const SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pDoctor, BOOLEAN fIgnoreAssignment, BOOLEAN fThisHour, BOOLEAN fSkipKitCheck, BOOLEAN fSkipSkillCheck);
+static BOOLEAN CanSoldierBeHealedByDoctor(const SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pDoctor, BOOLEAN fThisHour, BOOLEAN fSkipKitCheck, BOOLEAN fSkipSkillCheck);
 
 
 static UINT8 GetNumberThatCanBeDoctored(SOLDIERTYPE* pDoctor, BOOLEAN fThisHour, BOOLEAN fSkipKitCheck, BOOLEAN fSkipSkillCheck)
@@ -1107,7 +1107,7 @@ static UINT8 GetNumberThatCanBeDoctored(SOLDIERTYPE* pDoctor, BOOLEAN fThisHour,
 	UINT8 ubNumberOfPeople = 0;
 	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		if (CanSoldierBeHealedByDoctor(s, pDoctor, FALSE, fThisHour, fSkipKitCheck, fSkipSkillCheck))
+		if (CanSoldierBeHealedByDoctor(s, pDoctor, fThisHour, fSkipKitCheck, fSkipSkillCheck))
 		{
 			// increment number of doctorable patients/doctors
 			++ubNumberOfPeople;
@@ -1124,7 +1124,7 @@ SOLDIERTYPE *AnyDoctorWhoCanHealThisPatient( SOLDIERTYPE *pPatient, BOOLEAN fThi
 	{
 		// doctor?
 		if (s->bAssignment == DOCTOR &&
-				CanSoldierBeHealedByDoctor(pPatient, s, FALSE, fThisHour, FALSE, FALSE))
+				CanSoldierBeHealedByDoctor(pPatient, s, fThisHour, FALSE, FALSE))
 		{
 			// found one
 			return s;
@@ -1356,7 +1356,7 @@ static void HealCharacters(SOLDIERTYPE* pDoctor, INT16 sX, INT16 sY, INT8 bZ)
 		// heal each of the healable mercs by this equal amount
 		FOR_ALL_IN_TEAM(s, OUR_TEAM)
 		{
-			if (CanSoldierBeHealedByDoctor(s, pDoctor, FALSE, HEALABLE_THIS_HOUR, FALSE, FALSE))
+			if (CanSoldierBeHealedByDoctor(s, pDoctor, HEALABLE_THIS_HOUR, FALSE, FALSE))
 			{
 				// can heal and is patient, heal them
 				usRemainingHealingPts -= HealPatient(s, pDoctor, usEvenHealingAmount);
@@ -1375,7 +1375,7 @@ static void HealCharacters(SOLDIERTYPE* pDoctor, INT16 sX, INT16 sY, INT8 bZ)
 				pWorstHurtSoldier = NULL;
 				FOR_ALL_IN_TEAM(s, OUR_TEAM)
 				{
-					if (CanSoldierBeHealedByDoctor(s, pDoctor, FALSE, HEALABLE_THIS_HOUR, FALSE, FALSE))
+					if (CanSoldierBeHealedByDoctor(s, pDoctor, HEALABLE_THIS_HOUR, FALSE, FALSE))
 					{
 						if (pWorstHurtSoldier == NULL)
 						{
@@ -1448,10 +1448,10 @@ static UINT8 GetMinHealingSkillNeeded(const SOLDIERTYPE* pPatient);
 
 
 // can this soldier be healed by this doctor?
-static BOOLEAN CanSoldierBeHealedByDoctor(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pDoctor, const BOOLEAN fIgnoreAssignment, const BOOLEAN fThisHour, const BOOLEAN fSkipKitCheck, const BOOLEAN fSkipSkillCheck)
+static BOOLEAN CanSoldierBeHealedByDoctor(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pDoctor, const BOOLEAN fThisHour, const BOOLEAN fSkipKitCheck, const BOOLEAN fSkipSkillCheck)
 {
 	// must be a patient or a doctor
-	if (pSoldier->bAssignment != PATIENT && pSoldier->bAssignment != DOCTOR && !fIgnoreAssignment)
+	if (pSoldier->bAssignment != PATIENT && pSoldier->bAssignment != DOCTOR)
 	{
 		return(FALSE);
 	}
@@ -1463,7 +1463,7 @@ static BOOLEAN CanSoldierBeHealedByDoctor(const SOLDIERTYPE* const pSoldier, con
 	}
 
 	// if we care about how long it's been, and he hasn't been on a healable assignment long enough
-	if (fThisHour && !EnoughTimeOnAssignment(pSoldier) && !fIgnoreAssignment)
+	if (fThisHour && !EnoughTimeOnAssignment(pSoldier))
 	{
 		return( FALSE );
 	}
