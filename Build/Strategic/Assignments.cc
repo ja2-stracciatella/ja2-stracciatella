@@ -3156,91 +3156,60 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 {
 	static BOOLEAN fCreated = FALSE;
 
-	UINT32 uiMenuLine = 0;
-	INT32 iFontHeight = 0;
-	SOLDIERTYPE *pSoldier = NULL;
+	PopUpBox* const box = ghVehicleBox;
 
-
-	if( fShowVehicleMenu )
+	if (fShowVehicleMenu)
 	{
-		// vehicle position
-		const SGPBox* const area = GetBoxArea(ghAssignmentBox);
+		SGPBox const* const area = GetBoxArea(ghAssignmentBox);
 		VehiclePosition.iX = area->x + area->w;
-		SetBoxXY(ghVehicleBox, VehiclePosition.iX, VehiclePosition.iY);
+		SetBoxXY(box, VehiclePosition.iX, VehiclePosition.iY);
 	}
 
-	if (fShowVehicleMenu && !fCreated)
+	if (!fCreated && fShowVehicleMenu)
 	{
-		// grab height of font
-		iFontHeight = GetLineSpace( ghVehicleBox ) + GetFontHeight( GetBoxFont( ghVehicleBox ) );
-
-		const SGPBox* const area = GetBoxArea(ghVehicleBox);
-		const INT32 iBoxXPosition = area->x;
-		const INT32 iBoxYPosition = area->y;
-		const INT32 iBoxWidth     = area->w;
-
-		pSoldier = GetSelectedAssignSoldier( FALSE );
-
-		// run through list of vehicles in sector
+		SGPBox      const* const area = GetBoxArea(box);
+		UINT16             const x    = area->x;
+		UINT16                   y    = area->y + GetTopMarginSize(ghAssignmentBox); // XXX wrong box?
+		UINT16             const w    = area->w;
+		UINT16             const h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+		MOUSE_REGION*            r    = gVehicleMenuRegion;
+		SOLDIERTYPE const* const s    = GetSelectedAssignSoldier(FALSE);
 		FOR_ALL_VEHICLES(v)
 		{
-			if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
-			{
-				// add mouse region for each accessible vehicle
-				MOUSE_REGION* const r = &gVehicleMenuRegion[uiMenuLine];
-				const UINT16        x = iBoxXPosition;
-				const UINT16        y = iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * uiMenuLine;
-				const UINT16        w = iBoxWidth;
-				const UINT16        h = iFontHeight;
-				MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, VehicleMenuMvtCallback, VehicleMenuBtnCallback);
-				MSYS_SetRegionUserPtr(r, v);
+			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 
-				uiMenuLine++;
-			}
+			// add mouse region for each accessible vehicle
+			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, VehicleMenuMvtCallback, VehicleMenuBtnCallback);
+			MSYS_SetRegionUserPtr(r, v);
+			y += h;
+			++r;
 		}
 
 		// cancel line
-		MOUSE_REGION* const r = &gVehicleMenuRegion[uiMenuLine];
-		const UINT16        x = iBoxXPosition;
-		const UINT16        y = iBoxYPosition + GetTopMarginSize(ghAssignmentBox) + iFontHeight * uiMenuLine;
-		const UINT16        w = iBoxWidth;
-		const UINT16        h = iFontHeight;
 		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, VehicleMenuMvtCallback, VehicleMenuCancelBtnCallback);
 
-		// created
-		fCreated = TRUE;
-
-		// pause game
-		PauseGame( );
-
-		// unhighlight all strings in box
-		UnHighLightBox( ghVehicleBox );
+		PauseGame();
+		UnHighLightBox(box);
+		HandleShadingOfLinesForVehicleMenu();
 
 		fCreated = TRUE;
-
-		HandleShadingOfLinesForVehicleMenu( );
 	}
-	else if ((!fShowVehicleMenu || !fShowAssignmentMenu) && fCreated)
+	else if (fCreated && (!fShowVehicleMenu || !fShowAssignmentMenu))
 	{
-		fCreated = FALSE;
-
 		// remove these regions
-		for( uiMenuLine = 0; uiMenuLine < GetNumberOfLinesOfTextInBox( ghVehicleBox ); uiMenuLine++ )
+		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(box); ++i)
 		{
-			MSYS_RemoveRegion( &gVehicleMenuRegion[ uiMenuLine ] );
+			MSYS_RemoveRegion(&gVehicleMenuRegion[i]);
 		}
 
 		fShowVehicleMenu = FALSE;
 
-		SetRenderFlags( RENDER_FLAG_FULL );
+		SetRenderFlags(RENDER_FLAG_FULL);
+		HideBox(box);
 
-		HideBox( ghVehicleBox );
+		if (fShowAssignmentMenu) UnHighLightBox(ghAssignmentBox);
 
-		if ( fShowAssignmentMenu )
-		{
-			// remove highlight on the parent menu
-			UnHighLightBox( ghAssignmentBox );
-		}
+		fCreated = FALSE;
 	}
 }
 
