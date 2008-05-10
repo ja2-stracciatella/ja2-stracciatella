@@ -404,6 +404,9 @@ void HandleDialogue()
 				case WON_ROUND:
 				case LOST_ROUND:
 				case DISQUALIFIED:
+					break;
+
+				default:
 					guiPendingOverrideEvent = LU_ENDUILOCK;
 					HandleTacticalUI();
 
