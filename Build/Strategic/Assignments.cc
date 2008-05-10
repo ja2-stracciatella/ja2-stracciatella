@@ -7589,236 +7589,191 @@ void ReEvaluateEveryonesNothingToDo()
 }
 
 
-
-void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
+void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 {
-	SOLDIERTYPE *pSelectedSoldier = NULL;
-	BOOLEAN fItWorked;
-	BOOLEAN fRemoveFromSquad = TRUE;
-	BOOLEAN fNotifiedOfFailure = FALSE;
-	INT8 bCanJoinSquad;
-
 	// if not in mapscreen, there is no functionality available to change multiple assignments simultaneously!
-	if ( !( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-	{
-		return;
-	}
+	if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)) return;
 
-	// pSelectedSoldier is currently used only for REPAIR, and this block of code is copied from RepairMenuBtnCallback()
-	if( bSelectedAssignChar != -1 )
-	{
-		pSelectedSoldier = gCharactersList[bSelectedAssignChar].merc;
-	}
-
-	Assert( pSelectedSoldier && pSelectedSoldier->bActive );
-
+	SOLDIERTYPE* const sel = bSelectedAssignChar != -1 ?
+		gCharactersList[bSelectedAssignChar].merc : NULL;
+	Assert(sel && sel->bActive);
 
 	// sets assignment for the list
+	BOOLEAN fRemoveFromSquad   = TRUE;
+	BOOLEAN fNotifiedOfFailure = FALSE;
 	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
 	{
-		SOLDIERTYPE* const pSoldier = c->merc;
-		if (pSoldier != pSelectedSoldier &&
-				!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+		SOLDIERTYPE* const s = c->merc;
+		if (s == sel || s->uiStatusFlags & SOLDIER_VEHICLE) continue;
+
+		BOOLEAN fItWorked = FALSE; // assume it's NOT gonna work
+		switch (bAssignment)
 		{
-			// assume it's NOT gonna work
-			fItWorked = FALSE;
-
-			switch( bAssignment )
-			{
-				case( DOCTOR ):
-					// can character doctor?
-					if( CanCharacterDoctor( pSoldier ) )
-					{
-						// set as doctor
-						pSoldier->bOldAssignment = pSoldier->bAssignment;
-						SetSoldierAssignmentDoctor(pSoldier);
-						fItWorked = TRUE;
-					}
-					break;
-				case( PATIENT ):
-					// can character patient?
-					if( CanCharacterPatient( pSoldier ) )
-					{
-						// set as patient
-						pSoldier->bOldAssignment = pSoldier->bAssignment;
-						SetSoldierAssignmentPatient(pSoldier);
-						fItWorked = TRUE;
-					}
-					break;
-				case( VEHICLE ):
-					if (CanCharacterVehicle(pSoldier))
-					{
-						VEHICLETYPE* const v = GetVehicle(bParam);
-						if (v != NULL && IsThisVehicleAccessibleToSoldier(pSoldier, v))
-						{
-							// if the vehicle is FULL, then this will return FALSE!
-							fItWorked = PutSoldierInVehicle(pSoldier, v);
-							// failure produces its own error popup
-							fNotifiedOfFailure = TRUE;
-						}
-					}
-					break;
-
-				case( REPAIR ):
-					if( CanCharacterRepair( pSoldier ) )
-					{
-						BOOLEAN fCanFixSpecificTarget = TRUE;
-
-						// make sure he can repair the SPECIFIC thing being repaired too (must be in its sector, for example)
-
-/*
-						if ( pSelectedSoldier->fFixingSAMSite )
-						{
-							fCanFixSpecificTarget = CanSoldierRepairSAM( pSoldier, SAM_SITE_REPAIR_DIVISOR );
-						}
-						else
-*/
-						if ( pSelectedSoldier->bVehicleUnderRepairID != -1 )
-						{
-							fCanFixSpecificTarget = CanCharacterRepairVehicle( pSoldier, pSelectedSoldier->bVehicleUnderRepairID );
-						}
-						else if( pSoldier->fFixingRobot )
-						{
-							fCanFixSpecificTarget = CanCharacterRepairRobot( pSoldier );
-						}
-
-						if ( fCanFixSpecificTarget )
-						{
-							// set as repair
-							pSoldier->bOldAssignment = pSoldier->bAssignment;
-							SetSoldierAssignmentRepair(pSoldier, pSelectedSoldier->fFixingSAMSite, pSelectedSoldier->fFixingRobot, pSelectedSoldier->bVehicleUnderRepairID);
-							fItWorked = TRUE;
-						}
-					}
-					break;
-				case( TRAIN_SELF ):
-					if( CanCharacterTrainStat( pSoldier, bParam , TRUE, FALSE ) )
-					{
-						pSoldier->bOldAssignment = pSoldier->bAssignment;
-						SetSoldierAssignmentTrainSelf(pSoldier, bParam);
-						fItWorked = TRUE;
-					}
-					break;
-				case( TRAIN_TOWN ):
-					if( CanCharacterTrainMilitia( pSoldier ) )
-					{
-						pSoldier->bOldAssignment = pSoldier->bAssignment;
-						SetSoldierAssignmentTrainTown(pSoldier);
-						fItWorked = TRUE;
-					}
-					break;
-				case( TRAIN_TEAMMATE ):
-					if( CanCharacterTrainStat( pSoldier, bParam, FALSE, TRUE ) )
-					{
-						pSoldier->bOldAssignment = pSoldier->bAssignment;
-						SetSoldierAssignmentTrainTeammate(pSoldier, bParam);
-						fItWorked = TRUE;
-					}
-					break;
-				case TRAIN_BY_OTHER:
-					if( CanCharacterTrainStat( pSoldier, bParam, TRUE, FALSE ) )
-					{
-						pSoldier->bOldAssignment = pSoldier->bAssignment;
-						SetSoldierAssignmentTrainByOther(pSoldier, bParam);
-						fItWorked = TRUE;
-					}
-					break;
-
-				case( SQUAD_1 ):
-				case( SQUAD_2 ):
-				case( SQUAD_3 ):
-				case( SQUAD_4 ):
-				case( SQUAD_5 ):
-				case( SQUAD_6 ):
-				case( SQUAD_7 ):
-				case( SQUAD_8 ):
-				case( SQUAD_9 ):
-				case( SQUAD_10 ):
-				case( SQUAD_11 ):
-				case( SQUAD_12 ):
-				case( SQUAD_13 ):
-				case( SQUAD_14 ):
-				case( SQUAD_15 ):
-				case( SQUAD_16 ):
-				case( SQUAD_17 ):
-				case( SQUAD_18 ):
-				case( SQUAD_19 ):
-				case( SQUAD_20 ):
-					bCanJoinSquad = CanCharacterSquad( pSoldier, ( INT8 )bAssignment );
-
-					// if already in it, don't repor that as an error...
-					if (bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD ||
-							bCanJoinSquad == CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT)
-					{
-						if ( bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD )
-						{
-							PreChangeAssignment(pSoldier);
-
-							// is the squad between sectors
-							const SOLDIERTYPE* const t = Squad[bAssignment][0];
-							if (t != NULL && t->fBetweenSectors)
-							{
-								// between sectors, remove from old mvt group
-								if (pSoldier->bAssignment >= ON_DUTY)
-								{
-									// remove from group
-									// the guy wasn't in a sqaud, but moving through a sector?
-									if ( pSoldier->ubGroupID != 0 )
-									{
-										// now remove from mvt group
-										RemovePlayerFromGroup( pSoldier->ubGroupID, pSoldier );
-									}
-								}
-							}
-
-							// able to add, do it
-							AddCharacterToSquad( pSoldier, bAssignment );
-						}
-
-						fItWorked = TRUE;
-						fRemoveFromSquad = FALSE;	// already done, would screw it up!
-					}
-					break;
-
-				default:
-					// remove from current vehicle/squad, if any
-					if( pSoldier->bAssignment == VEHICLE )
-					{
-						TakeSoldierOutOfVehicle( pSoldier );
-					}
-					RemoveCharacterFromSquads( pSoldier );
-
-					AddCharacterToAnySquad( pSoldier );
-
+			case DOCTOR:
+				if (CanCharacterDoctor(s))
+				{
+					s->bOldAssignment = s->bAssignment;
+					SetSoldierAssignmentDoctor(s);
 					fItWorked = TRUE;
-					fRemoveFromSquad = FALSE;	// already done, would screw it up!
-					break;
-			}
-
-			if ( fItWorked )
-			{
-				if ( fRemoveFromSquad )
-				{
-					// remove him from his old squad if he was on one
-					RemoveCharacterFromSquads( pSoldier );
 				}
+				break;
 
-				MakeSoldiersTacticalAnimationReflectAssignment( pSoldier );
-			}
-			else
-			{
-				// didn't work - report it once
-				if( !fNotifiedOfFailure )
+			case PATIENT:
+				if (CanCharacterPatient(s))
 				{
-					fNotifiedOfFailure = TRUE;
-					NotifyPlayerOfAssignmentAttemptFailure( bAssignment );
+					s->bOldAssignment = s->bAssignment;
+					SetSoldierAssignmentPatient(s);
+					fItWorked = TRUE;
 				}
+				break;
+
+			case VEHICLE:
+				if (CanCharacterVehicle(s))
+				{
+					VEHICLETYPE* const v = GetVehicle(bParam);
+					if (v != NULL && IsThisVehicleAccessibleToSoldier(s, v))
+					{
+						// if the vehicle is FULL, then this will return FALSE!
+						fItWorked = PutSoldierInVehicle(s, v);
+						// failure produces its own error popup
+						fNotifiedOfFailure = TRUE;
+					}
+				}
+				break;
+
+			case REPAIR:
+				if (CanCharacterRepair(s))
+				{
+					// make sure he can repair the SPECIFIC thing being repaired too (must be in its sector, for example)
+					BOOLEAN const fCanFixSpecificTarget =
+#if 0
+						sel->fFixingSAMSite              ? CanSoldierRepairSAM(s, SAM_SITE_REPAIR_DIVISOR)          :
+#endif
+						sel->bVehicleUnderRepairID != -1 ? CanCharacterRepairVehicle(s, sel->bVehicleUnderRepairID) :
+						s->fFixingRobot                  ? CanCharacterRepairRobot(s)                               : // XXX s in condition seems wrong, should probably be sel
+						                                   TRUE;
+					if (fCanFixSpecificTarget)
+					{
+						// set as repair
+						s->bOldAssignment = s->bAssignment;
+						SetSoldierAssignmentRepair(s, sel->fFixingSAMSite, sel->fFixingRobot, sel->bVehicleUnderRepairID);
+						fItWorked = TRUE;
+					}
+				}
+				break;
+
+			case TRAIN_SELF:
+				if (CanCharacterTrainStat(s, bParam, TRUE, FALSE))
+				{
+					s->bOldAssignment = s->bAssignment;
+					SetSoldierAssignmentTrainSelf(s, bParam);
+					fItWorked = TRUE;
+				}
+				break;
+
+			case TRAIN_TOWN:
+				if (CanCharacterTrainMilitia(s))
+				{
+					s->bOldAssignment = s->bAssignment;
+					SetSoldierAssignmentTrainTown(s);
+					fItWorked = TRUE;
+				}
+				break;
+
+			case TRAIN_TEAMMATE:
+				if (CanCharacterTrainStat(s, bParam, FALSE, TRUE))
+				{
+					s->bOldAssignment = s->bAssignment;
+					SetSoldierAssignmentTrainTeammate(s, bParam);
+					fItWorked = TRUE;
+				}
+				break;
+
+			case TRAIN_BY_OTHER:
+				if (CanCharacterTrainStat(s, bParam, TRUE, FALSE))
+				{
+					s->bOldAssignment = s->bAssignment;
+					SetSoldierAssignmentTrainByOther(s, bParam);
+					fItWorked = TRUE;
+				}
+				break;
+
+			case SQUAD_1:
+			case SQUAD_2:
+			case SQUAD_3:
+			case SQUAD_4:
+			case SQUAD_5:
+			case SQUAD_6:
+			case SQUAD_7:
+			case SQUAD_8:
+			case SQUAD_9:
+			case SQUAD_10:
+			case SQUAD_11:
+			case SQUAD_12:
+			case SQUAD_13:
+			case SQUAD_14:
+			case SQUAD_15:
+			case SQUAD_16:
+			case SQUAD_17:
+			case SQUAD_18:
+			case SQUAD_19:
+			case SQUAD_20:
+				switch (CanCharacterSquad(s, (INT8)bAssignment))
+				{
+					case CHARACTER_CAN_JOIN_SQUAD:
+					{
+						PreChangeAssignment(s);
+
+						// if the squad is, between sectors, remove from old mvt group
+						const SOLDIERTYPE* const t = Squad[bAssignment][0];
+						if (t != NULL                 &&
+								t->fBetweenSectors        &&
+								s->bAssignment >= ON_DUTY &&
+								s->ubGroupID != 0)
+						{
+							RemovePlayerFromGroup(s->ubGroupID, s);
+						}
+
+						// able to add, do it
+						AddCharacterToSquad(s, bAssignment);
+						/* FALLTHROUGH */
+					}
+
+					// if already in it, don't report that as an error
+					case CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT:
+						fItWorked        = TRUE;
+						fRemoveFromSquad = FALSE; // already done, would screw it up!
+						break;
+				}
+				break;
+
+			default:
+				// remove from current vehicle/squad, if any
+				if (s->bAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
+				RemoveCharacterFromSquads(s);
+				AddCharacterToAnySquad(s);
+
+				fItWorked        = TRUE;
+				fRemoveFromSquad = FALSE;	// already done, would screw it up!
+				break;
+		}
+
+		if (fItWorked)
+		{
+			// remove him from his old squad if he was on one
+			if (fRemoveFromSquad) RemoveCharacterFromSquads(s);
+			MakeSoldiersTacticalAnimationReflectAssignment(s);
+		}
+		else
+		{
+			// didn't work - report it once
+			if (!fNotifiedOfFailure)
+			{
+				fNotifiedOfFailure = TRUE;
+				NotifyPlayerOfAssignmentAttemptFailure(bAssignment);
 			}
 		}
 	}
-	// reset list
-//	ResetSelectedListForMapScreen( );
-
 
 	// check if we should start/stop flashing any mercs' assignment strings after these changes
 	gfReEvaluateEveryonesNothingToDo = TRUE;
