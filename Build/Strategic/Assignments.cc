@@ -970,24 +970,9 @@ static JoinSquadResult CanCharacterSquad(SOLDIERTYPE const* const s, INT8 const 
 }
 
 
-BOOLEAN IsCharacterInTransit(const SOLDIERTYPE* const pSoldier)
+BOOLEAN IsCharacterInTransit(const SOLDIERTYPE* const s)
 {
-	// valid character?
-	if( pSoldier == NULL )
-	{
-		return ( FALSE );
-	}
-
-
-	// check if character is currently in transit
-	if( pSoldier -> bAssignment == IN_TRANSIT )
-	{
-		// yep
-		return ( TRUE );
-	}
-
-	// no
-	return ( FALSE );
+	return s->bAssignment == IN_TRANSIT;
 }
 
 
