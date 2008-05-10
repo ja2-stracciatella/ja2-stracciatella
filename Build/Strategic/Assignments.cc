@@ -6229,26 +6229,20 @@ void SetTacticalPopUpAssignmentBoxXY( void )
 
 static void RepositionMouseRegions(void)
 {
-	INT16 sDeltaX, sDeltaY;
-	INT32 iCounter = 0;
+	INT16 const sDeltaX = gsAssignmentBoxesX - gAssignmentMenuRegion[0].RegionTopLeftX;
+	INT16 const sDeltaY = gsAssignmentBoxesY - gAssignmentMenuRegion[0].RegionTopLeftY + GetTopMarginSize(ghAssignmentBox);
 
-	if (fShowAssignmentMenu)
+	// find the delta from the old to the new, and alter values accordingly
+	for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(ghAssignmentBox); ++i)
 	{
-		sDeltaX = gsAssignmentBoxesX - gAssignmentMenuRegion[ 0 ].RegionTopLeftX;
-		sDeltaY = ( INT16 ) ( gsAssignmentBoxesY - gAssignmentMenuRegion[ 0 ].RegionTopLeftY + GetTopMarginSize( ghAssignmentBox ) );
-
-		// find the delta from the old to the new, and alter values accordingly
-		for( iCounter = 0; iCounter < ( INT32 )GetNumberOfLinesOfTextInBox( ghAssignmentBox ); iCounter++ )
-		{
-			gAssignmentMenuRegion[ iCounter ].RegionTopLeftX += sDeltaX;
-			gAssignmentMenuRegion[ iCounter ].RegionTopLeftY += sDeltaY;
-
-			gAssignmentMenuRegion[ iCounter ].RegionBottomRightX += sDeltaX;
-			gAssignmentMenuRegion[ iCounter ].RegionBottomRightY += sDeltaY;
-		}
-
-		gfPausedTacticalRenderFlags = RENDER_FLAG_FULL;
+		MOUSE_REGION* const r = &gAssignmentMenuRegion[i];
+		r->RegionTopLeftX     += sDeltaX;
+		r->RegionTopLeftY     += sDeltaY;
+		r->RegionBottomRightX += sDeltaX;
+		r->RegionBottomRightY += sDeltaY;
 	}
+
+	gfPausedTacticalRenderFlags = RENDER_FLAG_FULL;
 }
 
 
