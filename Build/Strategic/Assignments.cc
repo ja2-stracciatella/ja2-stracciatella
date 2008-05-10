@@ -6199,15 +6199,12 @@ static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
 static void PositionCursorForTacticalAssignmentBox(void)
 {
 	// position cursor over y of on duty in tactical assignments
-	INT32 iFontHeight;
+	if (gGameSettings.fOptions[TOPTION_DONT_MOVE_MOUSE]) return;
 
-	iFontHeight = GetLineSpace( ghAssignmentBox ) + GetFontHeight( GetBoxFont( ghAssignmentBox ) );
-
-	if (!gGameSettings.fOptions[TOPTION_DONT_MOVE_MOUSE])
-	{
-		const SGPBox* const area = GetBoxArea(ghAssignmentBox);
-		SimulateMouseMovement(area->x + area->w - 6, area->y + iFontHeight / 2 + 2);
-	}
+	PopUpBox const* const box  = ghAssignmentBox;
+	INT32           const h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
+	SGPBox   const* const area = GetBoxArea(box);
+	SimulateMouseMovement(area->x + area->w - 6, area->y + h / 2 + 2);
 }
 
 
