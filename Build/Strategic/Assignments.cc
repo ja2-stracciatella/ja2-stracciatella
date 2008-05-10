@@ -1444,7 +1444,20 @@ static void HealCharacters(SOLDIERTYPE* pDoctor, INT16 sX, INT16 sY, INT8 bZ)
 }
 
 
-static UINT8 GetMinHealingSkillNeeded(const SOLDIERTYPE* pPatient);
+// returns minimum medical skill necessary to treat this patient
+static UINT8 GetMinHealingSkillNeeded(SOLDIERTYPE const* const patient)
+{
+	if (patient->bLife < OKLIFE)
+	{
+		return
+			BASE_MEDICAL_SKILL_TO_DEAL_WITH_EMERGENCY +
+			MULTIPLIER_FOR_DIFFERENCE_IN_LIFE_VALUE_FOR_EMERGENCY * (OKLIFE - patient->bLife);
+	}
+	else
+	{
+		return 1;
+	}
+}
 
 
 // can this soldier be healed by this doctor?
@@ -1461,24 +1474,6 @@ static BOOLEAN CanSoldierBeHealedByDoctor(SOLDIERTYPE const* const patient, SOLD
 	if (!fSkipSkillCheck && doctor->bMedical < GetMinHealingSkillNeeded(patient)) return FALSE;
 	if (!fSkipKitCheck || FindObj(doctor, MEDICKIT) == NO_SLOT)                   return FALSE;
 	return TRUE;
-}
-
-
-// returns minimum medical skill necessary to treat this patient
-static UINT8 GetMinHealingSkillNeeded(const SOLDIERTYPE* const pPatient)
-{
-	// get the minimum skill to handle a character under OKLIFE
-
-	if( pPatient -> bLife < OKLIFE )
-	{
-		// less than ok life, return skill needed
-		return( BASE_MEDICAL_SKILL_TO_DEAL_WITH_EMERGENCY + ( MULTIPLIER_FOR_DIFFERENCE_IN_LIFE_VALUE_FOR_EMERGENCY * ( OKLIFE - pPatient -> bLife ) ) );
-	}
-	else
-	{
-		// only need some skill
-		return ( 1 );
-	}
 }
 
 
