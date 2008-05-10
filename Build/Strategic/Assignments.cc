@@ -1448,51 +1448,19 @@ static UINT8 GetMinHealingSkillNeeded(const SOLDIERTYPE* pPatient);
 
 
 // can this soldier be healed by this doctor?
-static BOOLEAN CanSoldierBeHealedByDoctor(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pDoctor, const BOOLEAN fThisHour, const BOOLEAN fSkipKitCheck, const BOOLEAN fSkipSkillCheck)
+static BOOLEAN CanSoldierBeHealedByDoctor(SOLDIERTYPE const* const patient, SOLDIERTYPE const* const doctor, BOOLEAN const fThisHour, BOOLEAN const fSkipKitCheck, BOOLEAN const fSkipSkillCheck)
 {
-	// must be a patient or a doctor
-	if (pSoldier->bAssignment != PATIENT && pSoldier->bAssignment != DOCTOR)
-	{
-		return(FALSE);
-	}
-
-	// if dead or unhurt
-	if ( (pSoldier -> bLife == 0) || (pSoldier -> bLife == pSoldier -> bLifeMax ) )
-	{
-		return(FALSE);
-	}
-
-	// if we care about how long it's been, and he hasn't been on a healable assignment long enough
-	if (fThisHour && !EnoughTimeOnAssignment(pSoldier))
-	{
-		return( FALSE );
-	}
-
-	// must be in the same sector
-	if( ( pSoldier -> sSectorX != pDoctor -> sSectorX ) || ( pSoldier -> sSectorY != pDoctor -> sSectorY ) || ( pSoldier -> bSectorZ != pDoctor -> bSectorZ ) )
-	{
-		return(FALSE);
-	}
-
-	// can't be between sectors (possible to get here if ignoring assignment)
-	if ( pSoldier->fBetweenSectors )
-	{
-		return(FALSE);
-	}
-
-	// if doctor's skill is unsufficient to save this guy
-	if ( !fSkipSkillCheck && ( pDoctor -> bMedical < GetMinHealingSkillNeeded( pSoldier ) ) )
-	{
-		return(FALSE);
-	}
-
-	if ( !fSkipKitCheck && ( FindObj( pDoctor, MEDICKIT ) == NO_SLOT ) )
-	{
-		// no medical kit to use!
-		return( FALSE );
-	}
-
-	return( TRUE );
+	if (patient->bAssignment != PATIENT && patient->bAssignment != DOCTOR)        return FALSE;
+	if (patient->bLife == 0)                                                      return FALSE;
+	if (patient->bLife == patient->bLifeMax)                                      return FALSE;
+	if (fThisHour && !EnoughTimeOnAssignment(patient))                            return FALSE;
+	if (patient->sSectorX != doctor->sSectorX)                                    return FALSE;
+	if (patient->sSectorY != doctor->sSectorY)                                    return FALSE;
+	if (patient->bSectorZ != doctor->bSectorZ)                                    return FALSE;
+	if (patient->fBetweenSectors)                                                 return FALSE;
+	if (!fSkipSkillCheck && doctor->bMedical < GetMinHealingSkillNeeded(patient)) return FALSE;
+	if (!fSkipKitCheck || FindObj(doctor, MEDICKIT) == NO_SLOT)                   return FALSE;
+	return TRUE;
 }
 
 
