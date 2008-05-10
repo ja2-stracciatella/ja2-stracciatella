@@ -6185,45 +6185,24 @@ void DetermineBoxPositions( void )
 }
 
 
-
-void SetTacticalPopUpAssignmentBoxXY( void )
+void SetTacticalPopUpAssignmentBoxXY()
 {
-	INT16 sX, sY;
-	SOLDIERTYPE *pSoldier;
+	SOLDIERTYPE const* const s = GetSelectedAssignSoldier(FALSE);
+	INT16 sX;
+	INT16 sY;
+	GetSoldierScreenPos(s, &sX, &sY);
 
-
-	//get the soldier
-	pSoldier = GetSelectedAssignSoldier( FALSE );
-
-	// grab soldier's x,y screen position
-	GetSoldierScreenPos( pSoldier, &sX, &sY );
-
-	if( sX < 0 )
-	{
-		sX = 0;
-	}
-
-	gsAssignmentBoxesX = sX + 30;
-
-	if( sY < 0 )
-	{
-		sY = 0;
-	}
-
-	gsAssignmentBoxesY = sY;
-
+	if (sX < 0) sX = 0;
+	if (sY < 0) sY = 0;
+	sX += 30;
 
 	// ATE: Check if we are past tactical viewport....
-	// Use estimate width's/heights
-	if (gsAssignmentBoxesX > SCREEN_WIDTH - 100)
-	{
-		gsAssignmentBoxesX = SCREEN_WIDTH - 100;
-	}
+	// Use estimate widths/heights
+	if (sX > SCREEN_WIDTH - 100) sX = SCREEN_WIDTH - 100;
+	if (sY > 320 - 130)          sY = 190;
 
-	if ( ( gsAssignmentBoxesY + 130 ) > 320 )
-	{
-		gsAssignmentBoxesY = 190;
-	}
+	gsAssignmentBoxesX = sX;
+	gsAssignmentBoxesY = sY;
 }
 
 
