@@ -923,63 +923,50 @@ enum JoinSquadResult
 
 
 // can character be added to squad
-static JoinSquadResult CanCharacterSquad(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
+static JoinSquadResult CanCharacterSquad(SOLDIERTYPE const* const s, INT8 const bSquadValue)
 {
-	// can character join this squad?
-	Assert( bSquadValue < ON_DUTY );
+	Assert(bSquadValue < ON_DUTY);
 
-	if ( pSoldier->bAssignment == bSquadValue )
-	{
-		return( CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT );
-	}
-
-	// is the character alive and well?
-	if( pSoldier -> bLife < OKLIFE )
-	{
-		// dead or unconscious...
-		return ( CHARACTER_CANT_JOIN_SQUAD );
-	}
-
-	// in transit?
-	if (IsCharacterInTransit(pSoldier))
-	{
-		return ( CHARACTER_CANT_JOIN_SQUAD );
-	}
-
-	if ( pSoldier->bAssignment == ASSIGNMENT_POW )
-	{
-		// not allowed to be put on a squad
-		return( CHARACTER_CANT_JOIN_SQUAD );
-	}
-
-	// check sector x y and z, if not same, cannot join squad
 	INT16 sX;
 	INT16 sY;
 	INT8  sZ;
-	if (SectorSquadIsIn(bSquadValue, &sX, &sY, &sZ) &&
-			(sX != pSoldier->sSectorX || sY != pSoldier->sSectorY || sZ != pSoldier->bSectorZ))
+	if (s->bAssignment == bSquadValue)
+	{
+		return CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT;
+	}
+	else if (s->bLife < OKLIFE)
+	{
+		return CHARACTER_CANT_JOIN_SQUAD;
+	}
+	else if (IsCharacterInTransit(s))
+	{
+		return CHARACTER_CANT_JOIN_SQUAD;
+	}
+	else if (s->bAssignment == ASSIGNMENT_POW)
+	{
+		return CHARACTER_CANT_JOIN_SQUAD;
+	}
+	else if (SectorSquadIsIn(bSquadValue, &sX, &sY, &sZ) &&
+			(sX != s->sSectorX || sY != s->sSectorY || sZ != s->bSectorZ))
 	{
 		return CHARACTER_CANT_JOIN_SQUAD_TOO_FAR;
 	}
-
-	if (IsThisSquadOnTheMove(bSquadValue))
+	else if (IsThisSquadOnTheMove(bSquadValue))
 	{
-		// can't join while squad is moving
-		return( CHARACTER_CANT_JOIN_SQUAD_SQUAD_MOVING );
+		return CHARACTER_CANT_JOIN_SQUAD_SQUAD_MOVING;
 	}
-
-	if ( DoesVehicleExistInSquad( bSquadValue ) )
+	else if (DoesVehicleExistInSquad(bSquadValue))
 	{
-		// sorry can't change to this squad that way!
-		return( CHARACTER_CANT_JOIN_SQUAD_VEHICLE );
+		return CHARACTER_CANT_JOIN_SQUAD_VEHICLE;
 	}
-
-	if ( NumberOfPeopleInSquad( bSquadValue ) >= NUMBER_OF_SOLDIERS_PER_SQUAD )
+	else if (NumberOfPeopleInSquad(bSquadValue) >= NUMBER_OF_SOLDIERS_PER_SQUAD)
 	{
-		return( CHARACTER_CANT_JOIN_SQUAD_FULL );
+		return CHARACTER_CANT_JOIN_SQUAD_FULL;
 	}
-
-	return ( CHARACTER_CAN_JOIN_SQUAD );
+	else
+	{
+		return CHARACTER_CAN_JOIN_SQUAD;
+	}
 }
 
 
