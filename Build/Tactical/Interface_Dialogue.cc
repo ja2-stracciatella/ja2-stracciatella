@@ -3435,7 +3435,7 @@ unlock:
 								s->bAssignment != ASSIGNMENT_HOSPITAL &&
 								PythSpacesAway(s->sGridNo, pSoldier2->sGridNo) < HOSPITAL_PATIENT_DISTANCE)
 						{
-							SetSoldierAssignment(s, ASSIGNMENT_HOSPITAL, 0, 0, 0);
+							SetSoldierAssignmentHospital(s);
 							TriggerNPCRecord(s->ubProfile, 2);
 							s->bHospitalPriceModifier = gbHospitalPriceModifier;
 							// make sure this person doesn't have an absolute dest any more

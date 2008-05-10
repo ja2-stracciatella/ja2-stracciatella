@@ -3781,7 +3781,7 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		else if( iRepairWhat == REPAIR_MENU_ITEMS )
 		{
 			// items
-			SetSoldierAssignment( pSoldier, REPAIR, FALSE, FALSE, -1 );
+			SetSoldierAssignmentRepair(pSoldier, FALSE, FALSE, -1);
 
 			// the second argument is irrelevant here, function looks at pSoldier itself to know what's being repaired
 			SetAssignmentForList( ( INT8 ) REPAIR, 0 );
@@ -6659,119 +6659,97 @@ static void PostSetAssignment(SOLDIERTYPE* const s, const INT8 assignment)
 }
 
 
-void SetSoldierAssignment(SOLDIERTYPE* const s, const INT8 assignment, const INT32 iParam1, const INT32 iParam2, const INT32 iParam3)
+void SetSoldierAssignmentHospital(SOLDIERTYPE* const s)
 {
-	switch (assignment)
+	if (!CanCharacterPatient(s)) return;
+	PreSetAssignment(s, ASSIGNMENT_HOSPITAL);
+	s->bBleeding = 0;
+	if (s->bAssignment != ASSIGNMENT_HOSPITAL) SetTimeOfAssignmentChangeForMerc(s);
+	RebuildCurrentSquad();
+	PostSetAssignment(s, ASSIGNMENT_HOSPITAL);
+}
+
+
+static void SetSoldierAssignmentPatient(SOLDIERTYPE* const s)
+{
+	if (!CanCharacterPatient(s)) return;
+	PreSetAssignment(s, PATIENT);
+	if (s->bAssignment != PATIENT) SetTimeOfAssignmentChangeForMerc(s);
+	PostSetAssignment(s, PATIENT);
+}
+
+
+static void SetSoldierAssignmentDoctor(SOLDIERTYPE* const s)
+{
+	if (!CanCharacterDoctor(s)) return;
+	PreSetAssignment(s, DOCTOR);
+	if (s->bAssignment != DOCTOR) SetTimeOfAssignmentChangeForMerc(s);
+	MakeSureMedKitIsInHand(s);
+	PostSetAssignment(s, DOCTOR);
+}
+
+
+static void SetSoldierAssignmentTrainTown(SOLDIERTYPE* const s)
+{
+	if (!CanCharacterTrainMilitia(s)) return;
+	PreSetAssignment(s, TRAIN_TOWN);
+	if (s->bAssignment != TRAIN_TOWN) SetTimeOfAssignmentChangeForMerc(s);
+	if (pMilitiaTrainerSoldier == NULL &&
+			!SectorInfo[SECTOR(s->sSectorX, s->sSectorY)].fMilitiaTrainingPaid)
 	{
-		case ASSIGNMENT_HOSPITAL:
-			if (!CanCharacterPatient(s)) return;
-			PreSetAssignment(s, assignment);
-			s->bBleeding = 0;
-			if (s->bAssignment != ASSIGNMENT_HOSPITAL) SetTimeOfAssignmentChangeForMerc(s);
-			RebuildCurrentSquad();
-			PostSetAssignment(s, assignment);
-			break;
-
-		case PATIENT:
-			if (!CanCharacterPatient(s)) return;
-			PreSetAssignment(s, assignment);
-			if (s->bAssignment != PATIENT) SetTimeOfAssignmentChangeForMerc(s);
-			PostSetAssignment(s, assignment);
-			break;
-
-		case DOCTOR:
-			if (!CanCharacterDoctor(s)) return;
-			PreSetAssignment(s, assignment);
-			if (s->bAssignment != DOCTOR) SetTimeOfAssignmentChangeForMerc(s);
-			MakeSureMedKitIsInHand(s);
-			PostSetAssignment(s, assignment);
-			break;
-
-		case TRAIN_TOWN:
-			if (!CanCharacterTrainMilitia(s)) return;
-			PreSetAssignment(s, assignment);
-			if (s->bAssignment != TRAIN_TOWN) SetTimeOfAssignmentChangeForMerc(s);
-			if (pMilitiaTrainerSoldier == NULL &&
-					!SectorInfo[SECTOR(s->sSectorX, s->sSectorY)].fMilitiaTrainingPaid)
-			{
-				// show a message to confirm player wants to charge cost
-				HandleInterfaceMessageForCostOfTrainingMilitia(s);
-			}
-			PostSetAssignment(s, assignment);
-			break;
-
-		case TRAIN_SELF:
-			if (!CanCharacterTrainStat(s, (INT8)iParam1, TRUE, FALSE)) return;
-			PreSetAssignment(s, assignment);
-			if (s->bAssignment != TRAIN_SELF) SetTimeOfAssignmentChangeForMerc(s);
-			// set stat to train
-			s->bTrainStat = (INT8)iParam1;
-			PostSetAssignment(s, assignment);
-			break;
-
-		case TRAIN_TEAMMATE:
-			if (!CanCharacterTrainStat(s, (INT8)iParam1, FALSE, TRUE)) return;
-			PreSetAssignment(s, assignment);
-			if (s->bAssignment != TRAIN_TEAMMATE) SetTimeOfAssignmentChangeForMerc(s);
-			// set stat to train
-			s->bTrainStat = (INT8)iParam1;
-			PostSetAssignment(s, assignment);
-			break;
-
-		case TRAIN_BY_OTHER:
-			if (!CanCharacterTrainStat(s, (INT8)iParam1, TRUE, FALSE)) return;
-			PreSetAssignment(s, assignment);
-			if (s->bAssignment != TRAIN_BY_OTHER) SetTimeOfAssignmentChangeForMerc(s);
-			// set stat to train
-			s->bTrainStat = (INT8)iParam1;
-			PostSetAssignment(s, assignment);
-			break;
-
-		case REPAIR:
-			if (!CanCharacterRepair(s)) return;
-			PreSetAssignment(s, assignment);
-			if (s->bAssignment != REPAIR || s->fFixingSAMSite != (UINT8)iParam1 || s->fFixingRobot != (UINT8)iParam2 || s->bVehicleUnderRepairID != (UINT8)iParam3)
-			{
-				SetTimeOfAssignmentChangeForMerc(s);
-			}
-			MakeSureToolKitIsInHand(s);
-			s->fFixingSAMSite        = (UINT8)iParam1;
-			s->fFixingRobot          = (UINT8)iParam2;
-			s->bVehicleUnderRepairID = (INT8)iParam3;
-			PostSetAssignment(s, assignment);
-			break;
-
-		case VEHICLE:
-		{
-			if (!CanCharacterVehicle(s)) return;
-
-			VEHICLETYPE* const v = GetVehicle(iParam1);
-			if (v == NULL || !IsThisVehicleAccessibleToSoldier(s, v)) return;
-
-			if (!IsEnoughSpaceInVehicle(v))
-			{
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[18], zVehicleName[v->ubVehicleType]);
-				return;
-			}
-
-			PreSetAssignment(s, assignment);
-
-			if (!PutSoldierInVehicle(s, v))
-			{
-				AddCharacterToAnySquad(s);
-				return;
-			}
-
-			if (s->bAssignment != VEHICLE || s->iVehicleId != (UINT8)iParam1)
-			{
-				SetTimeOfAssignmentChangeForMerc(s);
-			}
-
-			s->iVehicleId = iParam1;
-			PostSetAssignment(s, assignment);
-			break;
-		}
+		// show a message to confirm player wants to charge cost
+		HandleInterfaceMessageForCostOfTrainingMilitia(s);
 	}
+	PostSetAssignment(s, TRAIN_TOWN);
+}
+
+
+static void SetSoldierAssignmentTrainSelf(SOLDIERTYPE* const s, INT8 const stat)
+{
+	if (!CanCharacterTrainStat(s, stat, TRUE, FALSE)) return;
+	PreSetAssignment(s, TRAIN_SELF);
+	if (s->bAssignment != TRAIN_SELF) SetTimeOfAssignmentChangeForMerc(s);
+	// set stat to train
+	s->bTrainStat = stat;
+	PostSetAssignment(s, TRAIN_SELF);
+}
+
+
+static void SetSoldierAssignmentTrainTeammate(SOLDIERTYPE* const s, INT8 const stat)
+{
+	if (!CanCharacterTrainStat(s, stat, FALSE, TRUE)) return;
+	PreSetAssignment(s, TRAIN_TEAMMATE);
+	if (s->bAssignment != TRAIN_TEAMMATE) SetTimeOfAssignmentChangeForMerc(s);
+	// set stat to train
+	s->bTrainStat = stat;
+	PostSetAssignment(s, TRAIN_TEAMMATE);
+}
+
+
+static void SetSoldierAssignmentTrainByOther(SOLDIERTYPE* const s, INT8 const stat)
+{
+	if (!CanCharacterTrainStat(s, stat, TRUE, FALSE)) return;
+	PreSetAssignment(s, TRAIN_BY_OTHER);
+	if (s->bAssignment != TRAIN_BY_OTHER) SetTimeOfAssignmentChangeForMerc(s);
+	// set stat to train
+	s->bTrainStat = stat;
+	PostSetAssignment(s, TRAIN_BY_OTHER);
+}
+
+
+void SetSoldierAssignmentRepair(SOLDIERTYPE* const s, BOOLEAN const sam, BOOLEAN const robot, INT8 const vehicle_id)
+{
+	if (!CanCharacterRepair(s)) return;
+	PreSetAssignment(s, REPAIR);
+	if (s->bAssignment != REPAIR || s->fFixingSAMSite != sam || s->fFixingRobot != robot || s->bVehicleUnderRepairID != vehicle_id)
+	{
+		SetTimeOfAssignmentChangeForMerc(s);
+	}
+	MakeSureToolKitIsInHand(s);
+	s->fFixingSAMSite        = sam;
+	s->fFixingRobot          = robot;
+	s->bVehicleUnderRepairID = vehicle_id;
+	PostSetAssignment(s, REPAIR);
 }
 
 
@@ -7653,7 +7631,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 					{
 						// set as doctor
 						pSoldier->bOldAssignment = pSoldier->bAssignment;
-						SetSoldierAssignment( pSoldier, DOCTOR, 0,0,0 );
+						SetSoldierAssignmentDoctor(pSoldier);
 						fItWorked = TRUE;
 					}
 					break;
@@ -7663,7 +7641,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 					{
 						// set as patient
 						pSoldier->bOldAssignment = pSoldier->bAssignment;
-						SetSoldierAssignment( pSoldier, PATIENT, 0,0,0 );
+						SetSoldierAssignmentPatient(pSoldier);
 						fItWorked = TRUE;
 					}
 					break;
@@ -7708,7 +7686,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 						{
 							// set as repair
 							pSoldier->bOldAssignment = pSoldier->bAssignment;
-							SetSoldierAssignment( pSoldier, REPAIR, pSelectedSoldier->fFixingSAMSite, pSelectedSoldier->fFixingRobot, pSelectedSoldier->bVehicleUnderRepairID );
+							SetSoldierAssignmentRepair(pSoldier, pSelectedSoldier->fFixingSAMSite, pSelectedSoldier->fFixingRobot, pSelectedSoldier->bVehicleUnderRepairID);
 							fItWorked = TRUE;
 						}
 					}
@@ -7717,7 +7695,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 					if( CanCharacterTrainStat( pSoldier, bParam , TRUE, FALSE ) )
 					{
 						pSoldier->bOldAssignment = pSoldier->bAssignment;
-						SetSoldierAssignment( pSoldier, TRAIN_SELF, bParam, 0,0 );
+						SetSoldierAssignmentTrainSelf(pSoldier, bParam);
 						fItWorked = TRUE;
 					}
 					break;
@@ -7725,7 +7703,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 					if( CanCharacterTrainMilitia( pSoldier ) )
 					{
 						pSoldier->bOldAssignment = pSoldier->bAssignment;
-						SetSoldierAssignment( pSoldier, TRAIN_TOWN, 0, 0, 0 );
+						SetSoldierAssignmentTrainTown(pSoldier);
 						fItWorked = TRUE;
 					}
 					break;
@@ -7733,7 +7711,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 					if( CanCharacterTrainStat( pSoldier, bParam, FALSE, TRUE ) )
 					{
 						pSoldier->bOldAssignment = pSoldier->bAssignment;
-						SetSoldierAssignment( pSoldier, TRAIN_TEAMMATE, bParam, 0,0 );
+						SetSoldierAssignmentTrainTeammate(pSoldier, bParam);
 						fItWorked = TRUE;
 					}
 					break;
@@ -7741,7 +7719,7 @@ void SetAssignmentForList( INT8 bAssignment, INT8 bParam )
 					if( CanCharacterTrainStat( pSoldier, bParam, TRUE, FALSE ) )
 					{
 						pSoldier->bOldAssignment = pSoldier->bAssignment;
-						SetSoldierAssignment( pSoldier, TRAIN_BY_OTHER, bParam, 0,0 );
+						SetSoldierAssignmentTrainByOther(pSoldier, bParam);
 						fItWorked = TRUE;
 					}
 					break;

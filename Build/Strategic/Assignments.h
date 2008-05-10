@@ -179,7 +179,8 @@ void CreateDestroyScreenMaskForAssignmentAndContractMenus( void );
 
 
 BOOLEAN CreateDestroyAssignmentPopUpBoxes( void );
-void SetSoldierAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment, INT32 iParam1, INT32 iParam2, INT32 iParam3 );
+void SetSoldierAssignmentHospital(SOLDIERTYPE*);
+void SetSoldierAssignmentRepair(SOLDIERTYPE*, BOOLEAN sam, BOOLEAN robot, INT8 vehicle_id);
 
 // set merc asleep and awake under the new sleep system implemented June 29, 1998
 // if give warning is false, the function can be used as an internal function
