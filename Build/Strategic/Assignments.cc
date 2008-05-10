@@ -4449,79 +4449,62 @@ static void AttributesMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void CreateDestroyMouseRegionsForAttributeMenu(void)
 {
 	static BOOLEAN fCreated = FALSE;
-	UINT32 iCounter = 0;
-	INT32 iFontHeight = 0;
 
 	// will create/destroy mouse regions for the map screen attribute  menu
 
-	if (fShowAttributeMenu && !fCreated)
+	PopUpBox* const box = ghAttributeBox;
+	if (!fCreated && fShowAttributeMenu)
 	{
-
-		if( ( fShowAssignmentMenu ) && ( guiCurrentScreen == MAP_SCREEN ) )
+		if (fShowAssignmentMenu && guiCurrentScreen == MAP_SCREEN)
 		{
 			SetBoxXY(ghAssignmentBox, AssignmentPosition.iX, AssignmentPosition.iY);
 		}
 
-		HandleShadingOfLinesForAttributeMenus( );
-		CheckAndUpdateTacticalAssignmentPopUpPositions( );
+		HandleShadingOfLinesForAttributeMenus();
+		CheckAndUpdateTacticalAssignmentPopUpPositions();
 
 		// grab height of font
-		iFontHeight = GetLineSpace( ghAttributeBox ) + GetFontHeight( GetBoxFont( ghAttributeBox ) );
-
-		const SGPBox* const area          = GetBoxArea(ghAttributeBox);
-		INT32         const iBoxXPosition = area->x;
-		INT32         const iBoxYPosition = area->y;
-		INT32         const iBoxWidth     = area->w;
+		SGPBox const* const area = GetBoxArea(box);
+		UINT16        const x    = area->x;
+		UINT16              y    = area->y + GetTopMarginSize(box);
+		UINT16        const w    = area->w;
+		UINT16        const h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
 
 		// define regions
-		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghAttributeBox ); iCounter++ )
+		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(box); ++i)
 		{
 			// add mouse region for each line of text..and set user data
-
-
-			MSYS_DefineRegion(&gAttributeMenuRegion[iCounter], iBoxXPosition, iBoxYPosition + GetTopMarginSize(ghAttributeBox) + iFontHeight * iCounter, iBoxXPosition + iBoxWidth, iBoxYPosition + GetTopMarginSize(ghAttributeBox) + iFontHeight * (iCounter + 1), MSYS_PRIORITY_HIGHEST - 2, MSYS_NO_CURSOR, AttributeMenuMvtCallBack, AttributesMenuBtnCallback);
-
-			// set user defines
-			MSYS_SetRegionUserData( &gAttributeMenuRegion[ iCounter ], 0, iCounter );
+			MOUSE_REGION* const r = &gAttributeMenuRegion[i];
+			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 2, MSYS_NO_CURSOR, AttributeMenuMvtCallBack, AttributesMenuBtnCallback);
+			MSYS_SetRegionUserData(r, 0, i);
+			y += h;
 		}
 
-		// created
+		UnHighLightBox(box);
+
 		fCreated = TRUE;
-
-		// unhighlight all strings in box
-		UnHighLightBox( ghAttributeBox );
-
 	}
-	else if ((!fShowAssignmentMenu || !fShowTrainingMenu || !fShowAttributeMenu) && fCreated)
+	else if (fCreated && (!fShowAssignmentMenu || !fShowTrainingMenu || !fShowAttributeMenu))
 	{
+		fShowAttributeMenu = FALSE;
+
 		// destroy
-		for( iCounter = 0; iCounter < GetNumberOfLinesOfTextInBox( ghAttributeBox ); iCounter++ )
+		for (UINT32 i = 0; i < GetNumberOfLinesOfTextInBox(box); ++i)
 		{
-			MSYS_RemoveRegion( &gAttributeMenuRegion[ iCounter ] );
+			MSYS_RemoveRegion(&gAttributeMenuRegion[i]);
 		}
 
-		// stop showing training menu
-		if (!fShowAssignmentMenu || !fShowTrainingMenu || !fShowAttributeMenu)
-		{
-			fShowAttributeMenu = FALSE;
-			gfRenderPBInterface = TRUE;
-		}
+		gfRenderPBInterface      = TRUE;
+		fMapPanelDirty           = TRUE;
+		fCharacterInfoPanelDirty = TRUE;
+		fTeamPanelDirty          = TRUE;
+		fMapScreenBottomDirty    = TRUE;
+		HideBox(box);
+		SetRenderFlags(RENDER_FLAG_FULL);
 
-		fMapPanelDirty = TRUE;
-		fCharacterInfoPanelDirty= TRUE;
-		fTeamPanelDirty = TRUE;
-		fMapScreenBottomDirty = TRUE;
-		HideBox( ghAttributeBox );
-		SetRenderFlags( RENDER_FLAG_FULL );
+		if (fShowTrainingMenu) UnHighLightBox(ghTrainingBox);
 
-		// not created
 		fCreated = FALSE;
-
-		if ( fShowTrainingMenu )
-		{
-			// remove highlight on the parent menu
-			UnHighLightBox( ghTrainingBox );
-		}
 	}
 }
 
