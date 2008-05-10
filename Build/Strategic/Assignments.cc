@@ -6252,134 +6252,100 @@ static void RepositionMouseRegions(void)
 }
 
 
-static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
+static void AdjustBoxPos(SGPBox const* const assignment_area, PopUpBox* const other_box, INT32 const offset_line)
 {
-	INT16 sLongest;
-	SOLDIERTYPE *pSoldier = NULL;
+	SGPBox const* const other_area = GetBoxArea(other_box);
 
-	if (!fShowAssignmentMenu) return;
-
-	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+	INT16 const max_x = SCREEN_WIDTH - assignment_area->w - other_area->w;
+	if (gsAssignmentBoxesX > max_x)
 	{
-		return;
+		gsAssignmentBoxesX = max_x;
+		SetRenderFlags(RENDER_FLAG_FULL);
 	}
 
+	INT16 const dy    = (GetFontHeight(MAP_SCREEN_FONT) + 2) * offset_line;
+	INT16 const ah    = assignment_area->h;
+	INT16 const oh    = other_area->h + dy;
+	INT16 const max_y = gsVIEWPORT_WINDOW_END_Y - (ah > oh ? ah : oh);
+	if (gsAssignmentBoxesY > max_y)
+	{
+		gsAssignmentBoxesY = max_y;
+		SetRenderFlags(RENDER_FLAG_FULL);
+	}
 
-	//get the soldier
-	pSoldier = GetSelectedAssignSoldier( FALSE );
+	INT16 const x = gsAssignmentBoxesX + assignment_area->w;
+	INT16 const y = gsAssignmentBoxesY + dy;
+	SetBoxXY(other_box, x, y);
+}
 
-	const SGPBox* const area2 = GetBoxArea(pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox);
+
+static void CheckAndUpdateTacticalAssignmentPopUpPositions(void)
+{
+	if (!fShowAssignmentMenu) return;
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN) return;
+
+	SOLDIERTYPE const* const s               = GetSelectedAssignSoldier(FALSE);
+	PopUpBox*          const assignment_box  = s->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox;
+	SGPBox      const* const assignment_area = GetBoxArea(assignment_box);
 
 	if (fShowRepairMenu)
 	{
-		const SGPBox* const area = GetBoxArea(ghRepairBox);
-
-		if (gsAssignmentBoxesX + area2->w + area->w >= SCREEN_WIDTH)
-		{
-			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (area2->w + area->w);
-			SetRenderFlags( RENDER_FLAG_FULL );
-		}
-
-		if (area2->h > area->h)
-		{
-			sLongest = area2->h + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_REPAIR;
-		}
-		else
-		{
-			sLongest = area->h + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_REPAIR;
-		}
-
-		if( gsAssignmentBoxesY + sLongest >= 360 )
-		{
-			gsAssignmentBoxesY = ( INT16 )( 359 - ( sLongest ) );
-			SetRenderFlags( RENDER_FLAG_FULL );
-		}
-
-		const INT16 x = gsAssignmentBoxesX + area2->w;
-		const INT16 y = gsAssignmentBoxesY + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_REPAIR;
-		SetBoxXY(ghRepairBox, x, y);
+		AdjustBoxPos(assignment_area, ghRepairBox, ASSIGN_MENU_REPAIR);
 	}
 	else if (fShowSquadMenu)
 	{
-		const SGPBox* const area = GetBoxArea(ghSquadBox);
-
-		if (gsAssignmentBoxesX + area2->w + area->w >= SCREEN_WIDTH)
-		{
-			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (area2->w + area->w);
-			SetRenderFlags( RENDER_FLAG_FULL );
-		}
-
-		sLongest = area2->h > area->h ? area2->h : area->h;
-
-		if( gsAssignmentBoxesY + sLongest >= 360 )
-		{
-			gsAssignmentBoxesY = ( INT16 )( 359 - ( sLongest ) );
-			SetRenderFlags( RENDER_FLAG_FULL );
-		}
-
-		SetBoxXY(ghSquadBox, gsAssignmentBoxesX + area2->w, gsAssignmentBoxesY);
+		AdjustBoxPos(assignment_area, ghSquadBox, ASSIGN_MENU_ON_DUTY);
 	}
 	else if (fShowAttributeMenu)
 	{
-		const SGPBox* const area  = GetBoxArea(ghTrainingBox);
-		const SGPBox* const area3 = GetBoxArea(ghAttributeBox);
+		SGPBox const* const train_area = GetBoxArea(ghTrainingBox);
+		SGPBox const* const attr_area  = GetBoxArea(ghAttributeBox);
 
-		if (gsAssignmentBoxesX + area2->w + area->w + area3->w >= SCREEN_WIDTH)
+		INT16 const max_x = SCREEN_WIDTH - assignment_area->w - train_area->w - attr_area->w;
+		if (gsAssignmentBoxesX > max_x)
 		{
-			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (area2->w + area->w + area3->w);
-			SetRenderFlags( RENDER_FLAG_FULL );
+			gsAssignmentBoxesX = max_x;
+			SetRenderFlags(RENDER_FLAG_FULL);
 		}
 
-		if (gsAssignmentBoxesY + area3->h + GetFontHeight(MAP_SCREEN_FONT) * ASSIGN_MENU_TRAIN >= 360)
+		INT16 const dy    = (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_TRAIN;
+		INT16 const max_y = gsVIEWPORT_WINDOW_END_Y - attr_area->h - dy;
+		if (gsAssignmentBoxesY > max_y)
 		{
-			gsAssignmentBoxesY = 359 - area3->h;
-			SetRenderFlags( RENDER_FLAG_FULL );
+			gsAssignmentBoxesY = max_y;
+			SetRenderFlags(RENDER_FLAG_FULL);
 		}
 
-		const INT16 x = gsAssignmentBoxesX + area2->w;
-		const INT16 y = gsAssignmentBoxesY + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_TRAIN;
-		SetBoxXY(ghAttributeBox, x + area->w, y);
-		SetBoxXY(ghTrainingBox,  x,           y);
+		INT16 const x = gsAssignmentBoxesX + assignment_area->w;
+		INT16 const y = gsAssignmentBoxesY + dy;
+		SetBoxXY(ghAttributeBox, x + train_area->w, y);
+		SetBoxXY(ghTrainingBox,  x,                 y);
 	}
 	else if (fShowTrainingMenu)
 	{
-		const SGPBox* const area = GetBoxArea(ghTrainingBox);
-		if (gsAssignmentBoxesX + area2->w + area->w >= SCREEN_WIDTH)
-		{
-			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - (area2->w + area->w);
-			SetRenderFlags( RENDER_FLAG_FULL );
-		}
-
-		if (gsAssignmentBoxesY + area2->h + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_TRAIN >= 360)
-		{
-			gsAssignmentBoxesY = 359 - area2->h - (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_TRAIN;
-			SetRenderFlags( RENDER_FLAG_FULL );
-		}
-
-		const INT16 x = gsAssignmentBoxesX + area2->w;
-		const INT16 y = gsAssignmentBoxesY + (GetFontHeight(MAP_SCREEN_FONT) + 2) * ASSIGN_MENU_TRAIN;
-		SetBoxXY(ghTrainingBox, x, y);
+		AdjustBoxPos(assignment_area, ghTrainingBox, ASSIGN_MENU_TRAIN);
 	}
 	else
 	{
 		// just the assignment box
-		if (gsAssignmentBoxesX + area2->w >= SCREEN_WIDTH)
+		INT16 const max_x = SCREEN_WIDTH - assignment_area->w;
+		if (gsAssignmentBoxesX > max_x)
 		{
-			gsAssignmentBoxesX = SCREEN_WIDTH - 1 - area2->w;
-			SetRenderFlags( RENDER_FLAG_FULL );
+			gsAssignmentBoxesX = max_x;
+			SetRenderFlags(RENDER_FLAG_FULL);
 		}
 
-		if (gsAssignmentBoxesY + area2->h >= 360)
+		INT16 const max_y = gsVIEWPORT_WINDOW_END_Y - assignment_area->h;
+		if (gsAssignmentBoxesY > max_y)
 		{
-			gsAssignmentBoxesY = 359 - area2->h;
-			SetRenderFlags( RENDER_FLAG_FULL );
+			gsAssignmentBoxesY = max_y;
+			SetRenderFlags(RENDER_FLAG_FULL);
 		}
 
-		PopUpBox* const box = pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC ? ghEpcBox : ghAssignmentBox;
-		SetBoxXY(box, gsAssignmentBoxesX, gsAssignmentBoxesY);
+		SetBoxXY(assignment_box, gsAssignmentBoxesX, gsAssignmentBoxesY);
 	}
 
-	RepositionMouseRegions( );
+	RepositionMouseRegions();
 }
 
 
