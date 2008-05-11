@@ -6368,41 +6368,37 @@ static void ContractRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void HandleShadingOfLinesForContractMenu(void)
 {
-	MERCPROFILESTRUCT *pProfile;
+	if (!fShowContractMenu) return;
 
-	if (!fShowContractMenu || ghContractBox == NO_POPUP_BOX) return;
+	PopUpBox* const box = ghContractBox;
+	if (box == NO_POPUP_BOX); return;
 
 	// error check, return if not a valid character
-	if( bSelectedContractChar == -1 )
-	{
-		return;
-	}
+	if (bSelectedContractChar == -1) return;
+	const SOLDIERTYPE* const s = gCharactersList[bSelectedContractChar].merc;
+	if (s == NULL) return;
 
-	const SOLDIERTYPE* const pSoldier = gCharactersList[bSelectedContractChar].merc;
-	if (pSoldier == NULL) return;
-
-	Assert(CanExtendContractForSoldier(pSoldier));
+	Assert(CanExtendContractForSoldier(s));
 
 	// is guy in AIM? and well enough to talk and make such decisions?
-	if( ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ) && ( pSoldier->bLife >= OKLIFE ) )
+	if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC && s->bLife >= OKLIFE)
 	{
-		pProfile = &( gMercProfiles[ pSoldier->ubProfile ] );
-
-		INT32 const balance = LaptopSaveInfo.iCurrentBalance;
-		ShadeStringInBox(ghContractBox, CONTRACT_MENU_DAY,              pProfile->sSalary          > balance);
-		ShadeStringInBox(ghContractBox, CONTRACT_MENU_WEEK,      (INT32)pProfile->uiWeeklySalary   > balance);
-		ShadeStringInBox(ghContractBox, CONTRACT_MENU_TWO_WEEKS, (INT32)pProfile->uiBiWeeklySalary > balance);
+		MERCPROFILESTRUCT const* const p       = GetProfile(s->ubProfile);
+		INT32                    const balance = LaptopSaveInfo.iCurrentBalance;
+		ShadeStringInBox(box, CONTRACT_MENU_DAY,              p->sSalary          > balance);
+		ShadeStringInBox(box, CONTRACT_MENU_WEEK,      (INT32)p->uiWeeklySalary   > balance);
+		ShadeStringInBox(box, CONTRACT_MENU_TWO_WEEKS, (INT32)p->uiBiWeeklySalary > balance);
 	}
 	else
 	{
 		// can't extend contract duration
-		ShadeStringInBox(ghContractBox, CONTRACT_MENU_DAY,       true);
-		ShadeStringInBox(ghContractBox, CONTRACT_MENU_WEEK,      true);
-		ShadeStringInBox(ghContractBox, CONTRACT_MENU_TWO_WEEKS, true);
+		ShadeStringInBox(box, CONTRACT_MENU_DAY,       true);
+		ShadeStringInBox(box, CONTRACT_MENU_WEEK,      true);
+		ShadeStringInBox(box, CONTRACT_MENU_TWO_WEEKS, true);
 	}
 
 	// if THIS soldier is involved in a fight (dismissing in a hostile sector IS ok...)
-	ShadeStringInBox(ghContractBox, CONTRACT_MENU_TERMINATE, gTacticalStatus.uiFlags & INCOMBAT && pSoldier->bInSector);
+	ShadeStringInBox(box, CONTRACT_MENU_TERMINATE, gTacticalStatus.uiFlags & INCOMBAT && s->bInSector);
 }
 
 
