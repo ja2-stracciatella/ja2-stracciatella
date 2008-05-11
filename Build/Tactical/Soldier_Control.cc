@@ -2163,7 +2163,7 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 			HandleCrowShadowNewGridNo( pSoldier );
 		}
 
-		pSoldier->bOldOverTerrainType = pSoldier->bOverTerrainType;
+		INT8 const old_over_terrain_type = pSoldier->bOverTerrainType;
 		pSoldier->bOverTerrainType = GetTerrainType( pSoldier->sGridNo );
 
 		// OK, check that our animation is up to date!
@@ -2203,7 +2203,7 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 
 
 			// OK, If we were not in deep water but we are now, handle deep animations!
-			if ( pSoldier->bOverTerrainType == DEEP_WATER && pSoldier->bOldOverTerrainType != DEEP_WATER )
+			if (pSoldier->bOverTerrainType == DEEP_WATER && old_over_terrain_type != DEEP_WATER)
 			{
 				// Based on our current animation, change!
 				switch( pSoldier->usAnimState )
@@ -2228,7 +2228,7 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 			}
 
 			// OK, If we were in deep water but we are NOT now, handle mid animations!
-			if ( pSoldier->bOverTerrainType != DEEP_WATER && pSoldier->bOldOverTerrainType == DEEP_WATER )
+			if (pSoldier->bOverTerrainType != DEEP_WATER && old_over_terrain_type == DEEP_WATER)
 			{
 				// Make transition from low to deep
 				EVENT_InitNewSoldierAnim( pSoldier, DEEP_TO_LOW_WATER, 0 , FALSE );

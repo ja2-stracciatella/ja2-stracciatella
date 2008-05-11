@@ -373,7 +373,6 @@ struct SOLDIERTYPE
 	INT16												sDesiredHeight;
 	INT16												sTempNewGridNo;					// New grid no for advanced animations
 	INT8												bOverTerrainType;
-	INT8												bOldOverTerrainType;
 
 	INT8												bCollapsed;					// collapsed due to being out of APs
 	INT8												bBreathCollapsed;					// collapsed due to being out of APs
