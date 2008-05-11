@@ -735,7 +735,7 @@ static BOOLEAN CanCharacterPractise(const SOLDIERTYPE* const s)
 
 
 // can this character train others?
-static BOOLEAN CanCharacterTrainTeammates(SOLDIERTYPE* pSoldier)
+static BOOLEAN CanCharacterTrainTeammates(SOLDIERTYPE const* const pSoldier)
 {
 	// can character train at all
 	if (!CanCharacterPractise(pSoldier)) return FALSE;
@@ -751,7 +751,7 @@ static BOOLEAN CanCharacterTrainTeammates(SOLDIERTYPE* pSoldier)
 }
 
 
-static BOOLEAN CanCharacterBeTrainedByOther(SOLDIERTYPE* pSoldier)
+static BOOLEAN CanCharacterBeTrainedByOther(SOLDIERTYPE const* const pSoldier)
 {
 	// can character train at all
 	if (!CanCharacterPractise(pSoldier)) return FALSE;
@@ -6666,23 +6666,21 @@ static BOOLEAN HandleShowingOfMovementBox(void)
 
 static void HandleShadingOfLinesForTrainingMenu(void)
 {
-	SOLDIERTYPE *pSoldier = NULL;
+	if (!fShowTrainingMenu) return;
 
-	// check if valid
-	if (!fShowTrainingMenu || ghTrainingBox == NO_POPUP_BOX) return;
+	PopUpBox* const box = ghTrainingBox;
+	if (box == NO_POPUP_BOX) return;
 
-	pSoldier = GetSelectedAssignSoldier( FALSE );
+	SOLDIERTYPE const* const s = GetSelectedAssignSoldier(FALSE);
 
-	ShadeStringInBox(ghTrainingBox, TRAIN_MENU_SELF, !CanCharacterPractise(pSoldier));
-
+	ShadeStringInBox(box, TRAIN_MENU_SELF,           !CanCharacterPractise(s));
 	PopUpShade const shade =
-		!BasicCanCharacterTrainMilitia(pSoldier) ? POPUP_SHADE           :
-		!CanCharacterTrainMilitia(pSoldier)      ? POPUP_SHADE_SECONDARY :
-		                                           POPUP_SHADE_NONE;
-	ShadeStringInBox(ghTrainingBox, TRAIN_MENU_TOWN, shade);
-
-	ShadeStringInBox(ghTrainingBox, TRAIN_MENU_TEAMMATES,      !CanCharacterTrainTeammates(pSoldier));
-	ShadeStringInBox(ghTrainingBox, TRAIN_MENU_TRAIN_BY_OTHER, !CanCharacterBeTrainedByOther(pSoldier));
+		!BasicCanCharacterTrainMilitia(s) ? POPUP_SHADE           :
+		!CanCharacterTrainMilitia(s)      ? POPUP_SHADE_SECONDARY :
+		                                    POPUP_SHADE_NONE;
+	ShadeStringInBox(box, TRAIN_MENU_TOWN,           shade);
+	ShadeStringInBox(box, TRAIN_MENU_TEAMMATES,      !CanCharacterTrainTeammates(s));
+	ShadeStringInBox(box, TRAIN_MENU_TRAIN_BY_OTHER, !CanCharacterBeTrainedByOther(s));
 }
 
 
