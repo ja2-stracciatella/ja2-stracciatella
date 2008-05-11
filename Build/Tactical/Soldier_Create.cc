@@ -553,7 +553,6 @@ static BOOLEAN TacticalCopySoldierFromProfile(SOLDIERTYPE* const pSoldier, const
 	//OK set initial duty
 //  pSoldier->bAssignment=ON_DUTY;
 
-	pSoldier->bOldAssignment = NO_ASSIGNMENT;
 	pSoldier->ubSkillTrait1 = pProfile->bSkillTrait;
 	pSoldier->ubSkillTrait2 = pProfile->bSkillTrait2;
 

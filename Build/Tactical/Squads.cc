@@ -257,10 +257,6 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 
 			// set squad value
 			ChangeSoldiersAssignment( pCharacter, bSquadValue );
-			if ( pCharacter->bOldAssignment < ON_DUTY )
-			{
-				pCharacter->bOldAssignment = bSquadValue;
-			}
 
 			// if current tactical sqaud...upadte panel
 			if (SquadIsEmpty(iCurrentTacticalSquad))

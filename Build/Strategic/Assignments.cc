@@ -2828,7 +2828,7 @@ void MakeSoldiersTacticalAnimationReflectAssignment(SOLDIERTYPE* const s)
 		case REPAIR:  SoldierInSectorRepair( s, s->usStrategicInsertionData); break;
 
 		default:
-			if (s->usAnimState != WKAEUP_FROM_SLEEP && s->bOldAssignment >= ON_DUTY)
+			if (s->usAnimState != WKAEUP_FROM_SLEEP)
 			{
 				ChangeSoldierState(s, STANDING, 1, TRUE);
 			}
@@ -3527,7 +3527,6 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 
 static void PreChangeAssignment(SOLDIERTYPE* const s)
 {
-	s->bOldAssignment = s->bAssignment;
 	if (s->bAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
 	RemoveCharacterFromSquads(s);
 }
@@ -5354,9 +5353,6 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						fTeamPanelDirty = TRUE;
 						fMapScreenBottomDirty = TRUE;
 
-						pSoldier -> bOldAssignment = pSoldier -> bAssignment;
-
-
 						if( pSoldier -> bSectorZ ==0 )
 						{
 							fShowRepairMenu = TRUE;
@@ -6030,9 +6026,6 @@ static void HandleRestFatigueAndSleepStatus(void)
 							AddSoldierToWaitingListQueue(pSoldier);
 							fBoxSetUp = TRUE;
 						}
-
-						// seems unnecessary now?  ARM
-						pSoldier->bOldAssignment = pSoldier->bAssignment;
 					}
 				}
 				else	// tired, in a squad / vehicle
@@ -7160,7 +7153,6 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 			case DOCTOR:
 				if (CanCharacterDoctor(s))
 				{
-					s->bOldAssignment = s->bAssignment;
 					SetSoldierAssignmentDoctor(s);
 					fItWorked = TRUE;
 				}
@@ -7169,7 +7161,6 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 			case PATIENT:
 				if (CanCharacterPatient(s))
 				{
-					s->bOldAssignment = s->bAssignment;
 					SetSoldierAssignmentPatient(s);
 					fItWorked = TRUE;
 				}
@@ -7202,8 +7193,6 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 						                                   TRUE;
 					if (fCanFixSpecificTarget)
 					{
-						// set as repair
-						s->bOldAssignment = s->bAssignment;
 						SetSoldierAssignmentRepair(s, sel->fFixingSAMSite, sel->fFixingRobot, sel->bVehicleUnderRepairID);
 						fItWorked = TRUE;
 					}
@@ -7213,7 +7202,6 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 			case TRAIN_SELF:
 				if (CanCharacterTrainStat(s, bParam, TRUE, FALSE))
 				{
-					s->bOldAssignment = s->bAssignment;
 					SetSoldierAssignmentTrainSelf(s, bParam);
 					fItWorked = TRUE;
 				}
@@ -7222,7 +7210,6 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 			case TRAIN_TOWN:
 				if (CanCharacterTrainMilitia(s))
 				{
-					s->bOldAssignment = s->bAssignment;
 					SetSoldierAssignmentTrainTown(s);
 					fItWorked = TRUE;
 				}
@@ -7231,7 +7218,6 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 			case TRAIN_TEAMMATE:
 				if (CanCharacterTrainStat(s, bParam, FALSE, TRUE))
 				{
-					s->bOldAssignment = s->bAssignment;
 					SetSoldierAssignmentTrainTeammate(s, bParam);
 					fItWorked = TRUE;
 				}
@@ -7240,7 +7226,6 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 			case TRAIN_BY_OTHER:
 				if (CanCharacterTrainStat(s, bParam, TRUE, FALSE))
 				{
-					s->bOldAssignment = s->bAssignment;
 					SetSoldierAssignmentTrainByOther(s, bParam);
 					fItWorked = TRUE;
 				}

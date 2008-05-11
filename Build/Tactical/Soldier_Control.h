@@ -647,7 +647,6 @@ struct SOLDIERTYPE
 	INT32												iNextActionSpecialData;		// AI special action data record for the next action
 	UINT8												ubWhatKindOfMercAmI;			//Set to the type of character it is
   INT8                        bAssignment;							// soldiers current assignment
-	INT8												bOldAssignment;						// old assignment, for autosleep purposes
 	BOOLEAN											fForcedToStayAwake;				// forced by player to stay awake, reset to false, the moment they are set to rest or sleep
 	INT8                        bTrainStat;								// current stat soldier is training
   INT16                       sSectorX;									// X position on the Stategic Map
