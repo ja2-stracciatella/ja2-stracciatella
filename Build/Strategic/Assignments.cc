@@ -5497,31 +5497,22 @@ static void CreateEPCBox(void)
 
 static void HandleShadingOfLinesForSquadMenu(void)
 {
-	// find current squad and set that line the squad box a lighter green
-	UINT32 uiCounter;
-	SOLDIERTYPE *pSoldier = NULL;
-	UINT32 uiMaxSquad;
-	JoinSquadResult bResult;
+	if (!fShowSquadMenu) return;
 
-	if (!fShowSquadMenu || ghSquadBox == NO_POPUP_BOX) return;
+	PopUpBox* const box = ghSquadBox;
+	if (box == NO_POPUP_BOX) return;
 
-	pSoldier = GetSelectedAssignSoldier( FALSE );
-
-	uiMaxSquad = GetLastSquadListedInSquadMenu();
-
-	for( uiCounter = 0; uiCounter <= uiMaxSquad; uiCounter++ )
+	SOLDIERTYPE const* const s         = GetSelectedAssignSoldier(FALSE);
+	UINT32             const max_squad = GetLastSquadListedInSquadMenu();
+	for (UINT32 i = 0; i <= max_squad; ++i)
 	{
-		if ( pSoldier != NULL )
-		{
-			bResult = CanCharacterSquad( pSoldier, (INT8) uiCounter );
-		}
-
-		// if no soldier, or a reason which doesn't have a good explanatory message
+		JoinSquadResult const bResult = CanCharacterSquad(s, (INT8)i);
 		PopUpShade const shade =
-			pSoldier == NULL || bResult == CHARACTER_CANT_JOIN_SQUAD ? POPUP_SHADE      :
-			bResult == CHARACTER_CAN_JOIN_SQUAD                      ? POPUP_SHADE_NONE :
-			                                                           POPUP_SHADE_SECONDARY;
-		ShadeStringInBox(ghSquadBox, uiCounter, shade);
+			// Shade, if the reason doesn't have a good explanatory message
+			bResult == CHARACTER_CANT_JOIN_SQUAD ? POPUP_SHADE      :
+			bResult == CHARACTER_CAN_JOIN_SQUAD  ? POPUP_SHADE_NONE :
+			                                       POPUP_SHADE_SECONDARY;
+		ShadeStringInBox(box, i, shade);
 	}
 }
 
