@@ -561,7 +561,6 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	{
 		HideButton( giCharInfoButton[ 1 ] );
 	}
-	HideButton( giMapContractButton );
 
 	if( gubEnemyEncounterCode == ENEMY_ENCOUNTER_CODE )
 	{ //we know how many enemies are here, so until we leave the sector, we will continue to display the value.
