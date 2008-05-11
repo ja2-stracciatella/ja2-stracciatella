@@ -5432,40 +5432,35 @@ static PopUpBox* MakeBox(const SGPPoint pos, const UINT32 flags)
 static UINT32 GetLastSquadListedInSquadMenu(void);
 
 
+// Create a pop up box for squad selection
 static void CreateSquadBox(void)
 {
-	// will create a pop up box for squad selection
-	CHAR16 sString[ 64 ];
-	UINT32 uiMaxSquad;
-
 	PopUpBox* const box = MakeBox(SquadPosition, 0);
 	ghSquadBox = box;
 
-	uiMaxSquad = GetLastSquadListedInSquadMenu();
-
 	// add strings for box
-	for (UINT32 uiCounter=0; uiCounter <= uiMaxSquad; ++uiCounter)
+	UINT32 const uiMaxSquad = GetLastSquadListedInSquadMenu();
+	for (UINT32 i = 0; i <= uiMaxSquad; ++i)
 	{
 		// get info about current squad and put in  string
-		swprintf( sString, lengthof(sString), L"%ls ( %d/%d )", pSquadMenuStrings[uiCounter], NumberOfPeopleInSquad( ( INT8 )uiCounter ), NUMBER_OF_SOLDIERS_PER_SQUAD );
-		AddMonoString(box, sString);
+		wchar_t buf[64];
+		swprintf(buf, lengthof(buf), L"%ls ( %d/%d )", pSquadMenuStrings[i], NumberOfPeopleInSquad(i), NUMBER_OF_SOLDIERS_PER_SQUAD);
+		AddMonoString(box, buf);
 	}
 
 	// add cancel line
 	AddMonoString(box, pSquadMenuStrings[NUMBER_OF_SQUADS]);
 
-	SetBoxTextAttrs(ghSquadBox);
-
-	// resize box to text
-	ResizeBoxToText(ghSquadBox);
-
+	SetBoxTextAttrs(box);
+	ResizeBoxToText(box);
 	DetermineBoxPositions();
 
-	const SGPBox* const area = GetBoxArea(ghSquadBox);
-	if (giBoxY + area->h >= SCREEN_HEIGHT)
+	const SGPBox* const area  = GetBoxArea(box);
+	INT16         const max_y = SCREEN_HEIGHT - area->h;
+	if (giBoxY > max_y)
 	{
-		SquadPosition.iY = SCREEN_HEIGHT - 1 - area->h;
-		SetBoxY(ghSquadBox, SquadPosition.iY);
+		SquadPosition.iY = max_y;
+		SetBoxY(box, SquadPosition.iY);
 	}
 }
 
