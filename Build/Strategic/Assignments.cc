@@ -5599,7 +5599,7 @@ void CreateContractBox(const SOLDIERTYPE* const s)
 
 
 // create attribute pop up menu for mapscreen assignments
-static void CreateAttributeBox(void)
+static void CreateAttributeBox()
 {
 	if (giBoxY != 0) AttributePosition.iY = giBoxY;
 
@@ -5618,7 +5618,7 @@ static void CreateAttributeBox(void)
 }
 
 
-static void CreateTrainingBox(void)
+static void CreateTrainingBox()
 {
 	if (giBoxY != 0)
 	{
@@ -5639,7 +5639,7 @@ static void CreateTrainingBox(void)
 }
 
 
-static void CreateAssignmentsBox(void)
+static void CreateAssignmentsBox()
 {
 	if (giBoxY != 0) AssignmentPosition.iY = giBoxY;
 
@@ -5669,22 +5669,19 @@ static void CreateAssignmentsBox(void)
 }
 
 
-void CreateMercRemoveAssignBox( void )
+// create remove mercbox to be placed in assignment area
+void CreateMercRemoveAssignBox()
 {
-	// will create remove mercbox to be placed in assignment area
 	PopUpBox* const box = MakeBox(AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghRemoveMercAssignBox = box;
 
-	// add strings for box
-	for (UINT32 uiCounter = 0; uiCounter < MAX_REMOVE_MERC_COUNT; ++uiCounter)
+	for (UINT32 i = 0; i < MAX_REMOVE_MERC_COUNT; ++i)
 	{
-		AddMonoString(box, pRemoveMercStrings[uiCounter]);
+		AddMonoString(box, pRemoveMercStrings[i]);
 	}
 
-	SetBoxTextAttrs(ghRemoveMercAssignBox);
-
-	// resize box to text
-	ResizeBoxToText(ghRemoveMercAssignBox);
+	SetBoxTextAttrs(box);
+	ResizeBoxToText(box);
 }
 
 
