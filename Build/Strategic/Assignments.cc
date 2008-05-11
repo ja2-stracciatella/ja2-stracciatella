@@ -5558,71 +5558,43 @@ static PopUpBox* CreateRepairBox(void)
 }
 
 
-void CreateContractBox(const SOLDIERTYPE* const pCharacter)
+void CreateContractBox(const SOLDIERTYPE* const s)
 {
-	wchar_t sString[ 50 ];
-	wchar_t sDollarString[ 50 ];
-
-	if( giBoxY != 0 )
-	{
-		ContractPosition.iY = giBoxY;
-	}
+	if (giBoxY != 0) ContractPosition.iY = giBoxY;
 
 	PopUpBox* const box = MakeBox(ContractPosition, 0);
 	ghContractBox = box;
 
-	// not null character?
-	if( pCharacter != NULL )
+	if (s)
 	{
-		for (UINT32 uiCounter = 0; uiCounter < MAX_CONTRACT_MENU_STRING_COUNT; ++uiCounter)
+		MERCPROFILESTRUCT const* const p =
+			s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ?
+				GetProfile(s->ubProfile) : 0;
+		for (UINT32 i = 0; i < MAX_CONTRACT_MENU_STRING_COUNT; ++i)
 		{
-			switch (uiCounter)
+			INT32 salary;
+			switch (i)
 			{
-				case CONTRACT_MENU_CURRENT_FUNDS:
-/*
-					// add current balance after title string
-					SPrintMoney(sDollarString, LaptopSaveInfo.iCurrentBalance);
-					swprintf(sString, L"%ls %ls", pContractStrings[uiCounter], sDollarString);
-					AddMonoString(box, sString);
-*/
-					AddMonoString(box, pContractStrings[uiCounter]);
-					break;
-
-				case CONTRACT_MENU_DAY:
-					SPrintMoney(sDollarString, pCharacter->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ? gMercProfiles[pCharacter->ubProfile].sSalary : 0);
-					swprintf(sString, lengthof(sString), L"%ls ( %ls )", pContractStrings[uiCounter], sDollarString);
-					AddMonoString(box, sString);
-					break;
-
-				case CONTRACT_MENU_WEEK:
-					SPrintMoney(sDollarString, pCharacter->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ? gMercProfiles[pCharacter->ubProfile].uiWeeklySalary : 0);
-					swprintf(sString, lengthof(sString), L"%ls ( %ls )", pContractStrings[uiCounter], sDollarString);
-					AddMonoString(box, sString);
-					break;
-
-				case CONTRACT_MENU_TWO_WEEKS:
-					SPrintMoney(sDollarString, pCharacter->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ? gMercProfiles[pCharacter->ubProfile].uiBiWeeklySalary : 0);
-					swprintf(sString, lengthof(sString), L"%ls ( %ls )", pContractStrings[uiCounter], sDollarString);
-					AddMonoString(box, sString);
-					break;
+				case CONTRACT_MENU_DAY:       salary = p ? p->sSalary          : 0; break;
+				case CONTRACT_MENU_WEEK:      salary = p ? p->uiWeeklySalary   : 0; break;
+				case CONTRACT_MENU_TWO_WEEKS: salary = p ? p->uiBiWeeklySalary : 0; break;
 
 				default:
-					AddMonoString(box, pContractStrings[uiCounter]);
-					break;
+					AddMonoString(box, pContractStrings[i]);
+					continue;
 			}
+
+			wchar_t sDollarString[50];
+			SPrintMoney(sDollarString, p ? p->sSalary : 0);
+			wchar_t sString[50];
+			swprintf(sString, lengthof(sString), L"%ls ( %ls )", pContractStrings[i], sDollarString);
+			AddMonoString(box, sString);
 		}
 	}
 
-	SetBoxTextAttrs(ghContractBox);
-
-	if (pCharacter != NULL)
-	{
-		// now set the color for the current balance value
-		SetBoxLineForeground(ghContractBox, 0, FONT_YELLOW);
-	}
-
-	// resize box to text
-	ResizeBoxToText(ghContractBox);
+	SetBoxTextAttrs(box);
+	if (s) SetBoxLineForeground(box, 0, FONT_YELLOW);
+	ResizeBoxToText(box);
 }
 
 
