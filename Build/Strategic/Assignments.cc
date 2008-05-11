@@ -368,9 +368,9 @@ static BOOLEAN CanCharacterDoctor(SOLDIERTYPE* pSoldier)
 }
 
 
-static BOOLEAN CanCharacterRepairRobot(SOLDIERTYPE* pSoldier);
-static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE* pSoldier, INT32 iVehicleId);
-static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE* pSoldier, INT8 bHighestPass);
+static BOOLEAN CanCharacterRepairRobot(SOLDIERTYPE const*);
+static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE const*, INT32 iVehicleId);
+static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const*, INT8 bHighestPass);
 
 
 static BOOLEAN IsAnythingAroundForSoldierToRepair(SOLDIERTYPE* pSoldier)
@@ -439,13 +439,11 @@ static INT8 FindRepairableItemOnOtherSoldier(const SOLDIERTYPE* pSoldier, UINT8 
 static BOOLEAN IsItemRepairable(UINT16 item_id, INT8 status);
 
 
-static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE* pSoldier, INT8 bHighestPass)
+static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const* const pSoldier, INT8 const bHighestPass)
 {
 	INT8	bPocket;
 	UINT8	ubItemsInPocket, ubObjectInPocketCounter;
-	OBJECTTYPE * pObj;
 	UINT8 ubPassType;
-
 
 	// check for jams
 	for (bPocket = HELMETPOS; bPocket <= SMALLPOCK8POS; bPocket++)
@@ -466,7 +464,7 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE* pSoldier, INT8 bHi
 	// now check for items to repair
 	for( bPocket = HELMETPOS; bPocket <= SMALLPOCK8POS; bPocket++ )
 	{
-		pObj = &(pSoldier->inv[ bPocket ]);
+		OBJECTTYPE const* const pObj = &pSoldier->inv[bPocket];
 
 		ubItemsInPocket = pObj->ubNumberOfObjects;
 
@@ -3380,48 +3378,46 @@ static void DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 
 static void HandleShadingOfLinesForRepairMenu(void)
 {
-	SOLDIERTYPE *pSoldier = NULL;
-	INT32 iCount = 0;
+	if (!fShowRepairMenu) return;
 
-	if (!fShowRepairMenu || ghRepairBox == NO_POPUP_BOX) return;
+	PopUpBox* const box = ghRepairBox;
+	if (box == NO_POPUP_BOX) return;
 
-	pSoldier = GetSelectedAssignSoldier( FALSE );
+	/* PLEASE NOTE: make sure any changes you do here are reflected in all 3
+	 * routines, which must remain in synch:
+	 * CreateDestroyMouseRegionForRepairMenu(), DisplayRepairMenu() and
+	 * HandleShadingOfLinesForRepairMenu(). */
+	SOLDIERTYPE const* const s    = GetSelectedAssignSoldier(FALSE);
+	INT32                    line = 0;
 
-
-	// PLEASE NOTE: make sure any changes you do here are reflected in all 3 routines which must remain in synch:
-	// CreateDestroyMouseRegionForRepairMenu(), DisplayRepairMenu(), and HandleShadingOfLinesForRepairMenu().
-
-	if ( pSoldier->bSectorZ == 0 )
+	if (s->bSectorZ == 0)
 	{
 		CFOR_ALL_VEHICLES(v)
 		{
 			// don't even list the helicopter, because it's NEVER repairable...
-			if (VEHICLE2ID(v) != iHelicopterVehicleId &&
-					IsThisVehicleAccessibleToSoldier(pSoldier, v))
-			{
-				ShadeStringInBox(ghRepairBox, iCount++, !CanCharacterRepairVehicle(pSoldier, VEHICLE2ID(v)));
-			}
+			if (VEHICLE2ID(v) == iHelicopterVehicleId)   continue;
+			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
+
+			ShadeStringInBox(box, line++, !CanCharacterRepairVehicle(s, VEHICLE2ID(v)));
 		}
 	}
 
-
-/* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
-	if (IsThisSectorASAMSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ) &&
-			IsTheSAMSiteInSectorRepairable(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ))
+#if 0 // No point in allowing SAM site repair any more.  Jan/13/99.  ARM
+	if (IsThisSectorASAMSector(s->sSectorX, s->sSectorY, s->bSectorZ) &&
+			IsTheSAMSiteInSectorRepairable(s->sSectorX, s->sSectorY, s->bSectorZ))
 	{
 		// handle enable disable of repair sam option
-		ShadeStringInBox(ghRepairBox, iCount++, !CanSoldierRepairSAM(pSoldier, SAM_SITE_REPAIR_DIVISOR));
+		ShadeStringInBox(box, line++, !CanSoldierRepairSAM(s, SAM_SITE_REPAIR_DIVISOR));
 	}
-*/
+#endif
 
-
-	if( IsRobotInThisSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ ) )
+	if (IsRobotInThisSector(s->sSectorX, s->sSectorY, s->bSectorZ))
 	{
 		// handle shading of repair robot option
-		ShadeStringInBox(ghRepairBox, iCount++, !CanCharacterRepairRobot(pSoldier));
+		ShadeStringInBox(box, line++, !CanCharacterRepairRobot(s));
 	}
 
-	ShadeStringInBox(ghRepairBox, iCount++, !DoesCharacterHaveAnyItemsToRepair(pSoldier, FINAL_REPAIR_PASS));
+	ShadeStringInBox(box, line++, !DoesCharacterHaveAnyItemsToRepair(s, FINAL_REPAIR_PASS));
 }
 
 
@@ -6213,7 +6209,7 @@ static void HandleRestFatigueAndSleepStatus(void)
 
 
 // can the character repair this vehicle?
-static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE* pSoldier, INT32 iVehicleId)
+static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE const* const pSoldier, INT32 const iVehicleId)
 {
 	const VEHICLETYPE* const v = GetVehicle(iVehicleId);
 	if (v == NULL) return FALSE;
@@ -6277,7 +6273,7 @@ static SOLDIERTYPE* GetRobotSoldier(void)
 
 
 // can soldier repair robot
-static BOOLEAN CanCharacterRepairRobot(SOLDIERTYPE* pSoldier)
+static BOOLEAN CanCharacterRepairRobot(SOLDIERTYPE const* const pSoldier)
 {
 	SOLDIERTYPE *pRobot = NULL;
 
