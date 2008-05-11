@@ -349,7 +349,7 @@ static BOOLEAN BasicCanCharacterDoctor(const SOLDIERTYPE* const s)
 
 // is character capable of 'playing' doctor?
 // check that character is alive, conscious, has medical skill and equipment
-static BOOLEAN CanCharacterDoctor(SOLDIERTYPE* pSoldier)
+static BOOLEAN CanCharacterDoctor(SOLDIERTYPE const* const pSoldier)
 {
 	INT8 bPocket = 0;
 
@@ -373,7 +373,7 @@ static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE const*, INT32 iVehicleId);
 static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const*, INT8 bHighestPass);
 
 
-static BOOLEAN IsAnythingAroundForSoldierToRepair(SOLDIERTYPE* pSoldier)
+static BOOLEAN IsAnythingAroundForSoldierToRepair(SOLDIERTYPE const* const pSoldier)
 {
 	// items?
 	if ( DoesCharacterHaveAnyItemsToRepair( pSoldier, FINAL_REPAIR_PASS ) )
@@ -547,7 +547,7 @@ static BOOLEAN CanCharacterRepairButDoesntHaveARepairkit(const SOLDIERTYPE* cons
 
 // can character be assigned as repairman?
 // check that character is alive, oklife, has repair skill, and equipment, etc.
-static BOOLEAN CanCharacterRepair(SOLDIERTYPE* pSoldier)
+static BOOLEAN CanCharacterRepair(SOLDIERTYPE const* const pSoldier)
 {
 	// this assignment is no go in the demo
 	#ifdef JA2DEMO
@@ -3212,7 +3212,7 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 }
 
 
-static void HandleShadingOfLinesForVehicleMenu(void)
+static void HandleShadingOfLinesForVehicleMenu()
 {
 	if (!fShowVehicleMenu) return;
 
@@ -3376,7 +3376,7 @@ static void DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 }
 
 
-static void HandleShadingOfLinesForRepairMenu(void)
+static void HandleShadingOfLinesForRepairMenu()
 {
 	if (!fShowRepairMenu) return;
 
@@ -3743,63 +3743,53 @@ static void HandleShadingOfLinesForSquadMenu(void);
 static void HandleShadingOfLinesForTrainingMenu(void);
 
 
-void HandleShadingOfLinesForAssignmentMenus( void )
+// updates which menus are selectable based on character status
+void HandleShadingOfLinesForAssignmentMenus()
 {
-	SOLDIERTYPE *pSoldier = NULL;
-
-	// updates which menus are selectable based on character status
-
 	if (!fShowAssignmentMenu || ghAssignmentBox == NO_POPUP_BOX) return;
 
-	pSoldier = GetSelectedAssignSoldier( FALSE );
-
-	if ( pSoldier && pSoldier->bActive )
+	SOLDIERTYPE const* const s = GetSelectedAssignSoldier(FALSE);
+	if (s && s->bActive)
 	{
-		if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+		if (s->ubWhatKindOfMercAmI == MERC_TYPE__EPC)
 		{
-			ShadeStringInBox(ghEpcBox, EPC_MENU_PATIENT, !CanCharacterPatient(pSoldier));
-			ShadeStringInBox(ghEpcBox, EPC_MENU_ON_DUTY, !CanCharacterOnDuty(pSoldier));
-			ShadeStringInBox(ghEpcBox, EPC_MENU_VEHICLE, !CanCharacterVehicle(pSoldier));
+			PopUpBox* const box = ghEpcBox;
+			ShadeStringInBox(box, EPC_MENU_PATIENT, !CanCharacterPatient(s));
+			ShadeStringInBox(box, EPC_MENU_ON_DUTY, !CanCharacterOnDuty(s));
+			ShadeStringInBox(box, EPC_MENU_VEHICLE, !CanCharacterVehicle(s));
 		}
 		else
 		{
+			PopUpBox* const box = ghAssignmentBox;
+
 			{ // doctor
 				PopUpShade const shade =
-					!BasicCanCharacterDoctor(pSoldier) ? POPUP_SHADE           :
-					!CanCharacterDoctor(pSoldier)      ? POPUP_SHADE_SECONDARY :
-					                                     POPUP_SHADE_NONE;
-				ShadeStringInBox(ghAssignmentBox, ASSIGN_MENU_DOCTOR, shade);
+					!BasicCanCharacterDoctor(s) ? POPUP_SHADE           :
+					!CanCharacterDoctor(s)      ? POPUP_SHADE_SECONDARY :
+					                              POPUP_SHADE_NONE;
+				ShadeStringInBox(box, ASSIGN_MENU_DOCTOR, shade);
 			}
 
 			{ // repair
 				PopUpShade const shade =
-					!BasicCanCharacterRepair(pSoldier) ? POPUP_SHADE           :
-					!CanCharacterRepair(pSoldier)      ? POPUP_SHADE_SECONDARY :
-					                                     POPUP_SHADE_NONE;
-				ShadeStringInBox(ghAssignmentBox, ASSIGN_MENU_REPAIR, shade);
+					!BasicCanCharacterRepair(s) ? POPUP_SHADE           :
+					!CanCharacterRepair(s)      ? POPUP_SHADE_SECONDARY :
+					                              POPUP_SHADE_NONE;
+				ShadeStringInBox(box, ASSIGN_MENU_REPAIR, shade);
 			}
 
-			ShadeStringInBox(ghAssignmentBox, ASSIGN_MENU_PATIENT, !CanCharacterPatient(pSoldier));
-			ShadeStringInBox(ghAssignmentBox, ASSIGN_MENU_ON_DUTY, !CanCharacterOnDuty(pSoldier));
-			ShadeStringInBox(ghAssignmentBox, ASSIGN_MENU_TRAIN,   !CanCharacterPractise(pSoldier));
-			ShadeStringInBox(ghAssignmentBox, ASSIGN_MENU_VEHICLE, !CanCharacterVehicle(pSoldier));
+			ShadeStringInBox(box, ASSIGN_MENU_PATIENT, !CanCharacterPatient(s));
+			ShadeStringInBox(box, ASSIGN_MENU_ON_DUTY, !CanCharacterOnDuty(s));
+			ShadeStringInBox(box, ASSIGN_MENU_TRAIN,   !CanCharacterPractise(s));
+			ShadeStringInBox(box, ASSIGN_MENU_VEHICLE, !CanCharacterVehicle(s));
 		}
 	}
 
-	// squad submenu
-	HandleShadingOfLinesForSquadMenu( );
-
-	// vehicle submenu
-	HandleShadingOfLinesForVehicleMenu( );
-
-	// repair submenu
-	HandleShadingOfLinesForRepairMenu( );
-
-	// training submenu
-	HandleShadingOfLinesForTrainingMenu( );
-
-	// training attributes submenu
-	HandleShadingOfLinesForAttributeMenus( );
+	HandleShadingOfLinesForSquadMenu();
+	HandleShadingOfLinesForVehicleMenu();
+	HandleShadingOfLinesForRepairMenu();
+	HandleShadingOfLinesForTrainingMenu();
+	HandleShadingOfLinesForAttributeMenus();
 }
 
 
