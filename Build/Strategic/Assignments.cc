@@ -5476,21 +5476,20 @@ static void CreateEPCBox(void)
 	PopUpBox* const box = MakeBox(AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghEpcBox = box;
 
-	for (INT32 iCount = 0; iCount < MAX_EPC_MENU_STRING_COUNT; ++iCount)
+	for (INT32 i = 0; i < MAX_EPC_MENU_STRING_COUNT; ++i)
 	{
-		AddMonoString(box, pEpcMenuStrings[iCount]);
+		AddMonoString(box, pEpcMenuStrings[i]);
 	}
 
-	SetBoxTextAttrs(ghEpcBox);
+	SetBoxTextAttrs(box);
+	ResizeBoxToText(box);
 
-	// resize box to text
-	ResizeBoxToText(ghEpcBox);
-
-	const SGPBox* const area = GetBoxArea(ghEpcBox);
-	if (giBoxY + area->h >= SCREEN_HEIGHT)
+	SGPBox const* const area  = GetBoxArea(box);
+	INT16         const max_y = SCREEN_HEIGHT - area->h;
+	if (giBoxY > max_y)
 	{
-		AssignmentPosition.iY = SCREEN_HEIGHT - 1 - area->h;
-		SetBoxY(ghEpcBox, AssignmentPosition.iY);
+		AssignmentPosition.iY = max_y;
+		SetBoxY(box, AssignmentPosition.iY);
 	}
 }
 
