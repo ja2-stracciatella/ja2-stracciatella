@@ -5598,30 +5598,23 @@ void CreateContractBox(const SOLDIERTYPE* const s)
 }
 
 
+// create attribute pop up menu for mapscreen assignments
 static void CreateAttributeBox(void)
 {
-	// will create attribute pop up menu for mapscreen assignments
-	if (giBoxY != 0)
-	{
-		AttributePosition.iY = giBoxY;
-	}
+	if (giBoxY != 0) AttributePosition.iY = giBoxY;
 
-	// update screen assignment positions
 	UpdateMapScreenAssignmentPositions();
 
 	PopUpBox* const box = MakeBox(AttributePosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghAttributeBox = box;
 
-	// add strings for box
-	for (UINT32 uiCounter = 0; uiCounter < MAX_ATTRIBUTE_STRING_COUNT; ++uiCounter)
+	for (UINT32 i = 0; i < MAX_ATTRIBUTE_STRING_COUNT; ++i)
 	{
-		AddMonoString(box, pAttributeMenuStrings[uiCounter]);
+		AddMonoString(box, pAttributeMenuStrings[i]);
 	}
 
-	SetBoxTextAttrs(ghAttributeBox);
-
-	// resize box to text
-	ResizeBoxToText(ghAttributeBox);
+	SetBoxTextAttrs(box);
+	ResizeBoxToText(box);
 }
 
 
