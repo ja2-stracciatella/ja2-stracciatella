@@ -334,7 +334,7 @@ static BOOLEAN AreAssignmentConditionsMet(const SOLDIERTYPE* const s, const Assi
 }
 
 
-static BOOLEAN CanCharacterDoctorButDoesntHaveMedKit(const SOLDIERTYPE* const s)
+static BOOLEAN BasicCanCharacterDoctor(const SOLDIERTYPE* const s)
 {
 #ifdef JA2DEMO
 	// this assignment is no go in the demo
@@ -353,7 +353,7 @@ static BOOLEAN CanCharacterDoctor(SOLDIERTYPE* pSoldier)
 {
 	INT8 bPocket = 0;
 
-	if (!CanCharacterDoctorButDoesntHaveMedKit(pSoldier)) return FALSE;
+	if (!BasicCanCharacterDoctor(pSoldier)) return FALSE;
 
 	// find med kit
 	for (bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++)
@@ -3227,22 +3227,11 @@ static void HandleShadingOfLinesForVehicleMenu(void)
 	CFOR_ALL_VEHICLES(v)
 	{
 		// inaccessible vehicles aren't listed at all!
-		if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
-		{
-			if (IsEnoughSpaceInVehicle(v))
-			{
-				// legal vehicle, leave it green
-				UnShadeStringInBox(ghVehicleBox, uiMenuLine);
-				UnSecondaryShadeStringInBox(ghVehicleBox, uiMenuLine);
-			}
-			else
-			{
-				// unjoinable vehicle - yellow
-				SecondaryShadeStringInBox(ghVehicleBox, uiMenuLine);
-			}
+		if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) continue;
 
-			uiMenuLine++;
-		}
+		PopUpShade const shade = IsEnoughSpaceInVehicle(v) ?
+			POPUP_SHADE_NONE : POPUP_SHADE_SECONDARY;
+		ShadeStringInBox(ghVehicleBox, uiMenuLine++, shade);
 	}
 }
 
@@ -3779,47 +3768,20 @@ void HandleShadingOfLinesForAssignmentMenus( void )
 		}
 		else
 		{
-			// doctor
-			if( CanCharacterDoctor( pSoldier ) )
-			{
-				// unshade doctor line
-				UnShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_DOCTOR );
-				UnSecondaryShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_DOCTOR );
-			}
-			else
-			{
-				// only missing a med kit
-				if( CanCharacterDoctorButDoesntHaveMedKit( pSoldier ) )
-				{
-					SecondaryShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_DOCTOR );
-				}
-				else
-				{
-					// shade doctor line
-					ShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_DOCTOR );
-				}
-
+			{ // doctor
+				PopUpShade const shade =
+					!BasicCanCharacterDoctor(pSoldier) ? POPUP_SHADE           :
+					!CanCharacterDoctor(pSoldier)      ? POPUP_SHADE_SECONDARY :
+					                                     POPUP_SHADE_NONE;
+				ShadeStringInBox(ghAssignmentBox, ASSIGN_MENU_DOCTOR, shade);
 			}
 
-			// repair
-			if( CanCharacterRepair( pSoldier ) )
-			{
-				// unshade repair line
-				UnShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_REPAIR );
-				UnSecondaryShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_REPAIR );
-			}
-			else
-			{
-				// only missing a tool kit
-				if( CanCharacterRepairButDoesntHaveARepairkit( pSoldier ) )
-				{
-					SecondaryShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_REPAIR );
-				}
-				else
-				{
-					// shade repair line
-					ShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_REPAIR );
-				}
+			{ // repair
+				PopUpShade const shade =
+					!BasicCanCharacterRepair(pSoldier) ? POPUP_SHADE           :
+					!CanCharacterRepair(pSoldier)      ? POPUP_SHADE_SECONDARY :
+					                                     POPUP_SHADE_NONE;
+				ShadeStringInBox(ghAssignmentBox, ASSIGN_MENU_REPAIR, shade);
 			}
 
 			ShadeStringInBox(ghAssignmentBox, ASSIGN_MENU_PATIENT, !CanCharacterPatient(pSoldier));
@@ -5341,7 +5303,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						// set assignment for group
 						SetAssignmentForList( ( INT8 ) DOCTOR, 0 );
 					}
-					else if( CanCharacterDoctorButDoesntHaveMedKit( pSoldier ) )
+					else if (BasicCanCharacterDoctor(pSoldier))
 					{
 						fTeamPanelDirty = TRUE;
 						fMapScreenBottomDirty = TRUE;
@@ -5570,25 +5532,11 @@ static void HandleShadingOfLinesForSquadMenu(void)
 		}
 
 		// if no soldier, or a reason which doesn't have a good explanatory message
-		if ( ( pSoldier == NULL ) || ( bResult == CHARACTER_CANT_JOIN_SQUAD ) )
-		{
-			// darken /disable line
-			ShadeStringInBox( ghSquadBox, uiCounter );
-		}
-		else
-		{
-			if ( bResult == CHARACTER_CAN_JOIN_SQUAD )
-			{
-				// legal squad, leave it green
-				UnShadeStringInBox( ghSquadBox, uiCounter );
-				UnSecondaryShadeStringInBox( ghSquadBox, uiCounter );
-			}
-			else
-			{
-				// unjoinable squad - yellow
-				SecondaryShadeStringInBox( ghSquadBox, uiCounter );
-			}
-		}
+		PopUpShade const shade =
+			pSoldier == NULL || bResult == CHARACTER_CANT_JOIN_SQUAD ? POPUP_SHADE      :
+			bResult == CHARACTER_CAN_JOIN_SQUAD                      ? POPUP_SHADE_NONE :
+			                                                           POPUP_SHADE_SECONDARY;
+		ShadeStringInBox(ghSquadBox, uiCounter, shade);
 	}
 }
 
@@ -6751,26 +6699,11 @@ static void HandleShadingOfLinesForTrainingMenu(void)
 
 	ShadeStringInBox(ghTrainingBox, TRAIN_MENU_SELF, !CanCharacterPractise(pSoldier));
 
-	// can character EVER train militia?
-	if( BasicCanCharacterTrainMilitia( pSoldier ) )
-	{
-		// can he train here, now?
-		if( CanCharacterTrainMilitia( pSoldier ) )
-		{
-			// unshade train militia line
-			UnShadeStringInBox( ghTrainingBox, TRAIN_MENU_TOWN );
-			UnSecondaryShadeStringInBox( ghTrainingBox, TRAIN_MENU_TOWN );
-		}
-		else
-		{
-			SecondaryShadeStringInBox( ghTrainingBox, TRAIN_MENU_TOWN );
-		}
-	}
-	else
-	{
-		// shade train militia line
-		ShadeStringInBox( ghTrainingBox, TRAIN_MENU_TOWN );
-	}
+	PopUpShade const shade =
+		!BasicCanCharacterTrainMilitia(pSoldier) ? POPUP_SHADE           :
+		!CanCharacterTrainMilitia(pSoldier)      ? POPUP_SHADE_SECONDARY :
+		                                           POPUP_SHADE_NONE;
+	ShadeStringInBox(ghTrainingBox, TRAIN_MENU_TOWN, shade);
 
 	ShadeStringInBox(ghTrainingBox, TRAIN_MENU_TEAMMATES,      !CanCharacterTrainTeammates(pSoldier));
 	ShadeStringInBox(ghTrainingBox, TRAIN_MENU_TRAIN_BY_OTHER, !CanCharacterBeTrainedByOther(pSoldier));

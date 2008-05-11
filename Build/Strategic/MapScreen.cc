@@ -6396,9 +6396,9 @@ static void HandleShadingOfLinesForContractMenu(void)
 	else
 	{
 		// can't extend contract duration
-		ShadeStringInBox( ghContractBox, CONTRACT_MENU_DAY );
-		ShadeStringInBox( ghContractBox, CONTRACT_MENU_WEEK );
-		ShadeStringInBox( ghContractBox, CONTRACT_MENU_TWO_WEEKS );
+		ShadeStringInBox(ghContractBox, CONTRACT_MENU_DAY,       true);
+		ShadeStringInBox(ghContractBox, CONTRACT_MENU_WEEK,      true);
+		ShadeStringInBox(ghContractBox, CONTRACT_MENU_TWO_WEEKS, true);
 	}
 
 	// if THIS soldier is involved in a fight (dismissing in a hostile sector IS ok...)

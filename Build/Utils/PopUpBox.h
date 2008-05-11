@@ -27,9 +27,17 @@ void SetBoxForeground(PopUpBox*, UINT8 ubColor);
 void SetBoxBackground(PopUpBox*, UINT8 ubColor);
 void SetBoxHighLight(PopUpBox*, UINT8 ubColor);
 void SetBoxShade(PopUpBox*, UINT8 ubColor);
-void ShadeStringInBox(PopUpBox*, INT32 iLineNumber);
-void UnShadeStringInBox(PopUpBox*, INT32 iLineNumber);
+
 void ShadeStringInBox(PopUpBox*, INT32 line, bool shade);
+
+enum PopUpShade
+{
+	POPUP_SHADE_NONE,
+	POPUP_SHADE,
+	POPUP_SHADE_SECONDARY
+};
+void ShadeStringInBox(PopUpBox*, INT32 line, PopUpShade);
+
 void HighLightBoxLine(PopUpBox*, INT32 iLineNumber);
 void UnHighLightBox(PopUpBox*);
 void RemoveAllBoxStrings(PopUpBox*);
@@ -73,8 +81,6 @@ void SetBoxSecondColumnHighLight(PopUpBox*, UINT8 ubColor);
 void SetBoxSecondColumnShade(PopUpBox*, UINT8 ubColor);
 
 // secondary shades for boxes
-void UnSecondaryShadeStringInBox(PopUpBox*, INT32 iLineNumber);
-void SecondaryShadeStringInBox(PopUpBox*, INT32 iLineNumber);
 void SetBoxSecondaryShade(PopUpBox*, UINT8 ubColor);
 
 // min width for box
