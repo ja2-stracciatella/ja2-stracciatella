@@ -29,6 +29,7 @@ void SetBoxHighLight(PopUpBox*, UINT8 ubColor);
 void SetBoxShade(PopUpBox*, UINT8 ubColor);
 void ShadeStringInBox(PopUpBox*, INT32 iLineNumber);
 void UnShadeStringInBox(PopUpBox*, INT32 iLineNumber);
+void ShadeStringInBox(PopUpBox*, INT32 line, bool shade);
 void HighLightBoxLine(PopUpBox*, INT32 iLineNumber);
 void UnHighLightBox(PopUpBox*);
 void RemoveAllBoxStrings(PopUpBox*);

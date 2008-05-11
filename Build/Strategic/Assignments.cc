@@ -3411,18 +3411,7 @@ static void HandleShadingOfLinesForRepairMenu(void)
 			if (VEHICLE2ID(v) != iHelicopterVehicleId &&
 					IsThisVehicleAccessibleToSoldier(pSoldier, v))
 			{
-				if (CanCharacterRepairVehicle(pSoldier, VEHICLE2ID(v)))
-				{
-					// unshade vehicle line
-					UnShadeStringInBox(ghRepairBox, iCount);
-				}
-				else
-				{
-					// shade vehicle line
-					ShadeStringInBox(ghRepairBox, iCount);
-				}
-
-				iCount++;
+				ShadeStringInBox(ghRepairBox, iCount++, !CanCharacterRepairVehicle(pSoldier, VEHICLE2ID(v)));
 			}
 		}
 	}
@@ -3433,18 +3422,7 @@ static void HandleShadingOfLinesForRepairMenu(void)
 			IsTheSAMSiteInSectorRepairable(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ))
 	{
 		// handle enable disable of repair sam option
-		if( CanSoldierRepairSAM( pSoldier, SAM_SITE_REPAIR_DIVISOR ) )
-		{
-			// unshade SAM line
-			UnShadeStringInBox( ghRepairBox, iCount );
-		}
-		else
-		{
-			// shade SAM line
-			ShadeStringInBox( ghRepairBox, iCount );
-		}
-
-		iCount++;
+		ShadeStringInBox(ghRepairBox, iCount++, !CanSoldierRepairSAM(pSoldier, SAM_SITE_REPAIR_DIVISOR));
 	}
 */
 
@@ -3452,33 +3430,10 @@ static void HandleShadingOfLinesForRepairMenu(void)
 	if( IsRobotInThisSector( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ ) )
 	{
 		// handle shading of repair robot option
-		if( CanCharacterRepairRobot( pSoldier ) )
-		{
-			// unshade robot line
-			UnShadeStringInBox( ghRepairBox, iCount );
-		}
-		else
-		{
-			// shade robot line
-			ShadeStringInBox( ghRepairBox, iCount );
-		}
-
-		iCount++;
+		ShadeStringInBox(ghRepairBox, iCount++, !CanCharacterRepairRobot(pSoldier));
 	}
 
-
-	if ( DoesCharacterHaveAnyItemsToRepair( pSoldier, FINAL_REPAIR_PASS ) )
-	{
-		// unshade items line
-		UnShadeStringInBox( ghRepairBox, iCount );
-	}
-	else
-	{
-		// shade items line
-		ShadeStringInBox( ghRepairBox, iCount );
-	}
-
-	iCount++;
+	ShadeStringInBox(ghRepairBox, iCount++, !DoesCharacterHaveAnyItemsToRepair(pSoldier, FINAL_REPAIR_PASS));
 }
 
 
@@ -3818,40 +3773,9 @@ void HandleShadingOfLinesForAssignmentMenus( void )
 	{
 		if( pSoldier -> ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 		{
-			// patient
-			if( CanCharacterPatient( pSoldier ) )
-			{
-				// unshade patient line
-				UnShadeStringInBox( ghEpcBox, EPC_MENU_PATIENT );
-			}
-			else
-			{
-				// shade patient line
-				ShadeStringInBox( ghEpcBox, EPC_MENU_PATIENT );
-			}
-
-
-			if( CanCharacterOnDuty( pSoldier ) )
-			{
-				// unshade on duty line
-				UnShadeStringInBox( ghEpcBox, EPC_MENU_ON_DUTY );
-			}
-			else
-			{
-				// shade on duty line
-				ShadeStringInBox( ghEpcBox, EPC_MENU_ON_DUTY );
-			}
-
-			if( CanCharacterVehicle( pSoldier ) )
-			{
-				// unshade vehicle line
-				UnShadeStringInBox( ghEpcBox, EPC_MENU_VEHICLE );
-			}
-			else
-			{
-				// shade vehicle line
-				ShadeStringInBox( ghEpcBox, EPC_MENU_VEHICLE );
-			}
+			ShadeStringInBox(ghEpcBox, EPC_MENU_PATIENT, !CanCharacterPatient(pSoldier));
+			ShadeStringInBox(ghEpcBox, EPC_MENU_ON_DUTY, !CanCharacterOnDuty(pSoldier));
+			ShadeStringInBox(ghEpcBox, EPC_MENU_VEHICLE, !CanCharacterVehicle(pSoldier));
 		}
 		else
 		{
@@ -3898,54 +3822,10 @@ void HandleShadingOfLinesForAssignmentMenus( void )
 				}
 			}
 
-
-			// patient
-			if( CanCharacterPatient( pSoldier ) )
-			{
-				// unshade patient line
-				UnShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_PATIENT );
-			}
-			else
-			{
-				// shade patient line
-				ShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_PATIENT );
-			}
-
-
-			if( CanCharacterOnDuty( pSoldier ) )
-			{
-				// unshade on duty line
-				UnShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_ON_DUTY );
-			}
-			else
-			{
-				// shade on duty line
-				ShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_ON_DUTY );
-			}
-
-
-			if( CanCharacterPractise( pSoldier ) )
-			{
-				// unshade train line
-				UnShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_TRAIN );
-			}
-			else
-			{
-				// shade train line
-				ShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_TRAIN );
-			}
-
-
-			if( CanCharacterVehicle( pSoldier ) )
-			{
-				// unshade vehicle line
-				UnShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_VEHICLE );
-			}
-			else
-			{
-				// shade vehicle line
-				ShadeStringInBox( ghAssignmentBox, ASSIGN_MENU_VEHICLE );
-			}
+			ShadeStringInBox(ghAssignmentBox, ASSIGN_MENU_PATIENT, !CanCharacterPatient(pSoldier));
+			ShadeStringInBox(ghAssignmentBox, ASSIGN_MENU_ON_DUTY, !CanCharacterOnDuty(pSoldier));
+			ShadeStringInBox(ghAssignmentBox, ASSIGN_MENU_TRAIN,   !CanCharacterPractise(pSoldier));
+			ShadeStringInBox(ghAssignmentBox, ASSIGN_MENU_VEHICLE, !CanCharacterVehicle(pSoldier));
 		}
 	}
 
@@ -6869,16 +6749,7 @@ static void HandleShadingOfLinesForTrainingMenu(void)
 
 	pSoldier = GetSelectedAssignSoldier( FALSE );
 
-	// can character practise?
-	if (!CanCharacterPractise(pSoldier))
-	{
-		ShadeStringInBox( ghTrainingBox, TRAIN_MENU_SELF );
-	}
-	else
-	{
-		UnShadeStringInBox( ghTrainingBox, TRAIN_MENU_SELF );
-	}
-
+	ShadeStringInBox(ghTrainingBox, TRAIN_MENU_SELF, !CanCharacterPractise(pSoldier));
 
 	// can character EVER train militia?
 	if( BasicCanCharacterTrainMilitia( pSoldier ) )
@@ -6901,25 +6772,8 @@ static void HandleShadingOfLinesForTrainingMenu(void)
 		ShadeStringInBox( ghTrainingBox, TRAIN_MENU_TOWN );
 	}
 
-	// can character train teammates?
-	if (!CanCharacterTrainTeammates(pSoldier))
-	{
-		ShadeStringInBox( ghTrainingBox, TRAIN_MENU_TEAMMATES );
-	}
-	else
-	{
-		UnShadeStringInBox( ghTrainingBox, TRAIN_MENU_TEAMMATES );
-	}
-
-	// can character be trained by others?
-	if (!CanCharacterBeTrainedByOther(pSoldier))
-	{
-		ShadeStringInBox( ghTrainingBox, TRAIN_MENU_TRAIN_BY_OTHER );
-	}
-	else
-	{
-		UnShadeStringInBox( ghTrainingBox, TRAIN_MENU_TRAIN_BY_OTHER );
-	}
+	ShadeStringInBox(ghTrainingBox, TRAIN_MENU_TEAMMATES,      !CanCharacterTrainTeammates(pSoldier));
+	ShadeStringInBox(ghTrainingBox, TRAIN_MENU_TRAIN_BY_OTHER, !CanCharacterBeTrainedByOther(pSoldier));
 }
 
 
@@ -6956,16 +6810,7 @@ static void HandleShadingOfLinesForAttributeMenus(void)
 				break;
 		}
 
-		if ( fStatTrainable )
-		{
-			// also unshade stat
-			UnShadeStringInBox( ghAttributeBox, bAttrib );
-		}
-		else
-		{
-			// shade stat
-			ShadeStringInBox( ghAttributeBox, bAttrib );
-		}
+		ShadeStringInBox(ghAttributeBox, bAttrib, !fStatTrainable);
 	}
 }
 

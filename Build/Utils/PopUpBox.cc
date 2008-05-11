@@ -142,6 +142,13 @@ void UnShadeStringInBox(PopUpBox* const box, const INT32 iLineNumber)
 }
 
 
+void ShadeStringInBox(PopUpBox* const box, INT32 const line, bool const shade)
+{
+	PopUpString* const s = box->Text[line];
+	if (s) s->fShadeFlag = shade;
+}
+
+
 void SecondaryShadeStringInBox(PopUpBox* const box, const INT32 iLineNumber)
 {
 	// shade iLineNumber Line in box indexed by hBoxHandle

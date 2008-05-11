@@ -6388,35 +6388,10 @@ static void HandleShadingOfLinesForContractMenu(void)
 	{
 		pProfile = &( gMercProfiles[ pSoldier->ubProfile ] );
 
-		// one day
-		if( pProfile->sSalary > LaptopSaveInfo.iCurrentBalance )
-		{
-			ShadeStringInBox( ghContractBox, CONTRACT_MENU_DAY );
-		}
-		else
-		{
-			UnShadeStringInBox( ghContractBox, CONTRACT_MENU_DAY );
-		}
-
-		// one week
-		if( ( INT32 )( pProfile->uiWeeklySalary ) > LaptopSaveInfo.iCurrentBalance )
-		{
-			ShadeStringInBox( ghContractBox, CONTRACT_MENU_WEEK );
-		}
-		else
-		{
-			UnShadeStringInBox( ghContractBox, CONTRACT_MENU_WEEK );
-		}
-
-		// two weeks
-		if( ( INT32 )( pProfile->uiBiWeeklySalary ) > LaptopSaveInfo.iCurrentBalance )
-		{
-			ShadeStringInBox( ghContractBox, CONTRACT_MENU_TWO_WEEKS );
-		}
-		else
-		{
-			UnShadeStringInBox( ghContractBox, CONTRACT_MENU_TWO_WEEKS );
-		}
+		INT32 const balance = LaptopSaveInfo.iCurrentBalance;
+		ShadeStringInBox(ghContractBox, CONTRACT_MENU_DAY,              pProfile->sSalary          > balance);
+		ShadeStringInBox(ghContractBox, CONTRACT_MENU_WEEK,      (INT32)pProfile->uiWeeklySalary   > balance);
+		ShadeStringInBox(ghContractBox, CONTRACT_MENU_TWO_WEEKS, (INT32)pProfile->uiBiWeeklySalary > balance);
 	}
 	else
 	{
@@ -6427,14 +6402,7 @@ static void HandleShadingOfLinesForContractMenu(void)
 	}
 
 	// if THIS soldier is involved in a fight (dismissing in a hostile sector IS ok...)
-	if( ( gTacticalStatus.uiFlags & INCOMBAT ) && pSoldier->bInSector )
-	{
-		ShadeStringInBox( ghContractBox, CONTRACT_MENU_TERMINATE );
-	}
-	else
-	{
-		UnShadeStringInBox( ghContractBox, CONTRACT_MENU_TERMINATE );
-	}
+	ShadeStringInBox(ghContractBox, CONTRACT_MENU_TERMINATE, gTacticalStatus.uiFlags & INCOMBAT && pSoldier->bInSector);
 }
 
 
