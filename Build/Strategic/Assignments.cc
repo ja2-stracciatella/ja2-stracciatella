@@ -6687,37 +6687,37 @@ static void HandleShadingOfLinesForTrainingMenu(void)
 static void HandleShadingOfLinesForAttributeMenus(void)
 {
 	// will do the same as updateassignments...but with training pop up box strings
-	SOLDIERTYPE *pSoldier;
-	INT8 bAttrib =0;
-	BOOLEAN fStatTrainable;
+	if (!fShowAttributeMenu) return;
 
-	if (!fShowTrainingMenu  || ghTrainingBox  == NO_POPUP_BOX) return;
-	if (!fShowAttributeMenu || ghAttributeBox == NO_POPUP_BOX) return;
+	PopUpBox* const box = ghAttributeBox;
+	if (box == NO_POPUP_BOX) return;
 
-	pSoldier = GetSelectedAssignSoldier( FALSE );
-
-	for( bAttrib = 0; bAttrib < ATTRIB_MENU_CANCEL; bAttrib++ )
+	SOLDIERTYPE const* const s = GetSelectedAssignSoldier(FALSE);
+	for (INT8 stat = 0; stat < ATTRIB_MENU_CANCEL; ++stat)
 	{
-		switch ( gbTrainingMode )
+		BOOLEAN stat_trainable;
+		switch (gbTrainingMode)
 		{
 			case TRAIN_SELF:
-				fStatTrainable = CanCharacterTrainStat( pSoldier, bAttrib, TRUE, FALSE );
+				stat_trainable = CanCharacterTrainStat(s, stat, TRUE, FALSE);
 				break;
+
 			case TRAIN_TEAMMATE:
 				// DO allow trainers to be assigned without any partners (students)
-				fStatTrainable = CanCharacterTrainStat( pSoldier, bAttrib, FALSE, TRUE );
+				stat_trainable = CanCharacterTrainStat(s, stat, FALSE, TRUE);
 				break;
+
 			case TRAIN_BY_OTHER:
 				// DO allow students to be assigned without any partners (trainers)
-				fStatTrainable = CanCharacterTrainStat( pSoldier, bAttrib, TRUE, FALSE );
+				stat_trainable = CanCharacterTrainStat(s, stat, TRUE, FALSE);
 				break;
+
 			default:
-				Assert( FALSE );
-				fStatTrainable = FALSE;
+				Assert(FALSE);
+				stat_trainable = FALSE;
 				break;
 		}
-
-		ShadeStringInBox(ghAttributeBox, bAttrib, !fStatTrainable);
+		ShadeStringInBox(box, stat, !stat_trainable);
 	}
 }
 
