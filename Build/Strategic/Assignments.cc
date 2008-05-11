@@ -5620,7 +5620,6 @@ static void CreateAttributeBox(void)
 
 static void CreateTrainingBox(void)
 {
-	// will create attribute pop up menu for mapscreen assignments
 	if (giBoxY != 0)
 	{
 		TrainPosition.iY = giBoxY + ASSIGN_MENU_TRAIN * GetFontHeight(MAP_SCREEN_FONT);
@@ -5629,17 +5628,13 @@ static void CreateTrainingBox(void)
 	PopUpBox* const box = MakeBox(TrainPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghTrainingBox = box;
 
-	// add strings for box
-	for (UINT32 uiCounter = 0; uiCounter < MAX_TRAIN_STRING_COUNT; ++uiCounter)
+	for (UINT32 i = 0; i < MAX_TRAIN_STRING_COUNT; ++i)
 	{
-		AddMonoString(box, pTrainingMenuStrings[uiCounter]);
+		AddMonoString(box, pTrainingMenuStrings[i]);
 	}
 
-	SetBoxTextAttrs(ghTrainingBox);
-
-	// resize box to text
-	ResizeBoxToText(ghTrainingBox);
-
+	SetBoxTextAttrs(box);
+	ResizeBoxToText(box);
 	DetermineBoxPositions();
 }
 
