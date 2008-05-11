@@ -6808,48 +6808,32 @@ static BOOLEAN EnoughTimeOnAssignment(const SOLDIERTYPE* const pSoldier)
 }
 
 
-BOOLEAN AnyMercInGroupCantContinueMoving( GROUP *pGroup )
+BOOLEAN AnyMercInGroupCantContinueMoving(GROUP const* const g)
 {
-	SOLDIERTYPE *pSoldier;
-	BOOLEAN fMeToo = FALSE;
-	BOOLEAN fGroupMustStop = FALSE;
-
-
-	Assert( pGroup );
-
-	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
+	Assert(g);
+	BOOLEAN group_must_stop = FALSE;
+	UINT16  quote           = QUOTE_NEED_SLEEP;
+	CFOR_ALL_PLAYERS_IN_GROUP(p, g)
 	{
-		// if group has player list...  and a valid first soldier
-		if (pPlayer->pSoldier)
-		{
-			pSoldier = pPlayer->pSoldier;
+		SOLDIERTYPE* const s = p->pSoldier;
+		if (!s) continue;
 
-			if ( PlayerSoldierTooTiredToTravel( pSoldier ) )
-			{
-				// NOTE: we only complain about it if it's gonna force the group to stop moving!
-				fGroupMustStop = TRUE;
+		if (!PlayerSoldierTooTiredToTravel(s)) continue;
 
-				// say quote
-				if (!fMeToo)
-				{
-					HandleImportantMercQuote( pSoldier, QUOTE_NEED_SLEEP );
-					fMeToo = TRUE;
-				}
-				else
-				{
-					HandleImportantMercQuote( pSoldier, QUOTE_ME_TOO );
-				}
+		/* NOTE: we only complain about it if it's gonna force the group to stop
+		 * moving! */
+		group_must_stop = TRUE;
 
-				// put him to bed
-				PutMercInAsleepState( pSoldier );
+		HandleImportantMercQuote(s, QUOTE_NEED_SLEEP);
+		quote = QUOTE_ME_TOO;
 
-				// player can't wake him up right away
-				pSoldier->fMercCollapsedFlag = TRUE;
-			}
-		}
+		PutMercInAsleepState(s);
+
+		// player can't wake him up right away
+		s->fMercCollapsedFlag = TRUE;
 	}
 
-	return( fGroupMustStop );
+	return group_must_stop;
 }
 
 
