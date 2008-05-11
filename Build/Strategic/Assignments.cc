@@ -5641,42 +5641,31 @@ static void CreateTrainingBox(void)
 
 static void CreateAssignmentsBox(void)
 {
-	// will create attribute pop up menu for mapscreen assignments
-	if( giBoxY != 0 )
-	{
-		AssignmentPosition.iY = giBoxY;
-	}
-
-	SOLDIERTYPE* const pSoldier = GetSelectedAssignSoldier(TRUE);
-	// pSoldier NULL is legal here!  Gets called during every mapscreen initialization even when nobody is assign char
+	if (giBoxY != 0) AssignmentPosition.iY = giBoxY;
 
 	PopUpBox* const box = MakeBox(AssignmentPosition, POPUP_BOX_FLAG_CENTER_TEXT);
 	ghAssignmentBox = box;
 
-	// add strings for box
-	for (UINT32 uiCounter = 0; uiCounter < MAX_ASSIGN_STRING_COUNT; ++uiCounter)
+	// No soldier is legal here!  Gets called during every mapscreen initialization even when nobody is assign char
+	SOLDIERTYPE* const s = GetSelectedAssignSoldier(TRUE);
+
+	for (UINT32 i = 0; i < MAX_ASSIGN_STRING_COUNT; ++i)
 	{
-		wchar_t sString[128];
+		wchar_t const* str = pAssignMenuStrings[i];
 		// if we have a soldier, and this is the squad line
-		if( ( uiCounter == ASSIGN_MENU_ON_DUTY ) && ( pSoldier != NULL ) && ( pSoldier->bAssignment < ON_DUTY ) )
+		wchar_t buf[128];
+		if (i == ASSIGN_MENU_ON_DUTY && s != NULL && s->bAssignment < ON_DUTY)
 		{
 			// show his squad # in brackets
-			swprintf( sString, lengthof(sString), L"%ls(%d)", pAssignMenuStrings[uiCounter], pSoldier->bAssignment + 1 );
+			swprintf(buf, lengthof(buf), L"%ls(%d)", str, s->bAssignment + 1);
+			str = buf;
 		}
-		else
-		{
-			wcslcpy(sString, pAssignMenuStrings[uiCounter], lengthof(sString));
-		}
-
-		AddMonoString(box, sString);
+		AddMonoString(box, str);
 	}
 
-	SetBoxTextAttrs(ghAssignmentBox);
-
-	// resize box to text
-	ResizeBoxToText( ghAssignmentBox );
-
-	DetermineBoxPositions( );
+	SetBoxTextAttrs(box);
+	ResizeBoxToText(box);
+	DetermineBoxPositions();
 }
 
 
