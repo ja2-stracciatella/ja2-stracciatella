@@ -5552,11 +5552,6 @@ static void TeamListAssignmentRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iRe
 				giAssignHighLine = iValue;
 
 				fShowAssignmentMenu = TRUE;
-
-				if( ( pSoldier->bLife == 0 ) || ( pSoldier->bAssignment == ASSIGNMENT_POW ) )
-				{
-					fShowRemoveMenu = TRUE;
-				}
 			}
 			else
 			{

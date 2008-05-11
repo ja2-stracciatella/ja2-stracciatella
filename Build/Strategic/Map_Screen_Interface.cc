@@ -272,7 +272,6 @@ BOOLEAN fShowTrainingMenu = FALSE;
 BOOLEAN fShowAttributeMenu = FALSE;
 BOOLEAN fShowSquadMenu = FALSE;
 BOOLEAN fShowContractMenu = FALSE;
-BOOLEAN fShowRemoveMenu =  FALSE;
 
 BOOLEAN fRebuildMoveBox = FALSE;
 

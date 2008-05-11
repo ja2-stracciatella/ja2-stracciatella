@@ -918,7 +918,7 @@ BOOLEAN AllowedToTimeCompress( void )
 		return( FALSE );
 	}
 
-	if( fShowAssignmentMenu || fShowTrainingMenu || fShowAttributeMenu || fShowSquadMenu || fShowContractMenu || fShowRemoveMenu )
+	if (fShowAssignmentMenu || fShowTrainingMenu || fShowAttributeMenu || fShowSquadMenu || fShowContractMenu)
 	{
 		return( FALSE );
 	}

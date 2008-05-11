@@ -176,7 +176,6 @@ extern BOOLEAN fShowTrainingMenu ;
 extern BOOLEAN fShowAttributeMenu;
 extern BOOLEAN fShowSquadMenu ;
 extern BOOLEAN fShowContractMenu ;
-extern BOOLEAN fShowRemoveMenu ;
 
 extern BOOLEAN fLockOutMapScreenInterface;
 

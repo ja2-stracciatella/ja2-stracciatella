@@ -4480,19 +4480,12 @@ static void CreateDestroyMouseRegionsForRemoveMenu(void)
 
 		fShownContractMenu = FALSE;
 
-		// stop showing  menu
-		if (!fShowRemoveMenu)
-		{
-			fShowAttributeMenu  = FALSE;
-			gfRenderPBInterface = TRUE;
-		}
-
+		gfRenderPBInterface      = TRUE;
 		fMapPanelDirty           = TRUE;
 		fCharacterInfoPanelDirty = TRUE;
 		fTeamPanelDirty          = TRUE;
 		fMapScreenBottomDirty    = TRUE;
 
-		fShowRemoveMenu     = FALSE;
 		fShowAssignmentMenu = FALSE;
 
 		fCreated = FALSE;
@@ -4773,8 +4766,6 @@ static void RemoveMercMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				//dont ask why?!! )
 				fShownContractMenu = FALSE;
 				fShownAssignmentMenu = FALSE;
-				fShowRemoveMenu = FALSE;
-
 				break;
 		}
 	}
