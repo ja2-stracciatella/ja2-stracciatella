@@ -1647,17 +1647,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// IF 496 - GOTO PREVIOUS ANIMATION, OTHERWISE PAUSE ANIMATION
 					if ( pSoldier->bLife == 0 )
 					{
-
-						//HandleSoldierDeath( pSoldier );
-
 						// If guy is now dead, and we have not played death sound before, play
-						if ( pSoldier->bLife == 0 && !pSoldier->fDeadSoundPlayed  )
+						if (!pSoldier->fDeadSoundPlayed &&
+								pSoldier->usAnimState != JFK_HITDEATH)
 						{
-							if ( pSoldier->usAnimState != JFK_HITDEATH )
-							{
-								DoMercBattleSound( pSoldier, BATTLE_SOUND_DIE1 );
-  							pSoldier->fDeadSoundPlayed = TRUE;
-							}
+							DoMercBattleSound( pSoldier, BATTLE_SOUND_DIE1 );
+							pSoldier->fDeadSoundPlayed = TRUE;
 						}
 
 						if ( gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] )
