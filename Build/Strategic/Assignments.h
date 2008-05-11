@@ -169,7 +169,7 @@ void HandleShadingOfLinesForAssignmentMenus( void );
 void CreateDestroyScreenMaskForAssignmentAndContractMenus( void );
 
 
-BOOLEAN CreateDestroyAssignmentPopUpBoxes( void );
+void CreateDestroyAssignmentPopUpBoxes();
 void SetSoldierAssignmentHospital(SOLDIERTYPE*);
 void SetSoldierAssignmentRepair(SOLDIERTYPE*, BOOLEAN sam, BOOLEAN robot, INT8 vehicle_id);
 

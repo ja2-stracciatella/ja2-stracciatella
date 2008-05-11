@@ -5685,30 +5685,30 @@ void CreateMercRemoveAssignBox()
 }
 
 
-BOOLEAN CreateDestroyAssignmentPopUpBoxes( void )
+void CreateDestroyAssignmentPopUpBoxes()
 {
-	static BOOLEAN fCreated= FALSE;
+	static BOOLEAN fCreated = FALSE;
 
-	if (fShowAssignmentMenu && !fCreated)
+	if (!fCreated && fShowAssignmentMenu)
 	{
 		guiPOPUPBORDERS = AddVideoObjectFromFile("INTERFACE/popup.sti");
-		CHECKF(guiPOPUPBORDERS != NO_VOBJECT);
+		CHECKV(guiPOPUPBORDERS != NO_VOBJECT);
 		guiPOPUPTEX = AddVideoSurfaceFromFile("INTERFACE/popupbackground.pcx");
-		CHECKF(guiPOPUPTEX != NO_VSURFACE);
+		CHECKV(guiPOPUPTEX != NO_VSURFACE);
 
 		// these boxes are always created while in mapscreen...
-		CreateEPCBox( );
-		CreateAssignmentsBox( );
-		CreateTrainingBox( );
+		CreateEPCBox();
+		CreateAssignmentsBox();
+		CreateTrainingBox();
 		CreateAttributeBox();
 		CreateVehicleBox();
-		CreateRepairBox( );
+		CreateRepairBox();
 
-		UpdateMapScreenAssignmentPositions( );
+		UpdateMapScreenAssignmentPositions();
 
 		fCreated = TRUE;
 	}
-	else if (!fShowAssignmentMenu && fCreated)
+	else if (fCreated && !fShowAssignmentMenu)
 	{
 		DeleteVideoObject(guiPOPUPBORDERS);
 		DeleteVideoSurface(guiPOPUPTEX);
@@ -5731,12 +5731,11 @@ BOOLEAN CreateDestroyAssignmentPopUpBoxes( void )
 		RemoveBox(ghTrainingBox);
 		ghTrainingBox = NO_POPUP_BOX;
 
-		fCreated = FALSE;
-		gfIgnoreScrolling = FALSE;
-		RebuildCurrentSquad( );
-	}
+		RebuildCurrentSquad();
 
-	return( TRUE );
+		gfIgnoreScrolling = FALSE;
+		fCreated          = FALSE;
+	}
 }
 
 
