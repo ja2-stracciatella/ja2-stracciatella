@@ -6371,7 +6371,7 @@ static void HandleShadingOfLinesForContractMenu(void)
 	if (!fShowContractMenu) return;
 
 	PopUpBox* const box = ghContractBox;
-	if (box == NO_POPUP_BOX); return;
+	if (box == NO_POPUP_BOX) return;
 
 	// error check, return if not a valid character
 	if (bSelectedContractChar == -1) return;
