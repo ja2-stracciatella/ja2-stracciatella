@@ -6931,61 +6931,39 @@ static void NotifyPlayerOfAssignmentAttemptFailure(INT8 bAssignment)
 }
 
 
-BOOLEAN HandleSelectedMercsBeingPutAsleep( BOOLEAN fWakeUp, BOOLEAN fDisplayWarning )
+BOOLEAN HandleSelectedMercsBeingPutAsleep(BOOLEAN const wake_up, BOOLEAN const display_warning)
 {
-	BOOLEAN fSuccess = TRUE;
-	UINT8 ubNumberOfSelectedSoldiers = 0;
-
-	const SOLDIERTYPE* const sel_char = GetSelectedInfoChar();
+	BOOLEAN                  success = TRUE;
+	const SOLDIERTYPE* const sel     = GetSelectedInfoChar();
 	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
 	{
 		// if the current character in the list is valid...then grab soldier pointer for the character
-		SOLDIERTYPE* const pSoldier = c->merc;
-		if (pSoldier == sel_char) continue;
+		SOLDIERTYPE* const s = c->merc;
+		if (s == sel) continue;
 
 		// don't try to put vehicles, robots, to sleep if they're also selected
-		if (!CanChangeSleepStatusForSoldier(pSoldier)) continue;
+		if (!CanChangeSleepStatusForSoldier(s)) continue;
 
-		// up the total number of soldiers
-		ubNumberOfSelectedSoldiers++;
-
-		if (fWakeUp)
+		if (wake_up)
 		{
-			// try to wake merc up
-			if (!SetMercAwake(pSoldier, FALSE, FALSE)) fSuccess = FALSE;
+			if (!SetMercAwake(s, FALSE, FALSE)) success = FALSE;
 		}
 		else
 		{
-			// set this soldier asleep
-			if (!SetMercAsleep(pSoldier, FALSE)) fSuccess = FALSE;
+			if (!SetMercAsleep(s, FALSE)) success = FALSE;
 		}
 	}
 
 	// if there was anyone processed, check for success and inform player of failure
-	if( ubNumberOfSelectedSoldiers )
+	if (!success && display_warning)
 	{
-		if (!fSuccess)
-		{
-			const wchar_t* WarningMsg;
-			if( fWakeUp )
-			{
-				// inform player not everyone could be woke up
-				WarningMsg = pMapErrorString[27];
-			}
-			else
-			{
-				// inform player not everyone could be put to sleep
-				WarningMsg = pMapErrorString[26];
-			}
-
-			if( fDisplayWarning )
-			{
-				DoScreenIndependantMessageBox(WarningMsg, MSG_BOX_FLAG_OK, NULL);
-			}
-		}
+		// inform player not everyone could be woken up/put to sleep
+		wchar_t const* const warning = wake_up ?
+			pMapErrorString[27] : pMapErrorString[26];
+		DoScreenIndependantMessageBox(warning, MSG_BOX_FLAG_OK, NULL);
 	}
 
-	return( fSuccess );
+	return success;
 }
 
 
