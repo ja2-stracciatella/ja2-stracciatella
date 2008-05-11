@@ -5581,7 +5581,7 @@ void CreateContractBox(const SOLDIERTYPE* const s)
 			}
 
 			wchar_t sDollarString[50];
-			SPrintMoney(sDollarString, p ? p->sSalary : 0);
+			SPrintMoney(sDollarString, salary);
 			wchar_t sString[50];
 			swprintf(sString, lengthof(sString), L"%ls ( %ls )", pContractStrings[i], sDollarString);
 			AddMonoString(box, sString);
