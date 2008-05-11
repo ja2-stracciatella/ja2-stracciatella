@@ -3216,22 +3216,21 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 
 static void HandleShadingOfLinesForVehicleMenu(void)
 {
-	SOLDIERTYPE *pSoldier = NULL;
-	UINT32 uiMenuLine = 0;
+	if (!fShowVehicleMenu) return;
 
-	if (!fShowVehicleMenu || ghVehicleBox == NO_POPUP_BOX) return;
+	PopUpBox* const box = ghVehicleBox;
+	if (box == NO_POPUP_BOX) return;
 
-	pSoldier = GetSelectedAssignSoldier( FALSE );
-
-	// run through list of vehicles
+	SOLDIERTYPE const * const s    = GetSelectedAssignSoldier(FALSE);
+	UINT32                    line = 0;
 	CFOR_ALL_VEHICLES(v)
 	{
 		// inaccessible vehicles aren't listed at all!
-		if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) continue;
+		if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 
 		PopUpShade const shade = IsEnoughSpaceInVehicle(v) ?
 			POPUP_SHADE_NONE : POPUP_SHADE_SECONDARY;
-		ShadeStringInBox(ghVehicleBox, uiMenuLine++, shade);
+		ShadeStringInBox(box, line++, shade);
 	}
 }
 
