@@ -6161,24 +6161,15 @@ static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE const* const pSoldier, INT3
 static SOLDIERTYPE* GetRobotSoldier(void);
 
 
-static BOOLEAN IsRobotInThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+static BOOLEAN IsRobotInThisSector(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
 {
-	SOLDIERTYPE *pSoldier;
-
-	pSoldier = GetRobotSoldier( );
-
-	if ( pSoldier != NULL )
-	{
-		if (pSoldier->sSectorX == sSectorX &&
-				pSoldier->sSectorY == sSectorY &&
-				pSoldier->bSectorZ == bSectorZ &&
-				!pSoldier->fBetweenSectors)
-		{
-			return( TRUE );
-		}
-	}
-
-	return( FALSE );
+	SOLDIERTYPE const* const s = GetRobotSoldier();
+	return
+		s                       &&
+		s->sSectorX == sSectorX &&
+		s->sSectorY == sSectorY &&
+		s->bSectorZ == bSectorZ &&
+		!s->fBetweenSectors;
 }
 
 
