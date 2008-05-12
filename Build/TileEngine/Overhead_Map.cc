@@ -284,8 +284,7 @@ static void DisplayMercNameInOverhead(const SOLDIERTYPE* const pSoldier)
 	FindFontCenterCoordinates(sWorldScreenX, sWorldScreenY, 1, 1, pSoldier->name, TINYFONT1, &sX, &sY);
 
 	// OK, selected guy is here...
-	gprintfdirty( sX, sY, pSoldier->name );
-	mprintf( sX, sY, pSoldier->name );
+	GDirtyPrint(sX, sY, pSoldier->name);
 }
 
 

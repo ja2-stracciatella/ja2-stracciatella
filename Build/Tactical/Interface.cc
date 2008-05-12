@@ -1272,24 +1272,21 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 		{
 			const wchar_t* Catch = TacticalStr[CATCH_STR];
 			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Catch, TINYFONT1, &sX, &sY);
-			gprintfdirty(sX, sY, Catch);
-			mprintf(sX, sY, Catch);
+			GDirtyPrint(sX, sY, Catch);
       fRaiseName = TRUE;
 		}
 		else if (gfUIMouseOnValidCatcher == 3 && pSoldier == gUIValidCatcher)
 		{
 			const wchar_t* Reload = TacticalStr[RELOAD_STR];
 			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Reload, TINYFONT1, &sX, &sY);
-			gprintfdirty(sX, sY, Reload);
-			mprintf(sX, sY, Reload);
+			GDirtyPrint(sX, sY, Reload);
       fRaiseName = TRUE;
 		}
 		else if (gfUIMouseOnValidCatcher == 4 && pSoldier == gUIValidCatcher)
 		{
 			const wchar_t* Pass = pMessageStrings[MSG_PASS];
 			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Pass, TINYFONT1, &sX, &sY);
-			gprintfdirty(sX, sY, Pass);
-			mprintf(sX, sY, Pass);
+			GDirtyPrint(sX, sY, Pass);
       fRaiseName = TRUE;
 		}
     else if ( pSoldier->bAssignment >= ON_DUTY )
@@ -1297,16 +1294,14 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 			SetFontForeground( FONT_YELLOW );
 			swprintf( NameStr, lengthof(NameStr), L"(%ls)", pAssignmentStrings[ pSoldier->bAssignment ] );
 			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, NameStr, TINYFONT1, &sX, &sY);
-			gprintfdirty( sX, sY, NameStr );
-			mprintf( sX, sY, NameStr );
+			GDirtyPrint(sX, sY, NameStr);
       fRaiseName = TRUE;
     }
     else if ( pSoldier->bTeam == gbPlayerNum &&  pSoldier->bAssignment < ON_DUTY && pSoldier->bAssignment != CurrentSquad() && !(  pSoldier->uiStatusFlags & SOLDIER_MULTI_SELECTED ) )
     {
 			swprintf( NameStr, lengthof(NameStr), gzLateLocalizedString[ 34 ], ( pSoldier->bAssignment + 1 ) );
 			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, NameStr, TINYFONT1, &sX, &sY);
-			gprintfdirty( sX, sY, NameStr );
-			mprintf( sX, sY, NameStr );
+			GDirtyPrint(sX, sY, NameStr);
       fRaiseName = TRUE;
     }
 
@@ -1333,8 +1328,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
     {
 			const wchar_t* Name = pSoldier->name;
 			FindFontCenterCoordinates(sXPos, fRaiseName ? sYPos - 10 : sYPos, 80, 1, Name, TINYFONT1, &sX, &sY);
-			gprintfdirty(sX, sY, Name);
-			mprintf(sX, sY, Name);
+			GDirtyPrint(sX, sY, Name);
     }
 
 		if ( pSoldier->ubProfile < FIRST_RPC || RPC_RECRUITED( pSoldier ) || AM_AN_EPC( pSoldier ) || ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
@@ -1378,8 +1372,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 
 				const wchar_t* Give = TacticalStr[GIVE_STR];
 				FindFontCenterCoordinates(sXPos, sYPos + 10, 80, 1, Give, TINYFONT1, &sX, &sY);
-				gprintfdirty(sX, sY, Give);
-				mprintf(sX, sY, Give);
+				GDirtyPrint(sX, sY, Give);
 			}
 			else
 			{
@@ -1391,8 +1384,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 				pStr = GetSoldierHealthString( pSoldier );
 
 				FindFontCenterCoordinates(sXPos, sYPos + 10, 80, 1, pStr, TINYFONT1, &sX, &sY);
-				gprintfdirty( sX, sY, pStr );
-				mprintf( sX, sY, pStr );
+				GDirtyPrint(sX, sY, pStr);
 			}
 		}
 	}
@@ -1407,8 +1399,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 
 			const wchar_t* Roof = gzLateLocalizedString[15];
 			FindFontCenterCoordinates(sXPos, sYPos + 10, 80, 1, Roof, TINYFONT1, &sX, &sY);
-			gprintfdirty(sX, sY, Roof);
-			mprintf(sX, sY, Roof);
+			GDirtyPrint(sX, sY, Roof);
     }
 
 		pStr = GetSoldierHealthString( pSoldier );
@@ -1418,11 +1409,8 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const pSoldier)
 		SetFontForeground( FONT_MCOLOR_DKRED );
 
 		FindFontCenterCoordinates(sXPos, sYPos, 80, 1, pStr, TINYFONT1, &sX, &sY);
-		gprintfdirty( sX, sY, pStr );
-		mprintf( sX, sY, pStr );
-
+		GDirtyPrint(sX, sY, pStr);
 	}
-
 }
 
 

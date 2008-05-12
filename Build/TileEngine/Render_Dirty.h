@@ -81,11 +81,11 @@ void             EmptyBackgroundRects(void);
 void             RestoreExternBackgroundRectGivenID(const BACKGROUND_SAVE*);
 
 
-/* Dirties a single-frame rect exactly the size needed to save the background
- * for a given call to gprintf. Note that this must be called before the
- * backgrounds are saved, and before the actual call to gprintf that writes to
- * the video buffer. */
-void gprintfdirty(INT16 x, INT16 y, wchar_t const* fmt, ...);
+void GDirtyPrint(INT16 x, INT16 y, wchar_t const* str);
+void GDirtyPrintF(INT16 x, INT16 y, wchar_t const* fmt, ...);
+
+void GPrintDirty(INT16 x, INT16 y, wchar_t const* str);
+void GPrintDirtyF(INT16 x, INT16 y, wchar_t const* fmt, ...);
 
 UINT16 gprintfinvalidate(INT16 x, INT16 y, const wchar_t* pFontString, ...);
 

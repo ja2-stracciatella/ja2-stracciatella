@@ -418,22 +418,54 @@ void RestoreExternBackgroundRectGivenID(const BACKGROUND_SAVE* const b)
 }
 
 
-void gprintfdirty(INT16 const x, INT16 const y, wchar_t const* const fmt, ...)
+/* Dirties a single-frame rect exactly the size needed to save the background
+ * for a given call to gprintf. Note that this must be called before the
+ * backgrounds are saved, and before the actual call to gprintf that writes to
+ * the video buffer. */
+static void GDirty(INT16 const x, INT16 const y, wchar_t const* const str)
 {
-	Assert(fmt != NULL);
-
-	wchar_t	string[512];
-	va_list argptr;
-	va_start(argptr, fmt);
-	vswprintf(string, lengthof(string), fmt, argptr);
-	va_end(argptr);
-
-	UINT16 const length = StringPixLength(string, FontDefault);
+	UINT16 const length = StringPixLength(str, FontDefault);
 	if (length > 0)
 	{
 		UINT16 const height = GetFontHeight(FontDefault);
 		RegisterBackgroundRectSingleFilled(x, y, x + length, y + height);
 	}
+}
+
+
+void GDirtyPrint(INT16 const x, INT16 const y, wchar_t const* const str) // XXX TODO0017
+{
+	GDirty( x, y, str);
+	mprintf(x, y, L"%ls", str);
+}
+
+
+void GDirtyPrintF(INT16 const x, INT16 const y, wchar_t const* const fmt, ...)
+{
+	wchar_t	str[512];
+	va_list argptr;
+	va_start(argptr, fmt);
+	vswprintf(str, lengthof(str), fmt, argptr);
+	va_end(argptr);
+	GDirtyPrint(x, y, str);
+}
+
+
+void GPrintDirty(INT16 const x, INT16 const y, wchar_t const* const str) // XXX TODO0017
+{
+	mprintf(x, y, L"%ls", str);
+	GDirty( x, y, str);
+}
+
+
+void GPrintDirtyF(INT16 const x, INT16 const y, wchar_t const* const fmt, ...)
+{
+	wchar_t	str[512];
+	va_list argptr;
+	va_start(argptr, fmt);
+	vswprintf(str, lengthof(str), fmt, argptr);
+	va_end(argptr);
+	GDirtyPrint(x, y, str);
 }
 
 

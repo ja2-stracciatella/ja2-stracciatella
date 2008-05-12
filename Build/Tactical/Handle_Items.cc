@@ -2466,23 +2466,21 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT8 bZLevel, cons
 
 		if (display_count++ == NUM_ITEMS_LISTED)
 		{
-			const wchar_t* const more = TacticalStr[ITEMPOOL_POPUP_MORE_STR];
-			gprintfdirty(x, y, more);
-			mprintf(     x, y, more);
+			GDirtyPrint(x, y, TacticalStr[ITEMPOOL_POPUP_MORE_STR]);
 			break;
 		}
 
-		const WORLDITEM* const wi  = GetWorldItem(i->iItemIndex);
-		const wchar_t*         txt = ShortItemNames[wi->o.usItem];
-		wchar_t                buf[100];
+		WORLDITEM const* const wi  = GetWorldItem(i->iItemIndex);
+		wchar_t   const* const txt = ShortItemNames[wi->o.usItem];
 		if (wi->o.ubNumberOfObjects > 1)
 		{
-			swprintf(buf, lengthof(buf), L"%ls (%d)", txt, wi->o.ubNumberOfObjects);
-			txt = buf;
+			GDirtyPrintF(x, y, L"%ls (%d)", txt, wi->o.ubNumberOfObjects);
+		}
+		else
+		{
+			GDirtyPrint(x, y, txt);
 		}
 
-		gprintfdirty(x, y, txt);
-		mprintf(     x, y, txt);
 		y += dy;
 	}
 }

@@ -525,8 +525,7 @@ void RenderTopmostTacticalInterface( )
 		SetFont( LARGEFONT1 );
 		SetFontBackground( FONT_MCOLOR_BLACK );
 		SetFontForeground( FONT_MCOLOR_WHITE );
-		gprintfdirty( 0, 300, L"OPPONENT %d DEADLOCKED - 'Q' TO DEBUG, <ALT><ENTER> END OPP TURN", gUIDeadlockedSoldier  );
-		mprintf( 0, 300, L"OPPONENT %d DEADLOCKED - 'Q' TO DEBUG, <ALT><ENTER> END OPP TURN", gUIDeadlockedSoldier );
+		GDirtyPrintF(0, 300, L"OPPONENT %d DEADLOCKED - 'Q' TO DEBUG, <ALT><ENTER> END OPP TURN", gUIDeadlockedSoldier);
 	}
 #endif
 
@@ -586,9 +585,7 @@ void RenderTopmostTacticalInterface( )
 				SetFont( TINYFONT1 );
 				SetFontBackground( FONT_MCOLOR_BLACK );
 				SetFontForeground( FONT_MCOLOR_WHITE );
-
-				gprintfdirty( sDamageX, sDamageY, L"-%d", pSoldier->sDamage );
-				mprintf( sDamageX, sDamageY, L"-%d", pSoldier->sDamage );
+				GDirtyPrintF(sDamageX, sDamageY, L"-%d", pSoldier->sDamage);
 			}
 		}
 	}

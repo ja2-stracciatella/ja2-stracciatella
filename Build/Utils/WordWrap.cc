@@ -265,8 +265,14 @@ void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 
 	if( ulFlags & TEXT_SHADOWED )
 		ShadowText( FRAME_BUFFER, pStr, ulFont, (UINT16)(usPosX-1), (UINT16)(usPosY-1 ) );
 
-	if (ulFlags & MARK_DIRTY) gprintfdirty(usPosX, usPosY, L"%ls", pStr);
-	mprintf(usPosX, usPosY, L"%ls", pStr);
+	if (ulFlags & MARK_DIRTY)
+	{
+		GPrintDirty(usPosX, usPosY, pStr);
+	}
+	else
+	{
+		mprintf(usPosX, usPosY, L"%ls", pStr);
+	}
 
 	if( ulFlags & INVALIDATE_TEXT )
 	{

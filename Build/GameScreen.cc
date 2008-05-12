@@ -658,9 +658,7 @@ UINT32  MainGameScreenHandle(void)
 		SetFont( MILITARYFONT1 );
 		SetFontBackground( FONT_MCOLOR_BLACK );
 		SetFontForeground( FONT_MCOLOR_LTGREEN );
-
-		mprintf( 0, 0, L"IN CONVERSATION %d", giNPCReferenceCount );
-		gprintfdirty( 0, 0, L"IN CONVERSATION %d", giNPCReferenceCount );
+		GPrintDirtyF(0, 0, L"IN CONVERSATION %d", giNPCReferenceCount);
 	}
 
 #ifdef JA2BETAVERSION
@@ -670,9 +668,7 @@ UINT32  MainGameScreenHandle(void)
 		SetFont( MILITARYFONT1 );
 		SetFontBackground( FONT_MCOLOR_BLACK );
 		SetFontForeground( FONT_MCOLOR_LTGREEN );
-
-		mprintf( 0, 10, L"Game Clock Paused" );
-		gprintfdirty( 0, 10, L"Game Clock Paused" );
+		GPrintDirty(0, 10, L"Game Clock Paused");
 	}
 
 #endif
@@ -688,8 +684,7 @@ UINT32  MainGameScreenHandle(void)
 		SetFontBackground( FONT_MCOLOR_BLACK );
 		SetFontForeground( FONT_MCOLOR_LTGREEN );
 
-		mprintf( 0, 15, L"Attacker Busy Count: %d", gTacticalStatus.ubAttackBusyCount );
-		gprintfdirty( 0, 15, L"Attacker Busy Count: %d", gTacticalStatus.ubAttackBusyCount );
+		GPrintDirtyF(0, 15, L"Attacker Busy Count: %d", gTacticalStatus.ubAttackBusyCount);
 
 		curr = gpScheduleList;
 		iSchedules = 0;
@@ -699,8 +694,7 @@ UINT32  MainGameScreenHandle(void)
 			curr = curr->next;
 		}
 
-		mprintf( 0, 25, L"Schedules: %d", iSchedules );
-		gprintfdirty( 0, 25, L"Schedules: %d", iSchedules );
+		GPrintDirtyF(0, 25, L"Schedules: %d", iSchedules);
 	}
 #endif
 

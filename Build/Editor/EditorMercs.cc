@@ -2534,8 +2534,7 @@ void RenderMercStrings()
 				FindFontCenterCoordinates(sXPos, sYPos, 80, 1, pSoldier->name, TINYFONT1, &sX, &sY);
 				if( sY < 352 )
 				{
-					gprintfdirty( sX, sY, pSoldier->name );
-					mprintf( sX, sY, pSoldier->name );
+					GDirtyPrint(sX, sY, pSoldier->name);
 				}
 				sYPos += 10;
 
@@ -2548,8 +2547,7 @@ void RenderMercStrings()
 				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, pStr, TINYFONT1, &sX, &sY );
 				if( sY < 352 )
 				{
-					gprintfdirty( sX, sY, pStr );
-					mprintf( sX, sY, pStr );
+					GDirtyPrint(sX, sY, pStr);
 				}
 				sYPos += 10;
 
@@ -2558,8 +2556,7 @@ void RenderMercStrings()
 				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, str, TINYFONT1, &sX, &sY );
 				if( sY < 352 )
 				{
-					gprintfdirty( sX, sY, str );
-					mprintf( sX, sY, str );
+					GDirtyPrint(sX, sY, str);
 				}
 				sYPos += 10;
 			}
@@ -2574,8 +2571,7 @@ void RenderMercStrings()
 				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, pStr, TINYFONT1, &sX, &sY );
 				if( sY < 352 )
 				{
-					gprintfdirty( sX, sY, pStr );
-					mprintf( sX, sY, pStr );
+					GDirtyPrint(sX, sY, pStr);
 				}
 				sYPos += 10;
 
@@ -2584,8 +2580,7 @@ void RenderMercStrings()
 				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, str, TINYFONT1, &sX, &sY );
 				if( sY < 352 )
 				{
-					gprintfdirty( sX, sY, str );
-					mprintf( sX, sY, str );
+					GDirtyPrint(sX, sY, str);
 				}
 				sYPos += 10;
 			}
@@ -2601,8 +2596,7 @@ void RenderMercStrings()
 					FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Msg, TINYFONT1, &sX, &sY);
 					if( sY < 352 )
 					{
-						gprintfdirty(sX, sY, Msg);
-						mprintf(sX, sY, Msg);
+						GDirtyPrint(sX, sY, Msg);
 					}
 					sYPos += 10;
 				}
@@ -2617,8 +2611,7 @@ void RenderMercStrings()
 				FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Msg, TINYFONT1, &sX, &sY);
 				if( sY < 352 )
 				{
-					gprintfdirty(sX, sY, Msg);
-					mprintf(sX, sY, Msg);
+					GDirtyPrint(sX, sY, Msg);
 				}
 				sYPos += 10;
 			}

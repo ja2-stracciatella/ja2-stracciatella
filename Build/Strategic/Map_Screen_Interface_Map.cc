@@ -862,9 +862,7 @@ static void DrawTownLabels(const wchar_t* pString, const wchar_t* pStringA, UINT
 	usFirstX -= StringPixLength( pString, MAP_FONT) / 2;
 
 	// print first string
-	gprintfdirty(usFirstX, usFirstY, L"%ls", pString);
-	mprintf(usFirstX, usFirstY, L"%ls", pString);
-
+	GDirtyPrint(usFirstX, usFirstY, pString);
 
 	// calculate starting coordinates for the second string
 	FindFontCenterCoordinates(usFirstX, usFirstY, StringPixLength(pString, MAP_FONT), 0, pStringA, MAP_FONT, &sSecondX, &sSecondY);
@@ -880,8 +878,7 @@ static void DrawTownLabels(const wchar_t* pString, const wchar_t* pStringA, UINT
 
 	// print second string beneath first
 	sSecondY = usFirstY + GetFontHeight(MAP_FONT);
-	gprintfdirty(sSecondX, sSecondY, L"%ls", pStringA);
-	mprintf(sSecondX, sSecondY, L"%ls", pStringA);
+	GDirtyPrint(sSecondX, sSecondY, pStringA);
 
 	// restore clip blits
 	RestoreClipRegionToFullScreen( );
@@ -5593,8 +5590,7 @@ static void ShowSAMSitesOnStrategicMap(void)
 			SetFontBackground(FONT_MCOLOR_BLACK);
 
 			// draw the text
-			gprintfdirty(sX, sY, SAMSite);
-			mprintf(sX, sY, SAMSite);
+			GDirtyPrint(sX, sY, SAMSite);
 
 			// restore clip blits
 			RestoreClipRegionToFullScreen( );
@@ -5745,9 +5741,7 @@ static void ShowItemsOnMap(void)
 					INT16 usYPos;
 					FindFontCenterCoordinates( sXCorner, sYCorner, MAP_GRID_X, MAP_GRID_Y, sString, MAP_FONT, &usXPos, &usYPos );
 	//				sXPos -= StringPixLength( sString, MAP_FONT ) / 2;
-
-					gprintfdirty( usXPos, usYPos, sString );
-					mprintf( usXPos, usYPos, sString );
+					GDirtyPrint(usXPos, usYPos, sString);
 				}
 			}
 		}

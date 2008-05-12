@@ -2572,8 +2572,7 @@ static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, UINT32 ui
 {
 	// draw monochrome string
 	SetFont(uiFont);
-	gprintfdirty(uiX,uiY,pString);
-	mprintf(uiX,uiY,pString);
+	GDirtyPrint(uiX, uiY, pString);
 }
 
 
