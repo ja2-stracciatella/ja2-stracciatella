@@ -257,7 +257,7 @@ static void DrawHistoryTitleText(void)
   SetFontShadow(DEFAULT_SHADOW);
 
 	// draw the pages title
-	mprintf(TITLE_X, TITLE_Y, pHistoryTitle);
+	MPrint(TITLE_X, TITLE_Y, pHistoryTitle);
 }
 
 
@@ -410,15 +410,15 @@ static void DisplayHistoryListHeaders(void)
 
   // the date header
   FindFontCenterCoordinates(RECORD_DATE_X + 5,0,RECORD_DATE_WIDTH,0, pHistoryHeaders[0], HISTORY_TEXT_FONT,&usX, &usY);
-	mprintf(usX, RECORD_HEADER_Y, pHistoryHeaders[0]);
+	MPrint(usX, RECORD_HEADER_Y, pHistoryHeaders[0]);
 
 	// the date header
   FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH + 5,0,RECORD_LOCATION_WIDTH,0, pHistoryHeaders[ 3 ], HISTORY_TEXT_FONT,&usX, &usY);
-	mprintf(usX, RECORD_HEADER_Y, pHistoryHeaders[3]);
+	MPrint(usX, RECORD_HEADER_Y, pHistoryHeaders[3]);
 
 	// event header
   FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH + RECORD_LOCATION_WIDTH + 5,0,RECORD_LOCATION_WIDTH,0, pHistoryHeaders[ 3 ], HISTORY_TEXT_FONT,&usX, &usY);
-	mprintf(usX, RECORD_HEADER_Y, pHistoryHeaders[4]);
+	MPrint(usX, RECORD_HEADER_Y, pHistoryHeaders[4]);
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
 }
@@ -472,25 +472,25 @@ static void DrawHistoryRecordsText(void)
 		INT16 usX;
 		INT16 usY;
 		FindFontCenterCoordinates(RECORD_DATE_X + 5, 0, RECORD_DATE_WIDTH, 0, sString, HISTORY_TEXT_FONT, &usX, &usY);
-		mprintf(usX, y, sString);
+		MPrint(usX, y, sString);
 
 		if (h->sSectorX == -1 || h->sSectorY == -1)
 		{
 			// no location
 			FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH, 0, RECORD_LOCATION_WIDTH + 10, 0, pHistoryLocations, HISTORY_TEXT_FONT, &sX, &sY);
-		  mprintf(sX, y, pHistoryLocations);
+		  MPrint(sX, y, pHistoryLocations);
     }
 		else
 		{
 			GetSectorIDString(h->sSectorX, h->sSectorY, h->bSectorZ, sString, lengthof(sString), TRUE);
 			FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH, 0, RECORD_LOCATION_WIDTH + 10, 0,  sString, HISTORY_TEXT_FONT, &sX, &sY);
 			ReduceStringLength(sString, lengthof(sString), RECORD_LOCATION_WIDTH + 10, HISTORY_TEXT_FONT);
-			mprintf(sX, y, sString);
+			MPrint(sX, y, sString);
 		}
 
 		// the actual history text
 		ProcessHistoryTransactionString(sString, lengthof(sString), h);
-		mprintf(RECORD_DATE_X + RECORD_LOCATION_WIDTH + RECORD_DATE_WIDTH + 15, y, sString);
+		MPrint(RECORD_DATE_X + RECORD_LOCATION_WIDTH + RECORD_DATE_WIDTH + 15, y, sString);
 
 		if (++entry_count == NUM_RECORDS_PER_PAGE) break;
 	}

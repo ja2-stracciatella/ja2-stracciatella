@@ -1511,7 +1511,7 @@ static void RenderAutoResolve(void)
 
 	xp = gpAR->sCenterStartX + 70 - StringPixLength(EncounterType, FONT10ARIALBOLD) / 2;
 	yp = gpAR->Rect.iTop + 15;
-	mprintf(xp, yp, EncounterType);
+	MPrint(xp, yp, EncounterType);
 
 	SetFont( FONT10ARIAL );
 	SetFontForeground( FONT_GRAY2 );
@@ -1520,7 +1520,7 @@ static void RenderAutoResolve(void)
 	GetSectorIDString( gpAR->ubSectorX, gpAR->ubSectorY, 0, str, lengthof(str), TRUE );
 	xp = gpAR->sCenterStartX + 70 - StringPixLength( str, FONT10ARIAL )/2;
 	yp += 11;
-	mprintf( xp, yp, str );
+	MPrint(xp, yp, str);
 
 	//Display the remaining forces
 	ubGood = (UINT8)(gpAR->ubAliveMercs + gpAR->ubAliveCivs);
@@ -1543,14 +1543,11 @@ static void RenderAutoResolve(void)
 
 	xp = gpAR->sCenterStartX + 70 - StringPixLength( str, FONT14ARIAL )/2;
 	yp += 11;
-	mprintf( xp, yp, str );
+	MPrint(xp, yp, str);
 
-	#ifdef JA2BETAVERSION
-		if( gpAR->fAllowCapture )
-		{
-			mprintf( 2, 2, L"Enemy capture enabled." );
-		}
-	#endif
+#ifdef JA2BETAVERSION
+	if (gpAR->fAllowCapture) MPrint(2, 2, L"Enemy capture enabled.");
+#endif
 
 	if( gpAR->fPendingSurrender )
 	{
@@ -1680,7 +1677,7 @@ static void RenderAutoResolve(void)
 			BltVideoObject( FRAME_BUFFER, gpAR->iIndent, 0, xp, yp);
 			xp = gpAR->sCenterStartX + 70 - StringPixLength(BattleResult, BLOCKFONT2) / 2;
 			yp = 227 + gpAR->bVerticalOffset;
-			mprintf(xp, yp, BattleResult);
+			MPrint(xp, yp, BattleResult);
 
 			//Render the total battle time elapsed.
 			SetFont( FONT10ARIAL );
@@ -1693,7 +1690,7 @@ static void RenderAutoResolve(void)
 			xp = gpAR->sCenterStartX + 70 - StringPixLength( str, FONT10ARIAL )/2;
 			yp = 290 + gpAR->bVerticalOffset;
 			SetFontForeground( FONT_YELLOW );
-			mprintf( xp, yp, str );
+			MPrint(xp, yp, str);
 	}
 
 	MarkButtonsDirty();
@@ -3083,13 +3080,13 @@ static void RenderSoldierCellHealth(SOLDIERCELL* pCell)
 			const wchar_t* Retreat = gpStrategicString[STR_AR_MERC_RETREAT];
 			xp = pCell->xp + 25 - StringPixLength(Retreat, SMALLCOMPFONT) / 2;
 			yp = pCell->yp + 12;
-			mprintf(xp, yp, Retreat);
+			MPrint(xp, yp, Retreat);
 		}
 	}
 	SetFontForeground( (UINT8)usColor );
 	xp = pCell->xp + 25 - StringPixLength( pStr, SMALLCOMPFONT ) / 2;
 	yp = pCell->yp + 33;
-	mprintf( xp, yp, pStr );
+	MPrint(xp, yp, pStr);
 }
 
 
@@ -3372,7 +3369,7 @@ static void DrawDebugText(SOLDIERCELL* pCell)
 	if( pCell->uiFlags & CELL_TEAMLEADER )
 	{
 		//debug str
-		mprintf( xp, yp, L"LEADER" );
+		MPrint(xp, yp, L"LEADER");
 		yp += 9;
 	}
 	mprintf( xp, yp, L"AT: %d", pCell->usAttack );
@@ -3387,21 +3384,21 @@ static void DrawDebugText(SOLDIERCELL* pCell)
 	if( pCell->uiFlags & CELL_FIREDATTARGET )
 	{
 		SetFontForeground( FONT_YELLOW );
-		mprintf( xp, yp, L"FIRE" );
+		MPrint(xp, yp, L"FIRE");
 		pCell->uiFlags &= ~CELL_FIREDATTARGET;
 		yp += 13;
 	}
 	if( pCell->uiFlags & CELL_DODGEDATTACK )
 	{
 		SetFontForeground( FONT_BLUE );
-		mprintf( xp, yp, L"MISS" );
+		MPrint(xp, yp, L"MISS");
 		pCell->uiFlags &= ~CELL_DODGEDATTACK;
 		yp += 13;
 	}
 	if( pCell->uiFlags & CELL_HITBYATTACKER )
 	{
 		SetFontForeground( FONT_RED );
-		mprintf( xp, yp, L"HIT" );
+		MPrint(xp, yp, L"HIT");
 		pCell->uiFlags &= ~CELL_HITBYATTACKER;
 		yp += 13;
 	}

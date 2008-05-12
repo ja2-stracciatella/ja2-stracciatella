@@ -3308,13 +3308,13 @@ void DebugSoldierPage2( )
 		ubLine = 1;
 
 		SetFontColors(COLOR1);
-		mprintf( 0, LINE_HEIGHT * ubLine, L"Land Raised:");
+		MPrint(0, LINE_HEIGHT * ubLine, L"Land Raised:");
 		SetFontColors(COLOR2);
 		mprintf( 150, LINE_HEIGHT * ubLine, L"%d", gpWorldLevelData[ usMapPos ].sHeight );
 		ubLine++;
 
 		SetFontColors(COLOR1);
-		mprintf( 0, LINE_HEIGHT * ubLine, L"Land Node:");
+		MPrint(0, LINE_HEIGHT * ubLine, L"Land Node:");
 		SetFontColors(COLOR2);
 		mprintf( 150, LINE_HEIGHT * ubLine, L"%x", gpWorldLevelData[ usMapPos ].pLandHead );
 		ubLine++;
@@ -3322,7 +3322,7 @@ void DebugSoldierPage2( )
 		if ( gpWorldLevelData[ usMapPos ].pLandHead != NULL )
 		{
 			SetFontColors(COLOR1);
-			mprintf( 0, LINE_HEIGHT * ubLine, L"Land Node:");
+			MPrint(0, LINE_HEIGHT * ubLine, L"Land Node:");
 			SetFontColors(COLOR2);
 			mprintf( 150, LINE_HEIGHT * ubLine, L"%d", gpWorldLevelData[ usMapPos ].pLandHead->usIndex );
 			ubLine++;
@@ -3331,20 +3331,20 @@ void DebugSoldierPage2( )
 
 			// Check for full tile
 			SetFontColors(COLOR1);
-			mprintf( 0, LINE_HEIGHT * ubLine, L"Full Land:");
+			MPrint(0, LINE_HEIGHT * ubLine, L"Full Land:");
 			SetFontColors(COLOR2);
 			mprintf( 150, LINE_HEIGHT * ubLine, L"%d", TileElem.ubFullTile );
 			ubLine++;
 		}
 
 		SetFontColors(COLOR1);
-		mprintf( 0, LINE_HEIGHT * ubLine, L"Land St Node:");
+		MPrint(0, LINE_HEIGHT * ubLine, L"Land St Node:");
 		SetFontColors(COLOR2);
 		mprintf( 150, LINE_HEIGHT * ubLine, L"%x", gpWorldLevelData[ usMapPos ].pLandStart );
 		ubLine++;
 
 		SetFontColors(COLOR1);
-		mprintf( 0, LINE_HEIGHT * ubLine, L"GRIDNO:");
+		MPrint(0, LINE_HEIGHT * ubLine, L"GRIDNO:");
 		SetFontColors(COLOR2);
 		mprintf( 150, LINE_HEIGHT * ubLine, L"%d", usMapPos );
 		ubLine++;
@@ -3354,7 +3354,7 @@ void DebugSoldierPage2( )
 			SetFontColors(COLOR2);
 			mprintf( 0, LINE_HEIGHT * ubLine, L"Merc: %d",  gpWorldLevelData[ usMapPos ].ubReservedSoldierID );
 			SetFontColors(COLOR2);
-			mprintf( 150, LINE_HEIGHT * ubLine, L"RESERVED MOVEMENT FLAG ON:" );
+			MPrint(150, LINE_HEIGHT * ubLine, L"RESERVED MOVEMENT FLAG ON:");
 			ubLine++;
 		}
 
@@ -3366,7 +3366,7 @@ void DebugSoldierPage2( )
 			SetFontColors(COLOR2);
 			mprintf( 0, LINE_HEIGHT * ubLine, L"Tile: %d",  pNode->usIndex );
 			SetFontColors(COLOR2);
-			mprintf( 150, LINE_HEIGHT * ubLine, L"ON INT TILE" );
+			MPrint(150, LINE_HEIGHT * ubLine, L"ON INT TILE");
 			ubLine++;
 		}
 
@@ -3376,7 +3376,7 @@ void DebugSoldierPage2( )
 			SetFontColors(COLOR2);
 			//mprintf( 0, LINE_HEIGHT * 9, L"Merc: %d",  gpWorldLevelData[ usMapPos ].ubReservedSoldierID );
 			SetFontColors(COLOR2);
-			mprintf( 150, LINE_HEIGHT * ubLine, L"REVEALED" );
+			MPrint(150, LINE_HEIGHT * ubLine, L"REVEALED");
 			ubLine++;
 		}
 
@@ -3385,7 +3385,7 @@ void DebugSoldierPage2( )
 			SetFontColors(COLOR2);
 			//mprintf( 0, LINE_HEIGHT * 9, L"Merc: %d",  gpWorldLevelData[ usMapPos ].ubReservedSoldierID );
 			SetFontColors(COLOR2);
-			mprintf( 150, LINE_HEIGHT * ubLine, L"Land Raise Start" );
+			MPrint(150, LINE_HEIGHT * ubLine, L"Land Raise Start");
 			ubLine++;
 		}
 
@@ -3394,14 +3394,14 @@ void DebugSoldierPage2( )
 			SetFontColors(COLOR2);
 			//mprintf( 0, LINE_HEIGHT * 9, L"Merc: %d",  gpWorldLevelData[ usMapPos ].ubReservedSoldierID );
 			SetFontColors(COLOR2);
-			mprintf( 150, LINE_HEIGHT * ubLine, L"Raise Land End" );
+			MPrint(150, LINE_HEIGHT * ubLine, L"Raise Land End");
 			ubLine++;
 		}
 
 		if (gubWorldRoomInfo[ usMapPos ] != NO_ROOM )
 		{
 			SetFontColors(COLOR2);
-			mprintf( 0, LINE_HEIGHT * ubLine, L"Room Number" );
+			MPrint(0, LINE_HEIGHT * ubLine, L"Room Number");
 			SetFontColors(COLOR2);
 			mprintf( 150, LINE_HEIGHT * ubLine, L"%d", gubWorldRoomInfo[ usMapPos ] );
 			ubLine++;
@@ -3410,7 +3410,7 @@ void DebugSoldierPage2( )
 		if ( gpWorldLevelData[ usMapPos ].ubExtFlags[0] & MAPELEMENT_EXT_NOBURN_STRUCT )
 		{
 			SetFontColors(COLOR2);
-			mprintf( 0, LINE_HEIGHT * ubLine, L"Don't Use Burn Through For Soldier" );
+			MPrint(0, LINE_HEIGHT * ubLine, L"Don't Use Burn Through For Soldier");
 			ubLine++;
 		}
 
@@ -3655,7 +3655,7 @@ void DebugSoldierPage3( )
 		if ( pDoorStatus == NULL )
 		{
 			SetFontColors(COLOR1);
-			mprintf( 0, LINE_HEIGHT * ubLine, L"No Door Status");
+			MPrint(0, LINE_HEIGHT * ubLine, L"No Door Status");
 			ubLine++;
 			ubLine++;
 			ubLine++;
@@ -3663,45 +3663,30 @@ void DebugSoldierPage3( )
 		else
 		{
 			SetFontColors(COLOR1);
-			mprintf( 0, LINE_HEIGHT * ubLine, L"Door Status Found:");
+			MPrint(0, LINE_HEIGHT * ubLine, L"Door Status Found:");
 			SetFontColors(COLOR2);
 			mprintf( 150, LINE_HEIGHT * ubLine, L" %d", usMapPos );
 			ubLine++;
 
 			SetFontColors(COLOR1);
-			mprintf( 0, LINE_HEIGHT * ubLine, L"Actual Status:");
+			MPrint(0, LINE_HEIGHT * ubLine, L"Actual Status:");
 			SetFontColors(COLOR2);
 
-			if ( pDoorStatus->ubFlags & DOOR_OPEN )
-			{
-				mprintf( 200, LINE_HEIGHT * ubLine, L"OPEN" );
-			}
-			else
-			{
-				mprintf( 200, LINE_HEIGHT * ubLine, L"CLOSED" );
-			}
+			wchar_t const* const door_state =
+				pDoorStatus->ubFlags & DOOR_OPEN ? L"OPEN" : L"CLOSED";
+			MPrint(200, LINE_HEIGHT * ubLine, door_state);
 			ubLine++;
 
 
 			SetFontColors(COLOR1);
-			mprintf( 0, LINE_HEIGHT * ubLine, L"Perceived Status:");
+			MPrint(0, LINE_HEIGHT * ubLine, L"Perceived Status:");
 			SetFontColors(COLOR2);
 
-			if ( pDoorStatus->ubFlags & DOOR_PERCEIVED_NOTSET )
-			{
-				mprintf( 200, LINE_HEIGHT * ubLine, L"NOT SET" );
-			}
-			else
-			{
-				if ( pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN )
-				{
-					mprintf( 200, LINE_HEIGHT * ubLine, L"OPEN" );
-				}
-				else
-				{
-					mprintf( 200, LINE_HEIGHT * ubLine, L"CLOSED" );
-				}
-			}
+			wchar_t const* const perceived_state =
+				pDoorStatus->ubFlags & DOOR_PERCEIVED_NOTSET ? L"NOT SET" :
+				pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN   ? L"OPEN"    :
+				                                               L"CLOSED";
+			MPrint(200, LINE_HEIGHT * ubLine, perceived_state);
 			ubLine++;
 		}
 
@@ -3711,23 +3696,18 @@ void DebugSoldierPage3( )
 		if ( pStructure == NULL )
 		{
 			SetFontColors(COLOR1);
-			mprintf( 0, LINE_HEIGHT * ubLine, L"No Door Struct Data");
+			MPrint(0, LINE_HEIGHT * ubLine, L"No Door Struct Data");
 			ubLine++;
 		}
 		else
 		{
 
 			SetFontColors(COLOR1);
-			mprintf( 0, LINE_HEIGHT * ubLine, L"State:");
+			MPrint(0, LINE_HEIGHT * ubLine, L"State:");
 			SetFontColors(COLOR2);
-			if ( !(pStructure->fFlags & STRUCTURE_OPEN) )
-			{
-				mprintf( 200, LINE_HEIGHT * ubLine, L"CLOSED" );
-			}
-			else
-			{
-				mprintf( 200, LINE_HEIGHT * ubLine, L"OPEN" );
-			}
+			wchar_t const* const structure_state =
+				pStructure->fFlags & STRUCTURE_OPEN ? L"OPEN" : L"CLOSED";
+			MPrint(200, LINE_HEIGHT * ubLine, structure_state);
 			ubLine++;
 		}
 	}

@@ -320,7 +320,7 @@ UINT32 LoadSaveScreenHandle(void)
 	{
 		SetFontForeground( FONT_LTRED );
 		SetFontBackground( 142 );
-	  mprintf( 226, 126, L"NO FILES IN /MAPS DIRECTORY" );
+	  MPrint(226, 126, L"NO FILES IN /MAPS DIRECTORY");
 	}
 	else for(x=iTopFileShown;x<(iTopFileShown+8) && x<iTotalFiles && FListNode != NULL; x++)
 	{
@@ -563,11 +563,11 @@ static void DrawFileDialog(void)
 	SetFontForeground( FONT_LTKHAKI );
 	SetFontShadow( FONT_DKKHAKI );
 	SetFontBackground( FONT_BLACK );
-	mprintf( 183, 217, L"Filename" );
+	MPrint(183, 217, L"Filename");
 
 	if( iFileDlgButtons[6] != -1 )
 	{
-		mprintf( 200, 231, L"Update world info" );
+		MPrint(200, 231, L"Update world info");
 	}
 }
 
@@ -885,7 +885,7 @@ static UINT32 ProcessFileIO(void)
 			swprintf(zOrigName, lengthof(zOrigName), L"Saving map:  %ls", gzFilename);
 			usStartX = (SCREEN_WIDTH - StringPixLength(zOrigName, HUGEFONT)) / 2;
 			usStartY = 180 - GetFontHeight(HUGEFONT) / 2;
-			mprintf( usStartX, usStartY, zOrigName );
+			MPrint(usStartX, usStartY, zOrigName);
 
 			InvalidateScreen( );
 			EndFrameBufferRender( );

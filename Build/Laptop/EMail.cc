@@ -754,9 +754,8 @@ static void DrawEmailSummary(INT32 y, const Email* e)
 	wchar_t pTempSubject[320];
 	wcscpy(pTempSubject, e->pSubject);
 	ReduceStringLength(pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, font);
-	mprintf(SUBJECT_X, y + 4, L"%ls", pTempSubject);
-
-	mprintf(SENDER_X, y + 4, pSenderNameList[e->ubSender]);
+	MPrint(SUBJECT_X, y + 4, pTempSubject);
+	MPrint(SENDER_X,  y + 4, pSenderNameList[e->ubSender]);
 
 	// draw date of message being displayed in mail viewer
 	mprintf(DATE_X, y + 4, L"%ls %d", pDayStrings, e->iDate / (24 * 60));
@@ -1234,7 +1233,7 @@ BOOLEAN DisplayNewMailBox( void )
 	SetFontShadow( DEFAULT_SHADOW );
 
 	// print warning
-	mprintf(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText);
+	MPrint(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText);
 
   // font stuff
 	SetFontShadow( NO_SHADOW );
@@ -1242,7 +1241,7 @@ BOOLEAN DisplayNewMailBox( void )
   SetFontForeground( FONT_BLACK );
 
 	// printf warning string
-	mprintf(EMAIL_WARNING_X + 60, EMAIL_WARNING_Y + 63, pNewMailStrings);
+	MPrint(EMAIL_WARNING_X + 60, EMAIL_WARNING_Y + 63, pNewMailStrings);
 
 	// invalidate region
 	InvalidateRegion( EMAIL_WARNING_X, EMAIL_WARNING_Y, EMAIL_WARNING_X + 270, EMAIL_WARNING_Y + 200 );
@@ -1443,7 +1442,7 @@ static BOOLEAN DisplayDeleteNotice(Email* pMail)
   BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 0, EMAIL_WARNING_X + 5, EMAIL_WARNING_Y + 2);
 
   // title
-	mprintf(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText);
+	MPrint(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText);
 
 	// shadow, font, and foreground
 	SetFontShadow( NO_SHADOW );
@@ -1452,9 +1451,9 @@ static BOOLEAN DisplayDeleteNotice(Email* pMail)
 
 	// draw text based on mail being read or not
 	if((pMail->fRead))
-	 mprintf(EMAIL_WARNING_X + 95 , EMAIL_WARNING_Y + 65,pDeleteMailStrings[0]);
+		MPrint(EMAIL_WARNING_X + 95, EMAIL_WARNING_Y + 65, pDeleteMailStrings[0]);
   else
-	 mprintf(EMAIL_WARNING_X + 70, EMAIL_WARNING_Y + 65,pDeleteMailStrings[1]);
+		MPrint(EMAIL_WARNING_X + 70, EMAIL_WARNING_Y + 65, pDeleteMailStrings[1]);
 
 
 	// invalidate screen area, for refresh
@@ -1567,10 +1566,7 @@ static void DisplayTextOnTitleBar(void)
 	SetFontBackground( FONT_BLACK );
 
 	// printf the title
-	mprintf(EMAIL_TITLE_X, EMAIL_TITLE_Y, pEmailTitleText);
-
-	// reset the shadow
-
+	MPrint(EMAIL_TITLE_X, EMAIL_TITLE_Y, pEmailTitleText);
 }
 
 
@@ -1625,22 +1621,22 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 
   // print from
 	FindFontRightCoordinates(MESSAGE_HEADER_X - 20, MESSAGE_FROM_Y + iViewerY, MESSAGE_HEADER_WIDTH, MESSAGE_FROM_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[0], MESSAGE_FONT, &usX, &usY);
-	mprintf(usX, MESSAGE_FROM_Y + iViewerY, pEmailHeaders[0]);
+	MPrint(usX, MESSAGE_FROM_Y + iViewerY, pEmailHeaders[0]);
 
 	// the actual from info
-	mprintf( MESSAGE_HEADER_X+MESSAGE_HEADER_WIDTH-13, MESSAGE_FROM_Y + iViewerY, pSenderNameList[pMail->ubSender]);
+	MPrint( MESSAGE_HEADER_X+MESSAGE_HEADER_WIDTH-13, MESSAGE_FROM_Y + iViewerY, pSenderNameList[pMail->ubSender]);
 
 
   // print date
 	FindFontRightCoordinates(MESSAGE_HEADER_X + 168, MESSAGE_DATE_Y + iViewerY, MESSAGE_HEADER_WIDTH, MESSAGE_DATE_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[2], MESSAGE_FONT, &usX, &usY);
-	mprintf(usX, MESSAGE_DATE_Y + iViewerY, pEmailHeaders[2]);
+	MPrint(usX, MESSAGE_DATE_Y + iViewerY, pEmailHeaders[2]);
 
 	// the actual date info
 	mprintf(MESSAGE_HEADER_X + 235, MESSAGE_DATE_Y + iViewerY, L"%d", pMail->iDate / (24 * 60));
 
 	// print subject
 	FindFontRightCoordinates(MESSAGE_HEADER_X - 20, MESSAGE_SUBJECT_Y, MESSAGE_HEADER_WIDTH, MESSAGE_SUBJECT_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[1], MESSAGE_FONT, &usX, &usY);
-	mprintf(usX, MESSAGE_SUBJECT_Y + iViewerY, pEmailHeaders[1]);
+	MPrint(usX, MESSAGE_SUBJECT_Y + iViewerY, pEmailHeaders[1]);
 
  	// the actual subject info
 	IanDisplayWrappedString(SUBJECT_LINE_X + 2, SUBJECT_LINE_Y + 2 + iViewerY, SUBJECT_LINE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pMail->pSubject, 0, 0);
@@ -1660,7 +1656,7 @@ static void DrawEmailMessageDisplayTitleText(INT32 iViewerY)
 	SetFontBackground( FONT_BLACK );
 
 	// dsiplay mail viewer title on message viewer
-  mprintf(VIEWER_X + 30, VIEWER_Y + 8 + iViewerY, pEmailTitleText);
+  MPrint(VIEWER_X + 30, VIEWER_Y + 8 + iViewerY, pEmailTitleText);
 }
 
 
@@ -2409,7 +2405,7 @@ static BOOLEAN DisplayNumberOfPagesToThisEmail(INT32 iViewerY)
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	FindFontCenterCoordinates(VIEWER_X + INDENT_X_OFFSET, 0,INDENT_X_WIDTH, 0, sString, FONT12ARIAL, &sX, &sY);
-	mprintf( sX, VIEWER_Y + iViewerY + INDENT_Y_OFFSET - 2, sString );
+	MPrint(sX, VIEWER_Y + iViewerY + INDENT_Y_OFFSET - 2, sString);
 
 
 	// restore shadows

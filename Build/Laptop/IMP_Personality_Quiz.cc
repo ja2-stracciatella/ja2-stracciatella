@@ -827,7 +827,7 @@ static void PrintQuizQuestionNumber(void)
 	mprintf(LAPTOP_SCREEN_UL_X + 345, LAPTOP_SCREEN_WEB_UL_Y + 370, L"%d", giCurrentPersonalityQuizQuestion + 1);
 
   // total number of questions
-  mprintf( LAPTOP_SCREEN_UL_X + 383 , LAPTOP_SCREEN_WEB_UL_Y + 370 , L"16");
+  MPrint(LAPTOP_SCREEN_UL_X + 383, LAPTOP_SCREEN_WEB_UL_Y + 370, L"16");
 }
 
 

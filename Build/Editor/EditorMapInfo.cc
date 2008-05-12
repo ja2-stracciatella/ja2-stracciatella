@@ -85,41 +85,41 @@ void UpdateMapInfo()
 	SetFontShadow( FONT_NEARBLACK );
 
 	SetFontForeground( FONT_RED );
-	mprintf( 38, 399, L"R");
+	MPrint( 38, 399, L"R");
 	SetFontForeground( FONT_GREEN );
-	mprintf( 38, 419, L"G");
+	MPrint( 38, 419, L"G");
 	SetFontForeground( FONT_DKBLUE );
-	mprintf( 38, 439, L"B");
+	MPrint( 38, 439, L"B");
 
 	SetFontForeground( FONT_YELLOW );
-	mprintf( 65, 369, L"Prime" );
-	mprintf( 65, 382, L"Night" );
-	mprintf( 65, 397, L"24Hrs" );
+	MPrint( 65, 369, L"Prime");
+	MPrint( 65, 382, L"Night");
+	MPrint( 65, 397, L"24Hrs");
 
 	SetFontForeground( FONT_YELLOW );
-	mprintf( 148, 399, L"Radius");
+	MPrint(148, 399, L"Radius");
 
 	if( !gfBasement && !gfCaves )
 		SetFontForeground( FONT_DKYELLOW );
-	mprintf( 148, 414, L"Underground" );
-	mprintf( 148, 423, L"Light Level" );
+	MPrint(148, 414, L"Underground");
+	MPrint(148, 423, L"Light Level");
 
 	SetFontForeground( FONT_YELLOW );
-	mprintf( 230, 369, L"Outdoors" );
-	mprintf( 230, 384, L"Basement" );
-	mprintf( 230, 399, L"Caves" );
+	MPrint(230, 369, L"Outdoors");
+	MPrint(230, 384, L"Basement");
+	MPrint(230, 399, L"Caves");
 
 	SetFontForeground( FONT_ORANGE );
-	mprintf( 250, 420, L"Restricted" );
-	mprintf( 250, 430, L"Scroll ID" );
+	MPrint(250, 420, L"Restricted");
+	MPrint(250, 430, L"Scroll ID");
 
 	SetFontForeground( FONT_YELLOW );
-	mprintf( 368, 363, L"Destination");
-	mprintf( 368, 372, L"Sector" );
-	mprintf( 368, 383, L"Destination");
-	mprintf( 368, 392, L"Bsmt. Level" );
-	mprintf( 378, 403, L"Dest." );
-	mprintf( 378, 412, L"GridNo" );
+	MPrint(368, 363, L"Destination");
+	MPrint(368, 372, L"Sector");
+	MPrint(368, 383, L"Destination");
+	MPrint(368, 392, L"Bsmt. Level");
+	MPrint(378, 403, L"Dest.");
+	MPrint(378, 412, L"GridNo");
 	SetFontForeground( FONT_RED );
 }
 

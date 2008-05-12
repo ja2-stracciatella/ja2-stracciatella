@@ -603,8 +603,8 @@ static void DisplayPlayerNameStrings(void)
 
   // reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
-	mprintf(LAPTOP_SCREEN_UL_X + 196, FULL_NAME_CURSOR_Y + 1, pFullNameString);
-	mprintf(LAPTOP_SCREEN_UL_X + 196, NICK_NAME_CURSOR_Y + 4, pNickNameString);
+	MPrint(LAPTOP_SCREEN_UL_X + 196, FULL_NAME_CURSOR_Y + 1, pFullNameString);
+	MPrint(LAPTOP_SCREEN_UL_X + 196, NICK_NAME_CURSOR_Y + 4, pNickNameString);
 
 	fNewCharInString  = FALSE;
 	fReDrawScreenFlag = TRUE;
@@ -820,7 +820,7 @@ static void RenderGender(void)
 	}
 	SetFontBackground(FONT_BLACK);
 	SetFontForeground(184);
-	mprintf(x, MALE_BOX_Y + 6, L"X");
+	MPrint(x, MALE_BOX_Y + 6, L"X");
 }
 
 
@@ -831,7 +831,7 @@ static void Print8CharacterOnlyString(void)
 	SetFont( FONT12ARIAL );
 	SetFontShadow(NO_SHADOW);
 
-	mprintf(430, LAPTOP_SCREEN_WEB_DELTA_Y + 228, pIMPBeginScreenStrings);
+	MPrint(430, LAPTOP_SCREEN_WEB_DELTA_Y + 228, pIMPBeginScreenStrings);
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);

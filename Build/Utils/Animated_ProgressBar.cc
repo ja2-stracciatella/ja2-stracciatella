@@ -206,7 +206,7 @@ void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32
 			SetFontForeground( pCurr->ubTitleFontForeColor );
 			SetFontShadow( pCurr->ubTitleFontShadowColor );
 			SetFontBackground( 0 );
-			mprintf( usStartX, usStartY, pCurr->swzTitle );
+			MPrint(usStartX, usStartY, pCurr->swzTitle);
 		}
 	}
 
@@ -225,7 +225,7 @@ void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32
 			SetFontForeground( pCurr->ubMsgFontForeColor );
 			SetFontShadow( pCurr->ubMsgFontShadowColor );
 			SetFontBackground( 0 );
-			mprintf( pCurr->usBarLeft, pCurr->usBarBottom + 3, str );
+			MPrint(pCurr->usBarLeft, pCurr->usBarBottom + 3, str);
 		}
 	}
 }

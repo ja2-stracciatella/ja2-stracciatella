@@ -435,8 +435,8 @@ static void GDirty(INT16 const x, INT16 const y, wchar_t const* const str)
 
 void GDirtyPrint(INT16 const x, INT16 const y, wchar_t const* const str) // XXX TODO0017
 {
-	GDirty( x, y, str);
-	mprintf(x, y, L"%ls", str);
+	GDirty(x, y, str);
+	MPrint(x, y, str);
 }
 
 
@@ -453,8 +453,8 @@ void GDirtyPrintF(INT16 const x, INT16 const y, wchar_t const* const fmt, ...)
 
 void GPrintDirty(INT16 const x, INT16 const y, wchar_t const* const str) // XXX TODO0017
 {
-	mprintf(x, y, L"%ls", str);
-	GDirty( x, y, str);
+	MPrint(x, y, str);
+	GDirty(x, y, str);
 }
 
 
@@ -471,7 +471,7 @@ void GPrintDirtyF(INT16 const x, INT16 const y, wchar_t const* const fmt, ...)
 
 void GPrintInvalidate(INT16 const x, INT16 const y, wchar_t const* const str)
 {
-	mprintf(x, y, L"%ls", str);
+	MPrint(x, y, str);
 
 	UINT16 const length = StringPixLength(str, FontDefault);
 	if (length > 0)

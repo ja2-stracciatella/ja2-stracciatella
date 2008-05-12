@@ -1566,12 +1566,12 @@ void DisplayItemStatistics()
 	usItemIndex = eInfo.pusItemIndex[ fUseSelectedItem ? eInfo.sSelItemIndex : eInfo.sHilitedItemIndex ];
 	const wchar_t* ItemName = ItemNames[usItemIndex];
 
-	mprintf(50 - StringPixLength(ItemName, SMALLCOMPFONT) / 2, 403, ItemName);
-	mprintf( 2, 410, L"Status Info Line 1");
-	mprintf( 2, 420, L"Status Info Line 2");
-	mprintf( 2, 430, L"Status Info Line 3");
-	mprintf( 2, 440, L"Status Info Line 4");
-	mprintf( 2, 450, L"Status Info Line 5");
+	MPrint(50 - StringPixLength(ItemName, SMALLCOMPFONT) / 2, 403, ItemName);
+	MPrint( 2, 410, L"Status Info Line 1");
+	MPrint( 2, 420, L"Status Info Line 2");
+	MPrint( 2, 430, L"Status Info Line 3");
+	MPrint( 2, 440, L"Status Info Line 4");
+	MPrint( 2, 450, L"Status Info Line 5");
 }
 
 

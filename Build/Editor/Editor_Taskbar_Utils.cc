@@ -426,7 +426,7 @@ void mprintfEditor(INT16 x, INT16 y, const wchar_t* pFontString, ...)
 	uiStringHeight = GetFontHeight( FontDefault );
 
 	ClearTaskbarRegion( x, y, (INT16)(x+uiStringLength), (INT16)(y+uiStringHeight) );
-	mprintf( x, y, string );
+	MPrint(x, y, string);
 }
 
 void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
@@ -490,7 +490,7 @@ void DrawEditorInfoBox(const wchar_t* str, UINT32 uiFont, UINT16 x, UINT16 y, UI
 	SetFontShadow( FONT_BLACK );
 	x += (w - StringPixLength(str, uiFont)) / 2;
 	y += (h - GetFontHeight(uiFont)) / 2;
-	mprintf(x, y, L"%ls", str);
+	MPrint(x, y, str);
 	InvalidateRegion( x, y, x2, y2 );
 }
 
@@ -741,10 +741,10 @@ static void RenderDoorLockInfo(void)
 			}
 			xp = sScreenX + 20 - StringPixLength(TrapType, FONT10ARIAL) / 2;
 			yp = sScreenY;
-			mprintf(xp, yp, TrapType);
+			MPrint(xp, yp, TrapType);
 			swprintf(str, lengthof(str), L"Trap Level %d", DoorTable[i].ubTrapLevel);
 			xp = sScreenX + 20 - StringPixLength( str, FONT10ARIAL ) / 2;
-			mprintf( xp, yp+10, str );
+			MPrint(xp, yp + 10, str);
 		}
 	}
 }
@@ -792,7 +792,7 @@ static void RenderSelectedItemBlownUp(void)
 	}
 	xp = sScreenX - (StringPixLength( szItemName, FONT10ARIAL ) - 40) / 2;
 	yp -= 10;
-	mprintf( xp, yp, szItemName );
+	MPrint(xp, yp, szItemName);
 
 	if( gpItem->usItem == ACTION_ITEM )
 	{
@@ -802,7 +802,7 @@ static void RenderSelectedItemBlownUp(void)
 		yp += 10;
 		SetFont( FONT10ARIALBOLD );
 		SetFontForeground( FONT_LTKHAKI );
-		mprintf( xp, yp, pStr );
+		MPrint(xp, yp, pStr);
 		SetFontForeground( FONT_YELLOW );
 	}
 
@@ -828,7 +828,7 @@ static void RenderSelectedItemBlownUp(void)
 		{
 			SetFontForeground( 249 );
 		}
-		mprintf( sScreenX + 16, sScreenY + 7, L"H" );
+		MPrint(sScreenX + 16, sScreenY + 7, L"H");
 		InvalidateRegion( sScreenX + 16, sScreenY + 7, sScreenX + 24, sScreenY + 27 );
 	}
 }
@@ -854,7 +854,7 @@ static void RenderEditorInfo(void)
 	{
 		case TASK_OPTIONS:
 			if( !gfWorldLoaded || giCurrentTilesetID < 0 )
-				mprintf( 260, 445, L"No map currently loaded." );
+				MPrint(260, 445, L"No map currently loaded.");
 			else
 				mprintf(260, 445, L"File:  %hs, Current Tileset:  %ls", g_filename, gTilesets[giCurrentTilesetID].zName);
 			break;

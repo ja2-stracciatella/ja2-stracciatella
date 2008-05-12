@@ -331,7 +331,7 @@ static void RenderCharFullName(void)
 	swprintf(sString, lengthof(sString), pIMPFinishStrings, pFullName);
 
   FindFontCenterCoordinates(LAPTOP_SCREEN_UL_X, 0, LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X, 0 , sString , FONT14ARIAL, &sX, &sY);
-  mprintf( sX, LAPTOP_SCREEN_WEB_DELTA_Y + 33, sString );
+	MPrint(sX, LAPTOP_SCREEN_WEB_DELTA_Y + 33, sString);
 }
 
 

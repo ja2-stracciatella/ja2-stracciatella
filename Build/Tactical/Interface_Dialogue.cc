@@ -643,7 +643,7 @@ void RenderTalkingMenu( )
 			SetFontForeground( 33 );
 		}
 		FindFontCenterCoordinates(gTalkPanel.sX + TALK_PANEL_NAME_X, gTalkPanel.sY + TALK_PANEL_NAME_Y, TALK_PANEL_NAME_WIDTH, TALK_PANEL_NAME_HEIGHT, gMercProfiles[gTalkPanel.ubCharNum].zNickname, MILITARYFONT1, &sFontX, &sFontY);
-		mprintf( sFontX, sFontY, L"%ls", gMercProfiles[ ubCharacterNum ].zNickname );
+		MPrint(sFontX, sFontY, gMercProfiles[ubCharacterNum].zNickname);
 
 		// Set font settings back
 		SetFontShadow( DEFAULT_SHADOW );
@@ -758,7 +758,7 @@ void RenderTalkingMenu( )
 					{
 						case 0:
 							FindFontCenterCoordinates(sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, zTalkMenuStrings[cnt], MILITARYFONT1, &sFontX, &sFontY);
-							mprintf( sFontX, sFontY, L"%ls", zTalkMenuStrings[ cnt ] );
+							MPrint(sFontX, sFontY, zTalkMenuStrings[cnt]);
 							break;
 
 						case 4:
@@ -777,7 +777,7 @@ void RenderTalkingMenu( )
 							}
 
 							FindFontCenterCoordinates(sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, DealerString, MILITARYFONT1, &sFontX, &sFontY);
-							mprintf(sFontX, sFontY, L"%ls", DealerString);
+							MPrint(sFontX, sFontY, DealerString);
 							break;
 						}
 
@@ -786,7 +786,7 @@ void RenderTalkingMenu( )
 							wchar_t buf[512];
 							swprintf(buf, lengthof(buf), L"%ls (%d)", zTalkMenuStrings[cnt], CalcDesireToTalk(ubCharacterNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[cnt]));
 							FindFontCenterCoordinates(sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, buf, MILITARYFONT1, &sFontX, &sFontY);
-							mprintf(sFontX, sFontY, buf);
+							MPrint(sFontX, sFontY, buf);
 							break;
 						}
 					}
@@ -809,12 +809,12 @@ void RenderTalkingMenu( )
 						}
 
 						FindFontCenterCoordinates(sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, DealerString, MILITARYFONT1, &sFontX, &sFontY);
-						mprintf(sFontX, sFontY, L"%ls", DealerString);
+						MPrint(sFontX, sFontY, DealerString);
 					}
 					else
 					{
 						FindFontCenterCoordinates(sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, zTalkMenuStrings[cnt], MILITARYFONT1, &sFontX, &sFontY);
-						mprintf( sFontX, sFontY, L"%ls", zTalkMenuStrings[ cnt ] );
+						MPrint(sFontX, sFontY, zTalkMenuStrings[cnt]);
 					}
 				}
 			}

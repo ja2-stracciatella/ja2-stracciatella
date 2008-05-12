@@ -318,6 +318,5 @@ static void RenderVoiceIndex(void)
 	SetFont( FONT12ARIAL );
 	SetFontForeground( FONT_WHITE );
 	SetFontBackground( FONT_BLACK );
-
-	mprintf( sX, 320, sString );
+	MPrint(sX, 320, sString);
 }

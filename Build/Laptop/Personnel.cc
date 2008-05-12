@@ -669,11 +669,11 @@ static void DisplayCharName(const SOLDIERTYPE* const s)
 		wcslcpy(sString, s->name, lengthof(sString));
 	}
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, sString, CHAR_NAME_FONT, &sX, &sY);
-	mprintf(sX, CHAR_NAME_Y, sString);
+	MPrint(sX, CHAR_NAME_Y, sString);
 
 	const wchar_t* Assignment = pPersonnelAssignmentStrings[s->bAssignment];
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, Assignment, CHAR_NAME_FONT, &sX, &sY);
-	mprintf(sX, CHAR_LOC_Y, Assignment);
+	MPrint(sX, CHAR_LOC_Y, Assignment);
 }
 
 
@@ -704,12 +704,12 @@ static void PrintStatWithDelta(UINT idx, INT8 stat, INT8 delta)
 	{
 		swprintf(sString, lengthof(sString), L"( %+d )", delta);
 		FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-		mprintf(sX, y, sString);
+		MPrint(sX, y, sString);
 	}
 	swprintf(sString, lengthof(sString), L"%d", stat);
 	mprintf(pers_stat_x, y, L"%ls:", str_stat[idx]);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-	mprintf(sX, y, sString);
+	MPrint(sX, y, sString);
 }
 
 
@@ -722,7 +722,7 @@ static void PrintStat(UINT16 stat, INT32 y, const wchar_t* text)
 	mprintf(pers_stat_x, y, L"%ls:", text);
 	swprintf(sString, lengthof(sString), L"%d", stat);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-	mprintf(sX, y, sString);
+	MPrint(sX, y, sString);
 }
 
 
@@ -742,7 +742,7 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 		{
 			swprintf(sString, lengthof(sString), L"( %+d )", p->bLifeDelta);
 			FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-			mprintf(sX, pers_stat_y[0], sString);
+			MPrint(sX, pers_stat_y[0], sString);
 		}
 		swprintf(sString, lengthof(sString), L"%d/%d", s->bLife, s->bLifeMax);
 	}
@@ -752,17 +752,17 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 	}
 	mprintf(pers_stat_x, pers_stat_y[0], L"%ls:", str_stat_health);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-	mprintf(sX, pers_stat_y[0], sString);
+	MPrint(sX, pers_stat_y[0], sString);
 
 	if  (fAmIaRobot)
 	{
 		for (INT32 i = 1; i < 11; ++i)
 		{
 			const INT32 y = pers_stat_y[i];
-			mprintf(pers_stat_x, y, str_stat[i]);
+			MPrint(pers_stat_x, y, str_stat[i]);
 			const wchar_t* const na = gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION];
 			FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, na, PERS_FONT, &sX, &sY);
-			mprintf(sX, y, na);
+			MPrint(sX, y, na);
 		}
 	}
 	else
@@ -783,19 +783,19 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 	PrintStat(p->usAssists, pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
 
 	// Shots/hits
-	mprintf(pers_stat_x, pers_stat_y[23], pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
+	MPrint(pers_stat_x, pers_stat_y[23], pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
 	// check we have shot at least once
 	const UINT32 fired = p->usShotsFired;
 	const UINT32 hits  = (fired > 0 ? 100 * p->usShotsHit / fired : 0);
 	swprintf(sString, lengthof(sString), L"%d %%", hits);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-	mprintf(sX, pers_stat_y[23], L"%ls", sString);
+	MPrint(sX, pers_stat_y[23], sString);
 
 	PrintStat(p->usBattlesFought, pers_stat_y[24], pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
 	PrintStat(p->usTimesWounded,  pers_stat_y[25], pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
 
 	//Display the 'Skills' text
-	mprintf(pers_stat_x, pers_stat_y[19], pPersonnelScreenStrings[PRSNL_TXT_SKILLS]);
+	MPrint(pers_stat_x, pers_stat_y[19], pPersonnelScreenStrings[PRSNL_TXT_SKILLS]);
 
 	/* KM: April 16, 1999
 	 * Added support for the German version, which has potential string
@@ -833,7 +833,7 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 					sX = max(sX, iMinimumX);
 				}
 
-				mprintf(sX, pers_stat_y[19], sString);
+				MPrint(sX, pers_stat_y[19], sString);
 			}
 			else
 			{
@@ -845,7 +845,7 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 				//Perform the potential overrun check
 				sX = max(sX, iMinimumX);
 
-				mprintf(sX, pers_stat_y[19], Skill);
+				MPrint(sX, pers_stat_y[19], Skill);
 
 				if (bSkill2 != NO_SKILLTRAIT)
 				{
@@ -857,7 +857,7 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 					//Perform the potential overrun check
 					sX = max(sX, iMinimumX);
 
-					mprintf(sX, pers_stat_y[20], Skill);
+					MPrint(sX, pers_stat_y[20], Skill);
 				}
 			}
 		}
@@ -865,7 +865,7 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 		{
 			const wchar_t* NoSkill = pPersonnelScreenStrings[PRSNL_TXT_NOSKILLS];
 			FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, NoSkill, PERS_FONT, &sX, &sY);
-			mprintf(sX, pers_stat_y[19], NoSkill);
+			MPrint(sX, pers_stat_y[19], NoSkill);
 		}
 	}
 }
@@ -1191,7 +1191,7 @@ static void DisplayCharInventory(const SOLDIERTYPE* const s)
 
 		wcslcpy(sString, ItemNames[item_idx], lengthof(sString));
 		ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);
-		mprintf(PosX + 65, PosY + 3, sString);
+		MPrint(PosX + 65, PosY + 3, sString);
 
 		// condition
 		if (item->usItemClass & IC_AMMO)
@@ -1206,13 +1206,13 @@ static void DisplayCharInventory(const SOLDIERTYPE* const s)
 		}
 
 		FindFontRightCoordinates(PosX + 65, PosY + 15, 171 - 75, GetFontHeight(FONT10ARIAL), sString, FONT10ARIAL, &sX, &sY);
-		mprintf(sX, sY, L"%ls", sString);
+		MPrint(sX, sY, sString);
 
 		if (item->usItemClass & IC_GUN)
 		{
 			wcslcpy(sString, AmmoCaliber[Weapon[item->ubClassIndex].ubCalibre], lengthof(sString));
 			ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);
-			mprintf(PosX + 65, PosY + 15, sString);
+			MPrint(PosX + 65, PosY + 15, sString);
 		}
 
 		// if more than 1?
@@ -1220,7 +1220,7 @@ static void DisplayCharInventory(const SOLDIERTYPE* const s)
 		{
 			swprintf(sString, lengthof(sString), L"x%d", o_count);
 			FindFontRightCoordinates(PosX, PosY + 15, 58, GetFontHeight(FONT10ARIAL), sString, FONT10ARIAL, &sX, &sY);
-			mprintf(sX, sY, sString);
+			MPrint(sX, sY, sString);
 		}
 
 		if (++item_count == NUMBER_OF_INVENTORY_PERSONNEL) break;
@@ -1401,7 +1401,7 @@ static void DisplayPersonnelSummary(void)
 		INT16 sX = 0;
 		INT16 sY = 0;
 		FindFontCenterCoordinates(PERS_CURR_TEAM_X, 0, 65, 0, s, FONT10ARIAL, &sX, &sY);
-		mprintf(sX, PERS_DEPART_TEAM_Y, s);
+		MPrint(sX, PERS_DEPART_TEAM_Y, s);
 	}
 	else
 	{
@@ -1409,7 +1409,7 @@ static void DisplayPersonnelSummary(void)
 		INT16 sX = 0;
 		INT16 sY = 0;
 		FindFontCenterCoordinates(PERS_CURR_TEAM_X, 0, 65, 0, s, FONT10ARIAL, &sX, &sY);
-		mprintf(sX, PERS_CURR_TEAM_Y, s);
+		MPrint(sX, PERS_CURR_TEAM_Y, s);
 
 		mprintf(PERS_CURR_TEAM_X, PERS_DEPART_TEAM_Y, L"%ls ( %d )", pPersonelTeamStrings[1], GetNumberOfPastMercsOnPlayersTeam());
 		DisplayStateOfPastTeamMembers();
@@ -1456,22 +1456,22 @@ static void DisplayCostOfCurrentTeam(void)
 	INT16 sY;
 
 	// daily cost
-	mprintf(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_COST_Y, pPersonelTeamStrings[2]);
+	MPrint(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_COST_Y, pPersonelTeamStrings[2]);
 	SPrintMoney(sString, sum_cost);
 	FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_CURR_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
-	mprintf(sX, PERS_CURR_TEAM_COST_Y, sString);
+	MPrint(sX, PERS_CURR_TEAM_COST_Y, sString);
 
 	// highest cost
-	mprintf(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_HIGHEST_Y, pPersonelTeamStrings[3]);
+	MPrint(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_HIGHEST_Y, pPersonelTeamStrings[3]);
 	SPrintMoney(sString, max_cost);
 	FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_CURR_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
-	mprintf(sX, PERS_CURR_TEAM_HIGHEST_Y, sString);
+	MPrint(sX, PERS_CURR_TEAM_HIGHEST_Y, sString);
 
 	// the lowest cost
-	mprintf(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_LOWEST_Y, pPersonelTeamStrings[4]);
+	MPrint(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_LOWEST_Y, pPersonelTeamStrings[4]);
 	SPrintMoney(sString, min_cost);
 	FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_CURR_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
-	mprintf(sX, PERS_CURR_TEAM_LOWEST_Y, sString);
+	MPrint(sX, PERS_CURR_TEAM_LOWEST_Y, sString);
 }
 
 
@@ -1487,13 +1487,13 @@ static void DisplayTeamStats(void)
 	// display headers
 	// lowest
 	FindFontCenterCoordinates(PERS_STAT_LOWEST_X,  0, PERS_STAT_LOWEST_WIDTH, 0, pPersonnelCurrentTeamStatsStrings[0], FONT10ARIAL, &sX, &sY);
-	mprintf(sX, PERS_STAT_AVG_Y, pPersonnelCurrentTeamStatsStrings[0]);
+	MPrint(sX, PERS_STAT_AVG_Y, pPersonnelCurrentTeamStatsStrings[0]);
 	// average
 	FindFontCenterCoordinates(PERS_STAT_AVG_X,     0, PERS_STAT_AVG_WIDTH,    0, pPersonnelCurrentTeamStatsStrings[1], FONT10ARIAL, &sX, &sY);
-	mprintf(sX, PERS_STAT_AVG_Y, pPersonnelCurrentTeamStatsStrings[1]);
+	MPrint(sX, PERS_STAT_AVG_Y, pPersonnelCurrentTeamStatsStrings[1]);
 	// highest
 	FindFontCenterCoordinates(PERS_STAT_HIGHEST_X, 0, PERS_STAT_LOWEST_WIDTH, 0, pPersonnelCurrentTeamStatsStrings[2], FONT10ARIAL, &sX, &sY);
-	mprintf(sX, PERS_STAT_AVG_Y, pPersonnelCurrentTeamStatsStrings[2]);
+	MPrint(sX, PERS_STAT_AVG_Y, pPersonnelCurrentTeamStatsStrings[2]);
 
 	for (INT32 stat = 0; stat < 11; stat++)
 	{
@@ -1503,7 +1503,7 @@ static void DisplayTeamStats(void)
 		const INT32 y = PERS_STAT_AVG_Y + (stat + 1) * (GetFontHeight(FONT10ARIAL) + 3);
 
 		// row header
-		mprintf(PERS_STAT_LIST_X, y, pPersonnelTeamStatsStrings[stat]);
+		MPrint(PERS_STAT_LIST_X, y, pPersonnelTeamStatsStrings[stat]);
 
 		const wchar_t* min_name = NULL;
 		const wchar_t* max_name = NULL;
@@ -1603,22 +1603,22 @@ static void DisplayTeamStats(void)
 
 		if (count == 0) continue;
 
-		mprintf(PERS_STAT_LOWEST_X,  y, L"%ls", min_name);
-		mprintf(PERS_STAT_HIGHEST_X, y, L"%ls", max_name);
+		MPrint(PERS_STAT_LOWEST_X,  y, min_name);
+		MPrint(PERS_STAT_HIGHEST_X, y, max_name);
 
 		wchar_t val_str[32];
 
 		swprintf(val_str, lengthof(val_str), L"%d", min_val);
 		FindFontRightCoordinates(PERS_STAT_LOWEST_X, 0, PERS_STAT_LOWEST_WIDTH, 0, val_str, FONT10ARIAL, &sX, &sY);
-		mprintf(sX, y, val_str);
+		MPrint(sX, y, val_str);
 
 		swprintf(val_str, lengthof(val_str), L"%d", sum_val / count);
 		FindFontCenterCoordinates(PERS_STAT_AVG_X, 0, PERS_STAT_AVG_WIDTH, 0, val_str, FONT10ARIAL, &sX, &sY);
-		mprintf(sX, y, val_str);
+		MPrint(sX, y, val_str);
 
 		swprintf(val_str, lengthof(val_str), L"%d", max_val);
 		FindFontRightCoordinates(PERS_STAT_HIGHEST_X, 0, PERS_STAT_LOWEST_WIDTH, 0, val_str, FONT10ARIAL, &sX, &sY);
-		mprintf(sX, y, val_str);
+		MPrint(sX, y, val_str);
 	}
 }
 
@@ -1686,22 +1686,22 @@ static void DisplayStateOfPastTeamMembers(void)
 	CHAR16 sString[32];
 
 	// dead
-	mprintf(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_COST_Y, pPersonelTeamStrings[5]);
+	MPrint(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_COST_Y, pPersonelTeamStrings[5]);
 	swprintf(sString, lengthof(sString), L"%d", GetNumberOfDeadOnPastTeam());
 	FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_DEPART_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
-	mprintf(sX, PERS_CURR_TEAM_COST_Y, sString);
+	MPrint(sX, PERS_CURR_TEAM_COST_Y, sString);
 
 	// fired
-	mprintf(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_HIGHEST_Y, pPersonelTeamStrings[6]);
+	MPrint(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_HIGHEST_Y, pPersonelTeamStrings[6]);
 	swprintf(sString, lengthof(sString), L"%d", GetNumberOfLeftOnPastTeam());
 	FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_DEPART_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
-	mprintf(sX, PERS_CURR_TEAM_HIGHEST_Y, sString);
+	MPrint(sX, PERS_CURR_TEAM_HIGHEST_Y, sString);
 
 	// other
-	mprintf(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_LOWEST_Y, pPersonelTeamStrings[7]);
+	MPrint(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_LOWEST_Y, pPersonelTeamStrings[7]);
 	swprintf(sString, lengthof(sString), L"%d", GetNumberOfOtherOnPastTeam());
 	FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_DEPART_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
-	mprintf(sX, PERS_CURR_TEAM_LOWEST_Y, sString);
+	MPrint(sX, PERS_CURR_TEAM_LOWEST_Y, sString);
 }
 
 
@@ -2014,7 +2014,7 @@ static void DisplayDepartedCharStats(const MERCPROFILESTRUCT* const p, const INT
 	swprintf(sString, lengthof(sString), L"%d/%d", cur, life);
 	mprintf(pers_stat_x, pers_stat_y[0], L"%ls:", str_stat_health);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-	mprintf(sX, pers_stat_y[0], sString);
+	MPrint(sX, pers_stat_y[0], sString);
 
 	PrintStat(p->bAgility,     pers_stat_y[ 1], str_stat_agility);
 	PrintStat(p->bDexterity,   pers_stat_y[ 2], str_stat_dexterity);
@@ -2030,13 +2030,13 @@ static void DisplayDepartedCharStats(const MERCPROFILESTRUCT* const p, const INT
 	PrintStat(p->usAssists,    pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
 
 	// Shots/hits
-	mprintf(pers_stat_x, pers_stat_y[23], pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
+	MPrint(pers_stat_x, pers_stat_y[23], pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
 	// check we have shot at least once
 	const UINT32 fired = p->usShotsFired;
 	const UINT32 hits  = (fired > 0 ? 100 * p->usShotsHit / fired : 0);
 	swprintf(sString, lengthof(sString), L"%d %%", hits);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-	mprintf(sX, pers_stat_y[23], L"%ls", sString);
+	MPrint(sX, pers_stat_y[23], sString);
 
 	PrintStat(p->usBattlesFought, pers_stat_y[24], pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
 	PrintStat(p->usTimesWounded,  pers_stat_y[25], pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
@@ -2080,11 +2080,11 @@ static void DisplayDepartedCharName(const MERCPROFILESTRUCT* const p, const INT3
 
 	const wchar_t* name = p->zNickname;
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, name, CHAR_NAME_FONT, &sX, &sY);
-	mprintf(sX, CHAR_NAME_Y, name);
+	MPrint(sX, CHAR_NAME_Y, name);
 
 	const wchar_t* const state_txt = pPersonnelDepartedStateStrings[iState];
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, state_txt, CHAR_NAME_FONT, &sX, &sY);
-	mprintf(sX, CHAR_LOC_Y, state_txt);
+	MPrint(sX, CHAR_LOC_Y, state_txt);
 }
 
 
@@ -2093,7 +2093,7 @@ static void DisplayPersonnelTextOnTitleBar(void)
 	SetFont(FONT14ARIAL);
 	SetFontForeground(FONT_WHITE);
 	SetFontBackground(FONT_BLACK);
-	mprintf(PERS_TITLE_X, PERS_TITLE_Y, pPersTitleText);
+	MPrint(PERS_TITLE_X, PERS_TITLE_Y, pPersTitleText);
 }
 
 
@@ -2488,7 +2488,7 @@ static void DisplayAmountOnChar(const SOLDIERTYPE* const s)
 	INT16 sX;
 	INT16 sY;
 	FindFontRightCoordinates(ATM_DISPLAY_X, ATM_DISPLAY_Y, ATM_DISPLAY_WIDTH, ATM_DISPLAY_HEIGHT, sString, ATM_FONT, &sX, &sY);
-	mprintf(sX, sY, sString);
+	MPrint(sX, sY, sString);
 }
 
 
@@ -2554,28 +2554,28 @@ static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 					wcscpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION]);
 				}
 
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
+				MPrint(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_CURRENT_CONTRACT]);
 				FindFontRightCoordinates(pers_stat_data_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
+				MPrint(sX, pers_stat_y[i], sString);
 			}
 			break;
 
 			case 1: // total contract time served
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_TOTAL_SERVICE]);
+				MPrint(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_TOTAL_SERVICE]);
 				//./DEF 2/4/99: total service days used to be calced as 'days -1'
 				swprintf(sString, lengthof(sString), L"%d %ls", p->usTotalDaysServed, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 				FindFontRightCoordinates(pers_stat_data_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i], sString);
+				MPrint(sX, pers_stat_y[i], sString);
 				break;
 
 			case 3: // cost (PRSNL_TXT_TOTAL_COST)
 			{
 				SPrintMoney(sString, p->uiTotalCostToDate);
 				FindFontRightCoordinates(pers_stat_data_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_TOTAL_COST]);
+				MPrint(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_TOTAL_COST]);
 
 				// print contract cost
-				mprintf(sX, pers_stat_y[i], sString);
+				MPrint(sX, pers_stat_y[i], sString);
 
 				INT32 salary;
 				switch (s->ubWhatKindOfMercAmI)
@@ -2598,8 +2598,8 @@ static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 				i++;
 
 				// now print daily rate
-				mprintf(sX, pers_stat_y[i + 1], sStringA);
-				mprintf(pers_stat_x, pers_stat_y[i + 1], pPersonnelScreenStrings[PRSNL_TXT_DAILY_COST]);
+				MPrint(sX,          pers_stat_y[i + 1], sStringA);
+				MPrint(pers_stat_x, pers_stat_y[i + 1], pPersonnelScreenStrings[PRSNL_TXT_DAILY_COST]);
 				break;
 			}
 
@@ -2607,16 +2607,16 @@ static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 				//if its a merc merc, display the salary oweing
 				if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
 				{
-					mprintf(pers_stat_x, pers_stat_y[i - 1], pPersonnelScreenStrings[PRSNL_TXT_UNPAID_AMOUNT]);
+					MPrint(pers_stat_x, pers_stat_y[i - 1], pPersonnelScreenStrings[PRSNL_TXT_UNPAID_AMOUNT]);
 					SPrintMoney(sString, p->sSalary * p->iMercMercContractLength);
 				}
 				else
 				{
-					mprintf(pers_stat_x, pers_stat_y[i - 1], pPersonnelScreenStrings[PRSNL_TXT_MED_DEPOSIT]);
+					MPrint(pers_stat_x, pers_stat_y[i - 1], pPersonnelScreenStrings[PRSNL_TXT_MED_DEPOSIT]);
 					SPrintMoney(sString, p->sMedicalDepositAmount);
 				}
 				FindFontRightCoordinates(pers_stat_data_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
-				mprintf(sX, pers_stat_y[i - 1], sString);
+				MPrint(sX, pers_stat_y[i - 1], sString);
 				break;
 		}
 	}

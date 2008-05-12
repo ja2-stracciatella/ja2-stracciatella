@@ -1333,7 +1333,7 @@ static void DisplayGroundEta(void)
 	SetFont( ETA_FONT );
 	SetFontForeground( FONT_LTGREEN );
 	SetFontBackground( FONT_BLACK );
-	mprintf(CLOCK_ETA_X, CLOCK_Y_START, pEtaString);
+	MPrint(CLOCK_ETA_X, CLOCK_Y_START, pEtaString);
 
 	// if less than one day
 	if (iTotalTime < 60 * 24)
@@ -2373,12 +2373,12 @@ UINT32 MapScreenHandle(void)
 			SetFontForeground( FONT_DKRED );
 		else
 			SetFontForeground( FONT_RED );
-		mprintf( 530, 2, L"TESTVERSION MSG" );
+		MPrint(530, 2, L"TESTVERSION MSG");
 		if( GetJA2Clock() % 1000 < 500 )
 			SetFontForeground( FONT_DKYELLOW );
 		else
 			SetFontForeground( FONT_YELLOW );
-		mprintf( 530, 12, L"NO WORLD LOADED" );
+		MPrint(530, 12, L"NO WORLD LOADED");
 		InvalidateRegion( 530, 2, 640, 23 );
 	}
 	#endif
@@ -4611,22 +4611,22 @@ static void BltCharInvPanel(void)
 	INT16 usY;
 
 	// Display armor
-	mprintf(MAP_ARMOR_LABEL_X, MAP_ARMOR_LABEL_Y, pInvPanelTitleStrings[0]);
+	MPrint(MAP_ARMOR_LABEL_X, MAP_ARMOR_LABEL_Y, pInvPanelTitleStrings[0]);
 	swprintf(sString, lengthof(sString), L"%3d%%", ArmourPercent(pSoldier));
 	FindFontRightCoordinates(MAP_ARMOR_X, MAP_ARMOR_Y, MAP_ARMOR_W, MAP_ARMOR_H, sString, BLOCKFONT2, &usX, &usY);
-	mprintf(usX, usY, L"%ls", sString);
+	MPrint(usX, usY, sString);
 
 	// Display weight
-	mprintf(MAP_WEIGHT_LABEL_X, MAP_WEIGHT_LABEL_Y, pInvPanelTitleStrings[1]);
+	MPrint(MAP_WEIGHT_LABEL_X, MAP_WEIGHT_LABEL_Y, pInvPanelTitleStrings[1]);
 	swprintf(sString, lengthof(sString), L"%d%%", CalculateCarriedWeight(pSoldier));
 	FindFontRightCoordinates(MAP_WEIGHT_X, MAP_WEIGHT_Y, MAP_WEIGHT_W, MAP_WEIGHT_H, sString, BLOCKFONT2, &usX, &usY);
-	mprintf(usX, usY, L"%ls", sString);
+	MPrint(usX, usY, sString);
 
 	// Display camouflage
-	mprintf(MAP_CAMO_LABEL_X, MAP_CAMO_LABEL_Y, pInvPanelTitleStrings[2]);
+	MPrint(MAP_CAMO_LABEL_X, MAP_CAMO_LABEL_Y, pInvPanelTitleStrings[2]);
 	swprintf(sString, lengthof(sString), L"%d%%", pSoldier->bCamo);
 	FindFontRightCoordinates(MAP_CAMO_X, MAP_CAMO_Y, MAP_CAMO_W, MAP_CAMO_H, sString, BLOCKFONT2, &usX, &usY);
-	mprintf(usX, usY, L"%ls", sString);
+	MPrint(usX, usY, sString);
 
 	if( InKeyRingPopup( ) )
 	{

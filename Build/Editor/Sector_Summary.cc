@@ -472,15 +472,15 @@ static void RenderSectorInformation(void)
 	{
 		INT32 x;
 		x = 140;
-		mprintf( x, 75, L"(" );
+		MPrint( x, 75, L"(" );
 		x += StringPixLength( L"(", FONT10ARIAL ) + 2;
-		if( m->sNorthGridNo			!= -1	)	{	mprintf( x, 75, L"N" );	x += StringPixLength( L"N", FONT10ARIAL ) + 2; }
-		if( m->sEastGridNo			!= -1	)	{	mprintf( x, 75, L"E" );	x += StringPixLength( L"E", FONT10ARIAL ) + 2; }
-		if( m->sSouthGridNo			!= -1	)	{	mprintf( x, 75, L"S" );	x += StringPixLength( L"S", FONT10ARIAL ) + 2; }
-		if( m->sWestGridNo			!= -1	)	{	mprintf( x, 75, L"W" );	x += StringPixLength( L"W", FONT10ARIAL ) + 2; }
-		if( m->sCenterGridNo		!= -1	)	{	mprintf( x, 75, L"C" );	x += StringPixLength( L"C", FONT10ARIAL ) + 2; }
-		if( m->sIsolatedGridNo	!= -1	)	{	mprintf( x, 75, L"I" );	x += StringPixLength( L"I", FONT10ARIAL ) + 2; }
-		mprintf( x, 75, L")" );
+		if (m->sNorthGridNo    != -1) { MPrint(x, 75, L"N"); x += StringPixLength(L"N", FONT10ARIAL) + 2; }
+		if (m->sEastGridNo     != -1) { MPrint(x, 75, L"E"); x += StringPixLength(L"E", FONT10ARIAL) + 2; }
+		if (m->sSouthGridNo    != -1) { MPrint(x, 75, L"S"); x += StringPixLength(L"S", FONT10ARIAL) + 2; }
+		if (m->sWestGridNo     != -1) { MPrint(x, 75, L"W"); x += StringPixLength(L"W", FONT10ARIAL) + 2; }
+		if (m->sCenterGridNo   != -1) { MPrint(x, 75, L"C"); x += StringPixLength(L"C", FONT10ARIAL) + 2; }
+		if (m->sIsolatedGridNo != -1) { MPrint(x, 75, L"I"); x += StringPixLength(L"I", FONT10ARIAL) + 2; }
+		MPrint(x, 75, L")");
 	}
 	mprintf( 10, 85,		L"Number of rooms:  %d", s->ubNumRooms );
 	mprintf( 10, 95,		L"Total map population:  %d", m->ubNumIndividuals );
@@ -539,7 +539,7 @@ static void RenderSectorInformation(void)
 			else switch( s->ubNumExitGridDests )
 			{
 				case 0:
-					mprintf( 10, 265, L"ExitGrids:  none" );
+					MPrint(10, 265, L"ExitGrids:  none");
 					break;
 				case 1:
 					mprintf( 10, 265, L"ExitGrids:  1 destination using %d exitgrids", s->usExitGridSize[0] );
@@ -619,9 +619,9 @@ static void RenderItemDetails(void)
 	SetFont( FONT10ARIAL );
 	SetFontForeground( FONT_GRAY2 );
 	SetFontShadow( FONT_NEARBLACK );
-	mprintf( 364, 49, L"R" );
-	mprintf( 390, 49, L"S" );
-	mprintf( 364, 62, L"Enemy" );
+	MPrint(364, 49, L"R");
+	MPrint(390, 49, L"S");
+	MPrint(364, 62, L"Enemy");
 	yp = 20;
 	xp = 5;
 	if( gubSummaryItemMode != ITEMMODE_ENEMY && gpWorldItemsSummaryArray )
@@ -699,7 +699,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				mprintf(xp, yp, L"%ls", ShortItemNames[index]);
+				MPrint(xp, yp, ShortItemNames[index]);
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;
@@ -710,7 +710,7 @@ static void RenderItemDetails(void)
 					if( xp >= 300 )
 					{
 						SetFontForeground( FONT_RED );
-						mprintf( 350, 350, L"TOO MANY ITEMS TO DISPLAY!");
+						MPrint(350, 350, L"TOO MANY ITEMS TO DISPLAY!");
 						return;
 					}
 				}
@@ -760,7 +760,7 @@ static void RenderItemDetails(void)
 					if( xp >= 300 )
 					{
 						SetFontForeground( FONT_RED );
-						mprintf( 350, 350, L"TOO MANY ITEMS TO DISPLAY!");
+						MPrint(350, 350, L"TOO MANY ITEMS TO DISPLAY!");
 						return;
 					}
 				}
@@ -771,14 +771,14 @@ static void RenderItemDetails(void)
 	{
 
 		SetFontForeground( FONT_YELLOW );
-		mprintf( xp, yp, L"PRIORITY ENEMY DROPPED ITEMS" );
+		MPrint(xp, yp, L"PRIORITY ENEMY DROPPED ITEMS");
 		yp += 10;
 
 		//Do the priority existance guys first
 		if( !gpPEnemyItemsSummaryArray )
 		{
 			SetFontForeground( FONT_DKYELLOW );
-			mprintf( xp, yp, L"None" );
+			MPrint(xp, yp, L"None");
 			yp += 10;
 		}
 		else for( index = 1; index < MAXITEMS; index++ )
@@ -806,7 +806,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				mprintf(xp, yp, L"%ls", ShortItemNames[index]);
+				MPrint(xp, yp, ShortItemNames[index]);
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;
@@ -817,7 +817,7 @@ static void RenderItemDetails(void)
 					if( xp >= 300 )
 					{
 						SetFontForeground( FONT_RED );
-						mprintf( 350, 350, L"TOO MANY ITEMS TO DISPLAY!");
+						MPrint(350, 350, L"TOO MANY ITEMS TO DISPLAY!");
 						return;
 					}
 				}
@@ -827,7 +827,7 @@ static void RenderItemDetails(void)
 		yp += 5;
 
 		SetFontForeground( FONT_YELLOW );
-		mprintf( xp, yp, L"NORMAL ENEMY DROPPED ITEMS" );
+		MPrint(xp, yp, L"NORMAL ENEMY DROPPED ITEMS");
 		yp += 10;
 		if( yp >= 355 )
 		{
@@ -836,7 +836,7 @@ static void RenderItemDetails(void)
 			if( xp >= 300 )
 			{
 				SetFontForeground( FONT_RED );
-				mprintf( 350, 350, L"TOO MANY ITEMS TO DISPLAY!");
+				MPrint(350, 350, L"TOO MANY ITEMS TO DISPLAY!");
 				return;
 			}
 		}
@@ -845,7 +845,7 @@ static void RenderItemDetails(void)
 		if( !gpNEnemyItemsSummaryArray )
 		{
 			SetFontForeground( FONT_DKYELLOW );
-			mprintf( xp, yp, L"None" );
+			MPrint(xp, yp, L"None");
 			yp += 10;
 		}
 		for( index = 1; index < MAXITEMS; index++ )
@@ -873,7 +873,7 @@ static void RenderItemDetails(void)
 				dAvgExistChance = (FLOAT)(uiExistChance / 100.0);
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
-				mprintf(xp, yp, L"%ls", ShortItemNames[index]);
+				MPrint(xp, yp, ShortItemNames[index]);
 				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
 				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
 				yp += 10;
@@ -884,7 +884,7 @@ static void RenderItemDetails(void)
 					if( xp >= 300 )
 					{
 						SetFontForeground( FONT_RED );
-						mprintf( 350, 350, L"TOO MANY ITEMS TO DISPLAY!");
+						MPrint(350, 350, L"TOO MANY ITEMS TO DISPLAY!");
 						return;
 					}
 				}
@@ -897,7 +897,7 @@ static void RenderItemDetails(void)
 	else
 	{
 		SetFontForeground( FONT_RED );
-		mprintf( 5, 50, L"ERROR:  Can't load the items for this map.  Reason unknown." );
+		MPrint(5, 50, L"ERROR:  Can't load the items for this map.  Reason unknown.");
 	}
 }
 
@@ -946,7 +946,7 @@ void RenderSummaryWindow()
 		{
 			SetFontForeground( FONT_RED );
 			SetFontShadow( FONT_NEARBLACK );
-			mprintf( 270, 5, L"(NO MAP LOADED).");
+			MPrint(270, 5, L"(NO MAP LOADED).");
 		}
 		SetFont( FONT10ARIAL );
 		SetFontShadow( FONT_NEARBLACK );
@@ -959,28 +959,28 @@ void RenderSummaryWindow()
 				DisableButton( iSummaryButton[ SUMMARY_LOAD ] );
 				SetFontForeground( FONT_YELLOW );
 				mprintf( 10, 20, L"You currently have %d outdated maps.", gusNumEntriesWithOutdatedOrNoSummaryInfo);
-				mprintf( 10, 30, L"The more maps that need to be updated, the longer it takes.  It'll take ");
-				mprintf( 10, 40, L"approximately 4 minutes on a P200MMX to analyse 100 maps, so");
-				mprintf( 10, 50, L"depending on your computer, it may vary.");
+				MPrint( 10, 30, L"The more maps that need to be updated, the longer it takes.  It'll take ");
+				MPrint( 10, 40, L"approximately 4 minutes on a P200MMX to analyse 100 maps, so");
+				MPrint( 10, 50, L"depending on your computer, it may vary.");
 				SetFontForeground( FONT_LTRED );
-				mprintf( 10, 65, L"Do you wish to regenerate info for ALL these maps at this time (y/n)?" );
+				MPrint( 10, 65, L"Do you wish to regenerate info for ALL these maps at this time (y/n)?" );
 			}
 			else if( !gsSelSectorX && !gsSectorX || gfTempFile )
 			{
 				DisableButton( iSummaryButton[ SUMMARY_LOAD ] );
 				SetFontForeground( FONT_LTRED );
-				mprintf( 10, 20, L"There is no sector currently selected." );
+				MPrint(10, 20, L"There is no sector currently selected.");
 				if( gfTempFile )
 				{
 					SetFontForeground( FONT_YELLOW );
-					mprintf( 10, 30, L"Entering a temp file name that doesn't follow campaign editor conventions..." );
+					MPrint(10, 30, L"Entering a temp file name that doesn't follow campaign editor conventions...");
 					goto SPECIALCASE_LABEL;  //OUCH!!!
 				}
 				else if( !gfWorldLoaded )
 				{
 					SetFontForeground( FONT_YELLOW );
-					mprintf( 10, 30, L"You need to either load an existing map or create a new map before being" );
-					mprintf( 10, 40, L"able to enter the editor, or you can quit (ESC or Alt+x).");
+					MPrint(10, 30, L"You need to either load an existing map or create a new map before being");
+					MPrint(10, 40, L"able to enter the editor, or you can quit (ESC or Alt+x).");
 				}
 			}
 			else
@@ -1153,16 +1153,9 @@ void RenderSummaryWindow()
 					else
 					{
 						SetFontForeground( FONT_RED );
-						if( gfItemDetailsMode )
-						{
-							mprintf(10, 5, L"Summary Information for sector %ls" , str);
-							mprintf( 10, 15, L"does not exist." );
-						}
-						else
-						{
-							mprintf(10, 20, L"Summary Information for sector %ls" , str);
-							mprintf( 10, 30, L"does not exist." );
-						}
+						INT32 const y = (gfItemDetailsMode ? 5 : 20);
+						mprintf(10, y,      L"Summary Information for sector %ls" , str);
+						MPrint( 10, y + 10, L"does not exist.");
 						ShowButton( iSummaryButton[ SUMMARY_UPDATE ] );
 					}
 				}
@@ -1218,12 +1211,12 @@ void RenderSummaryWindow()
 					if( gubOverrideStatus == READONLY )
 					{
 						SetFontForeground(gfOverride ? FONT_YELLOW : FONT_LTRED);
-						mprintf( MAP_LEFT+124, MAP_BOTTOM+61, L"Override READONLY" );
+						MPrint(MAP_LEFT + 124, MAP_BOTTOM + 61, L"Override READONLY");
 					}
 					else
 					{
 						SetFontForeground(gfOverride ? FONT_YELLOW: FONT_ORANGE);
-						mprintf( MAP_LEFT+124, MAP_BOTTOM+61, L"Overwrite File");
+						MPrint(MAP_LEFT + 124, MAP_BOTTOM + 61, L"Overwrite File");
 					}
 				}
 			}
@@ -1231,29 +1224,29 @@ void RenderSummaryWindow()
 		else if( !gfDeniedSummaryCreation )
 		{
 			SetFontForeground( FONT_GRAY1 );
-			mprintf( 10, 20, L"You currently have no summary data.  By creating one, you will be able to keep track" );
-			mprintf( 10, 30, L"of information pertaining to all of the sectors you edit and save.  The creation process" );
-			mprintf( 10, 40, L"will analyse all maps in your /MAPS directory, and generate a new one.  This could" );
-			mprintf( 10, 50, L"take a few minutes depending on how many valid maps you have.  Valid maps are" );
-			mprintf( 10, 60, L"maps following the proper naming convention from a1.dat - p16.dat.  Underground maps" );
-			mprintf( 10, 70, L"are signified by appending _b1 to _b3 before the .dat (ex:  a9_b1.dat). ");
+			MPrint(10, 20, L"You currently have no summary data.  By creating one, you will be able to keep track");
+			MPrint(10, 30, L"of information pertaining to all of the sectors you edit and save.  The creation process");
+			MPrint(10, 40, L"will analyse all maps in your /MAPS directory, and generate a new one.  This could");
+			MPrint(10, 50, L"take a few minutes depending on how many valid maps you have.  Valid maps are");
+			MPrint(10, 60, L"maps following the proper naming convention from a1.dat - p16.dat.  Underground maps");
+			MPrint(10, 70, L"are signified by appending _b1 to _b3 before the .dat (ex:  a9_b1.dat).");
 			SetFontForeground( FONT_LTRED );
-			mprintf( 10, 85, L"Do you wish to do this now (y/n)?" );
+			MPrint(10, 85, L"Do you wish to do this now (y/n)?");
 		}
 		else
 		{
 			SetFontForeground( FONT_LTRED );
-			mprintf( 10, 20, L"No summary info.  Creation denied." );
+			MPrint(10, 20, L"No summary info.  Creation denied.");
 		}
 
 		SetFont( FONT10ARIAL );
 		SetFontForeground( FONT_GRAY3 );
-		mprintf( MAP_LEFT + 15, MAP_BOTTOM + 7, L"Grid" );
-		mprintf( MAP_LEFT + 65, MAP_BOTTOM + 7, L"Progress" );
-		mprintf( MAP_LEFT + 15, MAP_BOTTOM + 27, L"Use Alternate Maps" );
+		MPrint(MAP_LEFT + 15, MAP_BOTTOM +  7, L"Grid");
+		MPrint(MAP_LEFT + 65, MAP_BOTTOM +  7, L"Progress");
+		MPrint(MAP_LEFT + 15, MAP_BOTTOM + 27, L"Use Alternate Maps");
 		//Draw the mode tabs
 		SetFontForeground( FONT_YELLOW );
-		mprintf( 354, 18, L"Summary" );
+		MPrint(354, 18, L"Summary");
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
 			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			RectangleDraw(TRUE, 350, 15, 405, 28, 0, l.Buffer<UINT8>());
@@ -1270,7 +1263,7 @@ void RenderSummaryWindow()
 		{
 			SetFontForeground( FONT_RED );
 		}
-		mprintf( 354, 33, L"Items" );
+		MPrint(354, 33, L"Items");
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
 			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			RectangleDraw(TRUE, 350, 30, 405, 43, 0, l.Buffer<UINT8>());
@@ -1549,13 +1542,13 @@ void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate)
 
 		if( gfSummaryWindowActive )
 		{
-			mprintf( MAP_LEFT, MAP_BOTTOM+100, str );
+			MPrint(MAP_LEFT, MAP_BOTTOM + 100, str);
 			InvalidateRegion( MAP_LEFT, MAP_BOTTOM+100, MAP_LEFT+150,	MAP_BOTTOM+110 );
 			CreateProgressBar( 0, MAP_LEFT, MAP_BOTTOM+110, MAP_LEFT+140, MAP_BOTTOM+120 );
 		}
 		else
 		{
-			mprintf((SCREEN_WIDTH - StringPixLength(str, FONT10ARIAL)) / 2, 190, str);
+			MPrint((SCREEN_WIDTH - StringPixLength(str, FONT10ARIAL)) / 2, 190, str);
 			InvalidateRegion( 200, 190, 400, 200 );
 			CreateProgressBar( 0, 250, 200, 390, 210 );
 		}
@@ -2413,11 +2406,11 @@ void ApologizeOverrideAndForceUpdateEverything()
 	SetFontForeground( FONT_RED );
 	SetFontShadow( FONT_NEARBLACK );
 	const wchar_t* UpdateInfo = L"MAJOR VERSION UPDATE";
-	mprintf((SCREEN_WIDTH - StringPixLength(UpdateInfo, HUGEFONT)) / 2, 105, UpdateInfo);
+	MPrint((SCREEN_WIDTH - StringPixLength(UpdateInfo, HUGEFONT)) / 2, 105, UpdateInfo);
 	SetFont( FONT10ARIAL );
 	SetFontForeground( FONT_YELLOW );
 	swprintf(str, lengthof(str), L"There are %d maps requiring a major version update.", gusNumberOfMapsToBeForceUpdated);
-	mprintf((SCREEN_WIDTH - StringPixLength(str, FONT10ARIAL)) / 2, 130, str);
+	MPrint((SCREEN_WIDTH - StringPixLength(str, FONT10ARIAL)) / 2, 130, str);
 
 	CreateProgressBar( 2, 120, 170, 520, 202 );
 	DefineProgressBarPanel( 2, 65, 79, 94, 100, 150, 540, 222 );

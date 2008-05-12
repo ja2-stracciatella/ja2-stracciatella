@@ -509,7 +509,7 @@ void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow )
     SetFontForeground(MAP_INDEX_COLOR);
 
 	 FindFontCenterCoordinates(MAP_HORT_INDEX_X + (iCount - 1) * MAP_GRID_X, MAP_HORT_INDEX_Y, MAP_GRID_X, MAP_HORT_HEIGHT, pMapHortIndex[iCount], MAP_FONT, &usX, &usY);
-	 mprintf(usX,usY,pMapHortIndex[iCount]);
+		MPrint(usX, usY, pMapHortIndex[iCount]);
 
 		if (fDrawCursors && iCount == sSelMapY && bSelectedDestChar == -1 && !fPlotForHelicopter)
 		SetFontForeground(fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE);
@@ -519,7 +519,7 @@ void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow )
     SetFontForeground(MAP_INDEX_COLOR);
 
 	 FindFontCenterCoordinates(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y + (iCount - 1) * MAP_GRID_Y, MAP_HORT_HEIGHT, MAP_GRID_Y, pMapVertIndex[iCount], MAP_FONT, &usX, &usY);
-	 mprintf(usX,usY,pMapVertIndex[iCount]);
+		MPrint(usX, usY, pMapVertIndex[iCount]);
 	}
 
   InvalidateRegion(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y,MAP_VERT_INDEX_X+MAP_HORT_HEIGHT,  MAP_VERT_INDEX_Y+( iCount - 1 ) * MAP_GRID_Y );
@@ -557,7 +557,7 @@ void DrawMapIndexSmallMap( BOOLEAN fSelectedCursorIsYellow )
     SetFontForeground(MAP_INDEX_COLOR);
 
    FindFontCenterCoordinates(MAP_HORT_INDEX_X + iCount * MAP_GRID_X * 2 - iZoomX, MAP_HORT_INDEX_Y, MAP_GRID_X * 2, MAP_HORT_HEIGHT, pMapHortIndex[iCount], MAP_FONT, &usX, &usY);
-	 mprintf(usX,usY,pMapHortIndex[iCount]);
+		MPrint(usX, usY, pMapHortIndex[iCount]);
   }
 	SetFontDestBuffer(FRAME_BUFFER, MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y, MAP_VERT_INDEX_X + MAP_GRID_X, MAP_VERT_INDEX_Y + MAX_VIEW_SECTORS * MAP_GRID_Y);
 
@@ -571,7 +571,7 @@ void DrawMapIndexSmallMap( BOOLEAN fSelectedCursorIsYellow )
     SetFontForeground(MAP_INDEX_COLOR);
 
 	 FindFontCenterCoordinates(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y + iCount * MAP_GRID_Y * 2 - iZoomY, MAP_HORT_HEIGHT, MAP_GRID_Y * 2, pMapVertIndex[iCount], MAP_FONT, &usX, &usY);
-	 mprintf(usX,usY,pMapVertIndex[iCount]);
+		MPrint(usX, usY, pMapVertIndex[iCount]);
 	}
 
   InvalidateRegion(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y,MAP_VERT_INDEX_X+MAP_HORT_HEIGHT,  MAP_VERT_INDEX_Y+iCount*MAP_GRID_Y );
@@ -3403,7 +3403,7 @@ static void ShowPeopleInMotion(INT16 sX, INT16 sY)
 
 				FindFontCenterCoordinates(iX + sTextXOffset, 0, ICON_WIDTH, 0, sString, MAP_FONT, &usX, &usY);
 				SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-				mprintf( usX, iY + sTextYOffset, sString);
+				MPrint(usX, iY + sTextYOffset, sString);
 
 				switch( iCounter % 2 )
 				{
@@ -3498,25 +3498,25 @@ void DisplayDistancesForHelicopter( void )
 	SetFontForeground( FONT_LTGREEN );
 	SetFontBackground( FONT_BLACK );
 
-	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5, pHelicopterEtaStrings[0]);
+	MPrint(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5, pHelicopterEtaStrings[0]);
 
 	swprintf( sString, lengthof(sString), L"%d", sTotalOfTrip );
 	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5, MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
-	mprintf( sX, sYPosition + 5, sString );
+	MPrint(sX, sYPosition + 5, sString);
 
-	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + GetFontHeight(MAP_FONT), pHelicopterEtaStrings[1]);
+	MPrint(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + GetFontHeight(MAP_FONT), pHelicopterEtaStrings[1]);
 
 	swprintf( sString, lengthof(sString), L"%d", sNumSafeSectors );
 	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5 + 2 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
-	mprintf(sX, sYPosition + 5 + GetFontHeight(MAP_FONT), sString);
+	MPrint(sX, sYPosition + 5 + GetFontHeight(MAP_FONT), sString);
 
-	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 2 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[2]);
+	MPrint(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 2 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[2]);
 
 	swprintf( sString, lengthof(sString), L"%d", sNumUnSafeSectors );
 	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5 + 2 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
-	mprintf(sX, sYPosition + 5 + 2 * GetFontHeight(MAP_FONT), sString);
+	MPrint(sX, sYPosition + 5 + 2 * GetFontHeight(MAP_FONT), sString);
 
-	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 3 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[3]);
+	MPrint(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 3 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[3]);
 
 
 	// calculate the cost of the trip based on the number of safe and unsafe sectors it will pass through
@@ -3524,9 +3524,9 @@ void DisplayDistancesForHelicopter( void )
 
 	SPrintMoney(sString, uiTripCost);
 	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5 + 3 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
-	mprintf(sX, sYPosition + 5 + 3 * GetFontHeight(MAP_FONT), sString);
+	MPrint(sX, sYPosition + 5 + 3 * GetFontHeight(MAP_FONT), sString);
 
-	mprintf(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 4 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[4]);
+	MPrint(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 4 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[4]);
 
 
 	// get travel time for the last path segment
@@ -3537,14 +3537,14 @@ void DisplayDistancesForHelicopter( void )
 
 	swprintf( sString, lengthof(sString), L"%d%ls %d%ls", iTime / 60, gsTimeStrings[0], iTime % 60, gsTimeStrings[1] );
 	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 4 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
-	mprintf(sX, sYPosition + 5 + 4 * GetFontHeight(MAP_FONT), sString);
+	MPrint(sX, sYPosition + 5 + 4 * GetFontHeight(MAP_FONT), sString);
 
 
 	// show # of passengers aboard the chopper
-	mprintf( MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 5 * GetFontHeight( MAP_FONT ), pHelicopterEtaStrings[ 6 ] );
+	MPrint(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 5 * GetFontHeight( MAP_FONT ), pHelicopterEtaStrings[ 6 ] );
 	swprintf( sString, lengthof(sString), L"%d", GetNumberOfPassengersInHelicopter() );
 	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5 + 5 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
-	mprintf(sX, sYPosition + 5 + 5 * GetFontHeight(MAP_FONT), sString);
+	MPrint(sX, sYPosition + 5 + 5 * GetFontHeight(MAP_FONT), sString);
 
 
 	InvalidateRegion( MAP_HELICOPTER_ETA_POPUP_X, sOldYPosition,  MAP_HELICOPTER_ETA_POPUP_X + MAP_HELICOPTER_ETA_POPUP_WIDTH + 20, sOldYPosition + MAP_HELICOPTER_ETA_POPUP_HEIGHT );
@@ -3854,7 +3854,7 @@ static void PrintStringCenteredBoxed(INT32 x, const INT32 y, const wchar_t* cons
 	{
 		if (x < MAP_VIEW_START_X + 23) x = MAP_VIEW_START_X + 23;
 	}
-	mprintf(x, y, L"%ls", string);
+	MPrint(x, y, string);
 }
 
 
@@ -4425,14 +4425,8 @@ static void RenderIconsPerSectorForSelectedTown(void)
 		if( StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( sCurrentSectorValue ) ].bNameId != BLANK_SECTOR &&
 				!StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( sCurrentSectorValue ) ].fEnemyControlled )
 		{
-			if( sSectorMilitiaMapSector != iCounter )
-			{
-				mprintf( sX, ( INT16 )( sY + MILITIA_BOX_BOX_HEIGHT - 5), sString );
-			}
-			else
-			{
-				mprintf( sX - 15, ( INT16 )( sY + MILITIA_BOX_BOX_HEIGHT - 5), sString );
-			}
+			INT32 const x = (sSectorMilitiaMapSector != iCounter ? sX : sX - 15);
+			MPrint(x, sY + MILITIA_BOX_BOX_HEIGHT - 5, sString);
 		}
 
 		// now display
@@ -4780,12 +4774,12 @@ static void DrawTownMilitiaName(void)
 	// get the name for the current militia town
 	swprintf( sString, lengthof(sString), L"%ls %ls", pTownNames[ sSelectedMilitiaTown ], pMilitiaString[ 0 ] );
 	FindFontCenterCoordinates( MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y + MILITIA_BOX_TEXT_OFFSET_Y, MILITIA_BOX_WIDTH, MILITIA_BOX_TEXT_TITLE_HEIGHT, sString, FONT10ARIAL, &sX, &sY );
-	mprintf(  sX, sY, sString );
+	MPrint(sX, sY, sString);
 
 	// might as well show the unassigned string
 	swprintf( sString, lengthof(sString), L"%ls %ls", pTownNames[ sSelectedMilitiaTown ], pMilitiaString[ 1 ] );
 	FindFontCenterCoordinates( MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y + MILITIA_BOX_UNASSIGNED_TEXT_OFFSET_Y, MILITIA_BOX_WIDTH, GetFontHeight( FONT10ARIAL ), sString, FONT10ARIAL, &sX, &sY );
-	mprintf(  sX, sY, sString );
+	MPrint(sX, sY, sString);
 }
 
 

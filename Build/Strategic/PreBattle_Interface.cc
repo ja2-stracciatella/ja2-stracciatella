@@ -882,7 +882,7 @@ static void RenderPBHeader(INT32* piX, INT32* piWidth)
 	}
 	width = StringPixLength( str, FONT10ARIALBOLD );
 	x = 130 - width / 2;
-	mprintf( x, 4, str );
+	MPrint(x, 4, str);
 	InvalidateRegion( 0, 0, 231, 12 );
 	*piX = x;
 	*piWidth = width;
@@ -967,7 +967,7 @@ void RenderPreBattleInterface()
 			SetFont( BLOCKFONTNARROW );
 			width = StringPixLength(Location, BLOCKFONTNARROW);
 		}
-		mprintf(65 - width , 17, Location);
+		MPrint(65 - width, 17, Location);
 
 		SetFont( BLOCKFONT );
 		const wchar_t* Encounter;
@@ -989,7 +989,7 @@ void RenderPreBattleInterface()
 			SetFont( BLOCKFONTNARROW );
 			width = StringPixLength(Encounter, BLOCKFONTNARROW);
 		}
-		mprintf(54 - width , 38, Encounter);
+		MPrint(54 - width, 38, Encounter);
 
 		SetFont( BLOCKFONT );
 		const wchar_t* Mercs = gpStrategicString[STR_PB_MERCS];
@@ -999,7 +999,7 @@ void RenderPreBattleInterface()
 			SetFont( BLOCKFONTNARROW );
 			width = StringPixLength(Mercs, BLOCKFONTNARROW);
 		}
-		mprintf(139 - width , 38, Mercs);
+		MPrint(139 - width, 38, Mercs);
 
 		SetFont( BLOCKFONT );
 		const wchar_t* Milita = gpStrategicString[STR_PB_MILITIA];
@@ -1009,7 +1009,7 @@ void RenderPreBattleInterface()
 			SetFont( BLOCKFONTNARROW );
 			width = StringPixLength(Milita, BLOCKFONTNARROW);
 		}
-		mprintf(224 - width , 38, Milita);
+		MPrint(224 - width, 38, Milita);
 
 		//Draw the bottom columns
 		for (INT32 i = 0; i < (INT32)max(guiNumUninvolved, 1); ++i)
@@ -1050,15 +1050,15 @@ void RenderPreBattleInterface()
 		}
 		x = 57 + (27 - StringPixLength( str, FONT14ARIAL )) / 2;
 		y = 36;
-		mprintf( x, y, str );
+		MPrint(x, y, str);
 		//player
 		swprintf( str, lengthof(str), L"%d", guiNumInvolved );
 		x = 142 + (27 - StringPixLength( str, FONT14ARIAL )) / 2;
-		mprintf( x, y, str );
+		MPrint(x, y, str);
 		//militia
 		swprintf( str, lengthof(str), L"%d", CountAllMilitiaInSector( gubPBSectorX, gubPBSectorY ) );
 		x = 227 + (27 - StringPixLength( str, FONT14ARIAL )) / 2;
-		mprintf( x, y, str );
+		MPrint(x, y, str);
 		SetFontShadow( FONT_NEARBLACK );
 
 		SetFont( BLOCKFONT2 );
@@ -1075,23 +1075,23 @@ void RenderPreBattleInterface()
 					//NAME
 					const wchar_t* const Name = s->name;
 					x = 17 + (52-StringPixLength(Name, BLOCKFONT2)) / 2;
-					mprintf(x, y, L"%ls", Name);
+					MPrint(x, y, Name);
 					//ASSIGN
 					const wchar_t* const Assignment = GetMapscreenMercAssignmentString(s);
 					x = 72 + (54 - StringPixLength(Assignment, BLOCKFONT2)) / 2;
-					mprintf(x, y, L"%ls", Assignment);
+					MPrint(x, y, Assignment);
 					//COND
 					const wchar_t* const Condition = GetSoldierConditionInfo(s);
 					x = 129 + (58 - StringPixLength(Condition, BLOCKFONT2)) / 2;
-					mprintf(x, y, L"%ls", Condition);
+					MPrint(x, y, Condition);
 					//HP
 					swprintf(str, lengthof(str), L"%d%%", s->bLife * 100 / s->bLifeMax);
 					x = 189 + (25-StringPixLength( str, BLOCKFONT2)) / 2;
-					mprintf(x, y, L"%ls", str);
+					MPrint(x, y, str);
 					//BP
 					swprintf(str, lengthof(str), L"%d%%", s->bBreath);
 					x = 217 + (25-StringPixLength( str, BLOCKFONT2)) / 2;
-					mprintf(x, y, L"%ls", str);
+					MPrint(x, y, str);
 
 					y += ROW_HEIGHT;
 				}
@@ -1105,7 +1105,7 @@ void RenderPreBattleInterface()
 			const wchar_t* None = gpStrategicString[STR_PB_NONE];
 			x = 17 + (52 - StringPixLength(None, BLOCKFONT2)) / 2;
 			y = BOTTOM_Y - ROW_HEIGHT + 2;
-			mprintf(x, y, None);
+			MPrint(x, y, None);
 		}
 		else
 		{
@@ -1120,26 +1120,26 @@ void RenderPreBattleInterface()
 						//NAME
 						const wchar_t* const Name = s->name;
 						x = 17 + (52 - StringPixLength(Name, BLOCKFONT2)) / 2;
-						mprintf(x , y, Name);
+						MPrint(x , y, Name);
 						//ASSIGN
 						const wchar_t* const Assignment = GetMapscreenMercAssignmentString(s);
 						x = 72 + (54 - StringPixLength(Assignment, BLOCKFONT2)) / 2;
-						mprintf(x, y, Assignment);
+						MPrint(x, y, Assignment);
 						//LOC
 						GetMapscreenMercLocationString(s, str, lengthof(str));
 						x = 128 + (33-StringPixLength( str, BLOCKFONT2)) / 2;
-						mprintf( x, y, str );
+						MPrint(x, y, str);
 						//DEST
 						GetMapscreenMercDestinationString(s, str, lengthof(str));
 						if( wcslen( str ) > 0 )
 						{
 							x = 164 + (41-StringPixLength( str, BLOCKFONT2)) / 2;
-							mprintf( x, y, str );
+							MPrint(x, y, str);
 						}
 						//DEP
 						GetMapscreenMercDepartureString(s, str, lengthof(str), &ubJunk);
 						x = 208 + (34-StringPixLength( str, BLOCKFONT2)) / 2;
-						mprintf( x, y, str );
+						MPrint(x, y, str);
 						y += ROW_HEIGHT;
 					}
 				}

@@ -291,7 +291,7 @@ void RenderClock(void)
 
 	const wchar_t* const str = (gfPauseDueToPlayerGamePause ? pPausedGameText[0] : WORLDTIMESTR);
 	FindFontCenterCoordinates(x, y, CLOCK_WIDTH, CLOCK_HEIGHT, str, CLOCK_FONT, &x, &y);
-	mprintf(x, y, str);
+	MPrint(x, y, str);
 }
 
 

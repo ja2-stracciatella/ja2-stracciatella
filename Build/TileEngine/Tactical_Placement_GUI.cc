@@ -497,14 +497,14 @@ static void RenderTacticalPlacementGUI(void)
 		}
 		else
 		{
-			mprintf( xp + 16, yp + 14, L"?" );
+			MPrint(xp + 16, yp + 14, L"?");
 			InvalidateRegion( xp + 16, yp + 14, xp + 24, yp + 22 );
 		}
 		SetFont( BLOCKFONT );
 		width = StringPixLength( pSoldier->name, BLOCKFONT );
 		xp = xp + ( 48 - width ) / 2;
 		yp = yp + 33;
-		mprintf( xp, yp, pSoldier->name );
+		MPrint(xp, yp, pSoldier->name);
 		InvalidateRegion( xp, yp, xp + width, yp + width );
 	}
 

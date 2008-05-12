@@ -625,7 +625,7 @@ void RenderSectorExitMenu( )
 	{
 		SetFontForeground( FONT_MCOLOR_WHITE );
 	}
-	mprintf( gExitDialog.sX + 45, gExitDialog.sY + 37, TacticalStr[ EXIT_GUI_SELECTED_MERC_STR ] );
+	MPrint(gExitDialog.sX + 45, gExitDialog.sY + 37, TacticalStr[EXIT_GUI_SELECTED_MERC_STR]);
 
 
 	if ( gExitDialog.fAllMoveDisabled )
@@ -640,7 +640,7 @@ void RenderSectorExitMenu( )
 	{
 		SetFontForeground( FONT_MCOLOR_WHITE );
 	}
-	mprintf( gExitDialog.sX + 45, gExitDialog.sY + 57, TacticalStr[ EXIT_GUI_ALL_MERCS_IN_SQUAD_STR ] );
+	MPrint(gExitDialog.sX + 45, gExitDialog.sY + 57, TacticalStr[EXIT_GUI_ALL_MERCS_IN_SQUAD_STR]);
 
 
 	if ( gExitDialog.fGotoSectorDisabled )
@@ -658,11 +658,11 @@ void RenderSectorExitMenu( )
 
 	if( gExitDialog.fGotoSectorText )
 	{ //only if tactical traversal is from one town sector to another town sector (5 minute convenience warp)
-		mprintf( gExitDialog.sX + 180, gExitDialog.sY + 45, TacticalStr[ EXIT_GUI_GOTO_SECTOR_STR ] );
+		MPrint(gExitDialog.sX + 180, gExitDialog.sY + 45, TacticalStr[EXIT_GUI_GOTO_SECTOR_STR]);
 	}
 	else
 	{ //most sectors don't allow tactical traversal.  Exiting results in entering the mapscreen.
-		mprintf( gExitDialog.sX + 180, gExitDialog.sY + 45, TacticalStr[ EXIT_GUI_GOTO_MAP_STR ] );
+		MPrint(gExitDialog.sX + 180, gExitDialog.sY + 45, TacticalStr[EXIT_GUI_GOTO_MAP_STR]);
 	}
 
 	SaveBackgroundRects();

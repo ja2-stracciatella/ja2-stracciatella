@@ -448,67 +448,67 @@ void UpdateItemStatsPanel()
 	if( gpItem && iCurrentTaskbar == TASK_ITEMS &&
 			gbEditingMode != EDITING_TRIGGERS && gbEditingMode != EDITING_ACTIONITEMS )
 	{
-		mprintf( 500, 366, L"Toggle hide flag" );
+		MPrint(500, 366, L"Toggle hide flag");
 	}
 	SetFontForeground( FONT_YELLOW );
 	switch( gbEditingMode )
 	{
 		case EDITING_NOTHING:
 			if( iCurrentTaskbar == TASK_ITEMS )
-				mprintf( 520, 400, L"No item selected." );
+				MPrint(520, 400, L"No item selected.");
 			else
 			{
-				mprintf( 500, 390, L"Slot available for" );
-				mprintf( 500, 400, L"random generation." );
+				MPrint(500, 390, L"Slot available for");
+				MPrint(500, 400, L"random generation.");
 			}
 			return;
 		case EDITING_KEYS:
 			if( !gpEditingItemPool )
 			{
-				mprintf( 500, 400, L"Keys not editable." );
+				MPrint(500, 400, L"Keys not editable.");
 				return;
 			}
 			break;
 		case EDITING_OWNERSHIP:
-			mprintf( 512, 384, L"ProfileID of owner" );
+			MPrint(512, 384, L"ProfileID of owner");
 			return;
 		case EDITING_NOT_YET_IMPLEMENTED:
-			mprintf( 500, 400, L"Item class not implemented." );
+			MPrint(500, 400, L"Item class not implemented.");
 			return;
 		case EDITING_DROPPABLE:
-			mprintf( 500, 400, L"Slot locked as empty.");
+			MPrint(500, 400, L"Slot locked as empty.");
 			return;
 		case EDITING_GUNS:
-			mprintf( 512, 384, L"Status" );
-			mprintf( 512, 404, L"Rounds" );
-			mprintf( 512, 424, L"Trap Level" );
+			MPrint(512, 384, L"Status");
+			MPrint(512, 404, L"Rounds");
+			MPrint(512, 424, L"Trap Level");
 			break;
 		case EDITING_AMMO:
-			mprintf( 512, 384, L"Quantity" );
-			mprintf( 512, 404, L"Trap Level" );
+			MPrint(512, 384, L"Quantity");
+			MPrint(512, 404, L"Trap Level");
 			break;
 		case EDITING_ARMOUR:
 		case EDITING_EQUIPMENT:
-			mprintf( 512, 384, L"Status" );
-			mprintf( 512, 404, L"Trap Level" );
+			MPrint(512, 384, L"Status");
+			MPrint(512, 404, L"Trap Level");
 			break;
 		case EDITING_EXPLOSIVES:
-			mprintf( 512, 380, L"Status" );
-			mprintf( 512, 404, L"Quantity" );
-			mprintf( 512, 424, L"Trap Level" );
+			MPrint(512, 380, L"Status");
+			MPrint(512, 404, L"Quantity");
+			MPrint(512, 424, L"Trap Level");
 			break;
 		case EDITING_MONEY:
-			mprintf( 532, 384, L"Dollars" );
+			MPrint(532, 384, L"Dollars");
 			break;
 		case EDITING_ACTIONITEMS:
-			mprintf( 512, 369, L"Status" );
-			mprintf( 512, 389, L"Trap Level" );
+			MPrint(512, 369, L"Status");
+			MPrint(512, 389, L"Trap Level");
 			break;
 		case EDITING_TRIGGERS:
-			mprintf( 512, 369, L"Trap Level");
-			mprintf( 512, 389, L"Tolerance" );
+			MPrint(512, 369, L"Trap Level");
+			MPrint(512, 389, L"Tolerance");
 			if (gpEditingItemPool && gpItem->bFrequency >= PANIC_FREQUENCY_3)
-				mprintf( 500, 407, L"Alarm Trigger" );
+				MPrint(500, 407, L"Alarm Trigger");
 			break;
 	}
 	if( gpEditingItemPool )
@@ -520,10 +520,10 @@ void UpdateItemStatsPanel()
 			SetFontForeground( FONT_ORANGE );
 		else
 			SetFontForeground( FONT_RED );
-		mprintf( 512, 444, L"Exist Chance" );
-		mprintf( 587, 366, L"B" );
-		mprintf( 609, 366, L"R" );
-		mprintf( 630, 366, L"S" );
+		MPrint(512, 444, L"Exist Chance");
+		MPrint(587, 366, L"B");
+		MPrint(609, 366, L"R");
+		MPrint(630, 366, L"S");
 	}
 	InvalidateRegion( 477, 362, 161, 97 );
 }

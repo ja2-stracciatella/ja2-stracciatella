@@ -1701,10 +1701,10 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	{
 		yp += b->bTextYSubOffSet;
 		xp += b->bTextXSubOffSet;
-		mprintf(xp, yp, b->string);
+		MPrint(xp, yp, b->string);
 	}
 #else
-	mprintf(xp, yp, b->string);
+	MPrint(xp, yp, b->string);
 #endif
 	// Restore the old text printing settings
 }

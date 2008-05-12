@@ -571,9 +571,9 @@ static void RenderInfoInSector(void)
 		//Render general enemy statistics
 		ClearViewerRegion( 105, VIEWER_BOTTOM + 10, 265, VIEWER_BOTTOM + 66 );
 		SetFontForeground( FONT_YELLOW );
-		mprintf( 105, VIEWER_BOTTOM + 10, L"GLOBAL INFO" );
+		MPrint( 105, VIEWER_BOTTOM + 10, L"GLOBAL INFO");
 		SetFontForeground( FONT_GRAY2 );
-		mprintf( 118, VIEWER_BOTTOM + 24, L"Strategic AI Awake" );
+		MPrint( 118, VIEWER_BOTTOM + 24, L"Strategic AI Awake");
 		mprintf( 105, VIEWER_BOTTOM + 36, L"Total Request Points:  %d", giRequestPoints );
 		mprintf( 105, VIEWER_BOTTOM + 46, L"Total Reinforcement Points:  %d", giReinforcementPoints );
 		mprintf( 105, VIEWER_BOTTOM + 56, L"Progress (Current/Highest): %d%%/%d%%", CurrentPlayerProgressPercentage(), HighestPlayerProgressPercentage() );
@@ -706,12 +706,12 @@ static void RenderInfoInSector(void)
 		yp += 10;
 		if( pSector->uiFlags & SF_PENDING_ALTERNATE_MAP )
 		{
-			mprintf( 280, yp, L"SF_PENDING_ALTERNATE_MAP", pSector->ubCreaturesInBattle, pSector->ubNumCreatures );
+			MPrint(280, yp, L"SF_PENDING_ALTERNATE_MAP");
 			yp += 10;
 		}
 		if( pSector->uiFlags & SF_USE_ALTERNATE_MAP )
 		{
-			mprintf( 280, yp, L"SF_USE_ALTERNATE_MAP", pSector->ubCreaturesInBattle, pSector->ubNumCreatures );
+			MPrint(280, yp, L"SF_USE_ALTERNATE_MAP");
 			yp += 10;
 		}
 	}
@@ -736,10 +736,10 @@ static void RenderViewer(void)
 		SetFontForeground( FONT_YELLOW );
 		SetFontShadow( FONT_NEARBLACK );
 
-		mprintf( 38, VIEWER_BOTTOM + 33, L"Admins" );
-		mprintf( 38, VIEWER_BOTTOM + 53, L"Troops" );
-		mprintf( 38, VIEWER_BOTTOM + 73, L"Elites" );
-		mprintf( 38, VIEWER_BOTTOM + 93, L"Creatures" );
+		MPrint(38, VIEWER_BOTTOM + 33, L"Admins");
+		MPrint(38, VIEWER_BOTTOM + 53, L"Troops");
+		MPrint(38, VIEWER_BOTTOM + 73, L"Elites");
+		MPrint(38, VIEWER_BOTTOM + 93, L"Creatures");
 	}
 
 	if( gfRenderMap )
@@ -772,7 +772,7 @@ static void RenderViewer(void)
 			else
 				SetFontForeground( FONT_GRAY1 );
 			swprintf(str, lengthof(str), L"%d", x);
-			mprintf( VIEWER_LEFT+x*26-(26+StringPixLength( str, FONT12POINT1 ))/2, VIEWER_TOP-12, str );
+			MPrint(VIEWER_LEFT + x * 26 - (26 + StringPixLength(str, FONT12POINT1)) / 2, VIEWER_TOP - 12, str);
 		}
 		if( gbViewLevel )
 		{
@@ -1543,7 +1543,7 @@ static void PrintEnemyPopTable(void)
 
 	// print table title
 	SetFontForeground( FONT_RED );
-	mprintf( usX, usY, L"ENEMY POPULATION:" );
+	MPrint(usX, usY, L"ENEMY POPULATION:");
 	usY += POP_TABLE_Y_GAP;
 
 	// print horizontal labels
@@ -1683,7 +1683,7 @@ static void PrintEnemiesKilledTable(void)
 
 	// print table title
 	SetFontForeground( FONT_RED );
-	mprintf( usX, usY, L"ENEMIES KILLED:" );
+	MPrint(usX, usY, L"ENEMIES KILLED:");
 	usY += KILLED_TABLE_Y_GAP;
 
 	// print horizontal labels
@@ -1818,7 +1818,7 @@ static void PrintDetailedEnemiesInSectorInfo(INT32 iScreenX, INT32 iScreenY, UIN
 			swprintf(wSubString, lengthof(wSubString), L"%d reinforcements requested", -iSurplus);
 			wcscat( wString, wSubString );
 		}
-		mprintf( iScreenX, iScreenY, wString );
+		MPrint(iScreenX, iScreenY, wString);
 		iScreenY += 10;
 
 		if( gGarrisonGroup[ pSector->ubGarrisonID ].ubPendingGroupID )
@@ -1835,14 +1835,14 @@ static void PrintDetailedEnemiesInSectorInfo(INT32 iScreenX, INT32 iScreenY, UIN
 		}
 		else
 		{
-			mprintf( iScreenX, iScreenY, L"No pending reinforcements for this sector." );
+			MPrint(iScreenX, iScreenY, L"No pending reinforcements for this sector.");
 		}
 		iScreenY += 10;
 	}
 	else
 	{
 		SetFontForeground( FONT_GRAY2 );
-		mprintf( iScreenX, iScreenY, L"No garrison information for this sector." );
+		MPrint(iScreenX, iScreenY, L"No garrison information for this sector.");
 		iScreenY += 10;
 	}
 
@@ -1946,7 +1946,7 @@ static void PrintDetailedEnemiesInSectorInfo(INT32 iScreenX, INT32 iScreenY, UIN
 						break;
 				}
 
-				mprintf( iScreenX, iScreenY, wString );
+				MPrint(iScreenX, iScreenY, wString);
 				iScreenY += 10;
 
 				ubGroupCnt++;

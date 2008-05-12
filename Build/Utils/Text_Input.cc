@@ -1199,7 +1199,7 @@ static void RenderActiveTextField(void)
 		SetFontForeground( pColors->ubForeColor );
 		SetFontShadow( pColors->ubShadowColor );
 		SetFontBackground( 0 );
-		mprintf(gpActive->region.RegionTopLeftX + 3, gpActive->region.RegionTopLeftY + usOffset, L"%ls", gpActive->szString);
+		MPrint(gpActive->region.RegionTopLeftX + 3, gpActive->region.RegionTopLeftY + usOffset, gpActive->szString);
 	}
 	//Draw the cursor in the correct position.
 	if (gfEditingText && gpActive->szString && GetJA2Clock() % 1000 < 500)
@@ -1242,7 +1242,7 @@ void RenderInactiveTextField( UINT8 ubID )
 	SetFontShadow( pColors->ubShadowColor );
 	SetFontBackground( 0 );
 	RenderBackgroundField( pNode );
-	mprintf(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, L"%ls", pNode->szString);
+	MPrint(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, pNode->szString);
 	RestoreFontSettings();
 }
 
@@ -1266,7 +1266,7 @@ static void RenderInactiveTextFieldNode(TEXTINPUTNODE* pNode)
 	UINT16 usOffset = (pNode->region.RegionBottomRightY - pNode->region.RegionTopLeftY - GetFontHeight(pColors->usFont)) / 2;
 	SetFontBackground( 0 );
 	RenderBackgroundField( pNode );
-	mprintf(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, L"%ls", pNode->szString);
+	MPrint(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, pNode->szString);
 	RestoreFontSettings();
 	if( !pNode->fEnabled && pColors->fUseDisabledAutoShade )
 	{

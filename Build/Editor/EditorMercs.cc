@@ -811,7 +811,7 @@ void DisplayWayPoints(void)
 			wchar_t buf[16];
 			swprintf(buf, lengthof(buf), L"%d", bPoint);
 			FindFontCenterCoordinates(sScreenX, sScreenY, 1, 1, buf, TINYFONT1, &sX, &sY);
-			mprintf(sX, sY, buf);
+			MPrint(sX, sY, buf);
 		}
 	}
 }
@@ -1864,51 +1864,51 @@ void UpdateMercsInfo()
 			SetFont( SMALLCOMPFONT );
 			SetFontForeground( FONT_YELLOW );
 			SetFontShadow( FONT_NEARBLACK );
-			mprintf( 240, 363, L" --=ORDERS=-- ");
-			mprintf( 240, 419, L"--=ATTITUDE=--");
+			MPrint(240, 363, L" --=ORDERS=-- ");
+			MPrint(240, 419, L"--=ATTITUDE=--");
 			if( iDrawMode == DRAW_MODE_CREATURE )
 			{
 				DisplayBodyTypeInfo();
 				SetFont( SMALLCOMPFONT );
 				SetFontForeground( FONT_LTBLUE );
-				mprintf( 493, 416, L"RELATIVE");
-				mprintf( 480, 422, L"ATTRIBUTES");
+				MPrint(493, 416, L"RELATIVE");
+				MPrint(480, 422, L"ATTRIBUTES");
 			}
 			else
 			{
 				SetFontForeground( FONT_LTGREEN );
-				mprintf( 480, 363, L"RELATIVE");
-				mprintf( 480, 371, L"EQUIPMENT");
+				MPrint(480, 363, L"RELATIVE");
+				MPrint(480, 371, L"EQUIPMENT");
 				SetFontForeground( FONT_LTBLUE );
-				mprintf( 530, 363, L"RELATIVE");
-				mprintf( 530, 371, L"ATTRIBUTES");
+				MPrint(530, 363, L"RELATIVE");
+				MPrint(530, 371, L"ATTRIBUTES");
 			}
 			if( iDrawMode == DRAW_MODE_ENEMY )
 			{
 				SetFont( FONT10ARIAL );
 				SetFontForeground( FONT_YELLOW );
-				mprintf( 590, 411, L"Army" );
-				mprintf( 590, 425, L"Admin" );
-				mprintf( 590, 439, L"Elite" );
+				MPrint(590, 411, L"Army");
+				MPrint(590, 425, L"Admin");
+				MPrint(590, 439, L"Elite");
 			}
 			break;
 		case MERC_ATTRIBUTEMODE:
 			SetFont( FONT10ARIAL );
 			SetFontForeground( FONT_YELLOW );
 			SetFontShadow( FONT_NEARBLACK );
-			mprintf( 225, 370, L"Exp. Level");
-			mprintf( 225, 395, L"Life");
-			mprintf( 225, 420, L"LifeMax");
-			mprintf( 225, 445, L"Marksmanship");
-			mprintf( 325, 370, L"Strength");
-			mprintf( 325, 395, L"Agility");
-			mprintf( 325, 420, L"Dexterity");
-			mprintf( 325, 445, L"Wisdom");
-			mprintf( 425, 370, L"Leadership");
-			mprintf( 425, 395, L"Explosives");
-			mprintf( 425, 420, L"Medical");
-			mprintf( 425, 445, L"Mechanical");
-			mprintf( 525, 370, L"Morale");
+			MPrint(225, 370, L"Exp. Level");
+			MPrint(225, 395, L"Life");
+			MPrint(225, 420, L"LifeMax");
+			MPrint(225, 445, L"Marksmanship");
+			MPrint(325, 370, L"Strength");
+			MPrint(325, 395, L"Agility");
+			MPrint(325, 420, L"Dexterity");
+			MPrint(325, 445, L"Wisdom");
+			MPrint(425, 370, L"Leadership");
+			MPrint(425, 395, L"Explosives");
+			MPrint(425, 420, L"Medical");
+			MPrint(425, 445, L"Mechanical");
+			MPrint(525, 370, L"Morale");
 			break;
 		case MERC_APPEARANCEMODE:
 			SetFont( FONT10ARIAL );
@@ -1918,10 +1918,10 @@ void UpdateMercsInfo()
 				SetFontForeground( FONT_DKYELLOW );
 			SetFontShadow( FONT_NEARBLACK );
 
-			mprintf( 396, 364, L"Hair color:");
-			mprintf( 396, 388, L"Skin color:");
-			mprintf( 396, 412, L"Vest color:");
-			mprintf( 396, 436, L"Pant color:");
+			MPrint(396, 364, L"Hair color:");
+			MPrint(396, 388, L"Skin color:");
+			MPrint(396, 412, L"Vest color:");
+			MPrint(396, 436, L"Pant color:");
 
 			SetFont( SMALLCOMPFONT );
 			SetFontForeground( FONT_BLACK );
@@ -1935,10 +1935,10 @@ void UpdateMercsInfo()
 			}
 			else
 			{
-				mprintf( 396, 374, L"RANDOM");
-				mprintf( 396, 398, L"RANDOM");
-				mprintf( 396, 422, L"RANDOM");
-				mprintf( 396, 446, L"RANDOM");
+				MPrint(396, 374, L"RANDOM");
+				MPrint(396, 398, L"RANDOM");
+				MPrint(396, 422, L"RANDOM");
+				MPrint(396, 446, L"RANDOM");
 				ShowEditMercPalettes( NULL ); //will display grey scale to signify random
 			}
 			DisplayBodyTypeInfo();
@@ -1976,25 +1976,25 @@ void UpdateMercsInfo()
 			SetFontShadow( FONT_NEARBLACK );
 			switch( gpSelected->pSoldier->bOrders )
 			{
-				case STATIONARY:	mprintf( 430, 363, L"STATIONARY" );			break;
-				case ONCALL:			mprintf( 430, 363, L"ON CALL" );				break;
-				case ONGUARD:			mprintf( 430, 363, L"ON GUARD" );				break;
-				case SEEKENEMY:		mprintf( 430, 363, L"SEEK ENEMY" );			break;
-				case CLOSEPATROL:	mprintf( 430, 363, L"CLOSE PATROL" );		break;
-				case FARPATROL:		mprintf( 430, 363, L"FAR PATROL" );			break;
-				case POINTPATROL:	mprintf( 430, 363, L"POINT PATROL" );		break;
-				case RNDPTPATROL:	mprintf( 430, 363, L"RND PT PATROL" );	break;
+				case STATIONARY:  MPrint(430, 363, L"STATIONARY");    break;
+				case ONCALL:      MPrint(430, 363, L"ON CALL");       break;
+				case ONGUARD:     MPrint(430, 363, L"ON GUARD");      break;
+				case SEEKENEMY:   MPrint(430, 363, L"SEEK ENEMY");    break;
+				case CLOSEPATROL: MPrint(430, 363, L"CLOSE PATROL");  break;
+				case FARPATROL:   MPrint(430, 363, L"FAR PATROL");    break;
+				case POINTPATROL: MPrint(430, 363, L"POINT PATROL");  break;
+				case RNDPTPATROL: MPrint(430, 363, L"RND PT PATROL"); break;
 			}
 			SetFontForeground( FONT_YELLOW );
-			mprintf( 186, 363, L"Action" );
-			mprintf( 268, 363, L"Time" );
-			mprintf( 309, 363, L"V" );
-			mprintf( 331, 363, L"GridNo 1" );
-			mprintf( 381, 363, L"GridNo 2" );
-			mprintf( 172, 376, L"1)" );
-			mprintf( 172, 397, L"2)" );
-			mprintf( 172, 418, L"3)" );
-			mprintf( 172, 439, L"4)" );
+			MPrint(186, 363, L"Action");
+			MPrint(268, 363, L"Time");
+			MPrint(309, 363, L"V");
+			MPrint(331, 363, L"GridNo 1");
+			MPrint(381, 363, L"GridNo 2");
+			MPrint(172, 376, L"1)");
+			MPrint(172, 397, L"2)");
+			MPrint(172, 418, L"3)");
+			MPrint(172, 439, L"4)");
 			if( gubScheduleInstructions )
 			{
 				wchar_t str[255];
@@ -2929,7 +2929,7 @@ static void RenderCurrentSchedule(void)
 			SetFontForeground( FONT_WHITE );
 			swprintf(str, lengthof(str), L"%d%c", i / 2 + 1, 'A' + i % 2);
 			FindFontCenterCoordinates(sScreenX, sScreenY, 1, 1, str, TINYFONT1, &sX, &sY);
-			mprintf( sX, sY, str );
+			MPrint(sX, sY, str);
 		}
 	}
 }

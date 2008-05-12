@@ -137,9 +137,8 @@ UINT32 ErrorScreenHandle(void)
 	SetFont( LARGEFONT1 );
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( FONT_MCOLOR_LTGRAY );
-	mprintf( 50, 200, L"RUNTIME ERROR" );
-
-	mprintf( 50, 225, L"PRESS <ESC> TO EXIT" );
+	MPrint(50, 200, L"RUNTIME ERROR");
+	MPrint(50, 225, L"PRESS <ESC> TO EXIT");
 
 	SetFont( FONT12ARIAL );
 	SetFontForeground( FONT_YELLOW );
@@ -212,7 +211,7 @@ UINT32 InitScreenHandle(void)
 		const INT32 y = SCREEN_HEIGHT;
 
 #ifdef JA2BETAVERSION
-		mprintf(x, y - 60, L"(Beta version error reporting enabled)");
+		MPrint(x, y - 60, L"(Beta version error reporting enabled)");
 #endif
 
 		mprintf(x, y - 50,
@@ -616,13 +615,13 @@ void DoDemoIntroduction(void)
 	height = DisplayWrappedString(20, yp, 400, 3, FONT14ARIAL, FONT_YELLOW, gpDemoIntroString[0], FONT_BLACK, LEFT_JUSTIFIED);
 	yp = (UINT16)(yp + 25 + height);
 	SetFontForeground( FONT_GRAY2 );
-	mprintf( 35, yp, L"-" );
+	MPrint(35, yp, L"-");
 	height = DisplayWrappedString(45, yp, 385, 3, FONT14ARIAL, FONT_GRAY2, gpDemoIntroString[1], FONT_BLACK, LEFT_JUSTIFIED);
 	yp = (UINT16)(yp + 25 + height);
-	mprintf( 35, yp, L"-" );
+	MPrint(35, yp, L"-");
 	height = DisplayWrappedString(45, yp, 385, 3, FONT14ARIAL, FONT_GRAY2, gpDemoIntroString[2], FONT_BLACK, LEFT_JUSTIFIED);
 	yp = (UINT16)(yp + 25 + height);
-	mprintf( 35, yp, L"-" );
+	MPrint(35, yp, L"-");
 	height = DisplayWrappedString(45, yp, 385, 3, FONT14ARIAL, FONT_GRAY2, gpDemoIntroString[3], FONT_BLACK, LEFT_JUSTIFIED);
 	yp = (UINT16)(yp + 30 + height);
 	height = DisplayWrappedString(35, yp, 385, 3, FONT14ARIAL, FONT_GRAY3, gpDemoIntroString[4], FONT_BLACK, LEFT_JUSTIFIED);
@@ -854,7 +853,7 @@ UINT32 DemoExitScreenHandle(void)
 			PlayJA2Sample(ENTERING_TEXT, MIDVOLUME, 1, 39 + iPercentage / 2);
 			wcscpy( str, gpDemoString[0] );
 			str[ uiCharsToPrint ] = L'\0';
-			mprintf( usCenter - 10 - uiWidthString, 5, str );
+			MPrint(usCenter - 10 - uiWidthString, 5, str);
 			InvalidateRegion( usCenter - 10 - uiWidthString, 5, usCenter - 10, 19 );
 			ExecuteBaseDirtyRectQueue();
 			EndFrameBufferRender();
@@ -897,7 +896,7 @@ UINT32 DemoExitScreenHandle(void)
 			PlayJA2Sample(ENTERING_TEXT, MIDVOLUME, 1, 39 + iPercentage / 2);
 			wcscpy( str, gpDemoString[1] );
 			str[ uiCharsToPrint ] = L'\0';
-			mprintf( usCenter + 10, 5, str );
+			MPrint(usCenter + 10, 5, str);
 			InvalidateRegion( usCenter + 10, 5, usCenter + 10 + uiWidthString, 19 );
 			ExecuteBaseDirtyRectQueue();
 			EndFrameBufferRender();
@@ -1047,7 +1046,7 @@ UINT32 DemoExitScreenHandle(void)
 			width = StringPixLength(String, usFont);
 			SetFont( usFont );
 
-			mprintf((SCREEN_WIDTH - width) / 2, yp + i * 17, String);
+			MPrint((SCREEN_WIDTH - width) / 2, yp + i * 17, String);
 		}
 		if( !fSetMusicToFade && iPercentage > 43000 )
 		{
@@ -1207,7 +1206,7 @@ UINT32 DemoExitScreenHandle(void)
 #else
 			const INT32 y = 420;
 #endif
-			mprintf(x, y, str);
+			MPrint(x, y, str);
 			InvalidateRegion(x, y, x + uiWidthString, y + 13);
 			ExecuteBaseDirtyRectQueue();
 			EndFrameBufferRender();

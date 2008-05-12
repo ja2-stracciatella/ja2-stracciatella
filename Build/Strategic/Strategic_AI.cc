@@ -4158,13 +4158,13 @@ static void RenderAIViewerGarrisonInfo(INT32 x, INT32 y, SECTORINFO* pSector)
 		}
 		else
 		{
-			mprintf( x, y+10, L"No pending reinforcements for this sector." );
+			MPrint(x, y + 10, L"No pending reinforcements for this sector.");
 		}
 	}
 	else
 	{
 		SetFontForeground( FONT_GRAY2 );
-		mprintf( x, y, L"No garrison information for this sector." );
+		MPrint(x, y, L"No garrison information for this sector.");
 	}
 }
 

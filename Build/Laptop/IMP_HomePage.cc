@@ -167,8 +167,7 @@ static void DisplayPlayerActivationString(void)
 
   // reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
-  mprintf(IMP_PLAYER_ACTIVATION_STRING_X, IMP_PLAYER_ACTIVATION_STRING_Y, pPlayerActivationString);
-
+	MPrint(IMP_PLAYER_ACTIVATION_STRING_X, IMP_PLAYER_ACTIVATION_STRING_Y, pPlayerActivationString);
 
 	fNewCharInActivationString = FALSE;
   fReDrawScreenFlag = TRUE;

@@ -332,24 +332,22 @@ UINT32 gprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 }
 
 
-static UINT32 vmprintf_buffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, va_list ArgPtr)
+static void mprint_buffer(UINT16* const pDestBuf, UINT32 const uiDestPitchBYTES, INT32 x, INT32 const y, wchar_t const* str)
 {
-	Assert(pFontString != NULL);
-
-	wchar_t	string[512];
-	vswprintf(string, lengthof(string), pFontString, ArgPtr);
-
-	INT32 destx = x;
-	INT32 desty = y;
-
-	for (const wchar_t* curletter = string; *curletter != L'\0'; curletter++)
+	HVOBJECT const font = FontObjs[FontDefault];
+	for (; *str != L'\0'; ++str)
 	{
-		wchar_t transletter = GetIndex(*curletter);
-		Blt8BPPDataTo16BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
-		destx += GetWidth(FontObjs[FontDefault], transletter);
+		wchar_t const glyph = GetIndex(*str);
+		Blt8BPPDataTo16BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, font, x, y, glyph, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
+		x += GetWidth(font, glyph);
 	}
+}
 
-	return 0;
+
+void MPrint(INT32 const x, INT32 const y, wchar_t const* const str)
+{
+	SGPVSurface::Lock l(FontDestBuffer);
+	mprint_buffer(l.Buffer<UINT16>(), l.Pitch(), x, y, str);
 }
 
 
@@ -357,29 +355,25 @@ static UINT32 vmprintf_buffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x
  * specified, using the currently selected font. Other than the X/Y coordinates,
  * the parameters are identical to printf. The resulting string may be no longer
  * than 512 word-characters. Uses monochrome font color settings */
-UINT32 mprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
+void mprintf(INT32 const x, INT32 const y, wchar_t const* const fmt, ...)
 {
-	SGPVSurface::Lock l(FontDestBuffer);
-	UINT16* const pDestBuf         = l.Buffer<UINT16>();
-	UINT32  const uiDestPitchBYTES = l.Pitch();
-
-	va_list ArgPtr;
-	va_start(ArgPtr, pFontString);
-	UINT32 Ret = vmprintf_buffer(pDestBuf, uiDestPitchBYTES, x, y, pFontString, ArgPtr);
-	va_end(ArgPtr);
-
-	return Ret;
+	wchar_t str[512];
+	va_list ap;
+	va_start(ap, fmt);
+	vswprintf(str, lengthof(str), fmt, ap);
+	va_end(ap);
+	MPrint(x, y, str);
 }
 
 
-UINT32 mprintf_buffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const wchar_t* pFontString, ...)
+void mprintf_buffer(UINT16* const pDestBuf, UINT32 const uiDestPitchBYTES, INT32 const x, INT32 const y, wchar_t const* const fmt, ...)
 {
-	va_list ArgPtr;
-	va_start(ArgPtr, pFontString);
-	UINT32 Ret = vmprintf_buffer(pDestBuf, uiDestPitchBYTES, x, y, pFontString, ArgPtr);
-	va_end(ArgPtr);
-
-	return Ret;
+	wchar_t str[512];
+	va_list ap;
+	va_start(ap, fmt);
+	vswprintf(str, lengthof(str), fmt, ap);
+	va_end(ap);
+	mprint_buffer(pDestBuf, uiDestPitchBYTES, x, y, str);
 }
 
 
@@ -418,18 +412,16 @@ static UINT32 vmprintf_buffer_coded(UINT16* const pDestBuf, const UINT32 uiDestP
 }
 
 
-UINT32 mprintf_buffer_coded(UINT16* const pDestBuf, const UINT32 uiDestPitchBYTES, const INT32 x, const INT32 y, const wchar_t* const pFontString, ...)
+void mprintf_buffer_coded(UINT16* const pDestBuf, const UINT32 uiDestPitchBYTES, const INT32 x, const INT32 y, const wchar_t* const pFontString, ...)
 {
 	va_list ArgPtr;
 	va_start(ArgPtr, pFontString);
-	UINT32 Ret = vmprintf_buffer_coded(pDestBuf, uiDestPitchBYTES, x, y, pFontString, ArgPtr);
+	vmprintf_buffer_coded(pDestBuf, uiDestPitchBYTES, x, y, pFontString, ArgPtr);
 	va_end(ArgPtr);
-
-	return Ret;
 }
 
 
-UINT32 mprintf_coded(INT32 x, INT32 y, const wchar_t* pFontString, ...)
+void mprintf_coded(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 {
 	SGPVSurface::Lock l(FontDestBuffer);
 	UINT16* const pDestBuf         = l.Buffer<UINT16>();
@@ -437,10 +429,8 @@ UINT32 mprintf_coded(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 
 	va_list ArgPtr;
 	va_start(ArgPtr, pFontString);
-	UINT32 Ret = vmprintf_buffer_coded(pDestBuf, uiDestPitchBYTES, x, y, pFontString, ArgPtr);
+	vmprintf_buffer_coded(pDestBuf, uiDestPitchBYTES, x, y, pFontString, ArgPtr);
 	va_end(ArgPtr);
-
-	return Ret;
 }
 
 

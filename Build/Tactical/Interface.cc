@@ -2141,7 +2141,7 @@ static void CreateTopMessage(void)
 	INT16 sX;
 	INT16 sY;
 	FindFontCenterCoordinates(bar->x, bar->y, bar->w, bar->h, msg, TINYFONT1, &sX, &sY);
-	mprintf(sX, sY, msg);
+	MPrint(sX, sY, msg);
 
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	SetFontShadow(DEFAULT_SHADOW);

@@ -247,7 +247,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	INT16 x;
 	INT16 y;
 	FindFontCenterCoordinates(dx + name_box->x, dy + name_box->y, name_box->w, name_box->h, sString, MAP_IVEN_FONT, &x, &y);
-	mprintf(x, y, sString);
+	MPrint(x, y, sString);
 
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -1085,8 +1085,7 @@ static void DisplayPagesForMapInventoryPool(void)
 	// grab centered coords
 	const SGPBox* const box = &g_sector_inv_page_box;
 	FindFontCenterCoordinates(box->x, box->y, box->w, box->h, sString, COMPFONT, &sX, &sY);
-
-	mprintf( sX, sY, sString );
+	MPrint(sX, sY, sString);
 
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
@@ -1150,8 +1149,7 @@ static void DrawNumberOfIventoryPoolItems(void)
 	// grab centered coords
 	const SGPBox* const box = &g_sector_inv_count_box;
 	FindFontCenterCoordinates(box->x, box->y, box->w, box->h, sString, COMPFONT, &sX, &sY);
-
-	mprintf( sX, sY, sString );
+	MPrint(sX, sY, sString);
 
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
@@ -1191,8 +1189,7 @@ static void DisplayCurrentSector(void)
 	// grab centered coords
 	const SGPBox* const box = &g_sector_inv_loc_box;
 	FindFontCenterCoordinates(box->x, box->y, box->w, box->h, sString, COMPFONT, &sX, &sY);
-
-	mprintf( sX, sY, sString );
+	MPrint(sX, sY, sString);
 
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
@@ -1296,7 +1293,7 @@ static void DrawTextOnSectorInventory(void)
 	const SGPBox*  const box   = &g_sector_inv_title_box;
 	const wchar_t* const title = zMarksMapScreenText[11];
 	FindFontCenterCoordinates(box->x, box->y, box->w, box->h, title, FONT14ARIAL, &x, &y);
-	mprintf(x, y, title);
+	MPrint(x, y, title);
 
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }

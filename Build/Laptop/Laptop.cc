@@ -1786,7 +1786,7 @@ static void DisplayBookMarks(void)
 		INT16 sX;
 		INT16 sY;
 		FindFontCenterCoordinates(BOOK_X + 3, y + 2, BOOK_WIDTH - 3, BOOK_HEIGHT + 6, pBookMarkStrings[LaptopSaveInfo.iBookMarkList[i - 1]], BOOK_FONT, &sX, &sY);
-		mprintf(sX, sY, pBookMarkStrings[LaptopSaveInfo.iBookMarkList[i - 1]]);
+		MPrint(sX, sY, pBookMarkStrings[LaptopSaveInfo.iBookMarkList[i - 1]]);
 	}
 
 	// blit one more
@@ -1799,7 +1799,7 @@ static void DisplayBookMarks(void)
 	INT16 sX;
 	INT16 sY;
 	FindFontCenterCoordinates(BOOK_X + 3, y + 2, BOOK_WIDTH - 3, BOOK_HEIGHT + 6, pBookMarkStrings[CANCEL_STRING], BOOK_FONT, &sX, &sY);
-	mprintf(sX, sY, pBookMarkStrings[CANCEL_STRING]);
+	MPrint(sX, sY, pBookMarkStrings[CANCEL_STRING]);
 	i++;
 
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -2104,7 +2104,7 @@ static void DisplayLoadPending(void)
 	INT16 sXPosition = 0;
 	INT16 sYPosition = 0;
 	FindFontCenterCoordinates(328, 0, 446 - 328, 0, str, DOWNLOAD_FONT, &sXPosition, &sYPosition);
-	mprintf(sXPosition, DOWN_STRING_Y, str);
+	MPrint(sXPosition, DOWN_STRING_Y, str);
 
 	BltVideoObject(FRAME_BUFFER, guiGRAPHWINDOW, 0, LAPTOP_WINDOW_X, LAPTOP_WINDOW_Y);
 
@@ -2881,7 +2881,7 @@ void PrintBalance(void)
 		++x;
 		++y;
 	}
-	mprintf(x, y, pString);
+	MPrint(x, y, pString);
 
 	SetFontShadow(DEFAULT_SHADOW);
 }
@@ -2915,9 +2915,7 @@ void PrintDate(void)
 	SetFontForeground(FONT_BLACK);
 	SetFontBackground(FONT_BLACK);
 	SetFontShadow(NO_SHADOW);
-
-	mprintf(30 + (70 - StringPixLength(WORLDTIMESTR, FONT10ARIAL)) / 2, 433, WORLDTIMESTR);
-
+	MPrint(30 + (70 - StringPixLength(WORLDTIMESTR, FONT10ARIAL)) / 2, 433, WORLDTIMESTR);
 	SetFontShadow(DEFAULT_SHADOW);
 }
 
@@ -3139,7 +3137,7 @@ BOOLEAN RenderWWWProgramTitleBar(void)
 
 	if (guiCurrentLaptopMode == LAPTOP_MODE_WWW)
 	{
-		mprintf(140, 33, pWebTitle);
+		MPrint(140, 33, pWebTitle);
 	}
 	else
 	{
@@ -3457,7 +3455,7 @@ static void DisplayWebBookMarkNotify(void)
 		SetFontShadow(NO_SHADOW);
 
 		// display download string
-		mprintf(DOWN_STRING_X, DOWN_STRING_Y, pShowBookmarkString[0]);
+		MPrint(DOWN_STRING_X, DOWN_STRING_Y, pShowBookmarkString[0]);
 
 		SetFont(BOOK_FONT);
 		SetFontForeground(FONT_BLACK);

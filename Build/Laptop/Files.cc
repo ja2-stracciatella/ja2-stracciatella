@@ -329,7 +329,7 @@ static void DrawFilesTitleText(void)
 	SetFontShadow(DEFAULT_SHADOW);
 
 	// draw the pages title
-	mprintf(TITLE_X, TITLE_Y, pFilesTitle);
+	MPrint(TITLE_X, TITLE_Y, pFilesTitle);
 }
 
 
@@ -479,7 +479,7 @@ static void DisplayFilesList(void)
 		{
 			BltVideoObject(FRAME_BUFFER, guiHIGHLIGHT, 0, FILES_SENDER_TEXT_X - 5, (iCounter + 9) * BLOCK_HEIGHT + iCounter * 2 - 4);
 		}
-    mprintf(FILES_SENDER_TEXT_X, ( ( iCounter + 9 ) * BLOCK_HEIGHT) + ( iCounter * 2 ) - 2 ,pFilesSenderList[pFilesList->ubCode]);
+    MPrint(FILES_SENDER_TEXT_X, (iCounter + 9) * BLOCK_HEIGHT + iCounter * 2 - 2, pFilesSenderList[pFilesList->ubCode]);
 		iCounter++;
 		pFilesList=pFilesList->Next;
 	}

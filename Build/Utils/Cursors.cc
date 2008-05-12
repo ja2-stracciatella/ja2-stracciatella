@@ -1291,7 +1291,7 @@ static void DrawMouseText(void)
 		SetFontBackground(FONT_MCOLOR_BLACK);
 		SetFontForeground(FONT_MCOLOR_WHITE);
 
-		mprintf(sX, sY + 12, gzLocation);
+		MPrint(sX, sY + 12, gzLocation);
 		// reset
 		SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
@@ -1307,7 +1307,7 @@ static void DrawMouseText(void)
 		SetFontBackground(FONT_MCOLOR_BLACK);
 		SetFontForeground(FONT_MCOLOR_WHITE);
 
-		mprintf(sX, sY + 6, gzIntTileLocation);
+		MPrint(sX, sY + 6, gzIntTileLocation);
 		// reset
 		SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
@@ -1323,7 +1323,7 @@ static void DrawMouseText(void)
 		SetFontBackground(FONT_MCOLOR_BLACK);
 		SetFontForeground(FONT_MCOLOR_WHITE);
 
-		mprintf(sX, sY - 2, gzIntTileLocation2);
+		MPrint(sX, sY - 2, gzIntTileLocation2);
 		// reset
 		SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}

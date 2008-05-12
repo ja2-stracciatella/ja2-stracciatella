@@ -271,7 +271,7 @@ void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 
 	}
 	else
 	{
-		mprintf(usPosX, usPosY, L"%ls", pStr);
+		MPrint(usPosX, usPosY, pStr);
 	}
 
 	if( ulFlags & INVALIDATE_TEXT )

@@ -616,7 +616,7 @@ static void RenderSquadList(void)
 		FindFontCenterCoordinates(x, y, w, h, pSquadMenuStrings[i], SQUAD_FONT, &sX, &sY);
 
 		sX = dx + (i < NUMBER_OF_SQUADS / 2 ? 2 : RADAR_WINDOW_WIDTH / 2 - 2);
-		mprintf(sX, sY, pSquadMenuStrings[i]);
+		MPrint(sX, sY, pSquadMenuStrings[i]);
 	}
 }
 

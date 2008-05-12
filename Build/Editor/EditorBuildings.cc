@@ -648,10 +648,10 @@ void RenderDoorEditingWindow()
 	mprintf( 210, 140, L"Editing lock attributes at map index %d.", iDoorMapIndex );
 
 	SetFontForeground( FONT_GRAY2 );
-	mprintf( 238, 160, L"Lock ID" );
-	mprintf( 238, 180, L"Trap Type" );
-	mprintf( 238, 200, L"Trap Level" );
-	mprintf( 238, 218, L"Locked" );
+	MPrint(238, 160, L"Lock ID");
+	MPrint(238, 180, L"Trap Type");
+	MPrint(238, 200, L"Trap Level");
+	MPrint(238, 218, L"Locked");
 }
 
 void KillDoorEditing()

@@ -884,7 +884,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 				const INT16 sX2 = sX1 + StringPixLength(sString, TINYFONT1) + 1;
 				const INT16 sY2 = sY1 + GetFontHeight(TINYFONT1) - 1;
 
-				mprintf(sX1 + 1, sY1 - 1, sString);
+				MPrint(sX1 + 1, sY1 - 1, sString);
 				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 				// Draw box
@@ -1042,7 +1042,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 				SetFontBackground(FONT_BLACK);
 
 				const UINT16 usTextWidth = StringPixLength(sString, FONT10ARIAL) + 1;
-				mprintf(sFaceX + f->usFaceWidth - usTextWidth, sFaceY + 3, sString);
+				MPrint(sFaceX + f->usFaceWidth - usTextWidth, sFaceY + 3, sString);
 				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			}
 		}

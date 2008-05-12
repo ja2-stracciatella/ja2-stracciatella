@@ -622,7 +622,7 @@ static void DrawBoxText(const PopUpBox* const box)
 				uX = tlx;
 				uY = y;
 			}
-			mprintf(uX, uY, L"%ls", text->pString);
+			MPrint(uX, uY, text->pString);
 		}
 
 		// there is secondary text in this line?
@@ -657,7 +657,7 @@ static void DrawBoxText(const PopUpBox* const box)
 				uX = tlx + box->uiSecondColumnCurrentOffset;
 				uY = y;
 			}
-			mprintf(uX, uY, L"%ls", second->pString);
+			MPrint(uX, uY, second->pString);
 		}
 	}
 

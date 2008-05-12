@@ -273,7 +273,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 		SetFontForeground( FONT_YELLOW );
 		SetFontShadow( FONT_NEARBLACK );
 		FRAME_BUFFER->Fill(0);
-		mprintf(5, 5, L"Error loading save, attempting to patch save to version 1.02...");
+		MPrint(5, 5, L"Error loading save, attempting to patch save to version 1.02...");
 	}
 	else
 	{

@@ -1251,7 +1251,7 @@ static void PrintAP(SOLDIERTYPE* s, INT16 x, INT16 y, INT16 w, INT16 h)
 	INT16 sFontX;
 	INT16 sFontY;
 	FindFontCenterCoordinates(x, y, w, h, buf, TINYFONT1, &sFontX, &sFontY);
-	mprintf(sFontX, sFontY, buf);
+	MPrint(sFontX, sFontY, buf);
 }
 
 
@@ -1293,7 +1293,7 @@ static void PrintStat(UINT32 change_time, UINT16 stat_bit, INT8 stat_val, INT16 
 	INT16 usX;
 	INT16 usY;
 	FindFontRightCoordinates(x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, str, BLOCKFONT2, &usX, &usY);
-	mprintf(usX, usY, str);
+	MPrint(usX, usY, str);
 }
 
 
@@ -1375,18 +1375,18 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 			for( cnt = 0; cnt < 5; cnt++ )
 			{
 				const INT32 y = dy + 7 + cnt * 10;
-				mprintf( 92, y, pShortAttributeStrings[cnt]);
-				mprintf(137, y, pShortAttributeStrings[cnt + 5]);
+				MPrint( 92, y, pShortAttributeStrings[cnt]);
+				MPrint(137, y, pShortAttributeStrings[cnt + 5]);
 			}
 
-			mprintf(SM_ARMOR_LABEL_X - StringPixLength(pInvPanelTitleStrings[0], BLOCKFONT2) / 2, dy + SM_ARMOR_LABEL_Y, pInvPanelTitleStrings[0]);
-			mprintf(SM_ARMOR_PERCENT_X, dy + SM_ARMOR_PERCENT_Y, L"%%");
+			MPrint(SM_ARMOR_LABEL_X - StringPixLength(pInvPanelTitleStrings[0], BLOCKFONT2) / 2, dy + SM_ARMOR_LABEL_Y, pInvPanelTitleStrings[0]);
+			MPrint(SM_ARMOR_PERCENT_X, dy + SM_ARMOR_PERCENT_Y, L"%");
 
-			mprintf(SM_WEIGHT_LABEL_X - StringPixLength(pInvPanelTitleStrings[1], BLOCKFONT2), dy + SM_WEIGHT_LABEL_Y, pInvPanelTitleStrings[1]);
-			mprintf(SM_WEIGHT_PERCENT_X, dy + SM_WEIGHT_PERCENT_Y, L"%%");
+			MPrint(SM_WEIGHT_LABEL_X - StringPixLength(pInvPanelTitleStrings[1], BLOCKFONT2), dy + SM_WEIGHT_LABEL_Y, pInvPanelTitleStrings[1]);
+			MPrint(SM_WEIGHT_PERCENT_X, dy + SM_WEIGHT_PERCENT_Y, L"%");
 
-			mprintf(SM_CAMO_LABEL_X - StringPixLength(pInvPanelTitleStrings[2], BLOCKFONT2), dy + SM_CAMO_LABEL_Y, pInvPanelTitleStrings[2]);
-			mprintf(SM_CAMO_PERCENT_X, dy + SM_CAMO_PERCENT_Y, L"%%");
+			MPrint(SM_CAMO_LABEL_X - StringPixLength(pInvPanelTitleStrings[2], BLOCKFONT2), dy + SM_CAMO_LABEL_Y, pInvPanelTitleStrings[2]);
+			MPrint(SM_CAMO_PERCENT_X, dy + SM_CAMO_PERCENT_Y, L"%");
 
 			const SOLDIERTYPE* const s = gpSMCurrentMerc;
 			PrintStat(s->uiChangeAgilityTime,      AGIL_INCREASE,     s->bAgility,      SM_AGI_X,    dy + SM_AGI_Y);
@@ -1416,18 +1416,17 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 			// Display armour value!
 			swprintf( sString, lengthof(sString), L"%3d", ArmourPercent( gpSMCurrentMerc ) );
 			FindFontRightCoordinates(SM_ARMOR_X, dy + SM_ARMOR_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString );
+			MPrint(usX, usY , sString);
 
 			// Display wieght value!
 			swprintf( sString, lengthof(sString), L"%3d", CalculateCarriedWeight( gpSMCurrentMerc ) );
 			FindFontRightCoordinates(SM_WEIGHT_X, dy + SM_WEIGHT_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString );
+			MPrint(usX, usY, sString);
 
 			// Display camo value!
 			swprintf( sString, lengthof(sString), L"%3d", gpSMCurrentMerc->bCamo );
 			FindFontRightCoordinates(SM_CAMO_X, dy + SM_CAMO_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
-			mprintf( usX, usY , sString );
-
+			MPrint(usX, usY, sString);
 
 			// reset to frame buffer!
 			SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -1456,7 +1455,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 		INT16 sFontX;
 		INT16 sFontY;
 		FindFontCenterCoordinates(x, y, w, h, gpSMCurrentMerc->name, BLOCKFONT2, &sFontX, &sFontY);
-		mprintf(sFontX, sFontY, L"%ls", gpSMCurrentMerc->name);
+		MPrint(sFontX, sFontY, gpSMCurrentMerc->name);
 	}
 
 	if (*pfDirty != DIRTYLEVEL0)
@@ -2612,7 +2611,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				INT16 sFontX;
 				INT16 sFontY;
 				FindFontCenterCoordinates(dx + TM_NAME_X, dy + TM_NAME_Y, TM_NAME_WIDTH, TM_NAME_HEIGHT, s->name, BLOCKFONT2, &sFontX, &sFontY);
-				mprintf(sFontX, sFontY, L"%ls", s->name);
+				MPrint(sFontX, sFontY, s->name);
 				// reset to frame buffer!
 				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			}
@@ -3426,7 +3425,7 @@ void RenderTownIDString(void)
 	GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTownIDString, lengthof(zTownIDString), TRUE );
 	ReduceStringLength( zTownIDString, lengthof(zTownIDString), 80, COMPFONT );
 	FindFontCenterCoordinates(548, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
-	mprintf( sFontX, sFontY, L"%ls", zTownIDString );
+	MPrint(sFontX, sFontY, zTownIDString);
 }
 
 

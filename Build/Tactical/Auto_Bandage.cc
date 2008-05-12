@@ -706,7 +706,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 				sCurrentXPosition -= TACT_UPDATE_MERC_FACE_X_OFFSET;
 				sCurrentYPosition -= TACT_UPDATE_MERC_FACE_Y_OFFSET;
 
-				mprintf(sX, sY , Name);
+				MPrint(sX, sY, Name);
 				//sCurrentYPosition-= TACT_UPDATE_MERC_FACE_Y_OFFSET;
 			}
 		}
@@ -737,7 +737,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 	const wchar_t* Medics = zMarksMapScreenText[13];
 	FindFontCenterCoordinates(sXPosition, sCurrentYPosition, iTotalPixelsWide, 0, Medics, TINYFONT1, &sX, &sY);
 	// print medic
-	mprintf(sX, sYPosition - 7 , Medics);
+	MPrint(sX, sYPosition - 7, Medics);
 
 	//DisplayWrappedString(sXPosition,  sCurrentYPosition - 40, iTotalPixelsWide, 0, TINYFONT1, FONT_WHITE, pUpdateMercStrings[0], FONT_BLACK, 0);
 
@@ -777,7 +777,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 				SetFontForeground( FONT_LTRED );
 				SetFontBackground( FONT_BLACK );
 				sY+= 35;
-				mprintf(sX, sY, Name);
+				MPrint(sX, sY, Name);
 			}
 
 		}
@@ -844,8 +844,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 	const wchar_t* Patients = zMarksMapScreenText[14];
 	FindFontCenterCoordinates(sXPosition, sCurrentYPosition, iTotalPixelsWide, 0, Patients, TINYFONT1, &sX, &sY);
 	// print patient
-	mprintf(sX, iCurPixelY + TACT_UPDATE_MERC_FACE_X_HEIGHT + 2, Patients);
-
+	MPrint(sX, iCurPixelY + TACT_UPDATE_MERC_FACE_X_HEIGHT + 2, Patients);
 
 	MarkAButtonDirty( iEndAutoBandageButton[ 0 ] );
 	MarkAButtonDirty( iEndAutoBandageButton[ 1 ] );
