@@ -684,6 +684,7 @@ void RenderTalkingMenu()
 			UINT16 usTextBoxWidth;
 			UINT16 usTextBoxHeight;
 			iInterfaceDialogueBox = PrepareMercPopupBox(iInterfaceDialogueBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, tp->zQuoteStr, TALK_PANEL_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &usTextBoxWidth, &usTextBoxHeight);
+			SetFont(MILITARYFONT1); // PrepareMercPopupBox() overwrites the current font
 
 			tp->fSetupSubTitles = FALSE;
 
