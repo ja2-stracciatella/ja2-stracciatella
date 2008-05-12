@@ -610,224 +610,155 @@ static void CalculatePopupTextPosition(INT16 sWidth, INT16 sHeight);
 static void TextRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-void RenderTalkingMenu( )
+void RenderTalkingMenu()
 {
-	INT32	cnt;
-	INT16					sFontX, sFontY, sX, sY;
-	UINT8					ubCharacterNum = gTalkPanel.ubCharNum;
-	UINT16				usTextBoxWidth, usTextBoxHeight;
+	NPC_DIALOGUE_TYPE* const tp  = &gTalkPanel;
+	ProfileID          const pid = tp->ubCharNum;
 
-	if ( !gfInTalkPanel )
+	if (!gfInTalkPanel || tp->fDirtyLevel == DIRTYLEVEL0) return;
+
+	SetFont(MILITARYFONT1);
+
+	if (tp->fDirtyLevel == DIRTYLEVEL2)
 	{
-		return;
-	}
-
-	const FACETYPE* const pFace = gTalkPanel.face;
-
-	if ( gTalkPanel.fDirtyLevel == DIRTYLEVEL2 )
-	{
-		SetFont( MILITARYFONT1 );
-
 		// Render box!
-		BltVideoObject(FRAME_BUFFER, gTalkPanel.uiPanelVO, 0, gTalkPanel.sX, gTalkPanel.sY);
+		BltVideoObject(FRAME_BUFFER, tp->uiPanelVO, 0, tp->sX, tp->sY);
 
 		// Render name
-		if ( gTalkPanel.fOnName )
-		{
-			SetFontBackground( FONT_MCOLOR_BLACK );
-			SetFontForeground( FONT_WHITE );
-		}
-		else
-		{
-			SetFontBackground( FONT_MCOLOR_BLACK );
-			SetFontForeground( 33 );
-		}
-		FindFontCenterCoordinates(gTalkPanel.sX + TALK_PANEL_NAME_X, gTalkPanel.sY + TALK_PANEL_NAME_Y, TALK_PANEL_NAME_WIDTH, TALK_PANEL_NAME_HEIGHT, gMercProfiles[gTalkPanel.ubCharNum].zNickname, MILITARYFONT1, &sFontX, &sFontY);
-		MPrint(sFontX, sFontY, gMercProfiles[ubCharacterNum].zNickname);
+		SetFontForeground(tp->fOnName ? FONT_WHITE : 33);
+		SetFontBackground(FONT_MCOLOR_BLACK);
+		wchar_t const* const name = GetProfile(pid)->zNickname;
+		INT16                sFontX;
+		INT16                sFontY;
+		FindFontCenterCoordinates(tp->sX + TALK_PANEL_NAME_X, tp->sY + TALK_PANEL_NAME_Y, TALK_PANEL_NAME_WIDTH, TALK_PANEL_NAME_HEIGHT, name, MILITARYFONT1, &sFontX, &sFontY);
+		MPrint(sFontX, sFontY, name);
 
-		// Set font settings back
-		SetFontShadow( DEFAULT_SHADOW );
+		SetFontShadow(DEFAULT_SHADOW);
 
-		BltVideoSurface(FRAME_BUFFER, gTalkPanel.uiSaveBuffer, gTalkPanel.sX + TALK_PANEL_FACE_X, gTalkPanel.sY + TALK_PANEL_FACE_Y, NULL);
+		BltVideoSurface(FRAME_BUFFER, tp->uiSaveBuffer, tp->sX + TALK_PANEL_FACE_X, tp->sY + TALK_PANEL_FACE_Y, NULL);
 
-		MarkButtonsDirty( );
+		MarkButtonsDirty();
 
 		// If guy is talking.... shadow area
-		if ( pFace->fTalking || !DialogueQueueIsEmpty( ) )
+		if (tp->face->fTalking || !DialogueQueueIsEmpty())
 		{
-			ShadowVideoSurfaceRect( FRAME_BUFFER, (INT16)(gTalkPanel.sX + TALK_PANEL_SHADOW_AREA_X),(INT16)(gTalkPanel.sY + TALK_PANEL_SHADOW_AREA_Y), (INT16)(gTalkPanel.sX + TALK_PANEL_SHADOW_AREA_X + TALK_PANEL_SHADOW_AREA_WIDTH) , (INT16)(gTalkPanel.sY + TALK_PANEL_SHADOW_AREA_Y + TALK_PANEL_SHADOW_AREA_HEIGHT) );
+			INT32 const x = tp->sX + TALK_PANEL_SHADOW_AREA_X;
+			INT32 const y = tp->sY + TALK_PANEL_SHADOW_AREA_Y;
+			ShadowVideoSurfaceRect(FRAME_BUFFER, x, y, x + TALK_PANEL_SHADOW_AREA_WIDTH, y + TALK_PANEL_SHADOW_AREA_HEIGHT);
 
 			// Disable mouse regions....
-			for ( cnt = 0; cnt < 6; cnt++ )
+			for (INT32 cnt = 0; cnt < 6; ++cnt)
 			{
-				MSYS_DisableRegion( &(gTalkPanel.Regions[cnt]));
+				MSYS_DisableRegion(&tp->Regions[cnt]);
 			}
 
-			DisableButton( gTalkPanel.uiCancelButton );
+			DisableButton(tp->uiCancelButton);
 
-			gTalkPanel.bCurSelect = -1;
+			tp->bCurSelect = -1;
 		}
 		else
 		{
 			// Enable mouse regions....
-			for ( cnt = 0; cnt < 6; cnt++ )
+			for (INT32 cnt = 0; cnt < 6; ++cnt)
 			{
-				MSYS_EnableRegion( &(gTalkPanel.Regions[cnt]));
+				MSYS_EnableRegion(&tp->Regions[cnt]);
 			}
 
-			// Restore selection....
-			gTalkPanel.bCurSelect = gTalkPanel.bOldCurSelect;
+			EnableButton(tp->uiCancelButton);
 
-			EnableButton( gTalkPanel.uiCancelButton );
+			// Restore selection....
+			tp->bCurSelect = tp->bOldCurSelect;
 		}
 
-		InvalidateRegion( gTalkPanel.sX, gTalkPanel.sY, gTalkPanel.sX + gTalkPanel.usWidth, gTalkPanel.sY + gTalkPanel.usHeight );
+		InvalidateRegion(tp->sX, tp->sY, tp->sX + tp->usWidth, tp->sY + tp->usHeight);
 
-		if ( gTalkPanel.fSetupSubTitles )
+		if (tp->fSetupSubTitles)
 		{
-      if ( iInterfaceDialogueBox != -1 )
+      if (iInterfaceDialogueBox != -1)
       {
         // Remove any old ones....
-        RemoveMercPopupBoxFromIndex( iInterfaceDialogueBox );
+        RemoveMercPopupBoxFromIndex(iInterfaceDialogueBox);
         iInterfaceDialogueBox = -1;
       }
 
-			iInterfaceDialogueBox = PrepareMercPopupBox( iInterfaceDialogueBox,BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, gTalkPanel.zQuoteStr, TALK_PANEL_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &usTextBoxWidth, &usTextBoxHeight );
+			UINT16 usTextBoxWidth;
+			UINT16 usTextBoxHeight;
+			iInterfaceDialogueBox = PrepareMercPopupBox(iInterfaceDialogueBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, tp->zQuoteStr, TALK_PANEL_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &usTextBoxWidth, &usTextBoxHeight);
 
-			gTalkPanel.fSetupSubTitles = FALSE;
+			tp->fSetupSubTitles = FALSE;
 
-			CalculatePopupTextOrientation( usTextBoxWidth, usTextBoxHeight );
-			CalculatePopupTextPosition( usTextBoxWidth, usTextBoxHeight );
+			CalculatePopupTextOrientation(usTextBoxWidth, usTextBoxHeight);
+			CalculatePopupTextPosition(   usTextBoxWidth, usTextBoxHeight);
 
 			//Define main region
-			if ( gTalkPanel.fTextRegionOn )
+			if (tp->fTextRegionOn)
 			{
 				// Remove
-				MSYS_RemoveRegion( &(gTalkPanel.TextRegion) );
-				gTalkPanel.fTextRegionOn = FALSE;
+				MSYS_RemoveRegion(&tp->TextRegion);
+				tp->fTextRegionOn = FALSE;
 			}
 
-			MSYS_DefineRegion( &(gTalkPanel.TextRegion), gTalkPanel.sPopupX, gTalkPanel.sPopupY, (INT16)( gTalkPanel.sPopupX + usTextBoxWidth ), (INT16)( gTalkPanel.sPopupY + usTextBoxHeight ), MSYS_PRIORITY_HIGHEST,
-								 CURSOR_NORMAL, MSYS_NO_CALLBACK, TextRegionClickCallback );
+			UINT16 const x = tp->sPopupX;
+			UINT16 const y = tp->sPopupY;
+			MSYS_DefineRegion(&tp->TextRegion, x, y, x + usTextBoxWidth, y + usTextBoxHeight, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, TextRegionClickCallback);
 
-			// Set to true
-			gTalkPanel.fTextRegionOn = TRUE;
+			tp->fTextRegionOn = TRUE;
 		}
 
-		if ( gTalkPanel.fRenderSubTitlesNow )
+		if (tp->fRenderSubTitlesNow)
 		{
-			RenderMercPopUpBoxFromIndex( iInterfaceDialogueBox, gTalkPanel.sPopupX, gTalkPanel.sPopupY,  FRAME_BUFFER );
+			RenderMercPopUpBoxFromIndex(iInterfaceDialogueBox, tp->sPopupX, tp->sPopupY,  FRAME_BUFFER);
 		}
 	}
 
-	if ( gTalkPanel.fDirtyLevel > DIRTYLEVEL0 )
+	// Create menu selections....
+	INT16 const x = tp->sX + TALK_PANEL_MENUTEXT_STARTX;
+	INT16       y = tp->sY + TALK_PANEL_MENUTEXT_STARTY;
+	for (INT32 cnt = 0; cnt < 6; cnt++)
 	{
-		SetFont( MILITARYFONT1 );
-
-		// Set some font settings
-		SetFontForeground( FONT_BLACK );
-		SetFontShadow( MILITARY_SHADOW );
-
-		// Create menu selections....
-		sX = gTalkPanel.sX + TALK_PANEL_MENUTEXT_STARTX;
-		sY = gTalkPanel.sY + TALK_PANEL_MENUTEXT_STARTY;
-
-		for ( cnt = 0; cnt < 6; cnt++ )
+		if (tp->bCurSelect == cnt)
 		{
-
-			if ( gTalkPanel.bCurSelect == cnt )
-			{
-				SetFontForeground( FONT_WHITE );
-				SetFontShadow( DEFAULT_SHADOW );
-			}
-			else
-			{
-				SetFontForeground( FONT_BLACK );
-				SetFontShadow( MILITARY_SHADOW );
-			}
-
-			{
-
-			#ifdef _DEBUG
-				if (gubSrcSoldierProfile != NO_PROFILE && ubCharacterNum != NO_PROFILE)
-			#else
-				if ( CHEATER_CHEAT_LEVEL() && gubSrcSoldierProfile != NO_PROFILE && ubCharacterNum != NO_PROFILE)
-			#endif
-				{
-					switch( cnt )
-					{
-						case 0:
-							FindFontCenterCoordinates(sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, zTalkMenuStrings[cnt], MILITARYFONT1, &sFontX, &sFontY);
-							MPrint(sFontX, sFontY, zTalkMenuStrings[cnt]);
-							break;
-
-						case 4:
-						{
-							const wchar_t* DealerString;
-							//if its an arms dealer
-							if( IsMercADealer( ubCharacterNum ) )
-							{
-								//determine the 'kind' of arms dealer
-								UINT8 ubType = GetTypeOfArmsDealer(GetArmsDealerIDFromMercID(ubCharacterNum));
-								DealerString = zDealerStrings[ubType];
-							}
-							else
-							{
-								DealerString = zTalkMenuStrings[cnt];
-							}
-
-							FindFontCenterCoordinates(sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, DealerString, MILITARYFONT1, &sFontX, &sFontY);
-							MPrint(sFontX, sFontY, DealerString);
-							break;
-						}
-
-						default:
-						{
-							wchar_t buf[512];
-							swprintf(buf, lengthof(buf), L"%ls (%d)", zTalkMenuStrings[cnt], CalcDesireToTalk(ubCharacterNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[cnt]));
-							FindFontCenterCoordinates(sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, buf, MILITARYFONT1, &sFontX, &sFontY);
-							MPrint(sFontX, sFontY, buf);
-							break;
-						}
-					}
-				}
-				else
-				{
-					if( cnt == 4 )
-					{
-						const wchar_t* DealerString;
-						//if its an arms dealer
-						if( IsMercADealer( ubCharacterNum ) )
-						{
-							//determine the 'kind' of arms dealer
-							UINT8 ubType = GetTypeOfArmsDealer(GetArmsDealerIDFromMercID(ubCharacterNum));
-							DealerString = zDealerStrings[ubType];
-						}
-						else
-						{
-							DealerString = zTalkMenuStrings[cnt];
-						}
-
-						FindFontCenterCoordinates(sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, DealerString, MILITARYFONT1, &sFontX, &sFontY);
-						MPrint(sFontX, sFontY, DealerString);
-					}
-					else
-					{
-						FindFontCenterCoordinates(sX, sY, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, zTalkMenuStrings[cnt], MILITARYFONT1, &sFontX, &sFontY);
-						MPrint(sFontX, sFontY, zTalkMenuStrings[cnt]);
-					}
-				}
-			}
-
-			sY += TALK_PANEL_MENUTEXT_SPACEY;
+			SetFontForeground(FONT_WHITE);
+			SetFontShadow(DEFAULT_SHADOW);
+		}
+		else
+		{
+			SetFontForeground(FONT_BLACK);
+			SetFontShadow(MILITARY_SHADOW);
 		}
 
+		wchar_t const* str;
+		wchar_t        buf[512];
+		if (cnt == 4 && IsMercADealer(pid))
+		{
+			str = zDealerStrings[GetTypeOfArmsDealer(GetArmsDealerIDFromMercID(pid))];
+		}
+		else if (cnt != 0 &&
+#ifndef _DEBUG
+				CHEATER_CHEAT_LEVEL() &&
+#endif
+				gubSrcSoldierProfile != NO_PROFILE &&
+				pid                  != NO_PROFILE)
+		{
+			UINT8 const desire = CalcDesireToTalk(pid, gubSrcSoldierProfile, ubTalkMenuApproachIDs[cnt]);
+			swprintf(buf, lengthof(buf), L"%ls (%d)", zTalkMenuStrings[cnt], desire);
+			str = buf;
+		}
+		else
+		{
+			str = zTalkMenuStrings[cnt];
+		}
+		INT16 sFontX;
+		INT16 sFontY;
+		FindFontCenterCoordinates(x, y, TALK_PANEL_MENUTEXT_WIDTH, TALK_PANEL_MENUTEXT_HEIGHT, str, MILITARYFONT1, &sFontX, &sFontY);
+		MPrint(sFontX, sFontY, str);
+
+		y += TALK_PANEL_MENUTEXT_SPACEY;
 	}
 
-	// Set font settings back
-	SetFontShadow( DEFAULT_SHADOW );
+	SetFontShadow(DEFAULT_SHADOW);
 
-	gTalkPanel.fDirtyLevel = 0;
+	tp->fDirtyLevel = DIRTYLEVEL0;
 }
 
 

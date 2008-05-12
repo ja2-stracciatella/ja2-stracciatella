@@ -143,7 +143,6 @@ RemoveItemGUI(): callers
 RenderFaceOverlay(): users
 RenderItemDescriptionBox(): code duplication
 RenderShopKeeperInterface(): MARK_DIRTY necessary?
-RenderTalkingMenu(): code duplication
 RenderTiles(): SetFontDestBuffer() + mprintf_buffer() strange
 SAIMOVECODE: use enum
 SAVED_GAME_HEADER: gets saved/loaded, but contains wchar_t
