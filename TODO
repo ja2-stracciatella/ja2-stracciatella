@@ -1,33 +1,28 @@
 HACK000E
 TODO0016
 
-high prio
-- TODO0001 implement blitters and related functions
-- TODO0004 Make it 64bit clean
-- TODO0005 Make it endian agnostic
-- HACK000D SDL_BlitSurface() sometimes returns with the direction flag set on x86, which violates the ABI.  Remove the "cld" hack once SDL is fixed.
-
-med prio
-- TODO0003 Implement sound streaming
+- HACK0001 put the process properly to sleep during idle phases instead of SDL_Delay(1)
+- HACK0007 Stop PreRandom always returning 0 or 1 without ensuring an equal distribution, which would be a rather complex task with pregenerated randoms
+- HACK0009 Workaround for trying to play samples with an empty ("") name. Investigate why this happens
 - HACK000A Clean up system specific hacks, especially wrt. wchar_t
+- HACK000B Remove unused fields which are only kept for savegame compatibility
 - HACK000C Workaround for code trying to access non-existent buttons
-- TODO000B Some values in MovementNoise() can wrap and then produce incorrect results
-- TODO000F Only half of the data gets saved/loaded
-- TODO0011 gubAnimCrawlSpeeds[] is only declared, gubAnimCrawlingSpeeds[] is never referenced, looks like a typo
+- HACK000D SDL_BlitSurface() sometimes returns with the direction flag set on x86, which violates the ABI.  Remove the "cld" hack once SDL is fixed.
 - HACK000E uninitialised variables
 
-low prio
 - TODO0000 remove RestrictMouseCursor() et al.
-- HACK0001 put the process properly to sleep during idle phases instead of SDL_Delay(1)
-- HACK0007 Stop PreRandom always returning 0 or 1 without ensuring an equal
-  distribution, which would be a rather complex task with pregenerated randoms
-- HACK0009 Workaround for trying to play samples with an empty ("") name. Investigate why this happens
-- HACK000B Remove unused fields which are only kept for savegame compatibility
+- TODO0001 implement blitters and related functions
+- TODO0003 Implement sound streaming
+- TODO0004 Make it 64bit clean
+- TODO0005 Make it endian agnostic
 - TODO0006 The IMP personality quiz evaluation seems to have some bugs
 - TODO0007 Deduct AIM_PENALTY_SMG when firing a SMG even when second hand is free?
 - TODO0008 The random call here seems to be off-by-one. If it returns its maximum value then no assignment to iAttitude happens, because the next loop tries to find the n+1th peak of n peaks.
 - TODO0009 Possible endless loop
 - TODO000A Memory leak?
+- TODO000B Some values in MovementNoise() can wrap and then produce incorrect results
+- TODO000F Only half of the data gets saved/loaded
+- TODO0011 gubAnimCrawlSpeeds[] is only declared, gubAnimCrawlingSpeeds[] is never referenced, looks like a typo
 - TODO0012 Is this fix for the infinite loop when throwing right?
 - TODO0013 Code and comment disagree
 - TODO0014 Properly resolve the bReverse mess
