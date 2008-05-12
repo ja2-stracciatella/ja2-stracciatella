@@ -691,7 +691,6 @@ void RenderTopmostTacticalInterface( )
 
 	if ( gfInTalkPanel )
 	{
-		SetTalkingMenuDirty( DIRTYLEVEL2 );
 		// Handle item pickup will return true if it's been closed
 		RenderTalkingMenu( );
 	}

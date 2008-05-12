@@ -32,7 +32,6 @@ typedef struct
 	MOUSE_REGION	TextRegion;
 	BOOLEAN				fTextRegionOn;
 	BOOLEAN				fOnName;
-	BOOLEAN				fDirtyLevel;
 	SGPVSurface*  uiSaveBuffer;
 	BOOLEAN				fHandled;
 	BOOLEAN				fHandledTalkingVal;
@@ -56,9 +55,6 @@ BOOLEAN TalkingMenuDialogue( UINT16 usQuoteNum );
 
 // Removes memory allocated for structure, removes face...
 void DeleteTalkingMenu(void);
-
-// Dirty menu
-void SetTalkingMenuDirty( BOOLEAN fDirtyLevel );
 
 BOOLEAN HandleTalkingMenu(void);
 

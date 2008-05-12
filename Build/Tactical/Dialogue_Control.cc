@@ -1905,7 +1905,6 @@ void HandleDialogueEnd( FACETYPE *pFace )
 				gTalkPanel.fRenderSubTitlesNow = FALSE;
 
 				// Delete subtitle box
-				gTalkPanel.fDirtyLevel = DIRTYLEVEL2;
 				RemoveMercPopupBoxFromIndex( iInterfaceDialogueBox );
 				iInterfaceDialogueBox = -1;
 				break;

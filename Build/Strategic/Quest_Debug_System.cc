@@ -643,7 +643,6 @@ UINT32	QuestDebugScreenHandle()
 		//and it is an npc
 		if( WhichPanelShouldTalkingMercUse( ) == QDS_NPC_PANEL )
 		{
-			gTalkPanel.fDirtyLevel = DIRTYLEVEL2;
 			ButtonList[ guiQDPgUpButtonButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
 			RenderTalkingMenu( );
 		}

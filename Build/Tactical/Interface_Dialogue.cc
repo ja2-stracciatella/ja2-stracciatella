@@ -615,101 +615,98 @@ void RenderTalkingMenu()
 	NPC_DIALOGUE_TYPE* const tp  = &gTalkPanel;
 	ProfileID          const pid = tp->ubCharNum;
 
-	if (!gfInTalkPanel || tp->fDirtyLevel == DIRTYLEVEL0) return;
+	if (!gfInTalkPanel) return;
 
 	SetFont(MILITARYFONT1);
 
-	if (tp->fDirtyLevel == DIRTYLEVEL2)
+	// Render box!
+	BltVideoObject(FRAME_BUFFER, tp->uiPanelVO, 0, tp->sX, tp->sY);
+
+	// Render name
+	SetFontForeground(tp->fOnName ? FONT_WHITE : 33);
+	SetFontBackground(FONT_MCOLOR_BLACK);
+	wchar_t const* const name = GetProfile(pid)->zNickname;
+	INT16                sFontX;
+	INT16                sFontY;
+	FindFontCenterCoordinates(tp->sX + TALK_PANEL_NAME_X, tp->sY + TALK_PANEL_NAME_Y, TALK_PANEL_NAME_WIDTH, TALK_PANEL_NAME_HEIGHT, name, MILITARYFONT1, &sFontX, &sFontY);
+	MPrint(sFontX, sFontY, name);
+
+	SetFontShadow(DEFAULT_SHADOW);
+
+	BltVideoSurface(FRAME_BUFFER, tp->uiSaveBuffer, tp->sX + TALK_PANEL_FACE_X, tp->sY + TALK_PANEL_FACE_Y, NULL);
+
+	MarkButtonsDirty();
+
+	// If guy is talking.... shadow area
+	if (tp->face->fTalking || !DialogueQueueIsEmpty())
 	{
-		// Render box!
-		BltVideoObject(FRAME_BUFFER, tp->uiPanelVO, 0, tp->sX, tp->sY);
+		INT32 const x = tp->sX + TALK_PANEL_SHADOW_AREA_X;
+		INT32 const y = tp->sY + TALK_PANEL_SHADOW_AREA_Y;
+		ShadowVideoSurfaceRect(FRAME_BUFFER, x, y, x + TALK_PANEL_SHADOW_AREA_WIDTH, y + TALK_PANEL_SHADOW_AREA_HEIGHT);
 
-		// Render name
-		SetFontForeground(tp->fOnName ? FONT_WHITE : 33);
-		SetFontBackground(FONT_MCOLOR_BLACK);
-		wchar_t const* const name = GetProfile(pid)->zNickname;
-		INT16                sFontX;
-		INT16                sFontY;
-		FindFontCenterCoordinates(tp->sX + TALK_PANEL_NAME_X, tp->sY + TALK_PANEL_NAME_Y, TALK_PANEL_NAME_WIDTH, TALK_PANEL_NAME_HEIGHT, name, MILITARYFONT1, &sFontX, &sFontY);
-		MPrint(sFontX, sFontY, name);
-
-		SetFontShadow(DEFAULT_SHADOW);
-
-		BltVideoSurface(FRAME_BUFFER, tp->uiSaveBuffer, tp->sX + TALK_PANEL_FACE_X, tp->sY + TALK_PANEL_FACE_Y, NULL);
-
-		MarkButtonsDirty();
-
-		// If guy is talking.... shadow area
-		if (tp->face->fTalking || !DialogueQueueIsEmpty())
+		// Disable mouse regions....
+		for (INT32 cnt = 0; cnt < 6; ++cnt)
 		{
-			INT32 const x = tp->sX + TALK_PANEL_SHADOW_AREA_X;
-			INT32 const y = tp->sY + TALK_PANEL_SHADOW_AREA_Y;
-			ShadowVideoSurfaceRect(FRAME_BUFFER, x, y, x + TALK_PANEL_SHADOW_AREA_WIDTH, y + TALK_PANEL_SHADOW_AREA_HEIGHT);
-
-			// Disable mouse regions....
-			for (INT32 cnt = 0; cnt < 6; ++cnt)
-			{
-				MSYS_DisableRegion(&tp->Regions[cnt]);
-			}
-
-			DisableButton(tp->uiCancelButton);
-
-			tp->bCurSelect = -1;
-		}
-		else
-		{
-			// Enable mouse regions....
-			for (INT32 cnt = 0; cnt < 6; ++cnt)
-			{
-				MSYS_EnableRegion(&tp->Regions[cnt]);
-			}
-
-			EnableButton(tp->uiCancelButton);
-
-			// Restore selection....
-			tp->bCurSelect = tp->bOldCurSelect;
+			MSYS_DisableRegion(&tp->Regions[cnt]);
 		}
 
-		InvalidateRegion(tp->sX, tp->sY, tp->sX + tp->usWidth, tp->sY + tp->usHeight);
+		DisableButton(tp->uiCancelButton);
 
-		if (tp->fSetupSubTitles)
+		tp->bCurSelect = -1;
+	}
+	else
+	{
+		// Enable mouse regions....
+		for (INT32 cnt = 0; cnt < 6; ++cnt)
 		{
-      if (iInterfaceDialogueBox != -1)
-      {
-        // Remove any old ones....
-        RemoveMercPopupBoxFromIndex(iInterfaceDialogueBox);
-        iInterfaceDialogueBox = -1;
-      }
-
-			UINT16 usTextBoxWidth;
-			UINT16 usTextBoxHeight;
-			iInterfaceDialogueBox = PrepareMercPopupBox(iInterfaceDialogueBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, tp->zQuoteStr, TALK_PANEL_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &usTextBoxWidth, &usTextBoxHeight);
-			SetFont(MILITARYFONT1); // PrepareMercPopupBox() overwrites the current font
-
-			tp->fSetupSubTitles = FALSE;
-
-			CalculatePopupTextOrientation(usTextBoxWidth, usTextBoxHeight);
-			CalculatePopupTextPosition(   usTextBoxWidth, usTextBoxHeight);
-
-			//Define main region
-			if (tp->fTextRegionOn)
-			{
-				// Remove
-				MSYS_RemoveRegion(&tp->TextRegion);
-				tp->fTextRegionOn = FALSE;
-			}
-
-			UINT16 const x = tp->sPopupX;
-			UINT16 const y = tp->sPopupY;
-			MSYS_DefineRegion(&tp->TextRegion, x, y, x + usTextBoxWidth, y + usTextBoxHeight, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, TextRegionClickCallback);
-
-			tp->fTextRegionOn = TRUE;
+			MSYS_EnableRegion(&tp->Regions[cnt]);
 		}
 
-		if (tp->fRenderSubTitlesNow)
+		EnableButton(tp->uiCancelButton);
+
+		// Restore selection....
+		tp->bCurSelect = tp->bOldCurSelect;
+	}
+
+	InvalidateRegion(tp->sX, tp->sY, tp->sX + tp->usWidth, tp->sY + tp->usHeight);
+
+	if (tp->fSetupSubTitles)
+	{
+		if (iInterfaceDialogueBox != -1)
 		{
-			RenderMercPopUpBoxFromIndex(iInterfaceDialogueBox, tp->sPopupX, tp->sPopupY,  FRAME_BUFFER);
+			// Remove any old ones....
+			RemoveMercPopupBoxFromIndex(iInterfaceDialogueBox);
+			iInterfaceDialogueBox = -1;
 		}
+
+		UINT16 usTextBoxWidth;
+		UINT16 usTextBoxHeight;
+		iInterfaceDialogueBox = PrepareMercPopupBox(iInterfaceDialogueBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, tp->zQuoteStr, TALK_PANEL_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &usTextBoxWidth, &usTextBoxHeight);
+		SetFont(MILITARYFONT1); // PrepareMercPopupBox() overwrites the current font
+
+		tp->fSetupSubTitles = FALSE;
+
+		CalculatePopupTextOrientation(usTextBoxWidth, usTextBoxHeight);
+		CalculatePopupTextPosition(   usTextBoxWidth, usTextBoxHeight);
+
+		//Define main region
+		if (tp->fTextRegionOn)
+		{
+			// Remove
+			MSYS_RemoveRegion(&tp->TextRegion);
+			tp->fTextRegionOn = FALSE;
+		}
+
+		UINT16 const x = tp->sPopupX;
+		UINT16 const y = tp->sPopupY;
+		MSYS_DefineRegion(&tp->TextRegion, x, y, x + usTextBoxWidth, y + usTextBoxHeight, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, TextRegionClickCallback);
+
+		tp->fTextRegionOn = TRUE;
+	}
+
+	if (tp->fRenderSubTitlesNow)
+	{
+		RenderMercPopUpBoxFromIndex(iInterfaceDialogueBox, tp->sPopupX, tp->sPopupY,  FRAME_BUFFER);
 	}
 
 	// Create menu selections....
@@ -758,8 +755,6 @@ void RenderTalkingMenu()
 	}
 
 	SetFontShadow(DEFAULT_SHADOW);
-
-	tp->fDirtyLevel = DIRTYLEVEL0;
 }
 
 
@@ -917,12 +912,6 @@ static void TalkPanelNameRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason
 		gTalkPanel.fOnName = FALSE;
 	}
 
-}
-
-// Dirty menu
-void SetTalkingMenuDirty( BOOLEAN fDirtyLevel )
-{
-	gTalkPanel.fDirtyLevel = fDirtyLevel;
 }
 
 
