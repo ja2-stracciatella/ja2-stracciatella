@@ -2507,7 +2507,7 @@ const wchar_t* BobbyRText[] =
 	L"Uszkodz.",			// If the item is damaged
 	L"Waga:",			// the Weight of the item
 	L"Razem:",			// The total cost of all items on order
-	L"* Stan: %%",		// if the item is damaged, displays the percent function of the item
+	L"* Stan: %",		// if the item is damaged, displays the percent function of the item
 
 	//Popup that tells the player that they can only order 10 items at a time
 
