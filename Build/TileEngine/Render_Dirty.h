@@ -85,7 +85,7 @@ void             RestoreExternBackgroundRectGivenID(const BACKGROUND_SAVE*);
  * for a given call to gprintf. Note that this must be called before the
  * backgrounds are saved, and before the actual call to gprintf that writes to
  * the video buffer. */
-UINT16 gprintfdirty(INT16 x, INT16 y, const wchar_t *pFontString, ...);
+void gprintfdirty(INT16 x, INT16 y, wchar_t const* fmt, ...);
 
 UINT16 gprintfinvalidate(INT16 x, INT16 y, const wchar_t* pFontString, ...);
 

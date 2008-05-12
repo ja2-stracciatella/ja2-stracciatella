@@ -418,27 +418,22 @@ void RestoreExternBackgroundRectGivenID(const BACKGROUND_SAVE* const b)
 }
 
 
-UINT16 gprintfdirty(INT16 x, INT16 y, const wchar_t *pFontString, ...)
+void gprintfdirty(INT16 const x, INT16 const y, wchar_t const* const fmt, ...)
 {
-va_list argptr;
-wchar_t	string[512];
-UINT16 uiStringLength, uiStringHeight;
+	Assert(fmt != NULL);
 
-	Assert(pFontString!=NULL);
-
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
+	wchar_t	string[512];
+	va_list argptr;
+	va_start(argptr, fmt);
+	vswprintf(string, lengthof(string), fmt, argptr);
 	va_end(argptr);
 
-	uiStringLength = StringPixLength(string, FontDefault);
-	uiStringHeight = GetFontHeight(FontDefault);
-
-	if ( uiStringLength > 0 )
+	UINT16 const length = StringPixLength(string, FontDefault);
+	if (length > 0)
 	{
-		RegisterBackgroundRectSingleFilled(x, y, x + uiStringLength, y + uiStringHeight);
+		UINT16 const height = GetFontHeight(FontDefault);
+		RegisterBackgroundRectSingleFilled(x, y, x + length, y + height);
 	}
-
-	return(uiStringLength);
 }
 
 
