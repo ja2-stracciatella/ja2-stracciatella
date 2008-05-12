@@ -3448,106 +3448,84 @@ static void ShowPeopleInMotion(INT16 sX, INT16 sY)
 }
 
 
-void DisplayDistancesForHelicopter( void )
+/* calculate the distance travelled, the proposed distance, and total distance
+ * one can go and display these on screen */
+void DisplayDistancesForHelicopter()
 {
-	// calculate the distance travelled, the proposed distance, and total distance one can go
-	// display these on screen
-	INT16 sX = 0, sY = 0;
-	CHAR16 sString[ 32 ];
-	INT16 sTotalOfTrip = 0;
-	INT32 iTime = 0;
-	INT16 sMapX, sMapY;
-	INT16 sYPosition = 0;
 	static INT16 sOldYPosition = 0;
-  INT16 sNumSafeSectors;
-  INT16 sNumUnSafeSectors;
-	UINT32 uiTripCost;
 
+	INT16 sMapX;
+	INT16 sMapY;
+	INT16 const sYPosition =
+		!fZoomFlag && GetMouseMapXY(&sMapX, &sMapY) && sMapY >= 13 ?
+			MAP_HELICOPTER_UPPER_ETA_POPUP_Y : MAP_HELICOPTER_ETA_POPUP_Y;
 
-	if ( GetMouseMapXY( &sMapX, &sMapY ) && !fZoomFlag && ( sMapY >= 13 ) )
+	if (sOldYPosition != 0 && sOldYPosition != sYPosition)
 	{
-		sYPosition = MAP_HELICOPTER_UPPER_ETA_POPUP_Y;
+		RestoreExternBackgroundRect(MAP_HELICOPTER_ETA_POPUP_X, sOldYPosition, MAP_HELICOPTER_ETA_POPUP_WIDTH + 20, MAP_HELICOPTER_ETA_POPUP_HEIGHT);
 	}
-	else
-	{
-		sYPosition = MAP_HELICOPTER_ETA_POPUP_Y;
-	}
-
-	if( ( sOldYPosition != 0 ) && ( sOldYPosition != sYPosition ) )
-	{
-		RestoreExternBackgroundRect( MAP_HELICOPTER_ETA_POPUP_X, sOldYPosition, MAP_HELICOPTER_ETA_POPUP_WIDTH + 20, MAP_HELICOPTER_ETA_POPUP_HEIGHT );
-	}
-
 	sOldYPosition = sYPosition;
 
 	BltVideoObject(FRAME_BUFFER, guiMapBorderHeliSectors, 0, MAP_HELICOPTER_ETA_POPUP_X, sYPosition);
 
-	INT16 sDistanceToGo = ( INT16 )DistanceOfIntendedHelicopterPath( );
-	sTotalOfTrip = sDistanceToGo;
+	SetFont(MAP_FONT);
+	SetFontForeground(FONT_LTGREEN);
+	SetFontBackground(FONT_BLACK);
 
-  sNumSafeSectors = GetNumSafeSectorsInPath( );
-  sNumUnSafeSectors = GetNumUnSafeSectorsInPath( );
+	INT32 const x = MAP_HELICOPTER_ETA_POPUP_X + 5;
+	INT32       y = sYPosition + 5;
+	INT32 const w = MAP_HELICOPTER_ETA_POPUP_WIDTH;
+	INT32 const h = GetFontHeight(MAP_FONT);
+	wchar_t     sString[32];
+	INT16       sX;
+	INT16       sY;
 
-	if( sDistanceToGo == 9999)
-	{
-		sDistanceToGo = 0;
-	}
+	MPrint(x, y, pHelicopterEtaStrings[0]);
+	INT32 const total_distance = DistanceOfIntendedHelicopterPath();
+	swprintf(sString, lengthof(sString), L"%d", total_distance);
+	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT,  &sX, &sY);
+	MPrint(sX, y, sString);
+	y += h;
 
-	// set the font stuff
-	SetFont( MAP_FONT );
-	SetFontForeground( FONT_LTGREEN );
-	SetFontBackground( FONT_BLACK );
+	MPrint(x, y, pHelicopterEtaStrings[1]);
+  INT16 const n_safe_sectors = GetNumSafeSectorsInPath();
+	swprintf(sString, lengthof(sString), L"%d", n_safe_sectors);
+	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
+	MPrint(sX, y, sString);
+	y += h;
 
-	MPrint(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5, pHelicopterEtaStrings[0]);
-
-	swprintf( sString, lengthof(sString), L"%d", sTotalOfTrip );
-	FindFontRightCoordinates( MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5, MAP_HELICOPTER_ETA_POPUP_WIDTH, 0,  sString, MAP_FONT,  &sX, &sY );
-	MPrint(sX, sYPosition + 5, sString);
-
-	MPrint(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + GetFontHeight(MAP_FONT), pHelicopterEtaStrings[1]);
-
-	swprintf( sString, lengthof(sString), L"%d", sNumSafeSectors );
-	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5 + 2 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
-	MPrint(sX, sYPosition + 5 + GetFontHeight(MAP_FONT), sString);
-
-	MPrint(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 2 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[2]);
-
-	swprintf( sString, lengthof(sString), L"%d", sNumUnSafeSectors );
-	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5 + 2 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
-	MPrint(sX, sYPosition + 5 + 2 * GetFontHeight(MAP_FONT), sString);
-
-	MPrint(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 3 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[3]);
-
+	MPrint(x, y, pHelicopterEtaStrings[2]);
+  INT16 const n_unsafe_sectors = GetNumUnSafeSectorsInPath();
+	swprintf(sString, lengthof(sString), L"%d", n_unsafe_sectors);
+	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
+	MPrint(sX, y, sString);
+	y += h;
 
 	// calculate the cost of the trip based on the number of safe and unsafe sectors it will pass through
-	uiTripCost = ( sNumSafeSectors * COST_AIRSPACE_SAFE ) + ( sNumUnSafeSectors * COST_AIRSPACE_UNSAFE );
-
+	MPrint(x, y, pHelicopterEtaStrings[3]);
+	UINT32 const uiTripCost = n_safe_sectors * COST_AIRSPACE_SAFE + n_unsafe_sectors * COST_AIRSPACE_UNSAFE;
 	SPrintMoney(sString, uiTripCost);
-	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5 + 3 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
-	MPrint(sX, sYPosition + 5 + 3 * GetFontHeight(MAP_FONT), sString);
+	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
+	MPrint(sX, y, sString);
+	y += h;
 
-	MPrint(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 4 * GetFontHeight(MAP_FONT), pHelicopterEtaStrings[4]);
-
-
+	MPrint(x, y, pHelicopterEtaStrings[4]);
 	// get travel time for the last path segment
-	iTime = GetPathTravelTimeDuringPlotting( pTempHelicopterPath );
-
+	INT32 iTime = GetPathTravelTimeDuringPlotting(pTempHelicopterPath);
 	// add travel time for any prior path segments (stored in the helicopter's mercpath, but waypoints aren't built)
 	iTime += GetPathTravelTimeDuringPlotting(GetHelicopter()->pMercPath);
-
-	swprintf( sString, lengthof(sString), L"%d%ls %d%ls", iTime / 60, gsTimeStrings[0], iTime % 60, gsTimeStrings[1] );
-	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 4 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
-	MPrint(sX, sYPosition + 5 + 4 * GetFontHeight(MAP_FONT), sString);
-
+	swprintf(sString, lengthof(sString), L"%d%ls %d%ls", iTime / 60, gsTimeStrings[0], iTime % 60, gsTimeStrings[1]);
+	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
+	MPrint(sX, y, sString);
+	y += h;
 
 	// show # of passengers aboard the chopper
-	MPrint(MAP_HELICOPTER_ETA_POPUP_X + 5, sYPosition + 5 + 5 * GetFontHeight( MAP_FONT ), pHelicopterEtaStrings[ 6 ] );
-	swprintf( sString, lengthof(sString), L"%d", GetNumberOfPassengersInHelicopter() );
-	FindFontRightCoordinates(MAP_HELICOPTER_ETA_POPUP_X + 5, MAP_HELICOPTER_ETA_POPUP_Y + 5 + 5 * GetFontHeight(MAP_FONT), MAP_HELICOPTER_ETA_POPUP_WIDTH, 0, sString, MAP_FONT, &sX, &sY);
-	MPrint(sX, sYPosition + 5 + 5 * GetFontHeight(MAP_FONT), sString);
+	MPrint(x, y, pHelicopterEtaStrings[6]);
+	swprintf(sString, lengthof(sString), L"%d", GetNumberOfPassengersInHelicopter());
+	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
+	MPrint(sX, y, sString);
 
-
-	InvalidateRegion( MAP_HELICOPTER_ETA_POPUP_X, sOldYPosition,  MAP_HELICOPTER_ETA_POPUP_X + MAP_HELICOPTER_ETA_POPUP_WIDTH + 20, sOldYPosition + MAP_HELICOPTER_ETA_POPUP_HEIGHT );
+	InvalidateRegion(MAP_HELICOPTER_ETA_POPUP_X, sOldYPosition, MAP_HELICOPTER_ETA_POPUP_X + MAP_HELICOPTER_ETA_POPUP_WIDTH + 20, sOldYPosition + MAP_HELICOPTER_ETA_POPUP_HEIGHT);
 }
 
 
