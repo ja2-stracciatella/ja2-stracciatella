@@ -919,8 +919,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 
 				if (f->fDisplayTextOver == FACE_DRAW_TEXT_OVER)
 				{
-					gprintfinvalidate(sFontX, sFontY, f->zDisplayText);
-					mprintf(sFontX, sFontY, f->zDisplayText);
+					GPrintInvalidate(sFontX, sFontY, f->zDisplayText);
 				}
 				else if (f->fDisplayTextOver == FACE_ERASE_TEXT_OVER)
 				{

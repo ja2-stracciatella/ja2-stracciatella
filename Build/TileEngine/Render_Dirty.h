@@ -87,7 +87,8 @@ void GDirtyPrintF(INT16 x, INT16 y, wchar_t const* fmt, ...);
 void GPrintDirty(INT16 x, INT16 y, wchar_t const* str);
 void GPrintDirtyF(INT16 x, INT16 y, wchar_t const* fmt, ...);
 
-UINT16 gprintfinvalidate(INT16 x, INT16 y, const wchar_t* pFontString, ...);
+void GPrintInvalidate(INT16 x, INT16 y, wchar_t const* str);
+void GPrintInvalidateF(INT16 x, INT16 y, wchar_t const* fmt, ...);
 
 
 // VIDEO OVERLAY STUFF

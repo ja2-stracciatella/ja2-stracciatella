@@ -1745,17 +1745,13 @@ void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const 
 			}
 			SetFontForeground(colour);
 
-			wchar_t pStr[16];
-			swprintf(pStr, lengthof(pStr), L"%d", o->ubGunShotsLeft);
-
 			const INT16 sNewX = sX + 1;
 			const INT16 sNewY = sY + sHeight - 10;
 			if (buffer == guiSAVEBUFFER)
 			{
 				RestoreExternBackgroundRect(sNewX, sNewY, 20, 15);
 			}
-			mprintf(          sNewX, sNewY, pStr);
-			gprintfinvalidate(sNewX, sNewY, pStr);
+			GPrintInvalidateF(sNewX, sNewY, L"%d", o->ubGunShotsLeft);
 
 			// Display 'JAMMED' if we are jammed
 			if (o->bGunAmmoStatus < 0)
@@ -1770,8 +1766,7 @@ void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const 
 				INT16 cx;
 				INT16 cy;
 				FindFontCenterCoordinates(sX, sY, sWidth, sHeight, jammed, ITEM_FONT, &cx, &cy);
-				mprintf(cx, cy, jammed);
-				gprintfinvalidate(cx, cy, jammed);
+				GPrintInvalidate(cx, cy, jammed);
 			}
 		}
 		else if (ubStatusIndex != RENDER_ITEM_NOSTATUS && o->ubNumberOfObjects > 1)
@@ -1790,8 +1785,7 @@ void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const 
 			{
 				RestoreExternBackgroundRect(sNewX, sNewY, 15, 15);
 			}
-			mprintf(          sNewX, sNewY, pStr);
-			gprintfinvalidate(sNewX, sNewY, pStr);
+			GPrintInvalidate(sNewX, sNewY, pStr);
 		}
 
 		if (ItemHasAttachments(o))
@@ -1807,8 +1801,7 @@ void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const 
 			{
 				RestoreExternBackgroundRect(sNewX, sNewY, 15, 15);
 			}
-			mprintf(          sNewX, sNewY, attach_marker);
-			gprintfinvalidate(sNewX, sNewY, attach_marker);
+			GPrintInvalidate(sNewX, sNewY, attach_marker);
 		}
 
 		if (s && o == &s->inv[HANDPOS] && Item[o->usItem].usItemClass == IC_GUN && s->bWeaponMode != WM_NORMAL)
@@ -1824,8 +1817,7 @@ void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const 
 			{
 				RestoreExternBackgroundRect(sNewX, sNewY, 15, 15);
 			}
-			mprintf(          sNewX, sNewY, mode_marker);
-			gprintfinvalidate(sNewX, sNewY, mode_marker);
+			GPrintInvalidate(sNewX, sNewY, mode_marker);
 		}
 	}
 }

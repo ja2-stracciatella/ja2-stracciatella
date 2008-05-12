@@ -443,10 +443,10 @@ void GDirtyPrint(INT16 const x, INT16 const y, wchar_t const* const str) // XXX 
 void GDirtyPrintF(INT16 const x, INT16 const y, wchar_t const* const fmt, ...)
 {
 	wchar_t	str[512];
-	va_list argptr;
-	va_start(argptr, fmt);
-	vswprintf(str, lengthof(str), fmt, argptr);
-	va_end(argptr);
+	va_list ap;
+	va_start(ap, fmt);
+	vswprintf(str, lengthof(str), fmt, ap);
+	va_end(ap);
 	GDirtyPrint(x, y, str);
 }
 
@@ -461,34 +461,35 @@ void GPrintDirty(INT16 const x, INT16 const y, wchar_t const* const str) // XXX 
 void GPrintDirtyF(INT16 const x, INT16 const y, wchar_t const* const fmt, ...)
 {
 	wchar_t	str[512];
-	va_list argptr;
-	va_start(argptr, fmt);
-	vswprintf(str, lengthof(str), fmt, argptr);
-	va_end(argptr);
+	va_list ap;
+	va_start(ap, fmt);
+	vswprintf(str, lengthof(str), fmt, ap);
+	va_end(ap);
 	GDirtyPrint(x, y, str);
 }
 
 
-UINT16 gprintfinvalidate(INT16 x, INT16 y, const wchar_t* pFontString, ...)
+void GPrintInvalidate(INT16 const x, INT16 const y, wchar_t const* const str)
 {
-va_list argptr;
-wchar_t	string[512];
-UINT16 uiStringLength, uiStringHeight;
+	mprintf(x, y, L"%ls", str);
 
-	Assert(pFontString!=NULL);
-
-	va_start(argptr, pFontString);       	// Set up variable argument pointer
-	vswprintf(string, lengthof(string), pFontString, argptr);	// process gprintf string (get output str)
-	va_end(argptr);
-
-	uiStringLength=StringPixLength(string, FontDefault);
-	uiStringHeight=GetFontHeight(FontDefault);
-
-	if ( uiStringLength > 0 )
+	UINT16 const length = StringPixLength(str, FontDefault);
+	if (length > 0)
 	{
-		InvalidateRegionEx(x, y, (INT16)(x + uiStringLength), (INT16)(y + uiStringHeight));
+		UINT16 const height = GetFontHeight(FontDefault);
+		InvalidateRegionEx(x, y, x + length, y + height);
 	}
-	return(uiStringLength);
+}
+
+
+void GPrintInvalidateF(INT16 const x, INT16 const y, wchar_t const* const fmt, ...)
+{
+	wchar_t	str[512];
+	va_list ap;
+	va_start(ap, fmt);
+	vswprintf(str, lengthof(str), fmt, ap);
+	va_end(ap);
+	GPrintInvalidate(x, y, str);
 }
 
 
