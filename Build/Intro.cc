@@ -23,6 +23,7 @@
 
 #ifndef JA2BETAVERSION
 #	include "GameSettings.h"
+#	include "MessageBoxScreen.h"
 #endif
 
 
