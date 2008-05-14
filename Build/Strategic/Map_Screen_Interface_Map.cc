@@ -777,111 +777,70 @@ static void GetScreenXYFromMapXYStationary(INT16 sMapX, INT16 sMapY, INT16* psX,
 }
 
 
-static void DrawTownLabels(const wchar_t* pString, const wchar_t* pStringA, UINT16 usFirstX, UINT16 usFirstY);
-
-
+// display the town names and loyalty on the screen
 static void ShowTownText(void)
 {
-	wchar_t sStringA[ 32 ];
-	INT8 bTown = 0;
-	BOOLEAN fLoyaltyTooLowToTrainMilitia;
-
-	// this procedure will display the town names on the screen
-
 	SetFont(MAP_FONT);
-  SetFontBackground(FONT_MCOLOR_BLACK);
+	SetFontBackground(FONT_MCOLOR_BLACK);
+	SetFontDestBuffer(guiSAVEBUFFER, MapScreenRect.iLeft + 2, MapScreenRect.iTop, MapScreenRect.iRight, MapScreenRect.iBottom);
+	ClipBlitsToMapViewRegion();
 
- 	for( bTown = FIRST_TOWN; bTown < NUM_TOWNS; bTown++)
+	for (INT8 town = FIRST_TOWN; town < NUM_TOWNS; ++town)
 	{
 		// skip Orta/Tixa until found
-		if ((bTown != ORTA || fFoundOrta) && (bTown != TIXA || fFoundTixa))
+		if (town == ORTA && !fFoundOrta) continue;
+		if (town == TIXA && !fFoundTixa) continue;
+
+		UINT16 x = MAP_VIEW_START_X + MAP_GRID_X;
+		UINT16 y = MAP_VIEW_START_Y + MAP_GRID_Y;
+		if (!fZoomFlag)
 		{
-			fLoyaltyTooLowToTrainMilitia = FALSE;
-
-			// don't show loyalty string until loyalty tracking for that town has been started
-			if( gTownLoyalty[ bTown ].fStarted && gfTownUsesLoyalty[ bTown ])
-			{
-				swprintf(sStringA, lengthof(sStringA), gsLoyalString, gTownLoyalty[bTown].ubRating);
-
-				// if loyalty is too low to train militia, and militia training is allowed here
-				if ( ( gTownLoyalty[ bTown ].ubRating < MIN_RATING_TO_TRAIN_TOWN ) && MilitiaTrainingAllowedInTown( bTown ) )
-				{
-					fLoyaltyTooLowToTrainMilitia = TRUE;
-				}
-			}
-			else
-			{
-				wcscpy( sStringA, L"");
-			}
-
-			UINT16 usX = MAP_VIEW_START_X + MAP_GRID_X;
-			UINT16 usY = MAP_VIEW_START_Y + MAP_GRID_Y;
-			if (!fZoomFlag)
-			{
-				usX += pTownPoints[bTown].iX * MAP_GRID_X / 10;
-				usY += pTownPoints[bTown].iY * MAP_GRID_Y / 10 + 1;
-			}
-			else
-			{
-				usX += MAP_GRID_ZOOM_X - iZoomX + pTownPoints[bTown].iX * MAP_GRID_ZOOM_X / 10;
-				usY += MAP_GRID_ZOOM_Y - iZoomY + pTownPoints[bTown].iY * MAP_GRID_ZOOM_Y / 10 + 1;
-//			usX = 2 * pTownPoints[bTown].iX - iZoomX - MAP_VIEW_START_X + MAP_GRID_X;
-//			usY = 2 * pTownPoints[bTown].iY - iZoomY - MAP_VIEW_START_Y + MAP_GRID_Y;
-			}
-
-			// red for low loyalty, green otherwise
-		  SetFontForeground(fLoyaltyTooLowToTrainMilitia ? FONT_MCOLOR_RED : FONT_MCOLOR_LTGREEN);
-
-      DrawTownLabels(pTownNames[bTown], sStringA, usX, usY);
+			x += pTownPoints[town].iX * MAP_GRID_X / 10;
+			y += pTownPoints[town].iY * MAP_GRID_Y / 10 + 1;
 		}
+		else
+		{
+			x += MAP_GRID_ZOOM_X - iZoomX + pTownPoints[town].iX * MAP_GRID_ZOOM_X / 10;
+			y += MAP_GRID_ZOOM_Y - iZoomY + pTownPoints[town].iY * MAP_GRID_ZOOM_Y / 10 + 1;
+		}
+
+		// if within view region...render, else don't
+		if (x < MAP_VIEW_START_X || MAP_VIEW_START_X + MAP_VIEW_WIDTH  < x) continue;
+		if (y < MAP_VIEW_START_Y || MAP_VIEW_START_Y + MAP_VIEW_HEIGHT < y) continue;
+
+		// don't show loyalty string until loyalty tracking for that town has been started
+		if (gTownLoyalty[town].fStarted && gfTownUsesLoyalty[town])
+		{
+			// if loyalty is too low to train militia, and militia training is allowed here
+			UINT8 const colour =
+				gTownLoyalty[town].ubRating < MIN_RATING_TO_TRAIN_TOWN &&
+				MilitiaTrainingAllowedInTown(town) ?
+					FONT_MCOLOR_RED : FONT_MCOLOR_LTGREEN;
+			SetFontForeground(colour);
+
+			wchar_t loyalty_str[32];
+			swprintf(loyalty_str, lengthof(loyalty_str), gsLoyalString, gTownLoyalty[town].ubRating);
+
+			INT16 loyalty_x = x - StringPixLength(loyalty_str, MAP_FONT) / 2;
+			if (!fZoomFlag) // make sure we don't go past left edge (Grumm)
+			{
+				INT16 const min_x = MAP_VIEW_START_X + 23;
+				if (loyalty_x < min_x) loyalty_x = min_x;
+			}
+
+			GDirtyPrint(loyalty_x, y + GetFontHeight(MAP_FONT), loyalty_str);
+		}
+		else
+		{
+			SetFontForeground(FONT_MCOLOR_LTGREEN);
+		}
+
+		wchar_t const* const name   = pTownNames[town];
+		INT16          const name_x = x - StringPixLength(name, MAP_FONT) / 2;
+		GDirtyPrint(name_x, y, name);
 	}
-}
 
-
-static void DrawTownLabels(const wchar_t* pString, const wchar_t* pStringA, UINT16 usFirstX, UINT16 usFirstY)
-{
-	// this procedure will draw the given strings on the screen centered around the given x and at the given y
-
-	INT16 sSecondX, sSecondY;
-	INT16 sPastEdge;
-
-
-	// if within view region...render, else don't
-	if( ( usFirstX > MAP_VIEW_START_X + MAP_VIEW_WIDTH )||( usFirstX < MAP_VIEW_START_X )|| (usFirstY < MAP_VIEW_START_Y ) || ( usFirstY > MAP_VIEW_START_Y + MAP_VIEW_HEIGHT ) )
-	{
-		return;
-	}
-
-
-	SetFontDestBuffer(guiSAVEBUFFER, MapScreenRect.iLeft + 2, MapScreenRect.iTop, MapScreenRect.iRight, MapScreenRect.iBottom);
-
-	// clip blits to mapscreen region
-	ClipBlitsToMapViewRegion( );
-
-	// we're CENTERING the first string AROUND usFirstX, so calculate the starting X
-	usFirstX -= StringPixLength( pString, MAP_FONT) / 2;
-
-	// print first string
-	GDirtyPrint(usFirstX, usFirstY, pString);
-
-	// calculate starting coordinates for the second string
-	FindFontCenterCoordinates(usFirstX, usFirstY, StringPixLength(pString, MAP_FONT), 0, pStringA, MAP_FONT, &sSecondX, &sSecondY);
-
-	// make sure we don't go past left edge (Grumm)
-	if( !fZoomFlag )
-	{
-		sPastEdge = (MAP_VIEW_START_X + 23) - sSecondX;
-
-		if (sPastEdge > 0)
-			sSecondX += sPastEdge;
-	}
-
-	// print second string beneath first
-	sSecondY = usFirstY + GetFontHeight(MAP_FONT);
-	GDirtyPrint(sSecondX, sSecondY, pStringA);
-
-	// restore clip blits
-	RestoreClipRegionToFullScreen( );
+	RestoreClipRegionToFullScreen();
 }
 
 
