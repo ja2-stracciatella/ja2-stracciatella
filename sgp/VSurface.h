@@ -7,7 +7,6 @@
 #include <SDL.h>
 
 
-#define NO_VSURFACE 0
 #define BACKBUFFER   g_back_buffer
 #define FRAME_BUFFER g_frame_buffer
 #define MOUSE_BUFFER g_mouse_buffer

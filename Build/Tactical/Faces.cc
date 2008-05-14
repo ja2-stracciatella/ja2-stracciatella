@@ -567,7 +567,7 @@ static void BlinkAutoFace(FACETYPE* const f)
 			}
 		}
 
-		HandleRenderFaceAdjustments(f, TRUE, NO_VSURFACE, f->usFaceX, f->usFaceY, f->usEyesX, f->usEyesY);
+		HandleRenderFaceAdjustments(f, TRUE, 0, f->usFaceX, f->usFaceY, f->usEyesX, f->usEyesY);
 	}
 }
 
@@ -677,7 +677,7 @@ static void MouthAutoFace(FACETYPE* const f)
 				}
 			}
 
-			HandleRenderFaceAdjustments(f, TRUE, NO_VSURFACE, f->usFaceX, f->usFaceY, f->usEyesX, f->usEyesY);
+			HandleRenderFaceAdjustments(f, TRUE, 0, f->usFaceX, f->usFaceY, f->usEyesX, f->usEyesY);
 		}
 	}
 
@@ -805,7 +805,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 {
 	// If we are using an extern buffer...
 	SGPVSurface* uiRenderBuffer;
-	if (buffer != NO_VSURFACE)
+	if (buffer)
 	{
 		uiRenderBuffer = buffer;
 	}
@@ -858,7 +858,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 
 		// ATE: Only do this, because we can be talking during an interrupt....
 		// Don't do this if we are being handled elsewhere and it's not an extern buffer...
-		if (!(f->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE) || buffer != NO_VSURFACE)
+		if (!(f->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE) || buffer)
 		{
 			HandleFaceHilights(f, uiRenderBuffer, sFaceX, sFaceY);
 
@@ -1075,7 +1075,7 @@ BOOLEAN RenderAutoFace(FACETYPE* const pFace)
 		BltVideoObject(pFace->uiAutoRestoreBuffer, pFace->uiVideoObject, 0, 0, 0);
 	}
 
-	HandleRenderFaceAdjustments(pFace, FALSE, NO_VSURFACE, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY);
+	HandleRenderFaceAdjustments(pFace, FALSE, 0, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY);
 
 	// Restore extern rect
 	if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )

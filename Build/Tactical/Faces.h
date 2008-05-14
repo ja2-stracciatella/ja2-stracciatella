@@ -12,8 +12,8 @@
 // Defines
 #define		NUM_FACE_SLOTS					50
 
-#define FACE_AUTO_DISPLAY_BUFFER NO_VSURFACE
-#define FACE_AUTO_RESTORE_BUFFER NO_VSURFACE
+#define FACE_AUTO_DISPLAY_BUFFER 0
+#define FACE_AUTO_RESTORE_BUFFER 0
 
 // FLAGS....
 #define	 FACE_BIGFACE												0x00000001						// A BIGFACE instead of small face
