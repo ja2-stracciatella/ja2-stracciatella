@@ -937,8 +937,7 @@ static BOOLEAN HandleSpeckTalking(BOOLEAN fReset)
 	HandleTalkingAutoFaces( );
 
 	//Blt the face surface to the video background surface
-	if (!BltStretchVideoSurface(FRAME_BUFFER, guiMercVideoFaceBackground, &SrcRect, &DestRect))
-		return(FALSE);
+	BltStretchVideoSurface(FRAME_BUFFER, guiMercVideoFaceBackground, &SrcRect, &DestRect);
 
 	//HandleCurrentMercDistortion();
 

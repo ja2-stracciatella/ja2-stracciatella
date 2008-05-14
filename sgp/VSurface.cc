@@ -534,9 +534,9 @@ BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(SGPVSurface* const dst, const
 }
 
 
-BOOLEAN BltStretchVideoSurface(SGPVSurface* const dst, const SGPVSurface* const src, SGPRect* const SrcRect, SGPRect* const DestRect)
+void BltStretchVideoSurface(SGPVSurface* const dst, const SGPVSurface* const src, SGPRect* const SrcRect, SGPRect* const DestRect)
 {
-	if (dst->BPP() != 16 || src->BPP() != 16) return FALSE;
+	if (dst->BPP() != 16 || src->BPP() != 16) return;
 
 	SDL_Surface const* const ssurface = src->surface_;
 	SDL_Surface*       const dsurface = dst->surface_;
@@ -587,8 +587,6 @@ BOOLEAN BltStretchVideoSurface(SGPVSurface* const dst, const SGPVSurface* const 
 			for (; py >= height; py -= height) os += s_pitch;
 		}
 	}
-
-	return TRUE;
 }
 
 

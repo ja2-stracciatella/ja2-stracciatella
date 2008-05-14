@@ -1838,8 +1838,7 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(const FACETYPE* const face)
 //	if( !gfIsAnsweringMachineActive )
 	{
 		//Blt the face surface to the video background surface
-		if (!BltStretchVideoSurface(FRAME_BUFFER, guiVideoFaceBackground, &SrcRect, &DestRect))
-			return(FALSE);
+		BltStretchVideoSurface(FRAME_BUFFER, guiVideoFaceBackground, &SrcRect, &DestRect);
 
 		//if the merc is not at home and the players is leaving a message, shade the players face
 		if( gfIsAnsweringMachineActive )

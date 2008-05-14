@@ -51,7 +51,7 @@ class SGPVSurface
 
 		/* This function will stretch the source image to the size of the dest rect.
 		 * If the 2 images are not 16 Bpp, it returns false. */
-		friend BOOLEAN BltStretchVideoSurface(SGPVSurface* dst, const SGPVSurface* src, SGPRect* SrcRect, SGPRect* DestRect);
+		friend void BltStretchVideoSurface(SGPVSurface* dst, const SGPVSurface* src, SGPRect* SrcRect, SGPRect* DestRect);
 
 	private:
 		SGP::AutoObj<SDL_Surface, SDL_FreeSurface> surface_;
