@@ -347,7 +347,6 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 	}
 	// Create a background video surface to blt the face onto
 	pPopUpTextBox->uiSourceBufferIndex = AddVideoSurface(usWidth, usHeight, PIXEL_DEPTH);
-	CHECKF(pPopUpTextBox->uiSourceBufferIndex != NO_VSURFACE);
 	pPopUpTextBox->fMercTextPopupSurfaceInitialized = TRUE;
 
 	pPopUpTextBox->sWidth = usWidth;

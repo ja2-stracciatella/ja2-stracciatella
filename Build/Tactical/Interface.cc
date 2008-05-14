@@ -301,10 +301,7 @@ BOOLEAN InitializeTacticalInterface(  )
 	guiCOMPANELB = AddVideoObjectFromFile("INTERFACE/communicationpopup_2.sti");
 	AssertMsg(guiCOMPANELB != NO_VOBJECT, "Missing INTERFACE/communicationpopup_2.sti");
 
-
-	// Alocate message surfaces
 	gTopMessage.uiSurface = AddVideoSurface(SCREEN_WIDTH, 20, PIXEL_DEPTH);
-	CHECKF(gTopMessage.uiSurface != NO_VSURFACE);
 
 	InitItemInterface( );
 

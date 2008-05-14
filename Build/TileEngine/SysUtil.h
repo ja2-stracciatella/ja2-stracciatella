@@ -7,6 +7,6 @@
 extern SGPVSurface* guiSAVEBUFFER;
 extern SGPVSurface* guiEXTRABUFFER;
 
-BOOLEAN InitializeGameVideoObjects(void);
+void InitializeGameVideoObjects(void);
 
 #endif

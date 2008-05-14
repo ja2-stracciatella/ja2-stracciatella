@@ -224,7 +224,6 @@ void DoMessageBox(const UINT8 ubStyle, const wchar_t* const zString, const UINT3
 
 	// Init save buffer
 	gMsgBox.uiSaveBuffer = AddVideoSurface(usTextBoxWidth, usTextBoxHeight, PIXEL_DEPTH);
-	if (gMsgBox.uiSaveBuffer == NO_VSURFACE) return;
 
   //Save what we have under here...
 	const SGPRect r = { gMsgBox.sX, gMsgBox.sY, gMsgBox.sX + usTextBoxWidth, gMsgBox.sY + usTextBoxHeight };

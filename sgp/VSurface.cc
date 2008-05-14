@@ -666,7 +666,7 @@ static void RecordVSurface(const char* Filename, UINT32 LineNum, const char* Sou
 SGPVSurface* AddAndRecordVSurface(const UINT16 Width, const UINT16 Height, const UINT8 BitDepth, const UINT32 LineNum, const char* const SourceFile)
 {
 	SGPVSurface* const vs = AddVideoSurface(Width, Height, BitDepth);
-	if (vs != NO_VSURFACE) RecordVSurface("<EMPTY>", LineNum, SourceFile);
+	RecordVSurface("<EMPTY>", LineNum, SourceFile);
 	return vs;
 }
 

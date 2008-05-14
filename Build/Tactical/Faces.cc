@@ -360,7 +360,6 @@ static void InternalSetAutoFaceActive(SGPVSurface* const display, SGPVSurface* c
 	{
 		pFace->fAutoRestoreBuffer  = TRUE;
 		pFace->uiAutoRestoreBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, PIXEL_DEPTH);
-		CHECKV(pFace->uiAutoRestoreBuffer != NO_VSURFACE);
 	}
 	else
 	{
@@ -372,7 +371,6 @@ static void InternalSetAutoFaceActive(SGPVSurface* const display, SGPVSurface* c
 	{
 		pFace->fAutoDisplayBuffer  = TRUE;
 		pFace->uiAutoDisplayBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, PIXEL_DEPTH);
-		CHECKV(pFace->uiAutoDisplayBuffer != NO_VSURFACE);
 	}
 	else
 	{

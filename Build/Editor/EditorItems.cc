@@ -274,11 +274,6 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 
 	//!!!Memory check.  Create the item buffer
 	eInfo.uiBuffer = AddVideoSurface(w, h, PIXEL_DEPTH);
-	if (eInfo.uiBuffer == NO_VSURFACE)
-	{
-		eInfo.fActive = FALSE;
-		return;
-	}
 
 	//copy a blank chunk of the editor interface to the new buffer.
 	for (i = 0; i < w; i += 60)

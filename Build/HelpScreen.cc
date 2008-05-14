@@ -480,7 +480,7 @@ static void BtnHelpScreenDontShowHelpAgainCallback(GUI_BUTTON* btn, INT32 reason
 static void BtnHelpScreenExitCallback(GUI_BUTTON* btn, INT32 reason);
 static void ChangeHelpScreenSubPage(void);
 static void CreateHelpScreenButtons(void);
-static BOOLEAN CreateHelpScreenTextBuffer(void);
+static void CreateHelpScreenTextBuffer(void);
 static void CreateScrollAreaButtons(void);
 static void SetSizeAndPropertiesOfHelpScreen(void);
 
@@ -1873,12 +1873,10 @@ INT8 HelpScreenDetermineWhichMapScreenHelpToShow(void)
 }
 
 
-static BOOLEAN CreateHelpScreenTextBuffer(void)
+static void CreateHelpScreenTextBuffer(void)
 {
 	guiHelpScreenTextBufferSurface = AddVideoSurface(HLP_SCRN__WIDTH_OF_TEXT_BUFFER, HLP_SCRN__HEIGHT_OF_TEXT_BUFFER, PIXEL_DEPTH);
-	CHECKF(guiHelpScreenTextBufferSurface != NO_VSURFACE);
 	guiHelpScreenTextBufferSurface->SetTransparency(0);
-	return( TRUE );
 }
 
 

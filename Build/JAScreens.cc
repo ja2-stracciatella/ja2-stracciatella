@@ -914,7 +914,6 @@ UINT32 DemoExitScreenHandle(void)
 		{
 			//Create render buffer
 			uiCollageID = AddVideoSurface(263, 210, PIXEL_DEPTH);
-			CHECKF(uiCollageID != NO_VSURFACE);
 			SetVideoSurfaceTransparency(uiCollageID, 0);
 
 			//bring up the collage screen
@@ -1073,7 +1072,6 @@ UINT32 DemoExitScreenHandle(void)
 		{
 			//Create render buffer
 			uiCollageID = AddVideoSurface(331, 148, PIXEL_DEPTH);
-			CHECKF(uiCollageID != NO_VSURFACE);
 			SetVideoSurfaceTransparency(uiCollageID, 0);
 
 			//bring up the collage screen

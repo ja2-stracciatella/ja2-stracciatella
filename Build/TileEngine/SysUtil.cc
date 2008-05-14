@@ -9,13 +9,8 @@ SGPVSurface* guiSAVEBUFFER;
 SGPVSurface* guiEXTRABUFFER;
 
 
-BOOLEAN	InitializeGameVideoObjects( )
+void InitializeGameVideoObjects()
 {
-	guiSAVEBUFFER = AddVideoSurface(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH);
-	CHECKF(guiSAVEBUFFER != NO_VSURFACE);
-
+	guiSAVEBUFFER  = AddVideoSurface(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH);
 	guiEXTRABUFFER = AddVideoSurface(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH);
-	CHECKF(guiEXTRABUFFER != NO_VSURFACE);
-
-	return( TRUE );
 }

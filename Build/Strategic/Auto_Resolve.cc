@@ -996,11 +996,7 @@ static void BuildInterfaceBuffer(void)
 	DestRect.iRight			= gpAR->sWidth;
 	DestRect.iBottom		= gpAR->sHeight;
 
-	//create buffer for the transition slot for merc items.  This slot contains the newly
-	//selected item graphic in it's inventory size version.  This buffer is then scaled down
-	//into the associated merc inventory panel slot buffer which is approximately 20% smaller.
 	gpAR->iInterfaceBuffer = AddVideoSurface(gpAR->sWidth, gpAR->sHeight, PIXEL_DEPTH);
-	AssertMsg(gpAR->iInterfaceBuffer != NO_VSURFACE, "Failed to allocate memory for autoresolve interface buffer.");
 
 	GetClippingRect( &ClipRect );
 	SetClippingRect( &DestRect );

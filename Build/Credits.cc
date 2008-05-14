@@ -365,7 +365,6 @@ static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	pNodeToAdd->sPosY = CRDT_START_POS_Y;
 
 	SGPVSurface* const vs = AddVideoSurface(CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString, PIXEL_DEPTH);
-	if (vs == NO_VSURFACE) return;
 	pNodeToAdd->uiVideoSurfaceImage = vs;
 
 	vs->SetTransparency(0);

@@ -75,7 +75,6 @@ UINT32	MapUtilScreenHandle( )
 		fNewMap = FALSE;
 
 		giMiniMap = AddVideoSurface(88, 44, PIXEL_DEPTH);
-		if (giMiniMap == NO_VSURFACE) return ERROR_SCREEN;
 
 		// USING BRET's STUFF FOR LOOPING FILES/CREATING LIST, hence AddToFDlgList.....
 		FindFileInfo* const find_info = FindFiles("MAPS/*.dat");
@@ -99,7 +98,6 @@ UINT32	MapUtilScreenHandle( )
 
 		//Allocate 8-bit surface
 		gi8BitMiniMap = AddVideoSurface(88, 44, 8);
-		if (gi8BitMiniMap == NO_VSURFACE) return ERROR_SCREEN;
 	}
 
 	//OK, we are here, now loop through files

@@ -362,7 +362,6 @@ BOOLEAN EnterMercs()
 
 	// Create a background video surface to blt the face onto
 	guiMercVideoFaceBackground = AddVideoSurface(MERC_VIDEO_FACE_WIDTH, MERC_VIDEO_FACE_HEIGHT, PIXEL_DEPTH);
-	CHECKF(guiMercVideoFaceBackground != NO_VSURFACE);
 
 	RenderMercs();
 

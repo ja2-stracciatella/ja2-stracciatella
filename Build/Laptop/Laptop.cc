@@ -2345,7 +2345,6 @@ static void InitTitleBarMaximizeGraphics(const SGPVObject* const uiBackgroundGra
 
 	// Create a background video surface to blt the title bar onto
 	guiTitleBarSurface = AddVideoSurface(LAPTOP_TITLE_BAR_WIDTH, LAPTOP_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
-	CHECKV(guiTitleBarSurface != NO_VSURFACE);
 
 	BltVideoObject(guiTitleBarSurface, uiBackgroundGraphic, 0, 0, 0);
 	BltVideoObject(guiTitleBarSurface, uiIconGraphic, usIconGraphicIndex, LAPTOP_TITLE_BAR_ICON_OFFSET_X, LAPTOP_TITLE_BAR_ICON_OFFSET_Y);
