@@ -129,11 +129,9 @@ typedef struct AUTORESOLVE_STRUCT
 	UINT32 uiTimeSlice;
 	UINT32 uiTotalElapsedBattleTimeInMilliseconds;
 	UINT32 uiPrevTime, uiCurrTime;
-	UINT32 uiStartExpanding;
-	UINT32 uiEndExpanding;
 	UINT32 uiPreRandomIndex;
 
-	SGPRect Rect, ExRect;
+	SGPRect Rect;
 
 	UINT16 usPlayerAttack;
 	UINT16 usPlayerDefence;
@@ -168,7 +166,6 @@ typedef struct AUTORESOLVE_STRUCT
 	BOOLEAN fAllowCapture;
 	BOOLEAN fPlayerRejectedSurrenderOffer;
 	BOOLEAN fPendingSurrender;
-	BOOLEAN fExpanding;
 	BOOLEAN fShowInterface;
 	BOOLEAN fEnteringAutoResolve;
 	BOOLEAN fMoraleEventsHandled;
@@ -412,11 +409,6 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 	gpBattleGroup = NULL;
 }
 
-#define ORIG_LEFT			26
-#define ORIG_TOP			53
-#define ORIG_RIGHT		92
-#define ORIG_BOTTOM		84
-
 
 static void RenderAutoResolve(void);
 
@@ -592,14 +584,7 @@ UINT32 AutoResolveScreenHandle()
 		DetermineTeamLeader( TRUE ); //friendly team
 		DetermineTeamLeader( FALSE ); //enemy team
 		CalculateAttackValues();
-		if (guiEXTRABUFFER != NO_VSURFACE)
-		{
-			DoTransitionFromPreBattleInterfaceToAutoResolve();
-		}
-		else
-		{
-			gpAR->fExpanding = TRUE;
-		}
+		DoTransitionFromPreBattleInterfaceToAutoResolve();
 		gpAR->fRenderAutoResolve = TRUE;
 	}
 	if( gpAR->fExitAutoResolve )
@@ -619,7 +604,7 @@ UINT32 AutoResolveScreenHandle()
 		gpAR->uiPrevTime = gpAR->uiCurrTime = GetJA2Clock();
 
 	}
-	else if( gpAR->ubBattleStatus == BATTLE_IN_PROGRESS && !gpAR->fExpanding )
+	else if (gpAR->ubBattleStatus == BATTLE_IN_PROGRESS)
 	{
 		ProcessBattleFrame();
 	}
@@ -1048,99 +1033,6 @@ static void BuildInterfaceBuffer(void)
 }
 
 
-static void ExpandWindow(void)
-{
-	SGPRect OldRect;
-	UINT32 uiCurrentTime, uiTimeRange, uiPercent;
-	INT32 i;
-
-	if( !gpAR->ExRect.iLeft && !gpAR->ExRect.iRight )
-	{ //First time
-		gpAR->ExRect.iLeft = ORIG_LEFT;
-		gpAR->ExRect.iTop = ORIG_TOP;
-		gpAR->ExRect.iRight = ORIG_RIGHT;
-		gpAR->ExRect.iBottom = ORIG_BOTTOM;
-		gpAR->uiStartExpanding = GetJA2Clock();
-		gpAR->uiEndExpanding = gpAR->uiStartExpanding + 333;
-		for( i = 0; i < DONEWIN_BUTTON; i++ )
-			HideButton( gpAR->iButton[ i ] );
-	}
-	else
-	{
-		//Restore the previous area
-		//left
-		BlitBufferToBuffer( guiSAVEBUFFER, FRAME_BUFFER, (UINT16)gpAR->ExRect.iLeft, (UINT16)gpAR->ExRect.iTop, 1, (UINT16)(gpAR->ExRect.iBottom-gpAR->ExRect.iTop+1) );
-		InvalidateRegion( gpAR->ExRect.iLeft, gpAR->ExRect.iTop, gpAR->ExRect.iLeft+1, gpAR->ExRect.iBottom+1 );
-		//right
-		BlitBufferToBuffer( guiSAVEBUFFER, FRAME_BUFFER, (UINT16)gpAR->ExRect.iRight, (UINT16)gpAR->ExRect.iTop, 1, (UINT16)(gpAR->ExRect.iBottom-gpAR->ExRect.iTop+1) );
-		InvalidateRegion( gpAR->ExRect.iRight, gpAR->ExRect.iTop, gpAR->ExRect.iRight+1, gpAR->ExRect.iBottom+1 );
-		//top
-		BlitBufferToBuffer( guiSAVEBUFFER, FRAME_BUFFER, (UINT16)gpAR->ExRect.iLeft, (UINT16)gpAR->ExRect.iTop, (UINT16)(gpAR->ExRect.iRight-gpAR->ExRect.iLeft+1), 1 );
-		InvalidateRegion( gpAR->ExRect.iLeft, gpAR->ExRect.iTop, gpAR->ExRect.iRight+1, gpAR->ExRect.iTop+1 );
-		//bottom
-		BlitBufferToBuffer( guiSAVEBUFFER, FRAME_BUFFER, (UINT16)gpAR->ExRect.iLeft, (UINT16)gpAR->ExRect.iBottom, (UINT16)(gpAR->ExRect.iRight-gpAR->ExRect.iLeft+1), 1 );
-		InvalidateRegion( gpAR->ExRect.iLeft, gpAR->ExRect.iBottom, gpAR->ExRect.iRight+1, gpAR->ExRect.iBottom+1 );
-
-		uiCurrentTime = GetJA2Clock();
-		if( uiCurrentTime >= gpAR->uiStartExpanding && uiCurrentTime <= gpAR->uiEndExpanding )
-		{
-			//Debug purposes
-			OldRect.iLeft = ORIG_LEFT;
-			OldRect.iTop = ORIG_TOP;
-			OldRect.iRight = ORIG_RIGHT;
-			OldRect.iBottom = ORIG_BOTTOM;
-
-			uiTimeRange = gpAR->uiEndExpanding - gpAR->uiStartExpanding;
-			uiPercent = (uiCurrentTime - gpAR->uiStartExpanding ) * 100 / uiTimeRange;
-
-			//Left
-			if( OldRect.iLeft <= gpAR->Rect.iLeft )
-				gpAR->ExRect.iLeft = OldRect.iLeft + ( gpAR->Rect.iLeft - OldRect.iLeft ) * uiPercent / 100;
-			else
-				gpAR->ExRect.iLeft = gpAR->Rect.iLeft + ( OldRect.iLeft - gpAR->Rect.iLeft ) * uiPercent / 100;
-			//Top
-			if( OldRect.iTop <= gpAR->Rect.iTop )
-				gpAR->ExRect.iTop = OldRect.iTop + ( gpAR->Rect.iTop - OldRect.iTop ) * uiPercent / 100;
-			else
-				gpAR->ExRect.iTop = gpAR->Rect.iTop + ( OldRect.iTop - gpAR->Rect.iTop ) * uiPercent / 100;
-			//Right
-			if( OldRect.iRight <= gpAR->Rect.iRight )
-				gpAR->ExRect.iRight = OldRect.iRight + ( gpAR->Rect.iRight - OldRect.iRight ) * uiPercent / 100;
-			else
-				gpAR->ExRect.iRight = gpAR->Rect.iRight + ( OldRect.iRight - gpAR->Rect.iRight ) * uiPercent / 100;
-			//Bottom
-			if( OldRect.iBottom <= gpAR->Rect.iBottom )
-				gpAR->ExRect.iBottom = OldRect.iBottom + ( gpAR->Rect.iBottom - OldRect.iBottom ) * uiPercent / 100;
-			else
-				gpAR->ExRect.iBottom = gpAR->Rect.iBottom + ( OldRect.iBottom - gpAR->Rect.iBottom ) * uiPercent / 100;
-		}
-		else
-		{ //expansion done -- final frame
-			gpAR->ExRect.iLeft		= gpAR->Rect.iLeft;
-			gpAR->ExRect.iTop			= gpAR->Rect.iTop;
-			gpAR->ExRect.iRight		= gpAR->Rect.iRight;
-			gpAR->ExRect.iBottom	= gpAR->Rect.iBottom;
-			gpAR->fExpanding = FALSE;
-			gpAR->fShowInterface = TRUE;
-		}
-	}
-
-	//The new rect now determines the state of the current rectangle.
-	{ SGPVSurface::Lock l(FRAME_BUFFER);
-		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		RectangleDraw(TRUE, gpAR->ExRect.iLeft, gpAR->ExRect.iTop, gpAR->ExRect.iRight, gpAR->ExRect.iBottom, Get16BPPColor( FROMRGB( 200, 200, 100 ) ), l.Buffer<UINT8>());
-	}
-	//left
-	InvalidateRegion( gpAR->ExRect.iLeft, gpAR->ExRect.iTop, gpAR->ExRect.iLeft+1, gpAR->ExRect.iBottom+1 );
-	//right
-	InvalidateRegion( gpAR->ExRect.iRight, gpAR->ExRect.iTop, gpAR->ExRect.iRight+1, gpAR->ExRect.iBottom+1 );
-	//top
-	InvalidateRegion( gpAR->ExRect.iLeft, gpAR->ExRect.iTop, gpAR->ExRect.iRight+1, gpAR->ExRect.iTop+1 );
-	//bottom
-	InvalidateRegion( gpAR->ExRect.iLeft, gpAR->ExRect.iBottom, gpAR->ExRect.iRight+1, gpAR->ExRect.iBottom+1 );
-}
-
-
 UINT32 VirtualSoldierDressWound(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVictim, OBJECTTYPE* pKit, INT16 sKitPts, INT16 sStatus)
 {
 	UINT32 uiDressSkill, uiPossible, uiActual, uiMedcost, uiDeficiency, uiAvailAPs, uiUsedAPs;
@@ -1417,12 +1309,7 @@ static void RenderAutoResolve(void)
 	wchar_t str[100];
 	UINT8 ubGood, ubBad;
 
-	if( gpAR->fExpanding )
-	{ //animate the expansion of the window.
-		ExpandWindow();
-		return;
-	}
-	else if( gpAR->fShowInterface )
+	if (gpAR->fShowInterface)
 	{ //After expanding the window, we now show the interface
 		if( gpAR->ubBattleStatus == BATTLE_IN_PROGRESS && !gpAR->fPendingSurrender )
 		{
