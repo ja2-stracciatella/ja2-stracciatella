@@ -494,22 +494,22 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const INT32
 }
 
 
-static BOOLEAN InternalShadowVideoSurfaceRect(SGPVSurface* const dst, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2, const UINT16* const filter_table)
+static void InternalShadowVideoSurfaceRect(SGPVSurface* const dst, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2, const UINT16* const filter_table)
 {
 	if (X1 < 0) X1 = 0;
-	if (X2 < 0) return FALSE;
+	if (X2 < 0) return;
 
-	if (Y2 < 0) return FALSE;
+	if (Y2 < 0) return;
 	if (Y1 < 0) Y1 = 0;
 
 	if (X2 >= dst->Width())  X2 = dst->Width() - 1;
 	if (Y2 >= dst->Height()) Y2 = dst->Height() - 1;
 
-	if (X1 >= dst->Width())  return FALSE;
-	if (Y1 >= dst->Height()) return FALSE;
+	if (X1 >= dst->Width())  return;
+	if (Y1 >= dst->Height()) return;
 
-	if (X2 - X1 <= 0) return FALSE;
-	if (Y2 - Y1 <= 0) return FALSE;
+	if (X2 - X1 <= 0) return;
+	if (Y2 - Y1 <= 0) return;
 
 	SGPRect area;
 	area.iTop    = Y1;
@@ -518,19 +518,19 @@ static BOOLEAN InternalShadowVideoSurfaceRect(SGPVSurface* const dst, INT32 X1, 
 	area.iRight  = X2;
 
 	SGPVSurface::Lock ldst(dst);
-	return Blt16BPPBufferFilterRect(ldst.Buffer<UINT16>(), ldst.Pitch(), filter_table, &area);
+	Blt16BPPBufferFilterRect(ldst.Buffer<UINT16>(), ldst.Pitch(), filter_table, &area);
 }
 
 
-BOOLEAN ShadowVideoSurfaceRect(SGPVSurface* const dst, const INT32 X1, const INT32 Y1, const INT32 X2, const INT32 Y2)
+void ShadowVideoSurfaceRect(SGPVSurface* const dst, const INT32 X1, const INT32 Y1, const INT32 X2, const INT32 Y2)
 {
-	return InternalShadowVideoSurfaceRect(dst, X1, Y1, X2, Y2, ShadeTable);
+	InternalShadowVideoSurfaceRect(dst, X1, Y1, X2, Y2, ShadeTable);
 }
 
 
-BOOLEAN ShadowVideoSurfaceRectUsingLowPercentTable(SGPVSurface* const dst, const INT32 X1, const INT32 Y1, const INT32 X2, const INT32 Y2)
+void ShadowVideoSurfaceRectUsingLowPercentTable(SGPVSurface* const dst, const INT32 X1, const INT32 Y1, const INT32 X2, const INT32 Y2)
 {
-	return InternalShadowVideoSurfaceRect(dst, X1, Y1, X2, Y2, IntensityTable);
+	InternalShadowVideoSurfaceRect(dst, X1, Y1, X2, Y2, IntensityTable);
 }
 
 
