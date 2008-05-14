@@ -356,7 +356,7 @@ const wchar_t *pConditionStrings[] =
 	L"Verwundet", // wounded health
 	L"Erschöpft", // tired
 	L"Verblutend", // bleeding to death
-	L"Bewußtlos", // knocked out
+	L"Bewusstlos", // knocked out
 	L"Stirbt", // near death
 	L"Tot", // dead
 };
@@ -729,8 +729,8 @@ const wchar_t *pLandTypeStrings[] =
 	L"See/Ozean",
 	L"Hügel",
 	L"Unpassierbar",
-	L"Fluß",		//river from north to south
-	L"Fluß",		//river from east to west
+	L"Fluss",		//river from north to south
+	L"Fluss",		//river from east to west
 	L"Fremdes Land",
 	//NONE of the following are used for directional travel, just for the sector description.
 	L"Tropen",
@@ -774,7 +774,7 @@ const wchar_t *gpStrategicString[] =
 	//Dialog strings for enemies.
 
 	L"Feind bietet die Chance zum Aufgeben an.",			//STR_ENEMY_SURRENDER_OFFER
-	L"Feind hat restliche bewußtlose Söldner gefangengenommen.",	//STR_ENEMY_CAPTURED
+	L"Feind hat restliche bewusstlose Söldner gefangengenommen.",	//STR_ENEMY_CAPTURED
 
 	//The text that goes on the autoresolve buttons
 
@@ -891,9 +891,9 @@ const wchar_t *gpStrategicString[] =
 	//Note: the minimum number of civilians eaten will be two.
 	L"Monster attackieren und töten %d Zivilisten im Sektor %ls.",
 	//%s is the sector -- ex: A9
-	L"Feinde attackieren Ihre Söldner im Sektor %ls. Alle Söldner sind bewußtlos!",
+	L"Feinde attackieren Ihre Söldner im Sektor %ls. Alle Söldner sind bewusstlos!",
 	//%s is the sector -- ex: A9
-	L"Monster attackieren Ihre Söldner im Sektor %ls. Alle Söldner sind bewußtlos!",
+	L"Monster attackieren Ihre Söldner im Sektor %ls. Alle Söldner sind bewusstlos!",
 
 };
 
@@ -1020,22 +1020,22 @@ const wchar_t* const TacticalStr[] =
 
 	// CAMFIELD NUKE THIS and add quote #66.
 
-	L"%ls bemerkt, daß Teile aus der Lieferung fehlen.",
+	L"%ls bemerkt, dass Teile aus der Lieferung fehlen.",
 
 	// The %s is a string from pDoorTrapStrings
 
-	L"Das Schloß hat %ls.",
-	L"Es gibt kein Schloß.",
+	L"Das Schloss hat %ls.",
+	L"Es gibt kein Schloss.",
 	L"Erfolg!",
 	L"Fehlschlag.",
 	L"Erfolg!",
 	L"Fehlschlag.",
-	L"Das Schloß hat keine Falle.",
+	L"Das Schloss hat keine Falle.",
 	L"Erfolg!",
 	// The %s is a merc name
 	L"%ls hat nicht den richtigen Schlüssel.",
-	L"Die Falle am Schloß ist entschärft.",
-	L"Das Schloß hat keine Falle.",
+	L"Die Falle am Schloss ist entschärft.",
+	L"Das Schloss hat keine Falle.",
 	L"Geschl.",
 	L"TÜR",
 	L"FALLE AN",
@@ -1185,7 +1185,7 @@ const wchar_t* const TacticalStr[] =
 	L"Der Herrin sagen, was sie wissen will?",
 	L"Fingerabdruck-ID gespeichert",
 	L"Falsche Fingerabdruck-ID. Waffe außer Betrieb",
-	L"Ziel erfaßt",
+	L"Ziel erfasst",
 	L"Weg blockiert",
 	L"Geld einzahlen/abheben",		//Help text over the $ button on the Single Merc Panel
 	L"Niemand braucht Erste Hilfe.",
@@ -1206,8 +1206,8 @@ const wchar_t* const TacticalStr[] =
 	L"Automatische Erste Hilfe nicht möglich",
 	L"Weg blockiert für %ls",
 	L"Ihre von Deidrannas Truppe gefangenen Soldaten sind hier inhaftiert",
-	L"Schloß getroffen",
-	L"Schloß zerstört",
+	L"Schloss getroffen",
+	L"Schloss zerstört",
 	L"Noch jemand an der Tür.",
 	L"Gesundh.: %d/%d\nTank: %d/%d",
 	L"%ls kann %ls nicht sehen.", // Cannot see person trying to talk to
@@ -1247,7 +1247,7 @@ const wchar_t *pExitingSectorHelpText[] =
 	L"Bei aktiviertem Kästchen reist %ls alleine und\nbildet automatisch wieder einen Trupp.",
 
 	//Standard helptext for all movement. Explains what will happen (moving the squad)
-	L"Bei aktiviertem Kästchen reist der ausgewählte Trupp\nweiter und verläßt den Sektor.",
+	L"Bei aktiviertem Kästchen reist der ausgewählte Trupp\nweiter und verlässt den Sektor.",
 
 	//This strings is used BEFORE the "exiting sector" interface is created. If you have an EPC selected and you attempt to tactically
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the
@@ -1300,7 +1300,7 @@ const wchar_t *pHelicopterEtaStrings[] =
 	L"Ank.: ", 				// ETA is an acronym for "estimated time of arrival"
 
 	// warning that the sector the helicopter is going to use for refueling is under enemy control
-	L"Helikopter hat fast keinen Sprit mehr und muß im feindlichen Gebiet landen.",
+	L"Helikopter hat fast keinen Sprit mehr und muss im feindlichen Gebiet landen.",
 	L"Passagiere: ",
 	L"Skyrider oder Absprungsort auswählen?",
 	L"Skyrider",
@@ -1647,7 +1647,7 @@ const wchar_t pEtaString[] = L"Ank.:"; // eta is an acronym for Estimated Time o
 const wchar_t *pTrashItemText[] =
 {
 	L"Sie werden das Ding nie wiedersehen. Trotzdem wegwerfen?", 	// do you want to continue and lose the item forever
-	L"Dieser Gegenstand sieht SEHR wichtig aus. Sie sie GANZ SICHER, daß Sie ihn wegwerfen wollen?", // does the user REALLY want to trash this item
+	L"Dieser Gegenstand sieht SEHR wichtig aus. Sie sie GANZ SICHER, dass Sie ihn wegwerfen wollen?", // does the user REALLY want to trash this item
 };
 
 const wchar_t *pMapErrorString[] =
@@ -1712,7 +1712,7 @@ const wchar_t *pMapErrorString[] =
 	L"Ein oder mehrere Söldner des ANDEREN Trupps kann sich gerade nicht bewegen.",
 	L"Fahrzeug zu stark beschädigt!",
 	L"Nur zwei Söldner pro Sektor können Milizen trainieren.",
-	L"Roboter muß von jemandem bedient werden. Beide im selben Trupp plazieren.",
+	L"Roboter muss von jemandem bedient werden. Beide im selben Trupp plazieren.",
 
 };
 
@@ -1744,19 +1744,19 @@ const wchar_t *pMiscMapScreenMouseRegionHelpText[] =
 	L"Inventar verlassen (|E|n|t|e|r)",
 };
 
-const wchar_t str_he_leaves_where_drop_equipment[]  = L"Soll %ls seine Ausrüstung hier lassen (%ls) oder in %ls, bevor er Arulco verläßt?";
-const wchar_t str_she_leaves_where_drop_equipment[] = L"Soll %ls ihre Ausrüstung hier lassen (%ls) oder in %ls, bevor sie Arulco verläßt?";
-const wchar_t str_he_leaves_drops_equipment[]       = L"%ls geht bald und läßt seine Ausrüstung in %ls.";
-const wchar_t str_she_leaves_drops_equipment[]      = L"%ls geht bald und läßt ihre Ausrüstung in %ls.";
+const wchar_t str_he_leaves_where_drop_equipment[]  = L"Soll %ls seine Ausrüstung hier lassen (%ls) oder in %ls, bevor er Arulco verlässt?";
+const wchar_t str_she_leaves_where_drop_equipment[] = L"Soll %ls ihre Ausrüstung hier lassen (%ls) oder in %ls, bevor sie Arulco verlässt?";
+const wchar_t str_he_leaves_drops_equipment[]       = L"%ls geht bald und lässt seine Ausrüstung in %ls.";
+const wchar_t str_she_leaves_drops_equipment[]      = L"%ls geht bald und lässt ihre Ausrüstung in %ls.";
 
 
 // Text used on IMP Web Pages
 const wchar_t *pImpPopUpStrings[] =
 {
 	L"Ungültiger Code",
-	L"Sie wollen gerade den ganzen Evaluierungsprozeß von vorn beginnen. Sind Sie sicher?",
+	L"Sie wollen gerade den ganzen Evaluierungsprozess von vorn beginnen. Sind Sie sicher?",
 	L"Bitte Ihren vollen Namen und Ihr Geschlecht eingeben",
-	L"Die Überprüfung Ihrer finanziellen Mittel hat ergeben, daß Sie sich keine Evaluierung leisten können.",
+	L"Die Überprüfung Ihrer finanziellen Mittel hat ergeben, dass Sie sich keine Evaluierung leisten können.",
 	L"Option zur Zeit nicht gültig.",
 	L"Um eine genaue Evaluierung durchzuführen, müssen Sie mindestens noch ein Teammitglied aufnehmen können.",
 	L"Evaluierung bereits durchgeführt.",
@@ -1773,7 +1773,7 @@ const wchar_t *pImpButtonText[] =
 	L"Stimme %d", 			// the voice selection
 	L"Fertig", 			// done profiling
 	L"Von vorne anfangen",	 		// start over profiling
-	L"Ja, die Antwort paßt!",
+	L"Ja, die Antwort passt!",
 	L"Ja",
 	L"Nein",
 	L"Fertig", 			// finished answering questions
@@ -2011,7 +2011,7 @@ const wchar_t *pWebPagesTitles[] =
 	L"Fleuropa - Gestecke",
 	L"Fleuropa - Bestellformular",
 	L"Fleuropa - Karten",
-	L"Hammer, Amboß & Steigbügel Versicherungsmakler",
+	L"Hammer, Amboss & Steigbügel Versicherungsmakler",
 	L"Information",
 	L"Vertrag",
 	L"Bemerkungen",
@@ -2149,7 +2149,7 @@ const wchar_t* const LargeTacticalStr[] =
 {
 	L"Sie sind in diesem Sektor geschlagen worden!",
 	L"Der Feind hat kein Erbarmen mit den Seelen Ihrer Teammitglieder und verschlingt jeden einzelnen.",
-	L"Ihre bewußtlosen Teammitglieder wurden gefangengenommen!",
+	L"Ihre bewusstlosen Teammitglieder wurden gefangengenommen!",
 	L"Ihre Teammitglieder wurden vom Feind gefangengenommen.",
 };
 
@@ -2199,7 +2199,7 @@ const wchar_t *MercInfo[] =
 	L"Pro Tag",
 	L"Verstorben",
 
-	L"Sie versuchen, zuviele Söldner anzuheuern. 18 ist Maximum.",
+	L"Sie versuchen, zu viele Söldner anzuheuern. 18 ist Maximum.",
 	L"nicht da",
 };
 
@@ -2314,7 +2314,7 @@ const wchar_t *sFloristGalleryText[] =
 	L"Zurück",	//abbreviation for previous
 	L"Weiter",	//abbreviation for next
 	L"Klicken Sie auf das Gesteck Ihrer Wahl",
-	L"Bitte beachten Sie, daß wir für jedes kaputte oder verwelkte Gesteck einen Aufpreis von $10 berechnen.",
+	L"Bitte beachten Sie, dass wir für jedes kaputte oder verwelkte Gesteck einen Aufpreis von $10 berechnen.",
 	L"Home",
 };
 
@@ -2765,7 +2765,7 @@ const wchar_t *zMarksMapScreenText[] =
 	L"Söldner hat Lebensversicherung",
 	L"%ls ist nicht müde.",
 	L"%ls ist unterwegs und kann nicht schlafen.",
-	L"%ls ist zu müde. Versuchen Sie es ein bißchen später nochmal.",
+	L"%ls ist zu müde. Versuchen Sie es ein bisschen später nochmal.",
 	L"%ls fährt.",
 	L"Der Trupp kann nicht weiter, wenn einer der Söldner pennt.",
 
@@ -3018,7 +3018,7 @@ const wchar_t *pDeliveryLocationStrings[] =
 /* This string is used in the IMP character generation.  It is possible to
  * select 0 ability in a skill meaning you can't use it.  This text is
  * confirmation to the player. */
-const wchar_t pSkillAtZeroWarning[]    = L"Sind Sie sicher? Ein Wert von 0 bedeutet, daß der Charakter diese Fähigkeit nicht nutzen kann.";
+const wchar_t pSkillAtZeroWarning[]    = L"Sind Sie sicher? Ein Wert von 0 bedeutet, dass der Charakter diese Fähigkeit nicht nutzen kann.";
 const wchar_t pIMPBeginScreenStrings[] = L"(max. 8 Buchstaben)";
 const wchar_t pIMPFinishButtonText[]   = L"Analyse wird durchgeführt";
 const wchar_t pIMPFinishStrings[]      = L"Danke, %ls"; //%s is the name of the merc
@@ -3208,7 +3208,7 @@ const wchar_t *gzNonPersistantPBIText[] =
 const wchar_t *gzMiscString[] =
 {
 	L"Ihre Milizen kämpfen ohne die Hilfe der Söldner weiter...",
-	L"Das Fahrzeug muß nicht mehr aufgetankt werden.",
+	L"Das Fahrzeug muss nicht mehr aufgetankt werden.",
 	L"Der Tank ist %d%% voll.",
 	L"Deidrannas Armee hat wieder volle Kontrolle über %ls.",
 	L"Sie haben ein Tanklager verloren.",
@@ -3332,9 +3332,9 @@ const wchar_t *sRepairsDoneString[] =
 
 const wchar_t *zGioDifConfirmText[]=
 {
-	L"Sie haben sich für den EINSTEIGER-Modus entschieden. Dies ist die passende Einstellung für Spieler, die noch nie zuvor Jagged Alliance oder ähnliche Spiele gespielt haben oder für Spieler, die sich ganz einfach kürzere Schlachten wünschen. Ihre Wahl wird den Verlauf des ganzen Spiels beeinflussen. Treffen Sie also eine sorgfältige Wahl. Sind Sie ganz sicher, daß Sie im Einsteiger-Modus spielen wollen?",
-	L"Sie haben sich für den FORTGESCHRITTENEN-Modus entschieden. Dies ist die passende Einstellung für Spieler, die bereits Erfahrung mit Jagged Alliance oder ähnlichen Spielen haben. Ihre Wahl wird den Verlauf des ganzen Spiels beeinflussen. Treffen Sie also eine sorgfältige Wahl. Sind Sie ganz sicher, daß Sie im Fortgeschrittenen-Modus spielen wollen?",
-	L"Sie haben sich für den PROFI-Modus entschieden. Na gut, wir haben Sie gewarnt. Machen Sie hinterher bloß nicht uns dafür verantwortlich, wenn Sie im Sarg nach Hause kommen. Ihre Wahl wird den Verlauf des ganzen Spiels beeinflussen. Treffen Sie also eine sorgfältige Wahl. Sind Sie ganz sicher, daß Sie im Profi-Modus spielen wollen?",
+	L"Sie haben sich für den EINSTEIGER-Modus entschieden. Dies ist die passende Einstellung für Spieler, die noch nie zuvor Jagged Alliance oder ähnliche Spiele gespielt haben oder für Spieler, die sich ganz einfach kürzere Schlachten wünschen. Ihre Wahl wird den Verlauf des ganzen Spiels beeinflussen. Treffen Sie also eine sorgfältige Wahl. Sind Sie ganz sicher, dass Sie im Einsteiger-Modus spielen wollen?",
+	L"Sie haben sich für den FORTGESCHRITTENEN-Modus entschieden. Dies ist die passende Einstellung für Spieler, die bereits Erfahrung mit Jagged Alliance oder ähnlichen Spielen haben. Ihre Wahl wird den Verlauf des ganzen Spiels beeinflussen. Treffen Sie also eine sorgfältige Wahl. Sind Sie ganz sicher, dass Sie im Fortgeschrittenen-Modus spielen wollen?",
+	L"Sie haben sich für den PROFI-Modus entschieden. Na gut, wir haben Sie gewarnt. Machen Sie hinterher bloß nicht uns dafür verantwortlich, wenn Sie im Sarg nach Hause kommen. Ihre Wahl wird den Verlauf des ganzen Spiels beeinflussen. Treffen Sie also eine sorgfältige Wahl. Sind Sie ganz sicher, dass Sie im Profi-Modus spielen wollen?",
 };
 
 const wchar_t *gzLateLocalizedString[] =
@@ -3360,7 +3360,7 @@ const wchar_t *gzLateLocalizedString[] =
 	L"Keiner der Söldner hat medizinische Fähigkeiten.",
 	L"Sie haben kein Verbandszeug.",
 	L"Sie haben nicht genug Verbandszeug, um alle zu verarzten.",
-	L"Keiner der Söldner muß verbunden werden.",
+	L"Keiner der Söldner muss verbunden werden.",
 	L"Söldner automatisch verbinden.",
 	L"Alle Söldner verarztet.",
 
