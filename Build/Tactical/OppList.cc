@@ -3138,287 +3138,6 @@ void DebugSoldierPage1( )
 }
 
 
-void DebugSoldierPage2( )
-{
-	static const char* const gzDirectionStr[] =
-	{
-		"NORTHEAST",
-		"EAST",
-		"SOUTHEAST",
-		"SOUTH",
-		"SOUTHWEST",
-		"WEST",
-		"NORTHWEST",
-		"NORTH"
-	};
-
-  TILE_ELEMENT							 TileElem;
-	LEVELNODE					*pNode;
-	UINT8							ubLine;
-
-	const SOLDIERTYPE* const pSoldier = FindSoldierFromMouse();
-	if (pSoldier != NULL)
-	{
-		SetFont( LARGEFONT1 );
-		gprintf( 0,0,L"DEBUG SOLDIER PAGE TWO, GRIDNO %d", pSoldier->sGridNo );
-		SetFont( LARGEFONT1 );
-
-		ubLine = 2;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"ID:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->ubID );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Body Type:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->ubBodyType );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Opp Cnt:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->bOppCnt);
-		ubLine++;
-
-		if (pSoldier->bTeam == OUR_TEAM || pSoldier->bTeam == MILITIA_TEAM)	// look at 8 to 15 opplist entries
-		{
-			SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-			gprintf( 0, LINE_HEIGHT * ubLine, L"Opplist B:");
-			SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-			gprintf( 150, LINE_HEIGHT * ubLine, L"%d %d %d %d %d %d %d %d", pSoldier->bOppList[20],pSoldier->bOppList[21],pSoldier->bOppList[22],
-							pSoldier->bOppList[23],pSoldier->bOppList[24],pSoldier->bOppList[25],pSoldier->bOppList[26],pSoldier->bOppList[27]);
-			ubLine++;
-		}
-		else	// team 1 - enemies so look at first 8 (0-7) opplist entries
-		{
-			SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-			gprintf( 0, LINE_HEIGHT * ubLine, L"OppList A:");
-			SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-			gprintf( 150, LINE_HEIGHT * ubLine, L"%d %d %d %d %d %d %d %d", pSoldier->bOppList[0],pSoldier->bOppList[1],pSoldier->bOppList[2],
-							pSoldier->bOppList[3],pSoldier->bOppList[4],pSoldier->bOppList[5],pSoldier->bOppList[6],
-							pSoldier->bOppList[7]);
-			ubLine++;
-		}
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Visible:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->bVisible);
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Direction:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf(150, LINE_HEIGHT * ubLine, L"%hs", gzDirectionStr[pSoldier->bDirection]);
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"DesDirection:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf(150, LINE_HEIGHT * ubLine, L"%hs", gzDirectionStr[pSoldier->bDesiredDirection]);
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"GridNo:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->sGridNo );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Dest:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->sFinalDestination );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Path Size:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->usPathDataSize);
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Path Index:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->usPathIndex );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"First 3 Steps:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d %d %d", pSoldier->usPathingData[0],
-		pSoldier->usPathingData[1],
-		pSoldier->usPathingData[2] );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Next 3 Steps:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d %d %d", pSoldier->usPathingData[pSoldier->usPathIndex],
-		pSoldier->usPathingData[pSoldier->usPathIndex + 1],
-		pSoldier->usPathingData[pSoldier->usPathIndex + 2] );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"FlashInd:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->fFlashLocator );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"ShowInd:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->fShowLocator );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Main hand:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%ls", ShortItemNames[pSoldier->inv[HANDPOS].usItem] );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Second hand:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%ls", ShortItemNames[pSoldier->inv[SECONDHANDPOS].usItem] );
-		ubLine++;
-
-		const GridNo usMapPos = GetMouseMapPos();
-		if (usMapPos != NOWHERE)
-		{
-			SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-			gprintf( 0, LINE_HEIGHT * ubLine, L"CurrGridNo:");
-			SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-			gprintf( 150, LINE_HEIGHT * ubLine, L"%d", usMapPos );
-			ubLine++;
-		}
-
-	}
-	else
-	{
-		const GridNo usMapPos = GetMouseMapPos();
-		if (usMapPos == NOWHERE) return;
-
-		SetFont( LARGEFONT1 );
-		gprintf( 0,0,L"DEBUG LAND PAGE TWO" );
-		SetFont( LARGEFONT1 );
-
-		ubLine = 1;
-
-		SetFontColors(COLOR1);
-		MPrint(0, LINE_HEIGHT * ubLine, L"Land Raised:");
-		SetFontColors(COLOR2);
-		mprintf( 150, LINE_HEIGHT * ubLine, L"%d", gpWorldLevelData[ usMapPos ].sHeight );
-		ubLine++;
-
-		SetFontColors(COLOR1);
-		MPrint(0, LINE_HEIGHT * ubLine, L"Land Node:");
-		SetFontColors(COLOR2);
-		mprintf( 150, LINE_HEIGHT * ubLine, L"%x", gpWorldLevelData[ usMapPos ].pLandHead );
-		ubLine++;
-
-		if ( gpWorldLevelData[ usMapPos ].pLandHead != NULL )
-		{
-			SetFontColors(COLOR1);
-			MPrint(0, LINE_HEIGHT * ubLine, L"Land Node:");
-			SetFontColors(COLOR2);
-			mprintf( 150, LINE_HEIGHT * ubLine, L"%d", gpWorldLevelData[ usMapPos ].pLandHead->usIndex );
-			ubLine++;
-
-			TileElem = gTileDatabase[ gpWorldLevelData[ usMapPos ].pLandHead->usIndex  ];
-
-			// Check for full tile
-			SetFontColors(COLOR1);
-			MPrint(0, LINE_HEIGHT * ubLine, L"Full Land:");
-			SetFontColors(COLOR2);
-			mprintf( 150, LINE_HEIGHT * ubLine, L"%d", TileElem.ubFullTile );
-			ubLine++;
-		}
-
-		SetFontColors(COLOR1);
-		MPrint(0, LINE_HEIGHT * ubLine, L"Land St Node:");
-		SetFontColors(COLOR2);
-		mprintf( 150, LINE_HEIGHT * ubLine, L"%x", gpWorldLevelData[ usMapPos ].pLandStart );
-		ubLine++;
-
-		SetFontColors(COLOR1);
-		MPrint(0, LINE_HEIGHT * ubLine, L"GRIDNO:");
-		SetFontColors(COLOR2);
-		mprintf( 150, LINE_HEIGHT * ubLine, L"%d", usMapPos );
-		ubLine++;
-
-		if ( gpWorldLevelData[ usMapPos ].uiFlags & MAPELEMENT_MOVEMENT_RESERVED )
-		{
-			SetFontColors(COLOR2);
-			mprintf( 0, LINE_HEIGHT * ubLine, L"Merc: %d",  gpWorldLevelData[ usMapPos ].ubReservedSoldierID );
-			SetFontColors(COLOR2);
-			MPrint(150, LINE_HEIGHT * ubLine, L"RESERVED MOVEMENT FLAG ON:");
-			ubLine++;
-		}
-
-
-		pNode =  GetCurInteractiveTile( );
-
-		if ( pNode != NULL )
-		{
-			SetFontColors(COLOR2);
-			mprintf( 0, LINE_HEIGHT * ubLine, L"Tile: %d",  pNode->usIndex );
-			SetFontColors(COLOR2);
-			MPrint(150, LINE_HEIGHT * ubLine, L"ON INT TILE");
-			ubLine++;
-		}
-
-
-		if ( gpWorldLevelData[ usMapPos ].uiFlags & MAPELEMENT_REVEALED )
-		{
-			SetFontColors(COLOR2);
-			//mprintf( 0, LINE_HEIGHT * 9, L"Merc: %d",  gpWorldLevelData[ usMapPos ].ubReservedSoldierID );
-			SetFontColors(COLOR2);
-			MPrint(150, LINE_HEIGHT * ubLine, L"REVEALED");
-			ubLine++;
-		}
-
-		if ( gpWorldLevelData[ usMapPos ].uiFlags & MAPELEMENT_RAISE_LAND_START )
-		{
-			SetFontColors(COLOR2);
-			//mprintf( 0, LINE_HEIGHT * 9, L"Merc: %d",  gpWorldLevelData[ usMapPos ].ubReservedSoldierID );
-			SetFontColors(COLOR2);
-			MPrint(150, LINE_HEIGHT * ubLine, L"Land Raise Start");
-			ubLine++;
-		}
-
-		if ( gpWorldLevelData[ usMapPos ].uiFlags & MAPELEMENT_RAISE_LAND_END )
-		{
-			SetFontColors(COLOR2);
-			//mprintf( 0, LINE_HEIGHT * 9, L"Merc: %d",  gpWorldLevelData[ usMapPos ].ubReservedSoldierID );
-			SetFontColors(COLOR2);
-			MPrint(150, LINE_HEIGHT * ubLine, L"Raise Land End");
-			ubLine++;
-		}
-
-		if (gubWorldRoomInfo[ usMapPos ] != NO_ROOM )
-		{
-			SetFontColors(COLOR2);
-			MPrint(0, LINE_HEIGHT * ubLine, L"Room Number");
-			SetFontColors(COLOR2);
-			mprintf( 150, LINE_HEIGHT * ubLine, L"%d", gubWorldRoomInfo[ usMapPos ] );
-			ubLine++;
-		}
-
-		if ( gpWorldLevelData[ usMapPos ].ubExtFlags[0] & MAPELEMENT_EXT_NOBURN_STRUCT )
-		{
-			SetFontColors(COLOR2);
-			MPrint(0, LINE_HEIGHT * ubLine, L"Don't Use Burn Through For Soldier");
-			ubLine++;
-		}
-
-	}
-
-}
-
-
 static void GHeader(INT32 const y, wchar_t const* const str)
 {
 	SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
@@ -3432,6 +3151,217 @@ static void MHeader(INT32 const y, wchar_t const* const str)
 	SetFontColors(COLOR1);
 	MPrint(0, y, str);
 	SetFontColors(COLOR2);
+}
+
+
+void DebugSoldierPage2()
+{
+	static const char* const gzDirectionStr[] =
+	{
+		"NORTHEAST",
+		"EAST",
+		"SOUTHEAST",
+		"SOUTH",
+		"SOUTHWEST",
+		"WEST",
+		"NORTHWEST",
+		"NORTH"
+	};
+
+	INT32 const h = LINE_HEIGHT;
+
+	const SOLDIERTYPE* const s = FindSoldierFromMouse();
+	if (s != NULL)
+	{
+		SetFont(LARGEFONT1);
+		gprintf(0, 0, L"DEBUG SOLDIER PAGE TWO, GRIDNO %d", s->sGridNo);
+
+		INT32 y = h * 2;
+
+		GHeader(y, L"ID:");
+		gprintf(150, y, L"%d", s->ubID);
+		y += h;
+
+		GHeader(y, L"Body Type:");
+		gprintf(150, y, L"%d", s->ubBodyType);
+		y += h;
+
+		GHeader(y, L"Opp Cnt:");
+		gprintf(150, y, L"%d", s->bOppCnt);
+		y += h;
+
+		wchar_t const* opp_header;
+		INT8    const* opp_list = s->bOppList;
+		if (s->bTeam == OUR_TEAM || s->bTeam == MILITIA_TEAM)	// look at 8 to 15 opplist entries
+		{
+			opp_header = L"Opplist B:";
+			opp_list += 20;
+		}
+		else	// team 1 - enemies so look at first 8 (0-7) opplist entries
+		{
+			opp_header = L"OppList A:";
+		}
+		GHeader(y, opp_header);
+		gprintf(150, y, L"%d %d %d %d %d %d %d %d",
+			opp_list[0], opp_list[1], opp_list[2], opp_list[3],
+			opp_list[4], opp_list[5], opp_list[6], opp_list[7]
+		);
+		y += h;
+
+		GHeader(y, L"Visible:");
+		gprintf(150, y, L"%d", s->bVisible);
+		y += h;
+
+		GHeader(y, L"Direction:");
+		gprintf(150, y, L"%hs", gzDirectionStr[s->bDirection]);
+		y += h;
+
+		GHeader(y, L"DesDirection:");
+		gprintf(150, y, L"%hs", gzDirectionStr[s->bDesiredDirection]);
+		y += h;
+
+		GHeader(y, L"GridNo:");
+		gprintf(150, y, L"%d", s->sGridNo);
+		y += h;
+
+		GHeader(y, L"Dest:");
+		gprintf(150, y, L"%d", s->sFinalDestination);
+		y += h;
+
+		GHeader(y, L"Path Size:");
+		gprintf(150, y, L"%d", s->usPathDataSize);
+		y += h;
+
+		GHeader(y, L"Path Index:");
+		gprintf(150, y, L"%d", s->usPathIndex);
+		y += h;
+
+		GHeader(y, L"First 3 Steps:");
+		gprintf(150, y, L"%d %d %d", s->usPathingData[0],
+		s->usPathingData[1],
+		s->usPathingData[2]);
+		y += h;
+
+		GHeader(y, L"Next 3 Steps:");
+		gprintf(150, y, L"%d %d %d", s->usPathingData[s->usPathIndex],
+		s->usPathingData[s->usPathIndex + 1],
+		s->usPathingData[s->usPathIndex + 2]);
+		y += h;
+
+		GHeader(y, L"FlashInd:");
+		gprintf(150, y, L"%d", s->fFlashLocator);
+		y += h;
+
+		GHeader(y, L"ShowInd:");
+		gprintf(150, y, L"%d", s->fShowLocator);
+		y += h;
+
+		GHeader(y, L"Main hand:");
+		gprintf(150, y, L"%ls", ShortItemNames[s->inv[HANDPOS].usItem]);
+		y += h;
+
+		GHeader(y, L"Second hand:");
+		gprintf(150, y, L"%ls", ShortItemNames[s->inv[SECONDHANDPOS].usItem]);
+		y += h;
+
+		const GridNo map_pos = GetMouseMapPos();
+		if (map_pos != NOWHERE)
+		{
+			GHeader(y, L"CurrGridNo:");
+			gprintf(150, y, L"%d", map_pos);
+			y += h;
+		}
+	}
+	else
+	{
+		const GridNo map_pos = GetMouseMapPos();
+		if (map_pos == NOWHERE) return;
+
+		SetFont(LARGEFONT1);
+		gprintf(0, 0, L"DEBUG LAND PAGE TWO");
+
+		INT32 y = h;
+
+		MAP_ELEMENT const* const me = &gpWorldLevelData[map_pos];
+
+		MHeader(y, L"Land Raised:");
+		mprintf(150, y, L"%d", me->sHeight);
+		y += h;
+
+		MHeader(y, L"Land Node:");
+		mprintf(150, y, L"%x", me->pLandHead);
+		y += h;
+
+		LEVELNODE const* const land_head = me->pLandHead;
+		if (land_head != NULL)
+		{
+			MHeader(y, L"Land Node:");
+			mprintf(150, y, L"%d", land_head->usIndex);
+			y += h;
+
+			// Check for full tile
+			MHeader(y, L"Full Land:");
+			TILE_ELEMENT const* const te = &gTileDatabase[land_head->usIndex];
+			mprintf(150, y, L"%d", te->ubFullTile);
+			y += h;
+		}
+
+		MHeader(y, L"Land St Node:");
+		mprintf(150, y, L"%x", me->pLandStart);
+		y += h;
+
+		MHeader(y, L"GRIDNO:");
+		mprintf(150, y, L"%d", map_pos);
+		y += h;
+
+		SetFontColors(COLOR2);
+
+		if (me->uiFlags & MAPELEMENT_MOVEMENT_RESERVED)
+		{
+			mprintf(0, y, L"Merc: %d",  me->ubReservedSoldierID);
+			MPrint(150, y, L"RESERVED MOVEMENT FLAG ON:");
+			y += h;
+		}
+
+		LEVELNODE const* const node = GetCurInteractiveTile();
+		if (node != NULL)
+		{
+			mprintf(  0, y, L"Tile: %d", node->usIndex);
+			MPrint( 150, y, L"ON INT TILE");
+			y += h;
+		}
+
+		if (me->uiFlags & MAPELEMENT_REVEALED)
+		{
+			MPrint(150, y, L"REVEALED");
+			y += h;
+		}
+
+		if (me->uiFlags & MAPELEMENT_RAISE_LAND_START)
+		{
+			MPrint(150, y, L"Land Raise Start");
+			y += h;
+		}
+
+		if (me->uiFlags & MAPELEMENT_RAISE_LAND_END)
+		{
+			MPrint(150, y, L"Raise Land End");
+			y += h;
+		}
+
+		if (gubWorldRoomInfo[map_pos] != NO_ROOM)
+		{
+			MPrint(   0, y, L"Room Number");
+			mprintf(150, y, L"%d", gubWorldRoomInfo[map_pos]);
+			y += h;
+		}
+
+		if (me->ubExtFlags[0] & MAPELEMENT_EXT_NOBURN_STRUCT)
+		{
+			MPrint(0, y, L"Don't Use Burn Through For Soldier");
+			y += h;
+		}
+	}
 }
 
 
