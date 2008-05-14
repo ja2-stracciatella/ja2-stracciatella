@@ -320,17 +320,12 @@ static SGPVSurface* CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ub
 			throw std::logic_error("Tried to create video surface with invalid bpp, must be 8 or 16.");
 	}
 
-	SDL_Surface* surface = SDL_CreateRGBSurface(
+	SDL_Surface* const surface = SDL_CreateRGBSurface(
 		SDL_SWSURFACE,
 		usWidth, usHeight, ubBitDepth,
 		uiRBitMask, uiGBitMask, uiBBitMask, 0
 	);
-
-	SGPVSurface* const hVSurface = new SGPVSurface(surface);
-
-	DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_3, "Success in Creating Video Surface");
-
-	return hVSurface;
+	return new SGPVSurface(surface);
 }
 
 
