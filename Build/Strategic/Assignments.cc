@@ -1470,7 +1470,7 @@ static BOOLEAN CanSoldierBeHealedByDoctor(SOLDIERTYPE const* const patient, SOLD
 	if (patient->bSectorZ != doctor->bSectorZ)                                    return FALSE;
 	if (patient->fBetweenSectors)                                                 return FALSE;
 	if (!fSkipSkillCheck && doctor->bMedical < GetMinHealingSkillNeeded(patient)) return FALSE;
-	if (!fSkipKitCheck || FindObj(doctor, MEDICKIT) == NO_SLOT)                   return FALSE;
+	if (!fSkipKitCheck && FindObj(doctor, MEDICKIT) == NO_SLOT)                   return FALSE;
 	return TRUE;
 }
 
