@@ -735,10 +735,10 @@ void BlitMFont( VIDEO_OVERLAY *pBlitter )
 }
 
 
-BOOLEAN BlitBufferToBuffer(SGPVSurface* const src, SGPVSurface* const dst, const UINT16 usSrcX, const UINT16 usSrcY, const UINT16 usWidth, const UINT16 usHeight)
+void BlitBufferToBuffer(SGPVSurface* const src, SGPVSurface* const dst, const UINT16 usSrcX, const UINT16 usSrcY, const UINT16 usWidth, const UINT16 usHeight)
 {
 	const SGPRect r = { usSrcX, usSrcY, usSrcX + usWidth, usSrcY + usHeight };
-	return BltVideoSurface(dst, src, usSrcX, usSrcY, &r);
+	BltVideoSurface(dst, src, usSrcX, usSrcY, &r);
 }
 
 

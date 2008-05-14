@@ -425,7 +425,7 @@ void DeleteVideoSurface(SGPVSurface* const vs)
 
 
 // Will drop down into user-defined blitter if 8->16 BPP blitting is being done
-BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const INT32 iDestX, const INT32 iDestY, const SGPRect* const SRect)
+void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const INT32 iDestX, const INT32 iDestY, const SGPRect* const SRect)
 {
 	Assert(dst != NULL);
 	Assert(src != NULL);
@@ -446,12 +446,12 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 		if (dst->Height() < src->Height())
 		{
 			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
-			return FALSE;
+			return;
 		}
 		if (dst->Width() < src->Width())
 		{
 			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
-			return FALSE;
+			return;
 		}
 
 		src_rect.x = 0;
@@ -471,7 +471,6 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 #if defined __GNUC__ && defined i386
 		__asm__ __volatile__("cld"); // XXX HACK000D
 #endif
-		return TRUE;
 	}
 	else if (src_bpp < dst_bpp)
 	{
@@ -487,11 +486,11 @@ BOOLEAN BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const IN
 		UINT16* const d_buf  = ldst.Buffer<UINT16>();
 		UINT32  const dpitch = ldst.Pitch();
 		Blt8BPPDataSubTo16BPPBuffer(d_buf, dpitch, src, s_buf, spitch, iDestX, iDestY, &r);
-		return TRUE;
 	}
-
-	DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible BPP values with src and dest Video Surfaces for blitting");
-	return FALSE;
+	else
+	{
+		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible BPP values with src and dest Video Surfaces for blitting");
+	}
 }
 
 
