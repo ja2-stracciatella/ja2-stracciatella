@@ -265,24 +265,24 @@ void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, const I
 }
 
 
-BOOLEAN ColorFillVideoSurfaceArea(SGPVSurface* const dst, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, const UINT16 Color16BPP)
+void ColorFillVideoSurfaceArea(SGPVSurface* const dst, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, const UINT16 Color16BPP)
 {
 	SGPRect Clip;
 	GetClippingRect(&Clip);
 
 	if (iDestX1 < Clip.iLeft) iDestX1 = Clip.iLeft;
-	if (iDestX1 > Clip.iRight) return FALSE;
+	if (iDestX1 > Clip.iRight) return;
 
 	if (iDestX2 > Clip.iRight) iDestX2 = Clip.iRight;
-	if (iDestX2 < Clip.iLeft) return FALSE;
+	if (iDestX2 < Clip.iLeft) return;
 
 	if (iDestY1 < Clip.iTop) iDestY1 = Clip.iTop;
-	if (iDestY1 > Clip.iBottom) return FALSE;
+	if (iDestY1 > Clip.iBottom) return;
 
 	if (iDestY2 > Clip.iBottom) iDestY2 = Clip.iBottom;
-	if (iDestY2 < Clip.iTop) return FALSE;
+	if (iDestY2 < Clip.iTop) return;
 
-	if (iDestX2 <= iDestX1 || iDestY2 <= iDestY1) return FALSE;
+	if (iDestX2 <= iDestX1 || iDestY2 <= iDestY1) return;
 
 	SDL_Rect Rect;
 	Rect.x = iDestX1;
@@ -290,8 +290,6 @@ BOOLEAN ColorFillVideoSurfaceArea(SGPVSurface* const dst, INT32 iDestX1, INT32 i
 	Rect.w = iDestX2 - iDestX1;
 	Rect.h = iDestY2 - iDestY1;
 	SDL_FillRect(dst->surface_, &Rect, Color16BPP);
-
-	return TRUE;
 }
 
 
