@@ -3652,89 +3652,78 @@ void DebugSoldierPage3()
 }
 
 
-static void AppendAttachmentCode(UINT16 usItem, wchar_t *str) /* XXX Needs length */
+static void AppendAttachmentCode(UINT16 const item, wchar_t* const str) /* XXX Needs length */
 {
-	switch( usItem )
+	switch (item)
 	{
-		case SILENCER:
-			wcscat( str, L" Sil" );
-			break;
-		case SNIPERSCOPE:
-			wcscat( str, L" Scp" );
-			break;
-		case BIPOD:
-			wcscat( str, L" Bip" );
-			break;
-		case LASERSCOPE:
-			wcscat( str, L" Las" );
-			break;
+		case SILENCER:    wcscat(str, L" Sil"); break;
+		case SNIPERSCOPE: wcscat(str, L" Scp"); break;
+		case BIPOD:       wcscat(str, L" Bip"); break;
+		case LASERSCOPE:  wcscat(str, L" Las"); break;
 	}
 }
 
 
-static void WriteQuantityAndAttachments(const OBJECTTYPE* pObject, INT32 yp)
+static void WriteQuantityAndAttachments(OBJECTTYPE const* o, INT32 const y)
 {
-	wchar_t szAttach[30];
-	BOOLEAN fAttachments;
 	//100%  Qty: 2  Attach:
 	//100%  Qty: 2
 	//100%  Attach:
 	//100%
-	if( !pObject->usItem )
-		return;
-	//Build attachment string
-	fAttachments = FALSE;
-	if( pObject->usAttachItem[0] || pObject->usAttachItem[1] ||
-		  pObject->usAttachItem[2] || pObject->usAttachItem[3] )
-	{
-		fAttachments = TRUE;
-		swprintf( szAttach, lengthof(szAttach), L"(" );
-		AppendAttachmentCode( pObject->usAttachItem[0], szAttach );
-		AppendAttachmentCode( pObject->usAttachItem[1], szAttach );
-		AppendAttachmentCode( pObject->usAttachItem[2], szAttach );
-		AppendAttachmentCode( pObject->usAttachItem[3], szAttach );
-		wcscat( szAttach, L" )" );
-	}
+	if (!o->usItem) return;
 
-	if( Item[pObject->usItem].usItemClass == IC_AMMO )
-	{ //ammo
-		if( pObject->ubNumberOfObjects > 1 )
+	if (Item[o->usItem].usItemClass == IC_AMMO)
+	{
+		if (o->ubNumberOfObjects > 1)
 		{
 			wchar_t str[50];
-			wchar_t temp[5];
-			UINT8 i;
-			swprintf( str, lengthof(str), L"Clips:  %d  (%d", pObject->ubNumberOfObjects, pObject->bStatus[0] );
-			for( i = 1; i < pObject->ubNumberOfObjects; i++ )
+			swprintf(str, lengthof(str), L"Clips:  %d  (%d", o->ubNumberOfObjects, o->bStatus[0]);
+			for (UINT8 i = 1; i < o->ubNumberOfObjects; ++i)
 			{
-				swprintf( temp, lengthof(temp), L", %d", pObject->bStatus[0] );
-				wcscat( str, temp );
+				wchar_t temp[5];
+				swprintf(temp, lengthof(temp), L", %d", o->bStatus[0]);
+				wcscat(str, temp);
 			}
-			wcscat( str, L")" );
-			gprintf( 320, yp, str );
+			wcscat(str, L")");
+			gprintf(320, y, str);
 		}
 		else
-			gprintf( 320, yp, L"%d rounds", pObject->bStatus[0] );
-		return;
-	}
-	if( pObject->ubNumberOfObjects > 1 && fAttachments )
-	{ //everything
-		gprintf( 320, yp, L"%d%%  Qty:  %d  %ls",
-			pObject->bStatus[0], pObject->ubNumberOfObjects, szAttach );
-	}
-	else if( pObject->ubNumberOfObjects > 1 )
-	{ //condition and quantity
-		gprintf( 320, yp, L"%d%%  Qty:  %d  ",
-			pObject->bStatus[0], pObject->ubNumberOfObjects );
-	}
-	else if( fAttachments )
-	{ //condition and attachments
-		gprintf( 320, yp, L"%d%%  %ls", pObject->bStatus[0], szAttach );
+		{
+			gprintf(320, y, L"%d rounds", o->bStatus[0]);
+		}
 	}
 	else
-	{ //condition
-		gprintf( 320, yp, L"%d%%", pObject->bStatus[0] );
+	{
+		// Build attachment string
+		wchar_t attachments[30];
+		if (o->usAttachItem[0] ||
+				o->usAttachItem[1] ||
+				o->usAttachItem[2] ||
+				o->usAttachItem[3])
+		{
+			swprintf(attachments, lengthof(attachments), L"  (");
+			AppendAttachmentCode(o->usAttachItem[0], attachments);
+			AppendAttachmentCode(o->usAttachItem[1], attachments);
+			AppendAttachmentCode(o->usAttachItem[2], attachments);
+			AppendAttachmentCode(o->usAttachItem[3], attachments);
+			wcscat(attachments, L" )");
+		}
+		else
+		{
+			attachments[0] = L'\0';
+		}
+
+		if (o->ubNumberOfObjects > 1)
+		{ //everything
+			gprintf(320, y, L"%d%%  Qty:  %d%ls", o->bStatus[0], o->ubNumberOfObjects, attachments);
+		}
+		else
+		{ //condition and attachments
+			gprintf(320, y, L"%d%%%ls", o->bStatus[0], attachments);
+		}
 	}
 }
+
 
 void DebugSoldierPage4( )
 {
