@@ -145,7 +145,6 @@ static BOOLEAN LoadTextMercPopupImages(UINT8 ubBackgroundIndex, UINT8 ubBorderIn
 
 	// the background
 	gPopUpTextBox->uiMercTextPopUpBackground = AddVideoSurfaceFromFile(zMercBackgroundPopupFilenames[ubBackgroundIndex]);
-	CHECKF(gPopUpTextBox->uiMercTextPopUpBackground != NO_VSURFACE);
 
   // border
 	gPopUpTextBox->uiMercTextPopUpBorder = AddVideoObjectFromFile(zMercBorderPopupFilenames[ubBorderIndex]);

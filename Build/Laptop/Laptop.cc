@@ -2853,7 +2853,6 @@ static void LoadDesktopBackground(void)
 {
 	const char* const ImageFile = GetMLGFilename(MLG_DESKTOP);
 	guiDESKTOP = AddVideoSurfaceFromFile(ImageFile);
-	CHECKV(guiDESKTOP != NO_VSURFACE);
 }
 
 

@@ -5690,7 +5690,6 @@ void CreateDestroyAssignmentPopUpBoxes()
 		guiPOPUPBORDERS = AddVideoObjectFromFile("INTERFACE/popup.sti");
 		CHECKV(guiPOPUPBORDERS != NO_VOBJECT);
 		guiPOPUPTEX = AddVideoSurfaceFromFile("INTERFACE/popupbackground.pcx");
-		CHECKV(guiPOPUPTEX != NO_VSURFACE);
 
 		// these boxes are always created while in mapscreen...
 		CreateEPCBox();

@@ -7361,7 +7361,6 @@ BOOLEAN HandlePreloadOfMapGraphics( void )
 {
 #ifndef JA2DEMO
 	guiBIGMAP = AddVideoSurfaceFromFile("INTERFACE/b_map.pcx");
-	CHECKF(guiBIGMAP != NO_VSURFACE);
 #endif
 	guiMAPCURSORS = AddVideoObjectFromFile("INTERFACE/mapcursr.sti");
 	CHECKF(guiMAPCURSORS != NO_VOBJECT);

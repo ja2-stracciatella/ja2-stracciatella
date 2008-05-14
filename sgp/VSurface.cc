@@ -186,8 +186,7 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 	AutoSGPImage hImage(CreateImage(Filename, IMAGE_ALLIMAGEDATA));
 	if (hImage == NULL)
 	{
-		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Invalid Image Filename given");
-		return NULL;
+		throw std::runtime_error("Failed to load image file for creation of video surface");
 	}
 
 	SGPVSurface* const vs = CreateVideoSurface(hImage->usWidth, hImage->usHeight, hImage->ubBitDepth);
@@ -583,10 +582,16 @@ void BltStretchVideoSurface(SGPVSurface* const dst, const SGPVSurface* const src
 
 BOOLEAN BltVideoSurfaceOnce(SGPVSurface* const dst, const char* const filename, const INT32 x, const INT32 y)
 {
-	AutoSGPVSurface src(AddVideoSurfaceFromFile(filename));
-	if (src == NO_VSURFACE) return FALSE;
-	BltVideoSurface(dst, src, x, y, NULL);
-	return TRUE;
+	try
+	{
+		AutoSGPVSurface src(AddVideoSurfaceFromFile(filename));
+		BltVideoSurface(dst, src, x, y, NULL);
+		return TRUE;
+	}
+	catch (...)
+	{
+		return FALSE;
+	}
 }
 
 
@@ -674,7 +679,7 @@ SGPVSurface* AddAndRecordVSurface(const UINT16 Width, const UINT16 Height, const
 SGPVSurface* AddAndRecordVSurfaceFromFile(const char* const Filename, const UINT32 LineNum, const char* const SourceFile)
 {
 	SGPVSurface* const vs = AddVideoSurfaceFromFile(Filename);
-	if (vs != NO_VSURFACE) RecordVSurface(Filename, LineNum, SourceFile);
+	RecordVSurface(Filename, LineNum, SourceFile);
 	return vs;
 }
 
