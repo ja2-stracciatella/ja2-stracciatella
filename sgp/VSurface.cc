@@ -81,7 +81,6 @@ typedef struct VSURFACE_NODE
 
 static VSURFACE_NODE* gpVSurfaceHead = NULL;
 static VSURFACE_NODE* gpVSurfaceTail = NULL;
-UINT32				        guiVSurfaceSize = 0;
 
 
 SGPVSurface* g_back_buffer;
@@ -132,7 +131,9 @@ BOOLEAN ShutdownVideoSurfaceManager(void)
 	}
 	gpVSurfaceHead = NULL;
 	gpVSurfaceTail = NULL;
+#ifdef SGP_VIDEO_DEBUGGING
 	guiVSurfaceSize = 0;
+#endif
 	return TRUE;
 }
 
@@ -147,6 +148,7 @@ static void AddStandardVideoSurface(SGPVSurface* const hVSurface)
 #ifdef SGP_VIDEO_DEBUGGING
 	Node->pName     = NULL;
 	Node->pCode     = NULL;
+	++guiVSurfaceSize;
 #endif
 
 	if (gpVSurfaceTail == NULL)
@@ -158,8 +160,6 @@ static void AddStandardVideoSurface(SGPVSurface* const hVSurface)
 		gpVSurfaceTail->next = Node;
 	}
 	gpVSurfaceTail = Node;
-
-	guiVSurfaceSize++;
 }
 
 
@@ -402,10 +402,10 @@ void DeleteVideoSurface(SGPVSurface* const vs)
 #ifdef SGP_VIDEO_DEBUGGING
 			if (curr->pName != NULL) MemFree(curr->pName);
 			if (curr->pCode != NULL) MemFree(curr->pCode);
+			--guiVSurfaceSize;
 #endif
 
 			MemFree(curr);
-			guiVSurfaceSize--;
 			return;
 		}
 		prev = curr;
@@ -596,6 +596,10 @@ BOOLEAN BltVideoSurfaceOnce(SGPVSurface* const dst, const char* const filename, 
 
 
 #ifdef SGP_VIDEO_DEBUGGING
+
+UINT32 guiVSurfaceSize = 0;
+
+
 typedef struct DUMPINFO
 {
 	UINT32 Counter;
