@@ -30,21 +30,25 @@ typedef struct
 
 // This structure is a video object.
 // The video object contains different data based on it's type, compressed or not
-struct SGPVObject
+class SGPVObject
 {
-	UINT32           fFlags;                         // Special flags
-	UINT32           uiSizePixData;                  // ETRLE data size
-	SGPPaletteEntry* pPaletteEntry;                  // 8BPP Palette
-	UINT16*          p16BPPPalette;                  // A 16BPP palette used for 8->16 blits
+	public:
+		SGPVObject(SGPImage const*);
+		~SGPVObject();
 
-	PTR              pPixData;                       // ETRLE pixel data
-	ETRLEObject*     pETRLEObject;                   // Object offset data etc
-	UINT16*          pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
-	UINT16*          pShadeCurrent;
-	ZStripInfo**     ppZStripInfo;                   // Z-value strip info arrays
+		UINT32           fFlags;                         // Special flags
+		UINT32           uiSizePixData;                  // ETRLE data size
+		SGPPaletteEntry* pPaletteEntry;                  // 8BPP Palette
+		UINT16*          p16BPPPalette;                  // A 16BPP palette used for 8->16 blits
 
-	UINT16           usNumberOfObjects;              // Total number of objects
-	UINT8            ubBitDepth;                     // BPP
+		PTR              pPixData;                       // ETRLE pixel data
+		ETRLEObject*     pETRLEObject;                   // Object offset data etc
+		UINT16*          pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
+		UINT16*          pShadeCurrent;
+		ZStripInfo**     ppZStripInfo;                   // Z-value strip info arrays
+
+		UINT16           usNumberOfObjects;              // Total number of objects
+		UINT8            ubBitDepth;                     // BPP
 };
 
 

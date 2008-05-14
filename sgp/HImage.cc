@@ -653,7 +653,7 @@ UINT32 GetRGBColor(UINT16 Value16BPP)
 }
 
 
-BOOLEAN GetETRLEImageData( HIMAGE hImage, ETRLEData *pBuffer )
+BOOLEAN GetETRLEImageData(SGPImage const* const hImage, ETRLEData* const pBuffer)
 {
 	// Assertions
 	Assert( hImage != NULL );

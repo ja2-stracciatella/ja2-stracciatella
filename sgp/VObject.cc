@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Debug.h"
 #include "HImage.h"
 #include "MemMan.h"
@@ -20,6 +22,70 @@
 // Second Revision: Dec 10, 1996, Andrew Emmons
 //
 // *******************************************************************************
+
+
+SGPVObject::SGPVObject(SGPImage const* const img) :
+	fFlags(),
+	pPaletteEntry(),
+	p16BPPPalette(),
+	pShades(),
+	pShadeCurrent(),
+	ppZStripInfo()
+{
+	if (!(img->fFlags & IMAGE_TRLECOMPRESSED))
+	{
+		throw std::runtime_error("Image for video object creation must be TRLE compressed");
+	}
+
+	ETRLEData TempETRLEData;
+	if (!GetETRLEImageData(img, &TempETRLEData))
+	{
+		throw std::runtime_error("Failed to get ETRLE data from image for video object creation");
+	}
+
+	usNumberOfObjects = TempETRLEData.usNumberOfObjects;
+	pETRLEObject      = TempETRLEData.pETRLEObject;
+	pPixData          = TempETRLEData.pPixData;
+	uiSizePixData     = TempETRLEData.uiSizePixData;
+	ubBitDepth        = img->ubBitDepth;
+
+	if (img->ubBitDepth == 8)
+	{
+		// create palette
+		const SGPPaletteEntry* const src_pal = img->pPalette;
+		Assert(src_pal != NULL);
+
+		SGPPaletteEntry* const pal = MALLOCN(SGPPaletteEntry, 256);
+		memcpy(pal, src_pal, sizeof(*pal) * 256);
+
+		pPaletteEntry = pal;
+		p16BPPPalette = Create16BPPPalette(pal);
+		pShadeCurrent = p16BPPPalette;
+	}
+}
+
+
+SGPVObject::~SGPVObject()
+{
+	DestroyObjectPaletteTables(this);
+
+	if (pPaletteEntry != NULL) MemFree(pPaletteEntry);
+	if (pPixData      != NULL) MemFree(pPixData);
+	if (pETRLEObject  != NULL) MemFree(pETRLEObject);
+
+	if (ppZStripInfo != NULL)
+	{
+		for (UINT32 usLoop = 0; usLoop < usNumberOfObjects; usLoop++)
+		{
+			if (ppZStripInfo[usLoop] != NULL)
+			{
+				MemFree(ppZStripInfo[usLoop]->pbZChange);
+				MemFree(ppZStripInfo[usLoop]);
+			}
+		}
+		MemFree(ppZStripInfo);
+	}
+}
 
 
 #define COMPRESS_TRANSPARENT				0x80
@@ -53,16 +119,13 @@ BOOLEAN InitializeVideoObjectManager(void)
 }
 
 
-static BOOLEAN InternalDeleteVideoObject(SGPVObject*);
-
-
 BOOLEAN ShutdownVideoObjectManager(void)
 {
 	while (gpVObjectHead != NULL)
 	{
 		VOBJECT_NODE* curr = gpVObjectHead;
 		gpVObjectHead = gpVObjectHead->next;
-		InternalDeleteVideoObject(curr->hVObject);
+		delete curr->hVObject;
 #ifdef SGP_VIDEO_DEBUGGING
 		if (curr->pName != NULL) MemFree(curr->pName);
 		if (curr->pCode != NULL) MemFree(curr->pCode);
@@ -128,44 +191,7 @@ static
 #endif
 SGPVObject* AddStandardVideoObjectFromHImage(HIMAGE hImage)
 {
-	if (hImage == NULL)
-	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, "Invalid hImage pointer given");
-		return NULL;
-	}
-
-	if (!(hImage->fFlags & IMAGE_TRLECOMPRESSED))
-	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, "Invalid Image format given.");
-		return NULL;
-	}
-
-	SGPVObject* const vo = MALLOCZ(SGPVObject);
-	CHECKF(vo != NULL);
-
-	ETRLEData TempETRLEData;
-	CHECKF(GetETRLEImageData(hImage, &TempETRLEData));
-
-	vo->usNumberOfObjects = TempETRLEData.usNumberOfObjects;
-	vo->pETRLEObject      = TempETRLEData.pETRLEObject;
-	vo->pPixData          = TempETRLEData.pPixData;
-	vo->uiSizePixData     = TempETRLEData.uiSizePixData;
-	vo->ubBitDepth        = hImage->ubBitDepth;
-
-	if (hImage->ubBitDepth == 8)
-	{
-		// create palette
-		const SGPPaletteEntry* const src_pal = hImage->pPalette;
-		Assert(src_pal != NULL);
-
-		SGPPaletteEntry* const pal = MALLOCN(SGPPaletteEntry, 256);
-		memcpy(pal, src_pal, sizeof(*pal) * 256);
-
-		vo->pPaletteEntry = pal;
-		vo->p16BPPPalette = Create16BPPPalette(pal);
-		vo->pShadeCurrent = vo->p16BPPPalette;
-	}
-
+	SGPVObject* const vo = new SGPVObject(hImage);
 	AddStandardVideoObject(vo);
 	return vo;
 }
@@ -194,7 +220,7 @@ void DeleteVideoObject(SGPVObject* const vo)
 	{
 		if (curr->hVObject == vo)
 		{ //Found the node, so detach it and delete it.
-			InternalDeleteVideoObject(vo);
+			delete vo;
 
 			if (curr == gpVObjectHead) gpVObjectHead = gpVObjectHead->next;
 			if (curr == gpVObjectTail) gpVObjectTail = prev;
@@ -237,36 +263,6 @@ BOOLEAN BltVideoObject(SGPVSurface* const dst, const SGPVObject* const src, cons
 	{
 		Blt8BPPDataTo16BPPBufferTransparent(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex);
 	}
-
-	return TRUE;
-}
-
-
-// Deletes all palettes, surfaces and region data
-static BOOLEAN InternalDeleteVideoObject(SGPVObject* const hVObject)
-{
-	CHECKF(hVObject != NULL);
-
-	DestroyObjectPaletteTables(hVObject);
-
-	if (hVObject->pPaletteEntry != NULL) MemFree(hVObject->pPaletteEntry);
-	if (hVObject->pPixData      != NULL) MemFree(hVObject->pPixData);
-	if (hVObject->pETRLEObject  != NULL) MemFree(hVObject->pETRLEObject);
-
-	if (hVObject->ppZStripInfo != NULL)
-	{
-		for (UINT32 usLoop = 0; usLoop < hVObject->usNumberOfObjects; usLoop++)
-		{
-			if (hVObject->ppZStripInfo[usLoop] != NULL)
-			{
-				MemFree(hVObject->ppZStripInfo[usLoop]->pbZChange);
-				MemFree(hVObject->ppZStripInfo[usLoop]);
-			}
-		}
-		MemFree(hVObject->ppZStripInfo);
-	}
-
-	MemFree(hVObject);
 
 	return TRUE;
 }
