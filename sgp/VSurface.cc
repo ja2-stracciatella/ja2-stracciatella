@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Debug.h"
 #include "HImage.h"
 #include "MemMan.h"
@@ -137,8 +139,6 @@ BOOLEAN ShutdownVideoSurfaceManager(void)
 
 static void AddStandardVideoSurface(SGPVSurface* const hVSurface)
 {
-	if (hVSurface == NULL) return;
-
 	VSURFACE_NODE* const Node = MALLOC(VSURFACE_NODE);
 	Assert(Node != NULL); // out of memory?
 	Node->hVSurface = hVSurface;
@@ -191,17 +191,15 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 	}
 
 	SGPVSurface* const vs = CreateVideoSurface(hImage->usWidth, hImage->usHeight, hImage->ubBitDepth);
-	if (vs != NULL)
-	{
-		SGPRect tempRect;
-		tempRect.iLeft   = 0;
-		tempRect.iTop    = 0;
-		tempRect.iRight  = hImage->usWidth  - 1;
-		tempRect.iBottom = hImage->usHeight - 1;
-		SetVideoSurfaceDataFromHImage(vs, hImage, 0, 0, &tempRect);
 
-		if (hImage->ubBitDepth == 8) vs->SetPalette(hImage->pPalette);
-	}
+	SGPRect tempRect;
+	tempRect.iLeft   = 0;
+	tempRect.iTop    = 0;
+	tempRect.iRight  = hImage->usWidth  - 1;
+	tempRect.iBottom = hImage->usHeight - 1;
+	SetVideoSurfaceDataFromHImage(vs, hImage, 0, 0, &tempRect);
+
+	if (hImage->ubBitDepth == 8) vs->SetPalette(hImage->pPalette);
 
 	AddStandardVideoSurface(vs);
 	return vs;
@@ -319,9 +317,7 @@ static SGPVSurface* CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ub
 		}
 
 		default:
-			// If Here, an invalid format was given
-			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Invalid BPP value, can only be 8 or 16.");
-			return FALSE;
+			throw std::logic_error("Tried to create video surface with invalid bpp, must be 8 or 16.");
 	}
 
 	SDL_Surface* surface = SDL_CreateRGBSurface(
