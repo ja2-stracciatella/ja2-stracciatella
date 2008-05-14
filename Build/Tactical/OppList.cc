@@ -2958,186 +2958,6 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 #define LINE_HEIGHT 15
 
 
-extern UINT32 guiNumBackSaves;
-
-void DebugSoldierPage1( )
-{
-	UINT8							ubLine=0;
-
-	const SOLDIERTYPE* const pSoldier = FindSoldierFromMouse();
-	if (pSoldier != NULL)
-	{
-		SetFont( LARGEFONT1 );
-		gprintf( 0,0,L"DEBUG SOLDIER PAGE ONE, GRIDNO %d", pSoldier->sGridNo );
-		SetFont( LARGEFONT1 );
-
-		ubLine = 2;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"ID:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->ubID );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"TEAM:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->bTeam );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"SIDE:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->bSide );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"STATUS FLAGS:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%x", pSoldier->uiStatusFlags );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"HUMAN:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", gTacticalStatus.Team[pSoldier->bTeam].bHuman);
-		ubLine++;
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"APs:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->bActionPoints );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Breath:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->bBreath );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Life:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->bLife );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"LifeMax:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->bLifeMax );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Bleeding:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->bBleeding );
-
-		ubLine = 2;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"Agility:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 350, LINE_HEIGHT * ubLine, L"%d ( %d )", pSoldier->bAgility, EffectiveAgility( pSoldier ) );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"Dexterity:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 350, LINE_HEIGHT * ubLine, L"%d( %d )", pSoldier->bDexterity, EffectiveDexterity( pSoldier ) );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"Strength:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 350, LINE_HEIGHT * ubLine, L"%d", pSoldier->bStrength );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"Wisdom:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 350, LINE_HEIGHT * ubLine, L"%d ( %d )", pSoldier->bWisdom, EffectiveWisdom( pSoldier ) );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"Exp Lvl:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 350, LINE_HEIGHT * ubLine, L"%d ( %d )", pSoldier->bExpLevel, EffectiveExpLevel( pSoldier ) );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"Mrksmnship:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 350, LINE_HEIGHT * ubLine, L"%d ( %d )", pSoldier->bMarksmanship, EffectiveMarksmanship( pSoldier ) );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"Mechanical:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 350, LINE_HEIGHT * ubLine, L"%d", pSoldier->bMechanical);
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"Explosive:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 350, LINE_HEIGHT * ubLine, L"%d", pSoldier->bExplosive);
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"Medical:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 350, LINE_HEIGHT * ubLine, L"%d", pSoldier->bMedical);
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"Drug Effects:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 400, LINE_HEIGHT * ubLine, L"%d", pSoldier->bDrugEffect[0] );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"Drug Side Effects:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 400, LINE_HEIGHT * ubLine, L"%d", pSoldier->bDrugSideEffect[0] );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"Booze Effects:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 400, LINE_HEIGHT * ubLine, L"%d", pSoldier->bDrugEffect[1] );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"Hangover Side Effects:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 400, LINE_HEIGHT * ubLine, L"%d", pSoldier->bDrugSideEffect[1] );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"AI has Keys:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 400, LINE_HEIGHT * ubLine, L"%d", pSoldier->bHasKeys );
-		ubLine++;
-	}
-	else if (GetMouseMapPos() != NOWHERE)
-	{
-		SetFont( LARGEFONT1 );
-		gprintf( 0,0,L"DEBUG LAND PAGE ONE" );
-		SetFont( LARGEFONT1 );
-
-		ubLine++;
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Num dirty rects:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 200, LINE_HEIGHT * ubLine, L"%d", guiNumBackSaves );
-		ubLine++;
-
-
-	}
-
-}
-
-
 static void GHeader(INT32 const y, wchar_t const* const str)
 {
 	SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
@@ -3146,11 +2966,115 @@ static void GHeader(INT32 const y, wchar_t const* const str)
 }
 
 
+static void GPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, INT32 const val)
+{
+	GHeader(y, header);
+	gprintf(x, y, L"%d", val);
+}
+
+
+static void GPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, char const* const val)
+{
+	GHeader(y, header);
+	gprintf(x, y, L"%hs", val);
+}
+
+
+static void GPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, wchar_t const* const val)
+{
+	GHeader(y, header);
+	gprintf(x, y, L"%ls", val);
+}
+
+
+static void GPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, INT32 const val, INT32 const effective_val)
+{
+	GHeader(y, header);
+	gprintf(x, y, L"%d ( %d )", val, effective_val);
+}
+
+
+extern UINT32 guiNumBackSaves;
+
+void DebugSoldierPage1()
+{
+	INT32 const h = LINE_HEIGHT;
+
+	const SOLDIERTYPE* const s = FindSoldierFromMouse();
+	if (s != NULL)
+	{
+		SetFont(LARGEFONT1);
+		gprintf(0, 0, L"DEBUG SOLDIER PAGE ONE, GRIDNO %d", s->sGridNo);
+
+		INT32 y = h;
+
+		GPrintStat(150, y += h, L"ID:",   s->ubID);
+		GPrintStat(150, y += h, L"TEAM:", s->bTeam);
+		GPrintStat(150, y += h, L"SIDE:", s->bSide);
+
+		GHeader(     y +=  h, L"STATUS FLAGS:");
+		gprintf(150, y,       L"%x", s->uiStatusFlags);
+
+		GPrintStat(150, y += h, L"HUMAN:",    gTacticalStatus.Team[s->bTeam].bHuman);
+		GPrintStat(150, y += h, L"APs:",      s->bActionPoints);
+		GPrintStat(150, y += h, L"Breath:",   s->bBreath);
+		GPrintStat(150, y += h, L"Life:",     s->bLife);
+		GPrintStat(150, y += h, L"LifeMax:",  s->bLifeMax);
+		GPrintStat(150, y += h, L"Bleeding:", s->bBleeding);
+
+		y = h;
+
+		GPrintStat(350, y += h, L"Agility:",               s->bAgility,      EffectiveAgility(s));
+		GPrintStat(350, y += h, L"Dexterity:",             s->bDexterity,    EffectiveDexterity(s));
+		GPrintStat(350, y += h, L"Strength:",              s->bStrength);
+		GPrintStat(350, y += h, L"Wisdom:",                s->bWisdom,       EffectiveWisdom(s));
+		GPrintStat(350, y += h, L"Exp Lvl:",               s->bExpLevel,     EffectiveExpLevel(s));
+		GPrintStat(350, y += h, L"Mrksmnship",             s->bMarksmanship, EffectiveMarksmanship(s));
+		GPrintStat(350, y += h, L"Mechanical:",            s->bMechanical);
+		GPrintStat(350, y += h, L"Explosive:",             s->bExplosive);
+		GPrintStat(350, y += h, L"Medical:",               s->bMedical);
+		GPrintStat(400, y += h, L"Drug Effects:",          s->bDrugEffect[0]);
+		GPrintStat(400, y += h, L"Drug Side Effects:",     s->bDrugSideEffect[0]);
+		GPrintStat(400, y += h, L"Booze Effects:",         s->bDrugEffect[1]);
+		GPrintStat(400, y += h, L"Hangover Side Effects:", s->bDrugSideEffect[1]);
+		GPrintStat(400, y += h, L"AI has Keys:",           s->bHasKeys);
+	}
+	else if (GetMouseMapPos() != NOWHERE)
+	{
+		SetFont(LARGEFONT1);
+		gprintf(0, 0, L"DEBUG LAND PAGE ONE");
+
+		GPrintStat(200, h, L"Num dirty rects:", guiNumBackSaves);
+	}
+}
+
+
 static void MHeader(INT32 const y, wchar_t const* const str)
 {
 	SetFontColors(COLOR1);
 	MPrint(0, y, str);
 	SetFontColors(COLOR2);
+}
+
+
+static void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, INT32 const val)
+{
+	MHeader(y, header);
+	mprintf(x, y, L"%d", val);
+}
+
+
+static void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, wchar_t const* const val)
+{
+	MHeader(y, header);
+	mprintf(x, y, L"%ls", val);
+}
+
+
+static void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, void const* const val)
+{
+	MHeader(y, header);
+	mprintf(x, y, L"%p", val);
 }
 
 
@@ -3176,19 +3100,11 @@ void DebugSoldierPage2()
 		SetFont(LARGEFONT1);
 		gprintf(0, 0, L"DEBUG SOLDIER PAGE TWO, GRIDNO %d", s->sGridNo);
 
-		INT32 y = h * 2;
+		INT32 y = h;
 
-		GHeader(y, L"ID:");
-		gprintf(150, y, L"%d", s->ubID);
-		y += h;
-
-		GHeader(y, L"Body Type:");
-		gprintf(150, y, L"%d", s->ubBodyType);
-		y += h;
-
-		GHeader(y, L"Opp Cnt:");
-		gprintf(150, y, L"%d", s->bOppCnt);
-		y += h;
+		GPrintStat(150, y += h, L"ID:", s->ubID);
+		GPrintStat(150, y += h, L"Body Type:", s->ubBodyType);
+		GPrintStat(150, y += h, L"Opp Cnt:", s->bOppCnt);
 
 		wchar_t const* opp_header;
 		INT8    const* opp_list = s->bOppList;
@@ -3201,75 +3117,43 @@ void DebugSoldierPage2()
 		{
 			opp_header = L"OppList A:";
 		}
-		GHeader(y, opp_header);
+		GHeader(y += h, opp_header);
 		gprintf(150, y, L"%d %d %d %d %d %d %d %d",
 			opp_list[0], opp_list[1], opp_list[2], opp_list[3],
 			opp_list[4], opp_list[5], opp_list[6], opp_list[7]
 		);
-		y += h;
 
-		GHeader(y, L"Visible:");
-		gprintf(150, y, L"%d", s->bVisible);
-		y += h;
+		GPrintStat(150, y += h, L"Visible:",     s->bVisible);
+		GPrintStat(150, y += h, L"Direction:",   gzDirectionStr[s->bDirection]);
+		GPrintStat(150, y += h, L"DesDirection", gzDirectionStr[s->bDesiredDirection]);
+		GPrintStat(150, y += h, L"GridNo:",      s->sGridNo);
+		GPrintStat(150, y += h, L"Dest:",        s->sFinalDestination);
+		GPrintStat(150, y += h, L"Path Size:",   s->usPathDataSize);
+		GPrintStat(150, y += h, L"Path Index:",  s->usPathIndex);
 
-		GHeader(y, L"Direction:");
-		gprintf(150, y, L"%hs", gzDirectionStr[s->bDirection]);
-		y += h;
+		GHeader(y += h, L"First 3 Steps:");
+		gprintf(150, y, L"%d %d %d",
+			s->usPathingData[0],
+			s->usPathingData[1],
+			s->usPathingData[2]
+		);
 
-		GHeader(y, L"DesDirection:");
-		gprintf(150, y, L"%hs", gzDirectionStr[s->bDesiredDirection]);
-		y += h;
+		GHeader(y += h, L"Next 3 Steps:");
+		gprintf(150, y, L"%d %d %d",
+			s->usPathingData[s->usPathIndex],
+			s->usPathingData[s->usPathIndex + 1],
+			s->usPathingData[s->usPathIndex + 2]
+		);
 
-		GHeader(y, L"GridNo:");
-		gprintf(150, y, L"%d", s->sGridNo);
-		y += h;
-
-		GHeader(y, L"Dest:");
-		gprintf(150, y, L"%d", s->sFinalDestination);
-		y += h;
-
-		GHeader(y, L"Path Size:");
-		gprintf(150, y, L"%d", s->usPathDataSize);
-		y += h;
-
-		GHeader(y, L"Path Index:");
-		gprintf(150, y, L"%d", s->usPathIndex);
-		y += h;
-
-		GHeader(y, L"First 3 Steps:");
-		gprintf(150, y, L"%d %d %d", s->usPathingData[0],
-		s->usPathingData[1],
-		s->usPathingData[2]);
-		y += h;
-
-		GHeader(y, L"Next 3 Steps:");
-		gprintf(150, y, L"%d %d %d", s->usPathingData[s->usPathIndex],
-		s->usPathingData[s->usPathIndex + 1],
-		s->usPathingData[s->usPathIndex + 2]);
-		y += h;
-
-		GHeader(y, L"FlashInd:");
-		gprintf(150, y, L"%d", s->fFlashLocator);
-		y += h;
-
-		GHeader(y, L"ShowInd:");
-		gprintf(150, y, L"%d", s->fShowLocator);
-		y += h;
-
-		GHeader(y, L"Main hand:");
-		gprintf(150, y, L"%ls", ShortItemNames[s->inv[HANDPOS].usItem]);
-		y += h;
-
-		GHeader(y, L"Second hand:");
-		gprintf(150, y, L"%ls", ShortItemNames[s->inv[SECONDHANDPOS].usItem]);
-		y += h;
+		GPrintStat(150, y += h, L"FlashInd:",    s->fFlashLocator);
+		GPrintStat(150, y += h, L"ShowInd:",     s->fShowLocator);
+		GPrintStat(150, y += h, L"Main hand:",   ShortItemNames[s->inv[HANDPOS].usItem]);
+		GPrintStat(150, y += h, L"Second hand:", ShortItemNames[s->inv[SECONDHANDPOS].usItem]);
 
 		const GridNo map_pos = GetMouseMapPos();
 		if (map_pos != NOWHERE)
 		{
-			GHeader(y, L"CurrGridNo:");
-			gprintf(150, y, L"%d", map_pos);
-			y += h;
+			GPrintStat(150, y += h, L"CurrGridNo:", map_pos);
 		}
 	}
 	else
@@ -3280,86 +3164,61 @@ void DebugSoldierPage2()
 		SetFont(LARGEFONT1);
 		gprintf(0, 0, L"DEBUG LAND PAGE TWO");
 
-		INT32 y = h;
-
+		INT32                    y  = 0;
 		MAP_ELEMENT const* const me = &gpWorldLevelData[map_pos];
 
-		MHeader(y, L"Land Raised:");
-		mprintf(150, y, L"%d", me->sHeight);
-		y += h;
-
-		MHeader(y, L"Land Node:");
-		mprintf(150, y, L"%x", me->pLandHead);
-		y += h;
+		MPrintStat(150, y += h, L"Land Raised:", me->sHeight);
 
 		LEVELNODE const* const land_head = me->pLandHead;
+		MPrintStat(150, y += h, L"Land Node:", land_head);
 		if (land_head != NULL)
 		{
-			MHeader(y, L"Land Node:");
-			mprintf(150, y, L"%d", land_head->usIndex);
-			y += h;
-
-			// Check for full tile
-			MHeader(y, L"Full Land:");
-			TILE_ELEMENT const* const te = &gTileDatabase[land_head->usIndex];
-			mprintf(150, y, L"%d", te->ubFullTile);
-			y += h;
+			UINT16 const idx = land_head->usIndex;
+			MPrintStat(150, y += h, L"Land Node:", idx);
+			MPrintStat(150, y += h, L"Full Land:", gTileDatabase[idx].ubFullTile);
 		}
 
-		MHeader(y, L"Land St Node:");
-		mprintf(150, y, L"%x", me->pLandStart);
-		y += h;
-
-		MHeader(y, L"GRIDNO:");
-		mprintf(150, y, L"%d", map_pos);
-		y += h;
+		MPrintStat(150, y += h, L"Land St Node:", me->pLandStart);
+		MPrintStat(150, y += h, L"GRIDNO:",       map_pos);
 
 		SetFontColors(COLOR2);
 
 		if (me->uiFlags & MAPELEMENT_MOVEMENT_RESERVED)
 		{
-			mprintf(0, y, L"Merc: %d",  me->ubReservedSoldierID);
-			MPrint(150, y, L"RESERVED MOVEMENT FLAG ON:");
-			y += h;
+			mprintf(  0, y += h, L"Merc: %d",  me->ubReservedSoldierID);
+			MPrint( 150, y,      L"RESERVED MOVEMENT FLAG ON:");
 		}
 
 		LEVELNODE const* const node = GetCurInteractiveTile();
 		if (node != NULL)
 		{
-			mprintf(  0, y, L"Tile: %d", node->usIndex);
-			MPrint( 150, y, L"ON INT TILE");
-			y += h;
+			mprintf(  0, y += h, L"Tile: %d", node->usIndex);
+			MPrint( 150, y,      L"ON INT TILE");
 		}
 
 		if (me->uiFlags & MAPELEMENT_REVEALED)
 		{
-			MPrint(150, y, L"REVEALED");
-			y += h;
+			MPrint(150, y += h, L"REVEALED");
 		}
 
 		if (me->uiFlags & MAPELEMENT_RAISE_LAND_START)
 		{
-			MPrint(150, y, L"Land Raise Start");
-			y += h;
+			MPrint(150, y += h, L"Land Raise Start");
 		}
 
 		if (me->uiFlags & MAPELEMENT_RAISE_LAND_END)
 		{
-			MPrint(150, y, L"Raise Land End");
-			y += h;
+			MPrint(150, y += h, L"Raise Land End");
 		}
 
 		if (gubWorldRoomInfo[map_pos] != NO_ROOM)
 		{
-			MPrint(   0, y, L"Room Number");
-			mprintf(150, y, L"%d", gubWorldRoomInfo[map_pos]);
-			y += h;
+			MPrintStat(150, y += h, L"Room Number", gubWorldRoomInfo[map_pos]);
 		}
 
 		if (me->ubExtFlags[0] & MAPELEMENT_EXT_NOBURN_STRUCT)
 		{
-			MPrint(0, y, L"Don't Use Burn Through For Soldier");
-			y += h;
+			MPrint(0, y += h, L"Don't Use Burn Through For Soldier");
 		}
 	}
 }
@@ -3383,23 +3242,17 @@ void DebugSoldierPage3()
 		SetFont(LARGEFONT1);
 		gprintf(0, 0, L"DEBUG SOLDIER PAGE THREE, GRIDNO %d", s->sGridNo);
 
-		INT32 y = h * 2;
+		INT32 y = h;
 
-		GHeader(y, L"ID:");
-		gprintf(150, y, L"%d", s->ubID);
-		y += h;
-
-		GHeader(y, L"Action:");
-		gprintf(150, y, L"%hs", gzActionStr[s->bAction]);
+		GPrintStat(150, y += h, L"ID:",     s->ubID);
+		GPrintStat(150, y += h, L"Action:", gzActionStr[s->bAction]);
 
 		if (s->uiStatusFlags & SOLDIER_ENEMY)
 		{
 			gprintf(350, y, L"Alert %hs", gzAlertStr[s->bAlertStatus]);
 		}
-		y += h;
 
-		GHeader(y, L"Action Data:");
-		gprintf(150, y, L"%d", s->usActionData);
+		GPrintStat(150, y += h, L"Action Data:", s->usActionData);
 
 		if (s->uiStatusFlags & SOLDIER_ENEMY)
 		{
@@ -3409,10 +3262,8 @@ void DebugSoldierPage3()
 		{
 			gprintf(350, y, L"Morale %d", s->bMorale);
 		}
-		y += h;
 
-		GHeader(y, L"Delayed Movement:");
-		gprintf(150, y, L"%d", s->fDelayedMovement);
+		GPrintStat(150, y += h, L"Delayed Movement:", s->fDelayedMovement);
 
 		if (gubWatchedLocPoints[s->ubID][0] > 0)
 		{
@@ -3422,12 +3273,10 @@ void DebugSoldierPage3()
 				gubWatchedLocPoints[s->ubID][0]
 			);
 		}
-		y += h;
 
-		GHeader(y, L"ActionInProg:");
-		gprintf(150, y, L"%d", s->bActionInProgress);
-		y += h;
+		GPrintStat(150, y += h, L"ActionInProg:", s->bActionInProgress);
 
+		y += h;
 		if (gubWatchedLocPoints[s->ubID][1] > 0)
 		{
 			gprintf(350, y, L"Watch %d/%d for %d pts",
@@ -3437,9 +3286,7 @@ void DebugSoldierPage3()
 			);
 		}
 
-		GHeader(y, L"Last Action:");
-		gprintf(150, y, L"%hs", gzActionStr[s->bLastAction]);
-		y += h;
+		GPrintStat(150, y += h, L"Last Action:", gzActionStr[s->bLastAction]);
 
 		if (gubWatchedLocPoints[s->ubID][2] > 0)
 		{
@@ -3450,79 +3297,34 @@ void DebugSoldierPage3()
 			);
 		}
 
-		GHeader(y, L"Animation:");
-		gprintf(150, y, L"%hs", gAnimControl[s->usAnimState].zAnimStr);
-		y += h;
-
-		GHeader(y, L"Getting Hit:");
-		gprintf(150, y, L"%d", s->fGettingHit);
+		GPrintStat(150, y += h, L"Animation:",   gAnimControl[s->usAnimState].zAnimStr);
+		GPrintStat(150, y += h, L"Getting Hit:", s->fGettingHit);
 
 		if (s->ubCivilianGroup != 0)
 		{
 			gprintf(350, y, L"Civ group %d", s->ubCivilianGroup);
 		}
-		y += h;
 
-		GHeader(y, L"Suppress pts:");
-		gprintf(150, y, L"%d", s->ubSuppressionPoints);
-		y += h;
-
-		GHeader(y, L"Attacker ID:");
-		gprintf(150, y, L"%d", SOLDIER2ID(s->attacker));
-		y += h;
-
-		GHeader(y, L"EndAINotCalled:");
-		gprintf(150, y, L"%d", s->fTurnInProgress);
-		y += h;
-
-		GHeader(y, L"PrevAnimation:");
-		gprintf(150, y, L"%hs", gAnimControl[s->usOldAniState].zAnimStr);
-		y += h;
-
-		GHeader(y, L"PrevAniCode:");
-		gprintf(150, y, L"%d", gusAnimInst[s->usOldAniState][s->sOldAniCode]);
-		y += h;
-
-		GHeader(y, L"GridNo:");
-		gprintf(150, y, L"%d", s->sGridNo);
-		y += h;
-
-		GHeader(y, L"AniCode:");
-		gprintf(150, y, L"%d", gusAnimInst[s->usAnimState][s->usAniCode]);
-		y += h;
-
-		GHeader(y, L"No APS To fin Move:");
-		gprintf(150, y, L"%d", s->fNoAPToFinishMove);
-		y += h;
-
-		GHeader(y, L"Reload Delay:");
-		gprintf(150, y, L"%d", s->sReloadDelay);
-		y += h;
-
-		GHeader(y, L"Reloading:");
-		gprintf(150, y, L"%d", s->fReloading);
-		y += h;
-
-		GHeader(y, L"Bullets out:");
-		gprintf(150, y, L"%d", s->bBulletsLeft);
-		y += h;
-
-		GHeader(y, L"Anim non-int:");
-		gprintf(150, y, L"%d", s->fInNonintAnim);
-		y += h;
-
-		GHeader(y, L"RT Anim non-int:");
-		gprintf(150, y, L"%d", s->fRTInNonintAnim);
-		y += h;
+		GPrintStat(150, y += h, L"Suppress pts:",       s->ubSuppressionPoints);
+		GPrintStat(150, y += h, L"Attacker ID:",        SOLDIER2ID(s->attacker));
+		GPrintStat(150, y += h, L"EndAINotCalled:",     s->fTurnInProgress);
+		GPrintStat(150, y += h, L"PrevAnimation:",      gAnimControl[s->usOldAniState].zAnimStr);
+		GPrintStat(150, y += h, L"PrevAniCode:",        gusAnimInst[s->usOldAniState][s->sOldAniCode]);
+		GPrintStat(150, y += h, L"GridNo:",             s->sGridNo);
+		GPrintStat(150, y += h, L"AniCode:",            gusAnimInst[s->usAnimState][s->usAniCode]);
+		GPrintStat(150, y += h, L"No APS To fin Move:", s->fNoAPToFinishMove);
+		GPrintStat(150, y += h, L"Reload Delay:",       s->sReloadDelay);
+		GPrintStat(150, y += h, L"Reloading:",          s->fReloading);
+		GPrintStat(150, y += h, L"Bullets out:",        s->bBulletsLeft);
+		GPrintStat(150, y += h, L"Anim non-int:",       s->fInNonintAnim);
+		GPrintStat(150, y += h, L"RT Anim non-int:",    s->fRTInNonintAnim);
 
 		// OPIONION OF SELECTED MERC
 		const SOLDIERTYPE* const sel = GetSelectedMan();
 		if (sel != NULL &&
 				sel->ubProfile < FIRST_NPC && s->ubProfile != NO_PROFILE)
 		{
-			GHeader(y, L"NPC Opinion:");
-			gprintf(150, y, L"%d", GetProfile(s->ubProfile)->bMercOpinion[sel->ubProfile]);
-			y += h;
+			GPrintStat(150, y += h, L"NPC Opinion:", GetProfile(s->ubProfile)->bMercOpinion[sel->ubProfile]);
 		}
 	}
 	else
@@ -3533,50 +3335,42 @@ void DebugSoldierPage3()
 		SetFont(LARGEFONT1);
 		gprintf(0, 0, L"DEBUG LAND PAGE THREE");
 
-		INT32 y = h;
+		INT32 y = 0;
 
 		// OK, display door information here.....
 		DOOR_STATUS const* const door = GetDoorStatus(map_pos);
 		if (door == NULL)
 		{
-			MHeader(y, L"No Door Status");
-			y += h * 3;
+			MHeader(y += h, L"No Door Status");
+			y += h * 2;
 		}
 		else
 		{
-			MHeader(y, L"Door Status Found:");
-			mprintf(150, y, L" %d", map_pos);
-			y += h;
+			MPrintStat(150, y += h, L"Door Status Found:", map_pos);
 
-			MHeader(y, L"Actual Status:");
 			wchar_t const* const door_state =
 				door->ubFlags & DOOR_OPEN ? L"OPEN" : L"CLOSED";
-			MPrint(200, y, door_state);
-			y += h;
+			MPrintStat(200, y += h, L"Actual Status:", door_state);
 
-			MHeader(y, L"Perceived Status:");
 			wchar_t const* const perceived_state =
 				door->ubFlags & DOOR_PERCEIVED_NOTSET ? L"NOT SET" :
 				door->ubFlags & DOOR_PERCEIVED_OPEN   ? L"OPEN"    :
 				                                        L"CLOSED";
-			MPrint(200, y, perceived_state);
-			y += h;
+			MPrintStat(200, y += h, L"Perceived Status:", perceived_state);
 		}
 
 		//Find struct data and se what it says......
+		y += h;
 		STRUCTURE const* const structure = FindStructure(map_pos, STRUCTURE_ANYDOOR);
 		if (structure == NULL)
 		{
 			MHeader(y, L"No Door Struct Data");
-			y += h;
 		}
 		else
 		{
-			MHeader(y, L"State:");
 			wchar_t const* const structure_state =
 				structure->fFlags & STRUCTURE_OPEN ? L"OPEN" : L"CLOSED";
-			MPrint(200, y, structure_state);
-			y += h;
+			MPrintStat(200, y, L"State:", structure_state);
 		}
 	}
 }
@@ -3671,10 +3465,9 @@ void DebugSoldierPage4()
 		gprintf(0, 0, L"DEBUG SOLDIER PAGE FOUR, GRIDNO %d", s->sGridNo);
 
 		INT32 const h = LINE_HEIGHT;
-		INT32       y = h * 2;
+		INT32       y = h;
 
-		GHeader(y, L"Exp. Level:");
-		gprintf(150, y, L"%d", s->bExpLevel);
+		GPrintStat(150, y += h, L"Exp. Level:", s->bExpLevel);
 		wchar_t const* sclass;
 		switch (s->ubSoldierClass)
 		{
@@ -3690,7 +3483,6 @@ void DebugSoldierPage4()
 			default:                            sclass = NULL;               break;
 		}
 		if (sclass) gprintf(320, y, L"%ls", sclass);
-		y += h;
 
 		if (s->bTeam != OUR_TEAM)
 		{
@@ -3720,6 +3512,7 @@ void DebugSoldierPage4()
 			}
 			SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
 			const SOLDIERINITNODE* const node = FindSoldierInitNodeBySoldier(s);
+			y += h;
 			if (node)
 			{
 				gprintf(0, y, L"%ls, %ls, REL EQUIP: %d, REL ATTR: %d",
@@ -3732,11 +3525,9 @@ void DebugSoldierPage4()
 			{
 				gprintf(0, y, L"%ls, %ls", orders, attitude);
 			}
-			y += h;
 		}
 
-		GHeader(y, L"ID:");
-		gprintf(150, y, L"%d", s->ubID);
+		GPrintStat(150, y += h, L"ID:", s->ubID);
 
 		PrintItem(y += h, L"HELMETPOS:",     &s->inv[HELMETPOS]);
 		PrintItem(y += h, L"VESTPOS:",       &s->inv[VESTPOS]);
