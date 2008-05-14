@@ -3419,7 +3419,23 @@ void DebugSoldierPage2( )
 }
 
 
-void DebugSoldierPage3( )
+static void GHeader(INT32 const y, wchar_t const* const str)
+{
+	SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
+	gprintf(0, y, L"%ls", str);
+	SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
+}
+
+
+static void MHeader(INT32 const y, wchar_t const* const str)
+{
+	SetFontColors(COLOR1);
+	MPrint(0, y, str);
+	SetFontColors(COLOR2);
+}
+
+
+void DebugSoldierPage3()
 {
 	static const char* const gzAlertStr[] =
 	{
@@ -3429,289 +3445,210 @@ void DebugSoldierPage3( )
 		"BLACK"
 	};
 
-	UINT8							ubLine;
+	INT32 const h = LINE_HEIGHT;
 
-	const SOLDIERTYPE* const pSoldier = FindSoldierFromMouse();
-	if (pSoldier != NULL)
+	const SOLDIERTYPE* const s = FindSoldierFromMouse();
+	if (s != NULL)
 	{
-		SetFont( LARGEFONT1 );
-		gprintf( 0,0,L"DEBUG SOLDIER PAGE THREE, GRIDNO %d", pSoldier->sGridNo );
-		SetFont( LARGEFONT1 );
+		SetFont(LARGEFONT1);
+		gprintf(0, 0, L"DEBUG SOLDIER PAGE THREE, GRIDNO %d", s->sGridNo);
 
-		ubLine = 2;
+		INT32 y = h * 2;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"ID:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->ubID );
-		ubLine++;
+		GHeader(y, L"ID:");
+		gprintf(150, y, L"%d", s->ubID);
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Action:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf(150, LINE_HEIGHT * ubLine, L"%hs", gzActionStr[pSoldier->bAction]);
-		if (pSoldier->uiStatusFlags & SOLDIER_ENEMY )
+		GHeader(y, L"Action:");
+		gprintf(150, y, L"%hs", gzActionStr[s->bAction]);
+
+		if (s->uiStatusFlags & SOLDIER_ENEMY)
 		{
-			gprintf(350, LINE_HEIGHT * ubLine, L"Alert %hs", gzAlertStr[pSoldier->bAlertStatus]);
+			gprintf(350, y, L"Alert %hs", gzAlertStr[s->bAlertStatus]);
 		}
-		ubLine++;
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Action Data:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->usActionData );
+		GHeader(y, L"Action Data:");
+		gprintf(150, y, L"%d", s->usActionData);
 
-		if (pSoldier->uiStatusFlags & SOLDIER_ENEMY )
+		if (s->uiStatusFlags & SOLDIER_ENEMY)
 		{
-			gprintf( 350, LINE_HEIGHT * ubLine, L"AIMorale %d", pSoldier->bAIMorale );
+			gprintf(350, y, L"AIMorale %d", s->bAIMorale);
 		}
 		else
 		{
-			gprintf( 350, LINE_HEIGHT * ubLine, L"Morale %d", pSoldier->bMorale );
+			gprintf(350, y, L"Morale %d", s->bMorale);
 		}
-		ubLine++;
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Delayed Movement:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->fDelayedMovement );
-		if ( gubWatchedLocPoints[ pSoldier->ubID ][ 0 ] > 0 )
+		GHeader(y, L"Delayed Movement:");
+		gprintf(150, y, L"%d", s->fDelayedMovement);
+
+		if (gubWatchedLocPoints[s->ubID][0] > 0)
 		{
-			gprintf( 350, LINE_HEIGHT * ubLine, L"Watch %d/%d for %d pts",
-				gsWatchedLoc[ pSoldier->ubID ][ 0 ],
-				gbWatchedLocLevel[ pSoldier->ubID ][ 0 ],
-				gubWatchedLocPoints[ pSoldier->ubID ][ 0 ]
-				);
+			gprintf(350, y, L"Watch %d/%d for %d pts",
+				gsWatchedLoc[s->ubID][0],
+				gbWatchedLocLevel[s->ubID][0],
+				gubWatchedLocPoints[s->ubID][0]
+			);
 		}
+		y += h;
 
-		ubLine++;
+		GHeader(y, L"ActionInProg:");
+		gprintf(150, y, L"%d", s->bActionInProgress);
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"ActionInProg:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->bActionInProgress);
-		ubLine++;
-		if ( gubWatchedLocPoints[ pSoldier->ubID ][ 1 ] > 0 )
+		if (gubWatchedLocPoints[s->ubID][1] > 0)
 		{
-			gprintf( 350, LINE_HEIGHT * ubLine, L"Watch %d/%d for %d pts",
-				gsWatchedLoc[ pSoldier->ubID ][ 1 ],
-				gbWatchedLocLevel[ pSoldier->ubID ][ 1 ],
-				gubWatchedLocPoints[ pSoldier->ubID ][ 1 ]
-				);
+			gprintf(350, y, L"Watch %d/%d for %d pts",
+				gsWatchedLoc[s->ubID][1],
+				gbWatchedLocLevel[s->ubID][1],
+				gubWatchedLocPoints[s->ubID][1]
+			);
 		}
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Last Action:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf(150, LINE_HEIGHT * ubLine, L"%hs", gzActionStr[pSoldier->bLastAction]);
-		ubLine++;
+		GHeader(y, L"Last Action:");
+		gprintf(150, y, L"%hs", gzActionStr[s->bLastAction]);
+		y += h;
 
-		if ( gubWatchedLocPoints[ pSoldier->ubID ][ 2 ] > 0 )
+		if (gubWatchedLocPoints[s->ubID][2] > 0)
 		{
-			gprintf( 350, LINE_HEIGHT * ubLine, L"Watch %d/%d for %d pts",
-				gsWatchedLoc[ pSoldier->ubID ][ 2 ],
-				gbWatchedLocLevel[ pSoldier->ubID ][ 2 ],
-				gubWatchedLocPoints[ pSoldier->ubID ][ 2 ]
-				);
+			gprintf(350, y, L"Watch %d/%d for %d pts",
+				gsWatchedLoc[s->ubID][2],
+				gbWatchedLocLevel[s->ubID][2],
+				gubWatchedLocPoints[s->ubID][2]
+			);
 		}
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Animation:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf(150, LINE_HEIGHT * ubLine, L"%hs", gAnimControl[pSoldier->usAnimState].zAnimStr);
-		ubLine++;
+		GHeader(y, L"Animation:");
+		gprintf(150, y, L"%hs", gAnimControl[s->usAnimState].zAnimStr);
+		y += h;
 
-/*
-		if ( gubWatchedLocPoints[ pSoldier->ubID ][ 3 ] > 0 )
+		GHeader(y, L"Getting Hit:");
+		gprintf(150, y, L"%d", s->fGettingHit);
+
+		if (s->ubCivilianGroup != 0)
 		{
-			gprintf( 350, LINE_HEIGHT * ubLine, L"Watch %d/%d for %d pts",
-				gsWatchedLoc[ pSoldier->ubID ][ 3 ],
-				gbWatchedLocLevel[ pSoldier->ubID ][ 3 ],
-				gubWatchedLocPoints[ pSoldier->ubID ][ 3 ]
-				);
+			gprintf(350, y, L"Civ group %d", s->ubCivilianGroup);
 		}
-*/
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Getting Hit:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->fGettingHit );
+		GHeader(y, L"Suppress pts:");
+		gprintf(150, y, L"%d", s->ubSuppressionPoints);
+		y += h;
 
-		if (pSoldier->ubCivilianGroup != 0)
-		{
-			gprintf( 350, LINE_HEIGHT * ubLine, L"Civ group %d", pSoldier->ubCivilianGroup );
-		}
-		ubLine++;
+		GHeader(y, L"Attacker ID:");
+		gprintf(150, y, L"%d", SOLDIER2ID(s->attacker));
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Suppress pts:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->ubSuppressionPoints );
-		ubLine++;
+		GHeader(y, L"EndAINotCalled:");
+		gprintf(150, y, L"%d", s->fTurnInProgress);
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Attacker ID:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf(150, LINE_HEIGHT * ubLine, L"%d", SOLDIER2ID(pSoldier->attacker));
-		ubLine++;
+		GHeader(y, L"PrevAnimation:");
+		gprintf(150, y, L"%hs", gAnimControl[s->usOldAniState].zAnimStr);
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"EndAINotCalled:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->fTurnInProgress );
-		ubLine++;
+		GHeader(y, L"PrevAniCode:");
+		gprintf(150, y, L"%d", gusAnimInst[s->usOldAniState][s->sOldAniCode]);
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"PrevAnimation:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf(150, LINE_HEIGHT * ubLine, L"%hs", gAnimControl[pSoldier->usOldAniState].zAnimStr);
-		ubLine++;
+		GHeader(y, L"GridNo:");
+		gprintf(150, y, L"%d", s->sGridNo);
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"PrevAniCode:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", gusAnimInst[ pSoldier->usOldAniState ][ pSoldier->sOldAniCode ] );
-		ubLine++;
+		GHeader(y, L"AniCode:");
+		gprintf(150, y, L"%d", gusAnimInst[s->usAnimState][s->usAniCode]);
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"GridNo:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->sGridNo);
-		ubLine++;
+		GHeader(y, L"No APS To fin Move:");
+		gprintf(150, y, L"%d", s->fNoAPToFinishMove);
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"AniCode:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", gusAnimInst[ pSoldier->usAnimState ][ pSoldier->usAniCode ] );
-		ubLine++;
+		GHeader(y, L"Reload Delay:");
+		gprintf(150, y, L"%d", s->sReloadDelay);
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"No APS To fin Move:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->fNoAPToFinishMove );
-		ubLine++;
+		GHeader(y, L"Reloading:");
+		gprintf(150, y, L"%d", s->fReloading);
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Reload Delay:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->sReloadDelay );
-		ubLine++;
+		GHeader(y, L"Bullets out:");
+		gprintf(150, y, L"%d", s->bBulletsLeft);
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Reloading:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->fReloading );
-		ubLine++;
+		GHeader(y, L"Anim non-int:");
+		gprintf(150, y, L"%d", s->fInNonintAnim);
+		y += h;
 
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Bullets out:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->bBulletsLeft );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"Anim non-int:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->fInNonintAnim );
-		ubLine++;
-
-		SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-		gprintf( 0, LINE_HEIGHT * ubLine, L"RT Anim non-int:");
-		SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-		gprintf( 150, LINE_HEIGHT * ubLine, L"%d", pSoldier->fRTInNonintAnim );
-		ubLine++;
+		GHeader(y, L"RT Anim non-int:");
+		gprintf(150, y, L"%d", s->fRTInNonintAnim);
+		y += h;
 
 		// OPIONION OF SELECTED MERC
 		const SOLDIERTYPE* const sel = GetSelectedMan();
-		if (sel != NULL)
+		if (sel != NULL &&
+				sel->ubProfile < FIRST_NPC && s->ubProfile != NO_PROFILE)
 		{
-			if (sel->ubProfile < FIRST_NPC && pSoldier->ubProfile != NO_PROFILE)
-			{
-				SetFontShade(LARGEFONT1, FONT_SHADE_GREEN);
-				gprintf( 0, LINE_HEIGHT * ubLine, L"NPC Opinion:");
-				SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-				gprintf(150, LINE_HEIGHT * ubLine, L"%d", gMercProfiles[pSoldier->ubProfile].bMercOpinion[sel->ubProfile]);
-				ubLine++;
-			}
+			GHeader(y, L"NPC Opinion:");
+			gprintf(150, y, L"%d", GetProfile(s->ubProfile)->bMercOpinion[sel->ubProfile]);
+			y += h;
 		}
 	}
 	else
 	{
-		const GridNo usMapPos = GetMouseMapPos();
-		if (usMapPos == NOWHERE) return;
+		const GridNo map_pos = GetMouseMapPos();
+		if (map_pos == NOWHERE) return;
 
-		DOOR_STATUS	*pDoorStatus;
-		STRUCTURE *pStructure;
+		SetFont(LARGEFONT1);
+		gprintf(0, 0, L"DEBUG LAND PAGE THREE");
 
-		SetFont( LARGEFONT1 );
-		gprintf( 0,0,L"DEBUG LAND PAGE THREE" );
-		SetFont( LARGEFONT1 );
+		INT32 y = h;
 
 		// OK, display door information here.....
-		pDoorStatus = GetDoorStatus( usMapPos );
-
-		ubLine = 1;
-
-		if ( pDoorStatus == NULL )
+		DOOR_STATUS const* const door = GetDoorStatus(map_pos);
+		if (door == NULL)
 		{
-			SetFontColors(COLOR1);
-			MPrint(0, LINE_HEIGHT * ubLine, L"No Door Status");
-			ubLine++;
-			ubLine++;
-			ubLine++;
+			MHeader(y, L"No Door Status");
+			y += h * 3;
 		}
 		else
 		{
-			SetFontColors(COLOR1);
-			MPrint(0, LINE_HEIGHT * ubLine, L"Door Status Found:");
-			SetFontColors(COLOR2);
-			mprintf( 150, LINE_HEIGHT * ubLine, L" %d", usMapPos );
-			ubLine++;
+			MHeader(y, L"Door Status Found:");
+			mprintf(150, y, L" %d", map_pos);
+			y += h;
 
-			SetFontColors(COLOR1);
-			MPrint(0, LINE_HEIGHT * ubLine, L"Actual Status:");
-			SetFontColors(COLOR2);
-
+			MHeader(y, L"Actual Status:");
 			wchar_t const* const door_state =
-				pDoorStatus->ubFlags & DOOR_OPEN ? L"OPEN" : L"CLOSED";
-			MPrint(200, LINE_HEIGHT * ubLine, door_state);
-			ubLine++;
+				door->ubFlags & DOOR_OPEN ? L"OPEN" : L"CLOSED";
+			MPrint(200, y, door_state);
+			y += h;
 
-
-			SetFontColors(COLOR1);
-			MPrint(0, LINE_HEIGHT * ubLine, L"Perceived Status:");
-			SetFontColors(COLOR2);
-
+			MHeader(y, L"Perceived Status:");
 			wchar_t const* const perceived_state =
-				pDoorStatus->ubFlags & DOOR_PERCEIVED_NOTSET ? L"NOT SET" :
-				pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN   ? L"OPEN"    :
-				                                               L"CLOSED";
-			MPrint(200, LINE_HEIGHT * ubLine, perceived_state);
-			ubLine++;
+				door->ubFlags & DOOR_PERCEIVED_NOTSET ? L"NOT SET" :
+				door->ubFlags & DOOR_PERCEIVED_OPEN   ? L"OPEN"    :
+				                                        L"CLOSED";
+			MPrint(200, y, perceived_state);
+			y += h;
 		}
 
 		//Find struct data and se what it says......
-		pStructure = FindStructure( usMapPos, STRUCTURE_ANYDOOR );
-
-		if ( pStructure == NULL )
+		STRUCTURE const* const structure = FindStructure(map_pos, STRUCTURE_ANYDOOR);
+		if (structure == NULL)
 		{
-			SetFontColors(COLOR1);
-			MPrint(0, LINE_HEIGHT * ubLine, L"No Door Struct Data");
-			ubLine++;
+			MHeader(y, L"No Door Struct Data");
+			y += h;
 		}
 		else
 		{
-
-			SetFontColors(COLOR1);
-			MPrint(0, LINE_HEIGHT * ubLine, L"State:");
-			SetFontColors(COLOR2);
+			MHeader(y, L"State:");
 			wchar_t const* const structure_state =
-				pStructure->fFlags & STRUCTURE_OPEN ? L"OPEN" : L"CLOSED";
-			MPrint(200, LINE_HEIGHT * ubLine, structure_state);
-			ubLine++;
+				structure->fFlags & STRUCTURE_OPEN ? L"OPEN" : L"CLOSED";
+			MPrint(200, y, structure_state);
+			y += h;
 		}
 	}
-
 }
 
 
