@@ -2729,7 +2729,7 @@ void CreateTilePaletteTables(const HVOBJECT pObj)
 	Assert(pObj != NULL);
 
 	// build the shade tables
-	CreateBiasedShadedPalettes(pObj->pShades, pObj->pPaletteEntry);
+	CreateBiasedShadedPalettes(pObj->pShades, pObj->Palette());
 
 	// build neutral palette as well!
 	// Set current shade table to neutral color

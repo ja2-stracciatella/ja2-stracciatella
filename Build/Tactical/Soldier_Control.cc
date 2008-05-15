@@ -4914,7 +4914,7 @@ BOOLEAN CreateSoldierPalettes(SOLDIERTYPE* const s)
 		if (palette_anim_surface != INVALID_ANIMATION_SURFACE)
 		{
 			// Use palette from HVOBJECT, then use substitution for pants, etc
-			memcpy(tmp_pal, gAnimSurfaceDatabase[palette_anim_surface].hVideoObject->pPaletteEntry, sizeof(*tmp_pal) * 256);
+			memcpy(tmp_pal, gAnimSurfaceDatabase[palette_anim_surface].hVideoObject->Palette(), sizeof(*tmp_pal) * 256);
 
 			// Substitute based on head, etc
 			SetPaletteReplacement(tmp_pal, s->HeadPal);
@@ -4931,7 +4931,7 @@ BOOLEAN CreateSoldierPalettes(SOLDIERTYPE* const s)
 	else
 	{
 		// Use palette from hvobject
-		pal = gAnimSurfaceDatabase[anim_surface].hVideoObject->pPaletteEntry;
+		pal = gAnimSurfaceDatabase[anim_surface].hVideoObject->Palette();
 	}
 
 

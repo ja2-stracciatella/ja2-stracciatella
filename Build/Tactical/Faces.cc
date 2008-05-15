@@ -211,7 +211,7 @@ try
 		pal[i].peBlue  = 255;
 	}
 
-	const SGPPaletteEntry* const vo_pal = vo->pPaletteEntry;
+	const SGPPaletteEntry* const vo_pal = vo->Palette();
 	vo->pShades[FLASH_PORTRAIT_NOSHADE   ] = Create16BPPPaletteShaded(vo_pal, 255, 255, 255, FALSE);
 	vo->pShades[FLASH_PORTRAIT_STARTSHADE] = Create16BPPPaletteShaded(pal,    255, 255, 255, FALSE);
 	vo->pShades[FLASH_PORTRAIT_ENDSHADE  ] = Create16BPPPaletteShaded(vo_pal, 250,  25,  25, TRUE );

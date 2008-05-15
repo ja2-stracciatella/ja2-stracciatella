@@ -91,7 +91,7 @@ try
 	gusRadarImage = radar;
 
 	// ATE: Add a shade table!
-	const SGPPaletteEntry* const pal = radar->pPaletteEntry;
+	const SGPPaletteEntry* const pal = radar->Palette();
 	radar->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
 	radar->pShades[1] = Create16BPPPaletteShaded(pal, 100, 100, 100, FALSE);
 

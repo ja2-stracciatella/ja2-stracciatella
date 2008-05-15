@@ -476,7 +476,7 @@ try
 
 	if (!alive)
 	{
-		guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 		//set the red pallete to the face
 		SetObjectShade(guiFACE, 0);
 	}
@@ -984,7 +984,7 @@ try
 
 		if (s->bLife <= 0)
 		{
-			guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+			guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 			//set the red pallete to the face
 			SetObjectShade(guiFACE, 0);
 		}
@@ -1985,7 +1985,7 @@ try
 
 	if (fDead)
 	{
-		guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 		//set the red pallete to the face
 		SetObjectShade(guiFACE, 0);
 	}

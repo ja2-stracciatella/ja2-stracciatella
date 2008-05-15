@@ -123,7 +123,7 @@ static UINT16 CreateFontPaletteTables(INT32 Font)
 		}
 	}
 
-	const SGPPaletteEntry* const pal = pObj->pPaletteEntry;
+	const SGPPaletteEntry* const pal = pObj->Palette();
 	pObj->pShades[FONT_SHADE_RED]     = Create16BPPPaletteShaded(pal, 255,   0,   0, TRUE);
 	pObj->pShades[FONT_SHADE_BLUE]    = Create16BPPPaletteShaded(pal,   0,   0, 255, TRUE);
 	pObj->pShades[FONT_SHADE_GREEN]   = Create16BPPPaletteShaded(pal,   0, 255,   0, TRUE);

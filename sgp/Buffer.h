@@ -14,10 +14,11 @@ namespace SGP
 
 			~Buffer() { if (buf_) MemFree(buf_); }
 
-			void Allocate(size_t const n)
+			Buffer& Allocate(size_t const n)
 			{
 				if (buf_) MemFree(buf_);
 				buf_ = MALLOCN(T, n);
+				return *this;
 			}
 
 			T* Release()

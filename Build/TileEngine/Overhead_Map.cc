@@ -441,7 +441,7 @@ void GoIntoOverheadMap( )
 
 	// Add shades to persons....
 	SGPVObject*            const vo  = uiPERSONS;
-	const SGPPaletteEntry* const pal = vo->pPaletteEntry;
+	SGPPaletteEntry const* const pal = vo->Palette();
 	vo->pShades[0] = Create16BPPPaletteShaded(pal, 256, 256, 256, FALSE);
 	vo->pShades[1] = Create16BPPPaletteShaded(pal, 310, 310, 310, FALSE);
 	vo->pShades[2] = Create16BPPPaletteShaded(pal,   0,   0,   0, FALSE);

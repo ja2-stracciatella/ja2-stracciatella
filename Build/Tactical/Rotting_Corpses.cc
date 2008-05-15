@@ -587,7 +587,7 @@ static void CreateCorpsePalette(ROTTING_CORPSE* const c)
 	if (bBodyTypePalette == -1)
 	{
 		// Use palette from HVOBJECT, then use substitution for pants, etc
-		memcpy(tmp_pal, gpTileCache[c->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry, sizeof(tmp_pal));
+		memcpy(tmp_pal, gpTileCache[c->pAniTile->sCachedTileID].pImagery->vo->Palette(), sizeof(tmp_pal));
 		SetPaletteReplacement(tmp_pal, c->def.HeadPal);
 		SetPaletteReplacement(tmp_pal, c->def.VestPal);
 		SetPaletteReplacement(tmp_pal, c->def.PantsPal);
@@ -601,7 +601,7 @@ static void CreateCorpsePalette(ROTTING_CORPSE* const c)
 	else
 	{
 		// Use palette from hvobject
-		pal = gpTileCache[c->pAniTile->sCachedTileID].pImagery->vo->pPaletteEntry;
+		pal = gpTileCache[c->pAniTile->sCachedTileID].pImagery->vo->Palette();
 	}
 
 	CreateBiasedShadedPalettes(c->pShades, pal);

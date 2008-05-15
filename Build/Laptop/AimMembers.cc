@@ -1044,7 +1044,7 @@ try
 	if (IsMercDead(id))
 	{
 		// the merc is dead, so shade the face red
-		face->pShades[0] = Create16BPPPaletteShaded(face->pPaletteEntry, DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		face->pShades[0] = Create16BPPPaletteShaded(face->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 		SetObjectShade(face, 0);
 		shaded = FALSE;
 		text   = AimPopUpText[AIM_MEMBER_DEAD];

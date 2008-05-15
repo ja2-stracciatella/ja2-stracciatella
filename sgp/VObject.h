@@ -2,6 +2,7 @@
 #define __VOBJECT_H
 
 #include "AutoObj.h"
+#include "Buffer.h"
 #include "Types.h"
 
 
@@ -36,25 +37,29 @@ class SGPVObject
 		SGPVObject(SGPImage const*);
 		~SGPVObject();
 
+		SGPPaletteEntry const* Palette() { return palette_; }
+
 		size_t SubregionCount() const { return subregion_count_; }
 
 		ETRLEObject const* SubregionProperties(size_t idx) const;
 
-		UINT32           fFlags;                         // Special flags
-		UINT32           uiSizePixData;                  // ETRLE data size
-		SGPPaletteEntry* pPaletteEntry;                  // 8BPP Palette
-		UINT16*          p16BPPPalette;                  // A 16BPP palette used for 8->16 blits
+		UINT32                       fFlags;                         // Special flags
+		UINT32                       uiSizePixData;                  // ETRLE data size
+	private:
+		SGP::Buffer<SGPPaletteEntry> palette_;                       // 8BPP Palette
+	public:
+		UINT16*                      p16BPPPalette;                  // A 16BPP palette used for 8->16 blits
 
-		PTR              pPixData;                       // ETRLE pixel data
-		ETRLEObject*     pETRLEObject;                   // Object offset data etc
-		UINT16*          pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
-		UINT16*          pShadeCurrent;
-		ZStripInfo**     ppZStripInfo;                   // Z-value strip info arrays
+		PTR                          pPixData;                       // ETRLE pixel data
+		ETRLEObject*                 pETRLEObject;                   // Object offset data etc
+		UINT16*                      pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
+		UINT16*                      pShadeCurrent;
+		ZStripInfo**                 ppZStripInfo;                   // Z-value strip info arrays
 
 	private:
-		UINT16           subregion_count_;               // Total number of objects
+		UINT16                       subregion_count_;               // Total number of objects
 	public:
-		UINT8            ubBitDepth;                     // BPP
+		UINT8                        ubBitDepth;                     // BPP
 };
 
 
