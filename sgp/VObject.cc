@@ -202,13 +202,17 @@ static
 #endif
 SGPVObject* AddStandardVideoObjectFromFile(const char* const ImageFile)
 {
-	AutoSGPImage hImage(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
-	if (hImage == NULL)
+	try
 	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, String("Invalid Image Filename '%s' given", ImageFile));
-		return NULL;
+		AutoSGPImage hImage(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
+		if (hImage == NULL)
+		{
+			DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, String("Invalid Image Filename '%s' given", ImageFile));
+			return NULL;
+		}
+		return AddStandardVideoObjectFromHImage(hImage);
 	}
-	return AddStandardVideoObjectFromHImage(hImage);
+	catch (...) { return 0; }
 }
 
 
@@ -524,7 +528,7 @@ static void RecordVObject(const char* Filename, UINT32 uiLineNum, const char* pS
 SGPVObject* AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32 uiLineNum, const char* pSourceFile)
 {
 	SGPVObject* const vo = AddStandardVideoObjectFromHImage(hImage);
-	if (vo != NO_VOBJECT) RecordVObject("<IMAGE>", uiLineNum, pSourceFile);
+	RecordVObject("<IMAGE>", uiLineNum, pSourceFile);
 	return vo;
 }
 

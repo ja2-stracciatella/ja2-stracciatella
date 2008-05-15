@@ -657,65 +657,66 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 	}
 	else
 	{
-		// Load into memory
-		AnimDebugMsg(String("Surface Database: Loading %d", usSurfaceIndex));
-
-		AutoSGPImage hImage(CreateImage(a->Filename, IMAGE_ALLDATA));
-	  if (hImage == NULL)
-	  {
-			SET_ERROR("Error: Could not load animation file %s", a->Filename);
-			return FALSE;
-	  }
-
-		AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage));
-		if (hVObject == NULL)
+		try
 		{
-			// Report error
-			SET_ERROR("Could not load animation file: %s", a->Filename);
-			// Video Object will set error conition.]
-			return FALSE;
-		}
+			// Load into memory
+			AnimDebugMsg(String("Surface Database: Loading %d", usSurfaceIndex));
 
-		// Get aux data
-		if (hImage->uiAppDataSize != hVObject->usNumberOfObjects * sizeof(AuxObjectData))
-		{
-			// Report error
-			SET_ERROR("Invalid # of animations given");
-			return FALSE;
-		}
-
-		// Valid auxiliary data, so get # of frames from data
-		const AuxObjectData* const pAuxData = (const AuxObjectData*)hImage->pAppData;
-		a->uiNumFramesPerDir = pAuxData->ubNumberOfFrames;
-
-		// get structure data if any
-		const STRUCTURE_FILE_REF* const pStructureFileRef = InternalGetAnimationStructureRef(ID2SOLDIER(usSoldierID), usSurfaceIndex, usAnimState, TRUE);
-		if (pStructureFileRef != NULL)
-		{
-			INT16 sStartFrame = 0;
-			if (usSurfaceIndex == RGMPRONE)
+			AutoSGPImage hImage(CreateImage(a->Filename, IMAGE_ALLDATA));
+			if (hImage == NULL)
 			{
-				sStartFrame = 5;
-			}
-			else if (usSurfaceIndex >= QUEENMONSTERSTANDING && usSurfaceIndex <= QUEENMONSTERSWIPE)
-			{
-				sStartFrame = -1;
-			}
-
-			if (!AddZStripInfoToVObject(hVObject, pStructureFileRef, TRUE, sStartFrame))
-			{
-				SET_ERROR("Animation structure ZStrip creation error: %s", a->Filename);
+				SET_ERROR("Error: Could not load animation file %s", a->Filename);
 				return FALSE;
 			}
+
+			AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage));
+
+			// Get aux data
+			if (hImage->uiAppDataSize != hVObject->usNumberOfObjects * sizeof(AuxObjectData))
+			{
+				// Report error
+				SET_ERROR("Invalid # of animations given");
+				return FALSE;
+			}
+
+			// Valid auxiliary data, so get # of frames from data
+			const AuxObjectData* const pAuxData = (const AuxObjectData*)hImage->pAppData;
+			a->uiNumFramesPerDir = pAuxData->ubNumberOfFrames;
+
+			// get structure data if any
+			const STRUCTURE_FILE_REF* const pStructureFileRef = InternalGetAnimationStructureRef(ID2SOLDIER(usSoldierID), usSurfaceIndex, usAnimState, TRUE);
+			if (pStructureFileRef != NULL)
+			{
+				INT16 sStartFrame = 0;
+				if (usSurfaceIndex == RGMPRONE)
+				{
+					sStartFrame = 5;
+				}
+				else if (usSurfaceIndex >= QUEENMONSTERSTANDING && usSurfaceIndex <= QUEENMONSTERSWIPE)
+				{
+					sStartFrame = -1;
+				}
+
+				if (!AddZStripInfoToVObject(hVObject, pStructureFileRef, TRUE, sStartFrame))
+				{
+					SET_ERROR("Animation structure ZStrip creation error: %s", a->Filename);
+					return FALSE;
+				}
+			}
+
+			// Set video object index
+			a->hVideoObject = hVObject.Release();
+
+			// Determine if we have a problem with #frames + directions ( ie mismatch )
+			if (a->uiNumDirections * a->uiNumFramesPerDir != a->hVideoObject->usNumberOfObjects)
+			{
+				AnimDebugMsg(String("Surface Database: WARNING!!! Surface %d has #frames mismatch.", usSurfaceIndex));
+			}
 		}
-
-		// Set video object index
-		a->hVideoObject = hVObject.Release();
-
-		// Determine if we have a problem with #frames + directions ( ie mismatch )
-		if (a->uiNumDirections * a->uiNumFramesPerDir != a->hVideoObject->usNumberOfObjects)
+		catch (...)
 		{
-			AnimDebugMsg(String("Surface Database: WARNING!!! Surface %d has #frames mismatch.", usSurfaceIndex));
+			SET_ERROR("Could not load animation file: %s", a->Filename);
+			return FALSE;
 		}
 	}
 

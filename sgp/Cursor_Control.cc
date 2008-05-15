@@ -81,26 +81,29 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 
 		if (CFData->hVObject == NULL)
 		{
-			// The file containing the video object hasn't been loaded yet. Let's load it now
-			// FIRST LOAD AS AN HIMAGE SO WE CAN GET AUX DATA!
-			Assert(CFData->Filename != NULL);
-
-			AutoSGPImage hImage(CreateImage(CFData->Filename, IMAGE_ALLDATA));
-			if (hImage == NULL) return FALSE;
-
-			CFData->hVObject = AddVideoObjectFromHImage(hImage);
-			if (CFData->hVObject == NULL) return FALSE;
-
-			// Check for animated tile
-			if (hImage->uiAppDataSize > 0)
+			try
 			{
-				// Valid auxiliary data, so get # od frames from data
-				const AuxObjectData* pAuxData = (const AuxObjectData*)hImage->pAppData;
-				if (pAuxData->fFlags & AUX_ANIMATED_TILE)
+				// The file containing the video object hasn't been loaded yet. Let's load it now
+				// FIRST LOAD AS AN HIMAGE SO WE CAN GET AUX DATA!
+				Assert(CFData->Filename != NULL);
+
+				AutoSGPImage hImage(CreateImage(CFData->Filename, IMAGE_ALLDATA));
+				if (hImage == NULL) return FALSE;
+
+				CFData->hVObject = AddVideoObjectFromHImage(hImage);
+
+				// Check for animated tile
+				if (hImage->uiAppDataSize > 0)
 				{
-					CFData->ubNumberOfFrames = pAuxData->ubNumberOfFrames;
+					// Valid auxiliary data, so get # od frames from data
+					const AuxObjectData* pAuxData = (const AuxObjectData*)hImage->pAppData;
+					if (pAuxData->fFlags & AUX_ANIMATED_TILE)
+					{
+						CFData->ubNumberOfFrames = pAuxData->ubNumberOfFrames;
+					}
 				}
 			}
+			catch (...) { return FALSE; }
 		}
 
 		// Get ETRLE Data for this video object

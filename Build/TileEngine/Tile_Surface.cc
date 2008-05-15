@@ -20,88 +20,90 @@ TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
 
 TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 {
-	// Add tile surface
-	AutoSGPImage hImage(CreateImage(cFilename, IMAGE_ALLDATA));
-	if (hImage == NULL)
+	try
 	{
-		SET_ERROR( "Could not load tile file: %s", cFilename );
+		// Add tile surface
+		AutoSGPImage hImage(CreateImage(cFilename, IMAGE_ALLDATA));
+		if (hImage == NULL)
+		{
+			SET_ERROR( "Could not load tile file: %s", cFilename );
+			return NULL;
+		}
+
+		AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage));
+
+		// Load structure data, if any.
+		// Start by hacking the image filename into that for the structure data
+		SGPFILENAME cStructureFilename;
+		strcpy( cStructureFilename, cFilename );
+		char* cEndOfName = strchr( cStructureFilename, '.' );
+		if (cEndOfName != NULL)
+		{
+			cEndOfName++;
+			*cEndOfName = '\0';
+		}
+		else
+		{
+			strcat( cStructureFilename, "." );
+		}
+		strcat( cStructureFilename, STRUCTURE_FILE_EXTENSION );
+		AutoStructureFileRef pStructureFileRef;
+		if (FileExists( cStructureFilename ))
+		{
+			pStructureFileRef = LoadStructureFile( cStructureFilename );
+			if (pStructureFileRef == NULL)
+			{
+				SET_ERROR("Structure file error: %s", cStructureFilename);
+				return NULL;
+			}
+
+			if (hVObject->usNumberOfObjects != pStructureFileRef->usNumberOfStructures)
+			{
+				SET_ERROR("Structure file error: %s", cStructureFilename);
+				return NULL;
+			}
+
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, cStructureFilename );
+
+			if (!AddZStripInfoToVObject(hVObject, pStructureFileRef, FALSE, 0))
+			{
+				SET_ERROR(  "ZStrip creation error: %s", cStructureFilename );
+				return NULL;
+			}
+		}
+
+		TILE_IMAGERY* const pTileSurf = MALLOCZ(TILE_IMAGERY);
+
+		if (pStructureFileRef && pStructureFileRef->pAuxData != NULL)
+		{
+			pTileSurf->pAuxData = pStructureFileRef->pAuxData;
+			pTileSurf->pTileLocData = pStructureFileRef->pTileLocData;
+		}
+		else if (hImage->uiAppDataSize == hVObject->usNumberOfObjects * sizeof( AuxObjectData ))
+		{
+			// Valid auxiliary data, so make a copy of it for TileSurf
+			pTileSurf->pAuxData = MALLOCN(AuxObjectData, hVObject->usNumberOfObjects);
+			if (pTileSurf->pAuxData == NULL)
+			{
+				MemFree(pTileSurf);
+				return NULL;
+			}
+			memcpy( pTileSurf->pAuxData, hImage->pAppData, hImage->uiAppDataSize );
+		}
+		else
+		{
+			pTileSurf->pAuxData = NULL;
+		}
+
+		pTileSurf->vo                = hVObject.Release();
+		pTileSurf->pStructureFileRef = pStructureFileRef.Release();
+		return pTileSurf;
+	}
+	catch (...)
+	{
+		SET_ERROR("Could not load tile file: %s", cFilename);
 		return NULL;
 	}
-
-	AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage));
-	if (hVObject == NULL)
-	{
-		SET_ERROR( "Could not load tile file: %s", cFilename );
-		// Video Object will set error conition.]
-		return NULL;
-	}
-
-	// Load structure data, if any.
-	// Start by hacking the image filename into that for the structure data
-	SGPFILENAME cStructureFilename;
-	strcpy( cStructureFilename, cFilename );
-	char* cEndOfName = strchr( cStructureFilename, '.' );
-	if (cEndOfName != NULL)
-	{
-		cEndOfName++;
-		*cEndOfName = '\0';
-	}
-	else
-	{
-		strcat( cStructureFilename, "." );
-	}
-	strcat( cStructureFilename, STRUCTURE_FILE_EXTENSION );
-	AutoStructureFileRef pStructureFileRef;
-	if (FileExists( cStructureFilename ))
-	{
-		pStructureFileRef = LoadStructureFile( cStructureFilename );
-		if (pStructureFileRef == NULL)
-		{
-			SET_ERROR("Structure file error: %s", cStructureFilename);
-			return NULL;
-		}
-
-		if (hVObject->usNumberOfObjects != pStructureFileRef->usNumberOfStructures)
-		{
-			SET_ERROR("Structure file error: %s", cStructureFilename);
-			return NULL;
-		}
-
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, cStructureFilename );
-
-		if (!AddZStripInfoToVObject(hVObject, pStructureFileRef, FALSE, 0))
-		{
-			SET_ERROR(  "ZStrip creation error: %s", cStructureFilename );
-			return NULL;
-		}
-	}
-
-	TILE_IMAGERY* const pTileSurf = MALLOCZ(TILE_IMAGERY);
-
-	if (pStructureFileRef && pStructureFileRef->pAuxData != NULL)
-	{
-		pTileSurf->pAuxData = pStructureFileRef->pAuxData;
-		pTileSurf->pTileLocData = pStructureFileRef->pTileLocData;
-	}
-	else if (hImage->uiAppDataSize == hVObject->usNumberOfObjects * sizeof( AuxObjectData ))
-	{
-		// Valid auxiliary data, so make a copy of it for TileSurf
-		pTileSurf->pAuxData = MALLOCN(AuxObjectData, hVObject->usNumberOfObjects);
-		if (pTileSurf->pAuxData == NULL)
-		{
-			MemFree(pTileSurf);
-			return NULL;
-		}
-		memcpy( pTileSurf->pAuxData, hImage->pAppData, hImage->uiAppDataSize );
-	}
-	else
-	{
-		pTileSurf->pAuxData = NULL;
-	}
-
-	pTileSurf->vo                = hVObject.Release();
-	pTileSurf->pStructureFileRef = pStructureFileRef.Release();
-	return pTileSurf;
 }
 
 
