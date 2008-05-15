@@ -329,9 +329,8 @@ UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade)
 BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETRLEIndex, UINT16 usX, UINT16 usY)
 {
 	CHECKF(hVObject != NULL);
-	CHECKF(usETRLEIndex < hVObject->usNumberOfObjects);
 
-	const ETRLEObject* pETRLEObject = &hVObject->pETRLEObject[usETRLEIndex];
+	ETRLEObject const* const pETRLEObject = hVObject->SubregionProperties(usETRLEIndex);
 
 	CHECKF(usX < pETRLEObject->usWidth);
 	CHECKF(usY < pETRLEObject->usHeight);
