@@ -88,7 +88,6 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 				Assert(CFData->Filename != NULL);
 
 				AutoSGPImage hImage(CreateImage(CFData->Filename, IMAGE_ALLDATA));
-				if (hImage == NULL) return FALSE;
 
 				CFData->hVObject = AddVideoObjectFromHImage(hImage);
 

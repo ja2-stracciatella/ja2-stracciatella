@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Types.h"
 #include "Debug.h"
 #include "FileMan.h"
@@ -29,11 +31,11 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 {
 	// depending on extension of filename, use different image readers
 	const char* const dot = strstr(filename, ".");
-	if (dot == NULL) return NULL;
+	if (!dot) throw std::logic_error("Tried to load image with no extension");
 	const char* const ext = dot + 1;
 
 	SGPImage* const img = MALLOCZ(SGPImage);
-	if (img == NULL) return NULL;
+	if (!img) throw std::bad_alloc();
 	strcpy(img->ImageFile, filename);
 
 	// determine type from extension
@@ -52,21 +54,17 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 	}
 	else
 	{
-		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_2, String("Resource file \"%s\" has unknown extension", filename));
-		goto fail_img;
+		MemFree(img);
+		throw std::logic_error("Tried to load image with unknown extension");
 	}
 
 	if (!ret)
 	{
-		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_2, "Error occured while reading image data.");
-		goto fail_img;
+		MemFree(img);
+		throw std::runtime_error("Error occured while loading image");
 	}
 
 	return img;
-
-fail_img:
-	MemFree(img);
-	return NULL;
 }
 
 

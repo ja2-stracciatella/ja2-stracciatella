@@ -120,8 +120,6 @@ struct SGPImage
 #define SGPGetGValue(rgb)   ((BYTE) (((UINT16) (rgb)) >> 8))
 
 
-// This function will return NULL if it fails, and call SetLastError() to set
-// error information
 SGPImage* CreateImage(const char* ImageFile, UINT16 fContents);
 
 // This function destroys the HIMAGE structure as well as its contents

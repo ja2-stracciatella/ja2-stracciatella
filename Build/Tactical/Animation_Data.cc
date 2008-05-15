@@ -662,13 +662,7 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 			// Load into memory
 			AnimDebugMsg(String("Surface Database: Loading %d", usSurfaceIndex));
 
-			AutoSGPImage hImage(CreateImage(a->Filename, IMAGE_ALLDATA));
-			if (hImage == NULL)
-			{
-				SET_ERROR("Error: Could not load animation file %s", a->Filename);
-				return FALSE;
-			}
-
+			AutoSGPImage   hImage(CreateImage(a->Filename, IMAGE_ALLDATA));
 			AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage));
 
 			// Get aux data

@@ -23,13 +23,7 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 	try
 	{
 		// Add tile surface
-		AutoSGPImage hImage(CreateImage(cFilename, IMAGE_ALLDATA));
-		if (hImage == NULL)
-		{
-			SET_ERROR( "Could not load tile file: %s", cFilename );
-			return NULL;
-		}
-
+		AutoSGPImage   hImage(CreateImage(cFilename, IMAGE_ALLDATA));
 		AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage));
 
 		// Load structure data, if any.

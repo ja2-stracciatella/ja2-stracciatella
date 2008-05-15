@@ -205,11 +205,6 @@ SGPVObject* AddStandardVideoObjectFromFile(const char* const ImageFile)
 	try
 	{
 		AutoSGPImage hImage(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
-		if (hImage == NULL)
-		{
-			DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, String("Invalid Image Filename '%s' given", ImageFile));
-			return NULL;
-		}
 		return AddStandardVideoObjectFromHImage(hImage);
 	}
 	catch (...) { return 0; }

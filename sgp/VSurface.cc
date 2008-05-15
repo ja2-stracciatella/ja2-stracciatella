@@ -184,10 +184,6 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(SGPVSurface* hVSurface, HIMAGE hIma
 SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 {
 	AutoSGPImage hImage(CreateImage(Filename, IMAGE_ALLIMAGEDATA));
-	if (hImage == NULL)
-	{
-		throw std::runtime_error("Failed to load image file for creation of video surface");
-	}
 
 	SGPVSurface* const vs = CreateVideoSurface(hImage->usWidth, hImage->usHeight, hImage->ubBitDepth);
 
