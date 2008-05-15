@@ -68,6 +68,7 @@ void InitCursorDatabase(CursorFileData* pCursorFileData, CursorData* pCursorData
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
+try
 {
 	// Load cursor data will load all data required for the cursor specified by this index
 	CursorData* pCurData = &gpCursorDatabase[uiCursorIndex];
@@ -81,33 +82,28 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 
 		if (CFData->hVObject == NULL)
 		{
-			try
+			// The file containing the video object hasn't been loaded yet. Let's load it now
+			// FIRST LOAD AS AN HIMAGE SO WE CAN GET AUX DATA!
+			Assert(CFData->Filename != NULL);
+
+			AutoSGPImage hImage(CreateImage(CFData->Filename, IMAGE_ALLDATA));
+
+			CFData->hVObject = AddVideoObjectFromHImage(hImage);
+
+			// Check for animated tile
+			if (hImage->uiAppDataSize > 0)
 			{
-				// The file containing the video object hasn't been loaded yet. Let's load it now
-				// FIRST LOAD AS AN HIMAGE SO WE CAN GET AUX DATA!
-				Assert(CFData->Filename != NULL);
-
-				AutoSGPImage hImage(CreateImage(CFData->Filename, IMAGE_ALLDATA));
-
-				CFData->hVObject = AddVideoObjectFromHImage(hImage);
-
-				// Check for animated tile
-				if (hImage->uiAppDataSize > 0)
+				// Valid auxiliary data, so get # od frames from data
+				const AuxObjectData* pAuxData = (const AuxObjectData*)hImage->pAppData;
+				if (pAuxData->fFlags & AUX_ANIMATED_TILE)
 				{
-					// Valid auxiliary data, so get # od frames from data
-					const AuxObjectData* pAuxData = (const AuxObjectData*)hImage->pAppData;
-					if (pAuxData->fFlags & AUX_ANIMATED_TILE)
-					{
-						CFData->ubNumberOfFrames = pAuxData->ubNumberOfFrames;
-					}
+					CFData->ubNumberOfFrames = pAuxData->ubNumberOfFrames;
 				}
 			}
-			catch (...) { return FALSE; }
 		}
 
 		// Get ETRLE Data for this video object
 		ETRLEObject const* const pTrav = CFData->hVObject->SubregionProperties(pCurImage->uiSubIndex);
-		if (!pTrav) return FALSE;
 
 		if (pTrav->usHeight > sMaxHeight) sMaxHeight = pTrav->usHeight;
 		if (pTrav->usWidth  > sMaxWidth)  sMaxWidth  = pTrav->usWidth;
@@ -142,7 +138,6 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 
 		// Get ETRLE Data for this video object
 		ETRLEObject const* const pTrav = gpCursorFileDatabase[pCurImage->uiFileIndex].hVObject->SubregionProperties(pCurImage->uiSubIndex);
-		if (!pTrav) return FALSE;
 
 		if (pCurImage->usPosX == CENTER_SUBCURSOR)
 		{
@@ -157,6 +152,7 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void UnLoadCursorData(UINT32 uiCursorIndex)
