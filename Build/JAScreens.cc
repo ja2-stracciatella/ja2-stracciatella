@@ -565,7 +565,7 @@ UINT32 SexScreenHandle(void)
 	}
 
 	// Calculate smily face positions...
-	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiSMILY, 0);
+	ETRLEObject const* const pTrav = guiSMILY->SubregionProperties(0);
 	INT16 sX = (SCREEN_WIDTH  - pTrav->usWidth)  / 2;
 	INT16 sY = (SCREEN_HEIGHT - pTrav->usHeight) / 2;
 

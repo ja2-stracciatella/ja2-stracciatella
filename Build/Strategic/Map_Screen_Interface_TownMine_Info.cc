@@ -575,7 +575,7 @@ try
 	AutoSGPVObject uiObject(AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti"));
 
 	// Calculate smily face positions...
-	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(uiObject, 0);
+	ETRLEObject const* const pTrav = uiObject->SubregionProperties(0);
 	INT16 sWidthA = pTrav->usWidth;
 
 	const SGPBox* const area = GetBoxArea(box);
@@ -647,8 +647,8 @@ try
 	AutoSGPVObject uiObject(AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti"));
 
 	// Calculate smily face positions...
-	INT16 sWidthA = GetVideoObjectETRLESubregionProperties(uiObject, 0)->usWidth;
-	INT16 sWidthB = GetVideoObjectETRLESubregionProperties(uiObject, 1)->usWidth;
+	INT16 const sWidthA = uiObject->SubregionProperties(0)->usWidth;
+	INT16 const sWidthB = uiObject->SubregionProperties(1)->usWidth;
 
 	INT16 sTotalBoxWidth = sWidthA + sWidthB;
 	sTotalButtonWidth = sTotalBoxWidth;

@@ -227,8 +227,7 @@ try
 	vo->pShades[FLASH_PORTRAIT_GRAYSHADE] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
 
 	// Get FACE height, width
-	const ETRLEObject* const face_gfx = GetVideoObjectETRLESubregionProperties(vo, 0);
-	if (face_gfx == NULL) return NULL;
+	ETRLEObject const* const face_gfx = vo->SubregionProperties(0);
 	face->usFaceWidth  = face_gfx->usWidth;
 	face->usFaceHeight = face_gfx->usHeight;
 
@@ -236,14 +235,12 @@ try
 	if (vo->usNumberOfObjects == 8)
 	{
 		// Get EYE height, width
-		const ETRLEObject* const eyes_gfx = GetVideoObjectETRLESubregionProperties(vo, 1);
-		if (eyes_gfx == NULL) return NULL;
+		ETRLEObject const* const eyes_gfx = vo->SubregionProperties(1);
 		face->usEyesWidth  = eyes_gfx->usWidth;
 		face->usEyesHeight = eyes_gfx->usHeight;
 
 		// Get Mouth height, width
-		const ETRLEObject* const mouth_gfx = GetVideoObjectETRLESubregionProperties(vo, 5);
-		if (mouth_gfx == NULL) return NULL;
+		ETRLEObject const* const mouth_gfx = vo->SubregionProperties(5);
 		face->usMouthWidth  = mouth_gfx->usWidth;
 		face->usMouthHeight = mouth_gfx->usHeight;
 
@@ -768,7 +765,7 @@ BOOLEAN RenderAutoFaceFromSoldier(const SOLDIERTYPE* s)
 static void GetXYForIconPlacement(const FACETYPE* pFace, UINT16 ubIndex, INT16 sFaceX, INT16 sFaceY, INT16* psX, INT16* psY)
 {
 	// Get height, width of icon...
-	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiPORTRAITICONS, ubIndex);
+	ETRLEObject const* const pTrav = guiPORTRAITICONS->SubregionProperties(ubIndex);
 	UINT16 usHeight = pTrav->usHeight;
 	UINT16 usWidth  = pTrav->usWidth;
 
@@ -783,7 +780,7 @@ static void GetXYForIconPlacement(const FACETYPE* pFace, UINT16 ubIndex, INT16 s
 static void GetXYForRightIconPlacement(const FACETYPE* pFace, UINT16 ubIndex, INT16 sFaceX, INT16 sFaceY, INT16* psX, INT16* psY, INT8 bNumIcons)
 {
 	// Get height, width of icon...
-	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiPORTRAITICONS, ubIndex);
+	ETRLEObject const* const pTrav = guiPORTRAITICONS->SubregionProperties(ubIndex);
 	UINT16 usHeight = pTrav->usHeight;
 	UINT16 usWidth  = pTrav->usWidth;
 

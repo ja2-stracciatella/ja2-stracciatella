@@ -1700,7 +1700,7 @@ void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const 
 		// Center the object in the slot
 		const SGPVObject*  const item_vo = GetInterfaceGraphicForItem(item);
 		UINT8              const gfx_idx = item->ubGraphicNum;
-		const ETRLEObject* const e       = GetVideoObjectETRLESubregionProperties(item_vo, gfx_idx);
+		ETRLEObject const* const e       = item_vo->SubregionProperties(gfx_idx);
 		INT16              const cx      = sX + (sWidth  - e->usWidth)  / 2 - e->sOffsetX;
 		INT16              const cy      = sY + (sHeight - e->usHeight) / 2 - e->sOffsetY;
 
@@ -2404,7 +2404,7 @@ void RenderItemDescriptionBox(void)
 	/* display item */
 	{
 		// center in slot, remove offsets
-		const ETRLEObject* const pTrav = GetVideoObjectETRLESubregionProperties(guiItemGraphic, 0);
+		ETRLEObject const* const pTrav = guiItemGraphic->SubregionProperties(0);
 		const SGPBox*      const xy    = (in_map ? &g_desc_item_box_map: &g_desc_item_box);
 		const INT32 x = dx + xy->x + (xy->w - pTrav->usWidth)  / 2 - pTrav->sOffsetX;
 		const INT32 y = dy + xy->y + (xy->h - pTrav->usHeight) / 2 - pTrav->sOffsetY;
@@ -3958,7 +3958,7 @@ try
 	guiItemPopupBoxes = AddVideoObjectFromFile("INTERFACE/extra_inventory.STI");
 
 	// Get size
-	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiItemPopupBoxes, 0);
+	ETRLEObject const* const pTrav = guiItemPopupBoxes->SubregionProperties(0);
 	usPopupWidth = pTrav->usWidth;
 
 	// Get Width, Height
@@ -4061,7 +4061,7 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 
 	}
 	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiItemPopupBoxes, 0);
+	ETRLEObject const* const pTrav = guiItemPopupBoxes->SubregionProperties(0);
 	UINT32 usWidth = pTrav->usWidth;
 
 	for (UINT32 cnt = 0; cnt < gubNumItemPopups; cnt++)
@@ -4151,7 +4151,7 @@ try
 	guiItemPopupBoxes = AddVideoObjectFromFile("INTERFACE/extra_inventory.STI");
 
 	// Get size
-	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiItemPopupBoxes, 0);
+	ETRLEObject const* const pTrav = guiItemPopupBoxes->SubregionProperties(0);
 	UINT16 usPopupWidth = pTrav->usWidth;
 	UINT16 usPopupHeight = pTrav->usHeight;
 
@@ -4221,7 +4221,7 @@ void RenderKeyRingPopup(const BOOLEAN fFullRender)
 	memset(&o, 0, sizeof(o));
 	o.bStatus[0] = 100;
 
-	const ETRLEObject* const pTrav = GetVideoObjectETRLESubregionProperties(guiItemPopupBoxes, 0);
+	ETRLEObject const* const pTrav = guiItemPopupBoxes->SubregionProperties(0);
 	const UINT32 box_w = pTrav->usWidth;
 	const UINT32 box_h = pTrav->usHeight;
 
@@ -4946,13 +4946,13 @@ static void CalculateItemPickupMenuDimensions(void)
 	{
 		// Add height of object
 		UINT16 usSubRegion = (cnt == 0 ? 0 : 1);
-		const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(gItemPickupMenu.uiPanelVo, usSubRegion);
+		ETRLEObject const* const ETRLEProps = gItemPickupMenu.uiPanelVo->SubregionProperties(usSubRegion);
 		sY += ETRLEProps->usHeight;
 	}
 	gItemPickupMenu.sButtomPanelStartY = sY;
 
 	// Do end
-	const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(gItemPickupMenu.uiPanelVo, 2);
+	ETRLEObject const* const ETRLEProps = gItemPickupMenu.uiPanelVo->SubregionProperties(2);
 	sY += ETRLEProps->usHeight;
 
 	// Set height, width
@@ -4998,7 +4998,7 @@ void RenderItemPickupMenu( )
 			BltVideoObject(FRAME_BUFFER, gItemPickupMenu.uiPanelVo, usSubRegion, sX, sY);
 
 			// Add height of object
-			const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(gItemPickupMenu.uiPanelVo, usSubRegion);
+			ETRLEObject const* const ETRLEProps = gItemPickupMenu.uiPanelVo->SubregionProperties(usSubRegion);
 			sY += ETRLEProps->usHeight;
 		}
 

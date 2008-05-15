@@ -933,7 +933,7 @@ static BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
 
 			const INVTYPE* pItem = &Item[usItem];
 			const SGPVObject* const item_vo = GetInterfaceGraphicForItem(pItem);
-			const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(item_vo, pItem->ubGraphicNum);
+			ETRLEObject const* const pTrav = item_vo->SubregionProperties(pItem->ubGraphicNum);
 
 			UINT32 usHeight = pTrav->usHeight;
 			UINT32 usWidth  = pTrav->usWidth;
@@ -1403,7 +1403,7 @@ static BOOLEAN DisplayVideoConferencingDisplay(void)
 
 static BOOLEAN DisplayMercsVideoFace(void)
 {
-	const ETRLEObject* e = GetVideoObjectETRLESubregionProperties(guiVideoConfTerminal, 0);
+	ETRLEObject const* const e = guiVideoConfTerminal->SubregionProperties(0);
 	const INT32 x = AIM_MEMBER_VIDEO_CONF_TERMINAL_X;
 	const INT32 y = AIM_MEMBER_VIDEO_CONF_TERMINAL_Y;
 	const INT32 w = e->usWidth;

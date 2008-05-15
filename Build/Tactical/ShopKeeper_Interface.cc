@@ -2120,7 +2120,7 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	//Display the item graphic, and price
 	const INVTYPE* pItem = &Item[usItemIndex];
 	const SGPVObject* const ItemVOIdx = GetInterfaceGraphicForItem(pItem);
-	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(ItemVOIdx, pItem->ubGraphicNum);
+	ETRLEObject const* const pTrav = ItemVOIdx->SubregionProperties(pItem->ubGraphicNum);
 
 	UINT32 usHeight = pTrav->usHeight;
 	UINT32 usWidth  = pTrav->usWidth;

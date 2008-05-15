@@ -1183,7 +1183,7 @@ static void DisplayCharInventory(const SOLDIERTYPE* const s)
 		const INVTYPE* item     = &Item[item_idx];
 
 		const SGPVObject*  const gfx   = GetInterfaceGraphicForItem(item);
-		const ETRLEObject* const pTrav = GetVideoObjectETRLESubregionProperties(gfx, item->ubGraphicNum);
+		ETRLEObject const* const pTrav = gfx->SubregionProperties(item->ubGraphicNum);
 		const INT16              cen_x = PosX + abs(57 - pTrav->usWidth)  / 2 - pTrav->sOffsetX;
 		const INT16              cen_y = PosY + abs(22 - pTrav->usHeight) / 2 - pTrav->sOffsetY;
 		BltVideoObjectOutline(FRAME_BUFFER, gfx, item->ubGraphicNum, cen_x, cen_y, TRANSPARENT);

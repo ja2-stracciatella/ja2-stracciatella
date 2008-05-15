@@ -757,7 +757,7 @@ static void RenderSelectedItemBlownUp(void)
 
 	//Display the enlarged item graphic
 	const SGPVObject* const vo = GetInterfaceGraphicForItem(&Item[gpItem->usItem]);
-	const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(vo, Item[gpItem->usItem].ubGraphicNum);
+	ETRLEObject const* const ETRLEProps = vo->SubregionProperties(Item[gpItem->usItem].ubGraphicNum);
 	INT16 sWidth   = ETRLEProps->usWidth;
 	INT16 sOffsetX = ETRLEProps->sOffsetX;
 	xp = sScreenX + (40 - sWidth - sOffsetX*2) / 2;

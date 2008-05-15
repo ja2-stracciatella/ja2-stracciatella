@@ -365,7 +365,7 @@ try
 
 	gTalkPanel.uiPanelVO = AddVideoObjectFromFile("INTERFACE/talkbox1.sti");
 
-	const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(gTalkPanel.uiPanelVO, 0);
+	ETRLEObject const* const ETRLEProps = gTalkPanel.uiPanelVO->SubregionProperties(0);
 	gTalkPanel.usWidth  = ETRLEProps->usWidth;
 	gTalkPanel.usHeight	= ETRLEProps->usHeight;
 

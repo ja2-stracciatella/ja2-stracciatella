@@ -732,7 +732,7 @@ static void DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
 	AutoSGPVObject uiImage(LoadTileGraphicForItem(item));
 
 	//center picture in frame
-	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(uiImage, 0);
+	ETRLEObject const* const pTrav = uiImage->SubregionProperties(0);
 	UINT32 usWidth = pTrav->usWidth;
 	INT16  sCenX   = PosX + abs(BOBBYR_GRID_PIC_WIDTH - usWidth) / 2 - pTrav->sOffsetX;
 	INT16  sCenY   = PosY + 8;

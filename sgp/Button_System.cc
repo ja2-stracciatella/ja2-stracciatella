@@ -148,7 +148,7 @@ static BUTTON_PICS* FindFreeButtonSlot(void)
 static void SetMaxSize(BUTTON_PICS* const pics, const INT32 img_idx)
 {
 	if (img_idx == BUTTON_NO_IMAGE) return;
-	const ETRLEObject* const e = GetVideoObjectETRLESubregionProperties(pics->vobj, img_idx);
+	ETRLEObject const* const e = pics->vobj->SubregionProperties(img_idx);
 	const UINT32             w = e->sOffsetX + e->usWidth;
 	const UINT32             h = e->sOffsetY + e->usHeight;
 	if (pics->max.w < w) pics->max.w = w;

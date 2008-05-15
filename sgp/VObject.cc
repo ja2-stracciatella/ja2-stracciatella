@@ -88,6 +88,16 @@ SGPVObject::~SGPVObject()
 }
 
 
+ETRLEObject const* SGPVObject::SubregionProperties(size_t const idx) const
+{
+	if (idx >= usNumberOfObjects)
+	{
+		throw std::logic_error("Tried to access invalid subregion in video object");
+	}
+	return &pETRLEObject[idx];
+}
+
+
 #define COMPRESS_TRANSPARENT				0x80
 #define COMPRESS_RUN_MASK						0x7F
 
@@ -382,13 +392,6 @@ BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETRLEIndex,
 	while (usLoopX < usX);
 	// huh???
 	return FALSE;
-}
-
-
-const ETRLEObject* GetVideoObjectETRLESubregionProperties(const SGPVObject* const vo, const UINT16 usIndex)
-{
-	CHECKN(usIndex < vo->usNumberOfObjects);
-	return &vo->pETRLEObject[usIndex];
 }
 
 

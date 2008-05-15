@@ -210,7 +210,7 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 			// Erase old cursor
 			EraseMouseCursor();
 
-			const ETRLEObject* const pTrav = GetVideoObjectETRLESubregionProperties(guiExternVo, gusExternVoSubIndex);
+			ETRLEObject const* const pTrav = guiExternVo->SubregionProperties(gusExternVoSubIndex);
 			const UINT16 usEffHeight = pTrav->usHeight + pTrav->sOffsetY;
 			const UINT16 usEffWidth  = pTrav->usWidth  + pTrav->sOffsetX;
 

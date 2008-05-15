@@ -36,6 +36,8 @@ class SGPVObject
 		SGPVObject(SGPImage const*);
 		~SGPVObject();
 
+		ETRLEObject const* SubregionProperties(size_t idx) const;
+
 		UINT32           fFlags;                         // Special flags
 		UINT32           uiSizePixData;                  // ETRLE data size
 		SGPPaletteEntry* pPaletteEntry;                  // 8BPP Palette
@@ -87,8 +89,6 @@ UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade);
 // Retrieves an HVOBJECT pixel value
 BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETLREIndex, UINT16 usX, UINT16 usY);
 
-
-const ETRLEObject* GetVideoObjectETRLESubregionProperties(const SGPVObject*, UINT16 usIndex);
 
 BOOLEAN BltVideoObjectOutline(SGPVSurface* dst, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor);
 BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* dst, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY);

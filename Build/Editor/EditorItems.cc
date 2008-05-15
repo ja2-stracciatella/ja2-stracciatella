@@ -309,7 +309,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 
 			const SGPVObject* uiVideoObjectIndex = GetInterfaceGraphicForItem(item);
 			//Calculate the center position of the graphic in a 60 pixel wide area.
-			const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(uiVideoObjectIndex, item->ubGraphicNum);
+			ETRLEObject const* const ETRLEProps = uiVideoObjectIndex->SubregionProperties(item->ubGraphicNum);
 			INT16 sWidth  = ETRLEProps->usWidth;
 			INT16 sOffset = ETRLEProps->sOffsetX;
 			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
@@ -446,7 +446,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 
 				const SGPVObject* const vo = GetInterfaceGraphicForItem(item);
 				//Calculate the center position of the graphic in a 60 pixel wide area.
-				const ETRLEObject* const ETRLEProps = GetVideoObjectETRLESubregionProperties(vo, item->ubGraphicNum);
+				ETRLEObject const* const ETRLEProps = vo->SubregionProperties(item->ubGraphicNum);
 				INT16 sWidth  = ETRLEProps->usWidth;
 				INT16 sOffset = ETRLEProps->sOffsetX;
 				INT16 sStart = x + (60 - sWidth - sOffset*2) / 2;
@@ -526,7 +526,7 @@ void RenderEditorItemsInfo()
 			INT16 y = 360 + (eInfo.sHilitedItemIndex % 2) * 40;
 			const INVTYPE* item = &Item[eInfo.pusItemIndex[eInfo.sHilitedItemIndex]];
 			const SGPVObject* const vo = GetInterfaceGraphicForItem(item);
-			const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(vo, item->ubGraphicNum);
+			ETRLEObject const* const ETRLEProps = vo->SubregionProperties(item->ubGraphicNum);
 			INT16 sWidth  = ETRLEProps->usWidth;
 			INT16 sOffset = ETRLEProps->sOffsetX;
 			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
@@ -545,7 +545,7 @@ void RenderEditorItemsInfo()
 			INT16 y = 360 + (eInfo.sSelItemIndex % 2) * 40;
 			const INVTYPE* item = &Item[eInfo.pusItemIndex[eInfo.sSelItemIndex]];
 			const SGPVObject* const vo = GetInterfaceGraphicForItem(item);
-			const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(vo, item->ubGraphicNum);
+			ETRLEObject const* const ETRLEProps = vo->SubregionProperties(item->ubGraphicNum);
 			INT16 sWidth  = ETRLEProps->usWidth;
 			INT16 sOffset = ETRLEProps->sOffsetX;
 			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
