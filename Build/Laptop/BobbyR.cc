@@ -166,6 +166,7 @@ static BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegio
 
 
 BOOLEAN EnterBobbyR()
+try
 {
 	UINT8 i;
 
@@ -183,28 +184,22 @@ BOOLEAN EnterBobbyR()
 	// load the Bobbyname graphic and add it
 	ImageFile = GetMLGFilename(MLG_BOBBYNAME);
 	guiBobbyName = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiBobbyName != NO_VOBJECT);
 
 	// load the plaque graphic and add it
 	guiPlaque = AddVideoObjectFromFile("LAPTOP/BobbyPlaques.sti");
-	CHECKF(guiPlaque != NO_VOBJECT);
 
 	// load the TopHinge graphic and add it
 	guiTopHinge = AddVideoObjectFromFile("LAPTOP/BobbyTopHinge.sti");
-	CHECKF(guiTopHinge != NO_VOBJECT);
 
 	// load the BottomHinge graphic and add it
 	guiBottomHinge = AddVideoObjectFromFile("LAPTOP/BobbyBottomHinge.sti");
-	CHECKF(guiBottomHinge != NO_VOBJECT);
 
 	// load the Store Plaque graphic and add it
 	ImageFile = GetMLGFilename(MLG_STOREPLAQUE);
 	guiStorePlaque = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiStorePlaque != NO_VOBJECT);
 
 	// load the Handle graphic and add it
 	guiHandle = AddVideoObjectFromFile("LAPTOP/BobbyHandle.sti");
-	CHECKF(guiHandle != NO_VOBJECT);
 
 
 	InitBobbiesMouseRegion(BOBBIES_NUMBER_SIGNS, usMouseRegionPosArray, gSelectedBobbiesSignMenuRegion);
@@ -214,7 +209,6 @@ BOOLEAN EnterBobbyR()
 	{
 		// load the Handle graphic and add it
 		guiUnderConstructionImage = AddVideoObjectFromFile("LAPTOP/UnderConstruction.sti");
-		CHECKF(guiUnderConstructionImage != NO_VOBJECT);
 
 		for(i=0; i<BOBBIES_NUMBER_SIGNS; i++)
 		{
@@ -232,6 +226,7 @@ BOOLEAN EnterBobbyR()
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION* Mouse_Region);
@@ -324,15 +319,15 @@ void RenderBobbyR()
 }
 
 
-
-
 BOOLEAN InitBobbyRWoodBackground()
+try
 {
 	// load the Wood bacground graphic and add it
 	guiWoodBackground = AddVideoObjectFromFile("LAPTOP/BobbyWood.sti");
-	CHECKF(guiWoodBackground != NO_VOBJECT);
 	return TRUE;
 }
+catch (...) { return FALSE; }
+
 
 BOOLEAN DeleteBobbyRWoodBackground()
 {

@@ -264,6 +264,7 @@ static void ClickButton(UINT32 btn)
 
 
 static BOOLEAN EnterGIOScreen(void)
+try
 {
 	UINT16					cnt;
 	UINT16					usPosY;
@@ -274,7 +275,6 @@ static BOOLEAN EnterGIOScreen(void)
 
 	// load the Main trade screen backgroiund image
 	guiGIOMainBackGroundImage = AddVideoObjectFromFile("InterFace/OptionsScreenBackGround.sti");
-	CHECKF(guiGIOMainBackGroundImage != NO_VOBJECT);
 
 	//Ok button
 	giGIODoneBtnImage = LoadButtonImage("INTERFACE/PreferencesButtons.sti", -1,0,-1,2,-1 );
@@ -388,6 +388,7 @@ static BOOLEAN EnterGIOScreen(void)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN ExitGIOScreen(void)

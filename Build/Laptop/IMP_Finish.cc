@@ -336,13 +336,14 @@ static void RenderCharFullName(void)
 
 
 static BOOLEAN LoadCharacterPortrait(void)
+try
 {
   // this function will load the character's portrait, to be used on portrait button
 	// load it
 	guiCHARACTERPORTRAIT = AddVideoObjectFromFile(pPlayerSelectedFaceFileNames[iPortraitNumber]);
-	CHECKF(guiCHARACTERPORTRAIT != NO_VOBJECT);
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void DestroyCharacterPortrait(void)

@@ -134,21 +134,19 @@ static INT32 MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
 
 
 BOOLEAN EnterMercsFiles()
+try
 {
 	InitMercBackGround();
 
 	// load the stats box graphic and add it
 	const char* const ImageFile = GetMLGFilename(MLG_STATSBOX);
 	guiStatsBox = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiStatsBox != NO_VOBJECT);
 
 	// load the Portrait box graphic and add it
 	guiPortraitBox = AddVideoObjectFromFile("LAPTOP/PortraitBox.sti");
-	CHECKF(guiPortraitBox != NO_VOBJECT);
 
 	// load the bio box graphic and add it
 	guiBioBox = AddVideoObjectFromFile("LAPTOP/BioBox.sti");
-	CHECKF(guiBioBox != NO_VOBJECT);
 
 	guiButtonImage  = LoadButtonImage("LAPTOP/BigButtons.sti", -1,0,-1,1,-1 );
 	guiPrevButton     = MakeButton(MercInfo[MERC_FILES_PREVIOUS], MERC_FILES_PREV_BUTTON_X, BtnMercPrevButtonCallback);
@@ -159,6 +157,8 @@ BOOLEAN EnterMercsFiles()
 //	RenderMercsFiles();
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 void ExitMercsFiles()
 {
@@ -284,6 +284,7 @@ static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 
 static void DisplayMercFace(const ProfileID pid)
+try
 {
 	BltVideoObject(FRAME_BUFFER, guiPortraitBox, 0, MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y);
 
@@ -294,7 +295,6 @@ static void DisplayMercFace(const ProfileID pid)
 	char sTemp[100];
   sprintf(sTemp, "FACES/BIGFACES/%02d.sti", pid);
 	AutoSGPVObject face(AddVideoObjectFromFile(sTemp));
-	CHECKV(face != NO_VOBJECT);
 
 	BOOLEAN        shaded;
 	const wchar_t* text;
@@ -347,6 +347,7 @@ static void DisplayMercFace(const ProfileID pid)
 		DisplayWrappedString(MERC_FACE_X, MERC_FACE_Y + MERC_PORTRAIT_TEXT_OFFSET_Y, MERC_FACE_WIDTH, 2, FONT14ARIAL, 145, text, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 }
+catch (...) { /* XXX ignore */ }
 
 
 static void LoadAndDisplayMercBio(UINT8 ubMercID)

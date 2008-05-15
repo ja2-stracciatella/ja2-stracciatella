@@ -93,18 +93,16 @@ static void BtnMercBackButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 BOOLEAN EnterMercsAccount()
+try
 {
 	InitMercBackGround();
 
 	// load the Arrow graphic and add it
 	const char* const ImageFile = GetMLGFilename(MLG_ORDERGRID);
 	guiMercOrderGrid = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiMercOrderGrid != NO_VOBJECT);
 
 	// load the Arrow graphic and add it
 	guiAccountNumberGrid = AddVideoObjectFromFile("LAPTOP/AccountNumber.sti");
-	CHECKF(guiAccountNumberGrid != NO_VOBJECT);
-
 
 	guiMercAuthorizeButtonImage = LoadButtonImage("LAPTOP/BigButtons.sti", -1,0,-1,1,-1 );
 	guiMercAuthorizeBoxButton   = MakeButton(MercAccountText[MERC_ACCOUNT_AUTHORIZE], MERC_AC_AUTHORIZE_BUTTON_X, BtnMercAuthorizeButtonCallback);
@@ -118,6 +116,8 @@ BOOLEAN EnterMercsAccount()
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 void ExitMercsAccount()
 {

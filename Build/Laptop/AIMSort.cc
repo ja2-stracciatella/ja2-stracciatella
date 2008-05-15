@@ -137,6 +137,7 @@ static void SelectToStatsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 BOOLEAN EnterAimSort()
+try
 {
 	//Everytime into Aim Sort, reset array.
 	for (UINT8 i = 0; i < MAX_NUMBER_MERCS; ++i)
@@ -148,28 +149,23 @@ BOOLEAN EnterAimSort()
 
 	// load the SortBy box graphic and add it
 	guiSortByBox = AddVideoObjectFromFile("LAPTOP/SortBy.sti");
-	CHECKF(guiSortByBox != NO_VOBJECT);
 
 	const char* ImageFile;
 
 	// load the ToAlumni graphic and add it
 	ImageFile = GetMLGFilename(MLG_TOALUMNI);
 	guiToAlumni = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiToAlumni != NO_VOBJECT);
 
 	// load the ToMugShots graphic and add it
 	ImageFile = GetMLGFilename(MLG_TOMUGSHOTS);
 	guiToMugShots = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiToMugShots != NO_VOBJECT);
 
 	// load the ToStats graphic and add it
 	ImageFile = GetMLGFilename(MLG_TOSTATS);
 	guiToStats = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiToStats != NO_VOBJECT);
 
 	// load the SelectLight graphic and add it
 	guiSelectLight = AddVideoObjectFromFile("LAPTOP/SelectLight.sti");
-	CHECKF(guiSelectLight != NO_VOBJECT);
 
 
 	//** Mouse Regions **
@@ -201,6 +197,7 @@ BOOLEAN EnterAimSort()
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN SortMercArray(void);

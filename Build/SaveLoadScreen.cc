@@ -378,6 +378,7 @@ static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reas
 
 
 static BOOLEAN EnterSaveLoadScreen(void)
+try
 {
 	INT8	i;
 	UINT16 usPosX = SLG_FIRST_SAVED_SPOT_X;
@@ -423,12 +424,10 @@ static BOOLEAN EnterSaveLoadScreen(void)
 
 	// load Main background  graphic and add it
 	guiSlgBackGroundImage = AddVideoObjectFromFile("INTERFACE/LoadScreen.sti");
-	CHECKF(guiSlgBackGroundImage != NO_VOBJECT);
 
 	// load Load Screen Add ons graphic and add it
 	const char* const ImageFile = GetMLGFilename(MLG_LOADSAVEHEADER);
 	guiBackGroundAddOns = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiBackGroundAddOns != NO_VOBJECT);
 
 	guiSlgButtonImage = LoadButtonImage("INTERFACE/LoadScreenAddOns.sti", -1,6,-1,9,-1 );
 //	guiSlgButtonImage = UseLoadedButtonImage( guiBackGroundAddOns, -1,9,-1,6,-1 );
@@ -600,6 +599,7 @@ Removed so that the user can click on it and get displayed a message that the qu
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void ExitSaveLoadScreen(void)

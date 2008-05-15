@@ -5682,14 +5682,14 @@ void CreateMercRemoveAssignBox()
 
 
 void CreateDestroyAssignmentPopUpBoxes()
+try
 {
 	static BOOLEAN fCreated = FALSE;
 
 	if (!fCreated && fShowAssignmentMenu)
 	{
 		guiPOPUPBORDERS = AddVideoObjectFromFile("INTERFACE/popup.sti");
-		CHECKV(guiPOPUPBORDERS != NO_VOBJECT);
-		guiPOPUPTEX = AddVideoSurfaceFromFile("INTERFACE/popupbackground.pcx");
+		guiPOPUPTEX     = AddVideoSurfaceFromFile("INTERFACE/popupbackground.pcx");
 
 		// these boxes are always created while in mapscreen...
 		CreateEPCBox();
@@ -5732,6 +5732,7 @@ void CreateDestroyAssignmentPopUpBoxes()
 		fCreated          = FALSE;
 	}
 }
+catch (...) { /* XXX ignore */ }
 
 
 void DetermineBoxPositions()

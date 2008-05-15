@@ -180,6 +180,7 @@ static void InitButtonImage(BUTTON_PICS* const pics, const HVOBJECT VObj, const 
 
 
 BUTTON_PICS* LoadButtonImage(const char* filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
+try
 {
 	AssertMsg(filename != NULL, "Attempting to LoadButtonImage() with null filename.");
 
@@ -201,15 +202,11 @@ BUTTON_PICS* LoadButtonImage(const char* filename, INT32 Grayed, INT32 OffNormal
 	}
 
 	SGPVObject* const VObj = AddVideoObjectFromFile(filename);
-	if (VObj == NULL)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Couldn't create VOBJECT for %s", filename));
-		return NULL;
-	}
 
 	InitButtonImage(UseSlot, VObj, GUI_BTN_NONE, Grayed, OffNormal, OffHilite, OnNormal, OnHilite);
 	return UseSlot;
 }
+catch (...) { return 0; }
 
 
 BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* const LoadedImg, const INT32 Grayed, const INT32 OffNormal, const INT32 OffHilite, const INT32 OnNormal, const INT32 OnHilite)
@@ -312,6 +309,7 @@ void DisableButton(INT32 iButtonID)
  * InitButtonSystem.
  */
 static BOOLEAN InitializeButtonImageManager(void)
+try
 {
 	// Blank out all QuickButton images
 	for (int x = 0; x < MAX_BUTTON_PICS; ++x)
@@ -338,26 +336,23 @@ static BOOLEAN InitializeButtonImageManager(void)
 
 	// Load the default generic button images
 	GenericButtonOffNormal = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_OFF);
-	if (GenericButtonOffNormal == NULL)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "Couldn't create VOBJECT for "DEFAULT_GENERIC_BUTTON_OFF);
-		return FALSE;
-	}
-
-	GenericButtonOnNormal = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON);
-	if (GenericButtonOnNormal == NULL)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "Couldn't create VOBJECT for "DEFAULT_GENERIC_BUTTON_ON);
-		return FALSE;
-	}
+	GenericButtonOnNormal  = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON);
 
 	/* Load up the off hilite and on hilite images. We won't check for errors
 	 * because if the file doesn't exists, the system simply ignores that file.
 	 * These are only here as extra images, they aren't required for operation
 	 * (only OFF Normal and ON Normal are required).
 	 */
-	GenericButtonOffHilite = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_OFF_HI);
-	GenericButtonOnHilite  = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON_HI);
+	try
+	{
+		GenericButtonOffHilite = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_OFF_HI);
+	}
+	catch (...) { /* see comment above */ }
+	try
+	{
+		GenericButtonOnHilite  = AddVideoObjectFromFile(DEFAULT_GENERIC_BUTTON_ON_HI);
+	}
+	catch (...) { /* see comment above */ }
 
 	UINT8 Pix = 0;
 	if (!GetETRLEPixelValue(&Pix, GenericButtonOffNormal, 8, 0, 0))
@@ -370,6 +365,7 @@ static BOOLEAN InitializeButtonImageManager(void)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 // Finds the next available slot for button icon images.
@@ -384,6 +380,7 @@ static INT16 FindFreeIconSlot(void)
 
 
 INT16 LoadGenericButtonIcon(const char* filename)
+try
 {
 	AssertMsg(filename != NULL, "Attempting to LoadGenericButtonIcon() with null filename.");
 
@@ -397,15 +394,11 @@ INT16 LoadGenericButtonIcon(const char* filename)
 
 	// Load the icon
 	GenericButtonIcons[ImgSlot] = AddVideoObjectFromFile(filename);
-	if (GenericButtonIcons[ImgSlot] == NULL)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("LoadGenericButtonIcon: Couldn't create VOBJECT for %s", filename));
-		return BUTTON_NO_SLOT;
-	}
 
 	// Return the slot number
 	return ImgSlot;
 }
+catch (...) { return BUTTON_NO_SLOT; }
 
 
 void UnloadGenericButtonIcon(INT16 GenImg)

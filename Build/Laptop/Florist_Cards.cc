@@ -56,6 +56,7 @@ static void SelectFloristCardsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 
 
 BOOLEAN EnterFloristCards()
+try
 {
 	UINT16 i, j, usPosX, usPosY;
 	UINT8						ubCount;
@@ -64,7 +65,6 @@ BOOLEAN EnterFloristCards()
 
 	// load the Flower Account Box graphic and add it
 	guiCardBackground = AddVideoObjectFromFile("LAPTOP/CardBlank.sti");
-	CHECKF(guiCardBackground != NO_VOBJECT);
 
 	ubCount = 0;
 	usPosY = FLORIST_CARD_FIRST_POS_Y;
@@ -99,6 +99,8 @@ BOOLEAN EnterFloristCards()
 	RenderFloristCards();
 	return(TRUE);
 }
+catch (...) { return FALSE; }
+
 
 void ExitFloristCards()
 {

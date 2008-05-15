@@ -334,28 +334,25 @@ static void DrawFilesTitleText(void)
 
 
 static BOOLEAN LoadFiles(void)
+try
 {
   // load files video objects into memory
 
 	// title bar
 	guiTITLE = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
-	CHECKF(guiTITLE != NO_VOBJECT);
 
 	// top portion of the screen background
 	guiTOP = AddVideoObjectFromFile("LAPTOP/fileviewer.sti");
-	CHECKF(guiTOP != NO_VOBJECT);
-
 
 	// the highlight
 	guiHIGHLIGHT = AddVideoObjectFromFile("LAPTOP/highlight.sti");
-	CHECKF(guiHIGHLIGHT != NO_VOBJECT);
 
   	// top portion of the screen background
 	guiFileBack = AddVideoObjectFromFile("LAPTOP/fileviewerwhite.sti");
-	CHECKF(guiFileBack != NO_VOBJECT);
 
 	return (TRUE);
 }
+catch (...) { return FALSE; }
 
 
 static void RemoveFiles(void)

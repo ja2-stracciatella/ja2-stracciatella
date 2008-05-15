@@ -345,6 +345,7 @@ static void SelectShippingSpeedRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 
 
 BOOLEAN EnterBobbyRMailOrder()
+try
 {
 	UINT16					i;
 
@@ -356,36 +357,28 @@ BOOLEAN EnterBobbyRMailOrder()
 
 	// load the Order Grid graphic and add it
 	guiBobbyROrderGrid = AddVideoObjectFromFile("LAPTOP/BobbyOrderGrid.sti");
-	CHECKF(guiBobbyROrderGrid != NO_VOBJECT);
 
 	// load the Location graphic and add it
 	guiBobbyRLocationGraphic = AddVideoObjectFromFile("LAPTOP/BobbyLocationBox.sti");
-	CHECKF(guiBobbyRLocationGraphic != NO_VOBJECT);
 
 	// load the delivery speed graphic and add it
 	guiDeliverySpeedGraphic = AddVideoObjectFromFile("LAPTOP/BobbyDeliverySpeed.sti");
-	CHECKF(guiDeliverySpeedGraphic != NO_VOBJECT);
 
 	// load the delivery speed graphic and add it
 	const char* const ImageFile = GetMLGFilename(MLG_CONFIRMORDER);
 	guiConfirmGraphic = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiConfirmGraphic != NO_VOBJECT);
 
 	// load the delivery speed graphic and add it
 	guiTotalSaveArea = AddVideoObjectFromFile("LAPTOP/TotalSaveArea.sti");
-	CHECKF(guiTotalSaveArea != NO_VOBJECT);
 
   // border
 	guiDropDownBorder = AddVideoObjectFromFile("INTERFACE/TactPopUp.sti");
-	CHECKF(guiDropDownBorder != NO_VOBJECT);
 
   // Gold Arrow for the scroll area
 	guiGoldArrowImages = AddVideoObjectFromFile("LAPTOP/GoldArrows.sti");
-	CHECKF(guiGoldArrowImages != NO_VOBJECT);
 
   // Package Weight Graphic
 	guiPackageWeightImage = AddVideoObjectFromFile("LAPTOP/PackageWeight.sti");
-	CHECKF(guiPackageWeightImage != NO_VOBJECT);
 
 
 	InitBobbyRWoodBackground();
@@ -459,6 +452,7 @@ BOOLEAN EnterBobbyRMailOrder()
 	RenderBobbyRMailOrder();
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction);
@@ -2008,10 +2002,10 @@ static void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON* btn, INT32 reason)
 
 
 BOOLEAN CreateBobbyRayOrderTitle()
+try
 {
 		// load BobbyRayTitle graphic and add it
 	guiBobbyRayTitle = AddVideoObjectFromFile("LAPTOP/BobbyRayTitle.sti");
-	CHECKF(guiBobbyRayTitle != NO_VOBJECT);
 
 	//the link to home page from the title
 	MSYS_DefineRegion( &gSelectedTitleLinkRegion, BOBBYR_BOBBY_RAY_TITLE_X, BOBBYR_BOBBY_RAY_TITLE_Y, (BOBBYR_BOBBY_RAY_TITLE_X + BOBBYR_BOBBY_RAY_TITLE_WIDTH), (UINT16)(BOBBYR_BOBBY_RAY_TITLE_Y + BOBBYR_BOBBY_RAY_TITLE_HEIGHT), MSYS_PRIORITY_HIGH,
@@ -2019,6 +2013,7 @@ BOOLEAN CreateBobbyRayOrderTitle()
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 void DestroyBobbyROrderTitle()

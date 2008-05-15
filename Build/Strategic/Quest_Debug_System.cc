@@ -709,6 +709,7 @@ static void ScrollQuestListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 static BOOLEAN EnterQuestDebugSystem(void)
+try
 {
 	UINT8	i;
 	UINT16 usPosX, usPosY;
@@ -815,15 +816,9 @@ static BOOLEAN EnterQuestDebugSystem(void)
 		usPosY += usFontHeight;
 	}
 
-
-
 	// load Scroll Horizontal Arrow graphic and add it
-	guiQdScrollArrowImage = AddVideoObjectFromFile("INTERFACE/Qd_ScrollArrows.sti");
-	CHECKF(guiQdScrollArrowImage != NO_VOBJECT);
-
+	guiQdScrollArrowImage          = AddVideoObjectFromFile("INTERFACE/Qd_ScrollArrows.sti");
 	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
-	CHECKF(guiBrownBackgroundForTeamPanel != NO_VOBJECT);
-
 
 	gfRedrawQuestDebugSystem = TRUE;
 
@@ -872,6 +867,7 @@ static BOOLEAN EnterQuestDebugSystem(void)
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void);

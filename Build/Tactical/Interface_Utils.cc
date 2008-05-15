@@ -62,6 +62,7 @@ const char *pbCarPortraitFileNames[] = {
 
 // load int he portraits for the car faces that will be use in mapscreen
 BOOLEAN LoadCarPortraitValues( void )
+try
 {
 	INT32 iCounter = 0;
 
@@ -69,10 +70,11 @@ BOOLEAN LoadCarPortraitValues( void )
 	for( iCounter = 0; iCounter < NUMBER_CAR_PORTRAITS; iCounter++ )
 	{
 		giCarPortraits[iCounter] = AddVideoObjectFromFile(pbCarPortraitFileNames[iCounter]);
-		CHECKF(giCarPortraits[iCounter] != NO_VOBJECT);
 	}
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 // get rid of the images we loaded for the mapscreen car portraits
 void UnLoadCarPortraits( void )

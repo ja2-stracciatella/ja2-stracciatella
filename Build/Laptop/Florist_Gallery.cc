@@ -212,6 +212,7 @@ static void BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 
 static BOOLEAN InitFlowerButtons(void)
+try
 {
 	UINT16 i,j, count;
 	UINT16 usPosY;
@@ -231,7 +232,6 @@ static BOOLEAN InitFlowerButtons(void)
 		// load the handbullet graphic and add it
 		sprintf( sTemp, "LAPTOP/Flower_%d.sti", count);
 		guiFlowerImages[i] = AddVideoObjectFromFile(sTemp);
-		CHECKF(guiFlowerImages[i] != NO_VOBJECT);
 		count++;
 	}
 
@@ -266,6 +266,7 @@ static BOOLEAN InitFlowerButtons(void)
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 static void DeleteFlowerButtons(void)

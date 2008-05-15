@@ -58,6 +58,7 @@ static void SelectLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 BOOLEAN EnterAimLinks()
+try
 {
 	UINT16					usPosY;
 	INT16						i;
@@ -70,17 +71,14 @@ BOOLEAN EnterAimLinks()
 	// load the Bobby link graphic and add it
 	ImageFile = GetMLGFilename(MLG_BOBBYRAYLINK);
 	guiBobbyLink = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiBobbyLink != NO_VOBJECT);
 
 	// load the Funeral graphic and add it
 	ImageFile = GetMLGFilename(MLG_MORTUARYLINK);
 	guiFuneralLink = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiFuneralLink != NO_VOBJECT);
 
 	// load the Insurance graphic and add it
 	ImageFile = GetMLGFilename(MLG_INSURANCELINK);
 	guiInsuranceLink = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiInsuranceLink != NO_VOBJECT);
 
 	usPosY = AIM_LINK_BOBBY_LINK_Y;
 	for(i=0; i<AIM_LINK_NUM_LINKS; i++)
@@ -95,6 +93,8 @@ BOOLEAN EnterAimLinks()
 	RenderAimLinks();
 	return(TRUE);
 }
+catch (...) { return FALSE; }
+
 
 void ExitAimLinks()
 {

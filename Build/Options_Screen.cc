@@ -265,6 +265,7 @@ static void SpeechSliderChangeCallBack(INT32 iNewValue);
 
 
 static BOOLEAN EnterOptionsScreen(void)
+try
 {
 	//if we are coming from mapscreen
 	if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
@@ -293,12 +294,10 @@ static BOOLEAN EnterOptionsScreen(void)
 
 	// load the options screen background graphic and add it
 	guiOptionBackGroundImage = AddVideoObjectFromFile("INTERFACE/OptionScreenBase.sti");
-	CHECKF(guiOptionBackGroundImage != NO_VOBJECT);
 
 	// load button, title graphic and add it
 	const char* const ImageFile = GetMLGFilename(MLG_OPTIONHEADER);
 	guiOptionsAddOnImages = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiOptionsAddOnImages != NO_VOBJECT);
 
 	giOptionsButtonImages = LoadButtonImage("INTERFACE/OptionScreenAddons.sti", -1, 2, -1, 3, -1);
 
@@ -398,6 +397,7 @@ static BOOLEAN EnterOptionsScreen(void)
   gfSettingOfDontAnimateSmoke = gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ];
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void GetOptionsScreenToggleBoxes(void);

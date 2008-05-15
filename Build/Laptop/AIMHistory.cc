@@ -105,6 +105,7 @@ static BOOLEAN InitAimHistoryMenuBar(void);
 
 
 BOOLEAN EnterAimHistory()
+try
 {
 	gfExitingAimHistory = FALSE;
 	InitAimDefaults();
@@ -112,7 +113,6 @@ BOOLEAN EnterAimHistory()
 
 	// load the Content Buttons graphic and add it
 	guiContentButton = AddVideoObjectFromFile("LAPTOP/ContentButton.sti");
-	CHECKF(guiContentButton != NO_VOBJECT);
 
 	gubCurPageNum = (UINT8) giCurrentSubPage;
 	RenderAimHistory();
@@ -122,6 +122,7 @@ BOOLEAN EnterAimHistory()
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN ExitAimHistoryMenuBar(void);

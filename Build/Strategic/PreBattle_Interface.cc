@@ -385,7 +385,6 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	//Create the panel
 	const char* const ImageFile = GetMLGFilename(MLG_PREBATTLEPANEL);
 	uiInterfaceImages = AddVideoObjectFromFile(ImageFile);
-	AssertMsg(uiInterfaceImages != NO_VOBJECT, "Failed to load interface/PreBattlePanel.sti");
 
 	//Create the 3 buttons
 	iPBButtonImage[0] = LoadButtonImage( "INTERFACE/PreBattleButton.sti", -1, 0, -1, 1, -1 );

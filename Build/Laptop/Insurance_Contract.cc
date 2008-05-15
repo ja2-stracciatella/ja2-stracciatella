@@ -167,6 +167,7 @@ static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 
 
 BOOLEAN EnterInsuranceContract()
+try
 {
 	UINT16					usPosX,i;
 
@@ -181,11 +182,9 @@ BOOLEAN EnterInsuranceContract()
 
 	// load the Insurance title graphic and add it
 	guiInsOrderGridImage = AddVideoObjectFromFile("LAPTOP/InsOrderGrid.sti");
-	CHECKF(guiInsOrderGridImage != NO_VOBJECT);
 
 	// load the Insurance bullet graphic and add it
 	guiInsOrderBulletImage = AddVideoObjectFromFile("LAPTOP/bullet.sti");
-	CHECKF(guiInsOrderBulletImage != NO_VOBJECT);
 
 
 	usPosX = INS_CTRCT_BOTTOM_LINK_RED_BAR_X;
@@ -213,6 +212,8 @@ BOOLEAN EnterInsuranceContract()
 //	RenderInsuranceContract();
 	return(TRUE);
 }
+catch (...) { return FALSE; }
+
 
 void ExitInsuranceContract()
 {
@@ -385,6 +386,7 @@ static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(const SOLDIERTYPE* pSo
 
 
 static BOOLEAN DisplayOrderGrid(const UINT8 ubGridNumber, SOLDIERTYPE* const pSoldier)
+try
 {
 	const ProfileID ubMercID = pSoldier->ubProfile;
 	INT32		iCostOfContract=0;
@@ -405,7 +407,6 @@ static BOOLEAN DisplayOrderGrid(const UINT8 ubGridNumber, SOLDIERTYPE* const pSo
 		char sTemp[100];
 		sprintf(sTemp, "FACES/%02d.sti", ubMercID);
 		AutoSGPVObject uiInsMercFaceImage(AddVideoObjectFromFile(sTemp));
-		CHECKF(uiInsMercFaceImage != NO_VOBJECT);
 
 		//if the merc is dead, shade the face red
 		if( IsMercDead( ubMercID ) )
@@ -577,6 +578,7 @@ static BOOLEAN DisplayOrderGrid(const UINT8 ubGridNumber, SOLDIERTYPE* const pSo
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void HandleAcceptButton(SOLDIERTYPE* s);

@@ -237,69 +237,23 @@ BOOLEAN InitializeTacticalInterface(  )
 	// Load interface panels
 	// failing the CHECKF after this will cause you to lose your mouse
 
-	// LOAD CLOSE ANIM
-	guiCLOSE = AddVideoObjectFromFile("INTERFACE/p_close.sti");
-	AssertMsg(guiCLOSE != NO_VOBJECT, "Missing INTERFACE/p_close.sti");
-
-	// LOAD DEAD ANIM
-	guiDEAD = AddVideoObjectFromFile("INTERFACE/p_dead.sti");
-	AssertMsg(guiDEAD != NO_VOBJECT, "Missing INTERFACE/p_dead.sti");
-
-	// LOAD HATCH
-	guiHATCH = AddVideoObjectFromFile("INTERFACE/hatch.sti");
-	AssertMsg(guiHATCH != NO_VOBJECT, "Missing INTERFACE/hatch.sti");
-
-	// LOAD INTERFACE GUN PICTURES
-	guiGUNSM = AddVideoObjectFromFile("INTERFACE/mdguns.sti");
-	AssertMsg(guiGUNSM != NO_VOBJECT, "Missing INTERFACE/mdguns.sti");
-
-	// LOAD INTERFACE ITEM PICTURES
-	guiP1ITEMS = AddVideoObjectFromFile("INTERFACE/mdp1items.sti");
-	AssertMsg(guiP1ITEMS != NO_VOBJECT, "Missing INTERFACE/mdplitems.sti");
-
-	// LOAD INTERFACE ITEM PICTURES
-	guiP2ITEMS = AddVideoObjectFromFile("INTERFACE/mdp2items.sti");
-	AssertMsg(guiP2ITEMS != NO_VOBJECT, "Missing INTERFACE/mdp2items.sti");
-
-	// LOAD INTERFACE ITEM PICTURES
-	guiP3ITEMS = AddVideoObjectFromFile("INTERFACE/mdp3items.sti");
-	AssertMsg(guiP3ITEMS != NO_VOBJECT, "Missing INTERFACE/mdp3items.sti");
-
-	// LOAD INTERFACE BUTTON BORDER
-	guiBUTTONBORDER = AddVideoObjectFromFile("INTERFACE/button_frame.sti");
-	AssertMsg(guiBUTTONBORDER != NO_VOBJECT, "Missing INTERFACE/button_frame.sti");
-
-	// LOAD AIM CUBES
-	guiAIMCUBES = AddVideoObjectFromFile("INTERFACE/aimcubes.sti");
-	AssertMsg(guiAIMCUBES != NO_VOBJECT, "Missing INTERFACE/aimcubes.sti");
-
-	// LOAD AIM BARS
-	guiAIMBARS = AddVideoObjectFromFile("INTERFACE/aimbars.sti");
-	AssertMsg(guiAIMBARS != NO_VOBJECT, "Missing INTERFACE/aimbars.sti");
-
-	guiVEHINV = AddVideoObjectFromFile("INTERFACE/inventor.sti");
-	AssertMsg(guiVEHINV != NO_VOBJECT, "Missing INTERFACE/inventor.sti");
-
-	guiBURSTACCUM = AddVideoObjectFromFile("INTERFACE/burst1.sti");
-	AssertMsg(guiBURSTACCUM != NO_VOBJECT, "Missing INTERFACE/burst1.sti");
-
+	guiCLOSE         = AddVideoObjectFromFile("INTERFACE/p_close.sti");
+	guiDEAD          = AddVideoObjectFromFile("INTERFACE/p_dead.sti");
+	guiHATCH         = AddVideoObjectFromFile("INTERFACE/hatch.sti");
+	guiGUNSM         = AddVideoObjectFromFile("INTERFACE/mdguns.sti");    // interface gun pictures
+	guiP1ITEMS       = AddVideoObjectFromFile("INTERFACE/mdp1items.sti"); // interface item pictures
+	guiP2ITEMS       = AddVideoObjectFromFile("INTERFACE/mdp2items.sti"); // interface item pictures
+	guiP3ITEMS       = AddVideoObjectFromFile("INTERFACE/mdp3items.sti"); // interface item pictures
+	guiBUTTONBORDER  = AddVideoObjectFromFile("INTERFACE/button_frame.sti");
+	guiAIMCUBES      = AddVideoObjectFromFile("INTERFACE/aimcubes.sti");
+	guiAIMBARS       = AddVideoObjectFromFile("INTERFACE/aimbars.sti");
+	guiVEHINV        = AddVideoObjectFromFile("INTERFACE/inventor.sti");
+	guiBURSTACCUM    = AddVideoObjectFromFile("INTERFACE/burst1.sti");
 	guiPORTRAITICONS = AddVideoObjectFromFile("INTERFACE/portraiticons.sti");
-	AssertMsg(guiPORTRAITICONS != NO_VOBJECT, "Missing INTERFACE/portraiticons.sti");
-
-	// LOAD RADIO
-	guiRADIO = AddVideoObjectFromFile("INTERFACE/radio.sti");
-	AssertMsg(guiRADIO != NO_VOBJECT, "Missing INTERFACE/radio.sti");
-
-	// LOAD RADIO2
-	guiRADIO2 = AddVideoObjectFromFile("INTERFACE/radio2.sti");
-	AssertMsg(guiRADIO2 != NO_VOBJECT, "Missing INTERFACE/radio2.sti");
-
-	// LOAD com panel 2
-	guiCOMPANEL = AddVideoObjectFromFile("INTERFACE/communicationpopup.sti");
-	AssertMsg(guiCOMPANEL != NO_VOBJECT, "Missing INTERFACE/communicationpopup.sti");
-
-	guiCOMPANELB = AddVideoObjectFromFile("INTERFACE/communicationpopup_2.sti");
-	AssertMsg(guiCOMPANELB != NO_VOBJECT, "Missing INTERFACE/communicationpopup_2.sti");
+	guiRADIO         = AddVideoObjectFromFile("INTERFACE/radio.sti");
+	guiRADIO2        = AddVideoObjectFromFile("INTERFACE/radio2.sti");
+	guiCOMPANEL      = AddVideoObjectFromFile("INTERFACE/communicationpopup.sti");
+	guiCOMPANELB     = AddVideoObjectFromFile("INTERFACE/communicationpopup_2.sti");
 
 	gTopMessage.uiSurface = AddVideoSurface(SCREEN_WIDTH, 20, PIXEL_DEPTH);
 
@@ -2086,7 +2040,6 @@ static void CreateTopMessage(void)
 	const SGPBox* const bar = &g_progress_bar_box;
 	{
 		AutoSGPVObject bar_vo(AddVideoObjectFromFile(bar_file));
-		AssertMsg(bar_vo != NO_VOBJECT, String("Missing %s", bar_file));
 
 		BltVideoObject(dst, bar_vo, bar_gfx, 0, 0);
 

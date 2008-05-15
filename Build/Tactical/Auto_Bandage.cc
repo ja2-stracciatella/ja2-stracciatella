@@ -961,7 +961,6 @@ static BOOLEAN AddFacesToAutoBandageBox(void)
 
 		// grab panels
 	giMercPanelImage = AddVideoObjectFromFile("Interface/panels.sti");
-	AssertMsg(giMercPanelImage != NO_VOBJECT, "Failed to load Interface/panels.sti");
 
 	return( TRUE );
 }

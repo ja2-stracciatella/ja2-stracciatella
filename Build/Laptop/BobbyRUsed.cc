@@ -16,14 +16,13 @@ static SGPVObject* guiUsedGrid;
 
 
 BOOLEAN EnterBobbyRUsed()
+try
 {
 	// load the background graphic and add it
 	guiUsedBackground = AddVideoObjectFromFile("LAPTOP/usedbackground.sti");
-	CHECKF(guiUsedBackground != NO_VOBJECT);
 
 	// load the gunsgrid graphic and add it
 	guiUsedGrid = AddVideoObjectFromFile("LAPTOP/usedgrid.sti");
-	CHECKF(guiUsedGrid != NO_VOBJECT);
 
 	InitBobbyBrTitle();
 
@@ -36,6 +35,7 @@ BOOLEAN EnterBobbyRUsed()
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 void ExitBobbyRUsed()

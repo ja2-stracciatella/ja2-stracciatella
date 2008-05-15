@@ -103,6 +103,7 @@ static void SelectInsuranceLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 
 
 BOOLEAN EnterInsuranceInfo()
+try
 {
 	UINT16					usPosX;
 
@@ -110,8 +111,6 @@ BOOLEAN EnterInsuranceInfo()
 
 	// load the Insurance bullet graphic and add it
 	guiBulletImage = AddVideoObjectFromFile("LAPTOP/bullet.sti");
-	CHECKF(guiBulletImage != NO_VOBJECT);
-
 
 	//left arrow
 	guiInsPrevButtonImage	= LoadButtonImage("LAPTOP/InsLeftButton.sti", 2,0,-1,1,-1 );
@@ -137,6 +136,8 @@ BOOLEAN EnterInsuranceInfo()
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
+
 
 void ExitInsuranceInfo()
 {

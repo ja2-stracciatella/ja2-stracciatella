@@ -173,6 +173,7 @@ static BOOLEAN InitAimPolicyMenuBar(void);
 
 
 BOOLEAN EnterAimPolicies()
+try
 {
 	InitAimDefaults();
 
@@ -188,11 +189,11 @@ BOOLEAN EnterAimPolicies()
 
 	// load the Content Buttons graphic and add it
 	guiContentButton = AddVideoObjectFromFile("LAPTOP/ContentButton.sti");
-	CHECKF(guiContentButton != NO_VOBJECT);
 
 	RenderAimPolicies();
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN ExitAgreementButton(void);

@@ -115,13 +115,13 @@ BOOLEAN gfCheckForCursorOverMapSectorInventoryItem = FALSE;
 
 // load the background panel graphics for inventory
 BOOLEAN LoadInventoryPoolGraphic( void )
+try
 {
 	// add to V-object index
 	guiMapInventoryPoolBackground = AddVideoObjectFromFile("INTERFACE/sector_inventory.sti");
-	CHECKF(guiMapInventoryPoolBackground != NO_VOBJECT);
-
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 

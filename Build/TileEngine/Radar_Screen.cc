@@ -77,6 +77,7 @@ void InitRadarScreen()
 
 
 void LoadRadarScreenBitmap(const char* const filename)
+try
 {
 	ClearOutRadarMapImage();
 
@@ -87,7 +88,6 @@ void LoadRadarScreenBitmap(const char* const filename)
 	SGPFILENAME image_filename;
 	sprintf(image_filename, "RADARMAPS/%.*s.STI", (int)base_len, filename);
 	SGPVObject* const radar = AddVideoObjectFromFile(image_filename);
-	CHECKV(radar != NO_VOBJECT);
 	gusRadarImage = radar;
 
 	// ATE: Add a shade table!
@@ -98,6 +98,7 @@ void LoadRadarScreenBitmap(const char* const filename)
 	// Dirty interface
 	fInterfacePanelDirty = TRUE;
 }
+catch (...) { /* XXX ignore */ }
 
 
 void ClearOutRadarMapImage( void )

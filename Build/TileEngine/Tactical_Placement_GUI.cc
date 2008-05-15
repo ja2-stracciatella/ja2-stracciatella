@@ -225,9 +225,7 @@ void InitTacticalPlacementGUI()
 
 	//Load the images
 	giOverheadPanelImage = AddVideoObjectFromFile("Interface/OverheadInterface.sti");
-	AssertMsg(giOverheadPanelImage != NO_VOBJECT, "Failed to load Interface/OverheadInterface.sti");
-	giMercPanelImage = AddVideoObjectFromFile("Interface/panels.sti");
-	AssertMsg(giMercPanelImage != NO_VOBJECT, "Failed to load Interface/panels.sti");
+	giMercPanelImage     = AddVideoObjectFromFile("Interface/panels.sti");
 
 	giOverheadButtonImages[ DONE_BUTTON ] = LoadButtonImage( "Interface/OverheadUIButtons.sti", -1, 0, -1, 1, -1 );
 	AssertMsg(giOverheadButtonImages[DONE_BUTTON] != NULL, "Failed to load Interface/OverheadUIButtons.sti");
@@ -316,11 +314,13 @@ void InitTacticalPlacementGUI()
 		//Load the faces
 		SGPFILENAME ImageFile;
 		sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[gMercPlacement[i].pSoldier->ubProfile].ubFaceIndex);
-		gMercPlacement[i].uiVObjectID = AddVideoObjectFromFile(ImageFile);
-		if (gMercPlacement[i].uiVObjectID == NO_VOBJECT)
+		try
+		{
+			gMercPlacement[i].uiVObjectID = AddVideoObjectFromFile(ImageFile);
+		}
+		catch (...)
 		{
 			gMercPlacement[i].uiVObjectID = AddVideoObjectFromFile("Faces/65Face/speck.sti");
-			AssertMsg(gMercPlacement[i].uiVObjectID != NO_VOBJECT, String("Failed to load %Faces/65Face/%03d.sti or it's placeholder, speck.sti", gMercProfiles[gMercPlacement[i].pSoldier->ubProfile].ubFaceIndex));
 		}
 		const INT32 xp = 91 + i / 2 * 54;
 		const INT32 yp = (i % 2 ? 412 : 361);

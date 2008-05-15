@@ -55,13 +55,12 @@ static INT32 MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
 
 
 BOOLEAN EnterMercsNoAccount()
+try
 {
 	InitMercBackGround();
 
 	// load the Account box graphic and add it
 	guiNoAccountImage = AddVideoObjectFromFile("LAPTOP/NoAccountBox.sti");
-	CHECKF(guiNoAccountImage != NO_VOBJECT);
-
 
 	// Open Accouint button
 	guiOpenAccountBoxButtonImage = LoadButtonImage("LAPTOP/BigButtons.sti", -1,0,-1,1,-1 );
@@ -72,6 +71,8 @@ BOOLEAN EnterMercsNoAccount()
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
+
 
 void ExitMercsNoAccount()
 {

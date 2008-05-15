@@ -3655,6 +3655,7 @@ void ShowUpdateBox( void )
 	fShowUpdateBox = TRUE;
 }
 
+
 void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
 {
 	INT32 iCounter = 0;
@@ -3672,7 +3673,6 @@ void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
 	if( pUpdateSoldierBox[ iCounter ] == NULL )
 	{
 		giMercPanelImage = AddVideoObjectFromFile("Interface/panels.sti");
-		AssertMsg(giMercPanelImage != NO_VOBJECT, "Failed to load Interface/panels.sti");
 	}
 
 	// run thought list of update soldiers
@@ -3692,6 +3692,7 @@ void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
 		}
 	}
 }
+
 
 void SetSoldierUpdateBoxReason( INT32 iReason )
 {

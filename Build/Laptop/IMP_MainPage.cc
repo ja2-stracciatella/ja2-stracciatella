@@ -490,13 +490,13 @@ static void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION* pRegion, INT32 iRe
 
 
 static BOOLEAN LoadCharacterPortraitForMainPage(void)
+try
 {
   // this function will load the character's portrait, to be used on portrait button
 	if( iCurrentProfileMode >= 4 )
 	{
 		// load it
 		guiCHARACTERPORTRAITFORMAINPAGE = AddVideoObjectFromFile(pPlayerSelectedFaceFileNames[iPortraitNumber]);
-		CHECKF(guiCHARACTERPORTRAITFORMAINPAGE != NO_VOBJECT);
 
 	// now specify
 	SpecifyButtonIcon(  giIMPMainPageButton[4], guiCHARACTERPORTRAITFORMAINPAGE, 0,
@@ -505,3 +505,4 @@ static BOOLEAN LoadCharacterPortraitForMainPage(void)
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }

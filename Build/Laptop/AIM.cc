@@ -199,6 +199,7 @@ static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 BOOLEAN EnterAIM()
+try
 {
 	gubCurrentAdvertisment = AIM_AD_WARNING_BOX;
 	LaptopInitAim();
@@ -207,51 +208,41 @@ BOOLEAN EnterAIM()
 
 	// load the MemberShipcard graphic and add it
 	guiMemberCard = AddVideoObjectFromFile("LAPTOP/membercard.sti");
-	CHECKF(guiMemberCard != NO_VOBJECT);
 
 	// load the Policies graphic and add it
 	guiPolicies = AddVideoObjectFromFile("LAPTOP/Policies.sti");
-	CHECKF(guiPolicies != NO_VOBJECT);
 
 	// load the Links graphic and add it
 	guiLinks = AddVideoObjectFromFile("LAPTOP/Links.sti");
-	CHECKF(guiLinks != NO_VOBJECT);
 
 	const char* ImageFile;
 
 	// load the History graphic and add it
 	ImageFile = GetMLGFilename(MLG_HISTORY);
 	guiHistory = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiHistory != NO_VOBJECT);
 
 	// load the Wanring graphic and add it
 	ImageFile = GetMLGFilename(MLG_WARNING);
 	guiWarning = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiWarning != NO_VOBJECT);
 
 	// load the flower advertisment and add it
 	guiFlowerAdvertisement = AddVideoObjectFromFile("LAPTOP/flowerad_16.sti");
-	CHECKF(guiFlowerAdvertisement != NO_VOBJECT);
 
 	// load the your ad advertisment and add it
 	ImageFile = GetMLGFilename(MLG_YOURAD13);
 	guiAdForAdsImages = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiAdForAdsImages != NO_VOBJECT);
 
 	// load the insurance advertisment and add it
 	ImageFile = GetMLGFilename(MLG_INSURANCEAD10);
 	guiInsuranceAdImages = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiInsuranceAdImages != NO_VOBJECT);
 
 	// load the funeral advertisment and add it
 	ImageFile = GetMLGFilename(MLG_FUNERALAD9);
 	guiFuneralAdImages = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiFuneralAdImages != NO_VOBJECT);
 
 	// load the funeral advertisment and add it
 	ImageFile = GetMLGFilename(MLG_BOBBYRAYAD21);
 	guiBobbyRAdImages = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiBobbyRAdImages != NO_VOBJECT);
 
 
 	//** Mouse Regions **
@@ -284,6 +275,7 @@ BOOLEAN EnterAIM()
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void LaptopInitAim(void)
@@ -400,15 +392,14 @@ static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 BOOLEAN InitAimDefaults()
+try
 {
 	// load the Rust bacground graphic and add it
 	guiRustBackGround = AddVideoObjectFromFile("LAPTOP/rustbackground.sti");
-	CHECKF(guiRustBackGround != NO_VOBJECT);
 
 	// load the Aim Symbol graphic and add it
 	const char* const ImageFile = GetMLGFilename(MLG_AIMSYMBOL);
 	guiAimSymbol = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiAimSymbol != NO_VOBJECT);
 
 	//Mouse region for the Links
 	MSYS_DefineRegion( &gSelectedAimLogo, AIM_SYMBOL_X, AIM_SYMBOL_Y, AIM_SYMBOL_X+AIM_SYMBOL_WIDTH, AIM_SYMBOL_Y+AIM_SYMBOL_HEIGHT, MSYS_PRIORITY_HIGH,
@@ -416,6 +407,7 @@ BOOLEAN InitAimDefaults()
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 BOOLEAN RemoveAimDefaults()
 {

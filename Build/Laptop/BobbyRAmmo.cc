@@ -16,14 +16,13 @@ static SGPVObject* guiAmmoGrid;
 
 
 BOOLEAN EnterBobbyRAmmo()
+try
 {
 	// load the background graphic and add it
 	guiAmmoBackground = AddVideoObjectFromFile("LAPTOP/ammobackground.sti");
-	CHECKF(guiAmmoBackground != NO_VOBJECT);
 
 	// load the gunsgrid graphic and add it
 	guiAmmoGrid = AddVideoObjectFromFile("LAPTOP/ammogrid.sti");
-	CHECKF(guiAmmoGrid != NO_VOBJECT);
 
 	InitBobbyBrTitle();
 
@@ -37,6 +36,8 @@ BOOLEAN EnterBobbyRAmmo()
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
+
 
 void ExitBobbyRAmmo()
 {

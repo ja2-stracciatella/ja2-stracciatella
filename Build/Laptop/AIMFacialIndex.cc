@@ -66,6 +66,7 @@ static void SelectScreenRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 BOOLEAN EnterAimFacialIndex()
+try
 {
 	UINT8	i;
 	UINT16		usPosX, usPosY, x,y;
@@ -74,7 +75,6 @@ BOOLEAN EnterAimFacialIndex()
 
 	// load the Portait graphic and add it
 	guiMugShotBorder = AddVideoObjectFromFile("LAPTOP/MugShotBorder3.sti");
-	CHECKF(guiMugShotBorder != NO_VOBJECT);
 
 	usPosX = AIM_FI_FIRST_MUGSHOT_X;
 	usPosY = AIM_FI_FIRST_MUGSHOT_Y;
@@ -90,7 +90,6 @@ BOOLEAN EnterAimFacialIndex()
 
 			sprintf(sTemp, "%s%02d.sti", sFaceLoc, AimMercArray[i]);
 			guiAimFiFace[i] = AddVideoObjectFromFile(sTemp);
-			if (guiAimFiFace[i] == NO_VOBJECT) return FALSE;
 
 			usPosX += AIM_FI_PORTRAIT_WIDTH + AIM_FI_MUGSHOT_GAP_X;
 			i++;
@@ -109,6 +108,8 @@ BOOLEAN EnterAimFacialIndex()
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 void ExitAimFacialIndex()
 {

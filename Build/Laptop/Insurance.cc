@@ -89,6 +89,7 @@ static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 BOOLEAN EnterInsurance()
+try
 {
 	UINT16					usPosX, i;
 
@@ -99,11 +100,9 @@ BOOLEAN EnterInsurance()
 	// load the Insurance title graphic and add it
 	const char* const ImageFile = GetMLGFilename(MLG_INSURANCETITLE);
 	guiInsuranceTitleImage = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiInsuranceTitleImage != NO_VOBJECT);
 
 	// load the red bar on the side of the page and add it
 	guiInsuranceBulletImage = AddVideoObjectFromFile("LAPTOP/Bullet.sti");
-	CHECKF(guiInsuranceBulletImage != NO_VOBJECT);
 
 	usPosX = INSURANCE_BOTTOM_LINK_RED_BAR_X;
 	for(i=0; i<3; i++)
@@ -122,6 +121,8 @@ BOOLEAN EnterInsurance()
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
+
 
 void ExitInsurance()
 {
@@ -213,18 +214,16 @@ static void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 
 
 
 BOOLEAN InitInsuranceDefaults()
+try
 {
 	// load the Flower Account Box graphic and add it
 	guiInsuranceBackGround = AddVideoObjectFromFile("LAPTOP/BackGroundTile.sti");
-	CHECKF(guiInsuranceBackGround != NO_VOBJECT);
 
 	// load the red bar on the side of the page and add it
 	guiInsuranceRedBarImage = AddVideoObjectFromFile("LAPTOP/LeftTile.sti");
-	CHECKF(guiInsuranceRedBarImage != NO_VOBJECT);
 
 	// load the red bar on the side of the page and add it
 	guiInsuranceBigRedLineImage = AddVideoObjectFromFile("LAPTOP/LargeBar.sti");
-	CHECKF(guiInsuranceBigRedLineImage != NO_VOBJECT);
 
 	//if it is not the first page, display the small title
 	if( guiCurrentLaptopMode != LAPTOP_MODE_INSURANCE )
@@ -232,7 +231,6 @@ BOOLEAN InitInsuranceDefaults()
 		// load the small title for the every page other then the first page
 		const char* const ImageFile = GetMLGFilename(MLG_SMALLTITLE);
 		guiInsuranceSmallTitleImage = AddVideoObjectFromFile(ImageFile);
-		CHECKF(guiInsuranceSmallTitleImage != NO_VOBJECT);
 
 		//create the link to the home page on the small titles
 		MSYS_DefineRegion( &gSelectedInsuranceTitleLinkRegion, INSURANCE_SMALL_TITLE_X+85, INSURANCE_SMALL_TITLE_Y, (UINT16)(INSURANCE_SMALL_TITLE_X + INSURANCE_SMALL_TITLE_WIDTH), (UINT16)(INSURANCE_SMALL_TITLE_Y+INSURANCE_SMALL_TITLE_HEIGHT), MSYS_PRIORITY_HIGH,
@@ -241,6 +239,8 @@ BOOLEAN InitInsuranceDefaults()
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 void DisplayInsuranceDefaults()
 {

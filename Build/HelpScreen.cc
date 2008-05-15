@@ -486,6 +486,7 @@ static void SetSizeAndPropertiesOfHelpScreen(void);
 
 
 static BOOLEAN EnterHelpScreen(void)
+try
 {
 	UINT16 usPosX, usPosY;
 
@@ -554,8 +555,6 @@ static BOOLEAN EnterHelpScreen(void)
 
 	// load the help screen background graphic and add it
 	guiHelpScreenBackGround = AddVideoObjectFromFile("INTERFACE/HelpScreen.sti");
-	CHECKF(guiHelpScreenBackGround != NO_VOBJECT);
-
 
 	//create the text buffer
 	CreateHelpScreenTextBuffer();
@@ -592,6 +591,7 @@ static BOOLEAN EnterHelpScreen(void)
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void HelpScreenMouseMoveScrollBox(INT32 usMousePosY);

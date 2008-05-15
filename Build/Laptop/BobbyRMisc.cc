@@ -15,14 +15,13 @@ static SGPVObject* guiMiscGrid;
 
 
 BOOLEAN EnterBobbyRMisc()
+try
 {
 	// load the background graphic and add it
 	guiMiscBackground = AddVideoObjectFromFile("LAPTOP/miscbackground.sti");
-	CHECKF(guiMiscBackground != NO_VOBJECT);
 
 	// load the gunsgrid graphic and add it
 	guiMiscGrid = AddVideoObjectFromFile("LAPTOP/miscgrid.sti");
-	CHECKF(guiMiscGrid != NO_VOBJECT);
 
 	InitBobbyBrTitle();
 	//Draw menu bar
@@ -34,6 +33,7 @@ BOOLEAN EnterBobbyRMisc()
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 void ExitBobbyRMisc()

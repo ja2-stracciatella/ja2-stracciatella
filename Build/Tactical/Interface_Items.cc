@@ -659,34 +659,26 @@ static void GenerateConsString(wchar_t* const zItemCons, const OBJECTTYPE* const
 
 
 BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* const pRegionDesc, const INV_REGION_DESC* const pCamoRegion, const MOUSE_CALLBACK INVMoveCallback, const MOUSE_CALLBACK INVClickCallback, const MOUSE_CALLBACK INVMoveCamoCallback, const MOUSE_CALLBACK INVClickCamoCallback)
+try
 {
 	INT32 cnt;
 
 	// Load all four body type images
 	guiBodyInvVO[1][0] = AddVideoObjectFromFile("INTERFACE/inventory_figure_large_male.sti");
-	CHECKF(guiBodyInvVO[1][0] != NO_VOBJECT);
 	guiBodyInvVO[1][1] = AddVideoObjectFromFile("INTERFACE/inventory_figure_large_male_H.sti");
-	CHECKF(guiBodyInvVO[1][1] != NO_VOBJECT);
 
 	guiBodyInvVO[0][0] = AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti");
-	CHECKF(guiBodyInvVO[0][0] != NO_VOBJECT);
 	guiBodyInvVO[0][1] = AddVideoObjectFromFile("INTERFACE/inventory_normal_male_H.sti");
-	CHECKF(guiBodyInvVO[0][1] != NO_VOBJECT);
 
 	guiBodyInvVO[2][0] = AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti");
-	CHECKF(guiBodyInvVO[2][0] != NO_VOBJECT);
 	guiBodyInvVO[2][1] = AddVideoObjectFromFile("INTERFACE/inventory_normal_male.sti");
-	CHECKF(guiBodyInvVO[2][1] != NO_VOBJECT);
 
 	guiBodyInvVO[3][0] = AddVideoObjectFromFile("INTERFACE/inventory_figure_female.sti");
-	CHECKF(guiBodyInvVO[3][0] != NO_VOBJECT);
 	guiBodyInvVO[3][1] = AddVideoObjectFromFile("INTERFACE/inventory_figure_female_H.sti");
-	CHECKF(guiBodyInvVO[3][1] != NO_VOBJECT);
 
 #ifndef JA2DEMO
 	// add gold key graphic
 	guiGoldKeyVO = AddVideoObjectFromFile("INTERFACE/gold_key_button.sti");
-	CHECKF(guiGoldKeyVO != NO_VOBJECT);
 #endif
 
 	// Add camo region
@@ -707,6 +699,7 @@ BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* const pRegionDesc, const INV
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 void InitKeyRingInterface(MOUSE_CALLBACK KeyRingClickCallback)
@@ -1915,6 +1908,7 @@ static BOOLEAN ReloadItemDesc(void);
 
 
 void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const INT16 sY, const UINT8 ubStatusIndex, SOLDIERTYPE* const s)
+try
 {
 	// Set the current screen
 	guiCurrentItemDescriptionScreen = guiCurrentScreen;
@@ -2020,12 +2014,9 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 	}
 
 	// Load graphic
-	guiItemDescBox = AddVideoObjectFromFile("INTERFACE/infobox.sti");
-	CHECKV(guiItemDescBox != NO_VOBJECT);
+	guiItemDescBox    = AddVideoObjectFromFile("INTERFACE/infobox.sti");
 	guiMapItemDescBox = AddVideoObjectFromFile("INTERFACE/iteminfoc.STI");
-	CHECKV(guiMapItemDescBox != NO_VOBJECT);
-	guiBullet = AddVideoObjectFromFile("INTERFACE/bullet.STI");
-	CHECKV(guiBullet != NO_VOBJECT);
+	guiBullet         = AddVideoObjectFromFile("INTERFACE/bullet.STI");
 
 	if (o->usItem != MONEY)
 	{
@@ -2051,7 +2042,6 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		gRemoveMoney.uiMoneyRemoving  = 0;
 
 		guiMoneyGraphicsForDescBox = AddVideoObjectFromFile("INTERFACE/info_bil.sti");
-		CHECKV(guiMoneyGraphicsForDescBox != NO_VOBJECT);
 
 		// Create buttons for the money
 		guiMoneyButtonImage = LoadButtonImage("INTERFACE/Info_bil.sti", -1, 1, -1, 2, -1);
@@ -2120,6 +2110,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		gfItemDescHelpTextOffset = TRUE;
 	}
 }
+catch (...) { /* XXX ignore */ }
 
 
 static BOOLEAN ReloadItemDesc(void)
@@ -3928,6 +3919,7 @@ static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight )
+try
 {
 	SGPRect					aRect;
 	UINT8						ubLimit;
@@ -3964,7 +3956,6 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 
 	// Load graphics
 	guiItemPopupBoxes = AddVideoObjectFromFile("INTERFACE/extra_inventory.STI");
-	CHECKF(guiItemPopupBoxes != NO_VOBJECT);
 
 	// Get size
 	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiItemPopupBoxes, 0);
@@ -4040,6 +4031,7 @@ BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void DeleteItemStackPopup(void);
@@ -4127,6 +4119,7 @@ static void DeleteItemStackPopup(void)
 
 
 BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight )
+try
 {
 	SGPRect			aRect;
 	INT16				sKeyRingItemWidth = 0;
@@ -4156,7 +4149,6 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 
 	// Load graphics
 	guiItemPopupBoxes = AddVideoObjectFromFile("INTERFACE/extra_inventory.STI");
-	CHECKF(guiItemPopupBoxes != NO_VOBJECT);
 
 	// Get size
 	const ETRLEObject* pTrav = GetVideoObjectETRLESubregionProperties(guiItemPopupBoxes, 0);
@@ -4207,6 +4199,7 @@ BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 void RenderKeyRingPopup(const BOOLEAN fFullRender)
@@ -4325,6 +4318,7 @@ UINT16 GetTileGraphicForItem(const INVTYPE* pItem)
 
 
 SGPVObject* LoadTileGraphicForItem(const INVTYPE* const pItem)
+try
 {
 	const char* Prefix;
 	switch (pItem->ubGraphicType)
@@ -4340,6 +4334,7 @@ SGPVObject* LoadTileGraphicForItem(const INVTYPE* const pItem)
 	sprintf(ImageFile, "BIGITEMS/%s%02d.sti", Prefix, pItem->ubGraphicNum);
 	return AddVideoObjectFromFile(ImageFile);
 }
+catch (...) { return 0; }
 
 
 static void ItemDescCallback(MOUSE_REGION* pRegion, INT32 iReason)
@@ -4642,6 +4637,7 @@ static void SetupPickupPage(INT8 bPage);
 
 
 BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel )
+try
 {
 	ITEM_POOL				*pTempItemPool;
 	INT32						cnt;
@@ -4699,7 +4695,6 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 	}
 
 	gItemPickupMenu.uiPanelVo = AddVideoObjectFromFile("INTERFACE/itembox.sti");
-	CHECKF(gItemPickupMenu.uiPanelVo != NO_VOBJECT);
 
 	// Memalloc selection array...
 	gItemPickupMenu.pfSelectedArray = MALLOCNZ(BOOLEAN, gItemPickupMenu.ubTotalItems);
@@ -4826,6 +4821,7 @@ BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POO
 	//gfSMDisableForItems = TRUE;
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void SetupPickupPage(INT8 bPage)

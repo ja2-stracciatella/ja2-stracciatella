@@ -207,27 +207,25 @@ void RenderHistory( void )
 
 
 static BOOLEAN LoadHistory(void)
+try
 {
   // load History video objects into memory
 
 	// title bar
 	guiTITLE = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
-	CHECKF(guiTITLE != NO_VOBJECT);
 
 	// top portion of the screen background
 	guiTOP = AddVideoObjectFromFile("LAPTOP/historywindow.sti");
-	CHECKF(guiTOP != NO_VOBJECT);
 
   // shaded line
 	guiSHADELINE = AddVideoObjectFromFile("LAPTOP/historylines.sti");
-	CHECKF(guiSHADELINE != NO_VOBJECT);
 
   // black divider line - long ( 480 length)
 	guiLONGLINE = AddVideoObjectFromFile("LAPTOP/divisionline480.sti");
-	CHECKF(guiLONGLINE != NO_VOBJECT);
 
 	return (TRUE);
 }
+catch (...) { return FALSE; }
 
 
 static void RemoveHistory(void)

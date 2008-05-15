@@ -373,22 +373,21 @@ void HandlePersonnel(void)
 
 
 static BOOLEAN LoadPersonnelGraphics(void)
+try
 {
 	// load graphics needed for personnel screen
 
 	// title bar
 	guiTITLE = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
-	CHECKF(guiTITLE != NO_VOBJECT);
 
 	// the background grpahics
 	guiSCREEN = AddVideoObjectFromFile("LAPTOP/personnelwindow.sti");
-	CHECKF(guiSCREEN != NO_VOBJECT);
 
 	guiPersonnelInventory = AddVideoObjectFromFile("LAPTOP/personnel_inventory.sti");
-	CHECKF(guiPersonnelInventory != NO_VOBJECT);
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void RemovePersonnelGraphics(void)
@@ -468,12 +467,12 @@ static void RenderPersonnelStats(const SOLDIERTYPE* const s)
 
 
 static void RenderPersonnelFace(const MERCPROFILESTRUCT* const p, const BOOLEAN alive)
+try
 {
 	char sTemp[100];
 	sprintf(sTemp, FACES_DIR "%02d.sti", p->ubFaceIndex);
 
 	SGPVObject* const guiFACE = AddVideoObjectFromFile(sTemp);
-	CHECKV(guiFACE != NO_VOBJECT);
 
 	if (!alive)
 	{
@@ -504,6 +503,7 @@ static void RenderPersonnelFace(const MERCPROFILESTRUCT* const p, const BOOLEAN 
 		DrawTextToScreen(name, x, y, w, PERS_FONT, PERS_FONT_COLOR, 0, CENTER_JUSTIFIED);
 	}
 }
+catch (...) { /* XXX ignore */ }
 
 
 static INT32 GetNumberOfMercsDeadOrAliveOnPlayersTeam(void);
@@ -898,19 +898,19 @@ static void RenderPersonnelScreenBackground(void)
 
 
 static BOOLEAN LoadPersonnelScreenBackgroundGraphics(void)
+try
 {
 	// will load the graphics for the personeel screen background
 
 	// departed bar
 	guiDEPARTEDTEAM = AddVideoObjectFromFile("LAPTOP/departed.sti");
-	CHECKF(guiDEPARTEDTEAM != NO_VOBJECT);
 
 	// current bar
 	guiCURRENTTEAM = AddVideoObjectFromFile("LAPTOP/CurrentTeam.sti");
-	CHECKF(guiCURRENTTEAM != NO_VOBJECT);
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void DeletePersonnelScreenBackgroundGraphics(void)
@@ -968,6 +968,7 @@ static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create)
 
 
 static void DisplayPicturesOfCurrentTeam(void)
+try
 {
 	// will display the small portraits of the current team
 	if (!fCurrentTeamMode) return;
@@ -980,7 +981,6 @@ static void DisplayPicturesOfCurrentTeam(void)
 		sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[s->ubProfile].ubFaceIndex);
 
 		SGPVObject* const guiFACE = AddVideoObjectFromFile(sTemp);
-		CHECKV(guiFACE != NO_VOBJECT);
 
 		if (s->bLife <= 0)
 		{
@@ -1003,6 +1003,7 @@ static void DisplayPicturesOfCurrentTeam(void)
 		i++;
 	}
 }
+catch (...) { /* XXX ignore */ }
 
 
 static const SOLDIERTYPE* GetSoldierOfCurrentSlot(void);
@@ -1975,12 +1976,12 @@ static PastMercInfo GetSelectedPastMercInfo(void)
 
 
 static BOOLEAN DisplayPortraitOfPastMerc(const INT32 iId, const INT32 iCounter, const BOOLEAN fDead)
+try
 {
 	char sTemp[100];
 	sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[iId].ubFaceIndex);
 
 	SGPVObject* const guiFACE = AddVideoObjectFromFile(sTemp);
-	CHECKF(guiFACE != NO_VOBJECT);
 
 	if (fDead)
 	{
@@ -1997,6 +1998,7 @@ static BOOLEAN DisplayPortraitOfPastMerc(const INT32 iId, const INT32 iCounter, 
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void DisplayDepartedCharStats(const MERCPROFILESTRUCT* const p, const INT32 iState)
@@ -2249,14 +2251,15 @@ static const SOLDIERTYPE* GetSoldierOfCurrentSlot(void)
 
 
 static void RenderAtmPanel(void)
+try
 {
 	// just show basic panel
 	// bounding
 	AutoSGPVObject uiBox(AddVideoObjectFromFile("LAPTOP/AtmButtons.sti"));
-	CHECKV(uiBox != NO_VOBJECT);
 	BltVideoObject(FRAME_BUFFER, uiBox, 0, ATM_UL_X,     ATM_UL_Y);
 	BltVideoObject(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
 }
+catch (...) { /* XXX ignore */ }
 
 
 static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* text)

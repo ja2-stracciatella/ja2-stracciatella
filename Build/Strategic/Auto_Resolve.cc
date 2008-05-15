@@ -1612,7 +1612,6 @@ static void CreateAutoResolveInterface(void)
 
 	//Load the general panel image pieces, to be combined to make the dynamically sized window.
 	gpAR->iPanelImages = AddVideoObjectFromFile("Interface/AutoResolve.sti");
-	AssertMsg(gpAR->iPanelImages != NO_VOBJECT, "Failed to load Interface/AutoResolve.sti");
 
 	//Load the button images file, and assign it to the first button.
 	/* OLD BEFORE THE MEDICAL BUTTON WAS ADDED
@@ -1650,7 +1649,6 @@ static void CreateAutoResolveInterface(void)
 
 	//Load the generic faces for civs and enemies
 	gpAR->iFaces = AddVideoObjectFromFile("Interface/SmFaces.sti");
-	AssertMsg(gpAR->iFaces != NO_VOBJECT, "Failed to load Interface/SmFaces.sti");
 	SGPVObject* const hVObject = gpAR->iFaces;
 	if (hVObject != NULL)
 	{
@@ -1661,7 +1659,6 @@ static void CreateAutoResolveInterface(void)
 
 	//Add the battle over panels
 	gpAR->iIndent = AddVideoObjectFromFile("Interface/indent.sti");
-	AssertMsg(gpAR->iIndent != NO_VOBJECT, "Failed to load Interface/indent.sti");
 
 	//add all the faces now
 	for( i = 0; i < gpAR->ubMercs; i++ )
@@ -1669,11 +1666,13 @@ static void CreateAutoResolveInterface(void)
 		//Load the face
 		SGPFILENAME ImageFile;
 		sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[gpMercs[i].pSoldier->ubProfile].ubFaceIndex);
-		gpMercs[i].uiVObjectID = AddVideoObjectFromFile(ImageFile);
-		if (gpMercs[i].uiVObjectID == NO_VOBJECT)
+		try
+		{
+			gpMercs[i].uiVObjectID = AddVideoObjectFromFile(ImageFile);
+		}
+		catch (...)
 		{
 			gpMercs[i].uiVObjectID = AddVideoObjectFromFile("Faces/65Face/speck.sti");
-			AssertMsg(gpMercs[i].uiVObjectID != NO_VOBJECT, String("Failed to load %Faces/65Face/%02d.sti or it's placeholder, speck.sti", gMercProfiles[gpMercs[i].pSoldier->ubProfile].ubFaceIndex));
 		}
 		SGPVObject* const hVObject = gpMercs[i].uiVObjectID;
 		if (hVObject != NULL)

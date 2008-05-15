@@ -458,53 +458,43 @@ static void SelectShutUpMercRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 
 BOOLEAN EnterAIMMembers()
+try
 {
 	// Create a background video surface to blt the face onto
 	guiVideoFaceBackground = AddVideoSurface(AIM_MEMBER_VIDEO_FACE_WIDTH, AIM_MEMBER_VIDEO_FACE_HEIGHT, PIXEL_DEPTH);
 
 	// load the stats graphic and add it
 	guiStats = AddVideoObjectFromFile("LAPTOP/stats.sti");
-	CHECKF(guiStats != NO_VOBJECT);
 
 	// load the Price graphic and add it
 	guiPrice = AddVideoObjectFromFile("LAPTOP/price.sti");
-	CHECKF(guiPrice != NO_VOBJECT);
 
 	// load the Portait graphic and add it
 	guiPortrait = AddVideoObjectFromFile("LAPTOP/portrait.sti");
-	CHECKF(guiPortrait != NO_VOBJECT);
 
 	// load the WeaponBox graphic and add it
 	guiWeaponBox = AddVideoObjectFromFile("LAPTOP/weaponbox.sti");
-	CHECKF(guiWeaponBox != NO_VOBJECT);
 
 	// load the videoconf Popup graphic and add it
 	guiVideoConfPopup = AddVideoObjectFromFile("LAPTOP/VideoConfPopup.sti");
-	CHECKF(guiVideoConfPopup != NO_VOBJECT);
 
 	// load the video conf terminal graphic and add it
 	guiVideoConfTerminal = AddVideoObjectFromFile("LAPTOP/VideoConfTerminal.sti");
-	CHECKF(guiVideoConfTerminal != NO_VOBJECT);
 
 	// load the background snow for the video conf terminal
 	guiBWSnow = AddVideoObjectFromFile("LAPTOP/BWSnow.sti");
-	CHECKF(guiBWSnow != NO_VOBJECT);
 
 	// load the fuzzy line for the video conf terminal
 	guiFuzzLine = AddVideoObjectFromFile("LAPTOP/FuzzLine.sti");
-	CHECKF(guiFuzzLine != NO_VOBJECT);
 
 	// load the line distortion for the video conf terminal
 	guiStraightLine = AddVideoObjectFromFile("LAPTOP/LineInterference.sti");
-	CHECKF(guiStraightLine != NO_VOBJECT);
 
 	// load the translucent snow for the video conf terminal
 	guiTransSnow = AddVideoObjectFromFile("LAPTOP/TransSnow.sti");
-	CHECKF(guiTransSnow != NO_VOBJECT);
 
 	// load the translucent snow for the video conf terminal
 	guiVideoContractCharge = AddVideoObjectFromFile("LAPTOP/VideoContractCharge.sti");
-	CHECKF(guiVideoContractCharge != NO_VOBJECT);
 
 
 	//** Mouse Regions **
@@ -562,6 +552,7 @@ BOOLEAN EnterAIMMembers()
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t* sString1, const wchar_t* sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData);
@@ -1034,6 +1025,7 @@ static void BtnNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 
 static void DisplayMercsFace(void)
+try
 {
 	// see if the merc is currently hired
 	const ProfileID          id = gbCurrentSoldier;
@@ -1046,7 +1038,6 @@ static void DisplayMercsFace(void)
 	char sTemp[100];
   sprintf(sTemp, "FACES/BIGFACES/%02d.sti", id);
 	AutoSGPVObject face(AddVideoObjectFromFile(sTemp));
-	CHECKV(face != NO_VOBJECT);
 
 	BOOLEAN        shaded;
 	const wchar_t* text;
@@ -1094,6 +1085,7 @@ static void DisplayMercsFace(void)
 		DrawTextToScreen(text, FACE_X + 1, FACE_Y + 107, FACE_WIDTH, FONT14ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 }
+catch (...) { /* XXX ignore */ }
 
 
 static void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const wchar_t* pString);
@@ -1541,6 +1533,7 @@ static void BtnPopUpOkButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t* sString1, const wchar_t* sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData)
+try
 {
 	static UINT16				usPopUpBoxPosX, usPopUpBoxPosY;
 	static wchar_t				sPopUpString1[400], sPopUpString2[400];
@@ -1571,7 +1564,6 @@ static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t* sString1
 
 			// load the popup box graphic
 			guiPopUpBox = AddVideoObjectFromFile("LAPTOP/VideoConfPopUp.sti");
-			CHECKF(guiPopUpBox != NO_VOBJECT);
 
 			BltVideoObject(FRAME_BUFFER, guiPopUpBox, 0, usPosX, usPosY);
 
@@ -1661,6 +1653,7 @@ static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t* sString1
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 static void WaitForMercToFinishTalkingOrUserToClick(void);
@@ -2690,14 +2683,6 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 		//Make sure the merc doesnt ramble away to the player
 		gubMercAttitudeLevel = QUOTE_DELAY_NO_ACTION;
 
-
-//
-//DEF: TEST
-//
-/*		// load the answering machine graphic and add it
-		guiAnsweringMachineImage = AddVideoObjectFromFile("LAPTOP/explosion.sti");
-		CHECKF(guiAnsweringMachineImage != NO_VOBJECT);
-*/
 		gubCurrentStaticMode = VC_NO_STATIC;
 	}
 

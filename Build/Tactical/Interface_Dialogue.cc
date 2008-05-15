@@ -346,6 +346,7 @@ static void DoneTalkingButtonClickCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
+try
 {
 	INT16							sCenterYVal, sCenterXVal;
 
@@ -363,7 +364,6 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	gTalkPanel.fOnName		=		FALSE;
 
 	gTalkPanel.uiPanelVO = AddVideoObjectFromFile("INTERFACE/talkbox1.sti");
-	if (gTalkPanel.uiPanelVO == NO_VOBJECT) return 0;
 
 	const ETRLEObject* ETRLEProps = GetVideoObjectETRLESubregionProperties(gTalkPanel.uiPanelVO, 0);
 	gTalkPanel.usWidth  = ETRLEProps->usWidth;
@@ -476,6 +476,7 @@ BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
 	// return OK....
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void DoneTalkingButtonClickCallback(GUI_BUTTON* btn, INT32 reason)

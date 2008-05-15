@@ -211,16 +211,12 @@ static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate);
 
 
 BOOLEAN InitMainMenu(void)
+try
 {
 	CreateDestroyMainMenuButtons(TRUE);
 
-	// Load background graphic and add it
 	guiMainMenuBackGroundImage = AddVideoObjectFromFile("INTERFACE/MainMenuBackGround.sti");
-	CHECKF(guiMainMenuBackGroundImage != NO_VOBJECT);
-
-	// Load ja2 logo graphic and add it
-	guiJa2LogoImage = AddVideoObjectFromFile("INTERFACE/Ja2Logo.sti");
-	CHECKF(guiJa2LogoImage != NO_VOBJECT);
+	guiJa2LogoImage            = AddVideoObjectFromFile("INTERFACE/Ja2Logo.sti");
 
 	// If there are no saved games, disable the button
 	if (!IsThereAnySavedGameFiles()) DisableButton(iMenuButtons[LOAD_GAME]);
@@ -241,6 +237,7 @@ BOOLEAN InitMainMenu(void)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void ExitMainMenu(void)

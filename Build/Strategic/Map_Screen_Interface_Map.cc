@@ -4164,19 +4164,16 @@ static BOOLEAN DropAPersonInASector(UINT8 ubType, INT16 sX, INT16 sY)
 
 
 BOOLEAN LoadMilitiaPopUpBox( void )
+try
 {
 	// load the militia pop up box
-	guiMilitia = AddVideoObjectFromFile("INTERFACE/Militia.sti");
-	CHECKF(guiMilitia != NO_VOBJECT);
-	guiMilitiaMaps = AddVideoObjectFromFile("INTERFACE/Militiamaps.sti");
-	CHECKF(guiMilitiaMaps != NO_VOBJECT);
+	guiMilitia                = AddVideoObjectFromFile("INTERFACE/Militia.sti");
+	guiMilitiaMaps            = AddVideoObjectFromFile("INTERFACE/Militiamaps.sti");
 	guiMilitiaSectorHighLight = AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline2.sti");
-	CHECKF(guiMilitiaSectorHighLight != NO_VOBJECT);
-	guiMilitiaSectorOutline = AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline.sti");
-	CHECKF(guiMilitiaSectorOutline != NO_VOBJECT);
-
+	guiMilitiaSectorOutline   = AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline.sti");
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 void RemoveMilitiaPopUpBox( void )

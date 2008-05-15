@@ -137,6 +137,7 @@ void InitSoldierFace(SOLDIERTYPE* const s)
 
 
 FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInitFlags)
+try
 {
 	if (id == NO_PROFILE) return NULL;
 	const MERCPROFILESTRUCT* const p = GetProfile(id);
@@ -169,14 +170,16 @@ FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 
 	SGPFILENAME ImageFile;
 	sprintf(ImageFile, face_file, face_id);
-	SGPVObject* vo = AddVideoObjectFromFile(ImageFile);
-	if (vo == NO_VOBJECT)
+	SGPVObject* vo;
+	try
 	{
-		if (!(uiInitFlags & FACE_BIGFACE)) return NULL;
-
+		vo = AddVideoObjectFromFile(ImageFile);
+	}
+	catch (...)
+	{
 		// If we are a big face, use placeholder...
+		if (!(uiInitFlags & FACE_BIGFACE)) throw;
 		vo = AddVideoObjectFromFile("FACES/placeholder.sti");
-		if (vo == NO_VOBJECT) return NULL;
 	}
 
 	memset(face, 0, sizeof(*face));
@@ -253,6 +256,7 @@ FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 
 	return face;
 }
+catch (...) { return 0; }
 
 
 void DeleteSoldierFace( SOLDIERTYPE *pSoldier )

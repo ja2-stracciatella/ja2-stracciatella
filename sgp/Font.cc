@@ -112,6 +112,7 @@ static INT32 FindFreeFont(void)
  * This function returns (-1) if it fails, and debug msgs for a reason.
  * Otherwise the font number is returned. */
 INT32 LoadFontFile(const char *filename)
+try
 {
 	Assert(filename != NULL);
 	Assert(strlen(filename));
@@ -127,18 +128,17 @@ INT32 LoadFontFile(const char *filename)
 	}
 
 	FontObjs[LoadIndex] = AddVideoObjectFromFile(filename);
-	if (FontObjs[LoadIndex] == NULL)
-	{
-		DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error creating VOBJECT (%s)", filename));
-#ifdef JA2
-		FatalError("Cannot init FONT file %s", filename);
-#endif
-		return -1;
-	}
 
 	if (FontDefault == -1) FontDefault = LoadIndex;
 
 	return LoadIndex;
+}
+catch (...)
+{
+#ifdef JA2
+	FatalError("Cannot init FONT file %s", filename);
+#endif
+	return -1;
 }
 
 

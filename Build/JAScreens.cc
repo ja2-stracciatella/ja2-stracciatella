@@ -510,7 +510,6 @@ UINT32 SexScreenHandle(void)
 	{
 		// Load face....
 		guiSMILY = AddVideoObjectFromFile("INTERFACE/luckysmile.sti");
-		AssertMsg(guiSMILY != NO_VOBJECT, "Missing INTERFACE/luckysmile.sti");
 
 		// Init screen
 		bCurFrame = 0;

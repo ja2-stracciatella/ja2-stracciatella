@@ -569,6 +569,7 @@ static void MakeButton(UINT idx, const wchar_t* text, INT16 x, INT16 y, GUI_CALL
 
 
 static void AddInventoryButtonForMapPopUpBox(const PopUpBox* const box)
+try
 {
 	// load the button
 	AutoSGPVObject uiObject(AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti"));
@@ -594,6 +595,7 @@ static void AddInventoryButtonForMapPopUpBox(const PopUpBox* const box)
 	}
 */
 }
+catch (...) { /* XXX ignore */ }
 
 
 static void RemoveInventoryButtonForMapPopUpBox(void)
@@ -640,6 +642,7 @@ static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, INT32 reason)
 
 // get the min width of the town mine info pop up box
 static void MinWidthOfTownMineInfoBox(void)
+try
 {
 	AutoSGPVObject uiObject(AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti"));
 
@@ -650,3 +653,4 @@ static void MinWidthOfTownMineInfoBox(void)
 	INT16 sTotalBoxWidth = sWidthA + sWidthB;
 	sTotalButtonWidth = sTotalBoxWidth;
 }
+catch (...) { /* XXX ignore */ }

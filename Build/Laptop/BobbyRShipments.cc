@@ -94,13 +94,12 @@ static void CreatePreviousShipmentsMouseRegions(void);
 
 
 BOOLEAN EnterBobbyRShipments()
+try
 {
 	InitBobbyRWoodBackground();
 
 	// load the Order Grid graphic and add it
 	guiBobbyRShipmentGrid = AddVideoObjectFromFile("LAPTOP/BobbyRay_OnOrder.sti");
-	CHECKF(guiBobbyRShipmentGrid != NO_VOBJECT);
-
 
 	guiBobbyRShipmentBackImage =  LoadButtonImage("LAPTOP/CatalogueButton.sti", -1,0,-1,1,-1 );
 	guiBobbyRShipmetBack = MakeButton(guiBobbyRShipmentBackImage, BobbyROrderFormText[BOBBYR_BACK], BOBBYR_SHIPMENT_BACK_BUTTON_X, BtnBobbyRShipmentBackCallback);
@@ -129,6 +128,7 @@ BOOLEAN EnterBobbyRShipments()
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void RemovePreviousShipmentsMouseRegions(void);

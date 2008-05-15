@@ -297,6 +297,7 @@ static void CreateMailScreenButtons(void);
 
 
 BOOLEAN EnterEmail()
+try
 {
   // load graphics
 
@@ -304,23 +305,18 @@ BOOLEAN EnterEmail()
 
 	// title bar
 	guiEmailTitle = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
-	CHECKF(guiEmailTitle != NO_VOBJECT);
 
 	// the list background
 	guiEmailBackground = AddVideoObjectFromFile("LAPTOP/Mailwindow.sti");
-	CHECKF(guiEmailBackground != NO_VOBJECT);
 
 	// the indication/notification box
 	guiEmailIndicator = AddVideoObjectFromFile("LAPTOP/MailIndicator.sti");
-	CHECKF(guiEmailIndicator != NO_VOBJECT);
 
 	// the message background
 	guiEmailMessage = AddVideoObjectFromFile("LAPTOP/emailviewer.sti");
-	CHECKF(guiEmailMessage != NO_VOBJECT);
 
   // the message background
 	guiMAILDIVIDER = AddVideoObjectFromFile("LAPTOP/maillistdivider.sti");
-	CHECKF(guiMAILDIVIDER != NO_VOBJECT);
 
 	// initialize mouse regions
 	InitializeMouseRegions();
@@ -339,6 +335,7 @@ BOOLEAN EnterEmail()
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void AddDeleteRegionsToMessageRegion(INT32 iViewerY);

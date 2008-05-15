@@ -144,6 +144,7 @@ static void InitAlumniFaceRegions(void);
 
 
 BOOLEAN EnterAimArchives()
+try
 {
 	UINT16	usPosX, i;
 
@@ -160,23 +161,18 @@ BOOLEAN EnterAimArchives()
 
 	// load the Alumni Frame and add it
 	guiAlumniFrame = AddVideoObjectFromFile("LAPTOP/AlumniFrame.sti");
-	CHECKF(guiAlumniFrame != NO_VOBJECT);
 
 	// load the 1st set of faces and add it
 	guiOldAim = AddVideoObjectFromFile("LAPTOP/Old_Aim.sti");
-	CHECKF(guiOldAim != NO_VOBJECT);
 
 	// load the PopupPic graphic and add it
 	guiPopUpPic = AddVideoObjectFromFile("LAPTOP/PopupPicFrame.sti");
-	CHECKF(guiPopUpPic != NO_VOBJECT);
 
 		// load the AlumniPopUp graphic and add it
 	guiAlumniPopUp = AddVideoObjectFromFile("LAPTOP/AlumniPopUp.sti");
-	CHECKF(guiAlumniPopUp != NO_VOBJECT);
 
 		// load the Done Button graphic and add it
 	guiDoneButton = AddVideoObjectFromFile("LAPTOP/DoneButton.sti");
-	CHECKF(guiDoneButton != NO_VOBJECT);
 
 	InitAlumniFaceRegions();
 
@@ -201,6 +197,7 @@ BOOLEAN EnterAimArchives()
 	RenderAimArchives();
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 static void CreateDestroyDoneMouseRegion(UINT16 usPosY);

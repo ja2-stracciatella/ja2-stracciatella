@@ -108,6 +108,7 @@ static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 BOOLEAN EnterFuneral()
+try
 {
 	const char* ImageFile;
 	UINT16					usPosX, i;
@@ -115,33 +116,26 @@ BOOLEAN EnterFuneral()
 	// load the Closed graphic and add it
 	ImageFile = GetMLGFilename(MLG_CLOSED);
 	guiClosedSign = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiClosedSign != NO_VOBJECT);
 
 	// load the Left column graphic and add it
 	guiLeftColumn = AddVideoObjectFromFile("LAPTOP/LeftColumn.sti");
-	CHECKF(guiLeftColumn != NO_VOBJECT);
 
 	// load the Link carving graphic and add it
 	guiLinkCarving = AddVideoObjectFromFile("LAPTOP/LinkCarving.sti");
-	CHECKF(guiLinkCarving != NO_VOBJECT);
 
 	// load the Marble graphic and add it
 	guiMarbleBackground = AddVideoObjectFromFile("LAPTOP/Marble.sti");
-	CHECKF(guiMarbleBackground != NO_VOBJECT);
 
 	// load the McGillicuttys sign graphic and add it
 	ImageFile = GetMLGFilename(MLG_MCGILLICUTTYS);
 	guiMcGillicuttys = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiMcGillicuttys != NO_VOBJECT);
 
 	// load the Mortuary  graphic and add it
 	ImageFile = GetMLGFilename(MLG_MORTUARY);
 	guiMortuary = AddVideoObjectFromFile(ImageFile);
-	CHECKF(guiMortuary != NO_VOBJECT);
 
 	// load the right column graphic and add it
 	guiRightColumn = AddVideoObjectFromFile("LAPTOP/RightColumn.sti");
-	CHECKF(guiRightColumn != NO_VOBJECT);
 
 
 	usPosX = FUNERAL_LINK_1_X;
@@ -163,8 +157,9 @@ BOOLEAN EnterFuneral()
 	SetBookMark( FUNERAL_BOOKMARK );
 
 	return( TRUE );
-
 }
+catch (...) { return FALSE; }
+
 
 void ExitFuneral()
 {

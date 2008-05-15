@@ -345,31 +345,28 @@ void RenderFinances(void)
 
 
 static BOOLEAN LoadFinances(void)
+try
 {
   // load Finance video objects into memory
 
 	// title bar
 	guiTITLE = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
-	CHECKF(guiTITLE != NO_VOBJECT);
 
 	// top portion of the screen background
 	guiTOP = AddVideoObjectFromFile("LAPTOP/Financeswindow.sti");
-	CHECKF(guiTOP != NO_VOBJECT);
 
   // black divider line - long ( 480 length)
 	guiLONGLINE = AddVideoObjectFromFile("LAPTOP/divisionline480.sti");
-	CHECKF(guiLONGLINE != NO_VOBJECT);
 
 	// the records columns
 	guiLISTCOLUMNS = AddVideoObjectFromFile("LAPTOP/recordcolumns.sti");
-	CHECKF(guiLISTCOLUMNS != NO_VOBJECT);
 
   // black divider line - long ( 480 length)
 	guiLINE = AddVideoObjectFromFile("LAPTOP/divisionline.sti");
-	CHECKF(guiLINE != NO_VOBJECT);
 
 	return (TRUE);
 }
+catch (...) { return FALSE; }
 
 
 static void RemoveFinances(void)

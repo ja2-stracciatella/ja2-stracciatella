@@ -202,12 +202,8 @@ static
 #endif
 SGPVObject* AddStandardVideoObjectFromFile(const char* const ImageFile)
 {
-	try
-	{
-		AutoSGPImage hImage(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
-		return AddStandardVideoObjectFromHImage(hImage);
-	}
-	catch (...) { return 0; }
+	AutoSGPImage hImage(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
+	return AddStandardVideoObjectFromHImage(hImage);
 }
 
 
@@ -435,13 +431,13 @@ BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* const dst, const SGPVObject* co
 
 
 BOOLEAN BltVideoObjectOnce(SGPVSurface* const dst, const char* const filename, const UINT16 region, const INT32 x, const INT32 y)
+try
 {
 	AutoSGPVObject vo(AddVideoObjectFromFile(filename));
-	Assert(vo != NO_VOBJECT);
-	if (vo == NO_VOBJECT) return FALSE;
 	BltVideoObject(dst, vo, region, x, y);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 #ifdef SGP_VIDEO_DEBUGGING
@@ -531,7 +527,7 @@ SGPVObject* AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32 uiLineNum, const
 SGPVObject* AddAndRecordVObjectFromFile(const char* ImageFile, UINT32 uiLineNum, const char* pSourceFile)
 {
 	SGPVObject* const vo = AddStandardVideoObjectFromFile(ImageFile);
-	if (vo != NULL) RecordVObject(ImageFile, uiLineNum, pSourceFile);
+	RecordVObject(ImageFile, uiLineNum, pSourceFile);
 	return vo;
 }
 

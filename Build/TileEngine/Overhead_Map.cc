@@ -108,8 +108,12 @@ void InitNewOverheadDB(const UINT8 ubTilesetID)
 
 		char adjusted_file[128];
 		sprintf(adjusted_file, "TILESETS/%d/T/%s", use_tileset, filename);
-		SGPVObject* vo = AddVideoObjectFromFile(adjusted_file);
-		if (vo == NULL)
+		SGPVObject* vo;
+		try
+		{
+			vo = AddVideoObjectFromFile(adjusted_file);
+		}
+		catch (...)
 		{
 			// Load one we know about
 			vo = AddVideoObjectFromFile("TILESETS/0/T/grass.sti");
@@ -431,12 +435,9 @@ void GoIntoOverheadMap( )
 
 	// LOAD CLOSE ANIM
 	uiOVERMAP = AddVideoObjectFromFile("INTERFACE/MAP_BORD.sti");
-	AssertMsg(uiOVERMAP != NO_VOBJECT, "Missing INTERFACE/MAP_BORD.sti");
-
 
 	// LOAD PERSONS
 	uiPERSONS = AddVideoObjectFromFile("INTERFACE/PERSONS.sti");
-	AssertMsg(uiPERSONS != NO_VOBJECT, "Missing INTERFACE/PERSONS.sti");
 
 	// Add shades to persons....
 	SGPVObject*            const vo  = uiPERSONS;

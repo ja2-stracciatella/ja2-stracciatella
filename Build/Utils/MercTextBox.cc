@@ -126,30 +126,20 @@ BOOLEAN InitMercPopupBox( )
 		gpPopUpBoxList[ iCounter ] = NULL;
 	}
 
-	// LOAD STOP ICON...
-	guiBoxIcons = AddVideoObjectFromFile("INTERFACE/msgboxicons.sti");
-	AssertMsg(guiBoxIcons != NO_VOBJECT, "Missing INTERFACE/msgboxicons.sti");
-
-	// LOAD SKULL ICON...
-	guiSkullIcons = AddVideoObjectFromFile("INTERFACE/msgboxiconskull.sti");
-	AssertMsg(guiSkullIcons != NO_VOBJECT, "Missing INTERFACE/msgboxiconskull.sti");
-
+	guiBoxIcons   = AddVideoObjectFromFile("INTERFACE/msgboxicons.sti");     // stop icon
+	guiSkullIcons = AddVideoObjectFromFile("INTERFACE/msgboxiconskull.sti"); // skull icon
 	return( TRUE );
 }
 
 
 // Tactical Popup
 static BOOLEAN LoadTextMercPopupImages(UINT8 ubBackgroundIndex, UINT8 ubBorderIndex)
+try
 {
   // this function will load the graphics associated with the background and border index values
 
-	// the background
 	gPopUpTextBox->uiMercTextPopUpBackground = AddVideoSurfaceFromFile(zMercBackgroundPopupFilenames[ubBackgroundIndex]);
-
-  // border
-	gPopUpTextBox->uiMercTextPopUpBorder = AddVideoObjectFromFile(zMercBorderPopupFilenames[ubBorderIndex]);
-	CHECKF(gPopUpTextBox->uiMercTextPopUpBorder != NO_VOBJECT);
-
+	gPopUpTextBox->uiMercTextPopUpBorder     = AddVideoObjectFromFile(zMercBorderPopupFilenames[ubBorderIndex]);
 	gPopUpTextBox->fMercTextPopupInitialized = TRUE;
 
 	// so far so good, return successful
@@ -158,6 +148,8 @@ static BOOLEAN LoadTextMercPopupImages(UINT8 ubBackgroundIndex, UINT8 ubBorderIn
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 void RemoveTextMercPopupImages( )
 {

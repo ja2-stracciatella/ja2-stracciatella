@@ -535,6 +535,7 @@ static void SelectArmsDealersFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iRe
 
 
 static BOOLEAN EnterShopKeeperInterface(void)
+try
 {
 	CHAR8						zTemp[32];
 
@@ -564,25 +565,9 @@ static BOOLEAN EnterShopKeeperInterface(void)
 
 	// load the Main trade screen backgroiund image
 	guiMainTradeScreenImage = AddVideoObjectFromFile("InterFace/TradeScreen.sti");
-	if (guiMainTradeScreenImage == NO_VOBJECT)
-	{
-#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load TradeScreen.sti" );
-#endif
-
-		return( FALSE );
-	}
-
 
 	// load the Main trade screen background image
 	guiItemCrossOut = AddVideoObjectFromFile("InterFace/itemcrossout.sti");
-	if (guiItemCrossOut == NO_VOBJECT)
-	{
-#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load itemcrossout.sti" );
-#endif
-		return( FALSE );
-	}
 
 	//Create an array of all mercs (anywhere!) currently in the player's employ, and load their small faces
 	// This is to support showing of repair item owner's faces even when they're not in the sector, as long as they still work for player
@@ -601,13 +586,6 @@ static BOOLEAN EnterShopKeeperInterface(void)
 
 			//While we are at it, add their small face
 			guiSmallSoldiersFace[gubNumberMercsInArray] = AddVideoObjectFromFile(zTemp);
-			if (guiSmallSoldiersFace[gubNumberMercsInArray] == NO_VOBJECT)
-			{
-#ifdef JA2BETAVERSION
-				ScreenMsg(FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Failed to load %hs", zTemp);
-#endif
-				return( FALSE );
-			}
 
 			gubNumberMercsInArray++;
 		}
@@ -770,6 +748,7 @@ static BOOLEAN EnterShopKeeperInterface(void)
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN InitShopKeepersFace(UINT8 ubMercID)

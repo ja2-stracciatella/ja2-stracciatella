@@ -267,6 +267,7 @@ static void SelectFlorsitCheckBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iRe
 
 
 BOOLEAN EnterFloristOrderForm()
+try
 {
 	UINT8	i;
 	char sTemp[40];
@@ -277,32 +278,25 @@ BOOLEAN EnterFloristOrderForm()
 
 	// load the DeliveryLocation graphic and add it
 	guiDeliveryLocation = AddVideoObjectFromFile("LAPTOP/DeliveryLocation.sti");
-	CHECKF(guiDeliveryLocation != NO_VOBJECT);
 
 	// load the Flower frame graphic and add it
 	guiFlowerFrame = AddVideoObjectFromFile("LAPTOP/FlowerFrame.sti");
-	CHECKF(guiFlowerFrame != NO_VOBJECT);
 
 	// load the Personel sentiments graphic and add it
 	guiPersonalSentiments = AddVideoObjectFromFile("LAPTOP/PersonalSentiments.sti");
-	CHECKF(guiPersonalSentiments != NO_VOBJECT);
 
 	// load the Name Box graphic and add it
 	guiNameBox = AddVideoObjectFromFile("LAPTOP/NameBox.sti");
-	CHECKF(guiNameBox != NO_VOBJECT);
 
 	// load the Check Box graphic and add it
 	guiFlowerOrderCheckBoxButtonImage = AddVideoObjectFromFile("LAPTOP/OrderCheckBox.sti");
-	CHECKF(guiFlowerOrderCheckBoxButtonImage != NO_VOBJECT);
 
 	// load the currently selected flower bouquet
 	sprintf( sTemp, "LAPTOP/Flower_%d.sti", guiCurrentlySelectedFlower);
 	guiCurrentlySelectedFlowerImage = AddVideoObjectFromFile(sTemp);
-	CHECKF(guiCurrentlySelectedFlowerImage != NO_VOBJECT);
 
   // border
 	guiDropDownBorder = AddVideoObjectFromFile("INTERFACE/TactPopUp.sti");
-	CHECKF(guiDropDownBorder != NO_VOBJECT);
 
 
 	guiFlowerOrderButtonImage	= LoadButtonImage("LAPTOP/FloristButtons.sti", -1,0,-1,1,-1 );
@@ -380,6 +374,8 @@ BOOLEAN EnterFloristOrderForm()
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
+
 
 void InitFloristOrderFormVariables()
 {

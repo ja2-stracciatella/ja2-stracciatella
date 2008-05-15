@@ -15,14 +15,13 @@ static SGPVObject* guiArmourGrid;
 
 
 BOOLEAN EnterBobbyRArmour()
+try
 {
 	// load the background graphic and add it
 	guiArmourBackground = AddVideoObjectFromFile("LAPTOP/Armourbackground.sti");
-	CHECKF(guiArmourBackground != NO_VOBJECT);
 
 	// load the gunsgrid graphic and add it
 	guiArmourGrid = AddVideoObjectFromFile("LAPTOP/Armourgrid.sti");
-	CHECKF(guiArmourGrid != NO_VOBJECT);
 
 	InitBobbyBrTitle();
 	//Draw menu bar
@@ -34,6 +33,8 @@ BOOLEAN EnterBobbyRArmour()
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
+
 
 void ExitBobbyRArmour()
 {

@@ -44,6 +44,7 @@ static void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION* pRegion, INT3
 
 
 BOOLEAN EnterInsuranceComments()
+try
 {
 	UINT8 i;
 	UINT16 usPosX;
@@ -52,7 +53,6 @@ BOOLEAN EnterInsuranceComments()
 
 	// load the Insurance bullet graphic and add it
 	guiInsCmntBulletImage = AddVideoObjectFromFile("LAPTOP/bullet.sti");
-	CHECKF(guiInsCmntBulletImage != NO_VOBJECT);
 
 	usPosX = INS_CMNT_FIRST_BULLET_X-6;
 	for( i=0; i<3; i++)
@@ -71,6 +71,8 @@ BOOLEAN EnterInsuranceComments()
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
+
 
 void ExitInsuranceComments()
 {

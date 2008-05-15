@@ -965,18 +965,14 @@ static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, INT32 iRea
 
 
 BOOLEAN InitializeSMPanel(void)
+try
 {
 	// failing the CHECKF after this will cause you to lose your mouse
-	guiSMPanel = AddVideoObjectFromFile("INTERFACE/inventory_bottom_panel.STI");
-	CHECKF(guiSMPanel != NO_VOBJECT);
-	guiSMObjects = AddVideoObjectFromFile("INTERFACE/inventory_gold_front.sti");
-	CHECKF(guiSMObjects != NO_VOBJECT);
-	guiSMObjects2 = AddVideoObjectFromFile("INTERFACE/inv_frn.sti");
-	CHECKF(guiSMObjects2 != NO_VOBJECT);
-	guiSecItemHiddenVO = AddVideoObjectFromFile("INTERFACE/secondary_gun_hidden.sti");
-	CHECKF(guiSecItemHiddenVO != NO_VOBJECT);
+	guiSMPanel                     = AddVideoObjectFromFile("INTERFACE/inventory_bottom_panel.STI");
+	guiSMObjects                   = AddVideoObjectFromFile("INTERFACE/inventory_gold_front.sti");
+	guiSMObjects2                  = AddVideoObjectFromFile("INTERFACE/inv_frn.sti");
+	guiSecItemHiddenVO             = AddVideoObjectFromFile("INTERFACE/secondary_gun_hidden.sti");
 	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
-	CHECKF(guiBrownBackgroundForTeamPanel != NO_VOBJECT);
 
 	// INit viewport region
 	// Set global mouse regions
@@ -1037,6 +1033,7 @@ BOOLEAN InitializeSMPanel(void)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN MakeButtonN(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
@@ -2407,18 +2404,16 @@ static void TMClickSecondHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 BOOLEAN InitializeTEAMPanel(void)
+try
 {
 	// INit viewport region
 	// Set global mouse regions
 	// Define region for viewport
 	MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-	guiTEAMPanel = AddVideoObjectFromFile("INTERFACE/bottom_bar.sti");
-	CHECKF(guiTEAMPanel != NO_VOBJECT);
-	guiTEAMObjects = AddVideoObjectFromFile("INTERFACE/gold_front.sti");
-	CHECKF(guiTEAMObjects != NO_VOBJECT);
+	guiTEAMPanel                   = AddVideoObjectFromFile("INTERFACE/bottom_bar.sti");
+	guiTEAMObjects                 = AddVideoObjectFromFile("INTERFACE/gold_front.sti");
 	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
-	CHECKF(guiBrownBackgroundForTeamPanel != NO_VOBJECT);
 
 	// Create buttons
 	CHECKF(CreateTEAMPanelButtons());
@@ -2471,6 +2466,7 @@ BOOLEAN InitializeTEAMPanel(void)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN ShutdownTEAMPanel(void)

@@ -197,11 +197,10 @@ static void SelectCreditFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 
 
 
 static BOOLEAN EnterCreditsScreen(void)
+try
 {
 	guiCreditBackGroundImage = AddVideoObjectFromFile("INTERFACE/Credits.sti");
-	CHECKF(guiCreditBackGroundImage != NO_VOBJECT);
-	guiCreditFaces = AddVideoObjectFromFile("INTERFACE/Credit Faces.sti");
-	CHECKF(guiCreditFaces != NO_VOBJECT);
+	guiCreditFaces           = AddVideoObjectFromFile("INTERFACE/Credit Faces.sti");
 
 	guiCreditScreenActiveFont  = FONT12ARIAL;
 	gubCreditScreenActiveColor = FONT_MCOLOR_DKWHITE;
@@ -242,6 +241,7 @@ static BOOLEAN EnterCreditsScreen(void)
 	g_credits_active = TRUE;
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void DeleteFirstNode(void);

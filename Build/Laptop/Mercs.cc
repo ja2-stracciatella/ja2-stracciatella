@@ -306,6 +306,7 @@ static BOOLEAN ShouldSpeckSayAQuote(void);
 
 
 BOOLEAN EnterMercs()
+try
 {
 	SetBookMark( MERC_BOOKMARK );
 
@@ -316,28 +317,21 @@ BOOLEAN EnterMercs()
 
 	// load the Account box graphic and add it
 	guiAccountBox = AddVideoObjectFromFile("LAPTOP/AccountBox.sti");
-	CHECKF(guiAccountBox != NO_VOBJECT);
 
 	// load the files Box graphic and add it
 	guiFilesBox = AddVideoObjectFromFile("LAPTOP/FilesBox.sti");
-	CHECKF(guiFilesBox != NO_VOBJECT);
 
 	// load the MercSymbol graphic and add it
 	guiMercSymbol = AddVideoObjectFromFile("LAPTOP/MERCSymbol.sti");
-	CHECKF(guiMercSymbol != NO_VOBJECT);
 
 	// load the SpecPortrait graphic and add it
 	guiSpecPortrait = AddVideoObjectFromFile("LAPTOP/SpecPortrait.sti");
-	CHECKF(guiSpecPortrait != NO_VOBJECT);
 
 	// load the Arrow graphic and add it
 	guiArrow = AddVideoObjectFromFile("LAPTOP/Arrow.sti");
-	CHECKF(guiArrow != NO_VOBJECT);
 
 	// load the Merc video conf background graphic and add it
 	guiMercVideoPopupBackground = AddVideoObjectFromFile("LAPTOP/SpeckComWindow.sti");
-	CHECKF(guiMercVideoPopupBackground != NO_VOBJECT);
-
 
 	// Account Box button
 	guiAccountBoxButtonImage  = LoadButtonImage("LAPTOP/SmallButtons.sti", -1,0,-1,1,-1 );
@@ -402,6 +396,7 @@ BOOLEAN EnterMercs()
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN InitDestroyXToCloseVideoWindow(BOOLEAN fCreate);
@@ -564,12 +559,13 @@ void RenderMercs()
 
 
 BOOLEAN InitMercBackGround()
+try
 {
 	// load the Merc background graphic and add it
 	guiMercBackGround = AddVideoObjectFromFile("LAPTOP/MERCBackGround.sti");
-	CHECKF(guiMercBackGround != NO_VOBJECT);
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN DrawMecBackGround()

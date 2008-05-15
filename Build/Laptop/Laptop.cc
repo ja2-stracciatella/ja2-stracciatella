@@ -442,6 +442,7 @@ static void RenderLapTopImage(void);
 
 
 static INT32 EnterLaptop(void)
+try
 {
 	//Create, load, initialize data -- just entered the laptop.
 
@@ -501,27 +502,21 @@ static INT32 EnterLaptop(void)
 
 	// load the laptop graphic and add it
 	guiLAPTOP = AddVideoObjectFromFile("LAPTOP/laptop3.sti");
-	CHECKF(guiLAPTOP != NO_VOBJECT);
 
 	// background for panel
 	guiLaptopBACKGROUND = AddVideoObjectFromFile("LAPTOP/taskbar.sti");
-	CHECKF(guiLaptopBACKGROUND != NO_VOBJECT);
 
 	// background for panel
 	guiTITLEBARLAPTOP = AddVideoObjectFromFile("LAPTOP/programtitlebar.sti");
-	CHECKF(guiTITLEBARLAPTOP != NO_VOBJECT);
 
 	// lights for power and HD
 	guiLIGHTS = AddVideoObjectFromFile("LAPTOP/lights.sti");
-	CHECKF(guiLIGHTS != NO_VOBJECT);
 
 	// icons for title bars
 	guiTITLEBARICONS = AddVideoObjectFromFile("LAPTOP/ICONS.sti");
-	CHECKF(guiTITLEBARICONS != NO_VOBJECT);
 
 	// load, blt and delete graphics
 	guiEmailWarning = AddVideoObjectFromFile("LAPTOP/NewMailWarning.sti");
-	CHECKF(guiEmailWarning != NO_VOBJECT);
 	// load background
 	LoadDesktopBackground();
 
@@ -576,6 +571,7 @@ static INT32 EnterLaptop(void)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void CreateDestoryBookMarkRegions(void);
@@ -1745,19 +1741,16 @@ void SetBookMark(INT32 iBookId)
 
 
 static void LoadBookmark(void)
+try
 {
 	// grab download bars too
 	guiDOWNLOADTOP = AddVideoObjectFromFile("LAPTOP/downloadtop.sti");
-	CHECKV(guiDOWNLOADTOP != NO_VOBJECT);
 	guiDOWNLOADMID = AddVideoObjectFromFile("LAPTOP/downloadmid.sti");
-	CHECKV(guiDOWNLOADMID != NO_VOBJECT);
 	guiDOWNLOADBOT = AddVideoObjectFromFile("LAPTOP/downloadbot.sti");
-	CHECKV(guiDOWNLOADBOT != NO_VOBJECT);
-	guiBOOKMARK = AddVideoObjectFromFile("LAPTOP/webpages.sti");
-	CHECKV(guiBOOKMARK != NO_VOBJECT);
-	guiBOOKHIGH = AddVideoObjectFromFile("LAPTOP/hilite.sti");
-	CHECKV(guiBOOKHIGH != NO_VOBJECT);
+	guiBOOKMARK    = AddVideoObjectFromFile("LAPTOP/webpages.sti");
+	guiBOOKHIGH    = AddVideoObjectFromFile("LAPTOP/hilite.sti");
 }
+catch (...) { /* XXX ignore */ }
 
 
 static void DisplayBookMarks(void)
@@ -1993,15 +1986,15 @@ static void BookmarkMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 
 static void LoadLoadPending(void)
+try
 {
 	// function will load the load pending graphics
 	// reuse bookmark
 	// load graph window and bar
 	guiGRAPHWINDOW = AddVideoObjectFromFile("LAPTOP/graphwindow.sti");
-	CHECKV(guiGRAPHWINDOW != NO_VOBJECT);
-	guiGRAPHBAR = AddVideoObjectFromFile("LAPTOP/graphsegment.sti");
-	CHECKV(guiGRAPHBAR != NO_VOBJECT);
+	guiGRAPHBAR    = AddVideoObjectFromFile("LAPTOP/graphsegment.sti");
 }
+catch (...) { /* XXX ignore */ }
 
 
 static INT32 WWaitDelayIncreasedIfRaining(INT32 iUnitTime);
