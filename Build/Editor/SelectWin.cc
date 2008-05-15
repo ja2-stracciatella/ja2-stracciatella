@@ -422,8 +422,6 @@ void InitJA2SelectionWindow( void )
 	INT32 iCount2;
 	INT32 iCount3;
 
-	UINT16			usETRLEObjects;
-
 	pDispList = NULL;
 
 	// Init the display spec lists for the types of selection windows
@@ -432,7 +430,7 @@ void InitJA2SelectionWindow( void )
 	for ( iCount3 = 0, iCount = 0; iCount < (LASTOSTRUCT - FIRSTFULLSTRUCT + 1); iCount++ )
 	{
 		const HVOBJECT hVObject = TileElemFromTileType(FIRSTFULLSTRUCT + iCount)->hTileSurface;
-		usETRLEObjects = hVObject->usNumberOfObjects;
+		UINT16 const usETRLEObjects = hVObject->SubregionCount();
 
 		for ( iCount2 = 0; iCount2 < usETRLEObjects; iCount2 += 3, iCount3++)
 		{
@@ -1286,12 +1284,12 @@ static BOOLEAN BuildDisplayWindow(DisplaySpec* pDisplaySpecs, UINT16 usNumSpecs,
 			if ( usETRLEStart == DISPLAY_ALL_OBJECTS )
 			{
 				usETRLEStart = 0;
-				usETRLEEnd = pDisplaySpec->hVObject->usNumberOfObjects - 1;
+				usETRLEEnd = pDisplaySpec->hVObject->SubregionCount() - 1;
 			}
 
 			if( usETRLEStart > usETRLEEnd )
 				return FALSE;
-			if( usETRLEEnd >= pDisplaySpec->hVObject->usNumberOfObjects )
+			if (usETRLEEnd >= pDisplaySpec->hVObject->SubregionCount())
 				return FALSE;
 
 			for( usETRLELoop = usETRLEStart; usETRLELoop <= usETRLEEnd; usETRLELoop++)

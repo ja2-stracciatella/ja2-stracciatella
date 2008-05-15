@@ -1730,7 +1730,7 @@ BOOLEAN AddZStripInfoToVObject(const HVOBJECT hVObject, const STRUCTURE_FILE_REF
 	// if no multi-tile images in this vobject, that's okay... return!
 	if (!fFound) return TRUE;
 
-	const UINT         zcount = hVObject->usNumberOfObjects;
+	UINT         const zcount = hVObject->SubregionCount();
 	ZStripInfo** const zinfo  = MALLOCNZ(ZStripInfo*, zcount);
 	if (zinfo == NULL) return FALSE;
 

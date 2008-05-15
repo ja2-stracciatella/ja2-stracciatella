@@ -4469,10 +4469,10 @@ BOOLEAN ConvertAniCodeToAniFrame( SOLDIERTYPE *pSoldier, UINT16 usAniFrame )
     return( TRUE );
   }
 
-	if ( pSoldier->usAniFrame >= gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject->usNumberOfObjects )
+	if (pSoldier->usAniFrame >= gAnimSurfaceDatabase[usAnimSurface].hVideoObject->SubregionCount())
 	{
 		// Debug msg here....
-//		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Soldier Animation: Wrong Number of frames per number of objects: %d vs %d, %hs", gAnimSurfaceDatabase[usAnimSurface].uiNumFramesPerDir, gAnimSurfaceDatabase[usAnimSurface].hVideoObject->usNumberOfObjects, gAnimControl[pSoldier->usAnimState].zAnimStr);
+//		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Soldier Animation: Wrong Number of frames per number of objects: %d vs %d, %hs", gAnimSurfaceDatabase[usAnimSurface].uiNumFramesPerDir, gAnimSurfaceDatabase[usAnimSurface].hVideoObject->SubregionCount(), gAnimControl[pSoldier->usAnimState].zAnimStr);
 
 		pSoldier->usAniFrame = 0;
 	}

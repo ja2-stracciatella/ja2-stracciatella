@@ -232,7 +232,7 @@ try
 	face->usFaceHeight = face_gfx->usHeight;
 
 	// OK, check # of items
-	if (vo->usNumberOfObjects == 8)
+	if (vo->SubregionCount() == 8)
 	{
 		// Get EYE height, width
 		ETRLEObject const* const eyes_gfx = vo->SubregionProperties(1);

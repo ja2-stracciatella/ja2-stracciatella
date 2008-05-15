@@ -43,11 +43,11 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 		throw std::runtime_error("Failed to get ETRLE data from image for video object creation");
 	}
 
-	usNumberOfObjects = TempETRLEData.usNumberOfObjects;
-	pETRLEObject      = TempETRLEData.pETRLEObject;
-	pPixData          = TempETRLEData.pPixData;
-	uiSizePixData     = TempETRLEData.uiSizePixData;
-	ubBitDepth        = img->ubBitDepth;
+	subregion_count_ = TempETRLEData.usNumberOfObjects;
+	pETRLEObject     = TempETRLEData.pETRLEObject;
+	pPixData         = TempETRLEData.pPixData;
+	uiSizePixData    = TempETRLEData.uiSizePixData;
+	ubBitDepth       = img->ubBitDepth;
 
 	if (img->ubBitDepth == 8)
 	{
@@ -75,7 +75,7 @@ SGPVObject::~SGPVObject()
 
 	if (ppZStripInfo != NULL)
 	{
-		for (UINT32 usLoop = 0; usLoop < usNumberOfObjects; usLoop++)
+		for (UINT32 usLoop = 0; usLoop < SubregionCount(); usLoop++)
 		{
 			if (ppZStripInfo[usLoop] != NULL)
 			{
@@ -90,7 +90,7 @@ SGPVObject::~SGPVObject()
 
 ETRLEObject const* SGPVObject::SubregionProperties(size_t const idx) const
 {
-	if (idx >= usNumberOfObjects)
+	if (idx >= SubregionCount())
 	{
 		throw std::logic_error("Tried to access invalid subregion in video object");
 	}

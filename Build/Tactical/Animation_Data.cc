@@ -666,7 +666,7 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 			AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage));
 
 			// Get aux data
-			if (hImage->uiAppDataSize != hVObject->usNumberOfObjects * sizeof(AuxObjectData))
+			if (hImage->uiAppDataSize != hVObject->SubregionCount() * sizeof(AuxObjectData))
 			{
 				// Report error
 				SET_ERROR("Invalid # of animations given");
@@ -702,7 +702,7 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 			a->hVideoObject = hVObject.Release();
 
 			// Determine if we have a problem with #frames + directions ( ie mismatch )
-			if (a->uiNumDirections * a->uiNumFramesPerDir != a->hVideoObject->usNumberOfObjects)
+			if (a->uiNumDirections * a->uiNumFramesPerDir != a->hVideoObject->SubregionCount())
 			{
 				AnimDebugMsg(String("Surface Database: WARNING!!! Surface %d has #frames mismatch.", usSurfaceIndex));
 			}

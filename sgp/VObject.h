@@ -36,6 +36,8 @@ class SGPVObject
 		SGPVObject(SGPImage const*);
 		~SGPVObject();
 
+		size_t SubregionCount() const { return subregion_count_; }
+
 		ETRLEObject const* SubregionProperties(size_t idx) const;
 
 		UINT32           fFlags;                         // Special flags
@@ -49,7 +51,9 @@ class SGPVObject
 		UINT16*          pShadeCurrent;
 		ZStripInfo**     ppZStripInfo;                   // Z-value strip info arrays
 
-		UINT16           usNumberOfObjects;              // Total number of objects
+	private:
+		UINT16           subregion_count_;               // Total number of objects
+	public:
 		UINT8            ubBitDepth;                     // BPP
 };
 

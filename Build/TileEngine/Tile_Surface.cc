@@ -51,7 +51,7 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 				return NULL;
 			}
 
-			if (hVObject->usNumberOfObjects != pStructureFileRef->usNumberOfStructures)
+			if (hVObject->SubregionCount() != pStructureFileRef->usNumberOfStructures)
 			{
 				SET_ERROR("Structure file error: %s", cStructureFilename);
 				return NULL;
@@ -73,10 +73,10 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 			pTileSurf->pAuxData = pStructureFileRef->pAuxData;
 			pTileSurf->pTileLocData = pStructureFileRef->pTileLocData;
 		}
-		else if (hImage->uiAppDataSize == hVObject->usNumberOfObjects * sizeof( AuxObjectData ))
+		else if (hImage->uiAppDataSize == hVObject->SubregionCount() * sizeof(AuxObjectData))
 		{
 			// Valid auxiliary data, so make a copy of it for TileSurf
-			pTileSurf->pAuxData = MALLOCN(AuxObjectData, hVObject->usNumberOfObjects);
+			pTileSurf->pAuxData = MALLOCN(AuxObjectData, hVObject->SubregionCount());
 			if (pTileSurf->pAuxData == NULL)
 			{
 				MemFree(pTileSurf);

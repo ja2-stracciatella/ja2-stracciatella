@@ -43,7 +43,6 @@ void CreateTileDatabase( )
 {
 	UINT32					cnt1, cnt2;
 	UINT8						ubLoop;
-	UINT32					NumRegions;
 	TILE_ELEMENT		TileElement;
 
 	// Loop through all surfaces and tiles and build database
@@ -57,7 +56,7 @@ void CreateTileDatabase( )
 			// Build start index list
 	    gTileTypeStartIndex[ cnt1 ] = (UINT16)gTileDatabaseSize;
 
-			NumRegions = TileSurf->vo->usNumberOfObjects;
+			UINT32 NumRegions = TileSurf->vo->SubregionCount();
 
 			// Check for overflow
 			if ( NumRegions > gNumTilesPerType[ cnt1 ] )
@@ -80,7 +79,7 @@ void CreateTileDatabase( )
 				if ( TileSurf->vo->ppZStripInfo != NULL )
 				{
 					// Only do this if we are within the # of video objects
-					if ( cnt2 < TileSurf->vo->usNumberOfObjects )
+					if (cnt2 < TileSurf->vo->SubregionCount())
 					{
 						if ( TileSurf->vo->ppZStripInfo[ cnt2 ] != NULL )
 						{
