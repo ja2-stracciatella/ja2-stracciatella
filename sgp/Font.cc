@@ -161,7 +161,7 @@ static UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex)
 	Assert(hSrcVObject != NULL);
 
 	// Get Offsets from Index into structure
-	const ETRLEObject* pTrav = &hSrcVObject->pETRLEObject[ssIndex];
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(ssIndex);
 	return pTrav->usWidth + pTrav->sOffsetX;
 }
 
@@ -210,7 +210,7 @@ static UINT32 GetHeight(HVOBJECT hSrcVObject, INT16 ssIndex)
 	Assert(hSrcVObject != NULL);
 
 	// Get Offsets from Index into structure
-	const ETRLEObject* pTrav = &hSrcVObject->pETRLEObject[ssIndex];
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(ssIndex);
 	return pTrav->usHeight + pTrav->sOffsetY;
 }
 

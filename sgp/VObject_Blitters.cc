@@ -34,7 +34,6 @@ UINT32 uiOffset, uiLineFlag;
 UINT32 usHeight, usWidth, Unblitted;
 UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 UINT32 LineSkip;
-ETRLEObject *pTrav;
 INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
 INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -43,7 +42,7 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -388,15 +387,13 @@ INT32	 iTempX, iTempY;
 UINT16 *p16BPPPalette;
 UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 UINT32 uiLineFlag;
-ETRLEObject *pTrav;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -520,15 +517,13 @@ INT32	 iTempX, iTempY;
 UINT16 *p16BPPPalette;
 UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 UINT32 uiLineFlag;
-ETRLEObject *pTrav;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -702,7 +697,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferMonoShadowClip( UINT16 *pBuffer, UINT32 uiDestPi
 	UINT32 usHeight, usWidth, Unblitted;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -711,7 +705,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferMonoShadowClip( UINT16 *pBuffer, UINT32 uiDestPi
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -1161,15 +1155,13 @@ INT32	 iTempX, iTempY;
 UINT16 *p16BPPPalette;
 UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 UINT32 uiLineFlag;
-ETRLEObject *pTrav;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -1344,16 +1336,14 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTES
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -1499,16 +1489,14 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZNB( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -1651,16 +1639,14 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadow(UINT16* pBuffer, UINT32 uiDestPitchB
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -1767,16 +1753,14 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZ(UINT16* pBuffer, UINT32 uiDestPitch
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -1895,16 +1879,14 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNB(UINT16* pBuffer, UINT32 uiDestPit
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -2067,18 +2049,15 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscured(UINT16* pBuffer, UINT32 u
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
 	UINT32 uiLineFlag;
-
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -2270,7 +2249,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestP
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -2279,7 +2257,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestP
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -2537,7 +2515,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowClip(UINT16* pBuffer, UINT32 uiDestPi
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -2546,7 +2523,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowClip(UINT16* pBuffer, UINT32 uiDestPi
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -2790,7 +2767,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBClip(UINT16* pBuffer, UINT32 uiDes
 	UINT32 usHeight, usWidth, Unblitted;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -2799,7 +2775,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBClip(UINT16* pBuffer, UINT32 uiDes
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -3155,7 +3131,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip(UINT16* pBuffer, UINT
 	UINT32 usHeight, usWidth, Unblitted, uiLineFlag;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -3164,7 +3139,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip(UINT16* pBuffer, UINT
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -3546,16 +3521,14 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -3696,7 +3669,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZClip( UINT16 *pBuffer, UINT32 uiDestPitch
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -3705,7 +3677,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZClip( UINT16 *pBuffer, UINT32 uiDestPitch
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -4031,16 +4003,14 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZNB( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -4175,7 +4145,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZNBClip( UINT16 *pBuffer, UINT32 uiDestPit
 	UINT32 usHeight, usWidth, Unblitted;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -4184,7 +4153,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowZNBClip( UINT16 *pBuffer, UINT32 uiDestPit
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -4513,7 +4482,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 	UINT32 usHeight, usWidth, Unblitted;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -4522,7 +4490,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -4857,7 +4825,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZNBClip( UINT16 *pBuffer, UINT32 uiDestPitc
 	UINT32 usHeight, usWidth, Unblitted;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -4866,7 +4833,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransZNBClip( UINT16 *pBuffer, UINT32 uiDestPitc
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -5293,7 +5260,6 @@ BOOLEAN Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPV
 //	UINT32 uiOffset;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
-//	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
 
 	// Assertions
@@ -5803,7 +5769,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadow( UINT16 *pBuffer, UINT32 uiDestPitchBYTES
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
 
 	// Assertions
@@ -5811,7 +5776,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadow( UINT16 *pBuffer, UINT32 uiDestPitchBYTES
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -5976,16 +5941,14 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransparent(UINT16* const pBuffer, const UINT32 
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -6150,7 +6113,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransparentClip(UINT16* const pBuffer, const UIN
 	UINT32 usHeight, usWidth, Unblitted;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -6159,7 +6121,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransparentClip(UINT16* const pBuffer, const UIN
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -6521,7 +6483,6 @@ BlitDone:
 BOOLEAN BltIsClipped(const SGPVObject* const hSrcVObject, const INT32 iX, const INT32 iY, const UINT16 usIndex, const SGPRect* const clipregion)
 {
 	UINT32 usHeight, usWidth;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -6529,7 +6490,7 @@ BOOLEAN BltIsClipped(const SGPVObject* const hSrcVObject, const INT32 iX, const 
 	Assert( hSrcVObject != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 
@@ -6586,7 +6547,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -6595,7 +6555,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -7014,7 +6974,6 @@ BlitLine:
 CHAR8 BltIsClippedOrOffScreen( HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion )
 {
 	UINT32 usHeight, usWidth;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -7022,7 +6981,7 @@ CHAR8 BltIsClippedOrOffScreen( HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 
 	Assert( hSrcVObject != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 
@@ -7085,17 +7044,15 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutline(UINT16* const pBuffer, const UINT32 uiDe
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
 	UINT16 *p16BPPPalette;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -7232,7 +7189,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineClip(UINT16* const pBuffer, const UINT32 
 	UINT32 usHeight, usWidth, Unblitted;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	UINT16 *p16BPPPalette;
@@ -7243,7 +7199,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineClip(UINT16* const pBuffer, const UINT32 
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -7571,7 +7527,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZClip(UINT16* const pBuffer, const UINT32
 	UINT32 usHeight, usWidth, Unblitted;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	UINT16 *p16BPPPalette;
@@ -7582,7 +7537,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZClip(UINT16* const pBuffer, const UINT32
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -7936,7 +7891,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip(UINT16* const pBuff
 	UINT32 usHeight, usWidth, Unblitted;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	UINT16 *p16BPPPalette;
@@ -7948,7 +7902,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip(UINT16* const pBuff
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -8335,17 +8289,15 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineShadow(UINT16* const pBuffer, const UINT3
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
 	UINT16 *p16BPPPalette;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -8466,7 +8418,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineShadowClip(UINT16* const pBuffer, const U
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -8475,7 +8426,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineShadowClip(UINT16* const pBuffer, const U
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -8751,16 +8702,14 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZ(UINT16* const pBuffer, const UINT32 uiD
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -8924,17 +8873,15 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured(UINT16* const pBuffer, 
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
 	UINT32 uiLineFlag;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -9125,16 +9072,14 @@ BOOLEAN Blt8BPPDataTo16BPPBufferOutlineZNB(UINT16* const pBuffer, const UINT32 u
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -9297,16 +9242,14 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZ( UINT16 *pBuffer, UINT32 uiDestPitchB
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -9415,7 +9358,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZClip( UINT16 *pBuffer, UINT32 uiDestPi
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -9424,7 +9366,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZClip( UINT16 *pBuffer, UINT32 uiDestPi
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -9671,16 +9613,14 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZNB( UINT16 *pBuffer, UINT32 uiDestPitc
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 	UINT32 LineSkip;
-	ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
-
 
 	// Assertions
 	Assert( hSrcVObject != NULL );
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -9786,7 +9726,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityClip( UINT16 *pBuffer, UINT32 uiDestPit
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight;
 	INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -9795,7 +9734,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityClip( UINT16 *pBuffer, UINT32 uiDestPit
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -10071,7 +10010,6 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensity( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
-  ETRLEObject *pTrav;
 	INT32	 iTempX, iTempY;
 
 	// Assertions
@@ -10079,7 +10017,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensity( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;
@@ -10224,7 +10162,6 @@ UINT32 uiOffset, uiLineFlag;
 UINT32 usHeight, usWidth, Unblitted;
 UINT8	 *SrcPtr, *DestPtr, *ZPtr;
 UINT32 LineSkip;
-ETRLEObject *pTrav;
 INT32	 iTempX, iTempY, LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight, LSCount;
 INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 
@@ -10233,7 +10170,7 @@ INT32  ClipX1, ClipY1, ClipX2, ClipY2;
 	Assert( pBuffer != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;

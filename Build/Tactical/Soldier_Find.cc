@@ -437,8 +437,6 @@ static void GetSoldierScreenRect(const SOLDIERTYPE* const pSoldier, SGPRect* con
 {
 		INT16 sMercScreenX, sMercScreenY;
 		UINT16	usAnimSurface;
-//		ETRLEObject *pTrav;
-//		UINT32 usHeight, usWidth;
 
 		GetSoldierScreenPos( pSoldier, &sMercScreenX, &sMercScreenY );
 
@@ -452,10 +450,6 @@ static void GetSoldierScreenRect(const SOLDIERTYPE* const pSoldier, SGPRect* con
 
 			return;
 		}
-
-		//pTrav = &(gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject->pETRLEObject[ pSoldier->usAniFrame ] );
-		//usHeight				= (UINT32)pTrav->usHeight;
-		//usWidth					= (UINT32)pTrav->usWidth;
 
 		pRect->iLeft		= sMercScreenX;
 		pRect->iTop			= sMercScreenY;
@@ -511,7 +505,6 @@ void GetSoldierScreenPos(const SOLDIERTYPE* pSoldier, INT16* psScreenX, INT16* p
 		FLOAT dOffsetX, dOffsetY;
 		FLOAT dTempX_S, dTempY_S;
 		UINT16											 usAnimSurface;
-//		ETRLEObject *pTrav;
 
 		usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
 
@@ -527,8 +520,6 @@ void GetSoldierScreenPos(const SOLDIERTYPE* pSoldier, INT16* psScreenX, INT16* p
 		dOffsetY = pSoldier->dYPos - gsRenderCenterY;
 
 		FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &dTempX_S, &dTempY_S );
-
-		//pTrav = &(gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject->pETRLEObject[ pSoldier->usAniFrame ] );
 
 		sMercScreenX = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)dTempX_S;
 		sMercScreenY = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)dTempY_S;

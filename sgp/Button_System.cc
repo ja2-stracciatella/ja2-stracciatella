@@ -1475,7 +1475,7 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 
 	// Get the width and height of the icon itself
 	const SGPVObject*  const hvObject = b->icon;
-	const ETRLEObject* const pTrav    = &hvObject->pETRLEObject[b->usIconIndex];
+	ETRLEObject const* const pTrav    = hvObject->SubregionProperties(b->usIconIndex);
 
 	/* Compute coordinates for centering the icon on the button or use the offset
 	 * system.
@@ -1755,7 +1755,7 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	/* DB - Added this to support more flexible sizing of border images.  The 3x2
 	 * size was a bit limiting. JA2 should default to the original size, unchanged
 	 */
-	const ETRLEObject* const pTrav = &BPic->pETRLEObject[0];
+	ETRLEObject const* const pTrav = &BPic->SubregionProperties(0);
 	const INT32 iBorderHeight = pTrav->usHeight;
 	const INT32 iBorderWidth  = pTrav->usWidth;
 #endif

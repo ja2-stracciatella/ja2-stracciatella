@@ -44,7 +44,7 @@ static BOOLEAN BltToMouseCursorFromVObject(HVOBJECT hVObject, UINT16 usVideoObje
 static BOOLEAN BltToMouseCursorFromVObjectWithOutline(HVOBJECT hVObject, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos)
 {
 	// Center and adjust for offsets
-	const ETRLEObject* pTrav = &hVObject->pETRLEObject[usVideoObjectSubIndex];
+	ETRLEObject const* const pTrav = hVObject->SubregionProperties(usVideoObjectSubIndex);
 	INT16 sXPos = (gsCurMouseWidth  - pTrav->usWidth)  / 2 - pTrav->sOffsetX;
 	INT16 sYPos = (gsCurMouseHeight - pTrav->usHeight) / 2 - pTrav->sOffsetY;
 	return BltVideoObjectOutline(MOUSE_BUFFER, hVObject, usVideoObjectSubIndex, sXPos, sYPos, Get16BPPColor(FROMRGB(0, 255, 0)));
@@ -106,7 +106,7 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 		}
 
 		// Get ETRLE Data for this video object
-		const ETRLEObject* pTrav = &CFData->hVObject->pETRLEObject[pCurImage->uiSubIndex];
+		ETRLEObject const* const pTrav = CFData->hVObject->SubregionProperties(pCurImage->uiSubIndex);
 		if (!pTrav) return FALSE;
 
 		if (pTrav->usHeight > sMaxHeight) sMaxHeight = pTrav->usHeight;

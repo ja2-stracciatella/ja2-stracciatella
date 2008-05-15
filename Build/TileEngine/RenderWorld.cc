@@ -1137,7 +1137,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 								}
 								else if (uiLevelNodeFlags & LEVELNODE_DISPLAY_AP && !(uiFlags & TILES_DIRTY))
 								{
-									const ETRLEObject* const pTrav = &hVObject->pETRLEObject[usImageIndex];
+									ETRLEObject const* const pTrav = hVObject->SubregionProperties(usImageIndex);
 									sXPos += pTrav->sOffsetX;
 									sYPos += pTrav->sOffsetY;
 
@@ -1243,7 +1243,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 								{
 									if (!(uiLevelNodeFlags & LEVELNODE_LASTDYNAMIC))
 									{
-										const ETRLEObject* const pTrav = &hVObject->pETRLEObject[usImageIndex];
+										ETRLEObject const* const pTrav = hVObject->SubregionProperties(usImageIndex);
 										UINT32 uiBrushHeight = pTrav->usHeight;
 										UINT32 uiBrushWidth  = pTrav->usWidth;
 										sXPos += pTrav->sOffsetX;
@@ -2591,7 +2591,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiD
 	Assert(pBuffer     != NULL);
 
 	// Get Offsets from Index into structure
-	const ETRLEObject* const pTrav = &hSrcVObject->pETRLEObject[usIndex];
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	const INT32  usHeight = pTrav->usHeight;
 	const INT32  usWidth  = pTrav->usWidth;
 	const UINT32 uiOffset = pTrav->uiDataOffset;
@@ -3118,7 +3118,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* p
 	Assert(pBuffer     != NULL);
 
 	// Get Offsets from Index into structure
-	const ETRLEObject* const pTrav = &hSrcVObject->pETRLEObject[usIndex];
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	const INT32  usHeight = pTrav->usHeight;
 	const INT32  usWidth  = pTrav->usWidth;
 	const UINT32 uiOffset = pTrav->uiDataOffset;
@@ -3647,7 +3647,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UIN
 	Assert(pBuffer     != NULL);
 
 	// Get Offsets from Index into structure
-	const ETRLEObject* const pTrav = &hSrcVObject->pETRLEObject[usIndex];
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	const INT32  usHeight = pTrav->usHeight;
 	const INT32  usWidth  = pTrav->usWidth;
 	const UINT32 uiOffset = pTrav->uiDataOffset;
@@ -4194,7 +4194,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* p
 	Assert(pBuffer     != NULL);
 
 	// Get Offsets from Index into structure
-	const ETRLEObject* const pTrav = &hSrcVObject->pETRLEObject[usIndex];
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	const INT32  usHeight = pTrav->usHeight;
 	const INT32  usWidth  = pTrav->usWidth;
 	const UINT32 uiOffset = pTrav->uiDataOffset;
@@ -4790,7 +4790,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer,
 	Assert(pBuffer     != NULL);
 
 	// Get Offsets from Index into structure
-	const ETRLEObject* const pTrav = &hSrcVObject->pETRLEObject[usIndex];
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	const INT32  usHeight = pTrav->usHeight;
 	const INT32  usWidth  = pTrav->usWidth;
 	const UINT32 uiOffset = pTrav->uiDataOffset;
@@ -5846,7 +5846,7 @@ static BOOLEAN IsTileRedundant(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcV
 	Assert(hSrcVObject != NULL);
 
 	// Get Offsets from Index into structure
-	const ETRLEObject* const pTrav = &hSrcVObject->pETRLEObject[usIndex];
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	UINT32       usHeight = pTrav->usHeight;
 	const UINT32 usWidth  = pTrav->usWidth;
 	const UINT32 uiOffset = pTrav->uiDataOffset;

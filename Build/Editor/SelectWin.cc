@@ -1270,7 +1270,6 @@ static BOOLEAN BuildDisplayWindow(DisplaySpec* pDisplaySpecs, UINT16 usNumSpecs,
 	UINT16					usETRLEStart;
 	UINT16					usETRLEEnd;
 	DisplaySpec *		pDisplaySpec;
-	ETRLEObject *		pETRLEObject;
 
 	SaveSelectionList();
 
@@ -1297,7 +1296,7 @@ static BOOLEAN BuildDisplayWindow(DisplaySpec* pDisplaySpecs, UINT16 usNumSpecs,
 
 			for( usETRLELoop = usETRLEStart; usETRLELoop <= usETRLEEnd; usETRLELoop++)
 			{
-				pETRLEObject = &(pDisplaySpec->hVObject->pETRLEObject[usETRLELoop]);
+				ETRLEObject const* const pETRLEObject = pDisplaySpec->hVObject->SubregionProperties(usETRLELoop);
 
 				if ((iCurrX + pETRLEObject->usWidth > pBottomRight->iX) || (fFlags & ONE_COLUMN))
 				{
