@@ -390,11 +390,8 @@ static void GetLevelNodeScreenRect(LEVELNODE* pNode, SGPRect* pRect, INT16 sXPos
 		INT16 sScreenX, sScreenY;
 		INT16 sOffsetX, sOffsetY;
 		INT16 sTempX_S, sTempY_S;
-		ETRLEObject *pTrav;
 		UINT32 usHeight, usWidth;
 		TILE_ELEMENT *TileElem;
-
-
 
 		// Get 'TRUE' merc position
 		sOffsetX = sXPos - gsRenderCenterX;
@@ -402,9 +399,10 @@ static void GetLevelNodeScreenRect(LEVELNODE* pNode, SGPRect* pRect, INT16 sXPos
 
 		FromCellToScreenCoordinates( sOffsetX, sOffsetY, &sTempX_S, &sTempY_S );
 
+		ETRLEObject const* pTrav;
 		if ( pNode->uiFlags & LEVELNODE_CACHEDANITILE )
 		{
-			pTrav = &(gpTileCache[ pNode->pAniTile->sCachedTileID ].pImagery->vo->pETRLEObject[ pNode->pAniTile->sCurrentFrame ] );
+			pTrav = gpTileCache[pNode->pAniTile->sCachedTileID].pImagery->vo->SubregionProperties(pNode->pAniTile->sCurrentFrame);
 		}
 		else
 		{
@@ -425,7 +423,7 @@ static void GetLevelNodeScreenRect(LEVELNODE* pNode, SGPRect* pRect, INT16 sXPos
 				}
 			}
 
-			pTrav = &(TileElem->hTileSurface->pETRLEObject[ TileElem->usRegionIndex ] );
+			pTrav = TileElem->hTileSurface->SubregionProperties(TileElem->usRegionIndex);
 		}
 
 		sScreenX = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)sTempX_S;
@@ -827,7 +825,6 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIn
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr;
-	ETRLEObject *pTrav;
 	BOOLEAN	fDataFound = FALSE;
 	INT32	 iTestPos, iStartPos;
 
@@ -835,7 +832,7 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIn
 	Assert( hSrcVObject != NULL );
 
 	// Get Offsets from Index into structure
-	pTrav = &(hSrcVObject->pETRLEObject[ usIndex ] );
+	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	usHeight				= (UINT32)pTrav->usHeight;
 	usWidth					= (UINT32)pTrav->usWidth;
 	uiOffset				= pTrav->uiDataOffset;

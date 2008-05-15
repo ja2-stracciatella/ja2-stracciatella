@@ -141,7 +141,7 @@ static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
 		CursorImage* pCurImage = &pCurData->Composites[cnt];
 
 		// Get ETRLE Data for this video object
-		const ETRLEObject* pTrav = &gpCursorFileDatabase[pCurImage->uiFileIndex].hVObject->pETRLEObject[pCurImage->uiSubIndex];
+		ETRLEObject const* const pTrav = gpCursorFileDatabase[pCurImage->uiFileIndex].hVObject->SubregionProperties(pCurImage->uiSubIndex);
 		if (!pTrav) return FALSE;
 
 		if (pCurImage->usPosX == CENTER_SUBCURSOR)
