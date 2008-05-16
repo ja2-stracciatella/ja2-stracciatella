@@ -361,7 +361,7 @@ try
 		return FALSE;
 	}
 
-	GenericButtonFillColors = GenericButtonOffNormal->p16BPPPalette[Pix];
+	GenericButtonFillColors = GenericButtonOffNormal->Palette16()[Pix];
 
 	return TRUE;
 }

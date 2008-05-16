@@ -112,7 +112,7 @@ static UINT16 CreateFontPaletteTables(INT32 Font)
 
 	for (UINT32 count = 0; count < 16; count++)
 	{
-		if (count == 4 && pObj->p16BPPPalette == pObj->pShades[count])
+		if (count == 4 && pObj->Palette16() == pObj->pShades[count])
 		{
 			pObj->pShades[count] = NULL;
 		}

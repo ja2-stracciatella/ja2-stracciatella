@@ -26,7 +26,7 @@
 
 SGPVObject::SGPVObject(SGPImage const* const img) :
 	fFlags(),
-	p16BPPPalette(),
+	palette16_(),
 	pShades(),
 	pShadeCurrent(),
 	ppZStripInfo()
@@ -57,8 +57,8 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 		SGPPaletteEntry* const pal = palette_.Allocate(256);
 		memcpy(pal, src_pal, sizeof(*pal) * 256);
 
-		p16BPPPalette = Create16BPPPalette(pal);
-		pShadeCurrent = p16BPPPalette;
+		palette16_    = Create16BPPPalette(pal);
+		pShadeCurrent = palette16_;
 	}
 }
 
@@ -106,20 +106,17 @@ void SGPVObject::DestroyPalettes()
 
 		if (pShades[x] != NULL)
 		{
-			if (pShades[x] == p16BPPPalette)
-			{
-				p16BPPPalette = NULL;
-			}
+			if (palette16_ == pShades[x]) palette16_ = 0;
 
 			MemFree(pShades[x]);
 			pShades[x] = NULL;
 		}
 	}
 
-	if (p16BPPPalette != NULL)
+	if (palette16_ != NULL)
 	{
-		MemFree(p16BPPPalette);
-		p16BPPPalette = NULL;
+		MemFree(palette16_);
+		palette16_ = 0;
 	}
 
 	pShadeCurrent = NULL;

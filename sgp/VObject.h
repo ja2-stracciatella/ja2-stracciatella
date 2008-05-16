@@ -37,7 +37,9 @@ class SGPVObject
 		SGPVObject(SGPImage const*);
 		~SGPVObject();
 
-		SGPPaletteEntry const* Palette() { return palette_; }
+		SGPPaletteEntry const* Palette() const { return palette_; }
+
+		UINT16 const* Palette16() const { return palette16_; }
 
 		size_t SubregionCount() const { return subregion_count_; }
 
@@ -50,9 +52,9 @@ class SGPVObject
 		UINT32                       uiSizePixData;                  // ETRLE data size
 	private:
 		SGP::Buffer<SGPPaletteEntry> palette_;                       // 8BPP Palette
-	public:
-		UINT16*                      p16BPPPalette;                  // A 16BPP palette used for 8->16 blits
+		UINT16*                      palette16_;                     // A 16BPP palette used for 8->16 blits
 
+	public:
 		PTR                          pPixData;                       // ETRLE pixel data
 		ETRLEObject*                 pETRLEObject;                   // Object offset data etc
 		UINT16*                      pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
