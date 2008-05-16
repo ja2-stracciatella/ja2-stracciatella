@@ -5044,7 +5044,7 @@ void RenderItemPickupMenu( )
 				sCenY = sY;
 
 				// ATE: Adjust to basic shade.....
-				te->hTileSurface->pShadeCurrent = te->hTileSurface->pShades[4];
+				te->hTileSurface->CurrentShade(4);
 
 				const UINT16 outline = (gItemPickupMenu.pfSelectedArray[cnt + gItemPickupMenu.ubScrollAnchor] ? outline_col : TRANSPARENT);
 				Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, outline);

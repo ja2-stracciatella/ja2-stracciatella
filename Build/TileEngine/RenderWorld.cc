@@ -670,7 +670,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 
 										if (!(uiFlags & TILES_DIRTY))
 										{
-											hVObject->pShadeCurrent = hVObject->pShades[pNode->ubShadeLevel];
+											hVObject->CurrentShade(pNode->ubShadeLevel);
 										}
 									}
 

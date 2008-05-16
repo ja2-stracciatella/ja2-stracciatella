@@ -2733,7 +2733,7 @@ void CreateTilePaletteTables(const HVOBJECT pObj)
 
 	// build neutral palette as well!
 	// Set current shade table to neutral color
-	pObj->pShadeCurrent = pObj->pShades[4];
+	pObj->CurrentShade(4);
 }
 
 

@@ -100,8 +100,7 @@ BOOLEAN SetFontShade(UINT32 uiFontID, INT8 bColorID)
 	CHECKF(bColorID >= 0);
 	CHECKF(bColorID < 16);
 
-	HVOBJECT pFont = GetFontObject(uiFontID);
-	pFont->pShadeCurrent = pFont->pShades[bColorID];
+	GetFontObject(uiFontID)->CurrentShade(bColorID);
 	return TRUE;
 }
 
@@ -144,7 +143,7 @@ static UINT16 CreateFontPaletteTables(INT32 Font)
 	pObj->pShades[15] = Create16BPPPaletteShaded(pal,   0,   0,   0, FALSE);
 
 	// Set current shade table to neutral color
-	pObj->pShadeCurrent = pObj->pShades[FONT_SHADE_NEUTRAL];
+	pObj->CurrentShade(FONT_SHADE_NEUTRAL);
 
 	return TRUE;
 }
