@@ -46,7 +46,7 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 	pETRLEObject     = TempETRLEData.pETRLEObject;
 	pPixData         = TempETRLEData.pPixData;
 	uiSizePixData    = TempETRLEData.uiSizePixData;
-	ubBitDepth       = img->ubBitDepth;
+	bit_depth_       = img->ubBitDepth;
 
 	if (img->ubBitDepth == 8)
 	{
@@ -288,8 +288,8 @@ void DeleteVideoObject(SGPVObject* const vo)
 
 BOOLEAN BltVideoObject(SGPVSurface* const dst, const SGPVObject* const src, const UINT16 usRegionIndex, const INT32 iDestX, const INT32 iDestY)
 {
-	Assert(src->ubBitDepth ==  8);
-	Assert(dst->BPP()      == 16);
+	Assert(src->BPP() ==  8);
+	Assert(dst->BPP() == 16);
 
 	SGPVSurface::Lock l(dst);
 	UINT16* const pBuffer = l.Buffer<UINT16>();

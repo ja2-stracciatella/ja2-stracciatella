@@ -37,6 +37,8 @@ class SGPVObject
 		SGPVObject(SGPImage const*);
 		~SGPVObject();
 
+		UINT8 BPP() const { return bit_depth_; }
+
 		SGPPaletteEntry const* Palette() const { return palette_; }
 
 		UINT16 const* Palette16() const { return palette16_; }
@@ -66,8 +68,7 @@ class SGPVObject
 
 	private:
 		UINT16                       subregion_count_;               // Total number of objects
-	public:
-		UINT8                        ubBitDepth;                     // BPP
+		UINT8                        bit_depth_;                     // BPP
 };
 
 
