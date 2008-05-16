@@ -95,13 +95,10 @@ void ShutdownFonts(void)
 
 
 // Set shades for fonts
-BOOLEAN SetFontShade(UINT32 uiFontID, INT8 bColorID)
+void SetFontShade(UINT32 const uiFontID, FontShade const shade)
 {
-	CHECKF(bColorID >= 0);
-	CHECKF(bColorID < 16);
-
-	GetFontObject(uiFontID)->CurrentShade(bColorID);
-	return TRUE;
+	CHECKV(0 <= shade && shade < 16);
+	GetFontObject(uiFontID)->CurrentShade(shade);
 }
 
 

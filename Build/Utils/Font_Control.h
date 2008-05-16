@@ -52,13 +52,6 @@ extern INT32 gpHugeFont;
 #endif
 
 
-#define					FONT_SHADE_RED					6
-#define					FONT_SHADE_BLUE					1
-#define					FONT_SHADE_GREEN				2
-#define					FONT_SHADE_YELLOW				3
-#define					FONT_SHADE_NEUTRAL			4
-#define					FONT_SHADE_WHITE				5
-
 #define					FONT_MCOLOR_BLACK				0
 #define					FONT_MCOLOR_WHITE				208
 #define					FONT_MCOLOR_DKWHITE			134
@@ -109,6 +102,17 @@ extern INT32 gpHugeFont;
 BOOLEAN InitializeFonts(void);
 void ShutdownFonts(void);
 
-BOOLEAN SetFontShade(UINT32 uiFontID, INT8 bColorID);
+enum FontShade
+{
+	FONT_SHADE_GREY_165 = 0,
+	FONT_SHADE_BLUE     = 1,
+	FONT_SHADE_GREEN    = 2,
+	FONT_SHADE_YELLOW   = 3,
+	FONT_SHADE_NEUTRAL  = 4,
+	FONT_SHADE_WHITE    = 5,
+	FONT_SHADE_RED      = 6
+};
+
+void SetFontShade(UINT32 uiFontID, FontShade);
 
 #endif

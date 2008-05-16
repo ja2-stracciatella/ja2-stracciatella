@@ -1242,7 +1242,7 @@ static void DrawSelections(void)
 	SetClippingRect(&NewRect);
 
 	SetFont( gpLargeFontType1 );
-	SetFontShade(LARGEFONT1, 0);
+	SetFontShade(LARGEFONT1, FONT_SHADE_GREY_165);
 
 	DisplayWindowFunc( pDispList, iTopWinCutOff, iBotWinCutOff, &SelWinStartPoint, CLEAR_BACKGROUND );
 
