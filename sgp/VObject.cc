@@ -65,7 +65,7 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 
 SGPVObject::~SGPVObject()
 {
-	DestroyObjectPaletteTables(this);
+	DestroyPalettes();
 
 	if (pPixData     != NULL) MemFree(pPixData);
 	if (pETRLEObject != NULL) MemFree(pETRLEObject);
@@ -92,6 +92,37 @@ ETRLEObject const* SGPVObject::SubregionProperties(size_t const idx) const
 		throw std::logic_error("Tried to access invalid subregion in video object");
 	}
 	return &pETRLEObject[idx];
+}
+
+
+/* Destroys the palette tables of a video object. All memory is deallocated, and
+ * the pointers set to NULL. Be careful not to try and blit this object until
+ * new tables are calculated, or things WILL go boom. */
+void SGPVObject::DestroyPalettes()
+{
+	for (UINT32 x = 0; x < HVOBJECT_SHADE_TABLES; x++)
+	{
+		if (fFlags & VOBJECT_FLAG_SHADETABLE_SHARED) continue;
+
+		if (pShades[x] != NULL)
+		{
+			if (pShades[x] == p16BPPPalette)
+			{
+				p16BPPPalette = NULL;
+			}
+
+			MemFree(pShades[x]);
+			pShades[x] = NULL;
+		}
+	}
+
+	if (p16BPPPalette != NULL)
+	{
+		MemFree(p16BPPPalette);
+		p16BPPPalette = NULL;
+	}
+
+	pShadeCurrent = NULL;
 }
 
 
@@ -265,39 +296,6 @@ BOOLEAN BltVideoObject(SGPVSurface* const dst, const SGPVObject* const src, cons
 	{
 		Blt8BPPDataTo16BPPBufferTransparent(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex);
 	}
-
-	return TRUE;
-}
-
-
-/* Destroys the palette tables of a video object. All memory is deallocated, and
- * the pointers set to NULL. Be careful not to try and blit this object until
- * new tables are calculated, or things WILL go boom. */
-BOOLEAN DestroyObjectPaletteTables(HVOBJECT hVObject)
-{
-	for (UINT32 x = 0; x < HVOBJECT_SHADE_TABLES; x++)
-	{
-		if (hVObject->fFlags & VOBJECT_FLAG_SHADETABLE_SHARED) continue;
-
-		if (hVObject->pShades[x] != NULL)
-		{
-			if (hVObject->pShades[x] == hVObject->p16BPPPalette)
-			{
-				hVObject->p16BPPPalette = NULL;
-			}
-
-			MemFree(hVObject->pShades[x]);
-			hVObject->pShades[x] = NULL;
-		}
-	}
-
-	if (hVObject->p16BPPPalette != NULL)
-	{
-		MemFree(hVObject->p16BPPPalette);
-		hVObject->p16BPPPalette = NULL;
-	}
-
-	hVObject->pShadeCurrent = NULL;
 
 	return TRUE;
 }

@@ -43,6 +43,9 @@ class SGPVObject
 
 		ETRLEObject const* SubregionProperties(size_t idx) const;
 
+		// Deletes the 16-bit palette tables
+		void DestroyPalettes();
+
 		UINT32                       fFlags;                         // Special flags
 		UINT32                       uiSizePixData;                  // ETRLE data size
 	private:
@@ -88,9 +91,6 @@ void DeleteVideoObject(SGPVObject*);
 
 // Blits a video object to another video object
 BOOLEAN BltVideoObject(SGPVSurface* dst, const SGPVObject* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
-
-// Deletes the 16-bit palette tables
-BOOLEAN DestroyObjectPaletteTables(HVOBJECT hVObject);
 
 // Sets the current object shade table
 UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade);

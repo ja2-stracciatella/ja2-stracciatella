@@ -370,7 +370,7 @@ void DestroyTileShadeTables(void)
 		if (gbNewTileSurfaceLoaded[i])
 #endif
 		{
-			DestroyObjectPaletteTables(ti->vo);
+			ti->vo->DestroyPalettes();
 		}
 	}
 }
