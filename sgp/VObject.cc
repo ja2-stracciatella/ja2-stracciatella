@@ -45,7 +45,7 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 	subregion_count_ = TempETRLEData.usNumberOfObjects;
 	pETRLEObject     = TempETRLEData.pETRLEObject;
 	pPixData         = TempETRLEData.pPixData;
-	uiSizePixData    = TempETRLEData.uiSizePixData;
+	pix_data_size_   = TempETRLEData.uiSizePixData;
 	bit_depth_       = img->ubBitDepth;
 
 	if (img->ubBitDepth == 8)

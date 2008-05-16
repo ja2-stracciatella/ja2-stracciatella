@@ -59,9 +59,7 @@ class SGPVObject
 
 	private:
 		Flags                        flags_;                         // Special flags
-	public:
-		UINT32                       uiSizePixData;                  // ETRLE data size
-	private:
+		UINT32                       pix_data_size_;                 // ETRLE data size
 		SGP::Buffer<SGPPaletteEntry> palette_;                       // 8BPP Palette
 		UINT16*                      palette16_;                     // A 16BPP palette used for 8->16 blits
 
