@@ -109,19 +109,6 @@ static UINT16 CreateFontPaletteTables(INT32 Font)
 {
 	HVOBJECT pObj = GetFontObject(Font);
 
-	for (UINT32 count = 0; count < 16; count++)
-	{
-		if (count == 4 && pObj->Palette16() == pObj->pShades[count])
-		{
-			pObj->pShades[count] = NULL;
-		}
-		else if (pObj->pShades[count] != NULL)
-		{
-			MemFree(pObj->pShades[count]);
-			pObj->pShades[count] = NULL;
-		}
-	}
-
 	const SGPPaletteEntry* const pal = pObj->Palette();
 	pObj->pShades[FONT_SHADE_RED]     = Create16BPPPaletteShaded(pal, 255,   0,   0, TRUE);
 	pObj->pShades[FONT_SHADE_BLUE]    = Create16BPPPaletteShaded(pal,   0,   0, 255, TRUE);
