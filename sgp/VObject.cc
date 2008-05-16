@@ -85,6 +85,16 @@ SGPVObject::~SGPVObject()
 }
 
 
+void SGPVObject::CurrentShade(size_t const idx)
+{
+	if (idx >= lengthof(pShades) || !pShades[idx])
+	{
+		throw std::logic_error("Tried to set invalid video object shade");
+	}
+	pShadeCurrent = pShades[idx];
+}
+
+
 ETRLEObject const* SGPVObject::SubregionProperties(size_t const idx) const
 {
 	if (idx >= SubregionCount())
@@ -294,23 +304,6 @@ BOOLEAN BltVideoObject(SGPVSurface* const dst, const SGPVObject* const src, cons
 		Blt8BPPDataTo16BPPBufferTransparent(pBuffer, uiPitch, src, iDestX, iDestY, usRegionIndex);
 	}
 
-	return TRUE;
-}
-
-
-UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade)
-{
-	Assert(pObj != NULL);
-	Assert(uiShade >= 0);
-	Assert(uiShade < HVOBJECT_SHADE_TABLES);
-
-	if (pObj->pShades[uiShade] == NULL)
-	{
-		DebugMsg(TOPIC_VIDEOOBJECT, DBG_LEVEL_2, "Attempt to set shade level to NULL table");
-		return FALSE;
-	}
-
-	pObj->pShadeCurrent = pObj->pShades[uiShade];
 	return TRUE;
 }
 

@@ -478,7 +478,7 @@ try
 	{
 		guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 		//set the red pallete to the face
-		SetObjectShade(guiFACE, 0);
+		guiFACE->CurrentShade(0);
 	}
 
 	BltVideoObject(FRAME_BUFFER, guiFACE, 0, IMAGE_BOX_X, IMAGE_BOX_Y);
@@ -986,7 +986,7 @@ try
 		{
 			guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 			//set the red pallete to the face
-			SetObjectShade(guiFACE, 0);
+			guiFACE->CurrentShade(0);
 		}
 
 		const INT32 x = SMALL_PORTRAIT_START_X + i % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;
@@ -1987,7 +1987,7 @@ try
 	{
 		guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 		//set the red pallete to the face
-		SetObjectShade(guiFACE, 0);
+		guiFACE->CurrentShade(0);
 	}
 
 	const INT32 x = SMALL_PORTRAIT_START_X + iCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;

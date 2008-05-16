@@ -302,7 +302,7 @@ try
 	{
 		// The merc is dead, shade the face red and put text over top saying the merc is dead
 		face->pShades[0] = Create16BPPPaletteShaded(face->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
-		SetObjectShade(face, 0);
+		face->CurrentShade(0);
 		shaded = FALSE;
 		text   = MercInfo[MERC_FILES_MERC_IS_DEAD];
 	}

@@ -876,7 +876,7 @@ static void RenderSoldierCell(SOLDIERCELL* pCell)
 	}
 	if( !pCell->pSoldier->bLife )
 	{
-		SetObjectShade( pCell->uiVObjectID, 0 );
+		pCell->uiVObjectID->CurrentShade(0);
 		if( !(pCell->uiFlags & CELL_CREATURE) )
 			BltVideoObject( FRAME_BUFFER, gpAR->iFaces, HUMAN_SKULL, pCell->xp+3+x, pCell->yp+3);
 		else
@@ -891,12 +891,12 @@ static void RenderSoldierCell(SOLDIERCELL* pCell)
 		else if( pCell->uiFlags & CELL_HITLASTFRAME )
 		{
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+3+x, pCell->yp+3, pCell->xp+33+x,	pCell->yp+29, 0 );
-			SetObjectShade( pCell->uiVObjectID, 1 );
+			pCell->uiVObjectID->CurrentShade(1);
 			BltVideoObject( FRAME_BUFFER, pCell->uiVObjectID, pCell->usIndex, pCell->xp+3+x, pCell->yp+3);
 		}
 		else
 		{
-			SetObjectShade( pCell->uiVObjectID, 0 );
+			pCell->uiVObjectID->CurrentShade(0);
 			BltVideoObject( FRAME_BUFFER, pCell->uiVObjectID, pCell->usIndex, pCell->xp+3+x, pCell->yp+3);
 		}
 	}

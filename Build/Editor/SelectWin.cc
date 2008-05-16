@@ -1393,7 +1393,7 @@ static BOOLEAN DisplayWindowFunc(DisplayList* pNode, INT16 iTopCutOff, INT16 iBo
 		if (pNode->fChosen)
 			sCount = pSelList[ FindInSelectionList( pNode ) ].sCount;
 
-		SetObjectShade( pNode->hObj, DEFAULT_SHADE_LEVEL );
+		pNode->hObj->CurrentShade(DEFAULT_SHADE_LEVEL);
 		fReturnVal = BltVideoObject(FRAME_BUFFER, pNode->hObj, pNode->uiIndex, (UINT16)pNode->iX, (UINT16)iCurrY);
 
 		if ( sCount != 0)

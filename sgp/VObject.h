@@ -41,6 +41,9 @@ class SGPVObject
 
 		UINT16 const* Palette16() const { return palette16_; }
 
+		// Set the current object shade table
+		void CurrentShade(size_t idx);
+
 		size_t SubregionCount() const { return subregion_count_; }
 
 		ETRLEObject const* SubregionProperties(size_t idx) const;
@@ -93,9 +96,6 @@ void DeleteVideoObject(SGPVObject*);
 
 // Blits a video object to another video object
 BOOLEAN BltVideoObject(SGPVSurface* dst, const SGPVObject* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
-
-// Sets the current object shade table
-UINT16 SetObjectShade(HVOBJECT pObj, UINT32 uiShade);
 
 // Retrieves an HVOBJECT pixel value
 BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETLREIndex, UINT16 usX, UINT16 usY);

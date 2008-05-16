@@ -416,7 +416,7 @@ try
 			uiInsMercFaceImage->pShades[0] = Create16BPPPaletteShaded(uiInsMercFaceImage->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 
 			//set the red pallete to the face
-			SetObjectShade(uiInsMercFaceImage, 0);
+			uiInsMercFaceImage->CurrentShade(0);
 		}
 
 		//Get and display the mercs face

@@ -750,7 +750,7 @@ static void SetFaceShade(FACETYPE* const f, const BOOLEAN fExternBlit)
 	{
 		shade = FLASH_PORTRAIT_NOSHADE; // Set to default
 	}
-	SetObjectShade(f->uiVideoObject, shade);
+	f->uiVideoObject->CurrentShade(shade);
 }
 
 

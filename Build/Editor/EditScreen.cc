@@ -942,7 +942,7 @@ void ShowCurrentDrawingMode( void )
 		pETRLEObject->sOffsetX = 0;
 		pETRLEObject->sOffsetY = 0;
 
-		SetObjectShade(ts, DEFAULT_SHADE_LEVEL);
+		ts->CurrentShade(DEFAULT_SHADE_LEVEL);
 		BltVideoObject(FRAME_BUFFER, ts, usUseIndex, 0 + iStartX, 400 + iStartY);
 
 		pETRLEObject->sOffsetX = sTempOffsetX;

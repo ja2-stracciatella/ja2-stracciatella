@@ -247,18 +247,14 @@ void RenderRadarScreen( )
 
 	if (fInterfacePanelDirty == DIRTYLEVEL2 && gusRadarImage != NO_VOBJECT)
 	{
-		// Set to default
-		SetObjectShade(gusRadarImage, 0);
-
-		//If night time and on surface, darken the radarmap.
-		if( NightTime() )
-		{
-			if( guiCurrentScreen == MAP_SCREEN && !iCurrentMapSectorZ ||
-					guiCurrentScreen == GAME_SCREEN && !gbWorldSectorZ )
-			{
-				SetObjectShade(gusRadarImage, 1);
-			}
-		}
+		// If night time and on surface, darken the radarmap.
+		size_t const shade =
+			NightTime() &&
+			(
+				(guiCurrentScreen == MAP_SCREEN  && iCurrentMapSectorZ == 0) ||
+				(guiCurrentScreen == GAME_SCREEN && gbWorldSectorZ     == 0)
+			) ? 1 : 0;
+		gusRadarImage->CurrentShade(shade);
 
 		BltVideoObject(guiSAVEBUFFER, gusRadarImage, 0, RADAR_WINDOW_X, gsRadarY);
 	}

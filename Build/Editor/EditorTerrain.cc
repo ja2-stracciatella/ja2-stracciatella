@@ -114,7 +114,7 @@ void RenderTerrainTileButtons()
 			ColorFillVideoSurfaceArea(ButtonDestBuffer, usX + 1, usY + 1, usX2 - 1, usY2 - 1, 0);
 
 			const HVOBJECT ts = TileElemFromTileType(x)->hTileSurface;
-			SetObjectShade(ts, DEFAULT_SHADE_LEVEL);
+			ts->CurrentShade(DEFAULT_SHADE_LEVEL);
 			BltVideoObject(ButtonDestBuffer, ts, 0, usX + 1, usY + 1);
 
 			if( fUseTerrainWeights )

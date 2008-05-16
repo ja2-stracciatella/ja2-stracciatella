@@ -976,7 +976,7 @@ static void RenderOverheadOverlays(void)
 		{
 			shade = 0;
 		}
-		SetObjectShade(marker, shade);
+		marker->CurrentShade(shade);
 
 #ifdef JA2EDITOR
 		if (gfEditMode && gpSelected && gpSelected->pSoldier == s)
@@ -1161,21 +1161,13 @@ void RenderOverheadOverlays( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 s
 							// Adjust for height...
 							sY -= ( pSoldier->sHeightAdjustment / 5 );
 
-							// Adjust shade a bit...
-							SetObjectShade( hVObject, 0 );
-
-							// If on roof....
-							if ( pSoldier->sHeightAdjustment )
-							{
-								SetObjectShade( hVObject, 1 );
-							}
-
-							if (pSoldier == GetSelectedMan() &&
-									gfRadarCurrentGuyFlash       &&
-									!gfTacticalPlacementGUIActive)
-							{
-								SetObjectShade(hVObject, 2);
-							}
+							size_t const shade =
+								pSoldier == GetSelectedMan() &&
+								gfRadarCurrentGuyFlash       &&
+								!gfTacticalPlacementGUIActive ? 2 :
+								pSoldier->sHeightAdjustment   ? 1 : // On roof?
+								                                0;
+							hVObject->CurrentShade(shade);
 							#ifdef JA2EDITOR
 							if( gfEditMode && gpSelected && gpSelected->pSoldier == pSoldier )
 							{ //editor:  show the selected edited merc as the yellow one.
