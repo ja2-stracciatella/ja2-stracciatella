@@ -33,9 +33,9 @@ typedef struct PROGRESSBAR
 	UINT16 usPanelLeft, usPanelTop, usPanelRight, usPanelBottom;
 	UINT16 usColor, usLtColor, usDkColor;
 	wchar_t *swzTitle;
-	UINT16 usTitleFont;
+	Font             usTitleFont;
 	UINT8 ubTitleFontForeColor, ubTitleFontShadowColor;
-	UINT16 usMsgFont;
+	Font    usMsgFont;
 	UINT8 ubMsgFontForeColor, ubMsgFontShadowColor;
 	UINT32 fill_colour;
 	double rStart, rEnd;
@@ -112,7 +112,7 @@ void DefineProgressBarPanel( UINT32 ubID, UINT8 r, UINT8 g, UINT8 b,
 
 //Assigning a title for the panel will automatically position the text horizontally centered on the
 //panel and vertically centered from the top of the panel, to the top of the progress bar.
-void SetProgressBarTitle(UINT32 ubID, const wchar_t* pString, UINT32 usFont, UINT8 ubForeColor, UINT8 ubShadowColor)
+void SetProgressBarTitle(UINT32 ubID, const wchar_t* pString, Font const font, UINT8 ubForeColor, UINT8 ubShadowColor)
 {
 	PROGRESSBAR *pCurr;
 	Assert( ubID < MAX_PROGRESSBARS );
@@ -129,21 +129,21 @@ void SetProgressBarTitle(UINT32 ubID, const wchar_t* pString, UINT32 usFont, UIN
 		pCurr->swzTitle = MALLOCN(wchar_t, wcslen(pString) + 1);
 		wcscpy(pCurr->swzTitle, pString);
 	}
-	pCurr->usTitleFont = usFont;
+	pCurr->usTitleFont = font;
 	pCurr->ubTitleFontForeColor = ubForeColor;
 	pCurr->ubTitleFontShadowColor = ubShadowColor;
 }
 
 //Unless you set up the attributes, any text you pass to SetRelativeStartAndEndPercentage will
 //default to FONT12POINT1 in a black color.
-void SetProgressBarMsgAttributes( UINT32 ubID, UINT32 usFont, UINT8 ubForeColor, UINT8 ubShadowColor )
+void SetProgressBarMsgAttributes(UINT32 ubID, Font const font, UINT8 ubForeColor, UINT8 ubShadowColor)
 {
 	PROGRESSBAR *pCurr;
 	Assert( ubID < MAX_PROGRESSBARS );
 	pCurr = pBar[ ubID ];
 	if( !pCurr )
 		return;
-	pCurr->usMsgFont = usFont;
+	pCurr->usMsgFont            = font;
 	pCurr->ubMsgFontForeColor = ubForeColor;
 	pCurr->ubMsgFontShadowColor = ubShadowColor;
 }

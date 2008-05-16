@@ -4,25 +4,25 @@
 #include "Types.h"
 
 
-extern INT32 gp10PointArial;
-extern INT32 gp10PointArialBold;
-extern INT32 gp12PointArial;
-extern INT32 gp12PointArialFixedFont;
-extern INT32 gp12PointFont1;
-extern INT32 gp14PointArial;
-extern INT32 gp14PointHumanist;
-extern INT32 gp16PointArial;
-extern INT32 gpBlockFontNarrow;
-extern INT32 gpBlockyFont;
-extern INT32 gpBlockyFont2;
-extern INT32 gpLargeFontType1;
-extern INT32 gpSmallFontType1;
-extern INT32 gpTinyFontType1;
-extern INT32 gpCompFont;
-extern INT32 gpSmallCompFont;
+extern Font gp10PointArial;
+extern Font gp10PointArialBold;
+extern Font gp12PointArial;
+extern Font gp12PointArialFixedFont;
+extern Font gp12PointFont1;
+extern Font gp14PointArial;
+extern Font gp14PointHumanist;
+extern Font gp16PointArial;
+extern Font gpBlockFontNarrow;
+extern Font gpBlockyFont;
+extern Font gpBlockyFont2;
+extern Font gpLargeFontType1;
+extern Font gpSmallFontType1;
+extern Font gpTinyFontType1;
+extern Font gpCompFont;
+extern Font gpSmallCompFont;
 
 #if defined JA2EDITOR && defined ENGLISH
-extern INT32 gpHugeFont;
+extern Font gpHugeFont;
 #endif
 
 
@@ -113,6 +113,6 @@ enum FontShade
 	FONT_SHADE_RED      = 6
 };
 
-void SetFontShade(UINT32 uiFontID, FontShade);
+void SetFontShade(Font, FontShade);
 
 #endif

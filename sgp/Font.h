@@ -64,7 +64,7 @@
 #endif
 
 
-extern INT32		FontDefault;
+extern Font FontDefault;
 
 
 void SetFontColors(UINT16 usColors);
@@ -72,7 +72,6 @@ void SetFontForeground(UINT8 ubForeground);
 void SetFontBackground(UINT8 ubBackground);
 void SetFontShadow(UINT8 ubBackground);
 
-extern HVOBJECT	 GetFontObject(INT32 iFont);
 extern UINT32		 gprintf(INT32 x, INT32 y, const wchar_t *pFontString, ...);
 
 void MPrint(INT32 x, INT32 y, wchar_t const* str);
@@ -84,21 +83,21 @@ void mprintf_coded(INT32 x, INT32 y, wchar_t const* fmt, ...);
 /* Sets the destination buffer for printing to and the clipping rectangle. */
 BOOLEAN SetFontDestBuffer(SGPVSurface* dst, INT32 x1, INT32 y1, INT32 x2, INT32 y2);
 
-extern BOOLEAN	 SetFont(INT32 iFontIndex);
+void SetFont(Font);
 
-extern INT32		 LoadFontFile(const char *pFileName);
-extern UINT16    GetFontHeight(INT32 FontNum);
+Font   LoadFontFile(const char* filename);
+UINT16 GetFontHeight(Font);
 extern BOOLEAN   InitializeFontManager(void);
 extern void      ShutdownFontManager(void);
-extern void			 UnloadFont(UINT32 FontIndex);
+void UnloadFont(Font);
 
 UINT32 GetCharWidth(HVOBJECT Font, wchar_t c);
 
-extern INT16 StringPixLength(const wchar_t *string,INT32 UseFont);
+INT16 StringPixLength(const wchar_t* string, Font);
 extern void SaveFontSettings(void);
 extern void RestoreFontSettings(void);
 
-void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t *pStr, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY );
-void FindFontCenterCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t *pStr, INT32 iFontIndex, INT16 *psNewX, INT16 *psNewY );
+void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, Font, INT16* psNewX, INT16* psNewY);
+void FindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, Font, INT16* psNewX, INT16* psNewY);
 
 #endif

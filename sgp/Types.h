@@ -124,10 +124,12 @@ typedef struct RelTileLoc      RelTileLoc;
 typedef struct SGPImage    SGPImage;
 typedef SGPImage*          HIMAGE;
 
-typedef struct SGPVObject  SGPVObject;
-typedef SGPVObject*        HVOBJECT;
-
 #ifdef __cplusplus
+class SGPVObject;
+typedef SGPVObject* HVOBJECT;
+
+typedef SGPVObject* Font;
+
 class SGPVSurface;
 #endif
 

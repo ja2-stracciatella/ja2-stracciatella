@@ -823,7 +823,7 @@ static void RenderIconsForUpperLeftCornerPiece(const SOLDIERTYPE* const s)
 }
 
 
-static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font);
+static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, Font);
 
 
 static void PrintStat(const UINT32 change_time, const UINT16 stat_gone_up_bit, const INT8 stat_val, const INT16 x, const INT16 y)
@@ -862,8 +862,8 @@ static void DrawCharStats(const SOLDIERTYPE* const s)
 }
 
 
-static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, UINT32 uiFont);
-static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font);
+static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, Font);
+static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, Font);
 
 
 static void DrawCharHealth(const SOLDIERTYPE* const pSoldier)
@@ -2570,15 +2570,15 @@ try
 catch (...) { return FALSE; }
 
 
-static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, UINT32 uiFont)
+static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, Font const font)
 {
 	// draw monochrome string
-	SetFont(uiFont);
+	SetFont(font);
 	GDirtyPrint(uiX, uiY, pString);
 }
 
 
-static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font)
+static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, Font const font)
 {
 	INT16 cx;
 	INT16 cy;
@@ -2587,7 +2587,7 @@ static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w,
 }
 
 
-static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, UINT32 font)
+static void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, Font const font)
 {
 	INT16 rx;
 	INT16 ry;

@@ -31,10 +31,10 @@ static const INT32 iIMPQuestionLengths[25] =
 #define QTN_SECOND_COLUMN_X 320
 
 
-static void LoadAndDisplayIMPText(INT16 sStartX, INT16 sStartY, INT16 sLineLength, INT16 sIMPTextRecordNumber, UINT32 uiFont, UINT8 ubColor, BOOLEAN fShadow, UINT32 uiFlags)
+static void LoadAndDisplayIMPText(INT16 sStartX, INT16 sStartY, INT16 sLineLength, INT16 sIMPTextRecordNumber, Font const font, UINT8 ubColor, BOOLEAN fShadow, UINT32 uiFlags)
 {
 	// this procedure will load and display to the screen starting at postion X, Y relative to the start of the laptop screen
-	// it will access record sIMPTextRecordNumber and go until all records following it but before the next IMP record are displayed in font uiFont
+	// it will access record sIMPTextRecordNumber and go until all records following it but before the next IMP record are displayed in the specified font
 	if (!fShadow)
 	{
 		// don't want shadow, remove it
@@ -43,7 +43,7 @@ static void LoadAndDisplayIMPText(INT16 sStartX, INT16 sStartY, INT16 sLineLengt
 
 	wchar_t sString[IMP_SEEK_AMOUNT];
 	LoadEncryptedDataFromFile("BINARYDATA/IMPText.EDT", sString, sIMPTextRecordNumber * IMP_SEEK_AMOUNT, IMP_SEEK_AMOUNT);
-	DisplayWrappedString(sStartX, sStartY, sLineLength, 2, uiFont, ubColor, sString, FONT_BLACK, uiFlags);
+	DisplayWrappedString(sStartX, sStartY, sLineLength, 2, font, ubColor, sString, FONT_BLACK, uiFlags);
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);

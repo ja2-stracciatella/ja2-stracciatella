@@ -17,7 +17,7 @@ static WRAPPED_STRING* AllocWrappedString(const wchar_t* str)
 }
 
 
-WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLineWidthIfWordIsWiderThenWidth, const wchar_t* pString)
+WRAPPED_STRING* LineWrap(Font const font, UINT16 usLineWidthPixels, UINT16* pusLineWidthIfWordIsWiderThenWidth, const wchar_t* pString)
 {
 	WRAPPED_STRING FirstWrappedString;
 	wchar_t TempString[1024];
@@ -43,7 +43,6 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 	usCurIndex = 0;
 	usEndIndex = 0;
 	usDestIndex = 0;
-	HVOBJECT Font = GetFontObject(ulFont);
 
 	for (BOOLEAN fDone = FALSE; !fDone;)
 	{
@@ -81,7 +80,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 			return FirstWrappedString.pNextWrappedString;
 		}
 
-		usCurrentWidthPixels += GetCharWidth(Font, TempString[usCurIndex]);
+		usCurrentWidthPixels += GetCharWidth(font, TempString[usCurIndex]);
 
 		if (usCurrentWidthPixels > usLineWidthPixels)
 		{
@@ -91,7 +90,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 			//Go back to begining of word
 			while (DestString[usDestIndex] != L' ' && usCurIndex > 0)
 			{
-				usCurrentWidthPixels -= GetCharWidth(Font, DestString[usDestIndex]);
+				usCurrentWidthPixels -= GetCharWidth(font, DestString[usDestIndex]);
 				usCurIndex--;
 				usDestIndex--;
 			}
@@ -120,7 +119,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 
 				const wchar_t* pCurrentStringLoc = &TempString[usEndIndex];
 				//if last line, put line into string structure
-				if (StringPixLength(pCurrentStringLoc, ulFont) < usLineWidthPixels)
+				if (StringPixLength(pCurrentStringLoc, font) < usLineWidthPixels)
 				{
 					// run until end of DestString
 					wcscpy(DestString, pCurrentStringLoc);
@@ -162,7 +161,7 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, zText);
 
 				//error
-				usLineWidthPixels = 1 + StringPixLength(&TempString[usCurIndex], ulFont);
+				usLineWidthPixels = 1 + StringPixLength(&TempString[usCurIndex], font);
 
 				if (pusLineWidthIfWordIsWiderThenWidth != NULL)
 				{
@@ -188,16 +187,16 @@ WRAPPED_STRING* LineWrap(UINT32 ulFont, UINT16 usLineWidthPixels, UINT16* pusLin
 //					the gap in between the lines
 //
 
-UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, const wchar_t* pString, UINT8 ubBackGroundColor, UINT32 uiFlags)
+UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, Font const font, UINT8 ubColor, const wchar_t* pString, UINT8 ubBackGroundColor, UINT32 uiFlags)
 {
 	WRAPPED_STRING *pFirstWrappedString, *pTempWrappedString;
 	UINT16	uiCounter=0;
 	UINT16	usLineWidthIfWordIsWiderThenWidth=0;
   UINT16	usHeight;
 
-  usHeight = GetFontHeight(uiFont);
+  usHeight = GetFontHeight(font);
 
-	pFirstWrappedString = LineWrap(uiFont, usWidth, &usLineWidthIfWordIsWiderThenWidth, pString);
+	pFirstWrappedString = LineWrap(font, usWidth, &usLineWidthIfWordIsWiderThenWidth, pString);
 
 	//if an error occured and a word was bigger then the width passed in, reset the width
 	if( usLineWidthIfWordIsWiderThenWidth != usWidth )
@@ -205,7 +204,7 @@ UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 
 
 	while(pFirstWrappedString != NULL)
 	{
-		DrawTextToScreen(pFirstWrappedString->sString, usPosX, usPosY, usWidth, uiFont, ubColor, ubBackGroundColor, uiFlags);
+		DrawTextToScreen(pFirstWrappedString->sString, usPosX, usPosY, usWidth, font, ubColor, ubBackGroundColor, uiFlags);
 
 		pTempWrappedString = pFirstWrappedString;
 		pFirstWrappedString = pTempWrappedString->pNextWrappedString;
@@ -217,11 +216,11 @@ UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 
 		usPosY += usHeight + ubGap;
 	}
 
-	return uiCounter * (GetFontHeight(uiFont) + ubGap);
+	return uiCounter * (GetFontHeight(font) + ubGap);
 }
 
 
-static void ShadowText(SGPVSurface* dst, const wchar_t* pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY);
+static void ShadowText(SGPVSurface* dst, const wchar_t* pString, Font, UINT16 usPosX, UINT16 usPosY);
 
 
 // DrawTextToScreen	Parameters:
@@ -234,7 +233,7 @@ static void ShadowText(SGPVSurface* dst, const wchar_t* pString, UINT32 uiFont, 
 //			the color of the background
 //			do you want to display it using dirty rects, TRUE or FALSE
 //			flags for either LEFT_JUSTIFIED, CENTER_JUSTIFIED, RIGHT_JUSTIFIED
-void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidth, UINT32 ulFont, UINT8 ubColor, UINT8 ubBackGroundColor, UINT32 ulFlags)
+void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidth, Font const font, UINT8 ubColor, UINT8 ubBackGroundColor, UINT32 ulFlags)
 {
 	UINT16	usFontHeight=0;
 	UINT16	usStringWidth=0;
@@ -245,11 +244,11 @@ void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 
 	INT16 usPosY;
 	if (ulFlags & CENTER_JUSTIFIED)
 	{
-		FindFontCenterCoordinates(usLocX, usLocY, usWidth, GetFontHeight(ulFont), pStr, ulFont, &usPosX, &usPosY);
+		FindFontCenterCoordinates(usLocX, usLocY, usWidth, GetFontHeight(font), pStr, font, &usPosX, &usPosY);
 	}
 	else if( ulFlags & RIGHT_JUSTIFIED )
 	{
-  	FindFontRightCoordinates(usLocX, usLocY, usWidth, GetFontHeight(ulFont), pStr, ulFont, &usPosX, &usPosY);
+  	FindFontRightCoordinates(usLocX, usLocY, usWidth, GetFontHeight(font), pStr, font, &usPosX, &usPosY);
 	}
 	else
 	{
@@ -257,13 +256,13 @@ void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 
 		usPosY = usLocY;
 	}
 
-	SetFont(ulFont);
+	SetFont(font);
 
 	SetFontForeground(ubColor);
 	SetFontBackground(ubBackGroundColor);
 
 	if( ulFlags & TEXT_SHADOWED )
-		ShadowText( FRAME_BUFFER, pStr, ulFont, (UINT16)(usPosX-1), (UINT16)(usPosY-1 ) );
+		ShadowText( FRAME_BUFFER, pStr, font, (UINT16)(usPosX-1), (UINT16)(usPosY-1 ) );
 
 	if (ulFlags & MARK_DIRTY)
 	{
@@ -276,8 +275,8 @@ void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 
 
 	if( ulFlags & INVALIDATE_TEXT )
 	{
-		  usFontHeight = GetFontHeight(ulFont);
-		  usStringWidth = StringPixLength(pStr, ulFont);
+		usFontHeight  = GetFontHeight(font);
+		usStringWidth = StringPixLength(pStr, font);
 
   		InvalidateRegion( usPosX, usPosY, usPosX+usStringWidth, usPosY+usFontHeight );
 	}
@@ -290,12 +289,12 @@ void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 
 //					the gap in between the lines
 //
 
-UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, UINT8 ubColor, const wchar_t* pString, UINT8 ubBackGroundColor, UINT32 uiFlags)
+UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, Font const font, UINT8 ubColor, const wchar_t* pString, UINT8 ubBackGroundColor, UINT32 uiFlags)
 {
 	UINT32 draw_flags = uiFlags & MARK_DIRTY;
 	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0,usPhraseLengthPixels=0;
 	UINT16	usLinesUsed=1,usLocalWidth=usWidth;
-	UINT32	uiLocalFont=uiFont;
+	Font    uiLocalFont = font;
 	UINT16	usJustification = LEFT_JUSTIFIED,usLocalPosX=usPosX;
 	UINT8		ubLocalColor = ubColor;
 	BOOLEAN fBoldOn=FALSE;
@@ -530,7 +529,7 @@ DEF: commented out for Beta.  Nov 30
 							memset(zWordString,0,sizeof(zWordString));
 
 							// turn bold OFF
-							uiLocalFont = uiFont;
+							uiLocalFont = font;
 							fBoldOn     = FALSE;
 
 							// reset dest char counter
@@ -737,7 +736,7 @@ DEF: commented out for Beta.  Nov 30
 	}
 
 	// return how many Y pixels we used
-	return usLinesUsed * (GetFontHeight(uiFont) + ubGap);
+	return usLinesUsed * (GetFontHeight(font) + ubGap);
 }
 
 
@@ -825,11 +824,11 @@ void CleanOutControlCodesFromString(const wchar_t* pSourceString, wchar_t* pDest
 
 
 // now variant for grabbing height
-UINT16 IanWrappedStringHeight(UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, const wchar_t* pString)
+UINT16 IanWrappedStringHeight(UINT16 usWidth, UINT8 ubGap, Font const font, const wchar_t* pString)
 {
 	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0;
 	UINT16	usLinesUsed=1;
-	UINT32	uiLocalFont=uiFont;
+	Font    uiLocalFont = font;
 	UINT16	usJustification = LEFT_JUSTIFIED;
 	BOOLEAN fBoldOn=FALSE;
 	CHAR16	zLineString[640] = L"",zWordString[640]= L"";
@@ -945,7 +944,7 @@ UINT16 IanWrappedStringHeight(UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, const 
 							memset(zWordString,0,sizeof(zWordString));
 
 							// turn bold OFF
-							uiLocalFont = uiFont;
+							uiLocalFont = font;
 							fBoldOn     = FALSE;
 
 							// reset dest char counter
@@ -1043,34 +1042,32 @@ UINT16 IanWrappedStringHeight(UINT16 usWidth, UINT8 ubGap, UINT32 uiFont, const 
 
 
 	// return how many Y pixels we used
-	return usLinesUsed * (GetFontHeight(uiFont) + ubGap);
+	return usLinesUsed * (GetFontHeight(font) + ubGap);
 }
 
 
 // Places a shadow the width an height of the string, to PosX, posY
-static void ShadowText(SGPVSurface* const dst, const wchar_t* pString, UINT32 uiFont, UINT16 usPosX, UINT16 usPosY)
+static void ShadowText(SGPVSurface* const dst, const wchar_t* pString, Font const font, UINT16 usPosX, UINT16 usPosY)
 {
-	UINT32 uiLength = StringPixLength( pString, uiFont);
-	UINT16 usFontHeight = GetFontHeight(uiFont);
-
+	UINT32 const uiLength     = StringPixLength(pString, font);
+	UINT16 const usFontHeight = GetFontHeight(font);
 	ShadowVideoSurfaceRect(dst, usPosX, usPosY, usPosX + uiLength + 1, usPosY + usFontHeight + 1);
 }
 
 
-void ReduceStringLength(wchar_t* pString, size_t Length, UINT32 uiWidthToFitIn, UINT32 uiFont)
+void ReduceStringLength(wchar_t* pString, size_t Length, UINT32 uiWidthToFitIn, Font const font)
 {
 	//if the string is wider then the loaction
-	if (StringPixLength(pString, uiFont) <= uiWidthToFitIn) return;
+	if (StringPixLength(pString, font) <= uiWidthToFitIn) return;
 
-	HVOBJECT Font = GetFontObject(uiFont);
 	const wchar_t* const Dots = L"...";
-	UINT32 RestWidth = uiWidthToFitIn - StringPixLength(Dots, uiFont);
+	UINT32 RestWidth = uiWidthToFitIn - StringPixLength(Dots, font);
 
 	//loop through and add each character, 1 at a time
 	UINT32 i;
 	for (i = 0;; i++)
 	{
-		UINT32 CharWidth = GetCharWidth(Font, pString[i]);
+		UINT32 CharWidth = GetCharWidth(font, pString[i]);
 		if (CharWidth > RestWidth) break;
 		RestWidth -= CharWidth;
 	}

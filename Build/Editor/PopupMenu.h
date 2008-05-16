@@ -74,7 +74,7 @@ typedef struct currentPopupMenuInformation{
 	UINT8 ubMaxEntriesPerColumn;
 	UINT8 ubColumnWidth[ MAX_COLUMNS ];
 	UINT8 ubActiveType;
-	UINT16 usFont;
+	Font    usFont;
 	BOOLEAN fActive;
 	BOOLEAN fUseKeyboardInfoUntilMouseMoves;
   UINT16 usLeft, usTop, usRight, usBottom;	//popup region coords.

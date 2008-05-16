@@ -146,10 +146,10 @@ static CRDT_NODE* g_credits_tail;
 static INT32 giCurrentlySelectedFace;
 
 
-static UINT32 guiCreditScreenActiveFont;  // the font that is used
-static UINT32 guiCreditScreenTitleFont;   // the font that is used
-static UINT8  gubCreditScreenActiveColor; // color of the font
-static UINT8  gubCreditScreenTitleColor;  // color of a Title node
+static Font  guiCreditScreenActiveFont;  // the font that is used
+static Font  guiCreditScreenTitleFont;   // the font that is used
+static UINT8 gubCreditScreenActiveColor; // color of the font
+static UINT8 gubCreditScreenTitleColor;  // color of a Title node
 
 static UINT32 guiCrdtNodeScrollSpeed;      // speed credits go up at
 static UINT32 guiCrdtLastTimeUpdatingNode; // the last time a node was read from the file
@@ -345,8 +345,8 @@ static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	if (pNodeToAdd == NULL) return;
 
 	//Determine the font and the color to use
-	UINT32 uiFontToUse;
-	UINT8  uiColorToUse;
+	Font  uiFontToUse;
+	UINT8 uiColorToUse;
 	if (uiFlags & CRDT_FLAG__TITLE)
 	{
 		uiFontToUse  = guiCreditScreenTitleFont;

@@ -666,7 +666,7 @@ INT32 CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT1
 }
 
 
-INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
+INT32 CreateTextButton(const wchar_t *string, Font const font, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
@@ -676,7 +676,7 @@ INT32 CreateTextButton(const wchar_t *string, UINT32 uiFont, INT16 sForeColor, I
 	if (b == NULL) return BUTTON_NO_SLOT;
 
 	CopyButtonText(b, string);
-	b->usFont       = uiFont;
+	b->usFont       = font;
 	b->sForeColor   = sForeColor;
 	b->sShadowColor = sShadowColor;
 
@@ -746,14 +746,14 @@ INT32 QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT3
 }
 
 
-INT32 CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* const string, const UINT32 uiFont, const INT16 sForeColor, const INT16 sShadowColor, const INT16 sForeColorDown, const INT16 sShadowColorDown, const INT16 xloc, const INT16 yloc, const INT16 Priority, const GUI_CALLBACK ClickCallback)
+INT32 CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* const string, Font const font, const INT16 sForeColor, const INT16 sShadowColor, const INT16 sForeColorDown, const INT16 sShadowColorDown, const INT16 xloc, const INT16 yloc, const INT16 Priority, const GUI_CALLBACK ClickCallback)
 {
 	const INT32 id = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);
 	if (id != BUTTON_NO_SLOT)
 	{
 		GUI_BUTTON* const b = GetButton(id);
 		CopyButtonText(b, string);
-		b->usFont           = uiFont;
+		b->usFont           = font;
 		b->sForeColor       = sForeColor;
 		b->sShadowColor     = sShadowColor;
 		b->sForeColorDown   = sForeColorDown;
@@ -764,7 +764,7 @@ INT32 CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* const str
 }
 
 
-INT32 CreateLabel(const wchar_t* text, UINT32 font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
+INT32 CreateLabel(const wchar_t* text, Font const font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
 {
 	INT32 btn = CreateTextButton(text, font, forecolor, shadowcolor, x, y, w, h, priority, NULL);
 	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_NONE);
@@ -817,13 +817,13 @@ void SpecifyButtonTextJustification(INT32 iButtonID, INT8 bJustification)
 }
 
 
-void SpecifyGeneralButtonTextAttributes(INT32 iButtonID, const wchar_t* string, INT32 uiFont, INT16 sForeColor, INT16 sShadowColor)
+void SpecifyGeneralButtonTextAttributes(INT32 iButtonID, const wchar_t* string, Font const font, INT16 sForeColor, INT16 sShadowColor)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
 	//Copy over information
 	SpecifyButtonText(iButtonID, string);
-	b->usFont = uiFont;
+	b->usFont       = font;
 	b->sForeColor = sForeColor;
 	b->sShadowColor = sShadowColor;
 	b->uiFlags |= BUTTON_DIRTY;

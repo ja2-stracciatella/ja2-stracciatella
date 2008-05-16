@@ -1003,7 +1003,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 	CHAR16		zBalanceString[128];
 	SAVED_GAME_HEADER SaveGameHeader;
 	UINT16		usPosX=SLG_FIRST_SAVED_SPOT_X;
-	UINT32		uiFont= SAVE_LOAD_TITLE_FONT;
+	Font              font = SAVE_LOAD_TITLE_FONT;
 	UINT8			ubFontColor=SAVE_LOAD_TITLE_COLOR;
 	UINT16		usPosY = SLG_FIRST_SAVED_SPOT_Y + ( SLG_GAP_BETWEEN_LOCATIONS * bEntryID );
 
@@ -1033,7 +1033,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 	{
 		SetFontShadow( SAVE_LOAD_QUICKSAVE_SHADOW_COLOR );
 		ubFontColor = SAVE_LOAD_QUICKSAVE_COLOR;
-		uiFont = SAVE_LOAD_QUICKSAVE_FONT;
+		font = SAVE_LOAD_QUICKSAVE_FONT;
 
 		//Shadow the slot
 //		if( !gbSaveGameArray[ bEntryID ] )
@@ -1046,7 +1046,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 
 		SetFontShadow( SAVE_LOAD_SELECTED_SHADOW_COLOR );			//130
 		ubFontColor = SAVE_LOAD_SELECTED_COLOR;//SAVE_LOAD_NORMAL_COLOR;
-		uiFont = SAVE_LOAD_SELECTED_FONT;
+		font = SAVE_LOAD_SELECTED_FONT;
 	}
 
 	//else it is the highlighted slot
@@ -1054,7 +1054,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 	{
 		SetFontShadow( SAVE_LOAD_HIGHLIGHTED_SHADOW_COLOR );
 		ubFontColor = SAVE_LOAD_HIGHLIGHTED_COLOR;
-		uiFont = SAVE_LOAD_HIGHLIGHTED_FONT;
+		font = SAVE_LOAD_HIGHLIGHTED_FONT;
 	}
 
 	//if the file doesnt exists
@@ -1065,7 +1065,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 		{
 			SetFontShadow( SAVE_LOAD_QUICKSAVE_SHADOW_COLOR );
 			ubFontColor = SAVE_LOAD_QUICKSAVE_COLOR;
-			uiFont = SAVE_LOAD_QUICKSAVE_FONT;
+			font = SAVE_LOAD_QUICKSAVE_FONT;
 
 			//Shadow the surface
 			ShadowVideoSurfaceRect( FRAME_BUFFER, usPosX, usPosY, usPosX+SLG_SAVELOCATION_WIDTH, usPosY+SLG_SAVELOCATION_HEIGHT );
@@ -1074,14 +1074,14 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 		{
 			SetFontShadow( SAVE_LOAD_EMPTYSLOT_SHADOW_COLOR		 );
 			ubFontColor = SAVE_LOAD_EMPTYSLOT_COLOR;
-			uiFont = SAVE_LOAD_EMPTYSLOT_FONT;
+			font = SAVE_LOAD_EMPTYSLOT_FONT;
 		}
 	}
 	else
 	{
 		SetFontShadow( SAVE_LOAD_NORMAL_SHADOW_COLOR );
 		ubFontColor = SAVE_LOAD_NORMAL_COLOR;
-		uiFont = SAVE_LOAD_NORMAL_FONT;
+		font = SAVE_LOAD_NORMAL_FONT;
 	}
 
 
@@ -1151,7 +1151,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 
 
 			//The date
-			DrawTextToScreen(zMouseHelpTextString, usPosX + SLG_DATE_OFFSET_X, usPosY + SLG_DATE_OFFSET_Y, 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DrawTextToScreen(zMouseHelpTextString, usPosX + SLG_DATE_OFFSET_X, usPosY + SLG_DATE_OFFSET_Y, 0, font, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		}
 		else
 		{
@@ -1200,24 +1200,24 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 			//
 
 			//The date
-			DrawTextToScreen(zDateString, usPosX + SLG_DATE_OFFSET_X, usPosY + SLG_DATE_OFFSET_Y, 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DrawTextToScreen(zDateString, usPosX + SLG_DATE_OFFSET_X, usPosY + SLG_DATE_OFFSET_Y, 0, font, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//if the sector string exceeds the width, and the ...
-			ReduceStringLength( zLocationString, lengthof(zLocationString), SLG_SECTOR_WIDTH, uiFont );
+			ReduceStringLength(zLocationString, lengthof(zLocationString), SLG_SECTOR_WIDTH, font);
 
 			//The Sector
-			DrawTextToScreen(zLocationString, usPosX + SLG_SECTOR_OFFSET_X, usPosY + SLG_SECTOR_OFFSET_Y, 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DrawTextToScreen(zLocationString, usPosX + SLG_SECTOR_OFFSET_X, usPosY + SLG_SECTOR_OFFSET_Y, 0, font, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//The Num of mercs
-			DrawTextToScreen(zNumMercsString, usPosX + SLG_NUM_MERCS_OFFSET_X, usPosY + SLG_NUM_MERCS_OFFSET_Y, 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DrawTextToScreen(zNumMercsString, usPosX + SLG_NUM_MERCS_OFFSET_X, usPosY + SLG_NUM_MERCS_OFFSET_Y, 0, font, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//The balance
-			DrawTextToScreen(zBalanceString, usPosX + SLG_BALANCE_OFFSET_X, usPosY + SLG_BALANCE_OFFSET_Y, 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DrawTextToScreen(zBalanceString, usPosX + SLG_BALANCE_OFFSET_X, usPosY + SLG_BALANCE_OFFSET_Y, 0, font, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			if( gbSaveGameArray[ bEntryID ] || ( gfSaveGame && !gfUserInTextInputMode && ( gbSelectedSaveLocation == bEntryID ) ) )
 			{
 				//The Saved Game description
-				DrawTextToScreen(SaveGameHeader.sSavedGameDesc, usPosX + SLG_SAVE_GAME_DESC_X, usPosY + SLG_SAVE_GAME_DESC_Y, 0, uiFont, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+				DrawTextToScreen(SaveGameHeader.sSavedGameDesc, usPosX + SLG_SAVE_GAME_DESC_X, usPosY + SLG_SAVE_GAME_DESC_Y, 0, font, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 			}
 		}
 	}
@@ -1227,12 +1227,12 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 		if( bEntryID == 0 )
 		{
 			//display the empty spot
-			DrawTextToScreen(pMessageStrings[MSG_EMPTY_QUICK_SAVE_SLOT], usPosX, usPosY + SLG_DATE_OFFSET_Y, 609, uiFont, ubFontColor, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+			DrawTextToScreen(pMessageStrings[MSG_EMPTY_QUICK_SAVE_SLOT], usPosX, usPosY + SLG_DATE_OFFSET_Y, 609, font, ubFontColor, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 		}
 		else
 		{
 			//display the empty spot
-			DrawTextToScreen(pMessageStrings[MSG_EMPTYSLOT], usPosX, usPosY + SLG_DATE_OFFSET_Y, 609, uiFont, ubFontColor, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+			DrawTextToScreen(pMessageStrings[MSG_EMPTYSLOT], usPosX, usPosY + SLG_DATE_OFFSET_Y, 609, font, ubFontColor, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 		}
 	}
 

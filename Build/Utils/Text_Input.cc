@@ -22,7 +22,7 @@ BOOLEAN gfNoScroll = FALSE;
 typedef struct TextInputColors
 {
 	//internal values that contain all of the colors for the text editing fields.
-	UINT16 usFont;
+	Font    usFont;
 	UINT16 usTextFieldColor;
 	UINT8 ubForeColor, ubShadowColor;
 	UINT8 ubHiForeColor, ubHiShadowColor, ubHiBackColor;
@@ -624,10 +624,11 @@ static void SelectPrevField(void)
 //under no circumstances would a user want a different color for each field.  It follows the Win95 convention
 //that all text input boxes are exactly the same color scheme.  However, these colors can be set at anytime,
 //but will effect all of the colors.
-void SetTextInputFont( UINT16 usFont )
+void SetTextInputFont(Font const font)
 {
-	pColors->usFont = usFont;
+	pColors->usFont = font;
 }
+
 
 void Set16BPPTextFieldColor( UINT16 usTextFieldColor )
 {
@@ -1067,7 +1068,7 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 			}
 
 			//Calculate the cursor position.
-			HVOBJECT font = GetFontObject(pColors->usFont);
+			Font const font = pColors->usFont;
 			INT32 click_x = gusMouseXPos - reg->RegionTopLeftX;
 			size_t i;
 			INT32 char_pos = 0;
@@ -1107,7 +1108,7 @@ static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 		//Signifies that we are typing text now.
 		gfEditingText = TRUE;
 		//Calculate the cursor position.
-		HVOBJECT font = GetFontObject(pColors->usFont);
+		Font const font = pColors->usFont;
 		INT32 click_x = gusMouseXPos - reg->RegionTopLeftX;
 		size_t i;
 		INT32 char_pos = 0;
@@ -1173,7 +1174,7 @@ static void RenderActiveTextField(void)
 			usEnd = gubStartHilite;
 		}
 		//Traverse the string one character at a time, and draw the highlited part differently.
-		HVOBJECT Font = GetFontObject(pColors->usFont);
+		Font const font = pColors->usFont;
 		UINT32 x = gpActive->region.RegionTopLeftX + 3;
 		UINT32 y = gpActive->region.RegionTopLeftY + usOffset;
 		for( i = 0; i < gpActive->ubStrLen; i++ )
@@ -1191,7 +1192,7 @@ static void RenderActiveTextField(void)
 				SetFontBackground( 0 );
 			}
 			mprintf(x, y, L"%lc", gpActive->szString[i]);
-			x += GetCharWidth(Font, gpActive->szString[i]);
+			x += GetCharWidth(font, gpActive->szString[i]);
 		}
 	}
 	else
@@ -1205,7 +1206,7 @@ static void RenderActiveTextField(void)
 	if (gfEditingText && gpActive->szString && GetJA2Clock() % 1000 < 500)
 	{	//draw the blinking ibeam cursor during the on blink period.
 		UINT32         dx   = 2;
-		const HVOBJECT font = GetFontObject(pColors->usFont);
+		Font const     font = pColors->usFont;
 		const wchar_t* str  = gpActive->szString;
 		for (size_t i = gubCursorPos; i != 0; --i)
 		{

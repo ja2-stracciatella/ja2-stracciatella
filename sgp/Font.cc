@@ -15,10 +15,8 @@
 #define MAX_FONTS 25
 
 
-static HVOBJECT FontObjs[MAX_FONTS];
-
 // Destination printing parameters
-INT32 FontDefault = -1;
+Font                FontDefault      = 0;
 static SGPVSurface* FontDestBuffer;
 static SGPRect      FontDestRegion   = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 static UINT16       FontForeground16 = 0;
@@ -26,7 +24,7 @@ static UINT16       FontBackground16 = 0;
 static UINT16       FontShadow16     = DEFAULT_SHADOW;
 
 // Temp, for saving printing parameters
-static INT32        SaveFontDefault      = -1;
+static Font         SaveFontDefault      = 0;
 static SGPVSurface* SaveFontDestBuffer   = NULL;
 static SGPRect      SaveFontDestRegion   = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 static UINT16       SaveFontForeground16 = 0;
@@ -54,18 +52,16 @@ void SetFontColors(UINT16 usColors)
  * currently set to. */
 void SetFontForeground(UINT8 ubForeground)
 {
-	if (FontDefault < 0 || (FontDefault > MAX_FONTS)) return;
-
-	const SGPPaletteEntry* const c = &FontObjs[FontDefault]->Palette()[ubForeground];
+	if (!FontDefault) return;
+	const SGPPaletteEntry* const c = &FontDefault->Palette()[ubForeground];
 	FontForeground16 = Get16BPPColor(FROMRGB(c->peRed, c->peGreen, c->peBlue));
 }
 
 
 void SetFontShadow(UINT8 ubShadow)
 {
-	if (FontDefault < 0 || FontDefault > MAX_FONTS) return;
-
-	const SGPPaletteEntry* const c = &FontObjs[FontDefault]->Palette()[ubShadow];
+	if (!FontDefault) return;
+	const SGPPaletteEntry* const c = &FontDefault->Palette()[ubShadow];
 	FontShadow16 = Get16BPPColor(FROMRGB(c->peRed, c->peGreen, c->peBlue));
 
 	if (ubShadow != 0 && FontShadow16 == 0) FontShadow16 = 1;
@@ -80,78 +76,40 @@ void SetFontShadow(UINT8 ubShadow)
  * currently set to. */
 void SetFontBackground(UINT8 ubBackground)
 {
-	if (FontDefault < 0 || FontDefault > MAX_FONTS) return;
-
-	const SGPPaletteEntry* const c = &FontObjs[FontDefault]->Palette()[ubBackground];
+	if (!FontDefault) return;
+	const SGPPaletteEntry* const c = &FontDefault->Palette()[ubBackground];
 	FontBackground16 = Get16BPPColor(FROMRGB(c->peRed, c->peGreen, c->peBlue));
-}
-
-
-/* Returns the VOBJECT pointer of a font. */
-HVOBJECT GetFontObject(INT32 iFont)
-{
-	Assert(iFont >= 0);
-	Assert(iFont <= MAX_FONTS);
-	Assert(FontObjs[iFont] != NULL);
-
-	return(FontObjs[iFont]);
-}
-
-
-/* Locates an empty slot in the font table. */
-static INT32 FindFreeFont(void)
-{
-	for (int count = 0; count < MAX_FONTS; count++)
-		if (FontObjs[count] == NULL) return count;
-
-	return -1;
 }
 
 
 /* Loads a font from an ETRLE file, and inserts it into one of the font slots.
  * This function returns (-1) if it fails, and debug msgs for a reason.
  * Otherwise the font number is returned. */
-INT32 LoadFontFile(const char *filename)
+Font LoadFontFile(const char *filename)
 try
 {
 	Assert(filename != NULL);
 	Assert(strlen(filename));
 
-	UINT32 LoadIndex = FindFreeFont();
-	if (LoadIndex == -1)
-	{
-		DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Out of font slots (%s)", filename));
-#ifdef JA2
-		FatalError("Cannot init FONT file %s", filename);
-#endif
-		return -1;
-	}
-
-	FontObjs[LoadIndex] = AddVideoObjectFromFile(filename);
-
-	if (FontDefault == -1) FontDefault = LoadIndex;
-
-	return LoadIndex;
+	Font const font = AddVideoObjectFromFile(filename);
+	if (!FontDefault) FontDefault = font;
+	return font;
 }
 catch (...)
 {
 #ifdef JA2
 	FatalError("Cannot init FONT file %s", filename);
 #endif
-	return -1;
+	return 0;
 }
 
 
 /* Deletes the video object of a particular font. Frees up the memory and
  * resources allocated for it. */
-void UnloadFont(UINT32 FontIndex)
+void UnloadFont(Font const font)
 {
-	Assert(FontIndex >= 0);
-	Assert(FontIndex <= MAX_FONTS);
-	Assert(FontObjs[FontIndex] != NULL);
-
-	DeleteVideoObject(FontObjs[FontIndex]);
-	FontObjs[FontIndex] = NULL;
+	Assert(font);
+	DeleteVideoObject(font);
 }
 
 
@@ -167,14 +125,14 @@ static UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex)
 
 
 /* Returns the length of a string in pixels, depending on the font given. */
-INT16 StringPixLength(const wchar_t *string, INT32 UseFont)
+INT16 StringPixLength(const wchar_t *string, Font const font)
 {
 	if (string == NULL) return 0;
 
 	UINT32 Cur = 0;
 	for (const wchar_t* curletter = string; *curletter != L'\0'; curletter++)
 	{
-		Cur += GetCharWidth(FontObjs[UseFont], *curletter);
+		Cur += GetCharWidth(font, *curletter);
 	}
 	return Cur;
 }
@@ -216,13 +174,10 @@ static UINT32 GetHeight(HVOBJECT hSrcVObject, INT16 ssIndex)
 
 
 /* Returns the height of the first character in a font. */
-UINT16 GetFontHeight(INT32 FontNum)
+UINT16 GetFontHeight(Font const font)
 {
-	Assert(FontNum >= 0);
-	Assert(FontNum <= MAX_FONTS);
-	Assert(FontObjs[FontNum] != NULL);
-
-	return GetHeight(FontObjs[FontNum], 0);
+	Assert(font);
+	return GetHeight(font, 0);
 }
 
 
@@ -252,14 +207,10 @@ UINT32 GetCharWidth(HVOBJECT Font, wchar_t c)
 
 
 /* Sets the current font number. */
-BOOLEAN SetFont(INT32 iFontIndex)
+void SetFont(Font const font)
 {
-	Assert(iFontIndex >= 0);
-	Assert(iFontIndex <= MAX_FONTS);
-	Assert(FontObjs[iFontIndex] != NULL);
-
-	FontDefault = iFontIndex;
-	return TRUE;
+	Assert(font);
+	FontDefault = font;
 }
 
 
@@ -278,22 +229,22 @@ BOOLEAN SetFontDestBuffer(SGPVSurface* const dst, const INT32 x1, const INT32 y1
 }
 
 
-void FindFontRightCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, INT32 iFontIndex, INT16* psNewX, INT16* psNewY)
+void FindFontRightCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, Font const font, INT16* psNewX, INT16* psNewY)
 {
 	// Compute the coordinates to right justify the text
-	INT16 xp = sWidth - StringPixLength(pStr, iFontIndex) + sLeft;
-	INT16 yp = (sHeight - GetFontHeight(iFontIndex)) / 2 + sTop;
+	INT16 xp = sWidth - StringPixLength(pStr, font) + sLeft;
+	INT16 yp = (sHeight - GetFontHeight(font)) / 2 + sTop;
 
 	*psNewX = xp;
 	*psNewY = yp;
 }
 
 
-void FindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, INT32 iFontIndex, INT16* psNewX, INT16* psNewY)
+void FindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, Font const font, INT16* psNewX, INT16* psNewY)
 {
 	// Compute the coordinates to center the text
-	INT16 xp = (sWidth - StringPixLength(pStr, iFontIndex) + 1) / 2 + sLeft;
-	INT16 yp = (sHeight - GetFontHeight(iFontIndex)) / 2 + sTop;
+	INT16 xp = (sWidth - StringPixLength(pStr, font) + 1) / 2 + sLeft;
+	INT16 yp = (sHeight - GetFontHeight(font)) / 2 + sTop;
 
 	*psNewX = xp;
 	*psNewY = yp;
@@ -321,11 +272,12 @@ UINT32 gprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 	UINT16* const pDestBuf         = l.Buffer<UINT16>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
+	Font const font = FontDefault;
 	for (const wchar_t* curletter = string; *curletter != L'\0'; curletter++)
 	{
 		wchar_t transletter = GetIndex(*curletter);
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion);
-		destx += GetWidth(FontObjs[FontDefault], transletter);
+		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, font, destx, desty, transletter, &FontDestRegion);
+		destx += GetWidth(font, transletter);
 	}
 
 	return 0;
@@ -334,7 +286,7 @@ UINT32 gprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 
 static void mprint_buffer(UINT16* const pDestBuf, UINT32 const uiDestPitchBYTES, INT32 x, INT32 const y, wchar_t const* str)
 {
-	HVOBJECT const font = FontObjs[FontDefault];
+	Font const font = FontDefault;
 	for (; *str != L'\0'; ++str)
 	{
 		wchar_t const glyph = GetIndex(*str);
@@ -389,6 +341,7 @@ static UINT32 vmprintf_buffer_coded(UINT16* const pDestBuf, const UINT32 uiDestP
 
 	UINT16 usOldForeColor = FontForeground16;
 
+	Font const font = FontDefault;
 	for (const wchar_t* curletter = string; *curletter != 0; curletter++)
 	{
 		if (*curletter == 180)
@@ -404,8 +357,8 @@ static UINT32 vmprintf_buffer_coded(UINT16* const pDestBuf, const UINT32 uiDestP
 		}
 
 		wchar_t transletter = GetIndex(*curletter);
-		Blt8BPPDataTo16BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, FontObjs[FontDefault], destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
-		destx += GetWidth(FontObjs[FontDefault], transletter);
+		Blt8BPPDataTo16BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, font, destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
+		destx += GetWidth(font, transletter);
 	}
 
 	return 0;
@@ -437,16 +390,13 @@ void mprintf_coded(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 /* Starts up the font manager system with the appropriate translation table. */
 BOOLEAN InitializeFontManager(void)
 {
-	FontDefault = -1;
+	FontDefault    = 0;
 	FontDestBuffer = BACKBUFFER;
 
 	FontDestRegion.iLeft   = 0;
 	FontDestRegion.iTop    = 0;
 	FontDestRegion.iRight  = SCREEN_WIDTH;
 	FontDestRegion.iBottom = SCREEN_HEIGHT;
-
-	// Mark all font slots as empty
-	for (int count = 0; count < MAX_FONTS; count++) FontObjs[count] = NULL;
 
 	return TRUE;
 }
@@ -455,8 +405,4 @@ BOOLEAN InitializeFontManager(void)
 /* Shuts down, and deallocates all fonts. */
 void ShutdownFontManager(void)
 {
-	for (INT32 count = 0; count < MAX_FONTS; count++)
-	{
-		if (FontObjs[count] != NULL) UnloadFont(count);
-	}
 }

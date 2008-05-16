@@ -454,11 +454,10 @@ void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 //This is a new function which duplicates the older "yellow info boxes" that
 //are common throughout the editor.  This draws the yellow box with the indentation
 //look.
-void DrawEditorInfoBox(const wchar_t* str, UINT32 uiFont, UINT16 x, UINT16 y, UINT16 w, UINT16 h)
+void DrawEditorInfoBox(const wchar_t* str, Font const font, UINT16 x, UINT16 y, UINT16 w, UINT16 h)
 {
 	UINT16 usFillColorDark, usFillColorLight, usFillColorBack;
 	UINT16 x2, y2;
-	UINT16 usStrWidth;
 
 	x2 = x + w;
 	y2 = y + h;
@@ -471,19 +470,19 @@ void DrawEditorInfoBox(const wchar_t* str, UINT32 uiFont, UINT16 x, UINT16 y, UI
 	ColorFillVideoSurfaceArea(ButtonDestBuffer, x + 1, y + 1, x2, y2, usFillColorLight);
 	ColorFillVideoSurfaceArea(ButtonDestBuffer, x + 1, y + 1, x2 - 1, y2 - 1, usFillColorBack);
 
-	usStrWidth = StringPixLength( str, uiFont );
+	UINT16 const usStrWidth = StringPixLength(str, font);
 	if( usStrWidth > w )
 	{ //the string is too long, so use the wrapped method
 		y += 1;
-		DisplayWrappedString(x, y, w, 2, uiFont, FONT_BLACK, str, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
+		DisplayWrappedString(x, y, w, 2, font, FONT_BLACK, str, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 		return;
 	}
 	//center the string vertically and horizontally.
-	SetFont( uiFont );
+	SetFont(font);
 	SetFontForeground( FONT_BLACK );
 	SetFontShadow( FONT_BLACK );
-	x += (w - StringPixLength(str, uiFont)) / 2;
-	y += (h - GetFontHeight(uiFont)) / 2;
+	x += (w - StringPixLength(str, font)) / 2;
+	y += (h - GetFontHeight(font)) / 2;
 	MPrint(x, y, str);
 	InvalidateRegion( x, y, x2, y2 );
 }

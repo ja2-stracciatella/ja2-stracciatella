@@ -741,7 +741,7 @@ static void PlaceMessagesinPages(void)
 static void DrawEmailSummary(INT32 y, const Email* e)
 {
 	const BOOLEAN read = e->fRead;
-	const UINT32  font = read ? MESSAGE_FONT : FONT10ARIALBOLD;
+	const Font    font = read ? MESSAGE_FONT : FONT10ARIALBOLD;
 
   // will draw the icon for letter in mail list depending if the mail has been read or not
 	BltVideoObject(FRAME_BUFFER, guiEmailIndicator, read ? 0 : 1, INDIC_X, y + 2);
@@ -901,7 +901,7 @@ static void BtnMessageXCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static Record* GetFirstRecordOnThisPage(Record* RecordList, UINT32 uiFont, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize)
+static Record* GetFirstRecordOnThisPage(Record* RecordList, Font const font, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize)
 {
 	// get the first record on this page - build pages up until this point
 
@@ -926,11 +926,11 @@ static Record* GetFirstRecordOnThisPage(Record* RecordList, UINT32 uiFont, UINT1
 	while( iCurrentPage < iPage )
 	{
 		// build record list to this point
-		while (iCurrentPositionOnThisPage + IanWrappedStringHeight(usWidth, ubGap, uiFont, CurrentRecord->pRecord) <= iPageSize)
+		while (iCurrentPositionOnThisPage + IanWrappedStringHeight(usWidth, ubGap, font, CurrentRecord->pRecord) <= iPageSize)
 		{
 
 			// still room on this page
-			iCurrentPositionOnThisPage += IanWrappedStringHeight(usWidth, ubGap, uiFont, CurrentRecord->pRecord);
+			iCurrentPositionOnThisPage += IanWrappedStringHeight(usWidth, ubGap, font, CurrentRecord->pRecord);
 
 			// next record
 			CurrentRecord = CurrentRecord -> Next;

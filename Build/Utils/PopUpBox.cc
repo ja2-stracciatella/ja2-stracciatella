@@ -41,7 +41,7 @@ struct PopUpBox
 	UINT32 uiBoxMinWidth;
 	BOOLEAN fUpdated;
 	BOOLEAN fShowBox;
-	UINT32  font;
+	Font    font;
 
 	PopUpString* Text[MAX_POPUP_BOX_STRING_COUNT];
 	PopUpString* pSecondColumnString[MAX_POPUP_BOX_STRING_COUNT];
@@ -251,7 +251,7 @@ UINT32 GetNumberOfLinesOfTextInBox(const PopUpBox* const box)
 }
 
 
-void SetBoxFont(PopUpBox* const box, const UINT32 font)
+void SetBoxFont(PopUpBox* const box, Font const font)
 {
 	box->font     = font;
 	box->fUpdated = FALSE;
@@ -264,7 +264,7 @@ void SetBoxSecondColumnMinimumOffset(PopUpBox* const box, const UINT32 uiWidth)
 }
 
 
-UINT32 GetBoxFont(const PopUpBox* const box)
+Font GetBoxFont(const PopUpBox* const box)
 {
 	return box->font;
 }
@@ -573,13 +573,13 @@ static void DrawBox(const PopUpBox* const box)
 
 static void DrawBoxText(const PopUpBox* const box)
 {
-	const UINT32 font = box->font;
-	const INT32  tlx  = box->pos.x + box->uiLeftMargin;
-	const INT32  tly  = box->pos.y + box->uiTopMargin;
-	const INT32  brx  = box->pos.x + box->pos.w - box->uiRightMargin;
-	const INT32  bry  = box->pos.y + box->pos.h - box->uiBottomMargin;
-	const INT32  w    = box->pos.w - (box->uiRightMargin + box->uiLeftMargin + 2);
-	const INT32  h    = GetFontHeight(font);
+	Font  const font = box->font;
+	INT32 const tlx  = box->pos.x + box->uiLeftMargin;
+	INT32 const tly  = box->pos.y + box->uiTopMargin;
+	INT32 const brx  = box->pos.x + box->pos.w - box->uiRightMargin;
+	INT32 const bry  = box->pos.y + box->pos.h - box->uiBottomMargin;
+	INT32 const w    = box->pos.w - (box->uiRightMargin + box->uiLeftMargin + 2);
+	INT32 const h    = GetFontHeight(font);
 
 	SetFont(font);
 	SetFontDestBuffer(box->uiBuffer, tlx - 1, tly, brx, bry);
@@ -672,7 +672,7 @@ static void DrawBoxText(const PopUpBox* const box)
 
 void ResizeBoxToText(PopUpBox* const box)
 {
-	const UINT32 font = box->font;
+	Font const font = box->font;
 	UINT32 max_lw = 0; // width of left  column
 	UINT32 max_rw = 0; // width of right column
 	UINT i;

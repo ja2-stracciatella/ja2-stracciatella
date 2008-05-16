@@ -8,65 +8,61 @@
 #include "MemMan.h"
 
 
-INT32 gp10PointArial;
-INT32 gp10PointArialBold;
-INT32 gp12PointArial;
-INT32 gp12PointArialFixedFont;
-INT32 gp12PointFont1;
-INT32 gp14PointArial;
-INT32 gp14PointHumanist;
-INT32 gp16PointArial;
-INT32 gpBlockFontNarrow;
-INT32 gpBlockyFont;
-INT32 gpBlockyFont2;
-INT32 gpCompFont;
-INT32 gpLargeFontType1;
-INT32 gpSmallCompFont;
-INT32 gpSmallFontType1;
-INT32 gpTinyFontType1;
+Font gp10PointArial;
+Font gp10PointArialBold;
+Font gp12PointArial;
+Font gp12PointArialFixedFont;
+Font gp12PointFont1;
+Font gp14PointArial;
+Font gp14PointHumanist;
+Font gp16PointArial;
+Font gpBlockFontNarrow;
+Font gpBlockyFont;
+Font gpBlockyFont2;
+Font gpCompFont;
+Font gpLargeFontType1;
+Font gpSmallCompFont;
+Font gpSmallFontType1;
+Font gpTinyFontType1;
 
 #if defined JA2EDITOR && defined ENGLISH
-INT32 gpHugeFont;
+Font gpHugeFont;
 #endif
 
 
-static UINT16 CreateFontPaletteTables(INT32 Font);
+static void CreateFontPaletteTables(Font);
 
-
-#define M(var, file) \
-	(var) = LoadFontFile((file)); \
-	CHECKF(CreateFontPaletteTables((var)));
 
 BOOLEAN	InitializeFonts(void)
 {
-	M(gp10PointArial,          "FONTS/FONT10ARIAL.sti")
-	M(gp10PointArialBold,      "FONTS/FONT10ARIALBOLD.sti")
-	M(gp12PointArial,          "FONTS/FONT12ARIAL.sti")
-	M(gp12PointArialFixedFont, "FONTS/FONT12ARIALFIXEDWIDTH.sti")
-	M(gp12PointFont1,          "FONTS/FONT12POINT1.sti")
-	M(gp14PointArial,          "FONTS/FONT14ARIAL.sti")
-	M(gp14PointHumanist,       "FONTS/FONT14HUMANIST.sti")
-	M(gp16PointArial,          "FONTS/FONT16ARIAL.sti")
-	M(gpBlockFontNarrow,       "FONTS/BLOCKFONTNARROW.sti")
-	M(gpBlockyFont,            "FONTS/BLOCKFONT.sti")
-	M(gpBlockyFont2,           "FONTS/BLOCKFONT2.sti")
-	M(gpCompFont,              "FONTS/COMPFONT.sti")
-	M(gpLargeFontType1,        "FONTS/LARGEFONT1.sti")
-	M(gpSmallCompFont,         "FONTS/SMALLCOMPFONT.sti")
-	M(gpSmallFontType1,        "FONTS/SMALLFONT1.sti")
-	M(gpTinyFontType1,         "FONTS/TINYFONT1.sti")
+#define M(var, file) (CreateFontPaletteTables((var) = LoadFontFile((file))))
+	M(gp10PointArial,          "FONTS/FONT10ARIAL.sti");
+	M(gp10PointArialBold,      "FONTS/FONT10ARIALBOLD.sti");
+	M(gp12PointArial,          "FONTS/FONT12ARIAL.sti");
+	M(gp12PointArialFixedFont, "FONTS/FONT12ARIALFIXEDWIDTH.sti");
+	M(gp12PointFont1,          "FONTS/FONT12POINT1.sti");
+	M(gp14PointArial,          "FONTS/FONT14ARIAL.sti");
+	M(gp14PointHumanist,       "FONTS/FONT14HUMANIST.sti");
+	M(gp16PointArial,          "FONTS/FONT16ARIAL.sti");
+	M(gpBlockFontNarrow,       "FONTS/BLOCKFONTNARROW.sti");
+	M(gpBlockyFont,            "FONTS/BLOCKFONT.sti");
+	M(gpBlockyFont2,           "FONTS/BLOCKFONT2.sti");
+	M(gpCompFont,              "FONTS/COMPFONT.sti");
+	M(gpLargeFontType1,        "FONTS/LARGEFONT1.sti");
+	M(gpSmallCompFont,         "FONTS/SMALLCOMPFONT.sti");
+	M(gpSmallFontType1,        "FONTS/SMALLFONT1.sti");
+	M(gpTinyFontType1,         "FONTS/TINYFONT1.sti");
 
 #if defined JA2EDITOR && defined ENGLISH
 	M(gpHugeFont, "FONTS/HUGEFONT.sti")
 #endif
+#undef M
 
 	// Set default for font system
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return TRUE;
 }
-
-#undef M
 
 
 void ShutdownFonts(void)
@@ -95,39 +91,35 @@ void ShutdownFonts(void)
 
 
 // Set shades for fonts
-void SetFontShade(UINT32 const uiFontID, FontShade const shade)
+void SetFontShade(Font const font, FontShade const shade)
 {
 	CHECKV(0 <= shade && shade < 16);
-	GetFontObject(uiFontID)->CurrentShade(shade);
+	font->CurrentShade(shade);
 }
 
 
-static UINT16 CreateFontPaletteTables(INT32 Font)
+static void CreateFontPaletteTables(Font const f)
 {
-	HVOBJECT pObj = GetFontObject(Font);
-
-	const SGPPaletteEntry* const pal = pObj->Palette();
-	pObj->pShades[FONT_SHADE_RED]     = Create16BPPPaletteShaded(pal, 255,   0,   0, TRUE);
-	pObj->pShades[FONT_SHADE_BLUE]    = Create16BPPPaletteShaded(pal,   0,   0, 255, TRUE);
-	pObj->pShades[FONT_SHADE_GREEN]   = Create16BPPPaletteShaded(pal,   0, 255,   0, TRUE);
-	pObj->pShades[FONT_SHADE_YELLOW]  = Create16BPPPaletteShaded(pal, 255, 255,   0, TRUE);
-	pObj->pShades[FONT_SHADE_NEUTRAL] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
-	pObj->pShades[FONT_SHADE_WHITE]   = Create16BPPPaletteShaded(pal, 255, 255, 255, TRUE);
+	const SGPPaletteEntry* const pal = f->Palette();
+	f->pShades[FONT_SHADE_RED]     = Create16BPPPaletteShaded(pal, 255,   0,   0, TRUE);
+	f->pShades[FONT_SHADE_BLUE]    = Create16BPPPaletteShaded(pal,   0,   0, 255, TRUE);
+	f->pShades[FONT_SHADE_GREEN]   = Create16BPPPaletteShaded(pal,   0, 255,   0, TRUE);
+	f->pShades[FONT_SHADE_YELLOW]  = Create16BPPPaletteShaded(pal, 255, 255,   0, TRUE);
+	f->pShades[FONT_SHADE_NEUTRAL] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+	f->pShades[FONT_SHADE_WHITE]   = Create16BPPPaletteShaded(pal, 255, 255, 255, TRUE);
 
 	// the rest are darkening tables, right down to all-black.
-	pObj->pShades[ 0] = Create16BPPPaletteShaded(pal, 165, 165, 165, FALSE);
-	pObj->pShades[ 7] = Create16BPPPaletteShaded(pal, 135, 135, 135, FALSE);
-	pObj->pShades[ 8] = Create16BPPPaletteShaded(pal, 105, 105, 105, FALSE);
-	pObj->pShades[ 9] = Create16BPPPaletteShaded(pal,  75,  75,  75, FALSE);
-	pObj->pShades[10] = Create16BPPPaletteShaded(pal,  45,  45,  45, FALSE);
-	pObj->pShades[11] = Create16BPPPaletteShaded(pal,  36,  36,  36, FALSE);
-	pObj->pShades[12] = Create16BPPPaletteShaded(pal,  27,  27,  27, FALSE);
-	pObj->pShades[13] = Create16BPPPaletteShaded(pal,  18,  18,  18, FALSE);
-	pObj->pShades[14] = Create16BPPPaletteShaded(pal,   9,   9,   9, FALSE);
-	pObj->pShades[15] = Create16BPPPaletteShaded(pal,   0,   0,   0, FALSE);
+	f->pShades[ 0] = Create16BPPPaletteShaded(pal, 165, 165, 165, FALSE);
+	f->pShades[ 7] = Create16BPPPaletteShaded(pal, 135, 135, 135, FALSE);
+	f->pShades[ 8] = Create16BPPPaletteShaded(pal, 105, 105, 105, FALSE);
+	f->pShades[ 9] = Create16BPPPaletteShaded(pal,  75,  75,  75, FALSE);
+	f->pShades[10] = Create16BPPPaletteShaded(pal,  45,  45,  45, FALSE);
+	f->pShades[11] = Create16BPPPaletteShaded(pal,  36,  36,  36, FALSE);
+	f->pShades[12] = Create16BPPPaletteShaded(pal,  27,  27,  27, FALSE);
+	f->pShades[13] = Create16BPPPaletteShaded(pal,  18,  18,  18, FALSE);
+	f->pShades[14] = Create16BPPPaletteShaded(pal,   9,   9,   9, FALSE);
+	f->pShades[15] = Create16BPPPaletteShaded(pal,   0,   0,   0, FALSE);
 
 	// Set current shade table to neutral color
-	pObj->CurrentShade(FONT_SHADE_NEUTRAL);
-
-	return TRUE;
+	f->CurrentShade(FONT_SHADE_NEUTRAL);
 }

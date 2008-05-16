@@ -622,7 +622,7 @@ static BOOLEAN DisplayFormattedText(void)
 }
 
 
-static FileString* GetFirstStringOnThisPage(FileString* RecordList, UINT32 uiFont, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize, FileRecordWidth* WidthList)
+static FileString* GetFirstStringOnThisPage(FileString* RecordList, Font const font, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize, FileRecordWidth* WidthList)
 {
 	// get the first record on this page - build pages up until this point
 	FileString* CurrentRecord = NULL;
@@ -677,10 +677,10 @@ static FileString* GetFirstStringOnThisPage(FileString* RecordList, UINT32 uiFon
 		}
 
 		// build record list to this point
-		while (iCurrentPositionOnThisPage + IanWrappedStringHeight(usCurrentWidth, ubGap, uiFont, CurrentRecord->pString) < iPageSize)
+		while (iCurrentPositionOnThisPage + IanWrappedStringHeight(usCurrentWidth, ubGap, font, CurrentRecord->pString) < iPageSize)
 		{
 			// still room on this page
-			iCurrentPositionOnThisPage += IanWrappedStringHeight(usCurrentWidth, ubGap, uiFont, CurrentRecord->pString);
+			iCurrentPositionOnThisPage += IanWrappedStringHeight(usCurrentWidth, ubGap, font, CurrentRecord->pString);
 
 			// next record
 			CurrentRecord = CurrentRecord->Next;
@@ -737,7 +737,6 @@ static BOOLEAN HandleSpecialFiles(void)
 	INT32 iYPositionOnPage = 0;
 	INT32 iFileLineWidth = 0;
 	INT32 iFileStartX = 0;
-	UINT32 uiFont = 0;
 	BOOLEAN fGoingOffCurrentPage = FALSE;
 	FileRecordWidth* WidthList = NULL;
 
@@ -785,15 +784,12 @@ static BOOLEAN HandleSpecialFiles(void)
 
 
 		// set up font
-		uiFont = FILES_TEXT_FONT;
+		Font font = FILES_TEXT_FONT;
 		if( giFilesPage == 0 )
 		{
-			switch( iCounter )
+			switch (iCounter)
 			{
-				case( 0 ):
-					uiFont = FILES_TITLE_FONT;
-			 break;
-
+				case 0: font = FILES_TITLE_FONT; break;
 			}
 		}
 
@@ -851,10 +847,10 @@ static BOOLEAN HandleSpecialFiles(void)
 		}
 		// not far enough, advance
 
-		if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, uiFont, String) < MAX_FILE_MESSAGE_PAGE_SIZE)
+		if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, font, String) < MAX_FILE_MESSAGE_PAGE_SIZE)
 		{
 			 // now print it
-			 iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, String, 0, IAN_WRAP_NO_SHADOW);
+			 iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, font, FILE_TEXT_COLOR, String, 0, IAN_WRAP_NO_SHADOW);
 			 fGoingOffCurrentPage = FALSE;
 		}
 		else
@@ -1231,7 +1227,6 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 	INT32 iYPositionOnPage = 0;
 	INT32 iFileLineWidth = 0;
 	INT32 iFileStartX = 0;
-	UINT32 uiFont = 0;
 	BOOLEAN fGoingOffCurrentPage = FALSE;
 	FileRecordWidth* WidthList = NULL;
 	INT32 iOffset = 0;
@@ -1279,15 +1274,12 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 
 
 			// set up font
-			uiFont = FILES_TEXT_FONT;
+			Font font = FILES_TEXT_FONT;
 			if( giFilesPage == 0 )
 			{
-				switch( iCounter )
+				switch (iCounter)
 				{
-				  case( 0 ):
-						uiFont = FILES_TITLE_FONT;
-				 break;
-
+				  case 0: font = FILES_TITLE_FONT; break;
 				}
 			}
 
@@ -1304,10 +1296,10 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 			}
 
 			// based on the record we are at, selected X start position and the width to wrap the line, to fit around pictures
-			if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, uiFont, String) < MAX_FILE_MESSAGE_PAGE_SIZE)
+			if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, font, String) < MAX_FILE_MESSAGE_PAGE_SIZE)
 			{
      	   // now print it
-		     iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, uiFont, FILE_TEXT_COLOR, String, 0, IAN_WRAP_NO_SHADOW);
+		     iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, font, FILE_TEXT_COLOR, String, 0, IAN_WRAP_NO_SHADOW);
 				 fGoingOffCurrentPage = FALSE;
 			}
 			else

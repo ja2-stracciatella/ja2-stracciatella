@@ -532,16 +532,16 @@ VIDEO_OVERLAY* RegisterVideoOverlay(const UINT32 uiFlags, const VIDEO_OVERLAY_DE
 
 	// Init new blitter
 	memset(v, 0, sizeof(*v));
-	v->uiFlags      = uiFlags;
-	v->fAllocated   = 2;
-	v->background   = bgs;
-	v->uiFontID     = vod->uiFontID;
-	v->sX           = vod->sLeft;
-	v->sY           = vod->sTop;
-	v->ubFontBack   = vod->ubFontBack;
-	v->ubFontFore   = vod->ubFontFore;
-	v->uiDestBuff   = FRAME_BUFFER;
-	v->BltCallback  = vod->BltCallback;
+	v->uiFlags     = uiFlags;
+	v->fAllocated  = 2;
+	v->background  = bgs;
+	v->uiFontID    = vod->uiFontID;
+	v->sX          = vod->sLeft;
+	v->sY          = vod->sTop;
+	v->ubFontBack  = vod->ubFontBack;
+	v->ubFontFore  = vod->ubFontFore;
+	v->uiDestBuff  = FRAME_BUFFER;
+	v->BltCallback = vod->BltCallback;
 	wcslcpy(v->zText, vod->pzText, lengthof(v->zText));
 
 	// Set disabled flag to true

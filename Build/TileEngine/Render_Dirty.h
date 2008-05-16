@@ -29,7 +29,7 @@ struct VIDEO_OVERLAY
 	BOOLEAN          fDeletionPending;
 	BACKGROUND_SAVE* background;
 	UINT16*          pSaveArea;
-	UINT32           uiFontID;
+	Font             uiFontID;
 	INT16            sX;
 	INT16            sY;
 	UINT8            ubFontBack;
@@ -47,7 +47,7 @@ typedef struct
 		INT16				sTop;
 		INT16				sRight;
 		INT16				sBottom;
-		UINT32			uiFontID;
+		Font             uiFontID;
 		UINT8				ubFontBack;
 		UINT8				ubFontFore;
 		wchar_t				pzText[ 200 ];

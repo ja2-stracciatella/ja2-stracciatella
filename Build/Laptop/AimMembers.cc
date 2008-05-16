@@ -806,20 +806,20 @@ BOOLEAN RenderAIMMembers()
 }
 
 
-BOOLEAN DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, UINT32 ulFont, UINT8 ubColor)
+BOOLEAN DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, Font const font, UINT8 ubColor)
 {
 	wchar_t		sStr[10];
 	swprintf(sStr, lengthof(sStr), L"%d", iNumber);
-	DrawTextToScreen(sStr, usLocX, usLocY, bWidth, ulFont, ubColor, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+	DrawTextToScreen(sStr, usLocX, usLocY, bWidth, font, ubColor, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	return(TRUE);
 }
 
 
-static BOOLEAN DrawMoneyToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, UINT32 ulFont, UINT8 ubColor)
+static BOOLEAN DrawMoneyToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, Font const font, UINT8 ubColor)
 {
 	wchar_t		sStr[10];
 	SPrintMoney(sStr, iNumber);
-	DrawTextToScreen(sStr, usLocX, usLocY, bWidth, ulFont, ubColor, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+	DrawTextToScreen(sStr, usLocX, usLocY, bWidth, font, ubColor, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	return(TRUE);
 }
 

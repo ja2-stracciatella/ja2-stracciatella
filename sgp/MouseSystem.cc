@@ -1060,7 +1060,7 @@ static void DisplayFastHelp(MOUSE_REGION* region)
 
 static size_t GetWidthOfString(const wchar_t* pStringA)
 {
-	HVOBJECT Font = GetFontObject(FONT10ARIAL);
+	Font const font = FONT10ARIAL;
 	size_t MaxWidth = 0;
 	size_t Width = 0;
 	for (const wchar_t* i = pStringA;; i++)
@@ -1076,7 +1076,7 @@ static size_t GetWidthOfString(const wchar_t* pStringA)
 				break;
 
 			default:
-				Width += GetCharWidth(Font, *i);
+				Width += GetCharWidth(font, *i);
 				break;
 		}
 	}
@@ -1085,15 +1085,15 @@ static size_t GetWidthOfString(const wchar_t* pStringA)
 
 static void DisplayHelpTokenizedString(const wchar_t* pStringA, INT16 sX, INT16 sY)
 {
-	HVOBJECT BoldFont   = GetFontObject(FONT10ARIALBOLD);
-	HVOBJECT NormalFont = GetFontObject(FONT10ARIAL);
+	Font const BoldFont   = FONT10ARIALBOLD;
+	Font const NormalFont = FONT10ARIAL;
 	INT32 h = GetFontHeight(FONT10ARIAL) + 1;
 	INT32 x = sX;
 	INT32 y = sY;
 	for (const wchar_t* i = pStringA;; i++)
 	{
 		wchar_t c = *i;
-		HVOBJECT Font;
+		Font font;
 		switch (c)
 		{
 			case L'\0': return;
@@ -1107,17 +1107,17 @@ static void DisplayHelpTokenizedString(const wchar_t* pStringA, INT16 sX, INT16 
 				c = *++i;
 				SetFont(FONT10ARIALBOLD);
 				SetFontForeground(146);
-				Font = BoldFont;
+				font = BoldFont;
 				break;
 
 			default:
 				SetFont(FONT10ARIAL);
 				SetFontForeground(FONT_BEIGE);
-				Font = NormalFont;
+				font = NormalFont;
 				break;
 		}
 		mprintf(x, y, L"%lc", c);
-		x += GetCharWidth(Font, c);
+		x += GetCharWidth(font, c);
 	}
 }
 
