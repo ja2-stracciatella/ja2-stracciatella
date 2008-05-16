@@ -602,7 +602,7 @@ static GUI_BUTTON* AllocateButton(const UINT32 Flags, const INT16 Left, const IN
 	b->bTextYSubOffSet         = 0;
 	b->fShiftText              = TRUE;
 	b->sWrappedWidth           = -1;
-	b->icon                    = NO_VOBJECT;
+	b->icon                    = 0;
 	b->usIconIndex             = -1;
 	b->bIconXOffset            = -1;
 	b->bIconYOffset            = -1;
@@ -879,7 +879,7 @@ void SpecifyButtonIcon(const INT32 iButtonID, const SGPVObject* const icon, cons
 	b->icon        = icon;
 	b->usIconIndex = usVideoObjectIndex;
 
-	if (icon == NO_VOBJECT) return;
+	if (!icon) return;
 
 	b->bIconXOffset = bXOffset;
 	b->bIconYOffset = bYOffset;
@@ -1247,8 +1247,8 @@ static void DrawButtonFromPtr(GUI_BUTTON* b)
 		case BUTTON_HOT_SPOT:
 			return; // hotspots don't have text, but if you want to, change this to a break!
 	}
-	if (b->icon != NO_VOBJECT) DrawIconOnButton(b);
-	if (b->string)             DrawTextOnButton(b);
+	if (b->icon)   DrawIconOnButton(b);
+	if (b->string) DrawTextOnButton(b);
 	/* If the button is disabled, and a style has been calculated, then draw the
 	 * style last.
 	 */
@@ -1428,7 +1428,7 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 
 static void DrawIconOnButton(const GUI_BUTTON* b)
 {
-	if (b->icon == NO_VOBJECT) return;
+	if (!b->icon) return;
 
 	// Get width and height of button area
 	INT32 width  = b->Area.RegionBottomRightX - b->Area.RegionTopLeftX;

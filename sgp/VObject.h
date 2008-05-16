@@ -6,9 +6,6 @@
 #include "Types.h"
 
 
-#define NO_VOBJECT 0
-
-
 // Defines for HVOBJECT limits
 #define HVOBJECT_SHADE_TABLES										48
 

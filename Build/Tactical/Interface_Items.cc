@@ -2116,7 +2116,7 @@ catch (...) { /* XXX ignore */ }
 static BOOLEAN ReloadItemDesc(void)
 {
 	guiItemGraphic = LoadTileGraphicForItem(&Item[gpItemDescObject->usItem]);
-	if (guiItemGraphic == NO_VOBJECT) return FALSE;
+	if (!guiItemGraphic) return FALSE;
 
 	//
 	// Load name, desc

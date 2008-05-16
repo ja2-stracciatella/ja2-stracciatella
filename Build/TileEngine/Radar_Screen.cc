@@ -104,10 +104,10 @@ catch (...) { /* XXX ignore */ }
 void ClearOutRadarMapImage( void )
 {
 	// If we have loaded, remove old one
-	if (gusRadarImage != NO_VOBJECT)
+	if (gusRadarImage)
   {
 	  DeleteVideoObject(gusRadarImage);
-		gusRadarImage = NO_VOBJECT;
+		gusRadarImage = 0;
   }
 }
 
@@ -245,7 +245,7 @@ void RenderRadarScreen( )
 		ClearOutRadarMapImage();
 	}
 
-	if (fInterfacePanelDirty == DIRTYLEVEL2 && gusRadarImage != NO_VOBJECT)
+	if (fInterfacePanelDirty == DIRTYLEVEL2 && gusRadarImage)
 	{
 		// If night time and on surface, darken the radarmap.
 		size_t const shade =

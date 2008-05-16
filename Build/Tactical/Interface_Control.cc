@@ -435,7 +435,7 @@ static void StartViewportOverlays(void);
 
 void RenderTopmostTacticalInterface( )
 {
-	static SGPVObject* uiBogTarget = NO_VOBJECT;
+	static SGPVObject* uiBogTarget = 0;
 
 	INT16			sX, sY;
 	INT16			sOffsetX, sOffsetY, sTempY_S, sTempX_S;
@@ -488,7 +488,7 @@ void RenderTopmostTacticalInterface( )
 			if (s->sPlannedTargetX != -1)
 			{
 				// Blit bogus target
-				if (uiBogTarget == NO_VOBJECT)
+				if (!uiBogTarget)
 				{
 					//Loadup cursor!
 					uiBogTarget = AddVideoObjectFromFile("CURSORS/targblak.sti");

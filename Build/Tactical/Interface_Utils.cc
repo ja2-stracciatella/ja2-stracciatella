@@ -66,7 +66,7 @@ try
 {
 	INT32 iCounter = 0;
 
-	if (giCarPortraits[0] != NO_VOBJECT) return FALSE;
+	if (giCarPortraits[0]) return FALSE;
 	for( iCounter = 0; iCounter < NUMBER_CAR_PORTRAITS; iCounter++ )
 	{
 		giCarPortraits[iCounter] = AddVideoObjectFromFile(pbCarPortraitFileNames[iCounter]);
@@ -82,7 +82,7 @@ void UnLoadCarPortraits( void )
 	INT32 iCounter = 0;
 
 	// car protraits loaded?
-	if (giCarPortraits[0] == NO_VOBJECT) return;
+	if (!giCarPortraits[0]) return;
 	for( iCounter = 0; iCounter < NUMBER_CAR_PORTRAITS; iCounter++ )
 	{
 		DeleteVideoObject(giCarPortraits[iCounter]);

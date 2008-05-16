@@ -1956,11 +1956,11 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 	//Delete all of the faces.
 	for( i = 0; i < gpAR->iNumMercFaces; i++ )
 	{
-		if (gpMercs[i].uiVObjectID != NO_VOBJECT)
+		if (gpMercs[i].uiVObjectID)
 		{
 			DeleteVideoObject(gpMercs[i].uiVObjectID);
+			gpMercs[i].uiVObjectID = 0;
 		}
-		gpMercs[i].uiVObjectID = NO_VOBJECT;
 		if( gpMercs[ i ].pRegion )
 		{
 			MSYS_RemoveRegion( gpMercs[ i ].pRegion );
