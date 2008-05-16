@@ -23,9 +23,6 @@ typedef struct
 // From RGB to COLORVAL
 #define FROMRGB(r, g ,b)  ((UINT32) (((UINT8) (r) | ((UINT16) (g) << 8)) | (((UINT32) (UINT8) (b)) << 16)))
 
-// VOBJECT FLAGS
-#define	VOBJECT_FLAG_SHADETABLE_SHARED 0x00000100
-
 // This structure is a video object.
 // The video object contains different data based on it's type, compressed or not
 class SGPVObject
@@ -52,7 +49,17 @@ class SGPVObject
 		// Deletes the 16-bit palette tables
 		void DestroyPalettes();
 
-		UINT32                       fFlags;                         // Special flags
+		void ShareShadetables(SGPVObject*);
+
+		enum Flags
+		{
+			NONE              = 0,
+			SHADETABLE_SHARED = 1U << 0
+		};
+
+	private:
+		Flags                        flags_;                         // Special flags
+	public:
 		UINT32                       uiSizePixData;                  // ETRLE data size
 	private:
 		SGP::Buffer<SGPPaletteEntry> palette_;                       // 8BPP Palette
@@ -69,6 +76,7 @@ class SGPVObject
 		UINT16                       subregion_count_;               // Total number of objects
 		UINT8                        bit_depth_;                     // BPP
 };
+ENUM_BITSET(SGPVObject::Flags)
 
 
 // Creates a list to contain video objects

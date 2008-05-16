@@ -25,7 +25,7 @@
 
 
 SGPVObject::SGPVObject(SGPImage const* const img) :
-	fFlags(),
+	flags_(),
 	palette16_(),
 	pShades(),
 	pShadeCurrent(),
@@ -112,7 +112,7 @@ void SGPVObject::DestroyPalettes()
 {
 	for (UINT32 x = 0; x < HVOBJECT_SHADE_TABLES; x++)
 	{
-		if (fFlags & VOBJECT_FLAG_SHADETABLE_SHARED) continue;
+		if (flags_ & SHADETABLE_SHARED) continue;
 
 		if (pShades[x] != NULL)
 		{
@@ -130,6 +130,16 @@ void SGPVObject::DestroyPalettes()
 	}
 
 	pShadeCurrent = NULL;
+}
+
+
+void SGPVObject::ShareShadetables(SGPVObject* const other)
+{
+	flags_ |= SHADETABLE_SHARED;
+	for (size_t i = 0; i < lengthof(pShades); ++i)
+	{
+		pShades[i] = other->pShades[i];
+	}
 }
 
 
