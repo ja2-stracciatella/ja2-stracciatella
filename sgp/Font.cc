@@ -387,8 +387,7 @@ void mprintf_coded(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 }
 
 
-/* Starts up the font manager system with the appropriate translation table. */
-BOOLEAN InitializeFontManager(void)
+void InitializeFontManager(void)
 {
 	FontDefault    = 0;
 	FontDestBuffer = BACKBUFFER;
@@ -397,12 +396,4 @@ BOOLEAN InitializeFontManager(void)
 	FontDestRegion.iTop    = 0;
 	FontDestRegion.iRight  = SCREEN_WIDTH;
 	FontDestRegion.iBottom = SCREEN_HEIGHT;
-
-	return TRUE;
-}
-
-
-/* Shuts down, and deallocates all fonts. */
-void ShutdownFontManager(void)
-{
 }

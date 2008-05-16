@@ -87,9 +87,8 @@ void SetFont(Font);
 
 Font   LoadFontFile(const char* filename);
 UINT16 GetFontHeight(Font);
-extern BOOLEAN   InitializeFontManager(void);
-extern void      ShutdownFontManager(void);
-void UnloadFont(Font);
+void   InitializeFontManager(void);
+void   UnloadFont(Font);
 
 UINT32 GetCharWidth(HVOBJECT Font, wchar_t c);
 

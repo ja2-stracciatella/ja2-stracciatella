@@ -169,11 +169,7 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 	// Initialize Font Manager
 	FastDebugMsg("Initializing the Font Manager");
 	// Init the manager and copy the TransTable stuff into it.
-	if (!InitializeFontManager())
-	{
-		FastDebugMsg("FAILED : Initializing Font Manager");
-		return FALSE;
-	}
+	InitializeFontManager();
 
 	FastDebugMsg("Initializing Sound Manager");
 #ifndef UTIL
@@ -216,8 +212,6 @@ static void ShutdownStandardGamingPlatform(void)
 #ifndef UTIL
   ShutdownSoundManager();
 #endif
-
-  ShutdownFontManager();
 
 #ifdef SGP_VIDEO_DEBUGGING
 	PerformVideoInfoDumpIntoFile( "SGPVideoShutdownDump.txt", FALSE );
