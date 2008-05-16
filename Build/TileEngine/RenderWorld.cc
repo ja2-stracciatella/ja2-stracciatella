@@ -2637,7 +2637,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiD
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	UINT8*       ZPtr     = (UINT8*)pZBuffer + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	const UINT32 LineSkip = uiDestPitchBYTES - BlitLength * 2;
-	const UINT16* const p16BPPPalette = hSrcVObject->pShadeCurrent;
+	UINT16 const* const p16BPPPalette = hSrcVObject->CurrentShade();
 
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
@@ -3164,7 +3164,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* p
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	UINT8*       ZPtr     = (UINT8*)pZBuffer + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	const UINT32 LineSkip = uiDestPitchBYTES - BlitLength * 2;
-	const UINT16* const p16BPPPalette = hSrcVObject->pShadeCurrent;
+	UINT16 const* const p16BPPPalette = hSrcVObject->CurrentShade();
 
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{
@@ -3695,7 +3695,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UIN
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	UINT8*       ZPtr     = (UINT8*)pZBuffer + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	const UINT32 LineSkip = uiDestPitchBYTES - BlitLength * 2;
-	const UINT16* const p16BPPPalette = hSrcVObject->pShadeCurrent;
+	UINT16 const* const p16BPPPalette = hSrcVObject->CurrentShade();
 
 	if (hSrcVObject->ppZStripInfo == NULL)
 	{

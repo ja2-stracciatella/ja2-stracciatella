@@ -43,6 +43,8 @@ class SGPVObject
 
 		UINT16 const* Palette16() const { return palette16_; }
 
+		UINT16 const* CurrentShade() const { return pShadeCurrent; }
+
 		// Set the current object shade table
 		void CurrentShade(size_t idx);
 
