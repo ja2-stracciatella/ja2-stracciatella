@@ -419,7 +419,7 @@ BOOLEAN EraseDirectory(const char* const path)
 	char pattern[512];
 	snprintf(pattern, lengthof(pattern), "%s/*", path);
 
-	FindFileInfo* const find_info = FindFiles(pattern);
+	AutoFindFileInfo find_info(FindFiles(pattern));
 	if (find_info == NULL) return FALSE;
 
 	BOOLEAN success = FALSE;
@@ -444,7 +444,6 @@ BOOLEAN EraseDirectory(const char* const path)
 		}
 	}
 
-	FindFilesFree(find_info);
 	return success;
 }
 
