@@ -1,4 +1,6 @@
+#include "Buffer.h"
 #include "HImage.h"
+#include "LoadSaveData.h"
 #include "Types.h"
 #include "FileMan.h"
 #include "ImpTGA.h"
@@ -11,7 +13,6 @@ static BOOLEAN ReadUncompColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID,
 static BOOLEAN ReadUncompRGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
 static BOOLEAN ReadRLEColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
 static BOOLEAN ReadRLERGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
-//BOOLEAN	ConvertTGAToSystemBPPFormat( HIMAGE hImage );
 
 
 BOOLEAN LoadTGAFileToImage( HIMAGE hImage, UINT16 fContents )
@@ -52,279 +53,96 @@ BOOLEAN LoadTGAFileToImage( HIMAGE hImage, UINT16 fContents )
 
 static BOOLEAN ReadUncompColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
 {
-	return( FALSE );
+	return FALSE;
 }
 
 
-static BOOLEAN ReadUncompRGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
+static BOOLEAN ReadUncompRGBImage(SGPImage* const img, HWFILE const f, UINT8 const uiImgID, UINT8 const uiColMap, UINT16 const contents)
 {
-	UINT8		*pBMData;
-	UINT8		*pBMPtr;
-
-	UINT16	uiColMapOrigin;
 	UINT16	uiColMapLength;
-	UINT8		uiColMapEntrySize;
-	UINT16	uiXOrg;
-	UINT16	uiYOrg;
 	UINT16	uiWidth;
 	UINT16	uiHeight;
 	UINT8		uiImagePixelSize;
-	UINT8		uiImageDescriptor;
-	UINT32	iNumValues;
-	UINT16  cnt;
 
-	UINT32	i;
-	UINT8		r;
-	UINT8		g;
-	UINT8		b;
+	BYTE data[15];
+	if (!FileRead(f, data, sizeof(data))) return FALSE;
 
-	if (!FileRead(hFile, &uiColMapOrigin,    sizeof(UINT16))) goto end;
-	if (!FileRead(hFile, &uiColMapLength,    sizeof(UINT16))) goto end;
-	if (!FileRead(hFile, &uiColMapEntrySize, sizeof(UINT8)))  goto end;
-
-	if (!FileRead(hFile, &uiXOrg,            sizeof(UINT16))) goto end;
-	if (!FileRead(hFile, &uiYOrg,            sizeof(UINT16))) goto end;
-	if (!FileRead(hFile, &uiWidth,           sizeof(UINT16))) goto end;
-	if (!FileRead(hFile, &uiHeight,          sizeof(UINT16))) goto end;
-	if (!FileRead(hFile, &uiImagePixelSize,  sizeof(UINT8)))  goto end;
-	if (!FileRead(hFile, &uiImageDescriptor, sizeof(UINT8)))  goto end;
+	BYTE const* d = data;
+	EXTR_SKIP(d, 2)              // colour map origin
+	EXTR_U16(d, uiColMapLength)
+	EXTR_SKIP(d, 5)              // colour map entry size, x origin, y origin
+	EXTR_U16(d, uiWidth)         // XXX unaligned
+	EXTR_U16(d, uiHeight)        // XXX unaligned
+	EXTR_U8(d, uiImagePixelSize)
+	EXTR_SKIP(d, 1)              // image descriptor
+	Assert(d == endof(data));
 
 	// skip the id
-	FileSeek( hFile, uiImgID, FILE_SEEK_FROM_CURRENT );
+	FileSeek(f, uiImgID, FILE_SEEK_FROM_CURRENT);
 
 	// skip the colour map
-	if ( uiColMap != 0 )
+	if (uiColMap != 0)
 	{
-		FileSeek( hFile, uiColMapLength * (uiImagePixelSize / 8), FILE_SEEK_FROM_CURRENT );
+		FileSeek(f, uiColMapLength * (uiImagePixelSize / 8), FILE_SEEK_FROM_CURRENT);
 	}
 
-	// Set some HIMAGE data values
-	hImage->usWidth = uiWidth;
-	hImage->usHeight = uiHeight;
-	hImage->ubBitDepth = uiImagePixelSize;
+	img->usWidth    = uiWidth;
+	img->usHeight   = uiHeight;
+	img->ubBitDepth = uiImagePixelSize;
 
-	// Allocate memory based on bpp, height, width
-
-	// Only do if contents flag is appropriate
-	if ( fContents & IMAGE_BITMAPDATA )
+	if (contents & IMAGE_BITMAPDATA)
 	{
-
-		if ( uiImagePixelSize == 16 )
+		if (uiImagePixelSize == 16)
 		{
-
-			iNumValues = uiWidth * uiHeight;
-
-			hImage->p16BPPData = MALLOCN(UINT16, iNumValues);
-
-			if ( hImage->p16BPPData == NULL )
-				goto end;
-
-			// Get data pointer
-			pBMData = hImage->p8BPPData;
-
-			// Start at end
-			pBMData += uiWidth * ( uiHeight - 1 ) * (uiImagePixelSize / 8);
+			SGP::Buffer<UINT16> img_data(uiWidth * uiHeight);
+			if (!img_data) return FALSE;
 
 			// Data is stored top-bottom - reverse for SGP HIMAGE format
-			for ( cnt = 0; cnt < uiHeight-1; cnt++ )
+			for (size_t y = uiHeight; y != 0;)
 			{
-				if (!FileRead(hFile, pBMData, uiWidth * 2)) goto freeEnd;
-
-				pBMData -= uiWidth * 2;
+				if (!FileRead(f, &img_data[uiWidth * --y], uiWidth * 2)) return FALSE;;
 			}
-			// Do first row
-			if (!FileRead(hFile, pBMData, uiWidth * 2)) goto freeEnd;
 
-			// Convert TGA 5,5,5 16 BPP data into current system 16 BPP Data
-			//ConvertTGAToSystemBPPFormat( hImage );
-
-			hImage->fFlags |= IMAGE_BITMAPDATA;
-
-
+			img->p16BPPData = img_data.Release();
 		}
-
-		if ( uiImagePixelSize == 24 )
+		else if (uiImagePixelSize == 24)
 		{
-			hImage->p8BPPData = MALLOCN(UINT8, uiWidth * uiHeight * 3);
+			SGP::Buffer<UINT8> img_data(uiWidth * uiHeight * 3);
+			if (!img_data) return FALSE;
 
-			if ( hImage->p8BPPData == NULL )
-				goto end;
-
-			// Get data pointer
-			pBMData = (UINT8*)hImage->p8BPPData;
-
-			// Start at end
-			pBMPtr = pBMData + uiWidth * ( uiHeight - 1 ) * 3;
-
-			iNumValues = uiWidth * uiHeight;
-
-			for ( cnt = 0; cnt < uiHeight; cnt++ )
+			for (size_t y = uiHeight; y != 0;)
 			{
-				for ( i=0 ; i < uiWidth; i++ )
+				UINT8* const line = &img_data[uiWidth * 3 * --y];
+				for (UINT32 x = 0 ; x < uiWidth; ++x)
 				{
-					if (!FileRead(hFile, &b, sizeof(UINT8))) goto freeEnd;
-					if (!FileRead(hFile, &g, sizeof(UINT8))) goto freeEnd;
-					if (!FileRead(hFile, &r, sizeof(UINT8))) goto freeEnd;
-
-					pBMPtr[ i*3   ] = r;
-					pBMPtr[ i*3+1 ] = g;
-					pBMPtr[ i*3+2 ] = b;
+					UINT8 bgr[3];
+					if (!FileRead(f, bgr, sizeof(bgr))) return FALSE;
+					line[x * 3    ] = bgr[2];
+					line[x * 3 + 1] = bgr[1];
+					line[x * 3 + 2] = bgr[0];
 				}
-				pBMPtr -= uiWidth * 3;
 			}
-			hImage->fFlags |= IMAGE_BITMAPDATA;
-		}
 
-		#if 0
-		// 32 bit not yet allowed in SGP
-		else if ( uiImagePixelSize == 32 )
+			img->p8BPPData = img_data.Release();
+		}
+		else
 		{
-			iNumValues = uiWidth * uiHeight;
-
-			for ( i=0 ; i<iNumValues; i++ )
-			{
-				if (!FileRead(hFile, &b, sizeof(UINT8))) goto freeEnd;
-				if (!FileRead(hFile, &g, sizeof(UINT8))) goto freeEnd;
-				if (!FileRead(hFile, &r, sizeof(UINT8))) goto freeEnd;
-				if (!FileRead(hFile, &a, sizeof(UINT8))) goto freeEnd;
-
-				pBMData[ i*3   ] = r;
-				pBMData[ i*3+1 ] = g;
-				pBMData[ i*3+2 ] = b;
-			}
+			return FALSE;
 		}
-		#endif
-
+		img->fFlags |= IMAGE_BITMAPDATA;
 	}
-	return( TRUE );
 
-end:
-	return( FALSE );
-
-freeEnd:
-	MemFree( pBMData );
-	return( FALSE );
+	return TRUE;
 }
 
 
 static BOOLEAN ReadRLEColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
 {
-	return( FALSE );
+	return FALSE;
 }
 
 
 static BOOLEAN ReadRLERGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
 {
-	return( FALSE );
+	return FALSE;
 }
-
-/*
-BOOLEAN	ConvertTGAToSystemBPPFormat( HIMAGE hImage )
-{
-	UINT16		usX, usY;
-	UINT16		Old16BPPValue;
-	UINT16		*pData;
-	UINT16		usR, usG, usB;
-	float			scale_val;
-	UINT32		uiRBitMask;
-	UINT32		uiGBitMask;
-	UINT32		uiBBitMask;
-	UINT8			ubRNewShift;
-	UINT8			ubGNewShift;
-	UINT8			ubBNewShift;
-	UINT8			ubScaleR;
-	UINT8			ubScaleB;
-	UINT8			ubScaleG;
-
-	// Basic algorithm for coonverting to different rgb distributions
-
-	// Get current Pixel Format from DirectDraw
-	CHECKF( GetPrimaryRGBDistributionMasks( &uiRBitMask, &uiGBitMask, &uiBBitMask ) );
-
-	// Only convert if different
-	if ( uiRBitMask == 0x7c00 && uiGBitMask == 0x3e0 && uiBBitMask == 0x1f )
-	{
-		return( TRUE );
-	}
-
-	// Default values
-	ubScaleR			= 0;
-	ubScaleG			= 0;
-	ubScaleB			= 0;
-	ubRNewShift   = 10;
-	ubGNewShift   = 5;
-	ubBNewShift   = 0;
-
-	// Determine values
-  switch( uiBBitMask )
-  {
-		case 0x3f: // 0000000000111111 pixel mask for blue
-
-			// 5-5-6
-			ubRNewShift = 11;
-			ubGNewShift = 6;
-			ubScaleB		= 1;
-			break;
-
-    case 0x1f: // 0000000000011111 pixel mask for blue
-			switch( uiGBitMask )
-      {
-				case 0x7e0: // 0000011111100000 pixel mask for green
-
-	        // 5-6-5
-					ubRNewShift = 11;
-					ubScaleG    = 1;
-					break;
-
-        case 0x3e0: // 0000001111100000 pixel mask for green
-
-					switch( uiRBitMask )
-          {
-						case 0xfc00: // 1111110000000000 pixel mask for red
-
-							// 6-5-5
-							ubScaleR	= 1;
-							break;
-          }
-          break;
-      }
-      break;
-  }
-
-	pData = hImage->pui16BPPPalette;
-	usX = 0;
-	do
-	{
-
-		usY = 0;
-
-		do
-		{
-
-			// Get Old 5,5,5 value
-			Old16BPPValue = hImage->p16BPPData[ usX * hImage->usWidth + usY ];
-
-			// Get component r,g,b values AT 5 5 5
-			usR = ( Old16BPPValue & 0x7c00 ) >> 10;
-			usG = ( Old16BPPValue & 0x3e0 ) >> 5;
-			usB = Old16BPPValue & 0x1f;
-
-			// Scale accordingly
-			usR = usR << ubScaleR;
-			usG = usG << ubScaleG;
-			usB = usB << ubScaleB;
-
-			hImage->p16BPPData[ usX * hImage->usWidth + usY ] = ((UINT16) ( ( usR << ubRNewShift | usG << ubGNewShift ) | usB  ) );
-
-			usY++;
-
-		} while( usY < hImage->usWidth );
-
-		usX++;
-
-	} while( usX < hImage->usHeight );
-
-	return( TRUE );
-
-}
-*/
