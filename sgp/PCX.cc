@@ -1,3 +1,4 @@
+#include "Buffer.h"
 #include "HImage.h"
 #include "PCX.h"
 #include "MemMan.h"
@@ -57,51 +58,37 @@ static BOOLEAN BlitPcxToBuffer(PcxObject* pCurrentPcxObject, UINT8* pBuffer, UIN
 static PcxObject* LoadPcx(const char* filename);
 
 
-BOOLEAN LoadPCXFileToImage( HIMAGE hImage, UINT16 fContents )
+BOOLEAN LoadPCXFileToImage(SGPImage* const img, UINT16 const contents)
 {
-	PcxObject *pPcxObject;
-
-	// First Load a PCX Image
-	pPcxObject = LoadPcx( hImage->ImageFile );
-
-	if ( pPcxObject == NULL )
-	{
-		return( FALSE );
-	}
+	PcxObject* const pcx_obj = LoadPcx(img->ImageFile);
+	if (!pcx_obj) return FALSE;
 
 	// Set some header information
-	hImage->usWidth = pPcxObject->usWidth;
-	hImage->usHeight = pPcxObject->usHeight;
-	hImage->ubBitDepth = 8;
-	hImage->fFlags = hImage->fFlags | fContents;
+	img->usWidth     = pcx_obj->usWidth;
+	img->usHeight    = pcx_obj->usHeight;
+	img->ubBitDepth  = 8;
+	img->fFlags     |= contents;
 
 	// Read and allocate bitmap block if requested
-	if ( fContents & IMAGE_BITMAPDATA )
+	if (contents & IMAGE_BITMAPDATA)
 	{
-		// Allocate memory for buffer
-		hImage->p8BPPData = MALLOCN(UINT8, hImage->usWidth * hImage->usHeight);
-
-		if ( !BlitPcxToBuffer( pPcxObject, hImage->p8BPPData, hImage->usWidth, hImage->usHeight, 0, 0, FALSE ) )
+		SGP::Buffer<UINT8> img_data(img->usWidth * img->usHeight);
+		if (!BlitPcxToBuffer(pcx_obj, img_data, img->usWidth, img->usHeight, 0, 0, FALSE))
 		{
-			MemFree( hImage->p8BPPData );
-			return( FALSE );
+			return FALSE;
 		}
+		img->p8BPPData = img_data.Release();
 	}
 
-	if ( fContents & IMAGE_PALETTE )
+	if (contents & IMAGE_PALETTE)
 	{
-		SetPcxPalette( pPcxObject, hImage );
-
-		// Create 16 BPP palette if flags and BPP justify
-		hImage->pui16BPPPalette = Create16BPPPalette( hImage->pPalette );
-
+		SetPcxPalette(pcx_obj, img);
+		img->pui16BPPPalette = Create16BPPPalette(img->pPalette);
 	}
 
-	// Free and remove pcx object
-	MemFree( pPcxObject->pPcxBuffer );
-	MemFree( pPcxObject );
-
-	return( TRUE );
+	MemFree(pcx_obj->pPcxBuffer);
+	MemFree(pcx_obj);
+	return TRUE;
 }
 
 
