@@ -133,7 +133,7 @@ static BOOLEAN STCILoadRGB(HIMAGE hImage, UINT16 fContents, HWFILE hFile, const 
 }
 
 
-static BOOLEAN STCISetPalette(const STCIPaletteElement* pSTCIPalette, HIMAGE hImage);
+static SGPPaletteEntry* STCISetPalette(STCIPaletteElement const*);
 
 
 static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFILE const f, STCIHeader const* const header)
@@ -160,7 +160,8 @@ static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFIL
 			return FALSE;
 		}
 
-		if (!STCISetPalette(pSTCIPalette, img))
+		img->pPalette = STCISetPalette(pSTCIPalette);
+		if (!img->pPalette)
 		{
 			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem setting SGPImage-format palette!");
 			return FALSE;
@@ -265,22 +266,18 @@ fail:
 }
 
 
-static BOOLEAN STCISetPalette(const STCIPaletteElement* pSTCIPalette, HIMAGE hImage)
+static SGPPaletteEntry* STCISetPalette(STCIPaletteElement const* const stci_palette)
 {
-	// Allocate memory for palette
-	hImage->pPalette = MALLOCN(SGPPaletteEntry, 256);
-	if ( hImage->pPalette == NULL )
-	{
-		return( FALSE );
-	}
+	SGPPaletteEntry* const pal = MALLOCN(SGPPaletteEntry, 256);
+	if (!pal) return 0;
 
   // Initialize the proper palette entries
-  for (UINT i = 0; i < 256; i++)
+  for (size_t i = 0; i < 256; i++)
   {
-		hImage->pPalette[i].peRed   = pSTCIPalette[i].ubRed;
-		hImage->pPalette[i].peGreen = pSTCIPalette[i].ubGreen;
-		hImage->pPalette[i].peBlue  = pSTCIPalette[i].ubBlue;
-		hImage->pPalette[i].peFlags = 0;
+		pal[i].peRed   = stci_palette[i].ubRed;
+		pal[i].peGreen = stci_palette[i].ubGreen;
+		pal[i].peBlue  = stci_palette[i].ubBlue;
+		pal[i].peFlags = 0;
   }
-  return TRUE;
+  return pal;
 }
