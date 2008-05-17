@@ -68,70 +68,15 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 }
 
 
-static BOOLEAN ReleaseImageData(HIMAGE hImage, UINT16 fContents);
-
-
-void DestroyImage(SGPImage* const hImage)
+void DestroyImage(SGPImage* const img)
 {
-	Assert( hImage != NULL );
-
-	// First delete contents
-	ReleaseImageData( hImage, IMAGE_ALLDATA );//hImage->fFlags );
-
-	// Now free structure
-	MemFree( hImage );
-}
-
-
-static BOOLEAN ReleaseImageData(HIMAGE hImage, UINT16 fContents)
-{
-
-	Assert( hImage != NULL );
-
-	if ( (fContents & IMAGE_PALETTE) && (hImage->fFlags & IMAGE_PALETTE) )
-	{
-		//Destroy palette
-		if( hImage->pPalette != NULL )
-		{
-			MemFree( hImage->pPalette );
-			hImage->pPalette = NULL;
-		}
-
-		if ( hImage->pui16BPPPalette != NULL )
-		{
-			MemFree( hImage->pui16BPPPalette );
-			hImage->pui16BPPPalette = NULL;
-		}
-
-		// Remove contents flag
-		hImage->fFlags = hImage->fFlags ^ IMAGE_PALETTE;
-	}
-
-	if ( (fContents & IMAGE_BITMAPDATA) && (hImage->fFlags & IMAGE_BITMAPDATA) )
-	{
-		//Destroy image data
-		Assert( hImage->pImageData != NULL );
-		MemFree( hImage->pImageData );
-		hImage->pImageData = NULL;
-		if (hImage->usNumberOfObjects > 0)
-		{
-			MemFree( hImage->pETRLEObject );
-		}
-		// Remove contents flag
-		hImage->fFlags = hImage->fFlags ^ IMAGE_BITMAPDATA;
-	}
-
-	if ( (fContents & IMAGE_APPDATA) && (hImage->fFlags & IMAGE_APPDATA) )
-	{
-		// get rid of the APP DATA
-		if ( hImage->pAppData != NULL )
-		{
-			MemFree( hImage->pAppData );
-			hImage->fFlags &= (~IMAGE_APPDATA);
-		}
-	}
-
-	return( TRUE );
+	Assert(img);
+	if (img->pPalette)        MemFree(img->pPalette);
+	if (img->pui16BPPPalette) MemFree(img->pui16BPPPalette);
+	if (img->pImageData)      MemFree(img->pImageData);
+	if (img->pETRLEObject)    MemFree(img->pETRLEObject);
+	if (img->pAppData)        MemFree(img->pAppData);
+	MemFree(img);
 }
 
 
