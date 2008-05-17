@@ -703,21 +703,18 @@ void ConvertRGBDistribution565To556( UINT16 * p16BPPData, UINT32 uiNumberOfPixel
 	}
 }
 
-void ConvertRGBDistribution565ToAny( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
-{
-	UINT16 *	pPixel;
-	UINT32		uiRed, uiGreen, uiBlue, uiTemp, uiLoop;
 
-	pPixel = p16BPPData;
-	for (uiLoop = 0; uiLoop < uiNumberOfPixels; uiLoop++)
+void ConvertRGBDistribution565ToAny(UINT16* const p16BPPData, UINT32 const uiNumberOfPixels)
+{
+	UINT16* px = p16BPPData;
+	for (size_t n = uiNumberOfPixels; n != 0; --n)
 	{
 		// put the 565 RGB 16-bit value into a 32-bit RGB value
-		uiRed = (*pPixel) >> 11;
-		uiGreen = (*pPixel & 0x07E0) >> 5;
-		uiBlue = (*pPixel & 0x001F);
-		uiTemp = FROMRGB(uiRed,uiGreen,uiBlue);
+		UINT32 const r   = (*px         ) >> 11;
+		UINT32 const g   = (*px & 0x07E0) >>  5;
+		UINT32 const b   = (*px & 0x001F);
+		UINT32 const rgb = FROMRGB(r, g, b);
 		// then convert the 32-bit RGB value to whatever 16 bit format is used
-		*pPixel = Get16BPPColor( uiTemp );
-		pPixel++;
+		*px++ = Get16BPPColor(rgb);
 	}
 }
