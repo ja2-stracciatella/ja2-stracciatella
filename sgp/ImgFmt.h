@@ -76,8 +76,7 @@ typedef struct
 	UINT16			usHeight;
 	UINT16			usWidth;
 } STCISubImage;
-
-#define STCI_SUBIMAGE_SIZE 16
+CASSERT(sizeof(STCISubImage) == 16)
 
 typedef struct
 {
@@ -85,8 +84,6 @@ typedef struct
 	UINT8				ubGreen;
 	UINT8				ubBlue;
 } STCIPaletteElement;
-
-#define STCI_PALETTE_ELEMENT_SIZE 3
-#define STCI_8BIT_PALETTE_SIZE 768
+CASSERT(sizeof(STCIPaletteElement) == 3)
 
 #endif

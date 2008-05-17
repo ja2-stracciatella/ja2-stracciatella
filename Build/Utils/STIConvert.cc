@@ -116,7 +116,7 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 	if ((Header.fFlags & STCI_INDEXED) && (fFlags & CONVERT_ETRLE_COMPRESS))
 	{
 		ConvertToETRLE(&pOutputBuffer, &uiCompressedSize, &pSubImageBuffer, &usNumberOfSubImages, pData, sWidth, sHeight, fFlags);
-		uiSubImageBufferSize = (UINT32) usNumberOfSubImages * STCI_SUBIMAGE_SIZE;
+		uiSubImageBufferSize = (UINT32) usNumberOfSubImages * sizeof(STCISubImage);
 
 		Header.Indexed.usNumberOfSubImages = usNumberOfSubImages;
 		Header.uiStoredSize = uiCompressedSize;
@@ -146,7 +146,7 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 				STCIPaletteEntry.ubRed = pSGPPaletteEntry[uiLoop].peRed;
 				STCIPaletteEntry.ubGreen = pSGPPaletteEntry[uiLoop].peGreen;
 				STCIPaletteEntry.ubBlue = pSGPPaletteEntry[uiLoop].peBlue;
-				fwrite( &STCIPaletteEntry, STCI_PALETTE_ELEMENT_SIZE, 1, pOutput );
+				fwrite(&STCIPaletteEntry, sizeof(STCIPaletteEntry), 1, pOutput);
 			}
 		}
 		if (Header.fFlags & STCI_ETRLE_COMPRESSED)

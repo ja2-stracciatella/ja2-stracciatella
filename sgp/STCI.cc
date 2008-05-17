@@ -1,3 +1,4 @@
+#include "Buffer.h"
 #include "MemMan.h"
 #include "FileMan.h"
 #include "ImgFmt.h"
@@ -8,7 +9,7 @@
 
 
 static BOOLEAN STCILoadRGB(HIMAGE hImage, UINT16 fContents, HWFILE hFile, const STCIHeader* pHeader);
-static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, const STCIHeader* pHeader);
+static BOOLEAN STCILoadIndexed(SGPImage*, UINT16 contents, HWFILE, STCIHeader const*);
 
 
 BOOLEAN LoadSTCIFileToImage(const HIMAGE image, const UINT16 fContents)
@@ -135,169 +136,132 @@ static BOOLEAN STCILoadRGB(HIMAGE hImage, UINT16 fContents, HWFILE hFile, const 
 static BOOLEAN STCISetPalette(const STCIPaletteElement* pSTCIPalette, HIMAGE hImage);
 
 
-static BOOLEAN STCILoadIndexed( HIMAGE hImage, UINT16 fContents, HWFILE hFile, const STCIHeader* pHeader)
+static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFILE const f, STCIHeader const* const header)
 {
-	if (fContents & IMAGE_PALETTE)
+	if (contents & IMAGE_PALETTE)
 	{ // Allocate memory for reading in the palette
-		if (pHeader->Indexed.uiNumberOfColours != 256)
+		if (header->Indexed.uiNumberOfColours != 256)
 		{
-			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Palettized image has bad palette size." );
-			return( FALSE );
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Palettized image has bad palette size.");
+			return FALSE;
 		}
-		const UINT32 uiFileSectionSize = pHeader->Indexed.uiNumberOfColours * STCI_PALETTE_ELEMENT_SIZE;
-		STCIPaletteElement* const pSTCIPalette = MALLOCN(STCIPaletteElement, pHeader->Indexed.uiNumberOfColours);
+
+		SGP::Buffer<STCIPaletteElement> pSTCIPalette(256);
 		if (pSTCIPalette == NULL)
 		{
-			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!" );
-			return( FALSE );
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
+			return FALSE;
 		}
 
 		// Read in the palette
-		if (!FileRead(hFile, pSTCIPalette, uiFileSectionSize))
+		if (!FileRead(f, pSTCIPalette, sizeof(*pSTCIPalette) * 256))
 		{
-			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading palette!" );
-			MemFree( pSTCIPalette );
-			return( FALSE );
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading palette!");
+			return FALSE;
 		}
-		else if (!STCISetPalette( pSTCIPalette, hImage ))
+
+		if (!STCISetPalette(pSTCIPalette, img))
 		{
-			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem setting hImage-format palette!" );
-			MemFree( pSTCIPalette );
-			return( FALSE );
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem setting SGPImage-format palette!");
+			return FALSE;
 		}
-		hImage->fFlags |= IMAGE_PALETTE;
-		// Free the temporary buffer
-		MemFree( pSTCIPalette );
+
+		img->fFlags |= IMAGE_PALETTE;
 	}
-	else if (fContents & (IMAGE_BITMAPDATA | IMAGE_APPDATA))
+	else if (contents & (IMAGE_BITMAPDATA | IMAGE_APPDATA))
 	{ // seek past the palette
-		const UINT32 uiFileSectionSize = pHeader->Indexed.uiNumberOfColours * STCI_PALETTE_ELEMENT_SIZE;
-		if (!FileSeek(hFile, uiFileSectionSize, FILE_SEEK_FROM_CURRENT))
+		if (!FileSeek(f, sizeof(STCIPaletteElement) * header->Indexed.uiNumberOfColours, FILE_SEEK_FROM_CURRENT))
 		{
-			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem seeking past palette!" );
-			return( FALSE );
-		}
-	}
-	if (fContents & IMAGE_BITMAPDATA)
-	{
-		if (pHeader->fFlags & STCI_ETRLE_COMPRESSED)
-		{
-			// load data for the subimage (object) structures
-			Assert( sizeof( ETRLEObject ) == STCI_SUBIMAGE_SIZE );
-			hImage->usNumberOfObjects = pHeader->Indexed.usNumberOfSubImages;
-			const UINT32 uiFileSectionSize = hImage->usNumberOfObjects * STCI_SUBIMAGE_SIZE;
-			hImage->pETRLEObject = MALLOCN(ETRLEObject, hImage->usNumberOfObjects);
-			if (hImage->pETRLEObject == NULL)
-			{
-				DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!" );
-				if (fContents & IMAGE_PALETTE)
-				{
-					MemFree( hImage->pPalette );
-				}
-				return( FALSE );
-			}
-			if (!FileRead(hFile, hImage->pETRLEObject, uiFileSectionSize))
-			{
-				DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading subimage structures!" );
-				if (fContents & IMAGE_PALETTE)
-				{
-					MemFree( hImage->pPalette );
-				}
-				MemFree( hImage->pETRLEObject );
-				return( FALSE );
-			}
-			hImage->uiSizePixData = pHeader->uiStoredSize;
-			hImage->fFlags |= IMAGE_TRLECOMPRESSED;
-		}
-		// allocate memory for and read in the image data
-		hImage->pImageData = MALLOCN(UINT8, pHeader->uiStoredSize);
-		if (hImage->pImageData == NULL)
-		{
-			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!" );
-			if (fContents & IMAGE_PALETTE)
-			{
-				MemFree( hImage->pPalette );
-			}
-			if (hImage->usNumberOfObjects > 0)
-			{
-				MemFree( hImage->pETRLEObject );
-			}
-			return( FALSE );
-		}
-		else if (!FileRead(hFile, hImage->pImageData, pHeader->uiStoredSize))
-		{ // Problem reading in the image data!
-			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading image data!" );
-			MemFree( hImage->pImageData );
-			if (fContents & IMAGE_PALETTE)
-			{
-				MemFree( hImage->pPalette );
-			}
-			if (hImage->usNumberOfObjects > 0)
-			{
-				MemFree( hImage->pETRLEObject );
-			}
-			return( FALSE );
-		}
-		hImage->fFlags |= IMAGE_BITMAPDATA;
-	}
-	else if (fContents & IMAGE_APPDATA) // then there's a point in seeking ahead
-	{
-		if (!FileSeek(hFile, pHeader->uiStoredSize, FILE_SEEK_FROM_CURRENT))
-		{
-			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Problem seeking past image data!" );
-			return( FALSE );
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem seeking past palette!");
+			return FALSE;
 		}
 	}
 
-	if (fContents & IMAGE_APPDATA && pHeader->uiAppDataSize > 0)
+	if (contents & IMAGE_BITMAPDATA)
+	{
+		if (header->fFlags & STCI_ETRLE_COMPRESSED)
+		{
+			// load data for the subimage (object) structures
+			Assert(sizeof(ETRLEObject) == sizeof(STCISubImage));
+
+			UINT16 const n_subimages = header->Indexed.usNumberOfSubImages;
+			img->usNumberOfObjects = n_subimages;
+
+			img->pETRLEObject = MALLOCN(ETRLEObject, n_subimages);
+			if (img->pETRLEObject == NULL)
+			{
+				DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
+				goto fail;
+			}
+
+			if (!FileRead(f, img->pETRLEObject, sizeof(*img->pETRLEObject) * n_subimages))
+			{
+				DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading subimage structures!");
+				goto fail;
+			}
+
+			img->uiSizePixData  = header->uiStoredSize;
+			img->fFlags        |= IMAGE_TRLECOMPRESSED;
+		}
+
+		// allocate memory for and read in the image data
+		img->pImageData = MALLOCN(UINT8, header->uiStoredSize);
+		if (img->pImageData == NULL)
+		{
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
+			goto fail;
+		}
+
+		if (!FileRead(f, img->pImageData, header->uiStoredSize))
+		{ // Problem reading in the image data!
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading image data!");
+			goto fail;
+		}
+
+		img->fFlags |= IMAGE_BITMAPDATA;
+	}
+	else if (contents & IMAGE_APPDATA) // then there's a point in seeking ahead
+	{
+		if (!FileSeek(f, header->uiStoredSize, FILE_SEEK_FROM_CURRENT))
+		{
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem seeking past image data!");
+			goto fail;
+		}
+	}
+
+	if (contents & IMAGE_APPDATA && header->uiAppDataSize > 0)
 	{
 		// load application-specific data
-		hImage->pAppData = MALLOCN(UINT8, pHeader->uiAppDataSize);
-		if (hImage->pAppData == NULL)
+		img->pAppData = MALLOCN(UINT8, header->uiAppDataSize);
+		if (img->pAppData == NULL)
 		{
-			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!" );
-			MemFree( hImage->pAppData );
-			if (fContents & IMAGE_PALETTE)
-			{
-				MemFree( hImage->pPalette );
-			}
-			if (fContents & IMAGE_BITMAPDATA)
-			{
-				MemFree( hImage->pImageData );
-			}
-			if (hImage->usNumberOfObjects > 0)
-			{
-				MemFree( hImage->pETRLEObject );
-			}
-			return( FALSE );
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
+			goto fail;
 		}
-		if (!FileRead(hFile, hImage->pAppData, pHeader->uiAppDataSize))
+
+		if (!FileRead(f, img->pAppData, header->uiAppDataSize))
 		{
-			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading application-specific data!" );
-			MemFree( hImage->pAppData );
-			if (fContents & IMAGE_PALETTE)
-			{
-				MemFree( hImage->pPalette );
-			}
-			if (fContents & IMAGE_BITMAPDATA)
-			{
-				MemFree( hImage->pImageData );
-			}
-			if (hImage->usNumberOfObjects > 0)
-			{
-				MemFree( hImage->pETRLEObject );
-			}
-			return( FALSE );
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading application-specific data!");
+			goto fail;
 		}
-		hImage->uiAppDataSize = pHeader->uiAppDataSize;;
-		hImage->fFlags |= IMAGE_APPDATA;
+
+		img->uiAppDataSize  = header->uiAppDataSize;;
+		img->fFlags        |= IMAGE_APPDATA;
 	}
 	else
 	{
-		hImage->pAppData = NULL;
-		hImage->uiAppDataSize = 0;
+		img->pAppData      = NULL;
+		img->uiAppDataSize = 0;
 	}
-	return( TRUE );
+
+	return TRUE;
+
+fail:
+	if (img->pAppData)     MemFree(img->pAppData);
+	if (img->pImageData)   MemFree(img->pImageData);
+	if (img->pETRLEObject) MemFree(img->pETRLEObject);
+	if (img->pPalette)     MemFree(img->pPalette);
+	return FALSE;
 }
 
 
