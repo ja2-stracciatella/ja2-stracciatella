@@ -483,7 +483,7 @@ void DetermineItemsScrolling()
 	//Right most scroll position.  Calculated by taking every pair of numItems rounded up,
 	//and subtracting 7 (because a scroll index 0 is disabled if there are <=12 items,
 	//index 1 for <=14 items, index 2 for <=16 items...
-	if( eInfo.sScrollIndex == max( ((eInfo.sNumItems+1)/2)-6, 0 ) )
+	if( eInfo.sScrollIndex == MAX( ((eInfo.sNumItems+1)/2)-6, 0 ) )
 		DisableEditorButton( ITEMS_RIGHTSCROLL );
 	else
 		EnableEditorButton( ITEMS_RIGHTSCROLL );
@@ -556,7 +556,7 @@ void RenderEditorItemsInfo()
 		}
 	}
 	//draw the numbers of each visible item that currently resides in the world.
-	maxIndex = min( maxIndex, eInfo.sNumItems-1 );
+	maxIndex = MIN( maxIndex, eInfo.sNumItems-1 );
 	for( i = minIndex; i <= maxIndex; i++ )
 	{
 		usNumItems = CountNumberOfEditorPlacementsInWorld( i, &usQuantity );

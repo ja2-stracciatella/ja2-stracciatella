@@ -1570,7 +1570,7 @@ next_node:
 							 * taskbar. */
 							if (iTempPosY_S < 360)
 							{
-								ColorFillVideoSurfaceArea(FRAME_BUFFER, iTempPosX_S, iTempPosY_S, iTempPosX_S + 40, min(iTempPosY_S + 20, 360), Get16BPPColor(FROMRGB(0, 0, 0)));
+								ColorFillVideoSurfaceArea(FRAME_BUFFER, iTempPosX_S, iTempPosY_S, iTempPosX_S + 40, MIN(iTempPosY_S + 20, 360), Get16BPPColor(FROMRGB(0, 0, 0)));
 							}
 						}
 					}
@@ -2620,9 +2620,9 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiD
 	}
 
 	// Calculate rows hanging off each side of the screen
-	const INT32 LeftSkip   = __min(ClipX1 -   min(ClipX1, iTempX), usWidth);
+	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
 	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
-	const INT32 RightSkip  = __min(  max(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
+	const INT32 RightSkip  = __min(  MAX(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
 	const INT32 BottomSkip = __min(__max(ClipY2, iTempY + usHeight) - ClipY2, usHeight);
 
 	// calculate the remaining rows and columns to blit
@@ -3147,9 +3147,9 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* p
 	}
 
 	// Calculate rows hanging off each side of the screen
-	const INT32 LeftSkip   = __min(ClipX1 -   min(ClipX1, iTempX), usWidth);
+	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
 	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
-	const INT32 RightSkip  = __min(  max(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
+	const INT32 RightSkip  = __min(  MAX(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
 	const INT32 BottomSkip = __min(__max(ClipY2, iTempY + usHeight) - ClipY2, usHeight);
 
 	// calculate the remaining rows and columns to blit
@@ -3676,9 +3676,9 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UIN
 	}
 
 	// Calculate rows hanging off each side of the screen
-	const INT32 LeftSkip   = __min(ClipX1 -   min(ClipX1, iTempX), usWidth);
+	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
 	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
-	const INT32 RightSkip  = __min(  max(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
+	const INT32 RightSkip  = __min(  MAX(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
 	const INT32 BottomSkip = __min(__max(ClipY2, iTempY + usHeight) - ClipY2, usHeight);
 
 	UINT32 uiLineFlag = iTempY & 1;
@@ -4223,9 +4223,9 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* p
 	}
 
 	// Calculate rows hanging off each side of the screen
-	const INT32 LeftSkip   = __min(ClipX1 -   min(ClipX1, iTempX), usWidth);
+	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
 	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
-	const INT32 RightSkip  = __min(  max(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
+	const INT32 RightSkip  = __min(  MAX(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
 	const INT32 BottomSkip = __min(__max(ClipY2, iTempY + usHeight) - ClipY2, usHeight);
 
 	UINT32 uiLineFlag = iTempY & 1;
@@ -4819,9 +4819,9 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer,
 	}
 
 	// Calculate rows hanging off each side of the screen
-	const INT32 LeftSkip   = __min(ClipX1 -   min(ClipX1, iTempX), usWidth);
+	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
 	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
-	const INT32 RightSkip  = __min(  max(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
+	const INT32 RightSkip  = __min(  MAX(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
 	const INT32 BottomSkip = __min(__max(ClipY2, iTempY + usHeight) - ClipY2, usHeight);
 
 	// calculate the remaining rows and columns to blit

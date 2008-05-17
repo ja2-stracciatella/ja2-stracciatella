@@ -345,10 +345,10 @@ static BOOLEAN HandleAreaSelection(const INT16 sGridX, const INT16 sGridY)
 
 static void ValidateSelectionRegionBoundaries(void)
 {
-	gSelectRegion.iLeft		= max( min( 159, gSelectRegion.iLeft	 ), 0 );
-	gSelectRegion.iRight	= max( min( 159, gSelectRegion.iRight  ), 0 );
-	gSelectRegion.iTop		= max( min( 159, gSelectRegion.iTop		 ), 0 );
-	gSelectRegion.iBottom = max( min( 159, gSelectRegion.iBottom ), 0 );
+	gSelectRegion.iLeft		= MAX( MIN( 159, gSelectRegion.iLeft	 ), 0 );
+	gSelectRegion.iRight	= MAX( MIN( 159, gSelectRegion.iRight  ), 0 );
+	gSelectRegion.iTop		= MAX( MIN( 159, gSelectRegion.iTop		 ), 0 );
+	gSelectRegion.iBottom = MAX( MIN( 159, gSelectRegion.iBottom ), 0 );
 }
 
 

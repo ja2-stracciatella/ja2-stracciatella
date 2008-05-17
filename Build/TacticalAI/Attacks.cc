@@ -230,7 +230,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 	 }
 	 else
 	 {
-	   ubMaxPossibleAimTime = min(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPcost);
+	   ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPcost);
 	 }
 
    // consider the various aiming times
@@ -698,10 +698,10 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		ubSearchRange = MAX_TOSS_SEARCH_DIST;
 
 		// determine maximum horizontal limits
-		//bMaxLeft  = min(ubSearchRange,(sOpponentTile[ubLoop] % MAXCOL));
+		//bMaxLeft  = MIN(ubSearchRange,(sOpponentTile[ubLoop] % MAXCOL));
 		bMaxLeft = ubSearchRange;
 		//NumMessage("bMaxLeft = ",bMaxLeft);
-		//bMaxRight = min(ubSearchRange,MAXCOL - ((sOpponentTile[ubLoop] % MAXCOL) + 1));
+		//bMaxRight = MIN(ubSearchRange,MAXCOL - ((sOpponentTile[ubLoop] % MAXCOL) + 1));
 		bMaxRight = ubSearchRange;
 		//NumMessage("bMaxRight = ",bMaxRight);
 
@@ -945,7 +945,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				}
 
 				// calculate the maximum possible aiming time
-				ubMaxPossibleAimTime = min(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPcost);
+				ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPcost);
 				//NumMessage("Max Possible Aim Time = ",ubMaxPossibleAimTime);
 
 				// calc next attack's minimum AP cost (excludes readying & turning)
@@ -1149,7 +1149,7 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
    iBestHitRate = 0;                     // reset best hit rate to minimum
 
    // calculate the maximum possible aiming time
-   ubMaxPossibleAimTime = min(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPCost);
+   ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPCost);
    //NumMessage("Max Possible Aim Time = ",ubMaxPossibleAimTime);
 
    // consider the various aiming times
@@ -1325,7 +1325,7 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 
    // calculate the maximum possible aiming time
 
-   //ubMaxPossibleAimTime = min(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPCost);
+   //ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPCost);
 	 ubMaxPossibleAimTime = 0;
    //NumMessage("Max Possible Aim Time = ",ubMaxPossibleAimTime);
 

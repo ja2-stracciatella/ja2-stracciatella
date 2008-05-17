@@ -1417,16 +1417,16 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 	}
 
 
-	pp->bExpLevel = max( 1, pp->bExpLevel ); //minimum exp. level of 1
-	pp->bExpLevel = min( 9, pp->bExpLevel ); //maximum exp. level of 9
+	pp->bExpLevel = MAX( 1, pp->bExpLevel ); //minimum exp. level of 1
+	pp->bExpLevel = MIN( 9, pp->bExpLevel ); //maximum exp. level of 9
 
 	ubStatsLevel = pp->bExpLevel + bStatsModifier;
 	#if 0 /* unsigned < 0 ? */
-	ubStatsLevel = max( 0, ubStatsLevel );	//minimum stats level of 0
+	ubStatsLevel = MAX( 0, ubStatsLevel );	//minimum stats level of 0
 	#else
 	ubStatsLevel = ubStatsLevel;	//minimum stats level of 0
 	#endif
-	ubStatsLevel = min( 9, ubStatsLevel );	//maximum stats level of 9
+	ubStatsLevel = MIN( 9, ubStatsLevel );	//maximum stats level of 9
 
 	//Set the minimum base attribute
 	bBaseAttribute = 49 + ( 4 * ubStatsLevel );
@@ -1752,8 +1752,8 @@ void ModifySoldierAttributesWithNewRelativeLevel( SOLDIERTYPE *s, INT8 bRelative
 	// Rel level 0: Lvl 1, 1: Lvl 2-3, 2: Lvl 4-5, 3: Lvl 6-7, 4: Lvl 8-9
 	s->bExpLevel = (INT8)(2 * bRelativeAttributeLevel + Random(2));
 
-	s->bExpLevel = max( 1, s->bExpLevel ); //minimum level of 1
-	s->bExpLevel = min( 9, s->bExpLevel ); //maximum level of 9
+	s->bExpLevel = MAX( 1, s->bExpLevel ); //minimum level of 1
+	s->bExpLevel = MIN( 9, s->bExpLevel ); //maximum level of 9
 
 	//Set the minimum base attribute
 	bBaseAttribute = 49 + ( 4 * s->bExpLevel );
@@ -2187,7 +2187,7 @@ static void CopyProfileItems(SOLDIERTYPE* const s, const SOLDIERCREATE_STRUCT* c
 			OBJECTTYPE* const slot = &s->inv[slot_id];
 
 			const UINT32 slot_limit  = MoneySlotLimit(slot_id);
-			const UINT32 slot_amount = min(money_left, slot_limit);
+			const UINT32 slot_amount = MIN(money_left, slot_limit);
 			CreateMoney(slot_amount, slot);
 			money_left -= slot_amount;
 		}

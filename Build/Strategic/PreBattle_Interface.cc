@@ -733,7 +733,7 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 	{
 		uiCurrTime = GetClock();
 		iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
-		iPercentage = min( iPercentage, 100 );
+		iPercentage = MIN( iPercentage, 100 );
 
 		//Factor the percentage so that it is modified by a gravity falling acceleration effect.
 		iFactor = (iPercentage - 50) * 2;
@@ -750,9 +750,9 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 			iTop = sStartTop + (sEndTop-sStartTop+1) * iPercentage / 100;
 
 		DstRect.iLeft = iLeft - iWidth * iPercentage / 200;
-		DstRect.iRight = DstRect.iLeft + max( iWidth * iPercentage / 100, 1 );
+		DstRect.iRight = DstRect.iLeft + MAX( iWidth * iPercentage / 100, 1 );
 		DstRect.iTop = iTop - iHeight * iPercentage / 200;
-		DstRect.iBottom = DstRect.iTop + max( iHeight * iPercentage / 100, 1 );
+		DstRect.iBottom = DstRect.iTop + MAX( iHeight * iPercentage / 100, 1 );
 
 		BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &PBIRect, &DstRect);
 
@@ -952,7 +952,7 @@ void RenderPreBattleInterface()
 			BltVideoObject( guiSAVEBUFFER, hVObject, TITLE_BAR_PIECE, i, 6);
 		}
 
-		y = BOTTOM_Y - ACTUAL_HEIGHT - ROW_HEIGHT * max( guiNumUninvolved, 1 );
+		y = BOTTOM_Y - ACTUAL_HEIGHT - ROW_HEIGHT * MAX( guiNumUninvolved, 1 );
 		BltVideoObject( guiSAVEBUFFER, hVObject, UNINVOLVED_HEADER, 8, y);
 
 		SetFont( BLOCKFONT );
@@ -1009,13 +1009,13 @@ void RenderPreBattleInterface()
 		MPrint(224 - width, 38, Milita);
 
 		//Draw the bottom columns
-		for (INT32 i = 0; i < (INT32)max(guiNumUninvolved, 1); ++i)
+		for (INT32 i = 0; i < (INT32)MAX(guiNumUninvolved, 1); ++i)
 		{
 			y = BOTTOM_Y - ROW_HEIGHT * (i+1) + 1;
 			BltVideoObject( guiSAVEBUFFER, hVObject, BOTTOM_COLUMN, 161, y);
 		}
 
-		for (INT32 i = 0; i < (INT32)(21 - max( guiNumUninvolved, 1 )); ++i)
+		for (INT32 i = 0; i < (INT32)(21 - MAX( guiNumUninvolved, 1 )); ++i)
 		{
 			y = TOP_Y + ROW_HEIGHT * i;
 			BltVideoObject( guiSAVEBUFFER, hVObject, TOP_COLUMN, 186, y);

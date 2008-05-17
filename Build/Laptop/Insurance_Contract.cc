@@ -146,7 +146,7 @@ static InsuranceInfo insurance_info[3];
 static void SetNumberOfDisplayedInsuranceMercs(void)
 {
 	gubNumberofDisplayedInsuranceGrids =
-		min(g_n_insurable_mercs - gsCurrentInsuranceMercIndex, 3);
+		MIN(g_n_insurable_mercs - gsCurrentInsuranceMercIndex, 3);
 }
 
 

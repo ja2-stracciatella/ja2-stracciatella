@@ -702,7 +702,7 @@ BOOLEAN ExecuteOverhead(void)
 					{
 						INT8 bShadeLevel = pSoldier->ubFadeLevel & 0x0f;
 						//ubShadeLevel =__max(ubShadeLevel-1, gpWorldLevelData[ pSoldier->sGridNo ].pLandHead->ubShadeLevel );
-						bShadeLevel = max(0, bShadeLevel - 1);
+						bShadeLevel = MAX(0, bShadeLevel - 1);
 
 						if (bShadeLevel <= gpWorldLevelData[pSoldier->sGridNo].pLandHead->ubShadeLevel)
 						{

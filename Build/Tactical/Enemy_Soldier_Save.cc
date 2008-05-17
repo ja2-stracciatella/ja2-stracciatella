@@ -943,7 +943,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 						{ //Add 4 life for every hour that passes.
 							INT32 iNewLife;
 							iNewLife = curr->pDetailedPlacement->bLife + uiTimeSinceLastLoaded / 15;
-							iNewLife = min( curr->pDetailedPlacement->bLifeMax, iNewLife );
+							iNewLife = MIN( curr->pDetailedPlacement->bLifeMax, iNewLife );
 							curr->pDetailedPlacement->bLife = (INT8)iNewLife;
 						}
 

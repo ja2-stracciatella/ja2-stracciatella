@@ -1005,8 +1005,8 @@ static void ViewerMapMoveCallback(MOUSE_REGION* reg, INT32 reason)
 		gfRenderViewer = TRUE;
 		return;
 	}
-	gsHiSectorX = min( (reg->RelativeXPos / 26) + 1, 16 );
-	gsHiSectorY = min( (reg->RelativeYPos / 22) + 1, 16 );
+	gsHiSectorX = MIN( (reg->RelativeXPos / 26) + 1, 16 );
+	gsHiSectorY = MIN( (reg->RelativeYPos / 22) + 1, 16 );
 	if( gsPrevX != gsHiSectorX || gsPrevY != gsHiSectorY )
 	{
 		gsPrevX = gsHiSectorX;
@@ -1022,8 +1022,8 @@ static void ViewerMapClickCallback(MOUSE_REGION* reg, INT32 reason)
 	//calc current sector selected.
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		gsSelSectorX = min( (reg->RelativeXPos / 26) + 1, 16 );
-		gsSelSectorY = min( (reg->RelativeYPos / 22) + 1, 16 );
+		gsSelSectorX = MIN( (reg->RelativeXPos / 26) + 1, 16 );
+		gsSelSectorY = MIN( (reg->RelativeYPos / 22) + 1, 16 );
 		if( gsSelSectorX != sLastX || gsSelSectorY != sLastY )
 		{ //clicked in a new sector
 			sLastX = gsSelSectorX;
@@ -1360,16 +1360,16 @@ static void ReloadSectorCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void ExtractAndUpdatePopulations(void)
 {
-	gsAINumAdmins = min( GetNumericStrictValueFromField( 0 ), MAX_STRATEGIC_TEAM_SIZE );
+	gsAINumAdmins = MIN( GetNumericStrictValueFromField( 0 ), MAX_STRATEGIC_TEAM_SIZE );
 	SetInputFieldStringWithNumericStrictValue( 0, gsAINumAdmins );
 
-	gsAINumTroops = min( GetNumericStrictValueFromField( 1 ), MAX_STRATEGIC_TEAM_SIZE );
+	gsAINumTroops = MIN( GetNumericStrictValueFromField( 1 ), MAX_STRATEGIC_TEAM_SIZE );
 	SetInputFieldStringWithNumericStrictValue( 1, gsAINumTroops );
 
-	gsAINumElites = min( GetNumericStrictValueFromField( 2 ), MAX_STRATEGIC_TEAM_SIZE );
+	gsAINumElites = MIN( GetNumericStrictValueFromField( 2 ), MAX_STRATEGIC_TEAM_SIZE );
 	SetInputFieldStringWithNumericStrictValue( 2, gsAINumElites );
 
-	gsAINumCreatures = min( GetNumericStrictValueFromField( 3 ), MAX_STRATEGIC_TEAM_SIZE );
+	gsAINumCreatures = MIN( GetNumericStrictValueFromField( 3 ), MAX_STRATEGIC_TEAM_SIZE );
 	SetInputFieldStringWithNumericStrictValue( 3, gsAINumCreatures );
 }
 

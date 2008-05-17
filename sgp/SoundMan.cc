@@ -951,7 +951,7 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 				size_t    amount;
 
 mixing:
-				amount = min(samples, s->n_samples - Sound->pos);
+				amount = MIN(samples, s->n_samples - Sound->pos);
 				if (s->uiFlags & SAMPLE_16BIT)
 				{
 					if (s->uiFlags & SAMPLE_STEREO)

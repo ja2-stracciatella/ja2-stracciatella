@@ -517,7 +517,7 @@ static void SetClockResolutionToCompressMode(INT32 iCompressMode)
 	}
 	else
 	{
-		SetClockResolutionPerSecond( (UINT8) max( 1, (UINT8)(guiGameSecondsPerRealSecond / 60) ) );
+		SetClockResolutionPerSecond( (UINT8) MAX( 1, (UINT8)(guiGameSecondsPerRealSecond / 60) ) );
 	}
 
 	// if the compress mode is X0 or X1
@@ -571,7 +571,7 @@ static void SetGameSecondsPerSecond(UINT32 uiGameSecondsPerSecond)
 	}
 	else
 	{
-		SetClockResolutionPerSecond( (UINT8) max( 1, (UINT8)(guiGameSecondsPerRealSecond / 60) ) );
+		SetClockResolutionPerSecond( (UINT8) MAX( 1, (UINT8)(guiGameSecondsPerRealSecond / 60) ) );
 	}
 }
 
@@ -661,7 +661,7 @@ static void SetClockResolutionToDefault(void)
 //Valid range is 0 - 60 times per second.
 static void SetClockResolutionPerSecond(UINT8 ubNumTimesPerSecond)
 {
-	ubNumTimesPerSecond = (UINT8)(max( 0, min( 60, ubNumTimesPerSecond ) ));
+	ubNumTimesPerSecond = (UINT8)(MAX( 0, MIN( 60, ubNumTimesPerSecond ) ));
 	gubClockResolution = ubNumTimesPerSecond;
 }
 
@@ -732,7 +732,7 @@ void UpdateClock()
 	//Because we debug so much, breakpoints tend to break the game, and cause unnecessary headaches.
 	//This line ensures that no more than 1 real-second passes between frames.  This otherwise has
 	//no effect on anything else.
-	uiLastSecondTime = max( uiNewTime - 1000, uiLastSecondTime );
+	uiLastSecondTime = MAX( uiNewTime - 1000, uiLastSecondTime );
 
 	//1000's of a second difference since last second.
 	uiThousandthsOfThisSecondProcessed = uiNewTime - uiLastSecondTime;
@@ -758,7 +758,7 @@ void UpdateClock()
 			guiTimesThisSecondProcessed = uiThousandthsOfThisSecondProcessed*1000 / uiTimeSlice;
 			uiNewTimeProcessed = guiGameSecondsPerRealSecond * guiTimesThisSecondProcessed / gubClockResolution;
 
-			uiNewTimeProcessed = max( uiNewTimeProcessed, uiLastTimeProcessed );
+			uiNewTimeProcessed = MAX( uiNewTimeProcessed, uiLastTimeProcessed );
 
 			uiAmountToAdvanceTime = uiNewTimeProcessed - uiLastTimeProcessed;
 

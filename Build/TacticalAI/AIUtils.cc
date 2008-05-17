@@ -696,12 +696,12 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 		sOrigX = usOrigin % MAXCOL;
 		sOrigY = usOrigin / MAXCOL;
 
-		sMaxLeft  = min(usMaxDist, sOrigX);
-		sMaxRight = min(usMaxDist,MAXCOL - (sOrigX + 1));
+		sMaxLeft  = MIN(usMaxDist, sOrigX);
+		sMaxRight = MIN(usMaxDist,MAXCOL - (sOrigX + 1));
 
 		// determine maximum vertical limits
-		sMaxUp   = min(usMaxDist, sOrigY);
-		sMaxDown = min(usMaxDist,MAXROW - (sOrigY + 1));
+		sMaxUp   = MIN(usMaxDist, sOrigY);
+		sMaxDown = MIN(usMaxDist,MAXROW - (sOrigY + 1));
 
 		sXRange = sMaxLeft + sMaxRight + 1;
 		sYRange = sMaxUp + sMaxDown + 1;

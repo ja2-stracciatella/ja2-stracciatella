@@ -401,7 +401,7 @@ try
 		}
 
 		// Check for bottom
-		sY = min(sY, gsVIEWPORT_WINDOW_END_Y - gTalkPanel.usHeight);
+		sY = MIN(sY, gsVIEWPORT_WINDOW_END_Y - gTalkPanel.usHeight);
 	}
 
 	//Set values

@@ -1068,10 +1068,10 @@ static size_t GetWidthOfString(const wchar_t* pStringA)
 		switch (*i)
 		{
 			case L'\0':
-				return max(Width, MaxWidth);
+				return MAX(Width, MaxWidth);
 
 			case L'\n':
-				MaxWidth = max(Width, MaxWidth);
+				MaxWidth = MAX(Width, MaxWidth);
 				Width = 0;
 				break;
 
@@ -1159,7 +1159,7 @@ void RenderFastHelp()
 				if ( MSYS_CurrRegion->uiFlags & MSYS_MOUSE_IN_AREA &&
 						!MSYS_CurrRegion->ButtonState)// & (MSYS_LEFT_BUTTON|MSYS_RIGHT_BUTTON)) )
 				{
-					MSYS_CurrRegion->FastHelpTimer -= (INT16)max( iTimeDifferential, 0 );
+					MSYS_CurrRegion->FastHelpTimer -= (INT16)MAX( iTimeDifferential, 0 );
 
 					if( MSYS_CurrRegion->FastHelpTimer < 0 )
 					{

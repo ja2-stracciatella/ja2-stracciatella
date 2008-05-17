@@ -235,7 +235,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 		case SOLDIER_CLASS_ADMINISTRATOR:
 		case SOLDIER_CLASS_GREEN_MILITIA:
 			bRating = BAD_ADMINISTRATOR_EQUIPMENT_RATING + bEquipmentModifier;
-			bRating = (INT8)max( MIN_EQUIPMENT_CLASS, min( MAX_EQUIPMENT_CLASS, bRating ) );
+			bRating = (INT8)MAX( MIN_EQUIPMENT_CLASS, MIN( MAX_EQUIPMENT_CLASS, bRating ) );
 
 			bWeaponClass = bRating;
 
@@ -277,7 +277,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 		case SOLDIER_CLASS_REG_MILITIA:
 			//army guys tend to have a broad range of equipment
 			bRating = BAD_ARMY_EQUIPMENT_RATING + bEquipmentModifier;
-			bRating = (INT8)max( MIN_EQUIPMENT_CLASS, min( MAX_EQUIPMENT_CLASS, bRating ) );
+			bRating = (INT8)MAX( MIN_EQUIPMENT_CLASS, MIN( MAX_EQUIPMENT_CLASS, bRating ) );
 
 			bWeaponClass = bRating;
 			bVestClass = bRating;
@@ -378,7 +378,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 		case SOLDIER_CLASS_ELITE:
 		case SOLDIER_CLASS_ELITE_MILITIA:
 			bRating = BAD_ELITE_EQUIPMENT_RATING + bEquipmentModifier;
-			bRating = (INT8)max( MIN_EQUIPMENT_CLASS, min( MAX_EQUIPMENT_CLASS, bRating ) );
+			bRating = (INT8)MAX( MIN_EQUIPMENT_CLASS, MIN( MAX_EQUIPMENT_CLASS, bRating ) );
 
 			bWeaponClass = bRating;
 			bHelmetClass = bRating;
@@ -677,21 +677,21 @@ static void ChooseWeaponForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bW
 				//Admins/Troops: 60-75% + 1% every 4% progress
 				bStatus = (INT8)(60 + Random( 16 ));
 				bStatus += (INT8)(HighestPlayerProgressPercentage() / 4);
-				bStatus = (INT8)min( 100, bStatus );
+				bStatus = (INT8)MIN( 100, bStatus );
 				break;
 			case SOLDIER_CLASS_ELITE:
 			case SOLDIER_CLASS_ELITE_MILITIA:
 				//85-90% +  1% every 10% progress
 				bStatus = (INT8)(85 + Random( 6 ));
 				bStatus += (INT8)(HighestPlayerProgressPercentage() / 10);
-				bStatus = (INT8)min( 100, bStatus );
+				bStatus = (INT8)MIN( 100, bStatus );
 				break;
 			default:
 				bStatus = (INT8)(50 + Random( 51 ) );
 				break;
 		}
 		// don't allow it to be lower than marksmanship, we don't want it to affect their chances of hitting
-		bStatus = (INT8)max( pp->bMarksmanship, bStatus );
+		bStatus = (INT8)MAX( pp->bMarksmanship, bStatus );
 
 		CreateItem( usGunIndex, bStatus, &(pp->Inv[ HANDPOS ]) );
 		pp->Inv[ HANDPOS ].fFlags |= OBJECT_UNDROPPABLE;
@@ -758,7 +758,7 @@ static void ChooseGrenadesForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 
 
 	//determine the quality of grenades.  The elite guys get the best quality, while the others
 	//get progressively worse.
-	ubBaseQuality = (UINT8)min( 45 + bGrenadeClass * 5, 90 );
+	ubBaseQuality = (UINT8)MIN( 45 + bGrenadeClass * 5, 90 );
 	ubQualityVariation = 101 - ubBaseQuality;
 
 
@@ -1484,7 +1484,7 @@ static BOOLEAN PlaceObjectInSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, OBJECT
 	}
 	else
 	{
-		pObject->ubNumberOfObjects = (UINT8)min( Item[ pObject->usItem ].ubPerPocket, pObject->ubNumberOfObjects );
+		pObject->ubNumberOfObjects = (UINT8)MIN( Item[ pObject->usItem ].ubPerPocket, pObject->ubNumberOfObjects );
 		//try to get it into a small pocket first
 		for( i = SMALLPOCK1POS; i <= SMALLPOCK8POS; i++ )
 		{

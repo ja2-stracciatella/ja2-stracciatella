@@ -455,9 +455,9 @@ BOOLEAN PrepareEnemyForSectorBattle()
 				gWorldSectorY + 'A' - 1, gWorldSectorX, ubTotalAdmins + ubTotalTroops + ubTotalElites, 32 );
 		#endif
 
-		ubTotalAdmins = min( 32, ubTotalAdmins );
-		ubTotalTroops = min( 32-ubTotalAdmins, ubTotalTroops );
-		ubTotalElites = min( 32-ubTotalAdmins+ubTotalTroops, ubTotalElites );
+		ubTotalAdmins = MIN( 32, ubTotalAdmins );
+		ubTotalTroops = MIN( 32-ubTotalAdmins, ubTotalTroops );
+		ubTotalElites = MIN( 32-ubTotalAdmins+ubTotalTroops, ubTotalElites );
 	}
 
 	pSector->ubAdminsInBattle += ubTotalAdmins;

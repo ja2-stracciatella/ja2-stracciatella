@@ -1672,7 +1672,7 @@ static void PrepareGroupsForSimultaneousArrival(void)
 				&& pGroup->ubNextY == gpPendingSimultaneousGroup->ubSectorY &&
 				!IsGroupTheHelicopterGroup( pGroup ) )
 		{
-			uiLatestArrivalTime = max( pGroup->uiArrivalTime, uiLatestArrivalTime );
+			uiLatestArrivalTime = MAX( pGroup->uiArrivalTime, uiLatestArrivalTime );
 			pGroup->uiFlags |= GROUPFLAG_SIMULTANEOUSARRIVAL_APPROVED | GROUPFLAG_MARKER;
 		}
 	}
@@ -3436,7 +3436,7 @@ static BOOLEAN SpendVehicleFuel(SOLDIERTYPE* pSoldier, INT16 sFuelSpent)
 {
 	Assert( pSoldier->uiStatusFlags & SOLDIER_VEHICLE );
 	pSoldier->sBreathRed -= sFuelSpent;
-	pSoldier->sBreathRed = (INT16)max( 0, pSoldier->sBreathRed );
+	pSoldier->sBreathRed = (INT16)MAX( 0, pSoldier->sBreathRed );
 	pSoldier->bBreath = (INT8)((pSoldier->sBreathRed+99) / 100);
 	return( FALSE );
 }
@@ -3466,7 +3466,7 @@ void AddFuelToVehicle(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVehicle)
 	{ //Fill 'er up.
 		sFuelNeeded = 10000 - pVehicle->sBreathRed;
 		sFuelAvailable = pItem->bStatus[0] * 50;
-		sFuelAdded = min( sFuelNeeded, sFuelAvailable );
+		sFuelAdded = MIN( sFuelNeeded, sFuelAvailable );
 		//Add to vehicle
 		pVehicle->sBreathRed += sFuelAdded;
 		pVehicle->bBreath = (INT8)(pVehicle->sBreathRed / 100);
@@ -3640,7 +3640,7 @@ static BOOLEAN TestForBloodcatAmbush(GROUP* pGroup)
 			//come back up to the maximum if left long enough.
 			INT32 iBloodCatDiff;
 			iBloodCatDiff = pSector->bBloodCatPlacements - pSector->bBloodCats;
-			pSector->bBloodCats += (INT8)min( iHoursElapsed / 18, iBloodCatDiff );
+			pSector->bBloodCats += (INT8)MIN( iHoursElapsed / 18, iBloodCatDiff );
 		}
 		//Once 0, the bloodcats will never recupe.
 	}
@@ -3652,22 +3652,22 @@ static BOOLEAN TestForBloodcatAmbush(GROUP* pGroup)
 			bDifficultyMaxCats = (INT8)( Random( 4 ) + gGameOptions.ubDifficultyLevel*2 + 3 );
 
 			//maximum of 3 bloodcats or 1 for every 6%, 5%, 4% progress based on easy, normal, and hard, respectively
-			bProgressMaxCats = (INT8)max( CurrentPlayerProgressPercentage() / (7 - gGameOptions.ubDifficultyLevel), 3 );
+			bProgressMaxCats = (INT8)MAX( CurrentPlayerProgressPercentage() / (7 - gGameOptions.ubDifficultyLevel), 3 );
 
 			//make sure bloodcats don't outnumber mercs by a factor greater than 2
 			bNumMercMaxCats = (INT8)(PlayerMercsInSector( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ ) * 2);
 
 			//choose the lowest number of cats calculated by difficulty and progress.
-			pSector->bBloodCats = (INT8)min( bDifficultyMaxCats, bProgressMaxCats );
+			pSector->bBloodCats = (INT8)MIN( bDifficultyMaxCats, bProgressMaxCats );
 
 			if( gGameOptions.ubDifficultyLevel != DIF_LEVEL_HARD )
 			{ //if not hard difficulty, ensure cats never outnumber mercs by a factor of 2 (min 3 bloodcats)
-				pSector->bBloodCats = (INT8)min( pSector->bBloodCats, bNumMercMaxCats );
-				pSector->bBloodCats = (INT8)max( pSector->bBloodCats, 3 );
+				pSector->bBloodCats = (INT8)MIN( pSector->bBloodCats, bNumMercMaxCats );
+				pSector->bBloodCats = (INT8)MAX( pSector->bBloodCats, 3 );
 			}
 
 			//ensure that there aren't more bloodcats than placements
-			pSector->bBloodCats = (INT8)min( pSector->bBloodCats, pSector->bBloodCatPlacements );
+			pSector->bBloodCats = (INT8)MIN( pSector->bBloodCats, pSector->bBloodCatPlacements );
 		}
 	}
 	else if( ubSectorID != SEC_I16 )

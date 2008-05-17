@@ -822,7 +822,7 @@ UINT32 DemoExitScreenHandle(void)
 		if( gfFastAnim )
 		{
 			if( gfPrevFastAnim )
-				iPercentage += max( iPercentage - iPrevPercentage, 1 );
+				iPercentage += MAX( iPercentage - iPrevPercentage, 1 );
 			else
 				iPercentage += 1;
 			iPrevPercentage = iPercentage;
@@ -842,7 +842,7 @@ UINT32 DemoExitScreenHandle(void)
 			iPrevPercentage = 0;
 			return DEMO_EXIT_SCREEN;
 		}
-		iPercentage = min( iPercentage, 100 );
+		iPercentage = MIN( iPercentage, 100 );
 
 		uiCharsToPrint = wcslen( gpDemoString[0] ) * iPercentage / 100;
 
@@ -869,7 +869,7 @@ UINT32 DemoExitScreenHandle(void)
 		if( gfFastAnim )
 		{
 			if( gfPrevFastAnim )
-				iPercentage += max( iPercentage - iPrevPercentage, 1 );
+				iPercentage += MAX( iPercentage - iPrevPercentage, 1 );
 			else
 				iPercentage += 1;
 			iPrevPercentage = iPercentage;
@@ -886,7 +886,7 @@ UINT32 DemoExitScreenHandle(void)
 			iPrevPercentage = 0;
 			return DEMO_EXIT_SCREEN;
 		}
-		iPercentage = min( iPercentage, 100 );
+		iPercentage = MIN( iPercentage, 100 );
 		uiCharsToPrint = wcslen( gpDemoString[1] ) * iPercentage / 100;
 
 		if( uiCharsToPrint > uiCharsPrinted )
@@ -931,7 +931,7 @@ UINT32 DemoExitScreenHandle(void)
 		if( gfFastAnim )
 		{
 			if( gfPrevFastAnim )
-				iPercentage += max( iPercentage - iPrevPercentage * 1, 1 );
+				iPercentage += MAX( iPercentage - iPrevPercentage * 1, 1 );
 			else
 				iPercentage += 1;
 			iPrevPercentage = iPercentage;
@@ -941,7 +941,7 @@ UINT32 DemoExitScreenHandle(void)
 			uiStartTime = uiTime - (iPrevPercentage+1) * 12;
 			iPercentage = (uiTime - uiStartTime) * 100 / 1200;
 		}
-		iPercentage = min( iPercentage, 100 );
+		iPercentage = MIN( iPercentage, 100 );
 
 		//Factor the percentage so that it is modified by a gravity falling acceleration effect.
 		iFactor = (iPercentage - 50) * 2;
@@ -1010,7 +1010,7 @@ UINT32 DemoExitScreenHandle(void)
 		if( gfFastAnim )
 		{
 			if( gfPrevFastAnim )
-				iPercentage += max( iPercentage - iPrevPercentage, 150 );
+				iPercentage += MAX( iPercentage - iPrevPercentage, 150 );
 			else
 				iPercentage += 150;
 			if( iPercentage < iPrevPercentage )
@@ -1024,12 +1024,12 @@ UINT32 DemoExitScreenHandle(void)
 			uiStartTime = uiTime - (iPrevPercentage+150);
 			iPercentage = (uiTime - uiStartTime);
 		}
-		iPercentage = min( iPercentage, 45000 );
+		iPercentage = MIN( iPercentage, 45000 );
 
 		BlitBufferToBuffer( guiSAVEBUFFER, FRAME_BUFFER, 100, 230, 440, 250 );
 		InvalidateRegion( 100, 230, 540, 640 );
 		yp = SCREEN_HEIGHT - iPercentage / 40; //500 (0%) to -500 (100%)
-		yp = max( yp, -400 );
+		yp = MAX( yp, -400 );
 		for( i = 2; i < 40; i++ )
 		{
 			UINT16 usFont = (i < 36 ? FONT14ARIAL : FONT14HUMANIST);
@@ -1089,7 +1089,7 @@ UINT32 DemoExitScreenHandle(void)
 		if( gfFastAnim )
 		{
 			if( gfPrevFastAnim )
-				iPercentage += max( iPercentage - iPrevPercentage, 1 );
+				iPercentage += MAX( iPercentage - iPrevPercentage, 1 );
 			else
 				iPercentage += 1;
 			iPrevPercentage = iPercentage;
@@ -1099,7 +1099,7 @@ UINT32 DemoExitScreenHandle(void)
 			uiStartTime = uiTime - iPrevPercentage * 12;
 			iPercentage = (uiTime - uiStartTime) * 100 / 1200;
 		}
-		iPercentage = min( iPercentage, 100 );
+		iPercentage = MIN( iPercentage, 100 );
 
 		//Factor the percentage so that it is modified by a gravity falling acceleration effect.
 		iFactor = (iPercentage - 50) * 2;
@@ -1168,7 +1168,7 @@ UINT32 DemoExitScreenHandle(void)
 		if( gfFastAnim )
 		{
 			if( gfPrevFastAnim )
-				iPercentage += max( iPercentage - iPrevPercentage, 1 );
+				iPercentage += MAX( iPercentage - iPrevPercentage, 1 );
 			else
 				iPercentage += 1;
 			iPrevPercentage = iPercentage;
@@ -1188,7 +1188,7 @@ UINT32 DemoExitScreenHandle(void)
 			iPrevPercentage = 0;
 			return DEMO_EXIT_SCREEN;
 		}
-		iPercentage = min( iPercentage, 100 );
+		iPercentage = MIN( iPercentage, 100 );
 		uiCharsToPrint = wcslen( gpDemoString[40] ) * iPercentage / 100;
 
 		if( uiCharsToPrint > uiCharsPrinted )

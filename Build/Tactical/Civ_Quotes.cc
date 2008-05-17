@@ -388,7 +388,7 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 		}
 
 		// Check for bottom
-		sY = min(sY, gsVIEWPORT_WINDOW_END_Y - gusCivQuoteBoxHeight);
+		sY = MIN(sY, gsVIEWPORT_WINDOW_END_Y - gusCivQuoteBoxHeight);
 	}
 
 	VideoOverlayDesc.sLeft			 = sX;

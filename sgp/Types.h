@@ -35,8 +35,8 @@
 
 #define __max(a, b) ((a) > (b) ? (a) : (b))
 #define __min(a, b) ((a) < (b) ? (a) : (b))
-#define max(a, b) __max(a, b)
-#define min(a, b) __min(a, b)
+#define MAX(a, b) __max(a, b)
+#define MIN(a, b) __min(a, b)
 
 
 typedef          int  INT;

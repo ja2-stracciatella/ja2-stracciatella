@@ -195,7 +195,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 					{
 						// damage the item a random amount!
 						const INT8 status = (70 + Random(11)) * (INT32)Object.bStatus[0] / 100;
-						Object.bStatus[0] = max(1, status);
+						Object.bStatus[0] = MAX(1, status);
 						AddItemToPool(usStandardMapPos, &Object, -1, 0, 0, 0);
 					}
 					else
@@ -224,7 +224,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 					{
 						// damage the item a random amount!
 						const INT8 status = (70 + Random(11)) * (INT32)Object.bStatus[0] / 100;
-						Object.bStatus[0] = max(1, status);
+						Object.bStatus[0] = MAX(1, status);
 						pObject[uiCount++] = Object;
 					}
 					else

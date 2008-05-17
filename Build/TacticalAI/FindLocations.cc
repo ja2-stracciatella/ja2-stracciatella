@@ -467,7 +467,7 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 		    MAX_THREAT_RANGE;
 
 	// divide by a 100 to make the numbers more managable and avoid 32-bit limit
-	iThisScale = max( iMyPosValue, iHisPosValue) / 100;
+	iThisScale = MAX( iMyPosValue, iHisPosValue) / 100;
 	iThisScale = (iThisScale * iReductionFactor) / 100;
 	*iTotalScale += iThisScale;
 	// this helps to decide the percent improvement later
@@ -779,15 +779,15 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 #endif
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min(iSearchRange,(pSoldier->sGridNo % MAXCOL));
+	sMaxLeft  = MIN(iSearchRange,(pSoldier->sGridNo % MAXCOL));
 	//NumMessage("sMaxLeft = ",sMaxLeft);
-	sMaxRight = min(iSearchRange,MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
+	sMaxRight = MIN(iSearchRange,MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
 	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
-	sMaxUp   = min(iSearchRange,(pSoldier->sGridNo / MAXROW));
+	sMaxUp   = MIN(iSearchRange,(pSoldier->sGridNo / MAXROW));
 	//NumMessage("sMaxUp = ",sMaxUp);
-	sMaxDown = min(iSearchRange,MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
+	sMaxDown = MIN(iSearchRange,MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 	//NumMessage("sMaxDown = ",sMaxDown);
 
 	iRoamRange = RoamingRange(pSoldier,&sOrigin);
@@ -1219,15 +1219,15 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 	//NumMessage("gubNPCAPBudget = ",gubNPCAPBudget);
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min( iSearchRange, (pSoldier->sGridNo % MAXCOL));
+	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
 	//NumMessage("sMaxLeft = ",sMaxLeft);
-	sMaxRight = min( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
+	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
 	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
-	sMaxUp   = min( iSearchRange, (pSoldier->sGridNo / MAXROW));
+	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
 	//NumMessage("sMaxUp = ",sMaxUp);
-	sMaxDown = min( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
+	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 	//NumMessage("sMaxDown = ",sMaxDown);
 
 	// Call FindBestPath to set flags in all locations that we can
@@ -1378,15 +1378,15 @@ INT16 FindNearestUngassedLand(SOLDIERTYPE *pSoldier)
 		//NumMessage("Trying iSearchRange = ", iSearchRange);
 
 		// determine maximum horizontal limits
-		sMaxLeft  = min(iSearchRange,(pSoldier->sGridNo % MAXCOL));
+		sMaxLeft  = MIN(iSearchRange,(pSoldier->sGridNo % MAXCOL));
 		//NumMessage("sMaxLeft = ",sMaxLeft);
-		sMaxRight = min(iSearchRange,MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
+		sMaxRight = MIN(iSearchRange,MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
 		//NumMessage("sMaxRight = ",sMaxRight);
 
 		// determine maximum vertical limits
-		sMaxUp   = min(iSearchRange,(pSoldier->sGridNo / MAXROW));
+		sMaxUp   = MIN(iSearchRange,(pSoldier->sGridNo / MAXROW));
 		//NumMessage("sMaxUp = ",sMaxUp);
-		sMaxDown = min(iSearchRange,MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
+		sMaxDown = MIN(iSearchRange,MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 		//NumMessage("sMaxDown = ",sMaxDown);
 
 		// Call FindBestPath to set flags in all locations that we can
@@ -1491,15 +1491,15 @@ INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 	for (iSearchRange = 5; iSearchRange <= 15; iSearchRange += 5)
 	{
 		// determine maximum horizontal limits
-		sMaxLeft  = min(iSearchRange,(pSoldier->sGridNo % MAXCOL));
+		sMaxLeft  = MIN(iSearchRange,(pSoldier->sGridNo % MAXCOL));
 		//NumMessage("sMaxLeft = ",sMaxLeft);
-		sMaxRight = min(iSearchRange,MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
+		sMaxRight = MIN(iSearchRange,MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
 		//NumMessage("sMaxRight = ",sMaxRight);
 
 		// determine maximum vertical limits
-		sMaxUp   = min(iSearchRange,(pSoldier->sGridNo / MAXROW));
+		sMaxUp   = MIN(iSearchRange,(pSoldier->sGridNo / MAXROW));
 		//NumMessage("sMaxUp = ",sMaxUp);
-		sMaxDown = min(iSearchRange,MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
+		sMaxDown = MIN(iSearchRange,MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 		//NumMessage("sMaxDown = ",sMaxDown);
 
 		// Call FindBestPath to set flags in all locations that we can
@@ -1657,15 +1657,15 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 	iSearchRange /= 2;
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min( iSearchRange, (pSoldier->sGridNo % MAXCOL));
+	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
 	//NumMessage("sMaxLeft = ",sMaxLeft);
-	sMaxRight = min( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
+	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
 	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
-	sMaxUp   = min( iSearchRange, (pSoldier->sGridNo / MAXROW));
+	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
 	//NumMessage("sMaxUp = ",sMaxUp);
-	sMaxDown = min( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
+	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 	//NumMessage("sMaxDown = ",sMaxDown);
 
 	// Call FindBestPath to set flags in all locations that we can
@@ -1954,15 +1954,15 @@ INT16 FindClosestDoor( SOLDIERTYPE * pSoldier )
 	iSearchRange = 5;
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min( iSearchRange, (pSoldier->sGridNo % MAXCOL));
+	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
 	//NumMessage("sMaxLeft = ",sMaxLeft);
-	sMaxRight = min( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
+	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
 	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
-	sMaxUp   = min( iSearchRange, (pSoldier->sGridNo / MAXROW));
+	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
 	//NumMessage("sMaxUp = ",sMaxUp);
-	sMaxDown = min( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
+	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 	//NumMessage("sMaxDown = ",sMaxDown);
 	// SET UP DOUBLE-LOOP TO STEP THROUGH POTENTIAL GRID #s
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
@@ -2125,15 +2125,15 @@ INT16 FindNearbyPointOnEdgeOfMap( SOLDIERTYPE * pSoldier, INT8 * pbDirection )
 	iSearchRange = EDGE_OF_MAP_SEARCH;
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min( iSearchRange, (pSoldier->sGridNo % MAXCOL));
+	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
 	//NumMessage("sMaxLeft = ",sMaxLeft);
-	sMaxRight = min( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
+	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
 	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
-	sMaxUp   = min( iSearchRange, (pSoldier->sGridNo / MAXROW));
+	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
 	//NumMessage("sMaxUp = ",sMaxUp);
-	sMaxDown = min( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
+	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
 	// reset the "reachable" flags in the region we're looking at
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
@@ -2206,9 +2206,9 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 	iSearchRange = 7;
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min( iSearchRange, (pSoldier->sGridNo % MAXCOL));
+	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
 	//NumMessage("sMaxLeft = ",sMaxLeft);
-	sMaxRight = min( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
+	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
 	//NumMessage("sMaxRight = ",sMaxRight);
 
 	if (pSoldier->bTeam == gbPlayerNum && !fInRing)
@@ -2218,9 +2218,9 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 	}
 
 	// determine maximum vertical limits
-	sMaxUp   = min( iSearchRange, (pSoldier->sGridNo / MAXROW));
+	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
 	//NumMessage("sMaxUp = ",sMaxUp);
-	sMaxDown = min( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
+	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
 	{
@@ -2260,15 +2260,15 @@ INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo )
 	iSearchRange = 7;
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min( iSearchRange, (sStartGridNo % MAXCOL));
+	sMaxLeft  = MIN( iSearchRange, (sStartGridNo % MAXCOL));
 	//NumMessage("sMaxLeft = ",sMaxLeft);
-	sMaxRight = min( iSearchRange, MAXCOL - ((sStartGridNo % MAXCOL) + 1));
+	sMaxRight = MIN( iSearchRange, MAXCOL - ((sStartGridNo % MAXCOL) + 1));
 	//NumMessage("sMaxRight = ",sMaxRight);
 
 	// determine maximum vertical limits
-	sMaxUp   = min( iSearchRange, (sStartGridNo / MAXROW));
+	sMaxUp   = MIN( iSearchRange, (sStartGridNo / MAXROW));
 	//NumMessage("sMaxUp = ",sMaxUp);
-	sMaxDown = min( iSearchRange, MAXROW - ((sStartGridNo / MAXROW) + 1));
+	sMaxDown = MIN( iSearchRange, MAXROW - ((sStartGridNo / MAXROW) + 1));
 
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
 	{

@@ -2050,10 +2050,10 @@ static BOOLEAN CalcTranslucentWalls(INT16 iX, INT16 iY)
 
 			//Kris:  added map boundary checking!!!
 			if(LightRevealWall(
-				 (INT16)min(max((iX+pLight->iDX),0),WORLD_COLS-1),
-				 (INT16)min(max((iY+pLight->iDY),0),WORLD_ROWS-1),
-				 (INT16)min(max(iX,0),WORLD_COLS-1),
-				 (INT16)min(max(iY,0),WORLD_ROWS-1)
+				 (INT16)MIN(MAX((iX+pLight->iDX),0),WORLD_COLS-1),
+				 (INT16)MIN(MAX((iY+pLight->iDY),0),WORLD_ROWS-1),
+				 (INT16)MIN(MAX(iX,0),WORLD_COLS-1),
+				 (INT16)MIN(MAX(iY,0),WORLD_ROWS-1)
 				))
 			{
 				uiCount = LightFindNextRay(t, uiCount);
@@ -2269,10 +2269,10 @@ BOOLEAN ApplyTranslucencyToWalls(INT16 iX, INT16 iY)
 			const LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 			//Kris:  added map boundary checking!!!
 			if(LightHideWall(
-				 (INT16)min(max((iX+pLight->iDX),0),WORLD_COLS-1),
-				 (INT16)min(max((iY+pLight->iDY),0),WORLD_ROWS-1),
-				 (INT16)min(max(iX,0),WORLD_COLS-1),
-				 (INT16)min(max(iY,0),WORLD_ROWS-1)
+				 (INT16)MIN(MAX((iX+pLight->iDX),0),WORLD_COLS-1),
+				 (INT16)MIN(MAX((iY+pLight->iDY),0),WORLD_ROWS-1),
+				 (INT16)MIN(MAX(iX,0),WORLD_COLS-1),
+				 (INT16)MIN(MAX(iY,0),WORLD_ROWS-1)
 				))
 			{
 				uiCount = LightFindNextRay(t, uiCount);

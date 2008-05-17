@@ -783,8 +783,8 @@ static UINT8 GetCurrentSuitabilityForItem(INT8 bArmsDealer, UINT16 usItemIndex)
 	}
 
 
-	ubMinCoolness = max( 1, min( 9, ubMinCoolness ) );
-	ubMaxCoolness = max( 2, min( 10, ubMaxCoolness ) );
+	ubMinCoolness = MAX( 1, MIN( 9, ubMinCoolness ) );
+	ubMaxCoolness = MAX( 2, MIN( 10, ubMaxCoolness ) );
 
 
 	// if item is too cool for current level of progress

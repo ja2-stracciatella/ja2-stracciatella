@@ -2773,11 +2773,11 @@ static void CreatePopUpBoxForMovementBox(void)
 	const SGPBox* const area = GetBoxArea(box);
 	if (area->x + area->w >= MAP_VIEW_START_X + MAP_VIEW_WIDTH)
 	{
-		SetBoxX(box, max(MAP_VIEW_START_X, MAP_VIEW_START_X + MAP_VIEW_WIDTH - area->w));
+		SetBoxX(box, MAX(MAP_VIEW_START_X, MAP_VIEW_START_X + MAP_VIEW_WIDTH - area->w));
 	}
 	if (area->y + area->h >= MAP_VIEW_START_Y + MAP_VIEW_HEIGHT)
 	{
-		SetBoxY(box, max(MAP_VIEW_START_Y, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - area->h));
+		SetBoxY(box, MAX(MAP_VIEW_START_Y, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - area->h));
 	}
 }
 

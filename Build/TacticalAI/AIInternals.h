@@ -75,12 +75,6 @@ enum
 
 #define SEE_THRU_COVER_THRESHOLD        5      // min chance to get through
 
-#undef min
-#define min(a,b) ((a) < (b) ? (a) : (b))
-
-#undef max
-#define max(a,b) ((a) > (b) ? (a) : (b))
-
 typedef struct
 {
  SOLDIERTYPE *	pOpponent;

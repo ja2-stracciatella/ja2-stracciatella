@@ -329,7 +329,7 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* r, INT32 iReason)
 		SLIDER* const s = (SLIDER*)MSYS_GetRegionUserPtr(r);
 		const INT32 step = (s->usNumberOfIncrements + WHEEL_MOVE_FRACTION - 1) / WHEEL_MOVE_FRACTION;
 		INT32 pos = s->usCurrentIncrement - step;
-		pos = max(0, pos);
+		pos = MAX(0, pos);
 		SetSliderPos(s, pos);
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
@@ -337,7 +337,7 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* r, INT32 iReason)
 		SLIDER* const s = (SLIDER*)MSYS_GetRegionUserPtr(r);
 		const INT32 step = (s->usNumberOfIncrements + WHEEL_MOVE_FRACTION - 1) / WHEEL_MOVE_FRACTION;
 		INT32 pos = s->usCurrentIncrement + step;
-		pos = min(pos, s->usNumberOfIncrements);
+		pos = MIN(pos, s->usNumberOfIncrements);
 		SetSliderPos(s, pos);
 	}
 }
@@ -406,7 +406,7 @@ static void CalculateNewSliderBoxPosition(SLIDER* s)
 	}
 
 	//if the box is past the edge, move it back
-	s->usCurrentSliderBoxPosition = min(pos, usMaxPos);
+	s->usCurrentSliderBoxPosition = MIN(pos, usMaxPos);
 }
 
 

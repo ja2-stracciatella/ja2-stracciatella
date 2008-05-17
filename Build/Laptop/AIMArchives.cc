@@ -264,7 +264,7 @@ void RenderAimArchives()
 
 	//Draw the mug shot border and face
 	UINT start = AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_NUM_FACE_ROWS * gubPageNum;
-	UINT end   = min(start + AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_NUM_FACE_ROWS, 51);
+	UINT end   = MIN(start + AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_NUM_FACE_ROWS, 51);
 
 	INT32 usPosX = AIM_ALUMNI_START_GRID_X;
 	INT32 usPosY = AIM_ALUMNI_START_GRID_Y;

@@ -283,7 +283,7 @@ void IncrementTownLoyalty( INT8 bTownId, UINT32 uiLoyaltyIncrease )
 	uiRemainingIncrement = uiLoyaltyIncrease;
 	while ( uiRemainingIncrement )
 	{
-		sThisIncrement = ( INT16 ) min( uiRemainingIncrement, 10000 );
+		sThisIncrement = ( INT16 ) MIN( uiRemainingIncrement, 10000 );
 
 		// up the gain value
 		gTownLoyalty[ bTownId ].sChange += (INT16) sThisIncrement;
@@ -319,7 +319,7 @@ void DecrementTownLoyalty( INT8 bTownId, UINT32 uiLoyaltyDecrease )
 	uiRemainingDecrement = uiLoyaltyDecrease;
 	while ( uiRemainingDecrement )
 	{
-		sThisDecrement = ( INT16 ) min( uiRemainingDecrement, 10000 );
+		sThisDecrement = ( INT16 ) MIN( uiRemainingDecrement, 10000 );
 
 		// down the gain value
 		gTownLoyalty[ bTownId ].sChange -= sThisDecrement;

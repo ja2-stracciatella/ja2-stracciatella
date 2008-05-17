@@ -1077,7 +1077,7 @@ UINT32 LaptopScreenHandle()
 		{
 			const UINT32 uiCurrTime = GetClock();
 			iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
-			iPercentage = min(iPercentage, 100);
+			iPercentage = MIN(iPercentage, 100);
 
 			iRealPercentage = iPercentage;
 
@@ -1485,7 +1485,7 @@ BOOLEAN LeaveLapTopScreen(void)
 
 				const UINT32 uiCurrTime = GetClock();
 				iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
-				iPercentage = min(iPercentage, 100);
+				iPercentage = MIN(iPercentage, 100);
 				iPercentage = 100 - iPercentage;
 
 				iRealPercentage = iPercentage;

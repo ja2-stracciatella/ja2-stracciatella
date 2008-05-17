@@ -300,12 +300,12 @@ static void CalculateCoverInRadiusAroundGridno(INT16 sTargetGridNo, INT8 bSearch
 		bSearchRange = ( DC_MAX_COVER_RANGE / 2 );
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min( bSearchRange,( sTargetGridNo % MAXCOL ));
-	sMaxRight = min( bSearchRange,MAXCOL - (( sTargetGridNo % MAXCOL ) + 1));
+	sMaxLeft  = MIN( bSearchRange,( sTargetGridNo % MAXCOL ));
+	sMaxRight = MIN( bSearchRange,MAXCOL - (( sTargetGridNo % MAXCOL ) + 1));
 
 	// determine maximum vertical limits
-	sMaxUp   = min( bSearchRange,( sTargetGridNo / MAXROW ));
-	sMaxDown = min( bSearchRange,MAXROW - (( sTargetGridNo / MAXROW ) + 1));
+	sMaxUp   = MIN( bSearchRange,( sTargetGridNo / MAXROW ));
+	sMaxDown = MIN( bSearchRange,MAXROW - (( sTargetGridNo / MAXROW ) + 1));
 
 
 	//Find out which tiles around the location are reachable
@@ -671,12 +671,12 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSea
 
 
 	// determine maximum horizontal limits
-	sMaxLeft  = min( bSearchRange,( sTargetGridNo % MAXCOL ));
-	sMaxRight = min( bSearchRange,MAXCOL - (( sTargetGridNo % MAXCOL ) + 1));
+	sMaxLeft  = MIN( bSearchRange,( sTargetGridNo % MAXCOL ));
+	sMaxRight = MIN( bSearchRange,MAXCOL - (( sTargetGridNo % MAXCOL ) + 1));
 
 	// determine maximum vertical limits
-	sMaxUp   = min( bSearchRange,( sTargetGridNo / MAXROW ));
-	sMaxDown = min( bSearchRange,MAXROW - (( sTargetGridNo / MAXROW ) + 1));
+	sMaxUp   = MIN( bSearchRange,( sTargetGridNo / MAXROW ));
+	sMaxDown = MIN( bSearchRange,MAXROW - (( sTargetGridNo / MAXROW ) + 1));
 
 	const SOLDIERTYPE* const pSoldier = GetCurrentMercForDisplayCover();
 
