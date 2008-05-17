@@ -119,11 +119,9 @@ static BOOLEAN STCILoadRGB(SGPImage* const img, UINT16 const contents, HWFILE co
 }
 
 
-static SGPPaletteEntry* STCISetPalette(STCIPaletteElement const*);
-
-
 static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFILE const f, STCIHeader const* const header)
 {
+	SGP::Buffer<SGPPaletteEntry> palette;
 	if (contents & IMAGE_PALETTE)
 	{ // Allocate memory for reading in the palette
 		if (header->Indexed.uiNumberOfColours != 256)
@@ -146,11 +144,19 @@ static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFIL
 			return FALSE;
 		}
 
-		img->pPalette = STCISetPalette(pSTCIPalette);
-		if (!img->pPalette)
+		palette.Allocate(256);
+		if (!palette)
 		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem setting SGPImage-format palette!");
+			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
 			return FALSE;
+		}
+
+		for (size_t i = 0; i < 256; i++)
+		{
+			palette[i].peRed   = pSTCIPalette[i].ubRed;
+			palette[i].peGreen = pSTCIPalette[i].ubGreen;
+			palette[i].peBlue  = pSTCIPalette[i].ubBlue;
+			palette[i].peFlags = 0;
 		}
 
 		img->fFlags |= IMAGE_PALETTE;
@@ -164,6 +170,8 @@ static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFIL
 		}
 	}
 
+	SGP::Buffer<ETRLEObject> etrle_objects;
+	SGP::Buffer<UINT8>       image_data;
 	if (contents & IMAGE_BITMAPDATA)
 	{
 		if (header->fFlags & STCI_ETRLE_COMPRESSED)
@@ -174,17 +182,17 @@ static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFIL
 			UINT16 const n_subimages = header->Indexed.usNumberOfSubImages;
 			img->usNumberOfObjects = n_subimages;
 
-			img->pETRLEObject = MALLOCN(ETRLEObject, n_subimages);
-			if (img->pETRLEObject == NULL)
+			etrle_objects.Allocate(n_subimages);
+			if (!etrle_objects)
 			{
 				DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
-				goto fail;
+				return FALSE;
 			}
 
-			if (!FileRead(f, img->pETRLEObject, sizeof(*img->pETRLEObject) * n_subimages))
+			if (!FileRead(f, etrle_objects, sizeof(*etrle_objects) * n_subimages))
 			{
 				DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading subimage structures!");
-				goto fail;
+				return FALSE;
 			}
 
 			img->uiSizePixData  = header->uiStoredSize;
@@ -192,17 +200,17 @@ static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFIL
 		}
 
 		// allocate memory for and read in the image data
-		img->pImageData = MALLOCN(UINT8, header->uiStoredSize);
-		if (img->pImageData == NULL)
+		image_data.Allocate(header->uiStoredSize);
+		if (!image_data)
 		{
 			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
-			goto fail;
+			return FALSE;
 		}
 
-		if (!FileRead(f, img->pImageData, header->uiStoredSize))
+		if (!FileRead(f, image_data, header->uiStoredSize))
 		{ // Problem reading in the image data!
 			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading image data!");
-			goto fail;
+			return FALSE;
 		}
 
 		img->fFlags |= IMAGE_BITMAPDATA;
@@ -212,58 +220,38 @@ static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFIL
 		if (!FileSeek(f, header->uiStoredSize, FILE_SEEK_FROM_CURRENT))
 		{
 			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem seeking past image data!");
-			goto fail;
+			return FALSE;
 		}
 	}
 
+	SGP::Buffer<UINT8> app_data;
 	if (contents & IMAGE_APPDATA && header->uiAppDataSize > 0)
 	{
 		// load application-specific data
-		img->pAppData = MALLOCN(UINT8, header->uiAppDataSize);
-		if (img->pAppData == NULL)
+		app_data.Allocate(header->uiAppDataSize);
+		if (!app_data)
 		{
 			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
-			goto fail;
+			return FALSE;
 		}
 
-		if (!FileRead(f, img->pAppData, header->uiAppDataSize))
+		if (!FileRead(f, app_data, header->uiAppDataSize))
 		{
 			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading application-specific data!");
-			goto fail;
+			return FALSE;
 		}
 
-		img->uiAppDataSize  = header->uiAppDataSize;;
+		img->uiAppDataSize  = header->uiAppDataSize;
 		img->fFlags        |= IMAGE_APPDATA;
 	}
 	else
 	{
-		img->pAppData      = NULL;
 		img->uiAppDataSize = 0;
 	}
 
+	img->pAppData     = app_data.Release();
+	img->pImageData   = image_data.Release();
+	img->pETRLEObject = etrle_objects.Release();
+	img->pPalette     = palette.Release();
 	return TRUE;
-
-fail:
-	if (img->pAppData)     MemFree(img->pAppData);
-	if (img->pImageData)   MemFree(img->pImageData);
-	if (img->pETRLEObject) MemFree(img->pETRLEObject);
-	if (img->pPalette)     MemFree(img->pPalette);
-	return FALSE;
-}
-
-
-static SGPPaletteEntry* STCISetPalette(STCIPaletteElement const* const stci_palette)
-{
-	SGPPaletteEntry* const pal = MALLOCN(SGPPaletteEntry, 256);
-	if (!pal) return 0;
-
-  // Initialize the proper palette entries
-  for (size_t i = 0; i < 256; i++)
-  {
-		pal[i].peRed   = stci_palette[i].ubRed;
-		pal[i].peGreen = stci_palette[i].ubGreen;
-		pal[i].peBlue  = stci_palette[i].ubBlue;
-		pal[i].peFlags = 0;
-  }
-  return pal;
 }
