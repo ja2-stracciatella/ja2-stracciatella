@@ -8,7 +8,7 @@
 #include "WCheck.h"
 
 
-static BOOLEAN STCILoadRGB(HIMAGE hImage, UINT16 fContents, HWFILE hFile, const STCIHeader* pHeader);
+static BOOLEAN STCILoadRGB(    SGPImage*, UINT16 contents, HWFILE, STCIHeader const*);
 static BOOLEAN STCILoadIndexed(SGPImage*, UINT16 contents, HWFILE, STCIHeader const*);
 
 
@@ -58,78 +58,59 @@ BOOLEAN LoadSTCIFileToImage(const HIMAGE image, const UINT16 fContents)
 }
 
 
-static BOOLEAN STCILoadRGB(HIMAGE hImage, UINT16 fContents, HWFILE hFile, const STCIHeader* pHeader)
+static BOOLEAN STCILoadRGB(SGPImage* const img, UINT16 const contents, HWFILE const f, STCIHeader const* const header)
 {
-	if (fContents & IMAGE_PALETTE && (fContents & IMAGE_ALLIMAGEDATA) != IMAGE_ALLIMAGEDATA)
+	if (contents & IMAGE_PALETTE && (contents & IMAGE_ALLIMAGEDATA) != IMAGE_ALLIMAGEDATA)
 	{ // RGB doesn't have a palette!
-		return( FALSE );
+		return FALSE;
 	}
 
-	if (fContents & IMAGE_BITMAPDATA)
+	if (contents & IMAGE_BITMAPDATA)
 	{
 		// Allocate memory for the image data and read it in
-		hImage->pImageData = MALLOCN(UINT8, pHeader->uiStoredSize);
-		if (hImage->pImageData == NULL)
+		img->pImageData = MALLOCN(UINT8, header->uiStoredSize);
+		if (img->pImageData == NULL) return FALSE;
+		if (!FileRead(f, img->pImageData, header->uiStoredSize))
 		{
-			return( FALSE );
-		}
-		else if (!FileRead(hFile, hImage->pImageData, pHeader->uiStoredSize))
-		{
-			MemFree( hImage->pImageData );
-			return( FALSE );
+			MemFree(img->pImageData);
+			return FALSE;
 		}
 
-		hImage->fFlags |= IMAGE_BITMAPDATA;
+		img->fFlags |= IMAGE_BITMAPDATA;
 
-		if( pHeader->ubDepth == 16)
+		if (header->ubDepth == 16)
 		{
 			// ASSUMPTION: file data is 565 R,G,B
-
-			if (gusRedMask != (UINT16) pHeader->RGB.uiRedMask || gusGreenMask != (UINT16) pHeader->RGB.uiGreenMask || gusBlueMask != (UINT16) pHeader->RGB.uiBlueMask )
+			if (gusRedMask   != (UINT16)header->RGB.uiRedMask   ||
+					gusGreenMask != (UINT16)header->RGB.uiGreenMask ||
+					gusBlueMask  != (UINT16)header->RGB.uiBlueMask)
 			{
 				// colour distribution of the file is different from hardware!  We have to change it!
-				DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Converting to current RGB distribution!" );
+				DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Converting to current RGB distribution!");
 				// Convert the image to the current hardware's specifications
-				if (gusRedMask > gusGreenMask && gusGreenMask > gusBlueMask)
+				size_t const size = header->usWidth * header->usHeight;
+				if (gusRedMask == 0x7C00 && gusGreenMask == 0x03E0 && gusBlueMask == 0x001F)
 				{
-					// hardware wants RGB!
-					if (gusRedMask == 0x7C00 && gusGreenMask == 0x03E0 && gusBlueMask == 0x001F)
-					{	// hardware is 555
-						ConvertRGBDistribution565To555( hImage->p16BPPData, pHeader->usWidth * pHeader->usHeight );
-						return( TRUE );
-					}
-					else if (gusRedMask == 0xFC00 && gusGreenMask == 0x03E0 && gusBlueMask == 0x001F)
-					{
-						ConvertRGBDistribution565To655( hImage->p16BPPData, pHeader->usWidth * pHeader->usHeight );
-						return( TRUE );
-					}
-					else if (gusRedMask == 0xF800 && gusGreenMask == 0x07C0 && gusBlueMask == 0x003F)
-					{
-						ConvertRGBDistribution565To556( hImage->p16BPPData, pHeader->usWidth * pHeader->usHeight );
-						return( TRUE );
-					}
-					else
-					{
-						// take the long route
-						ConvertRGBDistribution565ToAny( hImage->p16BPPData, pHeader->usWidth * pHeader->usHeight );
-						return( TRUE );
-					}
+					ConvertRGBDistribution565To555(img->p16BPPData, size);
+				}
+				else if (gusRedMask == 0xFC00 && gusGreenMask == 0x03E0 && gusBlueMask == 0x001F)
+				{
+					ConvertRGBDistribution565To655(img->p16BPPData, size);
+				}
+				else if (gusRedMask == 0xF800 && gusGreenMask == 0x07C0 && gusBlueMask == 0x003F)
+				{
+					ConvertRGBDistribution565To556(img->p16BPPData, size);
 				}
 				else
 				{
-					// hardware distribution is not R-G-B so we have to take the long route!
-					ConvertRGBDistribution565ToAny( hImage->p16BPPData, pHeader->usWidth * pHeader->usHeight );
-					return( TRUE );
+					// take the long route
+					ConvertRGBDistribution565ToAny(img->p16BPPData, size);
 				}
 			}
 		}
 	}
-#ifdef JA2
-	return( TRUE );
-#else
-// Anything else is an ERROR! --DB
-	return(FALSE);
-#endif
+
+	return TRUE;
 }
 
 
