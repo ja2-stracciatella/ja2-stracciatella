@@ -422,15 +422,10 @@ BOOLEAN EraseDirectory(const char* const path)
 	AutoFindFileInfo find_info(FindFiles(pattern));
 	if (find_info == NULL) return FALSE;
 
-	BOOLEAN success = FALSE;
 	for (;;)
 	{
 		const char* const find_filename = FindFilesNext(find_info);
-		if (find_filename == NULL)
-		{
-			success = TRUE;
-			break;
-		}
+		if (!find_filename) return TRUE;
 
 		char filename[512];
 		snprintf(filename, lengthof(filename), "%s/%s", path, find_filename);
@@ -438,13 +433,10 @@ BOOLEAN EraseDirectory(const char* const path)
 		if (!FileDelete(filename))
 		{
 			const FileAttributes attr = FileGetAttributes(filename);
-			if (attr == FILE_ATTR_ERROR)     break;
-			if (attr &  FILE_ATTR_DIRECTORY) continue;
-			break;
+			if (attr != FILE_ATTR_ERROR && attr & FILE_ATTR_DIRECTORY) continue;
+			return FALSE;
 		}
 	}
-
-	return success;
 }
 
 
