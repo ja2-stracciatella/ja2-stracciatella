@@ -58,6 +58,7 @@ static BOOLEAN ReadUncompColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID,
 
 
 static BOOLEAN ReadUncompRGBImage(SGPImage* const img, HWFILE const f, UINT8 const uiImgID, UINT8 const uiColMap, UINT16 const contents)
+try
 {
 	UINT16	uiColMapLength;
 	UINT16	uiWidth;
@@ -95,7 +96,6 @@ static BOOLEAN ReadUncompRGBImage(SGPImage* const img, HWFILE const f, UINT8 con
 		if (uiImagePixelSize == 16)
 		{
 			SGP::Buffer<UINT16> img_data(uiWidth * uiHeight);
-			if (!img_data) return FALSE;
 
 			// Data is stored top-bottom - reverse for SGP HIMAGE format
 			for (size_t y = uiHeight; y != 0;)
@@ -108,7 +108,6 @@ static BOOLEAN ReadUncompRGBImage(SGPImage* const img, HWFILE const f, UINT8 con
 		else if (uiImagePixelSize == 24)
 		{
 			SGP::Buffer<UINT8> img_data(uiWidth * uiHeight * 3);
-			if (!img_data) return FALSE;
 
 			for (size_t y = uiHeight; y != 0;)
 			{
@@ -134,6 +133,7 @@ static BOOLEAN ReadUncompRGBImage(SGPImage* const img, HWFILE const f, UINT8 con
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN ReadRLEColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)

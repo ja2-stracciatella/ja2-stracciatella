@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Buffer.h"
 #include "MemMan.h"
 #include "FileMan.h"
@@ -120,6 +122,7 @@ static BOOLEAN STCILoadRGB(SGPImage* const img, UINT16 const contents, HWFILE co
 
 
 static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFILE const f, STCIHeader const* const header)
+try
 {
 	SGP::Buffer<SGPPaletteEntry> palette;
 	if (contents & IMAGE_PALETTE)
@@ -131,11 +134,6 @@ static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFIL
 		}
 
 		SGP::Buffer<STCIPaletteElement> pSTCIPalette(256);
-		if (pSTCIPalette == NULL)
-		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
-			return FALSE;
-		}
 
 		// Read in the palette
 		if (!FileRead(f, pSTCIPalette, sizeof(*pSTCIPalette) * 256))
@@ -145,12 +143,6 @@ static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFIL
 		}
 
 		palette.Allocate(256);
-		if (!palette)
-		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
-			return FALSE;
-		}
-
 		for (size_t i = 0; i < 256; i++)
 		{
 			palette[i].peRed   = pSTCIPalette[i].ubRed;
@@ -183,12 +175,6 @@ static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFIL
 			img->usNumberOfObjects = n_subimages;
 
 			etrle_objects.Allocate(n_subimages);
-			if (!etrle_objects)
-			{
-				DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
-				return FALSE;
-			}
-
 			if (!FileRead(f, etrle_objects, sizeof(*etrle_objects) * n_subimages))
 			{
 				DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading subimage structures!");
@@ -199,14 +185,7 @@ static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFIL
 			img->fFlags        |= IMAGE_TRLECOMPRESSED;
 		}
 
-		// allocate memory for and read in the image data
 		image_data.Allocate(header->uiStoredSize);
-		if (!image_data)
-		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
-			return FALSE;
-		}
-
 		if (!FileRead(f, image_data, header->uiStoredSize))
 		{ // Problem reading in the image data!
 			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading image data!");
@@ -229,12 +208,6 @@ static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFIL
 	{
 		// load application-specific data
 		app_data.Allocate(header->uiAppDataSize);
-		if (!app_data)
-		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
-			return FALSE;
-		}
-
 		if (!FileRead(f, app_data, header->uiAppDataSize))
 		{
 			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading application-specific data!");
@@ -254,4 +227,9 @@ static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFIL
 	img->pETRLEObject = etrle_objects.Release();
 	img->pPalette     = palette.Release();
 	return TRUE;
+}
+catch (const std::bad_alloc&)
+{
+	DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
+	return FALSE;
 }

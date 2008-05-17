@@ -64,6 +64,7 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 
 
 BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
+try
 {
 	CHAR8		zMapName[ 128 ];
 	UINT32	uiNumberOfElementsSavedBackToFile = 0;	// added becuase if no files get saved back to disk, the flag needs to be erased
@@ -89,14 +90,8 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 		//Get the size of the file
 		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
 
-		pTempArrayOfMaps.Allocate(uiNumberOfElements);
-		if( pTempArrayOfMaps == NULL )
-		{
-			Assert( 0 );
-			return( TRUE );
-		}
-
 		//Read the map temp file into a buffer
+		pTempArrayOfMaps.Allocate(uiNumberOfElements);
 		if (!FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements))
 		{
 			return FALSE;
@@ -251,12 +246,7 @@ BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
 
 	return( TRUE );
 }
-
-
-
-
-
-
+catch (...) { return FALSE; }
 
 
 void AddStructToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
@@ -717,6 +707,7 @@ void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, INT16 sSect
 }
 
 BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ )
+try
 {
 	CHAR8		zMapName[ 128 ];
 	MODIFY_MAP *pMap;
@@ -734,15 +725,8 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 		//Get the number of elements in the file
 		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
 
-		//Allocate memory for the buffer
-		pTempArrayOfMaps.Allocate(uiNumberOfElements);
-		if( pTempArrayOfMaps == NULL )
-		{
-			Assert( 0 );
-			return( FALSE );
-		}
-
 		//Read the map temp file into a buffer
+		pTempArrayOfMaps.Allocate(uiNumberOfElements);
 		if (!FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements))
 		{
 			return FALSE;
@@ -775,6 +759,7 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 
 	return( fRetVal );
 }
+catch (...) { return FALSE; }
 
 
 static void AddOpenableStructStatusToMapTempFile(UINT32 uiMapIndex, BOOLEAN fOpened)
@@ -877,6 +862,7 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 
 
 BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector(const UINT16 usSectorX, const UINT16 usSectorY, const INT8 bSectorZ, const UINT16 usGridNo, const BOOLEAN fChangeToOpen)
+try
 {
 	char map_name[128];
 	GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, map_name, usSectorX, usSectorY, bSectorZ);
@@ -894,7 +880,6 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector(const UINT16 usSectorX, con
 		uiNumberOfElements = FileGetSize(src) / sizeof(MODIFY_MAP);
 
 		mm.Allocate(uiNumberOfElements);
-		if (!mm) return FALSE;
 		if (!FileRead(src, mm, sizeof(*mm) * uiNumberOfElements)) return FALSE;
 	}
 
@@ -914,3 +899,4 @@ BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector(const UINT16 usSectorX, con
 
 	return FileWrite(dst, mm, sizeof(*mm) * uiNumberOfElements);
 }
+catch (...) { return FALSE; }

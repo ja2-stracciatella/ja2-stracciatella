@@ -1,6 +1,8 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
+#include <stdexcept>
+
 #include "MemMan.h"
 
 
@@ -9,8 +11,12 @@ namespace SGP
 	template<typename T> class Buffer
 	{
 		public:
-			explicit Buffer()         : buf_(0)             {}
-			explicit Buffer(size_t n) : buf_(MALLOCN(T, n)) {}
+			explicit Buffer() : buf_(0) {}
+
+			explicit Buffer(size_t n) : buf_(MALLOCN(T, n))
+			{
+				if (!buf_) throw std::bad_alloc();
+			}
 
 			~Buffer() { if (buf_) MemFree(buf_); }
 
@@ -18,13 +24,14 @@ namespace SGP
 			{
 				if (buf_) MemFree(buf_);
 				buf_ = MALLOCN(T, n);
+				if (!buf_) throw std::bad_alloc();
 				return *this;
 			}
 
 			T* Release()
 			{
 				T* const buf = buf_;
-				buf_ = NULL;
+				buf_ = 0;
 				return buf;
 			}
 
@@ -34,7 +41,8 @@ namespace SGP
 		private:
 			T* buf_;
 
-			Buffer(const Buffer&); /* no copy */
+			Buffer(const Buffer&);          /* no copy */
+			void operator =(const Buffer&); /* no assignment */
 	};
 }
 

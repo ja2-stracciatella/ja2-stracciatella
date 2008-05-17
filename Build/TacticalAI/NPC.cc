@@ -105,6 +105,7 @@ BOOLEAN gfDisplayScreenMsgOnRecordUsage = FALSE;
 
 
 static NPCQuoteInfo* LoadQuoteFile(UINT8 ubNPC)
+try
 {
 	CHAR8						zFileName[255];
 
@@ -143,11 +144,11 @@ static NPCQuoteInfo* LoadQuoteFile(UINT8 ubNPC)
 	CHECKN( hFile );
 
 	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
-	if (!buf) return NULL;
 	const UINT32 uiFileSize = sizeof(*buf) * NUM_NPC_QUOTE_RECORDS;
 	if (!FileRead(hFile, buf, uiFileSize)) return NULL;
 	return buf.Release();
 }
+catch (...) { return 0; }
 
 
 static void RevertToOriginalQuoteFile(UINT8 ubNPC)
@@ -308,6 +309,7 @@ static BOOLEAN RefreshNPCScriptRecord(UINT8 ubNPC, UINT8 ubRecord)
 
 
 static NPCQuoteInfo* LoadCivQuoteFile(UINT8 ubIndex)
+try
 {
 	CHAR8						zFileName[255];
 
@@ -324,11 +326,11 @@ static NPCQuoteInfo* LoadCivQuoteFile(UINT8 ubIndex)
 	CHECKN( hFile );
 
 	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
-	if (!buf) return NULL;
 	const UINT32 uiFileSize = sizeof(*buf) * NUM_NPC_QUOTE_RECORDS;
 	if (!FileRead(hFile, buf, uiFileSize)) return NULL;
 	return buf.Release();
 }
+catch (...) { return 0; }
 
 
 static BOOLEAN EnsureCivQuoteFileLoaded(UINT8 ubIndex)

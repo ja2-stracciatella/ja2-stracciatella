@@ -262,6 +262,7 @@ CASSERT(sizeof(STRUCTURE_FILE_HEADER) == 16)
 
 // Loads a structure file's data as a honking chunk o' memory
 static BOOLEAN LoadStructureData(const char* const filename, STRUCTURE_FILE_REF* const sfr, UINT32* const structure_data_size)
+try
 {
 	CHECKF(filename);
 	CHECKF(sfr);
@@ -284,14 +285,12 @@ static BOOLEAN LoadStructureData(const char* const filename, STRUCTURE_FILE_REF*
 	{
 		const UINT16 n_images = header.usNumberOfImages;
 		aux_data.Allocate(n_images);
-		if (!aux_data) return FALSE;
 		if (!FileRead(f, aux_data, sizeof(*aux_data) * n_images)) return FALSE;
 
 		const UINT16 n_tile_locs = header.usNumberOfImageTileLocsStored;
 		if (n_tile_locs > 0)
 		{
 			tile_loc_data.Allocate(n_tile_locs);
-			if (!tile_loc_data) return FALSE;
 			if (!FileRead(f, tile_loc_data, sizeof(*tile_loc_data) * n_tile_locs)) return FALSE;
 		}
 	}
@@ -302,7 +301,6 @@ static BOOLEAN LoadStructureData(const char* const filename, STRUCTURE_FILE_REF*
 		sfr->usNumberOfStructuresStored = header.usNumberOfStructuresStored;
 		const UINT16 data_size = header.usStructureDataSize;
 		structure_data.Allocate(data_size);
-		if (!structure_data) return FALSE;
 		if (!FileRead(f, structure_data, data_size)) return FALSE;
 
 		*structure_data_size = data_size;
@@ -313,6 +311,7 @@ static BOOLEAN LoadStructureData(const char* const filename, STRUCTURE_FILE_REF*
 	sfr->pubStructureData = structure_data.Release();
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN CreateFileStructureArrays(STRUCTURE_FILE_REF* pFileRef, UINT32 uiDataSize)

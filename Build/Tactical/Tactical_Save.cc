@@ -458,6 +458,7 @@ BOOLEAN SaveWorldItemsToTempItemFile(const INT16 sMapX, const INT16 sMapY, const
 
 
 BOOLEAN LoadWorldItemsFromTempItemFile(const INT16 x, const INT16 y, const INT8 z, UINT32* const item_count, WORLDITEM** const items)
+try
 {
 	char filename[128];
 	GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, x, y, z);
@@ -474,8 +475,6 @@ BOOLEAN LoadWorldItemsFromTempItemFile(const INT16 x, const INT16 y, const INT8 
 		if (l_item_count != 0)
 		{
 			l_items.Allocate(l_item_count);
-			if (l_items == NULL) return FALSE;
-
 			if (!FileRead(f, l_items, l_item_count * sizeof(*l_items))) return FALSE;
 		}
 	}
@@ -487,6 +486,7 @@ BOOLEAN LoadWorldItemsFromTempItemFile(const INT16 x, const INT16 y, const INT8 
 	*items      = l_items.Release();
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const INT16 sGridNo, const UINT32 uiNumberOfItemsToAdd, const OBJECTTYPE* const pObject, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel, const INT8 bVisible)
@@ -1834,10 +1834,9 @@ BOOLEAN NewJA2EncryptedFileRead(const HWFILE f, void* const pDest, const UINT32 
 
 
 BOOLEAN NewJA2EncryptedFileWrite(const HWFILE hFile, const void* const data, const UINT32 uiBytesToWrite)
+try
 {
 	SGP::Buffer<UINT8> buf(uiBytesToWrite);
-	if (!buf) return FALSE;
-
 	const UINT8* const src              = static_cast<const UINT8*>(data);
 	const UINT8* const pubRotationArray = GetRotationArray();
 	UINT8              ubArrayIndex     = 0;
@@ -1851,6 +1850,7 @@ BOOLEAN NewJA2EncryptedFileWrite(const HWFILE hFile, const void* const data, con
 
 	return FileWrite(hFile, buf, uiBytesToWrite);
 }
+catch (...) { return FALSE; }
 
 
 #define ROTATION_ARRAY_SIZE 46
@@ -1876,13 +1876,12 @@ BOOLEAN JA2EncryptedFileRead(const HWFILE f, void* const pDest, const UINT32 uiB
 
 
 BOOLEAN JA2EncryptedFileWrite(const HWFILE hFile, const void* const data, const UINT32 uiBytesToWrite)
+try
 {
 	SGP::Buffer<UINT8> buf(uiBytesToWrite);
-	if (!buf) return FALSE;
-
-	const UINT8* src          = static_cast<const UINT8*>(data);
-	UINT8        ubArrayIndex = 0;
-	UINT8        last_byte    = 0;
+	const UINT8* const src          = static_cast<const UINT8*>(data);
+	UINT8              ubArrayIndex = 0;
+	UINT8              last_byte    = 0;
 	for (UINT32 i = 0; i < uiBytesToWrite; ++i)
 	{
 		buf[i] += src[i] + last_byte + ubRotationArray[ubArrayIndex];
@@ -1892,6 +1891,7 @@ BOOLEAN JA2EncryptedFileWrite(const HWFILE hFile, const void* const data, const 
 
 	return FileWrite(hFile, buf, uiBytesToWrite);
 }
+catch (...) { return FALSE; }
 
 
 void GetMapTempFileName(const UINT32 uiType, char* const pMapName, const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ)

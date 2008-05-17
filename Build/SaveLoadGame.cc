@@ -2435,6 +2435,7 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 
 
 BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
+try
 {
 	AutoSGPFile hSrcFile(FileOpen(pSrcFileName, FILE_ACCESS_READ));
 	if (!hSrcFile) return FALSE;
@@ -2450,10 +2451,8 @@ BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 	// Write the the size of the file to the saved game file
 	if (!FileWrite(hFile, &uiFileSize, sizeof(UINT32))) return FALSE;
 
-	SGP::Buffer<UINT8> pData(uiFileSize);
-	if (pData == NULL) return FALSE;
-
 	// Read the saource file into the buffer
+	SGP::Buffer<UINT8> pData(uiFileSize);
 	if (!FileRead(hSrcFile, pData, uiFileSize)) return FALSE;
 
 	// Write the buffer to the saved game file
@@ -2466,9 +2465,11 @@ BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadFilesFromSavedGame(const char* const pSrcFileName, const HWFILE hFile)
+try
 {
 #ifdef JA2BETAVERSION
 	++guiNumberOfMapTempFiles; //Increment counter:  To determine where the temp files are crashing
@@ -2483,10 +2484,8 @@ BOOLEAN LoadFilesFromSavedGame(const char* const pSrcFileName, const HWFILE hFil
 
 	if (uiFileSize == 0) return TRUE;
 
-	SGP::Buffer<UINT8> pData(uiFileSize);
-	if (pData == NULL) return FALSE;
-
 	// Read into the buffer
+	SGP::Buffer<UINT8> pData(uiFileSize);
 	if (!FileRead(hFile, pData, uiFileSize)) return FALSE;
 
 	// Write the buffer to the new file
@@ -2501,6 +2500,7 @@ BOOLEAN LoadFilesFromSavedGame(const char* const pSrcFileName, const HWFILE hFil
 #endif
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveTacticalStatusToSavedGame(HWFILE hFile)
