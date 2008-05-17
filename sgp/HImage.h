@@ -19,7 +19,6 @@
 #define BUFFER_16BPP						0x2
 
 // Defines for image charactoristics
-#define IMAGE_COMPRESSED				0x0001
 #define IMAGE_TRLECOMPRESSED		0x0002
 #define IMAGE_PALETTE						0x0004
 #define IMAGE_BITMAPDATA				0x0008
@@ -83,17 +82,11 @@ struct SGPImage
 	UINT16					*pui16BPPPalette;
 	UINT8 *					pAppData;
 	UINT32					uiAppDataSize;
-	// This union is used to describe each data type and is flexible to include the
-	// data strucutre of the compresssed format, once developed.
 	union
 	{
 		struct
 		{
 			PTR		pImageData;
-		};
-		struct
-		{
-			PTR		pCompressedImageData;
 		};
 		struct
 		{

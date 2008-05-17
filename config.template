@@ -28,7 +28,6 @@
 #WITH_FIXMES      := yes
 #WITH_MAEMO       := yes
 #WITH_SOUND_DEBUG := yes
-#WITH_ZLIB        := yes
 
 #CFLAGS += -g
 #CFLAGS += -Werror

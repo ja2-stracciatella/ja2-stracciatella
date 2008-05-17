@@ -26,6 +26,12 @@ BOOLEAN LoadSTCIFileToImage(const HIMAGE image, const UINT16 fContents)
 		return FALSE;
 	}
 
+	if (header.fFlags & STCI_ZLIB_COMPRESSED)
+	{
+		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Cannot handle zlib compressed images");
+		return FALSE;
+	}
+
 	// Determine from the header the data stored in the file. and run the appropriate loader
 	if (header.fFlags & STCI_RGB)
 	{
@@ -50,7 +56,6 @@ BOOLEAN LoadSTCIFileToImage(const HIMAGE image, const UINT16 fContents)
 		return FALSE;
 	}
 
-	if (header.fFlags & STCI_ZLIB_COMPRESSED) image->fFlags |= IMAGE_COMPRESSED;
 	image->usWidth    = header.usWidth;
 	image->usHeight   = header.usHeight;
 	image->ubBitDepth = header.ubDepth;

@@ -11,7 +11,6 @@
 
 #define CONVERT_ADD_APPDATA										0x0001
 #define CONVERT_ADD_JA2DATA										0x0003
-#define CONVERT_ZLIB_COMPRESS									0x0010
 #define CONVERT_ETRLE_COMPRESS								0x0020
 #define CONVERT_ETRLE_COMPRESS_SINGLE					0x0040
 #define CONVERT_ETRLE_NO_SUBIMAGE_SHRINKING		0x0080
@@ -21,9 +20,6 @@
 #define CONVERT_ETRLE_FLIC_NAME								0x0800
 #define CONVERT_TO_8_BIT											0x1000
 #define CONVERT_TO_16_BIT											0x2000
-// NB 18-bit is actually 24 bit but with only 6 bits used in each byte.  I implemented
-// it to see how well such images would compress with ZLIB.
-#define CONVERT_TO_18_BIT											0x4000
 
 // Defines for inserting red/green/blue values into a 16-bit pixel.
 // MASK is the mask to use to get the proper bits out of a byte (part of a 24-bit pixel)
@@ -156,7 +152,7 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 	}
 
 	// write file data
-	if (Header.fFlags & STCI_ZLIB_COMPRESSED || Header.fFlags & STCI_ETRLE_COMPRESSED)
+	if (Header.fFlags & STCI_ETRLE_COMPRESSED)
 	{
 		fwrite( pOutputBuffer, Header.uiStoredSize, 1, pOutput );
 	}

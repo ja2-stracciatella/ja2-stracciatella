@@ -73,10 +73,6 @@ ifdef WITH_SOUND_DEBUG
   CFLAGS += -DWITH_SOUND_DEBUG
 endif
 
-ifdef WITH_ZLIB
-  CFLAGS += -DWITH_ZLIB
-endif
-
 ifdef _DEBUG
   CFLAGS += -D_DEBUG
   ifndef JA2TESTVERSION
@@ -422,7 +418,6 @@ SRCS += Build/Utils/Utilities.cc
 SRCS += Build/Utils/WordWrap.cc
 SRCS += sgp/Button_Sound_Control.cc
 SRCS += sgp/Button_System.cc
-SRCS += sgp/Compression.cc
 SRCS += sgp/Config.cc
 SRCS += sgp/Container.cc
 SRCS += sgp/Cursor_Control.cc

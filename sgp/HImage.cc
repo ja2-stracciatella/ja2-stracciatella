@@ -8,7 +8,6 @@
 #include "PCX.h"
 #include "STCI.h"
 #include "WCheck.h"
-#include "Compression.h"
 #include "VObject.h"
 #include "MemMan.h"
 
@@ -80,13 +79,6 @@ void DestroyImage(SGPImage* const img)
 }
 
 
-
-#if defined WITH_ZLIB
-static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(  HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
-static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer( HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
-static BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
-#endif
-
 static BOOLEAN Copy8BPPImageTo8BPPBuffer(  HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
 static BOOLEAN Copy16BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
 static BOOLEAN Copy8BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
@@ -99,14 +91,6 @@ BOOLEAN CopyImageToBuffer(const HIMAGE hImage, const UINT32 fBufferType, BYTE* c
 
 	if ( hImage->ubBitDepth == 8 && fBufferType == BUFFER_8BPP )
 	{
-#if defined WITH_ZLIB
-		if (hImage->fFlags & IMAGE_COMPRESSED)
-		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_2, "Copying Compressed 8 BPP Imagery.");
-			return Copy8BPPCompressedImageTo8BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
-		}
-#endif
-
 		// Default do here
 		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, "Copying 8 BPP Imagery." );
 		return Copy8BPPImageTo8BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
@@ -114,14 +98,6 @@ BOOLEAN CopyImageToBuffer(const HIMAGE hImage, const UINT32 fBufferType, BYTE* c
 
 	if ( hImage->ubBitDepth == 8 && fBufferType == BUFFER_16BPP )
 	{
-#if defined WITH_ZLIB
-		if (hImage->fFlags & IMAGE_COMPRESSED)
-		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Copying Compressed 8 BPP Imagery to 16BPP Buffer.");
-			return Copy8BPPCompressedImageTo16BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
-		}
-#endif
-
 		// Default do here
 		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Copying 8 BPP Imagery to 16BPP Buffer." );
 		return Copy8BPPImageTo16BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
@@ -131,203 +107,13 @@ BOOLEAN CopyImageToBuffer(const HIMAGE hImage, const UINT32 fBufferType, BYTE* c
 
 	if ( hImage->ubBitDepth == 16 && fBufferType == BUFFER_16BPP )
 	{
-#if defined WITH_ZLIB
-		if (hImage->fFlags & IMAGE_COMPRESSED)
-		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Automatically Copying Compressed 16 BPP Imagery.");
-			return  Copy16BPPCompressedImageTo16BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
-		}
-#endif
-
-			DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Automatically Copying 16 BPP Imagery." );
+		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Automatically Copying 16 BPP Imagery." );
 		return Copy16BPPImageTo16BPPBuffer(hImage, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
 	}
 
 	return( FALSE );
 
 }
-
-
-#if defined WITH_ZLIB
-
-static BOOLEAN Copy8BPPCompressedImageTo8BPPBuffer(const HIMAGE hImage, BYTE* const pDestBuf, const UINT16 usDestWidth, const UINT16 usDestHeight, const UINT16 usX, const UINT16 usY, const SGPBox* const src_box)
-{
-	UINT32		uiCnt;
-
-	UINT8 *	pDest;
-	UINT32	uiDestStart;
-
-	PTR			pDecompPtr;
-	UINT32	uiDecompressed;
-
-	// Assertions
-	Assert( hImage != NULL );
-	Assert( hImage->pCompressedImageData != NULL );
-
-	// Validations
-	//CHECKF( usX >= 0 ); /* XXX unsigned < 0 ? */
-	CHECKF( usX < usDestWidth );
-	//CHECKF( usY >= 0 ); /* XXX unsigned < 0 ? */
-	CHECKF( usY < usDestHeight );
-	CHECKF(src_box->w > 0);
-	CHECKF(src_box->h > 0);
-
-	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "8BPP to 8BPP Compressed Blitter Called!" );
-	// determine where to start Copying and rectangle size
-	uiDestStart = usY * usDestWidth + usX;
-	const UINT32 uiLineSize = src_box->w;
-	const UINT32 uiNumLines = src_box->h;
-
-	Assert( usDestWidth >= uiLineSize );
-	Assert( usDestHeight >= uiNumLines );
-
-	pDest = (UINT8 *) pDestBuf + uiDestStart;
-
-	// Copying a portion of a compressed image is rather messy
-	// because we have to decompress past all the data we want
-	// to skip.
-
-	// To keep memory requirements small and regular, we will
-	// decompress one scanline at a time even if none of the data will
-	// be blitted (but stop when the bottom line of the rectangle
-	// to blit has been done).
-
-	// initialize the decompression routines
-	pDecompPtr = DecompressInit( hImage->pCompressedImageData, hImage->usWidth * hImage->usHeight );
-	CHECKF( pDecompPtr );
-
-	// Allocate memory for one scanline
-	UINT8* const pScanLine = MALLOCN(UINT8, hImage->usWidth);
-	CHECKF( pScanLine );
-
-	// go past all the scanlines we don't need to process
-	for (uiCnt = 0; uiCnt < (UINT32)src_box->y; uiCnt++)
-	{
-		uiDecompressed = Decompress( pDecompPtr, pScanLine, hImage->usWidth );
-		Assert( uiDecompressed == hImage->usWidth );
-	}
-
-	// now we start Copying
-	for (uiCnt = 0; uiCnt < uiNumLines - 1; uiCnt++)
-	{
-		// decompress a scanline
-		uiDecompressed = Decompress( pDecompPtr, pScanLine, hImage->usWidth );
-		Assert( uiDecompressed == hImage->usWidth );
-		// and blit
-//		memcpy( pDest, pScanLine + src_box->x, uiLineSize );
-		pDest += usDestWidth;
-	}
-	// decompress the last scanline and blit
-	uiDecompressed = Decompress( pDecompPtr, pScanLine, hImage->usWidth );
-	Assert( uiDecompressed == hImage->usWidth );
-//	memcpy( pDest, pScanLine + src_box->x, uiLineSize );
-
-	DecompressFini( pDecompPtr );
-	return( TRUE );
-}
-
-
-static BOOLEAN Copy8BPPCompressedImageTo16BPPBuffer(const HIMAGE hImage, BYTE* const pDestBuf, const UINT16 usDestWidth, const UINT16 usDestHeight, const UINT16 usX, const UINT16 usY, const SGPBox* const src_box)
-{
-	UINT32		uiLine;
-	UINT32		uiCol;
-
-	UINT16 *	pDest;
-	UINT16 *	pDestTemp;
-	UINT32		uiDestStart;
-
-	UINT8 *		pScanLineTemp;
-
-	PTR				pDecompPtr;
-	UINT32		uiDecompressed;
-
-	UINT16 *	p16BPPPalette;
-
-	// Assertions
-	Assert( hImage != NULL );
-	Assert( hImage->pCompressedImageData != NULL );
-	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Start check" );
-	// Validations
-	//CHECKF( usX >= 0 ); /* XXX unsigned < 0 ? */
-	CHECKF( usX < usDestWidth );
-	//CHECKF( usY >= 0 ); /* XXX unsigned < 0 ? */
-	CHECKF( usY < usDestHeight );
-	CHECKF(src_box->w > 0);
-	CHECKF(src_box->h > 0);
-	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "End check" );
-	p16BPPPalette = hImage->pui16BPPPalette;
-
-	// determine where to start Copying and rectangle size
-	uiDestStart = usY * usDestWidth + usX;
-	const UINT32 uiLineSize = src_box->w;
-	const UINT32 uiNumLines = src_box->h;
-
-	Assert( usDestWidth >= uiLineSize );
-	Assert( usDestHeight >= uiNumLines );
-
-	pDest = (UINT16 *) pDestBuf;
-	pDest += uiDestStart;
-	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, String( "Start Copying at %p", pDest ) );
-
-	// Copying a portion of a compressed image is rather messy
-	// because we have to decompress past all the data we want
-	// to skip.
-
-	// To keep memory requirements small and regular, we will
-	// decompress one scanline at a time even if none of the data will
-	// be blitted (but stop when the bottom line of the rectangle
-	// to blit has been done).
-
-	// initialize the decompression routines
-	pDecompPtr = DecompressInit( hImage->pCompressedImageData, hImage->usWidth * hImage->usHeight );
-	CHECKF( pDecompPtr );
-
-	// Allocate memory for one scanline
-	UINT8* const pScanLine = MALLOCN(UINT8, hImage->usWidth);
-	CHECKF( pScanLine );
-
-	// go past all the scanlines we don't need to process
-	for (uiLine = 0; uiLine < (UINT32)src_box->y; uiLine++)
-	{
-		DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Skipping scanline" );
-		uiDecompressed = Decompress( pDecompPtr, pScanLine, hImage->usWidth );
-		Assert( uiDecompressed == hImage->usWidth );
-	}
-
-	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, "Actually Copying" );
-	// now we start Copying
-	for (uiLine = 0; uiLine < uiNumLines - 1; uiLine++)
-	{
-		// decompress a scanline
-		uiDecompressed = Decompress( pDecompPtr, pScanLine, hImage->usWidth );
-		Assert( uiDecompressed == hImage->usWidth );
-
-		// set pointers and blit
-		pDestTemp = pDest;
-		pScanLineTemp = pScanLine + src_box->x;
-		for (uiCol = 0; uiCol < uiLineSize; uiCol++ )
-		{
-			*pDestTemp = p16BPPPalette[ *pScanLineTemp ];
-			pDestTemp++;
-			pScanLineTemp++;
-		}
-		pDest += usDestWidth;
-	}
-
-	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, String( "End Copying at %p", pDest ) );
-
-	DecompressFini( pDecompPtr );
-	return( TRUE );
-}
-
-
-static BOOLEAN Copy16BPPCompressedImageTo16BPPBuffer(const HIMAGE hImage, BYTE* const pDestBuf, const UINT16 usDestWidth, const UINT16 usDestHeight, const UINT16 usX, const UINT16 usY, const SGPBox* const src_box)
-{
-	// 16BPP Compressed image has not been implemented yet
-	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_2, "16BPP Compressed imagery blitter has not been implemented yet." );
-	return( FALSE );
-}
-#endif
 
 
 static BOOLEAN Copy8BPPImageTo8BPPBuffer(const HIMAGE hImage, BYTE* const pDestBuf, const UINT16 usDestWidth, const UINT16 usDestHeight, const UINT16 usX, const UINT16 usY, const SGPBox* const src_box)
