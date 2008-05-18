@@ -45,16 +45,26 @@ namespace SGP
 			if (!new_v) throw std::bad_alloc();
 		}
 
+		size_t       i;
 		T*     const old_v    = v_;
 		size_t const old_size = size_;
 		size_t const new_size = MIN(old_size, n);
-		for (size_t i = 0; i < new_size; ++i) new (&new_v[i]) T(old_v[i]);
+		try
+		{
+			for (i = 0; i < new_size; ++i) new (&new_v[i]) T(old_v[i]);
+		}
+		catch (...)
+		{
+			for (size_t k = i; k != 0;) new_v[--i].~T();
+			free(new_v);
+			throw;
+		}
 
 		v_        = new_v;
 		capacity_ = n;
 		size_     = new_size;
 
-		for (size_t i = old_size; i != 0;) old_v[--i].~T();
+		for (size_t k = old_size; k != 0;) old_v[--k].~T();
 		free(old_v);
 	}
 }
