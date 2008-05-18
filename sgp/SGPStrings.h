@@ -1,10 +1,10 @@
 #ifndef SGPSTRINGS_H
 #define SGPSTRINGS_H
 
+#include <cwchar>
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
-#include <wchar.h>
 
 
 #if defined(__linux__) || defined(_WIN32)

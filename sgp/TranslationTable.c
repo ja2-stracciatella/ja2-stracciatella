@@ -1,7 +1,7 @@
 #include "TranslationTable.h"
 
 
-const UINT8 TranslationTable[] =
+unsigned char const TranslationTable[] =
 {
 #if !defined RUSSIAN || defined RUSSIAN_GOLD
 
