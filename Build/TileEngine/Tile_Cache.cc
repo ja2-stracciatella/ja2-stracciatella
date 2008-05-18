@@ -10,6 +10,7 @@
 #include "Tile_Cache.h"
 #include "FileMan.h"
 #include "MemMan.h"
+#include "Vector.h"
 
 
 typedef struct TILE_CACHE_STRUCT
@@ -19,14 +20,13 @@ typedef struct TILE_CACHE_STRUCT
 } TILE_CACHE_STRUCT;
 
 
-static UINT32 guiNumTileCacheStructs    = 0;
 static const UINT32 guiMaxTileCacheSize = 50;
 static UINT32 guiCurTileCacheSize       = 0;
 static INT32  giDefaultStructIndex      = -1;
 
 
-TILE_CACHE_ELEMENT*       gpTileCache           = NULL;
-static TILE_CACHE_STRUCT* gpTileCacheStructInfo = NULL;
+TILE_CACHE_ELEMENT*                   gpTileCache;
+static SGP::Vector<TILE_CACHE_STRUCT> gpTileCacheStructInfo;
 
 
 void InitTileCache(void)
@@ -46,52 +46,37 @@ void InitTileCache(void)
 	char              jsd_file_pattern[512];
 	snprintf(jsd_file_pattern, lengthof(jsd_file_pattern), "%s/Data/TILECACHE/*.jsd", data_path);
 
-	INT16 file_count = 0;
+	// Loop through and set filenames
 	try
 	{
 		SGP::FindFiles find(jsd_file_pattern);
-		while (find.Next()) ++file_count;
+		for (;;)
+		{
+			char const* const find_filename = find.Next();
+			if (find_filename == NULL) break;
+
+			char filename[150];
+			sprintf(filename, "%s/Data/TILECACHE/%s", data_path, find_filename);
+
+			TILE_CACHE_STRUCT tc;
+			GetRootName(tc.zRootName, filename);
+
+			tc.pStructureFileRef = LoadStructureFile(filename);
+#ifdef JA2TESTVERSION
+			if (tc.pStructureFileRef == NULL)
+			{
+				SET_ERROR("Cannot load tilecache JSD: %s", filename);
+			}
+#endif
+			if (strcasecmp(tc.zRootName, "l_dead1") == 0)
+			{
+				giDefaultStructIndex = gpTileCacheStructInfo.Size();
+			}
+
+			gpTileCacheStructInfo.PushBack(tc);
+		}
 	}
 	catch (...) { /* XXX ignore */ }
-
-	if (file_count > 0)
-	{
-		guiNumTileCacheStructs = file_count;
-		gpTileCacheStructInfo  = MALLOCN(TILE_CACHE_STRUCT, file_count);
-
-		// Loop through and set filenames
-		UINT32 i = 0;
-		try
-		{
-			SGP::FindFiles find(jsd_file_pattern);
-			for (;;)
-			{
-				char const* const find_filename = find.Next();
-				if (find_filename == NULL) break;
-
-				char filename[150];
-				sprintf(filename, "%s/Data/TILECACHE/%s", data_path, find_filename);
-
-				TILE_CACHE_STRUCT* const tc = &gpTileCacheStructInfo[i];
-				GetRootName(tc->zRootName, filename);
-
-				tc->pStructureFileRef = LoadStructureFile(filename);
-#ifdef JA2TESTVERSION
-				if (tc->pStructureFileRef == NULL)
-				{
-					SET_ERROR("Cannot load tilecache JSD: %s", filename);
-				}
-#endif
-				if (strcasecmp(tc->zRootName, "l_dead1") == 0)
-				{
-					giDefaultStructIndex = i;
-				}
-
-				++i;
-			}
-		}
-		catch (...) { /* XXX ignore */ }
-	}
 }
 
 
@@ -113,10 +98,7 @@ void DeleteTileCache( )
 		MemFree( gpTileCache );
 	}
 
-	if ( gpTileCacheStructInfo != NULL )
-	{
-		MemFree( gpTileCacheStructInfo );
-	}
+	gpTileCacheStructInfo.Reserve(0);
 
 	guiCurTileCacheSize = 0;
 }
@@ -124,13 +106,12 @@ void DeleteTileCache( )
 
 static INT16 FindCacheStructDataIndex(const char* cFilename)
 {
-	UINT32 cnt;
-
-	for ( cnt = 0; cnt < guiNumTileCacheStructs; cnt++ )
+	size_t const n = gpTileCacheStructInfo.Size();
+	for (size_t i = 0; i != n; ++i)
 	{
-		if (strcasecmp(gpTileCacheStructInfo[cnt].zRootName, cFilename) == 0)
+		if (strcasecmp(gpTileCacheStructInfo[i].zRootName, cFilename) == 0)
 		{
-			return(	 (INT16)cnt );
+			return (INT16)i;
 		}
 	}
 
