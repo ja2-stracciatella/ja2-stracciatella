@@ -4,6 +4,13 @@
 #include "AutoObj.h"
 #include "Types.h"
 
+#ifdef _WIN32
+#	include <windef.h>
+#	include <winbase.h>
+#else
+#	include <glob.h>
+#endif
+
 
 typedef enum FileOpenFlags
 {
@@ -62,18 +69,30 @@ BOOLEAN MakeFileManDirectory(const char* path);
 BOOLEAN EraseDirectory(const char* pcDirectory);
 
 
-typedef struct FindFileInfo FindFileInfo;
+namespace SGP
+{
+	class FindFiles
+	{
+		public:
+			/* Search for files designated by pattern.  No match causes Next() to return
+			 * 0 the first time it is called. */
+			FindFiles(char const* pattern);
+			~FindFiles();
 
-/* Search for files designated by pattern.  Returns NULL on error.  No match
- * does not qualify as error. */
-FindFileInfo* FindFiles(const char* pattern);
+			/* Get the next filename.  Returns 0, iff there are no more files. */
+			char const* Next();
 
-/* Get the next filename of a search started by FindFiles().  Returns NULL, iff
- * there are no more files or an error occured. */
-const char* FindFilesNext(FindFileInfo*);
-
-/* Free the data returned by a successful call to FindFiles() */
-void FindFilesFree(FindFileInfo*);
+		private:
+#ifdef _WIN32
+			HANDLE          find_handle_;
+			WIN32_FIND_DATA find_data_;
+			bool            first_done_;
+#else
+			size_t index_;
+			glob_t glob_data_;
+#endif
+	};
+}
 
 
 typedef enum FileAttributes
@@ -106,7 +125,6 @@ UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
 
 const char* GetBinDataPath(void);
 
-typedef SGP::AutoObj<SGPFile,      FileClose>::Type     AutoSGPFile;
-typedef SGP::AutoObj<FindFileInfo, FindFilesFree>::Type AutoFindFileInfo;
+typedef SGP::AutoObj<SGPFile, FileClose>::Type AutoSGPFile;
 
 #endif

@@ -77,19 +77,19 @@ UINT32	MapUtilScreenHandle( )
 		giMiniMap = AddVideoSurface(88, 44, PIXEL_DEPTH);
 
 		// USING BRET's STUFF FOR LOOPING FILES/CREATING LIST, hence AddToFDlgList.....
-		{ AutoFindFileInfo find_info(FindFiles("MAPS/*.dat"));
-			if (find_info != NULL)
+		try
+		{
+			SGP::FindFiles find("MAPS/*.dat");
+			for (;;)
 			{
-				for (;;)
-				{
-					const char* const filename = FindFilesNext(find_info);
-					if (filename == NULL) break;
+				const char* const filename = find.Next();
+				if (filename == NULL) break;
 
-					FileList = AddToFDlgList(FileList, filename);
-					++sFiles;
-				}
+				FileList = AddToFDlgList(FileList, filename);
+				++sFiles;
 			}
 		}
+		catch (...) { /* XXX ignore */ }
 
 		FListNode = FileList;
 

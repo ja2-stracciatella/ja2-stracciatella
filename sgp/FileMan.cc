@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -19,7 +21,6 @@
 #	define mkdir(path, mode) _mkdir(path)
 
 #else
-#	include <glob.h>
 #	include <pwd.h>
 
 #	if defined __APPLE__ && defined __MACH__
@@ -45,17 +46,75 @@ struct SGPFile
 	} u;
 };
 
-struct FindFileInfo
+
+SGP::FindFiles::FindFiles(char const* const pattern) :
+#ifdef _WIN32
+	first_done_()
+#else
+	index_()
+#endif
 {
 #ifdef _WIN32
-	HANDLE          find_handle;
-	WIN32_FIND_DATA find_data;
-	BOOLEAN         first_done;
+	HANDLE const h = FindFirstFile(pattern, &find_data_);
+	if (h != INVALID_HANDLE_VALUE)
+	{
+		find_handle_ = h;
+		return;
+	}
+	else if (GetLastError() == ERROR_FILE_NOT_FOUND)
+	{
+		find_handle_ = 0;
+		return;
+	}
 #else
-	size_t index;
-	glob_t glob_data;
+	glob_t* const g = &glob_data_;
+	switch (glob(pattern, GLOB_NOSORT, 0, g))
+	{
+		case 0:
+		case GLOB_NOMATCH:
+			return;
+
+		default:
+			globfree(g);
+			break;
+	}
 #endif
-};
+	throw std::runtime_error("Failed to start file search");
+}
+
+
+SGP::FindFiles::~FindFiles()
+{
+#ifdef _WIN32
+	if (find_handle_) FindClose(find_handle_);
+#else
+	globfree(&glob_data_);
+#endif
+}
+
+
+char const* SGP::FindFiles::Next()
+{
+#ifdef _WIN32
+	if (!first_done_)
+	{
+		first_done_ = true;
+		// No match?
+		if (!find_handle_) return 0;
+	}
+	else if (!FindNextFile(find_handle_, &find_data_))
+	{
+		if (GetLastError() == ERROR_NO_MORE_FILES) return 0;
+		throw std::runtime_error("Failed to get next file in file search");
+	}
+	return find_data_.cFileName;
+#else
+	if (index_ >= glob_data_.gl_pathc) return 0;
+	char const* const path  = glob_data_.gl_pathv[index_++];
+	char const* const start = strrchr(path, '/');
+	return start ? start + 1 : path;
+#endif
+}
 
 
 static char         LocalPath[512];
@@ -415,16 +474,15 @@ BOOLEAN MakeFileManDirectory(const char* const path)
 
 
 BOOLEAN EraseDirectory(const char* const path)
+try
 {
 	char pattern[512];
 	snprintf(pattern, lengthof(pattern), "%s/*", path);
 
-	AutoFindFileInfo find_info(FindFiles(pattern));
-	if (find_info == NULL) return FALSE;
-
+	SGP::FindFiles find(pattern);
 	for (;;)
 	{
-		const char* const find_filename = FindFilesNext(find_info);
+		char const* const find_filename = find.Next();
 		if (!find_filename) return TRUE;
 
 		char filename[512];
@@ -438,86 +496,12 @@ BOOLEAN EraseDirectory(const char* const path)
 		}
 	}
 }
+catch (...) { return FALSE; }
 
 
 const char* GetExecutableDirectory(void)
 {
 	return LocalPath;
-}
-
-
-FindFileInfo* FindFiles(const char* const pattern)
-{
-	CHECKF(pattern != NULL);
-
-	FindFileInfo* const gfi = MALLOCZ(FindFileInfo);
-	if (gfi == NULL) return NULL;
-
-#ifdef _WIN32
-	const HANDLE h = FindFirstFile(pattern, &gfi->find_data);
-	if (h != INVALID_HANDLE_VALUE)
-	{
-		gfi->find_handle = h;
-	}
-	else if (GetLastError() != ERROR_FILE_NOT_FOUND)
-	{
-		MemFree(gfi);
-		return NULL;
-	}
-	return gfi;
-#else
-	glob_t* const g = &gfi->glob_data;
-	switch (glob(pattern, GLOB_NOSORT, NULL, g))
-	{
-		case 0:
-		case GLOB_NOMATCH:
-			return gfi;
-
-		default:
-			globfree(g);
-			MemFree(gfi);
-			return NULL;
-	}
-#endif
-}
-
-
-const char* FindFilesNext(FindFileInfo* const gfi)
-{
-	CHECKN(gfi != NULL);
-
-#ifdef _WIN32
-	if (!gfi->first_done)
-	{
-		gfi->first_done = TRUE;
-		// No match?
-		if (gfi->find_handle == NULL) return NULL;
-	}
-	else
-	{
-		if (!FindNextFile(gfi->find_handle, &gfi->find_data)) return NULL;
-	}
-	return gfi->find_data.cFileName;
-#else
-	if (gfi->index >= gfi->glob_data.gl_pathc) return NULL;
-
-	const char* const path  = gfi->glob_data.gl_pathv[gfi->index++];
-	const char* const start = strrchr(path, '/');
-	return start != NULL ? start + 1 : path;
-#endif
-}
-
-
-void FindFilesFree(FindFileInfo* const gfi)
-{
-	CHECKV(gfi != NULL);
-
-#ifdef _WIN32
-	if (gfi->find_handle != NULL) FindClose(gfi->find_handle);
-#else
-	globfree(&gfi->glob_data);
-#endif
-	MemFree(gfi);
 }
 
 

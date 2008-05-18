@@ -47,15 +47,12 @@ void InitTileCache(void)
 	snprintf(jsd_file_pattern, lengthof(jsd_file_pattern), "%s/Data/TILECACHE/*.jsd", data_path);
 
 	INT16 file_count = 0;
-	{ AutoFindFileInfo find_info(FindFiles(jsd_file_pattern));
-		if (find_info != NULL)
-		{
-			while (FindFilesNext(find_info) != NULL)
-			{
-				++file_count;
-			}
-		}
+	try
+	{
+		SGP::FindFiles find(jsd_file_pattern);
+		while (find.Next()) ++file_count;
 	}
+	catch (...) { /* XXX ignore */ }
 
 	if (file_count > 0)
 	{
@@ -64,12 +61,12 @@ void InitTileCache(void)
 
 		// Loop through and set filenames
 		UINT32 i = 0;
-		AutoFindFileInfo find_info(FindFiles(jsd_file_pattern));
-		if (find_info != NULL)
+		try
 		{
+			SGP::FindFiles find(jsd_file_pattern);
 			for (;;)
 			{
-				const char* const find_filename = FindFilesNext(find_info);
+				char const* const find_filename = find.Next();
 				if (find_filename == NULL) break;
 
 				char filename[150];
@@ -93,6 +90,7 @@ void InitTileCache(void)
 				++i;
 			}
 		}
+		catch (...) { /* XXX ignore */ }
 	}
 }
 

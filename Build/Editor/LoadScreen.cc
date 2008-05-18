@@ -133,19 +133,19 @@ static void LoadSaveScreenEntry(void)
 		TrashFDlgList( FileList );
 
 	iTopFileShown = iTotalFiles = 0;
-	{ AutoFindFileInfo find_info(FindFiles("MAPS/*.dat"));
-		if (find_info != NULL)
+	try
+	{
+		SGP::FindFiles find("MAPS/*.dat");
+		for (;;)
 		{
-			for (;;)
-			{
-				const char* const filename = FindFilesNext(find_info);
-				if (filename == NULL) break;
+			char const* const filename = find.Next();
+			if (filename == NULL) break;
 
-				FileList = AddToFDlgList(FileList, filename);
-				++iTotalFiles;
-			}
+			FileList = AddToFDlgList(FileList, filename);
+			++iTotalFiles;
 		}
 	}
+	catch (...) { /* XXX ignore */ }
 
 	swprintf(gzFilename, lengthof(gzFilename), L"%hs", g_filename);
 
