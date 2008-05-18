@@ -69,8 +69,6 @@ typedef struct
 {
 	HVOBJECT	vo;
 	UINT16		usSubIndex;
-	UINT32		fType;
-
 } SMALL_TILE_DB;
 
 
@@ -136,7 +134,6 @@ void InitNewOverheadDB(const UINT8 ubTilesetID)
 		{
 			gSmTileDB[dbSize].vo         = vo;
 			gSmTileDB[dbSize].usSubIndex = k;
-			gSmTileDB[dbSize].fType      = i;
 			++dbSize;
 		}
 
@@ -145,7 +142,6 @@ void InitNewOverheadDB(const UINT8 ubTilesetID)
 		{
 			gSmTileDB[dbSize].vo         = vo;
 			gSmTileDB[dbSize].usSubIndex = 0;
-			gSmTileDB[dbSize].fType      = i;
 			++dbSize;
 		}
 	}
@@ -605,7 +601,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 						sX = sTempPosX_S;
 						sY = sTempPosY_S - sHeight + ( gsRenderHeight / 5 );
 
-						pTile->vo->pShadeCurrent= gSmTileSurf[ pTile->fType ].vo->pShades[pNode->ubShadeLevel];
+						pTile->vo->CurrentShade(pNode->ubShadeLevel);
 
 						Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex );
 
@@ -705,7 +701,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 
 								sY += ( gsRenderHeight / 5 );
 
-								pTile->vo->pShadeCurrent= gSmTileSurf[ pTile->fType ].vo->pShades[pNode->ubShadeLevel];
+								pTile->vo->CurrentShade(pNode->ubShadeLevel);
 
 								// RENDER!
 								Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex );
@@ -727,7 +723,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 
 							sY += ( gsRenderHeight / 5 );
 
-							pTile->vo->pShadeCurrent= gSmTileSurf[ pTile->fType ].vo->pShades[pNode->ubShadeLevel];
+							pTile->vo->CurrentShade(pNode->ubShadeLevel);
 
 							// RENDER!
 							Blt8BPPDataTo16BPPBufferShadow((UINT16*)pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex );
@@ -761,7 +757,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 
 								sY += ( gsRenderHeight / 5 );
 
-								pTile->vo->pShadeCurrent= gSmTileSurf[ pTile->fType ].vo->pShades[pNode->ubShadeLevel];
+								pTile->vo->CurrentShade(pNode->ubShadeLevel);
 
 								// RENDER!
 								Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex );
@@ -853,7 +849,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 
 									sY += ( gsRenderHeight / 5 );
 
-									pTile->vo->pShadeCurrent= gSmTileSurf[ pTile->fType ].vo->pShades[pNode->ubShadeLevel];
+									pTile->vo->CurrentShade(pNode->ubShadeLevel);
 
 									// RENDER!
 									Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex );
