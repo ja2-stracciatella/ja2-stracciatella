@@ -28,7 +28,7 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 	flags_(),
 	palette16_(),
 	pShades(),
-	pShadeCurrent(),
+	current_shade_(),
 	ppZStripInfo()
 {
 	if (!(img->fFlags & IMAGE_TRLECOMPRESSED))
@@ -57,8 +57,8 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 		SGPPaletteEntry* const pal = palette_.Allocate(256);
 		memcpy(pal, src_pal, sizeof(*pal) * 256);
 
-		palette16_    = Create16BPPPalette(pal);
-		pShadeCurrent = palette16_;
+		palette16_     = Create16BPPPalette(pal);
+		current_shade_ = palette16_;
 	}
 }
 
@@ -91,7 +91,7 @@ void SGPVObject::CurrentShade(size_t const idx)
 	{
 		throw std::logic_error("Tried to set invalid video object shade");
 	}
-	pShadeCurrent = pShades[idx];
+	current_shade_ = pShades[idx];
 }
 
 
@@ -129,7 +129,7 @@ void SGPVObject::DestroyPalettes()
 		palette16_ = 0;
 	}
 
-	pShadeCurrent = NULL;
+	current_shade_ = 0;
 }
 
 

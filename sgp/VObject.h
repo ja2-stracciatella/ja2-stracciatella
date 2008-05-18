@@ -37,7 +37,7 @@ class SGPVObject
 
 		UINT16 const* Palette16() const { return palette16_; }
 
-		UINT16 const* CurrentShade() const { return pShadeCurrent; }
+		UINT16 const* CurrentShade() const { return current_shade_; }
 
 		// Set the current object shade table
 		void CurrentShade(size_t idx);
@@ -67,7 +67,9 @@ class SGPVObject
 		PTR                          pPixData;                       // ETRLE pixel data
 		ETRLEObject*                 pETRLEObject;                   // Object offset data etc
 		UINT16*                      pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
-		UINT16*                      pShadeCurrent;
+	private:
+		UINT16 const*                current_shade_;
+	public:
 		ZStripInfo**                 ppZStripInfo;                   // Z-value strip info arrays
 
 	private:
