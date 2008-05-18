@@ -901,7 +901,7 @@ static void BtnMessageXCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static Record* GetFirstRecordOnThisPage(Record* RecordList, Font const font, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize)
+static Record* GetFirstRecordOnThisPage(Record* const RecordList, INT32 const iPage)
 {
 	// get the first record on this page - build pages up until this point
 
@@ -923,14 +923,15 @@ static Record* GetFirstRecordOnThisPage(Record* RecordList, Font const font, UIN
 	CurrentRecord = RecordList;
 
 	// while we are not on the current page
+	Font const font = MESSAGE_FONT;
 	while( iCurrentPage < iPage )
 	{
 		// build record list to this point
-		while (iCurrentPositionOnThisPage + IanWrappedStringHeight(usWidth, ubGap, font, CurrentRecord->pRecord) <= iPageSize)
+		while (iCurrentPositionOnThisPage + IanWrappedStringHeight(MESSAGE_WIDTH, MESSAGE_GAP, font, CurrentRecord->pRecord) <= MAX_EMAIL_MESSAGE_PAGE_SIZE)
 		{
 
 			// still room on this page
-			iCurrentPositionOnThisPage += IanWrappedStringHeight(usWidth, ubGap, font, CurrentRecord->pRecord);
+			iCurrentPositionOnThisPage += IanWrappedStringHeight(MESSAGE_WIDTH, MESSAGE_GAP, font, CurrentRecord->pRecord);
 
 			// next record
 			CurrentRecord = CurrentRecord -> Next;
@@ -2424,7 +2425,7 @@ static INT32 GetNumberOfPagesToEmail(void)
 	// run through messages, and find out how many
 	while( pTempRecord )
 	{
-		pTempRecord = GetFirstRecordOnThisPage( pMessageRecordList, MESSAGE_FONT, MESSAGE_WIDTH, MESSAGE_GAP, iNumberOfPagesToEmail, MAX_EMAIL_MESSAGE_PAGE_SIZE );
+		pTempRecord = GetFirstRecordOnThisPage(pMessageRecordList, iNumberOfPagesToEmail);
 		iNumberOfPagesToEmail++;
 	}
 
@@ -2596,7 +2597,7 @@ static void PreProcessEmail(Email* pMail)
 		iCounter = 0;
 
 		// more than one page
-		while( pTempRecord = GetFirstRecordOnThisPage( pTempList, MESSAGE_FONT, MESSAGE_WIDTH, MESSAGE_GAP, iCounter, MAX_EMAIL_MESSAGE_PAGE_SIZE ) )
+		while (pTempRecord = GetFirstRecordOnThisPage(pTempList, iCounter))
 		{
 			iYPositionOnPage = 0;
 
