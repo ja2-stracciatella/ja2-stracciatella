@@ -1037,14 +1037,14 @@ void RenderFastHelp()
 }
 
 
-void MSYS_AllowDisabledRegionFastHelp( MOUSE_REGION *region, BOOLEAN fAllow )
+void MOUSE_REGION::AllowDisabledRegionFastHelp(bool const allow)
 {
-	if( fAllow )
+	if (allow)
 	{
-		region->uiFlags |= MSYS_ALLOW_DISABLED_FASTHELP;
+		uiFlags |= MSYS_ALLOW_DISABLED_FASTHELP;
 	}
 	else
 	{
-		region->uiFlags &= ~MSYS_ALLOW_DISABLED_FASTHELP;
+		uiFlags &= ~MSYS_ALLOW_DISABLED_FASTHELP;
 	}
 }

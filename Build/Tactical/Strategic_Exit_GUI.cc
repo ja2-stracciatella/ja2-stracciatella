@@ -327,7 +327,7 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 
 	MSYS_DefineRegion( &gExitDialog.SingleRegion, (INT16)(gExitDialog.sX + 20), (INT16)(gExitDialog.sY + 37), (INT16)(gExitDialog.sX + 45 + 120), (INT16)(gExitDialog.sY + 37 + 12), MSYS_PRIORITY_HIGHEST,
 																			CURSOR_NORMAL, SingleRegionMoveCallback, SingleRegionCallback );
-	MSYS_AllowDisabledRegionFastHelp( &gExitDialog.SingleRegion, TRUE );
+	gExitDialog.SingleRegion.AllowDisabledRegionFastHelp(TRUE);
 
 
 #ifdef JA2DEMO
@@ -336,11 +336,11 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 
 	MSYS_DefineRegion( &(gExitDialog.AllRegion), (INT16)(gExitDialog.sX + 20), (INT16)(gExitDialog.sY + 57), (INT16)(gExitDialog.sX + 45 + 120), (INT16)(gExitDialog.sY + 57 + 12), MSYS_PRIORITY_HIGHEST,
 																			CURSOR_NORMAL, AllRegionMoveCallback, AllRegionCallback );
-	MSYS_AllowDisabledRegionFastHelp( &gExitDialog.AllRegion, TRUE );
+	gExitDialog.AllRegion.AllowDisabledRegionFastHelp(TRUE);
 
 	MSYS_DefineRegion( &(gExitDialog.LoadRegion), (INT16)(gExitDialog.sX + 155), (INT16)(gExitDialog.sY + 45), (INT16)(gExitDialog.sX + 180 + 85), (INT16)(gExitDialog.sY + 45 + 15), MSYS_PRIORITY_HIGHEST,
 																			CURSOR_NORMAL, LoadRegionMoveCallback, LoadRegionCallback );
-	MSYS_AllowDisabledRegionFastHelp( &gExitDialog.LoadRegion, TRUE );
+	gExitDialog.LoadRegion.AllowDisabledRegionFastHelp(TRUE);
 
 	gExitDialog.uiLoadCheckButton		= CreateCheckBoxButton(	(INT16)(gExitDialog.sX + 155 ), (INT16)(gExitDialog.sY + 43 ), "INTERFACE/popupcheck.sti", MSYS_PRIORITY_HIGHEST, CheckLoadMapCallback );
 
