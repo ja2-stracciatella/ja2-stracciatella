@@ -26,7 +26,6 @@ struct _MOUSE_REGION;
 typedef void (*MOUSE_CALLBACK)(struct _MOUSE_REGION *,INT32);	// Define MOUSE_CALLBACK type as pointer to void
 
 typedef struct _MOUSE_REGION {
-	UINT16								IDNumber;						// Region's ID number, set by mouse system
 	INT8									PriorityLevel;			// Region's Priority, set by system and/or caller
 	UINT32								uiFlags;						// Region's state flags
 	INT16									RegionTopLeftX;			// Screen area affected by this region (absolute coordinates)
@@ -67,11 +66,6 @@ typedef struct _MOUSE_REGION {
 #define MSYS_HAS_BACKRECT								0x00000200
 #define MSYS_FASTHELP_RESET							0x00000400
 #define MSYS_ALLOW_DISABLED_FASTHELP		0x00000800
-
-// Mouse region IDs
-#define MSYS_ID_BASE						1
-#define MSYS_ID_MAX							0xfffffff // ( INT32 max )
-#define MSYS_ID_SYSTEM					0
 
 // Mouse region priorities
 #define MSYS_PRIORITY_LOWEST		0

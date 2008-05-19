@@ -47,9 +47,6 @@ static MOUSE_REGION* gpRegionLastLButtonUp        = NULL;
 static UINT32        guiRegionLastLButtonDownTime = 0;
 
 
-static INT32 MSYS_ScanForID = FALSE;
-static INT32 MSYS_CurrentID = MSYS_ID_SYSTEM;
-
 INT16 MSYS_CurrentMX=0;
 INT16 MSYS_CurrentMY=0;
 static INT16 MSYS_CurrentButtons = 0;
@@ -57,8 +54,8 @@ static INT16 MSYS_Action         = 0;
 
 static BOOLEAN MSYS_SystemInitialized   = FALSE;
 
-static UINT16  gusClickedIDNumber;
-static BOOLEAN gfClickedModeOn = FALSE;
+static MOUSE_REGION* g_clicked_region;
+static BOOLEAN       gfClickedModeOn = FALSE;
 
 static MOUSE_REGION* MSYS_RegList = NULL;
 
@@ -74,7 +71,6 @@ static const INT16 gsFastHelpDelay = 600; // In timer ticks
 //values there as well.  That's the only reason why I left this here.
 static MOUSE_REGION MSYS_SystemBaseRegion =
 {
-	MSYS_ID_SYSTEM,
 	MSYS_PRIORITY_SYSTEM,
 	BASE_REGION_FLAGS,
 	-32767, -32767, 32767, 32767,
@@ -112,9 +108,6 @@ INT32 MSYS_Init(void)
 	if(MSYS_RegList!=NULL)
 		MSYS_TrashRegList();
 
-	MSYS_CurrentID = MSYS_ID_SYSTEM;
-	MSYS_ScanForID = FALSE;
-
 	MSYS_CurrentMX = 0;
 	MSYS_CurrentMY = 0;
 	MSYS_CurrentButtons = 0;
@@ -124,7 +117,6 @@ INT32 MSYS_Init(void)
 	MSYS_SystemInitialized = TRUE;
 
 	// Setup the system's background region
-	MSYS_SystemBaseRegion.IDNumber						= MSYS_ID_SYSTEM;
 	MSYS_SystemBaseRegion.PriorityLevel				= MSYS_PRIORITY_SYSTEM;
 	MSYS_SystemBaseRegion.uiFlags								= BASE_REGION_FLAGS;
 	MSYS_SystemBaseRegion.RegionTopLeftX			= -32767;
@@ -241,54 +233,6 @@ force_move:
 
 
 //======================================================================================================
-//	MSYS_GetNewID
-//
-//	Returns a unique ID number for region nodes. If no new ID numbers can be found, the MAX value
-//	is returned.
-//
-static INT32 MSYS_GetNewID(void)
-{
-	INT32 retID;
-	INT32 Current,found,done;
-	MOUSE_REGION *node;
-
-	retID = MSYS_CurrentID;
-	MSYS_CurrentID++;
-
-	// Crapy scan for an unused ID
-	if((MSYS_CurrentID >= MSYS_ID_MAX) || MSYS_ScanForID)
-	{
-		MSYS_ScanForID = TRUE;
-		Current = MSYS_ID_BASE;
-		done=found=FALSE;
-		while(!done)
-		{
-			found=FALSE;
-			node=MSYS_RegList;
-			while(node!=NULL && !found)
-			{
-				if(node->IDNumber == Current)
-					found=TRUE;
-			}
-
-			if(found && Current < MSYS_ID_MAX)	// Current ID is in use, and their are more to scan
-				Current++;
-			else
-			{
-				done=TRUE;						// Got an ID to use.
-				if(found)
-					Current=MSYS_ID_MAX;		// Ooops, ran out of IDs, use MAX value!
-			}
-		}
-		MSYS_CurrentID = Current;
-	}
-
-	return(retID);
-}
-
-
-
-//======================================================================================================
 //	MSYS_TrashRegList
 //
 //	Deletes the entire region list.
@@ -330,9 +274,6 @@ static void MSYS_AddRegionToList(MOUSE_REGION* region)
 	{ // if it wasn't actually there, then call does nothing!
 		MSYS_DeleteRegionFromList(region);
 	}
-
-	// Set an ID number!
-	region->IDNumber = (UINT16)MSYS_GetNewID();
 
 	region->next = NULL;
 	region->prev = NULL;
@@ -381,11 +322,7 @@ static void MSYS_AddRegionToList(MOUSE_REGION* region)
 
 
 
-//======================================================================================================
-//	MSYS_RegionInList
-//
-//	Scan region list for presence of a node with the same region ID number
-//
+//	Scan region list for presence of a node
 static INT32 MSYS_RegionInList(const MOUSE_REGION* region)
 {
 	MOUSE_REGION *Current;
@@ -395,7 +332,7 @@ static INT32 MSYS_RegionInList(const MOUSE_REGION* region)
 	Current = MSYS_RegList;
 	while( Current && !found )
 	{
-		if(Current->IDNumber == region->IDNumber)
+		if(Current == region)
 			found=TRUE;
 		Current = Current->next;
 	}
@@ -435,20 +372,6 @@ static void MSYS_DeleteRegionFromList(MOUSE_REGION* region)
 		if( region->next )
 			region->next->prev = region->prev;
 		region->prev = region->next = NULL;
-	}
-
-	// Is only the system background region remaining?
-	if(MSYS_RegList == &MSYS_SystemBaseRegion)
-	{
-		// Yup, so let's reset the ID values!
-		MSYS_CurrentID = MSYS_ID_BASE;
-		MSYS_ScanForID = FALSE;
-	}
-	else if(MSYS_RegList == NULL)
-	{
-		// Ack, we actually emptied the list, so let's reset for re-init possibilities
-		MSYS_CurrentID = MSYS_ID_SYSTEM;
-		MSYS_ScanForID = FALSE;
 	}
 }
 
@@ -554,7 +477,7 @@ static void MSYS_UpdateMouseRegion(void)
 		}
 
 		// OK, if we do not have a button down, any button is game!
-		if (!gfClickedModeOn || gusClickedIDNumber == cur->IDNumber)
+		if (!gfClickedModeOn || g_clicked_region == cur)
 		{
 			cur->uiFlags |= MSYS_MOUSE_IN_AREA;
 
@@ -583,8 +506,7 @@ static void MSYS_UpdateMouseRegion(void)
 					{
 						ButtonReason |= MSYS_CALLBACK_REASON_LBUTTON_DWN;
 						gfClickedModeOn = TRUE;
-						// Set global ID
-						gusClickedIDNumber = cur->IDNumber;
+						g_clicked_region = cur;
 					}
 
 					if (MSYS_Action & MSYS_DO_LBUTTON_UP)
@@ -597,8 +519,7 @@ static void MSYS_UpdateMouseRegion(void)
 					{
 						ButtonReason |= MSYS_CALLBACK_REASON_RBUTTON_DWN;
 						gfClickedModeOn = TRUE;
-						// Set global ID
-						gusClickedIDNumber = cur->IDNumber;
+						g_clicked_region = cur;
 					}
 
 					if (MSYS_Action & MSYS_DO_RBUTTON_UP)
@@ -733,8 +654,6 @@ void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UIN
 			AssertMsg( 0, "Attempting to define a region that already exists." );
 	#endif
 
-	region->IDNumber = MSYS_ID_BASE;
-
 	if(priority == MSYS_PRIORITY_AUTO)
 		priority = MSYS_PRIORITY_BASE;
 	else if(priority <= MSYS_PRIORITY_LOWEST)
@@ -840,13 +759,10 @@ void MSYS_RemoveRegion(MOUSE_REGION *region)
 	gfRefreshUpdate = TRUE;
 
 	// Check if this is a locked region, and unlock if so
-	if ( gfClickedModeOn )
+	if (g_clicked_region == region)
 	{
-		// Set global ID
-		if ( gusClickedIDNumber == region->IDNumber )
-		{
-			gfClickedModeOn = FALSE;
-		}
+		g_clicked_region = 0;
+		gfClickedModeOn  = FALSE;
 	}
 
 	//clear all internal values (including the region exists flag)
