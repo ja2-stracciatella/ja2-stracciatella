@@ -253,7 +253,7 @@ static void MSYS_TrashRegList(void)
 }
 
 
-static void MSYS_DeleteRegionFromList(MOUSE_REGION* region);
+static void MSYS_DeleteRegionFromList(MOUSE_REGION*);
 
 
 //======================================================================================================
@@ -267,16 +267,9 @@ static void MSYS_AddRegionToList(MOUSE_REGION* region)
 	MOUSE_REGION *curr;
 	INT32 done;
 
-
-	// If region seems to already be in list, delete it so we can
-	// re-insert the region.
-	if( region->next || region->prev )
-	{ // if it wasn't actually there, then call does nothing!
-		MSYS_DeleteRegionFromList(region);
-	}
-
-	region->next = NULL;
-	region->prev = NULL;
+	/* If region seems to already be in list, delete it so we can re-insert the
+	 * region. */
+	MSYS_DeleteRegionFromList(region);
 
 	if( !MSYS_RegList )
 	{ // Null list, so add it straight up.
@@ -321,58 +314,18 @@ static void MSYS_AddRegionToList(MOUSE_REGION* region)
 }
 
 
-
-//	Scan region list for presence of a node
-static INT32 MSYS_RegionInList(const MOUSE_REGION* region)
+// Removes a region from the current list.
+static void MSYS_DeleteRegionFromList(MOUSE_REGION* const r)
 {
-	MOUSE_REGION *Current;
-	INT32 found;
+	MOUSE_REGION* const prev = r->prev;
+	MOUSE_REGION* const next = r->next;
+	if (prev) prev->next = next;
+	if (next) next->prev = prev;
 
-	found = FALSE;
-	Current = MSYS_RegList;
-	while( Current && !found )
-	{
-		if(Current == region)
-			found=TRUE;
-		Current = Current->next;
-	}
-	return(found);
-}
+	if (MSYS_RegList == r) MSYS_RegList = next;
 
-
-
-//======================================================================================================
-//	MSYS_DeleteRegionFromList
-//
-//	Removes a region from the current list.
-//
-static void MSYS_DeleteRegionFromList(MOUSE_REGION* region)
-{
-	// If no list present, there's nothin' to do.
-	if( !MSYS_RegList )
-		return;
-
-	// Check if region in list
-	if(!MSYS_RegionInList(region))
-		return;
-
-	// Remove a node from the list
-	if(MSYS_RegList == region)
-	{ // First node on list, adjust main pointer.
-		MSYS_RegList = region->next;
-		if(MSYS_RegList!=NULL)
-			MSYS_RegList->prev = NULL;
-		region->next = region->prev = NULL;
-	}
-	else
-	{
-		if(region->prev)
-			region->prev->next = region->next;
-		// If not last node in list, adjust following node's ->prev entry.
-		if( region->next )
-			region->next->prev = region->prev;
-		region->prev = region->next = NULL;
-	}
+	r->prev = 0;
+	r->next = 0;
 }
 
 
