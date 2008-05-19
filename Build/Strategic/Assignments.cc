@@ -3992,7 +3992,7 @@ void CreateDestroyScreenMaskForAssignmentAndContractMenus( void )
 
 		if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 		{
-			MSYS_ChangeRegionCursor(  &gAssignmentScreenMaskRegion, 0 );
+			gAssignmentScreenMaskRegion.ChangeCursor(0);
 		}
 
 	}

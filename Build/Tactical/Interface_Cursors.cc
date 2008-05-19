@@ -222,7 +222,7 @@ BOOLEAN DrawUICursor( )
 	// OK, WE OVERRIDE HERE CURSOR DRAWING FOR THINGS LIKE
 	if ( gpItemPointer != NULL )
 	{
-		MSYS_ChangeRegionCursor( &gViewportRegion , VIDEO_NO_CURSOR );
+		gViewportRegion.ChangeCursor(VIDEO_NO_CURSOR);
 
 		// Check if we are in the viewport region...
 		if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
@@ -243,7 +243,7 @@ BOOLEAN DrawUICursor( )
 
 		if ( guiCurUICursor == NO_UICURSOR )
 		{
-			MSYS_ChangeRegionCursor( &gViewportRegion , VIDEO_NO_CURSOR );
+			gViewportRegion.ChangeCursor(VIDEO_NO_CURSOR);
 			return( TRUE );
 		}
 
@@ -343,7 +343,7 @@ BOOLEAN DrawUICursor( )
 		if ( gUICursors[ guiCurUICursor ].uiFlags & UICURSOR_SNAPPING )
 		{
 			// Hide mouse region cursor
-			MSYS_ChangeRegionCursor( &gViewportRegion , VIDEO_NO_CURSOR );
+			gViewportRegion.ChangeCursor(VIDEO_NO_CURSOR);
 
 			// Set Snapping Cursor
 			DrawSnappingCursor( );
@@ -389,7 +389,7 @@ BOOLEAN DrawUICursor( )
 
 			}
 
-			MSYS_ChangeRegionCursor(&gViewportRegion, gUICursors[guiCurUICursor].usFreeCursorName);
+			gViewportRegion.ChangeCursor(gUICursors[guiCurUICursor].usFreeCursorName);
 		}
 
 		if ( gUICursors[ guiCurUICursor ].uiFlags & UICURSOR_CENTERAPS )

@@ -2153,7 +2153,7 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
 				guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
 				gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
 
-				MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );
+				gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
 				MSYS_SetCurrentCursor( EXTERN_CURSOR );
 				fMapInventoryItem=TRUE;
 				fTeamPanelDirty=TRUE;
@@ -2205,7 +2205,7 @@ static void DoAttachment(void)
 				gpItemPointer = NULL;
 				EnableSMPanelButtons( TRUE , TRUE );
 
-				MSYS_ChangeRegionCursor( &gSMPanelRegion , CURSOR_NORMAL );
+				gSMPanelRegion.ChangeCursor(CURSOR_NORMAL);
 				SetCurrentCursorFromDatabase( CURSOR_NORMAL );
 
 				//if we are currently in the shopkeeper interface
@@ -2306,7 +2306,7 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
 						gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
 
-						MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );
+						gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
 						MSYS_SetCurrentCursor( EXTERN_CURSOR );
 						fMapInventoryItem=TRUE;
 						fTeamPanelDirty=TRUE;
@@ -3061,7 +3061,7 @@ void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition )
 			gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
 
 			fMapInventoryItem=TRUE;
-			MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );
+			gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
 			MSYS_SetCurrentCursor( EXTERN_CURSOR );
 		}
 	}
@@ -3081,7 +3081,7 @@ void EndItemPointer( )
 	{
 		gpItemPointer = NULL;
 		gbItemPointerSrcSlot = NO_SLOT;
-		MSYS_ChangeRegionCursor( &gSMPanelRegion , CURSOR_NORMAL );
+		gSMPanelRegion.ChangeCursor(CURSOR_NORMAL);
 		MSYS_SetCurrentCursor( CURSOR_NORMAL );
 
 		if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
@@ -3107,7 +3107,7 @@ void DrawItemFreeCursor( )
 	guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
 	gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
 
-	MSYS_ChangeRegionCursor( &gSMPanelRegion , EXTERN_CURSOR );
+	gSMPanelRegion.ChangeCursor(EXTERN_CURSOR);
 	MSYS_SetCurrentCursor( EXTERN_CURSOR );
 }
 
@@ -3413,7 +3413,7 @@ void DrawItemTileCursor( )
 		}
 
 		//Erase any cursor in viewport
-		//MSYS_ChangeRegionCursor( &gViewportRegion , VIDEO_NO_CURSOR );
+		//gViewportRegion.ChangeCursor(VIDEO_NO_CURSOR);
 
 		// Get tile graphic fro item
 		usIndex = GetTileGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
@@ -3428,9 +3428,7 @@ void DrawItemTileCursor( )
 			uiOldCursorId = uiCursorId;
 		}
 
-
-		MSYS_ChangeRegionCursor( &gViewportRegion , (UINT16)uiCursorId );
-
+		gViewportRegion.ChangeCursor(uiCursorId);
 	}
 }
 
@@ -4423,7 +4421,7 @@ static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
           else
           {
 					  gpItemPointer = NULL;
-					  MSYS_ChangeRegionCursor( &gSMPanelRegion , CURSOR_NORMAL );
+					  gSMPanelRegion.ChangeCursor(CURSOR_NORMAL);
 					  SetCurrentCursorFromDatabase( CURSOR_NORMAL );
 
 						if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
@@ -5588,7 +5586,7 @@ static void RemoveMoney(void)
 				guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
 				gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
 
-				MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );
+				gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
 				MSYS_SetCurrentCursor( EXTERN_CURSOR );
 				fMapInventoryItem=TRUE;
 				fTeamPanelDirty=TRUE;

@@ -4855,7 +4855,7 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
 					gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
 
-					MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );
+					gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
 					MSYS_SetCurrentCursor( EXTERN_CURSOR );
 					fMapInventoryItem=TRUE;
 					fTeamPanelDirty=TRUE;
@@ -4946,7 +4946,7 @@ void InternalMAPBeginItemPointer(SOLDIERTYPE* pSoldier)
 	guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
 	gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
 
-	MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );
+	gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
 	MSYS_SetCurrentCursor( EXTERN_CURSOR );
 	fMapInventoryItem=TRUE;
 	fTeamPanelDirty=TRUE;
@@ -4992,7 +4992,7 @@ void MAPEndItemPointer(void)
 	if ( gpItemPointer != NULL )
 	{
 		gpItemPointer = NULL;
-		MSYS_ChangeRegionCursor( &gMPanelRegion , CURSOR_NORMAL );
+		gMPanelRegion.ChangeCursor(CURSOR_NORMAL);
 		MSYS_SetCurrentCursor( CURSOR_NORMAL );
 		fMapInventoryItem=FALSE;
 		fTeamPanelDirty=TRUE;
@@ -7074,7 +7074,7 @@ static void TrashItemMessageBoxCallBack(UINT8 bExitValue)
 		MAPEndItemPointer();
 
 		// reset cursor
-		MSYS_ChangeRegionCursor( &gSMPanelRegion , CURSOR_NORMAL );
+		gSMPanelRegion.ChangeCursor(CURSOR_NORMAL);
 		SetCurrentCursorFromDatabase( CURSOR_NORMAL );
 
 		HandleButtonStatesWhileMapInventoryActive( );
@@ -8238,7 +8238,7 @@ BOOLEAN CanChangeSleepStatusForSoldier(const SOLDIERTYPE* const pSoldier)
 static void ChangeMapScreenMaskCursor(UINT16 usCursor)
 {
 	MSYS_SetCurrentCursor( usCursor );
-	MSYS_ChangeRegionCursor( &gMapScreenMaskRegion, usCursor );
+	gMapScreenMaskRegion.ChangeCursor(usCursor);
 
 	if ( usCursor == CURSOR_CHECKMARK )
 		fCheckCursorWasSet = TRUE;

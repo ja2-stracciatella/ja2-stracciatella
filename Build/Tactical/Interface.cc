@@ -1483,11 +1483,11 @@ void ClearInterface( )
 	// Erase Interface cursors
 	HideUICursor( );
 
-	MSYS_ChangeRegionCursor( &gViewportRegion , VIDEO_NO_CURSOR );
+	gViewportRegion.ChangeCursor(VIDEO_NO_CURSOR);
 
 	// Hide lock UI cursors...
-	MSYS_ChangeRegionCursor( &gDisableRegion , VIDEO_NO_CURSOR );
-	MSYS_ChangeRegionCursor( &gUserTurnRegion , VIDEO_NO_CURSOR );
+	gDisableRegion.ChangeCursor(VIDEO_NO_CURSOR);
+	gUserTurnRegion.ChangeCursor(VIDEO_NO_CURSOR);
 
 	// Remove special thing for south arrow...
 	if (gsGlobalCursorYOffset == SCREEN_HEIGHT - gsVIEWPORT_WINDOW_END_Y)
@@ -1506,9 +1506,8 @@ void RestoreInterface( )
 	gfUIRefreshArrows = TRUE;
 
 	// SHow lock UI cursors...
-	MSYS_ChangeRegionCursor( &gDisableRegion , CURSOR_WAIT );
-	MSYS_ChangeRegionCursor( &gUserTurnRegion , CURSOR_WAIT );
-
+	gDisableRegion.ChangeCursor(CURSOR_WAIT);
+	gUserTurnRegion.ChangeCursor(CURSOR_WAIT);
 }
 
 

@@ -27,6 +27,8 @@ typedef void (*MOUSE_CALLBACK)(MOUSE_REGION*, INT32);
 
 struct MOUSE_REGION
 {
+	void ChangeCursor(UINT16 crsr);
+
 	INT8									PriorityLevel;			// Region's Priority, set by system and/or caller
 	UINT32								uiFlags;						// Region's state flags
 	INT16									RegionTopLeftX;			// Screen area affected by this region (absolute coordinates)
@@ -135,7 +137,6 @@ INT32 MSYS_Init(void);
 void MSYS_Shutdown(void);
 void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UINT16 bry,INT8 priority,
 					   UINT16 crsr,MOUSE_CALLBACK movecallback,MOUSE_CALLBACK buttoncallback);
-void MSYS_ChangeRegionCursor(MOUSE_REGION *region,UINT16 crsr);
 void MSYS_RemoveRegion(MOUSE_REGION *region);
 void MSYS_EnableRegion(MOUSE_REGION *region);
 void MSYS_DisableRegion(MOUSE_REGION *region);

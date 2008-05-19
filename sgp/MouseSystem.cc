@@ -651,14 +651,10 @@ void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UIN
 }
 
 
-
-//=================================================================================================
-//	MSYS_ChangeRegionCursor
-//
-void MSYS_ChangeRegionCursor(MOUSE_REGION *region,UINT16 crsr)
+void MOUSE_REGION::ChangeCursor(UINT16 const crsr)
 {
-	region->Cursor = crsr;
-	if (crsr != MSYS_NO_CURSOR && region->uiFlags & MSYS_MOUSE_IN_AREA)
+	Cursor = crsr;
+	if (crsr != MSYS_NO_CURSOR && uiFlags & MSYS_MOUSE_IN_AREA)
 	{
 		MSYS_SetCurrentCursor(crsr);
 	}

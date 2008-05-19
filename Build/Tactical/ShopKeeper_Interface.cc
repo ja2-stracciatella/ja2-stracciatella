@@ -3794,39 +3794,35 @@ void SetSkiCursor( UINT16	usCursor )
 		gusExternVoSubIndex = Item[ gMoveingItem.sItemIndex ].ubGraphicNum;
 		SetCurrentCursorFromDatabase( EXTERN_CURSOR );
 
-		MSYS_ChangeRegionCursor( &gSMPanelRegion, usCursor );
-
-		MSYS_ChangeRegionCursor( &gSKI_EntireScreenMouseRegions, usCursor );
-
-		MSYS_ChangeRegionCursor( &gArmsDealersDropItemToGroundMouseRegions, usCursor );
-
+		gSMPanelRegion.ChangeCursor(usCursor);
+		gSKI_EntireScreenMouseRegions.ChangeCursor(usCursor);
+		gArmsDealersDropItemToGroundMouseRegions.ChangeCursor(usCursor);
 		MSYS_SetCurrentCursor( usCursor );
 
 		//if the item desc window is up
 		if( gInvDesc.uiFlags & MSYS_REGION_EXISTS )
-			MSYS_ChangeRegionCursor( &gInvDesc, usCursor );
+			gInvDesc.ChangeCursor(usCursor);
 
 		for( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++)
 		{
 			if( gItemDescAttachmentRegions[ubCnt].uiFlags & MSYS_REGION_EXISTS )
-				MSYS_ChangeRegionCursor( &gItemDescAttachmentRegions[ubCnt], usCursor );
+				gItemDescAttachmentRegions[ubCnt].ChangeCursor(usCursor);
 		}
 
 		for( ubCnt=0; ubCnt<SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
 		{
-			MSYS_ChangeRegionCursor( &gPlayersOfferSlotsMouseRegions[ ubCnt], usCursor );
-			MSYS_ChangeRegionCursor( &gPlayersOfferSlotsSmallFaceMouseRegions[ ubCnt], usCursor );
-
-			MSYS_ChangeRegionCursor( &gDealersOfferSlotsMouseRegions[ ubCnt], usCursor );
+			gPlayersOfferSlotsMouseRegions[ubCnt].ChangeCursor(usCursor);
+			gPlayersOfferSlotsSmallFaceMouseRegions[ubCnt].ChangeCursor(usCursor);
+			gDealersOfferSlotsMouseRegions[ubCnt].ChangeCursor(usCursor);
 
 			//if the dealer repairs
 			if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 			{
-				MSYS_ChangeRegionCursor( &gDealersOfferSlotsSmallFaceMouseRegions[ ubCnt], usCursor );
+				gDealersOfferSlotsSmallFaceMouseRegions[ubCnt].ChangeCursor(usCursor);
 			}
 		}
 
-		MSYS_ChangeRegionCursor( &gSkiInventoryMovementAreaMouseRegions, usCursor );
+		gSkiInventoryMovementAreaMouseRegions.ChangeCursor(usCursor);
 	}
 
 	//else we are restoring the old cursor
@@ -3848,38 +3844,34 @@ void SetSkiCursor( UINT16	usCursor )
 			ReevaluateItemHatches( gpSMCurrentMerc, TRUE );
 		}
 
-		MSYS_ChangeRegionCursor( &gSMPanelRegion, usCursor );
-
-		MSYS_ChangeRegionCursor( &gSKI_EntireScreenMouseRegions, usCursor );
-
-		MSYS_ChangeRegionCursor( &gArmsDealersDropItemToGroundMouseRegions, usCursor );
+		gSMPanelRegion.ChangeCursor(usCursor);
+		gSKI_EntireScreenMouseRegions.ChangeCursor(usCursor);
+		gArmsDealersDropItemToGroundMouseRegions.ChangeCursor(usCursor);
 
 		for( ubCnt=0; ubCnt<SKI_NUM_TRADING_INV_SLOTS; ubCnt++)
 		{
-			MSYS_ChangeRegionCursor( &gPlayersOfferSlotsMouseRegions[ ubCnt ], usCursor );
-			MSYS_ChangeRegionCursor( &gPlayersOfferSlotsSmallFaceMouseRegions[ ubCnt ], usCursor );
-
-			MSYS_ChangeRegionCursor( &gDealersOfferSlotsMouseRegions[ ubCnt ], usCursor );
+			gPlayersOfferSlotsMouseRegions[ubCnt].ChangeCursor(usCursor);
+			gPlayersOfferSlotsSmallFaceMouseRegions[ubCnt].ChangeCursor(usCursor);
+			gDealersOfferSlotsMouseRegions[ubCnt].ChangeCursor(usCursor);
 
 			//if the dealer repairs
 			if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 			{
-				MSYS_ChangeRegionCursor( &gDealersOfferSlotsSmallFaceMouseRegions[ ubCnt ], usCursor );
+				gDealersOfferSlotsSmallFaceMouseRegions[ubCnt].ChangeCursor(usCursor);
 			}
 		}
 
 		//if the item desc window is up
 		if( gInvDesc.uiFlags & MSYS_REGION_EXISTS )
-			MSYS_ChangeRegionCursor( &gInvDesc, usCursor );
+			gInvDesc.ChangeCursor(usCursor);
 
 		for( ubCnt = 0; ubCnt < MAX_ATTACHMENTS; ubCnt++)
 		{
 			if( gItemDescAttachmentRegions[ubCnt].uiFlags & MSYS_REGION_EXISTS )
-				MSYS_ChangeRegionCursor( &gItemDescAttachmentRegions[ubCnt], usCursor );
+				gItemDescAttachmentRegions[ubCnt].ChangeCursor(usCursor);
 		}
 
-
-		MSYS_ChangeRegionCursor( &gSkiInventoryMovementAreaMouseRegions, usCursor );
+		gSkiInventoryMovementAreaMouseRegions.ChangeCursor(usCursor);
 
 		MSYS_SetCurrentCursor( usCursor );
 

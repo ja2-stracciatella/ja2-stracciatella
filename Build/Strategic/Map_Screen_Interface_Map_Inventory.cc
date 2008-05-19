@@ -627,7 +627,7 @@ static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 					gusExternVoSubIndex = item->ubGraphicNum;
 
 					fMapInventoryItem = TRUE;
-					MSYS_ChangeRegionCursor(&gMPanelRegion, EXTERN_CURSOR);
+					gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
 					SetCurrentCursorFromDatabase(EXTERN_CURSOR);
 				}
 			}
@@ -843,7 +843,7 @@ static void BeginInventoryPoolPtr(OBJECTTYPE* pInventorySlot)
 		gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
 
 		fMapInventoryItem = TRUE;
-		MSYS_ChangeRegionCursor( &gMPanelRegion , EXTERN_CURSOR );
+		gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
 		SetCurrentCursorFromDatabase( EXTERN_CURSOR );
 
 		if (fShowInventoryFlag)
