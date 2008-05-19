@@ -720,11 +720,11 @@ static void EnableKeyRing(BOOLEAN fEnable)
 {
 	if ( fEnable )
 	{
-		MSYS_EnableRegion( &gKeyRingPanel );
+		gKeyRingPanel.Enable();
 	}
 	else
 	{
-		MSYS_DisableRegion( &gKeyRingPanel );
+		gKeyRingPanel.Disable();
 	}
 }
 
@@ -742,26 +742,24 @@ void DisableInvRegions( BOOLEAN fDisable )
 	{
 		if ( fDisable )
 		{
-			MSYS_DisableRegion( &gSMInvRegion[ cnt ] );
+			gSMInvRegion[cnt].Disable();
 		}
 		else
 		{
-			MSYS_EnableRegion( &gSMInvRegion[ cnt ] );
+			gSMInvRegion[cnt].Enable();
 		}
 	}
 
 	if ( fDisable )
 	{
-		MSYS_DisableRegion( &gSMInvCamoRegion );
-
-		MSYS_DisableRegion( &gSM_SELMERCMoneyRegion );
+		gSMInvCamoRegion.Disable();
+		gSM_SELMERCMoneyRegion.Disable();
 		EnableKeyRing( FALSE );
 	}
 	else
 	{
-		MSYS_EnableRegion( &gSMInvCamoRegion );
-
-		MSYS_EnableRegion( &gSM_SELMERCMoneyRegion );
+		gSMInvCamoRegion.Enable();
+		gSM_SELMERCMoneyRegion.Enable();
 		EnableKeyRing( TRUE );
 	}
 

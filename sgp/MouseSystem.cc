@@ -719,30 +719,6 @@ void MSYS_RemoveRegion(MOUSE_REGION *region)
 }
 
 
-
-//=================================================================================================
-//	MSYS_EnableRegion
-//
-//	Enables a mouse region.
-//
-void MSYS_EnableRegion(MOUSE_REGION *region)
-{
-	region->uiFlags |= MSYS_REGION_ENABLED;
-}
-
-
-
-//=================================================================================================
-//	MSYS_DisableRegion
-//
-//	Disables a mouse region without removing it from the system list.
-//
-void MSYS_DisableRegion(MOUSE_REGION *region)
-{
-	region->uiFlags &= (~MSYS_REGION_ENABLED);
-}
-
-
 //=================================================================================================
 //	MSYS_SetCurrentCursor
 //

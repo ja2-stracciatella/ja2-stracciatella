@@ -69,7 +69,7 @@ void InitRadarScreen()
 	UINT16        const h = RADAR_WINDOW_HEIGHT;
 	MOUSE_REGION* const r = &gRadarRegion;
 	MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, 0, RadarRegionMoveCallback, RadarRegionButtonCallback);
-	MSYS_DisableRegion(r);
+	r->Disable();
 
 	gsRadarX = x;
 	gsRadarY = y;

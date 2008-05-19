@@ -356,7 +356,7 @@ try
 		//to disable the drop down city location
 	MSYS_DefineRegion( &gSelectedFloristDisableDropDownRegion, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, MSYS_PRIORITY_HIGH+2,
 					 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, SelectFloristDisableDropDownRegionCallBack);
-  MSYS_DisableRegion(&gSelectedFloristDisableDropDownRegion);
+  gSelectedFloristDisableDropDownRegion.Disable();
 
 	//to select typing in the personal sentiment box
 //	MSYS_DefineRegion( &gSelectedFloristPersonalSentimentBoxRegion, FLOWER_ORDER_SENTIMENT_BOX_X, FLOWER_ORDER_SENTIMENT_BOX_Y, (UINT16)(FLOWER_ORDER_SENTIMENT_BOX_X + FLOWER_ORDER_SENTIMENT_BOX_WIDTH), (UINT16)(FLOWER_ORDER_SENTIMENT_BOX_Y + FLOWER_ORDER_SENTIMENT_BOX_HEIGHT), MSYS_PRIORITY_HIGH,
@@ -852,7 +852,7 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 
 
 			gubFlowerDestDropDownMode = FLOWER_ORDER_DROP_DOWN_DISPLAY;
-		  MSYS_EnableRegion(&gSelectedFloristDisableDropDownRegion);
+		  gSelectedFloristDisableDropDownRegion.Enable();
 
 
 			//disable the text entry fields
@@ -879,7 +879,7 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 			DrawTextToScreen(*(FlowerOrderLocations[gubCurrentlySelectedFlowerLocation].psCityLoc), FLOWER_ORDER_DROP_DOWN_CITY_START_X + 6, FLOWER_ORDER_DROP_DOWN_CITY_START_Y + 3, 0, FLOWER_ORDEER_DROP_DOWN_FONT, FLOWER_ORDEER_DROP_DOWN_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//enable the drop down region
-		  MSYS_DisableRegion(&gSelectedFloristDisableDropDownRegion);
+		  gSelectedFloristDisableDropDownRegion.Disable();
 
 			fPausedReDrawScreenFlag = TRUE;
 			fMouseRegionsCreated  = FALSE;

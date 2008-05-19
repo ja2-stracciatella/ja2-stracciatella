@@ -473,7 +473,7 @@ static void UpdateSectorExitMenu(void)
 	if ( gExitDialog.fGotoSectorDisabled )
 	{
 		DisableButton( gExitDialog.uiLoadCheckButton );
-		MSYS_DisableRegion(&(gExitDialog.LoadRegion ) );
+		gExitDialog.LoadRegion.Disable();
 		if( gExitDialog.fMultipleSquadsInSector && gExitDialog.fGotoSectorText && gTacticalStatus.fEnemyInSector )
 		{ //We have multiple squads in a hostile sector.  That means that we can't load the adjacent sector.
 			SetButtonFastHelpText( gExitDialog.uiLoadCheckButton, pExitingSectorHelpText[ EXIT_GUI_CANT_LEAVE_HOSTILE_SECTOR_HELPTEXT ] );
@@ -493,7 +493,7 @@ static void UpdateSectorExitMenu(void)
 	else
 	{
 		EnableButton( gExitDialog.uiLoadCheckButton );
-		MSYS_EnableRegion(&(gExitDialog.LoadRegion ) );
+		gExitDialog.LoadRegion.Enable();
 		if( gExitDialog.fGotoSectorText )
 		{ //travesal is quick enough to allow the player to "warp" to the next sector and we load it.
 			SetButtonFastHelpText( gExitDialog.uiLoadCheckButton, pExitingSectorHelpText[ EXIT_GUI_LOAD_ADJACENT_SECTOR_HELPTEXT ] );
@@ -510,7 +510,7 @@ static void UpdateSectorExitMenu(void)
 	if ( gExitDialog.fSingleMoveDisabled )
 	{
 		DisableButton( gExitDialog.uiSingleMoveButton );
-		MSYS_DisableRegion(&(gExitDialog.SingleRegion) );
+		gExitDialog.SingleRegion.Disable();
 		if( gExitDialog.fSelectedMercIsEPC )
 		{ //EPCs cannot leave the sector alone and must be escorted
 			wchar_t str[ 256 ];
@@ -553,7 +553,7 @@ static void UpdateSectorExitMenu(void)
 	{
 		wchar_t str[ 256 ];
 		EnableButton( gExitDialog.uiSingleMoveButton );
-		MSYS_EnableRegion(&(gExitDialog.SingleRegion) );
+		gExitDialog.SingleRegion.Enable();
 		swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_SINGLE_TRAVERSAL_WILL_SEPARATE_SQUADS_HELPTEXT], sel->name);
 		SetButtonFastHelpText( gExitDialog.uiSingleMoveButton, str );
 		SetRegionFastHelpText( &gExitDialog.SingleRegion, str );
@@ -562,7 +562,7 @@ static void UpdateSectorExitMenu(void)
 	if ( gExitDialog.fAllMoveDisabled )
 	{
 		DisableButton( gExitDialog.uiAllMoveButton );
-		MSYS_DisableRegion(&(gExitDialog.AllRegion) );
+		gExitDialog.AllRegion.Disable();
 		if( gExitDialog.fUncontrolledRobotInSquad )
 		{
 			SetButtonFastHelpText( gExitDialog.uiAllMoveButton, gzLateLocalizedString[ 1 ] );
@@ -577,7 +577,7 @@ static void UpdateSectorExitMenu(void)
 	else
 	{
 		EnableButton( gExitDialog.uiAllMoveButton );
-		MSYS_EnableRegion(&(gExitDialog.AllRegion) );
+		gExitDialog.AllRegion.Enable();
 		SetButtonFastHelpText( gExitDialog.uiAllMoveButton, pExitingSectorHelpText[ EXIT_GUI_ALL_TRAVERSAL_WILL_MOVE_CURRENT_SQUAD_HELPTEXT ] );
 		SetRegionFastHelpText( &gExitDialog.AllRegion, pExitingSectorHelpText[ EXIT_GUI_ALL_TRAVERSAL_WILL_MOVE_CURRENT_SQUAD_HELPTEXT ] );
 	}

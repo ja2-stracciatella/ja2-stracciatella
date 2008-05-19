@@ -509,7 +509,7 @@ try
 	MSYS_DefineRegion( &gSelectedShutUpMercRegion, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y ,LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, MSYS_PRIORITY_HIGH-1,
 							 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, SelectShutUpMercRegionCallBack);
 	//have it disbled at first
-  MSYS_DisableRegion(&gSelectedShutUpMercRegion);
+	gSelectedShutUpMercRegion.Disable();
 
 
 	//Button Regions
@@ -1791,7 +1791,7 @@ static BOOLEAN InitVideoFaceTalking(UINT8 ubMercID, UINT16 usQuoteNum)
 	}
 
 	//Enables it so if a player clicks, he will shutup the merc
-	MSYS_EnableRegion(&gSelectedShutUpMercRegion);
+	gSelectedShutUpMercRegion.Enable();
 
 	gfIsShutUpMouseRegionActive = TRUE;
 	gfMercIsTalking = TRUE;
@@ -2417,7 +2417,7 @@ static void StopMercTalking(void)
 {
 	if( gfIsShutUpMouseRegionActive )
 	{
-	  MSYS_DisableRegion(&gSelectedShutUpMercRegion);
+		gSelectedShutUpMercRegion.Disable();
 
 		ShutupaYoFace( giMercFaceIndex );
 		gfMercIsTalking = FALSE;
@@ -2481,7 +2481,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 			SpecifyDisabledButtonStyle( giXToCloseVideoConfButton, DISABLED_STYLE_NONE );
 			fXRegionActive = TRUE;
 
-			MSYS_DisableRegion(&gSelectedFaceRegion);
+			gSelectedFaceRegion.Disable();
 		}
 	}
 
@@ -2514,10 +2514,10 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 			fXRegionActive = FALSE;
 		}
 
-		MSYS_DisableRegion(&gSelectedShutUpMercRegion);
+		gSelectedShutUpMercRegion.Disable();
 
 		//Enable the ability to click on the BIG face to go to different screen
-	  MSYS_EnableRegion(&gSelectedFaceRegion);
+		gSelectedFaceRegion.Enable();
 
 //		EnableDisableCurrentVideoConferenceButtons(FALSE);
 			if( gubVideoConferencingPreviousMode == AIM_VIDEO_HIRE_MERC_MODE )
@@ -3378,7 +3378,7 @@ static void WaitForMercToFinishTalkingOrUserToClick(void)
 	if( !gfIsShutUpMouseRegionActive )
 	{
 		//Enables it so if a player clicks, he will shutup the merc
-		MSYS_EnableRegion(&gSelectedShutUpMercRegion);
+		gSelectedShutUpMercRegion.Enable();
 		gfIsShutUpMouseRegionActive = TRUE;
 	}
 

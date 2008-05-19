@@ -71,13 +71,13 @@ void EnableEditorRegion( INT8 bRegionID )
 	{
 		case BASE_TERRAIN_TILE_REGION_ID:
 		case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8:
-			MSYS_EnableRegion( &TerrainTileButtonRegion[ bRegionID ] );
+			TerrainTileButtonRegion[bRegionID].Enable();
 			break;
 		case ITEM_REGION_ID:
-			MSYS_EnableRegion( &ItemsRegion );
+			ItemsRegion.Enable();
 			break;
 		case MERC_REGION_ID:
-			MSYS_EnableRegion( &MercRegion );
+			MercRegion.Enable();
 			break;
 	}
 }
@@ -88,13 +88,13 @@ void DisableEditorRegion( INT8	bRegionID )
 	{
 		case BASE_TERRAIN_TILE_REGION_ID:
 		case 1: case 2: case 3: case 4: case 5: case 6: case 7:
-			MSYS_DisableRegion( &TerrainTileButtonRegion[ bRegionID ] );
+			TerrainTileButtonRegion[bRegionID].Disable();
 			break;
 		case ITEM_REGION_ID:
-			MSYS_DisableRegion( &ItemsRegion );
+			ItemsRegion.Disable();
 			break;
 		case MERC_REGION_ID:
-			MSYS_DisableRegion( &MercRegion );
+			MercRegion.Disable();
 			break;
 	}
 }
@@ -128,19 +128,19 @@ static void InitEditorRegions(void)
 		MSYS_DefineRegion(&TerrainTileButtonRegion[x],(INT16)(261+x*42),369,(INT16)(303+x*42),391,
 			MSYS_PRIORITY_NORMAL, 0, MSYS_NO_CALLBACK, TerrainTileButtonRegionCallback);
 		MSYS_SetRegionUserData( &TerrainTileButtonRegion[x], 0, x );
-		MSYS_DisableRegion( &TerrainTileButtonRegion[x] );
+		TerrainTileButtonRegion[x].Disable();
 	}
 	gfShowTerrainTileButtons=FALSE;
 
 	//Create the region for the items selection window.
 	MSYS_DefineRegion( &ItemsRegion, 100, 360, 540, 440, MSYS_PRIORITY_NORMAL, 0,
 		MouseMovedInItemsRegion, MouseClickedInItemsRegion);
-	MSYS_DisableRegion( &ItemsRegion );
+	ItemsRegion.Disable();
 
 	//Create the region for the merc inventory panel.
 	MSYS_DefineRegion( &MercRegion, 175, 361, 450, 460, MSYS_PRIORITY_NORMAL, 0,
 		MouseMovedInMercRegion, MouseClickedInMercRegion );
-	MSYS_DisableRegion( &MercRegion );
+	MercRegion.Disable();
 }
 
 

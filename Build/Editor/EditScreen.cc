@@ -255,7 +255,7 @@ static BOOLEAN EditModeInit(void)
 
 	//Remove the radar from the interface.
 	RemoveCurrentTacticalPanelButtons( );
-	MSYS_DisableRegion(&gRadarRegion);
+	gRadarRegion.Disable();
 
 	CreateEditorTaskbar();
 
@@ -435,7 +435,7 @@ static BOOLEAN EditModeShutdown(void)
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender( );
 
-	MSYS_EnableRegion(&gRadarRegion);
+	gRadarRegion.Enable();
 	CreateCurrentTacticalPanelButtons( );
 
 	// Make sure to turn off demo mode!

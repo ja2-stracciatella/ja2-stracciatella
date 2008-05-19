@@ -637,7 +637,7 @@ try
 				CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
 
 	//Disable the region that limits the movement of the cursor with the item
-	MSYS_DisableRegion( &gSkiInventoryMovementAreaMouseRegions );
+	gSkiInventoryMovementAreaMouseRegions.Disable();
 
 
 	//Create the mouse region for the shopkeeper's face
@@ -684,7 +684,7 @@ try
 	gfDisplayNoRoomMsg = FALSE;
 
 	//Disable the map radar region
-	MSYS_DisableRegion(&gRadarRegion);
+	gRadarRegion.Disable();
 
 	gfDoEvaluationAfterOpening = FALSE;
 
@@ -848,8 +848,7 @@ static BOOLEAN ExitShopKeeperInterface(void)
 	//Get rid of the ShopKeeper face
 	DeleteFace( giShopKeeperFaceIndex );
 
-	//Enable the map region
-	MSYS_EnableRegion(&gRadarRegion);
+	gRadarRegion.Enable();
 
 	gfSMDisableForItems = FALSE;
 
@@ -3738,7 +3737,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 		SetSkiCursor( EXTERN_CURSOR );
 
 		//Enable the region that limits the movement of the cursor with the item
-		MSYS_EnableRegion( &gSkiInventoryMovementAreaMouseRegions );
+		gSkiInventoryMovementAreaMouseRegions.Enable();
 
 		RestrictMouseCursor( &Rect );
 
@@ -3883,7 +3882,7 @@ void SetSkiCursor( UINT16	usCursor )
 		EnableAllDealersOfferSlots();
 
 		//Disable the region that limits the movement of the cursor with the item
-		MSYS_DisableRegion( &gSkiInventoryMovementAreaMouseRegions );
+		gSkiInventoryMovementAreaMouseRegions.Disable();
 	}
 
 	SetCurrentCursorFromDatabase( usCursor );
@@ -5308,13 +5307,13 @@ void StartSKIDescriptionBox(void)
 
 	for (iCnt = 0; iCnt < SKI_NUM_TRADING_INV_SLOTS; iCnt++)
 	{
-		MSYS_DisableRegion( &gPlayersOfferSlotsMouseRegions[ iCnt ] );
-		MSYS_DisableRegion( &gPlayersOfferSlotsSmallFaceMouseRegions[ iCnt ] );
+		gPlayersOfferSlotsMouseRegions[iCnt].Disable();
+		gPlayersOfferSlotsSmallFaceMouseRegions[iCnt].Disable();
 	}
 
 	if( gShopKeeperSubTitleMouseRegion.uiFlags & MSYS_REGION_EXISTS )
 	{
-		MSYS_DisableRegion( &gShopKeeperSubTitleMouseRegion );
+		gShopKeeperSubTitleMouseRegion.Disable();
 	}
 
 	RenderItemDescriptionBox( );
@@ -5352,13 +5351,13 @@ void DeleteShopKeeperItemDescBox()
 
 	for (iCnt = 0; iCnt < SKI_NUM_TRADING_INV_SLOTS; iCnt++)
 	{
-		MSYS_EnableRegion( &gPlayersOfferSlotsMouseRegions[ iCnt ] );
-		MSYS_EnableRegion( &gPlayersOfferSlotsSmallFaceMouseRegions[ iCnt ] );
+		gPlayersOfferSlotsMouseRegions[iCnt].Enable();
+		gPlayersOfferSlotsSmallFaceMouseRegions[iCnt].Enable();
 	}
 
 	if( gShopKeeperSubTitleMouseRegion.uiFlags & MSYS_REGION_EXISTS )
 	{
-		MSYS_EnableRegion( &gShopKeeperSubTitleMouseRegion );
+		gShopKeeperSubTitleMouseRegion.Enable();
 	}
 }
 
@@ -6592,12 +6591,12 @@ static void DisableAllDealersInventorySlots(void)
 
 	for (iCnt = 0; iCnt < SKI_NUM_ARMS_DEALERS_INV_SLOTS; iCnt++)
 	{
-		MSYS_DisableRegion( &gDealersInventoryMouseRegions[ iCnt ] );
+		gDealersInventoryMouseRegions[iCnt].Disable();
 
 		//if the dealer repairs
 		if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 		{
-			MSYS_DisableRegion( &gRepairmanInventorySmallFaceMouseRegions[ iCnt ] );
+			gRepairmanInventorySmallFaceMouseRegions[iCnt].Disable();
 		}
 	}
 }
@@ -6609,12 +6608,12 @@ static void EnableAllDealersInventorySlots(void)
 
 	for (iCnt = 0; iCnt < SKI_NUM_ARMS_DEALERS_INV_SLOTS; iCnt++)
 	{
-		MSYS_EnableRegion( &gDealersInventoryMouseRegions[ iCnt ] );
+		gDealersInventoryMouseRegions[iCnt].Enable();
 
 		//if the dealer repairs
 		if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 		{
-			MSYS_EnableRegion( &gRepairmanInventorySmallFaceMouseRegions[ iCnt ] );
+			gRepairmanInventorySmallFaceMouseRegions[iCnt].Enable();
 		}
 	}
 }
@@ -6626,12 +6625,12 @@ static void DisableAllDealersOfferSlots(void)
 
 	for (iCnt = 0; iCnt < SKI_NUM_TRADING_INV_SLOTS; iCnt++)
 	{
-		MSYS_DisableRegion( &gDealersOfferSlotsMouseRegions[ iCnt ] );
+		gDealersOfferSlotsMouseRegions[iCnt].Disable();
 
 		//if the dealer repairs
 		if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 		{
-			MSYS_DisableRegion( &gDealersOfferSlotsSmallFaceMouseRegions[ iCnt ] );
+			gDealersOfferSlotsSmallFaceMouseRegions[iCnt].Disable();
 		}
 	}
 }
@@ -6643,12 +6642,12 @@ static void EnableAllDealersOfferSlots(void)
 
 	for (iCnt = 0; iCnt < SKI_NUM_TRADING_INV_SLOTS; iCnt++)
 	{
-		MSYS_EnableRegion( &gDealersOfferSlotsMouseRegions[ iCnt ] );
+		gDealersOfferSlotsMouseRegions[iCnt].Enable();
 
 		//if the dealer repairs
 		if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 		{
-			MSYS_EnableRegion( &gDealersOfferSlotsSmallFaceMouseRegions[ iCnt ] );
+			gDealersOfferSlotsSmallFaceMouseRegions[iCnt].Enable();
 		}
 	}
 }

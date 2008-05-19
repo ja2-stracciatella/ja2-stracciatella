@@ -479,7 +479,7 @@ try
 		{
 			//We cannot load a game that hasnt been saved
 			if( !gbSaveGameArray[ i ] )
-				MSYS_DisableRegion( &gSelectedSaveRegion[ i ] );
+				gSelectedSaveRegion[i].Disable();
 		}
 
 		usPosY += SLG_GAP_BETWEEN_LOCATIONS;
@@ -489,7 +489,7 @@ try
 Removed so that the user can click on it and get displayed a message that the quick save slot is for the tactical screen
 	if( gfSaveGame )
 	{
-		MSYS_DisableRegion( &gSelectedSaveRegion[0] );
+		gSelectedSaveRegion[0].Disable();
 	}
 */
 

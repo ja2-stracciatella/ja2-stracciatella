@@ -4088,7 +4088,7 @@ static void SetupDoneInterface(void)
 	DetermineBandageButtonState();
 	for( i = 0; i < gpAR->ubMercs; i++ )
 	{ //So they can't retreat!
-		MSYS_DisableRegion( gpMercs[ i ].pRegion );
+		gpMercs[i].pRegion->Disable();
 	}
 }
 

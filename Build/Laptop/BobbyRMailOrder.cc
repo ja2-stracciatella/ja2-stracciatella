@@ -432,7 +432,7 @@ try
 	//s on screen.  When user clicks anywhere the graphic disappears
 	MSYS_DefineRegion( &gSelectedConfirmOrderRegion, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y , LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, MSYS_PRIORITY_HIGH+1,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectConfirmOrderRegionCallBack);
-  MSYS_DisableRegion(&gSelectedConfirmOrderRegion);
+  gSelectedConfirmOrderRegion.Disable();
 
 	//click on the shipping location to activate the drop down menu
 	MSYS_DefineRegion( &gSelectedActivateCityDroDownRegion, BOBBYR_SHIPPING_LOC_AREA_L_X, BOBBYR_SHIPPING_LOC_AREA_T_Y, BOBBYR_SHIPPING_LOC_AREA_R_X, BOBBYR_SHIPPING_LOC_AREA_B_Y, MSYS_PRIORITY_HIGH,
@@ -441,7 +441,7 @@ try
 	//click anywhere on the screen to close the window( only when the drop down window is active)
 	MSYS_DefineRegion( &gSelectedCloseDropDownRegion, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y , LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y, MSYS_PRIORITY_HIGH-1,
 							 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, SelectCloseDroDownRegionCallBack);
-  MSYS_DisableRegion(&gSelectedCloseDropDownRegion);
+	gSelectedCloseDropDownRegion.Disable();
 
 	CreateBobbyRayOrderTitle();
 
@@ -536,7 +536,7 @@ void HandleBobbyRMailOrder()
 	{
 		gfDestroyConfirmGrphiArea = FALSE;
 		gfReDrawBobbyOrder = TRUE;
-	  MSYS_DisableRegion(&gSelectedConfirmOrderRegion);
+	  gSelectedConfirmOrderRegion.Disable();
 		gfCanAcceptOrder = TRUE;
 	}
 
@@ -769,7 +769,7 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 				//Get rid of the city drop dowm, if it is being displayed
 				gubDropDownAction = BR_DROP_DOWN_DESTROY;
 
-				MSYS_EnableRegion(&gSelectedConfirmOrderRegion);
+				gSelectedConfirmOrderRegion.Enable();
 */
 			}
 		}
@@ -1145,7 +1145,7 @@ static BOOLEAN CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 									 CURSOR_LAPTOP_SCREEN, SelectScrollAreaDropDownMovementCallBack, SelectScrollAreaDropDownRegionCallBack);
 			MSYS_SetRegionUserData( &gSelectedScrollAreaDropDownRegion[ i ], 0, i);
 
-		  MSYS_EnableRegion(&gSelectedCloseDropDownRegion);
+		  gSelectedCloseDropDownRegion.Enable();
 
 			//disable the clear order and accept order buttons, (their rendering interferes with the drop down graphics)
 		  DisableButton(guiBobbyRClearOrder);
@@ -1187,7 +1187,7 @@ static BOOLEAN CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 				DrawTextToScreen(*(BobbyROrderLocations[gbSelectedCity].psCityLoc), BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//disable the r\close regiuon
-		  MSYS_DisableRegion(&gSelectedCloseDropDownRegion);
+		  gSelectedCloseDropDownRegion.Disable();
 
 			//enable the clear order and accept order buttons, (because their rendering interferes with the drop down graphics)
 			EnableButton(guiBobbyRClearOrder);
@@ -1865,7 +1865,7 @@ static void PurchaseBobbyOrder(void)
 	//Get rid of the city drop dowm, if it is being displayed
 	gubDropDownAction = BR_DROP_DOWN_DESTROY;
 
-	MSYS_EnableRegion(&gSelectedConfirmOrderRegion);
+	gSelectedConfirmOrderRegion.Enable();
 	gfRemoveItemsFromStock = TRUE;
 
 	gbSelectedCity = -1;

@@ -212,7 +212,7 @@ try
 
 		for(i=0; i<BOBBIES_NUMBER_SIGNS; i++)
 		{
-			MSYS_DisableRegion( &gSelectedBobbiesSignMenuRegion[i] );
+			gSelectedBobbiesSignMenuRegion[i].Disable();
 		}
 
 		LaptopSaveInfo.ubHaveBeenToBobbyRaysAtLeastOnceWhileUnderConstruction = BOBBYR_BEEN_TO_SITE_ONCE;

@@ -1874,8 +1874,8 @@ try
 		// ATE: Init tactical interface interface ( always to team panel )
 		//SetCurrentInterfacePanel( TEAM_PANEL );
 		// Do some things to this now that it's initialized
-		//MSYS_DisableRegion( &gViewportRegion );
-		//MSYS_DisableRegion( &gRadarRegion );
+		//gViewportRegion.Disable();
+		//gRadarRegion.Disable();
 		//Disable all faces
 		SetAllAutoFacesInactive( );
 
@@ -1983,7 +1983,7 @@ try
     {
 		  MSYS_SetCurrentCursor(SCREEN_CURSOR);
     }
-		MSYS_DisableRegion(&gMPanelRegion);
+		gMPanelRegion.Disable();
 
 		// create contract box
 		CreateContractBox( NULL );
@@ -3979,8 +3979,8 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	fLeavingMapScreen = FALSE;
 
 	SetRenderFlags( RENDER_FLAG_FULL );
-  //MSYS_EnableRegion( &gViewportRegion );
-  //MSYS_EnableRegion( &gRadarRegion );
+	//gViewportRegion.Enable();
+	//gRadarRegion.Enable();
 	// ATE: Shutdown tactical interface panel
 //	ShutdownCurrentPanel( );
 
@@ -4536,7 +4536,7 @@ void CreateDestroyMapInvButton()
   fTeamPanelDirty=TRUE;
 
 	InitInvSlotInterface(gMapScreenInvPocketXY, &gSCamoXY, MAPInvMoveCallback, MAPInvClickCallback, MAPInvMoveCamoCallback, MAPInvClickCamoCallback);
-  MSYS_EnableRegion(&gMPanelRegion);
+  gMPanelRegion.Enable();
 
 	// switch hand region help text to "Exit Inventory"
 	SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 2 ] );
@@ -4550,7 +4550,7 @@ void CreateDestroyMapInvButton()
 	 ShutdownInvSlotInterface( );
 	 fOldShowInventoryFlag=FALSE;
    fTeamPanelDirty=TRUE;
-   MSYS_DisableRegion(&gMPanelRegion);
+   gMPanelRegion.Disable();
 
 	// switch hand region help text to "Enter Inventory"
 	SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
@@ -6497,31 +6497,31 @@ static void EnableDisableTeamListRegionsAndHelpText(void)
 		if (s == NULL)
 		{
 			// disable regions in all team list columns
-			MSYS_DisableRegion( &gTeamListNameRegion[ bCharNum ] );
+			gTeamListNameRegion[bCharNum].Disable();
 #ifndef JA2DEMO
-			MSYS_DisableRegion( &gTeamListAssignmentRegion[ bCharNum ] );
-			MSYS_DisableRegion( &gTeamListLocationRegion[ bCharNum ] );
-			MSYS_DisableRegion( &gTeamListSleepRegion[ bCharNum ] );
-			MSYS_DisableRegion( &gTeamListDestinationRegion[ bCharNum ] );
-			MSYS_DisableRegion( &gTeamListContractRegion[ bCharNum ] );
+			gTeamListAssignmentRegion[bCharNum].Disable();
+			gTeamListLocationRegion[bCharNum].Disable();
+			gTeamListSleepRegion[bCharNum].Disable();
+			gTeamListDestinationRegion[bCharNum].Disable();
+			gTeamListContractRegion[bCharNum].Disable();
 #endif
 		}
 		else
 		{
 			// always enable Name and Location regions
-			MSYS_EnableRegion( &gTeamListNameRegion[ bCharNum ] );
+			gTeamListNameRegion[bCharNum].Enable();
 #ifndef JA2DEMO
-			MSYS_EnableRegion( &gTeamListLocationRegion[ bCharNum ] );
+			gTeamListLocationRegion[bCharNum].Enable();
 
 			// valid character.  If it's a vehicle, however
 			if (s->uiStatusFlags & SOLDIER_VEHICLE)
 			{
 				// Can't change assignment for vehicles
-				MSYS_DisableRegion( &gTeamListAssignmentRegion[ bCharNum ] );
+				gTeamListAssignmentRegion[bCharNum].Disable();
 			}
 			else
 			{
-				MSYS_EnableRegion( &gTeamListAssignmentRegion[ bCharNum ] );
+				gTeamListAssignmentRegion[bCharNum].Enable();
 
 				// POW or dead ?
 				if (s->bAssignment == ASSIGNMENT_POW || s->bLife == 0)
@@ -6542,25 +6542,25 @@ static void EnableDisableTeamListRegionsAndHelpText(void)
 
 			if (CanExtendContractForSoldier(s))
 			{
-				MSYS_EnableRegion( &gTeamListContractRegion[ bCharNum ] );
+				gTeamListContractRegion[bCharNum].Enable();
 			}
 			else
 			{
-				MSYS_DisableRegion( &gTeamListContractRegion[ bCharNum ] );
+				gTeamListContractRegion[bCharNum].Disable();
 			}
 
 			if (CanChangeSleepStatusForSoldier(s))
 			{
-				MSYS_EnableRegion( &gTeamListSleepRegion[ bCharNum ] );
+				gTeamListSleepRegion[bCharNum].Enable();
 			}
 			else
 			{
-				MSYS_DisableRegion( &gTeamListSleepRegion[ bCharNum ] );
+				gTeamListSleepRegion[bCharNum].Disable();
 			}
 
 			// destination region is always enabled for all valid character slots.
 			// if the character can't move at this time, then the region handler must be able to tell the player why not
-			MSYS_EnableRegion( &gTeamListDestinationRegion[ bCharNum ] );
+			gTeamListDestinationRegion[bCharNum].Enable();
 #endif
 		}
 	}

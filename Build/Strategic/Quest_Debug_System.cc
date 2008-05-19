@@ -3337,7 +3337,7 @@ static void DisableFactMouseRegions(void)
 
 	for( i=0; i< QUEST_DBS_NUM_DISPLAYED_FACTS; i++)
 	{
-		MSYS_DisableRegion( &gFactListRegion[ i ] );
+		gFactListRegion[i].Disable();
 	}
 }
 
@@ -3348,7 +3348,7 @@ static void EnableFactMouseRegions(void)
 
 	for( i=0; i< QUEST_DBS_NUM_DISPLAYED_FACTS; i++)
 	{
-		MSYS_EnableRegion( &gFactListRegion[ i ] );
+		gFactListRegion[i].Enable();
 	}
 }
 

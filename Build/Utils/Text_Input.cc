@@ -1319,7 +1319,7 @@ static void EnableTextField(UINT8 ubID)
 			{
 				if( !gpActive )
 					gpActive = curr;
-				MSYS_EnableRegion( &curr->region );
+				curr->region.Enable();
 				curr->fEnabled = TRUE;
 			}
 			else
@@ -1341,7 +1341,7 @@ void DisableTextField( UINT8 ubID )
 				SelectNextField();
 			if( curr->fEnabled )
 			{
-				MSYS_DisableRegion( &curr->region );
+				curr->region.Disable();
 				curr->fEnabled = FALSE;
 			}
 			else
@@ -1363,7 +1363,7 @@ void EnableTextFields( UINT8 ubFirstID, UINT8 ubLastID )
 				SelectNextField();
 			if( !curr->fEnabled )
 			{
-				MSYS_EnableRegion( &curr->region );
+				curr->region.Enable();
 				curr->fEnabled = TRUE;
 			}
 		}
@@ -1383,7 +1383,7 @@ void DisableTextFields( UINT8 ubFirstID, UINT8 ubLastID )
 				SelectNextField();
 			if( curr->fEnabled )
 			{
-				MSYS_DisableRegion( &curr->region );
+				curr->region.Disable();
 				curr->fEnabled = FALSE;
 			}
 		}
@@ -1399,7 +1399,7 @@ void EnableAllTextFields()
 	{
 		if( !curr->fEnabled )
 		{
-			MSYS_EnableRegion( &curr->region );
+			curr->region.Enable();
 			curr->fEnabled = TRUE;
 		}
 		curr = curr->next;
@@ -1416,7 +1416,7 @@ void DisableAllTextFields()
 	{
 		if( curr->fEnabled )
 		{
-			MSYS_DisableRegion( &curr->region );
+			curr->region.Disable();
 			curr->fEnabled = FALSE;
 		}
 		curr = curr->next;

@@ -376,40 +376,40 @@ static void UpDateIMPMainPageButtons(void)
 
 	for( iCount = 0; iCount < 4; iCount++ )
 	{
-		MSYS_DisableRegion( &pIMPMainPageMouseRegions[ iCount ]);
+		pIMPMainPageMouseRegions[iCount].Disable();
 	}
 	// enable
   switch(  iCurrentProfileMode )
 	{
 		case 0:
-		 MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 0 ]);
-		 MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 1 ]);
-		 MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 2 ]);
-		 MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 3 ]);
+		 pIMPMainPageMouseRegions[0].Enable();
+		 pIMPMainPageMouseRegions[1].Enable();
+		 pIMPMainPageMouseRegions[2].Enable();
+		 pIMPMainPageMouseRegions[3].Enable();
 		break;
 		case( 1 ):
 		 EnableButton( giIMPMainPageButton[2] );
-		 MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 1 ]);
-		 MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 2 ]);
-		 MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 3 ]);
+		 pIMPMainPageMouseRegions[1].Enable();
+		 pIMPMainPageMouseRegions[2].Enable();
+		 pIMPMainPageMouseRegions[3].Enable();
 		break;
 		case( 2 ):
 		  EnableButton( giIMPMainPageButton[3] );
-			MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 0 ]);
-		  MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 2 ]);
-		  MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 3 ]);
+			pIMPMainPageMouseRegions[0].Enable();
+		  pIMPMainPageMouseRegions[2].Enable();
+		  pIMPMainPageMouseRegions[3].Enable();
 		break;
 		case( 3 ):
 			EnableButton( giIMPMainPageButton[3] );
 		  EnableButton( giIMPMainPageButton[4] );
-			MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 0 ]);
-		  //MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 1 ]);
-		  MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 3 ]);
-
+			pIMPMainPageMouseRegions[0].Enable();
+		  //pIMPMainPageMouseRegions[1].Enable();
+		  pIMPMainPageMouseRegions[3].Enable();
 		break;
+
 		case( 4 ):
-		 //MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 1 ]);
-		 MSYS_EnableRegion( &pIMPMainPageMouseRegions[ 0 ]);
+		 //pIMPMainPageMouseRegions[1].Enable();
+		 pIMPMainPageMouseRegions[0].Enable();
 		 EnableButton( giIMPMainPageButton[3] );
 		 EnableButton( giIMPMainPageButton[4] );
 	   EnableButton( giIMPMainPageButton[5] );

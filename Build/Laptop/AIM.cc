@@ -268,7 +268,7 @@ try
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectBannerRegionCallBack);
 
 	// disable the region because only certain banners will be 'clickable'
-  MSYS_DisableRegion(&gSelectedBannerRegion);
+	gSelectedBannerRegion.Disable();
 
 	fFirstTimeIn = FALSE;
 	RenderAIM();
@@ -641,7 +641,7 @@ static void HandleAdAndWarningArea(BOOLEAN fInit, BOOLEAN fRedraw)
 	switch( gubCurrentAdvertisment )
 	{
 		case 	AIM_AD_WARNING_BOX:
-			MSYS_DisableRegion(&gSelectedBannerRegion);
+			gSelectedBannerRegion.Disable();
 			ubPreviousAdvertisment = DrawWarningBox( fInit, fRedraw );
 			break;
 
@@ -651,22 +651,22 @@ static void HandleAdAndWarningArea(BOOLEAN fInit, BOOLEAN fRedraw)
 
 		case AIM_AD_FOR_ADS:
 			// disable the region because only certain banners will be 'clickable'
-			MSYS_DisableRegion(&gSelectedBannerRegion);
+			gSelectedBannerRegion.Disable();
 			ubPreviousAdvertisment = DisplayAd( fInit, fRedraw, AIM_AD_FOR_ADS_DELAY, AIM_AD_FOR_ADS__NUM_SUBIMAGES, guiAdForAdsImages );
 			break;
 
 		case AIM_AD_INSURANCE_AD:
-		  MSYS_EnableRegion(&gSelectedBannerRegion);
+		  gSelectedBannerRegion.Enable();
 			ubPreviousAdvertisment = DisplayAd( fInit, fRedraw, AIM_AD_INSURANCE_AD_DELAY, AIM_AD_INSURANCE_AD__NUM_SUBIMAGES, guiInsuranceAdImages );
 			break;
 
 		case AIM_AD_FUNERAL_ADS:
-		  MSYS_EnableRegion(&gSelectedBannerRegion);
+		  gSelectedBannerRegion.Enable();
 			ubPreviousAdvertisment = DisplayAd( fInit, fRedraw, AIM_AD_FUNERAL_AD_DELAY, AIM_AD_FUNERAL_AD__NUM_SUBIMAGES, guiFuneralAdImages );
 			break;
 
 		case AIM_AD_BOBBY_RAY_AD:
-		  MSYS_EnableRegion(&gSelectedBannerRegion);
+		  gSelectedBannerRegion.Enable();
 //			ubPreviousAdvertisment = DisplayAd( fInit, fRedraw, AIM_AD_BOBBYR_AD_DELAY, AIM_AD_BOBBYR_AD__NUM_SUBIMAGES, guiBobbyRAdImages );
 			ubPreviousAdvertisment = DisplayBobbyRAd( fInit, fRedraw );
 			break;
@@ -686,7 +686,7 @@ static BOOLEAN DisplayFlowerAd(BOOLEAN fInit, BOOLEAN fRedraw)
 		uiLastTime = 0;
 		ubSubImage = 0;
 		ubCount = 0;
-	  MSYS_EnableRegion(&gSelectedBannerRegion);
+	  gSelectedBannerRegion.Enable();
 	}
 
 	if( ((uiCurTime - uiLastTime) > AIM_FLOWER_AD_DELAY) || fRedraw)

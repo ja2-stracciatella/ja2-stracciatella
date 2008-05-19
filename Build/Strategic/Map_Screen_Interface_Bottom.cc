@@ -581,11 +581,11 @@ static void EnableDisableMessageScrollButtonsAndRegions(void)
 
 	if( ubNumMessages <= MAX_MESSAGES_ON_MAP_BOTTOM )
 	{
-		MSYS_DisableRegion( &gMapMessageScrollBarRegion );
+		gMapMessageScrollBarRegion.Disable();
 	}
 	else
 	{
-		MSYS_EnableRegion( &gMapMessageScrollBarRegion );
+		gMapMessageScrollBarRegion.Enable();
 	}
 }
 

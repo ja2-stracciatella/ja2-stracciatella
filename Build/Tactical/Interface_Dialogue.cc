@@ -647,7 +647,7 @@ void RenderTalkingMenu()
 		// Disable mouse regions....
 		for (INT32 cnt = 0; cnt < 6; ++cnt)
 		{
-			MSYS_DisableRegion(&tp->Regions[cnt]);
+			tp->Regions[cnt].Disable();
 		}
 
 		DisableButton(tp->uiCancelButton);
@@ -659,7 +659,7 @@ void RenderTalkingMenu()
 		// Enable mouse regions....
 		for (INT32 cnt = 0; cnt < 6; ++cnt)
 		{
-			MSYS_EnableRegion(&tp->Regions[cnt]);
+			tp->Regions[cnt].Enable();
 		}
 
 		EnableButton(tp->uiCancelButton);

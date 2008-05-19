@@ -21,6 +21,18 @@
 #define _JA2_RENDER_DIRTY		// Undef this if not using the JA2 Dirty Rectangle System.
 #endif
 
+
+// Mouse Region Flags
+#define MSYS_NO_FLAGS                0x00000000
+#define MSYS_MOUSE_IN_AREA           0x00000001
+#define MSYS_REGION_EXISTS           0x00000010
+#define MSYS_REGION_ENABLED          0x00000040
+#define MSYS_FASTHELP                0x00000080
+#define MSYS_GOT_BACKGROUND          0x00000100
+#define MSYS_HAS_BACKRECT            0x00000200
+#define MSYS_FASTHELP_RESET          0x00000400
+#define MSYS_ALLOW_DISABLED_FASTHELP 0x00000800
+
 struct MOUSE_REGION;
 
 typedef void (*MOUSE_CALLBACK)(MOUSE_REGION*, INT32);
@@ -28,6 +40,9 @@ typedef void (*MOUSE_CALLBACK)(MOUSE_REGION*, INT32);
 struct MOUSE_REGION
 {
 	void ChangeCursor(UINT16 crsr);
+
+	void Enable()  { uiFlags |=  MSYS_REGION_ENABLED; }
+	void Disable() { uiFlags &= ~MSYS_REGION_ENABLED; }
 
 	void AllowDisabledRegionFastHelp(bool allow);
 
@@ -59,18 +74,6 @@ struct MOUSE_REGION
 	MOUSE_REGION* next; // List maintenance, do NOT touch these entries
 	MOUSE_REGION* prev;
 };
-
-
-// Mouse Region Flags
-#define MSYS_NO_FLAGS										0x00000000
-#define MSYS_MOUSE_IN_AREA							0x00000001
-#define MSYS_REGION_EXISTS							0x00000010
-#define MSYS_REGION_ENABLED							0x00000040
-#define MSYS_FASTHELP										0x00000080
-#define MSYS_GOT_BACKGROUND							0x00000100
-#define MSYS_HAS_BACKRECT								0x00000200
-#define MSYS_FASTHELP_RESET							0x00000400
-#define MSYS_ALLOW_DISABLED_FASTHELP		0x00000800
 
 // Mouse region priorities
 #define MSYS_PRIORITY_LOWEST		0
@@ -140,8 +143,6 @@ void MSYS_Shutdown(void);
 void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UINT16 bry,INT8 priority,
 					   UINT16 crsr,MOUSE_CALLBACK movecallback,MOUSE_CALLBACK buttoncallback);
 void MSYS_RemoveRegion(MOUSE_REGION *region);
-void MSYS_EnableRegion(MOUSE_REGION *region);
-void MSYS_DisableRegion(MOUSE_REGION *region);
 void MSYS_SetRegionUserData(MOUSE_REGION *region,INT32 index,INT32 userdata);
 INT32 MSYS_GetRegionUserData(MOUSE_REGION *region,INT32 index);
 void  MSYS_SetRegionUserPtr(MOUSE_REGION* r, void* ptr);

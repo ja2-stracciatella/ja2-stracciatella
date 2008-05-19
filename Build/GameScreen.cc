@@ -203,11 +203,8 @@ void EnterTacticalScreen(void)
 		SetCurrentInterfacePanel( (UINT8)TEAM_PANEL );
 	}
 
-	if( !gfTacticalPlacementGUIActive )
-	{
-		MSYS_EnableRegion(&gRadarRegion);
-	}
-  MSYS_EnableRegion( &gViewportRegion );
+	if (!gfTacticalPlacementGUIActive) gRadarRegion.Enable();
+	gViewportRegion.Enable();
 
 	// set default squad on sector entry
 	// ATE: moved these 2 call after initalizing the interface!
@@ -302,8 +299,8 @@ void InternalLeaveTacticalScreen( UINT32 uiNewScreen )
 	ShutdownCurrentPanel( );
 
 	//disable the radar map
-	MSYS_DisableRegion(&gRadarRegion);
-  //MSYS_DisableRegion( &gViewportRegion );
+	gRadarRegion.Disable();
+	//gViewportRegion.Disable();
 
 	// We are leaving... turn off pedning autobadage...
 	SetAutoBandagePending( FALSE );

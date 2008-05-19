@@ -326,7 +326,7 @@ void CreateSummaryWindow()
 
 	MSYS_DefineRegion( &MapRegion, MAP_LEFT, MAP_TOP, MAP_RIGHT, MAP_BOTTOM, MSYS_PRIORITY_HIGH, 0,
 		MapMoveCallback, MapClickCallback );
-	MSYS_DisableRegion( &MapRegion );
+	MapRegion.Disable();
 
 	//if( gfItemDetailsMode )
 //	{
@@ -376,7 +376,7 @@ static void ReleaseSummaryWindow(void)
 		HideButton( iSummaryButton[ SUMMARY_REAL ] );
 		HideButton( iSummaryButton[ SUMMARY_SCIFI ] );
 		HideButton( iSummaryButton[ SUMMARY_ENEMY ] );
-		MSYS_EnableRegion( &MapRegion );
+		MapRegion.Enable();
 		gfPersistantSummary = TRUE;
 		gfOverrideDirty = TRUE;
 		gfRenderSummary = TRUE;

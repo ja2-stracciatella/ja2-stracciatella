@@ -152,7 +152,7 @@ try
 
 	MSYS_DefineRegion( &gSelectedRipSignRegion, FUNERAL_CLOSED_RIP_SIGN_X, FUNERAL_CLOSED_RIP_SIGN_Y, (UINT16)(FUNERAL_CLOSED_RIP_SIGN_X + FUNERAL_CLOSED_WIDTH), (UINT16)(FUNERAL_CLOSED_RIP_SIGN_Y + FUNERAL_CLOSED_HEIGHT), MSYS_PRIORITY_HIGH+1,
 						 CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, SelectRipSignRegionCallBack );
-  MSYS_DisableRegion(&gSelectedRipSignRegion);
+	gSelectedRipSignRegion.Disable();
 
 	SetBookMark( FUNERAL_BOOKMARK );
 
@@ -257,8 +257,7 @@ static void DisplayFuneralRipTombStone(void)
   InvalidateRegion(FUNERAL_CLOSED_RIP_SIGN_X,FUNERAL_CLOSED_RIP_SIGN_Y,  FUNERAL_CLOSED_RIP_SIGN_X+FUNERAL_CLOSED_WIDTH+5, FUNERAL_CLOSED_RIP_SIGN_Y+FUNERAL_CLOSED_HEIGHT+5);
 
 	//enable the region to make the sign disappear
-  MSYS_EnableRegion(&gSelectedRipSignRegion);
-
+  gSelectedRipSignRegion.Enable();
 }
 
 
@@ -286,7 +285,7 @@ static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-	  MSYS_DisableRegion(&gSelectedRipSignRegion);
+	  gSelectedRipSignRegion.Disable();
 		fPausedReDrawScreenFlag = TRUE;
 	}
 }

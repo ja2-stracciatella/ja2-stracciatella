@@ -906,7 +906,7 @@ void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup)
 
 
 				//enable the radar map region
-				MSYS_EnableRegion(&gRadarRegion);
+				gRadarRegion.Enable();
 
 				gfSMDisableForItems = FALSE;
 
@@ -943,8 +943,7 @@ void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup)
 			DisableButton( iSMPanelButtons[ SM_DONE_BUTTON ] );
 			DisableButton( iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ] );
 
-			//disable the radar map
-			MSYS_DisableRegion(&gRadarRegion);
+			gRadarRegion.Disable();
 		}
 
 		gfAllDisabled = !fEnable;
@@ -2785,17 +2784,14 @@ static void UpdateTEAMPanel(void)
 		// OK, disable item regions.......
 		for (INT32 i = 0; i < NUM_TEAM_SLOTS; ++i)
 		{
-			MSYS_DisableRegion(&gTEAM_EnemyIndicator[i]);
-			MSYS_DisableRegion(&gTEAM_FirstHandInv[i]);
-			MSYS_DisableRegion(&gTEAM_SecondHandInv[i]);
+			gTEAM_EnemyIndicator[i].Disable();
+			gTEAM_FirstHandInv[i].Disable();
+			gTEAM_SecondHandInv[i].Disable();
 		}
 
 		//disable the radar map region
 		// If NOT in overhead map
-		if (!InOverheadMap())
-		{
-			MSYS_DisableRegion(&gRadarRegion);
-		}
+		if (!InOverheadMap()) gRadarRegion.Disable();
 	}
 	else
 	{
@@ -2803,13 +2799,12 @@ static void UpdateTEAMPanel(void)
 
 		for (INT32 i = 0; i < NUM_TEAM_SLOTS; ++i)
 		{
-			MSYS_EnableRegion(&gTEAM_EnemyIndicator[i]);
-			MSYS_EnableRegion(&gTEAM_FirstHandInv[i]);
-			MSYS_EnableRegion(&gTEAM_SecondHandInv[i]);
+			gTEAM_EnemyIndicator[i].Enable();
+			gTEAM_FirstHandInv[i].Enable();
+			gTEAM_SecondHandInv[i].Enable();
 		}
 
-		//Enable the radar map region
-		MSYS_EnableRegion(&gRadarRegion);
+		gRadarRegion.Enable();
 	}
 }
 
