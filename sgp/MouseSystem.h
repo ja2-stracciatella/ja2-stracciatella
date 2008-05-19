@@ -21,11 +21,12 @@
 #define _JA2_RENDER_DIRTY		// Undef this if not using the JA2 Dirty Rectangle System.
 #endif
 
-struct _MOUSE_REGION;
+struct MOUSE_REGION;
 
-typedef void (*MOUSE_CALLBACK)(struct _MOUSE_REGION *,INT32);	// Define MOUSE_CALLBACK type as pointer to void
+typedef void (*MOUSE_CALLBACK)(MOUSE_REGION*, INT32);
 
-typedef struct _MOUSE_REGION {
+struct MOUSE_REGION
+{
 	INT8									PriorityLevel;			// Region's Priority, set by system and/or caller
 	UINT32								uiFlags;						// Region's state flags
 	INT16									RegionTopLeftX;			// Screen area affected by this region (absolute coordinates)
@@ -51,9 +52,9 @@ typedef struct _MOUSE_REGION {
 	wchar_t*         FastHelpText;  // Text string for the FastHelp (describes buttons if left there a while)
 	BACKGROUND_SAVE* FastHelpRect;
 
-	struct _MOUSE_REGION	*next;							// List maintenance, do NOT touch these entries
-	struct _MOUSE_REGION	*prev;
-} MOUSE_REGION;
+	MOUSE_REGION* next; // List maintenance, do NOT touch these entries
+	MOUSE_REGION* prev;
+};
 
 
 // Mouse Region Flags
