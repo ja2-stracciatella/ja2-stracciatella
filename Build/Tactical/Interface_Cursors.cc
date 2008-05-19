@@ -214,7 +214,6 @@ static void DrawSnappingCursor(void);
 
 BOOLEAN DrawUICursor( )
 {
-	static BOOLEAN						fHideCursor = FALSE;
 	LEVELNODE					*pNode;
 	UINT16						usTileCursor;
 
@@ -390,20 +389,7 @@ BOOLEAN DrawUICursor( )
 
 			}
 
-
-			fHideCursor = FALSE;
-
-			if ( !fHideCursor )
-			{
-				MSYS_ChangeRegionCursor( &gViewportRegion , gUICursors[ guiCurUICursor ].usFreeCursorName );
-
-			}
-			else
-			{
-				// Hide
-				MSYS_ChangeRegionCursor( &gViewportRegion , VIDEO_NO_CURSOR );
-			}
-
+			MSYS_ChangeRegionCursor(&gViewportRegion, gUICursors[guiCurUICursor].usFreeCursorName);
 		}
 
 		if ( gUICursors[ guiCurUICursor ].uiFlags & UICURSOR_CENTERAPS )
