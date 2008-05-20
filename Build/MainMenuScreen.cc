@@ -102,19 +102,15 @@ UINT32 MainMenuScreenHandle(void)
 		else
 		{
 			SetMusicMode(MUSIC_MAIN_MENU);
+			SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 		}
 
 		guiSplashFrameFade--;
 
 		InvalidateScreen();
 		EndFrameBufferRender();
-
-		SetCurrentCursorFromDatabase(VIDEO_NO_CURSOR);
-
 		return MAINMENU_SCREEN;
 	}
-
-	SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 
 	if (gfMainMenuScreenEntry)
 	{
