@@ -32,9 +32,6 @@
 #include "ScreenIDs.h"
 
 
-#define BASE_REGION_FLAGS (MSYS_REGION_ENABLED)
-
-
 //Kris:	Nov 31, 1999 -- Added support for double clicking
 //
 //Max double click delay (in milliseconds) to be considered a double click
@@ -65,23 +62,6 @@ static MOUSE_REGION* MSYS_CurrRegion = NULL;
 static const INT16 gsFastHelpDelay = 600; // In timer ticks
 
 
-//Kris:
-//NOTE:  This doesn't really need to be here, however, it is a good indication that
-//when an error appears here, that you need to go below to the init code and initialize the
-//values there as well.  That's the only reason why I left this here.
-static MOUSE_REGION MSYS_SystemBaseRegion =
-{
-	MSYS_PRIORITY_SYSTEM,
-	BASE_REGION_FLAGS,
-	-32767, -32767, 32767, 32767,
-	0, 0, 0, 0, 0,
-	0,
-	MSYS_NO_CALLBACK, MSYS_NO_CALLBACK,
-	{ 0, 0, 0, 0 },
-	0, 0, NO_BGND_RECT,
-	NULL, NULL
-};
-
 static BOOLEAN gfRefreshUpdate = FALSE;
 
 //Kris:  December 3, 1997
@@ -95,7 +75,6 @@ static BOOLEAN gfRefreshUpdate = FALSE;
 
 
 static void MSYS_TrashRegList(void);
-static void MSYS_AddRegionToList(MOUSE_REGION* region);
 
 
 //======================================================================================================
@@ -115,36 +94,6 @@ INT32 MSYS_Init(void)
 
 	MSYS_PrevRegion = NULL;
 	MSYS_SystemInitialized = TRUE;
-
-	// Setup the system's background region
-	MSYS_SystemBaseRegion.PriorityLevel				= MSYS_PRIORITY_SYSTEM;
-	MSYS_SystemBaseRegion.uiFlags								= BASE_REGION_FLAGS;
-	MSYS_SystemBaseRegion.RegionTopLeftX			= -32767;
-	MSYS_SystemBaseRegion.RegionTopLeftY			= -32767;
-	MSYS_SystemBaseRegion.RegionBottomRightX	= 32767;
-	MSYS_SystemBaseRegion.RegionBottomRightY	= 32767;
-	MSYS_SystemBaseRegion.MouseXPos						= 0;
-	MSYS_SystemBaseRegion.MouseYPos						= 0;
-	MSYS_SystemBaseRegion.RelativeXPos				= 0;
-	MSYS_SystemBaseRegion.RelativeYPos				= 0;
-	MSYS_SystemBaseRegion.ButtonState					= 0;
-	MSYS_SystemBaseRegion.Cursor							= 0;
-	MSYS_SystemBaseRegion.user.data[0]       = 0;
-	MSYS_SystemBaseRegion.user.data[1]       = 0;
-	MSYS_SystemBaseRegion.user.data[2]       = 0;
-	MSYS_SystemBaseRegion.user.data[3]       = 0;
-	MSYS_SystemBaseRegion.MovementCallback		= MSYS_NO_CALLBACK;
-	MSYS_SystemBaseRegion.ButtonCallback			= MSYS_NO_CALLBACK;
-
-	MSYS_SystemBaseRegion.FastHelpTimer				= 0;
-	MSYS_SystemBaseRegion.FastHelpText				= 0;
-	MSYS_SystemBaseRegion.FastHelpRect				= NO_BGND_RECT;
-
-	MSYS_SystemBaseRegion.next								= NULL;
-	MSYS_SystemBaseRegion.prev								= NULL;
-
-	// Add the base region to the list
-	MSYS_AddRegionToList(&MSYS_SystemBaseRegion);
 
 	return(1);
 }
@@ -368,8 +317,6 @@ static void MSYS_UpdateMouseRegion(void)
 				prev->uiFlags &= ~MSYS_FASTHELP_RESET;
 			}
 
-			cur->FastHelpTimer = gsFastHelpDelay;
-
 			/* Force a callbacks to happen on previous region to indicate that the
 			 * mouse has left the old region */
 			if (prev->MovementCallback != NULL && prev->uiFlags & MSYS_REGION_ENABLED)
@@ -384,13 +331,14 @@ static void MSYS_UpdateMouseRegion(void)
 	{
 		if (cur != prev)
 		{
+			cur->FastHelpTimer = gsFastHelpDelay;
+
 			//Kris -- October 27, 1997
 			//Implemented gain mouse region
 			if (cur->MovementCallback != NULL)
 			{
 				if (cur->FastHelpText && !(cur->uiFlags & MSYS_FASTHELP_RESET))
 				{
-					cur->FastHelpTimer = gsFastHelpDelay;
 #ifdef _JA2_RENDER_DIRTY
 					if (cur->uiFlags & MSYS_GOT_BACKGROUND)
 					{
