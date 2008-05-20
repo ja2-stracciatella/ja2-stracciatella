@@ -1,3 +1,4 @@
+(r4169) Enable scrolling the sector inventory with the mouse wheel.
 (r4040) Fix several vanilla inconsistencies when placing the assignment dropdown menus.
 (r3952, r3955, r3957, r3965, r3966, r3967, r3968, r3969, r3971) Plug vanilla memory and file leaks (mostly in error handling).
 (r3920) Fix a vanilla string buffer overrun, occuring in the French and Italian translations, when displaying the turn message at the top in combat.

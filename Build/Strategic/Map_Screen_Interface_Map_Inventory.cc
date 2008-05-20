@@ -443,6 +443,26 @@ static void SaveSeenAndUnseenItems(void)
 }
 
 
+static void InventoryNextPage()
+{
+	if (iCurrentInventoryPoolPage < iLastInventoryPoolPage)
+	{
+		++iCurrentInventoryPoolPage;
+		fMapPanelDirty = TRUE;
+	}
+}
+
+
+static void InventoryPrevPage()
+{
+	if (iCurrentInventoryPoolPage > 0)
+	{
+		--iCurrentInventoryPoolPage;
+		fMapPanelDirty = TRUE;
+	}
+}
+
+
 // the screen mask bttn callaback...to disable the inventory and lock out the map itself
 static void MapInvenPoolScreenMaskCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
@@ -450,6 +470,14 @@ static void MapInvenPoolScreenMaskCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if( ( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP ) )
 	{
 		fShowMapInventoryPool = FALSE;
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		InventoryPrevPage();
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		InventoryNextPage();
 	}
 }
 
@@ -635,6 +663,14 @@ static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 
 		// dirty region, force update
 		fMapPanelDirty = TRUE;
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		InventoryPrevPage();
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		InventoryNextPage();
 	}
 }
 
@@ -1035,11 +1071,7 @@ static void MapInventoryPoolNextBtn(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
-		if (iCurrentInventoryPoolPage < iLastInventoryPoolPage)
-		{
-			iCurrentInventoryPoolPage++;
-			fMapPanelDirty = TRUE;
-		}
+  	InventoryNextPage();
 	}
 }
 
@@ -1048,11 +1080,7 @@ static void MapInventoryPoolPrevBtn(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {
-		if (iCurrentInventoryPoolPage > 0)
-		{
-			iCurrentInventoryPoolPage--;
-			fMapPanelDirty = TRUE;
-		}
+  	InventoryPrevPage();
 	}
 }
 
