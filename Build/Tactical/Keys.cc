@@ -1080,43 +1080,23 @@ void TrashDoorStatusArray( )
 
 
 // Returns a doors status value, NULL if not found
-DOOR_STATUS	*GetDoorStatus( INT16 sGridNo )
+DOOR_STATUS* GetDoorStatus(INT16 const sGridNo)
 {
-	UINT8	ubCnt;
-	STRUCTURE * pStructure;
-	STRUCTURE * pBaseStructure;
+	if (!gpDoorStatus) return 0;
 
-	//if there is an array
-	if( gpDoorStatus )
+	// Find the base tile for the door structure and use that gridno
+	STRUCTURE* const structure = FindStructure(sGridNo, STRUCTURE_ANYDOOR);
+	if (!structure) return 0;
+	STRUCTURE const* const base = FindBaseStructure(structure);
+	if (!base) return 0;
+
+	DOOR_STATUS* const end = gpDoorStatus + gubNumDoorStatus;
+	for (DOOR_STATUS* i = gpDoorStatus; i != end; ++i)
 	{
-		// Find the base tile for the door structure and use that gridno
-		pStructure = FindStructure( sGridNo, STRUCTURE_ANYDOOR );
-		if (pStructure)
-		{
-			pBaseStructure = FindBaseStructure( pStructure );
-		}
-		else
-		{
-			pBaseStructure = NULL;
-		}
-
-		if ( pBaseStructure == NULL )
-		{
-			return( NULL );
-		}
-
-		//Check to see if the user is adding an existing door
-		for( ubCnt=0; ubCnt<gubNumDoorStatus; ubCnt++)
-		{
-			//if this is the door
-			if( gpDoorStatus[ ubCnt ].sGridNo == pBaseStructure->sGridNo )
-			{
-				return( &( gpDoorStatus[ ubCnt ] ) );
-			}
-		}
+		if (i->sGridNo == base->sGridNo) return i;
 	}
 
-	return( NULL );
+	return 0;
 }
 
 
