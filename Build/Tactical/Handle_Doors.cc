@@ -1199,135 +1199,60 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 	return( fDoAnimation );
 }
 
-void SetDoorString( INT16 sGridNo )
+
+void SetDoorString(INT16 const sGridNo)
 {
-	DOOR		*pDoor;
-	DOOR_STATUS *		pDoorStatus;
-	STRUCTURE *			pStructure;
-
-	BOOLEAN	fTrapped = FALSE;
-
-	// Try and get a door if one exists here
-	pDoor = FindDoorInfoAtGridNo( sGridNo );
-
-	if (GetIntTileLocationText() == NULL)
+	if (!GetIntTileLocationText())
 	{
 		SetIntTileLocationText(TacticalStr[DOOR_DOOR_MOUSE_DESCRIPTION]);
-		if (pDoor != NULL)
+		DOOR const* const d = FindDoorInfoAtGridNo(sGridNo);
+		if (d != NULL)
 		{
-			// CHECK PERCEIVED VALUE
-			switch( pDoor->bPerceivedTrapped )
+			wchar_t const* state = 0;
+			if (d->bPerceivedTrapped == DOOR_PERCEIVED_TRAPPED)
 			{
-				case DOOR_PERCEIVED_TRAPPED:
-					SetIntTileLocation2Text(TacticalStr[DOOR_TRAPPED_MOUSE_DESCRIPTION]);
-					fTrapped = TRUE;
-					break;
+				state = TacticalStr[DOOR_TRAPPED_MOUSE_DESCRIPTION];
 			}
-
-			if ( !fTrapped )
+			else switch (d->bPerceivedLocked)
 			{
-				// CHECK PERCEIVED VALUE
-				switch( pDoor->bPerceivedLocked )
-				{
-					case DOOR_PERCEIVED_UNKNOWN:
-
-						break;
-
-					case DOOR_PERCEIVED_LOCKED:
-						SetIntTileLocation2Text(TacticalStr[DOOR_LOCKED_MOUSE_DESCRIPTION]);
-						break;
-
-					case DOOR_PERCEIVED_UNLOCKED:
-						SetIntTileLocation2Text(TacticalStr[DOOR_UNLOCKED_MOUSE_DESCRIPTION]);
-						break;
-
-					case DOOR_PERCEIVED_BROKEN:
-						SetIntTileLocation2Text(TacticalStr[DOOR_BROKEN_MOUSE_DESCRIPTION]);
-						break;
-				}
+				case DOOR_PERCEIVED_UNKNOWN:                                                        break;
+				case DOOR_PERCEIVED_LOCKED:   state = TacticalStr[DOOR_LOCKED_MOUSE_DESCRIPTION];   break;
+				case DOOR_PERCEIVED_UNLOCKED: state = TacticalStr[DOOR_UNLOCKED_MOUSE_DESCRIPTION]; break;
+				case DOOR_PERCEIVED_BROKEN:   state = TacticalStr[DOOR_BROKEN_MOUSE_DESCRIPTION];   break;
 			}
-
+			if (state) SetIntTileLocation2Text(state);
 		}
 	}
 
 	// ATE: If here, we try to say, opened or closed...
-	if (GetIntTileLocation2Text() == NULL)
+	if (!GetIntTileLocation2Text())
 	{
 #ifdef GERMAN
-			SetIntTileLocation2Text(TacticalStr[DOOR_DOOR_MOUSE_DESCRIPTION]);
+		SetIntTileLocation2Text(TacticalStr[DOOR_DOOR_MOUSE_DESCRIPTION]);
+#endif
 
-			// Try to get doors status here...
-			pDoorStatus = GetDoorStatus( sGridNo );
-			if ( pDoorStatus == NULL || ( pDoorStatus != NULL && pDoorStatus->ubFlags & DOOR_PERCEIVED_NOTSET ) )
-			{
-				// OK, get status based on graphic.....
-				pStructure = FindStructure( sGridNo, STRUCTURE_ANYDOOR );
-				if (pStructure)
-				{
-					if ( pStructure->fFlags & STRUCTURE_OPEN )
-					{
-						// Door is opened....
-						SetIntTileLocationText(pMessageStrings[MSG_OPENED]);
-					}
-					else
-					{
-						// Door is closed
-						SetIntTileLocationText(pMessageStrings[MSG_CLOSED]);
-					}
-				}
-			}
-			else
-			{
-				// Use percived value
-				if ( pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN )
-				{
-					// Door is opened....
-					SetIntTileLocationText(pMessageStrings[MSG_OPENED]);
-				}
-				else
-				{
-					// Door is closed
-					SetIntTileLocationText(pMessageStrings[MSG_CLOSED]);
-				}
-			}
+		// Try to get doors status here...
+		bool                     open;
+		DOOR_STATUS const* const ds = GetDoorStatus(sGridNo);
+		if (ds == NULL || ds->ubFlags & DOOR_PERCEIVED_NOTSET)
+		{
+			// OK, get status based on graphic.....
+			STRUCTURE const* const structure = FindStructure(sGridNo, STRUCTURE_ANYDOOR);
+			if (!structure) return;
+
+			open = (structure->fFlags & STRUCTURE_OPEN) != 0;
+		}
+		else
+		{
+			// Use percived value
+			open = (ds->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
+		}
+		wchar_t const* const state = open ?
+			pMessageStrings[MSG_OPENED] : pMessageStrings[MSG_CLOSED];
+#ifdef GERMAN
+		SetIntTileLocationText(state);
 #else
-
-			// Try to get doors status here...
-			pDoorStatus = GetDoorStatus( sGridNo );
-			if ( pDoorStatus == NULL || ( pDoorStatus != NULL && pDoorStatus->ubFlags & DOOR_PERCEIVED_NOTSET ) )
-			{
-				// OK, get status based on graphic.....
-				pStructure = FindStructure( sGridNo, STRUCTURE_ANYDOOR );
-				if (pStructure)
-				{
-					if ( pStructure->fFlags & STRUCTURE_OPEN )
-					{
-						// Door is opened....
-						SetIntTileLocation2Text(pMessageStrings[MSG_OPENED]);
-					}
-					else
-					{
-						// Door is closed
-						SetIntTileLocation2Text(pMessageStrings[MSG_CLOSED]);
-					}
-				}
-			}
-			else
-			{
-				// Use percived value
-				if ( pDoorStatus->ubFlags & DOOR_PERCEIVED_OPEN )
-				{
-					// Door is opened....
-					SetIntTileLocation2Text(pMessageStrings[MSG_OPENED]);
-				}
-				else
-				{
-					// Door is closed
-					SetIntTileLocation2Text(pMessageStrings[MSG_CLOSED]);
-				}
-			}
-
+		SetIntTileLocation2Text(state);
 #endif
 	}
-
 }
