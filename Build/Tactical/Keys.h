@@ -5,13 +5,13 @@
 #include "Types.h"
 
 
-typedef struct
+struct KEY
 {
 	UINT16		usItem;						// index in item table for key
 	UINT8			fFlags;						// flags...
 	UINT16		usSectorFound;		// where and
 	UINT16		usDateFound;			// when the key was found
-} KEY;
+};
 CASSERT(sizeof(KEY) == 8)
 
 
@@ -27,7 +27,7 @@ CASSERT(sizeof(KEY) == 8)
 #define LOCK_SPECIAL			5
 
 #define MAXLOCKDESCLENGTH 40
-typedef struct
+struct LOCK
 {
 	UINT8		ubEditorName[ MAXLOCKDESCLENGTH ];	// name to display in editor
 	UINT16	usKeyItem;													// key for this door uses which graphic (item #)?
@@ -35,7 +35,7 @@ typedef struct
 	UINT8		ubPickDifficulty;										// difficulty to pick such a lock
 	UINT8		ubSmashDifficulty;										// difficulty to smash such a lock
 	UINT8		ubFiller;
-} LOCK;
+};
 CASSERT(sizeof(LOCK) == 46)
 
 // Defines below for the perceived value of the door
@@ -47,7 +47,7 @@ CASSERT(sizeof(LOCK) == 46)
 #define DOOR_PERCEIVED_TRAPPED		1
 #define DOOR_PERCEIVED_UNTRAPPED	2
 
-typedef struct
+struct DOOR
 {
 	INT16			sGridNo;
 	BOOLEAN		fLocked;							// is the door locked
@@ -60,11 +60,11 @@ typedef struct
 	INT8			bPerceivedTrapped;		// See above, but with respect to traps rather than locked status
 	INT8			bLockDamage;					// Damage to the lock
 	INT8			bPadding[4];					// extra bytes
-} DOOR;
+};
 CASSERT(sizeof(DOOR) == 14)
 
 
-typedef enum
+enum DoorTrapTypes
 {
 	NO_TRAP = 0,
 	EXPLOSION,
@@ -74,17 +74,17 @@ typedef enum
 	BROTHEL_SIREN,
 	SUPER_ELECTRIC,
 	NUM_DOOR_TRAPS
-} DoorTrapTypes;
+};
 
 #define DOOR_TRAP_STOPS_ACTION		0x01
 #define DOOR_TRAP_RECURRING				0x02
 #define DOOR_TRAP_SILENT					0x04
 
 
-typedef struct
+struct DOORTRAP
 {
 	UINT8		fFlags;									// stops action?  recurring trap?
-} DOORTRAP;
+};
 
 
 //The status of the door, either open or closed
@@ -97,12 +97,12 @@ typedef struct
 
 #define   DONTSETDOORSTATUS			2
 
-typedef struct
+struct DOOR_STATUS
 {
 	INT16		sGridNo;
 	UINT8		ubFlags;
 
-} DOOR_STATUS;
+};
 CASSERT(sizeof(DOOR_STATUS) == 4)
 
 
