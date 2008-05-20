@@ -1485,7 +1485,7 @@ void UpdateCharRegionHelpText( void )
 			swprintf( sString, lengthof(sString), L"%ls: ??, %ls: ??, %ls: ??", pMapScreenStatusStrings[ 0 ], pMapScreenStatusStrings[ 1 ], pMapScreenStatusStrings[ 2 ] );
 		}
 
-		SetRegionFastHelpText( &gMapStatusBarsRegion, sString );
+		gMapStatusBarsRegion.SetFastHelpText(sString);
 
 
 		// update CONTRACT button help text
@@ -1500,31 +1500,18 @@ void UpdateCharRegionHelpText( void )
 			DisableButton( giMapContractButton );
 		}
 
-
-		if ( CanToggleSelectedCharInventory( ) )
-		{
-			// inventory
-			if( fShowInventoryFlag )
-			{
-				SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 2 ] );
-			}
-			else
-			{
-				SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
-			}
-		}
-		else	// can't toggle it, don't show any inventory help text
-		{
-			SetRegionFastHelpText( &gCharInfoHandRegion, L"" );
-		}
-
+		wchar_t const* const help =
+			!CanToggleSelectedCharInventory() ? L"" :
+			fShowInventoryFlag                ? pMiscMapScreenMouseRegionHelpText[2] :
+			                                    pMiscMapScreenMouseRegionHelpText[0];
+		gCharInfoHandRegion.SetFastHelpText(help);
 		return;
 	}
 
 	// invalid soldier
-	SetRegionFastHelpText(&gMapStatusBarsRegion, L"");
+	gMapStatusBarsRegion.SetFastHelpText(L"");
 	SetButtonFastHelpText(giMapContractButton, L"");
-	SetRegionFastHelpText(&gCharInfoHandRegion, L"");
+	gCharInfoHandRegion.SetFastHelpText(L"");
 	DisableButton(giMapContractButton);
 }
 
@@ -4139,41 +4126,26 @@ void UpdateHelpTextForMapScreenMercIcons( void )
 	if (s != NULL)
 	{
 		// if merc is an AIM merc
-		if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC)
-		{
-			SetRegionFastHelpText(&gContractIconRegion, zMarksMapScreenText[21]);
-		}
-		else
-		{
-			SetRegionFastHelpText( &(gContractIconRegion), L"" );
-		}
+		wchar_t const* const contract = s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ?
+			zMarksMapScreenText[21] : L"";
+		gContractIconRegion.SetFastHelpText(contract);
 
 		// if merc has life insurance
-		if (s->usLifeInsurance > 0)
-		{
-			SetRegionFastHelpText( &(gInsuranceIconRegion), zMarksMapScreenText[ 3 ] );
-		}
-		else
-		{
-			SetRegionFastHelpText( &(gInsuranceIconRegion), L"" );
-		}
+		wchar_t const* const insurance = s->usLifeInsurance > 0 ?
+			zMarksMapScreenText[3] : L"";
+		gInsuranceIconRegion.SetFastHelpText(insurance);
 
 		// if merc has a medical deposit
-		if (s->usMedicalDeposit > 0)
-		{
-			SetRegionFastHelpText( &(gDepositIconRegion), zMarksMapScreenText[ 12 ] );
-		}
-		else
-		{
-			SetRegionFastHelpText( &(gDepositIconRegion), L"" );
-		}
+		wchar_t const* const medical = s->usMedicalDeposit > 0 ?
+			zMarksMapScreenText[12] : L"";
+		gDepositIconRegion.SetFastHelpText(medical);
 
 		return;
 	}
 
-	SetRegionFastHelpText(&gContractIconRegion,  L"");
-	SetRegionFastHelpText(&gInsuranceIconRegion, L"");
-	SetRegionFastHelpText(&gDepositIconRegion,   L"");
+	gContractIconRegion.SetFastHelpText(L"");
+	gInsuranceIconRegion.SetFastHelpText(L"");
+	gDepositIconRegion.SetFastHelpText(L"");
 }
 
 void CreateDestroyInsuranceMouseRegionForMercs( BOOLEAN fCreate )

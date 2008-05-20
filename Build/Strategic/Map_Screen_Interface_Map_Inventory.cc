@@ -265,16 +265,14 @@ static void UpdateHelpTextForInvnentoryStashSlots(void)
 	// run through list of items in slots and update help text for mouse regions
 	for( iCounter = 0; iCounter < MAP_INVENTORY_POOL_SLOT_COUNT; iCounter++ )
 	{
-			if( pInventoryPoolList[ iCounter + iFirstSlotOnPage ].o.ubNumberOfObjects > 0 )
-			{
-				GetHelpTextForItem(pStr, lengthof(pStr), &pInventoryPoolList[iCounter + iFirstSlotOnPage].o);
-				SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ] ), pStr );
-			}
-			else
-			{
-				//OK, for each item, set dirty text if applicable!
-				SetRegionFastHelpText( &(MapInventoryPoolSlots[ iCounter ]), L"" );
-			}
+		wchar_t    const*       help = L"";
+		OBJECTTYPE const* const o    = &pInventoryPoolList[iCounter + iFirstSlotOnPage].o;
+		if  (o->ubNumberOfObjects > 0)
+		{
+			GetHelpTextForItem(pStr, lengthof(pStr), o);
+			help = pStr;
+		}
+		MapInventoryPoolSlots[iCounter].SetFastHelpText(help);
 	}
 }
 

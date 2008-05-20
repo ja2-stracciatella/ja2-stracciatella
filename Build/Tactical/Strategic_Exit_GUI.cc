@@ -331,7 +331,7 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 
 
 #ifdef JA2DEMO
-	SetRegionFastHelpText(&gExitDialog.SingleRegion, str_strategic_exit_gui_demo);
+	gExitDialog.SingleRegion.SetFastHelpText(str_strategic_exit_gui_demo);
 #endif
 
 	MSYS_DefineRegion( &(gExitDialog.AllRegion), (INT16)(gExitDialog.sX + 20), (INT16)(gExitDialog.sY + 57), (INT16)(gExitDialog.sX + 45 + 120), (INT16)(gExitDialog.sY + 57 + 12), MSYS_PRIORITY_HIGHEST,
@@ -470,40 +470,40 @@ static void UpdateSectorExitMenu(void)
 	}
 
 
-	if ( gExitDialog.fGotoSectorDisabled )
 	{
-		DisableButton( gExitDialog.uiLoadCheckButton );
-		gExitDialog.LoadRegion.Disable();
-		if( gExitDialog.fMultipleSquadsInSector && gExitDialog.fGotoSectorText && gTacticalStatus.fEnemyInSector )
-		{ //We have multiple squads in a hostile sector.  That means that we can't load the adjacent sector.
-			SetButtonFastHelpText( gExitDialog.uiLoadCheckButton, pExitingSectorHelpText[ EXIT_GUI_CANT_LEAVE_HOSTILE_SECTOR_HELPTEXT ] );
-			SetRegionFastHelpText( &gExitDialog.LoadRegion, pExitingSectorHelpText[ EXIT_GUI_CANT_LEAVE_HOSTILE_SECTOR_HELPTEXT ] );
-		}
-		else if( gExitDialog.fGotoSectorText )
-		{ //travesal is quick enough to allow the player to "warp" to the next sector and we MUST load it.
-			SetButtonFastHelpText( gExitDialog.uiLoadCheckButton, pExitingSectorHelpText[ EXIT_GUI_MUST_LOAD_ADJACENT_SECTOR_HELPTEXT ] );
-			SetRegionFastHelpText( &gExitDialog.LoadRegion, pExitingSectorHelpText[ EXIT_GUI_MUST_LOAD_ADJACENT_SECTOR_HELPTEXT ] );
+		wchar_t const* help;
+		if (gExitDialog.fGotoSectorDisabled)
+		{
+			DisableButton(gExitDialog.uiLoadCheckButton);
+			gExitDialog.LoadRegion.Disable();
+			if (!gExitDialog.fGotoSectorText)
+			{ // Traversal takes too long to warrant instant travel (we MUST go to mapscreen).
+				help = pExitingSectorHelpText[EXIT_GUI_MUST_GOTO_MAPSCREEN_HELPTEXT];
+			}
+			else if (gExitDialog.fMultipleSquadsInSector && gTacticalStatus.fEnemyInSector)
+			{ // We have multiple squads in a hostile sector.  That means that we can't load the adjacent sector.
+				help = pExitingSectorHelpText[EXIT_GUI_CANT_LEAVE_HOSTILE_SECTOR_HELPTEXT];
+			}
+			else
+			{ // Travesal is quick enough to allow the player to "warp" to the next sector and we MUST load it.
+				help = pExitingSectorHelpText[EXIT_GUI_MUST_LOAD_ADJACENT_SECTOR_HELPTEXT];
+			}
 		}
 		else
-		{ //traversal takes too long to warrant instant travel (we MUST go to mapscreen)
-			SetButtonFastHelpText( gExitDialog.uiLoadCheckButton, pExitingSectorHelpText[ EXIT_GUI_MUST_GOTO_MAPSCREEN_HELPTEXT ] );
-			SetRegionFastHelpText( &gExitDialog.LoadRegion, pExitingSectorHelpText[ EXIT_GUI_MUST_GOTO_MAPSCREEN_HELPTEXT ] );
+		{
+			EnableButton(gExitDialog.uiLoadCheckButton);
+			gExitDialog.LoadRegion.Enable();
+			if (gExitDialog.fGotoSectorText)
+			{ // Travesal is quick enough to allow the player to "warp" to the next sector and we load it.
+				help = pExitingSectorHelpText[EXIT_GUI_LOAD_ADJACENT_SECTOR_HELPTEXT];
+			}
+			else
+			{ // Traversal takes too long to warrant instant travel (we go to mapscreen)
+				help = pExitingSectorHelpText[EXIT_GUI_GOTO_MAPSCREEN_HELPTEXT];
+			}
 		}
-	}
-	else
-	{
-		EnableButton( gExitDialog.uiLoadCheckButton );
-		gExitDialog.LoadRegion.Enable();
-		if( gExitDialog.fGotoSectorText )
-		{ //travesal is quick enough to allow the player to "warp" to the next sector and we load it.
-			SetButtonFastHelpText( gExitDialog.uiLoadCheckButton, pExitingSectorHelpText[ EXIT_GUI_LOAD_ADJACENT_SECTOR_HELPTEXT ] );
-			SetRegionFastHelpText( &gExitDialog.LoadRegion, pExitingSectorHelpText[ EXIT_GUI_LOAD_ADJACENT_SECTOR_HELPTEXT ] );
-		}
-		else
-		{ //traversal takes too long to warrant instant travel (we go to mapscreen)
-			SetButtonFastHelpText( gExitDialog.uiLoadCheckButton, pExitingSectorHelpText[ EXIT_GUI_GOTO_MAPSCREEN_HELPTEXT ] );
-			SetRegionFastHelpText( &gExitDialog.LoadRegion, pExitingSectorHelpText[ EXIT_GUI_GOTO_MAPSCREEN_HELPTEXT ] );
-		}
+		SetButtonFastHelpText(gExitDialog.uiLoadCheckButton, help);
+		gExitDialog.LoadRegion.SetFastHelpText(help);
 	}
 
 	const SOLDIERTYPE* const sel = GetSelectedMan();
@@ -516,7 +516,7 @@ static void UpdateSectorExitMenu(void)
 			wchar_t str[ 256 ];
 			swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_ESCORTED_CHARACTERS_MUST_BE_ESCORTED_HELPTEXT], sel->name);
 			SetButtonFastHelpText( gExitDialog.uiSingleMoveButton, str );
-			SetRegionFastHelpText( &gExitDialog.SingleRegion, str );
+			gExitDialog.SingleRegion.SetFastHelpText(str);
 		}
 		else if (gExitDialog.single_move_will_isolate_epc != NULL)
 		{ //It has been previously determined that there are only two mercs in the squad, the selected merc
@@ -546,7 +546,7 @@ static void UpdateSectorExitMenu(void)
 				}
 			}
 			SetButtonFastHelpText( gExitDialog.uiSingleMoveButton, str);
-			SetRegionFastHelpText( &gExitDialog.SingleRegion, str);
+			gExitDialog.SingleRegion.SetFastHelpText(str);
 		}
 	}
 	else
@@ -556,30 +556,27 @@ static void UpdateSectorExitMenu(void)
 		gExitDialog.SingleRegion.Enable();
 		swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_SINGLE_TRAVERSAL_WILL_SEPARATE_SQUADS_HELPTEXT], sel->name);
 		SetButtonFastHelpText( gExitDialog.uiSingleMoveButton, str );
-		SetRegionFastHelpText( &gExitDialog.SingleRegion, str );
+		gExitDialog.SingleRegion.SetFastHelpText(str);
 	}
 
-	if ( gExitDialog.fAllMoveDisabled )
 	{
-		DisableButton( gExitDialog.uiAllMoveButton );
-		gExitDialog.AllRegion.Disable();
-		if( gExitDialog.fUncontrolledRobotInSquad )
+		wchar_t const* help;
+		if (gExitDialog.fAllMoveDisabled)
 		{
-			SetButtonFastHelpText( gExitDialog.uiAllMoveButton, gzLateLocalizedString[ 1 ] );
-			SetRegionFastHelpText( &gExitDialog.AllRegion, gzLateLocalizedString[ 1 ] );
+			DisableButton(gExitDialog.uiAllMoveButton);
+			gExitDialog.AllRegion.Disable();
+			help = gExitDialog.fUncontrolledRobotInSquad ?
+				gzLateLocalizedString[1] :
+				pExitingSectorHelpText[EXIT_GUI_ALL_MERCS_MUST_BE_TOGETHER_TO_ALLOW_HELPTEXT];
 		}
 		else
 		{
-			SetButtonFastHelpText( gExitDialog.uiAllMoveButton, pExitingSectorHelpText[ EXIT_GUI_ALL_MERCS_MUST_BE_TOGETHER_TO_ALLOW_HELPTEXT ] );
-			SetRegionFastHelpText( &gExitDialog.AllRegion, pExitingSectorHelpText[ EXIT_GUI_ALL_MERCS_MUST_BE_TOGETHER_TO_ALLOW_HELPTEXT ] );
+			EnableButton( gExitDialog.uiAllMoveButton );
+			gExitDialog.AllRegion.Enable();
+			help = pExitingSectorHelpText[EXIT_GUI_ALL_TRAVERSAL_WILL_MOVE_CURRENT_SQUAD_HELPTEXT];
 		}
-	}
-	else
-	{
-		EnableButton( gExitDialog.uiAllMoveButton );
-		gExitDialog.AllRegion.Enable();
-		SetButtonFastHelpText( gExitDialog.uiAllMoveButton, pExitingSectorHelpText[ EXIT_GUI_ALL_TRAVERSAL_WILL_MOVE_CURRENT_SQUAD_HELPTEXT ] );
-		SetRegionFastHelpText( &gExitDialog.AllRegion, pExitingSectorHelpText[ EXIT_GUI_ALL_TRAVERSAL_WILL_MOVE_CURRENT_SQUAD_HELPTEXT ] );
+		SetButtonFastHelpText(gExitDialog.uiAllMoveButton, help);
+		gExitDialog.AllRegion.SetFastHelpText(help);
 	}
 }
 

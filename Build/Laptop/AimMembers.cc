@@ -502,7 +502,7 @@ try
 							 CURSOR_WWW, SelectFaceMovementRegionCallBack, SelectFaceRegionCallBack );
 
 	//Set the fast help for the mouse region
-//	SetRegionFastHelpText( &gSelectedFaceRegion, AimMemberText[ AIM_MEMBER_CLICK_INSTRUCTIONS ] );
+//	gSelectedFaceRegion.SetFastHelpText(AimMemberText[AIM_MEMBER_CLICK_INSTRUCTIONS]);
 
 
 	// if user clicks in the area, the merc will shut up!

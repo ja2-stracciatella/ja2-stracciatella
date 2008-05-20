@@ -1575,7 +1575,7 @@ static void SetSelection(UINT8 ubNewSelection)
 		gbSaveGameSelectedLocation[ gbSelectedSaveLocation ] = SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
 
 		//reset the slots help text
-		SetRegionFastHelpText(&gSelectedSaveRegion[gbSelectedSaveLocation], L"");
+		gSelectedSaveRegion[gbSelectedSaveLocation].SetFastHelpText(L"");
 	}
 
 	gfRedrawSaveLoadScreen = TRUE;
@@ -1642,7 +1642,7 @@ static void SetSelection(UINT8 ubNewSelection)
 		gzGIOScreenText[ GIO_GAME_STYLE_TEXT + SaveGameHeader.sInitialGameOptions.fSciFi + 1 ] );
 
 	//set the slots help text
-	SetRegionFastHelpText( &gSelectedSaveRegion[ gbSelectedSaveLocation ], zMouseHelpTextString );
+	gSelectedSaveRegion[gbSelectedSaveLocation].SetFastHelpText(zMouseHelpTextString);
 	*/
 }
 

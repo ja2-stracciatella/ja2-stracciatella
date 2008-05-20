@@ -44,6 +44,8 @@ struct MOUSE_REGION
 	void Enable()  { uiFlags |=  MSYS_REGION_ENABLED; }
 	void Disable() { uiFlags &= ~MSYS_REGION_ENABLED; }
 
+	void SetFastHelpText(wchar_t const* text);
+
 	void AllowDisabledRegionFastHelp(bool allow);
 
 	INT8									PriorityLevel;			// Region's Priority, set by system and/or caller
@@ -150,8 +152,6 @@ void* MSYS_GetRegionUserPtr(MOUSE_REGION* r);
 // This function will force a re-evaluation of mous regions
 // Usually used to force change of mouse cursor if panels switch, etc
 void RefreshMouseRegions(void);
-
-void SetRegionFastHelpText( MOUSE_REGION *region, const wchar_t *szText );
 
 // Now also used by Wizardry -- DB
 void RenderFastHelp(void);

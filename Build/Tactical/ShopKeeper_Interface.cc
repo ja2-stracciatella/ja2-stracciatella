@@ -2910,8 +2910,7 @@ static void SetSkiRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pR
 	Assert( pRegion );
 
 	BuildItemHelpTextString( zHelpText, lengthof(zHelpText), pInv, ubScreenArea );
-
-	SetRegionFastHelpText( pRegion, zHelpText );
+	pRegion->SetFastHelpText(zHelpText);
 }
 
 
@@ -2933,8 +2932,7 @@ static void SetSkiFaceRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION
 	{
 		zHelpText[ 0 ] = '\0';
 	}
-
-	SetRegionFastHelpText( pRegion, zHelpText );
+	pRegion->SetFastHelpText(zHelpText);
 }
 
 
@@ -4749,12 +4747,12 @@ static void ClearArmsDealerOfferSlot(INT32 ubSlotToClear)
 	memset( &ArmsDealerOfferArea[ ubSlotToClear ], 0, sizeof( INVENTORY_IN_SLOT ) );
 
 	//Remove the mouse help text from the region
-	SetRegionFastHelpText( &gDealersOfferSlotsMouseRegions[ ubSlotToClear ], L"" );
+	gDealersOfferSlotsMouseRegions[ubSlotToClear].SetFastHelpText(L"");
 
 	//if the dealer repairs
 	if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 	{
-		SetRegionFastHelpText( &gDealersOfferSlotsSmallFaceMouseRegions[ ubSlotToClear ], L"" );
+		gDealersOfferSlotsSmallFaceMouseRegions[ubSlotToClear].SetFastHelpText(L"");
 	}
 }
 
@@ -4768,8 +4766,8 @@ static void ClearPlayersOfferSlot(INT32 ubSlotToClear)
 	memset( &PlayersOfferArea[ ubSlotToClear ], 0, sizeof( INVENTORY_IN_SLOT ) );
 
 	//Clear the text for the item
-	SetRegionFastHelpText( &gPlayersOfferSlotsMouseRegions[ ubSlotToClear ], L"" );
-	SetRegionFastHelpText( &gPlayersOfferSlotsSmallFaceMouseRegions[ ubSlotToClear ], L"" );
+	gPlayersOfferSlotsMouseRegions[ubSlotToClear].SetFastHelpText(L"");
+	gPlayersOfferSlotsSmallFaceMouseRegions[ubSlotToClear].SetFastHelpText(L"");
 
 	// if the player offer area is clear, reset flags for transaction
 	CheckAndHandleClearingOfPlayerOfferArea( );

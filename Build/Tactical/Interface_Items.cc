@@ -705,14 +705,14 @@ catch (...) { return FALSE; }
 void InitKeyRingInterface(MOUSE_CALLBACK KeyRingClickCallback)
 {
 	MSYS_DefineRegion(&gKeyRingPanel, KEYRING_X, KEYRING_Y, KEYRING_X + KEYRING_WIDTH, KEYRING_Y + KEYRING_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, KeyRingClickCallback);
-	SetRegionFastHelpText(&gKeyRingPanel, TacticalStr[KEYRING_HELP_TEXT]);
+	gKeyRingPanel.SetFastHelpText(TacticalStr[KEYRING_HELP_TEXT]);
 }
 
 
 void InitMapKeyRingInterface( MOUSE_CALLBACK KeyRingClickCallback )
 {
 	MSYS_DefineRegion(&gKeyRingPanel, MAP_KEYRING_X, MAP_KEYRING_Y, MAP_KEYRING_X + KEYRING_WIDTH, MAP_KEYRING_Y + KEYRING_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, KeyRingClickCallback);
-	SetRegionFastHelpText(&gKeyRingPanel, TacticalStr[KEYRING_HELP_TEXT]);
+	gKeyRingPanel.SetFastHelpText(TacticalStr[KEYRING_HELP_TEXT]);
 }
 
 
@@ -824,7 +824,7 @@ void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel)
 			{
 				wchar_t pStr[150];
 				GetHelpTextForItem(pStr, lengthof(pStr), &pSoldier->inv[cnt]);
-				SetRegionFastHelpText( &(gSMInvRegion[ cnt ]), pStr );
+				gSMInvRegion[cnt].SetFastHelpText(pStr);
 			}
 
 			INVRenderINVPanelItem( pSoldier, (INT16)cnt, fDirtyLevel );
@@ -1892,7 +1892,7 @@ static void SetAttachmentTooltips(void)
 	{
 		const UINT16 attachment = gpItemDescObject->usAttachItem[i];
 		const wchar_t* const tip = (attachment != NOTHING ? ItemNames[attachment] : Message[STR_ATTACHMENTS]);
-		SetRegionFastHelpText(&gItemDescAttachmentRegions[i], tip);
+		gItemDescAttachmentRegions[i].SetFastHelpText(tip);
 	}
 }
 
@@ -2007,7 +2007,7 @@ try
 			}
 			wchar_t text[SIZE_ITEM_PROS];
 			swprintf(text, lengthof(text), L"%ls %ls", label, FullItemTemp);
-			SetRegionFastHelpText(r, text);
+			r->SetFastHelpText(text);
 		}
 	}
 
@@ -3994,7 +3994,7 @@ try
 		MSYS_SetRegionUserData( &gItemPopupRegions[cnt], 0, cnt );
 
 		//OK, for each item, set dirty text if applicable!
-		SetRegionFastHelpText( &(gItemPopupRegions[ cnt ]), ItemNames[ pSoldier->inv[ ubPosition ].usItem ] );
+		gItemPopupRegions[cnt].SetFastHelpText(ItemNames[pSoldier->inv[ubPosition].usItem]);
 		gfItemPopupRegionCallbackEndFix = FALSE;
 	}
 
@@ -4865,7 +4865,7 @@ static void SetupPickupPage(INT8 bPage)
   // Clear help text!
 	for ( cnt = 0; cnt < NUM_PICKUP_SLOTS; cnt++ )
 	{
-  	SetRegionFastHelpText( &(gItemPickupMenu.Regions[cnt]), L"" );
+  	gItemPickupMenu.Regions[cnt].SetFastHelpText(L"");
   }
 
 	for ( cnt = 0; cnt < iEnd; )
@@ -4895,7 +4895,7 @@ static void SetupPickupPage(INT8 bPage)
         swprintf( pStr, lengthof(pStr), L"%d%%", sValue );
       }
 
-    	SetRegionFastHelpText( &(gItemPickupMenu.Regions[ cnt - iStart ]), pStr );
+    	gItemPickupMenu.Regions[cnt - iStart].SetFastHelpText(pStr);
 		}
 
 		cnt++;

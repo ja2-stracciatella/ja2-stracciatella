@@ -349,7 +349,7 @@ try
 		MSYS_DefineRegion(reg, pos_x + 13, pos_y, pos_x + OPT_SPACE_BETWEEN_TEXT_AND_TOGGLE_BOX + usTextWidth, pos_y + height, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectedOptionTextRegionMovementCallBack, SelectedOptionTextRegionCallBack);
 		MSYS_SetRegionUserData(reg, 0, cnt);
 
-		SetRegionFastHelpText(reg, zOptionsScreenHelpText[cnt]);
+		reg->SetFastHelpText(zOptionsScreenHelpText[cnt]);
 		SetButtonFastHelpText(check, zOptionsScreenHelpText[cnt]);
 
 		pos_y += OPT_GAP_BETWEEN_TOGGLE_BOXES;

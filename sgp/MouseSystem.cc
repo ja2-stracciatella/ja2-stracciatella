@@ -731,51 +731,36 @@ void RefreshMouseRegions( )
 
 }
 
-void SetRegionFastHelpText( MOUSE_REGION *region, const wchar_t *szText )
+
+void MOUSE_REGION::SetFastHelpText(wchar_t const* const text)
 {
-	Assert( region );
-
-	if( region->FastHelpText )
-		MemFree( region->FastHelpText );
-
-	region->FastHelpText = NULL;
-//	region->FastHelpTimer = 0;
-	if( !(region->uiFlags & MSYS_REGION_EXISTS) )
+	if (FastHelpText)
 	{
-		return;
-		//AssertMsg( 0, String( "Attempting to set fast help text, \"%ls\" to an inactive region.", szText ) );
+		MemFree(FastHelpText);
+		FastHelpText = 0;
 	}
 
-	if( !szText || !wcslen( szText ) )
-		return; //blank (or clear)
+	if (!(uiFlags & MSYS_REGION_EXISTS)) return;
 
-	// Allocate memory for the button's FastHelp text string...
-	region->FastHelpText = MALLOCN(wchar_t, wcslen(szText) + 1);
-	Assert( region->FastHelpText );
+	if (!text || text[0] == L'\0') return;
 
-	wcscpy( region->FastHelpText, szText );
+	FastHelpText = MALLOCN(wchar_t, wcslen(text) + 1);
+	Assert(FastHelpText);
+	wcscpy(FastHelpText, text);
 
-  // ATE: We could be replacing already existing, active text
-  // so let's remove the region so it be rebuilt...
+  /* ATE: We could be replacing already existing, active text so let's remove
+   * the region so it be rebuilt */
 
-	#ifdef JA2
-	if ( guiCurrentScreen != MAP_SCREEN )
-	{
-	#endif
+#ifdef JA2
+	if (guiCurrentScreen == MAP_SCREEN) return;
+#endif
 
-	#ifdef _JA2_RENDER_DIRTY
-	  if( region->uiFlags & MSYS_GOT_BACKGROUND )
-		  FreeBackgroundRectPending( region->FastHelpRect );
-  #endif
+#ifdef _JA2_RENDER_DIRTY
+	if (uiFlags & MSYS_GOT_BACKGROUND) FreeBackgroundRectPending(FastHelpRect);
+#endif
 
-  region->uiFlags &= (~MSYS_GOT_BACKGROUND);
-  region->uiFlags &= (~MSYS_FASTHELP_RESET);
-
-	#ifdef JA2
-	}
-	#endif
-
-	//region->FastHelpTimer = gsFastHelpDelay;
+	uiFlags &= ~MSYS_GOT_BACKGROUND;
+	uiFlags &= ~MSYS_FASTHELP_RESET;
 }
 
 

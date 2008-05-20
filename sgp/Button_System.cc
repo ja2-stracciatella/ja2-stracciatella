@@ -901,7 +901,7 @@ void SetButtonFastHelpText(INT32 iButton, const wchar_t* Text)
 {
 	GUI_BUTTON* b = GetButton(iButton);
 	CHECKV(b != NULL); // XXX HACK000C
-	SetRegionFastHelpText(&b->Area, Text);
+	b->Area.SetFastHelpText(Text);
 }
 
 

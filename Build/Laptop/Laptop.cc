@@ -1828,7 +1828,7 @@ static void CreateBookMarkMouseRegions(void)
 		MSYS_SetRegionUserData(&gBookmarkMouseRegions[i], 0, i);
 		MSYS_SetRegionUserData(&gBookmarkMouseRegions[i], 1, 0);
 
-		SetRegionFastHelpText(&gBookmarkMouseRegions[i], gzLaptopHelpText[BOOKMARK_TEXT_ASSOCIATION_OF_INTERNATION_MERCENARIES + LaptopSaveInfo.iBookMarkList[i]]);
+		gBookmarkMouseRegions[i].SetFastHelpText(gzLaptopHelpText[BOOKMARK_TEXT_ASSOCIATION_OF_INTERNATION_MERCENARIES + LaptopSaveInfo.iBookMarkList[i]]);
 	}
 	// now add one more for the cancel button
 	const UINT16 y = BOOK_TOP_Y + (i + 1) * (BOOK_HEIGHT + 6) + 6;
@@ -3677,5 +3677,5 @@ void CreateFileAndNewEmailIconFastHelpText(UINT32 uiHelpTextID, BOOLEAN fClearHe
 	}
 
 	const wchar_t* help = (fClearHelpText ? L"" : gzLaptopHelpText[uiHelpTextID]);
-	SetRegionFastHelpText(pRegion, help);
+	pRegion->SetFastHelpText(help);
 }

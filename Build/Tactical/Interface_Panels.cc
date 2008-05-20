@@ -1003,7 +1003,7 @@ try
 	x = MONEY_X;
 	y = dy + MONEY_Y;
 	MSYS_DefineRegion(&gSM_SELMERCMoneyRegion, x, y, x + MONEY_WIDTH, y + MONEY_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, SMInvMoneyButtonCallback);
-	SetRegionFastHelpText(&gSM_SELMERCMoneyRegion, TacticalStr[MONEY_BUTTON_HELP_TEXT]);
+	gSM_SELMERCMoneyRegion.SetFastHelpText(TacticalStr[MONEY_BUTTON_HELP_TEXT]);
 
 	// Check if mouse is in region and if so, adjust...
 	if (IsMouseInRegion(&gSM_SELMERCPanelRegion))
@@ -1253,9 +1253,10 @@ static void PrintAP(SOLDIERTYPE* s, INT16 x, INT16 y, INT16 w, INT16 h)
 
 static void SetStatsHelp(MOUSE_REGION* r, const SOLDIERTYPE* s)
 {
+	wchar_t const* help = L"";
+	wchar_t        text[200];
 	if (s->bLife != 0)
 	{
-		wchar_t text[200];
 		if (s->uiStatusFlags & SOLDIER_VEHICLE)
 		{
 			swprintf(text, lengthof(text), TacticalStr[VEHICLE_VITAL_STATS_POPUPTEXT], s->bLife, s->bLifeMax, s->bBreath, s->bBreathMax);
@@ -1269,12 +1270,9 @@ static void SetStatsHelp(MOUSE_REGION* r, const SOLDIERTYPE* s)
 			const wchar_t* Morale = GetMoraleString(s);
 			swprintf(text, lengthof(text), TacticalStr[MERC_VITAL_STATS_POPUPTEXT], s->bLife, s->bLifeMax, s->bBreath, s->bBreathMax, Morale);
 		}
-		SetRegionFastHelpText(r, text);
+		help = text;
 	}
-	else
-	{
-		SetRegionFastHelpText(r, L"");
-	}
+	r->SetFastHelpText(help);
 }
 
 
@@ -2568,7 +2566,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 					GetHelpTextForItem(help_buf, lengthof(help_buf), &s->inv[HANDPOS]);
 					help = help_buf;
 				}
-				SetRegionFastHelpText(&gTEAM_FirstHandInv[i], help);
+				gTEAM_FirstHandInv[i].SetFastHelpText(help);
 
 				// Add text for seonc hand popup
 				if (s->uiStatusFlags & (SOLDIER_PASSENGER | SOLDIER_DRIVER))
@@ -2584,7 +2582,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 					GetHelpTextForItem(help_buf, lengthof(help_buf), &s->inv[SECONDHANDPOS]);
 					help = help_buf;
 				}
-				SetRegionFastHelpText(&gTEAM_SecondHandInv[i], help);
+				gTEAM_SecondHandInv[i].SetFastHelpText(help);
 
 				// Restore AP/LIFE POSIITONS
 

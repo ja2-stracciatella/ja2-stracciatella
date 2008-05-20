@@ -1961,7 +1961,7 @@ try
 		MSYS_DefineRegion(&gMapScreenMaskRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_LOW, CURSOR_NORMAL, MSYS_NO_CALLBACK, MapScreenMarkRegionBtnCallback);
 
 		// set help text for item glow region
-		SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
+		gCharInfoHandRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[0]);
 
 		// init the timer menus
 		InitTimersForMoveMenuMouseRegions( );
@@ -2394,7 +2394,7 @@ try
 		{
 			fShowInventoryFlag = FALSE;
 			// set help text for item glow region
-			SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
+			gCharInfoHandRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[0]);
 		}
 
 
@@ -4539,7 +4539,7 @@ void CreateDestroyMapInvButton()
   gMPanelRegion.Enable();
 
 	// switch hand region help text to "Exit Inventory"
-	SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 2 ] );
+	gCharInfoHandRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[2]);
 
 	// dirty character info panel  ( Why? ARM )
 	fCharacterInfoPanelDirty=TRUE;
@@ -4553,7 +4553,7 @@ void CreateDestroyMapInvButton()
    gMPanelRegion.Disable();
 
 	// switch hand region help text to "Enter Inventory"
-	SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
+	gCharInfoHandRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[0]);
 
 	// force immediate reblit of item in HANDPOS now that it's not blitted while in inventory mode
 	fCharacterInfoPanelDirty=TRUE;
@@ -5283,7 +5283,7 @@ static void MakeRegion(MOUSE_REGION* const r, const UINT idx, const UINT16 x, co
 {
 	MSYS_DefineRegion(r, x, y, x + w, y + Y_SIZE + 1, MSYS_PRIORITY_NORMAL + 1, MSYS_NO_CURSOR, move, click);
 	MSYS_SetRegionUserData(r, 0, idx);
-	SetRegionFastHelpText(r, help);
+	r->SetFastHelpText(help);
 }
 
 
@@ -6445,7 +6445,7 @@ void ReBuildCharactersList( void )
 	// exit inventory mode
 	fShowInventoryFlag = FALSE;
 	// switch hand region help text to "Enter Inventory"
-	SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
+	gCharInfoHandRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[0]);
 }
 
 
@@ -6527,16 +6527,15 @@ static void EnableDisableTeamListRegionsAndHelpText(void)
 				if (s->bAssignment == ASSIGNMENT_POW || s->bLife == 0)
 				{
 					// "Remove Merc"
-					SetRegionFastHelpText( &gTeamListAssignmentRegion[ bCharNum ], pRemoveMercStrings[ 0 ] );
-
-					SetRegionFastHelpText( &gTeamListDestinationRegion[ bCharNum ], L"" );
+					gTeamListAssignmentRegion[bCharNum].SetFastHelpText(pRemoveMercStrings[0]);
+					gTeamListDestinationRegion[bCharNum].SetFastHelpText(L"");
 				}
 				else
 				{
 					// "Assign Merc"
-					SetRegionFastHelpText( &gTeamListAssignmentRegion[ bCharNum ], pMapScreenMouseRegionHelpText[ 1 ] );
+					gTeamListAssignmentRegion[bCharNum].SetFastHelpText(pMapScreenMouseRegionHelpText[1]);
 					// "Plot Travel Route"
-					SetRegionFastHelpText( &gTeamListDestinationRegion[ bCharNum ], pMapScreenMouseRegionHelpText[ 2 ] );
+					gTeamListDestinationRegion[bCharNum].SetFastHelpText(pMapScreenMouseRegionHelpText[2]);
 				}
 			}
 
@@ -7182,7 +7181,7 @@ static void CreateDestroyTrashCanRegion(void)
     giMapInvDoneButton = QuickCreateButtonImg("INTERFACE/done_button2.sti", -1, 0, -1, 1, -1, INV_BTN_X, INV_BTN_Y, MSYS_PRIORITY_HIGHEST - 1, DoneInventoryMapBtnCallback);
 
 		SetButtonFastHelpText( giMapInvDoneButton ,pMiscMapScreenMouseRegionHelpText[ 2 ] );
-		SetRegionFastHelpText( &gTrashCanRegion, pMiscMapScreenMouseRegionHelpText[ 1 ] );
+		gTrashCanRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[1]);
 
 		InitMapKeyRingInterface( KeyRingItemPanelButtonCallback );
 
@@ -8128,7 +8127,7 @@ static void CheckForInventoryModeCancellation(void)
 			if ( fShowInventoryFlag )
 			{
 				fShowInventoryFlag = FALSE;
-				SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
+				gCharInfoHandRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[0]);
 				fTeamPanelDirty = TRUE;
 			}
 
@@ -9505,14 +9504,10 @@ static void RequestToggleMercInventoryPanel(void)
 		fShowInventoryFlag = !fShowInventoryFlag;
 
 		// set help text for item glow region
-		if( fShowInventoryFlag )
-		{
-			SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 2 ] );
-		}
-		else
-		{
-			SetRegionFastHelpText( &gCharInfoHandRegion, pMiscMapScreenMouseRegionHelpText[ 0 ] );
-		}
+		wchar_t const* const help = fShowInventoryFlag ?
+			pMiscMapScreenMouseRegionHelpText[2] :
+			pMiscMapScreenMouseRegionHelpText[0];
+		gCharInfoHandRegion.SetFastHelpText(help);
 	}
 
 	fTeamPanelDirty = TRUE;

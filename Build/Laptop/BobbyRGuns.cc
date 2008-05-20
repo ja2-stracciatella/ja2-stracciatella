@@ -1081,7 +1081,7 @@ static void CreateMouseRegionForBigImage(UINT16 usPosY, const UINT8 ubCount, con
 		else
 			zItemName[0] = '\0';
 
-		SetRegionFastHelpText( &gSelectedBigImageRegion[ i ], zItemName );
+		gSelectedBigImageRegion[i].SetFastHelpText(zItemName);
 
 		usPosY += BOBBYR_GRID_OFFSET;
 	}

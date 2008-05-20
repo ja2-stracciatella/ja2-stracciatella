@@ -873,14 +873,9 @@ void CreateMouseRegionForPauseOfClock(void)
 
 		fClockMouseRegionCreated = TRUE;
 
-		if (!gfGamePaused)
-		{
-			SetRegionFastHelpText( &gClockMouseRegion, pPausedGameText[ 2 ] );
-		}
-		else
-		{
-			SetRegionFastHelpText( &gClockMouseRegion, pPausedGameText[ 1 ] );
-		}
+		wchar_t const* const help = gfGamePaused ?
+			pPausedGameText[2] : pPausedGameText[1];
+		gClockMouseRegion.SetFastHelpText(help);
 	}
 }
 
@@ -975,7 +970,7 @@ static void CreateDestroyScreenMaskForPauseGame(void)
 		RemoveMouseRegionForPauseOfClock( );
 		CreateMouseRegionForPauseOfClock();
 
-		SetRegionFastHelpText( &gClockMouseRegion, pPausedGameText[ 1 ] );
+		gClockMouseRegion.SetFastHelpText(pPausedGameText[1]);
 
 		fMapScreenBottomDirty = TRUE;
 
