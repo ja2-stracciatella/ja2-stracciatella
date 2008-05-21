@@ -1589,6 +1589,39 @@ static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, BOOLEAN h
 }
 
 
+static SOLDIERCELL* MakeEnemyTroops(SOLDIERCELL* cell, size_t n, AUTORESOLVE_STRUCT* const ar, SOLDIERTYPE* (*create)(void), UINT16 const face, wchar_t const* const name)
+{
+	for (; n != 0; --n, ++cell)
+	{
+		SOLDIERTYPE* const s     = create();
+		cell->pSoldier           = s;
+		cell->uiVObjectID        = ar->iFaces;
+		// Only elite troops have women
+		cell->usIndex            = s->ubBodyType == REGFEMALE ? ELITEF_FACE : face;
+		s->sSectorX              = ar->ubSectorX;
+		s->sSectorY              = ar->ubSectorY;
+		wcslcpy(s->name, name, lengthof(s->name));
+	}
+	return cell;
+}
+
+
+static SOLDIERCELL* MakeCreatures(SOLDIERCELL* cell, size_t n, AUTORESOLVE_STRUCT* const ar, INT8 const body_type, UINT16 const face)
+{
+	for (; n != 0; --n, ++cell)
+	{
+		SOLDIERTYPE* const s = TacticalCreateCreature(body_type);
+		cell->pSoldier       = s;
+		cell->uiVObjectID    = ar->iFaces;
+		cell->usIndex        = face;
+		s->sSectorX          = ar->ubSectorX;
+		s->sSectorY          = ar->ubSectorY;
+		wcslcpy(s->name, gpStrategicString[STR_AR_CREATURE_NAME], lengthof(s->name));
+	}
+	return cell;
+}
+
+
 static void AcceptSurrenderCallback(GUI_BUTTON* btn, INT32 reason);
 static void BandageButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void DoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
@@ -1602,231 +1635,134 @@ static void RetreatButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 static void CreateAutoResolveInterface(void)
 {
-	INT32 i, index;
-	UINT8 ubGreenMilitia, ubRegMilitia, ubEliteMilitia;
-	//Setup new autoresolve blanket interface.
-	MSYS_DefineRegion(&gpAR->AutoResolveRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 1, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
-	gpAR->fRenderAutoResolve = TRUE;
-	gpAR->fExitAutoResolve = FALSE;
+	AUTORESOLVE_STRUCT* const ar = gpAR;
+
+	// Setup new autoresolve blanket interface.
+	MSYS_DefineRegion(&ar->AutoResolveRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 1, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	ar->fRenderAutoResolve = TRUE;
+	ar->fExitAutoResolve   = FALSE;
 
 	//Load the general panel image pieces, to be combined to make the dynamically sized window.
-	gpAR->iPanelImages = AddVideoObjectFromFile("Interface/AutoResolve.sti");
+	ar->iPanelImages = AddVideoObjectFromFile("Interface/AutoResolve.sti");
 
-	//Load the button images file, and assign it to the first button.
-	/* OLD BEFORE THE MEDICAL BUTTON WAS ADDED
-	gpAR->iButtonImage[ PAUSE_BUTTON ] = LoadButtonImage( "Interface/AutoBtns.sti", -1, 0, -1, 6, -1 );
-	if( gpAR->iButtonImage[ PAUSE_BUTTON ] == -1 )
+	// Load the button images file, and assign it to the first button.
+	BUTTON_PICS* const btn_pics = LoadButtonImage("Interface/AutoBtns.sti", -1, 0, -1, 7, -1);
+	AssertMsg(btn_pics, "Failed to load Interface/AutoBtns.sti");
+	ar->iButtonImage[PAUSE_BUTTON]    = btn_pics;
+	// Have the other buttons hook into the first button containing the images.
+	ar->iButtonImage[PLAY_BUTTON]     = UseLoadedButtonImage(btn_pics, -1,  1, -1,  8, -1);
+	ar->iButtonImage[FAST_BUTTON]     = UseLoadedButtonImage(btn_pics, -1,  2, -1,  9, -1);
+	ar->iButtonImage[FINISH_BUTTON]   = UseLoadedButtonImage(btn_pics, -1,  3, -1, 10, -1);
+	ar->iButtonImage[YES_BUTTON]      = UseLoadedButtonImage(btn_pics, -1,  4, -1, 11, -1);
+	ar->iButtonImage[NO_BUTTON]       = UseLoadedButtonImage(btn_pics, -1,  5, -1, 12, -1);
+	ar->iButtonImage[BANDAGE_BUTTON]  = UseLoadedButtonImage(btn_pics, -1,  6, -1, 13, -1);
+	ar->iButtonImage[RETREAT_BUTTON]  = UseLoadedButtonImage(btn_pics, -1, 14, -1, 15, -1);
+	ar->iButtonImage[DONEWIN_BUTTON]  = UseLoadedButtonImage(btn_pics, -1, 14, -1, 15, -1);
+	ar->iButtonImage[DONELOSE_BUTTON] = UseLoadedButtonImage(btn_pics, -1, 16, -1, 17, -1);
+
+	// Load the generic faces for civs and enemies
+	SGPVObject* const faces = AddVideoObjectFromFile("Interface/SmFaces.sti");
+	ar->iFaces = faces;
+	SGPPaletteEntry const* const pal = faces->Palette();
+	faces->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+	faces->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
+
+	// Add the battle over panels
+	ar->iIndent = AddVideoObjectFromFile("Interface/indent.sti");
+
+	// Add all the faces now
+	for (INT32 i = 0; i < ar->ubMercs; ++i)
 	{
-		AssertMsg( 0, "Failed to load Interface/AutoBtns.sti" );
-	}
-
-	//Have the other buttons hook into the first button containing the images.
-	gpAR->iButtonImage[ PLAY_BUTTON ]			= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 1, -1, 7, -1 );
-	gpAR->iButtonImage[ FAST_BUTTON ]			= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 2, -1, 8, -1 );
-	gpAR->iButtonImage[ FINISH_BUTTON ]		= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 3, -1, 9, -1 );
-	gpAR->iButtonImage[ YES_BUTTON ]			= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 4, -1, 10, -1 );
-	gpAR->iButtonImage[ NO_BUTTON ]				= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 5, -1, 11, -1 );
-	gpAR->iButtonImage[ RETREAT_BUTTON ]	= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 12, -1, 13, -1 );
-	gpAR->iButtonImage[ DONE_BUTTON ]			= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 14, -1, 15, -1 );
-	*/
-	gpAR->iButtonImage[ PAUSE_BUTTON ] = LoadButtonImage( "Interface/AutoBtns.sti", -1, 0, -1, 7, -1 );
-	if (gpAR->iButtonImage[PAUSE_BUTTON] == NULL)
-	{
-		AssertMsg( 0, "Failed to load Interface/AutoBtns.sti" );
-	}
-
-	//Have the other buttons hook into the first button containing the images.
-	gpAR->iButtonImage[ PLAY_BUTTON ]			= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 1, -1, 8, -1 );
-	gpAR->iButtonImage[ FAST_BUTTON ]			= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 2, -1, 9, -1 );
-	gpAR->iButtonImage[ FINISH_BUTTON ]		= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 3, -1, 10, -1 );
-	gpAR->iButtonImage[ YES_BUTTON ]			= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 4, -1, 11, -1 );
-	gpAR->iButtonImage[ NO_BUTTON ]				= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 5, -1, 12, -1 );
-	gpAR->iButtonImage[ BANDAGE_BUTTON ]	= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 6, -1, 13, -1 );
-	gpAR->iButtonImage[ RETREAT_BUTTON ]	= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 14, -1, 15, -1 );
-	gpAR->iButtonImage[ DONEWIN_BUTTON ]	= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 14, -1, 15, -1 );
-	gpAR->iButtonImage[ DONELOSE_BUTTON ]	= UseLoadedButtonImage( gpAR->iButtonImage[ PAUSE_BUTTON ], -1, 16, -1, 17, -1 );
-
-	//Load the generic faces for civs and enemies
-	gpAR->iFaces = AddVideoObjectFromFile("Interface/SmFaces.sti");
-	SGPVObject* const hVObject = gpAR->iFaces;
-	if (hVObject != NULL)
-	{
-		SGPPaletteEntry const* const pal = hVObject->Palette();
-		hVObject->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
-		hVObject->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
-	}
-
-	//Add the battle over panels
-	gpAR->iIndent = AddVideoObjectFromFile("Interface/indent.sti");
-
-	//add all the faces now
-	for( i = 0; i < gpAR->ubMercs; i++ )
-	{
+		SOLDIERCELL* const cell = &gpMercs[i];
 		//Load the face
 		SGPFILENAME ImageFile;
-		sprintf(ImageFile, "Faces/65Face/%02d.sti", gMercProfiles[gpMercs[i].pSoldier->ubProfile].ubFaceIndex);
+		sprintf(ImageFile, "Faces/65Face/%02d.sti", GetProfile(cell->pSoldier->ubProfile)->ubFaceIndex);
+		SGPVObject* face;
 		try
 		{
-			gpMercs[i].uiVObjectID = AddVideoObjectFromFile(ImageFile);
+			face = AddVideoObjectFromFile(ImageFile);
 		}
 		catch (...)
 		{
-			gpMercs[i].uiVObjectID = AddVideoObjectFromFile("Faces/65Face/speck.sti");
+			face = AddVideoObjectFromFile("Faces/65Face/speck.sti");
 		}
-		SGPVObject* const hVObject = gpMercs[i].uiVObjectID;
-		if (hVObject != NULL)
-		{
-			SGPPaletteEntry const* const pal = hVObject->Palette();
-			hVObject->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
-			hVObject->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
-		}
+		cell->uiVObjectID = face;
+		SGPPaletteEntry const* const pal = face->Palette();
+		face->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+		face->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
 	}
 
-	ubEliteMilitia = MilitiaInSectorOfRank( gpAR->ubSectorX, gpAR->ubSectorY, ELITE_MILITIA );
-	ubRegMilitia = MilitiaInSectorOfRank( gpAR->ubSectorX, gpAR->ubSectorY, REGULAR_MILITIA );
-	ubGreenMilitia = MilitiaInSectorOfRank( gpAR->ubSectorX, gpAR->ubSectorY, GREEN_MILITIA );
-	while( ubEliteMilitia + ubRegMilitia + ubGreenMilitia < gpAR->ubCivs )
+	UINT8 n_militia_elite = MilitiaInSectorOfRank(ar->ubSectorX, ar->ubSectorY, ELITE_MILITIA);
+	UINT8 n_militia_reg   = MilitiaInSectorOfRank(ar->ubSectorX, ar->ubSectorY, REGULAR_MILITIA);
+	UINT8 n_militia_green = MilitiaInSectorOfRank(ar->ubSectorX, ar->ubSectorY, GREEN_MILITIA);
+	while (n_militia_elite + n_militia_reg + n_militia_green < ar->ubCivs)
 	{
-		switch( PreRandom( 3 ) )
+		switch (PreRandom(3))
 		{
-			case 0: ubEliteMilitia++;	break;
-			case 1:	ubRegMilitia++;		break;
-			case 2:	ubGreenMilitia++;	break;
+			case 0: ++n_militia_elite; break;
+			case 1:	++n_militia_reg;   break;
+			case 2:	++n_militia_green; break;
 		}
 	}
-	for( i = 0; i < gpAR->ubCivs; i++ )
+	for (INT32 i = 0; i < ar->ubCivs; ++i)
 	{
 		// reset counter of how many mortars this team has rolled
 		ResetMortarsOnTeamCount();
 
-		if( i < ubEliteMilitia )
+		SOLDIERTYPE*       s;
+		UINT16             idx;
+		if (i < n_militia_elite)
 		{
-			gpCivs[i].pSoldier = TacticalCreateMilitia( SOLDIER_CLASS_ELITE_MILITIA );
-			if( gpCivs[i].pSoldier->ubBodyType == REGFEMALE )
-			{
-				gpCivs[i].usIndex = MILITIA3F_FACE;
-			}
-			else
-			{
-				gpCivs[i].usIndex = MILITIA3_FACE;
-			}
+			s   = TacticalCreateMilitia(SOLDIER_CLASS_ELITE_MILITIA);
+			idx = s->ubBodyType == REGFEMALE ? MILITIA3F_FACE : MILITIA3_FACE;
 		}
-		else if( i < ubRegMilitia + ubEliteMilitia )
+		else if (i < n_militia_reg + n_militia_elite)
 		{
-			gpCivs[i].pSoldier = TacticalCreateMilitia( SOLDIER_CLASS_REG_MILITIA );
-			if( gpCivs[i].pSoldier->ubBodyType == REGFEMALE )
-			{
-				gpCivs[i].usIndex = MILITIA2F_FACE;
-			}
-			else
-			{
-				gpCivs[i].usIndex = MILITIA2_FACE;
-			}
+			s   = TacticalCreateMilitia(SOLDIER_CLASS_REG_MILITIA);
+			idx = s->ubBodyType == REGFEMALE ? MILITIA2F_FACE : MILITIA2_FACE;
 		}
-		else if( i < ubGreenMilitia + ubRegMilitia + ubEliteMilitia )
+		else if (i < n_militia_green + n_militia_reg + n_militia_elite)
 		{
-			gpCivs[i].pSoldier = TacticalCreateMilitia( SOLDIER_CLASS_GREEN_MILITIA );
-			if( gpCivs[i].pSoldier->ubBodyType == REGFEMALE )
-			{
-				gpCivs[i].usIndex = MILITIA1F_FACE;
-			}
-			else
-			{
-				gpCivs[i].usIndex = MILITIA1_FACE;
-			}
+			s   = TacticalCreateMilitia(SOLDIER_CLASS_GREEN_MILITIA);
+			idx = s->ubBodyType == REGFEMALE ? MILITIA1F_FACE : MILITIA1_FACE;
 		}
 		else
 		{
-			AssertMsg( 0, "Attempting to illegally create a militia soldier." );
+			AssertMsg(0, "Attempting to illegally create a militia soldier.");
+			s   = 0;
+			idx = 0;
 		}
-		if( !gpCivs[ i ].pSoldier )
-		{
-			AssertMsg( 0, "Failed to create militia soldier for autoresolve." );
-		}
-		gpCivs[i].uiVObjectID = gpAR->iFaces;
-		gpCivs[i].pSoldier->sSectorX = gpAR->ubSectorX;
-		gpCivs[i].pSoldier->sSectorY = gpAR->ubSectorY;
-		wcslcpy(gpCivs[i].pSoldier->name, gpStrategicString[STR_AR_MILITIA_NAME], lengthof(gpCivs[i].pSoldier->name));
+		SOLDIERCELL* const cell = &gpCivs[i];
+		cell->pSoldier    = s;
+		cell->usIndex     = idx;
+		cell->uiVObjectID = ar->iFaces;
+
+		AssertMsg(s, "Failed to create militia soldier for autoresolve.");
+		s->sSectorX = ar->ubSectorX;
+		s->sSectorY = ar->ubSectorY;
+		wcslcpy(s->name, gpStrategicString[STR_AR_MILITIA_NAME], lengthof(s->name));
 	}
-	if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
+
+	if (gubEnemyEncounterCode != CREATURE_ATTACK_CODE)
 	{
-		for( i = 0, index = 0; i < gpAR->ubElites; i++, index++ )
-		{
-			gpEnemies[index].pSoldier = TacticalCreateEliteEnemy();
-			gpEnemies[index].uiVObjectID = gpAR->iFaces;
-			if( gpEnemies[i].pSoldier->ubBodyType == REGFEMALE )
-			{
-				gpEnemies[index].usIndex = ELITEF_FACE;
-			}
-			else
-			{
-				gpEnemies[index].usIndex = ELITE_FACE;
-			}
-			gpEnemies[index].pSoldier->sSectorX = gpAR->ubSectorX;
-			gpEnemies[index].pSoldier->sSectorY = gpAR->ubSectorY;
-			wcslcpy(gpEnemies[index].pSoldier->name, gpStrategicString[STR_AR_ELITE_NAME], lengthof(gpEnemies[index].pSoldier->name));
-		}
-		for( i = 0; i < gpAR->ubTroops; i++, index++ )
-		{
-			gpEnemies[index].pSoldier = TacticalCreateArmyTroop();
-			gpEnemies[index].uiVObjectID = gpAR->iFaces;
-			gpEnemies[index].usIndex = TROOP_FACE;
-			gpEnemies[index].pSoldier->sSectorX = gpAR->ubSectorX;
-			gpEnemies[index].pSoldier->sSectorY = gpAR->ubSectorY;
-			wcslcpy(gpEnemies[index].pSoldier->name, gpStrategicString[STR_AR_TROOP_NAME], lengthof(gpEnemies[index].pSoldier->name));
-		}
-		for( i = 0; i < gpAR->ubAdmins; i++, index++ )
-		{
-			gpEnemies[index].pSoldier = TacticalCreateAdministrator();
-			gpEnemies[index].uiVObjectID = gpAR->iFaces;
-			gpEnemies[index].usIndex = ADMIN_FACE;
-			gpEnemies[index].pSoldier->sSectorX = gpAR->ubSectorX;
-			gpEnemies[index].pSoldier->sSectorY = gpAR->ubSectorY;
-			wcslcpy(gpEnemies[index].pSoldier->name, gpStrategicString[STR_AR_ADMINISTRATOR_NAME], lengthof(gpEnemies[index].pSoldier->name));
-		}
+		SOLDIERCELL* cell = gpEnemies;
+		cell = MakeEnemyTroops(cell, ar->ubElites, ar, TacticalCreateEliteEnemy,    ELITE_FACE, gpStrategicString[STR_AR_ELITE_NAME]);
+		cell = MakeEnemyTroops(cell, ar->ubTroops, ar, TacticalCreateArmyTroop,     TROOP_FACE, gpStrategicString[STR_AR_TROOP_NAME]);
+		cell = MakeEnemyTroops(cell, ar->ubAdmins, ar, TacticalCreateAdministrator, ADMIN_FACE, gpStrategicString[STR_AR_ADMINISTRATOR_NAME]);
 		AssociateEnemiesWithStrategicGroups();
 	}
 	else
 	{
-		for( i = 0, index = 0; i < gpAR->ubAFCreatures; i++, index++ )
-		{
-			gpEnemies[index].pSoldier = TacticalCreateCreature( ADULTFEMALEMONSTER );
-			gpEnemies[index].uiVObjectID = gpAR->iFaces;
-			gpEnemies[index].usIndex = AF_CREATURE_FACE;
-			gpEnemies[index].pSoldier->sSectorX = gpAR->ubSectorX;
-			gpEnemies[index].pSoldier->sSectorY = gpAR->ubSectorY;
-			wcslcpy(gpEnemies[index].pSoldier->name, gpStrategicString[STR_AR_CREATURE_NAME], lengthof(gpEnemies[index].pSoldier->name));
-		}
-		for( i = 0; i < gpAR->ubAMCreatures; i++, index++ )
-		{
-			gpEnemies[index].pSoldier = TacticalCreateCreature( AM_MONSTER );
-			gpEnemies[index].uiVObjectID = gpAR->iFaces;
-			gpEnemies[index].usIndex = AM_CREATURE_FACE;
-			gpEnemies[index].pSoldier->sSectorX = gpAR->ubSectorX;
-			gpEnemies[index].pSoldier->sSectorY = gpAR->ubSectorY;
-			wcslcpy(gpEnemies[index].pSoldier->name, gpStrategicString[STR_AR_CREATURE_NAME], lengthof(gpEnemies[index].pSoldier->name));
-		}
-		for( i = 0; i < gpAR->ubYFCreatures; i++, index++ )
-		{
-			gpEnemies[index].pSoldier = TacticalCreateCreature( YAF_MONSTER );
-			gpEnemies[index].uiVObjectID = gpAR->iFaces;
-			gpEnemies[index].usIndex = YF_CREATURE_FACE;
-			gpEnemies[index].pSoldier->sSectorX = gpAR->ubSectorX;
-			gpEnemies[index].pSoldier->sSectorY = gpAR->ubSectorY;
-			wcslcpy(gpEnemies[index].pSoldier->name, gpStrategicString[STR_AR_CREATURE_NAME], lengthof(gpEnemies[index].pSoldier->name));
-		}
-		for( i = 0; i < gpAR->ubYMCreatures; i++, index++ )
-		{
-			gpEnemies[index].pSoldier = TacticalCreateCreature( YAM_MONSTER );
-			gpEnemies[index].uiVObjectID = gpAR->iFaces;
-			gpEnemies[index].usIndex = YM_CREATURE_FACE;
-			gpEnemies[index].pSoldier->sSectorX = gpAR->ubSectorX;
-			gpEnemies[index].pSoldier->sSectorY = gpAR->ubSectorY;
-			wcslcpy(gpEnemies[index].pSoldier->name, gpStrategicString[STR_AR_CREATURE_NAME], lengthof(gpEnemies[index].pSoldier->name));
-		}
+		SOLDIERCELL* cell = gpEnemies;
+		cell = MakeCreatures(cell, ar->ubAFCreatures, ar, ADULTFEMALEMONSTER, AF_CREATURE_FACE);
+		cell = MakeCreatures(cell, ar->ubAMCreatures, ar, AM_MONSTER,         AM_CREATURE_FACE);
+		cell = MakeCreatures(cell, ar->ubYFCreatures, ar, YAF_MONSTER,        YF_CREATURE_FACE);
+		cell = MakeCreatures(cell, ar->ubYMCreatures, ar, YAM_MONSTER,        YM_CREATURE_FACE);
 	}
 
-	if( gpAR->ubSectorX == gWorldSectorX && gpAR->ubSectorY == gWorldSectorY && !gbWorldSectorZ )
+	if (ar->ubSectorX  == gWorldSectorX &&
+			ar->ubSectorY  == gWorldSectorY &&
+			gbWorldSectorZ == 0)
 	{
 		CheckAndHandleUnloadingOfCurrentWorld();
 	}
@@ -1835,32 +1771,32 @@ static void CreateAutoResolveInterface(void)
 		gfBlitBattleSectorLocator = FALSE;
 	}
 
-	//Build the interface buffer, and blit the "shaded" background.  This info won't
-	//change from now on, but will be used to restore text.
+	/* Build the interface buffer, and blit the "shaded" background.  This info
+	 * won't change from now on, but will be used to restore text. */
 	BuildInterfaceBuffer();
-	BltVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, NULL);
+	BltVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, 0);
 
-	//If we are bumping up the interface, then also use that piece of info to
-	//move the buttons up by the same amount.
-	gpAR->bVerticalOffset = (SCREEN_HEIGHT - gpAR->sHeight) / 2 > 120 ? -40 : 0;
+	/* If we are bumping up the interface, then also use that piece of info to
+	 * move the buttons up by the same amount. */
+	ar->bVerticalOffset = (SCREEN_HEIGHT - ar->sHeight) / 2 > 120 ? -40 : 0;
 
-	const INT16 dx = gpAR->sCenterStartX;
-	const INT16 dy = gpAR->bVerticalOffset + SCREEN_HEIGHT / 2;
+	const INT16 dx = ar->sCenterStartX;
+	const INT16 dy = ar->bVerticalOffset + SCREEN_HEIGHT / 2;
 
-	//Create the buttons -- subject to relocation
-	MakeButton(PLAY_BUTTON,     dx + 11, dy,      PlayButtonCallback,      FALSE, NULL);
-	MakeButton(FAST_BUTTON,     dx + 51, dy,      FastButtonCallback,      FALSE, NULL);
-	MakeButton(FINISH_BUTTON,   dx + 91, dy,      FinishButtonCallback,    FALSE, NULL);
-	MakeButton(PAUSE_BUTTON,    dx + 11, dy + 34, PauseButtonCallback,     FALSE, NULL);
+	// Create the buttons -- subject to relocation
+	MakeButton(PLAY_BUTTON,     dx + 11, dy,      PlayButtonCallback,      FALSE, 0);
+	MakeButton(FAST_BUTTON,     dx + 51, dy,      FastButtonCallback,      FALSE, 0);
+	MakeButton(FINISH_BUTTON,   dx + 91, dy,      FinishButtonCallback,    FALSE, 0);
+	MakeButton(PAUSE_BUTTON,    dx + 11, dy + 34, PauseButtonCallback,     FALSE, 0);
 	MakeButton(RETREAT_BUTTON,  dx + 51, dy + 34, RetreatButtonCallback,   FALSE, gpStrategicString[STR_AR_RETREAT_BUTTON]);
-	if (!gpAR->ubMercs) DisableButton(gpAR->iButton[RETREAT_BUTTON]);
+	if (!ar->ubMercs) DisableButton(ar->iButton[RETREAT_BUTTON]);
 
-	MakeButton(BANDAGE_BUTTON,  dx + 11, dy +  5, BandageButtonCallback,   TRUE,  NULL);
+	MakeButton(BANDAGE_BUTTON,  dx + 11, dy +  5, BandageButtonCallback,   TRUE,  0);
 	MakeButton(DONEWIN_BUTTON,  dx + 51, dy +  5, DoneButtonCallback,      TRUE,  gpStrategicString[STR_AR_DONE_BUTTON]);
 	MakeButton(DONELOSE_BUTTON, dx + 25, dy +  5, DoneButtonCallback,      TRUE,  gpStrategicString[STR_AR_DONE_BUTTON]);
-	MakeButton(YES_BUTTON,      dx + 21, dy + 17, AcceptSurrenderCallback, TRUE,  NULL);
-	MakeButton(NO_BUTTON,       dx + 81, dy + 17, RejectSurrenderCallback, TRUE,  NULL);
-	ButtonList[gpAR->iButton[PLAY_BUTTON]]->uiFlags |= BUTTON_CLICKED_ON;
+	MakeButton(YES_BUTTON,      dx + 21, dy + 17, AcceptSurrenderCallback, TRUE,  0);
+	MakeButton(NO_BUTTON,       dx + 81, dy + 17, RejectSurrenderCallback, TRUE,  0);
+	ButtonList[ar->iButton[PLAY_BUTTON]]->uiFlags |= BUTTON_CLICKED_ON;
 }
 
 
