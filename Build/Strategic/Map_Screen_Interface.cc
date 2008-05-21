@@ -4120,33 +4120,27 @@ void InitTimersForMoveMenuMouseRegions( void )
 	}
 }
 
-void UpdateHelpTextForMapScreenMercIcons( void )
+
+void UpdateHelpTextForMapScreenMercIcons()
 {
 	const SOLDIERTYPE* const s = GetSelectedInfoChar();
-	if (s != NULL)
-	{
-		// if merc is an AIM merc
-		wchar_t const* const contract = s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ?
-			zMarksMapScreenText[21] : L"";
-		gContractIconRegion.SetFastHelpText(contract);
 
-		// if merc has life insurance
-		wchar_t const* const insurance = s->usLifeInsurance > 0 ?
-			zMarksMapScreenText[3] : L"";
-		gInsuranceIconRegion.SetFastHelpText(insurance);
+	// if merc is an AIM merc
+	wchar_t const* const contract = s && s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ?
+		zMarksMapScreenText[21] : L"";
+	gContractIconRegion.SetFastHelpText(contract);
 
-		// if merc has a medical deposit
-		wchar_t const* const medical = s->usMedicalDeposit > 0 ?
-			zMarksMapScreenText[12] : L"";
-		gDepositIconRegion.SetFastHelpText(medical);
+	// if merc has life insurance
+	wchar_t const* const insurance = s && s->usLifeInsurance > 0 ?
+		zMarksMapScreenText[3] : L"";
+	gInsuranceIconRegion.SetFastHelpText(insurance);
 
-		return;
-	}
-
-	gContractIconRegion.SetFastHelpText(L"");
-	gInsuranceIconRegion.SetFastHelpText(L"");
-	gDepositIconRegion.SetFastHelpText(L"");
+	// if merc has a medical deposit
+	wchar_t const* const medical = s && s->usMedicalDeposit > 0 ?
+		zMarksMapScreenText[12] : L"";
+	gDepositIconRegion.SetFastHelpText(medical);
 }
+
 
 void CreateDestroyInsuranceMouseRegionForMercs( BOOLEAN fCreate )
 {
