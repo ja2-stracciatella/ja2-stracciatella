@@ -139,7 +139,7 @@ SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, 
 
 	MOUSE_REGION* const r = &s->ScrollAreaMouseRegion;
 	MSYS_DefineRegion(r, x, y, x + w, y + h, sPriority, usCursor, SelectedSliderMovementCallBack, SelectedSliderButtonCallBack);
-	MSYS_SetRegionUserPtr(r, s);
+	r->SetUserPtr(s);
 
 	// Add the slider into the list
 	if (pSliderHead == NULL)
@@ -282,7 +282,7 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* r, INT32 reason)
 	SLIDER* s;
 	if (reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{
-		s = (SLIDER*)MSYS_GetRegionUserPtr(r);
+		s = r->GetUserPtr<SLIDER>();
 
 		// set the currently selectd slider bar
 		gpCurrentSlider = s;
@@ -290,7 +290,7 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* r, INT32 reason)
 	else if (reason & MSYS_CALLBACK_REASON_GAIN_MOUSE ||
 			reason & MSYS_CALLBACK_REASON_MOVE)
 	{
-		s = (SLIDER*)MSYS_GetRegionUserPtr(r);
+		s = r->GetUserPtr<SLIDER>();
 	}
 	else
 	{
@@ -320,13 +320,13 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* r, INT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
 			iReason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
-		SLIDER* const s = (SLIDER*)MSYS_GetRegionUserPtr(r);
+		SLIDER* const s = r->GetUserPtr<SLIDER>();
 		const UINT16 pos = s->uiFlags & SLIDER_VERTICAL ? r->RelativeYPos : r->RelativeXPos;
 		CalculateNewSliderIncrement(s, pos);
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
 	{
-		SLIDER* const s = (SLIDER*)MSYS_GetRegionUserPtr(r);
+		SLIDER* const s = r->GetUserPtr<SLIDER>();
 		const INT32 step = (s->usNumberOfIncrements + WHEEL_MOVE_FRACTION - 1) / WHEEL_MOVE_FRACTION;
 		INT32 pos = s->usCurrentIncrement - step;
 		pos = MAX(0, pos);
@@ -334,7 +334,7 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* r, INT32 iReason)
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
 	{
-		SLIDER* const s = (SLIDER*)MSYS_GetRegionUserPtr(r);
+		SLIDER* const s = r->GetUserPtr<SLIDER>();
 		const INT32 step = (s->usNumberOfIncrements + WHEEL_MOVE_FRACTION - 1) / WHEEL_MOVE_FRACTION;
 		INT32 pos = s->usCurrentIncrement + step;
 		pos = MIN(pos, s->usNumberOfIncrements);

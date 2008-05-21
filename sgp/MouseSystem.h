@@ -48,6 +48,10 @@ struct MOUSE_REGION
 
 	void AllowDisabledRegionFastHelp(bool allow);
 
+	void SetUserPtr(void* ptr) { user.ptr = ptr; }
+
+	template<typename T> T* GetUserPtr() const { return static_cast<T*>(user.ptr); }
+
 	INT8									PriorityLevel;			// Region's Priority, set by system and/or caller
 	UINT32								uiFlags;						// Region's state flags
 	INT16									RegionTopLeftX;			// Screen area affected by this region (absolute coordinates)
@@ -146,8 +150,6 @@ void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UIN
 void MSYS_RemoveRegion(MOUSE_REGION *region);
 void MSYS_SetRegionUserData(MOUSE_REGION *region,INT32 index,INT32 userdata);
 INT32 MSYS_GetRegionUserData(MOUSE_REGION *region,INT32 index);
-void  MSYS_SetRegionUserPtr(MOUSE_REGION* r, void* ptr);
-void* MSYS_GetRegionUserPtr(MOUSE_REGION* r);
 
 // This function will force a re-evaluation of mous regions
 // Usually used to force change of mouse cursor if panels switch, etc

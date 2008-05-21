@@ -709,18 +709,6 @@ INT32 MSYS_GetRegionUserData(MOUSE_REGION *region,INT32 index)
 }
 
 
-void MSYS_SetRegionUserPtr(MOUSE_REGION* r, void* ptr)
-{
-	r->user.ptr = ptr;
-}
-
-
-void* MSYS_GetRegionUserPtr(MOUSE_REGION* r)
-{
-	return r->user.ptr;
-}
-
-
 // This function will force a re-evaluation of mouse regions
 // Usually used to force change of mouse cursor if panels switch, etc
 void RefreshMouseRegions( )

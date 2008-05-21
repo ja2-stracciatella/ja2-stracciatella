@@ -3178,7 +3178,7 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 
 			// add mouse region for each accessible vehicle
 			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, VehicleMenuMvtCallback, VehicleMenuBtnCallback);
-			MSYS_SetRegionUserPtr(r, v);
+			r->SetUserPtr(v);
 			y += h;
 			++r;
 		}
@@ -3239,7 +3239,7 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		SOLDIERTYPE* const s = GetSelectedAssignSoldier(FALSE);
-		VEHICLETYPE* const v = (VEHICLETYPE*)MSYS_GetRegionUserPtr(pRegion);
+		VEHICLETYPE* const v = pRegion->GetUserPtr<VEHICLETYPE>();
 
 		// inaccessible vehicles shouldn't be listed in the menu!
 		Assert(IsThisVehicleAccessibleToSoldier(s, v));
