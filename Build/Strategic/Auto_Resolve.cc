@@ -859,77 +859,76 @@ static void RenderSoldierCellBars(SOLDIERCELL* pCell);
 static void RenderSoldierCellHealth(SOLDIERCELL* pCell);
 
 
-static void RenderSoldierCell(SOLDIERCELL* pCell)
+static void RenderSoldierCell(SOLDIERCELL* const c)
 {
-	UINT8 x;
-	if( pCell->uiFlags & CELL_MERC )
+	SGPVSurface* const buf = FRAME_BUFFER;
+	INT16        const dx  = c->xp;
+	INT16        const dy  = c->yp;
+
+	INT32       x = dx + 3;
+	INT32 const y = dy + 3;
+	if (c->uiFlags & CELL_MERC)
 	{
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+36, pCell->yp+2, pCell->xp+44,	pCell->yp+30, 0 );
-		BltVideoObject( FRAME_BUFFER, gpAR->iPanelImages, MERC_PANEL, pCell->xp, pCell->yp);
-		RenderSoldierCellBars( pCell );
-		x = 0;
+		ColorFillVideoSurfaceArea(buf, dx + 36, dy + 2, dx + 44, dy + 30, 0);
+		BltVideoObject(buf, gpAR->iPanelImages, MERC_PANEL, dx, dy);
+		RenderSoldierCellBars(c);
 	}
 	else
 	{
-		BltVideoObject( FRAME_BUFFER, gpAR->iPanelImages, OTHER_PANEL, pCell->xp, pCell->yp);
-		x = 6;
+		BltVideoObject(buf, gpAR->iPanelImages, OTHER_PANEL, dx, dy);
+		x += 6;
 	}
-	if( !pCell->pSoldier->bLife )
+
+	if (c->pSoldier->bLife == 0)
 	{
-		pCell->uiVObjectID->CurrentShade(0);
-		if( !(pCell->uiFlags & CELL_CREATURE) )
-			BltVideoObject( FRAME_BUFFER, gpAR->iFaces, HUMAN_SKULL, pCell->xp+3+x, pCell->yp+3);
-		else
-			BltVideoObject( FRAME_BUFFER, gpAR->iFaces, CREATURE_SKULL, pCell->xp+3 + x, pCell->yp+3);
+		UINT16 const skull = c->uiFlags & CELL_CREATURE ? CREATURE_SKULL : HUMAN_SKULL;
+		BltVideoObject(buf, gpAR->iFaces, skull, x, y);
 	}
 	else
 	{
-		if( pCell->uiFlags & CELL_HITBYATTACKER )
+		if (c->uiFlags & CELL_HITBYATTACKER)
 		{
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+3+x, pCell->yp+3, pCell->xp+33+x,	pCell->yp+29, 65535 );
-		}
-		else if( pCell->uiFlags & CELL_HITLASTFRAME )
-		{
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, pCell->xp+3+x, pCell->yp+3, pCell->xp+33+x,	pCell->yp+29, 0 );
-			pCell->uiVObjectID->CurrentShade(1);
-			BltVideoObject( FRAME_BUFFER, pCell->uiVObjectID, pCell->usIndex, pCell->xp+3+x, pCell->yp+3);
+			ColorFillVideoSurfaceArea(buf, x, y, x + 30, y + 26, 65535);
 		}
 		else
 		{
-			pCell->uiVObjectID->CurrentShade(0);
-			BltVideoObject( FRAME_BUFFER, pCell->uiVObjectID, pCell->usIndex, pCell->xp+3+x, pCell->yp+3);
+			size_t shade = 0;
+			if (c->uiFlags & CELL_HITLASTFRAME)
+			{
+				ColorFillVideoSurfaceArea(buf, x, y, x + 30, y + 26, 0);
+				shade = 1;
+			}
+			SGPVObject* const vo = c->uiVObjectID;
+			vo->CurrentShade(shade);
+			BltVideoObject(buf, vo, c->usIndex, x, y);
+		}
+
+		if (c->pSoldier->bLife < OKLIFE && !(c->uiFlags & (CELL_HITBYATTACKER | CELL_HITLASTFRAME | CELL_CREATURE)))
+		{ // Merc is unconcious (and not taking damage), so darken his portrait.
+			ShadowVideoSurfaceRect(buf, x, y, x + 30, y + 26);
 		}
 	}
 
-	if( pCell->pSoldier->bLife > 0 && pCell->pSoldier->bLife < OKLIFE && !(pCell->uiFlags & (CELL_HITBYATTACKER|CELL_HITLASTFRAME|CELL_CREATURE)) )
-	{ //Merc is unconcious (and not taking damage), so darken his portrait.
-		ShadowVideoSurfaceRect(FRAME_BUFFER, pCell->xp + 3 + x, pCell->yp + 3, pCell->xp + 33 + x, pCell->yp + 29);
-	}
+	RenderSoldierCellHealth(c);
+	DrawDebugText(c);
 
-	//Draw the health text
-	RenderSoldierCellHealth( pCell );
+	InvalidateRegion(dx, dy, dx + 50, dy + 44);
 
-	DrawDebugText( pCell );
-
-	if( !(pCell->uiFlags & CELL_RETREATING) )
-		pCell->uiFlags &= ~CELL_DIRTY;
-
-	InvalidateRegion( pCell->xp, pCell->yp, pCell->xp+50, pCell->yp+44 );
-
-	//Adjust flags accordingly
-	if( pCell->uiFlags & CELL_HITBYATTACKER )
+	// Adjust flags accordingly
+	if (c->uiFlags & CELL_HITBYATTACKER)
 	{
-		pCell->uiFlags &= ~CELL_HITBYATTACKER;
-		pCell->uiFlags |= CELL_HITLASTFRAME | CELL_DIRTY;
-		pCell->uiFlashTime = GetJA2Clock() + 150;
+		c->uiFlashTime  = GetJA2Clock() + 150;
+		c->uiFlags     &= ~CELL_HITBYATTACKER;
+		c->uiFlags     |= CELL_HITLASTFRAME | CELL_DIRTY;
 	}
-	else if( pCell->uiFlags & CELL_HITLASTFRAME )
+	else if (c->uiFlags & CELL_HITLASTFRAME)
 	{
-		if( pCell->uiFlashTime < GetJA2Clock() )
-		{
-			pCell->uiFlags &= ~CELL_HITLASTFRAME;
-		}
-		pCell->uiFlags |= CELL_DIRTY;
+		if (c->uiFlashTime < GetJA2Clock()) c->uiFlags &= ~CELL_HITLASTFRAME;
+		c->uiFlags |= CELL_DIRTY;
+	}
+	else if (!(c->uiFlags & CELL_RETREATING))
+	{
+		c->uiFlags &= ~CELL_DIRTY;
 	}
 }
 
