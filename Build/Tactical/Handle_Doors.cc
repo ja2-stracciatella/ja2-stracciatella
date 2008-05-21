@@ -35,45 +35,37 @@
 static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCTURE* pStructure, BOOLEAN fNoAnimations);
 
 
-void HandleDoorChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fNoAnimations )
+void HandleDoorChangeFromGridNo(SOLDIERTYPE* const s, INT16 const grid_no, BOOLEAN const no_animation)
 {
-	STRUCTURE *			pStructure;
-	DOOR_STATUS *		pDoorStatus;
-	BOOLEAN					fDoorsAnimated = FALSE;
-
-	pStructure = FindStructure( sGridNo, STRUCTURE_ANYDOOR );
-
-	if ( pStructure == NULL )
+	STRUCTURE* const structure = FindStructure(grid_no, STRUCTURE_ANYDOOR);
+	if (!structure)
 	{
 #ifdef JA2TESTVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"ERROR: Told to handle door that does not exist at %d.", sGridNo );
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"ERROR: Told to handle door that does not exist at %d.", grid_no);
 #endif
 		return;
 	}
 
-	fDoorsAnimated = HandleDoorsOpenClose( pSoldier, sGridNo, pStructure, fNoAnimations );
-	if ( SwapStructureForPartner( sGridNo, pStructure ) != NULL)
+	BOOLEAN const door_animated = HandleDoorsOpenClose(s, grid_no, structure, no_animation);
+	if (SwapStructureForPartner(grid_no, structure))
 	{
-		RecompileLocalMovementCosts( sGridNo );
+		RecompileLocalMovementCosts(grid_no);
 	}
 
-
 	// set door busy
-	pDoorStatus = GetDoorStatus( sGridNo );
-	if ( pDoorStatus == NULL )
+	DOOR_STATUS* const door_status = GetDoorStatus(grid_no);
+	if (!door_status)
 	{
 #ifdef JA2TESTVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"ERROR: Told to set door busy but can't get door status at %d!", sGridNo );
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"ERROR: Told to set door busy but can't get door status at %d!", grid_no);
 #endif
 		return;
 	}
 
 	// ATE: Only do if animated.....
-	if ( fDoorsAnimated )
-	{
-		pDoorStatus->ubFlags |= DOOR_BUSY;
-	}
+	if (door_animated) door_status->ubFlags |= DOOR_BUSY;
 }
+
 
 UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, UINT16 usAnimState )
 {
