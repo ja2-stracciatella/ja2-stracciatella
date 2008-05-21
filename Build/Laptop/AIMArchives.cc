@@ -428,46 +428,21 @@ static void DisplayAlumniOldMercPopUp(void)
 
 static void InitAlumniFaceRegions(void)
 {
-	UINT16	usPosX, usPosY,i,x,y, usNumRows;
-
-	if(gfFaceMouseRegionsActive)
-		return;
-
-	if( gubPageNum == 2 )
-		usNumRows = 2;
-	else
-		usNumRows = AIM_ALUMNI_NUM_FACE_ROWS;
-
-	usPosX = AIM_ALUMNI_START_GRID_X;
-	usPosY = AIM_ALUMNI_START_GRID_Y;
-	i=0;
-	for(y=0; y<usNumRows; y++)
-	{
-		for(x=0; x<AIM_ALUMNI_NUM_FACE_COLS; x++)
-		{
-
-			MSYS_DefineRegion( &gMercAlumniFaceMouseRegions[ i ], usPosX, usPosY, (INT16)(usPosX + AIM_ALUMNI_ALUMNI_FACE_WIDTH), (INT16)(usPosY + AIM_ALUMNI_ALUMNI_FACE_HEIGHT), MSYS_PRIORITY_HIGH,
-								 CURSOR_WWW, MSYS_NO_CALLBACK, SelectAlumniFaceRegionCallBack);
-			MSYS_SetRegionUserData( &gMercAlumniFaceMouseRegions[ i ], 0, i+(20*gubPageNum));
-
-			usPosX += AIM_ALUMNI_GRID_OFFSET_X;
-			i++;
-		}
-		usPosX = AIM_ALUMNI_START_GRID_X;
-		usPosY += AIM_ALUMNI_GRID_OFFSET_Y;
-	}
-
-	//the 3rd page now has an additional row with 1 merc on it, so add a new row
-	if( gubPageNum == 2 )
-	{
-			MSYS_DefineRegion( &gMercAlumniFaceMouseRegions[ i ], usPosX, usPosY, (INT16)(usPosX + AIM_ALUMNI_ALUMNI_FACE_WIDTH), (INT16)(usPosY + AIM_ALUMNI_ALUMNI_FACE_HEIGHT), MSYS_PRIORITY_HIGH,
-								 CURSOR_WWW, MSYS_NO_CALLBACK, SelectAlumniFaceRegionCallBack);
-			MSYS_SetRegionUserData( &gMercAlumniFaceMouseRegions[ i ], 0, i+(20*gubPageNum));
-	}
-
-
-
+	if (gfFaceMouseRegionsActive) return;
 	gfFaceMouseRegionsActive = TRUE;
+
+	size_t const start   = gubPageNum * MAX_NUMBER_OLD_MERCS_ON_PAGE;
+	size_t const n_faces = MIN(51 - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
+	UINT16 const w       = AIM_ALUMNI_ALUMNI_FACE_WIDTH;
+	UINT16 const h       = AIM_ALUMNI_ALUMNI_FACE_HEIGHT;
+	for (size_t i = 0; i != n_faces; ++i)
+	{
+		UINT16        const x = i % AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_GRID_OFFSET_X + AIM_ALUMNI_START_GRID_X;
+		UINT16        const y = i / AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_GRID_OFFSET_Y + AIM_ALUMNI_START_GRID_Y;
+		MOUSE_REGION* const r = &gMercAlumniFaceMouseRegions[i];
+		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGH, CURSOR_WWW, MSYS_NO_CALLBACK, SelectAlumniFaceRegionCallBack);
+		MSYS_SetRegionUserData(r, 0, start + i);
+	}
 }
 
 
