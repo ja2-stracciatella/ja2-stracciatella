@@ -67,153 +67,74 @@ void HandleDoorChangeFromGridNo(SOLDIERTYPE* const s, INT16 const grid_no, BOOLE
 }
 
 
-UINT16 GetAnimStateForInteraction( SOLDIERTYPE *pSoldier, BOOLEAN fDoor, UINT16 usAnimState )
+UINT16 GetAnimStateForInteraction(SOLDIERTYPE const* s, BOOLEAN const door, UINT16 const anim_state)
 {
-	switch( usAnimState )
+	bool const standing = gAnimControl[s->usAnimState].ubEndHeight == ANIM_STAND;
+	switch (anim_state)
 	{
 		case OPEN_DOOR:
-
-      if ( pSoldier->ubBodyType == CRIPPLECIV )
-      {
-        return( CRIPPLE_OPEN_DOOR );
-      }
-      else
-      {
-			  if ( fDoor )
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( OPEN_DOOR_CROUCHED );
-				  }
-				  else
-				  {
-					  return( usAnimState );
-				  }
-			  }
-			  else
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( BEGIN_OPENSTRUCT_CROUCHED );
-				  }
-				  else
-				  {
-					  return( BEGIN_OPENSTRUCT );
-				  }
-			  }
-      }
+			if (s->ubBodyType == CRIPPLECIV)
+			{
+				return CRIPPLE_OPEN_DOOR;
+			}
+			else if (door)
+			{
+				return standing ? anim_state : OPEN_DOOR_CROUCHED;
+			}
+			else
+			{
+				return standing ? BEGIN_OPENSTRUCT : BEGIN_OPENSTRUCT_CROUCHED;
+			}
 
 		case CLOSE_DOOR:
-
-      if ( pSoldier->ubBodyType == CRIPPLECIV )
-      {
-        return( CRIPPLE_CLOSE_DOOR );
-      }
-      else
-      {
-			  if ( fDoor )
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( CLOSE_DOOR_CROUCHED );
-				  }
-				  else
-				  {
-					  return( usAnimState );
-				  }
-			  }
-			  else
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( OPEN_STRUCT_CROUCHED );
-				  }
-				  else
-				  {
-					  return( OPEN_STRUCT );
-				  }
-			  }
-      }
+			if (s->ubBodyType == CRIPPLECIV)
+			{
+				return CRIPPLE_CLOSE_DOOR;
+			}
+			else if (door)
+			{
+				return standing ? anim_state : CLOSE_DOOR_CROUCHED;
+			}
+			else
+			{
+				return standing ? OPEN_STRUCT : OPEN_STRUCT_CROUCHED;
+			}
 
 		case END_OPEN_DOOR:
-
-      if ( pSoldier->ubBodyType == CRIPPLECIV )
-      {
-        return( CRIPPLE_END_OPEN_DOOR );
-      }
-      else
-      {
-			  if ( fDoor )
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( END_OPEN_DOOR_CROUCHED );
-				  }
-				  else
-				  {
-					  return( usAnimState );
-				  }
-			  }
-			  else
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( END_OPENSTRUCT_CROUCHED );
-				  }
-				  else
-				  {
-					  return( END_OPENSTRUCT );
-				  }
-			  }
-      }
+			if (s->ubBodyType == CRIPPLECIV)
+			{
+				return CRIPPLE_END_OPEN_DOOR;
+			}
+			else if (door)
+			{
+				return standing ? anim_state : END_OPEN_DOOR_CROUCHED;
+			}
+			else
+			{
+				return standing ? END_OPENSTRUCT : END_OPENSTRUCT_CROUCHED;
+			}
 
 		case END_OPEN_LOCKED_DOOR:
-
-      if ( pSoldier->ubBodyType == CRIPPLECIV )
-      {
-        return( CRIPPLE_END_OPEN_LOCKED_DOOR );
-      }
-      else
-      {
-			  if ( fDoor )
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( END_OPEN_LOCKED_DOOR_CROUCHED );
-				  }
-				  else
-				  {
-					  return( END_OPEN_LOCKED_DOOR );
-				  }
-			  }
-			  else
-			  {
-				  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-				  {
-					  return( END_OPENSTRUCT_LOCKED_CROUCHED );
-				  }
-				  else
-				  {
-					  return( END_OPENSTRUCT_LOCKED );
-				  }
-			  }
-      }
+			if (s->ubBodyType == CRIPPLECIV)
+			{
+				return CRIPPLE_END_OPEN_LOCKED_DOOR;
+			}
+			else if (door)
+			{
+				return standing ? END_OPEN_LOCKED_DOOR : END_OPEN_LOCKED_DOOR_CROUCHED;
+			}
+			else
+			{
+				return standing ? END_OPENSTRUCT_LOCKED : END_OPENSTRUCT_LOCKED_CROUCHED;
+			}
 
 		case PICK_LOCK:
-
-			if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_STAND )
-			{
-        return( LOCKPICK_CROUCHED );
-      }
-      else
-      {
-        return( PICK_LOCK );
-      }
+			return standing ? PICK_LOCK : LOCKPICK_CROUCHED;
 
 		default:
 			// should never happen!
-			Assert( FALSE );
-			return( usAnimState );
+			Assert(FALSE);
+			return anim_state;
 	}
 }
 
