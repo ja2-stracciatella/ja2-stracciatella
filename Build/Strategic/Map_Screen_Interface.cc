@@ -1439,80 +1439,72 @@ void RemoveMapStatusBarsRegion( void )
 	MSYS_RemoveRegion( &gMapStatusBarsRegion );
 }
 
-void UpdateCharRegionHelpText( void )
+
+void UpdateCharRegionHelpText(void)
 {
-	CHAR16 sString[ 128 ];
+	SOLDIERTYPE const* const s = GetSelectedInfoChar();
 
-	const SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
-	if (pSoldier != NULL)
+	// health/energy/morale
+	wchar_t status[128];
+	if (!s || s->bLife == 0)
 	{
-		// health/energy/morale
-		if( pSoldier->bAssignment != ASSIGNMENT_POW )
-		{
-			if ( pSoldier->bLife != 0 )
-			{
-				if (AM_A_ROBOT(pSoldier))
-				{
-					// robot (condition only)
-					swprintf( sString, lengthof(sString), L"%ls: %d/%d",
-													pMapScreenStatusStrings[ 3 ], pSoldier->bLife, pSoldier->bLifeMax );
-				}
-				else if (pSoldier->uiStatusFlags & SOLDIER_VEHICLE)
-				{
-					// vehicle (condition/fuel)
-					swprintf( sString, lengthof(sString), L"%ls: %d/%d, %ls: %d/%d",
-													pMapScreenStatusStrings[ 3 ], pSoldier->bLife, pSoldier->bLifeMax,
-													pMapScreenStatusStrings[ 4 ], pSoldier->bBreath, pSoldier->bBreathMax );
-				}
-				else
-				{
-					// person (health/energy/morale)
-					const wchar_t* Morale = GetMoraleString(pSoldier);
-					swprintf( sString, lengthof(sString), L"%ls: %d/%d, %ls: %d/%d, %ls: %ls",
-													pMapScreenStatusStrings[ 0 ], pSoldier->bLife, pSoldier->bLifeMax,
-													pMapScreenStatusStrings[ 1 ], pSoldier->bBreath, pSoldier->bBreathMax,
-													pMapScreenStatusStrings[ 2 ], Morale);
-				}
-			}
-			else
-			{
-				wcscpy( sString, L"" );
-			}
-		}
-		else
-		{
-			// POW - stats unknown
-			swprintf( sString, lengthof(sString), L"%ls: ??, %ls: ??, %ls: ??", pMapScreenStatusStrings[ 0 ], pMapScreenStatusStrings[ 1 ], pMapScreenStatusStrings[ 2 ] );
-		}
-
-		gMapStatusBarsRegion.SetFastHelpText(sString);
-
-
-		// update CONTRACT button help text
-		if (CanExtendContractForSoldier(pSoldier))
-		{
-			SetButtonFastHelpText( giMapContractButton, pMapScreenMouseRegionHelpText[ 3 ] );
-			EnableButton( giMapContractButton );
-		}
-		else
-		{
-			SetButtonFastHelpText( giMapContractButton, L"" );
-			DisableButton( giMapContractButton );
-		}
-
-		wchar_t const* const help =
-			!CanToggleSelectedCharInventory() ? L"" :
-			fShowInventoryFlag                ? pMiscMapScreenMouseRegionHelpText[2] :
-			                                    pMiscMapScreenMouseRegionHelpText[0];
-		gCharInfoHandRegion.SetFastHelpText(help);
-		return;
+		status[0] = L'\0';
 	}
+	else if (s->bAssignment == ASSIGNMENT_POW)
+	{
+		// POW - stats unknown
+		swprintf(status, lengthof(status), L"%ls: ??, %ls: ??, %ls: ??",
+			pMapScreenStatusStrings[0],
+			pMapScreenStatusStrings[1],
+			pMapScreenStatusStrings[2]
+		);
+	}
+	else if (AM_A_ROBOT(s))
+	{
+		// robot (condition only)
+		swprintf(status, lengthof(status), L"%ls: %d/%d",
+			pMapScreenStatusStrings[3], s->bLife, s->bLifeMax
+		);
+	}
+	else if (s->uiStatusFlags & SOLDIER_VEHICLE)
+	{
+		// vehicle (condition/fuel)
+		swprintf(status, lengthof(status), L"%ls: %d/%d, %ls: %d/%d",
+			pMapScreenStatusStrings[3], s->bLife,   s->bLifeMax,
+			pMapScreenStatusStrings[4], s->bBreath, s->bBreathMax
+		);
+	}
+	else
+	{
+		// person (health/energy/morale)
+		wchar_t const* const morale = GetMoraleString(s);
+		swprintf(status, lengthof(status), L"%ls: %d/%d, %ls: %d/%d, %ls: %ls",
+			pMapScreenStatusStrings[0], s->bLife,   s->bLifeMax,
+			pMapScreenStatusStrings[1], s->bBreath, s->bBreathMax,
+			pMapScreenStatusStrings[2], morale
+		);
+	}
+	gMapStatusBarsRegion.SetFastHelpText(status);
 
-	// invalid soldier
-	gMapStatusBarsRegion.SetFastHelpText(L"");
-	SetButtonFastHelpText(giMapContractButton, L"");
-	gCharInfoHandRegion.SetFastHelpText(L"");
-	DisableButton(giMapContractButton);
+	// update contract button help text
+	wchar_t const* contract;
+	if (s && CanExtendContractForSoldier(s))
+	{
+		EnableButton(giMapContractButton);
+		contract = pMapScreenMouseRegionHelpText[3];
+	}
+	else
+	{
+		DisableButton(giMapContractButton);
+		contract = L"";
+	}
+	SetButtonFastHelpText(giMapContractButton, contract);
+
+	wchar_t const* const inventory =
+		!s || !CanToggleSelectedCharInventory() ? L"" :
+		fShowInventoryFlag                      ? pMiscMapScreenMouseRegionHelpText[2] :
+																							pMiscMapScreenMouseRegionHelpText[0];
+	gCharInfoHandRegion.SetFastHelpText(inventory);
 }
 
 
