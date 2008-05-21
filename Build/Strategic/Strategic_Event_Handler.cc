@@ -581,7 +581,7 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 			case FACT_SHIPMENT_DELAYED_24_HOURS:
 			case FACT_24_HOURS_SINCE_DOCTOR_TALKED_TO:
 			case FACT_24_HOURS_SINCE_JOEY_RESCUED:
-				SetFactTrue( (UINT16) uiEvent );
+				SetFactTrue((Fact)uiEvent);
 				break;
 
 			case FACT_KINGPIN_KNOWS_MONEY_GONE:

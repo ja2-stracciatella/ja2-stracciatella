@@ -2587,15 +2587,15 @@ unlock:
 				break;
 
 			case NPC_ACTION_TRIGGER_FATHER_18_20_OR_15:
-				if (!CheckFact(132, FATHER))
+				if (!CheckFact(FACT_132, FATHER))
 				{
 					TriggerNPCRecord( FATHER, 18 );
 				}
-				else if (!CheckFact(133, FATHER))
+				else if (!CheckFact(FACT_133, FATHER))
 				{
 					TriggerNPCRecord( FATHER, 20 );
 				}
-				else if (!CheckFact(134, FATHER))
+				else if (!CheckFact(FACT_134, FATHER))
 				{
 					TriggerNPCRecord( FATHER, 15 );
 				}
@@ -3579,7 +3579,7 @@ unlock:
 				break;
 
 			case NPC_ACTION_TRIGGER_ANGEL_22_OR_24:
-				if ( CheckFact ( 120, ubTargetNPC ) ) // NB fact 120 is Angel left deed on counter
+				if (CheckFact(FACT_ANGEL_LEFT_DEED, ubTargetNPC))
 				{
 					TriggerNPCRecord( ubTargetNPC, 22 );
 				}

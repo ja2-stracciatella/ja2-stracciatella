@@ -7377,7 +7377,7 @@ static void InternalUnescortEPC(SOLDIERTYPE* const s)
 
 	const ProfileID profile = s->ubProfile;
 	UINT16 quote_num;
-	UINT16 fact_to_set_to_true;
+	Fact fact_to_set_to_true;
 	if (GetInfoForAbandoningEPC(profile, &quote_num, &fact_to_set_to_true))
 	{
 		gMercProfiles[profile].ubMiscFlags |= PROFILE_MISC_FLAG_FORCENPCQUOTE;

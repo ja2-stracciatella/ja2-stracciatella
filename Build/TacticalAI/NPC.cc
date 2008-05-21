@@ -1248,7 +1248,7 @@ static UINT8 NPCConsiderQuote(UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8
 	// if there are facts to be checked, check them
 	if (pNPCQuoteInfo->usFactMustBeTrue != NO_FACT)
 	{
-		fTrue = CheckFact( pNPCQuoteInfo->usFactMustBeTrue, ubNPC );
+		fTrue = CheckFact((Fact)pNPCQuoteInfo->usFactMustBeTrue, ubNPC);
 #ifdef JA2TESTVERSION
 		//Add entry to the quest debug file
 		NpcRecordLogging(ubApproach, "Fact (%d:'%ls') Must be True, status is %s", pNPCQuoteInfo->usFactMustBeTrue, FactDescText[pNPCQuoteInfo->usFactMustBeTrue], fTrue ? "True" : "False, returning");
@@ -1258,7 +1258,7 @@ static UINT8 NPCConsiderQuote(UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8
 
 	if (pNPCQuoteInfo->usFactMustBeFalse != NO_FACT)
 	{
-		fTrue = CheckFact( pNPCQuoteInfo->usFactMustBeFalse, ubNPC );
+		fTrue = CheckFact((Fact)pNPCQuoteInfo->usFactMustBeFalse, ubNPC);
 
 		#ifdef JA2TESTVERSION
 			//Add entry to the quest debug file
@@ -1525,7 +1525,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 			// CHEAP HACK
 			// Since we don't have CONDITIONAL once-per-convo refreshes, do this in code
 			// NB fact 281 is 'Darren has explained boxing rules'
-			if (ubNPC == DARREN && !CheckFact(281, DARREN))
+			if (ubNPC == DARREN && !CheckFact(FACT_281, DARREN))
 			{
 				TURN_FLAG_OFF( pNPCQuoteInfoArray[11].fFlags, QUOTE_FLAG_SAID );
 			}
@@ -1871,7 +1871,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 				// Set things
 				if (pQuotePtr->usSetFactTrue != NO_FACT)
 				{
-					SetFactTrue( pQuotePtr->usSetFactTrue );
+					SetFactTrue((Fact)pQuotePtr->usSetFactTrue);
 				}
 				if (pQuotePtr->ubEndQuest != NO_QUEST)
 				{
@@ -2464,7 +2464,7 @@ BOOLEAN NPCWillingToAcceptItem( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * pObj )
 }
 
 
-BOOLEAN GetInfoForAbandoningEPC( UINT8 ubNPC, UINT16 * pusQuoteNum, UINT16 * pusFactToSetTrue )
+BOOLEAN GetInfoForAbandoningEPC(UINT8 const ubNPC, UINT16* const pusQuoteNum, Fact* const fact_to_set_true)
 {
 	// Check if we have a quote that could be used
 	NPCQuoteInfo *				pNPCQuoteInfoArray;
@@ -2479,7 +2479,7 @@ BOOLEAN GetInfoForAbandoningEPC( UINT8 ubNPC, UINT16 * pusQuoteNum, UINT16 * pus
 		if ( NPCConsiderQuote( ubNPC, 0, APPROACH_EPC_IN_WRONG_SECTOR, ubLoop, 0, pNPCQuoteInfoArray ) )
 		{
 			*pusQuoteNum = pNPCQuoteInfoArray[ubLoop].ubQuoteNum;
-			*pusFactToSetTrue = pNPCQuoteInfoArray[ubLoop].usSetFactTrue;
+			*fact_to_set_true = (Fact)pNPCQuoteInfoArray[ubLoop].usSetFactTrue;
 			return( TRUE );
 		}
 	}

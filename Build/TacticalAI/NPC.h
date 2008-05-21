@@ -1,7 +1,9 @@
 #ifndef NPC_H
 #define NPC_H
 
+#include "Facts.h"
 #include "MapScreen.h"
+
 
 #define NUM_NPC_QUOTE_RECORDS 50
 
@@ -189,7 +191,7 @@ void UpdateDarrelScriptToGoTo( SOLDIERTYPE * pSoldier );
 
 #define WALTER_BRIBE_AMOUNT 20000
 
-BOOLEAN GetInfoForAbandoningEPC( UINT8 ubNPC, UINT16 * pusQuoteNum, UINT16 * pusFactToSetTrue );
+BOOLEAN GetInfoForAbandoningEPC(UINT8 ubNPC, UINT16* pusQuoteNum, Fact* fact_to_set_true);
 
 BOOLEAN RecordHasDialogue( UINT8 ubNPC, UINT8 ubRecord );
 

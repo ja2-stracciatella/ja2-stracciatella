@@ -42,7 +42,7 @@ INT16	gsFoodQuestSectorX;
 INT16	gsFoodQuestSectorY;
 
 
-void SetFactTrue( UINT16 usFact )
+void SetFactTrue(Fact const usFact)
 {
 	// This function is here just for control flow purposes (debug breakpoints)
 	// and code is more readable that way
@@ -57,7 +57,8 @@ void SetFactTrue( UINT16 usFact )
 	gubFact[usFact] = TRUE;
 }
 
-void SetFactFalse( UINT16 usFact )
+
+void SetFactFalse(Fact const usFact)
 {
 	gubFact[usFact] = FALSE;
 }
@@ -547,7 +548,8 @@ static BOOLEAN InTownSectorWithTrainingLoyalty(INT16 sSectorX, INT16 sSectorY)
 	}
 }
 
-BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
+
+BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 {
 	INT8 bTown = -1;
 
@@ -1104,7 +1106,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			break;
 
 		case FACT_84_AND_85_TRUE:
-			gubFact[usFact] = CheckFact( 84, ubProfileID ) && CheckFact( FACT_HANS_AT_SPOT, ubProfileID );
+			gubFact[usFact] = CheckFact(FACT_84, ubProfileID) && CheckFact(FACT_HANS_AT_SPOT, ubProfileID);
 			break;
 
 		case FACT_SKYRIDER_IN_B15:
@@ -1146,7 +1148,7 @@ BOOLEAN CheckFact( UINT16 usFact, UINT8 ubProfileID )
 			gubFact[usFact] = !BoxerExists();
 			break;
 
-		case 245: // Can dimitri be recruited? should be true if already true, OR if Miguel has been recruited already
+		case FACT_245: // Can dimitri be recruited? should be true if already true, OR if Miguel has been recruited already
 			gubFact[usFact] = gubFact[usFact] || FindSoldierByProfileIDOnPlayerTeam(MIGUEL);
 /*
 		case FACT_:

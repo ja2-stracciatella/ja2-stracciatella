@@ -1320,7 +1320,7 @@ static BOOLEAN EnemyPermittedToAttackSector(GROUP** pGroup, UINT8 ubSectorID)
 	{
 		case SEC_F10:
 			//Hill-billy farm -- not until hill billies are dead.
-			if( CheckFact( 273, FALSE ) )
+			if (CheckFact(FACT_HILLBILLIES_KILLED, FALSE))
 				return FALSE;
 			break;
 		case SEC_A9:

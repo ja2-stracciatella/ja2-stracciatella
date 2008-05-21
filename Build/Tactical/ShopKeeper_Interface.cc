@@ -3420,7 +3420,7 @@ static void PerformTransaction(UINT32 uiMoneyFromPlayersAccount)
 
 			//if the arms dealer is Howard( 125), set fact 222
 			if( gbSelectedArmsDealerID == ARMS_DEALER_HOWARD )
-				SetFactTrue( 222 );
+				SetFactTrue(FACT_222);
 		}
 
 
@@ -6138,7 +6138,6 @@ static void DealerGetsBribed(UINT8 ubProfileId, UINT32 uiMoneyAmount)
 {
 	BOOLEAN fBribable = FALSE;
 	UINT32 uiMinBribe = 0;
-	UINT16 usFact = 0;
 
 	// this is only for dealers
 	if (!IsMercADealer( ubProfileId ) )
@@ -6146,6 +6145,7 @@ static void DealerGetsBribed(UINT8 ubProfileId, UINT32 uiMoneyAmount)
 		return;
 	}
 
+	Fact usFact = FACT_NONE;
 	switch ( ubProfileId )
 	{
 		case FRANK:
