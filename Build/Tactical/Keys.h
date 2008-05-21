@@ -119,7 +119,7 @@ CASSERT(sizeof(DOOR_STATUS) == 4)
 
 extern KEY KeyTable[NUM_KEYS];
 extern LOCK LockTable[NUM_LOCKS];
-extern DOORTRAP DoorTrapTable[NUM_DOOR_TRAPS];
+extern DOORTRAP const DoorTrapTable[NUM_DOOR_TRAPS];
 
 extern BOOLEAN AddKeysToKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubKeyID, UINT8 ubNumber );
 extern BOOLEAN RemoveKeyFromKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubPos, OBJECTTYPE * pObj );
@@ -170,7 +170,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor );
 BOOLEAN AttemptToUntrapDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor );
 BOOLEAN ExamineDoorForTraps( SOLDIERTYPE * pSoldier, DOOR * pDoor );
 BOOLEAN HasDoorTrapGoneOff( SOLDIERTYPE * pSoldier, DOOR * pDoor );
-void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor );
+void HandleDoorTrap(SOLDIERTYPE*, const DOOR*);
 
 
 // Updates the perceived value to the user of the state of the door

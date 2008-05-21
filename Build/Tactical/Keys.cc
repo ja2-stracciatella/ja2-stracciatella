@@ -113,7 +113,7 @@ LOCK LockTable[NUM_LOCKS] =
 };
 */
 
-DOORTRAP DoorTrapTable[NUM_DOOR_TRAPS] =
+DOORTRAP const DoorTrapTable[NUM_DOOR_TRAPS] =
 {
 	{ 0 },																						// nothing
 	{ DOOR_TRAP_STOPS_ACTION },												// explosion
@@ -576,79 +576,74 @@ BOOLEAN HasDoorTrapGoneOff( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 }
 
 
-void HandleDoorTrap( SOLDIERTYPE * pSoldier, DOOR * pDoor )
+void HandleDoorTrap(SOLDIERTYPE* const s, const DOOR* const d)
 {
-	if ( !( DoorTrapTable[ pDoor->ubTrapID ].fFlags & DOOR_TRAP_SILENT )  )
+	if (!(DoorTrapTable[d->ubTrapID].fFlags & DOOR_TRAP_SILENT))
 	{
-		switch( pDoor->ubTrapID )
+		wchar_t const* trap_name;
+		switch (d->ubTrapID)
 		{
-			case BROTHEL_SIREN:
-				ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ LOCK_TRAP_HAS_GONE_OFF_STR ], pDoorTrapStrings[ SIREN ] );
-				break;
-			case SUPER_ELECTRIC:
-				ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ LOCK_TRAP_HAS_GONE_OFF_STR ], pDoorTrapStrings[ ELECTRIC ] );
-				break;
-			default:
-				ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ LOCK_TRAP_HAS_GONE_OFF_STR ], pDoorTrapStrings[ pDoor->ubTrapID ] );
-				break;
+			case BROTHEL_SIREN:  trap_name = pDoorTrapStrings[SIREN];       break;
+			case SUPER_ELECTRIC: trap_name = pDoorTrapStrings[ELECTRIC];    break;
+			default:             trap_name = pDoorTrapStrings[d->ubTrapID]; break;
 		}
+		ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[LOCK_TRAP_HAS_GONE_OFF_STR], trap_name);
 	}
 
 	// set trap off
-	switch( pDoor->ubTrapID )
+	switch (d->ubTrapID)
 	{
 		case EXPLOSION:
 			// cause damage as a regular hand grenade
-			IgniteExplosion(NULL, 25, pSoldier->sGridNo, HAND_GRENADE, 0);
+			IgniteExplosion(NULL, 25, s->sGridNo, HAND_GRENADE, 0);
 			break;
 
  		case SIREN:
-			// play siren sound effect but otherwise treat as silent alarm, calling
-			// available enemies to this location
-			PlayLocationJA2Sample(pDoor->sGridNo, KLAXON_ALARM, MIDVOLUME, 5);
+			/* play siren sound effect but otherwise treat as silent alarm, calling
+			 * available enemies to this location */
+			PlayLocationJA2Sample(d->sGridNo, KLAXON_ALARM, MIDVOLUME, 5);
+			/* FALLTHROUGH */
+
 		case SILENT_ALARM:
 			// Get all available enemies running here
-			CallAvailableEnemiesTo( pDoor->sGridNo );
+			CallAvailableEnemiesTo(d->sGridNo);
 			break;
 
 		case BROTHEL_SIREN:
-			PlayLocationJA2Sample(pDoor->sGridNo, KLAXON_ALARM, MIDVOLUME, 5);
-			CallAvailableKingpinMenTo( pDoor->sGridNo );
+			PlayLocationJA2Sample(d->sGridNo, KLAXON_ALARM, MIDVOLUME, 5);
+			CallAvailableKingpinMenTo(d->sGridNo);
 			// no one is authorized any more!
-			gMercProfiles[ MADAME ].bNPCData = 0;
+			gMercProfiles[MADAME].bNPCData = 0;
 			break;
 
 		case ELECTRIC:
 			// insert electrical sound effect here
-			PlayLocationJA2Sample(pDoor->sGridNo, DOOR_ELECTRICITY, MIDVOLUME, 1);
+			PlayLocationJA2Sample(d->sGridNo, DOOR_ELECTRICITY, MIDVOLUME, 1);
 
-	    pSoldier->attacker = pSoldier;
-	    // Increment  being attacked count
-	    pSoldier->bBeingAttackedCount++;
+	    s->attacker = s;
+	    s->bBeingAttackedCount++;
 		  gTacticalStatus.ubAttackBusyCount++;
-		  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Trap gone off %d", gTacticalStatus.ubAttackBusyCount) );
+		  DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Trap gone off %d", gTacticalStatus.ubAttackBusyCount));
 
-			SoldierTakeDamage(pSoldier, 10 + PreRandom(10), 3 + PreRandom(3) * 1000, TAKE_DAMAGE_ELECTRICITY, NULL);
+			SoldierTakeDamage(s, 10 + PreRandom(10), 3 + PreRandom(3) * 1000, TAKE_DAMAGE_ELECTRICITY, NULL);
 			break;
 
 		case SUPER_ELECTRIC:
 			// insert electrical sound effect here
-			PlayLocationJA2Sample(pDoor->sGridNo, DOOR_ELECTRICITY, MIDVOLUME, 1);
+			PlayLocationJA2Sample(d->sGridNo, DOOR_ELECTRICITY, MIDVOLUME, 1);
 
-	    pSoldier->attacker = pSoldier;
-	    // Increment  being attacked count
-	    pSoldier->bBeingAttackedCount++;
+	    s->attacker = s;
+	    s->bBeingAttackedCount++;
 		  gTacticalStatus.ubAttackBusyCount++;
-		  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Trap gone off %d", gTacticalStatus.ubAttackBusyCount) );
+		  DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("!!!!!!! Trap gone off %d", gTacticalStatus.ubAttackBusyCount));
 
-			SoldierTakeDamage(pSoldier, 20 + PreRandom(20), 6 + PreRandom(6) * 1000, TAKE_DAMAGE_ELECTRICITY, NULL);
+			SoldierTakeDamage(s, 20 + PreRandom(20), 6 + PreRandom(6) * 1000, TAKE_DAMAGE_ELECTRICITY, NULL);
 			break;
 
 		default:
 			// no trap
 			break;
 	}
-
 }
 
 
