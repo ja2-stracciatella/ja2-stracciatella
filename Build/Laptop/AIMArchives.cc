@@ -38,9 +38,10 @@
 #define		AIM_ALUMNI_ALUMNI_LINESIZE		7 * 80 * 2
 
 
-#define		AIM_ALUMNI_NUM_FACE_COLS			5
-#define		AIM_ALUMNI_NUM_FACE_ROWS			4
-#define		MAX_NUMBER_OLD_MERCS_ON_PAGE	AIM_ALUMNI_NUM_FACE_ROWS * AIM_ALUMNI_NUM_FACE_COLS
+#define   OLD_MERCS_COUNT                 51
+#define   AIM_ALUMNI_NUM_FACE_COLS         5
+#define   AIM_ALUMNI_NUM_FACE_ROWS         4
+#define   MAX_NUMBER_OLD_MERCS_ON_PAGE    (AIM_ALUMNI_NUM_FACE_ROWS * AIM_ALUMNI_NUM_FACE_COLS)
 
 #define		AIM_ALUMNI_START_GRID_X				LAPTOP_SCREEN_UL_X + 37
 #define		AIM_ALUMNI_START_GRID_Y				LAPTOP_SCREEN_WEB_UL_Y + 68
@@ -259,49 +260,36 @@ void RenderAimArchives()
 	DrawAimDefaults();
 	DisableAimButton();
 
-	//Draw Link Title
+	// Draw Link Title
 	DrawTextToScreen(AimAlumniText[AIM_ALUMNI_ALUMNI], AIM_ALUMNI_TITLE_X, AIM_ALUMNI_TITLE_Y, AIM_ALUMNI_TITLE_WIDTH, AIM_ALUMNI_TITLE_FONT, AIM_ALUMNI_TITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
-	//Draw the mug shot border and face
-	UINT start = AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_NUM_FACE_ROWS * gubPageNum;
-	UINT end   = MIN(start + AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_NUM_FACE_ROWS, 51);
-
-	INT32 usPosX = AIM_ALUMNI_START_GRID_X;
-	INT32 usPosY = AIM_ALUMNI_START_GRID_Y;
-	for (UINT i = start; i < end;)
+	// Draw the mug shot border and face
+	size_t const start    = gubPageNum * MAX_NUMBER_OLD_MERCS_ON_PAGE;
+	size_t const n_faces  = MIN(OLD_MERCS_COUNT - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
+	size_t       face_idx = start;
+	for (size_t i = 0; i != n_faces; ++i, ++face_idx)
 	{
-		BltVideoObject(FRAME_BUFFER, guiOldAim,      i, usPosX + 4, usPosY + 4); // Blt face to screen
-		BltVideoObject(FRAME_BUFFER, guiAlumniFrame, 0, usPosX,     usPosY);     // Blt the alumni frame background
+		INT32 const x = i % AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_GRID_OFFSET_X + AIM_ALUMNI_START_GRID_X;
+		INT32 const y = i / AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_GRID_OFFSET_Y + AIM_ALUMNI_START_GRID_Y;
+
+		BltVideoObject(FRAME_BUFFER, guiOldAim,      face_idx, x + 4, y + 4); // Blt face to screen
+		BltVideoObject(FRAME_BUFFER, guiAlumniFrame, 0,        x,     y);     // Blt the alumni frame background
 
 		// Display the merc's name
 		wchar_t sText[AIM_ALUMNI_NAME_SIZE];
-		LoadEncryptedDataFromFile(AIM_ALUMNI_NAME_FILE, sText, AIM_ALUMNI_NAME_LINESIZE * i, AIM_ALUMNI_NAME_SIZE);
-		DrawTextToScreen(sText, usPosX + AIM_ALUMNI_NAME_OFFSET_X, usPosY + AIM_ALUMNI_NAME_OFFSET_Y, AIM_ALUMNI_NAME_WIDTH, AIM_ALUMNI_NAME_FONT, AIM_ALUMNI_NAME_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-
-		++i;
-		if (i % AIM_ALUMNI_NUM_FACE_COLS == 0)
-		{
-			usPosX  = AIM_ALUMNI_START_GRID_X;
-			usPosY += AIM_ALUMNI_GRID_OFFSET_Y;
-		}
-		else
-		{
-			usPosX += AIM_ALUMNI_GRID_OFFSET_X;
-		}
+		LoadEncryptedDataFromFile(AIM_ALUMNI_NAME_FILE, sText, AIM_ALUMNI_NAME_LINESIZE * face_idx, AIM_ALUMNI_NAME_SIZE);
+		DrawTextToScreen(sText, x + AIM_ALUMNI_NAME_OFFSET_X, y + AIM_ALUMNI_NAME_OFFSET_Y, AIM_ALUMNI_NAME_WIDTH, AIM_ALUMNI_NAME_FONT, AIM_ALUMNI_NAME_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
-	if( gfDrawPopUpBox )
+	if (gfDrawPopUpBox)
 	{
 		DisplayAlumniOldMercPopUp();
 		RemoveAimAlumniFaceRegion();
 	}
 
-
-  MarkButtonsDirty( );
-
-	RenderWWWProgramTitleBar( );
-
-	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+  MarkButtonsDirty();
+	RenderWWWProgramTitleBar();
+	InvalidateRegion(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 
@@ -431,17 +419,18 @@ static void InitAlumniFaceRegions(void)
 	if (gfFaceMouseRegionsActive) return;
 	gfFaceMouseRegionsActive = TRUE;
 
-	size_t const start   = gubPageNum * MAX_NUMBER_OLD_MERCS_ON_PAGE;
-	size_t const n_faces = MIN(51 - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
-	UINT16 const w       = AIM_ALUMNI_ALUMNI_FACE_WIDTH;
-	UINT16 const h       = AIM_ALUMNI_ALUMNI_FACE_HEIGHT;
-	for (size_t i = 0; i != n_faces; ++i)
+	size_t const start    = gubPageNum * MAX_NUMBER_OLD_MERCS_ON_PAGE;
+	size_t const n_faces  = MIN(OLD_MERCS_COUNT - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
+	size_t       face_idx = start;
+	UINT16 const w        = AIM_ALUMNI_ALUMNI_FACE_WIDTH;
+	UINT16 const h        = AIM_ALUMNI_ALUMNI_FACE_HEIGHT;
+	for (size_t i = 0; i != n_faces; ++i, ++face_idx)
 	{
 		UINT16        const x = i % AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_GRID_OFFSET_X + AIM_ALUMNI_START_GRID_X;
 		UINT16        const y = i / AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_GRID_OFFSET_Y + AIM_ALUMNI_START_GRID_Y;
 		MOUSE_REGION* const r = &gMercAlumniFaceMouseRegions[i];
 		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGH, CURSOR_WWW, MSYS_NO_CALLBACK, SelectAlumniFaceRegionCallBack);
-		MSYS_SetRegionUserData(r, 0, start + i);
+		MSYS_SetRegionUserData(r, 0, face_idx);
 	}
 }
 
