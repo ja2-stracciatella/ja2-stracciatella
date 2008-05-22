@@ -324,19 +324,11 @@ static void ResetAimArchiveButtons(void)
 }
 
 
-static void DisableAimArchiveButton(void)
+static void DisableAimArchiveButton()
 {
-	if( (gubPageNum == 0 ) )
+	if (gubPageNum < 3)
 	{
-		ButtonList[ guiAlumniPageButton[ 0 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
-	}
-	else if( gubPageNum == 1 )
-	{
-		ButtonList[ guiAlumniPageButton[ 1 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
-	}
-	else if( gubPageNum == 2 )
-	{
-		ButtonList[ guiAlumniPageButton[ 2 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
+		ButtonList[guiAlumniPageButton[gubPageNum]]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 }
 
