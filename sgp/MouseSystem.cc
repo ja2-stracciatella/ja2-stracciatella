@@ -885,49 +885,37 @@ static void DisplayHelpTokenizedString(const wchar_t* pStringA, INT16 sX, INT16 
 
 void RenderFastHelp()
 {
-	static INT32 iLastClock;
-	INT32 iTimeDifferential, iCurrentClock;
+	static UINT32 last_clock;
 
-	if( !gfRenderHilights )
-		return;
+	if (!gfRenderHilights) return;
 
-	iCurrentClock = GetClock();
-	iTimeDifferential = iCurrentClock - iLastClock;
-	if (iTimeDifferential < 0)
-		iTimeDifferential += 0x7fffffff;
-	iLastClock = iCurrentClock;
+	UINT32 const current_clock = GetClock();
+	UINT32 const time_delta    = current_clock - last_clock;
+	last_clock = current_clock;
 
-	if( MSYS_CurrRegion && MSYS_CurrRegion->FastHelpText )
+	MOUSE_REGION* const r = MSYS_CurrRegion;
+	if (!r || !r->FastHelpText) return;
+
+	if (r->uiFlags & (MSYS_ALLOW_DISABLED_FASTHELP | MSYS_REGION_ENABLED))
 	{
-		if( !MSYS_CurrRegion->FastHelpTimer )
+		if (r->FastHelpTimer == 0)
 		{
-			if( MSYS_CurrRegion->uiFlags & ( MSYS_ALLOW_DISABLED_FASTHELP | MSYS_REGION_ENABLED ) )
+			if (r->uiFlags & MSYS_MOUSE_IN_AREA)
 			{
-				if( MSYS_CurrRegion->uiFlags & MSYS_MOUSE_IN_AREA )
-					MSYS_CurrRegion->uiFlags |= MSYS_FASTHELP;
-				else
-				{
-					MSYS_CurrRegion->uiFlags &= ( ~( MSYS_FASTHELP | MSYS_FASTHELP_RESET ) );
-				}
-				//Do I really need this?
-				//MSYS_CurrRegion->uiFlags |= REGION_DIRTY;
-				DisplayFastHelp( MSYS_CurrRegion );
+				r->uiFlags |= MSYS_FASTHELP;
 			}
+			else
+			{
+				r->uiFlags &= ~(MSYS_FASTHELP | MSYS_FASTHELP_RESET);
+			}
+			DisplayFastHelp(r);
 		}
 		else
 		{
-			if( MSYS_CurrRegion->uiFlags & ( MSYS_ALLOW_DISABLED_FASTHELP | MSYS_REGION_ENABLED ) )
+			if (r->uiFlags & MSYS_MOUSE_IN_AREA && r->ButtonState == 0)
 			{
-				if ( MSYS_CurrRegion->uiFlags & MSYS_MOUSE_IN_AREA &&
-						!MSYS_CurrRegion->ButtonState)// & (MSYS_LEFT_BUTTON|MSYS_RIGHT_BUTTON)) )
-				{
-					MSYS_CurrRegion->FastHelpTimer -= (INT16)MAX( iTimeDifferential, 0 );
-
-					if( MSYS_CurrRegion->FastHelpTimer < 0 )
-					{
-						MSYS_CurrRegion->FastHelpTimer = 0;
-					}
-				}
+				r->FastHelpTimer -= time_delta;
+				if (r->FastHelpTimer < 0) r->FastHelpTimer = 0;
 			}
 		}
 	}
