@@ -437,32 +437,15 @@ static void InitAlumniFaceRegions(void)
 
 static void RemoveAimAlumniFaceRegion(void)
 {
-	UINT16 i;
-	UINT16 usNumber=0;
-
-	if(!gfFaceMouseRegionsActive)
-		return;
-
-	switch(gubPageNum)
-	{
-		case 0:
-			usNumber = AIM_ALUMNI_NUM_FACE_ROWS * AIM_ALUMNI_NUM_FACE_COLS;
-			break;
-		case 1:
-			usNumber = AIM_ALUMNI_NUM_FACE_ROWS * AIM_ALUMNI_NUM_FACE_COLS;
-			break;
-		case 2:
-			usNumber = 2 * AIM_ALUMNI_NUM_FACE_COLS + 1;
-
-		default:
-			break;
-	}
-
-	for(i=0; i<usNumber; i++)
-	{
-	  MSYS_RemoveRegion( &gMercAlumniFaceMouseRegions[ i ]);
-	}
+	if (!gfFaceMouseRegionsActive) return;
 	gfFaceMouseRegionsActive = FALSE;
+
+	size_t const start    = gubPageNum * MAX_NUMBER_OLD_MERCS_ON_PAGE;
+	size_t const n_faces  = MIN(OLD_MERCS_COUNT - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
+	for (size_t i = 0; i < n_faces; ++i)
+	{
+	  MSYS_RemoveRegion(&gMercAlumniFaceMouseRegions[i]);
+	}
 }
 
 
