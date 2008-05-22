@@ -100,7 +100,6 @@ static SGPVObject* guiPopUpPic;
 static SGPVObject* guiDoneButton;
 
 UINT8			gubPageNum;
-BOOLEAN		gfExitingAimArchives;
 UINT8			gubDrawOldMerc;
 UINT8			gfDrawPopUpBox=FALSE;
 BOOLEAN		gfDestroyPopUpBox;
@@ -141,9 +140,6 @@ try
 {
 	UINT16	usPosX, i;
 
-
-	gfExitingAimArchives = FALSE;
-//	gubDrawOldMerc = 255;
 	gfDrawPopUpBox=FALSE;
 	gfDestroyPopUpBox=FALSE;
 
@@ -200,8 +196,6 @@ static void RemoveAimAlumniFaceRegion(void);
 void ExitAimArchives()
 {
 	UINT16 i;
-
-	gfExitingAimArchives = TRUE;
 
 	DeleteVideoObject(guiAlumniFrame);
 	DeleteVideoObject(guiOldAim);
@@ -332,8 +326,6 @@ static void ResetAimArchiveButtons(void)
 
 static void DisableAimArchiveButton(void)
 {
-	if (gfExitingAimArchives) return;
-
 	if( (gubPageNum == 0 ) )
 	{
 		ButtonList[ guiAlumniPageButton[ 0 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
