@@ -138,53 +138,43 @@ static void InitAlumniFaceRegions(void);
 BOOLEAN EnterAimArchives()
 try
 {
-	UINT16	usPosX, i;
-
-	gfDrawPopUpBox=FALSE;
-	gfDestroyPopUpBox=FALSE;
+	gfDrawPopUpBox    = FALSE;
+	gfDestroyPopUpBox = FALSE;
 
 	InitAimDefaults();
 	InitAimMenuBar();
 
 	gubPageNum = (UINT8)giCurrentSubPage;
 
-	// load the Alumni Frame and add it
 	guiAlumniFrame = AddVideoObjectFromFile("LAPTOP/AlumniFrame.sti");
-
-	// load the 1st set of faces and add it
-	guiOldAim = AddVideoObjectFromFile("LAPTOP/Old_Aim.sti");
-
-	// load the PopupPic graphic and add it
-	guiPopUpPic = AddVideoObjectFromFile("LAPTOP/PopupPicFrame.sti");
-
-		// load the AlumniPopUp graphic and add it
+	guiOldAim      = AddVideoObjectFromFile("LAPTOP/Old_Aim.sti"); // 1st set of faces
+	guiPopUpPic    = AddVideoObjectFromFile("LAPTOP/PopupPicFrame.sti");
 	guiAlumniPopUp = AddVideoObjectFromFile("LAPTOP/AlumniPopUp.sti");
-
-		// load the Done Button graphic and add it
-	guiDoneButton = AddVideoObjectFromFile("LAPTOP/DoneButton.sti");
+	guiDoneButton  = AddVideoObjectFromFile("LAPTOP/DoneButton.sti");
 
 	InitAlumniFaceRegions();
 
-	//Load graphic for buttons
-	guiAlumniPageButtonImage =  LoadButtonImage("LAPTOP/BottomButtons2.sti", -1,0,-1,1,-1 );
+	guiAlumniPageButtonImage = LoadButtonImage("LAPTOP/BottomButtons2.sti", -1, 0, -1, 1, -1);
 
-	usPosX = AIM_ALUMNI_PAGE1_X;
-	for(i=0; i<3; i++)
+	INT16 x       = AIM_ALUMNI_PAGE1_X;
+	INT16 const y = AIM_ALUMNI_PAGE1_Y;
+	for (size_t i = 0; i < 3; ++i)
 	{
-		guiAlumniPageButton[i] = CreateIconAndTextButton( guiAlumniPageButtonImage, AimAlumniText[i], AIM_ALUMNI_PAGE_FONT,
-														 AIM_ALUMNI_PAGE_COLOR_UP, DEFAULT_SHADOW,
-														 AIM_ALUMNI_PAGE_COLOR_DOWN, DEFAULT_SHADOW,
-														 usPosX, AIM_ALUMNI_PAGE1_Y, MSYS_PRIORITY_HIGH,
-														 BtnAlumniPageButtonCallback);
-		SetButtonCursor(guiAlumniPageButton[i], CURSOR_WWW);
-		MSYS_SetBtnUserData(guiAlumniPageButton[i], i);
-
-		usPosX += AIM_ALUMNI_PAGE_GAP;
+		INT32 const btn = CreateIconAndTextButton(
+			guiAlumniPageButtonImage, AimAlumniText[i], AIM_ALUMNI_PAGE_FONT,
+			AIM_ALUMNI_PAGE_COLOR_UP,   DEFAULT_SHADOW,
+			AIM_ALUMNI_PAGE_COLOR_DOWN, DEFAULT_SHADOW,
+			x, y, MSYS_PRIORITY_HIGH, BtnAlumniPageButtonCallback
+		);
+		guiAlumniPageButton[i] = btn;
+		SetButtonCursor(btn, CURSOR_WWW);
+		MSYS_SetBtnUserData(btn, i);
+		x += AIM_ALUMNI_PAGE_GAP;
 	}
 
 	DisableAimArchiveButton();
 	RenderAimArchives();
-	return(TRUE);
+	return TRUE;
 }
 catch (...) { return FALSE; }
 
@@ -195,8 +185,6 @@ static void RemoveAimAlumniFaceRegion(void);
 
 void ExitAimArchives()
 {
-	UINT16 i;
-
 	DeleteVideoObject(guiAlumniFrame);
 	DeleteVideoObject(guiOldAim);
 	DeleteVideoObject(guiAlumniPopUp);
@@ -205,9 +193,8 @@ void ExitAimArchives()
 
 	RemoveAimAlumniFaceRegion();
 
-	UnloadButtonImage( guiAlumniPageButtonImage );
-	for(i=0; i<3; i++)
- 		RemoveButton( guiAlumniPageButton[i] );
+	for (size_t i = 0; i < 3; ++i) RemoveButton(guiAlumniPageButton[i]);
+	UnloadButtonImage(guiAlumniPageButtonImage);
 
 	RemoveAimDefaults();
 	ExitAimMenuBar();
@@ -215,8 +202,9 @@ void ExitAimArchives()
 
 	CreateDestroyDoneMouseRegion(0);
 	gfDestroyPopUpBox = FALSE;
-	gfDrawPopUpBox = FALSE;
+	gfDrawPopUpBox    = FALSE;
 }
+
 
 void HandleAimArchives()
 {
