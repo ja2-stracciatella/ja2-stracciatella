@@ -767,55 +767,41 @@ static size_t GetWidthOfString(const wchar_t* String);
 static void DisplayHelpTokenizedString(const wchar_t* pStringA, INT16 sX, INT16 sY);
 
 
-//=============================================================================
-//	DisplayFastHelp
-//
-//
-static void DisplayFastHelp(MOUSE_REGION* region)
+static void DisplayFastHelp(MOUSE_REGION* const r)
 {
-	if ( region->uiFlags & MSYS_FASTHELP )
+	if (!(r->uiFlags & MSYS_FASTHELP)) return;
+
+	INT32 const w = GetWidthOfString(r->FastHelpText) + 10;
+	INT32 const h = GetNumberOfLinesInHeight(r->FastHelpText) * (GetFontHeight(FONT10ARIAL) + 1) + 8;
+
+	INT32 x = r->RegionTopLeftX + 10;
+	if (x <  0)                x = 0;
+	if (x >= SCREEN_WIDTH - w) x = SCREEN_WIDTH - w - 4;
+
+	INT32 y = r->RegionTopLeftY - h * 3 / 4;
+	if (y <  0)                 y = 0;
+	if (y >= SCREEN_HEIGHT - h) y = SCREEN_HEIGHT - h - 15;
+
+	if (!(r->uiFlags & MSYS_GOT_BACKGROUND))
 	{
-		INT32 iW = GetWidthOfString(region->FastHelpText) + 10;
-		INT32 iH = GetNumberOfLinesInHeight(region->FastHelpText) * (GetFontHeight(FONT10ARIAL) + 1) + 8;
-
-		INT32 iX = region->RegionTopLeftX + 10;
-
-		if (iX < 0)
-			iX = 0;
-
-		if ( (iX + iW) >= SCREEN_WIDTH )
-			iX = (SCREEN_WIDTH - iW - 4);
-
-		INT32 iY = region->RegionTopLeftY - iH * 3 / 4;
-		if (iY < 0)
-			iY = 0;
-
-		if ( (iY + iH) >= SCREEN_HEIGHT )
-			iY = (SCREEN_HEIGHT - iH - 15);
-
-		if ( !(region->uiFlags & MSYS_GOT_BACKGROUND) )
-		{
-			region->FastHelpRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT | BGND_FLAG_SAVERECT, iX, iY, iX + iW, iY + iH);
-			region->uiFlags |= MSYS_GOT_BACKGROUND;
-			region->uiFlags |= MSYS_HAS_BACKRECT;
+		r->FastHelpRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT | BGND_FLAG_SAVERECT, x, y, x + w, y + h);
+		r->uiFlags |= MSYS_GOT_BACKGROUND | MSYS_HAS_BACKRECT;
+	}
+	else
+	{
+		{ SGPVSurface::Lock l(FRAME_BUFFER);
+			UINT8* const buf = l.Buffer<UINT8>();
+			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			RectangleDraw(TRUE, x + 1, y + 1, x + w - 1, y + h - 1, Get16BPPColor(FROMRGB( 65,  57, 15)), buf);
+			RectangleDraw(TRUE, x,     y,     x + w - 2, y + h - 2, Get16BPPColor(FROMRGB(227, 198, 88)), buf);
 		}
-		else
-		{
-			{ SGPVSurface::Lock l(FRAME_BUFFER);
-				UINT8* const pDestBuf         = l.Buffer<UINT8>();
-				UINT32 const uiDestPitchBYTES = l.Pitch();
-				SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-				RectangleDraw( TRUE, iX + 1, iY + 1, iX + iW - 1, iY + iH - 1, Get16BPPColor( FROMRGB( 65, 57, 15 ) ), pDestBuf );
-				RectangleDraw( TRUE, iX, iY, iX + iW - 2, iY + iH - 2, Get16BPPColor( FROMRGB( 227, 198, 88 ) ), pDestBuf );
-			}
-			ShadowVideoSurfaceRect( FRAME_BUFFER, iX + 2, iY + 2, iX + iW - 3, iY + iH - 3 );
-			ShadowVideoSurfaceRect( FRAME_BUFFER, iX + 2, iY + 2, iX + iW - 3, iY + iH - 3 );
+		ShadowVideoSurfaceRect(FRAME_BUFFER, x + 2, y + 2, x + w - 3, y + h - 3);
+		ShadowVideoSurfaceRect(FRAME_BUFFER, x + 2, y + 2, x + w - 3, y + h - 3);
 
-			SetFont( FONT10ARIAL );
-			SetFontShadow( FONT_NEARBLACK );
-			DisplayHelpTokenizedString( region->FastHelpText ,( INT16 )( iX + 5 ), ( INT16 )( iY + 5 ) );
-			InvalidateRegion(  iX, iY, (iX + iW) , (iY + iH) );
-		}
+		SetFont(FONT10ARIAL);
+		SetFontShadow(FONT_NEARBLACK);
+		DisplayHelpTokenizedString(r->FastHelpText, x + 5, y + 5);
+		InvalidateRegion(x, y, x + w, y + h);
 	}
 }
 
