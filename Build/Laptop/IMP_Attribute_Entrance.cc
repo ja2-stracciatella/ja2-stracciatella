@@ -13,7 +13,7 @@
 
 // the buttons
 static BUTTON_PICS* giIMPAttributeEntranceButtonImage[1];
-static UINT32 giIMPAttributeEntranceButton[1];
+static GUIButtonRef giIMPAttributeEntranceButton[1];
 
 
 static void BtnIMPAttributeBeginCallback(GUI_BUTTON *btn, INT32 reason);

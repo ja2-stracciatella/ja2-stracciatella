@@ -149,14 +149,14 @@ BOOLEAN		gfSettingOfItemGlowStatusOnEnterOfOptionScreen;
 BOOLEAN   gfSettingOfDontAnimateSmoke;
 
 static BUTTON_PICS* giOptionsButtonImages;
-static UINT32 guiOptGotoSaveGameBtn;
-static UINT32 guiOptGotoLoadGameBtn;
-static UINT32 guiQuitButton;
-static UINT32 guiDoneButton;
+static GUIButtonRef guiOptGotoSaveGameBtn;
+static GUIButtonRef guiOptGotoLoadGameBtn;
+static GUIButtonRef guiQuitButton;
+static GUIButtonRef guiDoneButton;
 
 
 //checkbox to toggle tracking mode on or off
-UINT32	guiOptionsToggles[ NUM_GAME_OPTIONS ];
+GUIButtonRef guiOptionsToggles[NUM_GAME_OPTIONS];
 static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, INT32 reason);
 
 
@@ -245,7 +245,7 @@ UINT32	OptionsScreenHandle()
 }
 
 
-static INT32 MakeButton(INT16 x, GUI_CALLBACK click, const wchar_t* text)
+static GUIButtonRef MakeButton(INT16 x, GUI_CALLBACK click, const wchar_t* text)
 {
 	return CreateIconAndTextButton(giOptionsButtonImages, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, OPT_BTN_Y, MSYS_PRIORITY_HIGH, click);
 }
@@ -329,7 +329,7 @@ try
 		}
 
 		//Check box to toggle tracking mode
-		INT32 check = CreateCheckBoxButton(pos_x, pos_y, "INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH + 10, BtnOptionsTogglesCallback);
+		GUIButtonRef const check = CreateCheckBoxButton(pos_x, pos_y, "INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH + 10, BtnOptionsTogglesCallback);
 		guiOptionsToggles[cnt] = check;
 		MSYS_SetBtnUserData(check, cnt);
 

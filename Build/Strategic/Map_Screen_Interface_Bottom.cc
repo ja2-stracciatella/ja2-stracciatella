@@ -120,9 +120,9 @@ static SGPVObject* guiMAPBOTTOMPANEL;
 static SGPVObject* guiSliderBar;
 
 // buttons
-UINT32 guiMapMessageScrollButtons[ 2 ];
-UINT32 guiMapBottomExitButtons[ 3 ];
-UINT32 guiMapBottomTimeButtons[ 2 ];
+GUIButtonRef guiMapMessageScrollButtons[2];
+GUIButtonRef guiMapBottomExitButtons[3];
+GUIButtonRef guiMapBottomTimeButtons[2];
 
 // mouse regions
 MOUSE_REGION gMapMessageScrollBarRegion;
@@ -275,18 +275,18 @@ void RenderMapScreenInterfaceBottom( void )
 }
 
 
-static INT32 MakeExitButton(const INT32 off, const INT32 on, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
+static GUIButtonRef MakeExitButton(const INT32 off, const INT32 on, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
 {
-	const INT32 btn = QuickCreateButtonImg("INTERFACE/map_border_buttons.sti", -1, off, -1, on, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/map_border_buttons.sti", -1, off, -1, on, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	SetButtonFastHelpText(btn, help);
 	SetButtonCursor(btn, MSYS_NO_CURSOR);
 	return btn;
 }
 
 
-static INT32 MakeArrowButton(const INT32 grayed, const INT32 off, const INT32 on, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
+static GUIButtonRef MakeArrowButton(const INT32 grayed, const INT32 off, const INT32 on, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
 {
-	const INT32 btn = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", grayed, off, -1, on, -1, x, y, MSYS_PRIORITY_HIGHEST - 2, click);
+	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", grayed, off, -1, on, -1, x, y, MSYS_PRIORITY_HIGHEST - 2, click);
 	SetButtonFastHelpText(btn, help);
 	SetButtonCursor(btn, MSYS_NO_CURSOR);
 	return btn;

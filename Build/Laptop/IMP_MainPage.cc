@@ -28,8 +28,8 @@
 #define MAIN_PAGE_BUTTON_TEXT_WIDTH 95
 
 // main page buttons
-INT32 giIMPMainPageButton[6];
 static BUTTON_PICS* giIMPMainPageButtonImage[6];
+GUIButtonRef giIMPMainPageButton[6];
 
 extern INT32 iCurrentVoices;
 
@@ -132,7 +132,7 @@ static void MakeButton(UINT idx, const char* img_file, const wchar_t* text, INT1
 	giIMPMainPageButtonImage[idx] = img;
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;
-	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
 	giIMPMainPageButton[idx] = btn;
 	SetButtonCursor(btn, CURSOR_WWW);
 	if (idx >= 2)

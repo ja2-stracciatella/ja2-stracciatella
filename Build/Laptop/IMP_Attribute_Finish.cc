@@ -16,7 +16,7 @@
 
 // buttons
 static BUTTON_PICS* giIMPAttributeFinishButtonImage[2];
-INT32 giIMPAttributeFinishButton[ 2 ];
+GUIButtonRef giIMPAttributeFinishButton[2];
 
 // function definitions
 extern void SetGeneratedCharacterAttributes( void );
@@ -69,7 +69,7 @@ static void MakeButton(UINT idx, const wchar_t* text, INT16 y, GUI_CALLBACK clic
 	giIMPAttributeFinishButtonImage[idx] = img;
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;
-	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, LAPTOP_SCREEN_UL_X + 130, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, LAPTOP_SCREEN_UL_X + 130, y, MSYS_PRIORITY_HIGH, click);
 	giIMPAttributeFinishButton[idx] = btn;
 	SetButtonCursor(btn, CURSOR_WWW);
 }

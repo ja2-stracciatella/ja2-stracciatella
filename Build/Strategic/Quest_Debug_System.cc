@@ -449,30 +449,29 @@ static BOOLEAN gfDropDamagedItems = FALSE;
 static MOUSE_REGION gQuestDebugSysScreenRegions;
 
 
-static UINT32 guiQuestDebugExitButton;
+static GUIButtonRef guiQuestDebugExitButton;
 
 //checkbox for weather to show all npc or just npc in sector
-static UINT32 guiQuestDebugAllOrSectorNPCToggle;
+static GUIButtonRef guiQuestDebugAllOrSectorNPCToggle;
 
 
-static UINT32 guiQuestDebugCurNPCButton;
-static UINT32 guiQuestDebugCurItemButton;
-static UINT32 guiQuestDebugAddNpcToLocationButton;
-static UINT32 guiQuestDebugAddItemToLocationButton;
-static UINT32 guiQuestDebugGiveItemToNPCButton;
-static UINT32 guiQuestDebugChangeDayButton;
-static UINT32 guiQuestDebugViewNPCInvButton;
-static UINT32 guiQuestDebugRestoreNPCInvButton;
-static UINT32 guiQuestDebugNPCLogButtonButton;
-static UINT32 guiQuestDebugNPCRefreshButtonButton;
-static UINT32 guiQuestDebugStartMercTalkingButtonButton;
+static GUIButtonRef guiQuestDebugCurNPCButton;
+static GUIButtonRef guiQuestDebugCurItemButton;
+static GUIButtonRef guiQuestDebugAddNpcToLocationButton;
+static GUIButtonRef guiQuestDebugAddItemToLocationButton;
+static GUIButtonRef guiQuestDebugGiveItemToNPCButton;
+static GUIButtonRef guiQuestDebugChangeDayButton;
+static GUIButtonRef guiQuestDebugViewNPCInvButton;
+static GUIButtonRef guiQuestDebugRestoreNPCInvButton;
+static GUIButtonRef guiQuestDebugNPCLogButtonButton;
+static GUIButtonRef guiQuestDebugNPCRefreshButtonButton;
+static GUIButtonRef guiQuestDebugStartMercTalkingButtonButton;
 
 // checkbox for whether to add the merc to the players team
-static UINT32 guiQuestDebugAddNpcToTeamToggle;
+static GUIButtonRef guiQuestDebugAddNpcToTeamToggle;
 
 // checkbox for whether have rpc say the sector description
-static UINT32 guiQuestDebugRPCSaySectorDescToggle;
-
+static GUIButtonRef guiQuestDebugRPCSaySectorDescToggle;
 
 
 static MOUSE_REGION gSelectedNpcListRegion[QUEST_DBS_MAX_DISPLAYED_ENTRIES];
@@ -484,10 +483,10 @@ static MOUSE_REGION gScrollArrowsRegion[2];
 static MOUSE_REGION gQuestTextEntryDebugDisableScreenRegion;
 
 //Ok button on the text entry form
-static UINT32 guiQuestDebugTextEntryOkBtn;
+static GUIButtonRef guiQuestDebugTextEntryOkBtn;
 
 //Ok button on the NPC inventory form
-static UINT32 guiQuestDebugNPCInventOkBtn;
+static GUIButtonRef guiQuestDebugNPCInventOkBtn;
 
 
 // Mouse regions for the Quests
@@ -497,8 +496,8 @@ static MOUSE_REGION gQuestListRegion[QUEST_DBS_NUM_DISPLAYED_QUESTS];
 static MOUSE_REGION gFactListRegion[QUEST_DBS_NUM_DISPLAYED_FACTS];
 
 
-static UINT32 guiQDPgUpButtonButton;
-static UINT32 guiQDPgDownButtonButton;
+static GUIButtonRef guiQDPgUpButtonButton;
+static GUIButtonRef guiQDPgDownButtonButton;
 
 
 static void DisplaySelectedItem(void);
@@ -679,7 +678,7 @@ UINT32	QuestDebugScreenHandle()
 }
 
 
-static INT32 MakeButton(const wchar_t* text, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority, GUI_CALLBACK click)
+static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority, GUI_CALLBACK click)
 {
 	return CreateTextButton(text, QUEST_DBS_FONT_STATIC_TEXT, QUEST_DBS_COLOR_STATIC_TEXT, FONT_BLACK, x, y, w, h, priority, click);
 }

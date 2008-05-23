@@ -122,11 +122,11 @@ MOUSE_REGION    gSelectedInsuranceContractLinkRegion[2];
 
 static BUTTON_PICS* guiInsContractPrevButtonImage;
 static void BtnInsContractPrevButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiInsContractPrevBackButton;
+GUIButtonRef guiInsContractPrevBackButton;
 
 static BUTTON_PICS* guiInsContractNextButtonImage;
 static void BtnInsContractNextButtonCallBack(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiInsContractNextBackButton;
+GUIButtonRef guiInsContractNextBackButton;
 
 
 //Graphic for Accept, Clear button for form 1
@@ -135,7 +135,7 @@ static BUTTON_PICS* guiInsuranceAcceptClearFormButtonImage;
 
 typedef struct InsuranceInfo
 {
-	UINT32       button;
+	GUIButtonRef button;
 	SOLDIERTYPE* soldier;
 } InsuranceInfo;
 
@@ -150,11 +150,11 @@ static void SetNumberOfDisplayedInsuranceMercs(void)
 }
 
 
-static INT32 MakeButtonBig(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click, const INT8 offset_x)
+static GUIButtonRef MakeButtonBig(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click, const INT8 offset_x)
 {
 	const INT16 text_col   = INS_FONT_COLOR;
 	const INT16 shadow_col = INS_FONT_SHADOW;
-	const INT32 btn = CreateIconAndTextButton(img, text, INS_FONT_BIG, text_col, shadow_col, text_col, shadow_col, x, INS_INFO_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, INS_FONT_BIG, text_col, shadow_col, text_col, shadow_col, x, INS_INFO_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
 	SetButtonCursor(btn, CURSOR_WWW);
 	SpecifyButtonTextOffsets(btn, offset_x, 16, FALSE);
 	return btn;
@@ -651,7 +651,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 		for (UINT i = 0; i != gubNumberofDisplayedInsuranceGrids; ++i)
 		{
 			const INT16 x   = INS_CTRCT_ORDER_GRID_X + INS_CTRCT_ORDER_GRID_OFFSET_X * i + INS_CTRCT_ACCEPT_BTN_X;
-			const INT32 btn = CreateIconAndTextButton(guiInsuranceAcceptClearFormButtonImage, text, INS_FONT_MED, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, BtnInsuranceAcceptClearFormButtonCallback);
+			GUIButtonRef const btn = CreateIconAndTextButton(guiInsuranceAcceptClearFormButtonImage, text, INS_FONT_MED, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, BtnInsuranceAcceptClearFormButtonCallback);
 			insurance_info[i].button = btn;
 			SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 			MSYS_SetBtnUserData(btn, i);

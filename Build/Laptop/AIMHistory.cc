@@ -63,7 +63,7 @@ BOOLEAN		AimHistorySubPagesVisitedFlag[ NUM_AIM_HISTORY_PAGES ];
 
 MOUSE_REGION    gSelectedHistoryTocMenuRegion[ NUM_AIM_HISTORY_PAGES ];
 
-static UINT32 guiHistoryMenuButton[AIM_HISTORY_MENU_BUTTON_AMOUNT];
+static GUIButtonRef guiHistoryMenuButton[AIM_HISTORY_MENU_BUTTON_AMOUNT];
 static BUTTON_PICS* guiHistoryMenuButtonImage;
 
 

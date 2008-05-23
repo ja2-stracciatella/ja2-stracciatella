@@ -136,7 +136,7 @@ static BOOLEAN fInFinancialMode = FALSE;
 static UINT32 guiLastPageInRecordsList = 0;
 
 // finance screen buttons
-static INT32 giFinanceButton[4];
+static GUIButtonRef giFinanceButton[4];
 static BUTTON_PICS* giFinanceButtonImage[4];
 
 // internal functions

@@ -73,9 +73,9 @@ static void OKMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
 static void YESMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-static INT32 MakeButton(const wchar_t* text, INT16 fore_colour, INT16 shadow_colour, INT16 x, INT16 y, GUI_CALLBACK click, UINT16 cursor)
+static GUIButtonRef MakeButton(const wchar_t* text, INT16 fore_colour, INT16 shadow_colour, INT16 x, INT16 y, GUI_CALLBACK click, UINT16 cursor)
 {
-	INT32 btn = CreateIconAndTextButton(gMsgBox.iButtonImages, text, FONT12ARIAL, fore_colour, shadow_colour, fore_colour, shadow_colour, x, y, MSYS_PRIORITY_HIGHEST, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(gMsgBox.iButtonImages, text, FONT12ARIAL, fore_colour, shadow_colour, fore_colour, shadow_colour, x, y, MSYS_PRIORITY_HIGHEST, click);
 	SetButtonCursor(btn, cursor);
 	ForceButtonUnDirty(btn);
 	return btn;
@@ -267,7 +267,7 @@ void DoMessageBox(const UINT8 ubStyle, const wchar_t* const zString, const UINT3
 			for (UINT i = 0; i < 4; ++i)
 			{
 				wchar_t text[] = { '1' + i, '\0' };
-				const INT32 btn = MakeButton(text, ubFontColor, ubFontShadowColor, x + dx * i, y, NumberedMsgBoxCallback, usCursor);
+				GUIButtonRef const btn = MakeButton(text, ubFontColor, ubFontShadowColor, x + dx * i, y, NumberedMsgBoxCallback, usCursor);
 				gMsgBox.uiButton[i] = btn;
 				MSYS_SetBtnUserData(btn, i + 1);
 			}

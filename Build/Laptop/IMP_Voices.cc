@@ -26,7 +26,7 @@ INT32 iLastVoice = 2;
 
 UINT32 uiVocVoiceSound = 0;
 // buttons needed for the IMP Voices screen
-INT32 giIMPVoicesButton[ 3 ];
+GUIButtonRef giIMPVoicesButton[3];
 static BUTTON_PICS* giIMPVoicesButtonImage[3];
 
 
@@ -144,7 +144,7 @@ static void MakeButton(UINT idx, const char* img_file, INT32 off_normal, INT32 o
 	giIMPVoicesButtonImage[idx] = img;
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;
-	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
 	giIMPVoicesButton[idx] = btn;
 	SetButtonCursor(btn, CURSOR_WWW);
 }

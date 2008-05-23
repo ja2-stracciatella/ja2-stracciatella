@@ -102,7 +102,7 @@ GROUP *gpBattleGroup = NULL;
 
 MOUSE_REGION PBInterfaceBlanket;
 BOOLEAN gfPreBattleInterfaceActive = FALSE;
-UINT32 iPBButton[3];
+GUIButtonRef iPBButton[3];
 static BUTTON_PICS* iPBButtonImage[3];
 static SGPVObject* uiInterfaceImages;
 BOOLEAN gfRenderPBInterface;
@@ -200,7 +200,7 @@ static void ValidateAndCorrectInBattleCounters(GROUP* pLocGroup)
 
 static void MakeButton(UINT idx, INT16 x, const wchar_t* text, GUI_CALLBACK click)
 {
-	INT32 btn = QuickCreateButton(iPBButtonImage[idx], x, 54, MSYS_PRIORITY_HIGHEST - 2, click);
+	GUIButtonRef const btn = QuickCreateButton(iPBButtonImage[idx], x, 54, MSYS_PRIORITY_HIGHEST - 2, click);
 	iPBButton[idx] = btn;
 
 	SpecifyGeneralButtonTextAttributes(btn, text, BLOCKFONT, FONT_BEIGE, 141);

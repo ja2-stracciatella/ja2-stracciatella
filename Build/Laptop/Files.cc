@@ -162,7 +162,7 @@ static const UINT16 usProfileIdsForTerroristFiles[] =
 
 
 // buttons for next and previous pages
-static UINT32 giFilesPageButtons[2];
+static GUIButtonRef giFilesPageButtons[2];
 
 
 // the previous and next pages buttons

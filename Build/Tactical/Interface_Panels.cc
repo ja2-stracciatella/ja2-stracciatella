@@ -273,7 +273,7 @@ static BUTTON_PICS* iBurstButtonImages[NUM_WEAPON_MODES];
 static BUTTON_PICS* iTEAMPanelImages[NUM_TEAM_BUTTON_IMAGES];
 
 static BUTTON_PICS* giSMStealthImages;
-INT32										giSMStealthButton = -1;
+GUIButtonRef giSMStealthButton;
 
 BOOLEAN									gfSwitchPanel = FALSE;
 UINT8										gbNewPanel		= SM_PANEL;
@@ -331,8 +331,8 @@ static const INV_REGION_DESC gSMCamoXY =
 };
 
 
-INT32					iSMPanelButtons[ NUM_SM_BUTTONS ];
-INT32					iTEAMPanelButtons[ NUM_TEAM_BUTTONS ];
+GUIButtonRef iSMPanelButtons[NUM_SM_BUTTONS];
+GUIButtonRef iTEAMPanelButtons[NUM_TEAM_BUTTONS];
 
 // Video Surface for Single Merc Panel
 static SGPVObject* guiSMPanel;
@@ -1037,7 +1037,7 @@ catch (...) { return FALSE; }
 
 static BOOLEAN MakeButtonN(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
 {
-	INT32 btn = QuickCreateButtonToggle(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonToggle(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iSMPanelButtons[idx] = btn;
 	if (btn == -1)
 	{
@@ -1051,7 +1051,7 @@ static BOOLEAN MakeButtonN(const UINT idx, BUTTON_PICS* const image, const INT16
 
 static BOOLEAN MakeButtonT(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
 {
-	INT32 btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
+	GUIButtonRef const btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iSMPanelButtons[idx] = btn;
 	if (btn == -1)
 	{
@@ -1082,7 +1082,6 @@ static void BtnUpdownCallback(GUI_BUTTON* btn, INT32 reason);
 BOOLEAN CreateSMPanelButtons(void)
 {
 	giSMStealthImages = NULL;
-	giSMStealthButton = -1;
 	gfUIStanceDifferent = TRUE;
 	gfAllDisabled	= FALSE;
 
@@ -2672,7 +2671,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 
 static BOOLEAN MakeButtonTeam(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
 {
-	INT32 btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
+	GUIButtonRef const btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iTEAMPanelButtons[idx] = btn;
 	if (btn == BUTTON_NO_SLOT)
 	{

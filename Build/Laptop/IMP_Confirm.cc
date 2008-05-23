@@ -30,8 +30,8 @@
 
 #define IMP_MERC_FILE "IMP.dat"
 
-UINT32 giIMPConfirmButton[ 2 ];
 static BUTTON_PICS* giIMPConfirmButtonImage[2];
+GUIButtonRef giIMPConfirmButton[2];
 
 
 typedef struct FacePosInfo
@@ -113,7 +113,7 @@ static void MakeButton(UINT idx, const wchar_t* text, INT16 y, GUI_CALLBACK clic
 	giIMPConfirmButtonImage[idx] = img;
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;
-	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, LAPTOP_SCREEN_UL_X + 136, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, LAPTOP_SCREEN_UL_X + 136, y, MSYS_PRIORITY_HIGH, click);
 	giIMPConfirmButton[idx] = btn;
 	SetButtonCursor(btn, CURSOR_WWW);
 }

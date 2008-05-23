@@ -115,7 +115,7 @@ typedef struct AUTORESOLVE_STRUCT
 
 	//IDs into the graphic images
 	SGPVObject* iPanelImages;
-	INT32 iButton[ NUM_AR_BUTTONS ];
+	GUIButtonRef iButton[NUM_AR_BUTTONS];
 	BUTTON_PICS* iButtonImage[NUM_AR_BUTTONS];
 	SGPVObject* iFaces; //for generic civs and enemies
 	INT32 iMercFaces[20]; //for each merc face
@@ -1582,7 +1582,7 @@ static void RenderAutoResolve(void)
 
 static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, BOOLEAN hide, const wchar_t* text)
 {
-	INT32 btn = QuickCreateButton(gpAR->iButtonImage[idx], x, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = QuickCreateButton(gpAR->iButtonImage[idx], x, y, MSYS_PRIORITY_HIGH, click);
 	gpAR->iButton[idx] = btn;
 	if (text != NULL) SpecifyGeneralButtonTextAttributes(btn, text, BLOCKFONT2, 169, FONT_NEARBLACK);
 	if (hide) HideButton(btn);

@@ -67,13 +67,13 @@ BOOLEAN		FloristGallerySubPagesVisitedFlag[ 4 ];
 
 //Floral buttons
 static BUTTON_PICS* guiGalleryButtonImage;
-static UINT32 guiGalleryButton[FLOR_GALLERY_NUMBER_FLORAL_BUTTONS];
+static GUIButtonRef guiGalleryButton[FLOR_GALLERY_NUMBER_FLORAL_BUTTONS];
 
 //Next Previous buttons
 static BUTTON_PICS* guiFloralGalleryButtonImage;
 static void BtnFloralGalleryNextButtonCallback(GUI_BUTTON *btn, INT32 reason);
 static void BtnFloralGalleryBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiFloralGalleryButton[2];
+GUIButtonRef guiFloralGalleryButton[2];
 
 
 void EnterInitFloristGallery()
@@ -82,10 +82,10 @@ void EnterInitFloristGallery()
 }
 
 
-static INT32 MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
+static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
 {
 	const INT16 shadow_col = FLORIST_BUTTON_TEXT_SHADOW_COLOR;
-	const INT32 btn = CreateIconAndTextButton(guiFloralGalleryButtonImage, text, FLORIST_BUTTON_TEXT_FONT, FLORIST_BUTTON_TEXT_UP_COLOR, shadow_col, FLORIST_BUTTON_TEXT_DOWN_COLOR, shadow_col, x, FLOR_GALLERY_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(guiFloralGalleryButtonImage, text, FLORIST_BUTTON_TEXT_FONT, FLORIST_BUTTON_TEXT_UP_COLOR, shadow_col, FLORIST_BUTTON_TEXT_DOWN_COLOR, shadow_col, x, FLOR_GALLERY_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
 	SetButtonCursor(btn, CURSOR_WWW);
 	return btn;
 }

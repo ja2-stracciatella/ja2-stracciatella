@@ -171,16 +171,16 @@ UINT16		gusOldItemNumOnTopOfPage=65535;
 
 //The menu bar at the bottom that changes to different pages
 static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiBobbyRPageMenu[ NUM_CATALOGUE_BUTTONS ];
 static BUTTON_PICS* guiBobbyRPageMenuImage;
+GUIButtonRef guiBobbyRPageMenu[NUM_CATALOGUE_BUTTONS];
 
 //The next and previous buttons
 static void BtnBobbyRNextPreviousPageCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiBobbyRPreviousPage;
 static BUTTON_PICS* guiBobbyRPreviousPageImage;
+GUIButtonRef guiBobbyRPreviousPage;
 
-UINT32	guiBobbyRNextPage;
 static BUTTON_PICS* guiBobbyRNextPageImage;
+GUIButtonRef guiBobbyRNextPage;
 
 
 // Big Image Mouse region
@@ -188,13 +188,13 @@ MOUSE_REGION    gSelectedBigImageRegion[ BOBBYR_NUM_WEAPONS_ON_PAGE ];
 
 // The order form button
 static void BtnBobbyROrderFormCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiBobbyROrderForm;
 static BUTTON_PICS* guiBobbyROrderFormImage;
+GUIButtonRef guiBobbyROrderForm;
 
 // The Home button
 static void BtnBobbyRHomeButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static UINT32       guiBobbyRHome;
 static BUTTON_PICS* guiBobbyRHomeImage;
+static GUIButtonRef guiBobbyRHome;
 
 
 // Link from the title
@@ -325,10 +325,10 @@ static void SelectTitleImageLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 }
 
 
-static INT32 MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
+static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
 {
 	const INT16 shadow_col = BOBBYR_GUNS_SHADOW_COLOR;
-	const INT32 btn = CreateIconAndTextButton(img, text, BOBBYR_GUNS_BUTTON_FONT, BOBBYR_GUNS_TEXT_COLOR_ON, shadow_col, BOBBYR_GUNS_TEXT_COLOR_OFF, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, BOBBYR_GUNS_BUTTON_FONT, BOBBYR_GUNS_TEXT_COLOR_ON, shadow_col, BOBBYR_GUNS_TEXT_COLOR_OFF, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 	return btn;
 }

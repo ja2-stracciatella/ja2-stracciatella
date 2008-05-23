@@ -372,35 +372,35 @@ static BOOLEAN gfAimMemberCanMercSayOpeningQuote = TRUE;
 
 
 static BUTTON_PICS* guiPreviousContactNextButtonImage;
-static INT32 giPreviousButton;
-static INT32 giContactButton;
-static INT32 giNextButton;
+static GUIButtonRef giPreviousButton;
+static GUIButtonRef giContactButton;
+static GUIButtonRef giNextButton;
 
 //Video conference buttons
 static BUTTON_PICS* guiVideoConferenceButtonImage[3];
 
 //Contract Length Button
-static INT32 giContractLengthButton[3];
+static GUIButtonRef giContractLengthButton[3];
 
 //BuyEquipment Button
-static INT32 giBuyEquipmentButton[2];
+static GUIButtonRef giBuyEquipmentButton[2];
 
 //Authorize Payment Button
-static INT32 giAuthorizeButton[2];
+static GUIButtonRef giAuthorizeButton[2];
 
 //Hang up Button
-static INT32 giHangUpButton;
+static GUIButtonRef giHangUpButton;
 
 // PopupBox button
-static UINT32 guiPopUpOkButton;
+static GUIButtonRef guiPopUpOkButton;
 static BUTTON_PICS* guiPopUpImage;
 
 //Leave Message merc Button
-static INT32 giAnsweringMachineButton[2];
+static GUIButtonRef giAnsweringMachineButton[2];
 
 //X to Close the video conference Button
 static BUTTON_PICS* giXToCloseVideoConfButtonImage;
-static INT32 giXToCloseVideoConfButton;
+static GUIButtonRef giXToCloseVideoConfButton;
 
 
 //Mouse Regions
@@ -433,9 +433,9 @@ void EnterInitAimMembers()
 }
 
 
-static INT32 MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
+static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
 {
-	const INT32 btn = CreateIconAndTextButton
+	GUIButtonRef const btn = CreateIconAndTextButton
 	(
 		guiPreviousContactNextButtonImage, text, AIM_M_FONT_PREV_NEXT_CONTACT,
 		AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_UP,   DEFAULT_SHADOW,
@@ -2438,11 +2438,11 @@ static void BtnXToCloseVideoConfButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static INT32 MakeButtonVideo(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
+static GUIButtonRef MakeButtonVideo(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
 {
 	const INT16 txt_col    = AIM_M_VIDEO_NAME_COLOR;
 	const INT16 shadow_col = AIM_M_VIDEO_NAME_SHADOWCOLOR;
-	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, txt_col, shadow_col, txt_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, txt_col, shadow_col, txt_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 	return btn;
 }

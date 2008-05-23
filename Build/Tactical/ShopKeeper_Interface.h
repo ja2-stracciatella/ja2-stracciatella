@@ -1,6 +1,7 @@
 #ifndef _SHOPKEEPER_INTERFACE__H_
 #define _SHOPKEEPER_INTERFACE__H_
 
+#include "Button_System.h"
 #include "Item_Types.h"
 #include "JA2Types.h"
 
@@ -103,7 +104,7 @@ void RestrictSkiMouseCursor(void);
 void DoSkiMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
 void StartSKIDescriptionBox(void);
 
-extern BOOLEAN gfSKIScreenExit;
-extern UINT32  guiSKI_TransactionButton;
+extern BOOLEAN      gfSKIScreenExit;
+extern GUIButtonRef guiSKI_TransactionButton;
 
 #endif

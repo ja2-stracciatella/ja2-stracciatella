@@ -48,7 +48,7 @@ MOUSE_REGION    gSelectedFloristCardsRegion[9];
 
 
 static BUTTON_PICS* guiFlowerCardsButtonImage;
-UINT32	guiFlowerCardsBackButton;
+GUIButtonRef guiFlowerCardsBackButton;
 
 
 static void BtnFlowerCardsBackButtonCallback(GUI_BUTTON* btn, INT32 reason);

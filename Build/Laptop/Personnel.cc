@@ -239,12 +239,12 @@ static SGPVObject* guiDEPARTEDTEAM;
 static SGPVObject* guiCURRENTTEAM;
 static SGPVObject* guiPersonnelInventory;
 
-static INT32 giPersonnelButton[6];
-static INT32 giPersonnelInventoryButtons[2];
+static GUIButtonRef giPersonnelButton[6];
+static GUIButtonRef giPersonnelInventoryButtons[2];
 
 // buttons for ATM
-static INT32 giPersonnelATMStartButton[3];
 static BUTTON_PICS* giPersonnelATMStartButtonImage[3];
+static GUIButtonRef giPersonnelATMStartButton[3];
 
 // the id of currently displayed merc in right half of screen
 static INT32 iCurrentPersonSelectedId = -1;
@@ -2266,7 +2266,7 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* tex
 {
 	BUTTON_PICS* const img = LoadButtonImage("LAPTOP/AtmButtons.sti", -1, 2, -1, 3, -1);
 	giPersonnelATMStartButtonImage[idx] = img;
-	INT32 btn = QuickCreateButtonNoMove(img, 519, y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonNoMove(img, 519, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giPersonnelATMStartButton[idx] = btn;
 	SpecifyGeneralButtonTextAttributes(btn, text, PERS_FONT, FONT_BLACK, FONT_BLACK);
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);

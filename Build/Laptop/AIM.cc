@@ -169,7 +169,7 @@ static MOUSE_REGION gSelectedHistoryRegion;
 static MOUSE_REGION gSelectedLinksRegion;
 
 //Bottom Buttons
-static UINT32 guiBottomButtons[NUM_AIM_SCREENS];
+static GUIButtonRef guiBottomButtons[NUM_AIM_SCREENS];
 static BUTTON_PICS* guiBottomButtonImage;
 
 //Banner Area
@@ -526,7 +526,7 @@ BOOLEAN ExitAimMenuBar(void)
 }
 
 
-static void ResetAimButtons(UINT32 *Buttons, UINT16 uNumberOfButtons);
+static void ResetAimButtons(GUIButtonRef* Buttons, UINT16 uNumberOfButtons);
 
 
 static void BtnAimBottomButtonsCallback(GUI_BUTTON *btn, INT32 reason)
@@ -540,7 +540,7 @@ static void BtnAimBottomButtonsCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void ResetAimButtons(UINT32 *Buttons, UINT16 uNumberOfButtons)
+static void ResetAimButtons(GUIButtonRef* const Buttons, UINT16 const uNumberOfButtons)
 {
   UINT32 cnt;
 

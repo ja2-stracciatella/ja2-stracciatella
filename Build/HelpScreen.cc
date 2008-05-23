@@ -304,18 +304,18 @@ void SelectHelpScrollAreaArrowsCallBack( MOUSE_REGION * pRegion, INT32 iReason )
 
 
 //checkbox to toggle show help again toggle
-UINT32	gHelpScreenDontShowHelpAgainToggle;
+GUIButtonRef gHelpScreenDontShowHelpAgainToggle;
 
 
 static BUTTON_PICS* giHelpScreenButtonsImage[HELP_SCREEN_NUM_BTNS];
-UINT32	guiHelpScreenBtns[ HELP_SCREEN_NUM_BTNS ];
+GUIButtonRef guiHelpScreenBtns[HELP_SCREEN_NUM_BTNS];
 
 static BUTTON_PICS* giExitBtnImage;
-UINT32	guiHelpScreenExitBtn;
+GUIButtonRef guiHelpScreenExitBtn;
 
 
-INT32		giHelpScreenScrollArrows[2];
 static BUTTON_PICS* guiHelpScreenScrollArrowImage[2];
+GUIButtonRef giHelpScreenScrollArrows[2];
 
 
 void InitHelpScreenSystem()

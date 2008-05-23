@@ -65,7 +65,7 @@ INT32 iAttitude = 0;
 
 
 // IMP global buttons
-static INT32 giIMPButton[1];
+static GUIButtonRef giIMPButton[1];
 static BUTTON_PICS* giIMPButtonImage[1];
 
 // visted subpages

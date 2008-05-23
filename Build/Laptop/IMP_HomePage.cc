@@ -46,7 +46,7 @@ static void BtnIMPAboutUsCallback(GUI_BUTTON *btn, INT32 reason);
 
 
 // IMP homepage buttons
-INT32 giIMPHomePageButton[1];
+GUIButtonRef giIMPHomePageButton[1];
 static BUTTON_PICS* giIMPHomePageButtonImage[1];
 
 // the player activation string

@@ -74,8 +74,8 @@ UINT32 uiNickNameCharacterPosition = 0;
 INT8 bGenderFlag = -1;
 
 // IMP begin page buttons
-INT32 giIMPBeginScreenButton[1];
 static BUTTON_PICS* giIMPBeginScreenButtonImage[1];
+GUIButtonRef giIMPBeginScreenButton[1];
 
 // current mode of entering text we are in, ie FULL or Nick name?
 UINT8 ubTextEnterMode =0;

@@ -2,6 +2,7 @@
 #ifndef __EDITORDEFINES_H
 #define __EDITORDEFINES_H
 
+#include "Button_System.h"
 #include "Types.h"
 #include "Button_Defines.h"
 
@@ -220,7 +221,7 @@ enum
 	DRAW_MODE_ERASE				 = 1000
 };
 
-extern INT32 iEditorButton[NUMBER_EDITOR_BUTTONS];
+extern GUIButtonRef iEditorButton[NUMBER_EDITOR_BUTTONS];
 extern INT32 iEditorToolbarState;
 extern INT32 iDrawMode;
 extern INT32 iCurrentAction;

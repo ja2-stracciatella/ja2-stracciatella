@@ -107,26 +107,26 @@ static SGPVObject* guiBioBox;
 
 // The Prev button
 static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiPrevButton;
 static BUTTON_PICS* guiButtonImage;
+GUIButtonRef guiPrevButton;
 
 // The Next button
 static void BtnMercNextButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiNextButton;
+GUIButtonRef guiNextButton;
 
 // The Hire button
 static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiHireButton;
+GUIButtonRef guiHireButton;
 
 // The Back button
 static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiMercBackButton;
+GUIButtonRef guiMercBackButton;
 
 
-static INT32 MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
+static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
 {
 	const INT16 shadow_col = DEFAULT_SHADOW;
-	const INT32 btn = CreateIconAndTextButton(guiButtonImage, text, FONT12ARIAL, MERC_BUTTON_UP_COLOR, shadow_col, MERC_BUTTON_DOWN_COLOR, shadow_col, x, MERC_FILES_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(guiButtonImage, text, FONT12ARIAL, MERC_BUTTON_UP_COLOR, shadow_col, MERC_BUTTON_DOWN_COLOR, shadow_col, x, MERC_FILES_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_SHADED);
 	return btn;

@@ -15,16 +15,16 @@
 #include "Font_Control.h"
 
 
-static UINT32 giIMPPersonalityQuizButton[2];
 static BUTTON_PICS* giIMPPersonalityQuizButtonImage[2];
+static GUIButtonRef giIMPPersonalityQuizButton[2];
 
 
 // these are the buttons for the current question
-static INT32 giIMPPersonalityQuizAnswerButton[8];
 static BUTTON_PICS* giIMPPersonalityQuizAnswerButtonImage[8];
+static GUIButtonRef giIMPPersonalityQuizAnswerButton[8];
 
-static INT32 giPreviousQuestionButton;
-static INT32 giNextQuestionButton;
+static GUIButtonRef giPreviousQuestionButton;
+static GUIButtonRef giNextQuestionButton;
 
 static BUTTON_PICS* giPreviousQuestionButtonImage;
 static BUTTON_PICS* giNextQuestionButtonImage;
@@ -149,11 +149,11 @@ void HandleIMPPersonalityQuiz( void )
 }
 
 
-static INT32 MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
+static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
 {
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;
-	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
 	SetButtonCursor(btn, CURSOR_WWW);
 	return btn;
 }
@@ -324,7 +324,7 @@ static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 		BUTTON_PICS* const Image = LoadButtonImage("LAPTOP/button_6.sti", -1, 0, -1, 1, -1);
 		giIMPPersonalityQuizAnswerButtonImage[i] = Image;
 		Assert(i < lengthof(Callback));
-		INT32 Button = QuickCreateButtonNoMove(Image, XLoc, YLoc, MSYS_PRIORITY_HIGHEST - 3, Callback[i]);
+		GUIButtonRef const Button = QuickCreateButtonNoMove(Image, XLoc, YLoc, MSYS_PRIORITY_HIGHEST - 3, Callback[i]);
 		giIMPPersonalityQuizAnswerButton[i] = Button;
 		SpecifyButtonTextOffsets(Button, +23, +12, TRUE);
 		wchar_t sString[32];
@@ -345,7 +345,6 @@ static void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 	{
      RemoveButton(giIMPPersonalityQuizAnswerButton[ iCounter ] );
      UnloadButtonImage(giIMPPersonalityQuizAnswerButtonImage[ iCounter ] );
-		 giIMPPersonalityQuizAnswerButton[ iCounter ] = -1;
 	}
 }
 

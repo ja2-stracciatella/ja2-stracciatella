@@ -1,6 +1,7 @@
 #ifndef __INTERFACE_PANELS
 #define __INTERFACE_PANELS
 
+#include "Button_System.h"
 #include "JA2Types.h"
 #include "MouseSystem.h"
 
@@ -116,9 +117,9 @@ void HandleLocateSelectMerc(SOLDIERTYPE* s, INT8 bFlag);
 BOOLEAN HandleNailsVestFetish(const SOLDIERTYPE* pSoldier, UINT32 uiHandPos, UINT16 usReplaceItem);
 
 extern SOLDIERTYPE* gpSMCurrentMerc;
-extern INT32        iSMPanelButtons[NUM_SM_BUTTONS];
-extern INT32        iTEAMPanelButtons[NUM_TEAM_BUTTONS];
-extern INT32        giSMStealthButton;
+extern GUIButtonRef iSMPanelButtons[NUM_SM_BUTTONS];
+extern GUIButtonRef iTEAMPanelButtons[NUM_TEAM_BUTTONS];
+extern GUIButtonRef giSMStealthButton;
 extern SOLDIERTYPE* gSelectSMPanelToMerc;
 extern MOUSE_REGION gSM_SELMERCMoneyRegion;
 extern UINT8        gubHandPos;

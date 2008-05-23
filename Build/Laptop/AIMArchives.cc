@@ -116,8 +116,8 @@ MOUSE_REGION		gMercAlumniFaceMouseRegions[ MAX_NUMBER_OLD_MERCS_ON_PAGE ];
 MOUSE_REGION		gDoneRegion;
 
 //Previous Button
-UINT32	guiAlumniPageButton[3];
 static BUTTON_PICS* guiAlumniPageButtonImage;
+GUIButtonRef guiAlumniPageButton[3];
 
 
 void EnterInitAimArchives()
@@ -160,7 +160,7 @@ try
 	INT16 const y = AIM_ALUMNI_PAGE1_Y;
 	for (size_t i = 0; i < 3; ++i)
 	{
-		INT32 const btn = CreateIconAndTextButton(
+		GUIButtonRef const btn = CreateIconAndTextButton(
 			guiAlumniPageButtonImage, AimAlumniText[i], AIM_ALUMNI_PAGE_FONT,
 			AIM_ALUMNI_PAGE_COLOR_UP,   DEFAULT_SHADOW,
 			AIM_ALUMNI_PAGE_COLOR_DOWN, DEFAULT_SHADOW,

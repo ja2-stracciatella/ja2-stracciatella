@@ -321,7 +321,7 @@ SGPVObject* guiBULLSEYE;
 
 
 // the militia box buttons
-static INT32 giMapMilitiaButton[5] = { -1, -1, -1, -1, -1 };
+static GUIButtonRef giMapMilitiaButton[5];
 
 
 static const INT16 gsMilitiaSectorButtonColors[] =
@@ -4936,7 +4936,7 @@ static void HandleEveningOutOfTroopsAmongstSectors(void)
 
 static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
 {
-	INT32 btn = QuickCreateButtonImg("INTERFACE/militia.sti", -1, 1, -1, 2, -1, x, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/militia.sti", -1, 1, -1, 2, -1, x, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giMapMilitiaButton[idx] = btn;
 	SpecifyGeneralButtonTextAttributes(btn, text, FONT10ARIAL, FONT_BLACK, FONT_BLACK);
 }

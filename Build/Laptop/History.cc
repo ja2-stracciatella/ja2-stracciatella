@@ -83,7 +83,7 @@ enum{
 };
 
 // the page flipping buttons
-static INT32 giHistoryButton[2];
+static GUIButtonRef giHistoryButton[2];
 
 
 static BOOLEAN fInHistoryMode = FALSE;

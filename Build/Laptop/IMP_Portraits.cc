@@ -23,7 +23,7 @@ INT32 iCurrentPortrait = 0;
 INT32 iLastPicture = 7;
 
 // buttons needed for the IMP portrait screen
-INT32 giIMPPortraitButton[ 3 ];
+GUIButtonRef giIMPPortraitButton[3];
 static BUTTON_PICS* giIMPPortraitButtonImage[3];
 
 // redraw protrait screen
@@ -136,7 +136,7 @@ static void MakeButton(UINT idx, const char* img_file, INT32 off_normal, INT32 o
 	giIMPPortraitButtonImage[idx] = img;
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;
-	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
 	giIMPPortraitButton[idx] = btn;
 	SetButtonCursor(btn, CURSOR_WWW);
 }

@@ -106,6 +106,22 @@ struct GUI_BUTTON
 extern GUI_BUTTON* ButtonList[MAX_BUTTONS]; // Button System's Main Button List
 
 
+class GUIButtonRef
+{
+	public:
+		GUIButtonRef() : btn_id_(BUTTON_NO_SLOT) {}
+
+		GUIButtonRef(GUI_BUTTON* const b) : btn_id_(b->IDNum) {}
+
+		void Reset() { btn_id_ = BUTTON_NO_SLOT; }
+
+		operator INT32() const { return btn_id_; }
+
+	private:
+		INT32 btn_id_;
+};
+
+
 /* Initializes the GUI button system for use. Must be called before using any
  * other button functions.
  */
@@ -156,7 +172,7 @@ void DisableButton(INT32 iButtonID);
 /* Removes a button from the system's list. All memory associated with the
  * button is released.
  */
-void RemoveButton(INT32 iButtonID);
+void RemoveButton(GUIButtonRef&);
 
 void HideButton(INT32 iButtonID);
 void ShowButton(INT32 iButton);
@@ -172,30 +188,30 @@ extern BOOLEAN gfRenderHilights;
  * They cannot be re-sized, nor can the graphic be changed.  Providing you have
  * allocated your own image, this is a somewhat simplified function.
  */
-INT32 QuickCreateButton(BUTTON_PICS* image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
-INT32 QuickCreateButtonNoMove(BUTTON_PICS* image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
-INT32 QuickCreateButtonToggle(BUTTON_PICS* image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
+GUIButtonRef QuickCreateButton(BUTTON_PICS* image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
+GUIButtonRef QuickCreateButtonNoMove(BUTTON_PICS* image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
+GUIButtonRef QuickCreateButtonToggle(BUTTON_PICS* image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
 
-INT32 QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
+GUIButtonRef QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
 
-INT32 CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback);
+GUIButtonRef CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback);
 
 // Creates an Iconic type button.
-INT32 CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback);
+GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback);
 
 /* Creates a button like HotSpot. HotSpots have no graphics associated with
  * them.
  */
-INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Priority, GUI_CALLBACK ClickCallback);
+GUIButtonRef CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Priority, GUI_CALLBACK ClickCallback);
 
 // Creates a generic button with text on it.
-INT32 CreateTextButton(const wchar_t* string, Font, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback);
+GUIButtonRef CreateTextButton(const wchar_t* string, Font, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback);
 
-INT32 CreateIconAndTextButton(BUTTON_PICS* Image, const wchar_t* string, Font, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback);
+GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const wchar_t* string, Font, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback);
 
 /* This is technically not a clickable button, but just a label with text. It is
  * implemented as button */
-INT32 CreateLabel(const wchar_t* text, Font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority);
+GUIButtonRef CreateLabel(const wchar_t* text, Font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority);
 
 void SpecifyButtonText(INT32 iButtonID, const wchar_t* string);
 void SpecifyButtonDownTextColors(INT32 iButtonID, INT16 sForeColorDown, INT16 sShadowColorDown);

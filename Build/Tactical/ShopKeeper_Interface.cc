@@ -335,24 +335,24 @@ static ITEM_TO_ADD_AFTER_SKI_OPEN gItemToAdd;
 
 //Page up buttons for the merchants
 static void BtnSKI_InvPageUpButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static UINT32 guiSKI_InvPageUpButton;
 static BUTTON_PICS* guiSKI_InvPageUpButtonImage;
+static GUIButtonRef guiSKI_InvPageUpButton;
 
 //Page down buttons for the merchants
 static void BtnSKI_InvPageDownButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static UINT32 guiSKI_InvPageDownButton;
 static BUTTON_PICS* guiSKI_InvPageDownButtonImage;
+static GUIButtonRef guiSKI_InvPageDownButton;
 
 
 //Transaction buttons
 static void BtnSKI_TransactionButtonCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiSKI_TransactionButton;
 static BUTTON_PICS* guiSKI_TransactionButtonImage;
+GUIButtonRef guiSKI_TransactionButton;
 
 //Done buttons
 static void BtnSKI_DoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static UINT32 guiSKI_DoneButton;
 static BUTTON_PICS* guiSKI_DoneButtonImage;
+static GUIButtonRef guiSKI_DoneButton;
 
 static SGPVObject* guiItemCrossOut;
 
@@ -510,11 +510,11 @@ void ShopKeeperScreenShutdown(void)
 }
 
 
-static INT32 MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 prio, const GUI_CALLBACK click, const wchar_t* const help)
+static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 prio, const GUI_CALLBACK click, const wchar_t* const help)
 {
 	const INT16 text_col   = SKI_BUTTON_COLOR;
 	const INT16 shadow_col = DEFAULT_SHADOW;
-	const INT32 btn = CreateIconAndTextButton(img, text, SKI_BUTTON_FONT, text_col, shadow_col, text_col, shadow_col, x, SKI_BUTTON_Y, prio, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, SKI_BUTTON_FONT, text_col, shadow_col, text_col, shadow_col, x, SKI_BUTTON_Y, prio, click);
 	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_HATCHED);
 	SetButtonFastHelpText(btn, help);
 	return btn;

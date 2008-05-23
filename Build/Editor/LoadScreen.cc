@@ -74,7 +74,7 @@ static wchar_t gzFilename[31];
 static FDLG_LIST* FileList = NULL;
 
 static INT32 iFDlgState = DIALOG_NONE;
-static INT32 iFileDlgButtons[7];
+static GUIButtonRef iFileDlgButtons[7];
 
 static BOOLEAN gfLoadError;
 static BOOLEAN gfReadOnly;
@@ -422,9 +422,9 @@ UINT32 LoadSaveScreenHandle(void)
 }
 
 
-static INT32 MakeButtonArrow(const char* const gfx, const INT16 y, const GUI_CALLBACK click)
+static GUIButtonRef MakeButtonArrow(const char* const gfx, const INT16 y, const GUI_CALLBACK click)
 {
-	const INT32 btn = QuickCreateButtonImg(gfx, -1, 1, 2, 3, 4, 426, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(gfx, -1, 1, 2, 3, 4, 426, y, MSYS_PRIORITY_HIGH, click);
 	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_SHADED);
 	return btn;
 }
@@ -461,7 +461,6 @@ static void CreateFileDialog(const wchar_t* zTitle)
 	//Title button
 	iFileDlgButtons[5] = CreateLabel(zTitle, HUGEFONT, FONT_LTKHAKI, FONT_DKKHAKI, 179, 39, 281, 30, MSYS_PRIORITY_HIGH - 2);
 
-	iFileDlgButtons[6] = -1;
 	if( iCurrentAction == ACTION_SAVE_MAP )
 	{	//checkboxes
 		//The update world info checkbox

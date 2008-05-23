@@ -1,6 +1,7 @@
 #ifndef __MAPSCREEN_H
 #define __MAPSCREEN_H
 
+#include "Button_System.h"
 #include "Item_Types.h"
 #include "JA2Types.h"
 #include "MouseSystem.h"
@@ -104,13 +105,13 @@ extern MOUSE_REGION gMPanelRegion;
 #ifndef JA2DEMO
 extern SGPVObject*  guiMapInvSecondHandBlockout;
 #endif
-extern INT32        giMapInvDoneButton;
+extern GUIButtonRef giMapInvDoneButton;
 extern BOOLEAN      fInMapMode;
 extern BOOLEAN      fReDrawFace;
 extern BOOLEAN      fShowInventoryFlag;
 extern BOOLEAN      fShowDescriptionFlag;
-extern INT32        giMapContractButton;
-extern INT32        giCharInfoButton[2];
+extern GUIButtonRef giMapContractButton;
+extern GUIButtonRef giCharInfoButton[2];
 extern MOUSE_REGION gCharInfoHandRegion;
 extern BOOLEAN      fDrawCharacterList;
 

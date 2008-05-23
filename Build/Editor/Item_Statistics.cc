@@ -25,11 +25,11 @@
 #include "Pits.h"
 
 
-INT32 giBothCheckboxButton = -1;
-INT32 giRealisticCheckboxButton = -1;
-INT32 giSciFiCheckboxButton = -1;
-INT32 giAlarmTriggerButton = -1;
-INT32 giOwnershipGroupButton = -1;
+GUIButtonRef giBothCheckboxButton;
+GUIButtonRef giRealisticCheckboxButton;
+GUIButtonRef giSciFiCheckboxButton;
+GUIButtonRef giAlarmTriggerButton;
+GUIButtonRef giOwnershipGroupButton;
 
 const wchar_t* gszActionItemDesc[NUM_ACTIONITEMS] =
 {
@@ -130,16 +130,16 @@ enum
 	GLAUNCHER_ATTACHMENT_BUTTON,
 	NUM_ATTACHMENT_BUTTONS
 };
-UINT32 guiAttachmentButton[ NUM_ATTACHMENT_BUTTONS ];
+GUIButtonRef guiAttachmentButton[NUM_ATTACHMENT_BUTTONS];
 BOOLEAN gfAttachment[ NUM_ATTACHMENT_BUTTONS ];
 
-UINT32 guiCeramicPlatesButton;
+GUIButtonRef guiCeramicPlatesButton;
 BOOLEAN gfCeramicPlates;
 
-UINT32 guiDetonatorButton;
+GUIButtonRef guiDetonatorButton;
 BOOLEAN gfDetonator;
 
-UINT32 guiActionItemButton;
+GUIButtonRef guiActionItemButton;
 static void ActionItemCallback(GUI_BUTTON* btn, INT32 reason);
 INT8 gbActionItemIndex = ACTIONITEM_MEDIUM;
 INT8 gbDefaultBombTrapLevel = 9;
@@ -605,29 +605,17 @@ static void SetupGameTypeFlags(void)
 
 static void RemoveGameTypeFlags(void)
 {
-	if( giBothCheckboxButton != -1 )
-	{
-		RemoveButton( giBothCheckboxButton );
-		giBothCheckboxButton = -1;
-	}
-	if( giRealisticCheckboxButton != -1 )
-	{
-		RemoveButton( giRealisticCheckboxButton );
-		giRealisticCheckboxButton = -1;
-	}
-	if( giSciFiCheckboxButton != -1 )
-	{
-		RemoveButton( giSciFiCheckboxButton );
-		giSciFiCheckboxButton = -1;
-	}
+	if (giBothCheckboxButton      != -1) RemoveButton(giBothCheckboxButton);
+	if (giRealisticCheckboxButton != -1) RemoveButton(giRealisticCheckboxButton);
+	if (giSciFiCheckboxButton     != -1) RemoveButton(giSciFiCheckboxButton);
 }
 
 
-static INT32 MakeAttachmentButton(const UINT16 attachment, BOOLEAN& attached, const INT16 x, const INT16 y, const INT16 w, const wchar_t* const label, const GUI_CALLBACK click)
+static GUIButtonRef MakeAttachmentButton(const UINT16 attachment, BOOLEAN& attached, const INT16 x, const INT16 y, const INT16 w, const wchar_t* const label, const GUI_CALLBACK click)
 {
-	if (!ValidAttachment(attachment, gpItem->usItem)) return BUTTON_NO_SLOT;
+	if (!ValidAttachment(attachment, gpItem->usItem)) return GUIButtonRef();
 
-	const INT32 btn = CreateTextButton(label, SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, x, y, w, 12, MSYS_PRIORITY_NORMAL, click);
+	GUIButtonRef const btn = CreateTextButton(label, SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, x, y, w, 12, MSYS_PRIORITY_NORMAL, click);
 	if (FindAttachment(gpItem, attachment) != -1)
 	{
 		ButtonList[btn]->uiFlags |= BUTTON_CLICKED_ON;
@@ -643,7 +631,7 @@ static void ToggleAttachment(GUI_BUTTON* btn, INT32 reason);
 static INT32 MakeWeaponAttachmentButton(const UINT btn_idx, const UINT16 attachment, const INT16 y, const wchar_t* const label)
 {
 	gfAttachment[btn_idx] = FALSE;
-	const INT32 btn = MakeAttachmentButton(attachment, gfAttachment[btn_idx], 570, y, 60, label, ToggleAttachment);
+	GUIButtonRef const btn = MakeAttachmentButton(attachment, gfAttachment[btn_idx], 570, y, 60, label, ToggleAttachment);
 	guiAttachmentButton[btn_idx] = btn;
 	return btn != BUTTON_NO_SLOT;
 }
@@ -685,11 +673,7 @@ static void RemoveGunGUI(void)
 	INT32 i;
 	for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
 	{
-		if( guiAttachmentButton[ i ] != -1 )
-		{
-			RemoveButton( guiAttachmentButton[ i ] );
-			guiAttachmentButton[ i ] = -1;
-		}
+		if (guiAttachmentButton[i] != -1) RemoveButton(guiAttachmentButton[i]);
 	}
 }
 
@@ -798,11 +782,7 @@ static void SetupArmourGUI(void)
 
 static void RemoveArmourGUI(void)
 {
-	if( guiCeramicPlatesButton != -1 )
-	{
-		RemoveButton( guiCeramicPlatesButton );
-		guiCeramicPlatesButton = -1;
-	}
+	if (guiCeramicPlatesButton != -1) RemoveButton(guiCeramicPlatesButton);
 }
 
 
@@ -908,11 +888,7 @@ static void SetupExplosivesGUI(void)
 
 static void RemoveExplosivesGUI(void)
 {
-	if( guiDetonatorButton != -1 )
-	{
-		RemoveButton( guiDetonatorButton );
-		guiDetonatorButton = -1;
-	}
+	if (guiDetonatorButton != -1) RemoveButton(guiDetonatorButton);
 }
 
 
@@ -1037,11 +1013,7 @@ static void ExtractAndUpdateOwnershipGUI(void)
 
 static void RemoveOwnershipGUI(void)
 {
-	if( giOwnershipGroupButton != -1 )
-	{
-		RemoveButton( giOwnershipGroupButton );
-		giOwnershipGroupButton = -1;
-	}
+	if (giOwnershipGroupButton != -1) RemoveButton(giOwnershipGroupButton);
 }
 
 
@@ -1122,11 +1094,7 @@ static void ExtractAndUpdateActionItemsGUI(void)
 
 static void RemoveActionItemsGUI(void)
 {
-	if( guiActionItemButton != -1 )
-	{
-		RemoveButton( guiActionItemButton );
-		guiActionItemButton = -1;
-	}
+	if (guiActionItemButton != -1) RemoveButton(guiActionItemButton);
 }
 
 
@@ -1193,11 +1161,7 @@ static void RemoveTriggersGUI(void)
 {
 	if (gpEditingItemPool && gpItem->bFrequency >= PANIC_FREQUENCY_3)
 	{
-		if( giAlarmTriggerButton != -1 )
-		{
-			RemoveButton( giAlarmTriggerButton );
-			giAlarmTriggerButton = -1;
-		}
+		if (giAlarmTriggerButton != -1) RemoveButton(giAlarmTriggerButton);
 	}
 }
 

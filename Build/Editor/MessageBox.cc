@@ -10,7 +10,9 @@
 #include "Button_System.h"
 
 
-INT32 iMsgBoxBgrnd,iMsgBoxOk,iMsgBoxCancel;
+GUIButtonRef iMsgBoxBgrnd;
+GUIButtonRef iMsgBoxOk;
+GUIButtonRef iMsgBoxCancel;
 
 BOOLEAN gfMessageBoxResult = FALSE;
 UINT8 gubMessageBoxStatus = MESSAGEBOX_NONE;

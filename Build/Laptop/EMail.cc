@@ -208,12 +208,12 @@ static MOUSE_REGION pDeleteScreenMask;
 static EmailPageInfoStruct pEmailPageInfo[MAX_NUMBER_EMAIL_PAGES];
 
 //buttons
-static INT32 giMessageButton;
-static INT32 giDeleteMailButton[2];
-static INT32 giSortButton[4];
-static INT32 giNewMailButton;
-static INT32 giMailMessageButtons[3];
-static INT32 giMailPageButtons[2];
+static GUIButtonRef giMessageButton;
+static GUIButtonRef giDeleteMailButton[2];
+static GUIButtonRef giSortButton[4];
+static GUIButtonRef giNewMailButton;
+static GUIButtonRef giMailMessageButtons[3];
+static GUIButtonRef giMailPageButtons[2];
 
 
 // the message record list, for the currently displayed message
@@ -1086,9 +1086,9 @@ static void BtnNewOkback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static INT32 MakeButtonNewMail(INT32 image, INT16 x, INT16 y, GUI_CALLBACK click)
+static GUIButtonRef MakeButtonNewMail(INT32 image, INT16 x, INT16 y, GUI_CALLBACK click)
 {
-	INT32 btn = QuickCreateButtonImg("LAPTOP/NewMailButtons.sti", -1, image, -1, image + 3, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/NewMailButtons.sti", -1, image, -1, image + 3, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 	return btn;
 }
@@ -1147,9 +1147,9 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 }
 
 
-static INT32 MakeButtonYesNo(INT32 image, INT16 x, GUI_CALLBACK click)
+static GUIButtonRef MakeButtonYesNo(INT32 image, INT16 x, GUI_CALLBACK click)
 {
-	INT32 btn = QuickCreateButtonImg("LAPTOP/YesNoButtons.sti", -1, image, -1, image + 1, -1, x, NEW_BTN_Y, MSYS_PRIORITY_HIGHEST - 2, click);
+	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/YesNoButtons.sti", -1, image, -1, image + 1, -1, x, NEW_BTN_Y, MSYS_PRIORITY_HIGHEST - 2, click);
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 	return btn;
 }
@@ -1582,7 +1582,7 @@ static void DestroyMailScreenButtons(void)
 
 static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
 {
-	const INT32 btn = QuickCreateButtonImg("LAPTOP/mailbuttons.sti", -1, idx, -1, idx + 4, -1, x, FROM_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
+	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/mailbuttons.sti", -1, idx, -1, idx + 4, -1, x, FROM_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giSortButton[idx] = btn;
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 	if (text)

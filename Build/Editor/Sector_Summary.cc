@@ -203,7 +203,7 @@ enum{
 	SUMMARY_ENEMY,
 	NUM_SUMMARY_BUTTONS
 };
-INT32 iSummaryButton[ NUM_SUMMARY_BUTTONS ];
+GUIButtonRef iSummaryButton[NUM_SUMMARY_BUTTONS];
 
 
 static void LoadGlobalSummary(void);

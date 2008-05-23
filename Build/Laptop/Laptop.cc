@@ -264,10 +264,10 @@ static BOOLEAN fInitTitle = TRUE;
 // tab handled
 static BOOLEAN fTabHandled = FALSE;
 
-static INT32 gLaptopButton[7];
+static GUIButtonRef gLaptopButton[7];
 
 // minimize button
-static INT32 gLaptopMinButton;
+static GUIButtonRef gLaptopMinButton;
 
 
 static INT32 gLaptopProgramStates[LAPTOP_PROGRAM_HISTORY + 1];
@@ -1377,7 +1377,7 @@ static void ExitLaptopMode(UINT32 uiMode)
 
 static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, INT8 off_x, const wchar_t* text, const wchar_t* help_text)
 {
-	INT32 btn = QuickCreateButtonImg("LAPTOP/buttonsforlaptop.sti", -1, idx, -1, idx + 8, -1, 29, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = QuickCreateButtonImg("LAPTOP/buttonsforlaptop.sti", -1, idx, -1, idx + 8, -1, 29, y, MSYS_PRIORITY_HIGH, click);
 	gLaptopButton[idx] = btn;
 	SetButtonFastHelpText(btn, help_text);
 	SpecifyButtonTextOffsets(btn, off_x, 11, TRUE);

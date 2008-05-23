@@ -220,16 +220,16 @@ static BUTTON_PICS* guiFlowerOrderButtonImage;
 UINT8		gubFlowerOrder_AdditioanalServicePrices[] = {10, 20, 10, 10};
 
 static void BtnFlowerOrderBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiFlowerOrderBackButton;
+GUIButtonRef guiFlowerOrderBackButton;
 
 static void BtnFlowerOrderSendButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiFlowerOrderSendButton;
+GUIButtonRef guiFlowerOrderSendButton;
 
 static void BtnFlowerOrderClearButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiFlowerOrderClearButton;
+GUIButtonRef guiFlowerOrderClearButton;
 
 static void BtnFlowerOrderGalleryButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiFlowerOrderGalleryButton;
+GUIButtonRef guiFlowerOrderGalleryButton;
 
 
 //Clicking on OrderCheckBox
@@ -253,10 +253,10 @@ MOUSE_REGION    gSelectedFloristDisableDropDownRegion;
 MOUSE_REGION    gSelectedFlowerDropDownRegion[ FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS ];
 
 
-static INT32 MakeButton(const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
 	const INT16 shadow_col = FLORIST_BUTTON_TEXT_SHADOW_COLOR;
-	const INT32 btn = CreateIconAndTextButton(guiFlowerOrderButtonImage, text, FLORIST_BUTTON_TEXT_FONT, FLORIST_BUTTON_TEXT_UP_COLOR, shadow_col, FLORIST_BUTTON_TEXT_DOWN_COLOR, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(guiFlowerOrderButtonImage, text, FLORIST_BUTTON_TEXT_FONT, FLORIST_BUTTON_TEXT_UP_COLOR, shadow_col, FLORIST_BUTTON_TEXT_DOWN_COLOR, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
 	SetButtonCursor(btn, CURSOR_WWW);
 	return btn;
 }

@@ -37,18 +37,18 @@ static SGPVObject* guiNoAccountImage;
 
 // The Open Account Box button
 static void BtnOpenAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiOpenAccountBoxButton;
 static BUTTON_PICS* guiOpenAccountBoxButtonImage;
+GUIButtonRef guiOpenAccountBoxButton;
 
 // The Cancel Account Box button
 static void BtnCancelBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiCancelBoxButton;
+GUIButtonRef guiCancelBoxButton;
 
 
-static INT32 MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
+static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
 {
 	const INT16 shadow_col = DEFAULT_SHADOW;
-	const INT32 btn = CreateIconAndTextButton(guiOpenAccountBoxButtonImage, text, FONT12ARIAL, MERC_BUTTON_UP_COLOR, shadow_col, MERC_BUTTON_DOWN_COLOR, shadow_col, x, MERC_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(guiOpenAccountBoxButtonImage, text, FONT12ARIAL, MERC_BUTTON_UP_COLOR, shadow_col, MERC_BUTTON_DOWN_COLOR, shadow_col, x, MERC_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 	return btn;
 }

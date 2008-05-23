@@ -163,7 +163,7 @@ enum
 };
 
 
-static INT32 iActionIcons[NUM_ICONS];
+static GUIButtonRef iActionIcons[NUM_ICONS];
 
 // GLOBAL INTERFACE SURFACES
 SGPVObject* guiCLOSE;
@@ -419,7 +419,7 @@ static void BtnMovementCallback(GUI_BUTTON* btn, INT32 reason);
 
 static BOOLEAN MakeButtonMove(UINT idx, UINT gfx, INT16 x, INT16 y, UI_EVENT* event, const wchar_t* help)
 {
-	INT32 btn = QuickCreateButton(iIconImages[gfx], x, y, MSYS_PRIORITY_HIGHEST - 1, BtnMovementCallback);
+	GUIButtonRef const btn = QuickCreateButton(iIconImages[gfx], x, y, MSYS_PRIORITY_HIGHEST - 1, BtnMovementCallback);
 	iActionIcons[idx] = btn;
 	if (btn == -1)
 	{
@@ -1606,7 +1606,7 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason);
 
 static BOOLEAN MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16 bp, BOOLEAN disable, const wchar_t* help)
 {
-	INT32 btn = QuickCreateButton(iIconImages[gfx], x, y, MSYS_PRIORITY_HIGHEST - 1, BtnDoorMenuCallback);
+	GUIButtonRef const btn = QuickCreateButton(iIconImages[gfx], x, y, MSYS_PRIORITY_HIGHEST - 1, BtnDoorMenuCallback);
 	iActionIcons[idx] = btn;
 	if (btn == -1)
 	{

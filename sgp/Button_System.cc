@@ -480,12 +480,15 @@ BOOLEAN InitButtonSystem(void)
 }
 
 
+static void RemoveButtonInternal(INT32 const iButtonID);
+
+
 void ShutdownButtonSystem(void)
 {
 	// Kill off all buttons in the system
 	for (int x = 0; x < MAX_BUTTONS; ++x)
 	{
-		if (ButtonList[x] != NULL) RemoveButton(x);
+		if (ButtonList[x] != NULL) RemoveButtonInternal(x);
 	}
 	ShutdownButtonImageManager();
 }
@@ -497,13 +500,13 @@ static void RemoveButtonsMarkedForDeletion(void)
 	{
 		if (ButtonList[i] && ButtonList[i]->uiFlags & BUTTON_DELETION_PENDING)
 		{
-			RemoveButton(i);
+			RemoveButtonInternal(i);
 		}
 	}
 }
 
 
-void RemoveButton(INT32 iButtonID)
+static void RemoveButtonInternal(INT32 const iButtonID)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
@@ -541,6 +544,14 @@ void RemoveButton(INT32 iButtonID)
 
 	MemFree(b);
 	ButtonList[iButtonID] = NULL;
+}
+
+
+void RemoveButton(GUIButtonRef& btn_ref)
+{
+	GUIButtonRef const btn = btn_ref;
+	btn_ref.Reset();
+	RemoveButtonInternal(btn);
 }
 
 
@@ -649,46 +660,43 @@ static void CopyButtonText(GUI_BUTTON* b, const wchar_t* text)
 static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-INT32 CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
+GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
 	GUI_BUTTON* const b = AllocateButton(BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
-	if (b == NULL) return BUTTON_NO_SLOT;
+	if (!b) return GUIButtonRef();
 
 	b->icon        = GenericButtonIcons[Icon];
 	b->usIconIndex = IconIndex;
-
-	return b->IDNum;
+	return b;
 }
 
 
-INT32 CreateTextButton(const wchar_t *string, Font const font, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
+GUIButtonRef CreateTextButton(const wchar_t *string, Font const font, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
 	GUI_BUTTON* const b = AllocateButton(BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
-	if (b == NULL) return BUTTON_NO_SLOT;
+	if (!b) return GUIButtonRef();
 
 	CopyButtonText(b, string);
 	b->usFont       = font;
 	b->sForeColor   = sForeColor;
 	b->sShadowColor = sShadowColor;
-
-	return b->IDNum;
+	return b;
 }
 
 
-INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Priority, GUI_CALLBACK ClickCallback)
+GUIButtonRef CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	GUI_BUTTON* const b = AllocateButton(BUTTON_HOT_SPOT, xloc, yloc, Width, Height, Priority, ClickCallback, DefaultMoveCallback);
-	if (b == NULL) return BUTTON_NO_SLOT;
-
-	return b->IDNum;
+	if (!b) return GUIButtonRef();
+	return b;
 }
 
 
@@ -699,54 +707,53 @@ void SetButtonCursor(INT32 iBtnId, UINT16 crsr)
 }
 
 
-static INT32 QuickCreateButtonInternal(BUTTON_PICS* const pics, const INT16 xloc, const INT16 yloc, const INT32 Type, const INT16 Priority, const GUI_CALLBACK MoveCallback, const GUI_CALLBACK ClickCallback)
+static GUIButtonRef QuickCreateButtonInternal(BUTTON_PICS* const pics, const INT16 xloc, const INT16 yloc, const INT32 Type, const INT16 Priority, const GUI_CALLBACK MoveCallback, const GUI_CALLBACK ClickCallback)
 {
 	// Is there a QuickButton image in the given image slot?
 	if (pics->vobj == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "QuickCreateButton: Invalid button image number");
-		return BUTTON_NO_SLOT;
+		return GUIButtonRef();
 	}
 
 	GUI_BUTTON* const b = AllocateButton((Type & (BUTTON_CHECKBOX | BUTTON_NEWTOGGLE)) | BUTTON_QUICK, xloc, yloc, pics->max.w, pics->max.h, Priority, ClickCallback, MoveCallback);
-	if (b == NULL) return BUTTON_NO_SLOT;
+	if (!b) return GUIButtonRef();
 
 	b->image = pics;
-
-	return b->IDNum;
+	return b;
 }
 
 
-INT32 QuickCreateButton(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
+GUIButtonRef QuickCreateButton(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
 {
 	return QuickCreateButtonInternal(image, x, y, BUTTON_TOGGLE, priority, DefaultMoveCallback, click);
 }
 
 
-INT32 QuickCreateButtonNoMove(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
+GUIButtonRef QuickCreateButtonNoMove(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
 {
 	return QuickCreateButtonInternal(image, x, y, BUTTON_TOGGLE, priority, MSYS_NO_CALLBACK, click);
 }
 
 
-INT32 QuickCreateButtonToggle(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
+GUIButtonRef QuickCreateButtonToggle(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
 {
 	return QuickCreateButtonInternal(image, x, y, BUTTON_NEWTOGGLE, priority, MSYS_NO_CALLBACK, click);
 }
 
 
-INT32 QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
+GUIButtonRef QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
 {
 	BUTTON_PICS* const img = LoadButtonImage(gfx, grayed, off_normal, off_hilite, on_normal, on_hilite);
-	INT32 btn = QuickCreateButton(img, x, y, priority, click);
+	GUIButtonRef const btn = QuickCreateButton(img, x, y, priority, click);
 	ButtonList[btn]->uiFlags |= BUTTON_SELFDELETE_IMAGE;
 	return btn;
 }
 
 
-INT32 CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* const string, Font const font, const INT16 sForeColor, const INT16 sShadowColor, const INT16 sForeColorDown, const INT16 sShadowColorDown, const INT16 xloc, const INT16 yloc, const INT16 Priority, const GUI_CALLBACK ClickCallback)
+GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* const string, Font const font, const INT16 sForeColor, const INT16 sShadowColor, const INT16 sForeColorDown, const INT16 sShadowColorDown, const INT16 xloc, const INT16 yloc, const INT16 Priority, const GUI_CALLBACK ClickCallback)
 {
-	const INT32 id = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);
+	GUIButtonRef const id = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);
 	if (id != BUTTON_NO_SLOT)
 	{
 		GUI_BUTTON* const b = GetButton(id);
@@ -762,9 +769,9 @@ INT32 CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* const str
 }
 
 
-INT32 CreateLabel(const wchar_t* text, Font const font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
+GUIButtonRef CreateLabel(const wchar_t* text, Font const font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
 {
-	INT32 btn = CreateTextButton(text, font, forecolor, shadowcolor, x, y, w, h, priority, NULL);
+	GUIButtonRef const btn = CreateTextButton(text, font, forecolor, shadowcolor, x, y, w, h, priority, NULL);
 	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_NONE);
 	DisableButton(btn);
 	return btn;
@@ -1794,21 +1801,21 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 }
 
 
-INT32 CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback)
+GUIButtonRef CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	Assert(filename != NULL);
 	BUTTON_PICS* const ButPic = LoadButtonImage(filename, -1, 0, 1, 2, 3);
 	if (ButPic == NULL)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "CreateCheckBoxButton: Can't load button image");
-		return BUTTON_NO_SLOT;
+		return GUIButtonRef();
 	}
 
-	INT32 iButtonID = QuickCreateButtonInternal(ButPic, x, y, BUTTON_CHECKBOX, Priority, MSYS_NO_CALLBACK, ClickCallback);
+	GUIButtonRef const iButtonID = QuickCreateButtonInternal(ButPic, x, y, BUTTON_CHECKBOX, Priority, MSYS_NO_CALLBACK, ClickCallback);
 	if (iButtonID == BUTTON_NO_SLOT)
 	{
 		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "CreateCheckBoxButton: Can't create button");
-		return BUTTON_NO_SLOT;
+		return GUIButtonRef();
 	}
 
 	//change the flags so that it isn't a quick button anymore

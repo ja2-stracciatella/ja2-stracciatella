@@ -1,7 +1,9 @@
 #ifndef __MAP_INTERFACE_BORDER_H
 #define __MAP_INTERFACE_BORDER_H
 
+#include "Button_System.h"
 #include "Types.h"
+
 
 #define     MAP_BORDER_START_X   261
 #define     MAP_BORDER_START_Y    0
@@ -95,6 +97,6 @@ void DeleteMouseRegionsForLevelMarkers( void );
 
 void InitMapScreenFlags( void );
 
-extern INT32 giMapBorderButtons[];
+extern GUIButtonRef giMapBorderButtons[];
 
 #endif

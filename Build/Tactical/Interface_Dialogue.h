@@ -1,9 +1,10 @@
 #ifndef __INTERFACE_DIALOGUE_H
 #define __INTERFACE_DIALOGUE_H
 
-
+#include "Button_System.h"
 #include "MouseSystem.h"
 #include "NPC.h"
+
 
 extern UINT8 gubSrcSoldierProfile;
 
@@ -20,7 +21,7 @@ typedef struct
 	UINT8					ubCharNum;
 	SGPVObject*   uiPanelVO;
 	BUTTON_PICS*  iButtonImages;
-	UINT32				uiCancelButton;
+	GUIButtonRef  uiCancelButton;
 	INT8					bCurSelect;
 	INT8					bOldCurSelect;
 	UINT16				usWidth;

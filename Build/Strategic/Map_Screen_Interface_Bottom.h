@@ -1,6 +1,7 @@
 #ifndef __MAP_INTERFACE_BOTTOM
 #define __MAP_INTERFACE_BOTTOM
 
+#include "Button_System.h"
 #include "Types.h"
 
 
@@ -17,7 +18,7 @@ enum{
 };
 
 // there's no button for entering SAVE/LOAD screen directly...
-extern UINT32 guiMapBottomExitButtons[ 3 ];
+extern GUIButtonRef guiMapBottomExitButtons[3];
 
 extern BOOLEAN fLapTop;
 extern BOOLEAN fLeavingMapScreen;

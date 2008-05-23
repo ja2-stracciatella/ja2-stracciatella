@@ -54,7 +54,7 @@ BOOLEAN fEndAutoBandage = FALSE;
 BOOLEAN gfAutoBandageFailed;
 
 // the button and associated image for ending autobandage
-static INT32 iEndAutoBandageButton[2];
+static GUIButtonRef iEndAutoBandageButton[2];
 
 
 MOUSE_REGION gAutoBandageRegion;
@@ -879,7 +879,7 @@ static void StopAutoBandageButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 static void MakeButton(UINT idx, INT16 x, INT16 y, const wchar_t* text)
 {
-	INT32 btn = QuickCreateButtonImg("INTERFACE/group_confirm_tactical.sti", -1, 7, -1, 8, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, StopAutoBandageButtonCallback);
+	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/group_confirm_tactical.sti", -1, 7, -1, 8, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, StopAutoBandageButtonCallback);
 	iEndAutoBandageButton[idx] = btn;
 	SpecifyGeneralButtonTextAttributes(btn, text, MAP_SCREEN_FONT, FONT_MCOLOR_BLACK, FONT_BLACK);
 }

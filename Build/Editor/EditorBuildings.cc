@@ -499,7 +499,7 @@ enum{
 	DOOR_LOCKED,
 	NUM_DOOR_BUTTONS
 };
-static INT32        iDoorButton[NUM_DOOR_BUTTONS];
+static GUIButtonRef iDoorButton[NUM_DOOR_BUTTONS];
 static MOUSE_REGION DoorRegion;
 
 

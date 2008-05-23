@@ -1,6 +1,7 @@
 #ifndef MESSAGEBOXSCREEN_H
 #define MESSAGEBOXSCREEN_H
 
+#include "Button_System.h"
 #include "MouseSystem.h"
 
 // Message box flags
@@ -48,19 +49,10 @@ typedef struct
 	UINT16          usWidth;
 	UINT16          usHeight;
 	BUTTON_PICS*    iButtonImages;
-	union
-	{
-		struct
-		{
-			UINT32 uiOKButton;
-			UINT32 uiYESButton;
-			UINT32 uiNOButton;
-		};
-		struct
-		{
-			UINT32 uiButton[4];
-		};
-	};
+	GUIButtonRef    uiOKButton;
+	GUIButtonRef    uiYESButton;
+	GUIButtonRef    uiNOButton;
+	GUIButtonRef    uiButton[4];
 	BOOLEAN fRenderBox;
 	INT8    bHandled;
 	INT32   iBoxId;

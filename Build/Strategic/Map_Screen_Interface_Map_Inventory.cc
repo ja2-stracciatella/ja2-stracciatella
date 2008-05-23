@@ -108,7 +108,7 @@ static WORLDITEM* pUnSeenItems = NULL;
 INT32 giFlashHighlightedItemBaseTime = 0;
 INT32 giCompatibleItemBaseTime = 0;
 
-UINT32 guiMapInvenButton[ 3 ];
+GUIButtonRef guiMapInvenButton[3];
 
 BOOLEAN gfCheckForCursorOverMapSectorInventoryItem = FALSE;
 

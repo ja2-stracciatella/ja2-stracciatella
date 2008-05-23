@@ -28,8 +28,8 @@
 #define ANIMATE_MIN_TIME 200
 
 // buttons
-INT32 giIMPFinishButton[ 6 ];
 static BUTTON_PICS* giIMPFinishButtonImage[6];
+GUIButtonRef giIMPFinishButton[6];
 
 // we are in fact done
 BOOLEAN fFinishedCharGeneration = FALSE;
@@ -111,7 +111,7 @@ static void MakeButton(UINT idx, const char* img_file, const wchar_t* text, INT1
 	giIMPFinishButtonImage[idx] = img;
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;
-	const INT32 btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
 	giIMPFinishButton[idx] = btn;
 	SetButtonCursor(btn, CURSOR_WWW);
 }

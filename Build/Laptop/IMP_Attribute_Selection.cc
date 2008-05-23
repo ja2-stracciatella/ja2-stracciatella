@@ -71,11 +71,11 @@ BOOLEAN fFirstIMPAttribTime = TRUE;
 BOOLEAN fReviewStats = FALSE;
 
 // buttons
-static UINT32 giIMPAttributeSelectionButton[1];
+static GUIButtonRef giIMPAttributeSelectionButton[1];
 static BUTTON_PICS* giIMPAttributeSelectionButtonImage[1];
 
 // slider buttons
-static UINT32 giIMPAttributeSelectionSliderButton[20];
+static GUIButtonRef giIMPAttributeSelectionSliderButton[20];
 static BUTTON_PICS* giIMPAttributeSelectionSliderButtonImage[20];
 
 // mouse regions

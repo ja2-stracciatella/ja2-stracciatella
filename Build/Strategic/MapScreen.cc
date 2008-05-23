@@ -403,13 +403,13 @@ static BOOLEAN gfMapPanelWasRedrawn = FALSE;
 // currently selected character's list index
 INT8 bSelectedInfoChar = -1;
 
-static INT32 giMapSortButton[MAX_SORT_METHODS]      = { -1, -1, -1, -1, -1, -1 };
+static GUIButtonRef giMapSortButton[MAX_SORT_METHODS];
 
-INT32 giCharInfoButton[2] = { -1, -1 };
+GUIButtonRef giCharInfoButton[2];
 
-INT32 giMapInvDoneButton = -1;
+GUIButtonRef giMapInvDoneButton;
 
-INT32 giMapContractButton = -1;
+GUIButtonRef giMapContractButton;
 
 INT32 giSortStateForMapScreenList = 0;
 
@@ -7908,7 +7908,6 @@ static void RemoveTeamPanelSortButtonsForMapScreen(void)
 	for( iCounter = 0; iCounter < MAX_SORT_METHODS; iCounter++ )
 	{
 		RemoveButton( giMapSortButton[ iCounter ] );
-		giMapSortButton[ iCounter ] = -1;
 	}
 }
 

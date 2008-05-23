@@ -68,23 +68,23 @@ INT32			giBobbyRShipmentSelectedShipment = -1;
 
 //Back Button
 static void BtnBobbyRShipmentBackCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiBobbyRShipmetBack;
 static BUTTON_PICS* guiBobbyRShipmentBackImage;
+GUIButtonRef guiBobbyRShipmetBack;
 
 //Home Button
 static void BtnBobbyRShipmentHomeCallback(GUI_BUTTON* btn, INT32 reason);
-UINT32	guiBobbyRShipmentHome;
 static BUTTON_PICS* giBobbyRShipmentHomeImage;
+GUIButtonRef guiBobbyRShipmentHome;
 
 
 
 MOUSE_REGION    gSelectedPreviousShipmentsRegion[BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS];
 
 
-static INT32 MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click)
+static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click)
 {
 	const INT16 shadow_col = BOBBYR_GUNS_SHADOW_COLOR;
-	const INT32 btn = CreateIconAndTextButton(img, text, BOBBYR_GUNS_BUTTON_FONT, BOBBYR_GUNS_TEXT_COLOR_ON, shadow_col, BOBBYR_GUNS_TEXT_COLOR_OFF, shadow_col, x, BOBBYR_SHIPMENT_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, BOBBYR_GUNS_BUTTON_FONT, BOBBYR_GUNS_TEXT_COLOR_ON, shadow_col, BOBBYR_GUNS_TEXT_COLOR_OFF, shadow_col, x, BOBBYR_SHIPMENT_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 	return btn;
 }

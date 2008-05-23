@@ -168,7 +168,7 @@ static INT16 gsHiSectorY = 0;
 static INT16 gsSelSectorX = 0;
 static INT16 gsSelSectorY = 0;
 
-INT32 iViewerButton[ NUM_VIEWER_BUTTONS ];
+GUIButtonRef iViewerButton[NUM_VIEWER_BUTTONS];
 
 
 extern BOOLEAN gfQueenAIAwake;

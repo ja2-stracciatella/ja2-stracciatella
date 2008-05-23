@@ -149,25 +149,25 @@ static SGPVObject* guiGIOMainBackGroundImage;
 
 // Done Button
 static void BtnGIODoneCallback(GUI_BUTTON *btn,INT32 reason);
-static UINT32 guiGIODoneButton;
+static GUIButtonRef guiGIODoneButton;
 static BUTTON_PICS* giGIODoneBtnImage;
 
 // Cancel Button
 static void BtnGIOCancelCallback(GUI_BUTTON *btn, INT32 reason);
-static UINT32 guiGIOCancelButton;
+static GUIButtonRef guiGIOCancelButton;
 static BUTTON_PICS* giGIOCancelBtnImage;
 
 
 //checkbox to toggle the Diff level
-static UINT32 guiDifficultySettingsToggles[NUM_DIFF_SETTINGS];
+static GUIButtonRef guiDifficultySettingsToggles[NUM_DIFF_SETTINGS];
 static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, INT32 reason);
 
 //checkbox to toggle Game style
-static UINT32 guiGameStyleToggles[NUM_GAME_STYLES];
+static GUIButtonRef guiGameStyleToggles[NUM_GAME_STYLES];
 static void BtnGameStyleTogglesCallback(GUI_BUTTON *btn,INT32 reason);
 
 //checkbox to toggle Gun options
-static UINT32 guiGunOptionToggles[NUM_GUN_OPTIONS];
+static GUIButtonRef guiGunOptionToggles[NUM_GUN_OPTIONS];
 static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, INT32 reason);
 
 #if 0// JA2Gold: no more timed turns setting
@@ -177,7 +177,7 @@ static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, INT32 reason);
 #endif
 
 //checkbox to toggle Save style
-static UINT32 guiGameSaveToggles[NUM_SAVE_OPTIONS];
+static GUIButtonRef guiGameSaveToggles[NUM_SAVE_OPTIONS];
 static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, INT32 reason);
 
 
@@ -249,9 +249,9 @@ UINT32 GameInitOptionsScreenHandle(void)
 }
 
 
-static INT32 MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click)
+static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click)
 {
-	INT32 btn = CreateIconAndTextButton(img, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, GIO_BTN_OK_Y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, GIO_BTN_OK_Y, MSYS_PRIORITY_HIGH, click);
 	SpecifyButtonSoundScheme(btn, BUTTON_SOUND_SCHEME_BIGSWITCH3);
 	return btn;
 }

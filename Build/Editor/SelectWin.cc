@@ -82,11 +82,11 @@ static INT16 iEndClickY;
 #define OK_ICON				3
 
 static INT32 iButtonIcons[4];
-static INT32 iSelectWin;
-static INT32 iCancelWin;
-static INT32 iScrollUp;
-static INT32 iScrollDown;
-static INT32 iOkWin;
+static GUIButtonRef iSelectWin;
+static GUIButtonRef iCancelWin;
+static GUIButtonRef iScrollUp;
+static GUIButtonRef iScrollDown;
+static GUIButtonRef iOkWin;
 
 BOOLEAN fAllDone=FALSE;
 static BOOLEAN fButtonsPresent = FALSE;
@@ -225,11 +225,11 @@ static void SelWinClkCallback(GUI_BUTTON* button, INT32 reason);
 static void UpClkCallback(GUI_BUTTON* button, INT32 reason);
 
 
-static INT32 MakeButton(UINT idx, const char* gfx, INT16 y, INT16 h, GUI_CALLBACK click, const wchar_t* help)
+static GUIButtonRef MakeButton(UINT idx, const char* gfx, INT16 y, INT16 h, GUI_CALLBACK click, const wchar_t* help)
 {
 	INT32 img = LoadGenericButtonIcon(gfx);
 	iButtonIcons[idx] = img;
-	INT32 btn = CreateIconButton(img, 0, 600, y, 40, h, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconButton(img, 0, 600, y, 40, h, MSYS_PRIORITY_HIGH, click);
 	SetButtonFastHelpText(btn, help);
 	return btn;
 }

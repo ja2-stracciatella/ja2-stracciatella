@@ -140,7 +140,7 @@ INT32 iDrawMode = DRAW_MODE_NOTHING;
 INT32 iCurrentAction,iActionParam;
 INT32 iEditAction = ACTION_NULL;
 
-INT32 iEditorButton[NUMBER_EDITOR_BUTTONS];
+GUIButtonRef iEditorButton[NUMBER_EDITOR_BUTTONS];
 INT32 iEditorToolbarState;
 
 INT32 iCurrentTaskbar;
@@ -166,7 +166,7 @@ UINT16 gusEditorTaskbarHiColor;
 UINT16 gusEditorTaskbarLoColor;
 
 BOOLEAN gfGotoGridNoUI = FALSE;
-static INT32        guiGotoGridNoUIButtonID;
+static GUIButtonRef guiGotoGridNoUIButtonID;
 static MOUSE_REGION GotoGridNoUIRegion;
 
 //----------------------------------------------------------------------------------------------

@@ -71,18 +71,18 @@ INT32		giMercTotalContractCharge;
 BOOLEAN	gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning = FALSE;
 
 // The Authorize button
-UINT32	guiMercAuthorizeBoxButton;
 static BUTTON_PICS* guiMercAuthorizeButtonImage;
+GUIButtonRef guiMercAuthorizeBoxButton;
 
 
 // The Back button
-UINT32	guiMercBackBoxButton;
+GUIButtonRef guiMercBackBoxButton;
 
 
-static INT32 MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
+static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
 {
 	const INT16 shadow_col = DEFAULT_SHADOW;
-	const INT32 btn = CreateIconAndTextButton(guiMercAuthorizeButtonImage, text, FONT12ARIAL, MERC_BUTTON_UP_COLOR, shadow_col, MERC_BUTTON_DOWN_COLOR, shadow_col, x, MERC_AC_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(guiMercAuthorizeButtonImage, text, FONT12ARIAL, MERC_BUTTON_UP_COLOR, shadow_col, MERC_BUTTON_DOWN_COLOR, shadow_col, x, MERC_AC_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 	return btn;
 }

@@ -56,7 +56,7 @@ enum
 
 
 static BUTTON_PICS* iMenuImages[NUM_MENU_ITEMS];
-static INT32 iMenuButtons[NUM_MENU_ITEMS];
+static GUIButtonRef iMenuButtons[NUM_MENU_ITEMS];
 
 static SGPVObject* guiMainMenuBackGroundImage;
 static SGPVObject* guiJa2LogoImage;

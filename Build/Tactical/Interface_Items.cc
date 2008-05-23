@@ -210,13 +210,13 @@ static INT16 gsInvDescX;
 static INT16 gsInvDescY;
 static UINT8 gubItemDescStatusIndex;
 static BUTTON_PICS* giItemDescAmmoButtonImages;
-static INT32 giItemDescAmmoButton;
+static GUIButtonRef giItemDescAmmoButton;
 static SOLDIERTYPE* gpItemDescSoldier;
 static BOOLEAN fItemDescDelete = FALSE;
 MOUSE_REGION		gItemDescAttachmentRegions[4];
 static MOUSE_REGION gProsAndConsRegions[2];
 
-static UINT32 guiMoneyButtonBtn[MAX_ATTACHMENTS];
+static GUIButtonRef guiMoneyButtonBtn[MAX_ATTACHMENTS];
 static BUTTON_PICS* guiMoneyButtonImage;
 static BUTTON_PICS* guiMoneyDoneButtonImage;
 
@@ -265,7 +265,7 @@ static INT16 gsKeyRingPopupInvHeight;
 SOLDIERTYPE *gpItemPopupSoldier;
 
 // inventory description done button for mapscreen
-INT32 giMapInvDescButton = -1;
+GUIButtonRef giMapInvDescButton;
 
 
 static BOOLEAN gfItemPopupRegionCallbackEndFix = FALSE;
@@ -1956,7 +1956,7 @@ try
 		const INT16         y  = gsInvDescY + xy->y + xy->h - h; // align with bottom
 		const INT16         text_col   = ITEMDESC_AMMO_FORE;
 		const INT16         shadow_col = FONT_MCOLOR_BLACK;
-		const INT32 ammo_btn = CreateIconAndTextButton(ammo_img, pStr, TINYFONT1, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGHEST, ItemDescAmmoCallback);
+		GUIButtonRef  const ammo_btn   = CreateIconAndTextButton(ammo_img, pStr, TINYFONT1, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGHEST, ItemDescAmmoCallback);
 		giItemDescAmmoButton = ammo_btn;
 
 		/* Disable the eject button, if we are being init from the shop keeper
@@ -4563,11 +4563,11 @@ typedef struct
 	BUTTON_PICS*  iAllButtonImages;
 	BUTTON_PICS*  iCancelButtonImages;
 	BUTTON_PICS*  iOKButtonImages;
-	INT32					iUpButton;
-	INT32					iDownButton;
-	INT32					iAllButton;
-	INT32					iOKButton;
-	INT32					iCancelButton;
+	GUIButtonRef  iUpButton;
+	GUIButtonRef  iDownButton;
+	GUIButtonRef  iAllButton;
+	GUIButtonRef  iOKButton;
+	GUIButtonRef  iCancelButton;
 	BOOLEAN				fCanScrollUp;
 	BOOLEAN				fCanScrollDown;
 	BOOLEAN				fDirtyLevel;

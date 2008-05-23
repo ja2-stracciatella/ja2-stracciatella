@@ -85,7 +85,7 @@ BOOLEAN fZoomFlag = FALSE;
 
 
 // buttons & button images
-INT32 giMapBorderButtons[ 6 ] = { -1, -1, -1, -1, -1, -1 };
+GUIButtonRef giMapBorderButtons[6];
 static BUTTON_PICS* giMapBorderButtonsImage[6];
 
 //UINT32 guiMapBorderScrollButtons[ 4 ] = { -1, -1, -1, -1 };
@@ -221,7 +221,7 @@ static void MakeButton(UINT idx, UINT gfx, INT16 x, GUI_CALLBACK click, const wc
 {
 	BUTTON_PICS* const img = LoadButtonImage("INTERFACE/map_border_buttons.sti", -1, gfx, -1, gfx + 9, -1);
 	giMapBorderButtonsImage[idx] = img;
-	INT32 btn = QuickCreateButtonNoMove(img, x, 323, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = QuickCreateButtonNoMove(img, x, 323, MSYS_PRIORITY_HIGH, click);
 	giMapBorderButtons[idx] = btn;
 	SetButtonFastHelpText(btn, help);
 	SetButtonCursor(btn, MSYS_NO_CURSOR);
@@ -325,7 +325,6 @@ void DeleteMapBorderButtons( void )
 
 	for ( ubCnt = 0; ubCnt < 6; ubCnt++ )
 	{
-		giMapBorderButtons[ ubCnt ] = -1;
 		giMapBorderButtonsImage[ubCnt] = NULL;
 	}
 }

@@ -245,16 +245,16 @@ NUMBER_TIMES_QUOTE_SAID			gNumberOfTimesQuoteSaid[ MERC_NUMBER_OF_RANDOM_QUOTES 
 
 // The Account Box button
 static void BtnAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiAccountBoxButton;
 static BUTTON_PICS* guiAccountBoxButtonImage;
+GUIButtonRef guiAccountBoxButton;
 
 //File Box
-UINT32	guiFileBoxButton;
 static void BtnFileBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
+GUIButtonRef guiFileBoxButton;
 
 // The 'X' to close the video conf window button
 static void BtnXToCloseMercVideoButtonCallback(GUI_BUTTON *btn, INT32 reason);
-UINT32	guiXToCloseMercVideoButton;
+GUIButtonRef guiXToCloseMercVideoButton;
 
 
 //Mouse region for the subtitles region when the merc is talking

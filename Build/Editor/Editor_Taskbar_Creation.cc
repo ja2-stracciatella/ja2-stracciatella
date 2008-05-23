@@ -29,7 +29,7 @@ static void InitEditorItemStatsButtons(void)
 
 static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const char* gfx, const wchar_t* help)
 {
-	const INT32 btn = QuickCreateButtonImg(gfx, -1, 1, 2, 3, 4, x, y, MSYS_PRIORITY_NORMAL, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(gfx, -1, 1, 2, 3, 4, x, y, MSYS_PRIORITY_NORMAL, click);
 	iEditorButton[idx] = btn;
 	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_SHADED);
 	SetButtonFastHelpText(btn, help);
@@ -38,7 +38,7 @@ static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const cha
 
 static void MakeCheck(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const char* gfx, const wchar_t* help)
 {
-	INT32 btn = CreateCheckBoxButton(x, y, gfx, MSYS_PRIORITY_NORMAL, click);
+	GUIButtonRef const btn = CreateCheckBoxButton(x, y, gfx, MSYS_PRIORITY_NORMAL, click);
 	iEditorButton[idx] = btn;
 	SetButtonFastHelpText(btn, help);
 }
@@ -46,7 +46,7 @@ static void MakeCheck(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const char
 
 static void MakeButtonTeam(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* text)
 {
-	INT32 btn = CreateTextButton(text, BLOCKFONT, 165, FONT_BLACK, 20, y, 78, 19, MSYS_PRIORITY_NORMAL, click);
+	GUIButtonRef const btn = CreateTextButton(text, BLOCKFONT, 165, FONT_BLACK, 20, y, 78, 19, MSYS_PRIORITY_NORMAL, click);
 	iEditorButton[idx] = btn;
 	SpecifyButtonDownTextColors(btn, FONT_YELLOW, FONT_BLACK);
 }
@@ -54,7 +54,7 @@ static void MakeButtonTeam(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t*
 
 static void MakeButtonEquipment(UINT idx, UINT level, INT16 colour, const wchar_t* text)
 {
-	INT32 btn = CreateTextButton(text, SMALLCOMPFONT, FONT_GRAY1, FONT_BLACK, 480, 385 + 15 * level, 40, 15, MSYS_PRIORITY_NORMAL, MercsSetRelativeEquipmentCallback);
+	GUIButtonRef const btn = CreateTextButton(text, SMALLCOMPFONT, FONT_GRAY1, FONT_BLACK, 480, 385 + 15 * level, 40, 15, MSYS_PRIORITY_NORMAL, MercsSetRelativeEquipmentCallback);
 	iEditorButton[idx] = btn;
 	SpecifyButtonDownTextColors(btn, colour, FONT_BLACK);
 	MSYS_SetBtnUserData(btn, level);
@@ -63,7 +63,7 @@ static void MakeButtonEquipment(UINT idx, UINT level, INT16 colour, const wchar_
 
 static void MakeButtonAttribute(UINT idx, UINT level, INT16 colour, const wchar_t* text)
 {
-	INT32 btn = CreateTextButton(text, SMALLCOMPFONT, FONT_GRAY1, FONT_BLACK, 530, 385 + 15 * level, 40, 15, MSYS_PRIORITY_NORMAL, MercsSetRelativeAttributesCallback);
+	GUIButtonRef const btn = CreateTextButton(text, SMALLCOMPFONT, FONT_GRAY1, FONT_BLACK, 530, 385 + 15 * level, 40, 15, MSYS_PRIORITY_NORMAL, MercsSetRelativeAttributesCallback);
 	iEditorButton[idx] = btn;
 	SpecifyButtonDownTextColors(btn, colour, FONT_BLACK);
 	MSYS_SetBtnUserData(btn, level);
@@ -83,7 +83,7 @@ static void MakeButtonDir(UINT idx, UINT dir, INT16 x, INT16 y)
 		L"northwest"
 	};
 
-	INT32 btn = CreateIconButton(giEditMercDirectionIcons[0], (dir + 1) % 8, x, y, 30, 30, MSYS_PRIORITY_NORMAL + 1, MercsDirectionSetCallback);
+	GUIButtonRef const btn = CreateIconButton(giEditMercDirectionIcons[0], (dir + 1) % 8, x, y, 30, 30, MSYS_PRIORITY_NORMAL + 1, MercsDirectionSetCallback);
 	iEditorButton[idx] = btn;
 	wchar_t str[30];
 	swprintf(str, lengthof(str), L"Set merc to face %ls", FaceDirs[dir]);
@@ -94,7 +94,7 @@ static void MakeButtonDir(UINT idx, UINT dir, INT16 x, INT16 y)
 
 static void MakeButtonRank(UINT idx, INT16 y, INT32 rank)
 {
-	INT32 btn = CreateCheckBoxButton(575, y, "EDITOR/radiobutton.sti", MSYS_PRIORITY_NORMAL, MercsSetEnemyColorCodeCallback);
+	GUIButtonRef const btn = CreateCheckBoxButton(575, y, "EDITOR/radiobutton.sti", MSYS_PRIORITY_NORMAL, MercsSetEnemyColorCodeCallback);
 	iEditorButton[idx] = btn;
 	MSYS_SetBtnUserData(btn, rank);
 }
@@ -108,7 +108,7 @@ static void MakeButtonSchedule(UINT idx, INT16 x, INT16 y, INT16 w, INT16 h, GUI
 
 static void MakeButtonInventory(UINT idx, INT16 x, INT16 y, INT32 pos)
 {
-	INT32 btn = CreateCheckBoxButton(x, y, "EDITOR/smCheckbox.sti", MSYS_PRIORITY_NORMAL + 1, MercsInventorySlotCallback);
+	GUIButtonRef const btn = CreateCheckBoxButton(x, y, "EDITOR/smCheckbox.sti", MSYS_PRIORITY_NORMAL + 1, MercsInventorySlotCallback);
 	iEditorButton[idx] = btn;
 	MSYS_SetBtnUserData(btn, pos);
 }
@@ -395,7 +395,7 @@ static void InitEditorTerrainToolbar(void)
 
 static void MakeButtonTab(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
 {
-	INT32 btn = CreateTextButton(text, SMALLFONT1, FONT_LTKHAKI, FONT_DKKHAKI, x, 460, 90, 20, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateTextButton(text, SMALLFONT1, FONT_LTKHAKI, FONT_DKKHAKI, x, 460, 90, 20, MSYS_PRIORITY_HIGH, click);
 	iEditorButton[idx] = btn;
 	SpecifyButtonDownTextColors(btn, FONT_YELLOW, FONT_ORANGE);
 }

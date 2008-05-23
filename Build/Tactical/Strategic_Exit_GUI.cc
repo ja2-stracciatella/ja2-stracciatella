@@ -43,11 +43,11 @@ typedef struct
 	MOUSE_REGION			SingleRegion;
 	MOUSE_REGION			LoadRegion;
 	MOUSE_REGION			AllRegion;
-	UINT32						uiLoadCheckButton;
-	UINT32						uiSingleMoveButton;
-	UINT32						uiAllMoveButton;
-	UINT32						uiOKButton;
-	UINT32						uiCancelButton;
+	GUIButtonRef      uiLoadCheckButton;
+	GUIButtonRef      uiSingleMoveButton;
+	GUIButtonRef      uiAllMoveButton;
+	GUIButtonRef      uiOKButton;
+	GUIButtonRef      uiCancelButton;
 	INT32							iBoxId;
 	BUTTON_PICS*      iButtonImages;
 	UINT16						usWidth;
@@ -94,7 +94,7 @@ INT8    gbWarpWorldZ;
 INT16   gsWarpGridNo;
 
 
-static INT32 MakeButton(const wchar_t* text, INT16 dx, GUI_CALLBACK click)
+static GUIButtonRef MakeButton(const wchar_t* text, INT16 dx, GUI_CALLBACK click)
 {
 	const INT16 text_col   = FONT_MCOLOR_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;
