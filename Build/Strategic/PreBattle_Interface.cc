@@ -1189,7 +1189,7 @@ static void AutoResolveBattleCallback(GUI_BUTTON* btn, INT32 reason)
 					EliminateAllEnemies( gubPBSectorX, gubPBSectorY );
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
-					DrawButton( btn->IDNum );
+					DrawButton(btn);
 					InvalidateRegion( btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY );
 					ExecuteBaseDirtyRectQueue();
 					EndFrameBufferRender( );
@@ -1230,7 +1230,7 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 					EliminateAllEnemies( gubPBSectorX, gubPBSectorY );
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
-					DrawButton( btn->IDNum );
+					DrawButton(btn);
 					InvalidateRegion( btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY );
 					ExecuteBaseDirtyRectQueue();
 					EndFrameBufferRender( );
@@ -1248,7 +1248,7 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 				gfEnterTacticalPlacementGUI = TRUE;
 			}
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
-			DrawButton( btn->IDNum );
+			DrawButton(btn);
 			InvalidateRegion( btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY );
 			ExecuteBaseDirtyRectQueue();
 			EndFrameBufferRender( );
@@ -1304,7 +1304,7 @@ static void RetreatMercsCallback(GUI_BUTTON* btn, INT32 reason)
 			ResetMovementForEnemyGroupsInLocation( gubPBSectorX, gubPBSectorY );
 
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
-			DrawButton( btn->IDNum );
+			DrawButton(btn);
 			InvalidateRegion( btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY );
 			ExecuteBaseDirtyRectQueue();
 			EndFrameBufferRender( );

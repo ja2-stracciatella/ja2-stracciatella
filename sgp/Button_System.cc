@@ -288,7 +288,7 @@ static GUI_BUTTON* GetButton(INT32 BtnID)
 }
 
 
-void EnableButton(INT32 iButtonID)
+void EnableButton(GUIButtonRef const iButtonID)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
@@ -296,7 +296,7 @@ void EnableButton(INT32 iButtonID)
 }
 
 
-void DisableButton(INT32 iButtonID)
+void DisableButton(GUIButtonRef const iButtonID)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
@@ -700,7 +700,7 @@ GUIButtonRef CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, IN
 }
 
 
-void SetButtonCursor(INT32 iBtnId, UINT16 crsr)
+void SetButtonCursor(GUIButtonRef const iBtnId, UINT16 crsr)
 {
 	GUI_BUTTON* b = GetButton(iBtnId);
 	b->Area.Cursor = crsr;
@@ -778,7 +778,7 @@ GUIButtonRef CreateLabel(const wchar_t* text, Font const font, INT16 forecolor, 
 }
 
 
-void SpecifyButtonText(INT32 iButtonID, const wchar_t* string)
+void SpecifyButtonText(GUIButtonRef const iButtonID, const wchar_t* string)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
@@ -792,7 +792,7 @@ void SpecifyButtonText(INT32 iButtonID, const wchar_t* string)
 }
 
 
-void SpecifyButtonDownTextColors(INT32 iButtonID, INT16 sForeColorDown, INT16 sShadowColorDown)
+void SpecifyButtonDownTextColors(GUIButtonRef const iButtonID, INT16 sForeColorDown, INT16 sShadowColorDown)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	b->sForeColorDown   = sForeColorDown;
@@ -801,7 +801,7 @@ void SpecifyButtonDownTextColors(INT32 iButtonID, INT16 sForeColorDown, INT16 sS
 }
 
 
-void SpecifyButtonHilitedTextColors(INT32 iButtonID, INT16 sForeColorHilited, INT16 sShadowColorHilited)
+void SpecifyButtonHilitedTextColors(GUIButtonRef const iButtonID, INT16 sForeColorHilited, INT16 sShadowColorHilited)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	b->sForeColorHilited   = sForeColorHilited;
@@ -810,7 +810,7 @@ void SpecifyButtonHilitedTextColors(INT32 iButtonID, INT16 sForeColorHilited, IN
 }
 
 
-void SpecifyButtonTextJustification(INT32 iButtonID, INT8 bJustification)
+void SpecifyButtonTextJustification(GUIButtonRef const iButtonID, INT8 bJustification)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	Assert(bJustification >= BUTTON_TEXT_LEFT && bJustification <= BUTTON_TEXT_RIGHT);
@@ -819,7 +819,7 @@ void SpecifyButtonTextJustification(INT32 iButtonID, INT8 bJustification)
 }
 
 
-void SpecifyGeneralButtonTextAttributes(INT32 iButtonID, const wchar_t* string, Font const font, INT16 sForeColor, INT16 sShadowColor)
+void SpecifyGeneralButtonTextAttributes(GUIButtonRef const iButtonID, const wchar_t* string, Font const font, INT16 sForeColor, INT16 sShadowColor)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	//Copy over information
@@ -831,7 +831,7 @@ void SpecifyGeneralButtonTextAttributes(INT32 iButtonID, const wchar_t* string, 
 }
 
 
-void SpecifyButtonTextOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText)
+void SpecifyButtonTextOffsets(GUIButtonRef const iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	//Copy over information
@@ -841,7 +841,7 @@ void SpecifyButtonTextOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOff
 }
 
 
-void SpecifyButtonTextSubOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText)
+void SpecifyButtonTextSubOffsets(GUIButtonRef const iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	//Copy over information
@@ -851,14 +851,14 @@ void SpecifyButtonTextSubOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextY
 }
 
 
-void SpecifyButtonTextWrappedWidth(INT32 iButtonID, INT16 sWrappedWidth)
+void SpecifyButtonTextWrappedWidth(GUIButtonRef const iButtonID, INT16 sWrappedWidth)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	b->sWrappedWidth = sWrappedWidth;
 }
 
 
-void SpecifyDisabledButtonStyle(INT32 iButtonID, INT8 bStyle)
+void SpecifyDisabledButtonStyle(GUIButtonRef const iButtonID, INT8 bStyle)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
@@ -869,7 +869,7 @@ void SpecifyDisabledButtonStyle(INT32 iButtonID, INT8 bStyle)
 }
 
 
-void SpecifyButtonIcon(const INT32 iButtonID, const SGPVObject* const icon, const UINT16 usVideoObjectIndex, const INT8 bXOffset, const INT8 bYOffset, const BOOLEAN fShiftImage)
+void SpecifyButtonIcon(GUIButtonRef const iButtonID, const SGPVObject* const icon, const UINT16 usVideoObjectIndex, const INT8 bXOffset, const INT8 bYOffset, const BOOLEAN fShiftImage)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
@@ -887,14 +887,14 @@ void SpecifyButtonIcon(const INT32 iButtonID, const SGPVObject* const icon, cons
 }
 
 
-void AllowDisabledButtonFastHelp(INT32 iButtonID)
+void AllowDisabledButtonFastHelp(GUIButtonRef const iButtonID)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	b->Area.uiFlags |= MSYS_ALLOW_DISABLED_FASTHELP;
 }
 
 
-void SetButtonFastHelpText(INT32 iButton, const wchar_t* Text)
+void SetButtonFastHelpText(GUIButtonRef const iButton, const wchar_t* Text)
 {
 	GUI_BUTTON* b = GetButton(iButton);
 	CHECKV(b != NULL); // XXX HACK000C
@@ -1161,7 +1161,7 @@ void RenderButtons(void)
 }
 
 
-void MarkAButtonDirty(INT32 iButtonNum)
+void MarkAButtonDirty(GUIButtonRef const iButtonNum)
 {
   // surgical dirtying -> marks a user specified button dirty, without dirty the whole lot of them
 	GUI_BUTTON* b = GetButton(iButtonNum);
@@ -1179,7 +1179,7 @@ void MarkButtonsDirty(void)
 }
 
 
-void UnMarkButtonDirty(INT32 iButtonIndex)
+void UnMarkButtonDirty(GUIButtonRef const iButtonIndex)
 {
 	GUI_BUTTON* b = GetButton(iButtonIndex);
 	CHECKV(b != NULL); // XXX HACK000C
@@ -1191,12 +1191,13 @@ void UnmarkButtonsDirty(void)
 {
 	for (INT32 x = 0; x < MAX_BUTTONS; ++x)
 	{
-		if (ButtonList[x]) UnMarkButtonDirty(x);
+		GUI_BUTTON* const b = ButtonList[x];
+		if (b) UnMarkButtonDirty(b);
 	}
 }
 
 
-void ForceButtonUnDirty(INT32 iButtonIndex)
+void ForceButtonUnDirty(GUIButtonRef const iButtonIndex)
 {
 	GUI_BUTTON* b = GetButton(iButtonIndex);
 	CHECKV(b != NULL); // XXX HACK000C
@@ -1205,7 +1206,7 @@ void ForceButtonUnDirty(INT32 iButtonIndex)
 }
 
 
-void DrawButton(INT32 iButtonID)
+void DrawButton(GUIButtonRef const iButtonID)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
@@ -1332,7 +1333,7 @@ static void DrawShadeOnButton(const GUI_BUTTON* b)
 }
 
 
-void DrawCheckBoxButtonOnOff(INT32 iButtonID, BOOLEAN on)
+void DrawCheckBoxButtonOnOff(GUIButtonRef const iButtonID, BOOLEAN on)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
 
@@ -1827,7 +1828,7 @@ GUIButtonRef CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 
 }
 
 
-void MSYS_SetBtnUserData(INT32 iButtonNum, INT32 userdata)
+void MSYS_SetBtnUserData(GUIButtonRef const iButtonNum, INT32 userdata)
 {
 	GUI_BUTTON* b = GetButton(iButtonNum);
 	CHECKV(b != NULL); // XXX HACK000C
@@ -1904,7 +1905,7 @@ void ReleaseAnchorMode(void)
 }
 
 
-void HideButton(INT32 iButtonNum)
+void HideButton(GUIButtonRef const iButtonNum)
 {
 	GUI_BUTTON* b = GetButton(iButtonNum);
 	CHECKV(b != NULL); // XXX HACK000C
@@ -1916,7 +1917,7 @@ void HideButton(INT32 iButtonNum)
 }
 
 
-void ShowButton(INT32 iButtonNum)
+void ShowButton(GUIButtonRef const iButtonNum)
 {
 	GUI_BUTTON* b = GetButton(iButtonNum);
 	CHECKV(b != NULL); // XXX HACK000C

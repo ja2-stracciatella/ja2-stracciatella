@@ -463,7 +463,6 @@ extern BOOLEAN fDeletedNode;
 extern BOOLEAN gfStartedFromMapScreen;
 
 extern INT32 iDialogueBox;
-extern INT32 giMapInvDescButton;
 
 
 extern PathSt* pTempCharacterPath;

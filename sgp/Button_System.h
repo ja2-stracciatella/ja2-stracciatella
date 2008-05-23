@@ -134,7 +134,7 @@ BOOLEAN InitButtonSystem(void);
 void ShutdownButtonSystem(void);
 
 // Set the text that will be displayed as the FastHelp
-void SetButtonFastHelpText(INT32 iButton, const wchar_t* Text);
+void SetButtonFastHelpText(GUIButtonRef, wchar_t const* text);
 
 #if defined _JA2_RENDER_DIRTY
 
@@ -161,26 +161,26 @@ BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* LoadedImg, INT32 Grayed, INT32 Of
 void UnloadButtonImage(BUTTON_PICS*);
 
 // Enables an already created button.
-void EnableButton(INT32 iButtonID);
+void EnableButton(GUIButtonRef);
 
 /* Disables a button. The button remains in the system list, and can be
  * reactivated by calling EnableButton.  Diabled buttons will appear "grayed
  * out" on the screen (unless the graphics for such are not available).
  */
-void DisableButton(INT32 iButtonID);
+void DisableButton(GUIButtonRef);
 
 /* Removes a button from the system's list. All memory associated with the
  * button is released.
  */
 void RemoveButton(GUIButtonRef&);
 
-void HideButton(INT32 iButtonID);
-void ShowButton(INT32 iButton);
+void HideButton(GUIButtonRef);
+void ShowButton(GUIButtonRef);
 
 void RenderButtons(void);
 
 // Draws a single button on the screen.
-void DrawButton(INT32 iButtonID);
+void DrawButton(GUIButtonRef);
 
 extern BOOLEAN gfRenderHilights;
 
@@ -213,16 +213,16 @@ GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const wchar_t* string, 
  * implemented as button */
 GUIButtonRef CreateLabel(const wchar_t* text, Font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority);
 
-void SpecifyButtonText(INT32 iButtonID, const wchar_t* string);
-void SpecifyButtonDownTextColors(INT32 iButtonID, INT16 sForeColorDown, INT16 sShadowColorDown);
-void SpecifyButtonHilitedTextColors(INT32 iButtonID, INT16 sForeColorHilited, INT16 sShadowColorHilited);
-void SpecifyButtonTextJustification(INT32 iButtonID, INT8 bJustification);
-void SpecifyGeneralButtonTextAttributes(INT32 iButtonID, const wchar_t* string, Font, INT16 sForeColor, INT16 sShadowColor);
-void SpecifyButtonTextOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText);
-void SpecifyButtonTextSubOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText);
-void SpecifyButtonTextWrappedWidth(INT32 iButtonID, INT16 sWrappedWidth);
+void SpecifyButtonText(GUIButtonRef, const wchar_t* string);
+void SpecifyButtonDownTextColors(GUIButtonRef, INT16 sForeColorDown, INT16 sShadowColorDown);
+void SpecifyButtonHilitedTextColors(GUIButtonRef, INT16 sForeColorHilited, INT16 sShadowColorHilited);
+void SpecifyButtonTextJustification(GUIButtonRef, INT8 bJustification);
+void SpecifyGeneralButtonTextAttributes(GUIButtonRef, const wchar_t* string, Font, INT16 sForeColor, INT16 sShadowColor);
+void SpecifyButtonTextOffsets(GUIButtonRef, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText);
+void SpecifyButtonTextSubOffsets(GUIButtonRef, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText);
+void SpecifyButtonTextWrappedWidth(GUIButtonRef, INT16 sWrappedWidth);
 
-void AllowDisabledButtonFastHelp(INT32 iButtonID);
+void AllowDisabledButtonFastHelp(GUIButtonRef);
 
 enum // for use with SpecifyDisabledButtonStyle
 {
@@ -231,27 +231,27 @@ enum // for use with SpecifyDisabledButtonStyle
 	DISABLED_STYLE_HATCHED, // always hatches the disabled button
 	DISABLED_STYLE_SHADED   // always shades the disabled button 25% darker
 };
-void SpecifyDisabledButtonStyle(INT32 iButtonID, INT8 bStyle);
+void SpecifyDisabledButtonStyle(GUIButtonRef, INT8 bStyle);
 
 /* Note:  Text is always on top
  * If fShiftImage is true, then the image will shift down one pixel and right
  * one pixel just like the text does.
  */
-void SpecifyButtonIcon(INT32 iButtonID, const SGPVObject* icon, UINT16 usVideoObjectIndex, INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage);
+void SpecifyButtonIcon(GUIButtonRef, const SGPVObject* icon, UINT16 usVideoObjectIndex, INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage);
 
 // will simply set the cursor for the mouse region the button occupies
-void SetButtonCursor(INT32 iBtnId, UINT16 crsr);
+void SetButtonCursor(GUIButtonRef, UINT16 crsr);
 
-void MSYS_SetBtnUserData(INT32 iButtonNum, INT32 userdata);
+void MSYS_SetBtnUserData(GUIButtonRef, INT32 userdata);
 INT32 MSYS_GetBtnUserData(const GUI_BUTTON* b);
-void MarkAButtonDirty(INT32 iButtonNum); // will mark only selected button dirty
+void MarkAButtonDirty(GUIButtonRef); // will mark only selected button dirty
 void MarkButtonsDirty(void);// Function to mark buttons dirty ( all will redraw at next RenderButtons )
-void UnMarkButtonDirty(INT32 iButtonIndex);  // unmark button
+void UnMarkButtonDirty(GUIButtonRef);  // unmark button
 void UnmarkButtonsDirty(void); // unmark ALL the buttoms on the screen dirty
-void ForceButtonUnDirty(INT32 iButtonIndex); // forces button undirty no matter the reason, only lasts one frame
+void ForceButtonUnDirty(GUIButtonRef); // forces button undirty no matter the reason, only lasts one frame
 
 
-void DrawCheckBoxButtonOnOff(INT32 iButtonID, BOOLEAN on);
+void DrawCheckBoxButtonOnOff(GUIButtonRef, BOOLEAN on);
 
 typedef struct ButtonDimensions
 {

@@ -1,6 +1,7 @@
 #ifndef __INTERFACE_ITEMS_H
 #define __INTERFACE_ITEMS_H
 
+#include "Button_System.h"
 #include "MouseSystem.h"
 #include "Soldier_Control.h"
 
@@ -134,6 +135,7 @@ extern BOOLEAN      gfAddingMoneyToMercFromPlayersAccount;
 extern MOUSE_REGION gItemDescAttachmentRegions[MAX_ATTACHMENTS];
 extern INT8         gbItemPointerSrcSlot;
 extern BOOLEAN      gfDontChargeAPsToPickup;
+extern GUIButtonRef giMapInvDescButton;
 
 void    HandleAnyMercInSquadHasCompatibleStuff(const OBJECTTYPE* pObject);
 BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pTestObject, BOOLEAN fOn);
