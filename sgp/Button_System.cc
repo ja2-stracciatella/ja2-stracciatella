@@ -621,8 +621,7 @@ static GUI_BUTTON* AllocateButton(const UINT32 Flags, const INT16 Left, const IN
 		QuickButtonCallbackMMove,
 		QuickButtonCallbackMButn
 	);
-
-	MSYS_SetRegionUserData(&b->Area, 0, BtnID);
+	b->Area.SetUserPtr(b);
 
 #ifdef BUTTONSYSTEM_DEBUGGING
 	AssertFailIfIdenticalButtonAttributesFound(b);
@@ -911,10 +910,7 @@ void SetButtonFastHelpText(INT32 iButton, const wchar_t* Text)
 static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
 {
 	Assert(reg != NULL);
-
-	INT32 iButtonID = MSYS_GetRegionUserData(reg, 0);
-	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKV(b != NULL); // XXX HACK000C
+	GUI_BUTTON* const b = reg->GetUserPtr<GUI_BUTTON>();
 
 	if (b->uiFlags & BUTTON_ENABLED &&
 			reason & (MSYS_CALLBACK_REASON_LOST_MOUSE | MSYS_CALLBACK_REASON_GAIN_MOUSE))
@@ -977,10 +973,7 @@ static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
 static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 {
 	Assert(reg != NULL);
-
-	INT32 iButtonID = MSYS_GetRegionUserData(reg, 0);
-	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKV(b != NULL); // XXX HACK000C
+	GUI_BUTTON* const b = reg->GetUserPtr<GUI_BUTTON>();
 
 	BOOLEAN MouseBtnDown = (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_RBUTTON_DWN)) != 0;
 	BOOLEAN StateBefore  = (b->uiFlags & BUTTON_CLICKED_ON) != 0;
