@@ -695,8 +695,7 @@ INT32 CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Pri
 void SetButtonCursor(INT32 iBtnId, UINT16 crsr)
 {
 	GUI_BUTTON* b = GetButton(iBtnId);
-	CHECKV(b != NULL); // XXX HACK000C
-  b->Area.Cursor = crsr;
+	b->Area.Cursor = crsr;
 }
 
 
@@ -789,7 +788,6 @@ void SpecifyButtonText(INT32 iButtonID, const wchar_t* string)
 void SpecifyButtonDownTextColors(INT32 iButtonID, INT16 sForeColorDown, INT16 sShadowColorDown)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKV(b != NULL); // XXX HACK000C
 	b->sForeColorDown   = sForeColorDown;
 	b->sShadowColorDown = sShadowColorDown;
 	b->uiFlags |= BUTTON_DIRTY;
@@ -799,7 +797,6 @@ void SpecifyButtonDownTextColors(INT32 iButtonID, INT16 sForeColorDown, INT16 sS
 void SpecifyButtonHilitedTextColors(INT32 iButtonID, INT16 sForeColorHilited, INT16 sShadowColorHilited)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKV(b != NULL); // XXX HACK000C
 	b->sForeColorHilited   = sForeColorHilited;
 	b->sShadowColorHilited = sShadowColorHilited;
 	b->uiFlags |= BUTTON_DIRTY;
@@ -809,7 +806,6 @@ void SpecifyButtonHilitedTextColors(INT32 iButtonID, INT16 sForeColorHilited, IN
 void SpecifyButtonTextJustification(INT32 iButtonID, INT8 bJustification)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKV(b != NULL); // XXX HACK000C
 	Assert(bJustification >= BUTTON_TEXT_LEFT && bJustification <= BUTTON_TEXT_RIGHT);
 	b->bJustification = bJustification;
 	b->uiFlags |= BUTTON_DIRTY;
@@ -819,7 +815,6 @@ void SpecifyButtonTextJustification(INT32 iButtonID, INT8 bJustification)
 void SpecifyGeneralButtonTextAttributes(INT32 iButtonID, const wchar_t* string, Font const font, INT16 sForeColor, INT16 sShadowColor)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKV(b != NULL); // XXX HACK000C
 	//Copy over information
 	SpecifyButtonText(iButtonID, string);
 	b->usFont       = font;
@@ -832,7 +827,6 @@ void SpecifyGeneralButtonTextAttributes(INT32 iButtonID, const wchar_t* string, 
 void SpecifyButtonTextOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKV(b != NULL); // XXX HACK000C
 	//Copy over information
 	b->bTextXOffset = bTextXOffset;
 	b->bTextYOffset = bTextYOffset;
@@ -843,7 +837,6 @@ void SpecifyButtonTextOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOff
 void SpecifyButtonTextSubOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKV(b != NULL); // XXX HACK000C
 	//Copy over information
 	b->bTextXSubOffSet = bTextXOffset;
 	b->bTextYSubOffSet = bTextYOffset;
@@ -854,7 +847,6 @@ void SpecifyButtonTextSubOffsets(INT32 iButtonID, INT8 bTextXOffset, INT8 bTextY
 void SpecifyButtonTextWrappedWidth(INT32 iButtonID, INT16 sWrappedWidth)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKV(b != NULL); // XXX HACK000C
 	b->sWrappedWidth = sWrappedWidth;
 }
 
@@ -891,7 +883,6 @@ void SpecifyButtonIcon(const INT32 iButtonID, const SGPVObject* const icon, cons
 void AllowDisabledButtonFastHelp(INT32 iButtonID)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKV(b != NULL); // XXX HACK000C
 	b->Area.uiFlags |= MSYS_ALLOW_DISABLED_FASTHELP;
 }
 
@@ -1337,7 +1328,6 @@ static void DrawShadeOnButton(const GUI_BUTTON* b)
 void DrawCheckBoxButtonOnOff(INT32 iButtonID, BOOLEAN on)
 {
 	GUI_BUTTON* b = GetButton(iButtonID);
-	CHECKV(b != NULL); // XXX HACK000C
 
 	BOOLEAN fLeftButtonState = gfLeftButtonState;
 
