@@ -142,7 +142,7 @@ static BUTTON_PICS* FindFreeButtonSlot(void)
 	{
 		if (i->vobj == NULL) return i;
 	}
-	return NULL;
+	throw std::runtime_error("Out of button image slots");
 }
 
 
@@ -196,14 +196,7 @@ try
 	}
 
 	BUTTON_PICS* const UseSlot = FindFreeButtonSlot();
-	if (UseSlot == NULL)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Out of button image slots for %s", filename));
-		return NULL;
-	}
-
-	SGPVObject* const VObj = AddVideoObjectFromFile(filename);
-
+	SGPVObject*  const VObj    = AddVideoObjectFromFile(filename);
 	InitButtonImage(UseSlot, VObj, GUI_BTN_NONE, Grayed, OffNormal, OffHilite, OnNormal, OnHilite);
 	return UseSlot;
 }
@@ -211,6 +204,7 @@ catch (...) { return 0; }
 
 
 BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* const LoadedImg, const INT32 Grayed, const INT32 OffNormal, const INT32 OffHilite, const INT32 OnNormal, const INT32 OnHilite)
+try
 {
 	if (Grayed    == BUTTON_NO_IMAGE &&
 			OffNormal == BUTTON_NO_IMAGE &&
@@ -222,13 +216,6 @@ BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* const LoadedImg, const INT32 Gray
 		return NULL;
 	}
 
-	BUTTON_PICS* const UseSlot = FindFreeButtonSlot();
-	if (UseSlot == NULL)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Out of button image slots for pre-loaded button image %p", LoadedImg));
-		return NULL;
-	}
-
 	// Is button image index given valid?
 	const HVOBJECT vobj = LoadedImg->vobj;
 	if (vobj == NULL)
@@ -237,9 +224,11 @@ BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* const LoadedImg, const INT32 Gray
 		return NULL;
 	}
 
+	BUTTON_PICS* const UseSlot = FindFreeButtonSlot();
 	InitButtonImage(UseSlot, vobj, GUI_BTN_DUPLICATE_VOBJ, Grayed, OffNormal, OffHilite, OnNormal, OnHilite);
 	return UseSlot;
 }
+catch (...) { return 0; }
 
 
 void UnloadButtonImage(BUTTON_PICS* const pics)
