@@ -1,4 +1,5 @@
 // Rewritten mostly by Kris Morness
+#include  <stdexcept>
 
 #include "Button_Sound_Control.h"
 #include "Button_System.h"
@@ -562,7 +563,7 @@ static INT32 GetNextButtonNumber(void)
 	{
 		if (ButtonList[x] == NULL) return x;
 	}
-	return BUTTON_NO_SLOT;
+	throw std::runtime_error("No more button slots");
 }
 
 
@@ -574,19 +575,10 @@ static GUI_BUTTON* AllocateButton(const UINT32 Flags, const INT16 Left, const IN
 {
 	AssertMsg(Left >= 0 && Top >= 0 && Width >= 0 && Height >= 0, String("Attempting to create button with invalid coordinates %dx%d+%dx%d", Left, Top, Width, Height));
 
-	INT32 BtnID = GetNextButtonNumber();
-	if (BtnID == BUTTON_NO_SLOT)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "No more button slots");
-		return NULL;
-	}
+	INT32 const BtnID = GetNextButtonNumber();
 
 	GUI_BUTTON* const b = MALLOC(GUI_BUTTON);
-	if (b == NULL)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "Cannot allocte memory for button struct");
-		return NULL;
-	}
+	if (!b) throw std::bad_alloc();
 
 	b->IDNum                   = BtnID;
 	b->image                   = NULL;
@@ -661,43 +653,43 @@ static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
+try
 {
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
 	GUI_BUTTON* const b = AllocateButton(BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
-	if (!b) return GUIButtonRef();
-
 	b->icon        = GenericButtonIcons[Icon];
 	b->usIconIndex = IconIndex;
 	return b;
 }
+catch (...) { return GUIButtonRef(); }
 
 
 GUIButtonRef CreateTextButton(const wchar_t *string, Font const font, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
+try
 {
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
 	GUI_BUTTON* const b = AllocateButton(BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
-	if (!b) return GUIButtonRef();
-
 	CopyButtonText(b, string);
 	b->usFont       = font;
 	b->sForeColor   = sForeColor;
 	b->sShadowColor = sShadowColor;
 	return b;
 }
+catch (...) { return GUIButtonRef(); }
 
 
 GUIButtonRef CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Priority, GUI_CALLBACK ClickCallback)
+try
 {
-	GUI_BUTTON* const b = AllocateButton(BUTTON_HOT_SPOT, xloc, yloc, Width, Height, Priority, ClickCallback, DefaultMoveCallback);
-	if (!b) return GUIButtonRef();
-	return b;
+	return AllocateButton(BUTTON_HOT_SPOT, xloc, yloc, Width, Height, Priority, ClickCallback, DefaultMoveCallback);
 }
+catch (...) { return GUIButtonRef(); }
 
 
 void SetButtonCursor(GUIButtonRef const iBtnId, UINT16 crsr)
@@ -708,6 +700,7 @@ void SetButtonCursor(GUIButtonRef const iBtnId, UINT16 crsr)
 
 
 static GUIButtonRef QuickCreateButtonInternal(BUTTON_PICS* const pics, const INT16 xloc, const INT16 yloc, const INT32 Type, const INT16 Priority, const GUI_CALLBACK MoveCallback, const GUI_CALLBACK ClickCallback)
+try
 {
 	// Is there a QuickButton image in the given image slot?
 	if (pics->vobj == NULL)
@@ -717,11 +710,10 @@ static GUIButtonRef QuickCreateButtonInternal(BUTTON_PICS* const pics, const INT
 	}
 
 	GUI_BUTTON* const b = AllocateButton((Type & (BUTTON_CHECKBOX | BUTTON_NEWTOGGLE)) | BUTTON_QUICK, xloc, yloc, pics->max.w, pics->max.h, Priority, ClickCallback, MoveCallback);
-	if (!b) return GUIButtonRef();
-
 	b->image = pics;
 	return b;
 }
+catch (...) { return GUIButtonRef(); }
 
 
 GUIButtonRef QuickCreateButton(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
