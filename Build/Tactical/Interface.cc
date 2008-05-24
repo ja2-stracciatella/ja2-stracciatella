@@ -426,7 +426,7 @@ static BOOLEAN MakeButtonMove(UINT idx, UINT gfx, INT16 x, INT16 y, UI_EVENT* ev
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
 		return FALSE;
 	}
-	ButtonList[btn]->User.Ptr = event;
+	btn->User.Ptr = event;
 	SetButtonFastHelpText(btn, help);
 	return TRUE;
 }

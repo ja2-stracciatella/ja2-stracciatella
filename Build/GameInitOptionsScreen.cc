@@ -604,7 +604,7 @@ static void BtnDifficultyTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 
 		for (cnt = 0; cnt < NUM_DIFF_SETTINGS; cnt++)
 		{
-			ButtonList[guiDifficultySettingsToggles[cnt]]->uiFlags &= ~BUTTON_CLICKED_ON;
+			guiDifficultySettingsToggles[cnt]->uiFlags &= ~BUTTON_CLICKED_ON;
 		}
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 	}
@@ -619,7 +619,7 @@ static void BtnGameStyleTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 
 		for (cnt = 0; cnt < NUM_GAME_STYLES; cnt++)
 		{
-			ButtonList[guiGameStyleToggles[cnt]]->uiFlags &= ~BUTTON_CLICKED_ON;
+			guiGameStyleToggles[cnt]->uiFlags &= ~BUTTON_CLICKED_ON;
 		}
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 	}
@@ -634,7 +634,7 @@ static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 
 		for (cnt = 0; cnt < NUM_SAVE_OPTIONS; cnt++)
 		{
-			ButtonList[guiGameSaveToggles[cnt]]->uiFlags &= ~BUTTON_CLICKED_ON;
+			guiGameSaveToggles[cnt]->uiFlags &= ~BUTTON_CLICKED_ON;
 		}
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 	}
@@ -649,7 +649,7 @@ static void BtnGunOptionsTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 
 		for (cnt = 0; cnt < NUM_GUN_OPTIONS; cnt++)
 		{
-			ButtonList[guiGunOptionToggles[cnt]]->uiFlags &= ~BUTTON_CLICKED_ON;
+			guiGunOptionToggles[cnt]->uiFlags &= ~BUTTON_CLICKED_ON;
 		}
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 	}
@@ -665,7 +665,7 @@ static void BtnTimedTurnsTogglesCallback(GUI_BUTTON *btn, INT32 reason)
 
 		for (cnt = 0; cnt < GIO_NUM_TIMED_TURN_OPTIONS; cnt++)
 		{
-			ButtonList[guiTimedTurnToggles[cnt]]->uiFlags &= ~BUTTON_CLICKED_ON;
+			guiTimedTurnToggles[cnt]->uiFlags &= ~BUTTON_CLICKED_ON;
 		}
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 	}
@@ -702,7 +702,7 @@ static UINT8 GetCurrentDifficultyButtonSetting(void)
 
 	for (cnt = 0; cnt < NUM_DIFF_SETTINGS; cnt++)
 	{
-		if (ButtonList[guiDifficultySettingsToggles[cnt]]->uiFlags & BUTTON_CLICKED_ON)
+		if (guiDifficultySettingsToggles[cnt]->uiFlags & BUTTON_CLICKED_ON)
 		{
 			return cnt;
 		}
@@ -717,7 +717,7 @@ static UINT8 GetCurrentGameStyleButtonSetting(void)
 
 	for (cnt = 0; cnt < NUM_GAME_STYLES; cnt++)
 	{
-		if (ButtonList[guiGameStyleToggles[cnt]]->uiFlags & BUTTON_CLICKED_ON)
+		if (guiGameStyleToggles[cnt]->uiFlags & BUTTON_CLICKED_ON)
 		{
 			return cnt;
 		}
@@ -732,7 +732,7 @@ static UINT8 GetCurrentGunButtonSetting(void)
 
 	for (cnt = 0; cnt < NUM_GUN_OPTIONS; cnt++)
 	{
-		if (ButtonList[guiGunOptionToggles[cnt]]->uiFlags & BUTTON_CLICKED_ON)
+		if (guiGunOptionToggles[cnt]->uiFlags & BUTTON_CLICKED_ON)
 		{
 			return cnt;
 		}
@@ -748,7 +748,7 @@ static UINT8 GetCurrentTimedTurnsButtonSetting(void)
 
 	for (cnt = 0; cnt < GIO_NUM_TIMED_TURN_OPTIONS; cnt++)
 	{
-		if (ButtonList[guiTimedTurnToggles[cnt]]->uiFlags & BUTTON_CLICKED_ON)
+		if (guiTimedTurnToggles[cnt]->uiFlags & BUTTON_CLICKED_ON)
 		{
 			return cnt;
 		}
@@ -764,7 +764,7 @@ static UINT8 GetCurrentGameSaveButtonSetting(void)
 
 	for (cnt = 0; cnt < NUM_SAVE_OPTIONS; cnt++)
 	{
-		if (ButtonList[guiGameSaveToggles[cnt]]->uiFlags & BUTTON_CLICKED_ON)
+		if (guiGameSaveToggles[cnt]->uiFlags & BUTTON_CLICKED_ON)
 		{
 			return cnt;
 		}
@@ -911,7 +911,7 @@ static void ConfirmGioIronManMessageBoxCallBack(UINT8 bExitValue)
 	}
 	else
 	{
-		ButtonList[guiGameSaveToggles[GIO_IRON_MAN]]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[guiGameSaveToggles[GIO_CAN_SAVE]]->uiFlags |= BUTTON_CLICKED_ON;
+		guiGameSaveToggles[GIO_IRON_MAN]->uiFlags &= ~BUTTON_CLICKED_ON;
+		guiGameSaveToggles[GIO_CAN_SAVE]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 }

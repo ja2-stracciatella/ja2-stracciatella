@@ -589,8 +589,8 @@ Removed so that the user can click on it and get displayed a message that the qu
 	if( gfLoadGameUponEntry )
 	{
 		//unmark the 2 buttons from being dirty
-		ButtonList[ guiSlgCancelBtn ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-		ButtonList[ guiSlgSaveLoadBtn ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
+		guiSlgCancelBtn->uiFlags   |= BUTTON_FORCE_UNDIRTY;
+		guiSlgSaveLoadBtn->uiFlags |= BUTTON_FORCE_UNDIRTY;
 
 		FRAME_BUFFER->Fill(0);
 	}

@@ -733,7 +733,7 @@ static void ResetAimPolicyButtons(void)
 
 	for(i=0; i<AIM_POLICY_MENU_BUTTON_AMOUNT; i++)
 	{
-		ButtonList[ guiPoliciesMenuButton[i] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		guiPoliciesMenuButton[i]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 }
 
@@ -744,12 +744,12 @@ static void DisableAimPolicyButton(void)
 
 	if( (gubCurPageNum == AIM_POLICY_TOC_PAGE ) )
 	{
-		ButtonList[ guiPoliciesMenuButton[ 0 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
-		ButtonList[ guiPoliciesMenuButton[ 2 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
+		guiPoliciesMenuButton[0]->uiFlags |= BUTTON_CLICKED_ON;
+		guiPoliciesMenuButton[2]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 	else if(  ( gubCurPageNum == AIM_POLICY_LAST_PAGE ) )
 	{
-		ButtonList[ guiPoliciesMenuButton[ 3 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
+		guiPoliciesMenuButton[3]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 }
 

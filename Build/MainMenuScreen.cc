@@ -421,7 +421,7 @@ static void RestoreButtonBackGrounds(void)
 #ifndef TESTFOREIGNFONTS
 	for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
 	{
-		const MOUSE_REGION* const r = &ButtonList[iMenuButtons[cnt]]->Area;
+		const MOUSE_REGION* const r = &iMenuButtons[cnt]->Area;
 		const INT16 x = r->RegionTopLeftX;
 		const INT16 y = r->RegionTopLeftY;
 		const INT16 w = r->RegionBottomRightX - x + 1;

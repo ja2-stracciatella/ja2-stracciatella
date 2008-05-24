@@ -1378,7 +1378,7 @@ static const wchar_t* GetSoldierConditionInfo(const SOLDIERTYPE* pSoldier)
 
 void ActivatePreBattleAutoresolveAction()
 {
-	if( ButtonList[ iPBButton[ 0 ] ]->uiFlags & BUTTON_ENABLED )
+	if (iPBButton[0]->uiFlags & BUTTON_ENABLED)
 	{ //Feign call the autoresolve button using the callback
 		AutoResolveBattleCallback( ButtonList[ iPBButton[0] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
 	}
@@ -1386,7 +1386,7 @@ void ActivatePreBattleAutoresolveAction()
 
 void ActivatePreBattleEnterSectorAction()
 {
-	if( ButtonList[ iPBButton[ 1 ] ]->uiFlags & BUTTON_ENABLED )
+	if (iPBButton[1]->uiFlags & BUTTON_ENABLED)
 	{ //Feign call the enter sector button using the callback
 		GoToSectorCallback( ButtonList[ iPBButton[1] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
 	}
@@ -1394,7 +1394,7 @@ void ActivatePreBattleEnterSectorAction()
 
 void ActivatePreBattleRetreatAction()
 {
-	if( ButtonList[ iPBButton[ 2 ] ]->uiFlags & BUTTON_ENABLED )
+	if (iPBButton[2]->uiFlags & BUTTON_ENABLED)
 	{ //Feign call the retreat button using the callback
 		RetreatMercsCallback( ButtonList[ iPBButton[2] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
 	}
@@ -1403,7 +1403,7 @@ void ActivatePreBattleRetreatAction()
 
 static void ActivateAutomaticAutoResolveStart()
 {
-	ButtonList[ iPBButton[0] ]->uiFlags |= BUTTON_CLICKED_ON;
+	iPBButton[0]->uiFlags |= BUTTON_CLICKED_ON;
 	gfIgnoreAllInput = FALSE;
 	AutoResolveBattleCallback( ButtonList[ iPBButton[0] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
 }

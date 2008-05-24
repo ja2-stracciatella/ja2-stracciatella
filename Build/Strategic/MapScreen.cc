@@ -8030,7 +8030,7 @@ static void CheckForAndRenderNewMailOverlay(void)
 	{
 		if( GetJA2Clock() % 1000 < 667 )
 		{
-			if( ButtonList[ guiMapBottomExitButtons[ MAP_EXIT_TO_LAPTOP ] ]->uiFlags & BUTTON_CLICKED_ON )
+			if (guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]->uiFlags & BUTTON_CLICKED_ON)
 			{ //button is down, so offset the icon
 				BltVideoObject(FRAME_BUFFER, guiNewMailIcons, 1, 465, 418);
 				InvalidateRegion( 465, 418, 480, 428 );
@@ -8038,7 +8038,7 @@ static void CheckForAndRenderNewMailOverlay(void)
 			else
 			{ //button is up, so draw the icon normally
 				BltVideoObject(FRAME_BUFFER, guiNewMailIcons, 0, 464, 417);
-				if( !(ButtonList[ guiMapBottomExitButtons[ MAP_EXIT_TO_LAPTOP ] ]->uiFlags & BUTTON_ENABLED ) )
+				if (!(guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]->uiFlags & BUTTON_ENABLED))
 				{
 					SGPRect area = { 463, 417, 477, 425 };
 

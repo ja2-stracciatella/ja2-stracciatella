@@ -434,7 +434,7 @@ static void ResetAimHistoryButtons(void)
 
 	for(i=0; i<AIM_HISTORY_MENU_BUTTON_AMOUNT; i++)
 	{
-		ButtonList[ guiHistoryMenuButton[i] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		guiHistoryMenuButton[i]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 }
 
@@ -445,11 +445,11 @@ static void DisableAimHistoryButton(void)
 
 	if( (gubCurPageNum == 0 ) )
 	{
-		ButtonList[ guiHistoryMenuButton[ 0 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
+		guiHistoryMenuButton[0]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 	else if(  ( gubCurPageNum == 5) )
 	{
-		ButtonList[ guiHistoryMenuButton[ AIM_HISTORY_MENU_BUTTON_AMOUNT-1 ] ]->uiFlags |= (BUTTON_CLICKED_ON );
+		guiHistoryMenuButton[AIM_HISTORY_MENU_BUTTON_AMOUNT - 1]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 }
 

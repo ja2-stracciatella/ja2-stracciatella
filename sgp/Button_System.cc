@@ -746,7 +746,7 @@ GUIButtonRef QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_norma
 {
 	BUTTON_PICS* const img = LoadButtonImage(gfx, grayed, off_normal, off_hilite, on_normal, on_hilite);
 	GUIButtonRef const btn = QuickCreateButton(img, x, y, priority, click);
-	ButtonList[btn]->uiFlags |= BUTTON_SELFDELETE_IMAGE;
+	btn->uiFlags |= BUTTON_SELFDELETE_IMAGE;
 	return btn;
 }
 

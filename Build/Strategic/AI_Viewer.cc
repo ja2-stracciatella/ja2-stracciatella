@@ -272,7 +272,7 @@ static BOOLEAN CreateAIViewer(void)
 		CreateCheckBoxButton(	104, VIEWER_BOTTOM + 22, "DevTools/SmCheckbox.sti", MSYS_PRIORITY_HIGH, ToggleQueenAwake );
 	if( gfQueenAIAwake )
 	{
-		ButtonList[ iViewerButton[ QUEEN_AWAKE_TOGGLE ] ]->uiFlags |= BUTTON_CLICKED_ON;
+		iViewerButton[QUEEN_AWAKE_TOGGLE]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 
 	iViewerButton[RELOAD_SECTOR] = CreateTextButton(L"Override Sector", FONT12POINT1, FONT_BLACK, FONT_BLACK, 10, VIEWER_BOTTOM + 5, 90, 18, MSYS_PRIORITY_HIGH, ReloadSectorCallback);
@@ -284,9 +284,9 @@ static BOOLEAN CreateAIViewer(void)
 	iViewerButton[BASEMENT2_BTN] = CreateTextButton(L"B2", FONT16ARIAL, FONT_BLACK, FONT_BLACK, VIEWER_RIGHT +  88, 60, 30, 24, MSYS_PRIORITY_HIGH, B2Callback);
 	iViewerButton[BASEMENT3_BTN] = CreateTextButton(L"B3", FONT16ARIAL, FONT_BLACK, FONT_BLACK, VIEWER_RIGHT + 118, 60, 30, 24, MSYS_PRIORITY_HIGH, B3Callback);
 	if( gfViewEnemies )
-		ButtonList[ iViewerButton[ VIEW_ENEMIES ] ]->uiFlags |= BUTTON_CLICKED_ON;
+		iViewerButton[VIEW_ENEMIES]->uiFlags |= BUTTON_CLICKED_ON;
 	else
-		ButtonList[ iViewerButton[ VIEW_CREATURES ] ]->uiFlags |= BUTTON_CLICKED_ON;
+		iViewerButton[VIEW_CREATURES]->uiFlags |= BUTTON_CLICKED_ON;
 
 	MSYS_DefineRegion( &ViewerRegion, VIEWER_LEFT, VIEWER_TOP, VIEWER_RIGHT, VIEWER_BOTTOM, MSYS_PRIORITY_HIGH, 0,
 		ViewerMapMoveCallback, ViewerMapClickCallback );
@@ -304,8 +304,8 @@ static BOOLEAN CreateAIViewer(void)
 
 	//Press buttons in based on current settings
 	Assert( gGameOptions.ubDifficultyLevel >= DIF_LEVEL_EASY && gGameOptions.ubDifficultyLevel <= DIF_LEVEL_HARD );
-	ButtonList[ iViewerButton[ RESET_EASY + gGameOptions.ubDifficultyLevel - DIF_LEVEL_EASY ] ]->uiFlags |= BUTTON_CLICKED_ON;
-	ButtonList[ iViewerButton[ COMPRESSION0 ] ]->uiFlags |= BUTTON_CLICKED_ON;
+	iViewerButton[RESET_EASY + gGameOptions.ubDifficultyLevel - DIF_LEVEL_EASY]->uiFlags |= BUTTON_CLICKED_ON;
+	iViewerButton[COMPRESSION0]->uiFlags |= BUTTON_CLICKED_ON;
 	if( !GamePaused() )
 		SetGameMinutesPerSecond( 0 );
 	ClearViewerRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -941,10 +941,10 @@ static void EasyCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ iViewerButton[ RESET_EASY ] ]->uiFlags |= BUTTON_CLICKED_ON;
-		ButtonList[ iViewerButton[ RESET_NORMAL ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ RESET_HARD ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ QUEEN_AWAKE_TOGGLE ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
+		iViewerButton[RESET_EASY        ]->uiFlags |=  BUTTON_CLICKED_ON;
+		iViewerButton[RESET_NORMAL      ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[RESET_HARD        ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[QUEEN_AWAKE_TOGGLE]->uiFlags &= ~BUTTON_CLICKED_ON;
 		gfRenderViewer = TRUE;
 		gGameOptions.ubDifficultyLevel = DIF_LEVEL_EASY;
 		ShutdownStrategicLayer();
@@ -960,10 +960,10 @@ static void NormalCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ iViewerButton[ RESET_EASY ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ RESET_NORMAL ] ]->uiFlags |= BUTTON_CLICKED_ON;
-		ButtonList[ iViewerButton[ RESET_HARD ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ QUEEN_AWAKE_TOGGLE ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
+		iViewerButton[RESET_EASY        ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[RESET_NORMAL      ]->uiFlags |=  BUTTON_CLICKED_ON;
+		iViewerButton[RESET_HARD        ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[QUEEN_AWAKE_TOGGLE]->uiFlags &= ~BUTTON_CLICKED_ON;
 		gfRenderViewer = TRUE;
 		gGameOptions.ubDifficultyLevel = DIF_LEVEL_MEDIUM;
 		ShutdownStrategicLayer();
@@ -979,10 +979,10 @@ static void HardCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ iViewerButton[ RESET_EASY ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ RESET_NORMAL ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ RESET_HARD ] ]->uiFlags |= BUTTON_CLICKED_ON;
-		ButtonList[ iViewerButton[ QUEEN_AWAKE_TOGGLE ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
+		iViewerButton[RESET_EASY        ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[RESET_NORMAL      ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[RESET_HARD        ]->uiFlags |=  BUTTON_CLICKED_ON;
+		iViewerButton[QUEEN_AWAKE_TOGGLE]->uiFlags &= ~BUTTON_CLICKED_ON;
 		gfRenderViewer = TRUE;
 		gGameOptions.ubDifficultyLevel = DIF_LEVEL_HARD;
 		ShutdownStrategicLayer();
@@ -1090,11 +1090,11 @@ static void Compression0Callback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ iViewerButton[ COMPRESSION0 ] ]->uiFlags |= BUTTON_CLICKED_ON;
-		ButtonList[ iViewerButton[ COMPRESSION5 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ COMPRESSION15 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ COMPRESSION60 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-//		ButtonList[ iViewerButton[ COMPRESSION6H ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
+		iViewerButton[COMPRESSION0 ]->uiFlags |=  BUTTON_CLICKED_ON;
+		iViewerButton[COMPRESSION5 ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[COMPRESSION15]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[COMPRESSION60]->uiFlags &= ~BUTTON_CLICKED_ON;
+//		iViewerButton[COMPRESSION6H]->uiFlags &= ~BUTTON_CLICKED_ON;
 		SetGameMinutesPerSecond( 0 );
 	}
 }
@@ -1104,11 +1104,11 @@ static void Compression5Callback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ iViewerButton[ COMPRESSION0 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ COMPRESSION5 ] ]->uiFlags |= BUTTON_CLICKED_ON;
-		ButtonList[ iViewerButton[ COMPRESSION15 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ COMPRESSION60 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-//		ButtonList[ iViewerButton[ COMPRESSION6H ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
+		iViewerButton[COMPRESSION0 ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[COMPRESSION5 ]->uiFlags |=  BUTTON_CLICKED_ON;
+		iViewerButton[COMPRESSION15]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[COMPRESSION60]->uiFlags &= ~BUTTON_CLICKED_ON;
+//		iViewerButton[COMPRESSION6H]->uiFlags &= ~BUTTON_CLICKED_ON;
 		SetGameMinutesPerSecond( 5 );
 		SetFactTimeCompressHasOccured( );
 	}
@@ -1119,11 +1119,11 @@ static void Compression15Callback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ iViewerButton[ COMPRESSION0 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ COMPRESSION5 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ COMPRESSION15 ] ]->uiFlags |= BUTTON_CLICKED_ON;
-		ButtonList[ iViewerButton[ COMPRESSION60 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-//		ButtonList[ iViewerButton[ COMPRESSION6H ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
+		iViewerButton[COMPRESSION0 ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[COMPRESSION5 ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[COMPRESSION15]->uiFlags |=  BUTTON_CLICKED_ON;
+		iViewerButton[COMPRESSION60]->uiFlags &= ~BUTTON_CLICKED_ON;
+//		iViewerButton[COMPRESSION6H]->uiFlags &= ~BUTTON_CLICKED_ON;
 		SetGameMinutesPerSecond( 15 );
 		SetFactTimeCompressHasOccured( );
 	}
@@ -1134,11 +1134,11 @@ static void Compression60Callback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ iViewerButton[ COMPRESSION0 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ COMPRESSION5 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ COMPRESSION15 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ COMPRESSION60 ] ]->uiFlags |= BUTTON_CLICKED_ON;
-//		ButtonList[ iViewerButton[ COMPRESSION6H ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
+		iViewerButton[ COMPRESSION0 ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[ COMPRESSION5 ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[ COMPRESSION15]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[ COMPRESSION60]->uiFlags |=  BUTTON_CLICKED_ON;
+//		iViewerButton[COMPRESSION6H]->uiFlags &= ~BUTTON_CLICKED_ON;
 		SetGameHoursPerSecond( 1 );
 		SetFactTimeCompressHasOccured( );
 	}
@@ -1149,11 +1149,11 @@ static void Compression6HCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ iViewerButton[ COMPRESSION0 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ COMPRESSION5 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ COMPRESSION15 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-		ButtonList[ iViewerButton[ COMPRESSION60 ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
-//		ButtonList[ iViewerButton[ COMPRESSION6H ] ]->uiFlags |= BUTTON_CLICKED_ON;
+		iViewerButton[ COMPRESSION0 ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[ COMPRESSION5 ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[ COMPRESSION15]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[ COMPRESSION60]->uiFlags &= ~BUTTON_CLICKED_ON;
+//		iViewerButton[COMPRESSION6H]->uiFlags |=  BUTTON_CLICKED_ON;
 		SetGameHoursPerSecond( 6 );
 		SetFactTimeCompressHasOccured( );
 	}
@@ -1282,11 +1282,11 @@ static void ViewEnemiesCallback(GUI_BUTTON* btn, INT32 reason)
 	{
 		gfViewEnemies = TRUE;
 		gfRenderMap = TRUE;
-		ButtonList[ iViewerButton[ VIEW_CREATURES ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[VIEW_CREATURES]->uiFlags &= ~BUTTON_CLICKED_ON;
 		gbViewLevel = 0;
-		ButtonList[ iViewerButton[ BASEMENT1_BTN ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ iViewerButton[ BASEMENT2_BTN ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ iViewerButton[ BASEMENT3_BTN ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[BASEMENT1_BTN ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[BASEMENT2_BTN ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[BASEMENT3_BTN ]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 }
 
@@ -1297,13 +1297,13 @@ static void ViewCreaturesCallback(GUI_BUTTON* btn, INT32 reason)
 	{
 		gfViewEnemies = FALSE;
 		gfRenderMap = TRUE;
-		ButtonList[ iViewerButton[ VIEW_ENEMIES] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[VIEW_ENEMIES]->uiFlags &= ~BUTTON_CLICKED_ON;
 		if( !gbViewLevel )
 		{
 			gbViewLevel = 1;
-			ButtonList[ iViewerButton[ BASEMENT1_BTN ] ]->uiFlags |= BUTTON_CLICKED_ON;
-			ButtonList[ iViewerButton[ BASEMENT2_BTN ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-			ButtonList[ iViewerButton[ BASEMENT3_BTN ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+			iViewerButton[BASEMENT1_BTN]->uiFlags |=  BUTTON_CLICKED_ON;
+			iViewerButton[BASEMENT2_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
+			iViewerButton[BASEMENT3_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
 		}
 	}
 }
@@ -1315,8 +1315,8 @@ static void B1Callback(GUI_BUTTON* btn, INT32 reason)
 	{
 		gfRenderMap = TRUE;
 		gbViewLevel = 1;
-		ButtonList[ iViewerButton[ BASEMENT2_BTN ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ iViewerButton[ BASEMENT3_BTN ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[BASEMENT2_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[BASEMENT3_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 }
 
@@ -1327,8 +1327,8 @@ static void B2Callback(GUI_BUTTON* btn, INT32 reason)
 	{
 		gfRenderMap = TRUE;
 		gbViewLevel = 2;
-		ButtonList[ iViewerButton[ BASEMENT1_BTN ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ iViewerButton[ BASEMENT3_BTN ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[BASEMENT1_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[BASEMENT3_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 }
 
@@ -1339,8 +1339,8 @@ static void B3Callback(GUI_BUTTON* btn, INT32 reason)
 	{
 		gfRenderMap = TRUE;
 		gbViewLevel = 3;
-		ButtonList[ iViewerButton[ BASEMENT1_BTN ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ iViewerButton[ BASEMENT2_BTN ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[BASEMENT1_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iViewerButton[BASEMENT2_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 }
 

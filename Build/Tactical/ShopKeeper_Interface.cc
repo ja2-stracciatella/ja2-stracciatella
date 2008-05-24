@@ -886,11 +886,10 @@ static void HandleShopKeeperInterface(void)
 		DisableButton( guiSKI_DoneButton );
 
 		//make sure the buttons dont render
-//		ButtonList[ guiSKI_InvPageUpButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-//		ButtonList[ guiSKI_InvPageDownButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-		ButtonList[ guiSKI_TransactionButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-		ButtonList[ guiSKI_DoneButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-
+//		guiSKI_InvPageUpButton->uiFlags   |= BUTTON_FORCE_UNDIRTY;
+//		guiSKI_InvPageDownButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
+		guiSKI_TransactionButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
+		guiSKI_DoneButton->uiFlags        |= BUTTON_FORCE_UNDIRTY;
 
 		// make sure the shop keeper doesn't start talking ( reset the timing variable )
 		HandleShopKeeperDialog( 2 );
@@ -4580,16 +4579,14 @@ static void EnableDisableEvaluateAndTransactionButtons(void)
 	//if the player is in the item desc for the arms dealer items
 	if( InItemDescriptionBox( ) && pShopKeeperItemDescObject != NULL )
 	{
-		ButtonList[ guiSKI_TransactionButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
-		ButtonList[ guiSKI_DoneButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
+		guiSKI_TransactionButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
+		guiSKI_DoneButton->uiFlags        |= BUTTON_FORCE_UNDIRTY;
 	}
 	else
 	{
-		ButtonList[ guiSKI_TransactionButton ]->uiFlags &= ~BUTTON_FORCE_UNDIRTY;
-		ButtonList[ guiSKI_DoneButton ]->uiFlags &= ~BUTTON_FORCE_UNDIRTY;
+		guiSKI_TransactionButton->uiFlags &= ~BUTTON_FORCE_UNDIRTY;
+		guiSKI_DoneButton->uiFlags        &= ~BUTTON_FORCE_UNDIRTY;
 	}
-
-
 }
 
 

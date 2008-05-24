@@ -466,7 +466,7 @@ static void CreateFileDialog(const wchar_t* zTitle)
 		//The update world info checkbox
 		iFileDlgButtons[6] = CreateCheckBoxButton( 183, 229, "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, UpdateWorldInfoCallback );
 		if( gfUpdateSummaryInfo )
-			ButtonList[ iFileDlgButtons[6] ]->uiFlags |= BUTTON_CLICKED_ON;
+			iFileDlgButtons[6]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 
 	//Add the text input fields

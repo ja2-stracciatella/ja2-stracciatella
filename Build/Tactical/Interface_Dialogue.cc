@@ -462,7 +462,7 @@ try
 	SpecifyButtonHilitedTextColors( gTalkPanel.uiCancelButton, FONT_MCOLOR_WHITE, DEFAULT_SHADOW );
 
 	// Turn off dirty flags
-	ButtonList[ gTalkPanel.uiCancelButton ]->uiFlags &= (~BUTTON_DIRTY);
+	gTalkPanel.uiCancelButton->uiFlags &= ~BUTTON_DIRTY;
 
 	// Render once!
 	RenderAutoFace(pFace);

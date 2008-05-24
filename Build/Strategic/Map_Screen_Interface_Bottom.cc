@@ -560,7 +560,7 @@ static void EnableDisableMessageScrollButtonsAndRegions(void)
 	if( ( ubNumMessages <= MAX_MESSAGES_ON_MAP_BOTTOM ) || ( gubFirstMapscreenMessageIndex == 0 ) )
 	{
 		DisableButton( guiMapMessageScrollButtons[ MAP_SCROLL_MESSAGE_UP ] );
-		ButtonList[ guiMapMessageScrollButtons[ MAP_SCROLL_MESSAGE_UP ] ]->uiFlags &= ~( BUTTON_CLICKED_ON );
+		guiMapMessageScrollButtons[MAP_SCROLL_MESSAGE_UP]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 	else
 	{
@@ -572,7 +572,7 @@ static void EnableDisableMessageScrollButtonsAndRegions(void)
 			( ( gubFirstMapscreenMessageIndex + MAX_MESSAGES_ON_MAP_BOTTOM ) >= ubNumMessages ) )
 	{
 		DisableButton( guiMapMessageScrollButtons[ MAP_SCROLL_MESSAGE_DOWN ] );
-		ButtonList[ guiMapMessageScrollButtons[ MAP_SCROLL_MESSAGE_DOWN ] ]->uiFlags &= ~( BUTTON_CLICKED_ON );
+		guiMapMessageScrollButtons[MAP_SCROLL_MESSAGE_DOWN]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 	else
 	{

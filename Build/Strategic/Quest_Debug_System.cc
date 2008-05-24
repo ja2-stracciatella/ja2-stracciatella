@@ -642,7 +642,7 @@ UINT32	QuestDebugScreenHandle()
 		//and it is an npc
 		if( WhichPanelShouldTalkingMercUse( ) == QDS_NPC_PANEL )
 		{
-			ButtonList[ guiQDPgUpButtonButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
+			guiQDPgUpButtonButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
 			RenderTalkingMenu( );
 		}
 	}
@@ -782,14 +782,14 @@ try
 	guiQuestDebugAddNpcToTeamToggle =
 		CreateCheckBoxButton(	QUEST_DBS_ADD_NPC_TO_TEAM_BTN_X, QUEST_DBS_ADD_NPC_TO_TEAM_BTN_Y, "INTERFACE/checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugAddNpcToTeamToggleCallback );
 	if( gfAddNpcToTeam )
-		ButtonList[ guiQuestDebugAddNpcToTeamToggle ]->uiFlags |= BUTTON_CLICKED_ON;
+		guiQuestDebugAddNpcToTeamToggle->uiFlags |= BUTTON_CLICKED_ON;
 
 
 	//checkbox for weather have rpc say the sector description
 	guiQuestDebugRPCSaySectorDescToggle =
 		CreateCheckBoxButton(	QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_X, QUEST_DBS_RPC_TO_SAY_SECTOR_DESC_BTN_Y, "INTERFACE/checkbox.sti", MSYS_PRIORITY_HIGH+2, BtnQuestDebugRPCSaySectorDescToggleCallback );
 	if( gfRpcToSaySectorDesc )
-		ButtonList[ guiQuestDebugRPCSaySectorDescToggle ]->uiFlags |= BUTTON_CLICKED_ON;
+		guiQuestDebugRPCSaySectorDescToggle->uiFlags |= BUTTON_CLICKED_ON;
 
 
 	//Setup mouse regions for the Quest list
@@ -3124,7 +3124,7 @@ static void EndMercTalking(void)
 
 	//make sure we can dirty the button
 	if( !gfQuestDebugExit )
-		ButtonList[ guiQDPgUpButtonButton ]->uiFlags &= ~BUTTON_FORCE_UNDIRTY;
+		guiQDPgUpButtonButton->uiFlags &= ~BUTTON_FORCE_UNDIRTY;
 
 
 	//enable the fact mouse regions

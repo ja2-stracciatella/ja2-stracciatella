@@ -331,7 +331,7 @@ void InitTacticalPlacementGUI()
 
 	if( gubDefaultButton == GROUP_BUTTON )
 	{
-		ButtonList[ iTPButtons[ GROUP_BUTTON ] ]->uiFlags |= BUTTON_CLICKED_ON;
+		iTPButtons[GROUP_BUTTON]->uiFlags |= BUTTON_CLICKED_ON;
 		for (INT32 i = 0; i < giPlacements; ++i)
 		{ //go from the currently selected soldier to the end
 			if( !gMercPlacement[ i ].fPlaced )
@@ -520,7 +520,7 @@ static void EnsureDoneButtonStatus(void)
 	{
 		if( !gMercPlacement[ i ].fPlaced )
 		{
-			if( ButtonList[ iTPButtons[ DONE_BUTTON ] ]->uiFlags & BUTTON_ENABLED )
+			if (iTPButtons[DONE_BUTTON]->uiFlags & BUTTON_ENABLED)
 			{
 				DisableButton( iTPButtons[ DONE_BUTTON ] );
 				SetButtonFastHelpText( iTPButtons[ DONE_BUTTON ], gpStrategicString[ STR_TP_DISABLED_DONEHELP ] );
@@ -528,7 +528,7 @@ static void EnsureDoneButtonStatus(void)
 			return;
 		}
 	}
-	if( !(ButtonList[ iTPButtons[ DONE_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) )
+	if (!(iTPButtons[DONE_BUTTON]->uiFlags & BUTTON_ENABLED))
 	{ //only enable it when it is disabled, otherwise the button will stay down!
 		EnableButton( iTPButtons[ DONE_BUTTON ] );
 		SetButtonFastHelpText( iTPButtons[ DONE_BUTTON ], gpStrategicString[ STR_TP_DONEHELP ] );
@@ -565,7 +565,7 @@ void TacticalPlacementHandle()
 #endif
 
 				case SDLK_RETURN:
-					if( ButtonList[ iTPButtons[ DONE_BUTTON ] ]->uiFlags & BUTTON_ENABLED )
+					if (iTPButtons[DONE_BUTTON]->uiFlags & BUTTON_ENABLED)
 					{
 						KillTacticalPlacementGUI();
 					}
@@ -786,8 +786,8 @@ static void SpreadPlacementsCallback(GUI_BUTTON* btn, INT32 reason)
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gubDefaultButton = SPREAD_BUTTON;
-		ButtonList[ iTPButtons[ GROUP_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ iTPButtons[ GROUP_BUTTON ] ]->uiFlags |= BUTTON_DIRTY;
+		iTPButtons[GROUP_BUTTON]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iTPButtons[GROUP_BUTTON]->uiFlags |= BUTTON_DIRTY;
 		PlaceMercs();
 		gubSelectedGroupID = 0;
 		gbSelectedMercID = -1;
@@ -823,8 +823,8 @@ static void ClearPlacementsCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ iTPButtons[ GROUP_BUTTON ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ iTPButtons[ GROUP_BUTTON ] ]->uiFlags |= BUTTON_DIRTY;
+		iTPButtons[GROUP_BUTTON]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iTPButtons[GROUP_BUTTON]->uiFlags |= BUTTON_DIRTY;
 		gubDefaultButton = CLEAR_BUTTON;
 		PlaceMercs();
 	}

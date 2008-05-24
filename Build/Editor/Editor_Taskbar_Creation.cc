@@ -148,7 +148,7 @@ static void InitEditorMercsToolbar(void)
 	MakeButton(MERCS_PROFILE,      100, 434, MercsProfileModeCallback,    "EDITOR/MercProfile.sti",      L"Profile ID mode");
 	MakeButton(MERCS_SCHEDULE,     134, 434, MercsScheduleModeCallback,   "EDITOR/MercSchedule.sti",     L"Schedule mode");
 	//Workaround for identical buttons.
-	ButtonList[iEditorButton[MERCS_SCHEDULE]]->uiFlags |= BUTTON_NO_DUPLICATE;
+	iEditorButton[MERCS_SCHEDULE]->uiFlags |= BUTTON_NO_DUPLICATE;
 	MakeButton(MERCS_GLOWSCHEDULE, 134, 434, MercsScheduleModeCallback,   "EDITOR/MercGlowSchedule.sti", L"Schedule mode");
 	HideEditorButton( MERCS_GLOWSCHEDULE );
 

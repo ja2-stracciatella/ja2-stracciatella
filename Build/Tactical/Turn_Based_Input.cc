@@ -1541,7 +1541,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				case SDLK_SPACE:
 					// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
 					if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV )  &&
-							 ( ( gsCurInterfacePanel != SM_PANEL ) || ( ButtonList[ iSMPanelButtons[ NEXTMERC_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) )
+							(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[NEXTMERC_BUTTON]->uiFlags & BUTTON_ENABLED))
 					{
 						if ( !InKeyRingPopup( ) )
 						{
@@ -1552,7 +1552,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 								{
 									// only allow if nothing in hand and if in SM panel, the Change Squad button must be enabled
 									if (gsCurInterfacePanel != TEAM_PANEL ||
-											ButtonList[iTEAMPanelButtons[CHANGE_SQUAD_BUTTON]]->uiFlags & BUTTON_ENABLED)
+											iTEAMPanelButtons[CHANGE_SQUAD_BUTTON]->uiFlags & BUTTON_ENABLED)
 									{
 										//Select next squad
 										const INT32        iCurrentSquad = CurrentSquad();
@@ -1587,7 +1587,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				case SDLK_TAB:
 					// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
 					if ( ( gpItemPointer == NULL ) &&
-							 ( ( gsCurInterfacePanel != SM_PANEL ) || ( ButtonList[ iSMPanelButtons[ UPDOWN_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) )
+							(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[UPDOWN_BUTTON]->uiFlags & BUTTON_ENABLED))
 					{
 						UIHandleChangeLevel( NULL );
 					}
@@ -2031,7 +2031,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
 						if ( ( gpItemPointer == NULL ) &&
-								 ( ( gsCurInterfacePanel != SM_PANEL ) || ( ButtonList[ iSMPanelButtons[ BURSTMODE_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) )
+								(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[BURSTMODE_BUTTON]->uiFlags & BUTTON_ENABLED))
 						{
 							SetBurstMode();
 						}
@@ -2066,8 +2066,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						{
 							// nothing in hand and the Done button for whichever panel we're in must be enabled
 							if ( ( gpItemPointer == NULL ) && !gfDisableTacticalPanelButtons &&
-									 ( ( ( gsCurInterfacePanel == SM_PANEL   ) && ( ButtonList[ iSMPanelButtons[ SM_DONE_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) ||
-										 ( ( gsCurInterfacePanel == TEAM_PANEL ) && ( ButtonList[ iTEAMPanelButtons[ TEAM_DONE_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) ) )
+									(
+										(gsCurInterfacePanel == SM_PANEL   && iSMPanelButtons[SM_DONE_BUTTON]->uiFlags     & BUTTON_ENABLED) ||
+										(gsCurInterfacePanel == TEAM_PANEL && iTEAMPanelButtons[TEAM_DONE_BUTTON]->uiFlags & BUTTON_ENABLED)
+									))
 							{
 								if( fAlt )
 								{
@@ -2375,7 +2377,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						{
 							// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
 							if (gpItemPointer == NULL &&
-									(gsCurInterfacePanel != SM_PANEL || ButtonList[iSMPanelButtons[LOOK_BUTTON]]->uiFlags & BUTTON_ENABLED))
+									(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[LOOK_BUTTON]->uiFlags & BUTTON_ENABLED))
 							{
 								*puiNewEvent = LC_CHANGE_TO_LOOK;
 							}
@@ -2396,8 +2398,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						// nothing in hand and the Map Screen button for whichever panel we're in must be enabled
 						if ( ( gpItemPointer == NULL ) && !gfDisableTacticalPanelButtons &&
-								 ( ( ( gsCurInterfacePanel == SM_PANEL   ) && ( ButtonList[ iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) ||
-									 ( ( gsCurInterfacePanel == TEAM_PANEL ) && ( ButtonList[ iTEAMPanelButtons[ TEAM_MAP_SCREEN_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) ) )
+								(
+									(gsCurInterfacePanel == SM_PANEL   && iSMPanelButtons[SM_MAP_SCREEN_BUTTON]->uiFlags     & BUTTON_ENABLED) ||
+									(gsCurInterfacePanel == TEAM_PANEL && iTEAMPanelButtons[TEAM_MAP_SCREEN_BUTTON]->uiFlags & BUTTON_ENABLED)
+								))
 						{
 							// go to Map screen
 	            if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
@@ -2508,7 +2512,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						// nothing in hand and the Options Screen button for whichever panel we're in must be enabled
 						if ( ( gpItemPointer == NULL ) && !gfDisableTacticalPanelButtons &&
-								 ( ( gsCurInterfacePanel != SM_PANEL ) || ( ButtonList[ iSMPanelButtons[ OPTIONS_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) )
+								(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[OPTIONS_BUTTON]->uiFlags & BUTTON_ENABLED))
 						{
 							if( !fDisableMapInterfaceDueToBattle )
 							{
@@ -3974,7 +3978,7 @@ static void ChangeCurrentSquad(INT32 iSquad)
 {
 	// only allow if nothing in hand and the Change Squad button for whichever panel we're in must be enabled
 	if ( ( gpItemPointer == NULL ) && !gfDisableTacticalPanelButtons &&
-			 ( ( gsCurInterfacePanel != TEAM_PANEL ) || ( ButtonList[ iTEAMPanelButtons[ CHANGE_SQUAD_BUTTON ] ]->uiFlags & BUTTON_ENABLED ) ) )
+			(gsCurInterfacePanel != TEAM_PANEL || iTEAMPanelButtons[CHANGE_SQUAD_BUTTON]->uiFlags & BUTTON_ENABLED))
 	{
 		if ( IsSquadOnCurrentTacticalMap( iSquad ) )
 		{
@@ -4108,7 +4112,7 @@ void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 static void ToggleStealthMode(SOLDIERTYPE* pSoldier)
 {
 	// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
-	if ( ( gsCurInterfacePanel != SM_PANEL ) || ( ButtonList[ giSMStealthButton ]->uiFlags & BUTTON_ENABLED ) )
+	if (gsCurInterfacePanel != SM_PANEL || giSMStealthButton->uiFlags & BUTTON_ENABLED)
   {
 	  // ATE: Toggle stealth
 	  if (pSoldier == gpSMCurrentMerc) gfUIStanceDifferent = TRUE;

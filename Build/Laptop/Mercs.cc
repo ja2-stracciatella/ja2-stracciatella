@@ -541,7 +541,7 @@ void RenderMercs()
 	if( iMercPopUpBox != -1 )
 	{
 		DrawButton( guiAccountBoxButton );
-		ButtonList[ guiAccountBoxButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
+		guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
 
 		RenderMercPopUpBoxFromIndex( iMercPopUpBox, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
 	}
@@ -552,7 +552,7 @@ void RenderMercs()
 	//if the page is redrawn, and we are in video conferencing, redraw the VC backgrund graphic
 	gfMercSiteScreenIsReDrawn = TRUE;
 
-	ButtonList[ guiAccountBoxButton ]->uiFlags &= ~BUTTON_FORCE_UNDIRTY;
+	guiAccountBoxButton->uiFlags &= ~BUTTON_FORCE_UNDIRTY;
 
   InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 }
@@ -593,7 +593,7 @@ static void BtnAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 		if (iMercPopUpBox != -1)
 		{
-			ButtonList[guiAccountBoxButton]->uiFlags |= BUTTON_FORCE_UNDIRTY;
+			guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
 			RenderMercPopUpBoxFromIndex(iMercPopUpBox, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
 		}
 	}
@@ -1266,7 +1266,7 @@ static void HandleTalkingSpeck(void)
 		case MERC_VIDEO_VIDEO_MODE:
 
 			//Make sure the accounts button does not overwrite the dialog text
-//			ButtonList[ guiAccountBoxButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
+//			guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
 			//def:
 
 			if( gfJustEnteredMercSite && gubArrivedFromMercSubSite != MERC_CAME_FROM_OTHER_PAGE || gfFirstTimeIntoMERCSiteSinceEnteringLaptop )
@@ -1304,12 +1304,12 @@ static void HandleTalkingSpeck(void)
 				if( gsSpeckDialogueTextPopUp[0] != L'\0' )
 				{
 //					DrawButton( guiAccountBoxButton );
-//					ButtonList[ guiAccountBoxButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
+//					guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
 
 					if( iMercPopUpBox != -1 )
 					{
 						DrawButton( guiAccountBoxButton );
-						ButtonList[ guiAccountBoxButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
+						guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
 
 						RenderMercPopUpBoxFromIndex( iMercPopUpBox, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
 					}
@@ -2114,7 +2114,7 @@ void DisableMercSiteButton()
 {
 	if( iMercPopUpBox != -1 )
 	{
-		ButtonList[ guiAccountBoxButton ]->uiFlags |= BUTTON_FORCE_UNDIRTY;
+		guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
 	}
 }
 

@@ -533,11 +533,11 @@ static void RealisticOnlyCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ giRealisticCheckboxButton ]->uiFlags |= (BUTTON_CLICKED_ON | BUTTON_DIRTY);
-		ButtonList[ giSciFiCheckboxButton ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ giSciFiCheckboxButton ]->uiFlags |= BUTTON_DIRTY;
-		ButtonList[ giBothCheckboxButton ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ giBothCheckboxButton ]->uiFlags |= BUTTON_DIRTY;
+		giRealisticCheckboxButton->uiFlags |= BUTTON_CLICKED_ON | BUTTON_DIRTY;
+		giSciFiCheckboxButton->uiFlags     &= ~BUTTON_CLICKED_ON;
+		giSciFiCheckboxButton->uiFlags     |= BUTTON_DIRTY;
+		giBothCheckboxButton->uiFlags      &= ~BUTTON_CLICKED_ON;
+		giBothCheckboxButton->uiFlags      |= BUTTON_DIRTY;
 		WORLDITEM* const wi = GetWorldItem(gpEditingItemPool->iItemIndex);
 		wi->usFlags &= ~(WORLD_ITEM_REALISTIC_ONLY | WORLD_ITEM_SCIFI_ONLY);
 		wi->usFlags |= WORLD_ITEM_REALISTIC_ONLY;
@@ -549,11 +549,11 @@ static void SciFiOnlyCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ giRealisticCheckboxButton ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ giRealisticCheckboxButton ]->uiFlags |= BUTTON_DIRTY;
-		ButtonList[ giSciFiCheckboxButton ]->uiFlags |= (BUTTON_CLICKED_ON | BUTTON_DIRTY);
-		ButtonList[ giBothCheckboxButton ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ giBothCheckboxButton ]->uiFlags |= BUTTON_DIRTY;
+		giRealisticCheckboxButton->uiFlags &= ~BUTTON_CLICKED_ON;
+		giRealisticCheckboxButton->uiFlags |= BUTTON_DIRTY;
+		giSciFiCheckboxButton->uiFlags     |= BUTTON_CLICKED_ON | BUTTON_DIRTY;
+		giBothCheckboxButton->uiFlags      &= ~BUTTON_CLICKED_ON;
+		giBothCheckboxButton->uiFlags      |= BUTTON_DIRTY;
 		WORLDITEM* const wi = GetWorldItem(gpEditingItemPool->iItemIndex);
 		wi->usFlags &= ~(WORLD_ITEM_REALISTIC_ONLY | WORLD_ITEM_SCIFI_ONLY);
 		wi->usFlags |= WORLD_ITEM_SCIFI_ONLY;
@@ -565,11 +565,11 @@ static void BothModesCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ giRealisticCheckboxButton ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ giRealisticCheckboxButton ]->uiFlags |= BUTTON_DIRTY;
-		ButtonList[ giSciFiCheckboxButton ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ giSciFiCheckboxButton ]->uiFlags |= BUTTON_DIRTY;
-		ButtonList[ giBothCheckboxButton ]->uiFlags |= (BUTTON_CLICKED_ON | BUTTON_DIRTY);
+		giRealisticCheckboxButton->uiFlags &= ~BUTTON_CLICKED_ON;
+		giRealisticCheckboxButton->uiFlags |= BUTTON_DIRTY;
+		giSciFiCheckboxButton->uiFlags     &= ~BUTTON_CLICKED_ON;
+		giSciFiCheckboxButton->uiFlags     |= BUTTON_DIRTY;
+		giBothCheckboxButton->uiFlags      |= BUTTON_CLICKED_ON | BUTTON_DIRTY;
 		WORLDITEM* const wi = GetWorldItem(gpEditingItemPool->iItemIndex);
 		wi->usFlags &= ~(WORLD_ITEM_REALISTIC_ONLY | WORLD_ITEM_SCIFI_ONLY);
 	}
@@ -618,7 +618,7 @@ static GUIButtonRef MakeAttachmentButton(const UINT16 attachment, BOOLEAN& attac
 	GUIButtonRef const btn = CreateTextButton(label, SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, x, y, w, 12, MSYS_PRIORITY_NORMAL, click);
 	if (FindAttachment(gpItem, attachment) != -1)
 	{
-		ButtonList[btn]->uiFlags |= BUTTON_CLICKED_ON;
+		btn->uiFlags |= BUTTON_CLICKED_ON;
 		attached = TRUE;
 	}
 	return btn;
@@ -1127,7 +1127,7 @@ static void SetupTriggersGUI(void)
 				CreateCheckBoxButton(	485, 405, "EDITOR/smCheckBox.sti", MSYS_PRIORITY_NORMAL, AlarmTriggerCheckboxCallback );
 			SetButtonFastHelpText( giAlarmTriggerButton, L"If the panic trigger is an alarm trigger,\nenemies won't attempt to use it if they\nare already aware of your presence.");
 			if( gpItem->fFlags & OBJECT_ALARM_TRIGGER )
-				ButtonList[ giAlarmTriggerButton ]->uiFlags |= BUTTON_CLICKED_ON;
+				giAlarmTriggerButton->uiFlags |= BUTTON_CLICKED_ON;
 		}
 	}
 }
@@ -1442,7 +1442,7 @@ static void ReEvaluateAttachmentStatii(void)
 	INT32 i;
 	for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
 	{
-		if( guiAttachmentButton[ i ] != -1 && !( ButtonList[ guiAttachmentButton[ i ] ]->uiFlags & BUTTON_CLICKED_ON ) )
+		if (guiAttachmentButton[i] != -1 && !(guiAttachmentButton[i]->uiFlags & BUTTON_CLICKED_ON))
 		{ //if button exists and button isn't clicked
 			UINT16 usAttachment; // XXX HACK000E
 			switch( i )

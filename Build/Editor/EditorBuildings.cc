@@ -532,7 +532,7 @@ void InitDoorEditing( INT32 iMapIndex )
 	{
 		if( pDoor->fLocked )
 		{
-			ButtonList[ iDoorButton[ DOOR_LOCKED ] ]->uiFlags |= BUTTON_CLICKED_ON;
+			iDoorButton[DOOR_LOCKED]->uiFlags |= BUTTON_CLICKED_ON;
 		}
 		SetInputFieldStringWithNumericStrictValue( 0, pDoor->ubLockID );
 		SetInputFieldStringWithNumericStrictValue( 1, pDoor->ubTrapID );
@@ -540,7 +540,7 @@ void InitDoorEditing( INT32 iMapIndex )
 	}
 	else
 	{
-		ButtonList[ iDoorButton[ DOOR_LOCKED ] ]->uiFlags |= BUTTON_CLICKED_ON;
+		iDoorButton[DOOR_LOCKED]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 }
 
@@ -576,7 +576,7 @@ void ExtractAndUpdateDoorInfo()
 	if( num )
 		fCursor = TRUE;
 
-	if( ButtonList[ iDoorButton[ DOOR_LOCKED ] ]->uiFlags & BUTTON_CLICKED_ON )
+	if (iDoorButton[DOOR_LOCKED]->uiFlags & BUTTON_CLICKED_ON)
 	{
 		door.fLocked = TRUE;
 	}

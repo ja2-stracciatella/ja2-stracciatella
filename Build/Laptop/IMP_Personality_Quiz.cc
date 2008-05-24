@@ -481,7 +481,7 @@ static void ResetQuizAnswerButtons(void)
 	// now run through and reset the buttons
 	for (INT32 i = 0; i < iCounter; i++)
 	{
-		ButtonList[giIMPPersonalityQuizAnswerButton[i]]->uiFlags &= ~BUTTON_CLICKED_ON;
+		giIMPPersonalityQuizAnswerButton[i]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 }
 
@@ -872,7 +872,7 @@ static void HandleIMPQuizKeyBoard(void)
 				CheckStateOfTheConfirmButton( );
 
 				// toggle this button on
-				ButtonList[ giIMPPersonalityQuizAnswerButton[ InputEvent.usParam - '1' ] ]->uiFlags |= (BUTTON_CLICKED_ON);
+				giIMPPersonalityQuizAnswerButton[InputEvent.usParam - '1']->uiFlags |= BUTTON_CLICKED_ON;
 
 				iCurrentAnswer = InputEvent.usParam - '1';
 
@@ -1022,7 +1022,7 @@ static void ToggleQuestionNumberButtonOn(INT32 iAnswerNumber)
 		ResetQuizAnswerButtons( );
 
 		// toggle this button on
-		ButtonList[ giIMPPersonalityQuizAnswerButton[ iAnswerNumber ] ]->uiFlags |= (BUTTON_CLICKED_ON);
+		giIMPPersonalityQuizAnswerButton[iAnswerNumber]->uiFlags |= BUTTON_CLICKED_ON;
 		iCurrentAnswer = iAnswerNumber;
 	}
 }

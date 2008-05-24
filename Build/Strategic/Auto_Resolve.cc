@@ -1796,7 +1796,7 @@ static void CreateAutoResolveInterface(void)
 	MakeButton(DONELOSE_BUTTON, dx + 25, dy +  5, DoneButtonCallback,      TRUE,  gpStrategicString[STR_AR_DONE_BUTTON]);
 	MakeButton(YES_BUTTON,      dx + 21, dy + 17, AcceptSurrenderCallback, TRUE,  0);
 	MakeButton(NO_BUTTON,       dx + 81, dy + 17, RejectSurrenderCallback, TRUE,  0);
-	ButtonList[ar->iButton[PLAY_BUTTON]]->uiFlags |= BUTTON_CLICKED_ON;
+	ar->iButton[PLAY_BUTTON]->uiFlags |= BUTTON_CLICKED_ON;
 }
 
 
@@ -2042,11 +2042,11 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 
 static void DepressAutoButton(UINT btn)
 {
-	ButtonList[gpAR->iButton[PAUSE_BUTTON ]]->uiFlags &= ~BUTTON_CLICKED_ON;
-	ButtonList[gpAR->iButton[PLAY_BUTTON  ]]->uiFlags &= ~BUTTON_CLICKED_ON;
-	ButtonList[gpAR->iButton[FAST_BUTTON  ]]->uiFlags &= ~BUTTON_CLICKED_ON;
-	ButtonList[gpAR->iButton[FINISH_BUTTON]]->uiFlags &= ~BUTTON_CLICKED_ON;
-	ButtonList[gpAR->iButton[btn          ]]->uiFlags |=  BUTTON_CLICKED_ON;
+	gpAR->iButton[PAUSE_BUTTON ]->uiFlags &= ~BUTTON_CLICKED_ON;
+	gpAR->iButton[PLAY_BUTTON  ]->uiFlags &= ~BUTTON_CLICKED_ON;
+	gpAR->iButton[FAST_BUTTON  ]->uiFlags &= ~BUTTON_CLICKED_ON;
+	gpAR->iButton[FINISH_BUTTON]->uiFlags &= ~BUTTON_CLICKED_ON;
+	gpAR->iButton[btn          ]->uiFlags |=  BUTTON_CLICKED_ON;
 	gpAR->fPaused = (btn == PAUSE_BUTTON);
 }
 

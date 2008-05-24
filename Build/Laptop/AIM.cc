@@ -546,7 +546,7 @@ static void ResetAimButtons(GUIButtonRef* const Buttons, UINT16 const uNumberOfB
 
 	for ( cnt = 0; cnt < uNumberOfButtons; cnt++ )
 	{
-		ButtonList[ Buttons[ cnt ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);
+		Buttons[cnt]->uiFlags &= ~(BUTTON_CLICKED_ON);
 	}
 }
 
@@ -557,7 +557,7 @@ void DisableAimButton()
 	for(i=0; i<NUM_AIM_BOTTOMBUTTONS; i++)
 	{
 		if( gCurrentAimPage[i] == guiCurrentLaptopMode)
-			ButtonList[ guiBottomButtons[i] ]->uiFlags |= BUTTON_CLICKED_ON;
+			guiBottomButtons[i]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 }
 

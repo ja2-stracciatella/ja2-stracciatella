@@ -548,9 +548,9 @@ try
 
 		// Set the state of the chec box
 		if( gGameSettings.fHideHelpInAllScreens )
-			ButtonList[ gHelpScreenDontShowHelpAgainToggle ]->uiFlags |= BUTTON_CLICKED_ON;
+			gHelpScreenDontShowHelpAgainToggle->uiFlags |= BUTTON_CLICKED_ON;
 		else
-			ButtonList[ gHelpScreenDontShowHelpAgainToggle ]->uiFlags &= ~BUTTON_CLICKED_ON;
+			gHelpScreenDontShowHelpAgainToggle->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 
 	// load the help screen background graphic and add it
@@ -687,7 +687,7 @@ static void ExitHelpScreen(void)
 	if( !gHelpScreen.fForceHelpScreenToComeUp )
 	{
 		//Get the current value of the checkbox
-		if( ButtonList[ gHelpScreenDontShowHelpAgainToggle ]->uiFlags & BUTTON_CLICKED_ON )
+		if (gHelpScreenDontShowHelpAgainToggle->uiFlags & BUTTON_CLICKED_ON)
 		{
 			gGameSettings.fHideHelpInAllScreens = TRUE;
 			gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen = 0;
@@ -892,7 +892,7 @@ static void CreateHelpScreenButtons(void)
 			usPosY += HELP_SCREEN_BTN_HEIGHT + HELP_SCREEN_GAP_BN_BTNS;
 		}
 
-		ButtonList[ guiHelpScreenBtns[0] ]->uiFlags |= BUTTON_CLICKED_ON;
+		guiHelpScreenBtns[0]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 }
 
@@ -1271,11 +1271,11 @@ static void ChangeToHelpScreenSubPage(INT8 bNewPage)
 	//'undepress' all the buttons
 	for( i=0; i< gHelpScreen.bNumberOfButtons; i++ )
 	{
-		ButtonList[ guiHelpScreenBtns[i] ]->uiFlags &= (~BUTTON_CLICKED_ON );
+		guiHelpScreenBtns[i]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 
 	//depress the proper button
-	ButtonList[ guiHelpScreenBtns[ gHelpScreen.bCurrentHelpScreenActiveSubPage ] ]->uiFlags |= BUTTON_CLICKED_ON;
+	guiHelpScreenBtns[gHelpScreen.bCurrentHelpScreenActiveSubPage]->uiFlags |= BUTTON_CLICKED_ON;
 
 	//change the current sub page, and render it to the buffer
 	ChangeHelpScreenSubPage();
@@ -1848,18 +1848,18 @@ static void RefreshAllHelpScreenButtons(void)
 		//loop through all the buttons, and refresh them
 	for( i=0; i< gHelpScreen.bNumberOfButtons; i++ )
 	{
-		ButtonList[ guiHelpScreenBtns[i] ]->uiFlags |= BUTTON_DIRTY;
+		guiHelpScreenBtns[i]->uiFlags |= BUTTON_DIRTY;
 	}
 
-	ButtonList[ guiHelpScreenExitBtn ]->uiFlags |= BUTTON_DIRTY;
+	guiHelpScreenExitBtn->uiFlags |= BUTTON_DIRTY;
 
 	if( !gHelpScreen.fForceHelpScreenToComeUp )
 	{
-		ButtonList[ gHelpScreenDontShowHelpAgainToggle ]->uiFlags |= BUTTON_DIRTY;
+		gHelpScreenDontShowHelpAgainToggle->uiFlags |= BUTTON_DIRTY;
 	}
 
-	ButtonList[ giHelpScreenScrollArrows[0] ]->uiFlags |= BUTTON_DIRTY;
-	ButtonList[ giHelpScreenScrollArrows[1] ]->uiFlags |= BUTTON_DIRTY;
+	giHelpScreenScrollArrows[0]->uiFlags |= BUTTON_DIRTY;
+	giHelpScreenScrollArrows[1]->uiFlags |= BUTTON_DIRTY;
 }
 
 

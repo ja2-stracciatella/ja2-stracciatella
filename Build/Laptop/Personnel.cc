@@ -1286,7 +1286,7 @@ static void EnableDisableInventoryScrollButtons(void)
 
 	if (uiCurrentInventoryIndex == 0)
 	{
-		ButtonList[giPersonnelInventoryButtons[0]]->uiFlags &= ~(BUTTON_CLICKED_ON);
+		giPersonnelInventoryButtons[0]->uiFlags &= ~BUTTON_CLICKED_ON;
 		DisableButton(giPersonnelInventoryButtons[0]);
 	}
 	else
@@ -1297,7 +1297,7 @@ static void EnableDisableInventoryScrollButtons(void)
 
 	if ((INT32)uiCurrentInventoryIndex >= (INT32)(GetNumberOfInventoryItemsOnCurrentMerc() - NUMBER_OF_INVENTORY_PERSONNEL))
 	{
-		ButtonList[giPersonnelInventoryButtons[1]]->uiFlags &= ~(BUTTON_CLICKED_ON);
+		giPersonnelInventoryButtons[1]->uiFlags &= ~BUTTON_CLICKED_ON;
 		DisableButton(giPersonnelInventoryButtons[1]);
 	}
 	else
@@ -2363,8 +2363,8 @@ static void PersonnelINVStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		fReDrawScreenFlag = TRUE;
 		btn->uiFlags |= BUTTON_CLICKED_ON;
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_STAT_BTN]]->uiFlags       &= ~BUTTON_CLICKED_ON;
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]]->uiFlags &= ~BUTTON_CLICKED_ON;
+		giPersonnelATMStartButton[PERSONNEL_STAT_BTN]->uiFlags       &= ~BUTTON_CLICKED_ON;
+		giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
 		gubPersonnelInfoState = PRSNL_INV;
 	}
 }
@@ -2376,8 +2376,8 @@ static void PersonnelStatStartButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		fReDrawScreenFlag = TRUE;
 		btn->uiFlags |= BUTTON_CLICKED_ON;
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_INV_BTN]]->uiFlags        &= ~BUTTON_CLICKED_ON;
+		giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
+		giPersonnelATMStartButton[PERSONNEL_INV_BTN]->uiFlags        &= ~BUTTON_CLICKED_ON;
 		gubPersonnelInfoState = PRSNL_STATS;
 	}
 }
@@ -2389,8 +2389,8 @@ static void EmployementInfoButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		fReDrawScreenFlag = TRUE;
 		btn->uiFlags |= BUTTON_CLICKED_ON;
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_INV_BTN]]->uiFlags  &= ~BUTTON_CLICKED_ON;
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_STAT_BTN]]->uiFlags &= ~BUTTON_CLICKED_ON;
+		giPersonnelATMStartButton[PERSONNEL_INV_BTN]->uiFlags  &= ~BUTTON_CLICKED_ON;
+		giPersonnelATMStartButton[PERSONNEL_STAT_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
 		gubPersonnelInfoState = PRSNL_EMPLOYMENT;
 	}
 }
@@ -2421,21 +2421,21 @@ static void UpDateStateOfStartButton(void)
 {
 	if (gubPersonnelInfoState == PRSNL_INV)
 	{
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_INV_BTN]]->uiFlags |= BUTTON_CLICKED_ON;
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_STAT_BTN]]->uiFlags &= ~(BUTTON_CLICKED_ON);
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]]->uiFlags &= ~(BUTTON_CLICKED_ON);
+		giPersonnelATMStartButton[PERSONNEL_INV_BTN       ]->uiFlags |=  BUTTON_CLICKED_ON;
+		giPersonnelATMStartButton[PERSONNEL_STAT_BTN      ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 	else if (gubPersonnelInfoState == PRSNL_STATS)
 	{
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_INV_BTN]]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_STAT_BTN]]->uiFlags |= BUTTON_CLICKED_ON;
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]]->uiFlags &= ~(BUTTON_CLICKED_ON);
+		giPersonnelATMStartButton[PERSONNEL_INV_BTN       ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		giPersonnelATMStartButton[PERSONNEL_STAT_BTN      ]->uiFlags |=  BUTTON_CLICKED_ON;
+		giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 	else
 	{
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_STAT_BTN]]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_INV_BTN]]->uiFlags &= ~(BUTTON_CLICKED_ON);
-		ButtonList[giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]]->uiFlags |= BUTTON_CLICKED_ON;
+		giPersonnelATMStartButton[PERSONNEL_STAT_BTN      ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		giPersonnelATMStartButton[PERSONNEL_INV_BTN       ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 
 	// if in current mercs and the currently selected guy is valid, enable button, else disable it

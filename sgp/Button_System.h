@@ -115,6 +115,8 @@ class GUIButtonRef
 
 		void Reset() { btn_id_ = BUTTON_NO_SLOT; }
 
+		GUI_BUTTON* operator ->() const { return ButtonList[btn_id_]; }
+
 		operator INT32() const { return btn_id_; }
 
 	private:

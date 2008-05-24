@@ -848,22 +848,22 @@ void MapScrollButtonMvtCheck( void  )
 	// run through each button's mouse region, if mouse cursor there...don't show map white sector highlight
 	fCursorIsOnMapScrollButtons = FALSE;
 
-	if( ButtonList[ guiMapBorderScrollButtons[ 0 ] ] ->Area.uiFlags & MSYS_MOUSE_IN_AREA )
+	if (guiMapBorderScrollButtons[0]->Area.uiFlags & MSYS_MOUSE_IN_AREA)
 	{
 		fCursorIsOnMapScrollButtons = TRUE;
 	}
 
-	if( ButtonList[ guiMapBorderScrollButtons[ 1 ] ] ->Area.uiFlags & MSYS_MOUSE_IN_AREA )
+	if (guiMapBorderScrollButtons[1]->Area.uiFlags & MSYS_MOUSE_IN_AREA)
 	{
 		fCursorIsOnMapScrollButtons = TRUE;
 	}
 
-	if( ButtonList[ guiMapBorderScrollButtons[ 2 ] ] ->Area.uiFlags & MSYS_MOUSE_IN_AREA )
+	if (guiMapBorderScrollButtons[2]->Area.uiFlags & MSYS_MOUSE_IN_AREA)
 	{
 		fCursorIsOnMapScrollButtons = TRUE;
 	}
 
-	if( ButtonList[ guiMapBorderScrollButtons[ 3 ] ] ->Area.uiFlags & MSYS_MOUSE_IN_AREA )
+	if (guiMapBorderScrollButtons[3]->Area.uiFlags & MSYS_MOUSE_IN_AREA)
 	{
 		fCursorIsOnMapScrollButtons = TRUE;
 	}
@@ -929,10 +929,10 @@ BOOLEAN ScrollButtonsDisplayingHelpMessage( void )
 {
 	// return if any help messages are being displayed for the scroll buttons
 
-	if( ( ButtonList[ guiMapBorderScrollButtons[ 0 ] ]->Area.uiFlags & MSYS_HAS_BACKRECT )||
-	( ButtonList[ guiMapBorderScrollButtons[ 1 ] ]->Area.uiFlags & MSYS_HAS_BACKRECT )||
-	( ButtonList[ guiMapBorderScrollButtons[ 2 ] ]->Area.uiFlags & MSYS_HAS_BACKRECT )||
-	( ButtonList[ guiMapBorderScrollButtons[ 3 ] ]->Area.uiFlags & MSYS_HAS_BACKRECT ) )
+	if (guiMapBorderScrollButtons[0]->Area.uiFlags & MSYS_HAS_BACKRECT ||
+			guiMapBorderScrollButtons[1]->Area.uiFlags & MSYS_HAS_BACKRECT ||
+			guiMapBorderScrollButtons[2]->Area.uiFlags & MSYS_HAS_BACKRECT ||
+			guiMapBorderScrollButtons[3]->Area.uiFlags & MSYS_HAS_BACKRECT)
 	{
 		return( TRUE );
 	}
@@ -1233,24 +1233,24 @@ void UpdateScrollButtonStatesWhileScrolling( void )
 	// too far west, disable
 	if ( iZoomY == NORTH_ZOOM_BOUND )
 	{
-		ButtonList[ guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_UP ] ]->uiFlags&=~(BUTTON_CLICKED_ON);
+		guiMapBorderScrollButtons[ZOOM_MAP_SCROLL_UP]->uiFlags &= ~BUTTON_CLICKED_ON;
 		DisableButton( guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_UP ] );
 	}
 	else if(iZoomY == SOUTH_ZOOM_BOUND )
 	{
-		ButtonList[ guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_DWN ] ]->uiFlags&=~(BUTTON_CLICKED_ON);
+		guiMapBorderScrollButtons[ZOOM_MAP_SCROLL_DWN]->uiFlags &= ~BUTTON_CLICKED_ON;
 		DisableButton( guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_DWN ] );
 	}
 
 	// too far west, disable
 	if ( iZoomX == WEST_ZOOM_BOUND )
 	{
-		ButtonList[ guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_LEFT ] ]->uiFlags&=~(BUTTON_CLICKED_ON);
+		guiMapBorderScrollButtons[ZOOM_MAP_SCROLL_LEFT]->uiFlags &= ~BUTTON_CLICKED_ON;
 		DisableButton( guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_LEFT ] );
 	}
 	else if(iZoomX == EAST_ZOOM_BOUND )
 	{
-		ButtonList[ guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_RIGHT ] ]->uiFlags&=~(BUTTON_CLICKED_ON);
+		guiMapBorderScrollButtons[ZOOM_MAP_SCROLL_RIGHT]->uiFlags &= ~BUTTON_CLICKED_ON;
 		DisableButton( guiMapBorderScrollButtons[ ZOOM_MAP_SCROLL_RIGHT ] );
 	}
 
@@ -1381,7 +1381,7 @@ static void MapBorderButtonOff(UINT8 ubBorderButtonIndex)
 
 	Assert( giMapBorderButtons[ ubBorderButtonIndex ] < MAX_BUTTONS );
 
-	ButtonList[ giMapBorderButtons[ ubBorderButtonIndex ] ]->uiFlags &= ~(BUTTON_CLICKED_ON);
+	giMapBorderButtons[ubBorderButtonIndex]->uiFlags &= ~BUTTON_CLICKED_ON;
 }
 
 
@@ -1402,5 +1402,5 @@ static void MapBorderButtonOn(UINT8 ubBorderButtonIndex)
 
 	Assert( giMapBorderButtons[ ubBorderButtonIndex ] < MAX_BUTTONS );
 
-	ButtonList[ giMapBorderButtons[ ubBorderButtonIndex ] ]->uiFlags |= BUTTON_CLICKED_ON;
+	giMapBorderButtons[ubBorderButtonIndex]->uiFlags |= BUTTON_CLICKED_ON;
 }

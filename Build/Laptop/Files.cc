@@ -1027,8 +1027,8 @@ static void HandleFileViewerButtonStates(void)
 		// not displaying message, leave
 		DisableButton( giFilesPageButtons[ 0 ] );
 		DisableButton( giFilesPageButtons[ 1 ] );
-		ButtonList[ giFilesPageButtons[ 0 ] ]->uiFlags &= ~( BUTTON_CLICKED_ON );
-		ButtonList[ giFilesPageButtons[ 1 ] ]->uiFlags &= ~( BUTTON_CLICKED_ON );
+		giFilesPageButtons[0]->uiFlags &= ~BUTTON_CLICKED_ON;
+		giFilesPageButtons[1]->uiFlags &= ~BUTTON_CLICKED_ON;
 
 
 		return;
@@ -1038,8 +1038,7 @@ static void HandleFileViewerButtonStates(void)
 	if( giFilesPage == 0 )
 	{
 		DisableButton( giFilesPageButtons[ 0 ] );
-		ButtonList[ giFilesPageButtons[ 0 ] ]->uiFlags &= ~( BUTTON_CLICKED_ON );
-
+		giFilesPageButtons[0]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 	else
 	{
@@ -1051,7 +1050,7 @@ static void HandleFileViewerButtonStates(void)
 	if (fOnLastFilesPageFlag)
 	{
 		DisableButton( giFilesPageButtons[ 1 ] );
-		ButtonList[ giFilesPageButtons[ 1 ] ]->uiFlags &= ~( BUTTON_CLICKED_ON );
+		giFilesPageButtons[1]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 	else
 	{

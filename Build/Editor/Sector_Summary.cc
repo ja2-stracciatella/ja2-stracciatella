@@ -257,34 +257,34 @@ void CreateSummaryWindow()
 
 	iSummaryButton[ SUMMARY_GRIDCHECKBOX ] =
 		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 5 ), "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleGridCallback );
-	ButtonList[ iSummaryButton[ SUMMARY_GRIDCHECKBOX ] ]->uiFlags |= BUTTON_CLICKED_ON;
+	iSummaryButton[SUMMARY_GRIDCHECKBOX]->uiFlags |= BUTTON_CLICKED_ON;
 	gfRenderGrid = TRUE;
 
 	iSummaryButton[ SUMMARY_PROGRESSCHECKBOX ] =
 		CreateCheckBoxButton(	( INT16 ) ( MAP_LEFT + 50 ), ( INT16 ) ( MAP_BOTTOM + 5 ), "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleProgressCallback );
-	ButtonList[ iSummaryButton[ SUMMARY_PROGRESSCHECKBOX ] ]->uiFlags |= BUTTON_CLICKED_ON;
+	iSummaryButton[SUMMARY_PROGRESSCHECKBOX]->uiFlags |= BUTTON_CLICKED_ON;
 	gfRenderProgress = TRUE;
 
 	iSummaryButton[SUMMARY_ALL] = CreateTextButton(L"A",  SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 110, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, SummaryToggleLevelCallback);
 	if( giCurrentViewLevel == ALL_LEVELS_MASK || giCurrentViewLevel == ALTERNATE_LEVELS_MASK )
-		ButtonList[ iSummaryButton[ SUMMARY_ALL ] ]->uiFlags |= BUTTON_CLICKED_ON;
+		iSummaryButton[SUMMARY_ALL]->uiFlags |= BUTTON_CLICKED_ON;
 	iSummaryButton[SUMMARY_G]   = CreateTextButton(L"G",  SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 128, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, SummaryToggleLevelCallback);
 	if( giCurrentViewLevel == GROUND_LEVEL_MASK || giCurrentViewLevel == ALTERNATE_GROUND_MASK )
-		ButtonList[ iSummaryButton[ SUMMARY_G ] ]->uiFlags |= BUTTON_CLICKED_ON;
+		iSummaryButton[SUMMARY_G]->uiFlags |= BUTTON_CLICKED_ON;
 	iSummaryButton[SUMMARY_B1]  = CreateTextButton(L"B1", SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 146, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, SummaryToggleLevelCallback);
 	if( giCurrentViewLevel == BASEMENT1_LEVEL_MASK || giCurrentViewLevel == ALTERNATE_B1_MASK )
-		ButtonList[ iSummaryButton[ SUMMARY_B1 ] ]->uiFlags |= BUTTON_CLICKED_ON;
+		iSummaryButton[SUMMARY_B1]->uiFlags |= BUTTON_CLICKED_ON;
 	iSummaryButton[SUMMARY_B2]  = CreateTextButton(L"B2", SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 164, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, SummaryToggleLevelCallback);
 	if( giCurrentViewLevel == BASEMENT2_LEVEL_MASK || giCurrentViewLevel == ALTERNATE_B2_MASK )
-		ButtonList[ iSummaryButton[ SUMMARY_B2 ] ]->uiFlags |= BUTTON_CLICKED_ON;
+		iSummaryButton[SUMMARY_B2]->uiFlags |= BUTTON_CLICKED_ON;
 	iSummaryButton[SUMMARY_B3]  = CreateTextButton(L"B3", SMALLCOMPFONT, FONT_BLACK, FONT_BLACK, MAP_LEFT + 182, MAP_BOTTOM + 5, 16, 16, MSYS_PRIORITY_HIGH, SummaryToggleLevelCallback);
 	if( giCurrentViewLevel == BASEMENT3_LEVEL_MASK || giCurrentViewLevel == ALTERNATE_B3_MASK )
-		ButtonList[ iSummaryButton[ SUMMARY_B3 ] ]->uiFlags |= BUTTON_CLICKED_ON;
+		iSummaryButton[SUMMARY_B3]->uiFlags |= BUTTON_CLICKED_ON;
 
 	iSummaryButton[ SUMMARY_ALTERNATE ] =
 		CreateCheckBoxButton(	MAP_LEFT, ( INT16 ) ( MAP_BOTTOM + 25 ), "EDITOR/smcheckbox.sti", MSYS_PRIORITY_HIGH, SummaryToggleAlternateCallback );
 	if( gfAlternateMaps )
-		ButtonList[ iSummaryButton[ SUMMARY_ALTERNATE ] ]->uiFlags |= BUTTON_CLICKED_ON;
+		iSummaryButton[SUMMARY_ALTERNATE]->uiFlags |= BUTTON_CLICKED_ON;
 
 	iSummaryButton[SUMMARY_LOAD] = CreateTextButton(L"LOAD", FONT12POINT1, FONT_BLACK, FONT_BLACK, MAP_LEFT,      MAP_BOTTOM + 45, 50, 26, MSYS_PRIORITY_HIGH, SummaryLoadMapCallback);
 	iSummaryButton[SUMMARY_SAVE] = CreateTextButton(L"SAVE", FONT12POINT1, FONT_BLACK, FONT_BLACK, MAP_LEFT + 55, MAP_BOTTOM + 45, 50, 26, MSYS_PRIORITY_HIGH, SummarySaveMapCallback);
@@ -305,15 +305,9 @@ void CreateSummaryWindow()
 	//SetButtonFastHelpText( iSummaryButton[ SUMMARY_REAL ], L"Display items that appear in Realistic mode." );
 	switch( gubSummaryItemMode )
 	{
-		case ITEMMODE_SCIFI:
-			ButtonList[ iSummaryButton[ SUMMARY_SCIFI ] ]->uiFlags |= BUTTON_CLICKED_ON;
-			break;
-		case ITEMMODE_REAL:
-			ButtonList[ iSummaryButton[ SUMMARY_REAL ] ]->uiFlags |= BUTTON_CLICKED_ON;
-			break;
-		case ITEMMODE_ENEMY:
-			ButtonList[ iSummaryButton[ SUMMARY_ENEMY ] ]->uiFlags |= BUTTON_CLICKED_ON;
-			break;
+		case ITEMMODE_SCIFI: iSummaryButton[SUMMARY_SCIFI]->uiFlags |= BUTTON_CLICKED_ON; break;
+		case ITEMMODE_REAL:  iSummaryButton[SUMMARY_REAL]->uiFlags  |= BUTTON_CLICKED_ON; break;
+		case ITEMMODE_ENEMY: iSummaryButton[SUMMARY_ENEMY]->uiFlags |= BUTTON_CLICKED_ON; break;
 	}
 
 	//Init the textinput field.
@@ -346,7 +340,7 @@ void CreateSummaryWindow()
 		gsSelSectorX = 9;
 		gsSelSectorY = 1;
 		gpCurrentSectorSummary = gpSectorSummary[ 8 ][ 0 ][ 0 ];
-		ButtonList[ iSummaryButton[ SUMMARY_LOAD ] ]->uiFlags |= BUTTON_CLICKED_ON;
+		iSummaryButton[SUMMARY_LOAD]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 }
 
@@ -1611,11 +1605,11 @@ static void SummarySciFiCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ iSummaryButton[ SUMMARY_SCIFI ] ]->uiFlags |= (BUTTON_CLICKED_ON | BUTTON_DIRTY);
-		ButtonList[ iSummaryButton[ SUMMARY_REAL ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ iSummaryButton[ SUMMARY_REAL ] ]->uiFlags |= BUTTON_DIRTY;
-		ButtonList[ iSummaryButton[ SUMMARY_ENEMY ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ iSummaryButton[ SUMMARY_ENEMY ] ]->uiFlags |= BUTTON_DIRTY;
+		iSummaryButton[SUMMARY_SCIFI]->uiFlags |= BUTTON_CLICKED_ON | BUTTON_DIRTY;
+		iSummaryButton[SUMMARY_REAL ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iSummaryButton[SUMMARY_REAL ]->uiFlags |= BUTTON_DIRTY;
+		iSummaryButton[SUMMARY_ENEMY]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iSummaryButton[SUMMARY_ENEMY]->uiFlags |= BUTTON_DIRTY;
 		gubSummaryItemMode = ITEMMODE_SCIFI;
 		gfRenderSummary = TRUE;
 	}
@@ -1626,11 +1620,11 @@ static void SummaryRealCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ iSummaryButton[ SUMMARY_SCIFI ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ iSummaryButton[ SUMMARY_SCIFI ] ]->uiFlags |= BUTTON_DIRTY;
-		ButtonList[ iSummaryButton[ SUMMARY_REAL ] ]->uiFlags |= (BUTTON_CLICKED_ON | BUTTON_DIRTY);
-		ButtonList[ iSummaryButton[ SUMMARY_ENEMY ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ iSummaryButton[ SUMMARY_ENEMY ] ]->uiFlags |= BUTTON_DIRTY;
+		iSummaryButton[SUMMARY_SCIFI]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iSummaryButton[SUMMARY_SCIFI]->uiFlags |= BUTTON_DIRTY;
+		iSummaryButton[SUMMARY_REAL ]->uiFlags |= BUTTON_CLICKED_ON | BUTTON_DIRTY;
+		iSummaryButton[SUMMARY_ENEMY]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iSummaryButton[SUMMARY_ENEMY]->uiFlags |= BUTTON_DIRTY;
 		gubSummaryItemMode = ITEMMODE_REAL;
 		gfRenderSummary = TRUE;
 	}
@@ -1641,11 +1635,11 @@ static void SummaryEnemyCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ButtonList[ iSummaryButton[ SUMMARY_SCIFI ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ iSummaryButton[ SUMMARY_SCIFI ] ]->uiFlags |= BUTTON_DIRTY;
-		ButtonList[ iSummaryButton[ SUMMARY_REAL ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
-		ButtonList[ iSummaryButton[ SUMMARY_REAL ] ]->uiFlags |= BUTTON_DIRTY;
-		ButtonList[ iSummaryButton[ SUMMARY_ENEMY ] ]->uiFlags |= (BUTTON_CLICKED_ON | BUTTON_DIRTY);
+		iSummaryButton[SUMMARY_SCIFI]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iSummaryButton[SUMMARY_SCIFI]->uiFlags |= BUTTON_DIRTY;
+		iSummaryButton[SUMMARY_REAL ]->uiFlags &= ~BUTTON_CLICKED_ON;
+		iSummaryButton[SUMMARY_REAL ]->uiFlags |= BUTTON_DIRTY;
+		iSummaryButton[SUMMARY_ENEMY]->uiFlags |= BUTTON_CLICKED_ON | BUTTON_DIRTY;
 		gubSummaryItemMode = ITEMMODE_ENEMY;
 		gfRenderSummary = TRUE;
 	}
@@ -1949,7 +1943,7 @@ static void SummaryToggleLevelCallback(GUI_BUTTON* btn, INT32 reason)
 			}
 			else
 			{
-				ButtonList[ iSummaryButton[ i ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
+				iSummaryButton[i]->uiFlags &= ~BUTTON_CLICKED_ON;
 			}
 		}
 	}
@@ -2072,7 +2066,7 @@ static void CalculateOverrideStatus(void)
 		{
 			gubOverrideStatus = (attr & FILE_ATTR_READONLY ? READONLY : OVERWRITE);
 			ShowButton( iSummaryButton[ SUMMARY_OVERRIDE ] );
-			ButtonList[ iSummaryButton[ SUMMARY_OVERRIDE ] ]->uiFlags &= (~BUTTON_CLICKED_ON);
+			iSummaryButton[SUMMARY_OVERRIDE]->uiFlags &= ~BUTTON_CLICKED_ON;
 			DisableButton( iSummaryButton[ SUMMARY_SAVE ] );
 		}
 		if( gfTempFile )

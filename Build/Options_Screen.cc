@@ -568,7 +568,7 @@ static void GetOptionsScreenUserInput(void)
 				//Enter the save game screen
 				case SDLK_s:
 					//if the save game button isnt disabled
-					if( ButtonList[ guiOptGotoSaveGameBtn ]->uiFlags & BUTTON_ENABLED )
+					if (guiOptGotoSaveGameBtn->uiFlags & BUTTON_ENABLED)
 					{
 						SetOptionsExitScreen( SAVE_LOAD_SCREEN );
 						gfSaveGame = TRUE;
@@ -696,8 +696,8 @@ static void HandleOptionToggle(UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BO
 	 * Make sure that at least one of the toggles is still enabled. */
 	if (!fState &&
 			(ubButton == TOPTION_SPEECH || ubButton == TOPTION_SUBTITLES) &&
-			!(ButtonList[guiOptionsToggles[TOPTION_SPEECH]]->uiFlags    & BUTTON_CLICKED_ON) &&
-			!(ButtonList[guiOptionsToggles[TOPTION_SUBTITLES]]->uiFlags & BUTTON_CLICKED_ON))
+			!(guiOptionsToggles[TOPTION_SPEECH]->uiFlags    & BUTTON_CLICKED_ON) &&
+			!(guiOptionsToggles[TOPTION_SUBTITLES]->uiFlags & BUTTON_CLICKED_ON))
 	{
 		gGameSettings.fOptions[ubButton] = TRUE;
 		b->uiFlags |= BUTTON_CLICKED_ON;
@@ -780,9 +780,9 @@ static void SetOptionsScreenToggleBoxes(void)
 	for( cnt=0; cnt<NUM_GAME_OPTIONS; cnt++)
 	{
 		if( gGameSettings.fOptions[ cnt ] )
-			ButtonList[ guiOptionsToggles[ cnt ] ]->uiFlags |= BUTTON_CLICKED_ON;
+			guiOptionsToggles[cnt]->uiFlags |= BUTTON_CLICKED_ON;
 		else
-			ButtonList[ guiOptionsToggles[ cnt ] ]->uiFlags &= (~BUTTON_CLICKED_ON );
+			guiOptionsToggles[cnt]->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 }
 
@@ -793,7 +793,7 @@ static void GetOptionsScreenToggleBoxes(void)
 
 	for( cnt=0; cnt<NUM_GAME_OPTIONS; cnt++)
 	{
-		if( ButtonList[ guiOptionsToggles[ cnt ] ]->uiFlags & BUTTON_CLICKED_ON )
+		if (guiOptionsToggles[cnt]->uiFlags & BUTTON_CLICKED_ON)
 			gGameSettings.fOptions[ cnt ] = TRUE;
 		else
 			gGameSettings.fOptions[ cnt ] = FALSE;
@@ -889,7 +889,7 @@ static void HandleHighLightedText(BOOLEAN fHighLight)
 	//if the user has the mouse in one of the checkboxes
 	for( ubCnt=0; ubCnt<NUM_GAME_OPTIONS;ubCnt++)
 	{
-		if( ButtonList[ guiOptionsToggles[ ubCnt ] ]->Area.uiFlags & MSYS_MOUSE_IN_AREA )
+		if (guiOptionsToggles[ubCnt]->Area.uiFlags & MSYS_MOUSE_IN_AREA)
 		{
 			gbHighLightedOptionText = ubCnt;
 			fHighLight = TRUE;
@@ -950,7 +950,7 @@ static void SelectedToggleBoxAreaRegionMovementCallBack(MOUSE_REGION* pRegion, I
 		//loop through all the toggle box's and remove the in area flag
 		for( ubCnt=0;ubCnt<NUM_GAME_OPTIONS;ubCnt++)
 		{
-			ButtonList[ guiOptionsToggles[ ubCnt ] ]->Area.uiFlags &= ~MSYS_MOUSE_IN_AREA;
+			guiOptionsToggles[ubCnt]->Area.uiFlags &= ~MSYS_MOUSE_IN_AREA;
 		}
 
 		gbHighLightedOptionText = -1;

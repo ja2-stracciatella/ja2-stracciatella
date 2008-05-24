@@ -444,29 +444,29 @@ static void UpdateSectorExitMenu(void)
 {
 	if ( gExitDialog.fGotoSector )
 	{
-		ButtonList[ gExitDialog.uiLoadCheckButton ]->uiFlags |= BUTTON_CLICKED_ON;
+		gExitDialog.uiLoadCheckButton->uiFlags |= BUTTON_CLICKED_ON;
 	}
 	else
 	{
-		ButtonList[ gExitDialog.uiLoadCheckButton ]->uiFlags &= (~BUTTON_CLICKED_ON );
+		gExitDialog.uiLoadCheckButton->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 
 	if ( gExitDialog.fSingleMove )
 	{
-		ButtonList[ gExitDialog.uiSingleMoveButton ]->uiFlags |= BUTTON_CLICKED_ON;
+		gExitDialog.uiSingleMoveButton->uiFlags |= BUTTON_CLICKED_ON;
 	}
 	else
 	{
-		ButtonList[ gExitDialog.uiSingleMoveButton ]->uiFlags &=(~BUTTON_CLICKED_ON );
+		gExitDialog.uiSingleMoveButton->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 
 	if ( gExitDialog.fAllMove )
 	{
-		ButtonList[ gExitDialog.uiAllMoveButton ]->uiFlags |= BUTTON_CLICKED_ON;
+		gExitDialog.uiAllMoveButton->uiFlags |= BUTTON_CLICKED_ON;
 	}
 	else
 	{
-		ButtonList[ gExitDialog.uiAllMoveButton ]->uiFlags &=(~BUTTON_CLICKED_ON );
+		gExitDialog.uiAllMoveButton->uiFlags &= ~BUTTON_CLICKED_ON;
 	}
 
 
