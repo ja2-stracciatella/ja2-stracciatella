@@ -2026,37 +2026,34 @@ BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile )
 
 void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void)
 {
-	SECTORINFO *pSector;
-
-	if( !gfWorldLoaded || gbWorldSectorZ )
-	{ //No world loaded or underground.  Underground sectors don't matter
-		//seeing enemies (not creatures) never rejuvenate underground.
+	if (!gfWorldLoaded || gbWorldSectorZ != 0)
+	{ /* No world loaded or underground.  Underground sectors don't matter seeing
+		 * enemies (not creatures) never rejuvenate underground. */
 		return;
 	}
 
-	pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
-
-	if( !pSector->uiTimeLastPlayerLiberated )
-	{ //The player has never owned the sector.
+	SECTORINFO* const sector = &SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)];
+	if (sector->uiTimeLastPlayerLiberated == 0)
+	{ // The player has never owned the sector.
 		return;
 	}
 
-	//The player has owned the sector at one point.  By stripping all of the detailed placements, only basic
-	//placements will remain.  This prevents tanks and "specially detailed" enemies from coming back.
+	/* The player has owned the sector at one point.  By stripping all of the
+	 * detailed placements, only basic placements will remain.  This prevents
+	 * tanks and "specially detailed" enemies from coming back. */
 	FOR_ALL_SOLDIERINITNODES(curr)
 	{
-		if( curr->pDetailedPlacement )
-		{
-			if( curr->pBasicPlacement->bTeam == ENEMY_TEAM )
-			{
-				MemFree( curr->pDetailedPlacement );
-				curr->pDetailedPlacement = NULL;
-				curr->pBasicPlacement->fDetailedPlacement = FALSE;
-				curr->pBasicPlacement->fPriorityExistance = FALSE;
-				curr->pBasicPlacement->bBodyType = -1;
-				RandomizeRelativeLevel( &( curr->pBasicPlacement->bRelativeAttributeLevel ), curr->pBasicPlacement->ubSoldierClass );
-				RandomizeRelativeLevel( &( curr->pBasicPlacement->bRelativeEquipmentLevel ), curr->pBasicPlacement->ubSoldierClass );
-			}
-		}
+		if (!curr->pDetailedPlacement) continue;
+
+		BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
+		if (bp->bTeam != ENEMY_TEAM) continue;
+
+		MemFree(curr->pDetailedPlacement);
+		curr->pDetailedPlacement = NULL;
+		bp->fDetailedPlacement = FALSE;
+		bp->fPriorityExistance = FALSE;
+		bp->bBodyType          = -1;
+		RandomizeRelativeLevel(&bp->bRelativeAttributeLevel, bp->ubSoldierClass);
+		RandomizeRelativeLevel(&bp->bRelativeEquipmentLevel, bp->ubSoldierClass);
 	}
 }
