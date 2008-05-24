@@ -365,7 +365,7 @@ static INT16 FindFreeIconSlot(void)
 	{
 		if (GenericButtonIcons[x] == NULL) return x;
 	}
-	return BUTTON_NO_SLOT;
+	throw std::runtime_error("Out of generic button icon slots");
 }
 
 
@@ -375,12 +375,7 @@ try
 	AssertMsg(filename != NULL, "Attempting to LoadGenericButtonIcon() with null filename.");
 
 	// Get slot for icon image
-	INT16 ImgSlot = FindFreeIconSlot();
-	if (ImgSlot == BUTTON_NO_SLOT)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "LoadGenericButtonIcon: Out of generic button icon slots");
-		return BUTTON_NO_SLOT;
-	}
+	INT16 const ImgSlot = FindFreeIconSlot();
 
 	// Load the icon
 	GenericButtonIcons[ImgSlot] = AddVideoObjectFromFile(filename);
