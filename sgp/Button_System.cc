@@ -700,38 +700,41 @@ void SetButtonCursor(GUIButtonRef const iBtnId, UINT16 crsr)
 
 
 static GUIButtonRef QuickCreateButtonInternal(BUTTON_PICS* const pics, const INT16 xloc, const INT16 yloc, const INT32 Type, const INT16 Priority, const GUI_CALLBACK MoveCallback, const GUI_CALLBACK ClickCallback)
-try
 {
 	// Is there a QuickButton image in the given image slot?
-	if (pics->vobj == NULL)
+	if (!pics->vobj)
 	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "QuickCreateButton: Invalid button image number");
-		return GUIButtonRef();
+		throw std::runtime_error("QuickCreateButton: Invalid button image");
 	}
 
 	GUI_BUTTON* const b = AllocateButton((Type & (BUTTON_CHECKBOX | BUTTON_NEWTOGGLE)) | BUTTON_QUICK, xloc, yloc, pics->max.w, pics->max.h, Priority, ClickCallback, MoveCallback);
 	b->image = pics;
 	return b;
 }
-catch (...) { return GUIButtonRef(); }
 
 
 GUIButtonRef QuickCreateButton(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
+try
 {
 	return QuickCreateButtonInternal(image, x, y, BUTTON_TOGGLE, priority, DefaultMoveCallback, click);
 }
+catch (...) { return GUIButtonRef(); }
 
 
 GUIButtonRef QuickCreateButtonNoMove(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
+try
 {
 	return QuickCreateButtonInternal(image, x, y, BUTTON_TOGGLE, priority, MSYS_NO_CALLBACK, click);
 }
+catch (...) { return GUIButtonRef(); }
 
 
 GUIButtonRef QuickCreateButtonToggle(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
+try
 {
 	return QuickCreateButtonInternal(image, x, y, BUTTON_NEWTOGGLE, priority, MSYS_NO_CALLBACK, click);
 }
+catch (...) { return GUIButtonRef(); }
 
 
 GUIButtonRef QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
@@ -1795,6 +1798,7 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 
 
 GUIButtonRef CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback)
+try
 {
 	Assert(filename != NULL);
 	BUTTON_PICS* const ButPic = LoadButtonImage(filename, -1, 0, 1, 2, 3);
@@ -1805,11 +1809,6 @@ GUIButtonRef CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 
 	}
 
 	GUIButtonRef const iButtonID = QuickCreateButtonInternal(ButPic, x, y, BUTTON_CHECKBOX, Priority, MSYS_NO_CALLBACK, ClickCallback);
-	if (iButtonID == BUTTON_NO_SLOT)
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "CreateCheckBoxButton: Can't create button");
-		return GUIButtonRef();
-	}
 
 	//change the flags so that it isn't a quick button anymore
 	GUI_BUTTON* b = ButtonList[iButtonID];
@@ -1818,6 +1817,7 @@ GUIButtonRef CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 
 
 	return iButtonID;
 }
+catch (...) { return GUIButtonRef(); }
 
 
 void MSYS_SetBtnUserData(GUIButtonRef const iButtonNum, INT32 userdata)
