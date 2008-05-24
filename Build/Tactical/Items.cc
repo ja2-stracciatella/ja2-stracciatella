@@ -3865,7 +3865,6 @@ BOOLEAN CreateItems( UINT16 usItem, INT8 bStatus, UINT8 ubNumber, OBJECTTYPE * p
 			pObj->bStatus[ubLoop] = pObj->bStatus[0];
 		}
 		pObj->ubNumberOfObjects = ubNumber;
-		pObj->ubWeight *= ubNumber;
 		return( TRUE );
 	}
 	return( FALSE );
