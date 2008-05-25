@@ -7357,8 +7357,7 @@ static BOOLEAN AnyMercsLeavingRealSoon(void)
 }
 
 
-BOOLEAN HandlePreloadOfMapGraphics( void )
-try
+void HandlePreloadOfMapGraphics(void)
 {
 #ifndef JA2DEMO
 	guiBIGMAP                      = AddVideoSurfaceFromFile("INTERFACE/b_map.pcx");
@@ -7416,10 +7415,7 @@ try
 
 	// load the pop up for the militia pop up box
 	LoadMilitiaPopUpBox( );
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void HandleRemovalOfPreLoadedMapGraphics( void )

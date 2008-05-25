@@ -17,7 +17,7 @@
 #define		AIM_FI_HELP_COLOR									FONT_MCOLOR_WHITE
 
 
-BOOLEAN EnterAimFacialIndex(void);
+void EnterAimFacialIndex(void);
 void ExitAimFacialIndex(void);
 void HandleAimFacialIndex(void);
 BOOLEAN RenderAimFacialIndex(void);

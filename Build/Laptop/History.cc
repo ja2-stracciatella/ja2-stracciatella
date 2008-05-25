@@ -124,7 +124,7 @@ void GameInitHistory()
 
 
 static void CreateHistoryButtons(void);
-static BOOLEAN LoadHistory(void);
+static void LoadHistory(void);
 static void SetHistoryButtonStates(void);
 
 
@@ -206,8 +206,7 @@ void RenderHistory( void )
 }
 
 
-static BOOLEAN LoadHistory(void)
-try
+static void LoadHistory(void)
 {
   // load History video objects into memory
 
@@ -222,10 +221,7 @@ try
 
   // black divider line - long ( 480 length)
 	guiLONGLINE = AddVideoObjectFromFile("LAPTOP/divisionline480.sti");
-
-	return (TRUE);
 }
-catch (...) { return FALSE; }
 
 
 static void RemoveHistory(void)

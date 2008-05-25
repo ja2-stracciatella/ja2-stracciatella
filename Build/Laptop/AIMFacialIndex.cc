@@ -65,8 +65,7 @@ static void SelectMercFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectScreenRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN EnterAimFacialIndex()
-try
+void EnterAimFacialIndex()
 {
 	UINT8	i;
 	UINT16		usPosX, usPosY, x,y;
@@ -105,10 +104,7 @@ try
 	InitAimDefaults();
 
 	RenderAimFacialIndex();
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void ExitAimFacialIndex()

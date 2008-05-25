@@ -107,8 +107,7 @@ static void SelectFuneralLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason
 static void SelectRipSignRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN EnterFuneral()
-try
+void EnterFuneral()
 {
 	const char* ImageFile;
 	UINT16					usPosX, i;
@@ -155,10 +154,7 @@ try
 	gSelectedRipSignRegion.Disable();
 
 	SetBookMark( FUNERAL_BOOKMARK );
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void ExitFuneral()

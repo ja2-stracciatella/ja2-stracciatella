@@ -55,8 +55,7 @@ static void BtnFlowerCardsBackButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void SelectFloristCardsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN EnterFloristCards()
-try
+void EnterFloristCards()
 {
 	UINT16 i, j, usPosX, usPosY;
 	UINT8						ubCount;
@@ -97,9 +96,7 @@ try
 	gbCurrentlySelectedCard = -1;
 
 	RenderFloristCards();
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 void ExitFloristCards()

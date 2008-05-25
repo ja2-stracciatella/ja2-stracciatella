@@ -179,7 +179,7 @@ UINT32	OptionsScreenInit()
 }
 
 
-static BOOLEAN EnterOptionsScreen(void);
+static void EnterOptionsScreen(void);
 static void ExitOptionsScreen(void);
 static void GetOptionsScreenUserInput(void);
 static void HandleOptionsScreen(void);
@@ -264,8 +264,7 @@ static void SoundFXSliderChangeCallBack(INT32 iNewValue);
 static void SpeechSliderChangeCallBack(INT32 iNewValue);
 
 
-static BOOLEAN EnterOptionsScreen(void)
-try
+static void EnterOptionsScreen(void)
 {
 	//if we are coming from mapscreen
 	if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
@@ -287,7 +286,7 @@ try
 	{
 		gfRedrawOptionsScreen = TRUE;
 		gfExitOptionsDueToMessageBox = FALSE;
-		return( TRUE );
+		return;
 	}
 
 	gfExitOptionsDueToMessageBox = FALSE;
@@ -395,9 +394,7 @@ try
 	gfSettingOfItemGlowStatusOnEnterOfOptionScreen = gGameSettings.fOptions[ TOPTION_GLOW_ITEMS ];
 
   gfSettingOfDontAnimateSmoke = gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ];
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void GetOptionsScreenToggleBoxes(void);

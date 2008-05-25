@@ -56,7 +56,7 @@ INT32 iCurrentProfileMode = 0;
 
 static void CreateIMPMainPageButtons(void);
 static void CreateMouseRegionsForIMPMainPageBasedOnCharGenStatus(void);
-static BOOLEAN LoadCharacterPortraitForMainPage(void);
+static void LoadCharacterPortraitForMainPage(void);
 static void UpDateIMPMainPageButtons(void);
 
 
@@ -489,8 +489,7 @@ static void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION* pRegion, INT32 iRe
 }
 
 
-static BOOLEAN LoadCharacterPortraitForMainPage(void)
-try
+static void LoadCharacterPortraitForMainPage(void)
 {
   // this function will load the character's portrait, to be used on portrait button
 	if( iCurrentProfileMode >= 4 )
@@ -502,7 +501,4 @@ try
 	SpecifyButtonIcon(  giIMPMainPageButton[4], guiCHARACTERPORTRAITFORMAINPAGE, 0,
 													 33, 23, FALSE );
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }

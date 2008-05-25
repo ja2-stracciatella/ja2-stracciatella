@@ -52,13 +52,13 @@ enum
 
 
 void GameInitMercs(void);
-BOOLEAN EnterMercs(void);
+void EnterMercs(void);
 void ExitMercs(void);
 void HandleMercs(void);
 void RenderMercs(void);
 
 
-BOOLEAN InitMercBackGround(void);
+void    InitMercBackGround(void);
 BOOLEAN DrawMecBackGround(void);
 BOOLEAN RemoveMercBackGround(void);
 void DailyUpdateOfMercSite( UINT16 usDate);

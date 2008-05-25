@@ -203,11 +203,10 @@ static void HandleMainMenuScreen(void)
 }
 
 
-static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate);
+static void CreateDestroyMainMenuButtons(BOOLEAN fCreate);
 
 
-BOOLEAN InitMainMenu(void)
-try
+void InitMainMenu(void)
 {
 	CreateDestroyMainMenuButtons(TRUE);
 
@@ -230,10 +229,7 @@ try
 	InitGameOptions();
 
 	DequeueAllKeyBoardEvents();
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void ExitMainMenu(void)
@@ -324,14 +320,13 @@ static void SetMainMenuExitScreen(UINT32 uiNewScreen)
 }
 
 
-static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
-try
+static void CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 {
 	static BOOLEAN fButtonsCreated = FALSE;
 
 	if (fCreate)
 	{
-		if (fButtonsCreated) return TRUE;
+		if (fButtonsCreated) return;
 
 		// Reset the variable that allows the user to ALT click on the continue save btn to load the save instantly
 		gfLoadGameUponEntry = FALSE;
@@ -366,7 +361,7 @@ try
 	}
 	else
 	{
-		if (!fButtonsCreated) return TRUE;
+		if (!fButtonsCreated) return;
 
 		// Delete images/buttons
 		for (UINT32 cnt = 0; cnt < NUM_MENU_ITEMS; ++cnt)
@@ -376,10 +371,7 @@ try
 		}
 		fButtonsCreated = FALSE;
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void RenderMainMenu(void)

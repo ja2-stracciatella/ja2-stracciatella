@@ -5,7 +5,7 @@
 #include "Store_Inventory.h"
 
 
-BOOLEAN EnterBobbyR(void);
+void EnterBobbyR(void);
 void ExitBobbyR(void);
 void HandleBobbyR(void);
 void RenderBobbyR(void);
@@ -25,7 +25,7 @@ extern	UINT32	guiLastBobbyRayPage;
 
 BOOLEAN DrawBobbyRWoodBackground(void);
 BOOLEAN DeleteBobbyRWoodBackground(void);
-BOOLEAN InitBobbyRWoodBackground(void);
+void InitBobbyRWoodBackground(void);
 void DailyUpdateOfBobbyRaysNewInventory(void);
 void DailyUpdateOfBobbyRaysUsedInventory(void);
 void AddFreshBobbyRayInventory( UINT16 usItemIndex );

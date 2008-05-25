@@ -33,7 +33,7 @@ extern UINT8			gubLastGunIndex;
 
 
 void GameInitBobbyRGuns(void);
-BOOLEAN EnterBobbyRGuns(void);
+void EnterBobbyRGuns(void);
 void ExitBobbyRGuns(void);
 void HandleBobbyRGuns(void);
 void RenderBobbyRGuns(void);
@@ -41,7 +41,7 @@ void RenderBobbyRGuns(void);
 
 BOOLEAN DisplayBobbyRBrTitle(void);
 BOOLEAN DeleteBobbyBrTitle(void);
-BOOLEAN InitBobbyBrTitle(void);
+void    InitBobbyBrTitle(void);
 BOOLEAN InitBobbyMenuBar(void);
 BOOLEAN DeleteBobbyMenuBar(void);
 

@@ -88,8 +88,7 @@ MOUSE_REGION    gSelectedInsuranceTitleLinkRegion;
 static void SelectInsuranceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN EnterInsurance()
-try
+void EnterInsurance()
 {
 	UINT16					usPosX, i;
 
@@ -118,10 +117,7 @@ try
 
 	// reset the current merc index on the insurance contract page
 	gsCurrentInsuranceMercIndex = 0;
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 void ExitInsurance()
@@ -213,8 +209,7 @@ void RenderInsurance()
 static void SelectInsuranceTitleLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN InitInsuranceDefaults()
-try
+void InitInsuranceDefaults()
 {
 	// load the Flower Account Box graphic and add it
 	guiInsuranceBackGround = AddVideoObjectFromFile("LAPTOP/BackGroundTile.sti");
@@ -236,10 +231,7 @@ try
 		MSYS_DefineRegion( &gSelectedInsuranceTitleLinkRegion, INSURANCE_SMALL_TITLE_X+85, INSURANCE_SMALL_TITLE_Y, (UINT16)(INSURANCE_SMALL_TITLE_X + INSURANCE_SMALL_TITLE_WIDTH), (UINT16)(INSURANCE_SMALL_TITLE_Y+INSURANCE_SMALL_TITLE_HEIGHT), MSYS_PRIORITY_HIGH,
 						 CURSOR_WWW, MSYS_NO_CALLBACK, SelectInsuranceTitleLinkRegionCallBack);
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void DisplayInsuranceDefaults()

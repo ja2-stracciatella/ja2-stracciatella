@@ -136,8 +136,7 @@ static void SelectToMugShotRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectToStatsRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN EnterAimSort()
-try
+void EnterAimSort()
 {
 	//Everytime into Aim Sort, reset array.
 	for (UINT8 i = 0; i < MAX_NUMBER_MERCS; ++i)
@@ -194,10 +193,7 @@ try
 
 	InitAimMenuBar();
 	RenderAimSort();
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN SortMercArray(void);

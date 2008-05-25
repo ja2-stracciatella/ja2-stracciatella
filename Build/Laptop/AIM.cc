@@ -198,8 +198,7 @@ static void SelectMemberCardRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 static void SelectPoliciesRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN EnterAIM()
-try
+void EnterAIM()
 {
 	gubCurrentAdvertisment = AIM_AD_WARNING_BOX;
 	LaptopInitAim();
@@ -272,10 +271,7 @@ try
 
 	fFirstTimeIn = FALSE;
 	RenderAIM();
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void LaptopInitAim(void)
@@ -391,8 +387,7 @@ static void SelectLinksRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN InitAimDefaults()
-try
+void InitAimDefaults()
 {
 	// load the Rust bacground graphic and add it
 	guiRustBackGround = AddVideoObjectFromFile("LAPTOP/rustbackground.sti");
@@ -404,10 +399,8 @@ try
 	//Mouse region for the Links
 	MSYS_DefineRegion( &gSelectedAimLogo, AIM_SYMBOL_X, AIM_SYMBOL_Y, AIM_SYMBOL_X+AIM_SYMBOL_WIDTH, AIM_SYMBOL_Y+AIM_SYMBOL_HEIGHT, MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectAimLogoRegionCallBack);
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
+
 
 BOOLEAN RemoveAimDefaults()
 {

@@ -166,8 +166,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate);
 static void SelectInsuranceContractRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN EnterInsuranceContract()
-try
+void EnterInsuranceContract()
 {
 	UINT16					usPosX,i;
 
@@ -210,9 +209,7 @@ try
 	CreateDestroyInsuranceContractFormButtons( TRUE );
 
 //	RenderInsuranceContract();
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 void ExitInsuranceContract()

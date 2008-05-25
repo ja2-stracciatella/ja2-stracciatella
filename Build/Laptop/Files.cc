@@ -218,7 +218,7 @@ void GameInitFiles(void)
 static void CreateButtonsForFilesPage(void);
 static void HandleFileViewerButtonStates(void);
 static void InitializeFilesMouseRegions(void);
-static BOOLEAN LoadFiles(void);
+static void LoadFiles(void);
 static void OpenFirstUnreadFile(void);
 
 
@@ -333,8 +333,7 @@ static void DrawFilesTitleText(void)
 }
 
 
-static BOOLEAN LoadFiles(void)
-try
+static void LoadFiles(void)
 {
   // load files video objects into memory
 
@@ -349,10 +348,7 @@ try
 
   	// top portion of the screen background
 	guiFileBack = AddVideoObjectFromFile("LAPTOP/fileviewerwhite.sti");
-
-	return (TRUE);
 }
-catch (...) { return FALSE; }
 
 
 static void RemoveFiles(void)

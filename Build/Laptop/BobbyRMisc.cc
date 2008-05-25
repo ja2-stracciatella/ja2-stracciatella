@@ -14,8 +14,7 @@ static SGPVObject* guiMiscBackground;
 static SGPVObject* guiMiscGrid;
 
 
-BOOLEAN EnterBobbyRMisc()
-try
+void EnterBobbyRMisc()
 {
 	// load the background graphic and add it
 	guiMiscBackground = AddVideoObjectFromFile("LAPTOP/miscbackground.sti");
@@ -30,10 +29,7 @@ try
 	SetFirstLastPagesForNew( IC_BOBBY_MISC );
 
 	RenderBobbyRMisc( );
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 void ExitBobbyRMisc()

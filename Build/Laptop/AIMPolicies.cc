@@ -172,8 +172,7 @@ void EnterInitAimPolicies()
 static BOOLEAN InitAimPolicyMenuBar(void);
 
 
-BOOLEAN EnterAimPolicies()
-try
+void EnterAimPolicies()
 {
 	InitAimDefaults();
 
@@ -191,9 +190,7 @@ try
 	guiContentButton = AddVideoObjectFromFile("LAPTOP/ContentButton.sti");
 
 	RenderAimPolicies();
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN ExitAgreementButton(void);

@@ -207,8 +207,7 @@ void GameInitBobbyRGuns()
 }
 
 
-BOOLEAN EnterBobbyRGuns()
-try
+void EnterBobbyRGuns()
 {
 	gfBigImageMouseRegionCreated = FALSE;
 
@@ -229,9 +228,7 @@ try
 	RenderBobbyRGuns( );
 
 //	RenderBobbyRGuns();
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 void ExitBobbyRGuns()
@@ -290,8 +287,7 @@ BOOLEAN DisplayBobbyRBrTitle()
 static void SelectTitleImageLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN InitBobbyBrTitle()
-try
+void InitBobbyBrTitle()
 {
 	// load the br title graphic and add it
 	guiBrTitle = AddVideoObjectFromFile("LAPTOP/br.sti");
@@ -301,10 +297,7 @@ try
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectTitleImageLinkRegionCallBack);
 
 	gusOldItemNumOnTopOfPage=65535;
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN DeleteBobbyBrTitle()

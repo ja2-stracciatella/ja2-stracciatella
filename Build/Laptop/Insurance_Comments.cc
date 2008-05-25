@@ -43,8 +43,7 @@ MOUSE_REGION    gSelectedInsuranceCommentLinkRegion[3];
 static void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN EnterInsuranceComments()
-try
+void EnterInsuranceComments()
 {
 	UINT8 i;
 	UINT16 usPosX;
@@ -64,14 +63,8 @@ try
 		usPosX += INS_CMNT_LINK_OFFSET_X;
 	}
 
-
-
-
 	RenderInsuranceComments();
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 void ExitInsuranceComments()

@@ -57,8 +57,7 @@ MOUSE_REGION    gSelectedLinkRegion[ AIM_LINK_NUM_LINKS ] ;
 static void SelectLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN EnterAimLinks()
-try
+void EnterAimLinks()
 {
 	UINT16					usPosY;
 	INT16						i;
@@ -89,11 +88,8 @@ try
 		usPosY += AIM_LINK_LINK_OFFSET_Y;
 	}
 
-
 	RenderAimLinks();
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 void ExitAimLinks()

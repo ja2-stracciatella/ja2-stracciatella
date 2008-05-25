@@ -133,8 +133,7 @@ static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
 }
 
 
-BOOLEAN EnterMercsFiles()
-try
+void EnterMercsFiles()
 {
 	InitMercBackGround();
 
@@ -155,9 +154,7 @@ try
 	guiMercBackButton = MakeButton(MercInfo[MERC_FILES_HOME],     MERC_FILES_BACK_BUTTON_X, BtnMercFilesBackButtonCallback);
 
 //	RenderMercsFiles();
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void ExitMercsFiles()

@@ -1,7 +1,7 @@
 #ifndef __AIMMEMBERS_H_
 #define __AIMMEMBERS_H_
 
-BOOLEAN EnterAIMMembers(void);
+void EnterAIMMembers(void);
 void ExitAIMMembers(void);
 void HandleAIMMembers(void);
 BOOLEAN RenderAIMMembers(void);

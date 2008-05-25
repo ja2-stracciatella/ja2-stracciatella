@@ -54,8 +54,7 @@ static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
 }
 
 
-BOOLEAN EnterMercsNoAccount()
-try
+void EnterMercsNoAccount()
 {
 	InitMercBackGround();
 
@@ -68,10 +67,7 @@ try
 	guiCancelBoxButton      = MakeButton(MercNoAccountText[MERC_NO_ACC_CANCEL],       MERC_CANCEL_BUTTON_X, BtnCancelBoxButtonCallback);
 
 	RenderMercsNoAccount();
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 void ExitMercsNoAccount()

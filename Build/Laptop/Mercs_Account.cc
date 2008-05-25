@@ -92,8 +92,7 @@ static void BtnMercAuthorizeButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnMercBackButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-BOOLEAN EnterMercsAccount()
-try
+void EnterMercsAccount()
 {
 	InitMercBackGround();
 
@@ -113,10 +112,7 @@ try
 
 	//if true, will display a msgbox telling user that they dont have enough funds
 	gfMercPlayerDoesntHaveEnoughMoney_DisplayWarning = FALSE;
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void ExitMercsAccount()

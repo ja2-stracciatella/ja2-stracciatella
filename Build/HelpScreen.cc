@@ -411,7 +411,7 @@ HELP_SCREEN_SHOULD_COME_UP:
 }
 
 
-static BOOLEAN EnterHelpScreen(void);
+static void EnterHelpScreen(void);
 static void ExitHelpScreen(void);
 static void GetHelpScreenUserInput(void);
 static void HandleHelpScreen(void);
@@ -485,8 +485,7 @@ static void CreateScrollAreaButtons(void);
 static void SetSizeAndPropertiesOfHelpScreen(void);
 
 
-static BOOLEAN EnterHelpScreen(void)
-try
+static void EnterHelpScreen(void)
 {
 	UINT16 usPosX, usPosY;
 
@@ -588,10 +587,7 @@ try
 	gfHaveRenderedFirstFrameToSaveBuffer = FALSE;
 
 	gubRenderHelpScreenTwiceInaRow = 0;
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void HelpScreenMouseMoveScrollBox(INT32 usMousePosY);

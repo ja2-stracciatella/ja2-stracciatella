@@ -135,8 +135,7 @@ static void DisableAimArchiveButton(void);
 static void InitAlumniFaceRegions(void);
 
 
-BOOLEAN EnterAimArchives()
-try
+void EnterAimArchives()
 {
 	gfDrawPopUpBox    = FALSE;
 	gfDestroyPopUpBox = FALSE;
@@ -174,9 +173,7 @@ try
 
 	DisableAimArchiveButton();
 	RenderAimArchives();
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void CreateDestroyDoneMouseRegion(UINT16 usPosY);

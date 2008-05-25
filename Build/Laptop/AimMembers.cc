@@ -457,8 +457,7 @@ static void SelectFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectShutUpMercRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN EnterAIMMembers()
-try
+void EnterAIMMembers()
 {
 	// Create a background video surface to blt the face onto
 	guiVideoFaceBackground = AddVideoSurface(AIM_MEMBER_VIDEO_FACE_WIDTH, AIM_MEMBER_VIDEO_FACE_HEIGHT, PIXEL_DEPTH);
@@ -549,10 +548,7 @@ try
 	RenderAIMMembers();
 	gfIsNewMailFlagSet = FALSE;
 	gfAimMemberCanMercSayOpeningQuote = TRUE;
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t* sString1, const wchar_t* sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData);

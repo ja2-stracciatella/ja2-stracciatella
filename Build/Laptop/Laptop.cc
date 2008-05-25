@@ -441,13 +441,12 @@ static void LoadLoadPending(void);
 static void RenderLapTopImage(void);
 
 
-static INT32 EnterLaptop(void)
-try
+static void EnterLaptop(void)
 {
 	//Create, load, initialize data -- just entered the laptop.
 
 	// we are re entering due to message box, leave NOW!
-	if (fExitDueToMessageBox) return TRUE;
+	if (fExitDueToMessageBox) return;
 
 	//if the radar map mouse region is still active, disable it.
 	if (gRadarRegion.uiFlags & MSYS_REGION_ENABLED)
@@ -568,10 +567,7 @@ try
 	InitalizeSubSitesList();
 
 	InvalidateScreen();
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void CreateDestoryBookMarkRegions(void);

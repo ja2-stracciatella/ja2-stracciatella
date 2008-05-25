@@ -102,8 +102,7 @@ static void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT
 static void SelectInsuranceLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN EnterInsuranceInfo()
-try
+void EnterInsuranceInfo()
 {
 	UINT16					usPosX;
 
@@ -133,10 +132,7 @@ try
 	gubCurrentInsInfoSubPage = INS_INFO_INFO_TOC;
 
 	RenderInsuranceInfo();
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 void ExitInsuranceInfo()

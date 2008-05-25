@@ -15,8 +15,7 @@ static SGPVObject* guiUsedBackground;
 static SGPVObject* guiUsedGrid;
 
 
-BOOLEAN EnterBobbyRUsed()
-try
+void EnterBobbyRUsed()
 {
 	// load the background graphic and add it
 	guiUsedBackground = AddVideoObjectFromFile("LAPTOP/usedbackground.sti");
@@ -32,10 +31,7 @@ try
 	InitBobbyMenuBar( );
 
 	RenderBobbyRUsed( );
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 void ExitBobbyRUsed()

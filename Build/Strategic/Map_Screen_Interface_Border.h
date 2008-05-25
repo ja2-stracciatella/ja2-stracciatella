@@ -59,7 +59,7 @@ extern BOOLEAN fZoomFlag;
 // scroll animation
 extern INT32 giScrollButtonState;
 
-BOOLEAN LoadMapBorderGraphics( void );
+void LoadMapBorderGraphics(void);
 void DeleteMapBorderGraphics( void );
 void RenderMapBorder( void );
 //void RenderMapBorderCorner( void );

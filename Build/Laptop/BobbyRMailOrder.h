@@ -29,13 +29,8 @@ enum
 };
 
 
-
-
-
-
-
 void GameInitBobbyRMailOrder(void);
-BOOLEAN EnterBobbyRMailOrder(void);
+void EnterBobbyRMailOrder(void);
 void ExitBobbyRMailOrder(void);
 void HandleBobbyRMailOrder(void);
 void RenderBobbyRMailOrder(void);
@@ -44,7 +39,7 @@ void BobbyRayMailOrderEndGameShutDown(void);
 void EnterInitBobbyRayOrder(void);
 void AddJohnsGunShipment(void);
 
-BOOLEAN CreateBobbyRayOrderTitle(void);
+void CreateBobbyRayOrderTitle(void);
 void DestroyBobbyROrderTitle(void);
 void DrawBobbyROrderTitle(void);
 

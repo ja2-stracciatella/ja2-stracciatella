@@ -176,7 +176,7 @@ extern SGPVObject* guiEmailWarning;
 
 
 void GameInitEmail(void);
-BOOLEAN EnterEmail(void);
+void EnterEmail(void);
 void ExitEmail(void);
 void HandleEmail(void);
 void RenderEmail(void);

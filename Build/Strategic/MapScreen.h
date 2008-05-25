@@ -50,7 +50,7 @@ void EndMapScreen( BOOLEAN fDuringFade );
 void ReBuildCharactersList( void );
 
 
-BOOLEAN HandlePreloadOfMapGraphics( void );
+void HandlePreloadOfMapGraphics(void);
 void HandleRemovalOfPreLoadedMapGraphics( void );
 
 void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ );

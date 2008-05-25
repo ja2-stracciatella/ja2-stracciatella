@@ -84,7 +84,7 @@ void DisplayPositionOfHelicopter( void );
 BOOLEAN CheckForClickOverHelicopterIcon( INT16 sX, INT16 sY );
 
 // load and delete the graphics for the map screen map militia
-BOOLEAN LoadMilitiaPopUpBox( void );
+void LoadMilitiaPopUpBox(void);
 void RemoveMilitiaPopUpBox( void );
 
 

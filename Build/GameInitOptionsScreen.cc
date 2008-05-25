@@ -181,7 +181,7 @@ static GUIButtonRef guiGameSaveToggles[NUM_SAVE_OPTIONS];
 static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, INT32 reason);
 
 
-static BOOLEAN EnterGIOScreen(void);
+static void EnterGIOScreen(void);
 static BOOLEAN ExitGIOScreen(void);
 static void HandleGIOScreen(void);
 static BOOLEAN RenderGIOScreen(void);
@@ -263,13 +263,12 @@ static void ClickButton(GUIButtonRef const btn)
 }
 
 
-static BOOLEAN EnterGIOScreen(void)
-try
+static void EnterGIOScreen(void)
 {
 	UINT16					cnt;
 	UINT16					usPosY;
 
-	if (gfGIOButtonsAllocated) return TRUE;
+	if (gfGIOButtonsAllocated) return;
 
 	SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 
@@ -385,10 +384,7 @@ try
 	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, 439);
 
 	gfGIOButtonsAllocated = TRUE;
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN ExitGIOScreen(void)

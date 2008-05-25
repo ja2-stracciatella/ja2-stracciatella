@@ -93,8 +93,7 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 static void CreatePreviousShipmentsMouseRegions(void);
 
 
-BOOLEAN EnterBobbyRShipments()
-try
+void EnterBobbyRShipments()
 {
 	InitBobbyRWoodBackground();
 
@@ -125,10 +124,7 @@ try
 	}
 
 	CreatePreviousShipmentsMouseRegions();
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void RemovePreviousShipmentsMouseRegions(void);

@@ -14,8 +14,7 @@ static SGPVObject* guiArmourBackground;
 static SGPVObject* guiArmourGrid;
 
 
-BOOLEAN EnterBobbyRArmour()
-try
+void EnterBobbyRArmour()
 {
 	// load the background graphic and add it
 	guiArmourBackground = AddVideoObjectFromFile("LAPTOP/Armourbackground.sti");
@@ -30,10 +29,7 @@ try
 	SetFirstLastPagesForNew( IC_ARMOUR );
 
 	RenderBobbyRArmour( );
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 void ExitBobbyRArmour()

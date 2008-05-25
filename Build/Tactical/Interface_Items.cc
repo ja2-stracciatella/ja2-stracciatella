@@ -658,8 +658,7 @@ static void GenerateConsString(wchar_t* const zItemCons, const OBJECTTYPE* const
 }
 
 
-BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* const pRegionDesc, const INV_REGION_DESC* const pCamoRegion, const MOUSE_CALLBACK INVMoveCallback, const MOUSE_CALLBACK INVClickCallback, const MOUSE_CALLBACK INVMoveCamoCallback, const MOUSE_CALLBACK INVClickCamoCallback)
-try
+void InitInvSlotInterface(const INV_REGION_DESC* const pRegionDesc, const INV_REGION_DESC* const pCamoRegion, const MOUSE_CALLBACK INVMoveCallback, const MOUSE_CALLBACK INVClickCallback, const MOUSE_CALLBACK INVMoveCamoCallback, const MOUSE_CALLBACK INVClickCamoCallback)
 {
 	INT32 cnt;
 
@@ -696,10 +695,7 @@ try
 	}
 
 	memset( gbCompatibleAmmo, 0, sizeof( gbCompatibleAmmo ) );
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void InitKeyRingInterface(MOUSE_CALLBACK KeyRingClickCallback)
@@ -3912,8 +3908,7 @@ static void ItemPopupFullRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight )
-try
+void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT16 const sInvX, INT16 const sInvY, INT16 const sInvWidth, INT16 const sInvHeight)
 {
 	SGPRect					aRect;
 	UINT8						ubLimit;
@@ -3934,11 +3929,8 @@ try
 	gpItemPopupObject = &(pSoldier->inv[ ubPosition ] );
 	ubLimit = ItemSlotLimit( gpItemPopupObject->usItem, ubPosition );
 
-	// Return false if #objects not >1
-	if ( ubLimit <1 )
-	{
-		return( FALSE );
-	}
+	// Return if #objects not >1
+	if (ubLimit < 1) return;
 
 	if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 	{
@@ -4022,10 +4014,7 @@ try
 	aRect.iRight = sInvX + sInvWidth;
 
 	RestrictMouseCursor( &aRect );
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void DeleteItemStackPopup(void);
@@ -4112,8 +4101,7 @@ static void DeleteItemStackPopup(void)
 }
 
 
-BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight )
-try
+void InitKeyRingPopup(SOLDIERTYPE* const pSoldier, INT16 const sInvX, INT16 const sInvY, INT16 const sInvWidth, INT16 const sInvHeight)
 {
 	SGPRect			aRect;
 	INT16				sKeyRingItemWidth = 0;
@@ -4190,10 +4178,7 @@ try
 	aRect.iRight = sInvX + sInvWidth;
 
 	RestrictMouseCursor( &aRect );
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void RenderKeyRingPopup(const BOOLEAN fFullRender)
@@ -4630,8 +4615,7 @@ static void ItemPickupScrollUp(GUI_BUTTON* btn, INT32 reason);
 static void SetupPickupPage(INT8 bPage);
 
 
-BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel )
-try
+void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, ITEM_POOL* const pItemPool, INT16 const sScreenX, INT16 const sScreenY, INT8 const bZLevel)
 {
 	ITEM_POOL				*pTempItemPool;
 	INT32						cnt;
@@ -4813,9 +4797,7 @@ try
 	DisableTacticalTeamPanelButtons( TRUE );
 
 	//gfSMDisableForItems = TRUE;
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void SetupPickupPage(INT8 bPage)

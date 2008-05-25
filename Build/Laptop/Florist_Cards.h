@@ -6,7 +6,7 @@
 #define FLOR_CARD_TEXT_TITLE_SIZE 5 * 80
 
 
-BOOLEAN EnterFloristCards(void);
+void EnterFloristCards(void);
 void ExitFloristCards(void);
 void HandleFloristCards(void);
 void RenderFloristCards(void);

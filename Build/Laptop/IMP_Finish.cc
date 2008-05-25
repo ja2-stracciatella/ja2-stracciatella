@@ -47,7 +47,7 @@ extern void BtnIMPMainPagePortraitCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 static void CreateIMPFinishButtons(void);
-static BOOLEAN LoadCharacterPortrait(void);
+static void LoadCharacterPortrait(void);
 
 
 void EnterIMPFinish( void )
@@ -335,15 +335,12 @@ static void RenderCharFullName(void)
 }
 
 
-static BOOLEAN LoadCharacterPortrait(void)
-try
+static void LoadCharacterPortrait(void)
 {
   // this function will load the character's portrait, to be used on portrait button
 	// load it
 	guiCHARACTERPORTRAIT = AddVideoObjectFromFile(pPlayerSelectedFaceFileNames[iPortraitNumber]);
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void DestroyCharacterPortrait(void)

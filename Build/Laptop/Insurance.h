@@ -20,12 +20,12 @@
 #define INS_INFO_ARROW_BUTTON_Y       (LAPTOP_SCREEN_WEB_UL_Y + 354)
 
 
-BOOLEAN EnterInsurance(void);
+void EnterInsurance(void);
 void ExitInsurance(void);
 void HandleInsurance(void);
 void RenderInsurance(void);
 
-BOOLEAN InitInsuranceDefaults(void);
+void InitInsuranceDefaults(void);
 void DisplayInsuranceDefaults(void);
 void RemoveInsuranceDefaults(void);
 void DisplaySmallRedLineWithShadow( UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16 EndY);

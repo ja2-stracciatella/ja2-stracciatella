@@ -104,8 +104,7 @@ static void DisableAimHistoryButton(void);
 static BOOLEAN InitAimHistoryMenuBar(void);
 
 
-BOOLEAN EnterAimHistory()
-try
+void EnterAimHistory()
 {
 	gfExitingAimHistory = FALSE;
 	InitAimDefaults();
@@ -119,10 +118,7 @@ try
 
 
 	DisableAimHistoryButton();
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN ExitAimHistoryMenuBar(void);

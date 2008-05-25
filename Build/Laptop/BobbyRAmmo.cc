@@ -15,8 +15,7 @@ static SGPVObject* guiAmmoBackground;
 static SGPVObject* guiAmmoGrid;
 
 
-BOOLEAN EnterBobbyRAmmo()
-try
+void EnterBobbyRAmmo()
 {
 	// load the background graphic and add it
 	guiAmmoBackground = AddVideoObjectFromFile("LAPTOP/ammobackground.sti");
@@ -33,10 +32,7 @@ try
 	InitBobbyMenuBar( );
 
 	RenderBobbyRAmmo( );
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 void ExitBobbyRAmmo()

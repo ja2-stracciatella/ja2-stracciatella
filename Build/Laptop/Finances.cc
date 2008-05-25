@@ -141,7 +141,7 @@ static BUTTON_PICS* giFinanceButtonImage[4];
 
 // internal functions
 static void ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate);
-static BOOLEAN LoadFinances(void);
+static void LoadFinances(void);
 static void RemoveFinances(void);
 static void ClearFinanceList(void);
 static void DrawRecordsColumnHeadersText(void);
@@ -344,8 +344,7 @@ void RenderFinances(void)
 }
 
 
-static BOOLEAN LoadFinances(void)
-try
+static void LoadFinances(void)
 {
   // load Finance video objects into memory
 
@@ -363,10 +362,7 @@ try
 
   // black divider line - long ( 480 length)
 	guiLINE = AddVideoObjectFromFile("LAPTOP/divisionline.sti");
-
-	return (TRUE);
 }
-catch (...) { return FALSE; }
 
 
 static void RemoveFinances(void)

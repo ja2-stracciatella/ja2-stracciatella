@@ -61,19 +61,16 @@ const char *pbCarPortraitFileNames[] = {
 
 
 // load int he portraits for the car faces that will be use in mapscreen
-BOOLEAN LoadCarPortraitValues( void )
-try
+void LoadCarPortraitValues(void)
 {
 	INT32 iCounter = 0;
 
-	if (giCarPortraits[0]) return FALSE;
+	if (giCarPortraits[0]) return;
 	for( iCounter = 0; iCounter < NUMBER_CAR_PORTRAITS; iCounter++ )
 	{
 		giCarPortraits[iCounter] = AddVideoObjectFromFile(pbCarPortraitFileNames[iCounter]);
 	}
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 // get rid of the images we loaded for the mapscreen car portraits

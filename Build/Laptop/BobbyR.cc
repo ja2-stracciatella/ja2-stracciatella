@@ -165,8 +165,7 @@ static void HandleBobbyRUnderConstructionAni(BOOLEAN fReset);
 static BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegionPosArray, MOUSE_REGION* MouseRegion);
 
 
-BOOLEAN EnterBobbyR()
-try
+void EnterBobbyR()
 {
 	UINT8 i;
 
@@ -223,10 +222,7 @@ try
 	HandleBobbyRUnderConstructionAni( TRUE );
 
 	RenderBobbyR();
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION* Mouse_Region);
@@ -319,14 +315,11 @@ void RenderBobbyR()
 }
 
 
-BOOLEAN InitBobbyRWoodBackground()
-try
+void InitBobbyRWoodBackground()
 {
 	// load the Wood bacground graphic and add it
 	guiWoodBackground = AddVideoObjectFromFile("LAPTOP/BobbyWood.sti");
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN DeleteBobbyRWoodBackground()

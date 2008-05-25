@@ -296,8 +296,7 @@ void GameInitEmail()
 static void CreateMailScreenButtons(void);
 
 
-BOOLEAN EnterEmail()
-try
+void EnterEmail()
 {
   // load graphics
 
@@ -332,10 +331,7 @@ try
 
 	// render email background and text
 	RenderEmail();
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void AddDeleteRegionsToMessageRegion(INT32 iViewerY);

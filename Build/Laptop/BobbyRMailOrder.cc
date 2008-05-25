@@ -344,8 +344,7 @@ static void SelectConfirmOrderRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 static void SelectShippingSpeedRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN EnterBobbyRMailOrder()
-try
+void EnterBobbyRMailOrder()
 {
 	UINT16					i;
 
@@ -450,9 +449,7 @@ try
 	gfRemoveItemsFromStock = FALSE;
 
 	RenderBobbyRMailOrder();
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction);
@@ -2001,8 +1998,7 @@ static void BtnBobbyRGotoShipmentPageCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-BOOLEAN CreateBobbyRayOrderTitle()
-try
+void CreateBobbyRayOrderTitle()
 {
 		// load BobbyRayTitle graphic and add it
 	guiBobbyRayTitle = AddVideoObjectFromFile("LAPTOP/BobbyRayTitle.sti");
@@ -2010,10 +2006,7 @@ try
 	//the link to home page from the title
 	MSYS_DefineRegion( &gSelectedTitleLinkRegion, BOBBYR_BOBBY_RAY_TITLE_X, BOBBYR_BOBBY_RAY_TITLE_Y, (BOBBYR_BOBBY_RAY_TITLE_X + BOBBYR_BOBBY_RAY_TITLE_WIDTH), (UINT16)(BOBBYR_BOBBY_RAY_TITLE_Y + BOBBYR_BOBBY_RAY_TITLE_HEIGHT), MSYS_PRIORITY_HIGH,
 							 CURSOR_WWW, MSYS_NO_CALLBACK, SelectTitleLinkRegionCallBack);
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void DestroyBobbyROrderTitle()

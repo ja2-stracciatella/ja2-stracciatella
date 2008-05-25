@@ -225,7 +225,7 @@ UINT32	SaveLoadScreenInit()
 }
 
 
-static BOOLEAN EnterSaveLoadScreen(void);
+static void EnterSaveLoadScreen(void);
 static void ExitSaveLoadScreen(void);
 static void GetSaveLoadScreenUserInput(void);
 static void RenderSaveLoadScreen(void);
@@ -377,8 +377,7 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
 
 
-static BOOLEAN EnterSaveLoadScreen(void)
-try
+static void EnterSaveLoadScreen(void)
 {
 	INT8	i;
 	UINT16 usPosX = SLG_FIRST_SAVED_SPOT_X;
@@ -596,10 +595,7 @@ Removed so that the user can click on it and get displayed a message that the qu
 	}
 
 	gfGettingNameFromSaveLoadScreen = FALSE;
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void ExitSaveLoadScreen(void)

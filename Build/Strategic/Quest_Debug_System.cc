@@ -585,7 +585,7 @@ UINT32	QuestDebugScreenInit()
 
 
 static BOOLEAN CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* pString, TEXT_ENTRY_CALLBACK EntryCallBack);
-static BOOLEAN EnterQuestDebugSystem(void);
+static void EnterQuestDebugSystem(void);
 static void ExitQuestDebugSystem(void);
 static void GetUserInput(void);
 static void HandleQuestDebugSystem(void);
@@ -707,8 +707,7 @@ static void ScrollFactListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void ScrollQuestListRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static BOOLEAN EnterQuestDebugSystem(void)
-try
+static void EnterQuestDebugSystem(void)
 {
 	UINT8	i;
 	UINT16 usPosX, usPosY;
@@ -721,7 +720,7 @@ try
 	{
 		gfRedrawQuestDebugSystem = TRUE;
 		gfExitQdsDueToMessageBox = FALSE;
-		return( TRUE );
+		return;
 	}
 
 	MSYS_DefineRegion(&gQuestDebugSysScreenRegions, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
@@ -862,11 +861,7 @@ try
 
 		EnableQDSButtons();
 	}
-
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void);

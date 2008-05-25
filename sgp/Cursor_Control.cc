@@ -67,8 +67,7 @@ void InitCursorDatabase(CursorFileData* pCursorFileData, CursorData* pCursorData
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-static BOOLEAN LoadCursorData(UINT32 uiCursorIndex)
-try
+static void LoadCursorData(UINT32 uiCursorIndex)
 {
 	// Load cursor data will load all data required for the cursor specified by this index
 	CursorData* pCurData = &gpCursorDatabase[uiCursorIndex];
@@ -149,10 +148,7 @@ try
 			pCurImage->usPosY = pCurData->sOffsetY - pTrav->usHeight / 2;
 		}
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void UnLoadCursorData(UINT32 uiCursorIndex)

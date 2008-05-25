@@ -91,7 +91,7 @@ static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
 }
 
 
-static BOOLEAN InitFlowerButtons(void);
+static void InitFlowerButtons(void);
 
 
 BOOLEAN EnterFloristGallery()
@@ -211,8 +211,7 @@ static void BtnGalleryFlowerButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static BOOLEAN InitFlowerButtons(void)
-try
+static void InitFlowerButtons(void)
 {
 	UINT16 i,j, count;
 	UINT16 usPosY;
@@ -262,11 +261,7 @@ try
 		DisableButton( guiFloralGalleryButton[1] );
 	else
 		EnableButton( guiFloralGalleryButton[1] );
-
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 static void DeleteFlowerButtons(void)

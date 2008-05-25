@@ -17,7 +17,7 @@ void DrawItemUIBarEx(const OBJECTTYPE* pObject, UINT8 ubStatus, INT16 sXPos, INT
 void RenderSoldierFace(const SOLDIERTYPE* pSoldier, INT16 sFaceX, INT16 sFaceY);
 
 // load portraits for cars
-BOOLEAN LoadCarPortraitValues( void );
+void LoadCarPortraitValues(void);
 
 // get rid of the loaded portraits for cars
 void UnLoadCarPortraits( void );

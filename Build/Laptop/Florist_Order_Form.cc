@@ -270,8 +270,7 @@ static void SelectFloristGalleryLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 
 static void SelectFlorsitCheckBoxRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN EnterFloristOrderForm()
-try
+void EnterFloristOrderForm()
 {
 	InitFloristDefaults();
 
@@ -323,10 +322,7 @@ try
 	LaptopSaveInfo.uiFlowerOrderNumber += Random(5) + 1;
 
 	RenderFloristOrderForm();
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void InitFloristOrderFormVariables()

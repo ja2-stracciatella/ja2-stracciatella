@@ -305,8 +305,7 @@ static BOOLEAN HandleSpeckTalking(BOOLEAN fReset);
 static BOOLEAN ShouldSpeckSayAQuote(void);
 
 
-BOOLEAN EnterMercs()
-try
+void EnterMercs()
 {
 	SetBookMark( MERC_BOOKMARK );
 
@@ -393,10 +392,7 @@ try
 
 	//Since we are in the site, set the flag
 	gfInMercSite = TRUE;
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN InitDestroyXToCloseVideoWindow(BOOLEAN fCreate);
@@ -558,14 +554,11 @@ void RenderMercs()
 }
 
 
-BOOLEAN InitMercBackGround()
-try
+void InitMercBackGround()
 {
 	// load the Merc background graphic and add it
 	guiMercBackGround = AddVideoObjectFromFile("LAPTOP/MERCBackGround.sti");
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN DrawMecBackGround()

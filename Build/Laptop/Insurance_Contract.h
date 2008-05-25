@@ -4,7 +4,7 @@
 #include "JA2Types.h"
 
 
-BOOLEAN EnterInsuranceContract(void);
+void EnterInsuranceContract(void);
 void ExitInsuranceContract(void);
 void HandleInsuranceContract(void);
 void RenderInsuranceContract(void);

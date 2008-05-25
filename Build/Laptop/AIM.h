@@ -68,7 +68,7 @@ enum
 };
 
 void GameInitAIM(void);
-BOOLEAN EnterAIM(void);
+void EnterAIM(void);
 void ExitAIM(void);
 void HandleAIM(void);
 void RenderAIM(void);
@@ -77,7 +77,7 @@ BOOLEAN ExitAimMenuBar(void);
 BOOLEAN InitAimMenuBar(void);
 
 BOOLEAN RemoveAimDefaults(void);
-BOOLEAN InitAimDefaults(void);
+void    InitAimDefaults(void);
 BOOLEAN DrawAimDefaults(void);
 
 BOOLEAN DisplayAimSlogan(void);

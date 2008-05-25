@@ -279,8 +279,8 @@ static void CreateDestroyMouseRegionsForPersonnelPortraits(BOOLEAN create);
 static void CreateDestroyStartATMButton(BOOLEAN create);
 static void CreatePersonnelButtons(void);
 static void SelectFirstDisplayedMerc(void);
-static BOOLEAN LoadPersonnelGraphics(void);
-static BOOLEAN LoadPersonnelScreenBackgroundGraphics(void);
+static void LoadPersonnelGraphics(void);
+static void LoadPersonnelScreenBackgroundGraphics(void);
 static void SetPersonnelButtonStates(void);
 
 
@@ -372,8 +372,7 @@ void HandlePersonnel(void)
 }
 
 
-static BOOLEAN LoadPersonnelGraphics(void)
-try
+static void LoadPersonnelGraphics(void)
 {
 	// load graphics needed for personnel screen
 
@@ -384,10 +383,7 @@ try
 	guiSCREEN = AddVideoObjectFromFile("LAPTOP/personnelwindow.sti");
 
 	guiPersonnelInventory = AddVideoObjectFromFile("LAPTOP/personnel_inventory.sti");
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void RemovePersonnelGraphics(void)
@@ -897,8 +893,7 @@ static void RenderPersonnelScreenBackground(void)
 }
 
 
-static BOOLEAN LoadPersonnelScreenBackgroundGraphics(void)
-try
+static void LoadPersonnelScreenBackgroundGraphics(void)
 {
 	// will load the graphics for the personeel screen background
 
@@ -907,10 +902,7 @@ try
 
 	// current bar
 	guiCURRENTTEAM = AddVideoObjectFromFile("LAPTOP/CurrentTeam.sti");
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void DeletePersonnelScreenBackgroundGraphics(void)

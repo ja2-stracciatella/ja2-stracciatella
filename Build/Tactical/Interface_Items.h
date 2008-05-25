@@ -28,7 +28,7 @@ typedef struct
 
 
 // Itempickup stuff
-BOOLEAN InitializeItemPickupMenu( SOLDIERTYPE *pSoldier, INT16 sGridNo, ITEM_POOL *pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel );
+void InitializeItemPickupMenu(SOLDIERTYPE* pSoldier, INT16 sGridNo, ITEM_POOL* pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel);
 void RenderItemPickupMenu(void);
 void RemoveItemPickupMenu(void);
 void SetItemPickupMenuDirty( BOOLEAN fDirtyLevel );
@@ -37,7 +37,7 @@ void SetPickUpMenuDirtyLevel( BOOLEAN fDirtyLevel );
 
 
 // FUNCTIONS FOR INTERFACEING WITH ITEM PANEL STUFF
-BOOLEAN InitInvSlotInterface(const INV_REGION_DESC* pRegionDesc, const INV_REGION_DESC* pCamoRegion, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, MOUSE_CALLBACK INVMoveCamoCallback, MOUSE_CALLBACK INVClickCamoCallback);
+void InitInvSlotInterface(const INV_REGION_DESC* pRegionDesc, const INV_REGION_DESC* pCamoRegion, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, MOUSE_CALLBACK INVMoveCamoCallback, MOUSE_CALLBACK INVClickCamoCallback);
 void ShutdownInvSlotInterface(void);
 void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel);
 void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel );
@@ -75,12 +75,12 @@ void DeleteItemDescriptionBox(void);
 
 
 BOOLEAN InItemStackPopup(void);
-BOOLEAN InitItemStackPopup( SOLDIERTYPE *pSoldier, UINT8 ubPosition, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight );
+void    InitItemStackPopup(SOLDIERTYPE* pSoldier, UINT8 ubPosition, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight);
 void RenderItemStackPopup( BOOLEAN fFullRender );
 
 
 // keyring handlers
-BOOLEAN InitKeyRingPopup( SOLDIERTYPE *pSoldier, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight );
+void InitKeyRingPopup(SOLDIERTYPE* pSoldier, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight);
 void RenderKeyRingPopup( BOOLEAN fFullRender );
 void InitKeyRingInterface( MOUSE_CALLBACK KeyRingClickCallback );
 void InitMapKeyRingInterface( MOUSE_CALLBACK KeyRingClickCallback );

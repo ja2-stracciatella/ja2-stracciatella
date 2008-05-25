@@ -115,8 +115,7 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason);
 */
 
 
-BOOLEAN LoadMapBorderGraphics( void )
-try
+void LoadMapBorderGraphics(void)
 {
   // this procedure will load the graphics needed for the map border
 	guiMapBorder = AddVideoObjectFromFile(MAP_BORDER_FILE);
@@ -127,11 +126,7 @@ try
 
 	fCursorIsOnMapScrollButtons = FALSE;
 */
-
-
-	return ( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void DeleteMapBorderGraphics( void )
