@@ -1741,7 +1741,6 @@ void SetBookMark(INT32 iBookId)
 
 
 static void LoadBookmark(void)
-try
 {
 	// grab download bars too
 	guiDOWNLOADTOP = AddVideoObjectFromFile("LAPTOP/downloadtop.sti");
@@ -1750,7 +1749,6 @@ try
 	guiBOOKMARK    = AddVideoObjectFromFile("LAPTOP/webpages.sti");
 	guiBOOKHIGH    = AddVideoObjectFromFile("LAPTOP/hilite.sti");
 }
-catch (...) { /* XXX ignore */ }
 
 
 static void DisplayBookMarks(void)
@@ -1986,7 +1984,6 @@ static void BookmarkMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 
 static void LoadLoadPending(void)
-try
 {
 	// function will load the load pending graphics
 	// reuse bookmark
@@ -1994,7 +1991,6 @@ try
 	guiGRAPHWINDOW = AddVideoObjectFromFile("LAPTOP/graphwindow.sti");
 	guiGRAPHBAR    = AddVideoObjectFromFile("LAPTOP/graphsegment.sti");
 }
-catch (...) { /* XXX ignore */ }
 
 
 static INT32 WWaitDelayIncreasedIfRaining(INT32 iUnitTime);

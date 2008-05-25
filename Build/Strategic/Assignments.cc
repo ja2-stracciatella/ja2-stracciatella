@@ -5682,7 +5682,6 @@ void CreateMercRemoveAssignBox()
 
 
 void CreateDestroyAssignmentPopUpBoxes()
-try
 {
 	static BOOLEAN fCreated = FALSE;
 
@@ -5732,7 +5731,6 @@ try
 		fCreated          = FALSE;
 	}
 }
-catch (...) { /* XXX ignore */ }
 
 
 void DetermineBoxPositions()

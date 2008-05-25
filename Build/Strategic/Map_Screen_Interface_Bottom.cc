@@ -146,7 +146,6 @@ static void LoadMessageSliderBar(void);
 
 
 void HandleLoadOfMapBottomGraphics( void )
-try
 {
 	// will load the graphics needed for the mapscreen interface bottom
 	// will create buttons for interface bottom
@@ -155,7 +154,6 @@ try
 	// load slider bar icon
 	LoadMessageSliderBar( );
 }
-catch (...) { /* XXX ignore */ }
 
 
 static void CreateButtonsForMapScreenInterfaceBottom(void);
@@ -651,12 +649,10 @@ static void RemoveCompressModePause(void)
 
 
 static void LoadMessageSliderBar(void)
-try
 {
   // this function will load the message slider bar
 	guiSliderBar = AddVideoObjectFromFile("INTERFACE/map_screen_bottom_arrows.sti");
 }
-catch (...) { /* XXX ignore */ }
 
 
 static void DeleteMessageSliderBar(void)

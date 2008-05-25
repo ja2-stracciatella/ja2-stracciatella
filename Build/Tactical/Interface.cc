@@ -436,7 +436,6 @@ static void MovementMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 
 void PopupMovementMenu( UI_EVENT *pUIEvent )
-try
 {
 	INT32								iMenuAnchorX, iMenuAnchorY;
 	UINT32							uiActionImages;
@@ -599,7 +598,6 @@ try
 	// Ignore scrolling
 	gfIgnoreScrolling = TRUE;
 }
-catch (...) { /* XXX ignore */ }
 
 
 void PopDownMovementMenu( )
@@ -1634,7 +1632,6 @@ static void DoorMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
-try
 {
 	INT32 dx = gOpenDoorMenu.sX;
 	INT32 dy = gOpenDoorMenu.sY;
@@ -1674,7 +1671,6 @@ try
 	// Ignore scrolling
 	gfIgnoreScrolling = TRUE;
 }
-catch (...) { /* XXX ignore */ }
 
 
 void PopDownOpenDoorMenu( )

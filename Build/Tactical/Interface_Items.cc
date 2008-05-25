@@ -1906,7 +1906,6 @@ static BOOLEAN ReloadItemDesc(void);
 
 
 void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const INT16 sY, const UINT8 ubStatusIndex, SOLDIERTYPE* const s)
-try
 {
 	// Set the current screen
 	guiCurrentItemDescriptionScreen = guiCurrentScreen;
@@ -2108,7 +2107,6 @@ try
 		gfItemDescHelpTextOffset = TRUE;
 	}
 }
-catch (...) { /* XXX ignore */ }
 
 
 static BOOLEAN ReloadItemDesc(void)

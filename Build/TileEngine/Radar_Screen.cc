@@ -77,7 +77,6 @@ void InitRadarScreen()
 
 
 void LoadRadarScreenBitmap(const char* const filename)
-try
 {
 	ClearOutRadarMapImage();
 
@@ -98,7 +97,6 @@ try
 	// Dirty interface
 	fInterfacePanelDirty = TRUE;
 }
-catch (...) { /* XXX ignore */ }
 
 
 void ClearOutRadarMapImage( void )
