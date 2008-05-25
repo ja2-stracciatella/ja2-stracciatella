@@ -28,7 +28,7 @@ extern BOOLEAN gfStartMapScreenToLaptopTransition;
 
 // function prototypes
 
-BOOLEAN LoadMapScreenInterfaceBottom( void );
+void LoadMapScreenInterfaceBottom(void);
 void DeleteMapScreenInterfaceBottom( void );
 void RenderMapScreenInterfaceBottom( void );
 

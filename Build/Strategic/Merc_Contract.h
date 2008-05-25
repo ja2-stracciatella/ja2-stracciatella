@@ -53,8 +53,8 @@ enum
 
 BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction );
 
-BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier );
-BOOLEAN BeginStrategicRemoveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fAddRehireButton );
+void StrategicRemoveMerc(SOLDIERTYPE* pSoldier);
+void BeginStrategicRemoveMerc(SOLDIERTYPE* pSoldier, BOOLEAN fAddRehireButton);
 
 
 BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote );

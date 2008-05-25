@@ -7,14 +7,14 @@
 
 void    ExitLaptop(void);
 void    SetBookMark(INT32 iBookId);
-BOOLEAN LeaveLapTopScreen(void);
+void    LeaveLapTopScreen(void);
 void    SetLaptopExitScreen(UINT32 uiExitScreen);
 void    SetLaptopNewGameFlag(void);
 void    LapTopScreenCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 void    HandleRightButtonUpEvent(void);
 void    DoLapTopMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
 void    GoToWebPage(INT32 iPageId);
-BOOLEAN WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, const SGPVObject* background);
+void    WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, const SGPVObject* background);
 void    BlitTitleBarIcons(void);
 void    HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usKeyState);
 BOOLEAN RenderWWWProgramTitleBar(void);

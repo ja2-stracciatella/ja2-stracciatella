@@ -6,8 +6,6 @@
 void RenderBrokenLink(void);
 void HandleBrokenLink(void);
 void ExitBrokenLink(void);
-BOOLEAN EnterBrokenLink(void);
-
-
+void EnterBrokenLink(void);
 
 #endif

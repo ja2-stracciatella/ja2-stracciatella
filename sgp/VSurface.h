@@ -119,7 +119,7 @@ class SGPVSurface
 BOOLEAN InitializeVideoSurfaceManager(void);
 
 // Deletes any video Surface placed into list
-BOOLEAN ShutdownVideoSurfaceManager(void);
+void ShutdownVideoSurfaceManager(void);
 
 SGPVSurface* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth);
 SGPVSurface* AddVideoSurfaceFromFile(const char* Filename);

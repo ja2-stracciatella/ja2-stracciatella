@@ -699,13 +699,11 @@ static void GetRGBDistribution(void)
 }
 
 
-BOOLEAN GetPrimaryRGBDistributionMasks(UINT32 *RedBitMask, UINT32 *GreenBitMask, UINT32 *BlueBitMask)
+void GetPrimaryRGBDistributionMasks(UINT32* const  RedBitMask, UINT32* const GreenBitMask, UINT32* const BlueBitMask)
 {
 	*RedBitMask   = gusRedMask;
 	*GreenBitMask = gusGreenMask;
 	*BlueBitMask  = gusBlueMask;
-
-	return TRUE;
 }
 
 

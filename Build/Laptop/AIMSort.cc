@@ -196,7 +196,7 @@ void EnterAimSort()
 }
 
 
-static BOOLEAN SortMercArray(void);
+static void SortMercArray(void);
 
 
 void ExitAimSort()
@@ -381,11 +381,9 @@ static void DrawSelectLight(const UINT8 ubMode, const UINT8 ubImage)
 static INT32 QsortCompare(const void* pNum1, const void* pNum2);
 
 
-static BOOLEAN SortMercArray(void)
+static void SortMercArray(void)
 {
 	qsort(AimMercArray, MAX_NUMBER_MERCS, sizeof(UINT8), QsortCompare);
-
-	return(TRUE);
 }
 
 

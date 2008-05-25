@@ -658,7 +658,7 @@ static void ExitSaveLoadScreen(void)
 }
 
 
-static BOOLEAN DisplaySaveGameList(void);
+static void DisplaySaveGameList(void);
 
 
 static void RenderSaveLoadScreen(void)
@@ -972,7 +972,7 @@ static void InitSaveGameArray(void)
 }
 
 
-static BOOLEAN DisplaySaveGameList(void)
+static void DisplaySaveGameList(void)
 {
 	INT8	bLoop1;
 //	UINT16 usPosX = SLG_FIRST_SAVED_SPOT_X;
@@ -986,8 +986,6 @@ static BOOLEAN DisplaySaveGameList(void)
 
 		usPosY += SLG_GAP_BETWEEN_LOCATIONS;
 	}
-
-	return( TRUE );
 }
 
 

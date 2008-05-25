@@ -21,11 +21,11 @@
 #define		BROKEN_LINK__SITE_NOT_FOUND_Y			LAPTOP_SCREEN_UL_Y + 65
 
 
-BOOLEAN EnterBrokenLink()
+void EnterBrokenLink()
 {
 //	RenderBrokenLink();
-	return(TRUE);
 }
+
 
 void ExitBrokenLink()
 {

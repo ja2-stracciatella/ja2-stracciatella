@@ -182,9 +182,9 @@ static void BtnGameSaveTogglesCallback(GUI_BUTTON *btn, INT32 reason);
 
 
 static void EnterGIOScreen(void);
-static BOOLEAN ExitGIOScreen(void);
+static void ExitGIOScreen(void);
 static void HandleGIOScreen(void);
-static BOOLEAN RenderGIOScreen(void);
+static void RenderGIOScreen(void);
 static void GetGIOScreenUserInput(void);
 static void RestoreGIOButtonBackGrounds(void);
 static void DoneFadeOutForExitGameInitOptionScreen(void);
@@ -387,11 +387,11 @@ static void EnterGIOScreen(void)
 }
 
 
-static BOOLEAN ExitGIOScreen(void)
+static void ExitGIOScreen(void)
 {
 	UINT16	cnt;
 
-	if (!gfGIOButtonsAllocated) return TRUE;
+	if (!gfGIOButtonsAllocated) return;
 
 	//Delete the main options screen background
 	DeleteVideoObject(guiGIOMainBackGroundImage);
@@ -432,8 +432,6 @@ static BOOLEAN ExitGIOScreen(void)
 
 	gfGIOScreenExit = FALSE;
 	gfGIOScreenEntry = TRUE;
-
-	return TRUE;
 }
 
 
@@ -477,7 +475,7 @@ static void HandleGIOScreen(void)
 }
 
 
-static BOOLEAN RenderGIOScreen(void)
+static void RenderGIOScreen(void)
 {
 	UINT16		usPosY;
 
@@ -558,8 +556,6 @@ static BOOLEAN RenderGIOScreen(void)
 	//Display the text indicatting that the option is disabled for the demo
 	DisplayWrappedString(440, GIO_GUN_SETTINGS_Y - GIO_GAP_BN_SETTINGS, 150, 2, GIO_TOGGLE_TEXT_FONT, 162, str_disabled_for_the_demo, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 #endif
-
-	return TRUE;
 }
 
 

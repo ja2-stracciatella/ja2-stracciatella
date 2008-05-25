@@ -214,7 +214,7 @@ void SetFont(Font const font)
 }
 
 
-BOOLEAN SetFontDestBuffer(SGPVSurface* const dst, const INT32 x1, const INT32 y1, const INT32 x2, const INT32 y2)
+void SetFontDestBuffer(SGPVSurface* const dst, const INT32 x1, const INT32 y1, const INT32 x2, const INT32 y2)
 {
 	Assert(x2 > x1);
 	Assert(y2 > y1);
@@ -224,8 +224,6 @@ BOOLEAN SetFontDestBuffer(SGPVSurface* const dst, const INT32 x1, const INT32 y1
 	FontDestRegion.iTop    = y1;
 	FontDestRegion.iRight  = x2;
 	FontDestRegion.iBottom = y2;
-
-	return TRUE;
 }
 
 

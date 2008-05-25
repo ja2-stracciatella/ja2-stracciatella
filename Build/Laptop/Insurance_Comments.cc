@@ -83,7 +83,7 @@ void HandleInsuranceComments()
 }
 
 
-static BOOLEAN DisplayComment(UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY);
+static void DisplayComment(UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY);
 
 
 void RenderInsuranceComments()
@@ -169,7 +169,7 @@ static void SelectInsuranceCommentLinkRegionCallBack(MOUSE_REGION* pRegion, INT3
 }
 
 
-static BOOLEAN DisplayComment(UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY)
+static void DisplayComment(UINT8 ubCommentorsName, UINT8 ubComment, UINT16 usPosY)
 {
 	wchar_t		sText[800];
 	UINT16		sNumPixels=0;
@@ -188,6 +188,4 @@ static BOOLEAN DisplayComment(UINT8 ubCommentorsName, UINT8 ubComment, UINT16 us
 	//Display the commenters name
 	GetInsuranceText( ubCommentorsName, sText );
 	DrawTextToScreen(sText, INS_CMNT_FIRST_BULLET_X + INSURANCE_BULLET_TEXT_OFFSET_X, usPosY + sNumPixels, INS_CMNT_REDLINE_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
-
-	return( TRUE );
 }

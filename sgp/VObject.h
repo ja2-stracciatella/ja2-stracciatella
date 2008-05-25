@@ -83,7 +83,7 @@ ENUM_BITSET(SGPVObject::Flags)
 BOOLEAN InitializeVideoObjectManager(void);
 
 // Deletes any video object placed into list
-BOOLEAN ShutdownVideoObjectManager(void);
+void ShutdownVideoObjectManager(void);
 
 // Creates and adds a video object to list
 #ifdef SGP_VIDEO_DEBUGGING

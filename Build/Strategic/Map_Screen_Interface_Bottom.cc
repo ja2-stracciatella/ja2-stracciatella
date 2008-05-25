@@ -161,15 +161,13 @@ static void CreateCompressModePause(void);
 static void CreateMapScreenBottomMessageScrollBarRegion(void);
 
 
-BOOLEAN LoadMapScreenInterfaceBottom( void )
+void LoadMapScreenInterfaceBottom(void)
 {
 	CreateButtonsForMapScreenInterfaceBottom();
 	CreateMapScreenBottomMessageScrollBarRegion( );
 
 	// create pause region
 	CreateCompressModePause( );
-
-	return( TRUE );
 }
 
 

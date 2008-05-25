@@ -5,7 +5,7 @@
 BOOLEAN AddToUndoList( INT32 iMapIndex );
 void AddLightToUndoList(INT32 iMapIndex, INT32 iLightRadius);
 
-BOOLEAN RemoveAllFromUndoList(void);
+void    RemoveAllFromUndoList(void);
 BOOLEAN ExecuteUndoList(void);
 
 void EnableUndo(void);

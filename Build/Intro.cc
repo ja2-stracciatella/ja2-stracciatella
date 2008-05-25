@@ -100,7 +100,7 @@ UINT32	IntroScreenInit( void )
 }
 
 
-static BOOLEAN EnterIntroScreen(void);
+static void EnterIntroScreen(void);
 static void ExitIntroScreen(void);
 static void GetIntroScreenUserInput(void);
 static void HandleIntroScreen(void);
@@ -141,7 +141,7 @@ static void PrepareToExitIntroScreen(void);
 static void StartPlayingIntroFlic(INT32 iIndexOfFlicToPlay);
 
 
-static BOOLEAN EnterIntroScreen(void)
+static void EnterIntroScreen(void)
 {
 	INT32 iFirstVideoID = -1;
 
@@ -157,7 +157,7 @@ static BOOLEAN EnterIntroScreen(void)
 	if( FileExists( "../NoIntro.txt" ) )
 	{
 		PrepareToExitIntroScreen();
-		return( TRUE );
+		return;
 	}
 #endif
 
@@ -178,9 +178,6 @@ static BOOLEAN EnterIntroScreen(void)
 	{
 		PrepareToExitIntroScreen();
 	}
-
-
-	return( TRUE );
 }
 
 

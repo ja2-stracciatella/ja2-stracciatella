@@ -482,7 +482,7 @@ static void DisplayFilesList(void)
 }
 
 
-static BOOLEAN DisplayFormattedText(void);
+static void DisplayFormattedText(void);
 
 
 static void DisplayFileMessage(void)
@@ -563,7 +563,7 @@ static BOOLEAN HandleSpecialFiles(void);
 static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber);
 
 
-static BOOLEAN DisplayFormattedText(void)
+static void DisplayFormattedText(void)
 {
 	FilesUnit* pFilesList = pFilesListHead;
 
@@ -613,8 +613,6 @@ static BOOLEAN DisplayFormattedText(void)
 
 	HandleFileViewerButtonStates( );
 	SetFontShadow(DEFAULT_SHADOW);
-
-	return ( TRUE );
 }
 
 

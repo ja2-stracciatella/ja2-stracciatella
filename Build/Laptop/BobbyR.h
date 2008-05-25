@@ -23,8 +23,8 @@ void RenderBobbyR(void);
 extern	UINT32	guiLastBobbyRayPage;
 
 
-BOOLEAN DrawBobbyRWoodBackground(void);
-BOOLEAN DeleteBobbyRWoodBackground(void);
+void DrawBobbyRWoodBackground(void);
+void DeleteBobbyRWoodBackground(void);
 void InitBobbyRWoodBackground(void);
 void DailyUpdateOfBobbyRaysNewInventory(void);
 void DailyUpdateOfBobbyRaysUsedInventory(void);

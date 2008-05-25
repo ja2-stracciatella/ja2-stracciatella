@@ -89,7 +89,7 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 static BOOLEAN CloseLibrary(INT16 sLibraryID);
 
 
-BOOLEAN ShutDownFileDatabase( )
+void ShutDownFileDatabase()
 {
 	UINT16 sLoop1;
 
@@ -103,8 +103,6 @@ BOOLEAN ShutDownFileDatabase( )
 		MemFree( gFileDataBase.pLibraries );
 		gFileDataBase.pLibraries = NULL;
 	}
-
-	return( TRUE );
 }
 
 

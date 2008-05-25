@@ -584,7 +584,7 @@ UINT32	QuestDebugScreenInit()
 }
 
 
-static BOOLEAN CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* pString, TEXT_ENTRY_CALLBACK EntryCallBack);
+static void CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* pString, TEXT_ENTRY_CALLBACK EntryCallBack);
 static void EnterQuestDebugSystem(void);
 static void ExitQuestDebugSystem(void);
 static void GetUserInput(void);
@@ -2245,7 +2245,7 @@ static void DestroyQuestDebugTextInputBoxes(void);
 static void InitQuestDebugTextInputBoxes(void);
 
 
-static BOOLEAN CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* pString, TEXT_ENTRY_CALLBACK EntryCallBack)
+static void CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* pString, TEXT_ENTRY_CALLBACK EntryCallBack)
 {
 	static BOOLEAN	fMouseRegionCreated = FALSE;
 	static wchar_t	zString[ 256 ];
@@ -2347,8 +2347,6 @@ static BOOLEAN CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* p
 		}
 		break;
 	}
-
-	return( TRUE );
 }
 
 

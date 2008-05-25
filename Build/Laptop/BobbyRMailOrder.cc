@@ -452,7 +452,7 @@ void EnterBobbyRMailOrder()
 }
 
 
-static BOOLEAN CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction);
+static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction);
 static void RemovePurchasedItemsFromBobbyRayInventory(void);
 
 
@@ -552,7 +552,7 @@ void HandleBobbyRMailOrder()
 
 static void DisplayPackageWeight(void);
 static void DisplayShippingLocationCity(void);
-static BOOLEAN DrawShippingSpeedLights(UINT8 ubSelected);
+static void DrawShippingSpeedLights(UINT8 ubSelected);
 
 
 void RenderBobbyRMailOrder()
@@ -1009,9 +1009,8 @@ static void SelectShippingSpeedRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 }
 
 
-static BOOLEAN DrawShippingSpeedLights(UINT8 ubSelected)
+static void DrawShippingSpeedLights(UINT8 ubSelected)
 {
-
 	if(ubSelected == 0)
 		ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[0], gShippingSpeedAreas[1], gShippingSpeedAreas[0]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[1]+SHIPPING_SPEED_LIGHT_HEIGHT, Get16BPPColor( FROMRGB( 0, 255, 0 ) ) );
 	else
@@ -1028,7 +1027,6 @@ static BOOLEAN DrawShippingSpeedLights(UINT8 ubSelected)
 		ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[4], gShippingSpeedAreas[5], gShippingSpeedAreas[4]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[5]+SHIPPING_SPEED_LIGHT_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 
 	InvalidateRegion(585, 218, 594, 287);
-	return(TRUE);
 }
 
 
@@ -1073,7 +1071,7 @@ static void SelectScrollAreaDropDownRegionCallBack(MOUSE_REGION* pRegion, INT32 
 static void SelectUpDownArrowOnScrollAreaRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static BOOLEAN CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
+static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 {
 	static UINT16 usHeight;
 	static BOOLEAN fMouseRegionsCreated=FALSE;
@@ -1291,8 +1289,6 @@ static BOOLEAN CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 		}
 		break;
 	}
-
-	return(TRUE);
 }
 
 
@@ -1781,7 +1777,7 @@ static INT8 CalculateOrderDelay(UINT8 ubSelectedService)
 }
 
 
-static BOOLEAN AddNewBobbyRShipment(BobbyRayPurchaseStruct* pPurchaseStruct, UINT8 ubDeliveryLoc, UINT8 ubDeliveryMethod, BOOLEAN fPruchasedFromBobbyR, UINT32 uiPackageWeight);
+static void AddNewBobbyRShipment(BobbyRayPurchaseStruct* pPurchaseStruct, UINT8 ubDeliveryLoc, UINT8 ubDeliveryMethod, BOOLEAN fPruchasedFromBobbyR, UINT32 uiPackageWeight);
 
 
 static void PurchaseBobbyOrder(void)
@@ -2022,7 +2018,7 @@ void DrawBobbyROrderTitle()
 }
 
 
-static BOOLEAN AddNewBobbyRShipment(BobbyRayPurchaseStruct* pPurchaseStruct, UINT8 ubDeliveryLoc, UINT8 ubDeliveryMethod, BOOLEAN fPruchasedFromBobbyR, UINT32 uiPackageWeight)
+static void AddNewBobbyRShipment(BobbyRayPurchaseStruct* pPurchaseStruct, UINT8 ubDeliveryLoc, UINT8 ubDeliveryMethod, BOOLEAN fPruchasedFromBobbyR, UINT32 uiPackageWeight)
 {
 	INT32	iCnt;
 	INT32	iFoundSpot = -1;
@@ -2106,9 +2102,8 @@ static BOOLEAN AddNewBobbyRShipment(BobbyRayPurchaseStruct* pPurchaseStruct, UIN
 
 	//AddStrategicEvent( EVENT_BOBBYRAY_PURCHASE, uiResetTimeSec, cnt);
 	AddFutureDayStrategicEvent( EVENT_BOBBYRAY_PURCHASE, (8 + Random(4) ) * 60, iFoundSpot, bDaysAhead );
-
-	return( TRUE );
 }
+
 
 UINT16	CountNumberOfBobbyPurchasesThatAreInTransit()
 {

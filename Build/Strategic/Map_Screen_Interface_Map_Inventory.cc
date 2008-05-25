@@ -1020,7 +1020,7 @@ static BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYP
 }
 
 
-BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
+void AutoPlaceObjectInInventoryStash(OBJECTTYPE* pItemPtr)
 {
 	UINT8 ubNumberToDrop, ubSlotLimit, ubLoop;
 	OBJECTTYPE *pInventorySlot;
@@ -1056,8 +1056,6 @@ BOOLEAN AutoPlaceObjectInInventoryStash( OBJECTTYPE *pItemPtr )
 
 	// remove a like number of objects from pObj
 	RemoveObjs( pItemPtr, ubNumberToDrop );
-
-	return( TRUE );
 }
 
 

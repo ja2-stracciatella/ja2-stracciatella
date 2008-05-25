@@ -20,8 +20,6 @@
 void EnterAimFacialIndex(void);
 void ExitAimFacialIndex(void);
 void HandleAimFacialIndex(void);
-BOOLEAN RenderAimFacialIndex(void);
-
-BOOLEAN DisplayAimFIMugShot(void);
+void RenderAimFacialIndex(void);
 
 #endif

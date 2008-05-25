@@ -451,7 +451,7 @@ static void BtnContactButtonCallback( GUI_BUTTON* btn, INT32 reason);
 static void BtnNextButtonCallback(    GUI_BUTTON* btn, INT32 reason);
 static void BtnPreviousButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static BOOLEAN InitDeleteVideoConferencePopUp(void);
-static BOOLEAN InitVideoFace(UINT8 ubMercID);
+static void InitVideoFace(UINT8 ubMercID);
 static void SelectFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectShutUpMercRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
@@ -602,7 +602,7 @@ void ExitAIMMembers()
 
 static void DelayMercSpeech(UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, BOOLEAN fNewQuote, BOOLEAN fReset);
 static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(const FACETYPE*);
-static BOOLEAN HandleCurrentVideoConfMode(void);
+static void HandleCurrentVideoConfMode(void);
 static void HandleMercAttitude(void);
 static void HandleVideoDistortion(void);
 static void StopMercTalking(void);
@@ -699,23 +699,22 @@ void HandleAIMMembers()
   MarkButtonsDirty( );
 }
 
-BOOLEAN RenderAIMMembersTopLevel()
+
+void RenderAIMMembersTopLevel()
 {
 	InitCreateDeleteAimPopUpBox( AIM_POPUP_DISPLAY, NULL, NULL, 0, 0, 0);
-
-	return(TRUE);
 }
 
 
 static void DisplayAimMemberClickOnFaceHelpText(void);
 static void DisplayMercStats(void);
 static void DisplayMercsFace(void);
-static BOOLEAN DisplayMercsInventory(UINT8 ubMercID);
+static void DisplayMercsInventory(UINT8 ubMercID);
 static BOOLEAN DisplayVideoConferencingDisplay(void);
-static BOOLEAN UpdateMercInfo(void);
+static void UpdateMercInfo(void);
 
 
-BOOLEAN RenderAIMMembers()
+void RenderAIMMembers()
 {
 	UINT16		x, uiPosX;
 	wchar_t		wTemp[50];
@@ -797,26 +796,22 @@ BOOLEAN RenderAIMMembers()
 	RenderWWWProgramTitleBar( );
 	DisplayProgramBoundingBox( TRUE );
 	fReDrawScreenFlag = TRUE;
-
-	return(TRUE);
 }
 
 
-BOOLEAN DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, Font const font, UINT8 ubColor)
+void DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, Font const font, UINT8 ubColor)
 {
 	wchar_t		sStr[10];
 	swprintf(sStr, lengthof(sStr), L"%d", iNumber);
 	DrawTextToScreen(sStr, usLocX, usLocY, bWidth, font, ubColor, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
-	return(TRUE);
 }
 
 
-static BOOLEAN DrawMoneyToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, Font const font, UINT8 ubColor)
+static void DrawMoneyToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, Font const font, UINT8 ubColor)
 {
 	wchar_t		sStr[10];
 	SPrintMoney(sStr, iNumber);
 	DrawTextToScreen(sStr, usLocX, usLocY, bWidth, font, ubColor, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
-	return(TRUE);
 }
 
 
@@ -856,7 +851,7 @@ static void SelectFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 static BOOLEAN LoadMercBioInfo(UINT8 ubIndex, wchar_t* pInfoString, wchar_t* pAddInfo);
 
 
-static BOOLEAN UpdateMercInfo(void)
+static void UpdateMercInfo(void)
 {
 	//Display the salaries
 	DrawMoneyToScreen(gMercProfiles[gbCurrentSoldier].sSalary, FEE_WIDTH, FEE_X, HEALTH_Y, AIM_M_NUMBER_FONT, AIM_M_COLOR_DYNAMIC_TEXT	);
@@ -893,8 +888,6 @@ static BOOLEAN UpdateMercInfo(void)
 		DrawTextToScreen(CharacterInfo[AIM_MEMBER_ADDTNL_INFO], AIM_MERC_ADD_X, AIM_MERC_ADD_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		DisplayWrappedString(AIM_MERC_ADD_INFO_X, AIM_MERC_ADD_INFO_Y, AIM_MERC_INFO_WIDTH, 2, AIM_M_FONT_DYNAMIC_TEXT, AIM_FONT_MCOLOR_WHITE, AdditionalInfoString, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
-
-	return(TRUE);
 }
 
 
@@ -907,13 +900,12 @@ static BOOLEAN LoadMercBioInfo(const UINT8 ubIndex, wchar_t* const pInfoString, 
 }
 
 
-static BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
+static void DisplayMercsInventory(UINT8 ubMercID)
 {
 	UINT8				ubItemCount=0;
 
 	//if the mercs inventory has already been purchased, dont display the inventory
-	if( gMercProfiles[ ubMercID ].ubMiscFlags & PROFILE_MISC_FLAG_ALREADY_USED_ITEMS )
-		return( TRUE );
+	if (gMercProfiles[ubMercID].ubMiscFlags & PROFILE_MISC_FLAG_ALREADY_USED_ITEMS) return;
 
 	INT16 PosY = WEAPONBOX_Y;
 	INT16 PosX = WEAPONBOX_X + 3; // + 3 (1 to take care of the shadow, +2 to get past the weapon box border)
@@ -966,8 +958,6 @@ static BOOLEAN DisplayMercsInventory(UINT8 ubMercID)
 			PosX += WEAPONBOX_SIZE_X;
 		}
 	}
-
-	return(TRUE);
 }
 
 
@@ -1183,7 +1173,7 @@ static void BtnBuyEquipmentButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 static INT8 AimMemberHireMerc(void);
 static BOOLEAN CanMercBeHired(void);
-static BOOLEAN EnableDisableCurrentVideoConferenceButtons(BOOLEAN fEnable);
+static void EnableDisableCurrentVideoConferenceButtons(BOOLEAN fEnable);
 
 
 //Transfer funds button callback
@@ -1337,7 +1327,7 @@ static INT8 AimMemberHireMerc(void)
 }
 
 
-static BOOLEAN DisplayMercsVideoFace(void);
+static void DisplayMercsVideoFace(void);
 
 
 static BOOLEAN DisplayVideoConferencingDisplay(void)
@@ -1397,7 +1387,7 @@ static BOOLEAN DisplayVideoConferencingDisplay(void)
 }
 
 
-static BOOLEAN DisplayMercsVideoFace(void)
+static void DisplayMercsVideoFace(void)
 {
 	ETRLEObject const* const e = guiVideoConfTerminal->SubregionProperties(0);
 	const INT32 x = AIM_MEMBER_VIDEO_CONF_TERMINAL_X;
@@ -1414,8 +1404,6 @@ static BOOLEAN DisplayMercsVideoFace(void)
 	//Display the Select light on the merc
 	if(gubVideoConferencingMode == AIM_VIDEO_HIRE_MERC_MODE)
 		DisplaySelectLights(FALSE, FALSE);
-
-	return(TRUE);
 }
 
 
@@ -1757,7 +1745,7 @@ static void BtnHangUpButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 
 // InitVideoFace() is called once to initialize things
-static BOOLEAN InitVideoFace(UINT8 ubMercID)
+static void InitVideoFace(UINT8 ubMercID)
 {
 	//Create the facial index
 	giMercFaceIndex = InitFace(ubMercID, NULL, 0);
@@ -1771,8 +1759,6 @@ static BOOLEAN InitVideoFace(UINT8 ubMercID)
 	gfVideoFaceActive = TRUE;
 
 	guiMercAttitudeTime = GetJA2Clock();
-
-	return(TRUE);
 }
 
 
@@ -2850,7 +2836,7 @@ static BOOLEAN DeleteVideoConfPopUp(void)
 static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward);
 
 
-static BOOLEAN HandleCurrentVideoConfMode(void)
+static void HandleCurrentVideoConfMode(void)
 {
 	switch(	gubVideoConferencingMode )
 	{
@@ -2949,12 +2935,10 @@ static BOOLEAN HandleCurrentVideoConfMode(void)
 
 	//Gets set in the InitDeleteVideoConferencePopUp() function
 //	gfJustSwitchedVideoConferenceMode = FALSE;
-
-	return(TRUE);
 }
 
 
-static BOOLEAN EnableDisableCurrentVideoConferenceButtons(BOOLEAN fEnable)
+static void EnableDisableCurrentVideoConferenceButtons(BOOLEAN fEnable)
 {
 	INT8	i;
 	static BOOLEAN fCreated = FALSE;
@@ -2994,7 +2978,6 @@ static BOOLEAN EnableDisableCurrentVideoConferenceButtons(BOOLEAN fEnable)
 			fCreated = TRUE;
 		}
 	}
-	return(TRUE);
 }
 
 

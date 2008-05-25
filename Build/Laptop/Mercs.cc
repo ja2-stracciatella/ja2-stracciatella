@@ -395,7 +395,7 @@ void EnterMercs()
 }
 
 
-static BOOLEAN InitDestroyXToCloseVideoWindow(BOOLEAN fCreate);
+static void InitDestroyXToCloseVideoWindow(BOOLEAN fCreate);
 static void RemoveSpeckPopupTextBox(void);
 static void StopSpeckFromTalking(void);
 
@@ -561,17 +561,15 @@ void InitMercBackGround()
 }
 
 
-BOOLEAN DrawMecBackGround()
+void DrawMecBackGround()
 {
 	WebPageTileBackground(4, 4, MERC_BACKGROUND_WIDTH, MERC_BACKGROUND_HEIGHT, guiMercBackGround);
-	return(TRUE);
 }
 
 
-BOOLEAN RemoveMercBackGround()
+void RemoveMercBackGround()
 {
 	DeleteVideoObject(guiMercBackGround);
-	return(TRUE);
 }
 
 
@@ -1161,7 +1159,7 @@ static BOOLEAN DistortVideoMercImage(UINT16 usPosX, UINT16 usPosY, UINT16 usWidt
 }
 
 
-static BOOLEAN InitDestroyXToCloseVideoWindow(BOOLEAN fCreate)
+static void InitDestroyXToCloseVideoWindow(BOOLEAN fCreate)
 {
 	static BOOLEAN fButtonCreated=FALSE;
 
@@ -1180,8 +1178,6 @@ static BOOLEAN InitDestroyXToCloseVideoWindow(BOOLEAN fCreate)
 		RemoveButton( guiXToCloseMercVideoButton );
 		fButtonCreated = FALSE;
 	}
-
-	return(TRUE);
 }
 
 

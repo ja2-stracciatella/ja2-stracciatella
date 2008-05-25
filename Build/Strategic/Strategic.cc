@@ -19,7 +19,7 @@ StrategicMapElement StrategicMap[MAP_WORLD_X*MAP_WORLD_Y];
 static void HandleSoldierDeadComments(SOLDIERTYPE* pSoldier);
 
 
-BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
+void HandleStrategicDeath(SOLDIERTYPE* pSoldier)
 {
 	// add the guy to the dead list
 	//AddCharacterToDeadList( pSoldier );
@@ -80,8 +80,6 @@ BOOLEAN HandleStrategicDeath( SOLDIERTYPE *pSoldier )
 
 		StopTimeCompression();
 	}
-
-	return( TRUE );
 }
 
 

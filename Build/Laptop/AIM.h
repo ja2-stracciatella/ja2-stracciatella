@@ -76,12 +76,12 @@ void RenderAIM(void);
 void ExitAimMenuBar(void);
 void InitAimMenuBar(void);
 
-BOOLEAN RemoveAimDefaults(void);
-void    InitAimDefaults(void);
-BOOLEAN DrawAimDefaults(void);
+void RemoveAimDefaults(void);
+void InitAimDefaults(void);
+void DrawAimDefaults(void);
 
-BOOLEAN DisplayAimSlogan(void);
-BOOLEAN DisplayAimCopyright(void);
+void DisplayAimSlogan(void);
+void DisplayAimCopyright(void);
 
 void DisableAimButton(void);
 

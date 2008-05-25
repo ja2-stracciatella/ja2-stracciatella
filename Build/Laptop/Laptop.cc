@@ -1424,7 +1424,7 @@ static void BtnOnCallback(GUI_BUTTON *btn, INT32 reason)
 static BOOLEAN ExitLaptopDone(void);
 
 
-BOOLEAN LeaveLapTopScreen(void)
+void LeaveLapTopScreen(void)
 {
 	if (ExitLaptopDone())
 	{
@@ -1438,7 +1438,7 @@ BOOLEAN LeaveLapTopScreen(void)
 				fExitingLaptopFlag = TRUE;
 				InitNewGame(FALSE);
 				gfDontStartTransitionFromLaptop = TRUE;
-				return TRUE;
+				return;
 			}
 		}
 		else
@@ -1547,7 +1547,6 @@ BOOLEAN LeaveLapTopScreen(void)
 			}
 		}
 	}
-	return TRUE;
 }
 
 
@@ -2307,7 +2306,7 @@ void DoLapTopSystemMessageBox(const UINT8 ubStyle, const wchar_t* const zString,
 
 
 //places a tileable pattern down
-BOOLEAN WebPageTileBackground(const UINT8 ubNumX, const UINT8 ubNumY, const UINT16 usWidth, const UINT16 usHeight, const SGPVObject* const background)
+void WebPageTileBackground(const UINT8 ubNumX, const UINT8 ubNumY, const UINT16 usWidth, const UINT16 usHeight, const SGPVObject* const background)
 {
 	UINT16 uiPosY = LAPTOP_SCREEN_WEB_UL_Y;
 	for (UINT16 y = 0; y < ubNumY; ++y)
@@ -2320,7 +2319,6 @@ BOOLEAN WebPageTileBackground(const UINT8 ubNumX, const UINT8 ubNumY, const UINT
 		}
 		uiPosY += usHeight;
 	}
-	return TRUE;
 }
 
 

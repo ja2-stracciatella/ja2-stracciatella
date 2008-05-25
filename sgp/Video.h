@@ -18,7 +18,7 @@ void         InvalidateScreen(void);
 SDL_Surface* GetBackBufferObject(void);
 SDL_Surface* GetFrameBufferObject(void);
 SDL_Surface* GetMouseBufferObject(void);
-BOOLEAN      GetPrimaryRGBDistributionMasks(UINT32* RedBitMask, UINT32* GreenBitMask, UINT32* BlueBitMask);
+void         GetPrimaryRGBDistributionMasks(UINT32* RedBitMask, UINT32* GreenBitMask, UINT32* BlueBitMask);
 void         EndFrameBufferRender(void);
 void         PrintScreen(void);
 

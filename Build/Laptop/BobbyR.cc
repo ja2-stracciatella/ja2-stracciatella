@@ -162,7 +162,7 @@ MOUSE_REGION    gSelectedBobbiesSignMenuRegion[ BOBBIES_NUMBER_SIGNS ];
 
 
 static void HandleBobbyRUnderConstructionAni(BOOLEAN fReset);
-static BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegionPosArray, MOUSE_REGION* MouseRegion);
+static void InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegionPosArray, MOUSE_REGION* MouseRegion);
 
 
 void EnterBobbyR()
@@ -225,7 +225,7 @@ void EnterBobbyR()
 }
 
 
-static BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION* Mouse_Region);
+static void RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION* Mouse_Region);
 
 
 void ExitBobbyR()
@@ -322,14 +322,13 @@ void InitBobbyRWoodBackground()
 }
 
 
-BOOLEAN DeleteBobbyRWoodBackground()
+void DeleteBobbyRWoodBackground()
 {
 	DeleteVideoObject(guiWoodBackground);
-	return(TRUE);
 }
 
 
-BOOLEAN DrawBobbyRWoodBackground()
+void DrawBobbyRWoodBackground()
 {
 	UINT16	x,y, uiPosX, uiPosY;
 
@@ -344,15 +343,13 @@ BOOLEAN DrawBobbyRWoodBackground()
 		}
 		uiPosY += BOBBY_WOOD_BACKGROUND_HEIGHT;
 	}
-
-	return(TRUE);
 }
 
 
 static void SelectBobbiesSignMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegionPosArray, MOUSE_REGION* MouseRegion)
+static void InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegionPosArray, MOUSE_REGION* MouseRegion)
 {
 	UINT8 i,ubCount=0;
 
@@ -365,20 +362,15 @@ static BOOLEAN InitBobbiesMouseRegion(UINT8 ubNumerRegions, UINT16* usMouseRegio
 
 		ubCount +=4;
 	}
-
-
-	return(TRUE);
 }
 
 
-static BOOLEAN RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION* Mouse_Region)
+static void RemoveBobbiesMouseRegion(UINT8 ubNumberRegions, MOUSE_REGION* Mouse_Region)
 {
 	UINT8 i;
 
 	for(i=0; i<ubNumberRegions; i++)
 		MSYS_RemoveRegion( &Mouse_Region[i]);
-
-	return(TRUE);
 }
 
 
@@ -433,8 +425,8 @@ static void HandleBobbyRUnderConstructionAni(BOOLEAN fReset)
 }
 
 
-static BOOLEAN InitBobbyRayNewInventory(void);
-static BOOLEAN InitBobbyRayUsedInventory(void);
+static void InitBobbyRayNewInventory(void);
+static void InitBobbyRayUsedInventory(void);
 
 
 void InitBobbyRayInventory()
@@ -453,7 +445,7 @@ void InitBobbyRayInventory()
 }
 
 
-static BOOLEAN InitBobbyRayNewInventory(void)
+static void InitBobbyRayNewInventory(void)
 {
 	UINT16	i;
 	UINT16	usBobbyrIndex = 0;
@@ -483,12 +475,10 @@ static BOOLEAN InitBobbyRayNewInventory(void)
 	LaptopSaveInfo.usInventoryListLength[ BOBBY_RAY_NEW ] = usBobbyrIndex;
 	// also mark the end of the list of valid item entries
 	LaptopSaveInfo.BobbyRayInventory[ usBobbyrIndex ].usItemIndex = BOBBYR_NO_ITEMS;
-
-	return(TRUE);
 }
 
 
-static BOOLEAN InitBobbyRayUsedInventory(void)
+static void InitBobbyRayUsedInventory(void)
 {
 	UINT16	i;
 	UINT16	usBobbyrIndex = 0;
@@ -522,8 +512,6 @@ static BOOLEAN InitBobbyRayUsedInventory(void)
 	LaptopSaveInfo.usInventoryListLength[BOBBY_RAY_USED] = usBobbyrIndex;
 	// also mark the end of the list of valid item entries
 	LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyrIndex ].usItemIndex = BOBBYR_NO_ITEMS;
-
-	return(TRUE);
 }
 
 

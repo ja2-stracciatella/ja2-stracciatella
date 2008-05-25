@@ -174,7 +174,7 @@ BOOLEAN InitializeVideoObjectManager(void)
 }
 
 
-BOOLEAN ShutdownVideoObjectManager(void)
+void ShutdownVideoObjectManager(void)
 {
 	while (gpVObjectHead != NULL)
 	{
@@ -190,7 +190,6 @@ BOOLEAN ShutdownVideoObjectManager(void)
 	gpVObjectHead = NULL;
 	gpVObjectTail = NULL;
 	guiVObjectSize = 0;
-	return TRUE;
 }
 
 

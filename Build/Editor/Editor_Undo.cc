@@ -400,18 +400,16 @@ static BOOLEAN AddToUndoListCmd(INT32 iMapIndex, INT32 iCmdCount)
 }
 
 
-BOOLEAN RemoveAllFromUndoList( void )
+void RemoveAllFromUndoList(void)
 {
 	ClearUndoMapIndexTree();
 
 	while ( gpTileUndoStack != NULL )
 		DeleteTopStackNode();
-
-	return( TRUE );
 }
 
 
-static BOOLEAN SwapMapElementWithWorld(INT32 iMapIndex, MAP_ELEMENT* pUndoMapElement);
+static void SwapMapElementWithWorld(INT32 iMapIndex, MAP_ELEMENT* pUndoMapElement);
 
 
 BOOLEAN ExecuteUndoList( void )
@@ -780,7 +778,7 @@ static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIn
 }
 
 
-static BOOLEAN SwapMapElementWithWorld(INT32 iMapIndex, MAP_ELEMENT* pUndoMapElement)
+static void SwapMapElementWithWorld(INT32 const iMapIndex, MAP_ELEMENT* const pUndoMapElement)
 {
 	MAP_ELEMENT			*pCurrentMapElement;
 	MAP_ELEMENT			TempMapElement;
@@ -797,9 +795,8 @@ static BOOLEAN SwapMapElementWithWorld(INT32 iMapIndex, MAP_ELEMENT* pUndoMapEle
 	TempMapElement = *pCurrentMapElement;
 	*pCurrentMapElement = *pUndoMapElement;
 	*pUndoMapElement = TempMapElement;
-
-	return ( TRUE );
 }
+
 
 void DetermineUndoState()
 {

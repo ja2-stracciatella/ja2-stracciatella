@@ -242,7 +242,7 @@ static void BtnTownCallback(GUI_BUTTON* btn, INT32 reason);
 static void InitializeMapBorderButtonStates(void);
 
 
-BOOLEAN CreateButtonsForMapBorder( void )
+void CreateButtonsForMapBorder(void)
 {
 	// will create the buttons needed for the map screen border region
 #if 0
@@ -279,8 +279,6 @@ BOOLEAN CreateButtonsForMapBorder( void )
 //	SetButtonCursor(guiMapBorderLandRaiseButtons[ 1 ], MSYS_NO_CURSOR );
 
 	InitializeMapBorderButtonStates( );
-
-	return( TRUE );
 }
 
 

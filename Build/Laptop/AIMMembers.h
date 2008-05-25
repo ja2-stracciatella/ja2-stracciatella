@@ -4,14 +4,14 @@
 void EnterAIMMembers(void);
 void ExitAIMMembers(void);
 void HandleAIMMembers(void);
-BOOLEAN RenderAIMMembers(void);
+void RenderAIMMembers(void);
 
 
-BOOLEAN DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, Font, UINT8 ubColor);
+void DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, Font, UINT8 ubColor);
 
 void DisplayTextForMercFaceVideoPopUp(const wchar_t* pString);
 void EnterInitAimMembers(void);
-BOOLEAN RenderAIMMembersTopLevel(void);
+void RenderAIMMembersTopLevel(void);
 void ResetMercAnnoyanceAtPlayer( UINT8 ubMercID );
 void DisableNewMailMessage(void);
 void DisplayPopUpBoxExplainingMercArrivalLocationAndTime(void);

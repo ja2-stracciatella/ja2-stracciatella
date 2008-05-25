@@ -402,16 +402,15 @@ void InitAimDefaults()
 }
 
 
-BOOLEAN RemoveAimDefaults()
+void RemoveAimDefaults()
 {
 	DeleteVideoObject(guiRustBackGround);
 	DeleteVideoObject(guiAimSymbol);
   MSYS_RemoveRegion( &gSelectedAimLogo);
-
-	return(TRUE);
 }
 
-BOOLEAN DrawAimDefaults()
+
+void DrawAimDefaults()
 {
 	UINT16	x,y, uiPosX, uiPosY;
 
@@ -428,8 +427,6 @@ BOOLEAN DrawAimDefaults()
 	}
 
 	BltVideoObject(FRAME_BUFFER, guiAimSymbol, 0, AIM_SYMBOL_X, AIM_SYMBOL_Y);
-
-	return(TRUE);
 }
 
 
@@ -448,19 +445,16 @@ static void LoadAIMText(wchar_t buf[], UINT32 entry)
 }
 
 
-BOOLEAN DisplayAimSlogan()
+void DisplayAimSlogan()
 {
 	wchar_t	sSlogan[AIM_HISTORY_LINE_SIZE];
 	LoadAIMText(sSlogan, 0);
 	//Display Aim Text under the logo
 	DisplayWrappedString(AIM_LOGO_TEXT_X, AIM_LOGO_TEXT_Y, AIM_LOGO_TEXT_WIDTH, 2, AIM_LOGO_FONT, AIM_FONT_MCOLOR_WHITE, sSlogan, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-
-	return(TRUE);
 }
 
 
-
-BOOLEAN DisplayAimCopyright()
+void DisplayAimCopyright()
 {
 	wchar_t	sSlogan[AIM_HISTORY_LINE_SIZE];
 
@@ -474,8 +468,6 @@ BOOLEAN DisplayAimCopyright()
 
 	LoadAIMText(sSlogan, AIM_COPYRIGHT_3);
 	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y + AIM_COPYRIGHT_GAP * 2, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-
-	return(TRUE);
 }
 
 

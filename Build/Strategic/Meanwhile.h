@@ -41,7 +41,7 @@ CASSERT(sizeof(MEANWHILE_DEFINITION) == 8)
 
 void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime );
 
-BOOLEAN BeginMeanwhile( UINT8 ubMeanwhileID );
+void BeginMeanwhile(UINT8 ubMeanwhileID);
 
 void CheckForMeanwhileOKStart(void);
 void EndMeanwhile(void);

@@ -111,7 +111,7 @@ BOOLEAN InitializeVideoSurfaceManager(void)
 }
 
 
-BOOLEAN ShutdownVideoSurfaceManager(void)
+void ShutdownVideoSurfaceManager(void)
 {
   DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_0, "Shutting down the Video Surface manager");
 
@@ -134,7 +134,6 @@ BOOLEAN ShutdownVideoSurfaceManager(void)
 #ifdef SGP_VIDEO_DEBUGGING
 	guiVSurfaceSize = 0;
 #endif
-	return TRUE;
 }
 
 

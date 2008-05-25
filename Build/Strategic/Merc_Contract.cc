@@ -700,7 +700,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 
 
 //for ubRemoveType pass in the enum from the .h, 	( MERC_QUIT, MERC_FIRED  )
-BOOLEAN BeginStrategicRemoveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fAddRehireButton )
+void BeginStrategicRemoveMerc(SOLDIERTYPE* pSoldier, BOOLEAN fAddRehireButton)
 {
 	InterruptTime( );
 	PauseGame();
@@ -718,15 +718,13 @@ BOOLEAN BeginStrategicRemoveMerc( SOLDIERTYPE *pSoldier, BOOLEAN fAddRehireButto
   {
 	  NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( pSoldier, fAddRehireButton );
   }
-
-	return( TRUE );
 }
 
 
 static void CalculateMedicalDepositRefund(SOLDIERTYPE* pSoldier);
 
 
-BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
+void StrategicRemoveMerc(SOLDIERTYPE* pSoldier)
 {
 	UINT8	ubHistoryCode=0;
 
@@ -847,8 +845,6 @@ BOOLEAN StrategicRemoveMerc( SOLDIERTYPE *pSoldier )
 
   // ATE: update team panels....
   UpdateTeamPanelAssignments( );
-
-	return( TRUE );
 }
 
 

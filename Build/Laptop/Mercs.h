@@ -58,9 +58,9 @@ void HandleMercs(void);
 void RenderMercs(void);
 
 
-void    InitMercBackGround(void);
-BOOLEAN DrawMecBackGround(void);
-BOOLEAN RemoveMercBackGround(void);
+void InitMercBackGround(void);
+void DrawMecBackGround(void);
+void RemoveMercBackGround(void);
 void DailyUpdateOfMercSite( UINT16 usDate);
 UINT8 GetMercIDFromMERCArray(UINT8 ubMercID);
 void DisplayTextForSpeckVideoPopUp(const wchar_t* pString);

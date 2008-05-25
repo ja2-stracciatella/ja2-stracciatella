@@ -151,7 +151,7 @@ static void BtnFinanceDisplayPrevPageCallBack(GUI_BUTTON *btn, INT32 reason);
 static void CreateFinanceButtons(void);
 static void DestroyFinanceButtons(void);
 static void GetBalanceFromDisk(void);
-static BOOLEAN WriteBalanceToDisk(void);
+static void WriteBalanceToDisk(void);
 static void AppendFinanceToEndOfFile(void);
 static void SetLastPageInRecords(void);
 static BOOLEAN LoadInRecords(UINT32 uiPage);
@@ -925,12 +925,11 @@ static void DisplayFinancePageNumberAndDateRange(void)
 }
 
 
-static BOOLEAN WriteBalanceToDisk(void)
+static void WriteBalanceToDisk(void)
 {
 	// will write the current balance to disk
 	AutoSGPFile hFileHandle(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS));
 	FileWrite(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
-  return TRUE;
 }
 
 

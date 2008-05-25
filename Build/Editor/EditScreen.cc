@@ -212,7 +212,7 @@ void EditScreenShutdown(void)
 
 
 //	Editor's Init code. Called each time we enter edit mode from the game.
-static BOOLEAN EditModeInit(void)
+static void EditModeInit(void)
 {
 	UINT32 x;
 
@@ -368,8 +368,6 @@ static BOOLEAN EditModeInit(void)
 	gfIntendOnEnteringEditor = FALSE;
 
 	DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Finished entering editor mode...");
-
-	return(TRUE);
 }
 
 

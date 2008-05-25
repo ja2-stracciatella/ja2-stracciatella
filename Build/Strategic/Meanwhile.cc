@@ -303,7 +303,7 @@ void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime 
 }
 
 
-BOOLEAN BeginMeanwhile( UINT8 ubMeanwhileID )
+void BeginMeanwhile(UINT8 ubMeanwhileID)
 {
 	INT32 cnt;
 
@@ -320,8 +320,6 @@ BOOLEAN BeginMeanwhile( UINT8 ubMeanwhileID )
 	{
 		gNPCSaveData[ cnt ].ubProfile = NO_PROFILE;
 	}
-
-	return( TRUE );
 }
 
 

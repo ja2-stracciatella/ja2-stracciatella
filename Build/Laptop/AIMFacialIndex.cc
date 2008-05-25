@@ -136,7 +136,7 @@ void HandleAimFacialIndex()
 static void DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, UINT8 ubImage);
 
 
-BOOLEAN RenderAimFacialIndex()
+void RenderAimFacialIndex()
 {
 	UINT16		usPosX, usPosY, x,y;
 	wchar_t		sString[150];
@@ -186,7 +186,6 @@ BOOLEAN RenderAimFacialIndex()
   RenderWWWProgramTitleBar( );
 
 	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
-	return(TRUE);
 }
 
 

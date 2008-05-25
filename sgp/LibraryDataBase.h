@@ -52,7 +52,7 @@ typedef struct LibraryFile
 
 
 BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount);
-BOOLEAN ShutDownFileDatabase(void);
+void    ShutDownFileDatabase(void);
 BOOLEAN CheckIfFileExistInLibrary(const char *pFileName);
 
 BOOLEAN OpenFileFromLibrary(const char* filename, LibraryFile*);

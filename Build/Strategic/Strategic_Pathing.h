@@ -64,7 +64,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( UINT8 ubGrou
 BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY );
 
 /*
-BOOLEAN MoveGroupToOriginalSector( UINT8 ubGroupID );
+void MoveGroupToOriginalSector(UINT8 ubGroupID);
 */
 
 

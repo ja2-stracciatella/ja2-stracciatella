@@ -629,7 +629,7 @@ static void HandleHelpScreen(void)
 
 
 static void DisplayCurrentScreenTitleAndFooter(void);
-static BOOLEAN DrawHelpScreenBackGround(void);
+static void DrawHelpScreenBackGround(void);
 static void RenderTextBufferToScreen(void);
 
 
@@ -744,7 +744,7 @@ static void ExitHelpScreen(void)
 }
 
 
-static BOOLEAN DrawHelpScreenBackGround(void)
+static void DrawHelpScreenBackGround(void)
 {
 	UINT16 usPosX;
 
@@ -760,8 +760,6 @@ static BOOLEAN DrawHelpScreenBackGround(void)
   BltVideoObject(FRAME_BUFFER, guiHelpScreenBackGround, HLP_SCRN_DEFAULT_TYPE, usPosX, gHelpScreen.usScreenLocY);
 
   InvalidateRegion( gHelpScreen.usScreenLocX, gHelpScreen.usScreenLocY, gHelpScreen.usScreenLocX+gHelpScreen.usScreenWidth, gHelpScreen.usScreenLocY + gHelpScreen.usScreenHeight );
-
-	return( TRUE );
 }
 
 

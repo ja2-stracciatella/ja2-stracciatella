@@ -521,7 +521,7 @@ static void LoadEMailText(wchar_t buf[], UINT32 entry)
 
 
 static void AddMessageToPages(Email* Mail);
-static BOOLEAN ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, const Email* pMail);
+static void ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, const Email* pMail);
 
 
 void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 iFirstData, UINT32 uiSecondData)
@@ -951,7 +951,7 @@ static Record* GetFirstRecordOnThisPage(Record* const RecordList, INT32 const iP
 
 
 static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY);
-static BOOLEAN DisplayNumberOfPagesToThisEmail(INT32 iViewerY);
+static void DisplayNumberOfPagesToThisEmail(INT32 iViewerY);
 static void DrawEmailMessageDisplayTitleText(INT32 iViewerY);
 static void HandleAnySpecialEmailMessageEvents(INT32 iMessageId);
 static void HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail);
@@ -2378,7 +2378,7 @@ static void OpenMostRecentUnreadEmail(void)
 }
 
 
-static BOOLEAN DisplayNumberOfPagesToThisEmail(INT32 iViewerY)
+static void DisplayNumberOfPagesToThisEmail(INT32 iViewerY)
 {
 	// display the indent for the display of pages to this email..along with the current page/number of pages
 	INT16 sX = 0, sY = 0;
@@ -2404,8 +2404,6 @@ static BOOLEAN DisplayNumberOfPagesToThisEmail(INT32 iViewerY)
 
 	// restore shadows
 	SetFontShadow( DEFAULT_SHADOW );
-
-	return ( TRUE );
 }
 
 
@@ -2682,7 +2680,7 @@ static void ModifyInsuranceEmails(UINT16 usMessageId, Email* pMail, UINT8 ubNumb
 }
 
 
-static BOOLEAN ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, const Email* pMail)
+static void ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, const Email* pMail)
 {
 	const wchar_t* const sMercName = L"$MERCNAME$"; //Doesnt need to be translated, inside Email.txt and will be replaced by the mercs name
 	const wchar_t* const sAmount = L"$AMOUN$"; //Doesnt need to be translated, inside Email.txt and will be replaced by a dollar amount
@@ -2775,9 +2773,8 @@ static BOOLEAN ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, 
 			iCurLocInSourceString += wcslen( &pTempString[ iCurLocInSourceString ] );
 		}
 	}
-
-	return( TRUE );
 }
+
 
 #ifdef JA2BETAVERSION
 void AddAllEmails()
