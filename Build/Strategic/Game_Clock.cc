@@ -874,7 +874,7 @@ void CreateMouseRegionForPauseOfClock(void)
 		fClockMouseRegionCreated = TRUE;
 
 		wchar_t const* const help = gfGamePaused ?
-			pPausedGameText[2] : pPausedGameText[1];
+			pPausedGameText[1] : pPausedGameText[2];
 		gClockMouseRegion.SetFastHelpText(help);
 	}
 }
