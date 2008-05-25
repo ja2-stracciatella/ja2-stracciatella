@@ -605,9 +605,9 @@ static void SetupGameTypeFlags(void)
 
 static void RemoveGameTypeFlags(void)
 {
-	if (giBothCheckboxButton      != -1) RemoveButton(giBothCheckboxButton);
-	if (giRealisticCheckboxButton != -1) RemoveButton(giRealisticCheckboxButton);
-	if (giSciFiCheckboxButton     != -1) RemoveButton(giSciFiCheckboxButton);
+	if (giBothCheckboxButton)      RemoveButton(giBothCheckboxButton);
+	if (giRealisticCheckboxButton) RemoveButton(giRealisticCheckboxButton);
+	if (giSciFiCheckboxButton)     RemoveButton(giSciFiCheckboxButton);
 }
 
 
@@ -628,12 +628,12 @@ static GUIButtonRef MakeAttachmentButton(const UINT16 attachment, BOOLEAN& attac
 static void ToggleAttachment(GUI_BUTTON* btn, INT32 reason);
 
 
-static INT32 MakeWeaponAttachmentButton(const UINT btn_idx, const UINT16 attachment, const INT16 y, const wchar_t* const label)
+static bool MakeWeaponAttachmentButton(const UINT btn_idx, const UINT16 attachment, const INT16 y, const wchar_t* const label)
 {
 	gfAttachment[btn_idx] = FALSE;
 	GUIButtonRef const btn = MakeAttachmentButton(attachment, gfAttachment[btn_idx], 570, y, 60, label, ToggleAttachment);
 	guiAttachmentButton[btn_idx] = btn;
-	return btn != BUTTON_NO_SLOT;
+	return btn;
 }
 
 
@@ -673,7 +673,7 @@ static void RemoveGunGUI(void)
 	INT32 i;
 	for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
 	{
-		if (guiAttachmentButton[i] != -1) RemoveButton(guiAttachmentButton[i]);
+		if (guiAttachmentButton[i]) RemoveButton(guiAttachmentButton[i]);
 	}
 }
 
@@ -782,7 +782,7 @@ static void SetupArmourGUI(void)
 
 static void RemoveArmourGUI(void)
 {
-	if (guiCeramicPlatesButton != -1) RemoveButton(guiCeramicPlatesButton);
+	if (guiCeramicPlatesButton) RemoveButton(guiCeramicPlatesButton);
 }
 
 
@@ -888,7 +888,7 @@ static void SetupExplosivesGUI(void)
 
 static void RemoveExplosivesGUI(void)
 {
-	if (guiDetonatorButton != -1) RemoveButton(guiDetonatorButton);
+	if (guiDetonatorButton) RemoveButton(guiDetonatorButton);
 }
 
 
@@ -1013,7 +1013,7 @@ static void ExtractAndUpdateOwnershipGUI(void)
 
 static void RemoveOwnershipGUI(void)
 {
-	if (giOwnershipGroupButton != -1) RemoveButton(giOwnershipGroupButton);
+	if (giOwnershipGroupButton) RemoveButton(giOwnershipGroupButton);
 }
 
 
@@ -1094,7 +1094,7 @@ static void ExtractAndUpdateActionItemsGUI(void)
 
 static void RemoveActionItemsGUI(void)
 {
-	if (guiActionItemButton != -1) RemoveButton(guiActionItemButton);
+	if (guiActionItemButton) RemoveButton(guiActionItemButton);
 }
 
 
@@ -1161,7 +1161,7 @@ static void RemoveTriggersGUI(void)
 {
 	if (gpEditingItemPool && gpItem->bFrequency >= PANIC_FREQUENCY_3)
 	{
-		if (giAlarmTriggerButton != -1) RemoveButton(giAlarmTriggerButton);
+		if (giAlarmTriggerButton) RemoveButton(giAlarmTriggerButton);
 	}
 }
 
@@ -1186,7 +1186,7 @@ static void ToggleAttachment(GUI_BUTTON* btn, INT32 reason)
 
 				default: abort(); // HACK000E
 			}
-			if( guiAttachmentButton[ i ] != -1 && btn == ButtonList[ guiAttachmentButton[ i ] ] )
+			if (btn == guiAttachmentButton[i])
 			{	//Found it, now check the state of the button.
 				if( !gfAttachment[ i ] )
 				{
@@ -1442,7 +1442,8 @@ static void ReEvaluateAttachmentStatii(void)
 	INT32 i;
 	for( i = 0; i < NUM_ATTACHMENT_BUTTONS; i++ )
 	{
-		if (guiAttachmentButton[i] != -1 && !(guiAttachmentButton[i]->uiFlags & BUTTON_CLICKED_ON))
+		GUIButtonRef const b = guiAttachmentButton[i];
+		if (b && !(b->uiFlags & BUTTON_CLICKED_ON))
 		{ //if button exists and button isn't clicked
 			UINT16 usAttachment; // XXX HACK000E
 			switch( i )
@@ -1457,9 +1458,9 @@ static void ReEvaluateAttachmentStatii(void)
 				default: abort(); // HACK000E
 			}
 			if( ValidItemAttachment( gpItem, usAttachment, TRUE ) )
-				EnableButton( guiAttachmentButton[ i ] );
+				EnableButton(b);
 			else
-				DisableButton( guiAttachmentButton[ i ] );
+				DisableButton(b);
 		}
 	}
 }

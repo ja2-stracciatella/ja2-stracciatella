@@ -346,7 +346,7 @@ void CreateSummaryWindow()
 
 void AutoLoadMap()
 {
-	SummaryLoadMapCallback( ButtonList[ iSummaryButton[ SUMMARY_LOAD ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+	SummaryLoadMapCallback(iSummaryButton[SUMMARY_LOAD], MSYS_CALLBACK_REASON_LBUTTON_UP);
 	if( gfWorldLoaded )
 		DestroySummaryWindow();
 	gfAutoLoadA9 = FALSE;
@@ -1918,7 +1918,7 @@ static void SummaryToggleLevelCallback(GUI_BUTTON* btn, INT32 reason)
 		gfRenderSummary = TRUE;
 		for( i = SUMMARY_ALL; i <= SUMMARY_B3; i++ )
 		{
-			if( btn->IDNum == iSummaryButton[ i ] )
+			if (btn == iSummaryButton[i])
 			{
 				switch( i )
 				{
@@ -2549,7 +2549,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	{	//Don't have one, so generate them
 		if( gpCurrentSectorSummary->ubSummaryVersion == GLOBAL_SUMMARY_VERSION )
 			gusNumEntriesWithOutdatedOrNoSummaryInfo++;
-		SummaryUpdateCallback( ButtonList[ iSummaryButton[ SUMMARY_UPDATE ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+		SummaryUpdateCallback(iSummaryButton[SUMMARY_UPDATE], MSYS_CALLBACK_REASON_LBUTTON_UP);
 		gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ giCurrLevel ];
 	}
 	//Open the original map for the sector

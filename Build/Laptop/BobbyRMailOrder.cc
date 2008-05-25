@@ -1378,7 +1378,7 @@ static void DrawSelectedCity(UINT8 ubCityNumber)
 
 	DisplayShippingLocationCity();
 
-	if( guiBobbyRAcceptOrder != -1 )
+	if (guiBobbyRAcceptOrder)
 	{
 		//if there is anything to buy, dont disable the accept button
 		if( IsAnythingPurchasedFromBobbyRayPage() && gbSelectedCity != -1 )

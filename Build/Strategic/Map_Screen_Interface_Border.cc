@@ -1374,14 +1374,8 @@ static void MapBorderButtonOff(UINT8 ubBorderButtonIndex)
 	}
 
 	// if button doesn't exist, return
-	if ( giMapBorderButtons[ ubBorderButtonIndex ] == -1 )
-	{
-		return;
-	}
-
-	Assert( giMapBorderButtons[ ubBorderButtonIndex ] < MAX_BUTTONS );
-
-	giMapBorderButtons[ubBorderButtonIndex]->uiFlags &= ~BUTTON_CLICKED_ON;
+	GUIButtonRef const b = giMapBorderButtons[ubBorderButtonIndex];
+	if (b) b->uiFlags &= ~BUTTON_CLICKED_ON;
 }
 
 
@@ -1394,13 +1388,6 @@ static void MapBorderButtonOn(UINT8 ubBorderButtonIndex)
 		return;
 	}
 
-	// if button doesn't exist, return
-	if ( giMapBorderButtons[ ubBorderButtonIndex ] == -1 )
-	{
-		return;
-	}
-
-	Assert( giMapBorderButtons[ ubBorderButtonIndex ] < MAX_BUTTONS );
-
-	giMapBorderButtons[ubBorderButtonIndex]->uiFlags |= BUTTON_CLICKED_ON;
+	GUIButtonRef const b = giMapBorderButtons[ubBorderButtonIndex];
+	if (b) b->uiFlags |= BUTTON_CLICKED_ON;
 }

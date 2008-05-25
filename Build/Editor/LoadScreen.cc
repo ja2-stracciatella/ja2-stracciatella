@@ -526,10 +526,7 @@ static void RemoveFileDialog(void)
 		RemoveButton(iFileDlgButtons[x]);
 	}
 
-	if( iFileDlgButtons[6] != -1 )
-	{
-		RemoveButton( iFileDlgButtons[6] );
-	}
+	if (iFileDlgButtons[6]) RemoveButton(iFileDlgButtons[6]);
 
 	TrashFDlgList( FileList );
 	FileList = NULL;
@@ -564,10 +561,7 @@ static void DrawFileDialog(void)
 	SetFontBackground( FONT_BLACK );
 	MPrint(183, 217, L"Filename");
 
-	if( iFileDlgButtons[6] != -1 )
-	{
-		MPrint(200, 231, L"Update world info");
-	}
+	if (iFileDlgButtons[6]) MPrint(200, 231, L"Update world info");
 }
 
 

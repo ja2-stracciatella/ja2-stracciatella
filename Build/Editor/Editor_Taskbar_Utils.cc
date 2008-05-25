@@ -489,28 +489,18 @@ void DrawEditorInfoBox(const wchar_t* str, Font const font, UINT16 x, UINT16 y, 
 
 void ClickEditorButton( INT32 iEditorButtonID )
 {
-	GUI_BUTTON *butn;
 	if ( iEditorButtonID < 0 || iEditorButtonID >= NUMBER_EDITOR_BUTTONS )
 		return;
-	if ( iEditorButton[ iEditorButtonID ] != -1 )
-	{
-		butn = ButtonList[ iEditorButton[ iEditorButtonID ] ];
-		if( butn )
-			butn->uiFlags |= BUTTON_CLICKED_ON;
-	}
+	GUIButtonRef const b = iEditorButton[iEditorButtonID];
+	if (b) b->uiFlags |= BUTTON_CLICKED_ON;
 }
 
 void UnclickEditorButton( INT32 iEditorButtonID )
 {
-	GUI_BUTTON *butn;
 	if ( iEditorButtonID < 0 || iEditorButtonID >= NUMBER_EDITOR_BUTTONS )
 		return;
-	if ( iEditorButton[ iEditorButtonID ] != -1 )
-	{
-		butn = ButtonList[ iEditorButton[ iEditorButtonID ] ];
-		if( butn )
-			butn->uiFlags &= (~BUTTON_CLICKED_ON);
-	}
+	GUIButtonRef const b = iEditorButton[iEditorButtonID];
+	if (b) b->uiFlags &= ~BUTTON_CLICKED_ON;
 }
 
 void HideEditorButton( INT32 iEditorButtonID )
@@ -537,11 +527,9 @@ void EnableEditorButton( INT32 iEditorButtonID )
 void UnclickEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID )
 {
 	INT32 i;
-	GUI_BUTTON *b;
 	for( i = iFirstEditorButtonID; i <= iLastEditorButtonID; i++ )
 	{
-		Assert( iEditorButton[ i ] != -1 );
-		b = ButtonList[ iEditorButton[ i ] ];
+		GUIButtonRef const b = iEditorButton[i];
 		Assert( b );
 		b->uiFlags &= (~BUTTON_CLICKED_ON);
 	}

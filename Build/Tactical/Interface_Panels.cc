@@ -636,8 +636,8 @@ static void UpdateSMPanel(void)
 	if ( gfUIStanceDifferent )
 	{
 		//Remove old
-		if (giSMStealthButton != -1)   RemoveButton(giSMStealthButton);
-		if (giSMStealthImages != NULL) UnloadButtonImage(giSMStealthImages);
+		if (giSMStealthButton) RemoveButton(giSMStealthButton);
+		if (giSMStealthImages) UnloadButtonImage(giSMStealthImages);
 
 		// Make new
 		if (!gpSMCurrentMerc->bStealthMode) stance_gfx += 3;
@@ -739,10 +739,7 @@ static void UpdateSMPanel(void)
 		DisableButton( iSMPanelButtons[ LOOK_BUTTON ] );
 		DisableButton( iSMPanelButtons[ UPDOWN_BUTTON ] );
 		DisableButton( iSMPanelButtons[ HANDCURSOR_BUTTON ] );
-		if ( giSMStealthButton != -1 )
-		{
-				DisableButton( giSMStealthButton );
-		}
+		if (giSMStealthButton) DisableButton(giSMStealthButton);
 	}
 	else
 	{
@@ -759,10 +756,7 @@ static void UpdateSMPanel(void)
 		EnableButton( iSMPanelButtons[ UPDOWN_BUTTON ] );
 		EnableButton( iSMPanelButtons[ HANDCURSOR_BUTTON ] );
 
-		if ( giSMStealthButton != -1 )
-		{
-				EnableButton( giSMStealthButton );
-		}
+		if (giSMStealthButton) EnableButton(giSMStealthButton);
 	}
 
 	// CJC Dec 4 2002: or if item pickup menu is up
@@ -886,10 +880,7 @@ void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup)
 				EnableButton( iSMPanelButtons[ LOOK_BUTTON ] );
 				EnableButton( iSMPanelButtons[ UPDOWN_BUTTON ] );
 				EnableButton( iSMPanelButtons[ HANDCURSOR_BUTTON ] );
-				if ( giSMStealthButton != -1 )
-				{
-					EnableButton( giSMStealthButton );
-				}
+				if (giSMStealthButton) EnableButton(giSMStealthButton);
 
 				if ( gfDisableTacticalPanelButtons )
 				{
@@ -928,10 +919,7 @@ void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup)
 			DisableButton( iSMPanelButtons[ LOOK_BUTTON ] );
 			DisableButton( iSMPanelButtons[ UPDOWN_BUTTON ] );
 			DisableButton( iSMPanelButtons[ HANDCURSOR_BUTTON ] );
-			if ( giSMStealthButton != -1 )
-			{
-					DisableButton( giSMStealthButton );
-			}
+			if (giSMStealthButton) DisableButton(giSMStealthButton);
 
 			if ( !fFromItemPickup )
 			{
@@ -1039,7 +1027,7 @@ static BOOLEAN MakeButtonN(const UINT idx, BUTTON_PICS* const image, const INT16
 {
 	GUIButtonRef const btn = QuickCreateButtonToggle(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iSMPanelButtons[idx] = btn;
-	if (btn == -1)
+	if (!btn)
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
 		return FALSE;
@@ -1053,7 +1041,7 @@ static BOOLEAN MakeButtonT(const UINT idx, BUTTON_PICS* const image, const INT16
 {
 	GUIButtonRef const btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iSMPanelButtons[idx] = btn;
-	if (btn == -1)
+	if (!btn)
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
 		return FALSE;
@@ -1147,7 +1135,7 @@ void RemoveSMPanelButtons(void)
 {
 	for (UINT32 cnt = 0; cnt < NUM_SM_BUTTONS; ++cnt)
 	{
-		if (iSMPanelButtons[cnt] != -1) RemoveButton(iSMPanelButtons[cnt]);
+		if (iSMPanelButtons[cnt]) RemoveButton(iSMPanelButtons[cnt]);
 	}
 
 	for (UINT32 cnt = 0; cnt < NUM_SM_BUTTON_IMAGES; ++cnt)
@@ -1155,8 +1143,8 @@ void RemoveSMPanelButtons(void)
 		UnloadButtonImage(iSMPanelImages[cnt]);
 	}
 
-	if (giSMStealthButton != -1)   RemoveButton(giSMStealthButton);
-	if (giSMStealthImages != NULL) UnloadButtonImage(giSMStealthImages);
+	if (giSMStealthButton) RemoveButton(giSMStealthButton);
+	if (giSMStealthImages) UnloadButtonImage(giSMStealthImages);
 
 	UnloadButtonImage(iBurstButtonImages[WM_NORMAL]);
 	UnloadButtonImage(iBurstButtonImages[WM_BURST]);
@@ -2673,7 +2661,7 @@ static BOOLEAN MakeButtonTeam(const UINT idx, BUTTON_PICS* const image, const IN
 {
 	GUIButtonRef const btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iTEAMPanelButtons[idx] = btn;
-	if (btn == BUTTON_NO_SLOT)
+	if (!btn)
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
 		return FALSE;

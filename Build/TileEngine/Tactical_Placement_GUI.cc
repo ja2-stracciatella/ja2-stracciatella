@@ -571,13 +571,13 @@ void TacticalPlacementHandle()
 					}
 					break;
 				case 'c':
-					ClearPlacementsCallback( ButtonList[ iTPButtons[ CLEAR_BUTTON ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+					ClearPlacementsCallback(iTPButtons[CLEAR_BUTTON], MSYS_CALLBACK_REASON_LBUTTON_UP);
 					break;
 				case 'g':
-					GroupPlacementsCallback( ButtonList[ iTPButtons[ GROUP_BUTTON ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+					GroupPlacementsCallback(iTPButtons[GROUP_BUTTON], MSYS_CALLBACK_REASON_LBUTTON_UP);
 					break;
 				case 's':
-					SpreadPlacementsCallback( ButtonList[ iTPButtons[ SPREAD_BUTTON ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+					SpreadPlacementsCallback(iTPButtons[SPREAD_BUTTON], MSYS_CALLBACK_REASON_LBUTTON_UP);
 					break;
 				case 'x':
 					if( InputEvent.usKeyState & ALT_DOWN )

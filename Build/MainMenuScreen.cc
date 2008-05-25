@@ -356,9 +356,10 @@ static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 			const UINT16       w   = GetDimensionsOfButtonPic(img)->w;
 			const INT16        x   = (SCREEN_WIDTH - w) / 2;
 			const INT16        y   = MAINMENU_Y + cnt * MAINMENU_Y_SPACE;
-			iMenuButtons[cnt] = QuickCreateButton(img, x, y, MSYS_PRIORITY_HIGHEST, MenuButtonCallback);
-			if (iMenuButtons[cnt] == BUTTON_NO_SLOT) return FALSE;
-			MSYS_SetBtnUserData(iMenuButtons[cnt], cnt);
+			GUIButtonRef const b = QuickCreateButton(img, x, y, MSYS_PRIORITY_HIGHEST, MenuButtonCallback);
+			iMenuButtons[cnt] = b;
+			if (!b) return FALSE;
+			MSYS_SetBtnUserData(b, cnt);
 		}
 
 		fButtonsCreated = TRUE;

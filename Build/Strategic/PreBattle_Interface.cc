@@ -548,18 +548,9 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	fShowAssignmentMenu = FALSE;
 	fShowContractMenu = FALSE;
 	DisableTeamInfoPanels();
-	if( ButtonList[ giMapContractButton ] )
-	{
-		HideButton( giMapContractButton );
-	}
-	if( ButtonList[ giCharInfoButton[ 0 ] ] )
-	{
-		HideButton( giCharInfoButton[ 0 ] );
-	}
-	if( ButtonList[ giCharInfoButton[ 1 ] ] )
-	{
-		HideButton( giCharInfoButton[ 1 ] );
-	}
+	if (giMapContractButton) HideButton(giMapContractButton);
+	if (giCharInfoButton[0]) HideButton(giCharInfoButton[0]);
+	if (giCharInfoButton[1]) HideButton(giCharInfoButton[1]);
 
 	if( gubEnemyEncounterCode == ENEMY_ENCOUNTER_CODE )
 	{ //we know how many enemies are here, so until we leave the sector, we will continue to display the value.
@@ -808,18 +799,9 @@ void KillPreBattleInterface()
 	ColorFillVideoSurfaceArea( guiSAVEBUFFER, 0, 0, 261, 359, 0 );
 
 	EnableTeamInfoPanels();
-	if( ButtonList[ giMapContractButton ] )
-	{
-		ShowButton( giMapContractButton );
-	}
-	if( ButtonList[ giCharInfoButton[ 0 ] ] )
-	{
-		ShowButton( giCharInfoButton[ 0 ] );
-	}
-	if( ButtonList[ giCharInfoButton[ 1 ] ] )
-	{
-		ShowButton( giCharInfoButton[ 1 ] );
-	}
+	if (giMapContractButton) ShowButton(giMapContractButton);
+	if (giCharInfoButton[0]) ShowButton(giCharInfoButton[0]);
+	if (giCharInfoButton[1]) ShowButton(giCharInfoButton[1]);
 }
 
 
@@ -1380,7 +1362,7 @@ void ActivatePreBattleAutoresolveAction()
 {
 	if (iPBButton[0]->uiFlags & BUTTON_ENABLED)
 	{ //Feign call the autoresolve button using the callback
-		AutoResolveBattleCallback( ButtonList[ iPBButton[0] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+		AutoResolveBattleCallback(iPBButton[0], MSYS_CALLBACK_REASON_LBUTTON_UP);
 	}
 }
 
@@ -1388,7 +1370,7 @@ void ActivatePreBattleEnterSectorAction()
 {
 	if (iPBButton[1]->uiFlags & BUTTON_ENABLED)
 	{ //Feign call the enter sector button using the callback
-		GoToSectorCallback( ButtonList[ iPBButton[1] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+		GoToSectorCallback(iPBButton[1], MSYS_CALLBACK_REASON_LBUTTON_UP);
 	}
 }
 
@@ -1396,7 +1378,7 @@ void ActivatePreBattleRetreatAction()
 {
 	if (iPBButton[2]->uiFlags & BUTTON_ENABLED)
 	{ //Feign call the retreat button using the callback
-		RetreatMercsCallback( ButtonList[ iPBButton[2] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+		RetreatMercsCallback(iPBButton[2], MSYS_CALLBACK_REASON_LBUTTON_UP);
 	}
 }
 
@@ -1405,7 +1387,7 @@ static void ActivateAutomaticAutoResolveStart()
 {
 	iPBButton[0]->uiFlags |= BUTTON_CLICKED_ON;
 	gfIgnoreAllInput = FALSE;
-	AutoResolveBattleCallback( ButtonList[ iPBButton[0] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+	AutoResolveBattleCallback(iPBButton[0], MSYS_CALLBACK_REASON_LBUTTON_UP);
 }
 
 

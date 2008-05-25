@@ -949,7 +949,7 @@ static void EasyCallback(GUI_BUTTON* btn, INT32 reason)
 		gGameOptions.ubDifficultyLevel = DIF_LEVEL_EASY;
 		ShutdownStrategicLayer();
 		InitStrategicLayer();
-		Compression0Callback( ButtonList[ iViewerButton[ COMPRESSION0 ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+		Compression0Callback(iViewerButton[COMPRESSION0], MSYS_CALLBACK_REASON_LBUTTON_UP);
 		MarkButtonsDirty();
 		WarpGameTime( 45 * 60, WARPTIME_PROCESS_EVENTS_NORMALLY );
 	}
@@ -968,7 +968,7 @@ static void NormalCallback(GUI_BUTTON* btn, INT32 reason)
 		gGameOptions.ubDifficultyLevel = DIF_LEVEL_MEDIUM;
 		ShutdownStrategicLayer();
 		InitStrategicLayer();
-		Compression0Callback( ButtonList[ iViewerButton[ COMPRESSION0 ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+		Compression0Callback(iViewerButton[COMPRESSION0], MSYS_CALLBACK_REASON_LBUTTON_UP);
 		MarkButtonsDirty();
 		WarpGameTime( 45 * 60, WARPTIME_PROCESS_EVENTS_NORMALLY );
 	}
@@ -987,7 +987,7 @@ static void HardCallback(GUI_BUTTON* btn, INT32 reason)
 		gGameOptions.ubDifficultyLevel = DIF_LEVEL_HARD;
 		ShutdownStrategicLayer();
 		InitStrategicLayer();
-		Compression0Callback( ButtonList[ iViewerButton[ COMPRESSION0 ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+		Compression0Callback(iViewerButton[COMPRESSION0], MSYS_CALLBACK_REASON_LBUTTON_UP);
 		MarkButtonsDirty();
 		WarpGameTime( 45 * 60, WARPTIME_PROCESS_EVENTS_NORMALLY );
 	}
@@ -1167,7 +1167,7 @@ static void TestIncoming4SidesCallback(GUI_BUTTON* btn, INT32 reason)
 		GROUP *pGroup;
 		UINT8 ubSector;
 		UINT32 uiWorldMin;
-		Compression0Callback( ButtonList[ iViewerButton[ COMPRESSION0 ] ], MSYS_CALLBACK_REASON_LBUTTON_UP );
+		Compression0Callback(iViewerButton[COMPRESSION0], MSYS_CALLBACK_REASON_LBUTTON_UP);
 		if( ( gsSelSectorX == 0 ) || ( gsSelSectorY == 0 ) )
 			gsSelSectorX = 9, gsSelSectorY = 1;
 

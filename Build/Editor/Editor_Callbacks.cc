@@ -520,7 +520,7 @@ void MapInfoEntryPointsCallback( GUI_BUTTON *btn, INT32 reason )
 		INT16 x, sGridNo; // HACK000E
 		for( x = MAPINFO_NORTH_POINT; x <= MAPINFO_ISOLATED_POINT; x++ )
 		{
-			if( btn == ButtonList[ iEditorButton[ x ] ] )
+			if (btn == iEditorButton[x])
 			{
 				SetEditorMapInfoTaskbarMode( x );
 				if( reason & MSYS_CALLBACK_REASON_RBUTTON_UP )

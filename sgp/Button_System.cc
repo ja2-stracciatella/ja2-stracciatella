@@ -267,28 +267,15 @@ remove_pic:
 }
 
 
-static GUI_BUTTON* GetButton(INT32 BtnID)
+void EnableButton(GUIButtonRef const b)
 {
-	CHECKN(0 <= BtnID && BtnID < MAX_BUTTONS); // XXX HACK000C
-	AssertMsg(0 <= BtnID && BtnID < MAX_BUTTONS, String("ButtonID %d is out of range.", BtnID));
-	GUI_BUTTON* b = ButtonList[BtnID];
-	CHECKN(b != NULL); // XXX HACK000C
-	AssertMsg(b != NULL, String("Accessing non-existent button %d.", BtnID));
-	return b;
-}
-
-
-void EnableButton(GUIButtonRef const iButtonID)
-{
-	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
 	b->uiFlags |= BUTTON_ENABLED | BUTTON_DIRTY;
 }
 
 
-void DisableButton(GUIButtonRef const iButtonID)
+void DisableButton(GUIButtonRef const b)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
 	b->uiFlags &= ~BUTTON_ENABLED;
 	b->uiFlags |= BUTTON_DIRTY;
@@ -491,10 +478,13 @@ static void RemoveButtonsMarkedForDeletion(void)
 }
 
 
-static void RemoveButtonInternal(INT32 const iButtonID)
+static void RemoveButtonInternal(INT32 const btn_id)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
+	CHECKV(0 <= btn_id && btn_id < MAX_BUTTONS); // XXX HACK000C
+	AssertMsg(0 <= btn_id && btn_id < MAX_BUTTONS, String("ButtonID %d is out of range.", btn_id));
+	GUI_BUTTON* const b = ButtonList[btn_id];
 	CHECKV(b != NULL); // XXX HACK000C
+	AssertMsg(b != NULL, String("Accessing non-existent button %d.", btn_id));
 
 	/* If we happen to be in the middle of a callback, and attempt to delete a
 	 * button, like deleting a node during list processing, then we delay it till
@@ -528,7 +518,7 @@ static void RemoveButtonInternal(INT32 const iButtonID)
 	if (b == gpPrevAnchoredButton) gpPrevAnchoredButton = NULL;
 
 	MemFree(b);
-	ButtonList[iButtonID] = NULL;
+	ButtonList[btn_id] = NULL;
 }
 
 
@@ -536,7 +526,7 @@ void RemoveButton(GUIButtonRef& btn_ref)
 {
 	GUIButtonRef const btn = btn_ref;
 	btn_ref.Reset();
-	RemoveButtonInternal(btn);
+	RemoveButtonInternal(btn.ID());
 }
 
 
@@ -731,10 +721,9 @@ GUIButtonRef QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_norma
 
 GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* const string, Font const font, const INT16 sForeColor, const INT16 sShadowColor, const INT16 sForeColorDown, const INT16 sShadowColorDown, const INT16 xloc, const INT16 yloc, const INT16 Priority, const GUI_CALLBACK ClickCallback)
 {
-	GUIButtonRef const id = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);
-	if (id != BUTTON_NO_SLOT)
+	GUIButtonRef const b = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);
+	if (b)
 	{
-		GUI_BUTTON* const b = GetButton(id);
 		CopyButtonText(b, string);
 		b->usFont           = font;
 		b->sForeColor       = sForeColor;
@@ -743,7 +732,7 @@ GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* co
 		b->sShadowColorDown = sShadowColorDown;
 	}
 
-	return id;
+	return b;
 }
 
 
@@ -756,9 +745,8 @@ GUIButtonRef CreateLabel(const wchar_t* text, Font const font, INT16 forecolor, 
 }
 
 
-void SpecifyButtonText(GUIButtonRef const iButtonID, const wchar_t* string)
+void SpecifyButtonText(GUIButtonRef const b, const wchar_t* string)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
 
 	//free the previous strings memory if applicable
@@ -829,9 +817,8 @@ void SpecifyButtonTextWrappedWidth(GUIButtonRef const b, INT16 sWrappedWidth)
 }
 
 
-void SpecifyDisabledButtonStyle(GUIButtonRef const iButtonID, INT8 bStyle)
+void SpecifyDisabledButtonStyle(GUIButtonRef const b, INT8 bStyle)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
 
 	Assert(bStyle >= DISABLED_STYLE_NONE && bStyle <= DISABLED_STYLE_SHADED);
@@ -840,9 +827,8 @@ void SpecifyDisabledButtonStyle(GUIButtonRef const iButtonID, INT8 bStyle)
 }
 
 
-void SpecifyButtonIcon(GUIButtonRef const iButtonID, const SGPVObject* const icon, const UINT16 usVideoObjectIndex, const INT8 bXOffset, const INT8 bYOffset, const BOOLEAN fShiftImage)
+void SpecifyButtonIcon(GUIButtonRef const b, const SGPVObject* const icon, const UINT16 usVideoObjectIndex, const INT8 bXOffset, const INT8 bYOffset, const BOOLEAN fShiftImage)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
 
 	b->icon        = icon;
@@ -864,9 +850,8 @@ void AllowDisabledButtonFastHelp(GUIButtonRef const b)
 }
 
 
-void SetButtonFastHelpText(GUIButtonRef const iButton, const wchar_t* Text)
+void SetButtonFastHelpText(GUIButtonRef const b, const wchar_t* Text)
 {
-	GUI_BUTTON* b = GetButton(iButton);
 	CHECKV(b != NULL); // XXX HACK000C
 	b->Area.SetFastHelpText(Text);
 }
@@ -1131,10 +1116,9 @@ void RenderButtons(void)
 }
 
 
-void MarkAButtonDirty(GUIButtonRef const iButtonNum)
+void MarkAButtonDirty(GUIButtonRef const b)
 {
   // surgical dirtying -> marks a user specified button dirty, without dirty the whole lot of them
-	GUI_BUTTON* b = GetButton(iButtonNum);
 	CHECKV(b != NULL); // XXX HACK000C
 	b->uiFlags |= BUTTON_DIRTY;
 }
@@ -1149,9 +1133,8 @@ void MarkButtonsDirty(void)
 }
 
 
-void UnMarkButtonDirty(GUIButtonRef const iButtonIndex)
+void UnMarkButtonDirty(GUIButtonRef const b)
 {
-	GUI_BUTTON* b = GetButton(iButtonIndex);
 	CHECKV(b != NULL); // XXX HACK000C
 	b->uiFlags &= ~BUTTON_DIRTY;
 }
@@ -1167,18 +1150,16 @@ void UnmarkButtonsDirty(void)
 }
 
 
-void ForceButtonUnDirty(GUIButtonRef const iButtonIndex)
+void ForceButtonUnDirty(GUIButtonRef const b)
 {
-	GUI_BUTTON* b = GetButton(iButtonIndex);
 	CHECKV(b != NULL); // XXX HACK000C
 	b->uiFlags &= ~BUTTON_DIRTY;
 	b->uiFlags |= BUTTON_FORCE_UNDIRTY;
 }
 
 
-void DrawButton(GUIButtonRef const iButtonID)
+void DrawButton(GUIButtonRef const b)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
 	CHECKV(b != NULL); // XXX HACK000C
 	if (b->string != NULL) SaveFontSettings();
 	if (b->Area.uiFlags & MSYS_REGION_ENABLED) DrawButtonFromPtr(b);
@@ -1792,9 +1773,8 @@ try
 catch (...) { return GUIButtonRef(); }
 
 
-void MSYS_SetBtnUserData(GUIButtonRef const iButtonNum, INT32 userdata)
+void MSYS_SetBtnUserData(GUIButtonRef const b, INT32 userdata)
 {
-	GUI_BUTTON* b = GetButton(iButtonNum);
 	CHECKV(b != NULL); // XXX HACK000C
 	b->User.Data = userdata;
 }
@@ -1869,9 +1849,8 @@ void ReleaseAnchorMode(void)
 }
 
 
-void HideButton(GUIButtonRef const iButtonNum)
+void HideButton(GUIButtonRef const b)
 {
-	GUI_BUTTON* b = GetButton(iButtonNum);
 	CHECKV(b != NULL); // XXX HACK000C
 	b->Area.uiFlags &= ~MSYS_REGION_ENABLED;
 	b->uiFlags |= BUTTON_DIRTY;
@@ -1881,9 +1860,8 @@ void HideButton(GUIButtonRef const iButtonNum)
 }
 
 
-void ShowButton(GUIButtonRef const iButtonNum)
+void ShowButton(GUIButtonRef const b)
 {
-	GUI_BUTTON* b = GetButton(iButtonNum);
 	CHECKV(b != NULL); // XXX HACK000C
 	b->Area.uiFlags |= MSYS_REGION_ENABLED;
 	b->uiFlags |= BUTTON_DIRTY;

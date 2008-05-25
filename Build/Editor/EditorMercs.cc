@@ -619,7 +619,7 @@ void MercsSetColorsCallback( GUI_BUTTON *btn, INT32 reason )
 		iEditWhichStat = -1;
 		for ( iBtn = FIRST_MERCS_COLOR_BUTTON; iBtn <= LAST_MERCS_COLOR_BUTTON; iBtn++ )
 		{
-			if ( btn->IDNum == iEditorButton[iBtn] )
+			if (btn == iEditorButton[iBtn])
 			{
 				iEditWhichStat = iBtn - FIRST_MERCS_COLOR_BUTTON;
 				iEditMercMode = EDIT_MERC_NEXT_COLOR;
@@ -639,7 +639,7 @@ void MercsSetBodyTypeCallback( GUI_BUTTON *btn, INT32 reason )
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		gfRenderMercInfo = TRUE;
-		if( btn->IDNum == iEditorButton[ MERCS_BODYTYPE_DOWN ] )
+		if (btn == iEditorButton[MERCS_BODYTYPE_DOWN])
 			ChangeBodyType( 1 );	//next
 		else
       ChangeBodyType( -1 ); //previous
@@ -1290,7 +1290,7 @@ void ExtractAndUpdateMercSchedule()
 	for( i = 0; i < 4; i++ )
 	{
 		gCurrSchedule.usTime[i]	= GetExclusive24HourTimeValueFromField( (UINT8)(i+1) );
-		gCurrSchedule.ubAction[i] = MSYS_GetBtnUserData(ButtonList[iEditorButton[MERCS_SCHEDULE_ACTION1 + i]]);
+		gCurrSchedule.ubAction[i] = MSYS_GetBtnUserData(iEditorButton[MERCS_SCHEDULE_ACTION1 + i]);
 		if( gCurrSchedule.ubAction[i] )
 			fValidSchedule = TRUE;
 	}

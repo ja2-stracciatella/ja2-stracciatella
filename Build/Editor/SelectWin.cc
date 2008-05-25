@@ -673,7 +673,6 @@ static void DrawSelections(void);
 //
 void RenderSelectionWindow( void )
 {
-	GUI_BUTTON *button;
 	INT32 iSX,iSY,iEX,iEY;
 	UINT16 usFillColor;
 	static UINT8 usFillGreen = 0;
@@ -690,9 +689,8 @@ void RenderSelectionWindow( void )
 
 	if ( gfRenderSquareArea )
 	{
-		button = ButtonList[iSelectWin];
-		if ( button == NULL )
-			return;
+		GUIButtonRef const button = iSelectWin;
+		if (!button) return;
 
 		if ( (abs( iStartClickX - button->Area.MouseXPos ) > 9) ||
 			   (abs( iStartClickY - (button->Area.MouseYPos + iTopWinCutOff - (INT16)SelWinStartPoint.iY)) > 9) )

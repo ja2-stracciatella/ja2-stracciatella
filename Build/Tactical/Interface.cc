@@ -421,7 +421,7 @@ static BOOLEAN MakeButtonMove(UINT idx, UINT gfx, INT16 x, INT16 y, UI_EVENT* ev
 {
 	GUIButtonRef const btn = QuickCreateButton(iIconImages[gfx], x, y, MSYS_PRIORITY_HIGHEST - 1, BtnMovementCallback);
 	iActionIcons[idx] = btn;
-	if (btn == -1)
+	if (!btn)
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
 		return FALSE;
@@ -661,49 +661,45 @@ void CancelMovementMenu( )
 
 static void BtnMovementCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	INT32		uiBtnID;
-
 	if ( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 
-		uiBtnID = btn->IDNum;
-
 		UI_EVENT* pUIEvent = (UI_EVENT*)btn->User.Ptr;
 
-		if ( uiBtnID == iActionIcons[ WALK_ICON  ] )
+		if (btn == iActionIcons[WALK_ICON])
 		{
 			pUIEvent->uiParams[0] = MOVEMENT_MENU_WALK;
 		}
-		else if ( uiBtnID == iActionIcons[ RUN_ICON  ] )
+		else if (btn == iActionIcons[RUN_ICON])
 		{
 			pUIEvent->uiParams[0] = MOVEMENT_MENU_RUN;
 		}
-		else if ( uiBtnID == iActionIcons[ SNEAK_ICON  ] )
+		else if (btn == iActionIcons[SNEAK_ICON])
 		{
 			pUIEvent->uiParams[0] = MOVEMENT_MENU_SWAT;
 		}
-		else if ( uiBtnID == iActionIcons[ CRAWL_ICON  ] )
+		else if (btn == iActionIcons[CRAWL_ICON])
 		{
 			pUIEvent->uiParams[0] = MOVEMENT_MENU_PRONE;
 		}
-		else if ( uiBtnID == iActionIcons[ LOOK_ICON  ] )
+		else if (btn == iActionIcons[LOOK_ICON])
 		{
 			pUIEvent->uiParams[2] = MOVEMENT_MENU_LOOK;
 		}
-		else if ( uiBtnID == iActionIcons[ ACTIONC_ICON  ] )
+		else if (btn == iActionIcons[ACTIONC_ICON])
 		{
 			pUIEvent->uiParams[2] = MOVEMENT_MENU_ACTIONC;
 		}
-		else if ( uiBtnID == iActionIcons[ TALK_ICON  ] )
+		else if (btn == iActionIcons[TALK_ICON])
 		{
 			pUIEvent->uiParams[2] = MOVEMENT_MENU_TALK;
 		}
-		else if ( uiBtnID == iActionIcons[ HAND_ICON  ] )
+		else if (btn == iActionIcons[HAND_ICON])
 		{
 			pUIEvent->uiParams[2] = MOVEMENT_MENU_HAND;
 		}
-		else if ( uiBtnID == iActionIcons[ CANCEL_ICON  ] )
+		else if (btn == iActionIcons[CANCEL_ICON])
 		{
 			// Signal end of event
 			EndMenuEvent( U_MOVEMENT_MENU );
@@ -1608,7 +1604,7 @@ static BOOLEAN MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, IN
 {
 	GUIButtonRef const btn = QuickCreateButton(iIconImages[gfx], x, y, MSYS_PRIORITY_HIGHEST - 1, BtnDoorMenuCallback);
 	iActionIcons[idx] = btn;
-	if (btn == -1)
+	if (!btn)
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
 		return FALSE;
@@ -1767,17 +1763,15 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 
-		const INT32 uiBtnID = btn->IDNum;
-
 		// Popdown menu
 		gOpenDoorMenu.fMenuHandled = TRUE;
 
-		if (uiBtnID == iActionIcons[CANCEL_ICON])
+		if (btn == iActionIcons[CANCEL_ICON])
 		{
 			// OK, set cancle code!
 			gOpenDoorMenu.fMenuHandled = 2;
 		}
-		else if (uiBtnID == iActionIcons[OPEN_DOOR_ICON])
+		else if (btn == iActionIcons[OPEN_DOOR_ICON])
 		{
 			// Open door normally...
 			// Check APs
@@ -1801,31 +1795,31 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
 				gOpenDoorMenu.fMenuHandled = 2;
 			}
 		}
-		else if (uiBtnID == iActionIcons[BOOT_DOOR_ICON])
+		else if (btn == iActionIcons[BOOT_DOOR_ICON])
 		{
 			DoorAction(AP_BOOT_DOOR, BP_BOOT_DOOR, HANDLE_DOOR_FORCE);
 		}
-		else if (uiBtnID == iActionIcons[USE_KEYRING_ICON])
+		else if (btn == iActionIcons[USE_KEYRING_ICON])
 		{
 			DoorAction(AP_UNLOCK_DOOR, BP_UNLOCK_DOOR, HANDLE_DOOR_UNLOCK);
 		}
-		else if (uiBtnID == iActionIcons[LOCKPICK_DOOR_ICON])
+		else if (btn == iActionIcons[LOCKPICK_DOOR_ICON])
 		{
 			DoorAction(AP_PICKLOCK, BP_PICKLOCK, HANDLE_DOOR_LOCKPICK);
 		}
-		else if (uiBtnID == iActionIcons[EXAMINE_DOOR_ICON])
+		else if (btn == iActionIcons[EXAMINE_DOOR_ICON])
 		{
 			DoorAction(AP_EXAMINE_DOOR, BP_EXAMINE_DOOR, HANDLE_DOOR_EXAMINE);
 		}
-		else if (uiBtnID == iActionIcons[EXPLOSIVE_DOOR_ICON])
+		else if (btn == iActionIcons[EXPLOSIVE_DOOR_ICON])
 		{
 			DoorAction(AP_EXPLODE_DOOR, BP_EXPLODE_DOOR, HANDLE_DOOR_EXPLODE);
 		}
-		else if (uiBtnID == iActionIcons[UNTRAP_DOOR_ICON])
+		else if (btn == iActionIcons[UNTRAP_DOOR_ICON])
 		{
 			DoorAction(AP_UNTRAP_DOOR, BP_UNTRAP_DOOR, HANDLE_DOOR_UNTRAP);
 		}
-		else if (uiBtnID == iActionIcons[USE_CROWBAR_ICON])
+		else if (btn == iActionIcons[USE_CROWBAR_ICON])
 		{
 			DoorAction(AP_USE_CROWBAR, BP_USE_CROWBAR, HANDLE_DOOR_CROWBAR);
 		}
