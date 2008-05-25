@@ -370,7 +370,7 @@ try
 	// Return the slot number
 	return ImgSlot;
 }
-catch (...) { return BUTTON_NO_SLOT; }
+catch (...) { return BUTTON_NO_IMAGE; }
 
 
 void UnloadGenericButtonIcon(INT16 GenImg)
@@ -533,7 +533,8 @@ void RemoveButton(GUIButtonRef& btn_ref)
 // Finds the next available button slot.
 static INT32 GetNextButtonNumber(void)
 {
-	for (INT32 x = 0; x < MAX_BUTTONS; x++)
+	/* Never hand out ID 0.  Slot 0 is always a null pointer */
+	for (INT32 x = 1; x < MAX_BUTTONS; x++)
 	{
 		if (ButtonList[x] == NULL) return x;
 	}

@@ -17,7 +17,6 @@
 
 // Some GUI_BUTTON system defines
 #define BUTTON_NO_IMAGE    -1
-#define BUTTON_NO_SLOT     -1
 
 //effects how the button is rendered.
 #define BUTTON_TYPES (BUTTON_QUICK | BUTTON_GENERIC | BUTTON_HOT_SPOT | BUTTON_CHECKBOX)
@@ -109,20 +108,17 @@ extern GUI_BUTTON* ButtonList[MAX_BUTTONS]; // Button System's Main Button List
 class GUIButtonRef
 {
 	public:
-		GUIButtonRef() : btn_id_(BUTTON_NO_SLOT) {}
+		GUIButtonRef() : btn_id_(0) {}
 
 		GUIButtonRef(GUI_BUTTON* const b) : btn_id_(b->IDNum) {}
 
-		void Reset() { btn_id_ = BUTTON_NO_SLOT; }
+		void Reset() { btn_id_ = 0; }
 
 		INT32 ID() const { return btn_id_; }
 
 		GUI_BUTTON* operator ->() const { return ButtonList[btn_id_]; }
 
-		operator GUI_BUTTON*() const
-		{
-			return btn_id_ != BUTTON_NO_SLOT ? ButtonList[btn_id_] : 0;
-		}
+		operator GUI_BUTTON*() const { return ButtonList[btn_id_]; }
 
 	private:
 		INT32 btn_id_;
