@@ -266,8 +266,7 @@ void RenderBobbyRGuns()
 }
 
 
-
-BOOLEAN DisplayBobbyRBrTitle()
+void DisplayBobbyRBrTitle()
 {
 	BltVideoObject(FRAME_BUFFER, guiBrTitle, 0, BOBBYR_BRTITLE_X, BOBBYR_BRTITLE_Y);
 
@@ -279,8 +278,6 @@ BOOLEAN DisplayBobbyRBrTitle()
 
 	//To Order text
 	DisplayWrappedString(BOBBYR_TO_ORDER_TEXT_X, BOBBYR_TO_ORDER_TEXT_Y, BOBBYR_TO_ORDER_TEXT_WIDTH, 2, BOBBYR_ORDER_TEXT_FONT, BOBBYR_ORDER_TEXT_COLOR, BobbyRText[BOBBYR_GUNS_CLICK_ON_ITEMS], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-	return(TRUE);
 }
 
 
@@ -300,12 +297,11 @@ void InitBobbyBrTitle()
 }
 
 
-BOOLEAN DeleteBobbyBrTitle()
+void DeleteBobbyBrTitle()
 {
 	DeleteVideoObject(guiBrTitle);
 	MSYS_RemoveRegion(&gSelectedTitleImageLinkRegion);
 	DeleteMouseRegionForBigImage();
-	return(TRUE);
 }
 
 
@@ -327,7 +323,7 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 }
 
 
-BOOLEAN InitBobbyMenuBar(void)
+void InitBobbyMenuBar(void)
 {
 	UINT8	i;
 	UINT16	usPosX;
@@ -368,11 +364,10 @@ BOOLEAN InitBobbyMenuBar(void)
 	// Home button
 	guiBobbyRHomeImage  = LoadButtonImage("LAPTOP/CatalogueButton.sti", -1,0,-1,1,-1 );
 	guiBobbyRHome = MakeButton(guiBobbyRHomeImage, BobbyRText[BOBBYR_GUNS_HOME], BOBBYR_HOME_BUTTON_X, BOBBYR_HOME_BUTTON_Y, BtnBobbyRHomeButtonCallback);
-
-	return(TRUE);
 }
 
-BOOLEAN DeleteBobbyMenuBar()
+
+void DeleteBobbyMenuBar()
 {
 	UINT8	i;
 
@@ -391,8 +386,6 @@ BOOLEAN DeleteBobbyMenuBar()
 	{
 		RemoveButton( guiBobbyRPageMenu[i] );
 	}
-
-	return(TRUE);
 }
 
 
@@ -437,17 +430,17 @@ static void CalcFirstIndexForPage(STORE_INVENTORY* pInv, UINT32 uiItemClass);
 static UINT32 CalculateTotalPurchasePrice(void);
 static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, const INVTYPE* items[]);
 static void DisableBobbyRButtons(void);
-static BOOLEAN DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
-static BOOLEAN DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
+static void DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
+static void DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 static void DisplayBigItemImage(const INVTYPE* item, UINT16 PosY);
-static BOOLEAN DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
+static void DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
-static BOOLEAN DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
-static BOOLEAN DisplayNonGunWeaponInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
+static void DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
+static void DisplayNonGunWeaponInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 static void OutOfStockMessageBoxCallBack(UINT8 bExitValue);
 
 
-BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
+void DisplayItemInfo(UINT32 uiItemClass)
 {
 	UINT16	i;
 	UINT8		ubCount=0;
@@ -462,14 +455,13 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 	//if there are no items then return
 	if( gusFirstItemIndex == BOBBYR_NO_ITEMS )
 	{
-		if( fExitingLaptopFlag )
-			return( TRUE );
+		if (fExitingLaptopFlag) return;
 
 		DisableBobbyRButtons();
 
 		//Display a popup saying we are out of stock
 		DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, BobbyRText[ BOBBYR_NO_MORE_STOCK ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, OutOfStockMessageBoxCallBack );
-		return( TRUE );
+		return;
 	}
 
 
@@ -617,8 +609,6 @@ BOOLEAN DisplayItemInfo(UINT32 uiItemClass)
 	{
 		DrawTextToScreen(BobbyRText[BOBBYR_GUNS_PERCENT_FUNCTIONAL], BOBBYR_PERCENT_FUNTCIONAL_X, BOBBYR_PERCENT_FUNTCIONAL_Y, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ORDER_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | TEXT_SHADOWED);
 	}
-
-	return(TRUE);
 }
 
 
@@ -631,7 +621,7 @@ static UINT16 DisplayRof(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight);
 static UINT16 DisplayWeight(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight);
 
 
-static BOOLEAN DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
+static void DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16	usHeight;
 	UINT16 usFontHeight;
@@ -663,12 +653,10 @@ static BOOLEAN DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, 
 
 	//Display the Cost and the qty bought and on hand
 	usHeight = DisplayCostAndQty(usTextPosY, usIndex, usFontHeight, usBobbyIndex, fUsed);
-
-	return(TRUE);
 }
 
 
-static BOOLEAN DisplayNonGunWeaponInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
+static void DisplayNonGunWeaponInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16	usHeight;
 	UINT16 usFontHeight;
@@ -688,12 +676,10 @@ static BOOLEAN DisplayNonGunWeaponInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEA
 
 	//Display the Cost and the qty bought and on hand
 	usHeight = DisplayCostAndQty(usTextPosY, usIndex, usFontHeight, usBobbyIndex, fUsed);
-
-	return(TRUE);
 }
 
 
-static BOOLEAN DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
+static void DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16	usHeight;
 	UINT16 usFontHeight;
@@ -713,8 +699,6 @@ static BOOLEAN DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed,
 
 	//Display the Cost and the qty bought and on hand
 	usHeight = DisplayCostAndQty(usTextPosY, usIndex, usFontHeight, usBobbyIndex, fUsed);
-
-	return(TRUE);
 }
 
 
@@ -737,7 +721,7 @@ static void DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
 }
 
 
-static BOOLEAN DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
+static void DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16	usHeight;
 	UINT16 usFontHeight;
@@ -754,12 +738,10 @@ static BOOLEAN DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUse
 
 	//Display the Cost and the qty bought and on hand
 	usHeight = DisplayCostAndQty(usTextPosY, usIndex, usFontHeight, usBobbyIndex, fUsed);
-
-	return(TRUE);
 }
 
 
-static BOOLEAN DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
+static void DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
 	UINT16 usFontHeight;
 	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
@@ -769,8 +751,6 @@ static BOOLEAN DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed,
 
 	//Display the Cost and the qty bought and on hand
 	DisplayCostAndQty(usTextPosY, usIndex, usFontHeight, usBobbyIndex, fUsed);
-
-	return(TRUE);
 }
 
 

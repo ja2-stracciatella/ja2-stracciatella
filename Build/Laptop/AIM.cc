@@ -482,8 +482,7 @@ BOOLEAN DisplayAimCopyright()
 static void BtnAimBottomButtonsCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-// Buttons
-BOOLEAN InitAimMenuBar(void)
+void InitAimMenuBar(void)
 {
 	UINT8	i;
 	UINT16	usPosX;
@@ -503,9 +502,10 @@ BOOLEAN InitAimMenuBar(void)
 
 		usPosX += BOTTOM_BUTTON_START_WIDTH;
 	}
-	return(TRUE);
 }
-BOOLEAN ExitAimMenuBar(void)
+
+
+void ExitAimMenuBar(void)
 {
 	UINT8	i;
 
@@ -515,7 +515,6 @@ BOOLEAN ExitAimMenuBar(void)
 	{
 		RemoveButton( guiBottomButtons[i] );
 	}
-	return(TRUE);
 }
 
 

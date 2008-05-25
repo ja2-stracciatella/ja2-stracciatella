@@ -39,14 +39,14 @@ void HandleBobbyRGuns(void);
 void RenderBobbyRGuns(void);
 
 
-BOOLEAN DisplayBobbyRBrTitle(void);
-BOOLEAN DeleteBobbyBrTitle(void);
-void    InitBobbyBrTitle(void);
-BOOLEAN InitBobbyMenuBar(void);
-BOOLEAN DeleteBobbyMenuBar(void);
+void DisplayBobbyRBrTitle(void);
+void DeleteBobbyBrTitle(void);
+void InitBobbyBrTitle(void);
+void InitBobbyMenuBar(void);
+void DeleteBobbyMenuBar(void);
 
 //BOOLEAN DisplayWeaponInfo();
-BOOLEAN DisplayItemInfo(UINT32 uiItemClass);
+void DisplayItemInfo(UINT32 uiItemClass);
 void DeleteMouseRegionForBigImage(void);
 void UpdateButtonText(UINT32	uiCurPage);
 UINT16 CalcBobbyRayCost( UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);

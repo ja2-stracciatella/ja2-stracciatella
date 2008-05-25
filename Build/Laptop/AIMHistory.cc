@@ -101,7 +101,7 @@ void EnterInitAimHistory()
 
 
 static void DisableAimHistoryButton(void);
-static BOOLEAN InitAimHistoryMenuBar(void);
+static void InitAimHistoryMenuBar(void);
 
 
 void EnterAimHistory()
@@ -121,8 +121,8 @@ void EnterAimHistory()
 }
 
 
-static BOOLEAN ExitAimHistoryMenuBar(void);
-static BOOLEAN ExitTocMenu(void);
+static void ExitAimHistoryMenuBar(void);
+static void ExitTocMenu(void);
 
 
 void ExitAimHistory()
@@ -151,8 +151,8 @@ static void LoadAIMHistoryText(wchar_t buf[], UINT32 entry)
 }
 
 
-static BOOLEAN DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs);
-static BOOLEAN InitTocMenu(void);
+static void DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs);
+static void InitTocMenu(void);
 
 
 void RenderAimHistory()
@@ -222,7 +222,7 @@ void RenderAimHistory()
 static void BtnHistoryMenuButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-static BOOLEAN InitAimHistoryMenuBar(void)
+static void InitAimHistoryMenuBar(void)
 {
 	UINT16					i, usPosX;
 
@@ -242,12 +242,10 @@ static BOOLEAN InitAimHistoryMenuBar(void)
 		usPosX += AIM_HISTORY_GAP_X;
 
 	}
-
-	return(TRUE);
 }
 
 
-static BOOLEAN ExitAimHistoryMenuBar(void)
+static void ExitAimHistoryMenuBar(void)
 {
 	int i;
 
@@ -256,12 +254,10 @@ static BOOLEAN ExitAimHistoryMenuBar(void)
 
 	for(i=0; i<AIM_HISTORY_MENU_BUTTON_AMOUNT; i++)
  		RemoveButton( guiHistoryMenuButton[i] );
-
-	return(TRUE);
 }
 
 
-static BOOLEAN DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs)
+static void DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs)
 {
 	wchar_t	sText[AIM_HISTORY_LINE_SIZE];
 	UINT16	usPosY=0;
@@ -294,15 +290,13 @@ static BOOLEAN DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs
 		LoadAIMHistoryText(sText, ubPageNum + 3);
 		DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, usPosY, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
-
-	return(TRUE);
 }
 
 
 static void SelectHistoryTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static BOOLEAN InitTocMenu(void)
+static void InitTocMenu(void)
 {
 	UINT16			i, usPosY;
 	UINT8				ubLocInFile[]=
@@ -334,11 +328,10 @@ static BOOLEAN InitTocMenu(void)
 		usPosY += AIM_HISTORY_TOC_GAP_Y;
 	}
 	gfInToc = TRUE;
-	return(TRUE);
 }
 
 
-static BOOLEAN ExitTocMenu(void)
+static void ExitTocMenu(void)
 {
 	UINT16 i;
 
@@ -348,8 +341,6 @@ static BOOLEAN ExitTocMenu(void)
 		for(i=0; i<NUM_AIM_HISTORY_PAGES; i++)
 			MSYS_RemoveRegion( &gSelectedHistoryTocMenuRegion[i]);
 	}
-
-	return(TRUE);
 }
 
 

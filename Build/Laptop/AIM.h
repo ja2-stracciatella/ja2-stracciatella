@@ -73,8 +73,8 @@ void ExitAIM(void);
 void HandleAIM(void);
 void RenderAIM(void);
 
-BOOLEAN ExitAimMenuBar(void);
-BOOLEAN InitAimMenuBar(void);
+void ExitAimMenuBar(void);
+void InitAimMenuBar(void);
 
 BOOLEAN RemoveAimDefaults(void);
 void    InitAimDefaults(void);

@@ -169,7 +169,7 @@ void EnterInitAimPolicies()
 }
 
 
-static BOOLEAN InitAimPolicyMenuBar(void);
+static void InitAimPolicyMenuBar(void);
 
 
 void EnterAimPolicies()
@@ -193,9 +193,9 @@ void EnterAimPolicies()
 }
 
 
-static BOOLEAN ExitAgreementButton(void);
-static BOOLEAN ExitAimPolicyMenuBar(void);
-static BOOLEAN ExitAimPolicyTocMenu(void);
+static void ExitAgreementButton(void);
+static void ExitAimPolicyMenuBar(void);
+static void ExitAimPolicyTocMenu(void);
 
 
 void ExitAimPolicies()
@@ -232,13 +232,13 @@ void HandleAimPolicies()
 
 static void DisableAimPolicyButton(void);
 static UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber);
-static BOOLEAN DisplayAimPolicyStatement(void);
+static void DisplayAimPolicyStatement(void);
 static UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber);
-static BOOLEAN DisplayAimPolicyTitle(UINT16 usPosY, UINT8 ubPageNum);
-static BOOLEAN DisplayAimPolicyTitleText(void);
-static BOOLEAN DrawAimPolicyMenu(void);
-static BOOLEAN InitAgreementRegion(void);
-static BOOLEAN InitAimPolicyTocMenu(void);
+static void DisplayAimPolicyTitle(UINT16 usPosY, UINT8 ubPageNum);
+static void DisplayAimPolicyTitleText(void);
+static void DrawAimPolicyMenu(void);
+static void InitAgreementRegion(void);
+static void InitAimPolicyTocMenu(void);
 
 
 void RenderAimPolicies()
@@ -365,12 +365,11 @@ void RenderAimPolicies()
 static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, INT32 reason);
 
 
-static BOOLEAN InitAimPolicyMenuBar(void)
+static void InitAimPolicyMenuBar(void)
 {
 	UINT16					i, usPosX;
 
-	if(gfAimPolicyMenuBarLoaded)
-		return(TRUE);
+	if (gfAimPolicyMenuBarLoaded) return;
 
 	//Load graphic for buttons
 	guiPoliciesMenuButtonImage =  LoadButtonImage("LAPTOP/BottomButtons2.sti", -1,0,-1,1,-1 );
@@ -391,21 +390,15 @@ static BOOLEAN InitAimPolicyMenuBar(void)
 		usPosX += AIM_POLICY_GAP_X;
 	}
 
-
-
-
 	gfAimPolicyMenuBarLoaded = TRUE;
-
-	return(TRUE);
 }
 
 
-static BOOLEAN ExitAimPolicyMenuBar(void)
+static void ExitAimPolicyMenuBar(void)
 {
 	int i;
 
-	if( !gfAimPolicyMenuBarLoaded )
-		return( FALSE );
+	if (!gfAimPolicyMenuBarLoaded) return;
 
 	for(i=0; i<AIM_POLICY_MENU_BUTTON_AMOUNT; i++)
 		RemoveButton( guiPoliciesMenuButton[i]);
@@ -413,8 +406,6 @@ static BOOLEAN ExitAimPolicyMenuBar(void)
 	UnloadButtonImage( guiPoliciesMenuButtonImage );
 
 	gfAimPolicyMenuBarLoaded = FALSE;
-
-	return(TRUE);
 }
 
 
@@ -424,7 +415,7 @@ static void LoadAIMPolicyText(wchar_t* Text, UINT32 Offset)
 }
 
 
-static BOOLEAN DrawAimPolicyMenu(void)
+static void DrawAimPolicyMenu(void)
 {
 	UINT16			i, usPosY;
 	UINT8				ubLocInFile[]=
@@ -450,20 +441,17 @@ static BOOLEAN DrawAimPolicyMenu(void)
 		usPosY += AIM_POLICY_TOC_GAP_Y;
 	}
 	gfInPolicyToc = TRUE;
-
-	return(TRUE);
 }
 
 
 static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static BOOLEAN InitAimPolicyTocMenu(void)
+static void InitAimPolicyTocMenu(void)
 {
 	UINT16			i, usPosY;
 
-	if(gfInPolicyToc)
-		return(TRUE);
+	if (gfInPolicyToc) return;
 
 	usPosY = AIM_POLICY_TOC_Y;
 	for(i=0; i<NUM_AIM_POLICY_TOC_BUTTONS; i++)
@@ -476,20 +464,16 @@ static BOOLEAN InitAimPolicyTocMenu(void)
 		usPosY += AIM_POLICY_TOC_GAP_Y;
 	}
 	gfInPolicyToc = TRUE;
-
-	return(TRUE);
 }
 
 
-static BOOLEAN ExitAimPolicyTocMenu(void)
+static void ExitAimPolicyTocMenu(void)
 {
 	UINT16 i;
 
 	gfInPolicyToc = FALSE;
 	for(i=0; i<NUM_AIM_POLICY_TOC_BUTTONS; i++)
 		MSYS_RemoveRegion( &gSelectedPolicyTocMenuRegion[i]);
-
-	return(TRUE);
 }
 
 
@@ -515,19 +499,17 @@ static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 }
 
 
-static BOOLEAN DisplayAimPolicyTitleText(void)
+static void DisplayAimPolicyTitleText(void)
 {
 	wchar_t	sText[AIM_POLICY_LINE_SIZE];
 	LoadAIMPolicyText(sText, AIM_STATEMENT_OF_POLICY);
 
 	UINT16 y = (gubCurPageNum == 0 ? AIM_POLICY_TITLE_STATEMENT_Y - 25 : AIM_POLICY_TITLE_Y);
 	DrawTextToScreen(sText, AIM_POLICY_TITLE_X, y, AIM_POLICY_TITLE_WIDTH, AIM_POLICY_TITLE_FONT, AIM_POLICY_TITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-
-	return(TRUE);
 }
 
 
-static BOOLEAN DisplayAimPolicyStatement(void)
+static void DisplayAimPolicyStatement(void)
 {
 	wchar_t	sText[AIM_POLICY_LINE_SIZE];
 	UINT16	usNumPixels;
@@ -539,12 +521,10 @@ static BOOLEAN DisplayAimPolicyStatement(void)
 	//load and display the statment of policies
 	LoadAIMPolicyText(sText, AIM_STATEMENT_OF_POLICY_2);
 	DisplayWrappedString(AIM_POLICY_TITLE_STATEMENT_X, AIM_POLICY_TITLE_STATEMENT_Y + usNumPixels + 15, AIM_POLICY_TITLE_STATEMENT_WIDTH, 2, AIM_POLICY_TEXT_FONT, AIM_POLICY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-	return(TRUE);
 }
 
 
-static BOOLEAN InitAgreementRegion(void)
+static void InitAgreementRegion(void)
 {
 	UINT16	usPosX,i;
 
@@ -569,11 +549,10 @@ static BOOLEAN InitAgreementRegion(void)
 		usPosX += 125;
 	}
 	gfInAgreementPage = TRUE;
-	return(TRUE);
 }
 
 
-static BOOLEAN ExitAgreementButton(void)
+static void ExitAgreementButton(void)
 {
 	UINT8 i;
 
@@ -585,18 +564,14 @@ static BOOLEAN ExitAgreementButton(void)
 	  RemoveButton( guiPoliciesAgreeButton[ i ]);
 
 	gfInAgreementPage = FALSE;
-
-	return(TRUE);
 }
 
 
-static BOOLEAN DisplayAimPolicyTitle(UINT16 usPosY, UINT8 ubPageNum)
+static void DisplayAimPolicyTitle(UINT16 usPosY, UINT8 ubPageNum)
 {
 	wchar_t	sText[AIM_POLICY_LINE_SIZE];
 	LoadAIMPolicyText(sText, ubPageNum);
 	DrawTextToScreen(sText, AIM_POLICY_SUBTITLE_NUMBER, usPosY, 0, AIM_POLICY_SUBTITLE_FONT, AIM_POLICY_SUBTITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-	return(TRUE);
 }
 
 
