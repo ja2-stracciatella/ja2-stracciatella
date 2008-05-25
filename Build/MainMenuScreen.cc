@@ -325,6 +325,7 @@ static void SetMainMenuExitScreen(UINT32 uiNewScreen)
 
 
 static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
+try
 {
 	static BOOLEAN fButtonsCreated = FALSE;
 
@@ -358,7 +359,6 @@ static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 			const INT16        y   = MAINMENU_Y + cnt * MAINMENU_Y_SPACE;
 			GUIButtonRef const b = QuickCreateButton(img, x, y, MSYS_PRIORITY_HIGHEST, MenuButtonCallback);
 			iMenuButtons[cnt] = b;
-			if (!b) return FALSE;
 			MSYS_SetBtnUserData(b, cnt);
 		}
 
@@ -379,6 +379,7 @@ static BOOLEAN CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void RenderMainMenu(void)

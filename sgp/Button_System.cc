@@ -628,7 +628,6 @@ static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
-try
 {
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
@@ -639,11 +638,9 @@ try
 	b->usIconIndex = IconIndex;
 	return b;
 }
-catch (...) { return GUIButtonRef(); }
 
 
 GUIButtonRef CreateTextButton(const wchar_t *string, Font const font, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
-try
 {
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
@@ -656,15 +653,12 @@ try
 	b->sShadowColor = sShadowColor;
 	return b;
 }
-catch (...) { return GUIButtonRef(); }
 
 
 GUIButtonRef CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Priority, GUI_CALLBACK ClickCallback)
-try
 {
 	return AllocateButton(BUTTON_HOT_SPOT, xloc, yloc, Width, Height, Priority, ClickCallback, DefaultMoveCallback);
 }
-catch (...) { return GUIButtonRef(); }
 
 
 void SetButtonCursor(GUIButtonRef const b, UINT16 crsr)
@@ -688,27 +682,21 @@ static GUIButtonRef QuickCreateButtonInternal(BUTTON_PICS* const pics, const INT
 
 
 GUIButtonRef QuickCreateButton(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
-try
 {
 	return QuickCreateButtonInternal(image, x, y, BUTTON_TOGGLE, priority, DefaultMoveCallback, click);
 }
-catch (...) { return GUIButtonRef(); }
 
 
 GUIButtonRef QuickCreateButtonNoMove(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
-try
 {
 	return QuickCreateButtonInternal(image, x, y, BUTTON_TOGGLE, priority, MSYS_NO_CALLBACK, click);
 }
-catch (...) { return GUIButtonRef(); }
 
 
 GUIButtonRef QuickCreateButtonToggle(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
-try
 {
 	return QuickCreateButtonInternal(image, x, y, BUTTON_NEWTOGGLE, priority, MSYS_NO_CALLBACK, click);
 }
-catch (...) { return GUIButtonRef(); }
 
 
 GUIButtonRef QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click)
@@ -723,16 +711,12 @@ GUIButtonRef QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_norma
 GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* const string, Font const font, const INT16 sForeColor, const INT16 sShadowColor, const INT16 sForeColorDown, const INT16 sShadowColorDown, const INT16 xloc, const INT16 yloc, const INT16 Priority, const GUI_CALLBACK ClickCallback)
 {
 	GUIButtonRef const b = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);
-	if (b)
-	{
-		CopyButtonText(b, string);
-		b->usFont           = font;
-		b->sForeColor       = sForeColor;
-		b->sShadowColor     = sShadowColor;
-		b->sForeColorDown   = sForeColorDown;
-		b->sShadowColorDown = sShadowColorDown;
-	}
-
+	CopyButtonText(b, string);
+	b->usFont           = font;
+	b->sForeColor       = sForeColor;
+	b->sShadowColor     = sShadowColor;
+	b->sForeColorDown   = sForeColorDown;
+	b->sShadowColorDown = sShadowColorDown;
 	return b;
 }
 
@@ -1753,14 +1737,12 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 
 
 GUIButtonRef CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 Priority, GUI_CALLBACK ClickCallback)
-try
 {
 	Assert(filename != NULL);
 	BUTTON_PICS* const ButPic = LoadButtonImage(filename, -1, 0, 1, 2, 3);
-	if (ButPic == NULL)
+	if (!ButPic)
 	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "CreateCheckBoxButton: Can't load button image");
-		return GUIButtonRef();
+		throw std::runtime_error("CreateCheckBoxButton: Can't load button image");
 	}
 
 	GUIButtonRef const b = QuickCreateButtonInternal(ButPic, x, y, BUTTON_CHECKBOX, Priority, MSYS_NO_CALLBACK, ClickCallback);
@@ -1771,7 +1753,6 @@ try
 
 	return b;
 }
-catch (...) { return GUIButtonRef(); }
 
 
 void MSYS_SetBtnUserData(GUIButtonRef const b, INT32 userdata)

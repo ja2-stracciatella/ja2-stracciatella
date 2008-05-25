@@ -1023,31 +1023,31 @@ try
 catch (...) { return FALSE; }
 
 
-static BOOLEAN MakeButtonN(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
+static void MakeButtonN(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
+try
 {
 	GUIButtonRef const btn = QuickCreateButtonToggle(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iSMPanelButtons[idx] = btn;
-	if (!btn)
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
-		return FALSE;
-	}
 	SetButtonFastHelpText(btn, help);
-	return TRUE;
+}
+catch (...)
+{
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
+	throw;
 }
 
 
-static BOOLEAN MakeButtonT(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
+static void MakeButtonT(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
+try
 {
 	GUIButtonRef const btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iSMPanelButtons[idx] = btn;
-	if (!btn)
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
-		return FALSE;
-	}
 	SetButtonFastHelpText(btn, help);
-	return TRUE;
+}
+catch (...)
+{
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
+	throw;
 }
 
 
@@ -1068,6 +1068,7 @@ static void BtnUpdownCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 BOOLEAN CreateSMPanelButtons(void)
+try
 {
 	giSMStealthImages = NULL;
 	gfUIStanceDifferent = TRUE;
@@ -1109,26 +1110,27 @@ BOOLEAN CreateSMPanelButtons(void)
 
 	const INT32 dy = INV_INTERFACE_START_Y;
 
-	if (!MakeButtonT(SM_MAP_SCREEN_BUTTON, iSMPanelImages[MAPSCREEN_IMAGES],  SM_MAPSCREEN_X,   dy + SM_MAPSCREEN_Y,   BtnMapScreenCallback,  TacticalStr[MAPSCREEN_POPUPTEXT]))          return FALSE;
-	if (!MakeButtonT(SM_DONE_BUTTON,       iSMPanelImages[DONE_IMAGES],       SM_DONE_X,        dy + SM_DONE_Y,        BtnSMDoneCallback,     TacticalStr[END_TURN_POPUPTEXT]))           return FALSE;
-	if (!MakeButtonN(TALK_BUTTON,          iSMPanelImages[TALK_IMAGES],       SM_TALKB_X,       dy + SM_TALKB_Y,       BtnTalkCallback,       TacticalStr[TALK_CURSOR_POPUPTEXT]))        return FALSE;
-	if (!MakeButtonN(MUTE_BUTTON,          iSMPanelImages[MUTE_IMAGES],       SM_MUTEB_X,       dy + SM_MUTEB_Y,       BtnMuteCallback,       TacticalStr[TOGGLE_MUTE_POPUPTEXT]))        return FALSE;
-	if (!MakeButtonT(STANCEUP_BUTTON,      iSMPanelImages[STANCEUP_IMAGES],   SM_STANCEUPB_X,   dy + SM_STANCEUPB_Y,   BtnStanceUpCallback,   TacticalStr[CHANGE_STANCE_UP_POPUPTEXT]))   return FALSE;
-	if (!MakeButtonN(UPDOWN_BUTTON,        iSMPanelImages[UPDOWN_IMAGES],     SM_UPDOWNB_X,     dy + SM_UPDOWNB_Y,     BtnUpdownCallback,     TacticalStr[CURSOR_LEVEL_POPUPTEXT]))       return FALSE;
-	if (!MakeButtonT(CLIMB_BUTTON,         iSMPanelImages[CLIMB_IMAGES],      SM_CLIMBB_X,      dy + SM_CLIMBB_Y,      BtnClimbCallback,      TacticalStr[JUMPCLIMB_POPUPTEXT]))          return FALSE;
-	if (!MakeButtonT(STANCEDOWN_BUTTON,    iSMPanelImages[STANCEDOWN_IMAGES], SM_STANCEDOWNB_X, dy + SM_STANCEDOWNB_Y, BtnStanceDownCallback, TacticalStr[CHANGE_STANCE_DOWN_POPUPTEXT])) return FALSE;
-	if (!MakeButtonN(HANDCURSOR_BUTTON,    iSMPanelImages[HANDCURSOR_IMAGES], SM_HANDCURSORB_X, dy + SM_HANDCURSORB_Y, BtnHandCursorCallback, TacticalStr[EXAMINE_CURSOR_POPUPTEXT]))     return FALSE;
-	if (!MakeButtonT(PREVMERC_BUTTON,      iSMPanelImages[PREVMERC_IMAGES],   SM_PREVMERCB_X,   dy + SM_PREVMERCB_Y,   BtnPrevMercCallback,   TacticalStr[PREV_MERC_POPUPTEXT]))          return FALSE;
-	if (!MakeButtonT(NEXTMERC_BUTTON,      iSMPanelImages[NEXTMERC_IMAGES],   SM_NEXTMERCB_X,   dy + SM_NEXTMERCB_Y,   BtnNextMercCallback,   TacticalStr[NEXT_MERC_POPUPTEXT]))          return FALSE;
-	if (!MakeButtonT(OPTIONS_BUTTON,       iSMPanelImages[OPTIONS_IMAGES],    SM_OPTIONSB_X,    dy + SM_OPTIONSB_Y,    BtnOptionsCallback,    TacticalStr[CHANGE_OPTIONS_POPUPTEXT]))     return FALSE;
+	MakeButtonT(SM_MAP_SCREEN_BUTTON, iSMPanelImages[MAPSCREEN_IMAGES],  SM_MAPSCREEN_X,   dy + SM_MAPSCREEN_Y,   BtnMapScreenCallback,  TacticalStr[MAPSCREEN_POPUPTEXT]);
+	MakeButtonT(SM_DONE_BUTTON,       iSMPanelImages[DONE_IMAGES],       SM_DONE_X,        dy + SM_DONE_Y,        BtnSMDoneCallback,     TacticalStr[END_TURN_POPUPTEXT]);
+	MakeButtonN(TALK_BUTTON,          iSMPanelImages[TALK_IMAGES],       SM_TALKB_X,       dy + SM_TALKB_Y,       BtnTalkCallback,       TacticalStr[TALK_CURSOR_POPUPTEXT]);
+	MakeButtonN(MUTE_BUTTON,          iSMPanelImages[MUTE_IMAGES],       SM_MUTEB_X,       dy + SM_MUTEB_Y,       BtnMuteCallback,       TacticalStr[TOGGLE_MUTE_POPUPTEXT]);
+	MakeButtonT(STANCEUP_BUTTON,      iSMPanelImages[STANCEUP_IMAGES],   SM_STANCEUPB_X,   dy + SM_STANCEUPB_Y,   BtnStanceUpCallback,   TacticalStr[CHANGE_STANCE_UP_POPUPTEXT]);
+	MakeButtonN(UPDOWN_BUTTON,        iSMPanelImages[UPDOWN_IMAGES],     SM_UPDOWNB_X,     dy + SM_UPDOWNB_Y,     BtnUpdownCallback,     TacticalStr[CURSOR_LEVEL_POPUPTEXT]);
+	MakeButtonT(CLIMB_BUTTON,         iSMPanelImages[CLIMB_IMAGES],      SM_CLIMBB_X,      dy + SM_CLIMBB_Y,      BtnClimbCallback,      TacticalStr[JUMPCLIMB_POPUPTEXT]);
+	MakeButtonT(STANCEDOWN_BUTTON,    iSMPanelImages[STANCEDOWN_IMAGES], SM_STANCEDOWNB_X, dy + SM_STANCEDOWNB_Y, BtnStanceDownCallback, TacticalStr[CHANGE_STANCE_DOWN_POPUPTEXT]);
+	MakeButtonN(HANDCURSOR_BUTTON,    iSMPanelImages[HANDCURSOR_IMAGES], SM_HANDCURSORB_X, dy + SM_HANDCURSORB_Y, BtnHandCursorCallback, TacticalStr[EXAMINE_CURSOR_POPUPTEXT]);
+	MakeButtonT(PREVMERC_BUTTON,      iSMPanelImages[PREVMERC_IMAGES],   SM_PREVMERCB_X,   dy + SM_PREVMERCB_Y,   BtnPrevMercCallback,   TacticalStr[PREV_MERC_POPUPTEXT]);
+	MakeButtonT(NEXTMERC_BUTTON,      iSMPanelImages[NEXTMERC_IMAGES],   SM_NEXTMERCB_X,   dy + SM_NEXTMERCB_Y,   BtnNextMercCallback,   TacticalStr[NEXT_MERC_POPUPTEXT]);
+	MakeButtonT(OPTIONS_BUTTON,       iSMPanelImages[OPTIONS_IMAGES],    SM_OPTIONSB_X,    dy + SM_OPTIONSB_Y,    BtnOptionsCallback,    TacticalStr[CHANGE_OPTIONS_POPUPTEXT]);
 #if 0
-	if (!MakeButtonN(BURSTMODE_BUTTON,     iSMPanelImages[BURSTMODE_IMAGES],  SM_BURSTMODEB_X,  dy + SM_BURSTMODEB_Y,  BtnBurstModeCallback,  TacticalStr[TOGGLE_BURSTMODE_POPUPTEXT]))   return FALSE;
+	MakeButtonN(BURSTMODE_BUTTON,     iSMPanelImages[BURSTMODE_IMAGES],  SM_BURSTMODEB_X,  dy + SM_BURSTMODEB_Y,  BtnBurstModeCallback,  TacticalStr[TOGGLE_BURSTMODE_POPUPTEXT]);
 #endif
-	if (!MakeButtonT(BURSTMODE_BUTTON,     iBurstButtonImages[WM_NORMAL],     SM_BURSTMODEB_X,  dy + SM_BURSTMODEB_Y,  BtnBurstModeCallback,  TacticalStr[TOGGLE_BURSTMODE_POPUPTEXT]))   return FALSE;
-	if (!MakeButtonN(LOOK_BUTTON,          iSMPanelImages[LOOK_IMAGES],       SM_LOOKB_X,       dy + SM_LOOKB_Y,       BtnLookCallback,       TacticalStr[LOOK_CURSOR_POPUPTEXT]))        return FALSE;
+	MakeButtonT(BURSTMODE_BUTTON,     iBurstButtonImages[WM_NORMAL],     SM_BURSTMODEB_X,  dy + SM_BURSTMODEB_Y,  BtnBurstModeCallback,  TacticalStr[TOGGLE_BURSTMODE_POPUPTEXT]);
+	MakeButtonN(LOOK_BUTTON,          iSMPanelImages[LOOK_IMAGES],       SM_LOOKB_X,       dy + SM_LOOKB_Y,       BtnLookCallback,       TacticalStr[LOOK_CURSOR_POPUPTEXT]);
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 void RemoveSMPanelButtons(void)
@@ -2657,17 +2659,17 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 }
 
 
-static BOOLEAN MakeButtonTeam(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
+static void MakeButtonTeam(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
+try
 {
 	GUIButtonRef const btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iTEAMPanelButtons[idx] = btn;
-	if (!btn)
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
-		return FALSE;
-	}
 	SetButtonFastHelpText(btn, help);
-	return TRUE;
+}
+catch (...)
+{
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
+	throw;
 }
 
 
@@ -2677,6 +2679,7 @@ static void BtnSquadCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 BOOLEAN CreateTEAMPanelButtons(void)
+try
 {
 	// Load button Graphics
 	iTEAMPanelImages[ENDTURN_IMAGES]    = LoadButtonImage("INTERFACE/bottom_bar_buttons.sti",    -1, 0, -1, 3, -1);
@@ -2684,12 +2687,13 @@ BOOLEAN CreateTEAMPanelButtons(void)
 	iTEAMPanelImages[DISK_IMAGES]       = UseLoadedButtonImage(iTEAMPanelImages[ENDTURN_IMAGES], -1, 2, -1, 5, -1);
 
 	const INT32 dy = INTERFACE_START_Y;
-	if (!MakeButtonTeam(TEAM_DONE_BUTTON,       iTEAMPanelImages[ENDTURN_IMAGES],    TM_ENDTURN_X,    dy + TM_ENDTURN_Y,    BtnEndTurnCallback,    TacticalStr[END_TURN_POPUPTEXT]))     return FALSE;
-	if (!MakeButtonTeam(TEAM_MAP_SCREEN_BUTTON, iTEAMPanelImages[ROSTERMODE_IMAGES], TM_ROSTERMODE_X, dy + TM_ROSTERMODE_Y, BtnRostermodeCallback, TacticalStr[MAPSCREEN_POPUPTEXT]))    return FALSE;
-	if (!MakeButtonTeam(CHANGE_SQUAD_BUTTON,    iTEAMPanelImages[DISK_IMAGES],       TM_DISK_X,       dy + TM_DISK_Y,       BtnSquadCallback,      TacticalStr[CHANGE_SQUAD_POPUPTEXT])) return FALSE;
+	MakeButtonTeam(TEAM_DONE_BUTTON,       iTEAMPanelImages[ENDTURN_IMAGES],    TM_ENDTURN_X,    dy + TM_ENDTURN_Y,    BtnEndTurnCallback,    TacticalStr[END_TURN_POPUPTEXT]);
+	MakeButtonTeam(TEAM_MAP_SCREEN_BUTTON, iTEAMPanelImages[ROSTERMODE_IMAGES], TM_ROSTERMODE_X, dy + TM_ROSTERMODE_Y, BtnRostermodeCallback, TacticalStr[MAPSCREEN_POPUPTEXT]);
+	MakeButtonTeam(CHANGE_SQUAD_BUTTON,    iTEAMPanelImages[DISK_IMAGES],       TM_DISK_X,       dy + TM_DISK_Y,       BtnSquadCallback,      TacticalStr[CHANGE_SQUAD_POPUPTEXT]);
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 void RemoveTEAMPanelButtons(void)

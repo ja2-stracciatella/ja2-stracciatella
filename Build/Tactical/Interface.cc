@@ -417,18 +417,18 @@ void HandleInterfaceBackgrounds( )
 static void BtnMovementCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-static BOOLEAN MakeButtonMove(UINT idx, UINT gfx, INT16 x, INT16 y, UI_EVENT* event, const wchar_t* help)
+static void MakeButtonMove(UINT idx, UINT gfx, INT16 x, INT16 y, UI_EVENT* event, const wchar_t* help)
+try
 {
 	GUIButtonRef const btn = QuickCreateButton(iIconImages[gfx], x, y, MSYS_PRIORITY_HIGHEST - 1, BtnMovementCallback);
 	iActionIcons[idx] = btn;
-	if (!btn)
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
-		return FALSE;
-	}
 	btn->User.Ptr = event;
 	SetButtonFastHelpText(btn, help);
-	return TRUE;
+}
+catch (...)
+{
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
+	throw;
 }
 
 
@@ -436,6 +436,7 @@ static void MovementMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 
 void PopupMovementMenu( UI_EVENT *pUIEvent )
+try
 {
 	INT32								iMenuAnchorX, iMenuAnchorY;
 	UINT32							uiActionImages;
@@ -478,32 +479,32 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 	iMenuAnchorX = giMenuAnchorX + 9;
 	iMenuAnchorY = giMenuAnchorY + 8;
 
-	if (!MakeButtonMove(RUN_ICON, RUN_IMAGES, iMenuAnchorX + 20, iMenuAnchorY, pUIEvent, pTacticalPopupButtonStrings[RUN_ICON])) return;
+	MakeButtonMove(RUN_ICON, RUN_IMAGES, iMenuAnchorX + 20, iMenuAnchorY, pUIEvent, pTacticalPopupButtonStrings[RUN_ICON]);
 	if (MercInWater(s) || s->uiStatusFlags & SOLDIER_VEHICLE || s->uiStatusFlags & SOLDIER_ROBOT)
 	{
 		DisableButton(iActionIcons[RUN_ICON]);
 	}
 
 	const wchar_t* const help = (s->uiStatusFlags & SOLDIER_VEHICLE ? TacticalStr[DRIVE_POPUPTEXT] : pTacticalPopupButtonStrings[WALK_ICON]);
-	if (!MakeButtonMove(WALK_ICON, WALK_IMAGES, iMenuAnchorX + 40, iMenuAnchorY, pUIEvent, help)) return;
+	MakeButtonMove(WALK_ICON, WALK_IMAGES, iMenuAnchorX + 40, iMenuAnchorY, pUIEvent, help);
 	if (s->uiStatusFlags & SOLDIER_ROBOT && !CanRobotBeControlled(s))
 	{
 		DisableButton(iActionIcons[WALK_ICON]);
 	}
 
-	if (!MakeButtonMove(SNEAK_ICON, SNEAK_IMAGES, iMenuAnchorX + 40, iMenuAnchorY + 20, pUIEvent, pTacticalPopupButtonStrings[SNEAK_ICON])) return;
+	MakeButtonMove(SNEAK_ICON, SNEAK_IMAGES, iMenuAnchorX + 40, iMenuAnchorY + 20, pUIEvent, pTacticalPopupButtonStrings[SNEAK_ICON]);
 	if (!IsValidStance(s, ANIM_CROUCH))
 	{
 		DisableButton(iActionIcons[SNEAK_ICON]);
 	}
 
-	if (!MakeButtonMove(CRAWL_ICON, CRAWL_IMAGES, iMenuAnchorX + 40, iMenuAnchorY + 40, pUIEvent, pTacticalPopupButtonStrings[CRAWL_ICON])) return;
+	MakeButtonMove(CRAWL_ICON, CRAWL_IMAGES, iMenuAnchorX + 40, iMenuAnchorY + 40, pUIEvent, pTacticalPopupButtonStrings[CRAWL_ICON]);
 	if (!IsValidStance(s, ANIM_PRONE))
 	{
 		DisableButton(iActionIcons[CRAWL_ICON]);
 	}
 
-	if (!MakeButtonMove(LOOK_ICON, LOOK_IMAGES, iMenuAnchorX, iMenuAnchorY, pUIEvent, TacticalStr[LOOK_CURSOR_POPUPTEXT])) return;
+	MakeButtonMove(LOOK_ICON, LOOK_IMAGES, iMenuAnchorX, iMenuAnchorY, pUIEvent, TacticalStr[LOOK_CURSOR_POPUPTEXT]);
 	if (s->uiStatusFlags & SOLDIER_VEHICLE ||
 			s->uiStatusFlags & SOLDIER_ROBOT && !CanRobotBeControlled(s))
 	{
@@ -573,32 +574,33 @@ void PopupMovementMenu( UI_EVENT *pUIEvent )
 
 	if (AM_AN_EPC(s)) fDisableAction = TRUE;
 
-	if (!MakeButtonMove(ACTIONC_ICON, uiActionImages, iMenuAnchorX, iMenuAnchorY + 20, pUIEvent, Action)) return;
+	MakeButtonMove(ACTIONC_ICON, uiActionImages, iMenuAnchorX, iMenuAnchorY + 20, pUIEvent, Action);
 	if (fDisableAction)
 	{
 		DisableButton(iActionIcons[ACTIONC_ICON]);
 	}
 
-	if (!MakeButtonMove(TALK_ICON, TALK_IMAGES, iMenuAnchorX, iMenuAnchorY + 40, pUIEvent, pTacticalPopupButtonStrings[TALK_ICON])) return;
+	MakeButtonMove(TALK_ICON, TALK_IMAGES, iMenuAnchorX, iMenuAnchorY + 40, pUIEvent, pTacticalPopupButtonStrings[TALK_ICON]);
 	if (AM_AN_EPC(s) || s->uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		DisableButton(iActionIcons[TALK_ICON]);
 	}
 
-	if (!MakeButtonMove(HAND_ICON, HAND_IMAGES, iMenuAnchorX + 20, iMenuAnchorY + 40, pUIEvent, pTacticalPopupButtonStrings[HAND_ICON])) return;
+	MakeButtonMove(HAND_ICON, HAND_IMAGES, iMenuAnchorX + 20, iMenuAnchorY + 40, pUIEvent, pTacticalPopupButtonStrings[HAND_ICON]);
 	if (AM_AN_EPC(s) || s->uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		DisableButton(iActionIcons[HAND_ICON]);
 	}
 
-	if (!MakeButtonMove(CANCEL_ICON, CANCEL_IMAGES, iMenuAnchorX + 20, iMenuAnchorY + 20, pUIEvent, pTacticalPopupButtonStrings[CANCEL_ICON])) return;
+	MakeButtonMove(CANCEL_ICON, CANCEL_IMAGES, iMenuAnchorX + 20, iMenuAnchorY + 20, pUIEvent, pTacticalPopupButtonStrings[CANCEL_ICON]);
 
 	gfInMovementMenu = TRUE;
 
 	// Ignore scrolling
 	gfIgnoreScrolling = TRUE;
-
 }
+catch (...) { /* XXX ignore */ }
+
 
 void PopDownMovementMenu( )
 {
@@ -1600,15 +1602,11 @@ BOOLEAN InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, const BOOLEAN fClosingDoor
 static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-static BOOLEAN MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16 bp, BOOLEAN disable, const wchar_t* help)
+static void MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, INT16 bp, BOOLEAN disable, const wchar_t* help)
+try
 {
 	GUIButtonRef const btn = QuickCreateButton(iIconImages[gfx], x, y, MSYS_PRIORITY_HIGHEST - 1, BtnDoorMenuCallback);
 	iActionIcons[idx] = btn;
-	if (!btn)
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
-		return FALSE;
-	}
 	if (ap == 0 || !(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT))
 	{
 		SetButtonFastHelpText(btn, help);
@@ -1624,7 +1622,11 @@ static BOOLEAN MakeButtonDoor(UINT idx, UINT gfx, INT16 x, INT16 y, INT16 ap, IN
 	{
 		DisableButton(btn);
 	}
-	return TRUE;
+}
+catch (...)
+{
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
+	throw;
 }
 
 
@@ -1632,6 +1634,7 @@ static void DoorMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
 static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
+try
 {
 	INT32 dx = gOpenDoorMenu.sX;
 	INT32 dy = gOpenDoorMenu.sY;
@@ -1646,31 +1649,32 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 	BOOLEAN d;
 
 	d = d0 || !SoldierHasKey(gOpenDoorMenu.pSoldier, ANYKEY);
-	if (!MakeButtonDoor(USE_KEYRING_ICON, USE_KEYRING_IMAGES, dx + 20, dy, AP_UNLOCK_DOOR, BP_UNLOCK_DOOR, d, pTacticalPopupButtonStrings[USE_KEYRING_ICON])) return;
+	MakeButtonDoor(USE_KEYRING_ICON, USE_KEYRING_IMAGES, dx + 20, dy, AP_UNLOCK_DOOR, BP_UNLOCK_DOOR, d, pTacticalPopupButtonStrings[USE_KEYRING_ICON]);
 
 	d = fClosingDoor || FindUsableObj(gOpenDoorMenu.pSoldier, CROWBAR) == NO_SLOT;
-	if (!MakeButtonDoor(USE_CROWBAR_ICON, CROWBAR_DOOR_IMAGES, dx + 40, dy, AP_USE_CROWBAR, BP_USE_CROWBAR, d, pTacticalPopupButtonStrings[USE_CROWBAR_ICON])) return;
+	MakeButtonDoor(USE_CROWBAR_ICON, CROWBAR_DOOR_IMAGES, dx + 40, dy, AP_USE_CROWBAR, BP_USE_CROWBAR, d, pTacticalPopupButtonStrings[USE_CROWBAR_ICON]);
 
 	d = d0 || FindObj(gOpenDoorMenu.pSoldier, LOCKSMITHKIT) == NO_SLOT;
-	if (!MakeButtonDoor(LOCKPICK_DOOR_ICON, LOCKPICK_DOOR_IMAGES, dx + 40, dy + 20, AP_PICKLOCK, BP_PICKLOCK, d, pTacticalPopupButtonStrings[LOCKPICK_DOOR_ICON])) return;
+	MakeButtonDoor(LOCKPICK_DOOR_ICON, LOCKPICK_DOOR_IMAGES, dx + 40, dy + 20, AP_PICKLOCK, BP_PICKLOCK, d, pTacticalPopupButtonStrings[LOCKPICK_DOOR_ICON]);
 
 	d = d0 || FindObj(gOpenDoorMenu.pSoldier, SHAPED_CHARGE) == NO_SLOT;
-	if (!MakeButtonDoor(EXPLOSIVE_DOOR_ICON, EXPLOSIVE_DOOR_IMAGES, dx + 40, dy + 40, AP_EXPLODE_DOOR, BP_EXPLODE_DOOR, d, pTacticalPopupButtonStrings[EXPLOSIVE_DOOR_ICON])) return;
+	MakeButtonDoor(EXPLOSIVE_DOOR_ICON, EXPLOSIVE_DOOR_IMAGES, dx + 40, dy + 40, AP_EXPLODE_DOOR, BP_EXPLODE_DOOR, d, pTacticalPopupButtonStrings[EXPLOSIVE_DOOR_ICON]);
 
 	const wchar_t* const help = pTacticalPopupButtonStrings[fClosingDoor ? CANCEL_ICON + 1 : OPEN_DOOR_ICON];
-	if (!MakeButtonDoor(OPEN_DOOR_ICON, OPEN_DOOR_IMAGES, dx, dy, AP_OPEN_DOOR, BP_OPEN_DOOR, FALSE, help)) return;
+	MakeButtonDoor(OPEN_DOOR_ICON, OPEN_DOOR_IMAGES, dx, dy, AP_OPEN_DOOR, BP_OPEN_DOOR, FALSE, help);
 
-	if (!MakeButtonDoor(EXAMINE_DOOR_ICON, EXAMINE_DOOR_IMAGES, dx,      dy + 20, AP_EXAMINE_DOOR, BP_EXAMINE_DOOR, d0, pTacticalPopupButtonStrings[EXAMINE_DOOR_ICON])) return;
-	if (!MakeButtonDoor(BOOT_DOOR_ICON, BOOT_DOOR_IMAGES,       dx,      dy + 40, AP_BOOT_DOOR,    BP_BOOT_DOOR,    d0, pTacticalPopupButtonStrings[BOOT_DOOR_ICON]))    return;
-	if (!MakeButtonDoor(UNTRAP_DOOR_ICON, UNTRAP_DOOR_ICON,     dx + 20, dy + 40, AP_UNTRAP_DOOR,  BP_UNTRAP_DOOR,  d0, pTacticalPopupButtonStrings[UNTRAP_DOOR_ICON]))  return;
+	MakeButtonDoor(EXAMINE_DOOR_ICON, EXAMINE_DOOR_IMAGES, dx,      dy + 20, AP_EXAMINE_DOOR, BP_EXAMINE_DOOR, d0, pTacticalPopupButtonStrings[EXAMINE_DOOR_ICON]);
+	MakeButtonDoor(BOOT_DOOR_ICON, BOOT_DOOR_IMAGES,       dx,      dy + 40, AP_BOOT_DOOR,    BP_BOOT_DOOR,    d0, pTacticalPopupButtonStrings[BOOT_DOOR_ICON]);
+	MakeButtonDoor(UNTRAP_DOOR_ICON, UNTRAP_DOOR_ICON,     dx + 20, dy + 40, AP_UNTRAP_DOOR,  BP_UNTRAP_DOOR,  d0, pTacticalPopupButtonStrings[UNTRAP_DOOR_ICON]);
 
-	if (!MakeButtonDoor(CANCEL_ICON, CANCEL_IMAGES, dx + 20, dy + 20, 0, 0, FALSE, pTacticalPopupButtonStrings[CANCEL_ICON])) return;
+	MakeButtonDoor(CANCEL_ICON, CANCEL_IMAGES, dx + 20, dy + 20, 0, 0, FALSE, pTacticalPopupButtonStrings[CANCEL_ICON]);
 
 	gfInOpenDoorMenu = TRUE;
 
 	// Ignore scrolling
 	gfIgnoreScrolling = TRUE;
 }
+catch (...) { /* XXX ignore */ }
 
 
 void PopDownOpenDoorMenu( )
