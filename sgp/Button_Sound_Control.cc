@@ -5,9 +5,9 @@
 #include "ScreenIDs.h"
 
 
-void SpecifyButtonSoundScheme(INT32 iButtonID, ButtonSoundScheme SoundScheme)
+void SpecifyButtonSoundScheme(GUIButtonRef const b, ButtonSoundScheme SoundScheme)
 {
-	ButtonList[iButtonID]->ubSoundSchemeID = SoundScheme;
+	b->ubSoundSchemeID = SoundScheme;
 	if (SoundScheme == BUTTON_SOUND_SCHEME_GENERIC)
 	{
 		#ifdef JA2
@@ -18,22 +18,22 @@ void SpecifyButtonSoundScheme(INT32 iButtonID, ButtonSoundScheme SoundScheme)
 			case LOADSAVE_SCREEN:
 			case SAVE_LOAD_SCREEN:
 			case INIT_SCREEN:
-				ButtonList[ iButtonID ]->ubSoundSchemeID = BUTTON_SOUND_SCHEME_BIGSWITCH3;
+				b->ubSoundSchemeID = BUTTON_SOUND_SCHEME_BIGSWITCH3;
 				break;
 
 			case LAPTOP_SCREEN:
-				ButtonList[ iButtonID ]->ubSoundSchemeID = BUTTON_SOUND_SCHEME_COMPUTERBEEP2;
+				b->ubSoundSchemeID = BUTTON_SOUND_SCHEME_COMPUTERBEEP2;
 				break;
 
 			case AUTORESOLVE_SCREEN:
 			case MAP_SCREEN:
 			case GAME_SCREEN:
 			case SHOPKEEPER_SCREEN:
-				ButtonList[ iButtonID ]->ubSoundSchemeID = BUTTON_SOUND_SCHEME_SMALLSWITCH2;
+				b->ubSoundSchemeID = BUTTON_SOUND_SCHEME_SMALLSWITCH2;
 				break;
 
 			case GAME_INIT_OPTIONS_SCREEN:
-				ButtonList[ iButtonID ]->ubSoundSchemeID = BUTTON_SOUND_SCHEME_VERYSMALLSWITCH2;
+				b->ubSoundSchemeID = BUTTON_SOUND_SCHEME_VERYSMALLSWITCH2;
 				break;
 
 			//Anything not handled gets NO sound.

@@ -616,7 +616,7 @@ static GUI_BUTTON* AllocateButton(const UINT32 Flags, const INT16 Left, const IN
 
 	ButtonList[BtnID] = b;
 
-	SpecifyButtonSoundScheme(BtnID, BUTTON_SOUND_SCHEME_GENERIC);
+	SpecifyButtonSoundScheme(b, BUTTON_SOUND_SCHEME_GENERIC);
 
 	return b;
 }

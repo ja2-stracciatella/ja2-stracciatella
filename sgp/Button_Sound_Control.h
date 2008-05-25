@@ -17,7 +17,7 @@ typedef enum ButtonSoundScheme
 	BUTTON_SOUND_SCHEME_COMPUTERSWITCH1,
 } ButtonSoundScheme;
 
-void SpecifyButtonSoundScheme(INT32 iButtonID, ButtonSoundScheme SoundScheme);
+void SpecifyButtonSoundScheme(GUIButtonRef, ButtonSoundScheme);
 
 void PlayButtonSound(const GUI_BUTTON* btn, INT32 iSoundType);
 
