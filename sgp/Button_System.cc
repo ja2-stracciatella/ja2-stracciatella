@@ -357,7 +357,6 @@ static INT16 FindFreeIconSlot(void)
 
 
 INT16 LoadGenericButtonIcon(const char* filename)
-try
 {
 	AssertMsg(filename != NULL, "Attempting to LoadGenericButtonIcon() with null filename.");
 
@@ -370,7 +369,6 @@ try
 	// Return the slot number
 	return ImgSlot;
 }
-catch (...) { return BUTTON_NO_IMAGE; }
 
 
 void UnloadGenericButtonIcon(INT16 GenImg)
