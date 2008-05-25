@@ -63,6 +63,7 @@ const char *pbCarPortraitFileNames[] = {
 // load int he portraits for the car faces that will be use in mapscreen
 void LoadCarPortraitValues(void)
 {
+#ifndef JA2DEMO
 	INT32 iCounter = 0;
 
 	if (giCarPortraits[0]) return;
@@ -70,6 +71,7 @@ void LoadCarPortraitValues(void)
 	{
 		giCarPortraits[iCounter] = AddVideoObjectFromFile(pbCarPortraitFileNames[iCounter]);
 	}
+#endif
 }
 
 

@@ -1172,6 +1172,7 @@ static void ShadeMapElemZoomIn(const INT16 sMapX, const INT16 sMapY, INT32 iColo
 
 void InitializePalettesForMap(void)
 {
+#ifndef JA2DEMO
 	AutoSGPVSurface uiTempMap(AddVideoSurfaceFromFile("INTERFACE/b_map.pcx"));
 
 	SGPPaletteEntry pal[256];
@@ -1181,6 +1182,7 @@ void InitializePalettesForMap(void)
 	pMapDKRedPalette   = Create16BPPPaletteShaded(pal, 200,   0, 0, TRUE);
 	pMapLTGreenPalette = Create16BPPPaletteShaded(pal,   0, 400, 0, TRUE);
 	pMapDKGreenPalette = Create16BPPPaletteShaded(pal,   0, 200, 0, TRUE);
+#endif
 }
 
 
