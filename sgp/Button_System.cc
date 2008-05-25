@@ -181,7 +181,6 @@ static void InitButtonImage(BUTTON_PICS* const pics, const HVOBJECT VObj, const 
 
 
 BUTTON_PICS* LoadButtonImage(const char* filename, INT32 Grayed, INT32 OffNormal, INT32 OffHilite, INT32 OnNormal, INT32 OnHilite)
-try
 {
 	AssertMsg(filename != NULL, "Attempting to LoadButtonImage() with null filename.");
 
@@ -191,8 +190,7 @@ try
 			OnNormal  == BUTTON_NO_IMAGE &&
 			OnHilite  == BUTTON_NO_IMAGE)
 	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("No button pictures selected for %s", filename));
-		return NULL;
+		throw std::logic_error("No button pictures selected");
 	}
 
 	BUTTON_PICS* const UseSlot = FindFreeButtonSlot();
@@ -200,7 +198,6 @@ try
 	InitButtonImage(UseSlot, VObj, GUI_BTN_NONE, Grayed, OffNormal, OffHilite, OnNormal, OnHilite);
 	return UseSlot;
 }
-catch (...) { return 0; }
 
 
 BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* const LoadedImg, const INT32 Grayed, const INT32 OffNormal, const INT32 OffHilite, const INT32 OnNormal, const INT32 OnHilite)
@@ -1734,12 +1731,7 @@ GUIButtonRef CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 
 {
 	Assert(filename != NULL);
 	BUTTON_PICS* const ButPic = LoadButtonImage(filename, -1, 0, 1, 2, 3);
-	if (!ButPic)
-	{
-		throw std::runtime_error("CreateCheckBoxButton: Can't load button image");
-	}
-
-	GUIButtonRef const b = QuickCreateButtonInternal(ButPic, x, y, BUTTON_CHECKBOX, Priority, MSYS_NO_CALLBACK, ClickCallback);
+	GUIButtonRef const b      = QuickCreateButtonInternal(ButPic, x, y, BUTTON_CHECKBOX, Priority, MSYS_NO_CALLBACK, ClickCallback);
 
 	//change the flags so that it isn't a quick button anymore
 	b->uiFlags &= ~BUTTON_QUICK;

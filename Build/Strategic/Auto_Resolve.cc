@@ -1647,7 +1647,6 @@ static void CreateAutoResolveInterface(void)
 
 	// Load the button images file, and assign it to the first button.
 	BUTTON_PICS* const btn_pics = LoadButtonImage("Interface/AutoBtns.sti", -1, 0, -1, 7, -1);
-	AssertMsg(btn_pics, "Failed to load Interface/AutoBtns.sti");
 	ar->iButtonImage[PAUSE_BUTTON]    = btn_pics;
 	// Have the other buttons hook into the first button containing the images.
 	ar->iButtonImage[PLAY_BUTTON]     = UseLoadedButtonImage(btn_pics, -1,  1, -1,  8, -1);
