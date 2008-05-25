@@ -204,7 +204,6 @@ catch (...) { return 0; }
 
 
 BUTTON_PICS* UseLoadedButtonImage(BUTTON_PICS* const LoadedImg, const INT32 Grayed, const INT32 OffNormal, const INT32 OffHilite, const INT32 OnNormal, const INT32 OnHilite)
-try
 {
 	if (Grayed    == BUTTON_NO_IMAGE &&
 			OffNormal == BUTTON_NO_IMAGE &&
@@ -212,23 +211,20 @@ try
 			OnNormal  == BUTTON_NO_IMAGE &&
 			OnHilite  == BUTTON_NO_IMAGE)
 	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("No button pictures selected for pre-loaded button image %p", LoadedImg));
-		return NULL;
+		throw std::logic_error("No button pictures selected for pre-loaded button image");
 	}
 
 	// Is button image index given valid?
 	const HVOBJECT vobj = LoadedImg->vobj;
-	if (vobj == NULL)
+	if (!vobj)
 	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, String("Invalid button picture handle given for pre-loaded button image %p", LoadedImg));
-		return NULL;
+		throw std::logic_error("Invalid button picture handle given for pre-loaded button image");
 	}
 
 	BUTTON_PICS* const UseSlot = FindFreeButtonSlot();
 	InitButtonImage(UseSlot, vobj, GUI_BTN_DUPLICATE_VOBJ, Grayed, OffNormal, OffHilite, OnNormal, OnHilite);
 	return UseSlot;
 }
-catch (...) { return 0; }
 
 
 void UnloadButtonImage(BUTTON_PICS* const pics)
