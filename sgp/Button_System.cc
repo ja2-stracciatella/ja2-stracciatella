@@ -676,9 +676,8 @@ try
 catch (...) { return GUIButtonRef(); }
 
 
-void SetButtonCursor(GUIButtonRef const iBtnId, UINT16 crsr)
+void SetButtonCursor(GUIButtonRef const b, UINT16 crsr)
 {
-	GUI_BUTTON* b = GetButton(iBtnId);
 	b->Area.Cursor = crsr;
 }
 
@@ -771,38 +770,34 @@ void SpecifyButtonText(GUIButtonRef const iButtonID, const wchar_t* string)
 }
 
 
-void SpecifyButtonDownTextColors(GUIButtonRef const iButtonID, INT16 sForeColorDown, INT16 sShadowColorDown)
+void SpecifyButtonDownTextColors(GUIButtonRef const b, INT16 sForeColorDown, INT16 sShadowColorDown)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
 	b->sForeColorDown   = sForeColorDown;
 	b->sShadowColorDown = sShadowColorDown;
 	b->uiFlags |= BUTTON_DIRTY;
 }
 
 
-void SpecifyButtonHilitedTextColors(GUIButtonRef const iButtonID, INT16 sForeColorHilited, INT16 sShadowColorHilited)
+void SpecifyButtonHilitedTextColors(GUIButtonRef const b, INT16 sForeColorHilited, INT16 sShadowColorHilited)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
 	b->sForeColorHilited   = sForeColorHilited;
 	b->sShadowColorHilited = sShadowColorHilited;
 	b->uiFlags |= BUTTON_DIRTY;
 }
 
 
-void SpecifyButtonTextJustification(GUIButtonRef const iButtonID, INT8 bJustification)
+void SpecifyButtonTextJustification(GUIButtonRef const b, INT8 bJustification)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
 	Assert(bJustification >= BUTTON_TEXT_LEFT && bJustification <= BUTTON_TEXT_RIGHT);
 	b->bJustification = bJustification;
 	b->uiFlags |= BUTTON_DIRTY;
 }
 
 
-void SpecifyGeneralButtonTextAttributes(GUIButtonRef const iButtonID, const wchar_t* string, Font const font, INT16 sForeColor, INT16 sShadowColor)
+void SpecifyGeneralButtonTextAttributes(GUIButtonRef const b, const wchar_t* string, Font const font, INT16 sForeColor, INT16 sShadowColor)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
 	//Copy over information
-	SpecifyButtonText(iButtonID, string);
+	SpecifyButtonText(b, string);
 	b->usFont       = font;
 	b->sForeColor = sForeColor;
 	b->sShadowColor = sShadowColor;
@@ -810,9 +805,8 @@ void SpecifyGeneralButtonTextAttributes(GUIButtonRef const iButtonID, const wcha
 }
 
 
-void SpecifyButtonTextOffsets(GUIButtonRef const iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText)
+void SpecifyButtonTextOffsets(GUIButtonRef const b, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
 	//Copy over information
 	b->bTextXOffset = bTextXOffset;
 	b->bTextYOffset = bTextYOffset;
@@ -820,9 +814,8 @@ void SpecifyButtonTextOffsets(GUIButtonRef const iButtonID, INT8 bTextXOffset, I
 }
 
 
-void SpecifyButtonTextSubOffsets(GUIButtonRef const iButtonID, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText)
+void SpecifyButtonTextSubOffsets(GUIButtonRef const b, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
 	//Copy over information
 	b->bTextXSubOffSet = bTextXOffset;
 	b->bTextYSubOffSet = bTextYOffset;
@@ -830,9 +823,8 @@ void SpecifyButtonTextSubOffsets(GUIButtonRef const iButtonID, INT8 bTextXOffset
 }
 
 
-void SpecifyButtonTextWrappedWidth(GUIButtonRef const iButtonID, INT16 sWrappedWidth)
+void SpecifyButtonTextWrappedWidth(GUIButtonRef const b, INT16 sWrappedWidth)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
 	b->sWrappedWidth = sWrappedWidth;
 }
 
@@ -866,9 +858,8 @@ void SpecifyButtonIcon(GUIButtonRef const iButtonID, const SGPVObject* const ico
 }
 
 
-void AllowDisabledButtonFastHelp(GUIButtonRef const iButtonID)
+void AllowDisabledButtonFastHelp(GUIButtonRef const b)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
 	b->Area.uiFlags |= MSYS_ALLOW_DISABLED_FASTHELP;
 }
 
@@ -1312,15 +1303,13 @@ static void DrawShadeOnButton(const GUI_BUTTON* b)
 }
 
 
-void DrawCheckBoxButtonOnOff(GUIButtonRef const iButtonID, BOOLEAN on)
+void DrawCheckBoxButtonOnOff(GUIButtonRef const b, BOOLEAN const on)
 {
-	GUI_BUTTON* b = GetButton(iButtonID);
-
-	BOOLEAN fLeftButtonState = gfLeftButtonState;
+	BOOLEAN const fLeftButtonState = gfLeftButtonState;
 
 	gfLeftButtonState = on;
 	b->Area.uiFlags |= MSYS_MOUSE_IN_AREA;
-	DrawButton(iButtonID);
+	DrawButton(b);
 
 	gfLeftButtonState = fLeftButtonState;
 }
@@ -1792,14 +1781,13 @@ try
 		return GUIButtonRef();
 	}
 
-	GUIButtonRef const iButtonID = QuickCreateButtonInternal(ButPic, x, y, BUTTON_CHECKBOX, Priority, MSYS_NO_CALLBACK, ClickCallback);
+	GUIButtonRef const b = QuickCreateButtonInternal(ButPic, x, y, BUTTON_CHECKBOX, Priority, MSYS_NO_CALLBACK, ClickCallback);
 
 	//change the flags so that it isn't a quick button anymore
-	GUI_BUTTON* b = ButtonList[iButtonID];
 	b->uiFlags &= ~BUTTON_QUICK;
 	b->uiFlags |= BUTTON_CHECKBOX | BUTTON_SELFDELETE_IMAGE;
 
-	return iButtonID;
+	return b;
 }
 catch (...) { return GUIButtonRef(); }
 
