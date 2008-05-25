@@ -902,7 +902,7 @@ void RenderPreBattleInterface()
 	//This code determines if the cursor is inside the rectangle consisting of the
 	//retreat button.  If it is inside, then we set up the variables so that the retreat
 	//arrows get drawn in the mapscreen.
-	const GUI_BUTTON* const retreat = ButtonList[iPBButton[2]];
+	GUIButtonRef const retreat = iPBButton[2];
 	if (retreat->uiFlags & BUTTON_ENABLED)
 	{
 		const MOUSE_REGION* const r = &retreat->Area;

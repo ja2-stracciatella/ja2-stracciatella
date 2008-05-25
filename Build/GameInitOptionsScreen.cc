@@ -257,9 +257,9 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 }
 
 
-static void ClickButton(UINT32 btn)
+static void ClickButton(GUIButtonRef const btn)
 {
-	ButtonList[btn]->uiFlags |= BUTTON_CLICKED_ON;
+	btn->uiFlags |= BUTTON_CLICKED_ON;
 }
 
 

@@ -91,7 +91,7 @@ on a popup menu activation button.
 Returns 0 if nothing in menu was selected, else
 returns the menu entry number starting from 1.
 */
-void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
+void InitPopupMenu(GUIButtonRef const button, UINT8 const ubPopupMenuID, UINT8 const ubDirection)
 {
 	UINT16 usX, usY; // HACK000E
 	UINT16 usMenuHeight;
@@ -99,14 +99,11 @@ void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 	UINT16 usCurrStrWidth;
 	UINT8 ubColumn, ubEntry;
 	UINT8 ubCounter;
-	GUI_BUTTON *button;
 	//calculate the location of the menu based on the button position.
 	//This also calculates the menu's direction based on position.
 
 	gPopup.usFont = SMALLFONT1;
 	gusEntryHeight = GetFontHeight( gPopup.usFont );
-
-	button = ButtonList[ iButtonID ];
 
 	switch( ubDirection )
 	{
@@ -152,8 +149,6 @@ void InitPopupMenu( INT32 iButtonID, UINT8 ubPopupMenuID, UINT8 ubDirection )
 
 	gPopup.usFont = SMALLFONT1;
 	gusEntryHeight = GetFontHeight( gPopup.usFont );
-
-	button = ButtonList[ iButtonID ];
 
 	gPopup.ubPopupMenuID = ubPopupMenuID;
 	gPopup.ubSelectedIndex = 0;

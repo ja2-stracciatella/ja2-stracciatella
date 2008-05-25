@@ -590,15 +590,15 @@ static void SetupGameTypeFlags(void)
 			CreateCheckBoxButton(	616, 365, "EDITOR/radiobutton.sti", MSYS_PRIORITY_NORMAL, SciFiOnlyCheckboxCallback );
 		SetButtonFastHelpText( giSciFiCheckboxButton, L"Item appears in |Sci-Fi mode only." );
 
-		INT32            btn_id;
-		WORLDITEM* const wi     = GetWorldItem(gpEditingItemPool->iItemIndex);
+		GUIButtonRef     btn;
+		WORLDITEM* const wi = GetWorldItem(gpEditingItemPool->iItemIndex);
 		switch (wi->usFlags & (WORLD_ITEM_REALISTIC_ONLY | WORLD_ITEM_SCIFI_ONLY))
 		{
-			case WORLD_ITEM_REALISTIC_ONLY: btn_id = giRealisticCheckboxButton; break;
-			case WORLD_ITEM_SCIFI_ONLY:     btn_id = giSciFiCheckboxButton;     break;
-			default:                        btn_id = giBothCheckboxButton;      break;
+			case WORLD_ITEM_REALISTIC_ONLY: btn = giRealisticCheckboxButton; break;
+			case WORLD_ITEM_SCIFI_ONLY:     btn = giSciFiCheckboxButton;     break;
+			default:                        btn = giBothCheckboxButton;      break;
 		}
-		ButtonList[btn_id]->uiFlags |= BUTTON_CLICKED_ON | BUTTON_DIRTY;
+		btn->uiFlags |= BUTTON_CLICKED_ON | BUTTON_DIRTY;
 	}
 }
 
@@ -986,7 +986,7 @@ static void OwnershipGroupButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		InitPopupMenu( btn->IDNum, OWNERSHIPGROUP_POPUP, DIR_UPLEFT );
+		InitPopupMenu(btn, OWNERSHIPGROUP_POPUP, DIR_UPLEFT);
 	}
 }
 

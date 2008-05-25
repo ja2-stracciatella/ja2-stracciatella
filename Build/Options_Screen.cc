@@ -686,7 +686,7 @@ static void HandleOptionToggle(UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BO
 {
 	gGameSettings.fOptions[ubButton] = fState;
 
-	GUI_BUTTON* const b = ButtonList[guiOptionsToggles[ubButton]];
+	GUIButtonRef const b = guiOptionsToggles[ubButton];
 	b->uiFlags &= ~BUTTON_CLICKED_ON;
 	b->uiFlags |= (fState ? BUTTON_CLICKED_ON : 0);
 

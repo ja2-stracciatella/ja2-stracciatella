@@ -565,7 +565,7 @@ void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 
 static void SetButtonState(UINT idx, BOOLEAN clicked)
 {
-	GUI_BUTTON* const b = ButtonList[iSMPanelButtons[idx]];
+	GUIButtonRef const b = iSMPanelButtons[idx];
 	if (b->ubToggleButtonActivated) return;
 	b->uiFlags &= ~BUTTON_CLICKED_ON;
 	b->uiFlags |= (clicked ? BUTTON_CLICKED_ON : 0);
@@ -669,7 +669,7 @@ static void UpdateSMPanel(void)
 	}
 
 	// Set Disable /Enable UI based on buddy's stats
-	GUI_BUTTON* const burst = ButtonList[iSMPanelButtons[BURSTMODE_BUTTON]];
+	GUIButtonRef const burst = iSMPanelButtons[BURSTMODE_BUTTON];
 	if (burst->image != iBurstButtonImages[gpSMCurrentMerc->bWeaponMode])
 	{
 		burst->image    = iBurstButtonImages[gpSMCurrentMerc->bWeaponMode];
