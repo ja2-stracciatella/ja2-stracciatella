@@ -334,8 +334,6 @@ void ShutdownStrategicLayer()
 
 BOOLEAN InitNewGame( BOOLEAN fReset )
 {
-	INT32		iStartingCash;
-
 //	static fScreenCount = 0;
 
 	if( fReset )
@@ -421,6 +419,7 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 		//AddEmail(ENRICO_CONGRATS,ENRICO_CONGRATS_LENGTH,MAIL_ENRICO, GetWorldTotalMin() );
 
 		// ATE: Set starting cash....
+		INT32 iStartingCash;
 		switch( gGameOptions.ubDifficultyLevel )
 		{
 			case DIF_LEVEL_EASY:

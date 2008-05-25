@@ -3116,7 +3116,6 @@ static void SelectAllCharactersInSquad(INT8 bSquadNumber);
 static void GetMapKeyboardInput(UINT32* puiNewEvent)
 {
   InputAtom					InputEvent;
-	UINT8 ubGroupId = 0;
 	BOOLEAN fCtrl, fAlt;
 
 #ifndef JA2DEMO
@@ -3812,7 +3811,7 @@ static void GetMapKeyboardInput(UINT32* puiNewEvent)
 							// check to see if this person is moving, if not...then assign them to mvt group
 							if( pSoldier->ubGroupID  == 0 )
 							{
-								ubGroupId = CreateNewPlayerGroupDepartingFromSector( ( INT8 ) ( pSoldier->sSectorX ) , ( INT8 ) ( pSoldier->sSectorY ) );
+								UINT8 const ubGroupId = CreateNewPlayerGroupDepartingFromSector(pSoldier->sSectorX, pSoldier->sSectorY);
 								// assign to a group
 								AddPlayerToGroup( ubGroupId, pSoldier );
 							}
@@ -8011,7 +8010,7 @@ static void DisplayExitToTacticalGlowDuringDemo(void)
 	UINT16 usColor = GlowColor(iColorNum);
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw(TRUE, 495, 409, 528, 442, usColor, l.Buffer<UINT16>());
+	RectangleDraw(TRUE, 495, 409, 528, 442, usColor, l.Buffer<UINT8>());
 	InvalidateRegion(495, 408, 529+1, 442+1);
 }
 

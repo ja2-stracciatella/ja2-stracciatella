@@ -672,7 +672,7 @@ void DoDemoIntroduction(void)
 					}
 					else
 					{
-						FillSurface(FRAME_BUFFER, 0);
+						FRAME_BUFFER->Fill(0);
 						InvalidateScreen();
 						RefreshScreen();
 						return;
@@ -913,7 +913,7 @@ UINT32 DemoExitScreenHandle(void)
 		{
 			//Create render buffer
 			uiCollageID = AddVideoSurface(263, 210, PIXEL_DEPTH);
-			SetVideoSurfaceTransparency(uiCollageID, 0);
+			uiCollageID->SetTransparency(0);
 
 			//bring up the collage screen
 			if (!BltVideoObjectOnce(uiCollageID, "Interface/ja2logo.sti", 0, 0, 0))
@@ -1032,17 +1032,16 @@ UINT32 DemoExitScreenHandle(void)
 		yp = MAX( yp, -400 );
 		for( i = 2; i < 40; i++ )
 		{
-			UINT16 usFont = (i < 36 ? FONT14ARIAL : FONT14HUMANIST);
-
 			switch( i )
 			{
 				case 38:
 				case 39: SetFontForeground(FONT_LTKHAKI); break;
 				default: SetFontForeground(FONT_GRAY2);   break;
 			}
-			const wchar_t* String = gpDemoString[i];
-			width = StringPixLength(String, usFont);
-			SetFont( usFont );
+			wchar_t const* const String = gpDemoString[i];
+			Font           const font = (i < 36 ? FONT14ARIAL : FONT14HUMANIST);
+			width = StringPixLength(String, font);
+			SetFont(font);
 
 			MPrint((SCREEN_WIDTH - width) / 2, yp + i * 17, String);
 		}
@@ -1071,7 +1070,7 @@ UINT32 DemoExitScreenHandle(void)
 		{
 			//Create render buffer
 			uiCollageID = AddVideoSurface(331, 148, PIXEL_DEPTH);
-			SetVideoSurfaceTransparency(uiCollageID, 0);
+			uiCollageID->SetTransparency(0);
 
 			//bring up the collage screen
 			if (!BltVideoObjectOnce(uiCollageID, "DemoAds/available.sti", 0, 0, 0))
@@ -1218,9 +1217,9 @@ UINT32 DemoExitScreenHandle(void)
 		if( ubPreviousScreen == 6 )
 		{
 			uiStartTime = GetJA2Clock();
-			#ifdef GERMAN
-				uiStartTime = 4000000000; //you could break the system by playing the game for 46 real-time days or longer.
-			#endif
+#ifdef GERMAN
+			uiStartTime = 4000000000U; //you could break the system by playing the game for 46 real-time days or longer.
+#endif
 		}
 		uiTime = GetJA2Clock();
 		if( !fSetMusicToFade && gfLeftButtonState )

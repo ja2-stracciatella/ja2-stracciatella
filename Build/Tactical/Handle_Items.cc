@@ -3031,8 +3031,6 @@ static void BombMessageBoxCallBack(UINT8 ubExitValue);
 
 static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 {
-	UINT8 ubRoom;
-
 	gpTempSoldier = pSoldier;
 	gsTempGridno = sGridNo;
 	if (pSoldier->inv[HANDPOS].usItem == REMOTEBOMBTRIGGER)
@@ -3063,6 +3061,7 @@ static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 			// Check what sector we are in....
 			if ( gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_O && gbWorldSectorZ == 0 )
 			{
+				UINT8 ubRoom;
 				if ( InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom == 4 )
 				{
 					DoMercBattleSound( pSoldier, BATTLE_SOUND_OK1 );
