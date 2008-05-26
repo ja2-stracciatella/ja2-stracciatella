@@ -156,7 +156,7 @@ extern BOOLEAN TriggerNPCWithGivenApproach( UINT8 ubTriggerNPC, UINT8 ubApproach
 
 
 extern BOOLEAN ReloadQuoteFile( UINT8 ubNPC );
-extern BOOLEAN ReloadAllQuoteFiles( void );
+void ReloadAllQuoteFiles(void);
 
 // Save and loads the npc info to a saved game file
 extern BOOLEAN SaveNPCInfoToSaveGameFile( HWFILE hFile );

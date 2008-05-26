@@ -137,8 +137,7 @@ static UINT32 TimeProc(UINT32 interval, void* params)
 }
 
 
-
-BOOLEAN InitializeJA2Clock(void)
+void InitializeJA2Clock(void)
 {
 #ifdef CALLBACKTIMER
 
@@ -162,8 +161,8 @@ BOOLEAN InitializeJA2Clock(void)
 
 
 #endif
-  return TRUE;
 }
+
 
 void    ShutdownJA2Clock(void)
 {

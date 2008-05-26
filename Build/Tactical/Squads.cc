@@ -1022,11 +1022,9 @@ BOOLEAN SoldierIsDeadAndWasOnSquad( SOLDIERTYPE *pSoldier, INT8 bSquadValue )
 }
 
 
-BOOLEAN ResetDeadSquadMemberList( INT32 iSquadValue )
+void ResetDeadSquadMemberList(INT32 const iSquadValue)
 {
 	memset( sDeadMercs[ iSquadValue ], -1, sizeof( INT16 ) * NUMBER_OF_SOLDIERS_PER_SQUAD );
-
-	return( TRUE );
 }
 
 

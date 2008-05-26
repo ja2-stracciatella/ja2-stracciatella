@@ -75,21 +75,21 @@ struct LIGHT_SPRITE
 // Initializes the lighting system
 BOOLEAN		InitLightingSystem(void);
 // Shuts down, and frees up all lights/memory
-BOOLEAN		ShutdownLightingSystem(void);
+void ShutdownLightingSystem(void);
 // Resets all light sprites and deallocates templates
 BOOLEAN		LightReset(void);
 
 // THIS MUST BE CALLED ONCE ALL SURFACE VIDEO OBJECTS HAVE BEEN LOADED!
-BOOLEAN SetDefaultWorldLightingColors(void);
+void SetDefaultWorldLightingColors(void);
 
 // Low-Level Template Interface
 
 // Sets the normal light level for all tiles in the world
-BOOLEAN		LightSetBaseLevel(UINT8 iIntensity);
+void LightSetBaseLevel(UINT8 iIntensity);
 // Adds a light value to all tiles in the world
-BOOLEAN LightAddBaseLevel(UINT8 iIntensity);
+void LightAddBaseLevel(UINT8 iIntensity);
 // Subtracts a light value from all tiles
-BOOLEAN LightSubtractBaseLevel(UINT8 iIntensity);
+void LightSubtractBaseLevel(UINT8 iIntensity);
 // Creates an omni (circular) light
 LightTemplate* LightCreateOmni(UINT8 ubIntensity, INT16 iRadius);
 // Draws a light into the scene at X,Y
@@ -116,7 +116,7 @@ void LightSpritePosition(LIGHT_SPRITE* l, INT16 iX, INT16 iY);
 // Sets the flag of a light sprite to "fake" (in game for merc navig purposes)
 BOOLEAN LightSpriteFake(LIGHT_SPRITE* l);
 // Renders all lights
-BOOLEAN		LightSpriteRenderAll(void);
+void LightSpriteRenderAll(void);
 // Turns on/off power to a light
 void LightSpritePower(LIGHT_SPRITE* l, BOOLEAN fOn);
 // Moves light to/from roof position

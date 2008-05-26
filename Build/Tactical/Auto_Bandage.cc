@@ -366,7 +366,7 @@ void SetAutoBandageComplete( void )
 
 
 static void DestroyTerminateAutoBandageButton(void);
-static BOOLEAN RemoveFacesForAutoBandage(void);
+static void RemoveFacesForAutoBandage(void);
 static void SetUpAutoBandageUpdatePanel(void);
 
 
@@ -504,7 +504,7 @@ static void BeginAutoBandageCallBack(UINT8 bExitValue)
 }
 
 
-static BOOLEAN AddFacesToAutoBandageBox(void);
+static void AddFacesToAutoBandageBox(void);
 
 
 // the update box for autobandaging mercs
@@ -927,7 +927,7 @@ static void DestroyTerminateAutoBandageButton(void)
 }
 
 
-static BOOLEAN AddFacesToAutoBandageBox(void)
+static void AddFacesToAutoBandageBox(void)
 {
 	INT32 iCounter = 0;
 	INT32 iNumberOfDoctors = 0;
@@ -961,12 +961,10 @@ static BOOLEAN AddFacesToAutoBandageBox(void)
 
 		// grab panels
 	giMercPanelImage = AddVideoObjectFromFile("Interface/panels.sti");
-
-	return( TRUE );
 }
 
 
-static BOOLEAN RemoveFacesForAutoBandage(void)
+static void RemoveFacesForAutoBandage(void)
 {
 	INT32 iCounter = 0, iNumberOfDoctors = 0;
 
@@ -990,8 +988,6 @@ static BOOLEAN RemoveFacesForAutoBandage(void)
 	}
 
 	DeleteVideoObject(giMercPanelImage);
-
-	return( TRUE );
 }
 
 

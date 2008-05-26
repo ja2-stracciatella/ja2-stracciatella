@@ -943,7 +943,7 @@ BOOLEAN CreateSoldierPalettes( SOLDIERTYPE *pSoldier );
 UINT8   GetPaletteRepIndexFromID(const PaletteRepID pal_rep);
 BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalRep );
 BOOLEAN LoadPaletteData(void);
-BOOLEAN DeletePaletteData(void);
+void    DeletePaletteData(void);
 
 // UTILITY FUNCTUIONS
 void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLEAN fCheckRange );

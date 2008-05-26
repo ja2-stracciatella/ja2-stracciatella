@@ -19,7 +19,7 @@ SOLDIERTYPE			*gpUIStartPlannedSoldier = NULL;
 BOOLEAN					gfInUIPlanMode					  = FALSE;
 
 
-BOOLEAN BeginUIPlan( SOLDIERTYPE *pSoldier )
+void BeginUIPlan(SOLDIERTYPE* const pSoldier)
 {
 	gubNumUIPlannedMoves = 0;
 	gpUIPlannedSoldier				= pSoldier;
@@ -29,8 +29,6 @@ BOOLEAN BeginUIPlan( SOLDIERTYPE *pSoldier )
 	gfPlotNewMovement    = TRUE;
 
 	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Entering Planning Mode" );
-
-	return( TRUE );
 }
 
 

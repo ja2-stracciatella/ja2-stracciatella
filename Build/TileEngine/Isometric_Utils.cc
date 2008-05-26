@@ -362,7 +362,8 @@ INT16 DirectionInc(INT16 sDirection)
  return(DirIncrementer[sDirection]);
 }
 
-BOOLEAN CellXYToScreenXY(INT16 sCellX, INT16 sCellY, INT16 *sScreenX, INT16 *sScreenY)
+
+void CellXYToScreenXY(INT16 const sCellX, INT16 const sCellY, INT16* const sScreenX, INT16* const sScreenY)
 {
 INT16 sDeltaCellX, sDeltaCellY;
 INT16 sDeltaScreenX, sDeltaScreenY;
@@ -374,10 +375,8 @@ INT16 sDeltaScreenX, sDeltaScreenY;
 
 	*sScreenX=(((gsVIEWPORT_END_X-gsVIEWPORT_START_X)/2)+sDeltaScreenX);
 	*sScreenY=(((gsVIEWPORT_END_Y-gsVIEWPORT_START_Y)/2)+sDeltaScreenY);
-
-	return(TRUE);
-
 }
+
 
 void ConvertGridNoToXY( INT16 sGridNo, INT16 *sXPos, INT16 *sYPos )
 {

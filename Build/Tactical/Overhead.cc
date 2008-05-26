@@ -472,11 +472,10 @@ BOOLEAN InitOverhead(void)
 }
 
 
-BOOLEAN ShutdownOverhead(void)
+void ShutdownOverhead(void)
 {
 	// Delete any soldiers which have been created!
 	FOR_ALL_SOLDIERS(s) DeleteSoldier(s);
-	return TRUE;
 }
 
 
@@ -570,7 +569,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving);
 static void HandleCreatureTenseQuote(void);
 
 
-BOOLEAN ExecuteOverhead(void)
+void ExecuteOverhead(void)
 {
 	// Diagnostic Stuff
 	static INT32 iTimerTest = 0;
@@ -1361,8 +1360,6 @@ BOOLEAN ExecuteOverhead(void)
 	// reset these AI-related global variables to 0 to ensure they don't interfere with the UI
 	gubNPCAPBudget  = 0;
 	gubNPCDistLimit = 0;
-
-	return TRUE;
 }
 
 

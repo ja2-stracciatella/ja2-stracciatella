@@ -94,7 +94,7 @@ void MusicPlay(UINT32 uiNum)
 }
 
 
-static BOOLEAN StartMusicBasedOnMode(void);
+static void StartMusicBasedOnMode(void);
 
 
 void MusicSetVolume(UINT32 uiVolume)
@@ -290,7 +290,7 @@ void MusicPoll(void)
 }
 
 
-BOOLEAN SetMusicMode( UINT8 ubMusicMode )
+void SetMusicMode(UINT8 ubMusicMode)
 {
 	static INT8 bPreviousMode = 0;
 
@@ -349,12 +349,10 @@ BOOLEAN SetMusicMode( UINT8 ubMusicMode )
 
 	}
 	gubOldMusicMode = gubMusicMode;
-
-	return( TRUE );
 }
 
 
-static BOOLEAN StartMusicBasedOnMode(void)
+static void StartMusicBasedOnMode(void)
 {
 	static BOOLEAN fFirstTime = TRUE;
 
@@ -454,8 +452,6 @@ static BOOLEAN StartMusicBasedOnMode(void)
 			MusicFadeOut( );
 			break;
 	}
-
-	return( TRUE );
 }
 
 

@@ -231,7 +231,7 @@ void ShutdownTacticalEngine(void);
 
 
 BOOLEAN InitOverhead(void);
-BOOLEAN ShutdownOverhead(void);
+void    ShutdownOverhead(void);
 
 INT16 NewOKDestination(const SOLDIERTYPE* pCurrSoldier, INT16 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel);
 
@@ -241,7 +241,7 @@ extern BOOLEAN IsLocationSittableExcludingPeople( INT32 iMapIndex, BOOLEAN fOnRo
 extern BOOLEAN FlatRoofAboveGridNo( INT32 iMapIndex );
 
 
-BOOLEAN ExecuteOverhead(void);
+void ExecuteOverhead(void);
 
 void EndTurn(UINT8 ubNextTeam);
 void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode );

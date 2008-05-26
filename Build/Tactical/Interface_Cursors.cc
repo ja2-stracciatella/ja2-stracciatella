@@ -201,18 +201,16 @@ UINT16				gusTargetDropPos;
 BOOLEAN				gfTargetDropPos = FALSE;
 
 
-BOOLEAN SetUICursor( UINT32 uiNewCursor )
+void SetUICursor(UINT32 const uiNewCursor)
 {
 	guiCurUICursor = uiNewCursor;
-
-	return( TRUE );
 }
 
 
 static void DrawSnappingCursor(void);
 
 
-BOOLEAN DrawUICursor( )
+void DrawUICursor()
 {
 	LEVELNODE					*pNode;
 	UINT16						usTileCursor;
@@ -233,7 +231,7 @@ BOOLEAN DrawUICursor( )
 		{
 			DrawItemFreeCursor( );
 		}
-		return( TRUE );
+		return;
 	}
 
 	const GridNo usMapPos = GetMouseMapPos();
@@ -244,7 +242,7 @@ BOOLEAN DrawUICursor( )
 		if ( guiCurUICursor == NO_UICURSOR )
 		{
 			gViewportRegion.ChangeCursor(VIDEO_NO_CURSOR);
-			return( TRUE );
+			return;
 		}
 
 		if ( gUICursors[ guiCurUICursor ].uiFlags & UICURSOR_SHOWTILE )
@@ -397,30 +395,22 @@ BOOLEAN DrawUICursor( )
 			gfUIDisplayActionPointsCenter = TRUE;
 		}
 	}
-	return( TRUE );
 }
 
 
 static void EraseSnappingCursor(void);
 
 
-BOOLEAN HideUICursor( )
+void HideUICursor()
 {
 	// OK, WE OVERRIDE HERE CURSOR DRAWING FOR THINGS LIKE
 	if ( gpItemPointer != NULL )
 	{
 		// Check if we are in the viewport region...
-		if ( gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA )
-		{
-			return( TRUE );
-		}
+		if (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA) return;
 	}
 
-	if ( guiCurUICursor == NO_UICURSOR )
-	{
-		//Do nothing here
-		return( TRUE );
-	}
+	if (guiCurUICursor == NO_UICURSOR) return; //Do nothing here
 
 	if ( gUICursors[ guiCurUICursor ].uiFlags & ( UICURSOR_SHOWTILE | UICURSOR_SHOWTILEAPDEPENDENT )  )
 	{
@@ -457,8 +447,6 @@ BOOLEAN HideUICursor( )
 	{
 		// Nothing special here...
 	}
-
-	return( TRUE );
 }
 
 

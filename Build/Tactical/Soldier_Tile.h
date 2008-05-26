@@ -13,7 +13,7 @@ void UnMarkMovementReserved( SOLDIERTYPE *pSoldier );
 
 BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, INT16 sFinalDestTile );
 
-BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier );
+void HandleNextTileWaiting(SOLDIERTYPE* pSoldier);
 
 BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce );
 

@@ -2244,7 +2244,7 @@ void RemoveItemFromPool(WORLDITEM* const wi)
 }
 
 
-BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos )
+void MoveItemPools(INT16 const sStartPos, INT16 const sEndPos)
 {
 	// note, only works between locations on the ground
 
@@ -2257,8 +2257,8 @@ BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos )
 		RemoveItemFromPool(wi);
 		AddItemToPool( sEndPos, &(TempWorldItem.o), -1, TempWorldItem.ubLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
 	}
-	return( TRUE );
 }
+
 
 ITEM_POOL* GetItemPool(UINT16 usMapPos, UINT8 ubLevel)
 {

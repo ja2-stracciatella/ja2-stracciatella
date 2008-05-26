@@ -568,7 +568,7 @@ BOOLEAN InitAnimationSystem( )
 static void DeleteAnimationProfiles(void);
 
 
-BOOLEAN DeInitAnimationSystem( )
+void DeInitAnimationSystem()
 {
 	 INT32									cnt1, cnt2;
 
@@ -596,8 +596,6 @@ BOOLEAN DeInitAnimationSystem( )
 		}
 
 	 DeleteAnimationProfiles( );
-
-	 return( TRUE );
 }
 
 

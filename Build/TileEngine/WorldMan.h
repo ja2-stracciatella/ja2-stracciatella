@@ -50,13 +50,13 @@ BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 #endif
 
 BOOLEAN ReplaceLandIndex( UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex );
-BOOLEAN DeleteAllLandLayers( UINT32 iMapIndex );
+void DeleteAllLandLayers(UINT32 iMapIndex);
 
 #ifdef JA2EDITOR
 BOOLEAN InsertLandIndexAtLevel(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel);
 #endif
 
-BOOLEAN RemoveHigherLandLevels( UINT32 iMapIndex, UINT32 fSrcType, UINT32 **puiHigherTypes, UINT8 *pubNumHigherTypes );
+void RemoveHigherLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT32** puiHigherTypes, UINT8* pubNumHigherTypes);
 void AdjustAllLandDirtyCount( UINT32 iMapIndex, INT8 bDirtyDiff );
 UINT8	GetTerrainType( INT16 sGridNo );
 BOOLEAN Water( INT16 sGridNo );
@@ -73,12 +73,12 @@ BOOLEAN TypeExistsInStructLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusStru
 BOOLEAN RemoveAllStructsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 BOOLEAN AddWallToStructLayer( INT32 iMapIndex, UINT16 usIndex, BOOLEAN fReplace );
 BOOLEAN ReplaceStructIndex( UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex );
-BOOLEAN HideStructOfGivenType( UINT32 iMapIndex, UINT32 fType, BOOLEAN fHide );
+void    HideStructOfGivenType(UINT32 iMapIndex, UINT32 fType, BOOLEAN fHide);
 void SetStructAframeFlags( UINT32 iMapIndex, UINT32 uiFlags  );
 BOOLEAN RemoveStructFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 
 
-BOOLEAN ForceRemoveStructFromTail( UINT32 iMapIndex );
+void ForceRemoveStructFromTail(UINT32 iMapIndex);
 
 
 // Shadow manipulation routines

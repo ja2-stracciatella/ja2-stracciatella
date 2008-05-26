@@ -406,10 +406,10 @@ UINT32	ShopKeeperScreenInit()
 
 
 static BOOLEAN EnterShopKeeperInterface(void);
-static BOOLEAN ExitShopKeeperInterface(void);
+static void ExitShopKeeperInterface(void);
 static void GetShopKeeperInterfaceUserInput(void);
 static void HandleShopKeeperInterface(void);
-static BOOLEAN RenderShopKeeperInterface(void);
+static void RenderShopKeeperInterface(void);
 
 
 UINT32	ShopKeeperScreenHandle()
@@ -776,7 +776,7 @@ static void RemoveShopKeeperSubTitledText(void);
 static void ShutUpShopKeeper(void);
 
 
-static BOOLEAN ExitShopKeeperInterface(void)
+static void ExitShopKeeperInterface(void)
 {
 	UINT8	ubCnt;
 
@@ -851,8 +851,6 @@ static BOOLEAN ExitShopKeeperInterface(void)
 	gRadarRegion.Enable();
 
 	gfSMDisableForItems = FALSE;
-
-	return( TRUE );
 }
 
 
@@ -991,14 +989,11 @@ static void CrossOutUnwantedItems(void);
 static void RestoreTacticalBackGround(void);
 
 
-static BOOLEAN RenderShopKeeperInterface(void)
+static void RenderShopKeeperInterface(void)
 {
 	CHAR16	zMoney[128];
 
-	if( InItemDescriptionBox( ) && pShopKeeperItemDescObject != NULL )
-	{
-		return( TRUE );
-	}
+	if (InItemDescriptionBox() && pShopKeeperItemDescObject != NULL) return;
 
 //	RenderTacticalInterface( );
 	// Render view window
@@ -1069,8 +1064,6 @@ static BOOLEAN RenderShopKeeperInterface(void)
 	RestoreTacticalBackGround();
 
 	InvalidateScreen();
-
-	return( TRUE );
 }
 
 
@@ -3443,7 +3436,7 @@ static void PerformTransaction(UINT32 uiMoneyFromPlayersAccount)
 }
 
 
-static BOOLEAN RemoveItemFromDealersInventory(const INVENTORY_IN_SLOT* pInvSlot, UINT8 ubSlot);
+static void RemoveItemFromDealersInventory(const INVENTORY_IN_SLOT* pInvSlot, UINT8 ubSlot);
 
 
 static void MoveAllArmsDealersItemsInOfferAreaToPlayersOfferArea(void)
@@ -3492,7 +3485,7 @@ static void MoveAllArmsDealersItemsInOfferAreaToPlayersOfferArea(void)
 }
 
 
-static BOOLEAN RemoveItemFromDealersInventory(const INVENTORY_IN_SLOT* pInvSlot, UINT8 ubSlot)
+static void RemoveItemFromDealersInventory(const INVENTORY_IN_SLOT* pInvSlot, UINT8 ubSlot)
 {
 	INT16		sInvSlot;
 	INT16		sItemID;
@@ -3507,7 +3500,6 @@ static BOOLEAN RemoveItemFromDealersInventory(const INVENTORY_IN_SLOT* pInvSlot,
 	RemoveItemFromArmsDealerInventory( gbSelectedArmsDealerID, sItemID, &SpclItemInfo, pInvSlot->ItemObject.ubNumberOfObjects );
 
 	gfResetShopKeepIdleQuote = TRUE;
-	return( TRUE );
 }
 
 

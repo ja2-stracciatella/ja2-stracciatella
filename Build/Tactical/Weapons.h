@@ -261,7 +261,7 @@ extern UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 
 extern void ChangeWeaponMode( SOLDIERTYPE * pSoldier );
 
-extern BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier , INT16 sTargetGridNo, BOOLEAN fStealing );
+void UseHandToHand(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, BOOLEAN fStealing);
 
 void DishoutQueenSwipeDamage( SOLDIERTYPE *pQueenSoldier );
 

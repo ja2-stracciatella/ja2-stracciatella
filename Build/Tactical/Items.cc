@@ -3485,14 +3485,13 @@ BOOLEAN CreateKeyObject( OBJECTTYPE * pObj , UINT8 ubNumberOfKeys, UINT8 ubKeyID
 }
 
 
-BOOLEAN AllocateObject( OBJECTTYPE **pObj )
+void AllocateObject(OBJECTTYPE** const pObj)
 {
 	// create a key object
 	*pObj = MALLOC(OBJECTTYPE);
 	Assert( pObj );
-
-	return( TRUE );
 }
+
 
 BOOLEAN DeleteKeyObject( OBJECTTYPE * pObj )
 {

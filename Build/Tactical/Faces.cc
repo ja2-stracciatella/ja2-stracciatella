@@ -1365,7 +1365,7 @@ static BOOLEAN FaceRestoreSavedBackgroundRect(const FACETYPE* const pFace, INT16
 }
 
 
-BOOLEAN SetFaceTalking(FACETYPE* const pFace, const char* const zSoundFile, const wchar_t* const zTextString)
+void SetFaceTalking(FACETYPE* const pFace, const char* const zSoundFile, const wchar_t* const zTextString)
 {
 	// Set face to talking
 	pFace->fTalking = TRUE;
@@ -1398,12 +1398,10 @@ BOOLEAN SetFaceTalking(FACETYPE* const pFace, const char* const zSoundFile, cons
 
 		pFace->uiTalkingDuration = FindDelayForString( zTextString );
 	}
-
-	return( TRUE );
 }
 
 
-BOOLEAN ExternSetFaceTalking(FACETYPE* const pFace, const UINT32 uiSoundID)
+void ExternSetFaceTalking(FACETYPE* const pFace, const UINT32 uiSoundID)
 {
 	// Set face to talki	ng
 	pFace->fTalking = TRUE;
@@ -1412,8 +1410,6 @@ BOOLEAN ExternSetFaceTalking(FACETYPE* const pFace, const UINT32 uiSoundID)
 	pFace->fValidSpeech	= TRUE;
 
 	pFace->uiSoundID = uiSoundID;
-
-	return( TRUE );
 }
 
 

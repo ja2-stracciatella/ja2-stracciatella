@@ -8,7 +8,7 @@
 #define		UIPLAN_ACTION_FIRE				2
 
 
-BOOLEAN BeginUIPlan( SOLDIERTYPE *pSoldier );
+void    BeginUIPlan(SOLDIERTYPE* pSoldier);
 BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID );
 void EndUIPlan(void);
 BOOLEAN InUIPlanMode(void);

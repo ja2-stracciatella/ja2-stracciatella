@@ -49,7 +49,7 @@ enum
 BOOLEAN CreateSMPanelButtons(void);
 void    RemoveSMPanelButtons(void);
 BOOLEAN InitializeSMPanel(void);
-BOOLEAN ShutdownSMPanel(void);
+void    ShutdownSMPanel(void);
 void RenderSMPanel(BOOLEAN* pfDirty);
 void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup);
 
@@ -57,14 +57,14 @@ void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup);
 BOOLEAN CreateTEAMPanelButtons(void);
 void    RemoveTEAMPanelButtons(void);
 BOOLEAN InitializeTEAMPanel(void);
-BOOLEAN ShutdownTEAMPanel(void);
+void    ShutdownTEAMPanel(void);
 void    RenderTEAMPanel(BOOLEAN fDirty);
 
 
 void SetSMPanelCurrentMerc(SOLDIERTYPE* s);
 void SetTEAMPanelCurrentMerc(void);
 
-BOOLEAN InitTEAMSlots(void);
+void         InitTEAMSlots(void);
 void         AddPlayerToInterfaceTeamSlot(SOLDIERTYPE* s);
 SOLDIERTYPE* GetPlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot);
 void    RemoveAllPlayersFromSlot(void);

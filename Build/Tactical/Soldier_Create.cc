@@ -117,8 +117,8 @@ void RandomizeNewSoldierStats( SOLDIERCREATE_STRUCT *pCreateStruct )
 
 static void CopyProfileItems(SOLDIERTYPE* pSoldier, const SOLDIERCREATE_STRUCT* pCreateStruct);
 static void InitSoldierStruct(SOLDIERTYPE* pSoldier);
-static BOOLEAN TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* pSoldier, const SOLDIERCREATE_STRUCT* pCreateStruct);
-static BOOLEAN TacticalCopySoldierFromProfile(SOLDIERTYPE* pSoldier, const SOLDIERCREATE_STRUCT* pCreateStruct);
+static void TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT const* pCreateStruct);
+static void TacticalCopySoldierFromProfile(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT const* pCreateStruct);
 
 
 SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStruct)
@@ -514,7 +514,7 @@ SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE* const existing
 }
 
 
-static BOOLEAN TacticalCopySoldierFromProfile(SOLDIERTYPE* const pSoldier, const SOLDIERCREATE_STRUCT* const pCreateStruct)
+static void TacticalCopySoldierFromProfile(SOLDIERTYPE* const pSoldier, SOLDIERCREATE_STRUCT const* const pCreateStruct)
 {
 	UINT8						ubProfileIndex;
 	MERCPROFILESTRUCT * pProfile;
@@ -567,8 +567,8 @@ static BOOLEAN TacticalCopySoldierFromProfile(SOLDIERTYPE* const pSoldier, const
 		// set camouflaged to 100 automatically
 		pSoldier->bCamo = 100;
 	}
-	return( TRUE );
 }
+
 
 enum { PINKSKIN, TANSKIN, DARKSKIN, BLACKSKIN, NUMSKINS };
 enum {
@@ -833,7 +833,7 @@ static void GeneratePaletteForSoldier(SOLDIERTYPE* pSoldier, UINT8 ubSoldierClas
 }
 
 
-static BOOLEAN TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* const pSoldier, const SOLDIERCREATE_STRUCT* const pCreateStruct)
+static void TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* const pSoldier, SOLDIERCREATE_STRUCT const* const pCreateStruct)
 {
 	pSoldier->ubProfile							= NO_PROFILE;
 
@@ -978,8 +978,6 @@ no_name:
 
 	// Copy item info over
 	memcpy( pSoldier->inv, pCreateStruct->Inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
-
-	return( TRUE );
 }
 
 

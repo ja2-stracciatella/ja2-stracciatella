@@ -395,12 +395,11 @@ static const UINT8 AmbientVols[NUM_AMBIENTS] = {
 };
 
 
-BOOLEAN ShutdownJA2Sound(void)
+void ShutdownJA2Sound(void)
 {
 	SoundStopAll();
-
-	return( TRUE );
 }
+
 
 UINT32 PlayJA2Sample( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
 {

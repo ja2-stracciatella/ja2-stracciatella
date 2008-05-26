@@ -72,7 +72,7 @@ ARMS_DEALER_STATUS	gArmsDealerStatus[ NUM_ARMS_DEALERS ];
 DEALER_ITEM_HEADER	gArmsDealersInventory[ NUM_ARMS_DEALERS ][ MAXITEMS ];
 
 
-static BOOLEAN AdjustCertainDealersInventory(void);
+static void AdjustCertainDealersInventory(void);
 static void InitializeOneArmsDealer(UINT8 ubArmsDealer);
 
 
@@ -485,7 +485,7 @@ static void GuaranteeMinimumAlcohol(UINT8 ubArmsDealer);
 static void LimitArmsDealersInventory(UINT8 ubArmsDealer, UINT32 uiDealerItemType, UINT8 ubMaxNumberOfItemType);
 
 
-static BOOLEAN AdjustCertainDealersInventory(void)
+static void AdjustCertainDealersInventory(void)
 {
 	//Adjust Tony's items (this restocks *instantly* 1/day, doesn't use the reorder system)
 	GuaranteeAtLeastOneItemOfType( ARMS_DEALER_TONY, ARMS_DEALER_BIG_GUNS );
@@ -532,8 +532,6 @@ static BOOLEAN AdjustCertainDealersInventory(void)
 //	ArmsDealerGetsFreshStock( ARMS_DEALER_JAKE, LOCKSMITHKIT, 1);
 	}
 #endif
-
-	return( TRUE );
 }
 
 

@@ -2880,7 +2880,7 @@ BOOLEAN LoadWorld(const char *puiFilename)
 }
 
 
-BOOLEAN NewWorld( void )
+void NewWorld(void)
 {
 	UINT16				NewIndex;
 	INT32					cnt;
@@ -2901,8 +2901,6 @@ BOOLEAN NewWorld( void )
 	InitRoomDatabase( );
 
 	gfWorldLoaded = TRUE;
-
-	return( TRUE );
 }
 
 

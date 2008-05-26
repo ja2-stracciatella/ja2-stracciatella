@@ -203,7 +203,7 @@ INT16		gsInterfaceLevel			  = I_GROUND_LEVEL;
 INT16		gsCurInterfacePanel			= TEAM_PANEL;
 
 
-BOOLEAN InitializeTacticalInterface(  )
+void InitializeTacticalInterface()
 {
 	// Load button Interfaces
 	iIconImages[ WALK_IMAGES  ]			= LoadButtonImage("INTERFACE/newicons3.sti", -1,3,4,5,-1 );
@@ -265,8 +265,6 @@ BOOLEAN InitializeTacticalInterface(  )
 
 	// Init popup box images
 //	CHECKF( LoadTextMercPopupImages( BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER ) );
-
-	return( TRUE );
 }
 
 
@@ -1536,7 +1534,7 @@ BOOLEAN				gfInOpenDoorMenu = FALSE;
 static void PopupDoorOpenMenu(BOOLEAN fClosingDoor);
 
 
-BOOLEAN InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, const BOOLEAN fClosingDoor)
+void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, BOOLEAN const fClosingDoor)
 {
 	INT16 sHeight, sWidth;
 	INT16	sScreenX, sScreenY;
@@ -1592,8 +1590,6 @@ BOOLEAN InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, const BOOLEAN fClosingDoor
 	HandleTacticalUI( );
 
 	PopupDoorOpenMenu( fClosingDoor );
-
-	return( TRUE );
 }
 
 

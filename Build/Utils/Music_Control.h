@@ -41,7 +41,7 @@ extern UINT8		gubMusicMode;
 extern BOOLEAN	gfForceMusicToTense;
 
 
-BOOLEAN SetMusicMode( UINT8 ubMusicMode );
+void SetMusicMode(UINT8 ubMusicMode);
 
 /* Starts up one of the tunes in the music list. */
 void MusicPlay(UINT32 uiNum);

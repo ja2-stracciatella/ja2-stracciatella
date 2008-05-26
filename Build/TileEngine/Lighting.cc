@@ -224,11 +224,10 @@ BOOLEAN InitLightingSystem(void)
 
 
 // THIS MUST BE CALLED ONCE ALL SURFACE VIDEO OBJECTS HAVE BEEN LOADED!
-BOOLEAN SetDefaultWorldLightingColors(void)
+void SetDefaultWorldLightingColors(void)
 {
 	static const SGPPaletteEntry pPal = { 0, 0, 0 };
 	LightSetColor(&pPal);
-	return TRUE;
 }
 
 
@@ -242,7 +241,7 @@ static BOOLEAN LightDelete(LightTemplate*);
 	memory attached to them freed up.
 
 ***************************************************************************************/
-BOOLEAN ShutdownLightingSystem(void)
+void ShutdownLightingSystem(void)
 {
 UINT32 uiCount;
 
@@ -252,9 +251,8 @@ UINT32 uiCount;
 		LightTemplate* const t = &g_light_templates[uiCount];
 		if (t->lights != NULL) LightDelete(t);
 	}
-
-	return(TRUE);
 }
+
 
 /****************************************************************************************
  LightReset
@@ -1091,20 +1089,18 @@ UINT32 uiTile;
 
 
 // Resets all tiles on the map to their baseline values.
-static BOOLEAN LightResetAllTiles(void)
+static void LightResetAllTiles(void)
 {
 INT16 iCountY, iCountX;
 
 	for(iCountY=0; iCountY < WORLD_ROWS; iCountY++)
 		for(iCountX=0; iCountX < WORLD_COLS; iCountX++)
 			LightResetTile(iCountX, iCountY);
-
-	return(TRUE);
 }
 
 
 // Creates a new node, and adds it to the end of a light list.
-static BOOLEAN LightAddNode(LightTemplate* const t, const INT16 iHotSpotX, const INT16 iHotSpotY, INT16 iX, INT16 iY, const UINT8 ubIntensity, const UINT16 uiFlags)
+static void LightAddNode(LightTemplate* const t, const INT16 iHotSpotX, const INT16 iHotSpotY, INT16 iX, INT16 iY, const UINT8 ubIntensity, const UINT16 uiFlags)
 {
 DOUBLE dDistance;
 UINT8 ubShade;
@@ -1124,12 +1120,11 @@ INT32 iLightDecay;
 	iY/=DISTANCE_SCALE;
 
 	LightAddRayNode(t, iX, iY, ubShade, uiFlags);
-	return(TRUE);
 }
 
 
 // Creates a new node, and inserts it after the specified node.
-static BOOLEAN LightInsertNode(LightTemplate* const t, const UINT16 usLightIns, const INT16 iHotSpotX, const INT16 iHotSpotY, INT16 iX, INT16 iY, const UINT8 ubIntensity, const UINT16 uiFlags)
+static void LightInsertNode(LightTemplate* const t, const UINT16 usLightIns, const INT16 iHotSpotX, const INT16 iHotSpotY, INT16 iX, INT16 iY, const UINT8 ubIntensity, const UINT16 uiFlags)
 {
 DOUBLE dDistance;
 UINT8 ubShade;
@@ -1149,8 +1144,6 @@ INT32 iLightDecay;
 	iY/=DISTANCE_SCALE;
 
 	LightInsertRayNode(t, usLightIns, iX, iY, ubShade, uiFlags);
-
-	return(TRUE);
 }
 
 
@@ -1515,7 +1508,7 @@ BOOLEAN fInsertNodes=FALSE;
 
 
 // Creates an elliptical light, taking two radii.
-static BOOLEAN LightGenerateElliptical(LightTemplate* const t, const UINT8 iIntensity, const INT16 iA, const INT16 iB)
+static void LightGenerateElliptical(LightTemplate* const t, const UINT8 iIntensity, const INT16 iA, const INT16 iB)
 {
 INT16 iX, iY;
 INT32 WorkingX, WorkingY;
@@ -1595,13 +1588,11 @@ DOUBLE Temp;
 			LightCastRay(t, iX, iY, (INT16)(iX+WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
 			LightCastRay(t, iX, iY, (INT16)(iX-WorkingX), (INT16)(iY+WorkingY), iIntensity, 1);
    }
-
-	return(TRUE);
 }
 
 
 // Creates an square light, taking two radii.
-static BOOLEAN LightGenerateSquare(LightTemplate* const t, const UINT8 iIntensity, const INT16 iA, const INT16 iB)
+static void LightGenerateSquare(LightTemplate* const t, const UINT8 iIntensity, const INT16 iA, const INT16 iB)
 {
 INT16 iX, iY;
 
@@ -1629,8 +1620,6 @@ INT16 iX, iY;
 
 	for(iX=0+iA; iX >= 0-iA; iX--)
 		LightCastRay(t, iX, 0, iX, (INT16)(0-iB), iIntensity, 1); */
-
-	return(TRUE);
 }
 
 
@@ -1640,7 +1629,7 @@ INT16 iX, iY;
 		Sets the current and natural light settings for all tiles in the world.
 
 ***************************************************************************************/
-BOOLEAN LightSetBaseLevel(UINT8 iIntensity)
+void LightSetBaseLevel(UINT8 iIntensity)
 {
 	INT16 iCountY, iCountX;
 
@@ -1666,13 +1655,10 @@ BOOLEAN LightSetBaseLevel(UINT8 iIntensity)
 		RenderSetShadows(FALSE);
 	else
 		RenderSetShadows(TRUE);
-
-
-	return(TRUE);
 }
 
 
-BOOLEAN LightAddBaseLevel(const UINT8 iIntensity)
+void LightAddBaseLevel(const UINT8 iIntensity)
 {
 INT16 iCountY, iCountX;
 
@@ -1686,12 +1672,10 @@ INT16 iCountY, iCountX;
 		RenderSetShadows(FALSE);
 	else
 		RenderSetShadows(TRUE);
-
-	return(TRUE);
 }
 
 
-BOOLEAN LightSubtractBaseLevel(const UINT8 iIntensity)
+void LightSubtractBaseLevel(const UINT8 iIntensity)
 {
 INT16 iCountY, iCountX;
 
@@ -1705,8 +1689,6 @@ INT16 iCountY, iCountX;
 		RenderSetShadows(FALSE);
 	else
 		RenderSetShadows(TRUE);
-
-	return(TRUE);
 }
 
 
@@ -2518,7 +2500,7 @@ BOOLEAN LightSpriteFake(LIGHT_SPRITE* const l)
 }
 
 
-static BOOLEAN LightSpriteDirty(const LIGHT_SPRITE* l);
+static void LightSpriteDirty(const LIGHT_SPRITE* l);
 
 
 BOOLEAN LightSpriteDestroy(LIGHT_SPRITE* const l)
@@ -2550,7 +2532,7 @@ BOOLEAN LightSpriteDestroy(LIGHT_SPRITE* const l)
 * active lights.
 *
 ********************************************************************************/
-BOOLEAN LightSpriteRenderAll(void)
+void LightSpriteRenderAll(void)
 {
 INT32 iCount;
 
@@ -2567,8 +2549,6 @@ INT32 iCount;
 			LightSpriteDirty(l);
 		}
 	}
-
-	return(TRUE);
 }
 
 
@@ -2652,7 +2632,7 @@ void LightSpritePower(LIGHT_SPRITE* const l, const BOOLEAN fOn)
 
 
 // Sets the flag for the renderer to draw all marked tiles.
-static BOOLEAN LightSpriteDirty(const LIGHT_SPRITE* const l)
+static void LightSpriteDirty(LIGHT_SPRITE const* const l)
 {
 #if 0 // XXX was commented out
 	INT16 iLeft_s;
@@ -2675,8 +2655,6 @@ static BOOLEAN LightSpriteDirty(const LIGHT_SPRITE* const l)
 #endif
 
 	SetRenderFlags(RENDER_FLAG_MARKED);
-
-	return(TRUE);
 }
 
 

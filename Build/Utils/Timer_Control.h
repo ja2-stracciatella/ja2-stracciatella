@@ -50,8 +50,8 @@ extern INT32 giTimerDiag;
 extern INT32 giTimerTeamTurnUpdate;
 
 
-BOOLEAN InitializeJA2Clock( void );
-void    ShutdownJA2Clock( void );
+void InitializeJA2Clock(void);
+void ShutdownJA2Clock(void);
 
 #define GetJA2Clock()						guiBaseJA2Clock
 

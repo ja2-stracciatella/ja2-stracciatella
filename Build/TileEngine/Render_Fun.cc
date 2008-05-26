@@ -21,11 +21,10 @@ UINT8						gubWorldRoomInfo[ WORLD_MAX ];
 UINT8						gubWorldRoomHidden[ MAX_ROOMS ];
 
 
-BOOLEAN InitRoomDatabase( )
+void InitRoomDatabase()
 {
 	memset( gubWorldRoomInfo, NO_ROOM, sizeof( gubWorldRoomInfo ) );
 	memset( gubWorldRoomHidden, TRUE, sizeof( gubWorldRoomHidden ) );
-	return( TRUE );
 }
 
 

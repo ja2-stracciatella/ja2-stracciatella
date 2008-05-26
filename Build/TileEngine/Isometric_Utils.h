@@ -68,7 +68,7 @@ void FloatFromCellToScreenCoordinates( FLOAT dCellX, FLOAT dCellY, FLOAT *pdScre
 BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo );
 BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection );
 
-BOOLEAN CellXYToScreenXY(INT16 sCellX, INT16 sCellY, INT16 *sScreenX, INT16 *sScreenY);
+void CellXYToScreenXY(INT16 sCellX, INT16 sCellY, INT16* sScreenX, INT16* sScreenY);
 
 INT32 GetRangeFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 );
 INT32 GetRangeInCellCoordsFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 );

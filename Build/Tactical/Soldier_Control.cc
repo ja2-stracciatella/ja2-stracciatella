@@ -5322,7 +5322,7 @@ BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalR
 }
 
 
-BOOLEAN DeletePaletteData( )
+void DeletePaletteData()
 {
 	UINT32 cnt;
 
@@ -5351,8 +5351,6 @@ BOOLEAN DeletePaletteData( )
 		MemFree( gpPalRep );
 		gpPalRep = NULL;
 	}
-
-	return( TRUE );
 }
 
 

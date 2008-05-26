@@ -9,7 +9,7 @@
 #define MERC_POPUP_PREPARE_FLAGS_STOPICON				0x00000004
 #define MERC_POPUP_PREPARE_FLAGS_SKULLICON			0x00000008
 
-BOOLEAN InitMercPopupBox(void);
+void InitMercPopupBox(void);
 
 
 // create a pop up box if needed, return id of box..a -1 means couldn't be added
@@ -41,9 +41,9 @@ typedef struct {
 } MercPopUpBox;
 
 
-BOOLEAN OverrideMercPopupBox( MercPopUpBox *pMercBox );
-BOOLEAN ResetOverrideMercPopupBox(void);
-BOOLEAN	SetPrepareMercPopupFlags( UINT32 uiFlags );
+void OverrideMercPopupBox(MercPopUpBox* pMercBox);
+void ResetOverrideMercPopupBox(void);
+void SetPrepareMercPopupFlags(UINT32 uiFlags);
 
 
 // background enumeration

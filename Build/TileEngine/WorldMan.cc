@@ -444,7 +444,7 @@ BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 }
 
 
-BOOLEAN DeleteAllLandLayers(UINT32 iMapIndex)
+void DeleteAllLandLayers(UINT32 iMapIndex)
 {
 	const LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead;
 
@@ -458,8 +458,6 @@ BOOLEAN DeleteAllLandLayers(UINT32 iMapIndex)
 	// Set world data values
 	gpWorldLevelData[iMapIndex].pLandHead = NULL;
 	gpWorldLevelData[iMapIndex].pLandStart = NULL;
-
-	return TRUE;
 }
 
 
@@ -506,7 +504,7 @@ BOOLEAN InsertLandIndexAtLevel(const UINT32 iMapIndex, const UINT16 usIndex, con
 #endif
 
 
-BOOLEAN RemoveHigherLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT32** puiHigherTypes, UINT8* pubNumHigherTypes)
+void RemoveHigherLandLevels(UINT32 const iMapIndex, UINT32 const fSrcType, UINT32** const puiHigherTypes, UINT8* const pubNumHigherTypes)
 {
 	LEVELNODE* pOldLand = NULL;
 
@@ -548,7 +546,6 @@ BOOLEAN RemoveHigherLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT32** puiHi
 	}
 
 	AdjustForFullTile(iMapIndex);
-	return TRUE;
 }
 
 
@@ -727,7 +724,7 @@ static void RemoveShadowBuddy(UINT32 iMapIndex, UINT16 usIndex)
 }
 
 
-BOOLEAN ForceRemoveStructFromTail(UINT32 iMapIndex)
+void ForceRemoveStructFromTail(UINT32 const iMapIndex)
 {
 	LEVELNODE* pPrevStruct	= NULL;
 
@@ -756,13 +753,11 @@ BOOLEAN ForceRemoveStructFromTail(UINT32 iMapIndex)
 			MemFree(pStruct);
 
 			RemoveShadowBuddy(iMapIndex, usIndex);
-			return TRUE;
+			return;
 		}
 
 		pPrevStruct = pStruct;
 	}
-
-	return TRUE;
 }
 
 
@@ -995,7 +990,7 @@ BOOLEAN TypeExistsInStructLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusStruc
 }
 
 
-BOOLEAN HideStructOfGivenType(UINT32 iMapIndex, UINT32 fType, BOOLEAN fHide)
+void HideStructOfGivenType(UINT32 const iMapIndex, UINT32 const fType, BOOLEAN const fHide)
 {
 	if (fHide)
 	{
@@ -1009,7 +1004,6 @@ BOOLEAN HideStructOfGivenType(UINT32 iMapIndex, UINT32 fType, BOOLEAN fHide)
 			RemoveRoofIndexFlagsFromTypeRange(iMapIndex, fType, fType, LEVELNODE_HIDDEN);
 		}
 	}
-	return TRUE;
 }
 
 

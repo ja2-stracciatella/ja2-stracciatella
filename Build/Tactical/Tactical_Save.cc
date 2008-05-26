@@ -1121,7 +1121,7 @@ static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void);
 
 
 //Deletes the Temp map Directory
-BOOLEAN InitTacticalSave( BOOLEAN fCreateTempDir )
+void InitTacticalSave(BOOLEAN const fCreateTempDir)
 {
 	if (!MakeFileManDirectory(MAPS_DIR))
 	{
@@ -1136,8 +1136,6 @@ BOOLEAN InitTacticalSave( BOOLEAN fCreateTempDir )
 		//Create the initial temp file for the Npc Quote Info
 		InitTempNpcQuoteInfoForNPCFromTempFile();
 	}
-
- 	return( TRUE );
 }
 
 
@@ -1275,14 +1273,13 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 }
 
 
-BOOLEAN AddWorldItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const UINT32 item_count, const WORLDITEM* const wis)
+void AddWorldItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const UINT32 item_count, const WORLDITEM* const wis)
 {
 	for (const WORLDITEM* wi = wis; wi != wis + item_count; ++wi)
 	{
 		if (!wi->fExists) continue;
 		AddItemsToUnLoadedSector(sMapX, sMapY, bMapZ, wi->sGridNo, 1, &wi->o, wi->ubLevel, wi->usFlags, wi->bRenderZHeightAboveLevel, wi->bVisible);
 	}
-	return TRUE;
 }
 
 
@@ -1538,7 +1535,7 @@ static BOOLEAN GetUnderGroundSectorFlagStatus(INT16 sSectorX, INT16 sSectorY, UI
 }
 
 
-BOOLEAN SetSectorFlag( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, UINT32 uiFlagToSet )
+void SetSectorFlag(INT16 const sMapX, INT16 const sMapY, UINT8 const bMapZ, UINT32 const uiFlagToSet)
 {
 	if( uiFlagToSet == SF_ALREADY_VISITED )
 	{
@@ -1574,19 +1571,17 @@ BOOLEAN SetSectorFlag( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, UINT32 uiFlagToSet
 		SectorInfo[ SECTOR( sMapX,sMapY) ].uiFlags |= uiFlagToSet;
 	else
 		SetUnderGroundSectorFlag( sMapX, sMapY, bMapZ, uiFlagToSet );
-
-	return( TRUE );
 }
 
-BOOLEAN ReSetSectorFlag( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, UINT32 uiFlagToSet )
+
+void ReSetSectorFlag(INT16 const sMapX, INT16 const sMapY, UINT8 const bMapZ, UINT32 const uiFlagToSet)
 {
 	if( bMapZ == 0 )
 		SectorInfo[ SECTOR( sMapX,sMapY) ].uiFlags &= ~( uiFlagToSet );
 	else
 		ReSetUnderGroundSectorFlag( sMapX, sMapY, bMapZ, uiFlagToSet );
-
-	return( TRUE );
 }
+
 
 BOOLEAN GetSectorFlagStatus( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, UINT32 uiFlagToSet )
 {
@@ -1597,8 +1592,7 @@ BOOLEAN GetSectorFlagStatus( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, UINT32 uiFla
 }
 
 
-
-BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SOLDIERTYPE *pSoldier, INT16  sGridNo, UINT32 uiFlags )
+void AddDeadSoldierToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, UINT8 const bMapZ, SOLDIERTYPE* const pSoldier, INT16  const sGridNo, UINT32 const uiFlags)
 {
 	UINT32			uiNumberOfItems;
 	UINT				i;
@@ -1723,9 +1717,8 @@ BOOLEAN AddDeadSoldierToUnLoadedSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, S
 
 	//Add the rotting corpse info to the sectors unloaded rotting corpse file
 	AddRottingCorpseToUnloadedSectorsRottingCorpseFile( sMapX, sMapY, bMapZ, &Corpse);
-
-	return( TRUE );
 }
+
 
 BOOLEAN SaveTempNpcQuoteArrayToSaveGameFile( HWFILE hFile )
 {

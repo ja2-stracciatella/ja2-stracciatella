@@ -201,9 +201,9 @@ typedef struct
 extern const UICursor gUICursors[NUM_UI_CURSORS];
 
 
-BOOLEAN SetUICursor( UINT32 uiNewCursor );
-BOOLEAN DrawUICursor(void);
-BOOLEAN HideUICursor(void);
+void SetUICursor(UINT32 uiNewCursor);
+void DrawUICursor(void);
+void HideUICursor(void);
 
 
 extern UINT16 gusCurMousePos;

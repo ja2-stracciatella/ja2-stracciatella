@@ -109,7 +109,7 @@ typedef enum
 } InterfacePanelDefines;
 
 
-BOOLEAN InitializeTacticalInterface(void);
+void InitializeTacticalInterface(void);
 extern BOOLEAN fInterfacePanelDirty;
 extern BOOLEAN gfPausedTacticalRenderFlags;
 extern BOOLEAN gfPausedTacticalRenderInterfaceFlags;
@@ -125,7 +125,7 @@ void CancelMovementMenu(void);
 
 void PopDownOpenDoorMenu(void);
 void RenderOpenDoorMenu(void);
-BOOLEAN InitDoorOpenMenu(SOLDIERTYPE* pSoldier, BOOLEAN fClosingDoor);
+void InitDoorOpenMenu(SOLDIERTYPE* pSoldier, BOOLEAN fClosingDoor);
 BOOLEAN HandleOpenDoorMenu(void);
 void CancelOpenDoorMenu(void);
 

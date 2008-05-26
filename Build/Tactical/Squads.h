@@ -121,7 +121,7 @@ INT8 GetFirstEmptySquad( void );
 BOOLEAN SoldierIsDeadAndWasOnSquad( SOLDIERTYPE *pSoldier, INT8 bSquadValue );
 
 // now reset the table for these mercs
-BOOLEAN ResetDeadSquadMemberList( INT32 iSquadValue );
+void ResetDeadSquadMemberList(INT32 iSquadValue);
 
 // this passed  soldier on the current squad int he tactical map
 BOOLEAN IsMercOnCurrentSquad(const SOLDIERTYPE* pSoldier);

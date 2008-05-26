@@ -262,7 +262,7 @@ static BOOLEAN ReloadQuoteFileIfLoaded(UINT8 ubNPC)
 }
 
 
-static BOOLEAN RefreshNPCScriptRecord(UINT8 ubNPC, UINT8 ubRecord)
+static void RefreshNPCScriptRecord(UINT8 const ubNPC, UINT8 const ubRecord)
 {
 	UINT8							ubLoop;
 	NPCQuoteInfo *		pNewArray;
@@ -282,7 +282,7 @@ static BOOLEAN RefreshNPCScriptRecord(UINT8 ubNPC, UINT8 ubRecord)
 				RefreshNPCScriptRecord( ubLoop, ubRecord );
 			}
 		}
-		return( TRUE );
+		return;
 	}
 
 	if ( gpNPCQuoteInfoArray[ ubNPC ] )
@@ -290,7 +290,7 @@ static BOOLEAN RefreshNPCScriptRecord(UINT8 ubNPC, UINT8 ubRecord)
 		if ( CHECK_FLAG( gpNPCQuoteInfoArray[ ubNPC ][ ubRecord ].fFlags, QUOTE_FLAG_SAID ) )
 		{
 			// already used so we don't have to refresh!
-			return( TRUE );
+			return;
 		}
 
 		pNewArray = LoadQuoteFile( ubNPC );
@@ -300,8 +300,8 @@ static BOOLEAN RefreshNPCScriptRecord(UINT8 ubNPC, UINT8 ubRecord)
 			MemFree( pNewArray );
 		}
 	}
-	return( TRUE );
 }
+
 
 //
 // CIV QUOTE LOW LEVEL ROUTINES
@@ -404,7 +404,7 @@ void ShutdownNPCQuotes( void )
 // GENERAL LOW LEVEL ROUTINES
 //
 
-BOOLEAN ReloadAllQuoteFiles( void )
+void ReloadAllQuoteFiles(void)
 {
 	UINT8		ubProfile, ubLoop;
 
@@ -423,10 +423,8 @@ BOOLEAN ReloadAllQuoteFiles( void )
 	{
 		ReloadCivQuoteFileIfLoaded( ubLoop );
 	}
-
-
-	return( TRUE );
 }
+
 
 //
 // THE REST
@@ -695,7 +693,7 @@ static UINT8 NPCConsiderTalking(UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT8
 }
 
 
-static BOOLEAN HandleNPCBeingGivenMoneyByPlayer(UINT8 ubNPC, UINT32 uiMoneyAmount, UINT8* pQuoteValue);
+static void HandleNPCBeingGivenMoneyByPlayer(UINT8 ubNPC, UINT32 uiMoneyAmount, UINT8* pQuoteValue);
 
 
 static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE* pObj, NPCQuoteInfo* pNPCQuoteInfoArray, NPCQuoteInfo** ppResultQuoteInfo, UINT8* pubQuoteNum)
@@ -1074,7 +1072,7 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 
 
 // handle money being npc being
-static BOOLEAN HandleNPCBeingGivenMoneyByPlayer(UINT8 ubNPC, UINT32 uiMoneyAmount, UINT8* pQuoteValue)
+static void HandleNPCBeingGivenMoneyByPlayer(UINT8 const ubNPC, UINT32 const uiMoneyAmount, UINT8* const pQuoteValue)
 {
 	switch( ubNPC )
 	{
@@ -1169,8 +1167,6 @@ static BOOLEAN HandleNPCBeingGivenMoneyByPlayer(UINT8 ubNPC, UINT32 uiMoneyAmoun
 			}
 			break;
 	}
-
-	return( TRUE );
 }
 
 

@@ -453,8 +453,7 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 }
 
 
-
-BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
+void HandleNextTileWaiting(SOLDIERTYPE* const pSoldier)
 {
 	// Buddy is waiting to continue his path
 	INT8		bBlocked, bPathBlocked;
@@ -485,7 +484,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 					SetFinalTile( pSoldier, pSoldier->sGridNo, TRUE );
 					pSoldier->fDelayedMovement = FALSE;
 				}
-				return( TRUE );
+				return;
 			}
 
 			// Try new path if anything but temp blockage!
@@ -611,8 +610,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 
 						EVENT_GetNewSoldierPath( pSoldier, sCheckGridNo, pSoldier->usUIMovementMode );
 						gfPlotPathToExitGrid = FALSE;
-
-						return( TRUE );
+						return;
 					}
 				}
 
@@ -661,7 +659,7 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 									NPCReachedDestination(pSoldier, FALSE);
 									pSoldier->bNextAction = AI_ACTION_WAIT;
 									pSoldier->usNextActionData = 500;
-									return TRUE;
+									return;
 								}
 							}
 							pSoldier->bPathStored = TRUE;
@@ -697,7 +695,6 @@ BOOLEAN HandleNextTileWaiting( SOLDIERTYPE *pSoldier )
 			}
 		}
 	}
-	return( TRUE );
 }
 
 

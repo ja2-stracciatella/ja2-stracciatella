@@ -1156,7 +1156,7 @@ void RemoveSMPanelButtons(void)
 }
 
 
-BOOLEAN ShutdownSMPanel(void)
+void ShutdownSMPanel(void)
 {
 	// All buttons and regions and video objects and video surfaces will be deleted at shutddown of SGM
 	// We may want to delete them at the interm as well, to free up room for other panels
@@ -1191,8 +1191,6 @@ BOOLEAN ShutdownSMPanel(void)
 	MSYS_RemoveRegion(&gViewportRegion);
 
 	RemoveSMPanelButtons();
-
-	return TRUE;
 }
 
 
@@ -2455,7 +2453,7 @@ try
 catch (...) { return FALSE; }
 
 
-BOOLEAN ShutdownTEAMPanel(void)
+void ShutdownTEAMPanel(void)
 {
 	// All buttons and regions and video objects and video surfaces will be deleted at shutddown of SGM
 	// We may want to delete them at the interm as well, to free up room for other panels
@@ -2483,7 +2481,6 @@ BOOLEAN ShutdownTEAMPanel(void)
 
 	// start rendering radar region again,
 	fRenderRadarScreen = TRUE;
-	return TRUE;
 }
 
 
@@ -3339,10 +3336,9 @@ void AddPlayerToInterfaceTeamSlot(SOLDIERTYPE* const s)
 }
 
 
-BOOLEAN InitTEAMSlots(void)
+void InitTEAMSlots(void)
 {
 	for (INT32 i = 0; i < NUM_TEAM_SLOTS; i++) gTeamPanel[i].merc = NULL;
-	return( TRUE );
 }
 
 

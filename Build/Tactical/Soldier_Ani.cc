@@ -3392,14 +3392,15 @@ BOOLEAN OKFallDirection( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8
 	return( TRUE );
 }
 
-BOOLEAN HandleCheckForDeathCommonCode( SOLDIERTYPE *pSoldier )
+
+void HandleCheckForDeathCommonCode(SOLDIERTYPE* const pSoldier)
 {
 	// CHECK IF WE HAVE A PENDING ANIMATION HERE
 	if ( pSoldier->usPendingAnimation != NO_PENDING_ANIMATION )
 	{
 		ChangeSoldierState( pSoldier, pSoldier->usPendingAnimation, 0, FALSE );
 		pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-		return( TRUE );
+		return;
 	}
 
 	// OTHERWISE, GOTO APPROPRIATE STOPANIMATION!
@@ -3415,10 +3416,7 @@ BOOLEAN HandleCheckForDeathCommonCode( SOLDIERTYPE *pSoldier )
 		BeginSoldierGetup( pSoldier );
 
 		// Check this to see if above worked
-		if ( !pSoldier->bCollapsed )
-		{
-			return( TRUE );
-		}
+		if (!pSoldier->bCollapsed) return;
 	}
 
 	switch( pSoldier->usAnimState )
@@ -3468,10 +3466,7 @@ BOOLEAN HandleCheckForDeathCommonCode( SOLDIERTYPE *pSoldier )
 		BeginSoldierGetup( pSoldier );
 
 		// Check this to see if above worked
-		if ( !pSoldier->bCollapsed )
-		{
-			return( TRUE );
-		}
+		if (!pSoldier->bCollapsed) return;
 	}
 
 	UINT16 state;
@@ -3491,10 +3486,9 @@ BOOLEAN HandleCheckForDeathCommonCode( SOLDIERTYPE *pSoldier )
 		default:
 			// IF we are here - something is wrong - we should have a death animation here
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Soldier Ani: unconscious hit sequence needed for animation %d", pSoldier->usAnimState ) );
-			return TRUE;
+			return;
 	}
 	ChangeSoldierState(pSoldier, state, 0, FALSE);
-	return( TRUE );
 }
 
 

@@ -531,7 +531,7 @@ extern AnimationSurfaceType gAnimSurfaceDatabase[NUMANIMATIONSURFACETYPES];
 
 
 BOOLEAN InitAnimationSystem(void);
-BOOLEAN DeInitAnimationSystem(void);
+void    DeInitAnimationSystem(void);
 BOOLEAN LoadAnimationSurface(  UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState );
 void UnLoadAnimationSurface(UINT16 usSoldierID, UINT16 usSurfaceIndex);
 void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID );

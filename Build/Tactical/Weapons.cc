@@ -661,8 +661,8 @@ BOOLEAN	OKFireWeapon( SOLDIERTYPE *pSoldier )
 
 
 static BOOLEAN UseGun(      SOLDIERTYPE* pSoldier, INT16 sTargetGridNo);
-static BOOLEAN UseBlade(    SOLDIERTYPE* pSoldier, INT16 sTargetGridNo);
-static BOOLEAN UseThrown(   SOLDIERTYPE* pSoldier, INT16 sTargetGridNo);
+static void    UseBlade(    SOLDIERTYPE* pSoldier, INT16 sTargetGridNo);
+static void    UseThrown(   SOLDIERTYPE* pSoldier, INT16 sTargetGridNo);
 static BOOLEAN UseLauncher( SOLDIERTYPE* pSoldier, INT16 sTargetGridNo);
 
 
@@ -1233,7 +1233,7 @@ static void AgilityForEnemyMissingPlayer(const SOLDIERTYPE* const attacker, SOLD
 }
 
 
-static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
+static void UseBlade(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 {
 	INT32								iHitChance, iDiceRoll;
 	INT16								sAPCost;
@@ -1373,16 +1373,13 @@ static BOOLEAN UseBlade(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	{
 		pSoldier->bMonsterSmell--;
 	}
-
-
-	return( TRUE );
 }
 
 
 static UINT32 CalcChanceToSteal(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT8 ubAimTime);
 
 
-BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStealing )
+void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLEAN const fStealing)
 {
 	INT32								iHitChance, iDiceRoll;
 	INT16								sAPCost;
@@ -1605,13 +1602,10 @@ BOOLEAN UseHandToHand( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, BOOLEAN fStea
 	{
 		pSoldier->bMonsterSmell--;
 	}
-
-
-	return( TRUE );
 }
 
 
-static BOOLEAN UseThrown(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
+static void UseThrown(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 {
 	UINT32		uiHitChance, uiDiceRoll;
 	INT8			bLoop;
@@ -1671,8 +1665,6 @@ static BOOLEAN UseThrown(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	HandleSoldierThrowItem( pSoldier, pSoldier->sTargetGridNo );
 
 	RemoveObjs( &(pSoldier->inv[ HANDPOS ] ), 1 );
-
-	return( TRUE );
 }
 
 

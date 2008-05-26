@@ -75,7 +75,7 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 ITEM_POOL* GetItemPool(UINT16 usMapPos, UINT8 ubLevel);
 void       DrawItemPoolList(const ITEM_POOL* pItemPool, INT8 bZLevel, INT16 sXPos, INT16 sYPos);
 void       RemoveItemFromPool(WORLDITEM*);
-BOOLEAN MoveItemPools( INT16 sStartPos, INT16 sEndPos );
+void       MoveItemPools(INT16 sStartPos, INT16 sEndPos);
 
 BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOOLEAN fSetLocator );
 

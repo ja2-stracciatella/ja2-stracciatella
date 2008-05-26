@@ -96,26 +96,23 @@ static BOOLEAN SetCurrentPopUpBox(UINT32 uiId)
 	return ( FALSE );
 }
 
-BOOLEAN OverrideMercPopupBox( MercPopUpBox *pMercBox )
-{
 
+void OverrideMercPopupBox(MercPopUpBox* const pMercBox)
+{
 	// store old box and set current this passed one
 	gOldPopUpTextBox = gPopUpTextBox;
 
 	gPopUpTextBox = pMercBox;
-
-	return( TRUE );
 }
 
-BOOLEAN ResetOverrideMercPopupBox( )
+
+void ResetOverrideMercPopupBox()
 {
 	gPopUpTextBox = gOldPopUpTextBox;
-
-	return( TRUE );
 }
 
 
-BOOLEAN InitMercPopupBox( )
+void InitMercPopupBox()
 {
 	INT32 iCounter = 0;
 
@@ -128,7 +125,6 @@ BOOLEAN InitMercPopupBox( )
 
 	guiBoxIcons   = AddVideoObjectFromFile("INTERFACE/msgboxicons.sti");     // stop icon
 	guiSkullIcons = AddVideoObjectFromFile("INTERFACE/msgboxiconskull.sti"); // skull icon
-	return( TRUE );
 }
 
 
@@ -526,8 +522,8 @@ static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColo
 	}
 }
 
-BOOLEAN	SetPrepareMercPopupFlags( UINT32 uiFlags )
+
+void SetPrepareMercPopupFlags(UINT32 const uiFlags)
 {
 	guiFlags |= uiFlags;
-	return( TRUE );
 }
