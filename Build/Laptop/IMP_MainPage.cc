@@ -138,7 +138,7 @@ static void MakeButton(UINT idx, const char* img_file, const wchar_t* text, INT1
 	if (idx >= 2)
 	{
 		btn->SpecifyTextOffsets(10, 40, TRUE);
-		SpecifyButtonTextWrappedWidth(btn, MAIN_PAGE_BUTTON_TEXT_WIDTH);
+		btn->SpecifyTextWrappedWidth(MAIN_PAGE_BUTTON_TEXT_WIDTH);
 	}
 }
 

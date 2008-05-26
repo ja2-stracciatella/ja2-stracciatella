@@ -783,9 +783,9 @@ void GUI_BUTTON::SpecifyTextSubOffsets(INT8 const text_x_offset, INT8 const text
 }
 
 
-void SpecifyButtonTextWrappedWidth(GUIButtonRef const b, INT16 sWrappedWidth)
+void GUI_BUTTON::SpecifyTextWrappedWidth(INT16 const wrapped_width)
 {
-	b->sWrappedWidth = sWrappedWidth;
+	sWrappedWidth = wrapped_width;
 }
 
 
