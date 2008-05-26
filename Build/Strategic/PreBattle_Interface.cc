@@ -208,7 +208,7 @@ static void MakeButton(UINT idx, INT16 x, const wchar_t* text, GUI_CALLBACK clic
 	btn->SpecifyTextOffsets(8, 7, TRUE);
 	btn->SpecifyTextWrappedWidth(51);
 	btn->AllowDisabledFastHelp();
-	HideButton(btn);
+	btn->Hide();
 }
 
 
@@ -547,9 +547,9 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	fShowAssignmentMenu = FALSE;
 	fShowContractMenu = FALSE;
 	DisableTeamInfoPanels();
-	if (giMapContractButton) HideButton(giMapContractButton);
-	if (giCharInfoButton[0]) HideButton(giCharInfoButton[0]);
-	if (giCharInfoButton[1]) HideButton(giCharInfoButton[1]);
+	if (giMapContractButton) giMapContractButton->Hide();
+	if (giCharInfoButton[0]) giCharInfoButton[0]->Hide();
+	if (giCharInfoButton[1]) giCharInfoButton[1]->Hide();
 
 	if( gubEnemyEncounterCode == ENEMY_ENCOUNTER_CODE )
 	{ //we know how many enemies are here, so until we leave the sector, we will continue to display the value.

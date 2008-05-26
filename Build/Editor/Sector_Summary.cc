@@ -316,7 +316,7 @@ void CreateSummaryWindow()
 	AddTextInputField( MAP_LEFT+112, MAP_BOTTOM+75, 100, 18, MSYS_PRIORITY_HIGH, L"", 20, INPUTTYPE_EXCLUSIVE_DOSFILENAME );
 
 	for( i = 1; i < NUM_SUMMARY_BUTTONS; i++ )
-		HideButton( iSummaryButton[ i ] );
+		iSummaryButton[i]->Hide();
 
 	MSYS_DefineRegion( &MapRegion, MAP_LEFT, MAP_TOP, MAP_RIGHT, MAP_BOTTOM, MSYS_PRIORITY_HIGH, 0,
 		MapMoveCallback, MapClickCallback );
