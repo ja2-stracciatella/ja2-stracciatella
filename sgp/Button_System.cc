@@ -804,20 +804,25 @@ void SpecifyDisabledButtonStyle(GUIButtonRef const b, INT8 bStyle)
 }
 
 
+void GUI_BUTTON::SpecifyIcon(SGPVObject const* const icon_, UINT16 const usVideoObjectIndex, INT8 const bXOffset, INT8 const bYOffset, BOOLEAN const)
+{
+	icon        = icon_;
+	usIconIndex = usVideoObjectIndex;
+
+	if (!icon_) return;
+
+	bIconXOffset = bXOffset;
+	bIconYOffset = bYOffset;
+	fShiftImage  = TRUE;
+
+	uiFlags |= BUTTON_DIRTY;
+}
+
+
 void SpecifyButtonIcon(GUIButtonRef const b, const SGPVObject* const icon, const UINT16 usVideoObjectIndex, const INT8 bXOffset, const INT8 bYOffset, const BOOLEAN fShiftImage)
 {
 	CHECKV(b != NULL); // XXX HACK000C
-
-	b->icon        = icon;
-	b->usIconIndex = usVideoObjectIndex;
-
-	if (!icon) return;
-
-	b->bIconXOffset = bXOffset;
-	b->bIconYOffset = bYOffset;
-	b->fShiftImage  = TRUE;
-
-	b->uiFlags |= BUTTON_DIRTY;
+	b->SpecifyIcon(icon, usVideoObjectIndex, bXOffset, bYOffset, fShiftImage);
 }
 
 

@@ -76,6 +76,12 @@ struct GUI_BUTTON
 
 	void AllowDisabledFastHelp();
 
+	/* Note:  Text is always on top
+	 * If fShiftImage is true, then the image will shift down one pixel and right
+	 * one pixel just like the text does.
+	 */
+	void SpecifyIcon(SGPVObject const* icon, UINT16 usVideoObjectIndex, INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage);
+
 	// will simply set the cursor for the mouse region the button occupies
 	void SetCursor(UINT16 cursor);
 

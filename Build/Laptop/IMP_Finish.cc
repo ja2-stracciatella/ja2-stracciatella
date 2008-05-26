@@ -139,21 +139,21 @@ static void CreateIMPFinishButtons(void)
 
 	// the personality button
 	MakeButton(2, "LAPTOP/button_8.sti", pImpButtonText[2], dx +  13, dy + 245, BtnIMPFinishPersonalityCallback);
-	SpecifyButtonIcon(giIMPFinishButton[2], guiANALYSE, 0, 33, 23, FALSE);
+	giIMPFinishButton[2]->SpecifyIcon(guiANALYSE, 0, 33, 23, FALSE);
 
 	// the attribs button
 	MakeButton(3, "LAPTOP/button_8.sti", pImpButtonText[3], dx + 133, dy + 245, BtnIMPFinishAttributesCallback);
-	SpecifyButtonIcon(giIMPFinishButton[3], guiATTRIBUTEGRAPH, 0, 25, 25, FALSE);
+	giIMPFinishButton[3]->SpecifyIcon(guiATTRIBUTEGRAPH, 0, 25, 25, FALSE);
 
   // the portrait button
 	MakeButton(4, "LAPTOP/button_8.sti", pImpButtonText[4], dx + 253, dy + 245, BtnIMPMainPagePortraitCallback);
-	SpecifyButtonIcon(giIMPFinishButton[4], guiCHARACTERPORTRAIT, 0, 33, 23, FALSE);
+	giIMPFinishButton[4]->SpecifyIcon(guiCHARACTERPORTRAIT, 0, 33, 23, FALSE);
 
 	// the voice button
 	wchar_t sString[128];
 	swprintf(sString, lengthof(sString), pImpButtonText[5], iCurrentVoices + 1);
 	MakeButton(5, "LAPTOP/button_8.sti", sString, dx + 373, dy + 245, BtnIMPMainPageVoiceCallback);
-	SpecifyButtonIcon(giIMPFinishButton[5], guiSMALLSILHOUETTE, 0, 33, 23, FALSE);
+	giIMPFinishButton[5]->SpecifyIcon(guiSMALLSILHOUETTE, 0, 33, 23, FALSE);
 }
 
 
