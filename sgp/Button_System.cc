@@ -816,9 +816,9 @@ void SpecifyButtonIcon(GUIButtonRef const b, const SGPVObject* const icon, const
 }
 
 
-void AllowDisabledButtonFastHelp(GUIButtonRef const b)
+void GUI_BUTTON::AllowDisabledFastHelp()
 {
-	b->Area.uiFlags |= MSYS_ALLOW_DISABLED_FASTHELP;
+	Area.uiFlags |= MSYS_ALLOW_DISABLED_FASTHELP;
 }
 
 

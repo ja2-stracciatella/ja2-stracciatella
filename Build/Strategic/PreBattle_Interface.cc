@@ -207,7 +207,7 @@ static void MakeButton(UINT idx, INT16 x, const wchar_t* text, GUI_CALLBACK clic
 	btn->SpecifyHilitedTextColors(FONT_WHITE, FONT_NEARBLACK);
 	btn->SpecifyTextOffsets(8, 7, TRUE);
 	btn->SpecifyTextWrappedWidth(51);
-	AllowDisabledButtonFastHelp(btn);
+	btn->AllowDisabledFastHelp();
 	HideButton(btn);
 }
 
