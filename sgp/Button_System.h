@@ -57,6 +57,9 @@ struct GUI_BUTTON
 	void Hide();
 	void Show();
 
+	// Draw the button on the screen.
+	void Draw();
+
 	void SpecifyDownTextColors(INT16 fore_colour_down, INT16 shadow_colour_down);
 	void SpecifyHilitedTextColors(INT16 fore_colour_highlighted, INT16 shadow_colour_highlighted);
 

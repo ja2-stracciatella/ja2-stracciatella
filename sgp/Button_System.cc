@@ -800,7 +800,7 @@ void GUI_BUTTON::SpecifyDisabledStyle(DisabledStyle const style)
 }
 
 
-void SpecifyDisabledButtonStyle(GUIButtonRef const b, DisabledStyle const style)
+void SpecifyDisabledButtonStyle(GUIButtonRef const b, GUI_BUTTON::DisabledStyle const style)
 {
 	CHECKV(b != NULL); // XXX HACK000C
 	b->SpecifyDisabledStyle(style);
@@ -1149,12 +1149,18 @@ void ForceButtonUnDirty(GUIButtonRef const b)
 }
 
 
+void GUI_BUTTON::Draw()
+{
+	if (string) SaveFontSettings();
+	if (Area.uiFlags & MSYS_REGION_ENABLED) DrawButtonFromPtr(this);
+	if (string) RestoreFontSettings();
+}
+
+
 void DrawButton(GUIButtonRef const b)
 {
 	CHECKV(b != NULL); // XXX HACK000C
-	if (b->string != NULL) SaveFontSettings();
-	if (b->Area.uiFlags & MSYS_REGION_ENABLED) DrawButtonFromPtr(b);
-	if (b->string != NULL) RestoreFontSettings();
+	b->Draw();
 }
 
 
@@ -1283,7 +1289,7 @@ void DrawCheckBoxButtonOnOff(GUIButtonRef const b, BOOLEAN const on)
 
 	gfLeftButtonState = on;
 	b->Area.uiFlags |= MSYS_MOUSE_IN_AREA;
-	DrawButton(b);
+	b->Draw();
 
 	gfLeftButtonState = fLeftButtonState;
 }

@@ -536,7 +536,7 @@ void RenderMercs()
 	//If the Specks popup dioalogue box is active, display it.
 	if( iMercPopUpBox != -1 )
 	{
-		DrawButton( guiAccountBoxButton );
+		guiAccountBoxButton->Draw();
 		guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
 
 		RenderMercPopUpBoxFromIndex( iMercPopUpBox, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
@@ -1292,12 +1292,12 @@ static void HandleTalkingSpeck(void)
 
 				if( gsSpeckDialogueTextPopUp[0] != L'\0' )
 				{
-//					DrawButton( guiAccountBoxButton );
+//					guiAccountBoxButton->Draw();
 //					guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
 
 					if( iMercPopUpBox != -1 )
 					{
-						DrawButton( guiAccountBoxButton );
+						guiAccountBoxButton->Draw();
 						guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
 
 						RenderMercPopUpBoxFromIndex( iMercPopUpBox, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
