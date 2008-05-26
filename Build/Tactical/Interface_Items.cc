@@ -1969,7 +1969,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		INT16 usX;
 		INT16 usY;
 		FindFontCenterCoordinates(ITEMDESC_AMMO_TEXT_X, ITEMDESC_AMMO_TEXT_Y, ITEMDESC_AMMO_TEXT_WIDTH, GetFontHeight(TINYFONT1), pStr, TINYFONT1, &usX, &usY);
-		SpecifyButtonTextOffsets(ammo_btn, usX, usY, TRUE);
+		ammo_btn->SpecifyTextOffsets(usX, usY, TRUE);
 	}
 
 	if (ITEM_PROS_AND_CONS(o->usItem))

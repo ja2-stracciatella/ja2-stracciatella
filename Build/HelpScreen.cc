@@ -881,8 +881,6 @@ static void CreateHelpScreenButtons(void)
 			SetButtonCursor( guiHelpScreenBtns[i], gHelpScreen.usCursor);
 			MSYS_SetBtnUserData(guiHelpScreenBtns[i], i);
 
-//	SpecifyButtonTextOffsets( guiHelpScreenBtns[i], 19, 9, TRUE );
-
 			usPosY += HELP_SCREEN_BTN_HEIGHT + HELP_SCREEN_GAP_BN_BTNS;
 		}
 

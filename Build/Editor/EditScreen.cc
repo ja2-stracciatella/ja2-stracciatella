@@ -3421,7 +3421,7 @@ static void CreateGotoGridNoUI(void)
 	DisableEditorTaskbar();
 	//Create the background panel.
 	guiGotoGridNoUIButtonID = CreateLabel(L"Enter gridno:", FONT10ARIAL, FONT_YELLOW, FONT_BLACK, 290, 155, 60, 50, MSYS_PRIORITY_NORMAL);
-	SpecifyButtonTextOffsets( guiGotoGridNoUIButtonID, 5, 5, FALSE );
+	guiGotoGridNoUIButtonID->SpecifyTextOffsets(5, 5, FALSE);
 	//Create a blanket region so nobody can use
 	MSYS_DefineRegion(&GotoGridNoUIRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL + 1, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 	//Init a text input field.

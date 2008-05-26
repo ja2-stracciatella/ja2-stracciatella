@@ -63,6 +63,7 @@ struct GUI_BUTTON
 	void SpecifyTextJustification(Justification);
 
 	void SpecifyGeneralTextAttributes(wchar_t const* string, Font, INT16 fore_colour, INT16 shadow_colour);
+	void SpecifyTextOffsets(INT8 text_x_offset, INT8 text_y_offset, BOOLEAN shift_text);
 
 	INT32        IDNum;         // ID Number, contains it's own button number
 	BUTTON_PICS* image;         // Image to use (see DOCs for details)
@@ -225,7 +226,6 @@ GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const wchar_t* string, 
 GUIButtonRef CreateLabel(const wchar_t* text, Font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority);
 
 void SpecifyButtonText(GUIButtonRef, const wchar_t* string);
-void SpecifyButtonTextOffsets(GUIButtonRef, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText);
 void SpecifyButtonTextSubOffsets(GUIButtonRef, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText);
 void SpecifyButtonTextWrappedWidth(GUIButtonRef, INT16 sWrappedWidth);
 

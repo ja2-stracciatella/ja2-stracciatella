@@ -137,7 +137,7 @@ static void MakeButton(UINT idx, const char* img_file, const wchar_t* text, INT1
 	SetButtonCursor(btn, CURSOR_WWW);
 	if (idx >= 2)
 	{
-		SpecifyButtonTextOffsets(btn, 10, 40, TRUE);
+		btn->SpecifyTextOffsets(10, 40, TRUE);
 		SpecifyButtonTextWrappedWidth(btn, MAIN_PAGE_BUTTON_TEXT_WIDTH);
 	}
 }

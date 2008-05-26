@@ -326,7 +326,7 @@ static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 		Assert(i < lengthof(Callback));
 		GUIButtonRef const Button = QuickCreateButtonNoMove(Image, XLoc, YLoc, MSYS_PRIORITY_HIGHEST - 3, Callback[i]);
 		giIMPPersonalityQuizAnswerButton[i] = Button;
-		SpecifyButtonTextOffsets(Button, +23, +12, TRUE);
+		Button->SpecifyTextOffsets(23, 12, TRUE);
 		wchar_t sString[32];
 		swprintf(sString, lengthof(sString), L"%d", i + 1);
 		Button->SpecifyGeneralTextAttributes(sString, FONT12ARIAL, FONT_WHITE, FONT_BLACK);

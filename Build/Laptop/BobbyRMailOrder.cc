@@ -390,13 +390,13 @@ void EnterBobbyRMailOrder()
 	guiBobbyRClearOrderImage = LoadButtonImage("LAPTOP/EraseOrderButton.sti", -1,0,-1,1,-1 );
 	guiBobbyRClearOrder = MakeButton(guiBobbyRClearOrderImage, BobbyROrderFormText[BOBBYR_CLEAR_ORDER], BOBBYR_CLEAR_ORDER_X, BOBBYR_CLEAR_ORDER_Y + 4, BtnBobbyRClearOrderCallback);
 	SpecifyDisabledButtonStyle( guiBobbyRClearOrder, DISABLED_STYLE_NONE );
-	SpecifyButtonTextOffsets( guiBobbyRClearOrder, 39, 10, TRUE );
+	guiBobbyRClearOrder->SpecifyTextOffsets(39, 10, TRUE);
 
 
 	// Accept Order button
 	guiBobbyRAcceptOrderImage = LoadButtonImage("LAPTOP/AcceptOrderButton.sti", 2,0,-1,1,-1 );
 	guiBobbyRAcceptOrder = MakeButton(guiBobbyRAcceptOrderImage, BobbyROrderFormText[BOBBYR_ACCEPT_ORDER], BOBBYR_ACCEPT_ORDER_X, BOBBYR_ACCEPT_ORDER_Y + 4, BtnBobbyRAcceptOrderCallback);
-	SpecifyButtonTextOffsets( guiBobbyRAcceptOrder, 43, 24, TRUE );
+	guiBobbyRAcceptOrder->SpecifyTextOffsets(43, 24, TRUE);
 
 	SpecifyDisabledButtonStyle( guiBobbyRAcceptOrder, DISABLED_STYLE_SHADED );
 

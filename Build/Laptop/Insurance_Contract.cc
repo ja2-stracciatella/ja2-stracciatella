@@ -156,7 +156,7 @@ static GUIButtonRef MakeButtonBig(BUTTON_PICS* const img, const wchar_t* const t
 	const INT16 shadow_col = INS_FONT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, INS_FONT_BIG, text_col, shadow_col, text_col, shadow_col, x, INS_INFO_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
 	SetButtonCursor(btn, CURSOR_WWW);
-	SpecifyButtonTextOffsets(btn, offset_x, 16, FALSE);
+	btn->SpecifyTextOffsets(offset_x, 16, FALSE);
 	return btn;
 }
 
