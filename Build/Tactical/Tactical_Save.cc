@@ -493,7 +493,7 @@ BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT
 {
 	UINT32     uiNumberOfItems;
 	WORLDITEM* wis;
-	if (!LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems, &wis)) goto fail;
+	if (!LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems, &wis)) return FALSE;
 
 	//loop through all the objects to add
 	for (UINT32 uiLoop1 = 0; uiLoop1 < uiNumberOfItemsToAdd; ++uiLoop1)
@@ -506,7 +506,7 @@ BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT
 			{
 				//Error, there wasnt a free spot.  Reallocate memory for the array
 				wis = REALLOC(wis, WORLDITEM, ++uiNumberOfItems);
-				if (wis == NULL) goto fail;
+				if (wis == NULL) return FALSE;
 				break;
 			}
 			if (!wis[cnt].fExists) break;
@@ -533,9 +533,6 @@ BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT
 
 	MemFree(wis);
 	return TRUE;
-
-fail:
-	return FALSE;
 }
 
 
