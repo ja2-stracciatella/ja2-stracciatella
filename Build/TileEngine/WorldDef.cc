@@ -2880,6 +2880,8 @@ BOOLEAN LoadWorld(const char *puiFilename)
 }
 
 
+#ifdef JA2EDITOR
+
 void NewWorld(void)
 {
 	UINT16				NewIndex;
@@ -2902,6 +2904,8 @@ void NewWorld(void)
 
 	gfWorldLoaded = TRUE;
 }
+
+#endif
 
 
 void FreeLevelNodeList(LEVELNODE** const head)

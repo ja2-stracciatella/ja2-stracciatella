@@ -236,10 +236,10 @@ void DestroyTileShadeTables(void);
 
 void TrashWorld(void);
 
+#ifdef JA2EDITOR
 /* Deletes everything then re-creates the world with simple ground tiles */
 void NewWorld(void);
 
-#ifdef JA2EDITOR
 BOOLEAN SaveWorld(const char *puiFilename);
 #endif
 

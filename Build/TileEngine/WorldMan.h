@@ -39,25 +39,21 @@ BOOLEAN RemoveOnRoofFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 
 
 // Land manipulation functions
+#ifdef JA2EDITOR
 BOOLEAN RemoveLand( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE *AddLandToTail( UINT32 iMapIndex, UINT16 usIndex );
+#endif
 BOOLEAN AddLandToHead( UINT32 iMapIndex, UINT16 usIndex );
+#ifdef JA2EDITOR
 BOOLEAN TypeExistsInLandLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusLandIndex );
 BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
-
-#ifdef JA2EDITOR
 BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType);
-#endif
-
 BOOLEAN ReplaceLandIndex( UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex );
 void DeleteAllLandLayers(UINT32 iMapIndex);
-
-#ifdef JA2EDITOR
 BOOLEAN InsertLandIndexAtLevel(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel);
+void RemoveHigherLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT32** puiHigherTypes, UINT8* pubNumHigherTypes);
 #endif
 
-void RemoveHigherLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT32** puiHigherTypes, UINT8* pubNumHigherTypes);
-void AdjustAllLandDirtyCount( UINT32 iMapIndex, INT8 bDirtyDiff );
 UINT8	GetTerrainType( INT16 sGridNo );
 BOOLEAN Water( INT16 sGridNo );
 BOOLEAN DeepWater( INT16 sGridNo );
@@ -77,9 +73,9 @@ void    HideStructOfGivenType(UINT32 iMapIndex, UINT32 fType, BOOLEAN fHide);
 void SetStructAframeFlags( UINT32 iMapIndex, UINT32 uiFlags  );
 BOOLEAN RemoveStructFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 
-
+#ifdef JA2EDITOR
 void ForceRemoveStructFromTail(UINT32 iMapIndex);
-
+#endif
 
 // Shadow manipulation routines
 BOOLEAN AddShadowToTail( UINT32 iMapIndex, UINT16 usIndex );
