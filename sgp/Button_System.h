@@ -97,6 +97,8 @@ struct GUI_BUTTON
 	// will simply set the cursor for the mouse region the button occupies
 	void SetCursor(UINT16 cursor);
 
+	void DrawCheckBoxOnOff(BOOLEAN on);
+
 	INT32        IDNum;         // ID Number, contains it's own button number
 	BUTTON_PICS* image;         // Image to use (see DOCs for details)
 	MOUSE_REGION Area;          // Mouse System's mouse region to use for this button
@@ -275,8 +277,6 @@ void UnMarkButtonDirty(GUIButtonRef);  // unmark button
 void UnmarkButtonsDirty(void); // unmark ALL the buttoms on the screen dirty
 void ForceButtonUnDirty(GUIButtonRef); // forces button undirty no matter the reason, only lasts one frame
 
-
-void DrawCheckBoxButtonOnOff(GUIButtonRef, BOOLEAN on);
 
 typedef struct ButtonDimensions
 {

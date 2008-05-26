@@ -687,7 +687,7 @@ static void HandleOptionToggle(UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BO
 	b->uiFlags &= ~BUTTON_CLICKED_ON;
 	b->uiFlags |= (fState ? BUTTON_CLICKED_ON : 0);
 
-	if (fDown) DrawCheckBoxButtonOnOff(guiOptionsToggles[ubButton], fState);
+	if (fDown) b->DrawCheckBoxOnOff(fState);
 
 	/* Check if the user is unselecting either the spech or subtitles toggle.
 	 * Make sure that at least one of the toggles is still enabled. */

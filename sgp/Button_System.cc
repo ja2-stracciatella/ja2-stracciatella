@@ -1283,13 +1283,13 @@ static void DrawShadeOnButton(const GUI_BUTTON* b)
 }
 
 
-void DrawCheckBoxButtonOnOff(GUIButtonRef const b, BOOLEAN const on)
+void GUI_BUTTON::DrawCheckBoxOnOff(BOOLEAN const on)
 {
 	BOOLEAN const fLeftButtonState = gfLeftButtonState;
 
 	gfLeftButtonState = on;
-	b->Area.uiFlags |= MSYS_MOUSE_IN_AREA;
-	b->Draw();
+	Area.uiFlags |= MSYS_MOUSE_IN_AREA;
+	Draw();
 
 	gfLeftButtonState = fLeftButtonState;
 }
