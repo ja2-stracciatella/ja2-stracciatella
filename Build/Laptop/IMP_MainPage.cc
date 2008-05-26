@@ -157,7 +157,7 @@ static void CreateIMPMainPageButtons(void)
 
 	// the back button button
 	MakeButton(0, "LAPTOP/button_3.sti", pImpButtonText[19], dx + 15, dy + 360, BtnIMPMainPageBackCallback);
-	SpecifyButtonTextSubOffsets(giIMPMainPageButton[0], 0, -1, FALSE);
+	giIMPMainPageButton[0]->SpecifyTextSubOffsets(0, -1, FALSE);
 
 	// the begin profiling button
 	const wchar_t* const profiling_text = (iCurrentProfileMode == 0 || iCurrentProfileMode > 2 ? pImpButtonText[1] : pImpButtonText[22]);

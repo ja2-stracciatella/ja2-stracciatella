@@ -585,7 +585,7 @@ static void CreateIMPButtons(void)
 														 LAPTOP_SCREEN_UL_X + 15, LAPTOP_SCREEN_WEB_UL_Y + 360, MSYS_PRIORITY_HIGH,
 														 BtnIMPCancelCallback);
 
-	SpecifyButtonTextSubOffsets( giIMPButton[0], 0, -1, FALSE );
+	giIMPButton[0]->SpecifyTextSubOffsets(0, -1, FALSE);
 
 	// set up generic www cursor
 	SetButtonCursor(giIMPButton[ 0 ], CURSOR_WWW);

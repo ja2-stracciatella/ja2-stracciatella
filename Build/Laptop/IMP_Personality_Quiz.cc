@@ -185,9 +185,8 @@ static void CreateIMPPersonalityQuizButtons(void)
 	giNextQuestionButtonImage = LoadButtonImage( "LAPTOP/button_3.sti" ,-1,0,-1,1,-1 );
 	giNextQuestionButton = MakeButton(giNextQuestionButtonImage, pImpButtonText[13], dx + 417, dy + 361, NextQuestionButtonCallback);
 
-
-	SpecifyButtonTextSubOffsets( giNextQuestionButton, 0, -1, FALSE );
-	SpecifyButtonTextSubOffsets( giPreviousQuestionButton, 0, -1, FALSE );
+	giNextQuestionButton->SpecifyTextSubOffsets(    0, -1, FALSE);
+	giPreviousQuestionButton->SpecifyTextSubOffsets(0, -1, FALSE);
 
 	DisableButton( giPreviousQuestionButton );
 	DisableButton( giNextQuestionButton );

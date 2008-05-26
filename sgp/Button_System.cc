@@ -775,12 +775,11 @@ void GUI_BUTTON::SpecifyTextOffsets(INT8 const text_x_offset, INT8 const text_y_
 }
 
 
-void SpecifyButtonTextSubOffsets(GUIButtonRef const b, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText)
+void GUI_BUTTON::SpecifyTextSubOffsets(INT8 const text_x_offset, INT8 const text_y_offset, BOOLEAN const shift_text)
 {
-	//Copy over information
-	b->bTextXSubOffSet = bTextXOffset;
-	b->bTextYSubOffSet = bTextYOffset;
-	b->fShiftText = fShiftText;
+	bTextXSubOffSet = text_x_offset;
+	bTextYSubOffSet = text_y_offset;
+	fShiftText      = shift_text;
 }
 
 
