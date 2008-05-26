@@ -55,6 +55,7 @@ struct GUI_BUTTON
 	void SetFastHelpText(wchar_t const* text);
 
 	void Hide();
+	void Show();
 
 	void SpecifyDownTextColors(INT16 fore_colour_down, INT16 shadow_colour_down);
 	void SpecifyHilitedTextColors(INT16 fore_colour_highlighted, INT16 shadow_colour_highlighted);

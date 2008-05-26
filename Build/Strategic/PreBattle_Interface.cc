@@ -798,9 +798,9 @@ void KillPreBattleInterface()
 	ColorFillVideoSurfaceArea( guiSAVEBUFFER, 0, 0, 261, 359, 0 );
 
 	EnableTeamInfoPanels();
-	if (giMapContractButton) ShowButton(giMapContractButton);
-	if (giCharInfoButton[0]) ShowButton(giCharInfoButton[0]);
-	if (giCharInfoButton[1]) ShowButton(giCharInfoButton[1]);
+	if (giMapContractButton) giMapContractButton->Show();
+	if (giCharInfoButton[0]) giCharInfoButton[0]->Show();
+	if (giCharInfoButton[1]) giCharInfoButton[1]->Show();
 }
 
 

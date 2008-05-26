@@ -1841,14 +1841,20 @@ void HideButton(GUIButtonRef const b)
 }
 
 
+void GUI_BUTTON::Show()
+{
+	Area.uiFlags |= MSYS_REGION_ENABLED;
+	uiFlags      |= BUTTON_DIRTY;
+#if defined JA2
+	InvalidateRegion(Area.RegionTopLeftX, Area.RegionTopLeftY, Area.RegionBottomRightX, Area.RegionBottomRightY);
+#endif
+}
+
+
 void ShowButton(GUIButtonRef const b)
 {
 	CHECKV(b != NULL); // XXX HACK000C
-	b->Area.uiFlags |= MSYS_REGION_ENABLED;
-	b->uiFlags |= BUTTON_DIRTY;
-#if defined JA2
-	InvalidateRegion(b->Area.RegionTopLeftX, b->Area.RegionTopLeftY, b->Area.RegionBottomRightX, b->Area.RegionBottomRightY);
-#endif
+	b->Show();
 }
 
 
