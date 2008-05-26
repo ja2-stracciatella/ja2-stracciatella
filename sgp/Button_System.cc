@@ -721,16 +721,21 @@ GUIButtonRef CreateLabel(const wchar_t* text, Font const font, INT16 forecolor, 
 }
 
 
+void GUI_BUTTON::SpecifyText(wchar_t const* const text)
+{
+	//free the previous strings memory if applicable
+	if (string) MemFree(string);
+	string = NULL;
+
+	CopyButtonText(this, text);
+	uiFlags |= BUTTON_DIRTY;
+}
+
+
 void SpecifyButtonText(GUIButtonRef const b, const wchar_t* string)
 {
 	CHECKV(b != NULL); // XXX HACK000C
-
-	//free the previous strings memory if applicable
-	if (b->string) MemFree(b->string);
-	b->string = NULL;
-
-	CopyButtonText(b, string);
-	b->uiFlags |= BUTTON_DIRTY;
+	b->SpecifyText(string);
 }
 
 
@@ -759,7 +764,7 @@ void GUI_BUTTON::SpecifyTextJustification(Justification const j)
 
 void GUI_BUTTON::SpecifyGeneralTextAttributes(wchar_t const* const string, Font const font, INT16 const fore_colour, INT16 const shadow_colour)
 {
-	SpecifyButtonText(this, string);
+	SpecifyText(string);
 	usFont        = font;
 	sForeColor    = fore_colour;
 	sShadowColor  = shadow_colour;

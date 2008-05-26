@@ -251,10 +251,10 @@ static void InitFlowerButtons(void)
 	}
 
 	//if its the first page, display the 'back' text  in place of the 'prev' text on the top left button
-	if( gubCurFlowerIndex == 0 )
-		SpecifyButtonText( guiFloralGalleryButton[0], sFloristGalleryText[FLORIST_GALLERY_HOME] );
-	else
-		SpecifyButtonText( guiFloralGalleryButton[0], sFloristGalleryText[FLORIST_GALLERY_PREV] );
+	wchar_t const* const text = gubCurFlowerIndex == 0 ?
+		sFloristGalleryText[FLORIST_GALLERY_HOME] :
+		sFloristGalleryText[FLORIST_GALLERY_PREV];
+	guiFloralGalleryButton[0]->SpecifyText(text);
 
 	//if it is the last page disable the next button
 	if( gubCurFlowerIndex == FLOR_GALLERY_NUMBER_FLORAL_IMAGES-1 )

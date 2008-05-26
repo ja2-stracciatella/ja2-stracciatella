@@ -843,7 +843,7 @@ static void EnterQuestDebugSystem(void)
 		const ProfileID pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[giHaveSelectedNPC] : giHaveSelectedNPC);
 		wchar_t	zItemDesc[SIZE_ITEM_INFO];
 		swprintf(zItemDesc, lengthof(zItemDesc), L"%d - %ls", pid, GetProfile(pid)->zNickname);
-		SpecifyButtonText( guiQuestDebugCurNPCButton, zItemDesc );
+		guiQuestDebugCurNPCButton->SpecifyText(zItemDesc);
 
 		gNpcListBox.sCurSelectedItem = (INT16)giHaveSelectedNPC;
 
@@ -855,7 +855,7 @@ static void EnterQuestDebugSystem(void)
 		wchar_t	zItemDesc[ SIZE_ITEM_INFO ];
 
 		swprintf(zItemDesc, lengthof(zItemDesc), L"%d - %ls", giHaveSelectedItem, ShortItemNames[giHaveSelectedItem]);
-		SpecifyButtonText( guiQuestDebugCurItemButton, zItemDesc );
+		guiQuestDebugCurItemButton->SpecifyText(zItemDesc);
 
 		gItemListBox.sCurSelectedItem = (INT16)giHaveSelectedItem;
 

@@ -62,6 +62,7 @@ struct GUI_BUTTON
 	};
 	void SpecifyTextJustification(Justification);
 
+	void SpecifyText(wchar_t const* text);
 	void SpecifyGeneralTextAttributes(wchar_t const* string, Font, INT16 fore_colour, INT16 shadow_colour);
 	void SpecifyTextOffsets(INT8 text_x_offset, INT8 text_y_offset, BOOLEAN shift_text);
 	void SpecifyTextSubOffsets(INT8 text_x_offset, INT8 text_y_offset, BOOLEAN shift_text);
