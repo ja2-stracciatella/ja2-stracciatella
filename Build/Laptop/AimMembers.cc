@@ -2598,7 +2598,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 		for(i=0; i<3; i++)
 		{
 			giContractLengthButton[i] = MakeButtonVideo(guiVideoConferenceButtonImage[0], VideoConfercingText[AIM_MEMBER_ONE_DAY + i], AIM_MEMBER_BUY_CONTRACT_LENGTH_X, usPosY, BtnContractLengthButtonCallback);
-			SpecifyButtonTextJustification(giContractLengthButton[i], BUTTON_TEXT_LEFT);
+			giContractLengthButton[i]->SpecifyTextJustification(GUI_BUTTON::TEXT_LEFT);
 			MSYS_SetBtnUserData(giContractLengthButton[i], i);
 			SpecifyDisabledButtonStyle( giContractLengthButton[i], DISABLED_STYLE_NONE );
 			usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
@@ -2609,7 +2609,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 		for(i=0; i<2; i++)
 		{
 			giBuyEquipmentButton[i] = MakeButtonVideo(guiVideoConferenceButtonImage[0], VideoConfercingText[AIM_MEMBER_NO_EQUIPMENT + i], AIM_MEMBER_BUY_EQUIPMENT_X, usPosY, BtnBuyEquipmentButtonCallback);
-			SpecifyButtonTextJustification(giBuyEquipmentButton[i], BUTTON_TEXT_LEFT);
+			giBuyEquipmentButton[i]->SpecifyTextJustification(GUI_BUTTON::TEXT_LEFT);
 			MSYS_SetBtnUserData(giBuyEquipmentButton[i], i);
 			SpecifyDisabledButtonStyle( giBuyEquipmentButton[i], DISABLED_STYLE_SHADED );
 			usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;

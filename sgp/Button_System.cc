@@ -564,7 +564,7 @@ static GUI_BUTTON* AllocateButton(const UINT32 Flags, const INT16 Left, const IN
 	b->sShadowColorDown        = -1;
 	b->sForeColorHilited       = -1;
 	b->sShadowColorHilited     = -1;
-	b->bJustification          = BUTTON_TEXT_CENTER;
+	b->bJustification          = GUI_BUTTON::TEXT_CENTER;
 	b->bTextXOffset            = -1;
 	b->bTextYOffset            = -1;
 	b->bTextXSubOffSet         = 0;
@@ -742,7 +742,7 @@ void GUI_BUTTON::SpecifyDownTextColors(INT16 const fore_colour_down, INT16 const
 }
 
 
-void GUI_BUTTON::SpecifyHilitedTextColors(INT16 fore_colour_highlighted, INT16 shadow_colour_highlighted)
+void GUI_BUTTON::SpecifyHilitedTextColors(INT16 const fore_colour_highlighted, INT16 const shadow_colour_highlighted)
 {
 	sForeColorHilited    = fore_colour_highlighted;
 	sShadowColorHilited  = shadow_colour_highlighted;
@@ -750,11 +750,10 @@ void GUI_BUTTON::SpecifyHilitedTextColors(INT16 fore_colour_highlighted, INT16 s
 }
 
 
-void SpecifyButtonTextJustification(GUIButtonRef const b, INT8 bJustification)
+void GUI_BUTTON::SpecifyTextJustification(Justification const j)
 {
-	Assert(bJustification >= BUTTON_TEXT_LEFT && bJustification <= BUTTON_TEXT_RIGHT);
-	b->bJustification = bJustification;
-	b->uiFlags |= BUTTON_DIRTY;
+	bJustification  = j;
+	uiFlags        |= BUTTON_DIRTY;
 }
 
 
@@ -1505,10 +1504,10 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	{
 		switch (b->bJustification)
 		{
-			case BUTTON_TEXT_LEFT:   xp = TextX + 3; break;
-			case BUTTON_TEXT_RIGHT:  xp = NewClip.iRight - StringPixLength(b->string, b->usFont) - 3; break;
+			case GUI_BUTTON::TEXT_LEFT:   xp = TextX + 3; break;
+			case GUI_BUTTON::TEXT_RIGHT:  xp = NewClip.iRight - StringPixLength(b->string, b->usFont) - 3; break;
 			default:
-			case BUTTON_TEXT_CENTER: xp = TextX + (width - 6 - StringPixLength(b->string, b->usFont)) / 2; break;
+			case GUI_BUTTON::TEXT_CENTER: xp = TextX + (width - 6 - StringPixLength(b->string, b->usFont)) / 2; break;
 		}
 	}
 	else
@@ -1565,10 +1564,10 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 		UINT8 bJustified = 0;
 		switch (b->bJustification)
 		{
-			case BUTTON_TEXT_LEFT:    bJustified = LEFT_JUSTIFIED;    break;
-			case BUTTON_TEXT_RIGHT:   bJustified = RIGHT_JUSTIFIED;   break;
-			case BUTTON_TEXT_CENTER:  bJustified = CENTER_JUSTIFIED;  break;
-			default:                  Assert(0);                      break;
+			case GUI_BUTTON::TEXT_LEFT:    bJustified = LEFT_JUSTIFIED;    break;
+			case GUI_BUTTON::TEXT_RIGHT:   bJustified = RIGHT_JUSTIFIED;   break;
+			case GUI_BUTTON::TEXT_CENTER:  bJustified = CENTER_JUSTIFIED;  break;
+			default:                       Assert(0);                      break;
 		}
 		if (b->bTextXOffset == -1)
 		{
@@ -1583,7 +1582,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 
 			switch (b->bJustification)
 			{
-				case BUTTON_TEXT_RIGHT:
+				case GUI_BUTTON::TEXT_RIGHT:
 					xp = b->Area.RegionBottomRightX - 3 - b->sWrappedWidth;
 					if (b->fShiftText && b->uiFlags & BUTTON_CLICKED_ON)
 					{
@@ -1592,7 +1591,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 					}
 					break;
 
-				case BUTTON_TEXT_CENTER:
+				case GUI_BUTTON::TEXT_CENTER:
 					xp = b->Area.RegionTopLeftX + 3 + b->sWrappedWidth / 2;
 					if (b->fShiftText && b->uiFlags & BUTTON_CLICKED_ON)
 					{
