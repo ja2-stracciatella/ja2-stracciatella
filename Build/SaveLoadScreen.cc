@@ -458,7 +458,7 @@ static void EnterSaveLoadScreen(void)
 	//if we are loading, disable the load button
 //	if( !gfSaveGame )
 	{
-		SpecifyDisabledButtonStyle( guiSlgSaveLoadBtn, DISABLED_STYLE_HATCHED );
+		guiSlgSaveLoadBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 
 		if( gbSetSlotToBeSelected == -1 )
 			DisableButton( guiSlgSaveLoadBtn );
@@ -518,7 +518,7 @@ Removed so that the user can click on it and get displayed a message that the qu
 	//if we are loading
 //	if( !gfSaveGame )
 	{
-		SpecifyDisabledButtonStyle( guiSlgSaveLoadBtn, DISABLED_STYLE_HATCHED );
+		guiSlgSaveLoadBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 
 		//if the last saved game slot is ok, set the selected slot to the last saved slot]
 		if( gGameSettings.bLastSavedGameSlot != -1 )

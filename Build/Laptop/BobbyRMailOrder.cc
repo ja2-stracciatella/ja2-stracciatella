@@ -389,7 +389,7 @@ void EnterBobbyRMailOrder()
 	// Clear Order button
 	guiBobbyRClearOrderImage = LoadButtonImage("LAPTOP/EraseOrderButton.sti", -1,0,-1,1,-1 );
 	guiBobbyRClearOrder = MakeButton(guiBobbyRClearOrderImage, BobbyROrderFormText[BOBBYR_CLEAR_ORDER], BOBBYR_CLEAR_ORDER_X, BOBBYR_CLEAR_ORDER_Y + 4, BtnBobbyRClearOrderCallback);
-	SpecifyDisabledButtonStyle( guiBobbyRClearOrder, DISABLED_STYLE_NONE );
+	guiBobbyRClearOrder->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 	guiBobbyRClearOrder->SpecifyTextOffsets(39, 10, TRUE);
 
 
@@ -397,8 +397,7 @@ void EnterBobbyRMailOrder()
 	guiBobbyRAcceptOrderImage = LoadButtonImage("LAPTOP/AcceptOrderButton.sti", 2,0,-1,1,-1 );
 	guiBobbyRAcceptOrder = MakeButton(guiBobbyRAcceptOrderImage, BobbyROrderFormText[BOBBYR_ACCEPT_ORDER], BOBBYR_ACCEPT_ORDER_X, BOBBYR_ACCEPT_ORDER_Y + 4, BtnBobbyRAcceptOrderCallback);
 	guiBobbyRAcceptOrder->SpecifyTextOffsets(43, 24, TRUE);
-
-	SpecifyDisabledButtonStyle( guiBobbyRAcceptOrder, DISABLED_STYLE_SHADED );
+	guiBobbyRAcceptOrder->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 
 	if( gbSelectedCity == -1 )
 		DisableButton( guiBobbyRAcceptOrder );
@@ -1144,13 +1143,6 @@ static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 
 			//disable the clear order and accept order buttons, (their rendering interferes with the drop down graphics)
 		  DisableButton(guiBobbyRClearOrder);
-
-//FERAL
-//			if( IsAnythingPurchasedFromBobbyRayPage() )
-//			{
-//				SpecifyDisabledButtonStyle( guiBobbyRAcceptOrder, DISABLED_STYLE_NONE );
-//				DisableButton(guiBobbyRAcceptOrder);
-//			}
 		}
 		break;
 
@@ -1186,12 +1178,6 @@ static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 
 			//enable the clear order and accept order buttons, (because their rendering interferes with the drop down graphics)
 			EnableButton(guiBobbyRClearOrder);
-//FERAL
-//			if( IsAnythingPurchasedFromBobbyRayPage() )
-//			{
-//				SpecifyDisabledButtonStyle( guiBobbyRAcceptOrder, DISABLED_STYLE_SHADED );
-//			  EnableButton(guiBobbyRAcceptOrder);
-//			}
 
 			gfReDrawBobbyOrder = TRUE;
 			fMouseRegionsCreated  = FALSE;

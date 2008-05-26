@@ -105,7 +105,7 @@ void EnterMercsAccount()
 
 	guiMercAuthorizeButtonImage = LoadButtonImage("LAPTOP/BigButtons.sti", -1,0,-1,1,-1 );
 	guiMercAuthorizeBoxButton   = MakeButton(MercAccountText[MERC_ACCOUNT_AUTHORIZE], MERC_AC_AUTHORIZE_BUTTON_X, BtnMercAuthorizeButtonCallback);
-	SpecifyDisabledButtonStyle(guiMercAuthorizeBoxButton, DISABLED_STYLE_SHADED);
+	guiMercAuthorizeBoxButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 	guiMercBackBoxButton        = MakeButton(MercAccountText[MERC_ACCOUNT_HOME],      MERC_AC_CANCEL_BUTTON_X,    BtnMercBackButtonCallback);
 
 //	RenderMercsAccount();

@@ -515,7 +515,7 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 	const INT16 text_col   = SKI_BUTTON_COLOR;
 	const INT16 shadow_col = DEFAULT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, SKI_BUTTON_FONT, text_col, shadow_col, text_col, shadow_col, x, SKI_BUTTON_Y, prio, click);
-	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_HATCHED);
+	btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 	btn->SetFastHelpText(help);
 	return btn;
 }
@@ -598,11 +598,11 @@ try
 
 	//Page up button for the merchant inventory
 	guiSKI_InvPageUpButton = QuickCreateButton(guiSKI_InvPageUpButtonImage, SKI_PAGE_UP_ARROWS_X, SKI_PAGE_UP_ARROWS_Y, MSYS_PRIORITY_HIGHEST, BtnSKI_InvPageUpButtonCallback);
-	SpecifyDisabledButtonStyle( guiSKI_InvPageUpButton, DISABLED_STYLE_HATCHED );
+	guiSKI_InvPageUpButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 
 	//Page down button for the merchant inventory
 	guiSKI_InvPageDownButton = QuickCreateButton(guiSKI_InvPageDownButtonImage, SKI_PAGE_DOWN_ARROWS_X, SKI_PAGE_DOWN_ARROWS_Y, MSYS_PRIORITY_HIGHEST, BtnSKI_InvPageDownButtonCallback);
-	SpecifyDisabledButtonStyle( guiSKI_InvPageDownButton, DISABLED_STYLE_HATCHED );
+	guiSKI_InvPageDownButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 
 
 	guiSKI_TransactionButtonImage = LoadButtonImage("INTERFACE/TradeButtons.sti", -1,0,-1,1,-1 );

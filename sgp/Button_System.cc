@@ -555,7 +555,7 @@ static GUI_BUTTON* AllocateButton(const UINT32 Flags, const INT16 Left, const IN
 	b->XLoc                    = Left;
 	b->YLoc                    = Top;
 	b->User.Data               = 0;
-	b->bDisabledStyle          = DISABLED_STYLE_DEFAULT;
+	b->bDisabledStyle          = GUI_BUTTON::DISABLED_STYLE_DEFAULT;
 	b->string                  = NULL;
 	b->usFont                  = 0;
 	b->sForeColor              = 0;
@@ -715,7 +715,7 @@ GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* co
 GUIButtonRef CreateLabel(const wchar_t* text, Font const font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
 {
 	GUIButtonRef const btn = CreateTextButton(text, font, forecolor, shadowcolor, x, y, w, h, priority, NULL);
-	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_NONE);
+	btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 	DisableButton(btn);
 	return btn;
 }
@@ -794,13 +794,16 @@ void GUI_BUTTON::SpecifyTextWrappedWidth(INT16 const wrapped_width)
 }
 
 
-void SpecifyDisabledButtonStyle(GUIButtonRef const b, INT8 bStyle)
+void GUI_BUTTON::SpecifyDisabledStyle(DisabledStyle const style)
+{
+	bDisabledStyle = style;
+}
+
+
+void SpecifyDisabledButtonStyle(GUIButtonRef const b, DisabledStyle const style)
 {
 	CHECKV(b != NULL); // XXX HACK000C
-
-	Assert(bStyle >= DISABLED_STYLE_NONE && bStyle <= DISABLED_STYLE_SHADED);
-
-	b->bDisabledStyle = bStyle;
+	b->SpecifyDisabledStyle(style);
 }
 
 
@@ -1168,7 +1171,7 @@ static void DrawTextOnButton(  const GUI_BUTTON* b);
 static void DrawButtonFromPtr(GUI_BUTTON* b)
 {
 	// Draw the appropriate button according to button type
-	gbDisabledButtonStyle = DISABLED_STYLE_NONE;
+	gbDisabledButtonStyle = GUI_BUTTON::DISABLED_STYLE_NONE;
 	switch (b->uiFlags & BUTTON_TYPES)
 	{
 		case BUTTON_QUICK:    DrawQuickButton(b);    break;
@@ -1185,8 +1188,8 @@ static void DrawButtonFromPtr(GUI_BUTTON* b)
 	 */
 	switch (gbDisabledButtonStyle)
 	{
-		case DISABLED_STYLE_HATCHED: DrawHatchOnButton(b); break;
-		case DISABLED_STYLE_SHADED:  DrawShadeOnButton(b); break;
+		case GUI_BUTTON::DISABLED_STYLE_HATCHED: DrawHatchOnButton(b); break;
+		case GUI_BUTTON::DISABLED_STYLE_SHADED:  DrawShadeOnButton(b); break;
 	}
 }
 
@@ -1238,12 +1241,14 @@ static void DrawQuickButton(const GUI_BUTTON* b)
 		UseImage = pics->OffNormal;
 		switch (b->bDisabledStyle)
 		{
-			case DISABLED_STYLE_DEFAULT:
-				gbDisabledButtonStyle = b->string ? DISABLED_STYLE_SHADED : DISABLED_STYLE_HATCHED;
+			case GUI_BUTTON::DISABLED_STYLE_DEFAULT:
+				gbDisabledButtonStyle = b->string ?
+					GUI_BUTTON::DISABLED_STYLE_SHADED :
+					GUI_BUTTON::DISABLED_STYLE_HATCHED;
 				break;
 
-			case DISABLED_STYLE_HATCHED:
-			case DISABLED_STYLE_SHADED:
+			case GUI_BUTTON::DISABLED_STYLE_HATCHED:
+			case GUI_BUTTON::DISABLED_STYLE_SHADED:
 				gbDisabledButtonStyle = b->bDisabledStyle;
 				break;
 		}
@@ -1339,12 +1344,12 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 		}
 		switch (b->bDisabledStyle)
 		{
-			case DISABLED_STYLE_DEFAULT:
-				gbDisabledButtonStyle = DISABLED_STYLE_HATCHED;
+			case GUI_BUTTON::DISABLED_STYLE_DEFAULT:
+				gbDisabledButtonStyle = GUI_BUTTON::DISABLED_STYLE_HATCHED;
 				break;
 
-			case DISABLED_STYLE_HATCHED:
-			case DISABLED_STYLE_SHADED:
+			case GUI_BUTTON::DISABLED_STYLE_HATCHED:
+			case GUI_BUTTON::DISABLED_STYLE_SHADED:
 				gbDisabledButtonStyle = b->bDisabledStyle;
 				break;
 		}
@@ -1643,12 +1648,14 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 		BPic = GenericButtonOffNormal;
 		switch (b->bDisabledStyle)
 		{
-			case DISABLED_STYLE_DEFAULT:
-				gbDisabledButtonStyle = b->string ? DISABLED_STYLE_SHADED : DISABLED_STYLE_HATCHED;
+			case GUI_BUTTON::DISABLED_STYLE_DEFAULT:
+				gbDisabledButtonStyle = b->string ?
+					GUI_BUTTON::DISABLED_STYLE_SHADED :
+					GUI_BUTTON::DISABLED_STYLE_HATCHED;
 				break;
 
-			case DISABLED_STYLE_HATCHED:
-			case DISABLED_STYLE_SHADED:
+			case GUI_BUTTON::DISABLED_STYLE_HATCHED:
+			case GUI_BUTTON::DISABLED_STYLE_SHADED:
 				gbDisabledButtonStyle = b->bDisabledStyle;
 				break;
 		}

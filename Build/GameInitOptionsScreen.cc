@@ -278,7 +278,7 @@ static void EnterGIOScreen(void)
 	//Ok button
 	giGIODoneBtnImage = LoadButtonImage("INTERFACE/PreferencesButtons.sti", -1,0,-1,2,-1 );
 	guiGIODoneButton = MakeButton(giGIODoneBtnImage, gzGIOScreenText[GIO_OK_TEXT], GIO_BTN_OK_X, BtnGIODoneCallback);
-	SpecifyDisabledButtonStyle( guiGIODoneButton, DISABLED_STYLE_NONE );
+	guiGIODoneButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 
 	//Cancel button
 	giGIOCancelBtnImage = UseLoadedButtonImage( giGIODoneBtnImage, -1,1,-1,3,-1 );
@@ -352,8 +352,8 @@ static void EnterGIOScreen(void)
 
 //if its the demo, make sure to disable the buttons
 #ifdef JA2DEMO
-	SpecifyDisabledButtonStyle(guiGunOptionToggles[GIO_GUN_NUT], DISABLED_STYLE_SHADED);
-	SpecifyDisabledButtonStyle(guiGunOptionToggles[GIO_REDUCED_GUNS], DISABLED_STYLE_SHADED);
+	guiGunOptionToggles[GIO_GUN_NUT     ]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
+	guiGunOptionToggles[GIO_REDUCED_GUNS]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 
 	DisableButton(guiGunOptionToggles[GIO_GUN_NUT]);
 	DisableButton(guiGunOptionToggles[GIO_REDUCED_GUNS]);

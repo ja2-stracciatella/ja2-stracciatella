@@ -76,6 +76,15 @@ struct GUI_BUTTON
 
 	void AllowDisabledFastHelp();
 
+	enum DisabledStyle
+	{
+		DISABLED_STYLE_NONE,    // for dummy buttons, panels, etc.  Always displays normal state.
+		DISABLED_STYLE_DEFAULT, // if button has text then shade, else hatch
+		DISABLED_STYLE_HATCHED, // always hatches the disabled button
+		DISABLED_STYLE_SHADED   // always shades the disabled button 25% darker
+	};
+	void SpecifyDisabledStyle(DisabledStyle);
+
 	/* Note:  Text is always on top
 	 * If fShiftImage is true, then the image will shift down one pixel and right
 	 * one pixel just like the text does.
@@ -247,14 +256,7 @@ GUIButtonRef CreateLabel(const wchar_t* text, Font, INT16 forecolor, INT16 shado
 
 void SpecifyButtonText(GUIButtonRef, const wchar_t* string);
 
-enum // for use with SpecifyDisabledButtonStyle
-{
-	DISABLED_STYLE_NONE,    // for dummy buttons, panels, etc.  Always displays normal state.
-	DISABLED_STYLE_DEFAULT, // if button has text then shade, else hatch
-	DISABLED_STYLE_HATCHED, // always hatches the disabled button
-	DISABLED_STYLE_SHADED   // always shades the disabled button 25% darker
-};
-void SpecifyDisabledButtonStyle(GUIButtonRef, INT8 bStyle);
+void SpecifyDisabledButtonStyle(GUIButtonRef, GUI_BUTTON::DisabledStyle);
 
 /* Note:  Text is always on top
  * If fShiftImage is true, then the image will shift down one pixel and right

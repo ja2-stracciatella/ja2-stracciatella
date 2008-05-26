@@ -1958,7 +1958,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		 * screen and this is a dealer item we are getting info from */
 		if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE && pShopKeeperItemDescObject != NULL)
 		{
-			SpecifyDisabledButtonStyle(ammo_btn, DISABLED_STYLE_HATCHED);
+			ammo_btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 			DisableButton(ammo_btn);
 		}
 		else

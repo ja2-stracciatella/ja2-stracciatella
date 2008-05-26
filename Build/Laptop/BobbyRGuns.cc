@@ -333,7 +333,7 @@ void InitBobbyMenuBar(void)
 	guiBobbyRPreviousPageImage = LoadButtonImage("LAPTOP/PreviousButton.sti", -1,0,-1,1,-1 );
 	guiBobbyRPreviousPage = MakeButton(guiBobbyRPreviousPageImage, BobbyRText[BOBBYR_GUNS_PREVIOUS_ITEMS], BOBBYR_PREVIOUS_BUTTON_X, BOBBYR_PREVIOUS_BUTTON_Y, BtnBobbyRNextPreviousPageCallback);
 	MSYS_SetBtnUserData(guiBobbyRPreviousPage, BOBBYR_PREVIOUS_PAGE);
-	SpecifyDisabledButtonStyle( guiBobbyRPreviousPage, DISABLED_STYLE_SHADED );
+	guiBobbyRPreviousPage->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 
 
 	guiBobbyRPageMenuImage =  LoadButtonImage("LAPTOP/CatalogueButton1.sti", -1,0,-1,1,-1 );
@@ -342,7 +342,7 @@ void InitBobbyMenuBar(void)
 	guiBobbyRNextPageImage  = LoadButtonImage("LAPTOP/NextButton.sti", -1,0,-1,1,-1 );
 	guiBobbyRNextPage = MakeButton(guiBobbyRNextPageImage, BobbyRText[BOBBYR_GUNS_MORE_ITEMS], BOBBYR_NEXT_BUTTON_X, BOBBYR_NEXT_BUTTON_Y, BtnBobbyRNextPreviousPageCallback);
 	MSYS_SetBtnUserData(guiBobbyRNextPage, BOBBYR_NEXT_PAGE);
-	SpecifyDisabledButtonStyle( guiBobbyRNextPage, DISABLED_STYLE_SHADED );
+	guiBobbyRNextPage->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 
 
 	bCurMode = 0;

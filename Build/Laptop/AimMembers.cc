@@ -1204,8 +1204,8 @@ static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 					//Disable the buttons behind the message box
 					EnableDisableCurrentVideoConferenceButtons( TRUE );
 
-					SpecifyDisabledButtonStyle( giBuyEquipmentButton[0], DISABLED_STYLE_NONE );
-					SpecifyDisabledButtonStyle( giBuyEquipmentButton[1], DISABLED_STYLE_NONE );
+					SpecifyDisabledButtonStyle(giBuyEquipmentButton[0], GUI_BUTTON::DISABLED_STYLE_NONE);
+					SpecifyDisabledButtonStyle(giBuyEquipmentButton[1], GUI_BUTTON::DISABLED_STYLE_NONE);
 				}
 			}
 #if 0 // XXX was commented out
@@ -1245,8 +1245,8 @@ static INT8 AimMemberHireMerc(void)
 		//Disable the buttons behind the message box
 		EnableDisableCurrentVideoConferenceButtons( TRUE );
 
-		SpecifyDisabledButtonStyle( giBuyEquipmentButton[0], DISABLED_STYLE_NONE );
-		SpecifyDisabledButtonStyle( giBuyEquipmentButton[1], DISABLED_STYLE_NONE );
+		SpecifyDisabledButtonStyle(giBuyEquipmentButton[0], GUI_BUTTON::DISABLED_STYLE_NONE);
+		SpecifyDisabledButtonStyle(giBuyEquipmentButton[1], GUI_BUTTON::DISABLED_STYLE_NONE);
 
 		DelayMercSpeech( gbCurrentSoldier, QUOTE_REFUSAL_TO_JOIN_LACK_OF_FUNDS, 750, TRUE, FALSE );
 
@@ -1721,7 +1721,7 @@ static void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn, INT32 reason)
 			InitCreateDeleteAimPopUpBox(AIM_POPUP_CREATE, L" ", AimPopUpText[AIM_MEMBER_MESSAGE_RECORDED], AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
 
 
-			SpecifyDisabledButtonStyle(giAnsweringMachineButton[1], DISABLED_STYLE_NONE);
+			SpecifyDisabledButtonStyle(giAnsweringMachineButton[1], GUI_BUTTON::DISABLED_STYLE_NONE);
 			DisableButton(giAnsweringMachineButton[1]);
 			DisableButton(giAnsweringMachineButton[0]);
 		}
@@ -2460,7 +2460,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 		{
 			giXToCloseVideoConfButton = QuickCreateButton(giXToCloseVideoConfButtonImage, AIM_MEMBER_VIDEO_CONF_XCLOSE_X, AIM_MEMBER_VIDEO_CONF_XCLOSE_Y, MSYS_PRIORITY_HIGH, BtnXToCloseVideoConfButtonCallback);
 			giXToCloseVideoConfButton->SetCursor(CURSOR_LAPTOP_SCREEN);
-			SpecifyDisabledButtonStyle( giXToCloseVideoConfButton, DISABLED_STYLE_NONE );
+			giXToCloseVideoConfButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 			fXRegionActive = TRUE;
 
 			gSelectedFaceRegion.Disable();
@@ -2600,7 +2600,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 			giContractLengthButton[i] = MakeButtonVideo(guiVideoConferenceButtonImage[0], VideoConfercingText[AIM_MEMBER_ONE_DAY + i], AIM_MEMBER_BUY_CONTRACT_LENGTH_X, usPosY, BtnContractLengthButtonCallback);
 			giContractLengthButton[i]->SpecifyTextJustification(GUI_BUTTON::TEXT_LEFT);
 			MSYS_SetBtnUserData(giContractLengthButton[i], i);
-			SpecifyDisabledButtonStyle( giContractLengthButton[i], DISABLED_STYLE_NONE );
+			giContractLengthButton[i]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 			usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
 		}
 
@@ -2611,7 +2611,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 			giBuyEquipmentButton[i] = MakeButtonVideo(guiVideoConferenceButtonImage[0], VideoConfercingText[AIM_MEMBER_NO_EQUIPMENT + i], AIM_MEMBER_BUY_EQUIPMENT_X, usPosY, BtnBuyEquipmentButtonCallback);
 			giBuyEquipmentButton[i]->SpecifyTextJustification(GUI_BUTTON::TEXT_LEFT);
 			MSYS_SetBtnUserData(giBuyEquipmentButton[i], i);
-			SpecifyDisabledButtonStyle( giBuyEquipmentButton[i], DISABLED_STYLE_SHADED );
+			giBuyEquipmentButton[i]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 			usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
 		}
 		if( gMercProfiles[gbCurrentSoldier].usOptionalGearCost == 0 )
@@ -2625,7 +2625,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 		{
 			giAuthorizeButton[i] = MakeButtonVideo(guiVideoConferenceButtonImage[1], VideoConfercingText[AIM_MEMBER_TRANSFER_FUNDS + i], usPosX, AIM_MEMBER_AUTHORIZE_PAY_Y, BtnAuthorizeButtonCallback);
 			MSYS_SetBtnUserData(giAuthorizeButton[i], i);
-			SpecifyDisabledButtonStyle( giAuthorizeButton[i], DISABLED_STYLE_NONE );
+			giAuthorizeButton[i]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 			usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
 		}
 

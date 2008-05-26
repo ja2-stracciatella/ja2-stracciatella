@@ -425,7 +425,7 @@ UINT32 LoadSaveScreenHandle(void)
 static GUIButtonRef MakeButtonArrow(const char* const gfx, const INT16 y, const GUI_CALLBACK click)
 {
 	GUIButtonRef const btn = QuickCreateButtonImg(gfx, -1, 1, 2, 3, 4, 426, y, MSYS_PRIORITY_HIGH, click);
-	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_SHADED);
+	btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 	return btn;
 }
 

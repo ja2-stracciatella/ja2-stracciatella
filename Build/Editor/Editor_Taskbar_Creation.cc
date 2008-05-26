@@ -31,7 +31,7 @@ static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const cha
 {
 	GUIButtonRef const btn = QuickCreateButtonImg(gfx, -1, 1, 2, 3, 4, x, y, MSYS_PRIORITY_NORMAL, click);
 	iEditorButton[idx] = btn;
-	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_SHADED);
+	btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 	btn->SetFastHelpText(help);
 }
 

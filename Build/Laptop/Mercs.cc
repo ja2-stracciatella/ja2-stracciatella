@@ -340,7 +340,7 @@ void EnterMercs()
 
 	guiFileBoxButton = QuickCreateButton(guiAccountBoxButtonImage, MERC_FILE_BUTTON_X, MERC_FILE_BUTTON_Y, MSYS_PRIORITY_HIGH, BtnFileBoxButtonCallback);
 	guiFileBoxButton->SetCursor(CURSOR_LAPTOP_SCREEN);
-	SpecifyDisabledButtonStyle( guiFileBoxButton, DISABLED_STYLE_SHADED);
+	guiFileBoxButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 
 	//if the player doesnt have an account disable it
 	if( LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_NO_ACCOUNT )
