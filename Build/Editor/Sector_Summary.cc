@@ -301,8 +301,8 @@ void CreateSummaryWindow()
 	iSummaryButton[ SUMMARY_ENEMY ] =
 		CreateCheckBoxButton( 350, 60, "EDITOR/radiobutton.sti", MSYS_PRIORITY_HIGH, SummaryEnemyCallback );
 
-	//SetButtonFastHelpText( iSummaryButton[ SUMMARY_SCIFI ], L"Display items that appear in SciFi mode." );
-	//SetButtonFastHelpText( iSummaryButton[ SUMMARY_REAL ], L"Display items that appear in Realistic mode." );
+	//iSummaryButton[SUMMARY_SCIFI]->SetFastHelpText(L"Display items that appear in SciFi mode.");
+	//iSummaryButton[SUMMARY_REAL ]->SetFastHelpText(L"Display items that appear in Realistic mode.");
 	switch( gubSummaryItemMode )
 	{
 		case ITEMMODE_SCIFI: iSummaryButton[SUMMARY_SCIFI]->uiFlags |= BUTTON_CLICKED_ON; break;

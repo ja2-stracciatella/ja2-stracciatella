@@ -644,7 +644,7 @@ static void UpdateSMPanel(void)
 		giSMStealthImages = UseLoadedButtonImage(iSMPanelImages[STANCE_IMAGES], stance_gfx + 2, stance_gfx, -1, stance_gfx + 1, -1);
 		const INT32 dy = INV_INTERFACE_START_Y;
 		giSMStealthButton = QuickCreateButton(giSMStealthImages, SM_STEALTHMODE_X, dy + SM_STEALTHMODE_Y, MSYS_PRIORITY_HIGH - 1, BtnStealthModeCallback);
-		SetButtonFastHelpText(giSMStealthButton, TacticalStr[TOGGLE_STEALTH_MODE_POPUPTEXT]);
+		giSMStealthButton->SetFastHelpText(TacticalStr[TOGGLE_STEALTH_MODE_POPUPTEXT]);
 
 		gfUIStanceDifferent = FALSE;
 
@@ -1028,7 +1028,7 @@ try
 {
 	GUIButtonRef const btn = QuickCreateButtonToggle(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iSMPanelButtons[idx] = btn;
-	SetButtonFastHelpText(btn, help);
+	btn->SetFastHelpText(help);
 }
 catch (...)
 {
@@ -1042,7 +1042,7 @@ try
 {
 	GUIButtonRef const btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iSMPanelButtons[idx] = btn;
-	SetButtonFastHelpText(btn, help);
+	btn->SetFastHelpText(help);
 }
 catch (...)
 {
@@ -2661,7 +2661,7 @@ try
 {
 	GUIButtonRef const btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
 	iTEAMPanelButtons[idx] = btn;
-	SetButtonFastHelpText(btn, help);
+	btn->SetFastHelpText(help);
 }
 catch (...)
 {

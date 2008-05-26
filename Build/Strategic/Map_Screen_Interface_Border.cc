@@ -218,7 +218,7 @@ static void MakeButton(UINT idx, UINT gfx, INT16 x, GUI_CALLBACK click, const wc
 	giMapBorderButtonsImage[idx] = img;
 	GUIButtonRef const btn = QuickCreateButtonNoMove(img, x, 323, MSYS_PRIORITY_HIGH, click);
 	giMapBorderButtons[idx] = btn;
-	SetButtonFastHelpText(btn, help);
+	btn->SetFastHelpText(help);
 	btn->SetCursor(MSYS_NO_CURSOR);
 }
 
@@ -228,7 +228,7 @@ static void MakeButtonScroll(UINT idx, INT32 gray, INT32 normal, INT16 x, INT16 
 {
 	INT32 btn = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", gray, normal, -1, normal + 2, -1, x, y, MSYS_PRIORITY_HIGH, click);
 	guiMapBorderScrollButtons[idx] = btn;
-	SetButtonFastHelpText(btn, help);
+	btn->SetFastHelpText(help);
 }
 #endif
 
@@ -272,8 +272,8 @@ void CreateButtonsForMapBorder(void)
 
 */
 
-	//SetButtonFastHelpText( guiMapBorderLandRaiseButtons[ 0 ], pMapScreenBorderButtonHelpText[ 10 ] );
-	//SetButtonFastHelpText( guiMapBorderLandRaiseButtons[ 1 ], pMapScreenBorderButtonHelpText[ 11 ] );
+	//guiMapBorderLandRaiseButtons[0]->SetFastHelpText(pMapScreenBorderButtonHelpText[10]);
+	//guiMapBorderLandRaiseButtons[1]->SetFastHelpText(pMapScreenBorderButtonHelpText[11]);
 
 //	guiMapBorderLandRaiseButtons[0]->SetCursor(MSYS_NO_CURSOR);
 //	guiMapBorderLandRaiseButtons[1]->SetCursor(MSYS_NO_CURSOR);

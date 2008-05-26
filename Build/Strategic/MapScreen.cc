@@ -7177,8 +7177,8 @@ static void CreateDestroyTrashCanRegion(void)
 
 		// done inventory button define
     giMapInvDoneButton = QuickCreateButtonImg("INTERFACE/done_button2.sti", -1, 0, -1, 1, -1, INV_BTN_X, INV_BTN_Y, MSYS_PRIORITY_HIGHEST - 1, DoneInventoryMapBtnCallback);
+		giMapInvDoneButton->SetFastHelpText(pMiscMapScreenMouseRegionHelpText[2]);
 
-		SetButtonFastHelpText( giMapInvDoneButton ,pMiscMapScreenMouseRegionHelpText[ 2 ] );
 		gTrashCanRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[1]);
 
 		InitMapKeyRingInterface( KeyRingItemPanelButtonCallback );
@@ -7574,8 +7574,8 @@ static void CreateDestroyMapCharacterScrollButtons(void)
 		giCharInfoButton[0] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", 11, 4, -1, 6, -1, 67, 69, prio, PrevInventoryMapBtnCallback);
 		giCharInfoButton[1] = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", 12, 5, -1, 7, -1, 67, 87, prio, NextInventoryMapBtnCallback);
 
-		SetButtonFastHelpText( giCharInfoButton[ 0 ], pMapScreenPrevNextCharButtonHelpText[ 0 ] );
-		SetButtonFastHelpText( giCharInfoButton[ 1 ], pMapScreenPrevNextCharButtonHelpText[ 1 ] );
+		giCharInfoButton[0]->SetFastHelpText(pMapScreenPrevNextCharButtonHelpText[0]);
+		giCharInfoButton[1]->SetFastHelpText(pMapScreenPrevNextCharButtonHelpText[1]);
 
 		fCreated = TRUE;
 
@@ -7703,7 +7703,7 @@ static void AddTeamPanelSortButtonsForMapScreen(void)
 	{
 		giMapSortButton[i] = QuickCreateButtonImg(filename, -1, iImageIndex[i], -1, iImageIndex[i] + 6, -1, gMapSortButtons[i].iX, gMapSortButtons[i].iY, MSYS_PRIORITY_HIGHEST - 5, MapSortBtnCallback);
 		MSYS_SetBtnUserData(giMapSortButton[i], i);
-		SetButtonFastHelpText(giMapSortButton[i], wMapScreenSortButtonHelpText[i]);
+		giMapSortButton[i]->SetFastHelpText(wMapScreenSortButtonHelpText[i]);
 	}
 }
 

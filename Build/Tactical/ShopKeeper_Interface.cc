@@ -516,7 +516,7 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 	const INT16 shadow_col = DEFAULT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, SKI_BUTTON_FONT, text_col, shadow_col, text_col, shadow_col, x, SKI_BUTTON_Y, prio, click);
 	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_HATCHED);
-	SetButtonFastHelpText(btn, help);
+	btn->SetFastHelpText(help);
 	return btn;
 }
 

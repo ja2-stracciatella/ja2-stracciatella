@@ -502,7 +502,7 @@ static void UpdateSectorExitMenu(void)
 				help = pExitingSectorHelpText[EXIT_GUI_GOTO_MAPSCREEN_HELPTEXT];
 			}
 		}
-		SetButtonFastHelpText(gExitDialog.uiLoadCheckButton, help);
+		gExitDialog.uiLoadCheckButton->SetFastHelpText(help);
 		gExitDialog.LoadRegion.SetFastHelpText(help);
 	}
 
@@ -515,7 +515,7 @@ static void UpdateSectorExitMenu(void)
 		{ //EPCs cannot leave the sector alone and must be escorted
 			wchar_t str[ 256 ];
 			swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_ESCORTED_CHARACTERS_MUST_BE_ESCORTED_HELPTEXT], sel->name);
-			SetButtonFastHelpText( gExitDialog.uiSingleMoveButton, str );
+			gExitDialog.uiSingleMoveButton->SetFastHelpText(str);
 			gExitDialog.SingleRegion.SetFastHelpText(str);
 		}
 		else if (gExitDialog.single_move_will_isolate_epc != NULL)
@@ -545,7 +545,7 @@ static void UpdateSectorExitMenu(void)
 					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_PLURAL], sel->name);
 				}
 			}
-			SetButtonFastHelpText( gExitDialog.uiSingleMoveButton, str);
+			gExitDialog.uiSingleMoveButton->SetFastHelpText(str);
 			gExitDialog.SingleRegion.SetFastHelpText(str);
 		}
 	}
@@ -555,7 +555,7 @@ static void UpdateSectorExitMenu(void)
 		EnableButton( gExitDialog.uiSingleMoveButton );
 		gExitDialog.SingleRegion.Enable();
 		swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_SINGLE_TRAVERSAL_WILL_SEPARATE_SQUADS_HELPTEXT], sel->name);
-		SetButtonFastHelpText( gExitDialog.uiSingleMoveButton, str );
+		gExitDialog.uiSingleMoveButton->SetFastHelpText(str);
 		gExitDialog.SingleRegion.SetFastHelpText(str);
 	}
 
@@ -575,7 +575,7 @@ static void UpdateSectorExitMenu(void)
 			gExitDialog.AllRegion.Enable();
 			help = pExitingSectorHelpText[EXIT_GUI_ALL_TRAVERSAL_WILL_MOVE_CURRENT_SQUAD_HELPTEXT];
 		}
-		SetButtonFastHelpText(gExitDialog.uiAllMoveButton, help);
+		gExitDialog.uiAllMoveButton->SetFastHelpText(help);
 		gExitDialog.AllRegion.SetFastHelpText(help);
 	}
 }

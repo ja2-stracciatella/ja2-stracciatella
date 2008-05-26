@@ -193,7 +193,7 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* tex
 	GUIButtonRef const btn = QuickCreateButton(giOverheadButtonImages[idx], 11, y, MSYS_PRIORITY_HIGH, click);
 	iTPButtons[idx] = btn;
 	btn->SpecifyGeneralTextAttributes(text, BLOCKFONT, FONT_BEIGE, 141);
-	SetButtonFastHelpText(btn, help);
+	btn->SetFastHelpText(help);
 	btn->SpecifyHilitedTextColors(FONT_WHITE, FONT_NEARBLACK);
 }
 
@@ -523,7 +523,7 @@ static void EnsureDoneButtonStatus(void)
 			if (iTPButtons[DONE_BUTTON]->uiFlags & BUTTON_ENABLED)
 			{
 				DisableButton( iTPButtons[ DONE_BUTTON ] );
-				SetButtonFastHelpText( iTPButtons[ DONE_BUTTON ], gpStrategicString[ STR_TP_DISABLED_DONEHELP ] );
+				iTPButtons[DONE_BUTTON]->SetFastHelpText(gpStrategicString[STR_TP_DISABLED_DONEHELP]);
 			}
 			return;
 		}
@@ -531,7 +531,7 @@ static void EnsureDoneButtonStatus(void)
 	if (!(iTPButtons[DONE_BUTTON]->uiFlags & BUTTON_ENABLED))
 	{ //only enable it when it is disabled, otherwise the button will stay down!
 		EnableButton( iTPButtons[ DONE_BUTTON ] );
-		SetButtonFastHelpText( iTPButtons[ DONE_BUTTON ], gpStrategicString[ STR_TP_DONEHELP ] );
+		iTPButtons[DONE_BUTTON]->SetFastHelpText(gpStrategicString[STR_TP_DONEHELP]);
 	}
 }
 

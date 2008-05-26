@@ -230,7 +230,7 @@ static GUIButtonRef MakeButton(UINT idx, const char* gfx, INT16 y, INT16 h, GUI_
 	INT32 img = LoadGenericButtonIcon(gfx);
 	iButtonIcons[idx] = img;
 	GUIButtonRef const btn = CreateIconButton(img, 0, 600, y, 40, h, MSYS_PRIORITY_HIGH, click);
-	SetButtonFastHelpText(btn, help);
+	btn->SetFastHelpText(help);
 	return btn;
 }
 

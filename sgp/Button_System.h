@@ -51,6 +51,9 @@ typedef void (*GUI_CALLBACK)(struct GUI_BUTTON*, INT32);
 // GUI_BUTTON structure definitions.
 struct GUI_BUTTON
 {
+	// Set the text that will be displayed as the FastHelp
+	void SetFastHelpText(wchar_t const* text);
+
 	void SpecifyDownTextColors(INT16 fore_colour_down, INT16 shadow_colour_down);
 	void SpecifyHilitedTextColors(INT16 fore_colour_highlighted, INT16 shadow_colour_highlighted);
 

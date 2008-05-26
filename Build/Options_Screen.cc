@@ -349,7 +349,7 @@ static void EnterOptionsScreen(void)
 		MSYS_SetRegionUserData(reg, 0, cnt);
 
 		reg->SetFastHelpText(zOptionsScreenHelpText[cnt]);
-		SetButtonFastHelpText(check, zOptionsScreenHelpText[cnt]);
+		check->SetFastHelpText(zOptionsScreenHelpText[cnt]);
 
 		pos_y += OPT_GAP_BETWEEN_TOGGLE_BOXES;
 	}

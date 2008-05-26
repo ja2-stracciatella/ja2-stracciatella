@@ -32,7 +32,7 @@ static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const cha
 	GUIButtonRef const btn = QuickCreateButtonImg(gfx, -1, 1, 2, 3, 4, x, y, MSYS_PRIORITY_NORMAL, click);
 	iEditorButton[idx] = btn;
 	SpecifyDisabledButtonStyle(btn, DISABLED_STYLE_SHADED);
-	SetButtonFastHelpText(btn, help);
+	btn->SetFastHelpText(help);
 }
 
 
@@ -40,7 +40,7 @@ static void MakeCheck(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, const char
 {
 	GUIButtonRef const btn = CreateCheckBoxButton(x, y, gfx, MSYS_PRIORITY_NORMAL, click);
 	iEditorButton[idx] = btn;
-	SetButtonFastHelpText(btn, help);
+	btn->SetFastHelpText(help);
 }
 
 
@@ -87,7 +87,7 @@ static void MakeButtonDir(UINT idx, UINT dir, INT16 x, INT16 y)
 	iEditorButton[idx] = btn;
 	wchar_t str[30];
 	swprintf(str, lengthof(str), L"Set merc to face %ls", FaceDirs[dir]);
-	SetButtonFastHelpText(btn, str);
+	btn->SetFastHelpText(str);
 	MSYS_SetBtnUserData(  btn, dir);
 }
 
@@ -153,9 +153,9 @@ static void InitEditorMercsToolbar(void)
 	HideEditorButton( MERCS_GLOWSCHEDULE );
 
 	iEditorButton[MERCS_DELETE] = CreateTextButton(L"DELETE", SMALLCOMPFONT, FONT_DKBLUE, FONT_BLACK, 600, 362, 40, 20, MSYS_PRIORITY_NORMAL, MercsDeleteCallback);
-	SetButtonFastHelpText( iEditorButton[ MERCS_DELETE ], L"Delete currently selected merc (DEL).");
+	iEditorButton[MERCS_DELETE]->SetFastHelpText(L"Delete currently selected merc (DEL).");
 	iEditorButton[ MERCS_NEXT ] = CreateTextButton(L"NEXT",   SMALLCOMPFONT, FONT_DKBLUE, FONT_BLACK, 600, 382, 40, 20, MSYS_PRIORITY_NORMAL, MercsNextCallback);
-	SetButtonFastHelpText( iEditorButton[ MERCS_NEXT ], L"Find next merc (SPACE).");
+	iEditorButton[MERCS_NEXT]->SetFastHelpText(L"Find next merc (SPACE).");
 
 	//Priority Existance
 	MakeCheck(MERCS_PRIORITYEXISTANCE_CHECKBOX, 170, 365, MercsPriorityExistanceCallback, "EDITOR/checkbox.sti", L"Toggle priority existance");
@@ -199,7 +199,7 @@ static void InitEditorMercsToolbar(void)
 	MakeButtonDir(MERCS_DIRECTION_NW, 7, 390, 365);
 
 	iEditorButton[MERCS_DIRECTION_FIND] = CreateTextButton(L"Find", FONT12POINT1, FONT_MCOLOR_BLACK, FONT_BLACK, 390, 395, 30, 30, MSYS_PRIORITY_NORMAL + 1, MercsFindSelectedMercCallback);
-	SetButtonFastHelpText( iEditorButton[ MERCS_DIRECTION_FIND] , L"Find selected merc" );
+	iEditorButton[MERCS_DIRECTION_FIND]->SetFastHelpText(L"Find selected merc");
 
 	MakeButtonEquipment(MERCS_EQUIPMENT_BAD,     0, FONT_LTRED,   L"BAD");
 	MakeButtonEquipment(MERCS_EQUIPMENT_POOR,    1, FONT_ORANGE,  L"POOR");

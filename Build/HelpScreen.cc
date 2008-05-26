@@ -520,7 +520,7 @@ static void EnterHelpScreen(void)
 	giExitBtnImage = LoadButtonImage("INTERFACE/HelpScreen.sti", -1,0,4,2,6 );
 
 	guiHelpScreenExitBtn = QuickCreateButton(giExitBtnImage, usPosX, usPosY, MSYS_PRIORITY_HIGHEST, BtnHelpScreenExitCallback);
-	SetButtonFastHelpText(guiHelpScreenExitBtn, gzHelpScreenText);
+	guiHelpScreenExitBtn->SetFastHelpText(gzHelpScreenText);
 	guiHelpScreenExitBtn->SetCursor(gHelpScreen.usCursor);
 
 

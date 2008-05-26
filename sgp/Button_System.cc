@@ -827,10 +827,16 @@ void GUI_BUTTON::AllowDisabledFastHelp()
 }
 
 
+void GUI_BUTTON::SetFastHelpText(const wchar_t* const text)
+{
+	Area.SetFastHelpText(text);
+}
+
+
 void SetButtonFastHelpText(GUIButtonRef const b, const wchar_t* Text)
 {
 	CHECKV(b != NULL); // XXX HACK000C
-	b->Area.SetFastHelpText(Text);
+	b->SetFastHelpText(Text);
 }
 
 

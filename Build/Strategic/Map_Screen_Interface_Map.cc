@@ -4537,7 +4537,7 @@ void CreateDestroyMilitiaSectorButtons(void)
 			MSYS_SetBtnUserData(giMapMilitiaButton[iCounter], iCounter);
 			giMapMilitiaButton[iCounter]->SpecifyGeneralTextAttributes(NULL, FONT10ARIAL, gsMilitiaSectorButtonColors[iCounter], FONT_BLACK);
 
-			SetButtonFastHelpText( giMapMilitiaButton[ iCounter ], pMilitiaButtonsHelpText[ iCounter ] );
+			giMapMilitiaButton[iCounter]->SetFastHelpText(pMilitiaButtonsHelpText[iCounter]);
 		}
 
 		CreateScreenMaskForMoveBox( );
@@ -4951,7 +4951,7 @@ static void CreateMilitiaPanelBottomButton(void)
 	MakeButton(4, MAP_MILITIA_BOX_POS_X + MAP_MILITIA_BOX_DONE_BOX_X, MilitiaDoneButtonCallback, pMilitiaButtonString[1]);
 
 	// AUTO button help
-	SetButtonFastHelpText( giMapMilitiaButton[ 3 ], pMilitiaButtonsHelpText[ 3 ] );
+	giMapMilitiaButton[3]->SetFastHelpText(pMilitiaButtonsHelpText[3]);
 
 
 	// if auto-distribution is not possible

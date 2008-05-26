@@ -1963,7 +1963,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		}
 		else
 		{
-			SetButtonFastHelpText(ammo_btn, Message[STR_EJECT_AMMO]);
+			ammo_btn->SetFastHelpText(Message[STR_EJECT_AMMO]);
 		}
 
 		INT16 usX;
@@ -4752,20 +4752,20 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 	if ( gItemPickupMenu.bNumSlotsPerPage == NUM_PICKUP_SLOTS && gItemPickupMenu.ubTotalItems > NUM_PICKUP_SLOTS )
 	{
 		gItemPickupMenu.iUpButton	= QuickCreateButton(gItemPickupMenu.iUpButtonImages, sX + ITEMPICK_UP_X, sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_UP_Y, MSYS_PRIORITY_HIGHEST, ItemPickupScrollUp);
-		SetButtonFastHelpText( gItemPickupMenu.iUpButton, ItemPickupHelpPopup[ 1 ] );
+		gItemPickupMenu.iUpButton->SetFastHelpText(ItemPickupHelpPopup[1]);
 
 		gItemPickupMenu.iDownButton	= QuickCreateButton(gItemPickupMenu.iDownButtonImages, sX + ITEMPICK_DOWN_X, sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_DOWN_Y, MSYS_PRIORITY_HIGHEST, ItemPickupScrollDown);
-		SetButtonFastHelpText( gItemPickupMenu.iDownButton, ItemPickupHelpPopup[ 3 ] );
+		gItemPickupMenu.iDownButton->SetFastHelpText(ItemPickupHelpPopup[3]);
 	}
 
 	gItemPickupMenu.iOKButton = QuickCreateButton(gItemPickupMenu.iOKButtonImages, sX + ITEMPICK_OK_X, sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_OK_Y, MSYS_PRIORITY_HIGHEST, ItemPickupOK);
-	SetButtonFastHelpText( gItemPickupMenu.iOKButton, ItemPickupHelpPopup[ 0 ] );
+	gItemPickupMenu.iOKButton->SetFastHelpText(ItemPickupHelpPopup[0]);
 
 	gItemPickupMenu.iAllButton = QuickCreateButton(gItemPickupMenu.iAllButtonImages, sX + ITEMPICK_ALL_X, sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_ALL_Y, MSYS_PRIORITY_HIGHEST, ItemPickupAll);
-	SetButtonFastHelpText( gItemPickupMenu.iAllButton, ItemPickupHelpPopup[ 2 ] );
+	gItemPickupMenu.iAllButton->SetFastHelpText(ItemPickupHelpPopup[2]);
 
 	gItemPickupMenu.iCancelButton = QuickCreateButton(gItemPickupMenu.iCancelButtonImages, sX + ITEMPICK_CANCEL_X, sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_CANCEL_Y, MSYS_PRIORITY_HIGHEST, ItemPickupCancel);
-	SetButtonFastHelpText( gItemPickupMenu.iCancelButton, ItemPickupHelpPopup[ 4 ] );
+	gItemPickupMenu.iCancelButton->SetFastHelpText(ItemPickupHelpPopup[4]);
 
 	DisableButton( gItemPickupMenu.iOKButton );
 

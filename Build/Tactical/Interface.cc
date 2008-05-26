@@ -421,7 +421,7 @@ try
 	GUIButtonRef const btn = QuickCreateButton(iIconImages[gfx], x, y, MSYS_PRIORITY_HIGHEST - 1, BtnMovementCallback);
 	iActionIcons[idx] = btn;
 	btn->User.Ptr = event;
-	SetButtonFastHelpText(btn, help);
+	btn->SetFastHelpText(help);
 }
 catch (...)
 {
@@ -1603,13 +1603,13 @@ try
 	iActionIcons[idx] = btn;
 	if (ap == 0 || !(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT))
 	{
-		SetButtonFastHelpText(btn, help);
+		btn->SetFastHelpText(help);
 	}
 	else
 	{
 		wchar_t zDisp[100];
 		swprintf(zDisp, lengthof(zDisp), L"%ls ( %d )", help, ap);
-		SetButtonFastHelpText(btn, zDisp);
+		btn->SetFastHelpText(zDisp);
 	}
 	if (disable ||
 			(ap != 0 && !EnoughPoints(gOpenDoorMenu.pSoldier, ap, bp, FALSE)))
