@@ -68,8 +68,7 @@ static void CreateIMPPersonalityEntranceButtons(void)
 														 LAPTOP_SCREEN_UL_X + 136, LAPTOP_SCREEN_WEB_UL_Y + 314, MSYS_PRIORITY_HIGH,
 														 	BtnIMPPersonalityEntranceDoneCallback);
 
-
-	SetButtonCursor(giIMPPersonalityEntranceButton[0], CURSOR_WWW);
+	giIMPPersonalityEntranceButton[0]->SetCursor(CURSOR_WWW);
 }
 
 

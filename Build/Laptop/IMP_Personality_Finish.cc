@@ -153,7 +153,7 @@ static void MakeButton(UINT idx, const wchar_t* text, INT16 x, GUI_CALLBACK clic
 	const INT16 shadow_col = DEFAULT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, LAPTOP_SCREEN_UL_X + 224, MSYS_PRIORITY_HIGH, click);
 	giIMPPersonalityFinishButton[idx] = btn;
-	SetButtonCursor(btn, CURSOR_WWW);
+	btn->SetCursor(CURSOR_WWW);
 }
 
 

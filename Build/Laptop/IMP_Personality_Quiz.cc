@@ -154,7 +154,7 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
-	SetButtonCursor(btn, CURSOR_WWW);
+	btn->SetCursor(CURSOR_WWW);
 	return btn;
 }
 
@@ -329,7 +329,7 @@ static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 		wchar_t sString[32];
 		swprintf(sString, lengthof(sString), L"%d", i + 1);
 		Button->SpecifyGeneralTextAttributes(sString, FONT12ARIAL, FONT_WHITE, FONT_BLACK);
-		SetButtonCursor(Button, CURSOR_WWW);
+		Button->SetCursor(CURSOR_WWW);
 	}
 
 	// previous is current

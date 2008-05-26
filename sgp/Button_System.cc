@@ -652,9 +652,9 @@ GUIButtonRef CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, IN
 }
 
 
-void SetButtonCursor(GUIButtonRef const b, UINT16 crsr)
+void GUI_BUTTON::SetCursor(UINT16 const cursor)
 {
-	b->Area.Cursor = crsr;
+	Area.Cursor = cursor;
 }
 
 

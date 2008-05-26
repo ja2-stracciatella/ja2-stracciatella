@@ -442,7 +442,7 @@ static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
 		AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_DOWN, DEFAULT_SHADOW,
 		x, BTN_BOX_Y, MSYS_PRIORITY_HIGH, click
 	);
-	SetButtonCursor(btn, CURSOR_WWW);
+	btn->SetCursor(CURSOR_WWW);
 	return btn;
 }
 
@@ -1559,7 +1559,7 @@ try
 															 AIM_POPUP_BOX_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
 															 usPosX + AIM_POPUP_BOX_BUTTON_OFFSET_X, usPosY + AIM_POPUP_BOX_BUTTON_OFFSET_Y, MSYS_PRIORITY_HIGH + 5,
 															 BtnPopUpOkButtonCallback);
-			SetButtonCursor(guiPopUpOkButton, CURSOR_LAPTOP_SCREEN);
+			guiPopUpOkButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 			MSYS_SetBtnUserData(guiPopUpOkButton, ubData);
 
 			fPopUpBoxActive = TRUE;
@@ -2425,7 +2425,7 @@ static GUIButtonRef MakeButtonVideo(BUTTON_PICS* const img, const wchar_t* const
 	const INT16 txt_col    = AIM_M_VIDEO_NAME_COLOR;
 	const INT16 shadow_col = AIM_M_VIDEO_NAME_SHADOWCOLOR;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, txt_col, shadow_col, txt_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
-	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 	return btn;
 }
 
@@ -2459,7 +2459,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 		if( !fXRegionActive )
 		{
 			giXToCloseVideoConfButton = QuickCreateButton(giXToCloseVideoConfButtonImage, AIM_MEMBER_VIDEO_CONF_XCLOSE_X, AIM_MEMBER_VIDEO_CONF_XCLOSE_Y, MSYS_PRIORITY_HIGH, BtnXToCloseVideoConfButtonCallback);
-			SetButtonCursor(giXToCloseVideoConfButton, CURSOR_LAPTOP_SCREEN);
+			giXToCloseVideoConfButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 			SpecifyDisabledButtonStyle( giXToCloseVideoConfButton, DISABLED_STYLE_NONE );
 			fXRegionActive = TRUE;
 

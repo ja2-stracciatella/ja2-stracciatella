@@ -588,7 +588,7 @@ static void CreateIMPButtons(void)
 	giIMPButton[0]->SpecifyTextSubOffsets(0, -1, FALSE);
 
 	// set up generic www cursor
-	SetButtonCursor(giIMPButton[ 0 ], CURSOR_WWW);
+	giIMPButton[0]->SetCursor(CURSOR_WWW);
 }
 
 

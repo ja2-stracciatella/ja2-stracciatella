@@ -377,8 +377,7 @@ static void CreateIMPHomePageButtons(void)
 														 LAPTOP_SCREEN_UL_X + 286 - 106, LAPTOP_SCREEN_WEB_UL_Y + 248 - 48, MSYS_PRIORITY_HIGH,
 														 	BtnIMPAboutUsCallback);
 
-
-	SetButtonCursor(giIMPHomePageButton[ 0 ], CURSOR_WWW);
+	giIMPHomePageButton[0]->SetCursor(CURSOR_WWW);
 }
 
 

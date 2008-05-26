@@ -64,7 +64,7 @@ static void CreateIMPAttributeEntranceButtons(void)
 														 LAPTOP_SCREEN_UL_X +  136, LAPTOP_SCREEN_WEB_UL_Y + 314, MSYS_PRIORITY_HIGH,
 														 	BtnIMPAttributeBeginCallback);
 
-	SetButtonCursor(giIMPAttributeEntranceButton[0], CURSOR_WWW);
+	giIMPAttributeEntranceButton[0]->SetCursor(CURSOR_WWW);
 }
 
 

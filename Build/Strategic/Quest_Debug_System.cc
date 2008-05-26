@@ -2274,7 +2274,7 @@ static void CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* pStr
 
 			//create the ok button
 			guiQuestDebugTextEntryOkBtn = MakeButton(L"OK", QUEST_DBS_TEB_X + QUEST_DBS_TEB_WIDTH / 2 - 12, QUEST_DBS_TEB_Y + QUEST_DBS_TEB_HEIGHT - 30, 30, 25, MSYS_PRIORITY_HIGH + 50, BtnQuestDebugTextEntryOkBtnButtonCallback);
-			SetButtonCursor( guiQuestDebugTextEntryOkBtn, CURSOR_WWW );
+			guiQuestDebugTextEntryOkBtn->SetCursor(CURSOR_WWW);
 
 			wcscpy( zString, pString );
 
@@ -2582,7 +2582,7 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 
 			//create the ok button
 			guiQuestDebugNPCInventOkBtn = MakeButton(L"OK", QUEST_DBS_NPC_INV_POPUP_X + QUEST_DBS_NPC_INV_POPUP_WIDTH / 2 - 12, QUEST_DBS_NPC_INV_POPUP_Y + QUEST_DBS_NPC_INV_POPUP_HEIGHT - 30, 30, 25, MSYS_PRIORITY_HIGH + 50, BtnQuestDebugNPCInventOkBtnButtonCallback);
-			SetButtonCursor( guiQuestDebugNPCInventOkBtn, CURSOR_WWW );
+			guiQuestDebugNPCInventOkBtn->SetCursor(CURSOR_WWW);
 			break;
 		}
 

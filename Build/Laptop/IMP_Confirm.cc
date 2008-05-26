@@ -115,7 +115,7 @@ static void MakeButton(UINT idx, const wchar_t* text, INT16 y, GUI_CALLBACK clic
 	const INT16 shadow_col = DEFAULT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, LAPTOP_SCREEN_UL_X + 136, y, MSYS_PRIORITY_HIGH, click);
 	giIMPConfirmButton[idx] = btn;
-	SetButtonCursor(btn, CURSOR_WWW);
+	btn->SetCursor(CURSOR_WWW);
 }
 
 

@@ -219,7 +219,7 @@ static void MakeButton(UINT idx, UINT gfx, INT16 x, GUI_CALLBACK click, const wc
 	GUIButtonRef const btn = QuickCreateButtonNoMove(img, x, 323, MSYS_PRIORITY_HIGH, click);
 	giMapBorderButtons[idx] = btn;
 	SetButtonFastHelpText(btn, help);
-	SetButtonCursor(btn, MSYS_NO_CURSOR);
+	btn->SetCursor(MSYS_NO_CURSOR);
 }
 
 
@@ -275,8 +275,8 @@ void CreateButtonsForMapBorder(void)
 	//SetButtonFastHelpText( guiMapBorderLandRaiseButtons[ 0 ], pMapScreenBorderButtonHelpText[ 10 ] );
 	//SetButtonFastHelpText( guiMapBorderLandRaiseButtons[ 1 ], pMapScreenBorderButtonHelpText[ 11 ] );
 
-//	SetButtonCursor(guiMapBorderLandRaiseButtons[ 0 ], MSYS_NO_CURSOR );
-//	SetButtonCursor(guiMapBorderLandRaiseButtons[ 1 ], MSYS_NO_CURSOR );
+//	guiMapBorderLandRaiseButtons[0]->SetCursor(MSYS_NO_CURSOR);
+//	guiMapBorderLandRaiseButtons[1]->SetCursor(MSYS_NO_CURSOR);
 
 	InitializeMapBorderButtonStates( );
 }

@@ -85,7 +85,7 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 {
 	const INT16 shadow_col = BOBBYR_GUNS_SHADOW_COLOR;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, BOBBYR_GUNS_BUTTON_FONT, BOBBYR_GUNS_TEXT_COLOR_ON, shadow_col, BOBBYR_GUNS_TEXT_COLOR_OFF, shadow_col, x, BOBBYR_SHIPMENT_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
-	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 	return btn;
 }
 

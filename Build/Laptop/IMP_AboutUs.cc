@@ -79,7 +79,7 @@ static void CreateIMPAboutUsButtons(void)
 														 LAPTOP_SCREEN_UL_X + 216, LAPTOP_SCREEN_WEB_UL_Y + 360, MSYS_PRIORITY_HIGH,
 														 	BtnIMPBackCallback);
 
-	 SetButtonCursor(giIMPAboutUsButton[0], CURSOR_WWW);
+	giIMPAboutUsButton[0]->SetCursor(CURSOR_WWW);
 }
 
 

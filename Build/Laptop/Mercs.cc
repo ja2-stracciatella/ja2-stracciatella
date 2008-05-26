@@ -336,10 +336,10 @@ void EnterMercs()
 	guiAccountBoxButtonImage  = LoadButtonImage("LAPTOP/SmallButtons.sti", -1,0,-1,1,-1 );
 
 	guiAccountBoxButton = QuickCreateButton(guiAccountBoxButtonImage, MERC_ACCOUNT_BUTTON_X, MERC_ACCOUNT_BUTTON_Y, MSYS_PRIORITY_HIGH, BtnAccountBoxButtonCallback);
-	SetButtonCursor(guiAccountBoxButton, CURSOR_LAPTOP_SCREEN);
+	guiAccountBoxButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 
 	guiFileBoxButton = QuickCreateButton(guiAccountBoxButtonImage, MERC_FILE_BUTTON_X, MERC_FILE_BUTTON_Y, MSYS_PRIORITY_HIGH, BtnFileBoxButtonCallback);
-	SetButtonCursor(guiFileBoxButton, CURSOR_LAPTOP_SCREEN);
+	guiFileBoxButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 	SpecifyDisabledButtonStyle( guiFileBoxButton, DISABLED_STYLE_SHADED);
 
 	//if the player doesnt have an account disable it
@@ -1167,7 +1167,7 @@ static void InitDestroyXToCloseVideoWindow(BOOLEAN fCreate)
 	if( fCreate && !fButtonCreated )
 	{
 		guiXToCloseMercVideoButton = QuickCreateButtonImg("LAPTOP/CloseButton.sti", -1, 0, -1, 1, -1, MERC_X_TO_CLOSE_VIDEO_X, MERC_X_TO_CLOSE_VIDEO_Y, MSYS_PRIORITY_HIGH, BtnXToCloseMercVideoButtonCallback);
-		SetButtonCursor(guiXToCloseMercVideoButton, CURSOR_LAPTOP_SCREEN);
+		guiXToCloseMercVideoButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 
 		fButtonCreated = TRUE;
 	}

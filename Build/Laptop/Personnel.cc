@@ -599,8 +599,8 @@ static void CreatePersonnelButtons(void)
 	giPersonnelButton[0] = QuickCreateButtonImg("LAPTOP/personnelbuttons.sti", -1, 0, -1, 1, -1, PREV_MERC_FACE_X, MERC_FACE_SCROLL_Y, MSYS_PRIORITY_HIGHEST - 1, LeftButtonCallBack);
 	giPersonnelButton[1] = QuickCreateButtonImg("LAPTOP/personnelbuttons.sti", -1, 2, -1, 3, -1, NEXT_MERC_FACE_X, MERC_FACE_SCROLL_Y, MSYS_PRIORITY_HIGHEST - 1, RightButtonCallBack);
 
-	SetButtonCursor(giPersonnelButton[0], CURSOR_LAPTOP_SCREEN);
-	SetButtonCursor(giPersonnelButton[1], CURSOR_LAPTOP_SCREEN);
+	giPersonnelButton[0]->SetCursor(CURSOR_LAPTOP_SCREEN);
+	giPersonnelButton[1]->SetCursor(CURSOR_LAPTOP_SCREEN);
 }
 
 
@@ -1347,8 +1347,8 @@ static void CreateDestroyPersonnelInventoryScrollButtons(void)
 		giPersonnelInventoryButtons[1] = QuickCreateButtonImg("LAPTOP/personnel_inventory.sti", -1, 3, -1, 4, -1, 176 + 397, 200 + 223, MSYS_PRIORITY_HIGHEST - 1, InventoryDownButtonCallback);
 
 		// set up cursors for these buttons
-		SetButtonCursor(giPersonnelInventoryButtons[0], CURSOR_LAPTOP_SCREEN);
-		SetButtonCursor(giPersonnelInventoryButtons[1], CURSOR_LAPTOP_SCREEN);
+		giPersonnelInventoryButtons[0]->SetCursor(CURSOR_LAPTOP_SCREEN);
+		giPersonnelInventoryButtons[1]->SetCursor(CURSOR_LAPTOP_SCREEN);
 
 		MSYS_DefineRegion(&gMouseScrollPersonnelINV, X_OF_PERSONNEL_SCROLL_REGION, Y_OF_PERSONNEL_SCROLL_REGION, X_OF_PERSONNEL_SCROLL_REGION + X_SIZE_OF_PERSONNEL_SCROLL_REGION, Y_OF_PERSONNEL_SCROLL_REGION + Y_SIZE_OF_PERSONNEL_SCROLL_REGION, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, HandleSliderBarClickCallback);
 
@@ -1781,8 +1781,8 @@ static void CreateDestroyButtonsForDepartedTeamList(const BOOLEAN create)
 		giPersonnelButton[5] = QuickCreateButtonImg("LAPTOP/departuresbuttons.sti", -1, 1, -1, 3, -1, PERS_DEPARTED_UP_X, PERS_DEPARTED_DOWN_Y, MSYS_PRIORITY_HIGHEST - 1, DepartedDownCallBack);
 
 		// set up cursors for these buttons
-		SetButtonCursor(giPersonnelButton[4], CURSOR_LAPTOP_SCREEN);
-		SetButtonCursor(giPersonnelButton[5], CURSOR_LAPTOP_SCREEN);
+		giPersonnelButton[4]->SetCursor(CURSOR_LAPTOP_SCREEN);
+		giPersonnelButton[5]->SetCursor(CURSOR_LAPTOP_SCREEN);
 	}
 	else
 	{
@@ -2261,7 +2261,7 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* tex
 	GUIButtonRef const btn = QuickCreateButtonNoMove(img, 519, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giPersonnelATMStartButton[idx] = btn;
 	btn->SpecifyGeneralTextAttributes(text, PERS_FONT, FONT_BLACK, FONT_BLACK);
-	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 }
 
 

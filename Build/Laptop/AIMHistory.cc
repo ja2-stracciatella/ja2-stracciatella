@@ -235,7 +235,7 @@ static void InitAimHistoryMenuBar(void)
 														 AIM_BUTTON_OFF_COLOR, DEFAULT_SHADOW,
 														 usPosX, AIM_HISTORY_MENU_Y, MSYS_PRIORITY_HIGH,
 														 BtnHistoryMenuButtonCallback);
-		SetButtonCursor(guiHistoryMenuButton[i], CURSOR_WWW);
+		guiHistoryMenuButton[i]->SetCursor(CURSOR_WWW);
 		MSYS_SetBtnUserData(guiHistoryMenuButton[i], i + 1);
 
 

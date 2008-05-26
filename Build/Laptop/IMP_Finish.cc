@@ -113,7 +113,7 @@ static void MakeButton(UINT idx, const char* img_file, const wchar_t* text, INT1
 	const INT16 shadow_col = DEFAULT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
 	giIMPFinishButton[idx] = btn;
-	SetButtonCursor(btn, CURSOR_WWW);
+	btn->SetCursor(CURSOR_WWW);
 }
 
 

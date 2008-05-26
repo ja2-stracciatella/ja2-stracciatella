@@ -521,7 +521,7 @@ static void EnterHelpScreen(void)
 
 	guiHelpScreenExitBtn = QuickCreateButton(giExitBtnImage, usPosX, usPosY, MSYS_PRIORITY_HIGHEST, BtnHelpScreenExitCallback);
 	SetButtonFastHelpText(guiHelpScreenExitBtn, gzHelpScreenText);
-	SetButtonCursor( guiHelpScreenExitBtn, gHelpScreen.usCursor);
+	guiHelpScreenExitBtn->SetCursor(gHelpScreen.usCursor);
 
 
 
@@ -543,7 +543,7 @@ static void EnterHelpScreen(void)
 																		"INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGHEST,
 																		BtnHelpScreenDontShowHelpAgainCallback );
 
-		SetButtonCursor( gHelpScreenDontShowHelpAgainToggle, gHelpScreen.usCursor );
+		gHelpScreenDontShowHelpAgainToggle->SetCursor(gHelpScreen.usCursor);
 
 		// Set the state of the chec box
 		if( gGameSettings.fHideHelpInAllScreens )
@@ -877,8 +877,7 @@ static void CreateHelpScreenButtons(void)
 															 usPosX, usPosY, MSYS_PRIORITY_HIGHEST,
 															 BtnHelpScreenBtnsCallback);
 
-
-			SetButtonCursor( guiHelpScreenBtns[i], gHelpScreen.usCursor);
+			guiHelpScreenBtns[i]->SetCursor(gHelpScreen.usCursor);
 			MSYS_SetBtnUserData(guiHelpScreenBtns[i], i);
 
 			usPosY += HELP_SCREEN_BTN_HEIGHT + HELP_SCREEN_GAP_BN_BTNS;
@@ -2082,14 +2081,14 @@ static void CreateScrollAreaButtons(void)
 	//Create the scroll arrows
 	giHelpScreenScrollArrows[0] = QuickCreateButton(guiHelpScreenScrollArrowImage[0], usPosX, usPosY, MSYS_PRIORITY_HIGHEST, BtnHelpScreenScrollArrowsCallback);
 	MSYS_SetBtnUserData(giHelpScreenScrollArrows[0], 0);
-	SetButtonCursor( giHelpScreenScrollArrows[0], gHelpScreen.usCursor );
+	giHelpScreenScrollArrows[0]->SetCursor(gHelpScreen.usCursor);
 
 	usPosY = gHelpScreen.usScreenLocY + HLP_SCRN__SCROLL_DWN_ARROW_Y;
 
 	//Create the scroll arrows
 	giHelpScreenScrollArrows[1] = QuickCreateButton(guiHelpScreenScrollArrowImage[1], usPosX, usPosY, MSYS_PRIORITY_HIGHEST, BtnHelpScreenScrollArrowsCallback);
 	MSYS_SetBtnUserData(giHelpScreenScrollArrows[1], 1);
-	SetButtonCursor( giHelpScreenScrollArrows[1], gHelpScreen.usCursor );
+	giHelpScreenScrollArrows[1]->SetCursor(gHelpScreen.usCursor);
 }
 
 

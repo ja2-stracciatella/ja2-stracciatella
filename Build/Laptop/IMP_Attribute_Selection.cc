@@ -382,7 +382,7 @@ static void CreateIMPAttributeSelectionButtons(void)
 		LAPTOP_SCREEN_UL_X + 136, LAPTOP_SCREEN_WEB_UL_Y + 314, MSYS_PRIORITY_HIGH,
 		BtnIMPAttributeFinishCallback
 	);
-	SetButtonCursor(giIMPAttributeSelectionButton[0], CURSOR_WWW);
+	giIMPAttributeSelectionButton[0]->SetCursor(CURSOR_WWW);
 }
 
 
@@ -459,8 +459,8 @@ static void CreateAttributeSliderButtons(void)
 		giIMPAttributeSelectionSliderButton[iCounter    ] = QuickCreateButton(giIMPAttributeSelectionSliderButtonImage[0], LAPTOP_SCREEN_UL_X + 163, y, MSYS_PRIORITY_HIGHEST - 1, BtnIMPAttributeSliderLeftCallback);
 		giIMPAttributeSelectionSliderButton[iCounter + 1] = QuickCreateButton(giIMPAttributeSelectionSliderButtonImage[1], LAPTOP_SCREEN_UL_X + 419, y, MSYS_PRIORITY_HIGHEST - 1, BtnIMPAttributeSliderRightCallback);
 
-		SetButtonCursor(giIMPAttributeSelectionSliderButton[iCounter],     CURSOR_WWW);
-		SetButtonCursor(giIMPAttributeSelectionSliderButton[iCounter + 1], CURSOR_WWW);
+		giIMPAttributeSelectionSliderButton[iCounter    ]->SetCursor(CURSOR_WWW);
+		giIMPAttributeSelectionSliderButton[iCounter + 1]->SetCursor(CURSOR_WWW);
 		// set user data
 		MSYS_SetBtnUserData(giIMPAttributeSelectionSliderButton[iCounter],     iCounter / 2);
 		MSYS_SetBtnUserData(giIMPAttributeSelectionSliderButton[iCounter + 1], iCounter / 2);

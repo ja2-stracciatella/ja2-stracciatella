@@ -89,8 +89,7 @@ void EnterFloristCards()
 													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
 													 FLORIST_CARD_BACK_BUTTON_X, FLORIST_CARD_BACK_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnFlowerCardsBackButtonCallback);
-	SetButtonCursor(guiFlowerCardsBackButton, CURSOR_WWW );
-
+	guiFlowerCardsBackButton->SetCursor(CURSOR_WWW);
 
 	//passing the currently selected card to -1, so it is not used
 	gbCurrentlySelectedCard = -1;

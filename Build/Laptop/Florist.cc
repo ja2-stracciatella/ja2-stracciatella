@@ -93,7 +93,7 @@ void EnterFlorist()
 													 FLORIST_BUTTON_TEXT_DOWN_COLOR, FLORIST_BUTTON_TEXT_SHADOW_COLOR,
 													 FLORIST_GALLERY_BUTTON_X, FLORIST_GALLERY_BUTTON_Y, MSYS_PRIORITY_HIGH,
 													 BtnGalleryButtonCallback);
-	SetButtonCursor(guiGalleryButton, CURSOR_WWW );
+	guiGalleryButton->SetCursor(CURSOR_WWW);
 
 	//reset the currently selected card
 	gbCurrentlySelectedCard = -1;

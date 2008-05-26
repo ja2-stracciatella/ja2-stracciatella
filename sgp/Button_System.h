@@ -69,6 +69,9 @@ struct GUI_BUTTON
 
 	void AllowDisabledFastHelp();
 
+	// will simply set the cursor for the mouse region the button occupies
+	void SetCursor(UINT16 cursor);
+
 	INT32        IDNum;         // ID Number, contains it's own button number
 	BUTTON_PICS* image;         // Image to use (see DOCs for details)
 	MOUSE_REGION Area;          // Mouse System's mouse region to use for this button
@@ -245,9 +248,6 @@ void SpecifyDisabledButtonStyle(GUIButtonRef, INT8 bStyle);
  * one pixel just like the text does.
  */
 void SpecifyButtonIcon(GUIButtonRef, const SGPVObject* icon, UINT16 usVideoObjectIndex, INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage);
-
-// will simply set the cursor for the mouse region the button occupies
-void SetButtonCursor(GUIButtonRef, UINT16 crsr);
 
 void MSYS_SetBtnUserData(GUIButtonRef, INT32 userdata);
 INT32 MSYS_GetBtnUserData(const GUI_BUTTON* b);

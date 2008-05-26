@@ -265,7 +265,7 @@ static void CreateIMPBeginScreenButtons(void)
 														 LAPTOP_SCREEN_UL_X + 134, LAPTOP_SCREEN_WEB_UL_Y + 314, MSYS_PRIORITY_HIGH,
 														 BtnIMPBeginScreenDoneCallback);
 
-	SetButtonCursor(giIMPBeginScreenButton[0], CURSOR_WWW);
+	giIMPBeginScreenButton[0]->SetCursor(CURSOR_WWW);
 }
 
 

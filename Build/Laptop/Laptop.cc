@@ -1378,7 +1378,7 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, INT8 off_x, const 
 	SetButtonFastHelpText(btn, help_text);
 	btn->SpecifyTextOffsets(off_x, 11, TRUE);
 	btn->SpecifyGeneralTextAttributes(text, FONT10ARIAL, 2, 0);
-	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
+	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 }
 
 
@@ -2669,7 +2669,7 @@ static void CreateMinimizeButtonForCurrentMode(void)
 {
 	// create minimize button
 	gLaptopMinButton = QuickCreateButtonImg("LAPTOP/x.sti", -1, 0, -1, 1, -1, 590, 30, MSYS_PRIORITY_HIGH, LaptopMinimizeProgramButtonCallback);
-	SetButtonCursor(gLaptopMinButton, CURSOR_LAPTOP_SCREEN);
+	gLaptopMinButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 }
 
 

@@ -964,8 +964,8 @@ static void CreateButtonsForFilesPage(void)
 	giFilesPageButtons[0] = QuickCreateButtonImg("LAPTOP/arrows.sti", -1, 0, -1, 1, -1, PREVIOUS_FILE_PAGE_BUTTON_X, PREVIOUS_FILE_PAGE_BUTTON_Y, MSYS_PRIORITY_HIGHEST - 1, BtnPreviousFilePageCallback);
 	giFilesPageButtons[1] = QuickCreateButtonImg("LAPTOP/arrows.sti", -1, 6, -1, 7, -1, NEXT_FILE_PAGE_BUTTON_X,     NEXT_FILE_PAGE_BUTTON_Y,     MSYS_PRIORITY_HIGHEST - 1, BtnNextFilePageCallback);
 
-	SetButtonCursor(giFilesPageButtons[ 0 ], CURSOR_LAPTOP_SCREEN);
-	SetButtonCursor(giFilesPageButtons[ 1 ], CURSOR_LAPTOP_SCREEN);
+	giFilesPageButtons[0]->SetCursor(CURSOR_LAPTOP_SCREEN);
+	giFilesPageButtons[1]->SetCursor(CURSOR_LAPTOP_SCREEN);
 }
 
 

@@ -275,7 +275,7 @@ static GUIButtonRef MakeExitButton(const INT32 off, const INT32 on, const INT16 
 {
 	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/map_border_buttons.sti", -1, off, -1, on, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	SetButtonFastHelpText(btn, help);
-	SetButtonCursor(btn, MSYS_NO_CURSOR);
+	btn->SetCursor(MSYS_NO_CURSOR);
 	return btn;
 }
 
@@ -284,7 +284,7 @@ static GUIButtonRef MakeArrowButton(const INT32 grayed, const INT32 off, const I
 {
 	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/map_screen_bottom_arrows.sti", grayed, off, -1, on, -1, x, y, MSYS_PRIORITY_HIGHEST - 2, click);
 	SetButtonFastHelpText(btn, help);
-	SetButtonCursor(btn, MSYS_NO_CURSOR);
+	btn->SetCursor(MSYS_NO_CURSOR);
 	return btn;
 }
 

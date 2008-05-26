@@ -76,7 +76,7 @@ static void YESMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
 static GUIButtonRef MakeButton(const wchar_t* text, INT16 fore_colour, INT16 shadow_colour, INT16 x, INT16 y, GUI_CALLBACK click, UINT16 cursor)
 {
 	GUIButtonRef const btn = CreateIconAndTextButton(gMsgBox.iButtonImages, text, FONT12ARIAL, fore_colour, shadow_colour, fore_colour, shadow_colour, x, y, MSYS_PRIORITY_HIGHEST, click);
-	SetButtonCursor(btn, cursor);
+	btn->SetCursor(cursor);
 	ForceButtonUnDirty(btn);
 	return btn;
 }

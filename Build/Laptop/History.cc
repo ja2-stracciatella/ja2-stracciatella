@@ -266,8 +266,8 @@ static void CreateHistoryButtons(void)
 	giHistoryButton[NEXT_PAGE_BUTTON] = QuickCreateButtonImg("LAPTOP/arrows.sti", -1, 6, -1, 7, -1, NEXT_BTN_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnHistoryDisplayNextPageCallBack);
 
 	// set buttons
-	SetButtonCursor(giHistoryButton[0], CURSOR_LAPTOP_SCREEN);
-	SetButtonCursor(giHistoryButton[1], CURSOR_LAPTOP_SCREEN);
+	giHistoryButton[0]->SetCursor(CURSOR_LAPTOP_SCREEN);
+	giHistoryButton[1]->SetCursor(CURSOR_LAPTOP_SCREEN);
 }
 
 

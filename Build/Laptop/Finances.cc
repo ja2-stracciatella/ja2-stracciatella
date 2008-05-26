@@ -776,10 +776,10 @@ static void CreateFinanceButtons(void)
 	giFinanceButton[LAST_PAGE_BUTTON] = QuickCreateButton(giFinanceButtonImage[LAST_PAGE_BUTTON], LAST_PAGE_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnFinanceFirstLastPageCallBack);
 	MSYS_SetBtnUserData(giFinanceButton[LAST_PAGE_BUTTON], 1);
 
-	SetButtonCursor(giFinanceButton[0], CURSOR_LAPTOP_SCREEN);
-  SetButtonCursor(giFinanceButton[1], CURSOR_LAPTOP_SCREEN);
-  SetButtonCursor(giFinanceButton[2], CURSOR_LAPTOP_SCREEN);
-  SetButtonCursor(giFinanceButton[3], CURSOR_LAPTOP_SCREEN);
+	giFinanceButton[0]->SetCursor(CURSOR_LAPTOP_SCREEN);
+  giFinanceButton[1]->SetCursor(CURSOR_LAPTOP_SCREEN);
+  giFinanceButton[2]->SetCursor(CURSOR_LAPTOP_SCREEN);
+  giFinanceButton[3]->SetCursor(CURSOR_LAPTOP_SCREEN);
 }
 
 
