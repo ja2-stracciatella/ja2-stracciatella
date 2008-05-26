@@ -204,7 +204,7 @@ static void MakeButton(UINT idx, INT16 x, const wchar_t* text, GUI_CALLBACK clic
 	iPBButton[idx] = btn;
 
 	SpecifyGeneralButtonTextAttributes(btn, text, BLOCKFONT, FONT_BEIGE, 141);
-	SpecifyButtonHilitedTextColors(btn, FONT_WHITE, FONT_NEARBLACK);
+	btn->SpecifyHilitedTextColors(FONT_WHITE, FONT_NEARBLACK);
 	SpecifyButtonTextOffsets(btn, 8, 7, TRUE);
 	SpecifyButtonTextWrappedWidth(btn, 51);
 	AllowDisabledButtonFastHelp(btn);

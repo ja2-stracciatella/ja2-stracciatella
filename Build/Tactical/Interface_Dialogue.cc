@@ -459,7 +459,7 @@ try
 														 gTalkPanel.sX + TALK_PANEL_BUTTON_X, gTalkPanel.sY + TALK_PANEL_BUTTON_Y, MSYS_PRIORITY_HIGHEST,
 														 DoneTalkingButtonClickCallback );
 
-	SpecifyButtonHilitedTextColors( gTalkPanel.uiCancelButton, FONT_MCOLOR_WHITE, DEFAULT_SHADOW );
+	gTalkPanel.uiCancelButton->SpecifyHilitedTextColors(FONT_MCOLOR_WHITE, DEFAULT_SHADOW);
 
 	// Turn off dirty flags
 	gTalkPanel.uiCancelButton->uiFlags &= ~BUTTON_DIRTY;

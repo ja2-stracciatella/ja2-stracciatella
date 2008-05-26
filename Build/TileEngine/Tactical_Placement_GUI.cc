@@ -194,7 +194,7 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* tex
 	iTPButtons[idx] = btn;
 	SpecifyGeneralButtonTextAttributes(btn, text, BLOCKFONT, FONT_BEIGE, 141);
 	SetButtonFastHelpText(btn, help);
-	SpecifyButtonHilitedTextColors(btn, FONT_WHITE, FONT_NEARBLACK);
+	btn->SpecifyHilitedTextColors(FONT_WHITE, FONT_NEARBLACK);
 }
 
 

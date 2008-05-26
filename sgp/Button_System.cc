@@ -742,11 +742,11 @@ void GUI_BUTTON::SpecifyDownTextColors(INT16 const fore_colour_down, INT16 const
 }
 
 
-void SpecifyButtonHilitedTextColors(GUIButtonRef const b, INT16 sForeColorHilited, INT16 sShadowColorHilited)
+void GUI_BUTTON::SpecifyHilitedTextColors(INT16 fore_colour_highlighted, INT16 shadow_colour_highlighted)
 {
-	b->sForeColorHilited   = sForeColorHilited;
-	b->sShadowColorHilited = sShadowColorHilited;
-	b->uiFlags |= BUTTON_DIRTY;
+	sForeColorHilited    = fore_colour_highlighted;
+	sShadowColorHilited  = shadow_colour_highlighted;
+	uiFlags             |= BUTTON_DIRTY;
 }
 
 
