@@ -1583,7 +1583,7 @@ static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* tex
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 	if (text)
 	{
-		SpecifyGeneralButtonTextAttributes(btn, text, EMAIL_WARNING_FONT, FONT_BLACK, FONT_BLACK);
+		btn->SpecifyGeneralTextAttributes(text, EMAIL_WARNING_FONT, FONT_BLACK, FONT_BLACK);
 	}
 }
 

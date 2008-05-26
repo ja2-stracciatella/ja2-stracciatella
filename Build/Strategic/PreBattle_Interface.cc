@@ -203,7 +203,7 @@ static void MakeButton(UINT idx, INT16 x, const wchar_t* text, GUI_CALLBACK clic
 	GUIButtonRef const btn = QuickCreateButton(iPBButtonImage[idx], x, 54, MSYS_PRIORITY_HIGHEST - 2, click);
 	iPBButton[idx] = btn;
 
-	SpecifyGeneralButtonTextAttributes(btn, text, BLOCKFONT, FONT_BEIGE, 141);
+	btn->SpecifyGeneralTextAttributes(text, BLOCKFONT, FONT_BEIGE, 141);
 	btn->SpecifyHilitedTextColors(FONT_WHITE, FONT_NEARBLACK);
 	SpecifyButtonTextOffsets(btn, 8, 7, TRUE);
 	SpecifyButtonTextWrappedWidth(btn, 51);

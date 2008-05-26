@@ -4535,7 +4535,7 @@ void CreateDestroyMilitiaSectorButtons(void)
 
 			// set button user data
 			MSYS_SetBtnUserData(giMapMilitiaButton[iCounter], iCounter);
-			SpecifyGeneralButtonTextAttributes(giMapMilitiaButton[iCounter], NULL, FONT10ARIAL, gsMilitiaSectorButtonColors[iCounter], FONT_BLACK);
+			giMapMilitiaButton[iCounter]->SpecifyGeneralTextAttributes(NULL, FONT10ARIAL, gsMilitiaSectorButtonColors[iCounter], FONT_BLACK);
 
 			SetButtonFastHelpText( giMapMilitiaButton[ iCounter ], pMilitiaButtonsHelpText[ iCounter ] );
 		}
@@ -4936,7 +4936,7 @@ static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* tex
 {
 	GUIButtonRef const btn = QuickCreateButtonImg("INTERFACE/militia.sti", -1, 1, -1, 2, -1, x, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giMapMilitiaButton[idx] = btn;
-	SpecifyGeneralButtonTextAttributes(btn, text, FONT10ARIAL, FONT_BLACK, FONT_BLACK);
+	btn->SpecifyGeneralTextAttributes(text, FONT10ARIAL, FONT_BLACK, FONT_BLACK);
 }
 
 

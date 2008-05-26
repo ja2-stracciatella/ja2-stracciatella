@@ -62,6 +62,8 @@ struct GUI_BUTTON
 	};
 	void SpecifyTextJustification(Justification);
 
+	void SpecifyGeneralTextAttributes(wchar_t const* string, Font, INT16 fore_colour, INT16 shadow_colour);
+
 	INT32        IDNum;         // ID Number, contains it's own button number
 	BUTTON_PICS* image;         // Image to use (see DOCs for details)
 	MOUSE_REGION Area;          // Mouse System's mouse region to use for this button
@@ -223,7 +225,6 @@ GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const wchar_t* string, 
 GUIButtonRef CreateLabel(const wchar_t* text, Font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority);
 
 void SpecifyButtonText(GUIButtonRef, const wchar_t* string);
-void SpecifyGeneralButtonTextAttributes(GUIButtonRef, const wchar_t* string, Font, INT16 sForeColor, INT16 sShadowColor);
 void SpecifyButtonTextOffsets(GUIButtonRef, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText);
 void SpecifyButtonTextSubOffsets(GUIButtonRef, INT8 bTextXOffset, INT8 bTextYOffset, BOOLEAN fShiftText);
 void SpecifyButtonTextWrappedWidth(GUIButtonRef, INT16 sWrappedWidth);

@@ -192,7 +192,7 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* tex
 {
 	GUIButtonRef const btn = QuickCreateButton(giOverheadButtonImages[idx], 11, y, MSYS_PRIORITY_HIGH, click);
 	iTPButtons[idx] = btn;
-	SpecifyGeneralButtonTextAttributes(btn, text, BLOCKFONT, FONT_BEIGE, 141);
+	btn->SpecifyGeneralTextAttributes(text, BLOCKFONT, FONT_BEIGE, 141);
 	SetButtonFastHelpText(btn, help);
 	btn->SpecifyHilitedTextColors(FONT_WHITE, FONT_NEARBLACK);
 }

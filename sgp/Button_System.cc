@@ -757,14 +757,13 @@ void GUI_BUTTON::SpecifyTextJustification(Justification const j)
 }
 
 
-void SpecifyGeneralButtonTextAttributes(GUIButtonRef const b, const wchar_t* string, Font const font, INT16 sForeColor, INT16 sShadowColor)
+void GUI_BUTTON::SpecifyGeneralTextAttributes(wchar_t const* const string, Font const font, INT16 const fore_colour, INT16 const shadow_colour)
 {
-	//Copy over information
-	SpecifyButtonText(b, string);
-	b->usFont       = font;
-	b->sForeColor = sForeColor;
-	b->sShadowColor = sShadowColor;
-	b->uiFlags |= BUTTON_DIRTY;
+	SpecifyButtonText(this, string);
+	usFont        = font;
+	sForeColor    = fore_colour;
+	sShadowColor  = shadow_colour;
+	uiFlags      |= BUTTON_DIRTY;
 }
 
 

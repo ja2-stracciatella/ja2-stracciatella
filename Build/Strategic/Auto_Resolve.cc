@@ -1584,7 +1584,7 @@ static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, BOOLEAN h
 {
 	GUIButtonRef const btn = QuickCreateButton(gpAR->iButtonImage[idx], x, y, MSYS_PRIORITY_HIGH, click);
 	gpAR->iButton[idx] = btn;
-	if (text != NULL) SpecifyGeneralButtonTextAttributes(btn, text, BLOCKFONT2, 169, FONT_NEARBLACK);
+	if (text != NULL) btn->SpecifyGeneralTextAttributes(text, BLOCKFONT2, 169, FONT_NEARBLACK);
 	if (hide) HideButton(btn);
 }
 

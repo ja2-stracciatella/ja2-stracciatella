@@ -1377,7 +1377,7 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, INT8 off_x, const 
 	gLaptopButton[idx] = btn;
 	SetButtonFastHelpText(btn, help_text);
 	SpecifyButtonTextOffsets(btn, off_x, 11, TRUE);
-	SpecifyGeneralButtonTextAttributes(btn, text, FONT10ARIAL, 2, 0);
+	btn->SpecifyGeneralTextAttributes(text, FONT10ARIAL, 2, 0);
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 }
 

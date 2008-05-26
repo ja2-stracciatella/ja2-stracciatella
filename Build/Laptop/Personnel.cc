@@ -2260,7 +2260,7 @@ static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* tex
 	giPersonnelATMStartButtonImage[idx] = img;
 	GUIButtonRef const btn = QuickCreateButtonNoMove(img, 519, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giPersonnelATMStartButton[idx] = btn;
-	SpecifyGeneralButtonTextAttributes(btn, text, PERS_FONT, FONT_BLACK, FONT_BLACK);
+	btn->SpecifyGeneralTextAttributes(text, PERS_FONT, FONT_BLACK, FONT_BLACK);
 	SetButtonCursor(btn, CURSOR_LAPTOP_SCREEN);
 }
 
