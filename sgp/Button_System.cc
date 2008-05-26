@@ -734,11 +734,11 @@ void SpecifyButtonText(GUIButtonRef const b, const wchar_t* string)
 }
 
 
-void SpecifyButtonDownTextColors(GUIButtonRef const b, INT16 sForeColorDown, INT16 sShadowColorDown)
+void GUI_BUTTON::SpecifyDownTextColors(INT16 const fore_colour_down, INT16 const shadow_colour_down)
 {
-	b->sForeColorDown   = sForeColorDown;
-	b->sShadowColorDown = sShadowColorDown;
-	b->uiFlags |= BUTTON_DIRTY;
+	sForeColorDown    = fore_colour_down;
+	sShadowColorDown  = shadow_colour_down;
+	uiFlags          |= BUTTON_DIRTY;
 }
 
 

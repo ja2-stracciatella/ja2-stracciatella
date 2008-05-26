@@ -48,7 +48,7 @@ static void MakeButtonTeam(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t*
 {
 	GUIButtonRef const btn = CreateTextButton(text, BLOCKFONT, 165, FONT_BLACK, 20, y, 78, 19, MSYS_PRIORITY_NORMAL, click);
 	iEditorButton[idx] = btn;
-	SpecifyButtonDownTextColors(btn, FONT_YELLOW, FONT_BLACK);
+	btn->SpecifyDownTextColors(FONT_YELLOW, FONT_BLACK);
 }
 
 
@@ -56,7 +56,7 @@ static void MakeButtonEquipment(UINT idx, UINT level, INT16 colour, const wchar_
 {
 	GUIButtonRef const btn = CreateTextButton(text, SMALLCOMPFONT, FONT_GRAY1, FONT_BLACK, 480, 385 + 15 * level, 40, 15, MSYS_PRIORITY_NORMAL, MercsSetRelativeEquipmentCallback);
 	iEditorButton[idx] = btn;
-	SpecifyButtonDownTextColors(btn, colour, FONT_BLACK);
+	btn->SpecifyDownTextColors(colour, FONT_BLACK);
 	MSYS_SetBtnUserData(btn, level);
 }
 
@@ -65,7 +65,7 @@ static void MakeButtonAttribute(UINT idx, UINT level, INT16 colour, const wchar_
 {
 	GUIButtonRef const btn = CreateTextButton(text, SMALLCOMPFONT, FONT_GRAY1, FONT_BLACK, 530, 385 + 15 * level, 40, 15, MSYS_PRIORITY_NORMAL, MercsSetRelativeAttributesCallback);
 	iEditorButton[idx] = btn;
-	SpecifyButtonDownTextColors(btn, colour, FONT_BLACK);
+	btn->SpecifyDownTextColors(colour, FONT_BLACK);
 	MSYS_SetBtnUserData(btn, level);
 }
 
@@ -397,7 +397,7 @@ static void MakeButtonTab(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* 
 {
 	GUIButtonRef const btn = CreateTextButton(text, SMALLFONT1, FONT_LTKHAKI, FONT_DKKHAKI, x, 460, 90, 20, MSYS_PRIORITY_HIGH, click);
 	iEditorButton[idx] = btn;
-	SpecifyButtonDownTextColors(btn, FONT_YELLOW, FONT_ORANGE);
+	btn->SpecifyDownTextColors(FONT_YELLOW, FONT_ORANGE);
 }
 
 

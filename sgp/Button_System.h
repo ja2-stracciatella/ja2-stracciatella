@@ -56,6 +56,8 @@ typedef void (*GUI_CALLBACK)(struct GUI_BUTTON*, INT32);
 // GUI_BUTTON structure definitions.
 struct GUI_BUTTON
 {
+	void SpecifyDownTextColors(INT16 fore_colour_down, INT16 shadow_colour_down);
+
 	INT32        IDNum;         // ID Number, contains it's own button number
 	BUTTON_PICS* image;         // Image to use (see DOCs for details)
 	MOUSE_REGION Area;          // Mouse System's mouse region to use for this button
@@ -217,7 +219,6 @@ GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const wchar_t* string, 
 GUIButtonRef CreateLabel(const wchar_t* text, Font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority);
 
 void SpecifyButtonText(GUIButtonRef, const wchar_t* string);
-void SpecifyButtonDownTextColors(GUIButtonRef, INT16 sForeColorDown, INT16 sShadowColorDown);
 void SpecifyButtonHilitedTextColors(GUIButtonRef, INT16 sForeColorHilited, INT16 sShadowColorHilited);
 void SpecifyButtonTextJustification(GUIButtonRef, INT8 bJustification);
 void SpecifyGeneralButtonTextAttributes(GUIButtonRef, const wchar_t* string, Font, INT16 sForeColor, INT16 sShadowColor);
