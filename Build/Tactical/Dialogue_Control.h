@@ -259,7 +259,7 @@ BOOLEAN CharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* fac
 BOOLEAN SpecialCharacterDialogueEvent(UINT32 uiSpecialEventFlag, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, FACETYPE* face, UINT8 bUIHandlerID);
 
 // Same as above, for triggers, with extra param to hold approach value
-BOOLEAN SpecialCharacterDialogueEventWithExtraParam(UINT32 uiSpecialEventFlag, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, UINT32 uiSpecialEventData4, FACETYPE* face, UINT8 bUIHandlerID);
+void SpecialCharacterDialogueEventWithExtraParam(UINT32 uiSpecialEventFlag, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, UINT32 uiSpecialEventData4, FACETYPE* face, UINT8 bUIHandlerID);
 
 // Called when a face stops talking...
 void HandleDialogueEnd( FACETYPE *pFace );

@@ -1270,7 +1270,7 @@ BOOLEAN SpecialCharacterDialogueEvent(const UINT32 uiSpecialEventFlag, const UIN
 }
 
 
-BOOLEAN SpecialCharacterDialogueEventWithExtraParam(const UINT32 uiSpecialEventFlag, const UINT32 uiSpecialEventData1, const UINT32 uiSpecialEventData2, const UINT32 uiSpecialEventData3, const UINT32 uiSpecialEventData4, FACETYPE* const face, const UINT8 bUIHandlerID )
+void SpecialCharacterDialogueEventWithExtraParam(UINT32 const uiSpecialEventFlag, UINT32 const uiSpecialEventData1, UINT32 const uiSpecialEventData2, UINT32 const uiSpecialEventData3, UINT32 const uiSpecialEventData4, FACETYPE* const face, UINT8 const bUIHandlerID)
 {
 	// Allocate new item
 	DIALOGUE_Q_STRUCT* QItem = MALLOCZ(DIALOGUE_Q_STRUCT);
@@ -1290,7 +1290,6 @@ BOOLEAN SpecialCharacterDialogueEventWithExtraParam(const UINT32 uiSpecialEventF
 	fPausedTimeDuringQuote = FALSE;
 
 	ghDialogueQ->Add(QItem);
-	return( TRUE );
 }
 
 
