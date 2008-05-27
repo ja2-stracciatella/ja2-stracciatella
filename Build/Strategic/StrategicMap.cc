@@ -537,7 +537,7 @@ static void EndLoadScreen(void)
 static void InitializeMapStructure(void);
 
 
-BOOLEAN InitStrategicEngine( )
+void InitStrategicEngine()
 {
 	// this runs every time we start the application, so don't put anything in here that's only supposed to run when a new
 	// *game* is started!  Those belong in InitStrategicLayer() instead.
@@ -558,8 +558,6 @@ BOOLEAN InitStrategicEngine( )
 #endif
 
 	ReadInDistancesBetweenTowns( );
-
-	return( TRUE );
 }
 
 

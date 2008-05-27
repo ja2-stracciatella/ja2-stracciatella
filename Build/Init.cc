@@ -77,10 +77,7 @@ UINT32 InitializeJA2(void)
 	// Init dialog queue system
 	InitalizeDialogueControl();
 
-	if ( !InitStrategicEngine( ) )
-	{
-		return( ERROR_SCREEN );
-	}
+	InitStrategicEngine();
 
 	//needs to be called here to init the SectorInfo struct
 	InitStrategicMovementCosts( );
