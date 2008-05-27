@@ -1033,7 +1033,8 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEvent(const SOLDIERTYPE* pSoldier, U
 
 	}
 
-	return CharacterDialogueWithSpecialEvent(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1, uiData2);
+	CharacterDialogueWithSpecialEvent(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1, uiData2);
+	return TRUE;
 }
 
 
@@ -1163,7 +1164,7 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 // NB;				The queued system is not yet implemented, but will be transpatent to the caller....
 
 
-BOOLEAN CharacterDialogueWithSpecialEvent(const UINT8 ubCharacterNum, const UINT16 usQuoteNum, FACETYPE* const face, const UINT8 bUIHandlerID, const BOOLEAN fFromSoldier, const BOOLEAN fDelayed, const UINT32 uiFlag, const UINT32 uiData1, const UINT32 uiData2)
+void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, UINT8 const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, UINT32 const uiFlag, UINT32 const uiData1, UINT32 const uiData2)
 {
 	// Allocate new item
 	DIALOGUE_Q_STRUCT* QItem = MALLOCZ(DIALOGUE_Q_STRUCT);
@@ -1188,8 +1189,6 @@ BOOLEAN CharacterDialogueWithSpecialEvent(const UINT8 ubCharacterNum, const UINT
 		// Increment refrence count...
 		giNPCReferenceCount++;
 	}
-
-	return( TRUE );
 }
 
 
