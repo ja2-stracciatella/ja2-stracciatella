@@ -87,7 +87,7 @@ void DebugAI(const char* szOutput)
 #endif
 
 
-BOOLEAN InitAI( void )
+void InitAI(void)
 {
 #ifdef _DEBUG
 	if (gfDisplayCoverValues)
@@ -112,8 +112,6 @@ BOOLEAN InitAI( void )
 		fclose( DebugFile );
 	}
 #endif
-
-	return( TRUE );
 }
 
 

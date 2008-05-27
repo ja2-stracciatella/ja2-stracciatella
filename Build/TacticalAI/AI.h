@@ -196,7 +196,7 @@ void HandleInitialRedAlert(INT8 bTeam);
 void InitPanicSystem(void);
 INT16 InWaterOrGas(SOLDIERTYPE *pSoldier, INT16 sGridno);
 BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier);
-BOOLEAN InitAI( void );
+void InitAI(void);
 
 void MakeClosestEnemyChosenOne(void);
 

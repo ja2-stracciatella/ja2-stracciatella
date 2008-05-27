@@ -379,7 +379,7 @@ BOOLEAN InitTacticalEngine(void)
 
 	if (!LoadLockTable()) return FALSE;
 	if (!InitPathAI())    return FALSE;
-	if (!InitAI())        return FALSE;
+	InitAI();
 	InitOverhead();
 	return TRUE;
 }
