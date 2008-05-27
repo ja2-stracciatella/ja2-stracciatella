@@ -377,11 +377,11 @@ BOOLEAN InitTacticalEngine(void)
 	InitializeGameVideoObjects();
 	LoadPaletteData();
 
-	return
-		LoadLockTable() &&
-		InitPathAI()    &&
-		InitAI()        &&
-		InitOverhead();
+	if (!LoadLockTable()) return FALSE;
+	if (!InitPathAI())    return FALSE;
+	if (!InitAI())        return FALSE;
+	InitOverhead();
+	return TRUE;
 }
 
 
@@ -395,7 +395,7 @@ void ShutdownTacticalEngine(void)
 }
 
 
-BOOLEAN InitOverhead(void)
+void InitOverhead(void)
 {
 	memset(MercSlots, 0, sizeof(MercSlots));
 	memset(AwaySlots, 0, sizeof(AwaySlots));
@@ -467,8 +467,6 @@ BOOLEAN InitOverhead(void)
 
 	InitCivQuoteSystem();
 	ZeroAnimSurfaceCounts();
-
-	return TRUE;
 }
 
 

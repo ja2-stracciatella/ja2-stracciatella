@@ -230,8 +230,8 @@ BOOLEAN InitTacticalEngine(void);
 void ShutdownTacticalEngine(void);
 
 
-BOOLEAN InitOverhead(void);
-void    ShutdownOverhead(void);
+void InitOverhead(void);
+void ShutdownOverhead(void);
 
 INT16 NewOKDestination(const SOLDIERTYPE* pCurrSoldier, INT16 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel);
 
