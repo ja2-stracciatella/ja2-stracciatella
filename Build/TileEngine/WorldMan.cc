@@ -1174,7 +1174,7 @@ BOOLEAN RemoveAllShadows( UINT32 iMapIndex )
 // #################################################################
 
 
-static BOOLEAN AddMercStructureInfo(INT16 sGridNo, SOLDIERTYPE* pSoldier);
+static void AddMercStructureInfo(INT16 sGridNo, SOLDIERTYPE* pSoldier);
 
 
 LEVELNODE* AddMercToHead(const UINT32 iMapIndex, SOLDIERTYPE* const pSoldier, const BOOLEAN fAddStructInfo)
@@ -1202,11 +1202,10 @@ LEVELNODE* AddMercToHead(const UINT32 iMapIndex, SOLDIERTYPE* const pSoldier, co
 }
 
 
-static BOOLEAN AddMercStructureInfo(INT16 sGridNo, SOLDIERTYPE* pSoldier)
+static void AddMercStructureInfo(INT16 sGridNo, SOLDIERTYPE* pSoldier)
 {
 	UINT16 usAnimSurface = GetSoldierAnimationSurface(pSoldier, pSoldier->usAnimState);
 	AddMercStructureInfoFromAnimSurface(sGridNo, pSoldier, usAnimSurface, pSoldier->usAnimState);
-	return TRUE;
 }
 
 
@@ -1286,7 +1285,8 @@ BOOLEAN UpdateMercStructureInfo(SOLDIERTYPE *pSoldier)
 		return FALSE;
 	}
 
-	return AddMercStructureInfo(pSoldier->sGridNo, pSoldier);
+	AddMercStructureInfo(pSoldier->sGridNo, pSoldier);
+	return TRUE;
 }
 
 
