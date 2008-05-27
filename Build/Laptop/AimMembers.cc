@@ -1204,8 +1204,8 @@ static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 					//Disable the buttons behind the message box
 					EnableDisableCurrentVideoConferenceButtons( TRUE );
 
-					SpecifyDisabledButtonStyle(giBuyEquipmentButton[0], GUI_BUTTON::DISABLED_STYLE_NONE);
-					SpecifyDisabledButtonStyle(giBuyEquipmentButton[1], GUI_BUTTON::DISABLED_STYLE_NONE);
+					giBuyEquipmentButton[0]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
+					giBuyEquipmentButton[1]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 				}
 			}
 #if 0 // XXX was commented out
@@ -1245,8 +1245,8 @@ static INT8 AimMemberHireMerc(void)
 		//Disable the buttons behind the message box
 		EnableDisableCurrentVideoConferenceButtons( TRUE );
 
-		SpecifyDisabledButtonStyle(giBuyEquipmentButton[0], GUI_BUTTON::DISABLED_STYLE_NONE);
-		SpecifyDisabledButtonStyle(giBuyEquipmentButton[1], GUI_BUTTON::DISABLED_STYLE_NONE);
+		giBuyEquipmentButton[0]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
+		giBuyEquipmentButton[1]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 
 		DelayMercSpeech( gbCurrentSoldier, QUOTE_REFUSAL_TO_JOIN_LACK_OF_FUNDS, 750, TRUE, FALSE );
 
@@ -1721,7 +1721,7 @@ static void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn, INT32 reason)
 			InitCreateDeleteAimPopUpBox(AIM_POPUP_CREATE, L" ", AimPopUpText[AIM_MEMBER_MESSAGE_RECORDED], AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
 
 
-			SpecifyDisabledButtonStyle(giAnsweringMachineButton[1], GUI_BUTTON::DISABLED_STYLE_NONE);
+			giAnsweringMachineButton[1]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 			DisableButton(giAnsweringMachineButton[1]);
 			DisableButton(giAnsweringMachineButton[0]);
 		}

@@ -800,13 +800,6 @@ void GUI_BUTTON::SpecifyDisabledStyle(DisabledStyle const style)
 }
 
 
-void SpecifyDisabledButtonStyle(GUIButtonRef const b, GUI_BUTTON::DisabledStyle const style)
-{
-	CHECKV(b != NULL); // XXX HACK000C
-	b->SpecifyDisabledStyle(style);
-}
-
-
 void GUI_BUTTON::SpecifyIcon(SGPVObject const* const icon_, UINT16 const usVideoObjectIndex, INT8 const bXOffset, INT8 const bYOffset, BOOLEAN const)
 {
 	icon        = icon_;
