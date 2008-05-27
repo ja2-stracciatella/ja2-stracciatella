@@ -245,16 +245,8 @@ static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, INT32 reason)
     if (iDifference > ANIMATE_MIN_TIME)
 		{
 			uiBaseTime = GetJA2Clock();
-			if (fState)
-			{
-        SpecifyButtonIcon(giIMPFinishButton[2], guiANALYSE, 1, 33, 23, FALSE);
-				fState = FALSE;
-			}
-			else
-			{
-        SpecifyButtonIcon(giIMPFinishButton[2], guiANALYSE, 0, 33, 23, FALSE);
-				fState = TRUE;
-			}
+			fState = !fState;
+			btn->SpecifyIcon(guiANALYSE, fState ? 0 : 1, 33, 23, FALSE);
 		}
 	}
 }

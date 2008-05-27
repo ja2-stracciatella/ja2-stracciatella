@@ -822,13 +822,6 @@ void GUI_BUTTON::SpecifyIcon(SGPVObject const* const icon_, UINT16 const usVideo
 }
 
 
-void SpecifyButtonIcon(GUIButtonRef const b, const SGPVObject* const icon, const UINT16 usVideoObjectIndex, const INT8 bXOffset, const INT8 bYOffset, const BOOLEAN fShiftImage)
-{
-	CHECKV(b != NULL); // XXX HACK000C
-	b->SpecifyIcon(icon, usVideoObjectIndex, bXOffset, bYOffset, fShiftImage);
-}
-
-
 void GUI_BUTTON::AllowDisabledFastHelp()
 {
 	Area.uiFlags |= MSYS_ALLOW_DISABLED_FASTHELP;

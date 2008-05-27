@@ -263,12 +263,6 @@ void SpecifyButtonText(GUIButtonRef, const wchar_t* string);
 
 void SpecifyDisabledButtonStyle(GUIButtonRef, GUI_BUTTON::DisabledStyle);
 
-/* Note:  Text is always on top
- * If fShiftImage is true, then the image will shift down one pixel and right
- * one pixel just like the text does.
- */
-void SpecifyButtonIcon(GUIButtonRef, const SGPVObject* icon, UINT16 usVideoObjectIndex, INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage);
-
 void MSYS_SetBtnUserData(GUIButtonRef, INT32 userdata);
 INT32 MSYS_GetBtnUserData(const GUI_BUTTON* b);
 void MarkAButtonDirty(GUIButtonRef); // will mark only selected button dirty

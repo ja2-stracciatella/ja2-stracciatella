@@ -494,11 +494,7 @@ static void LoadCharacterPortraitForMainPage(void)
   // this function will load the character's portrait, to be used on portrait button
 	if( iCurrentProfileMode >= 4 )
 	{
-		// load it
 		guiCHARACTERPORTRAITFORMAINPAGE = AddVideoObjectFromFile(pPlayerSelectedFaceFileNames[iPortraitNumber]);
-
-	// now specify
-	SpecifyButtonIcon(  giIMPMainPageButton[4], guiCHARACTERPORTRAITFORMAINPAGE, 0,
-													 33, 23, FALSE );
+		giIMPMainPageButton[4]->SpecifyIcon(guiCHARACTERPORTRAITFORMAINPAGE, 0, 33, 23, FALSE);
 	}
 }
