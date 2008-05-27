@@ -64,15 +64,15 @@ void RenderTalkingMenu(void);
 BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey );
 
 // Gices an item to buddy
-BOOLEAN	TalkingMenuGiveItem( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos );
+void TalkingMenuGiveItem(UINT8 ubNPC, OBJECTTYPE* pObject, INT8 bInvPos);
 // Triggers an NPC record
 void NPCTriggerNPC(UINT8 ubTargetNPC, UINT8 ubTargetRecord, UINT8 ubTargetApproach, BOOLEAN fShowDialogueMenu);
 // NPC goto gridno
-BOOLEAN	NPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum );
+void NPCGotoGridNo(UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum);
 // NPC Do action
-BOOLEAN	NPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum );
+void NPCDoAction(UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum);
 
-BOOLEAN NPCClosePanel(void);
+void NPCClosePanel(void);
 
 void HandleWaitTimerForNPCTrigger(void);
 

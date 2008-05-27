@@ -256,7 +256,7 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 BOOLEAN CharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed);
 
 // A special event can be setup which can be queued with other speech
-BOOLEAN SpecialCharacterDialogueEvent(UINT32 uiSpecialEventFlag, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, FACETYPE* face, UINT8 bUIHandlerID);
+void SpecialCharacterDialogueEvent(UINT32 uiSpecialEventFlag, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, FACETYPE* face, UINT8 bUIHandlerID);
 
 // Same as above, for triggers, with extra param to hold approach value
 void SpecialCharacterDialogueEventWithExtraParam(UINT32 uiSpecialEventFlag, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, UINT32 uiSpecialEventData4, FACETYPE* face, UINT8 bUIHandlerID);

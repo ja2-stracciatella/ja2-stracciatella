@@ -1160,10 +1160,9 @@ static void CalculatePopupTextPosition(INT16 sWidth, INT16 sHeight)
 }
 
 
-BOOLEAN	TalkingMenuGiveItem( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos )
+void TalkingMenuGiveItem(UINT8 const ubNPC, OBJECTTYPE* const pObject, INT8 const bInvPos)
 {
-	CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GIVE_ITEM, ubNPC, (UINT32)pObject, bInvPos, gTalkPanel.face, DIALOGUE_NPC_UI));
-	return( TRUE );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GIVE_ITEM, ubNPC, reinterpret_cast<UINT32>(pObject), bInvPos, gTalkPanel.face, DIALOGUE_NPC_UI);
 }
 
 
@@ -1174,24 +1173,21 @@ void NPCTriggerNPC(UINT8 const ubTargetNPC, UINT8 const ubTargetRecord, UINT8 co
 }
 
 
-BOOLEAN	NPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubRecordNum )
+void NPCGotoGridNo(UINT8 const ubTargetNPC, UINT16 const usGridNo, UINT8 const ubRecordNum)
 {
-	CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO, ubTargetNPC, usGridNo, ubRecordNum, gTalkPanel.face, DIALOGUE_NPC_UI));
-	return( TRUE );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO, ubTargetNPC, usGridNo, ubRecordNum, gTalkPanel.face, DIALOGUE_NPC_UI);
 }
 
 
-BOOLEAN	NPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum )
+void NPCDoAction(UINT8 const ubTargetNPC, UINT16 const usActionCode, UINT8 const ubQuoteNum)
 {
-	CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_DO_ACTION, ubTargetNPC, usActionCode, ubQuoteNum, gTalkPanel.face, DIALOGUE_NPC_UI));
-	return( TRUE );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_DO_ACTION, ubTargetNPC, usActionCode, ubQuoteNum, gTalkPanel.face, DIALOGUE_NPC_UI);
 }
 
 
-BOOLEAN	NPCClosePanel( )
+void NPCClosePanel()
 {
-	CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_CLOSE_PANEL, 0, 0, 0, 0, DIALOGUE_NPC_UI));
-	return( TRUE );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_CLOSE_PANEL, 0, 0, 0, 0, DIALOGUE_NPC_UI);
 }
 
 
