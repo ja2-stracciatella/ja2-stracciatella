@@ -1167,11 +1167,10 @@ BOOLEAN	TalkingMenuGiveItem( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos )
 }
 
 
-BOOLEAN	NPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, UINT8 ubTargetApproach, BOOLEAN fShowDialogueMenu )
+void NPCTriggerNPC(UINT8 const ubTargetNPC, UINT8 const ubTargetRecord, UINT8 const ubTargetApproach, BOOLEAN const fShowDialogueMenu)
 {
 	//CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, gTalkPanel.face, DIALOGUE_NPC_UI));
 	SpecialCharacterDialogueEventWithExtraParam(DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, ubTargetApproach, gTalkPanel.face, DIALOGUE_NPC_UI);
-	return( TRUE );
 }
 
 
