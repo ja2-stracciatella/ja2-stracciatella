@@ -1037,7 +1037,7 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEvent(const SOLDIERTYPE* pSoldier, U
 }
 
 
-static BOOLEAN CharacterDialogueWithSpecialEventEx(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3);
+static void CharacterDialogueWithSpecialEventEx(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3);
 
 
 BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3 )
@@ -1070,7 +1070,8 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT
 
 	}
 
-	return CharacterDialogueWithSpecialEventEx(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1, uiData2, uiData3);
+	CharacterDialogueWithSpecialEventEx(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1, uiData2, uiData3);
+	return TRUE;
 }
 
 
@@ -1193,7 +1194,7 @@ BOOLEAN CharacterDialogueWithSpecialEvent(const UINT8 ubCharacterNum, const UINT
 
 
 // Do special event as well as dialogue!
-static BOOLEAN CharacterDialogueWithSpecialEventEx(const UINT8 ubCharacterNum, const UINT16 usQuoteNum, FACETYPE* const face, const UINT8 bUIHandlerID, const BOOLEAN fFromSoldier, const BOOLEAN fDelayed, const UINT32 uiFlag, const UINT32 uiData1, const UINT32 uiData2, const UINT32 uiData3)
+static void CharacterDialogueWithSpecialEventEx(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, UINT8 const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, UINT32 const uiFlag, UINT32 const uiData1, UINT32 const uiData2, UINT32 const uiData3)
 {
 	// Allocate new item
 	DIALOGUE_Q_STRUCT* QItem = MALLOCZ(DIALOGUE_Q_STRUCT);
@@ -1219,8 +1220,6 @@ static BOOLEAN CharacterDialogueWithSpecialEventEx(const UINT8 ubCharacterNum, c
 		// Increment refrence count...
 		giNPCReferenceCount++;
 	}
-
-	return( TRUE );
 }
 
 
