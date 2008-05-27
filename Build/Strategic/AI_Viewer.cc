@@ -1061,7 +1061,7 @@ UINT32  AIViewerScreenHandle()
 	{
 		guiLastTime = GetWorldTotalSeconds();
 		gfRenderViewer = TRUE;
-		SpecifyButtonText( iViewerButton[ VIEWER_TIMEPANEL ], WORLDTIMESTR );
+		iViewerButton[VIEWER_TIMEPANEL]->SpecifyText(WORLDTIMESTR);
 	}
 
 	HandleViewerInput();

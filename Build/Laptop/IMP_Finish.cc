@@ -226,7 +226,7 @@ static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
      uiBaseTime = GetJA2Clock();
-		 SpecifyButtonText(giIMPFinishButton[2], pImpButtonText[23]);
+		btn->SpecifyText(pImpButtonText[23]);
      fAnimateFlag = TRUE;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -234,7 +234,7 @@ static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, INT32 reason)
 		fButtonPendingFlag = TRUE;
 		uiBaseTime = 0;
 		fAnimateFlag = FALSE;
-		SpecifyButtonText(giIMPFinishButton[2], pImpButtonText[2]);
+		btn->SpecifyText(pImpButtonText[2]);
 	}
 
 	// get amount of time between callbacks
@@ -267,7 +267,7 @@ static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
 		fButtonPendingFlag = TRUE;
-		SpecifyButtonText(giIMPFinishButton[2], pImpButtonText[2]);
+		giIMPFinishButton[2]->SpecifyText(pImpButtonText[2]);
 	}
 }
 

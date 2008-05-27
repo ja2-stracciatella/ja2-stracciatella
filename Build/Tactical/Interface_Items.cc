@@ -2139,7 +2139,7 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
 				gpItemPointer = &gItemPointer;
 				gpItemPointerSoldier = gpItemDescSoldier;
 
-				SpecifyButtonText(giItemDescAmmoButton, L"0");
+				btn->SpecifyText(L"0");
 
 				// Set mouse
 				guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
@@ -2170,7 +2170,7 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
 				//fItemDescDelete = TRUE;
 				fInterfacePanelDirty = DIRTYLEVEL2;
 
-				SpecifyButtonText(giItemDescAmmoButton, L"0");
+				btn->SpecifyText(L"0");
 
 				fItemDescDelete = TRUE;
 			}
