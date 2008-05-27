@@ -565,23 +565,25 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 	//when necessary.
 	if( gfPersistantPBI )
 	{
+		wchar_t const* autoresolve_help;
 		if( gubEnemyEncounterCode == ENTERING_ENEMY_SECTOR_CODE ||
 				gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE )
 		{ //Don't allow autoresolve for player initiated invasion battle types
 			DisableButton( iPBButton[ 0 ] );
-			SetButtonFastHelpText( iPBButton[ 0 ], gpStrategicString[ STR_PB_DISABLED_AUTORESOLVE_FASTHELP ] );
+			autoresolve_help = gpStrategicString[STR_PB_DISABLED_AUTORESOLVE_FASTHELP];
 		}
 		else if( gubEnemyEncounterCode == ENEMY_AMBUSH_CODE ||
 						 gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE )
 		{ //Don't allow autoresolve for ambushes
 			DisableButton( iPBButton[ 0 ] );
-			SetButtonFastHelpText( iPBButton[ 0 ], gzNonPersistantPBIText[ 3 ] );
+			autoresolve_help = gzNonPersistantPBIText[3];
 		}
 		else
 		{
-			SetButtonFastHelpText( iPBButton[ 0 ], gpStrategicString[ STR_PB_AUTORESOLVE_FASTHELP ] );
+			autoresolve_help = gpStrategicString[STR_PB_AUTORESOLVE_FASTHELP];
 		}
-		SetButtonFastHelpText( iPBButton[ 1 ], gpStrategicString[ STR_PB_GOTOSECTOR_FASTHELP ] );
+		iPBButton[0]->SetFastHelpText(autoresolve_help);
+		iPBButton[1]->SetFastHelpText(gpStrategicString[STR_PB_GOTOSECTOR_FASTHELP]);
 		if( gfAutomaticallyStartAutoResolve )
 		{
 			DisableButton( iPBButton[ 1 ] );
@@ -591,61 +593,64 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 			gfCantRetreatInPBI = FALSE;
 			fRetreatAnOption = FALSE;
 		}
+
+		wchar_t const* retreat_help;
 		if( gfAutomaticallyStartAutoResolve || !fRetreatAnOption ||
 				gubEnemyEncounterCode == ENEMY_AMBUSH_CODE ||
 				gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE ||
 				gubEnemyEncounterCode == CREATURE_ATTACK_CODE )
 		{
 			DisableButton( iPBButton[ 2 ] );
-			SetButtonFastHelpText( iPBButton[ 2 ], gzNonPersistantPBIText[ 9 ] );
+			retreat_help = gzNonPersistantPBIText[9];
 		}
 		else
 		{
 			if( !fUsePluralVersion )
 			{
-				SetButtonFastHelpText( iPBButton[ 2 ], gpStrategicString[ STR_BP_RETREATSINGLE_FASTHELP ] );
+				retreat_help = gpStrategicString[STR_BP_RETREATSINGLE_FASTHELP];
 			}
 			else
 			{
-				SetButtonFastHelpText( iPBButton[ 2 ], gpStrategicString[ STR_BP_RETREATPLURAL_FASTHELP ] );
+				retreat_help = gpStrategicString[STR_BP_RETREATPLURAL_FASTHELP];
 			}
 		}
+		iPBButton[2]->SetFastHelpText(retreat_help);
 	}
 	else
 	{ //use the explicit encounter code to determine what get's disable and the associated help text that is used.
 
 		//First of all, the retreat button is always disabled seeing a battle is in progress.
 		DisableButton( iPBButton[ 2 ] );
-		SetButtonFastHelpText( iPBButton[ 2 ], gzNonPersistantPBIText[ 0 ] );
-		SetButtonFastHelpText( iPBButton[ 1 ], gzNonPersistantPBIText[ 1 ] );
+		iPBButton[2]->SetFastHelpText(gzNonPersistantPBIText[0]);
+		iPBButton[1]->SetFastHelpText(gzNonPersistantPBIText[1]);
 		switch( gubExplicitEnemyEncounterCode )
 		{
 			case CREATURE_ATTACK_CODE:
 			case ENEMY_ENCOUNTER_CODE:
 			case ENEMY_INVASION_CODE:
-				SetButtonFastHelpText( iPBButton[ 0 ], gzNonPersistantPBIText[ 2 ] );
+				iPBButton[0]->SetFastHelpText(gzNonPersistantPBIText[2]);
 				break;
 			case ENTERING_ENEMY_SECTOR_CODE:
 				DisableButton( iPBButton[ 0 ] );
-				SetButtonFastHelpText( iPBButton[ 0 ], gzNonPersistantPBIText[ 3 ] );
+				iPBButton[0]->SetFastHelpText(gzNonPersistantPBIText[3]);
 				break;
 			case ENEMY_AMBUSH_CODE:
 				DisableButton( iPBButton[ 0 ] );
-				SetButtonFastHelpText( iPBButton[ 0 ], gzNonPersistantPBIText[ 4 ] );
+				iPBButton[0]->SetFastHelpText(gzNonPersistantPBIText[4]);
 				break;
 			case FIGHTING_CREATURES_CODE:
 				DisableButton( iPBButton[ 0 ] );
-				SetButtonFastHelpText( iPBButton[ 0 ], gzNonPersistantPBIText[ 5 ] );
+				iPBButton[0]->SetFastHelpText(gzNonPersistantPBIText[5]);
 				break;
 			case HOSTILE_CIVILIANS_CODE:
 				DisableButton( iPBButton[ 0 ] );
-				SetButtonFastHelpText( iPBButton[ 0 ], gzNonPersistantPBIText[ 6 ] );
+				iPBButton[0]->SetFastHelpText(gzNonPersistantPBIText[6]);
 				break;
 			case HOSTILE_BLOODCATS_CODE:
 			case BLOODCAT_AMBUSH_CODE:
 			case ENTERING_BLOODCAT_LAIR_CODE:
 				DisableButton( iPBButton[ 0 ] );
-				SetButtonFastHelpText( iPBButton[ 0 ], gzNonPersistantPBIText[ 7 ] );
+				iPBButton[0]->SetFastHelpText(gzNonPersistantPBIText[7]);
 				break;
 		}
 	}
