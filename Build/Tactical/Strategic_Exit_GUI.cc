@@ -118,7 +118,7 @@ static void SingleRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 //KM:  New method is coded for more sophistocated rules.  All the information is stored within the gExitDialog struct
 //		 and calculated upon entry to this function instead of passing in multiple arguments and calculating it prior.
-static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalData)
+static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdditionalData)
 {
 	UINT32 uiTraverseTimeInMinutes;
 	SGPRect	aRect;
@@ -356,8 +356,6 @@ static BOOLEAN InternalInitSectorExitMenu(UINT8 ubDirection, INT16 sAdditionalDa
 	InterruptTime();
 	PauseGame();
 	LockPauseState( 21 );
-
-	return( TRUE );
 }
 
 
@@ -436,7 +434,8 @@ BOOLEAN InitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
     }
   }
 
-  return( InternalInitSectorExitMenu( ubDirection, sAdditionalData ) );
+  InternalInitSectorExitMenu(ubDirection, sAdditionalData);
+  return TRUE;
 }
 
 
