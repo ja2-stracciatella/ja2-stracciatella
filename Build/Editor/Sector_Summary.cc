@@ -922,7 +922,7 @@ void RenderSummaryWindow()
 			MarkAButtonDirty( iSummaryButton[ i ] );
 		}
 
-		DrawButton( iSummaryButton[ SUMMARY_BACKGROUND ] );
+		iSummaryButton[SUMMARY_BACKGROUND]->Draw();
 		InvalidateRegion(0, 0, SCREEN_WIDTH, 360);
 
 		SetFont( BLOCKFONT2 );

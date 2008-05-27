@@ -225,9 +225,6 @@ void ShowButton(GUIButtonRef);
 
 void RenderButtons(void);
 
-// Draws a single button on the screen.
-void DrawButton(GUIButtonRef);
-
 extern BOOLEAN gfRenderHilights;
 
 /* Creates a QuickButton. QuickButtons only have graphics associated with them.

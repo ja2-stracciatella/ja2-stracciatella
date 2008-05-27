@@ -849,11 +849,8 @@ static void DisplayAutoBandageUpdatePanel(void)
 	MarkAButtonDirty( iEndAutoBandageButton[ 0 ] );
 	MarkAButtonDirty( iEndAutoBandageButton[ 1 ] );
 
-
-
-
-	DrawButton( iEndAutoBandageButton[ 0 ] );
-	DrawButton( iEndAutoBandageButton[ 1 ] );
+	iEndAutoBandageButton[0]->Draw();
+	iEndAutoBandageButton[1]->Draw();
 
 	iTotalPixelsHigh+= 35;
 

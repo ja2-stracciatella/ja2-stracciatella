@@ -1143,13 +1143,6 @@ void GUI_BUTTON::Draw()
 }
 
 
-void DrawButton(GUIButtonRef const b)
-{
-	CHECKV(b != NULL); // XXX HACK000C
-	b->Draw();
-}
-
-
 static void DrawCheckBoxButton(const GUI_BUTTON* b);
 static void DrawGenericButton( const GUI_BUTTON* b);
 static void DrawHatchOnButton( const GUI_BUTTON* b);
