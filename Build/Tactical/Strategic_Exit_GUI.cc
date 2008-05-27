@@ -418,7 +418,7 @@ static void WarpToSurfaceCallback(UINT8 bExitValue)
 }
 
 
-BOOLEAN InitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
+void InitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdditionalData)
 {
   gubExitGUIDirection     = ubDirection;
   gsExitGUIAdditionalData = sAdditionalData;
@@ -429,13 +429,11 @@ BOOLEAN InitSectorExitMenu( UINT8 ubDirection, INT16 sAdditionalData )
     {
       // ATE: Check if we are in a creature lair and bring up box if so....
       DoMessageBox( MSG_BOX_BASIC_STYLE, gzLateLocalizedString[ 33 ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, WarpToSurfaceCallback, NULL );
-
-      return( TRUE );
+      return;
     }
   }
 
   InternalInitSectorExitMenu(ubDirection, sAdditionalData);
-  return TRUE;
 }
 
 
