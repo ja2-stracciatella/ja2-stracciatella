@@ -147,18 +147,15 @@ try
 catch (...) { return FALSE; }
 
 
-void RemoveTextMercPopupImages( )
+void RemoveTextMercPopupImages()
 {
 	//this procedure will remove the background and border video surface/object from the indecies
-	if( gPopUpTextBox )
-	{
-		if( gPopUpTextBox->fMercTextPopupInitialized )
-		{
-			DeleteVideoSurface(gPopUpTextBox->uiMercTextPopUpBackground);
-			DeleteVideoObject(gPopUpTextBox->uiMercTextPopUpBorder);
-			gPopUpTextBox->fMercTextPopupInitialized = FALSE;
-		}
-	}
+	MercPopUpBox* const box = gPopUpTextBox;
+	if (!box || !box->fMercTextPopupInitialized) return;
+
+	DeleteVideoSurface(box->uiMercTextPopUpBackground);
+	DeleteVideoObject(box->uiMercTextPopUpBorder);
+	box->fMercTextPopupInitialized = FALSE;
 }
 
 
