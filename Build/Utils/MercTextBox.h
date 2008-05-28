@@ -4,10 +4,15 @@
 #include "Types.h"
 
 
-#define MERC_POPUP_PREPARE_FLAGS_TRANS_BACK			0x00000001
-#define MERC_POPUP_PREPARE_FLAGS_MARGINS				0x00000002
-#define MERC_POPUP_PREPARE_FLAGS_STOPICON				0x00000004
-#define MERC_POPUP_PREPARE_FLAGS_SKULLICON			0x00000008
+enum MercPopupBoxFlags
+{
+	MERC_POPUP_PREPARE_FLAGS_NONE       = 0,
+	MERC_POPUP_PREPARE_FLAGS_TRANS_BACK = 1U << 0,
+	MERC_POPUP_PREPARE_FLAGS_MARGINS    = 1U << 1,
+	MERC_POPUP_PREPARE_FLAGS_STOPICON   = 1U << 2,
+	MERC_POPUP_PREPARE_FLAGS_SKULLICON  = 1U << 3
+};
+ENUM_BITSET(MercPopupBoxFlags)
 
 void InitMercPopupBox(void);
 
@@ -36,14 +41,13 @@ typedef struct {
  SGPVObject* uiMercTextPopUpBorder;
  BOOLEAN	fMercTextPopupInitialized;
  BOOLEAN	fMercTextPopupSurfaceInitialized;
- UINT32		uiFlags;
-
+ MercPopupBoxFlags uiFlags;
 } MercPopUpBox;
 
 
 void OverrideMercPopupBox(MercPopUpBox* pMercBox);
 void ResetOverrideMercPopupBox(void);
-void SetPrepareMercPopupFlags(UINT32 uiFlags);
+void SetPrepareMercPopupFlags(MercPopupBoxFlags);
 
 
 // background enumeration

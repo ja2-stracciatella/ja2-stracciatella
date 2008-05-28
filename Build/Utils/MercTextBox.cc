@@ -71,7 +71,7 @@ MercPopUpBox	*gOldPopUpTextBox = NULL;
 MercPopUpBox *gpPopUpBoxList[ MAX_NUMBER_OF_POPUP_BOXES ];
 
 // the flags
-UINT32	guiFlags = 0;
+static MercPopupBoxFlags guiFlags;
 static SGPVObject* guiBoxIcons;
 static SGPVObject* guiSkullIcons;
 
@@ -281,7 +281,7 @@ INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorder
 
 	gPopUpTextBox->uiFlags = guiFlags;
 	// reset flags
-	guiFlags = 0;
+	guiFlags = MERC_POPUP_PREPARE_FLAGS_NONE;
 
 	UINT16 usStringPixLength = StringPixLength(pString, TEXT_POPUP_FONT);
 	UINT16 usTextWidth;
@@ -519,7 +519,7 @@ static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColo
 }
 
 
-void SetPrepareMercPopupFlags(UINT32 const uiFlags)
+void SetPrepareMercPopupFlags(MercPopupBoxFlags const flags)
 {
-	guiFlags |= uiFlags;
+	guiFlags |= flags;
 }
