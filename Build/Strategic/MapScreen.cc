@@ -462,8 +462,6 @@ static PathSt* gpHelicopterPreviousMercPath = NULL;
 extern BOOLEAN fDeletedNode;
 extern BOOLEAN gfStartedFromMapScreen;
 
-extern INT32 iDialogueBox;
-
 
 extern PathSt* pTempCharacterPath;
 extern PathSt* pTempHelicopterPath;
