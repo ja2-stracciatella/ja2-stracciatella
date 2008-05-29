@@ -739,7 +739,7 @@ static void ShowEditMercColorSet(UINT8 ubPaletteRep, INT16 sSet)
 		else
 		{
 			const SGPPaletteEntry* Clr = &gpPalRep[ubPaletteRep].rgb[cnt1];
-			us16BPPColor = Get16BPPColor(FROMRGB(Clr->peRed, Clr->peGreen, Clr->peBlue));
+			us16BPPColor = Get16BPPColor(FROMRGB(Clr->r, Clr->g, Clr->b));
 		}
 		ColorFillVideoSurfaceArea( FRAME_BUFFER, sLeft, sTop, sRight, sBottom, us16BPPColor );
 

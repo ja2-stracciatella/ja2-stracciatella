@@ -352,10 +352,10 @@ static BOOLEAN SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage)
   // Initialize the proper palette entries
   for (Index = 0; Index < 256; Index++)
   {
-		hImage->pPalette[ Index ].peRed   = *(pubPalette+(Index*3));
-    hImage->pPalette[ Index ].peGreen = *(pubPalette+(Index*3)+1);
-    hImage->pPalette[ Index ].peBlue  = *(pubPalette+(Index*3)+2);
-    hImage->pPalette[ Index ].peFlags = 0;
+		hImage->pPalette[Index].r      = pubPalette[Index * 3 + 0];
+		hImage->pPalette[Index].g      = pubPalette[Index * 3 + 1];
+		hImage->pPalette[Index].b      = pubPalette[Index * 3 + 2];
+		hImage->pPalette[Index].unused = 0;
   }
 
   return TRUE;

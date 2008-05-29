@@ -5288,9 +5288,9 @@ BOOLEAN LoadPaletteData( )
 
 		for( cnt2 = 0; cnt2 < gpPalRep[ cnt ].ubPaletteSize; cnt2++ )
 		{
-			if (!FileRead(hFile, &Pal[cnt2].peRed,   sizeof(Pal[cnt2].peRed))   ||
-					!FileRead(hFile, &Pal[cnt2].peGreen, sizeof(Pal[cnt2].peGreen)) ||
-					!FileRead(hFile, &Pal[cnt2].peBlue,  sizeof(Pal[cnt2].peBlue)))
+			if (!FileRead(hFile, &Pal[cnt2].r, sizeof(Pal[cnt2].r)) ||
+					!FileRead(hFile, &Pal[cnt2].g, sizeof(Pal[cnt2].g)) ||
+					!FileRead(hFile, &Pal[cnt2].b, sizeof(Pal[cnt2].b)))
 			{
 				return( FALSE );
 			}
@@ -8030,9 +8030,9 @@ static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT
 
 	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{
-		UINT8 r = __max(rscale, pPalette[cnt].peRed);
-		UINT8 g = __max(gscale, pPalette[cnt].peGreen);
-		UINT8 b = pPalette[cnt].peBlue;
+		UINT8 r = __max(rscale, pPalette[cnt].r);
+		UINT8 g = __max(gscale, pPalette[cnt].g);
+		UINT8 b = pPalette[cnt].b;
 		p16BPPPalette[cnt] = Get16BPPColor(FROMRGB(r, g, b));
 	}
 	return p16BPPPalette;
@@ -8047,7 +8047,7 @@ static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, 
 
 	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{
-		UINT32 lumin = (pPalette[cnt].peRed * 299 + pPalette[cnt].peGreen * 587 + pPalette[cnt].peBlue * 114) / 1000;
+		UINT32 lumin = (pPalette[cnt].r * 299 + pPalette[cnt].g * 587 + pPalette[cnt].b * 114) / 1000;
 		UINT32 rmod = 100 * lumin / 256;
 		UINT32 gmod = 100 * lumin / 256;
 		UINT32 bmod = 100 * lumin / 256;

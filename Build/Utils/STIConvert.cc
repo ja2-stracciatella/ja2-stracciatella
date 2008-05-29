@@ -139,9 +139,9 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 			pSGPPaletteEntry = pPalette;
 			for (uiLoop = 0; uiLoop < 256; uiLoop++)
 			{
-				STCIPaletteEntry.ubRed = pSGPPaletteEntry[uiLoop].peRed;
-				STCIPaletteEntry.ubGreen = pSGPPaletteEntry[uiLoop].peGreen;
-				STCIPaletteEntry.ubBlue = pSGPPaletteEntry[uiLoop].peBlue;
+				STCIPaletteEntry.ubRed   = pSGPPaletteEntry[uiLoop].r;
+				STCIPaletteEntry.ubGreen = pSGPPaletteEntry[uiLoop].g;
+				STCIPaletteEntry.ubBlue  = pSGPPaletteEntry[uiLoop].b;
 				fwrite(&STCIPaletteEntry, sizeof(STCIPaletteEntry), 1, pOutput);
 			}
 		}

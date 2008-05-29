@@ -48,28 +48,14 @@ void SGPVSurface::SetPalette(const SGPPaletteEntry* const src_pal)
 {
 	// Create palette object if not already done so
 	if (!palette_) palette_.Allocate(256);
-	SDL_Color* const p = palette_;
+	SGPPaletteEntry* const p = palette_;
 	for (UINT32 i = 0; i < 256; i++)
 	{
-		p[i].r = src_pal[i].peRed;
-		p[i].g = src_pal[i].peGreen;
-		p[i].b = src_pal[i].peBlue;
+		p[i] = src_pal[i];
 	}
 
 	if (p16BPPPalette != NULL) MemFree(p16BPPPalette);
 	p16BPPPalette = Create16BPPPalette(src_pal);
-}
-
-
-void SGPVSurface::GetPalette(SGPPaletteEntry* const dst_pal) const
-{
-	const SDL_Color* const p = palette_;
-	for (UINT32 i = 0; i < 256; i++)
-	{
-		dst_pal[i].peRed   = p[i].r;
-		dst_pal[i].peGreen = p[i].g;
-		dst_pal[i].peBlue  = p[i].b;
-	}
 }
 
 

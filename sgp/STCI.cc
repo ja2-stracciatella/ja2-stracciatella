@@ -145,10 +145,10 @@ try
 		palette.Allocate(256);
 		for (size_t i = 0; i < 256; i++)
 		{
-			palette[i].peRed   = pSTCIPalette[i].ubRed;
-			palette[i].peGreen = pSTCIPalette[i].ubGreen;
-			palette[i].peBlue  = pSTCIPalette[i].ubBlue;
-			palette[i].peFlags = 0;
+			palette[i].r      = pSTCIPalette[i].ubRed;
+			palette[i].g      = pSTCIPalette[i].ubGreen;
+			palette[i].b      = pSTCIPalette[i].ubBlue;
+			palette[i].unused = 0;
 		}
 
 		img->fFlags |= IMAGE_PALETTE;

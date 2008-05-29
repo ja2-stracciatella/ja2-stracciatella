@@ -2430,9 +2430,9 @@ void LightSetColor(const SGPPaletteEntry* const pPal)
 {
 	Assert(pPal != NULL);
 
-	if (pPal->peRed   != g_light_color.peRed   ||
-			pPal->peGreen != g_light_color.peGreen ||
-			pPal->peBlue  != g_light_color.peBlue)
+	if (pPal->r != g_light_color.r ||
+			pPal->g != g_light_color.g ||
+			pPal->b != g_light_color.b)
 	{	//Set the entire tileset database so that it reloads everything.  It has to because the
 		//colors have changed.
 		SetAllNewTileSurfacesLoaded( TRUE );
@@ -2660,14 +2660,14 @@ static void LightSpriteDirty(LIGHT_SPRITE const* const l)
 
 static void AddSaturatePalette(SGPPaletteEntry Dst[256], const SGPPaletteEntry Src[256], const SGPPaletteEntry* Bias)
 {
-	UINT8 r = Bias->peRed;
-	UINT8 g = Bias->peGreen;
-	UINT8 b = Bias->peBlue;
+	UINT8 r = Bias->r;
+	UINT8 g = Bias->g;
+	UINT8 b = Bias->b;
 	for (UINT i = 0; i < 256; i++)
 	{
-		Dst[i].peRed   = __min(Src[i].peRed   + r, 255);
-		Dst[i].peGreen = __min(Src[i].peGreen + g, 255);
-		Dst[i].peBlue  = __min(Src[i].peBlue  + b, 255);
+		Dst[i].r = __min(Src[i].r + r, 255);
+		Dst[i].g = __min(Src[i].g + g, 255);
+		Dst[i].b = __min(Src[i].b + b, 255);
 	}
 }
 

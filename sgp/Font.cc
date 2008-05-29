@@ -54,7 +54,7 @@ void SetFontForeground(UINT8 ubForeground)
 {
 	if (!FontDefault) return;
 	const SGPPaletteEntry* const c = &FontDefault->Palette()[ubForeground];
-	FontForeground16 = Get16BPPColor(FROMRGB(c->peRed, c->peGreen, c->peBlue));
+	FontForeground16 = Get16BPPColor(FROMRGB(c->r, c->g, c->b));
 }
 
 
@@ -62,7 +62,7 @@ void SetFontShadow(UINT8 ubShadow)
 {
 	if (!FontDefault) return;
 	const SGPPaletteEntry* const c = &FontDefault->Palette()[ubShadow];
-	FontShadow16 = Get16BPPColor(FROMRGB(c->peRed, c->peGreen, c->peBlue));
+	FontShadow16 = Get16BPPColor(FROMRGB(c->r, c->g, c->b));
 
 	if (ubShadow != 0 && FontShadow16 == 0) FontShadow16 = 1;
 }
@@ -78,7 +78,7 @@ void SetFontBackground(UINT8 ubBackground)
 {
 	if (!FontDefault) return;
 	const SGPPaletteEntry* const c = &FontDefault->Palette()[ubBackground];
-	FontBackground16 = Get16BPPColor(FROMRGB(c->peRed, c->peGreen, c->peBlue));
+	FontBackground16 = Get16BPPColor(FROMRGB(c->r, c->g, c->b));
 }
 
 

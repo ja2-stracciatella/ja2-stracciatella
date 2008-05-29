@@ -206,9 +206,9 @@ try
 	// Build a grayscale palette! (for testing different looks)
 	for (UINT32 i = 0; i < 256; ++i)
 	{
-		pal[i].peRed   = 255;
-		pal[i].peGreen = 255;
-		pal[i].peBlue  = 255;
+		pal[i].r = 255;
+		pal[i].g = 255;
+		pal[i].b = 255;
 	}
 
 	const SGPPaletteEntry* const vo_pal = vo->Palette();
@@ -220,9 +220,9 @@ try
 
 	for (UINT32 i = 0; i < 256; ++i)
 	{
-		pal[i].peRed   = i % 128 + 128;
-		pal[i].peGreen = i % 128 + 128;
-		pal[i].peBlue  = i % 128 + 128;
+		pal[i].r = i % 128 + 128;
+		pal[i].g = i % 128 + 128;
+		pal[i].b = i % 128 + 128;
 	}
 	vo->pShades[FLASH_PORTRAIT_GRAYSHADE] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
 

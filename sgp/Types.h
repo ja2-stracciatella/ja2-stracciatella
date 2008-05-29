@@ -1,6 +1,8 @@
 #ifndef __TYPES_
 #define __TYPES_
 
+#include <SDL_video.h>
+
 #include "SGPStrings.h"
 
 
@@ -106,13 +108,8 @@ typedef struct
 } SGPPoint;
 
 
-typedef struct SGPPaletteEntry
-{
-	UINT8 peRed;
-	UINT8 peGreen;
-	UINT8 peBlue;
-	UINT8 peFlags;
-} SGPPaletteEntry;
+struct SDL_Color;
+typedef SDL_Color SGPPaletteEntry;
 
 
 typedef UINT32 COLORVAL;

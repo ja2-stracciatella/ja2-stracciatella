@@ -1175,8 +1175,7 @@ void InitializePalettesForMap(void)
 #ifndef JA2DEMO
 	AutoSGPVSurface uiTempMap(AddVideoSurfaceFromFile("INTERFACE/b_map.pcx"));
 
-	SGPPaletteEntry pal[256];
-	uiTempMap->GetPalette(pal);
+	SGPPaletteEntry const* const pal = uiTempMap->GetPalette();
 
 	pMapLTRedPalette   = Create16BPPPaletteShaded(pal, 400,   0, 0, TRUE);
 	pMapDKRedPalette   = Create16BPPPaletteShaded(pal, 200,   0, 0, TRUE);

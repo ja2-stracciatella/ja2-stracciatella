@@ -34,7 +34,7 @@ class SGPVSurface
 		void SetPalette(const SGPPaletteEntry* src_pal);
 
 		// Get the RGB palette entry values
-		void GetPalette(SGPPaletteEntry* dst_pal) const;
+		SGPPaletteEntry const* GetPalette() const { return palette_; }
 
 		void SetTransparency(COLORVAL);
 
@@ -56,7 +56,7 @@ class SGPVSurface
 
 	private:
 		SGP::AutoObj<SDL_Surface, SDL_FreeSurface> surface_;
-		SGP::Buffer<SDL_Color>                     palette_;
+		SGP::Buffer<SGPPaletteEntry>               palette_;
 	public:
 		UINT16*                                    p16BPPPalette; // A 16BPP palette used for 8->16 blits
 

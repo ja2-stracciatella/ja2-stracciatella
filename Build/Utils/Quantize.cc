@@ -114,9 +114,9 @@ static NODE* ProcessImage(const SGPPaletteEntry* pData, const int iWidth, const 
 	NODE* tree = NULL;
 	for (size_t i = iWidth * iHeight; i != 0; --i)
 	{
-		const BYTE r = pData->peRed;
-		const BYTE g = pData->peGreen;
-		const BYTE b = pData->peBlue;
+		const BYTE r = pData->r;
+		const BYTE g = pData->g;
+		const BYTE b = pData->b;
 		AddColor(&tree, b, g, r, 0); // XXX TODO0016 r and b are swapped (vanilla)
 		while (g_leaf_count > MAX_COLOURS) ReduceTree();
 	}
@@ -129,10 +129,10 @@ static size_t GetPaletteColors(const NODE* const pTree, SGPPaletteEntry* const p
 	if (pTree->bIsLeaf)
 	{
 		SGPPaletteEntry* const dst = &prgb[index++];
-		dst->peRed   = pTree->nRedSum   / pTree->nPixelCount;
-		dst->peGreen = pTree->nGreenSum / pTree->nPixelCount;
-		dst->peBlue  = pTree->nBlueSum  / pTree->nPixelCount;
-		dst->peFlags = 0;
+		dst->r      = pTree->nRedSum   / pTree->nPixelCount;
+		dst->g      = pTree->nGreenSum / pTree->nPixelCount;
+		dst->b      = pTree->nBlueSum  / pTree->nPixelCount;
+		dst->unused = 0;
 	}
 	else
 	{
@@ -168,9 +168,9 @@ static void MapPalette(UINT8* const pDest, const SGPPaletteEntry* const pSrc, co
 		{
 			const SGPPaletteEntry* const a = &pSrc[i];
 			const SGPPaletteEntry* const b = &pTable[cnt];
-			const INT32  dr   = a->peRed   - b->peRed;
-			const INT32  dg   = a->peGreen - b->peGreen;
-			const INT32  db   = a->peBlue  - b->peBlue;
+			const INT32  dr   = a->r - b->r;
+			const INT32  dg   = a->g - b->g;
+			const INT32  db   = a->b - b->b;
 			const UINT32 dist = dr * dr + dg * dg + db * db;
 			if (dist < lowest_dist)
 			{

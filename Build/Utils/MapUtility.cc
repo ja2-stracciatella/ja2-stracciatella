@@ -212,9 +212,9 @@ UINT32	MapUtilScreenHandle( )
 				pDestBuf[ ( iY * (uiDestPitchBYTES/2) ) + iX ] = sDest16BPPColor;
 
 				SGPPaletteEntry* const dst = &p24BitValues[iY * (uiDestPitchBYTES / 2) + iX];
-				dst->peRed   = bAvR;
-				dst->peGreen = bAvG;
-				dst->peBlue  = bAvB;
+				dst->r = bAvR;
+				dst->g = bAvG;
+				dst->b = bAvB;
 
 				//Increment
 				dY += gdYStep;
@@ -252,7 +252,7 @@ UINT32	MapUtilScreenHandle( )
 
 				for ( cnt = 0; cnt < 256; cnt++ )
 				{
-					usLineColor = Get16BPPColor( FROMRGB( pPalette[ cnt ].peRed, pPalette[ cnt ].peGreen, pPalette[ cnt ].peBlue ) );
+					usLineColor = Get16BPPColor(FROMRGB(pPalette[cnt].r, pPalette[cnt].g, pPalette[cnt].b));
 					RectangleDraw( TRUE, sX, sY, sX, (INT16)( sY+10 ), usLineColor, (UINT8*)pDestBuf );
 					sX++;
 					RectangleDraw( TRUE, sX, sY, sX, (INT16)( sY+10 ), usLineColor, (UINT8*)pDestBuf );

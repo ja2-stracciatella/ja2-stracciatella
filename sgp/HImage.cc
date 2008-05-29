@@ -272,9 +272,9 @@ UINT16* Create16BPPPalette(const SGPPaletteEntry* pPalette)
 
 	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{
-		UINT8 r = pPalette[cnt].peRed;
-		UINT8 g = pPalette[cnt].peGreen;
-		UINT8 b = pPalette[cnt].peBlue;
+		UINT8 const r = pPalette[cnt].r;
+		UINT8 const g = pPalette[cnt].g;
+		UINT8 const b = pPalette[cnt].b;
 		p16BPPPalette[cnt] = Get16BPPColor(FROMRGB(r, g, b));
 	}
 
@@ -319,16 +319,16 @@ UINT16* Create16BPPPaletteShaded(const SGPPaletteEntry* pPalette, UINT32 rscale,
 		UINT32 bmod;
 		if (mono)
 		{
-			UINT32 lumin = (pPalette[cnt].peRed * 299 + pPalette[cnt].peGreen * 587 + pPalette[cnt].peBlue * 114) / 1000;
+			UINT32 lumin = (pPalette[cnt].r * 299 + pPalette[cnt].g * 587 + pPalette[cnt].b * 114) / 1000;
 			rmod = rscale * lumin / 256;
 			gmod = gscale * lumin / 256;
 			bmod = bscale * lumin / 256;
 		}
 		else
 		{
-			rmod = rscale * pPalette[cnt].peRed   / 256;
-			gmod = gscale * pPalette[cnt].peGreen / 256;
-			bmod = bscale * pPalette[cnt].peBlue  / 256;
+			rmod = rscale * pPalette[cnt].r / 256;
+			gmod = gscale * pPalette[cnt].g / 256;
+			bmod = bscale * pPalette[cnt].b / 256;
 		}
 
 		UINT8 r = __min(rmod, 255);

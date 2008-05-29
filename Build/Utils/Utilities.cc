@@ -29,9 +29,9 @@ BOOLEAN CreateSGPPaletteFromCOLFile(SGPPaletteEntry* const pal, const char* cons
 	EXTR_SKIP(d, 8); // skip header
 	for (UINT i = 0; i != 256; ++i)
 	{
-		EXTR_U8(d, pal[i].peRed)
-		EXTR_U8(d, pal[i].peGreen)
-		EXTR_U8(d, pal[i].peBlue)
+		EXTR_U8(d, pal[i].r)
+		EXTR_U8(d, pal[i].g)
+		EXTR_U8(d, pal[i].b)
 	}
 	Assert(d == endof(data));
 
@@ -62,7 +62,7 @@ BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, const UINT8 ubXPos, const 
 		sBRY = sTLY + 20;
 
 		const SGPPaletteEntry* Clr = &gpPalRep[ubPaletteRep].rgb[cnt1];
-		us16BPPColor = Get16BPPColor(FROMRGB(Clr->peRed, Clr->peGreen, Clr->peBlue));
+		us16BPPColor = Get16BPPColor(FROMRGB(Clr->r, Clr->g, Clr->b));
 
 		ColorFillVideoSurfaceArea(dst, sTLX, sTLY, sBRX, sBRY, us16BPPColor);
 	}
