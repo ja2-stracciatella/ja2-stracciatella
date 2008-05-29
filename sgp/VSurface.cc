@@ -10,6 +10,34 @@
 #include "WCheck.h"
 
 
+SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
+	p16BPPPalette()
+{
+	Assert(w > 0);
+	Assert(h > 0);
+
+	SDL_Surface* s;
+	switch (bpp)
+	{
+		case 8:
+			s = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, bpp, 0, 0, 0, 0);
+			break;
+
+		case 16:
+		{
+			SDL_PixelFormat const* f = SDL_GetVideoSurface()->format;
+			s = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, bpp, f->Rmask, f->Gmask, f->Bmask, 0);
+			break;
+		}
+
+		default:
+			throw std::logic_error("Tried to create video surface with invalid bpp, must be 8 or 16.");
+	}
+	if (!s) throw std::runtime_error("Failed to create SDL surface");
+	surface_ = s;
+}
+
+
 SGPVSurface::~SGPVSurface()
 {
 	if (p16BPPPalette) MemFree(p16BPPPalette);
@@ -202,16 +230,13 @@ static void AddStandardVideoSurface(SGPVSurface* const hVSurface)
 }
 
 
-static SGPVSurface* CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBitDepth);
-
-
 #undef AddVideoSurface
 #undef AddVideoSurfaceFromFile
 
 
 SGPVSurface* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth)
 {
-	SGPVSurface* const vs = CreateVideoSurface(Width, Height, BitDepth);
+	SGPVSurface* const vs = new SGPVSurface(Width, Height, BitDepth);
 	AddStandardVideoSurface(vs);
 	return vs;
 }
@@ -224,7 +249,7 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 {
 	AutoSGPImage hImage(CreateImage(Filename, IMAGE_ALLIMAGEDATA));
 
-	SGPVSurface* const vs = CreateVideoSurface(hImage->usWidth, hImage->usHeight, hImage->ubBitDepth);
+	SGPVSurface* const vs = new SGPVSurface(hImage->usWidth, hImage->usHeight, hImage->ubBitDepth);
 
 	SGPRect tempRect;
 	tempRect.iLeft   = 0;
@@ -322,44 +347,6 @@ void ColorFillVideoSurfaceArea(SGPVSurface* const dst, INT32 iDestX1, INT32 iDes
 	Rect.w = iDestX2 - iDestX1;
 	Rect.h = iDestY2 - iDestY1;
 	SDL_FillRect(dst->surface_, &Rect, Color16BPP);
-}
-
-
-static SGPVSurface* CreateVideoSurface(UINT16 usWidth, UINT16 usHeight, UINT8 ubBitDepth)
-{
-	Assert(usHeight > 0);
-	Assert(usWidth  > 0);
-
-	UINT32 uiRBitMask;
-	UINT32 uiGBitMask;
-	UINT32 uiBBitMask;
-	switch (ubBitDepth)
-	{
-		case 8:
-			uiRBitMask = 0;
-			uiGBitMask = 0;
-			uiBBitMask = 0;
-			break;
-
-		case 16:
-		{
-			const SDL_Surface* screen = SDL_GetVideoSurface();
-			uiRBitMask = screen->format->Rmask;
-			uiGBitMask = screen->format->Gmask;
-			uiBBitMask = screen->format->Bmask;
-			break;
-		}
-
-		default:
-			throw std::logic_error("Tried to create video surface with invalid bpp, must be 8 or 16.");
-	}
-
-	SDL_Surface* const surface = SDL_CreateRGBSurface(
-		SDL_SWSURFACE,
-		usWidth, usHeight, ubBitDepth,
-		uiRBitMask, uiGBitMask, uiBBitMask, 0
-	);
-	return new SGPVSurface(surface);
 }
 
 

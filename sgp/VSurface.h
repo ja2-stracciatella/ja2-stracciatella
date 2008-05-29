@@ -20,10 +20,9 @@ extern SGPVSurface* g_mouse_buffer;
 class SGPVSurface
 {
 	public:
-		SGPVSurface(SDL_Surface* s) :
-			surface_(s),
-			p16BPPPalette(0)
-		{}
+		SGPVSurface(UINT16 w, UINT16 h, UINT8 bpp);
+
+		SGPVSurface(SDL_Surface* s) : surface_(s), p16BPPPalette() {}
 
 		~SGPVSurface();
 
