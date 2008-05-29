@@ -90,14 +90,9 @@ LackOfProgressTolerance(): callers
 LightIlluminateWall(): empty
 LightLoad(): complicated
 LightSave(): complicated
-LoadAllMapChangesFromMapTempFileAndApplyThem(): file leak on error
 LoadAmbientControlFile(): complicated, pointless strcpy()
-LoadAnimationProfiles(): file leak on error
 LoadCivQuoteFile(): string copy necessary?
 LoadEnemySoldiersFromTempFile(): ubStrategicCreatures > ubNumCreatures
-LoadPaletteData(): file leak on error
-LoadRevealedStatusArrayFromRevealedTempFile(): file leak on error
-LoadRevealedStatusArrayFromRevealedTempFile(): file leak on error
 LoadSaveScreenHandle(), LoadSaveScreenInit(), LoadSaveScreenShutdown(): Investigate if the duplication can be removed
 LoadSavedGameHeader(): invalid use of strlen()
 LoadSavedGameWarningMessageBoxCallBack(): users
@@ -138,7 +133,6 @@ RemoveAllShadows(): O(n^2)
 RemoveAllShadowsOfTypeRange(): O(n^2)
 RemoveAllTopmostsOfTypeRange(): O(n^2)
 RemoveAmmoGUI(), RemoveEquipGUI(), RemoveKeysGUI(), RemoveMoneyGUI(): empty, remove?
-RemoveGraphicFromTempFile(): file leak on error
 RemoveItemGUI(): callers
 RenderFaceOverlay(): users
 RenderItemDescriptionBox(): code duplication
@@ -154,7 +148,6 @@ SOLDIER_QUOTE_SAID_DROWNING: never set
 STRUCTURE_MULTI: never set?
 STRUCTURE_TREE: never set
 STR_AR_MERC_RETREATING: string too long in German
-SaveGame(): double close in error case (called function closes and then file gets closed again in error handler)
 SaveLightEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
 SaveSmokeEffectsToMapTempFile(): FileDelete() + FileOpen() == complicated
 SaveWorld(), LoadWorld(), EvaluateWorld(): uiSoldierSize gets saved, but loaded and discarded
