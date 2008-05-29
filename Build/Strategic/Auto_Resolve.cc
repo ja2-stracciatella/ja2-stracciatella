@@ -575,7 +575,7 @@ UINT32 AutoResolveScreenHandle()
 	{
 		gpAR->fEnteringAutoResolve = FALSE;
 		//Take the framebuffer, shade it, and save it to the SAVEBUFFER.
-		ShadowVideoSurfaceRect(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		FRAME_BUFFER->ShadowRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 		KillPreBattleInterface();
 		CalculateAutoResolveInfo();
@@ -905,7 +905,7 @@ static void RenderSoldierCell(SOLDIERCELL* const c)
 
 		if (c->pSoldier->bLife < OKLIFE && !(c->uiFlags & (CELL_HITBYATTACKER | CELL_HITLASTFRAME | CELL_CREATURE)))
 		{ // Merc is unconcious (and not taking damage), so darken his portrait.
-			ShadowVideoSurfaceRect(buf, x, y, x + 30, y + 26);
+			buf->ShadowRect(x, y, x + 30, y + 26);
 		}
 	}
 

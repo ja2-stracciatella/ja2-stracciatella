@@ -391,7 +391,7 @@ void BeginLoadScreen( )
 					//	iReqShadePercentage = iFactor;
 					//Record the new final shade percentage.
 					//iLastShadePercentage = iFactor;
-					ShadowVideoSurfaceRectUsingLowPercentTable(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+					guiSAVEBUFFER->ShadowRectUsingLowPercentTable(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			//	}
 			}
 

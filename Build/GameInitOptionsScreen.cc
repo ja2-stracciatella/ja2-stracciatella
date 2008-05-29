@@ -482,7 +482,7 @@ static void RenderGIOScreen(void)
 	BltVideoObject(FRAME_BUFFER, guiGIOMainBackGroundImage, 0, 0, 0);
 
 	//Shade the background
-	ShadowVideoSurfaceRect( FRAME_BUFFER, 48, 55, 592, 378 );	//358
+	FRAME_BUFFER->ShadowRect(48, 55, 592, 378); //358
 
 
 	//Display the title
@@ -551,7 +551,7 @@ static void RenderGIOScreen(void)
 //if its the demo, make sure to Display the text for the additional guns
 #ifdef JA2DEMO
 	//Shadow the area around the additional guns
-	ShadowVideoSurfaceRect( FRAME_BUFFER, 336, 105, 580, 218 );	//358
+	FRAME_BUFFER->ShadowRect(336, 105, 580, 218); //358
 
 	//Display the text indicatting that the option is disabled for the demo
 	DisplayWrappedString(440, GIO_GUN_SETTINGS_Y - GIO_GAP_BN_SETTINGS, 150, 2, GIO_TOGGLE_TEXT_FONT, 162, str_disabled_for_the_demo, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);

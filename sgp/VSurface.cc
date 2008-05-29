@@ -65,6 +65,46 @@ void SGPVSurface::Fill(const UINT16 colour)
 }
 
 
+static void InternalShadowVideoSurfaceRect(SGPVSurface* const dst, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2, const UINT16* const filter_table)
+{
+	if (X1 < 0) X1 = 0;
+	if (X2 < 0) return;
+
+	if (Y2 < 0) return;
+	if (Y1 < 0) Y1 = 0;
+
+	if (X2 >= dst->Width())  X2 = dst->Width() - 1;
+	if (Y2 >= dst->Height()) Y2 = dst->Height() - 1;
+
+	if (X1 >= dst->Width())  return;
+	if (Y1 >= dst->Height()) return;
+
+	if (X2 - X1 <= 0) return;
+	if (Y2 - Y1 <= 0) return;
+
+	SGPRect area;
+	area.iTop    = Y1;
+	area.iBottom = Y2;
+	area.iLeft   = X1;
+	area.iRight  = X2;
+
+	SGPVSurface::Lock ldst(dst);
+	Blt16BPPBufferFilterRect(ldst.Buffer<UINT16>(), ldst.Pitch(), filter_table, &area);
+}
+
+
+void SGPVSurface::ShadowRect(INT32 const x1, INT32 const y1, INT32 const x2, INT32 const y2)
+{
+	InternalShadowVideoSurfaceRect(this, x1, y1, x2, y2, ShadeTable);
+}
+
+
+void SGPVSurface::ShadowRectUsingLowPercentTable(INT32 const x1, INT32 const y1, INT32 const x2, INT32 const y2)
+{
+	InternalShadowVideoSurfaceRect(this, x1, y1, x2, y2, IntensityTable);
+}
+
+
 static void DeletePrimaryVideoSurfaces(void);
 
 
@@ -476,46 +516,6 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const INT32
 	{
 		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible BPP values with src and dest Video Surfaces for blitting");
 	}
-}
-
-
-static void InternalShadowVideoSurfaceRect(SGPVSurface* const dst, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2, const UINT16* const filter_table)
-{
-	if (X1 < 0) X1 = 0;
-	if (X2 < 0) return;
-
-	if (Y2 < 0) return;
-	if (Y1 < 0) Y1 = 0;
-
-	if (X2 >= dst->Width())  X2 = dst->Width() - 1;
-	if (Y2 >= dst->Height()) Y2 = dst->Height() - 1;
-
-	if (X1 >= dst->Width())  return;
-	if (Y1 >= dst->Height()) return;
-
-	if (X2 - X1 <= 0) return;
-	if (Y2 - Y1 <= 0) return;
-
-	SGPRect area;
-	area.iTop    = Y1;
-	area.iBottom = Y2;
-	area.iLeft   = X1;
-	area.iRight  = X2;
-
-	SGPVSurface::Lock ldst(dst);
-	Blt16BPPBufferFilterRect(ldst.Buffer<UINT16>(), ldst.Pitch(), filter_table, &area);
-}
-
-
-void ShadowVideoSurfaceRect(SGPVSurface* const dst, const INT32 X1, const INT32 Y1, const INT32 X2, const INT32 Y2)
-{
-	InternalShadowVideoSurfaceRect(dst, X1, Y1, X2, Y2, ShadeTable);
-}
-
-
-void ShadowVideoSurfaceRectUsingLowPercentTable(SGPVSurface* const dst, const INT32 X1, const INT32 Y1, const INT32 X2, const INT32 Y2)
-{
-	InternalShadowVideoSurfaceRect(dst, X1, Y1, X2, Y2, IntensityTable);
 }
 
 

@@ -3570,7 +3570,7 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		if( guiCurrentScreen == MAP_SCREEN )
 		{
 			// shade the background
-			ShadowVideoSurfaceRect( FRAME_BUFFER , 0, 107, 261, 359 );
+			FRAME_BUFFER->ShadowRect(0, 107, 261, 359);
 			InvalidateRegion( 0, 107, 261, 359 );
 		}
 

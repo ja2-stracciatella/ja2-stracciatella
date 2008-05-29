@@ -307,7 +307,7 @@ void RenderBobbyR()
 	//if we cant go to any sub pages, darken the page out
 	if( !LaptopSaveInfo.fBobbyRSiteCanBeAccessed )
 	{
-		ShadowVideoSurfaceRect( FRAME_BUFFER, LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y );
+		FRAME_BUFFER->ShadowRect(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y);
 	}
 
 	RenderWWWProgramTitleBar( );

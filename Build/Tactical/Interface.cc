@@ -1840,7 +1840,7 @@ BOOLEAN HandleOpenDoorMenu( )
 static void RenderUIMessage(VIDEO_OVERLAY* pBlitter)
 {
 	// Shade area first...
-	ShadowVideoSurfaceRect( pBlitter->uiDestBuff, pBlitter->sX, pBlitter->sY, pBlitter->sX + gusUIMessageWidth - 2, pBlitter->sY + gusUIMessageHeight - 2 );
+	pBlitter->uiDestBuff->ShadowRect(pBlitter->sX, pBlitter->sY, pBlitter->sX + gusUIMessageWidth - 2, pBlitter->sY + gusUIMessageHeight - 2);
 
 	RenderMercPopUpBoxFromIndex( iUIMessageBox, pBlitter->sX, pBlitter->sY,  pBlitter->uiDestBuff );
 

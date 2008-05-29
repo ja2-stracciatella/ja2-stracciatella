@@ -1031,7 +1031,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 
 		//Shadow the slot
 //		if( !gbSaveGameArray[ bEntryID ] )
-		ShadowVideoSurfaceRect( FRAME_BUFFER, usPosX, usPosY, usPosX+SLG_SAVELOCATION_WIDTH, usPosY+SLG_SAVELOCATION_HEIGHT );
+		FRAME_BUFFER->ShadowRect(usPosX, usPosY, usPosX + SLG_SAVELOCATION_WIDTH, usPosY + SLG_SAVELOCATION_HEIGHT);
 	}
 
 	//else if its the currently selected location
@@ -1062,7 +1062,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
 			font = SAVE_LOAD_QUICKSAVE_FONT;
 
 			//Shadow the surface
-			ShadowVideoSurfaceRect( FRAME_BUFFER, usPosX, usPosY, usPosX+SLG_SAVELOCATION_WIDTH, usPosY+SLG_SAVELOCATION_HEIGHT );
+			FRAME_BUFFER->ShadowRect(usPosX, usPosY, usPosX + SLG_SAVELOCATION_WIDTH, usPosY + SLG_SAVELOCATION_HEIGHT);
 		}
 		else
 		{

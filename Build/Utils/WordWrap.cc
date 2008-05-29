@@ -1051,7 +1051,7 @@ static void ShadowText(SGPVSurface* const dst, const wchar_t* pString, Font cons
 {
 	UINT32 const uiLength     = StringPixLength(pString, font);
 	UINT16 const usFontHeight = GetFontHeight(font);
-	ShadowVideoSurfaceRect(dst, usPosX, usPosY, usPosX + uiLength + 1, usPosY + usFontHeight + 1);
+	dst->ShadowRect(usPosX, usPosY, usPosX + uiLength + 1, usPosY + usFontHeight + 1);
 }
 
 

@@ -389,7 +389,7 @@ UINT32  MainGameScreenHandle(void)
 			SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 
 			//Shadow area
-			ShadowVideoSurfaceRect(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			FRAME_BUFFER->ShadowRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			InvalidateScreen( );
 
 			// Next frame please

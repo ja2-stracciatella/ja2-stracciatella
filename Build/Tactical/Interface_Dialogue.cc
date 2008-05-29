@@ -642,7 +642,7 @@ void RenderTalkingMenu()
 	{
 		INT32 const x = tp->sX + TALK_PANEL_SHADOW_AREA_X;
 		INT32 const y = tp->sY + TALK_PANEL_SHADOW_AREA_Y;
-		ShadowVideoSurfaceRect(FRAME_BUFFER, x, y, x + TALK_PANEL_SHADOW_AREA_WIDTH, y + TALK_PANEL_SHADOW_AREA_HEIGHT);
+		FRAME_BUFFER->ShadowRect(x, y, x + TALK_PANEL_SHADOW_AREA_WIDTH, y + TALK_PANEL_SHADOW_AREA_HEIGHT);
 
 		// Disable mouse regions....
 		for (INT32 cnt = 0; cnt < 6; ++cnt)

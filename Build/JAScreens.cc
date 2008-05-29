@@ -667,7 +667,7 @@ void DoDemoIntroduction(void)
 					if( usFadeLimit )
 					{
 						usFadeLimit--;
-						ShadowVideoSurfaceRectUsingLowPercentTable(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+						FRAME_BUFFER->ShadowRectUsingLowPercentTable(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 						InvalidateScreen();
 					}
 					else
@@ -709,7 +709,7 @@ static void DisplayTopwareGermanyAddress(void)
 	//bring up the Topware address screen
 
 	//Shade out a background piece to emphasize the German address.
-	ShadowVideoSurfaceRect(FRAME_BUFFER, 208, 390, 431, 475);
+	FRAME_BUFFER->ShadowRect(208, 390, 431, 475);
 
 	//Draw the anti-aliased address now.
 	if (!BltVideoObjectOnce(FRAME_BUFFER, "German/topware_germany.sti", 0, 218, 400)) return;

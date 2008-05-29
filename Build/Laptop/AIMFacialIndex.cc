@@ -288,7 +288,7 @@ static void DrawMercsFaceToScreen(const UINT8 ubMercID, const UINT16 usPosX, con
 
 	if (shaded)
 	{
-		ShadowVideoSurfaceRect(FRAME_BUFFER, usPosX + AIM_FI_FACE_OFFSET, usPosY + AIM_FI_FACE_OFFSET, usPosX + 48 + AIM_FI_FACE_OFFSET, usPosY + 43 + AIM_FI_FACE_OFFSET);
+		FRAME_BUFFER->ShadowRect(usPosX + AIM_FI_FACE_OFFSET, usPosY + AIM_FI_FACE_OFFSET, usPosX + 48 + AIM_FI_FACE_OFFSET, usPosY + 43 + AIM_FI_FACE_OFFSET);
 	}
 
 	if (text != NULL)

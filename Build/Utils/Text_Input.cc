@@ -1272,7 +1272,7 @@ static void RenderInactiveTextFieldNode(TEXTINPUTNODE* pNode)
 	if( !pNode->fEnabled && pColors->fUseDisabledAutoShade )
 	{
 		const MOUSE_REGION* r = &pNode->region;
-		ShadowVideoSurfaceRect(FRAME_BUFFER, r->RegionTopLeftX, r->RegionTopLeftY, r->RegionBottomRightX, r->RegionBottomRightY);
+		FRAME_BUFFER->ShadowRect(r->RegionTopLeftX, r->RegionTopLeftY, r->RegionBottomRightX, r->RegionBottomRightY);
 	}
 }
 

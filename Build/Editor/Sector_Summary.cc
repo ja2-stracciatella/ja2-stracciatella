@@ -1245,7 +1245,7 @@ void RenderSummaryWindow()
 			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			RectangleDraw(TRUE, 350, 15, 405, 28, 0, l.Buffer<UINT8>());
 		}
-		ShadowVideoSurfaceRectUsingLowPercentTable( FRAME_BUFFER, 351, 16, 404, 27 );
+		FRAME_BUFFER->ShadowRectUsingLowPercentTable(351, 16, 404, 27);
 		if( gpCurrentSectorSummary )
 			/*&& gpCurrentSectorSummary->usNumItems ||
 				gpPEnemyItemsSummaryArray && gusPEnemyItemsSummaryArraySize ||
@@ -1268,11 +1268,11 @@ void RenderSummaryWindow()
 				gpNEnemyItemsSummaryArray && gusNEnemyItemsSummaryArraySize )
 				*/
 		{
-			ShadowVideoSurfaceRectUsingLowPercentTable( FRAME_BUFFER, 351, 31, 404, 42 );
+			FRAME_BUFFER->ShadowRectUsingLowPercentTable(351, 31, 404, 42);
 		}
 		else
 		{
-			ShadowVideoSurfaceRect( FRAME_BUFFER, 351, 31, 404, 42 );
+			FRAME_BUFFER->ShadowRect(351, 31, 404, 42);
 		}
 		SetFontForeground( FONT_GRAY2 );
 	}
@@ -1367,7 +1367,7 @@ void RenderSummaryWindow()
 					}
 					ClipRect.iLeft = MAP_LEFT + x*13;
 					ClipRect.iRight = ClipRect.iLeft + 12;
-					ShadowVideoSurfaceRect(FRAME_BUFFER, ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
+					FRAME_BUFFER->ShadowRect(ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
 					if( giCurrentViewLevel == BASEMENT1_LEVEL_MASK ||
 						  giCurrentViewLevel == BASEMENT2_LEVEL_MASK ||
 							giCurrentViewLevel == BASEMENT3_LEVEL_MASK ||
@@ -1375,7 +1375,7 @@ void RenderSummaryWindow()
 							giCurrentViewLevel == ALTERNATE_B2_MASK		 ||
 							giCurrentViewLevel == ALTERNATE_B3_MASK		 )
 					{
-						ShadowVideoSurfaceRect(FRAME_BUFFER, ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
+						FRAME_BUFFER->ShadowRect(ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
 					}
 				}
 			}

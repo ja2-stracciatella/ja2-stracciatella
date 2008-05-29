@@ -795,8 +795,8 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 			RectangleDraw(TRUE, x + 1, y + 1, x + w - 1, y + h - 1, Get16BPPColor(FROMRGB( 65,  57, 15)), buf);
 			RectangleDraw(TRUE, x,     y,     x + w - 2, y + h - 2, Get16BPPColor(FROMRGB(227, 198, 88)), buf);
 		}
-		ShadowVideoSurfaceRect(FRAME_BUFFER, x + 2, y + 2, x + w - 3, y + h - 3);
-		ShadowVideoSurfaceRect(FRAME_BUFFER, x + 2, y + 2, x + w - 3, y + h - 3);
+		FRAME_BUFFER->ShadowRect(x + 2, y + 2, x + w - 3, y + h - 3);
+		FRAME_BUFFER->ShadowRect(x + 2, y + 2, x + w - 3, y + h - 3);
 
 		SetFont(FONT10ARIAL);
 		SetFontShadow(FONT_NEARBLACK);

@@ -1258,7 +1258,7 @@ static void DrawHatchOnButton(const GUI_BUTTON* b)
 static void DrawShadeOnButton(const GUI_BUTTON* b)
 {
 	const MOUSE_REGION* r = &b->Area;
-	ShadowVideoSurfaceRect(ButtonDestBuffer, r->RegionTopLeftX, r->RegionTopLeftY, r->RegionBottomRightX, r->RegionBottomRightY);
+	ButtonDestBuffer->ShadowRect(r->RegionTopLeftX, r->RegionTopLeftY, r->RegionBottomRightX, r->RegionBottomRightY);
 }
 
 

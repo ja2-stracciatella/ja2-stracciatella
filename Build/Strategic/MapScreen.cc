@@ -4629,7 +4629,7 @@ static void BltCharInvPanel(void)
 	if( InKeyRingPopup( ) )
 	{
 		// shade the background
-		ShadowVideoSurfaceRect( guiSAVEBUFFER , PLAYER_INFO_X, PLAYER_INFO_Y, PLAYER_INFO_X + 261,  PLAYER_INFO_Y + ( 359 - 107 ));
+		guiSAVEBUFFER->ShadowRect(PLAYER_INFO_X, PLAYER_INFO_Y, PLAYER_INFO_X + 261,  PLAYER_INFO_Y + (359 - 107));
 	}
 	else
 	{

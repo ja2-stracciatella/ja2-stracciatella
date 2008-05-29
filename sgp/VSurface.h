@@ -42,6 +42,9 @@ class SGPVSurface
 		/* Fill an entire surface with a colour */
 		void Fill(UINT16 colour);
 
+		void ShadowRect(INT32 x1, INT32 y1, INT32 x2, INT32 y2);
+		void ShadowRectUsingLowPercentTable(INT32 x1, INT32 y1, INT32 x2, INT32 y2);
+
 		/* Fills an rectangular area with a specified color value. */
 		friend void ColorFillVideoSurfaceArea(SGPVSurface*, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP);
 
@@ -142,10 +145,6 @@ void BltVideoSurfaceHalf(SGPVSurface* dst, SGPVSurface* src, INT32 DestX, INT32 
 
 // Deletes all data, including palettes
 void DeleteVideoSurface(SGPVSurface*);
-
-
-void ShadowVideoSurfaceRect(SGPVSurface*, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
-void ShadowVideoSurfaceRectUsingLowPercentTable(SGPVSurface*, INT32 X1, INT32 Y1, INT32 X2, INT32 Y2);
 
 BOOLEAN BltVideoSurfaceOnce(SGPVSurface* dst, const char* filename, INT32 x, INT32 y);
 

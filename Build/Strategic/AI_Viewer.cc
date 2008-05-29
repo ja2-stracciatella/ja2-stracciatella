@@ -796,8 +796,8 @@ static void RenderViewer(void)
 					{ //not found, so visually shade it darker.
 						ClipRect.iLeft = VIEWER_LEFT + x*VIEWER_CELLW;
 						ClipRect.iRight = ClipRect.iLeft + VIEWER_CELLW - 1;
-						ShadowVideoSurfaceRect(FRAME_BUFFER, ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
-						ShadowVideoSurfaceRect(FRAME_BUFFER, ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
+						FRAME_BUFFER->ShadowRect(ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
+						FRAME_BUFFER->ShadowRect(ClipRect.iLeft, ClipRect.iTop, ClipRect.iRight, ClipRect.iBottom);
 					}
 				}
 			}

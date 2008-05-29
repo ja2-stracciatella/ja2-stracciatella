@@ -1063,7 +1063,7 @@ try
 
 	if (shaded)
 	{
-		ShadowVideoSurfaceRect(FRAME_BUFFER, FACE_X, FACE_Y, FACE_X + FACE_WIDTH, FACE_Y + FACE_HEIGHT);
+		FRAME_BUFFER->ShadowRect(FACE_X, FACE_Y, FACE_X + FACE_WIDTH, FACE_Y + FACE_HEIGHT);
 	}
 
 	if (text != NULL)
@@ -1396,8 +1396,8 @@ static void DisplayMercsVideoFace(void)
 	const INT32 h = e->usHeight;
 
 	// Draw a drop shadow
-	ShadowVideoSurfaceRect(FRAME_BUFFER, x + 3, y + h, x + w,     y + h + 3); // Horizontal
-	ShadowVideoSurfaceRect(FRAME_BUFFER, x + w, y + 3, x + w + 3, y + h);     // Vertical
+	FRAME_BUFFER->ShadowRect(x + 3, y + h, x + w,     y + h + 3); // Horizontal
+	FRAME_BUFFER->ShadowRect(x + w, y + 3, x + w + 3, y + h);     // Vertical
 
 	BltVideoObject(FRAME_BUFFER, guiVideoConfTerminal, 0, x, y);
 
@@ -1816,7 +1816,7 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(const FACETYPE* const face)
 
 		//if the merc is not at home and the players is leaving a message, shade the players face
 		if( gfIsAnsweringMachineActive )
-			ShadowVideoSurfaceRect( FRAME_BUFFER, DestRect.iLeft, DestRect.iTop, DestRect.iRight-1, DestRect.iBottom-1 );
+			FRAME_BUFFER->ShadowRect(DestRect.iLeft, DestRect.iTop, DestRect.iRight - 1, DestRect.iBottom - 1);
 
 
 		//If the answering machine graphics is up, place a message on the screen
@@ -2319,7 +2319,7 @@ static UINT8 DisplayPixelatedImage(UINT8 ubMaxImages)
 		uiLastTime = uiCurrentTime;
 	}
 
-	ShadowVideoSurfaceRect( FRAME_BUFFER, AIM_MEMBER_VIDEO_FACE_X, AIM_MEMBER_VIDEO_FACE_Y, AIM_MEMBER_VIDEO_FACE_X+AIM_MEMBER_VIDEO_FACE_WIDTH-1, AIM_MEMBER_VIDEO_FACE_Y+AIM_MEMBER_VIDEO_FACE_HEIGHT-1);
+	FRAME_BUFFER->ShadowRect(AIM_MEMBER_VIDEO_FACE_X, AIM_MEMBER_VIDEO_FACE_Y, AIM_MEMBER_VIDEO_FACE_X + AIM_MEMBER_VIDEO_FACE_WIDTH - 1, AIM_MEMBER_VIDEO_FACE_Y + AIM_MEMBER_VIDEO_FACE_HEIGHT - 1);
 
 	if( ubCount == ubMaxImages-1)
 	{
