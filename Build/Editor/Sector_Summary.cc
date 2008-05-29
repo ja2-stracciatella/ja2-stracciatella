@@ -2561,10 +2561,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		return;
 	}
 	//Now fileseek directly to the file position where the number of world items are stored
-	if( !FileSeek( hfile, gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START ) )
-	{ //Position couldn't be found!
-		return;
-	}
+	FileSeek(hfile, gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START);
 	//Now load the number of world items from the map.
 	if (!FileRead(hfile, &uiNumItems, 4))
 	{ //Invalid situation.
@@ -2595,10 +2592,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//summary information, then the second pass will repeat the process, except it will record the actual items.
 
 	//PASS #1
-	if( !FileSeek( hfile, gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START ) )
-	{ //Position couldn't be found!
-		return;
-	}
+	FileSeek(hfile, gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START);
 	for( i = 0; i < gpCurrentSectorSummary->MapInfo.ubNumIndividuals ; i++ )
 	{
 		if (!FileRead(hfile, &basic, sizeof(BASIC_SOLDIERCREATE_STRUCT)))
@@ -2652,10 +2646,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//PASS #2
 	//During this pass, simply copy all the data instead of counting it, now that we have already done so.
 	usPEnemyIndex = usNEnemyIndex = 0;
-	if( !FileSeek( hfile, gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START ) )
-	{ //Position couldn't be found!
-		return;
-	}
+	FileSeek(hfile, gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START);
 	for( i = 0; i < gpCurrentSectorSummary->MapInfo.ubNumIndividuals ; i++ )
 	{
 		if (!FileRead(hfile, &basic, sizeof(BASIC_SOLDIERCREATE_STRUCT)))

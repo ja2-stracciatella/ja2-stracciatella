@@ -626,6 +626,7 @@ static inline int Clamp(int min, int x, int max)
 
 
 static BOOLEAN LoadDVIADPCM(SAMPLETAG* s, HWFILE file, UINT16 block_align)
+try
 {
 	s->uiFlags |= SAMPLE_16BIT;
 
@@ -641,7 +642,7 @@ static BOOLEAN LoadDVIADPCM(SAMPLETAG* s, HWFILE file, UINT16 block_align)
 		UINT8 StepIndex_;
 		if (!FileRead(file, &StepIndex_, sizeof(StepIndex_))) return FALSE;
 
-		if (!FileSeek(file, 1 , FILE_SEEK_FROM_CURRENT)) return FALSE; // reserved byte
+		FileSeek(file, 1 , FILE_SEEK_FROM_CURRENT); // reserved byte
 
 		INT32 CurSample = CurSample_;
 		INT32 StepIndex = StepIndex_;
@@ -705,6 +706,7 @@ static BOOLEAN LoadDVIADPCM(SAMPLETAG* s, HWFILE file, UINT16 block_align)
 		}
 	}
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN    SoundCleanCache(void);
@@ -717,6 +719,7 @@ static SAMPLETAG* SoundGetEmptySample(void);
  * Returns: The sample index if successful, NO_SAMPLE if the file wasn't found
  *          in the cache. */
 static SAMPLETAG* SoundLoadDisk(const char* pFilename)
+try
 {
 	Assert(pFilename != NULL);
 
@@ -754,7 +757,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 
 	memset(s, 0, sizeof(*s));
 
-	if (!FileSeek(hFile, 12, FILE_SEEK_FROM_CURRENT)) return NULL;
+	FileSeek(hFile, 12, FILE_SEEK_FROM_CURRENT);
 
 	UINT16 FormatTag = WAVE_FORMAT_UNKNOWN;
 	UINT16 BlockAlign = 0;
@@ -777,7 +780,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 					if (!FileRead(hFile, &FormatTag,     sizeof(FormatTag)))     return NULL;
 					if (!FileRead(hFile, &Channels,      sizeof(Channels)))      return NULL;
 					if (!FileRead(hFile, &Rate,          sizeof(Rate)))          return NULL;
-					if (!FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT))            return NULL;
+					FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT);
 					if (!FileRead(hFile, &BlockAlign,    sizeof(BlockAlign)))    return NULL;
 					if (!FileRead(hFile, &BitsPerSample, sizeof(BitsPerSample))) return NULL;
 					SNDDBG("LOAD file \"%s\" format %u channels %u rate %u bits %u to slot %u\n", pFilename, FormatTag, Channels, Rate, BitsPerSample, s - pSampleList);
@@ -786,7 +789,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 						case WAVE_FORMAT_PCM: break;
 
 						case WAVE_FORMAT_DVI_ADPCM:
-							if (!FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT)) return NULL;
+							FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT);
 							break;
 
 						default: return NULL;
@@ -823,7 +826,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 				}
 
 			default:
-				if (!FileSeek(hFile, Size, FILE_SEEK_FROM_CURRENT)) return NULL;
+				FileSeek(hFile, Size, FILE_SEEK_FROM_CURRENT);
 				break;
 		}
 	}
@@ -840,6 +843,7 @@ sound_loaded:
 	s->uiInstances  = 0;
 	return s;
 }
+catch (...) { return 0; }
 
 
 static BOOLEAN SoundSampleIsPlaying(const SAMPLETAG* s);

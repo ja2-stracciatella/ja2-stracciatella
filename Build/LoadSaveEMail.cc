@@ -5,10 +5,11 @@
 
 
 static BOOLEAN LoadEMailFromFile(HWFILE File)
+try
 {
 	UINT32 uiSizeOfSubject;
 	if (!FileRead(File, &uiSizeOfSubject, sizeof(UINT32))) return FALSE; // XXX HACK000B
-	if (!FileSeek(File, uiSizeOfSubject, FILE_SEEK_FROM_CURRENT)) return FALSE; // XXX HACK000B
+	FileSeek(File, uiSizeOfSubject, FILE_SEEK_FROM_CURRENT); // XXX HACK000B
 
 	UINT16	usOffset;
 	UINT16	usLength;
@@ -38,6 +39,7 @@ static BOOLEAN LoadEMailFromFile(HWFILE File)
 	AddEmailMessage(usOffset, usLength, iDate, ubSender, fRead, iFirstData, uiSecondData);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadEmailFromSavedGame(HWFILE File)

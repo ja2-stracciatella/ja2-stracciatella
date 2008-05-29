@@ -155,11 +155,7 @@ try
 	}
 	else if (contents & (IMAGE_BITMAPDATA | IMAGE_APPDATA))
 	{ // seek past the palette
-		if (!FileSeek(f, sizeof(STCIPaletteElement) * header->Indexed.uiNumberOfColours, FILE_SEEK_FROM_CURRENT))
-		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem seeking past palette!");
-			return FALSE;
-		}
+		FileSeek(f, sizeof(STCIPaletteElement) * header->Indexed.uiNumberOfColours, FILE_SEEK_FROM_CURRENT);
 	}
 
 	SGP::Buffer<ETRLEObject> etrle_objects;
@@ -196,11 +192,7 @@ try
 	}
 	else if (contents & IMAGE_APPDATA) // then there's a point in seeking ahead
 	{
-		if (!FileSeek(f, header->uiStoredSize, FILE_SEEK_FROM_CURRENT))
-		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem seeking past image data!");
-			return FALSE;
-		}
+		FileSeek(f, header->uiStoredSize, FILE_SEEK_FROM_CURRENT);
 	}
 
 	SGP::Buffer<UINT8> app_data;
@@ -231,5 +223,9 @@ try
 catch (const std::bad_alloc&)
 {
 	DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
+	return FALSE;
+}
+catch (...)
+{
 	return FALSE;
 }

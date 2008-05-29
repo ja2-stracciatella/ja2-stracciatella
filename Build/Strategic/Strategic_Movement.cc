@@ -2821,6 +2821,7 @@ static BOOLEAN LoadWayPointList(HWFILE hFile, GROUP* pGroup);
 
 
 BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile(const HWFILE f)
+try
 {
 	Assert(gpGroupList == NULL);
 
@@ -2868,8 +2869,10 @@ BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile(const HWFILE f)
 	}
 
 	// Skip over saved unique id mask
-	return FileSeek(f, 32, FILE_SEEK_FROM_CURRENT);
+	FileSeek(f, 32, FILE_SEEK_FROM_CURRENT);
+	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 // Saves the Player's group list to the saved game file

@@ -52,8 +52,8 @@ void   FileClose(HWFILE);
 BOOLEAN FileRead(HWFILE hFile, void* pDest, UINT32 uiBytesToRead);
 BOOLEAN FileWrite(HWFILE hFile, const void* pDest, UINT32 uiBytesToWrite);
 
-BOOLEAN FileSeek(HWFILE, INT32 distance, FileSeekMode);
-INT32   FileGetPos(HWFILE);
+void  FileSeek(HWFILE, INT32 distance, FileSeekMode);
+INT32 FileGetPos(HWFILE);
 
 UINT32 FileGetSize(HWFILE);
 

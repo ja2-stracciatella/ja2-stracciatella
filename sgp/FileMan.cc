@@ -406,8 +406,9 @@ BOOLEAN FileWrite(const HWFILE f, const void* const pDest, const UINT32 uiBytesT
 }
 
 
-BOOLEAN FileSeek(const HWFILE f, INT32 distance, const FileSeekMode how)
+void FileSeek(HWFILE const f, INT32 distance, FileSeekMode const how)
 {
+	bool success;
 	if (f->flags & SGPFILE_REAL)
 	{
 		int whence;
@@ -423,12 +424,13 @@ BOOLEAN FileSeek(const HWFILE f, INT32 distance, const FileSeekMode how)
 			default: whence = SEEK_CUR; break;
 		}
 
-		return fseek(f->u.file, distance, whence) == 0;
+		success = fseek(f->u.file, distance, whence) == 0;
 	}
 	else
 	{
-		return LibraryFileSeek(&f->u.lib, distance, how);
+		success = LibraryFileSeek(&f->u.lib, distance, how);
 	}
+	if (!success) throw std::runtime_error("Seek in file failed");
 }
 
 

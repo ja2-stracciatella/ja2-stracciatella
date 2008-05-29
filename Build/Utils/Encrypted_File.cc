@@ -4,12 +4,9 @@
 
 
 BOOLEAN LoadEncryptedData(HWFILE File, wchar_t* DestString, UINT32 seek_chars, UINT32 read_chars)
+try
 {
-	if (!FileSeek(File, seek_chars * 2, FILE_SEEK_FROM_START))
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "LoadEncryptedData: Failed FileSeek");
-		return FALSE;
-	}
+	FileSeek(File, seek_chars * 2, FILE_SEEK_FROM_START);
 
 	UINT16 Str[read_chars];
 	if (!FileRead(File, Str, sizeof(Str)))
@@ -83,6 +80,7 @@ BOOLEAN LoadEncryptedData(HWFILE File, wchar_t* DestString, UINT32 seek_chars, U
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadEncryptedDataFromFile(const char* Filename, wchar_t DestString[], UINT32 seek_chars, UINT32 read_chars)
