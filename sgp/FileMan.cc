@@ -445,7 +445,10 @@ UINT32 FileGetSize(const HWFILE f)
 	if (f->flags & SGPFILE_REAL)
 	{
 		struct stat sb;
-		if (fstat(fileno(f->u.file), &sb) != 0) return 0;
+		if (fstat(fileno(f->u.file), &sb) != 0)
+		{
+			throw std::runtime_error("Getting file size failed");
+		}
 		return sb.st_size;
 	}
 	else

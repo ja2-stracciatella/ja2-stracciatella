@@ -93,6 +93,7 @@ BOOLEAN LoadPCXFileToImage(SGPImage* const img, UINT16 const contents)
 
 
 static PcxObject* LoadPcx(const char* const filename)
+try
 {
 	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
 	if (f == 0) return NULL;
@@ -102,9 +103,7 @@ static PcxObject* LoadPcx(const char* const filename)
 	if (header.ubManufacturer != 10)           return NULL;
 	if (header.ubEncoding     !=  1)           return NULL;
 
-	const UINT32 file_size = FileGetSize(f);
-	if (file_size == 0) return NULL;
-
+	const UINT32 file_size   = FileGetSize(f);
 	const UINT32 buffer_size = file_size - sizeof(PcxHeader) - 768;
 
 	PcxObject* const pcx_obj = MALLOC(PcxObject);
@@ -129,6 +128,7 @@ static PcxObject* LoadPcx(const char* const filename)
 	MemFree(pcx_obj);
 	return NULL;
 }
+catch (...) { return 0; }
 
 
 static BOOLEAN BlitPcxToBuffer(PcxObject* pCurrentPcxObject, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp)

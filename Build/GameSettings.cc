@@ -40,6 +40,7 @@ static void InitGameSettings(void);
 
 void LoadGameSettings(void)
 {
+	try
 	{
 		AutoSGPFile f(FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_READ));
 		if (!f) goto fail;
@@ -79,6 +80,7 @@ void LoadGameSettings(void)
 		}
 		return;
 	}
+	catch (...) { /* Handled below */ }
 
 fail:
 	InitGameSettings();
