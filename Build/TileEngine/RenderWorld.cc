@@ -936,7 +936,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 									}
 
 									// Get animation surface....
-									UINT16 usAnimSurface = GetSoldierAnimationSurface(pSoldier, pSoldier->usAnimState);
+									UINT16 const usAnimSurface = GetSoldierAnimationSurface(pSoldier);
 									if (usAnimSurface == INVALID_ANIMATION_SURFACE)
 									{
 										pNode = pNode->pNext;

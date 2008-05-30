@@ -248,7 +248,7 @@ SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 				// Check if we are a vehicle and refine if so....
 				if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 				{
-					usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
+					usAnimSurface = GetSoldierAnimationSurface(pSoldier);
 
 					if ( usAnimSurface != INVALID_ANIMATION_SURFACE )
 					{
@@ -440,7 +440,7 @@ static void GetSoldierScreenRect(const SOLDIERTYPE* const pSoldier, SGPRect* con
 
 		GetSoldierScreenPos( pSoldier, &sMercScreenX, &sMercScreenY );
 
-		usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
+		usAnimSurface = GetSoldierAnimationSurface(pSoldier);
 		if ( usAnimSurface == INVALID_ANIMATION_SURFACE )
 		{
 			pRect->iLeft		= sMercScreenX;
@@ -461,7 +461,7 @@ void GetSoldierAnimDims( SOLDIERTYPE *pSoldier, INT16 *psHeight, INT16 *psWidth 
 {
 	UINT16											 usAnimSurface;
 
-	usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
+	usAnimSurface = GetSoldierAnimationSurface(pSoldier);
 
 	if ( usAnimSurface == INVALID_ANIMATION_SURFACE )
 	{
@@ -484,7 +484,7 @@ void GetSoldierAnimOffsets(const SOLDIERTYPE* pSoldier, INT16* sOffsetX, INT16* 
 {
 	UINT16											 usAnimSurface;
 
-	usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
+	usAnimSurface = GetSoldierAnimationSurface(pSoldier);
 
 	if ( usAnimSurface == INVALID_ANIMATION_SURFACE )
 	{
@@ -506,7 +506,7 @@ void GetSoldierScreenPos(const SOLDIERTYPE* pSoldier, INT16* psScreenX, INT16* p
 		FLOAT dTempX_S, dTempY_S;
 		UINT16											 usAnimSurface;
 
-		usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
+		usAnimSurface = GetSoldierAnimationSurface(pSoldier);
 
 		if ( usAnimSurface == INVALID_ANIMATION_SURFACE )
 		{
@@ -553,7 +553,7 @@ void GetSoldierTRUEScreenPos(const SOLDIERTYPE* pSoldier, INT16* psScreenX, INT1
 		FLOAT dTempX_S, dTempY_S;
 		UINT16											 usAnimSurface;
 
-		usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
+		usAnimSurface = GetSoldierAnimationSurface(pSoldier);
 
 		if ( usAnimSurface == INVALID_ANIMATION_SURFACE )
 		{

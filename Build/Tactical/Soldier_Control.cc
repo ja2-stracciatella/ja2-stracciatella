@@ -4413,7 +4413,7 @@ BOOLEAN ConvertAniCodeToAniFrame( SOLDIERTYPE *pSoldier, UINT16 usAniFrame )
 	// Given ani code, adjust for facing direction
 
 	// get anim surface and determine # of frames
-	usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
+	usAnimSurface = GetSoldierAnimationSurface(pSoldier);
 
 	CHECKF( usAnimSurface != INVALID_ANIMATION_SURFACE );
 
@@ -4898,7 +4898,7 @@ static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, 
 BOOLEAN CreateSoldierPalettes(SOLDIERTYPE* const s)
 {
 	// --- TAKE FROM CURRENT ANIMATION HVOBJECT!
-	const UINT16 anim_surface = GetSoldierAnimationSurface(s, s->usAnimState);
+	UINT16 const anim_surface = GetSoldierAnimationSurface(s);
 	CHECKF(anim_surface != INVALID_ANIMATION_SURFACE);
 
 	SGPPaletteEntry tmp_pal[256];
@@ -8305,7 +8305,7 @@ static ETRLEObject const* GetActualSoldierAnimDims(SOLDIERTYPE const* const s)
 {
 	static ETRLEObject const fallback = { 0, 0, 0, 0, 5, 5 };
 
-	UINT16 const anim_surface = GetSoldierAnimationSurface(s, s->usAnimState);
+	UINT16 const anim_surface = GetSoldierAnimationSurface(s);
 	if (anim_surface == INVALID_ANIMATION_SURFACE) return &fallback;
 
 	SGPVObject const* vo = gAnimSurfaceDatabase[anim_surface].hVideoObject;

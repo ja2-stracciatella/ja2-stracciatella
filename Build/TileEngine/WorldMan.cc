@@ -1204,7 +1204,7 @@ LEVELNODE* AddMercToHead(const UINT32 iMapIndex, SOLDIERTYPE* const pSoldier, co
 
 static void AddMercStructureInfo(INT16 sGridNo, SOLDIERTYPE* pSoldier)
 {
-	UINT16 usAnimSurface = GetSoldierAnimationSurface(pSoldier, pSoldier->usAnimState);
+	UINT16 const usAnimSurface = GetSoldierAnimationSurface(pSoldier);
 	AddMercStructureInfoFromAnimSurface(sGridNo, pSoldier, usAnimSurface, pSoldier->usAnimState);
 }
 
@@ -1246,7 +1246,7 @@ BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection )
   //if (pSoldier->uiStatusFlags & SOLDIER_MULTITILE)
 	{
 		// Get surface data
- 		UINT16 usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
+		UINT16 const usAnimSurface = GetSoldierAnimationSurface(pSoldier);
 		if (usAnimSurface == INVALID_ANIMATION_SURFACE)
 		{
 			return FALSE;

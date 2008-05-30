@@ -2865,7 +2865,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 }
 
 
-UINT16 GetSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAnimState)
+UINT16 GetSoldierAnimationSurface(SOLDIERTYPE const* const pSoldier)
 {
 	UINT16 usAnimSurface;
 
@@ -2876,7 +2876,7 @@ UINT16 GetSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAnimStat
 		// Ensure that it's loaded!
 		if ( gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject == NULL )
 		{
-			ScreenMsg(FONT_MCOLOR_RED, MSG_BETAVERSION, L"IAnimation Surface for Body %d, animation %hs, surface %d not loaded.", pSoldier->ubBodyType, gAnimControl[usAnimState].zAnimStr, usAnimSurface);
+			ScreenMsg(FONT_MCOLOR_RED, MSG_BETAVERSION, L"IAnimation Surface for Body %d, animation %hs, surface %d not loaded.", pSoldier->ubBodyType, gAnimControl[pSoldier->usAnimState].zAnimStr, usAnimSurface);
 			AnimDebugMsg("Surface Database: PROBLEMS!!!!!!");
     	usAnimSurface = INVALID_ANIMATION_SURFACE;
 		}
