@@ -856,7 +856,8 @@ static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
 		{
 			if (&b->Area == MSYS_PrevRegion && !gpAnchoredButton)
 			{
-				INT32 snd = (b->uiFlags & BUTTON_ENABLED ? BUTTON_SOUND_MOVED_ONTO : BUTTON_SOUND_DISABLED_MOVED_ONTO);
+				ButtonSound const snd = b->uiFlags & BUTTON_ENABLED ?
+					BUTTON_SOUND_MOVED_ONTO : BUTTON_SOUND_DISABLED_MOVED_ONTO;
 				PlayButtonSound(b, snd);
 			}
 		}

@@ -54,7 +54,7 @@ void SpecifyButtonSoundScheme(GUIButtonRef const b, ButtonSoundScheme SoundSchem
 }
 
 
-void PlayButtonSound(const GUI_BUTTON* btn, INT32 iSoundType)
+void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const iSoundType)
 {
 	switch (btn->ubSoundSchemeID)
 	{

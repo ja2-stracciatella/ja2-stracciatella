@@ -31,15 +31,6 @@
 #define BUTTON_FORCE_UNDIRTY    0x00004000 // no matter what happens this buttons does NOT get marked dirty
 #define BUTTON_NO_DUPLICATE     0x80000000 // Exclude button from duplicate check
 
-#define BUTTON_SOUND_NONE                  0x00
-#define BUTTON_SOUND_CLICKED_ON            0x01
-#define BUTTON_SOUND_CLICKED_OFF           0x02
-#define BUTTON_SOUND_MOVED_ONTO            0x04
-#define BUTTON_SOUND_MOVED_OFF_OF          0x08
-#define BUTTON_SOUND_DISABLED_CLICK        0x10
-#define BUTTON_SOUND_DISABLED_MOVED_ONTO   0x20
-#define BUTTON_SOUND_DISABLED_MOVED_OFF_OF 0x40
-
 
 extern SGPVSurface* ButtonDestBuffer;
 
