@@ -4402,82 +4402,61 @@ void EVENT_BeginMercTurn(SOLDIERTYPE* const pSoldier)
 	}
 }
 
-// UTILITY FUNCTIONS CALLED BY OVERHEAD.H
-UINT8		gDirectionFrom8to2[ ] = { 0, 0, 1, 1, 0, 1, 1, 0 };
 
-
-BOOLEAN ConvertAniCodeToAniFrame( SOLDIERTYPE *pSoldier, UINT16 usAniFrame )
+BOOLEAN ConvertAniCodeToAniFrame(SOLDIERTYPE* const s, UINT16 ani_frame)
 {
-	UINT16	usAnimSurface;
-	UINT8		ubTempDir;
 	// Given ani code, adjust for facing direction
 
 	// get anim surface and determine # of frames
-	usAnimSurface = GetSoldierAnimationSurface(pSoldier);
+	UINT16 const anim_surface = GetSoldierAnimationSurface(s);
+	CHECKF(anim_surface != INVALID_ANIMATION_SURFACE);
+	AnimationSurfaceType const& as = gAnimSurfaceDatabase[anim_surface];
 
-	CHECKF( usAnimSurface != INVALID_ANIMATION_SURFACE );
+	// Convert world direction into sprite direction
+	UINT8 temp_dir = OneCDirection(s->bDirection);
 
-	// COnvert world direction into sprite direction
-	ubTempDir = OneCDirection(pSoldier->bDirection);
-
-	//If we are only one frame, ignore what the script is telling us!
-	if ( gAnimSurfaceDatabase[ usAnimSurface ].ubFlags & ANIM_DATA_FLAG_NOFRAMES )
+	// Check # of directions/surface, adjust if ness.
+	switch (as.uiNumDirections)
 	{
-		usAniFrame = 0;
+		case  1: temp_dir  = 0;                                     break;
+		case  4: temp_dir /= 2;                                     break;
+		case 32: temp_dir  = ExtOneCDirection(s->ubHiResDirection); break;
+
+		case  2:
+			static UINT8 const gDirectionFrom8to2[] = { 0, 0, 1, 1, 0, 1, 1, 0 };
+			temp_dir = gDirectionFrom8to2[s->bDirection];
+			break;
+
+		case  3:
+			switch (s->bDirection)
+			{
+				case NORTHWEST: temp_dir = 1; break;
+				case WEST:      temp_dir = 0; break;
+				case EAST:      temp_dir = 2; break;
+			}
+			break;
 	}
 
-	if ( gAnimSurfaceDatabase[ usAnimSurface ].uiNumDirections == 32 )
-	{
-		ubTempDir = ExtOneCDirection(pSoldier->ubHiResDirection);
-	}
-	// Check # of directions /surface, adjust if ness.
-	else if ( gAnimSurfaceDatabase[ usAnimSurface ].uiNumDirections == 4 )
-	{
-		ubTempDir = ubTempDir / 2;
-	}
-	// Check # of directions /surface, adjust if ness.
-	else if ( gAnimSurfaceDatabase[ usAnimSurface ].uiNumDirections == 1 )
-	{
-		ubTempDir = 0;
-	}
-	// Check # of directions /surface, adjust if ness.
-	else if ( gAnimSurfaceDatabase[ usAnimSurface ].uiNumDirections == 3 )
-	{
-		if ( pSoldier->bDirection == NORTHWEST )
-		{
-			ubTempDir = 1;
-		}
-		if ( pSoldier->bDirection == WEST )
-		{
-			ubTempDir = 0;
-		}
-		if ( pSoldier->bDirection == EAST )
-		{
-			ubTempDir = 2;
-		}
-	}
-	else if ( gAnimSurfaceDatabase[ usAnimSurface ].uiNumDirections == 2 )
-	{
-		ubTempDir = gDirectionFrom8to2[ pSoldier->bDirection ];
-	}
+	// If we are only one frame, ignore what the script is telling us!
+	if (as.ubFlags & ANIM_DATA_FLAG_NOFRAMES) ani_frame = 0;
 
-	pSoldier->usAniFrame = usAniFrame + (UINT16) ( ( gAnimSurfaceDatabase[ usAnimSurface ].uiNumFramesPerDir * ubTempDir ) );
-
-  if ( gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject == NULL )
+  if (!as.hVideoObject)
   {
-		pSoldier->usAniFrame = 0;
-    return( TRUE );
+		ani_frame = 0;
   }
-
-	if (pSoldier->usAniFrame >= gAnimSurfaceDatabase[usAnimSurface].hVideoObject->SubregionCount())
+	else
 	{
-		// Debug msg here....
-//		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Soldier Animation: Wrong Number of frames per number of objects: %d vs %d, %hs", gAnimSurfaceDatabase[usAnimSurface].uiNumFramesPerDir, gAnimSurfaceDatabase[usAnimSurface].hVideoObject->SubregionCount(), gAnimControl[pSoldier->usAnimState].zAnimStr);
-
-		pSoldier->usAniFrame = 0;
+		ani_frame += as.uiNumFramesPerDir * temp_dir;
+		if (ani_frame >= as.hVideoObject->SubregionCount())
+		{
+			// Debug msg here....
+			//ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Soldier Animation: Wrong Number of frames per number of objects: %d vs %d, %hs", as.uiNumFramesPerDir, as.hVideoObject->SubregionCount(), gAnimControl[s->usAnimState].zAnimStr);
+			ani_frame = 0;
+		}
 	}
 
-	return( TRUE );
+	s->usAniFrame = ani_frame;
+	return TRUE;
 }
 
 
