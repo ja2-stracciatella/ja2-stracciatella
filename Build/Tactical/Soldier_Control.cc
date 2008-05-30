@@ -8301,79 +8301,33 @@ void SelectMoveAnimationFromStance( SOLDIERTYPE *pSoldier )
 }
 
 
-static void GetActualSoldierAnimDims(SOLDIERTYPE* pSoldier, INT16* psHeight, INT16* psWidth)
+static ETRLEObject const* GetActualSoldierAnimDims(SOLDIERTYPE const* const s)
 {
-	UINT16											 usAnimSurface;
+	static ETRLEObject const fallback = { 0, 0, 0, 0, 5, 5 };
 
-	usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
+	UINT16 const anim_surface = GetSoldierAnimationSurface(s, s->usAnimState);
+	if (anim_surface == INVALID_ANIMATION_SURFACE) return &fallback;
 
-	if ( usAnimSurface == INVALID_ANIMATION_SURFACE )
-	{
-		*psHeight					= (INT16)5;
-		*psWidth					= (INT16)5;
+	SGPVObject const* vo = gAnimSurfaceDatabase[anim_surface].hVideoObject;
+	if (!vo) return &fallback;
 
-		return;
-	}
-
-  if ( gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject == NULL )
-  {
-		*psHeight					= (INT16)5;
-		*psWidth					= (INT16)5;
-		return;
-  }
-
-	// OK, noodle here on what we should do... If we take each frame, it will be different slightly
-	// depending on the frame and the value returned here will vary thusly. However, for the
-	// uses of this function, we should be able to use just the first frame...
-
-	ETRLEObject const* const pTrav = gAnimSurfaceDatabase[usAnimSurface].hVideoObject->SubregionProperties(pSoldier->usAniFrame);
-	*psHeight					= (INT16)pTrav->usHeight;
-	*psWidth					= (INT16)pTrav->usWidth;
+	// XXX comment seems wrong
+	/* OK, noodle here on what we should do... If we take each frame, it will be
+	 * different slightly depending on the frame and the value returned here will
+	 * vary thusly. However, for the uses of this function, we should be able to
+	 * use just the first frame... */
+	return vo->SubregionProperties(s->usAniFrame);
 }
 
 
-static void GetActualSoldierAnimOffsets(SOLDIERTYPE* pSoldier, INT16* sOffsetX, INT16* sOffsetY)
+static void SetSoldierLocatorOffsets(SOLDIERTYPE* const s)
 {
-	UINT16											 usAnimSurface;
-
-	usAnimSurface = GetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
-
-	if ( usAnimSurface == INVALID_ANIMATION_SURFACE )
-	{
-		*sOffsetX					= (INT16)0;
-		*sOffsetY					= (INT16)0;
-
-		return;
-	}
-
-  if ( gAnimSurfaceDatabase[ usAnimSurface ].hVideoObject == NULL )
-  {
-		*sOffsetX					= (INT16)0;
-		*sOffsetY					= (INT16)0;
-		return;
-  }
-
-	ETRLEObject const* const pTrav = gAnimSurfaceDatabase[usAnimSurface].hVideoObject->SubregionProperties(pSoldier->usAniFrame);
-	*sOffsetX					= (INT16)pTrav->sOffsetX;
-	*sOffsetY					= (INT16)pTrav->sOffsetY;
-}
-
-
-static void SetSoldierLocatorOffsets(SOLDIERTYPE* pSoldier)
-{
-	INT16 sHeight, sWidth;
-	INT16 sOffsetX, sOffsetY;
-
-
 	// OK, from our animation, get height, width
-	GetActualSoldierAnimDims( pSoldier, &sHeight, &sWidth );
-	GetActualSoldierAnimOffsets( pSoldier, &sOffsetX, &sOffsetY );
-
-	pSoldier->sBoundingBoxWidth		= sWidth;
-	pSoldier->sBoundingBoxHeight  = sHeight;
-	pSoldier->sBoundingBoxOffsetX	= sOffsetX;
-	pSoldier->sBoundingBoxOffsetY	= sOffsetY;
-
+	ETRLEObject const* const dims = GetActualSoldierAnimDims(s);
+	s->sBoundingBoxWidth   = dims->usWidth;
+	s->sBoundingBoxHeight  = dims->usHeight;
+	s->sBoundingBoxOffsetX = dims->sOffsetX;
+	s->sBoundingBoxOffsetY = dims->sOffsetY;
 }
 
 
