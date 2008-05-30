@@ -1861,16 +1861,10 @@ void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text)
 	// Override it!
 	OverrideMercPopupBox( &gpUIMessageOverrideMercBox );
 
-  //SetPrepareMercPopupFlags( MERC_POPUP_PREPARE_FLAGS_TRANS_BACK | MERC_POPUP_PREPARE_FLAGS_MARGINS );
-
-	if ( fUseSkullIcon )
-	{
-		SetPrepareMercPopupFlags( MERC_POPUP_PREPARE_FLAGS_MARGINS | MERC_POPUP_PREPARE_FLAGS_SKULLICON );
-	}
-	else
-	{
-		SetPrepareMercPopupFlags( MERC_POPUP_PREPARE_FLAGS_MARGINS | MERC_POPUP_PREPARE_FLAGS_STOPICON );
-	}
+	MercPopupBoxFlags const flags = fUseSkullIcon ?
+		MERC_POPUP_PREPARE_FLAGS_SKULLICON :
+		MERC_POPUP_PREPARE_FLAGS_STOPICON;
+	SetPrepareMercPopupFlags(flags);
 
 	// Prepare text box
 	iUIMessageBox = PrepareMercPopupBox(iUIMessageBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight);
@@ -1907,7 +1901,7 @@ void BeginMapUIMessage(INT16 delta_y, const wchar_t* text)
 	guiUIMessageTimeDelay = CalcUIMessageDuration(text);
 
 	OverrideMercPopupBox(&gpUIMessageOverrideMercBox);
-	SetPrepareMercPopupFlags(MERC_POPUP_PREPARE_FLAGS_TRANS_BACK | MERC_POPUP_PREPARE_FLAGS_MARGINS);
+	SetPrepareMercPopupFlags(MERC_POPUP_PREPARE_FLAGS_TRANS_BACK);
 	iUIMessageBox = PrepareMercPopupBox(iUIMessageBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight);
 	ResetOverrideMercPopupBox();
 
