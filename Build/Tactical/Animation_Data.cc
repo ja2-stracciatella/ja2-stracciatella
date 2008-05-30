@@ -570,32 +570,30 @@ static void DeleteAnimationProfiles(void);
 
 void DeInitAnimationSystem()
 {
-	 INT32									cnt1, cnt2;
+	for (AnimationSurfaceType* i = gAnimSurfaceDatabase; i != endof(gAnimSurfaceDatabase); ++i)
+	{
+		SGPVObject*& vo = i->hVideoObject;
+		if (!vo) continue;
+		DeleteVideoObject(vo);
+		vo = 0;
+	}
 
-	 for ( cnt1 = 0; cnt1 < NUMANIMATIONSURFACETYPES; cnt1++ )
-	 {
-			if ( gAnimSurfaceDatabase[ cnt1 ].hVideoObject != NULL )
-			{
-			DeleteVideoObject(gAnimSurfaceDatabase[cnt1].hVideoObject);
-          gAnimSurfaceDatabase[ cnt1 ].hVideoObject = NULL;
-			}
-	 }
-
-		// OK, Delete all animation structures.....
-	 // ATE: OK, don't delete here.. we be deleted when the structure database is destoryed....
-		for ( cnt1 = 0; cnt1 < TOTALBODYTYPES; cnt1++ )
+	// Delete all animation structures
+	// ATE: Don't delete here, will be deleted when the structure database is destoryed
+#if 0 // XXX was commented out
+	for (INT32 i = 0; i < TOTALBODYTYPES; ++i)
+	{
+		for (INT32 k = 0; k < 3; k++) // XXX 3 seems wrong, should be NUM_STRUCT_IDS?
 		{
-			for ( cnt2 = 0; cnt2 < 3; cnt2++ )
-			{
-				if ( gAnimStructureDatabase[ cnt1 ][ cnt2 ].pStructureFileRef != NULL )
-				{
-				//	FreeStructureFile( gAnimStructureDatabase[ cnt1 ][ cnt2 ].pStructureFileRef );
-				//	gAnimStructureDatabase[ cnt1 ][ cnt2 ].pStructureFileRef = NULL;
-				}
-			}
+			STRUCTURE_FILE_REF*& sfr = gAnimStructureDatabase[i][k].pStructureFileRef;
+			if (!sfr) continue;
+			FreeStructureFile(sfr);
+			sfr = 0;
 		}
+	}
+#endif
 
-	 DeleteAnimationProfiles( );
+	DeleteAnimationProfiles();
 }
 
 
