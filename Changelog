@@ -1,3 +1,4 @@
+(r4269) Fix a vanilla out of bounds array access when somebody gets hit.
 (r4200) Fix a vanilla bug, which caused stacked items to be too heavy.
 (r4169) Enable scrolling the sector inventory with the mouse wheel.
 (r4040) Fix several vanilla inconsistencies when placing the assignment dropdown menus.

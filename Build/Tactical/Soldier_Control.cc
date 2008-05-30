@@ -1792,8 +1792,6 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 	// Reset some animation values
 	pSoldier->fForceShade = FALSE;
 
-	CheckForFreeupFromHit( pSoldier, uiOldAnimFlags, uiNewAnimFlags, pSoldier->usOldAniState, usNewState );
-
 	// CHECK IF WE ARE AT AN IDLE ACTION
 #if 0
 	if ( gAnimControl[ usNewState ].uiFlags & ANIM_IDLE )
@@ -1850,6 +1848,8 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 
 	// Free up from stance change
 	FreeUpNPCFromStanceChange( pSoldier );
+
+	CheckForFreeupFromHit(pSoldier, uiOldAnimFlags, uiNewAnimFlags, pSoldier->usOldAniState, usNewState);
 
 	return( TRUE );
 }
