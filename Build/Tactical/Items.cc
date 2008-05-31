@@ -3575,7 +3575,6 @@ static UINT16 MagazineClassIndexToItemType(UINT16 usMagIndex)
 
 UINT16 DefaultMagazine( UINT16 usItem )
 {
-	WEAPONTYPE *	pWeapon;
 	UINT16				usLoop;
 
 	if (!(Item[usItem].usItemClass & IC_GUN))
@@ -3583,7 +3582,7 @@ UINT16 DefaultMagazine( UINT16 usItem )
 		return( 0 );
 	}
 
-	pWeapon = &(Weapon[usItem]);
+	WEAPONTYPE const* const pWeapon = &Weapon[usItem];
 	usLoop = 0;
 	while ( Magazine[usLoop].ubCalibre != NOAMMO )
 	{
@@ -3654,8 +3653,6 @@ UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard )
 	// Note: if any ammo items in the item table are separated from the main group,
 	// this function will have to be rewritten to scan the item table for an item
 	// with item class ammo, which has class index ubLoop
-
-	WEAPONTYPE *	pWeapon;
 	UINT16				usLoop;
 	UINT16				usPossibleMagIndex[ MAX_AMMO_TYPES_PER_GUN ];
 	UINT16				usPossibleMagCnt = 0;
@@ -3666,7 +3663,7 @@ UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard )
 		return( 0 );
 	}
 
-	pWeapon = &(Weapon[usItem]);
+	WEAPONTYPE const* const pWeapon = &Weapon[usItem];
 
 	// find & store all possible mag types that fit this gun
 	usLoop = 0;

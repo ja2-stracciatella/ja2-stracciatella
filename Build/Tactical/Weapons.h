@@ -227,7 +227,7 @@ typedef struct
 
 //GLOBALS
 
-extern WEAPONTYPE Weapon[ MAX_WEAPONS ];
+extern WEAPONTYPE const Weapon[];
 extern ARMOURTYPE Armour[];
 extern MAGTYPE Magazine[];
 extern EXPLOSIVETYPE Explosive[];

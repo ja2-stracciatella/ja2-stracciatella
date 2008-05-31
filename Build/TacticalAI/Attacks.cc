@@ -1689,9 +1689,8 @@ static INT32 EstimateStabDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 static INT8 TryToReload(SOLDIERTYPE* pSoldier)
 {
 	INT8						bSlot;
-	WEAPONTYPE *		pWeapon;
 
-	pWeapon = &(Weapon[pSoldier->inv[HANDPOS].usItem]);
+	WEAPONTYPE const* const pWeapon = &Weapon[pSoldier->inv[HANDPOS].usItem];
 	bSlot = FindAmmo( pSoldier, pWeapon->ubCalibre, pWeapon->ubMagSize, NO_SLOT );
 	if (bSlot != NO_SLOT)
 	{
