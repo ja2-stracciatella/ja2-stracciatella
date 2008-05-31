@@ -848,39 +848,6 @@ static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
 		b->uiFlags |= BUTTON_DIRTY;
 	}
 
-	// Mouse moved on the button, so reset it's timer to maximum.
-	if (b->Area.uiFlags & MSYS_CALLBACK_REASON_GAIN_MOUSE)
-	{
-		//check for sound playing stuff
-		if (b->ubSoundSchemeID)
-		{
-			if (&b->Area == MSYS_PrevRegion && !gpAnchoredButton)
-			{
-				ButtonSound const snd = b->uiFlags & BUTTON_ENABLED ?
-					BUTTON_SOUND_MOVED_ONTO : BUTTON_SOUND_DISABLED_MOVED_ONTO;
-				PlayButtonSound(b, snd);
-			}
-		}
-	}
-	else
-	{
-		//Check if we should play a sound
-		if (b->ubSoundSchemeID)
-		{
-			if (b->uiFlags & BUTTON_ENABLED)
-			{
-				if (&b->Area == MSYS_PrevRegion && !gpAnchoredButton)
-				{
-					PlayButtonSound(b, BUTTON_SOUND_MOVED_OFF_OF);
-				}
-			}
-			else
-			{
-				PlayButtonSound(b, BUTTON_SOUND_DISABLED_MOVED_OFF_OF);
-			}
-		}
-	}
-
 	// ATE: New stuff for toggle buttons that work with new Win95 paradigm
 	if (b->uiFlags & BUTTON_NEWTOGGLE &&
 			reason & MSYS_CALLBACK_REASON_LOST_MOUSE &&
