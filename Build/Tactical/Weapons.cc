@@ -89,7 +89,7 @@ BOOLEAN gfReportHitChances = FALSE;
 #define        PISTOL(ammo, update, impact, rt, rof,                       deadl, clip, range, av, hv, sd)      { HANDGUNCLASS, GUN_PISTOL,   ammo,      rt,             rof,        0,          0, update, impact, deadl, clip, range, 200, av, hv, sd, NO_WEAPON_SOUND, S_RELOAD_PISTOL, S_LNL_PISTOL }
 #define      M_PISTOL(ammo, update, impact, rt, rof, burstrof, burstpenal, deadl, clip, range, av, hv, sd, bsd) { HANDGUNCLASS, GUN_M_PISTOL, ammo,      rt,             rof, burstrof, burstpenal, update, impact, deadl, clip, range, 200, av, hv, sd, bsd, S_RELOAD_PISTOL, S_LNL_PISTOL }
 #define           SMG(ammo, update, impact, rt, rof, burstrof, burstpenal, deadl, clip, range, av, hv, sd, bsd) { SMGCLASS,     GUN_SMG,      ammo,      rt,             rof, burstrof, burstpenal, update, impact, deadl, clip, range, 200, av, hv, sd, bsd, S_RELOAD_SMG, S_LNL_SMG }
-#define      SN_RIFLE(ammo, update, impact, rt, rof, burstrof,             deadl, clip, range, av, hv, sd, bsd) { RIFLECLASS,   GUN_SN_RIFLE, ammo,      rt,             rof, burstrof,          0, update, impact, deadl, clip, range, 200, av, hv, sd, bsd, S_RELOAD_RIFLE, S_LNL_RIFLE }
+#define      SN_RIFLE(ammo, update, impact, rt, rof,                       deadl, clip, range, av, hv, sd)      { RIFLECLASS,   GUN_SN_RIFLE, ammo,      rt,             rof,        0,          0, update, impact, deadl, clip, range, 200, av, hv, sd, NO_WEAPON_SOUND, S_RELOAD_RIFLE, S_LNL_RIFLE }
 #define         RIFLE(ammo, update, impact, rt, rof,                       deadl, clip, range, av, hv, sd)      { RIFLECLASS,   GUN_RIFLE,    ammo,      rt,             rof,        0,          0, update, impact, deadl, clip, range, 200, av, hv, sd, NO_WEAPON_SOUND, S_RELOAD_RIFLE, S_LNL_RIFLE }
 #define       ASRIFLE(ammo, update, impact, rt, rof, burstrof, burstpenal, deadl, clip, range, av, hv, sd, bsd) { RIFLECLASS,   GUN_AS_RIFLE, ammo,      rt,             rof, burstrof, burstpenal, update, impact, deadl, clip, range, 200, av, hv, sd, bsd, S_RELOAD_RIFLE, S_LNL_RIFLE }
 #define       SHOTGUN(ammo, update, impact, rt, rof, burstrof, burstpenal, deadl, clip, range, av, hv, sd, bsd) { SHOTGUNCLASS, GUN_SHOTGUN,  ammo,      rt,             rof, burstrof, burstpenal, update, impact, deadl, clip, range, 200, av, hv, sd, bsd, S_RELOAD_SHOTGUN, S_LNL_SHOTGUN }
@@ -136,8 +136,8 @@ WEAPONTYPE const Weapon[] =
   /* Type-85           */           SMG(AMMO762W,   23, 23, 1, 10, 4, 11,  12, 30, 200, 75,  7, S_TYPE85,                S_BURSTTYPE1), // wt 19 // China; ROF 780
 
   /* SKS               */         RIFLE(AMMO762W,   22, 31, 2, 13,         24, 10, 300, 80,  8, S_SKS                                ), // wt 39 // USSR
-  /* Dragunov          */      SN_RIFLE(AMMO762W,   21, 36, 5, 11, 0,      32, 10, 750, 80,  8, S_DRAGUNOV,              S_BURSTTYPE1), // wt 43 // USSR
-  /* M24               */      SN_RIFLE(AMMO762N,   21, 36, 5,  8, 0,      32,  5, 800, 80,  8, S_M24,                   S_BURSTTYPE1), // wt 66 // US
+  /* Dragunov          */      SN_RIFLE(AMMO762W,   21, 36, 5, 11,         32, 10, 750, 80,  8, S_DRAGUNOV                           ), // wt 43 // USSR
+  /* M24               */      SN_RIFLE(AMMO762N,   21, 36, 5,  8,         32,  5, 800, 80,  8, S_M24                                ), // wt 66 // US
 
   /* Steyr AUG         */       ASRIFLE(AMMO556,    20, 30, 2, 13, 3,  8,  38, 30, 500, 77,  8, S_AUG,                   S_BURSTTYPE1), // wt 36 // Austria; ROF 650
   /* H&K G41           */       ASRIFLE(AMMO556,    20, 29, 2, 13, 4,  8,  27, 30, 300, 77,  8, S_G41,                   S_BURSTTYPE1), // wt 41 // Germany; ROF 850
