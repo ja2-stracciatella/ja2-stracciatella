@@ -54,7 +54,7 @@ BOOLEAN	InitializeFonts(void)
 	M(gpTinyFontType1,         "FONTS/TINYFONT1.sti");
 
 #if defined JA2EDITOR && defined ENGLISH
-	M(gpHugeFont, "FONTS/HUGEFONT.sti")
+	M(gpHugeFont, "FONTS/HUGEFONT.sti");
 #endif
 #undef M
 
