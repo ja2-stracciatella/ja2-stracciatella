@@ -2090,7 +2090,6 @@ const wchar_t *pWebPagesTitles[] =
 	L"Contract",
 	L"Comments",
 	L"McGillicutty's Mortuary",
-	L"",
 	L"URL not found.",
 	L"Bobby Ray's - Recent Shipments",
 	L"",

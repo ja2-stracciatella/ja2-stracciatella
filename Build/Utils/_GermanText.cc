@@ -2016,7 +2016,6 @@ const wchar_t *pWebPagesTitles[] =
 	L"Vertrag",
 	L"Bemerkungen",
 	L"McGillicuttys Bestattungen",
-	L"",
 	L"URL nicht gefunden.",
 	L"Bobby Rays - Letzte Lieferungen",
 	L"",
