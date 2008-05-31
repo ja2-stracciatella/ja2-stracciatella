@@ -171,7 +171,7 @@ enum
 };
 
 // An enumeration for playing battle sounds
-enum
+enum BattleSound
 {
 	BATTLE_SOUND_OK1,
 	BATTLE_SOUND_OK2,
@@ -959,8 +959,8 @@ void SoldierGotoStationaryStance( SOLDIERTYPE *pSoldier );
 void ReCreateSoldierLight(SOLDIERTYPE*);
 
 
-BOOLEAN DoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID );
-BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID, INT8 bSpecialCode );
+BOOLEAN DoMercBattleSound(SOLDIERTYPE*, BattleSound);
+BOOLEAN InternalDoMercBattleSound(SOLDIERTYPE*, BattleSound, INT8 bSpecialCode);
 
 
 UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKitPts, INT16 sStatus );

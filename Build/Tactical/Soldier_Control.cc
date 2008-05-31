@@ -921,7 +921,7 @@ static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, 
 		{
 			if ( Random( 10 ) == 0 )
 			{
-				DoMercBattleSound( pSoldier, (INT8)( BATTLE_SOUND_CURSE1 ) );
+				DoMercBattleSound(pSoldier, BATTLE_SOUND_CURSE1);
 			}
 		}
 	}
@@ -6130,7 +6130,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 }
 
 
-BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID, INT8 bSpecialCode )
+BOOLEAN InternalDoMercBattleSound(SOLDIERTYPE* pSoldier, BattleSound ubBattleSoundID, INT8 const bSpecialCode)
 {
 	SGPFILENAME		zFilename;
 	UINT8					ubSoundID;
@@ -6462,7 +6462,8 @@ BOOLEAN InternalDoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID,
 	}
 }
 
-BOOLEAN DoMercBattleSound( SOLDIERTYPE *pSoldier, UINT8 ubBattleSoundID )
+
+BOOLEAN DoMercBattleSound(SOLDIERTYPE* const pSoldier, BattleSound const ubBattleSoundID)
 {
 	// We WANT to play some RIGHT AWAY.....
 	if ( gBattleSndsData[ ubBattleSoundID ].fStopDialogue == 1 || ( pSoldier->ubProfile == NO_PROFILE ) || InOverheadMap( ) )

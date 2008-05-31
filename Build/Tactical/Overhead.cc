@@ -4148,7 +4148,7 @@ void HandlePlayerServices( SOLDIERTYPE *pTeamSoldier )
 
 							if ( !gTacticalStatus.fAutoBandageMode )
 							{
-								DoMercBattleSound( pTeamSoldier, (INT8)( BATTLE_SOUND_CURSE1 ) );
+								DoMercBattleSound(pTeamSoldier, BATTLE_SOUND_CURSE1);
 							}
 						}
 					}
@@ -4484,7 +4484,7 @@ static BOOLEAN WeSawSomeoneThisTurn(void)
 }
 
 
-static void SayBattleSoundFromAnyBodyInSector(INT32 iBattleSnd)
+static void SayBattleSoundFromAnyBodyInSector(BattleSound const iBattleSnd)
 {
 	UINT8	ubNumMercs = 0;
 

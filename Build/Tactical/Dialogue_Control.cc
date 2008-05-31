@@ -712,7 +712,7 @@ void HandleDialogue()
 			s = FindSoldierByProfileID(d->ubCharacterNum);
 			if (s)
 			{
-				InternalDoMercBattleSound(s, (UINT8)d->uiSpecialEventData, 0);
+				InternalDoMercBattleSound(s, static_cast<BattleSound>(d->uiSpecialEventData), 0);
 			}
 		}
 
