@@ -2335,8 +2335,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							// Play noise....
 							//PlaySoldierJA2Sample(pTarget, S_SLAP_IMPACT, HIGHVOLUME, 1, TRUE);
 
-							//DoMercBattleSound( pTarget, (INT8)( BATTLE_SOUND_HIT1 + Random( 2 ) ) );
-
+							//DoMercBattleSound(pTarget, BATTLE_SOUND_HIT1);
 						}
 					}
 					break;

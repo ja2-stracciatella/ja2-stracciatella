@@ -8859,7 +8859,7 @@ static void RandomAwakeSelectedMercConfirmsStrategicMove(void)
 		// select that merc so that when he speaks we're showing his portrait and not someone else
 		ChangeSelectedInfoChar( ubSelectedMercIndex[ ubChosenMerc ], FALSE );
 
-		DoMercBattleSound(selected_merc[ubChosenMerc], Random(2) ? BATTLE_SOUND_OK1 : BATTLE_SOUND_OK2);
+		DoMercBattleSound(selected_merc[ubChosenMerc], BATTLE_SOUND_OK1);
 		//TacticalCharacterDialogue(selected_merc[ubChosenMerc], ubQuoteNum);
 	}
 }

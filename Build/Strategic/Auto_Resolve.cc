@@ -3549,7 +3549,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 		if( pTarget->pSoldier->bLife >= CONSCIOUSNESS || pTarget->uiFlags & CELL_CREATURE )
 		{
 			if( gpAR->fSound )
-				DoMercBattleSound( pTarget->pSoldier, (INT8)( BATTLE_SOUND_HIT1 + PreRandom( 2 ) ) );
+				DoMercBattleSound(pTarget->pSoldier, BATTLE_SOUND_HIT1);
 		}
 		if( !(pTarget->uiFlags & CELL_CREATURE) && iNewLife < OKLIFE && pTarget->pSoldier->bLife >= OKLIFE )
 		{ //the hit caused the merc to fall.  Play the falling sound
@@ -3682,7 +3682,7 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 	if( pTarget->pSoldier->bLife >= CONSCIOUSNESS )
 	{
 		if( gpAR->fSound )
-			DoMercBattleSound( pTarget->pSoldier, (INT8)( BATTLE_SOUND_HIT1 + PreRandom( 2 ) ) );
+			DoMercBattleSound(pTarget->pSoldier, BATTLE_SOUND_HIT1);
 	}
 	if( iNewLife < OKLIFE && pTarget->pSoldier->bLife >= OKLIFE )
 	{ //the hit caused the merc to fall.  Play the falling sound

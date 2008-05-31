@@ -3064,7 +3064,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
       }
       else
       {
-			  DoMercBattleSound( pSoldier, (INT8)( BATTLE_SOUND_HIT1 + Random( 2 ) ) );
+				DoMercBattleSound(pSoldier, BATTLE_SOUND_HIT1);
       }
 		}
 	}
@@ -3452,14 +3452,14 @@ static void SoldierGotHitExplosion(SOLDIERTYPE* const pSoldier, const UINT16 usW
 		{
 			if ( sRange >= 2 && sRange <= 4 )
 			{
-				DoMercBattleSound( pSoldier, (INT8)( BATTLE_SOUND_HIT1 + Random( 2 ) ) );
+				DoMercBattleSound(pSoldier, BATTLE_SOUND_HIT1);
 
 				EVENT_InitNewSoldierAnim( pSoldier, CHARIOTS_OF_FIRE, 0 , FALSE );
 				return;
 			}
 			else if ( sRange <= 1 )
 			{
-				DoMercBattleSound( pSoldier, (INT8)( BATTLE_SOUND_HIT1 + Random( 2 ) ) );
+				DoMercBattleSound(pSoldier, BATTLE_SOUND_HIT1);
 
 				EVENT_InitNewSoldierAnim( pSoldier, BODYEXPLODING, 0 , FALSE );
 				return;
@@ -9351,7 +9351,7 @@ static void HandleSoldierTakeDamageFeedback(SOLDIERTYPE* const s)
 	if (GetJA2Clock() - s->uiTimeSinceLastBleedGrunt > 1000)
 	{
 		s->uiTimeSinceLastBleedGrunt = GetJA2Clock();
-		DoMercBattleSound(s, BATTLE_SOUND_HIT1 + Random(2));
+		DoMercBattleSound(s, BATTLE_SOUND_HIT1);
 	}
 
 	FlashSoldierPortrait(s);

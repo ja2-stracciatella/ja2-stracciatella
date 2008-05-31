@@ -1230,7 +1230,7 @@ BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, EXPLOSIVETYPE* const pExpl
 		SoldierTakeDamage(pSoldier, sWoundAmt, sBreathAmt, TAKE_DAMAGE_GAS, NULL);
 		if ( pSoldier->bLife >= CONSCIOUSNESS )
 		{
-			DoMercBattleSound( pSoldier, (INT8)( BATTLE_SOUND_HIT1 + Random( 2 ) ) );
+			DoMercBattleSound(pSoldier, BATTLE_SOUND_HIT1);
 		}
 
 		if (owner != NULL && owner->bTeam == gbPlayerNum && pSoldier->bTeam != gbPlayerNum)
@@ -1622,7 +1622,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 				SoldierTakeDamage(pSoldier, sWoundAmt, sBreathAmt, TAKE_DAMAGE_GAS, NULL);
 				if ( pSoldier->bLife >= CONSCIOUSNESS )
 				{
-					DoMercBattleSound( pSoldier, (INT8)( BATTLE_SOUND_HIT1 + Random( 2 ) ) );
+					DoMercBattleSound(pSoldier, BATTLE_SOUND_HIT1);
 				}
 			}
 			*/
