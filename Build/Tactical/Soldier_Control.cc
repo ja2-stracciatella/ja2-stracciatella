@@ -6130,336 +6130,206 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 }
 
 
-BOOLEAN InternalDoMercBattleSound(SOLDIERTYPE* pSoldier, BattleSound ubBattleSoundID, INT8 const bSpecialCode)
+BOOLEAN InternalDoMercBattleSound(SOLDIERTYPE* s, BattleSound battle_snd_id, INT8 const bSpecialCode)
 {
-	SGPFILENAME		zFilename;
-	UINT8					ubSoundID;
-	BOOLEAN				fDoSub = FALSE;
-	INT32					uiSubSoundID = 0;
+	CHECKF (battle_snd_id < NUM_MERC_BATTLE_SOUNDS);
 
-	// DOUBLECHECK RANGE
-	CHECKF ( ubBattleSoundID < NUM_MERC_BATTLE_SOUNDS );
-
-  if ( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+  if (s->uiStatusFlags & SOLDIER_VEHICLE)
   {
     // Pick a passenger from vehicle....
-    pSoldier = PickRandomPassengerFromVehicle( pSoldier );
-
-    if ( pSoldier == NULL )
-    {
-      return( FALSE );
-    }
+    s = PickRandomPassengerFromVehicle(s);
+    if (!s) return FALSE;
   }
 
 	// Are we mute?
-	if ( pSoldier->uiStatusFlags & SOLDIER_MUTE )
-	{
-		return( FALSE );
-	}
-
-
-//	uiTimeSameBattleSndDone
+	if (s->uiStatusFlags & SOLDIER_MUTE) return FALSE;
 
 	// If we are a creature, etc, pick a better sound...
-	if ( ubBattleSoundID == BATTLE_SOUND_HIT1 || ubBattleSoundID == BATTLE_SOUND_HIT2 )
+	INT32 sub_snd = 0;
+	switch (battle_snd_id)
 	{
-		switch ( pSoldier->ubBodyType )
-		{
-			case COW:
+		case BATTLE_SOUND_HIT1:
+		case BATTLE_SOUND_HIT2:
+			switch (s->ubBodyType)
+			{
+				case COW:                sub_snd = COW_HIT_SND;                                break;
+				case YAF_MONSTER:
+				case YAM_MONSTER:
+				case ADULTFEMALEMONSTER:
+				case AM_MONSTER:         sub_snd = Random(2) == 0 ? ACR_DIE_PART1 : ACR_LUNGE; break;
+				case INFANT_MONSTER:     sub_snd = BCR_SHRIEK;                                 break;
+				case QUEENMONSTER:       sub_snd = LQ_SHRIEK;                                  break;
+				case LARVAE_MONSTER:     sub_snd = BCR_SHRIEK;                                 break;
+				case BLOODCAT:           sub_snd = BLOODCAT_HIT_1;                             break;
+				case ROBOTNOWEAPON:      sub_snd = S_METAL_IMPACT1 + Random(2);                break;
 
-				fDoSub = TRUE;
-				uiSubSoundID = COW_HIT_SND;
-				break;
+				default: goto no_sub;
+			}
+			break;
 
-			case YAF_MONSTER:
-			case YAM_MONSTER:
-			case ADULTFEMALEMONSTER:
-			case AM_MONSTER:
+		case BATTLE_SOUND_DIE1:
+			switch (s->ubBodyType)
+			{
+				case COW:                sub_snd = COW_DIE_SND;          break;
+				case YAF_MONSTER:
+				case YAM_MONSTER:
+				case ADULTFEMALEMONSTER:
+				case AM_MONSTER:         sub_snd = CREATURE_FALL_PART_2; break;
+				case INFANT_MONSTER:     sub_snd = BCR_DYING;            break;
+				case LARVAE_MONSTER:     sub_snd = LCR_RUPTURE;          break;
+				case QUEENMONSTER:       sub_snd = LQ_DYING;             break;
+				case BLOODCAT:           sub_snd = BLOODCAT_DIE_1;       break;
 
-				fDoSub = TRUE;
+				case ROBOTNOWEAPON:
+					sub_snd = EXPLOSION_1;
+					PlayJA2Sample(ROBOT_DEATH, HIGHVOLUME, 1, MIDDLEPAN);
+					break;
 
-				if ( Random( 2 ) == 0 )
-				{
-					uiSubSoundID = ACR_DIE_PART1;
-				}
-				else
-				{
-					uiSubSoundID = ACR_LUNGE;
-				}
-				break;
+				default: goto no_sub;
+			}
 
-			case INFANT_MONSTER:
+		default:
+			// OK. any other sound, not hits, robot makes a beep
+			switch (s->ubBodyType)
+			{
+				case ROBOTNOWEAPON:
+					sub_snd = battle_snd_id == BATTLE_SOUND_ATTN1 ?
+						ROBOT_GREETING : ROBOT_BEEP;
+					break;
 
-				fDoSub = TRUE;
-				uiSubSoundID = BCR_SHRIEK;
-				break;
-
-			case QUEENMONSTER:
-
-				fDoSub = TRUE;
-				uiSubSoundID = LQ_SHRIEK;
-				break;
-
-			case LARVAE_MONSTER:
-
-				fDoSub = TRUE;
-				uiSubSoundID = BCR_SHRIEK;
-				break;
-
-			case BLOODCAT:
-
-				fDoSub = TRUE;
-				uiSubSoundID = BLOODCAT_HIT_1;
-				break;
-
-			case ROBOTNOWEAPON:
-
-				fDoSub = TRUE;
-				uiSubSoundID = (UINT32)( S_METAL_IMPACT1 + Random( 2 ) );
-				break;
-		}
+				default: goto no_sub;
+			}
+			break;
 	}
 
-	if ( ubBattleSoundID == BATTLE_SOUND_DIE1 )
+	if (guiCurrentScreen != GAME_SCREEN)
 	{
-		switch ( pSoldier->ubBodyType )
-		{
-			case COW:
-
-				fDoSub = TRUE;
-				uiSubSoundID = COW_DIE_SND;
-				break;
-
-			case YAF_MONSTER:
-			case YAM_MONSTER:
-			case ADULTFEMALEMONSTER:
-			case AM_MONSTER:
-
-				fDoSub = TRUE;
-				uiSubSoundID = CREATURE_FALL_PART_2;
-				break;
-
-			case INFANT_MONSTER:
-
-				fDoSub = TRUE;
-				uiSubSoundID = BCR_DYING;
-				break;
-
-			case LARVAE_MONSTER:
-
-				fDoSub = TRUE;
-				uiSubSoundID = LCR_RUPTURE;
-				break;
-
-			case QUEENMONSTER:
-
-				fDoSub = TRUE;
-				uiSubSoundID = LQ_DYING;
-				break;
-
-			case BLOODCAT:
-
-				fDoSub = TRUE;
-				uiSubSoundID = BLOODCAT_DIE_1;
-				break;
-
-			case ROBOTNOWEAPON:
-
-				fDoSub = TRUE;
-				uiSubSoundID = (UINT32)( EXPLOSION_1 );
-  			PlayJA2Sample(ROBOT_DEATH, HIGHVOLUME, 1, MIDDLEPAN);
-				break;
-
-		}
+		PlayJA2Sample(sub_snd, HIGHVOLUME, 1, MIDDLEPAN);
 	}
-
-	// OK. any other sound, not hits, robot makes a beep
-	if ( pSoldier->ubBodyType == ROBOTNOWEAPON && !fDoSub )
+	else
 	{
-		fDoSub = TRUE;
-    if ( ubBattleSoundID == BATTLE_SOUND_ATTN1 )
-    {
-		  uiSubSoundID = ROBOT_GREETING;
-    }
-    else
-    {
-		  uiSubSoundID = ROBOT_BEEP;
-    }
+		PlayLocationJA2Sample(s->sGridNo, sub_snd, CalculateSpeechVolume(HIGHVOLUME), 1);
 	}
+	return TRUE;
 
-	if ( fDoSub )
-	{
-		if( guiCurrentScreen != GAME_SCREEN )
-		{
-			PlayJA2Sample(uiSubSoundID, HIGHVOLUME, 1, MIDDLEPAN);
-		}
-		else
-		{
-			PlayLocationJA2Sample(pSoldier->sGridNo, uiSubSoundID, CalculateSpeechVolume(HIGHVOLUME), 1);
-		}
-		return( TRUE );
-	}
+no_sub:
+	BATTLESNDS_STRUCT const* battle_snd = &gBattleSndsData[battle_snd_id];
 
-	// Check if this is the same one we just played...
-	if ( pSoldier->bOldBattleSnd == ubBattleSoundID && gBattleSndsData[ ubBattleSoundID ].fDontAllowTwoInRow )
+	// Check if this is the same one we just played and we are below the min delay
+	if (s->bOldBattleSnd == battle_snd_id &&
+			battle_snd->fDontAllowTwoInRow      &&
+			GetJA2Clock() - s->uiTimeSameBattleSndDone < MIN_SUBSEQUENT_SNDS_DELAY)
 	{
-		// Are we below the min delay?
-		if ( ( GetJA2Clock( ) - pSoldier->uiTimeSameBattleSndDone ) < MIN_SUBSEQUENT_SNDS_DELAY )
-		{
-			return( TRUE );
-		}
+		return TRUE;
 	}
 
 	// If a battle snd is STILL playing....
-	if ( SoundIsPlaying( pSoldier->uiBattleSoundID ) )
+	if (SoundIsPlaying(s->uiBattleSoundID))
 	{
-		// We can do a few things here....
-		// Is this a crutial one...?
-		if ( gBattleSndsData[ ubBattleSoundID ].fStopDialogue == 1 )
-		{
-			// Stop playing origonal
-			SoundStop( pSoldier->uiBattleSoundID );
-		}
-		else
-		{
-			// Skip this one...
-			return( TRUE );
-		}
+		// If this is not crucial, skip it
+		if (battle_snd->fStopDialogue != 1) return TRUE;
+
+		// Stop playing original
+		SoundStop(s->uiBattleSoundID);
 	}
 
 	// If we are talking now....
-	if ( IsMercSayingDialogue( pSoldier->ubProfile ) )
+	if (IsMercSayingDialogue(s->ubProfile))
 	{
-		// We can do a couple of things now...
-		if ( gBattleSndsData[ ubBattleSoundID ].fStopDialogue == 1 )
+		switch (battle_snd->fStopDialogue)
 		{
-			// Stop dialigue...
-			DialogueAdvanceSpeech( );
-		}
-		else if ( gBattleSndsData[ ubBattleSoundID ].fStopDialogue == 2 )
-		{
-			// Skip battle snd...
-			return( TRUE );
+			case 1: DialogueAdvanceSpeech(); break; // Stop dialogue
+			case 2: return TRUE;                    // Skip battle snd
 		}
 	}
-
 
 	// Save this one we're doing...
-	pSoldier->bOldBattleSnd						 = ubBattleSoundID;
-	pSoldier->uiTimeSameBattleSndDone	 = GetJA2Clock( );
-
+	s->bOldBattleSnd           = battle_snd_id;
+	s->uiTimeSameBattleSndDone = GetJA2Clock();
 
 	// Adjust based on morale...
-	if ( ubBattleSoundID == BATTLE_SOUND_OK1 && pSoldier->bMorale < LOW_MORALE_BATTLE_SND_THREASHOLD )
+	if (s->bMorale < LOW_MORALE_BATTLE_SND_THREASHOLD)
 	{
-		ubBattleSoundID = BATTLE_SOUND_LOWMARALE_OK1;
+		switch (battle_snd_id)
+		{
+			case BATTLE_SOUND_OK1:   battle_snd_id = BATTLE_SOUND_LOWMARALE_OK1;   break;
+			case BATTLE_SOUND_ATTN1: battle_snd_id = BATTLE_SOUND_LOWMARALE_ATTN1; break;
+		}
 	}
-	if ( ubBattleSoundID == BATTLE_SOUND_ATTN1 && pSoldier->bMorale < LOW_MORALE_BATTLE_SND_THREASHOLD )
-	{
-		ubBattleSoundID = BATTLE_SOUND_LOWMARALE_ATTN1;
-	}
-
-	ubSoundID = ubBattleSoundID;
 
 	//if the sound to be played is a confirmation, check to see if we are to play it
-	if( ubSoundID == BATTLE_SOUND_OK1 )
+	if (battle_snd_id == BATTLE_SOUND_OK1 &&
+			gGameSettings.fOptions[TOPTION_MUTE_CONFIRMATIONS])
 	{
-		if( gGameSettings.fOptions[ TOPTION_MUTE_CONFIRMATIONS ] )
-			return( TRUE );
+		return TRUE;
 	}
 
 	// Randomize between sounds, if appropriate
-	if ( gBattleSndsData[ ubSoundID ].ubRandomVal != 0 )
+	if (battle_snd->ubRandomVal != 0)
 	{
-		ubSoundID = ubSoundID + (UINT8)Random( gBattleSndsData[ ubSoundID ].ubRandomVal );
-
+		battle_snd_id = static_cast<BattleSound>(battle_snd_id + Random(battle_snd->ubRandomVal));
+		battle_snd    = &gBattleSndsData[battle_snd_id];
 	}
 
-
 	// OK, build file and play!
-	if ( pSoldier->ubProfile != NO_PROFILE )
+	SGPFILENAME filename;
+	if (s->ubProfile != NO_PROFILE)
 	{
-		sprintf( zFilename, "BATTLESNDS/%03d_%s.wav", pSoldier->ubProfile, gBattleSndsData[ ubSoundID ].zName );
+		sprintf(filename, "BATTLESNDS/%03d_%s.wav", s->ubProfile, battle_snd->zName);
 
-		if ( !FileExists( zFilename ) )
+		if (!FileExists(filename))
 		{
 			// OK, temp build file...
-			if ( pSoldier->ubBodyType == REGFEMALE )
+			if (s->ubBodyType == REGFEMALE)
 			{
-				sprintf( zFilename, "BATTLESNDS/f_%s.wav", gBattleSndsData[ ubSoundID ].zName );
+				sprintf(filename, "BATTLESNDS/f_%s.wav", battle_snd->zName);
 			}
 			else
 			{
-				sprintf( zFilename, "BATTLESNDS/m_%s.wav", gBattleSndsData[ ubSoundID ].zName );
+				sprintf(filename, "BATTLESNDS/m_%s.wav", battle_snd->zName);
 			}
 		}
 	}
 	else
 	{
 		// Check if we can play this!
-		if ( !gBattleSndsData[ ubSoundID ].fBadGuy )
-		{
-			return( FALSE );
-		}
+		if (!battle_snd->fBadGuy) return FALSE;
 
-		if ( pSoldier->ubBodyType == HATKIDCIV || pSoldier->ubBodyType == KIDCIV )
+		if (s->ubBodyType == HATKIDCIV || s->ubBodyType == KIDCIV)
 		{
-			if ( ubSoundID == BATTLE_SOUND_DIE1 )
-			{
-				sprintf( zFilename, "BATTLESNDS/kid%d_dying.wav", pSoldier->ubBattleSoundID );
-			}
-			else
-			{
-				sprintf( zFilename, "BATTLESNDS/kid%d_%s.wav", pSoldier->ubBattleSoundID, gBattleSndsData[ ubSoundID ].zName );
-			}
+			sprintf(filename, "BATTLESNDS/kid%d_%s.wav", s->ubBattleSoundID, battle_snd->zName);
 		}
 		else
 		{
-			if ( ubSoundID == BATTLE_SOUND_DIE1 )
-			{
-				sprintf( zFilename, "BATTLESNDS/bad%d_die.wav", pSoldier->ubBattleSoundID );
-			}
-			else
-			{
-				sprintf( zFilename, "BATTLESNDS/bad%d_%s.wav", pSoldier->ubBattleSoundID, gBattleSndsData[ ubSoundID ].zName );
-			}
+			char const* const snd_name = battle_snd_id == BATTLE_SOUND_DIE1 ?
+				"die" : battle_snd->zName;
+			sprintf(filename, "BATTLESNDS/bad%d_%s.wab", s->ubBattleSoundID, snd_name);
 		}
 	}
-
-	// Play sound!
-	UINT32 volume = CalculateSpeechVolume(HIGHVOLUME);
 
 	// ATE: Reduce volume for OK sounds...
-	// ( Only for all-moves or multi-selection cases... )
-	if ( bSpecialCode == BATTLE_SND_LOWER_VOLUME )
-	{
-		volume = CalculateSpeechVolume(MIDVOLUME);
-	}
+	// (Only for all-moves or multi-selection cases)
+	UINT32 const base_volume = bSpecialCode == BATTLE_SND_LOWER_VOLUME ? MIDVOLUME : HIGHVOLUME;
+	UINT32       volume      = CalculateSpeechVolume(base_volume);
 
 	// If we are an enemy.....reduce due to volume
-	if ( pSoldier->bTeam != gbPlayerNum )
+	if (s->bTeam != gbPlayerNum)
 	{
-		volume = SoundVolume(volume, pSoldier->sGridNo);
+		volume = SoundVolume(volume, s->sGridNo);
 	}
 
-	const UINT32 pan       = SoundDir(pSoldier->sGridNo);
-	const UINT32 uiSoundID = SoundPlay(zFilename, volume, pan, 1, NULL, NULL);
-	if (uiSoundID == SOUND_ERROR)
-	{
-		return( FALSE );
-	}
-	else
-	{
-		pSoldier->uiBattleSoundID = uiSoundID;
+	UINT32 const pan       = SoundDir(s->sGridNo);
+	UINT32 const uiSoundID = SoundPlay(filename, volume, pan, 1, NULL, NULL);
+	if (uiSoundID == SOUND_ERROR) return FALSE;
+	s->uiBattleSoundID = uiSoundID;
 
-		if ( pSoldier->ubProfile != NO_PROFILE )
-		{
-			FACETYPE* const face = pSoldier->face;
-			if (face != NULL) ExternSetFaceTalking(face, uiSoundID);
-		}
-
-		return( TRUE );
+	if (s->ubProfile != NO_PROFILE)
+	{
+		FACETYPE* const face = s->face;
+		if (face) ExternSetFaceTalking(face, uiSoundID);
 	}
+
+	return TRUE;
 }
 
 
