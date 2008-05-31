@@ -86,7 +86,7 @@ BOOLEAN gfReportHitChances = FALSE;
 
 
 #define      NOWEAPON(range)                                                                                    { NOGUNCLASS,   NOT_GUN,      NOAMMO,    0,                0,        0,          0,      0,      0,     0, range,    0,   0,  0,  0, NO_WEAPON_SOUND, NO_WEAPON_SOUND, NO_WEAPON_SOUND, NO_WEAPON_SOUND } // XXX it is magazine size, not range
-#define        PISTOL(ammo, update, impact, rt, rof, burstrof, burstpenal, deadl, clip, range, av, hv, sd, bsd) { HANDGUNCLASS, GUN_PISTOL,   ammo,      rt,             rof, burstrof, burstpenal, update, impact, deadl, clip, range, 200, av, hv, sd, bsd, S_RELOAD_PISTOL, S_LNL_PISTOL }
+#define        PISTOL(ammo, update, impact, rt, rof,                       deadl, clip, range, av, hv, sd)      { HANDGUNCLASS, GUN_PISTOL,   ammo,      rt,             rof,        0,          0, update, impact, deadl, clip, range, 200, av, hv, sd, NO_WEAPON_SOUND, S_RELOAD_PISTOL, S_LNL_PISTOL }
 #define      M_PISTOL(ammo, update, impact, rt, rof, burstrof, burstpenal, deadl, clip, range, av, hv, sd, bsd) { HANDGUNCLASS, GUN_M_PISTOL, ammo,      rt,             rof, burstrof, burstpenal, update, impact, deadl, clip, range, 200, av, hv, sd, bsd, S_RELOAD_PISTOL, S_LNL_PISTOL }
 #define           SMG(ammo, update, impact, rt, rof, burstrof, burstpenal, deadl, clip, range, av, hv, sd, bsd) { SMGCLASS,     GUN_SMG,      ammo,      rt,             rof, burstrof, burstpenal, update, impact, deadl, clip, range, 200, av, hv, sd, bsd, S_RELOAD_SMG, S_LNL_SMG }
 #define      SN_RIFLE(ammo, update, impact, rt, rof, burstrof,             deadl, clip, range, av, hv, sd, bsd) { RIFLECLASS,   GUN_SN_RIFLE, ammo,      rt,             rof, burstrof,          0, update, impact, deadl, clip, range, 200, av, hv, sd, bsd, S_RELOAD_RIFLE, S_LNL_RIFLE }
@@ -117,14 +117,14 @@ WEAPONTYPE const Weapon[] =
    *                                    |           |   |   |  Rate of fire    |   Range|   |   |                        |
    *                                    |           |   |   |  |   |  Burst penalty|    |   |   |                        |
    *                                    |           |   |   |  |   |  |   |    |   |    |   |   |                        | */
-  /* Glock 17          */        PISTOL(AMMO9,      24, 21, 0, 14, 0,  0,   8, 15, 120, 60,  5, S_GLOCK17,               NO_WEAPON_SOUND), // wt 6  // Austria
+  /* Glock 17          */        PISTOL(AMMO9,      24, 21, 0, 14,          8, 15, 120, 60,  5, S_GLOCK17                               ), // wt 6  // Austria
   /* Glock 18          */      M_PISTOL(AMMO9,      24, 21, 0, 14, 5, 15,   9, 15, 120, 60,  5, S_GLOCK18,               S_BURSTTYPE1   ), // wt 6  // Austria
-  /* Beretta 92F       */        PISTOL(AMMO9,      23, 22, 0, 16, 0,  0,   9, 15, 120, 60,  5, S_BERETTA92,             NO_WEAPON_SOUND), // wt 11 // Italy
+  /* Beretta 92F       */        PISTOL(AMMO9,      23, 22, 0, 16,          9, 15, 120, 60,  5, S_BERETTA92                             ), // wt 11 // Italy
   /* Beretta 93R       */      M_PISTOL(AMMO9,      23, 22, 0, 13, 5, 15,   9, 15, 120, 60,  5, S_BERETTA93,             S_BURSTTYPE1   ), // wt 11 // Italy
-  /* .38 S&W Special   */        PISTOL(AMMO38,     23, 22, 0, 11, 0,  0,   6,  6, 130, 63,  5, S_SWSPECIAL,             NO_WEAPON_SOUND), // wt 11 // Britain
-  /* .357 Barracuda    */        PISTOL(AMMO357,    23, 24, 0, 11, 0,  0,   7,  6, 135, 66,  6, S_BARRACUDA,             NO_WEAPON_SOUND), // wt 10 // Belgium
-  /* .357 DesertEagle  */        PISTOL(AMMO357,    24, 24, 0, 11, 0,  0,   7,  9, 135, 66,  6, S_DESERTEAGLE,           NO_WEAPON_SOUND), // wt 17 // US
-  /* .45 M1911         */        PISTOL(AMMO45,     24, 23, 0, 13, 0,  0,   9,  7, 125, 69,  6, S_M1911,                 NO_WEAPON_SOUND), // wt 12 // US
+  /* .38 S&W Special   */        PISTOL(AMMO38,     23, 22, 0, 11,          6,  6, 130, 63,  5, S_SWSPECIAL                             ), // wt 11 // Britain
+  /* .357 Barracuda    */        PISTOL(AMMO357,    23, 24, 0, 11,          7,  6, 135, 66,  6, S_BARRACUDA                             ), // wt 10 // Belgium
+  /* .357 DesertEagle  */        PISTOL(AMMO357,    24, 24, 0, 11,          7,  9, 135, 66,  6, S_DESERTEAGLE                           ), // wt 17 // US
+  /* .45 M1911         */        PISTOL(AMMO45,     24, 23, 0, 13,          9,  7, 125, 69,  6, S_M1911                                 ), // wt 12 // US
 
   /* H&K MP5K          */           SMG(AMMO9,      23, 23, 1, 15, 5,  8,  17, 30, 200, 75,  7, S_MP5K,                  S_BURSTTYPE1   ), // wt 21 // Germany; ROF 900 ?
   /* .45 MAC-10        */           SMG(AMMO45,     23, 27, 2, 13, 5,  8,  20, 30, 200, 75,  7, S_MAC10,                 S_BURSTTYPE1   ), // wt 28 // US; ROF 1090
@@ -180,12 +180,12 @@ WEAPONTYPE const Weapon[] =
   /* bloodcat bite     */         BLADE(                24,    10,          1,      10,  2,     NO_WEAPON_SOUND                         ),
   /* machete           */         BLADE(                24,     9,          6,      40,  2,     NO_WEAPON_SOUND                         ),
   /* rocket rifle      */         RIFLE(AMMOROCKET, 20, 38, 2, 10, 0,      62,  5, 600, 80, 10, S_SMALL_ROCKET_LAUNCHER, NO_WEAPON_SOUND),
-  /* automag III       */        PISTOL(AMMO762N,   24, 29, 1,  9, 0,  0,  13,  5, 220, 72,  6, S_AUTOMAG,               NO_WEAPON_SOUND),
+  /* automag III       */        PISTOL(AMMO762N,   24, 29, 1,  9,         13,  5, 220, 72,  6, S_AUTOMAG                               ),
   /* infant spit       */     MONSTSPIT(                12,    13,          1,  5, 200, 10,  5, ACR_SPIT                                ),
   /* young male spit   */     MONSTSPIT(                16,    10,          1, 10, 200, 10,  5, ACR_SPIT                                ),
   /* old male spit     */     MONSTSPIT(                20,    10,          1, 20, 200, 10,  5, ACR_SPIT                                ),
   /* tank cannon       */        CANNON(            30,     0,  8,         80,     800, 90, 10, S_TANK_CANNON                           ),
-  /* dart gun          */        PISTOL(AMMODART,   25,  2, 1, 13, 0,  0,  10,  1, 200,  0,  0, NO_WEAPON_SOUND,         NO_WEAPON_SOUND),
+  /* dart gun          */        PISTOL(AMMODART,   25,  2, 1, 13,         10,  1, 200,  0,  0, NO_WEAPON_SOUND                         ),
   /* Bloody Thrw knife */ THROWINGBLADE(                15,    12,          3,     150,  2,     S_THROWKNIFE                            ),
 
   /* Flamethrower      */       SHOTGUN(AMMOFLAME,  24, 60, 2, 10, 0,  0,  53,  5, 130, 40,  8, S_CAWS,                  S_BURSTTYPE1   ),
