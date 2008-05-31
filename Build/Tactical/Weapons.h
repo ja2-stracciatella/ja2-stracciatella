@@ -186,7 +186,6 @@ typedef struct
  UINT8	ubBulletSpeed;             // bullet's travelling speed
  UINT8	ubImpact;		               // weapon's max damage impact (size & speed)
  UINT8	ubDeadliness;							 // comparative ratings of guns
- INT8		bAccuracy;								 // accuracy or penalty
  UINT8	ubMagSize;
  UINT16	usRange;
  UINT16	usReloadDelay;
