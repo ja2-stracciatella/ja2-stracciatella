@@ -54,131 +54,67 @@ void SpecifyButtonSoundScheme(GUIButtonRef const b, ButtonSoundScheme SoundSchem
 }
 
 
-void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const iSoundType)
+void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const sound_type)
 {
-	switch (btn->ubSoundSchemeID)
+	UINT32 sample;
+	switch (sound_type)
 	{
-		case BUTTON_SOUND_SCHEME_NONE:
-		case BUTTON_SOUND_SCHEME_GENERIC:
-			break;
-
+		case BUTTON_SOUND_CLICKED_ON:
+			switch (btn->ubSoundSchemeID)
+			{
 #ifdef JA2
-
-		case BUTTON_SOUND_SCHEME_VERYSMALLSWITCH1:
-			switch( iSoundType )
-			{
-				case BUTTON_SOUND_CLICKED_ON:
-					PlayJA2Sample(VSM_SWITCH1_IN, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_CLICKED_OFF:
-					PlayJA2Sample(VSM_SWITCH1_OUT, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
-					break;
-			}
-			break;
-		case BUTTON_SOUND_SCHEME_VERYSMALLSWITCH2:
-			switch( iSoundType )
-			{
-				case BUTTON_SOUND_CLICKED_ON:
-					PlayJA2Sample(VSM_SWITCH2_IN, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_CLICKED_OFF:
-					PlayJA2Sample(VSM_SWITCH2_OUT, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
-					break;
-			}
-			break;
-		case BUTTON_SOUND_SCHEME_SMALLSWITCH1:
-			switch( iSoundType )
-			{
-				case BUTTON_SOUND_CLICKED_ON:
-					PlayJA2Sample(SM_SWITCH1_IN, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_CLICKED_OFF:
-					PlayJA2Sample(SM_SWITCH1_OUT, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
-					break;
-			}
-			break;
-		case BUTTON_SOUND_SCHEME_SMALLSWITCH2:
-			switch( iSoundType )
-			{
-				case BUTTON_SOUND_CLICKED_ON:
-					PlayJA2Sample(SM_SWITCH2_IN, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_CLICKED_OFF:
-					PlayJA2Sample(SM_SWITCH2_OUT, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
-					break;
-			}
-			break;
-		case BUTTON_SOUND_SCHEME_SMALLSWITCH3:
-			switch( iSoundType )
-			{
-				case BUTTON_SOUND_CLICKED_ON:
-					PlayJA2Sample(SM_SWITCH3_IN, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_CLICKED_OFF:
-					PlayJA2Sample(SM_SWITCH3_OUT, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
-					break;
-			}
-			break;
-		case BUTTON_SOUND_SCHEME_BIGSWITCH3:
-			switch( iSoundType )
-			{
-				case BUTTON_SOUND_CLICKED_ON:
-					PlayJA2Sample(BIG_SWITCH3_IN, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_CLICKED_OFF:
-					PlayJA2Sample(BIG_SWITCH3_OUT, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
-					break;
-			}
-			break;
-		case BUTTON_SOUND_SCHEME_COMPUTERBEEP2:
-			switch( iSoundType )
-			{
-				case BUTTON_SOUND_CLICKED_ON:
-					PlayJA2Sample(COMPUTER_BEEP2_IN, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_CLICKED_OFF:
-					PlayJA2Sample(COMPUTER_BEEP2_OUT, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
-					break;
-			}
-			break;
-		case BUTTON_SOUND_SCHEME_COMPUTERSWITCH1:
-			switch( iSoundType )
-			{
-				case BUTTON_SOUND_CLICKED_ON:
-					PlayJA2Sample(COMPUTER_SWITCH1_IN, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_CLICKED_OFF:
-					PlayJA2Sample(COMPUTER_SWITCH1_OUT, 15, 1, MIDDLEPAN);
-					break;
-				case BUTTON_SOUND_DISABLED_CLICK:
-					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
-					break;
-			}
-			break;
-
+				case BUTTON_SOUND_SCHEME_VERYSMALLSWITCH1: sample = VSM_SWITCH1_IN;      break;
+				case BUTTON_SOUND_SCHEME_VERYSMALLSWITCH2: sample = VSM_SWITCH2_IN;      break;
+				case BUTTON_SOUND_SCHEME_SMALLSWITCH1:     sample = SM_SWITCH1_IN;       break;
+				case BUTTON_SOUND_SCHEME_SMALLSWITCH2:     sample = SM_SWITCH2_IN;       break;
+				case BUTTON_SOUND_SCHEME_SMALLSWITCH3:     sample = SM_SWITCH3_IN;       break;
+				case BUTTON_SOUND_SCHEME_BIGSWITCH3:       sample = BIG_SWITCH3_IN;      break;
+				case BUTTON_SOUND_SCHEME_COMPUTERBEEP2:    sample = COMPUTER_BEEP2_IN;   break;
+				case BUTTON_SOUND_SCHEME_COMPUTERSWITCH1:  sample = COMPUTER_SWITCH1_IN; break;
 #endif
 
-	}
+				default: return;
+			}
+			break;
 
+		case BUTTON_SOUND_CLICKED_OFF:
+			switch (btn->ubSoundSchemeID)
+			{
+#ifdef JA2
+				case BUTTON_SOUND_SCHEME_VERYSMALLSWITCH1: sample = VSM_SWITCH1_OUT;      break;
+				case BUTTON_SOUND_SCHEME_VERYSMALLSWITCH2: sample = VSM_SWITCH2_OUT;      break;
+				case BUTTON_SOUND_SCHEME_SMALLSWITCH1:     sample = SM_SWITCH1_OUT;       break;
+				case BUTTON_SOUND_SCHEME_SMALLSWITCH2:     sample = SM_SWITCH2_OUT;       break;
+				case BUTTON_SOUND_SCHEME_SMALLSWITCH3:     sample = SM_SWITCH3_OUT;       break;
+				case BUTTON_SOUND_SCHEME_BIGSWITCH3:       sample = BIG_SWITCH3_OUT;      break;
+				case BUTTON_SOUND_SCHEME_COMPUTERBEEP2:    sample = COMPUTER_BEEP2_OUT;   break;
+				case BUTTON_SOUND_SCHEME_COMPUTERSWITCH1:  sample = COMPUTER_SWITCH1_OUT; break;
+#endif
+
+				default: return;
+			}
+			break;
+
+		case BUTTON_SOUND_DISABLED_CLICK:
+			switch (btn->ubSoundSchemeID)
+			{
+#ifdef JA2
+				case BUTTON_SOUND_SCHEME_VERYSMALLSWITCH1:
+				case BUTTON_SOUND_SCHEME_VERYSMALLSWITCH2:
+				case BUTTON_SOUND_SCHEME_SMALLSWITCH1:
+				case BUTTON_SOUND_SCHEME_SMALLSWITCH2:
+				case BUTTON_SOUND_SCHEME_SMALLSWITCH3:
+				case BUTTON_SOUND_SCHEME_BIGSWITCH3:
+				case BUTTON_SOUND_SCHEME_COMPUTERBEEP2:
+				case BUTTON_SOUND_SCHEME_COMPUTERSWITCH1:
+					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
+					return;
+#endif
+
+				default: return;
+			}
+
+		default: return;
+	}
+	PlayJA2Sample(sample, 15, 1, MIDDLEPAN);
 }
