@@ -6333,24 +6333,20 @@ no_sub:
 }
 
 
-BOOLEAN DoMercBattleSound(SOLDIERTYPE* const pSoldier, BattleSound const ubBattleSoundID)
+BOOLEAN DoMercBattleSound(SOLDIERTYPE* const s, BattleSound const battle_snd_id)
 {
-	// We WANT to play some RIGHT AWAY.....
-	if ( gBattleSndsData[ ubBattleSoundID ].fStopDialogue == 1 || ( pSoldier->ubProfile == NO_PROFILE ) || InOverheadMap( ) )
+	// We WANT to play some RIGHT AWAY or merc is not saying anything right now
+	if (gBattleSndsData[battle_snd_id].fStopDialogue == 1 ||
+			s->ubProfile == NO_PROFILE                        ||
+			InOverheadMap()                                   ||
+			!IsMercSayingDialogue(s->ubProfile))
 	{
-		return( InternalDoMercBattleSound( pSoldier, ubBattleSoundID, 0 ) );
-	}
-
-	// So here, only if we were currently saying dialogue.....
-	if ( !IsMercSayingDialogue( pSoldier->ubProfile ) )
-	{
-		return( InternalDoMercBattleSound( pSoldier, ubBattleSoundID, 0 ) );
+		return InternalDoMercBattleSound(s, battle_snd_id, 0);
 	}
 
 	// OK, queue it up otherwise!
-	TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND, ubBattleSoundID,0 );
-
-	return( TRUE );
+	TacticalCharacterDialogueWithSpecialEvent(s, 0, DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND, battle_snd_id, 0);
+	return TRUE;
 }
 
 
