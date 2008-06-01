@@ -11,6 +11,7 @@
 #include "FileMan.h"
 #include "LibraryDataBase.h"
 #include "MemMan.h"
+#include "PODObj.h"
 #include "WCheck.h"
 
 #ifdef _WIN32
@@ -289,6 +290,7 @@ BOOLEAN FileDelete(const char* const path)
 
 
 HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
+try
 {
 	const char* fmode;
 	int         mode;
@@ -302,8 +304,7 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 		default: abort();
 	}
 
-	SGPFile* const file = MALLOCZ(SGPFile);
-	if (!file) return NULL;
+	SGP::PODObj<SGPFile> file;
 
 	int d;
 	if (flags & FILE_CREATE_ALWAYS)
@@ -325,7 +326,7 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 			d = open(path, mode);
 			if (d < 0)
 			{
-				if (OpenFileFromLibrary(filename, &file->u.lib)) return file;
+				if (OpenFileFromLibrary(filename, &file->u.lib)) return file.Release();
 
 				if (flags & FILE_OPEN_ALWAYS)
 				{
@@ -335,21 +336,20 @@ HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 		}
 	}
 
-	if (d >= 0)
+	if (d < 0) return 0;
+
+	FILE* const f = fdopen(d, fmode);
+	if (!f)
 	{
-		FILE* const f = fdopen(d, fmode);
-		if (f != NULL)
-		{
-			file->flags  = SGPFILE_REAL;
-			file->u.file = f;
-			return file;
-		}
 		close(d);
+		return 0;
 	}
 
-	MemFree(file);
-	return NULL;
+	file->flags  = SGPFILE_REAL;
+	file->u.file = f;
+	return file.Release();
 }
+catch (...) { return 0; }
 
 
 void FileClose(const HWFILE f)

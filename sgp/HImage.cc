@@ -6,6 +6,7 @@
 #include "HImage.h"
 #include "ImpTGA.h"
 #include "PCX.h"
+#include "PODObj.h"
 #include "STCI.h"
 #include "WCheck.h"
 #include "VObject.h"
@@ -33,8 +34,7 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 	if (!dot) throw std::logic_error("Tried to load image with no extension");
 	const char* const ext = dot + 1;
 
-	SGPImage* const img = MALLOCZ(SGPImage);
-	if (!img) throw std::bad_alloc();
+	SGP::PODObj<SGPImage> img;
 	strcpy(img->ImageFile, filename);
 
 	// determine type from extension
@@ -53,17 +53,12 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 	}
 	else
 	{
-		MemFree(img);
 		throw std::logic_error("Tried to load image with unknown extension");
 	}
 
-	if (!ret)
-	{
-		MemFree(img);
-		throw std::runtime_error("Error occured while loading image");
-	}
+	if (!ret) throw std::runtime_error("Error occured while loading image");
 
-	return img;
+	return img.Release();
 }
 
 

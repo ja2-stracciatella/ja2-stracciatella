@@ -1,4 +1,5 @@
 #include "HImage.h"
+#include "PODObj.h"
 #include "Structure.h"
 #include "TileDef.h"
 #include "Tile_Surface.h"
@@ -66,7 +67,7 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 			}
 		}
 
-		TILE_IMAGERY* const pTileSurf = MALLOCZ(TILE_IMAGERY);
+		SGP::PODObj<TILE_IMAGERY> pTileSurf;
 
 		if (pStructureFileRef && pStructureFileRef->pAuxData != NULL)
 		{
@@ -77,11 +78,7 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 		{
 			// Valid auxiliary data, so make a copy of it for TileSurf
 			pTileSurf->pAuxData = MALLOCN(AuxObjectData, hVObject->SubregionCount());
-			if (pTileSurf->pAuxData == NULL)
-			{
-				MemFree(pTileSurf);
-				return NULL;
-			}
+			if (!pTileSurf->pAuxData) return 0;
 			memcpy( pTileSurf->pAuxData, hImage->pAppData, hImage->uiAppDataSize );
 		}
 		else
@@ -91,7 +88,7 @@ TILE_IMAGERY* LoadTileSurface(const char* cFilename)
 
 		pTileSurf->vo                = hVObject.Release();
 		pTileSurf->pStructureFileRef = pStructureFileRef.Release();
-		return pTileSurf;
+		return pTileSurf.Release();
 	}
 	catch (...)
 	{

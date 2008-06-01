@@ -3,6 +3,7 @@
 #include "PCX.h"
 #include "MemMan.h"
 #include "FileMan.h"
+#include "PODObj.h"
 
 
 #define PCX_NORMAL         1
@@ -106,8 +107,7 @@ try
 	const UINT32 file_size   = FileGetSize(f);
 	const UINT32 buffer_size = file_size - sizeof(PcxHeader) - 768;
 
-	PcxObject* const pcx_obj = MALLOC(PcxObject);
-	if (pcx_obj == NULL) return NULL;
+	SGP::PODObj<PcxObject> pcx_obj;
 
 	pcx_obj->pPcxBuffer = MALLOCN(UINT8, buffer_size);
 	if (pcx_obj->pPcxBuffer != NULL)
@@ -120,12 +120,11 @@ try
 		if (FileRead(f, pcx_obj->pPcxBuffer, buffer_size) &&
 				FileRead(f, pcx_obj->ubPalette, sizeof(pcx_obj->ubPalette)))
 		{
-			return pcx_obj;
+			return pcx_obj.Release();
 		}
 
 		MemFree(pcx_obj->pPcxBuffer);
 	}
-	MemFree(pcx_obj);
 	return NULL;
 }
 catch (...) { return 0; }

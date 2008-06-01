@@ -1,5 +1,6 @@
 #ifdef JA2EDITOR
 
+#include "PODObj.h"
 #include "Structure.h"
 #include "TileDef.h"
 #include "WorldDef.h"
@@ -317,63 +318,31 @@ static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIn
 
 
 static BOOLEAN AddToUndoListCmd(INT32 iMapIndex, INT32 iCmdCount)
+try
 {
 	STRUCTURE			*pStructure;
 	INT32					iCoveredMapIndex;
 	UINT8					ubLoop;
 
-	undo_stack* const pNode = MALLOC(undo_stack);
-	if (pNode == NULL) return FALSE;
-
-	undo_struct* const pUndoInfo = MALLOC(undo_struct);
-	if (pUndoInfo == NULL)
-	{
-		MemFree(pNode);
-		return FALSE;
-	}
-
-	MAP_ELEMENT* const pData = MALLOC(MAP_ELEMENT);
-	if (pData == NULL)
-	{
-		MemFree(pNode);
-		MemFree(pUndoInfo);
-		return FALSE;
-	}
-
-	// Init map element struct
-	pData->pLandHead = pData->pLandStart = NULL;
-	pData->pObjectHead = NULL;
-	pData->pStructHead = NULL;
-	pData->pShadowHead = NULL;
-	pData->pMercHead = NULL;
-	pData->pRoofHead = NULL;
-	pData->pOnRoofHead = NULL;
-	pData->pTopmostHead = NULL;
-	pData->pStructureHead = pData->pStructureTail = NULL;
-	pData->sHeight = 0;
-
+	SGP::PODObj<undo_stack>  pNode;
+	SGP::PODObj<undo_struct> pUndoInfo;
 
 	// Copy the world map's tile
-	if (!CopyMapElementFromWorld(pData, iMapIndex))
-	{
-		MemFree( pNode );
-		MemFree( pUndoInfo );
-		MemFree( pData );
-		return( FALSE );
-	}
+	SGP::PODObj<MAP_ELEMENT> pData;
+	if (!CopyMapElementFromWorld(pData, iMapIndex)) return FALSE;
 
 	// copy the room number information (it's not in the mapelement structure)
 	pUndoInfo->ubRoomNum = gubWorldRoomInfo[ iMapIndex ];
 
 	pUndoInfo->fLightSaved = FALSE;
 	pUndoInfo->ubLightRadius = 0;
-	pUndoInfo->pMapTile = pData;
+	pUndoInfo->pMapTile = pData.Release();
 	pUndoInfo->iMapIndex = iMapIndex;
 
-	pNode->pData = pUndoInfo;
+	pNode->pData = pUndoInfo.Release();
 	pNode->iCmdCount = iCmdCount;
 	pNode->pNext = gpTileUndoStack;
-	gpTileUndoStack = pNode;
+	gpTileUndoStack = pNode.Release();
 
 	// loop through pData->pStructureHead list
 	// for each structure
@@ -398,6 +367,7 @@ static BOOLEAN AddToUndoListCmd(INT32 iMapIndex, INT32 iCmdCount)
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 void RemoveAllFromUndoList(void)
