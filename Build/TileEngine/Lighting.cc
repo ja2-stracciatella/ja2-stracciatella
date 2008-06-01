@@ -15,6 +15,7 @@
 *
 ***************************************************************************************/
 
+#include "Buffer.h"
 #include "HImage.h"
 #include "Overhead.h"
 #include "math.h"
@@ -2368,39 +2369,35 @@ BOOLEAN LightSave(const LightTemplate* const t, const char* const pFilename)
 /* Loads a light template from disk. The light template is returned, or NULL if
  * the file wasn't loaded. */
 static LightTemplate* LightLoad(const char* pFilename)
+try
 {
-	INT32 iLight = LightGetFree();
-	if (iLight == -1) return NULL;
-
 	AutoSGPFile hFile(FileOpen(pFilename, FILE_ACCESS_READ));
 	if (hFile == 0) return NULL;
 
-	LightTemplate* const t = &g_light_templates[iLight];
+	UINT16 n_lights;
+	FileRead(hFile, &n_lights, sizeof(n_lights));
+	SGP::Buffer<LIGHT_NODE> lights(n_lights);
+	FileRead(hFile, lights, sizeof(*lights) * n_lights);
 
-	FileRead(hFile, &t->n_lights, sizeof(t->n_lights));
-	t->lights = MALLOCN(LIGHT_NODE, t->n_lights);
-	if (t->lights == NULL)
-	{
-		t->n_lights = 0;
-		return NULL;
-	}
-	FileRead(hFile, t->lights, sizeof(*t->lights) * t->n_lights);
+	UINT16 n_rays;
+	FileRead(hFile, &n_rays, sizeof(n_rays));
+	SGP::Buffer<UINT16> rays(n_rays);
+	FileRead(hFile, rays, sizeof(*rays) * n_rays);
 
-	FileRead(hFile, &t->n_rays, sizeof(t->n_rays));
-	t->rays = MALLOCN(UINT16, t->n_rays);
-	if (t->rays ==NULL)
-	{
-		t->n_lights = 0;
-		t->n_rays   = 0;
-		MemFree(t->lights);
-		return NULL;
-	}
-	FileRead(hFile, t->rays, sizeof(*t->rays) * t->n_rays);
+	SGP::Buffer<char> name(strlen(pFilename) + 1);
+	strcpy(name, pFilename);
 
-	t->name = MALLOCN(char, strlen(pFilename) + 1);
-	strcpy(t->name, pFilename);
+	INT32 const light_idx = LightGetFree();
+	if (light_idx == -1) return 0;
+	LightTemplate* const t = &g_light_templates[light_idx];
+	t->n_lights = n_lights;
+	t->lights   = lights.Release();
+	t->n_rays   = n_rays;
+	t->rays     = rays.Release();
+	t->name     = name.Release();
 	return t;
 }
+catch (...) { return 0; }
 
 
 /* Figures out whether a light template is already in memory, or needs to be
