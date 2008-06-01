@@ -2073,77 +2073,37 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					PlaySoldierJA2Sample(pSoldier, ACR_EATFLESH, HIGHVOLUME, 1, TRUE);
 					break;
 
-				case 717:
-
-					// Battle cry
+				case 717: // Battle cry
+				{
+					INT32 snd;
+					if (pSoldier->ubBodyType == QUEENMONSTER)
 					{
-						INT32			iSoundID=0;
-						BOOLEAN		fDoCry = FALSE;
-
-						//if (SoldierOnScreen(pSoldier))
+						switch (pSoldier->usActionData)
 						{
-							switch( pSoldier->usActionData )
-							{
-								case CALL_1_PREY:
+							case CALL_1_PREY:
+							case CALL_MULTIPLE_PREY: snd = LQ_SMELLS_THREAT;  break;
+							case CALL_ATTACKED:      snd = LQ_ENRAGED_ATTACK; break;
+							case CALL_CRIPPLED:      snd = LQ_CRIPPLED;       break;
 
-									if ( pSoldier->ubBodyType == QUEENMONSTER )
-									{
-										iSoundID = LQ_SMELLS_THREAT;
-									}
-									else
-									{
-										iSoundID = ACR_SMEEL_PREY;
-									}
-									fDoCry = TRUE;
-									break;
-
-								case CALL_MULTIPLE_PREY:
-
-									if ( pSoldier->ubBodyType == QUEENMONSTER )
-									{
-										iSoundID = LQ_SMELLS_THREAT;
-									}
-									else
-									{
-										iSoundID = ACR_SMELL_THREAT;
-									}
-									fDoCry = TRUE;
-									break;
-
-								case CALL_ATTACKED:
-
-									if ( pSoldier->ubBodyType == QUEENMONSTER )
-									{
-										iSoundID = LQ_ENRAGED_ATTACK;
-									}
-									else
-									{
-										iSoundID = ACR_SMELL_THREAT;
-									}
-									fDoCry = TRUE;
-									break;
-
-								case CALL_CRIPPLED:
-
-									if ( pSoldier->ubBodyType == QUEENMONSTER )
-									{
-										iSoundID = LQ_CRIPPLED;
-									}
-									else
-									{
-										iSoundID = ACR_CRIPPLED;
-									}
-									fDoCry = TRUE;
-									break;
-							}
-
-							if ( fDoCry )
-							{
-								PlayLocationJA2Sample(pSoldier->sGridNo, iSoundID, HIGHVOLUME, 1);
-							}
+							default: goto no_cry;
 						}
 					}
+					else
+					{
+						switch (pSoldier->usActionData)
+						{
+							case CALL_1_PREY:        snd = ACR_SMEEL_PREY;   break;
+							case CALL_MULTIPLE_PREY:
+							case CALL_ATTACKED:      snd = ACR_SMELL_THREAT; break;
+							case CALL_CRIPPLED:      snd = ACR_CRIPPLED;     break;
+
+							default: goto no_cry;
+						}
+					}
+					PlayLocationJA2Sample(pSoldier->sGridNo, snd, HIGHVOLUME, 1);
+no_cry:
 					break;
+				}
 
 				case 718:
 
