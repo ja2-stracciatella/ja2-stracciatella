@@ -107,25 +107,18 @@ try
 	const UINT32 file_size   = FileGetSize(f);
 	const UINT32 buffer_size = file_size - sizeof(PcxHeader) - 768;
 
+	SGP::Buffer<UINT8> pcx_buffer(buffer_size);
+	if (!FileRead(f, pcx_buffer, buffer_size)) return 0;
+
 	SGP::PODObj<PcxObject> pcx_obj;
+	if (!FileRead(f, pcx_obj->ubPalette, sizeof(pcx_obj->ubPalette))) return 0;
 
-	pcx_obj->pPcxBuffer = MALLOCN(UINT8, buffer_size);
-	if (pcx_obj->pPcxBuffer != NULL)
-	{
-		pcx_obj->usPcxFlags   = (header.ubBitsPerPixel == 8 ? PCX_256COLOR : 0);
-		pcx_obj->usWidth      = header.usRight  - header.usLeft + 1;
-		pcx_obj->usHeight     = header.usBottom - header.usTop  + 1;
-		pcx_obj->uiBufferSize = buffer_size;
-
-		if (FileRead(f, pcx_obj->pPcxBuffer, buffer_size) &&
-				FileRead(f, pcx_obj->ubPalette, sizeof(pcx_obj->ubPalette)))
-		{
-			return pcx_obj.Release();
-		}
-
-		MemFree(pcx_obj->pPcxBuffer);
-	}
-	return NULL;
+	pcx_obj->pPcxBuffer   = pcx_buffer.Release();
+	pcx_obj->usPcxFlags   = (header.ubBitsPerPixel == 8 ? PCX_256COLOR : 0);
+	pcx_obj->usWidth      = header.usRight  - header.usLeft + 1;
+	pcx_obj->usHeight     = header.usBottom - header.usTop  + 1;
+	pcx_obj->uiBufferSize = buffer_size;
+	return pcx_obj.Release();
 }
 catch (...) { return 0; }
 
