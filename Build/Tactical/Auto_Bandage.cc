@@ -1,3 +1,4 @@
+#include "Buffer.h"
 #include "Font.h"
 #include "Font_Control.h"
 #include "HImage.h"
@@ -285,6 +286,7 @@ BOOLEAN HandleAutoBandage( )
 
 
 static BOOLEAN CreateAutoBandageString(void)
+try
 {
 	UINT32					uiDoctorNameStringLength = 1; // for end-of-string character
 
@@ -331,11 +333,7 @@ static BOOLEAN CreateAutoBandageString(void)
 	else
 	{
 		// make a temporary string to hold most of the doctors names joined by commas
-		wchar_t* const sTemp = MALLOCN(wchar_t, uiDoctorNameStringLength);
-		if (!sTemp)
-		{
-			return( FALSE );
-		}
+		SGP::Buffer<wchar_t> sTemp(uiDoctorNameStringLength);
 		wcscpy( sTemp, L"" );
 		for (INT32 cnt = 0; cnt < ubDoctors - 1; ++cnt)
 		{
@@ -352,11 +350,12 @@ static BOOLEAN CreateAutoBandageString(void)
 				}
 			}
 		}
-		swprintf(sAutoBandageString, uiDoctorNameStringLength, Message[STR_ARE_APPLYING_FIRST_AID], sTemp, doctors[ubDoctors - 1]->name); /* XXX uiDoctorNameStringLength? */
-		MemFree( sTemp );
+		swprintf(sAutoBandageString, uiDoctorNameStringLength, Message[STR_ARE_APPLYING_FIRST_AID], static_cast<wchar_t const*>(sTemp), doctors[ubDoctors - 1]->name); /* XXX uiDoctorNameStringLength? */
 	}
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 void SetAutoBandageComplete( void )
 {

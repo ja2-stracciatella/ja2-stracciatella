@@ -1,5 +1,6 @@
 #ifdef JA2EDITOR
 
+#include "Buffer.h"
 #include "Types.h"
 #include "Debug.h"
 #include "ImgFmt.h"
@@ -204,6 +205,7 @@ static BOOLEAN GoToNextSubImage(INT16* psNewX, INT16* psNewY, UINT8* p8BPPBuffer
 
 
 static BOOLEAN ConvertToETRLE(UINT8** const ppDest, UINT32* const puiDestLen, STCISubImage** const ppSubImageBuffer, UINT16* const pusNumberOfSubImages, UINT8* const p8BPPBuffer, const UINT16 usWidth, const UINT16 usHeight, const UINT32 fFlags)
+try
 {
 	INT16						sCurrX;
 	INT16						sCurrY;
@@ -220,11 +222,10 @@ static BOOLEAN ConvertToETRLE(UINT8** const ppDest, UINT32* const puiDestLen, ST
 
 	// worst-case situation	estimate
 	uiSpaceLeft = (UINT32) usWidth * (UINT32) usHeight * 3;
-	*ppDest = MALLOCN(UINT8, uiSpaceLeft);
-	CHECKF( *ppDest );
+	SGP::Buffer<UINT8> dest(uiSpaceLeft);
 	*puiDestLen = uiSpaceLeft;
 
-	pOutputNext = *ppDest;
+	pOutputNext = dest;
 
 	if (fFlags & CONVERT_ETRLE_COMPRESS_SINGLE)
 	{
@@ -235,11 +236,7 @@ static BOOLEAN ConvertToETRLE(UINT8** const ppDest, UINT32* const puiDestLen, ST
 		// allocate!
 		*pusNumberOfSubImages = 1;
 		*ppSubImageBuffer = MALLOC(STCISubImage);
-		if (!(*ppSubImageBuffer))
-		{
-			MemFree( *ppDest );
-			return( FALSE );
-		}
+		if (!*ppSubImageBuffer) return FALSE;
 		STCISubImage* const pCurrSubImage = *ppSubImageBuffer;
 		pCurrSubImage->sOffsetX = 0;
 		pCurrSubImage->sOffsetY = 0;
@@ -247,34 +244,21 @@ static BOOLEAN ConvertToETRLE(UINT8** const ppDest, UINT32* const puiDestLen, ST
 		pCurrSubImage->usHeight = usHeight;
 		if (!(fFlags & CONVERT_ETRLE_NO_SUBIMAGE_SHRINKING))
 		{
-			if (!(DetermineSubImageUsedSize( p8BPPBuffer, usWidth, usHeight, pCurrSubImage )))
-			{
-				MemFree( *ppDest );
-				return( FALSE );
-			}
+			if (!DetermineSubImageUsedSize(p8BPPBuffer, usWidth, usHeight, pCurrSubImage)) return FALSE;
 		}
 		uiSubImageCompressedSize = ETRLECompressSubImage( pOutputNext, uiSpaceLeft, p8BPPBuffer, usWidth, usHeight, pCurrSubImage );
-		if (uiSubImageCompressedSize == 0)
-		{
-			MemFree( *ppDest );
-			return( FALSE );
-		}
-		else
-		{
-			pCurrSubImage->uiDataOffset = 0;
-			pCurrSubImage->uiDataLength = uiSubImageCompressedSize;
-			*puiDestLen = uiSubImageCompressedSize;
-			return( TRUE );
-		}
+		if (uiSubImageCompressedSize == 0) return FALSE;
+
+		pCurrSubImage->uiDataOffset = 0;
+		pCurrSubImage->uiDataLength = uiSubImageCompressedSize;
+		*puiDestLen = uiSubImageCompressedSize;
+		*ppDest     = dest.Release();
+		return TRUE;
 	}
 	else
 	{
 		// skip any initial wall bytes to find the first subimage
-		if (!GoPastWall( &sCurrX, &sCurrY, usWidth, usHeight, p8BPPBuffer, 0, 0 ))
-		{ // no subimages!
-			MemFree( *ppDest );
-			return( FALSE );
-		}
+		if (!GoPastWall(&sCurrX, &sCurrY, usWidth, usHeight, p8BPPBuffer, 0, 0)) return FALSE;
 		*ppSubImageBuffer = NULL;
 		*pusNumberOfSubImages = 0;
 
@@ -363,21 +347,20 @@ static BOOLEAN ConvertToETRLE(UINT8** const ppDest, UINT32* const puiDestLen, ST
 			fContinue = GoToNextSubImage( &sCurrX, &sCurrY, p8BPPBuffer, usWidth, usHeight, sCurrX, sCurrY );
 		}
 	}
-	if (fOk)
+	if (!fOk)
 	{
-		*puiDestLen -= uiSpaceLeft;
-		return( TRUE );
-	}
-	else
-	{
-		MemFree( *ppDest );
 		if (*ppSubImageBuffer != NULL)
 		{
 			MemFree( *ppSubImageBuffer );
 		}
 		return( FALSE );
 	}
+
+	*puiDestLen -= uiSpaceLeft;
+	*ppDest      = dest.Release();
+	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN DetermineOffset(UINT32* puiOffset, UINT16 usWidth, UINT16 usHeight, INT16 sX, INT16 sY);
