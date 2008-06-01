@@ -377,33 +377,26 @@ UINT32 GetRGBColor(UINT16 Value16BPP)
 }
 
 
-BOOLEAN GetETRLEImageData(SGPImage const* const hImage, ETRLEData* const pBuffer)
+BOOLEAN GetETRLEImageData(SGPImage const* const img, ETRLEData* const buf)
+try
 {
-	// Assertions
-	Assert( hImage != NULL );
-	Assert( pBuffer != NULL );
+	Assert(img);
+	Assert(buf);
 
-	// Create memory for data
-	pBuffer->usNumberOfObjects = hImage->usNumberOfObjects;
+	SGP::Buffer<ETRLEObject> etrle_objs(img->usNumberOfObjects);
+	memcpy(etrle_objs, img->pETRLEObject, sizeof(*etrle_objs) * img->usNumberOfObjects);
 
-	// Create buffer for objects
-	pBuffer->pETRLEObject = MALLOCN(ETRLEObject, pBuffer->usNumberOfObjects);
-	CHECKF( pBuffer->pETRLEObject != NULL );
+	SGP::Buffer<UINT8> pix_data(img->uiSizePixData);
+	memcpy(pix_data, img->pPixData8, sizeof(*pix_data) * img->uiSizePixData);
 
-	// Copy into buffer
-	memcpy( pBuffer->pETRLEObject, hImage->pETRLEObject, sizeof( ETRLEObject ) * pBuffer->usNumberOfObjects );
-
-	// Allocate memory for pixel data
-	pBuffer->pPixData = MALLOCN(UINT8, hImage->uiSizePixData);
-	CHECKF( pBuffer->pPixData != NULL );
-
-	pBuffer->uiSizePixData = hImage->uiSizePixData;
-
-	// Copy into buffer
-	memcpy( pBuffer->pPixData, hImage->pPixData8, pBuffer->uiSizePixData );
-
-	return( TRUE );
+	buf->pPixData          = pix_data.Release();
+	buf->uiSizePixData     = img->uiSizePixData;
+	buf->pETRLEObject      = etrle_objs.Release();
+	buf->usNumberOfObjects = img->usNumberOfObjects;
+	return TRUE;
 }
+catch (...) { return FALSE; }
+
 
 void ConvertRGBDistribution565To555( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
 {
