@@ -643,60 +643,29 @@ BOOLEAN SaveStrategicEventsToSavedGame( HWFILE hFile )
 }
 
 
-BOOLEAN LoadStrategicEventsFromSavedGame( HWFILE hFile )
+BOOLEAN LoadStrategicEventsFromSavedGame(HWFILE const f)
 {
-	UINT32		uiNumGameEvents;
-	STRATEGICEVENT sGameEvent;
-	UINT32		cnt;
-	STRATEGICEVENT *pTemp = NULL;
-
-
 	//erase the old Game Event queue
 	DeleteAllStrategicEvents();
 
 	//Read the number of strategic events
-	if (!FileRead(hFile, &uiNumGameEvents, sizeof(UINT32))) return FALSE;
+	UINT32 uiNumGameEvents;
+	if (!FileRead(f, &uiNumGameEvents, sizeof(UINT32))) return FALSE;
 
-	pTemp = NULL;
-
-	//loop through all the events and save them.
-	for( cnt=0; cnt<uiNumGameEvents; cnt++ )
+	STRATEGICEVENT** anchor = &gpEventList;
+	for (size_t n = uiNumGameEvents; n != 0; --n)
 	{
-		// allocate memory for the event
-		STRATEGICEVENT* const pTempEvent = MALLOC(STRATEGICEVENT);
-		if( pTempEvent == NULL )
-			return( FALSE );
+		STRATEGICEVENT* const sev = MALLOC(STRATEGICEVENT);
+		if (!sev) return FALSE;
 
-		//Read the current strategic event
-		if (!FileRead(hFile, &sGameEvent, sizeof(STRATEGICEVENT))) return FALSE;
+		if (!FileRead(f, sev, sizeof(*sev))) return FALSE;
+		sev->next = 0;
 
-		*pTempEvent = sGameEvent;
-
-		// Add the new node to the list
-
-		//if its the first node,
-		if( cnt == 0 )
-		{
-			// assign it as the head node
-			gpEventList = pTempEvent;
-
-			//assign the 'current node' to the head node
-			pTemp = gpEventList;
-		}
-		else
-		{
-			// add the new node to the next field of the current node
-			pTemp->next = pTempEvent;
-
-			//advance the current node to the next node
-			pTemp = pTemp->next;
-		}
-
-		// NULL out the next field ( cause there is no next field yet )
-		pTempEvent->next = NULL;
+		*anchor = sev;
+		anchor  = &sev->next;
 	}
 
-	return( TRUE );
+	return TRUE;
 }
 
 
