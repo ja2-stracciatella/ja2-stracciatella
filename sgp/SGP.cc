@@ -29,6 +29,13 @@
 #include "VSurface.h"
 #include <SDL.h>
 
+#if defined _WIN32
+#	define WIN32_LEAN_AND_MEAN
+#	include <windows.h>
+
+#	include "Local.h"
+#endif
+
 
 #ifdef JA2
 extern BOOLEAN gfPauseDueToPlayerGamePause;
@@ -281,6 +288,16 @@ static void MainLoop()
 }
 
 
+static int Failure(char const* const msg)
+{
+	fprintf(stderr, "%s\n", msg);
+#if defined _WIN32
+	MessageBox(0, msg, APPLICATION_NAME, MB_OK | MB_ICONERROR | MB_TASKMODAL);
+#endif
+	return EXIT_FAILURE;
+}
+
+
 static BOOLEAN ParseParameters(char* const argv[]);
 
 
@@ -298,7 +315,10 @@ int main(int argc, char* argv[])
 		if (!ParseParameters(argv)) return EXIT_FAILURE;
 		if (argc > 1 && argv[1] != NULL) strlcpy(gzCommandLine, argv[1], lengthof(gzCommandLine));
 
-		if (!InitializeStandardGamingPlatform()) return EXIT_FAILURE;
+		if (!InitializeStandardGamingPlatform())
+		{
+			return Failure("Initialisation failed");
+		}
 
 #if defined JA2 && defined ENGLISH
 		SetIntroType(INTRO_SPLASH);
@@ -318,18 +338,18 @@ int main(int argc, char* argv[])
 	}
 	catch (const std::bad_alloc&)
 	{
-		fprintf(stderr, "ERROR: out of memory\n");
+		return Failure("ERROR: out of memory");
 	}
 	catch (const std::exception& e)
 	{
-		fprintf(stderr, "ERROR: caught unhandled exception: \"%s\"\n", e.what());
+		char msg[2048];
+		snprintf(msg, lengthof(msg), "ERROR: caught unhandled exception: \"%s\"", e.what());
+		Failure(msg);
 	}
 	catch (...)
 	{
-		fprintf(stderr, "ERROR: caught unhandled unknown exception\n");
+		return Failure("ERROR: caught unhandled unknown exception");
 	}
-
-	return EXIT_FAILURE;
 }
 
 
