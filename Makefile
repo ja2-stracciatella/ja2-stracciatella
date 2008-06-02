@@ -42,7 +42,6 @@ CFLAGS += -I sgp
 #CFLAGS += -W
 CFLAGS += -Wpointer-arith
 CFLAGS += -Wreturn-type
-CFLAGS += -Wsequence-point
 CFLAGS += -Wunused-label
 CFLAGS += -Wunused-variable
 CFLAGS += -Wwrite-strings
