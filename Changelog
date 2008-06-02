@@ -1,3 +1,4 @@
+v0.10 - 2008-06-02 - Caramel
 (r4277) Fix a vanilla glitch regarding uneven distribution when playing some merc battle sounds, in one case even playing the wrong sound.
 (r4275) Fix a bug in r668, which caused wrong title bars to be displayed for some web pages.
 (r4269) Fix a vanilla out of bounds array access when somebody gets hit.
