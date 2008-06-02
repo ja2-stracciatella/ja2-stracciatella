@@ -305,7 +305,7 @@ extern const wchar_t *gzMoneyAmounts[6];
 extern const wchar_t  gzProsLabel[];
 extern const wchar_t  gzConsLabel[];
 extern const wchar_t	gMoneyStatsDesc[][ 13 ];
-extern const wchar_t	gWeaponStatsDesc[][ 14 ];
+extern const wchar_t* gWeaponStatsDesc[];
 extern const wchar_t *sKeyDescriptionStrings[2];
 extern const wchar_t	zHealthStr[][13];
 extern const wchar_t *zVehicleName[ 6 ];

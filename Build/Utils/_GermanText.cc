@@ -909,7 +909,7 @@ const wchar_t *sKeyDescriptionStrings[2]=
 };
 
 //The headers used to describe various weapon statistics.
-const wchar_t gWeaponStatsDesc[][ 14 ] = //USED TO BE 13
+const wchar_t* gWeaponStatsDesc[] =
 {
 	L"Gew. (%ls):", //weight
 	L"Status:",
