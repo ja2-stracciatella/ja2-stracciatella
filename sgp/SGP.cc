@@ -344,7 +344,7 @@ int main(int argc, char* argv[])
 	{
 		char msg[2048];
 		snprintf(msg, lengthof(msg), "ERROR: caught unhandled exception: \"%s\"", e.what());
-		Failure(msg);
+		return Failure(msg);
 	}
 	catch (...)
 	{
