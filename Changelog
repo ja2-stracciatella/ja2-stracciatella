@@ -1,3 +1,5 @@
+(r4303) Fix a vanilla bug, which restored a wrong amount of breath points at the start of the turn.
+
 v0.10 - 2008-06-02 - Caramel
 (r4277) Fix a vanilla glitch regarding uneven distribution when playing some merc battle sounds, in one case even playing the wrong sound.
 (r4275) Fix a bug in r668, which caused wrong title bars to be displayed for some web pages.

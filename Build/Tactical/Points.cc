@@ -701,7 +701,7 @@ void UnusedAPsToBreath(SOLDIERTYPE *pSold)
 			// adjust for carried weight
 			sBreathPerAP = sBreathPerAP * 100 / BreathPointAdjustmentForCarriedWeight( pSold );
 
-			sBreathChange = (AP_MAXIMUM - sUnusedAPs) * sBreathPerAP;
+			sBreathChange = sUnusedAPs * sBreathPerAP;
 		}
 		else
 		{
