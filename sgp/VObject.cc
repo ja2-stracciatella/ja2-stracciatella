@@ -44,7 +44,7 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 
 	subregion_count_ = TempETRLEData.usNumberOfObjects;
 	pETRLEObject     = TempETRLEData.pETRLEObject;
-	pPixData         = TempETRLEData.pPixData;
+	pix_data_        = static_cast<UINT8*>(TempETRLEData.pPixData);
 	pix_data_size_   = TempETRLEData.uiSizePixData;
 	bit_depth_       = img->ubBitDepth;
 
@@ -67,8 +67,8 @@ SGPVObject::~SGPVObject()
 {
 	DestroyPalettes();
 
-	if (pPixData     != NULL) MemFree(pPixData);
-	if (pETRLEObject != NULL) MemFree(pETRLEObject);
+	if (pix_data_)    MemFree(pix_data_);
+	if (pETRLEObject) MemFree(pETRLEObject);
 
 	if (ppZStripInfo != NULL)
 	{
@@ -102,6 +102,12 @@ ETRLEObject const* SGPVObject::SubregionProperties(size_t const idx) const
 		throw std::logic_error("Tried to access invalid subregion in video object");
 	}
 	return &pETRLEObject[idx];
+}
+
+
+UINT8 const* SGPVObject::PixData(ETRLEObject const* const e) const
+{
+	return &pix_data_[e->uiDataOffset];
 }
 
 
@@ -328,7 +334,7 @@ BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETRLEIndex,
 	CHECKF(usY < pETRLEObject->usHeight);
 
 	// Assuming everything's okay, go ahead and look...
-	UINT8* pCurrent = &((UINT8*)hVObject->pPixData)[pETRLEObject->uiDataOffset];
+	UINT8 const* pCurrent = hVObject->PixData(pETRLEObject);
 
 	// Skip past all uninteresting scanlines
 	for (UINT16 usLoopY = 0; usLoopY < usY; usLoopY++)

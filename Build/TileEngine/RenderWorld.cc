@@ -2592,9 +2592,8 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiD
 
 	// Get Offsets from Index into structure
 	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
-	const INT32  usHeight = pTrav->usHeight;
-	const INT32  usWidth  = pTrav->usWidth;
-	const UINT32 uiOffset = pTrav->uiDataOffset;
+	const INT32 usHeight = pTrav->usHeight;
+	const INT32 usWidth  = pTrav->usWidth;
 
 	// Add to start position of dest buffer
 	const INT32 iTempX = iX + pTrav->sOffsetX;
@@ -2633,7 +2632,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiD
 	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return TRUE;
 	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return TRUE;
 
-	const UINT8* SrcPtr   = (const UINT8*)hSrcVObject->pPixData + uiOffset;
+	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	UINT8*       ZPtr     = (UINT8*)pZBuffer + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	const UINT32 LineSkip = uiDestPitchBYTES - BlitLength * 2;
@@ -3119,9 +3118,8 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* p
 
 	// Get Offsets from Index into structure
 	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
-	const INT32  usHeight = pTrav->usHeight;
-	const INT32  usWidth  = pTrav->usWidth;
-	const UINT32 uiOffset = pTrav->uiDataOffset;
+	const INT32 usHeight = pTrav->usHeight;
+	const INT32 usWidth  = pTrav->usWidth;
 
 	// Add to start position of dest buffer
 	const INT32 iTempX = iX + pTrav->sOffsetX;
@@ -3160,7 +3158,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* p
 	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return TRUE;
 	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return TRUE;
 
-	const UINT8* SrcPtr   = (const UINT8*)hSrcVObject->pPixData + uiOffset;
+	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	UINT8*       ZPtr     = (UINT8*)pZBuffer + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	const UINT32 LineSkip = uiDestPitchBYTES - BlitLength * 2;
@@ -3648,9 +3646,8 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UIN
 
 	// Get Offsets from Index into structure
 	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
-	const INT32  usHeight = pTrav->usHeight;
-	const INT32  usWidth  = pTrav->usWidth;
-	const UINT32 uiOffset = pTrav->uiDataOffset;
+	const INT32 usHeight = pTrav->usHeight;
+	const INT32 usWidth  = pTrav->usWidth;
 
 	// Add to start position of dest buffer
 	const INT32 iTempX = iX + pTrav->sOffsetX;
@@ -3691,7 +3688,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UIN
 	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return TRUE;
 	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return TRUE;
 
-	const UINT8* SrcPtr   =  (const UINT8*)hSrcVObject->pPixData + uiOffset;
+	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	UINT8*       ZPtr     = (UINT8*)pZBuffer + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	const UINT32 LineSkip = uiDestPitchBYTES - BlitLength * 2;
@@ -4195,9 +4192,8 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* p
 
 	// Get Offsets from Index into structure
 	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
-	const INT32  usHeight = pTrav->usHeight;
-	const INT32  usWidth  = pTrav->usWidth;
-	const UINT32 uiOffset = pTrav->uiDataOffset;
+	const INT32 usHeight = pTrav->usHeight;
+	const INT32 usWidth  = pTrav->usWidth;
 
 	// Add to start position of dest buffer
 	const INT32 iTempX = iX + pTrav->sOffsetX;
@@ -4238,7 +4234,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* p
 	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return TRUE;
 	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return TRUE;
 
-	const UINT8* SrcPtr  = (const UINT8*)hSrcVObject->pPixData + uiOffset;
+	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
 	UINT8*       DestPtr = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	UINT8*       ZPtr    = (UINT8*)pZBuffer + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	const UINT32 LineSkip = uiDestPitchBYTES - BlitLength * 2;
@@ -4791,9 +4787,8 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer,
 
 	// Get Offsets from Index into structure
 	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
-	const INT32  usHeight = pTrav->usHeight;
-	const INT32  usWidth  = pTrav->usWidth;
-	const UINT32 uiOffset = pTrav->uiDataOffset;
+	const INT32 usHeight = pTrav->usHeight;
+	const INT32 usWidth  = pTrav->usWidth;
 
 	// Add to start position of dest buffer
 	INT32 iTempX = iX + pTrav->sOffsetX;
@@ -4832,7 +4827,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer,
 	if (LeftSkip >= usWidth  || RightSkip  >= usWidth)  return TRUE;
 	if (TopSkip  >= usHeight || BottomSkip >= usHeight) return TRUE;
 
-	const UINT8* SrcPtr   = (const UINT8*)hSrcVObject->pPixData + uiOffset;
+	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
 	UINT8*       DestPtr  = (UINT8*)pBuffer  + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	UINT8*       ZPtr     = (UINT8*)pZBuffer + uiDestPitchBYTES * (iTempY + TopSkip) + (iTempX + LeftSkip) * 2;
 	const UINT32 LineSkip = uiDestPitchBYTES - BlitLength * 2;
@@ -5849,7 +5844,6 @@ static BOOLEAN IsTileRedundant(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcV
 	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
 	UINT32       usHeight = pTrav->usHeight;
 	const UINT32 usWidth  = pTrav->usWidth;
-	const UINT32 uiOffset = pTrav->uiDataOffset;
 
 	// Add to start position of dest buffer
 	const INT32 iTempX = iX + pTrav->sOffsetX;
@@ -5858,7 +5852,7 @@ static BOOLEAN IsTileRedundant(UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcV
 	CHECKF(iTempX >= 0);
 	CHECKF(iTempY >= 0);
 
-	const UINT8* SrcPtr   = (const UINT8*)hSrcVObject->pPixData + uiOffset;
+	UINT8 const* SrcPtr   = hSrcVObject->PixData(pTrav);
 	const UINT8* ZPtr     = (const UINT8*)(pZBuffer + iTempY * SCREEN_WIDTH + iTempX);
 	const UINT32 LineSkip = (SCREEN_WIDTH - usWidth) * 2;
 

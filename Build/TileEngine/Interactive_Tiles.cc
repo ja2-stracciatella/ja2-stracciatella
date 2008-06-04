@@ -824,7 +824,6 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIn
 {
 	UINT32 uiOffset;
 	UINT32 usHeight, usWidth;
-	UINT8	 *SrcPtr;
 	BOOLEAN	fDataFound = FALSE;
 	INT32	 iTestPos, iStartPos;
 
@@ -843,7 +842,7 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIn
 	iTestPos	= ( ( usHeight - iTestY ) * usWidth ) + iTestX;
 	iStartPos	= 0;
 
-	SrcPtr= (UINT8 *)hSrcVObject->pPixData + uiOffset;
+	UINT8 const* SrcPtr = hSrcVObject->PixData(pTrav);
 
 #if 1 // XXX TODO
 	do

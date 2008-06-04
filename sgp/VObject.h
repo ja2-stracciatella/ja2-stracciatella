@@ -46,6 +46,8 @@ class SGPVObject
 
 		ETRLEObject const* SubregionProperties(size_t idx) const;
 
+		UINT8 const* PixData(ETRLEObject const*) const;
+
 		// Deletes the 16-bit palette tables
 		void DestroyPalettes();
 
@@ -63,8 +65,8 @@ class SGPVObject
 		SGP::Buffer<SGPPaletteEntry> palette_;                       // 8BPP Palette
 		UINT16*                      palette16_;                     // A 16BPP palette used for 8->16 blits
 
+		UINT8*                       pix_data_;                      // ETRLE pixel data
 	public:
-		PTR                          pPixData;                       // ETRLE pixel data
 		ETRLEObject*                 pETRLEObject;                   // Object offset data etc
 		UINT16*                      pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
 	private:
