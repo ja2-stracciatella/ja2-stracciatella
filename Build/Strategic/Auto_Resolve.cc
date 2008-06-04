@@ -502,16 +502,12 @@ void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY )
 
 	//Allocate memory for all the globals while we are in this mode.
 	gpAR = MALLOCZ(AUTORESOLVE_STRUCT);
-	Assert( gpAR );
 	//Mercs -- 20 max
 	gpMercs = MALLOCNZ(SOLDIERCELL, 20);
-	Assert( gpMercs );
 	//Militia -- MAX_ALLOWABLE_MILITIA_PER_SECTOR max
 	gpCivs = MALLOCNZ(SOLDIERCELL, MAX_ALLOWABLE_MILITIA_PER_SECTOR);
-	Assert( gpCivs );
 	//Enemies -- 32 max
 	gpEnemies = MALLOCNZ(SOLDIERCELL, 32);
-	Assert( gpEnemies );
 
 	//Set up autoresolve
 	gpAR->fEnteringAutoResolve = TRUE;
@@ -786,7 +782,6 @@ static void CalculateSoldierCells(BOOLEAN fReset)
 				}
 			}
 			gpMercs[index].pRegion = MALLOCZ(MOUSE_REGION);
-			Assert( gpMercs[ index ].pRegion );
 			MSYS_DefineRegion( gpMercs[ index ].pRegion, gpMercs[ index ].xp, gpMercs[ index ].yp,
 				(UINT16)(gpMercs[ index ].xp + 50), (UINT16)(gpMercs[ index ].yp + 44), MSYS_PRIORITY_HIGH, 0,
 				MercCellMouseMoveCallback, MercCellMouseClickCallback );

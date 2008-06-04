@@ -292,6 +292,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const INT16 sGridNo, const UINT32 uiNumberOfItemsToAdd, const OBJECTTYPE* const pObject, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel, const INT8 bVisible)
+try
 {
 	UINT32     uiNumberOfItems;
 	WORLDITEM* wis;
@@ -308,7 +309,6 @@ BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT
 			{
 				//Error, there wasnt a free spot.  Reallocate memory for the array
 				wis = REALLOC(wis, WORLDITEM, ++uiNumberOfItems);
-				if (wis == NULL) return FALSE;
 				break;
 			}
 			if (!wis[cnt].fExists) break;
@@ -336,6 +336,7 @@ BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT
 	MemFree(wis);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 extern BOOLEAN gfInMeanwhile;

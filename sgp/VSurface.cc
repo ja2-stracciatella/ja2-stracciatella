@@ -194,7 +194,6 @@ void ShutdownVideoSurfaceManager(void)
 static void AddStandardVideoSurface(SGPVSurface* const hVSurface)
 {
 	VSURFACE_NODE* const Node = MALLOC(VSURFACE_NODE);
-	Assert(Node != NULL); // out of memory?
 	Node->hVSurface = hVSurface;
 
 	Node->next      = NULL;

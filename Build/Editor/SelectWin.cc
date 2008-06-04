@@ -1257,6 +1257,7 @@ static void DrawSelections(void)
 //	properly scrolling the window etc.
 //
 static BOOLEAN BuildDisplayWindow(DisplaySpec* pDisplaySpecs, UINT16 usNumSpecs, DisplayList** pDisplayList, SGPPoint* pUpperLeft, SGPPoint* pBottomRight, SGPPoint* pSpacing, UINT16 fFlags)
+try
 {
 	INT32						iCurrX = pUpperLeft->iX;
 	INT32						iCurrY = pUpperLeft->iY;
@@ -1306,8 +1307,6 @@ static BOOLEAN BuildDisplayWindow(DisplaySpec* pDisplaySpecs, UINT16 usNumSpecs,
 				}
 
 				DisplayList* const pCurNode = MALLOC(DisplayList);
-				if (pCurNode == NULL) return FALSE;
-
 				pCurNode->hObj      = pDisplaySpec->hVObject;
 				pCurNode->uiIndex   = usETRLELoop;
 				pCurNode->iX        = iCurrX;
@@ -1332,6 +1331,7 @@ static BOOLEAN BuildDisplayWindow(DisplaySpec* pDisplaySpecs, UINT16 usNumSpecs,
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 //----------------------------------------------------------------------------------------------

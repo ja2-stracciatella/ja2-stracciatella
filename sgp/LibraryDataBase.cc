@@ -58,6 +58,7 @@ static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* 
 
 
 BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
+try
 {
 	INT16			i;
 
@@ -69,7 +70,6 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 	{
 		LibraryHeaderStruct* const libs = MALLOCNZ(LibraryHeaderStruct, LibCount);
 		gFileDataBase.pLibraries = libs;
-		CHECKF(libs);
 
 		//Load up each library
 		for (i = 0; i < LibCount; i++)
@@ -84,6 +84,7 @@ BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN CloseLibrary(INT16 sLibraryID);
@@ -116,13 +117,14 @@ static int CompareFileHeader(const void* a, const void* b)
 
 // Replace all \ in a string by /
 static char* Slashify(const char* s)
+try
 {
 	char* const res = MALLOCN(char, strlen(s) + 1);
-	if (res == NULL) return NULL;
 	char* d = res;
 	do { *d++ = (*s == '\\' ? '/' : *s); } while (*s++ != '\0');
 	return res;
 }
+catch (...) { return 0; }
 
 
 static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct* const lib)
@@ -422,6 +424,7 @@ static int CompareDirEntryFileNames(const void* key, const void* member);
 
 
 BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pLastWriteTime )
+try
 {
 #if 1 // XXX TODO
 	UNIMPLEMENTED
@@ -456,8 +459,6 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 		return( FALSE );
 
 	DIRENTRY* const pAllEntries = MALLOCN(DIRENTRY, LibFileHeader.iEntries);
-	if( pAllEntries == NULL )
-		return( FALSE );
 	memset( pAllEntries, 0, sizeof( DIRENTRY ) );
 
 
@@ -495,6 +496,7 @@ BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pL
 	return( TRUE );
 #endif
 }
+catch (...) { return FALSE; }
 
 
 static int CompareDirEntryFileNames(const void* key, const void* member)

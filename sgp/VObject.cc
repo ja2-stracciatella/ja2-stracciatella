@@ -215,7 +215,6 @@ static UINT32 CountVideoObjectNodes(void)
 static void AddStandardVideoObject(HVOBJECT hVObject)
 {
 	VOBJECT_NODE* const Node = MALLOC(VOBJECT_NODE);
-	Assert(Node != NULL); // out of memory?
 	Node->hVObject = hVObject;
 
 	Node->next = NULL;

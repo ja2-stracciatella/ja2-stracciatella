@@ -70,18 +70,13 @@ void KillSoldierInitList()
 }
 
 SOLDIERINITNODE* AddBasicPlacementToSoldierInitList( BASIC_SOLDIERCREATE_STRUCT *pBasicPlacement )
+try
 {
 	//Allocate memory for node
 	SOLDIERINITNODE* const curr = MALLOCZ(SOLDIERINITNODE);
-	Assert( curr );
 
 	//Allocate memory for basic placement
 	curr->pBasicPlacement = MALLOC(BASIC_SOLDIERCREATE_STRUCT);
-	if( !curr->pBasicPlacement )
-	{
-		AssertMsg( 0, "Failed to allocate memory for AddBasicPlacementToSoldierInitList." );
-		return NULL;
-	}
 
 	//Copy memory for basic placement
 	*curr->pBasicPlacement = *pBasicPlacement;
@@ -116,6 +111,8 @@ SOLDIERINITNODE* AddBasicPlacementToSoldierInitList( BASIC_SOLDIERCREATE_STRUCT 
 		gMapInformation.ubNumIndividuals++;
 	return curr;
 }
+catch (...) { return 0; }
+
 
 void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
 {
@@ -212,6 +209,7 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 
 
 BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
+try
 {
 	UINT32 i;
 	UINT8 ubNumIndividuals;
@@ -259,11 +257,6 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 		{ //Add the static detailed placement information in the same newly created node as the basic placement.
 			//read static detailed placement from file
 			SOLDIERCREATE_STRUCT* const Soldier = MALLOC(SOLDIERCREATE_STRUCT);
-			if (Soldier == NULL)
-			{
-				AssertMsg( 0, "Failed to allocate memory for new detailed placement in LoadSoldiersFromMap." );
-				return FALSE;
-			}
 
 			BYTE Data[1040];
 			LOADDATA(Data, *hBuffer, sizeof(Data));
@@ -291,6 +284,7 @@ BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
 	}
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 //Because soldiers, creatures, etc., maybe added to the game at anytime theoretically, the

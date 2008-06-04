@@ -38,12 +38,7 @@ namespace SGP
 
 	template<typename T> void Vector<T>::Reserve(size_t const n)
 	{
-		T* new_v = 0;
-		if (n != 0)
-		{
-			new_v = static_cast<T*>(malloc(sizeof(T) * n));
-			if (!new_v) throw std::bad_alloc();
-		}
+		T* const new_v = n == 0 ? 0 : MALLOCN(T, n);
 
 		size_t       i;
 		T*     const old_v    = v_;

@@ -80,7 +80,6 @@ static UINT16 gusTextInputCursor = CURSOR_IBEAM;
 static void PushTextInputLevel(void)
 {
 	STACKTEXTINPUTNODE* const pNewLevel = MALLOC(STACKTEXTINPUTNODE);
-	Assert( pNewLevel );
 	pNewLevel->head = gpTextInputHead;
 	pNewLevel->pColors = pColors;
 	pNewLevel->next = pInputStack;
@@ -132,7 +131,6 @@ void InitTextInputMode()
 	}
 	gpTextInputHead = NULL;
 	pColors = MALLOC(TextInputColors);
-	Assert( pColors );
 	gfTextInputMode = TRUE;
 	gfEditingText = FALSE;
 	pColors->fBevelling = FALSE;
@@ -216,7 +214,6 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason);
 void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT8 bPriority, const wchar_t* szInitText, UINT8 ubMaxChars, UINT16 usInputType)
 {
 	TEXTINPUTNODE* const pNode = MALLOCZ(TEXTINPUTNODE);
-	Assert(pNode);
 	pNode->next = NULL;
   if( !gpTextInputHead ) //first entry, so we start with text input.
 	{
@@ -240,7 +237,6 @@ void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT
 		ubMaxChars = 6;
 	//Allocate and copy the string.
 	pNode->szString = MALLOCN(wchar_t, ubMaxChars + 1);
-	Assert( pNode->szString );
 	if( szInitText )
 	{
 		pNode->ubStrLen = (UINT8)wcslen( szInitText );
@@ -278,7 +274,6 @@ void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT
 void AddUserInputField( INPUT_CALLBACK userFunction )
 {
 	TEXTINPUTNODE* const pNode = MALLOC(TEXTINPUTNODE);
-	Assert(pNode);
 	pNode->next = NULL;
   if( !gpTextInputHead ) //first entry, so we don't start with text input.
 	{
@@ -1474,7 +1469,6 @@ static void ExecuteCopyCommand(void)
 		}
 		ubCount = (UINT8)(ubEnd - ubStart);
 		szClipboard = MALLOCN(UINT16, ubCount + 1);
-		Assert( szClipboard );
 		for( ubCount = ubStart; ubCount < ubEnd; ubCount++ )
 		{
 			szClipboard[ ubCount-ubStart ] = gpActive->szString[ ubCount ];

@@ -2273,6 +2273,7 @@ static BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement);
 
 
 static BOOLEAN DetermineArmsDealersSellingInventory(void)
+try
 {
 	UINT16	usItemIndex;
 	UINT8		ubElement;
@@ -2292,13 +2293,7 @@ static BOOLEAN DetermineArmsDealersSellingInventory(void)
 
 	//allocate memory to hold the inventory in memory
 	gpTempDealersInventory = MALLOCNZ(INVENTORY_IN_SLOT, gSelectArmsDealerInfo.uiNumDistinctInventoryItems);
-	if( gpTempDealersInventory == NULL )
-	{
-		Assert( 0 );
-		return(FALSE);
-	}
-
-	guiNextFreeInvSlot = 0;
+	guiNextFreeInvSlot     = 0;
 
 	//loop through the dealer's permanent inventory items, adding them all to the temp inventory list
 	for( usItemIndex=1; usItemIndex<MAXITEMS; usItemIndex++)
@@ -2387,6 +2382,7 @@ static BOOLEAN DetermineArmsDealersSellingInventory(void)
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void StoreObjectsInNextFreeDealerInvSlot(UINT16 usItemIndex, SPECIAL_ITEM_INFO* pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner);

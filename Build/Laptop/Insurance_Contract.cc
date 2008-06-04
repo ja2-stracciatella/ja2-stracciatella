@@ -844,6 +844,7 @@ static void BuildInsuranceArray(void)
 
 
 BOOLEAN AddLifeInsurancePayout( SOLDIERTYPE *pSoldier )
+try
 {
 	UINT8	ubPayoutID;
 	UINT32 uiTimeInMinutes;
@@ -862,9 +863,6 @@ BOOLEAN AddLifeInsurancePayout( SOLDIERTYPE *pSoldier )
 	{
 		LaptopSaveInfo.ubNumberLifeInsurancePayouts++;
 		LaptopSaveInfo.pLifeInsurancePayouts = REALLOC(LaptopSaveInfo.pLifeInsurancePayouts, LIFE_INSURANCE_PAYOUT, LaptopSaveInfo.ubNumberLifeInsurancePayouts);
-		if( LaptopSaveInfo.pLifeInsurancePayouts == NULL )
-			return( FALSE );
-
 		memset( &LaptopSaveInfo.pLifeInsurancePayouts[ LaptopSaveInfo.ubNumberLifeInsurancePayouts - 1 ], 0, sizeof( LIFE_INSURANCE_PAYOUT ) );
 	}
 
@@ -929,6 +927,7 @@ BOOLEAN AddLifeInsurancePayout( SOLDIERTYPE *pSoldier )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 void StartInsuranceInvestigation( UINT8	ubPayoutID )

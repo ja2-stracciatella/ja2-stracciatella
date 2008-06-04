@@ -128,7 +128,6 @@ static BOOLEAN AddMapIndexToTree(UINT16 usMapIndex)
 	if( !top )
 	{
 		top = MALLOC(MapIndexBinaryTree);
-		Assert( top );
 		top->usMapIndex = usMapIndex;
 		top->left = NULL;
 		top->right = NULL;
@@ -151,7 +150,6 @@ static BOOLEAN AddMapIndexToTree(UINT16 usMapIndex)
 	//directly above.
 	//Create the new node and fill in the information.
 	curr = MALLOC(MapIndexBinaryTree);
-	Assert( curr );
 	curr->usMapIndex = usMapIndex;
 	curr->left = NULL;
 	curr->right = NULL;
@@ -564,6 +562,7 @@ static void DeleteMapElementContentsAfterCreationFail(MAP_ELEMENT* pNewMapElemen
 
 
 static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIndex)
+try
 {
 	MAP_ELEMENT			*pOldMapElement;
 	LEVELNODE				*pOldLevelNode;
@@ -587,11 +586,6 @@ static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIn
 		while( pOldStructure )
 		{
 			STRUCTURE* const pStructure = MALLOC(STRUCTURE);
-			if( !pStructure )
-			{
-				DeleteMapElementContentsAfterCreationFail( pNewMapElement );
-				return FALSE;
-			}
 			if( !tail )
 			{ //first node in structure list
 				tail = pStructure;
@@ -639,11 +633,6 @@ static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIn
 		{
 			//copy the level node
 			LEVELNODE* pLevelNode = MALLOC(LEVELNODE);
-			if( !pLevelNode )
-			{
-				DeleteMapElementContentsAfterCreationFail( pNewMapElement );
-				return FALSE;
-			}
 			if( !tail )
 			{ //first node in levelnode list
 				tail = pLevelNode;
@@ -735,6 +724,11 @@ static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIn
 	pNewMapElement->ubReservedSoldierID = pOldMapElement->ubReservedSoldierID;
 
 	return TRUE;
+}
+catch (...)
+{
+	DeleteMapElementContentsAfterCreationFail(pNewMapElement);
+	return FALSE;
 }
 
 

@@ -3587,7 +3587,6 @@ BOOLEAN LoadLaptopInfoFromSavedGame(HWFILE hFile)
 		//Allocate memory for the information
 		const UINT32 uiSize = sizeof(BobbyRayOrderStruct) * LaptopSaveInfo.usNumberOfBobbyRayOrderItems;
 		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = MALLOCN(BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
-		Assert(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray);
 
 		// Load The laptop information
 		if (!FileRead(hFile, LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, uiSize)) return FALSE;
@@ -3605,7 +3604,6 @@ BOOLEAN LoadLaptopInfoFromSavedGame(HWFILE hFile)
 		//Allocate memory for the information
 		const UINT32 uiSize = sizeof(LIFE_INSURANCE_PAYOUT) * LaptopSaveInfo.ubNumberLifeInsurancePayouts;
 		LaptopSaveInfo.pLifeInsurancePayouts = MALLOCN(LIFE_INSURANCE_PAYOUT, LaptopSaveInfo.ubNumberLifeInsurancePayouts);
-		Assert(LaptopSaveInfo.pLifeInsurancePayouts);
 
 		// Load The laptop information
 		if (!FileRead(hFile, LaptopSaveInfo.pLifeInsurancePayouts, uiSize)) return FALSE;

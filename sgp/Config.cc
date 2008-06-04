@@ -48,17 +48,16 @@ static void ConfigUpdateEntry(const char* key, const char* value)
 
 
 ConfigEntry* ConfigRegisterKey(const char* const key)
+try
 {
 	ConfigEntry* const new_config = MALLOC(ConfigEntry);
-	if (new_config != NULL)
-	{
-		new_config->key   = strdup(key);
-		new_config->value = NULL;
-		new_config->next  = config_head;
-		config_head       = new_config;
-	}
+	new_config->key   = strdup(key);
+	new_config->value = NULL;
+	new_config->next  = config_head;
+	config_head       = new_config;
 	return new_config;
 }
+catch (...) { return 0; }
 
 
 void ConfigSetValue(ConfigEntry* const entry, const char* const value)

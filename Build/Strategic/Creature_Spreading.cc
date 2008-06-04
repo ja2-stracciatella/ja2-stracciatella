@@ -139,7 +139,6 @@ static CREATURE_DIRECTIVE* NewDirective(UINT8 ubSectorID, UINT8 ubSectorZ, UINT8
 {
 	UINT8 ubSectorX, ubSectorY;
 	CREATURE_DIRECTIVE* const curr = MALLOC(CREATURE_DIRECTIVE);
-	Assert( curr );
 	ubSectorX = (UINT8)((ubSectorID % 16) + 1);
 	ubSectorY = (UINT8)((ubSectorID / 16) + 1);
 	curr->pLevel = FindUnderGroundSector( ubSectorX, ubSectorY, ubSectorZ );

@@ -5,6 +5,7 @@
 //		11sep96:HJH	- Creation
 //    29may97:ARM - Fix & improve MemDebugCounter handling, logging of
 //                    MemAlloc/MemFree, and reporting of any errors
+#include <stdexcept>
 
 #include "Types.h"
 #include <stdlib.h>
@@ -144,6 +145,22 @@ void ShutdownMemoryManager(void)
 }
 
 
+void* XMalloc(size_t const size)
+{
+	void* const p = malloc(size);
+	if (!p) throw std::bad_alloc();
+	return p;
+}
+
+
+void* XRealloc(void* const ptr, size_t const size)
+{
+	void* const p = realloc(ptr, size);
+	if (!p) throw std::bad_alloc();
+	return p;
+}
+
+
 #ifdef _DEBUG
 
 PTR MemAllocReal(size_t uiSize, const char* pcFile, INT32 iLine)
@@ -158,16 +175,15 @@ PTR MemAllocReal(size_t uiSize, const char* pcFile, INT32 iLine)
 
 
 	PTR ptr = _malloc_dbg(uiSize, _NORMAL_BLOCK, pcFile, iLine);
-	if (ptr != NULL)
-	{
-		guiMemTotal   += uiSize;
-		guiMemAlloced += uiSize;
-		MemDebugCounter++;
-	}
-	else
+	if (!ptr)
 	{
 		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_0, String("MemAlloc failed: %d bytes (line %d file %s)", uiSize, iLine, pcFile));
+		throw std::bad_alloc();
 	}
+
+	guiMemTotal   += uiSize;
+	guiMemAlloced += uiSize;
+	MemDebugCounter++;
 
 #ifdef DEBUG_MEM_LEAKS
 	DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemAlloc %p: %d bytes (line %d file %s)", ptr, uiSize, iLine, pcFile));
@@ -232,16 +248,15 @@ PTR MemReallocReal(PTR ptr, UINT32 uiSize, const char* pcFile, INT32 iLine)
 			guiMemFreed -= uiOldSize;
 			MemDebugCounter++;
 		}
+		throw std::bad_alloc();
 	}
-	else
-	{
+
 #ifdef DEBUG_MEM_LEAKS
-		DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemRealloc %p: Resizing %d bytes to %d bytes (line %d file %s) - New ptr %p", ptr, uiOldSize, uiSize, iLine, pcFile, ptrNew));
+	DebugMsg(TOPIC_MEMORY_MANAGER, DBG_LEVEL_1, String("MemRealloc %p: Resizing %d bytes to %d bytes (line %d file %s) - New ptr %p", ptr, uiOldSize, uiSize, iLine, pcFile, ptrNew));
 #endif
-		guiMemTotal   += uiSize;
-		guiMemAlloced += uiSize;
-		MemDebugCounter++;
-	}
+	guiMemTotal   += uiSize;
+	guiMemAlloced += uiSize;
+	MemDebugCounter++;
 
 	return ptrNew;
 }
@@ -258,39 +273,37 @@ PTR MemAllocXDebug(size_t size, const char* szCodeString, INT32 iLineNum)
 		return NULL;
 	}
 
-	PTR ptr = malloc(size);
-	if (ptr)
-	{
-		// Set into video object list
-		MEMORY_NODE* Node = malloc(sizeof(*Node));
-		Assert(Node); // out of memory?
-		Node->next = NULL;
-		if (gpMemoryTail)
-		{ //Add node after tail
-			gpMemoryTail->next = Node;
-		}
-		else
-		{ //new list
-			gpMemoryHead = Node;
-		}
-		gpMemoryTail = Node;
+	void* const ptr = XMalloc(size);
 
-		//record the code location of the calling creating function.
-		const char* pStr = strrchr(szCodeString, '/');
-		pStr = (pStr ? pStr + 1 : szCodeString);
-		char str[70];
-		sprintf(str, "%s -- line(%d)", pStr, iLineNum);
-		gpMemoryTail->pCode = strdup(str);
-
-		//record the size
-		gpMemoryTail->uiSize = size;
-
-		//Set the hVObject into the node.
-		gpMemoryTail->pBlock = ptr;
-
-		guiMemoryNodes++;
-		guiTotalMemoryNodes++;
+	// Set into video object list
+	MEMORY_NODE* Node = malloc(sizeof(*Node));
+	Assert(Node); // out of memory?
+	Node->next = NULL;
+	if (gpMemoryTail)
+	{ //Add node after tail
+		gpMemoryTail->next = Node;
 	}
+	else
+	{ //new list
+		gpMemoryHead = Node;
+	}
+	gpMemoryTail = Node;
+
+	//record the code location of the calling creating function.
+	const char* pStr = strrchr(szCodeString, '/');
+	pStr = (pStr ? pStr + 1 : szCodeString);
+	char str[70];
+	sprintf(str, "%s -- line(%d)", pStr, iLineNum);
+	gpMemoryTail->pCode = strdup(str);
+
+	//record the size
+	gpMemoryTail->uiSize = size;
+
+	//Set the hVObject into the node.
+	gpMemoryTail->pBlock = ptr;
+
+	guiMemoryNodes++;
+	guiTotalMemoryNodes++;
 	return ptr;
 }
 
@@ -340,24 +353,22 @@ PTR	MemReallocXDebug(PTR ptr, size_t size, const char* szCodeString, INT32 iLine
 		if (curr->pBlock != ptr) continue;
 
 		// Note that the ptr changes to ptrNew...
-		PTR	ptrNew = realloc(ptr, size);
-		if (ptrNew)
-		{
-			curr->pBlock = ptrNew;
-			curr->uiSize = size;
+		void* const ptrNew = XRealloc(ptr, size);
 
-			free(curr->pCode);
+		curr->pBlock = ptrNew;
+		curr->uiSize = size;
 
-			//record the code location of the calling creating function.
-			const char* pStr = strrchr(szCodeString, '/');
-			pStr = (pStr ? pStr + 1 : szCodeString);
-			char str[70];
-			sprintf(str, "%s -- line(%d)", pStr, iLineNum);
-			curr->pCode = strdup(str);
-		}
+		free(curr->pCode);
+
+		//record the code location of the calling creating function.
+		const char* pStr = strrchr(szCodeString, '/');
+		pStr = (pStr ? pStr + 1 : szCodeString);
+		char str[70];
+		sprintf(str, "%s -- line(%d)", pStr, iLineNum);
+		curr->pCode = strdup(str);
 		return ptrNew;
 	}
-	return 0;
+	throw std::logic_error("Tried to reallocate with invalid pointer");
 }
 
 

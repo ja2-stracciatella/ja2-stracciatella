@@ -685,9 +685,6 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 					{
 						LaptopSaveInfo.usNumberOfBobbyRayOrderItems++;
 						LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = REALLOC(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
-						if( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray == NULL )
-							return;
-
 						memset( &LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ LaptopSaveInfo.usNumberOfBobbyRayOrderItems - 1 ], 0, sizeof( BobbyRayOrderStruct ) );
 					}
 
@@ -1783,9 +1780,6 @@ static void PurchaseBobbyOrder(void)
 		{
 			LaptopSaveInfo.usNumberOfBobbyRayOrderItems++;
 			LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = REALLOC(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
-			if( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray == NULL )
-				return;
-
 			memset( &LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ LaptopSaveInfo.usNumberOfBobbyRayOrderItems - 1 ], 0, sizeof( BobbyRayOrderStruct ) );
 		}
 
@@ -1865,9 +1859,6 @@ void AddJohnsGunShipment()
 	{
 		LaptopSaveInfo.usNumberOfBobbyRayOrderItems++;
 		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = REALLOC(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
-		if( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray == NULL )
-			return;
-
 		memset( &LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ LaptopSaveInfo.usNumberOfBobbyRayOrderItems - 1 ], 0, sizeof( BobbyRayOrderStruct ) );
 	}
 
@@ -2129,6 +2120,7 @@ BOOLEAN NewWayOfSavingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 
 
 BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
+try
 {
 	INT32		iCnt;
 
@@ -2145,13 +2137,7 @@ BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 	}
 	else
 	{
-		//Allocate memory for the list
 		gpNewBobbyrShipments = MALLOCN(NewBobbyRayOrderStruct, giNumberOfNewBobbyRShipment);
-		if( gpNewBobbyrShipments == NULL )
-		{
-			Assert(0);
-			return(FALSE );
-		}
 
 		//loop through and load all the mail order slots
 		for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
@@ -2163,3 +2149,4 @@ BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }

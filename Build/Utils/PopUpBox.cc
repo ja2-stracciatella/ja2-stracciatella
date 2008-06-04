@@ -82,6 +82,7 @@ void SpecifyBoxMinWidth(PopUpBox* const box, INT32 iMinWidth)
 
 
 PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurface* const buffer, const SGPVObject* const border, SGPVSurface* const background, const UINT32 margin_l, const UINT32 margin_t, const UINT32 margin_b, const UINT32 margin_r, const UINT32 line_space)
+try
 {
 	// find first free box
 	for (PopUpBox** i = PopUpBoxList; i != endof(PopUpBoxList); ++i)
@@ -89,8 +90,6 @@ PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurf
 		if (*i == NULL)
 		{
 			PopUpBox* const box = MALLOCZ(PopUpBox);
-			if (box == NULL) return NO_POPUP_BOX;
-
 			SetBoxXY(box, Position.iX, Position.iY);
 			box->uiFlags            = uiFlags;
 			box->uiBuffer           = buffer;
@@ -111,6 +110,7 @@ PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurf
 	Assert(0);
 	return NO_POPUP_BOX;
 }
+catch (...) { return NO_POPUP_BOX; }
 
 
 UINT32 GetTopMarginSize(const PopUpBox* const box)
@@ -180,13 +180,8 @@ void AddMonoString(PopUpBox* const box, const wchar_t* pString)
 		return;
 	}
 
-	PopUpString* const pStringSt = MALLOC(PopUpString);
-	if (pStringSt == NULL)
-		return;
-
-	wchar_t* const pLocalString = MALLOCN(wchar_t, wcslen(pString) + 1);
-	if (pLocalString == NULL)
-		return;
+	PopUpString* const pStringSt    = MALLOC(PopUpString);
+	wchar_t*     const pLocalString = MALLOCN(wchar_t, wcslen(pString) + 1);
 
 	wcscpy(pLocalString, pString);
 
@@ -217,13 +212,8 @@ void AddSecondColumnMonoString(PopUpBox* const box, const wchar_t* const pString
 		return;
 	}
 
-	PopUpString* const pStringSt = MALLOC(PopUpString);
-	if (pStringSt == NULL)
-		return;
-
-	wchar_t* const pLocalString = MALLOCN(wchar_t, wcslen(pString) + 1);
-	if (pLocalString == NULL)
-		return;
+	PopUpString* const pStringSt    = MALLOC(PopUpString);
+	wchar_t*     const pLocalString = MALLOCN(wchar_t, wcslen(pString) + 1);
 
 	wcscpy(pLocalString, pString);
 

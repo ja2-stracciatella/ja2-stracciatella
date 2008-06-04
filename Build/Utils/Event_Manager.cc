@@ -45,11 +45,9 @@ static EventList* GetQueue(EventQueueID ubQueueID);
 
 
 BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, EventQueueID ubQueueID)
+try
 {
 	EVENT* pEvent = MALLOCE(EVENT, uiDataSize);
-	CHECKF(pEvent != NULL);
-
-	// Set values
 	pEvent->TimeStamp  = GetJA2Clock();
 	pEvent->usDelay    = usDelay;
 	pEvent->uiEvent    = uiEvent;
@@ -62,6 +60,7 @@ BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSi
 	hQueue->Add(pEvent, hQueue->Size());
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 EVENT* RemoveEvent(UINT32 uiIndex, EventQueueID ubQueueID)

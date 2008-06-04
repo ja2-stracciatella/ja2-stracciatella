@@ -37,6 +37,7 @@ UINT32				guiNumWorldBombs = 0;
 
 
 static INT32 GetFreeWorldBombIndex(void)
+try
 {
 	UINT32 uiCount;
 	WORLDBOMB *newWorldBombs;
@@ -51,10 +52,6 @@ static INT32 GetFreeWorldBombIndex(void)
 	guiNumWorldBombs += 10;
 	//Allocate new table with max+10 items.
 	newWorldBombs = REALLOC(gWorldBombs, WORLDBOMB, guiNumWorldBombs);
-	if (newWorldBombs == NULL)
-	{
-		return( -1 );
-	}
 
 	//Clear the rest of the new array
 	memset( &newWorldBombs[ uiOldNumWorldBombs ], 0,
@@ -64,6 +61,7 @@ static INT32 GetFreeWorldBombIndex(void)
 	// Return uiCount.....
 	return( uiCount );
 }
+catch (...) { return -1; }
 
 
 static INT32 AddBombToWorld(INT32 iItemIndex)
@@ -159,6 +157,7 @@ void FindPanicBombsAndTriggers(void)
 
 
 static INT32 GetFreeWorldItemIndex(void)
+try
 {
 	UINT32 uiCount;
 	WORLDITEM *newWorldItems;
@@ -173,10 +172,6 @@ static INT32 GetFreeWorldItemIndex(void)
 	guiNumWorldItems += 10;
 	//Allocate new table with max+10 items.
 	newWorldItems = REALLOC(gWorldItems, WORLDITEM, guiNumWorldItems);
-	if (newWorldItems == NULL)
-	{
-		return( -1 );
-	}
 
 	//Clear the rest of the new array
 	memset( &newWorldItems[ uiOldNumWorldItems ], 0,
@@ -186,6 +181,7 @@ static INT32 GetFreeWorldItemIndex(void)
 	// Return uiCount.....
 	return( uiCount );
 }
+catch (...) { return -1; }
 
 
 static UINT32 GetNumUsedWorldItems(void)

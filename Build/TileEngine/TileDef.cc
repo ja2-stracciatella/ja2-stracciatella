@@ -452,20 +452,17 @@ UINT16 GetWallOrientation(UINT16 usIndex)
 
 
 BOOLEAN AllocateAnimTileData( TILE_ELEMENT *pTileElem, UINT8 ubNumFrames )
+try
 {
-	pTileElem->pAnimData = MALLOC(TILE_ANIMATION_DATA);
-
-	CHECKF( pTileElem->pAnimData != NULL );
-
+	pTileElem->pAnimData            = MALLOC(TILE_ANIMATION_DATA);
 	pTileElem->pAnimData->pusFrames = MALLOCN(UINT16, ubNumFrames);
-
-	CHECKF( pTileElem->pAnimData->pusFrames != NULL );
 
 	// Set # if frames!
 	pTileElem->pAnimData->ubNumFrames = ubNumFrames;
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void FreeAnimTileData(TILE_ELEMENT* pTileElem)

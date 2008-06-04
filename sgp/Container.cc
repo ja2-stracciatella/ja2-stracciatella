@@ -48,6 +48,7 @@ typedef struct QueueHeader
 // Return Value	NULL if unsuccesful
 //							 pointer to allocated memory
 HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
+try
 {
 	if (uiNum_items == 0 || uiSiz_each == 0)
 	{
@@ -58,11 +59,6 @@ HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
 	UINT32 uiAmount = uiNum_items * uiSiz_each;
 
 	const HQUEUE hQueue = MALLOCE(QueueHeader, uiAmount);
-	if (hQueue == NULL)
-	{
-		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Could not allocate queue container memory");
-		return NULL;
-	}
 
 	QueueHeader* pQueue = hQueue;
 	pQueue->uiMax_size = uiAmount + sizeof(QueueHeader);
@@ -72,6 +68,7 @@ HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
 
 	return hQueue;
 }
+catch (...) { return 0; }
 
 
 // Parameter List : num_items - estimated number of items in ordered list
@@ -79,6 +76,7 @@ HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
 // Return Value	NULL if unsuccesful
 //							 pointer to allocated memory
 HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
+try
 {
 	if (uiNum_items == 0 || uiSiz_each == 0)
 	{
@@ -89,11 +87,6 @@ HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
 	UINT32 uiAmount = uiNum_items * uiSiz_each;
 
 	const HLIST hList = MALLOCE(ListHeader, uiAmount);
-	if (hList == NULL)
-	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not allocate queue container memory");
-		return 0;
-	}
 
 	ListHeader* pList = hList;
 	pList->uiMax_size = uiAmount + sizeof(ListHeader);
@@ -103,6 +96,7 @@ HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
 
 	return hList;
 }
+catch (...) { return 0; }
 
 
 BOOLEAN DeleteQueue(HQUEUE hQueue)

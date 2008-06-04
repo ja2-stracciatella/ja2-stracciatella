@@ -1025,7 +1025,6 @@ void InitStrategicAI()
 	if( !gPatrolGroup )
 	{ //Allocate it (otherwise, we just overwrite it because the size never changes)
 		gPatrolGroup = MALLOCN(PATROL_GROUP, lengthof(gOrigPatrolGroup));
-		Assert( gPatrolGroup );
 	}
 	memcpy( gPatrolGroup, gOrigPatrolGroup, sizeof( gOrigPatrolGroup ) );
 
@@ -1036,7 +1035,6 @@ void InitStrategicAI()
 	if( !gGarrisonGroup )
 	{
 		gGarrisonGroup = MALLOCN(GARRISON_GROUP, lengthof(gOrigGarrisonGroup));
-		Assert( gGarrisonGroup );
 	}
 	memcpy( gGarrisonGroup, gOrigGarrisonGroup, sizeof( gOrigGarrisonGroup ) );
 

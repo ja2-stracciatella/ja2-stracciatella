@@ -60,9 +60,7 @@ void RemoveLoadingScreenProgressBar()
 
 void CreateProgressBar(const UINT8 ubProgressBarID, const UINT16 usLeft, const UINT16 usTop, const UINT16 usRight, const UINT16 usBottom)
 {
-	//Allocate new progress bar
 	PROGRESSBAR* const pNew = MALLOCZ(PROGRESSBAR);
-	Assert( pNew );
 
 	if( pBar[ ubProgressBarID ] )
 		RemoveProgressBar( ubProgressBarID );

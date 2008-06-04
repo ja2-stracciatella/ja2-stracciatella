@@ -428,19 +428,18 @@ static INT8 RandomSkipListLevel(void)
 }
 
 BOOLEAN InitPathAI( void )
+try
 {
 	pathQ         = MALLOCN( path_t,        ABSMAX_PATHQ);
 	trailCost     = MALLOCN( TRAILCELLTYPE, MAPLENGTH);
 	trailCostUsed = MALLOCNZ(UINT8,         MAPLENGTH);
 	trailTree     = MALLOCN( trail_t,       ABSMAX_TRAIL_TREE);
-	if (!pathQ || !trailCost || !trailCostUsed || !trailTree)
-	{
-		return( FALSE );
-	}
 	pQueueHead = &(pathQ[QHEADNDX]);
 	pClosedHead = &(pathQ[QPOOLNDX]);
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 void ShutDownPathAI( void )
 {

@@ -138,6 +138,7 @@ static void RecountBackgrounds(void)
 
 
 BACKGROUND_SAVE* RegisterBackgroundRect(const UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
+try
 {
 	const INT32 ClipX1 = gDirtyClipRect.iLeft;
 	const INT32 ClipY1 = gDirtyClipRect.iTop;
@@ -174,17 +175,8 @@ BACKGROUND_SAVE* RegisterBackgroundRect(const UINT32 uiFlags, INT16 sLeft, INT16
 	const UINT32 uiBufSize = (sRight - sLeft) * (sBottom - sTop);
 	if (uiBufSize == 0) return NO_BGND_RECT;
 
-	if (uiFlags & BGND_FLAG_SAVERECT)
-	{
-		b->pSaveArea = MALLOCN(UINT16, uiBufSize);
-		if (b->pSaveArea == NULL) return NO_BGND_RECT;
-	}
-
-	if (uiFlags & BGND_FLAG_SAVE_Z)
-	{
-		b->pZSaveArea = MALLOCN(UINT16, uiBufSize);
-		if (b->pZSaveArea == NULL) return NO_BGND_RECT;
-	}
+	if (uiFlags & BGND_FLAG_SAVERECT) b->pSaveArea  = MALLOCN(UINT16, uiBufSize);
+	if (uiFlags & BGND_FLAG_SAVE_Z)   b->pZSaveArea = MALLOCN(UINT16, uiBufSize);
 
 	b->fFreeMemory = TRUE;
 	b->fAllocated  = TRUE;
@@ -199,6 +191,7 @@ BACKGROUND_SAVE* RegisterBackgroundRect(const UINT32 uiFlags, INT16 sLeft, INT16
 
 	return b;
 }
+catch (...) { return NO_BGND_RECT; }
 
 
 void RegisterBackgroundRectSingleFilled(const INT16 left, const INT16 top, const INT16 right, const INT16 bottom)

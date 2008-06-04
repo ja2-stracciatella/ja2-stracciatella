@@ -887,7 +887,6 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 	if( pIPPrev )
 	{
 		pIPPrev->next = MALLOC(IPListNode);
-		Assert( pIPPrev->next );
 		pIPPrev = pIPPrev->next;
 		pIPPrev->next = NULL;
 		pIPPrev->sGridNo = sGridNo;
@@ -896,7 +895,6 @@ void AddSelectedItemToWorld( INT16 sGridNo )
 	else
 	{
 		pIPHead = MALLOC(IPListNode);
-		Assert( pIPHead );
 		pIPHead->next = NULL;
 		pIPHead->sGridNo = sGridNo;
 		gpCurrItemPoolNode = pIPHead;

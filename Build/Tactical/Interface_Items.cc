@@ -3677,16 +3677,13 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 				{
 					case ANIM_STAND:
 						gpItemPointerSoldier->pTempObject = MALLOC(OBJECTTYPE);
-						if (gpItemPointerSoldier->pTempObject != NULL)
-						{
-							*gpItemPointerSoldier->pTempObject = *gpItemPointer;
-							gpItemPointerSoldier->sPendingActionData2 = usMapPos;
+						*gpItemPointerSoldier->pTempObject = *gpItemPointer;
+						gpItemPointerSoldier->sPendingActionData2 = usMapPos;
 
-	 						// Turn towards.....gridno
-							EVENT_SetSoldierDesiredDirectionForward(gpItemPointerSoldier, (INT8)GetDirectionFromGridNo(usMapPos, gpItemPointerSoldier));
+						// Turn towards.....gridno
+						EVENT_SetSoldierDesiredDirectionForward(gpItemPointerSoldier, (INT8)GetDirectionFromGridNo(usMapPos, gpItemPointerSoldier));
 
-							EVENT_InitNewSoldierAnim( gpItemPointerSoldier, DROP_ADJACENT_OBJECT, 0 , FALSE );
-						}
+						EVENT_InitNewSoldierAnim( gpItemPointerSoldier, DROP_ADJACENT_OBJECT, 0 , FALSE );
 						break;
 
 					case ANIM_CROUCH:

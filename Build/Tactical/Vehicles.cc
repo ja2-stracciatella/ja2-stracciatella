@@ -888,6 +888,7 @@ BOOLEAN SaveVehicleInformationToSaveGameFile(const HWFILE f)
 
 
 BOOLEAN LoadVehicleInformationFromSavedGameFile(const HWFILE hFile, const UINT32 uiSavedGameVersion)
+try
 {
 	ClearOutVehicleList();
 
@@ -898,7 +899,6 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile(const HWFILE hFile, const UINT32
 	//allocate memory to hold the vehicle list
 	VEHICLETYPE* const vl = MALLOCNZ(VEHICLETYPE, ubNumberOfVehicles);
 	pVehicleList = vl;
-	if (vl == NULL) return FALSE;
 
 	//loop through all the vehicles and load each one
 	for (UINT8 cnt = 0; cnt < ubNumberOfVehicles; ++cnt)
@@ -913,6 +913,7 @@ BOOLEAN LoadVehicleInformationFromSavedGameFile(const HWFILE hFile, const UINT32
 	}
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 void SetVehicleSectorValues(VEHICLETYPE* const v, const UINT8 ubSectorX, const UINT8 ubSectorY)

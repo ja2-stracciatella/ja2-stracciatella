@@ -321,10 +321,6 @@ try
 	}
 
 	sAutoBandageString = REALLOC(sAutoBandageString, wchar_t, uiDoctorNameStringLength);
-	if (!sAutoBandageString)
-	{
-		return( FALSE );
-	}
 
 	if (ubDoctors == 1)
 	{

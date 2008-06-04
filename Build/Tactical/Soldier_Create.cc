@@ -122,6 +122,7 @@ static void TacticalCopySoldierFromProfile(SOLDIERTYPE* pSoldier, SOLDIERCREATE_
 
 
 SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStruct)
+try
 {
 	//Kris:
 	//Huge no no!  See the header file for description of static detailed placements.
@@ -138,8 +139,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 	if (guiCurrentScreen == AUTORESOLVE_SCREEN)
 	{
 		// We are creating a dynamically allocated soldier for autoresolve.
-		s = MALLOC(SOLDIERTYPE);
-		if (!s) return NULL;
+		s  = MALLOC(SOLDIERTYPE);
 		id = 255;
 	}
 	else
@@ -486,6 +486,7 @@ SOLDIERTYPE* TacticalCreateSoldier(const SOLDIERCREATE_STRUCT* const pCreateStru
 
 	return s;
 }
+catch (...) { return 0; }
 
 
 SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE* const existing)
@@ -1802,6 +1803,7 @@ void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
 
 
 static SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve(UINT8 ubSoldierClass)
+try
 {
 	//This code looks for a soldier of specified type that currently exists in tactical and
 	//returns the pointer to that soldier.  This is used when copying the exact status of
@@ -1819,8 +1821,6 @@ static SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve(UINT8 ubSoldierClass)
 
 				//Allocate and copy the soldier
 				SOLDIERTYPE* const pSoldier = MALLOC(SOLDIERTYPE);
-				if( !pSoldier )
-					return NULL;
 				*pSoldier = *s;
 
 				//Assign a bogus ID, then return it
@@ -1831,6 +1831,8 @@ static SOLDIERTYPE* ReserveTacticalSoldierForAutoresolve(UINT8 ubSoldierClass)
 	}
 	return NULL;
 }
+catch (...) { return 0; }
+
 
 //USED BY STRATEGIC AI and AUTORESOLVE
 SOLDIERTYPE* TacticalCreateAdministrator()

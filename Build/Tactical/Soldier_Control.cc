@@ -5194,6 +5194,7 @@ void SetSoldierAniSpeed(SOLDIERTYPE* pSoldier)
 //PALETTE REPLACEMENT FUNCTIONS
 ///////////////////////////////////////////////////////
 BOOLEAN LoadPaletteData( )
+try
 {
 	UINT32			cnt, cnt2;
 
@@ -5263,7 +5264,6 @@ BOOLEAN LoadPaletteData( )
 
 		SGPPaletteEntry* const Pal = MALLOCN(SGPPaletteEntry, gpPalRep[cnt].ubPaletteSize);
 		gpPalRep[cnt].rgb = Pal;
-		CHECKF(Pal != NULL);
 
 		for( cnt2 = 0; cnt2 < gpPalRep[ cnt ].ubPaletteSize; cnt2++ )
 		{
@@ -5279,6 +5279,7 @@ BOOLEAN LoadPaletteData( )
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalRep )

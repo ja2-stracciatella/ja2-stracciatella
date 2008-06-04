@@ -315,6 +315,7 @@ catch (...) { return FALSE; }
 
 
 static BOOLEAN CreateFileStructureArrays(STRUCTURE_FILE_REF* pFileRef, UINT32 uiDataSize)
+try
 { // Based on a file chunk, creates all the dynamic arrays for the
   // structure definitions contained within
 
@@ -326,10 +327,6 @@ static BOOLEAN CreateFileStructureArrays(STRUCTURE_FILE_REF* pFileRef, UINT32 ui
 
 	pCurrent = pFileRef->pubStructureData;
 	DB_STRUCTURE_REF* const pDBStructureRef = MALLOCNZ(DB_STRUCTURE_REF, pFileRef->usNumberOfStructures);
-	if (pDBStructureRef == NULL)
-	{
-		return( FALSE );
-	}
 	pFileRef->pDBStructureRef = pDBStructureRef;
 	for (usLoop = 0; usLoop < pFileRef->usNumberOfStructuresStored; usLoop++)
 	{
@@ -341,10 +338,6 @@ static BOOLEAN CreateFileStructureArrays(STRUCTURE_FILE_REF* pFileRef, UINT32 ui
 		usIndex = ((DB_STRUCTURE *) pCurrent)->usStructureNumber;
 		pDBStructureRef[usIndex].pDBStructure = (DB_STRUCTURE *) pCurrent;
 		DB_STRUCTURE_TILE** const ppTileArray = MALLOCN(DB_STRUCTURE_TILE*, pDBStructureRef[usIndex].pDBStructure->ubNumberOfTiles);
-		if (ppTileArray == NULL)
-		{ // freeing of memory will occur outside of the function
-			return( FALSE );
-		}
 		pDBStructureRef[usIndex].ppTile = ppTileArray;
 		pCurrent += sizeof( DB_STRUCTURE );
 		// Set things up to calculate hit points
@@ -380,17 +373,16 @@ static BOOLEAN CreateFileStructureArrays(STRUCTURE_FILE_REF* pFileRef, UINT32 ui
 	}
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 STRUCTURE_FILE_REF* LoadStructureFile(const char* szFileName)
+try
 { // NB should be passed in expected number of structures so we can check equality
 	UINT32								uiDataSize = 0;
 	BOOLEAN								fOk;
 
 	STRUCTURE_FILE_REF* const pFileRef = MALLOCZ(STRUCTURE_FILE_REF);
-	if (pFileRef == NULL)
-	{
-		return( NULL );
-	}
 	fOk = LoadStructureData( szFileName, pFileRef, &uiDataSize );
 	if (!fOk)
 	{
@@ -415,6 +407,7 @@ STRUCTURE_FILE_REF* LoadStructureFile(const char* szFileName)
 	gpStructureFileRefs = pFileRef;
 	return( pFileRef );
 }
+catch (...) { return 0; }
 
 
 //
@@ -423,6 +416,7 @@ STRUCTURE_FILE_REF* LoadStructureFile(const char* szFileName)
 
 
 static STRUCTURE* CreateStructureFromDB(const DB_STRUCTURE_REF* const pDBStructureRef, const UINT8 ubTileNum)
+try
 { // Creates a STRUCTURE struct for one tile of a structure
 	DB_STRUCTURE *				pDBStructure;
 	DB_STRUCTURE_TILE	*		pTile;
@@ -435,9 +429,7 @@ static STRUCTURE* CreateStructureFromDB(const DB_STRUCTURE_REF* const pDBStructu
 	pTile = pDBStructureRef->ppTile[ubTileNum];
 	CHECKN( pTile );
 
-	// allocate memory...
 	STRUCTURE* const pStructure = MALLOCZ(STRUCTURE);
-	CHECKN( pStructure );
 
 	// setup
 	pStructure->fFlags = pDBStructure->fFlags;
@@ -468,6 +460,7 @@ static STRUCTURE* CreateStructureFromDB(const DB_STRUCTURE_REF* const pDBStructu
 	pStructure->ubVehicleHitLocation = pTile->ubVehicleHitLocation;
 	return( pStructure );
 }
+catch (...) { return 0; }
 
 
 static BOOLEAN OkayToAddStructureToTile(const INT16 sBaseGridNo, const INT16 sCubeOffset, const DB_STRUCTURE_REF* const pDBStructureRef, UINT8 ubTileIndex, const INT16 sExclusionID, const BOOLEAN fIgnorePeople)
@@ -784,6 +777,7 @@ static void DeleteStructureFromTile(MAP_ELEMENT* pMapElement, STRUCTURE* pStruct
 
 
 static STRUCTURE* InternalAddStructureToWorld(const INT16 sBaseGridNo, const INT8 bLevel, const DB_STRUCTURE_REF* const pDBStructureRef, LEVELNODE* const pLevelNode)
+try
 { // Adds a complete structure to the world at a location plus all other locations covered by the structure
 	INT16									sGridNo;
 	STRUCTURE *						pBaseStructure;
@@ -820,7 +814,6 @@ static STRUCTURE* InternalAddStructureToWorld(const INT16 sBaseGridNo, const INT
 
 	// NB we add 1 because the 0th element is in fact the reference count!
 	STRUCTURE** const ppStructure = MALLOCNZ(STRUCTURE*, pDBStructure->ubNumberOfTiles);
-	CHECKF( ppStructure );
 
 	for (ubLoop = BASE_TILE; ubLoop < pDBStructure->ubNumberOfTiles; ubLoop++)
 	{ // for each tile, create the appropriate STRUCTURE struct
@@ -945,6 +938,7 @@ static STRUCTURE* InternalAddStructureToWorld(const INT16 sBaseGridNo, const INT
 
 	return( pBaseStructure );
 }
+catch (...) { return 0; }
 
 
 BOOLEAN AddStructureToWorld(const INT16 sBaseGridNo, const INT8 bLevel, const DB_STRUCTURE_REF* const pDBStructureRef, LEVELNODE* const pLevelN)
@@ -1696,6 +1690,7 @@ void DebugStructurePage1( void )
 
 
 BOOLEAN AddZStripInfoToVObject(const HVOBJECT hVObject, const STRUCTURE_FILE_REF* const pStructureFileRef, const BOOLEAN fFromAnimation, INT16 sSTIStartIndex)
+try
 {
 	if (pStructureFileRef->usNumberOfStructuresStored == 0) return TRUE;
 
@@ -1731,7 +1726,6 @@ BOOLEAN AddZStripInfoToVObject(const HVOBJECT hVObject, const STRUCTURE_FILE_REF
 
 	UINT         const zcount = hVObject->SubregionCount();
 	ZStripInfo** const zinfo  = MALLOCNZ(ZStripInfo*, zcount);
-	if (zinfo == NULL) return FALSE;
 
 	INT16 sSTIStep;
 	if (fFromAnimation)
@@ -1759,6 +1753,7 @@ BOOLEAN AddZStripInfoToVObject(const HVOBJECT hVObject, const STRUCTURE_FILE_REF
 	INT16   sNext           = sSTIStartIndex + sSTIStep;
 	BOOLEAN fFirstTime      = TRUE;
 	for (UINT32 uiLoop = sSTIStartIndex; uiLoop < zcount; ++uiLoop)
+	try
 	{
 		// Defualt to true
 		BOOLEAN fCopyIntoVo = TRUE;
@@ -1793,7 +1788,6 @@ BOOLEAN AddZStripInfoToVObject(const HVOBJECT hVObject, const STRUCTURE_FILE_REF
 				if (!(pDBStructure->fFlags & STRUCTURE_ANYDOOR) || pDBStructure->fFlags & STRUCTURE_SLIDINGDOOR)
 				{
 					ZStripInfo* const pCurr = MALLOC(ZStripInfo);
-					if (pCurr == NULL) goto fail_loop;
 					Assert(uiDestVoIndex < zcount);
 					zinfo[uiDestVoIndex] = pCurr;
 
@@ -1914,7 +1908,6 @@ BOOLEAN AddZStripInfoToVObject(const HVOBJECT hVObject, const STRUCTURE_FILE_REF
 					// now create the array!
 					pCurr->ubNumberOfZChanges = ubNumIncreasing + ubNumStable + ubNumDecreasing;
 					pCurr->pbZChange = MALLOCN(INT8, pCurr->ubNumberOfZChanges);
-					if (pCurr->pbZChange == NULL) goto fail_loop;
 
 					UINT8 ubLoop2;
 					for (ubLoop2 = 0; ubLoop2 < ubNumIncreasing; ubLoop2++)
@@ -1944,9 +1937,9 @@ BOOLEAN AddZStripInfoToVObject(const HVOBJECT hVObject, const STRUCTURE_FILE_REF
 				}
 			}
 		}
-
-		continue;
-fail_loop:
+	}
+	catch (...)
+	{
 		for (UINT ubLoop2 = 0; ubLoop2 < uiLoop; ++ubLoop2)
 		{
 			if (zinfo[ubLoop2] != NULL)
@@ -1961,6 +1954,7 @@ fail_loop:
 	hVObject->ppZStripInfo = zinfo;
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLevel, INT8 *pStructHeight, STRUCTURE ** ppTallestStructure, BOOLEAN fWallsBlock )

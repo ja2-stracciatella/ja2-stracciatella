@@ -1353,6 +1353,7 @@ BOOLEAN SaveUnderGroundSectorInfoToSaveGame( HWFILE hFile )
 }
 
 BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile )
+try
 {
 	UINT32	uiNumOfRecords=0;
 	UINT32	cnt=0;
@@ -1366,12 +1367,7 @@ BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile )
 
 	for( cnt = 0; cnt< uiNumOfRecords; cnt ++)
 	{
-
-		//Malloc space for the new node
 		UNDERGROUND_SECTORINFO* const TempNode = MALLOC(UNDERGROUND_SECTORINFO);
-		if( TempNode == NULL )
-			return( FALSE );
-
 		if (!ExtractUndergroundSectorInfoFromFile(hFile, TempNode)) return FALSE;
 
 		//If its the first time in, assign the node to the list
@@ -1404,6 +1400,7 @@ BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ )

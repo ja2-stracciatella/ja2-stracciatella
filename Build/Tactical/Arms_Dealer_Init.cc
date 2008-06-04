@@ -1116,25 +1116,22 @@ BOOLEAN CanDealerRepairItem( UINT8 ubArmsDealer, UINT16 usItemIndex )
 
 
 static BOOLEAN AllocMemsetSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem, UINT8 ubElementsNeeded)
+try
 {
 	Assert(pDealerItem);
 	Assert( ubElementsNeeded > 0);
 
 	// zero them out (they're inactive until an item is actually added)
-	pDealerItem->SpecialItem = MALLOCNZ(DEALER_SPECIAL_ITEM, ubElementsNeeded);
-	if( pDealerItem->SpecialItem == NULL )
-	{
-		Assert( 0 );
-		return(FALSE);
-	}
-
+	pDealerItem->SpecialItem       = MALLOCNZ(DEALER_SPECIAL_ITEM, ubElementsNeeded);
 	pDealerItem->ubElementsAlloced = ubElementsNeeded;
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN ResizeSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem, UINT8 ubElementsNeeded)
+try
 {
 	Assert(pDealerItem);
 	// must already have a ptr allocated!
@@ -1149,11 +1146,6 @@ static BOOLEAN ResizeSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem, UINT8 ubE
 
 	// already allocated, but change its size
 	pDealerItem->SpecialItem = REALLOC(pDealerItem->SpecialItem, DEALER_SPECIAL_ITEM, ubElementsNeeded);
-	if( pDealerItem->SpecialItem == NULL )
-	{
-		Assert( 0 );
-		return(FALSE);
-	}
 
 	// if adding more elements
 	if ( ubElementsNeeded > pDealerItem->ubElementsAlloced)
@@ -1166,6 +1158,7 @@ static BOOLEAN ResizeSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem, UINT8 ubE
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 static void FreeSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem)

@@ -544,8 +544,6 @@ static GUI_BUTTON* AllocateButton(const UINT32 Flags, const INT16 Left, const IN
 	INT32 const BtnID = GetNextButtonNumber();
 
 	GUI_BUTTON* const b = MALLOC(GUI_BUTTON);
-	if (!b) throw std::bad_alloc();
-
 	b->IDNum                   = BtnID;
 	b->image                   = NULL;
 	b->ClickCallback           = Click;
@@ -609,7 +607,6 @@ static void CopyButtonText(GUI_BUTTON* b, const wchar_t* text)
 	if (text == NULL || text[0] == L'\0') return;
 
 	wchar_t* const Buf = MALLOCN(wchar_t, wcslen(text) + 1);
-	AssertMsg(Buf != NULL, "Out of memory error:  Couldn't allocate string in CopyButtonText.");
 	wcscpy(Buf, text);
 	b->string = Buf;
 }

@@ -77,7 +77,6 @@ try
 	{
 		// Valid auxiliary data, so make a copy of it for TileSurf
 		pTileSurf->pAuxData = MALLOCN(AuxObjectData, hVObject->SubregionCount());
-		if (!pTileSurf->pAuxData) return 0;
 		memcpy( pTileSurf->pAuxData, hImage->pAppData, hImage->uiAppDataSize );
 	}
 	else

@@ -236,7 +236,6 @@ try
 		// allocate!
 		*pusNumberOfSubImages = 1;
 		*ppSubImageBuffer = MALLOC(STCISubImage);
-		if (!*ppSubImageBuffer) return FALSE;
 		STCISubImage* const pCurrSubImage = *ppSubImageBuffer;
 		pCurrSubImage->sOffsetX = 0;
 		pCurrSubImage->sOffsetY = 0;
@@ -263,18 +262,10 @@ try
 		*pusNumberOfSubImages = 0;
 
 		while (fContinue)
+		try
 		{
 			// allocate more memory for SubImage structures, and set the current pointer to the last one
-			STCISubImage* const pTemp = REALLOC(*ppSubImageBuffer, STCISubImage, *pusNumberOfSubImages + 1);
-			if (pTemp == NULL)
-			{
-				fOk = FALSE;
-				break;
-			}
-			else
-			{
-				*ppSubImageBuffer = pTemp;
-			}
+			*ppSubImageBuffer = REALLOC(*ppSubImageBuffer, STCISubImage, *pusNumberOfSubImages + 1);
 			STCISubImage* const pCurrSubImage = *ppSubImageBuffer + *pusNumberOfSubImages;
 
 			pCurrSubImage->sOffsetX = sCurrX;
@@ -346,6 +337,7 @@ try
 			// find the next subimage
 			fContinue = GoToNextSubImage( &sCurrX, &sCurrY, p8BPPBuffer, usWidth, usHeight, sCurrX, sCurrY );
 		}
+		catch (...) { fOk = FALSE; }
 	}
 	if (!fOk)
 	{

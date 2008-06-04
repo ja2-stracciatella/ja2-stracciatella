@@ -93,14 +93,13 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* r, INT32 reason);
 
 
 SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usNumberOfIncrements, INT8 sPriority, SLIDER_CHANGE_CALLBACK SliderChangeCallback)
+try
 {
 	AssertMsg(guiSliderBoxImage != NULL, "Trying to Add a Slider Bar when the Slider System was never inited");
 
 	if (ubStyle >= NUM_SLIDER_STYLES) return NULL;
 
 	SLIDER* const s = MALLOCZ(SLIDER);
-	if (s == NULL) return NULL;
-
 	// Assign the settings to the current slider
 	s->usPosX               = usPosX;
 	s->usPosY               = usPosY;
@@ -161,6 +160,7 @@ SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, 
 
 	return s;
 }
+catch (...) { return 0; }
 
 
 static void CalculateNewSliderIncrement(SLIDER* s, UINT16 usPos);

@@ -2568,6 +2568,7 @@ BOOLEAN SaveNPCInfoToSaveGameFile( HWFILE hFile )
 }
 
 BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
+try
 {
 	UINT32		cnt;
 	UINT8			ubLoadQuote=0;
@@ -2603,8 +2604,6 @@ BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 			{
 				//allocate memory for the quote
 				gpNPCQuoteInfoArray[cnt] = MALLOCNZ(NPCQuoteInfo, NUM_NPC_QUOTE_RECORDS);
-				if( gpNPCQuoteInfoArray[ cnt ] == NULL )
-					return( FALSE );
 			}
 
 			//Load the NPC quote entry
@@ -2637,8 +2636,6 @@ BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 				{
 					//allocate memory for the quote
 					gpCivQuoteInfoArray[cnt] = MALLOCNZ(NPCQuoteInfo, NUM_NPC_QUOTE_RECORDS);
-					if( gpCivQuoteInfoArray[ cnt ] == NULL )
-						return( FALSE );
 				}
 
 				//Load the civ quote entry
@@ -2717,6 +2714,8 @@ BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 BOOLEAN SaveBackupNPCInfoToSaveGameFile( HWFILE hFile )
 {
@@ -2748,6 +2747,7 @@ BOOLEAN SaveBackupNPCInfoToSaveGameFile( HWFILE hFile )
 }
 
 BOOLEAN LoadBackupNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
+try
 {
 	UINT32		cnt;
 	UINT8			ubLoadQuote=0;
@@ -2777,8 +2777,6 @@ BOOLEAN LoadBackupNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersi
 			{
 				//allocate memory for the quote
 				gpBackupNPCQuoteInfoArray[cnt] = MALLOCNZ(NPCQuoteInfo, NUM_NPC_QUOTE_RECORDS);
-				if( gpBackupNPCQuoteInfoArray[ cnt ] == NULL )
-					return( FALSE );
 			}
 
 			//Load the NPC quote entry
@@ -2791,6 +2789,7 @@ BOOLEAN LoadBackupNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersi
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 void TriggerFriendWithHostileQuote( UINT8 ubNPC )

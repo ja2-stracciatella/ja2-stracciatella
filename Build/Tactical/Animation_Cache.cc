@@ -15,17 +15,16 @@ static const UINT32 guiCacheSize = MIN_CACHE_SIZE;
 
 
 BOOLEAN InitAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
+try
 {
 	UINT32 cnt;
 
 	// Allocate entries
 	AnimDebugMsg( String( "*** Initializing anim cache surface for soldier %d", usSoldierID ) );
 	pAnimCache->usCachedSurfaces = MALLOCN(UINT16, guiCacheSize);
-	CHECKF( pAnimCache->usCachedSurfaces!= NULL );
 
 	AnimDebugMsg( String( "*** Initializing anim cache hit counter for soldier %d", usSoldierID ) );
 	pAnimCache->sCacheHits = MALLOCN(INT16, guiCacheSize);
-	CHECKF( pAnimCache->sCacheHits!= NULL );
 
 	// Zero entries
 	for ( cnt = 0; cnt < guiCacheSize; cnt++ )
@@ -40,6 +39,8 @@ BOOLEAN InitAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnim
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
 {

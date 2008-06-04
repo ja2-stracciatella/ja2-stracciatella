@@ -126,7 +126,6 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 		//build an array of objects to be added
 		pObject       = MALLOCNZ(OBJECTTYPE, usNumberOfItems);
 		pStolenObject = MALLOCNZ(OBJECTTYPE, usNumberOfItems);
-		if (pObject == NULL || pStolenObject == NULL) return;
 	}
 
 	// check for potential theft
@@ -1048,8 +1047,6 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 	{
 		//build an array of objects to be added
 		pObject = MALLOCNZ(OBJECTTYPE, usNumberOfItems);
-		if( pObject == NULL )
-			return;
 	}
 
 

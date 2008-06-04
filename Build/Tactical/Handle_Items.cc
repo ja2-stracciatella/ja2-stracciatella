@@ -1146,17 +1146,15 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 }
 
 BOOLEAN SoldierDropItem( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj )
+try
 {
 	pSoldier->pTempObject = MALLOC(OBJECTTYPE);
-	if (pSoldier->pTempObject == NULL)
-	{
-		// OUT OF MEMORY! YIKES!
-		return( FALSE );
-	}
 	*pSoldier->pTempObject = *pObj;
 	PickDropItemAnimation( pSoldier );
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel )
 {

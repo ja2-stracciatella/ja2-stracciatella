@@ -66,6 +66,7 @@ BOOLEAN LoadSTCIFileToImage(const HIMAGE image, const UINT16 fContents)
 
 
 static BOOLEAN STCILoadRGB(SGPImage* const img, UINT16 const contents, HWFILE const f, STCIHeader const* const header)
+try
 {
 	if (contents & IMAGE_PALETTE && (contents & IMAGE_ALLIMAGEDATA) != IMAGE_ALLIMAGEDATA)
 	{ // RGB doesn't have a palette!
@@ -76,7 +77,6 @@ static BOOLEAN STCILoadRGB(SGPImage* const img, UINT16 const contents, HWFILE co
 	{
 		// Allocate memory for the image data and read it in
 		img->pImageData = MALLOCN(UINT8, header->uiStoredSize);
-		if (img->pImageData == NULL) return FALSE;
 		if (!FileRead(f, img->pImageData, header->uiStoredSize))
 		{
 			MemFree(img->pImageData);
@@ -119,6 +119,7 @@ static BOOLEAN STCILoadRGB(SGPImage* const img, UINT16 const contents, HWFILE co
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFILE const f, STCIHeader const* const header)

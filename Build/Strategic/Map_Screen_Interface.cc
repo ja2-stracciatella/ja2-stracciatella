@@ -4758,6 +4758,7 @@ BOOLEAN SaveLeaveItemList( HWFILE hFile )
 
 
 BOOLEAN LoadLeaveItemList( HWFILE hFile )
+try
 {
 	INT32 iCounter = 0;
 	MERC_LEAVE_ITEM *pCurrentItem;
@@ -4783,23 +4784,13 @@ BOOLEAN LoadLeaveItemList( HWFILE hFile )
 			// load the number specifing how many items there are in the list
 			if (!FileRead(hFile, &uiCount, sizeof(UINT32))) return FALSE;
 
-			// allocate space
 			gpLeaveListHead[iCounter] = MALLOCZ(MERC_LEAVE_ITEM);
-			if( gpLeaveListHead[ iCounter ] == NULL )
-			{
-				return( FALSE );
-			}
 
 			pCurrentItem = gpLeaveListHead[ iCounter ];
 
 			for( uiSubItem=0; uiSubItem< uiCount; uiSubItem++ )
 			{
-				// allocate space
 				MERC_LEAVE_ITEM* const pItem = MALLOCZ(MERC_LEAVE_ITEM);
-				if( pItem == NULL )
-				{
-					return( FALSE );
-				}
 
 				// Load the items
 				if (!FileRead(hFile, pItem, sizeof(MERC_LEAVE_ITEM))) return FALSE;
@@ -4829,7 +4820,7 @@ BOOLEAN LoadLeaveItemList( HWFILE hFile )
 
 	return( TRUE );
 }
-
+catch (...) { return FALSE; }
 
 
 void TurnOnSectorLocator( UINT8 ubProfileID )

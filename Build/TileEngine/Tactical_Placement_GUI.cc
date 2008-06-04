@@ -258,7 +258,6 @@ void InitTacticalPlacementGUI()
 	}
 	//Allocate the array based on how many mercs there are.
 	gMercPlacement = MALLOCN(MERCPLACEMENT, giPlacements);
-	Assert( gMercPlacement );
 	//Second pass:  Assign the mercs to their respective slots.
 	giPlacements = 0;
 	FOR_ALL_IN_TEAM(s, OUR_TEAM)

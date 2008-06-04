@@ -375,9 +375,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 	UINT16	cnt;
 	STRUCTURE * pStructure;
 
-
 	gpRevealedMap = MALLOCNZ(UINT8, NUM_REVEALED_BYTES);
-	AssertMsg(gpRevealedMap != NULL, "Failed allocating memory for the revealed map");
 
 	//Loop though all the map elements
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
@@ -531,10 +529,8 @@ BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 		AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
 		if (!hFile) return FALSE;
 
-		//Allocate memory
 		Assert( gpRevealedMap == NULL );
 		gpRevealedMap = MALLOCNZ(UINT8, NUM_REVEALED_BYTES);
-		AssertMsg(gpRevealedMap != NULL, "Failed allocating memory for the revealed map");
 
 		// Load the Reveal map array structure
 		if (!FileRead(hFile, gpRevealedMap, NUM_REVEALED_BYTES)) return FALSE;

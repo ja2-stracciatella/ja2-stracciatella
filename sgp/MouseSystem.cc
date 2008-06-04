@@ -733,7 +733,6 @@ void MOUSE_REGION::SetFastHelpText(wchar_t const* const text)
 	if (!text || text[0] == L'\0') return;
 
 	FastHelpText = MALLOCN(wchar_t, wcslen(text) + 1);
-	Assert(FastHelpText);
 	wcscpy(FastHelpText, text);
 
   /* ATE: We could be replacing already existing, active text so let's remove

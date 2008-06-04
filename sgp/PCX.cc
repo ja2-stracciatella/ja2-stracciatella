@@ -327,6 +327,7 @@ static BOOLEAN BlitPcxToBuffer(PcxObject* pCurrentPcxObject, UINT8* pBuffer, UIN
 
 
 static BOOLEAN SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage)
+try
 {
 	UINT16 Index;
 	UINT8  *pubPalette;
@@ -335,11 +336,6 @@ static BOOLEAN SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage)
 
 	// Allocate memory for palette
 	hImage->pPalette = MALLOCN(SGPPaletteEntry, 256);
-
-	if ( hImage->pPalette == NULL )
-	{
-		return( FALSE );
-	}
 
   // Initialize the proper palette entries
   for (Index = 0; Index < 256; Index++)
@@ -352,3 +348,4 @@ static BOOLEAN SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage)
 
   return TRUE;
 }
+catch (...) { return FALSE; }

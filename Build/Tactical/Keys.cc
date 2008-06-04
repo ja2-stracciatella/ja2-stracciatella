@@ -907,6 +907,7 @@ BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 
 
 
 BOOLEAN LoadDoorTableFromDoorTableTempFile( )
+try
 {
 	CHAR8		zMapName[ 128 ];
 
@@ -935,20 +936,18 @@ BOOLEAN LoadDoorTableFromDoorTableTempFile( )
 	//if there is no doors to load
 	if( gubNumDoors != 0 )
 	{
-		//Allocate space for the door table
 		DoorTable = MALLOCN(DOOR, gubMaxDoors);
-		if (DoorTable == NULL) return FALSE;
-
-		//Read in the number of doors
 		if (!FileRead(hFile, DoorTable, sizeof(DOOR) * gubMaxDoors)) return FALSE;
 	}
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 // fOpen is True if the door is open, false if it is closed
 BOOLEAN ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fPerceivedOpen )
+try
 {
 	UINT8	ubCnt;
 	STRUCTURE * pStructure;
@@ -1022,9 +1021,6 @@ BOOLEAN ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fPerceivedOpen )
 
 		//reallocate memory to hold the new door
 		gpDoorStatus = REALLOC(gpDoorStatus, DOOR_STATUS, gubNumDoorStatus);
-		if( gpDoorStatus == NULL )
-			return( FALSE );
-
 	}
 	else
 	{
@@ -1032,8 +1028,6 @@ BOOLEAN ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fPerceivedOpen )
 		gubNumDoorStatus = 1;
 
 		gpDoorStatus = MALLOC(DOOR_STATUS);
-		if( gpDoorStatus == NULL )
-			return( FALSE );
 	}
 
 	gpDoorStatus[ gubNumDoorStatus-1 ].sGridNo = pBaseStructure->sGridNo;
@@ -1061,6 +1055,8 @@ BOOLEAN ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fPerceivedOpen )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 void TrashDoorStatusArray( )
 {
@@ -1493,7 +1489,6 @@ BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
 
 	//Allocate space for the door status array
 	gpDoorStatus = MALLOCNZ(DOOR_STATUS, gubNumDoorStatus);
-	AssertMsg(gpDoorStatus != NULL , "Error Allocating memory for the gpDoorStatus");
 
 	// Load the number of elements in the door status array
 	if (!FileRead(hFile, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus)) return FALSE;

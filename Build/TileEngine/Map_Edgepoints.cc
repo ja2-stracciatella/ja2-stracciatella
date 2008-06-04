@@ -312,7 +312,6 @@ static void CompactEdgepointArray(INT16** psArray, UINT16* pusMiddleIndex, UINT1
 		}
 	}
 	*psArray = REALLOC(*psArray, INT16, *pusArraySize);
-	Assert( *psArray );
 }
 
 
@@ -934,7 +933,6 @@ static void OldLoadMapEdgepoints(INT8** hBuffer)
 	if( gus1stNorthEdgepointArraySize )
 	{
 		gps1stNorthEdgepointArray = MALLOCN(INT16, gus1stNorthEdgepointArraySize);
-		Assert( gps1stNorthEdgepointArray );
 		LOADDATA( gps1stNorthEdgepointArray, *hBuffer, gus1stNorthEdgepointArraySize * sizeof( INT16 ) );
 	}
 	LOADDATA( &gus1stEastEdgepointArraySize, *hBuffer, 2 );
@@ -942,7 +940,6 @@ static void OldLoadMapEdgepoints(INT8** hBuffer)
 	if( gus1stEastEdgepointArraySize )
 	{
 		gps1stEastEdgepointArray = MALLOCN(INT16, gus1stEastEdgepointArraySize);
-		Assert( gps1stEastEdgepointArray );
 		LOADDATA( gps1stEastEdgepointArray, *hBuffer, gus1stEastEdgepointArraySize * sizeof( INT16 ) );
 	}
 	LOADDATA( &gus1stSouthEdgepointArraySize, *hBuffer, 2 );
@@ -950,7 +947,6 @@ static void OldLoadMapEdgepoints(INT8** hBuffer)
 	if( gus1stSouthEdgepointArraySize )
 	{
 		gps1stSouthEdgepointArray = MALLOCN(INT16, gus1stSouthEdgepointArraySize);
-		Assert( gps1stSouthEdgepointArray );
 		LOADDATA( gps1stSouthEdgepointArray, *hBuffer, gus1stSouthEdgepointArraySize * sizeof( INT16 ) );
 	}
 	LOADDATA( &gus1stWestEdgepointArraySize, *hBuffer, 2 );
@@ -958,7 +954,6 @@ static void OldLoadMapEdgepoints(INT8** hBuffer)
 	if( gus1stWestEdgepointArraySize )
 	{
 		gps1stWestEdgepointArray = MALLOCN(INT16, gus1stWestEdgepointArraySize);
-		Assert( gps1stWestEdgepointArray );
 		LOADDATA( gps1stWestEdgepointArray, *hBuffer, gus1stWestEdgepointArraySize * sizeof( INT16 ) );
 	}
 }
@@ -979,7 +974,6 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	if( gus1stNorthEdgepointArraySize )
 	{
 		gps1stNorthEdgepointArray = MALLOCN(INT16, gus1stNorthEdgepointArraySize);
-		Assert( gps1stNorthEdgepointArray );
 		LOADDATA( gps1stNorthEdgepointArray, *hBuffer, gus1stNorthEdgepointArraySize * sizeof( INT16 ) );
 	}
 	LOADDATA( &gus1stEastEdgepointArraySize, *hBuffer, 2 );
@@ -987,7 +981,6 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	if( gus1stEastEdgepointArraySize )
 	{
 		gps1stEastEdgepointArray = MALLOCN(INT16, gus1stEastEdgepointArraySize);
-		Assert( gps1stEastEdgepointArray );
 		LOADDATA( gps1stEastEdgepointArray, *hBuffer, gus1stEastEdgepointArraySize * sizeof( INT16 ) );
 	}
 	LOADDATA( &gus1stSouthEdgepointArraySize, *hBuffer, 2 );
@@ -995,7 +988,6 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	if( gus1stSouthEdgepointArraySize )
 	{
 		gps1stSouthEdgepointArray = MALLOCN(INT16, gus1stSouthEdgepointArraySize);
-		Assert( gps1stSouthEdgepointArray );
 		LOADDATA( gps1stSouthEdgepointArray, *hBuffer, gus1stSouthEdgepointArraySize * sizeof( INT16 ) );
 	}
 	LOADDATA( &gus1stWestEdgepointArraySize, *hBuffer, 2 );
@@ -1003,7 +995,6 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	if( gus1stWestEdgepointArraySize )
 	{
 		gps1stWestEdgepointArray = MALLOCN(INT16, gus1stWestEdgepointArraySize);
-		Assert( gps1stWestEdgepointArray );
 		LOADDATA( gps1stWestEdgepointArray, *hBuffer, gus1stWestEdgepointArraySize * sizeof( INT16 ) );
 	}
 
@@ -1012,7 +1003,6 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	if( gus2ndNorthEdgepointArraySize )
 	{
 		gps2ndNorthEdgepointArray = MALLOCN(INT16, gus2ndNorthEdgepointArraySize);
-		Assert( gps2ndNorthEdgepointArray );
 		LOADDATA( gps2ndNorthEdgepointArray, *hBuffer, gus2ndNorthEdgepointArraySize * sizeof( INT16 ) );
 	}
 	LOADDATA( &gus2ndEastEdgepointArraySize, *hBuffer, 2 );
@@ -1020,7 +1010,6 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	if( gus2ndEastEdgepointArraySize )
 	{
 		gps2ndEastEdgepointArray = MALLOCN(INT16, gus2ndEastEdgepointArraySize);
-		Assert( gps2ndEastEdgepointArray );
 		LOADDATA( gps2ndEastEdgepointArray, *hBuffer, gus2ndEastEdgepointArraySize * sizeof( INT16 ) );
 	}
 	LOADDATA( &gus2ndSouthEdgepointArraySize, *hBuffer, 2 );
@@ -1028,7 +1017,6 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	if( gus2ndSouthEdgepointArraySize )
 	{
 		gps2ndSouthEdgepointArray = MALLOCN(INT16, gus2ndSouthEdgepointArraySize);
-		Assert( gps2ndSouthEdgepointArray );
 		LOADDATA( gps2ndSouthEdgepointArray, *hBuffer, gus2ndSouthEdgepointArraySize * sizeof( INT16 ) );
 	}
 	LOADDATA( &gus2ndWestEdgepointArraySize, *hBuffer, 2 );
@@ -1036,7 +1024,6 @@ BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
 	if( gus2ndWestEdgepointArraySize )
 	{
 		gps2ndWestEdgepointArray = MALLOCN(INT16, gus2ndWestEdgepointArraySize);
-		Assert( gps2ndWestEdgepointArray );
 		LOADDATA( gps2ndWestEdgepointArray, *hBuffer, gus2ndWestEdgepointArraySize * sizeof( INT16 ) );
 	}
 	if( gMapInformation.ubMapVersion < 22 )
@@ -1205,8 +1192,7 @@ void BeginMapEdgepointSearch()
 	//Create the reserved list
 	AssertMsg( !gpReservedGridNos, "Attempting to BeginMapEdgepointSearch that has already been created." );
 	gpReservedGridNos = MALLOCN(INT16, 20);
-	Assert( gpReservedGridNos );
-	gsReservedIndex = 0;
+	gsReservedIndex   = 0;
 
 	if( gMapInformation.sNorthGridNo != -1 )
 		sGridNo = gMapInformation.sNorthGridNo;

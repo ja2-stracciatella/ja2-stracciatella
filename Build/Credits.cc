@@ -342,7 +342,6 @@ static void DeleteFirstNode(void)
 static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 {
 	CRDT_NODE* const pNodeToAdd = MALLOCZ(CRDT_NODE);
-	if (pNodeToAdd == NULL) return;
 
 	//Determine the font and the color to use
 	Font  uiFontToUse;

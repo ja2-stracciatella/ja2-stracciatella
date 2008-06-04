@@ -116,7 +116,6 @@ UINT8 CreateNewPlayerGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY 
 	AssertMsg( ubSectorX >= 1 && ubSectorX <= 16, String( "CreateNewPlayerGroup with out of range sectorX value of %d", ubSectorX ) );
 	AssertMsg( ubSectorY >= 1 && ubSectorY <= 16, String( "CreateNewPlayerGroup with out of range sectorY value of %d", ubSectorY ) );
 	GROUP* const pNew = MALLOCZ(GROUP);
-	AssertMsg( pNew, "MemAlloc failure during CreateNewPlayerGroup." );
 	pNew->pPlayerList = NULL;
 	pNew->pWaypoints = NULL;
 	pNew->ubSectorX = pNew->ubNextX = ubSectorX;
@@ -141,7 +140,6 @@ UINT8 CreateNewVehicleGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY
 	AssertMsg( ubSectorX >= 1 && ubSectorX <= 16, String( "CreateNewVehicleGroup with out of range sectorX value of %d", ubSectorX ) );
 	AssertMsg( ubSectorY >= 1 && ubSectorY <= 16, String( "CreateNewVehicleGroup with out of range sectorY value of %d", ubSectorY ) );
 	GROUP* const pNew = MALLOCZ(GROUP);
-	AssertMsg( pNew, "MemAlloc failure during CreateNewVehicleGroup." );
 	pNew->pWaypoints = NULL;
 	pNew->ubSectorX = pNew->ubNextX = ubSectorX;
 	pNew->ubSectorY = pNew->ubNextY = ubSectorY;
@@ -474,8 +472,6 @@ BOOLEAN AddWaypointToPGroup( GROUP* pGroup, UINT8 ubSectorX, UINT8 ubSectorY ) /
 		pWay = pWay->next;
 	}
 
-	AssertMsg( pWay, "Failed to allocate memory for waypoint." );
-
 	//Fill in the information for the new waypoint.
 	pWay->x = ubSectorX;
 	pWay->y = ubSectorY;
@@ -531,9 +527,7 @@ GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmin
 {
 	AssertMsg( uiSector >= 0 && uiSector <= 255, String( "CreateNewEnemyGroup with out of range value of %d", uiSector ) );
 	GROUP* const pNew = MALLOCZ(GROUP);
-	AssertMsg( pNew, "MemAlloc failure during CreateNewEnemyGroup." );
 	pNew->pEnemyGroup = MALLOCZ(ENEMYGROUP);
-	AssertMsg( pNew->pEnemyGroup, "MemAlloc failure during enemy group creation." );
 	pNew->pWaypoints = NULL;
 	pNew->ubSectorX = (UINT8)SECTORX( uiSector );
 	pNew->ubSectorY = (UINT8)SECTORY( uiSector );
@@ -2833,10 +2827,7 @@ try
 	GROUP** anchor = &gpGroupList;
 	for (UINT32 i = uiNumberOfGroups; i != 0; --i)
 	{
-		//allocate memory for the node
 		GROUP* const g = MALLOCZ(GROUP);
-		if (g == NULL) return FALSE;
-
 		if (!FileRead(f, g, sizeof(GROUP))) return FALSE;
 		g->next = NULL;
 
@@ -2897,6 +2888,7 @@ static BOOLEAN SavePlayerGroupList(const HWFILE f, const GROUP* const g)
 
 //Loads the LL for the playerlist from the savegame file
 static BOOLEAN LoadPlayerGroupList(const HWFILE f, GROUP* const g)
+try
 {
 	// Load the number of nodes in the player list
 	UINT32 node_count;
@@ -2906,7 +2898,6 @@ static BOOLEAN LoadPlayerGroupList(const HWFILE f, GROUP* const g)
 	for (UINT32 i = node_count; i != 0; --i)
 	{
 		PLAYERGROUP* const pg = MALLOC(PLAYERGROUP);
-		if (pg == NULL) return FALSE;
 
 		UINT32 profile_id;
 		if (!FileRead(f, &profile_id, sizeof(UINT32))) return FALSE;
@@ -2923,6 +2914,7 @@ static BOOLEAN LoadPlayerGroupList(const HWFILE f, GROUP* const g)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 // Saves the enemy group struct to the saved game file
@@ -2934,15 +2926,15 @@ static BOOLEAN SaveEnemyGroupStruct(const HWFILE f, const GROUP* const g)
 
 // Loads the enemy group struct from the saved game file
 static BOOLEAN LoadEnemyGroupStructFromSavedGame(const HWFILE f, GROUP* const g)
+try
 {
 	ENEMYGROUP* const eg = MALLOCZ(ENEMYGROUP);
-	if (eg == NULL) return FALSE;
-
 	if (!FileRead(f, eg, sizeof(ENEMYGROUP))) return FALSE;
 
 	g->pEnemyGroup = eg;
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveWayPointList(const HWFILE f, const GROUP* const g)
@@ -2964,6 +2956,7 @@ static BOOLEAN SaveWayPointList(const HWFILE f, const GROUP* const g)
 
 
 static BOOLEAN LoadWayPointList(const HWFILE f, GROUP* const g)
+try
 {
 	// Load the number of waypoints
 	UINT32 uiNumberOfWayPoints;
@@ -2973,8 +2966,6 @@ static BOOLEAN LoadWayPointList(const HWFILE f, GROUP* const g)
 	for (UINT32 i = uiNumberOfWayPoints; i != 0; --i)
 	{
 		WAYPOINT* const w = MALLOCZ(WAYPOINT);
-		if (w == NULL) return FALSE;
-
 		if (!FileRead(f, w, sizeof(WAYPOINT))) return FALSE;
 		w->next = NULL;
 
@@ -2986,6 +2977,7 @@ static BOOLEAN LoadWayPointList(const HWFILE f, GROUP* const g)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 void CalculateGroupRetreatSector( GROUP *pGroup )

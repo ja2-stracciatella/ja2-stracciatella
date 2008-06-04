@@ -2728,6 +2728,7 @@ BOOLEAN SaveMercPath(const HWFILE f, const PathSt* const head)
 
 
 BOOLEAN LoadMercPath(const HWFILE hFile, PathSt** const head)
+try
 {
 	//Load the number of the nodes
 	UINT32 uiNumOfNodes = 0;
@@ -2738,7 +2739,6 @@ BOOLEAN LoadMercPath(const HWFILE hFile, PathSt** const head)
 	for (UINT32 cnt = 0; cnt < uiNumOfNodes; ++cnt)
 	{
 		PathSt* const n = MALLOC(PathSt);
-		if (n == NULL) return FALSE;
 
 		BYTE data[20];
 		if (!FileRead(hFile, data, sizeof(data))) return FALSE;
@@ -2766,6 +2766,7 @@ BOOLEAN LoadMercPath(const HWFILE hFile, PathSt** const head)
 	}
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 #ifdef JA2BETAVERSION
@@ -3702,13 +3703,7 @@ static void HandleOldBobbyRMailOrders(void)
 
 	if( LaptopSaveInfo.usNumberOfBobbyRayOrderUsed != 0 )
 	{
-		//Allocate memory for the list
 		gpNewBobbyrShipments = MALLOCN(NewBobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderUsed);
-		if( gpNewBobbyrShipments == NULL )
-		{
-			Assert(0);
-			return;
-		}
 
 		giNumberOfNewBobbyRShipment = LaptopSaveInfo.usNumberOfBobbyRayOrderUsed;
 

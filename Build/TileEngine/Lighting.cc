@@ -289,12 +289,12 @@ BOOLEAN LightReset(void)
 /* Creates a new node, and appends it to the template list. The index into the
  * list is returned. */
 static UINT16 LightCreateTemplateNode(LightTemplate* const t, const INT16 iX, const INT16 iY, const UINT8 ubLight)
+try
 {
 	const UINT16 n_lights = t->n_lights;
 	Assert((t->lights == NULL) == (n_lights == 0));
 
 	t->lights = REALLOC(t->lights, LIGHT_NODE, n_lights + 1);
-	if (t->lights == NULL) return 65535;
 
 	LIGHT_NODE* const l = &t->lights[n_lights];
 	l->iDX     = iX;
@@ -305,6 +305,7 @@ static UINT16 LightCreateTemplateNode(LightTemplate* const t, const INT16 iX, co
 	t->n_lights = n_lights + 1;
 	return n_lights;
 }
+catch (...) { return 65535; }
 
 
 /* Adds a node to the template list. If the node does not exist, it creates a
@@ -321,28 +322,29 @@ static UINT16 LightAddTemplateNode(LightTemplate* const t, const INT16 iX, const
 
 // Adds a node to the ray casting list.
 static UINT16 LightAddRayNode(LightTemplate* const t, const INT16 iX, const INT16 iY, const UINT8 ubLight, const UINT16 usFlags)
+try
 {
 	const UINT16 n_rays = t->n_rays;
 	Assert((t->rays == NULL) == (n_rays == 0));
 
 	t->rays = REALLOC(t->rays, UINT16, n_rays + 1);
-	if (t->rays == NULL) return 65535;
 
 	t->rays[n_rays] = LightAddTemplateNode(t, iX, iY, ubLight) | usFlags;
 	t->n_rays       = n_rays + 1;
 	return n_rays;
 }
+catch (...) { return 65535; }
 
 
 // Adds a node to the ray casting list.
 static UINT16 LightInsertRayNode(LightTemplate* const t, const UINT16 usIndex, const INT16 iX, const INT16 iY, const UINT8 ubLight, const UINT16 usFlags)
+try
 {
 	const UINT16 n_rays = t->n_rays;
 	Assert((t->rays == NULL) == (n_rays == 0));
 	Assert(usIndex <= n_rays);
 
 	t->rays = REALLOC(t->rays, UINT16, n_rays + 1);
-	if (t->rays == NULL) return 65535;
 
 	memmove(t->rays + usIndex + 1, t->rays + usIndex, (n_rays - usIndex) * sizeof(*t->rays));
 
@@ -350,6 +352,7 @@ static UINT16 LightInsertRayNode(LightTemplate* const t, const UINT16 usIndex, c
 	t->n_rays        = n_rays + 1;
 	return n_rays;
 }
+catch (...) { return 65535; }
 
 
 static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY);

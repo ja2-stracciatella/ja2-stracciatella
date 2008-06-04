@@ -1,8 +1,6 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
-#include <stdexcept>
-
 #include "MemMan.h"
 
 
@@ -13,18 +11,18 @@ namespace SGP
 		public:
 			explicit Buffer() : buf_(0) {}
 
-			explicit Buffer(size_t n) : buf_(MALLOCN(T, n))
-			{
-				if (!buf_) throw std::bad_alloc();
-			}
+			explicit Buffer(size_t const n) : buf_(MALLOCN(T, n)) {}
 
 			~Buffer() { if (buf_) MemFree(buf_); }
 
 			Buffer& Allocate(size_t const n)
 			{
-				if (buf_) MemFree(buf_);
+				if (buf_)
+				{
+					MemFree(buf_);
+					buf_ = 0;
+				}
 				buf_ = MALLOCN(T, n);
-				if (!buf_) throw std::bad_alloc();
 				return *this;
 			}
 

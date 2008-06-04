@@ -329,7 +329,6 @@ STRATEGICEVENT* AddAdvancedStrategicEvent( UINT8 ubEventType, UINT8 ubCallbackID
 	}
 
 	STRATEGICEVENT* const pNewNode = MALLOCZ(STRATEGICEVENT);
-	Assert( pNewNode );
 	pNewNode->ubCallbackID		= ubCallbackID;
 	pNewNode->uiParam					= uiParam;
 	pNewNode->ubEventType			= ubEventType;
@@ -644,6 +643,7 @@ BOOLEAN SaveStrategicEventsToSavedGame( HWFILE hFile )
 
 
 BOOLEAN LoadStrategicEventsFromSavedGame(HWFILE const f)
+try
 {
 	//erase the old Game Event queue
 	DeleteAllStrategicEvents();
@@ -656,8 +656,6 @@ BOOLEAN LoadStrategicEventsFromSavedGame(HWFILE const f)
 	for (size_t n = uiNumGameEvents; n != 0; --n)
 	{
 		STRATEGICEVENT* const sev = MALLOC(STRATEGICEVENT);
-		if (!sev) return FALSE;
-
 		if (!FileRead(f, sev, sizeof(*sev))) return FALSE;
 		sev->next = 0;
 
@@ -667,6 +665,7 @@ BOOLEAN LoadStrategicEventsFromSavedGame(HWFILE const f)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void ValidateGameEvents(void)

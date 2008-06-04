@@ -3489,7 +3489,6 @@ void AllocateObject(OBJECTTYPE** const pObj)
 {
 	// create a key object
 	*pObj = MALLOC(OBJECTTYPE);
-	Assert( pObj );
 }
 
 

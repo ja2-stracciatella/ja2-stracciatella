@@ -767,6 +767,7 @@ BOOLEAN SaveMapScreenMessagesToSaveGameFile(HWFILE hFile)
 
 
 BOOLEAN LoadMapScreenMessagesFromSaveGameFile(HWFILE hFile)
+try
 {
 	// clear tactical message queue
 	ClearTacticalMessageQueue();
@@ -812,13 +813,11 @@ BOOLEAN LoadMapScreenMessagesFromSaveGameFile(HWFILE hFile)
 			{
 				// There is now message here, add one
 				s = MALLOCZ(ScrollStringSt);
-				if (s == NULL) return FALSE;
 				*i = s;
 			}
 
 			//allocate space for the new string
 			s->pString16 = MALLOCNZ(wchar_t, uiSizeOfString / sizeof(wchar_t));
-			if (s->pString16 == NULL) return FALSE;
 
 			//copy the string over
 			wcscpy(s->pString16, SavedString);
@@ -836,6 +835,7 @@ BOOLEAN LoadMapScreenMessagesFromSaveGameFile(HWFILE hFile)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void HandleLastQuotePopUpTimer(void)

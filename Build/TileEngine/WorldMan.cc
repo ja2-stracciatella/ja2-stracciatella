@@ -41,10 +41,9 @@ static const wchar_t gzLevelString[][15] =
 
 // LEVEL NODE MANIPLULATION FUNCTIONS
 static LEVELNODE* CreateLevelNode(void)
+try
 {
 	LEVELNODE* const Node = MALLOCZ(LEVELNODE);
-	CHECKN(Node != NULL);
-
 	Node->ubShadeLevel        = LightGetAmbient();
 	Node->ubNaturalShadeLevel = LightGetAmbient();
 	Node->pSoldier            = NULL;
@@ -54,6 +53,7 @@ static LEVELNODE* CreateLevelNode(void)
 
 	return Node;
 }
+catch (...) { return 0; }
 
 
 void CountLevelNodes(void)

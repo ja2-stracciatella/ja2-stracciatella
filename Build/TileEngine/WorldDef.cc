@@ -158,6 +158,7 @@ static UINT8 gbDefaultSurfaceUsed[NUMBEROFTILETYPES];
 
 
 BOOLEAN InitializeWorld( )
+try
 {
 	gSurfaceMemUsage = 0;
 	giCurrentTilesetID = -1;
@@ -181,7 +182,6 @@ BOOLEAN InitializeWorld( )
 	// Initialize world data
 
 	gpWorldLevelData = MALLOCNZ(MAP_ELEMENT, WORLD_MAX);
-	CHECKF( gpWorldLevelData );
 
 	// Init room database
 	InitRoomDatabase( );
@@ -192,8 +192,8 @@ BOOLEAN InitializeWorld( )
 
 
 	return( TRUE );
-
 }
+catch (...) { return FALSE; }
 
 
 static void DestroyTileSurfaces(void);
@@ -1991,7 +1991,6 @@ BOOLEAN EvaluateWorld(const char* const pSector, const UINT8 ubLevel)
 
 	//clear the summary file info
 	SUMMARYFILE* const pSummary = MALLOCZ(SUMMARYFILE);
-	Assert(pSummary);
 	pSummary->ubSummaryVersion = GLOBAL_SUMMARY_VERSION;
 	pSummary->dMajorMapVersion = gdMajorMapVersion;
 

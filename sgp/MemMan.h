@@ -42,16 +42,18 @@ PTR  MemReallocReal(PTR ptr, UINT32 size, const char*, INT32);
 #	else
 // Release build version
 #		include <stdlib.h>
-#		define MemAlloc(size)        malloc((size))
+#		define MemAlloc(size)        XMalloc((size))
 #		define MemFree(ptr)          free((ptr))
-#		define MemRealloc(ptr, size) realloc((ptr), (size))
+#		define MemRealloc(ptr, size) XRealloc((ptr), (size))
+void* XMalloc(size_t size);
+void* XRealloc(void* ptr, size_t size);
 #	endif
 #endif
 
 static inline void* MallocZ(const size_t n)
 {
 	void* const p = MemAlloc(n);
-	if (p != NULL) memset(p, 0, n);
+	memset(p, 0, n);
 	return p;
 }
 
