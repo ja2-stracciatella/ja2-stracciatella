@@ -337,7 +337,11 @@ try
 			// find the next subimage
 			fContinue = GoToNextSubImage( &sCurrX, &sCurrY, p8BPPBuffer, usWidth, usHeight, sCurrX, sCurrY );
 		}
-		catch (...) { fOk = FALSE; }
+		catch (...)
+		{
+			fOk = FALSE;
+			break;
+		}
 	}
 	if (!fOk)
 	{
