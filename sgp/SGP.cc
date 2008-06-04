@@ -302,54 +302,52 @@ static BOOLEAN ParseParameters(char* const argv[]);
 
 
 int main(int argc, char* argv[])
+try
 {
-	try
-	{
 #if defined BROKEN_SWPRINTF
-		if (setlocale(LC_CTYPE, "UTF-8") == NULL)
-		{
-			fprintf(stderr, "WARNING: Failed to set LC_CTYPE to UTF-8. Some strings might get garbled.\n");
-		}
+	if (setlocale(LC_CTYPE, "UTF-8") == NULL)
+	{
+		fprintf(stderr, "WARNING: Failed to set LC_CTYPE to UTF-8. Some strings might get garbled.\n");
+	}
 #endif
 
-		if (!ParseParameters(argv)) return EXIT_FAILURE;
-		if (argc > 1 && argv[1] != NULL) strlcpy(gzCommandLine, argv[1], lengthof(gzCommandLine));
+	if (!ParseParameters(argv)) return EXIT_FAILURE;
+	if (argc > 1 && argv[1] != NULL) strlcpy(gzCommandLine, argv[1], lengthof(gzCommandLine));
 
-		if (!InitializeStandardGamingPlatform())
-		{
-			return Failure("Initialisation failed");
-		}
+	if (!InitializeStandardGamingPlatform())
+	{
+		return Failure("Initialisation failed");
+	}
 
 #if defined JA2 && defined ENGLISH
-		SetIntroType(INTRO_SPLASH);
+	SetIntroType(INTRO_SPLASH);
 #endif
 
-		FastDebugMsg("Running Game");
+	FastDebugMsg("Running Game");
 
-		/* At this point the SGP is set up, which means all I/O, Memory, tools, etc.
-		 * are available. All we need to do is attend to the gaming mechanics
-		 * themselves */
-		MainLoop();
+	/* At this point the SGP is set up, which means all I/O, Memory, tools, etc.
+	 * are available. All we need to do is attend to the gaming mechanics
+	 * themselves */
+	MainLoop();
 
-		FastDebugMsg("Exiting Game");
+	FastDebugMsg("Exiting Game");
 
-		// SGPExit() will be called next through the atexit() mechanism
-		return EXIT_SUCCESS;
-	}
-	catch (const std::bad_alloc&)
-	{
-		return Failure("ERROR: out of memory");
-	}
-	catch (const std::exception& e)
-	{
-		char msg[2048];
-		snprintf(msg, lengthof(msg), "ERROR: caught unhandled exception: \"%s\"", e.what());
-		return Failure(msg);
-	}
-	catch (...)
-	{
-		return Failure("ERROR: caught unhandled unknown exception");
-	}
+	// SGPExit() will be called next through the atexit() mechanism
+	return EXIT_SUCCESS;
+}
+catch (const std::bad_alloc&)
+{
+	return Failure("ERROR: out of memory");
+}
+catch (const std::exception& e)
+{
+	char msg[2048];
+	snprintf(msg, lengthof(msg), "ERROR: caught unhandled exception: \"%s\"", e.what());
+	return Failure(msg);
+}
+catch (...)
+{
+	return Failure("ERROR: caught unhandled unknown exception");
 }
 
 

@@ -20,81 +20,79 @@ TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
 
 
 TILE_IMAGERY* LoadTileSurface(const char* cFilename)
+try
 {
-	try
+	// Add tile surface
+	AutoSGPImage   hImage(CreateImage(cFilename, IMAGE_ALLDATA));
+	AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage));
+
+	// Load structure data, if any.
+	// Start by hacking the image filename into that for the structure data
+	SGPFILENAME cStructureFilename;
+	strcpy( cStructureFilename, cFilename );
+	char* cEndOfName = strchr( cStructureFilename, '.' );
+	if (cEndOfName != NULL)
 	{
-		// Add tile surface
-		AutoSGPImage   hImage(CreateImage(cFilename, IMAGE_ALLDATA));
-		AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage));
-
-		// Load structure data, if any.
-		// Start by hacking the image filename into that for the structure data
-		SGPFILENAME cStructureFilename;
-		strcpy( cStructureFilename, cFilename );
-		char* cEndOfName = strchr( cStructureFilename, '.' );
-		if (cEndOfName != NULL)
-		{
-			cEndOfName++;
-			*cEndOfName = '\0';
-		}
-		else
-		{
-			strcat( cStructureFilename, "." );
-		}
-		strcat( cStructureFilename, STRUCTURE_FILE_EXTENSION );
-		AutoStructureFileRef pStructureFileRef;
-		if (FileExists( cStructureFilename ))
-		{
-			pStructureFileRef = LoadStructureFile( cStructureFilename );
-			if (pStructureFileRef == NULL)
-			{
-				SET_ERROR("Structure file error: %s", cStructureFilename);
-				return NULL;
-			}
-
-			if (hVObject->SubregionCount() != pStructureFileRef->usNumberOfStructures)
-			{
-				SET_ERROR("Structure file error: %s", cStructureFilename);
-				return NULL;
-			}
-
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, cStructureFilename );
-
-			if (!AddZStripInfoToVObject(hVObject, pStructureFileRef, FALSE, 0))
-			{
-				SET_ERROR(  "ZStrip creation error: %s", cStructureFilename );
-				return NULL;
-			}
-		}
-
-		SGP::PODObj<TILE_IMAGERY> pTileSurf;
-
-		if (pStructureFileRef && pStructureFileRef->pAuxData != NULL)
-		{
-			pTileSurf->pAuxData = pStructureFileRef->pAuxData;
-			pTileSurf->pTileLocData = pStructureFileRef->pTileLocData;
-		}
-		else if (hImage->uiAppDataSize == hVObject->SubregionCount() * sizeof(AuxObjectData))
-		{
-			// Valid auxiliary data, so make a copy of it for TileSurf
-			pTileSurf->pAuxData = MALLOCN(AuxObjectData, hVObject->SubregionCount());
-			if (!pTileSurf->pAuxData) return 0;
-			memcpy( pTileSurf->pAuxData, hImage->pAppData, hImage->uiAppDataSize );
-		}
-		else
-		{
-			pTileSurf->pAuxData = NULL;
-		}
-
-		pTileSurf->vo                = hVObject.Release();
-		pTileSurf->pStructureFileRef = pStructureFileRef.Release();
-		return pTileSurf.Release();
+		cEndOfName++;
+		*cEndOfName = '\0';
 	}
-	catch (...)
+	else
 	{
-		SET_ERROR("Could not load tile file: %s", cFilename);
-		return NULL;
+		strcat( cStructureFilename, "." );
 	}
+	strcat( cStructureFilename, STRUCTURE_FILE_EXTENSION );
+	AutoStructureFileRef pStructureFileRef;
+	if (FileExists( cStructureFilename ))
+	{
+		pStructureFileRef = LoadStructureFile( cStructureFilename );
+		if (pStructureFileRef == NULL)
+		{
+			SET_ERROR("Structure file error: %s", cStructureFilename);
+			return NULL;
+		}
+
+		if (hVObject->SubregionCount() != pStructureFileRef->usNumberOfStructures)
+		{
+			SET_ERROR("Structure file error: %s", cStructureFilename);
+			return NULL;
+		}
+
+		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, cStructureFilename );
+
+		if (!AddZStripInfoToVObject(hVObject, pStructureFileRef, FALSE, 0))
+		{
+			SET_ERROR(  "ZStrip creation error: %s", cStructureFilename );
+			return NULL;
+		}
+	}
+
+	SGP::PODObj<TILE_IMAGERY> pTileSurf;
+
+	if (pStructureFileRef && pStructureFileRef->pAuxData != NULL)
+	{
+		pTileSurf->pAuxData = pStructureFileRef->pAuxData;
+		pTileSurf->pTileLocData = pStructureFileRef->pTileLocData;
+	}
+	else if (hImage->uiAppDataSize == hVObject->SubregionCount() * sizeof(AuxObjectData))
+	{
+		// Valid auxiliary data, so make a copy of it for TileSurf
+		pTileSurf->pAuxData = MALLOCN(AuxObjectData, hVObject->SubregionCount());
+		if (!pTileSurf->pAuxData) return 0;
+		memcpy( pTileSurf->pAuxData, hImage->pAppData, hImage->uiAppDataSize );
+	}
+	else
+	{
+		pTileSurf->pAuxData = NULL;
+	}
+
+	pTileSurf->vo                = hVObject.Release();
+	pTileSurf->pStructureFileRef = pStructureFileRef.Release();
+	return pTileSurf.Release();
+}
+catch (...)
+{
+	SET_ERROR("Could not load tile file: %s", cFilename);
+	return NULL;
 }
 
 

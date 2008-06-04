@@ -549,17 +549,15 @@ void BltStretchVideoSurface(SGPVSurface* const dst, const SGPVSurface* const src
 
 
 BOOLEAN BltVideoSurfaceOnce(SGPVSurface* const dst, const char* const filename, const INT32 x, const INT32 y)
+try
 {
-	try
-	{
-		AutoSGPVSurface src(AddVideoSurfaceFromFile(filename));
-		BltVideoSurface(dst, src, x, y, NULL);
-		return TRUE;
-	}
-	catch (...)
-	{
-		return FALSE;
-	}
+	AutoSGPVSurface src(AddVideoSurfaceFromFile(filename));
+	BltVideoSurface(dst, src, x, y, NULL);
+	return TRUE;
+}
+catch (...)
+{
+	return FALSE;
 }
 
 

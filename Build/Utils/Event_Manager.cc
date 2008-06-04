@@ -18,20 +18,18 @@ static EventList* hDemandEventQueue = NULL;
 
 
 BOOLEAN InitializeEventManager(void)
+try
 {
-	try
-	{
-		hEventQueue       = new EventList(QUEUE_RESIZE);
-		hDelayEventQueue  = new EventList(QUEUE_RESIZE);
-		/* Events on this queue are only processed when specifically called for by
-		 * code */
-		hDemandEventQueue = new EventList(QUEUE_RESIZE);
-		return TRUE;
-	}
-	catch (const std::exception&)
-	{
-		return FALSE;
-	}
+	hEventQueue       = new EventList(QUEUE_RESIZE);
+	hDelayEventQueue  = new EventList(QUEUE_RESIZE);
+	/* Events on this queue are only processed when specifically called for by
+	 * code */
+	hDemandEventQueue = new EventList(QUEUE_RESIZE);
+	return TRUE;
+}
+catch (const std::exception&)
+{
+	return FALSE;
 }
 
 
@@ -67,30 +65,25 @@ BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSi
 
 
 EVENT* RemoveEvent(UINT32 uiIndex, EventQueueID ubQueueID)
+try
 {
-	try
-	{
-		return GetQueue(ubQueueID)->Remove(uiIndex);
-	}
-	catch (const std::exception&)
-	{
-		return 0;
-	}
+	return GetQueue(ubQueueID)->Remove(uiIndex);
+}
+catch (const std::exception&)
+{
+	return 0;
 }
 
 
 EVENT* PeekEvent(UINT32 uiIndex, EventQueueID ubQueueID)
+try
 {
-	try
-	{
-		return GetQueue(ubQueueID)->Peek(uiIndex);
-	}
-	catch (const std::exception&)
-	{
-		return 0;
-	}
+	return GetQueue(ubQueueID)->Peek(uiIndex);
 }
-
+catch (const std::exception&)
+{
+	return 0;
+}
 
 
 BOOLEAN FreeEvent(EVENT* pEvent)
