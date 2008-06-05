@@ -185,9 +185,7 @@ BOOLEAN LoadMercProfiles(void)
 {
 	const char* const pFileName = "BINARYDATA/Prof.dat";
 
-#ifdef  JA2DEMO
 	try
-#endif
 	{
 		AutoSGPFile fptr(FileOpen(pFileName, FILE_ACCESS_READ));
 		if (!fptr)
@@ -277,13 +275,11 @@ BOOLEAN LoadMercProfiles(void)
 			p->bLearnToLikeCount = p->bLearnToLikeTime;
 		}
 	}
-#ifdef  JA2DEMO
 	catch (...)
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to read merc profiles from file %s", pFileName));
 		return FALSE;
 	}
-#endif
 
 #ifndef JA2DEMO
 	DecideActiveTerrorists();

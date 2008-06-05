@@ -1582,8 +1582,7 @@ UINT32 ProfileChecksum( MERCPROFILESTRUCT * pProfile )
 static const UINT8* GetRotationArray(void);
 
 
-BOOLEAN NewJA2EncryptedFileRead(const HWFILE f, void* const pDest, const UINT32 uiBytesToRead)
-try
+void NewJA2EncryptedFileRead(HWFILE const f, void* const pDest, UINT32 const uiBytesToRead)
 {
 	FileRead(f, pDest, uiBytesToRead);
 
@@ -1598,10 +1597,7 @@ try
 		if (++ubArrayIndex >= NEW_ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
 		ubLastByte = ubLastByteForNextLoop;
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN NewJA2EncryptedFileWrite(const HWFILE hFile, const void* const data, const UINT32 uiBytesToWrite)

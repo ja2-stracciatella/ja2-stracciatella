@@ -2200,7 +2200,7 @@ try
 		}
 		else
 		{
-			if (!NewJA2EncryptedFileRead(hFile, Data, sizeof(Data))) return FALSE;
+			NewJA2EncryptedFileRead(hFile, Data, sizeof(Data));
 		}
 		ExtractMercProfile(Data,  &gMercProfiles[cnt]);
 		if ( gMercProfiles[ cnt ].uiProfileChecksum != ProfileChecksum( &(gMercProfiles[ cnt ]) ) )
@@ -2326,7 +2326,7 @@ try
 			}
 			else
 			{
-				if (!NewJA2EncryptedFileRead(hFile, &Data, sizeof(Data))) return FALSE;
+				NewJA2EncryptedFileRead(hFile, &Data, sizeof(Data));
 			}
 			ExtractSoldierType(Data, &SavedSoldierInfo);
 			// check checksum
