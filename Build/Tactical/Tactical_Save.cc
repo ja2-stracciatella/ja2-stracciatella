@@ -1627,8 +1627,7 @@ catch (...) { return FALSE; }
 #define ROTATION_ARRAY_SIZE 46
 static const UINT8 ubRotationArray[46] = { 132, 235, 125, 99, 15, 220, 140, 89, 205, 132, 254, 144, 217, 78, 156, 58, 215, 76, 163, 187, 55, 49, 65, 48, 156, 140, 201, 68, 184, 13, 45, 69, 102, 185, 122, 225, 23, 250, 160, 220, 114, 240, 64, 175, 057, 233 };
 
-BOOLEAN JA2EncryptedFileRead(const HWFILE f, void* const pDest, const UINT32 uiBytesToRead)
-try
+void JA2EncryptedFileRead(HWFILE const f, void* const pDest, UINT32 const uiBytesToRead)
 {
 	FileRead(f, pDest, uiBytesToRead);
 
@@ -1642,10 +1641,7 @@ try
 		if (++ubArrayIndex >= ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
 		ubLastByte = ubLastByteForNextLoop;
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN JA2EncryptedFileWrite(const HWFILE hFile, const void* const data, const UINT32 uiBytesToWrite)

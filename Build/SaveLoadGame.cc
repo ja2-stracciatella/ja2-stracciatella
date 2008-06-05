@@ -2182,6 +2182,7 @@ static BOOLEAN SaveMercProfiles(HWFILE hFile)
 
 
 static BOOLEAN LoadSavedMercProfiles(HWFILE hFile)
+try
 {
 	UINT16	cnt;
 
@@ -2193,16 +2194,14 @@ static BOOLEAN LoadSavedMercProfiles(HWFILE hFile)
 #else
 		BYTE Data[796];
 #endif
-		BOOLEAN Ret;
 		if ( guiSaveGameVersion < 87 )
 		{
-			Ret = JA2EncryptedFileRead(hFile, Data, sizeof(Data));
+			JA2EncryptedFileRead(hFile, Data, sizeof(Data));
 		}
 		else
 		{
-			Ret = NewJA2EncryptedFileRead(hFile, Data, sizeof(Data));
+			if (!NewJA2EncryptedFileRead(hFile, Data, sizeof(Data))) return FALSE;
 		}
-		if (!Ret) return FALSE;
 		ExtractMercProfile(Data,  &gMercProfiles[cnt]);
 		if ( gMercProfiles[ cnt ].uiProfileChecksum != ProfileChecksum( &(gMercProfiles[ cnt ]) ) )
 		{
@@ -2212,6 +2211,7 @@ static BOOLEAN LoadSavedMercProfiles(HWFILE hFile)
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveSoldierStructure(HWFILE hFile)
@@ -2320,16 +2320,14 @@ try
 			BYTE Data[2352];
 #endif
 			//Read in the saved soldier info into a Temp structure
-			BOOLEAN Ret;
 			if ( guiSaveGameVersion < 87 )
 			{
-				Ret = JA2EncryptedFileRead(hFile, &Data, sizeof(Data));
+				JA2EncryptedFileRead(hFile, &Data, sizeof(Data));
 			}
 			else
 			{
-				Ret = NewJA2EncryptedFileRead(hFile, &Data, sizeof(Data));
+				if (!NewJA2EncryptedFileRead(hFile, &Data, sizeof(Data))) return FALSE;
 			}
-			if (!Ret) return FALSE;
 			ExtractSoldierType(Data, &SavedSoldierInfo);
 			// check checksum
 			if ( MercChecksum( &SavedSoldierInfo ) != SavedSoldierInfo.uiMercChecksum )

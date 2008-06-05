@@ -203,11 +203,7 @@ BOOLEAN LoadMercProfiles(void)
 			FileRead(fptr, &data, sizeof(data));
 #else
 			BYTE data[716];
-			if (!JA2EncryptedFileRead(fptr, &data, sizeof(data)))
-			{
-				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Read Merc Profiles from File %d %s", uiLoop, pFileName));
-				return FALSE;
-			}
+			JA2EncryptedFileRead(fptr, &data, sizeof(data));
 #endif
 
 			MERCPROFILESTRUCT* const p = GetProfile(uiLoop);
