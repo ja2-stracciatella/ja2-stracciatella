@@ -6,11 +6,12 @@
 
 
 BOOLEAN ExtractExplosionTypeFromFile(const HWFILE file, EXPLOSIONTYPE* const e)
+try
 {
 	BYTE src[36];
 	const BYTE* s = src;
 
-	if (!FileRead(file, src, sizeof(src))) return FALSE;
+	FileRead(file, src, sizeof(src));
 
 	EXTR_SKIP(s, 4)
 	EXTR_SOLDIER(s, e->owner)
@@ -33,6 +34,7 @@ BOOLEAN ExtractExplosionTypeFromFile(const HWFILE file, EXPLOSIONTYPE* const e)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN InjectExplosionTypeIntoFile(const HWFILE file, const EXPLOSIONTYPE* e)

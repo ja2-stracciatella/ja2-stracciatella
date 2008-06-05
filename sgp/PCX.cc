@@ -100,18 +100,18 @@ try
 	if (f == 0) return NULL;
 
 	PcxHeader header;
-	if (!FileRead(f, &header, sizeof(header))) return NULL;
-	if (header.ubManufacturer != 10)           return NULL;
-	if (header.ubEncoding     !=  1)           return NULL;
+	FileRead(f, &header, sizeof(header));
+	if (header.ubManufacturer != 10) return NULL;
+	if (header.ubEncoding     !=  1) return NULL;
 
 	const UINT32 file_size   = FileGetSize(f);
 	const UINT32 buffer_size = file_size - sizeof(PcxHeader) - 768;
 
 	SGP::Buffer<UINT8> pcx_buffer(buffer_size);
-	if (!FileRead(f, pcx_buffer, buffer_size)) return 0;
+	FileRead(f, pcx_buffer, buffer_size);
 
 	SGP::PODObj<PcxObject> pcx_obj;
-	if (!FileRead(f, pcx_obj->ubPalette, sizeof(pcx_obj->ubPalette))) return 0;
+	FileRead(f, pcx_obj->ubPalette, sizeof(pcx_obj->ubPalette));
 
 	pcx_obj->pPcxBuffer   = pcx_buffer.Release();
 	pcx_obj->usPcxFlags   = (header.ubBitsPerPixel == 8 ? PCX_256COLOR : 0);

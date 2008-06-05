@@ -74,13 +74,13 @@ BOOLEAN SaveContractRenewalDataToSaveGameFile( HWFILE hFile )
 
 
 BOOLEAN LoadContractRenewalDataFromSaveGameFile( HWFILE hFile )
+try
 {
-	if (!FileRead(hFile, ContractRenewalList, sizeof(ContractRenewalList))) return FALSE;
-
-	if (!FileRead(hFile, &ubNumContractRenewals, sizeof(ubNumContractRenewals))) return FALSE;
-
+	FileRead(hFile, ContractRenewalList,    sizeof(ContractRenewalList));
+	FileRead(hFile, &ubNumContractRenewals, sizeof(ubNumContractRenewals));
   return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN ContractIsExpiring(SOLDIERTYPE* pSoldier);

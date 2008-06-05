@@ -8,9 +8,10 @@
 
 
 BOOLEAN ExtractVehicleTypeFromFile(const HWFILE file, VEHICLETYPE* const v, const UINT32 savegame_version)
+try
 {
 	BYTE data[128];
-	if (!FileRead(file, data, sizeof(data))) return FALSE;
+	FileRead(file, data, sizeof(data));
 
 	const BYTE* d = data;
 	EXTR_PTR(d, v->pMercPath)
@@ -42,6 +43,7 @@ BOOLEAN ExtractVehicleTypeFromFile(const HWFILE file, VEHICLETYPE* const v, cons
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN InjectVehicleTypeIntoFile(const HWFILE file, const VEHICLETYPE* const v)

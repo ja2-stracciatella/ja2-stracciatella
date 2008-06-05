@@ -15,6 +15,7 @@ static BOOLEAN STCILoadIndexed(SGPImage*, UINT16 contents, HWFILE, STCIHeader co
 
 
 BOOLEAN LoadSTCIFileToImage(const HIMAGE image, const UINT16 fContents)
+try
 {
 	Assert(image != NULL);
 
@@ -22,7 +23,8 @@ BOOLEAN LoadSTCIFileToImage(const HIMAGE image, const UINT16 fContents)
 	if (!f) return FALSE;
 
 	STCIHeader header;
-	if (!FileRead(f, &header, sizeof(header)) || memcmp(header.cID, STCI_ID_STRING, STCI_ID_LEN) != 0)
+	FileRead(f, &header, sizeof(header));
+	if (memcmp(header.cID, STCI_ID_STRING, STCI_ID_LEN) != 0)
 	{
 		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem reading STCI header.");
 		return FALSE;
@@ -63,6 +65,7 @@ BOOLEAN LoadSTCIFileToImage(const HIMAGE image, const UINT16 fContents)
 	image->ubBitDepth = header.ubDepth;
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN STCILoadRGB(SGPImage* const img, UINT16 const contents, HWFILE const f, STCIHeader const* const header)
@@ -77,10 +80,14 @@ try
 	{
 		// Allocate memory for the image data and read it in
 		img->pImageData = MALLOCN(UINT8, header->uiStoredSize);
-		if (!FileRead(f, img->pImageData, header->uiStoredSize))
+		try
+		{
+			FileRead(f, img->pImageData, header->uiStoredSize);
+		}
+		catch (...)
 		{
 			MemFree(img->pImageData);
-			return FALSE;
+			throw;
 		}
 
 		img->fFlags |= IMAGE_BITMAPDATA;
@@ -137,11 +144,7 @@ try
 		SGP::Buffer<STCIPaletteElement> pSTCIPalette(256);
 
 		// Read in the palette
-		if (!FileRead(f, pSTCIPalette, sizeof(*pSTCIPalette) * 256))
-		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading palette!");
-			return FALSE;
-		}
+		FileRead(f, pSTCIPalette, sizeof(*pSTCIPalette) * 256);
 
 		palette.Allocate(256);
 		for (size_t i = 0; i < 256; i++)
@@ -172,22 +175,14 @@ try
 			img->usNumberOfObjects = n_subimages;
 
 			etrle_objects.Allocate(n_subimages);
-			if (!FileRead(f, etrle_objects, sizeof(*etrle_objects) * n_subimages))
-			{
-				DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading subimage structures!");
-				return FALSE;
-			}
+			FileRead(f, etrle_objects, sizeof(*etrle_objects) * n_subimages);
 
 			img->uiSizePixData  = header->uiStoredSize;
 			img->fFlags        |= IMAGE_TRLECOMPRESSED;
 		}
 
 		image_data.Allocate(header->uiStoredSize);
-		if (!FileRead(f, image_data, header->uiStoredSize))
-		{ // Problem reading in the image data!
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading image data!");
-			return FALSE;
-		}
+		FileRead(f, image_data, header->uiStoredSize);
 
 		img->fFlags |= IMAGE_BITMAPDATA;
 	}
@@ -201,11 +196,7 @@ try
 	{
 		// load application-specific data
 		app_data.Allocate(header->uiAppDataSize);
-		if (!FileRead(f, app_data, header->uiAppDataSize))
-		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Error loading application-specific data!");
-			return FALSE;
-		}
+		FileRead(f, app_data, header->uiAppDataSize);
 
 		img->uiAppDataSize  = header->uiAppDataSize;
 		img->fFlags        |= IMAGE_APPDATA;

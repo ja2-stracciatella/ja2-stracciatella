@@ -33,12 +33,13 @@ BOOLEAN SaveStrategicStatusToSaveGameFile( HWFILE hFile )
 
 
 BOOLEAN LoadStrategicStatusFromSaveGameFile( HWFILE hFile )
+try
 {
 	//Load the Strategic Status structure from the saved game file
-	if (!FileRead(hFile, &gStrategicStatus, sizeof(STRATEGIC_STATUS))) return FALSE;
-
+	FileRead(hFile, &gStrategicStatus, sizeof(STRATEGIC_STATUS));
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 #define DEATH_RATE_SEVERITY 1.0f			// increase to make death rates higher for same # of deaths/time

@@ -5201,10 +5201,7 @@ try
 	AutoSGPFile hFile(FileOpen(PALETTEFILENAME, FILE_ACCESS_READ));
 
 	// Read # of types
-	if (!FileRead(hFile, &guiNumPaletteSubRanges, sizeof(guiNumPaletteSubRanges)))
-	{
-		return( FALSE );
-	}
+	FileRead(hFile, &guiNumPaletteSubRanges, sizeof(guiNumPaletteSubRanges));
 
 	// Malloc!
 	gpPaletteSubRanges          = MALLOCN(PaletteSubRangeType, guiNumPaletteSubRanges);
@@ -5213,31 +5210,19 @@ try
 	// Read # of types for each!
 	for ( cnt = 0; cnt < guiNumPaletteSubRanges; cnt++ )
 	{
-		if (!FileRead(hFile, &gubpNumReplacementsPerRange[cnt], sizeof(UINT8)))
-		{
-			return( FALSE );
-		}
+		FileRead(hFile, &gubpNumReplacementsPerRange[cnt], sizeof(UINT8));
 	}
 
 	// Loop for each one, read in data
 	for ( cnt = 0; cnt < guiNumPaletteSubRanges; cnt++ )
 	{
-		if (!FileRead(hFile, &gpPaletteSubRanges[cnt].ubStart, sizeof(UINT8)))
-		{
-			return( FALSE );
-		}
-		if (!FileRead(hFile, &gpPaletteSubRanges[cnt].ubEnd, sizeof(UINT8)))
-		{
-			return( FALSE );
-		}
+		FileRead(hFile, &gpPaletteSubRanges[cnt].ubStart, sizeof(UINT8));
+		FileRead(hFile, &gpPaletteSubRanges[cnt].ubEnd,   sizeof(UINT8));
 	}
 
 
 	// Read # of palettes
-	if (!FileRead(hFile, &guiNumReplacements, sizeof(guiNumReplacements)))
-	{
-		return( FALSE );
-	}
+	FileRead(hFile, &guiNumReplacements, sizeof(guiNumReplacements));
 
 	// Malloc!
 	gpPalRep = MALLOCN(PaletteReplacementType, guiNumReplacements);
@@ -5246,33 +5231,21 @@ try
 	for ( cnt = 0; cnt < guiNumReplacements; cnt++ )
 	{
 		// type
-		if (!FileRead(hFile, &gpPalRep[cnt].ubType, sizeof(gpPalRep[cnt].ubType)))
-		{
-			return( FALSE );
-		}
+		FileRead(hFile, &gpPalRep[cnt].ubType, sizeof(gpPalRep[cnt].ubType));
 
-		if (!FileRead(hFile, &gpPalRep[cnt].ID, sizeof(gpPalRep[cnt].ID)))
-		{
-			return( FALSE );
-		}
+		FileRead(hFile, &gpPalRep[cnt].ID, sizeof(gpPalRep[cnt].ID));
 
 		// # entries
-		if (!FileRead(hFile, &gpPalRep[cnt].ubPaletteSize, sizeof(gpPalRep[cnt].ubPaletteSize)))
-		{
-			return( FALSE );
-		}
+		FileRead(hFile, &gpPalRep[cnt].ubPaletteSize, sizeof(gpPalRep[cnt].ubPaletteSize));
 
 		SGPPaletteEntry* const Pal = MALLOCN(SGPPaletteEntry, gpPalRep[cnt].ubPaletteSize);
 		gpPalRep[cnt].rgb = Pal;
 
 		for( cnt2 = 0; cnt2 < gpPalRep[ cnt ].ubPaletteSize; cnt2++ )
 		{
-			if (!FileRead(hFile, &Pal[cnt2].r, sizeof(Pal[cnt2].r)) ||
-					!FileRead(hFile, &Pal[cnt2].g, sizeof(Pal[cnt2].g)) ||
-					!FileRead(hFile, &Pal[cnt2].b, sizeof(Pal[cnt2].b)))
-			{
-				return( FALSE );
-			}
+			FileRead(hFile, &Pal[cnt2].r, sizeof(Pal[cnt2].r));
+			FileRead(hFile, &Pal[cnt2].g, sizeof(Pal[cnt2].g));
+			FileRead(hFile, &Pal[cnt2].b, sizeof(Pal[cnt2].b));
 		}
 
 	}

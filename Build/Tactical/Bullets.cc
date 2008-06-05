@@ -387,12 +387,13 @@ BOOLEAN SaveBulletStructureToSaveGameFile( HWFILE hFile )
 
 
 BOOLEAN LoadBulletStructureFromSavedGameFile( HWFILE hFile )
+try
 {
 	//make sure the bullets are not allocated
 	memset(gBullets, 0, sizeof(gBullets));
 
 	//Load the number of Bullets in the array
-	if (!FileRead(hFile, &guiNumBullets, sizeof(UINT32))) return FALSE;
+	FileRead(hFile, &guiNumBullets, sizeof(UINT32));
 
 	for (UINT i = 0; i < guiNumBullets; ++i)
 	{
@@ -408,6 +409,7 @@ BOOLEAN LoadBulletStructureFromSavedGameFile( HWFILE hFile )
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 void StopBullet(BULLET* b)

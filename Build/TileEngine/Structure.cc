@@ -271,8 +271,8 @@ try
 	if (!f) return FALSE;
 
 	STRUCTURE_FILE_HEADER header;
-	if (!FileRead(f, &header, sizeof(STRUCTURE_FILE_HEADER))                ||
-			strncmp(header.szId, STRUCTURE_FILE_ID, STRUCTURE_FILE_ID_LEN) != 0 ||
+	FileRead(f, &header, sizeof(STRUCTURE_FILE_HEADER));
+	if (strncmp(header.szId, STRUCTURE_FILE_ID, STRUCTURE_FILE_ID_LEN) != 0 ||
 			header.usNumberOfStructures == 0)
 	{
 		return FALSE;
@@ -285,13 +285,13 @@ try
 	{
 		const UINT16 n_images = header.usNumberOfImages;
 		aux_data.Allocate(n_images);
-		if (!FileRead(f, aux_data, sizeof(*aux_data) * n_images)) return FALSE;
+		FileRead(f, aux_data, sizeof(*aux_data) * n_images);
 
 		const UINT16 n_tile_locs = header.usNumberOfImageTileLocsStored;
 		if (n_tile_locs > 0)
 		{
 			tile_loc_data.Allocate(n_tile_locs);
-			if (!FileRead(f, tile_loc_data, sizeof(*tile_loc_data) * n_tile_locs)) return FALSE;
+			FileRead(f, tile_loc_data, sizeof(*tile_loc_data) * n_tile_locs);
 		}
 	}
 
@@ -301,7 +301,7 @@ try
 		sfr->usNumberOfStructuresStored = header.usNumberOfStructuresStored;
 		const UINT16 data_size = header.usStructureDataSize;
 		structure_data.Allocate(data_size);
-		if (!FileRead(f, structure_data, data_size)) return FALSE;
+		FileRead(f, structure_data, data_size);
 
 		*structure_data_size = data_size;
 	}

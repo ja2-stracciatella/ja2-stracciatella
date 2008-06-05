@@ -67,12 +67,14 @@ const BYTE* ExtractSoldierCreateUTF16(const BYTE* const data, SOLDIERCREATE_STRU
 
 
 BOOLEAN ExtractSoldierCreateFromFileUTF16(const HWFILE f, SOLDIERCREATE_STRUCT* const c)
+try
 {
 	BYTE data[1040];
-	BOOLEAN Ret = FileRead(f, data, sizeof(data));
-	if (Ret) ExtractSoldierCreateUTF16(data, c);
-	return Ret;
+	FileRead(f, data, sizeof(data));
+	ExtractSoldierCreateUTF16(data, c);
+	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* const c)
@@ -143,16 +145,18 @@ static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* c
 
 
 BOOLEAN ExtractSoldierCreateFromFile(const HWFILE f, SOLDIERCREATE_STRUCT* const c)
+try
 {
 #ifdef _WIN32 // XXX HACK000A
 	BYTE data[1040];
 #else
 	BYTE data[1060];
 #endif
-	BOOLEAN Ret = FileRead(f, data, sizeof(data));
-	if (Ret) ExtractSoldierCreate(data, c);
-	return Ret;
+	FileRead(f, data, sizeof(data));
+	ExtractSoldierCreate(data, c);
+	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void InjectSoldierCreateUTF16(BYTE* const data, const SOLDIERCREATE_STRUCT* const c)

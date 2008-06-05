@@ -273,11 +273,11 @@ try
 		AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
 		if (f == 0) return FALSE;
 
-		if (!FileRead(f, &l_item_count, sizeof(l_item_count))) return FALSE;
+		FileRead(f, &l_item_count, sizeof(l_item_count));
 		if (l_item_count != 0)
 		{
 			l_items.Allocate(l_item_count);
-			if (!FileRead(f, l_items, l_item_count * sizeof(*l_items))) return FALSE;
+			FileRead(f, l_items, l_item_count * sizeof(*l_items));
 		}
 	}
 	else
@@ -942,6 +942,7 @@ static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8
 
 
 static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
+try
 {
 	CHAR8		zMapName[ 128 ];
 	UINT32	uiNumberOfCorpses=0;
@@ -966,7 +967,7 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 	if (!hFile) return FALSE;
 
 	// Load the number of Rotting corpses
-	if (!FileRead(hFile, &uiNumberOfCorpses, sizeof(UINT32))) return FALSE;
+	FileRead(hFile, &uiNumberOfCorpses, sizeof(UINT32));
 
   // Get town ID for use later....
 	bTownId = GetTownIdForSector( gWorldSectorX, gWorldSectorY );
@@ -1043,6 +1044,7 @@ static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 void AddWorldItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const UINT32 item_count, const WORLDITEM* const wis)
@@ -1203,6 +1205,7 @@ void ChangeNpcToDifferentSector(MERCPROFILESTRUCT* const p, INT16 sSectorX, INT1
 
 
 BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const ROTTING_CORPSE_DEFINITION* const corpse_def)
+try
 {
 	char map_name[128];
 	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, sMapX, sMapY, bMapZ);
@@ -1213,7 +1216,7 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile(const INT16 sMapX, co
 	UINT32 corpse_count;
 	if (FileGetSize(f) != 0)
 	{
-		if (!FileRead(f, &corpse_count, sizeof(corpse_count))) return FALSE;
+		FileRead(f, &corpse_count, sizeof(corpse_count));
 		FileSeek(f, 0, FILE_SEEK_FROM_START);
 	}
 	else
@@ -1230,6 +1233,7 @@ BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile(const INT16 sMapX, co
 	SetSectorFlag(sMapX, sMapY, bMapZ, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN SetUnderGroundSectorFlag(INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ, UINT32 uiFlagToSet)
@@ -1579,8 +1583,9 @@ static const UINT8* GetRotationArray(void);
 
 
 BOOLEAN NewJA2EncryptedFileRead(const HWFILE f, void* const pDest, const UINT32 uiBytesToRead)
+try
 {
-	if (!FileRead(f, pDest, uiBytesToRead)) return FALSE;
+	FileRead(f, pDest, uiBytesToRead);
 
 	const UINT8* const pubRotationArray = GetRotationArray();
 	UINT8*       const pMemBlock        = (UINT8*)pDest;
@@ -1596,6 +1601,7 @@ BOOLEAN NewJA2EncryptedFileRead(const HWFILE f, void* const pDest, const UINT32 
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN NewJA2EncryptedFileWrite(const HWFILE hFile, const void* const data, const UINT32 uiBytesToWrite)
@@ -1622,8 +1628,9 @@ catch (...) { return FALSE; }
 static const UINT8 ubRotationArray[46] = { 132, 235, 125, 99, 15, 220, 140, 89, 205, 132, 254, 144, 217, 78, 156, 58, 215, 76, 163, 187, 55, 49, 65, 48, 156, 140, 201, 68, 184, 13, 45, 69, 102, 185, 122, 225, 23, 250, 160, 220, 114, 240, 64, 175, 057, 233 };
 
 BOOLEAN JA2EncryptedFileRead(const HWFILE f, void* const pDest, const UINT32 uiBytesToRead)
+try
 {
-	if (!FileRead(f, pDest, uiBytesToRead)) return FALSE;
+	FileRead(f, pDest, uiBytesToRead);
 
 	UINT8* const pMemBlock    = (UINT8*)pDest;
 	UINT8        ubArrayIndex = 0;
@@ -1638,6 +1645,7 @@ BOOLEAN JA2EncryptedFileRead(const HWFILE f, void* const pDest, const UINT32 uiB
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN JA2EncryptedFileWrite(const HWFILE hFile, const void* const data, const UINT32 uiBytesToWrite)

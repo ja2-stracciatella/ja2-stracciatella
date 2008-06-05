@@ -5,9 +5,10 @@
 
 
 BOOLEAN ExtractStrategicMapElementFromFile(const HWFILE file, StrategicMapElement* const e)
+try
 {
 	BYTE data[41];
-	if (!FileRead(file, data, sizeof(data))) return FALSE;
+	FileRead(file, data, sizeof(data));
 
 	const BYTE* d = data;
 	EXTR_SKIP(d, 16)
@@ -21,6 +22,7 @@ BOOLEAN ExtractStrategicMapElementFromFile(const HWFILE file, StrategicMapElemen
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN InjectStrategicMapElementIntoFile(const HWFILE file, const StrategicMapElement* const e)

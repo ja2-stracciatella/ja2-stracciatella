@@ -5678,13 +5678,14 @@ typedef struct
 
 
 BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile )
+try
 {
 	UINT32	uiLoadSize=0;
 	ITEM_CURSOR_SAVE_INFO		SaveStruct;
 
 	// Load structure
 	uiLoadSize = sizeof( ITEM_CURSOR_SAVE_INFO );
-	if (!FileRead(hFile, &SaveStruct, uiLoadSize)) return FALSE;
+	FileRead(hFile, &SaveStruct, uiLoadSize);
 
 	// Now set things up.....
 	// Copy object
@@ -5709,6 +5710,8 @@ BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile )
 {

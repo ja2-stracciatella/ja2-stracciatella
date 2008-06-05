@@ -4776,13 +4776,13 @@ try
 	for( iCounter = 0; iCounter < NUM_LEAVE_LIST_SLOTS; iCounter++ )
 	{
 		// load the flag that specifis that a node DOES exist
-		if (!FileRead(hFile, &fNodeExists, sizeof(BOOLEAN))) return FALSE;
+		FileRead(hFile, &fNodeExists, sizeof(BOOLEAN));
 
 		// if a root node is supposed to exist
 		if( fNodeExists )
 		{
 			// load the number specifing how many items there are in the list
-			if (!FileRead(hFile, &uiCount, sizeof(UINT32))) return FALSE;
+			FileRead(hFile, &uiCount, sizeof(UINT32));
 
 			gpLeaveListHead[iCounter] = MALLOCZ(MERC_LEAVE_ITEM);
 
@@ -4793,7 +4793,7 @@ try
 				MERC_LEAVE_ITEM* const pItem = MALLOCZ(MERC_LEAVE_ITEM);
 
 				// Load the items
-				if (!FileRead(hFile, pItem, sizeof(MERC_LEAVE_ITEM))) return FALSE;
+				FileRead(hFile, pItem, sizeof(MERC_LEAVE_ITEM));
 
 				pItem->pNext = NULL;
 
@@ -4815,7 +4815,7 @@ try
 	//Load the leave list profile id's
 	for( iCounter = 0; iCounter < NUM_LEAVE_LIST_SLOTS; iCounter++ )
 	{
-		if (!FileRead(hFile, &guiLeaveListOwnerProfileId[iCounter], sizeof(UINT32))) return FALSE;
+		FileRead(hFile, &guiLeaveListOwnerProfileId[iCounter], sizeof(UINT32));
 	}
 
 	return( TRUE );

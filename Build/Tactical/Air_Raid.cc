@@ -1226,10 +1226,11 @@ BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile )
 
 
 BOOLEAN LoadAirRaidInfoFromSaveGameFile( HWFILE hFile )
+try
 {
 	AIR_RAID_SAVE_STRUCT sAirRaidSaveStruct;
 
-	if (!FileRead(hFile, &sAirRaidSaveStruct, sizeof(AIR_RAID_SAVE_STRUCT))) return FALSE;
+	FileRead(hFile, &sAirRaidSaveStruct, sizeof(AIR_RAID_SAVE_STRUCT));
 
 	// Put all the globals into the save struct
 	gfInAirRaid = sAirRaidSaveStruct.fInAirRaid;
@@ -1280,6 +1281,7 @@ BOOLEAN LoadAirRaidInfoFromSaveGameFile( HWFILE hFile )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void SetTeamStatusGreen(INT8 team)

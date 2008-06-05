@@ -3305,6 +3305,7 @@ BOOLEAN SaveStrategicInfoToSavedFile( HWFILE hFile )
 
 
 BOOLEAN LoadStrategicInfoFromSavedFile( HWFILE hFile )
+try
 {
 	// Load the strategic map information
 	for (StrategicMapElement* i = StrategicMap; i != endof(StrategicMap); ++i)
@@ -3321,15 +3322,16 @@ BOOLEAN LoadStrategicInfoFromSavedFile( HWFILE hFile )
 	// Load the SAM Controlled Sector Information
 	const UINT32 uiSize = MAP_WORLD_X * MAP_WORLD_Y;
 /*
-	if (!FileRead(hFile, ubSAMControlledSectors, uiSize)) return FALSE;
+	FileRead(hFile, ubSAMControlledSectors, uiSize);
 */
 	FileSeek( hFile, uiSize, FILE_SEEK_FROM_CURRENT );
 
 	// Load the fFoundOrta
-	if (!FileRead(hFile, &fFoundOrta, sizeof(BOOLEAN))) return FALSE;
+	FileRead(hFile, &fFoundOrta, sizeof(BOOLEAN));
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirection)

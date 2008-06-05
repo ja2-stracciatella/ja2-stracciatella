@@ -134,6 +134,7 @@ DOOR * DoorTable = NULL;
 
 
 BOOLEAN LoadLockTable( void )
+try
 {
 	UINT32	uiBytesToRead;
 	const char *pFileName = "BINARYDATA/Locks.bin";
@@ -148,8 +149,10 @@ BOOLEAN LoadLockTable( void )
 	}
 
 	uiBytesToRead = sizeof( LOCK ) * NUM_LOCKS;
-	return FileRead(hFile, LockTable, uiBytesToRead);
+	FileRead(hFile, LockTable, uiBytesToRead);
+	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN KeyExistsInInventory(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID);
@@ -929,7 +932,7 @@ try
 	if (hFile == 0) return FALSE;
 
 	//Read in the number of doors
-	if (!FileRead(hFile, &gubMaxDoors, sizeof(UINT8))) return FALSE;
+	FileRead(hFile, &gubMaxDoors, sizeof(UINT8));
 
 	gubNumDoors = gubMaxDoors;
 
@@ -937,7 +940,7 @@ try
 	if( gubNumDoors != 0 )
 	{
 		DoorTable = MALLOCN(DOOR, gubMaxDoors);
-		if (!FileRead(hFile, DoorTable, sizeof(DOOR) * gubMaxDoors)) return FALSE;
+		FileRead(hFile, DoorTable, sizeof(DOOR) * gubMaxDoors);
 	}
 
 	return TRUE;
@@ -1470,6 +1473,7 @@ BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY,
 
 
 BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
+try
 {
 	CHAR8		zMapName[ 128 ];
 	UINT8		ubLoop;
@@ -1483,7 +1487,7 @@ BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
 	if (hFile == 0) return FALSE;
 
 	// Load the number of elements in the door status array
-	if (!FileRead(hFile, &gubNumDoorStatus, sizeof(UINT8))) return FALSE;
+	FileRead(hFile, &gubNumDoorStatus, sizeof(UINT8));
 
 	if (gubNumDoorStatus == 0) return TRUE;
 
@@ -1491,7 +1495,7 @@ BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
 	gpDoorStatus = MALLOCNZ(DOOR_STATUS, gubNumDoorStatus);
 
 	// Load the number of elements in the door status array
-	if (!FileRead(hFile, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus)) return FALSE;
+	FileRead(hFile, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus);
 
 	// the graphics will be updated later in the loading process.
 
@@ -1505,6 +1509,7 @@ BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN SaveKeyTableToSaveGameFile( HWFILE hFile )
@@ -1516,13 +1521,13 @@ BOOLEAN SaveKeyTableToSaveGameFile( HWFILE hFile )
 }
 
 BOOLEAN LoadKeyTableFromSaveedGameFile( HWFILE hFile )
+try
 {
 	// Load the KeyTable
-	if (!FileRead(hFile, KeyTable, sizeof(KEY) * NUM_KEYS)) return FALSE;
-
+	FileRead(hFile, KeyTable, sizeof(KEY) * NUM_KEYS);
 	return( TRUE );
 }
-
+catch (...) { return FALSE; }
 
 
 void ExamineDoorsOnEnteringSector( )

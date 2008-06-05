@@ -525,6 +525,7 @@ void DecaySmokeEffects( UINT32 uiTime )
 
 
 BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
+try
 {
 	UINT32	uiCnt=0;
 
@@ -535,7 +536,7 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 		memset( gSmokeEffectData, 0, sizeof( SMOKEEFFECT ) * NUM_SMOKE_EFFECT_SLOTS );
 
 		//Load the Number of Smoke Effects
-		if (!FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32))) return FALSE;
+		FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32));
 
 		//This is a TEMP hack to allow us to use the saves
 		if( guiSaveGameVersion < 37 && guiNumSmokeEffects == 0 )
@@ -563,6 +564,7 @@ BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
@@ -606,6 +608,7 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 
 BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+try
 {
 	UINT32	uiCnt=0;
 	CHAR8		zMapName[ 128 ];
@@ -620,7 +623,7 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 
 	//Load the Number of Smoke Effects
-	if (!FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32))) return FALSE;
+	FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32));
 
 	//loop through and load the list
 	for( uiCnt=0; uiCnt<guiNumSmokeEffects;uiCnt++)
@@ -637,6 +640,7 @@ BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 void ResetSmokeEffects()

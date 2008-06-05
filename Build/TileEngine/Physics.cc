@@ -2327,6 +2327,7 @@ BOOLEAN	SavePhysicsTableToSaveGameFile( HWFILE hFile )
 
 
 BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile )
+try
 {
 	UINT16	usCnt=0;
 
@@ -2334,7 +2335,7 @@ BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile )
 	memset( ObjectSlots, 0, NUM_OBJECT_SLOTS * sizeof( REAL_OBJECT ) );
 
 	//Load the number of REAL_OBJECTs in the array
-	if (!FileRead(hFile, &guiNumObjectSlots, sizeof(UINT32))) return FALSE;
+	FileRead(hFile, &guiNumObjectSlots, sizeof(UINT32));
 
 	//loop through and add the objects
 	for( usCnt=0; usCnt<guiNumObjectSlots; usCnt++ )
@@ -2345,6 +2346,7 @@ BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static UINT16 RandomGridFromRadius(INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius)

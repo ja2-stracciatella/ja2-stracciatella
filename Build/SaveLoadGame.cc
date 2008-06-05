@@ -1138,6 +1138,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//Create the name of the file
 	CreateSavedGameFileNameFromNumber( ubSavedGameID, zSaveGameName );
 
+	try
 	{
 		// open the save game file
 		AutoSGPFile hFile(FileOpen(zSaveGameName, FILE_ACCESS_READ));
@@ -1147,7 +1148,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 #endif
 
 		//Load the Save Game header file
-		if (!FileRead(hFile, &SaveGameHeader, sizeof(SAVED_GAME_HEADER))) goto load_failed;
+		FileRead(hFile, &SaveGameHeader, sizeof(SAVED_GAME_HEADER));
 #ifdef JA2BETAVERSION
 		LoadGameFilePosition(hFile, "Save Game Header");
 #endif
@@ -1887,6 +1888,7 @@ LoadGameFilePosition(hFile, "Misc info");
 		RenderProgressBar( 0, 100 );
 		uiRelStartPerc = uiRelEndPerc;
 	}
+	catch (...) { goto load_failed; }
 
 	// ATE: Patch? Patch up groups.....( will only do for old saves.. )
 	UpdatePersistantGroupsFromOldSave( SaveGameHeader.uiSavedGameVersion );
@@ -2279,6 +2281,7 @@ static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 
 
 static BOOLEAN LoadSoldierStructure(HWFILE hFile)
+try
 {
 	UINT16	cnt;
 	SOLDIERTYPE SavedSoldierInfo;
@@ -2300,7 +2303,7 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 
 
 		//Read in a byte to tell us whether or not there is a soldier loaded here.
-		if (!FileRead(hFile, &ubActive, 1)) return FALSE;
+		FileRead(hFile, &ubActive, 1);
 
 		// if the soldier is not active, continue
 		if( !ubActive )
@@ -2344,16 +2347,12 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 			//do we have a 	KEY_ON_RING									*pKeyRing;
 
 			// Read the file to see if we have to load the keys
-			if (!FileRead(hFile, &ubOne, 1)) return FALSE;
+			FileRead(hFile, &ubOne, 1);
 
 			if( ubOne )
 			{
 				// Now Load the ....
-				if (!FileRead(hFile, s->pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING)))
-				{
-					return(FALSE);
-				}
-
+				FileRead(hFile, s->pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING));
 			}
 			else
 			{
@@ -2427,6 +2426,7 @@ static BOOLEAN LoadSoldierStructure(HWFILE hFile)
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 #ifdef JA2BETAVERSION
@@ -2453,7 +2453,7 @@ try
 
 	// Read the saource file into the buffer
 	SGP::Buffer<UINT8> pData(uiFileSize);
-	if (!FileRead(hSrcFile, pData, uiFileSize)) return FALSE;
+	FileRead(hSrcFile, pData, uiFileSize);
 
 	// Write the buffer to the saved game file
 	if (!FileWrite(hFile, pData, uiFileSize)) return FALSE;
@@ -2480,13 +2480,13 @@ try
 
 	// Read the size of the data
 	UINT32 uiFileSize;
-	if (!FileRead(hFile, &uiFileSize, sizeof(UINT32))) return FALSE;
+	FileRead(hFile, &uiFileSize, sizeof(UINT32));
 
 	if (uiFileSize == 0) return TRUE;
 
 	// Read into the buffer
 	SGP::Buffer<UINT8> pData(uiFileSize);
-	if (!FileRead(hFile, pData, uiFileSize)) return FALSE;
+	FileRead(hFile, pData, uiFileSize);
 
 	// Write the buffer to the new file
 	if (!FileWrite(hSrcFile, pData, uiFileSize))
@@ -2525,6 +2525,7 @@ static BOOLEAN SaveTacticalStatusToSavedGame(HWFILE hFile)
 
 
 static BOOLEAN LoadTacticalStatusFromSavedGame(HWFILE hFile)
+try
 {
 	if (!ExtractTacticalStatusTypeFromFile(hFile)) return FALSE;
 
@@ -2533,17 +2534,17 @@ static BOOLEAN LoadTacticalStatusFromSavedGame(HWFILE hFile)
 	//
 
 	// Load gWorldSectorX
-	if (!FileRead(hFile, &gWorldSectorX, sizeof(gWorldSectorX))) return FALSE;
+	FileRead(hFile, &gWorldSectorX, sizeof(gWorldSectorX));
 
 	// Load gWorldSectorY
-	if (!FileRead(hFile, &gWorldSectorY, sizeof(gWorldSectorY))) return FALSE;
-
+	FileRead(hFile, &gWorldSectorY, sizeof(gWorldSectorY));
 
 	// Load gbWorldSectorZ
-	if (!FileRead(hFile, &gbWorldSectorZ, sizeof(gbWorldSectorZ))) return FALSE;
+	FileRead(hFile, &gbWorldSectorZ, sizeof(gbWorldSectorZ));
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveOppListInfoToSavedGame(HWFILE hFile)
@@ -2587,43 +2588,45 @@ static BOOLEAN SaveOppListInfoToSavedGame(HWFILE hFile)
 
 
 static BOOLEAN LoadOppListInfoFromSavedGame(HWFILE hFile)
+try
 {
 	UINT32	uiLoadSize=0;
 
 	// Load the Public Opplist
 	uiLoadSize = MAXTEAMS * TOTAL_SOLDIERS;
-	if (!FileRead(hFile, gbPublicOpplist, uiLoadSize)) return FALSE;
+	FileRead(hFile, gbPublicOpplist, uiLoadSize);
 
 	// Load the Seen Oppenents
 	uiLoadSize = TOTAL_SOLDIERS * TOTAL_SOLDIERS;
-	if (!FileRead(hFile, gbSeenOpponents, uiLoadSize)) return FALSE;
+	FileRead(hFile, gbSeenOpponents, uiLoadSize);
 
 	// Load the Last Known Opp Locations
 	uiLoadSize = TOTAL_SOLDIERS * TOTAL_SOLDIERS; // XXX TODO000F
-	if (!FileRead(hFile, gsLastKnownOppLoc, uiLoadSize)) return FALSE;
+	FileRead(hFile, gsLastKnownOppLoc, uiLoadSize);
 
 	// Load the Last Known Opp Level
 	uiLoadSize = TOTAL_SOLDIERS * TOTAL_SOLDIERS;
-	if (!FileRead(hFile, gbLastKnownOppLevel, uiLoadSize)) return FALSE;
+	FileRead(hFile, gbLastKnownOppLevel, uiLoadSize);
 
 	// Load the Public Last Known Opp Locations
 	uiLoadSize = MAXTEAMS * TOTAL_SOLDIERS; // XXX TODO000F
-	if (!FileRead(hFile, gsPublicLastKnownOppLoc, uiLoadSize)) return FALSE;
+	FileRead(hFile, gsPublicLastKnownOppLoc, uiLoadSize);
 
 	// Load the Public Last Known Opp Level
 	uiLoadSize = MAXTEAMS * TOTAL_SOLDIERS;
-	if (!FileRead(hFile, gbPublicLastKnownOppLevel, uiLoadSize)) return FALSE;
+	FileRead(hFile, gbPublicLastKnownOppLevel, uiLoadSize);
 
 	// Load the Public Noise Volume
 	uiLoadSize = MAXTEAMS;
-	if (!FileRead(hFile, gubPublicNoiseVolume, uiLoadSize)) return FALSE;
+	FileRead(hFile, gubPublicNoiseVolume, uiLoadSize);
 
 	// Load the Public Last Noise Gridno
 	uiLoadSize = MAXTEAMS; // XXX TODO000F
-	if (!FileRead(hFile, gsPublicNoiseGridno, uiLoadSize)) return FALSE;
+	FileRead(hFile, gsPublicNoiseGridno, uiLoadSize);
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveWatchedLocsToSavedGame(HWFILE hFile)
@@ -2650,6 +2653,7 @@ static BOOLEAN SaveWatchedLocsToSavedGame(HWFILE hFile)
 
 
 static BOOLEAN LoadWatchedLocsFromSavedGame(HWFILE hFile)
+try
 {
 	UINT32	uiArraySize;
 	UINT32	uiLoadSize=0;
@@ -2657,17 +2661,18 @@ static BOOLEAN LoadWatchedLocsFromSavedGame(HWFILE hFile)
 	uiArraySize = TOTAL_SOLDIERS * NUM_WATCHED_LOCS;
 
 	uiLoadSize = uiArraySize * sizeof( INT16 );
-	if (!FileRead(hFile, gsWatchedLoc, uiLoadSize)) return FALSE;
+	FileRead(hFile, gsWatchedLoc, uiLoadSize);
 
 	uiLoadSize = uiArraySize * sizeof( INT8 );
-	if (!FileRead(hFile, gbWatchedLocLevel, uiLoadSize)) return FALSE;
+	FileRead(hFile, gbWatchedLocLevel, uiLoadSize);
 
-	if (!FileRead(hFile, gubWatchedLocPoints, uiLoadSize)) return FALSE;
+	FileRead(hFile, gubWatchedLocPoints, uiLoadSize);
 
-	if (!FileRead(hFile, gfWatchedLocReset, uiLoadSize)) return FALSE;
+	FileRead(hFile, gfWatchedLocReset, uiLoadSize);
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzNewFileName)
@@ -2732,7 +2737,7 @@ try
 {
 	//Load the number of the nodes
 	UINT32 uiNumOfNodes = 0;
-	if (!FileRead(hFile, &uiNumOfNodes, sizeof(UINT32))) return FALSE;
+	FileRead(hFile, &uiNumOfNodes, sizeof(UINT32));
 
 	//load all the nodes
 	PathSt* path = NULL;
@@ -2741,7 +2746,7 @@ try
 		PathSt* const n = MALLOC(PathSt);
 
 		BYTE data[20];
-		if (!FileRead(hFile, data, sizeof(data))) return FALSE;
+		FileRead(hFile, data, sizeof(data));
 
 		const BYTE* d = data;
 		EXTR_U32(d, n->uiSectorId)
@@ -3033,13 +3038,14 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
 
 
 static BOOLEAN LoadGeneralInfo(HWFILE hFile)
+try
 {
 	GENERAL_SAVE_INFO sGeneralInfo;
 	memset( &sGeneralInfo, 0, sizeof( GENERAL_SAVE_INFO ) );
 
 
 	//Load the current music mode
-	if (!FileRead(hFile, &sGeneralInfo, sizeof(GENERAL_SAVE_INFO))) return FALSE;
+	FileRead(hFile, &sGeneralInfo, sizeof(GENERAL_SAVE_INFO));
 
 	gMusicModeToPlay = sGeneralInfo.ubMusicMode;
 
@@ -3262,6 +3268,7 @@ static BOOLEAN LoadGeneralInfo(HWFILE hFile)
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN SavePreRandomNumbersToSaveGameFile(HWFILE hFile)
@@ -3277,34 +3284,38 @@ static BOOLEAN SavePreRandomNumbersToSaveGameFile(HWFILE hFile)
 
 
 static BOOLEAN LoadPreRandomNumbersFromSaveGameFile(HWFILE hFile)
+try
 {
 	//Load the Prerandom number index
-	if (!FileRead(hFile, &guiPreRandomIndex, sizeof(UINT32))) return FALSE;
+	FileRead(hFile, &guiPreRandomIndex, sizeof(UINT32));
 
 	//Load the Prerandom number index
-	if (!FileRead(hFile, guiPreRandomNums, sizeof(UINT32) * MAX_PREGENERATED_NUMS)) return FALSE;
+	FileRead(hFile, guiPreRandomNums, sizeof(UINT32) * MAX_PREGENERATED_NUMS);
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN LoadMeanwhileDefsFromSaveGameFile(HWFILE hFile)
+try
 {
 	if ( guiSaveGameVersion < 72 )
 	{
 		//Load the array of meanwhile defs
-		if (!FileRead(hFile, gMeanwhileDef, sizeof(MEANWHILE_DEFINITION) * (NUM_MEANWHILES - 1))) return FALSE;
+		FileRead(hFile, gMeanwhileDef, sizeof(MEANWHILE_DEFINITION) * (NUM_MEANWHILES - 1));
 		// and set the last one
 		memset( &(gMeanwhileDef[ NUM_MEANWHILES - 1]), 0, sizeof( MEANWHILE_DEFINITION ) );
 	}
 	else
 	{
 		//Load the array of meanwhile defs
-		if (!FileRead(hFile, gMeanwhileDef, sizeof(MEANWHILE_DEFINITION) * NUM_MEANWHILES)) return FALSE;
+		FileRead(hFile, gMeanwhileDef, sizeof(MEANWHILE_DEFINITION) * NUM_MEANWHILES);
 	}
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveMeanwhileDefsFromSaveGameFile(HWFILE hFile)

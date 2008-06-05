@@ -5,9 +5,10 @@
 
 
 BOOLEAN ExtractUndergroundSectorInfoFromFile(const HWFILE file, UNDERGROUND_SECTORINFO* const u)
+try
 {
 	BYTE data[72];
-	if (!FileRead(file, data, sizeof(data))) return FALSE;
+	FileRead(file, data, sizeof(data));
 
 	const BYTE* d = data;
 	EXTR_U32(d, u->uiFlags)
@@ -35,6 +36,7 @@ BOOLEAN ExtractUndergroundSectorInfoFromFile(const HWFILE file, UNDERGROUND_SECT
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN InjectUndergroundSectorInfoIntoFile(const HWFILE file, const UNDERGROUND_SECTORINFO* const u)

@@ -396,13 +396,14 @@ void LoadSchedules( INT8 **hBuffer )
 
 extern BOOLEAN gfSchedulesHosed;
 BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
+try
 {
 	SCHEDULENODE *pSchedule = NULL;
 	UINT8 ubNum;
 	UINT32 ubRealNum;
 
 	//LOADDATA( &ubNum, *hBuffer, sizeof( UINT8 ) );
-	if (!FileRead(hFile, &ubNum, sizeof(ubNum))) return FALSE;
+	FileRead(hFile, &ubNum, sizeof(ubNum));
 
 	//Hack problem with schedules getting misaligned.
 	ubRealNum = gfSchedulesHosed ? ubNum + 256 : ubNum;
@@ -411,7 +412,7 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 	while( ubRealNum )
 	{
 		BYTE data[36];
-		if (!FileRead(hFile, data, sizeof(data))) return FALSE;
+		FileRead(hFile, data, sizeof(data));
 
 		SCHEDULENODE* const node = MALLOC(SCHEDULENODE);
 
@@ -444,6 +445,7 @@ BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
 	//Schedules are posted when the soldier is added...
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 #ifdef JA2EDITOR

@@ -7,9 +7,10 @@
 
 
 BOOLEAN ExtractSmokeEffectFromFile(const HWFILE file, SMOKEEFFECT* const s)
+try
 {
 	BYTE data[16];
-	if (!FileRead(file, data, sizeof(data))) return FALSE;
+	FileRead(file, data, sizeof(data));
 
 	const BYTE* d = data;
 	EXTR_I16(d, s->sGridNo)
@@ -27,6 +28,7 @@ BOOLEAN ExtractSmokeEffectFromFile(const HWFILE file, SMOKEEFFECT* const s)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN InjectSmokeEffectIntoFile(const HWFILE file, const SMOKEEFFECT* const s)

@@ -6,13 +6,14 @@
 
 
 BOOLEAN ExtractTacticalStatusTypeFromFile(const HWFILE f)
+try
 {
 #ifdef _WIN32 // XXX HACK000A
 	BYTE data[316];
 #else
 	BYTE data[360];
 #endif
-	if (!FileRead(f, data, sizeof(data))) return FALSE;
+	FileRead(f, data, sizeof(data));
 
 	TacticalStatusType* const s = &gTacticalStatus;
 	const BYTE* d = data;
@@ -133,6 +134,7 @@ BOOLEAN ExtractTacticalStatusTypeFromFile(const HWFILE f)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN InjectTacticalStatusTypeIntoFile(const HWFILE f)

@@ -460,10 +460,10 @@ static void LoadInCurrentImpCharacter(void)
 		if (hFile == 0) return;
 
 		// read in the profile
-		if (!FileRead(hFile, &iProfileId, sizeof(INT32))) return;
+		FileRead(hFile, &iProfileId, sizeof(INT32));
 
 		// read in the portrait
-		if (!FileRead(hFile, &iPortraitNumber, sizeof(INT32))) return;
+		FileRead(hFile, &iPortraitNumber, sizeof(INT32));
 
 		// read in the profile
 		if (!ExtractMercProfileFromFile(hFile, &gMercProfiles[iProfileId])) return;

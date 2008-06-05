@@ -2998,6 +2998,7 @@ static void ReinitializeUnvisitedGarrisons(void);
 
 
 BOOLEAN LoadStrategicAI( HWFILE hFile )
+try
 {
 	GARRISON_GROUP gTempGarrisonGroup;
 	PATROL_GROUP gTempPatrolGroup;
@@ -3005,33 +3006,33 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 	INT32 i;
 	UINT8 ubSAIVersion;
 
-	if (!FileRead(hFile, gbPadding2,                          3)) return FALSE;
-	if (!FileRead(hFile, &gfExtraElites,                      1)) return FALSE;
-	if (!FileRead(hFile, &giGarrisonArraySize,                4)) return FALSE;
-	if (!FileRead(hFile, &giPatrolArraySize,                  4)) return FALSE;
-	if (!FileRead(hFile, &giReinforcementPool,                4)) return FALSE;
-	if (!FileRead(hFile, &giForcePercentage,                  4)) return FALSE;
-	if (!FileRead(hFile, &giArmyAlertness,                    4)) return FALSE;
-	if (!FileRead(hFile, &giArmyAlertnessDecay,               4)) return FALSE;
-	if (!FileRead(hFile, &gfQueenAIAwake,                     1)) return FALSE;
-	if (!FileRead(hFile, &giReinforcementPoints,              4)) return FALSE;
-	if (!FileRead(hFile, &giRequestPoints,                    4)) return FALSE;
-	if (!FileRead(hFile, &gubNumAwareBattles,                 1)) return FALSE;
-	if (!FileRead(hFile, &ubSAIVersion,                       1)) return FALSE;
-	if (!FileRead(hFile, &gubQueenPriorityPhase,              1)) return FALSE;
-	if (!FileRead(hFile, &gfFirstBattleMeanwhileScenePending,	1)) return FALSE;
-	if (!FileRead(hFile, &gfMassFortificationOrdered,         1)) return FALSE;
-	if (!FileRead(hFile, &gubMinEnemyGroupSize,               1)) return FALSE;
-	if (!FileRead(hFile, &gubHoursGracePeriod,                1)) return FALSE;
-	if (!FileRead(hFile, &gusPlayerBattleVictories,           2)) return FALSE;
-	if (!FileRead(hFile, &gfUseAlternateQueenPosition,        1)) return FALSE;
-	if (!FileRead(hFile, gbPadding,           SAI_PADDING_BYTES)) return FALSE;
+	FileRead(hFile, gbPadding2,                          3);
+	FileRead(hFile, &gfExtraElites,                      1);
+	FileRead(hFile, &giGarrisonArraySize,                4);
+	FileRead(hFile, &giPatrolArraySize,                  4);
+	FileRead(hFile, &giReinforcementPool,                4);
+	FileRead(hFile, &giForcePercentage,                  4);
+	FileRead(hFile, &giArmyAlertness,                    4);
+	FileRead(hFile, &giArmyAlertnessDecay,               4);
+	FileRead(hFile, &gfQueenAIAwake,                     1);
+	FileRead(hFile, &giReinforcementPoints,              4);
+	FileRead(hFile, &giRequestPoints,                    4);
+	FileRead(hFile, &gubNumAwareBattles,                 1);
+	FileRead(hFile, &ubSAIVersion,                       1);
+	FileRead(hFile, &gubQueenPriorityPhase,              1);
+	FileRead(hFile, &gfFirstBattleMeanwhileScenePending, 1);
+	FileRead(hFile, &gfMassFortificationOrdered,         1);
+	FileRead(hFile, &gubMinEnemyGroupSize,               1);
+	FileRead(hFile, &gubHoursGracePeriod,                1);
+	FileRead(hFile, &gusPlayerBattleVictories,           2);
+	FileRead(hFile, &gfUseAlternateQueenPosition,        1);
+	FileRead(hFile, gbPadding,           SAI_PADDING_BYTES);
 	//Restore the army composition
-	if (!FileRead(hFile, gArmyComp,	NUM_ARMY_COMPOSITIONS * sizeof(ARMY_COMPOSITION))) return FALSE;
+	FileRead(hFile, gArmyComp,	NUM_ARMY_COMPOSITIONS * sizeof(ARMY_COMPOSITION));
 	i = SAVED_ARMY_COMPOSITIONS - NUM_ARMY_COMPOSITIONS;
 	while( i-- )
 	{
-		if (!FileRead(hFile, &gTempArmyComp, sizeof(ARMY_COMPOSITION))) return FALSE;
+		FileRead(hFile, &gTempArmyComp, sizeof(ARMY_COMPOSITION));
 	}
 
 	//Restore the patrol group definitions
@@ -3040,11 +3041,11 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 		MemFree( gPatrolGroup );
 	}
 	gPatrolGroup = MALLOCN(PATROL_GROUP, giPatrolArraySize);
-	if (!FileRead(hFile, gPatrolGroup, giPatrolArraySize * sizeof(PATROL_GROUP))) return FALSE;
+	FileRead(hFile, gPatrolGroup, giPatrolArraySize * sizeof(PATROL_GROUP));
 	i = SAVED_PATROL_GROUPS - giPatrolArraySize;
 	while( i-- )
 	{
-		if (!FileRead(hFile, &gTempPatrolGroup, sizeof(PATROL_GROUP))) return FALSE;
+		FileRead(hFile, &gTempPatrolGroup, sizeof(PATROL_GROUP));
 	}
 
 	gubSAIVersion = SAI_VERSION;
@@ -3054,11 +3055,11 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 		MemFree( gGarrisonGroup );
 	}
 	gGarrisonGroup = MALLOCN(GARRISON_GROUP, giGarrisonArraySize);
-	if (!FileRead(hFile, gGarrisonGroup, giGarrisonArraySize * sizeof(GARRISON_GROUP))) return FALSE;
+	FileRead(hFile, gGarrisonGroup, giGarrisonArraySize * sizeof(GARRISON_GROUP));
 	i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
 	while( i-- )
 	{
-		if (!FileRead(hFile, &gTempGarrisonGroup, sizeof(GARRISON_GROUP))) return FALSE;
+		FileRead(hFile, &gTempGarrisonGroup, sizeof(GARRISON_GROUP));
 	}
 
 	//Load the list of reinforcement patrol points.
@@ -3068,7 +3069,7 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 		gubPatrolReinforcementsDenied = NULL;
 	}
 	gubPatrolReinforcementsDenied = MALLOCN(UINT8, giPatrolArraySize);
-	if (!FileRead(hFile, gubPatrolReinforcementsDenied, giPatrolArraySize)) return FALSE;
+	FileRead(hFile, gubPatrolReinforcementsDenied, giPatrolArraySize);
 
 	//Load the list of reinforcement garrison points.
 	if( gubGarrisonReinforcementsDenied )
@@ -3077,7 +3078,7 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 		gubGarrisonReinforcementsDenied = NULL;
 	}
 	gubGarrisonReinforcementsDenied = MALLOCN(UINT8, giGarrisonArraySize);
-	if (!FileRead(hFile, gubGarrisonReinforcementsDenied, giGarrisonArraySize)) return FALSE;
+	FileRead(hFile, gubGarrisonReinforcementsDenied, giGarrisonArraySize);
 
 	#ifdef JA2BETAVERSION
 		InitStrategicMovementCosts();
@@ -3426,6 +3427,7 @@ BOOLEAN LoadStrategicAI( HWFILE hFile )
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 //As the player's progress changes in the game, the queen will adjust her priorities accordingly.

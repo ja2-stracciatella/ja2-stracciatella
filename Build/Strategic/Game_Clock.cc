@@ -821,27 +821,28 @@ BOOLEAN SaveGameClock( HWFILE hFile, BOOLEAN fGamePaused, BOOLEAN fLockPauseStat
 
 
 BOOLEAN LoadGameClock( HWFILE hFile )
+try
 {
-	if (!FileRead(hFile, &giTimeCompressMode,                sizeof(INT32)))   return FALSE;
-	if (!FileRead(hFile, &gubClockResolution,                sizeof(UINT8)))   return FALSE;
-	if (!FileRead(hFile, &gfGamePaused,                      sizeof(BOOLEAN))) return FALSE;
-	if (!FileRead(hFile, &gfTimeInterrupt,                   sizeof(BOOLEAN))) return FALSE;
-	if (!FileRead(hFile, &fSuperCompression,                 sizeof(BOOLEAN))) return FALSE;
-	if (!FileRead(hFile, &guiGameClock,                      sizeof(UINT32)))  return FALSE;
-	if (!FileRead(hFile, &guiGameSecondsPerRealSecond,       sizeof(UINT32)))  return FALSE;
-	if (!FileRead(hFile, &ubAmbientLightLevel,               sizeof(UINT8)))   return FALSE;
-	if (!FileRead(hFile, &guiEnvTime,                        sizeof(UINT32)))  return FALSE;
-	if (!FileRead(hFile, &guiEnvDay,                         sizeof(UINT32)))  return FALSE;
-	if (!FileRead(hFile, &gubEnvLightValue,                  sizeof(UINT8)))   return FALSE;
-	if (!FileRead(hFile, &guiTimeOfLastEventQuery,           sizeof(UINT32)))  return FALSE;
-	if (!FileRead(hFile, &gfLockPauseState,                  sizeof(BOOLEAN))) return FALSE;
-	if (!FileRead(hFile, &gfPauseDueToPlayerGamePause,       sizeof(BOOLEAN))) return FALSE;
-	if (!FileRead(hFile, &gfResetAllPlayerKnowsEnemiesFlags, sizeof(BOOLEAN))) return FALSE;
-	if (!FileRead(hFile, &gfTimeCompressionOn,               sizeof(BOOLEAN))) return FALSE;
-	if (!FileRead(hFile, &guiPreviousGameClock,              sizeof(UINT32)))  return FALSE;
-	if (!FileRead(hFile, &guiLockPauseStateLastReasonId,     sizeof(UINT32)))  return FALSE;
+	FileRead(hFile, &giTimeCompressMode,                sizeof(INT32));
+	FileRead(hFile, &gubClockResolution,                sizeof(UINT8));
+	FileRead(hFile, &gfGamePaused,                      sizeof(BOOLEAN));
+	FileRead(hFile, &gfTimeInterrupt,                   sizeof(BOOLEAN));
+	FileRead(hFile, &fSuperCompression,                 sizeof(BOOLEAN));
+	FileRead(hFile, &guiGameClock,                      sizeof(UINT32));
+	FileRead(hFile, &guiGameSecondsPerRealSecond,       sizeof(UINT32));
+	FileRead(hFile, &ubAmbientLightLevel,               sizeof(UINT8));
+	FileRead(hFile, &guiEnvTime,                        sizeof(UINT32));
+	FileRead(hFile, &guiEnvDay,                         sizeof(UINT32));
+	FileRead(hFile, &gubEnvLightValue,                  sizeof(UINT8));
+	FileRead(hFile, &guiTimeOfLastEventQuery,           sizeof(UINT32));
+	FileRead(hFile, &gfLockPauseState,                  sizeof(BOOLEAN));
+	FileRead(hFile, &gfPauseDueToPlayerGamePause,       sizeof(BOOLEAN));
+	FileRead(hFile, &gfResetAllPlayerKnowsEnemiesFlags, sizeof(BOOLEAN));
+	FileRead(hFile, &gfTimeCompressionOn,               sizeof(BOOLEAN));
+	FileRead(hFile, &guiPreviousGameClock,              sizeof(UINT32));
+	FileRead(hFile, &guiLockPauseStateLastReasonId,     sizeof(UINT32));
 
-	if (!FileRead(hFile, gubUnusedTimePadding, TIME_PADDINGBYTES)) return FALSE;
+	FileRead(hFile, gubUnusedTimePadding, TIME_PADDINGBYTES);
 
 	//Update the game clock
 	guiDay = ( guiGameClock / NUM_SEC_IN_DAY );
@@ -855,6 +856,7 @@ BOOLEAN LoadGameClock( HWFILE hFile )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void PauseOfClockBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);

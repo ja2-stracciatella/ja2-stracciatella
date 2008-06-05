@@ -771,11 +771,12 @@ void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID )
 
 
 static BOOLEAN LoadAnimationProfiles(void)
+try
 {
 	AutoSGPFile f(FileOpen(ANIMPROFILEFILENAME, FILE_ACCESS_READ));
 	if (!f) return FALSE;
 
-	if (!FileRead(f, &gubNumAnimProfiles, sizeof(gubNumAnimProfiles))) return FALSE;
+	FileRead(f, &gubNumAnimProfiles, sizeof(gubNumAnimProfiles));
 
 	ANIM_PROF* const aps = MALLOCN(ANIM_PROF, gubNumAnimProfiles);
 	gpAnimProfiles = aps;
@@ -787,22 +788,23 @@ static BOOLEAN LoadAnimationProfiles(void)
 		{
 			ANIM_PROF_DIR* const apd = &ap->Dirs[direction_idx];
 
-			if (!FileRead(f, &apd->ubNumTiles, sizeof(UINT8))) return FALSE;
+			FileRead(f, &apd->ubNumTiles, sizeof(UINT8));
 			ANIM_PROF_TILE* const apts = MALLOCN(ANIM_PROF_TILE, apd->ubNumTiles);
 			apd->pTiles = apts;
 
 			for (INT32 tile_idx = 0; tile_idx < apd->ubNumTiles; ++tile_idx)
 			{
 				ANIM_PROF_TILE* const apt = &apts[tile_idx];
-				if (!FileRead(f, &apt->usTileFlags, sizeof(UINT16))) return FALSE;
-				if (!FileRead(f, &apt->bTileX,      sizeof(INT8)))   return FALSE;
-				if (!FileRead(f, &apt->bTileY,      sizeof(INT8)))   return FALSE;
+				FileRead(f, &apt->usTileFlags, sizeof(UINT16));
+				FileRead(f, &apt->bTileX,      sizeof(INT8));
+				FileRead(f, &apt->bTileY,      sizeof(INT8));
 			}
 		}
 	}
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void DeleteAnimationProfiles(void)

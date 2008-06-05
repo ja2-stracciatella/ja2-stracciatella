@@ -1755,19 +1755,20 @@ BOOLEAN	SaveTeamTurnsToTheSaveGameFile( HWFILE hFile )
 }
 
 BOOLEAN	LoadTeamTurnsFromTheSavedGameFile( HWFILE hFile )
+try
 {
 	TEAM_TURN_SAVE_STRUCT TeamTurnStruct;
 
 	//Load the gubTurn Order Array
 	UINT8 ooto_ids[lengthof(gOutOfTurnOrder)];
-	if (!FileRead(hFile, ooto_ids, sizeof(ooto_ids))) return FALSE;
+	FileRead(hFile, ooto_ids, sizeof(ooto_ids));
 	for (UINT i = 1; i < lengthof(gOutOfTurnOrder); ++i)
 	{
 		gOutOfTurnOrder[i] = ID2Soldier(ooto_ids[i]);
 	}
 
 	//Load the Team turn save structure
-	if (!FileRead(hFile, &TeamTurnStruct, sizeof(TEAM_TURN_SAVE_STRUCT))) return FALSE;
+	FileRead(hFile, &TeamTurnStruct, sizeof(TEAM_TURN_SAVE_STRUCT));
 
 	gubOutOfTurnPersons = TeamTurnStruct.ubOutOfTurnPersons;
 
@@ -1777,6 +1778,8 @@ BOOLEAN	LoadTeamTurnsFromTheSavedGameFile( HWFILE hFile )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 BOOLEAN NPCFirstDraw( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier )
 {

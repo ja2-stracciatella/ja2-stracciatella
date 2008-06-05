@@ -145,7 +145,7 @@ try
 
 	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
 	const UINT32 uiFileSize = sizeof(*buf) * NUM_NPC_QUOTE_RECORDS;
-	if (!FileRead(hFile, buf, uiFileSize)) return NULL;
+	FileRead(hFile, buf, uiFileSize);
 	return buf.Release();
 }
 catch (...) { return 0; }
@@ -327,7 +327,7 @@ try
 
 	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
 	const UINT32 uiFileSize = sizeof(*buf) * NUM_NPC_QUOTE_RECORDS;
-	if (!FileRead(hFile, buf, uiFileSize)) return NULL;
+	FileRead(hFile, buf, uiFileSize);
 	return buf.Release();
 }
 catch (...) { return 0; }
@@ -2586,7 +2586,7 @@ try
 	for( cnt=0; cnt<uiNumberToLoad; cnt++ )
 	{
 		//Load a byte specify that there is an npc quote Loadd
-		if (!FileRead(hFile, &ubLoadQuote, sizeof(UINT8))) return FALSE;
+		FileRead(hFile, &ubLoadQuote, sizeof(UINT8));
 
 		//if there is an existing quote
 		if( gpNPCQuoteInfoArray[ cnt ] )
@@ -2607,7 +2607,7 @@ try
 			}
 
 			//Load the NPC quote entry
-			if (!FileRead(hFile, gpNPCQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS)) return FALSE;
+			FileRead(hFile, gpNPCQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS);
 		}
 		else
 		{
@@ -2618,7 +2618,7 @@ try
 	{
 		for( cnt = 0; cnt < NUM_CIVQUOTE_SECTORS; cnt++)
 		{
-			if (!FileRead(hFile, &ubLoadQuote, sizeof(UINT8))) return FALSE;
+			FileRead(hFile, &ubLoadQuote, sizeof(UINT8));
 
 			//if there is an existing quote
 			if( gpCivQuoteInfoArray[ cnt ] )
@@ -2639,7 +2639,7 @@ try
 				}
 
 				//Load the civ quote entry
-				if (!FileRead(hFile, gpCivQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS)) return FALSE;
+				FileRead(hFile, gpCivQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS);
 			}
 		}
 	}
@@ -2759,7 +2759,7 @@ try
 	for( cnt=0; cnt<uiNumberOfProfilesToLoad; cnt++ )
 	{
 		//Load a byte specify that there is an npc quote Loadd
-		if (!FileRead(hFile, &ubLoadQuote, sizeof(UINT8))) return FALSE;
+		FileRead(hFile, &ubLoadQuote, sizeof(UINT8));
 
 		//if there is an existing quote
 		if( gpBackupNPCQuoteInfoArray[ cnt ] )
@@ -2780,7 +2780,7 @@ try
 			}
 
 			//Load the NPC quote entry
-			if (!FileRead(hFile, gpBackupNPCQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS)) return FALSE;
+			FileRead(hFile, gpBackupNPCQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS);
 		}
 		else
 		{

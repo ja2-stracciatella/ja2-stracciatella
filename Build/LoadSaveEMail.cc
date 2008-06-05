@@ -8,7 +8,7 @@ static BOOLEAN LoadEMailFromFile(HWFILE File)
 try
 {
 	UINT32 uiSizeOfSubject;
-	if (!FileRead(File, &uiSizeOfSubject, sizeof(UINT32))) return FALSE; // XXX HACK000B
+	FileRead(File, &uiSizeOfSubject, sizeof(UINT32)); // XXX HACK000B
 	FileSeek(File, uiSizeOfSubject, FILE_SEEK_FROM_CURRENT); // XXX HACK000B
 
 	UINT16	usOffset;
@@ -20,7 +20,7 @@ try
 	BOOLEAN fRead;
 
 	BYTE Data[44];
-	if (!FileRead(File, Data, sizeof(Data))) return FALSE;
+	FileRead(File, Data, sizeof(Data));
 
 	BYTE* S = Data;
 	EXTR_U16(S, usOffset)
@@ -43,11 +43,12 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN LoadEmailFromSavedGame(HWFILE File)
+try
 {
 	ShutDownEmailList();
 
 	UINT32 uiNumOfEmails;
-	if (!FileRead(File, &uiNumOfEmails, sizeof(UINT32))) return FALSE;
+	FileRead(File, &uiNumOfEmails, sizeof(UINT32));
 
 	for (UINT32 cnt = 0; cnt < uiNumOfEmails; cnt++)
 	{
@@ -56,6 +57,7 @@ BOOLEAN LoadEmailFromSavedGame(HWFILE File)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveEMailIntoFile(HWFILE File, const Email* Mail)

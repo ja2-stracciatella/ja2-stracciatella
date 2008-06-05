@@ -2563,10 +2563,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//Now fileseek directly to the file position where the number of world items are stored
 	FileSeek(hfile, gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START);
 	//Now load the number of world items from the map.
-	if (!FileRead(hfile, &uiNumItems, 4))
-	{ //Invalid situation.
-		return;
-	}
+	FileRead(hfile, &uiNumItems, 4);
 	//Now compare this number with the number the summary thinks we should have.  If they are different,
 	//the the summary doesn't match the map.  What we will do is force regenerate the map so that they do
 	//match
@@ -2595,10 +2592,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	FileSeek(hfile, gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START);
 	for( i = 0; i < gpCurrentSectorSummary->MapInfo.ubNumIndividuals ; i++ )
 	{
-		if (!FileRead(hfile, &basic, sizeof(BASIC_SOLDIERCREATE_STRUCT)))
-		{ //Invalid situation.
-			return;
-		}
+		FileRead(hfile, &basic, sizeof(BASIC_SOLDIERCREATE_STRUCT));
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
 			if (!ExtractSoldierCreateFromFileUTF16(hfile, &priority))
@@ -2649,10 +2643,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	FileSeek(hfile, gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START);
 	for( i = 0; i < gpCurrentSectorSummary->MapInfo.ubNumIndividuals ; i++ )
 	{
-		if (!FileRead(hfile, &basic, sizeof(BASIC_SOLDIERCREATE_STRUCT)))
-		{ //Invalid situation.
-			return;
-		}
+		FileRead(hfile, &basic, sizeof(BASIC_SOLDIERCREATE_STRUCT));
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
 			if (!ExtractSoldierCreateFromFileUTF16(hfile, &priority))

@@ -222,6 +222,7 @@ static BOOLEAN LoadIncompleteArmsDealersStatus(HWFILE hFile, BOOLEAN fIncludesEl
 
 
 BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny )
+try
 {
 	UINT8		ubArmsDealer;
 	UINT16	usItemIndex;
@@ -237,10 +238,10 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile, BOOLEAN fInclude
 		// info for all dealers is in the save file
 
 		//Load the arms dealers status
-		if (!FileRead(hFile, gArmsDealerStatus, sizeof(gArmsDealerStatus))) return FALSE;
+		FileRead(hFile, gArmsDealerStatus, sizeof(gArmsDealerStatus));
 
 		//load the dealers inventory item headers (all at once)
-		if (!FileRead(hFile, gArmsDealersInventory, sizeof(gArmsDealersInventory))) return FALSE;
+		FileRead(hFile, gArmsDealersInventory, sizeof(gArmsDealersInventory));
 	}
 	else
 	{
@@ -263,16 +264,14 @@ BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile, BOOLEAN fInclude
 				if ( !AllocMemsetSpecialItemArray( &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ], gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced ))
 					return(FALSE);
 
-				if (!FileRead(hFile, &gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[0], sizeof(DEALER_SPECIAL_ITEM) * gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced))
-				{
-					return( FALSE );
-				}
+				FileRead(hFile, &gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[0], sizeof(DEALER_SPECIAL_ITEM) * gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced);
 			}
 		}
 	}
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void ConvertCreatureBloodToElixir(void);
@@ -2500,6 +2499,7 @@ UINT16 CalcValueOfItemToDealer( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN 
 
 // this only exists to support saves made with game versions < 54 or 55!
 static BOOLEAN LoadIncompleteArmsDealersStatus(HWFILE hFile, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny)
+try
 {
 	UINT32  uiDealersSaved;
 
@@ -2518,10 +2518,10 @@ static BOOLEAN LoadIncompleteArmsDealersStatus(HWFILE hFile, BOOLEAN fIncludesEl
 
 
 	// read in all other dealer's status
-	if (!FileRead(hFile, gArmsDealerStatus, uiDealersSaved * sizeof(ARMS_DEALER_STATUS))) return FALSE;
+	FileRead(hFile, gArmsDealerStatus, uiDealersSaved * sizeof(ARMS_DEALER_STATUS));
 
 	// read in all other dealer's inventory
-	if (!FileRead(hFile, gArmsDealersInventory, uiDealersSaved * sizeof(DEALER_ITEM_HEADER) * MAXITEMS)) return FALSE;
+	FileRead(hFile, gArmsDealersInventory, uiDealersSaved * sizeof(DEALER_ITEM_HEADER) * MAXITEMS);
 
 	if ( !fIncludesElgin )
 	{
@@ -2537,7 +2537,7 @@ static BOOLEAN LoadIncompleteArmsDealersStatus(HWFILE hFile, BOOLEAN fIncludesEl
 
 	return(TRUE);
 }
-
+catch (...) { return FALSE; }
 
 
 BOOLEAN DealerItemIsSafeToStack( UINT16 usItemIndex )

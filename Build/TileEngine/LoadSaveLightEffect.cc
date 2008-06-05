@@ -5,9 +5,10 @@
 
 
 BOOLEAN ExtractLightEffectFromFile(const HWFILE file, LIGHTEFFECT* const l)
+try
 {
 	BYTE data[16];
-	if (!FileRead(file, data, sizeof(data))) return FALSE;
+	FileRead(file, data, sizeof(data));
 
 	const BYTE* d = data;
 	EXTR_I16(d, l->sGridNo)
@@ -24,6 +25,7 @@ BOOLEAN ExtractLightEffectFromFile(const HWFILE file, LIGHTEFFECT* const l)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN InjectLightEffectIntoFile(const HWFILE file, const LIGHTEFFECT* const l)

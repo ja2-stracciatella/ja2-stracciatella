@@ -16,6 +16,7 @@ static BOOLEAN ReadRLERGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8
 
 
 BOOLEAN LoadTGAFileToImage( HIMAGE hImage, UINT16 fContents )
+try
 {
 	UINT8		uiImgID, uiColMap, uiType;
 
@@ -24,9 +25,9 @@ BOOLEAN LoadTGAFileToImage( HIMAGE hImage, UINT16 fContents )
 	AutoSGPFile hFile(FileOpen(hImage->ImageFile, FILE_ACCESS_READ));
 	CHECKF( hFile );
 
-	if (!FileRead(hFile, &uiImgID,  sizeof(UINT8))) return FALSE;
-	if (!FileRead(hFile, &uiColMap, sizeof(UINT8))) return FALSE;
-	if (!FileRead(hFile, &uiType,   sizeof(UINT8))) return FALSE;
+	FileRead(hFile, &uiImgID,  sizeof(UINT8));
+	FileRead(hFile, &uiColMap, sizeof(UINT8));
+	FileRead(hFile, &uiType,   sizeof(UINT8));
 
 	BOOLEAN fReturnVal = FALSE;
 	switch( uiType )
@@ -49,6 +50,7 @@ BOOLEAN LoadTGAFileToImage( HIMAGE hImage, UINT16 fContents )
 
 	return( fReturnVal );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN ReadUncompColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
@@ -66,7 +68,7 @@ try
 	UINT8		uiImagePixelSize;
 
 	BYTE data[15];
-	if (!FileRead(f, data, sizeof(data))) return FALSE;
+	FileRead(f, data, sizeof(data));
 
 	BYTE const* d = data;
 	EXTR_SKIP(d, 2)              // colour map origin
@@ -100,7 +102,7 @@ try
 			// Data is stored top-bottom - reverse for SGP HIMAGE format
 			for (size_t y = uiHeight; y != 0;)
 			{
-				if (!FileRead(f, &img_data[uiWidth * --y], uiWidth * 2)) return FALSE;;
+				FileRead(f, &img_data[uiWidth * --y], uiWidth * 2);;
 			}
 
 			img->p16BPPData = img_data.Release();
@@ -115,7 +117,7 @@ try
 				for (UINT32 x = 0 ; x < uiWidth; ++x)
 				{
 					UINT8 bgr[3];
-					if (!FileRead(f, bgr, sizeof(bgr))) return FALSE;
+					FileRead(f, bgr, sizeof(bgr));
 					line[x * 3    ] = bgr[2];
 					line[x * 3 + 1] = bgr[1];
 					line[x * 3 + 2] = bgr[0];

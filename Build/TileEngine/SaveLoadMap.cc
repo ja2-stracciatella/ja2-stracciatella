@@ -92,10 +92,7 @@ try
 
 		//Read the map temp file into a buffer
 		pTempArrayOfMaps.Allocate(uiNumberOfElements);
-		if (!FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements))
-		{
-			return FALSE;
-		}
+		FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements);
 	}
 
 	//Delete the file
@@ -513,6 +510,7 @@ static void SetMapRevealedStatus(void);
 
 
 BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
+try
 {
 	CHAR8		zMapName[ 128 ];
 
@@ -533,7 +531,7 @@ BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 		gpRevealedMap = MALLOCNZ(UINT8, NUM_REVEALED_BYTES);
 
 		// Load the Reveal map array structure
-		if (!FileRead(hFile, gpRevealedMap, NUM_REVEALED_BYTES)) return FALSE;
+		FileRead(hFile, gpRevealedMap, NUM_REVEALED_BYTES);
 	}
 
 	//Loop through and set the bits in the map that are revealed
@@ -546,6 +544,7 @@ BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void SetSectorsRevealedBit(UINT16 usMapIndex)
@@ -723,10 +722,7 @@ try
 
 		//Read the map temp file into a buffer
 		pTempArrayOfMaps.Allocate(uiNumberOfElements);
-		if (!FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements))
-		{
-			return FALSE;
-		}
+		FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements);
 	}
 
 	//Delete the file
@@ -876,7 +872,7 @@ try
 		uiNumberOfElements = FileGetSize(src) / sizeof(MODIFY_MAP);
 
 		mm.Allocate(uiNumberOfElements);
-		if (!FileRead(src, mm, sizeof(*mm) * uiNumberOfElements)) return FALSE;
+		FileRead(src, mm, sizeof(*mm) * uiNumberOfElements);
 	}
 
 	for (UINT32 i = 0; i < uiNumberOfElements; ++i)

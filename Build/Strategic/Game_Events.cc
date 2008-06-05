@@ -650,13 +650,13 @@ try
 
 	//Read the number of strategic events
 	UINT32 uiNumGameEvents;
-	if (!FileRead(f, &uiNumGameEvents, sizeof(UINT32))) return FALSE;
+	FileRead(f, &uiNumGameEvents, sizeof(UINT32));
 
 	STRATEGICEVENT** anchor = &gpEventList;
 	for (size_t n = uiNumGameEvents; n != 0; --n)
 	{
 		STRATEGICEVENT* const sev = MALLOC(STRATEGICEVENT);
-		if (!FileRead(f, sev, sizeof(*sev))) return FALSE;
+		FileRead(f, sev, sizeof(*sev));
 		sev->next = 0;
 
 		*anchor = sev;

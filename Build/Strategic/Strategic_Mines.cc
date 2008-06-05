@@ -776,12 +776,13 @@ BOOLEAN SaveMineStatusToSaveGameFile( HWFILE hFile )
 
 
 BOOLEAN LoadMineStatusFromSavedGameFile( HWFILE hFile )
+try
 {
 	//Load the MineStatus
-	if (!FileRead(hFile, gMineStatus, sizeof(MINE_STATUS_TYPE) * MAX_NUMBER_OF_MINES)) return FALSE;
-
+	FileRead(hFile, gMineStatus, sizeof(MINE_STATUS_TYPE) * MAX_NUMBER_OF_MINES);
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 void ShutOffMineProduction( INT8 bMineIndex )

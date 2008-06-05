@@ -2941,6 +2941,7 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 
 
 BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )
+try
 {
 	//
 	//	Explosion Queue
@@ -2950,12 +2951,12 @@ BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )
 	memset( gExplosionQueue, 0, sizeof( ExplosionQueueElement ) * MAX_BOMB_QUEUE );
 
 	//Read the number of explosions queue's
-	if (!FileRead(hFile, &gubElementsOnExplosionQueue, sizeof(UINT32))) return FALSE;
+	FileRead(hFile, &gubElementsOnExplosionQueue, sizeof(UINT32));
 
 	//loop through read all the active explosions fro the file
 	for (UINT32 uiCnt = 0; uiCnt < MAX_BOMB_QUEUE; ++uiCnt)
 	{
-		if (!FileRead(hFile, &gExplosionQueue[uiCnt], sizeof(ExplosionQueueElement))) return FALSE;
+		FileRead(hFile, &gExplosionQueue[uiCnt], sizeof(ExplosionQueueElement));
 	}
 
 
@@ -2966,7 +2967,7 @@ BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )
 
 	//Load the number of explosions
 	UINT32 num_explosions;
-	if (!FileRead(hFile, &num_explosions, sizeof(num_explosions))) return FALSE;
+	FileRead(hFile, &num_explosions, sizeof(num_explosions));
 
 	//loop through and load all the active explosions
 	const EXPLOSIONTYPE* const end = gExplosionData + num_explosions;
@@ -2979,8 +2980,7 @@ BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )
 
 	return( TRUE );
 }
-
-
+catch (...) { return FALSE; }
 
 
 BOOLEAN DoesSAMExistHere( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo )

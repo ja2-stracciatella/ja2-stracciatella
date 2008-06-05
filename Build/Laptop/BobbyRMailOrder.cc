@@ -2129,7 +2129,7 @@ try
 
 
 	//Read the number of orders
-	if (!FileRead(hFile, &giNumberOfNewBobbyRShipment, sizeof(INT32))) return FALSE;
+	FileRead(hFile, &giNumberOfNewBobbyRShipment, sizeof(INT32));
 
 	if ( giNumberOfNewBobbyRShipment == 0 )
 	{
@@ -2143,7 +2143,7 @@ try
 		for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
 		{
 			//Read the order
-			if (!FileRead(hFile, &gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct))) return FALSE;
+			FileRead(hFile, &gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct));
 		}
 	}
 

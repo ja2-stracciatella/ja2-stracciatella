@@ -1363,7 +1363,7 @@ try
 	TrashUndergroundSectorInfo();
 
 	//Read in the number of nodes stored
-	if (!FileRead(hFile, &uiNumOfRecords, sizeof(UINT32))) return FALSE;
+	FileRead(hFile, &uiNumOfRecords, sizeof(UINT32));
 
 	for( cnt = 0; cnt< uiNumOfRecords; cnt ++)
 	{

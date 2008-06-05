@@ -13,6 +13,7 @@ INT16									gsNumAmbData = 0;
 
 
 static BOOLEAN LoadAmbientControlFile(UINT8 ubAmbientID)
+try
 {
 	SGPFILENAME zFilename;
 	sprintf(zFilename, "AMBIENT/%d.bad", ubAmbientID);
@@ -21,12 +22,12 @@ static BOOLEAN LoadAmbientControlFile(UINT8 ubAmbientID)
 	if (!hFile) return FALSE;
 
 	// READ #
-	if (!FileRead(hFile, &gsNumAmbData, sizeof(INT16))) return FALSE;
+	FileRead(hFile, &gsNumAmbData, sizeof(INT16));
 
 	// LOOP FOR OTHERS
 	for (INT32 cnt = 0; cnt < gsNumAmbData; cnt++)
 	{
-		if (!FileRead(hFile, &gAmbData[cnt], sizeof(AMBIENTDATA_STRUCT))) return FALSE;
+		FileRead(hFile, &gAmbData[cnt], sizeof(AMBIENTDATA_STRUCT));
 
 		sprintf(zFilename, "AMBIENT/%s", gAmbData[cnt].zFilename);
 		strcpy(gAmbData[cnt].zFilename, zFilename);
@@ -34,6 +35,7 @@ static BOOLEAN LoadAmbientControlFile(UINT8 ubAmbientID)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 void StopAmbients( )

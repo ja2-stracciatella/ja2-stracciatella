@@ -1402,15 +1402,16 @@ BOOLEAN SaveCreatureDirectives( HWFILE hFile )
 }
 
 BOOLEAN LoadCreatureDirectives( HWFILE hFile, UINT32 uiSavedGameVersion )
+try
 {
-	if (!FileRead(hFile, &giHabitatedDistance,  4)) return FALSE;
-	if (!FileRead(hFile, &giPopulationModifier, 4)) return FALSE;
-	if (!FileRead(hFile, &giLairID,             4)) return FALSE;
-	if (!FileRead(hFile, &gfUseCreatureMusic,   1)) return FALSE;
+	FileRead(hFile, &giHabitatedDistance,  4);
+	FileRead(hFile, &giPopulationModifier, 4);
+	FileRead(hFile, &giLairID,             4);
+	FileRead(hFile, &gfUseCreatureMusic,   1);
 
 	if( uiSavedGameVersion >= 82 )
 	{
-		if (!FileRead(hFile, &giDestroyedLairID, 4)) return FALSE;
+		FileRead(hFile, &giDestroyedLairID, 4);
 	}
 	else
 	{
@@ -1444,6 +1445,8 @@ BOOLEAN LoadCreatureDirectives( HWFILE hFile, UINT32 uiSavedGameVersion )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 void ForceCreaturesToAvoidMineTemporarily( UINT8 ubMineIndex )
 {

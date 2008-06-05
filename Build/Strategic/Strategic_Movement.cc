@@ -2821,14 +2821,14 @@ try
 
 	// Load the number of nodes in the list
 	UINT32 uiNumberOfGroups;
-	if (!FileRead(f, &uiNumberOfGroups, sizeof(UINT32))) return FALSE;
+	FileRead(f, &uiNumberOfGroups, sizeof(UINT32));
 
 	//loop through all the nodes and add them to the LL
 	GROUP** anchor = &gpGroupList;
 	for (UINT32 i = uiNumberOfGroups; i != 0; --i)
 	{
 		GROUP* const g = MALLOCZ(GROUP);
-		if (!FileRead(f, g, sizeof(GROUP))) return FALSE;
+		FileRead(f, g, sizeof(GROUP));
 		g->next = NULL;
 
 		if (g->fPlayer)
@@ -2892,7 +2892,7 @@ try
 {
 	// Load the number of nodes in the player list
 	UINT32 node_count;
-	if (!FileRead(f, &node_count, sizeof(UINT32))) return FALSE;
+	FileRead(f, &node_count, sizeof(UINT32));
 
 	PLAYERGROUP** anchor = &g->pPlayerList;
 	for (UINT32 i = node_count; i != 0; --i)
@@ -2900,7 +2900,7 @@ try
 		PLAYERGROUP* const pg = MALLOC(PLAYERGROUP);
 
 		UINT32 profile_id;
-		if (!FileRead(f, &profile_id, sizeof(UINT32))) return FALSE;
+		FileRead(f, &profile_id, sizeof(UINT32));
 
 		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(profile_id);
 		//Should never happen
@@ -2929,8 +2929,7 @@ static BOOLEAN LoadEnemyGroupStructFromSavedGame(const HWFILE f, GROUP* const g)
 try
 {
 	ENEMYGROUP* const eg = MALLOCZ(ENEMYGROUP);
-	if (!FileRead(f, eg, sizeof(ENEMYGROUP))) return FALSE;
-
+	FileRead(f, eg, sizeof(ENEMYGROUP));
 	g->pEnemyGroup = eg;
 	return TRUE;
 }
@@ -2960,13 +2959,13 @@ try
 {
 	// Load the number of waypoints
 	UINT32 uiNumberOfWayPoints;
-	if (!FileRead(f, &uiNumberOfWayPoints, sizeof(UINT32))) return FALSE;
+	FileRead(f, &uiNumberOfWayPoints, sizeof(UINT32));
 
 	WAYPOINT** anchor = &g->pWaypoints;
 	for (UINT32 i = uiNumberOfWayPoints; i != 0; --i)
 	{
 		WAYPOINT* const w = MALLOCZ(WAYPOINT);
-		if (!FileRead(f, w, sizeof(WAYPOINT))) return FALSE;
+		FileRead(f, w, sizeof(WAYPOINT));
 		w->next = NULL;
 
 		// Add the node to the list

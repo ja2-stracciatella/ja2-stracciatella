@@ -1281,12 +1281,14 @@ BOOLEAN SaveQuestInfoToSavedGameFile( HWFILE hFile )
 
 
 BOOLEAN LoadQuestInfoFromSavedGameFile( HWFILE hFile )
+try
 {
 	//Save all the states if the Quests
-	if (!FileRead(hFile, gubQuest, MAX_QUESTS)) return FALSE;
+	FileRead(hFile, gubQuest, MAX_QUESTS);
 
 	//Save all the states for the facts
-	if (!FileRead(hFile, gubFact, NUM_FACTS)) return FALSE;
+	FileRead(hFile, gubFact, NUM_FACTS);
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }

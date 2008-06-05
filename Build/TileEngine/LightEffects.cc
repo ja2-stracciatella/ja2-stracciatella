@@ -168,6 +168,7 @@ void DecayLightEffects( UINT32 uiTime )
 
 
 BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
+try
 {
 	//no longer need to load Light effects.  They are now in temp files
 	if( guiSaveGameVersion < 76 )
@@ -175,7 +176,7 @@ BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 		memset( gLightEffectData, 0, sizeof( LIGHTEFFECT ) *  NUM_LIGHT_EFFECT_SLOTS );
 
 		//Load the Number of Light Effects
-		if (!FileRead(hFile, &guiNumLightEffects, sizeof(UINT32))) return FALSE;
+		FileRead(hFile, &guiNumLightEffects, sizeof(UINT32));
 
 		//if there are lights saved.
 		if( guiNumLightEffects != 0 )
@@ -196,7 +197,7 @@ BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
 
 	return( TRUE );
 }
-
+catch (...) { return FALSE; }
 
 
 BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
@@ -244,6 +245,7 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 
 BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+try
 {
 	UINT32	uiCnt=0;
 	CHAR8		zMapName[ 128 ];
@@ -257,7 +259,7 @@ BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	ResetLightEffects();
 
 	//Load the Number of Light Effects
-	if (!FileRead(hFile, &guiNumLightEffects, sizeof(UINT32))) return FALSE;
+	FileRead(hFile, &guiNumLightEffects, sizeof(UINT32));
 
 	//loop through and load the list
 	for( uiCnt=0; uiCnt<guiNumLightEffects;uiCnt++)
@@ -273,6 +275,7 @@ BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 void ResetLightEffects()

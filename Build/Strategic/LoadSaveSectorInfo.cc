@@ -5,9 +5,10 @@
 
 
 BOOLEAN ExtractSectorInfoFromFile(const HWFILE file, SECTORINFO* const s)
+try
 {
 	BYTE data[116];
-	if (!FileRead(file, data, sizeof(data))) return FALSE;
+	FileRead(file, data, sizeof(data));
 
 	const BYTE* d = data;
 	EXTR_U32(d, s->uiFlags)
@@ -49,6 +50,7 @@ BOOLEAN ExtractSectorInfoFromFile(const HWFILE file, SECTORINFO* const s)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN InjectSectorInfoIntoFile(const HWFILE file, const SECTORINFO* const s)

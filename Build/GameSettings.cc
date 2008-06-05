@@ -47,7 +47,7 @@ void LoadGameSettings(void)
 
 		GAME_SETTINGS* const g = &gGameSettings;
 		if (FileGetSize(f) != sizeof(*g))                              goto fail;
-		if (!FileRead(f, g, sizeof(*g)))                               goto fail;
+		FileRead(f, g, sizeof(*g));
 		if (g->uiSettingsVersionNumber < GAME_SETTING_CURRENT_VERSION) goto fail;
 
 		// Do checking to make sure the settings are valid

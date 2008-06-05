@@ -3554,6 +3554,7 @@ BOOLEAN SaveLaptopInfoToSavedGame(HWFILE hFile)
 
 
 BOOLEAN LoadLaptopInfoFromSavedGame(HWFILE hFile)
+try
 {
 	//if there is memory allocated for the BobbyR orders
 	if (LaptopSaveInfo.usNumberOfBobbyRayOrderItems)
@@ -3578,7 +3579,7 @@ BOOLEAN LoadLaptopInfoFromSavedGame(HWFILE hFile)
 
 
 	// Load The laptop information
-	if (!FileRead(hFile, &LaptopSaveInfo, sizeof(LaptopSaveInfoStruct))) return FALSE;
+	FileRead(hFile, &LaptopSaveInfo, sizeof(LaptopSaveInfoStruct));
 
 
 	//If there is anything in the Bobby Ray Orders on Delivery
@@ -3589,7 +3590,7 @@ BOOLEAN LoadLaptopInfoFromSavedGame(HWFILE hFile)
 		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = MALLOCN(BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
 
 		// Load The laptop information
-		if (!FileRead(hFile, LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, uiSize)) return FALSE;
+		FileRead(hFile, LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, uiSize);
 	}
 	else
 	{
@@ -3606,7 +3607,7 @@ BOOLEAN LoadLaptopInfoFromSavedGame(HWFILE hFile)
 		LaptopSaveInfo.pLifeInsurancePayouts = MALLOCN(LIFE_INSURANCE_PAYOUT, LaptopSaveInfo.ubNumberLifeInsurancePayouts);
 
 		// Load The laptop information
-		if (!FileRead(hFile, LaptopSaveInfo.pLifeInsurancePayouts, uiSize)) return FALSE;
+		FileRead(hFile, LaptopSaveInfo.pLifeInsurancePayouts, uiSize);
 	}
 	else
 	{
@@ -3616,6 +3617,7 @@ BOOLEAN LoadLaptopInfoFromSavedGame(HWFILE hFile)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static INT32 WWaitDelayIncreasedIfRaining(INT32 iUnitTime)

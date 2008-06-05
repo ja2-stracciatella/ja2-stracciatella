@@ -692,9 +692,10 @@ static void PlayNewMessageSound(void)
 
 
 static BOOLEAN ExtractScrollStringFromFile(const HWFILE file, ScrollStringSt* const s)
+try
 {
 	BYTE data[28];
-	if (!FileRead(file, data, sizeof(data))) return FALSE;
+	FileRead(file, data, sizeof(data));
 
 	const BYTE* d = data;
 	EXTR_SKIP(d, 4)
@@ -707,6 +708,7 @@ static BOOLEAN ExtractScrollStringFromFile(const HWFILE file, ScrollStringSt* co
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN InjectScrollStringIntoFile(const HWFILE file, const ScrollStringSt* const s)
@@ -777,27 +779,27 @@ try
 	gubCurrentMapMessageString     = 0;
 
 	// Read to the begining of the message list
-	if (!FileRead(hFile, &gubEndOfMapScreenMessageList, sizeof(UINT8))) return FALSE;
+	FileRead(hFile, &gubEndOfMapScreenMessageList, sizeof(UINT8));
 
 	// Read the current message string
-	if (!FileRead(hFile, &gubStartOfMapScreenMessageList, sizeof(UINT8))) return FALSE;
+	FileRead(hFile, &gubStartOfMapScreenMessageList, sizeof(UINT8));
 
 	// Read the current message string
-	if (!FileRead(hFile, &gubCurrentMapMessageString, sizeof(UINT8))) return FALSE;
+	FileRead(hFile, &gubCurrentMapMessageString, sizeof(UINT8));
 
 	//Loopthrough all the messages
 	for (ScrollStringSt** i = gMapScreenMessageList; i != endof(gMapScreenMessageList); ++i)
 	{
 		// Read to the file the size of the message
 		UINT32 uiSizeOfString;
-		if (!FileRead(hFile, &uiSizeOfString, sizeof(uiSizeOfString))) return FALSE;
+		FileRead(hFile, &uiSizeOfString, sizeof(uiSizeOfString));
 
 		//if there is a message
 		if (uiSizeOfString != 0)
 		{
 			// Read the message from the file
 			wchar_t SavedString[512];
-			if (!FileRead(hFile, SavedString, uiSizeOfString)) return FALSE;
+			FileRead(hFile, SavedString, uiSizeOfString);
 
 			//if there is an existing string,delete it
 			ScrollStringSt* s = *i;

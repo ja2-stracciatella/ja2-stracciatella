@@ -6,6 +6,7 @@
 * Derek Beland, May 28, 1997
 *********************************************************************************/
 
+#include "Buffer.h"
 #include "Debug.h"
 #include "FileMan.h"
 #include "Random.h"
@@ -602,19 +603,16 @@ enum WaveFormatTag
 
 
 static BOOLEAN LoadPCM(SAMPLETAG* s, HWFILE file, UINT32 size)
+try
 {
-	void* Data = malloc(size);
-	if (Data == NULL) return FALSE;
-	if (!FileRead(file, Data, size))
-	{
-		free(Data);
-		return FALSE;
-	}
+	SGP::Buffer<UINT8> data(size);
+	FileRead(file, data, size);
 
 	s->n_samples = size / GetSampleSize(s);
-	s->pData     = Data;
+	s->pData     = data.Release();
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static inline int Clamp(int min, int x, int max)
@@ -637,10 +635,10 @@ try
 	for (;;)
 	{
 		INT16 CurSample_;
-		if (!FileRead(file, &CurSample_, sizeof(CurSample_))) return FALSE;
+		FileRead(file, &CurSample_, sizeof(CurSample_));
 
 		UINT8 StepIndex_;
-		if (!FileRead(file, &StepIndex_, sizeof(StepIndex_))) return FALSE;
+		FileRead(file, &StepIndex_, sizeof(StepIndex_));
 
 		FileSeek(file, 1 , FILE_SEEK_FROM_CURRENT); // reserved byte
 
@@ -658,7 +656,7 @@ try
 		while (--DataCount != 0)
 		{
 			UINT32 DataWord;
-			if (!FileRead(file, &DataWord, sizeof(DataWord))) return FALSE;
+			FileRead(file, &DataWord, sizeof(DataWord));
 			for (UINT i = 0; i < 8; i++)
 			{
 				static const INT16 StepTable[] =
@@ -766,8 +764,8 @@ try
 		UINT32 Tag;
 		UINT32 Size;
 
-		if (!FileRead(hFile, &Tag, sizeof(Tag)))   return NULL;
-		if (!FileRead(hFile, &Size, sizeof(Size))) return NULL;
+		FileRead(hFile, &Tag,  sizeof(Tag));
+		FileRead(hFile, &Size, sizeof(Size));
 
 		switch (Tag)
 		{
@@ -777,12 +775,12 @@ try
 					UINT32 Rate;
 					UINT16 BitsPerSample;
 
-					if (!FileRead(hFile, &FormatTag,     sizeof(FormatTag)))     return NULL;
-					if (!FileRead(hFile, &Channels,      sizeof(Channels)))      return NULL;
-					if (!FileRead(hFile, &Rate,          sizeof(Rate)))          return NULL;
+					FileRead(hFile, &FormatTag,     sizeof(FormatTag));
+					FileRead(hFile, &Channels,      sizeof(Channels));
+					FileRead(hFile, &Rate,          sizeof(Rate));
 					FileSeek(hFile, 4 , FILE_SEEK_FROM_CURRENT);
-					if (!FileRead(hFile, &BlockAlign,    sizeof(BlockAlign)))    return NULL;
-					if (!FileRead(hFile, &BitsPerSample, sizeof(BitsPerSample))) return NULL;
+					FileRead(hFile, &BlockAlign,    sizeof(BlockAlign));
+					FileRead(hFile, &BitsPerSample, sizeof(BitsPerSample));
 					SNDDBG("LOAD file \"%s\" format %u channels %u rate %u bits %u to slot %u\n", pFilename, FormatTag, Channels, Rate, BitsPerSample, s - pSampleList);
 					switch (FormatTag)
 					{
@@ -804,7 +802,7 @@ try
 			case FOURCC('f', 'a', 'c', 't'):
 				{
 					UINT32 Samples;
-					if (!FileRead(hFile, &Samples, sizeof(Samples))) return NULL;
+					FileRead(hFile, &Samples, sizeof(Samples));
 					s->n_samples = Samples;
 					break;
 				}

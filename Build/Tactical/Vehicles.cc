@@ -893,7 +893,7 @@ try
 	ClearOutVehicleList();
 
 	//Load the number of elements
-	if (!FileRead(hFile, &ubNumberOfVehicles, sizeof(UINT8))) return FALSE;
+	FileRead(hFile, &ubNumberOfVehicles, sizeof(UINT8));
 	if (ubNumberOfVehicles == 0) return TRUE;
 
 	//allocate memory to hold the vehicle list
@@ -905,7 +905,7 @@ try
 	{
 		VEHICLETYPE* const v = &vl[cnt];
 		//Load if the vehicle spot is valid
-		if (!FileRead(hFile, &v->fValid, sizeof(BOOLEAN))) return FALSE;
+		FileRead(hFile, &v->fValid, sizeof(BOOLEAN));
 		if (!v->fValid) continue;
 
 		if (!ExtractVehicleTypeFromFile(hFile, v, uiSavedGameVersion)) return FALSE;
@@ -942,12 +942,13 @@ void UpdateAllVehiclePassengersGridNo(SOLDIERTYPE* const vs)
 
 
 BOOLEAN LoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile )
+try
 {
 	INT32		cnt;
 	GROUP		*pGroup	=	NULL;
 
 	//Load in the Squad movement id's
-	if (!FileRead(hFile, gubVehicleMovementGroups, sizeof(INT8) * 5)) return FALSE;
+	FileRead(hFile, gubVehicleMovementGroups, sizeof(INT8) * 5);
 
 	for( cnt = 5; cnt <  MAX_VEHICLES; cnt++ )
 	{
@@ -961,6 +962,7 @@ BOOLEAN LoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN NewSaveVehicleMovementInfoToSavedGameFile( HWFILE hFile )
@@ -973,12 +975,13 @@ BOOLEAN NewSaveVehicleMovementInfoToSavedGameFile( HWFILE hFile )
 
 
 BOOLEAN NewLoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile )
+try
 {
 	//Load in the Squad movement id's
-	if (!FileRead(hFile, gubVehicleMovementGroups, sizeof(INT8) * MAX_VEHICLES)) return FALSE;
-
+	FileRead(hFile, gubVehicleMovementGroups, sizeof(INT8) * MAX_VEHICLES);
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN OKUseVehicle( UINT8 ubProfile )

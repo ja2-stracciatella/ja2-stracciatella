@@ -9,11 +9,7 @@ try
 	FileSeek(File, seek_chars * 2, FILE_SEEK_FROM_START);
 
 	UINT16 Str[read_chars];
-	if (!FileRead(File, Str, sizeof(Str)))
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "LoadEncryptedData: Failed FileRead");
-		return FALSE;
-	}
+	FileRead(File, Str, sizeof(Str));
 
 	Str[read_chars - 1] = '\0';
 	for (const UINT16* i = Str; *i != '\0'; ++i)

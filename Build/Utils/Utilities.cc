@@ -14,6 +14,7 @@
 
 
 BOOLEAN CreateSGPPaletteFromCOLFile(SGPPaletteEntry* const pal, const char* const col_file)
+try
 {
 	AutoSGPFile f(FileOpen(col_file, FILE_ACCESS_READ));
 	if (!f)
@@ -23,7 +24,7 @@ BOOLEAN CreateSGPPaletteFromCOLFile(SGPPaletteEntry* const pal, const char* cons
 	}
 
 	BYTE data[776];
-	if (!FileRead(f, data, sizeof(data))) return FALSE;
+	FileRead(f, data, sizeof(data));
 
 	const BYTE* d = data;
 	EXTR_SKIP(d, 8); // skip header
@@ -37,6 +38,7 @@ BOOLEAN CreateSGPPaletteFromCOLFile(SGPPaletteEntry* const pal, const char* cons
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, const UINT8 ubXPos, const UINT8 ubYPos, SGPVSurface* const dst)

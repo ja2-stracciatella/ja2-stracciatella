@@ -1627,14 +1627,15 @@ BOOLEAN SaveSoldierInitListLinks( HWFILE hfile )
 }
 
 BOOLEAN LoadSoldierInitListLinks( HWFILE hfile )
+try
 {
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
 
-	if (!FileRead(hfile, &ubSlots, 1)) return FALSE;
+	FileRead(hfile, &ubSlots, 1);
 	while( ubSlots-- )
 	{
-		if (!FileRead(hfile, &ubNodeID, 1)) return FALSE;
-		if (!FileRead(hfile, &ubSoldierID, 1)) return FALSE;
+		FileRead(hfile, &ubNodeID,    1);
+		FileRead(hfile, &ubSoldierID, 1);
 
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		{
@@ -1656,6 +1657,8 @@ BOOLEAN LoadSoldierInitListLinks( HWFILE hfile )
 	}
 	return TRUE;
 }
+catch (...) { return FALSE; }
+
 
 void AddSoldierInitListBloodcats()
 {
@@ -1959,14 +1962,15 @@ BOOLEAN ValidateSoldierInitLinks(UINT8 ubCode)
 
 
 BOOLEAN NewWayOfLoadingEnemySoldierInitListLinks( HWFILE hfile )
+try
 {
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
 
-	if (!FileRead(hfile, &ubSlots, 1)) return FALSE;
+	FileRead(hfile, &ubSlots, 1);
 	while( ubSlots-- )
 	{
-		if (!FileRead(hfile, &ubNodeID, 1)) return FALSE;
-		if (!FileRead(hfile, &ubSoldierID, 1)) return FALSE;
+		FileRead(hfile, &ubNodeID,    1);
+		FileRead(hfile, &ubSoldierID, 1);
 
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		{
@@ -1986,17 +1990,19 @@ BOOLEAN NewWayOfLoadingEnemySoldierInitListLinks( HWFILE hfile )
 	}
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile )
+try
 {
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
 
-	if (!FileRead(hfile, &ubSlots, 1)) return FALSE;
+	FileRead(hfile, &ubSlots, 1);
 	while( ubSlots-- )
 	{
-		if (!FileRead(hfile, &ubNodeID, 1)) return FALSE;
-		if (!FileRead(hfile, &ubSoldierID, 1)) return FALSE;
+		FileRead(hfile, &ubNodeID,    1);
+		FileRead(hfile, &ubSoldierID, 1);
 
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		{
@@ -2016,6 +2022,7 @@ BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile )
 	}
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void)

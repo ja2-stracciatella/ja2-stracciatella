@@ -6,11 +6,12 @@
 
 
 BOOLEAN ExtractBulletFromFile(const HWFILE file, BULLET* const b)
+try
 {
 	BYTE src[128];
 	const BYTE* s = src;
 
-	if (!FileRead(file, src, sizeof(src))) return FALSE;
+	FileRead(file, src, sizeof(src));
 
 	EXTR_SKIP(s, 4)
 	EXTR_SOLDIER(s, b->pFirer)
@@ -63,6 +64,7 @@ BOOLEAN ExtractBulletFromFile(const HWFILE file, BULLET* const b)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN InjectBulletIntoFile(const HWFILE file, const BULLET* b)

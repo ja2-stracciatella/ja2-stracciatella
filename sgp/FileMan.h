@@ -49,7 +49,7 @@ BOOLEAN FileDelete(const char* path);
 HWFILE FileOpen(const char* filename, FileOpenFlags);
 void   FileClose(HWFILE);
 
-BOOLEAN FileRead(HWFILE hFile, void* pDest, UINT32 uiBytesToRead);
+void    FileRead(HWFILE, void* pDest, UINT32 uiBytesToRead);
 BOOLEAN FileWrite(HWFILE hFile, const void* pDest, UINT32 uiBytesToWrite);
 
 void  FileSeek(HWFILE, INT32 distance, FileSeekMode);

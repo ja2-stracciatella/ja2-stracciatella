@@ -7,9 +7,10 @@
 
 
 BOOLEAN ExtractRealObjectFromFile(const HWFILE file, REAL_OBJECT* const o)
+try
 {
 	BYTE data[256];
-	if (!FileRead(file, data, sizeof(data))) return FALSE;
+	FileRead(file, data, sizeof(data));
 
 	const BYTE* d = data;
 	EXTR_BOOL(d, o->fAllocated)
@@ -73,6 +74,7 @@ BOOLEAN ExtractRealObjectFromFile(const HWFILE file, REAL_OBJECT* const o)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN InjectRealObjectIntoFile(const HWFILE file, const REAL_OBJECT* const o)

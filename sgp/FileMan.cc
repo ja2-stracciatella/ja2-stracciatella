@@ -372,7 +372,7 @@ extern UINT32 uiTotalFileReadTime;
 extern UINT32 uiTotalFileReadCalls;
 #endif
 
-BOOLEAN FileRead(const HWFILE f, void* const pDest, const UINT32 uiBytesToRead)
+void FileRead(HWFILE const f, void* const pDest, UINT32 const uiBytesToRead)
 {
 #ifdef JA2TESTVERSION
 	const UINT32 uiStartTime = GetJA2Clock();
@@ -394,7 +394,7 @@ BOOLEAN FileRead(const HWFILE f, void* const pDest, const UINT32 uiBytesToRead)
 	uiTotalFileReadCalls++;
 #endif
 
-	return ret;
+	if (!ret) throw std::runtime_error("Reading from file failed");
 }
 
 

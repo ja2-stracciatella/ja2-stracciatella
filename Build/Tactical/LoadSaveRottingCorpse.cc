@@ -5,9 +5,10 @@
 
 
 BOOLEAN ExtractRottingCorpseFromFile(const HWFILE file, ROTTING_CORPSE_DEFINITION* const c)
+try
 {
 	BYTE data[160];
-	if (!FileRead(file, data, sizeof(data))) return FALSE;
+	FileRead(file, data, sizeof(data));
 
 	const BYTE* d = data;
 	EXTR_U8(d, c->ubType)
@@ -34,6 +35,7 @@ BOOLEAN ExtractRottingCorpseFromFile(const HWFILE file, ROTTING_CORPSE_DEFINITIO
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN InjectRottingCorpseIntoFile(const HWFILE file, const ROTTING_CORPSE_DEFINITION* c)
