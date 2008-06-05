@@ -54,7 +54,7 @@ typedef struct PcxObject
 } PcxObject;
 
 
-static BOOLEAN SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage);
+static void       SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage);
 static BOOLEAN BlitPcxToBuffer(PcxObject* pCurrentPcxObject, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp);
 static PcxObject* LoadPcx(const char* filename);
 
@@ -326,8 +326,7 @@ static BOOLEAN BlitPcxToBuffer(PcxObject* pCurrentPcxObject, UINT8* pBuffer, UIN
 }
 
 
-static BOOLEAN SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage)
-try
+static void SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage)
 {
 	UINT16 Index;
 	UINT8  *pubPalette;
@@ -345,7 +344,4 @@ try
 		hImage->pPalette[Index].b      = pubPalette[Index * 3 + 2];
 		hImage->pPalette[Index].unused = 0;
   }
-
-  return TRUE;
 }
-catch (...) { return FALSE; }
