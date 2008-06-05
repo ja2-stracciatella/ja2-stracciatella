@@ -1649,8 +1649,7 @@ void JA2EncryptedFileRead(HWFILE const f, void* const pDest, UINT32 const uiByte
 }
 
 
-BOOLEAN JA2EncryptedFileWrite(const HWFILE hFile, const void* const data, const UINT32 uiBytesToWrite)
-try
+void JA2EncryptedFileWrite(const HWFILE hFile, const void* const data, const UINT32 uiBytesToWrite)
 {
 	SGP::Buffer<UINT8> buf(uiBytesToWrite);
 	const UINT8* const src          = static_cast<const UINT8*>(data);
@@ -1664,9 +1663,7 @@ try
 	}
 
 	FileWrite(hFile, buf, uiBytesToWrite);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void GetMapTempFileName(const UINT32 uiType, char* const pMapName, const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ)

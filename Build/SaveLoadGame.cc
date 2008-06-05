@@ -2152,6 +2152,7 @@ load_failed:
 
 
 static BOOLEAN SaveMercProfiles(HWFILE hFile)
+try
 {
 	UINT16	cnt;
 
@@ -2159,7 +2160,6 @@ static BOOLEAN SaveMercProfiles(HWFILE hFile)
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
 		gMercProfiles[ cnt ].uiProfileChecksum = ProfileChecksum( &(gMercProfiles[ cnt ]) );
-		BOOLEAN Ret;
 #ifdef _WIN32 // XXX HACK000A
 		BYTE Data[716];
 #else
@@ -2168,17 +2168,17 @@ static BOOLEAN SaveMercProfiles(HWFILE hFile)
 		InjectMercProfile(Data,  &gMercProfiles[cnt]);
 		if ( guiSavedGameVersion < 87 )
 		{
-			Ret = JA2EncryptedFileWrite(hFile, Data, sizeof(Data));
+			JA2EncryptedFileWrite(hFile, Data, sizeof(Data));
 		}
 		else
 		{
-			Ret = NewJA2EncryptedFileWrite(hFile, Data, sizeof(Data));
+			if (!NewJA2EncryptedFileWrite(hFile, Data, sizeof(Data))) return FALSE;
 		}
-		if (!Ret) return FALSE;
 	}
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN LoadSavedMercProfiles(HWFILE hFile)
@@ -2245,16 +2245,14 @@ try
 			BYTE Data[2352];
 #endif
 			InjectSoldierType(Data, s);
-			BOOLEAN Ret;
 			if ( guiSavedGameVersion < 87 )
 			{
-				Ret = JA2EncryptedFileWrite(hFile, Data, sizeof(Data));
+				JA2EncryptedFileWrite(hFile, Data, sizeof(Data));
 			}
 			else
 			{
-				Ret = NewJA2EncryptedFileWrite(hFile, Data, sizeof(Data));
+				if (!NewJA2EncryptedFileWrite(hFile, Data, sizeof(Data))) return FALSE;
 			}
-			if (!Ret) return FALSE;
 
 			// Save all the pointer info from the structure
 

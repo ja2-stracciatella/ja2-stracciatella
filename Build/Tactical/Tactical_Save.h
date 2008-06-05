@@ -76,8 +76,9 @@ BOOLEAN SaveTempNpcQuoteArrayToSaveGameFile( HWFILE hFile );
 
 UINT32 MercChecksum( SOLDIERTYPE * pSoldier );
 UINT32 ProfileChecksum( MERCPROFILESTRUCT * pProfile );
-void    JA2EncryptedFileRead(HWFILE, void* pDest, UINT32 uiBytesToRead);
-BOOLEAN JA2EncryptedFileWrite(HWFILE hFile, const void* data, UINT32 uiBytesToWrite);
+
+void JA2EncryptedFileRead( HWFILE, void*       data, UINT32 uiBytesToRead);
+void JA2EncryptedFileWrite(HWFILE, const void* data, UINT32 uiBytesToWrite);
 
 void    NewJA2EncryptedFileRead(HWFILE, void* pDest, UINT32 uiBytesToRead);
 BOOLEAN NewJA2EncryptedFileWrite(HWFILE hFile, const void* data, UINT32 uiBytesToWrite);
