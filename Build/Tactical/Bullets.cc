@@ -352,6 +352,7 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 
 
 BOOLEAN SaveBulletStructureToSaveGameFile( HWFILE hFile )
+try
 {
 	UINT16	usCnt;
 	UINT32	uiBulletCount=0;
@@ -367,7 +368,7 @@ BOOLEAN SaveBulletStructureToSaveGameFile( HWFILE hFile )
 	}
 
 	//Save the number of Bullets in the array
-	if (!FileWrite(hFile, &uiBulletCount, sizeof(UINT32))) return FALSE;
+	FileWrite(hFile, &uiBulletCount, sizeof(UINT32));
 
 	if( uiBulletCount != 0 )
 	{
@@ -384,6 +385,7 @@ BOOLEAN SaveBulletStructureToSaveGameFile( HWFILE hFile )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadBulletStructureFromSavedGameFile( HWFILE hFile )

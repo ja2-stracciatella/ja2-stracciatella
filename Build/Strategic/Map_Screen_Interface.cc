@@ -4697,6 +4697,7 @@ static BOOLEAN CanSoldierMoveWithVehicleId(const SOLDIERTYPE* const pSoldier, co
 
 
 BOOLEAN SaveLeaveItemList( HWFILE hFile )
+try
 {
 	INT32 iCounter = 0;
 	MERC_LEAVE_ITEM *pCurrentItem;
@@ -4712,7 +4713,7 @@ BOOLEAN SaveLeaveItemList( HWFILE hFile )
 			fNodeExists = TRUE;
 
 			// Save the to specify that a node DOES exist
-			if (!FileWrite(hFile, &fNodeExists, sizeof(BOOLEAN))) return FALSE;
+			FileWrite(hFile, &fNodeExists, sizeof(BOOLEAN));
 
 			uiCount = 1;
 			pCurrentItem = gpLeaveListHead[ iCounter ];
@@ -4725,7 +4726,7 @@ BOOLEAN SaveLeaveItemList( HWFILE hFile )
 			}
 
 			// Save the number specifing how many items there are in the list
-			if (!FileWrite(hFile, &uiCount, sizeof(UINT32))) return FALSE;
+			FileWrite(hFile, &uiCount, sizeof(UINT32));
 
 			pCurrentItem = gpLeaveListHead[ iCounter ];
 
@@ -4733,7 +4734,7 @@ BOOLEAN SaveLeaveItemList( HWFILE hFile )
 			for( uiCnt=0; uiCnt<uiCount; uiCnt++)
 			{
 				// Save the items
-				if (!FileWrite(hFile, pCurrentItem, sizeof(MERC_LEAVE_ITEM))) return FALSE;
+				FileWrite(hFile, pCurrentItem, sizeof(MERC_LEAVE_ITEM));
 
 				pCurrentItem = pCurrentItem->pNext;
 			}
@@ -4742,19 +4743,19 @@ BOOLEAN SaveLeaveItemList( HWFILE hFile )
 		{
 			fNodeExists = FALSE;
 			// Save the to specify that a node DOENST exist
-			if (!FileWrite(hFile, &fNodeExists, sizeof(BOOLEAN))) return FALSE;
+			FileWrite(hFile, &fNodeExists, sizeof(BOOLEAN));
 		}
 	}
 
 	//Save the leave list profile id's
 	for( iCounter = 0; iCounter < NUM_LEAVE_LIST_SLOTS; iCounter++ )
 	{
-		if (!FileWrite(hFile, &guiLeaveListOwnerProfileId[iCounter], sizeof(UINT32))) return FALSE;
+		FileWrite(hFile, &guiLeaveListOwnerProfileId[iCounter], sizeof(UINT32));
 	}
 
 	return( TRUE );
 }
-
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadLeaveItemList( HWFILE hFile )

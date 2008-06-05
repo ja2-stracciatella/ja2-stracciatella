@@ -39,6 +39,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN InjectRottingCorpseIntoFile(const HWFILE file, const ROTTING_CORPSE_DEFINITION* c)
+try
 {
 	BYTE data[160];
 
@@ -65,5 +66,7 @@ BOOLEAN InjectRottingCorpseIntoFile(const HWFILE file, const ROTTING_CORPSE_DEFI
 	INJ_SKIP(d, 12)
 	Assert(d == endof(data));
 
-	return FileWrite(file, data, sizeof(data));
+	FileWrite(file, data, sizeof(data));
+	return TRUE;
 }
+catch (...) { return FALSE; }

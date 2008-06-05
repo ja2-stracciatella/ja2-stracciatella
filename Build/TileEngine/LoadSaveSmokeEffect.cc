@@ -32,6 +32,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN InjectSmokeEffectIntoFile(const HWFILE file, const SMOKEEFFECT* const s)
+try
 {
 	BYTE data[16];
 
@@ -49,6 +50,7 @@ BOOLEAN InjectSmokeEffectIntoFile(const HWFILE file, const SMOKEEFFECT* const s)
 	INJ_U32(d, s->uiTimeOfLastUpdate)
 	Assert(d == endof(data));
 
-	return FileWrite(file, data, sizeof(data));
+	FileWrite(file, data, sizeof(data));
+	return TRUE;
 }
-
+catch (...) { return FALSE; }

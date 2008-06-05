@@ -2101,22 +2101,23 @@ UINT16	CountNumberOfBobbyPurchasesThatAreInTransit()
 
 
 BOOLEAN NewWayOfSavingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )
+try
 {
 	INT32		iCnt;
 
 	//Write the number of orders
-	if (!FileWrite(hFile, &giNumberOfNewBobbyRShipment, sizeof(INT32))) return FALSE;
+	FileWrite(hFile, &giNumberOfNewBobbyRShipment, sizeof(INT32));
 
 	//loop through and save all the mail order slots
 	for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
 	{
 		//Write the order
-		if (!FileWrite(hFile, &gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct))) return FALSE;
+		FileWrite(hFile, &gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct));
 	}
 
 	return( TRUE );
 }
-
+catch (...) { return FALSE; }
 
 
 BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile )

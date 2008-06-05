@@ -65,12 +65,13 @@ BOOLEAN										gfInContractMenuFromRenewSequence = FALSE;
 
 
 BOOLEAN SaveContractRenewalDataToSaveGameFile( HWFILE hFile )
+try
 {
-	if (!FileWrite(hFile, ContractRenewalList,    sizeof(ContractRenewalList)))   return FALSE;
-	if (!FileWrite(hFile, &ubNumContractRenewals, sizeof(ubNumContractRenewals))) return FALSE;
-
+	FileWrite(hFile, ContractRenewalList,    sizeof(ContractRenewalList));
+	FileWrite(hFile, &ubNumContractRenewals, sizeof(ubNumContractRenewals));
   return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadContractRenewalDataFromSaveGameFile( HWFILE hFile )

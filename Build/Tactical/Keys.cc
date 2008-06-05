@@ -883,6 +883,7 @@ void UpdateDoorPerceivedValue( DOOR *pDoor )
 
 
 BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+try
 {
 	UINT32	uiSizeToSave=0;
 	CHAR8		zMapName[ 128 ];
@@ -897,16 +898,16 @@ BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 
 	if (hFile == 0) return FALSE;
 
 	//Save the number of doors
-	if (!FileWrite(hFile, &gubNumDoors, sizeof(UINT8))) return FALSE;
+	FileWrite(hFile, &gubNumDoors, sizeof(UINT8));
 
 	//if there are doors to save
-	if (uiSizeToSave != 0 && !FileWrite(hFile, DoorTable, uiSizeToSave)) return FALSE;
+	if (uiSizeToSave != 0) FileWrite(hFile, DoorTable, uiSizeToSave);
 
 	//Set the sector flag indicating that there is a Door table temp file present
 	SetSectorFlag( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_DOOR_TABLE_TEMP_FILES_EXISTS );
 	return TRUE;
 }
-
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadDoorTableFromDoorTableTempFile( )
@@ -1441,6 +1442,7 @@ static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* d)
 
 
 BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+try
 {
 	CHAR8		zMapName[ 128 ];
 	UINT8		ubCnt;
@@ -1457,19 +1459,20 @@ BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY,
 	if (hFile == 0) return FALSE;
 
 	//Save the number of elements in the door array
-	if (!FileWrite(hFile, &gubNumDoorStatus, sizeof(UINT8))) return FALSE;
+	FileWrite(hFile, &gubNumDoorStatus, sizeof(UINT8));
 
 	//if there is some to save
 	if( gubNumDoorStatus != 0 )
 	{
 		//Save the door array
-		if (!FileWrite(hFile, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus)) return FALSE;
+		FileWrite(hFile, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus);
 	}
 
 	//Set the flag indicating that there is a door status array
 	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_DOOR_STATUS_TEMP_FILE_EXISTS );
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
@@ -1513,12 +1516,14 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN SaveKeyTableToSaveGameFile( HWFILE hFile )
+try
 {
 	// Save the KeyTable
-	if (!FileWrite(hFile, KeyTable, sizeof(KEY) * NUM_KEYS)) return FALSE;
-
+	FileWrite(hFile, KeyTable, sizeof(KEY) * NUM_KEYS);
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 BOOLEAN LoadKeyTableFromSaveedGameFile( HWFILE hFile )
 try

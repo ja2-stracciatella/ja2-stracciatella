@@ -1729,6 +1729,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 
 
 BOOLEAN	SaveTeamTurnsToTheSaveGameFile( HWFILE hFile )
+try
 {
 	TEAM_TURN_SAVE_STRUCT TeamTurnStruct;
 
@@ -1738,7 +1739,7 @@ BOOLEAN	SaveTeamTurnsToTheSaveGameFile( HWFILE hFile )
 	{
 		ooto_ids[i] = Soldier2ID(gOutOfTurnOrder[i]);
 	}
-	if (!FileWrite(hFile, ooto_ids, sizeof(ooto_ids))) return FALSE;
+	FileWrite(hFile, ooto_ids, sizeof(ooto_ids));
 
 	TeamTurnStruct.ubOutOfTurnPersons = gubOutOfTurnPersons;
 
@@ -1749,10 +1750,12 @@ BOOLEAN	SaveTeamTurnsToTheSaveGameFile( HWFILE hFile )
 	TeamTurnStruct.ubLastInterruptedGuy = Soldier2ID(gLastInterruptedGuy);
 
 	//Save the Team turn save structure
-	if (!FileWrite(hFile, &TeamTurnStruct, sizeof(TEAM_TURN_SAVE_STRUCT))) return FALSE;
+	FileWrite(hFile, &TeamTurnStruct, sizeof(TEAM_TURN_SAVE_STRUCT));
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 BOOLEAN	LoadTeamTurnsFromTheSavedGameFile( HWFILE hFile )
 try

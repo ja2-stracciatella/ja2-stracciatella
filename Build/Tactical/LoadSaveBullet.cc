@@ -68,6 +68,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN InjectBulletIntoFile(const HWFILE file, const BULLET* b)
+try
 {
 	BYTE dst[128];
 	BYTE* d = dst;
@@ -121,5 +122,7 @@ BOOLEAN InjectBulletIntoFile(const HWFILE file, const BULLET* b)
 	INJ_SKIP(d, 3)
 	Assert(d == endof(dst));
 
-	return FileWrite(file, dst, sizeof(dst));
+	FileWrite(file, dst, sizeof(dst));
+	return TRUE;
 }
+catch (...) { return FALSE; }

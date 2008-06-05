@@ -26,6 +26,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN InjectStrategicMapElementIntoFile(const HWFILE file, const StrategicMapElement* const e)
+try
 {
 	BYTE data[41];
 
@@ -39,5 +40,7 @@ BOOLEAN InjectStrategicMapElementIntoFile(const HWFILE file, const StrategicMapE
 	INJ_SKIP(d, 20)
 	Assert(d == endof(data));
 
-	return FileWrite(file, data, sizeof(data));
+	FileWrite(file, data, sizeof(data));
+	return TRUE;
 }
+catch (...) { return FALSE; }

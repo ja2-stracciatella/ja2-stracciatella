@@ -568,6 +568,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+try
 {
 	UINT32	uiNumSmokeEffects=0;
 	CHAR8		zMapName[ 128 ];
@@ -594,7 +595,7 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	if (!hFile) return FALSE;
 
 	//Save the Number of Smoke Effects
-	if (!FileWrite(hFile, &uiNumSmokeEffects, sizeof(UINT32))) return FALSE;
+	FileWrite(hFile, &uiNumSmokeEffects, sizeof(UINT32));
 
 	CFOR_ALL_SMOKE_EFFECTS(s)
 	{
@@ -604,7 +605,7 @@ BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	SetSectorFlag( sMapX, sMapY, bMapZ, SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS );
 	return TRUE;
 }
-
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )

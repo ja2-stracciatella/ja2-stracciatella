@@ -5714,6 +5714,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile )
+try
 {
 	UINT32	uiSaveSize=0;
 
@@ -5741,12 +5742,13 @@ BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile )
 
 	// save locations of watched points
 	uiSaveSize = sizeof( ITEM_CURSOR_SAVE_INFO );
-	if (!FileWrite(hFile, &SaveStruct, uiSaveSize)) return FALSE;
+	FileWrite(hFile, &SaveStruct, uiSaveSize);
 
 	// All done...
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 void UpdateItemHatches(void)

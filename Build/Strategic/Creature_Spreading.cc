@@ -1391,15 +1391,17 @@ void CheckConditionsForTriggeringCreatureQuest( INT16 sSectorX, INT16 sSectorY, 
 
 
 BOOLEAN SaveCreatureDirectives( HWFILE hFile )
+try
 {
-	if (!FileWrite(hFile, &giHabitatedDistance,  4)) return FALSE;
-	if (!FileWrite(hFile, &giPopulationModifier, 4)) return FALSE;
-	if (!FileWrite(hFile, &giLairID,             4)) return FALSE;
-	if (!FileWrite(hFile, &gfUseCreatureMusic,   1)) return FALSE;
-	if (!FileWrite(hFile, &giDestroyedLairID,    4)) return FALSE;
-
+	FileWrite(hFile, &giHabitatedDistance,  4);
+	FileWrite(hFile, &giPopulationModifier, 4);
+	FileWrite(hFile, &giLairID,             4);
+	FileWrite(hFile, &gfUseCreatureMusic,   1);
+	FileWrite(hFile, &giDestroyedLairID,    4);
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 BOOLEAN LoadCreatureDirectives( HWFILE hFile, UINT32 uiSavedGameVersion )
 try

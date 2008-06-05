@@ -1166,6 +1166,7 @@ BOOLEAN HandleAirRaidEndTurn( UINT8 ubTeam )
 }
 
 BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile )
+try
 {
 	AIR_RAID_SAVE_STRUCT sAirRaidSaveStruct;
 
@@ -1219,10 +1220,10 @@ BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile )
 
 
 	//Save the Air Raid Save Struct
-	if (!FileWrite(hFile, &sAirRaidSaveStruct, sizeof(AIR_RAID_SAVE_STRUCT))) return FALSE;
-
+	FileWrite(hFile, &sAirRaidSaveStruct, sizeof(AIR_RAID_SAVE_STRUCT));
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadAirRaidInfoFromSaveGameFile( HWFILE hFile )

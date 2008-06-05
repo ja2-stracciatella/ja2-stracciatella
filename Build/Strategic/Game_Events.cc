@@ -607,6 +607,7 @@ BOOLEAN DeleteStrategicEvent( UINT8 ubCallbackID, UINT32 uiParam )
 
 //part of the game.sav files (not map files)
 BOOLEAN SaveStrategicEventsToSavedGame( HWFILE hFile )
+try
 {
 	STRATEGICEVENT sGameEvent;
 
@@ -622,7 +623,7 @@ BOOLEAN SaveStrategicEventsToSavedGame( HWFILE hFile )
 
 
 	//write the number of strategic events
-	if (!FileWrite(hFile, &uiNumGameEvents, sizeof(UINT32))) return FALSE;
+	FileWrite(hFile, &uiNumGameEvents, sizeof(UINT32));
 
 	//loop through all the events and save them.
 	pTempEvent = gpEventList;
@@ -632,7 +633,7 @@ BOOLEAN SaveStrategicEventsToSavedGame( HWFILE hFile )
 		sGameEvent = *pTempEvent;
 
 		//write the current strategic event
-		if (!FileWrite(hFile, &sGameEvent, sizeof(STRATEGICEVENT))) return FALSE;
+		FileWrite(hFile, &sGameEvent, sizeof(STRATEGICEVENT));
 
 		pTempEvent = pTempEvent->next;
 	}
@@ -640,6 +641,7 @@ BOOLEAN SaveStrategicEventsToSavedGame( HWFILE hFile )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadStrategicEventsFromSavedGame(HWFILE const f)

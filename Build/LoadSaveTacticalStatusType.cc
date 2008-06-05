@@ -138,6 +138,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN InjectTacticalStatusTypeIntoFile(const HWFILE f)
+try
 {
 #ifdef _WIN32 // XXX HACK000A
 	BYTE data[316];
@@ -261,5 +262,7 @@ BOOLEAN InjectTacticalStatusTypeIntoFile(const HWFILE f)
 	INJ_U32(d, s->uiCreatureTenseQuoteLastUpdate)
 	Assert(d == endof(data));
 
-	return FileWrite(f, data, sizeof(data));
+	FileWrite(f, data, sizeof(data));
+	return TRUE;
 }
+catch (...) { return FALSE; }

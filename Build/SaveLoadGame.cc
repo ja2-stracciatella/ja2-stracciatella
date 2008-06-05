@@ -498,6 +498,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	//Create the name of the file
 	CreateSavedGameFileNameFromNumber( ubSaveGameID, zSaveGameName );
 
+	try
 	{
 		// create the save game file
 		AutoSGPFile hFile(FileOpen(zSaveGameName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
@@ -564,9 +565,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 		//
 		// Save the Save Game header file
 		//
-
-
-		if (!FileWrite(hFile, &SaveGameHeader, sizeof(SAVED_GAME_HEADER))) goto FAILED_TO_SAVE;
+		FileWrite(hFile, &SaveGameHeader, sizeof(SAVED_GAME_HEADER));
 #ifdef JA2BETAVERSION
 		SaveGameFilePosition(hFile, "Save Game Header");
 #endif
@@ -958,6 +957,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 		SaveGameFilePosition(hFile, "New way of saving Bobby R mailorders");
 #endif
 	}
+	catch (...) { goto FAILED_TO_SAVE; }
 
 	//if we succesfully saved the game, mark this entry as the last saved game file
 	if( ubSaveGameID != SAVE__ERROR_NUM && ubSaveGameID != SAVE__END_TURN_NUM )
@@ -2215,6 +2215,7 @@ catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveSoldierStructure(HWFILE hFile)
+try
 {
 	UINT16	cnt;
 	UINT8		ubOne = 1;
@@ -2228,12 +2229,12 @@ static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 		if (!s->bActive)
 		{
 			// Save the byte specifing to NOT load the soldiers
-			if (!FileWrite(hFile, &ubZero, 1)) return FALSE;
+			FileWrite(hFile, &ubZero, 1);
 		}
 		else
 		{
 			// Save the byte specifing to load the soldiers
-			if (!FileWrite(hFile, &ubOne, 1)) return FALSE;
+			FileWrite(hFile, &ubOne, 1);
 
 			// calculate checksum for soldier
 			s->uiMercChecksum = MercChecksum(s);
@@ -2263,21 +2264,22 @@ static BOOLEAN SaveSoldierStructure(HWFILE hFile)
 			if (s->pKeyRing != NULL)
 			{
 				// write to the file saying we have the ....
-				if (!FileWrite(hFile, &ubOne, 1)) return FALSE;
+				FileWrite(hFile, &ubOne, 1);
 
 				// Now save the ....
-				if (!FileWrite(hFile, s->pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING))) return FALSE;
+				FileWrite(hFile, s->pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING));
 			}
 			else
 			{
 				// write to the file saying we DO NOT have the Key ring
-				if (!FileWrite(hFile, &ubZero, 1)) return FALSE;
+				FileWrite(hFile, &ubZero, 1);
 			}
 		}
 	}
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN LoadSoldierStructure(HWFILE hFile)
@@ -2447,14 +2449,14 @@ try
 	if (uiFileSize == 0) return FALSE;
 
 	// Write the the size of the file to the saved game file
-	if (!FileWrite(hFile, &uiFileSize, sizeof(UINT32))) return FALSE;
+	FileWrite(hFile, &uiFileSize, sizeof(UINT32));
 
 	// Read the saource file into the buffer
 	SGP::Buffer<UINT8> pData(uiFileSize);
 	FileRead(hSrcFile, pData, uiFileSize);
 
 	// Write the buffer to the saved game file
-	if (!FileWrite(hFile, pData, uiFileSize)) return FALSE;
+	FileWrite(hFile, pData, uiFileSize);
 
 #ifdef JA2BETAVERSION
 	//Write out the name of the temp file so we can track whcih ones get loaded, and saved
@@ -2487,11 +2489,7 @@ try
 	FileRead(hFile, pData, uiFileSize);
 
 	// Write the buffer to the new file
-	if (!FileWrite(hSrcFile, pData, uiFileSize))
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to Write to the %s File", pSrcFileName));
-		return FALSE;
-	}
+	FileWrite(hSrcFile, pData, uiFileSize);
 
 #ifdef JA2BETAVERSION
 	WriteTempFileNameToFile(pSrcFileName, uiFileSize, hFile);
@@ -2502,6 +2500,7 @@ catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveTacticalStatusToSavedGame(HWFILE hFile)
+try
 {
 	if (!InjectTacticalStatusTypeIntoFile(hFile)) return FALSE;
 
@@ -2510,16 +2509,17 @@ static BOOLEAN SaveTacticalStatusToSavedGame(HWFILE hFile)
 	//
 
 	// save gWorldSectorX
-	if (!FileWrite(hFile, &gWorldSectorX, sizeof(gWorldSectorX))) return FALSE;
+	FileWrite(hFile, &gWorldSectorX, sizeof(gWorldSectorX));
 
 	// save gWorldSectorY
-	if (!FileWrite(hFile, &gWorldSectorY, sizeof(gWorldSectorY))) return FALSE;
+	FileWrite(hFile, &gWorldSectorY, sizeof(gWorldSectorY));
 
 	// save gbWorldSectorZ
-	if (!FileWrite(hFile, &gbWorldSectorZ, sizeof(gbWorldSectorZ))) return FALSE;
+	FileWrite(hFile, &gbWorldSectorZ, sizeof(gbWorldSectorZ));
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN LoadTacticalStatusFromSavedGame(HWFILE hFile)
@@ -2546,43 +2546,45 @@ catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveOppListInfoToSavedGame(HWFILE hFile)
+try
 {
 	UINT32	uiSaveSize=0;
 
 	// Save the Public Opplist
 	uiSaveSize = MAXTEAMS * TOTAL_SOLDIERS;
-	if (!FileWrite(hFile, gbPublicOpplist, uiSaveSize)) return FALSE;
+	FileWrite(hFile, gbPublicOpplist, uiSaveSize);
 
 	// Save the Seen Oppenents
 	uiSaveSize = TOTAL_SOLDIERS * TOTAL_SOLDIERS;
-	if (!FileWrite(hFile, gbSeenOpponents, uiSaveSize)) return FALSE;
+	FileWrite(hFile, gbSeenOpponents, uiSaveSize);
 
 	// Save the Last Known Opp Locations
 	uiSaveSize = TOTAL_SOLDIERS * TOTAL_SOLDIERS; // XXX TODO000F
-	if (!FileWrite(hFile, gsLastKnownOppLoc, uiSaveSize)) return FALSE;
+	FileWrite(hFile, gsLastKnownOppLoc, uiSaveSize);
 
 	// Save the Last Known Opp Level
 	uiSaveSize = TOTAL_SOLDIERS * TOTAL_SOLDIERS;
-	if (!FileWrite(hFile, gbLastKnownOppLevel, uiSaveSize)) return FALSE;
+	FileWrite(hFile, gbLastKnownOppLevel, uiSaveSize);
 
 	// Save the Public Last Known Opp Locations
 	uiSaveSize = MAXTEAMS * TOTAL_SOLDIERS; // XXX TODO000F
-	if (!FileWrite(hFile, gsPublicLastKnownOppLoc, uiSaveSize)) return FALSE;
+	FileWrite(hFile, gsPublicLastKnownOppLoc, uiSaveSize);
 
 	// Save the Public Last Known Opp Level
 	uiSaveSize = MAXTEAMS * TOTAL_SOLDIERS;
-	if (!FileWrite(hFile, gbPublicLastKnownOppLevel, uiSaveSize)) return FALSE;
+	FileWrite(hFile, gbPublicLastKnownOppLevel, uiSaveSize);
 
 	// Save the Public Noise Volume
 	uiSaveSize = MAXTEAMS;
-	if (!FileWrite(hFile, gubPublicNoiseVolume, uiSaveSize)) return FALSE;
+	FileWrite(hFile, gubPublicNoiseVolume, uiSaveSize);
 
 	// Save the Public Last Noise Gridno
 	uiSaveSize = MAXTEAMS; // XXX TODO000F
-	if (!FileWrite(hFile, gsPublicNoiseGridno, uiSaveSize)) return FALSE;
+	FileWrite(hFile, gsPublicNoiseGridno, uiSaveSize);
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN LoadOppListInfoFromSavedGame(HWFILE hFile)
@@ -2628,6 +2630,7 @@ catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveWatchedLocsToSavedGame(HWFILE hFile)
+try
 {
 	UINT32	uiArraySize;
 	UINT32	uiSaveSize=0;
@@ -2636,18 +2639,19 @@ static BOOLEAN SaveWatchedLocsToSavedGame(HWFILE hFile)
 
 	// save locations of watched points
 	uiSaveSize = uiArraySize * sizeof( INT16 );
-	if (!FileWrite(hFile, gsWatchedLoc, uiSaveSize)) return FALSE;
+	FileWrite(hFile, gsWatchedLoc, uiSaveSize);
 
 	uiSaveSize = uiArraySize * sizeof( INT8 );
 
-	if (!FileWrite(hFile, gbWatchedLocLevel, uiSaveSize)) return FALSE;
+	FileWrite(hFile, gbWatchedLocLevel, uiSaveSize);
 
-	if (!FileWrite(hFile, gubWatchedLocPoints, uiSaveSize)) return FALSE;
+	FileWrite(hFile, gubWatchedLocPoints, uiSaveSize);
 
-	if (!FileWrite(hFile, gfWatchedLocReset, uiSaveSize)) return FALSE;
+	FileWrite(hFile, gfWatchedLocReset, uiSaveSize);
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN LoadWatchedLocsFromSavedGame(HWFILE hFile)
@@ -2709,10 +2713,11 @@ void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzN
 
 
 BOOLEAN SaveMercPath(const HWFILE f, const PathSt* const head)
+try
 {
 	UINT32 n_nodes = 0;
 	for (const PathSt* p = head; p != NULL; p = p->pNext) ++n_nodes;
-	if (!FileWrite(f, &n_nodes, sizeof(UINT32))) return FALSE;
+	FileWrite(f, &n_nodes, sizeof(UINT32));
 
 	for (const PathSt* p = head; p != NULL; p = p->pNext)
 	{
@@ -2724,10 +2729,11 @@ BOOLEAN SaveMercPath(const HWFILE f, const PathSt* const head)
 		INJ_SKIP(d, 11)
 		Assert(d == endof(data));
 
-		if (!FileWrite(f, data, sizeof(data))) return FALSE;
+		FileWrite(f, data, sizeof(data));
 	}
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadMercPath(const HWFILE hFile, PathSt** const head)
@@ -2830,6 +2836,7 @@ static void LoadGameFilePosition(const HWFILE load, const char* const pMsg)
 
 
 static BOOLEAN SaveGeneralInfo(HWFILE hFile)
+try
 {
 	GENERAL_SAVE_INFO sGeneralInfo;
 	memset( &sGeneralInfo, 0, sizeof( GENERAL_SAVE_INFO ) );
@@ -3031,8 +3038,10 @@ static BOOLEAN SaveGeneralInfo(HWFILE hFile)
   sGeneralInfo.fPlayerTeamSawJoey             = gfPlayerTeamSawJoey;
 	sGeneralInfo.fMikeShouldSayHi								= gfMikeShouldSayHi;
 
-	return FileWrite(hFile, &sGeneralInfo, sizeof(GENERAL_SAVE_INFO));
+	FileWrite(hFile, &sGeneralInfo, sizeof(GENERAL_SAVE_INFO));
+	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN LoadGeneralInfo(HWFILE hFile)
@@ -3270,15 +3279,17 @@ catch (...) { return FALSE; }
 
 
 static BOOLEAN SavePreRandomNumbersToSaveGameFile(HWFILE hFile)
+try
 {
 	//Save the Prerandom number index
-	if (!FileWrite(hFile, &guiPreRandomIndex, sizeof(UINT32))) return FALSE;
+	FileWrite(hFile, &guiPreRandomIndex, sizeof(UINT32));
 
 	//Save the Prerandom number index
-	if (!FileWrite(hFile, guiPreRandomNums, sizeof(UINT32) * MAX_PREGENERATED_NUMS)) return FALSE;
+	FileWrite(hFile, guiPreRandomNums, sizeof(UINT32) * MAX_PREGENERATED_NUMS);
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN LoadPreRandomNumbersFromSaveGameFile(HWFILE hFile)
@@ -3317,12 +3328,15 @@ catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveMeanwhileDefsFromSaveGameFile(HWFILE hFile)
+try
 {
 	//Save the array of meanwhile defs
-	if (!FileWrite(hFile, &gMeanwhileDef, sizeof(MEANWHILE_DEFINITION) * NUM_MEANWHILES)) return FALSE;
+	FileWrite(hFile, &gMeanwhileDef, sizeof(MEANWHILE_DEFINITION) * NUM_MEANWHILES);
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 BOOLEAN DoesUserHaveEnoughHardDriveSpace()
 {

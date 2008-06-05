@@ -1324,12 +1324,14 @@ UINT32 BuildLoyaltyEventValue( INT8 bTownValue, UINT32 uiValue, BOOLEAN fIncreme
 
 
 BOOLEAN SaveStrategicTownLoyaltyToSaveGameFile( HWFILE hFile )
+try
 {
 	//Save the Town Loyalty
-	if (!FileWrite(hFile, gTownLoyalty, sizeof(TOWN_LOYALTY) * NUM_TOWNS)) return FALSE;
-
+	FileWrite(hFile, gTownLoyalty, sizeof(TOWN_LOYALTY) * NUM_TOWNS);
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 BOOLEAN LoadStrategicTownLoyaltyFromSavedGameFile( HWFILE hFile )
 try

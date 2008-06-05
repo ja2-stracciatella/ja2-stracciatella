@@ -201,6 +201,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+try
 {
 	UINT32	uiNumLightEffects=0;
 	CHAR8		zMapName[ 128 ];
@@ -230,7 +231,7 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	if (!hFile) return FALSE;
 
 	//Save the Number of Light Effects
-	if (!FileWrite(hFile, &uiNumLightEffects, sizeof(UINT32))) return FALSE;
+	FileWrite(hFile, &uiNumLightEffects, sizeof(UINT32));
 
 	//loop through and save the number of Light effects
 	CFOR_ALL_LIGHTEFFECTS(l)
@@ -241,7 +242,7 @@ BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	SetSectorFlag( sMapX, sMapY, bMapZ, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS );
 	return TRUE;
 }
-
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )

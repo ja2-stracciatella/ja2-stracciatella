@@ -78,6 +78,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN InjectRealObjectIntoFile(const HWFILE file, const REAL_OBJECT* const o)
+try
 {
 	BYTE data[256];
 
@@ -141,5 +142,7 @@ BOOLEAN InjectRealObjectIntoFile(const HWFILE file, const REAL_OBJECT* const o)
 	INJ_SKIP(d, 3)
 	Assert(d == endof(data));
 
-	return FileWrite(file, data, sizeof(data));
+	FileWrite(file, data, sizeof(data));
+	return TRUE;
 }
+catch (...) { return FALSE; }

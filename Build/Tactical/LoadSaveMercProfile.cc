@@ -702,6 +702,7 @@ void InjectMercProfile(BYTE* Dst, const MERCPROFILESTRUCT* Merc)
 
 
 BOOLEAN InjectMercProfileIntoFile(HWFILE File, const MERCPROFILESTRUCT* Merc)
+try
 {
 #ifdef _WIN32 // XXX HACK000A
 	BYTE Data[716];
@@ -709,5 +710,7 @@ BOOLEAN InjectMercProfileIntoFile(HWFILE File, const MERCPROFILESTRUCT* Merc)
 	BYTE Data[796];
 #endif
 	InjectMercProfile(Data, Merc);
-	return FileWrite(File, Data, sizeof(Data));
+	FileWrite(File, Data, sizeof(Data));
+	return TRUE;
 }
+catch (...) { return FALSE; }

@@ -3524,9 +3524,10 @@ void ClearOutTempLaptopFiles(void)
 
 
 BOOLEAN SaveLaptopInfoToSavedGame(HWFILE hFile)
+try
 {
 	// Save The laptop information
-	if (!FileWrite(hFile, &LaptopSaveInfo, sizeof(LaptopSaveInfoStruct))) return FALSE;
+	FileWrite(hFile, &LaptopSaveInfo, sizeof(LaptopSaveInfoStruct));
 
 	//If there is anything in the Bobby Ray Orders on Delivery
 	if (LaptopSaveInfo.usNumberOfBobbyRayOrderUsed)
@@ -3535,7 +3536,7 @@ BOOLEAN SaveLaptopInfoToSavedGame(HWFILE hFile)
 		const UINT32 uiSize = sizeof(BobbyRayOrderStruct) * LaptopSaveInfo.usNumberOfBobbyRayOrderItems;
 
 		// Load The laptop information
-		if (!FileWrite(hFile, LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, uiSize)) return FALSE;
+		FileWrite(hFile, LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, uiSize);
 	}
 
 
@@ -3546,11 +3547,12 @@ BOOLEAN SaveLaptopInfoToSavedGame(HWFILE hFile)
 		const UINT32 uiSize = sizeof(LIFE_INSURANCE_PAYOUT) * LaptopSaveInfo.ubNumberLifeInsurancePayouts;
 
 		// Load The laptop information
-		if (!FileWrite(hFile, LaptopSaveInfo.pLifeInsurancePayouts, uiSize)) return FALSE;
+		FileWrite(hFile, LaptopSaveInfo.pLifeInsurancePayouts, uiSize);
 	}
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadLaptopInfoFromSavedGame(HWFILE hFile)

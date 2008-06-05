@@ -2780,15 +2780,16 @@ static BOOLEAN SaveWayPointList(HWFILE hFile, const GROUP* pGroup);
 
 
 BOOLEAN SaveStrategicMovementGroupsToSaveGameFile(const HWFILE f)
+try
 {
 	// Save the number of movement groups to the saved game file
 	UINT32 uiNumberOfGroups = 0;
 	CFOR_ALL_GROUPS(g) ++uiNumberOfGroups;
-	if (!FileWrite(f, &uiNumberOfGroups, sizeof(UINT32))) return FALSE;
+	FileWrite(f, &uiNumberOfGroups, sizeof(UINT32));
 
 	CFOR_ALL_GROUPS(g)
 	{
-		if (!FileWrite(f, g, sizeof(GROUP))) return FALSE;
+		FileWrite(f, g, sizeof(GROUP));
 
 		// Save the linked list, for the current type of group
 		if (g->fPlayer)
@@ -2805,8 +2806,10 @@ BOOLEAN SaveStrategicMovementGroupsToSaveGameFile(const HWFILE f)
 	}
 
 	// Save the unique id mask
-	return FileWrite(f, uniqueIDMask, sizeof(uniqueIDMask));
+	FileWrite(f, uniqueIDMask, sizeof(uniqueIDMask));
+	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN LoadEnemyGroupStructFromSavedGame(HWFILE hFile, GROUP* pGroup);
@@ -2868,22 +2871,24 @@ catch (...) { return FALSE; }
 
 // Saves the Player's group list to the saved game file
 static BOOLEAN SavePlayerGroupList(const HWFILE f, const GROUP* const g)
+try
 {
 	// Save the number of nodes in the list
 	UINT32 uiNumberOfNodesInList = 0;
 	CFOR_ALL_PLAYERS_IN_GROUP(p, g) ++uiNumberOfNodesInList;
-	if (!FileWrite(f, &uiNumberOfNodesInList, sizeof(UINT32))) return FALSE;
+	FileWrite(f, &uiNumberOfNodesInList, sizeof(UINT32));
 
 	// Loop through and save only the players profile id
 	CFOR_ALL_PLAYERS_IN_GROUP(p, g)
 	{
 		// Save the ubProfile ID for this node
 		const UINT32 uiProfileID = p->pSoldier->ubProfile;
-		if (!FileWrite(f, &uiProfileID, sizeof(UINT32))) return FALSE;
+		FileWrite(f, &uiProfileID, sizeof(UINT32));
 	}
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 //Loads the LL for the playerlist from the savegame file
@@ -2919,9 +2924,12 @@ catch (...) { return FALSE; }
 
 // Saves the enemy group struct to the saved game file
 static BOOLEAN SaveEnemyGroupStruct(const HWFILE f, const GROUP* const g)
+try
 {
-	return FileWrite(f, g->pEnemyGroup, sizeof(ENEMYGROUP));
+	FileWrite(f, g->pEnemyGroup, sizeof(ENEMYGROUP));
+	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 // Loads the enemy group struct from the saved game file
@@ -2937,6 +2945,7 @@ catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveWayPointList(const HWFILE f, const GROUP* const g)
+try
 {
 	// Save the number of waypoints
 	UINT32 uiNumberOfWayPoints = 0;
@@ -2944,14 +2953,15 @@ static BOOLEAN SaveWayPointList(const HWFILE f, const GROUP* const g)
 	{
 		++uiNumberOfWayPoints;
 	}
-	if (!FileWrite(f, &uiNumberOfWayPoints, sizeof(UINT32))) return FALSE;
+	FileWrite(f, &uiNumberOfWayPoints, sizeof(UINT32));
 
 	for (const WAYPOINT* w = g->pWaypoints; w != NULL; w = w->next)
 	{
-		if (!FileWrite(f, w, sizeof(WAYPOINT))) return FALSE;
+		FileWrite(f, w, sizeof(WAYPOINT));
 	}
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN LoadWayPointList(const HWFILE f, GROUP* const g)

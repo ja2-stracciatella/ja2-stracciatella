@@ -38,6 +38,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN InjectExplosionTypeIntoFile(const HWFILE file, const EXPLOSIONTYPE* e)
+try
 {
 	BYTE dst[36];
 	BYTE* d = dst;
@@ -59,6 +60,7 @@ BOOLEAN InjectExplosionTypeIntoFile(const HWFILE file, const EXPLOSIONTYPE* e)
 	INJ_SKIP(d, 12)
 	Assert(d == endof(dst));
 
-	return FileWrite(file, dst, sizeof(dst));
+	FileWrite(file, dst, sizeof(dst));
+	return TRUE;
 }
-
+catch (...) { return FALSE; }

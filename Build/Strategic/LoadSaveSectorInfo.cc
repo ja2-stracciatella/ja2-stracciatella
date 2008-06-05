@@ -54,6 +54,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN InjectSectorInfoIntoFile(const HWFILE file, const SECTORINFO* const s)
+try
 {
 	BYTE data[116];
 
@@ -95,5 +96,7 @@ BOOLEAN InjectSectorInfoIntoFile(const HWFILE file, const SECTORINFO* const s)
 	INJ_SKIP(d, 44)
 	Assert(d == endof(data));
 
-	return FileWrite(file, data, sizeof(data));
+	FileWrite(file, data, sizeof(data));
+	return TRUE;
 }
+catch (...) { return FALSE; }

@@ -179,22 +179,17 @@ void ShutDownArmsDealers()
 
 
 BOOLEAN SaveArmsDealerInventoryToSaveGameFile( HWFILE hFile )
+try
 {
 	UINT8		ubArmsDealer;
 	UINT16	usItemIndex;
 
 
 	//Save the arms dealers status
-	if (!FileWrite(hFile, gArmsDealerStatus, sizeof(gArmsDealerStatus)))
-	{
-		return( FALSE );
-	}
+	FileWrite(hFile, gArmsDealerStatus, sizeof(gArmsDealerStatus));
 
 	//save the dealers inventory item headers (all at once)
-	if (!FileWrite(hFile, gArmsDealersInventory, sizeof(gArmsDealersInventory)))
-	{
-		return( FALSE );
-	}
+	FileWrite(hFile, gArmsDealersInventory, sizeof(gArmsDealersInventory));
 
 	//loop through all the dealers inventories
 	for( ubArmsDealer=0; ubArmsDealer<NUM_ARMS_DEALERS; ubArmsDealer++ )
@@ -205,16 +200,14 @@ BOOLEAN SaveArmsDealerInventoryToSaveGameFile( HWFILE hFile )
 			//if there are any special item elements allocated for this item, save them
 			if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced > 0 )
 			{
-				if (!FileWrite(hFile, &gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[0], sizeof(DEALER_SPECIAL_ITEM) * gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced))
-				{
-					return( FALSE );
-				}
+				FileWrite(hFile, &gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[0], sizeof(DEALER_SPECIAL_ITEM) * gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced);
 			}
 		}
 	}
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN AllocMemsetSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem, UINT8 ubElementsNeeded);

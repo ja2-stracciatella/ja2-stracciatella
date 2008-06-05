@@ -47,6 +47,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN InjectVehicleTypeIntoFile(const HWFILE file, const VEHICLETYPE* const v)
+try
 {
 	BYTE data[128];
 
@@ -76,5 +77,7 @@ BOOLEAN InjectVehicleTypeIntoFile(const HWFILE file, const VEHICLETYPE* const v)
 	INJ_SKIP(d, 2)
 	Assert(d == endof(data));
 
-	return FileWrite(file, data, sizeof(data));
+	FileWrite(file, data, sizeof(data));
+	return TRUE;
 }
+catch (...) { return FALSE; }

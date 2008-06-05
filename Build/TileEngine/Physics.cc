@@ -2293,6 +2293,7 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 
 
 BOOLEAN	SavePhysicsTableToSaveGameFile( HWFILE hFile )
+try
 {
 	UINT16	usCnt=0;
 	UINT32	usPhysicsCount=0;
@@ -2308,7 +2309,7 @@ BOOLEAN	SavePhysicsTableToSaveGameFile( HWFILE hFile )
 
 
 	//Save the number of REAL_OBJECTs in the array
-	if (!FileWrite(hFile, &usPhysicsCount, sizeof(UINT32))) return FALSE;
+	FileWrite(hFile, &usPhysicsCount, sizeof(UINT32));
 
 	if( usPhysicsCount != 0 )
 	{
@@ -2324,6 +2325,7 @@ BOOLEAN	SavePhysicsTableToSaveGameFile( HWFILE hFile )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile )

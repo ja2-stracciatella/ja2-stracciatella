@@ -40,6 +40,7 @@ void	ApplyMapChangesToMapTempFile( BOOLEAN fAddToMap )
 
 
 static BOOLEAN SaveModifiedMapStructToMapTempFile(MODIFY_MAP* pMap, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+try
 {
 	CHAR8		zMapName[ 128 ];
 
@@ -48,11 +49,12 @@ static BOOLEAN SaveModifiedMapStructToMapTempFile(MODIFY_MAP* pMap, INT16 sSecto
 	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
 	if (!hFile) return FALSE;
 
-	if (!FileWrite(hFile, pMap, sizeof(MODIFY_MAP))) return FALSE;
+	FileWrite(hFile, pMap, sizeof(MODIFY_MAP));
 
 	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS );
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void AddBloodOrSmellFromMapTempFileToMap(MODIFY_MAP* pMap);
@@ -484,6 +486,7 @@ static void AddBloodOrSmellFromMapTempFileToMap(MODIFY_MAP* pMap)
 
 
 BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+try
 {
 	CHAR8		zMapName[ 128 ];
 
@@ -495,7 +498,7 @@ BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSector
 	if (!hFile) return FALSE;
 
 	//Write the revealed array to the Revealed temp file
-	if (!FileWrite(hFile, gpRevealedMap, NUM_REVEALED_BYTES)) return FALSE;
+	FileWrite(hFile, gpRevealedMap, NUM_REVEALED_BYTES);
 
 	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_REVEALED_STATUS_TEMP_FILE_EXISTS );
 
@@ -504,6 +507,7 @@ BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSector
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void SetMapRevealedStatus(void);
@@ -889,6 +893,7 @@ try
 	AutoSGPFile dst(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 	if (dst == 0) return FALSE;
 
-	return FileWrite(dst, mm, sizeof(*mm) * uiNumberOfElements);
+	FileWrite(dst, mm, sizeof(*mm) * uiNumberOfElements);
+	return TRUE;
 }
 catch (...) { return FALSE; }

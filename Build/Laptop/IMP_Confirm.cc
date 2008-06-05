@@ -445,8 +445,8 @@ static void WriteOutCurrentImpCharacter(INT32 iProfileId)
 	AutoSGPFile hFile(FileOpen(IMP_MERC_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 
 	// Write the profile id, portrait id and the profile itself. Abort on error
-	FileWrite(hFile, &iProfileId, sizeof(INT32)) &&
-	FileWrite(hFile, &iPortraitNumber, sizeof(INT32)) &&
+	FileWrite(hFile, &iProfileId,      sizeof(INT32));
+	FileWrite(hFile, &iPortraitNumber, sizeof(INT32));
 	InjectMercProfileIntoFile(hFile, &gMercProfiles[iProfileId]);
 }
 

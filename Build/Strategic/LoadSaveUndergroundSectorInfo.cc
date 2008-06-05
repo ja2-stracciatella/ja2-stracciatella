@@ -40,6 +40,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN InjectUndergroundSectorInfoIntoFile(const HWFILE file, const UNDERGROUND_SECTORINFO* const u)
+try
 {
 	BYTE data[72];
 	BYTE* d = data;
@@ -66,5 +67,7 @@ BOOLEAN InjectUndergroundSectorInfoIntoFile(const HWFILE file, const UNDERGROUND
 	INJ_SKIP(d, 36)
 	Assert(d == endof(data));
 
-	return FileWrite(file, data, sizeof(data));
+	FileWrite(file, data, sizeof(data));
+	return TRUE;
 }
+catch (...) { return FALSE; }

@@ -498,6 +498,7 @@ void ClearAllSchedules()
 
 
 BOOLEAN SaveSchedules( HWFILE hFile )
+try
 {
 	SCHEDULENODE *curr;
 	UINT8 ubNum, ubNumFucker;
@@ -516,7 +517,7 @@ BOOLEAN SaveSchedules( HWFILE hFile )
 	}
 	ubNum = (UINT8)(( iNum >= 32 ) ? 32 : iNum);
 
-	if (!FileWrite(hFile, &ubNum, sizeof(UINT8))) return FALSE;
+	FileWrite(hFile, &ubNum, sizeof(UINT8));
 	//Now, save each schedule
 	curr = gpScheduleList;
 	ubNumFucker = 0;
@@ -544,12 +545,14 @@ BOOLEAN SaveSchedules( HWFILE hFile )
 			INJ_U16(    d, curr->usFlags)
 			Assert(d == endof(data));
 
-			if (!FileWrite(hFile, data, sizeof(data))) return FALSE;
+			FileWrite(hFile, data, sizeof(data));
 		}
 		curr = curr->next;
 	}
 	return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 //Each schedule has upto four parts to it, so sort them chronologically.
 //Happily, the fields with no times actually are the highest.

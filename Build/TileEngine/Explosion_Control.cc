@@ -2888,6 +2888,7 @@ void ActivateSwitchInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo)
 }
 
 BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
+try
 {
 	UINT32	uiExplosionCount=0;
 	UINT32	uiCnt;
@@ -2899,12 +2900,12 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 
 
 	//Write the number of explosion queues
-	if (!FileWrite(hFile, &gubElementsOnExplosionQueue, sizeof(UINT32))) return FALSE;
+	FileWrite(hFile, &gubElementsOnExplosionQueue, sizeof(UINT32));
 
 	//loop through and add all the explosions
 	for( uiCnt=0; uiCnt< MAX_BOMB_QUEUE; uiCnt++)
 	{
-		if (!FileWrite(hFile, &gExplosionQueue[uiCnt], sizeof(ExplosionQueueElement))) return FALSE;
+		FileWrite(hFile, &gExplosionQueue[uiCnt], sizeof(ExplosionQueueElement));
 	}
 
 
@@ -2923,7 +2924,7 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 	}
 
 	//Save the number of explosions
-	if (!FileWrite(hFile, &uiExplosionCount, sizeof(UINT32))) return FALSE;
+	FileWrite(hFile, &uiExplosionCount, sizeof(UINT32));
 
 	//loop through and count all the active explosions
 	for( uiCnt=0; uiCnt< NUM_EXPLOSION_SLOTS; uiCnt++)
@@ -2937,7 +2938,7 @@ BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
 
 	return( TRUE );
 }
-
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )

@@ -2809,30 +2809,29 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 		fFirstTimeIn = FALSE;
 	}
 
-	AutoSGPFile hFile(FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
-	if( !hFile )
+	try
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to open Quest Debug File %s", QUEST_DEBUG_FILE) );
-		return;
+		AutoSGPFile hFile(FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+		if( !hFile )
+		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to open Quest Debug File %s", QUEST_DEBUG_FILE) );
+			return;
+		}
+
+		sprintf( DestString, "\n\n\nNew Approach for NPC ID: %d '%ls' against Merc: %d '%ls'", ubNpcID, gMercProfiles[ ubNpcID ].zNickname, ubMercID, gMercProfiles[ ubMercID ].zNickname );
+		//	sprintf( DestString, "\n\n\nNew Approach for NPC ID: %d  against Merc: %d ", ubNpcID, ubMercID );
+
+		FileWrite(hFile, DestString, strlen(DestString));
+
+		//Testing Record #
+		sprintf( DestString, "\n\tTesting Record #: %d", ubQuoteNum );
+
+		//append to file
+		FileWrite(hFile, DestString, strlen(DestString));
 	}
-
-	sprintf( DestString, "\n\n\nNew Approach for NPC ID: %d '%ls' against Merc: %d '%ls'", ubNpcID, gMercProfiles[ ubNpcID ].zNickname, ubMercID, gMercProfiles[ ubMercID ].zNickname );
-//	sprintf( DestString, "\n\n\nNew Approach for NPC ID: %d  against Merc: %d ", ubNpcID, ubMercID );
-
-	if (!FileWrite(hFile, DestString, strlen(DestString)))
+	catch (...)
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE) );
-		return;
-	}
-
-	//Testing Record #
-	sprintf( DestString, "\n\tTesting Record #: %d", ubQuoteNum );
-
-	//append to file
-	if (!FileWrite(hFile, DestString, strlen(DestString)))
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE) );
-		return;
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE));
 	}
 }
 
@@ -2861,20 +2860,23 @@ void NpcRecordLogging(UINT8 ubApproach, const char *pStringA, ...)
 	vsprintf(TempString, pStringA, argptr);	// process gprintf string (get output str)
 	va_end(argptr);
 
-	AutoSGPFile hFile(FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
-	if( !hFile )
+	try
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to open Quest Debug File %s", QUEST_DEBUG_FILE) );
-		return;
+		AutoSGPFile hFile(FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
+		if( !hFile )
+		{
+			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to open Quest Debug File %s", QUEST_DEBUG_FILE) );
+			return;
+		}
+
+		sprintf( DestString, "\n\t\t%s", TempString );
+
+		//append to file
+		FileWrite(hFile, DestString, strlen(DestString));
 	}
-
-	sprintf( DestString, "\n\t\t%s", TempString );
-
-	//append to file
-	if (!FileWrite(hFile, DestString, strlen(DestString)))
+	catch (...)
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE) );
-		return;
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to write to %s", QUEST_DEBUG_FILE));
 	}
 }
 

@@ -49,8 +49,8 @@ BOOLEAN FileDelete(const char* path);
 HWFILE FileOpen(const char* filename, FileOpenFlags);
 void   FileClose(HWFILE);
 
-void    FileRead(HWFILE, void* pDest, UINT32 uiBytesToRead);
-BOOLEAN FileWrite(HWFILE hFile, const void* pDest, UINT32 uiBytesToWrite);
+void FileRead( HWFILE, void*       pDest, UINT32 uiBytesToRead);
+void FileWrite(HWFILE, void const* pDest, UINT32 uiBytesToWrite);
 
 void  FileSeek(HWFILE, INT32 distance, FileSeekMode);
 INT32 FileGetPos(HWFILE);

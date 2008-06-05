@@ -23,12 +23,13 @@ void InitStrategicStatus(void)
 }
 
 BOOLEAN SaveStrategicStatusToSaveGameFile( HWFILE hFile )
+try
 {
 	//Save the Strategic Status structure to the saved game file
-	if (!FileWrite(hFile, &gStrategicStatus, sizeof(STRATEGIC_STATUS))) return FALSE;
-
+	FileWrite(hFile, &gStrategicStatus, sizeof(STRATEGIC_STATUS));
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 

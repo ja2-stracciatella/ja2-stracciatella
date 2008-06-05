@@ -712,6 +712,7 @@ catch (...) { return FALSE; }
 
 
 static BOOLEAN InjectScrollStringIntoFile(const HWFILE file, const ScrollStringSt* const s)
+try
 {
 	BYTE data[28];
 	BYTE* d = data;
@@ -723,19 +724,22 @@ static BOOLEAN InjectScrollStringIntoFile(const HWFILE file, const ScrollStringS
 	INJ_SKIP(d, 1)
 	Assert(d == endof(data));
 
-	return FileWrite(file, data, sizeof(data));
+	FileWrite(file, data, sizeof(data));
+	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN SaveMapScreenMessagesToSaveGameFile(HWFILE hFile)
+try
 {
 	// write to the begining of the message list
-	if (!FileWrite(hFile, &gubEndOfMapScreenMessageList, sizeof(UINT8))) return FALSE;
+	FileWrite(hFile, &gubEndOfMapScreenMessageList, sizeof(UINT8));
 
-	if (!FileWrite(hFile, &gubStartOfMapScreenMessageList, sizeof(UINT8))) return FALSE;
+	FileWrite(hFile, &gubStartOfMapScreenMessageList, sizeof(UINT8));
 
 	// write the current message string
-	if (!FileWrite(hFile, &gubCurrentMapMessageString, sizeof(UINT8))) return FALSE;
+	FileWrite(hFile, &gubCurrentMapMessageString, sizeof(UINT8));
 
 	//Loopthrough all the messages
 	for (ScrollStringSt*const *i = gMapScreenMessageList; i != endof(gMapScreenMessageList); ++i)
@@ -752,13 +756,13 @@ BOOLEAN SaveMapScreenMessagesToSaveGameFile(HWFILE hFile)
 		}
 
 		// write to the file the size of the message
-		if (!FileWrite(hFile, &uiSizeOfString, sizeof(UINT32))) return FALSE;
+		FileWrite(hFile, &uiSizeOfString, sizeof(UINT32));
 
 		//if there is a message
 		if (uiSizeOfString)
 		{
 			// write the message to the file
-			if (!FileWrite(hFile, s->pString16, uiSizeOfString)) return FALSE;
+			FileWrite(hFile, s->pString16, uiSizeOfString);
 
 			if (!InjectScrollStringIntoFile(hFile, s)) return FALSE;
 		}
@@ -766,6 +770,7 @@ BOOLEAN SaveMapScreenMessagesToSaveGameFile(HWFILE hFile)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadMapScreenMessagesFromSaveGameFile(HWFILE hFile)

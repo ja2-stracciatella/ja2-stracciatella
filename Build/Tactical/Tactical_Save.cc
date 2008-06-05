@@ -234,6 +234,7 @@ BOOLEAN LoadMapTempFilesFromSavedGameFile(HWFILE const f)
 
 
 BOOLEAN SaveWorldItemsToTempItemFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const UINT32 uiNumberOfItems, const WORLDITEM* const pData)
+try
 {
 	{
 		char filename[128];
@@ -242,12 +243,12 @@ BOOLEAN SaveWorldItemsToTempItemFile(const INT16 sMapX, const INT16 sMapY, const
 		if (f == 0) return FALSE;
 
 		// Save the size of the item table
-		if (!FileWrite(f, &uiNumberOfItems, sizeof(UINT32))) return FALSE;
+		FileWrite(f, &uiNumberOfItems, sizeof(UINT32));
 
-		if (uiNumberOfItems != 0 && // If there are items to save
-				!FileWrite(f, pData, uiNumberOfItems * sizeof(WORLDITEM)))
+		// Are there items to save?
+		if (uiNumberOfItems != 0)
 		{
-			return FALSE;
+			FileWrite(f, pData, uiNumberOfItems * sizeof(WORLDITEM));
 		}
 		/* Close the file before
 		 * SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems() reads it */
@@ -257,6 +258,7 @@ BOOLEAN SaveWorldItemsToTempItemFile(const INT16 sMapX, const INT16 sMapY, const
 	SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(sMapX, sMapY, bMapZ, FALSE);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadWorldItemsFromTempItemFile(const INT16 x, const INT16 y, const INT8 z, UINT32* const item_count, WORLDITEM** const items)
@@ -912,6 +914,7 @@ void InitTacticalSave(BOOLEAN const fCreateTempDir)
 
 
 static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
+try
 {
 	CHAR8		zMapName[ 128 ];
 
@@ -925,7 +928,7 @@ static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8
 	CFOR_ALL_ROTTING_CORPSES(c) ++uiNumberOfCorpses;
 
 	//Save the number of the Rotting Corpses array table
-	if (!FileWrite(hFile, &uiNumberOfCorpses, sizeof(UINT32))) return FALSE;
+	FileWrite(hFile, &uiNumberOfCorpses, sizeof(UINT32));
 
 	//Loop through all the carcases in the array and save the active ones
 	CFOR_ALL_ROTTING_CORPSES(c)
@@ -939,6 +942,7 @@ static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8
 	SetSectorFlag( sMapX, sMapY, bMapZ, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS );
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
@@ -1115,6 +1119,7 @@ static BOOLEAN DoesTempFileExistsForMap(UINT32 uiType, INT16 sMapX, INT16 sMapY,
 
 //Initializes the NPC temp array
 static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void)
+try
 {
 	UINT8	ubCnt;
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
@@ -1142,14 +1147,16 @@ static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void)
 		}
 
 		//Save the array to a temp file
-		if (!FileWrite(hFile, TempNpcQuote, uiSizeOfTempArray)) return FALSE;
+		FileWrite(hFile, TempNpcQuote, uiSizeOfTempArray);
 	}
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId)
+try
 {
 	UINT8	ubCnt;
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
@@ -1176,7 +1183,7 @@ static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId)
 		FileSeek( hFile, uiSpotInFile * uiSizeOfTempArray, FILE_SEEK_FROM_START );
 
 		//Save the array to a temp file
-		if (!FileWrite(hFile, TempNpcQuote, uiSizeOfTempArray)) return FALSE;
+		FileWrite(hFile, TempNpcQuote, uiSizeOfTempArray);
 
 		//Set the fact that the merc has the temp npc quote data
 		gMercProfiles[ ubNpcId ].ubMiscFlags |= PROFILE_MISC_FLAG_TEMP_NPC_QUOTE_DATA_EXISTS;
@@ -1184,6 +1191,7 @@ static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 void ChangeNpcToDifferentSector(MERCPROFILESTRUCT* const p, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
@@ -1225,7 +1233,7 @@ try
 	}
 
 	++corpse_count;
-	if (!FileWrite(f, &corpse_count, sizeof(corpse_count))) return FALSE;
+	FileWrite(f, &corpse_count, sizeof(corpse_count));
 
 	FileSeek(f, 0, FILE_SEEK_FROM_END);
 	if (!InjectRottingCorpseIntoFile(f, corpse_def)) return FALSE;
@@ -1615,7 +1623,8 @@ try
 		if (++ubArrayIndex >= NEW_ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
 	}
 
-	return FileWrite(hFile, buf, uiBytesToWrite);
+	FileWrite(hFile, buf, uiBytesToWrite);
+	return TRUE;
 }
 catch (...) { return FALSE; }
 
@@ -1654,7 +1663,8 @@ try
 		if (++ubArrayIndex >= ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
 	}
 
-	return FileWrite(hFile, buf, uiBytesToWrite);
+	FileWrite(hFile, buf, uiBytesToWrite);
+	return TRUE;
 }
 catch (...) { return FALSE; }
 

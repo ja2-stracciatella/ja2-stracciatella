@@ -803,11 +803,12 @@ void InitCivQuoteSystem( )
 
 
 BOOLEAN SaveCivQuotesToSaveGameFile( HWFILE hFile )
+try
 {
-	if (!FileWrite(hFile, &gCivQuotes, sizeof(gCivQuotes))) return FALSE;
-
+	FileWrite(hFile, &gCivQuotes, sizeof(gCivQuotes));
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadCivQuotesFromLoadGameFile( HWFILE hFile )

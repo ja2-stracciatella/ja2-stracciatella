@@ -767,12 +767,13 @@ BOOLEAN PlayerControlsMine(INT8 bMineIndex)
 
 
 BOOLEAN SaveMineStatusToSaveGameFile( HWFILE hFile )
+try
 {
 	//Save the MineStatus
-	if (!FileWrite(hFile, gMineStatus, sizeof(MINE_STATUS_TYPE) * MAX_NUMBER_OF_MINES)) return FALSE;
-
+	FileWrite(hFile, gMineStatus, sizeof(MINE_STATUS_TYPE) * MAX_NUMBER_OF_MINES);
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadMineStatusFromSavedGameFile( HWFILE hFile )

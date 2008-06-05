@@ -219,11 +219,14 @@ static void InjectSoldierCreateUTF16(BYTE* const data, const SOLDIERCREATE_STRUC
 
 
 BOOLEAN InjectSoldierCreateIntoFileUTF16(const HWFILE f, const SOLDIERCREATE_STRUCT* const c)
+try
 {
 	BYTE data[1040];
 	InjectSoldierCreateUTF16(data, c);
-	return FileWrite(f, data, sizeof(data));
+	FileWrite(f, data, sizeof(data));
+	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void InjectSoldierCreate(BYTE* const data, const SOLDIERCREATE_STRUCT* const c)
@@ -294,6 +297,7 @@ static void InjectSoldierCreate(BYTE* const data, const SOLDIERCREATE_STRUCT* co
 
 
 BOOLEAN InjectSoldierCreateIntoFile(const HWFILE f, const SOLDIERCREATE_STRUCT* const c)
+try
 {
 #ifdef _WIN32 // XXX HACK000A
 	BYTE data[1040];
@@ -301,5 +305,7 @@ BOOLEAN InjectSoldierCreateIntoFile(const HWFILE f, const SOLDIERCREATE_STRUCT* 
 	BYTE data[1060];
 #endif
 	InjectSoldierCreate(data, c);
-	return FileWrite(f, data, sizeof(data));
+	FileWrite(f, data, sizeof(data));
+	return TRUE;
 }
+catch (...) { return FALSE; }

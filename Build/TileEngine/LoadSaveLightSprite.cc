@@ -58,6 +58,7 @@ void ExtractLightSprite(const BYTE** const data, const UINT32 light_time)
 
 
 BOOLEAN InjectLightSpriteIntoFile(const HWFILE file, const LIGHT_SPRITE* const l)
+try
 {
 	BYTE data[24];
 
@@ -69,11 +70,12 @@ BOOLEAN InjectLightSpriteIntoFile(const HWFILE file, const LIGHT_SPRITE* const l
 	INJ_SKIP(d, 4)
 	Assert(d == endof(data));
 
-	if (!FileWrite(file, data, sizeof(data))) return FALSE;
+	FileWrite(file, data, sizeof(data));
 
 	const char* const light_name = LightSpriteGetTypeName(l);
 	const UINT8       str_len    = strlen(light_name) + 1;
-	return
-		FileWrite(file, &str_len,   sizeof(str_len)) &&
-		FileWrite(file, light_name, str_len);
+	FileWrite(file, &str_len,   sizeof(str_len));
+	FileWrite(file, light_name, str_len);
+	return TRUE;
 }
+catch (...) { return FALSE; }

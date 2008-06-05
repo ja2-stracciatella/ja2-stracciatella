@@ -29,6 +29,7 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN InjectLightEffectIntoFile(const HWFILE file, const LIGHTEFFECT* const l)
+try
 {
 	BYTE data[16];
 
@@ -43,6 +44,7 @@ BOOLEAN InjectLightEffectIntoFile(const HWFILE file, const LIGHTEFFECT* const l)
 	INJ_U32(d, l->uiTimeOfLastUpdate)
 	Assert(d == endof(data));
 
-	return FileWrite(file, data, sizeof(data));
+	FileWrite(file, data, sizeof(data));
+	return TRUE;
 }
-
+catch (...) { return FALSE; }

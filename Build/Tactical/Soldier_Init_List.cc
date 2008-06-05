@@ -1606,13 +1606,14 @@ void EvaluateDeathEffectsToSoldierInitList(const SOLDIERTYPE* const pSoldier)
 //the only way we can do this properly is to save the soldier ID from the list and reconnect the
 //soldier pointer whenever we load the game.
 BOOLEAN SaveSoldierInitListLinks( HWFILE hfile )
+try
 {
 	UINT8 ubSlots = 0;
 
 	//count the number of soldier init nodes...
 	CFOR_ALL_SOLDIERINITNODES(curr) ++ubSlots;
 	//...and save it.
-	if (!FileWrite(hfile, &ubSlots, 1)) return FALSE;
+	FileWrite(hfile, &ubSlots, 1);
 	//Now, go through each node, and save just the ubSoldierID, if that soldier is alive.
 	FOR_ALL_SOLDIERINITNODES(curr)
 	{
@@ -1620,11 +1621,13 @@ BOOLEAN SaveSoldierInitListLinks( HWFILE hfile )
 		{
 			curr->ubSoldierID = 0;
 		}
-		if (!FileWrite(hfile, &curr->ubNodeID, 1)) return FALSE;
-		if (!FileWrite(hfile, &curr->ubSoldierID, 1)) return FALSE;
+		FileWrite(hfile, &curr->ubNodeID,    1);
+		FileWrite(hfile, &curr->ubSoldierID, 1);
 	}
 	return TRUE;
 }
+catch (...) { return FALSE; }
+
 
 BOOLEAN LoadSoldierInitListLinks( HWFILE hfile )
 try

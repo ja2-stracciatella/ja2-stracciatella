@@ -398,11 +398,10 @@ void FileRead(HWFILE const f, void* const pDest, UINT32 const uiBytesToRead)
 }
 
 
-BOOLEAN FileWrite(const HWFILE f, const void* const pDest, const UINT32 uiBytesToWrite)
+void FileWrite(HWFILE const f, void const* const pDest, UINT32 const uiBytesToWrite)
 {
-	return
-		f->flags & SGPFILE_REAL &&
-		fwrite(pDest, uiBytesToWrite, 1, f->u.file) == 1;
+	if (!(f->flags & SGPFILE_REAL)) throw std::logic_error("Tried to write to library file");
+	if (fwrite(pDest, uiBytesToWrite, 1, f->u.file) != 1) throw std::runtime_error("Writing to file failed");
 }
 
 

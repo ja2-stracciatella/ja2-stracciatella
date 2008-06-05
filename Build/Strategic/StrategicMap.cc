@@ -3277,6 +3277,7 @@ static BOOLEAN SectorIsPartOfTown(INT8 bTownId, INT16 sSectorX, INT16 sSectorY)
 
 
 BOOLEAN SaveStrategicInfoToSavedFile( HWFILE hFile )
+try
 {
 	// Save the strategic map information
 	for (const StrategicMapElement* i = StrategicMap; i != endof(StrategicMap); ++i)
@@ -3293,15 +3294,16 @@ BOOLEAN SaveStrategicInfoToSavedFile( HWFILE hFile )
 	// Save the SAM Controlled Sector Information
 	const UINT32 uiSize = MAP_WORLD_X * MAP_WORLD_Y;
 /*
-	if (!FileWrite(hFile, ubSAMControlledSectors, uiSize)) return FALSE;
+	FileWrite(hFile, ubSAMControlledSectors, uiSize);
 */
 	FileSeek( hFile, uiSize, FILE_SEEK_FROM_CURRENT );
 
 	// Save the fFoundOrta
-	if (!FileWrite(hFile, &fFoundOrta, sizeof(BOOLEAN))) return FALSE;
+	FileWrite(hFile, &fFoundOrta, sizeof(BOOLEAN));
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadStrategicInfoFromSavedFile( HWFILE hFile )

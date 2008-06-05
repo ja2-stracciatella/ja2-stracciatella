@@ -907,6 +907,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 //If we are saving a game and we are in the sector, we will need to preserve the links between the
 //soldiers and the soldier init list.  Otherwise, the temp file will be deleted.
 BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, BOOLEAN fEnemy, BOOLEAN fValidateOnly )
+try
 {
 	INT32 i;
 	INT32 slots = 0;
@@ -1060,14 +1061,14 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 	AutoSGPFile hfile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 	if (!hfile) return FALSE;
 
-	if (!FileWrite(hfile, &sSectorY, 2)) return FALSE;
+	FileWrite(hfile, &sSectorY, 2);
 
 	//STEP THREE:  Save the data
 
 	//this works for both civs and enemies
 	SaveSoldierInitListLinks( hfile );
 
-	if (!FileWrite(hfile, &sSectorX, 2)) return FALSE;
+	FileWrite(hfile, &sSectorX, 2);
 
 	//This check may appear confusing.  It is intended to abort if the player is saving the game.  It is only
 	//supposed to preserve the links to the placement list, so when we finally do leave the level with enemies remaining,
@@ -1077,12 +1078,12 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 		slots = 0;
 	}
 
-	if (!FileWrite(hfile, &slots, 4)) return FALSE;
+	FileWrite(hfile, &slots, 4);
 
 	uiTimeStamp = GetWorldTotalMin();
-	if (!FileWrite(hfile, &uiTimeStamp, 4)) return FALSE;
+	FileWrite(hfile, &uiTimeStamp, 4);
 
-	if (!FileWrite(hfile, &bSectorZ, 1)) return FALSE;
+	FileWrite(hfile, &bSectorZ, 1);
 
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 	{
@@ -1115,13 +1116,13 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 				if (!InjectSoldierCreateIntoFile(hfile, curr->pDetailedPlacement)) return FALSE;
 				//insert a checksum equation (anti-hack)
 				const UINT16 usCheckSum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
-				if (!FileWrite(hfile, &usCheckSum, 2)) return FALSE;
+				FileWrite(hfile, &usCheckSum, 2);
 			}
 		}
 	}
 
 	ubSectorID = SECTOR( sSectorX, sSectorY );
-	if (!FileWrite(hfile, &ubSectorID, 1)) return FALSE;
+	FileWrite(hfile, &ubSectorID, 1);
 
 	if( fEnemy )
 	{
@@ -1134,6 +1135,7 @@ BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile(UINT8* pubNumElites, UINT8* pubNumRegulars, UINT8* pubNumAdmins, UINT8* pubNumCreatures)

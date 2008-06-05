@@ -868,16 +868,17 @@ SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId )
 
 
 BOOLEAN SaveVehicleInformationToSaveGameFile(const HWFILE f)
+try
 {
 	//Save the number of elements
-	if (!FileWrite(f, &ubNumberOfVehicles, sizeof(UINT8))) return FALSE;
+	FileWrite(f, &ubNumberOfVehicles, sizeof(UINT8));
 
 	//loop through all the vehicles and save each one
 	for (UINT8 i = 0; i < ubNumberOfVehicles; ++i)
 	{
 		const VEHICLETYPE* const v = &pVehicleList[i];
 		//save if the vehicle spot is valid
-		if (!FileWrite(f, &v->fValid, sizeof(BOOLEAN))) return FALSE;
+		FileWrite(f, &v->fValid, sizeof(BOOLEAN));
 		if (!v->fValid) continue;
 
 		if (!InjectVehicleTypeIntoFile(f, v)) return FALSE;
@@ -885,6 +886,7 @@ BOOLEAN SaveVehicleInformationToSaveGameFile(const HWFILE f)
 	}
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN LoadVehicleInformationFromSavedGameFile(const HWFILE hFile, const UINT32 uiSavedGameVersion)
@@ -966,12 +968,13 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN NewSaveVehicleMovementInfoToSavedGameFile( HWFILE hFile )
+try
 {
 	//Save all the vehicle movement id's
-	if (!FileWrite(hFile, gubVehicleMovementGroups, sizeof(INT8) * MAX_VEHICLES)) return FALSE;
-
+	FileWrite(hFile, gubVehicleMovementGroups, sizeof(INT8) * MAX_VEHICLES);
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN NewLoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile )

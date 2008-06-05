@@ -61,6 +61,7 @@ catch (...) { return FALSE; }
 
 
 static BOOLEAN SaveEMailIntoFile(HWFILE File, const Email* Mail)
+try
 {
 	BYTE Data[48];
 
@@ -79,11 +80,14 @@ static BOOLEAN SaveEMailIntoFile(HWFILE File, const Email* Mail)
 	INJ_SKIP(D, 3)
 	Assert(D == endof(Data));
 
-	return FileWrite(File, Data, sizeof(Data));
+	FileWrite(File, Data, sizeof(Data));
+	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 BOOLEAN SaveEmailToSavedGame(HWFILE File)
+try
 {
 	const Email* pEmail;
 
@@ -93,7 +97,7 @@ BOOLEAN SaveEmailToSavedGame(HWFILE File)
 	{
 		uiNumOfEmails++;
 	}
-	if (!FileWrite(File, &uiNumOfEmails, sizeof(UINT32))) return FALSE;
+	FileWrite(File, &uiNumOfEmails, sizeof(UINT32));
 
 	for (pEmail = pEmailList; pEmail != NULL; pEmail = pEmail->Next)
 	{
@@ -102,3 +106,4 @@ BOOLEAN SaveEmailToSavedGame(HWFILE File)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
