@@ -2172,7 +2172,7 @@ try
 		}
 		else
 		{
-			if (!NewJA2EncryptedFileWrite(hFile, Data, sizeof(Data))) return FALSE;
+			NewJA2EncryptedFileWrite(hFile, Data, sizeof(Data));
 		}
 	}
 
@@ -2251,7 +2251,7 @@ try
 			}
 			else
 			{
-				if (!NewJA2EncryptedFileWrite(hFile, Data, sizeof(Data))) return FALSE;
+				NewJA2EncryptedFileWrite(hFile, Data, sizeof(Data));
 			}
 
 			// Save all the pointer info from the structure

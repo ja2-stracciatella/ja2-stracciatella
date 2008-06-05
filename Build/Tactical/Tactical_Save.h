@@ -78,10 +78,10 @@ UINT32 MercChecksum( SOLDIERTYPE * pSoldier );
 UINT32 ProfileChecksum( MERCPROFILESTRUCT * pProfile );
 
 void JA2EncryptedFileRead( HWFILE, void*       data, UINT32 uiBytesToRead);
-void JA2EncryptedFileWrite(HWFILE, const void* data, UINT32 uiBytesToWrite);
+void JA2EncryptedFileWrite(HWFILE, void const* data, UINT32 uiBytesToWrite);
 
-void    NewJA2EncryptedFileRead(HWFILE, void* pDest, UINT32 uiBytesToRead);
-BOOLEAN NewJA2EncryptedFileWrite(HWFILE hFile, const void* data, UINT32 uiBytesToWrite);
+void NewJA2EncryptedFileRead( HWFILE, void*       data, UINT32 uiBytesToRead);
+void NewJA2EncryptedFileWrite(HWFILE, void const* data, UINT32 uiBytesToWrite);
 
 
 //If hacker's mess with our save/temp files, this is our final line of defence.

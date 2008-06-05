@@ -1608,8 +1608,7 @@ void NewJA2EncryptedFileRead(HWFILE const f, void* const pDest, UINT32 const uiB
 }
 
 
-BOOLEAN NewJA2EncryptedFileWrite(const HWFILE hFile, const void* const data, const UINT32 uiBytesToWrite)
-try
+void NewJA2EncryptedFileWrite(HWFILE const hFile, void const* const data, UINT32 const uiBytesToWrite)
 {
 	SGP::Buffer<UINT8> buf(uiBytesToWrite);
 	const UINT8* const src              = static_cast<const UINT8*>(data);
@@ -1624,9 +1623,7 @@ try
 	}
 
 	FileWrite(hFile, buf, uiBytesToWrite);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 #define ROTATION_ARRAY_SIZE 46
@@ -1649,7 +1646,7 @@ void JA2EncryptedFileRead(HWFILE const f, void* const pDest, UINT32 const uiByte
 }
 
 
-void JA2EncryptedFileWrite(const HWFILE hFile, const void* const data, const UINT32 uiBytesToWrite)
+void JA2EncryptedFileWrite(HWFILE const hFile, void const* const data, UINT32 const uiBytesToWrite)
 {
 	SGP::Buffer<UINT8> buf(uiBytesToWrite);
 	const UINT8* const src          = static_cast<const UINT8*>(data);
