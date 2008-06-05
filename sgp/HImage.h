@@ -123,7 +123,7 @@ BOOLEAN CopyImageToBuffer(HIMAGE hImage, UINT32 fBufferType, BYTE* pDestBuf, UIN
 
 
 // This function will create a buffer in memory of ETRLE data, excluding palette
-BOOLEAN GetETRLEImageData(SGPImage const*, ETRLEData*);
+void GetETRLEImageData(SGPImage const*, ETRLEData*);
 
 // UTILITY FUNCTIONS
 

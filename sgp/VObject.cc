@@ -37,10 +37,7 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 	}
 
 	ETRLEData TempETRLEData;
-	if (!GetETRLEImageData(img, &TempETRLEData))
-	{
-		throw std::runtime_error("Failed to get ETRLE data from image for video object creation");
-	}
+	GetETRLEImageData(img, &TempETRLEData);
 
 	subregion_count_ = TempETRLEData.usNumberOfObjects;
 	pETRLEObject     = TempETRLEData.pETRLEObject;

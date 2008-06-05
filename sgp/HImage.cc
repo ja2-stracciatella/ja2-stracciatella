@@ -377,8 +377,7 @@ UINT32 GetRGBColor(UINT16 Value16BPP)
 }
 
 
-BOOLEAN GetETRLEImageData(SGPImage const* const img, ETRLEData* const buf)
-try
+void GetETRLEImageData(SGPImage const* const img, ETRLEData* const buf)
 {
 	Assert(img);
 	Assert(buf);
@@ -393,9 +392,7 @@ try
 	buf->uiSizePixData     = img->uiSizePixData;
 	buf->pETRLEObject      = etrle_objs.Release();
 	buf->usNumberOfObjects = img->usNumberOfObjects;
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void ConvertRGBDistribution565To555( UINT16 * p16BPPData, UINT32 uiNumberOfPixels )
