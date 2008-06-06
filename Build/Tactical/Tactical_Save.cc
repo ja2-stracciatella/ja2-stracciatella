@@ -281,8 +281,7 @@ void LoadWorldItemsFromTempItemFile(INT16 const x, INT16 const y, INT8 const z, 
 }
 
 
-BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const INT16 sGridNo, const UINT32 uiNumberOfItemsToAdd, const OBJECTTYPE* const pObject, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel, const INT8 bVisible)
-try
+void AddItemsToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, INT16 const sGridNo, UINT32 const uiNumberOfItemsToAdd, OBJECTTYPE const* const pObject, UINT8 const ubLevel, UINT16 const usFlags, INT8 const bRenderZHeightAboveLevel, INT8 const bVisible)
 {
 	UINT32     uiNumberOfItems;
 	WORLDITEM* wis;
@@ -324,9 +323,7 @@ try
 	SaveWorldItemsToTempItemFile(sMapX, sMapY, bMapZ, uiNumberOfItems, wis);
 
 	MemFree(wis);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 extern BOOLEAN gfInMeanwhile;
