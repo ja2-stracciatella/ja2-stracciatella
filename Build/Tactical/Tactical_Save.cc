@@ -73,13 +73,13 @@ typedef struct
 #define		NPC_TEMP_QUOTE_FILE			"Temp/NpcQuote.tmp"
 
 
-static BOOLEAN AddTempFileToSavedGame(HWFILE const f, UINT32 const flags, UINT32 const type, INT16 const x, INT16 const y, INT8 const z)
+static void AddTempFileToSavedGame(HWFILE const f, UINT32 const flags, UINT32 const type, INT16 const x, INT16 const y, INT8 const z)
 {
-	if (!(flags & type)) return TRUE;
+	if (!(flags & type)) return;
 
 	char map_name[128];
 	GetMapTempFileName(type, map_name, x, y, z);
-	return SaveFilesToSavedGame(map_name, f);
+	SaveFilesToSavedGame(map_name, f);
 }
 
 
@@ -99,7 +99,7 @@ static void AddTempFilesToSavedGame(HWFILE const f, UINT32 const flags, INT16 co
 
 
 // SaveMapTempFilesToSavedGameFile() Looks for and opens all Map Modification files.  It add each mod file to the save game file.
-BOOLEAN SaveMapTempFilesToSavedGameFile(HWFILE const f)
+void SaveMapTempFilesToSavedGameFile(HWFILE const f)
 {
 	//Loop though all the array elements to see if there is a data file to be saved
 
@@ -122,18 +122,16 @@ BOOLEAN SaveMapTempFilesToSavedGameFile(HWFILE const f)
 		UINT32 const flags = u->uiFlags;
 		AddTempFilesToSavedGame(f, flags, x, y, z);
 	}
-
-	return TRUE;
 }
 
 
-static BOOLEAN RetrieveTempFileFromSavedGame(HWFILE const f, UINT32 const flags, UINT32 const type, INT16 const x, INT16 const y, INT8 const z)
+static void RetrieveTempFileFromSavedGame(HWFILE const f, UINT32 const flags, UINT32 const type, INT16 const x, INT16 const y, INT8 const z)
 {
-	if (!(flags & type)) return TRUE;
+	if (!(flags & type)) return;
 
 	char map_name[128];
 	GetMapTempFileName(type, map_name, x, y, z);
-	return LoadFilesFromSavedGame(map_name, f);
+	LoadFilesFromSavedGame(map_name, f);
 }
 
 
@@ -172,7 +170,7 @@ static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, INT16 
 
 
 // LoadMapTempFilesFromSavedGameFile() loads all the temp files from the saved game file and writes them into the temp directory
-BOOLEAN LoadMapTempFilesFromSavedGameFile(HWFILE const f)
+void LoadMapTempFilesFromSavedGameFile(HWFILE const f)
 {
 	// HACK FOR GABBY
 	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME && guiSaveGameVersion < 81)
@@ -228,8 +226,6 @@ BOOLEAN LoadMapTempFilesFromSavedGameFile(HWFILE const f)
 		UINT32&      flags = u->uiFlags;
 		RetrieveTempFilesFromSavedGame(f, flags, x, y, z);
 	}
-
-	return TRUE;
 }
 
 
@@ -1497,14 +1493,15 @@ void AddDeadSoldierToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, UINT8 
 }
 
 
-BOOLEAN SaveTempNpcQuoteArrayToSaveGameFile( HWFILE hFile )
+void SaveTempNpcQuoteArrayToSaveGameFile(HWFILE const f)
 {
-	return( SaveFilesToSavedGame( NPC_TEMP_QUOTE_FILE, hFile ) );
+	SaveFilesToSavedGame(NPC_TEMP_QUOTE_FILE, f);
 }
 
-BOOLEAN LoadTempNpcQuoteArrayToSaveGameFile( HWFILE hFile )
+
+void LoadTempNpcQuoteArrayToSaveGameFile(HWFILE const f)
 {
-	return( LoadFilesFromSavedGame( NPC_TEMP_QUOTE_FILE, hFile ) );
+	LoadFilesFromSavedGame(NPC_TEMP_QUOTE_FILE, f);
 }
 
 

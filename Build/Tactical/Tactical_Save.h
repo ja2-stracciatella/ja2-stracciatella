@@ -13,10 +13,10 @@
 
 
 //Load the Map modifications from the saved game file
-BOOLEAN	LoadMapTempFilesFromSavedGameFile( HWFILE hFile );
+void LoadMapTempFilesFromSavedGameFile(HWFILE);
 
 //Save the Map Temp files to the saved game file
-BOOLEAN SaveMapTempFilesToSavedGameFile( HWFILE hFile );
+void SaveMapTempFilesToSavedGameFile(HWFILE);
 
 
 //Saves the Current Sectors, ( world Items, rotting corpses, ... )  to the temporary file used to store the sectors items
@@ -69,10 +69,10 @@ void    ReSetSectorFlag(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, UINT32 uiFlagToSe
 
 
 //Saves the NPC temp Quote file to the saved game file
-BOOLEAN LoadTempNpcQuoteArrayToSaveGameFile( HWFILE hFile );
+void LoadTempNpcQuoteArrayToSaveGameFile(HWFILE);
 
 //Loads the NPC temp Quote file from the saved game file
-BOOLEAN SaveTempNpcQuoteArrayToSaveGameFile( HWFILE hFile );
+void SaveTempNpcQuoteArrayToSaveGameFile(HWFILE);
 
 UINT32 MercChecksum( SOLDIERTYPE * pSoldier );
 UINT32 ProfileChecksum( MERCPROFILESTRUCT * pProfile );

@@ -613,28 +613,19 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 #endif
 
 		//Save the Finaces Data file
-		if( !SaveFilesToSavedGame( FINANCES_DATA_FILE, f ) )
-		{
-			goto FAILED_TO_SAVE;
-		}
+		SaveFilesToSavedGame(FINANCES_DATA_FILE, f);
 #ifdef JA2BETAVERSION
 		SaveGameFilePosition(f, "Finances Data File");
 #endif
 
 		//Save the history file
-		if( !SaveFilesToSavedGame( HISTORY_DATA_FILE, f ) )
-		{
-			goto FAILED_TO_SAVE;
-		}
+		SaveFilesToSavedGame(HISTORY_DATA_FILE, f);
 #ifdef JA2BETAVERSION
 		SaveGameFilePosition(f, "History file");
 #endif
 
 		//Save the Laptop File file
-		if( !SaveFilesToSavedGame( FILES_DAT_FILE, f ) )
-		{
-			goto FAILED_TO_SAVE;
-		}
+		SaveFilesToSavedGame(FILES_DAT_FILE, f);
 #ifdef JA2BETAVERSION
 		SaveGameFilePosition(f, "The Laptop FILES file");
 #endif
@@ -669,10 +660,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 #endif
 
 		//Save all the map temp files from the maps\temp directory into the saved game file
-		if( !SaveMapTempFilesToSavedGameFile( f ) )
-		{
-			goto FAILED_TO_SAVE;
-		}
+		SaveMapTempFilesToSavedGameFile(f);
 #ifdef JA2BETAVERSION
 		SaveGameFilePosition(f, "All the Map Temp files");
 #endif
@@ -702,10 +690,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 		SaveGameFilePosition(f, "KeyTable");
 #endif
 
-		if( !SaveTempNpcQuoteArrayToSaveGameFile( f ) )
-		{
-			goto FAILED_TO_SAVE;
-		}
+		SaveTempNpcQuoteArrayToSaveGameFile(f);
 #ifdef JA2BETAVERSION
 		SaveGameFilePosition(f, "NPC Temp Quote File");
 #endif
@@ -1184,7 +1169,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		//
 		// Load the Finances Data and write it to a new file
 		//
-		if (!LoadFilesFromSavedGame(FINANCES_DATA_FILE, f)) goto load_failed;
+		LoadFilesFromSavedGame(FINANCES_DATA_FILE, f);
 #ifdef JA2BETAVERSION
 		LoadGameFilePosition(f, "Finances Data File");
 #endif
@@ -1198,7 +1183,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		//
 		// Load the History Data and write it to a new file
 		//
-		if (!LoadFilesFromSavedGame(HISTORY_DATA_FILE, f)) goto load_failed;
+		LoadFilesFromSavedGame(HISTORY_DATA_FILE, f);
 #ifdef JA2BETAVERSION
 		LoadGameFilePosition(f, "History File");
 #endif
@@ -1212,7 +1197,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		//
 		// Load the Files Data and write it to a new file
 		//
-		if (!LoadFilesFromSavedGame(FILES_DAT_FILE, f)) goto load_failed;
+		LoadFilesFromSavedGame(FILES_DAT_FILE, f);
 #ifdef JA2BETAVERSION
 		LoadGameFilePosition(f, "The Laptop FILES file");
 #endif
@@ -1283,7 +1268,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 
 		// Load all the map temp files from the saved game file into the maps\temp directory
-		if (!LoadMapTempFilesFromSavedGameFile(f)) goto load_failed;
+		LoadMapTempFilesFromSavedGameFile(f);
 #ifdef JA2BETAVERSION
 		LoadGameFilePosition(f, "All the Map Temp files");
 #endif
@@ -1349,7 +1334,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		uiRelStartPerc = uiRelEndPerc;
 
 
-		if (!LoadTempNpcQuoteArrayToSaveGameFile(f)) goto load_failed;
+		LoadTempNpcQuoteArrayToSaveGameFile(f);
 #ifdef JA2BETAVERSION
 		LoadGameFilePosition(f, "Npc Temp Quote File");
 #endif
@@ -2270,8 +2255,7 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 #endif
 
 
-BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
-try
+void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 {
 	AutoSGPFile hSrcFile(FileOpen(pSrcFileName, FILE_ACCESS_READ));
 
@@ -2281,10 +2265,11 @@ try
 
 	//Get the file size of the source data file
 	UINT32 uiFileSize = FileGetSize( hSrcFile );
-	if (uiFileSize == 0) return FALSE;
 
 	// Write the the size of the file to the saved game file
 	FileWrite(hFile, &uiFileSize, sizeof(UINT32));
+
+	if (uiFileSize == 0) return;
 
 	// Read the saource file into the buffer
 	SGP::Buffer<UINT8> pData(uiFileSize);
@@ -2297,14 +2282,10 @@ try
 	//Write out the name of the temp file so we can track whcih ones get loaded, and saved
 	WriteTempFileNameToFile(pSrcFileName, uiFileSize, hFile);
 #endif
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadFilesFromSavedGame(const char* const pSrcFileName, const HWFILE hFile)
-try
+void LoadFilesFromSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 {
 #ifdef JA2BETAVERSION
 	++guiNumberOfMapTempFiles; //Increment counter:  To determine where the temp files are crashing
@@ -2316,7 +2297,7 @@ try
 	UINT32 uiFileSize;
 	FileRead(hFile, &uiFileSize, sizeof(UINT32));
 
-	if (uiFileSize == 0) return TRUE;
+	if (uiFileSize == 0) return;
 
 	// Read into the buffer
 	SGP::Buffer<UINT8> pData(uiFileSize);
@@ -2328,9 +2309,7 @@ try
 #ifdef JA2BETAVERSION
 	WriteTempFileNameToFile(pSrcFileName, uiFileSize, hFile);
 #endif
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void SaveTacticalStatusToSavedGame(HWFILE const hFile)

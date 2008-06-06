@@ -58,8 +58,8 @@ void CreateSavedGameFileNameFromNumber(UINT8 ubSaveGameID, char* pzNewFileName);
 BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *pGameDesc );
 BOOLEAN LoadSavedGame( UINT8 ubSavedGameID );
 
-BOOLEAN		SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile );
-BOOLEAN		LoadFilesFromSavedGame( const char *pSrcFileName, HWFILE hFile );
+void SaveFilesToSavedGame(char const* pSrcFileName, HWFILE);
+void LoadFilesFromSavedGame(char const* pSrcFileName, HWFILE);
 
 BOOLEAN DoesUserHaveEnoughHardDriveSpace(void);
 
