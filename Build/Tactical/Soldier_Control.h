@@ -942,7 +942,7 @@ void ReviveSoldier( SOLDIERTYPE *pSoldier );
 BOOLEAN CreateSoldierPalettes( SOLDIERTYPE *pSoldier );
 UINT8   GetPaletteRepIndexFromID(const PaletteRepID pal_rep);
 BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalRep );
-BOOLEAN LoadPaletteData(void);
+void    LoadPaletteData(void);
 void    DeletePaletteData(void);
 
 // UTILITY FUNCTUIONS

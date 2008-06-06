@@ -371,6 +371,7 @@ void MoveSoldierFromAwayToMercSlot(SOLDIERTYPE* const pSoldier)
 
 
 BOOLEAN InitTacticalEngine(void)
+try
 {
 	InitRenderParams(0);
 	InitializeTacticalInterface();
@@ -378,11 +379,12 @@ BOOLEAN InitTacticalEngine(void)
 	LoadPaletteData();
 
 	if (!LoadLockTable()) return FALSE;
-	if (!InitPathAI())    return FALSE;
+	InitPathAI();
 	InitAI();
 	InitOverhead();
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 void ShutdownTacticalEngine(void)

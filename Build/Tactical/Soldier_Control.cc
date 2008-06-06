@@ -5193,8 +5193,7 @@ void SetSoldierAniSpeed(SOLDIERTYPE* pSoldier)
 ///////////////////////////////////////////////////////
 //PALETTE REPLACEMENT FUNCTIONS
 ///////////////////////////////////////////////////////
-BOOLEAN LoadPaletteData( )
-try
+void LoadPaletteData()
 {
 	UINT32			cnt, cnt2;
 
@@ -5249,10 +5248,7 @@ try
 		}
 
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalRep )
