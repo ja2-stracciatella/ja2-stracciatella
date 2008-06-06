@@ -258,7 +258,7 @@ try
 catch (...)
 {
 	FastDebugMsg(String("\n*******\nSoundPlayStreamedFile():  ERROR:  Failed to play '%s'\n", pFilename));
-	return FALSE;
+	return SOUND_ERROR;
 }
 
 
