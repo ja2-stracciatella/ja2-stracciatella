@@ -2291,9 +2291,7 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 }
 
 
-
-BOOLEAN	SavePhysicsTableToSaveGameFile( HWFILE hFile )
-try
+void SavePhysicsTableToSaveGameFile(HWFILE const hFile)
 {
 	UINT16	usCnt=0;
 	UINT32	usPhysicsCount=0;
@@ -2316,20 +2314,13 @@ try
 		for( usCnt=0; usCnt<NUM_OBJECT_SLOTS; usCnt++ )
 		{
 			const REAL_OBJECT* const o = &ObjectSlots[usCnt];
-			if (o->fAllocated)
-			{
-				if (!InjectRealObjectIntoFile(hFile, o)) return FALSE;
-			}
+			if (o->fAllocated) InjectRealObjectIntoFile(hFile, o);
 		}
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile )
-try
+void LoadPhysicsTableFromSavedGameFile(HWFILE const hFile)
 {
 	UINT16	usCnt=0;
 
@@ -2343,12 +2334,9 @@ try
 	for( usCnt=0; usCnt<guiNumObjectSlots; usCnt++ )
 	{
 		REAL_OBJECT* const o = &ObjectSlots[usCnt];
-		if (!ExtractRealObjectFromFile(hFile, o)) return FALSE;
+		ExtractRealObjectFromFile(hFile, o);
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static UINT16 RandomGridFromRadius(INT16 sSweetGridNo, INT8 ubMinRadius, INT8 ubMaxRadius)

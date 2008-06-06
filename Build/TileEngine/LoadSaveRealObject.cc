@@ -6,8 +6,7 @@
 #include "Overhead.h"
 
 
-BOOLEAN ExtractRealObjectFromFile(const HWFILE file, REAL_OBJECT* const o)
-try
+void ExtractRealObjectFromFile(HWFILE const file, REAL_OBJECT* const o)
 {
 	BYTE data[256];
 	FileRead(file, data, sizeof(data));
@@ -71,14 +70,10 @@ try
 	EXTR_U8(d, o->ubLastTargetTakenDamage)
 	EXTR_SKIP(d, 3)
 	Assert(d == endof(data));
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN InjectRealObjectIntoFile(const HWFILE file, const REAL_OBJECT* const o)
-try
+void InjectRealObjectIntoFile(HWFILE const file, REAL_OBJECT const* const o)
 {
 	BYTE data[256];
 
@@ -143,6 +138,4 @@ try
 	Assert(d == endof(data));
 
 	FileWrite(file, data, sizeof(data));
-	return TRUE;
 }
-catch (...) { return FALSE; }

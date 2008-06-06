@@ -10,8 +10,8 @@ void DecayCreatures(void);
 void ClearCreatureQuest(void);
 void DeleteCreatureDirectives(void);
 
-BOOLEAN SaveCreatureDirectives( HWFILE hFile );
-BOOLEAN LoadCreatureDirectives( HWFILE hFile, UINT32 uiSavedGameVersion );
+void SaveCreatureDirectives(HWFILE);
+void LoadCreatureDirectives(HWFILE, UINT32 uiSavedGameVersion);
 
 BOOLEAN PrepareCreaturesForBattle(void);
 void CreatureNightPlanning(void);

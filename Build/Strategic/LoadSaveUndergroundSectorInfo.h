@@ -4,7 +4,7 @@
 #include "Campaign_Types.h"
 
 
-BOOLEAN ExtractUndergroundSectorInfoFromFile(HWFILE, UNDERGROUND_SECTORINFO*);
-BOOLEAN InjectUndergroundSectorInfoIntoFile(HWFILE, const UNDERGROUND_SECTORINFO*);
+void ExtractUndergroundSectorInfoFromFile(HWFILE, UNDERGROUND_SECTORINFO*);
+void InjectUndergroundSectorInfoIntoFile(HWFILE, UNDERGROUND_SECTORINFO const*);
 
 #endif

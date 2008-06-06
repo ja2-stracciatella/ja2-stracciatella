@@ -4,8 +4,7 @@
 #include "LoadSaveData.h"
 
 
-BOOLEAN ExtractUndergroundSectorInfoFromFile(const HWFILE file, UNDERGROUND_SECTORINFO* const u)
-try
+void ExtractUndergroundSectorInfoFromFile(HWFILE const file, UNDERGROUND_SECTORINFO* const u)
 {
 	BYTE data[72];
 	FileRead(file, data, sizeof(data));
@@ -33,14 +32,10 @@ try
 	EXTR_U32(d, u->uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer)
 	EXTR_SKIP(d, 36)
 	Assert(d == endof(data));
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN InjectUndergroundSectorInfoIntoFile(const HWFILE file, const UNDERGROUND_SECTORINFO* const u)
-try
+void InjectUndergroundSectorInfoIntoFile(HWFILE const file, UNDERGROUND_SECTORINFO const* const u)
 {
 	BYTE data[72];
 	BYTE* d = data;
@@ -68,6 +63,4 @@ try
 	Assert(d == endof(data));
 
 	FileWrite(file, data, sizeof(data));
-	return TRUE;
 }
-catch (...) { return FALSE; }

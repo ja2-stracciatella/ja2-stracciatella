@@ -394,9 +394,11 @@ void LoadSchedules( INT8 **hBuffer )
 	//Schedules are posted when the soldier is added...
 }
 
+
 extern BOOLEAN gfSchedulesHosed;
-BOOLEAN LoadSchedulesFromSave( HWFILE hFile )
-try
+
+
+void LoadSchedulesFromSave(HWFILE const hFile)
 {
 	SCHEDULENODE *pSchedule = NULL;
 	UINT8 ubNum;
@@ -443,9 +445,7 @@ try
 		ubRealNum--;
 	}
 	//Schedules are posted when the soldier is added...
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 #ifdef JA2EDITOR
@@ -497,8 +497,7 @@ void ClearAllSchedules()
 #endif
 
 
-BOOLEAN SaveSchedules( HWFILE hFile )
-try
+void SaveSchedules(HWFILE const hFile)
 {
 	SCHEDULENODE *curr;
 	UINT8 ubNum, ubNumFucker;
@@ -528,10 +527,7 @@ try
 		{
 
 			ubNumFucker++;
-			if( ubNumFucker > ubNum )
-			{
-				return( TRUE );
-			}
+			if (ubNumFucker > ubNum) return;
 
 			BYTE data[36];
 			BYTE* d = data;
@@ -549,9 +545,7 @@ try
 		}
 		curr = curr->next;
 	}
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 //Each schedule has upto four parts to it, so sort them chronologically.

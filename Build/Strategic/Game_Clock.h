@@ -155,8 +155,8 @@ extern BOOLEAN gfTimeInterrupt;
 
 BOOLEAN DidGameJustStart(void);
 
-BOOLEAN SaveGameClock( HWFILE hFile, BOOLEAN fGamePaused, BOOLEAN fLockPauseState );
-BOOLEAN LoadGameClock( HWFILE hFile );
+void SaveGameClock(HWFILE, BOOLEAN fGamePaused, BOOLEAN fLockPauseState);
+void LoadGameClock(HWFILE);
 
 // time compress flag stuff
 BOOLEAN HasTimeCompressOccured( void );

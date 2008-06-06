@@ -351,8 +351,7 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 }
 
 
-BOOLEAN SaveBulletStructureToSaveGameFile( HWFILE hFile )
-try
+void SaveBulletStructureToSaveGameFile(HWFILE const hFile)
 {
 	UINT16	usCnt;
 	UINT32	uiBulletCount=0;
@@ -378,18 +377,14 @@ try
 			if( gBullets[ usCnt ].fAllocated )
 			{
 				//Save the the Bullet structure
-				if (!InjectBulletIntoFile(hFile, &gBullets[usCnt])) return FALSE;
+				InjectBulletIntoFile(hFile, &gBullets[usCnt]);
 			}
 		}
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadBulletStructureFromSavedGameFile( HWFILE hFile )
-try
+void LoadBulletStructureFromSavedGameFile(HWFILE const hFile)
 {
 	//make sure the bullets are not allocated
 	memset(gBullets, 0, sizeof(gBullets));
@@ -401,17 +396,14 @@ try
 	{
 		BULLET* const b = &gBullets[i];
 		//Load the the Bullet structure
-		if (!ExtractBulletFromFile(hFile, b)) return FALSE;
+		ExtractBulletFromFile(hFile, b);
 
 		//Set some parameters
 		b->uiLastUpdate = 0;
 
 		HandleBulletSpecialFlags(b);
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void StopBullet(BULLET* b)

@@ -20,9 +20,9 @@ void DoneAddingToIntList(void);
 
 void ClearIntList( void );
 
-BOOLEAN	SaveTeamTurnsToTheSaveGameFile( HWFILE hFile );
+void SaveTeamTurnsToTheSaveGameFile(HWFILE);
 
-BOOLEAN	LoadTeamTurnsFromTheSavedGameFile( HWFILE hFile );
+void LoadTeamTurnsFromTheSavedGameFile(HWFILE);
 
 void EndAllAITurns( void );
 

@@ -162,7 +162,7 @@ extern	LaptopSaveInfoStruct LaptopSaveInfo;
 extern BobbyRayPurchaseStruct BobbyRayPurchases[ MAX_PURCHASE_AMOUNT ];
 
 
-BOOLEAN LoadLaptopInfoFromSavedGame( HWFILE hFile );
-BOOLEAN SaveLaptopInfoToSavedGame( HWFILE hFile );
+void LoadLaptopInfoFromSavedGame(HWFILE);
+void SaveLaptopInfoToSavedGame(HWFILE);
 
 #endif

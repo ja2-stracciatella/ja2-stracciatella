@@ -1268,29 +1268,21 @@ void CheckForQuests( UINT32 uiDay )
 }
 
 
-BOOLEAN SaveQuestInfoToSavedGameFile( HWFILE hFile )
-try
+void SaveQuestInfoToSavedGameFile(HWFILE const hFile)
 {
 	//Save all the states if the Quests
 	FileWrite(hFile, gubQuest, MAX_QUESTS);
 
 	//Save all the states for the facts
 	FileWrite(hFile, gubFact, NUM_FACTS);
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadQuestInfoFromSavedGameFile( HWFILE hFile )
-try
+void LoadQuestInfoFromSavedGameFile(HWFILE const hFile)
 {
 	//Save all the states if the Quests
 	FileRead(hFile, gubQuest, MAX_QUESTS);
 
 	//Save all the states for the facts
 	FileRead(hFile, gubFact, NUM_FACTS);
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }

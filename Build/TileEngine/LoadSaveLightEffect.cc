@@ -4,8 +4,7 @@
 #include "LoadSaveLightEffect.h"
 
 
-BOOLEAN ExtractLightEffectFromFile(const HWFILE file, LIGHTEFFECT* const l)
-try
+void ExtractLightEffectFromFile(HWFILE const file, LIGHTEFFECT* const l)
 {
 	BYTE data[16];
 	FileRead(file, data, sizeof(data));
@@ -22,14 +21,10 @@ try
 	Assert(d == endof(data));
 
 	l->light = NULL;
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN InjectLightEffectIntoFile(const HWFILE file, const LIGHTEFFECT* const l)
-try
+void InjectLightEffectIntoFile(HWFILE const file, const LIGHTEFFECT* const l)
 {
 	BYTE data[16];
 
@@ -45,6 +40,4 @@ try
 	Assert(d == endof(data));
 
 	FileWrite(file, data, sizeof(data));
-	return TRUE;
 }
-catch (...) { return FALSE; }

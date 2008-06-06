@@ -80,8 +80,8 @@ INT8 GetCivType(const SOLDIERTYPE* pCiv);
 
 void HandleCivQuote(void);
 
-BOOLEAN SaveCivQuotesToSaveGameFile( HWFILE hFile );
-BOOLEAN LoadCivQuotesFromLoadGameFile( HWFILE hFile );
+void SaveCivQuotesToSaveGameFile(HWFILE);
+void LoadCivQuotesFromLoadGameFile(HWFILE);
 
 BOOLEAN ShutDownQuoteBoxIfActive(void);
 

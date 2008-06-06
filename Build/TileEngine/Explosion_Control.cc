@@ -2887,8 +2887,8 @@ void ActivateSwitchInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo)
 	}
 }
 
-BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile )
-try
+
+void SaveExplosionTableToSaveGameFile(HWFILE const hFile)
 {
 	UINT32	uiExplosionCount=0;
 	UINT32	uiCnt;
@@ -2932,17 +2932,13 @@ try
 		const EXPLOSIONTYPE* const e = &gExplosionData[uiCnt];
 		if (e->fAllocated)
 		{
-			if (!InjectExplosionTypeIntoFile(hFile, e)) return FALSE;
+			InjectExplosionTypeIntoFile(hFile, e);
 		}
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile )
-try
+void LoadExplosionTableFromSavedGameFile(HWFILE const hFile)
 {
 	//
 	//	Explosion Queue
@@ -2974,14 +2970,10 @@ try
 	const EXPLOSIONTYPE* const end = gExplosionData + num_explosions;
 	for (EXPLOSIONTYPE* e = gExplosionData; e != end; ++e)
 	{
-		if (!ExtractExplosionTypeFromFile(hFile, e)) return FALSE;
-
+		ExtractExplosionTypeFromFile(hFile, e);
 		GenerateExplosionFromExplosionPointer(e);
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN DoesSAMExistHere( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo )

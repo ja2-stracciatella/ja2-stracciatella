@@ -5,8 +5,7 @@
 #include "Overhead.h"
 
 
-BOOLEAN ExtractExplosionTypeFromFile(const HWFILE file, EXPLOSIONTYPE* const e)
-try
+void ExtractExplosionTypeFromFile(HWFILE const file, EXPLOSIONTYPE* const e)
 {
 	BYTE src[36];
 	const BYTE* s = src;
@@ -31,14 +30,10 @@ try
 	Assert(s == endof(src));
 
 	e->light = NULL;
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN InjectExplosionTypeIntoFile(const HWFILE file, const EXPLOSIONTYPE* e)
-try
+void InjectExplosionTypeIntoFile(HWFILE const file, EXPLOSIONTYPE const* e)
 {
 	BYTE dst[36];
 	BYTE* d = dst;
@@ -61,6 +56,4 @@ try
 	Assert(d == endof(dst));
 
 	FileWrite(file, dst, sizeof(dst));
-	return TRUE;
 }
-catch (...) { return FALSE; }

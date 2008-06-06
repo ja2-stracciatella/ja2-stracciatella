@@ -691,8 +691,7 @@ static void PlayNewMessageSound(void)
 }
 
 
-static BOOLEAN ExtractScrollStringFromFile(const HWFILE file, ScrollStringSt* const s)
-try
+static void ExtractScrollStringFromFile(HWFILE const file, ScrollStringSt* const s)
 {
 	BYTE data[28];
 	FileRead(file, data, sizeof(data));
@@ -705,14 +704,10 @@ try
 	EXTR_BOOL(d, s->fBeginningOfNewString)
 	EXTR_SKIP(d, 1)
 	Assert(d == endof(data));
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-static BOOLEAN InjectScrollStringIntoFile(const HWFILE file, const ScrollStringSt* const s)
-try
+static void InjectScrollStringIntoFile(HWFILE const file, ScrollStringSt const* const s)
 {
 	BYTE data[28];
 	BYTE* d = data;
@@ -725,13 +720,10 @@ try
 	Assert(d == endof(data));
 
 	FileWrite(file, data, sizeof(data));
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN SaveMapScreenMessagesToSaveGameFile(HWFILE hFile)
-try
+void SaveMapScreenMessagesToSaveGameFile(HWFILE const hFile)
 {
 	// write to the begining of the message list
 	FileWrite(hFile, &gubEndOfMapScreenMessageList, sizeof(UINT8));
@@ -764,17 +756,13 @@ try
 			// write the message to the file
 			FileWrite(hFile, s->pString16, uiSizeOfString);
 
-			if (!InjectScrollStringIntoFile(hFile, s)) return FALSE;
+			InjectScrollStringIntoFile(hFile, s);
 		}
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadMapScreenMessagesFromSaveGameFile(HWFILE hFile)
-try
+void LoadMapScreenMessagesFromSaveGameFile(HWFILE const hFile)
 {
 	// clear tactical message queue
 	ClearTacticalMessageQueue();
@@ -829,7 +817,7 @@ try
 			//copy the string over
 			wcscpy(s->pString16, SavedString);
 
-			if (!ExtractScrollStringFromFile(hFile, s)) return FALSE;
+			ExtractScrollStringFromFile(hFile, s);
 		}
 		else
 		{
@@ -839,10 +827,7 @@ try
 
 	// this will set a valid value for gubFirstMapscreenMessageIndex, which isn't being saved/restored
 	MoveToEndOfMapScreenMessageList();
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void HandleLastQuotePopUpTimer(void)

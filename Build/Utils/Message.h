@@ -48,8 +48,8 @@ void ClearDisplayedListOfTacticalStrings( void );
 // clear ALL strings in the tactical Message Queue
 void ClearTacticalMessageQueue( void );
 
-BOOLEAN LoadMapScreenMessagesFromSaveGameFile( HWFILE hFile );
-BOOLEAN SaveMapScreenMessagesToSaveGameFile( HWFILE hFile );
+void LoadMapScreenMessagesFromSaveGameFile(HWFILE);
+void SaveMapScreenMessagesToSaveGameFile(HWFILE);
 
 // use these if you are not Kris
 void HideMessagesDuringNPCDialogue( void );

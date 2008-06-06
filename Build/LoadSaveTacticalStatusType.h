@@ -4,7 +4,7 @@
 #include "Types.h"
 
 
-BOOLEAN ExtractTacticalStatusTypeFromFile(HWFILE f);
-BOOLEAN InjectTacticalStatusTypeIntoFile(HWFILE f);
+void ExtractTacticalStatusTypeFromFile(HWFILE);
+void InjectTacticalStatusTypeIntoFile(HWFILE);
 
 #endif

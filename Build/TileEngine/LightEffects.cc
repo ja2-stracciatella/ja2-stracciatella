@@ -167,8 +167,7 @@ void DecayLightEffects( UINT32 uiTime )
 }
 
 
-BOOLEAN LoadLightEffectsFromLoadGameFile( HWFILE hFile )
-try
+void LoadLightEffectsFromLoadGameFile(HWFILE const hFile)
 {
 	//no longer need to load Light effects.  They are now in temp files
 	if( guiSaveGameVersion < 76 )
@@ -184,7 +183,7 @@ try
 			//loop through and apply the light effects to the map
 			for (UINT32 uiCount = 0; uiCount < guiNumLightEffects; ++uiCount)
 			{
-				if (!ExtractLightEffectFromFile(hFile, &gLightEffectData[uiCount])) return FALSE;
+				ExtractLightEffectFromFile(hFile, &gLightEffectData[uiCount]);
 			}
 		}
 
@@ -194,10 +193,7 @@ try
 			UpdateLightingSprite(l);
 		}
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN SaveLightEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
@@ -236,7 +232,7 @@ try
 	//loop through and save the number of Light effects
 	CFOR_ALL_LIGHTEFFECTS(l)
 	{
-		if (!InjectLightEffectIntoFile(hFile, l)) return FALSE;
+		InjectLightEffectIntoFile(hFile, l);
 	}
 
 	SetSectorFlag( sMapX, sMapY, bMapZ, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS );
@@ -265,7 +261,7 @@ try
 	//loop through and load the list
 	for( uiCnt=0; uiCnt<guiNumLightEffects;uiCnt++)
 	{
-		if (!ExtractLightEffectFromFile(hFile, &gLightEffectData[uiCnt])) return FALSE;
+		ExtractLightEffectFromFile(hFile, &gLightEffectData[uiCnt]);
 	}
 
 	//loop through and apply the light effects to the map

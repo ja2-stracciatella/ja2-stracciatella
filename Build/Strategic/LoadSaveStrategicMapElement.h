@@ -4,7 +4,7 @@
 #include "Strategic.h"
 
 
-BOOLEAN ExtractStrategicMapElementFromFile(HWFILE, StrategicMapElement*);
-BOOLEAN InjectStrategicMapElementIntoFile(HWFILE, const StrategicMapElement*);
+void ExtractStrategicMapElementFromFile(HWFILE, StrategicMapElement*);
+void InjectStrategicMapElementIntoFile(HWFILE, StrategicMapElement const*);
 
 #endif

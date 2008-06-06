@@ -1390,21 +1390,17 @@ void CheckConditionsForTriggeringCreatureQuest( INT16 sSectorX, INT16 sSectorY, 
 }
 
 
-BOOLEAN SaveCreatureDirectives( HWFILE hFile )
-try
+void SaveCreatureDirectives(HWFILE const hFile)
 {
 	FileWrite(hFile, &giHabitatedDistance,  4);
 	FileWrite(hFile, &giPopulationModifier, 4);
 	FileWrite(hFile, &giLairID,             4);
 	FileWrite(hFile, &gfUseCreatureMusic,   1);
 	FileWrite(hFile, &giDestroyedLairID,    4);
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadCreatureDirectives( HWFILE hFile, UINT32 uiSavedGameVersion )
-try
+void LoadCreatureDirectives(HWFILE const hFile, UINT32 const uiSavedGameVersion)
 {
 	FileRead(hFile, &giHabitatedDistance,  4);
 	FileRead(hFile, &giPopulationModifier, 4);
@@ -1444,10 +1440,7 @@ try
 			#endif
 			break;
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void ForceCreaturesToAvoidMineTemporarily( UINT8 ubMineIndex )

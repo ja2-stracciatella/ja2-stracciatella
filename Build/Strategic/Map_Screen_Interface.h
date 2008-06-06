@@ -508,8 +508,8 @@ void RequestDecreaseInTimeCompression( void );
 
 void SelectUnselectedMercsWhoMustMoveWithThisGuy( void );
 
-BOOLEAN LoadLeaveItemList( HWFILE hFile );
-BOOLEAN SaveLeaveItemList( HWFILE hFile );
+void LoadLeaveItemList(HWFILE);
+void SaveLeaveItemList(HWFILE);
 
 BOOLEAN CheckIfSalaryIncreasedAndSayQuote( SOLDIERTYPE *pSoldier, BOOLEAN fTriggerContractMenu );
 

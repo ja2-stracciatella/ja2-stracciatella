@@ -766,24 +766,18 @@ BOOLEAN PlayerControlsMine(INT8 bMineIndex)
 }
 
 
-BOOLEAN SaveMineStatusToSaveGameFile( HWFILE hFile )
-try
+void SaveMineStatusToSaveGameFile(HWFILE const hFile)
 {
 	//Save the MineStatus
 	FileWrite(hFile, gMineStatus, sizeof(MINE_STATUS_TYPE) * MAX_NUMBER_OF_MINES);
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadMineStatusFromSavedGameFile( HWFILE hFile )
-try
+void LoadMineStatusFromSavedGameFile(HWFILE const hFile)
 {
 	//Load the MineStatus
 	FileRead(hFile, gMineStatus, sizeof(MINE_STATUS_TYPE) * MAX_NUMBER_OF_MINES);
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void ShutOffMineProduction( INT8 bMineIndex )

@@ -111,8 +111,8 @@ UINT8 GetTownSectorsUnderControl( INT8 bTownId );
 BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *puiTraverseTimeInMinutes );
 void SetupNewStrategicGame(void);
 
-BOOLEAN LoadStrategicInfoFromSavedFile( HWFILE hFile );
-BOOLEAN SaveStrategicInfoToSavedFile( HWFILE hFile );
+void LoadStrategicInfoFromSavedFile(HWFILE);
+void SaveStrategicInfoToSavedFile(HWFILE);
 
 void AllMercsHaveWalkedOffSector(void);
 

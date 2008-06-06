@@ -1515,24 +1515,18 @@ try
 catch (...) { return FALSE; }
 
 
-BOOLEAN SaveKeyTableToSaveGameFile( HWFILE hFile )
-try
+void SaveKeyTableToSaveGameFile(HWFILE const hFile)
 {
 	// Save the KeyTable
 	FileWrite(hFile, KeyTable, sizeof(KEY) * NUM_KEYS);
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadKeyTableFromSaveedGameFile( HWFILE hFile )
-try
+void LoadKeyTableFromSaveedGameFile(HWFILE const hFile)
 {
 	// Load the KeyTable
 	FileRead(hFile, KeyTable, sizeof(KEY) * NUM_KEYS);
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void ExamineDoorsOnEnteringSector( )

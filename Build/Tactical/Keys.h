@@ -202,10 +202,10 @@ BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile(void);
 
 
 //Save the key table to the saved game file
-BOOLEAN SaveKeyTableToSaveGameFile( HWFILE hFile );
+void SaveKeyTableToSaveGameFile(HWFILE);
 
 //Load the key table from the saved game file
-BOOLEAN LoadKeyTableFromSaveedGameFile( HWFILE hFile );
+void LoadKeyTableFromSaveedGameFile(HWFILE);
 
 // Returns a doors status value, NULL if not found
 DOOR_STATUS	*GetDoorStatus( INT16 sGridNo );

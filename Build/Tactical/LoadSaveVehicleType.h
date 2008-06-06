@@ -4,7 +4,7 @@
 #include "JA2Types.h"
 
 
-BOOLEAN ExtractVehicleTypeFromFile(HWFILE file, VEHICLETYPE* v, UINT32 savegame_version);
-BOOLEAN InjectVehicleTypeIntoFile(HWFILE file, const VEHICLETYPE* v);
+void ExtractVehicleTypeFromFile(HWFILE, VEHICLETYPE*, UINT32 savegame_version);
+void InjectVehicleTypeIntoFile(HWFILE, VEHICLETYPE const*);
 
 #endif

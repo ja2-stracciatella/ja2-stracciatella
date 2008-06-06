@@ -4,8 +4,7 @@
 #include "LoadSaveData.h"
 
 
-BOOLEAN ExtractStrategicMapElementFromFile(const HWFILE file, StrategicMapElement* const e)
-try
+void ExtractStrategicMapElementFromFile(HWFILE const file, StrategicMapElement* const e)
 {
 	BYTE data[41];
 	FileRead(file, data, sizeof(data));
@@ -19,14 +18,10 @@ try
 	EXTR_I8(d, e->bSAMCondition)
 	EXTR_SKIP(d, 20)
 	Assert(d == endof(data));
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN InjectStrategicMapElementIntoFile(const HWFILE file, const StrategicMapElement* const e)
-try
+void InjectStrategicMapElementIntoFile(HWFILE const file, StrategicMapElement const* const e)
 {
 	BYTE data[41];
 
@@ -41,6 +36,4 @@ try
 	Assert(d == endof(data));
 
 	FileWrite(file, data, sizeof(data));
-	return TRUE;
 }
-catch (...) { return FALSE; }

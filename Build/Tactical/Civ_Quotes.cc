@@ -802,20 +802,14 @@ void InitCivQuoteSystem( )
 }
 
 
-BOOLEAN SaveCivQuotesToSaveGameFile( HWFILE hFile )
-try
+void SaveCivQuotesToSaveGameFile(HWFILE const hFile)
 {
 	FileWrite(hFile, &gCivQuotes, sizeof(gCivQuotes));
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadCivQuotesFromLoadGameFile( HWFILE hFile )
-try
+void LoadCivQuotesFromLoadGameFile(HWFILE const hFile)
 {
 	FileRead(hFile, &gCivQuotes, sizeof(gCivQuotes));
 	CopyNumEntriesIntoQuoteStruct( );
-	return( TRUE );
 }
-catch (...) { return FALSE; }

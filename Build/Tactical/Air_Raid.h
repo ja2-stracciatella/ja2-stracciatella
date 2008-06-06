@@ -50,11 +50,10 @@ BOOLEAN HandleAirRaidEndTurn(UINT8 ubTeam);
 
 
 //Save the air raid info to the saved game
-BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile );
-
+void SaveAirRaidInfoToSaveGameFile(HWFILE);
 
 //load the air raid info from the saved game
-BOOLEAN LoadAirRaidInfoFromSaveGameFile( HWFILE hFile );
+void LoadAirRaidInfoFromSaveGameFile(HWFILE);
 
 void EndAirRaid(void);
 

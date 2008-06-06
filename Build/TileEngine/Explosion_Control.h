@@ -79,9 +79,8 @@ void UpdateAndDamageSAMIfFound( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ  );
 
 
-BOOLEAN SaveExplosionTableToSaveGameFile( HWFILE hFile );
-
-BOOLEAN LoadExplosionTableFromSavedGameFile( HWFILE hFile );
+void SaveExplosionTableToSaveGameFile(HWFILE);
+void LoadExplosionTableFromSavedGameFile(HWFILE);
 
 BOOLEAN ActiveTimedBombExists( void );
 void RemoveAllActiveTimedBombs( void );

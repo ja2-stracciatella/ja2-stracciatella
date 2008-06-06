@@ -69,8 +69,8 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID );
 void DeleteSchedule( UINT8 ubScheduleID );
 
 void LoadSchedules( INT8 **hBuffer );
-BOOLEAN LoadSchedulesFromSave( HWFILE hFile );
-BOOLEAN SaveSchedules( HWFILE hFile );
+void LoadSchedulesFromSave(HWFILE);
+void SaveSchedules(HWFILE);
 
 void PostNextSchedule( SOLDIERTYPE *pSoldier );
 

@@ -4,7 +4,7 @@
 #include "Physics.h"
 
 
-BOOLEAN ExtractRealObjectFromFile(HWFILE file, REAL_OBJECT* o);
-BOOLEAN InjectRealObjectIntoFile(HWFILE file, const REAL_OBJECT* o);
+void ExtractRealObjectFromFile(HWFILE, REAL_OBJECT*);
+void InjectRealObjectIntoFile(HWFILE, REAL_OBJECT const*);
 
 #endif

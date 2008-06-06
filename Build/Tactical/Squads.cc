@@ -828,8 +828,7 @@ INT32 GetLastSquadActive( void )
 }
 
 
-BOOLEAN SaveSquadInfoToSavedGameFile( HWFILE hFile )
-try
+void SaveSquadInfoToSavedGameFile(HWFILE const hFile)
 {
 	SAVE_SQUAD_INFO_STRUCT sSquadSaveStruct[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
 	UINT32	uiSaveSize=0;
@@ -854,14 +853,10 @@ try
 
 	//Save all the squad movement id's
 	FileWrite(hFile, SquadMovementGroups, sizeof(INT8) * NUMBER_OF_SQUADS);
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadSquadInfoFromSavedGameFile( HWFILE hFile )
-try
+void LoadSquadInfoFromSavedGameFile(HWFILE const hFile)
 {
 	SAVE_SQUAD_INFO_STRUCT sSquadSaveStruct[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
 	UINT32	uiSaveSize=0;
@@ -899,10 +894,7 @@ try
 
 	//Load in the Squad movement id's
 	FileRead(hFile, SquadMovementGroups, sizeof(INT8) * NUMBER_OF_SQUADS);
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN IsThisSquadOnTheMove( INT8 bSquadValue )

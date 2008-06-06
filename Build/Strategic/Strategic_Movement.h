@@ -229,10 +229,10 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 void MoveAllGroupsInCurrentSectorToSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
 
 //Save the strategic movemnet Group paths to the saved game file
-BOOLEAN SaveStrategicMovementGroupsToSaveGameFile( HWFILE hFile );
+void SaveStrategicMovementGroupsToSaveGameFile(HWFILE);
 
 //Load the strategic movement Group paths from the saved game file
-BOOLEAN LoadStrategicMovementGroupsFromSavedGameFile( HWFILE hFile );
+void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE);
 
 void HandleArrivalOfReinforcements( GROUP *pGroup );
 

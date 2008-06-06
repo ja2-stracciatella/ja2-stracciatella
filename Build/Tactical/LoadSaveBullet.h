@@ -4,7 +4,7 @@
 #include "Bullets.h"
 
 
-BOOLEAN ExtractBulletFromFile(HWFILE file, BULLET* b);
-BOOLEAN InjectBulletIntoFile(HWFILE file, const BULLET* b);
+void ExtractBulletFromFile(HWFILE, BULLET*);
+void InjectBulletIntoFile(HWFILE, const BULLET*);
 
 #endif

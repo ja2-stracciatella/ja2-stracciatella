@@ -4696,8 +4696,7 @@ static BOOLEAN CanSoldierMoveWithVehicleId(const SOLDIERTYPE* const pSoldier, co
 }
 
 
-BOOLEAN SaveLeaveItemList( HWFILE hFile )
-try
+void SaveLeaveItemList(HWFILE const hFile)
 {
 	INT32 iCounter = 0;
 	MERC_LEAVE_ITEM *pCurrentItem;
@@ -4752,14 +4751,10 @@ try
 	{
 		FileWrite(hFile, &guiLeaveListOwnerProfileId[iCounter], sizeof(UINT32));
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadLeaveItemList( HWFILE hFile )
-try
+void LoadLeaveItemList(HWFILE const hFile)
 {
 	INT32 iCounter = 0;
 	MERC_LEAVE_ITEM *pCurrentItem;
@@ -4818,10 +4813,7 @@ try
 	{
 		FileRead(hFile, &guiLeaveListOwnerProfileId[iCounter], sizeof(UINT32));
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void TurnOnSectorLocator( UINT8 ubProfileID )

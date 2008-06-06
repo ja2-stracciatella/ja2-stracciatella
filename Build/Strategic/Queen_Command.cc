@@ -1322,10 +1322,7 @@ static void AddEnemiesToBattle(GROUP* pGroup, UINT8 ubStrategicInsertionCode, UI
 }
 
 
-
-
-BOOLEAN SaveUnderGroundSectorInfoToSaveGame( HWFILE hFile )
-try
+void SaveUnderGroundSectorInfoToSaveGame(HWFILE const hFile)
 {
 	UINT32	uiNumOfRecords=0;
 	UNDERGROUND_SECTORINFO *TempNode = gpUndergroundSectorInfoHead;
@@ -1346,17 +1343,13 @@ try
 	//Go through each node and save it.
 	while( TempNode )
 	{
-		if (!InjectUndergroundSectorInfoIntoFile(hFile, TempNode)) return FALSE;
+		InjectUndergroundSectorInfoIntoFile(hFile, TempNode);
 		TempNode = TempNode->next;
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadUnderGroundSectorInfoFromSavedGame( HWFILE hFile )
-try
+void LoadUnderGroundSectorInfoFromSavedGame(HWFILE const hFile)
 {
 	UINT32	uiNumOfRecords=0;
 	UINT32	cnt=0;
@@ -1371,7 +1364,7 @@ try
 	for( cnt = 0; cnt< uiNumOfRecords; cnt ++)
 	{
 		UNDERGROUND_SECTORINFO* const TempNode = MALLOC(UNDERGROUND_SECTORINFO);
-		if (!ExtractUndergroundSectorInfoFromFile(hFile, TempNode)) return FALSE;
+		ExtractUndergroundSectorInfoFromFile(hFile, TempNode);
 
 		//If its the first time in, assign the node to the list
 		if( cnt == 0 )
@@ -1400,10 +1393,7 @@ try
 		gfClearCreatureQuest = TRUE;
 	}
 #endif
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ )

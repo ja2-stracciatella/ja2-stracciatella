@@ -1323,24 +1323,18 @@ UINT32 BuildLoyaltyEventValue( INT8 bTownValue, UINT32 uiValue, BOOLEAN fIncreme
 */
 
 
-BOOLEAN SaveStrategicTownLoyaltyToSaveGameFile( HWFILE hFile )
-try
+void SaveStrategicTownLoyaltyToSaveGameFile(HWFILE const hFile)
 {
 	//Save the Town Loyalty
 	FileWrite(hFile, gTownLoyalty, sizeof(TOWN_LOYALTY) * NUM_TOWNS);
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadStrategicTownLoyaltyFromSavedGameFile( HWFILE hFile )
-try
+void LoadStrategicTownLoyaltyFromSavedGameFile(HWFILE const hFile)
 {
 	//Restore the Town Loyalty
 	FileRead(hFile, gTownLoyalty, sizeof(TOWN_LOYALTY) * NUM_TOWNS);
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void ReduceLoyaltyForRebelsBetrayed(void)

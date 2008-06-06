@@ -5677,8 +5677,7 @@ typedef struct
 } ITEM_CURSOR_SAVE_INFO;
 
 
-BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile )
-try
+void LoadItemCursorFromSavedGame(HWFILE const hFile)
 {
 	UINT32	uiLoadSize=0;
 	ITEM_CURSOR_SAVE_INFO		SaveStruct;
@@ -5707,14 +5706,10 @@ try
 	{
 		gpItemPointer = NULL;
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile )
-try
+void SaveItemCursorToSavedGame(HWFILE const hFile)
 {
 	UINT32	uiSaveSize=0;
 
@@ -5743,12 +5738,7 @@ try
 	// save locations of watched points
 	uiSaveSize = sizeof( ITEM_CURSOR_SAVE_INFO );
 	FileWrite(hFile, &SaveStruct, uiSaveSize);
-
-	// All done...
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void UpdateItemHatches(void)

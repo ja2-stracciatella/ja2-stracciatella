@@ -68,9 +68,8 @@ void HandleMercIsNotWillingToRenew( UINT8 ubID );
 
 UINT32 GetHourWhenContractDone( SOLDIERTYPE *pSoldier );
 
-BOOLEAN LoadContractRenewalDataFromSaveGameFile( HWFILE hFile );
-BOOLEAN SaveContractRenewalDataToSaveGameFile( HWFILE hFile );
-
+void LoadContractRenewalDataFromSaveGameFile(HWFILE);
+void SaveContractRenewalDataToSaveGameFile(HWFILE);
 
 
 // rehiring of mercs from leave equipment pop up

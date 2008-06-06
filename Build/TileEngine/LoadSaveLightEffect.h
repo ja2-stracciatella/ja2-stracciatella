@@ -4,7 +4,7 @@
 #include "LightEffects.h"
 
 
-BOOLEAN ExtractLightEffectFromFile(HWFILE file, LIGHTEFFECT* l);
-BOOLEAN InjectLightEffectIntoFile(HWFILE file, const LIGHTEFFECT* l);
+void ExtractLightEffectFromFile(HWFILE, LIGHTEFFECT* l);
+void InjectLightEffectIntoFile(HWFILE, LIGHTEFFECT const* l);
 
 #endif

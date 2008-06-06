@@ -793,9 +793,7 @@ void UpdateClock()
 }
 
 
-
-BOOLEAN SaveGameClock( HWFILE hFile, BOOLEAN fGamePaused, BOOLEAN fLockPauseState )
-try
+void SaveGameClock(HWFILE const hFile, BOOLEAN const fGamePaused, BOOLEAN const fLockPauseState)
 {
 	FileWrite(hFile, &giTimeCompressMode,                sizeof(INT32));
 	FileWrite(hFile, &gubClockResolution,                sizeof(UINT8));
@@ -817,13 +815,10 @@ try
 	FileWrite(hFile, &guiLockPauseStateLastReasonId,     sizeof(UINT32));
 
 	FileWrite(hFile, gubUnusedTimePadding, TIME_PADDINGBYTES);
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadGameClock( HWFILE hFile )
-try
+void LoadGameClock(HWFILE const hFile)
 {
 	FileRead(hFile, &giTimeCompressMode,                sizeof(INT32));
 	FileRead(hFile, &gubClockResolution,                sizeof(UINT8));
@@ -855,10 +850,7 @@ try
 
 	if( !gfBasement && !gfCaves )
 		gfDoLighting		 = TRUE;
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void PauseOfClockBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);

@@ -31,8 +31,8 @@ enum
 };
 
 //part of the game.sav files (not map files)
-BOOLEAN SaveStrategicEventsToSavedGame( HWFILE hFile );
-BOOLEAN LoadStrategicEventsFromSavedGame( HWFILE hFile );
+void SaveStrategicEventsToSavedGame(HWFILE);
+void LoadStrategicEventsFromSavedGame(HWFILE);
 
 STRATEGICEVENT* AddAdvancedStrategicEvent( UINT8 ubEventType, UINT8 ubCallbackID, UINT32 uiTimeStamp, UINT32 uiParam );
 

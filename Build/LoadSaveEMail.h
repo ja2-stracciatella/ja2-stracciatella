@@ -4,7 +4,7 @@
 #include "EMail.h"
 
 
-BOOLEAN LoadEmailFromSavedGame(HWFILE File);
-BOOLEAN SaveEmailToSavedGame(HWFILE File);
+void LoadEmailFromSavedGame(HWFILE);
+void SaveEmailToSavedGame(HWFILE);
 
 #endif

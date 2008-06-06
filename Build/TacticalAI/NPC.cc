@@ -2519,8 +2519,7 @@ BOOLEAN TriggerNPCWithGivenApproach( UINT8 ubTriggerNPC, UINT8 ubApproach, BOOLE
 }
 
 
-BOOLEAN SaveNPCInfoToSaveGameFile( HWFILE hFile )
-try
+void SaveNPCInfoToSaveGameFile(HWFILE const hFile)
 {
 	UINT32		cnt;
 	UINT8			ubOne = 1;
@@ -2563,15 +2562,10 @@ try
 			FileWrite(hFile, &ubZero, sizeof(UINT8));
 		}
 	}
-
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
-try
+void LoadNPCInfoFromSavedGameFile(HWFILE const hFile, UINT32 const uiSaveGameVersion)
 {
 	UINT32		cnt;
 	UINT8			ubLoadQuote=0;
@@ -2714,14 +2708,10 @@ try
 		RefreshNPCScriptRecord( SKYRIDER, 21 );
 		RefreshNPCScriptRecord( SKYRIDER, 22 );
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN SaveBackupNPCInfoToSaveGameFile( HWFILE hFile )
-try
+void SaveBackupNPCInfoToSaveGameFile(HWFILE const hFile)
 {
 	UINT32		cnt;
 	UINT8			ubOne = 1;
@@ -2746,14 +2736,10 @@ try
 			FileWrite(hFile, &ubZero, sizeof(UINT8));
 		}
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadBackupNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion )
-try
+void LoadBackupNPCInfoFromSavedGameFile(HWFILE const hFile, UINT32 const uiSaveGameVersion)
 {
 	UINT32		cnt;
 	UINT8			ubLoadQuote=0;
@@ -2792,10 +2778,7 @@ try
 		{
 		}
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void TriggerFriendWithHostileQuote( UINT8 ubNPC )

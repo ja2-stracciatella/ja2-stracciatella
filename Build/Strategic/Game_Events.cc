@@ -606,8 +606,7 @@ BOOLEAN DeleteStrategicEvent( UINT8 ubCallbackID, UINT32 uiParam )
 
 
 //part of the game.sav files (not map files)
-BOOLEAN SaveStrategicEventsToSavedGame( HWFILE hFile )
-try
+void SaveStrategicEventsToSavedGame(HWFILE const hFile)
 {
 	STRATEGICEVENT sGameEvent;
 
@@ -637,15 +636,10 @@ try
 
 		pTempEvent = pTempEvent->next;
 	}
-
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadStrategicEventsFromSavedGame(HWFILE const f)
-try
+void LoadStrategicEventsFromSavedGame(HWFILE const f)
 {
 	//erase the old Game Event queue
 	DeleteAllStrategicEvents();
@@ -664,10 +658,7 @@ try
 		*anchor = sev;
 		anchor  = &sev->next;
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void ValidateGameEvents(void)

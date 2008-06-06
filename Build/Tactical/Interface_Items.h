@@ -113,8 +113,8 @@ void GetHelpTextForItem(wchar_t* pzStr, size_t Length, const OBJECTTYPE* pObject
 
 void CancelItemPointer(void);
 
-BOOLEAN LoadItemCursorFromSavedGame( HWFILE hFile );
-BOOLEAN SaveItemCursorToSavedGame( HWFILE hFile );
+void LoadItemCursorFromSavedGame(HWFILE);
+void SaveItemCursorToSavedGame(HWFILE);
 
 // handle compatable items for merc and map inventory
 BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bInvPos, BOOLEAN fOn, BOOLEAN fFromMerc);

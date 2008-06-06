@@ -4,8 +4,7 @@
 #include "LoadSaveEMail.h"
 
 
-static BOOLEAN LoadEMailFromFile(HWFILE File)
-try
+static void LoadEMailFromFile(HWFILE const File)
 {
 	UINT32 uiSizeOfSubject;
 	FileRead(File, &uiSizeOfSubject, sizeof(UINT32)); // XXX HACK000B
@@ -37,13 +36,10 @@ try
 	Assert(S == endof(Data));
 
 	AddEmailMessage(usOffset, usLength, iDate, ubSender, fRead, iFirstData, uiSecondData);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadEmailFromSavedGame(HWFILE File)
-try
+void LoadEmailFromSavedGame(HWFILE const File)
 {
 	ShutDownEmailList();
 
@@ -52,16 +48,12 @@ try
 
 	for (UINT32 cnt = 0; cnt < uiNumOfEmails; cnt++)
 	{
-		if (!LoadEMailFromFile(File)) return FALSE;
+		LoadEMailFromFile(File);
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-static BOOLEAN SaveEMailIntoFile(HWFILE File, const Email* Mail)
-try
+static void SaveEMailIntoFile(HWFILE const File, Email const* const Mail)
 {
 	BYTE Data[48];
 
@@ -81,13 +73,10 @@ try
 	Assert(D == endof(Data));
 
 	FileWrite(File, Data, sizeof(Data));
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN SaveEmailToSavedGame(HWFILE File)
-try
+void SaveEmailToSavedGame(HWFILE const File)
 {
 	const Email* pEmail;
 
@@ -101,9 +90,6 @@ try
 
 	for (pEmail = pEmailList; pEmail != NULL; pEmail = pEmail->Next)
 	{
-		if (!SaveEMailIntoFile(File, pEmail)) return FALSE;
+		SaveEMailIntoFile(File, pEmail);
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }

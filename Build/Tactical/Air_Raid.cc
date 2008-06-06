@@ -1165,8 +1165,8 @@ BOOLEAN HandleAirRaidEndTurn( UINT8 ubTeam )
 	return( FALSE );
 }
 
-BOOLEAN SaveAirRaidInfoToSaveGameFile( HWFILE hFile )
-try
+
+void SaveAirRaidInfoToSaveGameFile(HWFILE const hFile)
 {
 	AIR_RAID_SAVE_STRUCT sAirRaidSaveStruct;
 
@@ -1221,13 +1221,10 @@ try
 
 	//Save the Air Raid Save Struct
 	FileWrite(hFile, &sAirRaidSaveStruct, sizeof(AIR_RAID_SAVE_STRUCT));
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadAirRaidInfoFromSaveGameFile( HWFILE hFile )
-try
+void LoadAirRaidInfoFromSaveGameFile(HWFILE const hFile)
 {
 	AIR_RAID_SAVE_STRUCT sAirRaidSaveStruct;
 
@@ -1279,10 +1276,7 @@ try
 		gpRaidSoldier = NULL;
 
 	gAirRaidDef = sAirRaidSaveStruct.AirRaidDef;
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void SetTeamStatusGreen(INT8 team)

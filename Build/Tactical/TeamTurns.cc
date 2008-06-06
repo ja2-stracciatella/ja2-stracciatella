@@ -1728,8 +1728,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 }
 
 
-BOOLEAN	SaveTeamTurnsToTheSaveGameFile( HWFILE hFile )
-try
+void SaveTeamTurnsToTheSaveGameFile(HWFILE const hFile)
 {
 	TEAM_TURN_SAVE_STRUCT TeamTurnStruct;
 
@@ -1751,14 +1750,10 @@ try
 
 	//Save the Team turn save structure
 	FileWrite(hFile, &TeamTurnStruct, sizeof(TEAM_TURN_SAVE_STRUCT));
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN	LoadTeamTurnsFromTheSavedGameFile( HWFILE hFile )
-try
+void LoadTeamTurnsFromTheSavedGameFile(HWFILE const hFile)
 {
 	TEAM_TURN_SAVE_STRUCT TeamTurnStruct;
 
@@ -1778,10 +1773,7 @@ try
 	gWhoThrewRock = ID2Soldier(TeamTurnStruct.sWhoThrewRock); // XXX attention: saved value is a INT16
 	gfHiddenInterrupt = TeamTurnStruct.fHiddenInterrupt;
 	gLastInterruptedGuy = ID2Soldier(TeamTurnStruct.ubLastInterruptedGuy);
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN NPCFirstDraw( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pTargetSoldier )

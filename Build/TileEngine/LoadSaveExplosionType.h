@@ -4,7 +4,7 @@
 #include "Explosion_Control.h"
 
 
-BOOLEAN ExtractExplosionTypeFromFile(HWFILE file, EXPLOSIONTYPE* e);
-BOOLEAN InjectExplosionTypeIntoFile(HWFILE file, const EXPLOSIONTYPE* e);
+void ExtractExplosionTypeFromFile(HWFILE, EXPLOSIONTYPE*);
+void InjectExplosionTypeIntoFile(HWFILE, EXPLOSIONTYPE const*);
 
 #endif

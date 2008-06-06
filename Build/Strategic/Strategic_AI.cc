@@ -2928,8 +2928,7 @@ void EvaluateQueenSituation()
 }
 
 
-BOOLEAN SaveStrategicAI( HWFILE hFile )
-try
+void SaveStrategicAI(HWFILE const hFile)
 {
 	GARRISON_GROUP gTempGarrisonGroup;
 	PATROL_GROUP gTempPatrolGroup;
@@ -2990,17 +2989,13 @@ try
 	#ifdef JA2BETAVERSION
 		ValidatePlayersAreInOneGroupOnly();
 	#endif
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void ReinitializeUnvisitedGarrisons(void);
 
 
-BOOLEAN LoadStrategicAI( HWFILE hFile )
-try
+void LoadStrategicAI(HWFILE const hFile)
 {
 	GARRISON_GROUP gTempGarrisonGroup;
 	PATROL_GROUP gTempPatrolGroup;
@@ -3426,10 +3421,7 @@ try
 	#ifdef JA2BETAVERSION
 		ValidatePlayersAreInOneGroupOnly();
 	#endif
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 //As the player's progress changes in the game, the queen will adjust her priorities accordingly.

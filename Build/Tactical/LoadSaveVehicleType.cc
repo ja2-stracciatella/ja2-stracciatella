@@ -7,8 +7,7 @@
 #include "Vehicles.h"
 
 
-BOOLEAN ExtractVehicleTypeFromFile(const HWFILE file, VEHICLETYPE* const v, const UINT32 savegame_version)
-try
+void ExtractVehicleTypeFromFile(HWFILE const file, VEHICLETYPE* const v, UINT32 const savegame_version)
 {
 	BYTE data[128];
 	FileRead(file, data, sizeof(data));
@@ -40,14 +39,10 @@ try
 	EXTR_BOOL(d, v->fValid)
 	EXTR_SKIP(d, 2)
 	Assert(d == endof(data));
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN InjectVehicleTypeIntoFile(const HWFILE file, const VEHICLETYPE* const v)
-try
+void InjectVehicleTypeIntoFile(HWFILE const file, VEHICLETYPE const* const v)
 {
 	BYTE data[128];
 
@@ -78,6 +73,4 @@ try
 	Assert(d == endof(data));
 
 	FileWrite(file, data, sizeof(data));
-	return TRUE;
 }
-catch (...) { return FALSE; }

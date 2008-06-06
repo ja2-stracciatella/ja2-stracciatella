@@ -5,8 +5,7 @@
 #include "Overhead.h"
 
 
-BOOLEAN ExtractBulletFromFile(const HWFILE file, BULLET* const b)
-try
+void ExtractBulletFromFile(HWFILE const file, BULLET* const b)
 {
 	BYTE src[128];
 	const BYTE* s = src;
@@ -61,14 +60,10 @@ try
 	EXTR_U8(s, b->ubItemStatus)
 	EXTR_SKIP(s, 3)
 	Assert(s == endof(src));
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN InjectBulletIntoFile(const HWFILE file, const BULLET* b)
-try
+void InjectBulletIntoFile(HWFILE const file, BULLET const* b)
 {
 	BYTE dst[128];
 	BYTE* d = dst;
@@ -123,6 +118,4 @@ try
 	Assert(d == endof(dst));
 
 	FileWrite(file, dst, sizeof(dst));
-	return TRUE;
 }
-catch (...) { return FALSE; }

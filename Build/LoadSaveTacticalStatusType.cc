@@ -5,8 +5,7 @@
 #include "Overhead.h"
 
 
-BOOLEAN ExtractTacticalStatusTypeFromFile(const HWFILE f)
-try
+void ExtractTacticalStatusTypeFromFile(HWFILE const f)
 {
 #ifdef _WIN32 // XXX HACK000A
 	BYTE data[316];
@@ -131,14 +130,10 @@ try
 	EXTR_SKIP(d, 2)
 	EXTR_U32(d, s->uiCreatureTenseQuoteLastUpdate)
 	Assert(d == endof(data));
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN InjectTacticalStatusTypeIntoFile(const HWFILE f)
-try
+void InjectTacticalStatusTypeIntoFile(HWFILE const f)
 {
 #ifdef _WIN32 // XXX HACK000A
 	BYTE data[316];
@@ -263,6 +258,4 @@ try
 	Assert(d == endof(data));
 
 	FileWrite(f, data, sizeof(data));
-	return TRUE;
 }
-catch (...) { return FALSE; }

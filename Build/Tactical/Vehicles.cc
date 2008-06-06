@@ -867,8 +867,7 @@ SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId )
 }
 
 
-BOOLEAN SaveVehicleInformationToSaveGameFile(const HWFILE f)
-try
+void SaveVehicleInformationToSaveGameFile(HWFILE const f)
 {
 	//Save the number of elements
 	FileWrite(f, &ubNumberOfVehicles, sizeof(UINT8));
@@ -881,22 +880,19 @@ try
 		FileWrite(f, &v->fValid, sizeof(BOOLEAN));
 		if (!v->fValid) continue;
 
-		if (!InjectVehicleTypeIntoFile(f, v)) return FALSE;
-		if (!SaveMercPath(f, v->pMercPath))   return FALSE;
+		InjectVehicleTypeIntoFile(f, v);
+		SaveMercPath(f, v->pMercPath);
 	}
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadVehicleInformationFromSavedGameFile(const HWFILE hFile, const UINT32 uiSavedGameVersion)
-try
+void LoadVehicleInformationFromSavedGameFile(HWFILE const hFile, UINT32 const uiSavedGameVersion)
 {
 	ClearOutVehicleList();
 
 	//Load the number of elements
 	FileRead(hFile, &ubNumberOfVehicles, sizeof(UINT8));
-	if (ubNumberOfVehicles == 0) return TRUE;
+	if (ubNumberOfVehicles == 0) return;
 
 	//allocate memory to hold the vehicle list
 	VEHICLETYPE* const vl = MALLOCNZ(VEHICLETYPE, ubNumberOfVehicles);
@@ -910,12 +906,10 @@ try
 		FileRead(hFile, &v->fValid, sizeof(BOOLEAN));
 		if (!v->fValid) continue;
 
-		if (!ExtractVehicleTypeFromFile(hFile, v, uiSavedGameVersion)) return FALSE;
-		if (!LoadMercPath(hFile, &v->pMercPath))                       return FALSE;
+		ExtractVehicleTypeFromFile(hFile, v, uiSavedGameVersion);
+		LoadMercPath(hFile, &v->pMercPath);
 	}
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void SetVehicleSectorValues(VEHICLETYPE* const v, const UINT8 ubSectorX, const UINT8 ubSectorY)
@@ -943,8 +937,7 @@ void UpdateAllVehiclePassengersGridNo(SOLDIERTYPE* const vs)
 }
 
 
-BOOLEAN LoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile )
-try
+void LoadVehicleMovementInfoFromSavedGameFile(HWFILE const hFile)
 {
 	INT32		cnt;
 	GROUP		*pGroup	=	NULL;
@@ -961,30 +954,21 @@ try
 		pGroup = GetGroup( gubVehicleMovementGroups[ cnt ] );
 		pGroup->fPersistant = TRUE;
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN NewSaveVehicleMovementInfoToSavedGameFile( HWFILE hFile )
-try
+void NewSaveVehicleMovementInfoToSavedGameFile(HWFILE const hFile)
 {
 	//Save all the vehicle movement id's
 	FileWrite(hFile, gubVehicleMovementGroups, sizeof(INT8) * MAX_VEHICLES);
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN NewLoadVehicleMovementInfoFromSavedGameFile( HWFILE hFile )
-try
+void NewLoadVehicleMovementInfoFromSavedGameFile(HWFILE const hFile)
 {
 	//Load in the Squad movement id's
 	FileRead(hFile, gubVehicleMovementGroups, sizeof(INT8) * MAX_VEHICLES);
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN OKUseVehicle( UINT8 ubProfile )

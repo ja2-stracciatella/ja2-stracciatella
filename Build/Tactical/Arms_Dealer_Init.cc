@@ -177,9 +177,7 @@ void ShutDownArmsDealers()
 }
 
 
-
-BOOLEAN SaveArmsDealerInventoryToSaveGameFile( HWFILE hFile )
-try
+void SaveArmsDealerInventoryToSaveGameFile(HWFILE const hFile)
 {
 	UINT8		ubArmsDealer;
 	UINT16	usItemIndex;
@@ -204,18 +202,14 @@ try
 			}
 		}
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-static BOOLEAN AllocMemsetSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem, UINT8 ubElementsNeeded);
-static BOOLEAN LoadIncompleteArmsDealersStatus(HWFILE hFile, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny);
+static void AllocMemsetSpecialItemArray(DEALER_ITEM_HEADER*, UINT8 ubElementsNeeded);
+static void LoadIncompleteArmsDealersStatus(HWFILE, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny);
 
 
-BOOLEAN LoadArmsDealerInventoryFromSavedGameFile( HWFILE hFile, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny )
-try
+void LoadArmsDealerInventoryFromSavedGameFile(HWFILE const hFile, BOOLEAN const fIncludesElgin, BOOLEAN const fIncludesManny)
 {
 	UINT8		ubArmsDealer;
 	UINT16	usItemIndex;
@@ -238,10 +232,7 @@ try
 	}
 	else
 	{
-		if ( !LoadIncompleteArmsDealersStatus( hFile, fIncludesElgin, fIncludesManny ) )
-		{
-			return( FALSE );
-		}
+		LoadIncompleteArmsDealersStatus(hFile, fIncludesElgin, fIncludesManny);
 	}
 
 	//loop through all the dealers inventories
@@ -254,17 +245,12 @@ try
 			if( gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced > 0 )
 			{
 				//Allocate memory for the inventory
-				if ( !AllocMemsetSpecialItemArray( &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ], gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced ))
-					return(FALSE);
-
+				AllocMemsetSpecialItemArray(&gArmsDealersInventory[ubArmsDealer][usItemIndex], gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced);
 				FileRead(hFile, &gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[0], sizeof(DEALER_SPECIAL_ITEM) * gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced);
 			}
 		}
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void ConvertCreatureBloodToElixir(void);
@@ -1107,8 +1093,7 @@ BOOLEAN CanDealerRepairItem( UINT8 ubArmsDealer, UINT16 usItemIndex )
 }
 
 
-static BOOLEAN AllocMemsetSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem, UINT8 ubElementsNeeded)
-try
+static void AllocMemsetSpecialItemArray(DEALER_ITEM_HEADER* const pDealerItem, UINT8 const ubElementsNeeded)
 {
 	Assert(pDealerItem);
 	Assert( ubElementsNeeded > 0);
@@ -1116,10 +1101,7 @@ try
 	// zero them out (they're inactive until an item is actually added)
 	pDealerItem->SpecialItem       = MALLOCNZ(DEALER_SPECIAL_ITEM, ubElementsNeeded);
 	pDealerItem->ubElementsAlloced = ubElementsNeeded;
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN ResizeSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem, UINT8 ubElementsNeeded)
@@ -1538,8 +1520,6 @@ static void AddItemToArmsDealerInventory(UINT8 ubArmsDealer, UINT16 usItemIndex,
 	UINT8 ubElement;
 	UINT8 ubElementsToAdd;
 	BOOLEAN fFoundOne;
-	BOOLEAN fSuccess;
-
 
 	Assert( ubHowMany > 0);
 
@@ -1588,17 +1568,12 @@ static void AddItemToArmsDealerInventory(UINT8 ubArmsDealer, UINT16 usItemIndex,
 				if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced == 0 )
 				{
 					// allocate new memory for the real buffer
-					fSuccess = AllocMemsetSpecialItemArray( &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ], ubElementsToAdd );
+					AllocMemsetSpecialItemArray(&gArmsDealersInventory[ubArmsDealer][usItemIndex], ubElementsToAdd);
 				}
 				else
 				{
 					// we have some allocated, but they're all full and we need more.  MemRealloc existing amount + # addition elements
-					fSuccess = ResizeSpecialItemArray( &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ], (UINT8)( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced + ubElementsToAdd ) );
-				}
-
-				if ( !fSuccess )
-				{
-					return;
+					if (!ResizeSpecialItemArray(&gArmsDealersInventory[ubArmsDealer][usItemIndex], (UINT8)(gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced + ubElementsToAdd))) return;
 				}
 
 				// now add the special item at the first of the newly added elements (still stored in ubElement!)
@@ -2491,8 +2466,7 @@ UINT16 CalcValueOfItemToDealer( UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN 
 
 
 // this only exists to support saves made with game versions < 54 or 55!
-static BOOLEAN LoadIncompleteArmsDealersStatus(HWFILE hFile, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny)
-try
+static void LoadIncompleteArmsDealersStatus(HWFILE const hFile, BOOLEAN const fIncludesElgin, BOOLEAN const fIncludesManny)
 {
 	UINT32  uiDealersSaved;
 
@@ -2527,10 +2501,7 @@ try
 		// initialize Manny now...
 		InitializeOneArmsDealer( ARMS_DEALER_MANNY );
 	}
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN DealerItemIsSafeToStack( UINT16 usItemIndex )

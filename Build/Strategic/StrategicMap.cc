@@ -3276,19 +3276,18 @@ static BOOLEAN SectorIsPartOfTown(INT8 bTownId, INT16 sSectorX, INT16 sSectorY)
 }
 
 
-BOOLEAN SaveStrategicInfoToSavedFile( HWFILE hFile )
-try
+void SaveStrategicInfoToSavedFile(HWFILE const hFile)
 {
 	// Save the strategic map information
 	for (const StrategicMapElement* i = StrategicMap; i != endof(StrategicMap); ++i)
 	{
-		if (!InjectStrategicMapElementIntoFile(hFile, i)) return FALSE;
+		InjectStrategicMapElementIntoFile(hFile, i);
 	}
 
 	// Save the Sector Info
 	for (const SECTORINFO* i = SectorInfo; i != endof(SectorInfo); ++i)
 	{
-		if (!InjectSectorInfoIntoFile(hFile, i)) return FALSE;
+		InjectSectorInfoIntoFile(hFile, i);
 	}
 
 	// Save the SAM Controlled Sector Information
@@ -3300,25 +3299,21 @@ try
 
 	// Save the fFoundOrta
 	FileWrite(hFile, &fFoundOrta, sizeof(BOOLEAN));
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadStrategicInfoFromSavedFile( HWFILE hFile )
-try
+void LoadStrategicInfoFromSavedFile(HWFILE const hFile)
 {
 	// Load the strategic map information
 	for (StrategicMapElement* i = StrategicMap; i != endof(StrategicMap); ++i)
 	{
-		if (!ExtractStrategicMapElementFromFile(hFile, i)) return FALSE;
+		ExtractStrategicMapElementFromFile(hFile, i);
 	}
 
 	// Load the Sector Info
 	for (SECTORINFO* i = SectorInfo; i != endof(SectorInfo); ++i)
 	{
-		if (!ExtractSectorInfoFromFile(hFile, i)) return FALSE;
+		ExtractSectorInfoFromFile(hFile, i);
 	}
 
 	// Load the SAM Controlled Sector Information
@@ -3330,10 +3325,7 @@ try
 
 	// Load the fFoundOrta
 	FileRead(hFile, &fFoundOrta, sizeof(BOOLEAN));
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static INT16 PickGridNoNearestEdge(SOLDIERTYPE* pSoldier, UINT8 ubTacticalDirection)

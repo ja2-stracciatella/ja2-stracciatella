@@ -3523,8 +3523,7 @@ void ClearOutTempLaptopFiles(void)
 }
 
 
-BOOLEAN SaveLaptopInfoToSavedGame(HWFILE hFile)
-try
+void SaveLaptopInfoToSavedGame(HWFILE const hFile)
 {
 	// Save The laptop information
 	FileWrite(hFile, &LaptopSaveInfo, sizeof(LaptopSaveInfoStruct));
@@ -3549,14 +3548,10 @@ try
 		// Load The laptop information
 		FileWrite(hFile, LaptopSaveInfo.pLifeInsurancePayouts, uiSize);
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadLaptopInfoFromSavedGame(HWFILE hFile)
-try
+void LoadLaptopInfoFromSavedGame(HWFILE const hFile)
 {
 	//if there is memory allocated for the BobbyR orders
 	if (LaptopSaveInfo.usNumberOfBobbyRayOrderItems)
@@ -3616,10 +3611,7 @@ try
 		LaptopSaveInfo.ubNumberLifeInsurancePayouts = 0;
 		LaptopSaveInfo.pLifeInsurancePayouts        = NULL;
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static INT32 WWaitDelayIncreasedIfRaining(INT32 iUnitTime)

@@ -69,7 +69,7 @@ extern	INT32			giNumberOfNewBobbyRShipment;
 
 UINT16 CountNumberOfBobbyPurchasesThatAreInTransit(void);
 
-BOOLEAN NewWayOfLoadingBobbyRMailOrdersToSaveGameFile( HWFILE hFile );
-BOOLEAN NewWayOfSavingBobbyRMailOrdersToSaveGameFile( HWFILE hFile );
+void NewWayOfLoadingBobbyRMailOrdersToSaveGameFile(HWFILE);
+void NewWayOfSavingBobbyRMailOrdersToSaveGameFile(HWFILE);
 
 #endif

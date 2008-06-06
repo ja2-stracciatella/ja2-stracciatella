@@ -83,9 +83,7 @@ void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* pSoldier, INT16 sGridNo, UIN
 void SimulateWorld(void);
 
 
-BOOLEAN	SavePhysicsTableToSaveGameFile( HWFILE hFile );
-
-BOOLEAN	LoadPhysicsTableFromSavedGameFile( HWFILE hFile );
-
+void SavePhysicsTableToSaveGameFile(HWFILE);
+void LoadPhysicsTableFromSavedGameFile(HWFILE);
 
 #endif

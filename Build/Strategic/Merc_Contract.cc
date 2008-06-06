@@ -64,24 +64,18 @@ BOOLEAN										gfInContractMenuFromRenewSequence = FALSE;
 #define AIRPORT_Y 2
 
 
-BOOLEAN SaveContractRenewalDataToSaveGameFile( HWFILE hFile )
-try
+void SaveContractRenewalDataToSaveGameFile(HWFILE const hFile)
 {
 	FileWrite(hFile, ContractRenewalList,    sizeof(ContractRenewalList));
 	FileWrite(hFile, &ubNumContractRenewals, sizeof(ubNumContractRenewals));
-  return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadContractRenewalDataFromSaveGameFile( HWFILE hFile )
-try
+void LoadContractRenewalDataFromSaveGameFile(HWFILE const hFile)
 {
 	FileRead(hFile, ContractRenewalList,    sizeof(ContractRenewalList));
 	FileRead(hFile, &ubNumContractRenewals, sizeof(ubNumContractRenewals));
-  return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN ContractIsExpiring(SOLDIERTYPE* pSoldier);

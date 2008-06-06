@@ -22,25 +22,19 @@ void InitStrategicStatus(void)
 	InitArmyGunTypes();
 }
 
-BOOLEAN SaveStrategicStatusToSaveGameFile( HWFILE hFile )
-try
+
+void SaveStrategicStatusToSaveGameFile(HWFILE const hFile)
 {
 	//Save the Strategic Status structure to the saved game file
 	FileWrite(hFile, &gStrategicStatus, sizeof(STRATEGIC_STATUS));
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
-
-BOOLEAN LoadStrategicStatusFromSaveGameFile( HWFILE hFile )
-try
+void LoadStrategicStatusFromSaveGameFile(HWFILE const hFile)
 {
 	//Load the Strategic Status structure from the saved game file
 	FileRead(hFile, &gStrategicStatus, sizeof(STRATEGIC_STATUS));
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 #define DEATH_RATE_SEVERITY 1.0f			// increase to make death rates higher for same # of deaths/time

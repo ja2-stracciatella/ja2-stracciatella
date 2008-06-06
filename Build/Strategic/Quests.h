@@ -239,8 +239,8 @@ extern void CheckForQuests( UINT32 uiDay );
 
 void InitQuestEngine(void);
 
-BOOLEAN LoadQuestInfoFromSavedGameFile( HWFILE hFile );
-BOOLEAN SaveQuestInfoToSavedGameFile( HWFILE hFile );
+void LoadQuestInfoFromSavedGameFile(HWFILE);
+void SaveQuestInfoToSavedGameFile(HWFILE);
 
 BOOLEAN NPCInRoom(UINT8 ubProfileID, UINT8 ubRoomID);
 

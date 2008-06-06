@@ -159,8 +159,8 @@ extern BOOLEAN ReloadQuoteFile( UINT8 ubNPC );
 void ReloadAllQuoteFiles(void);
 
 // Save and loads the npc info to a saved game file
-extern BOOLEAN SaveNPCInfoToSaveGameFile( HWFILE hFile );
-BOOLEAN LoadNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion );
+void SaveNPCInfoToSaveGameFile(HWFILE);
+void LoadNPCInfoFromSavedGameFile(HWFILE, UINT32 uiSaveGameVersion);
 
 extern void TriggerFriendWithHostileQuote( UINT8 ubNPC );
 
@@ -180,8 +180,8 @@ BOOLEAN HandleShopKeepHasBeenShutDown( UINT8 ubCharNum );
 BOOLEAN NPCHasUnusedRecordWithGivenApproach( UINT8 ubNPC, UINT8 ubApproach );
 BOOLEAN NPCWillingToAcceptItem( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * pObj );
 
-BOOLEAN SaveBackupNPCInfoToSaveGameFile( HWFILE hFile );
-BOOLEAN LoadBackupNPCInfoFromSavedGameFile( HWFILE hFile, UINT32 uiSaveGameVersion );
+void SaveBackupNPCInfoToSaveGameFile(HWFILE);
+void LoadBackupNPCInfoFromSavedGameFile(HWFILE, UINT32 uiSaveGameVersion);
 
 #ifdef JA2BETAVERSION
 void ToggleNPCRecordDisplay( void );
