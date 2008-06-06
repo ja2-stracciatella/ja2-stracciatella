@@ -25,9 +25,10 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 	dot[3] = 'p';
 	dot[4] = '\0';
 
-	AutoSGPFile f(FileOpen(sFileName, FILE_ACCESS_READ));
-	if (f)
+	try
 	{
+		AutoSGPFile f(FileOpen(sFileName, FILE_ACCESS_READ));
+
 		// gap file exists
 		// now read in the AUDIO_GAPs
 		const UINT32 size = FileGetSize(f);
@@ -62,6 +63,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 			return;
 		}
 	}
+	catch (...) { /* Handled below */ }
 
 	pGapList->gaps = NULL;
 	pGapList->end  = NULL;

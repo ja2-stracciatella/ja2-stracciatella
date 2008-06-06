@@ -938,15 +938,19 @@ static void GetBalanceFromDisk(void)
 	// will grab the current blanace from disk
 	// assuming file already openned
   // this procedure will open and read in data to the finance list
-	AutoSGPFile hFileHandle(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
-	if (!hFileHandle)
+	AutoSGPFile f;
+	try
+	{
+		f = FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ);
+	}
+	catch (...)
 	{
 		LaptopSaveInfo.iCurrentBalance = 0;
-		return;
-  }
+		return; /* XXX TODO0019 ignore */
+	}
 
 	// get balance from disk first
-  FileRead(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
+  FileRead(f, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 }
 
 
@@ -954,7 +958,6 @@ static void GetBalanceFromDisk(void)
 static void AppendFinanceToEndOfFile(void)
 {
 	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
-	if (!f) return;
 
 	const FinanceUnit* const fu = pFinanceListHead;
 	BYTE  data[FINANCE_RECORD_SIZE];
@@ -974,11 +977,6 @@ static void AppendFinanceToEndOfFile(void)
 static void SetLastPageInRecords(void)
 {
 	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
-	if (!f)
-	{
-		LaptopSaveInfo.iCurrentBalance = 0;
-		return;
-	}
 
 	const UINT32 size = FileGetSize(f);
 
@@ -1046,11 +1044,11 @@ static BOOLEAN LoadNextPage(void)
 
 // Loads in records belonging to page
 static BOOLEAN LoadInRecords(const UINT32 page)
+try
 {
 	if (page == 0) return FALSE; // check if bad page
 
 	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
-	if (!f) return FALSE;
 
 	BOOLEAN      ret  = FALSE;
 	const UINT32 size = FileGetSize(f);
@@ -1089,6 +1087,7 @@ static BOOLEAN LoadInRecords(const UINT32 page)
 	}
 	return ret;
 }
+catch (...) { return FALSE; }
 
 
 static void InternalSPrintMoney(wchar_t* Str, INT32 Amount)
@@ -1146,7 +1145,6 @@ static INT32 GetPreviousDaysBalance(void)
 	if (date_in_days < 2) return 0;
 
 	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
-	if (!f) return 0;
 	const UINT32 size = FileGetSize(f);
 
 	INT32 balance = 0;
@@ -1190,7 +1188,6 @@ static INT32 GetTodaysBalance(void)
 	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
 	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
-	if (!f) return 0;
 	const UINT32 size = FileGetSize(f);
 
 	INT32 balance = 0;
@@ -1232,7 +1229,6 @@ static INT32 GetPreviousDaysIncome(void)
 	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
 	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
-	if (!f) return 0;
 	const UINT32 size = FileGetSize(f);
 
 	INT32 iTotalPreviousIncome = 0;
@@ -1281,7 +1277,6 @@ static INT32 GetTodaysDaysIncome(void)
   const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
 	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
-	if (!f) return 0;
 	const UINT32 size = FileGetSize(f);
 
 	INT32 iTotalIncome = 0;
@@ -1367,7 +1362,6 @@ static INT32 GetTodaysOtherDeposits(void)
   const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
 	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
-	if (!f) return 0;
 	const UINT32 size = FileGetSize(f);
 
 	INT32 iTotalIncome = 0;
@@ -1418,7 +1412,6 @@ static INT32 GetYesterdaysOtherDeposits(void)
   const UINT32 date_in_days   = iDateInMinutes / (24 * 60);
 
 	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
-	if (!f) return 0;
 
 	INT32 iTotalPreviousIncome = 0;
 	// start at the end, move back until Date / 24 * 60 on the record is =  date_in_days - 2

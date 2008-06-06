@@ -80,13 +80,9 @@ catch (...) { return FALSE; }
 
 
 BOOLEAN LoadEncryptedDataFromFile(const char* Filename, wchar_t DestString[], UINT32 seek_chars, UINT32 read_chars)
+try
 {
 	AutoSGPFile File(FileOpen(Filename, FILE_ACCESS_READ));
-	if (!File)
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "LoadEncryptedDataFromFile: Failed to FileOpen");
-		return FALSE;
-	}
-
 	return LoadEncryptedData(File, DestString, seek_chars, read_chars);
 }
+catch (...) { return FALSE; }

@@ -23,7 +23,6 @@ try
 	Assert( hImage != NULL );
 
 	AutoSGPFile hFile(FileOpen(hImage->ImageFile, FILE_ACCESS_READ));
-	CHECKF( hFile );
 
 	FileRead(hFile, &uiImgID,  sizeof(UINT8));
 	FileRead(hFile, &uiColMap, sizeof(UINT8));

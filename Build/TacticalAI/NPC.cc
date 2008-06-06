@@ -140,9 +140,7 @@ try
 
 	}
 
-	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_READ));
-	CHECKN( hFile );
-
+	AutoSGPFile               hFile(FileOpen(zFileName, FILE_ACCESS_READ));
 	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
 	const UINT32 uiFileSize = sizeof(*buf) * NUM_NPC_QUOTE_RECORDS;
 	FileRead(hFile, buf, uiFileSize);
@@ -322,9 +320,7 @@ try
 	  sprintf( zFileName, "NPCData/%c%d.npc", 'A' + ( gsCivQuoteSector[ ubIndex ][ 1 ] - 1 ), gsCivQuoteSector[ ubIndex ][ 0 ] );
   }
 
-	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_READ));
-	CHECKN( hFile );
-
+	AutoSGPFile               hFile(FileOpen(zFileName, FILE_ACCESS_READ));
 	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
 	const UINT32 uiFileSize = sizeof(*buf) * NUM_NPC_QUOTE_RECORDS;
 	FileRead(hFile, buf, uiFileSize);

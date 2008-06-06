@@ -457,7 +457,6 @@ static void LoadInCurrentImpCharacter(void)
 
 	{
 		AutoSGPFile hFile(FileOpen(IMP_MERC_FILE, FILE_ACCESS_READ));
-		if (hFile == 0) return;
 
 		// read in the profile
 		FileRead(hFile, &iProfileId, sizeof(INT32));

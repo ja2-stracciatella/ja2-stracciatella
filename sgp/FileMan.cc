@@ -290,7 +290,6 @@ BOOLEAN FileDelete(const char* const path)
 
 
 HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
-try
 {
 	const char* fmode;
 	int         mode;
@@ -336,20 +335,19 @@ try
 		}
 	}
 
-	if (d < 0) return 0;
+	if (d < 0) throw std::runtime_error("Opening file failed");
 
 	FILE* const f = fdopen(d, fmode);
 	if (!f)
 	{
 		close(d);
-		return 0;
+		throw std::runtime_error("Opening file failed");
 	}
 
 	file->flags  = SGPFILE_REAL;
 	file->u.file = f;
 	return file.Release();
 }
-catch (...) { return 0; }
 
 
 void FileClose(const HWFILE f)

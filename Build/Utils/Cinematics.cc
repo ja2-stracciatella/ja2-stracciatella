@@ -117,6 +117,7 @@ static void SmkSetupVideo(void);
 
 
 static SMKFLIC* SmkOpenFlic(const char* const filename)
+try
 {
 	SMKFLIC* const sf = SmkGetFreeFlic();
 	if (!sf)
@@ -126,11 +127,6 @@ static SMKFLIC* SmkOpenFlic(const char* const filename)
 	}
 
 	AutoSGPFile file(FileOpen(filename, FILE_ACCESS_READ));
-	if (!file)
-	{
-		FastDebugMsg("SMK ERROR: Can't open the SMK file");
-		return NULL;
-	}
 
 	FILE* const f = GetRealFileHandleFromFileManFileHandle(file);
 
@@ -156,6 +152,7 @@ static SMKFLIC* SmkOpenFlic(const char* const filename)
 	sf->uiFlags     |= SMK_FLIC_OPEN;
 	return sf;
 }
+catch (...) { return 0; }
 
 
 void SmkCloseFlic(SMKFLIC* const sf)

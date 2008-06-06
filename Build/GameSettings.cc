@@ -43,7 +43,6 @@ void LoadGameSettings(void)
 	try
 	{
 		AutoSGPFile f(FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_READ));
-		if (!f) goto fail;
 
 		GAME_SETTINGS* const g = &gGameSettings;
 		if (FileGetSize(f) != sizeof(*g))                              goto fail;
@@ -90,7 +89,6 @@ fail:
 void SaveGameSettings(void)
 {
 	AutoSGPFile f(FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-	if (!f) return;
 
 	// Record the current settings into the game settins structure
 	GAME_SETTINGS* const g = &gGameSettings;

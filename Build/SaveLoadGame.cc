@@ -502,7 +502,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	{
 		// create the save game file
 		AutoSGPFile f(FileOpen(zSaveGameName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-		if (!f) goto FAILED_TO_SAVE;
 #ifdef JA2BETAVERSION
 		SaveGameFilePosition(f, "Just Opened File");
 #endif
@@ -1022,7 +1021,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	{
 		// open the save game file
 		AutoSGPFile f(FileOpen(zSaveGameName, FILE_ACCESS_READ));
-		if (!f) goto load_failed;
 #ifdef JA2BETAVERSION
 		LoadGameFilePosition(f, "Just Opened File");
 #endif
@@ -2276,7 +2274,6 @@ BOOLEAN SaveFilesToSavedGame( const char *pSrcFileName, HWFILE hFile )
 try
 {
 	AutoSGPFile hSrcFile(FileOpen(pSrcFileName, FILE_ACCESS_READ));
-	if (!hSrcFile) return FALSE;
 
 #ifdef JA2BETAVERSION
 	guiNumberOfMapTempFiles++;		//Increment counter:  To determine where the temp files are crashing
@@ -2314,7 +2311,6 @@ try
 #endif
 
 	AutoSGPFile hSrcFile(FileOpen(pSrcFileName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-	if (!hSrcFile) return FALSE;
 
 	// Read the size of the data
 	UINT32 uiFileSize;
@@ -2605,7 +2601,6 @@ static void SaveGameFilePosition(const HWFILE save, const char* const pMsg)
 
 	// create the save game file
 	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
-	if (!hFile) return;
 
 	const INT32 pos = FileGetPos(save);
 	sprintf(zTempString, "%8d     %s\n", pos, pMsg);
@@ -2632,7 +2627,6 @@ static void LoadGameFilePosition(const HWFILE load, const char* const pMsg)
 
 	// create the save game file
 	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
-	if (!hFile) return;
 
 	const INT32 pos = FileGetPos(load);
 	sprintf(zTempString, "%8d     %s\n", pos, pMsg);
@@ -3162,7 +3156,6 @@ static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char* pNameOfFile, 
 	{
 		// create the save game file
 		AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
-		if (!hFile) return;
 
 		sprintf( zTempString, "Number Of Files: %6d.  Size of all files: %6d.\n", guiNumberOfMapTempFiles, guiSizeOfTempFiles );
 		uiStrLen = strlen( zTempString );
@@ -3184,7 +3177,6 @@ static void WriteTempFileNameToFile(const char* pFileName, UINT32 uiSizeOfFile, 
 
 	// create the save game file
 	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
-	if (!hFile) return;
 
 	sprintf( zTempString, "%8d   %6d   %s\n", FileGetPos( hSaveFile ), uiSizeOfFile, pFileName );
 	uiStrLen = strlen( zTempString );

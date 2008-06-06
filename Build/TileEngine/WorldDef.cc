@@ -1361,6 +1361,7 @@ static void SaveMapLights(HWFILE hfile);
 
 // SAVING CODE
 BOOLEAN SaveWorld(const char *puiFilename)
+try
 {
 	INT32			cnt;
 	UINT32		uiSoldierSize;
@@ -1391,7 +1392,6 @@ BOOLEAN SaveWorld(const char *puiFilename)
 	sprintf( aFilename, "MAPS/%s", puiFilename );
 
 	AutoSGPFile hfile(FileOpen(aFilename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-	if (!hfile) return FALSE;
 
 	// Write JA2 Version ID
 	FileWrite(hfile, &gdMajorMapVersion, sizeof(FLOAT));
@@ -1839,6 +1839,7 @@ BOOLEAN SaveWorld(const char *puiFilename)
 	strlcpy(g_filename, puiFilename, lengthof(g_filename));
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 #endif
 
@@ -1944,6 +1945,7 @@ extern BOOLEAN gfUpdatingNow;
  * is defined in Summary Info.h, not worlddef.h -- though it's not likely this
  * is going to be used anywhere where it would matter. */
 BOOLEAN EvaluateWorld(const char* const pSector, const UINT8 ubLevel)
+try
 {
 	// Make sure the file exists... if not, then return false
 	char filename[40];
@@ -1967,7 +1969,6 @@ BOOLEAN EvaluateWorld(const char* const pSector, const UINT8 ubLevel)
 	SGP::Buffer<INT8> pBufferHead;
 	{
 		AutoSGPFile f(FileOpen(szDirFilename, FILE_ACCESS_READ));
-		if (!f) return FALSE;
 
 		const UINT32 uiFileSize = FileGetSize(f);
 		pBufferHead.Allocate(uiFileSize);
@@ -2312,6 +2313,7 @@ BOOLEAN EvaluateWorld(const char* const pSector, const UINT8 ubLevel)
 	WriteSectorSummaryUpdate(filename, ubLevel, pSummary);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 #endif
 
@@ -2320,6 +2322,7 @@ static void LoadMapLights(INT8** hBuffer);
 
 
 BOOLEAN LoadWorld(const char *puiFilename)
+try
 {
 	FLOAT						dMajorMapVersion;
 	UINT32					uiFlags;
@@ -2355,11 +2358,6 @@ BOOLEAN LoadWorld(const char *puiFilename)
 	SGP::Buffer<INT8> pBufferHead;
 	{
 		AutoSGPFile hfile(FileOpen(aFilename, FILE_ACCESS_READ));
-		if (!hfile)
-		{
-			SET_ERROR("Could not load map file %s", aFilename);
-			return( FALSE );
-		}
 
 		SetRelativeStartAndEndPercentage( 0, 0, 1, L"Trashing world..." );
 #ifdef JA2TESTVERSION
@@ -2876,6 +2874,11 @@ BOOLEAN LoadWorld(const char *puiFilename)
 
 
 	return( TRUE );
+}
+catch (...)
+{
+	SET_ERROR("Could not load map file %s", puiFilename);
+	return FALSE;
 }
 
 

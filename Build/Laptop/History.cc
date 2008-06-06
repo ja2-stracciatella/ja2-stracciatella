@@ -348,7 +348,6 @@ static void OpenAndReadHistoryFile(void)
 	ClearHistoryList();
 
 	AutoSGPFile f(FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ));
-	if (!f) return;
 
 	UINT entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
 	while (entry_count-- > 0)
@@ -717,6 +716,7 @@ static void SetHistoryButtonStates(void)
 
 // loads in records belogning, to page uiPage
 static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage)
+try
 {
 	ClearHistoryList();
 
@@ -724,7 +724,6 @@ static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage)
 	if (uiPage == 0) return FALSE;
 
 	AutoSGPFile f(FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ));
-	if (!f) return FALSE;
 
 	UINT       entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
 	UINT const skip        = (uiPage - 1) * NUM_RECORDS_PER_PAGE;
@@ -761,6 +760,7 @@ static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 // clear out old list of records, and load in next page worth of records
@@ -792,7 +792,6 @@ static void LoadPreviousHistoryPage(void)
 static void AppendHistoryToEndOfFile(void)
 {
 	AutoSGPFile f(FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
-	if (!f) return;
 
 	const HistoryUnit* const h = pHistoryListHead;
 
@@ -867,7 +866,6 @@ static void PerformCheckOnHistoryRecord(UINT32 uiErrorCode, INT16 sSectorX, INT1
 static INT32 GetNumberOfHistoryPages(void)
 {
 	AutoSGPFile f(FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ));
-	if (!f) return 1;
 
 	const UINT32 uiFileSize = FileGetSize(f) - 1;
 

@@ -387,8 +387,12 @@ static void OpenAndReadFilesFile(void)
 {
 	ClearFilesList();
 
-	AutoSGPFile f(FileOpen(FILES_DAT_FILE, FILE_ACCESS_READ));
-	if (!f) return;
+	AutoSGPFile f;
+	try
+	{
+		f = FileOpen(FILES_DAT_FILE, FILE_ACCESS_READ);
+	}
+	catch (...) { return; /* XXX TODO0019 ignore */ }
 
 	// file exists, read in data, continue until file end
   for (UINT i = FileGetSize(f) / FILE_ENTRY_SIZE; i != 0; --i)
@@ -413,7 +417,6 @@ static void OpenAndReadFilesFile(void)
 static void OpenAndWriteFilesFile(void)
 {
 	AutoSGPFile f(FileOpen(FILES_DAT_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-	if (!f) return;
 
   for (const FilesUnit* i = pFilesListHead; i; i = i->Next)
 	{

@@ -268,7 +268,6 @@ try
 	CHECKF(sfr);
 
 	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
-	if (!f) return FALSE;
 
 	STRUCTURE_FILE_HEADER header;
 	FileRead(f, &header, sizeof(STRUCTURE_FILE_HEADER));

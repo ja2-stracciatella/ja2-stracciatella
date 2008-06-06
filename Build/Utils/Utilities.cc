@@ -17,11 +17,6 @@ BOOLEAN CreateSGPPaletteFromCOLFile(SGPPaletteEntry* const pal, const char* cons
 try
 {
 	AutoSGPFile f(FileOpen(col_file, FILE_ACCESS_READ));
-	if (!f)
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot open COL file");
-		return FALSE;
-	}
 
 	BYTE data[776];
 	FileRead(f, data, sizeof(data));

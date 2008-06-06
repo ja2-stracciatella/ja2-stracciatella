@@ -2414,8 +2414,6 @@ BOOLEAN LoadAnimationStateInstructions( )
 try
 {
 	AutoSGPFile hFile(FileOpen(ANIMFILENAME, FILE_ACCESS_READ));
-	if (!hFile) return FALSE;
-
 	FileRead(hFile, gusAnimInst, sizeof(gusAnimInst));
 	return TRUE;
 }

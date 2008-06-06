@@ -19,7 +19,6 @@ try
 	sprintf(zFilename, "AMBIENT/%d.bad", ubAmbientID);
 
 	AutoSGPFile hFile(FileOpen(zFilename, FILE_ACCESS_READ));
-	if (!hFile) return FALSE;
 
 	// READ #
 	FileRead(hFile, &gsNumAmbData, sizeof(INT16));

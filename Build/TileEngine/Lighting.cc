@@ -2354,19 +2354,19 @@ BOOLEAN fOnlyWalls;
 
 ***************************************************************************************/
 BOOLEAN LightSave(const LightTemplate* const t, const char* const pFilename)
+try
 {
 	if (t->lights == NULL) return FALSE;
 
 	const char* const pName = (pFilename != NULL ? pFilename : t->name);
 	AutoSGPFile hFile(FileOpen(pName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-	if (!hFile) return FALSE;
-
 	FileWrite(hFile, &t->n_lights, sizeof(t->n_lights));
 	FileWrite(hFile, t->lights,    sizeof(*t->lights) * t->n_lights);
 	FileWrite(hFile, &t->n_rays,   sizeof(t->n_rays));
 	FileWrite(hFile, t->rays,      sizeof(*t->rays)   * t->n_rays);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 /* Loads a light template from disk. The light template is returned, or NULL if
@@ -2375,7 +2375,6 @@ static LightTemplate* LightLoad(const char* pFilename)
 try
 {
 	AutoSGPFile hFile(FileOpen(pFilename, FILE_ACCESS_READ));
-	if (hFile == 0) return NULL;
 
 	UINT16 n_lights;
 	FileRead(hFile, &n_lights, sizeof(n_lights));

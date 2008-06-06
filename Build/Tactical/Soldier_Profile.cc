@@ -188,12 +188,6 @@ BOOLEAN LoadMercProfiles(void)
 	try
 	{
 		AutoSGPFile fptr(FileOpen(pFileName, FILE_ACCESS_READ));
-		if (!fptr)
-		{
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to LoadMercProfiles from file %s", pFileName));
-			return FALSE;
-		}
-
 		for (UINT32 uiLoop = 0; uiLoop < NUM_PROFILES; ++uiLoop)
 		{
 #ifdef JA2DEMO
@@ -277,7 +271,7 @@ BOOLEAN LoadMercProfiles(void)
 	}
 	catch (...)
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to read merc profiles from file %s", pFileName));
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to load merc profiles from file %s", pFileName));
 		return FALSE;
 	}
 

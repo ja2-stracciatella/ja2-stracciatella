@@ -211,6 +211,7 @@ static UINT32 SoundStartStream(const char* pFilename, SOUNDTAG* channel, UINT32 
 
 
 UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
+try
 {
 #if 1
 	// TODO0003 implement streaming
@@ -221,12 +222,7 @@ UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, U
 	SOUNDTAG* const channel = SoundGetFreeChannel();
 	if (channel == NULL) return SOUND_ERROR;
 
-	AutoSGPFile hFile = FileOpen(pFilename, FILE_ACCESS_READ);
-	if (!hFile)
-	{
-		FastDebugMsg(String("\n*******\nSoundPlayStreamedFile():  ERROR:  Couldnt open '%s' in SoundPlayStreamedFile()\n", pFilename ) );
-		return SOUND_ERROR;
-	}
+	AutoSGPFile hFile(FileOpen(pFilename, FILE_ACCESS_READ));
 
 	// MSS cannot determine which provider to play if you don't give it a real filename
 	// so if the file isn't in a library, play it normally
@@ -258,6 +254,11 @@ UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, U
 
 	return uiRetVal;
 #endif
+}
+catch (...)
+{
+	FastDebugMsg(String("\n*******\nSoundPlayStreamedFile():  ERROR:  Failed to play '%s'\n", pFilename));
+	return FALSE;
 }
 
 
@@ -717,7 +718,6 @@ try
 	Assert(pFilename != NULL);
 
 	AutoSGPFile hFile(FileOpen(pFilename, FILE_ACCESS_READ));
-	if (hFile == 0) return NULL;
 
 	UINT32 uiSize = FileGetSize(hFile);
 
@@ -1155,12 +1155,12 @@ static UINT32 SoundGetUniqueID(void)
  *
  * Returns: TRUE if it should be streamed, FALSE if loaded. */
 static BOOLEAN SoundPlayStreamed(const char* pFilename)
+try
 {
 	AutoSGPFile hDisk(FileOpen(pFilename, FILE_ACCESS_READ));
-	if (hDisk == 0) return FALSE;
-
 	return FileGetSize(hDisk) >= guiSoundCacheThreshold;
 }
+catch (...) { return FALSE; }
 
 
 /* Stops a sound referred to by its channel.  This function is the only one

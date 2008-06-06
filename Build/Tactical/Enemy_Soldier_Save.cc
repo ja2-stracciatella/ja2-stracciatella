@@ -104,7 +104,6 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 	try
 	{
 		AutoSGPFile hfile(FileOpen(zMapName, FILE_ACCESS_READ));
-		if (!hfile) return FALSE;
 
 		//STEP TWO:  determine whether or not we should use this data.
 		//because it is the demo, it is automatically used.
@@ -410,7 +409,6 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 	try
 	{
 		AutoSGPFile hfile(FileOpen(zMapName, FILE_ACCESS_READ));
-		if (!hfile) return FALSE;
 
 		//STEP TWO:  determine whether or not we should use this data.
 		//because it is the demo, it is automatically used.
@@ -699,7 +697,6 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 	try
 	{
 		AutoSGPFile hfile(FileOpen(zMapName, FILE_ACCESS_READ));
-		if (!hfile) return FALSE;
 
 		//STEP TWO:  determine whether or not we should use this data.
 		//because it is the demo, it is automatically used.
@@ -1041,7 +1038,6 @@ try
 	}
 
 	AutoSGPFile hfile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-	if (!hfile) return FALSE;
 
 	FileWrite(hfile, &sSectorY, 2);
 
@@ -1153,7 +1149,6 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 	try
 	{
 		AutoSGPFile hfile(FileOpen(zMapName, FILE_ACCESS_READ));
-		if (!hfile) return FALSE;
 
 		//STEP TWO:  determine whether or not we should use this data.
 		//because it is the demo, it is automatically used.

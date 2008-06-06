@@ -592,7 +592,6 @@ try
 	}
 
 	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-	if (!hFile) return FALSE;
 
 	//Save the Number of Smoke Effects
 	FileWrite(hFile, &uiNumSmokeEffects, sizeof(UINT32));
@@ -617,7 +616,6 @@ try
 	GetMapTempFileName( SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
 	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
-	if (!hFile) return FALSE;
 
 	//Clear out the old list
 	ResetSmokeEffects();

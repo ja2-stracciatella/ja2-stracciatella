@@ -142,17 +142,16 @@ try
 	// Load the Lock Table
 
 	AutoSGPFile hFile(FileOpen(pFileName, FILE_ACCESS_READ));
-	if( !hFile )
-	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to LoadLockTable from file %s", pFileName) );
-		return(FALSE);
-	}
 
 	uiBytesToRead = sizeof( LOCK ) * NUM_LOCKS;
 	FileRead(hFile, LockTable, uiBytesToRead);
 	return TRUE;
 }
-catch (...) { return FALSE; }
+catch (...)
+{
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to LoadLockTable"));
+	return FALSE;
+}
 
 
 static BOOLEAN KeyExistsInInventory(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID);
@@ -895,7 +894,6 @@ try
 	GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
 	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-	if (hFile == 0) return FALSE;
 
 	//Save the number of doors
 	FileWrite(hFile, &gubNumDoors, sizeof(UINT8));
@@ -930,7 +928,6 @@ try
 	TrashDoorTable();
 
 	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
-	if (hFile == 0) return FALSE;
 
 	//Read in the number of doors
 	FileRead(hFile, &gubMaxDoors, sizeof(UINT8));
@@ -1456,7 +1453,6 @@ try
 	GetMapTempFileName( SF_DOOR_STATUS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
 	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-	if (hFile == 0) return FALSE;
 
 	//Save the number of elements in the door array
 	FileWrite(hFile, &gubNumDoorStatus, sizeof(UINT8));
@@ -1487,7 +1483,6 @@ try
 	TrashDoorStatusArray( );
 
 	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
-	if (hFile == 0) return FALSE;
 
 	// Load the number of elements in the door status array
 	FileRead(hFile, &gubNumDoorStatus, sizeof(UINT8));

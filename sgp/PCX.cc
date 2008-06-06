@@ -97,7 +97,6 @@ static PcxObject* LoadPcx(const char* const filename)
 try
 {
 	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
-	if (f == 0) return NULL;
 
 	PcxHeader header;
 	FileRead(f, &header, sizeof(header));

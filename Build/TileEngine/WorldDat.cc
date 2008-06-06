@@ -17,13 +17,9 @@ static void SetTilesetTwoTerrainValues(void);
 
 
 void InitEngineTilesets(void)
+try
 {
 	AutoSGPFile f(FileOpen("BINARYDATA/JA2SET.DAT", FILE_ACCESS_READ));
-	if (!f)
-	{
-		SET_ERROR("Cannot open tileset data file");
-		return;
-	}
 
 	// READ # TILESETS and compare
 	UINT8 ubNumSets;
@@ -75,6 +71,10 @@ void InitEngineTilesets(void)
 	gTilesets[TEMP_29      ].MovementCostFnc = SetTilesetThreeTerrainValues;
 	gTilesets[TROPICAL_1   ].MovementCostFnc = SetTilesetFourTerrainValues;
 	gTilesets[TEMP_20      ].MovementCostFnc = SetTilesetFourTerrainValues;
+}
+catch (...)
+{
+	SET_ERROR("Failed to load tileset data file");
 }
 
 

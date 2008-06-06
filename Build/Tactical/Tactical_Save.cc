@@ -240,7 +240,6 @@ try
 		char filename[128];
 		GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, sMapX, sMapY, bMapZ);
 		AutoSGPFile f(FileOpen(filename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-		if (f == 0) return FALSE;
 
 		// Save the size of the item table
 		FileWrite(f, &uiNumberOfItems, sizeof(UINT32));
@@ -273,7 +272,6 @@ try
 	if (FileExists(filename))
 	{
 		AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
-		if (f == 0) return FALSE;
 
 		FileRead(f, &l_item_count, sizeof(l_item_count));
 		if (l_item_count != 0)
@@ -921,7 +919,6 @@ try
 	GetMapTempFileName( SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
 	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-	if (!hFile) return FALSE;
 
 	//Determine how many rotting corpses there are
 	UINT32 uiNumberOfCorpses = 0;
@@ -968,7 +965,6 @@ try
 	}
 
 	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
-	if (!hFile) return FALSE;
 
 	// Load the number of Rotting corpses
 	FileRead(hFile, &uiNumberOfCorpses, sizeof(UINT32));
@@ -1127,7 +1123,6 @@ try
 	UINT16	usCnt1;
 
 	AutoSGPFile hFile(FileOpen(NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-	if (!hFile) return FALSE;
 
 	//loop through all the npc accounts and write the temp array to disk
 	for( usCnt1=0; usCnt1< ( NUM_PROFILES-FIRST_RPC ); usCnt1++)
@@ -1167,7 +1162,6 @@ try
 	if( gpNPCQuoteInfoArray[ ubNpcId ] )
 	{
 		AutoSGPFile hFile(FileOpen(NPC_TEMP_QUOTE_FILE, FILE_ACCESS_WRITE | FILE_OPEN_ALWAYS));
-		if (!hFile) return FALSE;
 
 		memset( TempNpcQuote, 0, uiSizeOfTempArray );
 
@@ -1219,7 +1213,6 @@ try
 	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, sMapX, sMapY, bMapZ);
 
 	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_READWRITE | FILE_OPEN_ALWAYS));
-	if (!f) return FALSE;
 
 	UINT32 corpse_count;
 	if (FileGetSize(f) != 0)

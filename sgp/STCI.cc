@@ -20,7 +20,6 @@ try
 	Assert(image != NULL);
 
 	AutoSGPFile f(FileOpen(image->ImageFile, FILE_ACCESS_READ));
-	if (!f) return FALSE;
 
 	STCIHeader header;
 	FileRead(f, &header, sizeof(header));

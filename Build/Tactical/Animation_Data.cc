@@ -774,7 +774,6 @@ static BOOLEAN LoadAnimationProfiles(void)
 try
 {
 	AutoSGPFile f(FileOpen(ANIMPROFILEFILENAME, FILE_ACCESS_READ));
-	if (!f) return FALSE;
 
 	FileRead(f, &gubNumAnimProfiles, sizeof(gubNumAnimProfiles));
 

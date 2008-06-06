@@ -2084,16 +2084,19 @@ static void CalculateOverrideStatus(void)
 
 static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, const char* const suffix)
 {
-	char filename[40];
+	char summary_filename[40];
+	sprintf(summary_filename, DEVINFO_DIR "/%c%d%s.sum", 'A' + y, x + 1, suffix);
 
 	FLOAT dMajorMapVersion;
 	{
+		char filename[40];
 		sprintf(filename, "Maps/%c%d%s.dat", 'A' + y, x + 1, suffix);
-		AutoSGPFile f_map(FileOpen(filename, FILE_ACCESS_READ));
-
-		sprintf(filename, DEVINFO_DIR "/%c%d%s.sum", 'A' + y, x + 1, suffix);
-
-		if (!f_map)
+		AutoSGPFile f_map;
+		try
+		{
+			f_map = FileOpen(filename, FILE_ACCESS_READ);
+		}
+		catch (...)
 		{
 			FileDelete(filename);
 			return FALSE;
@@ -2102,7 +2105,7 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 		FileRead(f_map, &dMajorMapVersion, sizeof(FLOAT));
 	}
 
-	FILE* const f_sum = fopen(filename, "rb");
+	FILE* const f_sum = fopen(summary_filename, "rb");
 	if (!f_sum)
 	{
 		++gusNumEntriesWithOutdatedOrNoSummaryInfo;
@@ -2556,10 +2559,6 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	char szFilename[40];
 	sprintf( szFilename, "MAPS/%ls", gszFilename );
 	AutoSGPFile hfile(FileOpen(szFilename, FILE_ACCESS_READ));
-	if( !hfile )
-	{ //The file couldn't be found!
-		return;
-	}
 	//Now fileseek directly to the file position where the number of world items are stored
 	FileSeek(hfile, gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START);
 	//Now load the number of world items from the map.

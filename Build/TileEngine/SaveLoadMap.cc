@@ -47,8 +47,6 @@ try
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
 	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
-	if (!hFile) return FALSE;
-
 	FileWrite(hFile, pMap, sizeof(MODIFY_MAP));
 
 	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS );
@@ -87,7 +85,6 @@ try
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
 		AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
-		if (!hFile) return FALSE;
 
 		//Get the size of the file
 		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
@@ -495,7 +492,6 @@ try
 	GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
 	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-	if (!hFile) return FALSE;
 
 	//Write the revealed array to the Revealed temp file
 	FileWrite(hFile, gpRevealedMap, NUM_REVEALED_BYTES);
@@ -529,7 +525,6 @@ try
 
 	{
 		AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
-		if (!hFile) return FALSE;
 
 		Assert( gpRevealedMap == NULL );
 		gpRevealedMap = MALLOCNZ(UINT8, NUM_REVEALED_BYTES);
@@ -719,7 +714,6 @@ try
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
 		AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
-		if (!hFile) return FALSE;
 
 		//Get the number of elements in the file
 		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
@@ -871,7 +865,6 @@ try
 	{
 		// Read the map temp file into a buffer
 		AutoSGPFile src(FileOpen(map_name, FILE_ACCESS_READ));
-		if (src == 0) return FALSE;
 
 		uiNumberOfElements = FileGetSize(src) / sizeof(MODIFY_MAP);
 
@@ -891,8 +884,6 @@ try
 	}
 
 	AutoSGPFile dst(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-	if (dst == 0) return FALSE;
-
 	FileWrite(dst, mm, sizeof(*mm) * uiNumberOfElements);
 	return TRUE;
 }

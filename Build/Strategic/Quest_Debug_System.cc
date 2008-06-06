@@ -2812,11 +2812,6 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 	try
 	{
 		AutoSGPFile hFile(FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
-		if( !hFile )
-		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to open Quest Debug File %s", QUEST_DEBUG_FILE) );
-			return;
-		}
 
 		sprintf( DestString, "\n\n\nNew Approach for NPC ID: %d '%ls' against Merc: %d '%ls'", ubNpcID, gMercProfiles[ ubNpcID ].zNickname, ubMercID, gMercProfiles[ ubMercID ].zNickname );
 		//	sprintf( DestString, "\n\n\nNew Approach for NPC ID: %d  against Merc: %d ", ubNpcID, ubMercID );
@@ -2863,11 +2858,6 @@ void NpcRecordLogging(UINT8 ubApproach, const char *pStringA, ...)
 	try
 	{
 		AutoSGPFile hFile(FileOpen(QUEST_DEBUG_FILE, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
-		if( !hFile )
-		{
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to open Quest Debug File %s", QUEST_DEBUG_FILE) );
-			return;
-		}
 
 		sprintf( DestString, "\n\t\t%s", TempString );
 
