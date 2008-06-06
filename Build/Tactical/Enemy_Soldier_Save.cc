@@ -885,8 +885,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 //If we are saving a game and we are in the sector, we will need to preserve the links between the
 //soldiers and the soldier init list.  Otherwise, the temp file will be deleted.
-BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, BOOLEAN fEnemy, BOOLEAN fValidateOnly )
-try
+void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ, BOOLEAN const fEnemy, BOOLEAN const fValidateOnly)
 {
 	INT32 i;
 	INT32 slots = 0;
@@ -1010,21 +1009,16 @@ try
 		{
 			//No need to save anything, so return successfully
 			RemoveEnemySoldierTempFile( sSectorX, sSectorY, bSectorZ );
-			return TRUE;
 		}
 		else
 		{
 			//No need to save anything, so return successfully
 			RemoveCivilianTempFile( sSectorX, sSectorY, bSectorZ );
-			return( TRUE );
 		}
-
+		return;
 	}
 
-	if( fValidateOnly )
-	{
-		return( TRUE );
-	}
+	if (fValidateOnly) return;
 
 	//STEP TWO:  Set up the temp file to write to.
 
@@ -1077,7 +1071,7 @@ try
 		{
 			SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_CIV_PRESERVED_TEMP_FILE_EXISTS );
 		}
-		return TRUE;
+		return;
 	}
 
 	for( i = gTacticalStatus.Team[ ubStartID ].bFirstID; i <= gTacticalStatus.Team[ ubEndID ].bLastID; i++ )
@@ -1110,10 +1104,7 @@ try
 	{
 		SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_CIV_PRESERVED_TEMP_FILE_EXISTS );
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile(UINT8* pubNumElites, UINT8* pubNumRegulars, UINT8* pubNumAdmins, UINT8* pubNumCreatures)

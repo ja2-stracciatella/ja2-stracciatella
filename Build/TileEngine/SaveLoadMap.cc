@@ -469,9 +469,7 @@ static void AddBloodOrSmellFromMapTempFileToMap(MODIFY_MAP* pMap)
 }
 
 
-
-BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
-try
+void SaveRevealedStatusArrayToRevealedTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
 {
 	CHAR8		zMapName[ 128 ];
 
@@ -488,10 +486,7 @@ try
 
 	MemFree( gpRevealedMap );
 	gpRevealedMap = NULL;
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void SetMapRevealedStatus(void);

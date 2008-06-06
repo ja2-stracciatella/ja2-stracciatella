@@ -876,11 +876,7 @@ void UpdateDoorPerceivedValue( DOOR *pDoor )
 }
 
 
-
-
-
-BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
-try
+void SaveDoorTableToDoorTableTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
 {
 	UINT32	uiSizeToSave=0;
 	CHAR8		zMapName[ 128 ];
@@ -901,9 +897,7 @@ try
 
 	//Set the sector flag indicating that there is a Door table temp file present
 	SetSectorFlag( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_DOOR_TABLE_TEMP_FILES_EXISTS );
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void LoadDoorTableFromDoorTableTempFile()
@@ -1428,8 +1422,7 @@ static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* d)
 }
 
 
-BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
-try
+void SaveDoorStatusArrayToDoorStatusTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
 {
 	CHAR8		zMapName[ 128 ];
 	UINT8		ubCnt;
@@ -1456,9 +1449,7 @@ try
 
 	//Set the flag indicating that there is a door status array
 	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_DOOR_STATUS_TEMP_FILE_EXISTS );
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void LoadDoorStatusArrayFromDoorStatusTempFile()

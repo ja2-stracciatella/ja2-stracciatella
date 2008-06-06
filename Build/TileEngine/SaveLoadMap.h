@@ -78,7 +78,7 @@ void AddRemoveObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex );
 void SaveBloodSmellAndRevealedStatesFromMapToTempFile(void);
 
 
-BOOLEAN SaveRevealedStatusArrayToRevealedTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
+void SaveRevealedStatusArrayToRevealedTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 void LoadRevealedStatusArrayFromRevealedTempFile(void);
 

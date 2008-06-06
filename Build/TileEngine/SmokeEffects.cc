@@ -563,8 +563,7 @@ void LoadSmokeEffectsFromLoadGameFile(HWFILE const hFile)
 }
 
 
-BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
-try
+void SaveSmokeEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
 	UINT32	uiNumSmokeEffects=0;
 	CHAR8		zMapName[ 128 ];
@@ -583,8 +582,7 @@ try
 	{
 		//set the fact that there are no smoke effects for this sector
 		ReSetSectorFlag( sMapX, sMapY, bMapZ, SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS );
-
-		return( TRUE );
+		return;
 	}
 
 	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
@@ -598,9 +596,7 @@ try
 	}
 
 	SetSectorFlag( sMapX, sMapY, bMapZ, SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS );
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void LoadSmokeEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)

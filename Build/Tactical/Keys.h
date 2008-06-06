@@ -178,7 +178,7 @@ void UpdateDoorPerceivedValue( DOOR *pDoor );
 
 
 //Saves the Door Table array to the temp file
-BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
+void SaveDoorTableToDoorTableTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 //Load the door table from the temp file
 void LoadDoorTableFromDoorTableTempFile(void);
@@ -194,7 +194,7 @@ BOOLEAN ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fInitiallyPercie
 void TrashDoorStatusArray(void);
 
 // Saves the Door Status array to the MapTempfile
-BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
+void SaveDoorStatusArrayToDoorStatusTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 //Load the door status from the door status temp file
 void LoadDoorStatusArrayFromDoorStatusTempFile(void);

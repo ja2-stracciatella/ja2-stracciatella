@@ -14,7 +14,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile(void);
 BOOLEAN NewWayOfLoadingCiviliansFromTempFile(void);
 
 
-BOOLEAN NewWayOfSavingEnemyAndCivliansToTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, BOOLEAN fEnemy, BOOLEAN fValidateOnly  );
+void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, BOOLEAN fEnemy, BOOLEAN fValidateOnly);
 
 
 extern BOOLEAN gfRestoringEnemySoldiersFromTempFile;

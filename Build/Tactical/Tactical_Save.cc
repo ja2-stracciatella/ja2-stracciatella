@@ -340,10 +340,11 @@ extern BOOLEAN gfInMeanwhile;
 
 static void SaveNPCInformationToProfileStruct(void);
 static void SetLastTimePlayerWasInSector(void);
-static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+static void SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
 BOOLEAN SaveCurrentSectorsInformationToTempItemFile( )
+try
 {
 	BOOLEAN fShouldBeInMeanwhile = FALSE;
 	if( gfWasInMeanwhile )
@@ -380,64 +381,30 @@ BOOLEAN SaveCurrentSectorsInformationToTempItemFile( )
 	}
 
 	//Save the rotting corpse array to the temp rotting corpse file
-	if( !SaveRottingCorpsesToTempCorpseFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in SaveRottingCorpsesToTempCorpseFile()");
-		return( FALSE );
-	}
+	SaveRottingCorpsesToTempCorpseFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 
 	//save the Doortable array to the temp door map file
-	if( !SaveDoorTableToDoorTableTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in SaveDoorTableToDoorTableTempFile()");
-		return( FALSE );
-	}
+	SaveDoorTableToDoorTableTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 
 	//save the 'revealed'status of the tiles
-	if( !SaveRevealedStatusArrayToRevealedTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in SaveRevealedStatusArrayToRevealedTempFile()");
-		return( FALSE );
-	}
+	SaveRevealedStatusArrayToRevealedTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 
 	//save the door open status to the saved game file
-	if( !SaveDoorStatusArrayToDoorStatusTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in SaveDoorStatusArrayToDoorStatusTempFile()");
-		return( FALSE );
-	}
+	SaveDoorStatusArrayToDoorStatusTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 
 	//Save the enemies to the temp file
-	if( !NewWayOfSavingEnemyAndCivliansToTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE, FALSE ) )
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in NewWayOfSavingEnemyAndCivliansToTempFile( Enemy, Creature Team )");
-		return( FALSE );
-	}
+	NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE, FALSE);
 
 	//Save the civilian info to the temp file
-	if( !NewWayOfSavingEnemyAndCivliansToTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, FALSE, FALSE ) )
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in NewWayOfSavingEnemyAndCivliansToTempFile( Civ Team )");
-		return( FALSE );
-	}
+	NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, FALSE, FALSE);
 
 	//Save the smoke effects info to the temp file
-	if( !SaveSmokeEffectsToMapTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in SaveSmokeEffectsToMapTempFile");
-		return( FALSE );
-	}
+	SaveSmokeEffectsToMapTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 
 	//Save the smoke effects info to the temp file
-	if( !SaveLightEffectsToMapTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in SaveLightEffectsToMapTempFile");
-		return( FALSE );
-	}
-
+	SaveLightEffectsToMapTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 
 	//Save any other info here
-
 
 	//Save certain information from the NPC's soldier structure to the Merc structure
 	SaveNPCInformationToProfileStruct( );
@@ -453,6 +420,7 @@ BOOLEAN SaveCurrentSectorsInformationToTempItemFile( )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
@@ -901,8 +869,7 @@ void InitTacticalSave(BOOLEAN const fCreateTempDir)
 }
 
 
-static BOOLEAN SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
-try
+static void SaveRottingCorpsesToTempCorpseFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
 	CHAR8		zMapName[ 128 ];
 
@@ -927,9 +894,7 @@ try
 	// Set the flag indicating that there is a rotting corpse Temp File
 //	SectorInfo[ SECTOR( sMapX,sMapY) ].uiFlags |= SF_ROTTING_CORPSE_TEMP_FILE_EXISTS;
 	SetSectorFlag( sMapX, sMapY, bMapZ, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS );
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void LoadRottingCorpsesFromTempCorpseFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
@@ -1039,7 +1004,7 @@ void AddWorldItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const I
 }
 
 
-static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId);
+static void SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId);
 
 
 static void SaveNPCInformationToProfileStruct(void)
@@ -1132,8 +1097,7 @@ try
 catch (...) { return FALSE; }
 
 
-static BOOLEAN SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 ubNpcId)
-try
+static void SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 const ubNpcId)
 {
 	UINT8	ubCnt;
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
@@ -1164,10 +1128,7 @@ try
 		//Set the fact that the merc has the temp npc quote data
 		gMercProfiles[ ubNpcId ].ubMiscFlags |= PROFILE_MISC_FLAG_TEMP_NPC_QUOTE_DATA_EXISTS;
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void ChangeNpcToDifferentSector(MERCPROFILESTRUCT* const p, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
