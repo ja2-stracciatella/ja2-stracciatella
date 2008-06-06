@@ -4,8 +4,7 @@
 #include "LoadSaveData.h"
 
 
-BOOLEAN ExtractRottingCorpseFromFile(const HWFILE file, ROTTING_CORPSE_DEFINITION* const c)
-try
+void ExtractRottingCorpseFromFile(HWFILE const file, ROTTING_CORPSE_DEFINITION* const c)
 {
 	BYTE data[160];
 	FileRead(file, data, sizeof(data));
@@ -32,14 +31,10 @@ try
 	EXTR_U8(d, c->ubAIWarningValue)
 	EXTR_SKIP(d, 12)
 	Assert(d == endof(data));
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN InjectRottingCorpseIntoFile(const HWFILE file, const ROTTING_CORPSE_DEFINITION* c)
-try
+void InjectRottingCorpseIntoFile(HWFILE const file, ROTTING_CORPSE_DEFINITION const* const c)
 {
 	BYTE data[160];
 
@@ -67,6 +62,4 @@ try
 	Assert(d == endof(data));
 
 	FileWrite(file, data, sizeof(data));
-	return TRUE;
 }
-catch (...) { return FALSE; }

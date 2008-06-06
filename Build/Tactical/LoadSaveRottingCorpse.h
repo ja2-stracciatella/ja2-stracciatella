@@ -4,7 +4,7 @@
 #include "Rotting_Corpses.h"
 
 
-BOOLEAN ExtractRottingCorpseFromFile(HWFILE file, ROTTING_CORPSE_DEFINITION* b);
-BOOLEAN InjectRottingCorpseIntoFile(HWFILE file, const ROTTING_CORPSE_DEFINITION* b);
+void ExtractRottingCorpseFromFile(HWFILE, ROTTING_CORPSE_DEFINITION*);
+void InjectRottingCorpseIntoFile(HWFILE, ROTTING_CORPSE_DEFINITION const*);
 
 #endif

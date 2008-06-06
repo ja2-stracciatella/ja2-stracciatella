@@ -602,17 +602,14 @@ enum WaveFormatTag
 };
 
 
-static BOOLEAN LoadPCM(SAMPLETAG* s, HWFILE file, UINT32 size)
-try
+static void LoadPCM(SAMPLETAG* const s, HWFILE const file, UINT32 const size)
 {
 	SGP::Buffer<UINT8> data(size);
 	FileRead(file, data, size);
 
 	s->n_samples = size / GetSampleSize(s);
 	s->pData     = data.Release();
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static inline int Clamp(int min, int x, int max)
@@ -623,8 +620,7 @@ static inline int Clamp(int min, int x, int max)
 }
 
 
-static BOOLEAN LoadDVIADPCM(SAMPLETAG* s, HWFILE file, UINT16 block_align)
-try
+static void LoadDVIADPCM(SAMPLETAG* const s, HWFILE const file, UINT16 const block_align)
 {
 	s->uiFlags |= SAMPLE_16BIT;
 
@@ -649,7 +645,7 @@ try
 		if (--CountSamples == 0)
 		{
 			s->pData  = Data;
-			return TRUE;
+			return;
 		}
 
 		UINT DataCount = block_align / 4;
@@ -698,13 +694,12 @@ try
 				if (--CountSamples == 0)
 				{
 					s->pData  = Data;
-					return TRUE;
+					return;
 				}
 			}
 		}
 	}
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN    SoundCleanCache(void);
@@ -812,11 +807,11 @@ try
 					switch (FormatTag)
 					{
 						case WAVE_FORMAT_PCM:
-							if (!LoadPCM(s, hFile, Size)) return NULL;
+							LoadPCM(s, hFile, Size);
 							goto sound_loaded;
 
 						case WAVE_FORMAT_DVI_ADPCM:
-							if (!LoadDVIADPCM(s, hFile, BlockAlign)) return NULL;
+							LoadDVIADPCM(s, hFile, BlockAlign);
 							goto sound_loaded;
 
 						default: return NULL;

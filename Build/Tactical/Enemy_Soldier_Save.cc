@@ -206,13 +206,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 
 		for( i = 0; i < slots; i++ )
 		{
-			if (!ExtractSoldierCreateFromFile(hfile, &tempDetailedPlacement))
-			{
-#ifdef JA2TESTVERSION
-				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.  KM", i );
-#endif
-				goto FAIL_LOAD;
-			}
+			ExtractSoldierCreateFromFile(hfile, &tempDetailedPlacement);
 			FOR_ALL_SOLDIERINITNODES(curr)
 			{
 				if( !curr->pBasicPlacement->fPriorityExistance )
@@ -519,13 +513,7 @@ BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 
 		for( i = 0; i < slots; i++ )
 		{
-			if (!ExtractSoldierCreateFromFile(hfile, &tempDetailedPlacement))
-			{
-#ifdef JA2TESTVERSION
-				sprintf( zReason, "EnemySoldier -- EOF while reading tempDetailedPlacment %d.  KM", i );
-#endif
-				goto FAIL_LOAD;
-			}
+			ExtractSoldierCreateFromFile(hfile, &tempDetailedPlacement);
 			FOR_ALL_SOLDIERINITNODES(curr)
 			{
 				if( !curr->pBasicPlacement->fPriorityExistance )
@@ -784,13 +772,7 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 
 		for( i = 0; i < slots; i++ )
 		{
-			if (!ExtractSoldierCreateFromFile(hfile, &tempDetailedPlacement))
-			{
-#ifdef JA2TESTVERSION
-				sprintf( zReason, "Civilian -- EOF while reading tempDetailedPlacment %d.  KM", i );
-#endif
-				goto FAIL_LOAD;
-			}
+			ExtractSoldierCreateFromFile(hfile, &tempDetailedPlacement);
 			FOR_ALL_SOLDIERINITNODES(curr)
 			{
 				if( !curr->pBasicPlacement->fPriorityExistance )
@@ -1113,7 +1095,7 @@ try
 			if (curr && pSoldier->ubProfile == NO_PROFILE)
 			{
 				//found a match.
-				if (!InjectSoldierCreateIntoFile(hfile, curr->pDetailedPlacement)) return FALSE;
+				InjectSoldierCreateIntoFile(hfile, curr->pDetailedPlacement);
 				//insert a checksum equation (anti-hack)
 				const UINT16 usCheckSum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
 				FileWrite(hfile, &usCheckSum, 2);
@@ -1257,14 +1239,7 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 
 		for( i = 0; i < slots; i++ )
 		{
-			if (!ExtractSoldierCreateFromFile(hfile, &tempDetailedPlacement))
-			{
-#ifdef JA2TESTVERSION
-				sprintf( zReason, "Check EnemySoldier -- EOF while reading tempDetailedPlacment %d.  KM", i );
-#endif
-				goto FAIL_LOAD;
-			}
-
+			ExtractSoldierCreateFromFile(hfile, &tempDetailedPlacement);
 			//increment the current type of soldier
 			switch( tempDetailedPlacement.ubSoldierClass )
 			{

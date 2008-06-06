@@ -934,7 +934,7 @@ try
 	CFOR_ALL_ROTTING_CORPSES(c)
 	{
 		//Save the RottingCorpse info array
-		if (!InjectRottingCorpseIntoFile(hFile, &c->def)) return FALSE;
+		InjectRottingCorpseIntoFile(hFile, &c->def);
 	}
 
 	// Set the flag indicating that there is a rotting corpse Temp File
@@ -982,7 +982,7 @@ try
 
 		// Load the Rotting corpses info
 		ROTTING_CORPSE_DEFINITION def;
-		if (!ExtractRottingCorpseFromFile(hFile, &def)) return FALSE;
+		ExtractRottingCorpseFromFile(hFile, &def);
 
 		//Check the flags to see if we have to find a gridno to place the rotting corpses at
 		if( def.usFlags & ROTTING_CORPSE_FIND_SWEETSPOT_FROM_GRIDNO )
@@ -1236,7 +1236,7 @@ try
 	FileWrite(f, &corpse_count, sizeof(corpse_count));
 
 	FileSeek(f, 0, FILE_SEEK_FROM_END);
-	if (!InjectRottingCorpseIntoFile(f, corpse_def)) return FALSE;
+	InjectRottingCorpseIntoFile(f, corpse_def);
 
 	SetSectorFlag(sMapX, sMapY, bMapZ, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS);
 	return TRUE;

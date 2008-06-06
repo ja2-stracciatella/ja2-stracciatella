@@ -144,8 +144,7 @@ static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* c
 }
 
 
-BOOLEAN ExtractSoldierCreateFromFile(const HWFILE f, SOLDIERCREATE_STRUCT* const c)
-try
+void ExtractSoldierCreateFromFile(HWFILE const f, SOLDIERCREATE_STRUCT* const c)
 {
 #ifdef _WIN32 // XXX HACK000A
 	BYTE data[1040];
@@ -154,9 +153,7 @@ try
 #endif
 	FileRead(f, data, sizeof(data));
 	ExtractSoldierCreate(data, c);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void InjectSoldierCreateUTF16(BYTE* const data, const SOLDIERCREATE_STRUCT* const c)
@@ -296,8 +293,7 @@ static void InjectSoldierCreate(BYTE* const data, const SOLDIERCREATE_STRUCT* co
 }
 
 
-BOOLEAN InjectSoldierCreateIntoFile(const HWFILE f, const SOLDIERCREATE_STRUCT* const c)
-try
+void InjectSoldierCreateIntoFile(HWFILE const f, SOLDIERCREATE_STRUCT const* const c)
 {
 #ifdef _WIN32 // XXX HACK000A
 	BYTE data[1040];
@@ -306,6 +302,4 @@ try
 #endif
 	InjectSoldierCreate(data, c);
 	FileWrite(f, data, sizeof(data));
-	return TRUE;
 }
-catch (...) { return FALSE; }
