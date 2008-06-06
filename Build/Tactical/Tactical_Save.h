@@ -99,6 +99,6 @@ void		SetNumberOfVisibleWorldItemsInSectorStructureForSector( INT16 sMapX, INT16
 #define BASE_NUMBER_OF_ROTATION_ARRAYS 19
 
 
-BOOLEAN SaveWorldItemsToTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, const WORLDITEM* pData);
+void SaveWorldItemsToTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM const* pData);
 
 #endif

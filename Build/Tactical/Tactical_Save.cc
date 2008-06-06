@@ -229,8 +229,7 @@ void LoadMapTempFilesFromSavedGameFile(HWFILE const f)
 }
 
 
-BOOLEAN SaveWorldItemsToTempItemFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const UINT32 uiNumberOfItems, const WORLDITEM* const pData)
-try
+void SaveWorldItemsToTempItemFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, UINT32 const uiNumberOfItems, WORLDITEM const* const pData)
 {
 	{
 		char filename[128];
@@ -251,9 +250,7 @@ try
 
 	SetSectorFlag(sMapX, sMapY, bMapZ, SF_ITEM_TEMP_FILE_EXISTS);
 	SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(sMapX, sMapY, bMapZ, FALSE);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN LoadWorldItemsFromTempItemFile(const INT16 x, const INT16 y, const INT8 z, UINT32* const item_count, WORLDITEM** const items)
@@ -372,13 +369,8 @@ try
 	HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 
-
 	//Save the Items to the the file
-	if( !SaveWorldItemsToTempItemFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, guiNumWorldItems, gWorldItems ) )
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "SaveCurrentSectorsInformationToTempItemFile:  failed in SaveWorldItemsToTempItemFile()");
-		return( FALSE );
-	}
+	SaveWorldItemsToTempItemFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, guiNumWorldItems, gWorldItems);
 
 	//Save the rotting corpse array to the temp rotting corpse file
 	SaveRottingCorpsesToTempCorpseFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
