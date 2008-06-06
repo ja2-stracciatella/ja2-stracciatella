@@ -5,6 +5,6 @@
 
 
 void ExtractLightSprite(const BYTE** data, UINT32 light_time);
-BOOLEAN InjectLightSpriteIntoFile(HWFILE, const LIGHT_SPRITE*);
+void InjectLightSpriteIntoFile(HWFILE, LIGHT_SPRITE const*);
 
 #endif

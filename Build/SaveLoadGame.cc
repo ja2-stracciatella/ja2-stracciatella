@@ -1356,7 +1356,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		uiRelStartPerc = uiRelEndPerc;
 
 
-		if (!LoadSmokeEffectsFromLoadGameFile(f)) goto load_failed;
+		LoadSmokeEffectsFromLoadGameFile(f);
 #ifdef JA2BETAVERSION
 		LoadGameFilePosition(f, "Smoke Effect Structures");
 #endif

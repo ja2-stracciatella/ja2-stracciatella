@@ -6,8 +6,7 @@
 #include "SmokeEffects.h"
 
 
-BOOLEAN ExtractSmokeEffectFromFile(const HWFILE file, SMOKEEFFECT* const s)
-try
+void ExtractSmokeEffectFromFile(HWFILE const file, SMOKEEFFECT* const s)
 {
 	BYTE data[16];
 	FileRead(file, data, sizeof(data));
@@ -25,14 +24,10 @@ try
 	EXTR_SKIP(d, 1)
 	EXTR_U32(d, s->uiTimeOfLastUpdate)
 	Assert(d == endof(data));
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN InjectSmokeEffectIntoFile(const HWFILE file, const SMOKEEFFECT* const s)
-try
+void InjectSmokeEffectIntoFile(HWFILE const file, SMOKEEFFECT const* const s)
 {
 	BYTE data[16];
 
@@ -51,6 +46,4 @@ try
 	Assert(d == endof(data));
 
 	FileWrite(file, data, sizeof(data));
-	return TRUE;
 }
-catch (...) { return FALSE; }

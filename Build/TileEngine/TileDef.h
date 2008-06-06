@@ -163,7 +163,7 @@ UINT16 GetWallOrientation(UINT16 usIndex);
 
 void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEMENT *TileElement, BOOLEAN fUseRaisedObjectType );
 
-BOOLEAN AllocateAnimTileData( TILE_ELEMENT *pTileElem, UINT8 ubNumFrames );
+void AllocateAnimTileData(TILE_ELEMENT* pTileElem, UINT8 ubNumFrames);
 void DeallocateTileDatabase(void);
 
 #endif

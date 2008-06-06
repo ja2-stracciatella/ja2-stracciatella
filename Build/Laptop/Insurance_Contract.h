@@ -16,7 +16,7 @@ void DailyUpdateOfInsuredMercs(void);
 
 //void InsuranceContractPayLifeInsuranceForDeadMerc( LIFE_INSURANCE_PAYOUT *pPayoutStruct );
 
-BOOLEAN AddLifeInsurancePayout( SOLDIERTYPE *pSoldier );
+void AddLifeInsurancePayout(SOLDIERTYPE*);
 void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8	ubPayoutID );
 void StartInsuranceInvestigation( UINT8	ubPayoutID );
 void EndInsuranceInvestigation( UINT8	ubPayoutID );

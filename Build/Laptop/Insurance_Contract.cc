@@ -843,8 +843,7 @@ static void BuildInsuranceArray(void)
 }
 
 
-BOOLEAN AddLifeInsurancePayout( SOLDIERTYPE *pSoldier )
-try
+void AddLifeInsurancePayout(SOLDIERTYPE* const pSoldier)
 {
 	UINT8	ubPayoutID;
 	UINT32 uiTimeInMinutes;
@@ -924,10 +923,7 @@ try
 	}
 
 	LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed++;
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void StartInsuranceInvestigation( UINT8	ubPayoutID )

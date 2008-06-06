@@ -96,6 +96,6 @@ BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSec
 
 void AddWindowHitToMapTempFile( UINT32 uiMapIndex );
 
-BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector( UINT16 usSectorX, UINT16 usSectorY, INT8 bSectorZ, UINT16 usGridNo, BOOLEAN fChangeToOpen );
+void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 usSectorX, UINT16 usSectorY, INT8 bSectorZ, UINT16 usGridNo, BOOLEAN fChangeToOpen);
 
 #endif

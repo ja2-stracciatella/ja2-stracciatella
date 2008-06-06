@@ -1605,8 +1605,7 @@ void EvaluateDeathEffectsToSoldierInitList(const SOLDIERTYPE* const pSoldier)
 //For the purpose of keeping track of which soldier belongs to which placement within the game,
 //the only way we can do this properly is to save the soldier ID from the list and reconnect the
 //soldier pointer whenever we load the game.
-BOOLEAN SaveSoldierInitListLinks( HWFILE hfile )
-try
+void SaveSoldierInitListLinks(HWFILE const hfile)
 {
 	UINT8 ubSlots = 0;
 
@@ -1624,13 +1623,10 @@ try
 		FileWrite(hfile, &curr->ubNodeID,    1);
 		FileWrite(hfile, &curr->ubSoldierID, 1);
 	}
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN LoadSoldierInitListLinks( HWFILE hfile )
-try
+void LoadSoldierInitListLinks(HWFILE const hfile)
 {
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
 
@@ -1658,9 +1654,7 @@ try
 			}
 		}
 	}
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void AddSoldierInitListBloodcats()
@@ -1964,8 +1958,7 @@ BOOLEAN ValidateSoldierInitLinks(UINT8 ubCode)
 #endif //betaversion error checking functions
 
 
-BOOLEAN NewWayOfLoadingEnemySoldierInitListLinks( HWFILE hfile )
-try
+void NewWayOfLoadingEnemySoldierInitListLinks(HWFILE const hfile)
 {
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
 
@@ -1991,13 +1984,10 @@ try
 			}
 		}
 	}
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-BOOLEAN NewWayOfLoadingCivilianInitListLinks( HWFILE hfile )
-try
+void NewWayOfLoadingCivilianInitListLinks(HWFILE const hfile)
 {
 	UINT8 ubSlots, ubSoldierID, ubNodeID;
 
@@ -2023,9 +2013,7 @@ try
 			}
 		}
 	}
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void)

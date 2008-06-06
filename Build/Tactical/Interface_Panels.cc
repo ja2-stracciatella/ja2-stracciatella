@@ -967,7 +967,7 @@ try
 	MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	// Create buttons
-	CHECKF(CreateSMPanelButtons());
+	CreateSMPanelButtons();
 
 	const INT32 dy = INV_INTERFACE_START_Y;
 
@@ -1067,8 +1067,7 @@ static void BtnTalkCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnUpdownCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-BOOLEAN CreateSMPanelButtons(void)
-try
+void CreateSMPanelButtons(void)
 {
 	giSMStealthImages = NULL;
 	gfUIStanceDifferent = TRUE;
@@ -1127,10 +1126,7 @@ try
 #endif
 	MakeButtonT(BURSTMODE_BUTTON,     iBurstButtonImages[WM_NORMAL],     SM_BURSTMODEB_X,  dy + SM_BURSTMODEB_Y,  BtnBurstModeCallback,  TacticalStr[TOGGLE_BURSTMODE_POPUPTEXT]);
 	MakeButtonN(LOOK_BUTTON,          iSMPanelImages[LOOK_IMAGES],       SM_LOOKB_X,       dy + SM_LOOKB_Y,       BtnLookCallback,       TacticalStr[LOOK_CURSOR_POPUPTEXT]);
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void RemoveSMPanelButtons(void)
@@ -2400,7 +2396,7 @@ try
 	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
 
 	// Create buttons
-	CHECKF(CreateTEAMPanelButtons());
+	CreateTEAMPanelButtons();
 
 	// Set viewports
 	// Define region for panel
@@ -2675,8 +2671,7 @@ static void BtnRostermodeCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSquadCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-BOOLEAN CreateTEAMPanelButtons(void)
-try
+void CreateTEAMPanelButtons(void)
 {
 	// Load button Graphics
 	iTEAMPanelImages[ENDTURN_IMAGES]    = LoadButtonImage("INTERFACE/bottom_bar_buttons.sti",    -1, 0, -1, 3, -1);
@@ -2687,10 +2682,7 @@ try
 	MakeButtonTeam(TEAM_DONE_BUTTON,       iTEAMPanelImages[ENDTURN_IMAGES],    TM_ENDTURN_X,    dy + TM_ENDTURN_Y,    BtnEndTurnCallback,    TacticalStr[END_TURN_POPUPTEXT]);
 	MakeButtonTeam(TEAM_MAP_SCREEN_BUTTON, iTEAMPanelImages[ROSTERMODE_IMAGES], TM_ROSTERMODE_X, dy + TM_ROSTERMODE_Y, BtnRostermodeCallback, TacticalStr[MAPSCREEN_POPUPTEXT]);
 	MakeButtonTeam(CHANGE_SQUAD_BUTTON,    iTEAMPanelImages[DISK_IMAGES],       TM_DISK_X,       dy + TM_DISK_Y,       BtnSquadCallback,      TacticalStr[CHANGE_SQUAD_POPUPTEXT]);
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void RemoveTEAMPanelButtons(void)

@@ -1104,19 +1104,14 @@ static void AllocMemsetSpecialItemArray(DEALER_ITEM_HEADER* const pDealerItem, U
 }
 
 
-static BOOLEAN ResizeSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem, UINT8 ubElementsNeeded)
-try
+static void ResizeSpecialItemArray(DEALER_ITEM_HEADER* const pDealerItem, UINT8 const ubElementsNeeded)
 {
 	Assert(pDealerItem);
 	// must already have a ptr allocated!
 	Assert(pDealerItem->SpecialItem);
 
-
-	if ( ubElementsNeeded == pDealerItem->ubElementsAlloced)
-	{
-		// shouldn't have been called, but what they hey, it's not exactly a problem
-		return(TRUE);
-	}
+	// shouldn't have been called, but what they hey, it's not exactly a problem
+	if (ubElementsNeeded == pDealerItem->ubElementsAlloced) return;
 
 	// already allocated, but change its size
 	pDealerItem->SpecialItem = REALLOC(pDealerItem->SpecialItem, DEALER_SPECIAL_ITEM, ubElementsNeeded);
@@ -1129,10 +1124,7 @@ try
 	}
 
 	pDealerItem->ubElementsAlloced = ubElementsNeeded;
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 static void FreeSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem)
@@ -1573,7 +1565,7 @@ static void AddItemToArmsDealerInventory(UINT8 ubArmsDealer, UINT16 usItemIndex,
 				else
 				{
 					// we have some allocated, but they're all full and we need more.  MemRealloc existing amount + # addition elements
-					if (!ResizeSpecialItemArray(&gArmsDealersInventory[ubArmsDealer][usItemIndex], (UINT8)(gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced + ubElementsToAdd))) return;
+					ResizeSpecialItemArray(&gArmsDealersInventory[ubArmsDealer][usItemIndex], (UINT8)(gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced + ubElementsToAdd));
 				}
 
 				// now add the special item at the first of the newly added elements (still stored in ubElement!)

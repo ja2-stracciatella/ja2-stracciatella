@@ -6,9 +6,9 @@
 
 void ExtractMercProfileUTF16(const BYTE* Src, MERCPROFILESTRUCT* Merc);
 void ExtractMercProfile(const BYTE* Src, MERCPROFILESTRUCT* Merc);
-BOOLEAN ExtractMercProfileFromFile(HWFILE File, MERCPROFILESTRUCT* Merc);
+void ExtractMercProfileFromFile(HWFILE, MERCPROFILESTRUCT*);
 
 void InjectMercProfile(BYTE* Dst, const MERCPROFILESTRUCT* Merc);
-BOOLEAN InjectMercProfileIntoFile(HWFILE File, const MERCPROFILESTRUCT* Merc);
+void InjectMercProfileIntoFile(HWFILE, MERCPROFILESTRUCT const*);
 
 #endif

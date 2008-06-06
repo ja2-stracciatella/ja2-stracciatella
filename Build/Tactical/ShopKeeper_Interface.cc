@@ -1849,7 +1849,7 @@ void EnterShopKeeperInterfaceScreen( UINT8	ubArmsDealer )
 }
 
 
-static BOOLEAN DetermineArmsDealersSellingInventory(void);
+static void DetermineArmsDealersSellingInventory(void);
 
 
 static void InitializeShopKeeper(BOOLEAN fResetPage)
@@ -2272,8 +2272,7 @@ static void AddItemsToTempDealerInventory(UINT16 usItemIndex, SPECIAL_ITEM_INFO*
 static BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement);
 
 
-static BOOLEAN DetermineArmsDealersSellingInventory(void)
-try
+static void DetermineArmsDealersSellingInventory(void)
 {
 	UINT16	usItemIndex;
 	UINT8		ubElement;
@@ -2379,10 +2378,7 @@ try
 			qsort( gpTempDealersInventory, guiNextFreeInvSlot, sizeof( INVENTORY_IN_SLOT ), ArmsDealerItemQsortCompare );
 		}
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void StoreObjectsInNextFreeDealerInvSlot(UINT16 usItemIndex, SPECIAL_ITEM_INFO* pSpclItemInfo, INT16 sSpecialItemElement, UINT8 ubHowMany, UINT8 ubOwner);

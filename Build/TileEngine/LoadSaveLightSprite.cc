@@ -57,8 +57,7 @@ void ExtractLightSprite(const BYTE** const data, const UINT32 light_time)
 }
 
 
-BOOLEAN InjectLightSpriteIntoFile(const HWFILE file, const LIGHT_SPRITE* const l)
-try
+void InjectLightSpriteIntoFile(HWFILE const file, LIGHT_SPRITE const* const l)
 {
 	BYTE data[24];
 
@@ -76,6 +75,4 @@ try
 	const UINT8       str_len    = strlen(light_name) + 1;
 	FileWrite(file, &str_len,   sizeof(str_len));
 	FileWrite(file, light_name, str_len);
-	return TRUE;
 }
-catch (...) { return FALSE; }

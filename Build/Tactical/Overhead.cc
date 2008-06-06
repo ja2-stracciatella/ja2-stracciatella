@@ -378,7 +378,7 @@ try
 	InitializeGameVideoObjects();
 	LoadPaletteData();
 
-	if (!LoadLockTable()) return FALSE;
+	LoadLockTable();
 	InitPathAI();
 	InitAI();
 	InitOverhead();

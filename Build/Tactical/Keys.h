@@ -218,7 +218,7 @@ void UpdateDoorGraphicsFromStatus(void);
 
 BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor );
 
-BOOLEAN LoadLockTable( void );
+void LoadLockTable(void);
 
 void ExamineDoorsOnEnteringSector(void);
 

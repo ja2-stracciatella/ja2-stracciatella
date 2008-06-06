@@ -54,7 +54,7 @@ void SoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, 
 void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel );
 void HandleFlashingItems(void);
 
-BOOLEAN SoldierDropItem( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj );
+void SoldierDropItem(SOLDIERTYPE*, OBJECTTYPE*);
 
 void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 SOLDIERTYPE* VerifyGiveItem(SOLDIERTYPE* pSoldier);

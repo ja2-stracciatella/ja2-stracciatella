@@ -66,15 +66,12 @@ const BYTE* ExtractSoldierCreateUTF16(const BYTE* const data, SOLDIERCREATE_STRU
 }
 
 
-BOOLEAN ExtractSoldierCreateFromFileUTF16(const HWFILE f, SOLDIERCREATE_STRUCT* const c)
-try
+void ExtractSoldierCreateFromFileUTF16(HWFILE const f, SOLDIERCREATE_STRUCT* const c)
 {
 	BYTE data[1040];
 	FileRead(f, data, sizeof(data));
 	ExtractSoldierCreateUTF16(data, c);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* const c)
@@ -215,15 +212,12 @@ static void InjectSoldierCreateUTF16(BYTE* const data, const SOLDIERCREATE_STRUC
 }
 
 
-BOOLEAN InjectSoldierCreateIntoFileUTF16(const HWFILE f, const SOLDIERCREATE_STRUCT* const c)
-try
+void InjectSoldierCreateIntoFileUTF16(HWFILE const f, SOLDIERCREATE_STRUCT const* const c)
 {
 	BYTE data[1040];
 	InjectSoldierCreateUTF16(data, c);
 	FileWrite(f, data, sizeof(data));
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void InjectSoldierCreate(BYTE* const data, const SOLDIERCREATE_STRUCT* const c)

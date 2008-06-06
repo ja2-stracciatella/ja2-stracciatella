@@ -3,8 +3,7 @@
 #include "Debug.h"
 
 
-BOOLEAN LoadEncryptedData(HWFILE File, wchar_t* DestString, UINT32 seek_chars, UINT32 read_chars)
-try
+void LoadEncryptedData(HWFILE const File, wchar_t* DestString, UINT32 const seek_chars, UINT32 const read_chars)
 {
 	FileSeek(File, seek_chars * 2, FILE_SEEK_FROM_START);
 
@@ -73,16 +72,14 @@ try
 		*DestString++ = c;
 	}
 	*DestString = L'\0';
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN LoadEncryptedDataFromFile(const char* Filename, wchar_t DestString[], UINT32 seek_chars, UINT32 read_chars)
 try
 {
 	AutoSGPFile File(FileOpen(Filename, FILE_ACCESS_READ));
-	return LoadEncryptedData(File, DestString, seek_chars, read_chars);
+	LoadEncryptedData(File, DestString, seek_chars, read_chars);
+	return TRUE;
 }
 catch (...) { return FALSE; }

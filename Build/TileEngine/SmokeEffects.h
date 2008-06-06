@@ -49,7 +49,7 @@ void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel );
 void NewSmokeEffect(INT16 sGridNo, UINT16 usItem, INT8 bLevel, SOLDIERTYPE* owner);
 
 
-BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile );
+void LoadSmokeEffectsFromLoadGameFile(HWFILE);
 
 
 BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ );

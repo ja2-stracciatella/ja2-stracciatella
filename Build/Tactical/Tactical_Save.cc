@@ -1202,8 +1202,7 @@ void ChangeNpcToDifferentSector(MERCPROFILESTRUCT* const p, INT16 sSectorX, INT1
 }
 
 
-BOOLEAN AddRottingCorpseToUnloadedSectorsRottingCorpseFile(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const ROTTING_CORPSE_DEFINITION* const corpse_def)
-try
+void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, ROTTING_CORPSE_DEFINITION const* const corpse_def)
 {
 	char map_name[128];
 	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, sMapX, sMapY, bMapZ);
@@ -1228,9 +1227,7 @@ try
 	InjectRottingCorpseIntoFile(f, corpse_def);
 
 	SetSectorFlag(sMapX, sMapY, bMapZ, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN SetUnderGroundSectorFlag(INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ, UINT32 uiFlagToSet)

@@ -5,10 +5,10 @@
 
 
 const BYTE* ExtractSoldierCreateUTF16(const BYTE* Src, SOLDIERCREATE_STRUCT* Soldier);
-BOOLEAN ExtractSoldierCreateFromFileUTF16(HWFILE File, SOLDIERCREATE_STRUCT* Soldier);
+void        ExtractSoldierCreateFromFileUTF16(HWFILE, SOLDIERCREATE_STRUCT*);
 void        ExtractSoldierCreateFromFile(HWFILE, SOLDIERCREATE_STRUCT*);
 
-BOOLEAN InjectSoldierCreateIntoFileUTF16(HWFILE File, const SOLDIERCREATE_STRUCT* Soldier);
-void    InjectSoldierCreateIntoFile(HWFILE, SOLDIERCREATE_STRUCT const*);
+void InjectSoldierCreateIntoFileUTF16(HWFILE, SOLDIERCREATE_STRUCT const*);
+void InjectSoldierCreateIntoFile(HWFILE, SOLDIERCREATE_STRUCT const*);
 
 #endif

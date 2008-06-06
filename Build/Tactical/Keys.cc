@@ -132,8 +132,7 @@ DOORTRAP const DoorTrapTable[NUM_DOOR_TRAPS] =
 DOOR * DoorTable = NULL;
 
 
-
-BOOLEAN LoadLockTable( void )
+void LoadLockTable(void)
 try
 {
 	UINT32	uiBytesToRead;
@@ -145,12 +144,11 @@ try
 
 	uiBytesToRead = sizeof( LOCK ) * NUM_LOCKS;
 	FileRead(hFile, LockTable, uiBytesToRead);
-	return TRUE;
 }
 catch (...)
 {
 	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("FAILED to LoadLockTable"));
-	return FALSE;
+	throw;
 }
 
 

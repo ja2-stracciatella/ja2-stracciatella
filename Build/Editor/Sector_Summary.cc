@@ -2594,10 +2594,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		FileRead(hfile, &basic, sizeof(BASIC_SOLDIERCREATE_STRUCT));
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
-			if (!ExtractSoldierCreateFromFileUTF16(hfile, &priority))
-			{ //Invalid situation.
-				return;
-			}
+			ExtractSoldierCreateFromFileUTF16(hfile, &priority);
 		}
 		else
 		{ //non detailed placements don't have items, so skip
@@ -2645,10 +2642,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		FileRead(hfile, &basic, sizeof(BASIC_SOLDIERCREATE_STRUCT));
 		if( basic.fDetailedPlacement )
 		{ //skip static priority placement
-			if (!ExtractSoldierCreateFromFileUTF16(hfile, &priority))
-			{ //Invalid situation.
-				return;
-			}
+			ExtractSoldierCreateFromFileUTF16(hfile, &priority);
 		}
 		else
 		{ //non detailed placements don't have items, so skip

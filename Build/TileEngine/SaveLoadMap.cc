@@ -39,8 +39,7 @@ void	ApplyMapChangesToMapTempFile( BOOLEAN fAddToMap )
 }
 
 
-static BOOLEAN SaveModifiedMapStructToMapTempFile(MODIFY_MAP* pMap, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
-try
+static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
 {
 	CHAR8		zMapName[ 128 ];
 
@@ -50,9 +49,7 @@ try
 	FileWrite(hFile, pMap, sizeof(MODIFY_MAP));
 
 	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS );
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void AddBloodOrSmellFromMapTempFileToMap(MODIFY_MAP* pMap);
@@ -851,14 +848,13 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 }
 
 
-BOOLEAN ChangeStatusOfOpenableStructInUnloadedSector(const UINT16 usSectorX, const UINT16 usSectorY, const INT8 bSectorZ, const UINT16 usGridNo, const BOOLEAN fChangeToOpen)
-try
+void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16 const usSectorY, INT8 const bSectorZ, UINT16 const usGridNo, BOOLEAN const fChangeToOpen)
 {
 	char map_name[128];
 	GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, map_name, usSectorX, usSectorY, bSectorZ);
 
 	// If the file doesn't exists, it's no problem.
-	if (!FileExists(map_name)) return TRUE;
+	if (!FileExists(map_name)) return;
 
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> mm;
@@ -885,6 +881,4 @@ try
 
 	AutoSGPFile dst(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 	FileWrite(dst, mm, sizeof(*mm) * uiNumberOfElements);
-	return TRUE;
 }
-catch (...) { return FALSE; }

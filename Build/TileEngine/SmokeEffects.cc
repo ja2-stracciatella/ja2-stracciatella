@@ -524,8 +524,7 @@ void DecaySmokeEffects( UINT32 uiTime )
 }
 
 
-BOOLEAN LoadSmokeEffectsFromLoadGameFile( HWFILE hFile )
-try
+void LoadSmokeEffectsFromLoadGameFile(HWFILE const hFile)
 {
 	UINT32	uiCnt=0;
 
@@ -541,14 +540,14 @@ try
 		//This is a TEMP hack to allow us to use the saves
 		if( guiSaveGameVersion < 37 && guiNumSmokeEffects == 0 )
 		{
-			if (!ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[0])) return FALSE;
+			ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[0]);
 		}
 
 
 		//loop through and load the list
 		for( uiCnt=0; uiCnt<guiNumSmokeEffects;uiCnt++)
 		{
-			if (!ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[uiCnt])) return FALSE;
+			ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[uiCnt]);
 			//This is a TEMP hack to allow us to use the saves
 			if( guiSaveGameVersion < 37 )
 				break;
@@ -561,10 +560,7 @@ try
 			SpreadEffectSmoke(s, TRUE, bLevel);
 		}
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
@@ -598,7 +594,7 @@ try
 
 	CFOR_ALL_SMOKE_EFFECTS(s)
 	{
-		if (!InjectSmokeEffectIntoFile(hFile, s)) return FALSE;
+		InjectSmokeEffectIntoFile(hFile, s);
 	}
 
 	SetSectorFlag( sMapX, sMapY, bMapZ, SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS );
@@ -627,7 +623,7 @@ try
 	//loop through and load the list
 	for( uiCnt=0; uiCnt<guiNumSmokeEffects;uiCnt++)
 	{
-		if (!ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[uiCnt])) return FALSE;
+		ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[uiCnt]);
 	}
 
 	//loop through and apply the smoke effects to the map
