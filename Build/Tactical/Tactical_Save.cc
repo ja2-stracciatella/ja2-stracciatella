@@ -253,8 +253,7 @@ void SaveWorldItemsToTempItemFile(INT16 const sMapX, INT16 const sMapY, INT8 con
 }
 
 
-BOOLEAN LoadWorldItemsFromTempItemFile(const INT16 x, const INT16 y, const INT8 z, UINT32* const item_count, WORLDITEM** const items)
-try
+void LoadWorldItemsFromTempItemFile(INT16 const x, INT16 const y, INT8 const z, UINT32* const item_count, WORLDITEM** const items)
 {
 	char filename[128];
 	GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, x, y, z);
@@ -279,9 +278,7 @@ try
 	}
 	*item_count = l_item_count;
 	*items      = l_items.Release();
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN AddItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const INT16 sGridNo, const UINT32 uiNumberOfItemsToAdd, const OBJECTTYPE* const pObject, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel, const INT8 bVisible)
@@ -289,7 +286,7 @@ try
 {
 	UINT32     uiNumberOfItems;
 	WORLDITEM* wis;
-	if (!LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems, &wis)) return FALSE;
+	LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems, &wis);
 
 	//loop through all the objects to add
 	for (UINT32 uiLoop1 = 0; uiLoop1 < uiNumberOfItemsToAdd; ++uiLoop1)
@@ -759,13 +756,14 @@ static UINT32 GetLastTimePlayerWasInSector(void)
 
 
 static BOOLEAN LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
+try
 {
 	UINT32	cnt;
   INT16   sNewGridNo;
 
 	UINT32     uiNumberOfItems;
 	WORLDITEM* pWorldItems;
-	if (!LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems, &pWorldItems)) return FALSE;
+	LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems, &pWorldItems);
 
 	if (uiNumberOfItems == 0)
 	{
@@ -837,6 +835,7 @@ static BOOLEAN LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 b
 	MemFree(pWorldItems);
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void);
@@ -1691,9 +1690,7 @@ static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const INT1
 {
 	UINT32     uiTotalNumberOfItems = 0;
 	WORLDITEM* pTotalSectorList;
-	const BOOLEAN fReturn = LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiTotalNumberOfItems, &pTotalSectorList);
-	(void)fReturn;
-	Assert(fReturn);
+	LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiTotalNumberOfItems, &pTotalSectorList);
 
 	UINT32 uiItemCount = 0;
 	if (uiTotalNumberOfItems > 0)

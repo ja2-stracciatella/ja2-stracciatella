@@ -709,9 +709,7 @@ static void BuildStashForSelectedSector(const INT16 sMapX, const INT16 sMapY, co
 	{
 		UINT32 item_count = 0;
 		items             = NULL;
-		const BOOLEAN fReturn = LoadWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &item_count, &items);
-		(void)fReturn;
-		Assert(fReturn);
+		LoadWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &item_count, &items);
 		items_end  = items + item_count;
 	}
 

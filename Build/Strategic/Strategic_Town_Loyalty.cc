@@ -1000,7 +1000,7 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 	if( gWorldSectorX != sSectorX || gWorldSectorY != sSectorY || gbWorldSectorZ != sSectorZ )
 	{
 		// if the player has never been there, there's no temp file, and 0 items will get returned, preventing any stealing
-		UINT32     uiNumberOfItems = 0;
+		UINT32     uiNumberOfItems;
 		WORLDITEM* pItemList;
 		LoadWorldItemsFromTempItemFile(sSectorX, sSectorY, sSectorZ, &uiNumberOfItems, &pItemList);
 		if (uiNumberOfItems == 0) return;

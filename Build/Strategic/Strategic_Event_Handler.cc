@@ -426,8 +426,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 		// otherwise load the saved items from the item file and change the records of their locations
 		UINT32     uiNumWorldItems;
 		WORLDITEM* pTemp;
-		const BOOLEAN fOk = LoadWorldItemsFromTempItemFile(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, &uiNumWorldItems, &pTemp);
-		if (!fOk) return;
+		LoadWorldItemsFromTempItemFile(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, &uiNumWorldItems, &pTemp);
 
 		for (UINT32 uiLoop = 0; uiLoop < uiNumWorldItems; ++uiLoop)
 		{
