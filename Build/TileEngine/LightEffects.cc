@@ -240,8 +240,7 @@ try
 catch (...) { return FALSE; }
 
 
-BOOLEAN LoadLightEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
-try
+void LoadLightEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
 	UINT32	uiCnt=0;
 	CHAR8		zMapName[ 128 ];
@@ -267,10 +266,7 @@ try
 	{
 		UpdateLightingSprite(l);
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void ResetLightEffects()

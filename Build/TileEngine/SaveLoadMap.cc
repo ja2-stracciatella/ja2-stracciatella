@@ -60,8 +60,7 @@ static void RemoveSavedStructFromMap(UINT32 uiMapIndex, UINT16 usIndex);
 static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fOpened);
 
 
-BOOLEAN LoadAllMapChangesFromMapTempFileAndApplyThem( )
-try
+void LoadAllMapChangesFromMapTempFileAndApplyThem()
 {
 	CHAR8		zMapName[ 128 ];
 	UINT32	uiNumberOfElementsSavedBackToFile = 0;	// added becuase if no files get saved back to disk, the flag needs to be erased
@@ -70,13 +69,8 @@ try
 
 	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
-
-	//Check to see if the file exists
-	if( !FileExists( zMapName ) )
-	{
-		//If the file doesnt exists, its no problem.
-		return( TRUE );
-	}
+	//If the file doesnt exists, its no problem.
+	if (!FileExists(zMapName)) return;
 
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
@@ -236,10 +230,7 @@ try
 	{
 		ReSetSectorFlag( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS );
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void AddStructToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
@@ -506,19 +497,14 @@ catch (...) { return FALSE; }
 static void SetMapRevealedStatus(void);
 
 
-BOOLEAN LoadRevealedStatusArrayFromRevealedTempFile()
-try
+void LoadRevealedStatusArrayFromRevealedTempFile()
 {
 	CHAR8		zMapName[ 128 ];
 
 	GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
-	//Check to see if the file exists
-	if( !FileExists( zMapName ) )
-	{
-		//If the file doesnt exists, its no problem.
-		return( TRUE );
-	}
+	//If the file doesnt exists, its no problem.
+	if (!FileExists(zMapName)) return;
 
 	{
 		AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
@@ -535,12 +521,7 @@ try
 
 	MemFree( gpRevealedMap );
 	gpRevealedMap = NULL;
-
-
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void SetSectorsRevealedBit(UINT16 usMapIndex)

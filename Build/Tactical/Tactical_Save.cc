@@ -592,10 +592,11 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 static BOOLEAN DoesTempFileExistsForMap(UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 static BOOLEAN LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 static UINT32 GetLastTimePlayerWasInSector(void);
-static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+static void   LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
 BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile()
+try
 {
 	BOOLEAN fUsedTempFile = FALSE;
 
@@ -638,42 +639,36 @@ BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile()
 	if( DoesTempFileExistsForMap( SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 	{
 		fUsedTempFile = TRUE;
-		if( !LoadRottingCorpsesFromTempCorpseFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
-			return( FALSE );
+		LoadRottingCorpsesFromTempCorpseFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 	}
 
 	//If there is a map modifications file, load the data from the temp file
 	if( DoesTempFileExistsForMap( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 	{
 		fUsedTempFile = TRUE;
-		if( !LoadAllMapChangesFromMapTempFileAndApplyThem( ) )
-			return( FALSE );
+		LoadAllMapChangesFromMapTempFileAndApplyThem();
 	}
 
 	//if there is a door table temp file, load the data from the temp file
 	if( DoesTempFileExistsForMap( SF_DOOR_TABLE_TEMP_FILES_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 	{
 		fUsedTempFile = TRUE;
-		if( !LoadDoorTableFromDoorTableTempFile( ) )
-			return( FALSE );
+		LoadDoorTableFromDoorTableTempFile();
 	}
 
 	//if there is a revealed status temp file, load the data from the temp file
 	if( DoesTempFileExistsForMap( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 	{
 		fUsedTempFile = TRUE;
-		if( !LoadRevealedStatusArrayFromRevealedTempFile( ) )
-			return( FALSE );
+		LoadRevealedStatusArrayFromRevealedTempFile();
 	}
 
 	//if there is a door status temp file, load the data from the temp file
 	if( DoesTempFileExistsForMap( SF_DOOR_STATUS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 	{
 		fUsedTempFile = TRUE;
-		if( !LoadDoorStatusArrayFromDoorStatusTempFile( ) )
-			return( FALSE );
+		LoadDoorStatusArrayFromDoorStatusTempFile();
 	}
-
 
 	//if the save is an older version, use theold way of oading it up
 	if( guiSavedGameVersion < 57 )
@@ -707,15 +702,13 @@ BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile()
 	if( DoesTempFileExistsForMap( SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 	{
 		fUsedTempFile = TRUE;
-		if( !LoadSmokeEffectsFromMapTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
-			return( FALSE );
+		LoadSmokeEffectsFromMapTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 	}
 
 	if( DoesTempFileExistsForMap( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 	{
 		fUsedTempFile = TRUE;
-		if( !LoadLightEffectsFromMapTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
-			return( FALSE );
+		LoadLightEffectsFromMapTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 	}
 
 	//if we are loading a saved game
@@ -739,6 +732,7 @@ BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile()
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void SetLastTimePlayerWasInSector(void)
@@ -938,8 +932,7 @@ try
 catch (...) { return FALSE; }
 
 
-static BOOLEAN LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
-try
+static void LoadRottingCorpsesFromTempCorpseFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
 	CHAR8		zMapName[ 128 ];
 	UINT32	uiNumberOfCorpses=0;
@@ -953,12 +946,8 @@ try
 
 	GetMapTempFileName( SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
 
-	//Check to see if the file exists
-	if( !FileExists( zMapName ) )
-	{
-		//If the file doesnt exists, its no problem.
-		return( TRUE );
-	}
+	//If the file doesnt exists, its no problem.
+	if (!FileExists(zMapName)) return;
 
 	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
 
@@ -1037,10 +1026,7 @@ try
 
 	//Check to see if we have to start decomposing the corpses
 	HandleRottingCorpses( );
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void AddWorldItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const UINT32 item_count, const WORLDITEM* const wis)

@@ -603,8 +603,7 @@ try
 catch (...) { return FALSE; }
 
 
-BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
-try
+void LoadSmokeEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
 	UINT32	uiCnt=0;
 	CHAR8		zMapName[ 128 ];
@@ -632,10 +631,7 @@ try
 		const INT8 bLevel = (s->bFlags & SMOKE_EFFECT_ON_ROOF ? 1 : 0);
 		SpreadEffectSmoke(s, TRUE, bLevel);
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void ResetSmokeEffects()

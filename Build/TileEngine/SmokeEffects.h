@@ -53,7 +53,7 @@ void LoadSmokeEffectsFromLoadGameFile(HWFILE);
 
 
 BOOLEAN SaveSmokeEffectsToMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
-BOOLEAN LoadSmokeEffectsFromMapTempFile( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
+void    LoadSmokeEffectsFromMapTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 void ResetSmokeEffects(void);
 

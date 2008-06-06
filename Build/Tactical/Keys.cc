@@ -906,8 +906,7 @@ try
 catch (...) { return FALSE; }
 
 
-BOOLEAN LoadDoorTableFromDoorTableTempFile( )
-try
+void LoadDoorTableFromDoorTableTempFile()
 {
 	CHAR8		zMapName[ 128 ];
 
@@ -915,12 +914,8 @@ try
 
 	GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
-	//Check to see if the file exists
-	if( !FileExists( zMapName ) )
-	{
-		//If the file doesnt exists, its no problem.
-		return( TRUE );
-	}
+	//If the file doesnt exists, its no problem.
+	if (!FileExists(zMapName)) return;
 
 	//Get rid of the existing door table
 	TrashDoorTable();
@@ -938,10 +933,7 @@ try
 		DoorTable = MALLOCN(DOOR, gubMaxDoors);
 		FileRead(hFile, DoorTable, sizeof(DOOR) * gubMaxDoors);
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 // fOpen is True if the door is open, false if it is closed
@@ -1469,8 +1461,7 @@ try
 catch (...) { return FALSE; }
 
 
-BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile()
-try
+void LoadDoorStatusArrayFromDoorStatusTempFile()
 {
 	CHAR8		zMapName[ 128 ];
 	UINT8		ubLoop;
@@ -1485,7 +1476,7 @@ try
 	// Load the number of elements in the door status array
 	FileRead(hFile, &gubNumDoorStatus, sizeof(UINT8));
 
-	if (gubNumDoorStatus == 0) return TRUE;
+	if (gubNumDoorStatus == 0) return;
 
 	//Allocate space for the door status array
 	gpDoorStatus = MALLOCNZ(DOOR_STATUS, gubNumDoorStatus);
@@ -1502,10 +1493,7 @@ try
 	}
 
 	UpdateDoorGraphicsFromStatus();
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void SaveKeyTableToSaveGameFile(HWFILE const hFile)

@@ -181,8 +181,7 @@ void UpdateDoorPerceivedValue( DOOR *pDoor );
 BOOLEAN  SaveDoorTableToDoorTableTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
 //Load the door table from the temp file
-BOOLEAN LoadDoorTableFromDoorTableTempFile(void);
-
+void LoadDoorTableFromDoorTableTempFile(void);
 
 
 //	Adds a door to the Door status array.  As the user comes across the door, they are added.
@@ -198,7 +197,7 @@ void TrashDoorStatusArray(void);
 BOOLEAN SaveDoorStatusArrayToDoorStatusTempFile( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
 //Load the door status from the door status temp file
-BOOLEAN LoadDoorStatusArrayFromDoorStatusTempFile(void);
+void LoadDoorStatusArrayFromDoorStatusTempFile(void);
 
 
 //Save the key table to the saved game file
