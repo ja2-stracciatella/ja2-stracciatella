@@ -43,7 +43,6 @@
 #include "JAScreens.h"
 #include "MemMan.h"
 #include "MessageBoxScreen.h"
-#include "ScreenIDs.h"
 #include "Timer_Control.h"
 #include "VObject.h"
 #include "VSurface.h"
@@ -168,7 +167,7 @@ static BOOLEAN RemoveFromFDlgList(FDLG_LIST** head, FDLG_LIST* node);
 static BOOLEAN ValidFilename(void);
 
 
-static UINT32 ProcessLoadSaveScreenMessageBoxResult(void)
+static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 {
 	FDLG_LIST *curr, *temp;
 	gfRenderWorld = TRUE;
@@ -265,10 +264,10 @@ static UINT32 ProcessLoadSaveScreenMessageBoxResult(void)
 static void DrawFileDialog(void);
 static BOOLEAN ExtractFilenameFromFields(void);
 static void HandleMainKeyEvents(InputAtom* pEvent);
-static UINT32 ProcessFileIO(void);
+static ScreenID ProcessFileIO(void);
 
 
-UINT32 LoadSaveScreenHandle(void)
+ScreenID LoadSaveScreenHandle(void)
 {
 	FDLG_LIST *FListNode;
 	INT32 x;
@@ -281,8 +280,7 @@ UINT32 LoadSaveScreenHandle(void)
 
 	if( gbCurrentFileIOStatus ) //loading or saving map
 	{
-		UINT32 uiScreen;
-		uiScreen = ProcessFileIO();
+		ScreenID const uiScreen = ProcessFileIO();
 		if( uiScreen == EDIT_SCREEN && gbCurrentFileIOStatus == LOADING_MAP )
 			RemoveProgressBar( 0 );
 		return uiScreen;
@@ -861,7 +859,7 @@ static void InitErrorCatchDialog(void)
 //on the screen and then update it which requires passing the screen back to the main loop.
 //When we come back for the next frame, we then actually save or load the map.  So this
 //process takes two full screen cycles.
-static UINT32 ProcessFileIO(void)
+static ScreenID ProcessFileIO(void)
 {
 	INT16 usStartX, usStartY;
 	char ubNewFilename[50];

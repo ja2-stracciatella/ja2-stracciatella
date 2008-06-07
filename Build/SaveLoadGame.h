@@ -2,6 +2,8 @@
 #define _SAVE_LOAD_GAME_H_
 
 #include "GameSettings.h"
+#include "ScreenIDs.h"
+
 
 #define		BYTESINMEGABYTE						1048576 //1024*1024
 #define		REQUIRED_FREE_SPACE				(20 * BYTESINMEGABYTE)
@@ -49,8 +51,8 @@ typedef struct
 CASSERT(sizeof(SAVED_GAME_HEADER) == 688)
 
 
-extern	UINT32		guiScreenToGotoAfterLoadingSavedGame;
-extern UINT32 guiSaveGameVersion;
+extern ScreenID guiScreenToGotoAfterLoadingSavedGame;
+extern UINT32   guiSaveGameVersion;
 
 void CreateSavedGameFileNameFromNumber(UINT8 ubSaveGameID, char* pzNewFileName);
 

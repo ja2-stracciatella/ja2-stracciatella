@@ -19,7 +19,6 @@
 #include "Input.h"
 #include "Overhead.h"
 #include "Sys_Globals.h"
-#include "ScreenIDs.h"
 #include "Interface.h"
 #include "Cursor_Control.h"
 #include "Points.h"
@@ -112,73 +111,73 @@
 
 
 // CALLBACKS FOR EVENTS
-static UINT32 UIHandleIDoNothing(UI_EVENT* pUIEvent);
-static UINT32 UIHandleNewMerc(UI_EVENT* pUIEvent);
-static UINT32 UIHandleNewBadMerc(UI_EVENT* pUIEvent);
-static UINT32 UIHandleSelectMerc(UI_EVENT* pUIEvent);
-static UINT32 UIHandleEnterEditMode(UI_EVENT* pUIEvent);
-static UINT32 UIHandleTestHit(UI_EVENT* pUIEvent);
-static UINT32 UIHandleIOnTerrain(UI_EVENT* pUIEvent);
-static UINT32 UIHandleIChangeToIdle(UI_EVENT* pUIEvent);
-static UINT32 UIHandleISoldierDebug(UI_EVENT* pUIEvent);
-static UINT32 UIHandleILOSDebug(UI_EVENT* pUIEvent);
-static UINT32 UIHandleILevelNodeDebug(UI_EVENT* pUIEvent);
+static ScreenID UIHandleIDoNothing(UI_EVENT*);
+static ScreenID UIHandleNewMerc(UI_EVENT*);
+static ScreenID UIHandleNewBadMerc(UI_EVENT*);
+static ScreenID UIHandleSelectMerc(UI_EVENT*);
+static ScreenID UIHandleEnterEditMode(UI_EVENT*);
+static ScreenID UIHandleTestHit(UI_EVENT*);
+static ScreenID UIHandleIOnTerrain(UI_EVENT*);
+static ScreenID UIHandleIChangeToIdle(UI_EVENT*);
+static ScreenID UIHandleISoldierDebug(UI_EVENT*);
+static ScreenID UIHandleILOSDebug(UI_EVENT*);
+static ScreenID UIHandleILevelNodeDebug(UI_EVENT*);
 
-static UINT32 UIHandleIETOnTerrain(UI_EVENT* pUIEvent);
-static UINT32 UIHandleIETEndTurn(UI_EVENT* pUIEvent);
+static ScreenID UIHandleIETOnTerrain(UI_EVENT*);
+static ScreenID UIHandleIETEndTurn(UI_EVENT*);
 
-static UINT32 UIHandleMOnTerrain(UI_EVENT* pUIEvent);
-static UINT32 UIHandleMChangeToAction(UI_EVENT* pUIEvent);
-static UINT32 UIHandleMCycleMovement(UI_EVENT* pUIEvent);
-static UINT32 UIHandleMCycleMoveAll(UI_EVENT* pUIEvent);
-static UINT32 UIHandleMAdjustStanceMode(UI_EVENT* pUIEvent);
-static UINT32 UIHandleMChangeToHandMode(UI_EVENT* pUIEvent);
+static ScreenID UIHandleMOnTerrain(UI_EVENT*);
+static ScreenID UIHandleMChangeToAction(UI_EVENT*);
+static ScreenID UIHandleMCycleMovement(UI_EVENT*);
+static ScreenID UIHandleMCycleMoveAll(UI_EVENT*);
+static ScreenID UIHandleMAdjustStanceMode(UI_EVENT*);
+static ScreenID UIHandleMChangeToHandMode(UI_EVENT*);
 
-static UINT32 UIHandleAOnTerrain(UI_EVENT* pUIEvent);
-static UINT32 UIHandleAChangeToMove(UI_EVENT* pUIEvent);
-static UINT32 UIHandleAChangeToConfirmAction(UI_EVENT* pUIEvent);
-static UINT32 UIHandleAEndAction(UI_EVENT* pUIEvent);
+static ScreenID UIHandleAOnTerrain(UI_EVENT*);
+static ScreenID UIHandleAChangeToMove(UI_EVENT*);
+static ScreenID UIHandleAChangeToConfirmAction(UI_EVENT*);
+static ScreenID UIHandleAEndAction(UI_EVENT*);
 
-static UINT32 UIHandleMovementMenu(UI_EVENT* pUIEvent);
-static UINT32 UIHandlePositionMenu(UI_EVENT* pUIEvent);
+static ScreenID UIHandleMovementMenu(UI_EVENT*);
+static ScreenID UIHandlePositionMenu(UI_EVENT*);
 
-static UINT32 UIHandleCWait(UI_EVENT* pUIEvent);
-static UINT32 UIHandleCMoveMerc(UI_EVENT* pUIEvent);
-static UINT32 UIHandleCOnTerrain(UI_EVENT* pUIEvent);
+static ScreenID UIHandleCWait(UI_EVENT*);
+static ScreenID UIHandleCMoveMerc(UI_EVENT*);
+static ScreenID UIHandleCOnTerrain(UI_EVENT*);
 
-static UINT32 UIHandlePADJAdjustStance(UI_EVENT* pUIEvent);
+static ScreenID UIHandlePADJAdjustStance(UI_EVENT*);
 
-static UINT32 UIHandleCAOnTerrain(UI_EVENT* pUIEvent);
-static UINT32 UIHandleCAMercShoot(UI_EVENT* pUIEvent);
-static UINT32 UIHandleCAEndConfirmAction(UI_EVENT* pUIEvent);
+static ScreenID UIHandleCAOnTerrain(UI_EVENT*);
+static ScreenID UIHandleCAMercShoot(UI_EVENT*);
+static ScreenID UIHandleCAEndConfirmAction(UI_EVENT*);
 
-static UINT32 UIHandleHCOnTerrain(UI_EVENT* pUIEvent);
-static UINT32 UIHandleHCGettingItem(UI_EVENT* pUIEvent);
+static ScreenID UIHandleHCOnTerrain(UI_EVENT*);
+static ScreenID UIHandleHCGettingItem(UI_EVENT*);
 
 
-static UINT32 UIHandleLCOnTerrain(UI_EVENT* pUIEvent);
-static UINT32 UIHandleLCChangeToLook(UI_EVENT* pUIEvent);
-static UINT32 UIHandleLCLook(UI_EVENT* pUIEvent);
+static ScreenID UIHandleLCOnTerrain(UI_EVENT*);
+static ScreenID UIHandleLCChangeToLook(UI_EVENT*);
+static ScreenID UIHandleLCLook(UI_EVENT*);
 
-static UINT32 UIHandleTATalkingMenu(UI_EVENT* pUIEvent);
+static ScreenID UIHandleTATalkingMenu(UI_EVENT*);
 
-static UINT32 UIHandleTOnTerrain(UI_EVENT* pUIEvent);
-static UINT32 UIHandleTChangeToTalking(UI_EVENT* pUIEvent);
+static ScreenID UIHandleTOnTerrain(UI_EVENT*);
+static ScreenID UIHandleTChangeToTalking(UI_EVENT*);
 
-static UINT32 UIHandleLUIOnTerrain(UI_EVENT* pUIEvent);
-static UINT32 UIHandleLUIBeginLock(UI_EVENT* pUIEvent);
+static ScreenID UIHandleLUIOnTerrain(UI_EVENT*);
+static ScreenID UIHandleLUIBeginLock(UI_EVENT*);
 
-static UINT32 UIHandleLAOnTerrain(UI_EVENT* pUIEvent);
-static UINT32 UIHandleLABeginLockOurTurn(UI_EVENT* pUIEvent);
-static UINT32 UIHandleLAEndLockOurTurn(UI_EVENT* pUIEvent);
+static ScreenID UIHandleLAOnTerrain(UI_EVENT*);
+static ScreenID UIHandleLABeginLockOurTurn(UI_EVENT*);
+static ScreenID UIHandleLAEndLockOurTurn(UI_EVENT*);
 
-static UINT32 UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent);
-static UINT32 UIHandleJumpOverOnTerrain(UI_EVENT* pUIEvent);
-static UINT32 UIHandleJumpOver(UI_EVENT* pUIEvent);
+static ScreenID UIHandleRubberBandOnTerrain(UI_EVENT*);
+static ScreenID UIHandleJumpOverOnTerrain(UI_EVENT*);
+static ScreenID UIHandleJumpOver(UI_EVENT*);
 
-static UINT32 UIHandleOpenDoorMenu(UI_EVENT* pUIEvent);
+static ScreenID UIHandleOpenDoorMenu(UI_EVENT*);
 
-static UINT32 UIHandleEXExitSectorMenu(UI_EVENT* pUIEvent);
+static ScreenID UIHandleEXExitSectorMenu(UI_EVENT*);
 
 
 static SOLDIERTYPE* gpRequesterMerc        = NULL;
@@ -369,9 +368,8 @@ static void SetUIMouseCursor(void);
 
 
 // MAIN TACTICAL UI HANDLER
-UINT32  HandleTacticalUI( void )
+ScreenID HandleTacticalUI(void)
 {
-		UINT32 ReturnVal	= GAME_SCREEN;
 		UINT32 uiNewEvent;
 		LEVELNODE					*pIntTile;
 		static LEVELNODE *pOldIntTile = NULL;
@@ -527,7 +525,7 @@ UINT32  HandleTacticalUI( void )
 		}
 
 		// HANDLE UI EVENT
-		ReturnVal = gEvents[ uiNewEvent ].HandleEvent( &( gEvents[ uiNewEvent ] ) );
+		ScreenID const ReturnVal = gEvents[uiNewEvent].HandleEvent(&gEvents[uiNewEvent]);
 
   	if ( gfInOpenDoorMenu )
     {
@@ -893,7 +891,7 @@ void EndMenuEvent( UINT32	uiEvent )
 }
 
 
-static UINT32 UIHandleIDoNothing(UI_EVENT* pUIEvent)
+static ScreenID UIHandleIDoNothing(UI_EVENT* pUIEvent)
 {
 	guiNewUICursor = NORMAL_SNAPUICURSOR;
 
@@ -901,7 +899,7 @@ static UINT32 UIHandleIDoNothing(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleNewMerc(UI_EVENT* pUIEvent)
+static ScreenID UIHandleNewMerc(UI_EVENT* pUIEvent)
 {
 	 static UINT8				ubTemp = 3;
 	 MERC_HIRE_STRUCT HireMercStruct;
@@ -952,7 +950,7 @@ static UINT32 UIHandleNewMerc(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleNewBadMerc(UI_EVENT* pUIEvent)
+static ScreenID UIHandleNewBadMerc(UI_EVENT* pUIEvent)
 {
 	SOLDIERTYPE *pSoldier;
 	UINT16 usRandom;
@@ -1012,13 +1010,13 @@ static UINT32 UIHandleNewBadMerc(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleEnterEditMode(UI_EVENT* pUIEvent)
+static ScreenID UIHandleEnterEditMode(UI_EVENT* pUIEvent)
 {
 		return( EDIT_SCREEN );
 }
 
 
-UINT32 UIHandleEndTurn(UI_EVENT* pUIEvent)
+ScreenID UIHandleEndTurn(UI_EVENT* pUIEvent)
 {
 	// CANCEL FROM PLANNING MODE!
 	if ( InUIPlanMode( ) )
@@ -1052,7 +1050,7 @@ UINT32 UIHandleEndTurn(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleTestHit(UI_EVENT* pUIEvent)
+static ScreenID UIHandleTestHit(UI_EVENT* pUIEvent)
 {
 	INT8							bDamage;
 
@@ -1117,7 +1115,7 @@ void ChangeInterfaceLevel( INT16 sLevel )
 }
 
 
-UINT32 UIHandleChangeLevel(UI_EVENT* pUIEvent)
+ScreenID UIHandleChangeLevel(UI_EVENT* pUIEvent)
 {
 	if ( gsInterfaceLevel == 0 )
 	{
@@ -1132,7 +1130,7 @@ UINT32 UIHandleChangeLevel(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleSelectMerc(UI_EVENT* pUIEvent)
+static ScreenID UIHandleSelectMerc(UI_EVENT* pUIEvent)
 {
 	INT32	iCurrentSquad;
 
@@ -1158,7 +1156,7 @@ static void SetMovementModeCursor(const SOLDIERTYPE* pSoldier);
 static INT8 UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* pSoldier, INT16 usMapPos, BOOLEAN fUseOKCursor, BOOLEAN fItemsOnlyIfOnIntTiles);
 
 
-static UINT32 UIHandleMOnTerrain(UI_EVENT* pUIEvent)
+static ScreenID UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 {
 	BOOLEAN						fSetCursor = FALSE;
 	EXITGRID					ExitGrid;
@@ -1330,7 +1328,7 @@ static UINT32 UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleMovementMenu(UI_EVENT* pUIEvent)
+static ScreenID UIHandleMovementMenu(UI_EVENT* pUIEvent)
 {
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel == NULL) return GAME_SCREEN;
@@ -1404,14 +1402,14 @@ static UINT32 UIHandleMovementMenu(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandlePositionMenu(UI_EVENT* pUIEvent)
+static ScreenID UIHandlePositionMenu(UI_EVENT* pUIEvent)
 {
 
 	return( GAME_SCREEN );
 }
 
 
-static UINT32 UIHandleAOnTerrain(UI_EVENT* pUIEvent)
+static ScreenID UIHandleAOnTerrain(UI_EVENT* pUIEvent)
 {
 	const GridNo usMapPos = GetMouseMapPos();
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
@@ -1480,7 +1478,7 @@ static UINT32 UIHandleAOnTerrain(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleMChangeToAction(UI_EVENT* pUIEvent)
+static ScreenID UIHandleMChangeToAction(UI_EVENT* pUIEvent)
 {
 	gUITargetShotWaiting = FALSE;
 
@@ -1492,7 +1490,7 @@ static UINT32 UIHandleMChangeToAction(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleMChangeToHandMode(UI_EVENT* pUIEvent)
+static ScreenID UIHandleMChangeToHandMode(UI_EVENT* pUIEvent)
 {
 	ErasePath( FALSE );
 
@@ -1500,7 +1498,7 @@ static UINT32 UIHandleMChangeToHandMode(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleAChangeToMove(UI_EVENT* pUIEvent)
+static ScreenID UIHandleAChangeToMove(UI_EVENT* pUIEvent)
 {
 	 // gsOutOfRangeGridNo = NOWHERE;
 
@@ -1513,7 +1511,7 @@ static UINT32 UIHandleAChangeToMove(UI_EVENT* pUIEvent)
 static void SetConfirmMovementModeCursor(SOLDIERTYPE* pSoldier, BOOLEAN fFromMove);
 
 
-static UINT32 UIHandleCWait(UI_EVENT* pUIEvent)
+static ScreenID UIHandleCWait(UI_EVENT* pUIEvent)
 {
 	BOOLEAN						fSetCursor;
 	LEVELNODE					*pInvTile;
@@ -1579,7 +1577,7 @@ static BOOLEAN HandleMultiSelectionMove(INT16 sDestGridNo);
 
 // NOTE, ONCE AT THIS FUNCTION, WE HAVE ASSUMED TO HAVE CHECKED FOR ENOUGH APS THROUGH
 // SelectedMercCanAffordMove
-static UINT32 UIHandleCMoveMerc(UI_EVENT* pUIEvent)
+static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 {
 	INT16							sDestGridNo;
 	INT16							sActionGridNo;
@@ -1749,7 +1747,7 @@ static UINT32 UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleMCycleMoveAll(UI_EVENT* pUIEvent)
+static ScreenID UIHandleMCycleMoveAll(UI_EVENT* pUIEvent)
 {
 	if (GetSelectedMan() == NULL) return GAME_SCREEN;
 
@@ -1762,7 +1760,7 @@ static UINT32 UIHandleMCycleMoveAll(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleMCycleMovement(UI_EVENT* pUIEvent)
+static ScreenID UIHandleMCycleMovement(UI_EVENT* pUIEvent)
 {
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel == NULL) return GAME_SCREEN;
@@ -1804,14 +1802,14 @@ test_mode:
 }
 
 
-static UINT32 UIHandleCOnTerrain(UI_EVENT* pUIEvent)
+static ScreenID UIHandleCOnTerrain(UI_EVENT* pUIEvent)
 {
 
 	return( GAME_SCREEN );
 }
 
 
-static UINT32 UIHandleMAdjustStanceMode(UI_EVENT* pUIEvent)
+static ScreenID UIHandleMAdjustStanceMode(UI_EVENT* pUIEvent)
 {
 	INT32							iPosDiff;
 	static UINT16			gusAnchorMouseY;
@@ -2050,7 +2048,7 @@ static UINT32 UIHandleMAdjustStanceMode(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleAChangeToConfirmAction(UI_EVENT* pUIEvent)
+static ScreenID UIHandleAChangeToConfirmAction(UI_EVENT* pUIEvent)
 {
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel != NULL) HandleLeftClickCursor(sel);
@@ -2061,7 +2059,7 @@ static UINT32 UIHandleAChangeToConfirmAction(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleCAOnTerrain(UI_EVENT* pUIEvent)
+static ScreenID UIHandleCAOnTerrain(UI_EVENT* pUIEvent)
 {
 	const GridNo usMapPos = GetMouseMapPos();
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
@@ -2234,7 +2232,7 @@ static void AttackRequesterCallback(UINT8 bExitValue)
 }
 
 
-static UINT32 UIHandleCAMercShoot(UI_EVENT* pUIEvent)
+static ScreenID UIHandleCAMercShoot(UI_EVENT* pUIEvent)
 {
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel == NULL) return GAME_SCREEN;
@@ -2269,7 +2267,7 @@ static UINT32 UIHandleCAMercShoot(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleAEndAction(UI_EVENT* pUIEvent)
+static ScreenID UIHandleAEndAction(UI_EVENT* pUIEvent)
 {
 	const GridNo usMapPos = GetMouseMapPos();
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
@@ -2292,13 +2290,13 @@ static UINT32 UIHandleAEndAction(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleCAEndConfirmAction(UI_EVENT* pUIEvent)
+static ScreenID UIHandleCAEndConfirmAction(UI_EVENT* pUIEvent)
 {
 	return GAME_SCREEN;
 }
 
 
-static UINT32 UIHandleIOnTerrain(UI_EVENT* pUIEvent)
+static ScreenID UIHandleIOnTerrain(UI_EVENT* pUIEvent)
 {
 	const GridNo usMapPos = GetMouseMapPos();
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
@@ -2320,7 +2318,7 @@ static UINT32 UIHandleIOnTerrain(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleIChangeToIdle(UI_EVENT* pUIEvent)
+static ScreenID UIHandleIChangeToIdle(UI_EVENT* pUIEvent)
 {
 	return( GAME_SCREEN );
 }
@@ -2329,7 +2327,7 @@ static UINT32 UIHandleIChangeToIdle(UI_EVENT* pUIEvent)
 static UINT8 GetAdjustedAnimHeight(UINT8 ubAnimHeight, INT8 bChange);
 
 
-static UINT32 UIHandlePADJAdjustStance(UI_EVENT* pUIEvent)
+static ScreenID UIHandlePADJAdjustStance(UI_EVENT* pUIEvent)
 {
 	guiShowUPDownArrows					= ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
 
@@ -2508,7 +2506,7 @@ static void RemoveTacticalCursor(void)
 }
 
 
-static UINT32 UIHandleHCOnTerrain(UI_EVENT* pUIEvent)
+static ScreenID UIHandleHCOnTerrain(UI_EVENT* pUIEvent)
 {
 	const GridNo usMapPos = GetMouseMapPos();
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
@@ -2538,7 +2536,7 @@ static UINT32 UIHandleHCOnTerrain(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleHCGettingItem(UI_EVENT* pUIEvent)
+static ScreenID UIHandleHCGettingItem(UI_EVENT* pUIEvent)
 {
 	guiNewUICursor = NORMAL_FREEUICURSOR;
 
@@ -2546,7 +2544,7 @@ static UINT32 UIHandleHCGettingItem(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleTATalkingMenu(UI_EVENT* pUIEvent)
+static ScreenID UIHandleTATalkingMenu(UI_EVENT* pUIEvent)
 {
 	guiNewUICursor = NORMAL_FREEUICURSOR;
 
@@ -2554,7 +2552,7 @@ static UINT32 UIHandleTATalkingMenu(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleEXExitSectorMenu(UI_EVENT* pUIEvent)
+static ScreenID UIHandleEXExitSectorMenu(UI_EVENT* pUIEvent)
 {
 	guiNewUICursor = NORMAL_FREEUICURSOR;
 
@@ -2562,7 +2560,7 @@ static UINT32 UIHandleEXExitSectorMenu(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleOpenDoorMenu(UI_EVENT* pUIEvent)
+static ScreenID UIHandleOpenDoorMenu(UI_EVENT* pUIEvent)
 {
 	guiNewUICursor = NORMAL_FREEUICURSOR;
 
@@ -2746,7 +2744,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 }
 
 
-static UINT32 UIHandleISoldierDebug(UI_EVENT* pUIEvent)
+static ScreenID UIHandleISoldierDebug(UI_EVENT* pUIEvent)
 {
 	 // Use soldier display pages
 	 SetDebugRenderHook(DebugSoldierPage1, 0);
@@ -2759,21 +2757,21 @@ static UINT32 UIHandleISoldierDebug(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleILOSDebug(UI_EVENT* pUIEvent)
+static ScreenID UIHandleILOSDebug(UI_EVENT* pUIEvent)
 {
 	 SetDebugRenderHook(DebugStructurePage1, 0);
 	 return( DEBUG_SCREEN );
 }
 
 
-static UINT32 UIHandleILevelNodeDebug(UI_EVENT* pUIEvent)
+static ScreenID UIHandleILevelNodeDebug(UI_EVENT* pUIEvent)
 {
 	 SetDebugRenderHook(DebugLevelNodePage, 0);
 	 return( DEBUG_SCREEN );
 }
 
 
-static UINT32 UIHandleIETOnTerrain(UI_EVENT* pUIEvent)
+static ScreenID UIHandleIETOnTerrain(UI_EVENT* pUIEvent)
 {
 	//guiNewUICursor = CANNOT_MOVE_UICURSOR;
 	guiNewUICursor = NO_UICURSOR;
@@ -2882,7 +2880,7 @@ void UIHandleSoldierStanceChange(SOLDIERTYPE* s, INT8 bNewStance)
 }
 
 
-static UINT32 UIHandleIETEndTurn(UI_EVENT* pUIEvent)
+static ScreenID UIHandleIETEndTurn(UI_EVENT* pUIEvent)
 {
 	return( GAME_SCREEN );
 }
@@ -3834,7 +3832,7 @@ static void SetConfirmMovementModeCursor(SOLDIERTYPE* pSoldier, BOOLEAN fFromMov
 }
 
 
-static UINT32 UIHandleLCOnTerrain(UI_EVENT* pUIEvent)
+static ScreenID UIHandleLCOnTerrain(UI_EVENT* pUIEvent)
 {
 	guiNewUICursor = LOOK_UICURSOR;
 
@@ -3865,7 +3863,7 @@ static UINT32 UIHandleLCOnTerrain(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleLCChangeToLook(UI_EVENT* pUIEvent)
+static ScreenID UIHandleLCChangeToLook(UI_EVENT* pUIEvent)
 {
 	ErasePath( TRUE );
 
@@ -3909,7 +3907,7 @@ static BOOLEAN MakeSoldierTurn(SOLDIERTYPE* const pSoldier, const GridNo pos)
 }
 
 
-static UINT32 UIHandleLCLook(UI_EVENT* pUIEvent)
+static ScreenID UIHandleLCLook(UI_EVENT* pUIEvent)
 {
 	const GridNo pos = GetMouseMapPos();
 	if (pos == NOWHERE) return GAME_SCREEN;
@@ -3936,7 +3934,7 @@ static UINT32 UIHandleLCLook(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleTOnTerrain(UI_EVENT* pUIEvent)
+static ScreenID UIHandleTOnTerrain(UI_EVENT* pUIEvent)
 {
 	INT16							sTargetGridNo;
 
@@ -4025,7 +4023,7 @@ static UINT32 UIHandleTOnTerrain(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleTChangeToTalking(UI_EVENT* pUIEvent)
+static ScreenID UIHandleTChangeToTalking(UI_EVENT* pUIEvent)
 {
 	ErasePath( TRUE );
 
@@ -4033,7 +4031,7 @@ static UINT32 UIHandleTChangeToTalking(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleLUIOnTerrain(UI_EVENT* pUIEvent)
+static ScreenID UIHandleLUIOnTerrain(UI_EVENT* pUIEvent)
 {
 	//guiNewUICursor = NO_UICURSOR;
 //	SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
@@ -4042,7 +4040,7 @@ static UINT32 UIHandleLUIOnTerrain(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleLUIBeginLock(UI_EVENT* pUIEvent)
+static ScreenID UIHandleLUIBeginLock(UI_EVENT* pUIEvent)
 {
 	// Don't let both versions of the locks to happen at the same time!
 	// ( They are mutually exclusive )!
@@ -4069,7 +4067,7 @@ static UINT32 UIHandleLUIBeginLock(UI_EVENT* pUIEvent)
 }
 
 
-UINT32 UIHandleLUIEndLock(UI_EVENT* pUIEvent)
+ScreenID UIHandleLUIEndLock(UI_EVENT* pUIEvent)
 {
 	if ( gfDisableRegionActive )
 	{
@@ -4134,7 +4132,7 @@ void CheckForDisabledRegionRemove( )
 }
 
 
-static UINT32 UIHandleLAOnTerrain(UI_EVENT* pUIEvent)
+static ScreenID UIHandleLAOnTerrain(UI_EVENT* pUIEvent)
 {
 	//guiNewUICursor = NO_UICURSOR;
 	//SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
@@ -4333,7 +4331,7 @@ void ResetMultiSelection( )
 }
 
 
-static UINT32 UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent)
+static ScreenID UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent)
 {
 	INT16						sScreenX, sScreenY;
 	INT32						iTemp;
@@ -4424,7 +4422,7 @@ static UINT32 UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleJumpOverOnTerrain(UI_EVENT* pUIEvent)
+static ScreenID UIHandleJumpOverOnTerrain(UI_EVENT* pUIEvent)
 {
 	const SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel == NULL) return GAME_SCREEN;
@@ -4450,7 +4448,7 @@ static UINT32 UIHandleJumpOverOnTerrain(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleJumpOver(UI_EVENT* pUIEvent)
+static ScreenID UIHandleJumpOver(UI_EVENT* pUIEvent)
 {
 	// Here, first get map screen
 	SOLDIERTYPE* const sel = GetSelectedMan();
@@ -4481,7 +4479,7 @@ static UINT32 UIHandleJumpOver(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleLABeginLockOurTurn(UI_EVENT* pUIEvent)
+static ScreenID UIHandleLABeginLockOurTurn(UI_EVENT* pUIEvent)
 {
 	// Don't let both versions of the locks to happen at the same time!
 	// ( They are mutually exclusive )!
@@ -4512,7 +4510,7 @@ static UINT32 UIHandleLABeginLockOurTurn(UI_EVENT* pUIEvent)
 }
 
 
-static UINT32 UIHandleLAEndLockOurTurn(UI_EVENT* pUIEvent)
+static ScreenID UIHandleLAEndLockOurTurn(UI_EVENT* pUIEvent)
 {
 	if ( gfUserTurnRegionActive )
 	{

@@ -3,7 +3,6 @@
 #include "RenderWorld.h"
 #include "Input.h"
 #include "Font.h"
-#include "ScreenIDs.h"
 #include "Overhead.h"
 #include "SysUtil.h"
 #include "Font_Control.h"
@@ -54,7 +53,7 @@ static void CycleAnimations(void)
 static void BuildListFile(void);
 
 
-UINT32  AniEditScreenHandle(void)
+ScreenID AniEditScreenHandle(void)
 {
   InputAtom					InputEvent;
 	static BOOLEAN		fFirstTime = TRUE;

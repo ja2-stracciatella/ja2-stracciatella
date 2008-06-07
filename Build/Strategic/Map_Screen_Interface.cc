@@ -61,7 +61,6 @@
 #include "Video.h"
 #include "MemMan.h"
 #include "Debug.h"
-#include "ScreenIDs.h"
 #include "VSurface.h"
 #include "EMail.h"
 #include "Items.h"
@@ -847,14 +846,14 @@ void EnableTeamInfoPanels( void )
 }
 
 
-void DoMapMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect)
+void DoMapMessageBoxWithRect(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
 {	// reset the highlighted line
 	giHighLine = -1;
 	DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
 }
 
 
-void DoMapMessageBox(const UINT8 ubStyle, const wchar_t* const zString, const UINT32 uiExitScreen, const UINT16 usFlags, const MSGBOX_CALLBACK ReturnCallback)
+void DoMapMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	// reset the highlighted line
 	giHighLine = -1;

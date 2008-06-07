@@ -3,7 +3,10 @@
 
 #ifdef JA2EDITOR
 
-UINT32 MapUtilScreenHandle(void);
+#include "ScreenIDs.h"
+
+
+ScreenID MapUtilScreenHandle(void);
 
 #endif
 

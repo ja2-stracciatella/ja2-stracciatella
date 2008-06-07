@@ -1,9 +1,10 @@
 #ifndef ANIVIEWSCREEN_H
 #define ANIVIEWSCREEN_H
 
+#include "ScreenIDs.h"
 #include "Types.h"
 
 
-UINT32 AniEditScreenHandle(void);
+ScreenID AniEditScreenHandle(void);
 
 #endif

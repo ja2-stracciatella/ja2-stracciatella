@@ -1,6 +1,7 @@
 #ifndef __SCREEN_MANAGER
 #define __SCREEN_MANAGER
 
+#include "ScreenIDs.h"
 #include "Types.h"
 
 
@@ -10,9 +11,9 @@
 
 typedef struct Screens
 {
-  void   (*InitializeScreen)(void);
-  UINT32         (*HandleScreen)(void);
-	void (*ShutdownScreen)(void);
+  void     (*InitializeScreen)(void);
+  ScreenID (*HandleScreen)(void);
+	void     (*ShutdownScreen)(void);
 } Screens;
 
 // This extern is made available to make sure that external modules will have access to the screen information

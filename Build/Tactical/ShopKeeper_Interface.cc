@@ -56,7 +56,6 @@
 #include "Video.h"
 #include "MemMan.h"
 #include "Debug.h"
-#include "ScreenIDs.h"
 #include "Items.h"
 
 #ifdef JA2TESTVERSION
@@ -409,7 +408,7 @@ static void HandleShopKeeperInterface(void);
 static void RenderShopKeeperInterface(void);
 
 
-UINT32	ShopKeeperScreenHandle()
+ScreenID ShopKeeperScreenHandle()
 {
 	if( gfSKIScreenEntry )
 	{
@@ -4992,7 +4991,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 }
 
 
-void DoSkiMessageBox(const UINT8 ubStyle, const wchar_t* const zString, const UINT32 uiExitScreen, const UINT8 ubFlags, const MSGBOX_CALLBACK ReturnCallback)
+void DoSkiMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT8 const ubFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	// reset exit mode
 	gfExitSKIDueToMessageBox = TRUE;

@@ -91,7 +91,6 @@
 #include "VSurface.h"
 #include "MemMan.h"
 #include "JAScreens.h"
-#include "ScreenIDs.h"
 #include "BobbyR.h"
 #include "IMP_Portraits.h"
 #include "Loading_Screen.h"
@@ -354,7 +353,7 @@ UINT32	guiSaveGameVersion=0;
 
 static UINT8 gubSaveGameLoc = 0;
 
-UINT32		guiScreenToGotoAfterLoadingSavedGame = 0;
+ScreenID guiScreenToGotoAfterLoadingSavedGame = ERROR_SCREEN; // XXX TODO001A was not properly initialised (0)
 
 extern		UINT32		guiCurrentUniqueSoldierId;
 
@@ -2835,7 +2834,7 @@ static void LoadGeneralInfo(HWFILE const hFile)
 
 	guiCurrentUniqueSoldierId = sGeneralInfo.uiCurrentUniqueSoldierId;
 
-	guiScreenToGotoAfterLoadingSavedGame = sGeneralInfo.uiCurrentScreen;
+	guiScreenToGotoAfterLoadingSavedGame = static_cast<ScreenID>(sGeneralInfo.uiCurrentScreen); // XXX TODO001A unchecked conversion
 
 	SetSelectedMan(ID2Soldier(sGeneralInfo.usSelectedSoldier));
 

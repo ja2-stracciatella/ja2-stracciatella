@@ -1,6 +1,9 @@
 #ifndef FADE_SCREEN_H
 #define FADE_SCREEN_H
 
+#include "ScreenIDs.h"
+
+
 #define	FADE_OUT_REALFADE					5
 
 #define FADE_IN_REALFADE					12
@@ -19,8 +22,8 @@ extern BOOLEAN       gfFadeIn;
 extern FADE_FUNCTION gFadeFunction;
 extern BOOLEAN       gfFadeInVideo;
 
-BOOLEAN HandleBeginFadeIn( UINT32 uiScreenExit );
-BOOLEAN HandleBeginFadeOut( UINT32 uiScreenExit );
+BOOLEAN HandleBeginFadeIn(ScreenID uiScreenExit);
+BOOLEAN HandleBeginFadeOut(ScreenID uiScreenExit);
 
 BOOLEAN HandleFadeOutCallback(void);
 BOOLEAN HandleFadeInCallback(void);
@@ -28,6 +31,6 @@ BOOLEAN HandleFadeInCallback(void);
 void FadeInNextFrame(void);
 void FadeOutNextFrame(void);
 
-UINT32 FadeScreenHandle(void);
+ScreenID FadeScreenHandle(void);
 
 #endif

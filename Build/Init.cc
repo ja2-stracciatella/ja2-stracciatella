@@ -3,7 +3,6 @@
 #include "Init.h"
 #include "Local.h"
 #include "SGP.h"
-#include "ScreenIDs.h"
 #include "Screens.h"
 #include "Strategic_Movement_Costs.h"
 #include "Sys_Globals.h"
@@ -56,7 +55,7 @@ extern	BOOLEAN	gfUseConsecutiveQuickSaveSlots;
 #endif
 
 
-UINT32 InitializeJA2(void)
+ScreenID InitializeJA2(void)
 try
 {
 	gfWorldLoaded = FALSE;

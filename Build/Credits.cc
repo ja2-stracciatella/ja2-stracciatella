@@ -11,7 +11,6 @@
 #include "MouseSystem.h"
 #include "Random.h"
 #include "Render_Dirty.h"
-#include "ScreenIDs.h"
 #include "SysUtil.h"
 #include "Text.h"
 #include "Timer_Control.h"
@@ -169,7 +168,7 @@ static void GetCreditScreenUserInput(void);
 static void HandleCreditScreen(void);
 
 
-UINT32 CreditScreenHandle(void)
+ScreenID CreditScreenHandle(void)
 {
 	if (!g_credits_active)
 	{

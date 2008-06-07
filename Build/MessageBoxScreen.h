@@ -3,6 +3,8 @@
 
 #include "Button_System.h"
 #include "MouseSystem.h"
+#include "ScreenIDs.h"
+
 
 // Message box flags
 #define MSG_BOX_FLAG_OK                    0x0002 // Displays OK button
@@ -40,7 +42,7 @@ enum
 typedef struct
 {
 	UINT16          usFlags;
-	UINT32          uiExitScreen;
+	ScreenID        uiExitScreen;
 	MSGBOX_CALLBACK ExitCallback;
 	INT16           sX;
 	INT16           sY;
@@ -74,17 +76,17 @@ extern wchar_t gzUserDefinedButton2[128];
  * ubFlags        Some flags for button style
  * ReturnCallback Callback for return. Can be NULL. Returns any above return value
  * pCenteringRect Rect to center in. Can be NULL */
-void DoMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect);
+void DoMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
 void DoScreenIndependantMessageBox(const wchar_t* zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
 void DoLowerScreenIndependantMessageBox(const wchar_t* zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
 
 //wrappers for other screens
-void DoMapMessageBoxWithRect(     UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect);
-void DoOptionsMessageBoxWithRect( UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect);
-void DoSaveLoadMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect);
+void DoMapMessageBoxWithRect(     UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
+void DoOptionsMessageBoxWithRect( UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
+void DoSaveLoadMessageBoxWithRect(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
 
 extern BOOLEAN gfInMsgBox;
 
-UINT32 MessageBoxScreenHandle(void);
+ScreenID MessageBoxScreenHandle(void);
 
 #endif

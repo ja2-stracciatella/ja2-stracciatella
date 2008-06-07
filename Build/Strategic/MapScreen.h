@@ -5,6 +5,7 @@
 #include "Item_Types.h"
 #include "JA2Types.h"
 #include "MouseSystem.h"
+#include "ScreenIDs.h"
 
 
 #define			MAP_WORLD_X						18
@@ -118,9 +119,9 @@ extern BOOLEAN      fDrawCharacterList;
 // create/destroy inventory button as needed
 void CreateDestroyMapInvButton(void);
 
-void   MapScreenInit(void);
-UINT32 MapScreenHandle(void);
-void   MapScreenShutdown(void);
+void     MapScreenInit(void);
+ScreenID MapScreenHandle(void);
+void     MapScreenShutdown(void);
 
 #ifdef JA2TESTVERSION
 void DumpSectorDifficultyInfo(void);

@@ -38,7 +38,6 @@
 #include "Map_Information.h"
 #include "SmokeEffects.h"
 #include "Button_System.h"
-#include "ScreenIDs.h"
 #include "VSurface.h"
 #include "WorldMan.h"
 
@@ -131,8 +130,8 @@ BOOLEAN		gfRedrawOptionsScreen = TRUE;
 
 BOOLEAN		gfEnteredFromMapScreen=FALSE;
 
-UINT32		guiOptionsScreen = OPTIONS_SCREEN;
-UINT32		guiPreviousOptionScreen = OPTIONS_SCREEN;
+static ScreenID guiOptionsScreen        = OPTIONS_SCREEN;
+ScreenID        guiPreviousOptionScreen = OPTIONS_SCREEN;
 
 BOOLEAN		gfExitOptionsDueToMessageBox=FALSE;
 BOOLEAN		gfExitOptionsAfterMessageBox = FALSE;
@@ -182,7 +181,7 @@ static void HandleOptionsScreen(void);
 static void RenderOptionsScreen(void);
 
 
-UINT32	OptionsScreenHandle()
+ScreenID OptionsScreenHandle()
 {
 	if( gfOptionsScreenEntry )
 	{
@@ -539,7 +538,7 @@ static void RenderOptionsScreen(void)
 }
 
 
-static void SetOptionsExitScreen(UINT32 uiExitScreen);
+static void SetOptionsExitScreen(ScreenID);
 
 
 static void GetOptionsScreenUserInput(void)
@@ -601,7 +600,7 @@ static void GetOptionsScreenUserInput(void)
 }
 
 
-static void SetOptionsExitScreen(UINT32 uiExitScreen)
+static void SetOptionsExitScreen(ScreenID const uiExitScreen)
 {
 	guiOptionsScreen = uiExitScreen;
 	gfOptionsScreenExit	= TRUE;
@@ -629,7 +628,7 @@ static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, INT32 reason)
 
 
 static void ConfirmQuitToMainMenuMessageBoxCallBack(UINT8 bExitValue);
-static void DoOptionsMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
+static void DoOptionsMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
 
 
 static void BtnOptQuitCallback(GUI_BUTTON* btn, INT32 reason)
@@ -730,7 +729,7 @@ static void MusicSliderChangeCallBack(INT32 iNewValue)
 }
 
 
-void DoOptionsMessageBoxWithRect(const UINT8 ubStyle, const wchar_t* const zString, const UINT32 uiExitScreen, const UINT16 usFlags, const MSGBOX_CALLBACK ReturnCallback, const SGPRect* const pCenteringRect)
+void DoOptionsMessageBoxWithRect(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
 {
 	// reset exit mode
 	gfExitOptionsDueToMessageBox = TRUE;
@@ -740,7 +739,7 @@ void DoOptionsMessageBoxWithRect(const UINT8 ubStyle, const wchar_t* const zStri
 }
 
 
-static void DoOptionsMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback)
+static void DoOptionsMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	DoOptionsMessageBoxWithRect(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
 }

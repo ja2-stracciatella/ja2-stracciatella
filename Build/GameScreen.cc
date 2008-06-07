@@ -4,7 +4,6 @@
 #include "WorldDef.h"
 #include "Input.h"
 #include "Font.h"
-#include "ScreenIDs.h"
 #include "Screens.h"
 #include "Overhead.h"
 #include "SysUtil.h"
@@ -108,7 +107,7 @@ RENDER_HOOK				gRenderOverride = NULL;
 #define	RESTART_DELAY								6000
 
 
-UINT32	guiTacticalLeaveScreenID;
+static ScreenID guiTacticalLeaveScreenID = ERROR_SCREEN; // XXX TODO001A had no explicit initialisation
 BOOLEAN	guiTacticalLeaveScreen		= FALSE;
 
 
@@ -258,14 +257,15 @@ void EnterTacticalScreen(void)
 	EnableScrollMessages( );
 }
 
-void LeaveTacticalScreen( UINT32 uiNewScreen )
+
+void LeaveTacticalScreen(ScreenID const uiNewScreen)
 {
 	guiTacticalLeaveScreenID = uiNewScreen;
 	guiTacticalLeaveScreen = TRUE;
 }
 
 
-void InternalLeaveTacticalScreen( UINT32 uiNewScreen )
+void InternalLeaveTacticalScreen(ScreenID const uiNewScreen)
 {
   gpCustomizableTimerCallback = NULL;
 
@@ -337,10 +337,8 @@ static void HandleModalTactical(void);
 static void TacticalScreenLocateToSoldier(void);
 
 
-UINT32  MainGameScreenHandle(void)
+ScreenID MainGameScreenHandle(void)
 {
-	UINT32		uiNewScreen = GAME_SCREEN;
-
 	//DO NOT MOVE THIS FUNCTION CALL!!!
 	//This determines if the help screen should be active
 //	if( ( !gfTacticalDoHeliRun && !gfFirstHeliRun ) && ShouldTheHelpScreenComeUp( HELP_SCREEN_TACTICAL, FALSE ) )
@@ -569,6 +567,8 @@ UINT32  MainGameScreenHandle(void)
 			ExecuteOverhead( );
 		}
 
+		ScreenID uiNewScreen = GAME_SCREEN;
+
 		// Handle animated cursors
 		if( gfWorldLoaded )
 		{
@@ -588,7 +588,7 @@ UINT32  MainGameScreenHandle(void)
 		else if( gfIntendOnEnteringEditor )
 		{
 			DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Aborting normal game mode and entering editor mode...");
-			SetPendingNewScreen( 0xffff ); //NO_SCREEN
+			SetPendingNewScreen(NO_PENDING_SCREEN);
 			return EDIT_SCREEN;
 		}
 #endif

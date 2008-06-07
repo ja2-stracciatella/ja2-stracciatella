@@ -3,6 +3,7 @@
 #define EDITSCREEN_H
 
 #include "JA2Types.h"
+#include "ScreenIDs.h"
 
 
 #define EDITOR_LIGHT_MAX		(SHADE_MIN + SHADE_MAX)
@@ -41,9 +42,9 @@ extern BOOLEAN			gfConfirmExitFirst;
 extern BOOLEAN			gfConfirmExitPending;
 extern BOOLEAN			gfIntendOnEnteringEditor;
 
-void   EditScreenInit(void);
-UINT32 EditScreenHandle(void);
-void   EditScreenShutdown(void);
+void     EditScreenInit(void);
+ScreenID EditScreenHandle(void);
+void     EditScreenShutdown(void);
 
 #endif
 #endif

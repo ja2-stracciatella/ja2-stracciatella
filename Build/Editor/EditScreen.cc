@@ -18,7 +18,6 @@
 #include "Smooth.h"
 #include "WorldMan.h"
 #include "Edit_Sys.h"
-#include "ScreenIDs.h"
 #include "EditScreen.h"
 #include "Sys_Globals.h"
 #include "SmartMethod.h"
@@ -1791,11 +1790,9 @@ static void HandleKeyboardShortcuts(void)
 
 
 //	Perform the current user selected action, if any (or at least set things up for doing that)
-static UINT32 PerformSelectedAction(void)
+static ScreenID PerformSelectedAction(void)
 {
-	UINT32 uiRetVal;
-
-	uiRetVal = EDIT_SCREEN;
+	ScreenID const uiRetVal = EDIT_SCREEN;
 
 	switch ( iCurrentAction )
 	{
@@ -2239,7 +2236,7 @@ static void CreateNewMap(void)
 }
 
 
-static UINT32 ProcessEditscreenMessageBoxResponse(void)
+static ScreenID ProcessEditscreenMessageBoxResponse(void)
 {
 	RemoveMessageBox();
 	gfRenderWorld = TRUE;
@@ -2296,7 +2293,7 @@ static UINT32 ProcessEditscreenMessageBoxResponse(void)
 
 
 //	Displays a help screen and waits for the user to wisk it away.
-static UINT32 WaitForHelpScreenResponse(void)
+static ScreenID WaitForHelpScreenResponse(void)
 {
   InputAtom DummyEvent;
 	BOOLEAN fLeaveScreen;
@@ -2411,7 +2408,7 @@ static UINT32 WaitForHelpScreenResponse(void)
 
 
 //	Handles all keyboard input and display for a selection window.
-static UINT32 WaitForSelectionWindowResponse(void)
+static ScreenID WaitForSelectionWindowResponse(void)
 {
   InputAtom DummyEvent;
 
@@ -3268,9 +3265,8 @@ static void DrawObjectsBasedOnSelectionRegion(void)
 
 
 //The main loop of the editor.
-UINT32  EditScreenHandle( void )
+ScreenID EditScreenHandle(void)
 {
-	UINT32 uiRetVal;
 	BOOLEAN fShowingCursor;
 
 	if( gfWorldLoaded && gMapInformation.ubMapVersion <= 7 && !gfCorruptMap )
@@ -3305,7 +3301,7 @@ UINT32  EditScreenHandle( void )
 
 	fBeenWarned = FALSE;
 
-	uiRetVal = EDIT_SCREEN;
+	ScreenID uiRetVal = EDIT_SCREEN;
 
 	// Handle the bottom task bar menu.
 	DoTaskbar();

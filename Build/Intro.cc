@@ -13,7 +13,6 @@
 #include "Multi_Language_Graphic_Utils.h"
 #include "Music_Control.h"
 #include "Render_Dirty.h"
-#include "ScreenIDs.h"
 #include "Soldier_Profile.h"
 #include "SysUtil.h"
 #include "Text.h"
@@ -30,7 +29,7 @@
 BOOLEAN		gfIntroScreenEntry;
 BOOLEAN		gfIntroScreenExit;
 
-UINT32		guiIntroExitScreen = INTRO_SCREEN;
+static ScreenID guiIntroExitScreen = INTRO_SCREEN;
 
 
 extern	BOOLEAN	gfDoneWithSplashScreen;
@@ -104,7 +103,7 @@ static void GetIntroScreenUserInput(void);
 static void HandleIntroScreen(void);
 
 
-UINT32	IntroScreenHandle( void )
+ScreenID IntroScreenHandle(void)
 {
 	if( gfIntroScreenEntry )
 	{

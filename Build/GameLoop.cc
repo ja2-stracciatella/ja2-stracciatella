@@ -4,7 +4,6 @@
 #include "MessageBoxScreen.h"
 #include "SGP.h"
 #include "GameLoop.h"
-#include "ScreenIDs.h"
 #include "Screens.h"
 #include "ShopKeeper_Interface.h"
 #include "Tactical_Placement_GUI.h"
@@ -42,8 +41,8 @@
 #endif
 
 
-UINT32 guiCurrentScreen;
-UINT32 guiPendingScreen = NO_PENDING_SCREEN;
+ScreenID guiCurrentScreen = ERROR_SCREEN; // XXX TODO001A had no explicit initialisation
+ScreenID guiPendingScreen = NO_PENDING_SCREEN;
 
 #define	DONT_CHECK_FOR_FREE_SPACE		255
 static UINT8 gubCheckForFreeSpaceOnHardDriveCount = DONT_CHECK_FOR_FREE_SPACE;
@@ -207,7 +206,7 @@ static void HandleNewScreenChange(UINT32 uiNewScreen, UINT32 uiOldScreen);
 void GameLoop(void)
 {
   InputAtom					InputEvent;
-	UINT32	uiOldScreen=guiCurrentScreen;
+	ScreenID uiOldScreen = guiCurrentScreen;
 
 	SGPPoint MousePos;
 	GetMousePos(&MousePos);
@@ -331,7 +330,7 @@ void GameLoop(void)
 }
 
 
-void SetPendingNewScreen( UINT32 uiNewScreen )
+void SetPendingNewScreen(ScreenID const uiNewScreen)
 {
 	guiPendingScreen = uiNewScreen;
 }

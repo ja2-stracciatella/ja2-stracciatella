@@ -3,6 +3,8 @@
 #ifndef _JA2_LOAD_SCREEN_
 #define _JA2_LOAD_SCREEN_
 
+#include "ScreenIDs.h"
+
 
 typedef struct FDLG_LIST FDLG_LIST;
 struct FDLG_LIST
@@ -21,8 +23,8 @@ BOOLEAN ExternalSaveMap(const wchar_t* szFilename);
 extern BOOLEAN gfErrorCatch;
 extern wchar_t gzErrorCatchString[256];
 
-void   LoadSaveScreenInit(void);
-UINT32 LoadSaveScreenHandle(void);
+void     LoadSaveScreenInit(void);
+ScreenID LoadSaveScreenHandle(void);
 
 #endif
 #endif

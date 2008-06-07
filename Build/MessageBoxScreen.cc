@@ -2,7 +2,6 @@
 #include "Input.h"
 #include "Interface.h"
 #include "Local.h"
-#include "ScreenIDs.h"
 #include "Timer_Control.h"
 #include "Fade_Screen.h"
 #include "SysUtil.h"
@@ -82,7 +81,7 @@ static GUIButtonRef MakeButton(const wchar_t* text, INT16 fore_colour, INT16 sha
 }
 
 
-void DoMessageBox(const UINT8 ubStyle, const wchar_t* const zString, const UINT32 uiExitScreen, const UINT16 usFlags, const MSGBOX_CALLBACK ReturnCallback, const SGPRect* const pCenteringRect)
+void DoMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
 {
 	GetMousePos(&pOldMousePosition);
 
@@ -410,7 +409,7 @@ static void NumberedMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static UINT32 ExitMsgBox(INT8 ubExitCode)
+static ScreenID ExitMsgBox(INT8 const ubExitCode)
 {
 	// Delete popup!
 	RemoveMercPopupBoxFromIndex(gMsgBox.iBoxId);
@@ -522,7 +521,7 @@ static UINT32 ExitMsgBox(INT8 ubExitCode)
 }
 
 
-UINT32	MessageBoxScreenHandle(void)
+ScreenID MessageBoxScreenHandle(void)
 {
 	if (gfNewMessageBox)
 	{

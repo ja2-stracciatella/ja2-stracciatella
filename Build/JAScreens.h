@@ -1,18 +1,19 @@
 #ifndef __JASCREENS_H_
 #define __JASCREENS_H_
 
+#include "ScreenIDs.h"
 #include "Types.h"
 
 
-extern UINT32 ErrorScreenHandle(void);
+ScreenID ErrorScreenHandle(void);
 
-extern UINT32 InitScreenHandle(void);
+ScreenID InitScreenHandle(void);
 
-UINT32 PalEditScreenHandle(void);
+ScreenID PalEditScreenHandle(void);
 
-UINT32 DebugScreenHandle(void);
+ScreenID DebugScreenHandle(void);
 
-UINT32	SexScreenHandle( void );
+ScreenID SexScreenHandle(void);
 
 // External functions
 void DisplayFrameRate(void);
@@ -20,7 +21,7 @@ void DisplayFrameRate(void);
 void HandleTitleScreenAnimation(void);
 
 //External Globals
-extern UINT32 guiCurrentScreen;
+extern ScreenID guiCurrentScreen;
 
 typedef void (*RENDER_HOOK)( void );
 
@@ -34,7 +35,7 @@ extern INT8    gCurDebugPage;
 
 #ifdef JA2DEMOADS
 void DoDemoIntroduction(void);
-UINT32 DemoExitScreenHandle(void);
+ScreenID DemoExitScreenHandle(void);
 #endif
 
 #endif

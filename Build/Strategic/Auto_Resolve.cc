@@ -15,7 +15,6 @@
 #include "MouseSystem.h"
 #include "Button_System.h"
 #include "GameLoop.h"
-#include "ScreenIDs.h"
 #include "MapScreen.h"
 #include "VObject.h"
 #include "VSurface.h"
@@ -558,7 +557,7 @@ static void ProcessBattleFrame(void);
 static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood);
 
 
-UINT32 AutoResolveScreenHandle()
+ScreenID AutoResolveScreenHandle()
 {
 	RestoreBackgroundRects();
 

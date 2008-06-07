@@ -2,6 +2,7 @@
 #define _SAVE_LOAD_SCREEN__H_
 
 #include "JA2Types.h"
+#include "ScreenIDs.h"
 
 
 #define		NUM_SAVE_GAMES											11
@@ -19,10 +20,10 @@ extern	BOOLEAN			gbSaveGameArray[ NUM_SAVE_GAMES ];
 
 extern	BOOLEAN			gfCameDirectlyFromGame;
 
-void   SaveLoadScreenInit(void);
-UINT32	SaveLoadScreenHandle( void );
+void     SaveLoadScreenInit(void);
+ScreenID SaveLoadScreenHandle(void);
 
-void DoSaveLoadMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
+void DoSaveLoadMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
 
 BOOLEAN DoQuickSave(void);
 BOOLEAN DoQuickLoad(void);

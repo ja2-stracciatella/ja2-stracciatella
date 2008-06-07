@@ -1,7 +1,7 @@
 #ifndef __SCREEN_IDS
 #define __SCREEN_IDS
 
-enum ScreenTypes
+enum ScreenID
 {
 	EDIT_SCREEN,
 	ERROR_SCREEN = 3,
@@ -35,7 +35,9 @@ enum ScreenTypes
 	QUEST_DEBUG_SCREEN,
 //#endif
 
-	MAX_SCREENS
+	MAX_SCREENS,
+
+	NO_PENDING_SCREEN = 0xFFFF
 };
 
 #endif

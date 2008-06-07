@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "JA2Types.h"
 #include "MouseSystem.h"
+#include "ScreenIDs.h"
 
 
 #define		UIEVENT_SINGLEEVENT					0x00000002
@@ -58,12 +59,10 @@ typedef enum
 
 }	UI_MODE;
 
-struct TAG_UI_EVENT;
-
-typedef UINT32 (*UI_HANDLEFNC)( struct TAG_UI_EVENT* );
-
-typedef struct TAG_UI_EVENT
+struct UI_EVENT
 {
+	typedef ScreenID (*UI_HANDLEFNC)(UI_EVENT*);
+
 	UINT32					uiFlags;
 	UI_MODE					ChangeToUIMode;
 	UI_HANDLEFNC		HandleEvent;
@@ -71,7 +70,7 @@ typedef struct TAG_UI_EVENT
 	BOOLEAN					fDoneMenu;
 	UI_MODE         uiMenuPreviousMode;
 	UINT32					uiParams[3];
-} UI_EVENT;
+};
 
 
 // EVENT ENUMERATION
@@ -207,8 +206,8 @@ extern UINT32       guiUIFullTargetFlags;
 extern BOOLEAN gfUIConfirmExitArrows;
 extern INT16   gsJumpOverGridNo;
 
-UINT32  HandleTacticalUI(void);
-UINT32 UIHandleEndTurn( UI_EVENT *pUIEvent );
+ScreenID HandleTacticalUI(void);
+ScreenID UIHandleEndTurn(UI_EVENT*);
 
 extern BOOLEAN gfUIShowCurIntTile;
 
@@ -256,14 +255,14 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustForConfirm );
 void SetUIBusy(const SOLDIERTYPE* s);
 void UnSetUIBusy(const SOLDIERTYPE* s);
 
-UINT32 UIHandleLUIEndLock( UI_EVENT *pUIEvent );
+ScreenID UIHandleLUIEndLock(UI_EVENT*);
 
 void BeginDisplayTimedCursor( UINT32 uiCursorID, UINT32 uiDelay );
 
 void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent );
 INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent );
 
-UINT32	UIHandleChangeLevel( UI_EVENT *pUIEvent );
+ScreenID UIHandleChangeLevel(UI_EVENT*);
 BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode );
 
 void ChangeInterfaceLevel( INT16 sLevel );

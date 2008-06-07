@@ -3,11 +3,12 @@
 
 #ifdef JA2BETAVERSION
 
+#include "ScreenIDs.h"
 #include "Types.h"
 
 
-void   AIViewerScreenInit(void);
-UINT32 AIViewerScreenHandle(void);
+void     AIViewerScreenInit(void);
+ScreenID AIViewerScreenHandle(void);
 
 #endif
 

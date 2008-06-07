@@ -18,7 +18,6 @@
 #include "Render_Dirty.h"
 #include "SGP.h"
 #include "SaveLoadScreen.h"
-#include "ScreenIDs.h"
 #include "SysUtil.h"
 #include "Text.h"
 #include "Timer_Control.h"
@@ -67,7 +66,7 @@ static BOOLEAN fInitialRender    = FALSE;
 static BOOLEAN gfMainMenuScreenEntry = FALSE;
 static BOOLEAN gfMainMenuScreenExit = FALSE;
 
-static UINT32 guiMainMenuExitScreen = MAINMENU_SCREEN;
+static ScreenID guiMainMenuExitScreen = MAINMENU_SCREEN;
 
 
 extern BOOLEAN gfLoadGameUponEntry;
@@ -80,7 +79,7 @@ static void RenderMainMenu(void);
 static void RestoreButtonBackGrounds(void);
 
 
-UINT32 MainMenuScreenHandle(void)
+ScreenID MainMenuScreenHandle(void)
 {
 	if (guiSplashStartTime + 4000 > GetJA2Clock())
 	{
@@ -241,7 +240,7 @@ static void ExitMainMenu(void)
 }
 
 
-static void SetMainMenuExitScreen(UINT32 uiNewScreen);
+static void SetMainMenuExitScreen(ScreenID uiNewScreen);
 
 
 static void MenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
@@ -313,7 +312,7 @@ void ClearMainMenu(void)
 }
 
 
-static void SetMainMenuExitScreen(UINT32 uiNewScreen)
+static void SetMainMenuExitScreen(ScreenID const uiNewScreen)
 {
 	guiMainMenuExitScreen = uiNewScreen;
 	gfMainMenuScreenExit  = TRUE;

@@ -1,5 +1,5 @@
 HACK000E
-TODO0019
+TODO001A
 
 - HACK0001 put the process properly to sleep during idle phases instead of SDL_Delay(1)
 - HACK0007 Stop PreRandom always returning 0 or 1 without ensuring an equal distribution, which would be a rather complex task with pregenerated randoms
@@ -31,3 +31,4 @@ TODO0019
 - TODO0017 does the order of printing and dirtying matter?
 - TODO0018 give quest facts proper names
 - TODO0019 remove quirk, which ignores failure to open a file, which happens at the start of the game
+- TODO001A investigate, if these ScreenIDs are sensible

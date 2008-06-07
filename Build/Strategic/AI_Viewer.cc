@@ -33,7 +33,6 @@
 #include "Auto_Resolve.h"
 #include "Campaign.h"
 #include "Debug.h"
-#include "ScreenIDs.h"
 #include "Strategic_AI.h"
 #include "Strategic_Status.h"
 #include "Video.h"
@@ -1043,7 +1042,7 @@ void AIViewerScreenInit()
 }
 
 
-UINT32  AIViewerScreenHandle()
+ScreenID AIViewerScreenHandle()
 {
 	RestoreBackgroundRects();
 

@@ -16,7 +16,6 @@
 #include "Music_Control.h"
 #include "Options_Screen.h"
 #include "Render_Dirty.h"
-#include "ScreenIDs.h"
 #include "SysUtil.h"
 #include "Text.h"
 #include "Types.h"
@@ -142,7 +141,7 @@ static BOOLEAN gfGIOButtonsAllocated = FALSE;
 
 static UINT8 gubGameOptionScreenHandler = GIO_NOTHING;
 
-static UINT32 gubGIOExitScreen = GAME_INIT_OPTIONS_SCREEN;
+static ScreenID gubGIOExitScreen = GAME_INIT_OPTIONS_SCREEN;
 
 static SGPVObject* guiGIOMainBackGroundImage;
 
@@ -194,7 +193,7 @@ static BOOLEAN DisplayMessageToUserAboutIronManMode(void);
 static void ConfirmGioIronManMessageBoxCallBack(UINT8 bExitValue);
 
 
-UINT32 GameInitOptionsScreenHandle(void)
+ScreenID GameInitOptionsScreenHandle(void)
 {
 	if (gfGIOScreenEntry)
 	{

@@ -1,6 +1,5 @@
 #include "HImage.h"
 #include "Local.h"
-#include "ScreenIDs.h"
 #include "Timer_Control.h"
 #include "Sys_Globals.h"
 #include "Fade_Screen.h"
@@ -14,7 +13,7 @@
 #include "VSurface.h"
 
 
-static UINT32 guiExitScreen;
+static ScreenID guiExitScreen;
 BOOLEAN	gfFadeInitialized = FALSE;
 INT16		gsFadeLimit;
 UINT32	guiTime;
@@ -51,10 +50,10 @@ void FadeOutNextFrame( )
 }
 
 
-static void BeginFade(UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 uiDelay);
+static void BeginFade(ScreenID uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 uiDelay);
 
 
-BOOLEAN HandleBeginFadeIn( UINT32 uiScreenExit )
+BOOLEAN HandleBeginFadeIn(ScreenID const uiScreenExit)
 {
 	if ( gfFadeIn )
 	{
@@ -70,7 +69,7 @@ BOOLEAN HandleBeginFadeIn( UINT32 uiScreenExit )
 	return( FALSE );
 }
 
-BOOLEAN HandleBeginFadeOut( UINT32 uiScreenExit )
+BOOLEAN HandleBeginFadeOut(ScreenID const uiScreenExit)
 {
 	if ( gfFadeOut )
 	{
@@ -131,7 +130,7 @@ static void FadeFrameBufferRealFade(void);
 static void FadeInFrameBufferRealFade(void);
 
 
-static void BeginFade(UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 uiDelay)
+static void BeginFade(ScreenID const uiExitScreen, INT8 const bFadeValue, INT8 const bType, UINT32 const uiDelay)
 {
 	//Init some paramters
 	guiExitScreen	= uiExitScreen;
@@ -170,7 +169,7 @@ static void BeginFade(UINT32 uiExitScreen, INT8 bFadeValue, INT8 bType, UINT32 u
 }
 
 
-UINT32	FadeScreenHandle( )
+ScreenID FadeScreenHandle()
 {
 	UINT32 uiTime;
 

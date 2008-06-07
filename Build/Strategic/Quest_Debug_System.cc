@@ -39,7 +39,6 @@
 #include <stdarg.h>
 #include "Button_System.h"
 #include "Debug.h"
-#include "ScreenIDs.h"
 #include "VSurface.h"
 #include "FileMan.h"
 #include "SGP.h"
@@ -588,7 +587,7 @@ static void RenderQuestDebugSystem(void);
 static UINT8 WhichPanelShouldTalkingMercUse(void);
 
 
-UINT32	QuestDebugScreenHandle()
+ScreenID QuestDebugScreenHandle()
 {
 	if( gfQuestDebugEntry )
 	{
@@ -1055,7 +1054,7 @@ static FACETYPE* GetQDSFace(const UINT8 panel_merc_should_use)
 }
 
 
-static void DoQDSMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
+static void DoQDSMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
 static void IncrementActiveDropDownBox(INT16 sIncrementValue);
 static void SetTalkingMercPauseState(BOOLEAN fState);
 
@@ -2938,7 +2937,7 @@ static void EnableQDSButtons(void)
 }
 
 
-static void DoQDSMessageBox(const UINT8 ubStyle, const wchar_t* const zString, const UINT32 uiExitScreen, const UINT8 ubFlags, const MSGBOX_CALLBACK ReturnCallback)
+static void DoQDSMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT8 const ubFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	// reset exit mode
 	gfExitQdsDueToMessageBox = TRUE;

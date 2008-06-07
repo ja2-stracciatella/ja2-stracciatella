@@ -6,7 +6,6 @@
 #include "Font.h"
 #include "HImage.h"
 #include "Local.h"
-#include "ScreenIDs.h"
 #include "Screens.h"
 #include "VObject.h"
 #include "VSurface.h"
@@ -43,7 +42,7 @@ static SGPVSurface* gi8BitMiniMap;
 // quantizes it into an 8-bit image ans writes it to an sti file in radarmaps.
 
 
-UINT32	MapUtilScreenHandle( )
+ScreenID MapUtilScreenHandle()
 {
 	static SGPPaletteEntry* p24BitValues = NULL;
 	static INT16		fNewMap = TRUE;

@@ -2,24 +2,25 @@
 #define LAPTOP_H
 
 #include "MouseSystem.h"
+#include "ScreenIDs.h"
 #include "Types.h"
 
 
 void    ExitLaptop(void);
 void    SetBookMark(INT32 iBookId);
 void    LeaveLapTopScreen(void);
-void    SetLaptopExitScreen(UINT32 uiExitScreen);
+void    SetLaptopExitScreen(ScreenID uiExitScreen);
 void    SetLaptopNewGameFlag(void);
 void    LapTopScreenCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 void    HandleRightButtonUpEvent(void);
-void    DoLapTopMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
+void    DoLapTopMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
 void    GoToWebPage(INT32 iPageId);
 void    WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, const SGPVObject* background);
 void    BlitTitleBarIcons(void);
 void    HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usKeyState);
 BOOLEAN RenderWWWProgramTitleBar(void);
 void    DisplayProgramBoundingBox(BOOLEAN fMarkButtons);
-void    DoLapTopSystemMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
+void    DoLapTopSystemMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
 void    CreateFileAndNewEmailIconFastHelpText(UINT32 uiHelpTextID, BOOLEAN fClearHelpText);
 BOOLEAN InitLaptopAndLaptopScreens(void);
 
@@ -135,10 +136,10 @@ enum{
 #define DEAD_MERC_COLOR_BLUE   55
 
 
-void DoLapTopSystemMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect);
+void DoLapTopSystemMessageBoxWithRect(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
 
-void   LaptopScreenInit(void);
-UINT32 LaptopScreenHandle(void);
-void   LaptopScreenShutdown(void);
+void     LaptopScreenInit(void);
+ScreenID LaptopScreenHandle(void);
+void     LaptopScreenShutdown(void);
 
 #endif

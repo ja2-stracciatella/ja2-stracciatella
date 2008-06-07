@@ -1,9 +1,11 @@
 #ifndef _INTRO__C_
 #define _INTRO__C_
 
+#include "ScreenIDs.h"
 
-void   IntroScreenInit(void);
-UINT32	IntroScreenHandle( void );
+
+void     IntroScreenInit(void);
+ScreenID IntroScreenHandle(void);
 
 
 //enums used for when the intro screen can come up, used with 'gbIntroScreenMode'

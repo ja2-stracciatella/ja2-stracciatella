@@ -4,6 +4,7 @@
 #include "Button_System.h"
 #include "Item_Types.h"
 #include "JA2Types.h"
+#include "ScreenIDs.h"
 
 
 #define		SKI_NUM_TRADING_INV_SLOTS						12
@@ -69,9 +70,9 @@ extern	INVENTORY_IN_SLOT		gMoveingItem;
 extern	OBJECTTYPE	*pShopKeeperItemDescObject;
 
 
-void   ShopKeeperScreenInit(void);
-UINT32	ShopKeeperScreenHandle( void );
-void ShopKeeperScreenShutdown(void);
+void     ShopKeeperScreenInit(void);
+ScreenID ShopKeeperScreenHandle(void);
+void     ShopKeeperScreenShutdown(void);
 
 
 void			EnterShopKeeperInterfaceScreen( UINT8	ubArmsDealer );
@@ -101,7 +102,7 @@ void AddShopkeeperToGridNo( UINT8 ubProfile, INT16 sGridNo );
 
 void RestrictSkiMouseCursor(void);
 
-void DoSkiMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
+void DoSkiMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
 void StartSKIDescriptionBox(void);
 
 extern BOOLEAN      gfSKIScreenExit;

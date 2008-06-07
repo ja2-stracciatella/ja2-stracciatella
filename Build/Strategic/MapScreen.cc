@@ -10,7 +10,6 @@
 #include "WorldDef.h"
 #include "Input.h"
 #include "Font.h"
-#include "ScreenIDs.h"
 #include "Screens.h"
 #include "Overhead.h"
 #include "SysUtil.h"
@@ -1796,7 +1795,7 @@ static void UpdateStatusOfMapSortButtons(void);
 static void UpdateTheStateOfTheNextPrevMapScreenCharacterButtons(void);
 
 
-UINT32 MapScreenHandle(void)
+ScreenID MapScreenHandle(void)
 try
 {
 	UINT32 uiNewScreen;
@@ -2559,7 +2558,7 @@ try
 
 	return( MAP_SCREEN );
 }
-catch (...) { return FALSE; }
+catch (...) { return ERROR_SCREEN; /* XXX TODO001A originally returned FALSE */ }
 
 
 static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, Font const font)

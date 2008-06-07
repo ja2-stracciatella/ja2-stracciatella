@@ -3,6 +3,7 @@
 
 #include "Item_Types.h"
 #include "JA2Types.h"
+#include "ScreenIDs.h"
 
 
 void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY );
@@ -26,7 +27,7 @@ UINT32 VirtualSoldierDressWound(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVictim, OBJ
 //Returns TRUE if a battle is happening ONLY
 BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(INT16* psSectorX, INT16* psSectorY, INT16* psSectorZ);
 
-UINT32 AutoResolveScreenHandle(void);
-void   AutoResolveScreenShutdown(void);
+ScreenID AutoResolveScreenHandle(void);
+void     AutoResolveScreenShutdown(void);
 
 #endif

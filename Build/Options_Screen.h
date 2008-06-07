@@ -1,7 +1,9 @@
 #ifndef _OPTIONS_SCREEN__H_
 #define _OPTIONS_SCREEN__H_
 
+#include "ScreenIDs.h"
 #include "Types.h"
+
 
 #define		OPT_BUTTON_FONT												FONT14ARIAL
 #define		OPT_BUTTON_ON_COLOR										73//FONT_MCOLOR_WHITE
@@ -9,10 +11,10 @@
 
 
 //Record the previous screen the user was in.
-extern UINT32 guiPreviousOptionScreen;
+extern ScreenID guiPreviousOptionScreen;
 
 
-void   OptionsScreenInit(void);
-UINT32	OptionsScreenHandle( void );
+void     OptionsScreenInit(void);
+ScreenID OptionsScreenHandle(void);
 
 #endif

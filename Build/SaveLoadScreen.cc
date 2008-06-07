@@ -41,7 +41,6 @@
 #include "Debug.h"
 #include "JAScreens.h"
 #include "VSurface.h"
-#include "ScreenIDs.h"
 #include "FileMan.h"
 #include "Campaign_Init.h"
 
@@ -141,7 +140,7 @@ BOOLEAN		gfRedrawSaveLoadScreen = TRUE;
 
 BOOLEAN		gfExitAfterMessageBox = FALSE;
 
-UINT32		guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
+static ScreenID guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
 
 
 //Contains the array of valid save game locations
@@ -228,7 +227,7 @@ static void RenderSaveLoadScreen(void);
 static void SaveLoadGameNumber(INT8 bSaveGameID);
 
 
-UINT32	SaveLoadScreenHandle()
+ScreenID SaveLoadScreenHandle()
 {
 	if( gfSaveLoadScreenEntry )
 	{
@@ -327,7 +326,7 @@ UINT32	SaveLoadScreenHandle()
 static void DestroySaveLoadTextInputBoxes(void);
 
 
-static void SetSaveLoadExitScreen(UINT32 uiScreen)
+static void SetSaveLoadExitScreen(ScreenID const uiScreen)
 {
 	if( uiScreen == GAME_SCREEN )
 	{
@@ -945,14 +944,14 @@ static void SaveLoadGameNumber(INT8 bSaveGameID)
 }
 
 
-void DoSaveLoadMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect)
+void DoSaveLoadMessageBoxWithRect(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
 {
 	// do message box and return
 	DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
 }
 
 
-void DoSaveLoadMessageBox(const UINT8 ubStyle, const wchar_t* const zString, const UINT32 uiExitScreen, const UINT16 usFlags, const MSGBOX_CALLBACK ReturnCallback)
+void DoSaveLoadMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	DoSaveLoadMessageBoxWithRect(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
 }

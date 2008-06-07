@@ -5,7 +5,6 @@
 #include "Interface.h"
 #include "Local.h"
 #include "MessageBoxScreen.h"
-#include "ScreenIDs.h"
 #include "Timer.h"
 #include "Timer_Control.h"
 #include "VObject.h"
@@ -227,7 +226,7 @@ static BOOLEAN gfTemporaryDisablingOfLoadPendingFlag = FALSE;
 
 
 //GLOBAL FOR WHICH SCREEN TO EXIT TO FOR LAPTOP
-static UINT32 guiExitScreen = MAP_SCREEN;
+static ScreenID guiExitScreen = MAP_SCREEN;
 
 // Laptop screen graphic handle
 static SGPVObject* guiLAPTOP;
@@ -329,7 +328,7 @@ void PrintNumberOnTeam(void);
 extern void ClearHistoryList(void);
 
 
-void SetLaptopExitScreen(UINT32 uiExitScreen)
+void SetLaptopExitScreen(ScreenID const uiExitScreen)
 {
 	guiExitScreen = uiExitScreen;
 }
@@ -1027,7 +1026,7 @@ static void ShowLights(void);
 static void UpdateStatusOfDisplayingBookMarks(void);
 
 
-UINT32 LaptopScreenHandle()
+ScreenID LaptopScreenHandle()
 {
 	//User just changed modes.  This is determined by the button callbacks
 	//created in LaptopScreenInit()
@@ -2280,14 +2279,14 @@ void LapTopScreenCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-void DoLapTopMessageBox(const UINT8 ubStyle, const wchar_t* const zString, const UINT32 uiExitScreen, const UINT8 ubFlags, const MSGBOX_CALLBACK ReturnCallback)
+void DoLapTopMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT8 const ubFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	const SGPRect CenteringRect = { LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_LR_Y };
 	DoLapTopSystemMessageBoxWithRect(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, &CenteringRect);
 }
 
 
-void DoLapTopSystemMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect)
+void DoLapTopSystemMessageBoxWithRect(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
 {
 	// reset exit mode
 	fExitDueToMessageBox = TRUE;
@@ -2297,7 +2296,7 @@ void DoLapTopSystemMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UIN
 }
 
 
-void DoLapTopSystemMessageBox(const UINT8 ubStyle, const wchar_t* const zString, const UINT32 uiExitScreen, const UINT16 usFlags, const MSGBOX_CALLBACK ReturnCallback)
+void DoLapTopSystemMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	const SGPRect CenteringRect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
 	DoLapTopSystemMessageBoxWithRect(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, &CenteringRect);

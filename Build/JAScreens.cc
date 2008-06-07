@@ -9,7 +9,6 @@
 #include "Input.h"
 #include "Font.h"
 #include "MouseSystem.h"
-#include "ScreenIDs.h"
 #include "Screens.h"
 #include "Font_Control.h"
 #include "SysUtil.h"
@@ -128,7 +127,7 @@ void DisplayFrameRate( )
 }
 
 
-UINT32 ErrorScreenHandle(void)
+ScreenID ErrorScreenHandle(void)
 {
   InputAtom  InputEvent;
 	static BOOLEAN	fFirstTime = FALSE;
@@ -175,7 +174,7 @@ UINT32 ErrorScreenHandle(void)
 }
 
 
-UINT32 InitScreenHandle(void)
+ScreenID InitScreenHandle(void)
 {
 	static UINT8					ubCurrentScreen = 255;
 
@@ -270,7 +269,7 @@ static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent);
 static void PalEditRenderHook(void);
 
 
-UINT32 PalEditScreenHandle(void)
+ScreenID PalEditScreenHandle(void)
 {
 	static BOOLEAN FirstTime = TRUE;
 
@@ -389,7 +388,7 @@ static BOOLEAN DebugKeyboardHook(InputAtom* pInputEvent);
 static void DebugRenderHook(void);
 
 
-UINT32 DebugScreenHandle(void)
+ScreenID DebugScreenHandle(void)
 {
 	if ( CheckForAndExitTacticalDebug() )
 	{
@@ -493,7 +492,7 @@ static void DefaultDebugPage4(void)
 #define SMILY_DELAY						100
 #define SMILY_END_DELAY				1000
 
-UINT32 SexScreenHandle(void)
+ScreenID SexScreenHandle(void)
 {
 	static UINT8					ubCurrentScreen = 0;
 	static SGPVObject* guiSMILY;
@@ -721,7 +720,7 @@ static void DisplayTopwareGermanyAddress(void)
 #	endif
 
 
-UINT32 DemoExitScreenHandle(void)
+ScreenID DemoExitScreenHandle(void)
 {
 	static UINT8					ubCurrentScreen = 0;
 	static UINT8					ubPreviousScreen = 0;
