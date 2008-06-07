@@ -44,7 +44,6 @@
 
 UINT32 guiCurrentScreen;
 UINT32 guiPendingScreen = NO_PENDING_SCREEN;
-UINT32 guiPreviousScreen = NO_PENDING_SCREEN;
 
 #define	DONT_CHECK_FOR_FREE_SPACE		255
 static UINT8 gubCheckForFreeSpaceOnHardDriveCount = DONT_CHECK_FOR_FREE_SPACE;
