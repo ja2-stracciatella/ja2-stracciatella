@@ -137,4 +137,8 @@ enum{
 
 void DoLapTopSystemMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPRect* pCenteringRect);
 
+UINT32 LaptopScreenInit(void);
+UINT32 LaptopScreenHandle(void);
+void   LaptopScreenShutdown(void);
+
 #endif

@@ -85,4 +85,6 @@ void DoSaveLoadMessageBoxWithRect(UINT8 ubStyle, const wchar_t* zString, UINT32 
 
 extern BOOLEAN gfInMsgBox;
 
+UINT32 MessageBoxScreenHandle(void);
+
 #endif

@@ -3,10 +3,19 @@
 #include "Auto_Resolve.h"
 #include "Credits.h"
 #include "Fade_Screen.h"
-#include "MapUtility.h"
-#include "Quest_Debug_System.h"
-#include "Screens.h"
+#include "GameInitOptionsScreen.h"
+#include "GameScreen.h"
+#include "Intro.h"
 #include "JAScreens.h"
+#include "Laptop.h"
+#include "MainMenuScreen.h"
+#include "MapUtility.h"
+#include "MessageBoxScreen.h"
+#include "Options_Screen.h"
+#include "Quest_Debug_System.h"
+#include "SaveLoadScreen.h"
+#include "Screens.h"
+#include "ShopKeeper_Interface.h"
 
 
 const Screens GameScreens[MAX_SCREENS] =

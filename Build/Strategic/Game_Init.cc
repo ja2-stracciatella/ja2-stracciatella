@@ -4,6 +4,7 @@
 #include "Meanwhile.h"
 #include "Merc_Hiring.h"
 #include "Queen_Command.h"
+#include "ShopKeeper_Interface.h"
 #include "Timer_Control.h"
 #include "WorldDef.h"
 #include "Soldier_Control.h"

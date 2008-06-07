@@ -118,6 +118,10 @@ extern BOOLEAN      fDrawCharacterList;
 // create/destroy inventory button as needed
 void CreateDestroyMapInvButton(void);
 
+UINT32 MapScreenInit(void);
+UINT32 MapScreenHandle(void);
+void   MapScreenShutdown(void);
+
 #ifdef JA2TESTVERSION
 void DumpSectorDifficultyInfo(void);
 #endif

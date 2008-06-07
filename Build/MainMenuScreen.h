@@ -4,4 +4,6 @@
 void InitMainMenu(void);
 void ClearMainMenu(void);
 
+UINT32 MainMenuScreenHandle(void);
+
 #endif

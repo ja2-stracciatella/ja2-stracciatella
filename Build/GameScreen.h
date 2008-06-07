@@ -44,4 +44,8 @@ extern VIDEO_OVERLAY* g_counter_period_overlay;
 void EnterTacticalScreen(void);
 void LeaveTacticalScreen(UINT32 uiNewScreen);
 
+UINT32 MainGameScreenInit(void);
+UINT32 MainGameScreenHandle(void);
+void   MainGameScreenShutdown(void);
+
 #endif
