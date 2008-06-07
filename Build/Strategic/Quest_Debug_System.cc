@@ -2801,7 +2801,11 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 	{
 		//open a new file for writing
 
-		if (!FileDelete(QUEST_DEBUG_FILE))
+		try
+		{
+			FileDelete(QUEST_DEBUG_FILE);
+		}
+		catch (...)
 		{
 			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("FAILED to delete %s file", QUEST_DEBUG_FILE) );
 			return;

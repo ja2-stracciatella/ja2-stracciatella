@@ -267,25 +267,30 @@ static BOOLEAN FileExistsNoDB(const char* const filename)
 }
 
 
-BOOLEAN FileDelete(const char* const path)
+void FileDelete(char const* const path)
 {
-	if (unlink(path) == 0) return TRUE;
+	if (unlink(path) == 0) return;
 
 	switch (errno)
 	{
-		case ENOENT: return TRUE;
+		case ENOENT: return;
 
 #ifdef _WIN32
 		/* On WIN32 read-only files cannot be deleted, so try to make the file
 		 * writable and unlink() again */
 		case EACCES:
-			return
-				(chmod(path, S_IREAD | S_IWRITE) == 0 && unlink(path) == 0) ||
-				errno == ENOENT;
+			if ((chmod(path, S_IREAD | S_IWRITE) == 0 && unlink(path) == 0) ||
+					errno == ENOENT)
+			{
+				return;
+			}
+			break;
 #endif
 
-		default: return FALSE;
+		default: break;
 	}
+
+	throw std::runtime_error("Deleting file failed");
 }
 
 
@@ -494,7 +499,11 @@ try
 		char filename[512];
 		snprintf(filename, lengthof(filename), "%s/%s", path, find_filename);
 
-		if (!FileDelete(filename))
+		try
+		{
+			FileDelete(filename);
+		}
+		catch (...)
 		{
 			const FileAttributes attr = FileGetAttributes(filename);
 			if (attr != FILE_ATTR_ERROR && attr & FILE_ATTR_DIRECTORY) continue;

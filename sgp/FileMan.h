@@ -44,7 +44,7 @@ BOOLEAN FileExists(const char* filename);
 
 /* Delete the file at path. Returns true iff deleting the file succeeded or
  * the file did not exist in the first place. */
-BOOLEAN FileDelete(const char* path);
+void FileDelete(char const* path);
 
 HWFILE FileOpen(const char* filename, FileOpenFlags);
 void   FileClose(HWFILE);
