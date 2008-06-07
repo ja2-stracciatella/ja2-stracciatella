@@ -227,7 +227,7 @@ extern INT16		gsRecompileAreaLeft;
 extern INT16		gsRecompileAreaRight;
 extern INT16		gsRecompileAreaBottom;
 
-BOOLEAN InitializeWorld(void);
+void InitializeWorld(void);
 void DeinitializeWorld(void);
 
 void BuildTileShadeTables(void);

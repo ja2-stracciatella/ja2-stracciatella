@@ -226,7 +226,7 @@ static inline BOOLEAN IsTeamActive(const UINT team)
 #define CFOR_ALL_NON_PLAYER_SOLDIERS(iter) BASE_FOR_ALL_NON_PLAYER_SOLDIERS(const SOLDIERTYPE, iter)
 
 
-BOOLEAN InitTacticalEngine(void);
+void InitTacticalEngine(void);
 void ShutdownTacticalEngine(void);
 
 

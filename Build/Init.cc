@@ -56,6 +56,7 @@ extern	BOOLEAN	gfUseConsecutiveQuickSaveSlots;
 
 
 UINT32 InitializeJA2(void)
+try
 {
 	gfWorldLoaded = FALSE;
 
@@ -83,10 +84,7 @@ UINT32 InitializeJA2(void)
 	InitStrategicMovementCosts( );
 
 	// Init tactical engine
-	if ( !InitTacticalEngine( ) )
-	{
-		return( ERROR_SCREEN );
-	}
+	InitTacticalEngine();
 
 	// Init timer system
 	//Moved to the splash screen code.
@@ -99,16 +97,10 @@ UINT32 InitializeJA2(void)
 	BuildIntensityTable( );
 
 	// Init Event Manager
-	if ( !InitializeEventManager( ) )
-	{
-		return( ERROR_SCREEN );
-	}
+	InitializeEventManager();
 
 	// Initailize World
-	if ( !InitializeWorld( ) )
-	{
-		return( ERROR_SCREEN );
-	}
+	InitializeWorld();
 
 	InitTileCache( );
 
@@ -177,6 +169,7 @@ UINT32 InitializeJA2(void)
 
 	return( INIT_SCREEN );
 }
+catch (...) { return ERROR_SCREEN; }
 
 
 void ShutdownJA2(void)

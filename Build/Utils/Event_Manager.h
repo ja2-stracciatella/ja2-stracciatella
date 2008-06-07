@@ -22,8 +22,8 @@ enum EventQueueID
 
 #define			EVENT_EXPIRED						0x00000002
 
-BOOLEAN InitializeEventManager(void);
-void    ShutdownEventManager(void);
+void InitializeEventManager(void);
+void ShutdownEventManager(void);
 
 BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, EventQueueID);
 EVENT*  RemoveEvent(UINT32 uiIndex, EventQueueID);

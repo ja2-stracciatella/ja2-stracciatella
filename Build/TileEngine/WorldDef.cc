@@ -157,8 +157,7 @@ BOOLEAN GridNoIndoors( UINT32 iMapIndex )
 static UINT8 gbDefaultSurfaceUsed[NUMBEROFTILETYPES];
 
 
-BOOLEAN InitializeWorld( )
-try
+void InitializeWorld()
 {
 	gSurfaceMemUsage = 0;
 	giCurrentTilesetID = -1;
@@ -188,12 +187,7 @@ try
 
 	// INit tilesets
 	InitEngineTilesets( );
-
-
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void DestroyTileSurfaces(void);

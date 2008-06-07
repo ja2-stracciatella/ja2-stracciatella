@@ -17,19 +17,13 @@ static EventList* hDemandEventQueue = NULL;
 #define QUEUE_RESIZE		20
 
 
-BOOLEAN InitializeEventManager(void)
-try
+void InitializeEventManager(void)
 {
 	hEventQueue       = new EventList(QUEUE_RESIZE);
 	hDelayEventQueue  = new EventList(QUEUE_RESIZE);
 	/* Events on this queue are only processed when specifically called for by
 	 * code */
 	hDemandEventQueue = new EventList(QUEUE_RESIZE);
-	return TRUE;
-}
-catch (const std::exception&)
-{
-	return FALSE;
 }
 
 
