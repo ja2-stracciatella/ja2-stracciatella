@@ -82,7 +82,7 @@ static void MSYS_TrashRegList(void);
 //
 //	Initialize the mouse system.
 //
-INT32 MSYS_Init(void)
+void MSYS_Init(void)
 {
 	if(MSYS_RegList!=NULL)
 		MSYS_TrashRegList();
@@ -94,10 +94,7 @@ INT32 MSYS_Init(void)
 
 	MSYS_PrevRegion = NULL;
 	MSYS_SystemInitialized = TRUE;
-
-	return(1);
 }
-
 
 
 //======================================================================================================
