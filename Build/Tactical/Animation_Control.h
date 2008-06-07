@@ -536,7 +536,7 @@ extern RANDOM_ANI_DEF gRandomAnimDefs[][MAX_RANDOM_ANIMS_PER_BODYTYPE];
 extern UINT16 gubAnimSurfaceCorpseID[][NUMANIMATIONSTATES];
 
 
-BOOLEAN LoadAnimationStateInstructions(void);
+void LoadAnimationStateInstructions(void);
 void InitAnimationSurfacesPerBodytype(void);
 BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState );
 UINT16 SubstituteBodyTypeAnimation(const SOLDIERTYPE* s, UINT16 anim_state);

@@ -526,21 +526,17 @@ static AnimationStructureType gAnimStructureDatabase[TOTALBODYTYPES][NUM_STRUCT_
 #undef PATH_STRUCT
 
 
-static BOOLEAN LoadAnimationProfiles(void);
+static void LoadAnimationProfiles(void);
 
 
 BOOLEAN InitAnimationSystem( )
+try
 {
 	INT32									cnt1, cnt2;
 
-	CHECKF( LoadAnimationStateInstructions( ) );
-
-	InitAnimationSurfacesPerBodytype( );
-
-	if ( !LoadAnimationProfiles( ) )
-	{
-		return( SET_ERROR( "Problems initializing Animation Profiles" ) );
-	}
+	LoadAnimationStateInstructions();
+	InitAnimationSurfacesPerBodytype();
+	LoadAnimationProfiles();
 
 	// OK, Load all animation structures.....
 	for ( cnt1 = 0; cnt1 < TOTALBODYTYPES; cnt1++ )
@@ -563,6 +559,7 @@ BOOLEAN InitAnimationSystem( )
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void DeleteAnimationProfiles(void);
@@ -770,7 +767,7 @@ void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID )
 }
 
 
-static BOOLEAN LoadAnimationProfiles(void)
+static void LoadAnimationProfiles(void)
 try
 {
 	AutoSGPFile f(FileOpen(ANIMPROFILEFILENAME, FILE_ACCESS_READ));
@@ -800,10 +797,12 @@ try
 			}
 		}
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
+catch (...)
+{
+	SET_ERROR("Problems initializing Animation Profiles");
+	throw;
+}
 
 
 static void DeleteAnimationProfiles(void)

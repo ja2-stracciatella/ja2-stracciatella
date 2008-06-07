@@ -2410,14 +2410,12 @@ void	InitAnimationSurfacesPerBodytype( )
 	gubAnimSurfaceIndex[ JEEP ][ VEHICLE_DIE ]																	= HUMVEE_DIE;
 }
 
-BOOLEAN LoadAnimationStateInstructions( )
-try
+
+void LoadAnimationStateInstructions()
 {
 	AutoSGPFile hFile(FileOpen(ANIMFILENAME, FILE_ACCESS_READ));
 	FileRead(hFile, gusAnimInst, sizeof(gusAnimInst));
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState )
