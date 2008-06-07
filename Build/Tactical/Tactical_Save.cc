@@ -835,7 +835,7 @@ try
 catch (...) { return FALSE; }
 
 
-static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void);
+static void InitTempNpcQuoteInfoForNPCFromTempFile(void);
 
 
 //Deletes the Temp map Directory
@@ -1049,8 +1049,7 @@ static BOOLEAN DoesTempFileExistsForMap(UINT32 uiType, INT16 sMapX, INT16 sMapY,
 
 
 //Initializes the NPC temp array
-static BOOLEAN InitTempNpcQuoteInfoForNPCFromTempFile(void)
-try
+static void InitTempNpcQuoteInfoForNPCFromTempFile(void)
 {
 	UINT8	ubCnt;
 	TempNPCQuoteInfoSave TempNpcQuote[ NUM_NPC_QUOTE_RECORDS ];
@@ -1079,10 +1078,7 @@ try
 		//Save the array to a temp file
 		FileWrite(hFile, TempNpcQuote, uiSizeOfTempArray);
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 const ubNpcId)
