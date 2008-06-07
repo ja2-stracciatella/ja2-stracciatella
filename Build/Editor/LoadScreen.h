@@ -21,5 +21,8 @@ BOOLEAN ExternalSaveMap(const wchar_t* szFilename);
 extern BOOLEAN gfErrorCatch;
 extern wchar_t gzErrorCatchString[256];
 
+UINT32 LoadSaveScreenInit(void);
+UINT32 LoadSaveScreenHandle(void);
+
 #endif
 #endif
