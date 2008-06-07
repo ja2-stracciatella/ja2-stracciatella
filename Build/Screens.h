@@ -2,7 +2,7 @@
 #define __SCREEN_MANAGER
 
 #include "Types.h"
-#include "ScreenIDs.h"
+
 
 // Each screen in the game comes with a Status flag (what was the last thing the screen was doing), an Initialization
 // function (which loads up the screen if necessary), a Handler function which is called while the screen is showing and
@@ -26,6 +26,6 @@ typedef struct Screens
 
 // This extern is made available to make sure that external modules will have access to the screen information
 
-extern const Screens GameScreens[MAX_SCREENS];
+extern Screens const GameScreens[];
 
 #endif

@@ -3,6 +3,7 @@
 #include "Init.h"
 #include "Local.h"
 #include "SGP.h"
+#include "ScreenIDs.h"
 #include "Screens.h"
 #include "Strategic_Movement_Costs.h"
 #include "Sys_Globals.h"

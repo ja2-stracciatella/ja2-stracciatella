@@ -23,7 +23,6 @@
 #include "Overhead.h"
 #include "OppList.h"
 #include "PathAI.h"
-#include "ScreenIDs.h"
 #include "Interface_Cursors.h"
 #include "Weapons.h"
 #include "Handle_UI_Plan.h"

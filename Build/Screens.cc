@@ -16,11 +16,12 @@
 #include "Options_Screen.h"
 #include "Quest_Debug_System.h"
 #include "SaveLoadScreen.h"
+#include "ScreenIDs.h"
 #include "Screens.h"
 #include "ShopKeeper_Interface.h"
 
 
-const Screens GameScreens[MAX_SCREENS] =
+Screens const GameScreens[] =
 {
 #ifdef JA2EDITOR
 	{ EditScreenInit,       EditScreenHandle,            EditScreenShutdown        },
@@ -65,3 +66,4 @@ const Screens GameScreens[MAX_SCREENS] =
 #endif
 	{ QuestDebugScreenInit, QuestDebugScreenHandle,      NULL                      }
 };
+CASSERT(lengthof(GameScreens) == MAX_SCREENS)

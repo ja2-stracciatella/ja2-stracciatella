@@ -6,6 +6,7 @@
 #include "Font.h"
 #include "HImage.h"
 #include "Local.h"
+#include "ScreenIDs.h"
 #include "Screens.h"
 #include "VObject.h"
 #include "VSurface.h"

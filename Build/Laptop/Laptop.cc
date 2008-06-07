@@ -5,6 +5,7 @@
 #include "Interface.h"
 #include "Local.h"
 #include "MessageBoxScreen.h"
+#include "ScreenIDs.h"
 #include "Timer.h"
 #include "Timer_Control.h"
 #include "VObject.h"

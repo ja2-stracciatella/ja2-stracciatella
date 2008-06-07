@@ -4,6 +4,7 @@
 #include "MessageBoxScreen.h"
 #include "SGP.h"
 #include "GameLoop.h"
+#include "ScreenIDs.h"
 #include "Screens.h"
 #include "ShopKeeper_Interface.h"
 #include "Tactical_Placement_GUI.h"
