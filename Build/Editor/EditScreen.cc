@@ -174,7 +174,7 @@ static MOUSE_REGION GotoGridNoUIRegion;
 //
 //	This function is called once at SGP (and game) startup
 //
-UINT32 EditScreenInit(void)
+void EditScreenInit(void)
 {
 	gfFakeLights = FALSE;
 
@@ -197,8 +197,6 @@ UINT32 EditScreenInit(void)
 	InitializeRoadMacros();
 
 	InitArmyGunTypes();
-
-	return TRUE;
 }
 
 

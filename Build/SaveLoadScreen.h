@@ -19,8 +19,8 @@ extern	BOOLEAN			gbSaveGameArray[ NUM_SAVE_GAMES ];
 
 extern	BOOLEAN			gfCameDirectlyFromGame;
 
+void   SaveLoadScreenInit(void);
 UINT32	SaveLoadScreenHandle( void );
-UINT32	SaveLoadScreenInit( void );
 
 void DoSaveLoadMessageBox(UINT8 ubStyle, const wchar_t* zString, UINT32 uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
 

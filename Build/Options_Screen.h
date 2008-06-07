@@ -12,7 +12,7 @@
 extern UINT32 guiPreviousOptionScreen;
 
 
+void   OptionsScreenInit(void);
 UINT32	OptionsScreenHandle( void );
-UINT32	OptionsScreenInit( void );
 
 #endif

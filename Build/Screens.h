@@ -10,7 +10,7 @@
 
 typedef struct Screens
 {
-  UINT32         (*InitializeScreen)(void);
+  void   (*InitializeScreen)(void);
   UINT32         (*HandleScreen)(void);
 	void (*ShutdownScreen)(void);
 } Screens;

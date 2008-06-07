@@ -118,7 +118,7 @@ extern BOOLEAN      fDrawCharacterList;
 // create/destroy inventory button as needed
 void CreateDestroyMapInvButton(void);
 
-UINT32 MapScreenInit(void);
+void   MapScreenInit(void);
 UINT32 MapScreenHandle(void);
 void   MapScreenShutdown(void);
 

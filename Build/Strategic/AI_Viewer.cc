@@ -1034,15 +1034,14 @@ static void ViewerMapClickCallback(MOUSE_REGION* reg, INT32 reason)
 }
 
 
-
-UINT32  AIViewerScreenInit()
+void AIViewerScreenInit()
 {
 	gfViewerEntry = TRUE;
 	gusBlue		= Get16BPPColor( FROMRGB(  65,  79,  94 ) );
 	gusLtBlue = Get16BPPColor( FROMRGB( 122, 124, 121 ) );
 	gusDkBlue = Get16BPPColor( FROMRGB(  22,  55,  73 ) );
-	return TRUE;
 }
+
 
 UINT32  AIViewerScreenHandle()
 {

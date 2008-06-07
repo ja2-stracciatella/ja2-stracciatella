@@ -99,11 +99,10 @@ enum{
 static INT8 gbCurrentFileIOStatus; // 1 init saving message, 2 save, 3 init loading message, 4 load, 0 none
 
 
-UINT32 LoadSaveScreenInit(void)
+void LoadSaveScreenInit(void)
 {
 	gfUpdateSummaryInfo = TRUE;
 	fEnteringLoadSaveScreen = TRUE;
-	return TRUE;
 }
 
 

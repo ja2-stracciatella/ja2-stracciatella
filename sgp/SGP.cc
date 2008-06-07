@@ -189,11 +189,7 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 
 	FastDebugMsg("Initializing Game Manager");
 	// Initialize the Game
-	if (!InitializeGame())
-	{ // We were unable to initialize the game
-		FastDebugMsg("FAILED : Initializing Game Manager");
-		return FALSE;
-	}
+	InitializeGame();
 
 	gfGameInitialized = TRUE;
 

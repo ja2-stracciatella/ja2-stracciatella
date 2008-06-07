@@ -91,12 +91,10 @@ const char *gpzSmackerFileNames[] =
 INT8	gbIntroScreenMode=-1;
 
 
-UINT32	IntroScreenInit( void )
+void IntroScreenInit(void)
 {
 	//Set so next time we come in, we can set up
 	gfIntroScreenEntry = TRUE;
-
-	return( 1 );
 }
 
 

@@ -1720,10 +1720,8 @@ static void DisplayCharacterList(void)
 }
 
 
-
 // THIS IS STUFF THAT RUNS *ONCE* DURING APPLICATION EXECUTION, AT INITIAL STARTUP
-UINT32 MapScreenInit(void)
-try
+void MapScreenInit(void)
 {
 	SetUpBadSectorsList( );
 
@@ -1734,10 +1732,7 @@ try
 	InitLeaveList( );
 
 	guiUpdatePanelTactical = AddVideoObjectFromFile("INTERFACE/group_confirm_tactical.sti");
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void MapScreenShutdown(void)

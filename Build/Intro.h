@@ -2,8 +2,8 @@
 #define _INTRO__C_
 
 
+void   IntroScreenInit(void);
 UINT32	IntroScreenHandle( void );
-UINT32	IntroScreenInit( void );
 
 
 //enums used for when the intro screen can come up, used with 'gbIntroScreenMode'

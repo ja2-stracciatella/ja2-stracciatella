@@ -112,7 +112,7 @@ UINT32	guiTacticalLeaveScreenID;
 BOOLEAN	guiTacticalLeaveScreen		= FALSE;
 
 
-UINT32 MainGameScreenInit(void)
+void MainGameScreenInit(void)
 {
 	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 
@@ -140,8 +140,6 @@ UINT32 MainGameScreenInit(void)
 	wcslcpy(VideoOverlayDesc.pzText, L"Levelnodes: 100000", lengthof(VideoOverlayDesc.pzText));
 	VideoOverlayDesc.BltCallback = BlitMFont;
 	g_counter_period_overlay = RegisterVideoOverlay(VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT, &VideoOverlayDesc);
-
-  return TRUE;
 }
 
 

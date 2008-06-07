@@ -168,14 +168,10 @@ MOUSE_REGION    gSelectedOptionTextRegion[ NUM_GAME_OPTIONS ];
 MOUSE_REGION    gSelectedToggleBoxAreaRegion;
 
 
-UINT32	OptionsScreenInit()
+void OptionsScreenInit()
 {
-
 	//Set so next time we come in, we can set up
 	gfOptionsScreenEntry = TRUE;
-
-
-	return( TRUE );
 }
 
 

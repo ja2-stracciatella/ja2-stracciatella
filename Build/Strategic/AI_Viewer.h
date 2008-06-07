@@ -6,7 +6,7 @@
 #include "Types.h"
 
 
-UINT32 AIViewerScreenInit(void);
+void   AIViewerScreenInit(void);
 UINT32 AIViewerScreenHandle(void);
 
 #endif

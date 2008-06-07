@@ -41,7 +41,7 @@ extern BOOLEAN			gfConfirmExitFirst;
 extern BOOLEAN			gfConfirmExitPending;
 extern BOOLEAN			gfIntendOnEnteringEditor;
 
-UINT32 EditScreenInit(void);
+void   EditScreenInit(void);
 UINT32 EditScreenHandle(void);
 void   EditScreenShutdown(void);
 

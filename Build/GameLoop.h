@@ -9,9 +9,9 @@
 #define	NO_PENDING_SCREEN			0xFFFF
 
 
-extern BOOLEAN InitializeGame(void);
-extern void    ShutdownGame(void);
-extern void    GameLoop(void);
+void InitializeGame(void);
+void ShutdownGame(void);
+void GameLoop(void);
 
 // handle exit from game due to shortcut key
 void HandleShortCutExitState( void );

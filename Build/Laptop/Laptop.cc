@@ -360,7 +360,7 @@ static void InitBookMarkList(void);
 
 
 //This is called only once at game initialization.
-UINT32 LaptopScreenInit(void)
+void LaptopScreenInit(void)
 {
 	//Memset the whole structure, to make sure of no 'JUNK'
 	memset(&LaptopSaveInfo, 0, sizeof(LaptopSaveInfoStruct));
@@ -398,8 +398,6 @@ UINT32 LaptopScreenInit(void)
 	gfAtLeastOneMercWasHired = FALSE;
 
 	//No longer inits the laptop screens, now InitLaptopAndLaptopScreens() does
-
-	return 1;
 }
 
 

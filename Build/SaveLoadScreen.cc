@@ -208,7 +208,7 @@ MOUSE_REGION		gSLSEntireScreenRegion;
 static void ClearSelectedSaveSlot(void);
 
 
-UINT32	SaveLoadScreenInit()
+void SaveLoadScreenInit()
 {
 	//Set so next time we come in, we can set up
 	gfSaveLoadScreenEntry = TRUE;
@@ -218,10 +218,6 @@ UINT32	SaveLoadScreenInit()
 	ClearSelectedSaveSlot();
 
 	gbHighLightedLocation=-1;
-
-
-
-	return( TRUE );
 }
 
 

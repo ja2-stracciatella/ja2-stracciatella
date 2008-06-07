@@ -395,13 +395,10 @@ static BOOLEAN gfTestDisplayDealerCash = FALSE;
 // screen handler functions
 //
 
-UINT32	ShopKeeperScreenInit()
+void ShopKeeperScreenInit()
 {
 	//Set so next time we come in, we can set up
 	gfSKIScreenEntry = TRUE;
-
-
-	return( TRUE );
 }
 
 

@@ -504,7 +504,7 @@ static void DisplaySelectedItem(void);
 static void DisplaySelectedNPC(void);
 
 
-UINT32	QuestDebugScreenInit()
+void QuestDebugScreenInit()
 {
 	UINT16	usListBoxFontHeight = GetFontHeight( QUEST_DBS_FONT_LISTBOX_TEXT ) + 2;
 
@@ -576,11 +576,6 @@ UINT32	QuestDebugScreenInit()
 
 	//Set up the global list box
 	gpActiveListBox = &gNpcListBox;
-
-
-
-
-	return( TRUE );
 }
 
 

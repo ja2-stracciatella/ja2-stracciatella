@@ -69,7 +69,7 @@ extern	INVENTORY_IN_SLOT		gMoveingItem;
 extern	OBJECTTYPE	*pShopKeeperItemDescObject;
 
 
-UINT32	ShopKeeperScreenInit( void );
+void   ShopKeeperScreenInit(void);
 UINT32	ShopKeeperScreenHandle( void );
 void ShopKeeperScreenShutdown(void);
 

@@ -79,7 +79,8 @@ static void ReportMapscreenErrorLock(void)
 }
 #endif
 
-BOOLEAN InitializeGame(void)
+
+void InitializeGame(void)
 {
 	UINT32				uiIndex;
 
@@ -100,11 +101,8 @@ BOOLEAN InitializeGame(void)
 	// Initialize Game Screens.
   for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
   {
-		UINT32 (*init)(void) = GameScreens[uiIndex].InitializeScreen;
-		if (init != NULL && !init())
-    { // Failed to initialize one of the screens.
-      return FALSE;
-    }
+		void (*const init)(void) = GameScreens[uiIndex].InitializeScreen;
+		if (init) init();
   }
 
 	//Init the help screen system
@@ -120,9 +118,8 @@ BOOLEAN InitializeGame(void)
 	HandlePreloadOfMapGraphics( );
 
 	guiCurrentScreen = INIT_SCREEN;
-
-  return TRUE;
 }
+
 
 // The ShutdownGame function will free up/undo all things that were started in InitializeGame()
 // It will also be responsible to making sure that all Gaming Engine tasks exit properly
