@@ -7,7 +7,6 @@
 #include "MemMan.h"
 #include "RenderWorld.h"
 #include "Render_Dirty.h"
-#include "SGP.h"
 #include "Timer.h"
 #include "Timer_Control.h"
 #include "Types.h"
@@ -725,21 +724,6 @@ void EndFrameBufferRender(void)
 void PrintScreen(void)
 {
 	gfPrintFrameBuffer = TRUE;
-}
-
-
-void FatalError(const char *pError, ...)
-{
-	SDL_QuitSubSystem(SDL_INIT_VIDEO);
-
-	gfProgramIsRunning = FALSE;
-
-	char gFatalErrorString[512];
-	va_list argptr;
-	va_start(argptr, pError);
-	vsprintf(gFatalErrorString, pError, argptr);
-	va_end(argptr);
-	fprintf(stderr, "FATAL ERROR: %s\n", gFatalErrorString);
 }
 
 

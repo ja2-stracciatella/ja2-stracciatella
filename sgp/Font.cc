@@ -7,7 +7,6 @@
 #include "Debug.h"
 #include "TranslationTable.h"
 #include "VSurface.h"
-#include "Video.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
 
@@ -82,11 +81,8 @@ void SetFontBackground(UINT8 ubBackground)
 }
 
 
-/* Loads a font from an ETRLE file, and inserts it into one of the font slots.
- * This function returns (-1) if it fails, and debug msgs for a reason.
- * Otherwise the font number is returned. */
+/* Loads a font from an ETRLE file */
 Font LoadFontFile(const char *filename)
-try
 {
 	Assert(filename != NULL);
 	Assert(strlen(filename));
@@ -94,13 +90,6 @@ try
 	Font const font = AddVideoObjectFromFile(filename);
 	if (!FontDefault) FontDefault = font;
 	return font;
-}
-catch (...)
-{
-#ifdef JA2
-	FatalError("Cannot init FONT file %s", filename);
-#endif
-	return 0;
 }
 
 
