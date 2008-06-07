@@ -544,9 +544,9 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 
 
 static BOOLEAN DoesTempFileExistsForMap(UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
-static BOOLEAN LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
-static UINT32 GetLastTimePlayerWasInSector(void);
-static void   LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+static void    LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+static UINT32  GetLastTimePlayerWasInSector(void);
+static void    LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
 BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile()
@@ -570,8 +570,7 @@ try
 			//If there is a file, load in the Items array
 			if( DoesTempFileExistsForMap( SF_ITEM_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 			{
-				if( !LoadAndAddWorldItemsFromTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
-					return( FALSE );
+				LoadAndAddWorldItemsFromTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 			}
 
 			gfWasInMeanwhile = FALSE;
@@ -585,8 +584,7 @@ try
 	if( DoesTempFileExistsForMap( SF_ITEM_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 	{
 		fUsedTempFile = TRUE;
-		if( !LoadAndAddWorldItemsFromTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
-			return( FALSE );
+		LoadAndAddWorldItemsFromTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 	}
 
 	//If there is a rotting corpse temp file, load the data from the temp file
@@ -752,8 +750,7 @@ static UINT32 GetLastTimePlayerWasInSector(void)
 }
 
 
-static BOOLEAN LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ)
-try
+static void LoadAndAddWorldItemsFromTempFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
 	UINT32	cnt;
   INT16   sNewGridNo;
@@ -779,7 +776,7 @@ try
 		}
 
 		//there are no items in the file
-		return( TRUE );
+		return;
 	}
 
 	//If we have already been to the sector
@@ -830,9 +827,7 @@ try
 	}
 
 	MemFree(pWorldItems);
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void InitTempNpcQuoteInfoForNPCFromTempFile(void);
