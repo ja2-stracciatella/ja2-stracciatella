@@ -33,7 +33,7 @@ Font gpHugeFont;
 static void CreateFontPaletteTables(Font);
 
 
-BOOLEAN	InitializeFonts(void)
+void InitializeFonts(void)
 {
 #define M(var, file) (CreateFontPaletteTables((var) = LoadFontFile((file))))
 	M(gp10PointArial,          "FONTS/FONT10ARIAL.sti");
@@ -60,8 +60,6 @@ BOOLEAN	InitializeFonts(void)
 
 	// Set default for font system
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-	return TRUE;
 }
 
 
