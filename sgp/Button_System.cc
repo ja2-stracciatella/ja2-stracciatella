@@ -278,8 +278,7 @@ void DisableButton(GUIButtonRef const b)
 /* Initializes the button image sub-system. This function is called by
  * InitButtonSystem.
  */
-static BOOLEAN InitializeButtonImageManager(void)
-try
+static void InitializeButtonImageManager(void)
 {
 	// Blank out all QuickButton images
 	for (int x = 0; x < MAX_BUTTON_PICS; ++x)
@@ -327,15 +326,11 @@ try
 	UINT8 Pix = 0;
 	if (!GetETRLEPixelValue(&Pix, GenericButtonOffNormal, 8, 0, 0))
 	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "Couldn't get generic button's background pixel value");
-		return FALSE;
+		throw std::runtime_error("Couldn't get generic button's background pixel value");
 	}
 
 	GenericButtonFillColors = GenericButtonOffNormal->Palette16()[Pix];
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 // Finds the next available slot for button icon images.
@@ -422,7 +417,7 @@ static void ShutdownButtonImageManager(void)
 }
 
 
-BOOLEAN InitButtonSystem(void)
+void InitButtonSystem(void)
 {
 	ButtonDestBuffer = FRAME_BUFFER;
 
@@ -433,13 +428,7 @@ BOOLEAN InitButtonSystem(void)
 	}
 
 	// Initialize the button image manager sub-system
-	if (!InitializeButtonImageManager())
-	{
-		DebugMsg(TOPIC_BUTTON_HANDLER, DBG_LEVEL_0, "Failed button image manager init\n");
-		return FALSE;
-	}
-
-	return TRUE;
+	InitializeButtonImageManager();
 }
 
 

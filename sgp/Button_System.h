@@ -162,7 +162,7 @@ class GUIButtonRef
 /* Initializes the GUI button system for use. Must be called before using any
  * other button functions.
  */
-BOOLEAN InitButtonSystem(void);
+void InitButtonSystem(void);
 
 /* Shuts down and cleans up the GUI button system. Must be called before exiting
  * the program.  Button functions should not be used after calling this
