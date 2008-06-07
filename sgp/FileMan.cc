@@ -465,13 +465,17 @@ BOOLEAN SetFileManCurrentDirectory(const char* const pcDirectory)
 }
 
 
-BOOLEAN MakeFileManDirectory(const char* const path)
+void MakeFileManDirectory(char const* const path)
 {
-	if (mkdir(path, 0755) == 0) return TRUE;
-	if (errno != EEXIST)        return FALSE;
+	if (mkdir(path, 0755) == 0) return;
 
-	const FileAttributes attr = FileGetAttributes(path);
-	return attr != FILE_ATTR_ERROR && attr & FILE_ATTR_DIRECTORY;
+	if (errno == EEXIST)
+	{
+		FileAttributes const attr = FileGetAttributes(path);
+		if (attr != FILE_ATTR_ERROR && attr & FILE_ATTR_DIRECTORY) return;
+	}
+
+	throw std::runtime_error("Failed to create directory");
 }
 
 

@@ -493,13 +493,13 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	if( pGameDesc[0] == '\0' )
 		wcscpy( pGameDesc, pMessageStrings[ MSG_NODESC ] );
 
-	if (!MakeFileManDirectory(g_savegame_dir)) goto FAILED_TO_SAVE;
-
-	//Create the name of the file
-	CreateSavedGameFileNameFromNumber( ubSaveGameID, zSaveGameName );
-
 	try
 	{
+		MakeFileManDirectory(g_savegame_dir);
+
+		//Create the name of the file
+		CreateSavedGameFileNameFromNumber(ubSaveGameID, zSaveGameName);
+
 		// create the save game file
 		AutoSGPFile f(FileOpen(zSaveGameName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 #ifdef JA2BETAVERSION

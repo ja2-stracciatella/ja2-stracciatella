@@ -836,12 +836,7 @@ static void InitTempNpcQuoteInfoForNPCFromTempFile(void);
 //Deletes the Temp map Directory
 void InitTacticalSave(BOOLEAN const fCreateTempDir)
 {
-	if (!MakeFileManDirectory(MAPS_DIR))
-	{
-		//Erro creating the temp map directory
-		AssertMsg(0, "Error creating the Temp Directory.");
-	}
-
+	MakeFileManDirectory(MAPS_DIR);
 	EraseDirectory(MAPS_DIR);
 
 	if( fCreateTempDir )

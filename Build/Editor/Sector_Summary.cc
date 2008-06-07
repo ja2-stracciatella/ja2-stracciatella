@@ -1774,8 +1774,7 @@ static void CreateGlobalSummary(void)
 
 	gfGlobalSummaryExists = FALSE;
 
-	if (!MakeFileManDirectory(DEVINFO_DIR))
-		AssertMsg(0, "Can't create new directory, " DEVINFO_DIR " for summary information.");
+	MakeFileManDirectory(DEVINFO_DIR);
 
 	// Generate a simple readme file.
 	FILE* const f = fopen(DEVINFO_DIR "/readme.txt", "w");
