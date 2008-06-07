@@ -67,10 +67,7 @@ try
 	gsRenderCenterY = 805;
 
 	// Init animation system
-	if ( !InitAnimationSystem( ) )
-	{
-		return( ERROR_SCREEN );
-	}
+	InitAnimationSystem();
 
 	// Init lighting system
 	InitLightingSystem();

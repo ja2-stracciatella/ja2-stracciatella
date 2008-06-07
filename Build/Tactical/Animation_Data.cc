@@ -529,8 +529,7 @@ static AnimationStructureType gAnimStructureDatabase[TOTALBODYTYPES][NUM_STRUCT_
 static void LoadAnimationProfiles(void);
 
 
-BOOLEAN InitAnimationSystem( )
-try
+void InitAnimationSystem()
 {
 	INT32									cnt1, cnt2;
 
@@ -548,18 +547,11 @@ try
 			if (FileExists(Filename))
 			{
 				STRUCTURE_FILE_REF* pStructureFileRef = LoadStructureFile(Filename);
-				if (pStructureFileRef == NULL)
-				{
-					SET_ERROR("Animation structure file load failed - %s", Filename);
-				}
 				gAnimStructureDatabase[ cnt1 ][ cnt2 ].pStructureFileRef = pStructureFileRef;
 			}
 		}
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void DeleteAnimationProfiles(void);

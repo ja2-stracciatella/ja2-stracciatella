@@ -47,36 +47,26 @@ void InitTileCache(void)
 	snprintf(jsd_file_pattern, lengthof(jsd_file_pattern), "%s/Data/TILECACHE/*.jsd", data_path);
 
 	// Loop through and set filenames
-	try
+	SGP::FindFiles find(jsd_file_pattern);
+	for (;;)
 	{
-		SGP::FindFiles find(jsd_file_pattern);
-		for (;;)
+		char const* const find_filename = find.Next();
+		if (find_filename == NULL) break;
+
+		char filename[150];
+		sprintf(filename, "%s/Data/TILECACHE/%s", data_path, find_filename);
+
+		TILE_CACHE_STRUCT tc;
+		GetRootName(tc.zRootName, filename);
+		tc.pStructureFileRef = LoadStructureFile(filename);
+
+		if (strcasecmp(tc.zRootName, "l_dead1") == 0)
 		{
-			char const* const find_filename = find.Next();
-			if (find_filename == NULL) break;
-
-			char filename[150];
-			sprintf(filename, "%s/Data/TILECACHE/%s", data_path, find_filename);
-
-			TILE_CACHE_STRUCT tc;
-			GetRootName(tc.zRootName, filename);
-
-			tc.pStructureFileRef = LoadStructureFile(filename);
-#ifdef JA2TESTVERSION
-			if (tc.pStructureFileRef == NULL)
-			{
-				SET_ERROR("Cannot load tilecache JSD: %s", filename);
-			}
-#endif
-			if (strcasecmp(tc.zRootName, "l_dead1") == 0)
-			{
-				giDefaultStructIndex = gpTileCacheStructInfo.Size();
-			}
-
-			gpTileCacheStructInfo.PushBack(tc);
+			giDefaultStructIndex = gpTileCacheStructInfo.Size();
 		}
+
+		gpTileCacheStructInfo.PushBack(tc);
 	}
-	catch (...) { /* XXX ignore */ }
 }
 
 

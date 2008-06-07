@@ -45,11 +45,6 @@ try
 	if (FileExists( cStructureFilename ))
 	{
 		pStructureFileRef = LoadStructureFile( cStructureFilename );
-		if (pStructureFileRef == NULL)
-		{
-			SET_ERROR("Structure file error: %s", cStructureFilename);
-			return NULL;
-		}
 
 		if (hVObject->SubregionCount() != pStructureFileRef->usNumberOfStructures)
 		{

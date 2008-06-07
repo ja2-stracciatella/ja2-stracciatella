@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Buffer.h"
 #include "HImage.h"
 #include "Soldier_Control.h"
@@ -169,8 +171,10 @@ static UINT8 FilledTilePositions(DB_STRUCTURE_TILE* pTile)
 //
 // Structure database functions
 //
+namespace
+{
 
-static void FreeStructureFileRef(STRUCTURE_FILE_REF* pFileRef)
+void FreeStructureFileRef(STRUCTURE_FILE_REF* pFileRef)
 { // Frees all of the memory associated with a file reference, including
   // the file reference structure itself
 
@@ -201,6 +205,8 @@ static void FreeStructureFileRef(STRUCTURE_FILE_REF* pFileRef)
 		}
 	}
 	MemFree( pFileRef );
+}
+
 }
 
 void FreeAllStructureFiles( void )
@@ -261,12 +267,8 @@ CASSERT(sizeof(STRUCTURE_FILE_HEADER) == 16)
 
 
 // Loads a structure file's data as a honking chunk o' memory
-static BOOLEAN LoadStructureData(const char* const filename, STRUCTURE_FILE_REF* const sfr, UINT32* const structure_data_size)
-try
+static void LoadStructureData(const char* const filename, STRUCTURE_FILE_REF* const sfr, UINT32* const structure_data_size)
 {
-	CHECKF(filename);
-	CHECKF(sfr);
-
 	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
 
 	STRUCTURE_FILE_HEADER header;
@@ -274,7 +276,7 @@ try
 	if (strncmp(header.szId, STRUCTURE_FILE_ID, STRUCTURE_FILE_ID_LEN) != 0 ||
 			header.usNumberOfStructures == 0)
 	{
-		return FALSE;
+		throw std::runtime_error("Failed to load structure file, because header is invalid");
 	}
 
 	SGP::Buffer<AuxObjectData> aux_data;
@@ -308,13 +310,10 @@ try
 	sfr->pAuxData         = aux_data.Release();
 	sfr->pTileLocData     = tile_loc_data.Release();
 	sfr->pubStructureData = structure_data.Release();
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-static BOOLEAN CreateFileStructureArrays(STRUCTURE_FILE_REF* pFileRef, UINT32 uiDataSize)
-try
+static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32 const uiDataSize)
 { // Based on a file chunk, creates all the dynamic arrays for the
   // structure definitions contained within
 
@@ -332,7 +331,7 @@ try
 		if (pCurrent + sizeof( DB_STRUCTURE ) > pFileRef->pubStructureData + uiDataSize)
 		{	// gone past end of file block?!
 			// freeing of memory will occur outside of the function
-			return( FALSE );
+			throw std::runtime_error("Failed to create structure arrays, because input data is too short");
 		}
 		usIndex = ((DB_STRUCTURE *) pCurrent)->usStructureNumber;
 		pDBStructureRef[usIndex].pDBStructure = (DB_STRUCTURE *) pCurrent;
@@ -346,7 +345,7 @@ try
 			if (pCurrent + sizeof( DB_STRUCTURE ) > pFileRef->pubStructureData + uiDataSize)
 			{	// gone past end of file block?!
 				// freeing of memory will occur outside of the function
-				return( FALSE );
+				throw std::runtime_error("Failed to create structure arrays, because input data is too short");
 			}
 			ppTileArray[usTileLoop] = (DB_STRUCTURE_TILE *) pCurrent;
 			// set the single-value relative position between this tile and the base tile
@@ -370,43 +369,25 @@ try
 		}
 		*/
 	}
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 STRUCTURE_FILE_REF* LoadStructureFile(const char* szFileName)
-try
 { // NB should be passed in expected number of structures so we can check equality
 	UINT32								uiDataSize = 0;
-	BOOLEAN								fOk;
 
-	STRUCTURE_FILE_REF* const pFileRef = MALLOCZ(STRUCTURE_FILE_REF);
-	fOk = LoadStructureData( szFileName, pFileRef, &uiDataSize );
-	if (!fOk)
-	{
-		MemFree( pFileRef );
-		return( NULL );
-	}
-	if (pFileRef->pubStructureData != NULL)
-	{
-		fOk = CreateFileStructureArrays( pFileRef, uiDataSize );
-		if (!fOk)
-		{
-			FreeStructureFileRef( pFileRef );
-			return( NULL );
-		}
-	}
+	SGP::AutoObj<STRUCTURE_FILE_REF, FreeStructureFileRef> sfr(MALLOCZ(STRUCTURE_FILE_REF));
+	LoadStructureData(szFileName, sfr, &uiDataSize);
+	if (sfr->pubStructureData) CreateFileStructureArrays(sfr, uiDataSize);
 	// Add the file reference to the master list, at the head for convenience
 	if (gpStructureFileRefs != NULL)
 	{
-		gpStructureFileRefs->pPrev = pFileRef;
+		gpStructureFileRefs->pPrev = sfr;
 	}
-	pFileRef->pNext = gpStructureFileRefs;
-	gpStructureFileRefs = pFileRef;
-	return( pFileRef );
+	sfr->pNext = gpStructureFileRefs;
+	gpStructureFileRefs = sfr;
+	return sfr.Release();
 }
-catch (...) { return 0; }
 
 
 //
