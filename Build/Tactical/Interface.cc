@@ -1,4 +1,3 @@
-#include <stdarg.h>
 #include <stdexcept>
 
 #include "Font.h"
