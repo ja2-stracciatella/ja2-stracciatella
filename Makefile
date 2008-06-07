@@ -22,8 +22,12 @@ INSTALL_DATA    ?= $(INSTALL) -m 444
 
 
 SDL_CONFIG  ?= sdl-config
-CFLAGS_SDL  ?= $(shell $(SDL_CONFIG) --cflags)
-LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
+ifndef CFLAGS_SDL
+CFLAGS_SDL  := $(shell $(SDL_CONFIG) --cflags)
+endif
+ifndef LDFLAGS_SDL
+LDFLAGS_SDL := $(shell $(SDL_CONFIG) --libs)
+endif
 
 
 CFLAGS += $(CFLAGS_SDL)
