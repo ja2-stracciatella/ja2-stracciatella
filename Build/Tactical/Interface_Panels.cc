@@ -951,8 +951,7 @@ static void SelectedMercButtonMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN InitializeSMPanel(void)
-try
+void InitializeSMPanel(void)
 {
 	// failing the CHECKF after this will cause you to lose your mouse
 	guiSMPanel                     = AddVideoObjectFromFile("INTERFACE/inventory_bottom_panel.STI");
@@ -1017,10 +1016,7 @@ try
 		// full cursor - disable, from item pickup
 		EnableSMPanelButtons(FALSE, TRUE);
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void MakeButtonN(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
@@ -2383,8 +2379,7 @@ static void TMClickFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void TMClickSecondHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-BOOLEAN InitializeTEAMPanel(void)
-try
+void InitializeTEAMPanel(void)
 {
 	// INit viewport region
 	// Set global mouse regions
@@ -2443,10 +2438,7 @@ try
 		MSYS_DefineRegion(&gTEAM_SecondHandInv[i], x, y, x + TM_INV_WIDTH, y + TM_INV_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, TMClickSecondHandInvCallback);
 		MSYS_SetRegionUserData(&gTEAM_SecondHandInv[i], 0, i);
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void ShutdownTEAMPanel(void)

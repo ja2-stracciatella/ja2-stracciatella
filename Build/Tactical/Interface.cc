@@ -1,4 +1,6 @@
 #include <stdarg.h>
+#include <stdexcept>
+
 #include "Font.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
@@ -268,10 +270,8 @@ void InitializeTacticalInterface()
 }
 
 
-BOOLEAN InitializeCurrentPanel( )
+void InitializeCurrentPanel()
 {
-	BOOLEAN		fOK = FALSE;
-
 	MoveRadarScreen( );
 
 	switch( gsCurInterfacePanel )
@@ -282,22 +282,24 @@ BOOLEAN InitializeCurrentPanel( )
 
 			// Render full
 			SetRenderFlags(RENDER_FLAG_FULL);
-			fOK = InitializeSMPanel( );
+			InitializeSMPanel();
 			break;
 
 		case TEAM_PANEL:
 			gsVIEWPORT_WINDOW_END_Y = INTERFACE_START_Y;
 			// Render full
 			SetRenderFlags(RENDER_FLAG_FULL);
-			fOK = InitializeTEAMPanel( );
+			InitializeTEAMPanel();
 			break;
+
+		default:
+			throw std::logic_error("Tried to initialise invalid tactical panel");
 	}
 
 //	RefreshMouseRegions( );
 	gfPanelAllocated = TRUE;
-
-	return( fOK );
 }
+
 
 void ShutdownCurrentPanel( )
 {

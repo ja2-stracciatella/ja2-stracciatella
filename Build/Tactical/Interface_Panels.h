@@ -46,19 +46,19 @@ enum
 #define	SHOW_LOCATOR_NORMAL									1
 #define SHOW_LOCATOR_FAST										2
 
-void    CreateSMPanelButtons(void);
-void    RemoveSMPanelButtons(void);
-BOOLEAN InitializeSMPanel(void);
-void    ShutdownSMPanel(void);
+void CreateSMPanelButtons(void);
+void RemoveSMPanelButtons(void);
+void InitializeSMPanel(void);
+void ShutdownSMPanel(void);
 void RenderSMPanel(BOOLEAN* pfDirty);
 void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup);
 
 
-void    CreateTEAMPanelButtons(void);
-void    RemoveTEAMPanelButtons(void);
-BOOLEAN InitializeTEAMPanel(void);
-void    ShutdownTEAMPanel(void);
-void    RenderTEAMPanel(BOOLEAN fDirty);
+void CreateTEAMPanelButtons(void);
+void RemoveTEAMPanelButtons(void);
+void InitializeTEAMPanel(void);
+void ShutdownTEAMPanel(void);
+void RenderTEAMPanel(BOOLEAN fDirty);
 
 
 void SetSMPanelCurrentMerc(SOLDIERTYPE* s);

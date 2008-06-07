@@ -140,7 +140,7 @@ void SetCurrentTacticalPanelCurrentMerc(SOLDIERTYPE* s);
 void SetCurrentInterfacePanel( UINT8 ubNewPanel );
 BOOLEAN IsMercPortraitVisible(const SOLDIERTYPE* s);
 
-BOOLEAN InitializeCurrentPanel(void);
+void InitializeCurrentPanel(void);
 void ShutdownCurrentPanel(void);
 
 void ClearInterface(void);
