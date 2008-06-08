@@ -567,22 +567,21 @@ ScreenID MainGameScreenHandle(void)
 			ExecuteOverhead( );
 		}
 
-		ScreenID uiNewScreen = GAME_SCREEN;
-
 		// Handle animated cursors
 		if( gfWorldLoaded )
 		{
 			HandleAnimatedCursors( );
 
 			// Handle Interface
-			uiNewScreen = HandleTacticalUI( );
-
+			ScreenID const uiNewScreen = HandleTacticalUI();
 
 			// called to handle things like face panels changeing due to team panel, squad changes, etc
 			// To be done AFTER HandleUI and before ExecuteOverlays( )
 			HandleDialogueUIAdjustments( );
 
 			HandleTalkingAutoFaces( );
+
+			if (uiNewScreen != GAME_SCREEN) return uiNewScreen;
 		}
 #ifdef JA2EDITOR
 		else if( gfIntendOnEnteringEditor )
@@ -595,11 +594,6 @@ ScreenID MainGameScreenHandle(void)
 		else if( !gfEnteringMapScreen )
 		{
 			gfEnteringMapScreen = TRUE;
-		}
-
-		if ( uiNewScreen != GAME_SCREEN )
-		{
-			return( uiNewScreen );
 		}
 
 		// Deque all game events

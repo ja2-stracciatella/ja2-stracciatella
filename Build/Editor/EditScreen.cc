@@ -1792,8 +1792,6 @@ static void HandleKeyboardShortcuts(void)
 //	Perform the current user selected action, if any (or at least set things up for doing that)
 static ScreenID PerformSelectedAction(void)
 {
-	ScreenID const uiRetVal = EDIT_SCREEN;
-
 	switch ( iCurrentAction )
 	{
 		case ACTION_DENSITY_DOWN:
@@ -2184,7 +2182,7 @@ static ScreenID PerformSelectedAction(void)
 			break;
 	}
 
-	return( uiRetVal );
+	return EDIT_SCREEN;
 }
 
 
@@ -3301,8 +3299,6 @@ ScreenID EditScreenHandle(void)
 
 	fBeenWarned = FALSE;
 
-	ScreenID uiRetVal = EDIT_SCREEN;
-
 	// Handle the bottom task bar menu.
 	DoTaskbar();
 
@@ -3385,8 +3381,8 @@ ScreenID EditScreenHandle(void)
 	HandleKeyboardShortcuts( );
 
 	// Perform action based on current selection
-	if ( (uiRetVal = PerformSelectedAction( )) != EDIT_SCREEN )
-		return( uiRetVal );
+	ScreenID const uiRetVal = PerformSelectedAction();
+	if (uiRetVal != EDIT_SCREEN) return uiRetVal;
 
 	// Display Framerate
 	DisplayFrameRate( );
@@ -3404,7 +3400,7 @@ ScreenID EditScreenHandle(void)
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender( );
 
-	return( uiRetVal );
+	return EDIT_SCREEN;
 }
 
 
