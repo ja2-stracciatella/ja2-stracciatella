@@ -29,14 +29,11 @@ DisplayEmploymentinformation(): code duplication
 DisplayEmploymentinformation(): pointless loop
 DisplayOrderGrid(): call IsMercDead() more early
 DisplayPurchasedItems(): iSubTotal undefined value
-DoesTownHaveRatingToTrainMilitia(): complicated
-DoesVehicleHaveAnyPassengers(): complicated
 DoneFadeInActionLeaveBasement(): empty
 DoneFadeInWarp(): empty
 DoneFadeInWarp(): pointless?
 DoorToggleLockedCallback(): pointless?
 DrawBreathUIBar(): overdraw
-DrawTownLabels(): complicated coordinates (FindFontCenterCoordinates() necessary at all?)
 ET_ENDENEMYS_TURN: unused
 EndOfHelicoptersPath(): complicated
 EnoughTimeOnAssignment(): complicated
@@ -72,7 +69,7 @@ HandleMoraleEventForSoldier(): callers
 HandleOpinionOfTownsAboutSoldier(): empty
 HandleSummaryInput(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
 HeliCharacterDialogue(): callers
-IMPVideoObjects.h(): many needlessly called functions?
+IMPVideoObjects.h: many needlessly called functions?
 I_CHANGELEVEL: unused
 InitializeLibrary(): invalid use of strlen()
 InitializeStrategicMapSectorTownNames(): complicated?
@@ -84,7 +81,6 @@ IsMapScreenWorldItemVisibleInMapInventory(), IsMapScreenWorldItemInvisibleInMapI
 IsTownUnderCompleteControlByEnemy(): complicated
 ItemHasAttachments(): complicated
 KeyRingSlotInvClickCallback: one caller
-L"/": pointless copy
 LackOfProgressTolerance(): callers
 LightIlluminateWall(): empty
 LightLoad(): complicated
@@ -119,7 +115,6 @@ OBJECT_MODIFIED: unused
 OutOfStockMessageBoxCallBack(): pointless
 PLAYER_TEAM_DEAD: never set
 PayMilitiaTrainingYesNoBoxCallback(): users
-PersonnelDepartedTeamCallback(): x = 0; if (x == 0)
 PlayerGroupInMotion(): overkill
 ProcessMercEditing(): code duplication
 ProcessPlayerInputActivationString(): complicated
@@ -134,7 +129,6 @@ RemoveAllTopmostsOfTypeRange(): O(n^2)
 RemoveAmmoGUI(), RemoveEquipGUI(), RemoveKeysGUI(), RemoveMoneyGUI(): empty, remove?
 RemoveItemGUI(): callers
 RenderFaceOverlay(): users
-RenderItemDescriptionBox(): code duplication
 RenderShopKeeperInterface(): MARK_DIRTY necessary?
 RenderTiles(): SetFontDestBuffer() + mprintf_buffer() strange
 SAIMOVECODE: use enum
