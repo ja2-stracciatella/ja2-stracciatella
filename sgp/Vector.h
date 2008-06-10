@@ -22,7 +22,8 @@ namespace SGP
 			void PushBack(const T& e)
 			{
 				if (size_ >= capacity_) Reserve(MAX(1, size_ * 2));
-				new (&v_[size_++]) T(e);
+				new (&v_[size_]) T(e);
+				++size_;
 			}
 
 			void Reserve(size_t const n);
