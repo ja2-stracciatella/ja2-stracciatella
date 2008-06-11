@@ -1498,34 +1498,32 @@ UINT32 ProfileChecksum( MERCPROFILESTRUCT * pProfile )
 static const UINT8* GetRotationArray(void);
 
 
-void NewJA2EncryptedFileRead(HWFILE const f, void* const pDest, UINT32 const uiBytesToRead)
+void NewJA2EncryptedFileRead(HWFILE const f, BYTE* const pDest, UINT32 const uiBytesToRead)
 {
 	FileRead(f, pDest, uiBytesToRead);
 
 	const UINT8* const pubRotationArray = GetRotationArray();
-	UINT8*       const pMemBlock        = (UINT8*)pDest;
 	UINT8              ubArrayIndex     = 0;
 	UINT8              ubLastByte       = 0;
 	for (UINT32 i = 0; i < uiBytesToRead; ++i)
 	{
-		const UINT8 ubLastByteForNextLoop = pMemBlock[i];
-		pMemBlock[i] -= ubLastByte + pubRotationArray[ubArrayIndex];
+		UINT8 const ubLastByteForNextLoop = pDest[i];
+		pDest[i] -= ubLastByte + pubRotationArray[ubArrayIndex];
 		if (++ubArrayIndex >= NEW_ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
 		ubLastByte = ubLastByteForNextLoop;
 	}
 }
 
 
-void NewJA2EncryptedFileWrite(HWFILE const hFile, void const* const data, UINT32 const uiBytesToWrite)
+void NewJA2EncryptedFileWrite(HWFILE const hFile, BYTE const* const data, UINT32 const uiBytesToWrite)
 {
 	SGP::Buffer<UINT8> buf(uiBytesToWrite);
-	const UINT8* const src              = static_cast<const UINT8*>(data);
 	const UINT8* const pubRotationArray = GetRotationArray();
 	UINT8              ubArrayIndex     = 0;
 	UINT8              last_byte        = 0;
 	for (UINT32 i = 0; i < uiBytesToWrite; ++i)
 	{
-		buf[i] = src[i] + last_byte + pubRotationArray[ubArrayIndex];
+		buf[i] = data[i] + last_byte + pubRotationArray[ubArrayIndex];
 		last_byte = buf[i];
 		if (++ubArrayIndex >= NEW_ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
 	}
@@ -1537,32 +1535,30 @@ void NewJA2EncryptedFileWrite(HWFILE const hFile, void const* const data, UINT32
 #define ROTATION_ARRAY_SIZE 46
 static const UINT8 ubRotationArray[46] = { 132, 235, 125, 99, 15, 220, 140, 89, 205, 132, 254, 144, 217, 78, 156, 58, 215, 76, 163, 187, 55, 49, 65, 48, 156, 140, 201, 68, 184, 13, 45, 69, 102, 185, 122, 225, 23, 250, 160, 220, 114, 240, 64, 175, 057, 233 };
 
-void JA2EncryptedFileRead(HWFILE const f, void* const pDest, UINT32 const uiBytesToRead)
+void JA2EncryptedFileRead(HWFILE const f, BYTE* const pDest, UINT32 const uiBytesToRead)
 {
 	FileRead(f, pDest, uiBytesToRead);
 
-	UINT8* const pMemBlock    = (UINT8*)pDest;
-	UINT8        ubArrayIndex = 0;
-	UINT8        ubLastByte   = 0;
+	UINT8 ubArrayIndex = 0;
+	UINT8 ubLastByte   = 0;
 	for (UINT32 i = 0; i < uiBytesToRead; ++i)
 	{
-		const UINT8 ubLastByteForNextLoop = pMemBlock[i];
-		pMemBlock[i] -= ubLastByte + ubRotationArray[ubArrayIndex];
+		UINT8 const ubLastByteForNextLoop = pDest[i];
+		pDest[i] -= ubLastByte + ubRotationArray[ubArrayIndex];
 		if (++ubArrayIndex >= ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
 		ubLastByte = ubLastByteForNextLoop;
 	}
 }
 
 
-void JA2EncryptedFileWrite(HWFILE const hFile, void const* const data, UINT32 const uiBytesToWrite)
+void JA2EncryptedFileWrite(HWFILE const hFile, BYTE const* const data, UINT32 const uiBytesToWrite)
 {
 	SGP::Buffer<UINT8> buf(uiBytesToWrite);
-	const UINT8* const src          = static_cast<const UINT8*>(data);
 	UINT8              ubArrayIndex = 0;
 	UINT8              last_byte    = 0;
 	for (UINT32 i = 0; i < uiBytesToWrite; ++i)
 	{
-		buf[i] += src[i] + last_byte + ubRotationArray[ubArrayIndex];
+		buf[i] += data[i] + last_byte + ubRotationArray[ubArrayIndex];
 		last_byte = buf[i];
 		if (++ubArrayIndex >= ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
 	}

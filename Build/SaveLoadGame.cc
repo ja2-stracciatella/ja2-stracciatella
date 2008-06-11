@@ -2144,11 +2144,11 @@ try
 			//Read in the saved soldier info into a Temp structure
 			if ( guiSaveGameVersion < 87 )
 			{
-				JA2EncryptedFileRead(hFile, &Data, sizeof(Data));
+				JA2EncryptedFileRead(hFile, Data, sizeof(Data));
 			}
 			else
 			{
-				NewJA2EncryptedFileRead(hFile, &Data, sizeof(Data));
+				NewJA2EncryptedFileRead(hFile, Data, sizeof(Data));
 			}
 			ExtractSoldierType(Data, &SavedSoldierInfo);
 			// check checksum

@@ -192,10 +192,10 @@ BOOLEAN LoadMercProfiles(void)
 		{
 #ifdef JA2DEMO
 			BYTE data[696];
-			FileRead(fptr, &data, sizeof(data));
+			FileRead(fptr, data, sizeof(data));
 #else
 			BYTE data[716];
-			JA2EncryptedFileRead(fptr, &data, sizeof(data));
+			JA2EncryptedFileRead(fptr, data, sizeof(data));
 #endif
 
 			MERCPROFILESTRUCT* const p = GetProfile(uiLoop);

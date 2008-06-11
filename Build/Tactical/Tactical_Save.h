@@ -77,11 +77,11 @@ void SaveTempNpcQuoteArrayToSaveGameFile(HWFILE);
 UINT32 MercChecksum( SOLDIERTYPE * pSoldier );
 UINT32 ProfileChecksum( MERCPROFILESTRUCT * pProfile );
 
-void JA2EncryptedFileRead( HWFILE, void*       data, UINT32 uiBytesToRead);
-void JA2EncryptedFileWrite(HWFILE, void const* data, UINT32 uiBytesToWrite);
+void JA2EncryptedFileRead( HWFILE, BYTE*       data, UINT32 uiBytesToRead);
+void JA2EncryptedFileWrite(HWFILE, BYTE const* data, UINT32 uiBytesToWrite);
 
-void NewJA2EncryptedFileRead( HWFILE, void*       data, UINT32 uiBytesToRead);
-void NewJA2EncryptedFileWrite(HWFILE, void const* data, UINT32 uiBytesToWrite);
+void NewJA2EncryptedFileRead( HWFILE, BYTE*       data, UINT32 uiBytesToRead);
+void NewJA2EncryptedFileWrite(HWFILE, BYTE const* data, UINT32 uiBytesToWrite);
 
 
 //If hacker's mess with our save/temp files, this is our final line of defence.
