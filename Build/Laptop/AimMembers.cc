@@ -270,20 +270,6 @@
 #define		AIM_TEXT_SPEECH_MODIFIER					80
 
 
-// enumerated types used for the Video Conferencing Display
-enum
-{
-	AIM_VIDEO_NOT_DISPLAYED_MODE,							// The video popup is not displayed
-	AIM_VIDEO_POPUP_MODE,											// The title bar pops up out of the Contact button
-	AIM_VIDEO_INIT_MODE,											// When the player first tries to contact the merc, it will be snowy for a bit
-	AIM_VIDEO_FIRST_CONTACT_MERC_MODE,				// The popup that is displayed when first contactinf the merc
-	AIM_VIDEO_HIRE_MERC_MODE,									// The popup which deals with the contract length, and transfer funds
-	AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE,		// The popup which will be instread of the AIM_VIDEO_FIRST_CONTACT_MERC_MODE if the merc is not there
-	AIM_VIDEO_MERC_UNAVAILABLE_MODE,					// The popup which will be instread of the AIM_VIDEO_FIRST_CONTACT_MERC_MODE if the merc is unavailable
-	AIM_VIDEO_POPDOWN_MODE,										// The title bars pops down to the contact button
-};
-
-
 // Enumerated types used for the Pop Up Box
 enum
 {
@@ -330,9 +316,9 @@ static INT32  iAimMembersBoxId = -1;
 static UINT8 gbCurrentSoldier = 0;
 UINT8        gbCurrentIndex = 0;
 
-UINT8          gubVideoConferencingMode;
-static UINT8   gubVideoConferencingPreviousMode;
-static BOOLEAN gfJustSwitchedVideoConferenceMode;
+AIMVideoMode        gubVideoConferencingMode         = AIM_VIDEO_NOT_DISPLAYED_MODE;
+static AIMVideoMode gubVideoConferencingPreviousMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
+static BOOLEAN      gfJustSwitchedVideoConferenceMode;
 
 static BOOLEAN gfMercIsTalking=FALSE;
 static BOOLEAN gfVideoFaceActive=FALSE;
@@ -524,11 +510,11 @@ void EnterAIMMembers()
 	gbCurrentSoldier = AimMercArray[gbCurrentIndex];
 
 	gfStopMercFromTalking = FALSE;
-	gubVideoConferencingMode = (UINT8)giCurrentSubPage;
+	gubVideoConferencingMode = static_cast<AIMVideoMode>(giCurrentSubPage);
 	gubVideoConferencingPreviousMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 
 	// if we are re-entering but the video conference should still be up
-	if( gubVideoConferencingMode != 0 )
+	if (gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE)
 	{
 		//if we need to re initialize the talking face
 		if( gubVideoConferencingMode !=  AIM_VIDEO_FIRST_CONTACT_MERC_MODE)
@@ -982,7 +968,7 @@ static void BtnContactButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// if we are not already in the video conferemce mode, go in to it
-		if (!gubVideoConferencingMode)
+		if (gubVideoConferencingMode == AIM_VIDEO_NOT_DISPLAYED_MODE)
 		{
 			gubVideoConferencingMode = AIM_VIDEO_POPUP_MODE;
 //				gubVideoConferencingMode = AIM_VIDEO_INIT_MODE;
@@ -1898,7 +1884,7 @@ static void SelectShutUpMercRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static UINT8 WillMercAcceptCall(void)
+static AIMVideoMode WillMercAcceptCall(void)
 {
 	/* If merc has hung up on the player twice within a period of time
 	 * (MERC_ANNOYED_WONT_CONTACT_TIME_MINUTES), the merc cant ber hired */
@@ -3006,7 +2992,7 @@ void ResetMercAnnoyanceAtPlayer( UINT8 ubMercID )
 
 void DisableNewMailMessage(void)
 {
-	if( fNewMailFlag && gubVideoConferencingMode )
+	if (fNewMailFlag && gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE)
 	{
 		gfIsNewMailFlagSet = TRUE;
 		fNewMailFlag = FALSE;

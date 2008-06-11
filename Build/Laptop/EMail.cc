@@ -1156,7 +1156,7 @@ void CreateDestroyNewMailButton()
  static BOOLEAN fOldNewMailFlag=FALSE;
 
  // check if we are video conferencing, if so, do nothing
- if( gubVideoConferencingMode != 0 )
+	if (gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE)
  {
 	 return ;
  }
@@ -1201,7 +1201,7 @@ BOOLEAN DisplayNewMailBox( void )
 	// will display a new mail box whenever new mail has arrived
 
 	// check if we are video conferencing, if so, do nothing
-  if( gubVideoConferencingMode != 0 )
+	if (gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE)
   {
 	  return( FALSE );
   }
