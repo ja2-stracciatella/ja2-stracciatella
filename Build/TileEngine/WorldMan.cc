@@ -1185,7 +1185,6 @@ static void AddMercStructureInfo(INT16 sGridNo, SOLDIERTYPE* pSoldier);
 
 
 LEVELNODE* AddMercToHead(const UINT32 iMapIndex, SOLDIERTYPE* const pSoldier, const BOOLEAN fAddStructInfo)
-try
 {
 	LEVELNODE* pMerc = gpWorldLevelData[iMapIndex].pMercHead;
 
@@ -1207,7 +1206,6 @@ try
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_MERCS | TILES_DYNAMIC_STRUCT_MERCS | TILES_DYNAMIC_HIGHMERCS);
 	return pNextMerc;
 }
-catch (...) { return 0; }
 
 
 static void AddMercStructureInfo(INT16 sGridNo, SOLDIERTYPE* pSoldier)
