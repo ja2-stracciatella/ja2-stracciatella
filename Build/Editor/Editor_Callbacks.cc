@@ -661,12 +661,40 @@ void MouseMovedInItemsRegion( MOUSE_REGION *reg, INT32 reason )
 	HandleItemsPanel( gusMouseXPos, gusMouseYPos, GUI_MOVE_EVENT );
 }
 
+
+static void ItemsScrollLeft()
+{
+	if (eInfo.sScrollIndex == 0) return;
+	gfRenderTaskbar = TRUE;
+	if (--eInfo.sScrollIndex == 0) DisableButton(iEditorButton[ITEMS_LEFTSCROLL]);
+	EnableButton(iEditorButton[ITEMS_RIGHTSCROLL]);
+}
+
+
+static void ItemsScrollRight()
+{
+	INT16 const max_col = MAX(((eInfo.sNumItems + 1) / 2) - 6, 0);
+	if (eInfo.sScrollIndex >= max_col) return;
+	gfRenderTaskbar = TRUE;
+	EnableButton(iEditorButton[ITEMS_LEFTSCROLL]);
+	if (++eInfo.sScrollIndex == max_col) DisableButton(iEditorButton[ITEMS_RIGHTSCROLL]);
+}
+
+
 void MouseClickedInItemsRegion(MOUSE_REGION *reg, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 		HandleItemsPanel( gusMouseXPos, gusMouseYPos, GUI_LCLICK_EVENT );
 	else if( reason & MSYS_CALLBACK_REASON_RBUTTON_UP )
 		HandleItemsPanel( gusMouseXPos, gusMouseYPos, GUI_RCLICK_EVENT );
+	else if (reason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		ItemsScrollLeft();
+	}
+	else if (reason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		ItemsScrollRight();
+	}
 }
 
 void ItemsWeaponsCallback(GUI_BUTTON *btn,INT32 reason)
@@ -725,27 +753,12 @@ void ItemsKeysCallback(GUI_BUTTON *btn,INT32 reason)
 
 void ItemsLeftScrollCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		gfRenderTaskbar = TRUE;
-		eInfo.sScrollIndex--;
-		if( !eInfo.sScrollIndex )
-			DisableButton( iEditorButton[ITEMS_LEFTSCROLL] );
-		if( eInfo.sScrollIndex < ((eInfo.sNumItems+1)/2)-6 )
-			EnableButton( iEditorButton[ITEMS_RIGHTSCROLL] );
-	}
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP) ItemsScrollLeft();
 }
 
 void ItemsRightScrollCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		gfRenderTaskbar = TRUE;
-		eInfo.sScrollIndex++;
-		EnableButton( iEditorButton[ITEMS_LEFTSCROLL] );
-		if( eInfo.sScrollIndex == MAX( ((eInfo.sNumItems+1)/2)-6, 0) )
-			DisableButton( iEditorButton[ITEMS_RIGHTSCROLL] );
-	}
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP) ItemsScrollRight();
 }
 
 //MERCS

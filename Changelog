@@ -1,4 +1,5 @@
-(r4360) Enable scrolling the terrain graphics list in the editor with the mouse wheel.
+(r4361) Enable scrolling the items lists in the editor with the mouse wheel.
+(r4360) Enable scrolling the terrain and building graphics lists in the editor with the mouse wheel.
 (r4358) Fix a vanilla buffer underrun, which occurs when displaying a multiline text containing a word longer than the maximum line width.  The most prominent example is the item view in the map editor with the German data files ("Leichte Panzerabwehrwaffe").
 (r4357) Make the map editor available via the command line parameter -editor.
 (r4303) Fix a vanilla bug, which restored a wrong amount of breath points at the start of the turn.
