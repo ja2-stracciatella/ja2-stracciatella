@@ -1711,7 +1711,6 @@ LEVELNODE* AddTopmostToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 
 
 LEVELNODE* AddUIElem(UINT32 iMapIndex, UINT16 usIndex, INT8 sRelativeX, INT8 sRelativeY)
-try
 {
 	LEVELNODE* pTopmost = AddTopmostToTail(iMapIndex, usIndex);
 
@@ -1723,7 +1722,6 @@ try
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_TOPMOST);
 	return pTopmost;
 }
-catch (...) { return 0; }
 
 
 LEVELNODE* AddTopmostToHead(const UINT32 iMapIndex, const UINT16 usIndex)
