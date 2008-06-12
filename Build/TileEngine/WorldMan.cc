@@ -41,7 +41,6 @@ static const wchar_t gzLevelString[][15] =
 
 // LEVEL NODE MANIPLULATION FUNCTIONS
 static LEVELNODE* CreateLevelNode(void)
-try
 {
 	LEVELNODE* const Node = MALLOCZ(LEVELNODE);
 	Node->ubShadeLevel        = LightGetAmbient();
@@ -50,10 +49,8 @@ try
 	Node->pNext               = NULL;
 	Node->sRelativeX          = 0;
 	Node->sRelativeY          = 0;
-
 	return Node;
 }
-catch (...) { return 0; }
 
 
 void CountLevelNodes(void)
@@ -120,9 +117,9 @@ static BOOLEAN TypeExistsInLevel(const LEVELNODE* pStartNode, UINT32 fType, UINT
 // #################################################################
 
 LEVELNODE* AddObjectToTail(const UINT32 iMapIndex, const UINT16 usIndex)
+try
 {
 	LEVELNODE* const n = CreateLevelNode();
-	CHECKF(n != NULL);
 	n->usIndex = usIndex;
 
 	// Append node to list
@@ -133,12 +130,13 @@ LEVELNODE* AddObjectToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_OBJECTS);
 	return n;
 }
+catch (...) { return 0; }
 
 
 LEVELNODE* AddObjectToHead(const UINT32 iMapIndex, const UINT16 usIndex)
+try
 {
 	LEVELNODE* const n = CreateLevelNode();
-	CHECKN(n != NULL);
 	n->usIndex = usIndex;
 
 	LEVELNODE** const head = &gpWorldLevelData[iMapIndex].pObjectHead;
@@ -149,6 +147,7 @@ LEVELNODE* AddObjectToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 	AddObjectToMapTempFile(iMapIndex, usIndex);
 	return n;
 }
+catch (...) { return 0; }
 
 
 BOOLEAN RemoveObject(UINT32 iMapIndex, UINT16 usIndex)
@@ -249,9 +248,9 @@ BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 #ifdef JA2EDITOR
 
 LEVELNODE* AddLandToTail(const UINT32 iMapIndex, const UINT16 usIndex)
+try
 {
 	LEVELNODE* const n = CreateLevelNode();
-	CHECKF(n != NULL);
 	n->usIndex = usIndex;
 
 	// Append node to list
@@ -268,14 +267,15 @@ LEVELNODE* AddLandToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_LAND);
 	return n;
 }
+catch (...) { return 0; }
 
 #endif
 
 
 BOOLEAN AddLandToHead(const UINT32 iMapIndex, const UINT16 usIndex)
+try
 {
 	LEVELNODE* const n = CreateLevelNode();
-	CHECKF(n != NULL);
 	n->usIndex		= usIndex;
 
 	LEVELNODE** const head = &gpWorldLevelData[iMapIndex].pLandHead;
@@ -292,6 +292,7 @@ BOOLEAN AddLandToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_LAND);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 #ifdef JA2EDITOR
@@ -464,6 +465,7 @@ void DeleteAllLandLayers(UINT32 iMapIndex)
 
 
 BOOLEAN InsertLandIndexAtLevel(const UINT32 iMapIndex, const UINT16 usIndex, const UINT8 ubLevel)
+try
 {
 	// If we want to insert at head;
 	if (ubLevel == 0)
@@ -484,7 +486,6 @@ BOOLEAN InsertLandIndexAtLevel(const UINT32 iMapIndex, const UINT16 usIndex, con
 	}
 
 	LEVELNODE* const n = CreateLevelNode();
-	CHECKF(n != NULL);
 	n->usIndex = usIndex;
 
 	// Set links, according to position!
@@ -500,6 +501,7 @@ BOOLEAN InsertLandIndexAtLevel(const UINT32 iMapIndex, const UINT16 usIndex, con
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_LAND);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 void RemoveHigherLandLevels(UINT32 const iMapIndex, UINT32 const fSrcType, UINT32** const puiHigherTypes, UINT8* const pubNumHigherTypes)
@@ -582,9 +584,9 @@ LEVELNODE* ForceStructToTail(UINT32 iMapIndex, UINT16 usIndex)
 
 
 static LEVELNODE* AddStructToTailCommon(const UINT32 iMapIndex, const UINT16 usIndex, const BOOLEAN fAddStructDBInfo)
+try
 {
 	LEVELNODE* const n = CreateLevelNode();
-	CHECKN(n != NULL);
 
 	if (fAddStructDBInfo && !AddNodeToWorld(iMapIndex, usIndex, 0, n)) return NULL;
 
@@ -625,12 +627,13 @@ static LEVELNODE* AddStructToTailCommon(const UINT32 iMapIndex, const UINT16 usI
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_STRUCTURES);
 	return n;
 }
+catch (...) { return 0; }
 
 
 BOOLEAN AddStructToHead(const UINT32 iMapIndex, const UINT16 usIndex)
+try
 {
 	LEVELNODE* const n = CreateLevelNode();
-	CHECKF(n != NULL);
 
 	if (!AddNodeToWorld(iMapIndex, usIndex, 0, n)) return FALSE;
 
@@ -671,9 +674,11 @@ BOOLEAN AddStructToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_STRUCTURES);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN InsertStructIndex(const UINT32 iMapIndex, const UINT16 usIndex, const UINT8 ubLevel)
+try
 {
 	// If we want to insert at head
 	if (ubLevel == 0)
@@ -693,7 +698,6 @@ static BOOLEAN InsertStructIndex(const UINT32 iMapIndex, const UINT16 usIndex, c
 	}
 
 	LEVELNODE* const n = CreateLevelNode();
-	CHECKF(n != NULL);
 
 	n->usIndex = usIndex;
 
@@ -706,6 +710,7 @@ static BOOLEAN InsertStructIndex(const UINT32 iMapIndex, const UINT16 usIndex, c
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_STRUCTURES);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN RemoveShadow(UINT32 iMapIndex, UINT16 usIndex);
@@ -1015,9 +1020,9 @@ void HideStructOfGivenType(UINT32 const iMapIndex, UINT32 const fType, BOOLEAN c
 // #################################################################
 
 BOOLEAN AddShadowToTail(const UINT32 iMapIndex, const UINT16 usIndex)
+try
 {
 	LEVELNODE* const n = CreateLevelNode();
-	CHECKF(n != NULL);
 	n->usIndex = usIndex;
 
 	// Append node to list
@@ -1028,6 +1033,7 @@ BOOLEAN AddShadowToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_SHADOWS);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 //Kris:  identical shadows can exist in the same gridno, though it makes no sense
@@ -1046,9 +1052,9 @@ void AddExclusiveShadow(UINT32 iMapIndex, UINT16 usIndex)
 
 
 LEVELNODE* AddShadowToHead(const UINT32 iMapIndex, const UINT16 usIndex)
+try
 {
 	LEVELNODE* const n = CreateLevelNode();
-	CHECKN(n != NULL);
 	n->usIndex = usIndex;
 
 	// Prepend node to list
@@ -1059,6 +1065,7 @@ LEVELNODE* AddShadowToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_SHADOWS);
 	return n;
 }
+catch (...) { return 0; }
 
 
 static BOOLEAN RemoveShadow(UINT32 iMapIndex, UINT16 usIndex)
@@ -1178,11 +1185,11 @@ static void AddMercStructureInfo(INT16 sGridNo, SOLDIERTYPE* pSoldier);
 
 
 LEVELNODE* AddMercToHead(const UINT32 iMapIndex, SOLDIERTYPE* const pSoldier, const BOOLEAN fAddStructInfo)
+try
 {
 	LEVELNODE* pMerc = gpWorldLevelData[iMapIndex].pMercHead;
 
 	LEVELNODE* pNextMerc = CreateLevelNode();
-	CHECKN(pNextMerc != NULL);
 	pNextMerc->pNext = pMerc;
 	pNextMerc->pSoldier = pSoldier;
 	pNextMerc->uiFlags |= LEVELNODE_SOLDIER;
@@ -1200,6 +1207,7 @@ LEVELNODE* AddMercToHead(const UINT32 iMapIndex, SOLDIERTYPE* const pSoldier, co
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_MERCS | TILES_DYNAMIC_STRUCT_MERCS | TILES_DYNAMIC_HIGHMERCS);
 	return pNextMerc;
 }
+catch (...) { return 0; }
 
 
 static void AddMercStructureInfo(INT16 sGridNo, SOLDIERTYPE* pSoldier)
@@ -1359,9 +1367,9 @@ BOOLEAN RemoveMerc(UINT32 iMapIndex, SOLDIERTYPE* pSoldier, BOOLEAN fPlaceHolder
 // #################################################################
 
 static LEVELNODE* AddRoof(const UINT32 iMapIndex, const UINT16 usIndex)
+try
 {
 	LEVELNODE* const n = CreateLevelNode();
-	CHECKN(n != NULL);
 
 	if (!AddNodeToWorld(iMapIndex, usIndex, 1, n)) return NULL;
 
@@ -1369,6 +1377,7 @@ static LEVELNODE* AddRoof(const UINT32 iMapIndex, const UINT16 usIndex)
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ROOF);
 	return n;
 }
+catch (...) { return 0; }
 
 
 LEVELNODE* AddRoofToTail(const UINT32 iMapIndex, const UINT16 usIndex)
@@ -1545,9 +1554,9 @@ void SetRoofIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 // #################################################################
 
 static LEVELNODE* AddOnRoof(const UINT32 iMapIndex, const UINT16 usIndex)
+try
 {
 	LEVELNODE* const n = CreateLevelNode();
-	CHECKN(n != NULL);
 
 	if (!AddNodeToWorld(iMapIndex, usIndex, 1, n)) return NULL;
 
@@ -1555,6 +1564,7 @@ static LEVELNODE* AddOnRoof(const UINT32 iMapIndex, const UINT16 usIndex)
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);
 	return n;
 }
+catch (...) { return 0; }
 
 
 LEVELNODE* AddOnRoofToTail(const UINT32 iMapIndex, const UINT16 usIndex)
@@ -1686,9 +1696,9 @@ BOOLEAN RemoveAllOnRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 // #################################################################
 
 LEVELNODE* AddTopmostToTail(const UINT32 iMapIndex, const UINT16 usIndex)
+try
 {
 	LEVELNODE* const n = CreateLevelNode();
-	CHECKN(n != NULL);
 	n->usIndex = usIndex;
 
 	// Append node to list
@@ -1699,6 +1709,7 @@ LEVELNODE* AddTopmostToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_TOPMOST);
 	return n;
 }
+catch (...) { return 0; }
 
 
 LEVELNODE* AddUIElem(UINT32 iMapIndex, UINT16 usIndex, INT8 sRelativeX, INT8 sRelativeY)
@@ -1717,9 +1728,9 @@ LEVELNODE* AddUIElem(UINT32 iMapIndex, UINT16 usIndex, INT8 sRelativeX, INT8 sRe
 
 
 LEVELNODE* AddTopmostToHead(const UINT32 iMapIndex, const UINT16 usIndex)
+try
 {
 	LEVELNODE* const n = CreateLevelNode();
-	CHECKN(n != NULL);
 	n->usIndex = usIndex;
 
 	// Prepend node to list
@@ -1730,6 +1741,7 @@ LEVELNODE* AddTopmostToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_TOPMOST);
 	return n;
 }
+catch (...) { return 0; }
 
 
 BOOLEAN RemoveTopmost(UINT32 iMapIndex, UINT16 usIndex)
