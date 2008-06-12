@@ -409,6 +409,7 @@ static void CreateCorpsePalette(ROTTING_CORPSE*);
 
 
 ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
+try
 {
 	if (pCorpseDef->sGridNo == NOWHERE)   return NULL;
 	if (pCorpseDef->ubType  == NO_CORPSE) return NULL;
@@ -472,7 +473,6 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 	}
 
 	ANITILE* const ani = CreateAnimationTile(&AniParams);
-	if (ani == NULL) return NULL;
 	c->pAniTile = ani;
 
   LEVELNODE*       const n    = ani->pLevelNode;
@@ -526,6 +526,7 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* const pCorpseDef)
 
 	return c;
 }
+catch (...) { return 0; }
 
 
 static void FreeCorpsePalettes(ROTTING_CORPSE* pCorpse)

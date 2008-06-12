@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Physics.h"
 #include "Soldier_Find.h"
 #include "TileDef.h"
@@ -44,7 +46,6 @@ static UINT16 SetFrameByDir(UINT16 frame, const ANITILE* const a)
 
 
 ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
-try
 {
 	ANITILE* const a = MALLOC(ANITILE);
 
@@ -76,7 +77,7 @@ try
 			case ANI_ROOF_LEVEL:    l = AddRoofToHead(    gridno, tile_index); break;
 			case ANI_ONROOF_LEVEL:  l = AddOnRoofToHead(  gridno, tile_index); break;
 			case ANI_TOPMOST_LEVEL: l = AddTopmostToHead( gridno, tile_index); break;
-			default:                return NULL;
+			default: throw std::logic_error("Tried to create animation tile at invalid level");
 		}
 
 		// set new tile values
@@ -140,7 +141,6 @@ try
 	pAniTileHead = a;
 	return a;
 }
-catch (...) { return 0; }
 
 
 // Loop throug all ani tiles and remove...
