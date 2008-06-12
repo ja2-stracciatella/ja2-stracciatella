@@ -1728,7 +1728,6 @@ LEVELNODE* AddUIElem(UINT32 iMapIndex, UINT16 usIndex, INT8 sRelativeX, INT8 sRe
 
 
 LEVELNODE* AddTopmostToHead(const UINT32 iMapIndex, const UINT16 usIndex)
-try
 {
 	LEVELNODE* const n = CreateLevelNode();
 	n->usIndex = usIndex;
@@ -1741,7 +1740,6 @@ try
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_TOPMOST);
 	return n;
 }
-catch (...) { return 0; }
 
 
 BOOLEAN RemoveTopmost(UINT32 iMapIndex, UINT16 usIndex)
