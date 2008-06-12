@@ -249,7 +249,7 @@ void RecompileLocalMovementCosts( INT16 sCentreGridNo );
 void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius );
 
 
-BOOLEAN LoadMapTileset( INT32 iTilesetID );
+void LoadMapTileset(INT32 iTilesetID);
 
 void CalculateWorldWireFrameTiles( BOOLEAN fForce );
 

@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Animation_Data.h"
 #include "Buffer.h"
 #include "HImage.h"
@@ -7,7 +9,6 @@
 #include "Timer_Control.h"
 #include "WorldDef.h"
 #include "WorldDat.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "Smooth.h"
 #include "WorldMan.h"
@@ -2399,7 +2400,7 @@ try
 #ifdef JA2TESTVERSION
 	uiStartTime = GetJA2Clock();
 #endif
-	CHECKF(LoadMapTileset(iTilesetID));
+	LoadMapTileset(iTilesetID);
 #ifdef JA2TESTVERSION
 	uiLoadMapTilesetTime = GetJA2Clock() - uiStartTime;
 #endif
@@ -3007,22 +3008,17 @@ static void TrashMapTile(const INT16 MapTile)
 }
 
 
-BOOLEAN LoadMapTileset( INT32 iTilesetID )
-try
+void LoadMapTileset(INT32 const iTilesetID)
 {
-
 	if ( iTilesetID >= NUM_TILESETS )
 	{
-		return( FALSE );
+		throw std::logic_error("Tried to load tileset with invalid ID");
 	}
 
 	// Init tile surface used values
 	memset( gbNewTileSurfaceLoaded, 0, sizeof( gbNewTileSurfaceLoaded ) );
 
-	if( iTilesetID == giCurrentTilesetID )
-	{
-		return( TRUE );
-	}
+	if (iTilesetID == giCurrentTilesetID) return;
 
 	// Get free memory value nere
 	gSurfaceMemUsage = guiMemTotal;
@@ -3048,10 +3044,7 @@ try
 
 	// SET GLOBAL ID FOR TILESET ( FOR SAVING! )
 	giCurrentTilesetID = iTilesetID;
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void AddWireFrame(INT16 sGridNo, UINT16 usIndex, BOOLEAN fForced)
