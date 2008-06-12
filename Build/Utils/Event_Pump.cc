@@ -13,7 +13,7 @@
 static void AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, EventQueueID ubQueueID);
 
 
-void AddGameEvent(UINT32 const uiEvent, UINT16 const usDelay, PTR const pEventData)
+void AddGameEvent(GameEvent const uiEvent, UINT16 const usDelay, PTR const pEventData)
 {
 	if (usDelay == DEMAND_EVENT_DELAY)
 	{

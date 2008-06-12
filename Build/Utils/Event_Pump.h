@@ -2,16 +2,14 @@
 #define EVENT_PROCESSOR_H
 
 // Enumerate all events for JA2
-enum
+enum GameEvent
 {
 	S_SETDESIREDDIRECTION,
 	S_BEGINFIREWEAPON,
 	S_FIREWEAPON,
 	S_WEAPONHIT,
 	S_NOISE,
-	S_GETNEWPATH,
-
-	NUM_EVENTS
+	S_GETNEWPATH
 };
 
 // This definition is used to denote events with a special delay value;
@@ -82,7 +80,7 @@ typedef struct
 } EV_S_NOISE;
 
 
-void    AddGameEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData);
+void    AddGameEvent(GameEvent, UINT16 usDelay, PTR pEventData);
 BOOLEAN DequeAllGameEvents(void);
 BOOLEAN DequeueAllDemandGameEvents(void);
 
