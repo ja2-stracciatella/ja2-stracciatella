@@ -117,7 +117,6 @@ static BOOLEAN TypeExistsInLevel(const LEVELNODE* pStartNode, UINT32 fType, UINT
 // #################################################################
 
 LEVELNODE* AddObjectToTail(const UINT32 iMapIndex, const UINT16 usIndex)
-try
 {
 	LEVELNODE* const n = CreateLevelNode();
 	n->usIndex = usIndex;
@@ -130,7 +129,6 @@ try
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_OBJECTS);
 	return n;
 }
-catch (...) { return 0; }
 
 
 LEVELNODE* AddObjectToHead(const UINT32 iMapIndex, const UINT16 usIndex)
