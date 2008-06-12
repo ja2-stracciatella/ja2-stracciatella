@@ -44,6 +44,7 @@ static UINT16 SetFrameByDir(UINT16 frame, const ANITILE* const a)
 
 
 ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
+try
 {
 	ANITILE* const a = MALLOC(ANITILE);
 
@@ -63,8 +64,7 @@ ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 		if (parms->zCachedFile != NULL)
 		{
 			cached_tile = GetCachedTile(parms->zCachedFile);
-			if (cached_tile == -1) return NULL;
-			tile_index = cached_tile + TILE_CACHE_START_INDEX;
+			tile_index  = cached_tile + TILE_CACHE_START_INDEX;
 		}
 
 		// allocate new tile
@@ -140,6 +140,7 @@ ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 	pAniTileHead = a;
 	return a;
 }
+catch (...) { return 0; }
 
 
 // Loop throug all ani tiles and remove...

@@ -110,7 +110,6 @@ static INT16 FindCacheStructDataIndex(const char* cFilename)
 
 
 INT32 GetCachedTile(const char* const filename)
-try
 {
 	INT32 idx = -1;
 
@@ -181,7 +180,6 @@ try
 
 	return idx;
 }
-catch (...) { return -1; }
 
 
 BOOLEAN RemoveCachedTile( INT32 iCachedTile )
