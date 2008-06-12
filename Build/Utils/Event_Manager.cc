@@ -38,8 +38,7 @@ void ShutdownEventManager(void)
 static EventList* GetQueue(EventQueueID ubQueueID);
 
 
-BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, EventQueueID ubQueueID)
-try
+void AddEvent(UINT32 const uiEvent, UINT16 const usDelay, PTR const pEventData, UINT32 const uiDataSize, EventQueueID const ubQueueID)
 {
 	EVENT* pEvent = MALLOCE(EVENT, uiDataSize);
 	pEvent->TimeStamp  = GetJA2Clock();
@@ -52,9 +51,7 @@ try
 	// Add event to queue
 	EventList* const hQueue = GetQueue(ubQueueID);
 	hQueue->Add(pEvent, hQueue->Size());
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 EVENT* RemoveEvent(UINT32 uiIndex, EventQueueID ubQueueID)

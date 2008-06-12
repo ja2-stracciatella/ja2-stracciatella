@@ -1,6 +1,5 @@
 #include "Event_Manager.h"
 #include "Timer_Control.h"
-#include "WCheck.h"
 #include "Event_Pump.h"
 #include "Soldier_Control.h"
 #include "Overhead.h"
@@ -31,6 +30,7 @@ BOOLEAN AddGameEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData)
 
 
 static BOOLEAN AddGameEventToQueue(UINT32 const uiEvent, UINT16 const usDelay, PTR const pEventData, EventQueueID const ubQueueID)
+try
 {
 	// Switch on event type and set size accordingly
 	UINT32 uiDataSize;
@@ -48,9 +48,10 @@ static BOOLEAN AddGameEventToQueue(UINT32 const uiEvent, UINT16 const usDelay, P
 			return FALSE;
 	}
 
-	CHECKF(AddEvent(uiEvent, usDelay, pEventData, uiDataSize, ubQueueID));
+	AddEvent(uiEvent, usDelay, pEventData, uiDataSize, ubQueueID);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN ExecuteGameEvent(EVENT* pEvent);

@@ -25,7 +25,7 @@ enum EventQueueID
 void InitializeEventManager(void);
 void ShutdownEventManager(void);
 
-BOOLEAN AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, EventQueueID);
+void    AddEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, UINT32 uiDataSize, EventQueueID);
 EVENT*  RemoveEvent(UINT32 uiIndex, EventQueueID);
 EVENT*  PeekEvent(UINT32 uiIndex, EventQueueID);
 BOOLEAN FreeEvent(EVENT* pEvent);
