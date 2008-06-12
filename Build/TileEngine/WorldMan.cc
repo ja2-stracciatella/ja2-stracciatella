@@ -1052,7 +1052,6 @@ void AddExclusiveShadow(UINT32 iMapIndex, UINT16 usIndex)
 
 
 LEVELNODE* AddShadowToHead(const UINT32 iMapIndex, const UINT16 usIndex)
-try
 {
 	LEVELNODE* const n = CreateLevelNode();
 	n->usIndex = usIndex;
@@ -1065,7 +1064,6 @@ try
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_SHADOWS);
 	return n;
 }
-catch (...) { return 0; }
 
 
 static BOOLEAN RemoveShadow(UINT32 iMapIndex, UINT16 usIndex)
