@@ -1696,7 +1696,6 @@ BOOLEAN RemoveAllOnRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 // #################################################################
 
 LEVELNODE* AddTopmostToTail(const UINT32 iMapIndex, const UINT16 usIndex)
-try
 {
 	LEVELNODE* const n = CreateLevelNode();
 	n->usIndex = usIndex;
@@ -1709,13 +1708,12 @@ try
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_TOPMOST);
 	return n;
 }
-catch (...) { return 0; }
 
 
 LEVELNODE* AddUIElem(UINT32 iMapIndex, UINT16 usIndex, INT8 sRelativeX, INT8 sRelativeY)
+try
 {
 	LEVELNODE* pTopmost = AddTopmostToTail(iMapIndex, usIndex);
-	CHECKN(pTopmost != NULL);
 
 	// Set flags
 	pTopmost->uiFlags		|= LEVELNODE_USERELPOS;
@@ -1725,6 +1723,7 @@ LEVELNODE* AddUIElem(UINT32 iMapIndex, UINT16 usIndex, INT8 sRelativeX, INT8 sRe
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_TOPMOST);
 	return pTopmost;
 }
+catch (...) { return 0; }
 
 
 LEVELNODE* AddTopmostToHead(const UINT32 iMapIndex, const UINT16 usIndex)
