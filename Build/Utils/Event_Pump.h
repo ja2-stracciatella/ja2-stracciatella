@@ -82,7 +82,7 @@ typedef struct
 } EV_S_NOISE;
 
 
-BOOLEAN AddGameEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData);
+void    AddGameEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData);
 BOOLEAN DequeAllGameEvents(void);
 BOOLEAN DequeueAllDemandGameEvents(void);
 

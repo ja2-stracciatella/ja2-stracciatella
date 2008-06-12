@@ -13,25 +13,19 @@
 static void AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, EventQueueID ubQueueID);
 
 
-BOOLEAN AddGameEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData)
-try
+void AddGameEvent(UINT32 const uiEvent, UINT16 const usDelay, PTR const pEventData)
 {
 	if (usDelay == DEMAND_EVENT_DELAY)
 	{
 		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("AddGameEvent: Sending Local #%d", uiEvent));
 		AddGameEventToQueue(uiEvent, 0, pEventData, DEMAND_EVENT_QUEUE);
 	}
-	else if (uiEvent < NUM_EVENTS)
+	else
 	{
 		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("AddGameEvent: Sending Local #%d", uiEvent));
 		AddGameEventToQueue(uiEvent, usDelay, pEventData, PRIMARY_EVENT_QUEUE);
 	}
-	// There is an error with the event
-	else
-		return(FALSE);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void AddGameEventToQueue(UINT32 const uiEvent, UINT16 const usDelay, PTR const pEventData, EventQueueID const ubQueueID)
