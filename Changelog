@@ -1,3 +1,4 @@
+(r4357) Make the map editor available via the command line parameter -editor.
 (r4303) Fix a vanilla bug, which restored a wrong amount of breath points at the start of the turn.
 
 v0.10 - 2008-06-02 - Caramel

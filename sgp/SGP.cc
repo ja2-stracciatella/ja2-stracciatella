@@ -17,12 +17,14 @@
 #include "FileMan.h"
 #include "Font.h"
 #include "GameLoop.h"
+#include "Init.h" // XXX should not be used in SGP
 #include "Input.h"
 #include "Intro.h"
 #include "JA2_Splash.h"
 #include "MemMan.h"
 #include "Random.h"
 #include "SGP.h"
+#include "SaveLoadGame.h" // XXX should not be used in SGP
 #include "SoundMan.h"
 #include "VObject.h"
 #include "Video.h"
@@ -46,7 +48,6 @@ static BOOLEAN gfApplicationActive;
 BOOLEAN gfProgramIsRunning;
 static BOOLEAN gfGameInitialized = FALSE;
 
-CHAR8		gzCommandLine[100];		// Command line given
 
 #if 0 // XXX TODO
 INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LPARAM lParam)
@@ -308,7 +309,6 @@ try
 #endif
 
 	if (!ParseParameters(argv)) return EXIT_FAILURE;
-	if (argc > 1 && argv[1] != NULL) strlcpy(gzCommandLine, argv[1], lengthof(gzCommandLine));
 
 	if (!InitializeStandardGamingPlatform())
 	{
@@ -370,25 +370,50 @@ static BOOLEAN ParseParameters(char* const argv[])
 	if (name == NULL) return TRUE; // argv does not even contain the program name
 
 	BOOLEAN success = TRUE;
-	while (*++argv != NULL)
+	for (;;)
 	{
-		if (strcmp(*argv, "-fullscreen") == 0)
+		char const* const arg = *++argv;
+		if (!arg) break;
+
+		if (strcmp(arg, "-fullscreen") == 0)
 		{
 			VideoSetFullScreen(TRUE);
 		}
-		else if (strcmp(*argv, "-nosound") == 0)
+		else if (strcmp(arg, "-nosound") == 0)
 		{
 			SoundEnableSound(FALSE);
 		}
-		else if (strcmp(*argv, "-window") == 0)
+		else if (strcmp(arg, "-window") == 0)
 		{
 			VideoSetFullScreen(FALSE);
 		}
+#if defined JA2BETAVERSION
+		else if (strcmp(arg, "-quicksave") == 0)
+		{
+			/* This allows the QuickSave Slots to be autoincremented, i.e. everytime
+			 * the user saves, there will be a new quick save file */
+			gfUseConsecutiveQuickSaveSlots = TRUE;
+		}
+		else if (strcmp(arg, "-domaps") == 0)
+		{
+			g_game_mode = GAME_MODE_MAP_UTILITY;
+		}
+#	if defined JA2EDITOR
+		else if (strcmp(arg, "-editor") == 0)
+		{
+			g_game_mode = GAME_MODE_EDITOR;
+		}
+		else if (strcmp(arg, "-editorauto") == 0)
+		{
+			g_game_mode = GAME_MODE_EDITOR_AUTO;
+		}
+#	endif
+#endif
 		else
 		{
-			if (strcmp(*argv, "-help") != 0)
+			if (strcmp(arg, "-help") != 0)
 			{
-				fprintf(stderr, "Unknown switch \"%s\"\n", *argv);
+				fprintf(stderr, "Unknown switch \"%s\"\n", arg);
 			}
 			success = FALSE;
 		}
@@ -398,6 +423,9 @@ static BOOLEAN ParseParameters(char* const argv[])
 	{
 		fprintf(stderr,
 			"Usage: %s [options]\n"
+#if defined JA2BETAVERSION && defined JA2EDITOR
+			"  -editor      Start the map editor\n"
+#endif
 			"  -fullscreen  Start the game in fullscreen mode\n"
 			"  -help        Display this information\n"
 			"  -nosound     Turn the sound and music off\n"

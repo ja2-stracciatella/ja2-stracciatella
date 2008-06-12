@@ -2,7 +2,6 @@
 #include "HImage.h"
 #include "Init.h"
 #include "Local.h"
-#include "SGP.h"
 #include "Screens.h"
 #include "Strategic_Movement_Costs.h"
 #include "Sys_Globals.h"
@@ -47,12 +46,11 @@
 #endif
 
 
+GameMode g_game_mode = GAME_MODE_GAME;
+
+
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
 // tasks which will run the game
-
-#ifdef JA2BETAVERSION
-extern	BOOLEAN	gfUseConsecutiveQuickSaveSlots;
-#endif
 
 
 ScreenID InitializeJA2(void)
@@ -118,53 +116,34 @@ try
 	#endif
 #endif
 
-#ifdef JA2BETAVERSION
-	// CHECK COMMANDLINE FOR SPECIAL UTILITY
-	if ( strcmp( gzCommandLine, "-DOMAPS" ) == 0 )
+	switch (g_game_mode)
 	{
-		return( MAPUTILITY_SCREEN );
-	}
+#if defined JA2BETAVERSION
+		case GAME_MODE_MAP_UTILITY: return MAPUTILITY_SCREEN;
+
+#	if defined JA2EDITOR
+		case GAME_MODE_EDITOR:
+			DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Beginning JA2 using -editor commandline argument...");
+			gfAutoLoadA9 = FALSE;
+			goto editor;
+
+		case GAME_MODE_EDITOR_AUTO:
+			DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Beginning JA2 using -editorauto commandline argument...");
+			gfAutoLoadA9 = TRUE;
+editor:
+			//For editor purposes, need to know the default map file.
+			strcpy(g_filename, "none");
+			//also set the sector
+			gWorldSectorX            = 0;
+			gWorldSectorY            = 0;
+			gfIntendOnEnteringEditor = TRUE;
+			gGameOptions.fGunNut     = TRUE;
+			return GAME_SCREEN;
+#	endif
 #endif
 
-#ifdef JA2BETAVERSION
-	//This allows the QuickSave Slots to be autoincremented, ie everytime the user saves, there will be a new quick save file
-	if (strcasecmp(gzCommandLine, "-quicksave") == 0)
-	{
-		gfUseConsecutiveQuickSaveSlots = TRUE;
+		default: return INIT_SCREEN;
 	}
-#endif
-
-#if defined JA2BETAVERSION && defined JA2EDITOR
-	// CHECK COMMANDLINE FOR SPECIAL UTILITY
-	if( !strcmp( gzCommandLine, "-EDITORAUTO" ) )
-	{
-		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Beginning JA2 using -EDITORAUTO commandline argument...");
-		//For editor purposes, need to know the default map file.
-		strcpy(g_filename, "none");
-		//also set the sector
-		gWorldSectorX = 0;
-		gWorldSectorY = 0;
-		gfAutoLoadA9 = TRUE;
-		gfIntendOnEnteringEditor = TRUE;
-		gGameOptions.fGunNut = TRUE;
-		return( GAME_SCREEN );
-	}
-	if ( strcmp( gzCommandLine, "-EDITOR" ) == 0 )
-	{
-		DebugMsg(TOPIC_JA2EDITOR, DBG_LEVEL_1, "Beginning JA2 using -EDITOR commandline argument...");
-		//For editor purposes, need to know the default map file.
-		strcpy(g_filename, "none");
-		//also set the sector
-		gWorldSectorX = 0;
-		gWorldSectorY = 0;
-		gfAutoLoadA9 = FALSE;
-		gfIntendOnEnteringEditor = TRUE;
-		gGameOptions.fGunNut = TRUE;
-		return( GAME_SCREEN );
-	}
-#endif
-
-	return( INIT_SCREEN );
 }
 catch (...) { return ERROR_SCREEN; }
 
