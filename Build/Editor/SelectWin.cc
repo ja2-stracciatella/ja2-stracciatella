@@ -854,6 +854,14 @@ static void SelWinClkCallback(GUI_BUTTON* button, INT32 reason)
 			}
 		}
 	}
+	else if (reason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		ScrollSelWinUp();
+	}
+	else if (reason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		ScrollSelWinDown();
+	}
 }
 
 //When a selection window is up, the file information of the picture will display
