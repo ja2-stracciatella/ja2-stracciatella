@@ -402,10 +402,7 @@ try
 	DB_STRUCTURE_TILE	*		pTile;
 
 	// set pointers to the DBStructure and Tile
-	CHECKN( pDBStructureRef );
-	CHECKN( pDBStructureRef->pDBStructure );
 	pDBStructure = pDBStructureRef->pDBStructure;
-	CHECKN( pDBStructureRef->ppTile );
 	pTile = pDBStructureRef->ppTile[ubTileNum];
 	CHECKN( pTile );
 
