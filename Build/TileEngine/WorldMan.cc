@@ -244,7 +244,6 @@ BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 #ifdef JA2EDITOR
 
 LEVELNODE* AddLandToTail(const UINT32 iMapIndex, const UINT16 usIndex)
-try
 {
 	LEVELNODE* const n = CreateLevelNode();
 	n->usIndex = usIndex;
@@ -263,7 +262,6 @@ try
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_LAND);
 	return n;
 }
-catch (...) { return 0; }
 
 #endif
 
