@@ -210,10 +210,11 @@ void DeinitializeWorld( )
 }
 
 
-static BOOLEAN AddTileSurface(const char* Filename, UINT32 ubType, UINT8 ubTilesetID);
+static void AddTileSurface(char const* Filename, UINT32 ubType, UINT8 ubTilesetID);
 
 
 static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID)
+try
 {
 	UINT32					uiLoop;
 
@@ -262,19 +263,19 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 		// Adjust for tileset position
 		char AdjustedFilename[128];
 		sprintf(AdjustedFilename, "TILESETS/%d/%s", tileset_to_add, filename);
-		if (!AddTileSurface(AdjustedFilename, uiLoop, tileset_to_add))
-		{
-			DestroyTileSurfaces();
-			return FALSE;
-		}
+		AddTileSurface(AdjustedFilename, uiLoop, tileset_to_add);
 	}
 
 	return( TRUE );
 }
+catch (...)
+{
+	DestroyTileSurfaces();
+	return FALSE;
+}
 
 
-static BOOLEAN AddTileSurface(const char* Filename, UINT32 ubType, UINT8 ubTilesetID)
-try
+static void AddTileSurface(char const* const Filename, UINT32 const ubType, UINT8 const ubTilesetID)
 {
 	// Delete the surface first!
 	if ( gTileSurfaceArray[ ubType ] != NULL )
@@ -302,10 +303,7 @@ try
 	}
 
 	gbNewTileSurfaceLoaded[ ubType ] = TRUE;
-
-  return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 extern BOOLEAN gfLoadShadeTablesFromTextFile;
