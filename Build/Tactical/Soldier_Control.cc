@@ -606,6 +606,7 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 
 
 BOOLEAN CreateSoldierCommon(SOLDIERTYPE* const s)
+try
 {
 	//if we are loading a saved game, we DO NOT want to reset the opplist, look for enemies, or say a dying commnet
 	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
@@ -645,51 +646,47 @@ BOOLEAN CreateSoldierCommon(SOLDIERTYPE* const s)
 	}
 
 	// Create frame cache
-	if (!InitAnimationCache(s->ubID, &s->AnimCache))
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed animation cache creation");
-		goto fail;
-	}
+	InitAnimationCache(s->ubID, &s->AnimCache);
 
+	UINT16 ani_state = s->usAnimState;
+	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 	{
-		UINT16 ani_state = s->usAnimState;
-		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
+		// Init new soldier state
+		// OFFSET FIRST ANIMATION FRAME FOR NEW MERCS
+		EVENT_InitNewSoldierAnim(s, ani_state, ani_state == STANDING ? Random(10) : 0, TRUE);
+	}
+	else
+	{
+		/// if we don't have a world loaded, and are in a bad anim, goto standing.
+		UINT16 ani_code = s->usAniCode;
+		if (!gfWorldLoaded)
 		{
-			// Init new soldier state
-			// OFFSET FIRST ANIMATION FRAME FOR NEW MERCS
-			EVENT_InitNewSoldierAnim(s, ani_state, ani_state == STANDING ? Random(10) : 0, TRUE);
-		}
-		else
-		{
-			/// if we don't have a world loaded, and are in a bad anim, goto standing.
-			UINT16 ani_code = s->usAniCode;
-			if (!gfWorldLoaded)
+			switch (ani_state)
 			{
-				switch (ani_state)
-				{
-					case HOPFENCE:
-					case CLIMBDOWNROOF:
-					case FALLFORWARD_ROOF:
-					case FALLOFF:
-					case CLIMBUPROOF:
-						ani_state = STANDING;
-						ani_code  = 0;
-						break;
-				}
+				case HOPFENCE:
+				case CLIMBDOWNROOF:
+				case FALLFORWARD_ROOF:
+				case FALLOFF:
+				case CLIMBUPROOF:
+					ani_state = STANDING;
+					ani_code  = 0;
+					break;
 			}
-			EVENT_InitNewSoldierAnim(s, ani_state, ani_code, TRUE);
 		}
+		EVENT_InitNewSoldierAnim(s, ani_state, ani_code, TRUE);
 	}
 
 	if (!CreateSoldierPalettes(s))
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed in creating soldier palettes");
-		goto fail;
+		DeleteSoldier(s);
+		return FALSE;
 	}
 
 	return TRUE;
-
-fail:
+}
+catch (...)
+{
 	DeleteSoldier(s);
 	return FALSE;
 }

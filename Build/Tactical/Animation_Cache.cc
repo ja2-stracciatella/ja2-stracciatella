@@ -14,8 +14,7 @@
 static const UINT32 guiCacheSize = MIN_CACHE_SIZE;
 
 
-BOOLEAN InitAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
-try
+void InitAnimationCache(UINT16 const usSoldierID, AnimationSurfaceCacheType* const pAnimCache)
 {
 	UINT32 cnt;
 
@@ -36,10 +35,7 @@ try
 
 	// Zero surface databse history for this soldeir
 	ClearAnimationSurfacesUsageHistory( usSoldierID );
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )

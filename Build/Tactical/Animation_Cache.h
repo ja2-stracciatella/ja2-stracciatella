@@ -16,7 +16,7 @@ typedef struct
 } AnimationSurfaceCacheType;
 
 BOOLEAN GetCachedAnimationSurface( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache, UINT16 usSurfaceIndex, UINT16 usCurrentAnimation );
-BOOLEAN InitAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache );
+void InitAnimationCache(UINT16 usSoldierID, AnimationSurfaceCacheType*);
 void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache );
 void UnLoadCachedAnimationSurfaces( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache );
 
