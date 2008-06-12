@@ -222,12 +222,6 @@ try
 	//UINT32					uiLength;
 	//UINT16					uiFillColor;
 
-	// If no Tileset filenames are given, return error
-	if (ppTileSurfaceFilenames == NULL)
-	{
-		return FALSE;
-	}
-
 	//uiFillColor = Get16BPPColor(FROMRGB(223, 223, 223));
 	//ColorFillVideoSurfaceArea( FRAME_BUFFER, 20, 399, 622, 420, uiFillColor );
 	//ColorFillVideoSurfaceArea( FRAME_BUFFER, 21, 400, 621, 419, 0 );
