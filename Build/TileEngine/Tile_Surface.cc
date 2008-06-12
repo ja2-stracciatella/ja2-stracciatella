@@ -54,11 +54,7 @@ try
 
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, cStructureFilename );
 
-		if (!AddZStripInfoToVObject(hVObject, pStructureFileRef, FALSE, 0))
-		{
-			SET_ERROR(  "ZStrip creation error: %s", cStructureFilename );
-			return NULL;
-		}
+		AddZStripInfoToVObject(hVObject, pStructureFileRef, FALSE, 0);
 	}
 
 	SGP::PODObj<TILE_IMAGERY> pTileSurf;

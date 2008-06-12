@@ -1669,10 +1669,9 @@ void DebugStructurePage1( void )
 }
 
 
-BOOLEAN AddZStripInfoToVObject(const HVOBJECT hVObject, const STRUCTURE_FILE_REF* const pStructureFileRef, const BOOLEAN fFromAnimation, INT16 sSTIStartIndex)
-try
+void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* const pStructureFileRef, BOOLEAN const fFromAnimation, INT16 sSTIStartIndex)
 {
-	if (pStructureFileRef->usNumberOfStructuresStored == 0) return TRUE;
+	if (pStructureFileRef->usNumberOfStructuresStored == 0) return;
 
 	BOOLEAN             fFound       = FALSE;
 	const DB_STRUCTURE* pDBStructure = NULL;
@@ -1702,7 +1701,7 @@ try
 	}
 
 	// if no multi-tile images in this vobject, that's okay... return!
-	if (!fFound) return TRUE;
+	if (!fFound) return;
 
 	UINT         const zcount = hVObject->SubregionCount();
 	ZStripInfo** const zinfo  = MALLOCNZ(ZStripInfo*, zcount);
@@ -1928,13 +1927,11 @@ try
 			}
 		}
 		MemFree(zinfo);
-		return FALSE;
+		throw;
 	}
 
 	hVObject->ppZStripInfo = zinfo;
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLevel, INT8 *pStructHeight, STRUCTURE ** ppTallestStructure, BOOLEAN fWallsBlock )
