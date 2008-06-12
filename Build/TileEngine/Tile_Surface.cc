@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "HImage.h"
 #include "PODObj.h"
 #include "Structure.h"
@@ -48,8 +50,7 @@ try
 
 		if (hVObject->SubregionCount() != pStructureFileRef->usNumberOfStructures)
 		{
-			SET_ERROR("Structure file error: %s", cStructureFilename);
-			return NULL;
+			throw std::runtime_error("Structure file error");
 		}
 
 		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, cStructureFilename );
@@ -82,7 +83,7 @@ try
 catch (...)
 {
 	SET_ERROR("Could not load tile file: %s", cFilename);
-	return NULL;
+	throw;
 }
 
 

@@ -274,6 +274,7 @@ static BOOLEAN LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTiles
 
 
 static BOOLEAN AddTileSurface(const char* Filename, UINT32 ubType, UINT8 ubTilesetID)
+try
 {
 	// Delete the surface first!
 	if ( gTileSurfaceArray[ ubType ] != NULL )
@@ -283,8 +284,6 @@ static BOOLEAN AddTileSurface(const char* Filename, UINT32 ubType, UINT8 ubTiles
 	}
 
 	TILE_IMAGERY* const TileSurf = LoadTileSurface(Filename);
-	if ( TileSurf == NULL )
-		return( FALSE );
 
 	TileSurf->fType							= ubType;
 
@@ -306,6 +305,8 @@ static BOOLEAN AddTileSurface(const char* Filename, UINT32 ubType, UINT8 ubTiles
 
   return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 extern BOOLEAN gfLoadShadeTablesFromTextFile;
 

@@ -110,6 +110,7 @@ static INT16 FindCacheStructDataIndex(const char* cFilename)
 
 
 INT32 GetCachedTile(const char* const filename)
+try
 {
 	INT32 idx = -1;
 
@@ -163,7 +164,6 @@ INT32 GetCachedTile(const char* const filename)
 	TILE_CACHE_ELEMENT* const tce = &gpTileCache[idx];
 
 	tce->pImagery = LoadTileSurface(filename);
-	if (tce->pImagery == NULL) return -1;
 
 	strcpy(tce->zName, filename);
 	tce->sHits = 1;
@@ -181,6 +181,7 @@ INT32 GetCachedTile(const char* const filename)
 
 	return idx;
 }
+catch (...) { return -1; }
 
 
 BOOLEAN RemoveCachedTile( INT32 iCachedTile )
