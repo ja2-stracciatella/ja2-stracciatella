@@ -3,7 +3,6 @@
 #include "AIMLinks.h"
 #include "AIM.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "WordWrap.h"
 #include "Text.h"
 #include "Multi_Language_Graphic_Utils.h"

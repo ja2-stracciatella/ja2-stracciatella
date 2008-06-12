@@ -24,7 +24,6 @@
 #include "VObject.h"
 #include "VSurface.h"
 #include "Video.h"
-#include "WCheck.h"
 #include "WordWrap.h"
 
 #ifdef JA2DEMOADS

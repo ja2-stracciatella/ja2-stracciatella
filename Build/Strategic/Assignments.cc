@@ -68,7 +68,6 @@
 #include "Button_System.h"
 #include "ScreenIDs.h"
 #include "VSurface.h"
-#include "WCheck.h"
 
 
 // various reason an assignment can be aborted before completion

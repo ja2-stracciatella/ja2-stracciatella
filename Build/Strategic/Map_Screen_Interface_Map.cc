@@ -20,7 +20,6 @@
 #include "VSurface.h"
 #include "Video.h"
 #include "VObject_Blitters.h"
-#include "WCheck.h"
 #include "Assignments.h"
 #include "Squads.h"
 #include "Message.h"

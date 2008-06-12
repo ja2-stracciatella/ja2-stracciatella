@@ -1,7 +1,6 @@
 #include "Buffer.h"
 #include "Font_Control.h"
 #include "Types.h"
-#include "WCheck.h"
 #include "Overhead.h"
 #include "AI.h"
 #include "Soldier_Profile.h"

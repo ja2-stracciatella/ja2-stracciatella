@@ -7,7 +7,6 @@
 #include "Quests.h"
 #include "Soldier_Control.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "WordWrap.h"
 #include "Render_Dirty.h"

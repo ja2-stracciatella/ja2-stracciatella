@@ -12,7 +12,6 @@
 #include "LibraryDataBase.h"
 #include "MemMan.h"
 #include "PODObj.h"
-#include "WCheck.h"
 
 #ifdef _WIN32
 #	include <direct.h>

@@ -3,7 +3,6 @@
 #include "BobbyRGuns.h"
 #include "BobbyR.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "Interface_Items.h"
 #include "Text.h"
 #include "Button_System.h"

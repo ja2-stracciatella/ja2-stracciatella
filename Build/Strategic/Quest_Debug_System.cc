@@ -5,7 +5,6 @@
 #include "Types.h"
 #include "Quest_Debug_System.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "Font_Control.h"
 #include "Video.h"
 #include "Game_Clock.h"

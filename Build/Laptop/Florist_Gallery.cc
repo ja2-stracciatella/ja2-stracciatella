@@ -2,7 +2,6 @@
 #include "Florist.h"
 #include "Florist_Gallery.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Encrypted_File.h"

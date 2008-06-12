@@ -12,7 +12,6 @@
 #include "Overhead.h"
 #include "Soldier_Macros.h"
 #include "Line.h"
-#include "WCheck.h"
 #include "Vehicles.h"
 #include "JAScreens.h"
 #include "Video.h"

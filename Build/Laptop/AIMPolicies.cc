@@ -4,7 +4,6 @@
 #include "AIMPolicies.h"
 #include "AIM.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "WordWrap.h"
 #include "Encrypted_File.h"
 #include "Text.h"

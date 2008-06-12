@@ -5,7 +5,6 @@
 #include "AIM.h"
 #include "VObject.h"
 #include "WordWrap.h"
-#include "WCheck.h"
 #include "Encrypted_File.h"
 #include "Text.h"
 #include "Button_System.h"

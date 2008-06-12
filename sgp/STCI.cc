@@ -7,7 +7,6 @@
 #include "HImage.h"
 #include "Debug.h"
 #include "STCI.h"
-#include "WCheck.h"
 
 
 static BOOLEAN STCILoadRGB(    SGPImage*, UINT16 contents, HWFILE, STCIHeader const*);

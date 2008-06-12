@@ -10,7 +10,6 @@
 #include "Button_System.h"
 #include "Interface.h"
 #include "VSurface.h"
-#include "WCheck.h"
 #include "Input.h"
 #include "Handle_UI.h"
 #include "RenderWorld.h"
@@ -953,7 +952,6 @@ static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, INT32 iRea
 
 void InitializeSMPanel(void)
 {
-	// failing the CHECKF after this will cause you to lose your mouse
 	guiSMPanel                     = AddVideoObjectFromFile("INTERFACE/inventory_bottom_panel.STI");
 	guiSMObjects                   = AddVideoObjectFromFile("INTERFACE/inventory_gold_front.sti");
 	guiSMObjects2                  = AddVideoObjectFromFile("INTERFACE/inv_frn.sti");

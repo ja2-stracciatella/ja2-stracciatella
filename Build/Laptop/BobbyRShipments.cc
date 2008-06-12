@@ -3,7 +3,6 @@
 #include "BobbyRShipments.h"
 #include "BobbyR.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "Text.h"
 #include "BobbyRGuns.h"
 #include "Cursors.h"

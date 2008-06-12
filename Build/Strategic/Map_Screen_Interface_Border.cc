@@ -5,7 +5,6 @@
 #include "VSurface.h"
 #include "MouseSystem.h"
 #include "Button_System.h"
-#include "WCheck.h"
 #include "Message.h"
 #include "SysUtil.h"
 #include "MapScreen.h"

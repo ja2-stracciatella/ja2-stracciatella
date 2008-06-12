@@ -4,7 +4,6 @@
 #include "MercTextBox.h"
 #include "VObject.h"
 #include "VSurface.h"
-#include "WCheck.h"
 #include "Font_Control.h"
 #include "WordWrap.h"
 #include "Render_Dirty.h"

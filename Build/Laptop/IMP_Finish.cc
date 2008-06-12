@@ -7,7 +7,6 @@
 #include "IMPVideoObjects.h"
 #include "MessageBoxScreen.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "Timer_Control.h"
 #include "Debug.h"
 #include "Render_Dirty.h"

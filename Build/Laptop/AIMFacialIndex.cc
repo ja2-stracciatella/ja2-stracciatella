@@ -6,7 +6,6 @@
 #include "Soldier_Control.h"
 #include "VObject.h"
 #include "WordWrap.h"
-#include "WCheck.h"
 #include "AIM.h"
 #include "Soldier_Profile.h"
 #include "Text.h"

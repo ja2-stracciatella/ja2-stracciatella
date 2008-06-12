@@ -14,7 +14,6 @@
 #include "Button_System.h"
 #include "Interface.h"
 #include "VSurface.h"
-#include "WCheck.h"
 #include "Input.h"
 #include "Handle_UI.h"
 #include "Animation_Control.h"
@@ -236,8 +235,6 @@ void InitializeTacticalInterface()
 	iIconImages[ EXPLOSIVE_DOOR_IMAGES ]	= UseLoadedButtonImage(iIconImages[ OPEN_DOOR_IMAGES  ], -1, 15, 16, 17, -1 );
 
 	// Load interface panels
-	// failing the CHECKF after this will cause you to lose your mouse
-
 	guiCLOSE         = AddVideoObjectFromFile("INTERFACE/p_close.sti");
 	guiDEAD          = AddVideoObjectFromFile("INTERFACE/p_dead.sti");
 	guiHATCH         = AddVideoObjectFromFile("INTERFACE/hatch.sti");
@@ -263,9 +260,6 @@ void InitializeTacticalInterface()
 	InitRadarScreen( );
 
 	InitTEAMSlots( );
-
-	// Init popup box images
-//	CHECKF( LoadTextMercPopupImages( BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER ) );
 }
 
 

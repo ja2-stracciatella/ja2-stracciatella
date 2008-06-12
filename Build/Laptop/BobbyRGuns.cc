@@ -5,7 +5,6 @@
 #include "BobbyR.h"
 #include "MessageBoxScreen.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Interface_Items.h"

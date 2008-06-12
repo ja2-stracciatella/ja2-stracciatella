@@ -6,7 +6,6 @@
 #include "Mercs.h"
 #include "MessageBoxScreen.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "WordWrap.h"
 #include "Cursors.h"
 #include "Soldier_Profile.h"

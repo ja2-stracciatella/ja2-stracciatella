@@ -5,7 +5,6 @@
 #include "LoadSaveData.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "Render_Dirty.h"
 #include "Cursors.h"
