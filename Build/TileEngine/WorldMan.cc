@@ -134,7 +134,6 @@ catch (...) { return 0; }
 
 
 LEVELNODE* AddObjectToHead(const UINT32 iMapIndex, const UINT16 usIndex)
-try
 {
 	LEVELNODE* const n = CreateLevelNode();
 	n->usIndex = usIndex;
@@ -147,7 +146,6 @@ try
 	AddObjectToMapTempFile(iMapIndex, usIndex);
 	return n;
 }
-catch (...) { return 0; }
 
 
 BOOLEAN RemoveObject(UINT32 iMapIndex, UINT16 usIndex)
