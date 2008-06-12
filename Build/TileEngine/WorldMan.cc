@@ -266,8 +266,7 @@ LEVELNODE* AddLandToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 #endif
 
 
-BOOLEAN AddLandToHead(const UINT32 iMapIndex, const UINT16 usIndex)
-try
+void AddLandToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
 	LEVELNODE* const n = CreateLevelNode();
 	n->usIndex		= usIndex;
@@ -284,9 +283,7 @@ try
 	}
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_LAND);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 #ifdef JA2EDITOR

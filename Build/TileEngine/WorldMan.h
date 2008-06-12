@@ -43,7 +43,7 @@ BOOLEAN RemoveOnRoofFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 BOOLEAN RemoveLand( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE *AddLandToTail( UINT32 iMapIndex, UINT16 usIndex );
 #endif
-BOOLEAN AddLandToHead( UINT32 iMapIndex, UINT16 usIndex );
+void AddLandToHead(UINT32 iMapIndex, UINT16 usIndex);
 #ifdef JA2EDITOR
 BOOLEAN TypeExistsInLandLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusLandIndex );
 BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );

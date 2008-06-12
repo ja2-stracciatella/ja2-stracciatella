@@ -219,6 +219,7 @@ void DeallocateTileDatabase( )
 #ifdef JA2EDITOR
 
 BOOLEAN SetLandIndex(INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType)
+try
 {
 	UINT16	usTempIndex;
 	UINT8		ubLastHighLevel=0;
@@ -249,10 +250,12 @@ BOOLEAN SetLandIndex(INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType)
 		else
 		{
 			// Otherwise, add to head
-			return( AddLandToHead( iMapIndex, usIndex ) );
+			AddLandToHead(iMapIndex, usIndex);
+			return TRUE;
 		}
 	}
 }
+catch (...) { return FALSE; }
 
 #endif
 
