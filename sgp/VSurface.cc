@@ -362,8 +362,6 @@ static BOOLEAN SetVideoSurfaceDataFromHImage(SGPVSurface* const hVSurface, const
 	// Effective width ( in PIXELS ) is Pitch ( in bytes ) converted to pitch ( IN PIXELS )
 	const UINT16 usEffectiveWidth = uiPitch / (dst_bpp / 8);
 
-	CHECKF(pDest != NULL);
-
 	// Blit Surface
 	// If rect is NULL, use entrie image size
 	SGPBox box;
