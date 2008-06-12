@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Event_Manager.h"
 #include "Timer_Control.h"
 #include "Event_Pump.h"
@@ -8,29 +10,31 @@
 #include "Debug.h"
 
 
-static BOOLEAN AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, EventQueueID ubQueueID);
+static void AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, EventQueueID ubQueueID);
 
 
 BOOLEAN AddGameEvent(UINT32 uiEvent, UINT16 usDelay, PTR pEventData)
+try
 {
 	if (usDelay == DEMAND_EVENT_DELAY)
 	{
 		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("AddGameEvent: Sending Local #%d", uiEvent));
-		return AddGameEventToQueue(uiEvent, 0, pEventData, DEMAND_EVENT_QUEUE);
+		AddGameEventToQueue(uiEvent, 0, pEventData, DEMAND_EVENT_QUEUE);
 	}
 	else if (uiEvent < NUM_EVENTS)
 	{
 		//DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("AddGameEvent: Sending Local #%d", uiEvent));
-		return AddGameEventToQueue(uiEvent, usDelay, pEventData, PRIMARY_EVENT_QUEUE);
+		AddGameEventToQueue(uiEvent, usDelay, pEventData, PRIMARY_EVENT_QUEUE);
 	}
 	// There is an error with the event
 	else
 		return(FALSE);
+	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
-static BOOLEAN AddGameEventToQueue(UINT32 const uiEvent, UINT16 const usDelay, PTR const pEventData, EventQueueID const ubQueueID)
-try
+static void AddGameEventToQueue(UINT32 const uiEvent, UINT16 const usDelay, PTR const pEventData, EventQueueID const ubQueueID)
 {
 	// Switch on event type and set size accordingly
 	UINT32 uiDataSize;
@@ -43,15 +47,11 @@ try
 		case S_NOISE:               uiDataSize = sizeof(EV_S_NOISE);               break;
 		case S_GETNEWPATH:          uiDataSize = sizeof(EV_S_GETNEWPATH);          break;
 
-		default:
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Event Pump: Unknown event type");
-			return FALSE;
+		default: throw std::logic_error("Event Pump: Unknown event type");
 	}
 
 	AddEvent(uiEvent, usDelay, pEventData, uiDataSize, ubQueueID);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN ExecuteGameEvent(EVENT* pEvent);
