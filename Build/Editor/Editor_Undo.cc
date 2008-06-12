@@ -308,7 +308,6 @@ static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIn
 static BOOLEAN AddToUndoListCmd(INT32 iMapIndex, INT32 iCmdCount)
 try
 {
-	STRUCTURE			*pStructure;
 	INT32					iCoveredMapIndex;
 	UINT8					ubLoop;
 
@@ -318,6 +317,8 @@ try
 	// Copy the world map's tile
 	SGP::PODObj<MAP_ELEMENT> pData;
 	if (!CopyMapElementFromWorld(pData, iMapIndex)) return FALSE;
+
+	STRUCTURE* pStructure = pData->pStructureHead;
 
 	// copy the room number information (it's not in the mapelement structure)
 	pUndoInfo->ubRoomNum = gubWorldRoomInfo[ iMapIndex ];
@@ -338,7 +339,6 @@ try
 	//   reference the db structure
 	//   if number of tiles > 1
 	//     add all covered tiles to undo list
-	pStructure = pData->pStructureHead;
 	while (pStructure)
 	{
 		for (ubLoop = 1; ubLoop < pStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles; ubLoop++)
