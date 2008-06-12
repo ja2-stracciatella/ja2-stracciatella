@@ -727,12 +727,10 @@ BOOLEAN OkayToAddStructureToWorld(const INT16 sBaseGridNo, const INT8 bLevel, co
 }
 
 
-static BOOLEAN AddStructureToTile(MAP_ELEMENT* pMapElement, STRUCTURE* pStructure, UINT16 usStructureID)
+static void AddStructureToTile(MAP_ELEMENT* const pMapElement, STRUCTURE* const pStructure, UINT16 const usStructureID)
 { // adds a STRUCTURE to a MAP_ELEMENT (adds part of a structure to a location on the map)
 	STRUCTURE *		pStructureTail;
 
-	CHECKF( pMapElement );
-	CHECKF( pStructure );
 	pStructureTail = pMapElement->pStructureTail;
 	if (pStructureTail == NULL)
 	{ // set the head and tail to the new structure
@@ -749,7 +747,6 @@ static BOOLEAN AddStructureToTile(MAP_ELEMENT* pMapElement, STRUCTURE* pStructur
 	{
 		pMapElement->uiFlags |= MAPELEMENT_INTERACTIVETILE;
 	}
-	return( TRUE );
 }
 
 
@@ -898,16 +895,7 @@ try
 				return( NULL );
 			}
 		}
-		if (!AddStructureToTile(&gpWorldLevelData[sGridNo], ppStructure[ubLoop], usStructureID))
-		{
-			// error! abort!
-			for (ubLoop2 = BASE_TILE; ubLoop2 < ubLoop; ubLoop2++)
-			{
-				DeleteStructureFromTile( &(gpWorldLevelData[ppStructure[ubLoop2]->sGridNo]), ppStructure[ubLoop2] );
-			}
-			MemFree( ppStructure );
-			return( NULL );
-		}
+		AddStructureToTile(&gpWorldLevelData[sGridNo], ppStructure[ubLoop], usStructureID);
 	}
 
 	pBaseStructure = ppStructure[BASE_TILE];
