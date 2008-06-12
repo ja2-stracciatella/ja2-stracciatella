@@ -1010,8 +1010,7 @@ void HideStructOfGivenType(UINT32 const iMapIndex, UINT32 const fType, BOOLEAN c
 // Shadow layer
 // #################################################################
 
-BOOLEAN AddShadowToTail(const UINT32 iMapIndex, const UINT16 usIndex)
-try
+void AddShadowToTail(UINT32 const iMapIndex, UINT16 const usIndex)
 {
 	LEVELNODE* const n = CreateLevelNode();
 	n->usIndex = usIndex;
@@ -1022,9 +1021,7 @@ try
 	*anchor = n;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_SHADOWS);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 //Kris:  identical shadows can exist in the same gridno, though it makes no sense
