@@ -618,7 +618,7 @@ static void RenderItemDetails(void)
 	MPrint(364, 62, L"Enemy");
 	yp = 20;
 	xp = 5;
-	if( gubSummaryItemMode != ITEMMODE_ENEMY && gpWorldItemsSummaryArray )
+	if (gubSummaryItemMode != ITEMMODE_ENEMY)
 	{
 		memset( uiTriggerQuantity, 0, 32 );
 		memset( uiActionQuantity, 0, 32 );
@@ -2575,9 +2575,12 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	ShowButton( iSummaryButton[ SUMMARY_SCIFI ] );
 	ShowButton( iSummaryButton[ SUMMARY_REAL ] );
 	ShowButton( iSummaryButton[ SUMMARY_ENEMY ] );
-	gpWorldItemsSummaryArray = MALLOCN(WORLDITEM, uiNumItems);
 	gusWorldItemsSummaryArraySize = gpCurrentSectorSummary->usNumItems;
-	FileRead(hfile, gpWorldItemsSummaryArray, sizeof(WORLDITEM) * uiNumItems);
+	if (gusWorldItemsSummaryArraySize != 0)
+	{
+		gpWorldItemsSummaryArray = MALLOCN(WORLDITEM, uiNumItems);
+		FileRead(hfile, gpWorldItemsSummaryArray, sizeof(WORLDITEM) * uiNumItems);
+	}
 
 	//NOW, do the enemy's items!
 	//We need to do two passes.  The first pass simply processes all the enemies and counts all the droppable items

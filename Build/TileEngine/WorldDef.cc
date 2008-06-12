@@ -2075,10 +2075,7 @@ try
 		pSummary->usNumItems = (UINT16)temp;
 		//Important:  Saves the file position (byte offset) of the position where the numitems
 		//            resides.  Checking this value and comparing to usNumItems will ensure validity.
-		if (pSummary->usNumItems)
-		{
-			pSummary->uiNumItemsPosition = pBuffer - pBufferHead - 4;
-		}
+		pSummary->uiNumItemsPosition = pBuffer - pBufferHead - 4;
 		//Skip the contents of the world items.
 		pBuffer += sizeof(WORLDITEM) * pSummary->usNumItems;
 	}

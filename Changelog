@@ -1,3 +1,4 @@
+(r4366) Fix a vanilla crash in the editor when looking at the items summary and there are no items in the current sector.
 (r4361) Enable scrolling the items lists in the editor with the mouse wheel.
 (r4360) Enable scrolling the terrain and building graphics lists in the editor with the mouse wheel.
 (r4358) Fix a vanilla buffer underrun, which occurs when displaying a multiline text containing a word longer than the maximum line width.  The most prominent example is the item view in the map editor with the German data files ("Leichte Panzerabwehrwaffe").
