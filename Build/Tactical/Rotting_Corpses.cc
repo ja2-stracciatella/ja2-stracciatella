@@ -449,7 +449,7 @@ try
 	}
 
 	// Check if on roof or not...
-	const UINT8 ubLevelID = (c->def.bLevel == 0 ? ANI_STRUCT_LEVEL : ANI_ONROOF_LEVEL);
+	AnimationLevel const ubLevelID = (c->def.bLevel == 0 ? ANI_STRUCT_LEVEL : ANI_ONROOF_LEVEL);
 
 	ANITILE_PARAMS AniParams;
 	memset(&AniParams, 0, sizeof(AniParams));

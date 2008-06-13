@@ -25,13 +25,16 @@
 #define ANITILE_USE_4DIRECTION_FOR_START_FRAME							0x02000000
 
 
-#define	ANI_LAND_LEVEL					1
-#define	ANI_SHADOW_LEVEL				2
-#define	ANI_OBJECT_LEVEL				3
-#define	ANI_STRUCT_LEVEL				4
-#define	ANI_ROOF_LEVEL					5
-#define	ANI_ONROOF_LEVEL				6
-#define ANI_TOPMOST_LEVEL				7
+enum AnimationLevel
+{
+	ANI_LAND_LEVEL    = 1,
+	ANI_SHADOW_LEVEL  = 2,
+	ANI_OBJECT_LEVEL  = 3,
+	ANI_STRUCT_LEVEL  = 4,
+	ANI_ROOF_LEVEL    = 5,
+	ANI_ONROOF_LEVEL  = 6,
+	ANI_TOPMOST_LEVEL = 7
+};
 
 
 typedef union AniUserData
@@ -81,10 +84,10 @@ typedef struct TAG_anitile
 } ANITILE;
 
 
-typedef struct TAG_anitile_params
+struct ANITILE_PARAMS
 {
 	UINT32											uiFlags;							// flags struct
-	UINT8												ubLevelID;						// Level ID for rendering layer
+	AnimationLevel              ubLevelID;						// Level ID for rendering layer
 	INT16											  sStartFrame;					// Start frame
 	INT16												sDelay;								// Delay time
 	UINT16											usTileIndex;					// Tile database index ( optional )
@@ -102,7 +105,7 @@ typedef struct TAG_anitile_params
 	UINT32											uiKeyFrame2Code;			// Key frame code
 
 	AniUserData v;
-} ANITILE_PARAMS;
+};
 
 
 typedef enum KeyFrameEnums

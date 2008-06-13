@@ -49,12 +49,12 @@ ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 {
 	ANITILE* const a = MALLOC(ANITILE);
 
-	INT32        cached_tile = -1;
-	const INT16  gridno      = parms->sGridNo;
-	const UINT8  ubLevel     = parms->ubLevelID;
-	INT16        tile_index  = parms->usTileIndex;
-	const UINT32 flags       = parms->uiFlags;
-	LEVELNODE*   l           = parms->pGivenLevelNode;
+	INT32                cached_tile = -1;
+	INT16          const gridno      = parms->sGridNo;
+	AnimationLevel const ubLevel     = parms->ubLevelID;
+	INT16                tile_index  = parms->usTileIndex;
+	UINT32         const flags       = parms->uiFlags;
+	LEVELNODE*           l           = parms->pGivenLevelNode;
 	if (flags & ANITILE_EXISTINGTILE)
 	{
 		Assert(parms->zCachedFile == NULL);
