@@ -1098,7 +1098,7 @@ typedef struct PastMercInfo
 static void DisplayAmountOnChar(const SOLDIERTYPE*);
 static void DisplayDepartedCharName(const MERCPROFILESTRUCT*, INT32 iState);
 static void DisplayDepartedCharStats(const MERCPROFILESTRUCT*, INT32 iState);
-static BOOLEAN DisplayHighLightBox(void);
+static void DisplayHighLightBox(INT32 sel_id);
 static PastMercInfo GetSelectedPastMercInfo(void);
 
 
@@ -1108,7 +1108,7 @@ static void DisplayFaceOfDisplayedMerc(void)
 	if (iCurrentPersonSelectedId == -1) return;
 
 	// highlight it
-	DisplayHighLightBox();
+	DisplayHighLightBox(iCurrentPersonSelectedId);
 
 	// if showing inventory, leave
 	if (fCurrentTeamMode)
@@ -2091,24 +2091,13 @@ static void DisplayPersonnelTextOnTitleBar(void)
 
 
 // display box around currently selected merc
-static BOOLEAN DisplayHighLightBox(void)
-try
+static void DisplayHighLightBox(INT32 const sel_id)
 {
 	// will display highlight box around selected merc
-
-	// is the current selected face valid?
-	if (iCurrentPersonSelectedId == -1)
-	{
-		// no, leave
-		return FALSE;
-	}
-
-	const INT32 x = SMALL_PORTRAIT_START_X + iCurrentPersonSelectedId % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH  - 2;
-	const INT32 y = SMALL_PORTRAIT_START_Y + iCurrentPersonSelectedId / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT - 3;
+	const INT32 x = SMALL_PORTRAIT_START_X + sel_id % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH  - 2;
+	const INT32 y = SMALL_PORTRAIT_START_Y + sel_id / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT - 3;
 	BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/PicBorde.sti", 0, x, y);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 // add to dead list
