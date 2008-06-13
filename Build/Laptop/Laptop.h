@@ -18,7 +18,7 @@ void    GoToWebPage(INT32 iPageId);
 void    WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, const SGPVObject* background);
 void    BlitTitleBarIcons(void);
 void    HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usKeyState);
-BOOLEAN RenderWWWProgramTitleBar(void);
+void    RenderWWWProgramTitleBar(void);
 void    DisplayProgramBoundingBox(BOOLEAN fMarkButtons);
 void    DoLapTopSystemMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
 void    CreateFileAndNewEmailIconFastHelpText(UINT32 uiHelpTextID, BOOLEAN fClearHelpText);

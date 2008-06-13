@@ -3099,8 +3099,7 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 }
 
 
-BOOLEAN RenderWWWProgramTitleBar(void)
-try
+void RenderWWWProgramTitleBar(void)
 {
 	// will render the title bar for the www program
 	BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/programtitlebar.sti", 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
@@ -3126,9 +3125,7 @@ try
 
 	BlitTitleBarIcons();
 	DisplayProgramBoundingBox(FALSE);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void LaptopProgramIconMinimizeCallback(MOUSE_REGION* pRegion, INT32 iReason);
