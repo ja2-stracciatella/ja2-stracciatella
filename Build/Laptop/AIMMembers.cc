@@ -2420,274 +2420,256 @@ static BOOLEAN DeleteVideoConfPopUp(void);
 
 static void InitDeleteVideoConferencePopUp(void)
 {
-	static BOOLEAN	fXRegionActive = FALSE;
-	UINT8	i;
-	UINT16	usPosX, usPosY;
-
 	//remove the face help text
 	gfAimMemberDisplayFaceHelpText = FALSE;
 
 	//Gets reset to FALSE in the HandleCurrentVideoConfMode() function
 	gfJustSwitchedVideoConferenceMode = TRUE;
 
-
 	//remove old mode
 	DeleteVideoConfPopUp();
 
-	//reset ( in case merc was going to say something
-	DelayMercSpeech( 0, 0, 0, FALSE, TRUE );
+	// reset (in case merc was going to say something)
+	DelayMercSpeech(0, 0, 0, FALSE, TRUE);
 
-	//if the video conferencing is currently displayed, put the 'x' to close it in the top right corner
-	//and disable the ability to click on the BIG face to go to different screen
-	if( ( gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE) && ( gubVideoConferencingMode != AIM_VIDEO_POPUP_MODE) )
+	/* if the video conferencing is currently displayed, put the 'x' to close it
+	 * in the top right corner and disable the ability to click on the BIG face to
+	 * go to different screen */
+	if (gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE &&
+			gubVideoConferencingMode != AIM_VIDEO_POPUP_MODE         &&
+			!giXToCloseVideoConfButton)
 	{
-		if( !fXRegionActive )
-		{
-			giXToCloseVideoConfButton = QuickCreateButton(giXToCloseVideoConfButtonImage, AIM_MEMBER_VIDEO_CONF_XCLOSE_X, AIM_MEMBER_VIDEO_CONF_XCLOSE_Y, MSYS_PRIORITY_HIGH, BtnXToCloseVideoConfButtonCallback);
-			giXToCloseVideoConfButton->SetCursor(CURSOR_LAPTOP_SCREEN);
-			giXToCloseVideoConfButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
-			fXRegionActive = TRUE;
-
-			gSelectedFaceRegion.Disable();
-		}
+		giXToCloseVideoConfButton = QuickCreateButton(giXToCloseVideoConfButtonImage, AIM_MEMBER_VIDEO_CONF_XCLOSE_X, AIM_MEMBER_VIDEO_CONF_XCLOSE_Y, MSYS_PRIORITY_HIGH, BtnXToCloseVideoConfButtonCallback);
+		giXToCloseVideoConfButton->SetCursor(CURSOR_LAPTOP_SCREEN);
+		giXToCloseVideoConfButton->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
+		gSelectedFaceRegion.Disable();
 	}
 
-
-
-	// The video conference is not displayed
-	if( gubVideoConferencingMode ==  AIM_VIDEO_NOT_DISPLAYED_MODE )
+	switch (gubVideoConferencingMode)
 	{
-		gubVideoConferencingPreviousMode = gubVideoConferencingMode;
-		gfRedrawScreen = TRUE;
+		case AIM_VIDEO_NOT_DISPLAYED_MODE:
+		{ // The video conference is not displayed
+			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
+			gfRedrawScreen = TRUE;
 
-		if( gfVideoFaceActive )
-		{
-			StopMercTalking();
+			if (gfVideoFaceActive)
+			{
+				StopMercTalking();
+				//Get rid of the talking face
+				DeleteFace(giMercFaceIndex);
+			}
 
-			//Get rid of the talking face
-			DeleteFace(giMercFaceIndex);
-		}
-
-		//if the ansering machine is currently on, turn it off
-		if( gfIsAnsweringMachineActive)
+			//if the ansering machine is currently on, turn it off
 			gfIsAnsweringMachineActive = FALSE;
 
-		gfVideoFaceActive = FALSE;
+			gfVideoFaceActive = FALSE;
 
-		if( fXRegionActive )
-		{
+			if (giXToCloseVideoConfButton)
+			{
+				RemoveButton(giXToCloseVideoConfButton);
+			}
 
-			RemoveButton(giXToCloseVideoConfButton );
-			fXRegionActive = FALSE;
-		}
+			gSelectedShutUpMercRegion.Disable();
 
-		gSelectedShutUpMercRegion.Disable();
+			//Enable the ability to click on the BIG face to go to different screen
+			gSelectedFaceRegion.Enable();
 
-		//Enable the ability to click on the BIG face to go to different screen
-		gSelectedFaceRegion.Enable();
-
-//		EnableDisableCurrentVideoConferenceButtons(FALSE);
-			if( gubVideoConferencingPreviousMode == AIM_VIDEO_HIRE_MERC_MODE )
+			if (gubVideoConferencingPreviousMode == AIM_VIDEO_HIRE_MERC_MODE)
 			{
 				// Enable the current video conference buttons
 				EnableDisableCurrentVideoConferenceButtons(FALSE);
 			}
 
-		fNewMailFlag = gfIsNewMailFlagSet;
-		gfIsNewMailFlagSet = FALSE;
+			fNewMailFlag       = gfIsNewMailFlagSet;
+			gfIsNewMailFlagSet = FALSE;
+			break;
+		}
 
-	}
-
-
-	if( gubVideoConferencingMode == AIM_VIDEO_POPUP_MODE )
-	{
-
-		gubVideoConferencingPreviousMode = gubVideoConferencingMode;
-
-		if( gfJustSwitchedVideoConferenceMode )
+		case AIM_VIDEO_POPUP_MODE:
 		{
-			// load the answering machine graphic and add it
+			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
+
+			if (gfJustSwitchedVideoConferenceMode)
+			{
+				// load the answering machine graphic and add it
+
+				// Create a background video surface to blt the face onto
+				guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
+				BltVideoObjectOnce(guiVideoTitleBar, "LAPTOP/VideoTitleBar.sti", 0, 0, 0);
+
+				gfAimMemberCanMercSayOpeningQuote = TRUE;
+			}
+			break;
+		}
+
+		case AIM_VIDEO_INIT_MODE:
+		{ // The opening animation of the vc (fuzzy screen, then goes to black)
+			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
+			gubMercAttitudeLevel  = 0;
+			gubContractLength     = AIM_CONTRACT_LENGTH_ONE_WEEK;
+			gfBuyEquipment        = (GetProfile(gbCurrentSoldier)->usOptionalGearCost != 0);
+			gfMercIsTalking       = FALSE;
+			gfVideoFaceActive     = FALSE;
+			guiLastHandleMercTime = 0;
+			gfHangUpMerc          = FALSE;
+			break;
+		}
+
+		case AIM_VIDEO_FIRST_CONTACT_MERC_MODE:
+		{ /* The screen in which you first contact the merc, you have the option to
+			 * hang up or goto hire merc screen */
+			/* if the last screen was the init screen, then we need to initialize the
+			 * video face */
+			if (gubVideoConferencingPreviousMode == AIM_VIDEO_INIT_MODE ||
+					gubVideoConferencingPreviousMode == AIM_VIDEO_NOT_DISPLAYED_MODE)
+			{
+				//Put the merc face up on the screen
+				InitVideoFace(gbCurrentSoldier);
+			}
+
+			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
+
+			// Hang up button
+			UINT16 usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
+			BUTTON_PICS* const img = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 2, -1, 3, -1);
+			guiVideoConferenceButtonImage[2] = img;
+			for (UINT8 i = 0; i < 2; ++i)
+			{
+				giAuthorizeButton[i] = MakeButtonVideo(img, VideoConfercingText[AIM_MEMBER_HIRE + i], usPosX, AIM_MEMBER_HANG_UP_Y, BtnFirstContactButtonCallback);
+				MSYS_SetBtnUserData(giAuthorizeButton[i], i);
+				usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
+			}
+
+			if (gfWaitingForMercToStopTalkingOrUserToClick)
+			{
+				DisableButton(giAuthorizeButton[0]);
+				gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
+			}
+			break;
+		}
+
+		case AIM_VIDEO_HIRE_MERC_MODE:
+		{ /* The screen in which you set the contract length, and the ability to buy
+			 * equipment. */
+			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
+
+			// Contract Length button
+			BUTTON_PICS* const img0 = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 0, -1, 1, -1);
+			guiVideoConferenceButtonImage[0] = img0;
+			{ UINT16 usPosY = AIM_MEMBER_BUY_CONTRACT_LENGTH_Y;
+				for (UINT8 i = 0; i < 3; ++i)
+				{
+					GUIButtonRef const btn = MakeButtonVideo(img0, VideoConfercingText[AIM_MEMBER_ONE_DAY + i], AIM_MEMBER_BUY_CONTRACT_LENGTH_X, usPosY, BtnContractLengthButtonCallback);
+					giContractLengthButton[i] = btn;
+					btn->SpecifyTextJustification(GUI_BUTTON::TEXT_LEFT);
+					btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
+					MSYS_SetBtnUserData(btn, i);
+					usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
+				}
+			}
+
+			// BuyEquipment button
+			{ UINT16 usPosY = AIM_MEMBER_BUY_CONTRACT_LENGTH_Y;
+				for (UINT8 i = 0; i < 2; ++i)
+				{
+					GUIButtonRef const btn = MakeButtonVideo(img0, VideoConfercingText[AIM_MEMBER_NO_EQUIPMENT + i], AIM_MEMBER_BUY_EQUIPMENT_X, usPosY, BtnBuyEquipmentButtonCallback);
+					giBuyEquipmentButton[i] = btn;
+					btn->SpecifyTextJustification(GUI_BUTTON::TEXT_LEFT);
+					btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
+					MSYS_SetBtnUserData(btn, i);
+					usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
+				}
+			}
+			if (GetProfile(gbCurrentSoldier)->usOptionalGearCost == 0)
+			{
+				DisableButton(giBuyEquipmentButton[1]);
+			}
+
+			// Authorize button
+			UINT16 usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
+			BUTTON_PICS* const img1 = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 2, -1, 3, -1);
+			guiVideoConferenceButtonImage[1] = img1;
+			for (UINT8 i = 0; i < 2; ++i)
+			{
+				GUIButtonRef const btn = MakeButtonVideo(img1, VideoConfercingText[AIM_MEMBER_TRANSFER_FUNDS + i], usPosX, AIM_MEMBER_AUTHORIZE_PAY_Y, BtnAuthorizeButtonCallback);
+				giAuthorizeButton[i] = btn;
+				btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
+				MSYS_SetBtnUserData(btn, i);
+				usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
+			}
+
+			DelayMercSpeech(gbCurrentSoldier, QUOTE_LENGTH_OF_CONTRACT, 750, TRUE, FALSE);
+			break;
+		}
+
+		case AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE:
+		{ // The merc is not home and the player gets the answering machine
+			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
+
+			gfIsAnsweringMachineActive = TRUE;
+
+			// Leave msg button
+			UINT16 usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
+			BUTTON_PICS* const img = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 2, -1, 3, -1);
+			guiVideoConferenceButtonImage[2] = img;
+
+			giAnsweringMachineButton[0] = MakeButtonVideo(img, VideoConfercingText[AIM_MEMBER_LEAVE_MESSAGE], usPosX, AIM_MEMBER_HANG_UP_Y, BtnAnsweringMachineButtonCallback);
+			MSYS_SetBtnUserData(giAnsweringMachineButton[0], 0);
+
+			//if the user has already left a message, disable the button
+			if (GetProfile(gbCurrentSoldier)->ubMiscFlags3 & PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM)
+			{
+				DisableButton(giAnsweringMachineButton[0]);
+			}
+
+			usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
+
+			giAnsweringMachineButton[1] = MakeButtonVideo(img, VideoConfercingText[AIM_MEMBER_HANG_UP], usPosX, AIM_MEMBER_HANG_UP_Y, BtnAnsweringMachineButtonCallback);
+			MSYS_SetBtnUserData(giAnsweringMachineButton[1], 1);
+
+			//The face must be inited even though the face wont appear.  It is so the voice is played
+			InitVideoFace(gbCurrentSoldier);
+
+			//Make sure the merc doesnt ramble away to the player
+			gubMercAttitudeLevel = QUOTE_DELAY_NO_ACTION;
+
+			gubCurrentStaticMode = VC_NO_STATIC;
+			break;
+		}
+
+		case AIM_VIDEO_MERC_UNAVAILABLE_MODE:
+		{ // The merc is home but for some reason doesnt want to work for player
+			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
+
+			// The hangup button
+			BUTTON_PICS* const img = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 2, -1, 3, -1);
+			guiVideoConferenceButtonImage[2] = img;
+			giHangUpButton = MakeButtonVideo(img, VideoConfercingText[AIM_MEMBER_HANG_UP], AIM_MEMBER_HANG_UP_X, AIM_MEMBER_HANG_UP_Y, BtnHangUpButtonCallback);
+			MSYS_SetBtnUserData(giHangUpButton, 1);
+
+			//set the flag saying specifying that merc is busy
+			gubMercAttitudeLevel = QUOTE_MERC_BUSY;
+
+			InitVideoFace(gbCurrentSoldier);
+			break;
+		}
+
+		case AIM_VIDEO_POPDOWN_MODE:
+		{
+			if (gubPopUpBoxAction == AIM_POPUP_DISPLAY) return;
+
+			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
+
+			gfIsAnsweringMachineActive = FALSE;
+
+			// load the Video conference background graphic and add it
 
 			// Create a background video surface to blt the face onto
 			guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
 			BltVideoObjectOnce(guiVideoTitleBar, "LAPTOP/VideoTitleBar.sti", 0, 0, 0);
-
-			gfAimMemberCanMercSayOpeningQuote = TRUE;
+			break;
 		}
 	}
-
-
-	// The opening animation of the vc (fuzzy screen, then goes to black)
-	if( gubVideoConferencingMode == AIM_VIDEO_INIT_MODE )
-	{
-		gubVideoConferencingPreviousMode = gubVideoConferencingMode;
- 		gubMercAttitudeLevel = 0;
-		gubContractLength = AIM_CONTRACT_LENGTH_ONE_WEEK;
-
-		if( gMercProfiles[gbCurrentSoldier].usOptionalGearCost == 0 )
-			gfBuyEquipment = FALSE;
-		else
-			gfBuyEquipment = TRUE;
-
-		gfMercIsTalking = FALSE;
-		gfVideoFaceActive = FALSE;
-		guiLastHandleMercTime = 0;
-		gfHangUpMerc = FALSE;
-	}
-
-	// The screen in which you first contact the merc, you have the option to hang up or goto hire merc screen
-	if( gubVideoConferencingMode ==  AIM_VIDEO_FIRST_CONTACT_MERC_MODE )
-	{
-		//if the last screen was the init screen, then we need to initialize the video face
-		if( ( gubVideoConferencingPreviousMode == AIM_VIDEO_INIT_MODE) || ( gubVideoConferencingPreviousMode == AIM_VIDEO_NOT_DISPLAYED_MODE) )
-		{
-			//Put the merc face up on the screen
-			InitVideoFace(gbCurrentSoldier);
-
-//			if( gubVideoConferencingPreviousMode == AIM_VIDEO_INIT_MODE)
-//				InitVideoFaceTalking(gbCurrentSoldier, QUOTE_GREETING);
-		}
-
-		gubVideoConferencingPreviousMode = gubVideoConferencingMode;
-
-		// Hang up button
-		usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
-		guiVideoConferenceButtonImage[2] = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1,2,-1,3,-1 );
-		for(i=0; i<2; i++)
-		{
-			giAuthorizeButton[i] = MakeButtonVideo(guiVideoConferenceButtonImage[2], VideoConfercingText[AIM_MEMBER_HIRE + i], usPosX, AIM_MEMBER_HANG_UP_Y, BtnFirstContactButtonCallback);
-			MSYS_SetBtnUserData(giAuthorizeButton[i], i);
-			usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
-		}
-
-		if( gfWaitingForMercToStopTalkingOrUserToClick )
-		{
-			DisableButton( giAuthorizeButton[0] );
-			gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
-
-			//Display a popup msg box telling the user when and where the merc will arrive
-//			DisplayPopUpBoxExplainingMercArrivalLocationAndTime();
-		}
-	}
-
-
-
-		// The screen in which you set the contract length, and the ability to buy equipment..
-	if( gubVideoConferencingMode == AIM_VIDEO_HIRE_MERC_MODE)
-	{
-		gubVideoConferencingPreviousMode = gubVideoConferencingMode;
-
-		// Contract Length button
-		guiVideoConferenceButtonImage[0] = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1,0,-1,1,-1 );
-		usPosY = AIM_MEMBER_BUY_CONTRACT_LENGTH_Y;
-		for(i=0; i<3; i++)
-		{
-			giContractLengthButton[i] = MakeButtonVideo(guiVideoConferenceButtonImage[0], VideoConfercingText[AIM_MEMBER_ONE_DAY + i], AIM_MEMBER_BUY_CONTRACT_LENGTH_X, usPosY, BtnContractLengthButtonCallback);
-			giContractLengthButton[i]->SpecifyTextJustification(GUI_BUTTON::TEXT_LEFT);
-			MSYS_SetBtnUserData(giContractLengthButton[i], i);
-			giContractLengthButton[i]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
-			usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
-		}
-
-		// BuyEquipment button
-		usPosY = AIM_MEMBER_BUY_CONTRACT_LENGTH_Y;
-		for(i=0; i<2; i++)
-		{
-			giBuyEquipmentButton[i] = MakeButtonVideo(guiVideoConferenceButtonImage[0], VideoConfercingText[AIM_MEMBER_NO_EQUIPMENT + i], AIM_MEMBER_BUY_EQUIPMENT_X, usPosY, BtnBuyEquipmentButtonCallback);
-			giBuyEquipmentButton[i]->SpecifyTextJustification(GUI_BUTTON::TEXT_LEFT);
-			MSYS_SetBtnUserData(giBuyEquipmentButton[i], i);
-			giBuyEquipmentButton[i]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
-			usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
-		}
-		if( gMercProfiles[gbCurrentSoldier].usOptionalGearCost == 0 )
-			DisableButton( giBuyEquipmentButton[1] );
-
-
-		// Authorize button
-		usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
-		guiVideoConferenceButtonImage[1] = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1,2,-1,3,-1 );
-		for(i=0; i<2; i++)
-		{
-			giAuthorizeButton[i] = MakeButtonVideo(guiVideoConferenceButtonImage[1], VideoConfercingText[AIM_MEMBER_TRANSFER_FUNDS + i], usPosX, AIM_MEMBER_AUTHORIZE_PAY_Y, BtnAuthorizeButtonCallback);
-			MSYS_SetBtnUserData(giAuthorizeButton[i], i);
-			giAuthorizeButton[i]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
-			usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
-		}
-
-//		InitVideoFaceTalking(gbCurrentSoldier, QUOTE_LENGTH_OF_CONTRACT);
-		DelayMercSpeech( gbCurrentSoldier, QUOTE_LENGTH_OF_CONTRACT, 750, TRUE, FALSE );
-	}
-
-
-
-
-		// The merc is not home and the player gets the answering machine
-	if( gubVideoConferencingMode ==  AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE )
-	{
-		gubVideoConferencingPreviousMode = gubVideoConferencingMode;
-
-		gfIsAnsweringMachineActive = TRUE;
-
-		// Leave msg button
-		usPosX = AIM_MEMBER_AUTHORIZE_PAY_X;
-		guiVideoConferenceButtonImage[2] = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1,2,-1,3,-1 );
-
-		giAnsweringMachineButton[0] = MakeButtonVideo(guiVideoConferenceButtonImage[2], VideoConfercingText[AIM_MEMBER_LEAVE_MESSAGE], usPosX, AIM_MEMBER_HANG_UP_Y, BtnAnsweringMachineButtonCallback);
-		MSYS_SetBtnUserData(giAnsweringMachineButton[0], 0);
-
-		//if the user has already left a message, disable the button
-		if( gMercProfiles[ gbCurrentSoldier ].ubMiscFlags3 & PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM )
-			DisableButton( giAnsweringMachineButton[0] );
-
-		usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
-
-		giAnsweringMachineButton[1] = MakeButtonVideo(guiVideoConferenceButtonImage[2], VideoConfercingText[AIM_MEMBER_HANG_UP], usPosX, AIM_MEMBER_HANG_UP_Y, BtnAnsweringMachineButtonCallback);
-		MSYS_SetBtnUserData(giAnsweringMachineButton[1], 1);
-
-		//The face must be inited even though the face wont appear.  It is so the voice is played
-		InitVideoFace(gbCurrentSoldier);
-
-		//Make sure the merc doesnt ramble away to the player
-		gubMercAttitudeLevel = QUOTE_DELAY_NO_ACTION;
-
-		gubCurrentStaticMode = VC_NO_STATIC;
-	}
-
-
-
-
-	// The merc is home but for some reason doesnt want to work for player
-	if( gubVideoConferencingMode == AIM_VIDEO_MERC_UNAVAILABLE_MODE)
-	{
-		gubVideoConferencingPreviousMode = gubVideoConferencingMode;
-
-		// The hangup button
-		guiVideoConferenceButtonImage[2] = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1,2,-1,3,-1 );
-		giHangUpButton = MakeButtonVideo(guiVideoConferenceButtonImage[2], VideoConfercingText[AIM_MEMBER_HANG_UP], AIM_MEMBER_HANG_UP_X, AIM_MEMBER_HANG_UP_Y, BtnHangUpButtonCallback);
-		MSYS_SetBtnUserData(giHangUpButton, 1);
-
-		//set the flag saying specifying that merc is busy
-		gubMercAttitudeLevel = QUOTE_MERC_BUSY;
-
-		InitVideoFace(gbCurrentSoldier);
-	}
-
-	if( gubVideoConferencingMode == 	AIM_VIDEO_POPDOWN_MODE )
-	{
-		if (gubPopUpBoxAction == AIM_POPUP_DISPLAY) return;
-
-		gubVideoConferencingPreviousMode = gubVideoConferencingMode;
-
-		gfIsAnsweringMachineActive = FALSE;
-
-		// load the Video conference background graphic and add it
-
-		// Create a background video surface to blt the face onto
-		guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
-		BltVideoObjectOnce(guiVideoTitleBar, "LAPTOP/VideoTitleBar.sti", 0, 0, 0);
-	}
-
-//	gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
 
 	//reset the time in which the merc will get annoyed
 	guiMercAttitudeTime = GetJA2Clock();
