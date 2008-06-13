@@ -62,7 +62,7 @@ HQUEUE CreateQueue(UINT32 const uiNum_items, UINT32 const uiSiz_each)
 	q->uiSiz_of_elem = uiSiz_each;
 	q->uiTail        = sizeof(QueueHeader);
 	q->uiHead        = sizeof(QueueHeader);
-	return hQueue;
+	return q;
 }
 
 
@@ -70,24 +70,21 @@ HQUEUE CreateQueue(UINT32 const uiNum_items, UINT32 const uiSiz_each)
 //									siz_each - size of each item
 // Return Value	NULL if unsuccesful
 //							 pointer to allocated memory
-HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
+HLIST CreateList(UINT32 const uiNum_items, UINT32 const uiSiz_each)
 {
 	if (uiNum_items == 0 || uiSiz_each == 0)
 	{
 		throw std::logic_error("Requested queue items and size have to be >0");
 	}
 
-	UINT32 uiAmount = uiNum_items * uiSiz_each;
-
-	const HLIST hList = MALLOCE(ListHeader, uiAmount);
-
-	ListHeader* pList = hList;
-	pList->uiMax_size = uiAmount + sizeof(ListHeader);
-	pList->uiTotal_items = 0;
-	pList->uiSiz_of_elem = uiSiz_each;
-	pList->uiTail = pList->uiHead = sizeof(ListHeader);
-
-	return hList;
+	UINT32 const uiAmount = uiNum_items * uiSiz_each;
+	HLIST  const l        = MALLOCE(ListHeader, uiAmount);
+	l->uiMax_size    = uiAmount + sizeof(ListHeader);
+	l->uiTotal_items = 0;
+	l->uiSiz_of_elem = uiSiz_each;
+	l->uiTail        = sizeof(ListHeader);
+	l->uiHead    = sizeof(ListHeader);
+	return l;
 }
 
 
