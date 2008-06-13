@@ -26,11 +26,11 @@ typedef struct ListHeader*  HLIST;
 // QueueSize(handle to the queue) returns the queue size
 // DeleteQueue(handle to container) Delete the queue container
 // : returns BOOLEAN
-extern HQUEUE  CreateQueue(UINT32 num_of_elem, UINT32 siz_of_each);
-extern HQUEUE  AddtoQueue(HQUEUE hQueue, void const* data);
-extern BOOLEAN RemfromQueue(HQUEUE hQueue,void *data);
-extern UINT32  QueueSize(HQUEUE hQueue);
-extern BOOLEAN DeleteQueue(HQUEUE hQueue);
+HQUEUE  CreateQueue(UINT32 num_of_elem, UINT32 siz_of_each);
+HQUEUE  AddtoQueue(HQUEUE hQueue, void const* data);
+void    RemfromQueue(HQUEUE hQueue, void* data);
+UINT32  QueueSize(HQUEUE hQueue);
+BOOLEAN DeleteQueue(HQUEUE hQueue);
 
 namespace SGP
 {
@@ -55,10 +55,7 @@ namespace SGP
 			T Remove()
 			{
 				T data;
-				if (!RemfromQueue(queue_, &data))
-				{
-					throw std::logic_error("Tried to remove element from empty queue");
-				}
+				RemfromQueue(queue_, &data);
 				return data;
 			}
 

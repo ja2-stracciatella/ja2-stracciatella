@@ -160,49 +160,28 @@ BOOLEAN PeekList(HLIST hList, void *pdata, UINT32 uiPos)
 
 // Parameter List : pvoid_queue - pointer to queue container
 //									data - data removed from queue
-BOOLEAN RemfromQueue(HQUEUE hQueue, void *pdata)
+void RemfromQueue(HQUEUE const q, void* const data)
 {
-	// cannot check for invalid handle , only 0
-	if (hQueue == NULL)
-	{
-		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the queue");
-		return FALSE;
-	}
-	if (pdata == NULL)
-	{
-		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Memory fo Data to be removed from queue is NULL");
-		return FALSE;
-	}
-
-	QueueHeader* pTemp_cont = hQueue;
-
-	// if theres no elements to remove return error
-	if (pTemp_cont->uiTotal_items == 0)
-	{
-		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "There is nothing in the queue to remove");
-		return FALSE;
-	}
+	if (!q)                    throw std::logic_error("This is not a valid pointer to the queue");
+	if (!data)                 throw std::logic_error("Memory fo Data to be removed from queue is NULL");
+	if (q->uiTotal_items == 0) throw std::logic_error("There is nothing in the queue to remove");
 
 	//remove the element pointed to by uiHead
 
-	BYTE* pbyte = (BYTE*)hQueue + pTemp_cont->uiHead;
-	memmove(pdata, pbyte, pTemp_cont->uiSiz_of_elem);
-	pTemp_cont->uiTotal_items--;
-	pTemp_cont->uiHead += pTemp_cont->uiSiz_of_elem;
+	BYTE* const pbyte = (BYTE*)q + q->uiHead;
+	memmove(data, pbyte, q->uiSiz_of_elem);
+	q->uiTotal_items--;
+	q->uiHead += q->uiSiz_of_elem;
 
 	// if after removing an element head = tail then set them both
 	// to the beginning of the container as it is empty
 
-	if (pTemp_cont->uiHead == pTemp_cont->uiTail)
-		pTemp_cont->uiHead = pTemp_cont->uiTail = sizeof(QueueHeader);
+	if (q->uiHead == q->uiTail) q->uiHead = q->uiTail = sizeof(QueueHeader);
 
 	// if only the head is at the end of the container then make it point
 	// to the beginning of the container
 
-	if (pTemp_cont->uiHead == pTemp_cont->uiMax_size)
-		pTemp_cont->uiHead = sizeof(QueueHeader);
-
-	return TRUE;
+	if (q->uiHead == q->uiMax_size) q->uiHead = sizeof(QueueHeader);
 }
 
 
