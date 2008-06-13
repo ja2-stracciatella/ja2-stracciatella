@@ -46,7 +46,7 @@ void EnterIMPPortraits( void )
 }
 
 
-static BOOLEAN RenderPortrait(INT16 sX, INT16 sY);
+static void RenderPortrait(INT16 sX, INT16 sY);
 
 
 void RenderIMPPortraits( void )
@@ -92,15 +92,12 @@ void HandleIMPPortraits( void )
 }
 
 
-static BOOLEAN RenderPortrait(INT16 sX, INT16 sY)
-try
+static void RenderPortrait(INT16 const sX, INT16 const sY)
 {
   // render the portrait of the current picture
 	const INT32 portrait = iCurrentPortrait + (fCharacterIsMale ? 0 : 8);
 	BltVideoObjectOnce(FRAME_BUFFER, pPlayerSelectedBigFaceFileNames[portrait], 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void IncrementPictureIndex(void)
