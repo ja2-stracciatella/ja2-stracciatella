@@ -623,20 +623,9 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 				          }
 
 									pAttachedNode = FindLevelNodeBasedOnStructure( pAttachedBase->sGridNo, pAttachedBase );
-									if (pAttachedNode)
-									{
-										ApplyMapChangesToMapTempFile( TRUE );
-										RemoveStructFromLevelNode( pAttachedBase->sGridNo, pAttachedNode );
-										ApplyMapChangesToMapTempFile( FALSE );
-									}
-									else
-									{
-										// error!
-										#ifdef JA2BETAVERSION
-											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Problems removing structure attached to wall at %d", sNewGridNo );
-										#endif
-										break;
-									}
+									ApplyMapChangesToMapTempFile(TRUE);
+									RemoveStructFromLevelNode(pAttachedBase->sGridNo, pAttachedNode);
+									ApplyMapChangesToMapTempFile(FALSE);
 								}
 								else
 								{
@@ -659,20 +648,9 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 								if (pAttachedBase)
 								{
 									pAttachedNode = FindLevelNodeBasedOnStructure( pAttachedBase->sGridNo, pAttachedBase );
-									if (pAttachedNode)
-									{
-										ApplyMapChangesToMapTempFile( TRUE );
-										RemoveStructFromLevelNode( pAttachedBase->sGridNo, pAttachedNode );
-										ApplyMapChangesToMapTempFile( FALSE );
-									}
-									else
-									{
-										// error!
-										#ifdef JA2BETAVERSION
-											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Problems removing structure attached to wall at %d", sNewGridNo );
-										#endif
-										break;
-									}
+									ApplyMapChangesToMapTempFile(TRUE);
+									RemoveStructFromLevelNode(pAttachedBase->sGridNo, pAttachedNode);
+									ApplyMapChangesToMapTempFile(FALSE);
 								}
 								else
 								{
@@ -745,20 +723,9 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 								if (pAttachedBase)
 								{
 									pAttachedNode = FindLevelNodeBasedOnStructure( pAttachedBase->sGridNo, pAttachedBase );
-									if (pAttachedNode)
-									{
-										ApplyMapChangesToMapTempFile( TRUE );
-										RemoveStructFromLevelNode( pAttachedBase->sGridNo, pAttachedNode );
-										ApplyMapChangesToMapTempFile( FALSE );
-									}
-									else
-									{
-										// error!
-										#ifdef JA2BETAVERSION
-											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Problems removing structure attached to wall at %d", sNewGridNo );
-										#endif
-										break;
-									}
+									ApplyMapChangesToMapTempFile(TRUE);
+									RemoveStructFromLevelNode(pAttachedBase->sGridNo, pAttachedNode);
+									ApplyMapChangesToMapTempFile(FALSE);
 								}
 								else
 								{
@@ -780,21 +747,10 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 								pAttachedBase = FindBaseStructure( pAttached );
 								if (pAttachedBase)
 								{
-									pAttachedNode = FindLevelNodeBasedOnStructure( pAttachedBase->sGridNo, pAttachedBase );
-									if (pAttachedNode)
-									{
-										ApplyMapChangesToMapTempFile( TRUE );
-										RemoveStructFromLevelNode( pAttachedBase->sGridNo, pAttachedNode );
-										ApplyMapChangesToMapTempFile( FALSE );
-									}
-									else
-									{
-										// error!
-										#ifdef JA2BETAVERSION
-											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Problems removing structure attached to wall at %d", sNewGridNo );
-										#endif
-										break;
-									}
+									pAttachedNode = FindLevelNodeBasedOnStructure(pAttachedBase->sGridNo, pAttachedBase);
+									ApplyMapChangesToMapTempFile(TRUE);
+									RemoveStructFromLevelNode(pAttachedBase->sGridNo, pAttachedNode);
+									ApplyMapChangesToMapTempFile(FALSE);
 								}
 								else
 								{

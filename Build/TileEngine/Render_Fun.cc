@@ -126,9 +126,7 @@ void SetGridNoRevealedFlag( UINT16 sGridNo )
 
 				// Get LEVELNODE for struct and remove!
 				pNode = FindLevelNodeBasedOnStructure( pBase->sGridNo, pBase );
-
-				if( pNode )
-					pNode->uiFlags |= LEVELNODE_SHOW_THROUGH;
+				pNode->uiFlags |= LEVELNODE_SHOW_THROUGH;
 
 				if ( pStructure->fFlags & STRUCTURE_SLANTED_ROOF )
 				{

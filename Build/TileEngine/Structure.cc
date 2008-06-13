@@ -1002,6 +1002,7 @@ BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure )
 
 
 static STRUCTURE* InternalSwapStructureForPartner(INT16 sGridNo, STRUCTURE* pStructure, BOOLEAN fFlipSwitches, BOOLEAN fStoreInMap)
+try
 { // switch structure
 	LEVELNODE *				pLevelNode;
 	LEVELNODE *				pShadowNode;
@@ -1025,10 +1026,6 @@ static STRUCTURE* InternalSwapStructureForPartner(INT16 sGridNo, STRUCTURE* pStr
 	}
 	fDoor = ((pBaseStructure->fFlags & STRUCTURE_ANYDOOR) > 0);
 	pLevelNode = FindLevelNodeBasedOnStructure( pBaseStructure->sGridNo, pBaseStructure );
-	if (pLevelNode == NULL)
-	{
-		return( NULL );
-	}
 	pShadowNode = FindShadow( pBaseStructure->sGridNo, pLevelNode->usIndex );
 
 	// record values
@@ -1085,6 +1082,8 @@ static STRUCTURE* InternalSwapStructureForPartner(INT16 sGridNo, STRUCTURE* pStr
 	}
 	return( pNewBaseStructure );
 }
+catch (...) { return 0; }
+
 
 STRUCTURE * SwapStructureForPartner( INT16 sGridNo, STRUCTURE * pStructure )
 {

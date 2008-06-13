@@ -1983,8 +1983,7 @@ LEVELNODE* FindLevelNodeBasedOnStructure(INT16 sGridNo, STRUCTURE* pStructure)
 		}
 	}
 
-	AssertMsg(0, "FindLevelNodeBasedOnStruct failed.");
-	return NULL;
+	throw std::logic_error("FindLevelNodeBasedOnStruct failed");
 }
 
 

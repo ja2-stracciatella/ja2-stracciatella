@@ -832,6 +832,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 
 
 static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCTURE* pStructure, BOOLEAN fNoAnimations)
+try
 {
 	LEVELNODE	* pShadowNode;
 	LEVELNODE * pNode;
@@ -848,10 +849,6 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 	}
 
 	pNode = FindLevelNodeBasedOnStructure( pBaseStructure->sGridNo, pBaseStructure );
-	if (!pNode)
-	{
-		return( FALSE );
-	}
 
 	// ATE: if we are about to swap, but have an animation playing here..... stop the animation....
 	if ( ( pNode->uiFlags & LEVELNODE_ANIMATION ) )
@@ -1111,6 +1108,7 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 
 	return( fDoAnimation );
 }
+catch (...) { return FALSE; }
 
 
 void SetDoorString(INT16 const sGridNo)

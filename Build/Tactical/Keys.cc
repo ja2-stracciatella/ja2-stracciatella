@@ -1224,13 +1224,6 @@ static void SyncronizeDoorStatusToStructureData(DOOR_STATUS* pDoorStatus)
 	}
 
 	pNode = FindLevelNodeBasedOnStructure( sBaseGridNo, pBaseStructure );
-	if (!pNode)
-	{
-#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Could not find levelnode from door structure at %d", pDoorStatus->sGridNo );
-#endif
-		return;
-	}
 
 	// ATE: OK let me explain something here:
 	// One of the purposes of this function is to MAKE sure the door status MATCHES
@@ -1300,13 +1293,6 @@ static void InternalUpdateDoorGraphicFromStatus(const DOOR_STATUS* d, BOOLEAN fD
 	}
 
 	LEVELNODE* const pNode = FindLevelNodeBasedOnStructure(sBaseGridNo, pBaseStructure);
-	if (!pNode)
-	{
-#ifdef JA2BETAVERSION
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Could not find levelnode from door structure at %d", d->sGridNo);
-#endif
-		return;
-	}
 
 	// Get status we want to change to.....
 	const BOOLEAN fWantToBeOpen = (d->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
