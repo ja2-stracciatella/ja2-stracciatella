@@ -55,11 +55,11 @@ static SMOKEEFFECT* GetFreeSmokeEffect(void)
 }
 
 
-static INT8 FromWorldFlagsToSmokeType(UINT8 ubWorldFlags);
+static SmokeEffectKind FromWorldFlagsToSmokeType(UINT8 ubWorldFlags);
 
 
 // Returns NO_SMOKE_EFFECT if none there...
-INT8 GetSmokeEffectOnTile( INT16 sGridNo, INT8 bLevel )
+SmokeEffectKind GetSmokeEffectOnTile(INT16 const sGridNo, INT8 const bLevel)
 {
 	UINT8		ubExtFlags;
 
@@ -76,7 +76,7 @@ INT8 GetSmokeEffectOnTile( INT16 sGridNo, INT8 bLevel )
 }
 
 
-static INT8 FromWorldFlagsToSmokeType(UINT8 ubWorldFlags)
+static SmokeEffectKind FromWorldFlagsToSmokeType(UINT8 ubWorldFlags)
 {
 	if ( ubWorldFlags & MAPELEMENT_EXT_SMOKE )
 	{
@@ -101,7 +101,7 @@ static INT8 FromWorldFlagsToSmokeType(UINT8 ubWorldFlags)
 }
 
 
-static UINT8 FromSmokeTypeToWorldFlags(INT8 bType)
+static UINT8 FromSmokeTypeToWorldFlags(SmokeEffectKind const bType)
 {
 	switch( bType )
 	{
@@ -214,7 +214,7 @@ void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel,
 
 // Add smoke to gridno
 // ( Replacement algorithm uses distance away )
-void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, INT8 const bType, INT16 const sGridNo, INT8 const bLevel)
+void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, SmokeEffectKind const bType, INT16 const sGridNo, INT8 const bLevel)
 {
   BOOLEAN dissipating = FALSE;
 	if (smoke->ubDuration - smoke->bAge < 2)

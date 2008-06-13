@@ -4,7 +4,7 @@
 #include "JA2Types.h"
 
 // Smoke effect types
-enum
+enum SmokeEffectKind
 {
 	NO_SMOKE_EFFECT,
 	NORMAL_SMOKE_EFFECT,
@@ -35,14 +35,14 @@ struct SMOKEEFFECT
 
 
 // Returns NO_SMOKE_EFFECT if none there...
-INT8 GetSmokeEffectOnTile( INT16 sGridNo, INT8 bLevel );
+SmokeEffectKind GetSmokeEffectOnTile(INT16 sGridNo, INT8 bLevel);
 
 // Decays all smoke effects...
 void DecaySmokeEffects( UINT32 uiTime );
 
 // Add smoke to gridno
 // ( Replacement algorithm uses distance away )
-void AddSmokeEffectToTile(const SMOKEEFFECT* smoke, INT8 bType, INT16 sGridNo, INT8 bLevel);
+void AddSmokeEffectToTile(SMOKEEFFECT const*, SmokeEffectKind, INT16 sGridNo, INT8 bLevel);
 
 void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel );
 

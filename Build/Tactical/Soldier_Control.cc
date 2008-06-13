@@ -2234,7 +2234,7 @@ static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fF
 		}
 
     // are we now standing in tear gas without a decently working gas mask?
-    if ( GetSmokeEffectOnTile( sNewGridNo, pSoldier->bLevel ) )
+    if (GetSmokeEffectOnTile(sNewGridNo, pSoldier->bLevel) != NO_SMOKE_EFFECT)
 		{
 			BOOLEAN fSetGassed = TRUE;
 
@@ -4257,7 +4257,9 @@ void EVENT_BeginMercTurn(SOLDIERTYPE* const pSoldier)
 		if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
 		{
 			 // then must get a gas mask or leave the gassed area to get over it
-			 if ( ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK || pSoldier->inv[ HEAD2POS ].usItem == GASMASK ) || !( GetSmokeEffectOnTile( pSoldier->sGridNo, pSoldier->bLevel ) ) )
+			if (pSoldier->inv[HEAD1POS].usItem == GASMASK ||
+					pSoldier->inv[HEAD2POS].usItem == GASMASK ||
+					GetSmokeEffectOnTile(pSoldier->sGridNo, pSoldier->bLevel) == NO_SMOKE_EFFECT)
 			 {
 				 // Turn off gassed flag....
 				 pSoldier->uiStatusFlags &= (~SOLDIER_GASSED );

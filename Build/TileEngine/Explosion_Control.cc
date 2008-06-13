@@ -1253,7 +1253,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 	BOOLEAN fRecompileMovementCosts = FALSE;
 	BOOLEAN fSmokeEffect=FALSE;
 	BOOLEAN fStunEffect = FALSE;
-	INT8		bSmokeEffectType = 0;
+	SmokeEffectKind bSmokeEffectType = NO_SMOKE_EFFECT;
 	BOOLEAN	fBlastEffect = TRUE;
 	INT16		sNewGridNo;
 	UINT32	uiRoll;
