@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "LoadSaveSmokeEffect.h"
 #include "Overhead.h"
 #include "Debug.h"
@@ -212,161 +214,81 @@ void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel,
 
 // Add smoke to gridno
 // ( Replacement algorithm uses distance away )
-void AddSmokeEffectToTile(const SMOKEEFFECT* const smoke, const INT8 bType, const INT16 sGridNo, const INT8 bLevel)
+void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, INT8 const bType, INT16 const sGridNo, INT8 const bLevel)
 {
-	ANITILE_PARAMS	AniParams;
-	ANITILE					*pAniTile;
-  BOOLEAN         fDissipating = FALSE;
-
+  BOOLEAN dissipating = FALSE;
 	if (smoke->ubDuration - smoke->bAge < 2)
   {
-    fDissipating = TRUE;
+    dissipating = TRUE;
     // Remove old one...
-    RemoveSmokeEffectFromTile( sGridNo, bLevel );
+    RemoveSmokeEffectFromTile(sGridNo, bLevel);
   }
-
 
 	// If smoke effect exists already.... stop
-	if ( gpWorldLevelData[ sGridNo ].ubExtFlags[ bLevel ] & ANY_SMOKE_EFFECT )
-	{
-		return;
-	}
-
-	// OK,  Create anitile....
-	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
-	AniParams.sGridNo							= sGridNo;
-
-  if ( bLevel == 0 )
-  {
-	  AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-  }
-  else
-  {
-	  AniParams.ubLevelID						= ANI_ONROOF_LEVEL;
-  }
-
-
-	AniParams.sDelay							= (INT16)( 300 + Random( 300 ) );
-
-  if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
-  {
-	  AniParams.sStartFrame					= (INT16)0;
-  }
-  else
-  {
-	  AniParams.sStartFrame					= (INT16)Random( 5 );
-  }
-
-
-	// Bare bones flags are...
-	//AniParams.uiFlags = ANITILE_FORWARD | ANITILE_SMOKE_EFFECT | ANITILE_LOOPING;
-
-
-  if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
-  {
-    AniParams.uiFlags = ANITILE_PAUSED | ANITILE_FORWARD | ANITILE_SMOKE_EFFECT | ANITILE_LOOPING;
-  }
-  else
-  {
-    AniParams.uiFlags = ANITILE_FORWARD | ANITILE_SMOKE_EFFECT | ANITILE_LOOPING | ANITILE_ALWAYS_TRANSLUCENT;
-  }
-
-	AniParams.sX									= CenterX( sGridNo );
-	AniParams.sY									= CenterY( sGridNo );
-	AniParams.sZ									= (INT16)0;
+	if (gpWorldLevelData[sGridNo].ubExtFlags[bLevel] & ANY_SMOKE_EFFECT) return;
 
 	// Use the right graphic based on type..
-	switch( bType )
+	AnimationFlags ani_flags = ANITILE_FORWARD | ANITILE_SMOKE_EFFECT | ANITILE_LOOPING;
+	char const*    cached_file;
+	INT16          start_frame;
+	if (gGameSettings.fOptions[TOPTION_ANIMATE_SMOKE])
 	{
-		case NORMAL_SMOKE_EFFECT:
-
-      if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
-      {
-			   AniParams.zCachedFile = "TILECACHE/smkechze.sti";
-      }
-      else
-      {
-        if ( fDissipating )
-        {
-			    AniParams.zCachedFile = "TILECACHE/smalsmke.sti";
-        }
-        else
-        {
-			    AniParams.zCachedFile = "TILECACHE/smoke.sti";
-        }
-      }
-			break;
-
-		case TEARGAS_SMOKE_EFFECT:
-
-      if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
-      {
-			   AniParams.zCachedFile = "TILECACHE/tearchze.sti";
-      }
-      else
-      {
-        if ( fDissipating )
-        {
-			    AniParams.zCachedFile = "TILECACHE/smaltear.sti";
-        }
-        else
-        {
-			    AniParams.zCachedFile = "TILECACHE/teargas.sti";
-        }
-      }
-			break;
-
-		case MUSTARDGAS_SMOKE_EFFECT:
-
-      if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
-      {
-			   AniParams.zCachedFile = "TILECACHE/mustchze.sti";
-      }
-      else
-      {
-        if ( fDissipating )
-        {
-			    AniParams.zCachedFile = "TILECACHE/smalmust.sti";
-        }
-        else
-        {
-			    AniParams.zCachedFile = "TILECACHE/mustard2.sti";
-        }
-      }
-			break;
-
-		case CREATURE_SMOKE_EFFECT:
-
-      if ( !( gGameSettings.fOptions[ TOPTION_ANIMATE_SMOKE ] ) )
-      {
-			   AniParams.zCachedFile = "TILECACHE/spit_gas.sti";
-      }
-      else
-      {
-        if ( fDissipating )
-        {
-			    AniParams.zCachedFile = "TILECACHE/spit_gas.sti";
-        }
-        else
-        {
-			    AniParams.zCachedFile = "TILECACHE/spit_gas.sti";
-        }
-      }
-			break;
-
+		if (dissipating)
+		{
+			switch (bType)
+			{
+				case NORMAL_SMOKE_EFFECT:     cached_file = "TILECACHE/smalsmke.sti"; break;
+				case TEARGAS_SMOKE_EFFECT:    cached_file = "TILECACHE/smaltear.sti"; break;
+				case MUSTARDGAS_SMOKE_EFFECT: cached_file = "TILECACHE/smalmust.sti"; break;
+				case CREATURE_SMOKE_EFFECT:   cached_file = "TILECACHE/spit_gas.sti"; break;
+				default: std::logic_error("Invalid smoke effect type");
+			}
+		}
+		else
+		{
+			switch (bType)
+			{
+				case NORMAL_SMOKE_EFFECT:     cached_file = "TILECACHE/smoke.sti";    break;
+				case TEARGAS_SMOKE_EFFECT:    cached_file = "TILECACHE/teargas.sti";  break;
+				case MUSTARDGAS_SMOKE_EFFECT: cached_file = "TILECACHE/mustard2.sti"; break;
+				case CREATURE_SMOKE_EFFECT:   cached_file = "TILECACHE/spit_gas.sti"; break;
+				default: std::logic_error("Invalid smoke effect type");
+			}
+		}
+    start_frame  = Random(5);
+    ani_flags   |= ANITILE_ALWAYS_TRANSLUCENT;
+	}
+	else
+	{
+		switch (bType)
+		{
+			case NORMAL_SMOKE_EFFECT:     cached_file = "TILECACHE/smkechze.sti"; break;
+			case TEARGAS_SMOKE_EFFECT:    cached_file = "TILECACHE/tearchze.sti"; break;
+			case MUSTARDGAS_SMOKE_EFFECT: cached_file = "TILECACHE/mustchze.sti"; break;
+			case CREATURE_SMOKE_EFFECT:   cached_file = "TILECACHE/spit_gas.sti"; break;
+			default: std::logic_error("Invalid smoke effect type");
+		}
+    start_frame  = 0;
+    ani_flags   |= ANITILE_PAUSED;
 	}
 
-	// Create tile...
-	pAniTile = CreateAnimationTile( &AniParams );
+	ANITILE_PARAMS	ani_params;
+	memset(&ani_params, 0, sizeof(ani_params));
+	ani_params.uiFlags     = ani_flags;
+	ani_params.zCachedFile = cached_file;
+	ani_params.sStartFrame = start_frame;
+	ani_params.sGridNo     = sGridNo;
+	ani_params.ubLevelID   = (bLevel == 0 ? ANI_STRUCT_LEVEL : ANI_ONROOF_LEVEL);
+	ani_params.sDelay      = 300 + Random(300);
+	ani_params.sX          = CenterX(sGridNo);
+	ani_params.sY          = CenterY(sGridNo);
+	ani_params.sZ          = 0;
+	CreateAnimationTile(&ani_params);
 
-	// Set world flags
-	gpWorldLevelData[ sGridNo ].ubExtFlags[ bLevel ] |= FromSmokeTypeToWorldFlags( bType );
-
-	// All done...
-
-	// Re-draw..... :(
+	gpWorldLevelData[sGridNo].ubExtFlags[bLevel] |= FromSmokeTypeToWorldFlags(bType);
 	SetRenderFlags(RENDER_FLAG_FULL);
 }
+
 
 void RemoveSmokeEffectFromTile( INT16 sGridNo, INT8 bLevel )
 {
