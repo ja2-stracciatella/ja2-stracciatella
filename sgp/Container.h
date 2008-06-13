@@ -37,12 +37,9 @@ namespace SGP
 	template<typename T> class Queue
 	{
 		public:
-			Queue(size_t const n_elements)
-			{
-				HQUEUE const q = CreateQueue(n_elements, sizeof(T));
-				if (!q) throw std::bad_alloc();
-				queue_ = q;
-			}
+			Queue(size_t const n_elements) :
+				queue_(CreateQueue(n_elements, sizeof(T)))
+			{}
 
 			~Queue() { DeleteQueue(queue_); }
 
