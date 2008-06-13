@@ -561,7 +561,7 @@ static void FilesBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static BOOLEAN HandleSpecialFiles(void);
+static void HandleSpecialFiles(void);
 static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber);
 
 
@@ -725,8 +725,7 @@ static void ClearOutWidthRecordsList(FileRecordWidth* pFileRecordWidthList);
 static FileRecordWidth* CreateWidthRecordsForAruloIntelFile(void);
 
 
-static BOOLEAN HandleSpecialFiles(void)
-try
+static void HandleSpecialFiles(void)
 {
 	INT32 iCounter = 0;
 	FileString* pTempString = NULL;
@@ -895,10 +894,7 @@ try
 			// wedding pic
 		BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_W.sti", 0, 260, 85);
 	}
-
-	return ( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void AddStringToFilesList(const wchar_t* const pString)
