@@ -497,7 +497,6 @@ void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel )
 {
 	MAP_ELEMENT *		pMapElement;
 	INT8						bValue;
-	UINT16					usIndex;
 
 	// OK, based on level, type, display graphics for blood
 	pMapElement = &(gpWorldLevelData[ sGridNo ]);
@@ -520,7 +519,8 @@ void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel )
 			bValue = BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo );
 
 			// OK, remove tile graphic if one exists....
-			if ( TypeRangeExistsInObjectLayer( sGridNo, HUMANBLOOD, CREATUREBLOOD, &usIndex ) )
+			UINT16 const usIndex = TypeRangeExistsInObjectLayer(sGridNo, HUMANBLOOD, CREATUREBLOOD);
+			if (usIndex != NO_TILE)
 			{
 				//This has been removed and it is handled by the ubBloodInfo level when restoring a saved game.
 				//Set a flag indicating that the following changes are to go the the maps temp file
@@ -536,7 +536,7 @@ void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel )
 
 			if ( bValue > 0 )
 			{
-				usIndex = Random(4) * 4 + 3 - bValue / 2U;
+				UINT16 const usIndex = Random(4) * 4 + 3 - bValue / 2U;
 
 				UINT16 usNewIndex;
 				if ( BLOOD_FLOOR_TYPE( pMapElement->ubSmellInfo )	== 0 )

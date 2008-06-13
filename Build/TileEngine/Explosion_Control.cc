@@ -330,7 +330,6 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 	STRUCTURE		*pBase, *pWallStruct, *pAttached, *pAttachedBase;
 	LEVELNODE *pNode = NULL, *pNewNode = NULL, *pAttachedNode;
 	INT16 sNewGridNo, sStructGridNo;
-	UINT16 usObjectIndex;
 	UINT8	 ubNumberOfTiles, ubLoop;
 	DB_STRUCTURE_TILE	**	ppTile;
 	INT8	bDestructionPartner=-1;
@@ -465,7 +464,7 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 							// there might be two structures in this tile, one on each level, but we just want to
 							// delete one on each pass
 
-							if ( !TypeRangeExistsInObjectLayer( sStructGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS, &usObjectIndex ) )
+							if (TypeRangeExistsInObjectLayer(sStructGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
 							{
 								//Set a flag indicating that the following changes are to go the the maps, temp file
 								ApplyMapChangesToMapTempFile( TRUE );
@@ -486,7 +485,7 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 							case INSIDE_TOP_LEFT:
 
 									sStructGridNo = NewGridNo( pBase->sGridNo, DirectionInc( SOUTH ) );
-									if ( !TypeRangeExistsInObjectLayer( sStructGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS, &usObjectIndex ) )
+									if (TypeRangeExistsInObjectLayer(sStructGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
 									{
 										//Set a flag indicating that the following changes are to go the the maps, temp file
 										ApplyMapChangesToMapTempFile( TRUE );
@@ -501,7 +500,7 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 							case INSIDE_TOP_RIGHT:
 
 									sStructGridNo = NewGridNo( pBase->sGridNo, DirectionInc( EAST ) );
-									if ( !TypeRangeExistsInObjectLayer( sStructGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS, &usObjectIndex ) )
+									if (TypeRangeExistsInObjectLayer(sStructGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
 									{
 										//Set a flag indicating that the following changes are to go the the maps, temp file
 										ApplyMapChangesToMapTempFile( TRUE );
@@ -1345,7 +1344,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 		// Add burn marks to ground randomly....
 		if ( Random( 50 ) < 15 && uiDist == 1 )
 		{
-			//if ( !TypeRangeExistsInObjectLayer( sGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS, &usObjectIndex ) )
+			//if (TypeRangeExistsInObjectLayer(sGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
 			//{
 			//	UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(SECONDEXPLDEBRIS, Random(10) + 1);
 			//	AddObjectToHead( sGridNo, usTileIndex );

@@ -186,24 +186,21 @@ BOOLEAN RemoveObject(UINT32 iMapIndex, UINT16 usIndex)
 }
 
 
-BOOLEAN TypeRangeExistsInObjectLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusObjectIndex )
+UINT16 TypeRangeExistsInObjectLayer(UINT32 const iMapIndex, UINT32 const fStartType, UINT32 const fEndType)
 {
 	// Look through all objects and Search for type
 	for (const LEVELNODE* pObject = gpWorldLevelData[iMapIndex].pObjectHead; pObject != NULL; pObject = pObject->pNext)
 	{
-		if (pObject->usIndex != NO_TILE && pObject->usIndex < NUMBEROFTILES)
-		{
-			const UINT32 fTileType = GetTileType(pObject->usIndex);
-			if (fTileType >= fStartType && fTileType <= fEndType)
-			{
-				*pusObjectIndex = pObject->usIndex;
-				return TRUE;
-			}
-		}
+		if (pObject->usIndex == NO_TILE || pObject->usIndex >= NUMBEROFTILES) continue;
+
+		UINT32 const fTileType = GetTileType(pObject->usIndex);
+		if (fTileType < fStartType || fEndType < fTileType) continue;
+
+		return pObject->usIndex;
 	}
 
 	// Could not find it
-	return FALSE;
+	return NO_TILE;
 }
 
 
