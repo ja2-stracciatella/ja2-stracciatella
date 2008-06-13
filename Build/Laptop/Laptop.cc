@@ -400,7 +400,7 @@ void LaptopScreenInit(void)
 }
 
 
-BOOLEAN InitLaptopAndLaptopScreens(void)
+void InitLaptopAndLaptopScreens(void)
 {
 	GameInitFinances();
 	GameInitHistory();
@@ -410,8 +410,6 @@ BOOLEAN InitLaptopAndLaptopScreens(void)
 
 	//Reset the flag so that BOBBYR's isnt available at the begining of the game
 	LaptopSaveInfo.fBobbyRSiteCanBeAccessed = FALSE;
-
-	return TRUE;
 }
 
 
