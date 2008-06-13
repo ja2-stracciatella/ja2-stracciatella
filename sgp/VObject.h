@@ -115,7 +115,7 @@ BOOLEAN BltVideoObjectOutline(SGPVSurface* dst, const SGPVObject* src, UINT16 us
 BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* dst, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
 
 /* Loads a video object, blits it once and frees it */
-BOOLEAN BltVideoObjectOnce(SGPVSurface* dst, const char* filename, UINT16 region, INT32 x, INT32 y);
+void BltVideoObjectOnce(SGPVSurface* dst, char const* filename, UINT16 region, INT32 x, INT32 y);
 
 extern UINT32 guiVObjectSize;
 

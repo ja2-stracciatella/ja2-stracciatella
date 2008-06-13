@@ -9,7 +9,6 @@
 #include "Local.h"
 #include "MessageBoxScreen.h"
 #include "Timer_Control.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "SysUtil.h"
 #include "Soldier_Profile.h"
@@ -2420,6 +2419,7 @@ static BOOLEAN DeleteVideoConfPopUp(void);
 
 
 static BOOLEAN InitDeleteVideoConferencePopUp(void)
+try
 {
 	static BOOLEAN	fXRegionActive = FALSE;
 	UINT8	i;
@@ -2511,7 +2511,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 
 			// Create a background video surface to blt the face onto
 			guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
-			CHECKF(BltVideoObjectOnce(guiVideoTitleBar, "LAPTOP/VideoTitleBar.sti", 0, 0, 0));
+			BltVideoObjectOnce(guiVideoTitleBar, "LAPTOP/VideoTitleBar.sti", 0, 0, 0);
 
 			gfAimMemberCanMercSayOpeningQuote = TRUE;
 		}
@@ -2688,7 +2688,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 
 		// Create a background video surface to blt the face onto
 		guiVideoTitleBar = AddVideoSurface(AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT, PIXEL_DEPTH);
-		CHECKF(BltVideoObjectOnce(guiVideoTitleBar, "LAPTOP/VideoTitleBar.sti", 0, 0, 0));
+		BltVideoObjectOnce(guiVideoTitleBar, "LAPTOP/VideoTitleBar.sti", 0, 0, 0);
 	}
 
 //	gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
@@ -2697,6 +2697,7 @@ static BOOLEAN InitDeleteVideoConferencePopUp(void)
 	guiMercAttitudeTime = GetJA2Clock();
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN DeleteVideoConfPopUp(void)

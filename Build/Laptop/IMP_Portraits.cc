@@ -5,7 +5,6 @@
 #include "IMPVideoObjects.h"
 #include "Text.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "Input.h"
 #include "Debug.h"
 #include "Render_Dirty.h"
@@ -94,12 +93,14 @@ void HandleIMPPortraits( void )
 
 
 static BOOLEAN RenderPortrait(INT16 sX, INT16 sY)
+try
 {
   // render the portrait of the current picture
 	const INT32 portrait = iCurrentPortrait + (fCharacterIsMale ? 0 : 8);
-	CHECKF(BltVideoObjectOnce(FRAME_BUFFER, pPlayerSelectedBigFaceFileNames[portrait], 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY));
+	BltVideoObjectOnce(FRAME_BUFFER, pPlayerSelectedBigFaceFileNames[portrait], 0, LAPTOP_SCREEN_UL_X + sX, LAPTOP_SCREEN_WEB_UL_Y + sY);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void IncrementPictureIndex(void)

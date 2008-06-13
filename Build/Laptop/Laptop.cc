@@ -9,7 +9,6 @@
 #include "Timer_Control.h"
 #include "VObject.h"
 #include "VSurface.h"
-#include "WCheck.h"
 #include "Render_Dirty.h"
 #include "SysUtil.h"
 #include "Screens.h"
@@ -3101,9 +3100,10 @@ void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usK
 
 
 BOOLEAN RenderWWWProgramTitleBar(void)
+try
 {
 	// will render the title bar for the www program
-	CHECKF(BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/programtitlebar.sti", 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2));
+	BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/programtitlebar.sti", 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
 
 	// now slapdown text
 	SetFont(FONT14ARIAL);
@@ -3128,6 +3128,7 @@ BOOLEAN RenderWWWProgramTitleBar(void)
 	DisplayProgramBoundingBox(FALSE);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void LaptopProgramIconMinimizeCallback(MOUSE_REGION* pRegion, INT32 iReason);

@@ -4,7 +4,6 @@
 #include "Local.h"
 #include "Personnel.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "WordWrap.h"
 #include "Render_Dirty.h"
@@ -2093,6 +2092,7 @@ static void DisplayPersonnelTextOnTitleBar(void)
 
 // display box around currently selected merc
 static BOOLEAN DisplayHighLightBox(void)
+try
 {
 	// will display highlight box around selected merc
 
@@ -2105,10 +2105,10 @@ static BOOLEAN DisplayHighLightBox(void)
 
 	const INT32 x = SMALL_PORTRAIT_START_X + iCurrentPersonSelectedId % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH  - 2;
 	const INT32 y = SMALL_PORTRAIT_START_Y + iCurrentPersonSelectedId / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT - 3;
-	CHECKF(BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/PicBorde.sti", 0, x, y));
-
+	BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/PicBorde.sti", 0, x, y);
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 // add to dead list

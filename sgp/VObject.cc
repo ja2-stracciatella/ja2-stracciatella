@@ -426,14 +426,11 @@ BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* const dst, const SGPVObject* co
 }
 
 
-BOOLEAN BltVideoObjectOnce(SGPVSurface* const dst, const char* const filename, const UINT16 region, const INT32 x, const INT32 y)
-try
+void BltVideoObjectOnce(SGPVSurface* const dst, char const* const filename, UINT16 const region, INT32 const x, INT32 const y)
 {
 	AutoSGPVObject vo(AddVideoObjectFromFile(filename));
 	BltVideoObject(dst, vo, region, x, y);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 #ifdef SGP_VIDEO_DEBUGGING

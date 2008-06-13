@@ -9,7 +9,6 @@
 #include "Overhead.h"
 #include "Soldier_Control.h"
 #include "Timer_Control.h"
-#include "WCheck.h"
 #include "SysUtil.h"
 #include "Render_Dirty.h"
 #include "Overhead_Map.h"
@@ -518,7 +517,7 @@ static void CreateDestroyMouseRegionsForSquadList(void)
 
 	if (!fRenderRadarScreen && !fCreated)
 	{
-		CHECKV(BltVideoObjectOnce(guiSAVEBUFFER, "INTERFACE/squadpanel.sti", 0, 538, gsVIEWPORT_END_Y));
+		BltVideoObjectOnce(guiSAVEBUFFER, "INTERFACE/squadpanel.sti", 0, 538, gsVIEWPORT_END_Y);
 		RestoreExternBackgroundRect(538, gsVIEWPORT_END_Y, 102, 120);
 
 		// create regions

@@ -4,7 +4,6 @@
 #include "Game_Clock.h"
 #include "LoadSaveData.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "WordWrap.h"
 #include "Render_Dirty.h"
@@ -727,6 +726,7 @@ static FileRecordWidth* CreateWidthRecordsForAruloIntelFile(void);
 
 
 static BOOLEAN HandleSpecialFiles(void)
+try
 {
 	INT32 iCounter = 0;
 	FileString* pTempString = NULL;
@@ -883,21 +883,22 @@ static BOOLEAN HandleSpecialFiles(void)
 	if( giFilesPage == 0 )
 	{
 		// title bar
-		CHECKF(BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/ArucoFilesMap.sti", 0, 300, 270));
+		BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/ArucoFilesMap.sti", 0, 300, 270);
 	}
 	else if( giFilesPage == 4 )
 	{
 		// kid pic
-		CHECKF(BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_Y.sti", 0, 260, 225));
+		BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_Y.sti", 0, 260, 225);
 	}
 	else if( giFilesPage == 5 )
 	{
 			// wedding pic
-		CHECKF(BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_W.sti", 0, 260, 85));
+		BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_W.sti", 0, 260, 85);
 	}
 
 	return ( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 static void AddStringToFilesList(const wchar_t* const pString)
@@ -1215,6 +1216,7 @@ static void CheckForUnreadFiles(void)
 
 
 static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
+try
 {
 
 	INT32 iCounter = 0;
@@ -1327,8 +1329,8 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 			{
 				char sTemp[128];
 				sprintf(sTemp, "%s%02d.sti", "FACES/BIGFACES/",	usProfileIdsForTerroristFiles[iFileNumber + 1]);
-				CHECKF(BltVideoObjectOnce(FRAME_BUFFER, sTemp,                        0, FILE_VIEWER_X + 30, iYPositionOnPage + 21));
-				CHECKF(BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/InterceptBorder.sti", 0, FILE_VIEWER_X + 25, iYPositionOnPage + 16));
+				BltVideoObjectOnce(FRAME_BUFFER, sTemp,                        0, FILE_VIEWER_X + 30, iYPositionOnPage + 21);
+				BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/InterceptBorder.sti", 0, FILE_VIEWER_X + 25, iYPositionOnPage + 16);
 			}
 
 			iCounter++;
@@ -1341,6 +1343,8 @@ static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
 
 		return( TRUE );
 }
+catch (...) { return FALSE; }
+
 
 // add a file about this terrorist
 BOOLEAN AddFileAboutTerrorist( INT32 iProfileId )
