@@ -562,7 +562,7 @@ static void FilesBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 
 static void HandleSpecialFiles(void);
-static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber);
+static void HandleSpecialTerroristFile(INT32 iFileNumber);
 
 
 static void DisplayFormattedText(void)
@@ -1211,10 +1211,8 @@ static void CheckForUnreadFiles(void)
 }
 
 
-static BOOLEAN HandleSpecialTerroristFile(INT32 iFileNumber)
-try
+static void HandleSpecialTerroristFile(INT32 const iFileNumber)
 {
-
 	INT32 iCounter = 0;
 	FileString* pTempString = NULL;
 	FileString* pLocatorString = NULL;
@@ -1336,10 +1334,7 @@ try
 
 		ClearOutWidthRecordsList( WidthList );
 		ClearFileStringList( );
-
-		return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 // add a file about this terrorist
