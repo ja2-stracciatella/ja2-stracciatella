@@ -5,24 +5,28 @@
 #include "WorldDef.h"
 
 
-#define ANITILE_DOOR												0x00000001
-#define ANITILE_BACKWARD										0x00000020
-#define ANITILE_FORWARD											0x00000040
-#define ANITILE_PAUSED											0x00000200
-#define ANITILE_EXISTINGTILE								0x00000400
-#define ANITILE_LOOPING											0x00020000
-#define ANITILE_NOZBLITTER									0x00040000
-#define	ANITILE_REVERSE_LOOPING							0x00080000
-#define ANITILE_ALWAYS_TRANSLUCENT					0x00100000
-#define ANITILE_OPTIMIZEFORSLOWMOVING				0x00400000
-#define ANITILE_ANIMATE_Z																		0x00800000
-#define ANITILE_USE_DIRECTION_FOR_START_FRAME								0x01000000
-#define ANITILE_PAUSE_AFTER_LOOP						0x02000000
-#define ANITILE_ERASEITEMFROMSAVEBUFFFER		0x04000000
-#define	ANITILE_SMOKE_EFFECT								0x10000000
-#define ANITILE_EXPLOSION										0x20000000
-#define ANITILE_RELEASE_ATTACKER_WHEN_DONE	0x40000000
-#define ANITILE_USE_4DIRECTION_FOR_START_FRAME							0x02000000
+enum AnimationFlags
+{
+	ANITILE_DOOR                           = 0x00000001,
+	ANITILE_BACKWARD                       = 0x00000020,
+	ANITILE_FORWARD                        = 0x00000040,
+	ANITILE_PAUSED                         = 0x00000200,
+	ANITILE_EXISTINGTILE                   = 0x00000400,
+	ANITILE_LOOPING                        = 0x00020000,
+	ANITILE_NOZBLITTER                     = 0x00040000,
+	ANITILE_REVERSE_LOOPING                = 0x00080000,
+	ANITILE_ALWAYS_TRANSLUCENT             = 0x00100000,
+	ANITILE_OPTIMIZEFORSLOWMOVING          = 0x00400000,
+	ANITILE_ANIMATE_Z                      = 0x00800000,
+	ANITILE_USE_DIRECTION_FOR_START_FRAME  = 0x01000000,
+	ANITILE_PAUSE_AFTER_LOOP               = 0x02000000, // XXX same value as ANITILE_USE_4DIRECTION_FOR_START_FRAME
+	ANITILE_ERASEITEMFROMSAVEBUFFFER       = 0x04000000,
+	ANITILE_SMOKE_EFFECT                   = 0x10000000,
+	ANITILE_EXPLOSION                      = 0x20000000,
+	ANITILE_RELEASE_ATTACKER_WHEN_DONE     = 0x40000000,
+	ANITILE_USE_4DIRECTION_FOR_START_FRAME = 0x02000000  // XXX same value as ANITILE_PAUSE_AFTER_LOOP
+};
+ENUM_BITSET(AnimationFlags)
 
 
 enum AnimationLevel
@@ -54,7 +58,7 @@ typedef union AniUserData
 typedef struct TAG_anitile
 {
 	struct TAG_anitile			 	  *pNext;
-	UINT32											uiFlags;							// flags struct
+	AnimationFlags              uiFlags;							// flags struct
 	UINT32											uiTimeLastUpdate;			// Stuff for animated tiles
 
 	LEVELNODE										*pLevelNode;
@@ -86,7 +90,7 @@ typedef struct TAG_anitile
 
 struct ANITILE_PARAMS
 {
-	UINT32											uiFlags;							// flags struct
+	AnimationFlags              uiFlags;							// flags struct
 	AnimationLevel              ubLevelID;						// Level ID for rendering layer
 	INT16											  sStartFrame;					// Start frame
 	INT16												sDelay;								// Delay time
@@ -127,6 +131,6 @@ void DeleteAniTiles(void);
 
 void HideAniTile( ANITILE *pAniTile, BOOLEAN fHide );
 
-ANITILE *GetCachedAniTileOfType( INT16 sGridNo, UINT8 ubLevelID, UINT32 uiFlags );
+ANITILE* GetCachedAniTileOfType(INT16 sGridNo, UINT8 ubLevelID, AnimationFlags);
 
 #endif

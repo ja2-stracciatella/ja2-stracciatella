@@ -53,7 +53,7 @@ ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 	INT16          const gridno      = parms->sGridNo;
 	AnimationLevel const ubLevel     = parms->ubLevelID;
 	INT16                tile_index  = parms->usTileIndex;
-	UINT32         const flags       = parms->uiFlags;
+	AnimationFlags const flags       = parms->uiFlags;
 	LEVELNODE*           l           = parms->pGivenLevelNode;
 	if (flags & ANITILE_EXISTINGTILE)
 	{
@@ -536,7 +536,7 @@ void UpdateAniTiles( )
 }
 
 
-ANITILE *GetCachedAniTileOfType( INT16 sGridNo, UINT8 ubLevelID, UINT32 uiFlags )
+ANITILE* GetCachedAniTileOfType(INT16 const sGridNo, UINT8 const ubLevelID, AnimationFlags const uiFlags)
 {
 	LEVELNODE *pNode = NULL;
 

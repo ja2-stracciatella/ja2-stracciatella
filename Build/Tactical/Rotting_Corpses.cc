@@ -421,7 +421,7 @@ try
 	c->def = *pCorpseDef;
 
 	// If we are a soecial type...
-	UINT32 uiDirectionUseFlag;
+	AnimationFlags uiDirectionUseFlag;
 	switch (pCorpseDef->ubType)
 	{
 		case SMERC_FALL:
