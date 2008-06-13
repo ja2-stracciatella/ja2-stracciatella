@@ -2810,45 +2810,29 @@ static void HandleCurrentVideoConfMode(void)
 }
 
 
-static void EnableDisableCurrentVideoConferenceButtons(BOOLEAN fEnable)
+static void EnableDisableCurrentVideoConferenceButtons(BOOLEAN const fEnable)
 {
-	INT8	i;
 	static BOOLEAN fCreated = FALSE;
-	if(!fEnable)
+
+	if (!fEnable)
 	{
-		if( fCreated )
-		{
-			//enable buttons behind the acknowlegde button
+		if (!fCreated) return;
+		fCreated = FALSE;
 
-			for( i=0; i<3; i++)
-				EnableButton( giContractLengthButton[i] );
-
-			for(i=0; i<2; i++)
-				EnableButton( giBuyEquipmentButton[i] );
-
-			for(i=0; i<2; i++)
-				EnableButton( giAuthorizeButton[i] );
-
-			fCreated = FALSE;
-		}
+		//enable buttons behind the acknowlegde button
+		for (INT8 i = 0; i < 3; ++i) EnableButton(giContractLengthButton[i]);
+		for (INT8 i = 0; i < 2; ++i) EnableButton(giBuyEquipmentButton[i]);
+		for (INT8 i = 0; i < 2; ++i) EnableButton(giAuthorizeButton[i]);
 	}
 	else
 	{
-		if( !fCreated )
-		{
-			//disable buttons behind the acknowlegde button
-			for( i=0; i<3; i++)
-				DisableButton( giContractLengthButton[i] );
+		if (fCreated) return;
+		fCreated = TRUE;
 
-			for(i=0; i<2; i++)
-				DisableButton( giBuyEquipmentButton[i] );
-
-			for(i=0; i<2; i++)
-				DisableButton( giAuthorizeButton[i] );
-
-
-			fCreated = TRUE;
-		}
+		//disable buttons behind the acknowlegde button
+		for (INT8 i = 0; i < 3; ++i) DisableButton(giContractLengthButton[i]);
+		for (INT8 i = 0; i < 2; ++i) DisableButton(giBuyEquipmentButton[i]);
+		for (INT8 i = 0; i < 2; ++i) DisableButton(giAuthorizeButton[i]);
 	}
 }
 
