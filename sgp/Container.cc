@@ -48,23 +48,20 @@ typedef struct QueueHeader
 //									siz_each - size of each item
 // Return Value	NULL if unsuccesful
 //							 pointer to allocated memory
-HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
+HQUEUE CreateQueue(UINT32 const uiNum_items, UINT32 const uiSiz_each)
 {
 	if (uiNum_items == 0 || uiSiz_each == 0)
 	{
 		throw std::logic_error("Requested queue items and size have to be >0");
 	}
 
-	UINT32 uiAmount = uiNum_items * uiSiz_each;
-
-	const HQUEUE hQueue = MALLOCE(QueueHeader, uiAmount);
-
-	QueueHeader* pQueue = hQueue;
-	pQueue->uiMax_size = uiAmount + sizeof(QueueHeader);
-	pQueue->uiTotal_items = 0;
-	pQueue->uiSiz_of_elem = uiSiz_each;
-	pQueue->uiTail = pQueue->uiHead = sizeof(QueueHeader);
-
+	UINT32 const uiAmount = uiNum_items * uiSiz_each;
+	HQUEUE const q        = MALLOCE(QueueHeader, uiAmount);
+	q->uiMax_size    = uiAmount + sizeof(QueueHeader);
+	q->uiTotal_items = 0;
+	q->uiSiz_of_elem = uiSiz_each;
+	q->uiTail        = sizeof(QueueHeader);
+	q->uiHead        = sizeof(QueueHeader);
 	return hQueue;
 }
 
