@@ -33,7 +33,7 @@ GUIButtonRef giIMPMainPageButton[6];
 extern INT32 iCurrentVoices;
 
 // mouse regions for not entablable warning
-MOUSE_REGION pIMPMainPageMouseRegions[ 4 ];
+static MOUSE_REGION pIMPMainPageMouseRegions[4];
 
 static SGPVObject* guiCHARACTERPORTRAITFORMAINPAGE;
 
@@ -438,44 +438,28 @@ static void IMPMainPageNotSelectableBtnCallback(MOUSE_REGION* pRegion, INT32 iRe
 
 static void CreateMouseRegionsForIMPMainPageBasedOnCharGenStatus(void)
 {
-  // this procedure will create masks for the char generation main page
-
-
-	// mask for personality page button
-	MSYS_DefineRegion( &pIMPMainPageMouseRegions[ 0 ],LAPTOP_SCREEN_UL_X + 13 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),  LAPTOP_SCREEN_UL_X + 13 + 115 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ) + 93 , MSYS_PRIORITY_HIGH+5,
-						CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback );
-
-	// mask for attrib page button
-	MSYS_DefineRegion( &pIMPMainPageMouseRegions[ 1 ],LAPTOP_SCREEN_UL_X + 133 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),  LAPTOP_SCREEN_UL_X + 133 + 115 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ) + 93 , MSYS_PRIORITY_HIGH+5,
-						CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback );
-
-
-
-	// mask for portrait page button
-	MSYS_DefineRegion( &pIMPMainPageMouseRegions[ 2 ],LAPTOP_SCREEN_UL_X + 253 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),  LAPTOP_SCREEN_UL_X + 253 + 115 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ) + 93 , MSYS_PRIORITY_HIGH+5,
-						CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback );
-
-
-
-
-	// mask for voice page button
-	MSYS_DefineRegion( &pIMPMainPageMouseRegions[ 3 ],LAPTOP_SCREEN_UL_X + 373 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ),  LAPTOP_SCREEN_UL_X + 373  + 115 , LAPTOP_SCREEN_WEB_UL_Y + ( 245 ) + 93 , MSYS_PRIORITY_HIGH+5,
-						CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback );
+	// this procedure will create masks for the char generation main page
+	/* create masks for the personality, attrib, portrait and page buttons on the
+	 * character generation main page */
+	UINT16       x = LAPTOP_SCREEN_UL_X     +  13;
+	UINT16 const y = LAPTOP_SCREEN_WEB_UL_Y + 245;
+	UINT16 const w = 115;
+	UINT16 const h =  93;
+	for (MOUSE_REGION* r = pIMPMainPageMouseRegions; r != endof(pIMPMainPageMouseRegions); ++r)
+	{
+		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGH + 5, CURSOR_WWW, MSYS_NO_CALLBACK, IMPMainPageNotSelectableBtnCallback);
+		x += 120;
+	}
 }
 
 
 static void DestoryMouseRegionsForIMPMainPageBasedOnCharGenStatus(void)
 {
 	// will destroy button masks for the char gen pages
-
-
-	 MSYS_RemoveRegion( &pIMPMainPageMouseRegions[ 0 ]);
-
-	 MSYS_RemoveRegion( &pIMPMainPageMouseRegions[ 1 ]);
-
-	 MSYS_RemoveRegion( &pIMPMainPageMouseRegions[ 2 ]);
-
-	 MSYS_RemoveRegion( &pIMPMainPageMouseRegions[ 3 ]);
+	for (MOUSE_REGION* r = pIMPMainPageMouseRegions; r != endof(pIMPMainPageMouseRegions); ++r)
+	{
+		MSYS_RemoveRegion(r);
+	}
 }
 
 
