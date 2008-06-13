@@ -273,9 +273,8 @@
 enum
 {
 	AIM_POPUP_NOTHING,
-	AIM_POPUP_CREATE,
 	AIM_POPUP_DISPLAY,
-	AIM_POPUP_DELETE,
+	AIM_POPUP_DELETE
 };
 
 // Enumerated Types used for the different types of video distortion applied to the video face
@@ -535,7 +534,7 @@ void EnterAIMMembers()
 }
 
 
-static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t* sString1, const wchar_t* sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData);
+static BOOLEAN DeleteAimPopUpBox();
 
 
 void ExitAIMMembers()
@@ -577,7 +576,7 @@ void ExitAIMMembers()
 
 	ExitAimMenuBar();
 
-	InitCreateDeleteAimPopUpBox(AIM_POPUP_DELETE, NULL, NULL, 0, 0, 0);
+	DeleteAimPopUpBox();
 
 	RemoveTextMercPopupImages( );
 
@@ -636,7 +635,7 @@ void HandleAIMMembers()
 	// If we have to get rid of the popup box
 	if( gubPopUpBoxAction == AIM_POPUP_DELETE )
 	{
-		InitCreateDeleteAimPopUpBox(AIM_POPUP_DELETE, NULL, NULL, 0, 0, 0);
+		DeleteAimPopUpBox();
 
 		//if we are exiting to display a popup box, dont rerender the display
 		if( !fExitDueToMessageBox )
@@ -684,9 +683,12 @@ void HandleAIMMembers()
 }
 
 
+static BOOLEAN DisplayAimPopUpBox();
+
+
 void RenderAIMMembersTopLevel()
 {
-	InitCreateDeleteAimPopUpBox( AIM_POPUP_DISPLAY, NULL, NULL, 0, 0, 0);
+	DisplayAimPopUpBox();
 }
 
 
@@ -755,7 +757,7 @@ void RenderAIMMembers()
 		gfIsAnsweringMachineActive = FALSE;
 	}
 
-//	InitCreateDeleteAimPopUpBox( AIM_POPUP_DISPLAY, NULL, NULL, 0, 0, 0);
+//	DisplayAimPopUpBox();
 
 	//check to see if the merc is dead if so disable the contact button
 	if( IsMercDead( gbCurrentSoldier ) )
@@ -949,7 +951,7 @@ static void BtnPreviousButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		InitCreateDeleteAimPopUpBox(AIM_POPUP_DELETE, NULL, NULL, 0, 0, 0);
+		DeleteAimPopUpBox();
 
 		gbCurrentIndex =
 			(gbCurrentIndex > 0 ? gbCurrentIndex - 1 : MAX_NUMBER_MERCS - 1);
@@ -973,7 +975,7 @@ static void BtnContactButtonCallback(GUI_BUTTON *btn, INT32 reason)
 			gfFirstTimeInContactScreen = TRUE;
 		}
 
-		InitCreateDeleteAimPopUpBox(AIM_POPUP_DELETE, NULL, NULL, 0, 0, 0);
+		DeleteAimPopUpBox();
 	}
 }
 
@@ -982,7 +984,7 @@ static void BtnNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		InitCreateDeleteAimPopUpBox(AIM_POPUP_DELETE, NULL, NULL, 0, 0, 0);
+		DeleteAimPopUpBox();
 
 		gbCurrentIndex =
 			(gbCurrentIndex < MAX_NUMBER_MERCS - 1 ? gbCurrentIndex + 1 : 0);
@@ -1155,9 +1157,10 @@ static void BtnBuyEquipmentButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static INT8 AimMemberHireMerc(void);
+static INT8    AimMemberHireMerc(void);
 static BOOLEAN CanMercBeHired(void);
-static void EnableDisableCurrentVideoConferenceButtons(BOOLEAN fEnable);
+static void    EnableDisableCurrentVideoConferenceButtons(BOOLEAN fEnable);
+static BOOLEAN CreateAimPopUpBox(wchar_t const* sString1, wchar_t const* sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData);
 
 
 //Transfer funds button callback
@@ -1182,7 +1185,7 @@ static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 				if (AimMemberHireMerc())
 				{
 					// if merc was hired
-					InitCreateDeleteAimPopUpBox(AIM_POPUP_CREATE, AimPopUpText[AIM_MEMBER_FUNDS_TRANSFER_SUCCESFUL], NULL, AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
+					CreateAimPopUpBox(AimPopUpText[AIM_MEMBER_FUNDS_TRANSFER_SUCCESFUL], NULL, AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
 					DelayMercSpeech( gbCurrentSoldier, QUOTE_CONTRACT_ACCEPTANCE, 750, TRUE, FALSE );
 
 					//Disable the buttons behind the message box
@@ -1224,7 +1227,7 @@ static INT8 AimMemberHireMerc(void)
 	if( LaptopSaveInfo.iCurrentBalance < giContractAmount )
 	{
 		//wasnt hired because of lack of funds
-		InitCreateDeleteAimPopUpBox(AIM_POPUP_CREATE, AimPopUpText[AIM_MEMBER_FUNDS_TRANSFER_FAILED], AimPopUpText[AIM_MEMBER_NOT_ENOUGH_FUNDS], AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_FAILURE);
+		CreateAimPopUpBox(AimPopUpText[AIM_MEMBER_FUNDS_TRANSFER_FAILED], AimPopUpText[AIM_MEMBER_NOT_ENOUGH_FUNDS], AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_FAILURE);
 
 		//Disable the buttons behind the message box
 		EnableDisableCurrentVideoConferenceButtons( TRUE );
@@ -1497,106 +1500,102 @@ static void DisplayMercChargeAmount(void)
 }
 
 
+static UINT16  usPopUpBoxPosX;
+static UINT16  usPopUpBoxPosY;
+static wchar_t sPopUpString1[400];
+static wchar_t sPopUpString2[400];
+static BOOLEAN fPopUpBoxActive = FALSE;
+
+
 static void BtnPopUpOkButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 const ubFlag, wchar_t const* const sString1, wchar_t const* const sString2, UINT16 const usPosX, UINT16 const usPosY, UINT8 const ubData)
+static BOOLEAN CreateAimPopUpBox(wchar_t const* const sString1, wchar_t const* const sString2, UINT16 const usPosX, UINT16 const usPosY, UINT8 const ubData)
 try
 {
-	static UINT16  usPopUpBoxPosX;
-	static UINT16  usPopUpBoxPosY;
-	static wchar_t sPopUpString1[400];
-	static wchar_t sPopUpString2[400];
-	static BOOLEAN fPopUpBoxActive = FALSE;
+	if (fPopUpBoxActive) return FALSE;
 
-	switch (ubFlag)
+	//Disable the 'X' to close the pop upi video
+	DisableButton(giXToCloseVideoConfButton);
+
+	wcscpy(sPopUpString1, sString1 ? sString1 : L"");
+	wcscpy(sPopUpString2, sString2 ? sString2 : L"");
+
+	usPopUpBoxPosX = usPosX;
+	usPopUpBoxPosY = usPosY;
+
+	// load the popup box graphic
+	guiPopUpBox = AddVideoObjectFromFile("LAPTOP/VideoConfPopUp.sti");
+
+	BltVideoObject(FRAME_BUFFER, guiPopUpBox, 0, usPosX, usPosY);
+
+	//Create the popup boxes button
+	guiPopUpImage = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 2, -1, 3, -1);
+	INT16 const colour = AIM_POPUP_BOX_COLOR;
+	INT16 const shadow = AIM_M_VIDEO_NAME_SHADOWCOLOR;
+	INT16 const x      = usPosX + AIM_POPUP_BOX_BUTTON_OFFSET_X;
+	INT16 const y      = usPosY + AIM_POPUP_BOX_BUTTON_OFFSET_Y;
+	guiPopUpOkButton = CreateIconAndTextButton(guiPopUpImage, VideoConfercingText[AIM_MEMBER_OK], FONT14ARIAL, colour, shadow, colour, shadow, x, y, MSYS_PRIORITY_HIGH + 5, BtnPopUpOkButtonCallback);
+	guiPopUpOkButton->SetCursor(CURSOR_LAPTOP_SCREEN);
+	MSYS_SetBtnUserData(guiPopUpOkButton, ubData);
+
+	fPopUpBoxActive   = TRUE;
+	gubPopUpBoxAction = AIM_POPUP_DISPLAY;
+
+	if (gubVideoConferencingPreviousMode == AIM_VIDEO_HIRE_MERC_MODE)
 	{
-		case AIM_POPUP_CREATE:
-		{
-			if (fPopUpBoxActive) return FALSE;
+		// Enable the current video conference buttons
+		EnableDisableCurrentVideoConferenceButtons(FALSE);
+	}
 
-			//Disable the 'X' to close the pop upi video
-			DisableButton(giXToCloseVideoConfButton);
+	// Create a new flag for the PostButtonRendering function
+	fReDrawPostButtonRender = TRUE;
+	return TRUE;
+}
+catch (...) { return FALSE; }
 
-			wcscpy(sPopUpString1, sString1 ? sString1 : L"");
-			wcscpy(sPopUpString2, sString2 ? sString2 : L"");
 
-			usPopUpBoxPosX = usPosX;
-			usPopUpBoxPosY = usPosY;
+static BOOLEAN DisplayAimPopUpBox()
+{
+	if (gubPopUpBoxAction != AIM_POPUP_DISPLAY) return FALSE;
 
-			// load the popup box graphic
-			guiPopUpBox = AddVideoObjectFromFile("LAPTOP/VideoConfPopUp.sti");
+	UINT16 y = usPopUpBoxPosY;
+	BltVideoObject(FRAME_BUFFER, guiPopUpBox, 0, usPopUpBoxPosX, y);
 
-			BltVideoObject(FRAME_BUFFER, guiPopUpBox, 0, usPosX, usPosY);
+	SetFontShadow(AIM_M_VIDEO_NAME_SHADOWCOLOR);
 
-			//Create the popup boxes button
-			guiPopUpImage = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 2, -1, 3, -1);
-			INT16 const colour = AIM_POPUP_BOX_COLOR;
-			INT16 const shadow = AIM_M_VIDEO_NAME_SHADOWCOLOR;
-			INT16 const x      = usPosX + AIM_POPUP_BOX_BUTTON_OFFSET_X;
-			INT16 const y      = usPosY + AIM_POPUP_BOX_BUTTON_OFFSET_Y;
-			guiPopUpOkButton = CreateIconAndTextButton(guiPopUpImage, VideoConfercingText[AIM_MEMBER_OK], FONT14ARIAL, colour, shadow, colour, shadow, x, y, MSYS_PRIORITY_HIGH + 5, BtnPopUpOkButtonCallback);
-			guiPopUpOkButton->SetCursor(CURSOR_LAPTOP_SCREEN);
-			MSYS_SetBtnUserData(guiPopUpOkButton, ubData);
+	y += AIM_POPUP_BOX_STRING1_Y;
+	if (sPopUpString1[0] != L'\0') y += DisplayWrappedString(usPopUpBoxPosX, y,     AIM_POPUP_BOX_WIDTH, 2, AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString1, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	if (sPopUpString2[0] != L'\0')      DisplayWrappedString(usPopUpBoxPosX, y + 4, AIM_POPUP_BOX_WIDTH, 2, AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString2, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
-			fPopUpBoxActive   = TRUE;
-			gubPopUpBoxAction = AIM_POPUP_DISPLAY;
+	SetFontShadow(DEFAULT_SHADOW);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	return TRUE;
+}
 
-			if (gubVideoConferencingPreviousMode == AIM_VIDEO_HIRE_MERC_MODE)
-			{
-				// Enable the current video conference buttons
-				EnableDisableCurrentVideoConferenceButtons(FALSE);
-			}
 
-			// Create a new flag for the PostButtonRendering function
-			fReDrawPostButtonRender = TRUE;
-		}
-		break;
+static BOOLEAN DeleteAimPopUpBox()
+{
+	if (!fPopUpBoxActive) return FALSE;
 
-		case AIM_POPUP_DISPLAY:
-		{
-			if (gubPopUpBoxAction != AIM_POPUP_DISPLAY) return FALSE;
+	//Disable the 'X' to close the pop up video
+	EnableButton(giXToCloseVideoConfButton);
 
-			UINT16 y = usPopUpBoxPosY;
-			BltVideoObject(FRAME_BUFFER, guiPopUpBox, 0, usPopUpBoxPosX, y);
+	UnloadButtonImage(guiPopUpImage);
+	RemoveButton(guiPopUpOkButton);
+	DeleteVideoObject(guiPopUpBox);
 
-			SetFontShadow(AIM_M_VIDEO_NAME_SHADOWCOLOR);
+	fPopUpBoxActive   = FALSE;
+	gubPopUpBoxAction = AIM_POPUP_NOTHING;
 
-			y += AIM_POPUP_BOX_STRING1_Y;
-			if (sPopUpString1[0] != L'\0') y += DisplayWrappedString(usPopUpBoxPosX, y,     AIM_POPUP_BOX_WIDTH, 2, AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString1, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-			if (sPopUpString2[0] != L'\0')      DisplayWrappedString(usPopUpBoxPosX, y + 4, AIM_POPUP_BOX_WIDTH, 2, AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString2, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-
-			SetFontShadow(DEFAULT_SHADOW);
-			InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
-		}
-		break;
-
-		case AIM_POPUP_DELETE:
-		{
-			if (!fPopUpBoxActive) return FALSE;
-
-			//Disable the 'X' to close the pop up video
-			EnableButton(giXToCloseVideoConfButton);
-
-			UnloadButtonImage(guiPopUpImage);
-			RemoveButton(guiPopUpOkButton);
-			DeleteVideoObject(guiPopUpBox);
-
-			fPopUpBoxActive   = FALSE;
-			gubPopUpBoxAction = AIM_POPUP_NOTHING;
-
-			switch (gubVideoConferencingPreviousMode)
-			{
-				case AIM_VIDEO_HIRE_MERC_MODE:              EnableDisableCurrentVideoConferenceButtons(FALSE); break;
-				case AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE: EnableButton(giAnsweringMachineButton[1]);         break;
-			}
-		}
-		break;
+	switch (gubVideoConferencingPreviousMode)
+	{
+		case AIM_VIDEO_HIRE_MERC_MODE:              EnableDisableCurrentVideoConferenceButtons(FALSE); break;
+		case AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE: EnableButton(giAnsweringMachineButton[1]);         break;
 	}
 
 	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void WaitForMercToFinishTalkingOrUserToClick(void);
@@ -1677,7 +1676,7 @@ static void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 			//Display a message box displaying a messsage that the message was recorded
 //			DoLapTopMessageBox(10, AimPopUpText[AIM_MEMBER_MESSAGE_RECORDED], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-			InitCreateDeleteAimPopUpBox(AIM_POPUP_CREATE, L" ", AimPopUpText[AIM_MEMBER_MESSAGE_RECORDED], AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
+			CreateAimPopUpBox(L" ", AimPopUpText[AIM_MEMBER_MESSAGE_RECORDED], AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
 
 
 			giAnsweringMachineButton[1]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
