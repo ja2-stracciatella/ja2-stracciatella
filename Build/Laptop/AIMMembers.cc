@@ -308,7 +308,6 @@ static SGPVObject* guiFuzzLine;
 static SGPVObject* guiStraightLine;
 static SGPVObject* guiTransSnow;
 static SGPVObject* guiVideoContractCharge;
-//UINT32		guiAnsweringMachineImage;
 static SGPVSurface* guiVideoTitleBar;
 static INT32  iAimMembersBoxId = -1;
 
@@ -2415,7 +2414,7 @@ static GUIButtonRef MakeButtonVideo(BUTTON_PICS* const img, const wchar_t* const
 }
 
 
-static BOOLEAN DeleteVideoConfPopUp(void);
+static void DeleteVideoConfPopUp(void);
 
 
 static void InitDeleteVideoConferencePopUp(void)
@@ -2676,21 +2675,16 @@ static void InitDeleteVideoConferencePopUp(void)
 }
 
 
-static BOOLEAN DeleteVideoConfPopUp(void)
+static void DeleteVideoConfPopUp(void)
 {
-	UINT16 i;
+	// reset (in case merc was going to say something)
+	DelayMercSpeech(0, 0, 0, FALSE, TRUE);
 
-	//reset ( in case merc was going to say something
-	DelayMercSpeech( 0, 0, 0, FALSE, TRUE );
-
-	switch(	gubVideoConferencingPreviousMode )
+	switch (gubVideoConferencingPreviousMode)
 	{
 		// The video conference is not displayed
 		case AIM_VIDEO_NOT_DISPLAYED_MODE:
-		{
-
 			break;
-		}
 
 		case AIM_VIDEO_POPUP_MODE:
 			DeleteVideoSurface(guiVideoTitleBar);
@@ -2698,101 +2692,42 @@ static BOOLEAN DeleteVideoConfPopUp(void)
 
 		// The opening animation of the vc (fuzzy screen, then goes to black)
 		case AIM_VIDEO_INIT_MODE:
-		{
-
 			break;
-		}
 
-
-
-		// The screen in which you first contact the merc, you have the option to hang up or goto hire merc screen
+		/* The screen in which you first contact the merc, you have the option to
+		 * hang up or goto hire merc screen */
 		case AIM_VIDEO_FIRST_CONTACT_MERC_MODE:
-		{
-			//Remove the video conf buttons images
 			UnloadButtonImage(guiVideoConferenceButtonImage[2]);
-
-			//Remove the Hangup  buttons
-			for(i=0; i<2; i++)
-				RemoveButton(giAuthorizeButton[i] );
-
+			for (UINT16 i = 0; i < 2; ++i) RemoveButton(giAuthorizeButton[i]);
 			break;
-		}
 
-
-
-		// The screen in which you set the contract length, and the ability to buy equipment..
+		/* The screen in which you set the contract length, and the ability to buy
+		 * equipment. */
 		case AIM_VIDEO_HIRE_MERC_MODE:
-		{
-			//Remove the video conf buttons images
-			for(i=0; i<2; i++)
-				UnloadButtonImage(guiVideoConferenceButtonImage[i]);
-
-			//Remove the Contracy Length button
-			for(i=0; i<3; i++)
-				RemoveButton(giContractLengthButton[i] );
-
-			for(i=0; i<2; i++)
-				RemoveButton(giBuyEquipmentButton[i] );
-
-			for(i=0; i<2; i++)
-				RemoveButton(giAuthorizeButton[i] );
-
+			for (UINT16 i = 0; i < 2; ++i) UnloadButtonImage(guiVideoConferenceButtonImage[i]);
+			for (UINT16 i = 0; i < 3; ++i) RemoveButton(giContractLengthButton[i]);
+			for (UINT16 i = 0; i < 2; ++i) RemoveButton(giBuyEquipmentButton[i]);
+			for (UINT16 i = 0; i < 2; ++i) RemoveButton(giAuthorizeButton[i]);
 			break;
-		}
-
-
-
 
 		// The merc is not home and the player gets the answering machine
 		case AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE:
-		{
-			if( gubPopUpBoxAction == AIM_POPUP_DISPLAY )
-			{
-//				return( TRUE );
-			}
-
-			//Remove the video conf buttons images
 			UnloadButtonImage(guiVideoConferenceButtonImage[2]);
-
-			//Remove the Answering machine buttons
-			for(i=0; i<2; i++)
-				RemoveButton(giAnsweringMachineButton[i] );
-
-//			DeleteVideoObject(guiAnsweringMachineImage);
+			for (UINT16 i = 0; i < 2; ++i) RemoveButton(giAnsweringMachineButton[i]);
 			break;
-		}
-
-
-
 
 		// The merc is home but doesnt want to work for player
 		case AIM_VIDEO_MERC_UNAVAILABLE_MODE:
-		{
-			RemoveButton(giHangUpButton );
+			RemoveButton(giHangUpButton);
 			UnloadButtonImage(guiVideoConferenceButtonImage[2]);
 			break;
-		}
 
 		case AIM_VIDEO_POPDOWN_MODE:
-		{
-			if( gubPopUpBoxAction == AIM_POPUP_DISPLAY )
-			{
-				return( TRUE );
-			}
-
-			if( gfWaitingForMercToStopTalkingOrUserToClick )
-			{
-				gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
-
-//				DisplayPopUpBoxExplainingMercArrivalLocationAndTime();
-			}
-
+			if (gubPopUpBoxAction == AIM_POPUP_DISPLAY) return;
 			gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
 			DeleteVideoSurface(guiVideoTitleBar);
 			break;
-		}
 	}
-	return(TRUE);
 }
 
 
