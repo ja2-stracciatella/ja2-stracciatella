@@ -1500,32 +1500,26 @@ static void DisplayMercChargeAmount(void)
 static void BtnPopUpOkButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 ubFlag, const wchar_t* sString1, const wchar_t* sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData)
+static BOOLEAN InitCreateDeleteAimPopUpBox(UINT8 const ubFlag, wchar_t const* const sString1, wchar_t const* const sString2, UINT16 const usPosX, UINT16 const usPosY, UINT8 const ubData)
 try
 {
-	static UINT16				usPopUpBoxPosX, usPopUpBoxPosY;
-	static wchar_t				sPopUpString1[400], sPopUpString2[400];
+	static UINT16  usPopUpBoxPosX;
+	static UINT16  usPopUpBoxPosY;
+	static wchar_t sPopUpString1[400];
+	static wchar_t sPopUpString2[400];
 	static BOOLEAN fPopUpBoxActive = FALSE;
 
-	switch( ubFlag )
+	switch (ubFlag)
 	{
 		case AIM_POPUP_CREATE:
 		{
-			if( fPopUpBoxActive )
-				return(FALSE);
+			if (fPopUpBoxActive) return FALSE;
 
 			//Disable the 'X' to close the pop upi video
-			DisableButton( giXToCloseVideoConfButton );
+			DisableButton(giXToCloseVideoConfButton);
 
-			if(sString1 != NULL)
-				wcscpy(sPopUpString1, sString1);
-			else
-				sPopUpString1[0] = L'\0';
-
-			if(sString2 != NULL)
-				wcscpy(sPopUpString2, sString2);
-			else
-				sPopUpString2[0] = L'\0';
+			wcscpy(sPopUpString1, sString1 ? sString1 : L"");
+			wcscpy(sPopUpString2, sString2 ? sString2 : L"");
 
 			usPopUpBoxPosX = usPosX;
 			usPopUpBoxPosY = usPosY;
@@ -1536,90 +1530,71 @@ try
 			BltVideoObject(FRAME_BUFFER, guiPopUpBox, 0, usPosX, usPosY);
 
 			//Create the popup boxes button
-			guiPopUpImage = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1,2,-1,3,-1 );
-			guiPopUpOkButton = CreateIconAndTextButton( guiPopUpImage, VideoConfercingText[AIM_MEMBER_OK],
-															 FONT14ARIAL,
-															 AIM_POPUP_BOX_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-															 AIM_POPUP_BOX_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
-															 usPosX + AIM_POPUP_BOX_BUTTON_OFFSET_X, usPosY + AIM_POPUP_BOX_BUTTON_OFFSET_Y, MSYS_PRIORITY_HIGH + 5,
-															 BtnPopUpOkButtonCallback);
+			guiPopUpImage = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 2, -1, 3, -1);
+			INT16 const colour = AIM_POPUP_BOX_COLOR;
+			INT16 const shadow = AIM_M_VIDEO_NAME_SHADOWCOLOR;
+			INT16 const x      = usPosX + AIM_POPUP_BOX_BUTTON_OFFSET_X;
+			INT16 const y      = usPosY + AIM_POPUP_BOX_BUTTON_OFFSET_Y;
+			guiPopUpOkButton = CreateIconAndTextButton(guiPopUpImage, VideoConfercingText[AIM_MEMBER_OK], FONT14ARIAL, colour, shadow, colour, shadow, x, y, MSYS_PRIORITY_HIGH + 5, BtnPopUpOkButtonCallback);
 			guiPopUpOkButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 			MSYS_SetBtnUserData(guiPopUpOkButton, ubData);
 
-			fPopUpBoxActive = TRUE;
+			fPopUpBoxActive   = TRUE;
 			gubPopUpBoxAction = AIM_POPUP_DISPLAY;
 
-
-			// Disable the current video conference buttons
-			//EnableDisableCurrentVideoConferenceButtons(TRUE);
-			if( gubVideoConferencingPreviousMode == AIM_VIDEO_HIRE_MERC_MODE )
+			if (gubVideoConferencingPreviousMode == AIM_VIDEO_HIRE_MERC_MODE)
 			{
 				// Enable the current video conference buttons
 				EnableDisableCurrentVideoConferenceButtons(FALSE);
 			}
 
-
-
-//
-//	Create a new flag for the PostButtonRendering function
-//
+			// Create a new flag for the PostButtonRendering function
 			fReDrawPostButtonRender = TRUE;
 		}
 		break;
 
 		case AIM_POPUP_DISPLAY:
 		{
-			UINT16				usTempPosY = usPopUpBoxPosY;
+			if (gubPopUpBoxAction != AIM_POPUP_DISPLAY) return FALSE;
 
-			if( gubPopUpBoxAction != AIM_POPUP_DISPLAY)
-				return(FALSE);
-
-			BltVideoObject(FRAME_BUFFER, guiPopUpBox, 0, usPopUpBoxPosX, usPopUpBoxPosY);
+			UINT16 y = usPopUpBoxPosY;
+			BltVideoObject(FRAME_BUFFER, guiPopUpBox, 0, usPopUpBoxPosX, y);
 
 			SetFontShadow(AIM_M_VIDEO_NAME_SHADOWCOLOR);
 
-			usTempPosY += AIM_POPUP_BOX_STRING1_Y;
-			if( sPopUpString1[0]  != L'\0')
-				usTempPosY += DisplayWrappedString(usPopUpBoxPosX, usTempPosY, AIM_POPUP_BOX_WIDTH, 2, AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString1, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-			if( sPopUpString2[0] != L'\0')
-				DisplayWrappedString(usPopUpBoxPosX, usTempPosY + 4, AIM_POPUP_BOX_WIDTH, 2, AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString2, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+			y += AIM_POPUP_BOX_STRING1_Y;
+			if (sPopUpString1[0] != L'\0') y += DisplayWrappedString(usPopUpBoxPosX, y,     AIM_POPUP_BOX_WIDTH, 2, AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString1, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+			if (sPopUpString2[0] != L'\0')      DisplayWrappedString(usPopUpBoxPosX, y + 4, AIM_POPUP_BOX_WIDTH, 2, AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString2, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 			SetFontShadow(DEFAULT_SHADOW);
-
 			InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
-
 		}
 		break;
 
 		case AIM_POPUP_DELETE:
 		{
-			if( !fPopUpBoxActive )
-				return(FALSE);
+			if (!fPopUpBoxActive) return FALSE;
 
-			//Disable the 'X' to close the pop upi video
-			EnableButton( giXToCloseVideoConfButton );
+			//Disable the 'X' to close the pop up video
+			EnableButton(giXToCloseVideoConfButton);
 
-			UnloadButtonImage( guiPopUpImage );
-			RemoveButton( guiPopUpOkButton );
+			UnloadButtonImage(guiPopUpImage);
+			RemoveButton(guiPopUpOkButton);
 			DeleteVideoObject(guiPopUpBox);
 
-			fPopUpBoxActive = FALSE;
+			fPopUpBoxActive   = FALSE;
 			gubPopUpBoxAction = AIM_POPUP_NOTHING;
 
-			if( gubVideoConferencingPreviousMode == AIM_VIDEO_HIRE_MERC_MODE )
+			switch (gubVideoConferencingPreviousMode)
 			{
-				// Enable the current video conference buttons
-				EnableDisableCurrentVideoConferenceButtons(FALSE);
-			}
-			else if( gubVideoConferencingPreviousMode == AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE )
-			{
-				EnableButton( giAnsweringMachineButton[1]);
+				case AIM_VIDEO_HIRE_MERC_MODE:              EnableDisableCurrentVideoConferenceButtons(FALSE); break;
+				case AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE: EnableButton(giAnsweringMachineButton[1]);         break;
 			}
 		}
 		break;
 	}
 
-	return(TRUE);
+	return TRUE;
 }
 catch (...) { return FALSE; }
 
