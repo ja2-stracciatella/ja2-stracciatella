@@ -12,7 +12,10 @@ void DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLo
 void DisplayTextForMercFaceVideoPopUp(const wchar_t* pString);
 void EnterInitAimMembers(void);
 void RenderAIMMembersTopLevel(void);
-void ResetMercAnnoyanceAtPlayer( UINT8 ubMercID );
+
+// if merc is still annoyed, reset back to 0
+void ResetMercAnnoyanceAtPlayer(ProfileID);
+
 void DisableNewMailMessage(void);
 void DisplayPopUpBoxExplainingMercArrivalLocationAndTime(void);
 

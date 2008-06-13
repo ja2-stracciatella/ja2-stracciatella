@@ -2837,26 +2837,22 @@ static void EnableDisableCurrentVideoConferenceButtons(BOOLEAN const fEnable)
 }
 
 
-void ResetMercAnnoyanceAtPlayer( UINT8 ubMercID )
+void ResetMercAnnoyanceAtPlayer(ProfileID ubMercID)
 {
-	//if merc is still annoyed, reset back to 0
-
-	if ( ubMercID == LARRY_NORMAL  )
+	if (ubMercID == LARRY_NORMAL)
 	{
-		if ( CheckFact( FACT_LARRY_CHANGED, 0 ) )
-		{
-			ubMercID = LARRY_DRUNK;
-		}
+		if (CheckFact(FACT_LARRY_CHANGED, 0)) ubMercID = LARRY_DRUNK;
 	}
-	else if ( ubMercID == LARRY_DRUNK )
+	else if (ubMercID == LARRY_DRUNK)
 	{
-		if (!CheckFact(FACT_LARRY_CHANGED, 0))
-		{
-			ubMercID = LARRY_NORMAL;
-		}
+		if (!CheckFact(FACT_LARRY_CHANGED, 0)) ubMercID = LARRY_NORMAL;
 	}
-	if( ( gMercProfiles[ ubMercID ].bMercStatus == MERC_ANNOYED_WONT_CONTACT ) || ( gMercProfiles[ ubMercID ].bMercStatus == MERC_ANNOYED_BUT_CAN_STILL_CONTACT ) )
-		gMercProfiles[ ubMercID ].bMercStatus = 0;
+	INT8& status = GetProfile(ubMercID)->bMercStatus;
+	if (status == MERC_ANNOYED_WONT_CONTACT ||
+			status == MERC_ANNOYED_WONT_CONTACT)
+	{
+		status = 0;
+	}
 }
 
 
