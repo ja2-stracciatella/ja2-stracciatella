@@ -191,19 +191,8 @@ void RemfromQueue(HQUEUE const q, void* const data)
 // Return Value	pointer to queue with data added else	NULL
 HQUEUE AddtoQueue(HQUEUE hQueue, void const* const pdata)
 {
-	// check for invalid handle = 0
-	if (hQueue == NULL)
-	{
-		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the queue");
-		return NULL;
-	}
-
-	// check for data = NULL
-	if (pdata == NULL)
-	{
-		DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Data to be added onto queue is NULL");
-		return NULL;
-	}
+	if (!hQueue) throw std::logic_error("This is not a valid pointer to the queue");
+	if (!pdata)  throw std::logic_error("Data to be added onto queue is NULL");
 
 	// assign some temporary variables
 	BOOLEAN fresize = FALSE;
@@ -222,11 +211,6 @@ HQUEUE AddtoQueue(HQUEUE hQueue, void const* const pdata)
 		UINT32 uiNew_size = uiMax_size + (uiMax_size - sizeof(QueueHeader));
 		pTemp_cont->uiMax_size = uiNew_size;
 		hQueue = (HQUEUE)MemRealloc(hQueue, uiNew_size);
-		if (hQueue == NULL)
-		{
-			DebugMsg(TOPIC_QUEUE_CONTAINERS, DBG_LEVEL_0, "Could not resize queue container memory");
-			return NULL;
-		}
 		// copy memory from beginning of container to end of container
 		// so that all the data is in one continuous block
 

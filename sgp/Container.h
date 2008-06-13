@@ -45,12 +45,7 @@ namespace SGP
 
 			bool IsEmpty() const { return QueueSize(queue_) == 0; }
 
-			void Add(T const& data)
-			{
-				HQUEUE const q = AddtoQueue(queue_, &data);
-				if (!q) throw std::bad_alloc();
-				queue_ = q;
-			}
+			void Add(T const& data) { queue_ = AddtoQueue(queue_, &data); }
 
 			T Remove()
 			{
