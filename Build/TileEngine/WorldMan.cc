@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Animation_Data.h"
 #include "Environment.h"
 #include "Font.h"
@@ -455,21 +457,20 @@ void DeleteAllLandLayers(UINT32 iMapIndex)
 }
 
 
-BOOLEAN InsertLandIndexAtLevel(const UINT32 iMapIndex, const UINT16 usIndex, const UINT8 ubLevel)
-try
+void InsertLandIndexAtLevel(const UINT32 iMapIndex, const UINT16 usIndex, const UINT8 ubLevel)
 {
 	// If we want to insert at head;
 	if (ubLevel == 0)
 	{
 		AddLandToHead(iMapIndex, usIndex);
-		return TRUE;
+		return;
 	}
 
 	// Move to index before insertion
 	LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead;
 	for (UINT8 level = 0;; ++level)
 	{
-		if (pLand == NULL) return FALSE;
+		if (!pLand) throw std::logic_error("Tried to insert land index at invalid level");
 
 		if (level == ubLevel - 1) break;
 
@@ -490,9 +491,7 @@ try
 	AdjustForFullTile(iMapIndex);
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_LAND);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 void RemoveHigherLandLevels(UINT32 const iMapIndex, UINT32 const fSrcType, UINT32** const puiHigherTypes, UINT8* const pubNumHigherTypes)

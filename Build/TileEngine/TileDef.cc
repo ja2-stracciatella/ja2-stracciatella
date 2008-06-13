@@ -234,9 +234,9 @@ try
 			}
 			else
 			{
-				return( InsertLandIndexAtLevel( iMapIndex, usIndex, (UINT8)(ubLastHighLevel+1) ) );
+				InsertLandIndexAtLevel(iMapIndex, usIndex, ubLastHighLevel + 1);
+				return TRUE;
 			}
-
 	}
 	else
 	{
