@@ -230,12 +230,11 @@ try
 			if ( TypeExistsInLandLayer( iMapIndex, uiNewType, &usTempIndex ) )
 			{
 				// Replace with new index
-				return( ReplaceLandIndex( iMapIndex, usTempIndex, usIndex ) );
+				ReplaceLandIndex(iMapIndex, usTempIndex, usIndex);
 			}
 			else
 			{
 				InsertLandIndexAtLevel(iMapIndex, usIndex, ubLastHighLevel + 1);
-				return TRUE;
 			}
 	}
 	else
@@ -245,15 +244,15 @@ try
 		if ( TypeExistsInLandLayer( iMapIndex, uiNewType, &usTempIndex ) )
 		{
 			// Replace with new index
-			return( ReplaceLandIndex( iMapIndex, usTempIndex, usIndex ) );
+			ReplaceLandIndex(iMapIndex, usTempIndex, usIndex);
 		}
 		else
 		{
 			// Otherwise, add to head
 			AddLandToHead(iMapIndex, usIndex);
-			return TRUE;
 		}
 	}
+	return TRUE;
 }
 catch (...) { return FALSE; }
 

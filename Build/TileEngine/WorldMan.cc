@@ -364,7 +364,7 @@ static BOOLEAN AdjustForFullTile(UINT32 iMapIndex)
 }
 
 
-BOOLEAN ReplaceLandIndex(UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex)
+void ReplaceLandIndex(UINT32 const iMapIndex, UINT16 const usOldIndex, UINT16 const usNewIndex)
 {
 	// Look through all Lands and remove index if found
 	for (LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead; pLand != NULL; pLand = pLand->pNext)
@@ -374,12 +374,12 @@ BOOLEAN ReplaceLandIndex(UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex)
 			// OK, set new index value
 			pLand->usIndex = usNewIndex;
 			AdjustForFullTile(iMapIndex);
-			return TRUE;
+			return;
 		}
 	}
 
 	// Could not find it
-	return FALSE;
+	throw std::logic_error("Tried to replace non-existent land index");
 }
 
 
