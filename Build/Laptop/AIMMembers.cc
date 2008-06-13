@@ -435,7 +435,7 @@ static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
 static void BtnContactButtonCallback( GUI_BUTTON* btn, INT32 reason);
 static void BtnNextButtonCallback(    GUI_BUTTON* btn, INT32 reason);
 static void BtnPreviousButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static BOOLEAN InitDeleteVideoConferencePopUp(void);
+static void InitDeleteVideoConferencePopUp(void);
 static void InitVideoFace(UINT8 ubMercID);
 static void SelectFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
@@ -2418,8 +2418,7 @@ static GUIButtonRef MakeButtonVideo(BUTTON_PICS* const img, const wchar_t* const
 static BOOLEAN DeleteVideoConfPopUp(void);
 
 
-static BOOLEAN InitDeleteVideoConferencePopUp(void)
-try
+static void InitDeleteVideoConferencePopUp(void)
 {
 	static BOOLEAN	fXRegionActive = FALSE;
 	UINT8	i;
@@ -2675,10 +2674,7 @@ try
 
 	if( gubVideoConferencingMode == 	AIM_VIDEO_POPDOWN_MODE )
 	{
-		if( gubPopUpBoxAction == AIM_POPUP_DISPLAY )
-		{
-			return( TRUE );
-		}
+		if (gubPopUpBoxAction == AIM_POPUP_DISPLAY) return;
 
 		gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 
@@ -2695,9 +2691,7 @@ try
 
 	//reset the time in which the merc will get annoyed
 	guiMercAttitudeTime = GetJA2Clock();
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN DeleteVideoConfPopUp(void)
