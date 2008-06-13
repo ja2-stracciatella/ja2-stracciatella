@@ -273,7 +273,7 @@ static void InitEditorBuildingsToolbar(void)
 	iEditorButton[BUILDING_TOGGLE_INFO_VIEW] = CreateTextButton(L"ROOM INFO", SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 110, 430, 50, 15, MSYS_PRIORITY_NORMAL, BuildingToggleInfoViewCallback);
 
 	//Selection method buttons
-	MakeButton(BUILDING_PLACE_WALLS,        180, 370, BuildingWallCallback,           "EDITOR/wall.sti",         L"Place walls using selection method\n");
+	MakeButton(BUILDING_PLACE_WALLS,        180, 370, BuildingWallCallback,           "EDITOR/wall.sti",         L"Place walls using selection method");
 	MakeButton(BUILDING_PLACE_DOORS,        210, 370, BuildingDoorCallback,           "EDITOR/door.sti",         L"Place doors using selection method");
 	MakeButton(BUILDING_PLACE_ROOFS,        240, 370, BuildingRoofCallback,           "EDITOR/roof.sti",         L"Place roofs using selection method");
 	MakeButton(BUILDING_PLACE_WINDOWS,      180, 400, BuildingWindowCallback,         "EDITOR/window.sti",       L"Place windows using selection method");
