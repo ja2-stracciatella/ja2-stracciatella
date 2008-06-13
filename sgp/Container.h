@@ -91,12 +91,9 @@ namespace SGP
 	template<typename T> class List
 	{
 		public:
-			List(size_t const n_elements)
-			{
-				HLIST const l = CreateList(n_elements, sizeof(T));
-				if (!l) throw std::bad_alloc();
-				list_ = l;
-			}
+			List(size_t const n_elements) :
+				list_(CreateList(n_elements, sizeof(T)))
+			{}
 
 			~List() { DeleteList(list_); }
 

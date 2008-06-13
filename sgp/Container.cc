@@ -74,12 +74,10 @@ HQUEUE CreateQueue(UINT32 uiNum_items, UINT32 uiSiz_each)
 // Return Value	NULL if unsuccesful
 //							 pointer to allocated memory
 HLIST CreateList(UINT32 uiNum_items, UINT32 uiSiz_each)
-try
 {
 	if (uiNum_items == 0 || uiSiz_each == 0)
 	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Requested queue items and size have to be >0");
-		return 0;
+		throw std::logic_error("Requested queue items and size have to be >0");
 	}
 
 	UINT32 uiAmount = uiNum_items * uiSiz_each;
@@ -94,7 +92,6 @@ try
 
 	return hList;
 }
-catch (...) { return 0; }
 
 
 BOOLEAN DeleteQueue(HQUEUE hQueue)
