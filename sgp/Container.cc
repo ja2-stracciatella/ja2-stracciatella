@@ -188,46 +188,43 @@ void RemfromQueue(HQUEUE const q, void* const data)
 // Parameter List : pvoid_queue - pointer to queue container
 //									pdata - pointer to data to add to queue
 //
-// Return Value	pointer to queue with data added else	NULL
-HQUEUE AddtoQueue(HQUEUE hQueue, void const* const pdata)
+// Return Value	pointer to queue with data added
+HQUEUE AddtoQueue(HQUEUE q, void const* const pdata)
 {
-	if (!hQueue) throw std::logic_error("This is not a valid pointer to the queue");
-	if (!pdata)  throw std::logic_error("Data to be added onto queue is NULL");
+	if (!q)     throw std::logic_error("This is not a valid pointer to the queue");
+	if (!pdata) throw std::logic_error("Data to be added onto queue is NULL");
 
-	// assign some temporary variables
-	BOOLEAN fresize = FALSE;
-	QueueHeader* pTemp_cont = hQueue;
-	UINT32 uiSize_of_each = pTemp_cont->uiSiz_of_elem;
-	UINT32 uiMax_size = pTemp_cont->uiMax_size;
-	UINT32 uiHead = pTemp_cont->uiHead;
-	UINT32 uiTail = pTemp_cont->uiTail;
+	BOOLEAN      fresize        = FALSE;
+	UINT32 const uiSize_of_each = q->uiSiz_of_elem;
+	UINT32 const uiMax_size     = q->uiMax_size;
+	UINT32 const uiHead         = q->uiHead;
+	UINT32       uiTail         = q->uiTail;
 	if (uiTail + uiSize_of_each > uiMax_size)
 	{
-		uiTail = pTemp_cont->uiTail = sizeof(QueueHeader);
+		uiTail = q->uiTail = sizeof(QueueHeader);
 		fresize = TRUE;
 	}
 	if (uiHead == uiTail && (uiHead >= sizeof(QueueHeader) + uiSize_of_each || fresize))
 	{
-		UINT32 uiNew_size = uiMax_size + (uiMax_size - sizeof(QueueHeader));
-		pTemp_cont->uiMax_size = uiNew_size;
-		hQueue = (HQUEUE)MemRealloc(hQueue, uiNew_size);
+		UINT32 const uiNew_size = 2 * uiMax_size - sizeof(QueueHeader);
+		q->uiMax_size = uiNew_size;
+		q = (HQUEUE)MemRealloc(q, uiNew_size);
 		// copy memory from beginning of container to end of container
 		// so that all the data is in one continuous block
 
-		pTemp_cont = hQueue;
-		BYTE* presize = (BYTE*)hQueue;
-		BYTE* pmaxsize = (BYTE*)hQueue;
-		presize += sizeof(QueueHeader);
-		pmaxsize += uiMax_size;
 		if (uiHead > sizeof(QueueHeader))
-			memmove(pmaxsize, presize, uiHead-sizeof(QueueHeader));
-		pTemp_cont->uiTail = uiMax_size + (uiHead-sizeof(QueueHeader));
+		{
+			BYTE* const presize  = (BYTE*)q + sizeof(QueueHeader);
+			BYTE* const pmaxsize = (BYTE*)q + uiMax_size;
+			memmove(pmaxsize, presize, uiHead - sizeof(QueueHeader));
+		}
+		q->uiTail = uiMax_size + uiHead - sizeof(QueueHeader);
 	}
-	BYTE* pbyte = (BYTE*)hQueue + pTemp_cont->uiTail;
+	BYTE* const pbyte = (BYTE*)q + q->uiTail;
 	memmove(pbyte, pdata, uiSize_of_each);
-	pTemp_cont->uiTotal_items++;
-	pTemp_cont->uiTail += uiSize_of_each;
-	return hQueue;
+	q->uiTotal_items++;
+	q->uiTail += uiSize_of_each;
+	return q;
 }
 
 
