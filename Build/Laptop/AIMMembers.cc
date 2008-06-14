@@ -2960,79 +2960,63 @@ static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward)
 
 #ifdef JA2TESTVERSION
 //TEMP:
-void TempHiringOfMercs( UINT8 ubNumberOfMercs, BOOLEAN fReset )
+void TempHiringOfMercs(UINT8 ubNumberOfMercs, BOOLEAN const fReset)
 {
-	static const ProfileID MercID[] = { RED, GUS, MAGIC, SCOPE, LYNX, SHADOW, BUNS, GRUNTY, IVAN, REAPER, BARRY, BLOOD, GRIZZLY, VICKY, TREVOR, STEROID, IGOR, FIDEL, FOX, SIDNEY, ICE, SPIDER };
+	static ProfileID const MercID[] = { RED, GUS, MAGIC, SCOPE, LYNX, SHADOW, BUNS, GRUNTY, IVAN, REAPER, BARRY, BLOOD, GRIZZLY, VICKY, TREVOR, STEROID, IGOR, FIDEL, FOX, SIDNEY, ICE, SPIDER };
 
-	INT16	i;
-	MERC_HIRE_STRUCT HireMercStruct;
-	static BOOLEAN	fHaveCalledBefore=FALSE;
+	static BOOLEAN fHaveCalledBefore = FALSE;
 
 	//if we should reset the global variable
-	if( fReset )
+	if (fReset)
 	{
 		fHaveCalledBefore = FALSE;
 		return;
 	}
 
+	if (guiCurrentLaptopMode != LAPTOP_MODE_NONE) return;
 
-	if( fHaveCalledBefore )
-		return;
-
-	if( guiCurrentLaptopMode != LAPTOP_MODE_NONE )
-		return;
-
+	if (fHaveCalledBefore) return;
 	fHaveCalledBefore = TRUE;
 
-	for( i=0; i<ubNumberOfMercs; i++)
+	for (INT16 i = 0; i < ubNumberOfMercs; ++i)
 	{
-		memset(&HireMercStruct, 0, sizeof(MERC_HIRE_STRUCT));
-
-		if( !IsMercHireable( MercID[i] ) )
+		ProfileID const pid = MercID[i];
+		if (!IsMercHireable(pid))
 		{
-			ubNumberOfMercs++;
+			++ubNumberOfMercs;
 			continue;
 		}
 
-		HireMercStruct.ubProfileID = MercID[i];
+		MERCPROFILESTRUCT* const p = GetProfile(pid);
+		p->ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
+		p->bMercStatus  = 0; // since this is only a testing function, make the merc available
 
-		//DEF: temp
-		HireMercStruct.sSectorX = gsMercArriveSectorX;
-		HireMercStruct.sSectorY = gsMercArriveSectorY;
-		HireMercStruct.fUseLandingZoneForArrival = TRUE;
-		HireMercStruct.ubInsertionCode	= INSERTION_CODE_ARRIVING_GAME;
+		MERC_HIRE_STRUCT hire;
+		memset(&hire, 0, sizeof(hire));
+		hire.ubProfileID               = pid;
+		hire.sSectorX                  = gsMercArriveSectorX;
+		hire.sSectorY                  = gsMercArriveSectorY;
+		hire.fCopyProfileItemsOver     = TRUE;
+		hire.uiTimeTillMercArrives     = GetMercArrivalTimeOfDay();
+		hire.ubInsertionCode	         = INSERTION_CODE_ARRIVING_GAME;
+		hire.fUseLandingZoneForArrival = TRUE;
+		hire.iTotalContractLength      =
+			gfKeyState[ALT]  ? 14 :
+			gfKeyState[CTRL] ?  7 :
+			1;
+		HireMerc(&hire);
 
-		HireMercStruct.fCopyProfileItemsOver = TRUE;
-		gMercProfiles[ MercID[i] ].ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
+		// add an entry in the finacial page for the hiring of the merc
+		AddTransactionToPlayersBook(HIRED_MERC, pid, GetWorldTotalMin(), -(INT32)p->sSalary);
 
-
-		if( gfKeyState[ ALT ] )
-			HireMercStruct.iTotalContractLength = 14;
-		else if( gfKeyState[ CTRL ] )
-			HireMercStruct.iTotalContractLength = 7;
-		else
-			HireMercStruct.iTotalContractLength = 1;
-
-		//specify when the merc should arrive
-		HireMercStruct.uiTimeTillMercArrives = GetMercArrivalTimeOfDay( );// + MercID[i];
-
-		//since this is only a testing function, make the merc available
-		gMercProfiles[ MercID[i] ].bMercStatus = 0;
-
-		//if we succesfully hired the merc
-		HireMerc( &HireMercStruct );
-
-		//add an entry in the finacial page for the hiring of the merc
-		AddTransactionToPlayersBook(HIRED_MERC, MercID[i], GetWorldTotalMin(), -(INT32)( gMercProfiles[MercID[i]].sSalary ) );
-
-		if( gMercProfiles[ MercID[i] ].bMedicalDeposit )
+		if (p->bMedicalDeposit)
 		{
-				//add an entry in the finacial page for the medical deposit
-			AddTransactionToPlayersBook(	MEDICAL_DEPOSIT, MercID[i], GetWorldTotalMin(), -(gMercProfiles[MercID[i]].sMedicalDepositAmount) );
+			// add an entry in the finacial page for the medical deposit
+			AddTransactionToPlayersBook(MEDICAL_DEPOSIT, pid, GetWorldTotalMin(), -p->sMedicalDepositAmount);
 		}
 
 		//add an entry in the history page for the hiring of the merc
-		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, MercID[i], GetWorldTotalMin(), -1, -1 );
+		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, pid, GetWorldTotalMin(), -1, -1);
 	}
 }
 
