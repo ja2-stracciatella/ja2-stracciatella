@@ -270,7 +270,7 @@
 
 
 // Enumerated types used for the Pop Up Box
-enum
+enum PopUpAction
 {
 	AIM_POPUP_NOTHING,
 	AIM_POPUP_DISPLAY,
@@ -320,16 +320,16 @@ static BOOLEAN      gfJustSwitchedVideoConferenceMode;
 static BOOLEAN gfMercIsTalking=FALSE;
 static BOOLEAN gfVideoFaceActive=FALSE;
 
-static UINT8     gubPopUpBoxAction = AIM_POPUP_NOTHING;
-static BOOLEAN   gfRedrawScreen    = FALSE;
-static UINT8     gubContractLength;
-static BOOLEAN   gfBuyEquipment;
-static INT32     giContractAmount  = 0;
-static FACETYPE* giMercFaceIndex;
-static wchar_t   gsTalkingMercText[TEXT_POPUP_STRING_SIZE];
-static UINT32    guiTimeThatMercStartedTalking;
-static UINT32    guiLastHandleMercTime;
-static BOOLEAN   gfFirstTimeInContactScreen;
+static PopUpAction gubPopUpBoxAction = AIM_POPUP_NOTHING;
+static BOOLEAN     gfRedrawScreen    = FALSE;
+static UINT8       gubContractLength;
+static BOOLEAN     gfBuyEquipment;
+static INT32       giContractAmount  = 0;
+static FACETYPE*   giMercFaceIndex;
+static wchar_t     gsTalkingMercText[TEXT_POPUP_STRING_SIZE];
+static UINT32      guiTimeThatMercStartedTalking;
+static UINT32      guiLastHandleMercTime;
+static BOOLEAN     gfFirstTimeInContactScreen;
 
 static UINT8   gubCurrentCount;
 static UINT8   gubCurrentStaticMode;
@@ -542,10 +542,8 @@ void ExitAIMMembers()
 	RemoveAimDefaults();
 
 	//if we are exiting and the transfer of funds popup is enable, make sure we dont come back to it
-	if( gubPopUpBoxAction )
-		giCurrentSubPage = AIM_VIDEO_NOT_DISPLAYED_MODE;
-	else
-		giCurrentSubPage = gubVideoConferencingMode;
+	giCurrentSubPage = gubPopUpBoxAction != AIM_POPUP_NOTHING ?
+		AIM_VIDEO_NOT_DISPLAYED_MODE : gubVideoConferencingMode;
 
 	gubVideoConferencingMode = AIM_VIDEO_NOT_DISPLAYED_MODE;
 	InitDeleteVideoConferencePopUp( );
