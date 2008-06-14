@@ -2710,16 +2710,12 @@ static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward);
 
 static void HandleCurrentVideoConfMode(void)
 {
-	switch(	gubVideoConferencingMode )
+	switch (gubVideoConferencingMode)
 	{
 		// The video conference is not displayed
 		case AIM_VIDEO_NOT_DISPLAYED_MODE:
-		{
 			gfWaitingForMercToStopTalkingOrUserToClick = FALSE;
-
 			break;
-		}
-
 
 		case AIM_VIDEO_POPUP_MODE:
 			if (DisplayMovingTitleBar(TRUE))
@@ -2732,62 +2728,47 @@ static void HandleCurrentVideoConfMode(void)
 		case AIM_VIDEO_INIT_MODE:
 		{
 			static UINT8 ubCurMode = 0;
-			BOOLEAN	fDone;
 
-			if( ubCurMode == 0 )
+			BOOLEAN	done;
+			if (ubCurMode == 0)
 			{
-				fDone = DisplayBlackBackground( 10 );
-				if( fDone )
-					ubCurMode = 1;
+				done = DisplayBlackBackground(10);
+				if (done) ubCurMode = 1;
 			}
 			else
-				fDone = DisplaySnowBackground();
-
-			if( fDone && ubCurMode )
 			{
-				ubCurMode = 0;
-
-				gubVideoConferencingMode = WillMercAcceptCall();
+				done = DisplaySnowBackground();
 			}
 
+			if (done && ubCurMode != 0)
+			{
+				ubCurMode = 0;
+				gubVideoConferencingMode = WillMercAcceptCall();
+			}
 			break;
 		}
 
-		// The screen in which you first contact the merc, you have the option to hang up or goto hire merc screen
+		/* The screen in which you first contact the merc, you have the option to
+		 * hang up or goto hire merc screen */
 		case AIM_VIDEO_FIRST_CONTACT_MERC_MODE:
-		{
-			//if the merc is at home, play his greeting
-//			if( gfJustSwitchedVideoConferenceMode )
-//				InitVideoFaceTalking(gbCurrentSoldier, QUOTE_GREETING);
-
 			break;
-		}
 
-		// The screen in which you set the contract length, and the ability to buy equipment..
+		/* The screen in which you set the contract length, and the ability to buy
+		 * equipment. */
 		case AIM_VIDEO_HIRE_MERC_MODE:
-		{
-
 			break;
-		}
 
 		// The merc is not home and the player gets the answering machine
 		case AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE:
-		{
-			//if the merc is not at home, play his answering machine
-			if( gfJustSwitchedVideoConferenceMode )
+			if (gfJustSwitchedVideoConferenceMode)
 			{
 				InitVideoFaceTalking(gbCurrentSoldier, QUOTE_ANSWERING_MACHINE_MSG);
 			}
-
 			break;
-		}
 
 		// The merc is home but doesnt want to work for player
 		case AIM_VIDEO_MERC_UNAVAILABLE_MODE:
-		{
-
 			break;
-		}
 
 		case AIM_VIDEO_POPDOWN_MODE:
 			if (DisplayMovingTitleBar(FALSE))
@@ -2798,15 +2779,12 @@ static void HandleCurrentVideoConfMode(void)
 				DisplayPopUpBoxExplainingMercArrivalLocationAndTime();
 
 				//render the screen immediately to get rid of the pop down stuff
-				InitDeleteVideoConferencePopUp( );
+				InitDeleteVideoConferencePopUp();
 				RenderAIMMembers();
 				gfVideoFaceActive = FALSE;
 			}
 			break;
 	}
-
-	//Gets set in the InitDeleteVideoConferencePopUp() function
-//	gfJustSwitchedVideoConferenceMode = FALSE;
 }
 
 
