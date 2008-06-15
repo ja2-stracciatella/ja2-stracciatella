@@ -600,8 +600,11 @@ void HandleAIMMembers()
 
 	if( gfHangUpMerc && !gfMercIsTalking)
 	{
-		if( gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE )
+		if (gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE &&
+				gubPopUpBoxAction        != AIM_POPUP_DISPLAY)
+		{
 			gubVideoConferencingMode = AIM_VIDEO_POPDOWN_MODE;
+		}
 		gfHangUpMerc = FALSE;
 	}
 
