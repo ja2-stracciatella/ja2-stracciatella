@@ -229,7 +229,7 @@ void HandlePendingInitConv( )
 }
 
 
-static BOOLEAN InitTalkingMenu(UINT8 ubCharacterNum, INT16 sGridNo);
+static void InitTalkingMenu(UINT8 ubCharacterNum, INT16 sGridNo);
 
 
 static BOOLEAN InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTYPE* pSrcSoldier, INT8 bApproach, UINT32 uiApproachData)
@@ -248,7 +248,11 @@ static BOOLEAN InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTY
 		DeleteTalkingMenu( );
 	}
 
-	if ( !InitTalkingMenu( pDestSoldier->ubProfile, pDestSoldier->sGridNo ) )
+	try
+	{
+		InitTalkingMenu(pDestSoldier->ubProfile, pDestSoldier->sGridNo);
+	}
+	catch (...)
 	{
 		// If failed, and we were pending, unlock UI
 		if ( fFromPending )
@@ -312,8 +316,7 @@ static BOOLEAN InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTY
 
 
 // This fuction will allocate and setup an NPCDiaogue structure. Loads the face for the character..
-static BOOLEAN InitTalkingMenu(UINT8 ubCharacterNum, INT16 sGridNo)
-try
+static void InitTalkingMenu(UINT8 const ubCharacterNum, INT16 const sGridNo)
 {
 	INT16							sXMapPos, sYMapPos, sScreenX, sScreenY;
 	INT16							sX, sY;
@@ -333,10 +336,8 @@ try
 		sY = sScreenY;
 
 		InternalInitTalkingMenu(ubCharacterNum, sX, sY);
-		return TRUE;
 	}
 }
-catch (...) { return FALSE; }
 
 
 static void CalculatePopupTextOrientation(INT16 sWidth, INT16 sHeight);
