@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Font.h"
 #include "HImage.h"
 #include "Interface_Control.h"
@@ -109,7 +111,7 @@ static FACETYPE* GetFreeFace(void)
 		if (!i->fAllocated) return i;
 	}
 	if (guiNumFaces < NUM_FACE_SLOTS) return &gFacesData[guiNumFaces++];
-	return NULL;
+	throw std::runtime_error("Out of face slots");
 }
 
 
@@ -143,7 +145,6 @@ try
 	const MERCPROFILESTRUCT* const p = GetProfile(id);
 
 	FACETYPE* const face = GetFreeFace();
-	if (face == NULL) return NULL;
 
 	const char* face_file;
 	// Check if we are a big-face....
