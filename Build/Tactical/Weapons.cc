@@ -760,7 +760,6 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 	FLOAT								dTargetX;
 	FLOAT								dTargetY;
 	FLOAT								dTargetZ;
-	INT8								bStructHeight;
 	INT16								sXMapPos, sYMapPos;
 	UINT32							uiRoll;
 
@@ -834,7 +833,7 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 		}
 		else
 		{
-			bStructHeight = GetStructureTargetHeight( sTargetGridNo, (BOOLEAN) (pSoldier->bTargetLevel == 1) );
+			INT8 bStructHeight = GetStructureTargetHeight(sTargetGridNo, pSoldier->bTargetLevel == 1);
 			if (bStructHeight > 0)
 			{
 				// fire at the centre of the cube *one below* the tallest of the tallest structure

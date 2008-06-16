@@ -537,7 +537,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	BOOLEAN		fNonFenceJumper;
 	BOOLEAN		fNonSwimmer;
 	BOOLEAN		fPathAroundPeople;
-	BOOLEAN		fConsiderPersonAtDestAsObstacle;
 	BOOLEAN		fGoingThroughDoor = FALSE; // for one tile
 	BOOLEAN		fContinuousTurnNeeded;
 	BOOLEAN		fCloseGoodEnough;
@@ -604,7 +603,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 		}
 	}
 
-	fConsiderPersonAtDestAsObstacle = (BOOLEAN)( fPathingForPlayer && fPathAroundPeople && !(fFlags & PATH_IGNORE_PERSON_AT_DEST) );
+	BOOLEAN const fConsiderPersonAtDestAsObstacle = fPathingForPlayer && fPathAroundPeople && !(fFlags & PATH_IGNORE_PERSON_AT_DEST);
 
 	if (bCopy >= COPYREACHABLE)
 	{

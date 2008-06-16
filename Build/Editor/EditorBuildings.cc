@@ -54,7 +54,7 @@ void UpdateRoofsView()
 	{
 		for ( usType = FIRSTROOF; usType <= LASTSLANTROOF; usType++ )
 		{
-			HideStructOfGivenType( x, usType, (BOOLEAN)(!fBuildingShowRoofs) );
+			HideStructOfGivenType(x, usType, !fBuildingShowRoofs);
 		}
 	}
 	gfRenderWorld = TRUE;
@@ -353,7 +353,7 @@ static void PasteMapElementToNewMapElement(INT32 iSrcGridNo, INT32 iDstGridNo)
 	}
 	for ( usType = FIRSTROOF; usType <= LASTSLANTROOF; usType++ )
 	{
-		HideStructOfGivenType( iDstGridNo, usType, (BOOLEAN)(!fBuildingShowRoofs) );
+		HideStructOfGivenType(iDstGridNo, usType, !fBuildingShowRoofs);
 	}
 }
 

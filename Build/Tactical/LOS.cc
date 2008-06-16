@@ -2962,7 +2962,6 @@ UINT8 SoldierToSoldierBodyPartChanceToGetThrough(SOLDIERTYPE* const pStartSoldie
 UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, const INT16 sGridNo, const INT8 bLevel, const INT8 bCubeLevel, const SOLDIERTYPE* const target)
 {
 	FLOAT			dEndZPos;
-	INT8			bStructHeight;
 
 	if (pStartSoldier->sGridNo == sGridNo)
 	{
@@ -2984,7 +2983,7 @@ UINT8 SoldierToLocationChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, cons
 		}
 		else
 		{
-			bStructHeight = GetStructureTargetHeight( sGridNo, (BOOLEAN) (bLevel == 1) );
+			INT8 const bStructHeight = GetStructureTargetHeight(sGridNo, bLevel == 1);
 			if (bStructHeight > 0)
 			{
 				// fire at the centre of the cube of the tallest structure
@@ -3041,7 +3040,6 @@ UINT8 AISoldierToSoldierChanceToGetThrough(SOLDIERTYPE* const pStartSoldier, con
 UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 sGridNo, INT8 bLevel, INT8 bCubeLevel )
 {
 	FLOAT			dEndZPos;
-	INT8			bStructHeight;
 
 	UINT16		usTrueState;
 	UINT8			ubChance;
@@ -3066,7 +3064,7 @@ UINT8 AISoldierToLocationChanceToGetThrough( SOLDIERTYPE * pStartSoldier, INT16 
 		}
 		else
 		{
-			bStructHeight = GetStructureTargetHeight( sGridNo, (BOOLEAN) (bLevel == 1) );
+			INT8 const bStructHeight = GetStructureTargetHeight(sGridNo, bLevel == 1);
 			if (bStructHeight > 0)
 			{
 				// fire at the centre of the cube of the tallest structure

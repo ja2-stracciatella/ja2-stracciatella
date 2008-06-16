@@ -1206,7 +1206,7 @@ static void CheckForUnreadFiles(void)
 	//if the old flag and the new flag arent the same, either create or destory the fast help region
 	if( fNewFilesInFileViewer != fStatusOfNewFileFlag )
 	{
-		CreateFileAndNewEmailIconFastHelpText( LAPTOP_BN_HLP_TXT_YOU_HAVE_NEW_FILE, (BOOLEAN)!fNewFilesInFileViewer );
+		CreateFileAndNewEmailIconFastHelpText(LAPTOP_BN_HLP_TXT_YOU_HAVE_NEW_FILE, !fNewFilesInFileViewer);
 	}
 }
 

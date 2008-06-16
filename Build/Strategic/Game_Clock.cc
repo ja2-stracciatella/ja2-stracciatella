@@ -306,7 +306,7 @@ static void ToggleSuperCompression(void)
 		return;
 	}
 
-	fSuperCompression = (BOOLEAN)(!fSuperCompression);
+	fSuperCompression = !fSuperCompression;
 
 	if ( fSuperCompression )
 	{

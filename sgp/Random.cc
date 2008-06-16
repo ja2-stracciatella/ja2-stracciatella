@@ -57,7 +57,7 @@ UINT32 Random(UINT32 uiRange)
 
 BOOLEAN Chance( UINT32 uiChance )
 {
-	return (BOOLEAN)(Random( 100 ) < uiChance);
+	return Random(100) < uiChance;
 }
 
 #ifdef PRERANDOM_GENERATOR
@@ -93,7 +93,7 @@ UINT32 PreRandom( UINT32 uiRange )
 
 BOOLEAN PreChance( UINT32 uiChance )
 {
-	return (BOOLEAN)(PreRandom( 100 ) < uiChance);
+	return PreRandom(100) < uiChance;
 }
 
 #ifdef JA2BETAVERSION

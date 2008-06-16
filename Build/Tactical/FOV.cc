@@ -509,7 +509,7 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 
 		 if ( IS_TRAVELCOST_DOOR( ubMovementCost ) )
 		 {
-			 ubMovementCost = DoorTravelCost( pSoldier, marker, ubMovementCost, (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), &iDoorGridNo );
+			ubMovementCost = DoorTravelCost(pSoldier, marker, ubMovementCost, pSoldier->bTeam == gbPlayerNum, &iDoorGridNo);
 			 pStructure = FindStructure( (INT16) iDoorGridNo, STRUCTURE_ANYDOOR );
 			 if ( pStructure != NULL && pStructure->fFlags & STRUCTURE_TRANSPARENT)
 			 {

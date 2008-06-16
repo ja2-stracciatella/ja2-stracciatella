@@ -1085,7 +1085,7 @@ static void GetUserInput(void)
 
 				case SDLK_SPACE:
 					if( giSelectedMercCurrentQuote != -1 )
-						SetTalkingMercPauseState( (BOOLEAN)!gfPauseTalkingMercPopup );
+						SetTalkingMercPauseState(!gfPauseTalkingMercPopup);
 					break;
 
 				case SDLK_LEFT:

@@ -457,5 +457,5 @@ BOOLEAN SameBuilding( INT16 sGridNo1, INT16 sGridNo2 )
 	{
 		return( FALSE );
 	}
-	return( (BOOLEAN) (gubBuildingInfo[ sGridNo1] == gubBuildingInfo[ sGridNo2 ]) );
+	return gubBuildingInfo[sGridNo1] == gubBuildingInfo[sGridNo2];
 }

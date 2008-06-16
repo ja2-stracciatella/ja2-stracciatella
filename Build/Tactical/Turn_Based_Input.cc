@@ -1485,7 +1485,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						for ( usType = FIRSTROOF; usType <= LASTSLANTROOF; usType++ )
 						{
-							HideStructOfGivenType( x, usType, (BOOLEAN)(!fShowRoofs) );
+							HideStructOfGivenType(x, usType, !fShowRoofs);
 						}
 					}
 					InvalidateWorldRedundency();

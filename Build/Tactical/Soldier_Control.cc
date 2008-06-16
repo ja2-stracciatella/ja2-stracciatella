@@ -7902,7 +7902,7 @@ void ContinueMercMovement( SOLDIERTYPE *pSoldier )
 	{
 		sAPCost = PtsToMoveDirection( pSoldier, (UINT8)guiPathingData[ 0 ] );
 
-		if ( EnoughPoints( pSoldier, sAPCost, 0 , (BOOLEAN)( pSoldier->bTeam == gbPlayerNum )  ) )
+		if (EnoughPoints(pSoldier, sAPCost, 0, pSoldier->bTeam == gbPlayerNum))
 		{
 			// Acknowledge
 			if ( pSoldier->bTeam == gbPlayerNum )

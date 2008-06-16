@@ -288,7 +288,7 @@ static BOOLEAN HandleAreaSelection(const INT16 sGridX, const INT16 sGridY)
 			  !gfRightButtonState &&  gfCurrentSelectionWithRightButton )
 		{
 			fAnchored = FALSE;
-			ProcessAreaSelection( (BOOLEAN)!gfCurrentSelectionWithRightButton );
+			ProcessAreaSelection(!gfCurrentSelectionWithRightButton);
 			gfCurrentSelectionWithRightButton = FALSE;
 			return FALSE;
 		}

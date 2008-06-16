@@ -1031,10 +1031,8 @@ void IndicateSelectedMerc( INT16 sID )
 	AddObjectToHead( gsSelectedMercGridNo, CONFIRMMOVE1 );
 
 	//If the merc has a valid profile, then turn off editability
-	if( gpSelected->pDetailedPlacement )
-		SetMercEditability( (BOOLEAN)(gpSelected->pDetailedPlacement->ubProfile == NO_PROFILE) );
-	else
-		SetMercEditability( TRUE );
+	SOLDIERCREATE_STRUCT const* const dp = gpSelected->pDetailedPlacement;
+	SetMercEditability(!dp || dp->ubProfile == NO_PROFILE);
 
 	if( sID < 0 )
 	{	//We want to center the screen on the next merc, and update the interface.

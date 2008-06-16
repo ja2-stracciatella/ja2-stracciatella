@@ -1370,9 +1370,8 @@ static BOOLEAN HandlePlayerGroupNoticedByPatrolGroup(const GROUP* const pPlayerG
 {
 	UINT16 usDefencePoints;
 	UINT16 usOffensePoints;
-	UINT8 ubSectorID;
 
-	ubSectorID = (BOOLEAN)SECTOR( pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY );
+	UINT8 const ubSectorID = SECTOR(pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY);
 	usOffensePoints = pEnemyGroup->pEnemyGroup->ubNumAdmins * 2 +
 										pEnemyGroup->pEnemyGroup->ubNumTroops * 4 +
 										pEnemyGroup->pEnemyGroup->ubNumElites * 6;

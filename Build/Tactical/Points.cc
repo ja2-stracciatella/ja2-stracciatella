@@ -63,7 +63,7 @@ INT16 TerrainActionPoints(const SOLDIERTYPE* const pSoldier, const INT16 sGridno
 	}
 	else if (IS_TRAVELCOST_DOOR( sSwitchValue ))
 	{
-		sSwitchValue = DoorTravelCost( pSoldier, sGridno, (UINT8) sSwitchValue, (BOOLEAN) (pSoldier->bTeam == gbPlayerNum), NULL );
+		sSwitchValue = DoorTravelCost(pSoldier, sGridno, (UINT8)sSwitchValue, pSoldier->bTeam == gbPlayerNum, NULL);
 	}
 
 	if (sSwitchValue >= TRAVELCOST_BLOCKED && sSwitchValue != TRAVELCOST_DOOR )
