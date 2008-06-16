@@ -37,7 +37,6 @@ UINT32				guiNumWorldBombs = 0;
 
 
 static INT32 GetFreeWorldBombIndex(void)
-try
 {
 	UINT32 uiCount;
 	WORLDBOMB *newWorldBombs;
@@ -61,7 +60,6 @@ try
 	// Return uiCount.....
 	return( uiCount );
 }
-catch (...) { return -1; }
 
 
 static INT32 AddBombToWorld(INT32 iItemIndex)
