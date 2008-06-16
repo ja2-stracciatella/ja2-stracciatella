@@ -401,7 +401,7 @@ void ShopKeeperScreenInit()
 }
 
 
-static BOOLEAN EnterShopKeeperInterface(void);
+static void EnterShopKeeperInterface(void);
 static void ExitShopKeeperInterface(void);
 static void GetShopKeeperInterfaceUserInput(void);
 static void HandleShopKeeperInterface(void);
@@ -414,18 +414,19 @@ ScreenID ShopKeeperScreenHandle()
 	{
 		PauseGame();
 
-		if( !EnterShopKeeperInterface() )
+		try
+		{
+			EnterShopKeeperInterface();
+		}
+		catch (...) // XXX fishy, should probably propagate
 		{
 			gfSKIScreenExit = TRUE;
-			EnterTacticalScreen( );
+			EnterTacticalScreen();
+			return SHOPKEEPER_SCREEN;
+		}
 
-			return( SHOPKEEPER_SCREEN );
-		}
-		else
-		{
-			gfSKIScreenEntry = FALSE;
-			gfSKIScreenExit = FALSE;
-		}
+		gfSKIScreenEntry = FALSE;
+		gfSKIScreenExit  = FALSE;
 		gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
 		gfRenderScreenOnNextLoop = TRUE;
 		InvalidateScreen();
@@ -530,8 +531,7 @@ static void SelectArmsDealersDropItemToGroundRegionCallBack(MOUSE_REGION* pRegio
 static void SelectArmsDealersFaceRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static BOOLEAN EnterShopKeeperInterface(void)
-try
+static void EnterShopKeeperInterface(void)
 {
 	CHAR8						zTemp[32];
 
@@ -741,10 +741,7 @@ try
 
 	// by default re-enable calls to PerformTransaction()
 	gfPerformTransactionInProgress = FALSE;
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN InitShopKeepersFace(UINT8 ubMercID)
