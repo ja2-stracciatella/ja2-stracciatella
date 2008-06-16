@@ -302,7 +302,7 @@ BOOLEAN AddToUndoList( INT32 iMapIndex )
 }
 
 
-static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIndex);
+static void CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIndex);
 
 
 static BOOLEAN AddToUndoListCmd(INT32 iMapIndex, INT32 iCmdCount)
@@ -316,7 +316,7 @@ try
 
 	// Copy the world map's tile
 	SGP::PODObj<MAP_ELEMENT> pData;
-	if (!CopyMapElementFromWorld(pData, iMapIndex)) return FALSE;
+	CopyMapElementFromWorld(pData, iMapIndex);
 
 	STRUCTURE* pStructure = pData->pStructureHead;
 
@@ -561,7 +561,7 @@ static void DeleteMapElementContentsAfterCreationFail(MAP_ELEMENT* pNewMapElemen
 }
 
 
-static BOOLEAN CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIndex)
+static void CopyMapElementFromWorld(MAP_ELEMENT* const pNewMapElement, INT32 const iMapIndex)
 try
 {
 	MAP_ELEMENT			*pOldMapElement;
@@ -722,13 +722,11 @@ try
 	pNewMapElement->sHeight							= pOldMapElement->sHeight;
 	pNewMapElement->ubTerrainID					= pOldMapElement->ubTerrainID;
 	pNewMapElement->ubReservedSoldierID = pOldMapElement->ubReservedSoldierID;
-
-	return TRUE;
 }
 catch (...)
 {
 	DeleteMapElementContentsAfterCreationFail(pNewMapElement);
-	return FALSE;
+	throw;
 }
 
 
