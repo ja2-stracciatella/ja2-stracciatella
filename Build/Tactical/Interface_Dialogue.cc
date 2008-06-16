@@ -180,10 +180,11 @@ enum
 };
 
 
-static BOOLEAN InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTYPE* pSrcSoldier, INT8 bApproach, UINT32 uiApproachData);
+static void InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTYPE* pSrcSoldier, INT8 bApproach, UINT32 uiApproachData);
 
 
 BOOLEAN InitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pSrcSoldier, INT8 bApproach, UINT32 uiApproachData )
+try
 {
 	// ATE: OK, let's check the status of the Q
 	// If it has something in it....delay this until after....
@@ -192,7 +193,8 @@ BOOLEAN InitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pSrcSoldie
 		gfConversationPending = FALSE;
 
 		// Initiate directly....
-		return( InternalInitiateConversation( pDestSoldier, pSrcSoldier, bApproach, uiApproachData ) );
+		InternalInitiateConversation(pDestSoldier, pSrcSoldier, bApproach, uiApproachData);
+		return TRUE;
 	}
 	else
 	{
@@ -218,6 +220,8 @@ BOOLEAN InitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pSrcSoldie
 		return( FALSE );
 	}
 }
+catch (...) { return FALSE; /* XXX fishy, exception should probably propagate */ }
+
 
 void HandlePendingInitConv( )
 {
@@ -232,7 +236,7 @@ void HandlePendingInitConv( )
 static void InitTalkingMenu(UINT8 ubCharacterNum, INT16 sGridNo);
 
 
-static BOOLEAN InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTYPE* pSrcSoldier, INT8 bApproach, UINT32 uiApproachData)
+static void InternalInitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIERTYPE* const pSrcSoldier, INT8 const bApproach, UINT32 const uiApproachData)
 {
 	// OK, init talking menu
 	BOOLEAN	fFromPending;
@@ -263,7 +267,7 @@ static BOOLEAN InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTY
 #ifdef JA2TESTVERSION
 		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Cannot initiate conversation menu.. check for face file for ID: %d.", pDestSoldier->ubProfile );
 #endif
-		return( FALSE );
+		throw;
 	}
 
 	// Set soldier pointer
@@ -310,8 +314,6 @@ static BOOLEAN InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTY
 		guiPendingOverrideEvent = TA_TALKINGMENU;
 		HandleTacticalUI( );
 	}
-
-	return( TRUE );
 }
 
 
