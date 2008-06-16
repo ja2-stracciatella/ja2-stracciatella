@@ -82,7 +82,7 @@ static UINT32 MemDebugCounter  = 0;
 static BOOLEAN fMemManagerInit = FALSE;
 
 
-BOOLEAN InitializeMemoryManager(void)
+void InitializeMemoryManager(void)
 {
 	MemDebugCounter = 0;
 	guiMemTotal     = 0;
@@ -96,8 +96,6 @@ BOOLEAN InitializeMemoryManager(void)
 	guiMemoryNodes      = 0;
 	guiTotalMemoryNodes = 0;
 #endif
-
-	return TRUE;
 }
 
 

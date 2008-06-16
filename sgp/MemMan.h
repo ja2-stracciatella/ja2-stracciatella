@@ -11,8 +11,8 @@
 
 extern size_t guiMemTotal;
 
-BOOLEAN InitializeMemoryManager(void);
-void    ShutdownMemoryManager(void);
+void InitializeMemoryManager(void);
+void ShutdownMemoryManager(void);
 
 // Creates and adds a video object to list
 #if defined EXTREME_MEMORY_DEBUGGING

@@ -133,11 +133,7 @@ try
   // this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
 	FastDebugMsg("Initializing Memory Manager");
 	// Initialize the Memory Manager
-	if (!InitializeMemoryManager())
-	{ // We were unable to initialize the memory manager
-		FastDebugMsg("FAILED : Initializing Memory Manager");
-		return FALSE;
-	}
+	InitializeMemoryManager();
 
 	FastDebugMsg("Initializing File Manager");
 	// Initialize the File Manager
