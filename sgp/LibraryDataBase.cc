@@ -114,17 +114,16 @@ static int CompareFileHeader(const void* a, const void* b)
 
 // Replace all \ in a string by /
 static char* Slashify(const char* s)
-try
 {
 	char* const res = MALLOCN(char, strlen(s) + 1);
 	char* d = res;
 	do { *d++ = (*s == '\\' ? '/' : *s); } while (*s++ != '\0');
 	return res;
 }
-catch (...) { return 0; }
 
 
 static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct* const lib)
+try
 {
 	FILE* hFile = fopen(lib_name, "rb");
 	if (hFile == NULL)
@@ -170,7 +169,6 @@ static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct
 		FileHeaderStruct* const fh = &fhs[used_entries++];
 
 		fh->pFileName = Slashify(DirEntry.sFileName);
-		if (fh->pFileName == NULL) return FALSE;
 #ifdef JA2TESTVERSION
 		lib->uiTotalMemoryAllocatedForLibrary += strlen(fh->pFileName) + 1;
 #endif
@@ -190,7 +188,6 @@ static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct
 	lib->usNumberOfEntries = used_entries;
 
 	lib->sLibraryPath = Slashify(LibFileHeader.sPathToLibrary);
-	if (lib->sLibraryPath == NULL) return FALSE;
 #ifdef JA2TESTVERSION
 	lib->uiTotalMemoryAllocatedForLibrary += strlen(lib->sLibraryPath) + 1;
 #endif
@@ -199,6 +196,7 @@ static BOOLEAN InitializeLibrary(const char* const lib_name, LibraryHeaderStruct
 	lib->iNumFilesOpen  = 0;
 	return TRUE;
 }
+catch (...) { return 0; }
 
 
 BOOLEAN LoadDataFromLibrary(LibraryFile* const f, void* const pData, const UINT32 uiBytesToRead)
