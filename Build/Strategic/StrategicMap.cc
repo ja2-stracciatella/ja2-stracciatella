@@ -819,7 +819,7 @@ enum
 	ABOUT_TO_LOAD_NEW_MAP,
 	ABOUT_TO_TRASH_WORLD,
 };
-static BOOLEAN HandleDefiniteUnloadingOfWorld(UINT8 ubUnloadCode);
+static void HandleDefiniteUnloadingOfWorld(UINT8 ubUnloadCode);
 
 
 BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
@@ -4075,8 +4075,7 @@ BOOLEAN IsSectorDesert( INT16 sSectorX, INT16 sSectorY )
 }
 
 
-static BOOLEAN HandleDefiniteUnloadingOfWorld(UINT8 ubUnloadCode)
-try
+static void HandleDefiniteUnloadingOfWorld(UINT8 const ubUnloadCode)
 {
 	// clear tactical queue
 	ClearEventQueue();
@@ -4127,9 +4126,7 @@ try
 
 	//Handle cases for both types of unloading
 	HandleMilitiaStatusInCurrentMapBeforeLoadingNewMap();
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
@@ -4186,6 +4183,7 @@ BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
 
 
 BOOLEAN CheckAndHandleUnloadingOfCurrentWorld()
+try
 {
 	INT16 sBattleSectorX, sBattleSectorY, sBattleSectorZ;
 
@@ -4277,10 +4275,7 @@ BOOLEAN CheckAndHandleUnloadingOfCurrentWorld()
 	}
 
 	//We have passed all the checks and can Trash the world.
-	if( !HandleDefiniteUnloadingOfWorld( ABOUT_TO_TRASH_WORLD ) )
-	{
-		return FALSE;
-	}
+	HandleDefiniteUnloadingOfWorld(ABOUT_TO_TRASH_WORLD);
 
 	if( guiCurrentScreen == AUTORESOLVE_SCREEN )
 	{
@@ -4322,6 +4317,7 @@ BOOLEAN CheckAndHandleUnloadingOfCurrentWorld()
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 /* This is called just before the world is unloaded to preserve location
