@@ -85,7 +85,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 BOOLEAN ProfileCurrentlyTalkingInDialoguePanel( UINT8 ubProfile );
 
-BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY );
+void InternalInitTalkingMenu(UINT8 ubCharacterNum, INT16 sX, INT16 sY);
 
 
 enum

@@ -313,6 +313,7 @@ static BOOLEAN InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTY
 
 // This fuction will allocate and setup an NPCDiaogue structure. Loads the face for the character..
 static BOOLEAN InitTalkingMenu(UINT8 ubCharacterNum, INT16 sGridNo)
+try
 {
 	INT16							sXMapPos, sYMapPos, sScreenX, sScreenY;
 	INT16							sX, sY;
@@ -331,9 +332,11 @@ static BOOLEAN InitTalkingMenu(UINT8 ubCharacterNum, INT16 sGridNo)
 		sX = sScreenX;
 		sY = sScreenY;
 
-		return( InternalInitTalkingMenu( ubCharacterNum, sX, sY ) );
+		InternalInitTalkingMenu(ubCharacterNum, sX, sY);
+		return TRUE;
 	}
 }
+catch (...) { return FALSE; }
 
 
 static void CalculatePopupTextOrientation(INT16 sWidth, INT16 sHeight);
@@ -345,8 +348,7 @@ static void TalkPanelNameRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason
 static void DoneTalkingButtonClickCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-BOOLEAN InternalInitTalkingMenu( UINT8 ubCharacterNum, INT16 sX, INT16 sY )
-try
+void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 {
 	INT16							sCenterYVal, sCenterXVal;
 
@@ -469,13 +471,7 @@ try
 	gfInTalkPanel = TRUE;
 
 	gfIgnoreScrolling = TRUE;
-
-
-
-	// return OK....
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void DoneTalkingButtonClickCallback(GUI_BUTTON* btn, INT32 reason)
