@@ -2106,9 +2106,9 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 
 
 static BOOLEAN ReloadItemDesc(void)
+try
 {
 	guiItemGraphic = LoadTileGraphicForItem(&Item[gpItemDescObject->usItem]);
-	if (!guiItemGraphic) return FALSE;
 
 	//
 	// Load name, desc
@@ -2123,6 +2123,7 @@ static BOOLEAN ReloadItemDesc(void)
 	gzItemName = ItemNames[Item];
 	return LoadItemInfo(Item, gzItemDesc);
 }
+catch (...) { return FALSE; }
 
 
 static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
@@ -4294,7 +4295,6 @@ UINT16 GetTileGraphicForItem(const INVTYPE* pItem)
 
 
 SGPVObject* LoadTileGraphicForItem(const INVTYPE* const pItem)
-try
 {
 	const char* Prefix;
 	switch (pItem->ubGraphicType)
@@ -4310,7 +4310,6 @@ try
 	sprintf(ImageFile, "BIGITEMS/%s%02d.sti", Prefix, pItem->ubGraphicNum);
 	return AddVideoObjectFromFile(ImageFile);
 }
-catch (...) { return 0; }
 
 
 static void ItemDescCallback(MOUSE_REGION* pRegion, INT32 iReason)
