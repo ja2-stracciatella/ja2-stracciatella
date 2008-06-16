@@ -116,8 +116,7 @@ INT32 FAR PASCAL WindowProcedure(HWND hWindow, UINT16 Message, WPARAM wParam, LP
 static void SGPExit(void);
 
 
-static BOOLEAN InitializeStandardGamingPlatform(void)
-try
+static void InitializeStandardGamingPlatform(void)
 {
 	// now required by all (even JA2) in order to call ShutdownSGP
 	atexit(SGPExit);
@@ -170,10 +169,7 @@ try
 	InitializeGame();
 
 	gfGameInitialized = TRUE;
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void ShutdownStandardGamingPlatform(void)
@@ -288,10 +284,7 @@ try
 
 	if (!ParseParameters(argv)) return EXIT_FAILURE;
 
-	if (!InitializeStandardGamingPlatform())
-	{
-		return Failure("Initialisation failed");
-	}
+	InitializeStandardGamingPlatform();
 
 #if defined JA2 && defined ENGLISH
 	SetIntroType(INTRO_SPLASH);
