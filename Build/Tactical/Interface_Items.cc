@@ -1898,7 +1898,7 @@ static void ItemDescAmmoCallback(GUI_BUTTON* btn, INT32 reason);
 static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void ItemDescCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void ItemDescDoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
-static BOOLEAN ReloadItemDesc(void);
+static void ReloadItemDesc(void);
 
 
 void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const INT16 sY, const UINT8 ubStatusIndex, SOLDIERTYPE* const s)
@@ -2070,7 +2070,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 	fInterfacePanelDirty = DIRTYLEVEL2;
 	gfInItemDescBox      = TRUE;
 
-	CHECKV(ReloadItemDesc());
+	ReloadItemDesc();
 
 	gpAttachSoldier = (gpItemPointer ? gpItemPointerSoldier : s);
 	// Store attachments that item originally had
@@ -2105,8 +2105,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 }
 
 
-static BOOLEAN ReloadItemDesc(void)
-try
+static void ReloadItemDesc(void)
 {
 	guiItemGraphic = LoadTileGraphicForItem(&Item[gpItemDescObject->usItem]);
 
@@ -2122,9 +2121,7 @@ try
 	}
 	gzItemName = ItemNames[Item];
 	LoadItemInfo(Item, gzItemDesc);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
