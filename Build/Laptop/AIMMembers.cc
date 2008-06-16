@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Cursors.h"
 #include "EMail.h"
 #include "Font.h"
@@ -1161,7 +1163,7 @@ static void BtnBuyEquipmentButtonCallback(GUI_BUTTON *btn, INT32 reason)
 static INT8    AimMemberHireMerc(void);
 static BOOLEAN CanMercBeHired(void);
 static void    EnableDisableCurrentVideoConferenceButtons(BOOLEAN fEnable);
-static BOOLEAN CreateAimPopUpBox(wchar_t const* sString1, wchar_t const* sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData);
+static void    CreateAimPopUpBox(wchar_t const* sString1, wchar_t const* sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData);
 
 
 //Transfer funds button callback
@@ -1511,10 +1513,9 @@ static BOOLEAN fPopUpBoxActive = FALSE;
 static void BtnPopUpOkButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-static BOOLEAN CreateAimPopUpBox(wchar_t const* const sString1, wchar_t const* const sString2, UINT16 const usPosX, UINT16 const usPosY, UINT8 const ubData)
-try
+static void CreateAimPopUpBox(wchar_t const* const sString1, wchar_t const* const sString2, UINT16 const usPosX, UINT16 const usPosY, UINT8 const ubData)
 {
-	if (fPopUpBoxActive) return FALSE;
+	if (fPopUpBoxActive) throw std::logic_error("AIM popup box already active");
 
 	//Disable the 'X' to close the pop upi video
 	DisableButton(giXToCloseVideoConfButton);
@@ -1551,9 +1552,7 @@ try
 
 	// Create a new flag for the PostButtonRendering function
 	fReDrawPostButtonRender = TRUE;
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN DisplayAimPopUpBox()
