@@ -5,10 +5,10 @@
 #include "Encrypted_File.h"
 
 
-BOOLEAN LoadItemInfo(UINT16 ubIndex, wchar_t Info[])
+void LoadItemInfo(UINT16 const ubIndex, wchar_t Info[])
 {
 	UINT32 Seek = (SIZE_SHORT_ITEM_NAME + SIZE_ITEM_NAME + SIZE_ITEM_INFO) * ubIndex;
-	return LoadEncryptedDataFromFile(ITEMSTRINGFILENAME, Info, Seek + SIZE_ITEM_NAME + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_INFO);
+	LoadEncryptedDataFromFile(ITEMSTRINGFILENAME, Info, Seek + SIZE_ITEM_NAME + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_INFO);
 }
 
 

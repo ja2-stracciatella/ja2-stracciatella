@@ -1536,8 +1536,14 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
    //if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
    {
 			const char* pFilename = GetDialogueDataFilename(ubCharacterNum, 0, FALSE);
-			if (!LoadEncryptedDataFromFile(pFilename, zDialogueText, usQuoteNum * iDataSize, iDataSize) ||
-					zDialogueText[0] == L'\0')
+			bool success;
+			try
+			{
+				LoadEncryptedDataFromFile(pFilename, zDialogueText, usQuoteNum * iDataSize, iDataSize);
+				success = zDialogueText[0] != L'\0';
+			}
+			catch (...) { success = false; }
+			if (!success)
 			{
 				swprintf(zDialogueText, Length, L"I have no text in the EDT file (%d) %hs", usQuoteNum, pFilename);
 #ifndef JA2BETAVERSION

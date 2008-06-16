@@ -448,7 +448,11 @@ static BOOLEAN GetNextCreditFromTextFile(void)
 {
 	wchar_t text[CREDITS_LINESIZE];
 	const UINT32 pos = CREDITS_LINESIZE * guiCurrentCreditRecord++;
-	if (!LoadEncryptedDataFromFile(CRDT_NAME_OF_CREDIT_FILE, text, pos, CREDITS_LINESIZE))
+	try
+	{
+		LoadEncryptedDataFromFile(CRDT_NAME_OF_CREDIT_FILE, text, pos, CREDITS_LINESIZE);
+	}
+	catch (...) // XXX fishy, should check file size beforehand
 	{
 		return FALSE;
 	}

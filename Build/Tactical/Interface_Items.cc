@@ -2121,7 +2121,8 @@ try
 		Item = MONEY_FOR_PLAYERS_ACCOUNT;
 	}
 	gzItemName = ItemNames[Item];
-	return LoadItemInfo(Item, gzItemDesc);
+	LoadItemInfo(Item, gzItemDesc);
+	return TRUE;
 }
 catch (...) { return FALSE; }
 

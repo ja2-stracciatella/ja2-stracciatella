@@ -75,11 +75,8 @@ void LoadEncryptedData(HWFILE const File, wchar_t* DestString, UINT32 const seek
 }
 
 
-BOOLEAN LoadEncryptedDataFromFile(const char* Filename, wchar_t DestString[], UINT32 seek_chars, UINT32 read_chars)
-try
+void LoadEncryptedDataFromFile(char const* const Filename, wchar_t DestString[], UINT32 const seek_chars, UINT32 const read_chars)
 {
 	AutoSGPFile File(FileOpen(Filename, FILE_ACCESS_READ));
 	LoadEncryptedData(File, DestString, seek_chars, read_chars);
-	return TRUE;
 }
-catch (...) { return FALSE; }

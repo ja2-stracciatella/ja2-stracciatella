@@ -138,6 +138,7 @@ static void CopyNumEntriesIntoQuoteStruct(void)
 
 
 static BOOLEAN GetCivQuoteText(UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t* zQuote)
+try
 {
 	char zFileName[164];
 
@@ -159,10 +160,10 @@ static BOOLEAN GetCivQuoteText(UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t* zQu
 		sprintf( zFileName,"NPCDATA/CIV%02d.edt",ubCivQuoteID );
 	}
 
-	return
-		LoadEncryptedDataFromFile(zFileName, zQuote, CIV_QUOTE_TEXT_SIZE * ubEntryID, CIV_QUOTE_TEXT_SIZE) &&
-		zQuote[0] != L'\0';
+	LoadEncryptedDataFromFile(zFileName, zQuote, CIV_QUOTE_TEXT_SIZE * ubEntryID, CIV_QUOTE_TEXT_SIZE);
+	return zQuote[0] != L'\0';
 }
+catch (...) { return FALSE; }
 
 
 static void SurrenderMessageBoxCallBack(UINT8 ubExitValue)

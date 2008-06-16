@@ -837,7 +837,7 @@ static void SelectFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 }
 
 
-static BOOLEAN LoadMercBioInfo(UINT8 ubIndex, wchar_t* pInfoString, wchar_t* pAddInfo);
+static void LoadMercBioInfo(UINT8 ubIndex, wchar_t* pInfoString, wchar_t* pAddInfo);
 
 
 static void UpdateMercInfo(void)
@@ -880,12 +880,11 @@ static void UpdateMercInfo(void)
 }
 
 
-static BOOLEAN LoadMercBioInfo(const UINT8 ubIndex, wchar_t* const pInfoString, wchar_t* const pAddInfo)
+static void LoadMercBioInfo(UINT8 const ubIndex, wchar_t* const pInfoString, wchar_t* const pAddInfo)
 {
 	UINT32 uiStartSeekAmount = (SIZE_MERC_BIO_INFO + SIZE_MERC_ADDITIONAL_INFO) * ubIndex;
-	return
-		LoadEncryptedDataFromFile(MERCBIOSFILENAME, pInfoString, uiStartSeekAmount,                      SIZE_MERC_BIO_INFO) &&
-		LoadEncryptedDataFromFile(MERCBIOSFILENAME, pAddInfo,    uiStartSeekAmount + SIZE_MERC_BIO_INFO, SIZE_MERC_ADDITIONAL_INFO);
+	LoadEncryptedDataFromFile(MERCBIOSFILENAME, pInfoString, uiStartSeekAmount,                      SIZE_MERC_BIO_INFO);
+	LoadEncryptedDataFromFile(MERCBIOSFILENAME, pAddInfo,    uiStartSeekAmount + SIZE_MERC_BIO_INFO, SIZE_MERC_ADDITIONAL_INFO);
 }
 
 

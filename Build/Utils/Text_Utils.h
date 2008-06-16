@@ -3,6 +3,6 @@
 
 #include "Types.h"
 
-BOOLEAN LoadItemInfo(UINT16 ubIndex, wchar_t Info[]);
+void LoadItemInfo(UINT16 ubIndex, wchar_t Info[]);
 
 #endif
