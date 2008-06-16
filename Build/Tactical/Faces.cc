@@ -139,9 +139,8 @@ void InitSoldierFace(SOLDIERTYPE* const s)
 
 
 FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInitFlags)
-try
 {
-	if (id == NO_PROFILE) return NULL;
+	if (id == NO_PROFILE) throw std::logic_error("Tried to load face for invalid profile");
 	const MERCPROFILESTRUCT* const p = GetProfile(id);
 
 	FACETYPE* const face = GetFreeFace();
@@ -254,7 +253,6 @@ try
 
 	return face;
 }
-catch (...) { return 0; }
 
 
 void DeleteSoldierFace( SOLDIERTYPE *pSoldier )

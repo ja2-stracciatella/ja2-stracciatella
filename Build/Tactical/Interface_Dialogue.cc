@@ -412,7 +412,6 @@ try
 
 	// Create face ( a big face! )....
 	FACETYPE* const pFace = InitFace(ubCharacterNum, NULL, FACE_BIGFACE | FACE_POTENTIAL_KEYWAIT);
-	CHECKF(pFace != NULL);
 	gTalkPanel.face = pFace;
 
 	// Create mouse regions...
