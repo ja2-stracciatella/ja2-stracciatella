@@ -273,7 +273,7 @@ void AddLightToUndoList(INT32 const iMapIndex, INT32 const iLightRadius)
 }
 
 
-static BOOLEAN AddToUndoListCmd(INT32 iMapIndex, INT32 iCmdCount);
+static void AddToUndoListCmd(INT32 iMapIndex, INT32 iCmdCount);
 
 
 BOOLEAN AddToUndoList( INT32 iMapIndex )
@@ -294,9 +294,12 @@ BOOLEAN AddToUndoList( INT32 iMapIndex )
 	if( GridNoOnVisibleWorldTile( (INT16)iMapIndex ) && AddMapIndexToTree( (UINT16)iMapIndex ) )
 
 	{
-		if( AddToUndoListCmd( iMapIndex, ++iCount ) )
+		try
+		{
+			AddToUndoListCmd(iMapIndex, ++iCount);
 			return TRUE;
-		iCount--;
+		}
+		catch (...) { --iCount; }
 	}
 	return FALSE;
 }
@@ -305,8 +308,7 @@ BOOLEAN AddToUndoList( INT32 iMapIndex )
 static void CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIndex);
 
 
-static BOOLEAN AddToUndoListCmd(INT32 iMapIndex, INT32 iCmdCount)
-try
+static void AddToUndoListCmd(INT32 const iMapIndex, INT32 const iCmdCount)
 {
 	INT32					iCoveredMapIndex;
 	UINT8					ubLoop;
@@ -352,10 +354,7 @@ try
 	}
 
 	CropStackToMaxLength( MAX_UNDO_COMMAND_LENGTH );
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void RemoveAllFromUndoList(void)
