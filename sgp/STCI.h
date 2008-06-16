@@ -1,3 +1,9 @@
+#ifndef STCI_H
+#define STCI_H
+
 #include "Types.h"
 
-BOOLEAN LoadSTCIFileToImage( HIMAGE hImage, UINT16 fContents );
+
+void LoadSTCIFileToImage(HIMAGE, UINT16 fContents);
+
+#endif

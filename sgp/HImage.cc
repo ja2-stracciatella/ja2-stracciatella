@@ -40,8 +40,7 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 	// determine type from extension
 	if (strcasecmp(ext, "STI") == 0)
 	{
-		BOOLEAN const ret = LoadSTCIFileToImage(img, fContents);
-		if (!ret) throw std::runtime_error("Error occured while loading image");
+		LoadSTCIFileToImage(img, fContents);
 	}
 	else if (strcasecmp(ext, "PCX") == 0)
 	{

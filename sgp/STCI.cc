@@ -9,12 +9,11 @@
 #include "STCI.h"
 
 
-static BOOLEAN STCILoadRGB(    SGPImage*, UINT16 contents, HWFILE, STCIHeader const*);
-static BOOLEAN STCILoadIndexed(SGPImage*, UINT16 contents, HWFILE, STCIHeader const*);
+static void STCILoadRGB(    SGPImage*, UINT16 contents, HWFILE, STCIHeader const*);
+static void STCILoadIndexed(SGPImage*, UINT16 contents, HWFILE, STCIHeader const*);
 
 
-BOOLEAN LoadSTCIFileToImage(const HIMAGE image, const UINT16 fContents)
-try
+void LoadSTCIFileToImage(HIMAGE const image, UINT16 const fContents)
 {
 	Assert(image != NULL);
 
@@ -24,54 +23,40 @@ try
 	FileRead(f, &header, sizeof(header));
 	if (memcmp(header.cID, STCI_ID_STRING, STCI_ID_LEN) != 0)
 	{
-		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem reading STCI header.");
-		return FALSE;
+		throw std::runtime_error("STCI file has invalid header");
 	}
 
 	if (header.fFlags & STCI_ZLIB_COMPRESSED)
 	{
-		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Cannot handle zlib compressed images");
-		return FALSE;
+		throw std::runtime_error("Cannot handle zlib compressed STCI files");
 	}
 
 	// Determine from the header the data stored in the file. and run the appropriate loader
 	if (header.fFlags & STCI_RGB)
 	{
-		if (!STCILoadRGB(image, fContents, f, &header))
-		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading RGB image.");
-			return FALSE;
-		}
+		STCILoadRGB(image, fContents, f, &header);
 	}
 	else if (header.fFlags & STCI_INDEXED)
 	{
-		if (!STCILoadIndexed(image, fContents, f, &header))
-		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Problem loading palettized image.");
-			return FALSE;
-		}
+		STCILoadIndexed(image, fContents, f, &header);
 	}
 	else
 	{
 		// Unsupported type of data, or the right flags weren't set!
-		DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Unknown data organization in STCI file.");
-		return FALSE;
+		throw std::runtime_error("Unknown data organization in STCI file.");
 	}
 
 	image->usWidth    = header.usWidth;
 	image->usHeight   = header.usHeight;
 	image->ubBitDepth = header.ubDepth;
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-static BOOLEAN STCILoadRGB(SGPImage* const img, UINT16 const contents, HWFILE const f, STCIHeader const* const header)
-try
+static void STCILoadRGB(SGPImage* const img, UINT16 const contents, HWFILE const f, STCIHeader const* const header)
 {
 	if (contents & IMAGE_PALETTE && (contents & IMAGE_ALLIMAGEDATA) != IMAGE_ALLIMAGEDATA)
 	{ // RGB doesn't have a palette!
-		return FALSE;
+		throw std::logic_error("Invalid combination of content load flags");
 	}
 
 	if (contents & IMAGE_BITMAPDATA)
@@ -121,22 +106,17 @@ try
 			}
 		}
 	}
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
-static BOOLEAN STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFILE const f, STCIHeader const* const header)
-try
+static void STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFILE const f, STCIHeader const* const header)
 {
 	SGP::Buffer<SGPPaletteEntry> palette;
 	if (contents & IMAGE_PALETTE)
 	{ // Allocate memory for reading in the palette
 		if (header->Indexed.uiNumberOfColours != 256)
 		{
-			DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Palettized image has bad palette size.");
-			return FALSE;
+			throw std::runtime_error("Palettized image has bad palette size.");
 		}
 
 		SGP::Buffer<STCIPaletteElement> pSTCIPalette(256);
@@ -208,14 +188,4 @@ try
 	img->pImageData   = image_data.Release();
 	img->pETRLEObject = etrle_objects.Release();
 	img->pPalette     = palette.Release();
-	return TRUE;
-}
-catch (const std::bad_alloc&)
-{
-	DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Out of memory!");
-	return FALSE;
-}
-catch (...)
-{
-	return FALSE;
 }
