@@ -155,7 +155,6 @@ void FindPanicBombsAndTriggers(void)
 
 
 static INT32 GetFreeWorldItemIndex(void)
-try
 {
 	UINT32 uiCount;
 	WORLDITEM *newWorldItems;
@@ -179,7 +178,6 @@ try
 	// Return uiCount.....
 	return( uiCount );
 }
-catch (...) { return -1; }
 
 
 static UINT32 GetNumUsedWorldItems(void)
