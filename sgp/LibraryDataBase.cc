@@ -1,4 +1,6 @@
-#include <stdlib.h>
+#include <cstdlib>
+#include <stdexcept>
+
 #include "Types.h"
 #include "FileMan.h"
 #include "LibraryDataBase.h"
@@ -56,8 +58,7 @@ static DatabaseManagerHeaderStruct gFileDataBase;
 static BOOLEAN InitializeLibrary(const char* pLibraryName, LibraryHeaderStruct* pLibHeader);
 
 
-BOOLEAN InitializeFileDatabase(const char* LibFilenames[], UINT LibCount)
-try
+void InitializeFileDatabase(char const* LibFilenames[], UINT const LibCount)
 {
 	INT16			i;
 
@@ -76,14 +77,11 @@ try
 			if (!InitializeLibrary(LibFilenames[i], &libs[i]))
 			{
 				FastDebugMsg(String("Warning in InitializeFileDatabase(): Library Id #%d (%s) is to be loaded but cannot be found.\n", i, LibFilenames[i]));
-				return FALSE;
+				throw std::runtime_error("Initialising libraries failed");
 			}
 		}
 	}
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN CloseLibrary(INT16 sLibraryID);

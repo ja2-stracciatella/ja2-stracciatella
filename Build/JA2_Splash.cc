@@ -28,7 +28,7 @@ try
 	sprintf(DataDir, "%s/Data", GetExecutableDirectory());
 	SetFileManCurrentDirectory(DataDir);
 
-	if (!InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries))) return FALSE;
+	InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries));
 
 #ifdef ENGLISH
 	ClearMainMenu();
