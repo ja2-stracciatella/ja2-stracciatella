@@ -37,7 +37,7 @@ typedef struct SGP_FILETIME
 } SGP_FILETIME;
 
 
-BOOLEAN InitializeFileManager(void);
+void InitializeFileManager(void);
 
 /* Checks if a file exists. */
 BOOLEAN FileExists(const char* filename);

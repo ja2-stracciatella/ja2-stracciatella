@@ -136,12 +136,7 @@ try
 	InitializeMemoryManager();
 
 	FastDebugMsg("Initializing File Manager");
-	// Initialize the File Manager
-	if (!InitializeFileManager())
-	{ // We were unable to initialize the file manager
-		FastDebugMsg("FAILED : Initializing File Manager");
-		return FALSE;
-	}
+	InitializeFileManager();
 
 	FastDebugMsg("Initializing Video Manager");
 	InitializeVideoManager();

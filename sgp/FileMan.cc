@@ -166,7 +166,7 @@ void SetBinDataDirFromBundle(void)
 #endif
 
 
-BOOLEAN InitializeFileManager(void)
+void InitializeFileManager(void)
 {
 #ifdef _WIN32
 	_fmode = O_BINARY;
@@ -174,8 +174,7 @@ BOOLEAN InitializeFileManager(void)
 	char home[MAX_PATH];
 	if (FAILED(SHGetFolderPath(NULL, CSIDL_PERSONAL | CSIDL_FLAG_CREATE, NULL, 0, home)))
 	{
-		fprintf(stderr, "Unable to locate home directory\n");
-		return FALSE;
+		throw std::runtime_error("Unable to locate home directory\n");
 	}
 
 #	define LOCALDIR "JA2"
@@ -187,8 +186,7 @@ BOOLEAN InitializeFileManager(void)
 		const struct passwd* const passwd = getpwuid(getuid());
 		if (passwd == NULL || passwd->pw_dir == NULL)
 		{
-			fprintf(stderr, "Unable to locate home directory\n");
-			return FALSE;
+			throw std::runtime_error("Unable to locate home directory");
 		}
 
 		home = passwd->pw_dir;
@@ -201,16 +199,14 @@ BOOLEAN InitializeFileManager(void)
 	snprintf(LocalPath, lengthof(LocalPath), "%s/" LOCALDIR, home);
 	if (mkdir(LocalPath, 0700) != 0 && errno != EEXIST)
 	{
-		fprintf(stderr, "Unable to create directory \"%s\"\n", LocalPath);
-		return FALSE;
+		throw std::runtime_error("Unable to create directory \"" LOCALDIR "\"");
 	}
 
 	char DataPath[512];
 	snprintf(DataPath, lengthof(DataPath), "%s/Data", LocalPath);
 	if (mkdir(DataPath, 0700) != 0 && errno != EEXIST)
 	{
-		fprintf(stderr, "Unable to create directory \"%s\"\n", DataPath);
-		return FALSE;
+		throw std::runtime_error("Unable to create directory \"" LOCALDIR "/Data\"");
 	}
 	BinDataDir = ConfigRegisterKey("data_dir");
 
@@ -227,11 +223,9 @@ BOOLEAN InitializeFileManager(void)
 
 	if (GetBinDataPath() == NULL)
 	{
-		fputs("ERROR: Path to binary data is not set.\n", stderr);
 		TellAboutDataDir(ConfigFile);
-		return FALSE;
+		throw std::runtime_error("Path to binary data is not set.");
 	}
-	return TRUE;
 }
 
 
