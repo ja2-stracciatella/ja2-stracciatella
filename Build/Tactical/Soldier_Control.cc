@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Font_Control.h"
 #include "HImage.h"
 #include "Handle_Items.h"
@@ -676,13 +678,7 @@ try
 		EVENT_InitNewSoldierAnim(s, ani_state, ani_code, TRUE);
 	}
 
-	if (!CreateSoldierPalettes(s))
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_0, "Soldier: Failed in creating soldier palettes");
-		DeleteSoldier(s);
-		return FALSE;
-	}
-
+	CreateSoldierPalettes(s);
 	return TRUE;
 }
 catch (...)
@@ -4873,11 +4869,14 @@ static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT
 static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT32 rscale, UINT32 gscale);
 
 
-BOOLEAN CreateSoldierPalettes(SOLDIERTYPE* const s)
+void CreateSoldierPalettes(SOLDIERTYPE* const s)
 {
 	// --- TAKE FROM CURRENT ANIMATION HVOBJECT!
 	UINT16 const anim_surface = GetSoldierAnimationSurface(s);
-	CHECKF(anim_surface != INVALID_ANIMATION_SURFACE);
+	if (anim_surface == INVALID_ANIMATION_SURFACE)
+	{
+		throw std::runtime_error("Palette creation failed, soldier has invalid animation");
+	}
 
 	SGPPaletteEntry tmp_pal[256];
 	memset(tmp_pal, 0, sizeof(*tmp_pal) * 256);
@@ -4978,8 +4977,6 @@ BOOLEAN CreateSoldierPalettes(SOLDIERTYPE* const s)
 		s->pShades[i] = CreateEnemyGreyGlow16BPPPalette(pal, gOrangeGlowR[i - 20], gOrangeGlowG[i - 20]);
 	}
 	s->pShades[39] = CreateEnemyGreyGlow16BPPPalette(pal, gOrangeGlowR[18], gOrangeGlowG[18]);
-
-	return TRUE;
 }
 
 
