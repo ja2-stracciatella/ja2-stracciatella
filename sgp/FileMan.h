@@ -57,7 +57,7 @@ INT32 FileGetPos(HWFILE);
 
 UINT32 FileGetSize(HWFILE);
 
-BOOLEAN     SetFileManCurrentDirectory(const char* pcDirectory);
+void        SetFileManCurrentDirectory(char const* pcDirectory);
 const char* GetExecutableDirectory(void);
 
 /* Create the directory at path.  Returns true, iff the creation succeeded or

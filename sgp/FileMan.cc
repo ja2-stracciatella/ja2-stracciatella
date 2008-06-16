@@ -459,13 +459,16 @@ UINT32 FileGetSize(const HWFILE f)
 }
 
 
-BOOLEAN SetFileManCurrentDirectory(const char* const pcDirectory)
+void SetFileManCurrentDirectory(char const* const pcDirectory)
 {
 #if 1 // XXX TODO
-	return chdir(pcDirectory) == 0;
+	if (chdir(pcDirectory) != 0)
 #else
-	return SetCurrentDirectory(pcDirectory);
+	if (!SetCurrentDirectory(pcDirectory))
 #endif
+	{
+		throw std::runtime_error("Changing directory failed");
+	}
 }
 
 

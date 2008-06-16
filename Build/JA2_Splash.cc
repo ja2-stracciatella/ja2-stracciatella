@@ -26,11 +26,7 @@ try
 
 	STRING512 DataDir;
 	sprintf(DataDir, "%s/Data", GetExecutableDirectory());
-	if (!SetFileManCurrentDirectory(DataDir))
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Could not find data directory, shutting down");
-		return FALSE;
-	}
+	SetFileManCurrentDirectory(DataDir);
 
 	if (!InitializeFileDatabase(gGameLibaries, lengthof(gGameLibaries))) return FALSE;
 
