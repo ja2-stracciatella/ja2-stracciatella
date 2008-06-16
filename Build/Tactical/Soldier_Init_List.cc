@@ -70,7 +70,6 @@ void KillSoldierInitList()
 }
 
 SOLDIERINITNODE* AddBasicPlacementToSoldierInitList( BASIC_SOLDIERCREATE_STRUCT *pBasicPlacement )
-try
 {
 	//Allocate memory for node
 	SOLDIERINITNODE* const curr = MALLOCZ(SOLDIERINITNODE);
@@ -111,7 +110,6 @@ try
 		gMapInformation.ubNumIndividuals++;
 	return curr;
 }
-catch (...) { return 0; }
 
 
 void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode )
@@ -248,11 +246,6 @@ try
 		LOADDATA( &tempBasicPlacement, *hBuffer, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
 		pNode = AddBasicPlacementToSoldierInitList( &tempBasicPlacement );
 		pNode->ubNodeID = (UINT8)i;
-		if( !pNode )
-		{
-			AssertMsg( 0, "Failed to allocate memory for new basic placement in LoadSoldiersFromMap." );
-			return FALSE;
-		}
 		if( tempBasicPlacement.fDetailedPlacement )
 		{ //Add the static detailed placement information in the same newly created node as the basic placement.
 			//read static detailed placement from file
