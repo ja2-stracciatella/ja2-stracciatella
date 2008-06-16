@@ -470,7 +470,7 @@ try
 	Assert(s->usAnimState == STANDING);
 
 	// Alrighty then, we are set to create the merc, stuff after here can fail!
-	CHECKF(CreateSoldierCommon(s));
+	CreateSoldierCommon(s);
 
 	if (pCreateStruct->fOnRoof && FlatRoofAboveGridNo(pCreateStruct->sInsertionGridNo))
 	{
@@ -490,6 +490,7 @@ catch (...) { return 0; }
 
 
 SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE* const existing)
+try
 {
 	Assert(guiCurrentScreen != AUTORESOLVE_SCREEN);
 	Assert(existing->face  == NULL);
@@ -510,9 +511,10 @@ SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE* const existing
 		s->bNeutral = TRUE;
 	}
 
-	CHECKF(CreateSoldierCommon(s));
+	CreateSoldierCommon(s);
 	return s;
 }
+catch (...) { return 0; }
 
 
 static void TacticalCopySoldierFromProfile(SOLDIERTYPE* const pSoldier, SOLDIERCREATE_STRUCT const* const pCreateStruct)

@@ -607,7 +607,7 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN CreateSoldierCommon(SOLDIERTYPE* const s)
+void CreateSoldierCommon(SOLDIERTYPE* const s)
 try
 {
 	//if we are loading a saved game, we DO NOT want to reset the opplist, look for enemies, or say a dying commnet
@@ -679,12 +679,11 @@ try
 	}
 
 	CreateSoldierPalettes(s);
-	return TRUE;
 }
 catch (...)
 {
 	DeleteSoldier(s);
-	return FALSE;
+	throw;
 }
 
 
