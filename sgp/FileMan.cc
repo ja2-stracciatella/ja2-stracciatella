@@ -480,18 +480,14 @@ void MakeFileManDirectory(char const* const path)
 }
 
 
-BOOLEAN EraseDirectory(const char* const path)
-try
+void EraseDirectory(char const* const path)
 {
 	char pattern[512];
 	snprintf(pattern, lengthof(pattern), "%s/*", path);
 
 	SGP::FindFiles find(pattern);
-	for (;;)
+	while (char const* const find_filename = find.Next())
 	{
-		char const* const find_filename = find.Next();
-		if (!find_filename) return TRUE;
-
 		char filename[512];
 		snprintf(filename, lengthof(filename), "%s/%s", path, find_filename);
 
@@ -503,11 +499,10 @@ try
 		{
 			const FileAttributes attr = FileGetAttributes(filename);
 			if (attr != FILE_ATTR_ERROR && attr & FILE_ATTR_DIRECTORY) continue;
-			return FALSE;
+			throw;
 		}
 	}
 }
-catch (...) { return FALSE; }
 
 
 const char* GetExecutableDirectory(void)

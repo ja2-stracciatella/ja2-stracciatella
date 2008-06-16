@@ -66,7 +66,7 @@ void MakeFileManDirectory(char const* path);
 
 /* Removes ALL FILES in the specified directory, but leaves the directory alone.
  * Does not affect any subdirectories! */
-BOOLEAN EraseDirectory(const char* pcDirectory);
+void EraseDirectory(char const* pcDirectory);
 
 
 namespace SGP
