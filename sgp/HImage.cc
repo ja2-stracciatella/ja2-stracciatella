@@ -49,7 +49,8 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 	}
 	else if (strcasecmp(ext, "TGA") == 0)
 	{
-		ret = LoadTGAFileToImage(img, fContents);
+		LoadTGAFileToImage(img, fContents);
+		ret = TRUE;
 	}
 	else
 	{

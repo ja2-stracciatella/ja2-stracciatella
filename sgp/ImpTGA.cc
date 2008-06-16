@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Buffer.h"
 #include "HImage.h"
 #include "LoadSaveData.h"
@@ -8,14 +10,13 @@
 #include "Debug.h"
 
 
-static BOOLEAN ReadUncompColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
-static BOOLEAN ReadUncompRGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
-static BOOLEAN ReadRLEColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
-static BOOLEAN ReadRLERGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
+static void ReadUncompColMapImage(HIMAGE, HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
+static void ReadUncompRGBImage(   HIMAGE, HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
+static void ReadRLEColMapImage(   HIMAGE, HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
+static void ReadRLERGBImage(      HIMAGE, HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
 
 
-BOOLEAN LoadTGAFileToImage( HIMAGE hImage, UINT16 fContents )
-try
+void LoadTGAFileToImage(HIMAGE const hImage, UINT16 fContents)
 {
 	UINT8		uiImgID, uiColMap, uiType;
 
@@ -27,38 +28,24 @@ try
 	FileRead(hFile, &uiColMap, sizeof(UINT8));
 	FileRead(hFile, &uiType,   sizeof(UINT8));
 
-	BOOLEAN fReturnVal = FALSE;
-	switch( uiType )
+	switch (uiType)
 	{
-	case 1:
-		fReturnVal = ReadUncompColMapImage( hImage, hFile, uiImgID, uiColMap, fContents );
-		break;
-	case 2:
-		fReturnVal = ReadUncompRGBImage( hImage, hFile, uiImgID, uiColMap, fContents );
-		break;
-	case 9:
-		fReturnVal = ReadRLEColMapImage( hImage, hFile, uiImgID, uiColMap, fContents );
-		break;
-	case 10:
-		fReturnVal = ReadRLERGBImage( hImage, hFile, uiImgID, uiColMap, fContents );
-		break;
-	default:
-		break;
+		case  1: ReadUncompColMapImage(hImage, hFile, uiImgID, uiColMap, fContents); break;
+		case  2: ReadUncompRGBImage(   hImage, hFile, uiImgID, uiColMap, fContents); break;
+		case  9: ReadRLEColMapImage(   hImage, hFile, uiImgID, uiColMap, fContents); break;
+		case 10: ReadRLERGBImage(      hImage, hFile, uiImgID, uiColMap, fContents); break;
+		default: throw std::runtime_error("Unsupported TGA format");
 	}
-
-	return( fReturnVal );
 }
-catch (...) { return FALSE; }
 
 
-static BOOLEAN ReadUncompColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
+static void ReadUncompColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
 {
-	return FALSE;
+	throw std::runtime_error("TGA format 1 loading is unimplemented");
 }
 
 
-static BOOLEAN ReadUncompRGBImage(SGPImage* const img, HWFILE const f, UINT8 const uiImgID, UINT8 const uiColMap, UINT16 const contents)
-try
+static void ReadUncompRGBImage(SGPImage* const img, HWFILE const f, UINT8 const uiImgID, UINT8 const uiColMap, UINT16 const contents)
 {
 	UINT16	uiColMapLength;
 	UINT16	uiWidth;
@@ -126,23 +113,20 @@ try
 		}
 		else
 		{
-			return FALSE;
+			throw std::runtime_error("Failed to load TGA with unsupported colour depth");
 		}
 		img->fFlags |= IMAGE_BITMAPDATA;
 	}
-
-	return TRUE;
-}
-catch (...) { return FALSE; }
-
-
-static BOOLEAN ReadRLEColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
-{
-	return FALSE;
 }
 
 
-static BOOLEAN ReadRLERGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
+static void ReadRLEColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
 {
-	return FALSE;
+	throw std::runtime_error("TGA format 9 loading is unimplemented");
+}
+
+
+static void ReadRLERGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
+{
+	throw std::runtime_error("TGA format 10 loading is unimplemented");
 }
