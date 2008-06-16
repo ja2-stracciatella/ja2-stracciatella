@@ -146,13 +146,8 @@ try
 	FastDebugMsg("Initializing Video Manager");
 	InitializeVideoManager();
 
-	// Initialize Video Object Manager
 	FastDebugMsg("Initializing Video Object Manager");
-	if ( !InitializeVideoObjectManager( ) )
-	{
-		FastDebugMsg("FAILED : Initializing Video Object Manager");
-		return FALSE;
-	}
+	InitializeVideoObjectManager();
 
 	// Initialize Video Surface Manager
 	FastDebugMsg("Initializing Video Surface Manager");

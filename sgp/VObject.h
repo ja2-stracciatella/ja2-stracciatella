@@ -82,7 +82,7 @@ ENUM_BITSET(SGPVObject::Flags)
 
 
 // Creates a list to contain video objects
-BOOLEAN InitializeVideoObjectManager(void);
+void InitializeVideoObjectManager(void);
 
 // Deletes any video object placed into list
 void ShutdownVideoObjectManager(void);

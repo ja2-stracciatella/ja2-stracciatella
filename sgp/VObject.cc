@@ -165,7 +165,7 @@ static VOBJECT_NODE* gpVObjectTail = NULL;
 UINT32 guiVObjectSize = 0;
 
 
-BOOLEAN InitializeVideoObjectManager(void)
+void InitializeVideoObjectManager(void)
 {
 	//Shouldn't be calling this if the video object manager already exists.
 	//Call shutdown first...
@@ -173,7 +173,6 @@ BOOLEAN InitializeVideoObjectManager(void)
 	Assert(gpVObjectTail == NULL);
 	gpVObjectHead = NULL;
 	gpVObjectTail = NULL;
-	return TRUE;
 }
 
 
