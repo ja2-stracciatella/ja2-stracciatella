@@ -117,6 +117,7 @@ static void SGPExit(void);
 
 
 static BOOLEAN InitializeStandardGamingPlatform(void)
+try
 {
 	// now required by all (even JA2) in order to call ShutdownSGP
 	atexit(SGPExit);
@@ -171,7 +172,7 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 	}
 
 #ifdef JA2
-	if (!InitJA2SplashScreen()) return FALSE;
+	InitJA2SplashScreen();
 #endif
 
 	// Initialize Font Manager
@@ -196,6 +197,7 @@ static BOOLEAN InitializeStandardGamingPlatform(void)
 
 	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static void ShutdownStandardGamingPlatform(void)

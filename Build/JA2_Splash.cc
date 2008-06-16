@@ -19,8 +19,7 @@ UINT32 guiSplashStartTime = 0;
 
 
 //Simply create videosurface, load image, and draw it to the screen.
-BOOLEAN InitJA2SplashScreen(void)
-try
+void InitJA2SplashScreen(void)
 {
 	InitializeJA2Clock();
 
@@ -41,6 +40,4 @@ try
 	RefreshScreen();
 
 	guiSplashStartTime = GetJA2Clock();
-	return TRUE;
 }
-catch (...) { return FALSE; }
