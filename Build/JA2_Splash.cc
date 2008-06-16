@@ -20,6 +20,7 @@ UINT32 guiSplashStartTime = 0;
 
 //Simply create videosurface, load image, and draw it to the screen.
 BOOLEAN InitJA2SplashScreen(void)
+try
 {
 	InitializeJA2Clock();
 
@@ -37,11 +38,7 @@ BOOLEAN InitJA2SplashScreen(void)
 	ClearMainMenu();
 #else
 	const char* const ImageFile = GetMLGFilename(MLG_SPLASH);
-	if (!BltVideoSurfaceOnce(FRAME_BUFFER, ImageFile, 0, 0))
-	{
-		AssertMsg(0, String("Failed to load %s", ImageFile));
-		return FALSE;
-	}
+	BltVideoSurfaceOnce(FRAME_BUFFER, ImageFile, 0, 0);
 #endif
 
 	InvalidateScreen();
@@ -50,3 +47,4 @@ BOOLEAN InitJA2SplashScreen(void)
 	guiSplashStartTime = GetJA2Clock();
 	return TRUE;
 }
+catch (...) { return FALSE; }

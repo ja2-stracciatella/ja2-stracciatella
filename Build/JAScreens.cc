@@ -774,9 +774,12 @@ ScreenID DemoExitScreenHandle(void)
 	if ( ubCurrentScreen == 0 )
 	{
 		//bring up the collage screen
-		if (!BltVideoSurfaceOnce(FRAME_BUFFER, "DemoAds/collage.sti", 0, 0))
+		try
 		{
-			AssertMsg( 0, "Failed to load DemoAds/collage.sti" );
+			BltVideoSurfaceOnce(FRAME_BUFFER, "DemoAds/collage.sti", 0, 0);
+		}
+		catch (...)
+		{
 			ubCurrentScreen = 8;
 			return DEMO_EXIT_SCREEN;
 		}

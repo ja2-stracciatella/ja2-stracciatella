@@ -275,17 +275,17 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 		FRAME_BUFFER->Fill(0);
 		MPrint(5, 5, L"Error loading save, attempting to patch save to version 1.02...");
 	}
-	else
+	else try // Blit the background image
 	{
-		// Blit the background image
-		if (!BltVideoSurfaceOnce(FRAME_BUFFER, ImageFile, 0, 0))
-		{ //Failed to load the file, so use a black screen and print out message.
-			SetFont( FONT10ARIAL );
-			SetFontForeground( FONT_YELLOW );
-			SetFontShadow( FONT_NEARBLACK );
-			FRAME_BUFFER->Fill(0);
-			mprintf(5, 5, L"%hs loadscreen data file not found...", ImageFile);
-		}
+		BltVideoSurfaceOnce(FRAME_BUFFER, ImageFile, 0, 0);
+	}
+	catch (...)
+	{ //Failed to load the file, so use a black screen and print out message.
+		SetFont(FONT10ARIAL);
+		SetFontForeground(FONT_YELLOW);
+		SetFontShadow(FONT_NEARBLACK);
+		FRAME_BUFFER->Fill(0);
+		mprintf(5, 5, L"%hs loadscreen data file not found...", ImageFile);
 	}
 
 	gubLastLoadingScreenID = ubLoadScreenID;

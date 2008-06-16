@@ -145,7 +145,7 @@ void BltVideoSurfaceHalf(SGPVSurface* dst, SGPVSurface* src, INT32 DestX, INT32 
 // Deletes all data, including palettes
 void DeleteVideoSurface(SGPVSurface*);
 
-BOOLEAN BltVideoSurfaceOnce(SGPVSurface* dst, const char* filename, INT32 x, INT32 y);
+void BltVideoSurfaceOnce(SGPVSurface* dst, const char* filename, INT32 x, INT32 y);
 
 typedef SGP::AutoObj<SGPVSurface, DeleteVideoSurface>::Type AutoSGPVSurface;
 
