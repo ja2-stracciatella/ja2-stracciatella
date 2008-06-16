@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Buffer.h"
 #include "Font.h"
 #include "Font_Control.h"
@@ -911,7 +913,7 @@ static void LoadGeneralInfo(HWFILE);
 static void LoadMeanwhileDefsFromSaveGameFile(HWFILE);
 static void LoadOppListInfoFromSavedGame(HWFILE);
 static void LoadPreRandomNumbersFromSaveGameFile(HWFILE);
-static BOOLEAN LoadSavedMercProfiles(HWFILE hFile);
+static void LoadSavedMercProfiles(HWFILE);
 static BOOLEAN LoadSoldierStructure(HWFILE hFile);
 static void LoadTacticalStatusFromSavedGame(HWFILE);
 static void LoadWatchedLocsFromSavedGame(HWFILE);
@@ -1141,7 +1143,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		//
 		// Load all the saved Merc profiles
 		//
-		if (!LoadSavedMercProfiles(f)) goto load_failed;
+		LoadSavedMercProfiles(f);
 #ifdef JA2BETAVERSION
 		LoadGameFilePosition(f, "Merc Profiles");
 #endif
@@ -2007,8 +2009,7 @@ static void SaveMercProfiles(HWFILE const hFile)
 }
 
 
-static BOOLEAN LoadSavedMercProfiles(HWFILE hFile)
-try
+static void LoadSavedMercProfiles(HWFILE const hFile)
 {
 	UINT16	cnt;
 
@@ -2031,13 +2032,10 @@ try
 		ExtractMercProfile(Data,  &gMercProfiles[cnt]);
 		if ( gMercProfiles[ cnt ].uiProfileChecksum != ProfileChecksum( &(gMercProfiles[ cnt ]) ) )
 		{
-			return( FALSE );
+			throw std::runtime_error("Merc profile checksum mismatch");
 		}
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 static void SaveSoldierStructure(HWFILE const hFile)
