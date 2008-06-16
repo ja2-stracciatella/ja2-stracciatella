@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Buffer.h"
 #include "HImage.h"
 #include "PCX.h"
@@ -55,14 +57,13 @@ typedef struct PcxObject
 
 
 static void       SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage);
-static BOOLEAN BlitPcxToBuffer(PcxObject* pCurrentPcxObject, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp);
+static void       BlitPcxToBuffer(PcxObject*, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp);
 static PcxObject* LoadPcx(const char* filename);
 
 
-BOOLEAN LoadPCXFileToImage(SGPImage* const img, UINT16 const contents)
+void LoadPCXFileToImage(SGPImage* const img, UINT16 const contents)
 {
 	PcxObject* const pcx_obj = LoadPcx(img->ImageFile);
-	if (!pcx_obj) return FALSE;
 
 	// Set some header information
 	img->usWidth     = pcx_obj->usWidth;
@@ -74,10 +75,7 @@ BOOLEAN LoadPCXFileToImage(SGPImage* const img, UINT16 const contents)
 	if (contents & IMAGE_BITMAPDATA)
 	{
 		SGP::Buffer<UINT8> img_data(img->usWidth * img->usHeight);
-		if (!BlitPcxToBuffer(pcx_obj, img_data, img->usWidth, img->usHeight, 0, 0, FALSE))
-		{
-			return FALSE;
-		}
+		BlitPcxToBuffer(pcx_obj, img_data, img->usWidth, img->usHeight, 0, 0, FALSE);
 		img->p8BPPData = img_data.Release();
 	}
 
@@ -89,19 +87,20 @@ BOOLEAN LoadPCXFileToImage(SGPImage* const img, UINT16 const contents)
 
 	MemFree(pcx_obj->pPcxBuffer);
 	MemFree(pcx_obj);
-	return TRUE;
 }
 
 
 static PcxObject* LoadPcx(const char* const filename)
-try
 {
 	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
 
 	PcxHeader header;
 	FileRead(f, &header, sizeof(header));
-	if (header.ubManufacturer != 10) return NULL;
-	if (header.ubEncoding     !=  1) return NULL;
+	if (header.ubManufacturer != 10 ||
+			header.ubEncoding     !=  1)
+	{
+		throw std::runtime_error("PCX file has invalid header");
+	}
 
 	const UINT32 file_size   = FileGetSize(f);
 	const UINT32 buffer_size = file_size - sizeof(PcxHeader) - 768;
@@ -119,10 +118,9 @@ try
 	pcx_obj->uiBufferSize = buffer_size;
 	return pcx_obj.Release();
 }
-catch (...) { return 0; }
 
 
-static BOOLEAN BlitPcxToBuffer(PcxObject* pCurrentPcxObject, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp)
+static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBuffer, UINT16 const usBufferWidth, UINT16 const usBufferHeight, UINT16 const usX, UINT16 const usY, BOOLEAN const fTransp)
 {
   UINT8     *pPcxBuffer;
   UINT8      ubRepCount;
@@ -320,8 +318,6 @@ static BOOLEAN BlitPcxToBuffer(PcxObject* pCurrentPcxObject, UINT8* pBuffer, UIN
       }
     }
   }
-
-	return( TRUE );
 }
 
 

@@ -38,26 +38,23 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 	strcpy(img->ImageFile, filename);
 
 	// determine type from extension
-	BOOLEAN ret;
 	if (strcasecmp(ext, "STI") == 0)
 	{
-		ret = LoadSTCIFileToImage(img, fContents);
+		BOOLEAN const ret = LoadSTCIFileToImage(img, fContents);
+		if (!ret) throw std::runtime_error("Error occured while loading image");
 	}
 	else if (strcasecmp(ext, "PCX") == 0)
 	{
-		ret = LoadPCXFileToImage(img, fContents);
+		LoadPCXFileToImage(img, fContents);
 	}
 	else if (strcasecmp(ext, "TGA") == 0)
 	{
 		LoadTGAFileToImage(img, fContents);
-		ret = TRUE;
 	}
 	else
 	{
 		throw std::logic_error("Tried to load image with unknown extension");
 	}
-
-	if (!ret) throw std::runtime_error("Error occured while loading image");
 
 	return img.Release();
 }
