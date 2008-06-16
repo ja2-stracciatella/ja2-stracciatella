@@ -4076,6 +4076,7 @@ BOOLEAN IsSectorDesert( INT16 sSectorX, INT16 sSectorY )
 
 
 static BOOLEAN HandleDefiniteUnloadingOfWorld(UINT8 ubUnloadCode)
+try
 {
 	// clear tactical queue
 	ClearEventQueue();
@@ -4115,11 +4116,7 @@ static BOOLEAN HandleDefiniteUnloadingOfWorld(UINT8 ubUnloadCode)
 	else if( ubUnloadCode == ABOUT_TO_TRASH_WORLD )
 	{
 		//Save the current sectors open temp files to the disk
-		if( !SaveCurrentSectorsInformationToTempItemFile() )
-		{
-			ScreenMsg( FONT_MCOLOR_WHITE, MSG_TESTVERSION, L"ERROR in SaveCurrentSectorsInformationToTempItemFile()");
-			return FALSE;
-		}
+		SaveCurrentSectorsInformationToTempItemFile();
 
 		//Setup the tactical existance of the current soldier.
 		//@@@Evaluate
@@ -4132,6 +4129,8 @@ static BOOLEAN HandleDefiniteUnloadingOfWorld(UINT8 ubUnloadCode)
 	HandleMilitiaStatusInCurrentMapBeforeLoadingNewMap();
 	return TRUE;
 }
+catch (...) { return FALSE; }
+
 
 BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
 {

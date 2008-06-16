@@ -20,7 +20,7 @@ void SaveMapTempFilesToSavedGameFile(HWFILE);
 
 
 //Saves the Current Sectors, ( world Items, rotting corpses, ... )  to the temporary file used to store the sectors items
-BOOLEAN SaveCurrentSectorsInformationToTempItemFile(void);
+void SaveCurrentSectorsInformationToTempItemFile(void);
 
 //Loads the Currents Sectors information ( world Items, rotting corpses, ... ) from the temporary file used to store the sectores items
 BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile(void);

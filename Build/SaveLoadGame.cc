@@ -469,33 +469,29 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
 
 
-	//Save the current sectors open temp files to the disk
-	if( !SaveCurrentSectorsInformationToTempItemFile() )
-	{
-		ScreenMsg( FONT_MCOLOR_WHITE, MSG_TESTVERSION, L"ERROR in SaveCurrentSectorsInformationToTempItemFile()");
-		goto FAILED_TO_SAVE;
-	}
-
-	//if we are saving the quick save,
-	if( ubSaveGameID == 0 )
-	{
-#ifdef JA2BETAVERSION
-		//Increment the quicksave counter
-		guiCurrentQuickSaveNumber++;
-
-		if( gfUseConsecutiveQuickSaveSlots )
-			swprintf(pGameDesc, lengthof(pGameDesc), L"%hs%03d", g_quicksave_name, guiCurrentQuickSaveNumber);
-		else
-#endif
-			swprintf(pGameDesc, lengthof(pGameDesc), L"%hs", g_quicksave_name);
-	}
-
-	//If there was no string, add one
-	if( pGameDesc[0] == '\0' )
-		wcscpy( pGameDesc, pMessageStrings[ MSG_NODESC ] );
-
 	try
 	{
+		//Save the current sectors open temp files to the disk
+		SaveCurrentSectorsInformationToTempItemFile();
+
+		//if we are saving the quick save,
+		if (ubSaveGameID == 0)
+		{
+#ifdef JA2BETAVERSION
+			//Increment the quicksave counter
+			guiCurrentQuickSaveNumber++;
+
+			if (gfUseConsecutiveQuickSaveSlots)
+				swprintf(pGameDesc, lengthof(pGameDesc), L"%hs%03d", g_quicksave_name, guiCurrentQuickSaveNumber);
+			else
+#endif
+				swprintf(pGameDesc, lengthof(pGameDesc), L"%hs", g_quicksave_name);
+		}
+
+		//If there was no string, add one
+		if (pGameDesc[0] == '\0')
+			wcscpy(pGameDesc, pMessageStrings[MSG_NODESC]);
+
 		MakeFileManDirectory(g_savegame_dir);
 
 		//Create the name of the file
@@ -822,7 +818,31 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 		SaveGameFilePosition(f, "New way of saving Bobby R mailorders");
 #endif
 	}
-	catch (...) { goto FAILED_TO_SAVE; }
+	catch (...)
+	{
+		if (fWePausedIt) UnPauseAfterSaveGame();
+
+		//Delete the failed attempt at saving
+		DeleteSaveGameNumber(ubSaveGameID);
+
+		//Put out an error message
+		ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, zSaveLoadText[SLG_SAVE_GAME_ERROR]);
+
+#ifdef JA2BETAVERSION
+		InitShutDownMapTempFileTest(FALSE, "SaveMapTempFile", ubSaveGameID);
+#endif
+
+		//Check for enough free hard drive space
+		NextLoopCheckForEnoughFreeHardDriveSpace();
+
+#ifdef JA2BETAVERSION
+		if (fDisableDueToBattleRoster || fDisableMapInterfaceDueToBattle)
+		{
+			gubReportMapscreenLock = 2;
+		}
+#endif
+		return FALSE;
+	}
 
 	//if we succesfully saved the game, mark this entry as the last saved game file
 	if( ubSaveGameID != SAVE__ERROR_NUM && ubSaveGameID != SAVE__END_TURN_NUM )
@@ -873,35 +893,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	NextLoopCheckForEnoughFreeHardDriveSpace();
 
 	return( TRUE );
-
-	//if there is an error saving the game
-FAILED_TO_SAVE:
-	if ( fWePausedIt )
-	{
-		UnPauseAfterSaveGame();
-	}
-
-	//Delete the failed attempt at saving
-	DeleteSaveGameNumber( ubSaveGameID );
-
-	//Put out an error message
-	ScreenMsg( FONT_MCOLOR_WHITE, MSG_INTERFACE, zSaveLoadText[SLG_SAVE_GAME_ERROR] );
-
-	#ifdef JA2BETAVERSION
-		InitShutDownMapTempFileTest( FALSE, "SaveMapTempFile", ubSaveGameID );
-	#endif
-
-	//Check for enough free hard drive space
-	NextLoopCheckForEnoughFreeHardDriveSpace();
-
-#ifdef JA2BETAVERSION
-	if( fDisableDueToBattleRoster || fDisableMapInterfaceDueToBattle )
-	{
-		gubReportMapscreenLock = 2;
-	}
-#endif
-
-	return( FALSE );
 }
 
 

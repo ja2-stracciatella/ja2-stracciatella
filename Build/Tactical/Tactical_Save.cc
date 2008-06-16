@@ -334,14 +334,13 @@ static void SetLastTimePlayerWasInSector(void);
 static void SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
-BOOLEAN SaveCurrentSectorsInformationToTempItemFile( )
-try
+void SaveCurrentSectorsInformationToTempItemFile()
 {
 	BOOLEAN fShouldBeInMeanwhile = FALSE;
 	if( gfWasInMeanwhile )
 	{ //Don't save a temp file for the meanwhile scene map.
 		gfWasInMeanwhile = FALSE;
-		return TRUE;
+		return;
 	}
 	else if( AreInMeanwhile() )
 	{
@@ -350,11 +349,7 @@ try
 	}
 
 	//If we havent been to tactical yet
-	if( ( gWorldSectorX == 0 ) && ( gWorldSectorY == 0 ) )
-	{
-		return( TRUE );
-	}
-
+	if (gWorldSectorX == 0 && gWorldSectorY == 0) return;
 
 	//Save the Blood, smell and the revealed status for map elements
 	SaveBloodSmellAndRevealedStatesFromMapToTempFile();
@@ -403,10 +398,7 @@ try
 	{
 		gfInMeanwhile = TRUE;
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
