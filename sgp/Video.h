@@ -9,7 +9,7 @@
 
 
 void         VideoSetFullScreen(BOOLEAN enable);
-BOOLEAN      InitializeVideoManager(void);
+void         InitializeVideoManager(void);
 void         ShutdownVideoManager(void);
 void         SuspendVideoManager(void);
 BOOLEAN      RestoreVideoManager(void);

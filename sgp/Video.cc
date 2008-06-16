@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Debug.h"
 #include "Fade_Screen.h"
 #include "FileMan.h"
@@ -124,18 +126,14 @@ void VideoToggleFullScreen(void)
 static void GetRGBDistribution(void);
 
 
-BOOLEAN InitializeVideoManager(void)
+void InitializeVideoManager(void)
 {
 	DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Initializing the video manager");
 
 	SDL_WM_SetCaption(APPLICATION_NAME, NULL);
 
 	ScreenBuffer = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, PIXEL_DEPTH, g_video_flags);
-	if (ScreenBuffer == NULL)
-	{
-		DebugMsg(TOPIC_VIDEO, DBG_LEVEL_0, "Failed to set up video mode");
-		return FALSE;
-	}
+	if (!ScreenBuffer) throw std::runtime_error("Failed to set up video mode");
 
 	Uint32 Rmask = ScreenBuffer->format->Rmask;
 	Uint32 Gmask = ScreenBuffer->format->Gmask;
@@ -167,8 +165,6 @@ BOOLEAN InitializeVideoManager(void)
 
 	// This function must be called to setup RGB information
 	GetRGBDistribution();
-
-	return TRUE;
 }
 
 

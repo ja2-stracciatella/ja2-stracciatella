@@ -144,12 +144,7 @@ try
 	}
 
 	FastDebugMsg("Initializing Video Manager");
-	// Initialize DirectDraw (DirectX 2)
-	if (!InitializeVideoManager())
-	{ // We were unable to initialize the video manager
-		FastDebugMsg("FAILED : Initializing Video Manager");
-		return FALSE;
-	}
+	InitializeVideoManager();
 
 	// Initialize Video Object Manager
 	FastDebugMsg("Initializing Video Object Manager");
