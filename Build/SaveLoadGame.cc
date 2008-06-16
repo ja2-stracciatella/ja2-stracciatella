@@ -914,7 +914,7 @@ static void LoadMeanwhileDefsFromSaveGameFile(HWFILE);
 static void LoadOppListInfoFromSavedGame(HWFILE);
 static void LoadPreRandomNumbersFromSaveGameFile(HWFILE);
 static void LoadSavedMercProfiles(HWFILE);
-static BOOLEAN LoadSoldierStructure(HWFILE hFile);
+static void LoadSoldierStructure(HWFILE);
 static void LoadTacticalStatusFromSavedGame(HWFILE);
 static void LoadWatchedLocsFromSavedGame(HWFILE);
 static void TruncateStrategicGroupSizes(void);
@@ -1156,7 +1156,7 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		//
 		// Load the soldier structure info
 		//
-		if (!LoadSoldierStructure(f)) goto load_failed;
+		LoadSoldierStructure(f);
 #ifdef JA2BETAVERSION
 		LoadGameFilePosition(f, "Soldier Structure");
 #endif
@@ -2100,8 +2100,7 @@ static void SaveSoldierStructure(HWFILE const hFile)
 }
 
 
-static BOOLEAN LoadSoldierStructure(HWFILE hFile)
-try
+static void LoadSoldierStructure(HWFILE const hFile)
 {
 	UINT16	cnt;
 	SOLDIERTYPE SavedSoldierInfo;
@@ -2152,11 +2151,11 @@ try
 			// check checksum
 			if ( MercChecksum( &SavedSoldierInfo ) != SavedSoldierInfo.uiMercChecksum )
 			{
-				return( FALSE );
+				throw std::runtime_error("soldier checksum mismatch");
 			}
 
 			SOLDIERTYPE* const s = TacticalCreateSoldierFromExisting(&SavedSoldierInfo);
-			if (s == NULL) return FALSE;
+			if (!s) throw std::runtime_error("Soldier creation failed");
 			Assert(s->ubID == cnt);
 
 			// Load the pMercPath
@@ -2241,10 +2240,7 @@ try
 			}
 		}
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 #ifdef JA2BETAVERSION
