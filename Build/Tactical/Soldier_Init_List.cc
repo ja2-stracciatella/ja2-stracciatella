@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "LoadSaveSoldierCreate.h"
 #include "Types.h"
 #include "StrategicMap.h"
@@ -206,8 +208,7 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 #endif
 
 
-BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer )
-try
+void LoadSoldiersFromMap(INT8** const hBuffer)
 {
 	UINT32 i;
 	UINT8 ubNumIndividuals;
@@ -224,15 +225,11 @@ try
 
 	InitSoldierInitList();
 
-	if( ubNumIndividuals > MAX_INDIVIDUALS )
+	if (ubNumIndividuals > MAX_INDIVIDUALS)
 	{
-		AssertMsg( 0, "Corrupt map check failed.  ubNumIndividuals is greater than MAX_INDIVIDUALS." );
-		return FALSE; //too many mercs
+		throw std::runtime_error("Corrupt map check failed.  ubNumIndividuals is greater than MAX_INDIVIDUALS.");
 	}
-	if( !ubNumIndividuals )
-	{
-		return TRUE; //no mercs
-	}
+	if (ubNumIndividuals == 0) return; // no mercs
 
 	//Because we are loading the map, we needed to know how many
 	//guys are being loaded, but when we add them to the list here, it
@@ -275,9 +272,7 @@ try
 		sprintf( str, "Sounds/cowmoo%d.wav", Random( 3 ) + 1 );
 		PlayJA2SampleFromFile(str, MIDVOLUME, 1, MIDDLEPAN);
 	}
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 //Because soldiers, creatures, etc., maybe added to the game at anytime theoretically, the

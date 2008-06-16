@@ -31,7 +31,7 @@ extern SOLDIERINITNODE *gSoldierInitTail;
 //These serialization functions are assuming the passing of a valid file
 //pointer to the beginning of the save/load area, at the correct part of the
 //map file.
-BOOLEAN LoadSoldiersFromMap( INT8 **hBuffer );
+void LoadSoldiersFromMap(INT8** hBuffer);
 
 #ifdef JA2EDITOR
 BOOLEAN SaveSoldiersToMap( HWFILE fp );
