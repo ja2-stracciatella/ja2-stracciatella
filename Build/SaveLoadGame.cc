@@ -2155,7 +2155,6 @@ static void LoadSoldierStructure(HWFILE const hFile)
 			}
 
 			SOLDIERTYPE* const s = TacticalCreateSoldierFromExisting(&SavedSoldierInfo);
-			if (!s) throw std::runtime_error("Soldier creation failed");
 			Assert(s->ubID == cnt);
 
 			// Load the pMercPath

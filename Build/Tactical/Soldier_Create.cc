@@ -490,7 +490,6 @@ catch (...) { return 0; }
 
 
 SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE* const existing)
-try
 {
 	Assert(guiCurrentScreen != AUTORESOLVE_SCREEN);
 	Assert(existing->face  == NULL);
@@ -514,7 +513,6 @@ try
 	CreateSoldierCommon(s);
 	return s;
 }
-catch (...) { return 0; }
 
 
 static void TacticalCopySoldierFromProfile(SOLDIERTYPE* const pSoldier, SOLDIERCREATE_STRUCT const* const pCreateStruct)
