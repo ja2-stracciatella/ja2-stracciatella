@@ -149,13 +149,8 @@ try
 	FastDebugMsg("Initializing Video Object Manager");
 	InitializeVideoObjectManager();
 
-	// Initialize Video Surface Manager
 	FastDebugMsg("Initializing Video Surface Manager");
-	if ( !InitializeVideoSurfaceManager( ) )
-	{
-		FastDebugMsg("FAILED : Initializing Video Surface Manager");
-		return FALSE;
-	}
+	InitializeVideoSurfaceManager();
 
 #ifdef JA2
 	InitJA2SplashScreen();

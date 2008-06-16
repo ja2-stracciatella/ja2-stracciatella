@@ -145,7 +145,7 @@ SGPVSurface* g_mouse_buffer;
 static BOOLEAN SetPrimaryVideoSurfaces(void);
 
 
-BOOLEAN InitializeVideoSurfaceManager(void)
+void InitializeVideoSurfaceManager(void)
 {
 	//Shouldn't be calling this if the video surface manager already exists.
 	//Call shutdown first...
@@ -157,11 +157,8 @@ BOOLEAN InitializeVideoSurfaceManager(void)
 	// Create primary and backbuffer from globals
 	if (!SetPrimaryVideoSurfaces())
 	{
-		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_1, "Could not create primary surfaces");
-		return FALSE;
+		throw std::runtime_error("Could not create primary surfaces");
 	}
-
-	return TRUE;
 }
 
 

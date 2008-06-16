@@ -118,7 +118,7 @@ class SGPVSurface
 
 
 // Creates a list to contain video Surfaces
-BOOLEAN InitializeVideoSurfaceManager(void);
+void InitializeVideoSurfaceManager(void);
 
 // Deletes any video Surface placed into list
 void ShutdownVideoSurfaceManager(void);
