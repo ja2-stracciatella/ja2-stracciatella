@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Debug.h"
 #include "HImage.h"
 #include "Input.h"
@@ -92,11 +94,10 @@ static void SelectedSliderMovementCallBack(MOUSE_REGION* r, INT32 reason);
 
 
 SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT16 usNumberOfIncrements, INT8 sPriority, SLIDER_CHANGE_CALLBACK SliderChangeCallback)
-try
 {
 	AssertMsg(guiSliderBoxImage != NULL, "Trying to Add a Slider Bar when the Slider System was never inited");
 
-	if (ubStyle >= NUM_SLIDER_STYLES) return NULL;
+	if (ubStyle >= NUM_SLIDER_STYLES) throw std::logic_error("Invalid slider style");
 
 	SLIDER* const s = MALLOCZ(SLIDER);
 	// Assign the settings to the current slider
@@ -159,7 +160,6 @@ try
 
 	return s;
 }
-catch (...) { return 0; }
 
 
 static void CalculateNewSliderIncrement(SLIDER* s, UINT16 usPos);
