@@ -289,7 +289,6 @@ BOOLEAN LightReset(void)
 /* Creates a new node, and appends it to the template list. The index into the
  * list is returned. */
 static UINT16 LightCreateTemplateNode(LightTemplate* const t, const INT16 iX, const INT16 iY, const UINT8 ubLight)
-try
 {
 	const UINT16 n_lights = t->n_lights;
 	Assert((t->lights == NULL) == (n_lights == 0));
@@ -305,7 +304,6 @@ try
 	t->n_lights = n_lights + 1;
 	return n_lights;
 }
-catch (...) { return 65535; }
 
 
 /* Adds a node to the template list. If the node does not exist, it creates a
