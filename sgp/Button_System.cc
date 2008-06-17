@@ -323,12 +323,7 @@ static void InitializeButtonImageManager(void)
 	}
 	catch (...) { /* see comment above */ }
 
-	UINT8 Pix = 0;
-	if (!GetETRLEPixelValue(&Pix, GenericButtonOffNormal, 8, 0, 0))
-	{
-		throw std::runtime_error("Couldn't get generic button's background pixel value");
-	}
-
+	UINT8 const Pix = GetETRLEPixelValue(GenericButtonOffNormal, 8, 0, 0);
 	GenericButtonFillColors = GenericButtonOffNormal->Palette16()[Pix];
 }
 

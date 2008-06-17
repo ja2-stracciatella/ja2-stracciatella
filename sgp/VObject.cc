@@ -319,14 +319,16 @@ BOOLEAN BltVideoObject(SGPVSurface* const dst, const SGPVObject* const src, cons
 /* Given a VOBJECT and ETRLE image index, retrieves the value of the pixel
  * located at the given image coordinates. The value returned is an 8-bit
  * palette index */
-BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETRLEIndex, UINT16 usX, UINT16 usY)
+UINT8 GetETRLEPixelValue(HVOBJECT const hVObject, UINT16 const usETRLEIndex, UINT16 const usX, UINT16 const usY)
 {
 	CHECKF(hVObject != NULL);
 
 	ETRLEObject const* const pETRLEObject = hVObject->SubregionProperties(usETRLEIndex);
 
-	CHECKF(usX < pETRLEObject->usWidth);
-	CHECKF(usY < pETRLEObject->usHeight);
+	if (usX >= pETRLEObject->usWidth || usY >= pETRLEObject->usHeight)
+	{
+		throw std::logic_error("Tried to get pixel from invalid coordinate");
+	}
 
 	// Assuming everything's okay, go ahead and look...
 	UINT8 const* pCurrent = hVObject->PixData(pETRLEObject);
@@ -355,15 +357,8 @@ BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETRLEIndex,
 
 		if (*pCurrent & COMPRESS_TRANSPARENT)
 		{
-			if (usLoopX + ubRunLength >= usX)
-			{
-				*pDest = 0;
-				return TRUE;
-			}
-			else
-			{
-				pCurrent++;
-			}
+			if (usLoopX + ubRunLength >= usX) return 0;
+			pCurrent++;
 		}
 		else
 		{
@@ -371,8 +366,7 @@ BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETRLEIndex,
 			{
 				// skip to the correct byte; skip at least 1 to get past the byte defining the run
 				pCurrent += (usX - usLoopX) + 1;
-				*pDest = *pCurrent;
-				return TRUE;
+				return *pCurrent;
 			}
 			else
 			{
@@ -382,8 +376,8 @@ BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETRLEIndex,
 		usLoopX += ubRunLength;
 	}
 	while (usLoopX < usX);
-	// huh???
-	return FALSE;
+
+	throw std::logic_error("Inconsistent video object data");
 }
 
 

@@ -108,7 +108,7 @@ void DeleteVideoObject(SGPVObject*);
 BOOLEAN BltVideoObject(SGPVSurface* dst, const SGPVObject* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
 
 // Retrieves an HVOBJECT pixel value
-BOOLEAN GetETRLEPixelValue(UINT8* pDest, HVOBJECT hVObject, UINT16 usETLREIndex, UINT16 usX, UINT16 usY);
+UINT8 GetETRLEPixelValue(HVOBJECT, UINT16 usETLREIndex, UINT16 usX, UINT16 usY);
 
 
 BOOLEAN BltVideoObjectOutline(SGPVSurface* dst, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor);
