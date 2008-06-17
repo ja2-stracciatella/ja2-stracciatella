@@ -24,9 +24,13 @@
 #define DISPLAY_TEXT    1
 #define DISPLAY_GRAPHIC 2
 
-#define ONE_COLUMN       0x0001
-#define ONE_ROW          0x0002
-#define CLEAR_BACKGROUND 0x0004
+enum DisplayWindowFlags
+{
+	ONE_COLUMN       = 0x0001,
+	ONE_ROW          = 0x0002,
+	CLEAR_BACKGROUND = 0x0004
+};
+ENUM_BITSET(DisplayWindowFlags)
 
 #define DISPLAY_ALL_OBJECTS 0xFFFF
 
@@ -217,7 +221,7 @@ UINT16 SelWinFillColor = 0x0000;					// Black
 UINT16 SelWinHilightFillColor = 0x000d;		// a kind of medium dark blue
 
 
-static BOOLEAN BuildDisplayWindow(DisplaySpec* pDisplaySpecs, UINT16 usNumSpecs, DisplayList** pDisplayList, SGPPoint* pUpperLeft, SGPPoint* pBottomRight, SGPPoint* pSpacing, UINT16 fFlags);
+static BOOLEAN BuildDisplayWindow(DisplaySpec const*, UINT16 usNumSpecs, DisplayList** pDisplayList, SGPPoint const* pUpperLeft, SGPPoint const* pBottomRight, SGPPoint const* pSpacing, DisplayWindowFlags);
 static void CnclClkCallback(GUI_BUTTON* button, INT32 reason);
 static void DwnClkCallback(GUI_BUTTON* button, INT32 reason);
 static void OkClkCallback(GUI_BUTTON* button, INT32 reason);
@@ -1258,86 +1262,66 @@ static void DrawSelections(void)
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	BuildDisplayWindow
-//
-//	Creates a display list from a display specification list. It also sets variables up for
-//	properly scrolling the window etc.
-//
-static BOOLEAN BuildDisplayWindow(DisplaySpec* pDisplaySpecs, UINT16 usNumSpecs, DisplayList** pDisplayList, SGPPoint* pUpperLeft, SGPPoint* pBottomRight, SGPPoint* pSpacing, UINT16 fFlags)
+/* Create a display list from a display specification list.  Also set variables
+ * up for properly scrolling the window etc. */
+static BOOLEAN BuildDisplayWindow(DisplaySpec const* const pDisplaySpecs, UINT16 const usNumSpecs, DisplayList** const pDisplayList, SGPPoint const* const pUpperLeft, SGPPoint const* const pBottomRight, SGPPoint const* const pSpacing, DisplayWindowFlags const flags)
 try
 {
-	INT32						iCurrX = pUpperLeft->iX;
-	INT32						iCurrY = pUpperLeft->iY;
-	UINT16					usGreatestHeightInRow = 0;
-	UINT16					usSpecLoop;
-	UINT16					usETRLELoop;
-	UINT16					usETRLEStart;
-	UINT16					usETRLEEnd;
-	DisplaySpec *		pDisplaySpec;
-
 	SaveSelectionList();
 
-	for (usSpecLoop = 0; usSpecLoop < usNumSpecs; usSpecLoop++)
+	INT32  x     = pUpperLeft->iX;
+	INT32  y     = pUpperLeft->iY;
+	UINT16 max_h = 0; // Maximum height in current row
+	for (DisplaySpec const* ds = pDisplaySpecs; ds != pDisplaySpecs + usNumSpecs; ++ds)
 	{
-		pDisplaySpec = &(pDisplaySpecs[usSpecLoop]);
-		if (pDisplaySpec->ubType == DISPLAY_GRAPHIC)
+		if (ds->ubType != DISPLAY_GRAPHIC) continue;
+
+		SGPVObject* const vo = ds->hVObject;
+		if (!vo) return FALSE;
+
+		UINT16 usETRLEStart = ds->usStart;
+		UINT16 usETRLEEnd   = ds->usEnd;
+		if (usETRLEStart == DISPLAY_ALL_OBJECTS)
 		{
-			if( !pDisplaySpec->hVObject )
-				return FALSE;
-			usETRLEStart = pDisplaySpec->usStart;
-			usETRLEEnd = pDisplaySpec->usEnd;
+			usETRLEStart = 0;
+			usETRLEEnd   = vo->SubregionCount() - 1;
+		}
 
-			if ( usETRLEStart == DISPLAY_ALL_OBJECTS )
+		if (usETRLEStart         >  usETRLEEnd) return FALSE;
+		if (vo->SubregionCount() <= usETRLEEnd) return FALSE;
+
+		for (UINT16 usETRLELoop = usETRLEStart; usETRLELoop <= usETRLEEnd; ++usETRLELoop)
+		{
+			ETRLEObject const* const e = vo->SubregionProperties(usETRLELoop);
+
+			if (x + e->usWidth > pBottomRight->iX || flags & ONE_COLUMN)
 			{
-				usETRLEStart = 0;
-				usETRLEEnd = pDisplaySpec->hVObject->SubregionCount() - 1;
+				if (flags & ONE_ROW) break;
+				x  = pUpperLeft->iX;
+				y += max_h + pSpacing->iY;
+				max_h = 0;
 			}
 
-			if( usETRLEStart > usETRLEEnd )
-				return FALSE;
-			if (usETRLEEnd >= pDisplaySpec->hVObject->SubregionCount())
-				return FALSE;
+			DisplayList* const n = MALLOC(DisplayList);
+			n->hObj      = vo;
+			n->uiIndex   = usETRLELoop;
+			n->iX        = x;
+			n->iY        = y;
+			n->iWidth    = e->usWidth;
+			n->iHeight   = e->usHeight;
+			n->pNext     = *pDisplayList;
+			n->uiObjIndx = ds->uiObjIndx;
+			n->fChosen   = IsInSelectionList(n);
 
-			for( usETRLELoop = usETRLEStart; usETRLELoop <= usETRLEEnd; usETRLELoop++)
-			{
-				ETRLEObject const* const pETRLEObject = pDisplaySpec->hVObject->SubregionProperties(usETRLELoop);
+			*pDisplayList = n;
 
-				if ((iCurrX + pETRLEObject->usWidth > pBottomRight->iX) || (fFlags & ONE_COLUMN))
-				{
-					if (fFlags & ONE_ROW)
-					{
-						break;
-					}
-					iCurrX = pUpperLeft->iX;
-					iCurrY += usGreatestHeightInRow + pSpacing->iY;
-					usGreatestHeightInRow = 0;
-				}
+			if (max_h < e->usHeight) max_h = e->usHeight;
 
-				DisplayList* const pCurNode = MALLOC(DisplayList);
-				pCurNode->hObj      = pDisplaySpec->hVObject;
-				pCurNode->uiIndex   = usETRLELoop;
-				pCurNode->iX        = iCurrX;
-				pCurNode->iY        = iCurrY;
-				pCurNode->iWidth    = pETRLEObject->usWidth;
-				pCurNode->iHeight   = pETRLEObject->usHeight;
-				pCurNode->pNext     = *pDisplayList;
-				pCurNode->uiObjIndx = pDisplaySpec->uiObjIndx;
-				pCurNode->fChosen   = IsInSelectionList(pCurNode);
-
-				*pDisplayList = pCurNode;
-
-				if (pETRLEObject->usHeight > usGreatestHeightInRow)
-				{
-					usGreatestHeightInRow = pETRLEObject->usHeight;
-				}
-
-				iCurrX += pETRLEObject->usWidth + pSpacing->iX;
-			}
+			x += e->usWidth + pSpacing->iX;
 		}
 	}
 
-	return( TRUE );
+	return TRUE;
 }
 catch (...) { return FALSE; }
 
