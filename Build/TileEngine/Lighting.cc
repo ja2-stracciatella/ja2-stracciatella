@@ -336,7 +336,6 @@ static UINT16 LightAddRayNode(LightTemplate* const t, const INT16 iX, const INT1
 
 // Adds a node to the ray casting list.
 static UINT16 LightInsertRayNode(LightTemplate* const t, const UINT16 usIndex, const INT16 iX, const INT16 iY, const UINT8 ubLight, const UINT16 usFlags)
-try
 {
 	const UINT16 n_rays = t->n_rays;
 	Assert((t->rays == NULL) == (n_rays == 0));
@@ -350,7 +349,6 @@ try
 	t->n_rays        = n_rays + 1;
 	return n_rays;
 }
-catch (...) { return 65535; }
 
 
 static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY);
