@@ -241,7 +241,7 @@ void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, SmokeEffectKind const 
 				case TEARGAS_SMOKE_EFFECT:    cached_file = "TILECACHE/smaltear.sti"; break;
 				case MUSTARDGAS_SMOKE_EFFECT: cached_file = "TILECACHE/smalmust.sti"; break;
 				case CREATURE_SMOKE_EFFECT:   cached_file = "TILECACHE/spit_gas.sti"; break;
-				default: std::logic_error("Invalid smoke effect type");
+				default: throw std::logic_error("Invalid smoke effect type");
 			}
 		}
 		else
@@ -252,7 +252,7 @@ void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, SmokeEffectKind const 
 				case TEARGAS_SMOKE_EFFECT:    cached_file = "TILECACHE/teargas.sti";  break;
 				case MUSTARDGAS_SMOKE_EFFECT: cached_file = "TILECACHE/mustard2.sti"; break;
 				case CREATURE_SMOKE_EFFECT:   cached_file = "TILECACHE/spit_gas.sti"; break;
-				default: std::logic_error("Invalid smoke effect type");
+				default: throw std::logic_error("Invalid smoke effect type");
 			}
 		}
     start_frame  = Random(5);
@@ -266,7 +266,7 @@ void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, SmokeEffectKind const 
 			case TEARGAS_SMOKE_EFFECT:    cached_file = "TILECACHE/tearchze.sti"; break;
 			case MUSTARDGAS_SMOKE_EFFECT: cached_file = "TILECACHE/mustchze.sti"; break;
 			case CREATURE_SMOKE_EFFECT:   cached_file = "TILECACHE/spit_gas.sti"; break;
-			default: std::logic_error("Invalid smoke effect type");
+			default: throw std::logic_error("Invalid smoke effect type");
 		}
     start_frame  = 0;
     ani_flags   |= ANITILE_PAUSED;
