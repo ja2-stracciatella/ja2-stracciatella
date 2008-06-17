@@ -19,7 +19,6 @@
 #include "Input.h"
 #include "Handle_UI.h"
 #include "RenderWorld.h"
-#include "Sys_Globals.h"
 #include "Cursors.h"
 #include "Radar_Screen.h"
 #include "Font_Control.h"

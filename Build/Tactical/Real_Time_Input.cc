@@ -12,7 +12,6 @@
 #include "Isometric_Utils.h"
 #include "Input.h"
 #include "Overhead.h"
-#include "Sys_Globals.h"
 #include "Interface.h"
 #include "Cursor_Control.h"
 #include "Points.h"

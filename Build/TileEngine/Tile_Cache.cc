@@ -4,7 +4,6 @@
 #include "TileDef.h"
 #include "Animation_Cache.h"
 #include "Animation_Data.h"
-#include "Sys_Globals.h"
 #include "Debug_Control.h"
 #include "Tile_Surface.h"
 #include "Tile_Cache.h"
