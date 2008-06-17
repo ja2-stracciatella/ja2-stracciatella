@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Font.h"
 #include "Local.h"
 #include "WorldDef.h"
@@ -10,10 +12,6 @@
 #include <stdarg.h>
 #include "MemMan.h"
 #include "Debug.h"
-
-#ifdef JA2BETAVERSION
-#	include "JAScreens.h"
-#endif
 
 
 #define		BACKGROUND_BUFFERS	500
@@ -111,15 +109,8 @@ static BACKGROUND_SAVE* GetFreeBackgroundBuffer(void)
 	{
 		return &gBackSaves[guiNumBackSaves++];
 	}
-#ifdef JA2BETAVERSION
-	else
-	{
-		//else display an error message
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("ERROR! GetFreeBackgroundBuffer(): Trying to allocate more saves then there is room:  guiCurrentScreen = %d", guiCurrentScreen));
-	}
-#endif
 
-	return NO_BGND_RECT;
+	throw std::runtime_error("Out of background save slots");
 }
 
 
@@ -168,8 +159,6 @@ try
 	sBottom -= uiBottomSkip;
 
 	BACKGROUND_SAVE* const b = GetFreeBackgroundBuffer();
-	if (b == NO_BGND_RECT) return NO_BGND_RECT;
-
 	memset(b, 0, sizeof(*b));
 
 	const UINT32 uiBufSize = (sRight - sLeft) * (sBottom - sTop);
