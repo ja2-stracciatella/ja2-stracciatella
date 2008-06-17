@@ -17,7 +17,8 @@ BOOLEAN gfGlobalError          = FALSE;
 
 UINT32	guiGameCycleCounter = 0;
 
-BOOLEAN  SET_ERROR( const char *String, ...)
+
+void SET_ERROR(char const* const String, ...)
 {
   va_list  ArgPtr;
 
@@ -28,6 +29,4 @@ BOOLEAN  SET_ERROR( const char *String, ...)
 	SetPendingNewScreen( ERROR_SCREEN );
 
 	gfGlobalError = TRUE;
-
-	return( FALSE );
 }

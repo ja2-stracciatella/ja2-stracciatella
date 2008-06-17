@@ -13,7 +13,7 @@ extern BOOLEAN gfGlobalError;
 
 extern UINT32	guiGameCycleCounter;
 
-extern				BOOLEAN  SET_ERROR( const char *String, ...);
+void SET_ERROR(char const* const String, ...);
 
 #ifdef JA2EDITOR
 extern char g_filename[200];
