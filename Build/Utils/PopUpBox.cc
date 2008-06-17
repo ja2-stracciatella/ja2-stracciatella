@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Font.h"
 #include "Local.h"
 #include "PopUpBox.h"
@@ -82,7 +84,6 @@ void SpecifyBoxMinWidth(PopUpBox* const box, INT32 iMinWidth)
 
 
 PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurface* const buffer, const SGPVObject* const border, SGPVSurface* const background, const UINT32 margin_l, const UINT32 margin_t, const UINT32 margin_b, const UINT32 margin_r, const UINT32 line_space)
-try
 {
 	// find first free box
 	for (PopUpBox** i = PopUpBoxList; i != endof(PopUpBoxList); ++i)
@@ -107,10 +108,8 @@ try
 	}
 
 	// ran out of available popup boxes - probably not freeing them up right!
-	Assert(0);
-	return NO_POPUP_BOX;
+	throw std::runtime_error("Out of popup box slots");
 }
-catch (...) { return NO_POPUP_BOX; }
 
 
 UINT32 GetTopMarginSize(const PopUpBox* const box)
