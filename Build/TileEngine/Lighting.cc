@@ -322,7 +322,6 @@ static UINT16 LightAddTemplateNode(LightTemplate* const t, const INT16 iX, const
 
 // Adds a node to the ray casting list.
 static UINT16 LightAddRayNode(LightTemplate* const t, const INT16 iX, const INT16 iY, const UINT8 ubLight, const UINT16 usFlags)
-try
 {
 	const UINT16 n_rays = t->n_rays;
 	Assert((t->rays == NULL) == (n_rays == 0));
@@ -333,7 +332,6 @@ try
 	t->n_rays       = n_rays + 1;
 	return n_rays;
 }
-catch (...) { return 65535; }
 
 
 // Adds a node to the ray casting list.
