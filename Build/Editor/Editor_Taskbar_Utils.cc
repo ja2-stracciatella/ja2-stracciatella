@@ -419,6 +419,7 @@ void mprintfEditor(INT16 x, INT16 y, const wchar_t* pFontString, ...)
 	uiStringLength = StringPixLength( string, FontDefault );
 	uiStringHeight = GetFontHeight( FontDefault );
 
+	y += SCREEN_HEIGHT - 120;
 	ClearTaskbarRegion( x, y, (INT16)(x+uiStringLength), (INT16)(y+uiStringHeight) );
 	MPrint(x, y, string);
 }

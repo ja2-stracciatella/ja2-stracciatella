@@ -1921,10 +1921,10 @@ void UpdateMercsInfo()
 			SetFontForeground( FONT_BLACK );
 			if( gpSelected->pDetailedPlacement->fVisible || gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
 			{
-				mprintfEditor(396, 374, L"%hs    ", gpSelected->pSoldier->HeadPal);
-				mprintfEditor(396, 398, L"%hs    ", gpSelected->pSoldier->SkinPal);
-				mprintfEditor(396, 422, L"%hs    ", gpSelected->pSoldier->VestPal);
-				mprintfEditor(396, 446, L"%hs    ", gpSelected->pSoldier->PantsPal);
+				mprintfEditor(396, 14, L"%hs    ", gpSelected->pSoldier->HeadPal);
+				mprintfEditor(396, 38, L"%hs    ", gpSelected->pSoldier->SkinPal);
+				mprintfEditor(396, 62, L"%hs    ", gpSelected->pSoldier->VestPal);
+				mprintfEditor(396, 86, L"%hs    ", gpSelected->pSoldier->PantsPal);
 				ShowEditMercPalettes( gpSelected->pSoldier );
 			}
 			else
@@ -1954,7 +1954,7 @@ void UpdateMercsInfo()
 				if( gpSelected->pDetailedPlacement->ubProfile == NO_PROFILE )
 				{
 					SetFontForeground( FONT_GRAY3 );
-					mprintfEditor( 240, 435, L"Current Profile:  n/a                            ");
+					mprintfEditor(240, 75, L"Current Profile:  n/a                            ");
 				}
 				else
 				{
