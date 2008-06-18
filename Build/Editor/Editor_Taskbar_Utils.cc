@@ -420,13 +420,13 @@ void mprintfEditor(INT16 x, INT16 y, const wchar_t* pFontString, ...)
 	uiStringHeight = GetFontHeight( FontDefault );
 
 	ClearTaskbarRegion( x, y, (INT16)(x+uiStringLength), (INT16)(y+uiStringHeight) );
-	MPrint(x, SCREEN_HEIGHT - 120 + y, string);
+	MPrint(x, TASKBAR_Y + y, string);
 }
 
 void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 {
-	sTop    += SCREEN_HEIGHT - 120;
-	sBottom += SCREEN_HEIGHT - 120;
+	sTop    += TASKBAR_Y;
+	sBottom += TASKBAR_Y;
 	ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, sTop, sRight, sBottom, gusEditorTaskbarColor );
 
 	if( !sLeft )
