@@ -702,24 +702,27 @@ void ShowCurrentDrawingMode( void )
 	INT32				iShowMode;
 	UINT16			usUseIndex;
 	UINT16			usObjIndex;
-	INT32				iStartX = 50;
-	INT32				iStartY = 440;
 	INT32				iPicHeight, iPicWidth;
 	INT16				sTempOffsetX;
 	INT16				sTempOffsetY;
 	INT32				iIndexToUse;
 
+	INT32 const x =   0;
+	INT32 const y =  40 + TASKBAR_Y;
+	INT32 const w = 100;
+	INT32 const h =  58;
+
 	// Set up a clipping rectangle for the display window.
-	NewRect.iLeft = 0;
-	NewRect.iTop = 400;
-	NewRect.iRight = 100;
-	NewRect.iBottom = 458;
+	NewRect.iLeft   = x;
+	NewRect.iTop    = y;
+	NewRect.iRight  = x + w;
+	NewRect.iBottom = y + h;
 
 	GetClippingRect(&ClipRect);
 	SetClippingRect(&NewRect);
 
 	// Clear it out
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, 0, 400, 100, 458, 0 );
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + w, y + h, 0);
 
 	iShowMode = iDrawMode;
 	if ( iDrawMode >= DRAW_MODE_ERASE )
@@ -926,8 +929,8 @@ void ShowCurrentDrawingMode( void )
 		iPicHeight = (INT32)pETRLEObject->usHeight;
 
 		// Center the picture in the display window.
-		iStartX = ( 100 - iPicWidth ) / 2;
-		iStartY = ( 60 - iPicHeight ) / 2;
+		INT32 const iStartX = (w - iPicWidth)  / 2;
+		INT32 const iStartY = (h - iPicHeight) / 2;
 
 		// We have to store the offset data in temp variables before zeroing them and blitting
 		sTempOffsetX = pETRLEObject->sOffsetX;
@@ -938,7 +941,7 @@ void ShowCurrentDrawingMode( void )
 		pETRLEObject->sOffsetY = 0;
 
 		ts->CurrentShade(DEFAULT_SHADE_LEVEL);
-		BltVideoObject(FRAME_BUFFER, ts, usUseIndex, 0 + iStartX, 400 + iStartY);
+		BltVideoObject(FRAME_BUFFER, ts, usUseIndex, x + iStartX, y + iStartY);
 
 		pETRLEObject->sOffsetX = sTempOffsetX;
 		pETRLEObject->sOffsetY = sTempOffsetY;
@@ -948,10 +951,10 @@ void ShowCurrentDrawingMode( void )
 	UINT16 usFillColor = GetGenericButtonFillColor();
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
-		RectangleDraw(FALSE, 0, 400, 99, 458, usFillColor, l.Buffer<UINT8>());
+		RectangleDraw(FALSE, x, y, x + w - 1, y + h, usFillColor, l.Buffer<UINT8>());
 	}
 
-	InvalidateRegion( 0, 400, 100, 458 );
+	InvalidateRegion(x, y, x + w, y + h);
 	SetClippingRect(&ClipRect);
 }
 
