@@ -5,21 +5,7 @@
 #include "Types.h"
 
 
-extern BOOLEAN fAllDone;
-
-extern void CreateJA2SelectionWindow( INT16 sWhat );
-extern void InitJA2SelectionWindow( void );
-extern void ShutdownJA2SelectionWindow( void );
-extern void RemoveJA2SelectionWindow( void );
-extern void RenderSelectionWindow( void );
-
-
-extern void ScrollSelWinUp(void);
-extern void ScrollSelWinDown(void);
-
-#define MAX_SELECTIONS		120
-
-enum
+enum SelectWindow
 {
 	SELWIN_SINGLEWALL,
 	SELWIN_SINGLEDOOR,
@@ -40,6 +26,20 @@ enum
 	SELWIN_OSTRUCTS1,
 	SELWIN_OSTRUCTS2
 };
+
+extern BOOLEAN fAllDone;
+
+void CreateJA2SelectionWindow(SelectWindow);
+extern void InitJA2SelectionWindow( void );
+extern void ShutdownJA2SelectionWindow( void );
+extern void RemoveJA2SelectionWindow( void );
+extern void RenderSelectionWindow( void );
+
+
+extern void ScrollSelWinUp(void);
+extern void ScrollSelWinDown(void);
+
+#define MAX_SELECTIONS		120
 
 typedef struct _Selections
 {

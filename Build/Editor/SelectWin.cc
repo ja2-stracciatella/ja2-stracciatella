@@ -239,12 +239,8 @@ static GUIButtonRef MakeButton(UINT idx, const char* gfx, INT16 y, INT16 h, GUI_
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	CreateJA2SelectionWindow
-//
-//	Creates a selection window of the given type.
-//
-void CreateJA2SelectionWindow( INT16 sWhat )
+// Create a selection window of the given type.
+void CreateJA2SelectionWindow(SelectWindow const sWhat)
 {
 	DisplaySpec *pDSpec; // XXX HACK000E
 	UINT16 usNSpecs;
