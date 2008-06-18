@@ -1959,7 +1959,7 @@ void UpdateMercsInfo()
 				else
 				{
 					SetFontForeground( FONT_WHITE );
-					ClearTaskbarRegion( 240, 435, 580, 445 );
+					ClearTaskbarRegion(240, 75, 580, 85);
 					mprintf(240, 435, L"Current Profile:  %ls", gMercProfiles[gpSelected->pDetailedPlacement->ubProfile].zName);
 				}
 			}

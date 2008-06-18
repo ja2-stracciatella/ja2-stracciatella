@@ -419,13 +419,14 @@ void mprintfEditor(INT16 x, INT16 y, const wchar_t* pFontString, ...)
 	uiStringLength = StringPixLength( string, FontDefault );
 	uiStringHeight = GetFontHeight( FontDefault );
 
-	y += SCREEN_HEIGHT - 120;
 	ClearTaskbarRegion( x, y, (INT16)(x+uiStringLength), (INT16)(y+uiStringHeight) );
-	MPrint(x, y, string);
+	MPrint(x, SCREEN_HEIGHT - 120 + y, string);
 }
 
 void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 {
+	sTop    += SCREEN_HEIGHT - 120;
+	sBottom += SCREEN_HEIGHT - 120;
 	ColorFillVideoSurfaceArea( ButtonDestBuffer, sLeft, sTop, sRight, sBottom, gusEditorTaskbarColor );
 
 	if( !sLeft )
@@ -879,7 +880,7 @@ void ProcessEditorRendering()
 	BOOLEAN fSaveBuffer = FALSE;
 	if( gfRenderTaskbar ) //do a full taskbar render.
 	{
-		ClearTaskbarRegion(0, 360, SCREEN_WIDTH, SCREEN_HEIGHT);
+		ClearTaskbarRegion(0, 0, SCREEN_WIDTH, 120);
 		RenderTerrainTileButtons();
 		MarkButtonsDirty();
 		gfRenderTaskbar = FALSE;

@@ -195,13 +195,13 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 		else
 		{	//User selected a different item classification -- delete it first.
 			ClearEditorItemsInfo();
-			ClearTaskbarRegion( 100, 360, 480, 440 );
+			ClearTaskbarRegion(100, 0, 480, 80);
 		}
 	}
 	else
 	{
 		//Clear the menu area, so that the buffer doesn't get corrupted.
-		ClearTaskbarRegion( 100, 360, 480, 440 );
+		ClearTaskbarRegion(100, 0, 480, 80);
 	}
 	EnableEditorRegion( ITEM_REGION_ID );
 
