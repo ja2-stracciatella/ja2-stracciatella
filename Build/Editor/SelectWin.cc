@@ -233,7 +233,7 @@ static GUIButtonRef MakeButton(UINT idx, const char* gfx, INT16 y, INT16 h, GUI_
 {
 	INT32 img = LoadGenericButtonIcon(gfx);
 	iButtonIcons[idx] = img;
-	GUIButtonRef const btn = CreateIconButton(img, 0, 600, y, 40, h, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconButton(img, 0, SCREEN_WIDTH - 40, y, 40, h, MSYS_PRIORITY_HIGH, click);
 	btn->SetFastHelpText(help);
 	return btn;
 }
@@ -249,12 +249,14 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 
 	DisableEditorTaskbar( );
 
-	iSelectWin = CreateHotSpot(0, 0, 600, 360, MSYS_PRIORITY_HIGH, SelWinClkCallback);
+	iSelectWin = CreateHotSpot(0, 0, SCREEN_WIDTH - 40, TASKBAR_Y, MSYS_PRIORITY_HIGH, SelWinClkCallback);
 
-	iCancelWin  = MakeButton(CANCEL_ICON, "EDITOR/bigX.sti",         40,  40, CnclClkCallback, L"Cancel selections");
-	iOkWin      = MakeButton(OK_ICON,     "EDITOR/checkmark.sti",     0,  40, OkClkCallback,   L"Accept selections");
-	iScrollUp   = MakeButton(UP_ICON,     "EDITOR/lgUpArrow.sti",    80, 160, UpClkCallback,   L"Scroll window up");
-	iScrollDown = MakeButton(DOWN_ICON,   "EDITOR/lgDownArrow.sti", 240, 160, DwnClkCallback,  L"Scroll window down");
+	INT16 y;
+	iOkWin      = MakeButton(OK_ICON,     "EDITOR/checkmark.sti",   y  =  0, 40, OkClkCallback,   L"Accept selections");
+	iCancelWin  = MakeButton(CANCEL_ICON, "EDITOR/bigX.sti",        y += 40, 40, CnclClkCallback, L"Cancel selections");
+	INT16 const h = (TASKBAR_Y - 40 - 40) / 2;
+	iScrollUp   = MakeButton(UP_ICON,     "EDITOR/lgUpArrow.sti",   y += 40,  h, UpClkCallback,   L"Scroll window up");
+	iScrollDown = MakeButton(DOWN_ICON,   "EDITOR/lgDownArrow.sti", y += h,   h, DwnClkCallback,  L"Scroll window down");
 
 	fButtonsPresent = TRUE;
 
@@ -682,7 +684,7 @@ void RenderSelectionWindow( void )
 	if (!fButtonsPresent)
 		return;
 
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, 600, 400, GetGenericButtonFillColor());
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, 0, SCREEN_WIDTH - 40, TASKBAR_Y, GetGenericButtonFillColor());
 	DrawSelections( );
 	MarkButtonsDirty();
 	RenderButtons( );
