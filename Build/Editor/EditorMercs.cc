@@ -1824,7 +1824,7 @@ static void DisplayBodyTypeInfo(void)
 
 		default: abort(); // HACK000E
 	}
-	DrawEditorInfoBox( str, FONT10ARIAL, 490, 364, 70, 20 );
+	DrawEditorInfoBox(str, FONT10ARIAL, 490, 4, 70, 20);
 }
 
 

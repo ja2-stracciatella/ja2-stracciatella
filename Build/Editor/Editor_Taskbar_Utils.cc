@@ -461,8 +461,9 @@ void DrawEditorInfoBox(const wchar_t* str, Font const font, UINT16 x, UINT16 y, 
 	UINT16 usFillColorDark, usFillColorLight, usFillColorBack;
 	UINT16 x2, y2;
 
-	x2 = x + w;
-	y2 = y + h;
+	y  += TASKBAR_Y;
+	x2  = x + w;
+	y2  = y + h;
 
 	usFillColorDark = Get16BPPColor(FROMRGB(24, 61, 81));
 	usFillColorLight = Get16BPPColor(FROMRGB(136, 138, 135));
@@ -844,9 +845,9 @@ static void RenderEditorInfo(void)
 		case TASK_TERRAIN:
 			if( gusSelectionType == LINESELECTION )
 				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
-			DrawEditorInfoBox( wszSelType[gusSelectionType], FONT12POINT1, 220, 430, 60, 30 );
+			DrawEditorInfoBox(wszSelType[gusSelectionType], FONT12POINT1, 220, 70, 60, 30);
 			swprintf(FPSText, lengthof(FPSText), L"%d%%", gusSelectionDensity);
-			DrawEditorInfoBox( FPSText, FONT12POINT1, 310, 430, 40, 30 );
+			DrawEditorInfoBox(FPSText, FONT12POINT1, 310, 70, 40, 30);
 			break;
 		case TASK_ITEMS:
 			RenderEditorItemsInfo();
@@ -856,7 +857,7 @@ static void RenderEditorInfo(void)
 			UpdateBuildingsInfo();
 			if( gusSelectionType == LINESELECTION )
 				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
-			DrawEditorInfoBox( wszSelType[gusSelectionType], FONT12POINT1, 530, 430, 60, 30 );
+			DrawEditorInfoBox(wszSelType[gusSelectionType], FONT12POINT1, 530, 70, 60, 30);
 			break;
 		case TASK_MERCS:
 			UpdateMercsInfo();
@@ -865,7 +866,7 @@ static void RenderEditorInfo(void)
 			UpdateMapInfo();
 			if( gusSelectionType == LINESELECTION )
 				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
-			DrawEditorInfoBox( wszSelType[gusSelectionType], FONT12POINT1, 440, 430, 60, 30 );
+			DrawEditorInfoBox(wszSelType[gusSelectionType], FONT12POINT1, 440, 70, 60, 30);
 			break;
 	}
 }
