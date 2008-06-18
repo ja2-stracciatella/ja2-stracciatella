@@ -1332,10 +1332,7 @@ catch (...) { return FALSE; }
 static BOOLEAN DisplayWindowFunc(DisplayList* pNode, INT16 iTopCutOff, INT16 iBottomCutOff, SGPPoint* pUpperLeft, UINT16 fFlags)
 {
 	INT16						iCurrY;
-	INT16						sTempOffsetX;
-	INT16						sTempOffsetY;
 	BOOLEAN					fReturnVal;
-	ETRLEObject *		pETRLEObject;
 	UINT16					usFillColor;
 	INT16						sCount;
 
@@ -1353,17 +1350,6 @@ static BOOLEAN DisplayWindowFunc(DisplayList* pNode, INT16 iTopCutOff, INT16 iBo
 		if ( iCurrY > iBottomCutOff )
 			return(TRUE);
 
-		pETRLEObject = &(pNode->hObj->pETRLEObject[pNode->uiIndex]);
-
-		// We have to store the offset data in temp variables before zeroing them and blitting
-		sTempOffsetX = pETRLEObject->sOffsetX;
-		sTempOffsetY = pETRLEObject->sOffsetY;
-
-		// Set the offsets used for blitting to 0
-		pETRLEObject->sOffsetX = 0;
-		pETRLEObject->sOffsetY = 0;
-
-
 		if (fFlags & CLEAR_BACKGROUND)
 		{
 			usFillColor = SelWinFillColor;
@@ -1379,16 +1365,15 @@ static BOOLEAN DisplayWindowFunc(DisplayList* pNode, INT16 iTopCutOff, INT16 iBo
 		if (pNode->fChosen)
 			sCount = pSelList[ FindInSelectionList( pNode ) ].sCount;
 
-		pNode->hObj->CurrentShade(DEFAULT_SHADE_LEVEL);
-		fReturnVal = BltVideoObject(FRAME_BUFFER, pNode->hObj, pNode->uiIndex, (UINT16)pNode->iX, (UINT16)iCurrY);
+		SGPVObject*        const vo = pNode->hObj;
+		ETRLEObject const* const e  = vo->SubregionProperties(pNode->uiIndex);
+		vo->CurrentShade(DEFAULT_SHADE_LEVEL);
+		fReturnVal = BltVideoObject(FRAME_BUFFER, vo, pNode->uiIndex, pNode->iX - e->sOffsetX, iCurrY - e->sOffsetY);
 
 		if ( sCount != 0)
 		{
 			gprintf( pNode->iX, iCurrY, L"%d", sCount );
 		}
-
-		pETRLEObject->sOffsetX = sTempOffsetX;
-		pETRLEObject->sOffsetY = sTempOffsetY;
 	}
 
 	return(fReturnVal);

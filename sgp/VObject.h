@@ -66,8 +66,8 @@ class SGPVObject
 		UINT16*                      palette16_;                     // A 16BPP palette used for 8->16 blits
 
 		UINT8*                       pix_data_;                      // ETRLE pixel data
+		ETRLEObject*                 etrle_object_;                  // Object offset data etc
 	public:
-		ETRLEObject*                 pETRLEObject;                   // Object offset data etc
 		UINT16*                      pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
 	private:
 		UINT16 const*                current_shade_;

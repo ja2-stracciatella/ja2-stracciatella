@@ -40,7 +40,7 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 	GetETRLEImageData(img, &TempETRLEData);
 
 	subregion_count_ = TempETRLEData.usNumberOfObjects;
-	pETRLEObject     = TempETRLEData.pETRLEObject;
+	etrle_object_    = TempETRLEData.pETRLEObject;
 	pix_data_        = static_cast<UINT8*>(TempETRLEData.pPixData);
 	pix_data_size_   = TempETRLEData.uiSizePixData;
 	bit_depth_       = img->ubBitDepth;
@@ -64,8 +64,8 @@ SGPVObject::~SGPVObject()
 {
 	DestroyPalettes();
 
-	if (pix_data_)    MemFree(pix_data_);
-	if (pETRLEObject) MemFree(pETRLEObject);
+	if (pix_data_)     MemFree(pix_data_);
+	if (etrle_object_) MemFree(etrle_object_);
 
 	if (ppZStripInfo != NULL)
 	{
@@ -98,7 +98,7 @@ ETRLEObject const* SGPVObject::SubregionProperties(size_t const idx) const
 	{
 		throw std::logic_error("Tried to access invalid subregion in video object");
 	}
-	return &pETRLEObject[idx];
+	return &etrle_object_[idx];
 }
 
 

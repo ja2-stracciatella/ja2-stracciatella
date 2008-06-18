@@ -702,9 +702,6 @@ void ShowCurrentDrawingMode( void )
 	INT32				iShowMode;
 	UINT16			usUseIndex;
 	UINT16			usObjIndex;
-	INT32				iPicHeight, iPicWidth;
-	INT16				sTempOffsetX;
-	INT16				sTempOffsetY;
 	INT32				iIndexToUse;
 
 	INT32 const x =   0;
@@ -922,29 +919,15 @@ void ShowCurrentDrawingMode( void )
 	// If we actually have something to draw, draw it
 	if ( (usUseIndex != 0xffff) && (usObjIndex != 0xffff) )
 	{
-		const HVOBJECT ts = TileElemFromTileType(usObjIndex)->hTileSurface;
-		ETRLEObject* const pETRLEObject = &ts->pETRLEObject[usUseIndex];
-
-		iPicWidth = (INT32)pETRLEObject->usWidth;
-		iPicHeight = (INT32)pETRLEObject->usHeight;
+		HVOBJECT           const ts = TileElemFromTileType(usObjIndex)->hTileSurface;
+		ETRLEObject const* const e  = ts->SubregionProperties(usUseIndex);
 
 		// Center the picture in the display window.
-		INT32 const iStartX = (w - iPicWidth)  / 2;
-		INT32 const iStartY = (h - iPicHeight) / 2;
-
-		// We have to store the offset data in temp variables before zeroing them and blitting
-		sTempOffsetX = pETRLEObject->sOffsetX;
-		sTempOffsetY = pETRLEObject->sOffsetY;
-
-		// Set the offsets used for blitting to 0
-		pETRLEObject->sOffsetX = 0;
-		pETRLEObject->sOffsetY = 0;
+		INT32 const iStartX = (w - e->usWidth)  / 2 - e->sOffsetX;
+		INT32 const iStartY = (h - e->usHeight) / 2 - e->sOffsetY;
 
 		ts->CurrentShade(DEFAULT_SHADE_LEVEL);
 		BltVideoObject(FRAME_BUFFER, ts, usUseIndex, x + iStartX, y + iStartY);
-
-		pETRLEObject->sOffsetX = sTempOffsetX;
-		pETRLEObject->sOffsetY = sTempOffsetY;
 	}
 
 	// Set the color for the window's border. Blueish color = Normal, Red = Fake lighting is turned on
