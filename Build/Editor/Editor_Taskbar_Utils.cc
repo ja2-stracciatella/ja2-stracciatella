@@ -567,95 +567,56 @@ void EnableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID 
 }
 
 
+static void RenderEntryPoint(INT16 const gridno, wchar_t const* const label)
+{
+	if (gridno == -1) return;
+	INT16 x;
+	INT16 y;
+	GetGridNoScreenPos(gridno, 0, &x, &y);
+	if (x < -40 || SCREEN_WIDTH <= x || y < -20 || TASKBAR_Y - 20 <= y) return;
+	DisplayWrappedString(x, y - 5, 40, 2, FONT10ARIAL, FONT_YELLOW, label, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
+}
+
+
 static void RenderMapEntryPointsAndLights(void)
 {
-	INT16 sGridNo;
-	INT16 sScreenX, sScreenY;
-	if( gfSummaryWindowActive )
-		return;
-	SetFont( FONT10ARIAL );
-	SetFontForeground( FONT_YELLOW );
-	SetFontShadow( FONT_NEARBLACK );
-	sGridNo = gMapInformation.sNorthGridNo;
-	if( sGridNo != -1 )
-	{
-		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= -20 && sScreenY < 340 && sScreenX >= -40  && sScreenX < 640 )
-		{
-			DisplayWrappedString(sScreenX, sScreenY - 5, 40, 2, FONT10ARIAL, FONT_YELLOW, L"North Entry Point", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
-		}
-	}
-	sGridNo = gMapInformation.sWestGridNo;
-	if( sGridNo != -1 )
-	{
-		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= -20 && sScreenY < 340 && sScreenX >= -40  && sScreenX < 640 )
-		{
-			DisplayWrappedString(sScreenX, sScreenY - 5, 40, 2, FONT10ARIAL, FONT_YELLOW, L"West Entry Point", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
-		}
-	}
-	sGridNo = gMapInformation.sEastGridNo;
-	if( sGridNo != -1 )
-	{
-		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= -20 && sScreenY < 340 && sScreenX >= -40  && sScreenX < 640 )
-		{
-			DisplayWrappedString(sScreenX, sScreenY - 5, 40, 2, FONT10ARIAL, FONT_YELLOW, L"East Entry Point", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
-		}
-	}
-	sGridNo = gMapInformation.sSouthGridNo;
-	if( sGridNo != -1 )
-	{
-		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= -20 && sScreenY < 340 && sScreenX >= -40  && sScreenX < 640 )
-		{
-			DisplayWrappedString(sScreenX, sScreenY - 5, 40, 2, FONT10ARIAL, FONT_YELLOW, L"South Entry Point", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
-		}
-	}
-	sGridNo = gMapInformation.sCenterGridNo;
-	if( sGridNo != -1 )
-	{
-		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= -20 && sScreenY < 340 && sScreenX >= -40  && sScreenX < 640 )
-		{
-			DisplayWrappedString(sScreenX, sScreenY - 5, 40, 2, FONT10ARIAL, FONT_YELLOW, L"Center Entry Point", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
-		}
-	}
-	sGridNo = gMapInformation.sIsolatedGridNo;
-	if( sGridNo != -1 )
-	{
-		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= -20 && sScreenY < 340 && sScreenX >= -40  && sScreenX < 640 )
-		{
-			DisplayWrappedString(sScreenX, sScreenY - 5, 40, 2, FONT10ARIAL, FONT_YELLOW, L"Isolated Entry Point", FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
-		}
-	}
+	if (gfSummaryWindowActive) return;
+
+	SetFontShadow(FONT_NEARBLACK);
+	RenderEntryPoint(gMapInformation.sNorthGridNo,    L"North Entry Point");
+	RenderEntryPoint(gMapInformation.sWestGridNo,     L"West Entry Point");
+	RenderEntryPoint(gMapInformation.sEastGridNo,     L"East Entry Point");
+	RenderEntryPoint(gMapInformation.sSouthGridNo,    L"South Entry Point");
+	RenderEntryPoint(gMapInformation.sCenterGridNo,   L"Center Entry Point");
+	RenderEntryPoint(gMapInformation.sIsolatedGridNo, L"Isolated Entry Point");
+
 	//Do the lights now.
 	CFOR_ALL_LIGHT_SPRITES(l)
 	{
-		sGridNo = l->iY * WORLD_COLS + l->iX;
-		GetGridNoScreenPos( sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY >= -50 && sScreenY < 300 && sScreenX >= -40  && sScreenX < 640 )
+		INT16       x;
+		INT16       y;
+		INT16 const gridno = l->iY * WORLD_COLS + l->iX;
+		GetGridNoScreenPos(gridno, 0, &x, &y);
+		if (x < -40 || SCREEN_WIDTH <= x || y < -50 || TASKBAR_Y - 60 <= y) continue;
+
+		UINT8          colour;
+		wchar_t const* text;
+		if (l->uiFlags & LIGHT_PRIMETIME)
 		{
-			UINT8 colour;
-			const wchar_t* text;
-			if (l->uiFlags & LIGHT_PRIMETIME)
-			{
-				colour = FONT_ORANGE;
-				text   = L"Prime";
-			}
-			else if (l->uiFlags & LIGHT_NIGHTTIME)
-			{
-				colour = FONT_RED;
-				text   = L"Night";
-			}
-			else
-			{
-				colour = FONT_YELLOW;
-				text   = L"24Hour";
-			}
-			DisplayWrappedString(sScreenY, sScreenY - 5, 50, 2, FONT10ARIAL, colour, text, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
+			colour = FONT_ORANGE;
+			text   = L"Prime";
 		}
+		else if (l->uiFlags & LIGHT_NIGHTTIME)
+		{
+			colour = FONT_RED;
+			text   = L"Night";
+		}
+		else
+		{
+			colour = FONT_YELLOW;
+			text   = L"24Hour";
+		}
+		DisplayWrappedString(x, y - 5, 50, 2, FONT10ARIAL, colour, text, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 	}
 }
 
