@@ -697,17 +697,13 @@ void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent )
 }
 
 
-static void ShowItemCursor(INT32 iMapIndex)
+static void ShowItemCursor(INT32 const iMapIndex)
 {
-	LEVELNODE *pNode;
-	pNode = gpWorldLevelData[ iMapIndex ].pTopmostHead;
-	while( pNode )
+	for (LEVELNODE const* n = gpWorldLevelData[iMapIndex].pTopmostHead; n; n = n->pNext)
 	{
-		if( pNode->usIndex == SELRING )
-			return;
-		pNode = pNode->pNext;
+		if (n->usIndex == SELRING) return;
 	}
-	AddTopmostToTail( iMapIndex, SELRING1 );
+	AddTopmostToTail(iMapIndex, SELRING1);
 }
 
 
