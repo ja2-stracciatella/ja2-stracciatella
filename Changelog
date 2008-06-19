@@ -1,3 +1,4 @@
+(r4487) Fix a vanilla endless loop when an enemy tries to throw a grenade straight up.
 (r4426) Fix a vanilla user after free when leaving a message on a merc's answering machine and the greeting message has ended.
 (r4366) Fix a vanilla crash in the editor when looking at the items summary and there are no items in the current sector.
 (r4361) Enable scrolling the items lists in the editor with the mouse wheel.

@@ -1753,6 +1753,16 @@ BOOLEAN CalculateLaunchItemChanceToGetThrough(const SOLDIERTYPE* pSoldier, const
 	INT16				sDestX, sDestY, sSrcX, sSrcY;
 	vector_3		vForce, vPosition, vDirNormal;
 
+	/* Prevent throwing to the same tile the thrower is standing on and only the
+	 * target level differs.  This would lead to an endless loop when calculation
+	 * the trajectory. */
+	if (pSoldier->sGridNo == sGridNo)
+	{
+		*psFinalGridNo = sGridNo;
+		*pbLevel       = pSoldier->bLevel;
+		return FALSE;
+	}
+
 	// Ge7t basic launch params...
 	CalculateLaunchItemBasicParams( pSoldier, pItem, sGridNo, ubLevel, sEndZ, &dForce, &dDegrees, psFinalGridNo, fArmed );
 
