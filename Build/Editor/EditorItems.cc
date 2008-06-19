@@ -727,179 +727,138 @@ static BOOLEAN TriggerAtGridNo(INT16 sGridNo)
 }
 
 
-void AddSelectedItemToWorld( INT16 sGridNo )
+void AddSelectedItemToWorld(INT16 sGridNo)
 {
-	OBJECTTYPE	tempObject;
-	INT8 bVisibility = INVISIBLE;
-	BOOLEAN fFound = FALSE;
-	IPListNode *pIPCurr, *pIPPrev;
-	UINT16 usFlags;
+	// Extract the currently selected item.
+	SpecifyItemToEdit(NULL, -1);
 
-	//Extract the currently selected item.
-	SpecifyItemToEdit( NULL, -1 );
-
-	//memset( &tempObject, 0, sizeof( OBJECTTYPE ) );
-	if( eInfo.uiItemType == TBAR_MODE_ITEM_KEYS )
+	OBJECTTYPE tempObject;
+	if (eInfo.uiItemType == TBAR_MODE_ITEM_KEYS)
 	{
-		CreateKeyObject( &tempObject, 1, (UINT8)eInfo.sSelItemIndex );
+		CreateKeyObject(&tempObject, 1, (UINT8)eInfo.sSelItemIndex);
 	}
 	else
 	{
-		CreateItem( eInfo.pusItemIndex[eInfo.sSelItemIndex], 100, &tempObject );
+		CreateItem(eInfo.pusItemIndex[eInfo.sSelItemIndex], 100, &tempObject);
 	}
-	usFlags = 0;
-	switch( tempObject.usItem )
+
+	INT8   bVisibility = INVISIBLE;
+	UINT16 usFlags     = 0;
+	switch (tempObject.usItem)
 	{
 		case MINE:
-			if ( bVisibility == BURIED )
-			{
-				usFlags |= WORLD_ITEM_ARMED_BOMB;
-			}
+			if (bVisibility == BURIED) usFlags |= WORLD_ITEM_ARMED_BOMB;
 			break;
+
 		case MONEY:
 		case SILVER:
 		case GOLD:
-			tempObject.bStatus[0] = 100;
-			tempObject.uiMoneyAmount = 100 + Random( 19901 );
+			tempObject.bStatus[0]    = 100;
+			tempObject.uiMoneyAmount = 100 + Random(19901);
 			break;
+
 		case OWNERSHIP:
 			tempObject.ubOwnerProfile = NO_PROFILE;
 			bVisibility = BURIED;
 			break;
+
 		case SWITCH:
-			if( TriggerAtGridNo( sGridNo ) )
-			{ //Restricted to one action per gridno.
-				return;
-			}
+			// Restricted to one action per gridno.
+			if (TriggerAtGridNo(sGridNo)) return;
 			bVisibility = BURIED;
-			tempObject.bStatus[0] = 100;
+			tempObject.bStatus[0]  = 100;
 			tempObject.ubBombOwner = 1;
-			if( eInfo.sSelItemIndex < 2 )
-				tempObject.bFrequency = PANIC_FREQUENCY;
-			else if( eInfo.sSelItemIndex < 4 )
-				tempObject.bFrequency = PANIC_FREQUENCY_2;
-			else if( eInfo.sSelItemIndex < 6 )
-				tempObject.bFrequency = PANIC_FREQUENCY_3;
-			else
-				tempObject.bFrequency = (INT8)(FIRST_MAP_PLACED_FREQUENCY + (eInfo.sSelItemIndex-4) / 2);
+			tempObject.bFrequency  =
+				eInfo.sSelItemIndex < 2 ? PANIC_FREQUENCY   :
+				eInfo.sSelItemIndex < 4 ? PANIC_FREQUENCY_2 :
+				eInfo.sSelItemIndex < 6 ? PANIC_FREQUENCY_3 :
+				(INT8)(FIRST_MAP_PLACED_FREQUENCY + (eInfo.sSelItemIndex - 4) / 2);
 			usFlags |= WORLD_ITEM_ARMED_BOMB;
 			break;
+
 		case ACTION_ITEM:
 			bVisibility = BURIED;
-			tempObject.bStatus[0] = 100;
+			tempObject.bStatus[0]  = 100;
 			tempObject.ubBombOwner = 1;
-			tempObject.bTrap = gbDefaultBombTrapLevel;
-			if( eInfo.sSelItemIndex < PRESSURE_ACTION_ID )
+			tempObject.bTrap       = gbDefaultBombTrapLevel;
+			if (eInfo.sSelItemIndex < PRESSURE_ACTION_ID)
 			{
 				tempObject.bDetonatorType = BOMB_REMOTE;
-				if( eInfo.sSelItemIndex < 2 )
-					tempObject.bFrequency = PANIC_FREQUENCY;
-				else if( eInfo.sSelItemIndex < 4 )
-					tempObject.bFrequency = PANIC_FREQUENCY_2;
-				else if( eInfo.sSelItemIndex < 6 )
-					tempObject.bFrequency = PANIC_FREQUENCY_3;
-				else
-					tempObject.bFrequency = (INT8)(FIRST_MAP_PLACED_FREQUENCY + (eInfo.sSelItemIndex-4) / 2);
+				tempObject.bFrequency     =
+					eInfo.sSelItemIndex < 2 ? PANIC_FREQUENCY   :
+					eInfo.sSelItemIndex < 4 ? PANIC_FREQUENCY_2 :
+					eInfo.sSelItemIndex < 6 ? PANIC_FREQUENCY_3 :
+					(INT8)(FIRST_MAP_PLACED_FREQUENCY + (eInfo.sSelItemIndex-4) / 2);
 			}
 			else
 			{
 				tempObject.bDetonatorType = BOMB_PRESSURE;
-				tempObject.bDelay = 0;
+				tempObject.bDelay         = 0;
 			}
-			ChangeActionItem( &tempObject, gbActionItemIndex );
+			ChangeActionItem(&tempObject, gbActionItemIndex);
 			tempObject.fFlags |= OBJECT_ARMED_BOMB;
-			if( gbActionItemIndex == ACTIONITEM_SMPIT )
-				Add3X3Pit( sGridNo );
-			else if( gbActionItemIndex == ACTIONITEM_LGPIT )
-				Add5X5Pit( sGridNo );
+			switch (gbActionItemIndex)
+			{
+				case ACTIONITEM_SMPIT: Add3X3Pit(sGridNo); break;
+				case ACTIONITEM_LGPIT: Add5X5Pit(sGridNo); break;
+			}
 			usFlags |= WORLD_ITEM_ARMED_BOMB;
 			break;
 	}
 
 	INT32      const iItemIndex = InternalAddItemToPool(&sGridNo, &tempObject, bVisibility, 0, usFlags, 0);
 	WORLDITEM* const wi         = GetWorldItem(iItemIndex);
-	wi->ubNonExistChance = (tempObject.usItem != OWNERSHIP ? 100 - giDefaultExistChance : 0);
+	wi->ubNonExistChance = (tempObject.usItem == OWNERSHIP ? 0 : 100 - giDefaultExistChance);
 
-	OBJECTTYPE*    const pObject = &wi->o;
-	const INVTYPE* const pItem   = &Item[pObject->usItem];
-	if( pItem->usItemClass == IC_AMMO )
+	OBJECTTYPE*    const obj  = &wi->o;
+	INVTYPE const* const item = &Item[obj->usItem];
+	if (item->usItemClass == IC_AMMO)
 	{
-		if (Random( 2 ))
-		{
-			pObject->ubShotsLeft[0] = Magazine[ pItem->ubClassIndex ].ubMagSize;
-		}
-		else
-		{
-			pObject->ubShotsLeft[0] = (UINT8) Random( Magazine[ pItem->ubClassIndex ].ubMagSize );
-		}
+		UINT8 const mag_size = Magazine[item->ubClassIndex].ubMagSize;
+		obj->ubShotsLeft[0] = Random(2) ? mag_size : Random(mag_size);
 	}
 	else
 	{
-		pObject->bStatus[0] = (INT8)(70 + Random( 26 ));
+		obj->bStatus[0] = 70 + Random(26);
 	}
-	if( pItem->usItemClass & IC_GUN )
+	if (item->usItemClass & IC_GUN)
 	{
-		if ( pObject->usItem == ROCKET_LAUNCHER )
-		{
-			pObject->ubGunShotsLeft = 1;
-		}
-		else
-		{
-			pObject->ubGunShotsLeft = (UINT8)(Random( Weapon[ pObject->usItem ].ubMagSize ));
-		}
+		obj->ubGunShotsLeft =
+			obj->usItem == ROCKET_LAUNCHER ? 1 : Random(Weapon[obj->usItem].ubMagSize);
 	}
 
-	ITEM_POOL* pItemPool = GetItemPool(sGridNo, 0);
-	Assert(pItemPool != NULL);
-	while( pItemPool )
+	for (ITEM_POOL* ip = GetItemPool(sGridNo, 0); Assert(ip), ip; ip = ip->pNext)
 	{
-		if (&GetWorldItem(pItemPool->iItemIndex)->o == pObject)
-		{
-			fFound = TRUE;
-			//ShowSelectedItem();
-			break;
-		}
-		pItemPool = pItemPool->pNext;
+		if (&GetWorldItem(ip->iItemIndex)->o != obj) continue;
+		gpItemPool = ip;
+		break;
 	}
-	Assert( fFound );
 
-	gpItemPool = pItemPool;
-
-	SpecifyItemToEdit( pObject, sGridNo );
+	SpecifyItemToEdit(obj, sGridNo);
 
 	//Get access to the itempool.
 	//search for a current node in list containing same mapindex
-  pIPCurr = pIPHead;
-	pIPPrev = NULL;
-	while( pIPCurr )
+	IPListNode** anchor = &pIPHead;
+	for (IPListNode* i = pIPHead; i; i = i->next)
 	{
-		pIPPrev = pIPCurr;
-		if( pIPCurr->sGridNo == sGridNo )
+		anchor = &i->next;
+		if (i->sGridNo == sGridNo)
 		{
 			//found one, so we don't need to add it
-			gpCurrItemPoolNode = pIPCurr;
+			gpCurrItemPoolNode = i;
 			return;
 		}
-		pIPCurr = pIPCurr->next;
 	}
 	//there isn't one, so we will add it now.
-	ShowItemCursor( sGridNo );
-	if( pIPPrev )
-	{
-		pIPPrev->next = MALLOC(IPListNode);
-		pIPPrev = pIPPrev->next;
-		pIPPrev->next = NULL;
-		pIPPrev->sGridNo = sGridNo;
-		gpCurrItemPoolNode = pIPPrev;
-	}
-	else
-	{
-		pIPHead = MALLOC(IPListNode);
-		pIPHead->next = NULL;
-		pIPHead->sGridNo = sGridNo;
-		gpCurrItemPoolNode = pIPHead;
-	}
+	ShowItemCursor(sGridNo);
+
+	IPListNode* const n = MALLOC(IPListNode);
+	n->next            = 0;
+	n->sGridNo         = sGridNo;
+	*anchor            = n;
+	gpCurrItemPoolNode = n;
 }
+
 
 void HandleRightClickOnItem( INT16 sGridNo )
 {
