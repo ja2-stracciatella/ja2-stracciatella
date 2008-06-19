@@ -54,7 +54,7 @@ static void MakeButtonTeam(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t*
 
 static void MakeButtonEquipment(UINT idx, UINT level, INT16 colour, const wchar_t* text)
 {
-	GUIButtonRef const btn = CreateTextButton(text, SMALLCOMPFONT, FONT_GRAY1, FONT_BLACK, 480, 385 + 15 * level, 40, 15, MSYS_PRIORITY_NORMAL, MercsSetRelativeEquipmentCallback);
+	GUIButtonRef const btn = CreateTextButton(text, SMALLCOMPFONT, FONT_GRAY1, FONT_BLACK, 480, TASKBAR_Y + 20 + 15 * level, 40, 15, MSYS_PRIORITY_NORMAL, MercsSetRelativeEquipmentCallback);
 	iEditorButton[idx] = btn;
 	btn->SpecifyDownTextColors(colour, FONT_BLACK);
 	MSYS_SetBtnUserData(btn, level);
@@ -63,7 +63,7 @@ static void MakeButtonEquipment(UINT idx, UINT level, INT16 colour, const wchar_
 
 static void MakeButtonAttribute(UINT idx, UINT level, INT16 colour, const wchar_t* text)
 {
-	GUIButtonRef const btn = CreateTextButton(text, SMALLCOMPFONT, FONT_GRAY1, FONT_BLACK, 530, 385 + 15 * level, 40, 15, MSYS_PRIORITY_NORMAL, MercsSetRelativeAttributesCallback);
+	GUIButtonRef const btn = CreateTextButton(text, SMALLCOMPFONT, FONT_GRAY1, FONT_BLACK, 530, TASKBAR_Y + 20 + 15 * level, 40, 15, MSYS_PRIORITY_NORMAL, MercsSetRelativeAttributesCallback);
 	iEditorButton[idx] = btn;
 	btn->SpecifyDownTextColors(colour, FONT_BLACK);
 	MSYS_SetBtnUserData(btn, level);

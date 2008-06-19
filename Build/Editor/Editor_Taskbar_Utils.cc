@@ -827,7 +827,7 @@ static void RenderEditorInfo(void)
 			UpdateMapInfo();
 			if( gusSelectionType == LINESELECTION )
 				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
-			DrawEditorInfoBox(wszSelType[gusSelectionType], FONT12POINT1, 440, 70, 60, 30);
+			DrawEditorInfoBox(wszSelType[gusSelectionType], FONT12POINT1, 450, 70, 60, 30);
 			break;
 	}
 }
