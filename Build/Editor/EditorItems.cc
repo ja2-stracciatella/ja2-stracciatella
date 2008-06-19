@@ -723,6 +723,16 @@ static BOOLEAN TriggerAtGridNo(INT16 sGridNo)
 }
 
 
+static INT8 CalcItemFrequency(UINT16 const item_idx)
+{
+	return
+		item_idx < 2 ? PANIC_FREQUENCY   :
+		item_idx < 4 ? PANIC_FREQUENCY_2 :
+		item_idx < 6 ? PANIC_FREQUENCY_3 :
+		FIRST_MAP_PLACED_FREQUENCY + (item_idx - 4) / 2;
+}
+
+
 void AddSelectedItemToWorld(INT16 sGridNo)
 {
 	// Extract the currently selected item.
@@ -764,11 +774,7 @@ void AddSelectedItemToWorld(INT16 sGridNo)
 			bVisibility = BURIED;
 			tempObject.bStatus[0]  = 100;
 			tempObject.ubBombOwner = 1;
-			tempObject.bFrequency  =
-				eInfo.sSelItemIndex < 2 ? PANIC_FREQUENCY   :
-				eInfo.sSelItemIndex < 4 ? PANIC_FREQUENCY_2 :
-				eInfo.sSelItemIndex < 6 ? PANIC_FREQUENCY_3 :
-				(INT8)(FIRST_MAP_PLACED_FREQUENCY + (eInfo.sSelItemIndex - 4) / 2);
+			tempObject.bFrequency  = CalcItemFrequency(eInfo.sSelItemIndex);
 			usFlags |= WORLD_ITEM_ARMED_BOMB;
 			break;
 
@@ -780,11 +786,7 @@ void AddSelectedItemToWorld(INT16 sGridNo)
 			if (eInfo.sSelItemIndex < PRESSURE_ACTION_ID)
 			{
 				tempObject.bDetonatorType = BOMB_REMOTE;
-				tempObject.bFrequency     =
-					eInfo.sSelItemIndex < 2 ? PANIC_FREQUENCY   :
-					eInfo.sSelItemIndex < 4 ? PANIC_FREQUENCY_2 :
-					eInfo.sSelItemIndex < 6 ? PANIC_FREQUENCY_3 :
-					(INT8)(FIRST_MAP_PLACED_FREQUENCY + (eInfo.sSelItemIndex-4) / 2);
+				tempObject.bFrequency     = CalcItemFrequency(eInfo.sSelItemIndex);
 			}
 			else
 			{
@@ -1062,15 +1064,7 @@ static void FindNextItemOfSelectedType(void)
 	{
 		if( eInfo.sSelItemIndex < PRESSURE_ACTION_ID )
 		{
-			INT8 bFrequency;
-			if( eInfo.sSelItemIndex < 2 )
-				bFrequency = PANIC_FREQUENCY;
-			else if( eInfo.sSelItemIndex < 4 )
-				bFrequency = PANIC_FREQUENCY_2;
-			else if( eInfo.sSelItemIndex < 6 )
-				bFrequency = PANIC_FREQUENCY_3;
-			else
-				bFrequency = (INT8)(FIRST_MAP_PLACED_FREQUENCY + (eInfo.sSelItemIndex-4) / 2);
+			INT8 const bFrequency = CalcItemFrequency(eInfo.sSelItemIndex);
 			SelectNextTriggerWithFrequency( usItem, bFrequency );
 		}
 		else
@@ -1437,17 +1431,9 @@ static UINT16 CountNumberOfEditorPlacementsInWorld(UINT16 usEInfoIndex, UINT16* 
 	UINT16 usNumPlacements;
 	if( eInfo.uiItemType == TBAR_MODE_ITEM_TRIGGERS )
 	{	//find identical items with same frequency
-		INT8 bFrequency;
 		if( usEInfoIndex < PRESSURE_ACTION_ID )
 		{
-			if( usEInfoIndex < 2 )
-				bFrequency = PANIC_FREQUENCY;
-			else if( usEInfoIndex < 4 )
-				bFrequency = PANIC_FREQUENCY_2;
-			else if( usEInfoIndex < 6 )
-				bFrequency = PANIC_FREQUENCY_3;
-			else
-				bFrequency = (INT8)(FIRST_MAP_PLACED_FREQUENCY + (usEInfoIndex-4) / 2);
+			INT8 bFrequency = CalcItemFrequency(usEInfoIndex);
 			usNumPlacements = CountNumberOfItemsWithFrequency( eInfo.pusItemIndex[usEInfoIndex], bFrequency );
 			*pusQuantity = usNumPlacements;
 		}
