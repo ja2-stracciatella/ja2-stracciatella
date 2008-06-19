@@ -175,7 +175,7 @@ WEAPONTYPE const Weapon[] =
   /* queen's spit      */     MONSTSPIT(                20,    10,          1, 50, 300, 10,  5, ACR_SPIT                             ),
   /* brass knuckles    */   PUNCHWEAPON(                12,    15,          1,           0,     NO_WEAPON_SOUND                      ),
   /* underslung GL     */      LAUNCHER(            30,     3,  7,         80,     450, 20, 10, S_UNDER_GLAUNCHER                    ),
-  /* rocket laucher    */           LAW(            30,     0,  5,         80,     500, 80, 10, S_ROCKET_LAUNCHER                    ),
+  /* rocket launcher   */           LAW(            30,     0,  5,         80,     500, 80, 10, S_ROCKET_LAUNCHER                    ),
   /* bloodcat claws    */         BLADE(                12,    14,          1,      10,  2,     NO_WEAPON_SOUND                      ),
   /* bloodcat bite     */         BLADE(                24,    10,          1,      10,  2,     NO_WEAPON_SOUND                      ),
   /* machete           */         BLADE(                24,     9,          6,      40,  2,     NO_WEAPON_SOUND                      ),
