@@ -208,8 +208,14 @@ void InitMainMenu(void)
 {
 	CreateDestroyMainMenuButtons(TRUE);
 
-	guiMainMenuBackGroundImage = AddVideoObjectFromFile("INTERFACE/MainMenuBackGround.sti");
-	guiJa2LogoImage            = AddVideoObjectFromFile("INTERFACE/Ja2Logo.sti");
+#if defined JA2DEMO
+#	define GFX_DIR "INTERFACE"
+#else
+#	define GFX_DIR "LOADSCREENS"
+#endif
+	guiMainMenuBackGroundImage = AddVideoObjectFromFile(GFX_DIR "/MainMenuBackGround.sti");
+	guiJa2LogoImage            = AddVideoObjectFromFile(GFX_DIR "/Ja2Logo.sti");
+#undef GFX_DIR
 
 	// If there are no saved games, disable the button
 	if (!IsThereAnySavedGameFiles()) DisableButton(iMenuButtons[LOAD_GAME]);
