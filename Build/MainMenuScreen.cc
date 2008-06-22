@@ -156,6 +156,9 @@ ScreenID MainMenuScreenHandle(void)
 }
 
 
+static void SetMainMenuExitScreen(ScreenID uiNewScreen);
+
+
 static void HandleMainMenuScreen(void)
 {
 	if (gbHandledMainMenu == 0) return;
@@ -179,23 +182,20 @@ static void HandleMainMenuScreen(void)
 		case LOAD_GAME:
 			// Select the game which is to be restored
 			guiPreviousOptionScreen = guiCurrentScreen;
-			guiMainMenuExitScreen   = SAVE_LOAD_SCREEN;
 			gbHandledMainMenu       = 0;
 			gfSaveGame              = FALSE;
-			gfMainMenuScreenExit    = TRUE;
+			SetMainMenuExitScreen(SAVE_LOAD_SCREEN);
 			break;
 
 		case PREFERENCES:
 			guiPreviousOptionScreen = guiCurrentScreen;
-			guiMainMenuExitScreen   = OPTIONS_SCREEN;
 			gbHandledMainMenu       = 0;
-			gfMainMenuScreenExit    = TRUE;
+			SetMainMenuExitScreen(OPTIONS_SCREEN);
 			break;
 
 		case CREDITS:
-			guiMainMenuExitScreen = CREDIT_SCREEN;
-			gbHandledMainMenu     = 0;
-			gfMainMenuScreenExit  = TRUE;
+			gbHandledMainMenu = 0;
+			SetMainMenuExitScreen(CREDIT_SCREEN);
 			break;
 	}
 }
@@ -245,9 +245,6 @@ static void ExitMainMenu(void)
 }
 
 
-static void SetMainMenuExitScreen(ScreenID uiNewScreen);
-
-
 static void MenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -281,8 +278,7 @@ static void HandleMainMenuInput(void)
 
 #if defined JA2TESTVERSION
 				case 'q':
-					gbHandledMainMenu    = NEW_GAME;
-					gfMainMenuScreenExit = TRUE;
+					gbHandledMainMenu = NEW_GAME;
 					SetMainMenuExitScreen(INIT_SCREEN);
 					break;
 
