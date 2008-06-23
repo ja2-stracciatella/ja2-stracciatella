@@ -142,7 +142,7 @@ SGPVSurface* g_frame_buffer;
 SGPVSurface* g_mouse_buffer;
 
 
-static BOOLEAN SetPrimaryVideoSurfaces(void);
+static void SetPrimaryVideoSurfaces(void);
 
 
 void InitializeVideoSurfaceManager(void)
@@ -155,10 +155,7 @@ void InitializeVideoSurfaceManager(void)
 	gpVSurfaceTail = NULL;
 
 	// Create primary and backbuffer from globals
-	if (!SetPrimaryVideoSurfaces())
-	{
-		throw std::runtime_error("Could not create primary surfaces");
-	}
+	SetPrimaryVideoSurfaces();
 }
 
 
@@ -247,28 +244,16 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 }
 
 
-static BOOLEAN SetPrimaryVideoSurfaces(void)
+static void SetPrimaryVideoSurfaces(void)
 {
-	SDL_Surface* pSurface;
-
 	// Delete surfaces if they exist
 	DeletePrimaryVideoSurfaces();
 
 #ifdef JA2
-	pSurface = GetBackBufferObject();
-	CHECKF(pSurface != NULL);
-	g_back_buffer = new SGPVSurface(pSurface);
-
-	pSurface = GetMouseBufferObject();
-	CHECKF(pSurface != NULL);
-	g_mouse_buffer = new SGPVSurface(pSurface);
+	g_back_buffer  = new SGPVSurface(GetBackBufferObject());
+	g_mouse_buffer = new SGPVSurface(GetMouseBufferObject());
 #endif
-
-	pSurface = GetFrameBufferObject();
-	CHECKF(pSurface != NULL);
-	g_frame_buffer = new SGPVSurface(pSurface);
-
-	return TRUE;
+	g_frame_buffer = new SGPVSurface(GetFrameBufferObject());
 }
 
 

@@ -654,21 +654,21 @@ void RefreshScreen(void)
 
 SDL_Surface* GetBackBufferObject(void)
 {
-	Assert(ScreenBuffer != NULL);
+	if (!MouseCursor) throw std::logic_error("Tried to access screen surface before its creation");
 	return ScreenBuffer;
 }
 
 
 SDL_Surface* GetFrameBufferObject(void)
 {
-	Assert(FrameBuffer != NULL);
+	if (!MouseCursor) throw std::logic_error("Tried to access frame surface before its creation");
 	return FrameBuffer;
 }
 
 
 SDL_Surface* GetMouseBufferObject(void)
 {
-	Assert(MouseCursor != NULL);
+	if (!MouseCursor) throw std::logic_error("Tried to access mouse surface before its creation");
 	return MouseCursor;
 }
 
