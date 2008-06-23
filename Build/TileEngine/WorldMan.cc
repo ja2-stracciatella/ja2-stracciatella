@@ -6,7 +6,6 @@
 #include "Structure.h"
 #include "TileDef.h"
 #include "WorldDef.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "Smooth.h"
 #include "WorldMan.h"
@@ -1534,23 +1533,23 @@ void SetRoofIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 // #################################################################
 
 static LEVELNODE* AddOnRoof(const UINT32 iMapIndex, const UINT16 usIndex)
-try
 {
 	LEVELNODE* const n = CreateLevelNode();
 
-	if (!AddNodeToWorld(iMapIndex, usIndex, 1, n)) return NULL;
+	if (!AddNodeToWorld(iMapIndex, usIndex, 1, n))
+	{
+		throw std::runtime_error("Failed to add node to world");
+	}
 
 	n->usIndex = usIndex;
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);
 	return n;
 }
-catch (...) { return 0; }
 
 
 LEVELNODE* AddOnRoofToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 {
 	LEVELNODE* const n = AddOnRoof(iMapIndex, usIndex);
-	if (n == NULL) return NULL;
 
 	// Append the node to the list
 	LEVELNODE** anchor = &gpWorldLevelData[iMapIndex].pOnRoofHead;
@@ -1564,7 +1563,6 @@ LEVELNODE* AddOnRoofToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 LEVELNODE* AddOnRoofToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
 	LEVELNODE* const n = AddOnRoof(iMapIndex, usIndex);
-	CHECKN(n != NULL);
 
 	// Prepend the node to the list
 	LEVELNODE** const head = &gpWorldLevelData[iMapIndex].pOnRoofHead;
