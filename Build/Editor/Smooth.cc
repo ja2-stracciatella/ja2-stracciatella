@@ -92,7 +92,6 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 {
 	int temp = 0;
-	UINT16 usOldIndex;
 	UINT16 usTempIndex;
 	UINT32 cnt;
 	BOOLEAN fFound;
@@ -112,15 +111,13 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 
 	// Get land index value for given level and adjust according to type
 	UINT16 usTileIndex;
-	if ( TypeExistsInLandLayer( gridno, origType, &usTileIndex ) )
-	{
-		GetTypeSubIndexFromTileIndex( origType, usTileIndex, &usOldIndex );
-	}
-	else
+	if (!TypeExistsInLandLayer(gridno, origType, &usTileIndex))
 	{
 		*piNewTile = NO_TILE;
 		return;
 	}
+
+	UINT16 const usOldIndex = GetTypeSubIndexFromTileIndex(origType, usTileIndex);
 
 	// Check if we're dealing with a 'full' tile ( first ten )
 	// If so, do not smooth
@@ -344,7 +341,6 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	// based on the surrounding water textures. This is done via masking bits within
 	// a temp variable, then searching for the right texture and inserting it
 	int temp = 0;
-	UINT16 usOldIndex;
 	UINT32 cnt;
 	BOOLEAN fFound;
 	UINT32	uiTempIndex;
@@ -355,15 +351,14 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 	pSmoothStruct = gbSmoothWaterStruct;
 	// Get land index value for given level and adjust according to type
 	UINT16 usTileIndex;
-	if ( TypeExistsInLandLayer( gridno, origType, &usTileIndex ) )
-	{
-		GetTypeSubIndexFromTileIndex( origType, usTileIndex, &usOldIndex );
-	}
-	else
+	if (!TypeExistsInLandLayer(gridno, origType, &usTileIndex))
 	{
 		*piNewTile = NO_TILE;
 		return;
 	}
+
+	UINT16 const usOldIndex = GetTypeSubIndexFromTileIndex(origType, usTileIndex);
+
 	// Check if we're dealing with a 'full' tile ( first ten )
 	// If so, do not smooth
 	// Onlt do if we are not forcing the smooth

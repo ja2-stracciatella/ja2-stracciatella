@@ -1360,7 +1360,6 @@ try
 	LEVELNODE	*pOnRoof;
 	LEVELNODE	*pTailLand=NULL;
 	UINT16		usNumExitGrids = 0;
-	UINT16    usTypeSubIndex;
 	UINT8			LayerCount;
 	UINT8			ObjectCount;
 	UINT8			StructCount;
@@ -1368,7 +1367,6 @@ try
 	UINT8			RoofCount;
 	UINT8			OnRoofCount;
 	UINT8			ubType;
-	UINT8			ubTypeSubIndex;
 	UINT8			ubTest = 1;
 	CHAR8			aFilename[ 255 ];
 	UINT8			ubCombine;
@@ -1648,7 +1646,7 @@ try
 				// Write out object type and sub-index
 				const UINT32 uiType = GetTileType(pTailLand->usIndex);
 				ubType = (UINT8)uiType;
-				GetTypeSubIndexFromTileIndexChar( uiType, pTailLand->usIndex, &ubTypeSubIndex );
+				UINT8 const ubTypeSubIndex = (UINT8)GetTypeSubIndexFromTileIndex(uiType, pTailLand->usIndex);
 				FileWrite(hfile, &ubType, sizeof(UINT8));
 				FileWrite(hfile, &ubTypeSubIndex, sizeof(UINT8));
 
@@ -1675,7 +1673,7 @@ try
 					//We are writing 2 bytes for the type subindex in the object layer because the
 					//ROADPIECES slot contains more than 256 subindices.
 					ubType = (UINT8)uiType;
-					GetTypeSubIndexFromTileIndex( uiType, pObject->usIndex, &usTypeSubIndex );
+					UINT16 const usTypeSubIndex = GetTypeSubIndexFromTileIndex(uiType, pObject->usIndex);
 					FileWrite(hfile, &ubType, sizeof(UINT8));
 					FileWrite(hfile, &usTypeSubIndex, sizeof(UINT16));
 				}
@@ -1696,7 +1694,7 @@ try
 				// Write out object type and sub-index
 				const UINT32 uiType = GetTileType(pStruct->usIndex);
 				ubType = (UINT8)uiType;
-				GetTypeSubIndexFromTileIndexChar( uiType, pStruct->usIndex, &ubTypeSubIndex );
+				UINT8 const ubTypeSubIndex = (UINT8)GetTypeSubIndexFromTileIndex(uiType, pStruct->usIndex);
 					FileWrite(hfile, &ubType, sizeof(UINT8));
 					FileWrite(hfile, &ubTypeSubIndex, sizeof(UINT8));
 			}
@@ -1718,7 +1716,7 @@ try
 				// Write out object type and sub-index
 				const UINT32 uiType = GetTileType(pShadow->usIndex);
 				ubType = (UINT8)uiType;
-				GetTypeSubIndexFromTileIndexChar( uiType, pShadow->usIndex, &ubTypeSubIndex );
+				UINT8 const ubTypeSubIndex = (UINT8)GetTypeSubIndexFromTileIndex(uiType, pShadow->usIndex);
 				FileWrite(hfile, &ubType, sizeof(UINT8));
 				FileWrite(hfile, &ubTypeSubIndex, sizeof(UINT8));
 
@@ -1743,7 +1741,7 @@ try
 				// Write out object type and sub-index
 				const UINT32 uiType = GetTileType(pRoof->usIndex);
 				ubType = (UINT8)uiType;
-				GetTypeSubIndexFromTileIndexChar( uiType, pRoof->usIndex, &ubTypeSubIndex );
+				UINT8 const ubTypeSubIndex = (UINT8)GetTypeSubIndexFromTileIndex(uiType, pRoof->usIndex);
 				FileWrite(hfile, &ubType, sizeof(UINT8));
 				FileWrite(hfile, &ubTypeSubIndex, sizeof(UINT8));
 			}
@@ -1761,7 +1759,7 @@ try
 			// Write out object type and sub-index
 			const UINT32 uiType = GetTileType(pOnRoof->usIndex);
 			ubType = (UINT8)uiType;
-			GetTypeSubIndexFromTileIndexChar( uiType, pOnRoof->usIndex, &ubTypeSubIndex );
+			UINT8 const ubTypeSubIndex = (UINT8)GetTypeSubIndexFromTileIndex(uiType, pOnRoof->usIndex);
 			FileWrite(hfile, &ubType, sizeof(UINT8));
 			FileWrite(hfile, &ubTypeSubIndex, sizeof(UINT8));
 

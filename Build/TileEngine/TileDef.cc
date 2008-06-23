@@ -1,9 +1,10 @@
+#include <stdexcept>
+
 #include "HImage.h"
 #include "Structure.h"
 #include "TileDef.h"
 #include "VObject.h"
 #include "WorldDef.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "WorldMan.h"
 #include "Edit_Sys.h"
@@ -294,29 +295,14 @@ UINT16 GetSubIndexFromTileIndex(const UINT16 usTileIndex)
 
 #ifdef JA2EDITOR
 
-BOOLEAN GetTypeSubIndexFromTileIndex( UINT32 uiCheckType, UINT16 usIndex, UINT16 *pusSubIndex )
+UINT16 GetTypeSubIndexFromTileIndex(UINT32 const uiCheckType, UINT16 const usIndex)
 {
-
 	// Tile database is zero-based, Type indecies are 1-based!
-
-	CHECKF ( uiCheckType < NUMBEROFTILETYPES );
-
-	*pusSubIndex = usIndex - gTileTypeStartIndex[ uiCheckType ] + 1;
-
-	return( TRUE );
-}
-
-
-BOOLEAN GetTypeSubIndexFromTileIndexChar( UINT32 uiCheckType, UINT16 usIndex, UINT8 *pubSubIndex )
-{
-
-	// Tile database is zero-based, Type indecies are 1-based!
-
-	CHECKF ( uiCheckType < NUMBEROFTILETYPES );
-
-	*pubSubIndex = (UINT8)(usIndex - gTileTypeStartIndex[ uiCheckType ] + 1);
-
-	return( TRUE );
+	if (uiCheckType >= NUMBEROFTILETYPES)
+	{
+		throw std::logic_error("Tried to get sub-index from invalid tile type");
+	}
+	return usIndex - gTileTypeStartIndex[uiCheckType] + 1;
 }
 
 #endif

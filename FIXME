@@ -54,7 +54,6 @@ GetSectorIDString(): complicated
 GetSoldierAboveGuyPositions(): (twoards end of function) no decision
 GetTimeRemainingOnSoldiersContract(): callers
 GetTimeRemainingOnSoldiersInsuranceContract(): callers
-GetTypeSubIndexFromTileIndex(): interface complicated
 GetZLevelOfItemPoolGivenStructure(): third parameter only tested for != NULL
 Handle.*TextEvent(): code duplication
 HandleCompatibleAmmoUI(): if (gbCompatibleAmmo[cnt]) gbCompatibleAmmo[cnt] = FALSE;
