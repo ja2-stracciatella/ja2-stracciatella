@@ -1,6 +1,5 @@
 #include "Soldier_Create.h"
 #include "Overhead.h"
-#include "WCheck.h"
 #include "Soldier_Profile.h"
 #include "Animation_Control.h"
 #include "Animation_Data.h"

@@ -936,14 +936,12 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* pSoldier, INT16 sLifeDeduct, INT16 sBreathL
 void ReviveSoldier( SOLDIERTYPE *pSoldier );
 
 
-#define INVALID_PALREP 0xFFU
-
 // Palette functions for soldiers
-void    CreateSoldierPalettes(SOLDIERTYPE*);
-UINT8   GetPaletteRepIndexFromID(const PaletteRepID pal_rep);
-BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalRep );
-void    LoadPaletteData(void);
-void    DeletePaletteData(void);
+void  CreateSoldierPalettes(SOLDIERTYPE*);
+UINT8 GetPaletteRepIndexFromID(const PaletteRepID pal_rep);
+void  SetPaletteReplacement(SGPPaletteEntry*, PaletteRepID);
+void  LoadPaletteData(void);
+void  DeletePaletteData(void);
 
 // UTILITY FUNCTUIONS
 void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLEAN fCheckRange );

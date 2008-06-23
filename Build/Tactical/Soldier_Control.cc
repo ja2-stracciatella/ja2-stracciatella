@@ -5246,13 +5246,12 @@ void LoadPaletteData()
 }
 
 
-BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalRep )
+void SetPaletteReplacement(SGPPaletteEntry* const p8BPPPalette, PaletteRepID aPalRep)
 {
 	UINT32 cnt2;
 	UINT8	 ubType;
 
 	const UINT8 ubPalIndex = GetPaletteRepIndexFromID(aPalRep);
-	CHECKF(ubPalIndex != INVALID_PALREP);
 
 	// Get range type
 	ubType = gpPalRep[ ubPalIndex ].ubType;
@@ -5261,8 +5260,6 @@ BOOLEAN	SetPaletteReplacement( SGPPaletteEntry *p8BPPPalette, PaletteRepID aPalR
 	{
 		p8BPPPalette[cnt2] = gpPalRep[ubPalIndex].rgb[cnt2 - gpPaletteSubRanges[ubType].ubStart];
 	}
-
-	return( TRUE );
 }
 
 
@@ -5306,8 +5303,7 @@ UINT8 GetPaletteRepIndexFromID(const PaletteRepID pal_rep)
 		if (strcmp(pal_rep, gpPalRep[i].ID) == 0) return i;
 	}
 
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Invalid Palette Replacement ID given");
-	return INVALID_PALREP;
+	throw std::logic_error("Invalid Palette Replacement ID given");
 }
 
 

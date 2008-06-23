@@ -6,6 +6,6 @@
 
 BOOLEAN CreateSGPPaletteFromCOLFile(SGPPaletteEntry* pal, const char* col_file);
 
-BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos, SGPVSurface* dst);
+void DisplayPaletteRep(const PaletteRepID aPalRep, UINT8 ubXPos, UINT8 ubYPos, SGPVSurface* dst);
 
 #endif

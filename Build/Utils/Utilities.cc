@@ -8,7 +8,6 @@
 #include "Font_Control.h"
 #include "Overhead.h"
 #include "Overhead_Types.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "VSurface.h"
 
@@ -36,7 +35,7 @@ try
 catch (...) { return FALSE; }
 
 
-BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, const UINT8 ubXPos, const UINT8 ubYPos, SGPVSurface* const dst)
+void DisplayPaletteRep(const PaletteRepID aPalRep, const UINT8 ubXPos, const UINT8 ubYPos, SGPVSurface* const dst)
 {
 	UINT16										us16BPPColor;
 	UINT32										cnt1;
@@ -45,7 +44,6 @@ BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, const UINT8 ubXPos, const 
 
 	// Create 16BPP Palette
 	const UINT8 ubPaletteRep = GetPaletteRepIndexFromID(aPalRep);
-	CHECKF(ubPaletteRep != INVALID_PALREP);
 
 	SetFont( LARGEFONT1 );
 
@@ -65,6 +63,4 @@ BOOLEAN DisplayPaletteRep(const PaletteRepID aPalRep, const UINT8 ubXPos, const 
 	}
 
 	gprintf(ubXPos + 16 * 20, ubYPos, L"%hs", gpPalRep[ubPaletteRep].ID);
-
-	return( TRUE );
 }

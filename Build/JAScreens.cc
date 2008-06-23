@@ -5,7 +5,6 @@
 #include "HImage.h"
 #include "VObject.h"
 #include "VSurface.h"
-#include "WCheck.h"
 #include "Input.h"
 #include "Font.h"
 #include "MouseSystem.h"
@@ -318,10 +317,9 @@ static void PalEditRenderHook(void)
 }
 
 
-static BOOLEAN CyclePaletteReplacement(SOLDIERTYPE* const s, PaletteRepID pal)
+static void CyclePaletteReplacement(SOLDIERTYPE* const s, PaletteRepID pal)
 {
 	UINT8 ubPaletteRep = GetPaletteRepIndexFromID(pal);
-	CHECKF(ubPaletteRep != INVALID_PALREP);
 	const UINT8 ubType = gpPalRep[ubPaletteRep].ubType;
 
 	ubPaletteRep++;
@@ -339,7 +337,6 @@ static BOOLEAN CyclePaletteReplacement(SOLDIERTYPE* const s, PaletteRepID pal)
 	SET_PALETTEREP_ID(pal, gpPalRep[ubPaletteRep].ID);
 
 	CreateSoldierPalettes(s);
-	return TRUE;
 }
 
 
@@ -352,17 +349,16 @@ static BOOLEAN PalEditKeyboardHook(InputAtom* pInputEvent)
 
   switch (pInputEvent->usParam)
   {
-  	case SDLK_ESCAPE:
-  		gfExitPalEditScreen = TRUE;
-  		return TRUE;
+  	case SDLK_ESCAPE: gfExitPalEditScreen = TRUE; break;
 
-  	case 'h': return CyclePaletteReplacement(sel, sel->HeadPal);
-  	case 'v': return CyclePaletteReplacement(sel, sel->VestPal);
-  	case 'p': return CyclePaletteReplacement(sel, sel->PantsPal);
-  	case 's': return CyclePaletteReplacement(sel, sel->SkinPal);
+  	case 'h': CyclePaletteReplacement(sel, sel->HeadPal);  break;
+  	case 'v': CyclePaletteReplacement(sel, sel->VestPal);  break;
+  	case 'p': CyclePaletteReplacement(sel, sel->PantsPal); break;
+  	case 's': CyclePaletteReplacement(sel, sel->SkinPal);  break;
 
   	default: return FALSE;
   }
+  return TRUE;
 }
 
 
