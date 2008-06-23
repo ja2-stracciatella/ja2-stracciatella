@@ -656,21 +656,20 @@ void AddStructToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 }
 
 
-static BOOLEAN InsertStructIndex(const UINT32 iMapIndex, const UINT16 usIndex, const UINT8 ubLevel)
-try
+static void InsertStructIndex(const UINT32 iMapIndex, const UINT16 usIndex, const UINT8 ubLevel)
 {
 	// If we want to insert at head
 	if (ubLevel == 0)
 	{
 		AddStructToHead(iMapIndex, usIndex);
-		return TRUE;
+		return;
 	}
 
 	// Move to index before insertion
 	LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pStructHead;
 	for (UINT8 level = 0;; ++level)
 	{
-		if (pStruct == NULL) return FALSE;
+		if (!pStruct) throw std::logic_error("Tried to insert struct at invalid level");
 
 		if (level == ubLevel - 1) break;
 
@@ -686,9 +685,7 @@ try
 	pStruct->pNext = n;
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_STRUCTURES);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN RemoveShadow(UINT32 iMapIndex, UINT16 usIndex);
