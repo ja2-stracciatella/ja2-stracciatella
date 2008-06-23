@@ -537,17 +537,17 @@ void RemoveHigherLandLevels(UINT32 const iMapIndex, UINT32 const fSrcType, UINT3
 #endif
 
 
-static BOOLEAN AddNodeToWorld(const UINT32 iMapIndex, const UINT16 usIndex, const INT8 level, LEVELNODE* const n)
+static void AddNodeToWorld(const UINT32 iMapIndex, const UINT16 usIndex, const INT8 level, LEVELNODE* const n)
 {
-	if (usIndex >= NUMBEROFTILES) return TRUE;
+	if (usIndex >= NUMBEROFTILES) return;
 
 	const DB_STRUCTURE_REF* const sr = gTileDatabase[usIndex].pDBStructureRef;
-	if (sr == NULL) return TRUE;
+	if (sr == NULL) return;
 
-	if (AddStructureToWorld(iMapIndex, level, sr, n)) return TRUE;
+	if (AddStructureToWorld(iMapIndex, level, sr, n)) return;
 
 	MemFree(n);
-	return FALSE;
+	throw std::runtime_error("Failed to add node to world");
 }
 
 
@@ -574,7 +574,7 @@ try
 {
 	LEVELNODE* const n = CreateLevelNode();
 
-	if (fAddStructDBInfo && !AddNodeToWorld(iMapIndex, usIndex, 0, n)) return NULL;
+	if (fAddStructDBInfo) AddNodeToWorld(iMapIndex, usIndex, 0, n);
 
 	n->usIndex = usIndex;
 
@@ -620,9 +620,7 @@ BOOLEAN AddStructToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 try
 {
 	LEVELNODE* const n = CreateLevelNode();
-
-	if (!AddNodeToWorld(iMapIndex, usIndex, 0, n)) return FALSE;
-
+	AddNodeToWorld(iMapIndex, usIndex, 0, n);
 	n->usIndex = usIndex;
 
 	// Prepend node to list
@@ -684,10 +682,8 @@ try
 	}
 
 	LEVELNODE* const n = CreateLevelNode();
-
 	n->usIndex = usIndex;
-
-	if (!AddNodeToWorld(iMapIndex, usIndex, 0, n)) return FALSE;
+	AddNodeToWorld(iMapIndex, usIndex, 0, n);
 
 	// Set links, according to position!
 	n->pNext       = pStruct->pNext;
@@ -1349,9 +1345,7 @@ static LEVELNODE* AddRoof(const UINT32 iMapIndex, const UINT16 usIndex)
 try
 {
 	LEVELNODE* const n = CreateLevelNode();
-
-	if (!AddNodeToWorld(iMapIndex, usIndex, 1, n)) return NULL;
-
+	AddNodeToWorld(iMapIndex, usIndex, 1, n);
 	n->usIndex = usIndex;
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ROOF);
 	return n;
@@ -1535,12 +1529,7 @@ void SetRoofIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 static LEVELNODE* AddOnRoof(const UINT32 iMapIndex, const UINT16 usIndex)
 {
 	LEVELNODE* const n = CreateLevelNode();
-
-	if (!AddNodeToWorld(iMapIndex, usIndex, 1, n))
-	{
-		throw std::runtime_error("Failed to add node to world");
-	}
-
+	AddNodeToWorld(iMapIndex, usIndex, 1, n);
 	n->usIndex = usIndex;
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);
 	return n;
