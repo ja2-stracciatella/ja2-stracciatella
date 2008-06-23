@@ -616,8 +616,7 @@ try
 catch (...) { return 0; }
 
 
-BOOLEAN AddStructToHead(const UINT32 iMapIndex, const UINT16 usIndex)
-try
+void AddStructToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
 	LEVELNODE* const n = CreateLevelNode();
 	AddNodeToWorld(iMapIndex, usIndex, 0, n);
@@ -656,9 +655,7 @@ try
 	AddStructToMapTempFile(iMapIndex, usIndex);
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_STRUCTURES);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static BOOLEAN InsertStructIndex(const UINT32 iMapIndex, const UINT16 usIndex, const UINT8 ubLevel)
@@ -667,7 +664,8 @@ try
 	// If we want to insert at head
 	if (ubLevel == 0)
 	{
-		return AddStructToHead(iMapIndex, usIndex);
+		AddStructToHead(iMapIndex, usIndex);
+		return TRUE;
 	}
 
 	// Move to index before insertion
