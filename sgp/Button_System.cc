@@ -323,7 +323,7 @@ static void InitializeButtonImageManager(void)
 	}
 	catch (...) { /* see comment above */ }
 
-	UINT8 const Pix = GetETRLEPixelValue(GenericButtonOffNormal, 8, 0, 0);
+	UINT8 const Pix = GenericButtonOffNormal->GetETRLEPixelValue(8, 0, 0);
 	GenericButtonFillColors = GenericButtonOffNormal->Palette16()[Pix];
 }
 

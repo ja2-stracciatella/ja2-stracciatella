@@ -6,7 +6,6 @@
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"
-#include "WCheck.h"
 
 
 // ******************************************************************************
@@ -108,6 +107,70 @@ UINT8 const* SGPVObject::PixData(ETRLEObject const* const e) const
 }
 
 
+#define COMPRESS_TRANSPARENT 0x80
+#define COMPRESS_RUN_MASK    0x7F
+
+
+UINT8 SGPVObject::GetETRLEPixelValue(UINT16 const usETRLEIndex, UINT16 const usX, UINT16 const usY) const
+{
+	ETRLEObject const* const pETRLEObject = SubregionProperties(usETRLEIndex);
+
+	if (usX >= pETRLEObject->usWidth || usY >= pETRLEObject->usHeight)
+	{
+		throw std::logic_error("Tried to get pixel from invalid coordinate");
+	}
+
+	// Assuming everything's okay, go ahead and look...
+	UINT8 const* pCurrent = PixData(pETRLEObject);
+
+	// Skip past all uninteresting scanlines
+	for (UINT16 usLoopY = 0; usLoopY < usY; usLoopY++)
+	{
+		while (*pCurrent != 0)
+		{
+			if (*pCurrent & COMPRESS_TRANSPARENT)
+			{
+				pCurrent++;
+			}
+			else
+			{
+				pCurrent += *pCurrent & COMPRESS_RUN_MASK;
+			}
+		}
+	}
+
+	// Now look in this scanline for the appropriate byte
+	UINT16 usLoopX = 0;
+	do
+	{
+		UINT16 ubRunLength = *pCurrent & COMPRESS_RUN_MASK;
+
+		if (*pCurrent & COMPRESS_TRANSPARENT)
+		{
+			if (usLoopX + ubRunLength >= usX) return 0;
+			pCurrent++;
+		}
+		else
+		{
+			if (usLoopX + ubRunLength >= usX)
+			{
+				// skip to the correct byte; skip at least 1 to get past the byte defining the run
+				pCurrent += (usX - usLoopX) + 1;
+				return *pCurrent;
+			}
+			else
+			{
+				pCurrent += ubRunLength + 1;
+			}
+		}
+		usLoopX += ubRunLength;
+	}
+	while (usLoopX < usX);
+
+	throw std::logic_error("Inconsistent video object data");
+}
+
+
 /* Destroys the palette tables of a video object. All memory is deallocated, and
  * the pointers set to NULL. Be careful not to try and blit this object until
  * new tables are calculated, or things WILL go boom. */
@@ -144,10 +207,6 @@ void SGPVObject::ShareShadetables(SGPVObject* const other)
 		pShades[i] = other->pShades[i];
 	}
 }
-
-
-#define COMPRESS_TRANSPARENT				0x80
-#define COMPRESS_RUN_MASK						0x7F
 
 
 typedef struct VOBJECT_NODE
@@ -313,71 +372,6 @@ BOOLEAN BltVideoObject(SGPVSurface* const dst, const SGPVObject* const src, cons
 	}
 
 	return TRUE;
-}
-
-
-/* Given a VOBJECT and ETRLE image index, retrieves the value of the pixel
- * located at the given image coordinates. The value returned is an 8-bit
- * palette index */
-UINT8 GetETRLEPixelValue(HVOBJECT const hVObject, UINT16 const usETRLEIndex, UINT16 const usX, UINT16 const usY)
-{
-	CHECKF(hVObject != NULL);
-
-	ETRLEObject const* const pETRLEObject = hVObject->SubregionProperties(usETRLEIndex);
-
-	if (usX >= pETRLEObject->usWidth || usY >= pETRLEObject->usHeight)
-	{
-		throw std::logic_error("Tried to get pixel from invalid coordinate");
-	}
-
-	// Assuming everything's okay, go ahead and look...
-	UINT8 const* pCurrent = hVObject->PixData(pETRLEObject);
-
-	// Skip past all uninteresting scanlines
-	for (UINT16 usLoopY = 0; usLoopY < usY; usLoopY++)
-	{
-		while (*pCurrent != 0)
-		{
-			if (*pCurrent & COMPRESS_TRANSPARENT)
-			{
-				pCurrent++;
-			}
-			else
-			{
-				pCurrent += *pCurrent & COMPRESS_RUN_MASK;
-			}
-		}
-	}
-
-	// Now look in this scanline for the appropriate byte
-	UINT16 usLoopX = 0;
-	do
-	{
-		UINT16 ubRunLength = *pCurrent & COMPRESS_RUN_MASK;
-
-		if (*pCurrent & COMPRESS_TRANSPARENT)
-		{
-			if (usLoopX + ubRunLength >= usX) return 0;
-			pCurrent++;
-		}
-		else
-		{
-			if (usLoopX + ubRunLength >= usX)
-			{
-				// skip to the correct byte; skip at least 1 to get past the byte defining the run
-				pCurrent += (usX - usLoopX) + 1;
-				return *pCurrent;
-			}
-			else
-			{
-				pCurrent += ubRunLength + 1;
-			}
-		}
-		usLoopX += ubRunLength;
-	}
-	while (usLoopX < usX);
-
-	throw std::logic_error("Inconsistent video object data");
 }
 
 

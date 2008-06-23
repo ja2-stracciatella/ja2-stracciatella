@@ -48,6 +48,11 @@ class SGPVObject
 
 		UINT8 const* PixData(ETRLEObject const*) const;
 
+		/* Given a ETRLE image index, retrieves the value of the pixel located at
+		 * the given image coordinates. The value returned is an 8-bit palette index
+		 */
+		UINT8 GetETRLEPixelValue(UINT16 usETLREIndex, UINT16 usX, UINT16 usY) const;
+
 		// Deletes the 16-bit palette tables
 		void DestroyPalettes();
 
@@ -106,9 +111,6 @@ void DeleteVideoObject(SGPVObject*);
 
 // Blits a video object to another video object
 BOOLEAN BltVideoObject(SGPVSurface* dst, const SGPVObject* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
-
-// Retrieves an HVOBJECT pixel value
-UINT8 GetETRLEPixelValue(HVOBJECT, UINT16 usETLREIndex, UINT16 usX, UINT16 usY);
 
 
 BOOLEAN BltVideoObjectOutline(SGPVSurface* dst, const SGPVObject* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor);
