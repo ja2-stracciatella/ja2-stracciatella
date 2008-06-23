@@ -1342,7 +1342,6 @@ BOOLEAN RemoveMerc(UINT32 iMapIndex, SOLDIERTYPE* pSoldier, BOOLEAN fPlaceHolder
 // #################################################################
 
 static LEVELNODE* AddRoof(const UINT32 iMapIndex, const UINT16 usIndex)
-try
 {
 	LEVELNODE* const n = CreateLevelNode();
 	AddNodeToWorld(iMapIndex, usIndex, 1, n);
@@ -1350,13 +1349,11 @@ try
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ROOF);
 	return n;
 }
-catch (...) { return 0; }
 
 
 LEVELNODE* AddRoofToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 {
 	LEVELNODE* const n = AddRoof(iMapIndex, usIndex);
-	if (n == NULL) return NULL;
 
 	// Append node to list
 	LEVELNODE** anchor = &gpWorldLevelData[iMapIndex].pRoofHead;
@@ -1370,7 +1367,6 @@ LEVELNODE* AddRoofToTail(const UINT32 iMapIndex, const UINT16 usIndex)
 LEVELNODE* AddRoofToHead(const UINT32 iMapIndex, const UINT16 usIndex)
 {
 	LEVELNODE* const n = AddRoof(iMapIndex, usIndex);
-	if (n == NULL) return NULL;
 
 	// Prepend node to list
 	LEVELNODE** const head = &gpWorldLevelData[iMapIndex].pRoofHead;
