@@ -570,7 +570,6 @@ LEVELNODE* ForceStructToTail(UINT32 iMapIndex, UINT16 usIndex)
 
 
 static LEVELNODE* AddStructToTailCommon(const UINT32 iMapIndex, const UINT16 usIndex, const BOOLEAN fAddStructDBInfo)
-try
 {
 	LEVELNODE* const n = CreateLevelNode();
 
@@ -613,7 +612,6 @@ try
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_STRUCTURES);
 	return n;
 }
-catch (...) { return 0; }
 
 
 void AddStructToHead(const UINT32 iMapIndex, const UINT16 usIndex)

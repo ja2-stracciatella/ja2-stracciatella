@@ -3718,11 +3718,7 @@ static void AddBlueFlag(INT16 sGridNo, INT8 bLevel)
 	gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_PLAYER_MINE_PRESENT;
 
   pNode = AddStructToTail( sGridNo, BLUEFLAG_GRAPHIC );
-
-	if ( pNode )
-	{
-		pNode->uiFlags |= LEVELNODE_SHOW_THROUGH;
-	}
+	pNode->uiFlags |= LEVELNODE_SHOW_THROUGH;
 
 	ApplyMapChangesToMapTempFile( FALSE );
 	RecompileLocalMovementCostsFromRadius( sGridNo, bLevel );
