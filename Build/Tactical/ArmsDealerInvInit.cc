@@ -60,11 +60,8 @@ static ITEM_SORT_ENTRY const DealerItemSortInfo[] =
 //		The second is the amount of the items the dealer will try to keep in his inventory
 
 
-//
 // Tony ( Weapons only )
-//
-
-DEALER_POSSIBLE_INV gTonyInventory[] =
+static DEALER_POSSIBLE_INV const gTonyInventory[] =
 {
 	//Rare guns/ammo that Tony will buy although he won't ever sell them
 	{	ROCKET_RIFLE,					0 },
@@ -221,10 +218,8 @@ DEALER_POSSIBLE_INV gTonyInventory[] =
 };
 
 
-//
 // Devin		( Explosives )
-//
-DEALER_POSSIBLE_INV gDevinInventory[] =
+static DEALER_POSSIBLE_INV const gDevinInventory[] =
 {
 	{	STUN_GRENADE,							3 },
 	{	TEARGAS_GRENADE,					3 },
@@ -272,10 +267,8 @@ DEALER_POSSIBLE_INV gDevinInventory[] =
 };
 
 
-//
 // Franz	(Expensive pawn shop )
-//
-DEALER_POSSIBLE_INV gFranzInventory[] =
+static DEALER_POSSIBLE_INV const gFranzInventory[] =
 {
 	{ NIGHTGOGGLES,							3 },
 
@@ -309,10 +302,8 @@ DEALER_POSSIBLE_INV gFranzInventory[] =
 };
 
 
-//
 // Keith		( Cheap Pawn Shop )
-//
-DEALER_POSSIBLE_INV gKeithInventory[] =
+static DEALER_POSSIBLE_INV const gKeithInventory[] =
 {
 	{ FIRSTAIDKIT,			5 },
 
@@ -344,10 +335,8 @@ DEALER_POSSIBLE_INV gKeithInventory[] =
 };
 
 
-//
 // Sam		( Hardware )
-//
-DEALER_POSSIBLE_INV gSamInventory[] =
+static DEALER_POSSIBLE_INV const gSamInventory[] =
 {
 	{ FIRSTAIDKIT,			3 },
 
@@ -385,10 +374,8 @@ DEALER_POSSIBLE_INV gSamInventory[] =
 };
 
 
-//
 // Jake			( Junk )
-//
-DEALER_POSSIBLE_INV gJakeInventory[] =
+static DEALER_POSSIBLE_INV const gJakeInventory[] =
 {
 	{ FIRSTAIDKIT,			4 },
 	{ MEDICKIT,					3 },
@@ -457,10 +444,8 @@ DEALER_POSSIBLE_INV gJakeInventory[] =
 };
 
 
-//
 // Howard		( Pharmaceuticals )
-//
-DEALER_POSSIBLE_INV gHowardInventory[] =
+static DEALER_POSSIBLE_INV const gHowardInventory[] =
 {
 	{ FIRSTAIDKIT,				10},
 	{ MEDICKIT,						5 },
@@ -478,10 +463,8 @@ DEALER_POSSIBLE_INV gHowardInventory[] =
 };
 
 
-//
 // Gabby			( Creature parts and Blood )
-//
-DEALER_POSSIBLE_INV gGabbyInventory[] =
+static DEALER_POSSIBLE_INV const gGabbyInventory[] =
 {
 	{ JAR,											12 },
 	{ JAR_ELIXIR,								3 },
@@ -499,10 +482,8 @@ DEALER_POSSIBLE_INV gGabbyInventory[] =
 };
 
 
-//
 // Frank  ( Alcohol )
-//
-DEALER_POSSIBLE_INV gFrankInventory[] =
+static DEALER_POSSIBLE_INV const gFrankInventory[] =
 {
 	{ BEER,							12 },
 	{ WINE,							6 },
@@ -512,10 +493,8 @@ DEALER_POSSIBLE_INV gFrankInventory[] =
 };
 
 
-//
 // Elgin  ( Alcohol )
-//
-DEALER_POSSIBLE_INV gElginInventory[] =
+static DEALER_POSSIBLE_INV const gElginInventory[] =
 {
 	{ BEER,							12 },
 	{ WINE,							6 },
@@ -525,10 +504,8 @@ DEALER_POSSIBLE_INV gElginInventory[] =
 };
 
 
-//
 // Manny  ( Alcohol )
-//
-DEALER_POSSIBLE_INV gMannyInventory[] =
+static DEALER_POSSIBLE_INV const gMannyInventory[] =
 {
 	{ BEER,							12 },
 	{ WINE,							6 },
@@ -538,10 +515,8 @@ DEALER_POSSIBLE_INV gMannyInventory[] =
 };
 
 
-//
 // Herve Santos		( Alcohol )
-//
-DEALER_POSSIBLE_INV gHerveInventory[] =
+static DEALER_POSSIBLE_INV const gHerveInventory[] =
 {
 	{ BEER,							12 },
 	{ WINE,							6 },
@@ -551,10 +526,8 @@ DEALER_POSSIBLE_INV gHerveInventory[] =
 };
 
 
-//
 // Peter Santos ( Alcohol )
-//
-DEALER_POSSIBLE_INV gPeterInventory[] =
+static DEALER_POSSIBLE_INV const gPeterInventory[] =
 {
 	{ BEER,							12 },
 	{ WINE,							6 },
@@ -564,10 +537,8 @@ DEALER_POSSIBLE_INV gPeterInventory[] =
 };
 
 
-//
 // Alberto Santos		( Alcohol )
-//
-DEALER_POSSIBLE_INV gAlbertoInventory[] =
+static DEALER_POSSIBLE_INV const gAlbertoInventory[] =
 {
 	{ BEER,							12 },
 	{ WINE,							6 },
@@ -577,10 +548,8 @@ DEALER_POSSIBLE_INV gAlbertoInventory[] =
 };
 
 
-//
 // Carlo Santos		( Alcohol )
-//
-DEALER_POSSIBLE_INV gCarloInventory[] =
+static DEALER_POSSIBLE_INV const gCarloInventory[] =
 {
 	{ BEER,							12 },
 	{ WINE,							6 },
@@ -590,11 +559,8 @@ DEALER_POSSIBLE_INV gCarloInventory[] =
 };
 
 
-//
 // Micky	( BUYS Animal / Creature parts )
-//
-
-DEALER_POSSIBLE_INV gMickyInventory[] =
+static DEALER_POSSIBLE_INV const gMickyInventory[] =
 {
 	// ONLY BUYS THIS STUFF, DOESN'T SELL IT
 	{ BLOODCAT_CLAWS,	0 },
@@ -609,30 +575,26 @@ DEALER_POSSIBLE_INV gMickyInventory[] =
 };
 
 
-//
 // Arnie		( Weapons REPAIR )
-//
-DEALER_POSSIBLE_INV gArnieInventory[] =
+static DEALER_POSSIBLE_INV const gArnieInventory[] =
 {
 	// NO INVENTORY
 
 	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
 };
 
-//
+
 // Perko			( REPAIR)
-//
-DEALER_POSSIBLE_INV gPerkoInventory[] =
+static DEALER_POSSIBLE_INV const gPerkoInventory[] =
 {
 	// NO INVENTORY
 
 	{ LAST_DEALER_ITEM,	NO_DEALER_ITEM },		//Last One
 };
 
-//
+
 // Fredo			( Electronics REPAIR)
-//
-DEALER_POSSIBLE_INV gFredoInventory[] =
+static DEALER_POSSIBLE_INV const gFredoInventory[] =
 {
 	// NO INVENTORY
 
@@ -640,7 +602,7 @@ DEALER_POSSIBLE_INV gFredoInventory[] =
 };
 
 
-static INT8 GetMaxItemAmount(DEALER_POSSIBLE_INV* pInv, UINT16 usItemIndex);
+static INT8 GetMaxItemAmount(DEALER_POSSIBLE_INV const*, UINT16 usItemIndex);
 
 
 INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
@@ -649,7 +611,7 @@ INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
 }
 
 
-static INT8 GetMaxItemAmount(DEALER_POSSIBLE_INV* pInv, UINT16 usItemIndex)
+static INT8 GetMaxItemAmount(DEALER_POSSIBLE_INV const* const pInv, UINT16 const usItemIndex)
 {
 	UINT16	usCnt=0;
 
@@ -668,7 +630,7 @@ static INT8 GetMaxItemAmount(DEALER_POSSIBLE_INV* pInv, UINT16 usItemIndex)
 }
 
 
-DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID )
+DEALER_POSSIBLE_INV const* GetPointerToDealersPossibleInventory(UINT8 const ubArmsDealerID)
 {
 	switch (ubArmsDealerID)
 	{

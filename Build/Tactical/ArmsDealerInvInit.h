@@ -27,7 +27,7 @@ typedef struct
 
 INT8	GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex );
 
-DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID );
+DEALER_POSSIBLE_INV const* GetPointerToDealersPossibleInventory(UINT8 ubArmsDealerID);
 
 UINT8 ChanceOfItemTransaction( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerSelling, BOOLEAN fUsed );
 BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerSelling, BOOLEAN fUsed );

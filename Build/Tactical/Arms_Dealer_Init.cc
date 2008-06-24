@@ -2301,12 +2301,10 @@ static BOOLEAN IsItemInfoSpecial(SPECIAL_ITEM_INFO* pSpclItemInfo)
 
 static BOOLEAN DoesItemAppearInDealerInventoryList(UINT8 ubArmsDealer, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer)
 {
-	DEALER_POSSIBLE_INV *pDealerInv=NULL;
 	UINT16 usCnt;
 
-
 	// the others will buy only things that appear in their own "for sale" inventory lists
-	pDealerInv = GetPointerToDealersPossibleInventory( ubArmsDealer );
+	DEALER_POSSIBLE_INV const* const pDealerInv = GetPointerToDealersPossibleInventory(ubArmsDealer);
 
 	// loop through the dealers' possible inventory and see if the item exists there
 	usCnt = 0;
