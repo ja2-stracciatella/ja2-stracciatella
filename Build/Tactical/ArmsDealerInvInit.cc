@@ -12,9 +12,6 @@
 #include "Items.h"
 
 
-extern INT8	gbSelectedArmsDealerID;
-
-
 struct ITEM_SORT_ENTRY
 {
 	UINT32  uiItemClass;

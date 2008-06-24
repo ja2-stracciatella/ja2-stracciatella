@@ -107,5 +107,6 @@ void StartSKIDescriptionBox(void);
 
 extern BOOLEAN      gfSKIScreenExit;
 extern GUIButtonRef guiSKI_TransactionButton;
+extern INT8         gbSelectedArmsDealerID;
 
 #endif
