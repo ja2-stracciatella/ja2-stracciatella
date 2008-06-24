@@ -3411,24 +3411,6 @@ static void HandleSettingTheSelectedListOfMercs(void)
 }
 
 
-/*
-INT32 GetSquadListIndexForSquadNumber( INT32 iSquadNumber )
-{
-	INT32 iCounter = 0;
-
-	for( iCounter = 0; iCounter < giNumberOfSquadsInSectorMoving; iCounter++ )
-	{
-		if( iSquadMovingList[ iCounter ] == iSquadNumber )
-		{
-			return( iCounter );
-		}
-	}
-
-	return( -1 );
-}
-*/
-
-
 static BOOLEAN AllOtherSoldiersInListAreSelected(void)
 {
 	INT32 iCounter = 0, iCount = 0;
