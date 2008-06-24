@@ -1138,15 +1138,7 @@ static void CnclClkCallback(GUI_BUTTON* button, INT32 reason)
 //	Button callback function for scrolling the selection window up
 static void UpClkCallback(GUI_BUTTON* button, INT32 reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	{
-		button->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		button->uiFlags &= (~BUTTON_CLICKED_ON );
-		ScrollSelWinUp();
-	}
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP) ScrollSelWinUp();
 }
 
 
@@ -1180,15 +1172,7 @@ void ScrollSelWinDown(void)
 //	Button callback function to scroll the selection window down.
 static void DwnClkCallback(GUI_BUTTON* button, INT32 reason)
 {
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-	{
-		button->uiFlags |= BUTTON_CLICKED_ON;
-	}
-	else if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		button->uiFlags &= (~BUTTON_CLICKED_ON);
-		ScrollSelWinDown();
-	}
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP) ScrollSelWinDown();
 }
 
 
