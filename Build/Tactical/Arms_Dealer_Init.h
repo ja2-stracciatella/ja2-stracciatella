@@ -202,8 +202,6 @@ extern DEALER_ITEM_HEADER		gArmsDealersInventory[ NUM_ARMS_DEALERS ][ MAXITEMS ]
 void InitAllArmsDealers(void);
 void ShutDownArmsDealers(void);
 
-//Count every single item the dealer has in stock
-//UINT32	CountTotalItemsInArmsDealersInventory(ArmsDealerID);
 //Count only the # of "distinct" item types (for shopkeeper purposes)
 UINT32 CountDistinctItemsInArmsDealersInventory(ArmsDealerID);
 UINT16 CountTotalItemsRepairDealerHasInForRepairs(ArmsDealerID);

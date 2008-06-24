@@ -906,29 +906,6 @@ BOOLEAN	DoesDealerDoRepairs(ArmsDealerID const ubArmsDealer)
 }
 
 
-/*
-INT16 GetSpecialItemFromArmsDealerInventory(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, SPECIAL_ITEM_INFO* const pSpclItemInfo)
-{
-	UINT8 ubElement;
-
-	// this function won't find perfect items!
-	Assert( IsItemInfoSpecial( pSpclItemInfo ) );
-
-	for( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
-	{
-		// if this is the one we're looking for
-		if( memcmp( &(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].Info), pSpclItemInfo, sizeof( SPECIAL_ITEM_INFO ) ) == 0 )
-		{
-			return( ubElement );
-		}
-	}
-
-	// not found!
-	return( -1 );
-}
-*/
-
-
 BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 {
 	BOOLEAN fHaveOnlyUnRepairedItems=FALSE;
@@ -1204,24 +1181,6 @@ static BOOLEAN ItemContainsLiquid(UINT16 usItemIndex)
 
 	return( FALSE );
 }
-
-
-/*
-UINT32 CountTotalItemsInArmsDealersInventory(ArmsDealerID const ubArmsDealer)
-{
-	UINT32	uiNumOfItems=0;
-	UINT16	usItemIndex;
-
-	//loop through all the items in this dealer's inventory
-	for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
-	{
-		// This counts each pack of ammo or stacked item as one.  See the "distinct" version of this for an alternate version
-		uiNumOfItems += gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems;
-	}
-
-	return( uiNumOfItems );
-}
-*/
 
 
 static UINT8 CountActiveSpecialItemsInArmsDealersInventory(ArmsDealerID, UINT16 usItemIndex);
