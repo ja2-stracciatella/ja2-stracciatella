@@ -95,7 +95,8 @@ static GUIButtonRef iOkWin;
 BOOLEAN fAllDone=FALSE;
 static BOOLEAN fButtonsPresent = FALSE;
 
-SGPPoint SelWinSpacing, SelWinStartPoint, SelWinEndPoint;
+static SGPPoint SelWinSpacing;
+static SGPBox   g_sel_win_box;
 
 //These definitions help define the start and end of the various wall indices.
 //This needs to be maintained if the walls change.
@@ -220,7 +221,7 @@ UINT16 SelWinFillColor = 0x0000;					// Black
 UINT16 SelWinHilightFillColor = 0x000d;		// a kind of medium dark blue
 
 
-static BOOLEAN BuildDisplayWindow(DisplaySpec const*, UINT16 usNumSpecs, DisplayList** pDisplayList, SGPPoint const* pUpperLeft, SGPPoint const* pBottomRight, SGPPoint const* pSpacing, DisplayWindowFlags);
+static BOOLEAN BuildDisplayWindow(DisplaySpec const*, UINT16 usNumSpecs, DisplayList** pDisplayList, SGPBox const* area, SGPPoint const* pSpacing, DisplayWindowFlags);
 static void CnclClkCallback(GUI_BUTTON* button, INT32 reason);
 static void DwnClkCallback(GUI_BUTTON* button, INT32 reason);
 static void OkClkCallback(GUI_BUTTON* button, INT32 reason);
@@ -262,13 +263,12 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 	SelWinSpacing.iX = 2;
 	SelWinSpacing.iY = 2;
 
-	SelWinStartPoint.iX = 1;
-	SelWinStartPoint.iY = 15;
-
 	iTopWinCutOff = 15;
 
-	SelWinEndPoint.iX = 599;
-	SelWinEndPoint.iY = 359;
+	g_sel_win_box.x =  1;
+	g_sel_win_box.y = 15;
+	g_sel_win_box.w = SCREEN_WIDTH - g_sel_win_box.x - 40;
+	g_sel_win_box.h = TASKBAR_Y    - g_sel_win_box.y;
 
 	switch( sWhat )
 	{
@@ -384,8 +384,7 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 		default: abort(); // HACK000E
 	}
 
-	BuildDisplayWindow( pDSpec, usNSpecs, &pDispList, &SelWinStartPoint, &SelWinEndPoint,
-										&SelWinSpacing, CLEAR_BACKGROUND);
+	BuildDisplayWindow(pDSpec, usNSpecs, &pDispList, &g_sel_win_box, &SelWinSpacing, CLEAR_BACKGROUND);
 }
 
 
@@ -692,15 +691,15 @@ void RenderSelectionWindow( void )
 		if (!button) return;
 
 		if ( (abs( iStartClickX - button->Area.MouseXPos ) > 9) ||
-			   (abs( iStartClickY - (button->Area.MouseYPos + iTopWinCutOff - (INT16)SelWinStartPoint.iY)) > 9) )
+			   (abs( iStartClickY - (button->Area.MouseYPos + iTopWinCutOff - (INT16)g_sel_win_box.y)) > 9) )
 		{
 //			iSX = (INT32)iStartClickX;
 //			iEX = (INT32)button->Area.MouseXPos;
 //			iSY = (INT32)iStartClickY;
-//			iEY = (INT32)(button->Area.MouseYPos + iTopWinCutOff - (INT16)SelWinStartPoint.iY);
+//			iEY = (INT32)(button->Area.MouseYPos + iTopWinCutOff - (INT16)g_sel_win_box.y);
 
 			iSX = iStartClickX;
-			iSY = iStartClickY - iTopWinCutOff + SelWinStartPoint.iY;
+			iSY = iStartClickY - iTopWinCutOff + g_sel_win_box.y;
 			iEX = gusMouseXPos;
 			iEY = gusMouseYPos;
 
@@ -720,9 +719,9 @@ void RenderSelectionWindow( void )
 			}
 
 			iEX = MIN( iEX, 600 );
-			iSY = MAX( SelWinStartPoint.iY, iSY );
+			iSY = MAX(g_sel_win_box.y, iSY);
 			iEY = MIN( 359, iEY );
-			iEY = MAX( SelWinStartPoint.iY, iEY );
+			iEY = MAX(g_sel_win_box.y, iEY);
 
 			usFillColor = Get16BPPColor(FROMRGB(255, usFillGreen, 0));
 			usFillGreen += usDir;
@@ -758,7 +757,7 @@ static void SelWinClkCallback(GUI_BUTTON* button, INT32 reason)
 		return;
 
 	iClickX = button->Area.MouseXPos;
-	iClickY = button->Area.MouseYPos + iTopWinCutOff - (INT16)SelWinStartPoint.iY;
+	iClickY = button->Area.MouseYPos + iTopWinCutOff - (INT16)g_sel_win_box.y;
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -873,9 +872,9 @@ void DisplaySelectionWindowGraphicalInformation()
 	UINT16 y;
 	//Determine if there is a valid picture at cursor position.
 	//iRelX = gusMouseXPos;
-	//iRelY = gusMouseYPos + iTopWinCutOff - (INT16)SelWinStartPoint.iY;
+	//iRelY = gusMouseYPos + iTopWinCutOff - (INT16)g_sel_win_box.y;
 
-	y = gusMouseYPos + iTopWinCutOff - (UINT16)SelWinStartPoint.iY;
+	y = gusMouseYPos + iTopWinCutOff - (UINT16)g_sel_win_box.y;
 	pNode = pDispList;
 	fDone = FALSE;
 	while( (pNode != NULL) && !fDone )
@@ -1230,7 +1229,7 @@ static void DwnClkCallback(GUI_BUTTON* button, INT32 reason)
 }
 
 
-static BOOLEAN DisplayWindowFunc(DisplayList* pNode, INT16 iTopCutOff, INT16 iBottomCutOff, SGPPoint* pUpperLeft, UINT16 fFlags);
+static BOOLEAN DisplayWindowFunc(DisplayList* pNode, INT16 iTopCutOff, SGPBox const* area, UINT16 fFlags);
 
 
 //	Displays the objects in the display list to the selection window.
@@ -1238,10 +1237,10 @@ static void DrawSelections(void)
 {
 	SGPRect					ClipRect, NewRect;
 
-	NewRect.iLeft = SelWinStartPoint.iX;
-	NewRect.iTop = SelWinStartPoint.iY;
-	NewRect.iRight = SelWinEndPoint.iX;
-	NewRect.iBottom = SelWinEndPoint.iY;
+	NewRect.iLeft   = g_sel_win_box.x;
+	NewRect.iTop    = g_sel_win_box.y;
+	NewRect.iRight  = g_sel_win_box.x + g_sel_win_box.w - 1;
+	NewRect.iBottom = g_sel_win_box.y + g_sel_win_box.h - 1;
 
 	GetClippingRect(&ClipRect);
 	SetClippingRect(&NewRect);
@@ -1249,7 +1248,7 @@ static void DrawSelections(void)
 	SetFont( gpLargeFontType1 );
 	SetFontShade(LARGEFONT1, FONT_SHADE_GREY_165);
 
-	DisplayWindowFunc(pDispList, iTopWinCutOff, SelWinEndPoint.iY, &SelWinStartPoint, CLEAR_BACKGROUND);
+	DisplayWindowFunc(pDispList, iTopWinCutOff, &g_sel_win_box, CLEAR_BACKGROUND);
 
 	SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
 
@@ -1259,13 +1258,13 @@ static void DrawSelections(void)
 
 /* Create a display list from a display specification list.  Also set variables
  * up for properly scrolling the window etc. */
-static BOOLEAN BuildDisplayWindow(DisplaySpec const* const pDisplaySpecs, UINT16 const usNumSpecs, DisplayList** const pDisplayList, SGPPoint const* const pUpperLeft, SGPPoint const* const pBottomRight, SGPPoint const* const pSpacing, DisplayWindowFlags const flags)
+static BOOLEAN BuildDisplayWindow(DisplaySpec const* const pDisplaySpecs, UINT16 const usNumSpecs, DisplayList** const pDisplayList, SGPBox const* const area, SGPPoint const* const pSpacing, DisplayWindowFlags const flags)
 try
 {
 	SaveSelectionList();
 
-	INT32  x     = pUpperLeft->iX;
-	INT32  y     = pUpperLeft->iY;
+	INT32  x     = area->x;
+	INT32  y     = area->y;
 	UINT16 max_h = 0; // Maximum height in current row
 	for (DisplaySpec const* ds = pDisplaySpecs; ds != pDisplaySpecs + usNumSpecs; ++ds)
 	{
@@ -1289,10 +1288,10 @@ try
 		{
 			ETRLEObject const* const e = vo->SubregionProperties(usETRLELoop);
 
-			if (x + e->usWidth > pBottomRight->iX || flags & ONE_COLUMN)
+			if (x + e->usWidth > area->x + area->w || flags & ONE_COLUMN)
 			{
 				if (flags & ONE_ROW) break;
-				x  = pUpperLeft->iX;
+				x  = area->x;
 				y += max_h + pSpacing->iY;
 				max_h = 0;
 			}
@@ -1328,7 +1327,7 @@ catch (...) { return FALSE; }
 //	have been selected (in the selection list) are highlighted and the count placed in the upper
 //	left corner of the image.
 //
-static BOOLEAN DisplayWindowFunc(DisplayList* pNode, INT16 iTopCutOff, INT16 iBottomCutOff, SGPPoint* pUpperLeft, UINT16 fFlags)
+static BOOLEAN DisplayWindowFunc(DisplayList* const pNode, INT16 const iTopCutOff, SGPBox const* const area, UINT16 const fFlags)
 {
 	INT16						iCurrY;
 	BOOLEAN					fReturnVal;
@@ -1342,12 +1341,11 @@ static BOOLEAN DisplayWindowFunc(DisplayList* pNode, INT16 iTopCutOff, INT16 iBo
 		return(TRUE);
 
 	fReturnVal = FALSE;
-	if (DisplayWindowFunc(pNode->pNext, iTopCutOff, iBottomCutOff, pUpperLeft, fFlags))
+	if (DisplayWindowFunc(pNode->pNext, iTopCutOff, area, fFlags))
 	{
-		iCurrY = pUpperLeft->iY + pNode->iY - iTopCutOff;
+		iCurrY = area->y + pNode->iY - iTopCutOff;
 
-		if ( iCurrY > iBottomCutOff )
-			return(TRUE);
+		if (iCurrY > area->y + area->h) return TRUE;
 
 		if (fFlags & CLEAR_BACKGROUND)
 		{
