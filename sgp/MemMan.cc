@@ -75,7 +75,7 @@ static UINT32       guiTotalMemoryNodes = 0;
 #endif
 
 // debug variable for total memory currently allocated
-size_t guiMemTotal = 0;
+static size_t guiMemTotal      = 0;
 static size_t guiMemAlloced    = 0;
 static size_t guiMemFreed      = 0;
 static UINT32 MemDebugCounter  = 0;

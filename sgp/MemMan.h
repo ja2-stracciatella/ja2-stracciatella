@@ -9,8 +9,6 @@
 #include "Types.h"
 
 
-extern size_t guiMemTotal;
-
 void InitializeMemoryManager(void);
 void ShutdownMemoryManager(void);
 

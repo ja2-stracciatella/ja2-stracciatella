@@ -93,7 +93,6 @@ void SetAllNewTileSurfacesLoaded( BOOLEAN fNew )
 
 // Global Variables
 MAP_ELEMENT			*gpWorldLevelData;
-UINT32					gSurfaceMemUsage;
 UINT8						gubWorldMovementCosts[ WORLD_MAX ][MAXDIR][2];
 
 // set to nonzero (locs of base gridno of structure are good) to have it defined by structure code
@@ -160,7 +159,6 @@ static UINT8 gbDefaultSurfaceUsed[NUMBEROFTILETYPES];
 
 void InitializeWorld()
 {
-	gSurfaceMemUsage = 0;
 	giCurrentTilesetID = -1;
 
 	// DB Adds the _8 to the names if we're in 8 bit mode.
@@ -3017,9 +3015,6 @@ void LoadMapTileset(INT32 const iTilesetID)
 	memset( gbNewTileSurfaceLoaded, 0, sizeof( gbNewTileSurfaceLoaded ) );
 
 	if (iTilesetID == giCurrentTilesetID) return;
-
-	// Get free memory value nere
-	gSurfaceMemUsage = guiMemTotal;
 
 	// LOAD SURFACES
 	LoadTileSurfaces(&gTilesets[iTilesetID].TileSurfaceFilenames[0], iTilesetID);

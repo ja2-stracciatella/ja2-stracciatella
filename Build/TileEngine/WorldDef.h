@@ -220,8 +220,6 @@ extern UINT8 gubWorldMovementCosts[WORLD_MAX][MAXDIR][2];
 
 extern INT32 giCurrentTilesetID;
 
-extern UINT32 gSurfaceMemUsage;
-
 extern INT16		gsRecompileAreaTop;
 extern INT16		gsRecompileAreaLeft;
 extern INT16		gsRecompileAreaRight;
