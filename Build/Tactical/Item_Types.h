@@ -180,7 +180,6 @@ typedef struct
 
 #define IC_MEDKIT					0x00001000
 #define IC_KIT						0x00002000
-#define IC_APPLIABLE			0x00004000
 #define IC_FACE           0x00008000
 
 #define IC_KEY						0x00010000

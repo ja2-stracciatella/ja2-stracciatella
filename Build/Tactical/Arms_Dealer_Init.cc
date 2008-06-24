@@ -849,9 +849,6 @@ static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 		case IC_MONEY:
 			return( 0 );
 
-	//	case IC_APPLIABLE:
-			break;
-
 		default:
 			AssertMsg( FALSE, String( "GetArmsDealerItemTypeFromItemNumber(), invalid class %d for item %d.  DF 0.", Item[ usItem ].usItemClass, usItem ) );
 			break;
