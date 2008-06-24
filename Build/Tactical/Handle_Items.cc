@@ -1383,14 +1383,6 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 				// override the item index passed in with the one for the bomb in this
 				// tile
 				iItemIndex = FindWorldItemForBombInGridNo( sGridNo, pSoldier->bLevel );
-#ifdef JA2TESTVERSION
-				if (iItemIndex == -1)
-				{
-					// WTF????
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_ERROR, L"Cannot find bomb item in gridno %d", sGridNo );
-					return;
-				}
-#endif
 
 				gpBoobyTrapItemPool = GetItemPoolForIndex( sGridNo, iItemIndex, pSoldier->bLevel );
 				gpBoobyTrapSoldier = pSoldier;

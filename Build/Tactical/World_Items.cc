@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Items.h"
 #include "Handle_Items.h"
 #include "Overhead.h"
@@ -99,7 +101,7 @@ INT32 FindWorldItemForBombInGridNo(const INT16 sGridNo, const INT8 bLevel)
 
 		return wb->iItemIndex;
 	}
-	return -1;
+	throw std::logic_error("Cannot find bomb item");
 }
 
 
