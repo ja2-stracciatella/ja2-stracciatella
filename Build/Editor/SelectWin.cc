@@ -1150,66 +1150,29 @@ static void UpClkCallback(GUI_BUTTON* button, INT32 reason)
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	ScrollSelWinUp
-//
-//	Performs the calculations required to actually scroll a selection window up by one line.
-//
+/* Perform the calculations required to actually scroll a selection window up by
+ * one line. */
 void ScrollSelWinUp(void)
 {
-	DisplayList *pNode;
-	INT16 iCutOff;
-	BOOLEAN fDone;
-
-	// Code to scroll window up!
-	pNode = pDispList;
-	iCutOff = iTopWinCutOff;
-
-	fDone = FALSE;
-	while( (pNode != NULL) && !fDone )
+	INT16 iCutOff = iTopWinCutOff;
+	for (DisplayList* i = pDispList; i; i = i->pNext)
 	{
-		if (pNode->iY >= iTopWinCutOff)
-		{
-			iCutOff = pNode->iY;
-			pNode = pNode->pNext;
-		}
-		else
-		{
-			iCutOff = pNode->iY;
-			fDone = TRUE;
-		}
+		iCutOff = i->iY;
+		if (i->iY < iTopWinCutOff) break;
 	}
-
 	iTopWinCutOff = iCutOff;
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	ScrollSelWinDown
-//
-//	Performs the actual calculations for scrolling a selection window down.
-//
+/* Performs the actual calculations for scrolling a selection window down. */
 void ScrollSelWinDown(void)
 {
-	DisplayList *pNode;
-	INT16 iCutOff;
-	BOOLEAN fDone;
-
-	pNode = pDispList;
-	iCutOff = iTopWinCutOff;
-
-	fDone = FALSE;
-	while( (pNode != NULL) && !fDone )
+	INT16 iCutOff = iTopWinCutOff;
+	for (DisplayList* i = pDispList; i; i = i->pNext)
 	{
-		if (pNode->iY > iTopWinCutOff)
-		{
-			iCutOff = pNode->iY;
-			pNode = pNode->pNext;
-		}
-		else
-			fDone = TRUE;
+		if (i->iY <= iTopWinCutOff) break;
+		iCutOff = i->iY;
 	}
-
 	iTopWinCutOff = iCutOff;
 }
 
