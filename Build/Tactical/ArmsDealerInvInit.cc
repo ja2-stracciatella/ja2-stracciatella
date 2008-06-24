@@ -1089,132 +1089,63 @@ int RepairmanItemQsortCompare(const void *pArg1, const void *pArg2)
 static UINT8 GetDealerItemCategoryNumber(UINT16 usItemIndex);
 
 
-int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubItem1Quality, UINT8 ubItem2Quality )
+int CompareItemsForSorting(UINT16 const item_index1, UINT16 const item_index2, UINT8 const item_quality1, UINT8 const item_quality2)
 {
-	UINT8		ubItem1Category;
-	UINT8		ubItem2Category;
-	UINT16	usItem1Price;
-	UINT16	usItem2Price;
-	UINT8		ubItem1Coolness;
-	UINT8		ubItem2Coolness;
-
-	ubItem1Category = GetDealerItemCategoryNumber( usItem1Index );
-	ubItem2Category = GetDealerItemCategoryNumber( usItem2Index );
-
 	// lower category first
-  if ( ubItem1Category < ubItem2Category )
-  {
-    return( -1 );
-  }
-  else
-  if ( ubItem1Category > ubItem2Category )
-  {
-    return( 1 );
-  }
-  else
-  {
-		// the same category
-		if ( Item[ usItem1Index ].usItemClass == IC_AMMO && Item[ usItem2Index ].usItemClass == IC_AMMO )
-		{
-			UINT8		ubItem1Calibre;
-			UINT8		ubItem2Calibre;
-			UINT8		ubItem1MagSize;
-			UINT8		ubItem2MagSize;
+	UINT8 const category1 = GetDealerItemCategoryNumber(item_index1);
+	UINT8 const category2 = GetDealerItemCategoryNumber(item_index2);
+	if (category1 < category2) return -1;
+	if (category1 > category2) return  1;
 
-			// AMMO is sorted by caliber first
-			ubItem1Calibre = Magazine[ Item[ usItem1Index ].ubClassIndex ].ubCalibre;
-			ubItem2Calibre = Magazine[ Item[ usItem2Index ].ubClassIndex ].ubCalibre;
-			if ( ubItem1Calibre > ubItem2Calibre )
-			{
-				return( -1 );
-			}
-			else
-			if ( ubItem1Calibre < ubItem2Calibre )
-			{
-				return( 1 );
-			}
-			// the same caliber - compare size of magazine, then fall out of if statement
-			ubItem1MagSize = Magazine[ Item[ usItem1Index ].ubClassIndex ].ubMagSize;
-			ubItem2MagSize = Magazine[ Item[ usItem2Index ].ubClassIndex ].ubMagSize;
-			if ( ubItem1MagSize > ubItem2MagSize )
-			{
-				return( -1 );
-			}
-			else
-			if ( ubItem1MagSize < ubItem2MagSize )
-			{
-				return( 1 );
-			}
+	INVTYPE const& item1 = Item[item_index1];
+	INVTYPE const& item2 = Item[item_index2];
 
-		}
-		else
-		{
-			// items other than ammo are compared on coolness first
-			ubItem1Coolness = Item[ usItem1Index ].ubCoolness;
-			ubItem2Coolness = Item[ usItem2Index ].ubCoolness;
+	// the same category
+	if (item1.usItemClass == IC_AMMO && item2.usItemClass == IC_AMMO)
+	{
+		// AMMO is sorted by caliber first
+		UINT8 const calibre1 = Magazine[item1.ubClassIndex].ubCalibre;
+		UINT8 const calibre2 = Magazine[item2.ubClassIndex].ubCalibre;
+		if (calibre1 > calibre2) return -1;
+		if (calibre1 < calibre2) return  1;
 
-			// higher coolness first
-			if ( ubItem1Coolness > ubItem2Coolness )
-			{
-				return( -1 );
-			}
-			else
-			if ( ubItem1Coolness < ubItem2Coolness )
-			{
-				return( 1 );
-			}
-		}
+		// the same caliber - compare size of magazine
+		UINT8 const mag_size1 = Magazine[item1.ubClassIndex].ubMagSize;
+		UINT8 const mag_size2 = Magazine[item2.ubClassIndex].ubMagSize;
+		if (mag_size1 > mag_size2) return -1;
+		if (mag_size1 < mag_size2) return  1;
+	}
+	else
+	{
+		// items other than ammo are compared on coolness first
+		// higher coolness first
+		UINT8 const coolness1 = item1.ubCoolness;
+		UINT8 const coolness2 = item2.ubCoolness;
+		if (coolness1 > coolness2) return -1;
+		if (coolness1 < coolness2) return  1;
+	}
 
-		// the same coolness/caliber - compare base prices then
-		usItem1Price = Item[ usItem1Index ].usPrice;
-		usItem2Price = Item[ usItem2Index ].usPrice;
+	// the same coolness/caliber - compare base prices then
+	// higher price first
+	UINT16 const price1 = item1.usPrice;
+	UINT16 const price2 = item2.usPrice;
+	if (price1 > price2) return -1;
+	if (price1 < price2) return  1;
 
-		// higher price first
-		if ( usItem1Price > usItem2Price )
-		{
-			return( -1 );
-		}
-		else
-		if ( usItem1Price < usItem2Price )
-		{
-			return( 1 );
-		}
-		else
-		{
-			// the same price - compare item #s, then
+	// the same price - compare item #s, then
 
-			// lower index first
-			if ( usItem1Index < usItem2Index )
-			{
-				return( -1 );
-			}
-			else
-			if ( usItem1Index > usItem2Index )
-			{
-				return( 1 );
-			}
-			else
-			{
-				// same item type = compare item quality, then
+	// lower index first
+	if (item_index1 < item_index2) return -1;
+	if (item_index1 > item_index2) return  1;
 
-				// higher quality first
-				if ( ubItem1Quality > ubItem2Quality )
-				{
-					return( -1 );
-				}
-				else
-				if ( ubItem1Quality < ubItem2Quality )
-				{
-					return( 1 );
-				}
-				else
-				{
-					// identical items!
-					return( 0 );
-				}
-			}
-		}
-  }
+	// same item type = compare item quality, then
+
+	// higher quality first
+	if (item_quality1 > item_quality2) return -1;
+	if (item_quality1 < item_quality2) return  1;
+
+	// identical items!
+	return 0;
 }
 
 
