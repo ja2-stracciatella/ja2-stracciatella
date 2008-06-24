@@ -504,7 +504,7 @@ void SetupStoreInventory( STORE_INVENTORY *pInventoryArray, BOOLEAN fUsed )
 		usItemIndex = pInventoryArray[ i ].usItemIndex;
 		Assert(usItemIndex < MAXITEMS);
 
-		ubNumBought = DetermineInitialInvItems( -1, usItemIndex, StoreInventory[ usItemIndex ][ fUsed ], fUsed);
+		ubNumBought = DetermineInitialInvItems(ARMS_DEALER_BOBBYR, usItemIndex, StoreInventory[ usItemIndex ][ fUsed ], fUsed);
 		if ( ubNumBought > 0)
 		{
 			// If doing used items

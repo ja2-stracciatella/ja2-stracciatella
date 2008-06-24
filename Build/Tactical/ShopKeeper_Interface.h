@@ -1,6 +1,7 @@
 #ifndef _SHOPKEEPER_INTERFACE__H_
 #define _SHOPKEEPER_INTERFACE__H_
 
+#include "Arms_Dealer.h"
 #include "Button_System.h"
 #include "Item_Types.h"
 #include "JA2Types.h"
@@ -107,6 +108,6 @@ void StartSKIDescriptionBox(void);
 
 extern BOOLEAN      gfSKIScreenExit;
 extern GUIButtonRef guiSKI_TransactionButton;
-extern INT8         gbSelectedArmsDealerID;
+extern ArmsDealerID gbSelectedArmsDealerID;
 
 #endif

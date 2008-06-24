@@ -605,7 +605,7 @@ static DEALER_POSSIBLE_INV const gFredoInventory[] =
 static INT8 GetMaxItemAmount(DEALER_POSSIBLE_INV const*, UINT16 usItemIndex);
 
 
-INT8 GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex )
+INT8 GetDealersMaxItemAmount(ArmsDealerID const ubDealerID, UINT16 const usItemIndex)
 {
 	return GetMaxItemAmount(GetPointerToDealersPossibleInventory(ubDealerID), usItemIndex);
 }
@@ -630,7 +630,7 @@ static INT8 GetMaxItemAmount(DEALER_POSSIBLE_INV const* const pInv, UINT16 const
 }
 
 
-DEALER_POSSIBLE_INV const* GetPointerToDealersPossibleInventory(UINT8 const ubArmsDealerID)
+DEALER_POSSIBLE_INV const* GetPointerToDealersPossibleInventory(ArmsDealerID const ubArmsDealerID)
 {
 	switch (ubArmsDealerID)
 	{
@@ -658,7 +658,7 @@ DEALER_POSSIBLE_INV const* GetPointerToDealersPossibleInventory(UINT8 const ubAr
 }
 
 
-static UINT8 GetCurrentSuitabilityForItem(INT8 bArmsDealer, UINT16 usItemIndex)
+static UINT8 GetCurrentSuitabilityForItem(ArmsDealerID const bArmsDealer, UINT16 const usItemIndex)
 {
 	UINT8 ubItemCoolness;
 	UINT8 ubMinCoolness, ubMaxCoolness;
@@ -721,14 +721,18 @@ static UINT8 GetCurrentSuitabilityForItem(INT8 bArmsDealer, UINT16 usItemIndex)
 			return(ITEM_SUITABILITY_ALWAYS);
 	}
 
-
-	// If it's not BobbyRay, Tony, or Devin
-	if ((bArmsDealer != -1) && (bArmsDealer != ARMS_DEALER_TONY) && (bArmsDealer != ARMS_DEALER_DEVIN))
+	switch (bArmsDealer)
 	{
-		// all the other dealers have very limited inventories, so their suitability remains constant at all times in game
-		return(ITEM_SUITABILITY_HIGH);
-	}
+		case ARMS_DEALER_BOBBYR:
+		case ARMS_DEALER_TONY:
+		case ARMS_DEALER_DEVIN:
+			break;
 
+		default:
+			/* All the other dealers have very limited inventories, so their
+			 * suitability remains constant at all times in game */
+			return ITEM_SUITABILITY_HIGH;
+	}
 
 	// figure out the appropriate range of coolness based on player's maximum progress so far
 
@@ -779,24 +783,17 @@ static UINT8 GetCurrentSuitabilityForItem(INT8 bArmsDealer, UINT16 usItemIndex)
 }
 
 
-
-UINT8 ChanceOfItemTransaction( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerIsSelling, BOOLEAN fUsed )
+UINT8 ChanceOfItemTransaction(ArmsDealerID const bArmsDealer, UINT16 const usItemIndex, BOOLEAN const fDealerIsSelling, BOOLEAN const fUsed)
 {
 	UINT8 ubItemCoolness;
 	UINT8 ubChance = 0;
-	BOOLEAN fBobbyRay = FALSE;
-
 
 	// make sure dealers don't carry used items that they shouldn't
 	if ( fUsed && !fDealerIsSelling && !CanDealerItemBeSoldUsed( usItemIndex ) )
 		return( 0 );
 
-
-	if (bArmsDealer == -1)
-	{
-		// Bobby Ray has an easier time getting resupplied than the local dealers do
-		fBobbyRay = TRUE;
-	}
+	// Bobby Ray has an easier time getting resupplied than the local dealers do
+	BOOLEAN const fBobbyRay = bArmsDealer == ARMS_DEALER_BOBBYR;
 
 	ubItemCoolness = Item[ usItemIndex ].ubCoolness;
 
@@ -870,8 +867,7 @@ UINT8 ChanceOfItemTransaction( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDe
 }
 
 
-
-BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDealerIsSelling, BOOLEAN fUsed )
+BOOLEAN ItemTransactionOccurs(ArmsDealerID const bArmsDealer, UINT16 const usItemIndex, BOOLEAN const fDealerIsSelling, BOOLEAN const fUsed)
 {
 	UINT8 ubChance;
 	INT16 sInventorySlot;
@@ -883,7 +879,7 @@ BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDe
 	if (!fDealerIsSelling && (ubChance > 0))
 	{
 		// mark it as such
-		if (bArmsDealer == -1)
+		if (bArmsDealer == ARMS_DEALER_BOBBYR)
 		{
 			if (fUsed)
 			{
@@ -914,8 +910,7 @@ BOOLEAN ItemTransactionOccurs( INT8 bArmsDealer, UINT16 usItemIndex, BOOLEAN fDe
 }
 
 
-
-UINT8 DetermineInitialInvItems( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubChances, BOOLEAN fUsed)
+UINT8 DetermineInitialInvItems(ArmsDealerID const bArmsDealerID, UINT16 const usItemIndex, UINT8 const ubChances, BOOLEAN const fUsed)
 {
 	UINT8 ubNumBought;
 	UINT8 ubCnt;
@@ -934,8 +929,7 @@ UINT8 DetermineInitialInvItems( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ub
 }
 
 
-
-UINT8 HowManyItemsAreSold( INT8 bArmsDealerID, UINT16 usItemIndex, UINT8 ubNumInStock, BOOLEAN fUsed)
+UINT8 HowManyItemsAreSold(ArmsDealerID const bArmsDealerID, UINT16 const usItemIndex, UINT8 const ubNumInStock, BOOLEAN const fUsed)
 {
 	UINT8 ubNumSold;
 	UINT8 ubCnt;

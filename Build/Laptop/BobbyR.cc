@@ -649,7 +649,7 @@ static UINT8 HowManyBRItemsToOrder(UINT16 usItemIndex, UINT8 ubCurrentlyOnHand, 
 
 
 	// decide if he can get stock for this item (items are reordered an entire batch at a time)
-	if (ItemTransactionOccurs( -1, usItemIndex, DEALER_BUYING, ubBobbyRayNewUsed ))
+	if (ItemTransactionOccurs(ARMS_DEALER_BOBBYR, usItemIndex, DEALER_BUYING, ubBobbyRayNewUsed))
 	{
 		if (ubBobbyRayNewUsed == BOBBY_RAY_NEW)
 		{
@@ -757,7 +757,7 @@ static void SimulateBobbyRayCustomer(STORE_INVENTORY* pInventoryArray, BOOLEAN f
 		//if we have some of this item in stock
 		if( pInventoryArray[ i ].ubQtyOnHand > 0)
 		{
-			ubItemsSold = HowManyItemsAreSold( -1, pInventoryArray[ i ].usItemIndex, pInventoryArray[ i ].ubQtyOnHand, fUsed);
+			ubItemsSold = HowManyItemsAreSold(ARMS_DEALER_BOBBYR, pInventoryArray[i].usItemIndex, pInventoryArray[i].ubQtyOnHand, fUsed);
 			pInventoryArray[ i ].ubQtyOnHand -= ubItemsSold;
 
 #ifdef BR_INVENTORY_TURNOVER_DEBUG

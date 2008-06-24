@@ -230,7 +230,7 @@ static BOOLEAN gfRenderScreenOnNextLoop = FALSE;
 
 UINT8			gubSkiDirtyLevel = SKI_DIRTY_LEVEL0;
 
-INT8			gbSelectedArmsDealerID = -1;		//Contains the enum value for the currently selected arms dealer
+ArmsDealerID gbSelectedArmsDealerID = ARMS_DEALER_INVALID; //Contains the enum value for the currently selected arms dealer
 
 //the quote that is in progress, in certain circumstances, we don't want queuing of related but different quotes
 INT32			giShopKeepDialogueEventinProgress = - 1;
@@ -2072,7 +2072,7 @@ static void DisplayArmsDealerCurrentInventoryPage(void)
 }
 
 
-static void BuildDoneWhenTimeString(wchar_t sString[], size_t Length, UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement);
+static void BuildDoneWhenTimeString(wchar_t sString[], size_t Length, ArmsDealerID, UINT16 usItemIndex, UINT8 ubElement);
 static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, UINT16 usItemID, FLOAT dModifier, const OBJECTTYPE* pItemObject);
 static INT8 GetSlotNumberForMerc(UINT8 ubProfile);
 static BOOLEAN IsGunOrAmmoOfSameTypeSelected(const OBJECTTYPE* pItemObject);
@@ -6482,7 +6482,7 @@ static void BuildRepairTimeString(wchar_t sString[], size_t Length, UINT32 uiTim
 }
 
 
-static void BuildDoneWhenTimeString(wchar_t sString[], size_t Length, UINT8 ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement)
+static void BuildDoneWhenTimeString(wchar_t sString[], size_t const Length, ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, UINT8 const ubElement)
 {
 	UINT32 uiDoneTime;
 	UINT32 uiDay, uiHour, uiMin;
