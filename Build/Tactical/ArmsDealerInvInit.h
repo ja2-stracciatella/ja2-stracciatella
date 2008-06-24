@@ -25,15 +25,6 @@ typedef struct
 } DEALER_POSSIBLE_INV;
 
 
-typedef struct
-{
-	UINT32		uiItemClass;
-	UINT8			ubWeaponClass;
-	BOOLEAN		fAllowUsed;
-} ITEM_SORT_ENTRY;
-
-
-
 INT8	GetDealersMaxItemAmount( UINT8 ubDealerID, UINT16 usItemIndex );
 
 DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID );

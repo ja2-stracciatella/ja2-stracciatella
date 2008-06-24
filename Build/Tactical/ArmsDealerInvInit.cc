@@ -15,34 +15,41 @@
 extern INT8	gbSelectedArmsDealerID;
 
 
-// This table controls the order items appear in inventory at BR's and dealers, and which kinds of items are sold used
-ITEM_SORT_ENTRY DealerItemSortInfo[ ] =
+struct ITEM_SORT_ENTRY
 {
-//  item class					weapon class	sold used?
-	{ IC_GUN,							HANDGUNCLASS, TRUE	},
-	{ IC_GUN,							SHOTGUNCLASS, TRUE	},
-	{ IC_GUN,							SMGCLASS,			TRUE	},
-	{ IC_GUN,							RIFLECLASS,		TRUE	},
-	{ IC_GUN,							MGCLASS,			FALSE	},
-	{ IC_LAUNCHER,				NOGUNCLASS,		FALSE	},
-	{ IC_AMMO,						NOGUNCLASS,		FALSE	},
-	{ IC_GRENADE,					NOGUNCLASS,		FALSE	},
-	{ IC_BOMB,						NOGUNCLASS,		FALSE	},
-	{ IC_BLADE,						NOGUNCLASS,		FALSE	},
-	{ IC_THROWING_KNIFE,	NOGUNCLASS,		FALSE	},
-	{ IC_PUNCH,						NOGUNCLASS,		FALSE	},
-	{ IC_ARMOUR,					NOGUNCLASS,		TRUE	},
-	{ IC_FACE,						NOGUNCLASS,		TRUE	},
-	{ IC_MEDKIT,					NOGUNCLASS,		FALSE	},
-	{ IC_KIT,							NOGUNCLASS,		FALSE	},
-	{ IC_MISC,						NOGUNCLASS,		TRUE	},
-	{ IC_THROWN,					NOGUNCLASS,		FALSE	},
-	{ IC_KEY,							NOGUNCLASS,		FALSE	},
-
-	// marks end of list
-	{ IC_NONE,						NOGUNCLASS,		},
+	UINT32  uiItemClass;
+	UINT8   ubWeaponClass;
+	BOOLEAN fAllowUsed;
 };
 
+
+/* This table controls the order items appear in inventory at BR's and dealers,
+ * and which kinds of items are sold used */
+static ITEM_SORT_ENTRY const DealerItemSortInfo[] =
+{
+//  item class         weapon class  sold used?
+	{ IC_GUN,            HANDGUNCLASS, TRUE  },
+	{ IC_GUN,            SHOTGUNCLASS, TRUE  },
+	{ IC_GUN,            SMGCLASS,     TRUE  },
+	{ IC_GUN,            RIFLECLASS,   TRUE  },
+	{ IC_GUN,            MGCLASS,      FALSE },
+	{ IC_LAUNCHER,       NOGUNCLASS,   FALSE },
+	{ IC_AMMO,           NOGUNCLASS,   FALSE },
+	{ IC_GRENADE,        NOGUNCLASS,   FALSE },
+	{ IC_BOMB,           NOGUNCLASS,   FALSE },
+	{ IC_BLADE,          NOGUNCLASS,   FALSE },
+	{ IC_THROWING_KNIFE, NOGUNCLASS,   FALSE },
+	{ IC_PUNCH,          NOGUNCLASS,   FALSE },
+	{ IC_ARMOUR,         NOGUNCLASS,   TRUE  },
+	{ IC_FACE,           NOGUNCLASS,   TRUE  },
+	{ IC_MEDKIT,         NOGUNCLASS,   FALSE },
+	{ IC_KIT,            NOGUNCLASS,   FALSE },
+	{ IC_MISC,           NOGUNCLASS,   TRUE  },
+	{ IC_THROWN,         NOGUNCLASS,   FALSE },
+	{ IC_KEY,            NOGUNCLASS,   FALSE },
+
+	{ IC_NONE,           NOGUNCLASS,   FALSE }  // marks end of list
+};
 
 
 //
@@ -1213,57 +1220,29 @@ int CompareItemsForSorting( UINT16 usItem1Index, UINT16 usItem2Index, UINT8 ubIt
 }
 
 
-static UINT8 GetDealerItemCategoryNumber(UINT16 usItemIndex)
+static UINT8 GetDealerItemCategoryNumber(UINT16 const usItemIndex)
 {
-	UINT32	uiItemClass;
-	UINT8		ubWeaponClass;
-	UINT8		ubCategory = 0;
+	UINT32 const item_class = Item[usItemIndex].usItemClass;
 
-
-	uiItemClass  = Item[ usItemIndex ].usItemClass;
-
-	if ( usItemIndex < MAX_WEAPONS )
-	{
-		ubWeaponClass = Weapon[ usItemIndex ].ubWeaponClass;
-	}
-	else
-	{
-		// not a weapon, so no weapon class, this won't be needed
-		ubWeaponClass = 0;
-	}
-
-
-	ubCategory = 0;
+	// If it's not a weapon, set no weapon class, as this won't be needed
+	UINT8 const weapon_class = usItemIndex < MAX_WEAPONS ?
+		Weapon[usItemIndex].ubWeaponClass : NOGUNCLASS;
 
 	// search table until end-of-list marker is encountered
-	while ( DealerItemSortInfo[ ubCategory ].uiItemClass != IC_NONE )
+	for (UINT8 category = 0;; ++category)
 	{
-		if ( DealerItemSortInfo[ ubCategory ].uiItemClass == uiItemClass )
-		{
-			// if not a type of gun
-			if ( uiItemClass != IC_GUN )
-			{
-				// then we're found it
-				return ( ubCategory );
-			}
-			else
-			{
-				// for guns, must also match on weapon class
-				if ( DealerItemSortInfo[ ubCategory ].ubWeaponClass == ubWeaponClass )
-				{
-					// then we're found it
-					return ( ubCategory );
-				}
-			}
-		}
+		ITEM_SORT_ENTRY const& ise = DealerItemSortInfo[category];
+		if (ise.uiItemClass == IC_NONE) break;
 
-		// check vs. next category in the list
-		ubCategory++;
+		if (ise.uiItemClass   != item_class)   continue;
+		if (ise.ubWeaponClass != weapon_class) continue;
+
+		return category;
 	}
 
 	// should never be trying to locate an item that's not covered in the table!
-	Assert( FALSE );
-	return( 0 );
+	Assert(FALSE);
+	return 0;
 }
 
 
