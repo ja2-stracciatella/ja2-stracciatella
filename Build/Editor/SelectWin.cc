@@ -215,7 +215,6 @@ INT32				iCurBank = 0;
 
 static DisplayList* pDispList;
 static INT16 iTopWinCutOff;
-static INT16 iBotWinCutOff;
 
 UINT16 SelWinFillColor = 0x0000;					// Black
 UINT16 SelWinHilightFillColor = 0x000d;		// a kind of medium dark blue
@@ -270,8 +269,6 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 
 	SelWinEndPoint.iX = 599;
 	SelWinEndPoint.iY = 359;
-
-	iBotWinCutOff = 359;
 
 	switch( sWhat )
 	{
@@ -1252,7 +1249,7 @@ static void DrawSelections(void)
 	SetFont( gpLargeFontType1 );
 	SetFontShade(LARGEFONT1, FONT_SHADE_GREY_165);
 
-	DisplayWindowFunc( pDispList, iTopWinCutOff, iBotWinCutOff, &SelWinStartPoint, CLEAR_BACKGROUND );
+	DisplayWindowFunc(pDispList, iTopWinCutOff, SelWinEndPoint.iY, &SelWinStartPoint, CLEAR_BACKGROUND);
 
 	SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
 
