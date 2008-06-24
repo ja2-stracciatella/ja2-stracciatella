@@ -44,6 +44,7 @@ static ITEM_SORT_ENTRY const DealerItemSortInfo[] =
 	{ IC_MISC,           NOGUNCLASS,   TRUE  },
 	{ IC_THROWN,         NOGUNCLASS,   FALSE },
 	{ IC_KEY,            NOGUNCLASS,   FALSE },
+	{ IC_MONEY,          NOGUNCLASS,   FALSE },
 
 	{ IC_NONE,           NOGUNCLASS,   FALSE }  // marks end of list
 };
