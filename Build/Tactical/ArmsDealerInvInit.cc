@@ -1231,8 +1231,8 @@ static UINT8 GetDealerItemCategoryNumber(UINT16 const usItemIndex)
 		ITEM_SORT_ENTRY const& ise = DealerItemSortInfo[category];
 		if (ise.uiItemClass == IC_NONE) break;
 
-		if (ise.uiItemClass   != item_class)   continue;
-		if (ise.ubWeaponClass != weapon_class) continue;
+		if (ise.uiItemClass != item_class) continue;
+		if (ise.uiItemClass == IC_GUN && ise.ubWeaponClass != weapon_class) continue;
 
 		return category;
 	}
