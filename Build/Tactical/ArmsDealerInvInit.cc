@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Types.h"
 #include "ArmsDealerInvInit.h"
 #include "Item_Types.h"
@@ -689,7 +691,7 @@ DEALER_POSSIBLE_INV *GetPointerToDealersPossibleInventory( UINT8 ubArmsDealerID 
 		case ARMS_DEALER_DEVIN:     return gDevinInventory;
 		case ARMS_DEALER_ELGIN:     return gElginInventory;
 		case ARMS_DEALER_MANNY:     return gMannyInventory;
-		default:                    return NULL;
+		default: throw std::logic_error("Invalid arms dealer ID");
 	}
 }
 

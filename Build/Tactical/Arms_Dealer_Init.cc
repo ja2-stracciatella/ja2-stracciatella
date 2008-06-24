@@ -2307,7 +2307,6 @@ static BOOLEAN DoesItemAppearInDealerInventoryList(UINT8 ubArmsDealer, UINT16 us
 
 	// the others will buy only things that appear in their own "for sale" inventory lists
 	pDealerInv = GetPointerToDealersPossibleInventory( ubArmsDealer );
-	Assert( pDealerInv != NULL );
 
 	// loop through the dealers' possible inventory and see if the item exists there
 	usCnt = 0;
