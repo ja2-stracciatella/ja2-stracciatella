@@ -11,7 +11,17 @@ namespace SGP
 		public:
 			PODObj() : p_(MALLOCZ(T)) {}
 
+			PODObj(T* const p) : p_(p) {}
+
 			~PODObj() { if (p_) MemFree(p_); }
+
+			T* Allocate()
+			{
+				T* const p = MALLOCZ(T);
+				if (p_) MemFree(p_);
+				p_ = p;
+				return p;
+			}
 
 			T* Release()
 			{

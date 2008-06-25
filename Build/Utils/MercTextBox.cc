@@ -2,6 +2,7 @@
 #include "HImage.h"
 #include "Local.h"
 #include "MercTextBox.h"
+#include "PODObj.h"
 #include "VObject.h"
 #include "VSurface.h"
 #include "Font_Control.h"
@@ -234,24 +235,20 @@ INT32 PrepareMercPopupBox(INT32 const iBoxId, MercPopUpBackground const ubBackgr
 		usWidth = MERC_TEXT_MIN_WIDTH;
 
 	MercPopUpBox* pPopUpTextBox;
+	SGP::PODObj<MercPopUpBox> new_box(0);
 	// check id value, if -1, box has not been inited yet
 	if( iBoxId == -1 )
 	{
 		// no box yet
 
 		// create box
-		pPopUpTextBox = MALLOC(MercPopUpBox);
+		pPopUpTextBox = new_box.Allocate();
 
 		// copy over ptr
 		gPopUpTextBox = pPopUpTextBox;
 
 			// Load appropriate images
-		if (!LoadTextMercPopupImages(ubBackgroundIndex, ubBorderIndex))
-		{
-			MemFree( pPopUpTextBox );
-			return( -1 );
-		}
-
+		if (!LoadTextMercPopupImages(ubBackgroundIndex, ubBorderIndex)) return -1;
 	}
 	else
 	{
@@ -320,11 +317,6 @@ INT32 PrepareMercPopupBox(INT32 const iBoxId, MercPopUpBackground const ubBackgr
 	//make sure the area isnt bigger then the background texture
 	if( ( usWidth >= MERC_BACKGROUND_WIDTH ) || usHeight >= MERC_BACKGROUND_HEIGHT)
 	{
-		if( iBoxId == -1 )
-		{
-			MemFree( pPopUpTextBox );
-		}
-
 		return( -1 );
 	}
 	// Create a background video surface to blt the face onto
@@ -418,6 +410,7 @@ INT32 PrepareMercPopupBox(INT32 const iBoxId, MercPopUpBackground const ubBackgr
 	if( iBoxId == -1 )
 	{
 		// now return attemp to add to pop up box list, if successful will return index
+		new_box.Release();
 		return( AddPopUpBoxToList( pPopUpTextBox ) );
 	}
 	else
