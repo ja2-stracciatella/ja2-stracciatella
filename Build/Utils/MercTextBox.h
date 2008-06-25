@@ -16,8 +16,28 @@ ENUM_BITSET(MercPopupBoxFlags)
 void InitMercPopupBox(void);
 
 
+enum MercPopUpBackground
+{
+	BASIC_MERC_POPUP_BACKGROUND = 0,
+	WHITE_MERC_POPUP_BACKGROUND,
+	GREY_MERC_POPUP_BACKGROUND,
+	DIALOG_MERC_POPUP_BACKGROUND,
+	LAPTOP_POPUP_BACKGROUND,
+	IMP_POPUP_BACKGROUND
+};
+
+enum MercPopUpBorder
+{
+	BASIC_MERC_POPUP_BORDER = 0,
+	RED_MERC_POPUP_BORDER,
+	BLUE_MERC_POPUP_BORDER,
+	DIALOG_MERC_POPUP_BORDER,
+	LAPTOP_POP_BORDER
+};
+
+
 // create a pop up box if needed, return id of box..a -1 means couldn't be added
-INT32 PrepareMercPopupBox(  INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorderIndex, const wchar_t *pString, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16 *pActualWidth, UINT16 *pActualHeight);
+INT32 PrepareMercPopupBox(INT32 iBoxId, MercPopUpBackground, MercPopUpBorder, wchar_t const* pString, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16* pActualWidth, UINT16* pActualHeight);
 
 
 // remove this box from the index
@@ -47,26 +67,5 @@ typedef struct {
 void OverrideMercPopupBox(MercPopUpBox* pMercBox);
 void ResetOverrideMercPopupBox(void);
 void SetPrepareMercPopupFlags(MercPopupBoxFlags);
-
-
-// background enumeration
-enum{
-	BASIC_MERC_POPUP_BACKGROUND = 0,
-	WHITE_MERC_POPUP_BACKGROUND,
-	GREY_MERC_POPUP_BACKGROUND,
-	DIALOG_MERC_POPUP_BACKGROUND,
-	LAPTOP_POPUP_BACKGROUND,
-	IMP_POPUP_BACKGROUND,
-};
-
-// border enumeration
-enum{
-  BASIC_MERC_POPUP_BORDER =0,
-  RED_MERC_POPUP_BORDER,
-  BLUE_MERC_POPUP_BORDER,
-  DIALOG_MERC_POPUP_BORDER,
-	LAPTOP_POP_BORDER
-};
-
 
 #endif

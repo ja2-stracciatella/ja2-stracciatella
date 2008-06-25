@@ -128,7 +128,7 @@ void InitMercPopupBox()
 
 
 // Tactical Popup
-static BOOLEAN LoadTextMercPopupImages(UINT8 ubBackgroundIndex, UINT8 ubBorderIndex)
+static BOOLEAN LoadTextMercPopupImages(MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex)
 try
 {
   // this function will load the graphics associated with the background and border index values
@@ -225,7 +225,7 @@ static MercPopUpBox* GetPopUpBoxIndex(INT32 iId)
 static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColor, UINT8* pubFontShadowColor);
 
 
-INT32 PrepareMercPopupBox( INT32 iBoxId, UINT8 ubBackgroundIndex, UINT8 ubBorderIndex, const wchar_t *pString, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16 *pActualWidth, UINT16 *pActualHeight)
+INT32 PrepareMercPopupBox(INT32 const iBoxId, MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex, wchar_t const* const pString, UINT16 usWidth, UINT16 const usMarginX, UINT16 const usMarginTopY, UINT16 const usMarginBottomY, UINT16* const pActualWidth, UINT16* const pActualHeight)
 {
 	if (usWidth >= SCREEN_WIDTH)
 		return( -1 );

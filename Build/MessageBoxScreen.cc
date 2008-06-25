@@ -93,11 +93,11 @@ void DoMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID co
 	if (gMsgBox.BackRegion.uiFlags & MSYS_REGION_EXISTS) return;
 
 	// Based on style....
-	UINT8  ubMercBoxBackground = BASIC_MERC_POPUP_BACKGROUND;
-	UINT8  ubMercBoxBorder     = BASIC_MERC_POPUP_BORDER;
-	UINT8  ubFontColor;
-	UINT8  ubFontShadowColor;
-	UINT16 usCursor;
+	MercPopUpBackground ubMercBoxBackground;
+	MercPopUpBorder     ubMercBoxBorder;
+	UINT8               ubFontColor;
+	UINT8               ubFontShadowColor;
+	UINT16              usCursor;
 	switch (ubStyle)
 	{
 		case MSG_BOX_BASIC_STYLE:
