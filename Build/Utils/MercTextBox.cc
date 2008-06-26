@@ -159,12 +159,13 @@ BOOLEAN RenderMercPopUpBoxFromIndex(const INT32 iBoxId, const INT16 sDestX, cons
 	if (!box) return FALSE;
 
 	// will render/transfer the image from the buffer in the data structure to the buffer specified by user
-	BltVideoSurface(buffer, box->uiSourceBufferIndex, sDestX, sDestY, NULL);
+	SGPVSurface* const vs = box->uiSourceBufferIndex;
+	BltVideoSurface(buffer, vs, sDestX, sDestY, NULL);
 
 	//Invalidate!
 	if (buffer == FRAME_BUFFER)
 	{
-		InvalidateRegion(sDestX, sDestY, sDestX + box->sWidth, sDestY + box->sHeight);
+		InvalidateRegion(sDestX, sDestY, sDestX + vs->Width(), sDestY + vs->Height());
 	}
 
 	return TRUE;
@@ -299,9 +300,6 @@ try
 	// Create a background video surface to blt the face onto
 	pPopUpTextBox->uiSourceBufferIndex = AddVideoSurface(usWidth, usHeight, PIXEL_DEPTH);
 	pPopUpTextBox->fMercTextPopupSurfaceInitialized = TRUE;
-
-	pPopUpTextBox->sWidth = usWidth;
-	pPopUpTextBox->sHeight = usHeight;
 
 	*pActualWidth = usWidth;
 	*pActualHeight = usHeight;

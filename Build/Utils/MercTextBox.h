@@ -52,8 +52,6 @@ void RemoveTextMercPopupImages(void);
 
 typedef struct {
  SGPVSurface* uiSourceBufferIndex;
- UINT16 sWidth;
- UINT16 sHeight;
  UINT8	ubBackgroundIndex;
  UINT8	ubBorderIndex;
  SGPVSurface* uiMercTextPopUpBackground;
