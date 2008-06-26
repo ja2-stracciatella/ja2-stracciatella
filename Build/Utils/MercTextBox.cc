@@ -129,8 +129,7 @@ void InitMercPopupBox()
 
 
 // Tactical Popup
-static BOOLEAN LoadTextMercPopupImages(MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex)
-try
+static void LoadTextMercPopupImages(MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex)
 {
   // this function will load the graphics associated with the background and border index values
 
@@ -141,10 +140,7 @@ try
 	// so far so good, return successful
 	gPopUpTextBox->ubBackgroundIndex = ubBackgroundIndex;
 	gPopUpTextBox->ubBorderIndex			= ubBorderIndex;
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void RemoveTextMercPopupImages()
@@ -227,6 +223,7 @@ static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColo
 
 
 INT32 PrepareMercPopupBox(INT32 const iBoxId, MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex, wchar_t const* const pString, UINT16 usWidth, UINT16 const usMarginX, UINT16 const usMarginTopY, UINT16 const usMarginBottomY, UINT16* const pActualWidth, UINT16* const pActualHeight)
+try
 {
 	if (usWidth >= SCREEN_WIDTH)
 		return( -1 );
@@ -248,7 +245,7 @@ INT32 PrepareMercPopupBox(INT32 const iBoxId, MercPopUpBackground const ubBackgr
 		gPopUpTextBox = pPopUpTextBox;
 
 			// Load appropriate images
-		if (!LoadTextMercPopupImages(ubBackgroundIndex, ubBorderIndex)) return -1;
+		LoadTextMercPopupImages(ubBackgroundIndex, ubBorderIndex);
 	}
 	else
 	{
@@ -268,10 +265,7 @@ INT32 PrepareMercPopupBox(INT32 const iBoxId, MercPopUpBackground const ubBackgr
 		{
 			//Remove old, set new
 			RemoveTextMercPopupImages( );
-			if (!LoadTextMercPopupImages(ubBackgroundIndex, ubBorderIndex))
-			{
-				return( -1 );
-			}
+			LoadTextMercPopupImages(ubBackgroundIndex, ubBorderIndex);
 		}
 	}
 
@@ -421,6 +415,7 @@ INT32 PrepareMercPopupBox(INT32 const iBoxId, MercPopUpBackground const ubBackgr
 		return( iBoxId );
 	}
 }
+catch (...) { return -1; }
 
 
 //Deletes the surface thats contains the border, background and the text.
