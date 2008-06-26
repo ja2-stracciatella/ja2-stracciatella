@@ -576,9 +576,6 @@ void ExitAIMMembers()
 	ExitAimMenuBar();
 
 	DeleteAimPopUpBox();
-
-	RemoveTextMercPopupImages( );
-
 }
 
 
