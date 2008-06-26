@@ -404,57 +404,31 @@ catch (...) { return -1; }
 
 
 //Deletes the surface thats contains the border, background and the text.
-static BOOLEAN RemoveMercPopupBox(void)
+BOOLEAN RemoveMercPopupBoxFromIndex(UINT32 const uiId)
 {
-
-	INT32 iCounter = 0;
-
-	// make sure the current box does in fact exist
-	if( gPopUpTextBox == NULL )
-	{
-		// failed..
-		return( FALSE );
-	}
+	MercPopUpBox* const box = SetCurrentPopUpBox(uiId);
+	if (!box) return FALSE;
 
 	// now check to see if inited...
-	if( gPopUpTextBox->fMercTextPopupSurfaceInitialized )
+	if (!box->fMercTextPopupSurfaceInitialized) return TRUE; // XXX TRUE?
+
+	// now find this box in the list
+	for (INT32 i = 0; i != MAX_NUMBER_OF_POPUP_BOXES; ++i)
 	{
-
-		// now find this box in the list
-		for( iCounter = 0; iCounter < MAX_NUMBER_OF_POPUP_BOXES; iCounter++ )
-		{
-			if( gpPopUpBoxList[ iCounter ] == gPopUpTextBox )
-			{
-				 gpPopUpBoxList[ iCounter ] = NULL;
-				 iCounter = MAX_NUMBER_OF_POPUP_BOXES;
-			}
-		}
-		DeleteVideoSurface(gPopUpTextBox->uiSourceBufferIndex);
-
-		//DEF Added 5/26
-		//Delete the background and the border
-		RemoveTextMercPopupImages( );
-
-		MemFree( gPopUpTextBox );
-
-		// reset current ptr
-		gPopUpTextBox = NULL;
-
+		if (gpPopUpBoxList[i] != box) continue;
+		gpPopUpBoxList[i] = 0;
+		break;
 	}
+	DeleteVideoSurface(box->uiSourceBufferIndex);
 
+	//DEF Added 5/26
+	//Delete the background and the border
+	RemoveTextMercPopupImages();
 
+	MemFree(box);
 
-	return(TRUE);
-}
-
-
-BOOLEAN RemoveMercPopupBoxFromIndex( UINT32 uiId )
-{
-	// find this box, set it to current, and delete it
-	if (!SetCurrentPopUpBox(uiId)) return FALSE;
-
-	// now try to remove it
-	return( RemoveMercPopupBox( ) );
+	gPopUpTextBox = 0;
+	return TRUE;
 }
 
 
