@@ -128,17 +128,16 @@ void InitMercPopupBox()
 
 
 // Tactical Popup
-static void LoadTextMercPopupImages(MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex)
+static void LoadTextMercPopupImages(MercPopUpBox* const box, MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex)
 {
   // this function will load the graphics associated with the background and border index values
-
-	gPopUpTextBox->uiMercTextPopUpBackground = AddVideoSurfaceFromFile(zMercBackgroundPopupFilenames[ubBackgroundIndex]);
-	gPopUpTextBox->uiMercTextPopUpBorder     = AddVideoObjectFromFile(zMercBorderPopupFilenames[ubBorderIndex]);
-	gPopUpTextBox->fMercTextPopupInitialized = TRUE;
+	box->uiMercTextPopUpBackground = AddVideoSurfaceFromFile(zMercBackgroundPopupFilenames[ubBackgroundIndex]);
+	box->uiMercTextPopUpBorder     = AddVideoObjectFromFile(zMercBorderPopupFilenames[ubBorderIndex]);
+	box->fMercTextPopupInitialized = TRUE;
 
 	// so far so good, return successful
-	gPopUpTextBox->ubBackgroundIndex = ubBackgroundIndex;
-	gPopUpTextBox->ubBorderIndex			= ubBorderIndex;
+	box->ubBackgroundIndex = ubBackgroundIndex;
+	box->ubBorderIndex     = ubBorderIndex;
 }
 
 
@@ -229,7 +228,7 @@ try
 		gPopUpTextBox = pPopUpTextBox;
 
 			// Load appropriate images
-		LoadTextMercPopupImages(ubBackgroundIndex, ubBorderIndex);
+		LoadTextMercPopupImages(pPopUpTextBox, ubBackgroundIndex, ubBorderIndex);
 	}
 	else
 	{
@@ -249,7 +248,7 @@ try
 		{
 			//Remove old, set new
 			RemoveTextMercPopupImages( );
-			LoadTextMercPopupImages(ubBackgroundIndex, ubBorderIndex);
+			LoadTextMercPopupImages(pPopUpTextBox, ubBackgroundIndex, ubBorderIndex);
 		}
 	}
 
