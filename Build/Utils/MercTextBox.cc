@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Font.h"
 #include "HImage.h"
 #include "Local.h"
@@ -185,12 +187,6 @@ static INT32 AddPopUpBoxToList(MercPopUpBox* pPopUpTextBox)
 {
 	INT32 iCounter = 0;
 
-	// make sure is a valid box
-	if( pPopUpTextBox == NULL )
-	{
-		return ( -1 );
-	}
-
 	// attempt to add box to list
 	for( iCounter = 0; iCounter < MAX_NUMBER_OF_POPUP_BOXES; iCounter++ )
 	{
@@ -207,8 +203,7 @@ static INT32 AddPopUpBoxToList(MercPopUpBox* pPopUpTextBox)
 		}
 	}
 
-	// return failure
-	return( -1 );
+	throw std::runtime_error("Out of merc popup box slots");
 }
 
 
@@ -404,8 +399,9 @@ try
 	if( iBoxId == -1 )
 	{
 		// now return attemp to add to pop up box list, if successful will return index
+		INT32 const new_id = AddPopUpBoxToList(pPopUpTextBox);
 		new_box.Release();
-		return( AddPopUpBoxToList( pPopUpTextBox ) );
+		return new_id;
 	}
 	else
 	{
