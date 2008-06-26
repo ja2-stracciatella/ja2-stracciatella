@@ -78,7 +78,7 @@ static SGPVObject* guiBoxIcons;
 static SGPVObject* guiSkullIcons;
 
 
-static BOOLEAN SetCurrentPopUpBox(UINT32 uiId)
+static MercPopUpBox* SetCurrentPopUpBox(UINT32 const uiId)
 {
 	// given id of the box, find it in the list and set to current
 
@@ -86,16 +86,13 @@ static BOOLEAN SetCurrentPopUpBox(UINT32 uiId)
 	if( uiId == (UINT32) -1 )
 	{
 		//ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Error: Trying to set Current Popup Box using -1 as an ID" );
-		return( FALSE );
+		return 0;
 	}
 
 	// see if box inited
-	if( gpPopUpBoxList[ uiId ] != NULL )
-	{
-		gPopUpTextBox = gpPopUpBoxList[ uiId ];
-		return( TRUE );
-	}
-	return ( FALSE );
+	MercPopUpBox* const box = gpPopUpBoxList[uiId];
+	if (box) gPopUpTextBox = box;
+	return box;
 }
 
 
