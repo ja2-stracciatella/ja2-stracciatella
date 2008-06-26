@@ -40,37 +40,37 @@
 // MercTextBox.h
 
 // filenames for border popup .sti's
-const char *zMercBorderPopupFilenames[ ] = {
+static char const* const zMercBorderPopupFilenames[] =
+{
  "INTERFACE/TactPopUp.sti",
  "INTERFACE/TactRedPopUp.sti",
  "INTERFACE/TactBluePopUp.sti",
  "INTERFACE/TactPopUpMain.sti",
- "INTERFACE/LaptopPopup.sti",
-
-
+ "INTERFACE/LaptopPopup.sti"
 };
 
 // filenames for background popup .pcx's
-static const char* const zMercBackgroundPopupFilenames[ ] = {
+static char const* const zMercBackgroundPopupFilenames[] =
+{
   "INTERFACE/TactPopupBackground.pcx",
   "INTERFACE/TactPopupWhiteBackground.pcx",
   "INTERFACE/TactPopupGreyBackground.pcx",
   "INTERFACE/TactPopupBackgroundMain.pcx",
   "INTERFACE/LaptopPopupBackground.pcx",
-	"INTERFACE/imp_popup_background.pcx",
+	"INTERFACE/imp_popup_background.pcx"
 };
 
 
 // the current pop up box
-MercPopUpBox	*gPopUpTextBox = NULL;
+static MercPopUpBox* gPopUpTextBox;
 
 
 // the old one
-MercPopUpBox	*gOldPopUpTextBox = NULL;
+static MercPopUpBox* gOldPopUpTextBox;
 
 
 // the list of boxes
-MercPopUpBox *gpPopUpBoxList[ MAX_NUMBER_OF_POPUP_BOXES ];
+static MercPopUpBox* gpPopUpBoxList[MAX_NUMBER_OF_POPUP_BOXES];
 
 // the flags
 static MercPopupBoxFlags guiFlags;
