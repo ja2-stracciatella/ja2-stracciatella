@@ -310,7 +310,6 @@ static SGPVObject* guiStraightLine;
 static SGPVObject* guiTransSnow;
 static SGPVObject* guiVideoContractCharge;
 static SGPVSurface* guiVideoTitleBar;
-static INT32  iAimMembersBoxId = -1;
 
 static UINT8 gbCurrentSoldier = 0;
 UINT8        gbCurrentIndex = 0;
@@ -1358,16 +1357,13 @@ static BOOLEAN DisplayVideoConferencingDisplay(void)
 		UINT16 usActualHeight;
 		UINT16 usPosX;
 
-		iAimMembersBoxId = PrepareMercPopupBox( iAimMembersBoxId ,BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, gsTalkingMercText, 300, 0, 0, 0, &usActualWidth, &usActualHeight);
+		INT32 const iAimMembersBoxId = PrepareMercPopupBox(-1, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, gsTalkingMercText, 300, 0, 0, 0, &usActualWidth, &usActualHeight);
 
 		usPosX = ( LAPTOP_SCREEN_LR_X - usActualWidth ) / 2 ;
 
 		RenderMercPopUpBoxFromIndex( iAimMembersBoxId, usPosX, TEXT_POPUP_WINDOW_Y, FRAME_BUFFER);
 
-		if( RemoveMercPopupBoxFromIndex( iAimMembersBoxId ) )
-		{
-			iAimMembersBoxId = -1;
-		}
+		RemoveMercPopupBoxFromIndex(iAimMembersBoxId);
 	}
 
   InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
