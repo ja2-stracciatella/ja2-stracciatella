@@ -141,11 +141,10 @@ static void LoadTextMercPopupImages(MercPopUpBox* const box, MercPopUpBackground
 }
 
 
-static void RemoveTextMercPopupImages()
+static void RemoveTextMercPopupImages(MercPopUpBox* const box)
 {
 	//this procedure will remove the background and border video surface/object from the indecies
-	MercPopUpBox* const box = gPopUpTextBox;
-	if (!box || !box->fMercTextPopupInitialized) return;
+	if (!box->fMercTextPopupInitialized) return;
 
 	DeleteVideoSurface(box->uiMercTextPopUpBackground);
 	DeleteVideoObject(box->uiMercTextPopUpBorder);
@@ -248,7 +247,7 @@ try
 		if ( ubBackgroundIndex != pPopUpTextBox->ubBackgroundIndex || ubBorderIndex != pPopUpTextBox->ubBorderIndex || !pPopUpTextBox->fMercTextPopupInitialized)
 		{
 			//Remove old, set new
-			RemoveTextMercPopupImages( );
+			RemoveTextMercPopupImages(pPopUpTextBox);
 			LoadTextMercPopupImages(pPopUpTextBox, ubBackgroundIndex, ubBorderIndex);
 		}
 	}
@@ -420,7 +419,7 @@ BOOLEAN RemoveMercPopupBoxFromIndex(UINT32 const uiId)
 
 	//DEF Added 5/26
 	//Delete the background and the border
-	RemoveTextMercPopupImages();
+	RemoveTextMercPopupImages(box);
 
 	MemFree(box);
 
