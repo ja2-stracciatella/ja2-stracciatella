@@ -694,7 +694,7 @@ static void DoScreenIndependantMessageBoxWithRect(const wchar_t* zString, UINT16
 		{
 			case LAPTOP_SCREEN:    DoLapTopSystemMessageBoxWithRect(MSG_BOX_LAPTOP_DEFAULT, zString, LAPTOP_SCREEN,    usFlags, ReturnCallback, pCenteringRect); break;
 			case SAVE_LOAD_SCREEN: DoSaveLoadMessageBoxWithRect(                            zString, SAVE_LOAD_SCREEN, usFlags, ReturnCallback, pCenteringRect); break;
-			case OPTIONS_SCREEN:   DoOptionsMessageBoxWithRect(     MSG_BOX_BASIC_STYLE,    zString, OPTIONS_SCREEN,   usFlags, ReturnCallback, pCenteringRect); break;
+			case OPTIONS_SCREEN:   DoOptionsMessageBoxWithRect(                             zString, OPTIONS_SCREEN,   usFlags, ReturnCallback, pCenteringRect); break;
 			case GAME_SCREEN:      DoMessageBox(                    MSG_BOX_BASIC_STYLE,    zString, guiCurrentScreen, usFlags, ReturnCallback, pCenteringRect); break;
 		}
 	}

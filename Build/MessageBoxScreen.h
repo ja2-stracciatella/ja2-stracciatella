@@ -81,9 +81,9 @@ void DoScreenIndependantMessageBox(const wchar_t* zString, UINT16 usFlags, MSGBO
 void DoLowerScreenIndependantMessageBox(const wchar_t* zString, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
 
 //wrappers for other screens
-void DoMapMessageBoxWithRect(     UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
-void DoOptionsMessageBoxWithRect( UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
-void DoSaveLoadMessageBoxWithRect(               wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
+void DoMapMessageBoxWithRect(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
+void DoOptionsMessageBoxWithRect(           wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
+void DoSaveLoadMessageBoxWithRect(          wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
 
 extern BOOLEAN gfInMsgBox;
 

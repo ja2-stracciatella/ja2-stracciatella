@@ -728,19 +728,19 @@ static void MusicSliderChangeCallBack(INT32 iNewValue)
 }
 
 
-void DoOptionsMessageBoxWithRect(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
+void DoOptionsMessageBoxWithRect(wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
 {
 	// reset exit mode
 	gfExitOptionsDueToMessageBox = TRUE;
 
 	// do message box and return
-	DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
+	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
 }
 
 
 static void DoOptionsMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
-	DoOptionsMessageBoxWithRect(MSG_BOX_BASIC_STYLE, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
+	DoOptionsMessageBoxWithRect(zString, uiExitScreen, usFlags, ReturnCallback, NULL);
 }
 
 
