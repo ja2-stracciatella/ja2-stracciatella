@@ -198,8 +198,5 @@ void ShutdownJA2(void)
 
 	ShutdownEventManager( );
 
-	// Unload any text box images!
-	RemoveTextMercPopupImages( );
-
 	ClearOutVehicleList();
 }

@@ -141,7 +141,7 @@ static void LoadTextMercPopupImages(MercPopUpBox* const box, MercPopUpBackground
 }
 
 
-void RemoveTextMercPopupImages()
+static void RemoveTextMercPopupImages()
 {
 	//this procedure will remove the background and border video surface/object from the indecies
 	MercPopUpBox* const box = gPopUpTextBox;

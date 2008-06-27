@@ -47,9 +47,6 @@ BOOLEAN RemoveMercPopupBoxFromIndex( UINT32 uiId );
 BOOLEAN RenderMercPopUpBoxFromIndex(INT32 iBoxId, INT16 sDestX, INT16 sDestY, SGPVSurface* buffer);
 
 
-void RemoveTextMercPopupImages(void);
-
-
 typedef struct {
  SGPVSurface* uiSourceBufferIndex;
  UINT8	ubBackgroundIndex;
