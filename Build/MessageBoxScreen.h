@@ -9,17 +9,17 @@
 // Message box flags
 enum MessageBoxFlags
 {
-	MSG_BOX_FLAG_OK                    = 0x0002, // Displays OK button
-	MSG_BOX_FLAG_YESNO                 = 0x0004, // Displays YES NO buttons
-	MSG_BOX_FLAG_CANCEL                = 0x0008, // Displays YES NO buttons
-	MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS = 0x0010, // Displays four numbered buttons, 1-4
-	MSG_BOX_FLAG_YESNOCONTRACT         = 0x0020, // yes no and contract buttons
-	MSG_BOX_FLAG_OKCONTRACT            = 0x0040, // ok and contract buttons
-	MSG_BOX_FLAG_YESNOLIE              = 0x0080, // ok and contract buttons
-	MSG_BOX_FLAG_CONTINUESTOP          = 0x0100, // continue stop box
-	MSG_BOX_FLAG_OKSKIP                = 0x0200, // Displays ok or skip (meanwhile) buttons
-	MSG_BOX_FLAG_GENERICCONTRACT       = 0x0400, // displays contract buttoin + 2 user-defined text buttons
-	MSG_BOX_FLAG_GENERIC               = 0x0800  // 2 user-defined text buttons
+	MSG_BOX_FLAG_OK,                    // Displays OK button
+	MSG_BOX_FLAG_YESNO,                 // Displays YES NO buttons
+	MSG_BOX_FLAG_CANCEL,                // Displays YES NO buttons
+	MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS, // Displays four numbered buttons, 1-4
+	MSG_BOX_FLAG_YESNOCONTRACT,         // yes no and contract buttons
+	MSG_BOX_FLAG_OKCONTRACT,            // ok and contract buttons
+	MSG_BOX_FLAG_YESNOLIE,              // ok and contract buttons
+	MSG_BOX_FLAG_CONTINUESTOP,          // continue stop box
+	MSG_BOX_FLAG_OKSKIP,                // Displays ok or skip (meanwhile) buttons
+	MSG_BOX_FLAG_GENERICCONTRACT,       // displays contract buttoin + 2 user-defined text buttons
+	MSG_BOX_FLAG_GENERIC                // 2 user-defined text buttons
 };
 
 // message box return codes
