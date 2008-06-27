@@ -627,7 +627,7 @@ static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, INT32 reason)
 
 
 static void ConfirmQuitToMainMenuMessageBoxCallBack(UINT8 bExitValue);
-static void DoOptionsMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
+static void DoOptionsMessageBox(wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
 
 
 static void BtnOptQuitCallback(GUI_BUTTON* btn, INT32 reason)
@@ -635,7 +635,7 @@ static void BtnOptQuitCallback(GUI_BUTTON* btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		//Confirm the Exit to the main menu screen
-		DoOptionsMessageBox(MSG_BOX_BASIC_STYLE, zOptionsText[OPT_RETURN_TO_MAIN], OPTIONS_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmQuitToMainMenuMessageBoxCallBack);
+		DoOptionsMessageBox(zOptionsText[OPT_RETURN_TO_MAIN], OPTIONS_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmQuitToMainMenuMessageBoxCallBack);
 	}
 }
 
@@ -694,7 +694,7 @@ static void HandleOptionToggle(UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BO
 		b->uiFlags |= BUTTON_CLICKED_ON;
 
 		//Confirm the Exit to the main menu screen
-		DoOptionsMessageBox(MSG_BOX_BASIC_STYLE, zOptionsText[OPT_NEED_AT_LEAST_SPEECH_OR_SUBTITLE_OPTION_ON], OPTIONS_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		DoOptionsMessageBox(zOptionsText[OPT_NEED_AT_LEAST_SPEECH_OR_SUBTITLE_OPTION_ON], OPTIONS_SCREEN, MSG_BOX_FLAG_OK, NULL);
 		gfExitOptionsDueToMessageBox = FALSE;
 	}
 
@@ -738,9 +738,9 @@ void DoOptionsMessageBoxWithRect(UINT8 const ubStyle, wchar_t const* const zStri
 }
 
 
-static void DoOptionsMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback)
+static void DoOptionsMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
-	DoOptionsMessageBoxWithRect(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
+	DoOptionsMessageBoxWithRect(MSG_BOX_BASIC_STYLE, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
 }
 
 
