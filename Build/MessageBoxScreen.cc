@@ -81,6 +81,33 @@ static GUIButtonRef MakeButton(const wchar_t* text, INT16 fore_colour, INT16 sha
 }
 
 
+struct MessageBoxStyle
+{
+	MercPopUpBackground background;
+	MercPopUpBorder     border;
+	char const*         btn_image;
+	INT32               btn_off;
+	INT32               btn_on;
+	UINT8               font_colour;
+	UINT8               shadow_colour;
+	UINT16              cursor;
+};
+
+
+static MessageBoxStyle const g_msg_box_style[] =
+{
+	{ DIALOG_MERC_POPUP_BACKGROUND, DIALOG_MERC_POPUP_BORDER, "INTERFACE/popupbuttons.sti",      0, 1, FONT_MCOLOR_WHITE, DEFAULT_SHADOW,    CURSOR_NORMAL        }, // MSG_BOX_BASIC_STYLE
+	{ WHITE_MERC_POPUP_BACKGROUND,  RED_MERC_POPUP_BORDER,    "INTERFACE/msgboxRedButtons.sti",  0, 1, 2,                 NO_SHADOW,         CURSOR_LAPTOP_SCREEN }, // MSG_BOX_RED_ON_WHITE
+	{ GREY_MERC_POPUP_BACKGROUND,   BLUE_MERC_POPUP_BORDER,   "INTERFACE/msgboxGreyButtons.sti", 0, 1, 2,                 FONT_MCOLOR_WHITE, CURSOR_LAPTOP_SCREEN }, // MSG_BOX_BLUE_ON_GREY
+	{ DIALOG_MERC_POPUP_BACKGROUND, DIALOG_MERC_POPUP_BORDER, "INTERFACE/popupbuttons.sti",      2, 3, FONT_MCOLOR_WHITE, DEFAULT_SHADOW,    CURSOR_NORMAL        }, // MSG_BOX_BASIC_SMALL_BUTTONS
+	{ IMP_POPUP_BACKGROUND,         DIALOG_MERC_POPUP_BORDER, "INTERFACE/msgboxGreyButtons.sti", 0, 1, 2,                 FONT_MCOLOR_WHITE, CURSOR_LAPTOP_SCREEN }, // MSG_BOX_IMP_STYLE
+	{ LAPTOP_POPUP_BACKGROUND,      LAPTOP_POP_BORDER,        "INTERFACE/popupbuttons.sti",      0, 1, FONT_MCOLOR_WHITE, DEFAULT_SHADOW,    CURSOR_LAPTOP_SCREEN }  // MSG_BOX_LAPTOP_DEFAULT
+};
+
+
+static MessageBoxStyle const g_msg_box_style_default = { BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, "INTERFACE/msgboxbuttons.sti", 0, 1, FONT_MCOLOR_WHITE, DEFAULT_SHADOW, CURSOR_NORMAL };
+
+
 void DoMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
 {
 	GetMousePos(&pOldMousePosition);
@@ -92,77 +119,8 @@ void DoMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID co
 
 	if (gMsgBox.BackRegion.uiFlags & MSYS_REGION_EXISTS) return;
 
-	// Based on style....
-	MercPopUpBackground ubMercBoxBackground;
-	MercPopUpBorder     ubMercBoxBorder;
-	UINT8               ubFontColor;
-	UINT8               ubFontShadowColor;
-	UINT16              usCursor;
-	switch (ubStyle)
-	{
-		case MSG_BOX_BASIC_STYLE:
-			ubMercBoxBackground   = DIALOG_MERC_POPUP_BACKGROUND;
-			ubMercBoxBorder       = DIALOG_MERC_POPUP_BORDER;
-			gMsgBox.iButtonImages = LoadButtonImage("INTERFACE/popupbuttons.sti", -1, 0, -1, 1, -1);
-			ubFontColor           = FONT_MCOLOR_WHITE;
-			ubFontShadowColor     = DEFAULT_SHADOW;
-			usCursor              = CURSOR_NORMAL;
-			break;
-
-		case MSG_BOX_RED_ON_WHITE:
-			ubMercBoxBackground   = WHITE_MERC_POPUP_BACKGROUND;
-			ubMercBoxBorder       = RED_MERC_POPUP_BORDER;
-			gMsgBox.iButtonImages = LoadButtonImage("INTERFACE/msgboxRedButtons.sti", -1, 0, -1, 1, -1);
-			ubFontColor           = 2;
-			ubFontShadowColor     = NO_SHADOW;
-			usCursor              = CURSOR_LAPTOP_SCREEN;
-			break;
-
-		case MSG_BOX_BLUE_ON_GREY:
-			ubMercBoxBackground   = GREY_MERC_POPUP_BACKGROUND;
-			ubMercBoxBorder       = BLUE_MERC_POPUP_BORDER;
-			gMsgBox.iButtonImages = LoadButtonImage("INTERFACE/msgboxGreyButtons.sti", -1, 0, -1, 1, -1);
-			ubFontColor           = 2;
-			ubFontShadowColor     = FONT_MCOLOR_WHITE;
-			usCursor              = CURSOR_LAPTOP_SCREEN;
-			break;
-
-		case MSG_BOX_IMP_STYLE:
-			ubMercBoxBackground   = IMP_POPUP_BACKGROUND;
-			ubMercBoxBorder       = DIALOG_MERC_POPUP_BORDER;
-			gMsgBox.iButtonImages = LoadButtonImage("INTERFACE/msgboxGreyButtons.sti", -1, 0, -1, 1, -1);
-			ubFontColor           = 2;
-			ubFontShadowColor     = FONT_MCOLOR_WHITE;
-			usCursor              = CURSOR_LAPTOP_SCREEN;
-			break;
-
-		case MSG_BOX_BASIC_SMALL_BUTTONS:
-			ubMercBoxBackground   = DIALOG_MERC_POPUP_BACKGROUND;
-			ubMercBoxBorder       = DIALOG_MERC_POPUP_BORDER;
-			gMsgBox.iButtonImages = LoadButtonImage("INTERFACE/popupbuttons.sti", -1, 2, -1, 3, -1);
-			ubFontColor           = FONT_MCOLOR_WHITE;
-			ubFontShadowColor     = DEFAULT_SHADOW;
-			usCursor              = CURSOR_NORMAL;
-			break;
-
-		case MSG_BOX_LAPTOP_DEFAULT:
-			ubMercBoxBackground   = LAPTOP_POPUP_BACKGROUND;
-			ubMercBoxBorder       = LAPTOP_POP_BORDER;
-			gMsgBox.iButtonImages = LoadButtonImage("INTERFACE/popupbuttons.sti", -1, 0, -1, 1, -1);
-			ubFontColor           = FONT_MCOLOR_WHITE;
-			ubFontShadowColor     = DEFAULT_SHADOW;
-			usCursor              = CURSOR_LAPTOP_SCREEN;
-			break;
-
-		default:
-			ubMercBoxBackground   = BASIC_MERC_POPUP_BACKGROUND;
-			ubMercBoxBorder       = BASIC_MERC_POPUP_BORDER;
-			gMsgBox.iButtonImages = LoadButtonImage("INTERFACE/msgboxbuttons.sti", -1, 0, -1, 1, -1);
-			ubFontColor           = FONT_MCOLOR_WHITE;
-			ubFontShadowColor     = DEFAULT_SHADOW;
-			usCursor              = CURSOR_NORMAL;
-			break;
-	}
+	MessageBoxStyle const& style = ubStyle < lengthof(g_msg_box_style) ?
+		g_msg_box_style[ubStyle] : g_msg_box_style_default;
 
 	SGPRect	aRect;
 	if (pCenteringRect != NULL)
@@ -188,7 +146,7 @@ void DoMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID co
 	// Init message box
 	UINT16 usTextBoxWidth;
 	UINT16 usTextBoxHeight;
-	gMsgBox.iBoxId = PrepareMercPopupBox(-1, ubMercBoxBackground, ubMercBoxBorder, zString, MSGBOX_DEFAULT_WIDTH, 40, 10, 30, &usTextBoxWidth, &usTextBoxHeight);
+	gMsgBox.iBoxId = PrepareMercPopupBox(-1, style.background, style.border, zString, MSGBOX_DEFAULT_WIDTH, 40, 10, 30, &usTextBoxWidth, &usTextBoxHeight);
 
 	if (gMsgBox.iBoxId == -1)
 	{
@@ -228,8 +186,9 @@ void DoMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID co
 	const SGPRect r = { gMsgBox.sX, gMsgBox.sY, gMsgBox.sX + usTextBoxWidth, gMsgBox.sY + usTextBoxHeight };
 	BltVideoSurface(gMsgBox.uiSaveBuffer, FRAME_BUFFER, 0, 0, &r);
 
+	UINT16 const cursor = style.cursor;
 	// Create top-level mouse region
-	MSYS_DefineRegion(&gMsgBox.BackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, usCursor, MSYS_NO_CALLBACK, MsgBoxClickCallback);
+	MSYS_DefineRegion(&gMsgBox.BackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, cursor, MSYS_NO_CALLBACK, MsgBoxClickCallback);
 
 	if (!gGameSettings.fOptions[TOPTION_DONT_MOVE_MOUSE])
 	{
@@ -254,7 +213,11 @@ void DoMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID co
 	INT16       x = gMsgBox.sX;
 	const INT16 y = gMsgBox.sY + usTextBoxHeight - MSGBOX_BUTTON_HEIGHT - 10;
 
-	const INT16 dx = MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP;
+	gMsgBox.iButtonImages = LoadButtonImage(style.btn_image, -1, style.btn_off, -1, style.btn_on, -1);
+
+	INT16 const dx            = MSGBOX_BUTTON_WIDTH + MSGBOX_BUTTON_X_SEP;
+	UINT8 const font_colour   = style.font_colour;
+	UINT8 const shadow_colour = style.shadow_colour;
 	switch (usFlags)
 	{
 		case MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS:
@@ -266,7 +229,7 @@ void DoMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID co
 			for (UINT i = 0; i < 4; ++i)
 			{
 				wchar_t text[] = { '1' + i, '\0' };
-				GUIButtonRef const btn = MakeButton(text, ubFontColor, ubFontShadowColor, x + dx * i, y, NumberedMsgBoxCallback, usCursor);
+				GUIButtonRef const btn = MakeButton(text, font_colour, shadow_colour, x + dx * i, y, NumberedMsgBoxCallback, cursor);
 				gMsgBox.uiButton[i] = btn;
 				MSYS_SetBtnUserData(btn, i + 1);
 			}
@@ -275,63 +238,63 @@ void DoMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID co
 
 		case MSG_BOX_FLAG_OK:
 			x += (usTextBoxWidth - GetDimensionsOfButtonPic(gMsgBox.iButtonImages)->w) / 2;
-			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_OK], ubFontColor, ubFontShadowColor, x, y, OKMsgBoxCallback, usCursor);
+			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_OK], font_colour, shadow_colour, x, y, OKMsgBoxCallback, cursor);
 			break;
 
 		case MSG_BOX_FLAG_CANCEL:
 			x += (usTextBoxWidth - GetDimensionsOfButtonPic(gMsgBox.iButtonImages)->w) / 2;
-			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_CANCEL], ubFontColor, ubFontShadowColor, x, y, OKMsgBoxCallback, usCursor);
+			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_CANCEL], font_colour, shadow_colour, x, y, OKMsgBoxCallback, cursor);
 			break;
 
 		case MSG_BOX_FLAG_YESNO:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
-			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES], ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback, usCursor);
-			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],  ubFontColor, ubFontShadowColor, x + dx, y, NOMsgBoxCallback,  usCursor);
+			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES], font_colour, shadow_colour, x,      y, YESMsgBoxCallback, cursor);
+			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],  font_colour, shadow_colour, x + dx, y, NOMsgBoxCallback,  cursor);
 			break;
 
 		case MSG_BOX_FLAG_CONTINUESTOP:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
-			gMsgBox.uiYESButton = MakeButton(pUpdatePanelButtons[0], ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback, usCursor);
-			gMsgBox.uiNOButton  = MakeButton(pUpdatePanelButtons[1], ubFontColor, ubFontShadowColor, x + dx, y, NOMsgBoxCallback,  usCursor);
+			gMsgBox.uiYESButton = MakeButton(pUpdatePanelButtons[0], font_colour, shadow_colour, x,      y, YESMsgBoxCallback, cursor);
+			gMsgBox.uiNOButton  = MakeButton(pUpdatePanelButtons[1], font_colour, shadow_colour, x + dx, y, NOMsgBoxCallback,  cursor);
 			break;
 
 		case MSG_BOX_FLAG_OKCONTRACT:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
-			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_OK],     ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback,      usCursor);
-			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_REHIRE], ubFontColor, ubFontShadowColor, x + dx, y, ContractMsgBoxCallback, usCursor);
+			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_OK],     font_colour, shadow_colour, x,      y, YESMsgBoxCallback,      cursor);
+			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_REHIRE], font_colour, shadow_colour, x + dx, y, ContractMsgBoxCallback, cursor);
 			break;
 
 		case MSG_BOX_FLAG_YESNOCONTRACT:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx * 2)) / 2;
-			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES],    ubFontColor, ubFontShadowColor, x,          y, YESMsgBoxCallback,      usCursor);
-			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],     ubFontColor, ubFontShadowColor, x + dx,     y, NOMsgBoxCallback,       usCursor);
-			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_REHIRE], ubFontColor, ubFontShadowColor, x + dx * 2, y, ContractMsgBoxCallback, usCursor);
+			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES],    font_colour, shadow_colour, x,          y, YESMsgBoxCallback,      cursor);
+			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],     font_colour, shadow_colour, x + dx,     y, NOMsgBoxCallback,       cursor);
+			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_REHIRE], font_colour, shadow_colour, x + dx * 2, y, ContractMsgBoxCallback, cursor);
 			break;
 
 		case MSG_BOX_FLAG_GENERICCONTRACT:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx * 2)) / 2;
-			gMsgBox.uiYESButton = MakeButton(gzUserDefinedButton1,        ubFontColor, ubFontShadowColor, x,          y, YESMsgBoxCallback,      usCursor);
-			gMsgBox.uiNOButton  = MakeButton(gzUserDefinedButton2,        ubFontColor, ubFontShadowColor, x + dx,     y, NOMsgBoxCallback,       usCursor);
-			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_REHIRE], ubFontColor, ubFontShadowColor, x + dx * 2, y, ContractMsgBoxCallback, usCursor);
+			gMsgBox.uiYESButton = MakeButton(gzUserDefinedButton1,        font_colour, shadow_colour, x,          y, YESMsgBoxCallback,      cursor);
+			gMsgBox.uiNOButton  = MakeButton(gzUserDefinedButton2,        font_colour, shadow_colour, x + dx,     y, NOMsgBoxCallback,       cursor);
+			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_REHIRE], font_colour, shadow_colour, x + dx * 2, y, ContractMsgBoxCallback, cursor);
 			break;
 
 		case MSG_BOX_FLAG_GENERIC:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
-			gMsgBox.uiYESButton = MakeButton(gzUserDefinedButton1, ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback, usCursor);
-			gMsgBox.uiNOButton  = MakeButton(gzUserDefinedButton2, ubFontColor, ubFontShadowColor, x + dx, y, NOMsgBoxCallback,  usCursor);
+			gMsgBox.uiYESButton = MakeButton(gzUserDefinedButton1, font_colour, shadow_colour, x,      y, YESMsgBoxCallback, cursor);
+			gMsgBox.uiNOButton  = MakeButton(gzUserDefinedButton2, font_colour, shadow_colour, x + dx, y, NOMsgBoxCallback,  cursor);
 			break;
 
 		case MSG_BOX_FLAG_YESNOLIE:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx * 2)) / 2;
-			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES], ubFontColor, ubFontShadowColor, x,          y, YESMsgBoxCallback, usCursor);
-			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],  ubFontColor, ubFontShadowColor, x + dx,     y, NOMsgBoxCallback,  usCursor);
-			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_LIE], ubFontColor, ubFontShadowColor, x + dx * 2, y, LieMsgBoxCallback, usCursor);
+			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES], font_colour, shadow_colour, x,          y, YESMsgBoxCallback, cursor);
+			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],  font_colour, shadow_colour, x + dx,     y, NOMsgBoxCallback,  cursor);
+			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_LIE], font_colour, shadow_colour, x + dx * 2, y, LieMsgBoxCallback, cursor);
 			break;
 
 		case MSG_BOX_FLAG_OKSKIP:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
-			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_OK],   ubFontColor, ubFontShadowColor, x,      y, YESMsgBoxCallback, usCursor);
-			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_SKIP], ubFontColor, ubFontShadowColor, x + dx, y, NOMsgBoxCallback,  usCursor);
+			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_OK],   font_colour, shadow_colour, x,      y, YESMsgBoxCallback, cursor);
+			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_SKIP], font_colour, shadow_colour, x + dx, y, NOMsgBoxCallback,  cursor);
 			break;
 	}
 
