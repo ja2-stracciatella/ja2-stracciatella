@@ -2,7 +2,6 @@
 #include "GameLoop.h"
 #include "HImage.h"
 #include "Local.h"
-#include "MessageBoxScreen.h"
 #include "Timer_Control.h"
 #include "Types.h"
 #include "SaveLoadScreen.h"
@@ -935,14 +934,14 @@ static void SaveLoadGameNumber(INT8 bSaveGameID)
 }
 
 
-void DoSaveLoadMessageBoxWithRect(wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
+void DoSaveLoadMessageBoxWithRect(wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
 {
 	// do message box and return
 	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
 }
 
 
-void DoSaveLoadMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback)
+void DoSaveLoadMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	DoSaveLoadMessageBoxWithRect(zString, uiExitScreen, usFlags, ReturnCallback, NULL);
 }

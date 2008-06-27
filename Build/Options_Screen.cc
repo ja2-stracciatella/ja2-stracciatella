@@ -627,7 +627,7 @@ static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, INT32 reason)
 
 
 static void ConfirmQuitToMainMenuMessageBoxCallBack(UINT8 bExitValue);
-static void DoOptionsMessageBox(wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
+static void DoOptionsMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 
 
 static void BtnOptQuitCallback(GUI_BUTTON* btn, INT32 reason)
@@ -728,7 +728,7 @@ static void MusicSliderChangeCallBack(INT32 iNewValue)
 }
 
 
-void DoOptionsMessageBoxWithRect(wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
+void DoOptionsMessageBoxWithRect(wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
 {
 	// reset exit mode
 	gfExitOptionsDueToMessageBox = TRUE;
@@ -738,7 +738,7 @@ void DoOptionsMessageBoxWithRect(wchar_t const* const zString, ScreenID const ui
 }
 
 
-static void DoOptionsMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback)
+static void DoOptionsMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	DoOptionsMessageBoxWithRect(zString, uiExitScreen, usFlags, ReturnCallback, NULL);
 }

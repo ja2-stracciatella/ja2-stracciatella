@@ -1053,7 +1053,7 @@ static FACETYPE* GetQDSFace(const UINT8 panel_merc_should_use)
 }
 
 
-static void DoQDSMessageBox(wchar_t const* zString, ScreenID uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
+static void DoQDSMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 static void IncrementActiveDropDownBox(INT16 sIncrementValue);
 static void SetTalkingMercPauseState(BOOLEAN fState);
 
@@ -2936,7 +2936,7 @@ static void EnableQDSButtons(void)
 }
 
 
-static void DoQDSMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, UINT8 const ubFlags, MSGBOX_CALLBACK const ReturnCallback)
+static void DoQDSMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const ubFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	// reset exit mode
 	gfExitQdsDueToMessageBox = TRUE;

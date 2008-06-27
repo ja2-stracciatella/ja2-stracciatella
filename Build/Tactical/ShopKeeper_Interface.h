@@ -5,6 +5,7 @@
 #include "Button_System.h"
 #include "Item_Types.h"
 #include "JA2Types.h"
+#include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
 
 
@@ -103,7 +104,7 @@ void AddShopkeeperToGridNo( UINT8 ubProfile, INT16 sGridNo );
 
 void RestrictSkiMouseCursor(void);
 
-void DoSkiMessageBox(wchar_t const* zString, ScreenID uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
+void DoSkiMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 void StartSKIDescriptionBox(void);
 
 extern BOOLEAN      gfSKIScreenExit;

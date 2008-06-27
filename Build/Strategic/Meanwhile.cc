@@ -336,18 +336,13 @@ static void BringupMeanwhileBox(void)
 	swprintf( zStr, lengthof(zStr), L"%ls.....", pMessageStrings[ MSG_MEANWHILE ] );
 #endif
 
-#ifdef JA2TESTVERSION
-	if ( gCurrentMeanwhileDef.ubMeanwhileID != INTERROGATION )
-#else
-	if ( gCurrentMeanwhileDef.ubMeanwhileID != INTERROGATION && MeanwhileSceneSeen( gCurrentMeanwhileDef.ubMeanwhileID ) )
+	MessageBoxFlags const flags =
+		gCurrentMeanwhileDef.ubMeanwhileID != INTERROGATION
+#if !defined JA2TESTVERSION
+		&& MeanwhileSceneSeen(gCurrentMeanwhileDef.ubMeanwhileID)
 #endif
-	{
-		DoMessageBox( MSG_BOX_BASIC_STYLE, zStr, guiCurrentScreen, MSG_BOX_FLAG_OKSKIP, BeginMeanwhileCallBack, NULL );
-	}
-	else
-	{
-		DoMessageBox( MSG_BOX_BASIC_STYLE, zStr, guiCurrentScreen, ( UINT8 )MSG_BOX_FLAG_OK, BeginMeanwhileCallBack, NULL );
-	}
+		? MSG_BOX_FLAG_OKSKIP : MSG_BOX_FLAG_OK;
+	DoMessageBox(MSG_BOX_BASIC_STYLE, zStr, guiCurrentScreen, flags, BeginMeanwhileCallBack, NULL);
 }
 
 void CheckForMeanwhileOKStart( )

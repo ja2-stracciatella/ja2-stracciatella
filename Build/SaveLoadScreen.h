@@ -2,6 +2,7 @@
 #define _SAVE_LOAD_SCREEN__H_
 
 #include "JA2Types.h"
+#include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
 
 
@@ -23,7 +24,7 @@ extern	BOOLEAN			gfCameDirectlyFromGame;
 void     SaveLoadScreenInit(void);
 ScreenID SaveLoadScreenHandle(void);
 
-void DoSaveLoadMessageBox(wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
+void DoSaveLoadMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 
 BOOLEAN DoQuickSave(void);
 BOOLEAN DoQuickLoad(void);

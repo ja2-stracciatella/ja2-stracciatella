@@ -428,7 +428,7 @@ void InitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdditionalData)
     if ( GetWarpOutOfMineCodes( &gsWarpWorldX, &gsWarpWorldY, &gbWarpWorldZ, &gsWarpGridNo ) )
     {
       // ATE: Check if we are in a creature lair and bring up box if so....
-      DoMessageBox( MSG_BOX_BASIC_STYLE, gzLateLocalizedString[ 33 ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, WarpToSurfaceCallback, NULL );
+      DoMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[33], GAME_SCREEN, MSG_BOX_FLAG_YESNO, WarpToSurfaceCallback, NULL);
       return;
     }
   }
@@ -723,7 +723,7 @@ void RemoveSectorExitMenu( BOOLEAN fOk )
 				if ( gExitDialog.ubNumPeopleOnSquad == 0 )
 				{
 					swprintf(Str, lengthof(Str), pMessageStrings[MSG_EPC_CANT_TRAVERSE], sel->name);
-					DoMessageBox( MSG_BOX_BASIC_STYLE, Str, GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_OK, NULL, NULL );
+					DoMessageBox(MSG_BOX_BASIC_STYLE, Str, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
 					return;
 				}
 			}

@@ -3,6 +3,7 @@
 
 #include "Item_Types.h"
 #include "JA2Types.h"
+#include "MessageBoxScreen.h"
 #include "MouseSystem.h"
 #include "ScreenIDs.h"
 
@@ -305,7 +306,7 @@ void DisableTeamInfoPanels( void );
 void EnableTeamInfoPanels( void );
 
 // do mapscreen message box
-void DoMapMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
+void DoMapMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 
 // hop up one leve,l int he map screen level interface
 void GoUpOneLevelInMap( void );

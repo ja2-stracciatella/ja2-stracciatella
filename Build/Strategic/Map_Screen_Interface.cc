@@ -3,7 +3,6 @@
 #include "HImage.h"
 #include "Map_Screen_Interface.h"
 #include "Map_Screen_Interface_Map.h"
-#include "MessageBoxScreen.h"
 #include "Render_Dirty.h"
 #include "Font_Control.h"
 #include "Assignments.h"
@@ -846,14 +845,14 @@ void EnableTeamInfoPanels( void )
 }
 
 
-void DoMapMessageBoxWithRect(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
+void DoMapMessageBoxWithRect(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
 {	// reset the highlighted line
 	giHighLine = -1;
 	DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
 }
 
 
-void DoMapMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback)
+void DoMapMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	// reset the highlighted line
 	giHighLine = -1;

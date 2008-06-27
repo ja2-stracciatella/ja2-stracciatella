@@ -958,33 +958,17 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 		}
 	}
 
+	MessageBoxFlags const flags = fInSector ?
+		(fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT      : MSG_BOX_FLAG_OK) :
+		(fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC);
 	/// which screen are we in?
 	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 	{
-		if (!fInSector)
-		{
-			// set up for mapscreen
-			DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, ( UINT16 )( ( fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC ) ), MercDepartEquipmentBoxCallBack );
-		}
-		else
-		{
-			DoMapMessageBox( MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, ( UINT16 )( ( fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK  ) ), MercDepartEquipmentBoxCallBack );
-		}
-
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, flags, MercDepartEquipmentBoxCallBack);
 	}
 	else
 	{
-		UINT16 Flags;
-		if (fInSector)
-		{
-			Flags = fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK;
-		}
-		else
-		{
-			// set up for all otherscreens
-			Flags = fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC;
-		}
-		DoMessageBox(MSG_BOX_BASIC_STYLE, sString, guiCurrentScreen, Flags, MercDepartEquipmentBoxCallBack, NULL);
+		DoMessageBox(MSG_BOX_BASIC_STYLE, sString, guiCurrentScreen, flags, MercDepartEquipmentBoxCallBack, NULL);
 	}
 }
 
