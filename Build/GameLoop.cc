@@ -380,7 +380,7 @@ void HandleShortCutExitState( void )
 	}
 	else if( guiCurrentScreen == SHOPKEEPER_SCREEN )
 	{
-		DoSkiMessageBox( MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_EXITGAME ], SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack );
+		DoSkiMessageBox(pMessageStrings[MSG_EXITGAME], SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack);
 	}
 	else
 	{

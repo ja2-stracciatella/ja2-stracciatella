@@ -491,7 +491,7 @@ ScreenID ShopKeeperScreenHandle()
 	{
 		// tell player there's not enough room in the player's offer area
 		// ARM: message is delayed because we need the mouse restriction to be in place BEFORE it comes up so it gets lifted/restored
-		DoSkiMessageBox( MSG_BOX_BASIC_STYLE, SKI_Text[ SKI_TEXT_NO_MORE_ROOM_IN_PLAYER_OFFER_AREA ], SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, NULL );
+		DoSkiMessageBox(SKI_Text[SKI_TEXT_NO_MORE_ROOM_IN_PLAYER_OFFER_AREA], SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, NULL);
 
 		gfDisplayNoRoomMsg = FALSE;
 	}
@@ -3248,7 +3248,7 @@ static void PerformTransaction(UINT32 uiMoneyFromPlayersAccount)
 			if( CountNumberOfItemsInTheArmsDealersOfferArea( ) > uiAvailablePlayerOfferSlots )
 			{
 				// tell player there's not enough room in the player's offer area
-				DoSkiMessageBox( MSG_BOX_BASIC_STYLE, SKI_Text[ SKI_TEXT_NO_MORE_ROOM_IN_PLAYER_OFFER_AREA ], SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, NULL );
+				DoSkiMessageBox(SKI_Text[SKI_TEXT_NO_MORE_ROOM_IN_PLAYER_OFFER_AREA], SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, NULL);
 
 				return;
 			}
@@ -4988,14 +4988,14 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 }
 
 
-void DoSkiMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT8 const ubFlags, MSGBOX_CALLBACK const ReturnCallback)
+void DoSkiMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, UINT8 const ubFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	// reset exit mode
 	gfExitSKIDueToMessageBox = TRUE;
 
 	// do message box and return
 	const SGPRect pCenteringRect = { 0, 0, SCREEN_WIDTH, 339 };
-	DoMessageBox(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, &pCenteringRect);
+	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, uiExitScreen, ubFlags, ReturnCallback, &pCenteringRect);
 }
 
 void ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack( UINT8 bExitValue )
@@ -5403,7 +5403,7 @@ static BOOLEAN OfferObjectToDealer(OBJECTTYPE* pComplexObject, UINT8 ubOwnerProf
 		if ( ( ubDealerOfferAreaSlotsNeeded + CountNumberOfItemsInTheArmsDealersOfferArea() ) > SKI_NUM_TRADING_INV_SLOTS )
 		{
 			// tell player there's not enough room in the dealer's offer area
-			DoSkiMessageBox( MSG_BOX_BASIC_STYLE, L"There is not enough room in the dealers repair area.", SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, NULL );
+			DoSkiMessageBox(L"There is not enough room in the dealers repair area.", SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			return(FALSE);	// no room
 		}
 */

@@ -788,7 +788,7 @@ void HandleDialogue()
 					//popup a message stating the player doesnt have enough money
 					SPrintMoney(zMoney, d->uiSpecialEventData2);
 					swprintf(zText, lengthof(zText), SkiMessageBoxText[SKI_SHORT_FUNDS_TEXT], zMoney);
-					DoSkiMessageBox(MSG_BOX_BASIC_STYLE, zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack);
+					DoSkiMessageBox(zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack);
 					break;
 
 				case 1:
@@ -796,7 +796,7 @@ void HandleDialogue()
 					 * out the players account to cover the difference */
 					SPrintMoney(zMoney, d->uiSpecialEventData2);
 					swprintf(zText, lengthof(zText), SkiMessageBoxText[SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_DIFFERENCE], zMoney);
-					DoSkiMessageBox(MSG_BOX_BASIC_STYLE, zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack);
+					DoSkiMessageBox(zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack);
 					break;
 
 				case 2:
@@ -804,7 +804,7 @@ void HandleDialogue()
 					 * the difference */
 					SPrintMoney(zMoney, d->uiSpecialEventData2);
 					swprintf(zText, lengthof(zText), SkiMessageBoxText[SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_COST], zMoney);
-					DoSkiMessageBox(MSG_BOX_BASIC_STYLE, zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack);
+					DoSkiMessageBox(zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack);
 					break;
 
 				case 3: // this means a dialogue event is in progress
