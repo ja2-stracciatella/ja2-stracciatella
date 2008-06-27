@@ -100,5 +100,6 @@ void DoSaveLoadMessageBoxWithRect(              wchar_t const* zString, ScreenID
 extern BOOLEAN gfInMsgBox;
 
 ScreenID MessageBoxScreenHandle(void);
+void     MessageBoxScreenShutdown();
 
 #endif

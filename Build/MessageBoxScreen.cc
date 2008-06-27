@@ -595,6 +595,14 @@ ScreenID MessageBoxScreenHandle(void)
 }
 
 
+void MessageBoxScreenShutdown()
+{
+	if (gMsgBox.iBoxId == -1) return;
+	RemoveMercPopupBoxFromIndex(gMsgBox.iBoxId);
+	gMsgBox.iBoxId = -1;
+}
+
+
 static void DoScreenIndependantMessageBoxWithRect(wchar_t const* zString, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
 
 
