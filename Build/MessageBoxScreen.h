@@ -11,9 +11,7 @@ enum MessageBoxFlags
 {
 	MSG_BOX_FLAG_OK,                    // Displays OK button
 	MSG_BOX_FLAG_YESNO,                 // Displays YES NO buttons
-	MSG_BOX_FLAG_CANCEL,                // Displays YES NO buttons
 	MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS, // Displays four numbered buttons, 1-4
-	MSG_BOX_FLAG_YESNOCONTRACT,         // yes no and contract buttons
 	MSG_BOX_FLAG_OKCONTRACT,            // ok and contract buttons
 	MSG_BOX_FLAG_YESNOLIE,              // ok and contract buttons
 	MSG_BOX_FLAG_CONTINUESTOP,          // continue stop box

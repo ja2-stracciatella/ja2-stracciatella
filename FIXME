@@ -96,7 +96,6 @@ MAPInvClickCamoCallback(): empty
 MAPInvMoveCamoCallback(): empty
 MERCPROFILESTRUCT: gets saved/loaded, but contains wchar_t
 MERC_POPUP_PREPARE_FLAGS_TRANS_BACK: complicated
-MSG_BOX_FLAG_CANCEL, MSG_BOX_FLAG_YESNOCONTRACT: never set
 MaxDistanceVisible(): inline
 MercDepartEquipmentBoxCallBack(): users
 MergeMessageBoxCallBack(): users

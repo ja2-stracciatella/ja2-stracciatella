@@ -241,11 +241,6 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_OK], font_colour, shadow_colour, x, y, OKMsgBoxCallback, cursor);
 			break;
 
-		case MSG_BOX_FLAG_CANCEL:
-			x += (usTextBoxWidth - GetDimensionsOfButtonPic(gMsgBox.iButtonImages)->w) / 2;
-			gMsgBox.uiOKButton = MakeButton(pMessageStrings[MSG_CANCEL], font_colour, shadow_colour, x, y, OKMsgBoxCallback, cursor);
-			break;
-
 		case MSG_BOX_FLAG_YESNO:
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
 			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES], font_colour, shadow_colour, x,      y, YESMsgBoxCallback, cursor);
@@ -262,13 +257,6 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx)) / 2;
 			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_OK],     font_colour, shadow_colour, x,      y, YESMsgBoxCallback,      cursor);
 			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_REHIRE], font_colour, shadow_colour, x + dx, y, ContractMsgBoxCallback, cursor);
-			break;
-
-		case MSG_BOX_FLAG_YESNOCONTRACT:
-			x += (usTextBoxWidth - (MSGBOX_BUTTON_WIDTH + dx * 2)) / 2;
-			gMsgBox.uiYESButton = MakeButton(pMessageStrings[MSG_YES],    font_colour, shadow_colour, x,          y, YESMsgBoxCallback,      cursor);
-			gMsgBox.uiNOButton  = MakeButton(pMessageStrings[MSG_NO],     font_colour, shadow_colour, x + dx,     y, NOMsgBoxCallback,       cursor);
-			gMsgBox.uiOKButton  = MakeButton(pMessageStrings[MSG_REHIRE], font_colour, shadow_colour, x + dx * 2, y, ContractMsgBoxCallback, cursor);
 			break;
 
 		case MSG_BOX_FLAG_GENERICCONTRACT:
@@ -401,7 +389,6 @@ static ScreenID ExitMsgBox(INT8 const ubExitCode)
 			RemoveButton(gMsgBox.uiNOButton);
 			break;
 
-		case MSG_BOX_FLAG_YESNOCONTRACT:
 		case MSG_BOX_FLAG_GENERICCONTRACT:
 		case MSG_BOX_FLAG_YESNOLIE:
 			RemoveButton(gMsgBox.uiYESButton);
@@ -524,7 +511,6 @@ ScreenID MessageBoxScreenHandle(void)
 				break;
 
 			case MSG_BOX_FLAG_OK:
-			case MSG_BOX_FLAG_CANCEL:
 				MarkAButtonDirty(gMsgBox.uiOKButton);
 				break;
 
@@ -537,7 +523,6 @@ ScreenID MessageBoxScreenHandle(void)
 				MarkAButtonDirty(gMsgBox.uiNOButton);
 				break;
 
-			case MSG_BOX_FLAG_YESNOCONTRACT:
 			case MSG_BOX_FLAG_GENERICCONTRACT:
 			case MSG_BOX_FLAG_YESNOLIE:
 				MarkAButtonDirty(gMsgBox.uiYESButton);
