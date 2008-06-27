@@ -1,5 +1,4 @@
 #include "Font_Control.h"
-#include "MessageBoxScreen.h"
 #include "Types.h"
 #include "GameSettings.h"
 #include "FileMan.h"
@@ -169,7 +168,7 @@ void InitGameOptions()
 }
 
 
-void CDromEjectionErrorMessageBoxCallBack( UINT8 bExitValue )
+void CDromEjectionErrorMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	if( bExitValue == MSG_BOX_RETURN_OK )
 	{

@@ -1,6 +1,8 @@
 #ifndef _GAME_SETTINGS__H_
 #define _GAME_SETTINGS__H_
 
+#include "MessageBoxScreen.h"
+
 
 //If you add any options, MAKE sure you add the corresponding string to the Options Screen string array
 enum
@@ -124,6 +126,6 @@ BOOLEAN SetMeanwhileSceneSeen( UINT8 ubMeanwhile );
 
 BOOLEAN CanGameBeSaved(void);
 
-void CDromEjectionErrorMessageBoxCallBack(UINT8 bExitValue);
+void CDromEjectionErrorMessageBoxCallBack(MessageBoxReturnValue);
 
 #endif
