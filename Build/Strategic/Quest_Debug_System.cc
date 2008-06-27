@@ -1053,7 +1053,7 @@ static FACETYPE* GetQDSFace(const UINT8 panel_merc_should_use)
 }
 
 
-static void DoQDSMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
+static void DoQDSMessageBox(wchar_t const* zString, ScreenID uiExitScreen, UINT8 ubFlags, MSGBOX_CALLBACK ReturnCallback);
 static void IncrementActiveDropDownBox(INT16 sIncrementValue);
 static void SetTalkingMercPauseState(BOOLEAN fState);
 
@@ -1175,7 +1175,7 @@ static void GetUserInput(void)
 						// toggle whether dropped items are damaged or not
 						gfDropDamagedItems ^= 1;
 						swprintf(zTemp, lengthof(zTemp), L"Items dropped will be in %ls condition", gfDropDamagedItems ? L"DAMAGED" : L"PERFECT");
-						DoQDSMessageBox( MSG_BOX_BASIC_STYLE, zTemp, QUEST_DEBUG_SCREEN, MSG_BOX_FLAG_OK, NULL );
+						DoQDSMessageBox(zTemp, QUEST_DEBUG_SCREEN, MSG_BOX_FLAG_OK, NULL);
 					}
 					break;
 			}
@@ -2210,7 +2210,7 @@ static void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON* btn, INT32 r
 			swprintf(zTemp, lengthof(zTemp), L"%ls %ls", QuestDebugText[QUEST_DBS_REFRESH_FAILED], gMercProfiles[ubMercID].zNickname);
 		}
 
-		DoQDSMessageBox( MSG_BOX_BASIC_STYLE, zTemp, QUEST_DEBUG_SCREEN, MSG_BOX_FLAG_OK, NULL );
+		DoQDSMessageBox(zTemp, QUEST_DEBUG_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}
 }
 
@@ -2223,7 +2223,7 @@ static void BtnQuestDebugStartMercTalkingButtonButtonCallback(GUI_BUTTON* btn, I
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		//Ask for the initial quote num to start talking from
-//		DoQDSMessageBox( MSG_BOX_BASIC_STYLE, zTemp, QUEST_DEBUG_SCREEN, MSG_BOX_FLAG_OK, NULL );
+//		DoQDSMessageBox(zTemp, QUEST_DEBUG_SCREEN, MSG_BOX_FLAG_OK, NULL);
 
 		//set the initial value
 		gsQdsEnteringGridNo = 0;
@@ -2936,14 +2936,14 @@ static void EnableQDSButtons(void)
 }
 
 
-static void DoQDSMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT8 const ubFlags, MSGBOX_CALLBACK const ReturnCallback)
+static void DoQDSMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, UINT8 const ubFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	// reset exit mode
 	gfExitQdsDueToMessageBox = TRUE;
 	gfQuestDebugEntry = TRUE;
 
 	// do message box and return
-	DoMessageBox(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, NULL);
+	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, uiExitScreen, ubFlags, ReturnCallback, NULL);
 }
 
 
@@ -3065,7 +3065,7 @@ static void StartMercTalkingFromQuoteNum(INT32 iQuoteToStartTalkingFrom)
 	if( iQuoteToStartTalkingFrom < 0 || iQuoteToStartTalkingFrom > uiMaxNumberOfQuotes )
 	{
 		swprintf( zTemp, lengthof(zTemp), L"Please enter a value between 0 and %d", uiMaxNumberOfQuotes );
-		DoQDSMessageBox( MSG_BOX_BASIC_STYLE, zTemp, QUEST_DEBUG_SCREEN, MSG_BOX_FLAG_OK, NULL );
+		DoQDSMessageBox(zTemp, QUEST_DEBUG_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}
 	else
 	{
