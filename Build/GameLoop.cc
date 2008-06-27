@@ -376,7 +376,7 @@ void HandleShortCutExitState( void )
 	else if( guiCurrentScreen == LAPTOP_SCREEN )
 	{
 		// set up for laptop
-		DoLapTopSystemMessageBox( MSG_BOX_LAPTOP_DEFAULT, pMessageStrings[ MSG_EXITGAME ], LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack );
+		DoLapTopSystemMessageBox(pMessageStrings[MSG_EXITGAME], LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, EndGameMessageBoxCallBack);
 	}
 	else if( guiCurrentScreen == SHOPKEEPER_SCREEN )
 	{
