@@ -845,14 +845,14 @@ void EnableTeamInfoPanels( void )
 }
 
 
-void DoMapMessageBoxWithRect(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
+void DoMapMessageBoxWithRect(MessageBoxStyleID const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
 {	// reset the highlighted line
 	giHighLine = -1;
 	DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
 }
 
 
-void DoMapMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
+void DoMapMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	// reset the highlighted line
 	giHighLine = -1;

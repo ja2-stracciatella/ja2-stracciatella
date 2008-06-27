@@ -14,7 +14,7 @@ void SetLaptopExitScreen(ScreenID uiExitScreen);
 void SetLaptopNewGameFlag(void);
 void LapTopScreenCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 void HandleRightButtonUpEvent(void);
-void DoLapTopMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
+void DoLapTopMessageBox(MessageBoxStyleID, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 void GoToWebPage(INT32 iPageId);
 void WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, const SGPVObject* background);
 void BlitTitleBarIcons(void);
@@ -137,7 +137,7 @@ enum{
 #define DEAD_MERC_COLOR_BLUE   55
 
 
-void DoLapTopSystemMessageBoxWithRect(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
+void DoLapTopSystemMessageBoxWithRect(MessageBoxStyleID, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
 
 void     LaptopScreenInit(void);
 ScreenID LaptopScreenHandle(void);

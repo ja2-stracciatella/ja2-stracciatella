@@ -2275,14 +2275,14 @@ void LapTopScreenCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-void DoLapTopMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const ubFlags, MSGBOX_CALLBACK const ReturnCallback)
+void DoLapTopMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const ubFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
 	const SGPRect CenteringRect = { LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_LR_Y };
 	DoLapTopSystemMessageBoxWithRect(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, &CenteringRect);
 }
 
 
-void DoLapTopSystemMessageBoxWithRect(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
+void DoLapTopSystemMessageBoxWithRect(MessageBoxStyleID const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
 {
 	// reset exit mode
 	fExitDueToMessageBox = TRUE;

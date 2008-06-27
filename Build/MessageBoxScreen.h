@@ -30,7 +30,7 @@ enum MessageBoxFlags
 #define MSG_BOX_RETURN_LIE      5 // LIE BUTTON
 
 // message box style flags
-enum
+enum MessageBoxStyleID
 {
 	MSG_BOX_BASIC_STYLE,         // We'll have other styles, like in laptop, etc
 	                             // Graphics are all that are required here...
@@ -79,14 +79,14 @@ extern wchar_t gzUserDefinedButton2[128];
  * ubFlags        Some flags for button style
  * ReturnCallback Callback for return. Can be NULL. Returns any above return value
  * pCenteringRect Rect to center in. Can be NULL */
-void DoMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
+void DoMessageBox(MessageBoxStyleID, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
 void DoScreenIndependantMessageBox(const wchar_t* zString, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 void DoLowerScreenIndependantMessageBox(const wchar_t* zString, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 
 //wrappers for other screens
-void DoMapMessageBoxWithRect(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
-void DoOptionsMessageBoxWithRect(           wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
-void DoSaveLoadMessageBoxWithRect(          wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
+void DoMapMessageBoxWithRect(MessageBoxStyleID, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
+void DoOptionsMessageBoxWithRect(               wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
+void DoSaveLoadMessageBoxWithRect(              wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
 
 extern BOOLEAN gfInMsgBox;
 

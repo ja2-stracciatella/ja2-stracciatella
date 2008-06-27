@@ -108,7 +108,7 @@ static MessageBoxStyle const g_msg_box_style[] =
 static MessageBoxStyle const g_msg_box_style_default = { BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, "INTERFACE/msgboxbuttons.sti", 0, 1, FONT_MCOLOR_WHITE, DEFAULT_SHADOW, CURSOR_NORMAL };
 
 
-void DoMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
+void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
 {
 	GetMousePos(&pOldMousePosition);
 
