@@ -23,7 +23,7 @@ extern	BOOLEAN			gfCameDirectlyFromGame;
 void     SaveLoadScreenInit(void);
 ScreenID SaveLoadScreenHandle(void);
 
-void DoSaveLoadMessageBox(UINT8 ubStyle, wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
+void DoSaveLoadMessageBox(wchar_t const* zString, ScreenID uiExitScreen, UINT16 usFlags, MSGBOX_CALLBACK ReturnCallback);
 
 BOOLEAN DoQuickSave(void);
 BOOLEAN DoQuickLoad(void);

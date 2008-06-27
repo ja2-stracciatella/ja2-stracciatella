@@ -1917,7 +1917,7 @@ BOOLEAN ValidateSoldierInitLinks(UINT8 ubCode)
 				swprintf(str, lengthof(str), L"Error detected in save file WHILE LOADING.  Please send save and text files associated with save to Kris and Dave."
 											 L"  After doing so, go back into the game and immediately resave the game which will fix the problem."
 											 L"  This is the bug responsible for mercs disappearing.  Be prepared to answer lots of questions..." );
-				DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, str, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, ErrorDetectedInSaveCallback );
+				DoSaveLoadMessageBox(str, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, ErrorDetectedInSaveCallback);
 				break;
 			case 2: //saving game
 				//swprintf( str, L"Error detected WHILE SAVING file.  Please send save and text files associated with save to Kris and Dave."

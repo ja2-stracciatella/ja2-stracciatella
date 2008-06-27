@@ -896,7 +896,7 @@ static void SaveLoadGameNumber(INT8 bSaveGameID)
 
 			swprintf( sText, lengthof(sText), zSaveLoadText[SLG_CONFIRM_SAVE], bSaveGameID );
 
-			DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, sText, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmSavedGameMessageBoxCallBack );
+			DoSaveLoadMessageBox(sText, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmSavedGameMessageBoxCallBack);
 		}
 		else
 		{
@@ -912,18 +912,11 @@ static void SaveLoadGameNumber(INT8 bSaveGameID)
 		ubRetVal = CompareSaveGameVersion( bSaveGameID );
 		if( ubRetVal != SLS_HEADER_OK )
 		{
-			if( ubRetVal == SLS_GAME_VERSION_OUT_OF_DATE )
-			{
-				DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_GAME_VERSION_DIF], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, LoadSavedGameWarningMessageBoxCallBack );
-			}
-			else if( ubRetVal == SLS_SAVED_GAME_VERSION_OUT_OF_DATE )
-			{
-				DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVED_GAME_VERSION_DIF], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, LoadSavedGameWarningMessageBoxCallBack );
-			}
-			else
-			{
-				DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_BOTH_GAME_AND_SAVED_GAME_DIF], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, LoadSavedGameWarningMessageBoxCallBack );
-			}
+			wchar_t const* const msg =
+				ubRetVal == SLS_GAME_VERSION_OUT_OF_DATE       ? zSaveLoadText[SLG_GAME_VERSION_DIF] :
+				ubRetVal == SLS_SAVED_GAME_VERSION_OUT_OF_DATE ? zSaveLoadText[SLG_SAVED_GAME_VERSION_DIF] :
+				zSaveLoadText[SLG_BOTH_GAME_AND_SAVED_GAME_DIF];
+			DoSaveLoadMessageBox(msg, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, LoadSavedGameWarningMessageBoxCallBack);
 		}
 		else
 		{
@@ -933,7 +926,7 @@ static void SaveLoadGameNumber(INT8 bSaveGameID)
 
 			swprintf(sText, L"%ls%d?", zSaveLoadText[SLG_CONFIRM_LOAD], bSaveGameID);
 
-			DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, sText, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmLoadSavedGameMessageBoxCallBack );
+			DoSaveLoadMessageBox(sText, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmLoadSavedGameMessageBoxCallBack);
 */
 			//Setup up the fade routines
 			StartFadeOutForSaveLoadScreen();
@@ -949,9 +942,9 @@ void DoSaveLoadMessageBoxWithRect(UINT8 const ubStyle, wchar_t const* const zStr
 }
 
 
-void DoSaveLoadMessageBox(UINT8 const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback)
+void DoSaveLoadMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, UINT16 const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
-	DoSaveLoadMessageBoxWithRect(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
+	DoSaveLoadMessageBoxWithRect(MSG_BOX_BASIC_STYLE, zString, uiExitScreen, usFlags, ReturnCallback, NULL);
 }
 
 
@@ -1308,7 +1301,7 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		if( gfSaveGame && bSelected == 0 )
 		{
 			//Display a pop up telling user what the quick save slot is
-			DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_QUICK_SAVE_RESERVED_FOR_TACTICAL ], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, RedrawSaveLoadScreenAfterMessageBox );
+			DoSaveLoadMessageBox(pMessageStrings[MSG_QUICK_SAVE_RESERVED_FOR_TACTICAL], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, RedrawSaveLoadScreenAfterMessageBox);
 			return;
 		}
 
@@ -1319,7 +1312,7 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		if( gfSaveGame && bSelected == 0 )
 		{
 			//Display a pop up telling user what the quick save slot is
-			DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, pMessageStrings[ MSG_QUICK_SAVE_RESERVED_FOR_TACTICAL ], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, RedrawSaveLoadScreenAfterMessageBox );
+			DoSaveLoadMessageBox(pMessageStrings[MSG_QUICK_SAVE_RESERVED_FOR_TACTICAL], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, RedrawSaveLoadScreenAfterMessageBox);
 			return;
 		}
 
@@ -1679,7 +1672,7 @@ static void LoadSavedGameWarningMessageBoxCallBack(UINT8 bExitValue)
 	else
 	{
 		//ask if the user wants to delete all the saved game files
-		DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_DELETE_ALL_SAVE_GAMES], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, LoadSavedGameDeleteAllSaveGameMessageBoxCallBack );
+		DoSaveLoadMessageBox(zSaveLoadText[SLG_DELETE_ALL_SAVE_GAMES], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, LoadSavedGameDeleteAllSaveGameMessageBoxCallBack);
 	}
 }
 
@@ -1769,7 +1762,7 @@ static void DoneFadeOutForSaveLoadScreen(void)
 			gfSchedulesHosed = TRUE;
 			if( !LoadSavedGame( gbSelectedSaveLocation ) )
 			{
-				DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_LOAD_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack );
+				DoSaveLoadMessageBox(zSaveLoadText[SLG_LOAD_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack);
 				NextLoopCheckForEnoughFreeHardDriveSpace();
 			}
 			else
@@ -1781,7 +1774,7 @@ static void DoneFadeOutForSaveLoadScreen(void)
 		}
 		else
 		{
-			DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_LOAD_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack );
+			DoSaveLoadMessageBox(zSaveLoadText[SLG_LOAD_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack);
 			NextLoopCheckForEnoughFreeHardDriveSpace();
 		}
 	}
@@ -2126,7 +2119,7 @@ static void SaveGameToSlotNum(void)
 		//Unset the fact that we are saving a game
 		gTacticalStatus.uiFlags &= ~LOADING_SAVED_GAME;
 
-		DoSaveLoadMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		DoSaveLoadMessageBox(zSaveLoadText[SLG_SAVE_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}
 
 //			gfExitAfterMessageBox = TRUE;
