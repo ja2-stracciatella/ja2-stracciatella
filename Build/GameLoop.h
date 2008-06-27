@@ -6,10 +6,6 @@
 #include "Types.h"
 
 
-// main game loop systems
-#define INIT_SYSTEM										0
-
-
 void InitializeGame(void);
 void ShutdownGame(void);
 void GameLoop(void);
