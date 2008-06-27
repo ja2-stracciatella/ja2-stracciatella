@@ -129,8 +129,6 @@ static const INT16 sBasementExitGridNos[] = { 8047, 8207, 8208, 8048, 7888, 7728
 #define CHANCE_FOR_DOCTOR_TO_SAY_RANDOM_QUOTE 20
 
 
-extern void EndGameMessageBoxCallBack( UINT8 ubExitValue );
-
 static const UINT8 ubTalkMenuApproachIDs[] =
 {
 	APPROACH_REPEAT,
@@ -4105,7 +4103,7 @@ UINT32 CalcMedicalCost( UINT8 ubId )
 static UINT16 gusDialogueMessageBoxType;
 
 
-static void DialogueMessageBoxCallBack(UINT8 ubExitValue);
+static void DialogueMessageBoxCallBack(MessageBoxReturnValue);
 
 
 static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
@@ -4180,7 +4178,7 @@ static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 }
 
 
-static void DialogueMessageBoxCallBack(UINT8 ubExitValue)
+static void DialogueMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 {
 	UINT8						ubProfile;
 	SOLDIERTYPE			*pSoldier;

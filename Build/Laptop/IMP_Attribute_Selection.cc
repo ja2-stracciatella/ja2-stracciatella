@@ -167,7 +167,7 @@ static void DecrementStat(INT32 iStatToDecrement);
 static INT32 GetCurrentAttributeValue(INT32 iAttribute);
 static void IncrementStat(INT32 iStatToIncrement);
 static void ProcessAttributes(void);
-static void StatAtZeroBoxCallBack(UINT8 bExitValue);
+static void StatAtZeroBoxCallBack(MessageBoxReturnValue);
 
 
 void HandleIMPAttributeSelection(void)
@@ -772,7 +772,7 @@ void SetGeneratedCharacterAttributes(void)
 }
 
 
-static void StatAtZeroBoxCallBack(UINT8 bExitValue)
+static void StatAtZeroBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, so start over, else stay here and do nothing for now
 	switch (bExitValue)

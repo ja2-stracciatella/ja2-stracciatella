@@ -639,7 +639,7 @@ static void BtnBobbyRClearOrderCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void ConfirmBobbyRPurchaseMessageBoxCallBack(UINT8 bExitValue);
+static void ConfirmBobbyRPurchaseMessageBoxCallBack(MessageBoxReturnValue);
 
 
 static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
@@ -1903,7 +1903,7 @@ void AddJohnsGunShipment()
 }
 
 
-static void ConfirmBobbyRPurchaseMessageBoxCallBack(UINT8 bExitValue)
+static void ConfirmBobbyRPurchaseMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, load the game
   if( bExitValue == MSG_BOX_RETURN_YES )

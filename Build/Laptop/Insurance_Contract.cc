@@ -268,7 +268,7 @@ void HandleInsuranceContract()
 static BOOLEAN AreAnyAimMercsOnTeam(void);
 static void DisableInsuranceContractNextPreviousbuttons(void);
 static BOOLEAN DisplayOrderGrid(UINT8 ubGridNumber, SOLDIERTYPE*);
-static void InsContractNoMercsPopupCallBack(UINT8 bExitValue);
+static void InsContractNoMercsPopupCallBack(MessageBoxReturnValue);
 
 
 void RenderInsuranceContract()
@@ -814,7 +814,7 @@ static FLOAT DiffFromNormRatio(INT16 sThisValue, INT16 sNormalValue)
 }
 
 
-static void InsContractNoMercsPopupCallBack(UINT8 bExitValue)
+static void InsContractNoMercsPopupCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, so start over, else stay here and do nothing for now
   if( bExitValue == MSG_BOX_RETURN_OK )

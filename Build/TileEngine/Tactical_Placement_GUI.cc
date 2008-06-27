@@ -924,7 +924,7 @@ static void SelectNextUnplacedUnit(void)
 }
 
 
-static void DialogRemoved(UINT8 ubResult);
+static void DialogRemoved(MessageBoxReturnValue);
 
 
 void HandleTacticalPlacementClicksInOverheadMap(INT32 reason)
@@ -1077,7 +1077,7 @@ static void PickUpMercPiece(INT32 iPlacement)
 }
 
 
-static void DialogRemoved(UINT8 ubResult)
+static void DialogRemoved(MessageBoxReturnValue const ubResult)
 {
 	gfTacticalPlacementGUIDirty = TRUE;
 	gfValidLocationsChanged = TRUE;

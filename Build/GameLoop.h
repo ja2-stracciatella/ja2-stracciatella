@@ -1,6 +1,7 @@
 #ifndef GAMELOOP_H
 #define GAMELOOP_H
 
+#include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
 #include "Types.h"
 
@@ -21,5 +22,8 @@ void SetPendingNewScreen(ScreenID);
 extern ScreenID guiPendingScreen;
 
 void NextLoopCheckForEnoughFreeHardDriveSpace(void);
+
+// callback to confirm game is over
+void EndGameMessageBoxCallBack(MessageBoxReturnValue);
 
 #endif

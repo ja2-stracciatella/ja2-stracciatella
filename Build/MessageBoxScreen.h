@@ -21,11 +21,22 @@ enum MessageBoxFlags
 };
 
 // message box return codes
-#define MSG_BOX_RETURN_OK       1 // ENTER or on OK button
-#define MSG_BOX_RETURN_YES      2 // ENTER or YES button
-#define MSG_BOX_RETURN_NO       3 // ESC, Right Click or NO button
-#define MSG_BOX_RETURN_CONTRACT 4 // contract button
-#define MSG_BOX_RETURN_LIE      5 // LIE BUTTON
+enum MessageBoxReturnValue
+{
+	MSG_BOX_RETURN_NONE     = 0,
+	MSG_BOX_RETURN_OK       = 1, // ENTER or on OK button
+	MSG_BOX_RETURN_YES      = 2, // ENTER or YES button
+	MSG_BOX_RETURN_NO       = 3, // ESC, Right Click or NO button
+	MSG_BOX_RETURN_CONTRACT = 4, // contract button
+	MSG_BOX_RETURN_LIE      = 5, // LIE BUTTON
+
+	MSG_BOX_RETURN_1        = 1,
+	MSG_BOX_RETURN_2        = 2,
+	MSG_BOX_RETURN_3        = 3,
+	MSG_BOX_RETURN_4        = 4
+};
+
+typedef void (*MSGBOX_CALLBACK)(MessageBoxReturnValue);
 
 // message box style flags
 enum MessageBoxStyleID
@@ -42,23 +53,23 @@ enum MessageBoxStyleID
 
 struct MESSAGE_BOX_STRUCT
 {
-	MessageBoxFlags usFlags;
-	ScreenID        uiExitScreen;
-	MSGBOX_CALLBACK ExitCallback;
-	INT16           sX;
-	INT16           sY;
-	SGPVSurface*    uiSaveBuffer;
-	MOUSE_REGION    BackRegion;
-	UINT16          usWidth;
-	UINT16          usHeight;
-	BUTTON_PICS*    iButtonImages;
-	GUIButtonRef    uiOKButton;
-	GUIButtonRef    uiYESButton;
-	GUIButtonRef    uiNOButton;
-	GUIButtonRef    uiButton[4];
-	BOOLEAN fRenderBox;
-	INT8    bHandled;
-	INT32   iBoxId;
+	MessageBoxFlags       usFlags;
+	ScreenID              uiExitScreen;
+	MSGBOX_CALLBACK       ExitCallback;
+	INT16                 sX;
+	INT16                 sY;
+	SGPVSurface*          uiSaveBuffer;
+	MOUSE_REGION          BackRegion;
+	UINT16                usWidth;
+	UINT16                usHeight;
+	BUTTON_PICS*          iButtonImages;
+	GUIButtonRef          uiOKButton;
+	GUIButtonRef          uiYESButton;
+	GUIButtonRef          uiNOButton;
+	GUIButtonRef          uiButton[4];
+	BOOLEAN               fRenderBox;
+	MessageBoxReturnValue bHandled;
+	INT32                 iBoxId;
 };
 
 

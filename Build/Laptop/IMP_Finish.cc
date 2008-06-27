@@ -186,7 +186,7 @@ static void DeleteIMPFinishButtons(void)
 }
 
 
-static void FinishMessageBoxCallBack(UINT8 bExitValue);
+static void FinishMessageBoxCallBack(MessageBoxReturnValue);
 
 
 static void BtnIMPFinishStartOverCallback(GUI_BUTTON *btn, INT32 reason)
@@ -341,7 +341,7 @@ static void DestroyCharacterPortrait(void)
 }
 
 
-static void FinishMessageBoxCallBack(UINT8 bExitValue)
+static void FinishMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, so start over, else stay here and do nothing for now
   if( bExitValue == MSG_BOX_RETURN_YES )

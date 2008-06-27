@@ -3245,7 +3245,7 @@ void DemoHiringOfMercs( )
 #endif
 
 
-static void DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack(UINT8 bExitValue);
+static void DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack(MessageBoxReturnValue);
 
 
 void DisplayPopUpBoxExplainingMercArrivalLocationAndTime(void)
@@ -3307,7 +3307,7 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime(void)
 }
 
 
-static void DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack(UINT8 bExitValue)
+static void DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack(MessageBoxReturnValue const bExitValue)
 {
 	//unset the flag so the msgbox WONT dislay its save buffer
 	gfDontOverRideSaveBuffer = FALSE;

@@ -43,7 +43,6 @@
 #include "LaptopSave.h"
 #include "Quests.h"
 #include "Weapons.h"
-#include "MessageBoxScreen.h"
 #include "Line.h"
 #include "Drugs_And_Alcohol.h"
 #include "Map_Screen_Interface.h"
@@ -4998,7 +4997,8 @@ void DoSkiMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, 
 	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, uiExitScreen, ubFlags, ReturnCallback, &pCenteringRect);
 }
 
-void ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack( UINT8 bExitValue )
+
+void ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// simply redraw the panel
 	if( bExitValue == MSG_BOX_RETURN_OK )
@@ -5012,7 +5012,7 @@ void ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack( UINT8 bExitValue )
 
 
 
-void ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack( UINT8 bExitValue )
+void ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, deduct the money
 	if( bExitValue == MSG_BOX_RETURN_YES )

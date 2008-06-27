@@ -1689,7 +1689,7 @@ static BOOLEAN UIHandleItemPlacement(UINT8 ubHandPos, UINT16 usOldItemIndex, UIN
 }
 
 
-static void MergeMessageBoxCallBack(UINT8 ubExitValue);
+static void MergeMessageBoxCallBack(MessageBoxReturnValue);
 
 
 static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
@@ -1994,7 +1994,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void MergeMessageBoxCallBack(UINT8 ubExitValue)
+static void MergeMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 {
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -3854,7 +3854,7 @@ static BOOLEAN IsMouseInRegion(MOUSE_REGION* pRegion)
 }
 
 
-static void ConfirmationToDepositMoneyToPlayersAccount(UINT8 ubExitValue);
+static void ConfirmationToDepositMoneyToPlayersAccount(MessageBoxReturnValue);
 
 
 static void SMInvMoneyButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
@@ -3916,7 +3916,7 @@ static void SMInvMoneyButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void ConfirmationToDepositMoneyToPlayersAccount(UINT8 ubExitValue)
+static void ConfirmationToDepositMoneyToPlayersAccount(MessageBoxReturnValue const ubExitValue)
 {
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -3956,7 +3956,7 @@ static void CheckForReEvaluateDisabledINVPanelButtons(void)
 }
 
 
-static void AbandonBoxingCallback(UINT8 ubExitValue)
+static void AbandonBoxingCallback(MessageBoxReturnValue const ubExitValue)
 {
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{

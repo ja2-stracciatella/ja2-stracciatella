@@ -6319,7 +6319,7 @@ static void DoneFadeOutDueToDeath(void)
 }
 
 
-static void EndBattleWithUnconsciousGuysCallback(UINT8 bExitValue)
+static void EndBattleWithUnconsciousGuysCallback(MessageBoxReturnValue const bExitValue)
 {
 	// Enter mapscreen.....
 #ifdef JA2DEMO

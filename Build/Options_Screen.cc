@@ -626,7 +626,7 @@ static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void ConfirmQuitToMainMenuMessageBoxCallBack(UINT8 bExitValue);
+static void ConfirmQuitToMainMenuMessageBoxCallBack(MessageBoxReturnValue);
 static void DoOptionsMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 
 
@@ -744,7 +744,7 @@ static void DoOptionsMessageBox(wchar_t const* const zString, ScreenID const uiE
 }
 
 
-static void ConfirmQuitToMainMenuMessageBoxCallBack(UINT8 bExitValue)
+static void ConfirmQuitToMainMenuMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, Quit to main menu
   if( bExitValue == MSG_BOX_RETURN_YES )

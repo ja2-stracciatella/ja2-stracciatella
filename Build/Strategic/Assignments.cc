@@ -4638,7 +4638,7 @@ static void BeginRemoveMercFromContract(SOLDIERTYPE* const s)
 }
 
 
-static void MercDismissConfirmCallBack(UINT8 bExitValue)
+static void MercDismissConfirmCallBack(MessageBoxReturnValue const bExitValue)
 {
 	if (bExitValue == MSG_BOX_RETURN_YES)
 	{

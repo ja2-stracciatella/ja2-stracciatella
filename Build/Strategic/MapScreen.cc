@@ -4,7 +4,6 @@
 #include "MapScreen.h"
 #include "GameLoop.h"
 #include "Merc_Hiring.h"
-#include "MessageBoxScreen.h"
 #include "VObject.h"
 #include "WorldDef.h"
 #include "Input.h"
@@ -7054,7 +7053,7 @@ static void UpDateStatusOfContractBox(void)
 }
 
 
-static void TrashItemMessageBoxCallBack(UINT8 bExitValue)
+static void TrashItemMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -7660,7 +7659,7 @@ void TellPlayerWhyHeCantCompressTime( void )
 }
 
 
-void MapScreenDefaultOkBoxCallback(UINT8 bExitValue)
+void MapScreenDefaultOkBoxCallback(MessageBoxReturnValue const bExitValue)
 {
 	// yes, load the game
   if( bExitValue == MSG_BOX_RETURN_OK )
@@ -8991,7 +8990,7 @@ static BOOLEAN CanMoveBullseyeAndClickedOnIt(INT16 sMapX, INT16 sMapY)
 }
 
 
-static void BullsEyeOrChopperSelectionPopupCallback(UINT8 ubExitValue);
+static void BullsEyeOrChopperSelectionPopupCallback(MessageBoxReturnValue);
 
 
 static void CreateBullsEyeOrChopperSelectionPopup(void)
@@ -9004,7 +9003,7 @@ static void CreateBullsEyeOrChopperSelectionPopup(void)
 }
 
 
-static void BullsEyeOrChopperSelectionPopupCallback(UINT8 ubExitValue)
+static void BullsEyeOrChopperSelectionPopupCallback(MessageBoxReturnValue const ubExitValue)
 {
 	// button 1 pressed?
 	if ( ubExitValue == MSG_BOX_RETURN_YES )

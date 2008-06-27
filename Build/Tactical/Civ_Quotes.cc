@@ -166,7 +166,7 @@ try
 catch (...) { return FALSE; }
 
 
-static void SurrenderMessageBoxCallBack(UINT8 ubExitValue)
+static void SurrenderMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 {
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{

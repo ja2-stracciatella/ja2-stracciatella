@@ -34,6 +34,4 @@ struct VIDEO_OVERLAY;
 struct SUMMARYFILE;
 #endif
 
-typedef void (*MSGBOX_CALLBACK)(UINT8 bExitValue);
-
 #endif

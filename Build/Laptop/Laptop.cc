@@ -1878,7 +1878,7 @@ static void BookmarkCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void InternetRainDelayMessageBoxCallBack(UINT8 bExitValue);
+static void InternetRainDelayMessageBoxCallBack(MessageBoxReturnValue);
 
 
 void GoToWebPage(INT32 iPageId)
@@ -3631,7 +3631,7 @@ static BOOLEAN IsItRaining(void)
 }
 
 
-static void InternetRainDelayMessageBoxCallBack(UINT8 bExitValue)
+static void InternetRainDelayMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	GoToWebPage(giRainDelayInternetSite);
 

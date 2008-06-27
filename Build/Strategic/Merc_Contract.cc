@@ -886,7 +886,7 @@ static void CalculateMedicalDepositRefund(SOLDIERTYPE* pSoldier)
 }
 
 
-static void MercDepartEquipmentBoxCallBack(UINT8 bExitValue);
+static void MercDepartEquipmentBoxCallBack(MessageBoxReturnValue);
 
 
 static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* pSoldier, BOOLEAN fAddRehireButton)
@@ -976,7 +976,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* 
 static void HandleExtendMercsContract(SOLDIERTYPE* pSoldier);
 
 
-static void MercDepartEquipmentBoxCallBack(UINT8 bExitValue)
+static void MercDepartEquipmentBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// gear left in current sector?
 	if( pLeaveSoldier == NULL )
@@ -1145,7 +1145,7 @@ static void HandleNotifyPlayerCantAffordInsurance(void)
 }
 
 
-static void ExtendMercInsuranceContractCallBack(UINT8 bExitValue);
+static void ExtendMercInsuranceContractCallBack(MessageBoxReturnValue);
 
 
 static void HandleNotifyPlayerCanAffordInsurance(SOLDIERTYPE* pSoldier, UINT8 ubLength, INT32 iCost)
@@ -1169,7 +1169,7 @@ static void HandleNotifyPlayerCanAffordInsurance(SOLDIERTYPE* pSoldier, UINT8 ub
 }
 
 
-static void ExtendMercInsuranceContractCallBack(UINT8 bExitValue)
+static void ExtendMercInsuranceContractCallBack(MessageBoxReturnValue const bExitValue)
 {
   if( bExitValue == MSG_BOX_RETURN_YES )
 	{

@@ -323,7 +323,7 @@ void BeginMeanwhile(UINT8 ubMeanwhileID)
 }
 
 
-static void BeginMeanwhileCallBack(UINT8 bExitValue);
+static void BeginMeanwhileCallBack(MessageBoxReturnValue);
 
 
 static void BringupMeanwhileBox(void)
@@ -514,7 +514,7 @@ static void DoneFadeInMeanwhile(void)
 static void ProcessImplicationsOfMeanwhile(void);
 
 
-static void BeginMeanwhileCallBack(UINT8 bExitValue)
+static void BeginMeanwhileCallBack(MessageBoxReturnValue const bExitValue)
 {
 	if ( bExitValue == MSG_BOX_RETURN_OK || bExitValue == MSG_BOX_RETURN_YES )
 	{

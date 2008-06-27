@@ -1194,7 +1194,7 @@ static OBJECTTYPE* FindMedicalKit(void)
 }
 
 
-static void AutoBandageFinishedCallback(UINT8 ubResult);
+static void AutoBandageFinishedCallback(MessageBoxReturnValue);
 
 
 static UINT32 AutoBandageMercs(void)
@@ -4373,7 +4373,7 @@ BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(INT16* psSectorX,
 }
 
 
-static void AutoBandageFinishedCallback(UINT8 ubResult)
+static void AutoBandageFinishedCallback(MessageBoxReturnValue const ubResult)
 {
 	SetupDoneInterface();
 }

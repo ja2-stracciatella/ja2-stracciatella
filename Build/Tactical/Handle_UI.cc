@@ -2221,7 +2221,7 @@ static void UIHandleMercAttack(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTargetSoldie
 }
 
 
-static void AttackRequesterCallback(UINT8 bExitValue)
+static void AttackRequesterCallback(MessageBoxReturnValue const bExitValue)
 {
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{

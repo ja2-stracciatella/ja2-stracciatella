@@ -1,7 +1,6 @@
 #include "GameLoop.h"
 #include "GameVersion.h"
 #include "Local.h"
-#include "MessageBoxScreen.h"
 #include "SGP.h"
 #include "GameLoop.h"
 #include "Screens.h"
@@ -46,9 +45,6 @@ ScreenID guiPendingScreen = NO_PENDING_SCREEN;
 
 #define	DONT_CHECK_FOR_FREE_SPACE		255
 static UINT8 gubCheckForFreeSpaceOnHardDriveCount = DONT_CHECK_FOR_FREE_SPACE;
-
-// callback to confirm game is over
-void EndGameMessageBoxCallBack( UINT8 bExitValue );
 
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
 // tasks which will run the game
@@ -408,7 +404,7 @@ void HandleShortCutExitState( void )
 }
 
 
-void EndGameMessageBoxCallBack( UINT8 bExitValue )
+void EndGameMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, so start over, else stay here and do nothing for now
   if( bExitValue == MSG_BOX_RETURN_YES )

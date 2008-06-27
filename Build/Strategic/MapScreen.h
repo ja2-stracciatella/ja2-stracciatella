@@ -4,6 +4,7 @@
 #include "Button_System.h"
 #include "Item_Types.h"
 #include "JA2Types.h"
+#include "MessageBoxScreen.h"
 #include "MouseSystem.h"
 #include "ScreenIDs.h"
 
@@ -98,7 +99,7 @@ BOOLEAN GetMouseMapXY(INT16* psMapWorldX, INT16* psMapWorldY);
 void    EndConfirmMapMoveMode(void);
 BOOLEAN CanDrawSectorCursor(void);
 void    RememberPreviousPathForAllSelectedChars(void);
-void    MapScreenDefaultOkBoxCallback(UINT8 bExitValue);
+void    MapScreenDefaultOkBoxCallback(MessageBoxReturnValue);
 void    SetUpCursorForStrategicMap(void);
 void    DrawFace(void);
 

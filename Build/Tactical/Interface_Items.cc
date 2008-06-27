@@ -2229,7 +2229,7 @@ static void DoAttachment(void)
 }
 
 
-static void PermanantAttachmentMessageBoxCallBack(UINT8 ubExitValue)
+static void PermanantAttachmentMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 {
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{

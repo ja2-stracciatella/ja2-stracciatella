@@ -753,7 +753,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 static void HandleOtherGroupsArrivingSimultaneously(UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ);
 static void NotifyPlayerOfBloodcatBattle(UINT8 ubSectorX, UINT8 ubSectorY);
 static BOOLEAN TestForBloodcatAmbush(GROUP* pGroup);
-static void TriggerPrebattleInterface(UINT8 ubResult);
+static void TriggerPrebattleInterface(MessageBoxReturnValue);
 static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* pFirstGroup);
 
 
@@ -954,7 +954,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 }
 
 
-static void TriggerPrebattleInterface(UINT8 ubResult)
+static void TriggerPrebattleInterface(MessageBoxReturnValue const ubResult)
 {
 	StopTimeCompression();
 	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_TRIGGERPREBATTLEINTERFACE, (UINT32)gpInitPrebattleGroup, 0, 0, 0, 0 );
@@ -1734,7 +1734,7 @@ static void PrepareGroupsForSimultaneousArrival(void)
 }
 
 
-static void PlanSimultaneousGroupArrivalCallback(UINT8 bMessageValue);
+static void PlanSimultaneousGroupArrivalCallback(MessageBoxReturnValue);
 
 
 //See if there are other groups OTW.  If so, and if we haven't asked the user yet to plan
@@ -1819,7 +1819,7 @@ static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* pFirstGroup)
 }
 
 
-static void PlanSimultaneousGroupArrivalCallback(UINT8 bMessageValue)
+static void PlanSimultaneousGroupArrivalCallback(MessageBoxReturnValue const bMessageValue)
 {
   if( bMessageValue == MSG_BOX_RETURN_YES )
 	{
@@ -3830,7 +3830,7 @@ void PlayerGroupArrivedSafelyInSector( GROUP *pGroup, BOOLEAN fCheckForNPCs )
 }
 
 
-static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(UINT8 ubExitValue);
+static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageBoxReturnValue);
 static BOOLEAN WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 
@@ -3969,7 +3969,7 @@ static BOOLEAN WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 sSectorX, 
 }
 
 
-static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(UINT8 ubExitValue)
+static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageBoxReturnValue const ubExitValue)
 {
 	Assert( gpGroupPrompting );
 

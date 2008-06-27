@@ -1225,7 +1225,7 @@ static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* pSoldier, INT16 sGridNo, INT32
 static BOOLEAN ItemExistsAtLocation(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel);
 static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, const ITEM_POOL* pItemPool, INT8 bZLevel);
 static BOOLEAN LookForHiddenItems(INT16 sGridNo, INT8 ubLevel);
-static void SwitchMessageBoxCallBack(UINT8 ubExitValue);
+static void SwitchMessageBoxCallBack(MessageBoxReturnValue);
 
 
 void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const INT16 sGridNo, const INT8 bZLevel, const BOOLEAN* const pfSelectionList)
@@ -1355,7 +1355,7 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 }
 
 
-static void BoobyTrapMessageBoxCallBack(UINT8 ubExitValue);
+static void BoobyTrapMessageBoxCallBack(MessageBoxReturnValue);
 static BOOLEAN DoesItemPoolContainAllHiddenItems(const ITEM_POOL* pItemPool);
 static ITEM_POOL* GetItemPoolForIndex(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel);
 static INT16 GetNumOkForDisplayItemsInPool(const ITEM_POOL* pItemPool, INT8 bZLevel);
@@ -3014,7 +3014,7 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 }
 
 
-static void BombMessageBoxCallBack(UINT8 ubExitValue);
+static void BombMessageBoxCallBack(MessageBoxReturnValue);
 
 
 static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo)
@@ -3081,7 +3081,7 @@ static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 }
 
 
-static void BombMessageBoxCallBack(UINT8 ubExitValue)
+static void BombMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 {
 	if (gpTempSoldier)
 	{
@@ -3102,6 +3102,7 @@ static void BombMessageBoxCallBack(UINT8 ubExitValue)
 				iResult = SkillCheck( gpTempSoldier, PLANTING_BOMB_CHECK, 0 );
 			}
 
+			INT8 timer = ubExitValue;
 			if ( iResult >= 0 )
 			{
 				// EXPLOSIVES GAIN (25):  Place a bomb, or buried and armed a mine
@@ -3116,15 +3117,7 @@ static void BombMessageBoxCallBack(UINT8 ubExitValue)
 				if ( iResult >= -20 )
 				{
 					// messed up the setting
-					if ( ubExitValue == 0 )
-					{
-						ubExitValue = 1;
-					}
-					else
-					{
-						// change up/down by 1
-						ubExitValue = (UINT8) (ubExitValue + Random( 3 ) - 1);
-					}
+					timer = (timer == 0 ? 1 : timer + Random(3) - 1);
 					// and continue
 				}
 				else
@@ -3135,7 +3128,7 @@ static void BombMessageBoxCallBack(UINT8 ubExitValue)
 				}
 			}
 
-			if ( ArmBomb( &(gpTempSoldier->inv[HANDPOS]), ubExitValue ) )
+			if (ArmBomb(&gpTempSoldier->inv[HANDPOS], timer))
 			{
 				gpTempSoldier->inv[ HANDPOS ].bTrap = __min( 10, ( EffectiveExplosive( gpTempSoldier ) / 20) + (EffectiveExpLevel( gpTempSoldier ) / 3) );
 				// HACK IMMINENT!
@@ -3324,7 +3317,7 @@ static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* const pSoldier, const INT16 sG
 }
 
 
-static void BoobyTrapInMapScreenMessageBoxCallBack(UINT8 ubExitValue);
+static void BoobyTrapInMapScreenMessageBoxCallBack(MessageBoxReturnValue);
 
 
 static void BoobyTrapDialogueCallBack(void)
@@ -3338,10 +3331,10 @@ static void BoobyTrapDialogueCallBack(void)
 }
 
 
-static void RemoveBlueFlagDialogueCallBack(UINT8 ubExitValue);
+static void RemoveBlueFlagDialogueCallBack(MessageBoxReturnValue);
 
 
-static void BoobyTrapMessageBoxCallBack(UINT8 ubExitValue)
+static void BoobyTrapMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 {
 	if ( gfJustFoundBoobyTrap )
 	{
@@ -3455,7 +3448,7 @@ static void BoobyTrapMessageBoxCallBack(UINT8 ubExitValue)
 }
 
 
-static void BoobyTrapInMapScreenMessageBoxCallBack(UINT8 ubExitValue)
+static void BoobyTrapInMapScreenMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 {
 	if ( gfJustFoundBoobyTrap )
 	{
@@ -3549,7 +3542,7 @@ static void BoobyTrapInMapScreenMessageBoxCallBack(UINT8 ubExitValue)
 }
 
 
-static void SwitchMessageBoxCallBack(UINT8 ubExitValue)
+static void SwitchMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 {
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
@@ -3666,7 +3659,7 @@ void MineSpottedDialogueCallBack( void )
 }
 
 
-static void MineSpottedMessageBoxCallBack(UINT8 ubExitValue);
+static void MineSpottedMessageBoxCallBack(MessageBoxReturnValue);
 
 
 static void MineSpottedLocatorCallback(void)
@@ -3678,7 +3671,7 @@ static void MineSpottedLocatorCallback(void)
 }
 
 
-static void MineSpottedMessageBoxCallBack(UINT8 ubExitValue)
+static void MineSpottedMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 {
 	if (ubExitValue == MSG_BOX_RETURN_YES)
 	{
@@ -3688,7 +3681,7 @@ static void MineSpottedMessageBoxCallBack(UINT8 ubExitValue)
 }
 
 
-static void RemoveBlueFlagDialogueCallBack(UINT8 ubExitValue)
+static void RemoveBlueFlagDialogueCallBack(MessageBoxReturnValue const ubExitValue)
 {
 	if (ubExitValue == MSG_BOX_RETURN_YES)
 	{

@@ -1415,7 +1415,7 @@ void LoadTempNpcQuoteArrayToSaveGameFile(HWFILE const f)
 }
 
 
-static void TempFileLoadErrorMessageReturnCallback(UINT8 ubRetVal)
+static void TempFileLoadErrorMessageReturnCallback(MessageBoxReturnValue const ubRetVal)
 {
 	gfProgramIsRunning = FALSE;
 }

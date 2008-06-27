@@ -72,7 +72,7 @@ static SGPVObject* giAutoBandagesSoldierFaces[2 * MAX_CHARACTER_COUNT];
 BOOLEAN fAutoEndBandageButtonCreated = FALSE;
 
 
-static void BeginAutoBandageCallBack(UINT8 bExitValue);
+static void BeginAutoBandageCallBack(MessageBoxReturnValue);
 
 
 void BeginAutoBandage( )
@@ -489,7 +489,7 @@ void AutoBandage( BOOLEAN fStart )
 }
 
 
-static void BeginAutoBandageCallBack(UINT8 bExitValue)
+static void BeginAutoBandageCallBack(MessageBoxReturnValue const bExitValue)
 {
   if( bExitValue == MSG_BOX_RETURN_YES )
 	{

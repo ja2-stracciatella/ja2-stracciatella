@@ -141,7 +141,7 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 	gMsgBox.uiExitScreen = uiExitScreen;
 	gMsgBox.ExitCallback = ReturnCallback;
 	gMsgBox.fRenderBox   = TRUE;
-	gMsgBox.bHandled     = 0;
+	gMsgBox.bHandled     = MSG_BOX_RETURN_NONE;
 
 	// Init message box
 	UINT16 usTextBoxWidth;
@@ -355,12 +355,12 @@ static void NumberedMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		gMsgBox.bHandled = MSYS_GetBtnUserData(btn);
+		gMsgBox.bHandled = static_cast<MessageBoxReturnValue>(MSYS_GetBtnUserData(btn));
 	}
 }
 
 
-static ScreenID ExitMsgBox(INT8 const ubExitCode)
+static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
 {
 	// Delete popup!
 	RemoveMercPopupBoxFromIndex(gMsgBox.iBoxId);
@@ -576,16 +576,16 @@ ScreenID MessageBoxScreenHandle(void)
 			case MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS:
 				switch (InputEvent.usParam)
 				{
-					case '1': gMsgBox.bHandled = 1; break;
-					case '2': gMsgBox.bHandled = 2; break;
-					case '3': gMsgBox.bHandled = 3; break;
-					case '4': gMsgBox.bHandled = 4; break;
+					case '1': gMsgBox.bHandled = MSG_BOX_RETURN_1; break;
+					case '2': gMsgBox.bHandled = MSG_BOX_RETURN_2; break;
+					case '3': gMsgBox.bHandled = MSG_BOX_RETURN_3; break;
+					case '4': gMsgBox.bHandled = MSG_BOX_RETURN_4; break;
 				}
 				break;
 		}
 	}
 
-  if (gMsgBox.bHandled)
+  if (gMsgBox.bHandled != MSG_BOX_RETURN_NONE)
 	{
 		SetRenderFlags(RENDER_FLAG_FULL);
 		return ExitMsgBox(gMsgBox.bHandled);

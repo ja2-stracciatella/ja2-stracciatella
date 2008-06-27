@@ -863,8 +863,8 @@ static void GetSaveLoadScreenUserInput(void)
 
 
 static UINT8 CompareSaveGameVersion(INT8 bSaveGameID);
-static void ConfirmSavedGameMessageBoxCallBack(UINT8 bExitValue);
-static void LoadSavedGameWarningMessageBoxCallBack(UINT8 bExitValue);
+static void ConfirmSavedGameMessageBoxCallBack(MessageBoxReturnValue);
+static void LoadSavedGameWarningMessageBoxCallBack(MessageBoxReturnValue);
 static void SaveGameToSlotNum(void);
 
 
@@ -1281,7 +1281,7 @@ static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void DisableSelectedSlot(void);
 static void InitSaveLoadScreenTextInputBoxes(void);
-static void RedrawSaveLoadScreenAfterMessageBox(UINT8 bExitValue);
+static void RedrawSaveLoadScreenAfterMessageBox(MessageBoxReturnValue);
 
 
 static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
@@ -1655,10 +1655,10 @@ static UINT8 CompareSaveGameVersion(INT8 bSaveGameID)
 }
 
 
-static void LoadSavedGameDeleteAllSaveGameMessageBoxCallBack(UINT8 bExitValue);
+static void LoadSavedGameDeleteAllSaveGameMessageBoxCallBack(MessageBoxReturnValue);
 
 
-static void LoadSavedGameWarningMessageBoxCallBack(UINT8 bExitValue)
+static void LoadSavedGameWarningMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, load the game
   if( bExitValue == MSG_BOX_RETURN_YES )
@@ -1679,7 +1679,7 @@ static void LoadSavedGameWarningMessageBoxCallBack(UINT8 bExitValue)
 static void DeleteAllSaveGameFile(void);
 
 
-static void LoadSavedGameDeleteAllSaveGameMessageBoxCallBack(UINT8 bExitValue)
+static void LoadSavedGameDeleteAllSaveGameMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, Delete all the save game files
   if( bExitValue == MSG_BOX_RETURN_YES )
@@ -1746,7 +1746,7 @@ static void DisplayOnScreenNumber(BOOLEAN display)
 
 
 static void DoneFadeInForSaveLoadScreen(void);
-static void FailedLoadingGameCallBack(UINT8 bExitValue);
+static void FailedLoadingGameCallBack(MessageBoxReturnValue);
 
 
 static void DoneFadeOutForSaveLoadScreen(void)
@@ -1871,7 +1871,7 @@ static void DisableSelectedSlot(void)
 }
 
 
-static void ConfirmSavedGameMessageBoxCallBack(UINT8 bExitValue)
+static void ConfirmSavedGameMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	Assert( gbSelectedSaveLocation != -1 );
 
@@ -1901,7 +1901,7 @@ static void ConfirmLoadSavedGameMessageBoxCallBack(UINT8 bExitValue)
 
 
 #ifdef JA2BETAVERSION
-void ErrorDetectedInSaveCallback(UINT8 bValue)
+void ErrorDetectedInSaveCallback(MessageBoxReturnValue const bValue)
 {
 	//If we are to go to map screen after loading the game
 	if( guiScreenToGotoAfterLoadingSavedGame == MAP_SCREEN )
@@ -1922,7 +1922,7 @@ void ErrorDetectedInSaveCallback(UINT8 bValue)
 #endif
 
 
-static void FailedLoadingGameCallBack(UINT8 bExitValue)
+static void FailedLoadingGameCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes
   if( bExitValue == MSG_BOX_RETURN_OK )
@@ -2010,7 +2010,7 @@ BOOLEAN IsThereAnySavedGameFiles()
 }
 
 
-static void RedrawSaveLoadScreenAfterMessageBox(UINT8 bExitValue)
+static void RedrawSaveLoadScreenAfterMessageBox(MessageBoxReturnValue const bExitValue)
 {
 	gfRedrawSaveLoadScreen = TRUE;
 }

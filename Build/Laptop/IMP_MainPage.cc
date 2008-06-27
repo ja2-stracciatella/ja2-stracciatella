@@ -230,7 +230,7 @@ static void BtnIMPMainPageBackCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void BeginMessageBoxCallBack(UINT8 bExitValue);
+static void BeginMessageBoxCallBack(MessageBoxReturnValue);
 
 
 static void BtnIMPMainPageBeginCallback(GUI_BUTTON *btn, INT32 reason)
@@ -417,7 +417,7 @@ static void UpDateIMPMainPageButtons(void)
 }
 
 
-static void BeginMessageBoxCallBack(UINT8 bExitValue)
+static void BeginMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, so start over, else stay here and do nothing for now
   if( bExitValue == MSG_BOX_RETURN_YES )

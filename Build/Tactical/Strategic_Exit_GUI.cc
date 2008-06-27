@@ -403,7 +403,7 @@ static void DoneFadeOutWarpCallback(void)
 }
 
 
-static void WarpToSurfaceCallback(UINT8 bExitValue)
+static void WarpToSurfaceCallback(MessageBoxReturnValue const bExitValue)
 {
   if( bExitValue == MSG_BOX_RETURN_YES )
 	{

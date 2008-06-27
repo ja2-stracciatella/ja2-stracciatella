@@ -177,7 +177,7 @@ void RenderMercsAccount()
 }
 
 
-static void MercAuthorizePaymentMessageBoxCallBack(UINT8 bExitValue);
+static void MercAuthorizePaymentMessageBoxCallBack(MessageBoxReturnValue);
 
 
 static void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
@@ -426,7 +426,7 @@ static void SettleMercAccounts(void)
 }
 
 
-static void MercAuthorizePaymentMessageBoxCallBack(UINT8 bExitValue)
+static void MercAuthorizePaymentMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, clear the form
   if( bExitValue == MSG_BOX_RETURN_YES )

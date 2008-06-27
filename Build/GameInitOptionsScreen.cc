@@ -187,9 +187,9 @@ static void GetGIOScreenUserInput(void);
 static void RestoreGIOButtonBackGrounds(void);
 static void DoneFadeOutForExitGameInitOptionScreen(void);
 static void DisplayMessageToUserAboutGameDifficulty(void);
-static void ConfirmGioDifSettingMessageBoxCallBack(UINT8 bExitValue);
+static void ConfirmGioDifSettingMessageBoxCallBack(MessageBoxReturnValue);
 static BOOLEAN DisplayMessageToUserAboutIronManMode(void);
-static void ConfirmGioIronManMessageBoxCallBack(UINT8 bExitValue);
+static void ConfirmGioIronManMessageBoxCallBack(MessageBoxReturnValue);
 
 
 ScreenID GameInitOptionsScreenHandle(void)
@@ -870,7 +870,7 @@ static void DisplayMessageToUserAboutGameDifficulty(void)
 }
 
 
-static void ConfirmGioDifSettingMessageBoxCallBack(UINT8 bExitValue)
+static void ConfirmGioDifSettingMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	if (bExitValue == MSG_BOX_RETURN_YES)
 	{
@@ -893,7 +893,7 @@ static BOOLEAN DisplayMessageToUserAboutIronManMode(void)
 }
 
 
-static void ConfirmGioIronManMessageBoxCallBack(UINT8 bExitValue)
+static void ConfirmGioIronManMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	if (bExitValue == MSG_BOX_RETURN_YES)
 	{

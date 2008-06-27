@@ -462,9 +462,9 @@ static BOOLEAN ServeNextFriendlySectorInTown(INT16* sNeighbourX, INT16* sNeighbo
 }
 
 
-static void CantTrainMilitiaOkBoxCallback(UINT8 bExitValue);
+static void CantTrainMilitiaOkBoxCallback(MessageBoxReturnValue);
 static INT32 GetNumberOfUnpaidTrainableSectors(void);
-static void PayMilitiaTrainingYesNoBoxCallback(UINT8 bExitValue);
+static void PayMilitiaTrainingYesNoBoxCallback(MessageBoxReturnValue);
 
 
 void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
@@ -603,7 +603,7 @@ static void StartTrainingInAllUnpaidTrainableSectors(void);
 
 // IMPORTANT: This same callback is used both for initial training and for continue training prompt
 // use 'gfYesNoPromptIsForContinue' flag to tell them apart
-static void PayMilitiaTrainingYesNoBoxCallback(UINT8 bExitValue)
+static void PayMilitiaTrainingYesNoBoxCallback(MessageBoxReturnValue const bExitValue)
 {
 	Assert( giTotalCostOfTraining > 0 );
 
@@ -645,7 +645,7 @@ static void PayMilitiaTrainingYesNoBoxCallback(UINT8 bExitValue)
 }
 
 
-static void CantTrainMilitiaOkBoxCallback(UINT8 bExitValue)
+static void CantTrainMilitiaOkBoxCallback(MessageBoxReturnValue const bExitValue)
 {
 	MilitiaTrainingRejected();
 }
