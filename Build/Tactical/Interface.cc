@@ -94,7 +94,6 @@ static MOUSE_REGION gMenuOverlayRegion;
 VIDEO_OVERLAY*      g_ui_message_overlay = NULL;
 static UINT16       gusUIMessageWidth;
 static UINT16       gusUIMessageHeight;
-static MercPopUpBox gpUIMessageOverrideMercBox;
 UINT32				guiUIMessageTime = 0;
 static INT32        iUIMessageBox = -1;
 UINT32				guiUIMessageTimeDelay = 0;
@@ -1853,9 +1852,6 @@ void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text)
 	guiUIMessageTime = GetJA2Clock( );
 	guiUIMessageTimeDelay = CalcUIMessageDuration(text);
 
-	// Override it!
-	OverrideMercPopupBox( &gpUIMessageOverrideMercBox );
-
 	MercPopupBoxFlags const flags = fUseSkullIcon ?
 		MERC_POPUP_PREPARE_FLAGS_SKULLICON :
 		MERC_POPUP_PREPARE_FLAGS_STOPICON;
@@ -1863,9 +1859,6 @@ void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text)
 
 	// Prepare text box
 	iUIMessageBox = PrepareMercPopupBox(iUIMessageBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight);
-
-	// Set it back!
-	ResetOverrideMercPopupBox( );
 
 	if (g_ui_message_overlay != NULL)
 	{
@@ -1895,10 +1888,8 @@ void BeginMapUIMessage(INT16 delta_y, const wchar_t* text)
 	guiUIMessageTime      = GetJA2Clock();
 	guiUIMessageTimeDelay = CalcUIMessageDuration(text);
 
-	OverrideMercPopupBox(&gpUIMessageOverrideMercBox);
 	SetPrepareMercPopupFlags(MERC_POPUP_PREPARE_FLAGS_TRANS_BACK);
 	iUIMessageBox = PrepareMercPopupBox(iUIMessageBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight);
-	ResetOverrideMercPopupBox();
 
 	if (g_ui_message_overlay == NULL)
 	{

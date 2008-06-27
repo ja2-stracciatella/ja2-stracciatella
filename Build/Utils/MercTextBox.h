@@ -47,20 +47,6 @@ BOOLEAN RemoveMercPopupBoxFromIndex( UINT32 uiId );
 BOOLEAN RenderMercPopUpBoxFromIndex(INT32 iBoxId, INT16 sDestX, INT16 sDestY, SGPVSurface* buffer);
 
 
-typedef struct {
- SGPVSurface* uiSourceBufferIndex;
- UINT8	ubBackgroundIndex;
- UINT8	ubBorderIndex;
- SGPVSurface* uiMercTextPopUpBackground;
- SGPVObject* uiMercTextPopUpBorder;
- BOOLEAN	fMercTextPopupInitialized;
- BOOLEAN	fMercTextPopupSurfaceInitialized;
- MercPopupBoxFlags uiFlags;
-} MercPopUpBox;
-
-
-void OverrideMercPopupBox(MercPopUpBox* pMercBox);
-void ResetOverrideMercPopupBox(void);
 void SetPrepareMercPopupFlags(MercPopupBoxFlags);
 
 #endif

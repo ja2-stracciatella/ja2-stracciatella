@@ -61,12 +61,17 @@ static char const* const zMercBackgroundPopupFilenames[] =
 };
 
 
-// the current pop up box
-static MercPopUpBox* gPopUpTextBox;
-
-
-// the old one
-static MercPopUpBox* gOldPopUpTextBox;
+struct MercPopUpBox
+{
+	SGPVSurface*      uiSourceBufferIndex;
+	UINT8             ubBackgroundIndex;
+	UINT8             ubBorderIndex;
+	SGPVSurface*      uiMercTextPopUpBackground;
+	SGPVObject*       uiMercTextPopUpBorder;
+	BOOLEAN           fMercTextPopupInitialized;
+	BOOLEAN           fMercTextPopupSurfaceInitialized;
+	MercPopupBoxFlags uiFlags;
+};
 
 
 // the list of boxes
@@ -90,24 +95,7 @@ static MercPopUpBox* SetCurrentPopUpBox(UINT32 const uiId)
 	}
 
 	// see if box inited
-	MercPopUpBox* const box = gpPopUpBoxList[uiId];
-	if (box) gPopUpTextBox = box;
-	return box;
-}
-
-
-void OverrideMercPopupBox(MercPopUpBox* const pMercBox)
-{
-	// store old box and set current this passed one
-	gOldPopUpTextBox = gPopUpTextBox;
-
-	gPopUpTextBox = pMercBox;
-}
-
-
-void ResetOverrideMercPopupBox()
-{
-	gPopUpTextBox = gOldPopUpTextBox;
+	return gpPopUpBoxList[uiId];
 }
 
 
@@ -224,9 +212,6 @@ try
 		// create box
 		pPopUpTextBox = new_box.Allocate();
 
-		// copy over ptr
-		gPopUpTextBox = pPopUpTextBox;
-
 			// Load appropriate images
 		LoadTextMercPopupImages(pPopUpTextBox, ubBackgroundIndex, ubBorderIndex);
 	}
@@ -241,9 +226,6 @@ try
 		// box has valid id and no instance?..error
 		Assert( pPopUpTextBox );
 
-			// copy over ptr
-		gPopUpTextBox = pPopUpTextBox;
-
 		if ( ubBackgroundIndex != pPopUpTextBox->ubBackgroundIndex || ubBorderIndex != pPopUpTextBox->ubBorderIndex || !pPopUpTextBox->fMercTextPopupInitialized)
 		{
 			//Remove old, set new
@@ -252,7 +234,7 @@ try
 		}
 	}
 
-	gPopUpTextBox->uiFlags = guiFlags;
+	pPopUpTextBox->uiFlags = guiFlags;
 	// reset flags
 	guiFlags = MERC_POPUP_PREPARE_FLAGS_NONE;
 
@@ -422,8 +404,6 @@ BOOLEAN RemoveMercPopupBoxFromIndex(UINT32 const uiId)
 	RemoveTextMercPopupImages(box);
 
 	MemFree(box);
-
-	gPopUpTextBox = 0;
 	return TRUE;
 }
 
