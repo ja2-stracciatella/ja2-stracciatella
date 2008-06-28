@@ -196,8 +196,6 @@ const wchar_t* const Message[] =
 
 	L"%ls recharge.",
 	L"%ls n'a pas assez de Points d'Action !",
-	L"%ls applique les premiers soins (Appuyez sur une touche pour annuler).",
-	L"%ls et %ls appliquent les premiers soins (Appuyez sur une touche pour annuler).",
 	// the following 17 strings are used to create lists of gun advantages and disadvantages
 	// (separated by commas)
 	L"fiable",

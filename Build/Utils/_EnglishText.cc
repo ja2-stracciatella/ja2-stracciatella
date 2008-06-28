@@ -196,8 +196,6 @@ const wchar_t* const Message[] =
 
 	L"%ls reloads.",
 	L"%ls doesn't have enough Action Points!",
-	L"%ls is applying first aid. (Press any key to cancel.)",
-	L"%ls and %ls are applying first aid. (Press any key to cancel.)",
 	// the following 17 strings are used to create lists of gun advantages and disadvantages
 	// (separated by commas)
 	L"reliable",

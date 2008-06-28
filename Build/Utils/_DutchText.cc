@@ -196,8 +196,6 @@ const wchar_t* const Message[] =
 
 	L"%ls herlaad.",
 	L"%ls heeft niet genoeg actiepunten!",
-	L"%ls verricht eerste hulp. (Druk een toets om te stoppen.)",
-	L"%ls en %ls verrichten eerste hulp. (Druk een toets om te stoppen.)",
 	// the following 17 strings are used to create lists of gun advantages and disadvantages
 	// (separated by commas)
 	L"reliable",

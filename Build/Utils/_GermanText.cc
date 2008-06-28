@@ -194,8 +194,6 @@ const wchar_t* const Message[] =
 
 	L"%ls lädt nach.",
 	L"%ls hat nicht genug Action-Punkte!",
-	L"%ls leistet Erste Hilfe. (Rückgängig mit beliebiger Taste.)",
-	L"%ls und %ls leisten Erste Hilfe. (Rückgängig mit beliebiger Taste.)",
 	// the following 17 strings are used to create lists of gun advantages and disadvantages
 	// (separated by commas)
 	L"zuverlässig",

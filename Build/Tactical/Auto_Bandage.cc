@@ -1,4 +1,3 @@
-#include "Buffer.h"
 #include "Font.h"
 #include "Font_Control.h"
 #include "HImage.h"
@@ -13,7 +12,6 @@
 #include "Items.h"
 #include "Tactical_Placement_GUI.h"
 #include "Text.h"
-#include "MercTextBox.h"
 #include "Interface.h"
 #include "Auto_Bandage.h"
 #include "RenderWorld.h"
@@ -41,13 +39,7 @@
 #define NUMBER_MERC_FACES_AUTOBANDAGE_BOX 4
 
 
-static wchar_t* sAutoBandageString = NULL;
-INT32		giBoxId						      = -1;
-UINT16	gusTextBoxWidth					= 0;
-UINT16	gusTextBoxHeight			  = 0;
 BOOLEAN	gfBeginningAutoBandage  = FALSE;
-INT16		gsX											= 0;
-INT16		gsY											= 0;
 UINT32  guiAutoBandageSeconds		= 0;
 BOOLEAN fAutoBandageComplete = FALSE;
 BOOLEAN fEndAutoBandage = FALSE;
@@ -234,10 +226,6 @@ BOOLEAN HandleAutoBandage( )
 
 		DisplayAutoBandageUpdatePanel( );
 
-		//RenderMercPopUpBoxFromIndex( giBoxId, gsX, gsY,  FRAME_BUFFER );
-
-		//InvalidateRegion( gsX, gsY, gsX + gusTextBoxWidth, gsY + gusTextBoxHeight );
-
 		EndFrameBufferRender( );
 
 		// Handle strategic engine
@@ -285,74 +273,6 @@ BOOLEAN HandleAutoBandage( )
 }
 
 
-static BOOLEAN CreateAutoBandageString(void)
-try
-{
-	UINT32					uiDoctorNameStringLength = 1; // for end-of-string character
-
-	UINT8 ubDoctors = 0;
-	const SOLDIERTYPE* doctors[20];
-	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
-	{
-		if (s->bInSector &&
-				s->bLife >= OKLIFE &&
-				!s->bCollapsed &&
-				s->bMedical > 0 &&
-				FindObjClass(s, IC_MEDKIT) != NO_SLOT)
-		{
-			doctors[ubDoctors++] = s;
-			// increase the length of the string by the size of the name
-			// plus 2, one for the comma and one for the space after that
-			uiDoctorNameStringLength += wcslen(s->name) + 2;
-		}
-	}
-	if (ubDoctors == 0)
-	{
-		return( FALSE );
-	}
-
-	if (ubDoctors == 1)
-	{
-		uiDoctorNameStringLength += wcslen( Message[STR_IS_APPLYING_FIRST_AID] );
-	}
-	else
-	{
-		uiDoctorNameStringLength += wcslen( Message[STR_ARE_APPLYING_FIRST_AID] );
-	}
-
-	sAutoBandageString = REALLOC(sAutoBandageString, wchar_t, uiDoctorNameStringLength);
-
-	if (ubDoctors == 1)
-	{
-		swprintf(sAutoBandageString, uiDoctorNameStringLength, Message[STR_IS_APPLYING_FIRST_AID], doctors[0]->name); /* XXX uiDoctorNameStringLength? */
-	}
-	else
-	{
-		// make a temporary string to hold most of the doctors names joined by commas
-		SGP::Buffer<wchar_t> sTemp(uiDoctorNameStringLength);
-		wcscpy( sTemp, L"" );
-		for (INT32 cnt = 0; cnt < ubDoctors - 1; ++cnt)
-		{
-			wcscat(sTemp, doctors[cnt]->name);
-			if (ubDoctors > 2)
-			{
-				if (cnt == ubDoctors - 2)
-				{
-					wcscat( sTemp, L"," );
-				}
-				else
-				{
-					wcscat( sTemp, L", " );
-				}
-			}
-		}
-		swprintf(sAutoBandageString, uiDoctorNameStringLength, Message[STR_ARE_APPLYING_FIRST_AID], static_cast<wchar_t const*>(sTemp), doctors[ubDoctors - 1]->name); /* XXX uiDoctorNameStringLength? */
-	}
-	return( TRUE );
-}
-catch (...) { return FALSE; }
-
-
 void SetAutoBandageComplete( void )
 {
 	// this will set the fact autobandage is complete
@@ -367,8 +287,6 @@ static void SetUpAutoBandageUpdatePanel(void);
 
 void AutoBandage( BOOLEAN fStart )
 {
-	SGPRect					aRect;
-
 	if ( fStart )
 	{
 		gTacticalStatus.fAutoBandageMode	 = TRUE;
@@ -395,21 +313,6 @@ void AutoBandage( BOOLEAN fStart )
 		}
 
 		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Begin auto bandage." );
-
-		if (CreateAutoBandageString())
-		{
-			giBoxId = PrepareMercPopupBox( -1, DIALOG_MERC_POPUP_BACKGROUND, DIALOG_MERC_POPUP_BORDER, sAutoBandageString, 200, 40, 10, 30, &gusTextBoxWidth, &gusTextBoxHeight );
-		}
-
-		aRect.iTop    = 0;
-		aRect.iLeft   = 0;
-		aRect.iBottom = INV_INTERFACE_START_Y;
-		aRect.iRight  = SCREEN_WIDTH;
-
-		// Determine position ( centered in rect )
-		gsX = (INT16)( ( ( ( aRect.iRight	- aRect.iLeft ) - gusTextBoxWidth ) / 2 ) + aRect.iLeft );
-		gsY = (INT16)( ( ( ( aRect.iBottom - aRect.iTop ) - gusTextBoxHeight ) / 2 ) + aRect.iTop );
-
 
 		// build a mask
 		MSYS_DefineRegion(&gAutoBandageRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
@@ -462,9 +365,6 @@ void AutoBandage( BOOLEAN fStart )
 
 		DestroyTerminateAutoBandageButton( );
 
-		// Delete popup!
-		RemoveMercPopupBoxFromIndex( giBoxId );
-		giBoxId = -1;
 		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"End auto bandage." );
 
 		// build a mask

@@ -195,8 +195,6 @@ const wchar_t* const Message[] =
 
 	L"%ls перезаряжает оружие.",
 	L"%ls: недостаточно очков действия!",
-	L"%ls оказывает первую помощь (любая клавиша - отмена).",
-	L"%ls и %ls оказывают первую помощь (любая клавиша - отмена).",
 	// the following 17 strings are used to create lists of gun advantages and disadvantages
 	// (separated by commas)
 	L"надежность",
