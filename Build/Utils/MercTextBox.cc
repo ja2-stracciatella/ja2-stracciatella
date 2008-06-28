@@ -60,13 +60,12 @@ static char const* const zMercBackgroundPopupFilenames[] =
 
 struct MercPopUpBox
 {
-	SGPVSurface*      uiSourceBufferIndex;
-	UINT8             ubBackgroundIndex;
-	UINT8             ubBorderIndex;
-	SGPVSurface*      uiMercTextPopUpBackground;
-	SGPVObject*       uiMercTextPopUpBorder;
-	BOOLEAN           fMercTextPopupInitialized;
-	BOOLEAN           fMercTextPopupSurfaceInitialized;
+	SGPVSurface* uiSourceBufferIndex;
+	UINT8        ubBackgroundIndex;
+	UINT8        ubBorderIndex;
+	SGPVSurface* uiMercTextPopUpBackground;
+	SGPVObject*  uiMercTextPopUpBorder;
+	BOOLEAN      fMercTextPopupInitialized;
 };
 
 
@@ -193,8 +192,7 @@ try
 
 	// Create a background video surface to blt the face onto
 	SGPVSurface* const vs = AddVideoSurface(usWidth, usHeight, PIXEL_DEPTH);
-	box->uiSourceBufferIndex              = vs;
-	box->fMercTextPopupSurfaceInitialized = TRUE;
+	box->uiSourceBufferIndex = vs;
 
 	*pActualWidth  = usWidth;
 	*pActualHeight = usHeight;
@@ -287,9 +285,6 @@ catch (...) { return 0; }
 BOOLEAN RemoveMercPopupBox(MercPopUpBox* const box)
 {
 	if (!box) return FALSE;
-
-	// now check to see if inited...
-	if (!box->fMercTextPopupSurfaceInitialized) return TRUE; // XXX TRUE?
 
 	DeleteVideoSurface(box->uiSourceBufferIndex);
 
