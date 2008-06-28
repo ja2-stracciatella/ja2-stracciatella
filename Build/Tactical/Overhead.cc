@@ -6372,7 +6372,7 @@ void InitializeTacticalStatusAtBattleStart(void)
 
 
 #ifdef JA2DEMO
-static void DemoEndOKCallback(UINT8 bExitCode)
+static void DemoEndOKCallback(MessageBoxReturnValue const bExitCode)
 {
 	// Check if gabby is alive...
 	if ( gMercProfiles[ GABBY ].bLife == 0 )
