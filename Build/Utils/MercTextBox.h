@@ -1,6 +1,7 @@
 #ifndef MERCTEXTBOX_H
 #define MERCTEXTBOX_H
 
+#include "AutoObj.h"
 #include "JA2Types.h"
 
 
@@ -42,5 +43,7 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox*, MercPopUpBackground, MercPopUpB
 void RemoveMercPopupBox(MercPopUpBox*);
 
 BOOLEAN RenderMercPopUpBox(MercPopUpBox const*, INT16 sDestX, INT16 sDestY, SGPVSurface* buffer);
+
+typedef SGP::AutoObj<MercPopUpBox, RemoveMercPopupBox>::Type AutoMercPopUpBox;
 
 #endif

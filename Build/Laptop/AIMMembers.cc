@@ -1354,12 +1354,9 @@ static BOOLEAN DisplayVideoConferencingDisplay(void)
 		UINT16 usActualHeight;
 		UINT16 usPosX;
 
-		MercPopUpBox* const aim_members_box = PrepareMercPopupBox(0, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, gsTalkingMercText, 300, 0, 0, 0, &usActualWidth, &usActualHeight);
-
+		AutoMercPopUpBox const aim_members_box(PrepareMercPopupBox(0, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, gsTalkingMercText, 300, 0, 0, 0, &usActualWidth, &usActualHeight));
 		usPosX = ( LAPTOP_SCREEN_LR_X - usActualWidth ) / 2 ;
-
 		RenderMercPopUpBox(aim_members_box, usPosX, TEXT_POPUP_WINDOW_Y, FRAME_BUFFER);
-		RemoveMercPopupBox(aim_members_box);
 	}
 
   InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
