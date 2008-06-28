@@ -275,9 +275,9 @@ catch (...) { return 0; }
 
 
 //Deletes the surface thats contains the border, background and the text.
-BOOLEAN RemoveMercPopupBox(MercPopUpBox* const box)
+void RemoveMercPopupBox(MercPopUpBox* const box)
 {
-	if (!box) return FALSE;
+	if (!box) return;
 
 	DeleteVideoSurface(box->uiSourceBufferIndex);
 
@@ -286,7 +286,6 @@ BOOLEAN RemoveMercPopupBox(MercPopUpBox* const box)
 	RemoveTextMercPopupImages(box);
 
 	MemFree(box);
-	return TRUE;
 }
 
 

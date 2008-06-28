@@ -39,7 +39,7 @@ enum MercPopUpBorder
 // create a pop up box if needed, return null pointer on failure
 MercPopUpBox* PrepareMercPopupBox(MercPopUpBox*, MercPopUpBackground, MercPopUpBorder, wchar_t const* pString, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16* pActualWidth, UINT16* pActualHeight, MercPopupBoxFlags flags = MERC_POPUP_PREPARE_FLAGS_NONE);
 
-BOOLEAN RemoveMercPopupBox(MercPopUpBox*);
+void RemoveMercPopupBox(MercPopUpBox*);
 
 BOOLEAN RenderMercPopUpBox(MercPopUpBox const*, INT16 sDestX, INT16 sDestY, SGPVSurface* buffer);
 
