@@ -37,7 +37,7 @@ enum MercPopUpBorder
 
 
 // create a pop up box if needed, return id of box..a -1 means couldn't be added
-INT32 PrepareMercPopupBox(INT32 iBoxId, MercPopUpBackground, MercPopUpBorder, wchar_t const* pString, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16* pActualWidth, UINT16* pActualHeight);
+INT32 PrepareMercPopupBox(INT32 iBoxId, MercPopUpBackground, MercPopUpBorder, wchar_t const* pString, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16* pActualWidth, UINT16* pActualHeight, MercPopupBoxFlags flags = MERC_POPUP_PREPARE_FLAGS_NONE);
 
 
 // remove this box from the index
@@ -45,8 +45,5 @@ BOOLEAN RemoveMercPopupBoxFromIndex( UINT32 uiId );
 
 // render pop up box with this index value
 BOOLEAN RenderMercPopUpBoxFromIndex(INT32 iBoxId, INT16 sDestX, INT16 sDestY, SGPVSurface* buffer);
-
-
-void SetPrepareMercPopupFlags(MercPopupBoxFlags);
 
 #endif

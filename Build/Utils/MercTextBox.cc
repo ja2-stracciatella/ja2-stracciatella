@@ -70,7 +70,6 @@ struct MercPopUpBox
 	SGPVObject*       uiMercTextPopUpBorder;
 	BOOLEAN           fMercTextPopupInitialized;
 	BOOLEAN           fMercTextPopupSurfaceInitialized;
-	MercPopupBoxFlags uiFlags;
 };
 
 
@@ -78,7 +77,6 @@ struct MercPopUpBox
 static MercPopUpBox* gpPopUpBoxList[MAX_NUMBER_OF_POPUP_BOXES];
 
 // the flags
-static MercPopupBoxFlags guiFlags;
 static SGPVObject* guiBoxIcons;
 static SGPVObject* guiSkullIcons;
 
@@ -186,7 +184,7 @@ static INT32 AddPopUpBoxToList(MercPopUpBox* pPopUpTextBox)
 static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColor, UINT8* pubFontShadowColor);
 
 
-INT32 PrepareMercPopupBox(INT32 const iBoxId, MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex, wchar_t const* const pString, UINT16 usWidth, UINT16 const usMarginX, UINT16 const usMarginTopY, UINT16 const usMarginBottomY, UINT16* const pActualWidth, UINT16* const pActualHeight)
+INT32 PrepareMercPopupBox(INT32 const iBoxId, MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex, wchar_t const* const pString, UINT16 usWidth, UINT16 const usMarginX, UINT16 const usMarginTopY, UINT16 const usMarginBottomY, UINT16* const pActualWidth, UINT16* const pActualHeight, MercPopupBoxFlags const flags)
 try
 {
 	if (usWidth >= SCREEN_WIDTH) return -1;
@@ -219,10 +217,6 @@ try
 		}
 	}
 
-	box->uiFlags = guiFlags;
-	// reset flags
-	guiFlags = MERC_POPUP_PREPARE_FLAGS_NONE;
-
 	UINT16 const usStringPixLength = StringPixLength(pString, TEXT_POPUP_FONT);
 	UINT16       usTextWidth;
 	if (usStringPixLength < usWidth - MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X * 2)
@@ -245,7 +239,7 @@ try
 	usWidth += usMarginX * 2;
 
 	// Add width for iconic...
-	if (box->uiFlags & (MERC_POPUP_PREPARE_FLAGS_STOPICON | MERC_POPUP_PREPARE_FLAGS_SKULLICON))
+	if (flags & (MERC_POPUP_PREPARE_FLAGS_STOPICON | MERC_POPUP_PREPARE_FLAGS_SKULLICON))
 	{
 		// Make minimun height for box...
 		if (usHeight < 45) usHeight = 45;
@@ -265,7 +259,7 @@ try
 	*pActualWidth  = usWidth;
 	*pActualHeight = usHeight;
 
-	if (box->uiFlags & MERC_POPUP_PREPARE_FLAGS_TRANS_BACK)
+	if (flags & MERC_POPUP_PREPARE_FLAGS_TRANS_BACK)
 	{
 		// Zero with yellow,
 		// Set source transparcenty
@@ -313,11 +307,11 @@ try
 	BltVideoObject(vs, hImageHandle, 7, usWidth - TEXT_POPUP_GAP_BN_LINES, usHeight - TEXT_POPUP_GAP_BN_LINES);
 
 	// Icon if ness....
-	if (box->uiFlags & MERC_POPUP_PREPARE_FLAGS_STOPICON)
+	if (flags & MERC_POPUP_PREPARE_FLAGS_STOPICON)
 	{
 		BltVideoObject(vs, guiBoxIcons, 0, 5, 4);
 	}
-	if (box->uiFlags & MERC_POPUP_PREPARE_FLAGS_SKULLICON)
+	if (flags & MERC_POPUP_PREPARE_FLAGS_SKULLICON)
 	{
 		BltVideoObject(vs, guiSkullIcons, 0, 9, 4);
 	}
@@ -333,7 +327,7 @@ try
 	//Display the text
 	INT16 sDispTextXPos = MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X + usMarginX;
 
-	if (box->uiFlags & (MERC_POPUP_PREPARE_FLAGS_STOPICON | MERC_POPUP_PREPARE_FLAGS_SKULLICON))
+	if (flags & (MERC_POPUP_PREPARE_FLAGS_STOPICON | MERC_POPUP_PREPARE_FLAGS_SKULLICON))
 	{
 		sDispTextXPos += 30;
 	}
@@ -417,10 +411,4 @@ static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColo
 			*pubFontShadowColor = DEFAULT_SHADOW;
 			break;
 	}
-}
-
-
-void SetPrepareMercPopupFlags(MercPopupBoxFlags const flags)
-{
-	guiFlags |= flags;
 }

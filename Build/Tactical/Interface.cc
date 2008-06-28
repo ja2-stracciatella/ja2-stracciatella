@@ -1855,10 +1855,9 @@ void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text)
 	MercPopupBoxFlags const flags = fUseSkullIcon ?
 		MERC_POPUP_PREPARE_FLAGS_SKULLICON :
 		MERC_POPUP_PREPARE_FLAGS_STOPICON;
-	SetPrepareMercPopupFlags(flags);
 
 	// Prepare text box
-	iUIMessageBox = PrepareMercPopupBox(iUIMessageBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight);
+	iUIMessageBox = PrepareMercPopupBox(iUIMessageBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight, flags);
 
 	if (g_ui_message_overlay != NULL)
 	{
@@ -1888,8 +1887,7 @@ void BeginMapUIMessage(INT16 delta_y, const wchar_t* text)
 	guiUIMessageTime      = GetJA2Clock();
 	guiUIMessageTimeDelay = CalcUIMessageDuration(text);
 
-	SetPrepareMercPopupFlags(MERC_POPUP_PREPARE_FLAGS_TRANS_BACK);
-	iUIMessageBox = PrepareMercPopupBox(iUIMessageBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight);
+	iUIMessageBox = PrepareMercPopupBox(iUIMessageBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight, MERC_POPUP_PREPARE_FLAGS_TRANS_BACK);
 
 	if (g_ui_message_overlay == NULL)
 	{
