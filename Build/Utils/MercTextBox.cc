@@ -120,9 +120,11 @@ static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColo
 
 
 MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex, wchar_t const* const pString, UINT16 usWidth, UINT16 const usMarginX, UINT16 const usMarginTopY, UINT16 const usMarginBottomY, UINT16* const pActualWidth, UINT16* const pActualHeight, MercPopupBoxFlags const flags)
-try
 {
-	if (usWidth >= SCREEN_WIDTH) return 0;
+	if (usWidth >= SCREEN_WIDTH)
+	{
+		throw std::logic_error("Tried to create too wide merc popup box");
+	}
 
 	if (usWidth <= MERC_TEXT_MIN_WIDTH) usWidth = MERC_TEXT_MIN_WIDTH;
 
@@ -179,7 +181,10 @@ try
 	if (usWidth >= MERC_BACKGROUND_WIDTH) usWidth = MERC_BACKGROUND_WIDTH - 1;
 
 	// make sure the area isnt bigger than the background texture
-	if (usHeight >= MERC_BACKGROUND_HEIGHT) return 0;
+	if (usHeight >= MERC_BACKGROUND_HEIGHT)
+	{
+		throw std::logic_error("Tried to create too high merc popup box");
+	}
 
 	// Create a background video surface to blt the face onto
 	SGPVSurface* const vs = AddVideoSurface(usWidth, usHeight, PIXEL_DEPTH);
@@ -269,7 +274,6 @@ try
 	new_box.Release();
 	return box;
 }
-catch (...) { return 0; }
 
 
 //Deletes the surface thats contains the border, background and the text.

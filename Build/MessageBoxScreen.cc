@@ -147,13 +147,6 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 	UINT16 usTextBoxWidth;
 	UINT16 usTextBoxHeight;
 	gMsgBox.box = PrepareMercPopupBox(0, style.background, style.border, zString, MSGBOX_DEFAULT_WIDTH, 40, 10, 30, &usTextBoxWidth, &usTextBoxHeight);
-	if (!gMsgBox.box)
-	{
-#ifdef JA2BETAVERSION
-		AssertMsg(0, "Failed in DoMessageBox().  Probable reason is because the string was too large to fit in max message box size.");
-#endif
-		return;
-	}
 
 	// Save height,width
 	gMsgBox.usWidth  = usTextBoxWidth;
