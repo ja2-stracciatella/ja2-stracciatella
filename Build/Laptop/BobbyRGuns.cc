@@ -436,7 +436,6 @@ static void DisplayGunInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UIN
 static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed);
 static void DisplayMiscInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 static void DisplayNonGunWeaponInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
-static void OutOfStockMessageBoxCallBack(MessageBoxReturnValue);
 
 
 void DisplayItemInfo(UINT32 uiItemClass)
@@ -459,7 +458,7 @@ void DisplayItemInfo(UINT32 uiItemClass)
 		DisableBobbyRButtons();
 
 		//Display a popup saying we are out of stock
-		DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, BobbyRText[ BOBBYR_NO_MORE_STOCK ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, OutOfStockMessageBoxCallBack );
+		DoLapTopMessageBox(MSG_BOX_LAPTOP_DEFAULT, BobbyRText[BOBBYR_NO_MORE_STOCK], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, 0);
 		return;
 	}
 
@@ -1430,16 +1429,6 @@ static void CalcFirstIndexForPage(STORE_INVENTORY* pInv, UINT32 uiItemClass)
 				}
 			}
 		}
-	}
-}
-
-
-static void OutOfStockMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
-{
-	// yes, load the game
-  if( bExitValue == MSG_BOX_RETURN_OK )
-	{
-//		guiCurrentLaptopMode  = LAPTOP_MODE_BOBBY_R;
 	}
 }
 
