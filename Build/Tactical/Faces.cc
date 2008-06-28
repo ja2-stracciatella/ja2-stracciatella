@@ -492,7 +492,7 @@ void SetAllAutoFacesInactive(  )
 
 static void NewEye(FACETYPE* pFace);
 static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer, SGPVSurface* buffer, INT16 sFaceX, INT16 sFaceY, UINT16 usEyesX, UINT16 usEyesY);
-static BOOLEAN FaceRestoreSavedBackgroundRect(const FACETYPE*, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight);
+static void FaceRestoreSavedBackgroundRect(FACETYPE const*, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight);
 
 
 static void BlinkAutoFace(FACETYPE* const f)
@@ -1348,10 +1348,8 @@ void HandleTalkingAutoFaces( )
 }
 
 
-static BOOLEAN FaceRestoreSavedBackgroundRect(const FACETYPE* const pFace, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight)
+static void FaceRestoreSavedBackgroundRect(FACETYPE const* const pFace, INT16 const sDestLeft, INT16 const sDestTop, INT16 const sSrcLeft, INT16 const sSrcTop, INT16 const sWidth, INT16 const sHeight)
 {
-	CHECKF(pFace != NULL);
-
 	const SGPRect r = { sSrcLeft, sSrcTop, sSrcLeft + sWidth, sSrcTop + sHeight };
 	BltVideoSurface(pFace->uiAutoDisplayBuffer, pFace->uiAutoRestoreBuffer, sDestLeft, sDestTop, &r);
 
@@ -1360,7 +1358,6 @@ static BOOLEAN FaceRestoreSavedBackgroundRect(const FACETYPE* const pFace, INT16
 	{
 		InvalidateRegionEx(sDestLeft - 2, sDestTop - 2, sDestLeft + sWidth + 3, sDestTop + sHeight + 2);
 	}
-	return(TRUE);
 }
 
 

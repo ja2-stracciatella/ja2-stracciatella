@@ -109,7 +109,6 @@ NPCQuoteInfo: weird preprocessor magic
 NewOKDestination(): boolean parameter with three (four?) values
 OBJECT_ARMED_BOMB: never gets tested
 OBJECT_MODIFIED: unused
-OutOfStockMessageBoxCallBack(): pointless
 PLAYER_TEAM_DEAD: never set
 PayMilitiaTrainingYesNoBoxCallback(): users
 PlayerGroupInMotion(): overkill
