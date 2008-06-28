@@ -183,114 +183,94 @@ static INT32 AddPopUpBoxToList(MercPopUpBox* pPopUpTextBox)
 }
 
 
-// get box with this id
-static MercPopUpBox* GetPopUpBoxIndex(INT32 iId)
-{
-	return( gpPopUpBoxList[ iId ] );
-}
-
-
 static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColor, UINT8* pubFontShadowColor);
 
 
 INT32 PrepareMercPopupBox(INT32 const iBoxId, MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex, wchar_t const* const pString, UINT16 usWidth, UINT16 const usMarginX, UINT16 const usMarginTopY, UINT16 const usMarginBottomY, UINT16* const pActualWidth, UINT16* const pActualHeight)
 try
 {
-	if (usWidth >= SCREEN_WIDTH)
-		return( -1 );
+	if (usWidth >= SCREEN_WIDTH) return -1;
 
-	if( usWidth <= MERC_TEXT_MIN_WIDTH )
-		usWidth = MERC_TEXT_MIN_WIDTH;
+	if (usWidth <= MERC_TEXT_MIN_WIDTH) usWidth = MERC_TEXT_MIN_WIDTH;
 
-	MercPopUpBox* pPopUpTextBox;
+	MercPopUpBox*             box;
 	SGP::PODObj<MercPopUpBox> new_box(0);
 	// check id value, if -1, box has not been inited yet
-	if( iBoxId == -1 )
+	if (iBoxId == -1)
 	{
 		// no box yet
-
-		// create box
-		pPopUpTextBox = new_box.Allocate();
-
-			// Load appropriate images
-		LoadTextMercPopupImages(pPopUpTextBox, ubBackgroundIndex, ubBorderIndex);
+		box = new_box.Allocate();
+		LoadTextMercPopupImages(box, ubBackgroundIndex, ubBorderIndex);
 	}
 	else
 	{
 		// has been created already,
 		// Check if these images are different
+		box = gpPopUpBoxList[iBoxId];
+		Assert(box);
 
-		// grab box
-		pPopUpTextBox = GetPopUpBoxIndex( iBoxId );
-
-		// box has valid id and no instance?..error
-		Assert( pPopUpTextBox );
-
-		if ( ubBackgroundIndex != pPopUpTextBox->ubBackgroundIndex || ubBorderIndex != pPopUpTextBox->ubBorderIndex || !pPopUpTextBox->fMercTextPopupInitialized)
+		if (ubBackgroundIndex != box->ubBackgroundIndex ||
+				ubBorderIndex     != box->ubBorderIndex     ||
+				!box->fMercTextPopupInitialized)
 		{
 			//Remove old, set new
-			RemoveTextMercPopupImages(pPopUpTextBox);
-			LoadTextMercPopupImages(pPopUpTextBox, ubBackgroundIndex, ubBorderIndex);
+			RemoveTextMercPopupImages(box);
+			LoadTextMercPopupImages(box, ubBackgroundIndex, ubBorderIndex);
 		}
 	}
 
-	pPopUpTextBox->uiFlags = guiFlags;
+	box->uiFlags = guiFlags;
 	// reset flags
 	guiFlags = MERC_POPUP_PREPARE_FLAGS_NONE;
 
-	UINT16 usStringPixLength = StringPixLength(pString, TEXT_POPUP_FONT);
-	UINT16 usTextWidth;
-	if( usStringPixLength < ( usWidth - ( MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X ) * 2 ) )
+	UINT16 const usStringPixLength = StringPixLength(pString, TEXT_POPUP_FONT);
+	UINT16       usTextWidth;
+	if (usStringPixLength < usWidth - MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X * 2)
 	{
-		usWidth = usStringPixLength + MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X * 2;
-		usTextWidth = usWidth - ( MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X  ) * 2 + 1;
+		usWidth     = usStringPixLength + MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X * 2;
+		usTextWidth = usWidth           - MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X * 2 + 1;
 	}
 	else
 	{
-		usTextWidth = usWidth - ( MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X  ) * 2 + 1 - usMarginX;
+		usTextWidth = usWidth - MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X * 2 + 1 - usMarginX;
 	}
 
-	UINT16 usNumberVerticalPixels = IanWrappedStringHeight(usTextWidth, 2, TEXT_POPUP_FONT, pString);
-
-	UINT16 usHeight = usNumberVerticalPixels + MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X * 2;
+	UINT16 const usNumberVerticalPixels = IanWrappedStringHeight(usTextWidth, 2, TEXT_POPUP_FONT, pString);
+	UINT16       usHeight               = usNumberVerticalPixels + MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y * 2;
 
 	// Add height for margins
 	usHeight += usMarginTopY + usMarginBottomY;
 
 	// Add width for margins
-	usWidth += (usMarginX*2);
+	usWidth += usMarginX * 2;
 
 	// Add width for iconic...
-	if ( ( pPopUpTextBox->uiFlags & ( MERC_POPUP_PREPARE_FLAGS_STOPICON | MERC_POPUP_PREPARE_FLAGS_SKULLICON ) ) )
+	if (box->uiFlags & (MERC_POPUP_PREPARE_FLAGS_STOPICON | MERC_POPUP_PREPARE_FLAGS_SKULLICON))
 	{
 		// Make minimun height for box...
-		if ( usHeight < 45 )
-		{
-			usHeight = 45;
-		}
+		if (usHeight < 45) usHeight = 45;
 		usWidth += 35;
 	}
 
-	if( usWidth >= MERC_BACKGROUND_WIDTH )
-		usWidth = MERC_BACKGROUND_WIDTH-1;
-	//make sure the area isnt bigger then the background texture
-	if( ( usWidth >= MERC_BACKGROUND_WIDTH ) || usHeight >= MERC_BACKGROUND_HEIGHT)
-	{
-		return( -1 );
-	}
-	// Create a background video surface to blt the face onto
-	pPopUpTextBox->uiSourceBufferIndex = AddVideoSurface(usWidth, usHeight, PIXEL_DEPTH);
-	pPopUpTextBox->fMercTextPopupSurfaceInitialized = TRUE;
+	if (usWidth >= MERC_BACKGROUND_WIDTH) usWidth = MERC_BACKGROUND_WIDTH - 1;
 
-	*pActualWidth = usWidth;
+	// make sure the area isnt bigger than the background texture
+	if (usHeight >= MERC_BACKGROUND_HEIGHT) return -1;
+
+	// Create a background video surface to blt the face onto
+	SGPVSurface* const vs = AddVideoSurface(usWidth, usHeight, PIXEL_DEPTH);
+	box->uiSourceBufferIndex              = vs;
+	box->fMercTextPopupSurfaceInitialized = TRUE;
+
+	*pActualWidth  = usWidth;
 	*pActualHeight = usHeight;
 
-	if ( pPopUpTextBox->uiFlags & MERC_POPUP_PREPARE_FLAGS_TRANS_BACK )
+	if (box->uiFlags & MERC_POPUP_PREPARE_FLAGS_TRANS_BACK)
 	{
 		// Zero with yellow,
 		// Set source transparcenty
-		pPopUpTextBox->uiSourceBufferIndex->SetTransparency(FROMRGB(255, 255, 0));
-		pPopUpTextBox->uiSourceBufferIndex->Fill(Get16BPPColor(FROMRGB(255, 255, 0)));
+		vs->SetTransparency(FROMRGB(255, 255, 0));
+		vs->Fill(Get16BPPColor(FROMRGB(255, 255, 0)));
 	}
 	else
 	{
@@ -299,61 +279,61 @@ try
 		DestRect.iTop    = 0;
 		DestRect.iRight  = usWidth;
 		DestRect.iBottom = usHeight;
-		BltVideoSurface(pPopUpTextBox->uiSourceBufferIndex, pPopUpTextBox->uiMercTextPopUpBackground, 0, 0, &DestRect);
+		BltVideoSurface(vs, box->uiMercTextPopUpBackground, 0, 0, &DestRect);
 	}
 
-	const SGPVObject* const hImageHandle = pPopUpTextBox->uiMercTextPopUpBorder;
+	const SGPVObject* const hImageHandle = box->uiMercTextPopUpBorder;
 
 	UINT16 usPosY = 0;
 	//blit top row of images
 	for (UINT16 i = TEXT_POPUP_GAP_BN_LINES; i < usWidth - TEXT_POPUP_GAP_BN_LINES; i += TEXT_POPUP_GAP_BN_LINES)
 	{
 		//TOP ROW
-	  BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, hImageHandle, 1,i, usPosY);
+	  BltVideoObject(vs, hImageHandle, 1, i, usPosY);
 		//BOTTOM ROW
-	  BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, hImageHandle, 6,i, usHeight - TEXT_POPUP_GAP_BN_LINES+6);
+	  BltVideoObject(vs, hImageHandle, 6, i, usHeight - TEXT_POPUP_GAP_BN_LINES + 6);
 	}
 
 	//blit the left and right row of images
 	UINT16 usPosX = 0;
 	for (UINT16 i= TEXT_POPUP_GAP_BN_LINES; i < usHeight - TEXT_POPUP_GAP_BN_LINES; i += TEXT_POPUP_GAP_BN_LINES)
 	{
-	  BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, hImageHandle, 3,usPosX, i);
-	  BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, hImageHandle, 4,usPosX+usWidth-4, i);
+	  BltVideoObject(vs, hImageHandle, 3, usPosX,               i);
+	  BltVideoObject(vs, hImageHandle, 4, usPosX + usWidth - 4, i);
 	}
 
 	//blt the corner images for the row
 	//top left
-	BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, hImageHandle, 0, 0, usPosY);
+	BltVideoObject(vs, hImageHandle, 0, 0,                                 usPosY);
 	//top right
-	BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, hImageHandle, 2, usWidth-TEXT_POPUP_GAP_BN_LINES, usPosY);
+	BltVideoObject(vs, hImageHandle, 2, usWidth - TEXT_POPUP_GAP_BN_LINES, usPosY);
 	//bottom left
-	BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, hImageHandle, 5, 0, usHeight-TEXT_POPUP_GAP_BN_LINES);
+	BltVideoObject(vs, hImageHandle, 5, 0,                                 usHeight - TEXT_POPUP_GAP_BN_LINES);
 	//bottom right
-	BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, hImageHandle, 7, usWidth-TEXT_POPUP_GAP_BN_LINES, usHeight-TEXT_POPUP_GAP_BN_LINES);
+	BltVideoObject(vs, hImageHandle, 7, usWidth - TEXT_POPUP_GAP_BN_LINES, usHeight - TEXT_POPUP_GAP_BN_LINES);
 
 	// Icon if ness....
-	if ( pPopUpTextBox->uiFlags & MERC_POPUP_PREPARE_FLAGS_STOPICON )
+	if (box->uiFlags & MERC_POPUP_PREPARE_FLAGS_STOPICON)
 	{
-		BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, guiBoxIcons, 0, 5, 4);
+		BltVideoObject(vs, guiBoxIcons, 0, 5, 4);
 	}
-	if ( pPopUpTextBox->uiFlags & MERC_POPUP_PREPARE_FLAGS_SKULLICON )
+	if (box->uiFlags & MERC_POPUP_PREPARE_FLAGS_SKULLICON)
 	{
-		BltVideoObject(pPopUpTextBox->uiSourceBufferIndex, guiSkullIcons, 0, 9, 4);
+		BltVideoObject(vs, guiSkullIcons, 0, 9, 4);
 	}
 
 	//Get the font and shadow colors
 	UINT8 ubFontColor;
 	UINT8 ubFontShadowColor;
-	GetMercPopupBoxFontColor( ubBackgroundIndex, &ubFontColor, &ubFontShadowColor );
+	GetMercPopupBoxFontColor(ubBackgroundIndex, &ubFontColor, &ubFontShadowColor);
 
-	SetFontShadow( ubFontShadowColor );
-	SetFontDestBuffer(pPopUpTextBox->uiSourceBufferIndex, 0, 0, usWidth, usHeight);
+	SetFontShadow(ubFontShadowColor);
+	SetFontDestBuffer(vs, 0, 0, usWidth, usHeight);
 
 	//Display the text
 	INT16 sDispTextXPos = MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X + usMarginX;
 
-	if ( pPopUpTextBox->uiFlags & ( MERC_POPUP_PREPARE_FLAGS_STOPICON | MERC_POPUP_PREPARE_FLAGS_SKULLICON ) )
+	if (box->uiFlags & (MERC_POPUP_PREPARE_FLAGS_STOPICON | MERC_POPUP_PREPARE_FLAGS_SKULLICON))
 	{
 		sDispTextXPos += 30;
 	}
@@ -363,19 +343,18 @@ try
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	SetFontShadow(DEFAULT_SHADOW);
 
-	if( iBoxId == -1 )
+	if (iBoxId == -1)
 	{
 		// now return attemp to add to pop up box list, if successful will return index
-		INT32 const new_id = AddPopUpBoxToList(pPopUpTextBox);
+		INT32 const new_id = AddPopUpBoxToList(box);
 		new_box.Release();
 		return new_id;
 	}
 	else
 	{
 		// set as current box
-		SetCurrentPopUpBox( iBoxId );
-
-		return( iBoxId );
+		SetCurrentPopUpBox(iBoxId);
+		return iBoxId;
 	}
 }
 catch (...) { return -1; }
