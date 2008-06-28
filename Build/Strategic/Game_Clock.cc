@@ -973,7 +973,7 @@ static void CreateDestroyScreenMaskForPauseGame(void)
 		//UnMarkButtonsDirty( );
 
 		// now create the pop up box to say the game is paused
-		iPausedPopUpBox = PrepareMercPopupBox ( iPausedPopUpBox ,BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, pPausedGameText[ 0 ], 300, 0, 0, 0, &usPausedActualWidth, &usPausedActualHeight );
+		iPausedPopUpBox = PrepareMercPopupBox(-1, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, pPausedGameText[0], 300, 0, 0, 0, &usPausedActualWidth, &usPausedActualHeight);
 	}
 }
 
