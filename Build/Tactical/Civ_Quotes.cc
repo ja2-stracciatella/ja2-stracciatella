@@ -112,7 +112,7 @@ typedef struct
 	BOOLEAN				bActive;
 	MOUSE_REGION	MouseRegion;
 	VIDEO_OVERLAY* video_overlay;
-	INT32					iDialogueBox;
+	MercPopUpBox*  dialogue_box;
 	UINT32				uiTimeOfCreation;
 	UINT32				uiDelayTime;
 	SOLDIERTYPE *	pCiv;
@@ -213,10 +213,9 @@ static void ShutDownQuoteBox(BOOLEAN fForce)
 		// Remove mouse region...
 		MSYS_RemoveRegion( &(gCivQuoteData.MouseRegion) );
 
-    RemoveMercPopupBoxFromIndex( gCivQuoteData.iDialogueBox );
-    gCivQuoteData.iDialogueBox = -1;
-
-		gCivQuoteData.bActive = FALSE;
+		RemoveMercPopupBox(gCivQuoteData.dialogue_box);
+		gCivQuoteData.dialogue_box = 0;
+		gCivQuoteData.bActive      = FALSE;
 
 		// do we need to do anything at the end of the civ quote?
 		if ( gCivQuoteData.pCiv && gCivQuoteData.pCiv->bAction == AI_ACTION_OFFER_SURRENDER )
@@ -307,7 +306,7 @@ INT8 GetCivType(const SOLDIERTYPE* pCiv)
 static void RenderCivQuoteBoxOverlay(VIDEO_OVERLAY* pBlitter)
 {
 	if (gCivQuoteData.video_overlay == NULL) return;
-	RenderMercPopUpBoxFromIndex(gCivQuoteData.iDialogueBox, pBlitter->sX, pBlitter->sY,  pBlitter->uiDestBuff);
+	RenderMercPopUpBox(gCivQuoteData.dialogue_box, pBlitter->sX, pBlitter->sY,  pBlitter->uiDestBuff);
 	InvalidateRegion(pBlitter->sX, pBlitter->sY, pBlitter->sX + gusCivQuoteBoxWidth, pBlitter->sY + gusCivQuoteBoxHeight);
 }
 
@@ -363,7 +362,7 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
 
 	// Prepare text box
-	gCivQuoteData.iDialogueBox = PrepareMercPopupBox(-1, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, gzCivQuote, DIALOGUE_DEFAULT_WIDTH, 0, 0, 0, &gusCivQuoteBoxWidth, &gusCivQuoteBoxHeight);
+	gCivQuoteData.dialogue_box = PrepareMercPopupBox(0, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, gzCivQuote, DIALOGUE_DEFAULT_WIDTH, 0, 0, 0, &gusCivQuoteBoxWidth, &gusCivQuoteBoxHeight);
 
 	// OK, find center for box......
 	sX = sX - ( gusCivQuoteBoxWidth / 2 );
@@ -799,7 +798,7 @@ void InitCivQuoteSystem( )
 	memset( &gCivQuoteData, 0, sizeof( gCivQuoteData ) );
 	gCivQuoteData.bActive				= FALSE;
 	gCivQuoteData.video_overlay = NULL;
-	gCivQuoteData.iDialogueBox	= -1;
+	gCivQuoteData.dialogue_box  = 0;
 }
 
 

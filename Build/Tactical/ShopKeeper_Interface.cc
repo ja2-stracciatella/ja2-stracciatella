@@ -272,7 +272,7 @@ static UINT32  guiRandomQuoteDelayTime                        = SKI_DEALERS_RAND
 static FACETYPE* giShopKeeperFaceIndex;
 
 //Id for the popup box
-static INT32 giPopUpBoxId = -1;
+static MercPopUpBox* g_popup_box;
 
 static BOOLEAN gfIsTheShopKeeperTalking;
 
@@ -964,10 +964,11 @@ static void HandleShopKeeperInterface(void)
 
 	//if the merc is talking and there is an item currently being highlighted
 	// ( this gets rid of the item burning through the dealers text box )
-	if( gfIsTheShopKeeperTalking )
-		if( gpHighLightedItemObject != NULL || gubSkiDirtyLevel != SKI_DIRTY_LEVEL0 )
-			RenderMercPopUpBoxFromIndex( giPopUpBoxId, gusPositionOfSubTitlesX, SKI_POSITION_SUBTITLES_Y, FRAME_BUFFER);
-
+	if (gfIsTheShopKeeperTalking &&
+			(gpHighLightedItemObject != NULL || gubSkiDirtyLevel != SKI_DIRTY_LEVEL0))
+	{
+		RenderMercPopUpBox(g_popup_box, gusPositionOfSubTitlesX, SKI_POSITION_SUBTITLES_Y, FRAME_BUFFER);
+	}
 
 	//if we are to display the drop item to ground text
 	if( gfSkiDisplayDropItemToGroundText )
@@ -1043,7 +1044,7 @@ static void RenderShopKeeperInterface(void)
 
 	//if the merc is talking and the screen has been dirtied
 	if( gfIsTheShopKeeperTalking )
-		RenderMercPopUpBoxFromIndex( giPopUpBoxId, gusPositionOfSubTitlesX, SKI_POSITION_SUBTITLES_Y, FRAME_BUFFER);
+		RenderMercPopUpBox(g_popup_box, gusPositionOfSubTitlesX, SKI_POSITION_SUBTITLES_Y, FRAME_BUFFER);
 
 	CrossOutUnwantedItems( );
 
@@ -4214,12 +4215,12 @@ void InitShopKeeperSubTitledText(const wchar_t* pString)
 		// The subutitled text for what the merc is saying
 		wchar_t ShopKeeperTalkingText[SKI_SUBTITLE_TEXT_SIZE];
 		swprintf(ShopKeeperTalkingText, lengthof(ShopKeeperTalkingText), L"\"%ls\"", pString);
-		giPopUpBoxId = PrepareMercPopupBox(giPopUpBoxId, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, ShopKeeperTalkingText, 300, 0, 0, 0, &usActualWidth, &usActualHeight);
+		g_popup_box = PrepareMercPopupBox(g_popup_box, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, ShopKeeperTalkingText, 300, 0, 0, 0, &usActualWidth, &usActualHeight);
 
 		//position it to start under the guys face
 		gusPositionOfSubTitlesX = 13;
 
-		RenderMercPopUpBoxFromIndex( giPopUpBoxId, gusPositionOfSubTitlesX, SKI_POSITION_SUBTITLES_Y, FRAME_BUFFER);
+		RenderMercPopUpBox(g_popup_box, gusPositionOfSubTitlesX, SKI_POSITION_SUBTITLES_Y, FRAME_BUFFER);
 
 		//check to make sure the region is not already initialized
 		if( !( gShopKeeperSubTitleMouseRegion.uiFlags & MSYS_REGION_EXISTS ) )
@@ -4237,18 +4238,16 @@ void InitShopKeeperSubTitledText(const wchar_t* pString)
 
 static void RemoveShopKeeperSubTitledText(void)
 {
-	if( giPopUpBoxId == -1 )
-		return;
+	if (!g_popup_box) return;
 
-	if( RemoveMercPopupBoxFromIndex( giPopUpBoxId ) )
-	{
-		giPopUpBoxId = -1;
-		gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
+	RemoveMercPopupBox(g_popup_box);
+	g_popup_box = 0;
 
-		//Get rid of the subtitles region
-		if( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
-			MSYS_RemoveRegion( &gShopKeeperSubTitleMouseRegion );
-	}
+	gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
+
+	//Get rid of the subtitles region
+	if( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
+		MSYS_RemoveRegion( &gShopKeeperSubTitleMouseRegion );
 }
 
 

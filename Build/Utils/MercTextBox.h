@@ -1,7 +1,7 @@
-#ifndef __MERCTEXTBOX_H_
-#define __MERCTEXTBOX_H_
+#ifndef MERCTEXTBOX_H
+#define MERCTEXTBOX_H
 
-#include "Types.h"
+#include "JA2Types.h"
 
 
 enum MercPopupBoxFlags
@@ -36,14 +36,11 @@ enum MercPopUpBorder
 };
 
 
-// create a pop up box if needed, return id of box..a -1 means couldn't be added
-INT32 PrepareMercPopupBox(INT32 iBoxId, MercPopUpBackground, MercPopUpBorder, wchar_t const* pString, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16* pActualWidth, UINT16* pActualHeight, MercPopupBoxFlags flags = MERC_POPUP_PREPARE_FLAGS_NONE);
+// create a pop up box if needed, return null pointer on failure
+MercPopUpBox* PrepareMercPopupBox(MercPopUpBox*, MercPopUpBackground, MercPopUpBorder, wchar_t const* pString, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16* pActualWidth, UINT16* pActualHeight, MercPopupBoxFlags flags = MERC_POPUP_PREPARE_FLAGS_NONE);
 
+BOOLEAN RemoveMercPopupBox(MercPopUpBox*);
 
-// remove this box from the index
-BOOLEAN RemoveMercPopupBoxFromIndex( UINT32 uiId );
-
-// render pop up box with this index value
-BOOLEAN RenderMercPopUpBoxFromIndex(INT32 iBoxId, INT16 sDestX, INT16 sDestY, SGPVSurface* buffer);
+BOOLEAN RenderMercPopUpBox(MercPopUpBox const*, INT16 sDestX, INT16 sDestY, SGPVSurface* buffer);
 
 #endif

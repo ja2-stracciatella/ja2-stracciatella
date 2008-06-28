@@ -146,9 +146,8 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 	// Init message box
 	UINT16 usTextBoxWidth;
 	UINT16 usTextBoxHeight;
-	gMsgBox.iBoxId = PrepareMercPopupBox(-1, style.background, style.border, zString, MSGBOX_DEFAULT_WIDTH, 40, 10, 30, &usTextBoxWidth, &usTextBoxHeight);
-
-	if (gMsgBox.iBoxId == -1)
+	gMsgBox.box = PrepareMercPopupBox(0, style.background, style.border, zString, MSGBOX_DEFAULT_WIDTH, 40, 10, 30, &usTextBoxWidth, &usTextBoxHeight);
+	if (!gMsgBox.box)
 	{
 #ifdef JA2BETAVERSION
 		AssertMsg(0, "Failed in DoMessageBox().  Probable reason is because the string was too large to fit in max message box size.");
@@ -362,9 +361,8 @@ static void NumberedMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 
 static ScreenID ExitMsgBox(MessageBoxReturnValue const ubExitCode)
 {
-	// Delete popup!
-	RemoveMercPopupBoxFromIndex(gMsgBox.iBoxId);
-	gMsgBox.iBoxId = -1;
+	RemoveMercPopupBox(gMsgBox.box);
+	gMsgBox.box = 0;
 
 	//Delete buttons!
 	switch (gMsgBox.usFlags)
@@ -531,7 +529,7 @@ ScreenID MessageBoxScreenHandle(void)
 				break;
 		}
 
-		RenderMercPopUpBoxFromIndex(gMsgBox.iBoxId, gMsgBox.sX, gMsgBox.sY, FRAME_BUFFER);
+		RenderMercPopUpBox(gMsgBox.box, gMsgBox.sX, gMsgBox.sY, FRAME_BUFFER);
 		//gMsgBox.fRenderBox = FALSE;
 		// ATE: Render each frame...
 	}
@@ -597,9 +595,9 @@ ScreenID MessageBoxScreenHandle(void)
 
 void MessageBoxScreenShutdown()
 {
-	if (gMsgBox.iBoxId == -1) return;
-	RemoveMercPopupBoxFromIndex(gMsgBox.iBoxId);
-	gMsgBox.iBoxId = -1;
+	if (!gMsgBox.box) return;
+	RemoveMercPopupBox(gMsgBox.box);
+	gMsgBox.box = 0;
 }
 
 

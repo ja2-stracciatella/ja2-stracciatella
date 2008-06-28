@@ -155,7 +155,7 @@ static UINT8        gubTargetApproach;
 static BOOLEAN      gfShowDialogueMenu;
 BOOLEAN							gfWaitingForTriggerTimer;
 static UINT32       guiWaitingForTriggerTime;
-INT32								iInterfaceDialogueBox = -1;
+MercPopUpBox*       g_interface_dialogue_box;
 static UINT8        ubRecordThatTriggeredLiePrompt;
 static BOOLEAN      gfConversationPending = FALSE;
 static SOLDIERTYPE* gpPendingDestSoldier;
@@ -594,10 +594,10 @@ void DeleteTalkingMenu( )
 		}
 	}
 
-  if ( iInterfaceDialogueBox != -1 )
+  if (g_interface_dialogue_box)
   {
-    RemoveMercPopupBoxFromIndex( iInterfaceDialogueBox );
-    iInterfaceDialogueBox = -1;
+    RemoveMercPopupBox(g_interface_dialogue_box);
+    g_interface_dialogue_box = 0;
   }
 }
 
@@ -668,16 +668,16 @@ void RenderTalkingMenu()
 
 	if (tp->fSetupSubTitles)
 	{
-		if (iInterfaceDialogueBox != -1)
+		if (g_interface_dialogue_box)
 		{
 			// Remove any old ones....
-			RemoveMercPopupBoxFromIndex(iInterfaceDialogueBox);
-			iInterfaceDialogueBox = -1;
+			RemoveMercPopupBox(g_interface_dialogue_box);
+			g_interface_dialogue_box = 0;
 		}
 
 		UINT16 usTextBoxWidth;
 		UINT16 usTextBoxHeight;
-		iInterfaceDialogueBox = PrepareMercPopupBox(-1, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, tp->zQuoteStr, TALK_PANEL_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &usTextBoxWidth, &usTextBoxHeight);
+		g_interface_dialogue_box = PrepareMercPopupBox(0, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, tp->zQuoteStr, TALK_PANEL_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &usTextBoxWidth, &usTextBoxHeight);
 		SetFont(MILITARYFONT1); // PrepareMercPopupBox() overwrites the current font
 
 		tp->fSetupSubTitles = FALSE;
@@ -702,7 +702,7 @@ void RenderTalkingMenu()
 
 	if (tp->fRenderSubTitlesNow)
 	{
-		RenderMercPopUpBoxFromIndex(iInterfaceDialogueBox, tp->sPopupX, tp->sPopupY,  FRAME_BUFFER);
+		RenderMercPopUpBox(g_interface_dialogue_box, tp->sPopupX, tp->sPopupY,  FRAME_BUFFER);
 	}
 
 	// Create menu selections....

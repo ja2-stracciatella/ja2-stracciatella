@@ -2,6 +2,7 @@
 #define MESSAGEBOXSCREEN_H
 
 #include "Button_System.h"
+#include "JA2Types.h"
 #include "MouseSystem.h"
 #include "ScreenIDs.h"
 
@@ -69,7 +70,7 @@ struct MESSAGE_BOX_STRUCT
 	GUIButtonRef          uiButton[4];
 	BOOLEAN               fRenderBox;
 	MessageBoxReturnValue bHandled;
-	INT32                 iBoxId;
+	MercPopUpBox*         box;
 };
 
 

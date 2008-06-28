@@ -416,10 +416,10 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 
 
 	//Place a message on the screen telling the user that we are saving the game
-	INT32 iSaveLoadGameMessageBoxID = PrepareMercPopupBox(-1, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, zSaveLoadText[SLG_SAVING_GAME_MESSAGE], 300, 0, 0, 0, &usActualWidth, &usActualHeight);
+	MercPopUpBox* const save_load_game_message_box = PrepareMercPopupBox(0, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, zSaveLoadText[SLG_SAVING_GAME_MESSAGE], 300, 0, 0, 0, &usActualWidth, &usActualHeight);
 	usPosX = (SCREEN_WIDTH - usActualWidth) / 2;
 
-	RenderMercPopUpBoxFromIndex( iSaveLoadGameMessageBoxID, usPosX, 160, FRAME_BUFFER );
+	RenderMercPopUpBox(save_load_game_message_box, usPosX, 160, FRAME_BUFFER);
 
 	InvalidateScreen();
 
@@ -427,10 +427,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	EndFrameBufferRender( );
 	RefreshScreen();
 
-	if( RemoveMercPopupBoxFromIndex( iSaveLoadGameMessageBoxID ) )
-	{
-		iSaveLoadGameMessageBoxID = -1;
-	}
+	RemoveMercPopupBox(save_load_game_message_box);
 
 	//
 	// make sure we redraw the screen when we are done

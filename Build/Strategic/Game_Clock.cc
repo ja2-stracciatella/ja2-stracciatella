@@ -76,7 +76,7 @@ UINT32			guiGameClock						= STARTING_TIME;
 UINT32			guiPreviousGameClock = 0;		// used only for error-checking purposes
 UINT32			guiGameSecondsPerRealSecond;
 UINT32			guiTimesThisSecondProcessed = 0;
-INT32			  iPausedPopUpBox = -1;
+static MercPopUpBox* g_paused_popup_box;
 UINT32			guiDay;
 UINT32			guiHour;
 UINT32			guiMin;
@@ -946,8 +946,8 @@ static void CreateDestroyScreenMaskForPauseGame(void)
 	{
 		fCreated = FALSE;
 		MSYS_RemoveRegion( &gClockScreenMaskMouseRegion );
-		RemoveMercPopupBoxFromIndex( iPausedPopUpBox );
-		iPausedPopUpBox = -1;
+		RemoveMercPopupBox(g_paused_popup_box);
+		g_paused_popup_box = 0;
 		SetRenderFlags( RENDER_FLAG_FULL );
 		fTeamPanelDirty = TRUE;
 		fMapPanelDirty = TRUE;
@@ -973,7 +973,7 @@ static void CreateDestroyScreenMaskForPauseGame(void)
 		//UnMarkButtonsDirty( );
 
 		// now create the pop up box to say the game is paused
-		iPausedPopUpBox = PrepareMercPopupBox(-1, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, pPausedGameText[0], 300, 0, 0, 0, &usPausedActualWidth, &usPausedActualHeight);
+		g_paused_popup_box = PrepareMercPopupBox(0, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, pPausedGameText[0], 300, 0, 0, 0, &usPausedActualWidth, &usPausedActualHeight);
 	}
 }
 
@@ -989,11 +989,11 @@ static void ScreenMaskForGamePauseBtnCallBack(MOUSE_REGION* pRegion, INT32 iReas
 
 void RenderPausedGameBox( void )
 {
-	if (gfPauseDueToPlayerGamePause && gfGamePaused && iPausedPopUpBox != -1)
+	if (gfPauseDueToPlayerGamePause && gfGamePaused && g_paused_popup_box)
 	{
 		const INT32 x = (SCREEN_WIDTH - usPausedActualWidth)  / 2;
 		const INT32 y = 200 - usPausedActualHeight / 2;
-		RenderMercPopUpBoxFromIndex(iPausedPopUpBox, x, y, FRAME_BUFFER);
+		RenderMercPopUpBox(g_paused_popup_box, x, y, FRAME_BUFFER);
 		InvalidateRegion(x, y, x + usPausedActualWidth, y + usPausedActualHeight);
 	}
 

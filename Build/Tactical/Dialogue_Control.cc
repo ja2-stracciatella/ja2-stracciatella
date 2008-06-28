@@ -159,7 +159,7 @@ BOOLEAN				gfUseAlternateDialogueFile = FALSE;
 INT16 gsTopPosition = 20;
 
 
-INT32 iDialogueBox = -1;
+MercPopUpBox* g_dialogue_box;
 
 
 // the next said quote will pause time
@@ -1665,7 +1665,7 @@ static void ExecuteTacticalTextBox(const INT16 sLeftPosition, const wchar_t* con
 	memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
 
 	// Prepare text box
-	iDialogueBox = PrepareMercPopupBox( iDialogueBox , BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, pString, DIALOGUE_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &gusSubtitleBoxWidth, &gusSubtitleBoxHeight );
+	g_dialogue_box = PrepareMercPopupBox(g_dialogue_box, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, pString, DIALOGUE_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &gusSubtitleBoxWidth, &gusSubtitleBoxHeight);
 
 	VideoOverlayDesc.sLeft			 = sLeftPosition;
 	VideoOverlayDesc.sTop				 = gsTopPosition;
@@ -1882,10 +1882,9 @@ void HandleDialogueEnd( FACETYPE *pFace )
 
 					if ( fTextBoxMouseRegionCreated )
 					{
-						RemoveMercPopupBoxFromIndex( iDialogueBox );
+						RemoveMercPopupBox(g_dialogue_box);
+						g_dialogue_box = 0;
 
-						// reset box id
-						iDialogueBox = -1;
 						MSYS_RemoveRegion( &gTextBoxMouseRegion );
 						fTextBoxMouseRegionCreated = FALSE;
 					}
@@ -1909,8 +1908,8 @@ void HandleDialogueEnd( FACETYPE *pFace )
 				gTalkPanel.fRenderSubTitlesNow = FALSE;
 
 				// Delete subtitle box
-				RemoveMercPopupBoxFromIndex( iInterfaceDialogueBox );
-				iInterfaceDialogueBox = -1;
+				RemoveMercPopupBox(g_interface_dialogue_box);
+				g_interface_dialogue_box = 0;
 				break;
 
 			case DIALOGUE_CONTACTPAGE_UI:
@@ -2000,7 +1999,7 @@ static void RenderSubtitleBoxOverlay(VIDEO_OVERLAY* pBlitter)
 {
 	if (g_text_box_overlay == NULL) return;
 
-	RenderMercPopUpBoxFromIndex(iDialogueBox, pBlitter->sX, pBlitter->sY, pBlitter->uiDestBuff);
+	RenderMercPopUpBox(g_dialogue_box, pBlitter->sX, pBlitter->sY, pBlitter->uiDestBuff);
 	InvalidateRegion(pBlitter->sX, pBlitter->sY, pBlitter->sX + gusSubtitleBoxWidth, pBlitter->sY + gusSubtitleBoxHeight);
 }
 

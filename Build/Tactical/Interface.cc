@@ -91,13 +91,13 @@ BOOLEAN gfTopMessageDirty = FALSE;
 static MOUSE_REGION gMenuOverlayRegion;
 
 
-VIDEO_OVERLAY*      g_ui_message_overlay = NULL;
-static UINT16       gusUIMessageWidth;
-static UINT16       gusUIMessageHeight;
+VIDEO_OVERLAY*       g_ui_message_overlay = NULL;
+static UINT16        gusUIMessageWidth;
+static UINT16        gusUIMessageHeight;
 UINT32				guiUIMessageTime = 0;
-static INT32        iUIMessageBox = -1;
+static MercPopUpBox* g_ui_message_box;
 UINT32				guiUIMessageTimeDelay = 0;
-static BOOLEAN      gfUseSkullIconMessage = FALSE;
+static BOOLEAN       gfUseSkullIconMessage = FALSE;
 
 static BOOLEAN gfPanelAllocated = FALSE;
 
@@ -1836,7 +1836,7 @@ static void RenderUIMessage(VIDEO_OVERLAY* pBlitter)
 	// Shade area first...
 	pBlitter->uiDestBuff->ShadowRect(pBlitter->sX, pBlitter->sY, pBlitter->sX + gusUIMessageWidth - 2, pBlitter->sY + gusUIMessageHeight - 2);
 
-	RenderMercPopUpBoxFromIndex( iUIMessageBox, pBlitter->sX, pBlitter->sY,  pBlitter->uiDestBuff );
+	RenderMercPopUpBox(g_ui_message_box, pBlitter->sX, pBlitter->sY,  pBlitter->uiDestBuff);
 
 	InvalidateRegion( pBlitter->sX, pBlitter->sY, pBlitter->sX + gusUIMessageWidth, pBlitter->sY + gusUIMessageHeight );
 }
@@ -1857,7 +1857,7 @@ void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text)
 		MERC_POPUP_PREPARE_FLAGS_STOPICON;
 
 	// Prepare text box
-	iUIMessageBox = PrepareMercPopupBox(iUIMessageBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight, flags);
+	g_ui_message_box = PrepareMercPopupBox(g_ui_message_box, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight, flags);
 
 	if (g_ui_message_overlay != NULL)
 	{
@@ -1887,7 +1887,7 @@ void BeginMapUIMessage(INT16 delta_y, const wchar_t* text)
 	guiUIMessageTime      = GetJA2Clock();
 	guiUIMessageTimeDelay = CalcUIMessageDuration(text);
 
-	iUIMessageBox = PrepareMercPopupBox(iUIMessageBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight, MERC_POPUP_PREPARE_FLAGS_TRANS_BACK);
+	g_ui_message_box = PrepareMercPopupBox(g_ui_message_box, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, text, 200, 10, 0, 0, &gusUIMessageWidth, &gusUIMessageHeight, MERC_POPUP_PREPARE_FLAGS_TRANS_BACK);
 
 	if (g_ui_message_overlay == NULL)
 	{
@@ -1923,13 +1923,12 @@ void EndUIMessage( )
 		g_ui_message_overlay = NULL;
 
     // Remove popup as well....
-    if ( iUIMessageBox != -1 )
+    if (g_ui_message_box)
     {
-    	RemoveMercPopupBoxFromIndex( iUIMessageBox );
-      iUIMessageBox = -1;
+    	RemoveMercPopupBox(g_ui_message_box);
+    	g_ui_message_box = 0;
     }
 	}
-	//iUIMessageBox = -1;
 }
 
 #define PLAYER_TEAM_TIMER_INTTERUPT_GRACE		( 15000 / PLAYER_TEAM_TIMER_SEC_PER_TICKS )

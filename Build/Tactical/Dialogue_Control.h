@@ -331,6 +331,6 @@ BOOLEAN IsMercSayingDialogue(UINT8 ubProfileID);
 extern FACETYPE* gpCurrentTalkingFace;
 extern UINT8     gubCurrentTalkingID;
 
-extern INT32 iDialogueBox;
+extern MercPopUpBox* g_dialogue_box;
 
 #endif

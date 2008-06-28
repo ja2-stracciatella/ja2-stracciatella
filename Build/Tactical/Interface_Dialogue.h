@@ -363,7 +363,7 @@ void HandleTalkingMenuBackspace(void);
 
 void HandlePendingInitConv(void);
 
-extern BOOLEAN gfWaitingForTriggerTimer;
-extern INT32   iInterfaceDialogueBox;
+extern BOOLEAN       gfWaitingForTriggerTimer;
+extern MercPopUpBox* g_interface_dialogue_box;
 
 #endif

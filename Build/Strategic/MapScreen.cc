@@ -5349,7 +5349,7 @@ static void MapScreenMarkRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void ContractButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if (iDialogueBox != -1) return;
+	if (g_dialogue_box) return;
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -6309,10 +6309,7 @@ static void ContractRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for contract region
 
-	if( ( iDialogueBox != -1 ) )
-	{
-		return;
-	}
+	if (g_dialogue_box) return;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

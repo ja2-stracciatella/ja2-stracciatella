@@ -32,9 +32,6 @@
 #define		MERC_BACKGROUND_WIDTH										350
 #define		MERC_BACKGROUND_HEIGHT									200
 
-// the max number of pop up boxes availiable to user
-#define MAX_NUMBER_OF_POPUP_BOXES 10
-
 
 // both of the below are index by the enum for thier types - background and border in
 // MercTextBox.h
@@ -73,41 +70,13 @@ struct MercPopUpBox
 };
 
 
-// the list of boxes
-static MercPopUpBox* gpPopUpBoxList[MAX_NUMBER_OF_POPUP_BOXES];
-
 // the flags
 static SGPVObject* guiBoxIcons;
 static SGPVObject* guiSkullIcons;
 
 
-static MercPopUpBox* SetCurrentPopUpBox(UINT32 const uiId)
-{
-	// given id of the box, find it in the list and set to current
-
-	//make sure the box id is valid
-	if( uiId == (UINT32) -1 )
-	{
-		//ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Error: Trying to set Current Popup Box using -1 as an ID" );
-		return 0;
-	}
-
-	// see if box inited
-	return gpPopUpBoxList[uiId];
-}
-
-
 void InitMercPopupBox()
 {
-	INT32 iCounter = 0;
-
-	// init the pop up box list
-	for( iCounter = 0; iCounter < MAX_NUMBER_OF_POPUP_BOXES; iCounter++ )
-	{
-		// set ptr to null
-		gpPopUpBoxList[ iCounter ] = NULL;
-	}
-
 	guiBoxIcons   = AddVideoObjectFromFile("INTERFACE/msgboxicons.sti");     // stop icon
 	guiSkullIcons = AddVideoObjectFromFile("INTERFACE/msgboxiconskull.sti"); // skull icon
 }
@@ -138,9 +107,8 @@ static void RemoveTextMercPopupImages(MercPopUpBox* const box)
 }
 
 
-BOOLEAN RenderMercPopUpBoxFromIndex(const INT32 iBoxId, const INT16 sDestX, const INT16 sDestY, SGPVSurface* const buffer)
+BOOLEAN RenderMercPopUpBox(MercPopUpBox const* const box, INT16 const sDestX, INT16 const sDestY, SGPVSurface* const buffer)
 {
-	MercPopUpBox const* const box = SetCurrentPopUpBox(iBoxId);
 	if (!box) return FALSE;
 
 	// will render/transfer the image from the buffer in the data structure to the buffer specified by user
@@ -157,44 +125,19 @@ BOOLEAN RenderMercPopUpBoxFromIndex(const INT32 iBoxId, const INT16 sDestX, cons
 }
 
 
-static INT32 AddPopUpBoxToList(MercPopUpBox* pPopUpTextBox)
-{
-	INT32 iCounter = 0;
-
-	// attempt to add box to list
-	for( iCounter = 0; iCounter < MAX_NUMBER_OF_POPUP_BOXES; iCounter++ )
-	{
-		if( gpPopUpBoxList[ iCounter ] == NULL )
-		{
-			// found a spot, inset
-			gpPopUpBoxList[ iCounter ] = pPopUpTextBox;
-
-			// set as current
-			SetCurrentPopUpBox( iCounter );
-
-			// return index value
-			return( iCounter );
-		}
-	}
-
-	throw std::runtime_error("Out of merc popup box slots");
-}
-
-
 static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColor, UINT8* pubFontShadowColor);
 
 
-INT32 PrepareMercPopupBox(INT32 const iBoxId, MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex, wchar_t const* const pString, UINT16 usWidth, UINT16 const usMarginX, UINT16 const usMarginTopY, UINT16 const usMarginBottomY, UINT16* const pActualWidth, UINT16* const pActualHeight, MercPopupBoxFlags const flags)
+MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex, wchar_t const* const pString, UINT16 usWidth, UINT16 const usMarginX, UINT16 const usMarginTopY, UINT16 const usMarginBottomY, UINT16* const pActualWidth, UINT16* const pActualHeight, MercPopupBoxFlags const flags)
 try
 {
-	if (usWidth >= SCREEN_WIDTH) return -1;
+	if (usWidth >= SCREEN_WIDTH) return 0;
 
 	if (usWidth <= MERC_TEXT_MIN_WIDTH) usWidth = MERC_TEXT_MIN_WIDTH;
 
-	MercPopUpBox*             box;
 	SGP::PODObj<MercPopUpBox> new_box(0);
 	// check id value, if -1, box has not been inited yet
-	if (iBoxId == -1)
+	if (!box)
 	{
 		// no box yet
 		box = new_box.Allocate();
@@ -204,9 +147,6 @@ try
 	{
 		// has been created already,
 		// Check if these images are different
-		box = gpPopUpBoxList[iBoxId];
-		Assert(box);
-
 		if (ubBackgroundIndex != box->ubBackgroundIndex ||
 				ubBorderIndex     != box->ubBorderIndex     ||
 				!box->fMercTextPopupInitialized)
@@ -249,7 +189,7 @@ try
 	if (usWidth >= MERC_BACKGROUND_WIDTH) usWidth = MERC_BACKGROUND_WIDTH - 1;
 
 	// make sure the area isnt bigger than the background texture
-	if (usHeight >= MERC_BACKGROUND_HEIGHT) return -1;
+	if (usHeight >= MERC_BACKGROUND_HEIGHT) return 0;
 
 	// Create a background video surface to blt the face onto
 	SGPVSurface* const vs = AddVideoSurface(usWidth, usHeight, PIXEL_DEPTH);
@@ -337,39 +277,20 @@ try
 	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	SetFontShadow(DEFAULT_SHADOW);
 
-	if (iBoxId == -1)
-	{
-		// now return attemp to add to pop up box list, if successful will return index
-		INT32 const new_id = AddPopUpBoxToList(box);
-		new_box.Release();
-		return new_id;
-	}
-	else
-	{
-		// set as current box
-		SetCurrentPopUpBox(iBoxId);
-		return iBoxId;
-	}
+	new_box.Release();
+	return box;
 }
-catch (...) { return -1; }
+catch (...) { return 0; }
 
 
 //Deletes the surface thats contains the border, background and the text.
-BOOLEAN RemoveMercPopupBoxFromIndex(UINT32 const uiId)
+BOOLEAN RemoveMercPopupBox(MercPopUpBox* const box)
 {
-	MercPopUpBox* const box = SetCurrentPopUpBox(uiId);
 	if (!box) return FALSE;
 
 	// now check to see if inited...
 	if (!box->fMercTextPopupSurfaceInitialized) return TRUE; // XXX TRUE?
 
-	// now find this box in the list
-	for (INT32 i = 0; i != MAX_NUMBER_OF_POPUP_BOXES; ++i)
-	{
-		if (gpPopUpBoxList[i] != box) continue;
-		gpPopUpBoxList[i] = 0;
-		break;
-	}
 	DeleteVideoSurface(box->uiSourceBufferIndex);
 
 	//DEF Added 5/26

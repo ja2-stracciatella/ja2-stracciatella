@@ -174,7 +174,7 @@ static SGPVObject* guiMercVideoPopupBackground;
 UINT8			gubMercArray[ NUMBER_OF_MERCS ];
 UINT8			gubCurMercIndex;
 
-INT32			iMercPopUpBox = -1;
+static MercPopUpBox* g_merc_popup_box;
 
 UINT16		gusPositionOfSpecksDialogBox_X;
 wchar_t		gsSpeckDialogueTextPopUp[ 900 ];
@@ -533,12 +533,11 @@ void RenderMercs()
 	DisplayWrappedString(MERC_FILE_BOX_TEXT_X, MERC_FILE_BOX_TEXT_Y, MERC_FILE_BOX_TEXT_WIDTH, 2, MERC_TEXT_FONT, MERC_TEXT_COLOR, MercHomePageText[MERC_VIEW_FILES], FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 	//If the Specks popup dioalogue box is active, display it.
-	if( iMercPopUpBox != -1 )
+	if (g_merc_popup_box)
 	{
 		guiAccountBoxButton->Draw();
 		guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
-
-		RenderMercPopUpBoxFromIndex( iMercPopUpBox, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
+		RenderMercPopUpBox(g_merc_popup_box, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
 	}
 
   MarkButtonsDirty( );
@@ -581,10 +580,10 @@ static void BtnAccountBoxButtonCallback(GUI_BUTTON *btn, INT32 reason)
 		else
 			guiCurrentLaptopMode = LAPTOP_MODE_MERC_ACCOUNT;
 
-		if (iMercPopUpBox != -1)
+		if (g_merc_popup_box)
 		{
 			guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
-			RenderMercPopUpBoxFromIndex(iMercPopUpBox, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
+			RenderMercPopUpBox(g_merc_popup_box, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
 		}
 	}
 }
@@ -1294,12 +1293,11 @@ static void HandleTalkingSpeck(void)
 //					guiAccountBoxButton->Draw();
 //					guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
 
-					if( iMercPopUpBox != -1 )
+					if (g_merc_popup_box)
 					{
 						guiAccountBoxButton->Draw();
 						guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
-
-						RenderMercPopUpBoxFromIndex( iMercPopUpBox, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
+						RenderMercPopUpBox(g_merc_popup_box, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
 					}
 				}
 			}
@@ -1343,7 +1341,6 @@ static void MercSiteSubTitleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 void DisplayTextForSpeckVideoPopUp(const wchar_t* const pString)
 {
 	UINT16	usActualHeight;
-	INT32		iOldMercPopUpBoxId = iMercPopUpBox;
 
 	//If the user has selected no subtitles
 	if( !gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
@@ -1355,12 +1352,13 @@ void DisplayTextForSpeckVideoPopUp(const wchar_t* const pString)
 	gfDisplaySpeckTextBox = TRUE;
 
 	//Set this so the popup box doesnt render in RenderMercs()
-	iMercPopUpBox = -1;
+	MercPopUpBox* const old_merc_popup_box = g_merc_popup_box;
+	g_merc_popup_box = 0;
 
 	//Render the screen to get rid of any old text popup boxes
 	RenderMercs();
 
-	iMercPopUpBox = iOldMercPopUpBoxId;
+	g_merc_popup_box = old_merc_popup_box;
 
 	if( gfMercVideoIsBeingDisplayed && gfMercSiteScreenIsReDrawn )
 	{
@@ -1368,12 +1366,12 @@ void DisplayTextForSpeckVideoPopUp(const wchar_t* const pString)
 	}
 
 	//Create the popup box
-  iMercPopUpBox = PrepareMercPopupBox( iMercPopUpBox, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, gsSpeckDialogueTextPopUp, 300, 0, 0, 0, &gusSpeckDialogueActualWidth, &usActualHeight);
+	g_merc_popup_box = PrepareMercPopupBox(g_merc_popup_box, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, gsSpeckDialogueTextPopUp, 300, 0, 0, 0, &gusSpeckDialogueActualWidth, &usActualHeight);
 
 	gusSpeckDialogueX = ( LAPTOP_SCREEN_LR_X - gusSpeckDialogueActualWidth - LAPTOP_SCREEN_UL_X ) / 2 + LAPTOP_SCREEN_UL_X;
 
 	//Render the pop box
-	RenderMercPopUpBoxFromIndex( iMercPopUpBox, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
+	RenderMercPopUpBox(g_merc_popup_box, gusSpeckDialogueX, MERC_TEXT_BOX_POS_Y, FRAME_BUFFER);
 
 	//check to make sure the region is not already initialized
 	if( !( gMercSiteSubTitleMouseRegion.uiFlags & MSYS_REGION_EXISTS ) )
@@ -1767,16 +1765,13 @@ static void MercSiteSubTitleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void RemoveSpeckPopupTextBox(void)
 {
-	if( iMercPopUpBox == -1 )
-		return;
+	if (!g_merc_popup_box) return;
 
 	if( gMercSiteSubTitleMouseRegion.uiFlags & MSYS_REGION_EXISTS )
 		MSYS_RemoveRegion( &gMercSiteSubTitleMouseRegion );
 
-	if( RemoveMercPopupBoxFromIndex( iMercPopUpBox ) )
-	{
-		iMercPopUpBox = -1;
-	}
+	RemoveMercPopupBox(g_merc_popup_box);
+	g_merc_popup_box = 0;
 
 	//redraw the screen
 	gfRedrawMercSite = TRUE;
@@ -2100,10 +2095,8 @@ static void DrawMercVideoBackGround(void)
 
 void DisableMercSiteButton()
 {
-	if( iMercPopUpBox != -1 )
-	{
-		guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
-	}
+	if (!g_merc_popup_box) return;
+	guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
 }
 
 

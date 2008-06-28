@@ -48,7 +48,7 @@ typedef struct
 	GUIButtonRef      uiAllMoveButton;
 	GUIButtonRef      uiOKButton;
 	GUIButtonRef      uiCancelButton;
-	INT32							iBoxId;
+	MercPopUpBox*     box;
 	BUTTON_PICS*      iButtonImages;
 	UINT16						usWidth;
 	UINT16						usHeight;
@@ -306,7 +306,7 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 	gExitDialog.ubDirection							= ubDirection;
 	gExitDialog.sAdditionalData					= sAdditionalData;
 
-	gExitDialog.iBoxId = PrepareMercPopupBox( -1, DIALOG_MERC_POPUP_BACKGROUND, DIALOG_MERC_POPUP_BORDER, TacticalStr[ EXIT_GUI_TITLE_STR ], 100, 85, 2, 75, &usTextBoxWidth, &usTextBoxHeight );
+	gExitDialog.box = PrepareMercPopupBox(0, DIALOG_MERC_POPUP_BACKGROUND, DIALOG_MERC_POPUP_BORDER, TacticalStr[EXIT_GUI_TITLE_STR], 100, 85, 2, 75, &usTextBoxWidth, &usTextBoxHeight);
 
 
 	gExitDialog.sX				= (INT16)( ( ( ( aRect.iRight	- aRect.iLeft ) - usTextBoxWidth ) / 2 ) + aRect.iLeft );
@@ -600,7 +600,7 @@ void RenderSectorExitMenu( )
 
 	UpdateSectorExitMenu( );
 
-	RenderMercPopUpBoxFromIndex( gExitDialog.iBoxId, gExitDialog.sX, gExitDialog.sY,  FRAME_BUFFER );
+	RenderMercPopUpBox(gExitDialog.box, gExitDialog.sX, gExitDialog.sY,  FRAME_BUFFER);
 	InvalidateRegion( gExitDialog.sX, gExitDialog.sY, gExitDialog.usWidth, gExitDialog.usHeight );
 
 	SetFont( FONT12ARIAL );
@@ -699,8 +699,8 @@ void RemoveSectorExitMenu( BOOLEAN fOk )
 		MSYS_RemoveRegion(&(gExitDialog.LoadRegion) );
 
 		//Remove the popup box
-		RemoveMercPopupBoxFromIndex( gExitDialog.iBoxId );
-		gExitDialog.iBoxId = -1;
+		RemoveMercPopupBox(gExitDialog.box);
+		gExitDialog.box = 0;
 
 		gfIgnoreScrolling = FALSE;
 

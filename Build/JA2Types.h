@@ -19,6 +19,7 @@ struct ITEM_POOL;
 struct LEVELNODE;
 struct LIGHT_SPRITE;
 struct MERCPROFILESTRUCT;
+struct MercPopUpBox;
 struct PathSt;
 struct PopUpBox;
 struct REAL_OBJECT;
