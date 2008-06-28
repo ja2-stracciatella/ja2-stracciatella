@@ -100,9 +100,9 @@ static void RemoveTextMercPopupImages(MercPopUpBox* const box)
 }
 
 
-BOOLEAN RenderMercPopUpBox(MercPopUpBox const* const box, INT16 const sDestX, INT16 const sDestY, SGPVSurface* const buffer)
+void RenderMercPopUpBox(MercPopUpBox const* const box, INT16 const sDestX, INT16 const sDestY, SGPVSurface* const buffer)
 {
-	if (!box) return FALSE;
+	if (!box) return;
 
 	// will render/transfer the image from the buffer in the data structure to the buffer specified by user
 	SGPVSurface* const vs = box->uiSourceBufferIndex;
@@ -113,8 +113,6 @@ BOOLEAN RenderMercPopUpBox(MercPopUpBox const* const box, INT16 const sDestX, IN
 	{
 		InvalidateRegion(sDestX, sDestY, sDestX + vs->Width(), sDestY + vs->Height());
 	}
-
-	return TRUE;
 }
 
 

@@ -42,7 +42,7 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox*, MercPopUpBackground, MercPopUpB
 
 void RemoveMercPopupBox(MercPopUpBox*);
 
-BOOLEAN RenderMercPopUpBox(MercPopUpBox const*, INT16 sDestX, INT16 sDestY, SGPVSurface* buffer);
+void RenderMercPopUpBox(MercPopUpBox const*, INT16 sDestX, INT16 sDestY, SGPVSurface* buffer);
 
 typedef SGP::AutoObj<MercPopUpBox, RemoveMercPopupBox>::Type AutoMercPopUpBox;
 
