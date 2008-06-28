@@ -65,7 +65,6 @@ struct MercPopUpBox
 	UINT8        ubBorderIndex;
 	SGPVSurface* uiMercTextPopUpBackground;
 	SGPVObject*  uiMercTextPopUpBorder;
-	BOOLEAN      fMercTextPopupInitialized;
 };
 
 
@@ -87,7 +86,6 @@ static void LoadTextMercPopupImages(MercPopUpBox* const box, MercPopUpBackground
   // this function will load the graphics associated with the background and border index values
 	box->uiMercTextPopUpBackground = AddVideoSurfaceFromFile(zMercBackgroundPopupFilenames[ubBackgroundIndex]);
 	box->uiMercTextPopUpBorder     = AddVideoObjectFromFile(zMercBorderPopupFilenames[ubBorderIndex]);
-	box->fMercTextPopupInitialized = TRUE;
 
 	// so far so good, return successful
 	box->ubBackgroundIndex = ubBackgroundIndex;
@@ -97,12 +95,8 @@ static void LoadTextMercPopupImages(MercPopUpBox* const box, MercPopUpBackground
 
 static void RemoveTextMercPopupImages(MercPopUpBox* const box)
 {
-	//this procedure will remove the background and border video surface/object from the indecies
-	if (!box->fMercTextPopupInitialized) return;
-
 	DeleteVideoSurface(box->uiMercTextPopUpBackground);
 	DeleteVideoObject(box->uiMercTextPopUpBorder);
-	box->fMercTextPopupInitialized = FALSE;
 }
 
 
@@ -147,8 +141,7 @@ try
 		// has been created already,
 		// Check if these images are different
 		if (ubBackgroundIndex != box->ubBackgroundIndex ||
-				ubBorderIndex     != box->ubBorderIndex     ||
-				!box->fMercTextPopupInitialized)
+				ubBorderIndex     != box->ubBorderIndex)
 		{
 			//Remove old, set new
 			RemoveTextMercPopupImages(box);
