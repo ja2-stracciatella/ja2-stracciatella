@@ -109,7 +109,7 @@ BOOLEAN fLapTop = FALSE;
 static BOOLEAN gfOneFramePauseOnExit = FALSE;
 
 // exit states
-INT8 gbExitingMapScreenToWhere = -1;
+static ExitToWhere gbExitingMapScreenToWhere = MAP_EXIT_TO_INVALID;
 
 UINT8 gubFirstMapscreenMessageIndex = 0;
 
@@ -787,10 +787,8 @@ static void EnableDisableTimeCompressButtons(void);
 
 static void EnableDisableBottomButtonsAndRegions(void)
 {
-	INT8 iExitButtonIndex;
-
 	// this enables and disables the buttons MAP_EXIT_TO_LAPTOP, MAP_EXIT_TO_TACTICAL, and MAP_EXIT_TO_OPTIONS
-	for ( iExitButtonIndex = 0; iExitButtonIndex < 3; iExitButtonIndex++ )
+	for (ExitToWhere iExitButtonIndex = MAP_EXIT_TO_LAPTOP; iExitButtonIndex <= MAP_EXIT_TO_OPTIONS; ++iExitButtonIndex)
 	{
 		if ( AllowedToExitFromMapscreenTo( iExitButtonIndex ) )
 		{
@@ -885,10 +883,7 @@ BOOLEAN AllowedToTimeCompress( void )
 	}
 
 	// if already going someplace
-	if ( gbExitingMapScreenToWhere != -1 )
-	{
-		return( FALSE );
-	}
+	if (gbExitingMapScreenToWhere != MAP_EXIT_TO_INVALID) return FALSE;
 
 	// if we're locked into paused time compression by some event that enforces that
 	if ( PauseStateLocked() )
@@ -1165,7 +1160,7 @@ void HandleLeavingOfMapScreenDuringDemo( void )
 #endif
 
 
-void RequestTriggerExitFromMapscreen( INT8 bExitToWhere )
+void RequestTriggerExitFromMapscreen(ExitToWhere const bExitToWhere)
 {
 	Assert( ( bExitToWhere >= MAP_EXIT_TO_LAPTOP ) && ( bExitToWhere <= MAP_EXIT_TO_SAVE ) );
 
@@ -1193,7 +1188,7 @@ void RequestTriggerExitFromMapscreen( INT8 bExitToWhere )
 }
 
 
-BOOLEAN AllowedToExitFromMapscreenTo( INT8 bExitToWhere )
+BOOLEAN AllowedToExitFromMapscreenTo(ExitToWhere const bExitToWhere)
 {
 	Assert( ( bExitToWhere >= MAP_EXIT_TO_LAPTOP ) && ( bExitToWhere <= MAP_EXIT_TO_SAVE ) );
 
@@ -1204,7 +1199,8 @@ BOOLEAN AllowedToExitFromMapscreenTo( INT8 bExitToWhere )
 	}
 
 	// if already going someplace else
-	if ( ( gbExitingMapScreenToWhere != -1 ) && ( gbExitingMapScreenToWhere != bExitToWhere ) )
+	if (gbExitingMapScreenToWhere != MAP_EXIT_TO_INVALID &&
+			gbExitingMapScreenToWhere != bExitToWhere)
 	{
 		return( FALSE );
 	}
@@ -1292,66 +1288,65 @@ BOOLEAN AllowedToExitFromMapscreenTo( INT8 bExitToWhere )
 void HandleExitsFromMapScreen( void )
 {
 	// if going somewhere
-	if ( gbExitingMapScreenToWhere != -1 )
+	if (gbExitingMapScreenToWhere == MAP_EXIT_TO_INVALID) return;
+
+	// delay all exits by one frame...
+	if (gfOneFramePauseOnExit)
 	{
-		// delay all exits by one frame...
-		if (gfOneFramePauseOnExit)
-		{
-			gfOneFramePauseOnExit = FALSE;
-			return;
-		}
-
-		// make sure it's still legal to do this!
-		if ( AllowedToExitFromMapscreenTo( gbExitingMapScreenToWhere ) )
-		{
-			// see where we're trying to go
-			switch ( gbExitingMapScreenToWhere )
-			{
-				case MAP_EXIT_TO_LAPTOP:
-					fLapTop = TRUE;
-					SetPendingNewScreen(LAPTOP_SCREEN);
-
-					BltVideoSurface(guiEXTRABUFFER, FRAME_BUFFER, 0, 0, NULL);
-					gfStartMapScreenToLaptopTransition = TRUE;
-					break;
-
-				case MAP_EXIT_TO_TACTICAL:
-					#ifdef JA2DEMO
-						HandleLeavingOfMapScreenDuringDemo( );
-						gfDontStartTransitionFromLaptop = TRUE;
-					#else
-						SetCurrentWorldSector( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ );
-					#endif
-
-					break;
-
-				case MAP_EXIT_TO_OPTIONS:
-					guiPreviousOptionScreen = guiCurrentScreen;
-					SetPendingNewScreen( OPTIONS_SCREEN );
-					break;
-
-				case MAP_EXIT_TO_SAVE:
-				case MAP_EXIT_TO_LOAD:
-					gfCameDirectlyFromGame = TRUE;
-					guiPreviousOptionScreen = guiCurrentScreen;
-					SetPendingNewScreen( SAVE_LOAD_SCREEN );
-					break;
-
-				default:
-					// invalid exit type
-					Assert( FALSE );
-			}
-
-			// time compression during mapscreen exit doesn't seem to cause any problems, but turn it off as early as we can
-			StopTimeCompression();
-
-			// now leaving mapscreen
-			fLeavingMapScreen = TRUE;
-		}
-
-		// cancel exit, either we're on our way, or we're not allowed to go
-		gbExitingMapScreenToWhere = -1;
+		gfOneFramePauseOnExit = FALSE;
+		return;
 	}
+
+	// make sure it's still legal to do this!
+	if ( AllowedToExitFromMapscreenTo( gbExitingMapScreenToWhere ) )
+	{
+		// see where we're trying to go
+		switch ( gbExitingMapScreenToWhere )
+		{
+			case MAP_EXIT_TO_LAPTOP:
+				fLapTop = TRUE;
+				SetPendingNewScreen(LAPTOP_SCREEN);
+
+				BltVideoSurface(guiEXTRABUFFER, FRAME_BUFFER, 0, 0, NULL);
+				gfStartMapScreenToLaptopTransition = TRUE;
+				break;
+
+			case MAP_EXIT_TO_TACTICAL:
+				#ifdef JA2DEMO
+					HandleLeavingOfMapScreenDuringDemo( );
+					gfDontStartTransitionFromLaptop = TRUE;
+				#else
+					SetCurrentWorldSector( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ );
+				#endif
+
+				break;
+
+			case MAP_EXIT_TO_OPTIONS:
+				guiPreviousOptionScreen = guiCurrentScreen;
+				SetPendingNewScreen( OPTIONS_SCREEN );
+				break;
+
+			case MAP_EXIT_TO_SAVE:
+			case MAP_EXIT_TO_LOAD:
+				gfCameDirectlyFromGame = TRUE;
+				guiPreviousOptionScreen = guiCurrentScreen;
+				SetPendingNewScreen( SAVE_LOAD_SCREEN );
+				break;
+
+			default:
+				// invalid exit type
+				Assert( FALSE );
+		}
+
+		// time compression during mapscreen exit doesn't seem to cause any problems, but turn it off as early as we can
+		StopTimeCompression();
+
+		// now leaving mapscreen
+		fLeavingMapScreen = TRUE;
+	}
+
+	// cancel exit, either we're on our way, or we're not allowed to go
+	gbExitingMapScreenToWhere = MAP_EXIT_TO_INVALID;
 }
 
 

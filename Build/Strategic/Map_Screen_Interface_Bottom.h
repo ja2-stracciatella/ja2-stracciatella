@@ -8,14 +8,21 @@
 #define MAX_MESSAGES_ON_MAP_BOTTOM  9
 
 
-// exit to where defines
-enum{
-	MAP_EXIT_TO_LAPTOP = 0,
-	MAP_EXIT_TO_TACTICAL,
-	MAP_EXIT_TO_OPTIONS,
+enum ExitToWhere
+{
+	MAP_EXIT_TO_INVALID  = -1,
+	MAP_EXIT_TO_LAPTOP   =  0,
+	MAP_EXIT_TO_TACTICAL =  1,
+	MAP_EXIT_TO_OPTIONS  =  2,
 	MAP_EXIT_TO_LOAD,
-	MAP_EXIT_TO_SAVE,
+	MAP_EXIT_TO_SAVE
 };
+
+static inline ExitToWhere operator ++(ExitToWhere& a)
+{
+	return a = (ExitToWhere)(a + 1);
+}
+
 
 // there's no button for entering SAVE/LOAD screen directly...
 extern GUIButtonRef guiMapBottomExitButtons[3];
@@ -50,9 +57,9 @@ BOOLEAN CommonTimeCompressionChecks( void );
 
 BOOLEAN AnyUsableRealMercenariesOnTeam( void );
 
-void RequestTriggerExitFromMapscreen( INT8 bExitToWhere );
-BOOLEAN AllowedToExitFromMapscreenTo( INT8 bExitToWhere );
-void HandleExitsFromMapScreen( void );
+void    RequestTriggerExitFromMapscreen(ExitToWhere);
+BOOLEAN AllowedToExitFromMapscreenTo(ExitToWhere);
+void    HandleExitsFromMapScreen(void);
 
 void MapScreenMsgScrollDown( UINT8 ubLinesDown );
 void MapScreenMsgScrollUp( UINT8 ubLinesUp );
