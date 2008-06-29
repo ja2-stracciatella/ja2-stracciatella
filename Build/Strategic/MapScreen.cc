@@ -860,81 +860,51 @@ static void DrawString(const wchar_t *pString, UINT16 uiX, UINT16 uiY, Font);
 static void DrawStringCentered(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, Font);
 
 
-static void DrawCharHealth(const SOLDIERTYPE* const pSoldier)
+static void DrawCharHealth(SOLDIERTYPE const* const s)
 {
-	UINT32 uiHealthPercent = 0;
-	wchar_t sString[9];
-
-	if( pSoldier->bAssignment != ASSIGNMENT_POW )
+	if (s->bAssignment != ASSIGNMENT_POW)
 	{
+		wchar_t buf[9];
+
 		// find starting X coordinate by centering all 3 substrings together, then print them separately (different colors)!
-		swprintf( sString, lengthof(sString), L"%d/%d", pSoldier->bLife, pSoldier->bLifeMax );
+		swprintf(buf, lengthof(buf), L"%d/%d", s->bLife, s->bLifeMax);
 		INT16 usX;
 		INT16 usY;
-		FindFontCenterCoordinates(CHAR_HP_X, CHAR_HP_Y, CHAR_HP_WID, CHAR_HP_HEI, sString, CHAR_FONT, &usX, &usY);
-
-
-		if ( pSoldier->bLifeMax > 0 )
-		{
-			uiHealthPercent = ( pSoldier->bLife * 100 ) / pSoldier->bLifeMax;
-		}
+		FindFontCenterCoordinates(CHAR_HP_X, CHAR_HP_Y, CHAR_HP_WID, CHAR_HP_HEI, buf, CHAR_FONT, &usX, &usY);
 
 		// how is characters life?
-		if (uiHealthPercent == 0)
-		{
-			// he's dead, Jim
-			SetFontForeground(FONT_METALGRAY);
-		}
-		else
-		if (uiHealthPercent < 25)
-		{
-			// very bad
-			SetFontForeground(FONT_RED);
-		}
-		else
-		if (uiHealthPercent < 50)
-		{
-			// not good
-			SetFontForeground(FONT_YELLOW);
-		}
-		else
-		{
-			// ok
-			SetFontForeground(CHAR_TEXT_FONT_COLOR);
-		}
+		UINT32 const uiHealthPercent =
+			s->bLifeMax > 0 ? 100 * s->bLife / s->bLifeMax : 0;
+		UINT8  const cur_colour =
+			uiHealthPercent ==  0 ? FONT_METALGRAY : // dead
+			uiHealthPercent <  25 ? FONT_RED       : // very bad
+			uiHealthPercent <  50 ? FONT_YELLOW    : // not good
+			CHAR_TEXT_FONT_COLOR;                    // ok
+		SetFontForeground(cur_colour);
 
 		// current life
-		swprintf( sString, lengthof(sString), L"%d", pSoldier->bLife );
-		DrawString( sString, usX, CHAR_HP_Y, CHAR_FONT );
-		usX += StringPixLength( sString, CHAR_FONT );
-
+		swprintf(buf, lengthof(buf), L"%d", s->bLife);
+		DrawString(buf, usX, CHAR_HP_Y, CHAR_FONT);
+		usX += StringPixLength(buf, CHAR_FONT);
 
 		// slash
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
-		const wchar_t* Slash = L"/";
-		DrawString(Slash, usX, CHAR_HP_Y, CHAR_FONT);
-		usX += StringPixLength(Slash, CHAR_FONT);
+		wchar_t const* const slash = L"/";
+		DrawString(slash, usX, CHAR_HP_Y, CHAR_FONT);
+		usX += StringPixLength(slash, CHAR_FONT);
 
-
-		if( ( GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + pSoldier->uiChangeHealthTime)&& ( pSoldier->uiChangeHealthTime != 0 ) )
-		{
-			if( pSoldier->usValueGoneUp & HEALTH_INCREASE )
-			{
-				SetFontForeground( FONT_LTGREEN );
-			}
-			else
-			{
-				SetFontForeground( FONT_RED );
-			}
-		}
-		else
-		{
-			SetFontForeground(CHAR_TEXT_FONT_COLOR);
-		}
+		bool  const recent_change =
+			GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + s->uiChangeHealthTime &&
+			s->uiChangeHealthTime != 0;
+		UINT8 const max_colour =
+			recent_change                      ? CHAR_TEXT_FONT_COLOR :
+			s->usValueGoneUp & HEALTH_INCREASE ? FONT_LTGREEN         :
+			FONT_RED;
+		SetFontForeground(max_colour);
 
 		// maximum life
-		swprintf( sString, lengthof(sString), L"%d", pSoldier->bLifeMax );
-		DrawString( sString, usX, CHAR_HP_Y, CHAR_FONT );
+		swprintf(buf, lengthof(buf), L"%d", s->bLifeMax);
+		DrawString(buf, usX, CHAR_HP_Y, CHAR_FONT);
 	}
 	else
 	{
@@ -942,9 +912,6 @@ static void DrawCharHealth(const SOLDIERTYPE* const pSoldier)
 		SetFontForeground(CHAR_TEXT_FONT_COLOR);
 		DrawStringCentered(pPOWStrings[1], CHAR_HP_X, CHAR_HP_Y, CHAR_HP_WID, CHAR_HP_HEI, CHAR_FONT);
 	}
-
-
-	SetFontForeground(CHAR_TEXT_FONT_COLOR);
 }
 
 
