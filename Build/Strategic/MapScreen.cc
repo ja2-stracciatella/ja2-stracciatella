@@ -3354,7 +3354,6 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 					if (HandleKeyESC()) return;
 					break;
 
-#if !defined JA2DEMO
 				case SDLK_PAUSE: HandlePlayerPauseUnPauseOfGame(); break;
 
 				case SDLK_LEFT:  GoToPrevCharacterInList(); break;
@@ -3369,8 +3368,10 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 				case SDLK_HOME: ChangeCurrentMapscreenMessageIndex(0); break;
 				case SDLK_END:  MoveToEndOfMapScreenMessageList();     break;
 
+#if !defined JA2DEMO
 				case SDLK_INSERT: GoUpOneLevelInMap();   break;
 				case SDLK_DELETE: GoDownOneLevelInMap(); break;
+#endif
 
 				case SDLK_RETURN: RequestToggleMercInventoryPanel(); break;
 
@@ -3451,6 +3452,7 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 #endif
 					break;
 
+#if !defined JA2DEMO
 				case '+':
 				case '=':
 					if (!CommonTimeCompressionChecks())
@@ -3479,6 +3481,7 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 							RequestToggleTimeCompression();
 					}
 					break;
+#endif
 
 #if defined JA2TESTVERSION
 				case '`':
@@ -3534,6 +3537,7 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 					break;
 				}
 
+#if !defined JA2DEMO
 				case 'a':
 					if (fAlt)
 					{
@@ -3582,6 +3586,7 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 				case 'c':
 					RequestContractMenu();
 					break;
+#endif
 
 				case 'd':
 #if defined JA2TESTVERSION
@@ -3627,7 +3632,6 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 						}
 					}
 					break;
-#endif
 
 				case 'h':
 #if defined JA2TESTVERSION
@@ -3680,6 +3684,7 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 						}
 					}
 					break;
+#endif
 
 				case 'l':
 					if (fAlt)
@@ -3696,13 +3701,16 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 						gfSaveGame = FALSE;
 						RequestTriggerExitFromMapscreen(MAP_EXIT_TO_LOAD);
 					}
+#if !defined JA2DEMO
 					else
 					{
 						// go to LAPTOP
 						RequestTriggerExitFromMapscreen(MAP_EXIT_TO_LAPTOP);
 					}
+#endif
 					break;
 
+#if !defined JA2DEMO
 				case 'm':
 					// only handle border button keyboard equivalents if the button is visible!
 					if (!fShowMapInventoryPool)
@@ -3711,6 +3719,7 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 						ToggleShowMinesMode();
 					}
 					break;
+#endif
 
 				case 'n':
 #if defined JA2TESTVERSION
@@ -3750,13 +3759,11 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 
 #if defined JA2TESTVERSION
 				case 'p':
-#if !defined JA2DEMO
 					if (fCtrl)
 					{
 						// CTRL-P: Display player's highest progress percentage
 						DumpSectorDifficultyInfo();
 					}
-#endif
 					// ALT-P: Make the selected character a POW!
 					if (fAlt)
 					{
@@ -3817,6 +3824,7 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 					}
 					break;
 
+#if !defined JA2DEMO
 				case 't':
 					// Teleport: CTRL-T
 					if (fCtrl && CHEATER_CHEAT_LEVEL())
@@ -3828,6 +3836,7 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 						ToggleShowTeamsMode();
 					}
 					break;
+#endif
 
 				case 'u':
 #if defined JA2TESTVERSION
@@ -3859,8 +3868,8 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 						DisplayGameSettings();
 					}
 					break;
-#endif
 
+#if !defined JA2DEMO
 				case 'w':
 					// only handle border button keyboard equivalents if the button is visible!
 					if (!fShowMapInventoryPool)
@@ -3868,6 +3877,7 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 						ToggleShowTownsMode();
 					}
 					break;
+#endif
 
 				case 'x':
 					if (fAlt)
@@ -3886,6 +3896,7 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 					break;
 #endif
 
+#if !defined JA2DEMO
 				case 'z':
 					if (fCtrl)
 					{
@@ -3903,6 +3914,7 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 						ToggleShowMilitiaMode();
 					}
 					break;
+#endif
 			}
 		}
 		else if (InputEvent.usEvent == KEY_REPEAT)
