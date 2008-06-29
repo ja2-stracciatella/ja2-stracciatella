@@ -752,17 +752,28 @@ UINT16 CompatibleFaceItems[][2] =
 	{0,								0},
 };
 
-typedef enum
+
+enum MergeType
 {
 	DESTRUCTION,
 	COMBINE_POINTS,
 	TREAT_ARMOUR,
 	EXPLOSIVE,
 	EASY_MERGE,
-	ELECTRONIC_MERGE,
-} MergeType;
+	ELECTRONIC_MERGE
+};
 
-UINT16 Merge[][4] =
+
+struct MergeInfo
+{
+	UINT16 item1;
+	UINT16 item2;
+	UINT16 result;
+	UINT16 action;
+};
+
+
+static MergeInfo const Merge[] =
 { // first item			second item						resulting item,					merge type
 	{FIRSTAIDKIT,			FIRSTAIDKIT,					FIRSTAIDKIT,						COMBINE_POINTS},
 	{MEDICKIT,				MEDICKIT,							MEDICKIT,								COMBINE_POINTS},
@@ -822,7 +833,7 @@ UINT16 Merge[][4] =
 	{FLASH_DEVICE,		DISPLAY_UNIT,					XRAY_DEVICE,						ELECTRONIC_MERGE},
 	{DISPLAY_UNIT,		FLASH_DEVICE,					XRAY_DEVICE,						ELECTRONIC_MERGE},
 
-	{0, 0, 0, 0}
+	{ NOTHING,  NOTHING, NOTHING, DESTRUCTION}
 };
 
 typedef struct
@@ -1630,49 +1641,29 @@ UINT16 GetLauncherFromLaunchable( UINT16 usLaunchable )
 }
 
 
-static BOOLEAN EvaluateValidMerge(UINT16 usMerge, UINT16 usItem, UINT16* pusResult, UINT8* pubType)
+static BOOLEAN EvaluateValidMerge(UINT16 const usMerge, UINT16 const usItem, UINT16* const pusResult, UINT8* const pubType)
 {
 	// NB "usMerge" is the object being merged with (e.g. compound 18)
 	// "usItem" is the item being merged "onto" (e.g. kevlar vest)
-	INT32 iLoop = 0;
 
-	if (usMerge == usItem && Item[ usItem ].usItemClass == IC_AMMO)
+	if (usMerge == usItem && Item[usItem].usItemClass == IC_AMMO)
 	{
 		*pusResult = usItem;
-		*pubType = COMBINE_POINTS;
-		return( TRUE );
+		*pubType   = COMBINE_POINTS;
+		return TRUE;
 	}
-	// look for the section of the array pertaining to this Merge...
-	while( 1 )
+
+	for (MergeInfo const* m = Merge; m->item1 != NOTHING; ++m)
 	{
-		if (Merge[iLoop][0] == usMerge)
-		{
-			break;
-		}
-		iLoop++;
-		if (Merge[iLoop][0] == 0)
-		{
-			// the proposed item cannot be merged with anything!
-			return( FALSE );
-		}
+		if (m->item1 != usMerge) continue;
+		if (m->item2 != usItem)  continue;
+
+		*pusResult = m->result;
+		*pubType   = m->action;
+		return TRUE;
 	}
-	// now look through this section for the item in question
-	while( 1 )
-	{
-		if (Merge[iLoop][1] == usItem)
-		{
-			break;
-		}
-		iLoop++;
-		if (Merge[iLoop][0] != usMerge)
-		{
-			// the proposed item cannot be merged with the item in question
-			return( FALSE );
-		}
-	}
-	*pusResult = Merge[iLoop][2];
-	*pubType = (UINT8) Merge[iLoop][3];
-	return( TRUE );
+
+	return FALSE;
 }
 
 BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem )
