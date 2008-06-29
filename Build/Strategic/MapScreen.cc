@@ -1126,17 +1126,11 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 
 
 // this character is in transit has an item picked up
-static BOOLEAN CharacterIsInTransitAndHasItemPickedUp(const SOLDIERTYPE* const s)
+static bool CharacterIsInTransitAndHasItemPickedUp(SOLDIERTYPE const* const s)
 {
-	if (s->bAssignment != IN_TRANSIT) return FALSE;
-
-	// item picked up?
-	if( gMPanelRegion.Cursor != EXTERN_CURSOR)
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return
+		s->bAssignment       == IN_TRANSIT &&
+		gMPanelRegion.Cursor == EXTERN_CURSOR; // item picked up?
 }
 
 
