@@ -395,47 +395,36 @@ STRUCTURE_FILE_REF* LoadStructureFile(const char* szFileName)
 //
 
 
-static STRUCTURE* CreateStructureFromDB(const DB_STRUCTURE_REF* const pDBStructureRef, const UINT8 ubTileNum)
+static STRUCTURE* CreateStructureFromDB(DB_STRUCTURE_REF const* const pDBStructureRef, UINT8 const ubTileNum)
 try
 { // Creates a STRUCTURE struct for one tile of a structure
-	DB_STRUCTURE *				pDBStructure;
-	DB_STRUCTURE_TILE	*		pTile;
-
-	// set pointers to the DBStructure and Tile
-	pDBStructure = pDBStructureRef->pDBStructure;
-	pTile = pDBStructureRef->ppTile[ubTileNum];
-	CHECKN( pTile );
+	DB_STRUCTURE const* const pDBStructure = pDBStructureRef->pDBStructure;
+	DB_STRUCTURE_TILE*  const pTile        = pDBStructureRef->ppTile[ubTileNum];
+	CHECKN(pTile);
 
 	STRUCTURE* const pStructure = MALLOCZ(STRUCTURE);
 
-	// setup
-	pStructure->fFlags = pDBStructure->fFlags;
-	pStructure->pShape = &(pTile->Shape);
+	pStructure->fFlags          = pDBStructure->fFlags;
+	pStructure->pShape          = &pTile->Shape;
 	pStructure->pDBStructureRef = pDBStructureRef;
 	if (pTile->sPosRelToBase == 0)
 	{	// base tile
-		pStructure->fFlags |= STRUCTURE_BASE_TILE;
-		pStructure->ubHitPoints = pDBStructure->ubHitPoints;
+		pStructure->fFlags      |= STRUCTURE_BASE_TILE;
+		pStructure->ubHitPoints  = pDBStructure->ubHitPoints;
 	}
 	if (pDBStructure->ubWallOrientation != NO_ORIENTATION)
 	{
-		if (pStructure->fFlags & STRUCTURE_WALL)
-		{
-			// for multi-tile walls, which are only the special corner pieces,
-			// the non-base tile gets no orientation value because this copy
-			// will be skipped
-			if (pStructure->fFlags & STRUCTURE_BASE_TILE)
-			{
-				pStructure->ubWallOrientation = pDBStructure->ubWallOrientation;
-			}
-		}
-		else
+		/* for multi-tile walls, which are only the special corner pieces, the
+		 * non-base tile gets no orientation value because this copy will be
+		 * skipped */
+		if (!(pStructure->fFlags & STRUCTURE_WALL) ||
+				pStructure->fFlags & STRUCTURE_BASE_TILE)
 		{
 			pStructure->ubWallOrientation = pDBStructure->ubWallOrientation;
 		}
 	}
 	pStructure->ubVehicleHitLocation = pTile->ubVehicleHitLocation;
-	return( pStructure );
+	return pStructure;
 }
 catch (...) { return 0; }
 
