@@ -262,6 +262,7 @@ try
 catch (...)
 {
 	DestroyTileSurfaces();
+	throw;
 }
 
 
