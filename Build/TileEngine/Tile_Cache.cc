@@ -243,28 +243,21 @@ STRUCTURE_FILE_REF* GetCachedTileStructureRefFromFilename(const char* cFilename)
 }
 
 
-void CheckForAndAddTileCacheStructInfo( LEVELNODE *pNode, INT16 sGridNo, UINT16 usIndex, UINT16 usSubIndex )
+void CheckForAndAddTileCacheStructInfo(LEVELNODE* const pNode, INT16 const sGridNo, UINT16 const usIndex, UINT16 const usSubIndex)
 {
-	STRUCTURE_FILE_REF *pStructureFileRef;
+	STRUCTURE_FILE_REF* const sfr = GetCachedTileStructureRef(usIndex);
+	if (!sfr)  return;
 
-	pStructureFileRef = GetCachedTileStructureRef( usIndex );
+	if (AddStructureToWorld(sGridNo, 0, &sfr->pDBStructureRef[usSubIndex], pNode)) return;
 
-	if ( pStructureFileRef != NULL)
-	{
-		if ( !AddStructureToWorld( sGridNo, 0, &( pStructureFileRef->pDBStructureRef[ usSubIndex ] ), pNode ) )
-    {
-      if ( giDefaultStructIndex != -1 )
-      {
-        pStructureFileRef = gpTileCacheStructInfo[ giDefaultStructIndex ].pStructureFileRef;
+	if (giDefaultStructIndex == -1) return;
 
-	      if ( pStructureFileRef != NULL)
-	      {
-		      AddStructureToWorld( sGridNo, 0, &( pStructureFileRef->pDBStructureRef[ usSubIndex ] ), pNode );
-        }
-      }
-    }
-	}
+	STRUCTURE_FILE_REF* const def_sfr = gpTileCacheStructInfo[giDefaultStructIndex].pStructureFileRef;
+	if (!def_sfr) return;
+
+	AddStructureToWorld(sGridNo, 0, &def_sfr->pDBStructureRef[usSubIndex], pNode);
 }
+
 
 void CheckForAndDeleteTileCacheStructInfo( LEVELNODE *pNode, UINT16 usIndex )
 {
