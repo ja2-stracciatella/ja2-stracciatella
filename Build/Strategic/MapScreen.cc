@@ -897,7 +897,7 @@ static void DrawCharHealth(SOLDIERTYPE const* const s)
 			GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + s->uiChangeHealthTime &&
 			s->uiChangeHealthTime != 0;
 		UINT8 const max_colour =
-			recent_change                      ? CHAR_TEXT_FONT_COLOR :
+			!recent_change                     ? CHAR_TEXT_FONT_COLOR :
 			s->usValueGoneUp & HEALTH_INCREASE ? FONT_LTGREEN         :
 			FONT_RED;
 		SetFontForeground(max_colour);
