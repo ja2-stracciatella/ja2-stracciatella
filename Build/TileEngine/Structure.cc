@@ -429,237 +429,191 @@ try
 catch (...) { return 0; }
 
 
-static BOOLEAN OkayToAddStructureToTile(const INT16 sBaseGridNo, const INT16 sCubeOffset, const DB_STRUCTURE_REF* const pDBStructureRef, UINT8 ubTileIndex, const INT16 sExclusionID, const BOOLEAN fIgnorePeople)
+static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCubeOffset, DB_STRUCTURE_REF const* const pDBStructureRef, UINT8 ubTileIndex, INT16 const sExclusionID, BOOLEAN const fIgnorePeople)
 { // Verifies whether a structure is blocked from being added to the map at a particular point
-	DB_STRUCTURE *	pDBStructure;
-	DB_STRUCTURE_TILE	**	ppTile;
-	STRUCTURE *			pExistingStructure;
-	STRUCTURE *			pOtherExistingStructure;
-	INT8						bLoop, bLoop2;
-	INT16						sGridNo;
-	INT16						sOtherGridNo;
-
-	ppTile = pDBStructureRef->ppTile;
-	sGridNo = sBaseGridNo + ppTile[ubTileIndex]->sPosRelToBase;
-	if (sGridNo < 0 || sGridNo > WORLD_MAX)
-	{
-		return( FALSE );
-	}
+	DB_STRUCTURE_TILE const* const* const ppTile = pDBStructureRef->ppTile;
+	INT16 const sGridNo = sBaseGridNo + ppTile[ubTileIndex]->sPosRelToBase;
+	if (sGridNo < 0 || WORLD_MAX < sGridNo) return FALSE;
 
 	if (gpWorldLevelData[sBaseGridNo].sHeight != gpWorldLevelData[sGridNo].sHeight)
 	{
 		// uneven terrain, one portion on top of cliff and another not! can't add!
-		return( FALSE );
+		return FALSE;
 	}
 
-	pDBStructure = pDBStructureRef->pDBStructure;
-	pExistingStructure = gpWorldLevelData[sGridNo].pStructureHead;
-
-/*
-	// If adding a mobile structure, always allow addition if the mobile structure tile is passable
-	if ( (pDBStructure->fFlags & STRUCTURE_MOBILE) && (ppTile[ubTileIndex]->fFlags & TILE_PASSABLE) )
+	DB_STRUCTURE const* const pDBStructure = pDBStructureRef->pDBStructure;
+	for (STRUCTURE const* pExistingStructure = gpWorldLevelData[sGridNo].pStructureHead; pExistingStructure != NULL; pExistingStructure = pExistingStructure->pNext)
 	{
-		return( TRUE );
-	}
-*/
+		if (sCubeOffset != pExistingStructure->sCubeOffset) continue;
 
-	while (pExistingStructure != NULL)
-	{
-		if (sCubeOffset == pExistingStructure->sCubeOffset)
+		// CJC:
+		// If adding a mobile structure, allow addition if existing structure is passable
+		if (pDBStructure->fFlags & STRUCTURE_MOBILE && pExistingStructure->fFlags & STRUCTURE_PASSABLE)
 		{
+			continue;
+		}
 
-			// CJC:
-			// If adding a mobile structure, allow addition if existing structure is passable
-			if ( (pDBStructure->fFlags & STRUCTURE_MOBILE) && (pExistingStructure->fFlags & STRUCTURE_PASSABLE) )
+		if (pDBStructure->fFlags & STRUCTURE_OBSTACLE)
+		{
+			// CJC: NB these next two if states are probably COMPLETELY OBSOLETE but I'm leaving
+			// them in there for now (no harm done)
+
+			// ATE:
+			// ignore this one if it has the same ID num as exclusion
+			if (sExclusionID != INVALID_STRUCTURE_ID &&
+					sExclusionID == pExistingStructure->usStructureID)
 			{
-				// Skip!
-				pExistingStructure = pExistingStructure->pNext;
 				continue;
 			}
 
-
-			if (pDBStructure->fFlags & STRUCTURE_OBSTACLE)
+			// If we are a person, skip!
+			if (fIgnorePeople && pExistingStructure->usStructureID < TOTAL_SOLDIERS)
 			{
+				continue;
+			}
 
-				// CJC: NB these next two if states are probably COMPLETELY OBSOLETE but I'm leaving
-				// them in there for now (no harm done)
-
-				// ATE:
-				// ignore this one if it has the same ID num as exclusion
-				if ( sExclusionID != INVALID_STRUCTURE_ID )
+			// two obstacle structures aren't allowed in the same tile at the same height
+			// ATE: There is more sophisticated logic for mobiles, so postpone this check if mobile....
+			if (pExistingStructure->fFlags & STRUCTURE_OBSTACLE && !(pDBStructure->fFlags & STRUCTURE_MOBILE))
+			{
+				if (pExistingStructure->fFlags & STRUCTURE_PASSABLE && !(pExistingStructure->fFlags & STRUCTURE_MOBILE))
 				{
-					if ( pExistingStructure->usStructureID == sExclusionID )
-					{
-						// Skip!
-						pExistingStructure = pExistingStructure->pNext;
-						continue;
-					}
+					// no mobiles, existing structure is passable
 				}
-
-				if ( fIgnorePeople )
+				else
 				{
-					// If we are a person, skip!
-					if ( pExistingStructure->usStructureID < TOTAL_SOLDIERS )
-					{
-						// Skip!
-						pExistingStructure = pExistingStructure->pNext;
-						continue;
-					}
-				}
-
-				// two obstacle structures aren't allowed in the same tile at the same height
-				// ATE: There is more sophisticated logic for mobiles, so postpone this check if mobile....
-				if ( ( pExistingStructure->fFlags & STRUCTURE_OBSTACLE ) && !( pDBStructure->fFlags & STRUCTURE_MOBILE ) )
-				{
-					if ( pExistingStructure->fFlags & STRUCTURE_PASSABLE && !(pExistingStructure->fFlags & STRUCTURE_MOBILE) )
-					{
-						// no mobiles, existing structure is passable
-					}
-					else
-					{
-						return( FALSE );
-					}
-				}
-				else if ((pDBStructure->ubNumberOfTiles > 1) && (pExistingStructure->fFlags & STRUCTURE_WALLSTUFF))
-				{
-					// if not an open door...
-					if ( ! ( (pExistingStructure->fFlags & STRUCTURE_ANYDOOR) && (pExistingStructure->fFlags & STRUCTURE_OPEN) ) )
-					{
-
-						// we could be trying to place a multi-tile obstacle on top of a wall; we shouldn't
-						// allow this if the structure is going to be on both sides of the wall
-						for (bLoop = 1; bLoop < 4; bLoop++)
-						{
-							switch( pExistingStructure->ubWallOrientation)
-							{
-								case OUTSIDE_TOP_LEFT:
-								case INSIDE_TOP_LEFT:
-									sOtherGridNo = NewGridNo( sGridNo, DirectionInc( (INT8) (bLoop + 2) ) );
-									break;
-								case OUTSIDE_TOP_RIGHT:
-								case INSIDE_TOP_RIGHT:
-									sOtherGridNo = NewGridNo( sGridNo, DirectionInc( bLoop ) );
-									break;
-								default:
-									// @%?@#%?@%
-									sOtherGridNo = NewGridNo( sGridNo, DirectionInc( SOUTHEAST ) );
-							}
-							for (bLoop2 = 0; bLoop2 < pDBStructure->ubNumberOfTiles; bLoop2++)
-							{
-								if ( sBaseGridNo + ppTile[bLoop2]->sPosRelToBase == sOtherGridNo)
-								{
-									// obstacle will straddle wall!
-									return( FALSE );
-								}
-							}
-						}
-					}
-
+					return FALSE;
 				}
 			}
-			else if (pDBStructure->fFlags & STRUCTURE_WALLSTUFF)
+			else if (pDBStructure->ubNumberOfTiles > 1 && pExistingStructure->fFlags & STRUCTURE_WALLSTUFF)
 			{
-				// two walls with the same alignment aren't allowed in the same tile
-				if ((pExistingStructure->fFlags & STRUCTURE_WALLSTUFF) && (pDBStructure->ubWallOrientation == pExistingStructure->ubWallOrientation))
+				// if not an open door...
+				if (!(pExistingStructure->fFlags & STRUCTURE_ANYDOOR) ||
+						!(pExistingStructure->fFlags & STRUCTURE_OPEN))
 				{
-					return( FALSE );
-				}
-				else if ( !(pExistingStructure->fFlags & (STRUCTURE_CORPSE | STRUCTURE_PERSON)) )
-				{
-					// it's possible we're trying to insert this wall on top of a multitile obstacle
-					for (bLoop = 1; bLoop < 4; bLoop++)
+					// we could be trying to place a multi-tile obstacle on top of a wall; we shouldn't
+					// allow this if the structure is going to be on both sides of the wall
+					for (INT8 bLoop = 1; bLoop < 4; ++bLoop)
 					{
-						switch( pDBStructure->ubWallOrientation)
+						INT16 sOtherGridNo;
+						switch (pExistingStructure->ubWallOrientation)
 						{
 							case OUTSIDE_TOP_LEFT:
 							case INSIDE_TOP_LEFT:
-								sOtherGridNo = NewGridNo( sGridNo, DirectionInc( (INT8) (bLoop + 2) ) );
+								sOtherGridNo = NewGridNo(sGridNo, DirectionInc((INT8)(bLoop + 2)));
 								break;
+
 							case OUTSIDE_TOP_RIGHT:
 							case INSIDE_TOP_RIGHT:
-								sOtherGridNo = NewGridNo( sGridNo, DirectionInc( bLoop ) );
+								sOtherGridNo = NewGridNo(sGridNo, DirectionInc(bLoop));
 								break;
+
 							default:
 								// @%?@#%?@%
-								sOtherGridNo = NewGridNo( sGridNo, DirectionInc( SOUTHEAST ) );
+								sOtherGridNo = NewGridNo(sGridNo, DirectionInc(SOUTHEAST));
 								break;
 						}
-						for (ubTileIndex = 0; ubTileIndex < pDBStructure->ubNumberOfTiles; ubTileIndex++)
+						for (INT8 bLoop2 = 0; bLoop2 < pDBStructure->ubNumberOfTiles; ++bLoop2)
 						{
-							pOtherExistingStructure = FindStructureByID( sOtherGridNo, pExistingStructure->usStructureID );
-							if (pOtherExistingStructure)
-							{
-								return( FALSE );
-							}
+							if (sBaseGridNo + ppTile[bLoop2]->sPosRelToBase != sOtherGridNo) continue;
+
+							// obstacle will straddle wall!
+							return FALSE;
 						}
 					}
 				}
 			}
-
-			if ( pDBStructure->fFlags & STRUCTURE_MOBILE )
+		}
+		else if (pDBStructure->fFlags & STRUCTURE_WALLSTUFF)
+		{
+			// two walls with the same alignment aren't allowed in the same tile
+			if (pExistingStructure->fFlags & STRUCTURE_WALLSTUFF &&
+					pExistingStructure->ubWallOrientation == pDBStructure->ubWallOrientation)
 			{
-				// ATE:
-				// ignore this one if it has the same ID num as exclusion
-				if ( sExclusionID != INVALID_STRUCTURE_ID )
-				{
-					if ( pExistingStructure->usStructureID == sExclusionID )
-					{
-						// Skip!
-						pExistingStructure = pExistingStructure->pNext;
-						continue;
-					}
-				}
-
-				if ( fIgnorePeople )
-				{
-					// If we are a person, skip!
-					if ( pExistingStructure->usStructureID < TOTAL_SOLDIERS )
-					{
-						// Skip!
-						pExistingStructure = pExistingStructure->pNext;
-						continue;
-					}
-				}
-
-				// ATE: Added check here - UNLESS the part we are trying to add is PASSABLE!
-				if ( pExistingStructure->fFlags & STRUCTURE_MOBILE && !(pExistingStructure->fFlags & STRUCTURE_PASSABLE) && !(ppTile[ubTileIndex]->fFlags & TILE_PASSABLE) )
-				{
-					// don't allow 2 people in the same tile
-					return( FALSE );
-				}
-
-        // ATE: Another rule: allow PASSABLE *IF* the PASSABLE is *NOT* MOBILE!
-				if ( !( pExistingStructure->fFlags & STRUCTURE_MOBILE ) && (pExistingStructure->fFlags & STRUCTURE_PASSABLE) )
-				{
-					// Skip!
-					pExistingStructure = pExistingStructure->pNext;
-					continue;
-        }
-
-				// ATE: Added here - UNLESS this part is PASSABLE....
-				// two obstacle structures aren't allowed in the same tile at the same height
-				if ( (pExistingStructure->fFlags & STRUCTURE_OBSTACLE ) && !(ppTile[ubTileIndex]->fFlags & TILE_PASSABLE) )
-				{
-					return( FALSE );
-				}
+				return FALSE;
 			}
-
-			if ((pDBStructure->fFlags & STRUCTURE_OPENABLE))
+			else if (!(pExistingStructure->fFlags & (STRUCTURE_CORPSE | STRUCTURE_PERSON)))
 			{
-				if (pExistingStructure->fFlags & STRUCTURE_OPENABLE)
+				// it's possible we're trying to insert this wall on top of a multitile obstacle
+				for (INT8 bLoop = 1; bLoop < 4; ++bLoop)
 				{
-					// don't allow two openable structures in the same tile or things will screw
-					// up on an interface level
-					return( FALSE );
+					INT16 sOtherGridNo;
+					switch (pDBStructure->ubWallOrientation)
+					{
+						case OUTSIDE_TOP_LEFT:
+						case INSIDE_TOP_LEFT:
+							sOtherGridNo = NewGridNo(sGridNo, DirectionInc((INT8)(bLoop + 2)));
+							break;
+
+						case OUTSIDE_TOP_RIGHT:
+						case INSIDE_TOP_RIGHT:
+							sOtherGridNo = NewGridNo(sGridNo, DirectionInc(bLoop));
+							break;
+
+						default:
+							// @%?@#%?@%
+							sOtherGridNo = NewGridNo(sGridNo, DirectionInc(SOUTHEAST));
+							break;
+					}
+					for (ubTileIndex = 0; ubTileIndex < pDBStructure->ubNumberOfTiles; ++ubTileIndex)
+					{
+						STRUCTURE const* const pOtherExistingStructure = FindStructureByID(sOtherGridNo, pExistingStructure->usStructureID);
+						if (pOtherExistingStructure) return FALSE;
+					}
 				}
 			}
 		}
 
-		pExistingStructure = pExistingStructure->pNext;
+		if (pDBStructure->fFlags & STRUCTURE_MOBILE)
+		{
+			// ATE:
+			// ignore this one if it has the same ID num as exclusion
+			if (sExclusionID != INVALID_STRUCTURE_ID)
+			{
+				if (pExistingStructure->usStructureID == sExclusionID) continue;
+			}
+
+			// If we are a person, skip!
+			if (fIgnorePeople && pExistingStructure->usStructureID < TOTAL_SOLDIERS)
+			{
+				continue;
+			}
+
+			// ATE: Added check here - UNLESS the part we are trying to add is PASSABLE!
+			if (pExistingStructure->fFlags & STRUCTURE_MOBILE &&
+					!(pExistingStructure->fFlags & STRUCTURE_PASSABLE) &&
+					!(ppTile[ubTileIndex]->fFlags & TILE_PASSABLE))
+			{
+				// don't allow 2 people in the same tile
+				return FALSE;
+			}
+
+			// ATE: Another rule: allow PASSABLE *IF* the PASSABLE is *NOT* MOBILE!
+			if (!(pExistingStructure->fFlags & STRUCTURE_MOBILE) &&
+					pExistingStructure->fFlags & STRUCTURE_PASSABLE)
+			{
+				continue;
+			}
+
+			// ATE: Added here - UNLESS this part is PASSABLE....
+			// two obstacle structures aren't allowed in the same tile at the same height
+			if (pExistingStructure->fFlags & STRUCTURE_OBSTACLE &&
+					!(ppTile[ubTileIndex]->fFlags & TILE_PASSABLE))
+			{
+				return FALSE;
+			}
+		}
+
+		if (pDBStructure->fFlags & STRUCTURE_OPENABLE &&
+				pExistingStructure->fFlags & STRUCTURE_OPENABLE)
+		{
+			/* Don't allow two openable structures in the same tile or things will
+			 * screw up on an interface level */
+			return FALSE;
+		}
 	}
 
-
-	return( TRUE );
+	return TRUE;
 }
 
 
