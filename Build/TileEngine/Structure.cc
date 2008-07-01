@@ -739,107 +739,88 @@ static void AddStructureToTile(MAP_ELEMENT* const pMapElement, STRUCTURE* const 
 static void DeleteStructureFromTile(MAP_ELEMENT* pMapElement, STRUCTURE* pStructure);
 
 
-static STRUCTURE* InternalAddStructureToWorld(const INT16 sBaseGridNo, const INT8 bLevel, const DB_STRUCTURE_REF* const pDBStructureRef, LEVELNODE* const pLevelNode)
+static STRUCTURE* InternalAddStructureToWorld(INT16 const sBaseGridNo, INT8 const bLevel, DB_STRUCTURE_REF const* const pDBStructureRef, LEVELNODE* const pLevelNode)
 try
 { // Adds a complete structure to the world at a location plus all other locations covered by the structure
-	INT16									sGridNo;
-	STRUCTURE *						pBaseStructure;
-	DB_STRUCTURE *				pDBStructure;
-	DB_STRUCTURE_TILE	**	ppTile;
-	UINT8									ubLoop;
-	UINT8									ubLoop2;
-	INT16									sBaseTileHeight=-1;
-	UINT16								usStructureID;
+	CHECKN(pDBStructureRef);
+	CHECKN(pLevelNode);
 
-	CHECKF( pDBStructureRef );
-	CHECKF( pLevelNode );
+	DB_STRUCTURE const* const pDBStructure = pDBStructureRef->pDBStructure;
+	CHECKN(pDBStructure);
 
-	pDBStructure = pDBStructureRef->pDBStructure;
-	CHECKF( pDBStructure );
+	DB_STRUCTURE_TILE const* const* const ppTile = pDBStructureRef->ppTile;
+	CHECKN(ppTile);
 
-	ppTile = pDBStructureRef->ppTile;
-	CHECKF( ppTile );
-
-	CHECKF( pDBStructure->ubNumberOfTiles > 0 );
+	CHECKN(pDBStructure->ubNumberOfTiles > 0);
 
 	// first check to see if the structure will be blocked
-	if (!OkayToAddStructureToWorld( sBaseGridNo, bLevel, pDBStructureRef, INVALID_STRUCTURE_ID )	)
+	if (!OkayToAddStructureToWorld(sBaseGridNo, bLevel, pDBStructureRef, INVALID_STRUCTURE_ID))
 	{
-		return( NULL );
+		return 0;
 	}
 
-	// We go through a definition stage here and a later stage of
-	// adding everything to the world so that we don't have to untangle
-	// things if we run out of memory.  First we create an array of
-	// pointers to point to all of the STRUCTURE elements created in
-	// the first stage.  This array gets given to the base tile so
-	// there is an easy way to remove an entire object from the world quickly
+	/* We go through a definition stage here and a later stage of adding
+	 * everything to the world so that we don't have to untangle things if we run
+	 * out of memory.  First we create an array of pointers to point to all of the
+	 * STRUCTURE elements created in the first stage.  This array gets given to
+	 * the base tile so there is an easy way to remove an entire object from the
+	 * world quickly */
+	SGP::Buffer<STRUCTURE*> structures(pDBStructure->ubNumberOfTiles);
 
-	// NB we add 1 because the 0th element is in fact the reference count!
-	STRUCTURE** const ppStructure = MALLOCNZ(STRUCTURE*, pDBStructure->ubNumberOfTiles);
-
-	for (ubLoop = BASE_TILE; ubLoop < pDBStructure->ubNumberOfTiles; ubLoop++)
+	for (UINT8 i = BASE_TILE; i < pDBStructure->ubNumberOfTiles; ++i)
 	{ // for each tile, create the appropriate STRUCTURE struct
-		ppStructure[ubLoop] = CreateStructureFromDB( pDBStructureRef, ubLoop );
-		if (ppStructure[ubLoop] == NULL)
+		STRUCTURE* const s = CreateStructureFromDB(pDBStructureRef, i);
+		structures[i] = s;
+		if (!s)
 		{
 			// Free allocated memory and abort!
-			for (ubLoop2 = 0; ubLoop2 < ubLoop; ubLoop2++)
+			for (UINT8 k = 0; k < i; ++k)
 			{
-				MemFree( ppStructure[ubLoop2] );
+				MemFree(structures[k]);
 			}
-			MemFree( ppStructure );
-			return( NULL );
+			return 0;
 		}
-		ppStructure[ubLoop]->sGridNo = sBaseGridNo + ppTile[ubLoop]->sPosRelToBase;
-		if (ubLoop != BASE_TILE)
+		DB_STRUCTURE_TILE const* const t = ppTile[i];
+		s->sGridNo = sBaseGridNo + t->sPosRelToBase;
+		if (i != BASE_TILE)
 		{
-			#ifdef JA2EDITOR
-				//Kris:
-				//Added this undo code if in the editor.
-				//It is important to save tiles effected by multitiles.  If the structure placement
-				//fails below, it doesn't matter, because it won't hurt the undo code.
-				if( gfEditMode )
-					AddToUndoList( ppStructure[ ubLoop ]->sGridNo );
-			#endif
-
-			ppStructure[ubLoop]->sBaseGridNo = sBaseGridNo;
+#if defined JA2EDITOR
+			/* Kris:
+			 * Added this undo code if in the editor.
+			 * It is important to save tiles effected by multitiles.  If the
+			 * structure placement fails below, it doesn't matter, because it won't
+			 * hurt the undo code. */
+			if (gfEditMode) AddToUndoList(s->sGridNo);
+#endif
+			s->sBaseGridNo = sBaseGridNo;
 		}
-		if (ppTile[ubLoop]->fFlags & TILE_ON_ROOF)
-		{
-			ppStructure[ubLoop]->sCubeOffset = (bLevel + 1) * PROFILE_Z_SIZE;
-		}
-		else
-		{
-			ppStructure[ubLoop]->sCubeOffset = bLevel * PROFILE_Z_SIZE;
-		}
-		if (ppTile[ubLoop]->fFlags & TILE_PASSABLE)
-		{
-			ppStructure[ubLoop]->fFlags |= STRUCTURE_PASSABLE;
-		}
+		s->sCubeOffset =
+			(t->fFlags & TILE_ON_ROOF ? bLevel + 1 : bLevel) * PROFILE_Z_SIZE;
+		if (t->fFlags & TILE_PASSABLE) s->fFlags |= STRUCTURE_PASSABLE;
 		if (pLevelNode->uiFlags & LEVELNODE_SOLDIER)
 		{
 			// should now be unncessary
-			ppStructure[ubLoop]->fFlags |= STRUCTURE_PERSON;
-			ppStructure[ubLoop]->fFlags &= ~(STRUCTURE_BLOCKSMOVES);
+			s->fFlags |= STRUCTURE_PERSON;
+			s->fFlags &= ~STRUCTURE_BLOCKSMOVES;
 		}
 		else if (pLevelNode->uiFlags & LEVELNODE_ROTTINGCORPSE || pDBStructure->fFlags & STRUCTURE_CORPSE)
 		{
-			ppStructure[ubLoop]->fFlags |= STRUCTURE_CORPSE;
+			s->fFlags |= STRUCTURE_CORPSE;
 			// attempted check to screen this out for queen creature or vehicle
-			if ( pDBStructure->ubNumberOfTiles < 10 )
+			if (pDBStructure->ubNumberOfTiles < 10)
 			{
-				ppStructure[ubLoop]->fFlags |= STRUCTURE_PASSABLE;
-				ppStructure[ubLoop]->fFlags &= ~(STRUCTURE_BLOCKSMOVES);
+				s->fFlags |= STRUCTURE_PASSABLE;
+				s->fFlags &= ~STRUCTURE_BLOCKSMOVES;
 			}
 			else
 			{
 				// make sure not transparent
-				ppStructure[ubLoop]->fFlags &= ~(STRUCTURE_TRANSPARENT);
+				s->fFlags &= ~STRUCTURE_TRANSPARENT;
 			}
 		}
 	}
 
+	UINT16 usStructureID;
 	if (pLevelNode->uiFlags & LEVELNODE_SOLDIER)
 	{
 		// use the merc's ID as the structure ID for his/her structure
@@ -861,36 +842,31 @@ try
 		usStructureID = gusNextAvailableStructureID;
 	}
 	// now add all these to the world!
-	for (ubLoop = BASE_TILE; ubLoop < pDBStructure->ubNumberOfTiles; ubLoop++)
+	INT16 sBaseTileHeight = -1;
+	for (UINT8 i = BASE_TILE; i < pDBStructure->ubNumberOfTiles; ++i)
 	{
-		sGridNo = ppStructure[ubLoop]->sGridNo;
-		if (ubLoop == BASE_TILE)
+		STRUCTURE*   const s  = structures[i];
+		MAP_ELEMENT* const me = &gpWorldLevelData[s->sGridNo];
+		if (i == BASE_TILE)
 		{
-			sBaseTileHeight = gpWorldLevelData[sGridNo].sHeight;
+			sBaseTileHeight = me->sHeight;
 		}
-		else
+		else if (me->sHeight != sBaseTileHeight)
 		{
-			if (gpWorldLevelData[sGridNo].sHeight != sBaseTileHeight)
+			// not level ground! abort!
+			for (UINT8 k = BASE_TILE; k < i; ++k)
 			{
-				// not level ground! abort!
-				for (ubLoop2 = BASE_TILE; ubLoop2 < ubLoop; ubLoop2++)
-				{
-					DeleteStructureFromTile( &(gpWorldLevelData[ppStructure[ubLoop2]->sGridNo]), ppStructure[ubLoop2] );
-				}
-				MemFree( ppStructure );
-				return( NULL );
+				STRUCTURE* const s = structures[k];
+				DeleteStructureFromTile(&gpWorldLevelData[s->sGridNo], s);
 			}
+			return 0;
 		}
-		AddStructureToTile(&gpWorldLevelData[sGridNo], ppStructure[ubLoop], usStructureID);
+		AddStructureToTile(me, s, usStructureID);
 	}
 
-	pBaseStructure = ppStructure[BASE_TILE];
-	pLevelNode->pStructureData = pBaseStructure;
-
-	MemFree( ppStructure );
-	// And we're done! return a pointer to the base structure!
-
-	return( pBaseStructure );
+	STRUCTURE* const base = structures[BASE_TILE];
+	pLevelNode->pStructureData = base;
+	return base;
 }
 catch (...) { return 0; }
 
