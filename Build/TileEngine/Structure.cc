@@ -384,11 +384,9 @@ STRUCTURE_FILE_REF* LoadStructureFile(const char* szFileName)
 
 
 static STRUCTURE* CreateStructureFromDB(DB_STRUCTURE_REF const* const pDBStructureRef, UINT8 const ubTileNum)
-try
 { // Creates a STRUCTURE struct for one tile of a structure
 	DB_STRUCTURE const* const pDBStructure = pDBStructureRef->pDBStructure;
 	DB_STRUCTURE_TILE*  const pTile        = pDBStructureRef->ppTile[ubTileNum];
-	CHECKN(pTile);
 
 	STRUCTURE* const pStructure = MALLOCZ(STRUCTURE);
 
@@ -414,7 +412,6 @@ try
 	pStructure->ubVehicleHitLocation = pTile->ubVehicleHitLocation;
 	return pStructure;
 }
-catch (...) { return 0; }
 
 
 static BOOLEAN OkayToAddStructureToTile(INT16 const sBaseGridNo, INT16 const sCubeOffset, DB_STRUCTURE_REF const* const pDBStructureRef, UINT8 ubTileIndex, INT16 const sExclusionID, BOOLEAN const fIgnorePeople)
@@ -701,9 +698,13 @@ try
 
 	for (UINT8 i = BASE_TILE; i < pDBStructure->ubNumberOfTiles; ++i)
 	{ // for each tile, create the appropriate STRUCTURE struct
-		STRUCTURE* const s = CreateStructureFromDB(pDBStructureRef, i);
-		structures[i] = s;
-		if (!s)
+		STRUCTURE* s;
+		try
+		{
+			s = CreateStructureFromDB(pDBStructureRef, i);
+			structures[i] = s;
+		}
+		catch (...)
 		{
 			// Free allocated memory and abort!
 			for (UINT8 k = 0; k < i; ++k)
