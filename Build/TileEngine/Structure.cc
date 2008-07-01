@@ -313,61 +313,49 @@ static void LoadStructureData(const char* const filename, STRUCTURE_FILE_REF* co
 }
 
 
-static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32 const uiDataSize)
-{ // Based on a file chunk, creates all the dynamic arrays for the
-  // structure definitions contained within
-
-	UINT8 *										pCurrent;
-	UINT16										usLoop;
-	UINT16										usIndex;
-	UINT16										usTileLoop;
-	UINT32										uiHitPoints;
-
-	pCurrent = pFileRef->pubStructureData;
+static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32 uiDataSize)
+{ /* Based on a file chunk, creates all the dynamic arrays for the structure
+	 * definitions contained within */
+	UINT8*                  pCurrent        = pFileRef->pubStructureData;
 	DB_STRUCTURE_REF* const pDBStructureRef = MALLOCNZ(DB_STRUCTURE_REF, pFileRef->usNumberOfStructures);
 	pFileRef->pDBStructureRef = pDBStructureRef;
-	for (usLoop = 0; usLoop < pFileRef->usNumberOfStructuresStored; usLoop++)
+	for (UINT16 usLoop = 0; usLoop < pFileRef->usNumberOfStructuresStored; ++usLoop)
 	{
-		if (pCurrent + sizeof( DB_STRUCTURE ) > pFileRef->pubStructureData + uiDataSize)
+		if (uiDataSize < sizeof(DB_STRUCTURE))
 		{	// gone past end of file block?!
 			// freeing of memory will occur outside of the function
 			throw std::runtime_error("Failed to create structure arrays, because input data is too short");
 		}
-		usIndex = ((DB_STRUCTURE *) pCurrent)->usStructureNumber;
-		pDBStructureRef[usIndex].pDBStructure = (DB_STRUCTURE *) pCurrent;
-		DB_STRUCTURE_TILE** const ppTileArray = MALLOCN(DB_STRUCTURE_TILE*, pDBStructureRef[usIndex].pDBStructure->ubNumberOfTiles);
-		pDBStructureRef[usIndex].ppTile = ppTileArray;
-		pCurrent += sizeof( DB_STRUCTURE );
+		DB_STRUCTURE* const dbs = (DB_STRUCTURE*)pCurrent;
+		pCurrent   += sizeof(DB_STRUCTURE);
+		uiDataSize -= sizeof(DB_STRUCTURE);
+
+		DB_STRUCTURE_TILE** const tiles       = MALLOCN(DB_STRUCTURE_TILE*, dbs->ubNumberOfTiles);
+		UINT16              const usIndex     = dbs->usStructureNumber;
+		pDBStructureRef[usIndex].pDBStructure = dbs;
+		pDBStructureRef[usIndex].ppTile       = tiles;
+
 		// Set things up to calculate hit points
-		uiHitPoints = 0;
-		for (usTileLoop = 0; usTileLoop < pDBStructureRef[usIndex].pDBStructure->ubNumberOfTiles; usTileLoop++ )
+		UINT32 uiHitPoints = 0;
+		for (UINT16 usTileLoop = 0; usTileLoop < dbs->ubNumberOfTiles; ++usTileLoop)
 		{
-			if (pCurrent + sizeof( DB_STRUCTURE ) > pFileRef->pubStructureData + uiDataSize)
+			if (uiDataSize < sizeof(DB_STRUCTURE_TILE))
 			{	// gone past end of file block?!
 				// freeing of memory will occur outside of the function
 				throw std::runtime_error("Failed to create structure arrays, because input data is too short");
 			}
-			ppTileArray[usTileLoop] = (DB_STRUCTURE_TILE *) pCurrent;
+			DB_STRUCTURE_TILE* const tile = (DB_STRUCTURE_TILE*)pCurrent;
+			pCurrent   += sizeof(DB_STRUCTURE_TILE);
+			uiDataSize -= sizeof(DB_STRUCTURE_TILE);
+
+			tiles[usTileLoop] = tile;
 			// set the single-value relative position between this tile and the base tile
-			ppTileArray[usTileLoop]->sPosRelToBase = ppTileArray[usTileLoop]->bXPosRelToBase + ppTileArray[usTileLoop]->bYPosRelToBase * WORLD_COLS;
-			uiHitPoints += FilledTilePositions( ppTileArray[usTileLoop] );
-			pCurrent += sizeof( DB_STRUCTURE_TILE );
+			tile->sPosRelToBase = tile->bXPosRelToBase + tile->bYPosRelToBase * WORLD_COLS;
+			uiHitPoints += FilledTilePositions(tile);
 		}
 		// scale hit points down to something reasonable...
 		uiHitPoints = uiHitPoints * 100 / 255;
-		/*
-		if (uiHitPoints > 255)
-		{
-			uiHitPoints = 255;
-		}
-		*/
-		pDBStructureRef[usIndex].pDBStructure->ubHitPoints = (UINT8) uiHitPoints;
-		/*
-		if (pDBStructureRef[usIndex].pDBStructure->usStructureNumber + 1 == pFileRef->usNumberOfStructures)
-		{
-			break;
-		}
-		*/
+		dbs->ubHitPoints = (UINT8)uiHitPoints;
 	}
 }
 
