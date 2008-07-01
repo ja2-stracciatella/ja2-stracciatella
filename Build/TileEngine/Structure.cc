@@ -663,47 +663,37 @@ static BOOLEAN OkayToAddStructureToTile(const INT16 sBaseGridNo, const INT16 sCu
 }
 
 
-BOOLEAN InternalOkayToAddStructureToWorld(const INT16 sBaseGridNo, const INT8 bLevel, const DB_STRUCTURE_REF* const pDBStructureRef, const INT16 sExclusionID, const BOOLEAN fIgnorePeople)
+BOOLEAN InternalOkayToAddStructureToWorld(INT16 const sBaseGridNo, INT8 const bLevel, DB_STRUCTURE_REF const* const pDBStructureRef, INT16 const sExclusionID, BOOLEAN const fIgnorePeople)
 {
-	UINT8									ubLoop;
-	INT16									sCubeOffset;
+	CHECKF(pDBStructureRef);
+	CHECKF(pDBStructureRef->pDBStructure);
+	UINT8 const n_tiles = pDBStructureRef->pDBStructure->ubNumberOfTiles;
+	CHECKF(n_tiles > 0);
+	DB_STRUCTURE_TILE const* const* const tiles = pDBStructureRef->ppTile;
+	CHECKF(tiles);
 
-	CHECKF( pDBStructureRef );
-	CHECKF( pDBStructureRef->pDBStructure );
-	CHECKF( pDBStructureRef->pDBStructure->ubNumberOfTiles > 0 );
-	CHECKF( pDBStructureRef->ppTile );
-
-/*
-	if (gpWorldLevelData[sGridNo].sHeight != sBaseTileHeight)
+	for (UINT8 i = 0; i < n_tiles; ++i)
 	{
-		// not level ground!
-		return( FALSE );
-	}
-*/
-
-	for (ubLoop = 0; ubLoop < pDBStructureRef->pDBStructure->ubNumberOfTiles; ubLoop++)
-	{
-		if (pDBStructureRef->ppTile[ubLoop]->fFlags & TILE_ON_ROOF)
+		INT16 cube_offset;
+		if (!(tiles[i]->fFlags & TILE_ON_ROOF))
 		{
-			if (bLevel == 0)
-			{
-				sCubeOffset = PROFILE_Z_SIZE;
-			}
-			else
-			{
-				return( FALSE );
-			}
+			cube_offset = bLevel * PROFILE_Z_SIZE;
+		}
+		else if (bLevel == 0)
+		{
+			cube_offset = PROFILE_Z_SIZE;
 		}
 		else
 		{
-			sCubeOffset = bLevel * PROFILE_Z_SIZE;
+			return FALSE;
 		}
-		if (!OkayToAddStructureToTile( sBaseGridNo, sCubeOffset, pDBStructureRef, ubLoop, sExclusionID, fIgnorePeople ))
+
+		if (!OkayToAddStructureToTile(sBaseGridNo, cube_offset, pDBStructureRef, i, sExclusionID, fIgnorePeople))
 		{
-			return( FALSE );
+			return FALSE;
 		}
 	}
-	return( TRUE );
+	return TRUE;
 }
 
 
