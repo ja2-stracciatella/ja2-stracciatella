@@ -73,7 +73,7 @@ struct LIGHT_SPRITE
 
 
 // Initializes the lighting system
-BOOLEAN		InitLightingSystem(void);
+void InitLightingSystem(void);
 // Shuts down, and frees up all lights/memory
 void ShutdownLightingSystem(void);
 // Resets all light sprites and deallocates templates

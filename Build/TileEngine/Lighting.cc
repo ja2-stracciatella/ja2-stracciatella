@@ -205,8 +205,7 @@ static LightTemplate* LightLoad(const char* pFilename);
 	Initializes the lighting system.
 
 ***************************************************************************************/
-BOOLEAN InitLightingSystem(void)
-try
+void InitLightingSystem(void)
 {
 	LoadShadeTablesFromTextFile();
 
@@ -218,7 +217,6 @@ try
 
 	LightLoad("TRANSLUC.LHT");
 }
-catch (...) { return FALSE; }
 
 
 // THIS MUST BE CALLED ONCE ALL SURFACE VIDEO OBJECTS HAVE BEEN LOADED!
