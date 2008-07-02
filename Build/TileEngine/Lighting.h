@@ -77,7 +77,7 @@ void InitLightingSystem(void);
 // Shuts down, and frees up all lights/memory
 void ShutdownLightingSystem(void);
 // Resets all light sprites and deallocates templates
-BOOLEAN		LightReset(void);
+void LightReset(void);
 
 // THIS MUST BE CALLED ONCE ALL SURFACE VIDEO OBJECTS HAVE BEEN LOADED!
 void SetDefaultWorldLightingColors(void);

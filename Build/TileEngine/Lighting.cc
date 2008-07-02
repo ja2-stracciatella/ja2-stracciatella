@@ -256,8 +256,7 @@ UINT32 uiCount;
 	Removes all currently active lights, without undrawing them.
 
 ***************************************************************************************/
-BOOLEAN LightReset(void)
-try
+void LightReset(void)
 {
 	// reset all light lists
 	for (UINT32 uiCount = 0; uiCount < MAX_LIGHT_TEMPLATES; ++uiCount)
@@ -273,10 +272,7 @@ try
 
 	// Loop through mercs and reset light value
 	FOR_ALL_NON_PLANNING_SOLDIERS(s) s->light = NULL;
-
-	return(TRUE);
 }
-catch (...) { return FALSE; }
 
 
 /* Creates a new node, and appends it to the template list. The index into the
