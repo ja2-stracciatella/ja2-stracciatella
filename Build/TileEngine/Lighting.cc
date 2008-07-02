@@ -206,6 +206,7 @@ static LightTemplate* LightLoad(const char* pFilename);
 
 ***************************************************************************************/
 BOOLEAN InitLightingSystem(void)
+try
 {
 	LoadShadeTablesFromTextFile();
 
@@ -215,14 +216,9 @@ BOOLEAN InitLightingSystem(void)
 	// init all light sprites
 	memset(LightSprites, 0, sizeof(LightSprites));
 
-	if (LightLoad("TRANSLUC.LHT") != g_light_templates)
-	{
-		DebugMsg(TOPIC_GAME, DBG_LEVEL_0, "Failed to load translucency template");
-		return(FALSE);
-	}
-
-	return(TRUE);
+	LightLoad("TRANSLUC.LHT");
 }
+catch (...) { return FALSE; }
 
 
 // THIS MUST BE CALLED ONCE ALL SURFACE VIDEO OBJECTS HAVE BEEN LOADED!
@@ -263,6 +259,7 @@ UINT32 uiCount;
 
 ***************************************************************************************/
 BOOLEAN LightReset(void)
+try
 {
 	// reset all light lists
 	for (UINT32 uiCount = 0; uiCount < MAX_LIGHT_TEMPLATES; ++uiCount)
@@ -274,17 +271,14 @@ BOOLEAN LightReset(void)
 	// init all light sprites
 	memset(LightSprites, 0, sizeof(LightSprites));
 
-	if (LightLoad("TRANSLUC.LHT") != g_light_templates)
-	{
-		DebugMsg(TOPIC_GAME, DBG_LEVEL_0, "Failed to load translucency template");
-		return(FALSE);
-	}
+	LightLoad("TRANSLUC.LHT");
 
 	// Loop through mercs and reset light value
 	FOR_ALL_NON_PLANNING_SOLDIERS(s) s->light = NULL;
 
 	return(TRUE);
 }
+catch (...) { return FALSE; }
 
 
 /* Creates a new node, and appends it to the template list. The index into the
@@ -2355,7 +2349,6 @@ catch (...) { return FALSE; }
 /* Loads a light template from disk. The light template is returned, or NULL if
  * the file wasn't loaded. */
 static LightTemplate* LightLoad(const char* pFilename)
-try
 {
 	AutoSGPFile hFile(FileOpen(pFilename, FILE_ACCESS_READ));
 
@@ -2380,11 +2373,10 @@ try
 	t->name     = name.Release();
 	return t;
 }
-catch (...) { return 0; }
 
 
 /* Figures out whether a light template is already in memory, or needs to be
- * loaded from disk. Returns the template, or NULL if it couldn't be loaded. */
+ * loaded from disk. */
 static LightTemplate* LightLoadCachedTemplate(const char* pFilename)
 {
 INT32 iCount;
@@ -2450,6 +2442,7 @@ static LIGHT_SPRITE* LightSpriteGetFree(void)
 
 
 LIGHT_SPRITE* LightSpriteCreate(const char* const pName)
+try
 {
 	LIGHT_SPRITE* const l = LightSpriteGetFree();
 	if (l == NULL) return NULL;
@@ -2459,11 +2452,11 @@ LIGHT_SPRITE* LightSpriteCreate(const char* const pName)
 	l->iY          = WORLD_ROWS + 1;
 
 	l->light_template = LightLoadCachedTemplate(pName);
-	if (l->light_template == NULL) return NULL;
 
 	l->uiFlags |= LIGHT_SPR_ACTIVE;
 	return l;
 }
+catch (...) { return 0; }
 
 
 BOOLEAN LightSpriteFake(LIGHT_SPRITE* const l)
