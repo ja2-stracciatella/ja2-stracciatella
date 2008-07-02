@@ -14,6 +14,7 @@
 * Written by Derek Beland, April 14, 1997
 *
 ***************************************************************************************/
+#include <stdexcept>
 
 #include "Buffer.h"
 #include "HImage.h"
@@ -526,15 +527,15 @@ static BOOLEAN LightDelete(LightTemplate* const t)
 }
 
 
-/* Returns an available slot for a new light template. If none are available,
- * (-1) is returned. */
-static INT32 LightGetFree(void)
+/* Returns an available slot for a new light template. */
+static LightTemplate* LightGetFree(void)
 {
 	for (UINT32 i = 0; i != lengthof(g_light_templates); ++i)
 	{
-		if (g_light_templates[i].lights == NULL) return i;
+		LightTemplate* const t = &g_light_templates[i];
+		if (!t->lights) return t;
 	}
-	return -1;
+	throw std::runtime_error("Out of light template slots");
 }
 
 
@@ -1692,11 +1693,7 @@ INT16 iCountY, iCountX;
 
 LightTemplate* LightCreateOmni(const UINT8 ubIntensity, const INT16 iRadius)
 {
-INT32 iLight;
-
-	iLight=LightGetFree();
-	if (iLight == -1) return NULL;
-	LightTemplate* const t = &g_light_templates[iLight];
+	LightTemplate* const t = LightGetFree();
 
 	LightGenerateElliptical(t, ubIntensity, iRadius * DISTANCE_SCALE, iRadius * DISTANCE_SCALE);
 
@@ -1712,11 +1709,7 @@ INT32 iLight;
 // Creates a square light
 static LightTemplate* LightCreateSquare(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2)
 {
-INT32 iLight;
-
-	iLight=LightGetFree();
-	if (iLight == -1) return NULL;
-	LightTemplate* const t = &g_light_templates[iLight];
+	LightTemplate* const t = LightGetFree();
 
 	LightGenerateSquare(t, ubIntensity, iRadius1 * DISTANCE_SCALE, iRadius2 * DISTANCE_SCALE);
 
@@ -1732,11 +1725,7 @@ INT32 iLight;
 // Creates an elliptical light (two separate radii)
 static LightTemplate* LightCreateElliptical(UINT8 ubIntensity, INT16 iRadius1, INT16 iRadius2)
 {
-INT32 iLight;
-
-	iLight=LightGetFree();
-	if (iLight == -1) return NULL;
-	LightTemplate* const t = &g_light_templates[iLight];
+	LightTemplate* const t = LightGetFree();
 
 	LightGenerateElliptical(t, ubIntensity, iRadius1 * DISTANCE_SCALE, iRadius2 * DISTANCE_SCALE);
 
@@ -2383,9 +2372,7 @@ try
 	SGP::Buffer<char> name(strlen(pFilename) + 1);
 	strcpy(name, pFilename);
 
-	INT32 const light_idx = LightGetFree();
-	if (light_idx == -1) return 0;
-	LightTemplate* const t = &g_light_templates[light_idx];
+	LightTemplate* const t = LightGetFree();
 	t->n_lights = n_lights;
 	t->lights   = lights.Release();
 	t->n_rays   = n_rays;
