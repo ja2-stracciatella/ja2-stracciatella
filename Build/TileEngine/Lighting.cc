@@ -2428,7 +2428,7 @@ static LIGHT_SPRITE* LightSpriteGetFree(void)
 	{
 		if (!(l->uiFlags & LIGHT_SPR_ACTIVE)) return l;
 	}
-	return NULL;
+	throw std::runtime_error("Out of light sprite slots");
 }
 
 
@@ -2436,7 +2436,6 @@ LIGHT_SPRITE* LightSpriteCreate(const char* const pName)
 try
 {
 	LIGHT_SPRITE* const l = LightSpriteGetFree();
-	if (l == NULL) return NULL;
 
 	memset(l, 0, sizeof(LIGHT_SPRITE));
 	l->iX          = WORLD_COLS + 1;
