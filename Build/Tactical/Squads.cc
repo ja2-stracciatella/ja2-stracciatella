@@ -352,7 +352,7 @@ INT8 AddCharacterToUniqueSquad( SOLDIERTYPE *pCharacter )
 		}
 	}
 
-	return( -1 );
+	throw std::logic_error("Failed to add character to unique squad");
 }
 
 

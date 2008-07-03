@@ -3320,24 +3320,15 @@ static void HandleMoveoutOfSectorMovementTroops(void)
 			{
 				// no existing squad is compatible, will have to start his own new squad
 				iSquadNumber = AddCharacterToUniqueSquad( pSoldier );
-				if ( iSquadNumber != -1 )
-				{
-					// It worked.  Add his new squad to the "moving squads" list so others can join it, too!
-					AddSquadToMovingLists( iSquadNumber );
 
-					// If this guy is moving
-					if( fSoldierIsMoving[ iCounter ] )
-					{
-						// mark this new squad as moving too, so those moving can join it
-						SelectSquadForMovement( iSquadNumber );
-					}
-				}
-				else
+				// It worked.  Add his new squad to the "moving squads" list so others can join it, too!
+				AddSquadToMovingLists( iSquadNumber );
+
+				// If this guy is moving
+				if( fSoldierIsMoving[ iCounter ] )
 				{
-					// failed - should never happen!
-					AssertMsg( 0, String( "HandleMoveoutOfSectorMovementTroops: AddCharacterToUniqueSquad failed, iCounter %d", iCounter ) );
-					// toggle whether he's going or not to try and recover somewhat gracefully
-					fSoldierIsMoving[ iCounter ] = !fSoldierIsMoving[ iCounter ];
+					// mark this new squad as moving too, so those moving can join it
+					SelectSquadForMovement( iSquadNumber );
 				}
 			}
 		}

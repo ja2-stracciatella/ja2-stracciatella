@@ -86,7 +86,7 @@ void CopyPathOfCharacterToSquad(SOLDIERTYPE* pCharacter, INT8 bSquadValue);
 // what is the id of the current squad?
 INT32 CurrentSquad( void );
 
-// add character to unique squad (returns the squad #, -1 if failed)
+// add character to unique squad, returns the squad #
 INT8 AddCharacterToUniqueSquad( SOLDIERTYPE *pCharacter );
 
 // is this squad empty?
