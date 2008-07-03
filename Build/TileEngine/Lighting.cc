@@ -2324,10 +2324,9 @@ BOOLEAN fOnlyWalls;
 	filename forces the system to save the light with the internal filename (recommended).
 
 ***************************************************************************************/
-BOOLEAN LightSave(const LightTemplate* const t, const char* const pFilename)
-try
+void LightSave(LightTemplate const* const t, char const* const pFilename)
 {
-	if (t->lights == NULL) return FALSE;
+	if (t->lights == NULL) throw std::logic_error("Tried to save invalid light template");
 
 	const char* const pName = (pFilename != NULL ? pFilename : t->name);
 	AutoSGPFile hFile(FileOpen(pName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
@@ -2335,9 +2334,7 @@ try
 	FileWrite(hFile, t->lights,    sizeof(*t->lights) * t->n_lights);
 	FileWrite(hFile, &t->n_rays,   sizeof(t->n_rays));
 	FileWrite(hFile, t->rays,      sizeof(*t->rays)   * t->n_rays);
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 /* Loads a light template from disk. The light template is returned, or NULL if

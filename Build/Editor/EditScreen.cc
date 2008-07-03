@@ -2468,12 +2468,7 @@ try
 		ubIntensity = (UINT8)((float)sRadius / LIGHT_DECAY);
 		LightTemplate* const t = LightCreateOmni(ubIntensity, sRadius);
 
-		if (!LightSave(t, Filename))
-		{
-			// Can't save light template
-			DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't save light template for radius %d",sRadius) );
-			return( FALSE );
-		}
+		LightSave(t, Filename);
 
 		l = LightSpriteCreate(Filename);
 		if (l == NULL)

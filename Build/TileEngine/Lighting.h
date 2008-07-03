@@ -95,7 +95,7 @@ LightTemplate* LightCreateOmni(UINT8 ubIntensity, INT16 iRadius);
 // Draws a light into the scene at X,Y
 BOOLEAN LightDraw(const LIGHT_SPRITE* l);
 // Save a light list into a file
-BOOLEAN LightSave(const LightTemplate*, const char* pFilename);
+void LightSave(LightTemplate const*, char const* filename);
 
 // Sets the light color
 void LightSetColor(const SGPPaletteEntry* pPal);
