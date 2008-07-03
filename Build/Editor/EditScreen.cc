@@ -2452,6 +2452,7 @@ static ScreenID WaitForSelectionWindowResponse(void)
 //	Creates and places a light of selected radius and color into the world.
 //
 BOOLEAN PlaceLight(const INT16 sRadius, const GridNo pos)
+try
 {
 	UINT8 ubIntensity;
 	STRING512 Filename;
@@ -2466,12 +2467,6 @@ BOOLEAN PlaceLight(const INT16 sRadius, const GridNo pos)
 		// Couldn't load file because it doesn't exist. So let's make the file
 		ubIntensity = (UINT8)((float)sRadius / LIGHT_DECAY);
 		LightTemplate* const t = LightCreateOmni(ubIntensity, sRadius);
-		if (t == NULL)
-		{
-			// Can't create light template
-			DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't create light template for radius %d",sRadius) );
-			return( FALSE );
-		}
 
 		if (!LightSave(t, Filename))
 		{
@@ -2511,6 +2506,7 @@ BOOLEAN PlaceLight(const INT16 sRadius, const GridNo pos)
 
 	return( TRUE );
 }
+catch (...) { return FALSE; }
 
 
 //----------------------------------------------------------------------------------------------
