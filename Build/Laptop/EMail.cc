@@ -1971,10 +1971,7 @@ static void AddIMPResultText(UINT32 Offset)
 
 static void AddSkillTraitText(const MERCPROFILESTRUCT* Imp, SkillTrait Skill, UINT32 Offset)
 {
-	if (Imp->bSkillTrait == Skill || Imp->bSkillTrait2 == Skill)
-	{
-		AddIMPResultText(Offset);
-	}
+	if (HasSkillTrait(Imp, Skill)) AddIMPResultText(Offset);
 }
 
 

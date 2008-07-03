@@ -1027,15 +1027,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 						// Are we a martial artist?
 						{
-							BOOLEAN fMartialArtist = FALSE;
-
-							if ( pSoldier->ubProfile != NO_PROFILE )
-							{
-								if ( gMercProfiles[ pSoldier->ubProfile ].bSkillTrait == MARTIALARTS || gMercProfiles[ pSoldier->ubProfile ].bSkillTrait2 == MARTIALARTS )
-								{
-									fMartialArtist = TRUE;
-								}
-							}
+							bool const fMartialArtist =
+								pSoldier->ubProfile != NO_PROFILE &&
+								HasSkillTrait(GetProfile(pSoldier->ubProfile), MARTIALARTS);
 
 							UINT16 state;
 							if ( gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_CROUCH )

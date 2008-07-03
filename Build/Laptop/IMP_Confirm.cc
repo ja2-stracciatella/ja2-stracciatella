@@ -260,9 +260,6 @@ static void BtnIMPConfirmNo(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-#define PROFILE_HAS_SKILL_TRAIT( p, t ) ((p->bSkillTrait == t) || (p->bSkillTrait2 == t))
-
-
 static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT* pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
 static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT* pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
 
@@ -336,42 +333,42 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 
 
 	// check for special skills
-	if (PROFILE_HAS_SKILL_TRAIT(pProfile, LOCKPICKING) && ( iMechanical ) )
+	if (HasSkillTrait(pProfile, LOCKPICKING) && iMechanical)
 	{
 		MakeProfileInvItemAnySlot(pProfile, LOCKSMITHKIT, 100, 1);
 	}
 
-	if (PROFILE_HAS_SKILL_TRAIT(pProfile, HANDTOHAND))
+	if (HasSkillTrait(pProfile, HANDTOHAND))
 	{
 		MakeProfileInvItemAnySlot(pProfile, BRASS_KNUCKLES, 100, 1);
 	}
 
-	if (PROFILE_HAS_SKILL_TRAIT(pProfile, ELECTRONICS) && ( iMechanical ) )
+	if (HasSkillTrait(pProfile, ELECTRONICS) && iMechanical)
 	{
 		MakeProfileInvItemAnySlot(pProfile, METALDETECTOR, 100, 1);
 	}
 
-	if (PROFILE_HAS_SKILL_TRAIT(pProfile, NIGHTOPS))
+	if (HasSkillTrait(pProfile, NIGHTOPS))
 	{
 		MakeProfileInvItemAnySlot(pProfile, BREAK_LIGHT, 100, 2);
 	}
 
-	if (PROFILE_HAS_SKILL_TRAIT(pProfile, THROWING))
+	if (HasSkillTrait(pProfile, THROWING))
 	{
 		MakeProfileInvItemAnySlot(pProfile, THROWING_KNIFE, 100, 1);
 	}
 
-	if (PROFILE_HAS_SKILL_TRAIT(pProfile, STEALTHY))
+	if (HasSkillTrait(pProfile, STEALTHY))
 	{
 		MakeProfileInvItemAnySlot(pProfile, SILENCER, 100, 1);
 	}
 
-	if (PROFILE_HAS_SKILL_TRAIT(pProfile, KNIFING))
+	if (HasSkillTrait(pProfile, KNIFING))
 	{
 		MakeProfileInvItemAnySlot(pProfile, COMBAT_KNIFE, 100, 1);
 	}
 
-	if (PROFILE_HAS_SKILL_TRAIT(pProfile, CAMOUFLAGED))
+	if (HasSkillTrait(pProfile, CAMOUFLAGED))
 	{
 		MakeProfileInvItemAnySlot(pProfile, CAMOUFLAGEKIT, 100, 1);
 	}
