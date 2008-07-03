@@ -1488,7 +1488,6 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* const pGroup, const BOO
 	{
 		// put these guys on their own squad (we need to return their group ID, and can only return one, so they need a unique one
 		bUniqueVehicleSquad = GetFirstEmptySquad();
-		if (bUniqueVehicleSquad == -1) return;
 	}
 
 	PLAYERGROUP* next;

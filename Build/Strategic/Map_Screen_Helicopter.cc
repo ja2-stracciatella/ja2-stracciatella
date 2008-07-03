@@ -800,7 +800,6 @@ void MoveAllInHelicopterToFootMovementGroup(void)
 
 	// put these guys on their own squad (we need to return their group ID, and can only return one, so they need a unique one
 	bNewSquad = GetFirstEmptySquad();
-	if (bNewSquad == -1) return;
 
 	// go through list of everyone in helicopter
 	const VEHICLETYPE* const v = GetHelicopter();

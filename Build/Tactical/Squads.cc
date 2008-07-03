@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Interface_Panels.h"
 #include "Types.h"
 #include "Squads.h"
@@ -99,8 +101,7 @@ INT8 GetFirstEmptySquad( void )
 	}
 
 	// not found - none are completely empty (shouldn't ever happen!)
-	Assert( FALSE );
-	return( -1 );
+	throw std::logic_error("Found no empty squad");
 }
 
 
