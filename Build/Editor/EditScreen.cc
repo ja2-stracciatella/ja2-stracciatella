@@ -2446,36 +2446,28 @@ static ScreenID WaitForSelectionWindowResponse(void)
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	PlaceLight
-//
-//	Creates and places a light of selected radius and color into the world.
-//
-BOOLEAN PlaceLight(const INT16 sRadius, const GridNo pos)
+BOOLEAN PlaceLight(INT16 const radius, GridNo const pos)
 try
 {
-	UINT8 ubIntensity;
-	STRING512 Filename;
-	UINT16 usTmpIndex;
-
-	sprintf( Filename, "L-R%02d.LHT", sRadius );
+	STRING512 filename;
+	sprintf(filename, "L-R%02d.LHT", radius);
 
 	// Attempt to create light
-	LIGHT_SPRITE* l = LightSpriteCreate(Filename);
-	if (l == NULL)
+	LIGHT_SPRITE* l = LightSpriteCreate(filename);
+	if (!l)
 	{
 		// Couldn't load file because it doesn't exist. So let's make the file
-		ubIntensity = (UINT8)((float)sRadius / LIGHT_DECAY);
-		LightTemplate* const t = LightCreateOmni(ubIntensity, sRadius);
+		UINT8 const intensity = radius / LIGHT_DECAY;
+		LightTemplate* const t = LightCreateOmni(intensity, radius);
 
-		LightSave(t, Filename);
+		LightSave(t, filename);
 
-		l = LightSpriteCreate(Filename);
-		if (l == NULL)
+		l = LightSpriteCreate(filename);
+		if (!l)
 		{
 			// Can't create sprite
-			DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't create light sprite of radius %d",sRadius) );
-			return( FALSE );
+			DebugMsg(TOPIC_GAME, DBG_LEVEL_1, String("PlaceLight: Can't create light sprite of radius %d", radius));
+			return FALSE;
 		}
 	}
 
@@ -2485,12 +2477,13 @@ try
 	ConvertGridNoToXY(pos, &x, &y);
 	LightSpritePosition(l, x, y);
 
-	switch( gbDefaultLightType )
+	switch (gbDefaultLightType)
 	{
 		case PRIMETIME_LIGHT: l->uiFlags |= LIGHT_PRIMETIME; break;
 		case NIGHTTIME_LIGHT: l->uiFlags |= LIGHT_NIGHTTIME; break;
 	}
 
+	UINT16 usTmpIndex;
 	if (!TypeExistsInObjectLayer(pos, GOODRING, &usTmpIndex))
 	{
 		LEVELNODE* const n = AddObjectToHead(pos, GOODRING1);
@@ -2499,7 +2492,7 @@ try
 
 	AddLightToUndoList(pos, 0);
 
-	return( TRUE );
+	return TRUE;
 }
 catch (...) { return FALSE; }
 

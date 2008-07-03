@@ -19,7 +19,9 @@ extern void ShowCurrentDrawingMode( void );
 
 void DisplayTilesetPage(void);
 
-BOOLEAN PlaceLight(INT16 sRadius, GridNo pos);
+// Create and place a light of selected radius into the world.
+BOOLEAN PlaceLight(INT16 radius, GridNo pos);
+
 BOOLEAN RemoveLight(GridNo pos);
 extern BOOLEAN gfMercResetUponEditorEntry;
 
