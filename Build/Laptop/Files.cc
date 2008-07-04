@@ -897,33 +897,17 @@ static void HandleSpecialFiles(void)
 }
 
 
-static void AddStringToFilesList(const wchar_t* const pString)
+static void AddStringToFilesList(wchar_t const* const pString)
 {
-	FileString* pTempString = pFileStringList;
+	FileString* const fs = MALLOC(FileString);
+	fs->Next    = 0;
+	fs->pString = MALLOCN(wchar_t, wcslen(pString) + 1);
+	wcscpy(fs->pString, pString);
 
-	// create string structure
-	FileString* const pFileString = MALLOC(FileString);
-
-
-  // alloc string and copy
-	pFileString->pString = MALLOCN(wchar_t, wcslen(pString) + 1);
-	wcscpy( pFileString->pString, pString );
-
-	// set Next to NULL
-
-	pFileString -> Next = NULL;
-	if( pFileStringList == NULL )
-	{
-		pFileStringList = pFileString;
-	}
-	else
-	{
-		while( pTempString -> Next )
-		{
-			pTempString = pTempString -> Next;
-		}
-		pTempString->Next = pFileString;
-	}
+	// Append node to list
+	FileString** anchor = &pFileStringList;
+	while (*anchor) anchor = &(*anchor)->Next;
+	*anchor = fs;
 }
 
 
