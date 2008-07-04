@@ -42,6 +42,9 @@ typedef void (*GUI_CALLBACK)(struct GUI_BUTTON*, INT32);
 // GUI_BUTTON structure definitions.
 struct GUI_BUTTON
 {
+	GUI_BUTTON(UINT32 flags, INT16 left, INT16 top, INT16 width, INT16 height, INT8 priority, GUI_CALLBACK click, GUI_CALLBACK move);
+	~GUI_BUTTON();
+
 	// Set the text that will be displayed as the FastHelp
 	void SetFastHelpText(wchar_t const* text);
 

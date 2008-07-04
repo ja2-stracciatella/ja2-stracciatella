@@ -427,15 +427,12 @@ void InitButtonSystem(void)
 }
 
 
-static void RemoveButtonInternal(INT32 const iButtonID);
-
-
 void ShutdownButtonSystem(void)
 {
 	// Kill off all buttons in the system
-	for (int x = 0; x < MAX_BUTTONS; ++x)
+	for (GUI_BUTTON** i = ButtonList; i != endof(ButtonList); ++i)
 	{
-		if (ButtonList[x] != NULL) RemoveButtonInternal(x);
+		if (*i) delete *i;
 	}
 	ShutdownButtonImageManager();
 }
@@ -443,23 +440,23 @@ void ShutdownButtonSystem(void)
 
 static void RemoveButtonsMarkedForDeletion(void)
 {
-	for (INT32 i = 0; i < MAX_BUTTONS; ++i)
+	for (GUI_BUTTON** i = ButtonList; i != endof(ButtonList); ++i)
 	{
-		if (ButtonList[i] && ButtonList[i]->uiFlags & BUTTON_DELETION_PENDING)
-		{
-			RemoveButtonInternal(i);
-		}
+		if (*i && (*i)->uiFlags & BUTTON_DELETION_PENDING) delete *i;
 	}
 }
 
 
-static void RemoveButtonInternal(INT32 const btn_id)
+void RemoveButton(GUIButtonRef& btn)
 {
-	CHECKV(0 <= btn_id && btn_id < MAX_BUTTONS); // XXX HACK000C
-	AssertMsg(0 <= btn_id && btn_id < MAX_BUTTONS, String("ButtonID %d is out of range.", btn_id));
+	INT32 const btn_id = btn.ID();
+	btn.Reset();
+
+	CHECKV(0 < btn_id && btn_id < MAX_BUTTONS); // XXX HACK000C
+	AssertMsg(0 < btn_id && btn_id < MAX_BUTTONS, String("ButtonID %d is out of range.", btn_id));
 	GUI_BUTTON* const b = ButtonList[btn_id];
-	CHECKV(b != NULL); // XXX HACK000C
-	AssertMsg(b != NULL, String("Accessing non-existent button %d.", btn_id));
+	CHECKV(b); // XXX HACK000C
+	AssertMsg(b, String("Accessing non-existent button %d.", btn_id));
 
 	/* If we happen to be in the middle of a callback, and attempt to delete a
 	 * button, like deleting a node during list processing, then we delay it till
@@ -472,36 +469,7 @@ static void RemoveButtonInternal(INT32 const btn_id)
 		return;
 	}
 
-	//Kris:
-	if (b->uiFlags & BUTTON_SELFDELETE_IMAGE)
-	{
-		/* Checkboxes and simple create buttons have their own graphics associated
-		 * with them, and it is handled internally.  We delete it here.  This
-		 * provides the advantage of less micromanagement, but with the
-		 * disadvantage of wasting more memory if you have lots of buttons using the
-		 * same graphics.
-		 */
-		UnloadButtonImage(b->image);
-	}
-
-	MSYS_RemoveRegion(&b->Area);
-
-	// Get rid of the text string
-	if (b->string != NULL) MemFree(b->string);
-
-	if (b == gpAnchoredButton)     gpAnchoredButton     = NULL;
-	if (b == gpPrevAnchoredButton) gpPrevAnchoredButton = NULL;
-
-	MemFree(b);
-	ButtonList[btn_id] = NULL;
-}
-
-
-void RemoveButton(GUIButtonRef& btn_ref)
-{
-	GUIButtonRef const btn = btn_ref;
-	btn_ref.Reset();
-	RemoveButtonInternal(btn.ID());
+	delete b;
 }
 
 
@@ -521,68 +489,85 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason);
 static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason);
 
 
-static GUI_BUTTON* AllocateButton(const UINT32 Flags, const INT16 Left, const INT16 Top, const INT16 Width, const INT16 Height, const INT8 Priority, const GUI_CALLBACK Click, const GUI_CALLBACK Move)
+GUI_BUTTON::GUI_BUTTON(UINT32 const flags, INT16 const left, INT16 const top, INT16 const width, INT16 const height, INT8 const priority, GUI_CALLBACK const click, GUI_CALLBACK const move) :
+	IDNum(GetNextButtonNumber()),
+	image(0),
+	ClickCallback(click),
+	MoveCallback(move),
+	uiFlags(BUTTON_DIRTY | BUTTON_ENABLED | flags),
+	uiOldFlags(0),
+	XLoc(left),
+	YLoc(top),
+	bDisabledStyle(GUI_BUTTON::DISABLED_STYLE_DEFAULT),
+	string(0),
+	usFont(0),
+	sForeColor(0),
+	sShadowColor(-1),
+	sForeColorDown(-1),
+	sShadowColorDown(-1),
+	sForeColorHilited(-1),
+	sShadowColorHilited(-1),
+	bJustification(GUI_BUTTON::TEXT_CENTER),
+	bTextXOffset(-1),
+	bTextYOffset(-1),
+	bTextXSubOffSet(-1),
+	bTextYSubOffSet(-1),
+	fShiftText(TRUE),
+	sWrappedWidth(-1),
+	icon(0),
+	usIconIndex(-1),
+	bIconXOffset(-1),
+	bIconYOffset(-1),
+	fShiftImage(TRUE),
+	ubToggleButtonActivated(FALSE)
 {
-	AssertMsg(Left >= 0 && Top >= 0 && Width >= 0 && Height >= 0, String("Attempting to create button with invalid coordinates %dx%d+%dx%d", Left, Top, Width, Height));
+	AssertMsg(left >= 0 && top >= 0 && width >= 0 && height >= 0, String("Attempting to create button with invalid coordinates %dx%d+%dx%d", left, top, width, height));
 
-	INT32 const BtnID = GetNextButtonNumber();
-
-	GUI_BUTTON* const b = MALLOC(GUI_BUTTON);
-	b->IDNum                   = BtnID;
-	b->image                   = NULL;
-	b->ClickCallback           = Click;
-	b->MoveCallback            = Move;
-	b->uiFlags                 = BUTTON_DIRTY | BUTTON_ENABLED | Flags;
-	b->uiOldFlags              = 0;
-	b->XLoc                    = Left;
-	b->YLoc                    = Top;
-	b->User.Data               = 0;
-	b->bDisabledStyle          = GUI_BUTTON::DISABLED_STYLE_DEFAULT;
-	b->string                  = NULL;
-	b->usFont                  = 0;
-	b->sForeColor              = 0;
-	b->sShadowColor            = -1;
-	b->sForeColorDown          = -1;
-	b->sShadowColorDown        = -1;
-	b->sForeColorHilited       = -1;
-	b->sShadowColorHilited     = -1;
-	b->bJustification          = GUI_BUTTON::TEXT_CENTER;
-	b->bTextXOffset            = -1;
-	b->bTextYOffset            = -1;
-	b->bTextXSubOffSet         = 0;
-	b->bTextYSubOffSet         = 0;
-	b->fShiftText              = TRUE;
-	b->sWrappedWidth           = -1;
-	b->icon                    = 0;
-	b->usIconIndex             = -1;
-	b->bIconXOffset            = -1;
-	b->bIconYOffset            = -1;
-	b->fShiftImage             = TRUE;
-	b->ubToggleButtonActivated = FALSE;
-
-	memset(&b->Area, 0, sizeof(b->Area));
+	memset(&Area, 0, sizeof(Area));
 	MSYS_DefineRegion(
-		&b->Area,
-		Left,
-		Top,
-		Left + Width,
-		Top  + Height,
-		Priority,
+		&Area,
+		left,
+		top,
+		left + width,
+		top  + height,
+		priority,
 		MSYS_STARTING_CURSORVAL,
 		QuickButtonCallbackMMove,
 		QuickButtonCallbackMButn
 	);
-	b->Area.SetUserPtr(b);
+	Area.SetUserPtr(this);
 
 #ifdef BUTTONSYSTEM_DEBUGGING
-	AssertFailIfIdenticalButtonAttributesFound(b);
+	AssertFailIfIdenticalButtonAttributesFound(this);
 #endif
 
-	ButtonList[BtnID] = b;
+	ButtonList[IDNum] = this;
 
-	SpecifyButtonSoundScheme(b, BUTTON_SOUND_SCHEME_GENERIC);
+	SpecifyButtonSoundScheme(this, BUTTON_SOUND_SCHEME_GENERIC);
+}
 
-	return b;
+
+GUI_BUTTON::~GUI_BUTTON()
+{
+	if (this == gpAnchoredButton)     gpAnchoredButton     = 0;
+	if (this == gpPrevAnchoredButton) gpPrevAnchoredButton = 0;
+
+	ButtonList[IDNum] = 0;
+
+	MSYS_RemoveRegion(&Area);
+
+	if (uiFlags & BUTTON_SELFDELETE_IMAGE)
+	{
+		/* Checkboxes and simple create buttons have their own graphics associated
+		 * with them, and it is handled internally.  We delete it here.  This
+		 * provides the advantage of less micromanagement, but with the
+		 * disadvantage of wasting more memory if you have lots of buttons using the
+		 * same graphics.
+		 */
+		UnloadButtonImage(image);
+	}
+
+	if (string) MemFree(string);
 }
 
 
@@ -605,7 +590,7 @@ GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 ylo
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
-	GUI_BUTTON* const b = AllocateButton(BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
+	GUI_BUTTON* const b = new GUI_BUTTON(BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
 	b->icon        = GenericButtonIcons[Icon];
 	b->usIconIndex = IconIndex;
 	return b;
@@ -618,7 +603,7 @@ GUIButtonRef CreateTextButton(const wchar_t *string, Font const font, INT16 sFor
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
-	GUI_BUTTON* const b = AllocateButton(BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
+	GUI_BUTTON* const b = new GUI_BUTTON(BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
 	CopyButtonText(b, string);
 	b->usFont       = font;
 	b->sForeColor   = sForeColor;
@@ -629,7 +614,7 @@ GUIButtonRef CreateTextButton(const wchar_t *string, Font const font, INT16 sFor
 
 GUIButtonRef CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
-	return AllocateButton(BUTTON_HOT_SPOT, xloc, yloc, Width, Height, Priority, ClickCallback, DefaultMoveCallback);
+	return new GUI_BUTTON(BUTTON_HOT_SPOT, xloc, yloc, Width, Height, Priority, ClickCallback, DefaultMoveCallback);
 }
 
 
@@ -647,7 +632,7 @@ static GUIButtonRef QuickCreateButtonInternal(BUTTON_PICS* const pics, const INT
 		throw std::runtime_error("QuickCreateButton: Invalid button image");
 	}
 
-	GUI_BUTTON* const b = AllocateButton((Type & (BUTTON_CHECKBOX | BUTTON_NEWTOGGLE)) | BUTTON_QUICK, xloc, yloc, pics->max.w, pics->max.h, Priority, ClickCallback, MoveCallback);
+	GUI_BUTTON* const b = new GUI_BUTTON((Type & (BUTTON_CHECKBOX | BUTTON_NEWTOGGLE)) | BUTTON_QUICK, xloc, yloc, pics->max.w, pics->max.h, Priority, ClickCallback, MoveCallback);
 	b->image = pics;
 	return b;
 }
