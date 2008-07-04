@@ -17,12 +17,9 @@ namespace SGP
 
 			Buffer& Allocate(size_t const n)
 			{
-				if (buf_)
-				{
-					MemFree(buf_);
-					buf_ = 0;
-				}
-				buf_ = MALLOCN(T, n);
+				T* const buf = MALLOCN(T, n);
+				if (buf_) MemFree(buf_);
+				buf_ = buf;
 				return *this;
 			}
 
