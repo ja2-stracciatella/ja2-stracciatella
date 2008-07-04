@@ -929,28 +929,14 @@ static void AddStringToFilesList(const wchar_t* const pString)
 
 static void ClearFileStringList(void)
 {
-	FileString* pFileString;
-	FileString* pDeleteFileString;
-
-	pFileString = pFileStringList;
-
-	if( pFileString == NULL )
+	for (FileString* i = pFileStringList; i;)
 	{
-		return;
+		FileString* const del = i;
+		i = i->Next;
+		MemFree(del->pString);
+		MemFree(del);
 	}
-	while( pFileString -> Next)
-	{
-		pDeleteFileString = pFileString;
-		pFileString = pFileString -> Next;
-		MemFree( pDeleteFileString );
-	}
-
-	// last one
-	MemFree( pFileString );
-
-	pFileStringList = NULL;
-
-
+	pFileStringList = 0;
 }
 
 
