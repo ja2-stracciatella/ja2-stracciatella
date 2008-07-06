@@ -707,8 +707,14 @@ static void ExtractScrollStringFromFile(HWFILE const file, ScrollStringSt* const
 }
 
 
-static void InjectScrollStringIntoFile(HWFILE const file, ScrollStringSt const* const s)
+static void InjectScrollStringIntoFile(HWFILE const f, ScrollStringSt const* const s)
 {
+	UINT32 const size = s ? (wcslen(s->pString16) + 1) * sizeof(*s->pString16) : 0;
+	FileWrite(f, &size, sizeof(size));
+
+	if (!s) return;
+	FileWrite(f, s->pString16, size);
+
 	BYTE data[28];
 	BYTE* d = data;
 	INJ_SKIP(d, 4)
@@ -719,7 +725,7 @@ static void InjectScrollStringIntoFile(HWFILE const file, ScrollStringSt const* 
 	INJ_SKIP(d, 1)
 	Assert(d == endof(data));
 
-	FileWrite(file, data, sizeof(data));
+	FileWrite(f, data, sizeof(data));
 }
 
 
@@ -736,28 +742,7 @@ void SaveMapScreenMessagesToSaveGameFile(HWFILE const hFile)
 	//Loopthrough all the messages
 	for (ScrollStringSt*const *i = gMapScreenMessageList; i != endof(gMapScreenMessageList); ++i)
 	{
-		const ScrollStringSt* const s = *i;
-		UINT32 uiSizeOfString;
-		if (s != NULL)
-		{
-			uiSizeOfString = (wcslen(s->pString16) + 1) * sizeof(*s->pString16);
-		}
-		else
-		{
-			uiSizeOfString = 0;
-		}
-
-		// write to the file the size of the message
-		FileWrite(hFile, &uiSizeOfString, sizeof(UINT32));
-
-		//if there is a message
-		if (uiSizeOfString)
-		{
-			// write the message to the file
-			FileWrite(hFile, s->pString16, uiSizeOfString);
-
-			InjectScrollStringIntoFile(hFile, s);
-		}
+		InjectScrollStringIntoFile(hFile, *i);
 	}
 }
 
