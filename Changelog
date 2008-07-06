@@ -1,3 +1,4 @@
+(r4600) Plug vanilla memory leak when loading savegames.
 (r4597) Plug vanilla memory leak in the laptop file viewer.
 (r4487) Fix a vanilla endless loop when an enemy tries to throw a grenade straight up.
 (r4426) Fix a vanilla user after free when leaving a message on a merc's answering machine and the greeting message has ended.

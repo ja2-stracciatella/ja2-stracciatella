@@ -1,7 +1,9 @@
+#include "Buffer.h"
 #include "Debug.h"
 #include "Local.h"
 #include "Font.h"
 #include "LoadSaveData.h"
+#include "PODObj.h"
 #include "Types.h"
 #include "Font_Control.h"
 #include "Message.h"
@@ -691,10 +693,20 @@ static void PlayNewMessageSound(void)
 }
 
 
-static void ExtractScrollStringFromFile(HWFILE const file, ScrollStringSt* const s)
+static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f)
 {
+	UINT32 size;
+	FileRead(f, &size, sizeof(size));
+	if (size == 0) return 0;
+	size_t const len = size / sizeof(wchar_t);
+
+	SGP::Buffer<wchar_t> str(len);
+	FileRead(f, str, len * sizeof(*str));
+
+	SGP::PODObj<ScrollStringSt> s;
+
 	BYTE data[28];
-	FileRead(file, data, sizeof(data));
+	FileRead(f, data, sizeof(data));
 
 	const BYTE* d = data;
 	EXTR_SKIP(d, 4)
@@ -704,6 +716,9 @@ static void ExtractScrollStringFromFile(HWFILE const file, ScrollStringSt* const
 	EXTR_BOOL(d, s->fBeginningOfNewString)
 	EXTR_SKIP(d, 1)
 	Assert(d == endof(data));
+
+	s->pString16 = str.Release();
+	return s.Release();
 }
 
 
@@ -768,46 +783,16 @@ void LoadMapScreenMessagesFromSaveGameFile(HWFILE const hFile)
 	//Loopthrough all the messages
 	for (ScrollStringSt** i = gMapScreenMessageList; i != endof(gMapScreenMessageList); ++i)
 	{
-		// Read to the file the size of the message
-		UINT32 uiSizeOfString;
-		FileRead(hFile, &uiSizeOfString, sizeof(uiSizeOfString));
+		ScrollStringSt* const s = ExtractScrollStringFromFile(hFile);
 
-		//if there is a message
-		if (uiSizeOfString != 0)
+		ScrollStringSt* const old = *i;
+		if (old)
 		{
-			// Read the message from the file
-			wchar_t SavedString[512];
-			FileRead(hFile, SavedString, uiSizeOfString);
-
-			//if there is an existing string,delete it
-			ScrollStringSt* s = *i;
-			if (s != NULL)
-			{
-				if (s->pString16)
-				{
-					MemFree(s->pString16);
-					s->pString16 = NULL;
-				}
-			}
-			else
-			{
-				// There is now message here, add one
-				s = MALLOCZ(ScrollStringSt);
-				*i = s;
-			}
-
-			//allocate space for the new string
-			s->pString16 = MALLOCNZ(wchar_t, uiSizeOfString / sizeof(wchar_t));
-
-			//copy the string over
-			wcscpy(s->pString16, SavedString);
-
-			ExtractScrollStringFromFile(hFile, s);
+			MemFree(old->pString16);
+			MemFree(old);
 		}
-		else
-		{
-			*i = NULL;
-		}
+
+		*i = s;
 	}
 
 	// this will set a valid value for gubFirstMapscreenMessageIndex, which isn't being saved/restored
