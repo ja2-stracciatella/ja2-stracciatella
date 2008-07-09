@@ -540,7 +540,7 @@ void LoadAnimationStateInstructions(void);
 void InitAnimationSurfacesPerBodytype(void);
 BOOLEAN IsAnimationValidForBodyType( SOLDIERTYPE *pSoldier, UINT16 usNewState );
 UINT16 SubstituteBodyTypeAnimation(const SOLDIERTYPE* s, UINT16 anim_state);
-INT8	GetBodyTypePaletteSubstitutionCode( SOLDIERTYPE *pSoldier, UINT8 ubBodyType, CHAR8 *zColFilename );
+char const* GetBodyTypePaletteSubstitution(SOLDIERTYPE const*, UINT8 ubBodyType);
 
 BOOLEAN SetSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState );
 UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAnimState);

@@ -2515,53 +2515,31 @@ UINT16 SubstituteBodyTypeAnimation(const SOLDIERTYPE* const s, const UINT16 anim
 }
 
 
-INT8	GetBodyTypePaletteSubstitutionCode( SOLDIERTYPE *pSoldier, UINT8 ubBodyType, CHAR8 *zColFilename )
+char const* GetBodyTypePaletteSubstitution(SOLDIERTYPE const* const s, UINT8 const ubBodyType)
 {
-	switch( ubBodyType )
+	switch (ubBodyType)
 	{
 		case REGMALE:
 		case BIGMALE:
 		case STOCKYMALE:
 		case REGFEMALE:
-
-			if ( pSoldier != NULL )
+			if (s)
 			{
 				// Are we on fire?
-				if ( pSoldier->usAnimState == CHARIOTS_OF_FIRE || pSoldier->usAnimState == BODYEXPLODING )
+				if (s->usAnimState == CHARIOTS_OF_FIRE ||
+						s->usAnimState == BODYEXPLODING)
 				{
-					return( 0 );
+					return "";
 				}
 
-				// Check for camo...
-				if ( pSoldier->bCamo != 0 )
-				{
-					strcpy( zColFilename, "ANIMS/camo.COL" );
-					return( 1 );
-				}
-
+				if (s->bCamo != 0) return "ANIMS/camo.COL";
 			}
-			return( -1 );
+			return 0;
 
-
-		case YAF_MONSTER:
-
-			strcpy( zColFilename, "ANIMS/MONSTERS/fm_brite.COL" );
-			return( 1 );
-
-		case YAM_MONSTER:
-
-			strcpy( zColFilename, "ANIMS/MONSTERS/mn_brite.COL" );
-			return( 1 );
-
-		case ADULTFEMALEMONSTER:
-
-			strcpy( zColFilename, "ANIMS/MONSTERS/femmon.COL" );
-			return( 1 );
-
-		case AM_MONSTER:
-
-			strcpy( zColFilename, "ANIMS/MONSTERS/monster.COL" );
-			return( 1 );
+		case YAF_MONSTER:        return "ANIMS/MONSTERS/fm_brite.COL";
+		case YAM_MONSTER:        return "ANIMS/MONSTERS/mn_brite.COL";
+		case ADULTFEMALEMONSTER: return "ANIMS/MONSTERS/femmon.COL";
+		case AM_MONSTER:         return "ANIMS/MONSTERS/monster.COL";
 
 		case QUEENMONSTER:
 		case COW:
@@ -2574,11 +2552,10 @@ INT8	GetBodyTypePaletteSubstitutionCode( SOLDIERTYPE *pSoldier, UINT8 ubBodyType
 		case ROBOTNOWEAPON:
 		case TANK_NW:
 		case TANK_NE:
+			return "";
 
-			return( 0 );
+		default: return 0;
 	}
-
-	return( -1 );
 }
 
 

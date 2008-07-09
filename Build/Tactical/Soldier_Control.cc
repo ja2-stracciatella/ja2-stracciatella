@@ -4880,10 +4880,9 @@ void CreateSoldierPalettes(SOLDIERTYPE* const s)
 	SGPPaletteEntry tmp_pal[256];
 	memset(tmp_pal, 0, sizeof(*tmp_pal) * 256);
 
-	const SGPPaletteEntry* pal;
-	char col_filename[100];
-	const INT8 body_type_palette = GetBodyTypePaletteSubstitutionCode(s, s->ubBodyType, col_filename);
-	if (body_type_palette == -1)
+	SGPPaletteEntry const*       pal;
+	char            const* const substitution = GetBodyTypePaletteSubstitution(s, s->ubBodyType);
+	if (!substitution)
 	{
 		// ATE: here we want to use the breath cycle for the palette.....
 		const UINT16 palette_anim_surface = LoadSoldierAnimationSurface(s, STANDING);
@@ -4900,7 +4899,7 @@ void CreateSoldierPalettes(SOLDIERTYPE* const s)
 		}
 		pal = tmp_pal;
 	}
-	else if (body_type_palette != 0 && CreateSGPPaletteFromCOLFile(tmp_pal, col_filename))
+	else if (substitution[0] != '\0' && CreateSGPPaletteFromCOLFile(tmp_pal, substitution))
 	{
 		pal = tmp_pal;
 	}

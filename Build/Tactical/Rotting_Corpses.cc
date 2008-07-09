@@ -567,25 +567,14 @@ static void RemoveCorpse(ROTTING_CORPSE* const c)
 
 static void CreateCorpsePalette(ROTTING_CORPSE* const c)
 {
-	char zColFilename[100];
-	INT8 bBodyTypePalette;
-	if (c->def.ubType == ROTTING_STAGE2)
-	{
-		bBodyTypePalette = 0;
-	}
-	else if (c->def.usFlags & ROTTING_CORPSE_USE_CAMO_PALETTE)
-	{
-		strcpy(zColFilename, "ANIMS/camo.COL");
-		bBodyTypePalette = 1;
-	}
-	else
-	{
-		bBodyTypePalette = GetBodyTypePaletteSubstitutionCode(NULL, c->def.ubBodyType, zColFilename);
-	}
+	char const* const substitution =
+		c->def.ubType == ROTTING_STAGE2                  ? ""               :
+		c->def.usFlags & ROTTING_CORPSE_USE_CAMO_PALETTE ? "ANIMS/camo.COL" :
+		GetBodyTypePaletteSubstitution(0, c->def.ubBodyType);
 
 	const SGPPaletteEntry* pal;
 	SGPPaletteEntry        tmp_pal[256];
-	if (bBodyTypePalette == -1)
+	if (!substitution)
 	{
 		// Use palette from HVOBJECT, then use substitution for pants, etc
 		memcpy(tmp_pal, gpTileCache[c->pAniTile->sCachedTileID].pImagery->vo->Palette(), sizeof(tmp_pal));
@@ -595,7 +584,7 @@ static void CreateCorpsePalette(ROTTING_CORPSE* const c)
 		SetPaletteReplacement(tmp_pal, c->def.SkinPal);
 		pal = tmp_pal;
 	}
-	else if (bBodyTypePalette != 0 && CreateSGPPaletteFromCOLFile(tmp_pal, zColFilename))
+	else if (substitution[0] != '\0' && CreateSGPPaletteFromCOLFile(tmp_pal, substitution))
 	{
 		pal = tmp_pal;
 	}
