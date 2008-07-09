@@ -2622,13 +2622,14 @@ UINT16 LoadSoldierAnimationSurface( SOLDIERTYPE *pSoldier, UINT16 usAnimState )
 	usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usAnimState );
 
 	if ( usAnimSurface != INVALID_ANIMATION_SURFACE )
+	try
 	{
 		// Ensure that it's been loaded!
-		if (!GetCachedAnimationSurface(pSoldier->ubID, &pSoldier->AnimCache, usAnimSurface, pSoldier->usAnimState))
-		{
-			usAnimSurface = INVALID_ANIMATION_SURFACE;
-		}
-
+		GetCachedAnimationSurface(pSoldier->ubID, &pSoldier->AnimCache, usAnimSurface, pSoldier->usAnimState);
+	}
+	catch (...)
+	{
+		usAnimSurface = INVALID_ANIMATION_SURFACE;
 	}
 
 	return( usAnimSurface );

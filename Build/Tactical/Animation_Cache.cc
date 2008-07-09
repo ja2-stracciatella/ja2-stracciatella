@@ -54,8 +54,7 @@ void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimC
 }
 
 
-BOOLEAN GetCachedAnimationSurface( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache, UINT16 usSurfaceIndex, UINT16 usCurrentAnimation )
-try
+void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheType* const pAnimCache, UINT16 const usSurfaceIndex, UINT16 const usCurrentAnimation)
 {
 	UINT8			cnt;
 	UINT8			ubLowestIndex = 0;
@@ -70,7 +69,7 @@ try
 			 // Found surface, return
 			 AnimDebugMsg( String( "Anim Cache: Hit %d ( Soldier %d )", usSurfaceIndex, usSoldierID ) );
 			 pAnimCache->sCacheHits[cnt]++;
-			 return( TRUE );
+			 return;
 		}
 	}
 
@@ -131,10 +130,7 @@ try
 			break;
 		}
 	}
-
-	return( TRUE );
 }
-catch (...) { return FALSE; }
 
 
 void UnLoadCachedAnimationSurfaces( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
