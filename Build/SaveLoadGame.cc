@@ -381,15 +381,11 @@ static void SaveGameFilePosition(const HWFILE save, const char* pMsg);
 
 BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 {
-	SAVED_GAME_HEADER SaveGameHeader;
 	CHAR8		zSaveGameName[ 512 ];
 	BOOLEAN	fPausedStateBeforeSaving = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
 	UINT16	usPosX, usActualWidth, usActualHeight;
 	BOOLEAN fWePausedIt = FALSE;
-
-	wchar_t pGameDesc[256];
-	wcslcpy(pGameDesc, GameDesc, lengthof(pGameDesc));
 
 #ifdef JA2BETAVERSION
 	const UINT32 uiSizeOfGeneralInfo = sizeof(GENERAL_SAVE_INFO);
@@ -399,9 +395,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 
 	if( ubSaveGameID >= NUM_SAVE_GAMES && ubSaveGameID != SAVE__ERROR_NUM && ubSaveGameID != SAVE__END_TURN_NUM )
 		return( FALSE );
-
-	//clear out the save game header
-	memset( &SaveGameHeader, 0, sizeof( SAVED_GAME_HEADER ) );
 
 	if ( !GamePaused() )
 	{
@@ -468,6 +461,9 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 		//Save the current sectors open temp files to the disk
 		SaveCurrentSectorsInformationToTempItemFile();
 
+		SAVED_GAME_HEADER SaveGameHeader;
+		memset(&SaveGameHeader, 0, sizeof(SaveGameHeader));
+
 		//if we are saving the quick save,
 		if (ubSaveGameID == 0)
 		{
@@ -476,15 +472,16 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 			guiCurrentQuickSaveNumber++;
 
 			if (gfUseConsecutiveQuickSaveSlots)
-				swprintf(pGameDesc, lengthof(pGameDesc), L"%hs%03d", g_quicksave_name, guiCurrentQuickSaveNumber);
+				swprintf(SaveGameHeader.sSavedGameDesc, lengthof(SaveGameHeader.sSavedGameDesc), L"%hs%03d", g_quicksave_name, guiCurrentQuickSaveNumber);
 			else
 #endif
-				swprintf(pGameDesc, lengthof(pGameDesc), L"%hs", g_quicksave_name);
+				swprintf(SaveGameHeader.sSavedGameDesc, lengthof(SaveGameHeader.sSavedGameDesc), L"%hs", g_quicksave_name);
 		}
-
-		//If there was no string, add one
-		if (pGameDesc[0] == '\0')
-			wcscpy(pGameDesc, pMessageStrings[MSG_NODESC]);
+		else
+		{
+			if (GameDesc[0] == L'\0') GameDesc = pMessageStrings[MSG_NODESC];
+			wcslcpy(SaveGameHeader.sSavedGameDesc, GameDesc, lengthof(SaveGameHeader.sSavedGameDesc));
+		}
 
 		MakeFileManDirectory(g_savegame_dir);
 
@@ -515,7 +512,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 		//
 
 		SaveGameHeader.uiSavedGameVersion = guiSavedGameVersion;
-		wcscpy( SaveGameHeader.sSavedGameDesc, pGameDesc );
 		strcpy(SaveGameHeader.zGameVersionNumber, g_version_number);
 
 		SaveGameHeader.uiFlags;
