@@ -1432,17 +1432,15 @@ try
 		}
 		if( LayerCount > 15 )
 		{
-			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"SAVE ABORTED!  Land count too high (%d) for gridno %d."
+			SetErrorCatchString(L"SAVE ABORTED!  Land count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				LayerCount, cnt, uiNumWarningsCaught );
-			gfErrorCatch = TRUE;
 			return FALSE;
 		}
 		if( LayerCount > 10 )
 		{
 			uiNumWarningsCaught++;
-			gfErrorCatch = TRUE;
-			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"Warnings %d -- Last warning:  Land count warning of %d for gridno %d.",
+			SetErrorCatchString(L"Warnings %d -- Last warning:  Land count warning of %d for gridno %d.",
 				uiNumWarningsCaught, LayerCount, cnt );
 		}
 		bCounts[ cnt ][ 0 ] = LayerCount;
@@ -1470,17 +1468,15 @@ try
 		}
 		if( ObjectCount > 15 )
 		{
-			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"SAVE ABORTED!  Object count too high (%d) for gridno %d."
+			SetErrorCatchString(L"SAVE ABORTED!  Object count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				ObjectCount, cnt, uiNumWarningsCaught );
-			gfErrorCatch = TRUE;
 			return FALSE;
 		}
 		if( ObjectCount > 10 )
 		{
 			uiNumWarningsCaught++;
-			gfErrorCatch = TRUE;
-			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"Warnings %d -- Last warning:  Object count warning of %d for gridno %d.",
+			SetErrorCatchString(L"Warnings %d -- Last warning:  Object count warning of %d for gridno %d.",
 				uiNumWarningsCaught, ObjectCount, cnt );
 		}
 		bCounts[ cnt ][ 1 ] = ObjectCount;
@@ -1499,17 +1495,15 @@ try
 		}
 		if( StructCount > 15 )
 		{
-			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"SAVE ABORTED!  Struct count too high (%d) for gridno %d."
+			SetErrorCatchString(L"SAVE ABORTED!  Struct count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				StructCount, cnt, uiNumWarningsCaught );
-			gfErrorCatch = TRUE;
 			return FALSE;
 		}
 		if( StructCount > 10 )
 		{
 			uiNumWarningsCaught++;
-			gfErrorCatch = TRUE;
-			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"Warnings %d -- Last warning:  Struct count warning of %d for gridno %d.",
+			SetErrorCatchString(L"Warnings %d -- Last warning:  Struct count warning of %d for gridno %d.",
 				uiNumWarningsCaught, StructCount, cnt );
 		}
 		bCounts[ cnt ][ 2 ] = StructCount;
@@ -1533,17 +1527,15 @@ try
 		}
 		if( ShadowCount > 15 )
 		{
-			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"SAVE ABORTED!  Shadow count too high (%d) for gridno %d."
+			SetErrorCatchString(L"SAVE ABORTED!  Shadow count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				ShadowCount, cnt, uiNumWarningsCaught );
-			gfErrorCatch = TRUE;
 			return FALSE;
 		}
 		if( ShadowCount > 10 )
 		{
 			uiNumWarningsCaught++;
-			gfErrorCatch = TRUE;
-			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"Warnings %d -- Last warning:  Shadow count warning of %d for gridno %d.",
+			SetErrorCatchString(L"Warnings %d -- Last warning:  Shadow count warning of %d for gridno %d.",
 				uiNumWarningsCaught, ShadowCount, cnt );
 		}
 		bCounts[ cnt ][ 3 ] = ShadowCount;
@@ -1562,17 +1554,15 @@ try
 		}
 		if( RoofCount > 15 )
 		{
-			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"SAVE ABORTED!  Roof count too high (%d) for gridno %d."
+			SetErrorCatchString(L"SAVE ABORTED!  Roof count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				RoofCount, cnt, uiNumWarningsCaught );
-			gfErrorCatch = TRUE;
 			return FALSE;
 		}
 		if( RoofCount > 10 )
 		{
 			uiNumWarningsCaught++;
-			gfErrorCatch = TRUE;
-			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"Warnings %d -- Last warning:  Roof count warning of %d for gridno %d.",
+			SetErrorCatchString(L"Warnings %d -- Last warning:  Roof count warning of %d for gridno %d.",
 				uiNumWarningsCaught, RoofCount, cnt );
 		}
 		bCounts[ cnt ][ 4 ] = RoofCount;
@@ -1594,17 +1584,15 @@ try
 		}
 		if( OnRoofCount > 15 )
 		{
-			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"SAVE ABORTED!  OnRoof count too high (%d) for gridno %d."
+			SetErrorCatchString(L"SAVE ABORTED!  OnRoof count too high (%d) for gridno %d."
 				L"  Need to fix before map can be saved!  There are %d additional warnings.",
 				OnRoofCount, cnt, uiNumWarningsCaught );
-			gfErrorCatch = TRUE;
 			return FALSE;
 		}
 		if( OnRoofCount > 10 )
 		{
 			uiNumWarningsCaught++;
-			gfErrorCatch = TRUE;
-			swprintf(gzErrorCatchString, lengthof(gzErrorCatchString), L"Warnings %d -- Last warning:  OnRoof count warning of %d for gridno %d.",
+			SetErrorCatchString(L"Warnings %d -- Last warning:  OnRoof count warning of %d for gridno %d.",
 				uiNumWarningsCaught, OnRoofCount, cnt );
 		}
 		bCounts[ cnt ][ 5 ] = RoofCount;

@@ -20,8 +20,7 @@ FDLG_LIST* AddToFDlgList(FDLG_LIST* pList, const char* filename);
 BOOLEAN ExternalLoadMap(const wchar_t* szFilename);
 BOOLEAN ExternalSaveMap(const wchar_t* szFilename);
 
-extern BOOLEAN gfErrorCatch;
-extern wchar_t gzErrorCatchString[256];
+void SetErrorCatchString(wchar_t const* fmt, ...);
 
 void     LoadSaveScreenInit(void);
 ScreenID LoadSaveScreenHandle(void);

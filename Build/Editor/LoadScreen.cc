@@ -1,5 +1,7 @@
 #ifdef JA2EDITOR
 
+#include <cstdarg>
+
 #include "Button_System.h"
 #include "FileMan.h"
 #include "Font.h"
@@ -50,8 +52,18 @@
 #include "WorldDef.h"
 
 
-BOOLEAN gfErrorCatch = FALSE;
-wchar_t gzErrorCatchString[256] = L"";
+static BOOLEAN gfErrorCatch            = FALSE;
+static wchar_t gzErrorCatchString[256] = L"";
+
+
+void SetErrorCatchString(wchar_t const* const fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	vswprintf(gzErrorCatchString, lengthof(gzErrorCatchString), fmt, ap);
+	va_end(ap);
+	gfErrorCatch = TRUE;
+}
 
 
 enum{
