@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "Font.h"
 #include "Font_Control.h"
+#include "Soldier_Tile.h"
 #include "Types.h"
 #include "Strategic_Movement.h"
 #include "Strategic_Movement_Costs.h"
@@ -212,8 +213,6 @@ UINT8 *gubPatrolReinforcementsDenied = NULL;
 
 //Unsaved vars
 BOOLEAN gfDisplayStrategicAILogs = FALSE;
-
-extern BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce );
 
 
 //The army composition defines attributes for the various garrisons.  The priority reflects how important the sector is
