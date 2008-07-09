@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "HImage.h"
 #include "Overhead.h"
 #include "Structure.h"
@@ -628,10 +630,13 @@ STRUCTURE_FILE_REF* GetAnimationStructureRef(const SOLDIERTYPE* const s, const U
 
 
 // Surface mamagement functions
-BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceIndex, const UINT16 usAnimState)
+void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex, UINT16 const usAnimState)
 {
-	// Check for valid surface
-	CHECKF(usSurfaceIndex < NUMANIMATIONSURFACETYPES);
+	if (usSurfaceIndex >= NUMANIMATIONSURFACETYPES)
+	{
+		throw std::logic_error("Invalid surface index");
+	}
+
 	AnimationSurfaceType* const a = &gAnimSurfaceDatabase[usSurfaceIndex];
 
 	// Check if surface is loaded
@@ -653,9 +658,7 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 			// Get aux data
 			if (hImage->uiAppDataSize != hVObject->SubregionCount() * sizeof(AuxObjectData))
 			{
-				// Report error
-				SET_ERROR("Invalid # of animations given");
-				return FALSE;
+				throw std::runtime_error("Invalid # of animations given");
 			}
 
 			// Valid auxiliary data, so get # of frames from data
@@ -691,7 +694,7 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 		catch (...)
 		{
 			SET_ERROR("Could not load animation file: %s", a->Filename);
-			return FALSE;
+			throw;
 		}
 	}
 
@@ -704,8 +707,6 @@ BOOLEAN LoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInd
 		// Set history for particular sodlier
 		++gbAnimUsageHistory[usSurfaceIndex][usSoldierID];
 	}
-
-	return TRUE;
 }
 
 

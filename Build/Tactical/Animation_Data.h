@@ -530,9 +530,9 @@ typedef struct
 extern AnimationSurfaceType gAnimSurfaceDatabase[NUMANIMATIONSURFACETYPES];
 
 
-void    InitAnimationSystem(void);
-void    DeInitAnimationSystem(void);
-BOOLEAN LoadAnimationSurface(  UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState );
+void InitAnimationSystem(void);
+void DeInitAnimationSystem(void);
+void LoadAnimationSurface(UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState);
 void UnLoadAnimationSurface(UINT16 usSoldierID, UINT16 usSurfaceIndex);
 void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID );
 

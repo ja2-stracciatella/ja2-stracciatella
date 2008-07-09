@@ -1,6 +1,5 @@
 #include "Overhead.h"
 #include "Types.h"
-#include "WCheck.h"
 #include "Debug.h"
 #include "Animation_Cache.h"
 #include "Animation_Data.h"
@@ -56,6 +55,7 @@ void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimC
 
 
 BOOLEAN GetCachedAnimationSurface( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache, UINT16 usSurfaceIndex, UINT16 usCurrentAnimation )
+try
 {
 	UINT8			cnt;
 	UINT8			ubLowestIndex = 0;
@@ -123,7 +123,7 @@ BOOLEAN GetCachedAnimationSurface( UINT16 usSoldierID, AnimationSurfaceCacheType
 			AnimDebugMsg( String( "Anim Cache: Loading Surface %d ( Soldier %d )", usSurfaceIndex, usSoldierID ) );
 
 			// Insert here
-			CHECKF(LoadAnimationSurface(usSoldierID, usSurfaceIndex, usCurrentAnimation));
+			LoadAnimationSurface(usSoldierID, usSurfaceIndex, usCurrentAnimation);
 			pAnimCache->sCacheHits[ cnt ] = 0;
 			pAnimCache->usCachedSurfaces[ cnt ] = usSurfaceIndex;
 			pAnimCache->ubCacheSize++;
@@ -133,8 +133,8 @@ BOOLEAN GetCachedAnimationSurface( UINT16 usSoldierID, AnimationSurfaceCacheType
 	}
 
 	return( TRUE );
-	}
-
+}
+catch (...) { return FALSE; }
 
 
 void UnLoadCachedAnimationSurfaces( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimCache )
