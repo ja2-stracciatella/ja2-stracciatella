@@ -387,12 +387,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	UINT16	usPosX, usActualWidth, usActualHeight;
 	BOOLEAN fWePausedIt = FALSE;
 
-#ifdef JA2BETAVERSION
-	const UINT32 uiSizeOfGeneralInfo = sizeof(GENERAL_SAVE_INFO);
-	AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.  DF 1.", uiSizeOfGeneralInfo ) );
-	AssertMsg( sizeof( LaptopSaveInfoStruct ) == 7440, String( "LaptopSaveStruct is NOT 7440, it is %d.  DF 1.", sizeof( LaptopSaveInfoStruct ) ) );
-#endif
-
 	if( ubSaveGameID >= NUM_SAVE_GAMES && ubSaveGameID != SAVE__ERROR_NUM && ubSaveGameID != SAVE__END_TURN_NUM )
 		return( FALSE );
 
@@ -933,12 +927,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
   ZeroAnimSurfaceCounts( );
 
 	ShutdownNPCQuotes();
-
-
-#ifdef JA2BETAVERSION
-	const UINT32 uiSizeOfGeneralInfo = sizeof(GENERAL_SAVE_INFO);
-	AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.  DF 1.", uiSizeOfGeneralInfo ) );
-#endif
 
 	//is it a valid save number
 	if( ubSavedGameID >= NUM_SAVE_GAMES )
@@ -1778,10 +1766,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 
 	//Reset the shadow
   SetFontShadow( DEFAULT_SHADOW );
-
-#ifdef JA2BETAVERSION
-	AssertMsg( uiSizeOfGeneralInfo == 1024, String( "Saved General info is NOT 1024, it is %d.  DF 1.", uiSizeOfGeneralInfo ) );
-#endif
 
 	//if we succesfully LOADED! the game, mark this entry as the last saved game file
 	gGameSettings.bLastSavedGameSlot		= ubSavedGameID;
