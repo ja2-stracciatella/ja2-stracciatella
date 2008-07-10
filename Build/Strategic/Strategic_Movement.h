@@ -167,10 +167,11 @@ void RemovePGroup( GROUP *pGroup ); //same function, but takes a GROUP*
 void RemoveGroupWaypoints(GROUP*);
 
 //Player grouping functions
-//.........................
-//Creates a new player group, returning the unique ID of that group.  This is the first
-//step before adding waypoints and members to the player group.
-UINT8 CreateNewPlayerGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY );
+
+/* Create a new player group.  This is the first step before adding waypoints
+ * and members to the player group. */
+GROUP* CreateNewPlayerGroupDepartingFromSector(UINT8 ubSectorX, UINT8 ubSectorY);
+
 //Allows you to add or remove players from the group.
 void AddPlayerToGroup(GROUP*, SOLDIERTYPE*);
 

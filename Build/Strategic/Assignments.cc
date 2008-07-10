@@ -6858,7 +6858,6 @@ BOOLEAN PlayerSoldierTooTiredToTravel(SOLDIERTYPE* pSoldier)
 static BOOLEAN AssignMercToAMovementGroup(SOLDIERTYPE* pSoldier)
 {
 	// if merc doesn't have a group or is in a vehicle or on a squad assign to group
-	INT8 bGroupId = 0;
 
 	// on a squad?
 	if( pSoldier->bAssignment < ON_DUTY )
@@ -6884,12 +6883,8 @@ static BOOLEAN AssignMercToAMovementGroup(SOLDIERTYPE* pSoldier)
 		return( FALSE );
 	}
 
-	// create group
-	bGroupId = CreateNewPlayerGroupDepartingFromSector( ( UINT8 )( pSoldier->sSectorX ), ( UINT8 )( pSoldier->sSectorY ) );
-
-	// add merc
-	AddPlayerToGroup(GetGroup(bGroupId), pSoldier);
-
+	GROUP* const g = CreateNewPlayerGroupDepartingFromSector(pSoldier->sSectorX, pSoldier->sSectorY);
+	AddPlayerToGroup(g, pSoldier);
 	return( TRUE );
 }
 

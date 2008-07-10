@@ -113,7 +113,7 @@ static UINT8 AddGroupToList(GROUP* pGroup);
 //.........................
 //Creates a new player group, returning the unique ID of that group.  This is the first
 //step before adding waypoints and members to the player group.
-UINT8 CreateNewPlayerGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY )
+GROUP* CreateNewPlayerGroupDepartingFromSector(UINT8 const ubSectorX, UINT8 const ubSectorY)
 {
 	AssertMsg( ubSectorX >= 1 && ubSectorX <= 16, String( "CreateNewPlayerGroup with out of range sectorX value of %d", ubSectorX ) );
 	AssertMsg( ubSectorY >= 1 && ubSectorY <= 16, String( "CreateNewPlayerGroup with out of range sectorY value of %d", ubSectorY ) );
@@ -133,7 +133,8 @@ UINT8 CreateNewPlayerGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY 
 	pNew->ubCreatedSectorID = pNew->ubOriginalSector;
 	pNew->ubSectorIDOfLastReassignment = 255;
 
-	return AddGroupToList( pNew );
+	AddGroupToList(pNew);
+	return pNew;
 }
 
 

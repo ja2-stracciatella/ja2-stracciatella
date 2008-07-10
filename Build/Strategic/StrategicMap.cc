@@ -2343,7 +2343,6 @@ void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier )
 {
 	// soldier leaving thier squad behind, will rejoin later
 	// if soldier in a squad, set the fact they want to return here
-	UINT8 ubGroupId;
 
 	if( pSoldier->bAssignment < ON_DUTY )
 	{
@@ -2374,8 +2373,8 @@ void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier )
 	if( pSoldier->ubGroupID == 0 )
 	{
 	  // create independant group
-	  ubGroupId = CreateNewPlayerGroupDepartingFromSector( ( UINT8 )pSoldier->sSectorX, ( UINT8 )pSoldier->sSectorY );
-	  AddPlayerToGroup(GetGroup(ubGroupId), pSoldier);
+	  GROUP* const g = CreateNewPlayerGroupDepartingFromSector(pSoldier->sSectorX, pSoldier->sSectorY);
+	  AddPlayerToGroup(g, pSoldier);
 	}
 }
 

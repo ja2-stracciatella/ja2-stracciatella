@@ -3228,9 +3228,8 @@ static void Teleport()
 	// check to see if this person is moving, if not...then assign them to mvt group
 	if (s->ubGroupID  == 0)
 	{
-		UINT8 const ubGroupId = CreateNewPlayerGroupDepartingFromSector(s->sSectorX, s->sSectorY);
-		// assign to a group
-		AddPlayerToGroup(GetGroup(ubGroupId), s);
+		GROUP* const g = CreateNewPlayerGroupDepartingFromSector(s->sSectorX, s->sSectorY);
+		AddPlayerToGroup(g, s);
 	}
 
 	// figure out where they would've come from

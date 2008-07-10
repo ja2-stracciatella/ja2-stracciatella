@@ -47,7 +47,6 @@ void InitSquads( void )
 	// init the squad lists to NULL ptrs.
 	INT32 iCounterB = 0;
 	INT32 iCounter =0;
-	GROUP		*pGroup	=	NULL;
 
 	// null each list of ptrs.
 	for( iCounter = 0; iCounter <  NUMBER_OF_SQUADS; iCounter++ )
@@ -61,12 +60,9 @@ void InitSquads( void )
 		}
 
 		// create mvt groups
-		SquadMovementGroups[ iCounter ] = CreateNewPlayerGroupDepartingFromSector( 1, 1 );
-
-		// Set persistent....
-		pGroup = GetGroup( SquadMovementGroups[ iCounter ] );
-		pGroup->fPersistant = TRUE;
-
+		GROUP* const g = CreateNewPlayerGroupDepartingFromSector(1, 1);
+		g->fPersistant = TRUE;
+		SquadMovementGroups[iCounter] = g->ubGroupID;
 	}
 
 	memset( sDeadMercs, -1, sizeof( INT16 ) * NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD );
@@ -375,7 +371,6 @@ BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter )
 {
 	INT32 iCounterA = 0;
 	INT32 iCounter = 0;
-	UINT8 ubGroupId = 0;
 	// find character and remove.. check characters in all squads
 
 
@@ -406,10 +401,8 @@ BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter )
 
 				if( ( pCharacter->fBetweenSectors )&&( pCharacter-> uiStatusFlags & SOLDIER_VEHICLE ) )
 				{
-					ubGroupId = CreateNewPlayerGroupDepartingFromSector( ( INT8 ) ( pCharacter -> sSectorX ) , ( INT8 ) ( pCharacter -> sSectorY ) );
-
-					// assign to a group
-					AddPlayerToGroup(GetGroup(ubGroupId), pCharacter);
+					GROUP* const g = CreateNewPlayerGroupDepartingFromSector(pCharacter->sSectorX, pCharacter->sSectorY);
+					AddPlayerToGroup(g, pCharacter);
 				}
 
 				RebuildSquad( ( INT8 )iCounterA );
@@ -1111,11 +1104,9 @@ void CheckSquadMovementGroups( void )
 		if ( pGroup == NULL )
 		{
 			// recreate group
-			SquadMovementGroups[ iSquad ] = CreateNewPlayerGroupDepartingFromSector( 1, 1 );
-
-			// Set persistent....
-			pGroup = GetGroup( SquadMovementGroups[ iSquad ] );
-			pGroup->fPersistant = TRUE;
+			GROUP* const g = CreateNewPlayerGroupDepartingFromSector(1, 1);
+			g->fPersistant = TRUE;
+			SquadMovementGroups[iSquad] = g->ubGroupID;
 		}
 	}
 }

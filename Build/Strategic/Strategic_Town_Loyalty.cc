@@ -1138,7 +1138,6 @@ void CalcDistancesBetweenTowns( void )
 	// run though each town sector and compare it to the next in terms of distance
 	UINT8 ubTownA, ubTownB;
 	UINT32 uiCounterA, uiCounterB;
-	UINT8 ubTempGroupId = 0;
 	INT32 iDistance = 0;
 
 
@@ -1153,10 +1152,8 @@ void CalcDistancesBetweenTowns( void )
 		}
 	}
 
-
 	// create a temporary group (needed to plot strategic paths)
-	ubTempGroupId = CreateNewPlayerGroupDepartingFromSector( 1, 1 );
-
+	UINT8 const ubTempGroupId = CreateNewPlayerGroupDepartingFromSector(1, 1)->ubGroupID;
 
 	// now, measure distance from every town sector to every other town sector!
 	// The minimum distances between towns get stored.
@@ -1551,7 +1548,6 @@ void HandleGlobalLoyaltyEvent( UINT8 ubEventType, INT16 sSectorX, INT16 sSectorY
 static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
 	INT16 sEventSector;
-	UINT8 ubTempGroupId;
 	INT8 bTownId;
 	UINT32 uiIndex;
 	INT32 iThisDistance;
@@ -1569,7 +1565,7 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 	sEventSector = sSectorX + ( MAP_WORLD_X * sSectorY );
 
 	// need a temporary group create to use for laying down distance paths
-	ubTempGroupId = CreateNewPlayerGroupDepartingFromSector( (UINT8) sSectorX, (UINT8) sSectorY );
+	UINT8 const ubTempGroupId = CreateNewPlayerGroupDepartingFromSector(sSectorX, sSectorY)->ubGroupID;
 
 	// calc distance to the event sector from EACH SECTOR of each town, keeping only the shortest one for every town
 	uiIndex = 0;
