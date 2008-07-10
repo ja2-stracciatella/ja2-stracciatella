@@ -450,7 +450,7 @@ static MOUSE_REGION gTeamListContractRegion[MAX_CHARACTER_COUNT];
 #endif
 
 
-static PathSt* gpHelicopterPreviousMercPath = NULL;
+static PathSt* g_prev_path;
 
 
 // GLOBAL VARIABLES (EXTERNAL)
@@ -6626,8 +6626,6 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 	PathSt*const* ppMovePath = NULL;
 	BOOLEAN fLastSectorInPath = FALSE;
 	INT32 iVehicleId = -1;
-	PathSt* pPreviousMercPath = NULL;
-
 
 	// see if we have clicked on the last sector in the characters path
 
@@ -6643,9 +6641,6 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 			VEHICLETYPE* const v = GetHelicopter();
 			ppMovePath = &v->pMercPath;
 			RebuildWayPointsForGroupPath(*ppMovePath, GetGroup(v->ubMovementGroup));
-
-			// pointer to previous helicopter path
-			pPreviousMercPath = gpHelicopterPreviousMercPath;
 
 			fLastSectorInPath = TRUE;
 		}
@@ -6697,9 +6692,6 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 
 			RebuildWayPointsForAllSelectedCharsGroups( );
 
-			// pointer to previous character path
-			pPreviousMercPath = c->prev_path;
-
 			fLastSectorInPath = TRUE;
 		}
 	}
@@ -6720,7 +6712,7 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 		else	// NULL path confirmed
 		{
 			// if previously there was a path
-			if ( pPreviousMercPath != NULL )
+			if (g_prev_path)
 			{
 				// then this means we've CANCELED it
 				BeginMapUIMessage(0, pMapPlotStrings[3]);
@@ -8626,8 +8618,8 @@ static BOOLEAN RequestGiveSkyriderNewDestination(void)
 		SetUpCursorForStrategicMap();
 
 		// remember the helicopter's current path so we can restore it if need be
-		ClearStrategicPathList(gpHelicopterPreviousMercPath, 0);
-		gpHelicopterPreviousMercPath = CopyPaths(GetHelicopter()->pMercPath);
+		ClearStrategicPathList(g_prev_path, 0);
+		g_prev_path = CopyPaths(GetHelicopter()->pMercPath);
 
 		// affects Skyrider's dialogue
 		SetFactTrue( FACT_SKYRIDER_USED_IN_MAPSCREEN );
@@ -9180,27 +9172,15 @@ void GetMapscreenMercDepartureString(const SOLDIERTYPE* pSoldier, wchar_t sStrin
 
 static void InitPreviousPaths(void)
 {
-	INT32 iCounter = 0;
-
-	// init character previous paths
-	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
-	{
-		gCharactersList[iCounter].prev_path = NULL;
-	}
-
-	// init helicopter previous path
-	gpHelicopterPreviousMercPath = NULL;
+	g_prev_path = NULL;
 }
 
 
 void RememberPreviousPathForAllSelectedChars(void)
 {
-	FOR_ALL_SELECTED_IN_CHAR_LIST(c)
-	{
-		// remember his previous path by copying it to his slot in the array kept for that purpose
-		ClearStrategicPathList(c->prev_path, 0);
-		c->prev_path = CopyPaths(GetSoldierMercPathPtr(c->merc));
-	}
+	Assert(0 <= bSelectedDestChar && bSelectedDestChar < MAX_CHARACTER_COUNT);
+	ClearStrategicPathList(g_prev_path, 0);
+	g_prev_path = CopyPaths(GetSoldierMercPathPtr(gCharactersList[bSelectedDestChar].merc));
 }
 
 
@@ -9220,10 +9200,10 @@ static void RestorePreviousPaths(void)
 		ubGroupId  = v->ubMovementGroup;
 
 		// if the helicopter had a previous path
-		if( gpHelicopterPreviousMercPath != NULL )
+		if (g_prev_path)
 		{
 			ClearStrategicPathList(*ppMovePath, ubGroupId);
-			*ppMovePath = CopyPaths(gpHelicopterPreviousMercPath);
+			*ppMovePath = CopyPaths(g_prev_path);
 			// will need to rebuild waypoints
 			fPathChanged = TRUE;
 		}
@@ -9282,10 +9262,10 @@ static void RestorePreviousPaths(void)
 			fPathChanged = FALSE;
 
 			// if we have the previous path stored for the dest char
-			if (c->prev_path)
+			if (g_prev_path)
 			{
 				ClearStrategicPathList(*ppMovePath, ubGroupId);
-				*ppMovePath = CopyPaths(c->prev_path);
+				*ppMovePath = CopyPaths(g_prev_path);
 				// will need to rebuild waypoints
 				fPathChanged = TRUE;
 			}
@@ -9314,11 +9294,7 @@ static void RestorePreviousPaths(void)
 
 static void ClearPreviousPaths(void)
 {
-	FOR_ALL_SELECTED_IN_CHAR_LIST(c)
-	{
-		c->prev_path = ClearStrategicPathList(c->prev_path, 0);
-	}
-	gpHelicopterPreviousMercPath = ClearStrategicPathList( gpHelicopterPreviousMercPath, 0 );
+	g_prev_path = ClearStrategicPathList(g_prev_path, 0);
 }
 
 

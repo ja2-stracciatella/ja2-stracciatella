@@ -185,7 +185,6 @@ extern BOOLEAN fLockOutMapScreenInterface;
 typedef struct MapScreenCharacterSt
 {
 	SOLDIERTYPE* merc;
-	PathSt*      prev_path;
 	BOOLEAN      selected;
 } MapScreenCharacterSt;
 
