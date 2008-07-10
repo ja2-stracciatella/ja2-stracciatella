@@ -2199,27 +2199,7 @@ static void SetGroupNextSectorValue(INT16 sSectorX, INT16 sSectorY, UINT8 ubGrou
 }
 
 
-static INT32 CalculateTravelTimeOfGroup(GROUP const*);
-
-
-// get eta of the group with this id
-INT32 CalculateTravelTimeOfGroupId( UINT8 ubId )
-{
-	GROUP *pGroup;
-
-	// get the group
-	pGroup = GetGroup( ubId );
-
-	if( pGroup == NULL )
-	{
-		return( 0 );
-	}
-
-	return( CalculateTravelTimeOfGroup( pGroup ) );
-}
-
-
-static INT32 CalculateTravelTimeOfGroup(GROUP const* const pGroup)
+INT32 CalculateTravelTimeOfGroup(GROUP const* const pGroup)
 {
 	INT32 iDelta;
 	UINT32 uiEtaTime = 0;
@@ -2561,9 +2541,6 @@ UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 }
 
 
-static BOOLEAN PlayerGroupInMotion(GROUP const*);
-
-
 // is the player group with this id in motion?
 BOOLEAN PlayerIDGroupInMotion( UINT8 ubID )
 {
@@ -2586,7 +2563,7 @@ BOOLEAN PlayerIDGroupInMotion( UINT8 ubID )
 
 
 // is the player group in motion?
-static BOOLEAN PlayerGroupInMotion(GROUP const* const pGroup)
+BOOLEAN PlayerGroupInMotion(GROUP const* const pGroup)
 {
 	return( pGroup -> fBetweenSectors );
 }

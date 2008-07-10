@@ -212,13 +212,16 @@ void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID );
 
 
 // calculate the eta time in world total mins of this group
-INT32 CalculateTravelTimeOfGroupId( UINT8 ubId );
+INT32 CalculateTravelTimeOfGroup(GROUP const*);
 
 // Get travel time for this group
 INT32 GetSectorMvtTimeForGroup(UINT8 ubSector, UINT8 ubDirection, GROUP const*);
 
 UINT8 PlayerMercsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
 UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
+
+// Is this player group in motion?
+BOOLEAN PlayerGroupInMotion(GROUP const*);
 
 // is the player greoup with this id in motion
 BOOLEAN PlayerIDGroupInMotion( UINT8 ubID );

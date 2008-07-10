@@ -1001,10 +1001,12 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 			break;
 
 		default:
-			if (PlayerIDGroupInMotion(GetSoldierGroupId(s)))
+		{
+			GROUP const* const g = GetGroup(GetSoldierGroupId(s));
+			if (g && PlayerGroupInMotion(g))
 			{
 				// show ETA
-				const UINT32 uiArrivalTime = GetWorldTotalMin() + CalculateTravelTimeOfGroupId(GetSoldierGroupId(s));
+				UINT32 const uiArrivalTime = GetWorldTotalMin() + CalculateTravelTimeOfGroup(g);
 				ConvertMinTimeToETADayHourMinString(uiArrivalTime, sString, lengthof(sString));
 			}
 			else
@@ -1013,6 +1015,7 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 				GetMapscreenMercLocationString(s, sString, lengthof(sString));
 			}
 			break;
+		}
 	}
 	DrawStringCentered(sString, CHAR_ASSIGN_X, CHAR_ASSIGN2_Y, CHAR_ASSIGN_WID, CHAR_ASSIGN_HEI, CHAR_FONT);
 
