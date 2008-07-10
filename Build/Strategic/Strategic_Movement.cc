@@ -3658,10 +3658,8 @@ static void NotifyPlayerOfBloodcatBattle(UINT8 ubSectorX, UINT8 ubSectorY)
 }
 
 
-
-void PlaceGroupInSector( UINT8 ubGroupID, INT16 sPrevX, INT16 sPrevY, INT16 sNextX, INT16 sNextY, INT8 bZ, BOOLEAN fCheckForBattle )
+void PlaceGroupInSector(GROUP* const g, INT16 const sPrevX, INT16 const sPrevY, INT16 const sNextX, INT16 const sNextY, INT8 const bZ, BOOLEAN const fCheckForBattle)
 {
-	GROUP* const g = GetGroup(ubGroupID);
 	ClearMercPathsAndWaypointsForAllInGroup(g);
 
 	// change where they are and where they're going

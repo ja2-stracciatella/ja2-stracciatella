@@ -1029,7 +1029,7 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 	SetGroupArrivalTime( pGroup, GetWorldTotalMin() );
 
 	// change where it is and where it's going, then make it arrive there.  Don't check for battle
-	PlaceGroupInSector( ubGroupID, sPrevX, sPrevY, sNextX, sNextY, 0, FALSE );
+	PlaceGroupInSector(pGroup, sPrevX, sPrevY, sNextX, sNextY, 0, FALSE);
 }
 
 

@@ -3271,7 +3271,7 @@ static void Teleport()
 	}
 
 	// set where they are, were/are going, then make them arrive there and check for battle
-	PlaceGroupInSector(s->ubGroupID, sPrevX, sPrevY, sMapX, sMapY, 0, TRUE);
+	PlaceGroupInSector(GetGroup(s->ubGroupID), sPrevX, sPrevY, sMapX, sMapY, 0, TRUE);
 
 	// unload the sector they teleported out of
 	CheckAndHandleUnloadingOfCurrentWorld();

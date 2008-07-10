@@ -272,7 +272,7 @@ BOOLEAN VehicleHasFuel(const SOLDIERTYPE* s);
 
 void RandomizePatrolGroupLocation( GROUP *pGroup );
 
-void PlaceGroupInSector( UINT8 ubGroupID, INT16 sPrevX, INT16 sPrevY, INT16 sNextX, INT16 sNextY, INT8 bZ, BOOLEAN fCheckForBattle );
+void PlaceGroupInSector(GROUP*, INT16 sPrevX, INT16 sPrevY, INT16 sNextX, INT16 sNextY, INT8 bZ, BOOLEAN fCheckForBattle);
 
 void SetGroupArrivalTime( GROUP *pGroup, UINT32 uiArrivalTime );
 
