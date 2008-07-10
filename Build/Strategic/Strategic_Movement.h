@@ -278,7 +278,7 @@ void SetGroupArrivalTime( GROUP *pGroup, UINT32 uiArrivalTime );
 
 void PlayerGroupArrivedSafelyInSector( GROUP *pGroup, BOOLEAN fCheckForNPCs );
 
-BOOLEAN DoesPlayerExistInPGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier );
+BOOLEAN DoesPlayerExistInPGroup(GROUP const*, SOLDIERTYPE const*);
 
 BOOLEAN GroupHasInTransitDeadOrPOWMercs(const GROUP*);
 

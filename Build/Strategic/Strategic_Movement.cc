@@ -3957,14 +3957,9 @@ static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageB
 }
 
 
-BOOLEAN DoesPlayerExistInPGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
+BOOLEAN DoesPlayerExistInPGroup(GROUP const* const g, SOLDIERTYPE const* const pSoldier)
 {
-	GROUP *pGroup;
-
-	pGroup = GetGroup( ubGroupID );
-  Assert( pGroup );
-
-	CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
+	CFOR_ALL_PLAYERS_IN_GROUP(curr, g)
 	{ //definately more than one node
 
 		if( curr->pSoldier == pSoldier )

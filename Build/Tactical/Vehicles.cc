@@ -216,10 +216,11 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const pSoldier, VEHICLETYPE* con
 
     // I really have vehicles.
     // ONLY add to vehicle group once!
-		if (!DoesPlayerExistInPGroup(v->ubMovementGroup, pVehicleSoldier))
+		GROUP* const g = GetGroup(v->ubMovementGroup);
+		if (!DoesPlayerExistInPGroup(g, pVehicleSoldier))
     {
 		  //NOW.. add guy to vehicle group....
-			AddPlayerToGroup(GetGroup(v->ubMovementGroup), pVehicleSoldier);
+			AddPlayerToGroup(g, pVehicleSoldier);
     }
     else
     {
@@ -420,9 +421,10 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* const s)
 		// Remove vehicle from squad.....
 		RemoveCharacterFromSquads(vs);
 		// ATE: Add him back to vehicle group!
-		if (!DoesPlayerExistInPGroup(v->ubMovementGroup, vs))
+		GROUP* const g = GetGroup(v->ubMovementGroup);
+		if (!DoesPlayerExistInPGroup(g, vs))
 		{
-			AddPlayerToGroup(GetGroup(v->ubMovementGroup), vs);
+			AddPlayerToGroup(g, vs);
 		}
 		ChangeSoldiersAssignment(vs, ASSIGNMENT_EMPTY);
 		return TRUE;
