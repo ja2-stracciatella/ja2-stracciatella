@@ -215,7 +215,7 @@ void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID );
 INT32 CalculateTravelTimeOfGroupId( UINT8 ubId );
 
 // Get travel time for this group
-INT32 GetSectorMvtTimeForGroup( UINT8 ubSector, UINT8 ubDirection, GROUP *pGroup );
+INT32 GetSectorMvtTimeForGroup(UINT8 ubSector, UINT8 ubDirection, GROUP const*);
 
 UINT8 PlayerMercsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
 UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
@@ -234,7 +234,7 @@ void SaveStrategicMovementGroupsToSaveGameFile(HWFILE);
 //Load the strategic movement Group paths from the saved game file
 void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE);
 
-void HandleArrivalOfReinforcements( GROUP *pGroup );
+void HandleArrivalOfReinforcements(GROUP const*);
 
 //Called when all checks have been made for the group (if possible to retreat, etc.)  This function
 //blindly determines where to move the group.
@@ -246,7 +246,7 @@ GROUP* FindPlayerMovementGroupInSector(UINT8 x, UINT8 y);
 BOOLEAN GroupAtFinalDestination(const GROUP*);
 
 // find the travel time between waypts for this group
-INT32 FindTravelTimeBetweenWaypoints( WAYPOINT * pSource, WAYPOINT * pDest,  GROUP *pGroup );
+INT32 FindTravelTimeBetweenWaypoints(WAYPOINT const* pSource, WAYPOINT const* pDest,  GROUP const*);
 
 BOOLEAN GroupReversingDirectionsBetweenSectors( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY, BOOLEAN fBuildingWaypoints );
 BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY );

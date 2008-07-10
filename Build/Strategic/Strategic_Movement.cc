@@ -58,7 +58,7 @@ static GROUP* gpPendingSimultaneousGroup = NULL;
 
 #ifdef JA2BETAVERSION
 	extern BOOLEAN gfExitViewer;
-static void ValidateGroups(GROUP* pGroup);
+static void ValidateGroups(GROUP const*);
 #endif
 
 extern BOOLEAN gubNumAwareBattles;
@@ -253,7 +253,7 @@ BOOLEAN RemovePlayerFromGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
 }
 
 
-static void SetLocationOfAllPlayerSoldiersInGroup(GROUP* pGroup, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const*, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 
 BOOLEAN GroupReversingDirectionsBetweenSectors( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY, BOOLEAN fBuildingWaypoints )
@@ -752,7 +752,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 
 static void HandleOtherGroupsArrivingSimultaneously(UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ);
 static void NotifyPlayerOfBloodcatBattle(UINT8 ubSectorX, UINT8 ubSectorY);
-static BOOLEAN TestForBloodcatAmbush(GROUP* pGroup);
+static BOOLEAN TestForBloodcatAmbush(GROUP const*);
 static void TriggerPrebattleInterface(MessageBoxReturnValue);
 static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* pFirstGroup);
 
@@ -2199,7 +2199,7 @@ static void SetGroupNextSectorValue(INT16 sSectorX, INT16 sSectorY, UINT8 ubGrou
 }
 
 
-static INT32 CalculateTravelTimeOfGroup(GROUP* pGroup);
+static INT32 CalculateTravelTimeOfGroup(GROUP const*);
 
 
 // get eta of the group with this id
@@ -2219,7 +2219,7 @@ INT32 CalculateTravelTimeOfGroupId( UINT8 ubId )
 }
 
 
-static INT32 CalculateTravelTimeOfGroup(GROUP* pGroup)
+static INT32 CalculateTravelTimeOfGroup(GROUP const* const pGroup)
 {
 	INT32 iDelta;
 	UINT32 uiEtaTime = 0;
@@ -2284,7 +2284,8 @@ static INT32 CalculateTravelTimeOfGroup(GROUP* pGroup)
 	return( uiEtaTime );
 }
 
-INT32 FindTravelTimeBetweenWaypoints( WAYPOINT * pSource, WAYPOINT * pDest,  GROUP *pGroup )
+
+INT32 FindTravelTimeBetweenWaypoints(WAYPOINT const* const pSource, WAYPOINT const* const pDest,  GROUP const * const pGroup)
 {
 	UINT8 ubStart=0, ubEnd = 0;
 	INT32 iDelta = 0;
@@ -2370,8 +2371,9 @@ INT32 FindTravelTimeBetweenWaypoints( WAYPOINT * pSource, WAYPOINT * pDest,  GRO
 #define TRACKED_TRAVEL_TIME	46
 #define AIR_TRAVEL_TIME			10
 
+
 //CHANGES:  ubDirection contains the strategic move value, not the delta value.
-INT32 GetSectorMvtTimeForGroup( UINT8 ubSector, UINT8 ubDirection, GROUP *pGroup )
+INT32 GetSectorMvtTimeForGroup(UINT8 const ubSector, UINT8 const ubDirection, GROUP const* const pGroup)
 {
 	INT32 iTraverseTime;
 	INT32 iBestTraverseTime = 1000000;
@@ -2559,7 +2561,7 @@ UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 }
 
 
-static BOOLEAN PlayerGroupInMotion(GROUP* pGroup);
+static BOOLEAN PlayerGroupInMotion(GROUP const*);
 
 
 // is the player group with this id in motion?
@@ -2584,7 +2586,7 @@ BOOLEAN PlayerIDGroupInMotion( UINT8 ubID )
 
 
 // is the player group in motion?
-static BOOLEAN PlayerGroupInMotion(GROUP* pGroup)
+static BOOLEAN PlayerGroupInMotion(GROUP const* const pGroup)
 {
 	return( pGroup -> fBetweenSectors );
 }
@@ -2594,7 +2596,7 @@ static BOOLEAN PlayerGroupInMotion(GROUP* pGroup)
 //NOTE:  For enemies, only MAX_STRATEGIC_TEAM_SIZE at a time can be in a battle, so
 //if it ever gets past that, god help the player, but we'll have to insert them
 //as those slots free up.
-void HandleArrivalOfReinforcements( GROUP *pGroup )
+void HandleArrivalOfReinforcements(GROUP const* const pGroup)
 {
 	SOLDIERTYPE *pSoldier;
 	INT32	cnt;
@@ -3466,7 +3468,7 @@ static void ReportVehicleOutOfGas(const VEHICLETYPE* const v, const UINT8 ubSect
 }
 
 
-static void SetLocationOfAllPlayerSoldiersInGroup(GROUP* pGroup, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const* const pGroup, INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
 {
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -3584,7 +3586,7 @@ void RandomizePatrolGroupLocation( GROUP *pGroup )
 
 //Whenever a player group arrives in a sector, and if bloodcats exist in the sector,
 //roll the dice to see if this will become an ambush random encounter.
-static BOOLEAN TestForBloodcatAmbush(GROUP* pGroup)
+static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 {
 	SECTORINFO *pSector;
 	INT32 iHoursElapsed;
@@ -4047,7 +4049,7 @@ BOOLEAN GroupHasInTransitDeadOrPOWMercs(const GROUP* const pGroup)
 
 #ifdef JA2BETAVERSION
 
-static void ValidateGroups(GROUP* pGroup)
+static void ValidateGroups(GROUP const* const pGroup)
 {
 	//Do error checking, and report group
 	ValidatePlayersAreInOneGroupOnly();
