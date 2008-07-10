@@ -137,7 +137,7 @@ UINT8 CreateNewPlayerGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY 
 }
 
 
-UINT8 CreateNewVehicleGroupDepartingFromSector(UINT8 const ubSectorX, UINT8 const ubSectorY)
+GROUP* CreateNewVehicleGroupDepartingFromSector(UINT8 const ubSectorX, UINT8 const ubSectorY)
 {
 	AssertMsg( ubSectorX >= 1 && ubSectorX <= 16, String( "CreateNewVehicleGroup with out of range sectorX value of %d", ubSectorX ) );
 	AssertMsg( ubSectorY >= 1 && ubSectorY <= 16, String( "CreateNewVehicleGroup with out of range sectorY value of %d", ubSectorY ) );
@@ -159,7 +159,8 @@ UINT8 CreateNewVehicleGroupDepartingFromSector(UINT8 const ubSectorX, UINT8 cons
 	// get the type
 	pNew->ubTransportationMask = CAR;
 
-	return( AddGroupToList( pNew ) );
+	AddGroupToList(pNew);
+	return pNew;
 }
 
 

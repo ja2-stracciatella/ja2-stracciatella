@@ -679,10 +679,10 @@ void SetUpHelicopterForMovement( void )
 	if (v->ubMovementGroup == 0)
 	{
 		// get the vehicle a mvt group
-		v->ubMovementGroup = CreateNewVehicleGroupDepartingFromSector(v->sSectorX, v->sSectorY);
+		GROUP* const g = CreateNewVehicleGroupDepartingFromSector(v->sSectorX, v->sSectorY);
+		v->ubMovementGroup = g->ubGroupID;
 
 		// add everyone in vehicle to this mvt group
-		GROUP* const g = GetGroup(v->ubMovementGroup);
 		CFOR_ALL_PASSENGERS(v, i)
 		{
 			AddPlayerToGroup(g, *i);

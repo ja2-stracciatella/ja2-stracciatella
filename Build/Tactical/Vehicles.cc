@@ -82,16 +82,12 @@ static const VehicleTypeInfo g_vehicle_type_info[] =
 void InitVehicles(void)
 {
 	INT32		cnt;
-	GROUP		*pGroup	=	NULL;
-
 	for( cnt = 0; cnt <  MAX_VEHICLES; cnt++ )
 	{
 		// create mvt groups
-		gubVehicleMovementGroups[cnt] = CreateNewVehicleGroupDepartingFromSector(1, 1);
-
-		// Set persistent....
-		pGroup = GetGroup( gubVehicleMovementGroups[ cnt ] );
-		pGroup->fPersistant = TRUE;
+		GROUP* const g = CreateNewVehicleGroupDepartingFromSector(1, 1);
+		g->fPersistant = TRUE;
+		gubVehicleMovementGroups[cnt] = g->ubGroupID;
 	}
 }
 
@@ -940,7 +936,6 @@ void UpdateAllVehiclePassengersGridNo(SOLDIERTYPE* const vs)
 void LoadVehicleMovementInfoFromSavedGameFile(HWFILE const hFile)
 {
 	INT32		cnt;
-	GROUP		*pGroup	=	NULL;
 
 	//Load in the Squad movement id's
 	FileRead(hFile, gubVehicleMovementGroups, sizeof(INT8) * 5);
@@ -948,11 +943,9 @@ void LoadVehicleMovementInfoFromSavedGameFile(HWFILE const hFile)
 	for( cnt = 5; cnt <  MAX_VEHICLES; cnt++ )
 	{
 		// create mvt groups
-		gubVehicleMovementGroups[cnt] = CreateNewVehicleGroupDepartingFromSector(1, 1);
-
-		// Set persistent....
-		pGroup = GetGroup( gubVehicleMovementGroups[ cnt ] );
-		pGroup->fPersistant = TRUE;
+		GROUP* const g = CreateNewVehicleGroupDepartingFromSector(1, 1);
+		g->fPersistant = TRUE;
+		gubVehicleMovementGroups[cnt] = g->ubGroupID;
 	}
 }
 
