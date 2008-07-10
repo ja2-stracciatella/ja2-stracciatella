@@ -161,9 +161,8 @@ UINT8 CreateNewVehicleGroupDepartingFromSector( UINT8 ubSectorX, UINT8 ubSectorY
 }
 
 
-void AddPlayerToGroup(const UINT8 group_id, SOLDIERTYPE* const s)
+void AddPlayerToGroup(GROUP* const g, SOLDIERTYPE* const s)
 {
-	GROUP* const g = GetGroup(group_id);
 	Assert(g);
 	AssertMsg(g->fPlayer, "Attempting AddPlayerToGroup() on an ENEMY group!");
 
@@ -171,7 +170,7 @@ void AddPlayerToGroup(const UINT8 group_id, SOLDIERTYPE* const s)
 	p->pSoldier = s;
 	p->next     = NULL;
 
-	s->ubGroupID = group_id;
+	s->ubGroupID = g->ubGroupID;
 
 	PLAYERGROUP* i = g->pPlayerList;
 	if (!i)

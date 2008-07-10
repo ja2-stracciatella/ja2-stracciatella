@@ -6890,7 +6890,7 @@ static BOOLEAN AssignMercToAMovementGroup(SOLDIERTYPE* pSoldier)
 	if( bGroupId )
 	{
 		// add merc
-		AddPlayerToGroup( bGroupId, pSoldier );
+		AddPlayerToGroup(GetGroup(bGroupId), pSoldier);
 
 		// success
 		return( TRUE );

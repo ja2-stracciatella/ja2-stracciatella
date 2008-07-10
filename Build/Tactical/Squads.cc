@@ -200,7 +200,7 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 
 				RemoveSoldierFromHelicopter( pCharacter );
 
-				AddPlayerToGroup( SquadMovementGroups[ bSquadValue ], pCharacter  );
+				AddPlayerToGroup(g, pCharacter);
 				SetGroupSectorValue(pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, g);
 
 				// if we've just started a new squad
@@ -225,12 +225,12 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 				TakeSoldierOutOfVehicle( pCharacter );
 				fExitingVehicleToSquad = FALSE;
 
-				AddPlayerToGroup( SquadMovementGroups[ bSquadValue ], pCharacter  );
+				AddPlayerToGroup(g, pCharacter);
 				SetGroupSectorValue(pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, g);
 			}
 			else
 			{
-				AddPlayerToGroup( SquadMovementGroups[ bSquadValue ], pCharacter  );
+				AddPlayerToGroup(g, pCharacter);
 				SetGroupSectorValue(pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, g);
 			}
 
@@ -409,7 +409,7 @@ BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter )
 					ubGroupId = CreateNewPlayerGroupDepartingFromSector( ( INT8 ) ( pCharacter -> sSectorX ) , ( INT8 ) ( pCharacter -> sSectorY ) );
 
 					// assign to a group
-					AddPlayerToGroup( ubGroupId, pCharacter );
+					AddPlayerToGroup(GetGroup(ubGroupId), pCharacter);
 				}
 
 				RebuildSquad( ( INT8 )iCounterA );

@@ -2375,7 +2375,7 @@ void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier )
 	{
 	  // create independant group
 	  ubGroupId = CreateNewPlayerGroupDepartingFromSector( ( UINT8 )pSoldier->sSectorX, ( UINT8 )pSoldier->sSectorY );
-	  AddPlayerToGroup( ubGroupId , pSoldier );
+	  AddPlayerToGroup(GetGroup(ubGroupId), pSoldier);
 	}
 }
 

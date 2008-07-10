@@ -3230,7 +3230,7 @@ static void Teleport()
 	{
 		UINT8 const ubGroupId = CreateNewPlayerGroupDepartingFromSector(s->sSectorX, s->sSectorY);
 		// assign to a group
-		AddPlayerToGroup(ubGroupId, s);
+		AddPlayerToGroup(GetGroup(ubGroupId), s);
 	}
 
 	// figure out where they would've come from
