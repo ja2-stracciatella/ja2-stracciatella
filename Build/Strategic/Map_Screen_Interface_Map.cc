@@ -1240,7 +1240,7 @@ void PlotPathForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY, BOOLEAN 
 
 	// will plot a path from current position to sX, sY
 	// get last sector in characters list, build new path, remove tail section, move to beginning of list, and append onto old list
-	pCharacter->pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), (INT16)(sX + sY * MAP_WORLD_X), GetSoldierGroupId(pCharacter), fTacticalTraversal), pCharacter->pMercPath);
+	pCharacter->pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), (INT16)(sX + sY * MAP_WORLD_X), GetGroup(GetSoldierGroupId(pCharacter)), fTacticalTraversal), pCharacter->pMercPath);
 
 	// check if in vehicle, if so, copy path to vehicle
 	if( ( pCharacter->bAssignment == VEHICLE ) || ( pCharacter->uiStatusFlags & SOLDIER_VEHICLE ) )
@@ -1265,7 +1265,7 @@ void PlotATemporaryPathForCharacter(const SOLDIERTYPE* const pCharacter, const I
 		return;
 	}
 
-	pTempCharacterPath = BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), sX + sY * MAP_WORLD_X, GetSoldierGroupId(pCharacter), FALSE);
+	pTempCharacterPath = BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), sX + sY * MAP_WORLD_X, GetGroup(GetSoldierGroupId(pCharacter)), FALSE);
 }
 
 
@@ -1477,7 +1477,7 @@ void PlotPathForHelicopter(const INT16 sX, const INT16 sY)
 	VEHICLETYPE* const v = GetHelicopter();
 	// will plot a path from current position to sX, sY
 	// get last sector in helicopters list, build new path, remove tail section, move to beginning of list, and append onto old list
-	v->pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), (INT16)(sX + sY * MAP_WORLD_X), v->ubMovementGroup, FALSE), v->pMercPath);
+	v->pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), (INT16)(sX + sY * MAP_WORLD_X), GetGroup(v->ubMovementGroup), FALSE), v->pMercPath);
 
 	fMapPanelDirty = TRUE;
 }
@@ -1495,7 +1495,7 @@ void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY )
 	}
 
 	// build path
-	pTempHelicopterPath = BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sX + sY * MAP_WORLD_X, GetHelicopter()->ubMovementGroup, FALSE);
+	pTempHelicopterPath = BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sX + sY * MAP_WORLD_X, GetGroup(GetHelicopter()->ubMovementGroup), FALSE);
 }
 
 

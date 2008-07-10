@@ -1818,7 +1818,7 @@ static void MakeHeliReturnToBase(void)
 
 		VEHICLETYPE* const v = GetHelicopter();
 		ClearStrategicPathList(v->pMercPath, v->ubMovementGroup);
-		v->pMercPath = BuildAStrategicPath(CALCULATE_STRATEGIC_INDEX(v->sSectorX , v->sSectorY), CALCULATE_STRATEGIC_INDEX(ubRefuelList[iLocation][0], ubRefuelList[iLocation][1]), v->ubMovementGroup, FALSE);
+		v->pMercPath = BuildAStrategicPath(CALCULATE_STRATEGIC_INDEX(v->sSectorX , v->sSectorY), CALCULATE_STRATEGIC_INDEX(ubRefuelList[iLocation][0], ubRefuelList[iLocation][1]), GetGroup(v->ubMovementGroup), FALSE);
 		RebuildWayPointsForGroupPath(v->pMercPath, v->ubMovementGroup);
 
 		fHeliReturnStraightToBase = TRUE;
