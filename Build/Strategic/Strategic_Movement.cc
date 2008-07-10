@@ -2121,30 +2121,23 @@ void RemoveAllGroups()
 	gfRemovingAllGroups = FALSE;
 }
 
-void SetGroupSectorValue( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubGroupID )
+
+void SetGroupSectorValue(INT16 const sSectorX, INT16 const sSectorY, INT16 const sSectorZ, GROUP* const g)
 {
-	GROUP *pGroup;
-
-	// get the group
-	pGroup = GetGroup( ubGroupID );
-
-	// make sure it is valid
-	Assert( pGroup );
-
-	RemoveGroupWaypoints(pGroup);
+	RemoveGroupWaypoints(g);
 
 	// set sector x and y to passed values
-	pGroup->ubSectorX = pGroup->ubNextX = ( UINT8 ) sSectorX;
-	pGroup->ubSectorY = pGroup->ubNextY = ( UINT8 ) sSectorY;
-	pGroup->ubSectorZ = ( UINT8 ) sSectorZ;
-	pGroup->fBetweenSectors = FALSE;
+	g->ubSectorX = g->ubNextX = sSectorX;
+	g->ubSectorY = g->ubNextY = sSectorY;
+	g->ubSectorZ =              sSectorZ;
+	g->fBetweenSectors = FALSE;
 
 	// set next sectors same as current
-	pGroup->ubOriginalSector = (UINT8)SECTOR( pGroup->ubSectorX, pGroup->ubSectorY );
-	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
+	g->ubOriginalSector = SECTOR(g->ubSectorX, g->ubSectorY);
+	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g->ubGroupID);
 
 	// set all of the mercs in the group so that they are in the new sector too.
-	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, g)
 	{
 		pPlayer->pSoldier->sSectorX = sSectorX;
 		pPlayer->pSoldier->sSectorY = sSectorY;
@@ -2154,6 +2147,7 @@ void SetGroupSectorValue( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 
 
 	CheckAndHandleUnloadingOfCurrentWorld();
 }
+
 
 void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID )
 {
@@ -3677,7 +3671,7 @@ void PlaceGroupInSector( UINT8 ubGroupID, INT16 sPrevX, INT16 sPrevY, INT16 sNex
 
 	// change where they are and where they're going
 	SetGroupPrevSectors(g, sPrevX, sPrevY);
-	SetGroupSectorValue( sPrevX, sPrevY, bZ, ubGroupID );
+	SetGroupSectorValue(sPrevX, sPrevY, bZ, g);
 	SetGroupNextSectorValue(sNextX, sNextY, g);
 
 	// call arrive event

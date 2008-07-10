@@ -190,12 +190,9 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 						RemoveGroupFromList( pGroup );
 					}
 				}
-
 			}
 
-
-
-
+			GROUP* const g = GetGroup(SquadMovementGroups[bSquadValue]);
 			if( ( pCharacter->bAssignment == VEHICLE ) && ( pCharacter->iVehicleId == iHelicopterVehicleId ) && ( pCharacter-> iVehicleId != -1 ) )
 			{
 				// if creating a new squad from guys exiting the chopper
@@ -204,7 +201,7 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 				RemoveSoldierFromHelicopter( pCharacter );
 
 				AddPlayerToGroup( SquadMovementGroups[ bSquadValue ], pCharacter  );
-				SetGroupSectorValue( pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, SquadMovementGroups[ bSquadValue ] );
+				SetGroupSectorValue(pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, g);
 				pCharacter -> ubGroupID = SquadMovementGroups[ bSquadValue ];
 
 				// if we've just started a new squad
@@ -231,13 +228,13 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 
 
 				AddPlayerToGroup( SquadMovementGroups[ bSquadValue ], pCharacter  );
-				SetGroupSectorValue( pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, SquadMovementGroups[ bSquadValue ] );
+				SetGroupSectorValue(pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, g);
 				pCharacter -> ubGroupID = SquadMovementGroups[ bSquadValue ];
 			}
 			else
 			{
 				AddPlayerToGroup( SquadMovementGroups[ bSquadValue ], pCharacter  );
-				SetGroupSectorValue( pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, SquadMovementGroups[ bSquadValue ] );
+				SetGroupSectorValue(pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, g);
 				pCharacter -> ubGroupID = SquadMovementGroups[ bSquadValue ];
 			}
 

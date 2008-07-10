@@ -206,7 +206,7 @@ void CalculateNextMoveIntention( GROUP *pGroup );
 
 
 // set current sector of the group..used for player controlled mercs
-void SetGroupSectorValue( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubGroupID );
+void SetGroupSectorValue(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, GROUP*);
 
 void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID );
 

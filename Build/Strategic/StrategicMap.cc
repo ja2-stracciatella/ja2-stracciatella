@@ -2400,7 +2400,7 @@ void AllMercsWalkedToExitGrid()
 			RemoveSoldierFromTacticalSector(pPlayer->pSoldier);
 		}
 
-		SetGroupSectorValue( (UINT8)gsAdjacentSectorX, (UINT8)gsAdjacentSectorY, gbAdjacentSectorZ, gpAdjacentGroup->ubGroupID );
+		SetGroupSectorValue(gsAdjacentSectorX, gsAdjacentSectorY, gbAdjacentSectorZ, gpAdjacentGroup);
 
 		SetDefaultSquadOnSectorEntry( TRUE );
 
@@ -2441,7 +2441,7 @@ void AllMercsWalkedToExitGrid()
 		{
 			SetInsertionDataFromAdjacentMoveDirection( pPlayer->pSoldier, gubTacticalDirection, gsAdditionalData );
 		}
-		SetGroupSectorValue( gsAdjacentSectorX, gsAdjacentSectorY, gbAdjacentSectorZ, gpAdjacentGroup->ubGroupID );
+		SetGroupSectorValue(gsAdjacentSectorX, gsAdjacentSectorY, gbAdjacentSectorZ, gpAdjacentGroup);
 
 		gFadeOutDoneCallback = DoneFadeOutExitGridSector;
 		FadeOutGameScreen( );
