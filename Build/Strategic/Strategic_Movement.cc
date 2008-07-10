@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Map_Screen_Interface_Bottom.h"
 #include "MessageBoxScreen.h"
 #include "Strategic_Movement.h"
@@ -568,9 +570,8 @@ GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmin
 	}
 #endif
 
-	if( AddGroupToList( pNew ) )
-		return pNew;
-	return NULL;
+	AddGroupToList(pNew);
+	return pNew;
 }
 
 //INTERNAL LIST MANIPULATION FUNCTIONS
@@ -600,7 +601,7 @@ static UINT8 AddGroupToList(GROUP* const g)
 
 		return id;
 	}
-	return 0;
+	throw std::runtime_error("Out of group IDs");
 }
 
 

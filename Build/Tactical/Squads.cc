@@ -1115,7 +1115,6 @@ void CheckSquadMovementGroups( void )
 
 			// Set persistent....
 			pGroup = GetGroup( SquadMovementGroups[ iSquad ] );
-			Assert( pGroup );
 			pGroup->fPersistant = TRUE;
 		}
 	}

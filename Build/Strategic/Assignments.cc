@@ -6887,14 +6887,8 @@ static BOOLEAN AssignMercToAMovementGroup(SOLDIERTYPE* pSoldier)
 	// create group
 	bGroupId = CreateNewPlayerGroupDepartingFromSector( ( UINT8 )( pSoldier->sSectorX ), ( UINT8 )( pSoldier->sSectorY ) );
 
-	if( bGroupId )
-	{
-		// add merc
-		AddPlayerToGroup(GetGroup(bGroupId), pSoldier);
-
-		// success
-		return( TRUE );
-	}
+	// add merc
+	AddPlayerToGroup(GetGroup(bGroupId), pSoldier);
 
 	return( TRUE );
 }

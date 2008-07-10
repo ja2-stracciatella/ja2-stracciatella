@@ -1188,7 +1188,6 @@ void InitStrategicAI()
 			//The patrol group can't actually start on the first waypoint, so we set it to the second way
 			//point for initialization, and then add the waypoints from 0 up
 			pGroup = CreateNewEnemyGroupDepartingFromSector( gPatrolGroup[ i ].ubSectorID[ 1 ], 0, ubNumTroops, 0 );
-			Assert( pGroup );
 
 			if( i == 3 || i == 4 )
 			{ //Special case:  Two patrol groups are administrator groups -- rest are troops
@@ -4114,7 +4113,6 @@ static void MassFortifyTowns(void)
 	if( pSector->ubNumTroops )
 	{
 		pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_A9, 0, pSector->ubNumTroops, 0 );
-		Assert( pGroup );
 		pSector->ubNumTroops = 0;
 		pGroup->pEnemyGroup->ubIntention = PATROL;
 		pGroup->ubMoveType = ONE_WAY;
