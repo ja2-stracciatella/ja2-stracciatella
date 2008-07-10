@@ -352,7 +352,7 @@ static INT32 FindLocationOfClosestRefuelSite(BOOLEAN fMustBeAvailable)
 		{
 			// find if sector is under control, find distance from heli to it
 			const VEHICLETYPE* const v = GetHelicopter();
-			const INT32 iDistance = FindStratPath(CALCULATE_STRATEGIC_INDEX(v->sSectorX , v->sSectorY), CALCULATE_STRATEGIC_INDEX(ubRefuelList[iCounter][0], ubRefuelList[iCounter][1]), v->ubMovementGroup, FALSE);
+			const INT32 iDistance = FindStratPath(CALCULATE_STRATEGIC_INDEX(v->sSectorX , v->sSectorY), CALCULATE_STRATEGIC_INDEX(ubRefuelList[iCounter][0], ubRefuelList[iCounter][1]), GetGroup(v->ubMovementGroup), FALSE);
 
 			if( iDistance < iShortestDistance )
 			{
@@ -376,7 +376,7 @@ static INT32 DistanceToNearestRefuelPoint(INT16 sX, INT16 sY)
 	// don't notify player during these checks!
 	iClosestLocation = LocationOfNearestRefuelPoint( FALSE );
 
-	const INT32 iDistance = FindStratPath(CALCULATE_STRATEGIC_INDEX(sX, sY), CALCULATE_STRATEGIC_INDEX(ubRefuelList[iClosestLocation][0], ubRefuelList[iClosestLocation][1]), GetHelicopter()->ubMovementGroup, FALSE);
+	const INT32 iDistance = FindStratPath(CALCULATE_STRATEGIC_INDEX(sX, sY), CALCULATE_STRATEGIC_INDEX(ubRefuelList[iClosestLocation][0], ubRefuelList[iClosestLocation][1]), GetGroup(GetHelicopter()->ubMovementGroup), FALSE);
 	return( iDistance );
 }
 

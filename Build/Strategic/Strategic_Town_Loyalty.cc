@@ -1153,7 +1153,7 @@ void CalcDistancesBetweenTowns( void )
 	}
 
 	// create a temporary group (needed to plot strategic paths)
-	UINT8 const ubTempGroupId = CreateNewPlayerGroupDepartingFromSector(1, 1)->ubGroupID;
+	GROUP* const g = CreateNewPlayerGroupDepartingFromSector(1, 1);
 
 	// now, measure distance from every town sector to every other town sector!
 	// The minimum distances between towns get stored.
@@ -1174,7 +1174,7 @@ void CalcDistancesBetweenTowns( void )
 			if (ubTownA != ubTownB)
 			{
 				// calculate fastest distance between them (in sectors) - not necessarily shortest distance, roads are faster!
-				iDistance = FindStratPath( ( INT16 )pTownLocationsList[uiCounterA ], ( INT16 )pTownLocationsList[ uiCounterB ], ubTempGroupId, FALSE );
+				iDistance = FindStratPath(pTownLocationsList[uiCounterA], pTownLocationsList[uiCounterB], g, FALSE);
 			}
 			else
 			{
@@ -1197,7 +1197,7 @@ void CalcDistancesBetweenTowns( void )
 	}
 
 
-	RemoveGroup( ubTempGroupId );
+	RemovePGroup(g);
 }
 
 
@@ -1565,7 +1565,7 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 	sEventSector = sSectorX + ( MAP_WORLD_X * sSectorY );
 
 	// need a temporary group create to use for laying down distance paths
-	UINT8 const ubTempGroupId = CreateNewPlayerGroupDepartingFromSector(sSectorX, sSectorY)->ubGroupID;
+	GROUP* const g = CreateNewPlayerGroupDepartingFromSector(sSectorX, sSectorY);
 
 	// calc distance to the event sector from EACH SECTOR of each town, keeping only the shortest one for every town
 	uiIndex = 0;
@@ -1577,7 +1577,7 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 		if (iShortestDistance[ bTownId ] > 0 )
 		{
 			// calculate across how many sectors the fastest travel path from event to this town sector
-			iThisDistance = FindStratPath( sEventSector, ( INT16 )pTownLocationsList[ uiIndex ], ubTempGroupId, FALSE );
+			iThisDistance = FindStratPath(sEventSector, pTownLocationsList[uiIndex], g, FALSE);
 
 			if (iThisDistance < iShortestDistance[ bTownId ])
 			{
@@ -1589,7 +1589,7 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 	}
 
 	// must always remove that temporary group!
-	RemoveGroup( ubTempGroupId );
+	RemovePGroup(g);
 
 
 	for( bTownId = FIRST_TOWN; bTownId < NUM_TOWNS; bTownId++ )

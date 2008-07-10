@@ -182,7 +182,7 @@ INT16 diStratDelta[8]=
 
 // this will find if a shortest strategic path
 
-INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOOLEAN fTacticalTraversal )
+INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const* const pGroup, BOOLEAN const fTacticalTraversal)
 {
 	INT32 iCnt,ndx,insertNdx,qNewNdx;
 	INT32 iDestX,iDestY,locX,locY,dx,dy;
@@ -197,7 +197,6 @@ INT32 FindStratPath(INT16 sStart, INT16 sDestination, INT16 sMvtGroupNumber, BOO
 	// so this is just to keep things happy!
 
 	// for player groups only!
-	GROUP* const pGroup = GetGroup(sMvtGroupNumber);
 	if ( pGroup->fPlayer )
 	{
 		// if player is holding down SHIFT key, find the shortest route instead of the quickest route!
@@ -449,7 +448,7 @@ PathSt* BuildAStrategicPath(const INT16 start_sector, const INT16 end_sector, co
 {
 	if (end_sector < MAP_WORLD_X - 1) return NULL;
 
-	const INT32 path_len = FindStratPath(start_sector, end_sector, sMvtGroupNumber, fTacticalTraversal);
+	const INT32 path_len = FindStratPath(start_sector, end_sector, GetGroup(sMvtGroupNumber), fTacticalTraversal);
 	if (path_len == 0) return NULL;
 
 	// start new path list
