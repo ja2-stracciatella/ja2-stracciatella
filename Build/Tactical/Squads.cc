@@ -202,7 +202,6 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 
 				AddPlayerToGroup( SquadMovementGroups[ bSquadValue ], pCharacter  );
 				SetGroupSectorValue(pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, g);
-				pCharacter -> ubGroupID = SquadMovementGroups[ bSquadValue ];
 
 				// if we've just started a new squad
 				if ( fNewSquad )
@@ -226,18 +225,14 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
 				TakeSoldierOutOfVehicle( pCharacter );
 				fExitingVehicleToSquad = FALSE;
 
-
 				AddPlayerToGroup( SquadMovementGroups[ bSquadValue ], pCharacter  );
 				SetGroupSectorValue(pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, g);
-				pCharacter -> ubGroupID = SquadMovementGroups[ bSquadValue ];
 			}
 			else
 			{
 				AddPlayerToGroup( SquadMovementGroups[ bSquadValue ], pCharacter  );
 				SetGroupSectorValue(pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, g);
-				pCharacter -> ubGroupID = SquadMovementGroups[ bSquadValue ];
 			}
-
 
 			// assign here
 			Squad[ bSquadValue ][ bCounter ] = pCharacter;
