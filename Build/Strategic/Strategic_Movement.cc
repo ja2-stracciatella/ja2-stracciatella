@@ -2057,15 +2057,10 @@ void RemoveGroupWaypoints(GROUP* const pGroup)
 
 
 // set this groups previous sector values
-static void SetGroupPrevSectors(UINT8 ubGroupID, UINT8 ubX, UINT8 ubY)
+static void SetGroupPrevSectors(GROUP* const g, UINT8 const ubX, UINT8 const ubY)
 {
-	GROUP *pGroup;
-	pGroup = GetGroup( ubGroupID );
-	Assert( pGroup );
-
-	// since we have a group, set prev sector's x and y
-	pGroup -> ubPrevX = ubX;
-	pGroup -> ubPrevY = ubY;
+	g->ubPrevX = ubX;
+	g->ubPrevY = ubY;
 }
 
 
@@ -2177,25 +2172,17 @@ void SetEnemyGroupSector( GROUP *pGroup, UINT8 ubSectorID )
 
 
 // set groups next sector x,y value..used ONLY for teleporting groups
-static void SetGroupNextSectorValue(INT16 sSectorX, INT16 sSectorY, UINT8 ubGroupID)
+static void SetGroupNextSectorValue(INT16 const sSectorX, INT16 const sSectorY, GROUP* const g)
 {
-	GROUP *pGroup;
-
-	// get the group
-  pGroup = GetGroup( ubGroupID );
-
-	// make sure it is valid
-	Assert( pGroup );
-
-	RemoveGroupWaypoints(pGroup);
+	RemoveGroupWaypoints(g);
 
 	// set sector x and y to passed values
-	pGroup->ubNextX = ( UINT8 ) sSectorX;
-	pGroup->ubNextY = ( UINT8 ) sSectorY;
-	pGroup->fBetweenSectors = FALSE;
+	g->ubNextX         = sSectorX;
+	g->ubNextY         = sSectorY;
+	g->fBetweenSectors = FALSE;
 
 	// set next sectors same as current
-	pGroup->ubOriginalSector = (UINT8)SECTOR( pGroup->ubSectorX, pGroup->ubSectorY );
+	g->ubOriginalSector = SECTOR(g->ubSectorX, g->ubSectorY);
 }
 
 
@@ -3685,12 +3672,13 @@ static void NotifyPlayerOfBloodcatBattle(UINT8 ubSectorX, UINT8 ubSectorY)
 
 void PlaceGroupInSector( UINT8 ubGroupID, INT16 sPrevX, INT16 sPrevY, INT16 sNextX, INT16 sNextY, INT8 bZ, BOOLEAN fCheckForBattle )
 {
-	ClearMercPathsAndWaypointsForAllInGroup( GetGroup( ubGroupID ) );
+	GROUP* const g = GetGroup(ubGroupID);
+	ClearMercPathsAndWaypointsForAllInGroup(g);
 
 	// change where they are and where they're going
-	SetGroupPrevSectors( ubGroupID, ( UINT8 ) sPrevX, ( UINT8 ) sPrevY );
+	SetGroupPrevSectors(g, sPrevX, sPrevY);
 	SetGroupSectorValue( sPrevX, sPrevY, bZ, ubGroupID );
-	SetGroupNextSectorValue( sNextX, sNextY, ubGroupID );
+	SetGroupNextSectorValue(sNextX, sNextY, g);
 
 	// call arrive event
 	GroupArrivedAtSector( ubGroupID, fCheckForBattle, FALSE );
