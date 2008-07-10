@@ -1076,19 +1076,6 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 }
 
 
-/*
-void MoveGroupToOriginalSector(UINT8 ubGroupID)
-{
-	GROUP *pGroup;
-	UINT8 ubDestX, ubDestY;
-	pGroup = GetGroup( ubGroupID );
-	ubDestX = ( pGroup->ubOriginalSector % 16 ) + 1;
-	ubDestY = ( pGroup->ubOriginalSector / 16 ) + 1;
-	MoveGroupFromSectorToSector( ubGroupID, pGroup->ubSectorX, pGroup->ubSectorY, ubDestX, ubDestY );
-}
-*/
-
-
 INT32 GetLengthOfPath(PathSt* pHeadPath)
 {
 	INT32 iLength = 0;
