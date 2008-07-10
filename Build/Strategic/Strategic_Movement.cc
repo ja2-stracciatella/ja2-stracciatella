@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "LoadSaveData.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "MessageBoxScreen.h"
 #include "Strategic_Movement.h"
@@ -2743,7 +2744,41 @@ void SaveStrategicMovementGroupsToSaveGameFile(HWFILE const f)
 
 	CFOR_ALL_GROUPS(g)
 	{
-		FileWrite(f, g, sizeof(GROUP));
+		BYTE data[84];
+		BYTE* d = data;
+		INJ_BOOL(d, g->fDebugGroup)
+		INJ_BOOL(d, g->fPlayer)
+		INJ_BOOL(d, g->fVehicle)
+		INJ_BOOL(d, g->fPersistant)
+		INJ_U8(d, g->ubGroupID)
+		INJ_U8(d, g->ubGroupSize)
+		INJ_U8(d, g->ubSectorX)
+		INJ_U8(d, g->ubSectorY)
+		INJ_U8(d, g->ubSectorZ)
+		INJ_U8(d, g->ubNextX)
+		INJ_U8(d, g->ubNextY)
+		INJ_U8(d, g->ubPrevX)
+		INJ_U8(d, g->ubPrevY)
+		INJ_U8(d, g->ubOriginalSector)
+		INJ_BOOL(d, g->fBetweenSectors)
+		INJ_U8(d, g->ubMoveType)
+		INJ_U8(d, g->ubNextWaypointID)
+		INJ_U8(d, g->ubFatigueLevel)
+		INJ_U8(d, g->ubRestAtFatigueLevel)
+		INJ_U8(d, g->ubRestToFatigueLevel)
+		INJ_U32(d, g->uiArrivalTime)
+		INJ_U32(d, g->uiTraverseTime)
+		INJ_BOOL(d, g->fRestAtNight)
+		INJ_SKIP(d, 7)
+		INJ_U8(d, g->ubTransportationMask)
+		INJ_SKIP(d, 3)
+		INJ_U32(d, g->uiFlags)
+		INJ_U8(d, g->ubCreatedSectorID)
+		INJ_U8(d, g->ubSectorIDOfLastReassignment)
+		INJ_SKIP(d, 38)
+		Assert(d == endof(data));
+
+		FileWrite(f, data, sizeof(data));
 
 		// Save the linked list, for the current type of group
 		if (g->fPlayer)
@@ -2782,8 +2817,42 @@ void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE const f)
 	for (UINT32 i = uiNumberOfGroups; i != 0; --i)
 	{
 		GROUP* const g = MALLOCZ(GROUP);
-		FileRead(f, g, sizeof(GROUP));
-		g->next = NULL;
+
+		BYTE data[84];
+		FileRead(f, data, sizeof(data));
+
+		BYTE const* d = data;
+		EXTR_BOOL(d, g->fDebugGroup)
+		EXTR_BOOL(d, g->fPlayer)
+		EXTR_BOOL(d, g->fVehicle)
+		EXTR_BOOL(d, g->fPersistant)
+		EXTR_U8(d, g->ubGroupID)
+		EXTR_U8(d, g->ubGroupSize)
+		EXTR_U8(d, g->ubSectorX)
+		EXTR_U8(d, g->ubSectorY)
+		EXTR_U8(d, g->ubSectorZ)
+		EXTR_U8(d, g->ubNextX)
+		EXTR_U8(d, g->ubNextY)
+		EXTR_U8(d, g->ubPrevX)
+		EXTR_U8(d, g->ubPrevY)
+		EXTR_U8(d, g->ubOriginalSector)
+		EXTR_BOOL(d, g->fBetweenSectors)
+		EXTR_U8(d, g->ubMoveType)
+		EXTR_U8(d, g->ubNextWaypointID)
+		EXTR_U8(d, g->ubFatigueLevel)
+		EXTR_U8(d, g->ubRestAtFatigueLevel)
+		EXTR_U8(d, g->ubRestToFatigueLevel)
+		EXTR_U32(d, g->uiArrivalTime)
+		EXTR_U32(d, g->uiTraverseTime)
+		EXTR_BOOL(d, g->fRestAtNight)
+		EXTR_SKIP(d, 7)
+		EXTR_U8(d, g->ubTransportationMask)
+		EXTR_SKIP(d, 3)
+		EXTR_U32(d, g->uiFlags)
+		EXTR_U8(d, g->ubCreatedSectorID)
+		EXTR_U8(d, g->ubSectorIDOfLastReassignment)
+		EXTR_SKIP(d, 38)
+		Assert(d == endof(data));
 
 		if (g->fPlayer)
 		{
