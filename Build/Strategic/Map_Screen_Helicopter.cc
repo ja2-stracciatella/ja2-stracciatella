@@ -679,7 +679,7 @@ void SetUpHelicopterForMovement( void )
 	if (v->ubMovementGroup == 0)
 	{
 		// get the vehicle a mvt group
-		v->ubMovementGroup = CreateNewVehicleGroupDepartingFromSector(v->sSectorX, v->sSectorY, iHelicopterVehicleId);
+		v->ubMovementGroup = CreateNewVehicleGroupDepartingFromSector(v->sSectorX, v->sSectorY);
 
 		// add everyone in vehicle to this mvt group
 		GROUP* const g = GetGroup(v->ubMovementGroup);

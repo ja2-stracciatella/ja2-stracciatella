@@ -87,7 +87,7 @@ void InitVehicles(void)
 	for( cnt = 0; cnt <  MAX_VEHICLES; cnt++ )
 	{
 		// create mvt groups
-		gubVehicleMovementGroups[ cnt ] = CreateNewVehicleGroupDepartingFromSector( 1, 1, cnt );
+		gubVehicleMovementGroups[cnt] = CreateNewVehicleGroupDepartingFromSector(1, 1);
 
 		// Set persistent....
 		pGroup = GetGroup( gubVehicleMovementGroups[ cnt ] );
@@ -948,7 +948,7 @@ void LoadVehicleMovementInfoFromSavedGameFile(HWFILE const hFile)
 	for( cnt = 5; cnt <  MAX_VEHICLES; cnt++ )
 	{
 		// create mvt groups
-		gubVehicleMovementGroups[ cnt ] = CreateNewVehicleGroupDepartingFromSector( 1, 1, cnt );
+		gubVehicleMovementGroups[cnt] = CreateNewVehicleGroupDepartingFromSector(1, 1);
 
 		// Set persistent....
 		pGroup = GetGroup( gubVehicleMovementGroups[ cnt ] );
