@@ -1141,32 +1141,24 @@ PathSt* GetSoldierMercPathPtr(const SOLDIERTYPE* pSoldier)
 }
 
 
-
-PathSt* GetGroupMercPathPtr(GROUP* pGroup)
+PathSt* GetGroupMercPathPtr(GROUP const* const g)
 {
-	PathSt* pMercPath = NULL;
+	Assert(g);
+	Assert(g->fPlayer);
 
-	Assert( pGroup );
-
-	// must be a player group!
-	Assert( pGroup->fPlayer );
-
-	if( pGroup->fVehicle )
+	if (g->fVehicle)
 	{
-		const VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-		Assert(v != NULL);
-		pMercPath = v->pMercPath;
-	}
-	else
-	{
-		// value returned will be NULL if there's nobody in the group!
-		if ( pGroup->pPlayerList && pGroup->pPlayerList->pSoldier )
-		{
-			pMercPath = pGroup->pPlayerList->pSoldier->pMercPath;
-		}
+		VEHICLETYPE const* const v = GetVehicleFromMvtGroup(g);
+		Assert(v);
+		return v->pMercPath;
 	}
 
-	return( pMercPath );
+	if (g->pPlayerList && g->pPlayerList->pSoldier) // XXX pSoldier test necessary?
+	{
+		return g->pPlayerList->pSoldier->pMercPath;
+	}
+
+	return 0;
 }
 
 
