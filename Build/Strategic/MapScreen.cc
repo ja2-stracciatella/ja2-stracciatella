@@ -9184,48 +9184,41 @@ void RememberPreviousPathForAllSelectedChars(void)
 }
 
 
+static bool RestorePath(PathSt*& path, UINT8 const group_id)
+{
+	if (g_prev_path)
+	{
+		ClearStrategicPathList(path, group_id);
+		path = CopyPaths(g_prev_path);
+	}
+	else if (path) // if he currently has a path
+	{
+		// wipe it out!
+		path = ClearStrategicPathList(path, group_id);
+	}
+	else
+	{
+		return false;
+	}
+
+	RebuildWayPointsForGroupPath(path, GetGroup(group_id));
+	return true;
+}
+
+
 static void RestorePreviousPaths(void)
 {
-	PathSt** ppMovePath = NULL;
-	UINT8 ubGroupId = 0;
-	BOOLEAN fPathChanged = FALSE;
-
 	// invalid if we're not plotting movement
 	Assert(bSelectedDestChar != -1 || fPlotForHelicopter);
 
 	if (fPlotForHelicopter)
 	{
-		VEHICLETYPE* const v = GetHelicopter();
-		ppMovePath = &v->pMercPath;
-		ubGroupId  = v->ubMovementGroup;
+		VEHICLETYPE* const v    = GetHelicopter();
+		PathSt**     const path = &v->pMercPath;
 
-		// if the helicopter had a previous path
-		if (g_prev_path)
+		if (RestorePath(*path, v->ubMovementGroup))
 		{
-			ClearStrategicPathList(*ppMovePath, ubGroupId);
-			*ppMovePath = CopyPaths(g_prev_path);
-			// will need to rebuild waypoints
-			fPathChanged = TRUE;
-		}
-		else	// no previous path
-		{
-			// if he currently has a path
-			if( *ppMovePath )
-			{
-				// wipe it out!
-				*ppMovePath = ClearStrategicPathList( *ppMovePath, ubGroupId );
-				// will need to rebuild waypoints
-				fPathChanged = TRUE;
-			}
-		}
-
-		if ( fPathChanged )
-		{
-			// rebuild waypoints
-			RebuildWayPointsForGroupPath(*ppMovePath, GetGroup(ubGroupId));
-
-			// copy his path to all selected characters
-			CopyPathToAllSelectedCharacters( *ppMovePath );
+			CopyPathToAllSelectedCharacters(*path);
 		}
 	}
 	else	// character(s) plotting
@@ -9234,6 +9227,8 @@ static void RestorePreviousPaths(void)
 		{
 			SOLDIERTYPE* const pSoldier = c->merc;
 
+			PathSt** ppMovePath;
+			UINT8    ubGroupId;
 			if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 			{
 				VEHICLETYPE* const v = &pVehicleList[pSoldier->bVehicleID];
@@ -9258,35 +9253,7 @@ static void RestorePreviousPaths(void)
 				continue;
 			}
 
-
-			fPathChanged = FALSE;
-
-			// if we have the previous path stored for the dest char
-			if (g_prev_path)
-			{
-				ClearStrategicPathList(*ppMovePath, ubGroupId);
-				*ppMovePath = CopyPaths(g_prev_path);
-				// will need to rebuild waypoints
-				fPathChanged = TRUE;
-			}
-			else	// no previous path stored
-			{
-				// if he has one now, wipe it out
-				if( *ppMovePath )
-				{
-					// wipe it out!
-					*ppMovePath = ClearStrategicPathList( *ppMovePath, ubGroupId );
-					// will need to rebuild waypoints
-					fPathChanged = TRUE;
-				}
-			}
-
-
-			if ( fPathChanged )
-			{
-				// rebuild waypoints
-				RebuildWayPointsForGroupPath(*ppMovePath, GetGroup(ubGroupId));
-			}
+			RestorePath(*ppMovePath, ubGroupId);
 		}
 	}
 }
