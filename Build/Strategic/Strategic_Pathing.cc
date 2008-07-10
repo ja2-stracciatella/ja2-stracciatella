@@ -936,7 +936,7 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP* const pGroup
 	if( pGroup->uiArrivalTime == GetWorldTotalMin() )
 	{
 		// never really left.  Must set check for battle TRUE in order for HandleNonCombatGroupArrival() to run!
-		GroupArrivedAtSector( pGroup->ubGroupID, TRUE, TRUE );
+		GroupArrivedAtSector(pGroup, TRUE, TRUE);
 	}
 }
 

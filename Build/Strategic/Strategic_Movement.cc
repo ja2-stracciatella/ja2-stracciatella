@@ -319,7 +319,7 @@ BOOLEAN GroupReversingDirectionsBetweenSectors( GROUP *pGroup, UINT8 ubSectorX, 
 		if ( !fBuildingWaypoints )
 		{
 			// never really left.  Must set check for battle TRUE in order for HandleNonCombatGroupArrival() to run!
-			GroupArrivedAtSector( pGroup->ubGroupID, TRUE, TRUE );
+			GroupArrivedAtSector(pGroup, TRUE, TRUE);
 		}
 	}
 
@@ -1156,7 +1156,7 @@ static INT16 VehicleFuelRemaining(SOLDIERTYPE* pSoldier);
 //This is called whenever any group arrives in the next sector (player or enemy)
 //This function will first check to see if a battle should start, or if they
 //aren't at the final destination, they will move to the next sector.
-void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNeverLeft )
+void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BOOLEAN const fNeverLeft)
 {
 	UINT8 ubInsertionDirection, ubStrategicInsertionCode;
 	SOLDIERTYPE *pSoldier = NULL;
@@ -1166,13 +1166,6 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 
 	// reset
 	gfWaitingForInput = FALSE;
-
-	// grab the group and see if valid
-	GROUP* const pGroup = GetGroup(ubGroupID);
-	if( pGroup == NULL )
-	{
-		return;
-	}
 
 	if( pGroup->fPlayer )
 	{
@@ -1203,7 +1196,7 @@ void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNe
 			if( pGroup->pPlayerList == NULL )
 			{
 				// nobody here, better just get out now
-				AssertMsg( 0, String( "Player group %d arrived in sector empty.  KM 0", ubGroupID ) );
+				AssertMsg(0, String("Player group %d arrived in sector empty.  KM 0", pGroup->ubGroupID));
 				return;
 			}
 		}
@@ -1637,7 +1630,7 @@ static void HandleOtherGroupsArrivingSimultaneously(UINT8 ubSectorX, UINT8 ubSec
 			{
 				if( pGroup->fBetweenSectors )
 				{
-					GroupArrivedAtSector( (UINT8)pEvent->uiParam, FALSE, FALSE );
+					GroupArrivedAtSector(pGroup, FALSE, FALSE );
 					pGroup->uiFlags |= GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY;
 					gubNumGroupsArrivedSimultaneously++;
 					DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
@@ -3677,7 +3670,7 @@ void PlaceGroupInSector( UINT8 ubGroupID, INT16 sPrevX, INT16 sPrevY, INT16 sNex
 	SetGroupNextSectorValue(sNextX, sNextY, g);
 
 	// call arrive event
-	GroupArrivedAtSector( ubGroupID, fCheckForBattle, FALSE );
+	GroupArrivedAtSector(g, fCheckForBattle, FALSE);
 }
 
 

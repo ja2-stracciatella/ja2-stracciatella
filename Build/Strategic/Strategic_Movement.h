@@ -202,7 +202,7 @@ GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmin
 //This is called whenever any group arrives in the next sector (player or enemy)
 //This function will first check to see if a battle should start, or if they
 //aren't at the final destination, they will move to the next sector.
-void GroupArrivedAtSector( UINT8 ubGroupID, BOOLEAN fCheckForBattle, BOOLEAN fNeverLeft );
+void GroupArrivedAtSector(GROUP*, BOOLEAN fCheckForBattle, BOOLEAN fNeverLeft);
 void CalculateNextMoveIntention( GROUP *pGroup );
 
 
