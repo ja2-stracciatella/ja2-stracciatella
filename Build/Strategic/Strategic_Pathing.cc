@@ -843,28 +843,17 @@ static void VerifyAllMercsInGroupAreOnSameSquad(GROUP* const pGroup)
 #endif
 
 
-
-void RebuildWayPointsForGroupPath(PathSt* pHeadOfPath, INT16 sMvtGroup)
+void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP* const pGroup)
 {
 	INT32 iDelta = 0;
 	INT32 iOldDelta = 0;
 	BOOLEAN fFirstNode = TRUE;
 	PathSt* pNode = pHeadOfPath;
-	GROUP *pGroup = NULL;
 	WAYPOINT *wp = NULL;
-
-
-	if( ( sMvtGroup == -1 ) || ( sMvtGroup == 0 ) )
-	{
-		// invalid group...leave
-		return;
-	}
-
-	pGroup = GetGroup( ( UINT8 )sMvtGroup );
 
 	//KRIS!  Added this because it was possible to plot a new course to the same destination, and the
 	//       group would add new arrival events without removing the existing one(s).
-	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, sMvtGroup );
+	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, pGroup->ubGroupID);
 
 	RemoveGroupWaypoints(pGroup);
 
@@ -980,7 +969,7 @@ BOOLEAN MoveGroupFromSectorToSector(GROUP* const g, INT16 const sStartX, INT16 c
 	}
 
 	// start movement to next sector
-	RebuildWayPointsForGroupPath(pNode, g->ubGroupID);
+	RebuildWayPointsForGroupPath(pNode, g);
 
 	// now clear out the mess
 	pNode = ClearStrategicPathList( pNode, -1 );
@@ -1002,7 +991,7 @@ static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP* const g, INT
 	pNode = RemoveTailFromStrategicPath( pNode );
 
 	// start movement to next sector
-	RebuildWayPointsForGroupPath(pNode, g->ubGroupID);
+	RebuildWayPointsForGroupPath(pNode, g);
 
 	// now clear out the mess
 	pNode = ClearStrategicPathList( pNode, -1 );
@@ -1033,7 +1022,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP* const 
 	}
 
 	// start movement to next sector
-	RebuildWayPointsForGroupPath(pNode, g->ubGroupID);
+	RebuildWayPointsForGroupPath(pNode, g);
 
 	// now clear out the mess
 	pNode = ClearStrategicPathList( pNode, -1 );
@@ -1067,7 +1056,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 	pNode = RemoveTailFromStrategicPath( pNode );
 
 	// start movement to next sector
-	RebuildWayPointsForGroupPath(pNode, g->ubGroupID);
+	RebuildWayPointsForGroupPath(pNode, g);
 
 	// now clear out the mess
 	pNode = ClearStrategicPathList( pNode, -1 );

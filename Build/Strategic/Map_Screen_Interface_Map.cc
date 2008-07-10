@@ -1347,7 +1347,7 @@ void CancelPathForCharacter( SOLDIERTYPE *pCharacter )
 
 	// This causes the group to effectively reverse directions (even if they've never actually left), so handle that.
 	// They are going to return to their current X,Y sector.
-	RebuildWayPointsForGroupPath( pCharacter->pMercPath, pCharacter->ubGroupID );
+	RebuildWayPointsForGroupPath(pCharacter->pMercPath, GetGroup(pCharacter->ubGroupID));
 //	GroupReversingDirectionsBetweenSectors( GetGroup( pCharacter->ubGroupID ), ( UINT8 )( pCharacter->sSectorX ), ( UINT8 )( pCharacter->sSectorY ), FALSE );
 
 
@@ -1384,7 +1384,7 @@ void CancelPathForVehicle( VEHICLETYPE *pVehicle, BOOLEAN fAlreadyReversed )
 	{
 		// This causes the group to effectively reverse directions (even if they've never actually left), so handle that.
 		// They are going to return to their current X,Y sector.
-		RebuildWayPointsForGroupPath( pVehicle->pMercPath, pVehicle->ubMovementGroup );
+		RebuildWayPointsForGroupPath(pVehicle->pMercPath, GetGroup(pVehicle->ubMovementGroup));
 //		GroupReversingDirectionsBetweenSectors( GetGroup( pVehicle->ubMovementGroup ), ( UINT8 ) ( pVehicle->sSectorX ), ( UINT8 ) ( pVehicle->sSectorY ), FALSE );
 	}
 

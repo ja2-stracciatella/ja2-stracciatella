@@ -6642,7 +6642,7 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 			// rebuild waypoints - helicopter
 			VEHICLETYPE* const v = GetHelicopter();
 			ppMovePath = &v->pMercPath;
-			RebuildWayPointsForGroupPath(*ppMovePath, v->ubMovementGroup);
+			RebuildWayPointsForGroupPath(*ppMovePath, GetGroup(v->ubMovementGroup));
 
 			// pointer to previous helicopter path
 			pPreviousMercPath = gpHelicopterPreviousMercPath;
@@ -6784,7 +6784,7 @@ static void RebuildWayPointsForAllSelectedCharsGroups(void)
 		if ( !fGroupIDRebuilt[ ubGroupId ] )
 		{
 			// rebuild it now
-			RebuildWayPointsForGroupPath( *ppMovePath, ubGroupId );
+			RebuildWayPointsForGroupPath(*ppMovePath, GetGroup(ubGroupId));
 
 			// mark it as rebuilt
 			fGroupIDRebuilt[ ubGroupId ] = TRUE;
@@ -9245,7 +9245,7 @@ static void RestorePreviousPaths(void)
 		if ( fPathChanged )
 		{
 			// rebuild waypoints
-			RebuildWayPointsForGroupPath( *ppMovePath, ubGroupId );
+			RebuildWayPointsForGroupPath(*ppMovePath, GetGroup(ubGroupId));
 
 			// copy his path to all selected characters
 			CopyPathToAllSelectedCharacters( *ppMovePath );
@@ -9308,7 +9308,7 @@ static void RestorePreviousPaths(void)
 			if ( fPathChanged )
 			{
 				// rebuild waypoints
-				RebuildWayPointsForGroupPath( *ppMovePath, ubGroupId );
+				RebuildWayPointsForGroupPath(*ppMovePath, GetGroup(ubGroupId));
 			}
 		}
 	}

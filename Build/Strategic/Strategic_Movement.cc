@@ -3786,7 +3786,7 @@ void PlayerGroupArrivedSafelyInSector( GROUP *pGroup, BOOLEAN fCheckForNPCs )
 			else
 			{
 				// continue onwards: rebuild way points, initiate movement
-				RebuildWayPointsForGroupPath( GetGroupMercPathPtr( pGroup ), pGroup->ubGroupID );
+				RebuildWayPointsForGroupPath(GetGroupMercPathPtr(pGroup), pGroup);
 			}
 		}
 	}
