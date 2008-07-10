@@ -1115,29 +1115,16 @@ INT32 GetLengthOfMercPath(const SOLDIERTYPE* pSoldier)
 }
 
 
-PathSt* GetSoldierMercPathPtr(const SOLDIERTYPE* pSoldier)
+PathSt* GetSoldierMercPathPtr(SOLDIERTYPE const* const s)
 {
-	PathSt* pMercPath = NULL;
-
-
-	Assert( pSoldier );
-
-	// IN a vehicle?
-	if( pSoldier->bAssignment == VEHICLE )
-	{
-		pMercPath = pVehicleList[ pSoldier->iVehicleId ].pMercPath;
-	}
-	// IS a vehicle?
-	else if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-	{
-		pMercPath = pVehicleList[ pSoldier->bVehicleID ].pMercPath;
-	}
-	else	// a person
-	{
-		pMercPath = pSoldier->pMercPath;
-	}
-
-	return( pMercPath );
+	Assert(s);
+	return
+		/* In a vehicle? */
+		s->bAssignment == VEHICLE          ? pVehicleList[s->iVehicleId].pMercPath :
+		/* Is a vehicle? */
+		s->uiStatusFlags & SOLDIER_VEHICLE ? pVehicleList[s->bVehicleID].pMercPath :
+		/* A person */
+		s->pMercPath;
 }
 
 

@@ -72,7 +72,7 @@ void MoveGroupToOriginalSector(UINT8 ubGroupID);
 INT32 GetLengthOfPath(PathSt* pHeadPath);
 INT32 GetLengthOfMercPath(const SOLDIERTYPE* pSoldier);
 
-PathSt* GetSoldierMercPathPtr(const SOLDIERTYPE* pSoldier);
+PathSt* GetSoldierMercPathPtr(SOLDIERTYPE const*);
 PathSt* GetGroupMercPathPtr(GROUP const*);
 
 UINT8 GetSoldierGroupId(const SOLDIERTYPE* pSoldier);
