@@ -453,7 +453,6 @@ PathSt* BuildAStrategicPath(INT16 const start_sector, INT16 const end_sector, GR
 
 	// start new path list
 	PathSt* const head = MALLOC(PathSt);
-	head->fSpeed     = NORMAL_MVT;
 	head->uiSectorId = start_sector;
 	head->pNext      = NULL;
 	head->pPrev      = NULL;
@@ -483,7 +482,6 @@ PathSt* BuildAStrategicPath(INT16 const start_sector, INT16 const end_sector, GR
 		n->uiSectorId = cur_sector;
 		n->pPrev      = path;
 		n->pNext      = NULL;
-		n->fSpeed     = NORMAL_MVT;
 		path->pNext   = n;
 		path          = n;
 	}
@@ -785,7 +783,6 @@ PathSt* CopyPaths(PathSt* src)
 
 	PathSt* const head = MALLOC(PathSt);
 	head->uiSectorId = src->uiSectorId;
-	head->fSpeed     = src->fSpeed;
 	head->pPrev      = NULL;
 
 	for (PathSt* dst = head;;)
@@ -799,7 +796,6 @@ PathSt* CopyPaths(PathSt* src)
 
 		PathSt* const p = MALLOC(PathSt);
 		p->uiSectorId	= src->uiSectorId;
-		p->fSpeed     = src->fSpeed;
 		p->pPrev      = dst;
 
 		dst->pNext = p;
@@ -1232,7 +1228,6 @@ static void AddSectorToFrontOfMercPath(PathSt** ppMercPath, UINT8 ubSectorX, UIN
 	pNode->uiSectorId = CALCULATE_STRATEGIC_INDEX( ubSectorX, ubSectorY );
 	pNode->pNext = *ppMercPath;
 	pNode->pPrev = NULL;
-	pNode->fSpeed = NORMAL_MVT;
 
 	// if path wasn't null
 	if ( *ppMercPath != NULL )

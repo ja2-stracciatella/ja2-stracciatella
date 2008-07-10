@@ -1625,7 +1625,6 @@ static void TracePathRoute(PathSt* const pPath)
 					(iDeltaB1 ==  1           && iDeltaA ==  1           && iDeltaB ==  WORLD_MAP_X);
 			}
 
-			const BOOLEAN fSpeedFlag = !node->fSpeed;
 			if (prev->uiSectorId == next->uiSectorId)
 			{
 				if (prev->uiSectorId + WORLD_MAP_X == node->uiSectorId)
@@ -1633,14 +1632,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = S_TO_N_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_NORTH_ARROW : ZOOM_NORTH_ARROW;
+						iArrow      = ZOOM_NORTH_ARROW;
 						iArrowX    += NORTH_OFFSET_X * 2;
 						iArrowY    += NORTH_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = S_TO_N_LINE;
-						iArrow      = fSpeedFlag ? Y_NORTH_ARROW : NORTH_ARROW;
+						iArrow      = NORTH_ARROW;
 						iArrowX    += NORTH_OFFSET_X;
 						iArrowY    += NORTH_OFFSET_Y;
 					}
@@ -1650,14 +1649,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = N_TO_S_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_SOUTH_ARROW : ZOOM_SOUTH_ARROW;
+						iArrow      = ZOOM_SOUTH_ARROW;
 						iArrowX    += SOUTH_OFFSET_X * 2;
 						iArrowY    += SOUTH_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = N_TO_S_LINE;
-						iArrow      = fSpeedFlag ? Y_SOUTH_ARROW : SOUTH_ARROW;
+						iArrow      = SOUTH_ARROW;
 						iArrowX    += SOUTH_OFFSET_X;
 						iArrowY    += SOUTH_OFFSET_Y;
 					}
@@ -1667,14 +1666,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = E_TO_W_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_WEST_ARROW : ZOOM_WEST_ARROW;
+						iArrow      = ZOOM_WEST_ARROW;
 						iArrowX    += WEST_OFFSET_X * 2;
 						iArrowY    += WEST_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = E_TO_W_LINE;
-						iArrow      = fSpeedFlag ? Y_WEST_ARROW : WEST_ARROW;
+						iArrow      = WEST_ARROW;
 						iArrowX    += WEST_OFFSET_X;
 						iArrowY    += WEST_OFFSET_Y;
 					}
@@ -1684,14 +1683,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = W_TO_E_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_EAST_ARROW : ZOOM_EAST_ARROW;
+						iArrow      = ZOOM_EAST_ARROW;
 						iArrowX    += EAST_OFFSET_X * 2;
 						iArrowY    += EAST_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = W_TO_E_LINE;
-						iArrow      = fSpeedFlag ? Y_EAST_ARROW : EAST_ARROW;
+						iArrow      = EAST_ARROW;
 						iArrowX    += EAST_OFFSET_X;
 						iArrowY    += EAST_OFFSET_Y;
 					}
@@ -1704,14 +1703,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = WEST_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_WEST_ARROW : ZOOM_WEST_ARROW;
+						iArrow      = ZOOM_WEST_ARROW;
 						iArrowX    += WEST_OFFSET_X * 2;
 						iArrowY    += WEST_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = WEST_LINE;
-						iArrow      = fSpeedFlag ? Y_WEST_ARROW : WEST_ARROW;
+						iArrow      = WEST_ARROW;
 						iArrowX    += WEST_OFFSET_X;
 						iArrowY    += WEST_OFFSET_Y;
 					}
@@ -1721,14 +1720,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = EAST_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_EAST_ARROW : ZOOM_EAST_ARROW;
+						iArrow      = ZOOM_EAST_ARROW;
 						iArrowX    += EAST_OFFSET_X * 2;
 						iArrowY    += EAST_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = EAST_LINE;
-						iArrow      = fSpeedFlag ? Y_EAST_ARROW : EAST_ARROW;
+						iArrow      = EAST_ARROW;
 						iArrowX    += EAST_OFFSET_X;
 						iArrowY    += EAST_OFFSET_Y;
 					}
@@ -1738,14 +1737,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = NORTH_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_NORTH_ARROW : ZOOM_NORTH_ARROW;
+						iArrow      = ZOOM_NORTH_ARROW;
 						iArrowX    += NORTH_OFFSET_X * 2;
 						iArrowY    += NORTH_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = NORTH_LINE;
-						iArrow      = fSpeedFlag ? Y_NORTH_ARROW : NORTH_ARROW;
+						iArrow      = NORTH_ARROW;
 						iArrowX    += NORTH_OFFSET_X;
 						iArrowY    += NORTH_OFFSET_Y;
 					}
@@ -1755,14 +1754,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = SOUTH_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_SOUTH_ARROW : ZOOM_SOUTH_ARROW;
+						iArrow      = ZOOM_SOUTH_ARROW;
 						iArrowX    += SOUTH_OFFSET_X * 2;
 						iArrowY    += SOUTH_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = SOUTH_LINE;
-						iArrow      = fSpeedFlag ? Y_SOUTH_ARROW : SOUTH_ARROW;
+						iArrow      = SOUTH_ARROW;
 						iArrowX    += SOUTH_OFFSET_X;
 						iArrowY    += SOUTH_OFFSET_Y;
 					}
@@ -1772,14 +1771,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = N_TO_E_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_EAST_ARROW : ZOOM_EAST_ARROW;
+						iArrow      = ZOOM_EAST_ARROW;
 						iArrowX    += EAST_OFFSET_X * 2;
 						iArrowY    += EAST_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = N_TO_E_LINE;
-						iArrow      = fSpeedFlag ? Y_EAST_ARROW : EAST_ARROW;
+						iArrow      = EAST_ARROW;
 						iArrowX    += EAST_OFFSET_X;
 						iArrowY    += EAST_OFFSET_Y;
 					}
@@ -1789,14 +1788,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = S_TO_W_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_WEST_ARROW : ZOOM_WEST_ARROW;
+						iArrow      = ZOOM_WEST_ARROW;
 						iArrowX    += WEST_OFFSET_X * 2;
 						iArrowY    += WEST_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = S_TO_W_LINE;
-						iArrow      = fSpeedFlag ? Y_WEST_ARROW : WEST_ARROW;
+						iArrow      = WEST_ARROW;
 						iArrowX    += WEST_OFFSET_X;
 						iArrowY    += WEST_OFFSET_Y;
 					}
@@ -1806,14 +1805,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = E_TO_S_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_SOUTH_ARROW : ZOOM_SOUTH_ARROW;
+						iArrow      = ZOOM_SOUTH_ARROW;
 						iArrowX    += SOUTH_OFFSET_X * 2;
 						iArrowY    += SOUTH_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = E_TO_S_LINE;
-						iArrow      = fSpeedFlag ? Y_WEST_ARROW : SOUTH_ARROW;
+						iArrow      = SOUTH_ARROW;
 						iArrowX    += SOUTH_OFFSET_X;
 						iArrowY    += SOUTH_OFFSET_Y;
 					}
@@ -1823,14 +1822,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = W_TO_N_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_NORTH_ARROW : ZOOM_NORTH_ARROW;
+						iArrow      = ZOOM_NORTH_ARROW;
 						iArrowX    += NORTH_OFFSET_X * 2;
 						iArrowY    += NORTH_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = W_TO_N_LINE;
-						iArrow      = fSpeedFlag ? Y_NORTH_ARROW : NORTH_ARROW;
+						iArrow      = NORTH_ARROW;
 						iArrowX    += NORTH_OFFSET_X;
 						iArrowY    += NORTH_OFFSET_Y;
 					}
@@ -1840,14 +1839,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = W_TO_S_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_SOUTH_ARROW : ZOOM_SOUTH_ARROW;
+						iArrow      = ZOOM_SOUTH_ARROW;
 						iArrowX    += SOUTH_OFFSET_X * 2;
 						iArrowY    += (SOUTH_OFFSET_Y + WEST_TO_SOUTH_OFFSET_Y) * 2;
 					}
 					else
 					{
 						iDirection  = W_TO_S_LINE;
-						iArrow      = fSpeedFlag ? Y_SOUTH_ARROW : SOUTH_ARROW;
+						iArrow      = SOUTH_ARROW;
 						iArrowX    += SOUTH_OFFSET_X;
 						iArrowY    += SOUTH_OFFSET_Y + WEST_TO_SOUTH_OFFSET_Y;
 					}
@@ -1857,14 +1856,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = N_TO_W_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_WEST_ARROW : ZOOM_WEST_ARROW;
+						iArrow      = ZOOM_WEST_ARROW;
 						iArrowX    += WEST_OFFSET_X * 2;
 						iArrowY    += WEST_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = N_TO_W_LINE;
-						iArrow      = fSpeedFlag ? Y_WEST_ARROW : WEST_ARROW;
+						iArrow      = WEST_ARROW;
 						iArrowX    += WEST_OFFSET_X;
 						iArrowY    += WEST_OFFSET_Y;
 					}
@@ -1874,14 +1873,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = S_TO_E_ZOOM_LINE;
-						iArrow      = fSpeedFlag ? ZOOM_Y_EAST_ARROW : ZOOM_EAST_ARROW;
+						iArrow      = ZOOM_EAST_ARROW;
 						iArrowX    += EAST_OFFSET_X * 2;
 						iArrowY    += EAST_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = S_TO_E_LINE;
-						iArrow      = fSpeedFlag ? Y_EAST_ARROW : EAST_ARROW;
+						iArrow      = EAST_ARROW;
 						iArrowX    += EAST_OFFSET_X;
 						iArrowY    += EAST_OFFSET_Y;
 					}
@@ -1891,14 +1890,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection   = E_TO_N_ZOOM_LINE;
-						iArrow       = fSpeedFlag ? ZOOM_Y_NORTH_ARROW : ZOOM_NORTH_ARROW;
+						iArrow       = ZOOM_NORTH_ARROW;
 						iArrowX     += NORTH_OFFSET_X * 2;
 						iArrowY     += (NORTH_OFFSET_Y + EAST_TO_NORTH_OFFSET_Y) * 2;
 					}
 					else
 					{
 						iDirection  = E_TO_N_LINE;
-						iArrow      = fSpeedFlag ? Y_NORTH_ARROW : NORTH_ARROW;
+						iArrow      = NORTH_ARROW;
 						iArrowX    += NORTH_OFFSET_X;
 						iArrowY    += NORTH_OFFSET_Y + EAST_TO_NORTH_OFFSET_Y;
 					}
@@ -1949,21 +1948,20 @@ static void TracePathRoute(PathSt* const pPath)
 			if (next)
 			{
 				fUTurnFlag = FALSE;
-				const INT32   iDeltaB    = (INT16)node->uiSectorId - (INT16)next->uiSectorId;
-				const BOOLEAN fSpeedFlag = !node->fSpeed;
+				const INT32 iDeltaB = (INT16)node->uiSectorId - (INT16)next->uiSectorId;
 				if (iDeltaB == -1)
 				{
 					if (fZoomFlag)
 					{
 						iDirection  = ZOOM_GREEN_X_EAST;
-						iArrow      = fSpeedFlag ? ZOOM_Y_EAST_ARROW : ZOOM_EAST_ARROW;
+						iArrow      = ZOOM_EAST_ARROW;
 						iArrowX    += EAST_OFFSET_X * 2;
 						iArrowY    += EAST_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = GREEN_X_EAST;
-						iArrow      = fSpeedFlag ? Y_EAST_ARROW : EAST_ARROW;
+						iArrow      = EAST_ARROW;
 						iArrowX    += EAST_OFFSET_X;
 						iArrowY    += EAST_OFFSET_Y;
 					}
@@ -1973,14 +1971,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = ZOOM_GREEN_X_WEST;
-						iArrow      = fSpeedFlag ? ZOOM_Y_WEST_ARROW : ZOOM_WEST_ARROW;
+						iArrow      = ZOOM_WEST_ARROW;
 						iArrowX    += WEST_OFFSET_X * 2;
 						iArrowY    += WEST_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = GREEN_X_WEST;
-						iArrow      = fSpeedFlag ? Y_WEST_ARROW : WEST_ARROW;
+						iArrow      = WEST_ARROW;
 						iArrowX    += WEST_OFFSET_X;
 						iArrowY    += WEST_OFFSET_Y;
 					}
@@ -1990,14 +1988,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = ZOOM_GREEN_X_NORTH;
-						iArrow      = fSpeedFlag ? ZOOM_Y_NORTH_ARROW : ZOOM_NORTH_ARROW;
+						iArrow      = ZOOM_NORTH_ARROW;
 						iArrowX    += NORTH_OFFSET_X * 2;
 						iArrowY    += NORTH_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = GREEN_X_NORTH;
-						iArrow      = fSpeedFlag ? Y_NORTH_ARROW : NORTH_ARROW;
+						iArrow      = NORTH_ARROW;
 						iArrowX    += NORTH_OFFSET_X;
 						iArrowY    += NORTH_OFFSET_Y;
 					}
@@ -2007,14 +2005,14 @@ static void TracePathRoute(PathSt* const pPath)
 					if (fZoomFlag)
 					{
 						iDirection  = ZOOM_GREEN_X_SOUTH;
-						iArrow      = fSpeedFlag ? ZOOM_Y_SOUTH_ARROW : ZOOM_SOUTH_ARROW;
+						iArrow      = ZOOM_SOUTH_ARROW;
 						iArrowX    += SOUTH_OFFSET_X * 2;
 						iArrowY    += SOUTH_OFFSET_Y * 2;
 					}
 					else
 					{
 						iDirection  = GREEN_X_SOUTH;
-						iArrow      = fSpeedFlag ? Y_SOUTH_ARROW : SOUTH_ARROW;
+						iArrow      = SOUTH_ARROW;
 						iArrowX    += SOUTH_OFFSET_X;
 						iArrowY    += SOUTH_OFFSET_Y;
 					}
@@ -2126,7 +2124,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
  static BOOLEAN fPauseFlag=TRUE;
  static UINT8 ubCounter=1;
 
- BOOLEAN fSpeedFlag=FALSE;
  INT32 iDifference=0;
  INT32 iArrow=-1;
  INT32 iX = 0, iY = 0;
@@ -2266,10 +2263,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 		 {
       iDeltaA=(INT16)pNode->uiSectorId-(INT16)pPastNode->uiSectorId;
 		  iDeltaB=(INT16)pNode->uiSectorId-(INT16)pNextNode->uiSectorId;
-			if(!pNode->fSpeed)
-				fSpeedFlag=TRUE;
-			else
-				fSpeedFlag=FALSE;
 			if (iDeltaA ==0)
 		   return FALSE;
       if(!fZoomFlag)
@@ -2339,8 +2332,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=S_TO_N_ZOOM_LINE;
 					 if(!ubCounter)
             iArrow=ZOOM_W_NORTH_ARROW;
-					 else if(fSpeedFlag)
-            iArrow=ZOOM_Y_NORTH_ARROW;
            else
 						iArrow=ZOOM_NORTH_ARROW;
 					 iArrowX+=NORTH_OFFSET_X*2;
@@ -2351,8 +2342,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=S_TO_N_LINE;
            if(!ubCounter)
             iArrow=W_NORTH_ARROW;
-					 else if(fSpeedFlag)
-            iArrow=Y_NORTH_ARROW;
 					 else
 						iArrow=NORTH_ARROW;
 
@@ -2367,8 +2356,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=N_TO_S_ZOOM_LINE;
            if(!ubCounter)
             iArrow=ZOOM_W_SOUTH_ARROW;
-					 else if(fSpeedFlag)
-            iArrow=ZOOM_Y_SOUTH_ARROW;
 					 else
 						iArrow=ZOOM_SOUTH_ARROW;
 					 iArrowX+=SOUTH_OFFSET_X*2;
@@ -2379,8 +2366,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
            iDirection=N_TO_S_LINE;
            if(!ubCounter)
              iArrow=W_SOUTH_ARROW;
-					 else if(fSpeedFlag)
-              iArrow=Y_SOUTH_ARROW;
 					 else
 						 iArrow=SOUTH_ARROW;
 					 iArrowX+=SOUTH_OFFSET_X;
@@ -2394,8 +2379,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=E_TO_W_ZOOM_LINE;
            if(!ubCounter)
              iArrow=ZOOM_W_WEST_ARROW;
-					 else if (fSpeedFlag)
-              iArrow=ZOOM_Y_WEST_ARROW;
 					 else
 						 iArrow=ZOOM_WEST_ARROW;
 					 iArrowX+=WEST_OFFSET_X*2;
@@ -2406,8 +2389,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=E_TO_W_LINE;
            if(!ubCounter)
              iArrow=W_WEST_ARROW;
-					 else if (fSpeedFlag)
-             iArrow=Y_WEST_ARROW;
 					 else
 						 iArrow=WEST_ARROW;
 					 iArrowX+=WEST_OFFSET_X;
@@ -2421,8 +2402,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=W_TO_E_ZOOM_LINE;
            if(!ubCounter)
              iArrow=ZOOM_W_EAST_ARROW;
-					 else if (fSpeedFlag)
-              iArrow=ZOOM_Y_EAST_ARROW;
 					 else
 						 iArrow=ZOOM_EAST_ARROW;
 					 iArrowX+=EAST_OFFSET_X*2;
@@ -2433,8 +2412,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
            iDirection=W_TO_E_LINE;
            if(!ubCounter)
             iArrow=W_EAST_ARROW;
-					 else if (fSpeedFlag)
-            iArrow=Y_EAST_ARROW;
 					 else
 						iArrow=EAST_ARROW;
 					 iArrowX+=EAST_OFFSET_X;
@@ -2451,8 +2428,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=WEST_ZOOM_LINE;
            if(!ubCounter)
             iArrow=ZOOM_W_WEST_ARROW;
-					 else if (fSpeedFlag)
-            iArrow=ZOOM_Y_WEST_ARROW;
 					 else
 						iArrow=ZOOM_WEST_ARROW;
 
@@ -2464,8 +2439,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=WEST_LINE;
            if(!ubCounter)
             iArrow=W_WEST_ARROW;
-					 else if (fSpeedFlag)
-            iArrow=Y_WEST_ARROW;
 					 else
 						iArrow=WEST_ARROW;
 
@@ -2492,8 +2465,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=EAST_LINE;
            if(!ubCounter)
             iArrow=W_EAST_ARROW;
-					 else if (fSpeedFlag)
-            iArrow=Y_EAST_ARROW;
 					 else
 						iArrow=EAST_ARROW;
 
@@ -2508,8 +2479,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=NORTH_ZOOM_LINE;
            if(!ubCounter)
             iArrow=ZOOM_W_NORTH_ARROW;
-					 else if (fSpeedFlag)
-            iArrow=ZOOM_Y_NORTH_ARROW;
 					 else
 					  iArrow=ZOOM_NORTH_ARROW;
 
@@ -2521,8 +2490,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=NORTH_LINE;
            if(!ubCounter)
             iArrow=W_NORTH_ARROW;
-					 else if (fSpeedFlag)
-            iArrow=Y_NORTH_ARROW;
 					 else
 					  iArrow=NORTH_ARROW;
 
@@ -2537,8 +2504,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iDirection=SOUTH_ZOOM_LINE;
           if(!ubCounter)
            iArrow=ZOOM_W_SOUTH_ARROW;
-          else if (fSpeedFlag)
-            iArrow=ZOOM_Y_SOUTH_ARROW;
 					else
 					 iArrow=ZOOM_SOUTH_ARROW;
 
@@ -2550,8 +2515,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iDirection=SOUTH_LINE;
           if(!ubCounter)
            iArrow=W_SOUTH_ARROW;
-					else if (fSpeedFlag)
-           iArrow=Y_SOUTH_ARROW;
 					else
 					 iArrow=SOUTH_ARROW;
 
@@ -2566,8 +2529,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=N_TO_E_ZOOM_LINE;
            if(!ubCounter)
             iArrow=ZOOM_W_EAST_ARROW;
-					 else if (fSpeedFlag)
-           iArrow=ZOOM_Y_EAST_ARROW;
 					 else
 					  iArrow=ZOOM_EAST_ARROW;
 
@@ -2579,8 +2540,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=N_TO_E_LINE;
            if(!ubCounter)
             iArrow=W_EAST_ARROW;
-					 else if (fSpeedFlag)
-            iArrow=Y_EAST_ARROW;
 					 else
 					  iArrow=EAST_ARROW;
 
@@ -2595,8 +2554,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=S_TO_W_ZOOM_LINE;
            if(!ubCounter)
              iArrow=ZOOM_W_WEST_ARROW;
-					 else if (fSpeedFlag)
-             iArrow=ZOOM_Y_WEST_ARROW;
 					 else
 					   iArrow=ZOOM_WEST_ARROW;
 
@@ -2608,8 +2565,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=S_TO_W_LINE;
            if(!ubCounter)
              iArrow=W_WEST_ARROW;
-					 else if (fSpeedFlag)
-              iArrow=Y_WEST_ARROW;
 					 else
 					   iArrow=WEST_ARROW;
 
@@ -2625,8 +2580,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=E_TO_S_ZOOM_LINE;
            if(!ubCounter)
             iArrow=ZOOM_W_SOUTH_ARROW;
-					 else if (fSpeedFlag)
-             iArrow=ZOOM_Y_SOUTH_ARROW;
 					 else
 					  iArrow=ZOOM_SOUTH_ARROW;
 
@@ -2638,8 +2591,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=E_TO_S_LINE;
            if(!ubCounter)
             iArrow=W_SOUTH_ARROW;
-					 else if (fSpeedFlag)
-             iArrow=Y_SOUTH_ARROW;
 					 else
 					  iArrow=SOUTH_ARROW;
 
@@ -2654,8 +2605,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=W_TO_N_ZOOM_LINE;
            if(!ubCounter)
             iArrow=ZOOM_W_NORTH_ARROW;
-					 else if (fSpeedFlag)
-              iArrow=ZOOM_Y_NORTH_ARROW;
 					 else
 					  iArrow=ZOOM_NORTH_ARROW;
 
@@ -2667,8 +2616,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=W_TO_N_LINE;
            if(!ubCounter)
             iArrow=W_NORTH_ARROW;
-					 else if (fSpeedFlag)
-              iArrow=Y_NORTH_ARROW;
 					 else
 					  iArrow=NORTH_ARROW;
 
@@ -2683,8 +2630,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=W_TO_S_ZOOM_LINE;
            if(!ubCounter)
             iArrow=ZOOM_W_SOUTH_ARROW;
-					 else if (fSpeedFlag)
-              iArrow=ZOOM_Y_SOUTH_ARROW;
 					 else
 					  iArrow=ZOOM_SOUTH_ARROW;
 
@@ -2696,8 +2641,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=W_TO_S_LINE;
            if(!ubCounter)
             iArrow=W_SOUTH_ARROW;
-					 else if (fSpeedFlag)
-            iArrow=Y_SOUTH_ARROW;
 					 else
 					  iArrow=SOUTH_ARROW;
            iArrowX+=SOUTH_OFFSET_X;
@@ -2711,8 +2654,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=N_TO_W_ZOOM_LINE;
            if(!ubCounter)
             iArrow=ZOOM_W_WEST_ARROW;
-					 else if (fSpeedFlag)
-            iArrow=ZOOM_Y_WEST_ARROW;
 					 else
 					  iArrow=ZOOM_WEST_ARROW;
 
@@ -2724,8 +2665,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=N_TO_W_LINE;
            if(!ubCounter)
             iArrow=W_WEST_ARROW;
-					 else if (fSpeedFlag)
-            iArrow=Y_WEST_ARROW;
 					 else
 					  iArrow=WEST_ARROW;
 
@@ -2740,8 +2679,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=S_TO_E_ZOOM_LINE;
            if(!ubCounter)
             iArrow=ZOOM_W_EAST_ARROW;
-					 else if (fSpeedFlag)
-            iArrow=ZOOM_Y_EAST_ARROW;
 					 else
 					  iArrow=ZOOM_EAST_ARROW;
 	         iArrowX+=EAST_OFFSET_X*2;
@@ -2752,8 +2689,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=S_TO_E_LINE;
            if(!ubCounter)
             iArrow=W_EAST_ARROW;
-           else if (fSpeedFlag)
-            iArrow=Y_EAST_ARROW;
 					 else
 					  iArrow=EAST_ARROW;
 					 iArrowX+=EAST_OFFSET_X;
@@ -2767,8 +2702,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=E_TO_N_ZOOM_LINE;
            if(!ubCounter)
             iArrow=ZOOM_W_NORTH_ARROW;
-					 else if (fSpeedFlag)
-             iArrow=ZOOM_Y_NORTH_ARROW;
 					 else
 					  iArrow=ZOOM_NORTH_ARROW;
            iArrowX+=(NORTH_OFFSET_X*2);
@@ -2779,8 +2712,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					 iDirection=E_TO_N_LINE;
            if(!ubCounter)
             iArrow=W_NORTH_ARROW;
-					 else if (fSpeedFlag)
-             iArrow=Y_NORTH_ARROW;
 					 else
 					   iArrow=NORTH_ARROW;
 
@@ -2805,10 +2736,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
        iPastX=(iPastX*MAP_GRID_X)+MAP_VIEW_START_X;
 		   iPastY=(iPastY*MAP_GRID_Y)+MAP_VIEW_START_Y;
 			}
-      if(pNode->fSpeed)
-				fSpeedFlag=TRUE;
-			else
-				fSpeedFlag=FALSE;
 			iArrowX=iX;
 			iArrowY=iY;
 			// display enter and exit 'X's
@@ -2847,8 +2774,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iDirection=GREEN_X_EAST;
           if(!ubCounter)
             iArrow=W_EAST_ARROW;
-					else if (fSpeedFlag)
-            iArrow=Y_EAST_ARROW;
 					else
 					  iArrow=EAST_ARROW;
 
@@ -2861,8 +2786,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iDirection=GREEN_X_WEST;
            if(!ubCounter)
             iArrow=W_WEST_ARROW;
-					 else if (fSpeedFlag)
-            iArrow=Y_WEST_ARROW;
 					 else
 					  iArrow=WEST_ARROW;
 
@@ -2875,8 +2798,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iDirection=GREEN_X_NORTH;
           if(!ubCounter)
            iArrow=W_NORTH_ARROW;
-					else if (fSpeedFlag)
-            iArrow=Y_NORTH_ARROW;
 					else
 					 iArrow=NORTH_ARROW;
 
@@ -2889,8 +2810,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iDirection=GREEN_X_SOUTH;
           if(!ubCounter)
             iArrow=W_SOUTH_ARROW;
-					else if (fSpeedFlag)
-           iArrow=Y_SOUTH_ARROW;
 					else
 					 iArrow=SOUTH_ARROW;
           iArrowX+=SOUTH_OFFSET_X;

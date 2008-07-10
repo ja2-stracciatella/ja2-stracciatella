@@ -2261,9 +2261,7 @@ void SaveMercPath(HWFILE const f, PathSt const* const head)
 		BYTE  data[20];
 		BYTE* d = data;
 		INJ_U32(d, p->uiSectorId)
-		INJ_SKIP(d, 4)
-		INJ_BOOL(d, p->fSpeed)
-		INJ_SKIP(d, 11)
+		INJ_SKIP(d, 16)
 		Assert(d == endof(data));
 
 		FileWrite(f, data, sizeof(data));
@@ -2288,9 +2286,7 @@ void LoadMercPath(HWFILE const hFile, PathSt** const head)
 
 		const BYTE* d = data;
 		EXTR_U32(d, n->uiSectorId)
-		EXTR_SKIP(d, 4)
-		EXTR_BOOL(d, n->fSpeed)
-		EXTR_SKIP(d, 11)
+		EXTR_SKIP(d, 16)
 		Assert(d == endof(data));
 
 		n->pPrev = path;

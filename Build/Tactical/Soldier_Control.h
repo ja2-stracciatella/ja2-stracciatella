@@ -214,7 +214,6 @@ enum
 struct PathSt
 {
 	UINT32 uiSectorId;
-	BOOLEAN fSpeed;
 	PathSt* pNext;
 	PathSt* pPrev;
 };
