@@ -75,7 +75,7 @@ INT32 GetLengthOfMercPath(const SOLDIERTYPE* pSoldier);
 PathSt* GetSoldierMercPathPtr(SOLDIERTYPE const*);
 PathSt* GetGroupMercPathPtr(GROUP const*);
 
-UINT8 GetSoldierGroupId(const SOLDIERTYPE* pSoldier);
+UINT8 GetSoldierGroupId(SOLDIERTYPE const*);
 
 // clears this groups strategic movement (mercpaths and waypoints), include those in the vehicle structs(!)
 void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup );
