@@ -1002,7 +1002,7 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 
 		default:
 		{
-			GROUP const* const g = GetGroup(GetSoldierGroupId(s));
+			GROUP const* const g = GetSoldierGroup(s);
 			if (g && PlayerGroupInMotion(g))
 			{
 				// show ETA
@@ -9066,8 +9066,6 @@ void GetMapscreenMercDestinationString(const SOLDIERTYPE* pSoldier, wchar_t sStr
 {
 	INT32 iSectorX, iSectorY;
 	INT16 sSector=0;
-	GROUP *pGroup = NULL;
-
 
 	// by default, show nothing
 	wcscpy( sString, L"" );
@@ -9102,8 +9100,7 @@ void GetMapscreenMercDestinationString(const SOLDIERTYPE* pSoldier, wchar_t sStr
 			{
 				// he must be returning to his previous (reversed so as to be the next) sector, so show that as his destination
 				// individual soldiers don't store previous/next sector coordinates, must go to his group for that
-				pGroup = GetGroup( GetSoldierGroupId( pSoldier ) );
-				Assert( pGroup );
+				GROUP* const pGroup = GetSoldierGroup(pSoldier);
 				iSectorX = pGroup->ubNextX;
 				iSectorY = pGroup->ubNextY;
 			}

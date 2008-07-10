@@ -1125,15 +1125,16 @@ PathSt* GetGroupMercPathPtr(GROUP const* const g)
 }
 
 
-UINT8 GetSoldierGroupId(SOLDIERTYPE const* const s)
+GROUP* GetSoldierGroup(SOLDIERTYPE const* const s)
 {
-	return
+	UINT8 const group_id =
 		/* In a vehicle? */
 		s->bAssignment == VEHICLE          ? pVehicleList[s->iVehicleId].ubMovementGroup :
 		/* Is a vehicle? */
 		s->uiStatusFlags & SOLDIER_VEHICLE ? pVehicleList[s->bVehicleID].ubMovementGroup :
 		/* A person */
 		s->ubGroupID;
+	return GetGroup(group_id);
 }
 
 
