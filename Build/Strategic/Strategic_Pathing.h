@@ -58,10 +58,10 @@ void RebuildWayPointsForGroupPath(PathSt* pHeadOfPath, INT16 sMvtGroup);
 void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier );
 
 // start movement of this group to this sector...not to be used by the player merc groups.
-BOOLEAN MoveGroupFromSectorToSector( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY );
+BOOLEAN MoveGroupFromSectorToSector(GROUP*, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY);
 
-BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY );
-BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd( UINT8 ubGroupID, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY );
+BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP*, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY);
+BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(GROUP*, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY);
 
 
 // get length of path

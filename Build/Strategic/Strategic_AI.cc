@@ -4907,14 +4907,14 @@ static void MoveSAIGroupToSector(GROUP** pGroup, UINT8 ubSectorID, UINT32 uiMove
 	switch( uiMoveCode )
 	{
 		case STAGE:
-			MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd( (*pGroup)->ubGroupID, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY );
+			MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(*pGroup, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY);
 			break;
 		case EVASIVE:
-			MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors( (*pGroup)->ubGroupID, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY );
+			MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(*pGroup, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY);
 			break;
 		case DIRECT:
 		default:
-			MoveGroupFromSectorToSector( (*pGroup)->ubGroupID, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY );
+			MoveGroupFromSectorToSector(*pGroup, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY);
 			break;
 	}
 	//Make sure that the group is moving.  If this fails, then the pathing may have failed for some reason.
