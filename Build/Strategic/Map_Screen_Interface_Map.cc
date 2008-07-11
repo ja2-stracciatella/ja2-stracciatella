@@ -454,7 +454,6 @@ BOOLEAN   fTempPathAlreadyDrawn = FALSE;
 
 // the regions for the mapscreen militia box
 MOUSE_REGION gMapScreenMilitiaBoxRegions[ 9 ];
-MOUSE_REGION gMapScreenMilitiaRegion;
 
 // the mine icon
 SGPVObject* guiMINEICON;
@@ -4409,9 +4408,6 @@ void CreateDestroyMilitiaSectorButtons(void)
 	{
 		sOldSectorValue = sSectorMilitiaMapSector;
 		fCreated = FALSE;
-
-		// the militia box left click region
-	//	MSYS_RemoveRegion( &gMapScreenMilitiaRegion );
 
 		// get rid of the buttons
 		for( iCounter = 0 ; iCounter < 3; iCounter++ )
