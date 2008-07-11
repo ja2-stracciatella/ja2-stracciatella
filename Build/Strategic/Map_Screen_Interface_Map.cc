@@ -2060,63 +2060,6 @@ static void AnimateRoute(PathSt* pPath)
 }
 
 
-// restore backgrounds for arrows
-static void RestoreArrowBackgroundsForTrace(INT32 iArrow, INT32 iArrowX, INT32 iArrowY, BOOLEAN fZoom)
-{
-	INT16 sArrow=0;
-  INT32 iX = -1, iY = -1;
-	// find location of arrow and restore appropriate background
-
- if((iArrow==SOUTH_ARROW)||(iArrow==W_SOUTH_ARROW)||(iArrow==ZOOM_W_SOUTH_ARROW)||(ZOOM_SOUTH_ARROW==iArrow))
- {
-	 sArrow=SOUTH_ARROW;
- }
- else if((iArrow==NORTH_ARROW)||(iArrow==W_NORTH_ARROW)||(iArrow==ZOOM_W_NORTH_ARROW)||(ZOOM_NORTH_ARROW==iArrow))
- {
-   sArrow=NORTH_ARROW;
- }
- else if((iArrow==WEST_ARROW)||(iArrow==W_WEST_ARROW)||(iArrow==ZOOM_W_WEST_ARROW)||(ZOOM_WEST_ARROW==iArrow))
- {
-   sArrow=WEST_ARROW;
- }
- else if((iArrow==EAST_ARROW)||(iArrow==W_EAST_ARROW)||(iArrow==ZOOM_W_EAST_ARROW)||(ZOOM_EAST_ARROW==iArrow))
- {
-   sArrow=EAST_ARROW;
- }
-
- switch(sArrow)
- {
-	case(SOUTH_ARROW):
-	  iX=iArrowX;
-		iY=iArrowY;
-	break;
-	case(NORTH_ARROW):
-    iX=iArrowX;
-		iY=iArrowY;
-	break;
-	case(WEST_ARROW):
-	  iX=iArrowX;
-		iY=iArrowY;
-	break;
-	case(EAST_ARROW):
-	  iX=iArrowX;
-		iY=iArrowY;
-	break;
- }
-
- // error check
- if( iX == -1 )
- {
-	 return;
- }
-
- if(!fZoom)
-  RestoreExternBackgroundRect(((INT16)iX),((INT16)iY),DMAP_GRID_X/2 ,DMAP_GRID_Y/2 );
- else
-  RestoreExternBackgroundRect(((INT16)iX), ((INT16)iY),DMAP_GRID_ZOOM_X, DMAP_GRID_ZOOM_Y);
-}
-
-
 static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceUpDate)
 {
 	static PathSt* pCurrentNode = NULL;
