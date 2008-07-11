@@ -4362,7 +4362,6 @@ static void MilitiaRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void MilitiaBoxMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void MilitiaButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
@@ -5105,20 +5104,6 @@ static void HandleLowerLevelMapBlit(void)
 
 	// handle shading of sublevels
 	ShadeSubLevelsNotVisited( );
-}
-
-
-static void MilitiaBoxMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	// btn callback handler for assignment screen mask region
-	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP )  )
-	{
-		sSectorMilitiaMapSector = -1;
-	}
-	else if( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP )
-	{
-		sSectorMilitiaMapSector = -1;
-	}
 }
 
 
