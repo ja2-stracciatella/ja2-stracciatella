@@ -1476,75 +1476,58 @@ BOOLEAN CanHelicopterTakeOff( void )
 }
 
 
-static void AddHeliPeice(INT16 sGridNo, UINT16 sOStruct)
+static void AddHeliPiece(INT16 const sGridNo, UINT16 const sOStruct)
 {
 	if (IndexExistsInStructLayer(sGridNo, sOStruct)) return;
 	AddStructToTail(sGridNo, sOStruct);
 }
 
 
-static void AddHelicopterToMaps(BOOLEAN fAdd, UINT8 ubSite)
+static void AddHelicopterToMaps(BOOLEAN const fAdd, UINT8 const ubSite)
 {
- 	INT16 sGridNo = sRefuelStartGridNo[ ubSite ];
-	INT16 sOStruct = 0;
-	INT16	usGridNo;
-	INT16	sGridX, sGridY;
-	INT16	sCentreGridX, sCentreGridY;
+ 	INT16 const sGridNo = sRefuelStartGridNo[ubSite];
 
 	// find out what slot it is by which site
-	if( ubSite == 0 )
-	{
-		// drassen
-		sOStruct = FIRSTOSTRUCT1;
-	}
-	else
-	{
-		// estoni
-		sOStruct = FOURTHOSTRUCT1;
-	}
-
+	INT16 const sOStruct = ubSite == 0 ?
+		FIRSTOSTRUCT1 : // Drassen
+		FOURTHOSTRUCT1; // Estoni
 
 	// are we adding or taking away
-	if( fAdd )
+	if (fAdd)
 	{
-		AddHeliPeice( sGridNo, sOStruct );
-		AddHeliPeice( sGridNo, ( UINT16 )( sOStruct + 1));
-		AddHeliPeice( (INT16)( sGridNo - 800 ), ( UINT16 )( sOStruct + 2 ));
-		AddHeliPeice( sGridNo, ( UINT16 )(sOStruct + 3 ));
-		AddHeliPeice( sGridNo, ( UINT16 )(sOStruct + 4));
-		AddHeliPeice( (INT16)( sGridNo - 800 ), ( UINT16 )(sOStruct + 5));
-
-		InvalidateWorldRedundency();
-		SetRenderFlags( RENDER_FLAG_FULL );
+		AddHeliPiece(sGridNo,       sOStruct    );
+		AddHeliPiece(sGridNo,       sOStruct + 1);
+		AddHeliPiece(sGridNo - 800, sOStruct + 2);
+		AddHeliPiece(sGridNo,       sOStruct + 3);
+		AddHeliPiece(sGridNo,       sOStruct + 4);
+		AddHeliPiece(sGridNo - 800, sOStruct + 5);
 
     // ATE: If any mercs here, bump them off!
-  	ConvertGridNoToXY( sGridNo, &sCentreGridX, &sCentreGridY );
+		INT16	sCentreGridX;
+		INT16 sCentreGridY;
+  	ConvertGridNoToXY(sGridNo, &sCentreGridX, &sCentreGridY);
 
-	  for( sGridY = sCentreGridY - 5; sGridY < sCentreGridY + 5; sGridY++ )
+	  for (INT16 y = sCentreGridY - 5; y < sCentreGridY + 5; ++y)
 	  {
-		  for( sGridX = sCentreGridX - 5; sGridX < sCentreGridX + 5; sGridX++ )
+		  for (INT16 x = sCentreGridX - 5; x < sCentreGridX + 5; ++x)
 		  {
-			  usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
-
-		    BumpAnyExistingMerc( usGridNo );
+		    BumpAnyExistingMerc(MAPROWCOLTOPOS(y, x));
       }
     }
 	}
 	else
 	{
 		// remove from the world
-		RemoveStruct( sRefuelStartGridNo[ ubSite ], ( UINT16 )(sOStruct ));
-		RemoveStruct( sRefuelStartGridNo[ ubSite ], ( UINT16 )(sOStruct + 1 ));
-		RemoveStruct( sRefuelStartGridNo[ ubSite ] - 800, ( UINT16 )(sOStruct + 2));
-		RemoveStruct( sRefuelStartGridNo[ ubSite ], ( UINT16 )(sOStruct + 3));
-		RemoveStruct( sRefuelStartGridNo[ ubSite ], ( UINT16 )(sOStruct + 4));
-		RemoveStruct( sRefuelStartGridNo[ ubSite ] - 800, ( UINT16 )(sOStruct +5));
-
-		InvalidateWorldRedundency();
-		SetRenderFlags( RENDER_FLAG_FULL );
-
+		RemoveStruct(sGridNo,       sOStruct    );
+		RemoveStruct(sGridNo,       sOStruct + 1);
+		RemoveStruct(sGridNo - 800, sOStruct + 2);
+		RemoveStruct(sGridNo,       sOStruct + 3);
+		RemoveStruct(sGridNo,       sOStruct + 4);
+		RemoveStruct(sGridNo - 800, sOStruct + 5);
 	}
 
+	InvalidateWorldRedundency();
+	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
 
