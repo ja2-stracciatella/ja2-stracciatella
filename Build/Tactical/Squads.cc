@@ -104,171 +104,131 @@ INT8 GetFirstEmptySquad( void )
 static BOOLEAN CopyPathOfSquadToCharacter(SOLDIERTYPE* pCharacter, INT8 bSquadValue);
 
 
-BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue )
+BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 {
-	INT8 bCounter =0;
-//	BOOLEAN fBetweenSectors = FALSE;
-	GROUP	*pGroup;
-	BOOLEAN fNewSquad;
-
-
 	// add character to squad...return success or failure
 	// run through list of people in squad, find first free slo
 
-	if( fExitingVehicleToSquad )
-	{
-		return( FALSE );
-	}
-
+	if (fExitingVehicleToSquad) return FALSE;
 
 	// ATE: If any vehicle exists in this squad AND we're not set to
 	// a driver or or passenger, when return false
-	if ( DoesVehicleExistInSquad( bSquadValue ) )
+	if (DoesVehicleExistInSquad(bSquadValue))
 	{
 		// We're not allowing anybody to go on a vehicle if they are not passengers!
 		// NB: We obviously need to make sure that REAL passengers have their
 		// flags set before adding them to a squad!
-		if ( !( pCharacter->uiStatusFlags & ( SOLDIER_PASSENGER | SOLDIER_DRIVER | SOLDIER_VEHICLE ) ) )
+		if (!(s->uiStatusFlags & (SOLDIER_PASSENGER | SOLDIER_DRIVER | SOLDIER_VEHICLE)))
 		{
-			return( FALSE );
+			return FALSE;
 		}
 	}
 
 	// if squad is on the move, can't add someone
-	if (IsThisSquadOnTheMove(bSquadValue))
-	{
-		// nope, go away now
-		return( FALSE );
-	}
+	if (IsThisSquadOnTheMove(bSquadValue)) return FALSE;
 
-
-
-	for( bCounter =0; bCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; bCounter++ )
+	for (INT8 bCounter = 0; bCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; ++bCounter)
 	{
 		const SOLDIERTYPE* const t = Squad[bSquadValue][bCounter];
 		// check if on current squad and current slot?
 		// 'successful of sorts, if there, then he's 'added'
-		if (t == pCharacter) return TRUE;
+		if (t == s) return TRUE;
 
+		if (t) continue;
 		// free slot, add here
-		if (t == NULL)
+
+		// check if squad empty, if not check sector x,y,z are the same as this guys
+		INT16 sX;
+		INT16 sY;
+		INT8  bZ;
+		if (SectorSquadIsIn(bSquadValue, &sX, &sY, &bZ) &&
+				(s->sSectorX != sX || s->sSectorY != sY || s->bSectorZ != bZ))
 		{
-			// check if squad empty, if not check sector x,y,z are the same as this guys
-			INT16 sX;
-			INT16 sY;
-			INT8  bZ;
-			if (SectorSquadIsIn(bSquadValue, &sX, &sY, &bZ) &&
-					(pCharacter->sSectorX != sX || pCharacter->sSectorY != sY || pCharacter->bSectorZ != bZ))
-			{
-				return FALSE;
-			}
-
-			RemoveCharacterFromSquads(pCharacter);
-
-			// copy path of squad to this char
-			CopyPathOfSquadToCharacter( pCharacter, bSquadValue );
-
-			// check if old mvt group
-			if( pCharacter -> ubGroupID != 0 )
-			{
-				// in valid group, remove from that group
-				RemovePlayerFromGroup(  pCharacter -> ubGroupID , pCharacter );
-
-				// character not on a reserved group
-				if( ( pCharacter->bAssignment >= ON_DUTY ) && ( pCharacter->bAssignment != VEHICLE ) )
-				{
-					// get the group from the character
-					pGroup = GetGroup( pCharacter -> ubGroupID );
-
-					// if valid group, delete it
-					if( pGroup )
-					{
-						RemoveGroupFromList( pGroup );
-					}
-				}
-			}
-
-			GROUP* const g = GetGroup(SquadMovementGroups[bSquadValue]);
-			if( ( pCharacter->bAssignment == VEHICLE ) && ( pCharacter->iVehicleId == iHelicopterVehicleId ) && ( pCharacter-> iVehicleId != -1 ) )
-			{
-				// if creating a new squad from guys exiting the chopper
-				fNewSquad = SquadIsEmpty( bSquadValue );
-
-				RemoveSoldierFromHelicopter( pCharacter );
-
-				AddPlayerToGroup(g, pCharacter);
-				SetGroupSectorValue(pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, g);
-
-				// if we've just started a new squad
-				if ( fNewSquad )
-				{
-					// set mvt group for
-					// grab group
-					const GROUP* const pGroup = GetGroup(GetHelicopter()->ubMovementGroup);
-					Assert( pGroup );
-
-					if( pGroup )
-					{
-						// set where it is and where it's going, then make it arrive there.  Don't check for battle
-						PlaceGroupInSector(g, pGroup->ubPrevX, pGroup->ubPrevY, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ, FALSE );
-					}
-				}
-			}
-			else if( ( pCharacter->bAssignment == VEHICLE ) && ( pCharacter-> iVehicleId != -1 ) )
-			{
-				fExitingVehicleToSquad = TRUE;
-				// remove from vehicle
-				TakeSoldierOutOfVehicle( pCharacter );
-				fExitingVehicleToSquad = FALSE;
-
-				AddPlayerToGroup(g, pCharacter);
-				SetGroupSectorValue(pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, g);
-			}
-			else
-			{
-				AddPlayerToGroup(g, pCharacter);
-				SetGroupSectorValue(pCharacter->sSectorX, pCharacter->sSectorY, pCharacter->bSectorZ, g);
-			}
-
-			// assign here
-			Squad[ bSquadValue ][ bCounter ] = pCharacter;
-
-			if( ( pCharacter->bAssignment != bSquadValue ) )
-			{
-				// check to see if we should wake them up
-				if ( pCharacter->fMercAsleep )
-				{
-					// try to wake him up
-					SetMercAwake( pCharacter, FALSE, FALSE );
-				}
-				SetTimeOfAssignmentChangeForMerc( pCharacter );
-			}
-
-			// set squad value
-			ChangeSoldiersAssignment( pCharacter, bSquadValue );
-
-			// if current tactical sqaud...upadte panel
-			if (SquadIsEmpty(iCurrentTacticalSquad))
-			{
-				SetCurrentSquad( bSquadValue, TRUE );
-			}
-
-			if( bSquadValue == ( INT8 ) iCurrentTacticalSquad )
-			{
-				CheckForAndAddMercToTeamPanel( Squad[ iCurrentTacticalSquad ][ bCounter ] );
-			}
-
-			if (pCharacter == GetSelectedMan())
-			{
-				SetCurrentSquad( bSquadValue, TRUE );
-			}
-
-
-			return ( TRUE );
+			return FALSE;
 		}
+
+		RemoveCharacterFromSquads(s);
+
+		// copy path of squad to this char
+		CopyPathOfSquadToCharacter(s, bSquadValue);
+
+		// check if old mvt group
+		if (s->ubGroupID != 0)
+		{
+			// in valid group, remove from that group
+			RemovePlayerFromGroup(s->ubGroupID, s);
+
+			// character not on a reserved group
+			if (s->bAssignment >= ON_DUTY && s->bAssignment != VEHICLE)
+			{
+				// if valid group, delete it
+				GROUP* const pGroup = GetGroup(s->ubGroupID);
+				if (pGroup) RemoveGroupFromList(pGroup);
+			}
+		}
+
+		GROUP* const g = GetGroup(SquadMovementGroups[bSquadValue]);
+		if (s->bAssignment != VEHICLE || s->iVehicleId == -1)
+		{
+			AddPlayerToGroup(g, s);
+			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, g);
+		}
+		else if (s->iVehicleId == iHelicopterVehicleId)
+		{
+			// if creating a new squad from guys exiting the chopper
+			BOOLEAN const fNewSquad = SquadIsEmpty(bSquadValue);
+
+			RemoveSoldierFromHelicopter(s);
+
+			AddPlayerToGroup(g, s);
+			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, g);
+
+			// if we've just started a new squad
+			if (fNewSquad)
+			{
+				// set mvt group for
+				const GROUP* const pGroup = GetGroup(GetHelicopter()->ubMovementGroup);
+				Assert(pGroup);
+				if (pGroup)
+				{
+					// set where it is and where it's going, then make it arrive there.  Don't check for battle
+					PlaceGroupInSector(g, pGroup->ubPrevX, pGroup->ubPrevY, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ, FALSE);
+				}
+			}
+		}
+		else
+		{
+			fExitingVehicleToSquad = TRUE;
+			// remove from vehicle
+			TakeSoldierOutOfVehicle(s);
+			fExitingVehicleToSquad = FALSE;
+
+			AddPlayerToGroup(g, s);
+			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, g);
+		}
+
+		Squad[bSquadValue][bCounter] = s;
+
+		if (s->bAssignment != bSquadValue)
+		{
+			// check to see if we should wake them up
+			if (s->fMercAsleep) SetMercAwake(s, FALSE, FALSE);
+			SetTimeOfAssignmentChangeForMerc(s);
+		}
+
+		// set squad value
+		ChangeSoldiersAssignment(s, bSquadValue);
+
+		if (SquadIsEmpty(iCurrentTacticalSquad)) SetCurrentSquad(bSquadValue, TRUE);
+
+		if (bSquadValue == iCurrentTacticalSquad) CheckForAndAddMercToTeamPanel(s);
+
+		if (s == GetSelectedMan()) SetCurrentSquad(bSquadValue, TRUE);
+
+		return TRUE;
 	}
 
-	return ( FALSE );
+	return FALSE;
 }
 
 
