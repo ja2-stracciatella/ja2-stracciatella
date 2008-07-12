@@ -366,65 +366,48 @@ static void RebuildSquad(INT8 bSquadValue);
 static void UpdateCurrentlySelectedMerc(SOLDIERTYPE* pSoldier, INT8 bSquadValue);
 
 
-// find and remove characters from any squad
-BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter )
+// find and remove character from any squad
+BOOLEAN RemoveCharacterFromSquads(SOLDIERTYPE* const s)
 {
-	INT32 iCounterA = 0;
-	INT32 iCounter = 0;
-	// find character and remove.. check characters in all squads
-
-
-	// squad?
-	for( iCounterA = 0; iCounterA < NUMBER_OF_SQUADS ; iCounterA++ )
+	for (INT32 squad = 0; squad < NUMBER_OF_SQUADS; ++squad)
 	{
-		// slot?
-		for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD ; iCounter++ )
+		for (INT32 slot = 0; slot < NUMBER_OF_SOLDIERS_PER_SQUAD; ++slot)
 		{
+			if (Squad[squad][slot] != s) continue;
+			Squad[squad][slot] = 0;
 
-			// check if on current squad and current slot?
-			if( Squad[ iCounterA ][ iCounter ] == pCharacter )
+			/* Release memory for his personal path, but don't clear his group's
+			 * path/waypoints (pass in groupID -1).  Just because one guy leaves a
+			 * group is no reason to cancel movement for the rest of the group. */
+			s->pMercPath = ClearStrategicPathList(s->pMercPath, -1);
+
+			RemovePlayerFromGroup(SquadMovementGroups[squad], s);
+			s->ubGroupID = 0;
+
+			if (s->fBetweenSectors && s->uiStatusFlags & SOLDIER_VEHICLE)
 			{
-
-
-				// found and nulled
-				Squad[ iCounterA ][ iCounter ] = NULL;
-
-				// Release memory for his personal path, BUT DON'T CLEAR HIS GROUP'S PATH/WAYPOINTS (pass in groupID -1).
-				// Just because one guy leaves a group is no reason to cancel movement for the rest of the group.
-				pCharacter -> pMercPath = ClearStrategicPathList( pCharacter -> pMercPath, -1 );
-
-				// remove character from mvt group
-				RemovePlayerFromGroup( SquadMovementGroups[ iCounterA ], pCharacter  );
-
-				// reset player mvt group id value
-				pCharacter -> ubGroupID = 0;
-
-				if( ( pCharacter->fBetweenSectors )&&( pCharacter-> uiStatusFlags & SOLDIER_VEHICLE ) )
-				{
-					GROUP* const g = CreateNewPlayerGroupDepartingFromSector(pCharacter->sSectorX, pCharacter->sSectorY);
-					AddPlayerToGroup(g, pCharacter);
-				}
-
-				RebuildSquad( ( INT8 )iCounterA );
-
-				if( pCharacter->bLife == 0 )
-				{
-					AddDeadCharacterToSquadDeadGuys( pCharacter, iCounterA );
-				}
-
-					//if we are not loading a saved game
-				if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) && guiCurrentScreen == GAME_SCREEN )
-        {
-					UpdateCurrentlySelectedMerc( pCharacter, ( INT8 )iCounterA );
-        }
-
-				return ( TRUE );
+				GROUP* const g = CreateNewPlayerGroupDepartingFromSector(s->sSectorX, s->sSectorY);
+				AddPlayerToGroup(g, s);
 			}
+
+			RebuildSquad(squad);
+
+			if (s->bLife == 0)
+			{
+				AddDeadCharacterToSquadDeadGuys(s, squad);
+			}
+
+			if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && guiCurrentScreen == GAME_SCREEN)
+			{
+				UpdateCurrentlySelectedMerc(s, squad);
+			}
+
+			return TRUE;
 		}
 	}
 
 	// not found
-	return ( FALSE );
+	return FALSE;
 }
 
 
