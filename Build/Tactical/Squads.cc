@@ -957,16 +957,6 @@ BOOLEAN IsMercOnCurrentSquad(const SOLDIERTYPE* pSoldier)
 {
 	INT32 iCounter = 0;
 
-	// valid soldier?
-	if( pSoldier == NULL )
-	{
-		// no
-		return( FALSE );
-	}
-
-	// active grunt?
-	if (!pSoldier->bActive) return FALSE;
-
 	// current squad valid?
   if( iCurrentTacticalSquad >= NUMBER_OF_SQUADS )
 	{
