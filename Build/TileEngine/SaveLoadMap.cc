@@ -113,8 +113,11 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 
 			case SLM_STRUCT:
 			{
-				UINT16 usIndex = GetTileIndexFromTypeSubIndex(pMap->usImageType, pMap->usSubImageIndex);
-				AddStructToTail(pMap->usGridNo, usIndex);
+				UINT16 const usIndex = GetTileIndexFromTypeSubIndex(pMap->usImageType, pMap->usSubImageIndex);
+				if (!IndexExistsInStructLayer(pMap->usGridNo, usIndex))
+				{
+					AddStructToTail(pMap->usGridNo, usIndex);
+				}
 
 				// Save this struct back to the temp file
 				SaveModifiedMapStructToMapTempFile( pMap, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
