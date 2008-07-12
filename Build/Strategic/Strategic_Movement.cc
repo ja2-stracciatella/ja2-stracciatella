@@ -204,7 +204,7 @@ void AddPlayerToGroup(GROUP* const g, SOLDIERTYPE* const s)
 static void CancelEmptyPersistentGroupMovement(GROUP* pGroup);
 
 
-BOOLEAN RemovePlayerFromPGroup(GROUP* const g, SOLDIERTYPE* const s)
+void RemovePlayerFromPGroup(GROUP* const g, SOLDIERTYPE* const s)
 {
 	AssertMsg(g->fPlayer, "Attempting RemovePlayerFromGroup() on an ENEMY group!");
 
@@ -230,29 +230,24 @@ BOOLEAN RemovePlayerFromPGroup(GROUP* const g, SOLDIERTYPE* const s)
 				CancelEmptyPersistentGroupMovement(g);
 			}
 		}
-		return TRUE;
+		break;
 	}
-
-	return FALSE;
 }
 
 
-BOOLEAN RemovePlayerFromGroup(SOLDIERTYPE* const s)
+void RemovePlayerFromGroup(SOLDIERTYPE* const s)
 {
 	GROUP* const pGroup = GetGroup(s->ubGroupID);
 
 	//KM : August 6, 1999 Patch fix
 	//     Because the release build has no assertions, it was still possible for the group to be null,
 	//     causing a crash.  Instead of crashing, it'll simply return false.
-	if( !pGroup )
-	{
-		return FALSE;
-	}
+	if (!pGroup) return;
 	//end
 
 	AssertMsg(pGroup, String("Attempting to RemovePlayerFromGroup( %d, %d ) from non-existant group", s->ubGroupID, s->ubProfile));
 
-	return RemovePlayerFromPGroup(pGroup, s);
+	RemovePlayerFromPGroup(pGroup, s);
 }
 
 
