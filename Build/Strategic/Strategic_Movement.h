@@ -172,7 +172,7 @@ GROUP* CreateNewPlayerGroupDepartingFromSector(UINT8 ubSectorX, UINT8 ubSectorY)
 //Allows you to add or remove players from the group.
 void AddPlayerToGroup(GROUP*, SOLDIERTYPE*);
 
-BOOLEAN RemovePlayerFromGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier );
+BOOLEAN RemovePlayerFromGroup(SOLDIERTYPE*);
 BOOLEAN RemovePlayerFromPGroup( GROUP *pGroup, SOLDIERTYPE *pSoldier );
 
 // create a vehicle group, it is by itself,

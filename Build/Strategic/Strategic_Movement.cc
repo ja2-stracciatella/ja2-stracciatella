@@ -237,10 +237,9 @@ BOOLEAN RemovePlayerFromPGroup(GROUP* const g, SOLDIERTYPE* const s)
 }
 
 
-BOOLEAN RemovePlayerFromGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
+BOOLEAN RemovePlayerFromGroup(SOLDIERTYPE* const s)
 {
-	GROUP *pGroup;
-	pGroup = GetGroup( ubGroupID );
+	GROUP* const pGroup = GetGroup(s->ubGroupID);
 
 	//KM : August 6, 1999 Patch fix
 	//     Because the release build has no assertions, it was still possible for the group to be null,
@@ -251,9 +250,9 @@ BOOLEAN RemovePlayerFromGroup( UINT8 ubGroupID, SOLDIERTYPE *pSoldier )
 	}
 	//end
 
-	AssertMsg( pGroup, String( "Attempting to RemovePlayerFromGroup( %d, %d ) from non-existant group", ubGroupID, pSoldier->ubProfile ) );
+	AssertMsg(pGroup, String("Attempting to RemovePlayerFromGroup( %d, %d ) from non-existant group", s->ubGroupID, s->ubProfile));
 
-	return RemovePlayerFromPGroup( pGroup, pSoldier );
+	return RemovePlayerFromPGroup(pGroup, s);
 }
 
 

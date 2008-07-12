@@ -209,7 +209,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 
 			// ATE: OK funcky stuff here!
 			// We have now a guy on a squad group, remove him!
-			RemovePlayerFromGroup(SquadMovementGroups[vs->bAssignment], vs);
+			RemovePlayerFromGroup(vs);
 
 			// I really have vehicles.
 			// ONLY add to vehicle group once!
@@ -335,13 +335,13 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* const s)
 		break;
 	}
 
+	RemovePlayerFromGroup(s);
+
 	s->ubGroupID      = 0;
 	s->sSectorY       = v->sSectorY;
 	s->sSectorX       = v->sSectorX;
 	s->bSectorZ       = v->sSectorZ;
 	s->uiStatusFlags &= ~(SOLDIER_DRIVER | SOLDIER_PASSENGER);
-
-	if (v->ubMovementGroup != 0) RemovePlayerFromGroup(v->ubMovementGroup, s);
 
 	// is the vehicle the helicopter?..it can continue moving when no soldiers aboard (Skyrider remains)
 	if (iId == iHelicopterVehicleId)
