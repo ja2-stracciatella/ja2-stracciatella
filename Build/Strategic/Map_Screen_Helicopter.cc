@@ -1274,9 +1274,6 @@ static BOOLEAN IsHelicopterOnGroundAtRefuelingSite(UINT8 ubRefuelingSite)
 		}
 	}
 
-	// skyrider is setup, helicopter isn't destroyed, so this ought to be a valid vehicle id
-	Assert( iHelicopterVehicleId != -1 );
-
 	const VEHICLETYPE* const v = GetHelicopter();
 	// on the ground, but is it at this site or at another one?
 	if (ubRefuelList[ubRefuelingSite][0] == v->sSectorX &&
