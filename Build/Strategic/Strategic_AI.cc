@@ -692,23 +692,19 @@ static void ValidateLargeGroup(GROUP* pGroup)
 
 
 #ifdef JA2BETAVERSION
-static void RemovePlayersFromAllMismatchGroups(SOLDIERTYPE* pSoldier)
+static void RemovePlayersFromAllMismatchGroups(SOLDIERTYPE* const s)
 {
-	FOR_ALL_GROUPS_SAFE(pGroup)
+	FOR_ALL_GROUPS_SAFE(g)
 	{
-		if( pGroup->fPlayer )
+		if (!g->fPlayer) continue;
+		if (s->ubGroupID == g->ubGroupID) continue;
+
+		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, g)
 		{
-			CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
-			{
-				if( pPlayer->pSoldier == pSoldier )
-				{
-					if( pSoldier->ubGroupID != pGroup->ubGroupID )
-					{
-						RemovePlayerFromPGroup(pGroup, pSoldier);
-					}
-					break;
-				}
-			}
+			if (pPlayer->pSoldier != s) continue;
+
+			RemovePlayerFromPGroup(g, s);
+			break;
 		}
 	}
 }
