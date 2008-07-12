@@ -65,13 +65,13 @@ LEVELNODE *AddStructToTail( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE *ForceStructToTail( UINT32 iMapIndex, UINT16 usIndex );
 
 void    AddStructToHead(UINT32 iMapIndex, UINT16 usIndex);
-BOOLEAN TypeExistsInStructLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusStructIndex );
 BOOLEAN RemoveAllStructsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 BOOLEAN AddWallToStructLayer( INT32 iMapIndex, UINT16 usIndex, BOOLEAN fReplace );
 BOOLEAN ReplaceStructIndex( UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex );
 void    HideStructOfGivenType(UINT32 iMapIndex, UINT32 fType, BOOLEAN fHide);
 void SetStructAframeFlags( UINT32 iMapIndex, UINT32 uiFlags  );
 BOOLEAN RemoveStructFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
+BOOLEAN IndexExistsInStructLayer(GridNo, UINT16 tile_index);
 
 #ifdef JA2EDITOR
 void ForceRemoveStructFromTail(UINT32 iMapIndex);

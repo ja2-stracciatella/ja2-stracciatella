@@ -1478,14 +1478,8 @@ BOOLEAN CanHelicopterTakeOff( void )
 
 static void AddHeliPeice(INT16 sGridNo, UINT16 sOStruct)
 {
-	UINT16 usDummy;
-
-	// ATE: Check first if already exists....
-	if ( !TypeExistsInStructLayer( sGridNo, sOStruct, &usDummy ) )
-	{
-		// place in the world
-		AddStructToTail( sGridNo, sOStruct );
-	}
+	if (IndexExistsInStructLayer(sGridNo, sOStruct)) return;
+	AddStructToTail(sGridNo, sOStruct);
 }
 
 

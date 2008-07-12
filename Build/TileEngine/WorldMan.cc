@@ -967,10 +967,19 @@ BOOLEAN AddWallToStructLayer(INT32 iMapIndex, UINT16 usIndex, BOOLEAN fReplace)
 }
 
 
-BOOLEAN TypeExistsInStructLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusStructIndex)
+static bool IndexExistsInLayer(LEVELNODE const* n, UINT16 const tile_index)
 {
-	const LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pStructHead;
-	return TypeExistsInLevel(pStruct, fType, pusStructIndex);
+	for (; n; n = n->pNext)
+	{
+		if (n->usIndex == tile_index) return true;
+	}
+	return false;
+}
+
+
+BOOLEAN IndexExistsInStructLayer(GridNo const grid_no, UINT16 const tile_index)
+{
+	return IndexExistsInLayer(gpWorldLevelData[grid_no].pStructHead, tile_index);
 }
 
 
@@ -1433,18 +1442,9 @@ BOOLEAN TypeRangeExistsInRoofLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 }
 
 
-BOOLEAN IndexExistsInRoofLayer(INT16 sGridNo, UINT16 usIndex)
+BOOLEAN IndexExistsInRoofLayer(INT16 const sGridNo, UINT16 const usIndex)
 {
-	for (const LEVELNODE* pRoof = gpWorldLevelData[sGridNo].pRoofHead; pRoof != NULL; pRoof = pRoof->pNext)
-	{
-		if (pRoof->usIndex == usIndex)
-		{
-			return TRUE;
-		}
-	}
-
-	// Could not find it
-	return FALSE;
+	return IndexExistsInLayer(gpWorldLevelData[sGridNo].pRoofHead, usIndex);
 }
 
 
