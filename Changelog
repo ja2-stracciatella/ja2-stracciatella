@@ -1,3 +1,4 @@
+(r4670) Fix a vanilla glitch: Some dying sounds were not played because of inconsistent file names.
 (r4663) Fix a vanilla glitch: Do not add two corpses for mercs died in auto resolve.
 (r4600) Plug vanilla memory leak when loading savegames.
 (r4597) Plug vanilla memory leak in the laptop file viewer.

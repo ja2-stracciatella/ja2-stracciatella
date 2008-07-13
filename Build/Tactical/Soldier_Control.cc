@@ -151,7 +151,7 @@ static const BATTLESNDS_STRUCT gBattleSndsData[] =
 	{ "hit2",   0, 1, 1, 1 },
 	{ "laugh",  0, 1, 1, 0 },
 	{ "attn",   0, 0, 1, 0 },
-	{ "dying",  0, 1, 1, 1 },
+	{ "die",    0, 1, 1, 1 },
 	{ "humm",   0, 0, 1, 1 },
 	{ "noth",   0, 0, 1, 1 },
 	{ "gotit",  0, 0, 1, 1 },
@@ -6231,41 +6231,40 @@ no_sub:
 		battle_snd    = &gBattleSndsData[battle_snd_id];
 	}
 
-	// OK, build file and play!
-	SGPFILENAME filename;
+	char basename[16];
 	if (s->ubProfile != NO_PROFILE)
 	{
-		sprintf(filename, "BATTLESNDS/%03d_%s.wav", s->ubProfile, battle_snd->zName);
-
-		if (!FileExists(filename))
-		{
-			// OK, temp build file...
-			if (s->ubBodyType == REGFEMALE)
-			{
-				sprintf(filename, "BATTLESNDS/f_%s.wav", battle_snd->zName);
-			}
-			else
-			{
-				sprintf(filename, "BATTLESNDS/m_%s.wav", battle_snd->zName);
-			}
-		}
+		sprintf(basename, "%03d", s->ubProfile);
 	}
 	else
 	{
 		// Check if we can play this!
 		if (!battle_snd->fBadGuy) return FALSE;
 
-		if (s->ubBodyType == HATKIDCIV || s->ubBodyType == KIDCIV)
-		{
-			sprintf(filename, "BATTLESNDS/kid%d_%s.wav", s->ubBattleSoundID, battle_snd->zName);
-		}
-		else
-		{
-			char const* const snd_name = battle_snd_id == BATTLE_SOUND_DIE1 ?
-				"die" : battle_snd->zName;
-			sprintf(filename, "BATTLESNDS/bad%d_%s.wab", s->ubBattleSoundID, snd_name);
-		}
+		char const* const prefix =
+			s->ubBodyType == HATKIDCIV || s->ubBodyType == KIDCIV ? "kid" : "bad";
+		sprintf(basename, "%s%d", prefix, s->ubBattleSoundID);
 	}
+
+	SGPFILENAME filename;
+	sprintf(filename, "BATTLESNDS/%s_%s.wav", basename, battle_snd->zName);
+
+	if (!FileExists(filename))
+	{
+		if (battle_snd_id == BATTLE_SOUND_DIE1)
+		{
+			// The "die" sound filenames differs between profiles and languages
+			sprintf(filename, "BATTLESNDS/%s_dying.wav", basename);
+			if (FileExists(filename)) goto file_exists;
+		}
+
+		if (s->ubProfile == NO_PROFILE) return FALSE;
+
+		// Generic replacement voices
+		char const prefix = s->ubBodyType == REGFEMALE ? 'f' : 'm';
+		sprintf(filename, "BATTLESNDS/%c_%s.wav", prefix, battle_snd->zName);
+	}
+file_exists:;
 
 	// ATE: Reduce volume for OK sounds...
 	// (Only for all-moves or multi-selection cases)
