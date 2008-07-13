@@ -1524,9 +1524,7 @@ static void PutNonSquadMercsInPlayerGroupOnSquads(GROUP* const pGroup, const BOO
 		else
 		{
 			// add him to ANY on duty foot squad
-			const BOOLEAN fSuccess = AddCharacterToAnySquad(s);
-			(void)fSuccess;
-			Assert(fSuccess);
+			AddCharacterToAnySquad(s);
 		}
 
 		// stand him up

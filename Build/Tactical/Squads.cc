@@ -233,7 +233,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 
 
 // find the first slot we can fit the guy in
-BOOLEAN AddCharacterToAnySquad( SOLDIERTYPE *pCharacter )
+void AddCharacterToAnySquad(SOLDIERTYPE* const pCharacter)
 {
 	// add character to any squad, if character is assigned to a squad, returns TRUE
 	INT8 bCounter = 0;
@@ -250,7 +250,7 @@ BOOLEAN AddCharacterToAnySquad( SOLDIERTYPE *pCharacter )
 		{
 			if (AddCharacterToSquad(pCharacter, bCounter))
 			{
-				return ( TRUE );
+				return;
 			}
 		}
 		else
@@ -269,14 +269,13 @@ BOOLEAN AddCharacterToAnySquad( SOLDIERTYPE *pCharacter )
 	{
 		if (AddCharacterToSquad(pCharacter, bFirstEmptySquad))
 		{
-			return ( TRUE );
+			return;
 		}
 	}
 
-	// should never happen!
-	Assert( FALSE );
-	return( FALSE );
+	throw std::logic_error("Failed to add character to any squad");
 }
+
 
 // find the first slot we can fit the guy in
 INT8 AddCharacterToUniqueSquad( SOLDIERTYPE *pCharacter )

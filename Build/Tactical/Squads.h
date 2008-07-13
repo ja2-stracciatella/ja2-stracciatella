@@ -56,7 +56,7 @@ BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue );
 
 
 // find the first slot the guy will fit in, return true if he is in a squad or has been put in one
-BOOLEAN AddCharacterToAnySquad( SOLDIERTYPE *pCharacter );
+void AddCharacterToAnySquad(SOLDIERTYPE*);
 
 // remove character from squads
 BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter );
