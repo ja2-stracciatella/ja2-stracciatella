@@ -200,7 +200,7 @@ SOLDIERTYPE* FindSoldierByProfileIDOnPlayerTeam(ProfileID);
 BOOLEAN RecruitRPC( UINT8 ubCharNum );
 
 BOOLEAN RecruitEPC( UINT8 ubCharNum );
-BOOLEAN UnRecruitEPC( UINT8 ubCharNum );
+BOOLEAN UnRecruitEPC(ProfileID);
 
 INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy );
 INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated );

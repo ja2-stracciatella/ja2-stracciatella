@@ -972,58 +972,48 @@ BOOLEAN RecruitEPC( UINT8 ubCharNum )
 }
 
 
-BOOLEAN UnRecruitEPC( UINT8 ubCharNum )
+BOOLEAN UnRecruitEPC(ProfileID const pid)
 {
-	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubCharNum);
-	if (!pSoldier)
-	{
-		return( FALSE );
-	}
+	SOLDIERTYPE* const s = FindSoldierByProfileID(pid);
+	if (!s) return FALSE;
+	if (s->ubWhatKindOfMercAmI != MERC_TYPE__EPC) return FALSE;
 
-	if (pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__EPC)
-	{
-		return( FALSE );
-	}
+	if (s->bAssignment < ON_DUTY) ResetDeadSquadMemberList(s->bAssignment);
 
-  if ( pSoldier->bAssignment < ON_DUTY )
-  {
-    ResetDeadSquadMemberList( pSoldier->bAssignment );
-  }
+	RemoveCharacterFromSquads(s);
 
-	// Rmeove from squad....
-	RemoveCharacterFromSquads( pSoldier );
+	MERCPROFILESTRUCT* const p = GetProfile(pid);
 
 	// OK, UN set recruit flag..
-	gMercProfiles[ ubCharNum ].ubMiscFlags &= (~PROFILE_MISC_FLAG_EPCACTIVE);
+	p->ubMiscFlags &= ~PROFILE_MISC_FLAG_EPCACTIVE;
 
 	// update sector values to current
 
 	// check to see if this person should disappear from the map after this
-	if ( (ubCharNum == JOHN || ubCharNum == MARY) && pSoldier->sSectorX == 13 && pSoldier->sSectorY == MAP_ROW_B && pSoldier->bSectorZ == 0 )
+	if ((pid == JOHN || pid == MARY) &&
+			s->sSectorX == 13            &&
+			s->sSectorY == MAP_ROW_B     &&
+			s->bSectorZ == 0)
 	{
-		gMercProfiles[ ubCharNum ].sSectorX = 0;
-		gMercProfiles[ ubCharNum ].sSectorY = 0;
-		gMercProfiles[ ubCharNum ].bSectorZ = 0;
+		p->sSectorX = 0;
+		p->sSectorY = 0;
+		p->bSectorZ = 0;
 	}
 	else
 	{
-		gMercProfiles[ ubCharNum ].sSectorX = pSoldier->sSectorX;
-		gMercProfiles[ ubCharNum ].sSectorY = pSoldier->sSectorY;
-		gMercProfiles[ ubCharNum ].bSectorZ = pSoldier->bSectorZ;
+		p->sSectorX = s->sSectorX;
+		p->sSectorY = s->sSectorY;
+		p->bSectorZ = s->bSectorZ;
 	}
 
 	// how do we decide whether or not to set this?
-	gMercProfiles[ ubCharNum ].fUseProfileInsertionInfo = TRUE;
-	gMercProfiles[ ubCharNum ].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
+	p->fUseProfileInsertionInfo  = TRUE;
+	p->ubMiscFlags3             |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
 
-	// Add this guy to CIV team!
-	ChangeSoldierTeam(pSoldier, CIV_TEAM);
-
-  UpdateTeamPanelAssignments( );
-
-	return( TRUE );
+	ChangeSoldierTeam(s, CIV_TEAM);
+	UpdateTeamPanelAssignments();
+	return TRUE;
 }
-
 
 
 INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy )
