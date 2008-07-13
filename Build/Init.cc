@@ -22,7 +22,6 @@
 #include "Video.h"
 #include "MapScreen.h"
 #include "Interface_Items.h"
-#include "Strategic.h"
 #include "Dialogue_Control.h"
 #include "Text.h"
 #include "Laptop.h"

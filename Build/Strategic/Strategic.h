@@ -34,8 +34,6 @@ enum
 
 extern StrategicMapElement StrategicMap[MAP_WORLD_X*MAP_WORLD_Y];
 
-void InitStrategicEngine(void);
-
 void HandleStrategicDeath(SOLDIERTYPE*);
 
 #endif
