@@ -19,63 +19,44 @@ StrategicMapElement StrategicMap[MAP_WORLD_X*MAP_WORLD_Y];
 static void HandleSoldierDeadComments(SOLDIERTYPE* pSoldier);
 
 
-void HandleStrategicDeath(SOLDIERTYPE* pSoldier)
+void HandleStrategicDeath(SOLDIERTYPE* const s)
 {
-	// add the guy to the dead list
-	//AddCharacterToDeadList( pSoldier );
-
-  // If in a vehicle, remove them!
-	if( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier->iVehicleId != -1 ) )
+	if (s->bAssignment == VEHICLE && s->iVehicleId != -1)
 	{
-		// remove from vehicle
-		TakeSoldierOutOfVehicle( pSoldier );
+		TakeSoldierOutOfVehicle(s);
   }
 
-	// if not in mapscreen
-	if ( !(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+	if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
 	{
 		// ATE; At least make them dead!
-		if( ( pSoldier->bAssignment != ASSIGNMENT_DEAD ) )
+		if (s->bAssignment != ASSIGNMENT_DEAD)
 		{
-			SetTimeOfAssignmentChangeForMerc( pSoldier );
+			SetTimeOfAssignmentChangeForMerc(s);
 		}
-
-		ChangeSoldiersAssignment( pSoldier, ASSIGNMENT_DEAD );
+		ChangeSoldiersAssignment(s, ASSIGNMENT_DEAD);
 	}
-	else if( ( pSoldier -> bLife == 0 )&&( pSoldier->bAssignment != ASSIGNMENT_DEAD ) )
+	else if (s->bLife == 0 && s->bAssignment != ASSIGNMENT_DEAD)
 	{
 		// died in mapscreen
-
 		fReDrawFace = TRUE;
 
-		// dead
-		if( ( pSoldier->bAssignment != ASSIGNMENT_DEAD ) )
+		if (s->bAssignment != ASSIGNMENT_DEAD)
 		{
-			SetTimeOfAssignmentChangeForMerc( pSoldier );
+			SetTimeOfAssignmentChangeForMerc(s);
 		}
+		ChangeSoldiersAssignment(s, ASSIGNMENT_DEAD);
 
-		ChangeSoldiersAssignment( pSoldier, ASSIGNMENT_DEAD );
+		s->bBreath    = 0;
+		s->bBreathMax = 0;
 
-		//s et breath and breath max to 0
-		pSoldier -> bBreath = pSoldier->bBreathMax = 0;
+		ReBuildCharactersList();
 
-		// rebuild list
-		ReBuildCharactersList( );
+		RemoveCharacterFromSquads(s);
+		HandleSoldierDeadComments(s);
+		AddDeadSoldierToUnLoadedSector(s->sSectorX, s->sSectorY, s->bSectorZ, s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 
-		// ste merc as dead
-		// pSoldier->fUIdeadMerc = TRUE;
-
-		// attempt o remove character from squad
-		RemoveCharacterFromSquads( pSoldier );
-
-		// handle any passign comments by grunts
-		HandleSoldierDeadComments( pSoldier );
-
-		// put the dead guys down
-		AddDeadSoldierToUnLoadedSector( ( UINT8 ) ( pSoldier->sSectorX ), ( UINT8 )( pSoldier->sSectorY ), pSoldier->bSectorZ, pSoldier, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT );
-
-		fTeamPanelDirty = TRUE;
-		fMapPanelDirty = TRUE;
+		fTeamPanelDirty          = TRUE;
+		fMapPanelDirty           = TRUE;
 		fCharacterInfoPanelDirty = TRUE;
 
 		StopTimeCompression();
