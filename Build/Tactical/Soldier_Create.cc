@@ -1036,64 +1036,48 @@ static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
 }
 
 
-void TacticalRemoveSoldier(SOLDIERTYPE* const pSoldier, BOOLEAN const fRemoveVehicle)
+void InternalTacticalRemoveSoldier(SOLDIERTYPE* const s, BOOLEAN const fRemoveVehicle)
 {
-	if (GetSelectedMan() == pSoldier) SetSelectedMan(NULL);
-	if (gUIFullTarget    == pSoldier) gUIFullTarget   = NULL;
-	if (gpSMCurrentMerc  == pSoldier) gpSMCurrentMerc = NULL;
+	if (GetSelectedMan() == s) SetSelectedMan(0);
+	if (gUIFullTarget    == s) gUIFullTarget   = 0;
+	if (gpSMCurrentMerc  == s) gpSMCurrentMerc = 0;
 
-	if (!pSoldier->bActive) return;
+	if (!s->bActive) return;
 
-	if( pSoldier->ubScheduleID )
+	if (s->ubScheduleID) DeleteSchedule(s->ubScheduleID);
+
+	if (s->uiStatusFlags & SOLDIER_VEHICLE && fRemoveVehicle)
 	{
-		DeleteSchedule( pSoldier->ubScheduleID );
+		RemoveVehicleFromList(GetVehicle(s->bVehicleID));
 	}
 
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE && fRemoveVehicle )
+	if (s->ubBodyType == CROW) HandleCrowLeave(s);
+
+	if (guiCurrentScreen != AUTORESOLVE_SCREEN)
 	{
-		// remove this vehicle from the list
-		RemoveVehicleFromList(GetVehicle(pSoldier->bVehicleID));
-	}
-
-	// Handle crow leave....
-	if ( pSoldier->ubBodyType == CROW )
-	{
-		HandleCrowLeave( pSoldier );
-	}
-
-	if( guiCurrentScreen != AUTORESOLVE_SCREEN )
-	{
-
-		// remove character from squad list.. if they are on one
-		RemoveCharacterFromSquads( pSoldier );
-
-		//remove the soldier from the interface panel
-		RemovePlayerFromTeamSlot(pSoldier);
-
-		RemoveSoldierFromGridNo(pSoldier);
+		RemoveCharacterFromSquads(s);
+		RemovePlayerFromTeamSlot(s);
+		RemoveSoldierFromGridNo(s);
 
 		// Delete shadow of crow....
-		if (pSoldier->pAniTile != NULL)
+		if (s->pAniTile)
 		{
-			DeleteAniTile(pSoldier->pAniTile);
-			pSoldier->pAniTile = NULL;
+			DeleteAniTile(s->pAniTile);
+			s->pAniTile = 0;
 		}
 
-		if (!(pSoldier->uiStatusFlags & SOLDIER_OFF_MAP))
+		if (!(s->uiStatusFlags & SOLDIER_OFF_MAP))
 		{
 			// Decrement men in sector number!
-			RemoveManFromTeam(pSoldier->bTeam);
+			RemoveManFromTeam(s->bTeam);
 		} // people specified off-map have already been removed from their team count
 
-		DeleteSoldier(pSoldier);
+		DeleteSoldier(s);
 	}
 	else
 	{
-		if( gfPersistantPBI )
-		{
-			DeleteSoldier( pSoldier );
-		}
-		MemFree( pSoldier );
+		if (gfPersistantPBI) DeleteSoldier(s);
+		MemFree(s);
 	}
 }
 
