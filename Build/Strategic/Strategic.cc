@@ -40,10 +40,7 @@ void HandleStrategicDeath(SOLDIERTYPE* const s)
 		HandleSoldierDeadComments(s);
 		AddDeadSoldierToUnLoadedSector(s->sSectorX, s->sSectorY, s->bSectorZ, s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 
-		fReDrawFace              = TRUE;
-		fTeamPanelDirty          = TRUE;
-		fMapPanelDirty           = TRUE;
-		fCharacterInfoPanelDirty = TRUE;
+		fReDrawFace = TRUE;
 
 		StopTimeCompression();
 	}
