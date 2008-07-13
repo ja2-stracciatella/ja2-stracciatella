@@ -993,9 +993,6 @@ BOOLEAN UnRecruitEPC( UINT8 ubCharNum )
 	// Rmeove from squad....
 	RemoveCharacterFromSquads( pSoldier );
 
-	// O< check if this is the only guy in the sector....
-	if (GetSelectedMan() == pSoldier) SetSelectedMan(NULL);
-
 	// OK, UN set recruit flag..
 	gMercProfiles[ ubCharNum ].ubMiscFlags &= (~PROFILE_MISC_FLAG_EPCACTIVE);
 
