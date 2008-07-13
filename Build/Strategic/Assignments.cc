@@ -7126,7 +7126,6 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 	Assert(sel && sel->bActive);
 
 	// sets assignment for the list
-	BOOLEAN fRemoveFromSquad   = TRUE;
 	BOOLEAN fNotifiedOfFailure = FALSE;
 	CFOR_ALL_SELECTED_IN_CHAR_LIST(c)
 	{
@@ -7260,8 +7259,7 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 
 					// if already in it, don't report that as an error
 					case CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT:
-						fItWorked        = TRUE;
-						fRemoveFromSquad = FALSE; // already done, would screw it up!
+						fItWorked = TRUE;
 						break;
 
 					default: break;
@@ -7272,16 +7270,13 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 				// remove from current vehicle/squad, if any
 				if (s->bAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
 				AddCharacterToAnySquad(s);
-
-				fItWorked        = TRUE;
-				fRemoveFromSquad = FALSE;	// already done, would screw it up!
+				fItWorked = TRUE;
 				break;
 		}
 
 		if (fItWorked)
 		{
 			// remove him from his old squad if he was on one
-			if (fRemoveFromSquad) RemoveCharacterFromSquads(s);
 			MakeSoldiersTacticalAnimationReflectAssignment(s);
 		}
 		else
