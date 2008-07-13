@@ -26,13 +26,14 @@ void HandleStrategicDeath(SOLDIERTYPE* const s)
 		TakeSoldierOutOfVehicle(s);
   }
 
+	if (s->bAssignment != ASSIGNMENT_DEAD)
+	{
+		SetTimeOfAssignmentChangeForMerc(s);
+	}
+
 	if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
 	{
 		// ATE; At least make them dead!
-		if (s->bAssignment != ASSIGNMENT_DEAD)
-		{
-			SetTimeOfAssignmentChangeForMerc(s);
-		}
 		ChangeSoldiersAssignment(s, ASSIGNMENT_DEAD);
 	}
 	else if (s->bLife == 0 && s->bAssignment != ASSIGNMENT_DEAD)
@@ -40,14 +41,7 @@ void HandleStrategicDeath(SOLDIERTYPE* const s)
 		// died in mapscreen
 		fReDrawFace = TRUE;
 
-		if (s->bAssignment != ASSIGNMENT_DEAD)
-		{
-			SetTimeOfAssignmentChangeForMerc(s);
-		}
 		ChangeSoldiersAssignment(s, ASSIGNMENT_DEAD);
-
-		s->bBreath    = 0;
-		s->bBreathMax = 0;
 
 		ReBuildCharactersList();
 

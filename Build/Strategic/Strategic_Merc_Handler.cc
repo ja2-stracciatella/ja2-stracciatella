@@ -133,11 +133,6 @@ void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 	//Set the fact that the merc is DEAD!!
 	gMercProfiles[ pSoldier->ubProfile ].bMercStatus = MERC_IS_DEAD;
 
-	if( pSoldier->bAssignment != ASSIGNMENT_DEAD )
-	{
-		SetTimeOfAssignmentChangeForMerc( pSoldier );
-	}
-
 	// handle strategic level death
 	HandleStrategicDeath( pSoldier );
 }
