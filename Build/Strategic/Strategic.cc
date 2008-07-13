@@ -26,6 +26,7 @@ void HandleStrategicDeath(SOLDIERTYPE* const s)
 		TakeSoldierOutOfVehicle(s);
   }
 
+	RemoveCharacterFromSquads(s);
 	if (s->bAssignment != ASSIGNMENT_DEAD)
 	{
 		SetTimeOfAssignmentChangeForMerc(s);
@@ -36,7 +37,6 @@ void HandleStrategicDeath(SOLDIERTYPE* const s)
 	{
 		ReBuildCharactersList();
 
-		RemoveCharacterFromSquads(s);
 		HandleSoldierDeadComments(s);
 		AddDeadSoldierToUnLoadedSector(s->sSectorX, s->sSectorY, s->bSectorZ, s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 

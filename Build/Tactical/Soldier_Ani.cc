@@ -39,7 +39,6 @@
 #include "QArray.h"
 #include "Soldier_Macros.h"
 #include "Strategic_Town_Loyalty.h"
-#include "Squads.h"
 #include "WorldMan.h"
 #include "Structure_Wrap.h"
 #include "PathAI.h"
@@ -3006,9 +3005,6 @@ void HandlePlayerTeamMemberDeathAfterSkullAnimation(SOLDIERTYPE* pSoldier)
   }
 
 	HandlePlayerTeamMemberDeath( pSoldier );
-
-	// now remove character from a squad
-	RemoveCharacterFromSquads( pSoldier );
 }
 
 

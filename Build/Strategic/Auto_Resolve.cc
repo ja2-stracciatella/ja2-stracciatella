@@ -38,7 +38,6 @@
 #include "Map_Screen_Interface.h"
 #include "Text.h"
 #include "WordWrap.h"
-#include "Squads.h"
 #include "Random.h"
 #include "Line.h"
 #include "English.h"
@@ -1839,10 +1838,6 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 				if( !gpMercs[ i ].pSoldier->bLife )
 				{
 					StrategicHandlePlayerTeamMercDeath( gpMercs[ i ].pSoldier );
-
-					// now remove character from a squad
-					RemoveCharacterFromSquads( gpMercs[ i ].pSoldier );
-
 					AddDeadSoldierToUnLoadedSector( gpAR->ubSectorX, gpAR->ubSectorY, 0, gpMercs[ i ].pSoldier, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT );
 				}
 				else if( gpAR->ubBattleStatus == BATTLE_SURRENDERED || gpAR->ubBattleStatus == BATTLE_CAPTURED )
