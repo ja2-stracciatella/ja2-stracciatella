@@ -7271,7 +7271,6 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 			default:
 				// remove from current vehicle/squad, if any
 				if (s->bAssignment == VEHICLE) TakeSoldierOutOfVehicle(s);
-				RemoveCharacterFromSquads(s);
 				AddCharacterToAnySquad(s);
 
 				fItWorked        = TRUE;
