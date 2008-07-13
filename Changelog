@@ -1,3 +1,4 @@
+(r4663) Fix a vanilla glitch: Do not add two corpses for mercs died in auto resolve.
 (r4600) Plug vanilla memory leak when loading savegames.
 (r4597) Plug vanilla memory leak in the laptop file viewer.
 (r4487) Fix a vanilla endless loop when an enemy tries to throw a grenade straight up.

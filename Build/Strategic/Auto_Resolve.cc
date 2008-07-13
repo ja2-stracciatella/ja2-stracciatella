@@ -1838,7 +1838,6 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 				if( !gpMercs[ i ].pSoldier->bLife )
 				{
 					StrategicHandlePlayerTeamMercDeath( gpMercs[ i ].pSoldier );
-					AddDeadSoldierToUnLoadedSector( gpAR->ubSectorX, gpAR->ubSectorY, 0, gpMercs[ i ].pSoldier, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT );
 				}
 				else if( gpAR->ubBattleStatus == BATTLE_SURRENDERED || gpAR->ubBattleStatus == BATTLE_CAPTURED )
 				{
