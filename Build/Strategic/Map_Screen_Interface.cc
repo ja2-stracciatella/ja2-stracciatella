@@ -389,8 +389,7 @@ BOOLEAN MultipleCharacterListEntriesSelected( void )
 }
 
 
-
-void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList( INT8 bAssignment )
+void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList()
 {
 	CFOR_ALL_IN_CHAR_LIST(c)
 	{

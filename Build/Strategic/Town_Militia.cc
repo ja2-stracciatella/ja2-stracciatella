@@ -663,7 +663,7 @@ static void MilitiaTrainingRejected(void)
 	else
 	{
 		// take all mercs in unpaid sectors EVERYWHERE off militia training
-		ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList( 0 );
+		ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList();
 	}
 
 #ifdef JA2BETAVERSION

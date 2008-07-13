@@ -284,8 +284,7 @@ BOOLEAN MultipleCharacterListEntriesSelected( void );
 // toggle this entry on or off
 void ToggleEntryInSelectedList( INT8 bEntry );
 
-// reset assignments for mercs on selected list who have this assignment
-void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList(INT8 bAssignment);
+void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList();
 
 void RestoreBackgroundForAssignmentGlowRegionList( void );
 void RestoreBackgroundForDestinationGlowRegionList( void );
