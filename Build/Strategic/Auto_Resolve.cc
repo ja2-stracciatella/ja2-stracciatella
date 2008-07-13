@@ -1832,7 +1832,7 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 		for( i = 0; i < gpAR->iNumMercFaces; i++ )
 		{
 			if( i >= gpAR->iActualMercFaces )
-				TacticalRemoveSoldierPointer( gpMercs[ i ].pSoldier, FALSE );
+				TacticalRemoveSoldier(gpMercs[i].pSoldier);
 			else
 			{ //Record finishing information for our mercs
 				if( !gpMercs[ i ].pSoldier->bLife )
@@ -1943,7 +1943,7 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 					}
 				}
 			}
-			TacticalRemoveSoldierPointer( gpCivs[ i ].pSoldier, FALSE );
+			TacticalRemoveSoldier(gpCivs[i].pSoldier);
 			memset( &gpCivs[ i ], 0, sizeof( SOLDIERCELL ) );
 		}
 	}
@@ -1982,7 +1982,7 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 	{
 		if( gpEnemies[ i ].pSoldier )
 		{
-			TacticalRemoveSoldierPointer( gpEnemies[ i ].pSoldier, FALSE );
+			TacticalRemoveSoldier(gpEnemies[i].pSoldier);
 			memset( &gpEnemies[ i ], 0, sizeof( SOLDIERCELL ) );
 		}
 	}
@@ -2403,7 +2403,7 @@ static void ResetAutoResolveInterface(void)
 	while( gpAR->iNumMercFaces > gpAR->ubMercs && gpAR->iNumMercFaces > gpAR->iActualMercFaces )
 	{ //Removing temp mercs
 		gpAR->iNumMercFaces--;
-		TacticalRemoveSoldierPointer( gpMercs[gpAR->iNumMercFaces].pSoldier, FALSE );
+		TacticalRemoveSoldier(gpMercs[gpAR->iNumMercFaces].pSoldier);
 		gpMercs[gpAR->iNumMercFaces].pSoldier = NULL;
 	}
 	while( gpAR->iNumMercFaces < gpAR->ubMercs && gpAR->iNumMercFaces >= gpAR->iActualMercFaces )

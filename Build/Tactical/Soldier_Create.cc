@@ -1036,18 +1036,12 @@ static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
 }
 
 
-void InternalTacticalRemoveSoldier(SOLDIERTYPE* const s, const BOOLEAN fRemoveVehicle)
+void TacticalRemoveSoldier(SOLDIERTYPE* const pSoldier, BOOLEAN const fRemoveVehicle)
 {
-	if (GetSelectedMan() == s) SetSelectedMan(NULL);
-	if (gUIFullTarget    == s) gUIFullTarget   = NULL;
-	if (gpSMCurrentMerc  == s) gpSMCurrentMerc = NULL;
+	if (GetSelectedMan() == pSoldier) SetSelectedMan(NULL);
+	if (gUIFullTarget    == pSoldier) gUIFullTarget   = NULL;
+	if (gpSMCurrentMerc  == pSoldier) gpSMCurrentMerc = NULL;
 
-	TacticalRemoveSoldierPointer(s, fRemoveVehicle);
-}
-
-
-void TacticalRemoveSoldierPointer(SOLDIERTYPE* const pSoldier, const BOOLEAN fRemoveVehicle)
-{
 	if (!pSoldier->bActive) return;
 
 	if( pSoldier->ubScheduleID )
