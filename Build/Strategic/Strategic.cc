@@ -16,7 +16,7 @@
 StrategicMapElement StrategicMap[MAP_WORLD_X*MAP_WORLD_Y];
 
 
-static void HandleSoldierDeadComments(SOLDIERTYPE* pSoldier);
+static void HandleSoldierDeadComments(SOLDIERTYPE const*);
 
 
 void HandleStrategicDeath(SOLDIERTYPE* const s)
@@ -58,29 +58,22 @@ void HandleStrategicDeath(SOLDIERTYPE* const s)
 }
 
 
-static void HandleSoldierDeadComments(SOLDIERTYPE* pSoldier)
+static void HandleSoldierDeadComments(SOLDIERTYPE const* const s)
 {
-	FOR_ALL_IN_TEAM(s, pSoldier->bTeam)
+	FOR_ALL_IN_TEAM(s, s->bTeam)
 	{
 		if (s->bLife < OKLIFE) continue;
 
-		const INT8 bBuddyIndex = WhichBuddy(s->ubProfile, pSoldier->ubProfile);
-		switch (bBuddyIndex)
+		UINT16     quote_num;
+		INT8 const buddy_idx = WhichBuddy(s->ubProfile, s->ubProfile);
+		switch (buddy_idx)
 		{
-			case 0:
-				// buddy #1 died!
-				TacticalCharacterDialogue(s, QUOTE_BUDDY_ONE_KILLED);
-				break;
-			case 1:
-				// buddy #2 died!
-				TacticalCharacterDialogue(s, QUOTE_BUDDY_TWO_KILLED);
-				break;
-			case 2:
-				// learn to like buddy died!
-				TacticalCharacterDialogue(s, QUOTE_LEARNED_TO_LIKE_MERC_KILLED);
-				break;
-			default:
-				break;
+			case 0: quote_num = QUOTE_BUDDY_ONE_KILLED;            break;
+			case 1: quote_num = QUOTE_BUDDY_TWO_KILLED;            break;
+			case 2: quote_num = QUOTE_LEARNED_TO_LIKE_MERC_KILLED; break;
+
+			default: continue;
 		}
+		TacticalCharacterDialogue(s, quote_num);
 	}
 }
