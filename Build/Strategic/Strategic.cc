@@ -30,25 +30,17 @@ void HandleStrategicDeath(SOLDIERTYPE* const s)
 	{
 		SetTimeOfAssignmentChangeForMerc(s);
 	}
+	ChangeSoldiersAssignment(s, ASSIGNMENT_DEAD);
 
-	if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
 	{
-		// ATE; At least make them dead!
-		ChangeSoldiersAssignment(s, ASSIGNMENT_DEAD);
-	}
-	else if (s->bLife == 0 && s->bAssignment != ASSIGNMENT_DEAD)
-	{
-		// died in mapscreen
-		fReDrawFace = TRUE;
-
-		ChangeSoldiersAssignment(s, ASSIGNMENT_DEAD);
-
 		ReBuildCharactersList();
 
 		RemoveCharacterFromSquads(s);
 		HandleSoldierDeadComments(s);
 		AddDeadSoldierToUnLoadedSector(s->sSectorX, s->sSectorY, s->bSectorZ, s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 
+		fReDrawFace              = TRUE;
 		fTeamPanelDirty          = TRUE;
 		fMapPanelDirty           = TRUE;
 		fCharacterInfoPanelDirty = TRUE;
