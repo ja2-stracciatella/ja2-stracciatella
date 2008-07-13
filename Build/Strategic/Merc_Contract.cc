@@ -719,127 +719,108 @@ void BeginStrategicRemoveMerc(SOLDIERTYPE* pSoldier, BOOLEAN fAddRehireButton)
 static void CalculateMedicalDepositRefund(SOLDIERTYPE* pSoldier);
 
 
-void StrategicRemoveMerc(SOLDIERTYPE* pSoldier)
+void StrategicRemoveMerc(SOLDIERTYPE* const s)
 {
-	UINT8	ubHistoryCode=0;
-
-
-	if ( gfInContractMenuFromRenewSequence )
+	if (gfInContractMenuFromRenewSequence)
 	{
-		EndCurrentContractRenewal( );
+		EndCurrentContractRenewal();
 	}
 
 	// ATE: Determine which HISTORY ENTRY to use...
-	if ( pSoldier->ubLeaveHistoryCode == 0 )
+	if (s->ubLeaveHistoryCode == 0)
 	{
 		// Default use contract expired reason...
-		pSoldier->ubLeaveHistoryCode = HISTORY_MERC_CONTRACT_EXPIRED;
+		s->ubLeaveHistoryCode = HISTORY_MERC_CONTRACT_EXPIRED;
 	}
 
-	ubHistoryCode = pSoldier->ubLeaveHistoryCode;
+	UINT8 const ubHistoryCode = s->ubLeaveHistoryCode;
 
-	//if the soldier is DEAD
-	if( pSoldier->bLife <= 0 )
-	{
-		AddCharacterToDeadList( pSoldier );
+	if (s->bLife <= 0)
+	{ // The soldier is dead
+		AddCharacterToDeadList(s);
 	}
-
-	//else if the merc was fired
-	else if( ubHistoryCode == HISTORY_MERC_FIRED || pSoldier->bAssignment == ASSIGNMENT_POW )
-	{
-		AddCharacterToFiredList( pSoldier );
+	else if (ubHistoryCode == HISTORY_MERC_FIRED || s->bAssignment == ASSIGNMENT_POW)
+	{ // The merc was fired
+		AddCharacterToFiredList(s);
 	}
-
-	//The merc is leaving for some other reason
 	else
-	{
-		AddCharacterToOtherList( pSoldier );
+	{ // The merc is leaving for some other reason
+		AddCharacterToOtherList(s);
 	}
 
-
-	if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC )
+	if (s->ubWhatKindOfMercAmI == MERC_TYPE__NPC)
 	{
-		SetupProfileInsertionDataForSoldier( pSoldier );
+		SetupProfileInsertionDataForSoldier(s);
 	}
 
 	//remove him from the soldier structure
-	if( pSoldier->bAssignment >= ON_DUTY )
+	if (s->bAssignment < ON_DUTY)
 	{
-		// is he/she in a mvt group, if so, remove and destroy the group
-		if( pSoldier->ubGroupID )
-		{
-			if ( pSoldier->bAssignment != VEHICLE )
-			{ //Can only remove groups if they aren't persistant (not in a squad or vehicle)
-				RemoveGroup( pSoldier->ubGroupID );
-			}
-			else
-			{
-				// remove him from any existing merc slot he could be in
-				RemoveMercSlot( pSoldier );
-        TakeSoldierOutOfVehicle( pSoldier );
-			}
+		RemoveCharacterFromSquads(s);
+	}
+	else if (s->ubGroupID)
+	{ // He/she is in a mvt group, remove and destroy the group
+		if (s->bAssignment != VEHICLE)
+		{ //Can only remove groups if they aren't persistant (not in a squad or vehicle)
+			RemoveGroup(s->ubGroupID);
 		}
-
+		else
+		{
+			// remove him from any existing merc slot he could be in
+			RemoveMercSlot(s);
+			TakeSoldierOutOfVehicle(s);
+		}
 	}
-	else
-	{
-		RemoveCharacterFromSquads( pSoldier );
-	}
 
+	MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
 	// if the merc is not dead
-	if( gMercProfiles[ pSoldier->ubProfile ].bMercStatus != MERC_IS_DEAD )
+	if (p->bMercStatus != MERC_IS_DEAD)
 	{
-		//Set the status to returning home ( delay the merc for rehire )
-		gMercProfiles[ pSoldier->ubProfile ].bMercStatus = MERC_RETURNING_HOME;
+		// Set the status to returning home (delay the merc for rehire)
+		p->bMercStatus = MERC_RETURNING_HOME;
 
 		// specify how long the merc will continue to be unavailable
-		gMercProfiles[ pSoldier->ubProfile ].uiDayBecomesAvailable = 1 + Random(2);		// 1-2 days
+		p->uiDayBecomesAvailable = 1 + Random(2); // 1-2 days
 
-		HandleSoldierLeavingWithLowMorale( pSoldier );
-		HandleSoldierLeavingForAnotherContract( pSoldier );
+		HandleSoldierLeavingWithLowMorale(s);
+		HandleSoldierLeavingForAnotherContract(s);
 	}
-
 
 	//add an entry in the history page for the firing/quiting of the merc
 	// ATE: Don't do this if they are already dead!
-	if ( !( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
+	if (!(s->uiStatusFlags & SOLDIER_DEAD))
 	{
-		AddHistoryToPlayersLog( ubHistoryCode, pSoldier->ubProfile, GetWorldTotalMin(), pSoldier->sSectorX, pSoldier->sSectorY );
+		AddHistoryToPlayersLog(ubHistoryCode, s->ubProfile, GetWorldTotalMin(), s->sSectorX, s->sSectorY);
 	}
 
 	//if the merc was a POW, remember it becuase the merc cant show up in AIM or MERC anymore
-	if( pSoldier->bAssignment	== ASSIGNMENT_POW )
+	if (s->bAssignment == ASSIGNMENT_POW)
 	{
-		gMercProfiles[ pSoldier->ubProfile ].bMercStatus = MERC_FIRED_AS_A_POW;
+		p->bMercStatus = MERC_FIRED_AS_A_POW;
 	}
-
-	//else the merc CAN get his medical deposit back
-	else
+	else //else the merc CAN get his medical deposit back
 	{
 		//Determine how much of a Medical deposit is going to be refunded to the player
-		CalculateMedicalDepositRefund( pSoldier );
+		CalculateMedicalDepositRefund(s);
 	}
 
-	//remove the merc from the tactical
-	TacticalRemoveSoldier(pSoldier);
+	TacticalRemoveSoldier(s);
 
-	// Check if we should remove loaded world...
 	CheckAndHandleUnloadingOfCurrentWorld();
 
-	if ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
 	{
-		ReBuildCharactersList( );
+		ReBuildCharactersList();
 	}
 
-	fMapPanelDirty = TRUE;
-	fTeamPanelDirty = TRUE;
+	fMapPanelDirty           = TRUE;
+	fTeamPanelDirty          = TRUE;
 	fCharacterInfoPanelDirty = TRUE;
 
 	// stop time compression so player can react to the departure
 	StopTimeCompression();
 
-  // ATE: update team panels....
-  UpdateTeamPanelAssignments( );
+	UpdateTeamPanelAssignments();
 }
 
 
