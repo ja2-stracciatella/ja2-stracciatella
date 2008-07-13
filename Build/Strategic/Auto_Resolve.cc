@@ -1842,7 +1842,6 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 
 					// now remove character from a squad
 					RemoveCharacterFromSquads( gpMercs[ i ].pSoldier );
-					ChangeSoldiersAssignment( gpMercs[ i ].pSoldier, ASSIGNMENT_DEAD );
 
 					AddDeadSoldierToUnLoadedSector( gpAR->ubSectorX, gpAR->ubSectorY, 0, gpMercs[ i ].pSoldier, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT );
 				}
