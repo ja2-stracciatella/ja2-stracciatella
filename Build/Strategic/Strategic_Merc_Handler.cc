@@ -41,10 +41,6 @@
 #define		NUM_DAYS_TILL_UNPAID_RPC_QUITS				3
 
 
-// build a list of mercs based on departure time
-void BuildMercQuitList( SOLDIERTYPE *pMercList );
-
-
 void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 {
 	INT16 sSectorX, sSectorY;
@@ -147,317 +143,245 @@ void StrategicHandlePlayerTeamMercDeath( SOLDIERTYPE *pSoldier )
 }
 
 
-// MercDailyUpdate() gets called every day at midnight.  If something is to happen to a merc that day, add an event for it.
+/* MercDailyUpdate() gets called every day at midnight.  If something is to
+ * happen to a merc that day, add an event for it. */
 void MercDailyUpdate()
 {
-	//SOLDIERTYPE *pQuitList[ 21 ];
-	MERCPROFILESTRUCT *pProfile;
-	UINT32 uiChance;
-	INT32 iOffset = 0;
+	// if its the first day, leave
+	if (GetWorldDay() == 1) return;
 
-	//if its the first day, leave
-	if( GetWorldDay() == 1 )
-		return;
-
-	// debug message
 	ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls - Doing MercDailyUpdate", WORLDTIMESTR);
 
-	// if the death rate is very low (this is independent of mercs' personal deathrate tolerances)
+	/* if the death rate is very low (this is independent of mercs' personal
+	 * deathrate tolerances) */
 	if (CalcDeathRate() < 5)
 	{
 		// everyone gets a morale bonus, which also gets player a reputation bonus.
-		HandleMoraleEvent( NULL, MORALE_LOW_DEATHRATE, -1, -1, -1 );
+		HandleMoraleEvent(NULL, MORALE_LOW_DEATHRATE, -1, -1, -1);
 	}
 
+	/* add an event so the merc will say the departing warning (2 hours prior to
+	 * leaving).  Do so for all time slots they will depart from */
+	AddSameDayStrategicEvent(EVENT_MERC_ABOUT_TO_LEAVE, MERC_ARRIVE_TIME_SLOT_1 - 2 * 60,	0);
+	AddSameDayStrategicEvent(EVENT_MERC_ABOUT_TO_LEAVE, MERC_ARRIVE_TIME_SLOT_2 - 2 * 60,	0);
+	AddSameDayStrategicEvent(EVENT_MERC_ABOUT_TO_LEAVE, MERC_ARRIVE_TIME_SLOT_3 - 2 * 60,	0);
 
-	//add an event so the merc will say the departing warning ( 2 hours prior to leaving
-	// Do so for all time slots they will depart from
-	AddSameDayStrategicEvent( EVENT_MERC_ABOUT_TO_LEAVE, MERC_ARRIVE_TIME_SLOT_1 - ( 2 * 60 ),	0 );
-	AddSameDayStrategicEvent( EVENT_MERC_ABOUT_TO_LEAVE, MERC_ARRIVE_TIME_SLOT_2 - ( 2 * 60 ),	0 );
-	AddSameDayStrategicEvent( EVENT_MERC_ABOUT_TO_LEAVE, MERC_ARRIVE_TIME_SLOT_3 - ( 2 * 60 ),	0 );
+	AddSameDayStrategicEvent(EVENT_BEGIN_CONTRACT_RENEWAL_SEQUENCE, MERC_ARRIVE_TIME_SLOT_1, 0);
+	AddSameDayStrategicEvent(EVENT_BEGIN_CONTRACT_RENEWAL_SEQUENCE, MERC_ARRIVE_TIME_SLOT_2, 0);
+	AddSameDayStrategicEvent(EVENT_BEGIN_CONTRACT_RENEWAL_SEQUENCE, MERC_ARRIVE_TIME_SLOT_3, 0);
 
-
-	AddSameDayStrategicEvent( EVENT_BEGIN_CONTRACT_RENEWAL_SEQUENCE, MERC_ARRIVE_TIME_SLOT_1,	0 );
-	AddSameDayStrategicEvent( EVENT_BEGIN_CONTRACT_RENEWAL_SEQUENCE, MERC_ARRIVE_TIME_SLOT_2,	0 );
-	AddSameDayStrategicEvent( EVENT_BEGIN_CONTRACT_RENEWAL_SEQUENCE, MERC_ARRIVE_TIME_SLOT_3,	0 );
-
-	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		//if the merc is active
-		if (pSoldier->bAssignment != ASSIGNMENT_POW && pSoldier->bAssignment != IN_TRANSIT)
+		if (s->bAssignment == ASSIGNMENT_POW)
+		{
+			s->iEndofContractTime += 1440;
+		}
+		else if (s->bAssignment != IN_TRANSIT)
 		{
 			//CJC: Reset dialogue flags for quotes that can be said once/day
-			pSoldier->usQuoteSaidFlags &= ( ~SOLDIER_QUOTE_SAID_ANNOYING_MERC );
+			s->usQuoteSaidFlags &= ~SOLDIER_QUOTE_SAID_ANNOYING_MERC;
 			// ATE: Reset likes gun flag
-			pSoldier->usQuoteSaidFlags &= ( ~SOLDIER_QUOTE_SAID_LIKESGUN );
+			s->usQuoteSaidFlags &= ~SOLDIER_QUOTE_SAID_LIKESGUN;
 			// ATE; Reset found something nice flag...
-			pSoldier->usQuoteSaidFlags &= ( ~SOLDIER_QUOTE_SAID_FOUND_SOMETHING_NICE );
+			s->usQuoteSaidFlags &= ~SOLDIER_QUOTE_SAID_FOUND_SOMETHING_NICE;
 
       // ATE: Decrement tolerance value...
-      pSoldier->bCorpseQuoteTolerance--;
+      if (--s->bCorpseQuoteTolerance < 0) s->bCorpseQuoteTolerance = 0;
 
-      if ( pSoldier->bCorpseQuoteTolerance < 0 )
-      {
-        pSoldier->bCorpseQuoteTolerance = 0;
-      }
+			MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
 
 			// CJC: For some personalities, reset personality quote said flag
-			if ( pSoldier->ubProfile != NO_PROFILE )
+			switch (p->bPersonalityTrait)
 			{
-				switch( gMercProfiles[ pSoldier->ubProfile ].bPersonalityTrait )
-				{
-					case HEAT_INTOLERANT:
-					case CLAUSTROPHOBIC:
-					case NONSWIMMER:
-					case FEAR_OF_INSECTS:
-						// repeatable once per day
-						pSoldier->usQuoteSaidFlags &= ( ~SOLDIER_QUOTE_SAID_PERSONALITY );
-						break;
-					default:
-						break;
-				}
+				case HEAT_INTOLERANT:
+				case CLAUSTROPHOBIC:
+				case NONSWIMMER:
+				case FEAR_OF_INSECTS:
+					// repeatable once per day
+					s->usQuoteSaidFlags &= ~SOLDIER_QUOTE_SAID_PERSONALITY;
+					break;
+
+				default: break;
 			}
 
-
 			//ATE: Try to see if our equipment sucks!
-			if ( SoldierHasWorseEquipmentThanUsedTo( pSoldier ) )
+			if (SoldierHasWorseEquipmentThanUsedTo(s))
 			{
 				// Randomly anytime between 6:00, and 10:00
-				AddSameDayStrategicEvent( EVENT_MERC_COMPLAIN_EQUIPMENT, 360 + Random( 1080 ) , pSoldier->ubProfile );
+				AddSameDayStrategicEvent(EVENT_MERC_COMPLAIN_EQUIPMENT, 360 + Random(1080), s->ubProfile);
 			}
 
 			// increment days served by this grunt
-			gMercProfiles[pSoldier->ubProfile].usTotalDaysServed++;
+			++p->usTotalDaysServed;
 
 			// player has hired him, so he'll eligible to get killed off on another job
-			gMercProfiles[pSoldier->ubProfile].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
-
+			p->ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
 
 			//if the character is an RPC
-			if( pSoldier->ubProfile >= FIRST_RPC && pSoldier->ubProfile < FIRST_NPC )
+			if (FIRST_RPC <= s->ubProfile && s->ubProfile < FIRST_NPC)
 			{
-				INT16	sSalary = gMercProfiles[ pSoldier->ubProfile ].sSalary;
-				INT32	iMoneyOwedToMerc = 0;
-
 				//increment the number of days the mercs has been on the team
-				pSoldier->iTotalContractLength++;
+				++s->iTotalContractLength;
+
+				// The player owes the salary
+				INT16	const sSalary          = p->sSalary;
+				INT32	      iMoneyOwedToMerc = sSalary;
 
 				//if the player owes the npc money, the balance field will be negative
-				if( gMercProfiles[ pSoldier->ubProfile ].iBalance < 0 )
-				{
-					//the player owes the npc the salary and whatever money the player owes the npc
-					iMoneyOwedToMerc = sSalary + ( - gMercProfiles[ pSoldier->ubProfile ].iBalance );
-				}
-				else
-				{
-					//else the player only owes the salary
-					iMoneyOwedToMerc = sSalary;
-				}
+				if (p->iBalance < 0) iMoneyOwedToMerc += -p->iBalance;
 
 				//if the player owes money
-				if( iMoneyOwedToMerc != 0 )
+				if (iMoneyOwedToMerc != 0)
 				{
 					//if the player can afford to pay them
-					if( LaptopSaveInfo.iCurrentBalance >= iMoneyOwedToMerc )
+					if (LaptopSaveInfo.iCurrentBalance >= iMoneyOwedToMerc)
 					{
 						//add the transaction to the player
-						AddTransactionToPlayersBook( PAYMENT_TO_NPC, pSoldier->ubProfile, GetWorldTotalMin(), -iMoneyOwedToMerc);
+						AddTransactionToPlayersBook(PAYMENT_TO_NPC, s->ubProfile, GetWorldTotalMin(), -iMoneyOwedToMerc);
 
-						//if the player owed money to the npc
-						if( gMercProfiles[ pSoldier->ubProfile ].iBalance < 0 )
-						{
-							// reset the amount
-							gMercProfiles[ pSoldier->ubProfile ].iBalance = 0;
-						}
+						// reset the amount, if the player owed money to the npc
+						if (p->iBalance < 0) p->iBalance = 0;
 					}
 					else
 					{
-						CHAR16	zMoney[128];
-
-						//create a string for the salary owed to the npc
+						// Display a screen msg indicating that the npc was NOT paid
+						wchar_t zMoney[128];
 						SPrintMoney(zMoney, sSalary);
+						ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, pMessageStrings[MSG_CANT_AFFORD_TO_PAY_NPC_DAILY_SALARY_MSG], p->zNickname, zMoney);
 
-						//Display a screen msg indicating that the npc was NOT paid
-						ScreenMsg( FONT_MCOLOR_WHITE, MSG_INTERFACE, pMessageStrings[ MSG_CANT_AFFORD_TO_PAY_NPC_DAILY_SALARY_MSG ], gMercProfiles[ pSoldier->ubProfile ].zNickname, zMoney );
-
-						//if the merc hasnt been paid for NUM_DAYS_TILL_UNPAID_RPC_QUITS days, the merc will quit
-						if( ( gMercProfiles[ pSoldier->ubProfile ].iBalance - sSalary ) <= -( sSalary * NUM_DAYS_TILL_UNPAID_RPC_QUITS ) )
+						/* if the merc hasnt been paid for NUM_DAYS_TILL_UNPAID_RPC_QUITS
+						 * days, the merc will quit */
+						if (p->iBalance - sSalary <= -(sSalary * NUM_DAYS_TILL_UNPAID_RPC_QUITS))
 						{
-							//Set it up so the merc quits
-							MercsContractIsFinished(pSoldier);
+							// Set it up so the merc quits
+							MercsContractIsFinished(s);
 						}
 						else
 						{
 							//set how much money the player owes the merc
-							gMercProfiles[ pSoldier->ubProfile ].iBalance -= sSalary;
+							p->iBalance -= sSalary;
 
 							// Add even for displaying a dialogue telling the player this....
-							AddSameDayStrategicEvent( EVENT_RPC_WHINE_ABOUT_PAY, MERC_ARRIVE_TIME_SLOT_1, pSoldier->ubID );
-
+							AddSameDayStrategicEvent(EVENT_RPC_WHINE_ABOUT_PAY, MERC_ARRIVE_TIME_SLOT_1, s->ubID);
 						}
 					}
 				}
 			}
 
-
-			DailyMoraleUpdate( pSoldier );
-
-			CheckIfMercGetsAnotherContract( pSoldier );
-		}
-		else
-		{
-			if (pSoldier->bAssignment == ASSIGNMENT_POW)
-			{
-				pSoldier->iEndofContractTime += 1440;
-			}
+			DailyMoraleUpdate(s);
+			CheckIfMercGetsAnotherContract(s);
 		}
 
 		// if active, here, & alive (POW is ok, don't care)
-		if (pSoldier->bAssignment != ASSIGNMENT_DEAD &&
-				pSoldier->bAssignment != IN_TRANSIT)
+		if (s->bAssignment != ASSIGNMENT_DEAD &&
+				s->bAssignment != IN_TRANSIT)
 		{
 			// increment the "man days" played counter for each such merc in the player's employment
-			gStrategicStatus.uiManDaysPlayed++;
+			++gStrategicStatus.uiManDaysPlayed;
 		}
 	}
 
-	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
+	/* Determine for all MERC mercs, whether they should levae, because the
+	 * player refused to pay */
+	if (LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_ACCOUNT_INVALID)
 	{
-		//if the merc is active
-		if (pSoldier->bAssignment != ASSIGNMENT_POW && pSoldier->bAssignment != IN_TRANSIT)
+		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			//if its a MERC merc, determine if the merc should leave ( because player refused to pay for merc )
-			if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC )
-			{
-				//if the players account status is invalid
-				if( LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_ACCOUNT_INVALID )
-				{
-					//if the soldier is alive anc concious
-					if( IsTheSoldierAliveAndConcious( pSoldier ) )
-					{
-						//if the merc should leave today
-						MercsContractIsFinished(pSoldier);
-					}
-				}
-			}
+			if (s->bAssignment == ASSIGNMENT_POW) continue;
+			if (s->bAssignment == IN_TRANSIT)     continue;
+
+			if (s->ubWhatKindOfMercAmI != MERC_TYPE__MERC) continue;
+
+			if (!IsTheSoldierAliveAndConcious(s)) continue;
+
+			MercsContractIsFinished(s);
 		}
 	}
 
-	//Loop through all the profiles
 	for (INT32 cnt = 0; cnt < NUM_PROFILES; ++cnt)
 	{
-		pProfile = &(gMercProfiles[ cnt ]);
+		MERCPROFILESTRUCT* const p = GetProfile(cnt);
 
 		// dead guys don't do nuthin' !
-		if ( pProfile->bMercStatus == MERC_IS_DEAD )
-		{
-			continue;
-		}
+		if (p->bMercStatus == MERC_IS_DEAD) continue;
 
 		//Every day reset this variable
-		pProfile->uiPrecedentQuoteSaid = 0;
+		p->uiPrecedentQuoteSaid = 0;
 
 		// skip anyone currently on the player's team
-		if ( IsMercOnTeam( (UINT8) cnt ))
-		{
-			continue;
-		}
+		if (IsMercOnTeam(cnt)) continue;
 
-		// if he's an AIM/M.E.R.C. merc
-		if ( cnt < AIM_AND_MERC_MERCS )
+		if (cnt < AIM_AND_MERC_MERCS && p->bMercStatus != MERC_RETURNING_HOME)
 		{
-			// if he's not just on his way home
-			if ( pProfile->bMercStatus != MERC_RETURNING_HOME )
+			// check if any of his stats improve through working or training
+			HandleUnhiredMercImprovement(p);
+
+			// if he's working on another job
+			if (p->bMercStatus == MERC_WORKING_ELSEWHERE)
 			{
-				// check if any of his stats improve through working or training
-				HandleUnhiredMercImprovement(pProfile);
-
-				// if he's working on another job
-				if (pProfile->bMercStatus == MERC_WORKING_ELSEWHERE)
-				{
-					// check if he's killed
-					HandleUnhiredMercDeaths( cnt );
-				}
+				// check if he's killed
+				HandleUnhiredMercDeaths(cnt);
 			}
 		}
 
 		// if merc is currently unavailable
-		if( pProfile->uiDayBecomesAvailable > 0 )
+		if (p->uiDayBecomesAvailable > 0)
 		{
-			// reduce time til available by one day
-			pProfile->uiDayBecomesAvailable--;
-
-			// Check to see if the merc has become available
-			if (pProfile->uiDayBecomesAvailable == 0)
+			if (--p->uiDayBecomesAvailable == 0 &&    // Check to see if the merc has become available
+					p->bMercStatus != MERC_FIRED_AS_A_POW) // if the merc CAN become ready
 			{
-				//if the merc CAN become ready
-				if( pProfile->bMercStatus != MERC_FIRED_AS_A_POW )
+				p->bMercStatus = MERC_OK;
+
+				// if the player has left a message for this merc
+				if (p->ubMiscFlags3 & PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM)
 				{
-					pProfile->bMercStatus = MERC_OK;
+					//remove the Flag, so if the merc goes on another assignment, the player can leave an email.
+					p->ubMiscFlags3 &= ~PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM;
 
-					// if the player has left a message for this merc
-					if ( pProfile->ubMiscFlags3 & PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM )
-					{
-						iOffset = AIM_REPLY_BARRY;
-
-						//remove the Flag, so if the merc goes on another assignment, the player can leave an email.
-						pProfile->ubMiscFlags3 &= ~PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM;
-
-						// TO DO: send E-mail to player telling him the merc has returned from an assignment
-						AddEmail( ( UINT8 )( iOffset + ( cnt * AIM_REPLY_LENGTH_BARRY ) ), AIM_REPLY_LENGTH_BARRY, ( UINT8 )( 6 + cnt ), GetWorldTotalMin() );
-					}
+					// TO DO: send E-mail to player telling him the merc has returned from an assignment
+					AddEmail(AIM_REPLY_BARRY + cnt * AIM_REPLY_LENGTH_BARRY, AIM_REPLY_LENGTH_BARRY, 6 + cnt, GetWorldTotalMin());
 				}
 			}
 		}
 		else	// was already available today
 		{
-			// if it's an AIM or M.E.R.C. merc
 			if (cnt < AIM_AND_MERC_MERCS)
 			{
 				// check to see if he goes on another assignment
+				UINT32 uiChance;
 				if (cnt < MAX_NUMBER_MERCS)
-				{
-					// A.I.M. merc
-					uiChance = 2 * pProfile->bExpLevel;
+				{ // A.I.M. merc
+					uiChance = 2 * p->bExpLevel;
 
 					// player has now had a chance to hire him, so he'll eligible to get killed off on another job
-					pProfile->ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
+					p->ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
 				}
 				else
-				{
-					// M.E.R.C. merc - very rarely get other work
-					uiChance = 1 * pProfile->bExpLevel;
+				{ // M.E.R.C. merc - very rarely get other work
+					uiChance = 1 * p->bExpLevel;
 
 					// player doesn't have a chance to hire any M.E.R.C's until after Speck's E-mail is sent
 					if (GetWorldDay() > DAYS_TIL_M_E_R_C_AVAIL)
 					{
 						// player has now had a chance to hire him, so he'll eligible to get killed off on another job
-						pProfile->ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
+						p->ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
 					}
 				}
 
 				if (Random(100) < uiChance)
 				{
-					pProfile->bMercStatus = MERC_WORKING_ELSEWHERE;
-					pProfile->uiDayBecomesAvailable = 1 + Random(6 + (pProfile->bExpLevel / 2) );		// 1-(6 to 11) days
+					p->bMercStatus = MERC_WORKING_ELSEWHERE;
+					p->uiDayBecomesAvailable = 1 + Random(6 + (p->bExpLevel / 2)); // 1-(6 to 11) days
 				}
 			}
 		}
 
 		// Decrement morale hangover (merc appears hirable, he just gives lame refusals during this time, though)
-		if( pProfile->ubDaysOfMoraleHangover > 0 )
-		{
-			pProfile->ubDaysOfMoraleHangover--;
-		}
+		if (p->ubDaysOfMoraleHangover > 0) --p->ubDaysOfMoraleHangover;
 	}
 
-
-	// build quit list
-	//BuildMercQuitList( pQuitList );
-	HandleSlayDailyEvent( );
-
-	// rebuild list for mapscreen
-	ReBuildCharactersList( );
+	HandleSlayDailyEvent();
+	ReBuildCharactersList();
 }
 
 
