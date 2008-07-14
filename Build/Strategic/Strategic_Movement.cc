@@ -604,7 +604,7 @@ static UINT8 AddGroupToList(GROUP* const g)
 
 /* Destroys the waypoint list, detaches group from list, then deallocated the
  * memory for the group */
-void RemoveGroupFromList(GROUP* const g)
+static void RemoveGroupFromList(GROUP* const g)
 {
 	for (GROUP** i = &gpGroupList; *i != NULL; i = &(*i)->next)
 	{

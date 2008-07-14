@@ -163,7 +163,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 			{
 				// if valid group, delete it
 				GROUP* const pGroup = GetGroup(s->ubGroupID);
-				if (pGroup) RemoveGroupFromList(pGroup);
+				if (pGroup) RemovePGroup(pGroup);
 			}
 		}
 
