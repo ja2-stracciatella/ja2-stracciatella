@@ -766,8 +766,6 @@ void StrategicRemoveMerc(SOLDIERTYPE* const s)
 		}
 		else
 		{
-			// remove him from any existing merc slot he could be in
-			RemoveMercSlot(s);
 			TakeSoldierOutOfVehicle(s);
 		}
 	}
