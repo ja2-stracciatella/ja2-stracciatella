@@ -753,12 +753,7 @@ void StrategicRemoveMerc(SOLDIERTYPE* const s)
 		SetupProfileInsertionDataForSoldier(s);
 	}
 
-	//remove him from the soldier structure
-	if (s->bAssignment < ON_DUTY)
-	{
-		RemoveCharacterFromSquads(s);
-	}
-	else if (s->ubGroupID)
+	if (s->bAssignment >= ON_DUTY && s->ubGroupID)
 	{ // He/she is in a mvt group, remove and destroy the group
 		if (s->bAssignment != VEHICLE)
 		{ //Can only remove groups if they aren't persistant (not in a squad or vehicle)
