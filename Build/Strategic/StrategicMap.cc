@@ -2346,7 +2346,7 @@ void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier )
 
 	if( pSoldier->bAssignment < ON_DUTY )
 	{
-			RemoveCharacterFromSquads( pSoldier );
+			RemoveCharacterFromSquads( pSoldier ); // REDUNDANT AddCharacterToUniqueSquad()
 
 		// are they in a group?..remove from group
 		if( pSoldier->ubGroupID != 0 )

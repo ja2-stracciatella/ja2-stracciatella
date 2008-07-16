@@ -40,148 +40,113 @@ UINT8		gTileTypeMovementCost[ NUM_TERRAIN_TYPES ] =
 };
 
 
-void CreateTileDatabase( )
+void CreateTileDatabase()
 {
-	UINT32					cnt1, cnt2;
-	UINT8						ubLoop;
-	TILE_ELEMENT		TileElement;
-
 	// Loop through all surfaces and tiles and build database
-	for( cnt1 = 0; cnt1 < NUMBEROFTILETYPES; cnt1++ )
+	for (UINT32 cnt1 = 0; cnt1 < NUMBEROFTILETYPES; ++cnt1)
 	{
-		// Get number of regions
 		const TILE_IMAGERY* const TileSurf = gTileSurfaceArray[cnt1];
-		if ( TileSurf != NULL )
+		if (!TileSurf) continue;
+
+		// Build start index list
+		gTileTypeStartIndex[cnt1] = (UINT16)gTileDatabaseSize;
+
+		UINT32 NumRegions = TileSurf->vo->SubregionCount();
+
+		// Handle overflow
+		if (NumRegions > gNumTilesPerType[cnt1])
 		{
+			NumRegions = gNumTilesPerType[cnt1];
+		}
 
-			// Build start index list
-	    gTileTypeStartIndex[ cnt1 ] = (UINT16)gTileDatabaseSize;
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Type: %s Size: %d Index: %d", gTileSurfaceName[cnt1], gNumTilesPerType[cnt1], gTileDatabaseSize));
 
-			UINT32 NumRegions = TileSurf->vo->SubregionCount();
+		UINT32 cnt2;
+		for (cnt2 = 0; cnt2 < NumRegions; ++cnt2)
+		{
+			TILE_ELEMENT TileElement;
+			memset(&TileElement, 0, sizeof(TileElement));
+			TileElement.usRegionIndex = (UINT16)cnt2;
+			TileElement.hTileSurface	= TileSurf->vo;
+			TileElement.sBuddyNum			= -1;
 
-			// Check for overflow
-			if ( NumRegions > gNumTilesPerType[ cnt1 ] )
+			if (TileSurf->vo->ppZStripInfo && // Check for multi-z stuff
+					TileSurf->vo->ppZStripInfo[cnt2])
 			{
-				// Cutof
-				NumRegions = gNumTilesPerType[ cnt1 ];
+				TileElement.uiFlags |= MULTI_Z_TILE;
 			}
 
-			DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Type: %s Size: %d Index: %d", gTileSurfaceName[cnt1], gNumTilesPerType[ cnt1 ], gTileDatabaseSize ) );
-
-			for( cnt2 = 0; cnt2 < NumRegions; cnt2++ )
+			// Structure database stuff!
+			STRUCTURE_FILE_REF const* const sfr = TileSurf->pStructureFileRef;
+			if (sfr && sfr->pubStructureData)
 			{
-
-				memset( &TileElement, 0, sizeof( TileElement ) );
-				TileElement.usRegionIndex = (UINT16)cnt2;
-				TileElement.hTileSurface	= TileSurf->vo;
-				TileElement.sBuddyNum			= -1;
-
-				// Check for multi-z stuff
-				if ( TileSurf->vo->ppZStripInfo != NULL )
-				{
-					// Only do this if we are within the # of video objects
-					if (cnt2 < TileSurf->vo->SubregionCount())
-					{
-						if ( TileSurf->vo->ppZStripInfo[ cnt2 ] != NULL )
-						{
-							TileElement.uiFlags |= MULTI_Z_TILE;
-						}
-					}
-				}
-
-				// Structure database stuff!
-				if (TileSurf->pStructureFileRef != NULL && TileSurf->pStructureFileRef->pubStructureData != NULL)
-				{
-					if (TileSurf->pStructureFileRef->pDBStructureRef[cnt2].pDBStructure != NULL)
-					{
-						TileElement.pDBStructureRef	= &(TileSurf->pStructureFileRef->pDBStructureRef[cnt2]);
-					}
-				}
-
-				TileElement.fType							= (UINT16)TileSurf->fType;
-				TileElement.ubTerrainID				= TileSurf->ubTerrainID;
-				TileElement.usWallOrientation = NO_ORIENTATION;
-
-				if (TileSurf->pAuxData != NULL)
-				{
-					if (TileSurf->pAuxData[cnt2].fFlags & AUX_FULL_TILE)
-					{
-						TileElement.ubFullTile = 1;
-					}
-					if (TileSurf->pAuxData[cnt2].fFlags & AUX_ANIMATED_TILE)
-					{
-						// Allocate Animated tile data
-						AllocateAnimTileData( &TileElement, TileSurf->pAuxData[cnt2].ubNumberOfFrames );
-
-						// Set values into tile element
-						TileElement.pAnimData->bCurrentFrame = TileSurf->pAuxData[cnt2].ubCurrentFrame;
-						for (ubLoop = 0; ubLoop < TileElement.pAnimData->ubNumFrames; ubLoop++)
-						{
-							TileElement.pAnimData->pusFrames[ ubLoop ] = gTileDatabaseSize - TileElement.pAnimData->bCurrentFrame + ubLoop;
-						}
-
-/*
-						for (ubLoop = TileElement.pAnimData->bCurrentFrame; ubLoop < TileElement.pAnimData->ubNumFrames; ubLoop++)
-						{
-							TileElement.pAnimData->pusFrames[ ubLoop ] = gTileDatabaseSize - TileElement.pAnimData->bCurrentFrame + ubLoop;
-						}
-						for (ubLoop = 0; ubLoop < TileElement.pAnimData->bCurrentFrame; ubLoop++)
-						{
-							TileElement.pAnimData->pusFrames[ ubLoop ] = gTileDatabaseSize - TileElement.pAnimData->bCurrentFrame + ubLoop;
-						}
-
-*/
-
-						// set into animation controller array
-						gusAnimatedTiles[ gusNumAnimatedTiles ] = gTileDatabaseSize;
-						gusNumAnimatedTiles++;
-
-						Assert( gusNumAnimatedTiles <= MAX_ANIMATED_TILES );
-
-						TileElement.uiFlags				 |= ANIMATED_TILE;
-					}
-					TileElement.usWallOrientation = TileSurf->pAuxData[cnt2].ubWallOrientation;
-					if (TileSurf->pAuxData[cnt2].ubNumberOfTiles > 0)
-					{
-						TileElement.ubNumberOfTiles = TileSurf->pAuxData[cnt2].ubNumberOfTiles;
-						TileElement.pTileLocData = TileSurf->pTileLocData + TileSurf->pAuxData[cnt2].usTileLocIndex;
-					}
-				}
-
-				SetSpecificDatabaseValues( (UINT16)cnt1, gTileDatabaseSize, &TileElement, TileSurf->bRaisedObjectType );
-
-				gTileDatabase[ gTileDatabaseSize ] = TileElement;
-				gTileDatabaseSize++;
+				DB_STRUCTURE_REF* const sr = &sfr->pDBStructureRef[cnt2];
+				if (sr->pDBStructure) TileElement.pDBStructureRef	= sr;
 			}
 
-			// Check if data matches what should be there
-			if ( NumRegions < gNumTilesPerType[ cnt1 ] )
+			TileElement.fType             = (UINT16)TileSurf->fType;
+			TileElement.ubTerrainID       = TileSurf->ubTerrainID;
+			TileElement.usWallOrientation = NO_ORIENTATION;
+
+			if (TileSurf->pAuxData)
 			{
-				// Do underflows here
-				for ( cnt2 = NumRegions; cnt2 < gNumTilesPerType[ cnt1 ]; cnt2++ )
+				AuxObjectData const& aux = TileSurf->pAuxData[cnt2];
+				if (aux.fFlags & AUX_FULL_TILE)
 				{
-					memset( &TileElement, 0, sizeof( TileElement ) );
-					TileElement.usRegionIndex = 0;
-					TileElement.hTileSurface	= TileSurf->vo;
-					TileElement.fType					= (UINT16)TileSurf->fType;
-					TileElement.ubFullTile    = FALSE;
-					TileElement.sOffsetHeight = 0;
-					TileElement.ubFullTile		= 0;
-          TileElement.uiFlags       |= UNDERFLOW_FILLER;
-
-					gTileDatabase[ gTileDatabaseSize ] = TileElement;
-					gTileDatabaseSize++;
+					TileElement.ubFullTile = 1;
 				}
+				if (aux.fFlags & AUX_ANIMATED_TILE)
+				{
+					// Allocate Animated tile data
+					AllocateAnimTileData(&TileElement, aux.ubNumberOfFrames);
 
+					// Set values into tile element
+					TileElement.pAnimData->bCurrentFrame = aux.ubCurrentFrame;
+					for (UINT8 ubLoop = 0; ubLoop < TileElement.pAnimData->ubNumFrames; ++ubLoop)
+					{
+						TileElement.pAnimData->pusFrames[ubLoop] = gTileDatabaseSize - TileElement.pAnimData->bCurrentFrame + ubLoop;
+					}
+
+					// set into animation controller array
+					Assert(gusNumAnimatedTiles < lengthof(gusAnimatedTiles));
+					gusAnimatedTiles[gusNumAnimatedTiles++] = gTileDatabaseSize;
+
+					TileElement.uiFlags |= ANIMATED_TILE;
+				}
+				TileElement.usWallOrientation = aux.ubWallOrientation;
+				if (aux.ubNumberOfTiles > 0)
+				{
+					TileElement.ubNumberOfTiles = aux.ubNumberOfTiles;
+					TileElement.pTileLocData    = TileSurf->pTileLocData + aux.usTileLocIndex;
+				}
 			}
 
+			SetSpecificDatabaseValues(cnt1, gTileDatabaseSize, &TileElement, TileSurf->bRaisedObjectType);
+
+			gTileDatabase[gTileDatabaseSize++] = TileElement;
+		}
+
+		// Handle underflow
+		for (; cnt2 < gNumTilesPerType[cnt1]; ++cnt2)
+		{
+			TILE_ELEMENT TileElement;
+			memset(&TileElement, 0, sizeof(TileElement));
+			TileElement.usRegionIndex  = 0;
+			TileElement.hTileSurface   = TileSurf->vo;
+			TileElement.fType          = (UINT16)TileSurf->fType;
+			TileElement.ubFullTile     = FALSE;
+			TileElement.sOffsetHeight  = 0;
+			TileElement.ubFullTile     = 0;
+			TileElement.uiFlags       |= UNDERFLOW_FILLER;
+
+			gTileDatabase[gTileDatabaseSize++] = TileElement;
 		}
 	}
 
 	//Calculate mem usgae
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Database Sizes: %d vs %d", gTileDatabaseSize, NUMBEROFTILES ) );
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Database Types: %d", NUMBEROFTILETYPES ) );
-	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Database Item Mem:		%d", gTileDatabaseSize * sizeof( TILE_ELEMENT ) ) );
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Database Sizes: %d vs %d", gTileDatabaseSize, NUMBEROFTILES));
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Database Types: %d", NUMBEROFTILETYPES));
+	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Database Item Mem:		%d", gTileDatabaseSize * sizeof(TILE_ELEMENT)));
 }
 
 

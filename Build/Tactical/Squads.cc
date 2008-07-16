@@ -241,7 +241,7 @@ void AddCharacterToAnySquad(SOLDIERTYPE* const pCharacter)
 
 
 	// remove them from current squad
-	RemoveCharacterFromSquads( pCharacter );
+	RemoveCharacterFromSquads( pCharacter ); // REDUNDANT AddCharacterToSquad()
 
 	// first look for a compatible NON-EMPTY squad (don't start new squad if we don't have to)
 	for( bCounter = 0; bCounter < NUMBER_OF_SQUADS; bCounter++ )
@@ -286,7 +286,7 @@ INT8 AddCharacterToUniqueSquad( SOLDIERTYPE *pCharacter )
 	// check if character on a squad
 
 		// remove them
-	RemoveCharacterFromSquads( pCharacter );
+	RemoveCharacterFromSquads( pCharacter ); // REDUNDANT AddCharacterToSquad()
 
 	for( bCounter = 0; bCounter < NUMBER_OF_SQUADS; bCounter++ )
 	{
