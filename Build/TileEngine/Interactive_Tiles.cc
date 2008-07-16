@@ -667,17 +667,12 @@ void EndCurInteractiveTileCheck( )
 
 static BOOLEAN RefineLogicOnStruct(INT16 sGridNo, LEVELNODE* pNode)
 {
-	TILE_ELEMENT *TileElem;
 	STRUCTURE		 *pStructure;
-
 
 	if ( pNode->uiFlags & LEVELNODE_CACHEDANITILE )
 	{
 		return ( FALSE );
 	}
-
-
-	TileElem = &(gTileDatabase[pNode->usIndex]);
 
 	// See if we are on an interactable tile!
 	// Try and get struct data from levelnode pointer
@@ -766,16 +761,6 @@ static BOOLEAN RefineLogicOnStruct(INT16 sGridNo, LEVELNODE* pNode)
 			{
 				return( FALSE );
 			}
-		}
-	}
-
-	// Check if it's a hidden struct and we have not revealed anything!
-	if ( TileElem->uiFlags & HIDDEN_TILE )
-	{
-		if ( !IsHiddenStructureVisible( sGridNo, pNode->usIndex ) )
-		{
-			// Return false
-			return( FALSE );
 		}
 	}
 

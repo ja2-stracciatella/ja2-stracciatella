@@ -4033,19 +4033,6 @@ INT16 FindAdjacentPunchTarget(const SOLDIERTYPE* const pSoldier, const SOLDIERTY
 
 BOOLEAN UIOKMoveDestination(const SOLDIERTYPE* pSoldier, UINT16 usMapPos)
 {
-	BOOLEAN fVisible;
-
-	// Check if a hidden tile exists but is not revealed
-	if ( DoesGridnoContainHiddenStruct( usMapPos, &fVisible ) )
-	{
-		if ( !fVisible )
-		{
-			// The player thinks this is OK!
-			return( TRUE );
-		}
-	}
-
-
 	if ( !NewOKDestination( pSoldier, usMapPos, FALSE, (INT8) gsInterfaceLevel ) )
 	{
 		return( FALSE );

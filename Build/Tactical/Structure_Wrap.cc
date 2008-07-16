@@ -179,48 +179,6 @@ BOOLEAN IsDoorVisibleAtGridNo( INT16 sGridNo )
 }
 
 
-BOOLEAN DoesGridnoContainHiddenStruct( INT16 sGridNo, BOOLEAN *pfVisible )
-{
-	// ATE: These are ignored now - always return false
-
-	//STRUCTURE *pStructure;
-
-	//pStructure = FindStructure( sGridNo, STRUCTURE_HIDDEN );
-
-	//if ( pStructure != NULL )
-	//{
-	//	if ( !(gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) && !(gTacticalStatus.uiFlags&SHOW_ALL_MERCS)  )
-	//	{
-	//		*pfVisible = FALSE;
-	//	}
-	//	else
-	//	{
-	//		*pfVisible = TRUE;
-	//	}//
-//
-	//	return( TRUE );
-	//}
-
-	return( FALSE );
-}
-
-
-BOOLEAN IsHiddenStructureVisible( INT16 sGridNo, UINT16 usIndex )
-{
-	// Check if it's a hidden struct and we have not revealed anything!
-	if ( gTileDatabase[ usIndex ].uiFlags & HIDDEN_TILE )
-	{
-		if ( !(gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) && !(gTacticalStatus.uiFlags&SHOW_ALL_MERCS) )
-		{
-			// Return false
-			return( FALSE );
-		}
-	}
-
-	return( TRUE );
-}
-
-
 BOOLEAN	WallExistsOfTopLeftOrientation( INT16 sGridNo )
 {
 	// CJC: changing to search only for normal walls, July 16, 1998

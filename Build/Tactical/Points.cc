@@ -32,7 +32,6 @@ INT16 TerrainActionPoints(const SOLDIERTYPE* const pSoldier, const INT16 sGridno
 {
 		INT16	sAPCost = 0;
 	  INT16  sSwitchValue;
-		BOOLEAN		fHiddenStructVisible;				// Used for hidden struct visiblity
 
  if ( pSoldier->bStealthMode )
      sAPCost += AP_STEALTH_MODIFIER;
@@ -43,19 +42,6 @@ INT16 TerrainActionPoints(const SOLDIERTYPE* const pSoldier, const INT16 sGridno
   sSwitchValue = gubWorldMovementCosts[sGridno][bDir][ bLevel ];
 
 	// Check reality vs what the player knows....
-	if ( pSoldier->bTeam == gbPlayerNum )
-	{
-		// Is this obstcale a hidden tile that has not been revealed yet?
-		if( DoesGridnoContainHiddenStruct( (UINT16)sGridno, &fHiddenStructVisible ) )
-		{
-			// Are we not visible, if so use terrain costs!
-			if ( !fHiddenStructVisible )
-			{
-				// Set cost of terrain!
-				sSwitchValue = gTileTypeMovementCost[ gpWorldLevelData[ sGridno ].ubTerrainID ];
-			}
-		}
-	}
 	if ( sSwitchValue == TRAVELCOST_NOT_STANDING )
 	{
 		// use the cost of the terrain!

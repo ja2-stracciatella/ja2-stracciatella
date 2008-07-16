@@ -283,7 +283,6 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
  UINT8 dir,range,Path2;
  UINT8	ubRoomNo;
  BOOLEAN	fCheckForRooms = FALSE;
- BOOLEAN			fHiddenStructVisible;
  UINT8				ubMovementCost;
  BOOLEAN			fTravelCostObs;
  BOOLEAN			fGoneThroughDoor = FALSE;
@@ -736,19 +735,6 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 						 }
 
 						 tilesLeftToSee--;
-				}
-
-				 // CHECK FOR HIDDEN STRUCTS
-				 // IF we had a hidden struct here that is not visible ( which will still be true because
-				 // we set it revealed below...
-				if ( DoesGridnoContainHiddenStruct( (UINT16)marker, &fHiddenStructVisible ) )
-				{
-					if ( !fHiddenStructVisible )
-					{
-						gpWorldLevelData[marker].uiFlags|=MAPELEMENT_REDRAW;
-						SetRenderFlags(RENDER_FLAG_MARKED);
-						RecompileLocalMovementCosts( (UINT16)marker );
-					}
 				}
 
 				if (tilesLeftToSee <= 0)

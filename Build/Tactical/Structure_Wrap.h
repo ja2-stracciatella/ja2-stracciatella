@@ -8,10 +8,6 @@ BOOLEAN	IsJumpableFencePresentAtGridno( INT16 sGridNo );
 
 BOOLEAN IsDoorVisibleAtGridNo( INT16 sGridNo );
 
-BOOLEAN IsHiddenStructureVisible( INT16 sGridNo, UINT16 usIndex );
-
-BOOLEAN DoesGridnoContainHiddenStruct( INT16 sGridNo, BOOLEAN *pfVisible );
-
 BOOLEAN	WallExistsOfTopLeftOrientation( INT16 sGridNo );
 
 BOOLEAN	WallExistsOfTopRightOrientation( INT16 sGridNo );

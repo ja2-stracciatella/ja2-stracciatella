@@ -95,12 +95,6 @@ void CreateTileDatabase( )
 					if (TileSurf->pStructureFileRef->pDBStructureRef[cnt2].pDBStructure != NULL)
 					{
 						TileElement.pDBStructureRef	= &(TileSurf->pStructureFileRef->pDBStructureRef[cnt2]);
-
-						if ( TileElement.pDBStructureRef->pDBStructure->fFlags & STRUCTURE_HIDDEN )
-						{
-							// ATE: These are ignored!
-							//TileElement.uiFlags |= HIDDEN_TILE;
-						}
 					}
 				}
 

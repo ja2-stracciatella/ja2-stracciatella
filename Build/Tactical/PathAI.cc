@@ -518,7 +518,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	UINT32		uiCost;
 	INT32			iCurrLevel, iLoop;
 
-	BOOLEAN		fHiddenStructVisible;				// Used for hidden struct visiblity
 	UINT16		usOKToAddStructID=0;
 
 	BOOLEAN		fCopyReachable;
@@ -1081,24 +1080,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 				nextCost = gubWorldMovementCosts[ newLoc ][ iCnt ][ ubLevel ];
 
 				//ATE:	Check for differences from reality
-				// Is next cost an obstcale
-				if ( nextCost == TRAVELCOST_HIDDENOBSTACLE )
-				{
-					if ( fPathingForPlayer )
-					{
-						// Is this obstcale a hidden tile that has not been revealed yet?
-						if( DoesGridnoContainHiddenStruct( (UINT16)newLoc, &fHiddenStructVisible ) )
-						{
-							// Are we not visible, if so use terrain costs!
-							if ( !fHiddenStructVisible )
-							{
-								// Set cost of terrain!
-								nextCost = gTileTypeMovementCost[ gpWorldLevelData[ newLoc ].ubTerrainID ];
-							}
-						}
-					}
-				}
-				else if ( nextCost == TRAVELCOST_NOT_STANDING )
+				if (nextCost == TRAVELCOST_NOT_STANDING)
 				{
 					// for path plotting purposes, use the terrain value
 					nextCost = gTileTypeMovementCost[ gpWorldLevelData[ newLoc ].ubTerrainID ];
