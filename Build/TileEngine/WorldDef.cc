@@ -2549,6 +2549,11 @@ try
         // Check patching for phantom menace struct data...
         if ( gTileDatabase[ usTileIndex ].uiFlags & UNDERFLOW_FILLER )
         {
+        	/* HACK000F Workaround: Skip underflow fillers, when there is more
+        	 * than one struct on this tile, otherwise adding the underflow
+        	 * replacement struct will fail */
+					if (bCounts[cnt][2] > 1) continue;
+
 			    usTileIndex = GetTileIndexFromTypeSubIndex(ubType, 1);
         }
       }
