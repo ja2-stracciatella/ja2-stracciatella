@@ -3387,50 +3387,45 @@ void RenderTownIDString(void)
 }
 
 
-void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* pSoldier)
+void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* const s)
 {
+	if (!s->bActive) return;
+	if (s->bTeam != gbPlayerNum) return;
 
-	if ( pSoldier->bActive  )
+	// Are we in the loaded sector?
+	if (s->sSectorX == gWorldSectorX  &&
+			s->sSectorY == gWorldSectorY  &&
+			s->bSectorZ == gbWorldSectorZ &&
+			!s->fBetweenSectors &&
+			s->bInSector)
 	{
-		// Add to interface if the are ours
-		if ( pSoldier->bTeam == gbPlayerNum )
+		// IF on duty....
+		INT32 const cur_squad = CurrentSquad();
+		if (s->bAssignment == cur_squad || SoldierIsDeadAndWasOnSquad(s, cur_squad))
 		{
-			// Are we in the loaded sector?
-			if ( pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ && !pSoldier->fBetweenSectors && pSoldier->bInSector )
+			if (s->bAssignment == ASSIGNMENT_DEAD)
 			{
-				// IF on duty....
-				if( ( pSoldier->bAssignment ==  CurrentSquad( ) )|| ( SoldierIsDeadAndWasOnSquad( pSoldier, ( INT8 )( CurrentSquad( ) ) ) ) )
-				{
-
-					if( pSoldier->bAssignment == ASSIGNMENT_DEAD )
-					{
-						pSoldier->fUICloseMerc = FALSE;
-					}
-					// ATE: ALrighty, if we have the insertion code of helicopter..... don't add just yet!
-					/// ( will add in heli code )
-					if ( pSoldier->ubStrategicInsertionCode != INSERTION_CODE_CHOPPER )
-					{
-						AddPlayerToInterfaceTeamSlot(pSoldier);
-					}
-
-					// ARE WE A VEHICLE.....
-					if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-					{
-						AddPassangersToTeamPanel( pSoldier->bVehicleID );
-					}
-				}
+				s->fUICloseMerc = FALSE;
 			}
-			else
+			/* ATE: If we have the insertion code of helicopter, don't add just yet!
+			 * (will add in heli code) */
+			if (s->ubStrategicInsertionCode != INSERTION_CODE_CHOPPER)
 			{
-				// Make sure we are NOT in this world!
-				// Set gridno to one that's not visib;l
-				RemoveSoldierFromGridNo( pSoldier );
+				AddPlayerToInterfaceTeamSlot(s);
+			}
 
-				// Remove slot from tactical
-				RemoveMercSlot( pSoldier );
-
+			if (s->uiStatusFlags & SOLDIER_VEHICLE)
+			{
+				AddPassangersToTeamPanel(s->bVehicleID);
 			}
 		}
+	}
+	else
+	{
+		// Make sure we are NOT in this world!
+		// Set gridno to one that's not visible
+		RemoveSoldierFromGridNo(s);
+		RemoveMercSlot(s);
 	}
 }
 
