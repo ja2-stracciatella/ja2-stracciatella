@@ -435,20 +435,8 @@ BOOLEAN IsValidTargetMerc(const SOLDIERTYPE* const s)
 static void GetSoldierScreenRect(const SOLDIERTYPE* const pSoldier, SGPRect* const pRect)
 {
 		INT16 sMercScreenX, sMercScreenY;
-		UINT16	usAnimSurface;
 
 		GetSoldierScreenPos( pSoldier, &sMercScreenX, &sMercScreenY );
-
-		usAnimSurface = GetSoldierAnimationSurface(pSoldier);
-		if ( usAnimSurface == INVALID_ANIMATION_SURFACE )
-		{
-			pRect->iLeft		= sMercScreenX;
-			pRect->iTop			= sMercScreenY;
-			pRect->iBottom	= sMercScreenY + 5;
-			pRect->iRight		= sMercScreenX + 5;
-
-			return;
-		}
 
 		pRect->iLeft		= sMercScreenX;
 		pRect->iTop			= sMercScreenY;
@@ -458,18 +446,6 @@ static void GetSoldierScreenRect(const SOLDIERTYPE* const pSoldier, SGPRect* con
 
 void GetSoldierAnimDims( SOLDIERTYPE *pSoldier, INT16 *psHeight, INT16 *psWidth )
 {
-	UINT16											 usAnimSurface;
-
-	usAnimSurface = GetSoldierAnimationSurface(pSoldier);
-
-	if ( usAnimSurface == INVALID_ANIMATION_SURFACE )
-	{
-		*psHeight					= (INT16)5;
-		*psWidth					= (INT16)5;
-
-		return;
-	}
-
 	// OK, noodle here on what we should do... If we take each frame, it will be different slightly
 	// depending on the frame and the value returned here will vary thusly. However, for the
 	// uses of this function, we should be able to use just the first frame...
@@ -481,18 +457,6 @@ void GetSoldierAnimDims( SOLDIERTYPE *pSoldier, INT16 *psHeight, INT16 *psWidth 
 
 void GetSoldierAnimOffsets(const SOLDIERTYPE* pSoldier, INT16* sOffsetX, INT16* sOffsetY)
 {
-	UINT16											 usAnimSurface;
-
-	usAnimSurface = GetSoldierAnimationSurface(pSoldier);
-
-	if ( usAnimSurface == INVALID_ANIMATION_SURFACE )
-	{
-		*sOffsetX					= (INT16)0;
-		*sOffsetY					= (INT16)0;
-
-		return;
-	}
-
 	*sOffsetX					= (INT16)pSoldier->sBoundingBoxOffsetX;
 	*sOffsetY					= (INT16)pSoldier->sBoundingBoxOffsetY;
 }
