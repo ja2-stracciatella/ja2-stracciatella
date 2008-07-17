@@ -968,95 +968,47 @@ static void GetArrowsBackground(void)
 }
 
 
-void GetSoldierAboveGuyPositions(const SOLDIERTYPE* const pSoldier, INT16* const psX, INT16* const psY, const BOOLEAN fRadio)
+void GetSoldierAboveGuyPositions(SOLDIERTYPE const* const s, INT16* const psX, INT16* const psY, BOOLEAN const fRadio)
 {
-	INT16 sMercScreenX, sMercScreenY;
-	UINT8	ubAnimUseHeight;
-	INT16		sStanceOffset = 0;
-	INT16		sTextBodyTypeYOffset = 62;
+	INT16 const sTextBodyTypeYOffset = 62;
 
-	GetSoldierTRUEScreenPos(pSoldier, &sMercScreenX, &sMercScreenY);
-
-	// Adjust based on stance
-	if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_NOMOVE_MARKER) )
+	INT16 sStanceOffset;
+	// Adjust based on body type
+	switch (s->ubBodyType)
 	{
-		ubAnimUseHeight = gAnimControl[ pSoldier->usAnimState ].ubHeight;
-	}
-	else
-	{
-		ubAnimUseHeight = gAnimControl[ pSoldier->usAnimState ].ubEndHeight;
-	}
-	switch ( ubAnimUseHeight )
-	{
-		case ANIM_STAND:
-			break;
+		case CROW:          sStanceOffset = 30; break;
+		case ROBOTNOWEAPON: sStanceOffset = 30; break;
 
-		case ANIM_PRONE:
-			sStanceOffset = 25;
-			break;
-
-		case ANIM_CROUCH:
-			sStanceOffset = 10;
-			break;
-	}
-
-	// Adjust based on body type...
-	switch( pSoldier->ubBodyType )
-	{
-		case CROW:
-
-			sStanceOffset = 30;
-			break;
-
-		case ROBOTNOWEAPON:
-
-			sStanceOffset = 30;
-			break;
-
-	}
-
-	//sStanceOffset -= gpWorldLevelData[ pSoldier->sGridNo ].sHeight;
-
-	// Adjust based on level
-	if ( pSoldier->bLevel == 1 && gsInterfaceLevel == 0 )
-	{
-		//sStanceOffset -= ROOF_LEVEL_HEIGHT;
-	}
-	if ( pSoldier->bLevel == 0 && gsInterfaceLevel == 1 )
-	{
-		//sStanceOffset += ROOF_LEVEL_HEIGHT;
-	}
-
-	if ( pSoldier->ubProfile != NO_PROFILE )
-	{
-		if ( fRadio )
+		default:
 		{
-			*psX = sMercScreenX - 80 / 2;
-			*psY = sMercScreenY - sTextBodyTypeYOffset + sStanceOffset;
-		}
-		else
-		{
-			*psX = sMercScreenX - 80 / 2;
-			*psY = sMercScreenY - sTextBodyTypeYOffset + sStanceOffset;
-
-			// OK, Check if we need to go below....
-			// Can do this 1) if displaying damge or 2 ) above screen
-
-			// If not a radio position, adjust if we are getting hit, to be lower!
-			// If we are getting hit, lower them!
-			if ( pSoldier->fDisplayDamage || *psY < gsVIEWPORT_WINDOW_START_Y )
+			// Adjust based on stance
+			ANIMCONTROLTYPE const& ac = gAnimControl[s->usAnimState];
+			UINT8 const ubAnimUseHeight = ac.uiFlags & ANIM_NOMOVE_MARKER ?
+				ac.ubHeight : ac.ubEndHeight;
+			switch (ubAnimUseHeight)
 			{
-				*psX = sMercScreenX - 80 / 2;
-				*psY = sMercScreenY;
+				case ANIM_PRONE:  sStanceOffset = 25; break;
+				case ANIM_CROUCH: sStanceOffset = 10; break;
+				default:          sStanceOffset =  0; break;
 			}
+			break;
 		}
-
 	}
-	else
+
+	INT16 sMercScreenX;
+	INT16 sMercScreenY;
+	GetSoldierTRUEScreenPos(s, &sMercScreenX, &sMercScreenY);
+
+	*psX = sMercScreenX - 80 / 2;
+	*psY = sMercScreenY - sTextBodyTypeYOffset + sStanceOffset;
+
+	// OK, Check if we need to go below....
+	// Can do this if 1) displaying damge or 2) above screen
+	if (s->ubProfile != NO_PROFILE &&
+			!fRadio                    &&
+			(s->fDisplayDamage || *psY < gsVIEWPORT_WINDOW_START_Y))
 	{
-		//Display Text!
-		*psX = sMercScreenX - 80 / 2;
-		*psY = sMercScreenY - sTextBodyTypeYOffset + sStanceOffset;
+		*psY = sMercScreenY;
 	}
 }
 

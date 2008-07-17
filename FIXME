@@ -51,7 +51,6 @@ GetNumberOfPastMercsOnPlayersTeam(): callers
 GetRootName(): complicated
 GetSectorFacilitiesFlags(): complicated
 GetSectorIDString(): complicated
-GetSoldierAboveGuyPositions(): (twoards end of function) no decision
 GetTimeRemainingOnSoldiersContract(): callers
 GetTimeRemainingOnSoldiersInsuranceContract(): callers
 GetZLevelOfItemPoolGivenStructure(): third parameter only tested for != NULL
