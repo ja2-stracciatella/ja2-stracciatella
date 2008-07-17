@@ -171,36 +171,19 @@ void DeallocateTileDatabase( )
 
 void SetLandIndex(INT32 const iMapIndex, UINT16 const usIndex, UINT32 const uiNewType)
 {
-	UINT16	usTempIndex;
-	UINT8		ubLastHighLevel=0;
-
-	if ( AnyHeigherLand( iMapIndex, uiNewType, &ubLastHighLevel ) )
+	UINT16 usTempIndex;
+	UINT8  ubLastHighLevel;
+	if (TypeExistsInLandLayer(iMapIndex, uiNewType, &usTempIndex))
 	{
-			// Check if type exists and get it's index if so
-			if ( TypeExistsInLandLayer( iMapIndex, uiNewType, &usTempIndex ) )
-			{
-				// Replace with new index
-				ReplaceLandIndex(iMapIndex, usTempIndex, usIndex);
-			}
-			else
-			{
-				InsertLandIndexAtLevel(iMapIndex, usIndex, ubLastHighLevel + 1);
-			}
+		ReplaceLandIndex(iMapIndex, usTempIndex, usIndex);
+	}
+	else if (AnyHeigherLand(iMapIndex, uiNewType, &ubLastHighLevel))
+	{
+		InsertLandIndexAtLevel(iMapIndex, usIndex, ubLastHighLevel + 1);
 	}
 	else
 	{
-
-		// Check if type exists and get it's index if so
-		if ( TypeExistsInLandLayer( iMapIndex, uiNewType, &usTempIndex ) )
-		{
-			// Replace with new index
-			ReplaceLandIndex(iMapIndex, usTempIndex, usIndex);
-		}
-		else
-		{
-			// Otherwise, add to head
-			AddLandToHead(iMapIndex, usIndex);
-		}
+		AddLandToHead(iMapIndex, usIndex);
 	}
 }
 
