@@ -545,48 +545,39 @@ void RenderTopmostTacticalInterface( )
 	// Loop through all mercs and make go
 	FOR_ALL_MERCS(i)
 	{
-		SOLDIERTYPE* const pSoldier = *i;
-		if (pSoldier != gSelectedGuy) DrawSelectedUIAboveGuy(pSoldier);
+		SOLDIERTYPE* const s = *i;
+		if (s != gSelectedGuy) DrawSelectedUIAboveGuy(s);
 
-		if ( pSoldier->fDisplayDamage )
+		if (!s->fDisplayDamage)    continue;
+		if (s->sGridNo == NOWHERE) continue;
+		if (s->bVisible == -1)     continue;
+
+		INT16 sMercScreenX;
+		INT16 sMercScreenY;
+		GetSoldierScreenPos(s, &sMercScreenX, &sMercScreenY);
+
+		INT16 x = sMercScreenX + s->sDamageX - s->sBoundingBoxOffsetX;
+		INT16 y = sMercScreenY + s->sDamageY - s->sBoundingBoxOffsetY;
+		if (s->ubBodyType == QUEENMONSTER)
 		{
-			// Display damage
+			x += 25;
+			y += 10;
+		}
+		else
+		{
+			x += 2 * 30 / 3;
+			y += -5;
 
-			// Use world coordinates!
-			INT16 sMercScreenX, sMercScreenY, sDamageX, sDamageY;
-
-			if ( pSoldier->sGridNo != NOWHERE && pSoldier->bVisible != -1 )
+			if (y < gsVIEWPORT_WINDOW_START_Y)
 			{
-				GetSoldierScreenPos( pSoldier, &sMercScreenX, &sMercScreenY );
-
-				if ( pSoldier->ubBodyType == QUEENMONSTER )
-				{
-					sDamageX = sMercScreenX + pSoldier->sDamageX - pSoldier->sBoundingBoxOffsetX;
-					sDamageY = sMercScreenY + pSoldier->sDamageY - pSoldier->sBoundingBoxOffsetY;
-
-					sDamageX += 25;
-					sDamageY += 10;
-				}
-				else
-				{
-					sDamageX = pSoldier->sDamageX + (INT16)(sMercScreenX + ( 2 * 30 / 3 )  );
-					sDamageY = pSoldier->sDamageY + (INT16)(sMercScreenY - 5 );
-
-					sDamageX -= pSoldier->sBoundingBoxOffsetX;
-					sDamageY -= pSoldier->sBoundingBoxOffsetX;
-
-					if ( sDamageY < gsVIEWPORT_WINDOW_START_Y )
-					{
-						sDamageY = ( sMercScreenY - sOffsetY );
-					}
-				}
-
-				SetFont( TINYFONT1 );
-				SetFontBackground( FONT_MCOLOR_BLACK );
-				SetFontForeground( FONT_MCOLOR_WHITE );
-				GDirtyPrintF(sDamageX, sDamageY, L"-%d", pSoldier->sDamage);
+				y = sMercScreenY - s->sBoundingBoxOffsetY;
 			}
 		}
+
+		SetFont(TINYFONT1);
+		SetFontBackground(FONT_MCOLOR_BLACK);
+		SetFontForeground(FONT_MCOLOR_WHITE);
+		GDirtyPrintF(x, y, L"-%d", s->sDamage);
 	}
 
 	SOLDIERTYPE* const sel = GetSelectedMan();
