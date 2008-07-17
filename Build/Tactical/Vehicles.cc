@@ -416,55 +416,38 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* const s)
 }
 
 
-BOOLEAN MoveCharactersPathToVehicle( SOLDIERTYPE *pSoldier )
+BOOLEAN MoveCharactersPathToVehicle(SOLDIERTYPE* const s)
 {
-	INT32 iId;
-	// valid soldier?
-	if( pSoldier == NULL )
-	{
-		return ( FALSE );
-	}
+	if (!s) return FALSE;
 
 	// check if character is in fact in a vehicle
-	if( ( pSoldier->bAssignment != VEHICLE ) && ( ! ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) ) )
+	INT32 vid;
+	if (s->uiStatusFlags & SOLDIER_VEHICLE)
 	{
-		// now clear soldier's path
-		pSoldier->pMercPath = ClearStrategicPathList( pSoldier->pMercPath, 0 );
-		return( FALSE );
+		vid = s->bVehicleID;
 	}
-
-	if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	else if (s->bAssignment == VEHICLE)
 	{
-		// grab the id the character is
-		iId = pSoldier->bVehicleID;
+		vid = s->iVehicleId;
 	}
 	else
 	{
-		// grab the id the character is
-		iId = pSoldier->iVehicleId;
+		s->pMercPath = ClearStrategicPathList(s->pMercPath, 0);
+		return FALSE;
 	}
 
-	// check if vehicle is valid
-	if( iId != -1 )
+	VEHICLETYPE* const v = GetVehicle(vid);
+	if (!v)
 	{
-		// check if vehicle has mvt group, if not, get one for it
-		if (GetVehicle(iId) == NULL)
-		{
-			// now clear soldier's path
-			pSoldier->pMercPath = ClearStrategicPathList( pSoldier->pMercPath, 0 );
-			return ( FALSE );
-		}
+		s->pMercPath = ClearStrategicPathList(s->pMercPath, 0);
+		return FALSE;
 	}
 
-	// valid vehicle
-	VEHICLETYPE* const v = &pVehicleList[iId];
 	ClearStrategicPathList(v->pMercPath, v->ubMovementGroup);
-	v->pMercPath = CopyPaths(pSoldier->pMercPath);
+	v->pMercPath = CopyPaths(s->pMercPath);
 
-	// now clear soldier's path
-	pSoldier->pMercPath = ClearStrategicPathList( pSoldier->pMercPath, 0 );
-
-	return( TRUE );
+	s->pMercPath = ClearStrategicPathList(s->pMercPath, 0);
+	return TRUE;
 }
 
 
