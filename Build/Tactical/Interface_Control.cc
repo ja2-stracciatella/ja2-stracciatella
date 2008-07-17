@@ -433,12 +433,9 @@ static void EndViewportOverlays(void);
 static void StartViewportOverlays(void);
 
 
-void RenderTopmostTacticalInterface( )
+void RenderTopmostTacticalInterface()
 {
 	static SGPVObject* uiBogTarget = 0;
-
-	INT16			sX, sY;
-	INT16			sOffsetX, sOffsetY, sTempY_S, sTempX_S;
 
 	if (gfRerenderInterfaceFromHelpText)
 	{
@@ -447,7 +444,7 @@ void RenderTopmostTacticalInterface( )
 		gfRerenderInterfaceFromHelpText = FALSE;
 	}
 
-	if ( ( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
 	{
 		// If we want to rederaw whole screen, dirty all buttons!
 		if (fInterfacePanelDirty == DIRTYLEVEL2) MarkButtonsDirty();
@@ -455,92 +452,79 @@ void RenderTopmostTacticalInterface( )
 		return;
 	}
 
-	if ( InItemStackPopup( ) )
+	if (InItemStackPopup())
 	{
-		if ( fInterfacePanelDirty == DIRTYLEVEL2 )
-		{
-			RenderItemStackPopup( TRUE );
-		}
-		else
-		{
-			RenderItemStackPopup( FALSE );
-		}
+		RenderItemStackPopup(fInterfacePanelDirty == DIRTYLEVEL2);
 	}
 
-	if( ( InKeyRingPopup() ) && ( !InItemDescriptionBox( ) ) )
+	if (InKeyRingPopup() && !InItemDescriptionBox())
 	{
-		RenderKeyRingPopup( ( BOOLEAN )( fInterfacePanelDirty == DIRTYLEVEL2 ) );
+		RenderKeyRingPopup(fInterfacePanelDirty == DIRTYLEVEL2);
 	}
 
-	if ( gfInMovementMenu )
+	if (gfInMovementMenu)
 	{
-		RenderMovementMenu( );
+		RenderMovementMenu();
 	}
-
-
 
 	// if IN PLAN MODE AND WE HAVE TARGETS, draw black targets!
-	if ( InUIPlanMode( ) )
+	if (InUIPlanMode())
 	{
 		// Zero out any planned soldiers
 		CFOR_ALL_PLANNING_SOLDIERS(s)
 		{
-			if (s->sPlannedTargetX != -1)
+			if (s->sPlannedTargetX == -1) continue;
+
+			if (!GridNoOnScreen(MAPROWCOLTOPOS(s->sPlannedTargetY / CELL_Y_SIZE, s->sPlannedTargetX / CELL_X_SIZE))) continue;
+
+			// GET SCREEN COORDINATES
+			INT16 const sOffsetX = (s->sPlannedTargetX - gsRenderCenterX);
+			INT16 const sOffsetY = (s->sPlannedTargetY - gsRenderCenterY);
+
+			INT16 sTempX_S;
+			INT16 sTempY_S;
+			FromCellToScreenCoordinates(sOffsetX, sOffsetY, &sTempX_S, &sTempY_S);
+
+			INT16 sX = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + sTempX_S;
+			INT16 sY = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + sTempY_S;
+
+			// Adjust for offset position on screen
+			sX -= gsRenderWorldOffsetX;
+			sY -= gsRenderWorldOffsetY;
+
+			sX -= 10;
+			sY -= 10;
+
+			// Blit bogus target
+			if (!uiBogTarget)
 			{
-				// Blit bogus target
-				if (!uiBogTarget)
-				{
-					//Loadup cursor!
-					uiBogTarget = AddVideoObjectFromFile("CURSORS/targblak.sti");
-				}
-
-				if (GridNoOnScreen((INT16)MAPROWCOLTOPOS(s->sPlannedTargetY / CELL_Y_SIZE, s->sPlannedTargetX / CELL_X_SIZE)))
-				{
-					// GET SCREEN COORDINATES
-					sOffsetX = (s->sPlannedTargetX - gsRenderCenterX);
-					sOffsetY = (s->sPlannedTargetY - gsRenderCenterY);
-
-					FromCellToScreenCoordinates(sOffsetX, sOffsetY, &sTempX_S, &sTempY_S);
-
-					sX = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + sTempX_S;
-					sY = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + sTempY_S;
-
-					// Adjust for offset position on screen
-					sX -= gsRenderWorldOffsetX;
-					sY -= gsRenderWorldOffsetY;
-
-					sX -= 10;
-					sY -= 10;
-
-					BltVideoObject(FRAME_BUFFER, uiBogTarget, 0, sX, sY);
-					InvalidateRegion(sX, sY, sX + 20, sY + 20);
-				}
+				uiBogTarget = AddVideoObjectFromFile("CURSORS/targblak.sti");
 			}
+
+			BltVideoObject(FRAME_BUFFER, uiBogTarget, 0, sX, sY);
+			InvalidateRegion(sX, sY, sX + 20, sY + 20);
 		}
 	}
 
 #ifdef JA2TESTVERSION
 	if (gUIDeadlockedSoldier != NOBODY)
 	{
-		SetFont( LARGEFONT1 );
-		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_WHITE );
+		SetFont(LARGEFONT1);
+		SetFontBackground(FONT_MCOLOR_BLACK);
+		SetFontForeground(FONT_MCOLOR_WHITE);
 		GDirtyPrintF(0, 300, L"OPPONENT %d DEADLOCKED - 'Q' TO DEBUG, <ALT><ENTER> END OPP TURN", gUIDeadlockedSoldier);
 	}
 #endif
 
 	// Syncronize for upcoming soldier counters
-	SYNCTIMECOUNTER( );
+	SYNCTIMECOUNTER();
 
+	// Setup system for video overlay (text and blitting) Sets clipping rects, etc
+	StartViewportOverlays();
 
-	// Setup system for video overlay ( text and blitting ) Sets clipping rects, etc
-	StartViewportOverlays( );
-
-	RenderTopmostFlashingItems( );
-
-  RenderTopmostMultiPurposeLocator( );
-
-	RenderAccumulatedBurstLocations( );
+	RenderTopmostFlashingItems();
+  RenderTopmostMultiPurposeLocator();
+	RenderAccumulatedBurstLocations();
 
 	FOR_ALL_MERCS(i)
 	{
@@ -580,18 +564,16 @@ void RenderTopmostTacticalInterface( )
 	}
 
 	// FOR THE MOST PART, DISABLE INTERFACE STUFF WHEN IT'S ENEMY'S TURN
-	if ( gTacticalStatus.ubCurrentTeam == gbPlayerNum )
+	if (gTacticalStatus.ubCurrentTeam == gbPlayerNum)
 	{
-		RenderArrows( );
+		RenderArrows();
 	}
 
-	RenderAimCubeUI( );
+	RenderAimCubeUI();
+	EndViewportOverlays();
+	RenderRubberBanding();
 
-	EndViewportOverlays( );
-
-	RenderRubberBanding( );
-
-	if ( !gfInItemPickupMenu && gpItemPointer == NULL )
+	if (!gfInItemPickupMenu && !gpItemPointer)
 	{
 		HandleAnyMercInSquadHasCompatibleStuff(NULL);
 	}
@@ -599,9 +581,7 @@ void RenderTopmostTacticalInterface( )
 	// CHECK IF OUR CURSOR IS OVER AN INV POOL
 	GridNo       const usMapPos = GetMouseMapPos();
 	SOLDIERTYPE* const sel      = GetSelectedMan();
-	if (usMapPos               != NOWHERE &&
-			gfUIOverItemPoolGridNo != NOWHERE &&
-			sel                    != NULL)
+	if (usMapPos != NOWHERE && gfUIOverItemPoolGridNo != NOWHERE && sel)
 	{
 		// Check if we are over an item pool
 		INT8             level     = sel->bLevel;
@@ -631,40 +611,31 @@ void RenderTopmostTacticalInterface( )
 		}
 	}
 
-	// Check if we should render item selection window
-	if ( gCurrentUIMode == GETTINGITEM_MODE )
+	switch (gCurrentUIMode)
 	{
-		SetItemPickupMenuDirty( DIRTYLEVEL2 );
-		// Handle item pickup will return true if it's been closed
-		RenderItemPickupMenu( );
+		case GETTINGITEM_MODE:
+			SetItemPickupMenuDirty(DIRTYLEVEL2);
+			RenderItemPickupMenu();
+			break;
+
+		case OPENDOOR_MENU_MODE:
+			RenderOpenDoorMenu();
+			break;
 	}
 
-	// Check if we should render item selection window
-		if ( gCurrentUIMode == OPENDOOR_MENU_MODE )
-	{
-			RenderOpenDoorMenu( );
-	}
+	if (gfInTalkPanel) RenderTalkingMenu();
 
-	if ( gfInTalkPanel )
-	{
-		// Handle item pickup will return true if it's been closed
-		RenderTalkingMenu( );
-	}
-
-	if ( gfInSectorExitMenu )
-	{
-		RenderSectorExitMenu( );
-	}
+	if (gfInSectorExitMenu) RenderSectorExitMenu();
 
 	if (fRenderRadarScreen)
 	{
 	  RenderClock();
-	  RenderTownIDString( );
+	  RenderTownIDString();
 		CreateMouseRegionForPauseOfClock();
 	}
 	else
 	{
-		RemoveMouseRegionForPauseOfClock( );
+		RemoveMouseRegionForPauseOfClock();
 	}
 
 	// If we want to rederaw whole screen, dirty all buttons!
@@ -673,13 +644,12 @@ void RenderTopmostTacticalInterface( )
 	RenderButtons();
 	RenderPausedGameBox();
 
-		// mark all pop ups as dirty
-	MarkAllBoxesAsAltered( );
+	MarkAllBoxesAsAltered();
 
-	HandleShowingOfTacticalInterfaceFastHelpText( );
-	HandleShadingOfLinesForAssignmentMenus( );
-	DetermineBoxPositions( );
-	DisplayBoxes( FRAME_BUFFER );
+	HandleShowingOfTacticalInterfaceFastHelpText();
+	HandleShadingOfLinesForAssignmentMenus();
+	DetermineBoxPositions();
+	DisplayBoxes(FRAME_BUFFER);
 }
 
 
