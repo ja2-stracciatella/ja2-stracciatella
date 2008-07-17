@@ -4926,8 +4926,7 @@ static INT8 UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* pSoldier, INT
 					}
 					else
 					{
-						const VEHICLETYPE* const v = GetVehicle(tgt->bVehicleID);
-						Assert(v != NULL);
+						VEHICLETYPE const* const v = GetVehicle(tgt->bVehicleID);
 						if (GetNumberInVehicle(v) == 0)
 						{
 							// Set UI CURSOR....

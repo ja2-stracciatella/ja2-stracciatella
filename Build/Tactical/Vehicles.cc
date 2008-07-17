@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "LoadSaveVehicleType.h"
 #include "SaveLoadGame.h"
 #include "Soldier_Find.h"
@@ -322,7 +324,6 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* const s)
 {
 	const INT32        iId = s->iVehicleId;
 	VEHICLETYPE* const v   = GetVehicle(iId);
-	if (v == NULL) return FALSE;
 
 	// now look for the grunt
 	const INT32 seats = GetVehicleSeats(v);
@@ -437,11 +438,6 @@ BOOLEAN MoveCharactersPathToVehicle(SOLDIERTYPE* const s)
 	}
 
 	VEHICLETYPE* const v = GetVehicle(vid);
-	if (!v)
-	{
-		s->pMercPath = ClearStrategicPathList(s->pMercPath, 0);
-		return FALSE;
-	}
 
 	ClearStrategicPathList(v->pMercPath, v->ubMovementGroup);
 	v->pMercPath = CopyPaths(s->pMercPath);
@@ -459,19 +455,20 @@ void SetUpMvtGroupForVehicle(SOLDIERTYPE* const s)
 	else if (s->bAssignment   == VEHICLE)         vid = s->iVehicleId;
 	else                                          return;
 	VEHICLETYPE* const v = GetVehicle(vid);
-	Assert(v != NULL);
-
 	ClearStrategicPathList(s->pMercPath, s->ubGroupID);
 	s->pMercPath = CopyPaths(v->pMercPath);
 	s->ubGroupID = v->ubMovementGroup;
 }
 
 
-VEHICLETYPE* GetVehicle(const INT32 vehicle_id)
+VEHICLETYPE* GetVehicle(INT32 const vehicle_id)
 {
-	if (vehicle_id < 0 || ubNumberOfVehicles <= vehicle_id) return NULL;
-	VEHICLETYPE* const v = &pVehicleList[vehicle_id];
-	return v->fValid ? v : NULL;
+	if (0 <= vehicle_id && vehicle_id < ubNumberOfVehicles)
+	{
+		VEHICLETYPE* const v = &pVehicleList[vehicle_id];
+		if (v) return v;
+	}
+	throw std::logic_error("Invalid vehicle ID");
 }
 
 
@@ -542,8 +539,7 @@ INT32 GetNumberInVehicle(const VEHICLETYPE* const v)
 INT32 GetNumberOfNonEPCsInVehicle( INT32 iId )
 {
 	// go through list of occupants in vehicles and count them
-	const VEHICLETYPE* const v = GetVehicle(iId);
-	if (v == NULL) return 0;
+	VEHICLETYPE const* const v = GetVehicle(iId);
 
 	INT32 count = 0;
 	CFOR_ALL_PASSENGERS(v, i)
@@ -557,8 +553,7 @@ INT32 GetNumberOfNonEPCsInVehicle( INT32 iId )
 
 BOOLEAN IsRobotControllerInVehicle( INT32 iId )
 {
-	const VEHICLETYPE* const v = GetVehicle(iId);
-	if (v == NULL) return FALSE;
+	VEHICLETYPE const* const v = GetVehicle(iId);
 
 	CFOR_ALL_PASSENGERS(v, i)
 	{
@@ -778,8 +773,7 @@ INT8 RepairVehicle( INT32 iVehicleId, INT8 bRepairPtsLeft, BOOLEAN *pfNothingToR
 	INT8					bRepairPtsUsed = 0;
 	INT8					bOldLife;
 
-	const VEHICLETYPE* const v = GetVehicle(iVehicleId);
-	if (v == NULL) return bRepairPtsUsed;
+	VEHICLETYPE const* const v = GetVehicle(iVehicleId);
 
 	if (!DoesVehicleNeedAnyRepairs(v)) return bRepairPtsUsed;
 
@@ -1067,8 +1061,7 @@ BOOLEAN SoldierMustDriveVehicle(const SOLDIERTYPE* const pSoldier, const INT32 i
 {
 	Assert( pSoldier );
 
-	const VEHICLETYPE* const v = GetVehicle(iVehicleId);
-	if (v == NULL) return FALSE;
+	VEHICLETYPE const* const v = GetVehicle(iVehicleId);
 
 	// if vehicle is not going anywhere, then nobody has to be driving it!
 	// need the path length check in case we're doing a test while actually in a sector even though we're moving!

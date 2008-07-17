@@ -2683,8 +2683,7 @@ void SetUpMovingListsForSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		{
 			if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 			{
-				const VEHICLETYPE* const v = GetVehicle(pSoldier->bVehicleID);
-				Assert(v != NULL);
+				VEHICLETYPE const* const v = GetVehicle(pSoldier->bVehicleID);
 				// vehicle
 				// if it can move (can't be empty)
 				if (GetNumberInVehicle(v) > 0)
@@ -4341,8 +4340,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE* const pSoldier)
 	// vehicle checks
 	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 	{
-		const VEHICLETYPE* const v = GetVehicle(pSoldier->bVehicleID);
-		Assert(v != NULL);
+		VEHICLETYPE const* const v = GetVehicle(pSoldier->bVehicleID);
 		// empty (needs a driver!)?
 		if (GetNumberInVehicle(v) == 0) return ME_VEHICLE_EMPTY;
 

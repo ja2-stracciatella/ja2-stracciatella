@@ -436,8 +436,6 @@ BOOLEAN CanHelicopterFly( void )
 	// is the heli available
 	if (iHelicopterVehicleId == -1) return FALSE;
 
-	if (GetVehicle(iHelicopterVehicleId) == NULL) return FALSE;
-
 	// is the pilot alive, well, and willing to help us?
 	if (!IsHelicopterPilotAvailable()) return FALSE;
 
@@ -689,8 +687,7 @@ static BOOLEAN HeliCharacterDialogue(SOLDIERTYPE* pSoldier, UINT16 usQuoteNum)
 
 INT32 GetNumberOfPassengersInHelicopter( void )
 {
-	const VEHICLETYPE* const v = GetVehicle(iHelicopterVehicleId);
-	return v == NULL ? 0 : GetNumberInVehicle(v);
+	return GetNumberInVehicle(GetVehicle(iHelicopterVehicleId));
 }
 
 
@@ -1530,7 +1527,8 @@ BOOLEAN IsSkyriderIsFlyingInSector( INT16 sSectorX, INT16 sSectorY )
 
 BOOLEAN IsGroupTheHelicopterGroup(const GROUP* const pGroup)
 {
-	const VEHICLETYPE* const v = GetVehicle(iHelicopterVehicleId);
+	if (iHelicopterVehicleId == -1) return FALSE;
+	VEHICLETYPE const* const v = GetVehicle(iHelicopterVehicleId);
 	return
 		v != NULL &&
 		v->ubMovementGroup != 0 &&

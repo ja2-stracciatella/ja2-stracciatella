@@ -7311,7 +7311,6 @@ void EVENT_SoldierEnterVehicle(SOLDIERTYPE* const s, const INT16 sGridNo)
 	if (tgt != NULL && tgt->uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		VEHICLETYPE* const v = GetVehicle(tgt->bVehicleID);
-		Assert(v != NULL);
 		PutSoldierInVehicle(s, v);
 	}
 

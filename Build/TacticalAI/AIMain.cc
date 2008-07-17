@@ -742,9 +742,7 @@ void StartNPCAI(SOLDIERTYPE *pSoldier)
 
 		if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 		{
-			const VEHICLETYPE* const v = GetVehicle(pSoldier->bVehicleID);
-			Assert(v != NULL);
-			if (GetNumberInVehicle(v) == 0)
+			if (GetNumberInVehicle(GetVehicle(pSoldier->bVehicleID)) == 0)
 			{
 				fInValidSoldier = TRUE;
 			}

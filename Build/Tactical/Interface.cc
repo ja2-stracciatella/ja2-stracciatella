@@ -1156,9 +1156,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const s)
 		// If not in a squad....
 		if (s->uiStatusFlags & SOLDIER_VEHICLE)
 		{
-			VEHICLETYPE const* const v = GetVehicle(s->bVehicleID);
-			Assert(v);
-			if (GetNumberInVehicle(v) == 0)
+			if (GetNumberInVehicle(GetVehicle(s->bVehicleID)) == 0)
 			{
 				SetFontForeground(FONT_GRAY4);
 			}

@@ -6121,8 +6121,7 @@ static void HandleRestFatigueAndSleepStatus(void)
 // can the character repair this vehicle?
 static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE const* const pSoldier, INT32 const iVehicleId)
 {
-	const VEHICLETYPE* const v = GetVehicle(iVehicleId);
-	if (v == NULL) return FALSE;
+	VEHICLETYPE const* const v = GetVehicle(iVehicleId);
 
 	// is vehicle destroyed?
 	if (v->fDestroyed) return FALSE;
@@ -7155,7 +7154,7 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 				if (CanCharacterVehicle(s))
 				{
 					VEHICLETYPE* const v = GetVehicle(bParam);
-					if (v != NULL && IsThisVehicleAccessibleToSoldier(s, v))
+					if (IsThisVehicleAccessibleToSoldier(s, v))
 					{
 						// if the vehicle is FULL, then this will return FALSE!
 						fItWorked = PutSoldierInVehicle(s, v);

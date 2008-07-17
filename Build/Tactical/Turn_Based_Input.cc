@@ -3568,7 +3568,6 @@ static INT8 CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* pSoldier
 		 if ( OK_ENTERABLE_VEHICLE( pTSoldier ) && pTSoldier->bVisible != -1 && OKUseVehicle( pTSoldier->ubProfile ) )
 		 {
 			VEHICLETYPE* const v = GetVehicle(pTSoldier->bVehicleID);
-			Assert(v != NULL);
 			if (GetNumberInVehicle(v) == 0 || !fMovementMode)
 			 {
 				 // Find a gridno closest to sweetspot...
