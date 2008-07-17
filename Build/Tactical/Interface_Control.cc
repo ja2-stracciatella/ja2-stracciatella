@@ -542,11 +542,10 @@ void RenderTopmostTacticalInterface( )
 
 	RenderAccumulatedBurstLocations( );
 
-	// Loop through all mercs and make go
 	FOR_ALL_MERCS(i)
 	{
 		SOLDIERTYPE* const s = *i;
-		if (s != gSelectedGuy) DrawSelectedUIAboveGuy(s);
+		DrawSelectedUIAboveGuy(s);
 
 		if (!s->fDisplayDamage)    continue;
 		if (s->sGridNo == NOWHERE) continue;
@@ -580,10 +579,6 @@ void RenderTopmostTacticalInterface( )
 		GDirtyPrintF(x, y, L"-%d", s->sDamage);
 	}
 
-	SOLDIERTYPE* const sel = GetSelectedMan();
-	if (sel          != NULL) DrawSelectedUIAboveGuy(sel);
-	if (gSelectedGuy != NULL) DrawSelectedUIAboveGuy(gSelectedGuy);
-
 	// FOR THE MOST PART, DISABLE INTERFACE STUFF WHEN IT'S ENEMY'S TURN
 	if ( gTacticalStatus.ubCurrentTeam == gbPlayerNum )
 	{
@@ -602,7 +597,8 @@ void RenderTopmostTacticalInterface( )
 	}
 
 	// CHECK IF OUR CURSOR IS OVER AN INV POOL
-	const GridNo usMapPos = GetMouseMapPos();
+	GridNo       const usMapPos = GetMouseMapPos();
+	SOLDIERTYPE* const sel      = GetSelectedMan();
 	if (usMapPos               != NOWHERE &&
 			gfUIOverItemPoolGridNo != NOWHERE &&
 			sel                    != NULL)
