@@ -45,7 +45,7 @@ void CreateTileDatabase()
 	// Loop through all surfaces and tiles and build database
 	for (UINT32 cnt1 = 0; cnt1 < NUMBEROFTILETYPES; ++cnt1)
 	{
-		const TILE_IMAGERY* const TileSurf = gTileSurfaceArray[cnt1];
+		TILE_IMAGERY const* const TileSurf = gTileSurfaceArray[cnt1];
 		if (!TileSurf) continue;
 
 		// Build start index list
@@ -70,15 +70,13 @@ void CreateTileDatabase()
 			TileElement.hTileSurface	= TileSurf->vo;
 			TileElement.sBuddyNum			= -1;
 
-			if (TileSurf->vo->ppZStripInfo && // Check for multi-z stuff
-					TileSurf->vo->ppZStripInfo[cnt2])
-			{
-				TileElement.uiFlags |= MULTI_Z_TILE;
-			}
+			// Check for multi-z stuff
+			ZStripInfo* const* const zsi = TileSurf->vo->ppZStripInfo;
+			if (zsi && zsi[cnt2]) TileElement.uiFlags |= MULTI_Z_TILE;
 
 			// Structure database stuff!
 			STRUCTURE_FILE_REF const* const sfr = TileSurf->pStructureFileRef;
-			if (sfr && sfr->pubStructureData)
+			if (sfr && sfr->pubStructureData /* XXX testing wrong attribute? */)
 			{
 				DB_STRUCTURE_REF* const sr = &sfr->pDBStructureRef[cnt2];
 				if (sr->pDBStructure) TileElement.pDBStructureRef	= sr;
@@ -97,10 +95,8 @@ void CreateTileDatabase()
 				}
 				if (aux.fFlags & AUX_ANIMATED_TILE)
 				{
-					// Allocate Animated tile data
 					AllocateAnimTileData(&TileElement, aux.ubNumberOfFrames);
 
-					// Set values into tile element
 					TileElement.pAnimData->bCurrentFrame = aux.ubCurrentFrame;
 					for (UINT8 ubLoop = 0; ubLoop < TileElement.pAnimData->ubNumFrames; ++ubLoop)
 					{
