@@ -980,8 +980,6 @@ BOOLEAN UnRecruitEPC(ProfileID const pid)
 
 	if (s->bAssignment < ON_DUTY) ResetDeadSquadMemberList(s->bAssignment);
 
-	RemoveCharacterFromSquads(s); // REDUNDANT ChangeSoldierTeam()
-
 	MERCPROFILESTRUCT* const p = GetProfile(pid);
 
 	// OK, UN set recruit flag..
