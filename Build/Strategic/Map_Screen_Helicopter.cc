@@ -770,8 +770,6 @@ void SetUpHelicopterForPlayer( INT16 sX, INT16 sY )
 
 		iHelicopterVehicleId = AddVehicleToList( sX, sY, 0, HELICOPTER );
 
-		Assert( iHelicopterVehicleId != -1 );
-
 		memset( &SoldierSkyRider, 0, sizeof( SOLDIERTYPE ) );
 		SoldierSkyRider.ubProfile = SKYRIDER;
 		SoldierSkyRider.bLife = 80;
