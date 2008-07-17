@@ -663,13 +663,6 @@ BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 }
 
 
-void AddPassangersToTeamPanel( INT32 iId )
-{
-	const VEHICLETYPE* const v = &pVehicleList[iId];
-	CFOR_ALL_PASSENGERS(v, i) AddPlayerToInterfaceTeamSlot(*i);
-}
-
-
 static void HandleCriticalHitForVehicleInLocation(UINT8 ubID, INT16 sDmg, INT16 sGridNo, SOLDIERTYPE* att);
 
 

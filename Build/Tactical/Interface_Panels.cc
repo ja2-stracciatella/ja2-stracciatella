@@ -3296,11 +3296,8 @@ BOOLEAN RemovePlayerFromTeamSlot(const SOLDIERTYPE* const s)
 }
 
 
-void AddPlayerToInterfaceTeamSlot(SOLDIERTYPE* const s)
+static void AddPlayerToInterfaceTeamSlot(SOLDIERTYPE* const s)
 {
-	// If we are a vehicle don't ever add.....
-	if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
-
 	if (PlayerExistsInSlot(s)) return;
 
 	// Find a free slot
@@ -3403,27 +3400,23 @@ void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* const s)
 		INT32 const cur_squad = CurrentSquad();
 		if (s->bAssignment == cur_squad || SoldierIsDeadAndWasOnSquad(s, cur_squad))
 		{
-			if (s->bAssignment == ASSIGNMENT_DEAD)
-			{
-				s->fUICloseMerc = FALSE;
-			}
-			/* ATE: If we have the insertion code of helicopter, don't add just yet!
-			 * (will add in heli code) */
-			if (s->ubStrategicInsertionCode != INSERTION_CODE_CHOPPER)
-			{
-				AddPlayerToInterfaceTeamSlot(s);
-			}
+			if (s->bAssignment == ASSIGNMENT_DEAD) s->fUICloseMerc = FALSE;
 
 			if (s->uiStatusFlags & SOLDIER_VEHICLE)
 			{
-				AddPassangersToTeamPanel(s->bVehicleID);
+				VEHICLETYPE const* const v = GetVehicle(s->bVehicleID);
+				CFOR_ALL_PASSENGERS(v, i) AddPlayerToInterfaceTeamSlot(*i);
+			}
+			else if (s->ubStrategicInsertionCode != INSERTION_CODE_CHOPPER)
+			{ /* ATE: If we have the insertion code of helicopter, don't add just yet!
+				 * (will add in heli code) */
+				AddPlayerToInterfaceTeamSlot(s);
 			}
 		}
 	}
 	else
 	{
 		// Make sure we are NOT in this world!
-		// Set gridno to one that's not visible
 		RemoveSoldierFromGridNo(s);
 		RemoveMercSlot(s);
 	}

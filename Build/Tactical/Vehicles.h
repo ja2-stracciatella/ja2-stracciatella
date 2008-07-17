@@ -109,8 +109,6 @@ void SetVehicleName( SOLDIERTYPE *pVehicle );
 
 BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier );
 
-void AddPassangersToTeamPanel( INT32 iId );
-
 
 void VehicleTakeDamage(UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo, SOLDIERTYPE* att);
 
