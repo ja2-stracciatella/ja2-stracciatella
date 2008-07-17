@@ -1847,45 +1847,36 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 }
 
 
-static void InternalRemoveSoldierFromGridNo(SOLDIERTYPE* pSoldier, BOOLEAN fForce)
+static void InternalRemoveSoldierFromGridNo(SOLDIERTYPE* const s, BOOLEAN const force)
 {
-	INT8 bDir;
-	INT32 iGridNo;
+	if (s->sGridNo == NO_MAP_POS) return;
 
-	if((pSoldier->sGridNo!=NO_MAP_POS) )
+	if (!s->bInSector && !force) return;
+
+	// Remove from world (old pos)
+	RemoveMerc(s->sGridNo, s, FALSE);
+	HandleAnimationProfile(s, s->usAnimState, TRUE);
+
+	// Remove records of this guy being adjacent
+	for (INT8 dir = 0; dir < NUM_WORLD_DIRECTIONS; ++dir)
 	{
-    if ( pSoldier->bInSector || fForce )
-    {
-		  // Remove from world ( old pos )
-		  RemoveMerc( pSoldier->sGridNo, pSoldier, FALSE );
-		  HandleAnimationProfile( pSoldier, pSoldier->usAnimState, TRUE );
+		INT32 const grid_no = s->sGridNo + DirIncrementer[dir];
+		if (grid_no < 0 || WORLD_MAX <= grid_no) continue;
 
-		  // Remove records of this guy being adjacent
-		  for (bDir = 0; bDir < NUM_WORLD_DIRECTIONS; bDir++)
-		  {
-			  iGridNo = pSoldier->sGridNo + DirIncrementer[ bDir ];
-			  if( iGridNo >= 0 && iGridNo < WORLD_MAX )
-			  {
-				  gpWorldLevelData[ iGridNo ].ubAdjacentSoldierCnt--;
-			  }
-		  }
-
-		  HandlePlacingRoofMarker( pSoldier, pSoldier->sGridNo, FALSE , FALSE );
-
-		  // Remove reseved movement value
-		  UnMarkMovementReserved( pSoldier );
-
-		  HandleCrowShadowRemoveGridNo( pSoldier );
-
-		  // Reset gridno...
-		  pSoldier->sGridNo = NO_MAP_POS;
-    }
+		--gpWorldLevelData[grid_no].ubAdjacentSoldierCnt;
 	}
+
+	HandlePlacingRoofMarker(s, s->sGridNo, FALSE, FALSE);
+
+	UnMarkMovementReserved(s);
+	HandleCrowShadowRemoveGridNo(s);
+	s->sGridNo = NO_MAP_POS;
 }
 
-void RemoveSoldierFromGridNo( SOLDIERTYPE *pSoldier )
+
+void RemoveSoldierFromGridNo(SOLDIERTYPE* const s)
 {
-  InternalRemoveSoldierFromGridNo( pSoldier, FALSE );
+  InternalRemoveSoldierFromGridNo(s, FALSE);
 }
 
 
