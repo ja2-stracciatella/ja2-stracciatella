@@ -753,13 +753,12 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 		if ( sDmg != 0 )
 		{
 			// Display damage
-			INT16 sMercScreenX, sMercScreenY, sOffsetX, sOffsetY;
+			INT16 sOffsetX, sOffsetY;
 
 			// Set Damage display counter
 			pSoldier->fDisplayDamage = TRUE;
 			pSoldier->bDisplayDamageCount = 0;
 
-			GetSoldierScreenPos( pSoldier, &sMercScreenX, &sMercScreenY );
 			GetSoldierAnimOffsets( pSoldier, &sOffsetX, &sOffsetY );
 			pSoldier->sDamageX = sOffsetX;
 			pSoldier->sDamageY = sOffsetY;
