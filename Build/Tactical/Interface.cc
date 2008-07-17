@@ -975,12 +975,7 @@ void GetSoldierAboveGuyPositions(const SOLDIERTYPE* const pSoldier, INT16* const
 	INT16		sStanceOffset = 0;
 	INT16		sTextBodyTypeYOffset = 62;
 
-	// Find XY, dims, offsets
-	GetSoldierScreenPos( pSoldier, &sMercScreenX, &sMercScreenY );
-
-	// OK, first thing to do is subtract offsets ( because GetSoldierScreenPos adds them... )
-	sMercScreenX -= pSoldier->sBoundingBoxOffsetX;
-	sMercScreenY -= pSoldier->sBoundingBoxOffsetY;
+	GetSoldierTRUEScreenPos(pSoldier, &sMercScreenX, &sMercScreenY);
 
 	// Adjust based on stance
 	if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_NOMOVE_MARKER) )
