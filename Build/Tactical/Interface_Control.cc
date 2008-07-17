@@ -604,59 +604,29 @@ void RenderTopmostTacticalInterface( )
 			sel                    != NULL)
 	{
 		// Check if we are over an item pool
-		const ITEM_POOL* const pItemPool = GetItemPool(gfUIOverItemPoolGridNo, sel->bLevel);
-		if (pItemPool != NULL)
-		{
-			STRUCTURE					*pStructure = NULL;
-			INT16							sIntTileGridNo;
-			INT16							sActionGridNo = usMapPos;
-
-			// Get interactive tile...
-			if ( ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE ) )
-			{
-				sActionGridNo = sIntTileGridNo;
-			}
-
-			const INT8 bZLevel = GetZLevelOfItemPoolGivenStructure(sActionGridNo, sel->bLevel, pStructure);
-			if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
-			{
-				DrawItemPoolList(pItemPool, bZLevel, gusMouseXPos, gusMouseYPos);
-
-				// ATE: If over items, remove locator....
-				RemoveFlashItemSlot( pItemPool );
-
-			}
-		}
-		else
+		INT8             level     = sel->bLevel;
+		ITEM_POOL const* item_pool = GetItemPool(gfUIOverItemPoolGridNo, level);
+		if (!item_pool)
 		{
 			// ATE: Allow to see list if a different level....
-			const INT8 bCheckLevel = (sel->bLevel == 0 ? 1 : 0);
+			level     = (level == 0 ? 1 : 0);
+			item_pool = GetItemPool(gfUIOverItemPoolGridNo, level);
+		}
 
-			// Check if we are over an item pool
-			const ITEM_POOL* pItemPool = GetItemPool(gfUIOverItemPoolGridNo, bCheckLevel);
-			if (pItemPool != NULL)
+		if (item_pool)
+		{
+			STRUCTURE* pStructure;
+			INT16      sIntTileGridNo;
+			INT16 const sActionGridNo =
+				ConditionalGetCurInteractiveTileGridNoAndStructure(&sIntTileGridNo, &pStructure, FALSE) ?
+					sIntTileGridNo : usMapPos;
+
+			INT8 const bZLevel = GetZLevelOfItemPoolGivenStructure(sActionGridNo, level, pStructure);
+			if (AnyItemsVisibleOnLevel(item_pool, bZLevel))
 			{
-				STRUCTURE					*pStructure = NULL;
-				INT16							sIntTileGridNo;
-				INT8							bZLevel = 0;
-				INT16							sActionGridNo = usMapPos;
-
-				// Get interactive tile...
-				if ( ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE ) )
-				{
-					sActionGridNo = sIntTileGridNo;
-				}
-
-				bZLevel = GetZLevelOfItemPoolGivenStructure( sActionGridNo, bCheckLevel, pStructure );
-
-				if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
-				{
-					DrawItemPoolList(pItemPool, bZLevel, gusMouseXPos, gusMouseYPos);
-
-					// ATE: If over items, remove locator....
-					RemoveFlashItemSlot( pItemPool );
-
-				}
+				DrawItemPoolList(item_pool, bZLevel, gusMouseXPos, gusMouseYPos);
+				// ATE: If over items, remove locator....
+				RemoveFlashItemSlot(item_pool);
 			}
 		}
 	}
