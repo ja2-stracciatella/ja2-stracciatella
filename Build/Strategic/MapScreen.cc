@@ -2260,7 +2260,7 @@ try
 
 
 	// if heli is around, show it
-	if( fHelicopterAvailable && fShowAircraftFlag && ( iCurrentMapSectorZ == 0 ) && !fShowMapInventoryPool )
+	if (iHelicopterVehicleId != -1 && fShowAircraftFlag && iCurrentMapSectorZ == 0 && !fShowMapInventoryPool)
 	{
 		// this is done on EVERY frame, I guess it beats setting entire map dirty all the time while he's moving...
 		DisplayPositionOfHelicopter( );

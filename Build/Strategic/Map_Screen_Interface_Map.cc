@@ -1465,7 +1465,7 @@ void PlotPathForHelicopter(const INT16 sX, const INT16 sY)
 	// will plot the path for the helicopter
 
 	// no heli...go back
-	if (!fShowAircraftFlag || !fHelicopterAvailable) return;
+	if (!fShowAircraftFlag || iHelicopterVehicleId == -1) return;
 
 	// is cursor allowed here?..if not..don't build path
 	if (!IsTheCursorAllowedToHighLightThisSector(sX, sY)) return;
@@ -3540,7 +3540,7 @@ BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSe
 	INT16 sSectorX;
 	INT16 sSectorY;
 
-	if( !fHelicopterAvailable || !fShowAircraftFlag )
+	if (iHelicopterVehicleId == -1 || !fShowAircraftFlag)
 	{
 		return( FALSE );
 	}

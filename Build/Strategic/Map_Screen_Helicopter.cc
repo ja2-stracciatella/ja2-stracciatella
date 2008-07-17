@@ -61,9 +61,6 @@ BOOLEAN fSkyRiderSetUp = FALSE;
 // plotting for a helicopter
 BOOLEAN fPlotForHelicopter = FALSE;
 
-// is the helicopter available to player?
-BOOLEAN fHelicopterAvailable = FALSE;
-
 // helicopter vehicle id
 INT32 iHelicopterVehicleId = -1;
 
@@ -72,9 +69,6 @@ SGPVObject* guiHelicopterIcon;
 
 // total owed to player
 INT32 iTotalAccumulatedCostByPlayer = 0;
-
-// whether or not skyrider is alive and well? and on our side yet?
-BOOLEAN fSkyRiderAvailable = FALSE;
 
 #ifdef JA2TESTVERSION
 BOOLEAN	fSAMSitesDisabledFromAttackingPlayer = FALSE;
@@ -136,10 +130,8 @@ SOLDIERTYPE *pSkyRider;
 void InitializeHelicopter( void )
 {
 	// must be called whenever a new game starts up!
-	fHelicopterAvailable = FALSE;
 	iHelicopterVehicleId = -1;
 
-	fSkyRiderAvailable = FALSE;
 	fSkyRiderSetUp = FALSE;
 	pSkyRider = NULL;
 	memset ( &SoldierSkyRider, 0, sizeof( SoldierSkyRider ) );
@@ -421,12 +413,8 @@ static void SkyriderDestroyed(void)
 	KillAllInVehicle(v);
 
 	// kill skyrider
-	fSkyRiderAvailable = FALSE;
 	SoldierSkyRider.bLife = 0;
 	gMercProfiles[ SKYRIDER ].bLife = 0;
-
-	// heli no longer available
-	fHelicopterAvailable = FALSE;
 
 	// destroy helicopter
 	fHelicopterDestroyed = TRUE;
@@ -446,7 +434,7 @@ BOOLEAN CanHelicopterFly( void )
 	// check if heli is available for flight?
 
 	// is the heli available
-	if (!fHelicopterAvailable) return FALSE;
+	if (iHelicopterVehicleId == -1) return FALSE;
 
 	if (GetVehicle(iHelicopterVehicleId) == NULL) return FALSE;
 
@@ -465,7 +453,7 @@ BOOLEAN CanHelicopterFly( void )
 BOOLEAN IsHelicopterPilotAvailable( void )
 {
 	// what is state of skyrider?
-	if (!fSkyRiderAvailable) return FALSE;
+	if (iHelicopterVehicleId == -1) return FALSE;
 
 	// owe any money to skyrider?
 	if( gMercProfiles[ SKYRIDER ].iBalance < 0 )
@@ -694,8 +682,7 @@ void SetUpHelicopterForMovement( void )
 static BOOLEAN HeliCharacterDialogue(SOLDIERTYPE* pSoldier, UINT16 usQuoteNum)
 {
 	// ARM: we could just return, but since various flags are often being set it's safer to honk so it gets fixed right!
-	Assert( fSkyRiderAvailable );
-
+	Assert(iHelicopterVehicleId != -1);
 	return( CharacterDialogue( SKYRIDER, usQuoteNum, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE ) );
 }
 
@@ -746,7 +733,7 @@ void UpdateRefuelSiteAvailability( void )
 			fRefuelingSiteAvailable[ iCounter ] = TRUE;
 
 			// reactivate a grounded helicopter, if here
-			if ( !fHelicopterAvailable && !fHelicopterDestroyed && fSkyRiderAvailable && ( iHelicopterVehicleId != -1 ) )
+			if (iHelicopterVehicleId == -1 && !fHelicopterDestroyed && iHelicopterVehicleId != -1)
 			{
 				const VEHICLETYPE* const v = GetHelicopter();
 				if (v->sSectorX == ubRefuelList[iCounter][0] &&
@@ -765,9 +752,6 @@ void SetUpHelicopterForPlayer( INT16 sX, INT16 sY )
 {
 	if (!fSkyRiderSetUp)
 	{
-		fHelicopterAvailable = TRUE;
-		fSkyRiderAvailable = TRUE;
-
 		iHelicopterVehicleId = AddVehicleToList( sX, sY, 0, HELICOPTER );
 
 		memset( &SoldierSkyRider, 0, sizeof( SOLDIERTYPE ) );
@@ -1158,7 +1142,7 @@ void HandleHelicopterOnGroundGraphic( void )
 				AddHelicopterToMaps( TRUE, ubSite );
 				// ATE: Add skyridder too
 				// ATE: only if hired......
-				if ( fHelicopterAvailable	)
+				if (iHelicopterVehicleId != -1)
 				{
 					gMercProfiles[ SKYRIDER ].sSectorX = gWorldSectorX;
 					gMercProfiles[ SKYRIDER ].sSectorY = gWorldSectorY;
@@ -1168,7 +1152,7 @@ void HandleHelicopterOnGroundGraphic( void )
 			{
 				AddHelicopterToMaps( FALSE, ubSite );
 				// ATE: Remove skyridder....
-				if ( fHelicopterAvailable	)
+				if (iHelicopterVehicleId != -1)
 				{
 					gMercProfiles[ SKYRIDER ].sSectorX = 0;
 					gMercProfiles[ SKYRIDER ].sSectorY = 0;
@@ -1214,7 +1198,7 @@ void HandleHelicopterOnGroundSkyriderProfile( void )
 			{
 				// ATE: Add skyridder too
 				// ATE: only if hired......
-				if ( fHelicopterAvailable	)
+				if (iHelicopterVehicleId != -1)
 				{
 					gMercProfiles[ SKYRIDER ].sSectorX = gWorldSectorX;
 					gMercProfiles[ SKYRIDER ].sSectorY = gWorldSectorY;
@@ -1223,7 +1207,7 @@ void HandleHelicopterOnGroundSkyriderProfile( void )
 			else
 			{
 				// ATE: Remove skyridder....
-				if ( fHelicopterAvailable	)
+				if (iHelicopterVehicleId != -1)
 				{
 					gMercProfiles[ SKYRIDER ].sSectorX = 0;
 					gMercProfiles[ SKYRIDER ].sSectorY = 0;
@@ -1529,7 +1513,7 @@ static void AddHelicopterToMaps(BOOLEAN const fAdd, UINT8 const ubSite)
 BOOLEAN IsSkyriderIsFlyingInSector( INT16 sSectorX, INT16 sSectorY )
 {
 	// up and about?
-	if ( fHelicopterAvailable && ( iHelicopterVehicleId != -1 ) && CanHelicopterFly() && fHelicopterIsAirBorne )
+	if (iHelicopterVehicleId != -1 && CanHelicopterFly() && fHelicopterIsAirBorne)
 	{
 		const GROUP* const pGroup = GetGroup(GetHelicopter()->ubMovementGroup);
 

@@ -73,9 +73,6 @@ enum{
 extern	UINT8 ubRefuelList[ NUMBER_OF_REFUEL_SITES ][ 2 ];
 
 
-// is the helicopter available to player?
-extern BOOLEAN fHelicopterAvailable;
-
 // helicopter vehicle id value
 extern INT32 iHelicopterVehicleId;
 
@@ -105,9 +102,6 @@ extern BOOLEAN fHelicopterIsAirBorne;
 
 // total owed to player
 //extern INT32 iTotalAccumlatedCostByPlayer;
-
-// whether or not skyrider is alive and well? and on our side yet?
-extern BOOLEAN fSkyRiderAvailable;
 
 // time started hovering
 extern UINT32 uiStartHoverTime;
