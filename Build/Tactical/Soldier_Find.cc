@@ -485,44 +485,39 @@ void GetSoldierScreenPos(const SOLDIERTYPE* const s, INT16* const psScreenX, INT
 
 
 // THE TRUE SCREN RECT DOES NOT TAKE THE OFFSETS OF BUDDY INTO ACCOUNT!
-void GetSoldierTRUEScreenPos(const SOLDIERTYPE* pSoldier, INT16* psScreenX, INT16* psScreenY)
+void GetSoldierTRUEScreenPos(const SOLDIERTYPE* const s, INT16* const psScreenX, INT16* const psScreenY)
 {
-		INT16 sMercScreenX, sMercScreenY;
-		FLOAT dOffsetX, dOffsetY;
-		FLOAT dTempX_S, dTempY_S;
-		UINT16											 usAnimSurface;
+	UINT16 const usAnimSurface = GetSoldierAnimationSurface(s);
+	if (usAnimSurface == INVALID_ANIMATION_SURFACE)
+	{
+		*psScreenX = 0;
+		*psScreenY = 0;
+		return;
+	}
 
-		usAnimSurface = GetSoldierAnimationSurface(pSoldier);
+	// Get 'TRUE' merc position
+	FLOAT const dOffsetX = s->dXPos - gsRenderCenterX;
+	FLOAT const dOffsetY = s->dYPos - gsRenderCenterY;
 
-		if ( usAnimSurface == INVALID_ANIMATION_SURFACE )
-		{
-			*psScreenX = 0;
-			*psScreenY = 0;
-			return;
-		}
+	FLOAT dTempX_S;
+	FLOAT dTempY_S;
+	FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
 
-		// Get 'TRUE' merc position
-		dOffsetX = pSoldier->dXPos - gsRenderCenterX;
-		dOffsetY = pSoldier->dYPos - gsRenderCenterY;
+	INT16 sMercScreenX = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
+	INT16 sMercScreenY = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S;
 
-		FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &dTempX_S, &dTempY_S );
+	// Adjust starting screen coordinates
+	sMercScreenX -= gsRenderWorldOffsetX;
+	sMercScreenY -= gsRenderWorldOffsetY;
 
-		sMercScreenX = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)dTempX_S;
-		sMercScreenY = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)dTempY_S;
+	// Adjust for render height
+	sMercScreenY += gsRenderHeight;
+	sMercScreenY -= gpWorldLevelData[s->sGridNo].sHeight;
 
-		// Adjust starting screen coordinates
-		sMercScreenX	-= gsRenderWorldOffsetX;
-		sMercScreenY	-= gsRenderWorldOffsetY;
+	sMercScreenY -= s->sHeightAdjustment;
 
-		// Adjust for render height
-		sMercScreenY += gsRenderHeight;
-		sMercScreenY	-= gpWorldLevelData[ pSoldier->sGridNo ].sHeight;
-
-		sMercScreenY -= pSoldier->sHeightAdjustment;
-
-
-		*psScreenX = sMercScreenX;
-		*psScreenY = sMercScreenY;
+	*psScreenX = sMercScreenX;
+	*psScreenY = sMercScreenY;
 }
 
 
