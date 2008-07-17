@@ -553,12 +553,11 @@ void RenderTopmostTacticalInterface( )
 			// Display damage
 
 			// Use world coordinates!
-			INT16 sMercScreenX, sMercScreenY, sOffsetX, sOffsetY, sDamageX, sDamageY;
+			INT16 sMercScreenX, sMercScreenY, sDamageX, sDamageY;
 
 			if ( pSoldier->sGridNo != NOWHERE && pSoldier->bVisible != -1 )
 			{
 				GetSoldierScreenPos( pSoldier, &sMercScreenX, &sMercScreenY );
-				GetSoldierAnimOffsets( pSoldier, &sOffsetX, &sOffsetY );
 
 				if ( pSoldier->ubBodyType == QUEENMONSTER )
 				{
@@ -573,8 +572,8 @@ void RenderTopmostTacticalInterface( )
 					sDamageX = pSoldier->sDamageX + (INT16)(sMercScreenX + ( 2 * 30 / 3 )  );
 					sDamageY = pSoldier->sDamageY + (INT16)(sMercScreenY - 5 );
 
-					sDamageX -= sOffsetX;
-					sDamageY -= sOffsetY;
+					sDamageX -= pSoldier->sBoundingBoxOffsetX;
+					sDamageY -= pSoldier->sBoundingBoxOffsetX;
 
 					if ( sDamageY < gsVIEWPORT_WINDOW_START_Y )
 					{

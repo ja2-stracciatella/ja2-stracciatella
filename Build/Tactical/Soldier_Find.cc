@@ -445,13 +445,6 @@ static void GetSoldierScreenRect(const SOLDIERTYPE* const pSoldier, SGPRect* con
 }
 
 
-void GetSoldierAnimOffsets(const SOLDIERTYPE* pSoldier, INT16* sOffsetX, INT16* sOffsetY)
-{
-	*sOffsetX					= (INT16)pSoldier->sBoundingBoxOffsetX;
-	*sOffsetY					= (INT16)pSoldier->sBoundingBoxOffsetY;
-}
-
-
 void GetSoldierScreenPos(const SOLDIERTYPE* pSoldier, INT16* psScreenX, INT16* psScreenY)
 {
 		INT16 sMercScreenX, sMercScreenY;

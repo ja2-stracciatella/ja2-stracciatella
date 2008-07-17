@@ -5913,7 +5913,6 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 		if (bOldLife != 0 && sLifeDeduct != 0 && sLifeDeduct < 1000)
 		{
 			// Display damage
-			INT16 sOffsetX, sOffsetY;
 
 			// Set Damage display counter
 			pSoldier->fDisplayDamage = TRUE;
@@ -5926,9 +5925,8 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
       }
       else
       {
-			  GetSoldierAnimOffsets( pSoldier, &sOffsetX, &sOffsetY );
-			  pSoldier->sDamageX = sOffsetX;
-			  pSoldier->sDamageY = sOffsetY;
+				pSoldier->sDamageX = pSoldier->sBoundingBoxOffsetX;
+				pSoldier->sDamageY = pSoldier->sBoundingBoxOffsetY;
       }
 		}
 	}

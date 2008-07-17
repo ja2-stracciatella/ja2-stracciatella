@@ -971,18 +971,16 @@ static void GetArrowsBackground(void)
 void GetSoldierAboveGuyPositions(const SOLDIERTYPE* const pSoldier, INT16* const psX, INT16* const psY, const BOOLEAN fRadio)
 {
 	INT16 sMercScreenX, sMercScreenY;
-	INT16 sOffsetX, sOffsetY;
 	UINT8	ubAnimUseHeight;
 	INT16		sStanceOffset = 0;
 	INT16		sTextBodyTypeYOffset = 62;
 
 	// Find XY, dims, offsets
 	GetSoldierScreenPos( pSoldier, &sMercScreenX, &sMercScreenY );
-	GetSoldierAnimOffsets( pSoldier, &sOffsetX, &sOffsetY );
 
 	// OK, first thing to do is subtract offsets ( because GetSoldierScreenPos adds them... )
-	sMercScreenX -= sOffsetX;
-	sMercScreenY -= sOffsetY;
+	sMercScreenX -= pSoldier->sBoundingBoxOffsetX;
+	sMercScreenY -= pSoldier->sBoundingBoxOffsetY;
 
 	// Adjust based on stance
 	if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_NOMOVE_MARKER) )

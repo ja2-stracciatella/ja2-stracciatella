@@ -35,7 +35,6 @@ BOOLEAN GridNoOnScreen( INT16 sGridNo );
 BOOLEAN SoldierOnScreen(const SOLDIERTYPE* s);
 BOOLEAN SoldierLocationRelativeToScreen(INT16 sGridNo, INT8* pbDirection, UINT32* puiScrollFlags);
 void GetSoldierScreenPos(const SOLDIERTYPE* pSoldier, INT16* psScreenX, INT16* psScreenY);
-void GetSoldierAnimOffsets(const SOLDIERTYPE* pSoldier, INT16* sOffsetX, INT16* sOffsetY);
 void GetSoldierTRUEScreenPos(const SOLDIERTYPE* pSoldier, INT16* psScreenX, INT16* psScreenY);
 BOOLEAN IsPointInSoldierBoundingBox( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY );
 UINT16 FindRelativeSoldierPosition(const SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY);
