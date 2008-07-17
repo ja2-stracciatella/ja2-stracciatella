@@ -444,16 +444,6 @@ static void GetSoldierScreenRect(const SOLDIERTYPE* const pSoldier, SGPRect* con
 		pRect->iRight		= sMercScreenX + pSoldier->sBoundingBoxWidth;
 }
 
-void GetSoldierAnimDims( SOLDIERTYPE *pSoldier, INT16 *psHeight, INT16 *psWidth )
-{
-	// OK, noodle here on what we should do... If we take each frame, it will be different slightly
-	// depending on the frame and the value returned here will vary thusly. However, for the
-	// uses of this function, we should be able to use just the first frame...
-
-	*psHeight					= (INT16)pSoldier->sBoundingBoxHeight;
-	*psWidth					= (INT16)pSoldier->sBoundingBoxWidth;
-}
-
 
 void GetSoldierAnimOffsets(const SOLDIERTYPE* pSoldier, INT16* sOffsetX, INT16* sOffsetY)
 {

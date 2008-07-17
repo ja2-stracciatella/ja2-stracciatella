@@ -1530,7 +1530,6 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor);
 
 void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, BOOLEAN const fClosingDoor)
 {
-	INT16 sHeight, sWidth;
 	INT16	sScreenX, sScreenY;
 
 	// Erase other menus....
@@ -1550,10 +1549,9 @@ void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, BOOLEAN const fClosingDoor)
 	// Center on guy
 	// Locate to guy first.....
 	LocateSoldier(pSoldier, FALSE);
-	GetSoldierAnimDims( pSoldier, &sHeight, &sWidth );
 	GetSoldierScreenPos( pSoldier, &sScreenX, &sScreenY );
-	gOpenDoorMenu.sX = sScreenX - ( ( BUTTON_PANEL_WIDTH - sWidth ) / 2 );
-	gOpenDoorMenu.sY = sScreenY - ( ( BUTTON_PANEL_HEIGHT - sHeight ) / 2 );
+	gOpenDoorMenu.sX = sScreenX - (BUTTON_PANEL_WIDTH  - pSoldier->sBoundingBoxWidth)  / 2;
+	gOpenDoorMenu.sY = sScreenY - (BUTTON_PANEL_HEIGHT - pSoldier->sBoundingBoxHeight) / 2;
 
 	// Alrighty, cancel lock UI if we havn't done so already
 	UnSetUIBusy(pSoldier);
