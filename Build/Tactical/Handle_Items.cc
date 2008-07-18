@@ -2529,24 +2529,16 @@ static void AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callba
 }
 
 
-void RemoveFlashItemSlot(const ITEM_POOL* pItemPool)
+void RemoveFlashItemSlot(ITEM_POOL const* const ip)
 {
-	for (UINT32 uiCount = 0; uiCount < guiNumFlashItemSlots; ++uiCount)
+	for (ITEM_POOL_LOCATOR* i = FlashItemSlots; i != endof(FlashItemSlots); ++i)
 	{
-		if ( FlashItemSlots[ uiCount ].fAllocated )
-		{
-			if ( FlashItemSlots[ uiCount ].pItemPool == pItemPool )
-			{
-				FlashItemSlots[ uiCount ].fAllocated = FALSE;
+		if (!i->fAllocated)     continue;
+		if (i->pItemPool != ip) continue;
 
-				// Check if we have a callback and call it if so!
-				if ( FlashItemSlots[ uiCount ].Callback != NULL )
-				{
-					FlashItemSlots[ uiCount ].Callback( );
-				}
-				break;
-			}
-		}
+		i->fAllocated = FALSE;
+		if (i->Callback) i->Callback();
+		break;
 	}
 }
 
