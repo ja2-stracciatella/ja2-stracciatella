@@ -194,7 +194,7 @@ BOOLEAN gfUseAlternateQueenPosition = FALSE;
 INT8		gbPadding[SAI_PADDING_BYTES];
 //patrol group info plus padding
 #define SAVED_PATROL_GROUPS			50
-PATROL_GROUP *gPatrolGroup			= NULL;
+static PATROL_GROUP* gPatrolGroup;
 //army composition info plus padding
 #define SAVED_ARMY_COMPOSITIONS	60
 ARMY_COMPOSITION gArmyComp[ NUM_ARMY_COMPOSITIONS ];
@@ -437,18 +437,12 @@ static INT32 GarrisonReinforcementsRequested(INT32 iGarrisonID, UINT8* pubExtraR
 }
 
 
-static INT32 PatrolReinforcementsRequested(INT32 iPatrolID)
+static INT32 PatrolReinforcementsRequested(PATROL_GROUP const* const pg)
 {
-	GROUP *pGroup;
-	pGroup = GetGroup( gPatrolGroup[ iPatrolID ].ubGroupID );
-	if( !pGroup )
-	{
-		return gPatrolGroup[ iPatrolID ].bSize;
-	}
-	else
-	{
-		return gPatrolGroup[ iPatrolID ].bSize - pGroup->ubGroupSize;
-	}
+	GROUP* const g = GetGroup(pg->ubGroupID);
+	INT32 size = pg->bSize;
+	if (g) size -= g->ubGroupSize;
+	return size;
 }
 
 
@@ -2697,24 +2691,26 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 	GROUP *pGroup;
 	INT32 iRandom, iSrcGarrisonID, iWeight;
 	INT32 iReinforcementsAvailable, iReinforcementsRequested, iReinforcementsApproved;
-	UINT8 ubSrcSectorX, ubSrcSectorY, ubDstSectorX, ubDstSectorY;
+	UINT8 ubSrcSectorX, ubSrcSectorY;
 
 	ValidateWeights( 21 );
 
+	PATROL_GROUP* const pg = &gPatrolGroup[iPatrolID];
+
 	//Determine how many units the patrol group needs.
-	iReinforcementsRequested = PatrolReinforcementsRequested( iPatrolID );
+	iReinforcementsRequested = PatrolReinforcementsRequested(pg);
 
 	if( iReinforcementsRequested <= 0)
 		return;
 
-	ubDstSectorX = (gPatrolGroup[ iPatrolID ].ubSectorID[1] % 16) + 1;
-	ubDstSectorY = (gPatrolGroup[ iPatrolID ].ubSectorID[1] / 16) + 1;
+	UINT8 const ubDstSectorX = (pg->ubSectorID[1] % 16) + 1;
+	UINT8 const ubDstSectorY = (pg->ubSectorID[1] / 16) + 1;
 
 	if( pOptionalGroup && *pOptionalGroup )
 	{ //This group will provide the reinforcements
 		pGroup = *pOptionalGroup;
 
-		gPatrolGroup[ iPatrolID ].ubPendingGroupID = pGroup->ubGroupID;
+		pg->ubPendingGroupID = pGroup->ubGroupID;
 
 		#ifdef JA2BETAVERSION
 			LogStrategicEvent( "%d troops have been reassigned from %c%d to reinforce patrol group covering sector %c%d",
@@ -2723,7 +2719,7 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 				ubDstSectorY + 'A' - 1, ubDstSectorX );
 		#endif
 
-		MoveSAIGroupToSector( pOptionalGroup, gPatrolGroup[ iPatrolID ].ubSectorID[1], EVASIVE, REINFORCEMENTS );
+		MoveSAIGroupToSector(pOptionalGroup, pg->ubSectorID[1], EVASIVE, REINFORCEMENTS);
 
 		ValidateWeights( 22 );
 		return;
@@ -2740,7 +2736,7 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 		pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
 		giReinforcementPool -= iReinforcementsApproved;
 
-		gPatrolGroup[ iPatrolID ].ubPendingGroupID = pGroup->ubGroupID;
+		pg->ubPendingGroupID = pGroup->ubGroupID;
 
 		#ifdef JA2BETAVERSION
 			LogStrategicEvent( "%d troops have been sent from palace to patrol area near sector %c%d",
@@ -2748,7 +2744,7 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 				ubDstSectorY + 'A' - 1, ubDstSectorX );
 		#endif
 
-		MoveSAIGroupToSector( &pGroup, gPatrolGroup[ iPatrolID ].ubSectorID[1], EVASIVE, REINFORCEMENTS );
+		MoveSAIGroupToSector(&pGroup, pg->ubSectorID[1], EVASIVE, REINFORCEMENTS);
 
 		ValidateWeights( 23 );
 		return;
@@ -2773,7 +2769,7 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 						iReinforcementsApproved = MIN( iReinforcementsRequested, iReinforcementsAvailable );
 						pGroup = CreateNewEnemyGroupDepartingFromSector( gGarrisonGroup[ iSrcGarrisonID ].ubSectorID, 0, (UINT8)iReinforcementsApproved, 0 );
 						pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
-						gPatrolGroup[ iPatrolID ].ubPendingGroupID = pGroup->ubGroupID;
+						pg->ubPendingGroupID = pGroup->ubGroupID;
 
 						RemoveSoldiersFromGarrisonBasedOnComposition( iSrcGarrisonID, pGroup->ubGroupSize );
 
@@ -2784,7 +2780,7 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 								ubDstSectorY + 'A' - 1, ubDstSectorX );
 						#endif
 
-						MoveSAIGroupToSector( &pGroup, gPatrolGroup[ iPatrolID ].ubSectorID[1], EVASIVE, REINFORCEMENTS );
+						MoveSAIGroupToSector(&pGroup, pg->ubSectorID[1], EVASIVE, REINFORCEMENTS);
 
 						ValidateWeights( 24 );
 
