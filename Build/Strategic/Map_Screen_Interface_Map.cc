@@ -905,22 +905,16 @@ static INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 icon_pos)
 	CFOR_ALL_VEHICLES(v)
 	{
 		// skip the chopper, it has its own icon and displays in airspace mode
-		if (VEHICLE2ID(v) == iHelicopterVehicleId) continue;
+		if (VEHICLE2ID(v) == iHelicopterVehicleId)     continue;
+		if (v->sSectorX != sMapX)                      continue;
+		if (v->sSectorY != sMapY)                      continue;
+		if (v->sSectorZ != iCurrentMapSectorZ)         continue;
+		if (PlayerIDGroupInMotion(v->ubMovementGroup)) continue;
 
-		if (v->sSectorX == sMapX              &&
-				v->sSectorY == sMapY              &&
-				v->sSectorZ == iCurrentMapSectorZ &&
-				!PlayerIDGroupInMotion(v->ubMovementGroup))
-		{
-			// ATE: Check if this vehicle has a soldier and it's on our team.....
-			const SOLDIERTYPE* const pVehicleSoldier = GetSoldierStructureForVehicle(v);
+		SOLDIERTYPE const* const vs = GetSoldierStructureForVehicle(v);
+		if (vs->bTeam != gbPlayerNum) continue;
 
-			// this skips the chopper, which has no soldier
-			if (pVehicleSoldier != NULL && pVehicleSoldier->bTeam == gbPlayerNum)
-			{
-				DrawMapBoxIcon(guiCHARICONS, SMALL_WHITE_BOX, sMapX, sMapY, icon_pos++);
-			}
-		}
+		DrawMapBoxIcon(guiCHARICONS, SMALL_WHITE_BOX, sMapX, sMapY, icon_pos++);
 	}
 
 	return icon_pos;
