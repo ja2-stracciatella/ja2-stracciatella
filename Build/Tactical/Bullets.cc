@@ -3,7 +3,6 @@
 #include "WorldDef.h"
 #include "Render_Dirty.h"
 #include "SysUtil.h"
-#include "WCheck.h"
 #include "Faces.h"
 #include "Overhead.h"
 #include "Soldier_Profile.h"
@@ -126,8 +125,6 @@ void HandleBulletSpecialFlags(BULLET* pBullet)
 
 void RemoveBullet(BULLET* b)
 {
-	CHECKV(b != NULL);
-
 	// decrease soldier's bullet count
 
 	if (b->fReal)

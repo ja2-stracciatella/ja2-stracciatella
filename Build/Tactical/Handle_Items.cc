@@ -20,7 +20,6 @@
 #include "World_Items.h"
 #include "Text.h"
 #include "Timer_Control.h"
-#include "WCheck.h"
 #include "Interface_Items.h"
 #include "Soldier_Profile.h"
 #include "Interface_Dialogue.h"
@@ -2530,13 +2529,9 @@ static void AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callba
 }
 
 
-BOOLEAN RemoveFlashItemSlot(const ITEM_POOL* pItemPool)
+void RemoveFlashItemSlot(const ITEM_POOL* pItemPool)
 {
-	UINT32 uiCount;
-
-	CHECKF( pItemPool != NULL );
-
-	for( uiCount=0; uiCount < guiNumFlashItemSlots; uiCount++)
+	for (UINT32 uiCount = 0; uiCount < guiNumFlashItemSlots; ++uiCount)
 	{
 		if ( FlashItemSlots[ uiCount ].fAllocated )
 		{
@@ -2549,13 +2544,10 @@ BOOLEAN RemoveFlashItemSlot(const ITEM_POOL* pItemPool)
 				{
 					FlashItemSlots[ uiCount ].Callback( );
 				}
-
-				return( TRUE );
+				break;
 			}
 		}
 	}
-
-	return( TRUE );
 }
 
 

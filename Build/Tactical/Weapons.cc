@@ -1816,7 +1816,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 
 
 			if ( fFreeupAttacker )
 			{
-				RemoveBullet(bullet);
+				if (bullet) RemoveBullet(bullet);
 				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - bullet hit structure - explosive ammo");
 				FreeUpAttacker(attacker);
 			}

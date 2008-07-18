@@ -12,7 +12,6 @@
 #include "Render_Dirty.h"
 #include "Timer_Control.h"
 #include "VObject.h"
-#include "WCheck.h"
 #include "SysUtil.h"
 #include "Map_Screen_Interface_Border.h"
 #include "Map_Screen_Interface.h"
@@ -922,9 +921,6 @@ static BOOLEAN GetObjFromInventoryStashSlot(OBJECTTYPE* pInventorySlot, OBJECTTY
 
 static BOOLEAN RemoveObjectFromStashSlot(OBJECTTYPE* pInventorySlot, OBJECTTYPE* pItemPtr)
 {
-
-	CHECKF( pInventorySlot );
-
 	if (pInventorySlot -> ubNumberOfObjects == 0)
 	{
 		return( FALSE );

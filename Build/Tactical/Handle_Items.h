@@ -122,7 +122,7 @@ void MakeNPCGrumpyForMinorOffense(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pOff
 
 BOOLEAN AnyItemsVisibleOnLevel(const ITEM_POOL* pItemPool, INT8 bZLevel);
 
-BOOLEAN RemoveFlashItemSlot(const ITEM_POOL* pItemPool);
+void RemoveFlashItemSlot(ITEM_POOL const*);
 
 void ToggleItemGlow(BOOLEAN fOn);
 
