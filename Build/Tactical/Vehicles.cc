@@ -767,18 +767,16 @@ BOOLEAN DoesVehicleNeedAnyRepairs(const VEHICLETYPE* const v)
 }
 
 
-INT8 RepairVehicle( INT32 iVehicleId, INT8 bRepairPtsLeft, BOOLEAN *pfNothingToRepair )
+INT8 RepairVehicle(VEHICLETYPE const* const v, INT8 const bRepairPtsLeft, BOOLEAN* const pfNothingToRepair)
 {
 	SOLDIERTYPE		*pVehicleSoldier = NULL;
 	INT8					bRepairPtsUsed = 0;
 	INT8					bOldLife;
 
-	VEHICLETYPE const* const v = GetVehicle(iVehicleId);
-
 	if (!DoesVehicleNeedAnyRepairs(v)) return bRepairPtsUsed;
 
 	// get the vehicle soldiertype
-	pVehicleSoldier = GetSoldierStructureForVehicle( iVehicleId );
+	pVehicleSoldier = GetSoldierStructureForVehicle(VEHICLE2ID(v));
 
 	bOldLife = pVehicleSoldier->bLife;
 
