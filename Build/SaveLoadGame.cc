@@ -2382,7 +2382,7 @@ static void SaveGeneralInfo(HWFILE const hFile)
 	sGeneralInfo.fShowAircraftFlag	= fShowAircraftFlag;
 	sGeneralInfo.fShowTeamFlag			= fShowTeamFlag;
 
-	sGeneralInfo.fHelicopterAvailable = iHelicopterVehicleId != -1;
+	sGeneralInfo.fHelicopterAvailable = iHelicopterVehicleId != -1; // XXX HACK000B
 
 	// helicopter vehicle id
 	sGeneralInfo.iHelicopterVehicleId = iHelicopterVehicleId;
@@ -2391,7 +2391,7 @@ static void SaveGeneralInfo(HWFILE const hFile)
 	sGeneralInfo.iTotalAccumulatedCostByPlayer = iTotalAccumulatedCostByPlayer;
 
 	// whether or not skyrider is alive and well? and on our side yet?
-	sGeneralInfo.fSkyRiderAvailable = iHelicopterVehicleId != -1;
+	sGeneralInfo.fSkyRiderAvailable = iHelicopterVehicleId != -1; // XXX HACK000B
 
 	// is the heli in the air?
 	sGeneralInfo.fHelicopterIsAirBorne = fHelicopterIsAirBorne;
