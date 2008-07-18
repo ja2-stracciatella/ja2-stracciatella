@@ -1654,7 +1654,6 @@ const wchar_t* pSkyriderText[] =
 {
 	L"Skyrider è stato pagato $%d", 			// skyrider was paid an amount of money
 	L"A Skyrider bisogna ancora dare $%d", 		// skyrider is still owed an amount of money
-	L"Skyrider ha finito il carburante",	// skyrider has finished refueling
 	L"Skyrider non ha passeggeri. Se avete intenzione di trasportare mercenari in questo settore, assegnateli prima al Veicolo/Elicottero.",
 };
 

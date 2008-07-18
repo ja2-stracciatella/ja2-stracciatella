@@ -1668,7 +1668,6 @@ const wchar_t* pSkyriderText[] =
 {
 	L"Skyrider is $%d betaald.", 			// skyrider was paid an amount of money
 	L"Skyrider heeft $%d tegoed.", 		// skyrider is still owed an amount of money
-	L"Skyrider is klaar met tanken",	// skyrider has finished refueling
 	L"Skyrider heeft geen passagiers. Als je huurlingen in deze sector wil vervoeren, wijs ze dan eerst toe aan Voertuig/Helikopter.",
 };
 

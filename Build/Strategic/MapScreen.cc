@@ -8603,7 +8603,7 @@ static BOOLEAN RequestGiveSkyriderNewDestination(void)
 			 ( GetNumberOfPassengersInHelicopter() == 0 ) &&
 			 ( PlayerMercsInHelicopterSector() > 0 ) )
 		{
-			DoMapMessageBox(MSG_BOX_BASIC_STYLE, pSkyriderText[3], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback);
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, pSkyriderText[2], MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback);
 			gfSkyriderEmptyHelpGiven = TRUE;
 			return( FALSE );
 		}
