@@ -11,7 +11,6 @@
 #include "Font_Control.h"
 #include "Render_Dirty.h"
 #include "World_Items.h"
-#include "Debug.h"
 #include "Isometric_Utils.h"
 #include "Sys_Globals.h"
 #include "StrategicMap.h"

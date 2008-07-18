@@ -6,7 +6,6 @@
 #include "Structure.h"
 #include "TileDef.h"
 #include "WorldDef.h"
-#include "Debug.h"
 #include "Smooth.h"
 #include "WorldMan.h"
 #include "Lighting.h"

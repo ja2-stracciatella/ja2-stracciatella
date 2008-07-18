@@ -26,10 +26,6 @@
 #include "JAScreens.h"
 #include "Video.h"
 
-#ifdef JA2BETAVERSION
-#	include "Debug.h"
-#endif
-
 
 #define MSGBOX_DEFAULT_WIDTH      300
 

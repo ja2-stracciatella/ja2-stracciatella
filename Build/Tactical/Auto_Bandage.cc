@@ -32,7 +32,6 @@
 #include "VSurface.h"
 #include "MemMan.h"
 #include "Button_System.h"
-#include "Debug.h"
 
 
 // max number of merc faces per row in autobandage box

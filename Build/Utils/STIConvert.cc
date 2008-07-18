@@ -2,7 +2,6 @@
 
 #include "Buffer.h"
 #include "Types.h"
-#include "Debug.h"
 #include "ImgFmt.h"
 #include "HImage.h"
 #include "STIConvert.h"

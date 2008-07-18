@@ -15,7 +15,6 @@
 #include "WordWrap.h"
 #include "SaveLoadScreen.h"
 #include "Slider.h"
-#include "Debug.h"
 #include "Music_Control.h"
 #include "Sound_Control.h"
 #include "SoundMan.h"

@@ -1,6 +1,5 @@
 #include "Encrypted_File.h"
 #include "FileMan.h"
-#include "Debug.h"
 
 
 void LoadEncryptedData(HWFILE const File, wchar_t* DestString, UINT32 const seek_chars, UINT32 const read_chars)

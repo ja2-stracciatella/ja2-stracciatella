@@ -4,7 +4,6 @@
 #include "Structure.h"
 #include "TileDat.h"
 #include "Turn_Based_Input.h"
-#include "Debug.h"
 #include "JAScreens.h"
 #include "PathAI.h"
 #include "Soldier_Control.h"

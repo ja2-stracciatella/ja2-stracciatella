@@ -8,7 +8,6 @@
 #include "Encrypted_File.h"
 #include "Text.h"
 #include "Button_System.h"
-#include "Debug.h"
 #include "VSurface.h"
 #include "Video.h"
 #include "Font_Control.h"

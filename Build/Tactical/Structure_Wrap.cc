@@ -1,4 +1,3 @@
-#include "Debug.h"
 #include "Explosion_Control.h"
 #include "Structure.h"
 #include "TileDef.h"

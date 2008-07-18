@@ -4,7 +4,6 @@
 #include "LoadSaveMercProfile.h"
 #include "Merc_Hiring.h"
 #include "Text.h"
-#include "Debug.h"
 #include "Render_Dirty.h"
 #include "Cursors.h"
 #include "Laptop.h"

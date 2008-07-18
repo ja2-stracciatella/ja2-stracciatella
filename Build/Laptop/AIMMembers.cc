@@ -11,7 +11,6 @@
 #include "Local.h"
 #include "MessageBoxScreen.h"
 #include "Timer_Control.h"
-#include "Debug.h"
 #include "SysUtil.h"
 #include "Soldier_Profile.h"
 #include "Soldier_Control.h"

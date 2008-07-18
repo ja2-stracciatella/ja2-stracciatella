@@ -1,4 +1,3 @@
-#include "Debug.h"
 #include "MouseSystem.h"
 #include "Structure.h"
 #include "WorldDef.h"

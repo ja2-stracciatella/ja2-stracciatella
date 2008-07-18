@@ -37,7 +37,6 @@
 #include "Tile_Surface.h"
 #include "Button_System.h"
 #include "Video.h"
-#include "Debug.h"
 
 #ifdef JA2DEMO
 #	include "Message.h"

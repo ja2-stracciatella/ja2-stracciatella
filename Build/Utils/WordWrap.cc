@@ -2,7 +2,6 @@
 #include "WordWrap.h"
 #include "Render_Dirty.h"
 #include "Font_Control.h"
-#include "Debug.h"
 #include "Video.h"
 #include "MemMan.h"
 #include "VSurface.h"

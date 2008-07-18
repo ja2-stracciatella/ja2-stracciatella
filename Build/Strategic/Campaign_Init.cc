@@ -12,7 +12,6 @@
 #include "Strategic_AI.h"
 #include "Tactical_Save.h"
 #include "MemMan.h"
-#include "Debug.h"
 
 
 UNDERGROUND_SECTORINFO* gpUndergroundSectorInfoTail = NULL;

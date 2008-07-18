@@ -1,7 +1,6 @@
 #include "Font_Control.h"
 #include "Overhead.h"
 #include "Timer_Control.h"
-#include "Debug.h"
 #include "Soldier_Control.h"
 #include "Weapons.h"
 #include "Handle_Items.h"

@@ -24,7 +24,6 @@
 #include "PopupMenu.h"
 #include "EditorDefines.h"
 #include "Render_Dirty.h"
-#include "Debug.h"
 #include "MouseSystem.h"
 #include "Cursors.h"
 #include "Overhead_Types.h"

@@ -3,7 +3,6 @@
 #include "IMP_Attribute_Entrance.h"
 #include "IMPVideoObjects.h"
 #include "Text.h"
-#include "Debug.h"
 #include "Render_Dirty.h"
 #include "Cursors.h"
 #include "Laptop.h"

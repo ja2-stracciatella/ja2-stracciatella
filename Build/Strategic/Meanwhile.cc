@@ -30,7 +30,6 @@
 #include "Campaign_Types.h"
 #include "Squads.h"
 #include "Random.h"
-#include "Debug.h"
 
 
 #define MAX_MEANWHILE_PROFILES	10

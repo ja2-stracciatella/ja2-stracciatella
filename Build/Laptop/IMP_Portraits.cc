@@ -6,7 +6,6 @@
 #include "Text.h"
 #include "VObject.h"
 #include "Input.h"
-#include "Debug.h"
 #include "Render_Dirty.h"
 #include "Cursors.h"
 #include "Laptop.h"

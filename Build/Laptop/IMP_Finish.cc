@@ -8,7 +8,6 @@
 #include "MessageBoxScreen.h"
 #include "VObject.h"
 #include "Timer_Control.h"
-#include "Debug.h"
 #include "Render_Dirty.h"
 #include "Cursors.h"
 #include "Laptop.h"

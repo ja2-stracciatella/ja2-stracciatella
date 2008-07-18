@@ -3,7 +3,6 @@
 #include "IMP_Attribute_Selection.h"
 #include "IMPVideoObjects.h"
 #include "Input.h"
-#include "Debug.h"
 #include "MessageBoxScreen.h"
 #include "Render_Dirty.h"
 #include "Cursors.h"
