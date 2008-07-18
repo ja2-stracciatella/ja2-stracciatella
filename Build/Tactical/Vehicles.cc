@@ -190,11 +190,10 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 {
 	// ok now check if any free slots in the vehicle
 
-	// get the vehicle soldiertype
-	SOLDIERTYPE* vs = GetSoldierStructureForVehicle(v);
-
-	if (vs)
+	SOLDIERTYPE* vs = 0;
+	if (VEHICLE2ID(v) != iHelicopterVehicleId)
 	{
+		vs = GetSoldierStructureForVehicle(v);
 		if (vs->bTeam != gbPlayerNum)
 		{
 			// Change sides
@@ -386,8 +385,6 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* const s)
 		CFOR_ALL_PASSENGERS(v, i) return TRUE;
 
 		SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(v);
-		Assert(vs);
-		if (!vs) return TRUE;
 
 		// and he has a route set
 		if (GetLengthOfMercPath(vs) > 0)
@@ -618,7 +615,6 @@ BOOLEAN PutSoldierInVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 {
 	SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(GetVehicle(s->iVehicleId));
-	if (vs == NULL) return FALSE;
 
 	INT16 sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 5, 3, vs);
 	if (sGridNo == NOWHERE)
@@ -801,14 +797,11 @@ SOLDIERTYPE* GetSoldierStructureForVehicle(VEHICLETYPE const* const v)
 {
 	FOR_ALL_SOLDIERS(s)
 	{
-		if (s->uiStatusFlags & SOLDIER_VEHICLE &&
-				s->bVehicleID == VEHICLE2ID(v))
-		{
-			return s;
-		}
+		if (!(s->uiStatusFlags & SOLDIER_VEHICLE)) continue;
+		if (s->bVehicleID != VEHICLE2ID(v))        continue;
+		return s;
 	}
-
-	return NULL;
+	throw std::logic_error("Vehicle has no corresponding soldier");
 }
 
 
@@ -986,14 +979,11 @@ void AddVehicleFuelToSave( )
 {
 	CFOR_ALL_VEHICLES(v)
 	{
-		// get the vehicle soldiertype
-		SOLDIERTYPE* const pVehicleSoldier = GetSoldierStructureForVehicle(v);
-		if( pVehicleSoldier )
-		{
-			// Init fuel!
-			pVehicleSoldier->sBreathRed = 10000;
-			pVehicleSoldier->bBreath    = 100;
-		}
+		if (VEHICLE2ID(v) == iHelicopterVehicleId) continue;
+		SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(v);
+		// Init fuel!
+		vs->sBreathRed = 10000;
+		vs->bBreath    = 100;
 	}
 }
 
@@ -1130,7 +1120,6 @@ BOOLEAN IsSoldierInThisVehicleSquad(const SOLDIERTYPE* const pSoldier, const INT
 	}
 
 	pVehicleSoldier = GetSoldierStructureForVehicle(GetVehicle(iVehicleId));
-	Assert( pVehicleSoldier );
 
 	// check squad vehicle is on
 	if ( pVehicleSoldier->bAssignment != bSquadNumber )

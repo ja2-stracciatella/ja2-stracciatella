@@ -371,17 +371,13 @@ static TEAM_PANEL_SLOTS_TYPE gTeamPanel[NUM_TEAM_SLOTS];
 
 
 // Wraps up check for AP-s get from a different soldier for in a vehicle...
-static INT8 GetUIApsToDisplay(const SOLDIERTYPE* s)
+static INT8 GetUIApsToDisplay(SOLDIERTYPE const* s)
 {
 	if (s->uiStatusFlags & SOLDIER_DRIVER)
 	{
-		const SOLDIERTYPE* const v = GetSoldierStructureForVehicle(GetVehicle(s->iVehicleId));
-		return v == NULL ? 0 : v->bActionPoints;
+		s = GetSoldierStructureForVehicle(GetVehicle(s->iVehicleId));
 	}
-	else
-	{
-		return s->bActionPoints;
-	}
+	return s->bActionPoints;
 }
 
 

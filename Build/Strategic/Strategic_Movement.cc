@@ -1154,7 +1154,6 @@ static INT16 VehicleFuelRemaining(SOLDIERTYPE* pSoldier);
 void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BOOLEAN const fNeverLeft)
 {
 	UINT8 ubInsertionDirection, ubStrategicInsertionCode;
-	SOLDIERTYPE *pSoldier = NULL;
 	BOOLEAN fExceptionQueue = FALSE;
 	BOOLEAN fFirstTimeInSector = FALSE;
 	BOOLEAN fGroupDestroyed = FALSE;
@@ -1263,13 +1262,12 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 		}
 		else if( !IsGroupTheHelicopterGroup( pGroup ) )
 		{
-			VEHICLETYPE const* const v        = GetVehicleFromMvtGroup(pGroup);
-			SOLDIERTYPE*       const pSoldier = GetSoldierStructureForVehicle(v);
-			AssertMsg( pSoldier, "GroupArrival for vehicle group.  Invalid soldier pointer." );
+			VEHICLETYPE const* const v  = GetVehicleFromMvtGroup(pGroup);
+			SOLDIERTYPE*       const vs = GetSoldierStructureForVehicle(v);
 
-			SpendVehicleFuel( pSoldier, (INT16)(pGroup->uiTraverseTime*6) );
+			SpendVehicleFuel(vs, pGroup->uiTraverseTime * 6);
 
-			if( !VehicleFuelRemaining( pSoldier ) )
+			if (!VehicleFuelRemaining(vs))
 			{
 				ReportVehicleOutOfGas(v, pGroup->ubSectorX, pGroup->ubSectorY);
 				//Nuke the group's path, so they don't continue moving.
@@ -1408,8 +1406,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 
 			if (VEHICLE2ID(v) != iHelicopterVehicleId)
 			{
-				pSoldier = GetSoldierStructureForVehicle(v);
-				Assert( pSoldier );
+				SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(v);
 
 				pSoldier->fBetweenSectors = FALSE;
 				pSoldier->sSectorX = pGroup->ubSectorX;
@@ -1693,14 +1690,12 @@ static void PrepareGroupsForSimultaneousArrival(void)
 	if( pGroup->fVehicle )
 	{
 		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-
 		v->fBetweenSectors = TRUE;
 
-		// set up vehicle soldier
-		SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(v);
-		if( pSoldier )
+		if (VEHICLE2ID(v) != iHelicopterVehicleId)
 		{
-			pSoldier->fBetweenSectors = TRUE;
+			SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(v);
+			vs->fBetweenSectors = TRUE;
 		}
 	}
 
@@ -1976,15 +1971,13 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	{
 		// vehicle, set fact it is between sectors too
 		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-
 		v->fBetweenSectors = TRUE;
-		SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(v);
-		if( pSoldier )
-		{
-			pSoldier->fBetweenSectors = TRUE;
 
-			// OK, Remove the guy from tactical engine!
-			RemoveSoldierFromTacticalSector(pSoldier);
+		if (VEHICLE2ID(v) != iHelicopterVehicleId)
+		{
+			SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(v);
+			vs->fBetweenSectors = TRUE;
+			RemoveSoldierFromTacticalSector(vs);
 		}
 	}
 
@@ -3503,8 +3496,6 @@ static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const* const pGroup, INT
 		if (VEHICLE2ID(v) != iHelicopterVehicleId)
 		{
 			pSoldier = GetSoldierStructureForVehicle(v);
-			Assert ( pSoldier );
-
 			// these are apparently unnecessary, since vehicles are part of the pPlayerList in a vehicle group.  Oh well.
 			pSoldier->sSectorX = sSectorX;
 			pSoldier->sSectorY = sSectorY;
