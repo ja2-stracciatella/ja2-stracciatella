@@ -7,7 +7,6 @@
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 #include "Video.h"
-#include "WCheck.h"
 
 
 SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
@@ -221,23 +220,33 @@ SGPVSurface* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth)
 }
 
 
-static BOOLEAN SetVideoSurfaceDataFromHImage(SGPVSurface* hVSurface, HIMAGE hImage, UINT16 usX, UINT16 usY, const SGPRect* pSrcRect);
-
-
 SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 {
-	AutoSGPImage hImage(CreateImage(Filename, IMAGE_ALLIMAGEDATA));
+	AutoSGPImage img(CreateImage(Filename, IMAGE_ALLIMAGEDATA));
 
-	SGPVSurface* const vs = new SGPVSurface(hImage->usWidth, hImage->usHeight, hImage->ubBitDepth);
+	SGPVSurface* const vs = new SGPVSurface(img->usWidth, img->usHeight, img->ubBitDepth);
 
-	SGPRect tempRect;
-	tempRect.iLeft   = 0;
-	tempRect.iTop    = 0;
-	tempRect.iRight  = hImage->usWidth  - 1;
-	tempRect.iBottom = hImage->usHeight - 1;
-	SetVideoSurfaceDataFromHImage(vs, hImage, 0, 0, &tempRect);
+	UINT8 const dst_bpp = vs->BPP();
+	UINT32      buffer_bpp;
+	switch (dst_bpp)
+	{
+		case  8: buffer_bpp = BUFFER_8BPP;  break;
+		case 16: buffer_bpp = BUFFER_16BPP; break;
+		default: throw std::logic_error("Invalid bpp");
+	}
 
-	if (hImage->ubBitDepth == 8) vs->SetPalette(hImage->pPalette);
+	{ SGPVSurface::Lock l(vs);
+		UINT8*  const dst   = l.Buffer<UINT8>();
+		UINT16  const pitch = l.Pitch() / (dst_bpp / 8); // pitch in pixels
+		SGPBox  const box   = { 0, 0, img->usWidth, img->usHeight };
+		BOOLEAN const Ret   = CopyImageToBuffer(img, buffer_bpp, dst, pitch, vs->Height(), 0, 0, &box);
+		if (!Ret)
+		{
+			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Error Occured Copying HIMAGE to video surface");
+		}
+	}
+
+	if (img->ubBitDepth == 8) vs->SetPalette(img->pPalette);
 
 	AddStandardVideoSurface(vs);
 	return vs;
@@ -314,61 +323,6 @@ void ColorFillVideoSurfaceArea(SGPVSurface* const dst, INT32 iDestX1, INT32 iDes
 	Rect.w = iDestX2 - iDestX1;
 	Rect.h = iDestY2 - iDestY1;
 	SDL_FillRect(dst->surface_, &Rect, Color16BPP);
-}
-
-
-// Given an HIMAGE object, blit imagery into existing Video Surface. Can be from 8->16 BPP
-static BOOLEAN SetVideoSurfaceDataFromHImage(SGPVSurface* const hVSurface, const HIMAGE hImage, const UINT16 usX, const UINT16 usY, const SGPRect* const pSrcRect)
-{
-	Assert(hVSurface != NULL);
-	Assert(hImage != NULL);
-
-	// Get Size of hImage and determine if it can fit
-	CHECKF(hImage->usWidth  >= hVSurface->Width());
-	CHECKF(hImage->usHeight >= hVSurface->Height());
-
-	const UINT8 dst_bpp = hVSurface->BPP();
-
-	UINT32 buffer_bpp;
-	switch (dst_bpp)
-	{
-		case  8: buffer_bpp = BUFFER_8BPP;  break;
-		case 16: buffer_bpp = BUFFER_16BPP; break;
-		default: abort();
-	}
-
-	SGPVSurface::Lock l(hVSurface);
-	UINT8* const pDest   = l.Buffer<UINT8>();
-	UINT32 const uiPitch = l.Pitch();
-
-	// Effective width ( in PIXELS ) is Pitch ( in bytes ) converted to pitch ( IN PIXELS )
-	const UINT16 usEffectiveWidth = uiPitch / (dst_bpp / 8);
-
-	// Blit Surface
-	// If rect is NULL, use entrie image size
-	SGPBox box;
-	if (pSrcRect == NULL)
-	{
-		box.x = 0;
-		box.y = 0;
-		box.w = hImage->usWidth;
-		box.h = hImage->usHeight;
-	}
-	else
-	{
-		box.x = pSrcRect->iLeft;
-		box.y = pSrcRect->iTop;
-		box.w = pSrcRect->iRight  - pSrcRect->iLeft + 1;
-		box.h = pSrcRect->iBottom - pSrcRect->iTop  + 1;
-	}
-
-	// This HIMAGE function will transparently copy buffer
-	BOOLEAN Ret = CopyImageToBuffer(hImage, buffer_bpp, pDest, usEffectiveWidth, hVSurface->Height(), usX, usY, &box);
-	if (!Ret)
-	{
-		DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Error Occured Copying HIMAGE to video surface");
-	}
-	return Ret;
 }
 
 
