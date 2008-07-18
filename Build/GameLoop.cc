@@ -4,7 +4,6 @@
 #include "GameVersion.h"
 #include "Local.h"
 #include "SGP.h"
-#include "GameLoop.h"
 #include "Screens.h"
 #include "ShopKeeper_Interface.h"
 #include "Tactical_Placement_GUI.h"
