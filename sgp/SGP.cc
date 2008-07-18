@@ -309,7 +309,7 @@ catch (const std::bad_alloc&)
 catch (const std::exception& e)
 {
 	char msg[2048];
-	snprintf(msg, lengthof(msg), "ERROR: caught unhandled exception: \"%s\"", e.what());
+	snprintf(msg, lengthof(msg), "ERROR: caught unhandled exception:\n%s", e.what());
 	return Failure(msg);
 }
 catch (...)

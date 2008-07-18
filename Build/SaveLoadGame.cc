@@ -2217,35 +2217,40 @@ static void LoadWatchedLocsFromSavedGame(HWFILE const hFile)
 
 void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzNewFileName)
 {
-	const char* const dir = g_savegame_dir;
-	const char* const ext = g_savegame_ext;
+	char const* const dir = g_savegame_dir;
+	char const* const ext = g_savegame_ext;
 
-	//if we are creating the QuickSave file
-	if (ubSaveGameID == 0)
+	switch (ubSaveGameID)
 	{
-		const char* const quick = g_quicksave_name;
+		case 0: // we are creating the QuickSave file
+		{
+			char const* const quick = g_quicksave_name;
 #ifdef JA2BETAVERSION
-		if (gfUseConsecutiveQuickSaveSlots &&
-				guiCurrentQuickSaveNumber != 0)
-		{
-			sprintf(pzNewFileName, "%s/%s%02d.%s", dir, quick, guiCurrentQuickSaveNumber, ext);
-		}
-		else
+			if (gfUseConsecutiveQuickSaveSlots &&
+					guiCurrentQuickSaveNumber != 0)
+			{
+				sprintf(pzNewFileName, "%s/%s%02d.%s", dir, quick, guiCurrentQuickSaveNumber, ext);
+			}
+			else
 #endif
-		{
-			sprintf(pzNewFileName, "%s/%s.%s", dir, quick, ext);
+			{
+				sprintf(pzNewFileName, "%s/%s.%s", dir, quick, ext);
+			}
+			break;
 		}
-	}
-	else if (ubSaveGameID == SAVE__END_TURN_NUM)
-	{
-		//The name of the file
-		sprintf(pzNewFileName, "%s/Auto%02d.%s", dir, guiLastSaveGameNum, ext);
 
-		guiLastSaveGameNum = (guiLastSaveGameNum + 1) % 2;
-	}
-	else
-	{
-		sprintf(pzNewFileName, "%s/%s%02d.%s", dir, g_savegame_name, ubSaveGameID, ext);
+		case SAVE__END_TURN_NUM:
+			sprintf(pzNewFileName, "%s/Auto%02d.%s", dir, guiLastSaveGameNum, ext);
+			guiLastSaveGameNum = (guiLastSaveGameNum + 1) % 2;
+			break;
+
+		case SAVE__ERROR_NUM:
+			sprintf(pzNewFileName, "%s/error.%s", dir, ext);
+			break;
+
+		default:
+			sprintf(pzNewFileName, "%s/%s%02d.%s", dir, g_savegame_name, ubSaveGameID, ext);
+			break;
 	}
 }
 
