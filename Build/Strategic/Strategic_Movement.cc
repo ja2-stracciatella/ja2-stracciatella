@@ -1176,9 +1176,8 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 
 		if( pGroup->fVehicle )
 		{
-			const VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-			if (v != NULL &&
-					VEHICLE2ID(v) != iHelicopterVehicleId &&
+			VEHICLETYPE const* const v = GetVehicleFromMvtGroup(pGroup);
+			if (VEHICLE2ID(v) != iHelicopterVehicleId &&
 					pGroup->pPlayerList == NULL)
 			{
 				// nobody here, better just get out now
@@ -1264,10 +1263,8 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 		}
 		else if( !IsGroupTheHelicopterGroup( pGroup ) )
 		{
-			const VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-			AssertMsg(v != NULL, "GroupArrival for vehicle group.  Invalid vehicle.");
-
-			SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(v);
+			VEHICLETYPE const* const v        = GetVehicleFromMvtGroup(pGroup);
+			SOLDIERTYPE*       const pSoldier = GetSoldierStructureForVehicle(v);
 			AssertMsg( pSoldier, "GroupArrival for vehicle group.  Invalid soldier pointer." );
 
 			SpendVehicleFuel( pSoldier, (INT16)(pGroup->uiTraverseTime*6) );
@@ -1396,8 +1393,6 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 		else	// vehicle player group
 		{
 			VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-			Assert(v != NULL);
-
 			if (v->pMercPath  )
 			{
 				// remove head from vehicle's mapscreen path list
@@ -1698,16 +1693,14 @@ static void PrepareGroupsForSimultaneousArrival(void)
 	if( pGroup->fVehicle )
 	{
 		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-		if (v != NULL)
-		{
-			v->fBetweenSectors = TRUE;
 
-			// set up vehicle soldier
-			SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(v);
-			if( pSoldier )
-			{
-				pSoldier->fBetweenSectors = TRUE;
-			}
+		v->fBetweenSectors = TRUE;
+
+		// set up vehicle soldier
+		SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(v);
+		if( pSoldier )
+		{
+			pSoldier->fBetweenSectors = TRUE;
 		}
 	}
 
@@ -1983,17 +1976,15 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	{
 		// vehicle, set fact it is between sectors too
 		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-		if (v != NULL)
-		{
-			v->fBetweenSectors = TRUE;
-			SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(v);
-			if( pSoldier )
-			{
-				pSoldier->fBetweenSectors = TRUE;
 
-				// OK, Remove the guy from tactical engine!
-				RemoveSoldierFromTacticalSector(pSoldier);
-			}
+		v->fBetweenSectors = TRUE;
+		SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(v);
+		if( pSoldier )
+		{
+			pSoldier->fBetweenSectors = TRUE;
+
+			// OK, Remove the guy from tactical engine!
+			RemoveSoldierFromTacticalSector(pSoldier);
 		}
 	}
 
@@ -2652,7 +2643,7 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 						))
 				{
 					// if it's a valid vehicle, but not the helicopter (which can fly empty)
-					if (curr->fVehicle && !fHelicopterGroup && GetVehicleFromMvtGroup(curr) != NULL)
+					if (curr->fVehicle && !fHelicopterGroup)
 					{
 						// make sure empty vehicles (besides helicopter) aren't in motion!
 						Assert( ubMercsInGroup > 0 );
@@ -2675,7 +2666,7 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 						))
 				{
 					// if it's a valid vehicle, but not the helicopter (which can fly empty)
-					if (curr->fVehicle && !fHelicopterGroup && GetVehicleFromMvtGroup(curr) != NULL)
+					if (curr->fVehicle && !fHelicopterGroup)
 					{
 						// make sure empty vehicles (besides helicopter) aren't in motion!
 						Assert( ubMercsInGroup > 0 );
@@ -3087,7 +3078,7 @@ void RetreatGroupToPreviousSector( GROUP *pGroup )
 	{
 		// vehicle, set fact it is between sectors too
 		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-		if (v != NULL) v->fBetweenSectors = TRUE;
+		v->fBetweenSectors = TRUE;
 	}
 
 	//Post the event!
@@ -3504,8 +3495,6 @@ static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const* const pGroup, INT
 	if ( pGroup->fVehicle )
 	{
 		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-		Assert(v != NULL);
-
 		v->sSectorX = sSectorX;
 		v->sSectorY = sSectorY;
 		v->sSectorZ = bSectorZ;

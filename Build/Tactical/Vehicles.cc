@@ -495,8 +495,7 @@ VEHICLETYPE* GetVehicleFromMvtGroup(const GROUP* const group)
 			return v;
 		}
 	}
-
-	return NULL;
+	throw std::logic_error("Group does not contain a vehicle");
 }
 
 
@@ -1160,15 +1159,9 @@ SOLDIERTYPE* PickRandomPassengerFromVehicle(SOLDIERTYPE* const pSoldier)
 }
 
 
-BOOLEAN DoesVehicleGroupHaveAnyPassengers(const GROUP* const pGroup)
+BOOLEAN DoesVehicleGroupHaveAnyPassengers(GROUP const* const g)
 {
-	const VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-#ifdef JA2BETAVERSION
-		AssertMsg(v != NULL, "DoesVehicleGroupHaveAnyPassengers() for vehicle group.  Invalid vehicle.");
-#endif
-	if (v == NULL) return FALSE;
-
-	return GetNumberInVehicle(v) != 0;
+	return GetNumberInVehicle(GetVehicleFromMvtGroup(g)) != 0;
 }
 
 

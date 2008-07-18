@@ -1104,7 +1104,6 @@ PathSt* GetGroupMercPathPtr(GROUP const* const g)
 	if (g->fVehicle)
 	{
 		VEHICLETYPE const* const v = GetVehicleFromMvtGroup(g);
-		Assert(v);
 		return v->pMercPath;
 	}
 
@@ -1152,8 +1151,6 @@ void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup )
 	if ( pGroup->fVehicle )
 	{
 		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-		Assert(v != NULL);
-
 		// clear the path for that vehicle
 		v->pMercPath = ClearStrategicPathList(v->pMercPath, v->ubMovementGroup);
 	}
@@ -1213,8 +1210,6 @@ void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSec
 	if ( pGroup->fVehicle )
 	{
 		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-		Assert(v != NULL);
-
 		// add it to that vehicle's path
 		AddSectorToFrontOfMercPath(&v->pMercPath, ubSectorX, ubSectorY);
 	}
