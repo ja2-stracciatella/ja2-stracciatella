@@ -913,7 +913,7 @@ static INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 icon_pos)
 				!PlayerIDGroupInMotion(v->ubMovementGroup))
 		{
 			// ATE: Check if this vehicle has a soldier and it's on our team.....
-			const SOLDIERTYPE* const pVehicleSoldier = GetSoldierStructureForVehicle(VEHICLE2ID(v));
+			const SOLDIERTYPE* const pVehicleSoldier = GetSoldierStructureForVehicle(v);
 
 			// this skips the chopper, which has no soldier
 			if (pVehicleSoldier != NULL && pVehicleSoldier->bTeam == gbPlayerNum)

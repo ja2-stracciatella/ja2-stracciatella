@@ -1267,7 +1267,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 			const VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
 			AssertMsg(v != NULL, "GroupArrival for vehicle group.  Invalid vehicle.");
 
-			SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(VEHICLE2ID(v));
+			SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(v);
 			AssertMsg( pSoldier, "GroupArrival for vehicle group.  Invalid soldier pointer." );
 
 			SpendVehicleFuel( pSoldier, (INT16)(pGroup->uiTraverseTime*6) );
@@ -1413,7 +1413,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 
 			if (VEHICLE2ID(v) != iHelicopterVehicleId)
 			{
-				pSoldier = GetSoldierStructureForVehicle(VEHICLE2ID(v));
+				pSoldier = GetSoldierStructureForVehicle(v);
 				Assert( pSoldier );
 
 				pSoldier->fBetweenSectors = FALSE;
@@ -1703,7 +1703,7 @@ static void PrepareGroupsForSimultaneousArrival(void)
 			v->fBetweenSectors = TRUE;
 
 			// set up vehicle soldier
-			SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(VEHICLE2ID(v));
+			SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(v);
 			if( pSoldier )
 			{
 				pSoldier->fBetweenSectors = TRUE;
@@ -1986,7 +1986,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 		if (v != NULL)
 		{
 			v->fBetweenSectors = TRUE;
-			SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(VEHICLE2ID(v));
+			SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(v);
 			if( pSoldier )
 			{
 				pSoldier->fBetweenSectors = TRUE;
@@ -3513,7 +3513,7 @@ static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const* const pGroup, INT
 		// if it ain't the chopper
 		if (VEHICLE2ID(v) != iHelicopterVehicleId)
 		{
-			pSoldier = GetSoldierStructureForVehicle(VEHICLE2ID(v));
+			pSoldier = GetSoldierStructureForVehicle(v);
 			Assert ( pSoldier );
 
 			// these are apparently unnecessary, since vehicles are part of the pPlayerList in a vehicle group.  Oh well.

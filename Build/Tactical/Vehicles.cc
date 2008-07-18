@@ -191,7 +191,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 	// ok now check if any free slots in the vehicle
 
 	// get the vehicle soldiertype
-	SOLDIERTYPE* vs = GetSoldierStructureForVehicle(VEHICLE2ID(v));
+	SOLDIERTYPE* vs = GetSoldierStructureForVehicle(v);
 
 	if (vs)
 	{
@@ -385,7 +385,7 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* const s)
 		// check if anyone left in vehicle
 		CFOR_ALL_PASSENGERS(v, i) return TRUE;
 
-		SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(iId);
+		SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(v);
 		Assert(vs);
 		if (!vs) return TRUE;
 
@@ -618,7 +618,7 @@ BOOLEAN PutSoldierInVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 
 BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 {
-	SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(s->iVehicleId);
+	SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(GetVehicle(s->iVehicleId));
 	if (vs == NULL) return FALSE;
 
 	INT16 sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 5, 3, vs);
@@ -695,10 +695,10 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 {
 	// check state the armor was s'posed to be in vs. the current state..the difference / orig state is % chance
 	// that a critical hit will occur
-	SOLDIERTYPE *pSoldier;
 	BOOLEAN	fMadeCorpse = FALSE;
 
-	pSoldier = GetSoldierStructureForVehicle( ubID );
+	VEHICLETYPE* const v        = &pVehicleList[ubID];
+	SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(v);
 
 	if ( sDmg > pSoldier->bLife )
 	{
@@ -734,7 +734,6 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 		}
 	}
 
-	VEHICLETYPE* const v = &pVehicleList[ubID];
 	if (pSoldier->bLife == 0 && !v->fDestroyed)
 	{
 		v->fDestroyed = TRUE;
@@ -762,7 +761,7 @@ BOOLEAN DoesVehicleNeedAnyRepairs(const VEHICLETYPE* const v)
 	if (VEHICLE2ID(v) == iHelicopterVehicleId) return FALSE;
 
 	// get the vehicle soldiertype
-	const SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(VEHICLE2ID(v));
+	const SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(v);
 	return vs->bLife != vs->bLifeMax;
 }
 
@@ -776,7 +775,7 @@ INT8 RepairVehicle(VEHICLETYPE const* const v, INT8 const bRepairPtsLeft, BOOLEA
 	if (!DoesVehicleNeedAnyRepairs(v)) return bRepairPtsUsed;
 
 	// get the vehicle soldiertype
-	pVehicleSoldier = GetSoldierStructureForVehicle(VEHICLE2ID(v));
+	pVehicleSoldier = GetSoldierStructureForVehicle(v);
 
 	bOldLife = pVehicleSoldier->bLife;
 
@@ -799,12 +798,12 @@ INT8 RepairVehicle(VEHICLETYPE const* const v, INT8 const bRepairPtsLeft, BOOLEA
 }
 
 
-SOLDIERTYPE * GetSoldierStructureForVehicle( INT32 iId )
+SOLDIERTYPE* GetSoldierStructureForVehicle(VEHICLETYPE const* const v)
 {
 	FOR_ALL_SOLDIERS(s)
 	{
 		if (s->uiStatusFlags & SOLDIER_VEHICLE &&
-				s->bVehicleID == iId)
+				s->bVehicleID == VEHICLE2ID(v))
 		{
 			return s;
 		}
@@ -989,7 +988,7 @@ void AddVehicleFuelToSave( )
 	CFOR_ALL_VEHICLES(v)
 	{
 		// get the vehicle soldiertype
-		SOLDIERTYPE* const pVehicleSoldier = GetSoldierStructureForVehicle(VEHICLE2ID(v));
+		SOLDIERTYPE* const pVehicleSoldier = GetSoldierStructureForVehicle(v);
 		if( pVehicleSoldier )
 		{
 			// Init fuel!
@@ -1131,7 +1130,7 @@ BOOLEAN IsSoldierInThisVehicleSquad(const SOLDIERTYPE* const pSoldier, const INT
 		return( FALSE );
 	}
 
-	pVehicleSoldier = GetSoldierStructureForVehicle( iVehicleId );
+	pVehicleSoldier = GetSoldierStructureForVehicle(GetVehicle(iVehicleId));
 	Assert( pVehicleSoldier );
 
 	// check squad vehicle is on
