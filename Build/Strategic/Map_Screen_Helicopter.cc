@@ -687,7 +687,7 @@ static BOOLEAN HeliCharacterDialogue(SOLDIERTYPE* pSoldier, UINT16 usQuoteNum)
 
 INT32 GetNumberOfPassengersInHelicopter( void )
 {
-	return GetNumberInVehicle(GetVehicle(iHelicopterVehicleId));
+	return GetNumberInVehicle(GetHelicopter());
 }
 
 
@@ -1516,9 +1516,8 @@ BOOLEAN IsSkyriderIsFlyingInSector( INT16 sSectorX, INT16 sSectorY )
 BOOLEAN IsGroupTheHelicopterGroup(const GROUP* const pGroup)
 {
 	if (iHelicopterVehicleId == -1) return FALSE;
-	VEHICLETYPE const* const v = GetVehicle(iHelicopterVehicleId);
+	VEHICLETYPE const* const v = GetHelicopter();
 	return
-		v != NULL &&
 		v->ubMovementGroup != 0 &&
 		v->ubMovementGroup == pGroup->ubGroupID;
 }
