@@ -1670,7 +1670,6 @@ const wchar_t* pSkyriderText[] =
 	L"Всаднику выплачено $%d", 			// skyrider was paid an amount of money
 	L"Всаднику недоплачено $%d", 		// skyrider is still owed an amount of money
 	L"Вертолет заправлен",	// skyrider has finished refueling
-	L"Всадник снова готов к полету.", // Skyrider was grounded but has been freed
 	L"У Всадника нет пассажиров. Если вы собирались перевозить бойцов - назначьте им ЗАДАНИЕ ТРАНСПОРТ."
 };
 

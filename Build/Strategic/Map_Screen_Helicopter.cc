@@ -728,18 +728,6 @@ void UpdateRefuelSiteAvailability( void )
 		{
 			// mark refueling site as available
 			fRefuelingSiteAvailable[ iCounter ] = TRUE;
-
-			// reactivate a grounded helicopter, if here
-			if (iHelicopterVehicleId == -1 && !fHelicopterDestroyed && iHelicopterVehicleId != -1)
-			{
-				const VEHICLETYPE* const v = GetHelicopter();
-				if (v->sSectorX == ubRefuelList[iCounter][0] &&
-						v->sSectorY == ubRefuelList[iCounter][1])
-				{
-					// no longer grounded
-					DoScreenIndependantMessageBox(pSkyriderText[3], MSG_BOX_FLAG_OK, NULL);
-				}
-			}
 		}
 	}
 }
