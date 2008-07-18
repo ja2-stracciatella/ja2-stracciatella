@@ -368,7 +368,7 @@ static BOOLEAN CanCharacterDoctor(SOLDIERTYPE const* const pSoldier)
 
 
 static BOOLEAN CanCharacterRepairRobot(SOLDIERTYPE const*);
-static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE const*, INT32 iVehicleId);
+static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE const*, VEHICLETYPE const*);
 static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const*, INT8 bHighestPass);
 
 
@@ -394,7 +394,7 @@ static BOOLEAN IsAnythingAroundForSoldierToRepair(SOLDIERTYPE const* const pSold
 			// the helicopter, is NEVER repairable...
 			if (VEHICLE2ID(v) != iHelicopterVehicleId &&
 					IsThisVehicleAccessibleToSoldier(pSoldier, v) &&
-					CanCharacterRepairVehicle(pSoldier, VEHICLE2ID(v)))
+					CanCharacterRepairVehicle(pSoldier, v))
 			{
 				// there is a repairable vehicle here
 				return TRUE;
@@ -416,7 +416,7 @@ static BOOLEAN HasCharacterFinishedRepairing(SOLDIERTYPE* pSoldier)
 	// check if we are repairing a vehicle
 	if ( pSoldier->bVehicleUnderRepairID != -1 )
 	{
-		fCanStillRepair = CanCharacterRepairVehicle( pSoldier, pSoldier->bVehicleUnderRepairID );
+		fCanStillRepair = CanCharacterRepairVehicle(pSoldier, GetVehicle(pSoldier->bVehicleUnderRepairID));
 	}
 	// check if we are repairing a robot
 	else if( pSoldier -> fFixingRobot )
@@ -1984,7 +1984,8 @@ static void HandleRepairBySoldier(SOLDIERTYPE* pSoldier)
 	// check if we are repairing a vehicle
 	if ( pSoldier->bVehicleUnderRepairID != -1 )
 	{
-		if ( CanCharacterRepairVehicle( pSoldier, pSoldier->bVehicleUnderRepairID ) )
+		VEHICLETYPE const* const v = GetVehicle(pSoldier->bVehicleUnderRepairID);
+		if (CanCharacterRepairVehicle(pSoldier, v))
 		{
 			// attempt to fix vehicle
 			ubRepairPtsLeft -= RepairVehicle( pSoldier->bVehicleUnderRepairID, ubRepairPtsLeft, &fNothingLeftToRepair );
@@ -3397,7 +3398,7 @@ static void HandleShadingOfLinesForRepairMenu()
 			if (VEHICLE2ID(v) == iHelicopterVehicleId)   continue;
 			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 
-			ShadeStringInBox(box, line++, !CanCharacterRepairVehicle(s, VEHICLE2ID(v)));
+			ShadeStringInBox(box, line++, !CanCharacterRepairVehicle(s, v));
 		}
 	}
 
@@ -6119,10 +6120,8 @@ static void HandleRestFatigueAndSleepStatus(void)
 
 
 // can the character repair this vehicle?
-static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE const* const pSoldier, INT32 const iVehicleId)
+static BOOLEAN CanCharacterRepairVehicle(SOLDIERTYPE const* const pSoldier, VEHICLETYPE const* const v)
 {
-	VEHICLETYPE const* const v = GetVehicle(iVehicleId);
-
 	// is vehicle destroyed?
 	if (v->fDestroyed) return FALSE;
 
@@ -7170,10 +7169,10 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 					// make sure he can repair the SPECIFIC thing being repaired too (must be in its sector, for example)
 					BOOLEAN const fCanFixSpecificTarget =
 #if 0
-						sel->fFixingSAMSite              ? CanSoldierRepairSAM(s, SAM_SITE_REPAIR_DIVISOR)          :
+						sel->fFixingSAMSite              ? CanSoldierRepairSAM(s, SAM_SITE_REPAIR_DIVISOR)                      :
 #endif
-						sel->bVehicleUnderRepairID != -1 ? CanCharacterRepairVehicle(s, sel->bVehicleUnderRepairID) :
-						s->fFixingRobot                  ? CanCharacterRepairRobot(s)                               : // XXX s in condition seems wrong, should probably be sel
+						sel->bVehicleUnderRepairID != -1 ? CanCharacterRepairVehicle(s, GetVehicle(sel->bVehicleUnderRepairID)) :
+						s->fFixingRobot                  ? CanCharacterRepairRobot(s)                                           : // XXX s in condition seems wrong, should probably be sel
 						                                   TRUE;
 					if (fCanFixSpecificTarget)
 					{
