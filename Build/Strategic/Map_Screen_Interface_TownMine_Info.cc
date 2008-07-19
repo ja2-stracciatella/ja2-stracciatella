@@ -646,7 +646,5 @@ static void MinWidthOfTownMineInfoBox(void)
 	// Calculate smily face positions...
 	INT16 const sWidthA = uiObject->SubregionProperties(0)->usWidth;
 	INT16 const sWidthB = uiObject->SubregionProperties(1)->usWidth;
-
-	INT16 sTotalBoxWidth = sWidthA + sWidthB;
-	sTotalButtonWidth = sTotalBoxWidth;
+	sTotalButtonWidth = sWidthA + sWidthB;
 }
