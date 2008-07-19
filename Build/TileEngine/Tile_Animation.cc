@@ -538,60 +538,27 @@ void UpdateAniTiles( )
 
 ANITILE* GetCachedAniTileOfType(INT16 const sGridNo, UINT8 const ubLevelID, AnimationFlags const uiFlags)
 {
-	LEVELNODE *pNode = NULL;
-
-	switch( ubLevelID )
+	LEVELNODE*         n;
+	MAP_ELEMENT const& me = gpWorldLevelData[sGridNo];
+	switch (ubLevelID)
 	{
-		case ANI_STRUCT_LEVEL:
-
-			pNode = gpWorldLevelData[ sGridNo ].pStructHead;
-			break;
-
-		case ANI_SHADOW_LEVEL:
-
-			pNode = gpWorldLevelData[ sGridNo ].pShadowHead;
-			break;
-
-		case ANI_OBJECT_LEVEL:
-
-			pNode = gpWorldLevelData[ sGridNo ].pObjectHead;
-			break;
-
-		case ANI_ROOF_LEVEL:
-
-			pNode = gpWorldLevelData[ sGridNo ].pRoofHead;
-			break;
-
-		case ANI_ONROOF_LEVEL:
-
-			pNode = gpWorldLevelData[ sGridNo ].pOnRoofHead;
-			break;
-
-		case ANI_TOPMOST_LEVEL:
-
-			pNode = gpWorldLevelData[ sGridNo ].pTopmostHead;
-			break;
-
-		default:
-
-			return( NULL );
+		case ANI_STRUCT_LEVEL:  n = me.pStructHead;  break;
+		case ANI_SHADOW_LEVEL:  n = me.pShadowHead;  break;
+		case ANI_OBJECT_LEVEL:  n = me.pObjectHead;  break;
+		case ANI_ROOF_LEVEL:    n = me.pRoofHead;    break;
+		case ANI_ONROOF_LEVEL:  n = me.pOnRoofHead;  break;
+		case ANI_TOPMOST_LEVEL: n = me.pTopmostHead; break;
+		default: throw std::logic_error("Invalid level ID");
 	}
 
-	while( pNode != NULL )
+	for (; n; n = n->pNext)
 	{
-		if ( pNode->uiFlags & LEVELNODE_CACHEDANITILE )
-		{
-			if ( pNode->pAniTile->uiFlags & uiFlags )
-			{
-				return( pNode->pAniTile );
-			}
-
-		}
-
-		pNode = pNode->pNext;
+		if (!(n->uiFlags & LEVELNODE_CACHEDANITILE)) continue;
+		ANITILE* const a = n->pAniTile;
+		if (a->uiFlags & uiFlags) return a;
 	}
 
-	return( NULL );
+	return 0;
 }
 
 
