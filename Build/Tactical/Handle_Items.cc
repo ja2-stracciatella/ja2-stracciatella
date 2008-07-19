@@ -2014,10 +2014,10 @@ BOOLEAN SetItemPoolVisibilityOn(ITEM_POOL* const ip, INT8 const bAllGreaterThan,
 		fAtLeastModified = TRUE;
 	}
 
-	// If we didn;t find any that should be modified..
+	// If we didn't find any that should be modified
 	if (!fAtLeastModified) return FALSE;
 
-	// Update global pool bVisible to true (if at least one is visible)
+	// Update global pool bVisible to true, if at least one is visible
 	for (ITEM_POOL* i = ip; i; i = i->pNext)
 	{
 		i->bVisible = VISIBLE;
@@ -2045,47 +2045,32 @@ void SetItemPoolVisibilityHidden(ITEM_POOL* const ip)
 
 // This determines the overall initial visibility of the pool...
 // IF ANY are set to VISIBLE, MODIFY
-static void AdjustItemPoolVisibility(ITEM_POOL* pItemPool)
+static void AdjustItemPoolVisibility(ITEM_POOL* const ip)
 {
-	ITEM_POOL		*pItemPoolTemp;
-	BOOLEAN			fAtLeastModified = FALSE;
-
-	pItemPoolTemp = pItemPool;
-	while( pItemPoolTemp != NULL )
+	BOOLEAN fAtLeastModified = FALSE;
+	for (ITEM_POOL* i = ip; i; i = i->pNext)
 	{
-		// DEFAULT ITEM POOL TO INVISIBLE....
-		pItemPoolTemp->bVisible = INVISIBLE;
+		// Default item pool to invisible
+		i->bVisible = INVISIBLE;
 
-		// Update each item...
-		// If we have reached a visible value we should not modify, ignore...
-		if (GetWorldItem(pItemPoolTemp->iItemIndex)->bVisible == VISIBLE)
+		if (GetWorldItem(i->iItemIndex)->bVisible == VISIBLE)
 		{
 			fAtLeastModified = TRUE;
 		}
-
-		pItemPoolTemp						= pItemPoolTemp->pNext;
 	}
 
-	// Handle obscured flag...
-	WORLDITEM const* const wi = GetWorldItem(pItemPool->iItemIndex);
+	WORLDITEM const* const wi = GetWorldItem(ip->iItemIndex);
 	HandleItemObscuredFlag(wi->sGridNo, wi->ubLevel);
 
-	// If we didn;t find any that should be modified..
-	if ( !fAtLeastModified )
+	// If we didn't find any that should be modified
+	if (!fAtLeastModified) return;
+
+	// Update global pool bVisible to true, if at least one is visible
+	for (ITEM_POOL* i = ip; i; i = i->pNext)
 	{
-		return;
+		i->bVisible = VISIBLE;
 	}
 
-	// Update global pool bVisible to true ( if at least one is visible... )
-	pItemPoolTemp = pItemPool;
-	while( pItemPoolTemp != NULL )
-	{
-		pItemPoolTemp->bVisible = VISIBLE;
-
-		pItemPoolTemp						= pItemPoolTemp->pNext;
-	}
-
-	// Handle obscured flag...
 	HandleItemObscuredFlag(wi->sGridNo, wi->ubLevel);
 }
 
