@@ -78,33 +78,16 @@ static BOOLEAN CheckForNewShipment(void)
 }
 
 
-static BOOLEAN CheckNPCWounded(UINT8 ubProfileID, BOOLEAN fByPlayerOnly)
+static BOOLEAN CheckNPCWounded(UINT8 const ubProfileID, BOOLEAN const fByPlayerOnly)
 {
-	// is the NPC is wounded at all?
-	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfileID);
-	if (pSoldier && pSoldier->bLife < pSoldier->bLifeMax)
-	{
-		if (fByPlayerOnly)
-		{
-			if (gMercProfiles[ubProfileID].ubMiscFlags & PROFILE_MISC_FLAG_WOUNDEDBYPLAYER)
-			{
-				return( TRUE );
-			}
-			else
-			{
-				return( FALSE );
-			}
-		}
-		else
-		{
-			return( TRUE );
-		}
-	}
-	else
-	{
-		return( FALSE );
-
-	}
+	SOLDIERTYPE const* const s = FindSoldierByProfileID(ubProfileID);
+	return
+		s &&
+		s->bLife < s->bLifeMax && // is the NPC is wounded at all?
+		(
+			!fByPlayerOnly ||
+			GetProfile(ubProfileID)->ubMiscFlags & PROFILE_MISC_FLAG_WOUNDEDBYPLAYER
+		);
 }
 
 
