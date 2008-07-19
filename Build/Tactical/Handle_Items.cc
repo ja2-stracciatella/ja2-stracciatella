@@ -1736,7 +1736,6 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, IN
 
 	// Set flahs timer
 	new_item->bFlashColor = FALSE;
-	new_item->bVisible    = bVisible;
 
 	// ATE: Get head of pool again....
 	ITEM_POOL* const pool_head = GetItemPool(sNewGridNo, ubLevel);
