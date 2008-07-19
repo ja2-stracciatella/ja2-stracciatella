@@ -130,8 +130,6 @@ static void AddCoverObjectToWorld(INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof
 static void AddCoverTileToEachGridNo(void)
 {
 	BOOLEAN const roof = gsInterfaceLevel != I_GROUND_LEVEL;
-
-	//loop through all the gridnos
 	for (UINT32 y = 0; y < DC_MAX_COVER_RANGE; ++y)
 	{
 		for (UINT32 x = 0; x < DC_MAX_COVER_RANGE; ++x)
@@ -158,74 +156,33 @@ static void RemoveCoverObjectFromWorld(INT16 sGridNo, UINT16 usGraphic, BOOLEAN 
 
 void RemoveCoverOfSelectedGridNo()
 {
-	UINT32 uiCntX, uiCntY;
-	BOOLEAN fRoof = ( gsInterfaceLevel != I_GROUND_LEVEL );
+	if (gsLastCoverGridNo == NOWHERE) return;
 
-
-	if( gsLastCoverGridNo == NOWHERE )
+	BOOLEAN const roof = gsInterfaceLevel != I_GROUND_LEVEL;
+	for (UINT32 y = 0; y < DC_MAX_COVER_RANGE; ++y)
 	{
-		return;
-	}
-
-	//loop through all the gridnos
-	for(uiCntY=0; uiCntY<DC_MAX_COVER_RANGE ;uiCntY++)
-	{
-		for(uiCntX=0; uiCntX<DC_MAX_COVER_RANGE ;uiCntX++)
+		for (UINT32 x = 0; x < DC_MAX_COVER_RANGE; ++x)
 		{
-			//if there is a valid cover at this gridno
-			if( gCoverRadius[ uiCntX ][ uiCntY ].bCover != -1 )
-			{
-//				fRoof = gCoverRadius[ uiCntX ][ uiCntY ].fRoof;
+			BEST_COVER_STRUCT const& cr    = gCoverRadius[x][y];
+			INT8              const  cover = cr.bCover;
+			if (cover == -1) continue; // Valid cover?
+			Assert(0 <= cover && cover <= 100);
 
-				//if the tile provides 80-100% cover
-				if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 100 &&
-						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 80 )
-				{
-					RemoveCoverObjectFromWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_5, fRoof );
-				}
-
-				//else if the tile provides 60-80% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 80 &&
-						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 60 )
-				{
-					RemoveCoverObjectFromWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_4, fRoof );
-				}
-
-				//else if the tile provides 40-60% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 60 &&
-						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 40 )
-				{
-					RemoveCoverObjectFromWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_3, fRoof );
-				}
-
-				//else if the tile provides 20-40% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 40 &&
-						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 20 )
-				{
-					RemoveCoverObjectFromWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_2, fRoof );
-				}
-
-				//else if the tile provides 0-20% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 20 &&
-						gCoverRadius[ uiCntX ][ uiCntY ].bCover >= 0 )
-				{
-					RemoveCoverObjectFromWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_1, fRoof );
-				}
-
-				//should never get in here
-				else
-				{
-					Assert( 0 );
-				}
-			}
+			UINT16 const gfx =
+				cover <= 20 ? SPECIALTILE_COVER_1 :
+				cover <= 40 ? SPECIALTILE_COVER_2 :
+				cover <= 60 ? SPECIALTILE_COVER_3 :
+				cover <= 80 ? SPECIALTILE_COVER_4 :
+				              SPECIALTILE_COVER_5;
+			RemoveCoverObjectFromWorld(cr.sGridNo, gfx, roof);
 		}
 	}
 
 	// Re-render the scene!
-	SetRenderFlags( RENDER_FLAG_FULL );
+	SetRenderFlags(RENDER_FLAG_FULL);
 
-	gsLastCoverGridNo = NOWHERE;
-	gbLastStance = -1;
+	gsLastCoverGridNo   = NOWHERE;
+	gbLastStance        = -1;
 	gsLastSoldierGridNo = NOWHERE;
 }
 
