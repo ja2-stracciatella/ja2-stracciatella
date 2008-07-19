@@ -1995,115 +1995,40 @@ static void HandleItemObscuredFlag(INT16 sGridNo, UINT8 ubLevel)
 static void SetItemPoolLocator(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback);
 
 
-BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOOLEAN fSetLocator )
+BOOLEAN SetItemPoolVisibilityOn(ITEM_POOL* const ip, INT8 const bAllGreaterThan, BOOLEAN const fSetLocator)
 {
-	ITEM_POOL		*pItemPoolTemp;
-	BOOLEAN			fAtLeastModified = FALSE, fDeleted = FALSE;
-
-	pItemPoolTemp = pItemPool;
-	while( pItemPoolTemp != NULL )
+	BOOLEAN fAtLeastModified = FALSE;
+	for (ITEM_POOL* i = ip; i; i = i->pNext)
 	{
-		WORLDITEM* const wi            = GetWorldItem(pItemPoolTemp->iItemIndex);
-		INT8       const bVisibleValue = wi->bVisible;
+		WORLDITEM* const wi            = GetWorldItem(i->iItemIndex);
 
-		// Update each item...
-		if ( bVisibleValue != VISIBLE )
-		{
-			if (wi->o.usItem == ACTION_ITEM)
-			{
-				// NEVER MAKE VISIBLE!
-				pItemPoolTemp = pItemPoolTemp->pNext;
-				continue;
-			}
+		/* Skip if already visible or should not get modified */
+		if (wi->bVisible == VISIBLE || wi->bVisible < bAllGreaterThan) continue;
 
-			// If we have reached a visible value we should not modify, ignore...
-			if (bVisibleValue >= bAllGreaterThan && wi->o.usItem != OWNERSHIP)
-			{
-				// Update the world value
-				wi->bVisible = VISIBLE;
+		/* Never make these visible */
+		if (wi->o.usItem == ACTION_ITEM) continue;
+		if (wi->o.usItem == OWNERSHIP)   continue;
 
-				fAtLeastModified = TRUE;
-			}
-
-			/*
-			if (wi->o.usItem == ACTION_ITEM)
-			{
-				OBJECTTYPE* const pObj = &wi->o;
-				switch( pObj->bActionValue )
-				{
-					case ACTION_ITEM_SMALL_PIT:
-					case ACTION_ITEM_LARGE_PIT:
-						if (pObj->bDetonatorType == 0)
-						{
-							// randomly set to active or destroy the item!
-							if (Random( 100 ) < 65)
-							{
-								ArmBomb( pObj, 0 ); // will be set to pressure type so freq is irrelevant
-								wi->usFlags |= WORLD_ITEM_ARMED_BOMB;
-								AddBombToWorld( pItemPoolTemp->iItemIndex );
-							}
-							else
-							{
-								// get pointer to the next element NOW
-								pItemPoolTemp	= pItemPoolTemp->pNext;
-								// set flag so we don't traverse an additional time
-								fDeleted = TRUE;
-								// remove item from pool
-								RemoveItemFromPool(wi);
-							}
-						}
-						break;
-					default:
-						break;
-				}
-			}
-			*/
-
-			if (fDeleted)
-			{
-				// don't get the 'next' pointer because we did so above
-
-				// reset fDeleted to false so we don't skip moving through the list more than once
-				fDeleted = FALSE;
-			}
-			else
-			{
-				pItemPoolTemp						= pItemPoolTemp->pNext;
-			}
-
-		}
-		else
-		{
-			pItemPoolTemp						= pItemPoolTemp->pNext;
-		}
+		// Update the world value
+		wi->bVisible     = VISIBLE;
+		fAtLeastModified = TRUE;
 	}
 
 	// If we didn;t find any that should be modified..
-	if ( !fAtLeastModified )
+	if (!fAtLeastModified) return FALSE;
+
+	// Update global pool bVisible to true (if at least one is visible)
+	for (ITEM_POOL* i = ip; i; i = i->pNext)
 	{
-		return( FALSE );
-	}
-
-
-	// Update global pool bVisible to true ( if at least one is visible... )
-	pItemPoolTemp = pItemPool;
-	while( pItemPoolTemp != NULL )
-	{
-		pItemPoolTemp->bVisible = VISIBLE;
-
-		pItemPoolTemp						= pItemPoolTemp->pNext;
+		i->bVisible = VISIBLE;
 	}
 
 	// Handle obscured flag...
-	WORLDITEM const* const wi = GetWorldItem(pItemPool->iItemIndex);
+	WORLDITEM const* const wi = GetWorldItem(ip->iItemIndex);
 	HandleItemObscuredFlag(wi->sGridNo, wi->ubLevel);
 
-	if ( fSetLocator )
-	{
-		SetItemPoolLocator(pItemPool, NULL);
-	}
-
-	return( TRUE );
+	if (fSetLocator) SetItemPoolLocator(ip, 0);
+	return TRUE;
 }
 
 
