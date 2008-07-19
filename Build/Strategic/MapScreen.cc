@@ -5668,6 +5668,7 @@ static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iR
 
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
+		CancelPathsOfAllSelectedCharacters();
 		ResetAllSelectedCharacterModes();
 	}
 }
