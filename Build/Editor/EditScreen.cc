@@ -2536,28 +2536,17 @@ BOOLEAN RemoveLight(const GridNo pos)
 }
 
 
-//----------------------------------------------------------------------------------------------
-//	ShowLightPositionHandles
-//
-//	For all lights that are in the world (except lights attached to mercs), this function places
-//	a marker at it's location for editing purposes.
-//
-void ShowLightPositionHandles( void )
+void ShowLightPositionHandles(void)
 {
-	INT32 iMapIndex;
-
-	// Check all lights and place a position handle there!
 	CFOR_ALL_LIGHT_SPRITES(l)
 	{
-		if (!IsSoldierLight(l))
-		{
-			iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
-			if (!TypeExistsInObjectLayer(iMapIndex, GOODRING))
-			{
-				LEVELNODE* const n = AddObjectToHead(iMapIndex, GOODRING1);
-				n->ubShadeLevel = DEFAULT_SHADE_LEVEL;
-			}
-		}
+		if (IsSoldierLight(l)) continue;
+
+		INT32 const iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
+		if (TypeExistsInObjectLayer(iMapIndex, GOODRING)) continue;
+
+		LEVELNODE* const n = AddObjectToHead(iMapIndex, GOODRING1);
+		n->ubShadeLevel = DEFAULT_SHADE_LEVEL;
 	}
 }
 

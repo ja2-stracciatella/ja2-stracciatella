@@ -13,7 +13,9 @@ extern BOOLEAN gfFakeLights;
 
 void DisplayWayPoints(void);
 
-void ShowLightPositionHandles( void );
+/* For all lights that are in the world (except lights attached to mercs), this
+ * function places a marker at its location for editing purposes. */
+void ShowLightPositionHandles(void);
 
 extern void ShowCurrentDrawingMode( void );
 
