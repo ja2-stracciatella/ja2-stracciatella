@@ -2102,31 +2102,15 @@ void MoveItemPools(INT16 const sStartPos, INT16 const sEndPos)
 }
 
 
-ITEM_POOL* GetItemPool(UINT16 usMapPos, UINT8 ubLevel)
+ITEM_POOL* GetItemPool(UINT16 const usMapPos, UINT8 const ubLevel)
 {
-	LEVELNODE *pObject;
-
-	if ( ubLevel == 0 )
+	MAP_ELEMENT const* const me = &gpWorldLevelData[usMapPos];
+	for (LEVELNODE* n = (ubLevel == 0 ? me->pStructHead : me->pOnRoofHead); n; n = n->pNext)
 	{
-		pObject = gpWorldLevelData[ usMapPos ].pStructHead;
+		if (!(n->uiFlags & LEVELNODE_ITEM)) continue;
+		return n->pItemPool;
 	}
-	else
-	{
-		pObject = gpWorldLevelData[ usMapPos ].pOnRoofHead;
-	}
-
-	// LOOP THORUGH OBJECT LAYER
-	while( pObject != NULL )
-	{
-		if ( pObject->uiFlags & LEVELNODE_ITEM )
-		{
-			return pObject->pItemPool;
-		}
-
-		pObject = pObject->pNext;
-	}
-
-	return NULL;
+	return 0;
 }
 
 
