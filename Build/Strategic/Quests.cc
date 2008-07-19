@@ -64,17 +64,14 @@ void SetFactFalse(Fact const usFact)
 }
 
 
-static BOOLEAN CheckForNewShipment(void)
+static bool CheckForNewShipment(void)
 {
-	if ( ( gWorldSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X ) && ( gWorldSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y ) && ( gbWorldSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z ) )
-	{
-		ITEM_POOL* pItemPool = GetItemPool(BOBBYR_SHIPPING_DEST_GRIDNO, 0);
-		if (pItemPool != NULL)
-		{
-			return( !( ITEMPOOL_VISIBLE( pItemPool ) ) );
-		}
-	}
-	return( FALSE );
+	if (gWorldSectorX  != BOBBYR_SHIPPING_DEST_SECTOR_X) return false;
+	if (gWorldSectorY  != BOBBYR_SHIPPING_DEST_SECTOR_Y) return false;
+	if (gbWorldSectorZ != BOBBYR_SHIPPING_DEST_SECTOR_Z) return false;
+
+	ITEM_POOL const* const ip = GetItemPool(BOBBYR_SHIPPING_DEST_GRIDNO, 0);
+	return ip && !ITEMPOOL_VISIBLE(ip);
 }
 
 
