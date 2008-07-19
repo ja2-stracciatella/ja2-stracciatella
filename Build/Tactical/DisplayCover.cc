@@ -30,44 +30,38 @@
 #define		DC__MIN_SIZE									4
 #define		DC__MAX_SIZE									11
 
-typedef struct
+struct BEST_COVER_STRUCT
 {
 	INT16	sGridNo;
 	INT8	bCover;				//% chance that the gridno is fully covered.  ie 100 if safe, 0  is has no cover
-//	BOOLEAN fRoof;
-} BEST_COVER_STRUCT;
+};
 
 
-typedef struct
+struct VISIBLE_TO_SOLDIER_STRUCT
 {
 	INT16 sGridNo;
 	INT8	bVisibleToSoldier;
 	BOOLEAN	fRoof;
-} VISIBLE_TO_SOLDIER_STRUCT;
+};
 
 
-/*
-#define	DC__PRONE				(INT8)( 0x01 )
-#define DC__CROUCH			(INT8)( 0x02 )
-#define DC__STAND				(INT8)( 0x04 )
-*/
 enum
 {
 	DC__SEE_NO_STANCES,
 	DC__SEE_1_STANCE,
 	DC__SEE_2_STANCE,
-	DC__SEE_3_STANCE,
+	DC__SEE_3_STANCE
 };
 
 
-BEST_COVER_STRUCT gCoverRadius[ DC_MAX_COVER_RANGE ][ DC_MAX_COVER_RANGE ];
-INT16	gsLastCoverGridNo=NOWHERE;
-INT16	gsLastSoldierGridNo=NOWHERE;
-INT8	gbLastStance=-1;
+static BEST_COVER_STRUCT gCoverRadius[DC_MAX_COVER_RANGE][DC_MAX_COVER_RANGE];
+static INT16             gsLastCoverGridNo   = NOWHERE;
+static INT16             gsLastSoldierGridNo = NOWHERE;
+static INT8              gbLastStance        = -1;
 
 
-VISIBLE_TO_SOLDIER_STRUCT gVisibleToSoldierStruct[ DC__SOLDIER_VISIBLE_RANGE ][ DC__SOLDIER_VISIBLE_RANGE ];
-INT16	gsLastVisibleToSoldierGridNo=NOWHERE;
+static VISIBLE_TO_SOLDIER_STRUCT gVisibleToSoldierStruct[DC__SOLDIER_VISIBLE_RANGE][DC__SOLDIER_VISIBLE_RANGE];
+static INT16                     gsLastVisibleToSoldierGridNo = NOWHERE;
 
 
 static void AddCoverTileToEachGridNo(void);
