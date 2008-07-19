@@ -69,60 +69,58 @@ static void CalculateCoverInRadiusAroundGridno(INT16 sTargetGridNo, INT8 bSearch
 static INT8 GetCurrentMercForDisplayCoverStance(void);
 
 
-void DisplayCoverOfSelectedGridNo( )
+void DisplayCoverOfSelectedGridNo()
 {
-	INT8	bStance;
-
-	const SOLDIERTYPE* const sel = GetSelectedMan();
+	SOLDIERTYPE const* const sel = GetSelectedMan();
 	//Only allowed in if there is someone selected
-	if (sel == NULL) return;
+	if (!sel) return;
 
 	//if the cursor is in a the tactical map
-	const GridNo sGridNo = GetMouseMapPos();
-	if (sGridNo != NOWHERE)
+	GridNo const sGridNo = GetMouseMapPos();
+	if (sGridNo == NOWHERE) return;
+
+	INT8 const bStance = GetCurrentMercForDisplayCoverStance();
+
+	//if the gridno is different then the last one that was displayed
+	if (gsLastCoverGridNo == sGridNo &&
+			gbLastStance      == bStance &&
+			gsLastCoverGridNo == sel->sGridNo)
 	{
-		bStance = GetCurrentMercForDisplayCoverStance();
-
-		//if the gridno is different then the last one that was displayed
-		if( sGridNo != gsLastCoverGridNo ||
-				gbLastStance != bStance ||
-				sel->sGridNo != gsLastSoldierGridNo)
-		{
-			//if the cover is currently being displayed
-			if( gsLastCoverGridNo != NOWHERE || gbLastStance != -1 || gsLastSoldierGridNo != NOWHERE )
-			{
-				//remove the gridnos
-				RemoveCoverOfSelectedGridNo();
-			}
-			else
-			{
-				//if it is the first time in here
-
-				//pop up a message to say we are in the display cover routine
-#ifdef JA2TESTVERSION
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls, (%d)", zNewTacticalMessages[TCTL_MSG__DISPLAY_COVER], gGameSettings.ubSizeOfDisplayCover);
-#else
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zNewTacticalMessages[ TCTL_MSG__DISPLAY_COVER ] );
-#endif
-
-				//increment the display cover counter ( just seeing how many times people use it )
-				//gJa25SaveStruct.uiDisplayCoverCounter++;
-			}
-
-			gbLastStance = bStance;
-			gsLastCoverGridNo = sGridNo;
-			gsLastSoldierGridNo = sel->sGridNo;
-
-			//Fill the array of gridno and cover values
-			CalculateCoverInRadiusAroundGridno( sGridNo, gGameSettings.ubSizeOfDisplayCover );
-
-			//Add the graphics to each gridno
-			AddCoverTileToEachGridNo();
-
-			// Re-render the scene!
-			SetRenderFlags( RENDER_FLAG_FULL );
-		}
+		return;
 	}
+
+	//if the cover is currently being displayed
+	if (gsLastCoverGridNo   != NOWHERE ||
+			gbLastStance        != -1      ||
+			gsLastSoldierGridNo != NOWHERE)
+	{
+		//remove the gridnos
+		RemoveCoverOfSelectedGridNo();
+	}
+	else
+	{
+		//if it is the first time in here
+
+		//pop up a message to say we are in the display cover routine
+#ifdef JA2TESTVERSION
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%ls, (%d)", zNewTacticalMessages[TCTL_MSG__DISPLAY_COVER], gGameSettings.ubSizeOfDisplayCover);
+#else
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zNewTacticalMessages[TCTL_MSG__DISPLAY_COVER]);
+#endif
+	}
+
+	gbLastStance        = bStance;
+	gsLastCoverGridNo   = sGridNo;
+	gsLastSoldierGridNo = sel->sGridNo;
+
+	//Fill the array of gridno and cover values
+	CalculateCoverInRadiusAroundGridno(sGridNo, gGameSettings.ubSizeOfDisplayCover);
+
+	//Add the graphics to each gridno
+	AddCoverTileToEachGridNo();
+
+	// Re-render the scene!
+	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
 
