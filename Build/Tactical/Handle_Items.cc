@@ -79,6 +79,7 @@ typedef struct
 {
 	ITEM_POOL*             pItemPool;
 	UINT8                  ubFlags;
+	INT8                   bFlashColor;
 	INT8                   bRadioFrame;
 	UINT32                 uiLastFrameUpdate;
 	ITEM_POOL_LOCATOR_HOOK Callback;
@@ -1734,9 +1735,6 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, IN
 		SetRenderFlags(RENDER_FLAG_FULL);
 	}
 
-	// Set flahs timer
-	new_item->bFlashColor = FALSE;
-
 	// ATE: Get head of pool again....
 	ITEM_POOL* const pool_head = GetItemPool(sNewGridNo, ubLevel);
 	if (pool_head != NULL) AdjustItemPoolVisibility(pool_head);
@@ -2185,7 +2183,7 @@ void RemoveItemFromPool(WORLDITEM* const wi)
 
 	RemoveItemGraphicFromWorld(wi->sGridNo, wi->ubLevel, item->pLevelNode);
 
-	if (item->bFlashColor != 0) RemoveFlashItemSlot(item);
+	RemoveFlashItemSlot(item);
 
 	ITEM_POOL* const next = item->pNext;
 
@@ -2470,16 +2468,6 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT8 bZLevel, cons
 }
 
 
-static void AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback);
-
-
-static void SetItemPoolLocator(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback)
-{
-	pItemPool->bFlashColor = 59;
-	AddFlashItemSlot(pItemPool, Callback);
-}
-
-
 /// ITEM POOL INDICATOR FUNCTIONS
 
 
@@ -2510,12 +2498,13 @@ INT32 uiCount;
 }
 
 
-static void AddFlashItemSlot(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback)
+static void SetItemPoolLocator(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback)
 {
 	ITEM_POOL_LOCATOR* const l = GetFreeFlashItemSlot();
 	if (l == NULL) return;
 
 	l->pItemPool         = pItemPool;
+	l->bFlashColor       = 59;
 	l->bRadioFrame       = 0;
 	l->uiLastFrameUpdate = GetJA2Clock();
 	l->Callback          = Callback;
@@ -2562,9 +2551,9 @@ void HandleFlashingItems()
 		}
 
 		// Update flash color value
-		if (--ip->bFlashColor == 1)
+		if (--l->bFlashColor == 1)
 		{
-			ip->bFlashColor = 0;
+			l->bFlashColor = 0;
 			RemoveFlashItemSlot(ip);
 			SetRenderFlags(RENDER_FLAG_FULL);
 		}
