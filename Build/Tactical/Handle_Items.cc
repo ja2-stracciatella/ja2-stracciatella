@@ -2032,18 +2032,13 @@ BOOLEAN SetItemPoolVisibilityOn(ITEM_POOL* const ip, INT8 const bAllGreaterThan,
 }
 
 
-void SetItemPoolVisibilityHidden(ITEM_POOL* pItemPool)
+void SetItemPoolVisibilityHidden(ITEM_POOL* const ip)
 {
-	ITEM_POOL* pItemPoolTemp;
-
-	pItemPoolTemp = pItemPool;
-	while( pItemPoolTemp != NULL )
+	for (ITEM_POOL* i = ip; i; i = i->pNext)
 	{
 		// Update the world value
-		GetWorldItem(pItemPoolTemp->iItemIndex)->bVisible = HIDDEN_IN_OBJECT;
-		pItemPoolTemp->bVisible = HIDDEN_IN_OBJECT;
-
-		pItemPoolTemp						= pItemPoolTemp->pNext;
+		GetWorldItem(i->iItemIndex)->bVisible = HIDDEN_IN_OBJECT;
+		i->bVisible = HIDDEN_IN_OBJECT;
 	}
 }
 
