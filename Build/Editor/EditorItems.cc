@@ -977,7 +977,6 @@ void ShowSelectedItem()
 {
 	if( gpItemPool )
 	{
-		gpItemPool->bVisible = INVISIBLE;
 		GetWorldItem(gpItemPool->iItemIndex)->bVisible = INVISIBLE;
 	}
 }
@@ -986,7 +985,6 @@ void HideSelectedItem()
 {
 	if( gpItemPool )
 	{
-		gpItemPool->bVisible = HIDDEN_ITEM;
 		GetWorldItem(gpItemPool->iItemIndex)->bVisible = HIDDEN_ITEM;
 	}
 }

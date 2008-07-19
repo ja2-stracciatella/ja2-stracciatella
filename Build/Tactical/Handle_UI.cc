@@ -1190,7 +1190,7 @@ static ScreenID UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 	{
 		 // Are we over items...
 		const ITEM_POOL* pItemPool = GetItemPool(usMapPos, (UINT8)gsInterfaceLevel);
-		if (pItemPool != NULL && ITEMPOOL_VISIBLE(pItemPool))
+		if (pItemPool != NULL && IsItemPoolVisible(pItemPool))
 		 {
 				// Are we already in...
 			  if ( fOverItems )
@@ -5032,7 +5032,7 @@ static INT8 UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* pSoldier, INT
 				}
 			}
 
-			if ( ITEMPOOL_VISIBLE( pItemPool ) || fPoolContainsHiddenItems )
+			if (fPoolContainsHiddenItems || IsItemPoolVisible(pItemPool))
 			{
 
 				if ( !fOverPool )

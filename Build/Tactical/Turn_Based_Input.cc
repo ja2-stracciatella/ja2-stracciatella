@@ -3687,7 +3687,7 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 		// Check if we are over an item pool
 		// ATE: Ignore items will be set if over a switch interactive tile...
 		const ITEM_POOL* pItemPool = GetItemPool(sActionGridNo, pSoldier->bLevel);
-		if (pItemPool != NULL && ITEMPOOL_VISIBLE(pItemPool) && !fIgnoreItems)
+		if (pItemPool && IsItemPoolVisible(pItemPool) && !fIgnoreItems)
 		{
 			if ( AM_AN_EPC( pSoldier ) )
 			{

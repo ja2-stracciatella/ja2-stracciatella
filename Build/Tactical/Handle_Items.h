@@ -32,9 +32,8 @@
 #define	ITEM_LOCATOR_LOCKED 0x02
 
 
-
-// MACRO FOR DEFINING OF ITEM IS VISIBLE
-#define ITEMPOOL_VISIBLE( pItemPool )			( ( pItemPool->bVisible >= 1 ) || (gTacticalStatus.uiFlags&SHOW_ALL_ITEMS) )
+/* Check if at least one item in the item pool is visible */
+bool IsItemPoolVisible(ITEM_POOL const*);
 
 
 struct ITEM_POOL
@@ -42,7 +41,6 @@ struct ITEM_POOL
 	struct ITEM_POOL* pNext;
 
 	INT32				iItemIndex;
-	INT8				bVisible;
 	LEVELNODE*  pLevelNode;
 };
 

@@ -1537,7 +1537,7 @@ INT32 AddItemToPool(INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisibl
 }
 
 
-static void AdjustItemPoolVisibility(ITEM_POOL* pItemPool);
+static void HandleItemObscuredFlag(INT16 sGridNo, UINT8 ubLevel);
 
 
 INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel)
@@ -1724,9 +1724,6 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, IN
 		gpWorldLevelData[sNewGridNo].uiFlags |= MAPELEMENT_ITEMPOOL_PRESENT;
 	}
 
-	// Set visible!
-	new_item->bVisible = bVisible;
-
 	// If bbisible is true, render makered world
 	if (bVisible == 1 && GridNoOnScreen(sNewGridNo))
 	{
@@ -1735,9 +1732,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, IN
 		SetRenderFlags(RENDER_FLAG_FULL);
 	}
 
-	// ATE: Get head of pool again....
-	ITEM_POOL* const pool_head = GetItemPool(sNewGridNo, ubLevel);
-	if (pool_head != NULL) AdjustItemPoolVisibility(pool_head);
+	HandleItemObscuredFlag(sNewGridNo, ubLevel);
 
 	return iWorldItem;
 }
@@ -2000,7 +1995,7 @@ BOOLEAN SetItemPoolVisibilityOn(ITEM_POOL* const ip, INT8 const bAllGreaterThan,
 	BOOLEAN fAtLeastModified = FALSE;
 	for (ITEM_POOL* i = ip; i; i = i->pNext)
 	{
-		WORLDITEM* const wi            = GetWorldItem(i->iItemIndex);
+		WORLDITEM* const wi = GetWorldItem(i->iItemIndex);
 
 		/* Skip if already visible or should not get modified */
 		if (wi->bVisible == VISIBLE || wi->bVisible < bAllGreaterThan) continue;
@@ -2017,12 +2012,6 @@ BOOLEAN SetItemPoolVisibilityOn(ITEM_POOL* const ip, INT8 const bAllGreaterThan,
 	// If we didn't find any that should be modified
 	if (!fAtLeastModified) return FALSE;
 
-	// Update global pool bVisible to true, if at least one is visible
-	for (ITEM_POOL* i = ip; i; i = i->pNext)
-	{
-		i->bVisible = VISIBLE;
-	}
-
 	// Handle obscured flag...
 	WORLDITEM const* const wi = GetWorldItem(ip->iItemIndex);
 	HandleItemObscuredFlag(wi->sGridNo, wi->ubLevel);
@@ -2038,40 +2027,7 @@ void SetItemPoolVisibilityHidden(ITEM_POOL* const ip)
 	{
 		// Update the world value
 		GetWorldItem(i->iItemIndex)->bVisible = HIDDEN_IN_OBJECT;
-		i->bVisible = HIDDEN_IN_OBJECT;
 	}
-}
-
-
-// This determines the overall initial visibility of the pool...
-// IF ANY are set to VISIBLE, MODIFY
-static void AdjustItemPoolVisibility(ITEM_POOL* const ip)
-{
-	BOOLEAN fAtLeastModified = FALSE;
-	for (ITEM_POOL* i = ip; i; i = i->pNext)
-	{
-		// Default item pool to invisible
-		i->bVisible = INVISIBLE;
-
-		if (GetWorldItem(i->iItemIndex)->bVisible == VISIBLE)
-		{
-			fAtLeastModified = TRUE;
-		}
-	}
-
-	WORLDITEM const* const wi = GetWorldItem(ip->iItemIndex);
-	HandleItemObscuredFlag(wi->sGridNo, wi->ubLevel);
-
-	// If we didn't find any that should be modified
-	if (!fAtLeastModified) return;
-
-	// Update global pool bVisible to true, if at least one is visible
-	for (ITEM_POOL* i = ip; i; i = i->pNext)
-	{
-		i->bVisible = VISIBLE;
-	}
-
-	HandleItemObscuredFlag(wi->sGridNo, wi->ubLevel);
 }
 
 
@@ -2125,7 +2081,6 @@ void RemoveItemFromPool(WORLDITEM* const wi)
 		}
 	}
 
-	AdjustItemPoolVisibility(item);
 	RemoveItemFromWorld(item->iItemIndex);
 	MemFree(item);
 }
@@ -3832,4 +3787,17 @@ BOOLEAN CanPlayerUseRocketRifle(SOLDIERTYPE* const s, const BOOLEAN fDisplay)
 		}
   }
   return TRUE;
+}
+
+
+bool IsItemPoolVisible(ITEM_POOL const* const ip)
+{
+	if (!ip) return false;
+	for (ITEM_POOL const* i = ip; i; i = i->pNext)
+	{
+		if (GetWorldItem(i->iItemIndex)->bVisible >= VISIBLE) return true;
+	}
+
+	if (gTacticalStatus.uiFlags & SHOW_ALL_ITEMS) return true;
+	return false;
 }

@@ -71,7 +71,7 @@ static bool CheckForNewShipment(void)
 	if (gbWorldSectorZ != BOBBYR_SHIPPING_DEST_SECTOR_Z) return false;
 
 	ITEM_POOL const* const ip = GetItemPool(BOBBYR_SHIPPING_DEST_GRIDNO, 0);
-	return ip && !ITEMPOOL_VISIBLE(ip);
+	return ip && !IsItemPoolVisible(ip);
 }
 
 
