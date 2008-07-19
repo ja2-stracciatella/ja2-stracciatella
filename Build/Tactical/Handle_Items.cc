@@ -1484,21 +1484,17 @@ static LEVELNODE* AddItemGraphicToWorld(const INVTYPE* const pItem, const INT16 
 }
 
 
+static LEVELNODE* GetStructNodes(GridNo const grid_no, UINT8 const level)
+{
+	MAP_ELEMENT const& me = gpWorldLevelData[grid_no];
+	return level == 0 ? me.pStructHead : me.pOnRoofHead;
+}
+
+
 static void RemoveItemGraphicFromWorld(INT16 sGridNo, UINT8 ubLevel, LEVELNODE* pLevelNode)
 {
-	LEVELNODE *pNode;
-
 	// OK, Do stuff differently base on level!
-	// Loop through and find pointer....
-	if ( ubLevel == 0 )
-	{
-		pNode = gpWorldLevelData[ sGridNo ].pStructHead;
-	}
-	else
-	{
-		pNode = gpWorldLevelData[ sGridNo ].pOnRoofHead;
-	}
-
+	LEVELNODE* pNode = GetStructNodes(sGridNo, ubLevel);
 	while( pNode != NULL )
 	{
 		if ( pNode == pLevelNode )
@@ -1979,11 +1975,9 @@ static void LoopLevelNodeForShowThroughFlag(LEVELNODE* pNode)
 }
 
 
-static void HandleItemObscuredFlag(INT16 sGridNo, UINT8 ubLevel)
+static void HandleItemObscuredFlag(INT16 const sGridNo, UINT8 const ubLevel)
 {
-	MAP_ELEMENT* const e = &gpWorldLevelData[sGridNo];
-	LEVELNODE* const   n = (ubLevel == 0 ? e->pStructHead : e->pOnRoofHead);
-	LoopLevelNodeForShowThroughFlag(n);
+	LoopLevelNodeForShowThroughFlag(GetStructNodes(sGridNo, ubLevel));
 }
 
 
@@ -2055,8 +2049,7 @@ void RemoveItemFromPool(WORLDITEM* const wi)
 	else if (next != NULL)
 	{
 		// This node was the head, set next as head at this gridno
-		const MAP_ELEMENT* const m = &gpWorldLevelData[wi->sGridNo];
-		for (LEVELNODE* l = (wi->ubLevel == 0 ? m->pStructHead : m->pOnRoofHead); l != NULL; l = l->pNext)
+		for (LEVELNODE* l = GetStructNodes(wi->sGridNo, wi->ubLevel); l != NULL; l = l->pNext)
 		{
 			if (!(l->uiFlags & LEVELNODE_ITEM)) continue;
 			l->pItemPool = next;
@@ -2104,8 +2097,7 @@ void MoveItemPools(INT16 const sStartPos, INT16 const sEndPos)
 
 ITEM_POOL* GetItemPool(UINT16 const usMapPos, UINT8 const ubLevel)
 {
-	MAP_ELEMENT const* const me = &gpWorldLevelData[usMapPos];
-	for (LEVELNODE* n = (ubLevel == 0 ? me->pStructHead : me->pOnRoofHead); n; n = n->pNext)
+	for (LEVELNODE* n = GetStructNodes(usMapPos, ubLevel); n; n = n->pNext)
 	{
 		if (!(n->uiFlags & LEVELNODE_ITEM)) continue;
 		return n->pItemPool;
