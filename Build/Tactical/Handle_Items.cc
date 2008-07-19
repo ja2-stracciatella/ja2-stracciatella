@@ -1484,42 +1484,22 @@ static LEVELNODE* AddItemGraphicToWorld(const INVTYPE* const pItem, const INT16 
 }
 
 
-static LEVELNODE* GetStructNodes(GridNo const grid_no, UINT8 const level)
+static void RemoveItemGraphicFromWorld(INT16 const sGridNo, UINT8 const ubLevel, LEVELNODE* const pLevelNode)
 {
-	MAP_ELEMENT const& me = gpWorldLevelData[grid_no];
-	return level == 0 ? me.pStructHead : me.pOnRoofHead;
-}
-
-
-static void RemoveItemGraphicFromWorld(INT16 sGridNo, UINT8 ubLevel, LEVELNODE* pLevelNode)
-{
-	// OK, Do stuff differently base on level!
-	LEVELNODE* pNode = GetStructNodes(sGridNo, ubLevel);
-	while( pNode != NULL )
+	if (ubLevel == 0)
 	{
-		if ( pNode == pLevelNode )
-		{
-			// Found one!
-			if ( ubLevel == 0 )
-			{
-				RemoveStructFromLevelNode( sGridNo, pNode );
-			}
-			else
-			{
-				RemoveOnRoofFromLevelNode( sGridNo, pNode );
-			}
-
-			break;
-		}
-
-		pNode = pNode->pNext;
+		RemoveStructFromLevelNode(sGridNo, pLevelNode);
+	}
+	else
+	{
+		RemoveOnRoofFromLevelNode(sGridNo, pLevelNode);
 	}
 
 	// DIRTY INTERFACE
 	fInterfacePanelDirty = DIRTYLEVEL2;
 
 	// DIRTY TILE
-	gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_REDRAW;
+	gpWorldLevelData[sGridNo].uiFlags |= MAPELEMENT_REDRAW;
 	SetRenderFlags(RENDER_FLAG_MARKED);
 
 	//TEMP RENDER FULL!!!
@@ -1972,6 +1952,13 @@ static void LoopLevelNodeForShowThroughFlag(LEVELNODE* pNode)
 			pNode->uiFlags |= LEVELNODE_DYNAMIC;
 		}
 	}
+}
+
+
+static LEVELNODE* GetStructNodes(GridNo const grid_no, UINT8 const level)
+{
+	MAP_ELEMENT const& me = gpWorldLevelData[grid_no];
+	return level == 0 ? me.pStructHead : me.pOnRoofHead;
 }
 
 
