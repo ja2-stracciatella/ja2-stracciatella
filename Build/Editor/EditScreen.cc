@@ -2483,8 +2483,7 @@ try
 		case NIGHTTIME_LIGHT: l->uiFlags |= LIGHT_NIGHTTIME; break;
 	}
 
-	UINT16 usTmpIndex;
-	if (!TypeExistsInObjectLayer(pos, GOODRING, &usTmpIndex))
+	if (!TypeExistsInObjectLayer(pos, GOODRING))
 	{
 		LEVELNODE* const n = AddObjectToHead(pos, GOODRING1);
 		n->ubShadeLevel = DEFAULT_SHADE_LEVEL;
@@ -2546,7 +2545,6 @@ BOOLEAN RemoveLight(const GridNo pos)
 void ShowLightPositionHandles( void )
 {
 	INT32 iMapIndex;
-	UINT16 usTmpIndex;
 
 	// Check all lights and place a position handle there!
 	CFOR_ALL_LIGHT_SPRITES(l)
@@ -2554,7 +2552,7 @@ void ShowLightPositionHandles( void )
 		if (!IsSoldierLight(l))
 		{
 			iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
-			if (!TypeExistsInObjectLayer(iMapIndex, GOODRING, &usTmpIndex))
+			if (!TypeExistsInObjectLayer(iMapIndex, GOODRING))
 			{
 				LEVELNODE* const n = AddObjectToHead(iMapIndex, GOODRING1);
 				n->ubShadeLevel = DEFAULT_SHADE_LEVEL;

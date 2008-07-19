@@ -91,7 +91,6 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSmooth )
 {
 	int temp = 0;
-	UINT16 usTempIndex;
 	UINT32 cnt;
 	BOOLEAN fFound;
 	UINT32	uiTempIndex;
@@ -133,7 +132,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	// is land height one tile above not the same type?
 	if ( (gridno- WORLD_COLS ) >= 0 )
 	{
-		if ( !TypeExistsInLandLayer( gridno - WORLD_COLS, origType, &usTempIndex ) )
+		if (!TypeExistsInLandLayer(gridno - WORLD_COLS, origType))
 		{
 			// no it's not
 			temp+=3;
@@ -143,7 +142,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	// (make sure there IS a tile to the right, i.e. check for border)
 	if ((gridno+1)% WORLD_COLS !=0)
 	{
-		if ( !TypeExistsInLandLayer( gridno+1, origType, &usTempIndex ) )
+		if (!TypeExistsInLandLayer(gridno + 1, origType))
 		{
 			// no it's not
 			temp+=5;
@@ -153,7 +152,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	// is land height one tile down not the same type?
 	if ( (gridno + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
 	{
-		if ( !TypeExistsInLandLayer( gridno + WORLD_COLS, origType, &usTempIndex ) )
+		if (!TypeExistsInLandLayer(gridno + WORLD_COLS, origType))
 		{
 			// no it's not
 			temp+=7;
@@ -163,7 +162,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	// is land height one tile to left not the same type?
 	if (gridno % WORLD_COLS!=0)
 	{
-		if ( !TypeExistsInLandLayer( gridno-1, origType, &usTempIndex ) )
+		if (!TypeExistsInLandLayer(gridno - 1, origType))
 		{
 			// no it's not
 			temp+=11;
@@ -229,7 +228,6 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 void SmoothAllTerrainWorld( void )
 {
 	int						cnt;
-	UINT16				usIndex;
 	UINT16				NewTile;
 	UINT32				uiCheckType;
 	 // Smooth out entire world surrounding tiles
@@ -237,7 +235,7 @@ void SmoothAllTerrainWorld( void )
 	{
 		for ( uiCheckType = FIRSTTEXTURE; uiCheckType <= SEVENTHTEXTURE; uiCheckType++ )
 		{
-			if ( TypeExistsInLandLayer( cnt, uiCheckType, &usIndex ) )
+			if (TypeExistsInLandLayer(cnt, uiCheckType))
 			{
 				SmoothTerrain( cnt, uiCheckType, &NewTile, TRUE );
 
@@ -258,7 +256,6 @@ void SmoothTerrainRadius( UINT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, 
 	INT16  cnt1, cnt2;
 	INT32				    iNewIndex;
 	UINT16					NewTile;
-	UINT16					usIndex;
 	INT32					leftmost;
 	// Don't bother to smooth floors, they don't need them
 	if ( uiCheckType >= FIRSTFLOOR && uiCheckType <= LASTFLOOR )
@@ -277,7 +274,7 @@ void SmoothTerrainRadius( UINT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, 
 			if ( iNewIndex >=0 && iNewIndex < WORLD_MAX &&
 				   iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
 			{
-				if ( TypeExistsInLandLayer( iNewIndex, uiCheckType, &usIndex ) )
+				if (TypeExistsInLandLayer(iNewIndex, uiCheckType))
 				{
 						SmoothTerrain(  iNewIndex, uiCheckType, &NewTile, fForceSmooth );
 
@@ -300,7 +297,6 @@ void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForc
 	INT16  cnt1, cnt2, cnt3;
 	INT32				    iNewIndex;
 	UINT16					NewTile;
-	UINT16					usIndex;
 	INT32					leftmost;
 	// Determine start end end indicies and num rows
 	sTop		= ubRadius;
@@ -318,7 +314,7 @@ void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForc
 				if ( iNewIndex >=0 && iNewIndex < WORLD_MAX &&
 						 iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
 				{
-					if ( TypeExistsInLandLayer( iNewIndex, cnt3, &usIndex ) )
+					if (TypeExistsInLandLayer(iNewIndex, cnt3))
 					{
 						SmoothTerrain(  iNewIndex, cnt3, &NewTile, fForceSmooth );
 						if ( NewTile != NO_TILE )

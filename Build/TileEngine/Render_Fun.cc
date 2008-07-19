@@ -153,7 +153,6 @@ void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
 	UINT8							ubLoop;
 	DB_STRUCTURE_TILE	**	ppTile;
 	INT16							sGridNo;
-	UINT16						usIndex;
 	BOOLEAN						fChanged = FALSE;
 
 	// CHECK FOR A SLANTED ROOF HERE....
@@ -183,7 +182,7 @@ void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
 			if ( !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) && pNode->uiFlags & LEVELNODE_HIDDEN )
 			{
 				// Add graphic if one does not already exist....
-				if ( !TypeExistsInRoofLayer( sGridNo, SLANTROOFCEILING, &usIndex ) )
+				if (!TypeExistsInRoofLayer(sGridNo, SLANTROOFCEILING))
 				{
 					// Add
 					AddRoofToHead( sGridNo, SLANTROOFCEILING1 );
@@ -195,6 +194,7 @@ void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
 			if ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED )
 			{
 				///Remove any slant roof items if they exist
+				UINT16 usIndex;
 				if ( TypeExistsInRoofLayer( sGridNo, SLANTROOFCEILING, &usIndex ) )
 				{
 					RemoveRoof( sGridNo, usIndex );

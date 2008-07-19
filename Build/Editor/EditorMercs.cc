@@ -1551,8 +1551,7 @@ void SpecifyEntryPoint( UINT32 iMapIndex )
 	}
 	else
 	{
-		UINT16 usDummy;
-		if( TypeExistsInTopmostLayer( iMapIndex, FIRSTPOINTERS, &usDummy ) )
+		if (TypeExistsInTopmostLayer(iMapIndex, FIRSTPOINTERS))
 		{
 			AddToUndoList( iMapIndex );
 			RemoveAllTopmostsOfTypeRange( iMapIndex, FIRSTPOINTERS, FIRSTPOINTERS );

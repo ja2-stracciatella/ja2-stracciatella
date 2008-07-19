@@ -11,7 +11,7 @@ void CountLevelNodes( void );
 BOOLEAN RemoveObject( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE *AddObjectToTail( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE* AddObjectToHead(UINT32 iMapIndex, UINT16 usIndex);
-BOOLEAN TypeExistsInObjectLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusObjectIndex );
+BOOLEAN TypeExistsInObjectLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusObjectIndex = 0);
 BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 UINT16 TypeRangeExistsInObjectLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType);
 
@@ -20,7 +20,7 @@ UINT16 TypeRangeExistsInObjectLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 BOOLEAN RemoveRoof( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE  *AddRoofToTail( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE* AddRoofToHead(UINT32 iMapIndex, UINT16 usIndex);
-BOOLEAN TypeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusRoofIndex );
+BOOLEAN TypeExistsInRoofLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusRoofIndex = 0);
 BOOLEAN RemoveAllRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 void RemoveRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  );
 void SetRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  );
@@ -45,7 +45,7 @@ LEVELNODE *AddLandToTail( UINT32 iMapIndex, UINT16 usIndex );
 #endif
 void AddLandToHead(UINT32 iMapIndex, UINT16 usIndex);
 #ifdef JA2EDITOR
-BOOLEAN TypeExistsInLandLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusLandIndex );
+BOOLEAN TypeExistsInLandLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusLandIndex = 0);
 BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType);
 void ReplaceLandIndex(UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex);
@@ -101,7 +101,7 @@ BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection );
 LEVELNODE  *AddTopmostToTail( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE* AddTopmostToHead(UINT32 iMapIndex, UINT16 usIndex);
 BOOLEAN RemoveTopmost( UINT32 iMapIndex, UINT16 usIndex );
-BOOLEAN TypeExistsInTopmostLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusTopmostIndex );
+BOOLEAN TypeExistsInTopmostLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusTopmostIndex = 0);
 BOOLEAN RemoveAllTopmostsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 LEVELNODE* AddUIElem(UINT32 iMapIndex, UINT16 usIndex, INT8 sRelativeX, INT8 sRelativeY);
 BOOLEAN RemoveTopmostFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );

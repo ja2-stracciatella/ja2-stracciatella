@@ -102,7 +102,7 @@ static BOOLEAN TypeExistsInLevel(const LEVELNODE* pStartNode, UINT32 fType, UINT
 			const UINT32 fTileType = GetTileType(pStartNode->usIndex);
 			if (fTileType == fType)
 			{
-				*pusIndex = pStartNode->usIndex;
+				if (pusIndex) *pusIndex = pStartNode->usIndex;
 				return TRUE;
 			}
 		}

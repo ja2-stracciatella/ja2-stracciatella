@@ -770,7 +770,6 @@ static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 //	Puts a land index "under" an existing ground texture. Affects a radial area.
 static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UINT8 ubRadius, BOOLEAN fReplace)
 {
-	UINT16				usTempIndex;
 	INT16					sTop, sBottom;
 	INT16					sLeft, sRight;
 	INT16					cnt1, cnt2;
@@ -810,7 +809,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 				}
 				else
 				{
-					if ( TypeExistsInLandLayer( iNewIndex, uiNewType, &usTempIndex ) )
+					if (TypeExistsInLandLayer(iNewIndex, uiNewType))
 					{
 						fDoPaste = TRUE;
 					}
