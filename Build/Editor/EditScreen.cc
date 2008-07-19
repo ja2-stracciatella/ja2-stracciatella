@@ -2551,19 +2551,16 @@ void ShowLightPositionHandles(void)
 }
 
 
-//	Scans through all light currently in the world and removes any light markers that may be present.
+/* Scan through all light currently in the world and remove any light markers
+ * that may be present. */
 static void RemoveLightPositionHandles(void)
 {
-	INT32 iMapIndex;
-
-	// Check all lights and remove the position handle there!
 	CFOR_ALL_LIGHT_SPRITES(l)
 	{
-		if (!IsSoldierLight(l))
-		{
-			iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
-			RemoveAllObjectsOfTypeRange(iMapIndex, GOODRING, GOODRING);
-		}
+		if (IsSoldierLight(l)) continue;
+
+		INT32 const iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
+		RemoveAllObjectsOfTypeRange(iMapIndex, GOODRING, GOODRING);
 	}
 }
 
