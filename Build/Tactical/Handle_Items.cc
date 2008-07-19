@@ -2537,112 +2537,42 @@ void RemoveFlashItemSlot(ITEM_POOL const* const ip)
 }
 
 
-void HandleFlashingItems( )
+void HandleFlashingItems()
 {
-	UINT32 cnt;
-	ITEM_POOL		*pItemPool;
-	LEVELNODE		*pObject;
-	ITEM_POOL_LOCATOR	*pLocator;
-	BOOLEAN			fDoLocator = FALSE;
+	if (!COUNTERDONE(CYCLERENDERITEMCOLOR)) return;
+	RESETCOUNTER(CYCLERENDERITEMCOLOR);
 
-	if ( COUNTERDONE( CYCLERENDERITEMCOLOR ) )
+	for (ITEM_POOL_LOCATOR* l = FlashItemSlots; l != FlashItemSlots + guiNumFlashItemSlots; ++l)
 	{
-			RESETCOUNTER( CYCLERENDERITEMCOLOR );
+		ITEM_POOL* const ip = l->pItemPool;
+		if (!ip) continue;
 
-			for ( cnt = 0; cnt < guiNumFlashItemSlots; cnt++ )
-			{
-				pLocator  = &( FlashItemSlots[ cnt ] );
-				if (!pLocator->pItemPool) continue;
+		if (l->ubFlags & ITEM_LOCATOR_LOCKED)
+		{
+			if (gTacticalStatus.fLockItemLocators) continue;
+			// Turn off
+			l->ubFlags &= ~ITEM_LOCATOR_LOCKED;
+		}
 
-				fDoLocator = TRUE;
+		// Update radio locator
+		UINT32 const uiClock = GetJA2Clock();
+		// Update frame values!
+		if (uiClock - l->uiLastFrameUpdate > 80)
+		{
+			l->uiLastFrameUpdate = uiClock;
+			if (++l->bRadioFrame == 5) l->bRadioFrame = 0;
+		}
 
-				if ( ( pLocator->ubFlags & ITEM_LOCATOR_LOCKED ) )
-				{
-					if (!gTacticalStatus.fLockItemLocators)
-					{
-						// Turn off!
-						pLocator->ubFlags &= (~ITEM_LOCATOR_LOCKED);
-					}
-					else
-					{
-						fDoLocator = FALSE;
-					}
-				}
-
-				if ( fDoLocator )
-				{
-					pItemPool = pLocator->pItemPool;
-
-					// Update radio locator
-					{
-						UINT32			uiClock;
-
-						uiClock = GetJA2Clock( );
-
-						// Update frame values!
-						if ( ( uiClock - pLocator->uiLastFrameUpdate ) > 80 )
-						{
-							pLocator->uiLastFrameUpdate = uiClock;
-
-							// Update frame
-							pLocator->bRadioFrame++;
-
-							if ( pLocator->bRadioFrame == 5 )
-							{
-								pLocator->bRadioFrame = 0;
-							}
-						}
-					}
-
-					// UPDATE FLASH COLOR VALUE
-					pItemPool->bFlashColor--;
-
-					const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
-					if (wi->ubLevel == 0)
-					{
-						pObject = gpWorldLevelData[ pItemPool->sGridNo ].pStructHead;
-					}
-					else
-					{
-						pObject = gpWorldLevelData[ pItemPool->sGridNo ].pOnRoofHead;
-					}
-
-					// LOOP THORUGH OBJECT LAYER
-					while( pObject != NULL )
-					{
-						if ( pObject->uiFlags & LEVELNODE_ITEM )
-						{
-							if ( pItemPool->bFlashColor == 1 )
-							{
-								//pObject->uiFlags &= (~LEVELNODE_DYNAMIC);
-								//pObject->uiFlags |= ( LEVELNODE_LASTDYNAMIC  );
-							}
-							else
-							{
-								//pObject->uiFlags |= LEVELNODE_DYNAMIC;
-							}
-
-						}
-
-						pObject = pObject->pNext;
-					}
-
-					if ( pItemPool->bFlashColor == 1 )
-					{
-						pItemPool->bFlashColor = 0;
-
-						// REMOVE TIMER!
-						RemoveFlashItemSlot( pItemPool );
-
-						SetRenderFlags( RENDER_FLAG_FULL );
-					}
-				}
-			}
-
-			RecountFlashItemSlots( );
-
+		// Update flash color value
+		if (--ip->bFlashColor == 1)
+		{
+			ip->bFlashColor = 0;
+			RemoveFlashItemSlot(ip);
+			SetRenderFlags(RENDER_FLAG_FULL);
+		}
 	}
 
+	RecountFlashItemSlots();
 }
 
 
