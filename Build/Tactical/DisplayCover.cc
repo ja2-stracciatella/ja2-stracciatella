@@ -129,59 +129,25 @@ static void AddCoverObjectToWorld(INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof
 
 static void AddCoverTileToEachGridNo(void)
 {
-	UINT32 uiCntX, uiCntY;
-	BOOLEAN fRoof = ( gsInterfaceLevel != I_GROUND_LEVEL );
-
+	BOOLEAN const roof = gsInterfaceLevel != I_GROUND_LEVEL;
 
 	//loop through all the gridnos
-	for(uiCntY=0; uiCntY<DC_MAX_COVER_RANGE ;uiCntY++)
+	for (UINT32 y = 0; y < DC_MAX_COVER_RANGE; ++y)
 	{
-		for(uiCntX=0; uiCntX<DC_MAX_COVER_RANGE ;uiCntX++)
+		for (UINT32 x = 0; x < DC_MAX_COVER_RANGE; ++x)
 		{
-			//if there is a valid cover at this gridno
-			if( gCoverRadius[ uiCntX ][ uiCntY ].bCover != -1 )
-			{
-				//if the tile provides 80-100% cover
-				if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 100 &&
-						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 80 )
-				{
-					AddCoverObjectToWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_5, fRoof );
-				}
+			BEST_COVER_STRUCT const& cr    = gCoverRadius[x][y];
+			INT8              const  cover = cr.bCover;
+			if (cover == -1) continue; // Valid cover?
+			Assert(0 <= cover && cover <= 100);
 
-				//else if the tile provides 60-80% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 80 &&
-						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 60 )
-				{
-					AddCoverObjectToWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_4, fRoof );
-				}
-
-				//else if the tile provides 40-60% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 60 &&
-						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 40 )
-				{
-					AddCoverObjectToWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_3, fRoof );
-				}
-
-				//else if the tile provides 20-40% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 40 &&
-						gCoverRadius[ uiCntX ][ uiCntY ].bCover > 20 )
-				{
-					AddCoverObjectToWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_2, fRoof );
-				}
-
-				//else if the tile provides 0-20% cover
-				else if( gCoverRadius[ uiCntX ][ uiCntY ].bCover <= 20 &&
-						gCoverRadius[ uiCntX ][ uiCntY ].bCover >= 0 )
-				{
-					AddCoverObjectToWorld( gCoverRadius[ uiCntX ][ uiCntY ].sGridNo, SPECIALTILE_COVER_1, fRoof );
-				}
-
-				//should never get in here
-				else
-				{
-					Assert( 0 );
-				}
-			}
+			UINT16 const gfx =
+				cover <= 20 ? SPECIALTILE_COVER_1 :
+				cover <= 40 ? SPECIALTILE_COVER_2 :
+				cover <= 60 ? SPECIALTILE_COVER_3 :
+				cover <= 80 ? SPECIALTILE_COVER_4 :
+				              SPECIALTILE_COVER_5;
+			AddCoverObjectToWorld(cr.sGridNo, gfx, roof);
 		}
 	}
 }
