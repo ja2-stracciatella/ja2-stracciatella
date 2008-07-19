@@ -44,7 +44,6 @@ struct ITEM_POOL
 	INT32				iItemIndex;
 	INT8				bVisible;
 	INT8				bFlashColor;
-	INT16				sGridNo;
 	LEVELNODE*  pLevelNode;
 };
 

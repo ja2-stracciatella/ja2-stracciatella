@@ -1735,9 +1735,8 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, IN
 	}
 
 	// Set flahs timer
-	new_item->bFlashColor              = FALSE;
-	new_item->sGridNo                  = sNewGridNo;
-	new_item->bVisible                 = bVisible;
+	new_item->bFlashColor = FALSE;
+	new_item->bVisible    = bVisible;
 
 	// ATE: Get head of pool again....
 	ITEM_POOL* const pool_head = GetItemPool(sNewGridNo, ubLevel);
@@ -2099,8 +2098,8 @@ BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOO
 	}
 
 	// Handle obscured flag...
-	const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
-	HandleItemObscuredFlag(pItemPool->sGridNo, wi->ubLevel);
+	WORLDITEM const* const wi = GetWorldItem(pItemPool->iItemIndex);
+	HandleItemObscuredFlag(wi->sGridNo, wi->ubLevel);
 
 	if ( fSetLocator )
 	{
@@ -2151,8 +2150,8 @@ static void AdjustItemPoolVisibility(ITEM_POOL* pItemPool)
 	}
 
 	// Handle obscured flag...
-	const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
-	HandleItemObscuredFlag(pItemPool->sGridNo, wi->ubLevel);
+	WORLDITEM const* const wi = GetWorldItem(pItemPool->iItemIndex);
+	HandleItemObscuredFlag(wi->sGridNo, wi->ubLevel);
 
 	// If we didn;t find any that should be modified..
 	if ( !fAtLeastModified )
@@ -2170,7 +2169,7 @@ static void AdjustItemPoolVisibility(ITEM_POOL* pItemPool)
 	}
 
 	// Handle obscured flag...
-	HandleItemObscuredFlag(pItemPool->sGridNo, wi->ubLevel);
+	HandleItemObscuredFlag(wi->sGridNo, wi->ubLevel);
 }
 
 
@@ -2214,7 +2213,7 @@ void RemoveItemFromPool(WORLDITEM* const wi)
 		 * because there are no more items here */
 		if (wi->bRenderZHeightAboveLevel > 0)
 		{
-			STRUCTURE* const s = FindStructure(item->sGridNo, STRUCTURE_HASITEMONTOP);
+			STRUCTURE* const s = FindStructure(wi->sGridNo, STRUCTURE_HASITEMONTOP);
 			if (s != NULL)
 			{
 				s->fFlags &= ~STRUCTURE_HASITEMONTOP;
@@ -2586,11 +2585,12 @@ void RenderTopmostFlashingItems(void)
 
 		if (l->ubFlags & ITEM_LOCATOR_LOCKED) continue;
 
+		const WORLDITEM* const wi = GetWorldItem(ip->iItemIndex);
 
 		// Update radio locator
 		INT16 sX;
 		INT16 sY;
-		ConvertGridNoToCenterCellXY(ip->sGridNo, &sX, &sY);
+		ConvertGridNoToCenterCellXY(wi->sGridNo, &sX, &sY);
 
 		const FLOAT dOffsetX = sX - gsRenderCenterX;
 		const FLOAT dOffsetY = sY - gsRenderCenterY;
@@ -2601,9 +2601,7 @@ void RenderTopmostFlashingItems(void)
 		FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
 
 		INT16 sXPos = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
-		INT16 sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S - gpWorldLevelData[ip->sGridNo].sHeight;
-
-		const WORLDITEM* const wi = GetWorldItem(ip->iItemIndex);
+		INT16 sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S - gpWorldLevelData[wi->sGridNo].sHeight;
 
 		// Adjust for offset position on screen
 		sXPos -= gsRenderWorldOffsetX;
@@ -3135,12 +3133,11 @@ static void SetOffBoobyTrapInMapScreen(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObjec
 
 static void SetOffBoobyTrap(ITEM_POOL* pItemPool)
 {
-	if ( pItemPool )
-	{
-		WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
-		IgniteExplosion(NULL, gpWorldLevelData[pItemPool->sGridNo].sHeight + wi->bRenderZHeightAboveLevel, pItemPool->sGridNo, MINI_GRENADE, 0);
-		RemoveItemFromPool(wi);
-	}
+	if (!pItemPool) return;
+
+	WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+	IgniteExplosion(0, gpWorldLevelData[wi->sGridNo].sHeight + wi->bRenderZHeightAboveLevel, wi->sGridNo, MINI_GRENADE, 0);
+	RemoveItemFromPool(wi);
 }
 
 

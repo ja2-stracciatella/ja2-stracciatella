@@ -897,7 +897,8 @@ void HandleRightClickOnItem( INT16 sGridNo )
 		pIPCurr = pIPCurr->next;
 	}
 	Assert( gpCurrItemPoolNode );
-	SpecifyItemToEdit(&GetWorldItem(gpItemPool->iItemIndex)->o, gpItemPool->sGridNo);
+	WORLDITEM* const wi = GetWorldItem(gpItemPool->iItemIndex);
+	SpecifyItemToEdit(&wi->o, wi->sGridNo);
 }
 
 
@@ -913,21 +914,21 @@ void DeleteSelectedItem()
 	}
 	if( gpItemPool )
 	{ //Okay, we have a selected item...
-		INT16 sGridNo;
 		//save the mapindex
 		if( gpItemPool->pNext )
 		{
-			SpecifyItemToEdit(&GetWorldItem(gpItemPool->pNext->iItemIndex)->o, gpItemPool->sGridNo);
+			WORLDITEM* const wi = GetWorldItem(gpItemPool->pNext->iItemIndex);
+			SpecifyItemToEdit(&wi->o, wi->sGridNo);
 		}
-		sGridNo = gpItemPool->sGridNo;
 		//remove the item
-		WORLDITEM* const wi = GetWorldItem(gpItemPool->iItemIndex);
+		WORLDITEM* const wi      = GetWorldItem(gpItemPool->iItemIndex);
+		INT16      const sGridNo = wi->sGridNo;
 		if (wi->o.usItem == ACTION_ITEM)
 		{
 			switch (wi->o.bActionValue)
 			{
-				case ACTION_ITEM_SMALL_PIT: Remove3X3Pit(wi->sGridNo); break;
-				case ACTION_ITEM_LARGE_PIT: Remove5X5Pit(wi->sGridNo); break;
+				case ACTION_ITEM_SMALL_PIT: Remove3X3Pit(sGridNo); break;
+				case ACTION_ITEM_LARGE_PIT: Remove5X5Pit(sGridNo); break;
 			}
 		}
 		if( gpEditingItemPool == gpItemPool )
@@ -997,7 +998,7 @@ void SelectNextItemPool()
 //remove the current hilight.
 	if( gpItemPool )
 	{
-		MarkMapIndexDirty( gpItemPool->sGridNo );
+		MarkMapIndexDirty(GetWorldItem(gpItemPool->iItemIndex)->sGridNo);
 	}
 
 	//go to the next node.  If at end of list, choose pIPHead
@@ -1007,8 +1008,9 @@ void SelectNextItemPool()
 		gpCurrItemPoolNode = pIPHead;
 	//get the item pool at this node's gridno.
 	gpItemPool = GetItemPool(gpCurrItemPoolNode->sGridNo, 0);
-	MarkMapIndexDirty( gpItemPool->sGridNo );
-	SpecifyItemToEdit(&GetWorldItem(gpItemPool->iItemIndex)->o, gpItemPool->sGridNo);
+	WORLDITEM* const wi = GetWorldItem(gpItemPool->iItemIndex);
+	MarkMapIndexDirty(wi->sGridNo);
+	SpecifyItemToEdit(&wi->o, wi->sGridNo);
 	if( gsItemGridNo != -1 )
 	{
 		CenterScreenAtMapIndex( gsItemGridNo );
@@ -1025,9 +1027,10 @@ void SelectNextItemInPool()
 		}
 		else
 		{
-			gpItemPool = GetItemPool(gpItemPool->sGridNo, 0);
+			gpItemPool = GetItemPool(GetWorldItem(gpItemPool->iItemIndex)->sGridNo, 0);
 		}
-		SpecifyItemToEdit(&GetWorldItem(gpItemPool->iItemIndex)->o, gpItemPool->sGridNo);
+		WORLDITEM* const wi = GetWorldItem(gpItemPool->iItemIndex);
+		SpecifyItemToEdit(&wi->o, wi->sGridNo);
 		MarkWorldDirty();
 	}
 }
@@ -1036,12 +1039,13 @@ void SelectPrevItemInPool()
 {
 	if (!gpItemPool) return;
 
-	for (ITEM_POOL* i = GetItemPool(gpItemPool->sGridNo, 0);; i = i->pNext)
+	for (ITEM_POOL* i = GetItemPool(GetWorldItem(gpItemPool->iItemIndex)->sGridNo, 0);; i = i->pNext)
 	{
 		if (i->pNext != gpItemPool && i->pNext != NULL) continue;
 
 		gpItemPool = i;
-		SpecifyItemToEdit(&GetWorldItem(gpItemPool->iItemIndex)->o, gpItemPool->sGridNo);
+		WORLDITEM* const wi = GetWorldItem(gpItemPool->iItemIndex);
+		SpecifyItemToEdit(&wi->o, wi->sGridNo);
 		MarkWorldDirty();
 		break;
 	}

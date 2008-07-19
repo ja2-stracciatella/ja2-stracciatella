@@ -356,7 +356,7 @@ void HandleOverheadMap(void)
 				if (AnyItemsVisibleOnLevel(pItemPool, bZLevel))
 				{
 					DrawItemPoolList(pItemPool, bZLevel, gusMouseXPos, gusMouseYPos);
-					gsOveritemPoolGridNo = pItemPool->sGridNo;
+					gsOveritemPoolGridNo = GetWorldItem(pItemPool->iItemIndex)->sGridNo;
 				}
 			}
 
@@ -367,7 +367,7 @@ void HandleOverheadMap(void)
 				if (AnyItemsVisibleOnLevel(pItemPool, bZLevel))
 				{
 					DrawItemPoolList(pItemPool, bZLevel, gusMouseXPos, gusMouseYPos - 5);
-					gsOveritemPoolGridNo = pItemPool->sGridNo;
+					gsOveritemPoolGridNo = GetWorldItem(pItemPool->iItemIndex)->sGridNo;
 				}
 			}
     }
