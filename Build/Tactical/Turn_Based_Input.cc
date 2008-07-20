@@ -3694,7 +3694,7 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 
 				bZLevel = GetZLevelOfItemPoolGivenStructure( sActionGridNo, pSoldier->bLevel, pStructure );
 
-				SoldierPickupItem( pSoldier, pItemPool->iItemIndex, sActionGridNo, bZLevel );
+				SoldierPickupItem(pSoldier, -1, sActionGridNo, bZLevel);
 
 				*puiNewEvent = A_CHANGE_TO_MOVE;
 
@@ -3748,7 +3748,7 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 					  }
 					  else
 					  {
-						  SoldierPickupItem( pSoldier, NOTHING, sActionGridNo, 0 );
+						  SoldierPickupItem(pSoldier, -1, sActionGridNo, 0);
 						  *puiNewEvent = A_CHANGE_TO_MOVE;
 					  }
 				  }
@@ -3819,7 +3819,7 @@ INT8 HandleMoveModeInteractiveClick(UINT16 const usMapPos)
 				{
 					BeginDisplayTimedCursor(OKHANDCURSOR_UICURSOR, 300);
 				}
-				SoldierPickupItem(sel, pItemPool->iItemIndex, sIntTileGridNo, bZLevel);
+				SoldierPickupItem(sel, -1, sIntTileGridNo, bZLevel);
 				return -3;
 			}
 		}
