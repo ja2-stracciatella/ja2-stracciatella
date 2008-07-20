@@ -1768,34 +1768,21 @@ static BOOLEAN DoesItemPoolContainAllHiddenItems(const ITEM_POOL* pItemPool)
 }
 
 
-static BOOLEAN LookForHiddenItems(const INT16 sGridNo, const INT8 ubLevel)
+static BOOLEAN LookForHiddenItems(INT16 const sGridNo, INT8 const ubLevel)
 {
-	ITEM_POOL *pHeadItemPool = NULL;
-	BOOLEAN		fFound = FALSE;
-
-	ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
-	if (pItemPool != NULL)
+	ITEM_POOL* const head  = GetItemPool(sGridNo, ubLevel);
+	BOOLEAN          found = FALSE;
+	while (ITEM_POOL* i = head; i; i = i->pNext)
 	{
-		pHeadItemPool = pItemPool;
-
-		// LOOP THROUGH LIST TO FIND NODE WE WANT
-		while( pItemPool != NULL )
-		{
-			WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
-			if (wi->bVisible == HIDDEN_ITEM && wi->o.usItem != OWNERSHIP)
-			{
-				fFound = TRUE;
-				wi->bVisible = INVISIBLE;
-			}
-
-			pItemPool = pItemPool->pNext;
-		}
+		WORLDITEM* const wi = GetWorldItem(i->iItemIndex);
+		if (wi->o.usItem == OWNERSHIP)   continue;
+		if (wi->bVisible != HIDDEN_ITEM) continue;
+		wi->bVisible = INVISIBLE;
+		found        = TRUE;
 	}
 
-	// If found, set item pool visibility...
-	if (fFound) SetItemPoolVisibilityOn(pHeadItemPool, INVISIBLE, TRUE);
-
-	return( fFound );
+	if (found) SetItemPoolVisibilityOn(head, INVISIBLE, TRUE);
+	return found;
 }
 
 
