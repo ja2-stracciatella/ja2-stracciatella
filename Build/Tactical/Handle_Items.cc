@@ -1714,27 +1714,16 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, IN
 }
 
 
-static BOOLEAN ItemExistsAtLocation(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel)
+static BOOLEAN ItemExistsAtLocation(INT16 const sGridNo, INT32 const iItemIndex, UINT8 const ubLevel)
 {
-	// Check for an existing pool on the object layer
-	const ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
-	if (pItemPool != NULL)
+	for (ITEM_POOL const* i = GetItemPool(sGridNo, ubLevel); i; i = i->pNext)
 	{
-	// LOOP THROUGH LIST TO FIND NODE WE WANT
-		const ITEM_POOL* pItemPoolTemp = pItemPool;
-		while( pItemPoolTemp != NULL )
-		{
-			if ( pItemPoolTemp->iItemIndex == iItemIndex )
-			{
-				return( TRUE );
-			}
-			pItemPoolTemp = pItemPoolTemp->pNext;
-		}
-
+		if (i->iItemIndex != iItemIndex) continue;
+		return TRUE;
 	}
-
-	return( FALSE );
+	return FALSE;
 }
+
 
 BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, UINT16 usItem, UINT8 ubLevel, INT32 * piItemIndex )
 {
