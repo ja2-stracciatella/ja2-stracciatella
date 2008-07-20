@@ -298,104 +298,68 @@ static void CalculateCoverInRadiusAroundGridno(INT16 sTargetGridNo, INT8 bSearch
 }
 
 
-static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(const SOLDIERTYPE* pSoldier, INT16 sTargetGridNo, INT8 bStance)
+static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE const* const pSoldier, INT16 const sTargetGridNo, INT8 const bStance)
 {
-	INT32		iTotalCoverPoints=0;
-	INT8		bNumEnemies=0;
-	INT8		bPercentCoverForGridno=0;
-	INT32		iGetThrough=0;
-	INT32		iBulletGetThrough=0;
-	INT32		iHighestValue=0;
-	INT32		iCover=0;
-	UINT16	usMaxRange;
-	UINT16	usRange;
-	UINT16	usSightLimit;
-
-	//loop through all the enemies and determine the cover
+	// loop through all the enemies and determine the cover
+	INT32 iTotalCoverPoints = 0;
+	INT8  bNumEnemies       = 0;
+	INT32 iHighestValue     = 0;
 	FOR_ALL_MERCS(i)
 	{
 		SOLDIERTYPE* const pOpponent = *i;
 
-		// if this merc is inactive, at base, on assignment, dead, unconscious
 		if (pOpponent->bLife < OKLIFE) continue;
 
 		// if this man is neutral / on the same side, he's not an opponent
- 		if( CONSIDERED_NEUTRAL( pSoldier, pOpponent ) || (pSoldier->bSide == pOpponent->bSide))
-		{
-			continue;          // next merc
-		}
+ 		if (CONSIDERED_NEUTRAL(pSoldier, pOpponent)) continue;
+ 		if (pSoldier->bSide == pOpponent->bSide)     continue;
 
-		const INT8* const pbPersOL = pSoldier->bOppList        + pOpponent->ubID;
-		const INT8* const pbPublOL = gbPublicOpplist[OUR_TEAM] + pOpponent->ubID;
+		INT8 const* const pbPersOL = pSoldier->bOppList        + pOpponent->ubID;
+		INT8 const* const pbPublOL = gbPublicOpplist[OUR_TEAM] + pOpponent->ubID;
 
 		// if this opponent is unknown personally and publicly
-		if( *pbPersOL != SEEN_CURRENTLY &&
-				*pbPersOL != SEEN_THIS_TURN &&
-				*pbPublOL != SEEN_CURRENTLY &&
-				*pbPublOL != SEEN_THIS_TURN )
-		{
-			continue;          // next merc
-		}
-
-		usRange = (UINT16)GetRangeInCellCoordsFromGridNoDiff( pOpponent->sGridNo, sTargetGridNo );
-		usSightLimit = DistanceVisible( pOpponent, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sTargetGridNo, pSoldier->bLevel );
-
-		if( usRange > ( usSightLimit * CELL_X_SIZE ) )
+		if (*pbPersOL != SEEN_CURRENTLY && *pbPersOL != SEEN_THIS_TURN &&
+				*pbPublOL != SEEN_CURRENTLY && *pbPublOL != SEEN_THIS_TURN)
 		{
 			continue;
 		}
+
+		UINT16 const usRange      = GetRangeInCellCoordsFromGridNoDiff(pOpponent->sGridNo, sTargetGridNo);
+		UINT16 const usSightLimit = DistanceVisible(pOpponent, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sTargetGridNo, pSoldier->bLevel);
+
+		if (usRange > usSightLimit * CELL_X_SIZE) continue;
 
 		// if actual LOS check fails, then chance to hit is 0, ignore this guy
-		if( SoldierToVirtualSoldierLineOfSightTest( pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, (UINT8)usSightLimit, TRUE ) == 0 )
+		if (SoldierToVirtualSoldierLineOfSightTest(pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, usSightLimit, TRUE) == 0)
 		{
 			continue;
 		}
 
-		iGetThrough = SoldierToLocationChanceToGetThrough(pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, NULL);
-//	iBulletGetThrough = CalcChanceToHitGun( pOpponent, sTargetGridNo, AP_MAX_AIM_ATTACK, AIM_SHOT_TORSO );
-
-		if( WeaponInHand( pOpponent ) )
+		INT32  const iGetThrough       = SoldierToLocationChanceToGetThrough(pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, NULL);
+		UINT16 const usMaxRange        = WeaponInHand(pOpponent) ? GunRange(&pOpponent->inv[HANDPOS]) : Weapon[GLOCK_18].usRange;
+		INT32  const iBulletGetThrough = __min(__max((INT32)(((usMaxRange - usRange) / (FLOAT)usMaxRange + .3) * 100), 0), 100);
+		if (iBulletGetThrough > 5 && iGetThrough > 0)
 		{
-			usMaxRange = GunRange( &pOpponent->inv[ HANDPOS ] );
-		}
-		else
-		{
-			usMaxRange = Weapon[ GLOCK_18 ].usRange;
-		}
-
-		iBulletGetThrough = __min( __max( (INT32)( ( ( ( ( usMaxRange - usRange ) / (FLOAT)( usMaxRange ) ) + .3 ) * 100 ) ), 0 ), 100 );
-
-		if( iBulletGetThrough > 5 && iGetThrough > 0 )
-		{
-			iCover = (iGetThrough * iBulletGetThrough / 100);
-
-			if( iCover > iHighestValue )
-				iHighestValue = iCover;
+			INT32 const iCover = iGetThrough * iBulletGetThrough / 100;
+			if (iHighestValue < iCover) iHighestValue = iCover;
 
 			iTotalCoverPoints += iCover;
-			bNumEnemies++;
+			++bNumEnemies;
 		}
 	}
 
-	if( bNumEnemies == 0 )
+	INT8 bPercentCoverForGridno;
+	if (bNumEnemies == 0)
 	{
 		bPercentCoverForGridno = 100;
 	}
 	else
 	{
-		INT32 iTemp;
-
-		bPercentCoverForGridno = ( iTotalCoverPoints / bNumEnemies );
-
-		iTemp = bPercentCoverForGridno - ( iHighestValue / bNumEnemies );
-
-		iTemp = iTemp + iHighestValue;
-
-		bPercentCoverForGridno = 100 - ( __min( iTemp, 100 ) );
+		bPercentCoverForGridno = iTotalCoverPoints / bNumEnemies;
+		INT32 const iTemp = bPercentCoverForGridno - (iHighestValue / bNumEnemies) + iHighestValue;
+		bPercentCoverForGridno = 100 - __min(iTemp, 100);
 	}
-
-
-	return( bPercentCoverForGridno );
+	return bPercentCoverForGridno;
 }
 
 
