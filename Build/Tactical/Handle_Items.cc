@@ -1737,30 +1737,6 @@ BOOLEAN ItemTypeExistsAtLocation(INT16 const sGridNo, UINT16 const usItem, UINT8
 }
 
 
-static INT32 GetItemOfClassTypeInPool(INT16 sGridNo, UINT32 uiItemClass, UINT8 ubLevel)
-{
-
-	// Check for an existing pool on the object layer
-	const ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
-	if (pItemPool != NULL)
-	{
-	// LOOP THROUGH LIST TO FIND NODE WE WANT
-		const ITEM_POOL* pItemPoolTemp = pItemPool;
-		while( pItemPoolTemp != NULL )
-		{
-			if (Item[GetWorldItem(pItemPoolTemp->iItemIndex)->o.usItem].usItemClass & uiItemClass)
-			{
-				return( pItemPoolTemp->iItemIndex );
-			}
-			pItemPoolTemp = pItemPoolTemp->pNext;
-		}
-
-	}
-
-	return( -1 );
-}
-
-
 static ITEM_POOL* GetItemPoolForIndex(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel)
 {
 	// Check for an existing pool on the object layer

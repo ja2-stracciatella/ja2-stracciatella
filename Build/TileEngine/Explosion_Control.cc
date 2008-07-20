@@ -1369,35 +1369,6 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 				}
 				pItemPool = pItemPoolNext;
 			}
-
-			/*
-			// Search for an explosive item in item pool
-			while ( ( iWorldItem = GetItemOfClassTypeInPool( sGridNo, IC_EXPLOSV, bLevel ) ) != -1 )
-			{
-				const WORLDITEM*  const wi = GetWorldItem(iWorldItem);
-				const OBJECTTYPE* const o  = wi->o;
-				// Get usItem
-				usItem = o->usItem;
-
-				DamageItem
-
-				if (CheckForChainReaction(usItem, o->bStatus[0], sWoundAmt, TRUE))
-				{
-					RemoveItemFromPool(wi);
-
-					// OK, Ignite this explosion!
-					IgniteExplosion(NULL, 0, sGridNo, usItem, bLevel);
-				}
-				else
-				{
-					RemoveItemFromPool(wi);
-				}
-
-			}
-
-			// Remove any unburied items here!
-			RemoveAllUnburiedItems( sGridNo, bLevel );
-			*/
 		}
  }
  else if ( fSmokeEffect )
