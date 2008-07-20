@@ -108,10 +108,6 @@ static BOOLEAN gfFirstCycleMovementStarted = FALSE;
 const SOLDIERTYPE* gUITargetSoldier = NULL;
 
 
-static SOLDIERTYPE* gpExchangeSoldier1;
-static SOLDIERTYPE* gpExchangeSoldier2;
-
-
 UINT8			gubCheatLevel		= STARTING_CHEAT_LEVEL;
 
 
@@ -3766,142 +3762,85 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 }
 
 
-static void ExchangeMessageBoxCallBack(UINT8 bExitValue)
+INT8 HandleMoveModeInteractiveClick(UINT16 const usMapPos, UINT32* const puiNewEvent)
 {
-	if ( bExitValue == MSG_BOX_RETURN_YES )
+	SOLDIERTYPE* const sel = GetSelectedMan();
+	if (!sel) return 0;
+
+	// ATE: If we are a vehicle, no moving!
+	if (sel->uiStatusFlags & SOLDIER_VEHICLE)
 	{
-		SwapMercPositions( gpExchangeSoldier1, gpExchangeSoldier2 );
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[VEHICLE_CANT_MOVE_IN_TACTICAL]);
+		return -3;
 	}
-}
 
-
-INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent )
-{
-	// Look for an item pool
-	BOOLEAN						fContinue = TRUE;
-	LEVELNODE					*pIntTile;
-  INT16							sIntTileGridNo;
-	INT16							sActionGridNo;
-	INT8							bReturnCode = 0;
-	INT8							bZLevel;
-	STRUCTURE					*pStructure = NULL;
-
-	SOLDIERTYPE* const pSoldier = GetSelectedMan();
-	if (pSoldier != NULL)
+	// OK, check for height differences
+	if (gpWorldLevelData[usMapPos].sHeight != gpWorldLevelData[sel->sGridNo].sHeight)
 	{
-	  // If we are out of breath, no cursor...
-	 // if ( pSoldier->bBreath < OKBREATH )
-	  //{
-	//	  return( -1 );
-	  //}
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[CANT_GET_THERE]);
+		return -1;
+	}
 
-		// ATE: If we are a vehicle, no moving!
-		if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	// See if we are over a vehicle, and walk up to it and enter
+	if (CheckForAndHandleHandleVehicleInteractiveClick(sel, usMapPos, TRUE) == -1)
+	{
+		return -1;
+	}
+
+	// Check if we are over a civillian
+	SOLDIERTYPE* const tgt = gUIFullTarget;
+	if (tgt)
+	{
+		if (ValidQuickExchangePosition() &&
+				CanExchangePlaces(sel, tgt, TRUE))
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ VEHICLE_CANT_MOVE_IN_TACTICAL ] );
-			return( -3 );
+			SwapMercPositions(sel, tgt);
 		}
+		return -3;
+	}
 
-		// OK, check for height differences.....
-	  if ( gpWorldLevelData[ usMapPos ].sHeight != gpWorldLevelData[ pSoldier->sGridNo ].sHeight )
+  INT16            sIntTileGridNo;
+	STRUCTURE*       pStructure;
+	LEVELNODE* const pIntTile = GetCurInteractiveTileGridNoAndStructure(&sIntTileGridNo, &pStructure);
+	if (!pIntTile) return 0;
+
+	// Check if we are over an item pool, take precedence over that, except for switches
+	ITEM_POOL const* const pItemPool = GetItemPool(sIntTileGridNo, sel->bLevel);
+	if (pItemPool && !(pStructure->fFlags & (STRUCTURE_SWITCH | STRUCTURE_ANYDOOR)))
+	{
+		if (AM_AN_EPC(sel))
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANT_GET_THERE ] );
-			return( -1 );
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[EPC_CANNOT_DO_THAT]);
 		}
-
-		// See if we are over a vehicle, and walk up to it and enter....
-		if ( CheckForAndHandleHandleVehicleInteractiveClick( pSoldier, usMapPos, TRUE ) == -1 )
+		else if (UIOkForItemPickup(sel, sIntTileGridNo))
 		{
-			return( -1 );
-		}
-
-		// Check if we are over a civillian....
-		SOLDIERTYPE* const tgt = gUIFullTarget;
-		if (tgt != NULL)
-		{
-			if ( ValidQuickExchangePosition( ) )
+			INT8 const bZLevel = GetLargestZLevelOfItemPool(pItemPool);
+			if (AnyItemsVisibleOnLevel(pItemPool, bZLevel))
 			{
-				// Check if we can...
-				if (CanExchangePlaces(pSoldier, tgt, TRUE))
+				SetUIBusy(sel);
+				if (!(gTacticalStatus.uiFlags & INCOMBAT) && !(gTacticalStatus.uiFlags & TURNBASED))
 				{
-					 gpExchangeSoldier1 = pSoldier;
-					gpExchangeSoldier2 = tgt;
-
-					 // Do message box...
-					 //DoMessageBox( MSG_BOX_BASIC_STYLE, TacticalStr[ EXCHANGE_PLACES_REQUESTER ], GAME_SCREEN, ( UINT8 )MSG_BOX_FLAG_YESNO, ExchangeMessageBoxCallBack, NULL );
-					 SwapMercPositions( gpExchangeSoldier1, gpExchangeSoldier2 );
+					BeginDisplayTimedCursor(OKHANDCURSOR_UICURSOR, 300);
 				}
-			}
-		  return( -3 );
-		}
-
-		pIntTile = GetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo, &pStructure );
-
-		if ( pIntTile != NULL )
-		{
-			bReturnCode = -3;
-
-			// Check if we are over an item pool, take precedence over that.....
-			// EXCEPT FOR SWITCHES!
-			const ITEM_POOL* pItemPool = GetItemPool(sIntTileGridNo, pSoldier->bLevel);
-			if (pItemPool != NULL && !(pStructure->fFlags & (STRUCTURE_SWITCH | STRUCTURE_ANYDOOR)))
-			{
-				if ( AM_AN_EPC( pSoldier ) )
-				{
-					// Display message
-					// ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ EPC_CANNOT_DO_THAT ] );
-					bReturnCode = -1;
-				}
-				else if ( UIOkForItemPickup( pSoldier, sIntTileGridNo ) )
-				{
-					bZLevel = GetLargestZLevelOfItemPool( pItemPool );
-
-					if ( AnyItemsVisibleOnLevel( pItemPool, bZLevel ) )
-					{
-						fContinue = FALSE;
-
-						SetUIBusy(pSoldier);
-
-						if ( ( gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) )
-						{
-							//puiNewEvent = C_WAIT_FOR_CONFIRM;
-							SoldierPickupItem( pSoldier, pItemPool->iItemIndex, sIntTileGridNo, bZLevel );
-						}
-						else
-						{
-							BeginDisplayTimedCursor( OKHANDCURSOR_UICURSOR, 300 );
-
-							SoldierPickupItem( pSoldier, pItemPool->iItemIndex, sIntTileGridNo, bZLevel );
-						}
-					}
-				}
-			}
-
-			if ( fContinue )
-			{
-				SOLDIERTYPE* const sel = GetSelectedMan();
-				sActionGridNo = FindAdjacentGridEx(sel, sIntTileGridNo, NULL, NULL, FALSE, TRUE);
-				if ( sActionGridNo == -1 )
-				{
-					sActionGridNo = sIntTileGridNo;
-				}
-
-				// If this is not the same tile as ours, check if we can get to dest!
-				if (sActionGridNo != sel->sGridNo && gsCurrentActionPoints == 0)
-				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
-					bReturnCode = -1;
-				}
-				else
-				{
-					bReturnCode = -2;
-				}
+				SoldierPickupItem(sel, pItemPool->iItemIndex, sIntTileGridNo, bZLevel);
+				return -3;
 			}
 		}
 	}
 
-	return( bReturnCode );
+	INT16 sActionGridNo = FindAdjacentGridEx(sel, sIntTileGridNo, NULL, NULL, FALSE, TRUE);
+	if (sActionGridNo == -1) sActionGridNo = sIntTileGridNo;
+
+	// If this is not the same tile as ours, check if we can get to dest!
+	if (sActionGridNo != sel->sGridNo && gsCurrentActionPoints == 0)
+	{
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NO_PATH]);
+		return -1;
+	}
+	else
+	{
+		return -2;
+	}
 }
 
 
