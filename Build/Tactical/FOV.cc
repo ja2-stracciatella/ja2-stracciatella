@@ -668,71 +668,66 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 
 						 // NOTE: don't allow object viewing if gassed XXX
 
-						 if (itemsToo && fRevealItems ) // && itemIndex < MAXOBJECTLIST)
-						 {
-               	// OK, look for corpses...
-	              LookForAndMayCommentOnSeeingCorpse( pSoldier, (INT16)marker, ubLevel );
+						if (itemsToo && fRevealItems ) // && itemIndex < MAXOBJECTLIST)
+						{
+							// OK, look for corpses...
+							LookForAndMayCommentOnSeeingCorpse( pSoldier, (INT16)marker, ubLevel );
 
-								ITEM_POOL* pItemPool = GetItemPool((INT16)marker, ubLevel);
-								if (pItemPool != NULL)
+							if (SetItemsVisibilityOn(marker, ubLevel, INVISIBLE, fShowLocators))
+							{
+								SetRenderFlags(RENDER_FLAG_FULL);
+
+								if ( fShowLocators )
 								{
-										if ( SetItemPoolVisibilityOn( pItemPool, INVISIBLE, fShowLocators ) )
+									// Set makred render flags
+									//gpWorldLevelData[marker].uiFlags|=MAPELEMENT_REDRAW;
+									//gpWorldLevelData[gusCurMousePos].pTopmostHead->uiFlags |= LEVELNODE_DYNAMIC;
+
+									//SetRenderFlags(RENDER_FLAG_MARKED);
+									SetRenderFlags(RENDER_FLAG_FULL);
+
+									// Hault soldier
+									// ATE: Only if in combat...
+									if ( gTacticalStatus.uiFlags & INCOMBAT )
+									{
+										HaultSoldierFromSighting( pSoldier, FALSE );
+									}
+									else
+									{
+										// ATE: Make sure we show locators...
+										gTacticalStatus.fLockItemLocators = FALSE;
+									}
+
+									if (!fItemsQuoteSaid && !gTacticalStatus.fLockItemLocators)
+									{
+										gTacticalStatus.fLockItemLocators = TRUE;
+
+										if ( gTacticalStatus.ubAttackBusyCount > 0 && ( gTacticalStatus.uiFlags & INCOMBAT ) )
 										{
-											SetRenderFlags(RENDER_FLAG_FULL);
-
-											if ( fShowLocators )
+											gTacticalStatus.fItemsSeenOnAttack           = TRUE;
+											gTacticalStatus.items_seen_on_attack_soldier = pSoldier;
+											gTacticalStatus.usItemsSeenOnAttackGridNo    = (INT16)marker;
+										}
+										else
+										{
+											// Display quote!
+											if ( !AM_AN_EPC( pSoldier ) )
 											{
-												// Set makred render flags
-												//gpWorldLevelData[marker].uiFlags|=MAPELEMENT_REDRAW;
-												//gpWorldLevelData[gusCurMousePos].pTopmostHead->uiFlags |= LEVELNODE_DYNAMIC;
-
-												//SetRenderFlags(RENDER_FLAG_MARKED);
-												SetRenderFlags(RENDER_FLAG_FULL);
-
-												// Hault soldier
-												// ATE: Only if in combat...
-												if ( gTacticalStatus.uiFlags & INCOMBAT )
-												{
-													HaultSoldierFromSighting( pSoldier, FALSE );
-												}
-                        else
-                        {
-                          // ATE: Make sure we show locators...
-                          gTacticalStatus.fLockItemLocators = FALSE;
-                        }
-
-												if (!fItemsQuoteSaid && !gTacticalStatus.fLockItemLocators)
-												{
-													gTacticalStatus.fLockItemLocators = TRUE;
-
-													if ( gTacticalStatus.ubAttackBusyCount > 0 && ( gTacticalStatus.uiFlags & INCOMBAT ) )
-													{
-														gTacticalStatus.fItemsSeenOnAttack           = TRUE;
-														gTacticalStatus.items_seen_on_attack_soldier = pSoldier;
-														gTacticalStatus.usItemsSeenOnAttackGridNo    = (INT16)marker;
-													}
-													else
-													{
-														// Display quote!
-                            if ( !AM_AN_EPC( pSoldier ) )
-                            {
-														  TacticalCharacterDialogueWithSpecialEvent( pSoldier, (UINT16)( QUOTE_SPOTTED_SOMETHING_ONE + Random( 2 ) ), DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START, (INT16)(marker), 0 );
-                            }
-                            else
-                            {
-			                        // Turn off item lock for locators...
-			                        gTacticalStatus.fLockItemLocators = FALSE;
-			                        SlideToLocation((INT16)marker);
-                            }
-													}
-													fItemsQuoteSaid = TRUE;
-												}
-
+												TacticalCharacterDialogueWithSpecialEvent( pSoldier, (UINT16)( QUOTE_SPOTTED_SOMETHING_ONE + Random( 2 ) ), DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START, (INT16)(marker), 0 );
+											}
+											else
+											{
+												// Turn off item lock for locators...
+												gTacticalStatus.fLockItemLocators = FALSE;
+												SlideToLocation((INT16)marker);
 											}
 										}
-								}
+										fItemsQuoteSaid = TRUE;
+									}
 
-						 }
+								}
+							}
+						}
 
 						 tilesLeftToSee--;
 				}

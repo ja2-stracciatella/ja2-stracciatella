@@ -253,7 +253,7 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 				}
 
 				// If now open, set visible...
-				SetItemPoolVisibilityOn( pItemPool, ANY_VISIBILITY_VALUE, fDoLocators );
+				SetItemsVisibilityOn(sGridNo, pSoldier->bLevel, ANY_VISIBILITY_VALUE, fDoLocators);
 
 				// Display quote!
 				//TacticalCharacterDialogue( pSoldier, (UINT16)( QUOTE_SPOTTED_SOMETHING_ONE + Random( 2 ) ) );

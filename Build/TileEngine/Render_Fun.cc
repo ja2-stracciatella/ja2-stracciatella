@@ -233,20 +233,15 @@ void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier )
 			RemoveRoofIndexFlagsFromTypeRange( cnt, FIRSTROOF, SECONDSLANTROOF, LEVELNODE_REVEAL  );
 
 			// Reveal any items if here!
-  		ITEM_POOL* pItemPool = GetItemPool((INT16)cnt, 0);
-			if (pItemPool != NULL)
+			if (SetItemsVisibilityOn(cnt, 0, INVISIBLE, TRUE))
 			{
-				// Set visible! ( only if invisible... )
-				if ( SetItemPoolVisibilityOn( pItemPool, INVISIBLE, TRUE ) )
+				if ( !fSaidItemSeenQuote )
 				{
-					if ( !fSaidItemSeenQuote )
-					{
-						fSaidItemSeenQuote = TRUE;
+					fSaidItemSeenQuote = TRUE;
 
-						if ( pSoldier != NULL )
-						{
-							TacticalCharacterDialogue( pSoldier, (UINT16)( QUOTE_SPOTTED_SOMETHING_ONE + Random( 2 ) ) );
-						}
+					if ( pSoldier != NULL )
+					{
+						TacticalCharacterDialogue( pSoldier, (UINT16)( QUOTE_SPOTTED_SOMETHING_ONE + Random( 2 ) ) );
 					}
 				}
 			}

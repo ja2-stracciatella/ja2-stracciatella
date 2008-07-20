@@ -73,7 +73,7 @@ void       DrawItemPoolList(const ITEM_POOL* pItemPool, INT8 bZLevel, INT16 sXPo
 void       RemoveItemFromPool(WORLDITEM*);
 void       MoveItemPools(INT16 sStartPos, INT16 sEndPos);
 
-BOOLEAN SetItemPoolVisibilityOn( ITEM_POOL *pItemPool, INT8 bAllGreaterThan, BOOLEAN fSetLocator );
+BOOLEAN SetItemsVisibilityOn(GridNo, UINT8 level, INT8 bAllGreaterThan, BOOLEAN fSetLocator);
 
 void SetItemPoolVisibilityHidden(ITEM_POOL* pItemPool);
 

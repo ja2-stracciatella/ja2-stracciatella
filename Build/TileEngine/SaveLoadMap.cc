@@ -803,26 +803,20 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 			//an error occured
 		}
 
-
 		// Adjust visiblity of any item pools here....
     // ATE: Nasty bug here - use base gridno for structure for items!
     // since items always drop to base gridno in AddItemToPool
-		ITEM_POOL* pItemPool = GetItemPool(sBaseGridNo, 0);
-		if (pItemPool != NULL)
+		if (fOpened)
 		{
-			if ( fOpened )
-			{
-				 // We are open, make un-hidden if so....
-				 SetItemPoolVisibilityOn( pItemPool, ANY_VISIBILITY_VALUE, FALSE );
-			}
-			else
-			{
-				 // Make sure items are hidden...
-				 SetItemPoolVisibilityHidden( pItemPool );
-			}
-
+			// We are open, make un-hidden if so....
+			SetItemsVisibilityOn(sBaseGridNo, 0, ANY_VISIBILITY_VALUE, FALSE);
 		}
-
+		else
+		{
+			// Make sure items are hidden...
+			ITEM_POOL* const pItemPool = GetItemPool(sBaseGridNo, 0);
+			if (pItemPool) SetItemPoolVisibilityHidden(pItemPool);
+		}
 	}
 }
 

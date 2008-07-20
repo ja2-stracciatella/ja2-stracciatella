@@ -1770,9 +1770,8 @@ static BOOLEAN DoesItemPoolContainAllHiddenItems(const ITEM_POOL* pItemPool)
 
 static BOOLEAN LookForHiddenItems(INT16 const sGridNo, INT8 const ubLevel)
 {
-	ITEM_POOL* const head  = GetItemPool(sGridNo, ubLevel);
-	BOOLEAN          found = FALSE;
-	while (ITEM_POOL* i = head; i; i = i->pNext)
+	BOOLEAN found = FALSE;
+	for (ITEM_POOL* i = GetItemPool(sGridNo, ubLevel); i; i = i->pNext)
 	{
 		WORLDITEM* const wi = GetWorldItem(i->iItemIndex);
 		if (wi->o.usItem == OWNERSHIP)   continue;
@@ -1781,7 +1780,7 @@ static BOOLEAN LookForHiddenItems(INT16 const sGridNo, INT8 const ubLevel)
 		found        = TRUE;
 	}
 
-	if (found) SetItemPoolVisibilityOn(head, INVISIBLE, TRUE);
+	if (found) SetItemsVisibilityOn(sGridNo, ubLevel, INVISIBLE, TRUE);
 	return found;
 }
 
@@ -1882,8 +1881,10 @@ static void HandleItemObscuredFlag(INT16 const sGridNo, UINT8 const ubLevel)
 static void SetItemPoolLocator(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback);
 
 
-BOOLEAN SetItemPoolVisibilityOn(ITEM_POOL* const ip, INT8 const bAllGreaterThan, BOOLEAN const fSetLocator)
+BOOLEAN SetItemsVisibilityOn(GridNo const grid_no, UINT8 const level, INT8 const bAllGreaterThan, BOOLEAN const fSetLocator)
 {
+	ITEM_POOL* const ip = GetItemPool(grid_no, level);
+
 	BOOLEAN fAtLeastModified = FALSE;
 	for (ITEM_POOL* i = ip; i; i = i->pNext)
 	{
