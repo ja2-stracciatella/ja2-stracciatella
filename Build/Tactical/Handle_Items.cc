@@ -96,13 +96,13 @@ static INT16					gsTempGridno;
 static INT8						bTempFrequency;
 
 
-SOLDIERTYPE*      gpBoobyTrapSoldier;
-static ITEM_POOL* gpBoobyTrapItemPool;
-INT16             gsBoobyTrapGridNo;
-static INT8       gbBoobyTrapLevel;
-static BOOLEAN    gfDisarmingBuriedBomb;
-static INT8       gbTrapDifficulty;
-static BOOLEAN    gfJustFoundBoobyTrap = FALSE;
+SOLDIERTYPE*   gpBoobyTrapSoldier;
+static INT32   g_booby_trap_item = -1;
+INT16          gsBoobyTrapGridNo;
+static INT8    gbBoobyTrapLevel;
+static BOOLEAN gfDisarmingBuriedBomb;
+static INT8    gbTrapDifficulty;
+static BOOLEAN gfJustFoundBoobyTrap = FALSE;
 
 
 BOOLEAN HandleCheckForBadChangeToGetThrough(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTargetSoldier, const INT16 sTargetGridNo, const INT8 bLevel)
@@ -1356,7 +1356,6 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 
 static void BoobyTrapMessageBoxCallBack(MessageBoxReturnValue);
 static BOOLEAN DoesItemPoolContainAllHiddenItems(const ITEM_POOL* pItemPool);
-static ITEM_POOL* GetItemPoolForIndex(INT16 sGridNo, INT32 iItemIndex, UINT8 ubLevel);
 static INT16 GetNumOkForDisplayItemsInPool(const ITEM_POOL* pItemPool, INT8 bZLevel);
 
 
@@ -1382,14 +1381,12 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 				// override the item index passed in with the one for the bomb in this
 				// tile
 				iItemIndex = FindWorldItemForBombInGridNo( sGridNo, pSoldier->bLevel );
-
-				gpBoobyTrapItemPool = GetItemPoolForIndex( sGridNo, iItemIndex, pSoldier->bLevel );
-				gpBoobyTrapSoldier = pSoldier;
-				gsBoobyTrapGridNo = sGridNo;
-				gbBoobyTrapLevel  = pSoldier->bLevel;
+				g_booby_trap_item     = iItemIndex;
+				gpBoobyTrapSoldier    = pSoldier;
+				gsBoobyTrapGridNo     = sGridNo;
+				gbBoobyTrapLevel      = pSoldier->bLevel;
 				gfDisarmingBuriedBomb = TRUE;
-				gbTrapDifficulty = GetWorldItem(iItemIndex)->o.bTrap;
-
+				gbTrapDifficulty      = GetWorldItem(iItemIndex)->o.bTrap;
 				DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[DISARM_TRAP_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, BoobyTrapMessageBoxCallBack, NULL);
 			}
 			else
@@ -1734,17 +1731,6 @@ BOOLEAN ItemTypeExistsAtLocation(INT16 const sGridNo, UINT16 const usItem, UINT8
 		return TRUE;
 	}
 	return FALSE;
-}
-
-
-static ITEM_POOL* GetItemPoolForIndex(INT16 const sGridNo, INT32 const iItemIndex, UINT8 const ubLevel)
-{
-	for (ITEM_POOL* i = GetItemPool(sGridNo, ubLevel); i != NULL; i = i->pNext)
-	{
-		if (i->iItemIndex != iItemIndex) continue;
-		return i;
-	}
-	return 0;
 }
 
 
@@ -2880,11 +2866,10 @@ static void SetOffBoobyTrapInMapScreen(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObjec
 }
 
 
-static void SetOffBoobyTrap(ITEM_POOL* pItemPool)
+static void SetOffBoobyTrap()
 {
-	if (!pItemPool) return;
-
-	WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+	WORLDITEM* const wi = GetWorldItem(g_booby_trap_item);
+	g_booby_trap_item = -1;
 	IgniteExplosion(0, gpWorldLevelData[wi->sGridNo].sHeight + wi->bRenderZHeightAboveLevel, wi->sGridNo, MINI_GRENADE, 0);
 	RemoveItemFromPool(wi);
 }
@@ -2924,12 +2909,12 @@ static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* const pSoldier, const INT16 sG
 					// Make him warn us:
 
 					// Set things up..
-					gpBoobyTrapSoldier = pSoldier;
-					gpBoobyTrapItemPool = GetItemPoolForIndex( sGridNo, iItemIndex, pSoldier->bLevel );
-					gsBoobyTrapGridNo = sGridNo;
-				  gbBoobyTrapLevel  = pSoldier->bLevel;
+					gpBoobyTrapSoldier    = pSoldier;
+					g_booby_trap_item     = iItemIndex;
+					gsBoobyTrapGridNo     = sGridNo;
+				  gbBoobyTrapLevel      = pSoldier->bLevel;
 					gfDisarmingBuriedBomb = FALSE;
-					gbTrapDifficulty = bTrapDifficulty;
+					gbTrapDifficulty      = bTrapDifficulty;
 
 					// And make the call for the dialogue
 					SetStopTimeQuoteCallback( BoobyTrapDialogueCallBack );
@@ -2941,7 +2926,7 @@ static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* const pSoldier, const INT16 sG
 				}
 			}
 
-			gpBoobyTrapItemPool = GetItemPoolForIndex( sGridNo, iItemIndex, pSoldier->bLevel );
+			g_booby_trap_item = iItemIndex;
 			if (fBoobyTrapKnowledge)
 			{
 				// have the computer ask us if we want to proceed
@@ -2956,7 +2941,7 @@ static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* const pSoldier, const INT16 sG
 			else
 			{
 				// oops!
-				SetOffBoobyTrap( gpBoobyTrapItemPool );
+				SetOffBoobyTrap();
 			}
 
 			return( FALSE );
@@ -3006,7 +2991,7 @@ static void BoobyTrapMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 
 		if (iCheckResult >= 0)
 		{
-			WORLDITEM* const wi = GetWorldItem(gpBoobyTrapItemPool->iItemIndex);
+			WORLDITEM* const wi = GetWorldItem(g_booby_trap_item);
 
 			// get the item
 			OBJECTTYPE Object = wi->o;
@@ -3085,7 +3070,7 @@ static void BoobyTrapMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 			}
 			else
 			{
-				SetOffBoobyTrap( gpBoobyTrapItemPool );
+				SetOffBoobyTrap();
 			}
 		}
 	}
@@ -3179,7 +3164,7 @@ static void BoobyTrapInMapScreenMessageBoxCallBack(MessageBoxReturnValue const u
 			}
 			else
 			{
-				SetOffBoobyTrap( gpBoobyTrapItemPool );
+				SetOffBoobyTrap();
 			}
 		}
 	}
