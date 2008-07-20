@@ -474,25 +474,17 @@ static INT8 GetCurrentMercForDisplayCoverStance(void)
 }
 
 
-void DisplayRangeToTarget(const SOLDIERTYPE* const pSoldier, const INT16 sTargetGridNo)
+void DisplayRangeToTarget(SOLDIERTYPE const* const s, INT16 const sTargetGridNo)
 {
-	UINT16 usRange=0;
+	if (sTargetGridNo == NOWHERE || sTargetGridNo == 0) return;
 
-	if( sTargetGridNo == NOWHERE || sTargetGridNo == 0 )
-	{
-		return;
-	}
+	// Get the range to the target location
+	UINT16 const usRange = GetRangeInCellCoordsFromGridNoDiff(s->sGridNo, sTargetGridNo) / 10;
 
-	//Get the range to the target location
-	usRange = GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, sTargetGridNo );
-
-	usRange = usRange / 10;
-
-	//if the soldier has a weapon in hand,
-	if( WeaponInHand( pSoldier ) )
+	if (WeaponInHand(s))
 	{
 		//display a string with the weapons range, then range to target
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET_AND_GUN_RANGE], Weapon[pSoldier->inv[HANDPOS].usItem].usRange / 10, usRange);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET_AND_GUN_RANGE], Weapon[s->inv[HANDPOS].usItem].usRange / 10, usRange);
 	}
 	else
 	{
@@ -501,15 +493,16 @@ void DisplayRangeToTarget(const SOLDIERTYPE* const pSoldier, const INT16 sTarget
 	}
 
 	//if the target is out of the mercs gun range or knife
-	if( !InRange( pSoldier, sTargetGridNo ) &&
-		( Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass == IC_GUN || Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass == IC_THROWING_KNIFE  ) )
+	if (!InRange(s, sTargetGridNo))
 	{
-		// Display a warning saying so
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ OUT_OF_RANGE_STRING ] );
+		UINT16 const item_class = Item[s->inv[HANDPOS].usItem].usItemClass;
+		if (item_class == IC_GUN ||
+				item_class == IC_THROWING_KNIFE)
+		{
+			// Display a warning saying so
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[OUT_OF_RANGE_STRING]);
+		}
 	}
-
-	//increment the display gun range counter ( just seeing how many times people use it )
-	//gJa25SaveStruct.uiDisplayGunRangeCounter++;
 }
 
 
