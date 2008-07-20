@@ -1725,30 +1725,15 @@ static BOOLEAN ItemExistsAtLocation(INT16 const sGridNo, INT32 const iItemIndex,
 }
 
 
-BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, UINT16 usItem, UINT8 ubLevel, INT32 * piItemIndex )
+BOOLEAN ItemTypeExistsAtLocation(INT16 const sGridNo, UINT16 const usItem, UINT8 const ubLevel, INT32* const piItemIndex)
 {
-	// Check for an existing pool on the object layer
-	const ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
-	if (pItemPool != NULL)
+	for (ITEM_POOL const* i = GetItemPool(sGridNo, ubLevel); i; i = i->pNext)
 	{
-	// LOOP THROUGH LIST TO FIND ITEM WE WANT
-		const ITEM_POOL* pItemPoolTemp = pItemPool;
-		while( pItemPoolTemp != NULL )
-		{
-			if (GetWorldItem(pItemPoolTemp->iItemIndex)->o.usItem == usItem)
-			{
-				if ( piItemIndex )
-				{
-					*piItemIndex = pItemPoolTemp->iItemIndex;
-				}
-				return( TRUE );
-			}
-			pItemPoolTemp = pItemPoolTemp->pNext;
-		}
-
+		if (GetWorldItem(i->iItemIndex)->o.usItem != usItem) continue;
+		if (piItemIndex) *piItemIndex = i->iItemIndex;
+		return TRUE;
 	}
-
-	return( FALSE );
+	return FALSE;
 }
 
 
