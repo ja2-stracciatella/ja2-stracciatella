@@ -191,109 +191,78 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(const SOLDIERTYPE* pSoldie
 static SOLDIERTYPE* GetCurrentMercForDisplayCover(void);
 
 
-static void CalculateCoverInRadiusAroundGridno(INT16 sTargetGridNo, INT8 bSearchRange)
+static void CalculateCoverInRadiusAroundGridno(INT16 const sTargetGridNo, INT8 search_range)
 {
-	INT16	sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16	sGridNo;
-	INT16	sCounterX, sCounterY;
-	INT8 bStance;
-//	BOOLEAN fRoof;
-
 	//clear out the array first
-//	memset( gCoverRadius, -1, DC_MAX_COVER_RANGE * DC_MAX_COVER_RANGE );
-	//loop through all the gridnos that we are interested in
-	for (sCounterY = 0; sCounterY < DC_MAX_COVER_RANGE; sCounterY++)
+	for (INT16 y = 0; y < DC_MAX_COVER_RANGE; ++y)
 	{
-		for (sCounterX = 0; sCounterX < DC_MAX_COVER_RANGE; sCounterX++)
+		for (INT16 x = 0; x < DC_MAX_COVER_RANGE; ++x)
 		{
-			gCoverRadius[ sCounterX ][ sCounterY ].sGridNo = -1;
-			gCoverRadius[ sCounterX ][ sCounterY ].bCover = -1;
+			BEST_COVER_STRUCT& cr = gCoverRadius[x][y];
+			cr.sGridNo = -1;
+			cr.bCover  = -1;
 		}
 	}
 
-	if( bSearchRange > ( DC_MAX_COVER_RANGE / 2 ) )
-		bSearchRange = ( DC_MAX_COVER_RANGE / 2 );
+	if (search_range > DC_MAX_COVER_RANGE / 2) search_range = DC_MAX_COVER_RANGE / 2;
 
-	// determine maximum horizontal limits
-	sMaxLeft  = MIN( bSearchRange,( sTargetGridNo % MAXCOL ));
-	sMaxRight = MIN( bSearchRange,MAXCOL - (( sTargetGridNo % MAXCOL ) + 1));
+	// Determine maximum horizontal and vertical limits
+	INT16 const max_left  = MIN(search_range,              sTargetGridNo % MAXCOL);
+	INT16 const max_right = MIN(search_range, MAXCOL - 1 - sTargetGridNo % MAXCOL);
+	INT16 const max_up    = MIN(search_range,              sTargetGridNo / MAXROW);
+	INT16 const max_down  = MIN(search_range, MAXROW - 1 - sTargetGridNo / MAXROW);
 
-	// determine maximum vertical limits
-	sMaxUp   = MIN( bSearchRange,( sTargetGridNo / MAXROW ));
-	sMaxDown = MIN( bSearchRange,MAXROW - (( sTargetGridNo / MAXROW ) + 1));
+	// Find out which tiles around the location are reachable
+	LocalReachableTest(sTargetGridNo, search_range);
 
+	SOLDIERTYPE const* const pSoldier = GetCurrentMercForDisplayCover();
 
-	//Find out which tiles around the location are reachable
-	LocalReachableTest( sTargetGridNo, bSearchRange );
+	INT16 x = 0;
+	INT16 y = 0;
 
-	const SOLDIERTYPE* const pSoldier = GetCurrentMercForDisplayCover();
-
-	sCounterX = sCounterY = 0;
-
-	//Determine the stance to use
-	bStance = GetCurrentMercForDisplayCoverStance();
+	// Determine the stance to use
+	INT8 const stance = GetCurrentMercForDisplayCoverStance();
 
 	//loop through all the gridnos that we are interested in
-	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
+	for (INT16 sYOffset = -max_up; sYOffset <= max_down; ++sYOffset)
 	{
-		for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++)
+		for (INT16 sXOffset = -max_left; sXOffset <= max_right; ++sXOffset)
 		{
-			sGridNo = sTargetGridNo + sXOffset + (MAXCOL * sYOffset);
+			INT16 const sGridNo = sTargetGridNo + sXOffset + (MAXCOL * sYOffset);
 
-			//record the gridno
-			gCoverRadius[ sCounterX ][ sCounterY ].sGridNo = sGridNo;
+			gCoverRadius[x][y].sGridNo = sGridNo;
 
-/*
-			fRoof = FALSE;
-
-			//is there a roof above this gridno
-			if( FlatRoofAboveGridNo( sGridNo ) )
-			{
-				if( IsTheRoofVisible( sGridNo ) )
-				{
-					fRoof = TRUE;
-				}
-			}
-*/
-			//if the gridno is NOT on screen
-			if( !GridNoOnScreen( sGridNo ) )
-			{
-				continue;
-			}
+			if (!GridNoOnScreen(sGridNo)) continue;
 
 			//if we are to display cover for the roofs, and there is a roof above us
-			if( gsInterfaceLevel == I_ROOF_LEVEL && !FlatRoofAboveGridNo( sGridNo ) )
+			if (gsInterfaceLevel == I_ROOF_LEVEL && !FlatRoofAboveGridNo(sGridNo))
 			{
 				continue;
 			}
 
-			//if the gridno cant be reached
-			if ( !(gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE) )
+			if (!(gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE))
 			{
 				//skip to the next gridno
-				sCounterX++;
+				++x;
 				continue;
 			}
 
 			// if someone (visible) is there, skip
 			//Check both bottom level, and top level
-			const SOLDIERTYPE* tgt = WhoIsThere2(sGridNo, 0);
-			if (tgt == NULL) tgt = WhoIsThere2(sGridNo, 1);
+			SOLDIERTYPE const* tgt = WhoIsThere2(sGridNo, 0);
+			if (!tgt) tgt = WhoIsThere2(sGridNo, 1);
 			//if someone is here, and they are an enemy, skip over them
-			if (tgt != NULL && tgt->bVisible == TRUE && tgt->bTeam != pSoldier->bTeam)
+			if (tgt && tgt->bVisible == TRUE && tgt->bTeam != pSoldier->bTeam)
 			{
 				continue;
 			}
 
 			//Calculate the cover for this gridno
-			gCoverRadius[ sCounterX ][ sCounterY ].bCover = CalcCoverForGridNoBasedOnTeamKnownEnemies( pSoldier, sGridNo, bStance );
-//			gCoverRadius[ sCounterX ][ sCounterY ].fRoof = fRoof;
-
-
-			sCounterX++;
+			gCoverRadius[x][y].bCover = CalcCoverForGridNoBasedOnTeamKnownEnemies(pSoldier, sGridNo, stance);
+			++x;
 		}
-		sCounterY++;
-		sCounterX = 0;
+		++y;
+		x = 0;
 	}
 }
 
@@ -311,8 +280,8 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE const* const p
 		if (pOpponent->bLife < OKLIFE) continue;
 
 		// if this man is neutral / on the same side, he's not an opponent
- 		if (CONSIDERED_NEUTRAL(pSoldier, pOpponent)) continue;
- 		if (pSoldier->bSide == pOpponent->bSide)     continue;
+		if (CONSIDERED_NEUTRAL(pSoldier, pOpponent)) continue;
+		if (pSoldier->bSide == pOpponent->bSide)     continue;
 
 		INT8 const* const pbPersOL = pSoldier->bOppList        + pOpponent->ubID;
 		INT8 const* const pbPublOL = gbPublicOpplist[OUR_TEAM] + pOpponent->ubID;
