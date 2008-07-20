@@ -715,11 +715,7 @@ static void HideItemCursor(INT32 iMapIndex)
 
 static BOOLEAN TriggerAtGridNo(INT16 sGridNo)
 {
-	for (const ITEM_POOL* i = GetItemPool(sGridNo, 0); i != NULL; i = i->pNext)
-	{
-		if (GetWorldItem(i->iItemIndex)->o.usItem == SWITCH) return TRUE;
-	}
-	return FALSE;
+	return ItemTypeExistsAtLocation(sGridNo, SWITCH, 0, 0);
 }
 
 
