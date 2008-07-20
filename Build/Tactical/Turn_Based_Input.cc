@@ -199,10 +199,7 @@ static void QueryTBLeftButton(UINT32* puiNewEvent)
 											const SOLDIERTYPE* const sel = GetSelectedMan();
 											if (sel != NULL)
 											{
-												INT8 bReturnVal = FALSE;
-
-												bReturnVal = HandleMoveModeInteractiveClick( usMapPos, puiNewEvent );
-
+												INT8 const bReturnVal = HandleMoveModeInteractiveClick(usMapPos);
 												// All's OK for interactive tile?
 												if ( bReturnVal == -2 )
 												{
@@ -3762,7 +3759,7 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 }
 
 
-INT8 HandleMoveModeInteractiveClick(UINT16 const usMapPos, UINT32* const puiNewEvent)
+INT8 HandleMoveModeInteractiveClick(UINT16 const usMapPos)
 {
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (!sel) return 0;

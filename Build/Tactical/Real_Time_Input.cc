@@ -148,10 +148,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 									}
 									else
 									{
-										INT8 bReturnCode;
-
-										bReturnCode = HandleMoveModeInteractiveClick( usMapPos, puiNewEvent );
-
+										INT8 const bReturnCode = HandleMoveModeInteractiveClick(usMapPos);
 										if ( bReturnCode == -1 )
 										{
 											//gfRTClickLeftHoldIntercepted = TRUE;
@@ -537,10 +534,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 																	}
 																	else
 																	{
-																		INT8 bReturnCode;
-
-																		bReturnCode = HandleMoveModeInteractiveClick( usMapPos, puiNewEvent );
-
+																		INT8 const bReturnCode = HandleMoveModeInteractiveClick(usMapPos);
 																		if ( bReturnCode == -1 )
 																		{
 																			gfRTClickLeftHoldIntercepted = TRUE;

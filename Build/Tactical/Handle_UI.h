@@ -260,7 +260,6 @@ ScreenID UIHandleLUIEndLock(UI_EVENT*);
 void BeginDisplayTimedCursor( UINT32 uiCursorID, UINT32 uiDelay );
 
 void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent );
-INT8 HandleMoveModeInteractiveClick( UINT16 usMapPos, UINT32 *puiNewEvent );
 
 ScreenID UIHandleChangeLevel(UI_EVENT*);
 BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode );
