@@ -1153,7 +1153,7 @@ static ScreenID UIHandleSelectMerc(UI_EVENT* pUIEvent)
 
 
 static void SetMovementModeCursor(const SOLDIERTYPE* pSoldier);
-static INT8 UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* pSoldier, INT16 usMapPos, BOOLEAN fUseOKCursor, BOOLEAN fItemsOnlyIfOnIntTiles);
+static bool UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* pSoldier, INT16 usMapPos, BOOLEAN fUseOKCursor, BOOLEAN fItemsOnlyIfOnIntTiles);
 
 
 static ScreenID UIHandleMOnTerrain(UI_EVENT* pUIEvent)
@@ -4885,244 +4885,178 @@ void BeginDisplayTimedCursor( UINT32 uiCursorID, UINT32 uiDelay )
 }
 
 
-static INT8 UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* pSoldier, INT16 usMapPos, BOOLEAN fUseOKCursor, BOOLEAN fItemsOnlyIfOnIntTiles)
+static bool UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* const pSoldier, INT16 const usMapPos, BOOLEAN const fUseOKCursor, BOOLEAN const fItemsOnlyIfOnIntTiles)
 {
-	BOOLEAN						fSetCursor;
-	LEVELNODE					*pIntTile;
-	static BOOLEAN		fOverPool = FALSE;
-	static BOOLEAN		fOverEnemy = FALSE;
-	INT16							sActionGridNo;
-	INT16							sIntTileGridNo;
-	BOOLEAN						fContinue = TRUE;
-	STRUCTURE					*pStructure = NULL;
-	BOOLEAN						fPoolContainsHiddenItems = FALSE;
+	static BOOLEAN fOverPool  = FALSE;
+	static BOOLEAN fOverEnemy = FALSE;
 
-	const UINT32 uiCursorFlags = GetCursorMovementFlags();
+	UINT32 const uiCursorFlags = GetCursorMovementFlags();
 
 	// Default gridno to mouse pos
-	sActionGridNo = usMapPos;
+	INT16 sActionGridNo = usMapPos;
 
 	// Look for being on a merc....
 	// Steal.....
-	UIHandleOnMerc( FALSE );
+	UIHandleOnMerc(FALSE);
 
 	gfBeginVehicleCursor = FALSE;
 
-	const SOLDIERTYPE* const tgt = gUIFullTarget;
-	if (tgt != NULL)
+	SOLDIERTYPE const* const tgt = gUIFullTarget;
+	if (tgt)
 	{
 		if (OK_ENTERABLE_VEHICLE(tgt) && tgt->bVisible != -1)
-		 {
-				// grab number of occupants in vehicles
-				if ( fItemsOnlyIfOnIntTiles )
-				{
-					if (!OKUseVehicle(tgt->ubProfile))
-					{
-						// Set UI CURSOR....
-						guiNewUICursor = CANNOT_MOVE_UICURSOR;
+		{
+			// grab number of occupants in vehicles
+			if (!fItemsOnlyIfOnIntTiles)
+			{
+				guiNewUICursor = ENTER_VEHICLE_UICURSOR;
+				return true;
+			}
+			else if (!OKUseVehicle(tgt->ubProfile))
+			{
+				guiNewUICursor       = CANNOT_MOVE_UICURSOR;
+				gfBeginVehicleCursor = TRUE;
+				return true;
+			}
+			else if (GetNumberInVehicle(GetVehicle(tgt->bVehicleID)) == 0)
+			{
+				guiNewUICursor       = ENTER_VEHICLE_UICURSOR;
+				gfBeginVehicleCursor = TRUE;
+				return true;
+			}
+		}
 
-						gfBeginVehicleCursor = TRUE;
-						return( 1 );
-					}
-					else
-					{
-						VEHICLETYPE const* const v = GetVehicle(tgt->bVehicleID);
-						if (GetNumberInVehicle(v) == 0)
-						{
-							// Set UI CURSOR....
-							guiNewUICursor = ENTER_VEHICLE_UICURSOR;
+		if (!fItemsOnlyIfOnIntTiles           &&
+				guiUIFullTargetFlags & ENEMY_MERC &&
+				!(guiUIFullTargetFlags & UNCONSCIOUS_MERC))
+		{
+			if (!fOverEnemy)
+			{
+				fOverEnemy        = TRUE;
+				gfPlotNewMovement = TRUE;
+			}
 
-							gfBeginVehicleCursor = TRUE;
-							return( 1 );
-						}
-					}
-				}
-				else
-				{
-					// Set UI CURSOR....
-					guiNewUICursor = ENTER_VEHICLE_UICURSOR;
-					return( 1 );
-				}
-		 }
+			//Set UI CURSOR
+			guiNewUICursor =
+				fUseOKCursor || (gTacticalStatus.uiFlags & INCOMBAT && gTacticalStatus.uiFlags & TURNBASED) ?
+					OKHANDCURSOR_UICURSOR : NORMALHANDCURSOR_UICURSOR;
 
-		 if ( !fItemsOnlyIfOnIntTiles )
-		 {
-			 if ( ( guiUIFullTargetFlags & ENEMY_MERC ) && !( guiUIFullTargetFlags & UNCONSCIOUS_MERC ) )
-			 {
-					if ( !fOverEnemy )
-					{
-						fOverEnemy = TRUE;
-						gfPlotNewMovement = TRUE;
-					}
+			HandleUIMovementCursor(pSoldier, uiCursorFlags, sActionGridNo, MOVEUI_TARGET_STEAL);
 
-					//Set UI CURSOR
-					if ( fUseOKCursor || ( ( gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) ) )
-					{
-						guiNewUICursor = OKHANDCURSOR_UICURSOR;
-					}
-					else
-					{
-						guiNewUICursor = NORMALHANDCURSOR_UICURSOR;
-					}
+			// Display action points
+			gfUIDisplayActionPoints = TRUE;
 
-					fSetCursor =  HandleUIMovementCursor( pSoldier, uiCursorFlags, sActionGridNo, MOVEUI_TARGET_STEAL );
+			// Determine if we can afford!
+			if (!EnoughPoints(pSoldier, gsCurrentActionPoints, 0, FALSE))
+			{
+				gfUIDisplayActionPointsInvalid = TRUE;
+			}
 
-					// Display action points
-					gfUIDisplayActionPoints = TRUE;
-
-					// Determine if we can afford!
-					if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0, FALSE ) )
-					{
-						gfUIDisplayActionPointsInvalid = TRUE;
-					}
-
-					return( 0 );
-			 }
-		 }
+			return false;
+		}
 	}
 
-	if ( fOverEnemy )
+	if (fOverEnemy)
 	{
-		ErasePath( TRUE );
-		fOverEnemy = FALSE;
+		ErasePath(TRUE);
+		fOverEnemy        = FALSE;
 		gfPlotNewMovement = TRUE;
 	}
 
 	// If we are over an interactive struct, adjust gridno to this....
-	pIntTile											 = ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE );
+	INT16            sIntTileGridNo;
+	STRUCTURE*       pStructure;
+	LEVELNODE* const pIntTile = ConditionalGetCurInteractiveTileGridNoAndStructure(&sIntTileGridNo, &pStructure, FALSE);
 	gpInvTileThatCausedMoveConfirm = pIntTile;
 
-	if ( pIntTile != NULL )
+	if (pIntTile) sActionGridNo = sIntTileGridNo;
+
+	if (fItemsOnlyIfOnIntTiles && !pIntTile)
 	{
-		sActionGridNo = sIntTileGridNo;
+		// If we want only on int tiles, and we have no int tiles, then ignore items!
 	}
-
-	// Check if we are over an item pool
-	const ITEM_POOL* pItemPool = GetItemPool(sActionGridNo, pSoldier->bLevel);
-	if (pItemPool != NULL)
+	else if (fItemsOnlyIfOnIntTiles && pIntTile && pStructure->fFlags & STRUCTURE_HASITEMONTOP)
 	{
-		// If we want only on int tiles, and we have no int tiles.. ignore items!
-		if ( fItemsOnlyIfOnIntTiles && pIntTile == NULL  )
-		{
-
-		}
-		else if ( fItemsOnlyIfOnIntTiles && pIntTile != NULL && ( pStructure->fFlags & STRUCTURE_HASITEMONTOP ) )
-		{
-			// if in this mode, we don't want to automatically show hand cursor over items on strucutres
-		}
-		//else if ( pIntTile != NULL && ( pStructure->fFlags & ( STRUCTURE_SWITCH | STRUCTURE_ANYDOOR ) ) )
-		else if ( pIntTile != NULL && ( pStructure->fFlags & ( STRUCTURE_SWITCH ) ) )
-		{
-			// We don't want switches messing around with items ever!
-		}
-		else if ( ( pIntTile != NULL && ( pStructure->fFlags & ( STRUCTURE_ANYDOOR ) ) ) && ( sActionGridNo != usMapPos || fItemsOnlyIfOnIntTiles ) )
-		{
-			// Next we look for if we are over a door and if the mouse position is != base door position, ignore items!
-		}
-		else
-		{
-			fPoolContainsHiddenItems = DoesItemPoolContainAnyHiddenItems( pItemPool );
-
-			// Adjust this if we have not visited this gridno yet...
-			if ( fPoolContainsHiddenItems )
-			{
-				if ( !( gpWorldLevelData[ sActionGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
-				{
-					fPoolContainsHiddenItems = FALSE;
-				}
-			}
-
-			if (fPoolContainsHiddenItems || IsItemPoolVisible(pItemPool))
-			{
-
-				if ( !fOverPool )
-				{
-					fOverPool = TRUE;
-					gfPlotNewMovement = TRUE;
-				}
-
-				//Set UI CURSOR
-				if ( fUseOKCursor || ( ( gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) ) )
-				{
-					guiNewUICursor = OKHANDCURSOR_UICURSOR;
-				}
-				else
-				{
-					guiNewUICursor = NORMALHANDCURSOR_UICURSOR;
-				}
-
-				fSetCursor =  HandleUIMovementCursor( pSoldier, uiCursorFlags, sActionGridNo, MOVEUI_TARGET_ITEMS );
-
-				// Display action points
-				gfUIDisplayActionPoints = TRUE;
-
-				if ( gsOverItemsGridNo == sActionGridNo )
-				{
-					gfPlotNewMovement = TRUE;
-				}
-
-				// Determine if we can afford!
-				if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0, FALSE ) )
-				{
-					gfUIDisplayActionPointsInvalid = TRUE;
-				}
-
-				fContinue = FALSE;
-			}
-		}
+		// if in this mode, we don't want to automatically show hand cursor over items on strucutres
 	}
-
-	if ( fContinue )
+	else if (pIntTile && pStructure->fFlags & STRUCTURE_SWITCH)
 	{
-		// Try interactive tiles now....
-		if ( pIntTile != NULL )
-		{
-			if ( fOverPool )
-			{
-				ErasePath( TRUE );
-				fOverPool = FALSE;
-				gfPlotNewMovement = TRUE;
-			}
-
-			HandleUIMovementCursor( pSoldier, uiCursorFlags, usMapPos, MOVEUI_TARGET_INTTILES );
-
-			//Set UI CURSOR
-			guiNewUICursor = GetInteractiveTileCursor( guiNewUICursor, fUseOKCursor  );
-		}
-		else
-		{
-			if ( !fItemsOnlyIfOnIntTiles )
-			{
-				// Let's at least show where the merc will walk to if they go here...
-				if ( !fOverPool )
-				{
-					fOverPool = TRUE;
-					gfPlotNewMovement = TRUE;
-				}
-
-				fSetCursor =  HandleUIMovementCursor( pSoldier, uiCursorFlags, sActionGridNo, MOVEUI_TARGET_ITEMS );
-
-				// Display action points
-				gfUIDisplayActionPoints = TRUE;
-
-				// Determine if we can afford!
-				if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0, FALSE ) )
-				{
-					gfUIDisplayActionPointsInvalid = TRUE;
-				}
-			}
-		}
-
+		// We don't want switches messing around with items ever!
 	}
-
-	if ( pIntTile == NULL )
+	else if (pIntTile && pStructure->fFlags & STRUCTURE_ANYDOOR && (sActionGridNo != usMapPos || fItemsOnlyIfOnIntTiles))
 	{
-		return( 0 );
+		// Next we look for if we are over a door and if the mouse position is != base door position, ignore items!
 	}
 	else
 	{
-		return( 1 );
+		// Check if we are over an item pool
+		ITEM_POOL const* const pItemPool = GetItemPool(sActionGridNo, pSoldier->bLevel);
+		if (IsItemPoolVisible(pItemPool) ||
+				(gpWorldLevelData[sActionGridNo].uiFlags & MAPELEMENT_REVEALED && DoesItemPoolContainAnyHiddenItems(pItemPool)))
+		{
+			if (!fOverPool)
+			{
+				fOverPool         = TRUE;
+				gfPlotNewMovement = TRUE;
+			}
+
+			//Set UI CURSOR
+			guiNewUICursor =
+				fUseOKCursor || (gTacticalStatus.uiFlags & INCOMBAT && gTacticalStatus.uiFlags & TURNBASED) ?
+				OKHANDCURSOR_UICURSOR : NORMALHANDCURSOR_UICURSOR;
+
+			HandleUIMovementCursor(pSoldier, uiCursorFlags, sActionGridNo, MOVEUI_TARGET_ITEMS);
+
+			// Display action points
+			gfUIDisplayActionPoints = TRUE;
+
+			if (gsOverItemsGridNo == sActionGridNo) gfPlotNewMovement = TRUE;
+
+			// Determine if we can afford!
+			if (!EnoughPoints(pSoldier, gsCurrentActionPoints, 0, FALSE))
+			{
+				gfUIDisplayActionPointsInvalid = TRUE;
+			}
+
+			return pIntTile != 0;
+		}
 	}
+
+	if (pIntTile)
+	{
+		if (fOverPool)
+		{
+			ErasePath(TRUE);
+			fOverPool         = FALSE;
+			gfPlotNewMovement = TRUE;
+		}
+
+		HandleUIMovementCursor(pSoldier, uiCursorFlags, usMapPos, MOVEUI_TARGET_INTTILES);
+
+		guiNewUICursor = GetInteractiveTileCursor(guiNewUICursor, fUseOKCursor);
+		return true;
+	}
+	else if (!fItemsOnlyIfOnIntTiles)
+	{
+		// Let's at least show where the merc will walk to if they go here...
+		if (!fOverPool)
+		{
+			fOverPool         = TRUE;
+			gfPlotNewMovement = TRUE;
+		}
+
+		HandleUIMovementCursor(pSoldier, uiCursorFlags, sActionGridNo, MOVEUI_TARGET_ITEMS);
+
+		// Display action points
+		gfUIDisplayActionPoints = TRUE;
+
+		// Determine if we can afford!
+		if (!EnoughPoints(pSoldier, gsCurrentActionPoints, 0, FALSE))
+		{
+			gfUIDisplayActionPointsInvalid = TRUE;
+		}
+	}
+	return false;
 }
 
 
