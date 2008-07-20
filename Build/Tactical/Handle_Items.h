@@ -75,7 +75,7 @@ void       MoveItemPools(INT16 sStartPos, INT16 sEndPos);
 
 BOOLEAN SetItemsVisibilityOn(GridNo, UINT8 level, INT8 bAllGreaterThan, BOOLEAN fSetLocator);
 
-void SetItemPoolVisibilityHidden(ITEM_POOL* pItemPool);
+void SetItemsVisibilityHidden(GridNo, UINT8 level);
 
 void RenderTopmostFlashingItems(void);
 

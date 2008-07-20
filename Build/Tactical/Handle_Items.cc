@@ -1914,9 +1914,9 @@ BOOLEAN SetItemsVisibilityOn(GridNo const grid_no, UINT8 const level, INT8 const
 }
 
 
-void SetItemPoolVisibilityHidden(ITEM_POOL* const ip)
+void SetItemsVisibilityHidden(GridNo const grid_no, UINT8 const level)
 {
-	for (ITEM_POOL* i = ip; i; i = i->pNext)
+	for (ITEM_POOL* i = GetItemPool(grid_no, level); i; i = i->pNext)
 	{
 		// Update the world value
 		GetWorldItem(i->iItemIndex)->bVisible = HIDDEN_IN_OBJECT;

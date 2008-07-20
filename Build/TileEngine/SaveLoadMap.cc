@@ -814,8 +814,7 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 		else
 		{
 			// Make sure items are hidden...
-			ITEM_POOL* const pItemPool = GetItemPool(sBaseGridNo, 0);
-			if (pItemPool) SetItemPoolVisibilityHidden(pItemPool);
+			SetItemsVisibilityHidden(sBaseGridNo, 0);
 		}
 	}
 }

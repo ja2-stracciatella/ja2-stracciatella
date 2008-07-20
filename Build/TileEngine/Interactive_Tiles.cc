@@ -280,7 +280,7 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 			}
 			else
 			{
-				SetItemPoolVisibilityHidden( pItemPool );
+				SetItemsVisibilityHidden(sGridNo, pSoldier->bLevel);
 			}
 		}
 		else
