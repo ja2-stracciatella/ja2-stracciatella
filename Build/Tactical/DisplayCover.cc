@@ -332,25 +332,18 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE const* const p
 }
 
 
-static void AddCoverObjectToWorld(INT16 sGridNo, UINT16 usGraphic, BOOLEAN fRoof)
+static void AddCoverObjectToWorld(INT16 const sGridNo, UINT16 const usGraphic, BOOLEAN const fRoof)
 {
-	LEVELNODE *pNode;
+	LEVELNODE* const n = fRoof ?
+		AddOnRoofToHead(sGridNo, usGraphic) :
+		AddObjectToHead(sGridNo, usGraphic);
 
-	if( fRoof )
-	{
-		pNode = AddOnRoofToHead(sGridNo, usGraphic);
-	}
-	else
-	{
-		pNode = AddObjectToHead(sGridNo, usGraphic);
-	}
+	n->uiFlags |= LEVELNODE_REVEAL;
 
-	pNode->uiFlags |= LEVELNODE_REVEAL;
-
-	if( NightTime() )
+	if (NightTime())
 	{
-		pNode->ubShadeLevel=DEFAULT_SHADE_LEVEL;
-		pNode->ubNaturalShadeLevel=DEFAULT_SHADE_LEVEL;
+		n->ubShadeLevel        = DEFAULT_SHADE_LEVEL;
+		n->ubNaturalShadeLevel = DEFAULT_SHADE_LEVEL;
 	}
 }
 
