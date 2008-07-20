@@ -96,13 +96,13 @@ static INT16					gsTempGridno;
 static INT8						bTempFrequency;
 
 
-SOLDIERTYPE *		gpBoobyTrapSoldier;
-ITEM_POOL *			gpBoobyTrapItemPool;
-INT16						gsBoobyTrapGridNo;
-INT8            gbBoobyTrapLevel;
-BOOLEAN					gfDisarmingBuriedBomb;
-INT8						gbTrapDifficulty;
-BOOLEAN					gfJustFoundBoobyTrap = FALSE;
+SOLDIERTYPE*      gpBoobyTrapSoldier;
+static ITEM_POOL* gpBoobyTrapItemPool;
+INT16             gsBoobyTrapGridNo;
+static INT8       gbBoobyTrapLevel;
+static BOOLEAN    gfDisarmingBuriedBomb;
+static INT8       gbTrapDifficulty;
+static BOOLEAN    gfJustFoundBoobyTrap = FALSE;
 
 
 BOOLEAN HandleCheckForBadChangeToGetThrough(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTargetSoldier, const INT16 sTargetGridNo, const INT8 bLevel)
