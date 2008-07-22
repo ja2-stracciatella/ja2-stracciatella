@@ -488,7 +488,7 @@ void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow )
 	INT32 iCount=0;
 	BOOLEAN fDrawCursors;
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
   //SetFontColors(FONT_FCOLOR_GREEN)
   SetFont(MAP_FONT);
   SetFontForeground(MAP_INDEX_COLOR);
@@ -523,7 +523,7 @@ void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow )
   InvalidateRegion(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y,MAP_VERT_INDEX_X+MAP_HORT_HEIGHT,  MAP_VERT_INDEX_Y+( iCount - 1 ) * MAP_GRID_Y );
   InvalidateRegion(MAP_HORT_INDEX_X, MAP_HORT_INDEX_Y,MAP_HORT_INDEX_X + ( iCount - 1) * MAP_GRID_X,  MAP_HORT_INDEX_Y+ MAP_HORT_HEIGHT);
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 }
 
 
@@ -574,7 +574,7 @@ void DrawMapIndexSmallMap( BOOLEAN fSelectedCursorIsYellow )
 
   InvalidateRegion(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y,MAP_VERT_INDEX_X+MAP_HORT_HEIGHT,  MAP_VERT_INDEX_Y+iCount*MAP_GRID_Y );
   InvalidateRegion(MAP_HORT_INDEX_X, MAP_HORT_INDEX_Y,MAP_HORT_INDEX_X+iCount*MAP_GRID_X,  MAP_HORT_INDEX_Y+ MAP_HORT_HEIGHT);
-  SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+  SetFontDestBuffer(FRAME_BUFFER);
 }
 */
 
@@ -2040,8 +2040,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* pPath, BOOLEAN fForceUpDate);
 
 static void AnimateRoute(PathSt* pPath)
 {
-	// set buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 
 	// the animated path
 	if (TraceCharAnimatedRoute(pPath, FALSE))
@@ -3215,7 +3214,7 @@ static void ShowPeopleInMotion(INT16 sX, INT16 sY)
 				}
 
 				FindFontCenterCoordinates(iX + sTextXOffset, 0, ICON_WIDTH, 0, sString, MAP_FONT, &usX, &usY);
-				SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				SetFontDestBuffer(guiSAVEBUFFER);
 				MPrint(usX, iY + sTextYOffset, sString);
 
 				switch( iCounter % 2 )
@@ -3257,7 +3256,7 @@ static void ShowPeopleInMotion(INT16 sX, INT16 sY)
 	}
 
 	// restore buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 }
 
 
@@ -3901,7 +3900,7 @@ static void DisplayLevelString(void)
 	SetFontBackground( FONT_BLACK );
 	mprintf(MAP_LEVEL_STRING_X, MAP_LEVEL_STRING_Y, L"%ls %d", sMapLevelString, iCurrentMapSectorZ);
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 }
 
 
