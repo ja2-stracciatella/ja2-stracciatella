@@ -5750,6 +5750,6 @@ void UpdateItemHatches(void)
 
 	if ( pSoldier != NULL )
 	{
-		ReevaluateItemHatches( pSoldier, ( BOOLEAN ) ( gpItemPointer == NULL ) );
+		ReevaluateItemHatches(pSoldier, FALSE);
 	}
 }
