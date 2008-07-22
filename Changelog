@@ -1,7 +1,7 @@
 (r4768) Enable scrolling the item pickup list with the mouse wheel.
 (r4765) Fix a vanilla bug, when trying to remove more than $20.000 from the player's account by clicking on $100 or $10 while trading with a shopkeeper (broken display).
 (r4722) Restore path cancellation when right clicking on the destination column in the map screen, which was broken in r3592.
-(r4670) Fix a vanilla glitch: Some dying sounds were not played because of inconsistent file names.
+(r4671) Fix a vanilla glitch: Some dying sounds were not played because of inconsistent file names.
 (r4663) Fix a vanilla glitch: Do not add two corpses for mercs died in auto resolve.
 (r4600) Plug vanilla memory leak when loading savegames.
 (r4597) Plug vanilla memory leak in the laptop file viewer.
