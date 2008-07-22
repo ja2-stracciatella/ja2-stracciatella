@@ -4609,178 +4609,143 @@ static void SetupPickupPage(INT8 bPage);
 
 void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, ITEM_POOL* const pItemPool, INT8 const bZLevel)
 {
-	ITEM_POOL				*pTempItemPool;
-	INT32						cnt;
-	INT16						sCenX, sCenY, sX, sY, sCenterYVal;
-
-	// Erase other menus....
-	EraseInterfaceMenus( TRUE );
-
-	// Make sure menu is located if not on screen
+	EraseInterfaceMenus(TRUE);
 	LocateSoldier(pSoldier, FALSE);
 
-	// memset values
-	memset( &gItemPickupMenu, 0, sizeof( gItemPickupMenu ) );
-
-	//Set item pool value
-	gItemPickupMenu.pItemPool		= pItemPool;
+	ITEM_PICKUP_MENU_STRUCT& menu = gItemPickupMenu;
+	memset(&menu, 0, sizeof(menu));
+	menu.pItemPool = pItemPool;
 
 	InterruptTime();
 	PauseGame();
-	LockPauseState( 18 );
-	// Pause timers as well....
-	PauseTime( TRUE );
-
+	LockPauseState(18);
+	PauseTime(TRUE);
 
 	// Alrighty, cancel lock UI if we havn't done so already
 	UnSetUIBusy(pSoldier);
 
 	// Change to INV panel if not there already...
-	gfSwitchPanel = TRUE;
-	gbNewPanel = SM_PANEL;
+	gfSwitchPanel    = TRUE;
+	gbNewPanel       = SM_PANEL;
 	gNewPanelSoldier = pSoldier;
 
 	//Determine total #
-	cnt = 0;
-	pTempItemPool = pItemPool;
-	while( pTempItemPool != NULL )
+	INT32 cnt = 0;
+	for (ITEM_POOL* i = pItemPool; i; i = i->pNext)
 	{
-		if ( ItemPoolOKForDisplay( pTempItemPool, bZLevel ) )
-		{
-			cnt++;
-		}
-
-		pTempItemPool = pTempItemPool->pNext;
+		if (!ItemPoolOKForDisplay(i, bZLevel)) continue;
+		++cnt;
 	}
-	gItemPickupMenu.ubTotalItems = (UINT8)cnt;
+	menu.ubTotalItems = (UINT8)cnt;
 
 	// Determine # of slots per page
-	if ( gItemPickupMenu.ubTotalItems > NUM_PICKUP_SLOTS )
+	menu.bNumSlotsPerPage = menu.ubTotalItems < NUM_PICKUP_SLOTS ?
+		menu.ubTotalItems : NUM_PICKUP_SLOTS;
+
+	menu.uiPanelVo = AddVideoObjectFromFile("INTERFACE/itembox.sti");
+
+	menu.pfSelectedArray = MALLOCNZ(BOOLEAN, menu.ubTotalItems);
+
+	CalculateItemPickupMenuDimensions();
+
+	// First get mouse xy screen location
+	INT16 sX = gusMouseXPos;
+	INT16 sY = gusMouseYPos;
+
+	// CHECK FOR LEFT/RIGHT
+	if (sX + menu.sWidth > SCREEN_WIDTH)
 	{
-		gItemPickupMenu.bNumSlotsPerPage = NUM_PICKUP_SLOTS;
+		sX = SCREEN_WIDTH - menu.sWidth - ITEMPICK_START_X_OFFSET;
 	}
 	else
 	{
-		gItemPickupMenu.bNumSlotsPerPage = gItemPickupMenu.ubTotalItems;
+		sX = sX + ITEMPICK_START_X_OFFSET;
 	}
 
-	gItemPickupMenu.uiPanelVo = AddVideoObjectFromFile("INTERFACE/itembox.sti");
+	// Now check for top
+	// Center in the y
+	INT16 const sCenterYVal = menu.sHeight / 2;
 
-	// Memalloc selection array...
-	gItemPickupMenu.pfSelectedArray = MALLOCNZ(BOOLEAN, gItemPickupMenu.ubTotalItems);
-
-	// Calcualate dimensions
-	CalculateItemPickupMenuDimensions( );
-
-	// Get XY
+	sY -= sCenterYVal;
+	if (sY < gsVIEWPORT_WINDOW_START_Y)
 	{
-		// First get mouse xy screen location
-		sX = gusMouseXPos;
-		sY = gusMouseYPos;
-
-		// CHECK FOR LEFT/RIGHT
-		if (sX + gItemPickupMenu.sWidth > SCREEN_WIDTH)
-		{
-			sX = SCREEN_WIDTH - gItemPickupMenu.sWidth - ITEMPICK_START_X_OFFSET;
-		}
-		else
-		{
-			sX = sX + ITEMPICK_START_X_OFFSET;
-		}
-
-		// Now check for top
-		// Center in the y
-		sCenterYVal = gItemPickupMenu.sHeight / 2;
-
-		sY -= sCenterYVal;
-
-		if ( sY < gsVIEWPORT_WINDOW_START_Y )
-		{
-			sY = gsVIEWPORT_WINDOW_START_Y;
-		}
-
-		// Check for bottom
-		if (sY + gItemPickupMenu.sHeight > gsVIEWPORT_WINDOW_END_Y)
-		{
-			sY = gsVIEWPORT_WINDOW_END_Y - gItemPickupMenu.sHeight;
-		}
+		sY = gsVIEWPORT_WINDOW_START_Y;
 	}
 
-	// Set some values
-	gItemPickupMenu.sX					= sX;
-	gItemPickupMenu.sY					= sY;
-	gItemPickupMenu.bCurSelect	= 0;
-	gItemPickupMenu.pSoldier		= pSoldier;
-	gItemPickupMenu.fHandled		= FALSE;
-	gItemPickupMenu.sGridNo			= sGridNo;
-	gItemPickupMenu.bZLevel			= bZLevel;
-	gItemPickupMenu.fAtLeastOneSelected = FALSE;
-	gItemPickupMenu.fAllSelected	= FALSE;
+	// Check for bottom
+	if (sY + menu.sHeight > gsVIEWPORT_WINDOW_END_Y)
+	{
+		sY = gsVIEWPORT_WINDOW_END_Y - menu.sHeight;
+	}
+
+	menu.sX                  = sX;
+	menu.sY                  = sY;
+	menu.bCurSelect          = 0;
+	menu.pSoldier            = pSoldier;
+	menu.fHandled            = FALSE;
+	menu.sGridNo             = sGridNo;
+	menu.bZLevel             = bZLevel;
+	menu.fAtLeastOneSelected = FALSE;
+	menu.fAllSelected        = FALSE;
 
 	//Load images for buttons
-	gItemPickupMenu.iUpButtonImages     = LoadButtonImage("INTERFACE/itembox.sti", -1, 5, -1, 10, -1);
-	gItemPickupMenu.iDownButtonImages		=	UseLoadedButtonImage( gItemPickupMenu.iUpButtonImages, -1, 7, -1, 12, -1 );
-	gItemPickupMenu.iAllButtonImages		=	UseLoadedButtonImage( gItemPickupMenu.iUpButtonImages, -1, 6, -1,11, -1 );
-	gItemPickupMenu.iCancelButtonImages	=	UseLoadedButtonImage( gItemPickupMenu.iUpButtonImages, -1, 8, -1, 13, -1 );
-	gItemPickupMenu.iOKButtonImages			=	UseLoadedButtonImage( gItemPickupMenu.iUpButtonImages, -1, 4, -1, 9, -1 );
-
-
-	// Build a mouse region here that is over any others.....
-	MSYS_DefineRegion(&gItemPickupMenu.BackRegion, 532, 367, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	BUTTON_PICS* const pics  = LoadButtonImage("INTERFACE/itembox.sti",   -1, 5, -1, 10, -1);
+	menu.iUpButtonImages     = pics;
+	menu.iDownButtonImages   = UseLoadedButtonImage(pics, -1, 7, -1, 12, -1);
+	menu.iAllButtonImages    = UseLoadedButtonImage(pics, -1, 6, -1, 11, -1);
+	menu.iCancelButtonImages = UseLoadedButtonImage(pics, -1, 8, -1, 13, -1);
+	menu.iOKButtonImages     = UseLoadedButtonImage(pics, -1, 4, -1,  9, -1);
 
 	// Build a mouse region here that is over any others.....
-	MSYS_DefineRegion(&gItemPickupMenu.BackRegions, gItemPickupMenu.sX, gItemPickupMenu.sY, gItemPickupMenu.sX + gItemPickupMenu.sWidth, gItemPickupMenu.sY + gItemPickupMenu.sHeight, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&menu.BackRegion, 532, 367, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
+	// Build a mouse region here that is over any others.....
+	MSYS_DefineRegion(&menu.BackRegions, sX, sY, menu.sX + menu.sWidth, sY + menu.sHeight, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+
+	INT16 const by = sY + menu.sButtomPanelStartY;
 
 	// Create buttons
-	if ( gItemPickupMenu.bNumSlotsPerPage == NUM_PICKUP_SLOTS && gItemPickupMenu.ubTotalItems > NUM_PICKUP_SLOTS )
+	if (menu.bNumSlotsPerPage == NUM_PICKUP_SLOTS && menu.ubTotalItems > NUM_PICKUP_SLOTS)
 	{
-		gItemPickupMenu.iUpButton	= QuickCreateButton(gItemPickupMenu.iUpButtonImages, sX + ITEMPICK_UP_X, sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_UP_Y, MSYS_PRIORITY_HIGHEST, ItemPickupScrollUp);
-		gItemPickupMenu.iUpButton->SetFastHelpText(ItemPickupHelpPopup[1]);
+		menu.iUpButton = QuickCreateButton(menu.iUpButtonImages, sX + ITEMPICK_UP_X, by + ITEMPICK_UP_Y, MSYS_PRIORITY_HIGHEST, ItemPickupScrollUp);
+		menu.iUpButton->SetFastHelpText(ItemPickupHelpPopup[1]);
 
-		gItemPickupMenu.iDownButton	= QuickCreateButton(gItemPickupMenu.iDownButtonImages, sX + ITEMPICK_DOWN_X, sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_DOWN_Y, MSYS_PRIORITY_HIGHEST, ItemPickupScrollDown);
-		gItemPickupMenu.iDownButton->SetFastHelpText(ItemPickupHelpPopup[3]);
+		menu.iDownButton = QuickCreateButton(menu.iDownButtonImages, sX + ITEMPICK_DOWN_X, by + ITEMPICK_DOWN_Y, MSYS_PRIORITY_HIGHEST, ItemPickupScrollDown);
+		menu.iDownButton->SetFastHelpText(ItemPickupHelpPopup[3]);
 	}
 
-	gItemPickupMenu.iOKButton = QuickCreateButton(gItemPickupMenu.iOKButtonImages, sX + ITEMPICK_OK_X, sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_OK_Y, MSYS_PRIORITY_HIGHEST, ItemPickupOK);
-	gItemPickupMenu.iOKButton->SetFastHelpText(ItemPickupHelpPopup[0]);
+	menu.iOKButton = QuickCreateButton(menu.iOKButtonImages, sX + ITEMPICK_OK_X, by + ITEMPICK_OK_Y, MSYS_PRIORITY_HIGHEST, ItemPickupOK);
+	menu.iOKButton->SetFastHelpText(ItemPickupHelpPopup[0]);
 
-	gItemPickupMenu.iAllButton = QuickCreateButton(gItemPickupMenu.iAllButtonImages, sX + ITEMPICK_ALL_X, sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_ALL_Y, MSYS_PRIORITY_HIGHEST, ItemPickupAll);
-	gItemPickupMenu.iAllButton->SetFastHelpText(ItemPickupHelpPopup[2]);
+	menu.iAllButton = QuickCreateButton(menu.iAllButtonImages, sX + ITEMPICK_ALL_X, by + ITEMPICK_ALL_Y, MSYS_PRIORITY_HIGHEST, ItemPickupAll);
+	menu.iAllButton->SetFastHelpText(ItemPickupHelpPopup[2]);
 
-	gItemPickupMenu.iCancelButton = QuickCreateButton(gItemPickupMenu.iCancelButtonImages, sX + ITEMPICK_CANCEL_X, sY + gItemPickupMenu.sButtomPanelStartY + ITEMPICK_CANCEL_Y, MSYS_PRIORITY_HIGHEST, ItemPickupCancel);
-	gItemPickupMenu.iCancelButton->SetFastHelpText(ItemPickupHelpPopup[4]);
+	menu.iCancelButton = QuickCreateButton(menu.iCancelButtonImages, sX + ITEMPICK_CANCEL_X, by + ITEMPICK_CANCEL_Y, MSYS_PRIORITY_HIGHEST, ItemPickupCancel);
+	menu.iCancelButton->SetFastHelpText(ItemPickupHelpPopup[4]);
 
-	DisableButton( gItemPickupMenu.iOKButton );
+	DisableButton(menu.iOKButton);
 
-
-
-	// Create regions...
-	sCenX = gItemPickupMenu.sX;
-	sCenY = gItemPickupMenu.sY + ITEMPICK_GRAPHIC_Y;
-
-	for ( cnt = 0; cnt < gItemPickupMenu.bNumSlotsPerPage; cnt++ )
+	// Create regions
+	INT16 const sCenX = sX;
+	INT16       sCenY = sY + ITEMPICK_GRAPHIC_Y;
+	for (INT32 i = 0; i < menu.bNumSlotsPerPage; ++i)
 	{
-		// Build a mouse region here that is over any others.....
-		MSYS_DefineRegion(&gItemPickupMenu.Regions[cnt], sCenX, sCenY + 1, sCenX + gItemPickupMenu.sWidth, sCenY + ITEMPICK_GRAPHIC_YSPACE, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, ItemPickMenuMouseMoveCallback, ItemPickMenuMouseClickCallback);
-		MSYS_SetRegionUserData( &(gItemPickupMenu.Regions[cnt]), 0, cnt );
+		MOUSE_REGION* const r = &menu.Regions[i];
+		MSYS_DefineRegion(r, sCenX, sCenY + 1, sCenX + menu.sWidth, sCenY + ITEMPICK_GRAPHIC_YSPACE, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, ItemPickMenuMouseMoveCallback, ItemPickMenuMouseClickCallback);
+		MSYS_SetRegionUserData(r, 0, i);
 
 		sCenY += ITEMPICK_GRAPHIC_YSPACE;
 	}
 
-	SetupPickupPage( 0 );
+	SetupPickupPage(0);
 
 	gfInItemPickupMenu = TRUE;
-
-	// Ignore scrolling
-	gfIgnoreScrolling = TRUE;
+	gfIgnoreScrolling  = TRUE;
 
 	HandleAnyMercInSquadHasCompatibleStuff(NULL);
 	gSelectSMPanelToMerc = pSoldier;
-	ReEvaluateDisabledINVPanelButtons( );
-	DisableTacticalTeamPanelButtons( TRUE );
-
-	//gfSMDisableForItems = TRUE;
+	ReEvaluateDisabledINVPanelButtons();
+	DisableTacticalTeamPanelButtons(TRUE);
 }
 
 
