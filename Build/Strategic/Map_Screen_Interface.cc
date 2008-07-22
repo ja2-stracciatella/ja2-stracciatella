@@ -65,10 +65,6 @@
 #include "Items.h"
 
 
-// inventory pool position on screen
-#define MAP_INVEN_POOL_X 300
-#define MAP_INVEN_POOL_Y 300
-
 // number of LINKED LISTS for sets of leave items (each slot holds an unlimited # of items)
 #define NUM_LEAVE_LIST_SLOTS 20
 
@@ -179,8 +175,6 @@ INT32 fVehicleIsMoving[ NUMBER_OF_SQUADS ];
 MOUSE_REGION gMoveBoxScreenMask;
 
 
-// has the inventory pool been selected to be on or off?
-BOOLEAN fMapInventoryPoolInited = FALSE;
 BOOLEAN fShowMapScreenMovementList = FALSE;
 
 
@@ -206,9 +200,6 @@ INT32 iOldContractTimes[ MAX_CHARACTER_COUNT ];
 
 // position of pop up box
 INT32 giBoxY = 0;
-
-// screen mask for inventory pop up
-MOUSE_REGION gInventoryScreenMask;
 
 MOUSE_REGION gContractIconRegion;
 MOUSE_REGION gInsuranceIconRegion;
@@ -1007,86 +998,6 @@ void HandleDisplayOfSelectedMercArrows( void )
 			BltVideoObject(guiSAVEBUFFER, guiSelectedCharArrow, 0, SELECTED_CHAR_ARROW_X, sYPosition);
 		}
 	}
-}
-
-
-static void CreateScreenMaskForInventoryPoolPopUp(void);
-static void RemoveScreenMaskForInventoryPoolPopUp(void);
-
-
-void HandleDisplayOfItemPopUpForSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ )
-{
-	// handle display of item pop up for this sector
-	// check if anyone alive in this sector
-	ITEM_POOL		*pItemPool = NULL;
-	static BOOLEAN fWasInited = FALSE;
-
-	SOLDIERTYPE* const s = GetSelectedInfoChar();
-	if (s == NULL) return;
-
-	if (!fWasInited && fMapInventoryPoolInited)
-	{
-		if (s->sSectorX == sMapX &&
-				s->sSectorY == sMapY &&
-				s->bSectorZ == sMapZ &&
-				s->bLife >= OKLIFE)
-		{
-			// valid character
-			InitializeItemPickupMenu(s, NOWHERE , pItemPool, MAP_INVEN_POOL_X, MAP_INVEN_POOL_Y, -1);
-			fWasInited = TRUE;
-
-			CreateScreenMaskForInventoryPoolPopUp( );
-		}
-	}
-	else if (fWasInited && !fMapInventoryPoolInited)
-	{
-		fWasInited = FALSE;
-
-		// now clear up the box
-		RemoveItemPickupMenu( );
-
-		// remove screen mask
-		RemoveScreenMaskForInventoryPoolPopUp( );
-
-		// drity nessacary regions
-		fMapPanelDirty = TRUE;
-
-	}
-
-	// showing it
-	if( ( fMapInventoryPoolInited ) && ( fWasInited ) )
-	{
-		SetPickUpMenuDirtyLevel( DIRTYLEVEL2 );
-		RenderItemPickupMenu( );
-	}
-}
-
-
-static void InventoryScreenMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason);
-
-
-static void CreateScreenMaskForInventoryPoolPopUp(void)
-{
-	//  a screen mask for the inventory pop up
-	MSYS_DefineRegion(&gInventoryScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 1, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, InventoryScreenMaskBtnCallback);
-}
-
-
-static void RemoveScreenMaskForInventoryPoolPopUp(void)
-{
-	// remove screen mask
-	MSYS_RemoveRegion( &gInventoryScreenMask );
-}
-
-
-// invnetory screen mask btn callback
-static void InventoryScreenMaskBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
-  // inventory screen mask btn callback
-  if(iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-  {
-	  fMapInventoryPoolInited = FALSE;
-  }
 }
 
 

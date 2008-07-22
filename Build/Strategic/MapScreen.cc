@@ -2305,9 +2305,6 @@ try
 //	RenderMapBorderCorner( );
 
 
-	// handle display of inventory pop up
-	HandleDisplayOfItemPopUpForSector( 9, 1, 0 );
-
 	// Display Framerate
 	DisplayFrameRate( );
 

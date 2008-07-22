@@ -205,9 +205,6 @@ extern MapScreenCharacterSt gCharactersList[ ];
 #define CFOR_ALL_SELECTED_IN_CHAR_LIST(iter) BASE_FOR_ALL_SELECTED_IN_CHAR_LIST(const MapScreenCharacterSt, iter)
 
 
-// map inventory pool inited
-extern BOOLEAN fMapInventoryPoolInited;
-
 // highlighted lines
 extern INT32 giHighLine;
 extern INT32 giAssignHighLine;
@@ -317,9 +314,6 @@ void JumpToLevel( INT32 iLevel );
 
 // check to see if we need to update the screen
 void CheckAndUpdateBasedOnContractTimes( void );
-
-// check if are just about to display this pop up or stopping display
-void HandleDisplayOfItemPopUpForSector( INT16 sMapX, INT16 sMapY, INT16 sMapZ );
 
 // display red arrow by name of selected merc
 void HandleDisplayOfSelectedMercArrows( void );

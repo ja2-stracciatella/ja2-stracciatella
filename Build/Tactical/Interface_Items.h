@@ -33,7 +33,6 @@ void RenderItemPickupMenu(void);
 void RemoveItemPickupMenu(void);
 void SetItemPickupMenuDirty( BOOLEAN fDirtyLevel );
 BOOLEAN HandleItemPickupMenu(void);
-void SetPickUpMenuDirtyLevel( BOOLEAN fDirtyLevel );
 
 
 // FUNCTIONS FOR INTERFACEING WITH ITEM PANEL STUFF

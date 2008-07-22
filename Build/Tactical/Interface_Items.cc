@@ -4929,13 +4929,6 @@ static void CalculateItemPickupMenuDimensions(void)
 }
 
 
-// set pick up menu dirty level
-void SetPickUpMenuDirtyLevel( BOOLEAN fDirtyLevel )
-{
-	gItemPickupMenu.fDirtyLevel = fDirtyLevel;
-}
-
-
 void RenderItemPickupMenu()
 {
 	wchar_t pStr[100];
