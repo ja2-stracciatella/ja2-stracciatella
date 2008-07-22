@@ -5376,54 +5376,15 @@ static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason)
 	}
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
+		INT32 amount   = 0;
 		UINT8	ubButton = MSYS_GetBtnUserData(btn);
 
 		switch( ubButton )
 		{
-			case M_1000:
-				if( gRemoveMoney.uiMoneyRemaining >= 1000 )
-				{
-					//if the player is removing money from their account, and they are removing more then $20,000
-					if( gfAddingMoneyToMercFromPlayersAccount &&  ( gRemoveMoney.uiMoneyRemoving + 1000 ) > MAX_MONEY_PER_SLOT )
-					{
-						ScreenID const exit_screen = guiCurrentScreen == SHOPKEEPER_SCREEN ?
-							SHOPKEEPER_SCREEN : GAME_SCREEN;
-						DoMessageBox(MSG_BOX_BASIC_STYLE, gzMoneyWithdrawMessageText[MONEY_TEXT_WITHDRAW_MORE_THEN_MAXIMUM], exit_screen, MSG_BOX_FLAG_OK, NULL, NULL);
-						return;
-					}
+			case M_1000: amount = 1000; break;
+			case M_100:  amount =  100; break;
+			case M_10:   amount =   10; break;
 
-					gRemoveMoney.uiMoneyRemaining -= 1000;
-					gRemoveMoney.uiMoneyRemoving += 1000;
-				}
-				break;
-			case M_100:
-				if( gRemoveMoney.uiMoneyRemaining >= 100 )
-				{
-					//if the player is removing money from their account, and they are removing more then $20,000
-					if( gfAddingMoneyToMercFromPlayersAccount &&  ( gRemoveMoney.uiMoneyRemoving + 100 ) > MAX_MONEY_PER_SLOT )
-					{
-						DoMessageBox(MSG_BOX_BASIC_STYLE, gzMoneyWithdrawMessageText[MONEY_TEXT_WITHDRAW_MORE_THEN_MAXIMUM], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
-						return;
-					}
-
-					gRemoveMoney.uiMoneyRemaining -= 100;
-					gRemoveMoney.uiMoneyRemoving += 100;
-				}
-				break;
-			case M_10:
-				if( gRemoveMoney.uiMoneyRemaining >= 10 )
-				{
-					//if the player is removing money from their account, and they are removing more then $20,000
-					if( gfAddingMoneyToMercFromPlayersAccount &&  ( gRemoveMoney.uiMoneyRemoving + 10 ) > MAX_MONEY_PER_SLOT )
-					{
-						DoMessageBox(MSG_BOX_BASIC_STYLE, gzMoneyWithdrawMessageText[MONEY_TEXT_WITHDRAW_MORE_THEN_MAXIMUM], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
-						return;
-					}
-
-					gRemoveMoney.uiMoneyRemaining -= 10;
-					gRemoveMoney.uiMoneyRemoving += 10;
-				}
-				break;
 			case M_DONE:
 			{
 				RemoveMoney();
@@ -5432,8 +5393,20 @@ static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason)
 			}
 			break;
 		}
-		if( ubButton != M_DONE )
+
+		if (amount != 0 && gRemoveMoney.uiMoneyRemaining >= amount)
 		{
+			if (gfAddingMoneyToMercFromPlayersAccount && gRemoveMoney.uiMoneyRemoving + amount > MAX_MONEY_PER_SLOT)
+			{
+				ScreenID const exit_screen = guiCurrentScreen == SHOPKEEPER_SCREEN ?
+					SHOPKEEPER_SCREEN : GAME_SCREEN;
+				DoMessageBox(MSG_BOX_BASIC_STYLE, gzMoneyWithdrawMessageText[MONEY_TEXT_WITHDRAW_MORE_THEN_MAXIMUM], exit_screen, MSG_BOX_FLAG_OK, NULL, NULL);
+				return;
+			}
+
+			gRemoveMoney.uiMoneyRemaining -= amount;
+			gRemoveMoney.uiMoneyRemoving  += amount;
+
 			RenderItemDescriptionBox( );
 			for( i=0; i<MAX_ATTACHMENTS; i++ )
 			{
