@@ -4524,15 +4524,9 @@ static void BltCharInvPanel(void)
 	// render items in each of chars slots
   HandleRenderInvSlots( pSoldier, DIRTYLEVEL2 );
 
-	// reset font destination buffer
-	SetFontDestBuffer(FRAME_BUFFER);
-
  	SetFont( BLOCKFONT2 );
 
 	// Render Values for stats!
-	// Set font drawing to saved buffer
-	SetFontDestBuffer(guiSAVEBUFFER);
-
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( MAP_INV_STATS_TITLE_FONT_COLOR );
 
