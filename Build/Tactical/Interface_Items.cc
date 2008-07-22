@@ -4543,8 +4543,6 @@ struct ITEM_PICKUP_MENU_STRUCT
 	GUIButtonRef  iAllButton;
 	GUIButtonRef  iOKButton;
 	GUIButtonRef  iCancelButton;
-	BOOLEAN				fCanScrollUp;
-	BOOLEAN				fCanScrollDown;
 	BOOLEAN				fDirtyLevel;
 	BOOLEAN				fHandled;
 	INT16					sGridNo;
@@ -4755,10 +4753,6 @@ static void SetupPickupPage(INT8 bPage)
 	// Zero out page slots
 	memset( gItemPickupMenu.ItemPoolSlots, 0, sizeof( gItemPickupMenu.ItemPoolSlots )  );
 
-	// Zero page flags
-	gItemPickupMenu.fCanScrollUp		= FALSE;
-	gItemPickupMenu.fCanScrollDown  = FALSE;
-
 	// Get lower bound
 	iStart = bPage * NUM_PICKUP_SLOTS;
 	if ( iStart > gItemPickupMenu.ubTotalItems )
@@ -4766,21 +4760,11 @@ static void SetupPickupPage(INT8 bPage)
 		return;
 	}
 
-	if ( bPage > 0 )
-	{
-		gItemPickupMenu.fCanScrollUp = TRUE;
-	}
-
 
 	iEnd   = iStart + NUM_PICKUP_SLOTS;
 	if ( iEnd >= gItemPickupMenu.ubTotalItems )
 	{
 		iEnd = gItemPickupMenu.ubTotalItems;
-	}
-	else
-	{
-		// We can go for more!
-		gItemPickupMenu.fCanScrollDown = TRUE;
 	}
 
 	// Setup slots!
@@ -4835,7 +4819,7 @@ static void SetupPickupPage(INT8 bPage)
 	if ( gItemPickupMenu.bNumSlotsPerPage == NUM_PICKUP_SLOTS && gItemPickupMenu.ubTotalItems > NUM_PICKUP_SLOTS )
 	{
 		// Setup enabled/disabled buttons
-		if ( gItemPickupMenu.fCanScrollUp )
+		if (bPage > 0)
 		{
 			EnableButton( gItemPickupMenu.iUpButton );
 		}
@@ -4845,7 +4829,7 @@ static void SetupPickupPage(INT8 bPage)
 		}
 
 		// Setup enabled/disabled buttons
-		if ( gItemPickupMenu.fCanScrollDown )
+		if (iEnd < gItemPickupMenu.ubTotalItems)
 		{
 			EnableButton( gItemPickupMenu.iDownButton );
 		}
