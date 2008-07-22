@@ -5307,7 +5307,21 @@ static void ItemPickMenuMouseClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			DisableButton( gItemPickupMenu.iOKButton );
 		}
 	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		INT8 const page = gItemPickupMenu.bScrollPage;
+		if (page > 0) SetupPickupPage(page - 1);
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		INT8 const page = gItemPickupMenu.bScrollPage;
+		if ((page + 1) * NUM_PICKUP_SLOTS < gItemPickupMenu.ubTotalItems)
+		{
+			SetupPickupPage(page + 1);
+		}
+	}
 }
+
 
 BOOLEAN HandleItemPickupMenu( )
 {
