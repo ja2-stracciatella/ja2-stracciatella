@@ -206,7 +206,6 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	const SGPBox* const item_box = &g_sector_inv_item_box;
 	const UINT16        outline  = (fMapInventoryItemCompatable[iCurrentSlot] ? Get16BPPColor(FROMRGB(255, 255, 255)) : TRANSPARENT);
 	INVRenderItem(guiSAVEBUFFER, NULL, &item->o, dx + item_box->x, dy + item_box->y, item_box->w, item_box->h, DIRTYLEVEL2, 0, outline);
-	SetFontDestBuffer(FRAME_BUFFER);
 
 	// draw bar for condition
 	const UINT16 col0 = Get16BPPColor(DESC_STATUS_BAR);
@@ -231,8 +230,6 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	wchar_t sString[64];
 	wcscpy(sString, ShortItemNames[item->o.usItem]);
 	ReduceStringLength(sString, lengthof(sString), name_box->w, MAP_IVEN_FONT);
-
-	SetFontDestBuffer(guiSAVEBUFFER);
 
 	SetFont(MAP_IVEN_FONT);
 	SetFontForeground(FONT_WHITE);
