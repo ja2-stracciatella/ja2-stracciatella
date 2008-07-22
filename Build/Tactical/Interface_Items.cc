@@ -5141,53 +5141,42 @@ static void ItemPickupCancel(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* const pRegion, INT32 const iReason)
 {
-	UINT32					uiItemPos;
-	ITEM_POOL				*pTempItemPool;
-	INT32						bPos;
-	static					BOOLEAN	bChecked = FALSE;
-
-	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
-
+	static BOOLEAN bChecked = FALSE;
 
 	if (iReason & MSYS_CALLBACK_REASON_MOVE)
 	{
-		bPos = ( uiItemPos + gItemPickupMenu.ubScrollAnchor );
+		UINT32 const uiItemPos = MSYS_GetRegionUserData(pRegion, 0);
+		INT32  const bPos      = uiItemPos + gItemPickupMenu.ubScrollAnchor;
+		if (bPos >= gItemPickupMenu.ubTotalItems) return;
 
-		if ( bPos < gItemPickupMenu.ubTotalItems )
-		{
-			// Set current selected guy....
-			gItemPickupMenu.bCurSelect = bPos;
+		gItemPickupMenu.bCurSelect = bPos;
 
-			if ( !bChecked )
-			{
-				// Show compatible ammo...
-				pTempItemPool = gItemPickupMenu.ItemPoolSlots[ gItemPickupMenu.bCurSelect - gItemPickupMenu.ubScrollAnchor ];
-				const OBJECTTYPE* const o = &GetWorldItem(pTempItemPool->iItemIndex)->o;
+		if (bChecked) return;
 
-				gItemPickupMenu.CompAmmoObject = *o;
+		// Show compatible ammo
+		ITEM_POOL  const* const pTempItemPool = gItemPickupMenu.ItemPoolSlots[uiItemPos];
+		OBJECTTYPE const* const o             = &GetWorldItem(pTempItemPool->iItemIndex)->o;
 
-				// Turn off first...
-				HandleAnyMercInSquadHasCompatibleStuff(NULL);
-				InternalHandleCompatibleAmmoUI( gpSMCurrentMerc, &( gItemPickupMenu.CompAmmoObject ), TRUE );
+		gItemPickupMenu.CompAmmoObject = *o;
 
-				HandleAnyMercInSquadHasCompatibleStuff(o);
+		HandleAnyMercInSquadHasCompatibleStuff(0); // Turn off first
+		InternalHandleCompatibleAmmoUI(gpSMCurrentMerc, &gItemPickupMenu.CompAmmoObject, TRUE);
+		HandleAnyMercInSquadHasCompatibleStuff(o);
 
-				SetItemPickupMenuDirty( DIRTYLEVEL2 );
+		SetItemPickupMenuDirty(DIRTYLEVEL2);
 
-				bChecked = TRUE;
-			}
-		}
+		bChecked = TRUE;
 	}
-	else if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
+	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{
 		gItemPickupMenu.bCurSelect = 255;
 
-		InternalHandleCompatibleAmmoUI( gpSMCurrentMerc, &( gItemPickupMenu.CompAmmoObject ), FALSE );
+		InternalHandleCompatibleAmmoUI(gpSMCurrentMerc, &gItemPickupMenu.CompAmmoObject, FALSE);
 		HandleAnyMercInSquadHasCompatibleStuff(NULL);
 
-		SetItemPickupMenuDirty( DIRTYLEVEL2 );
+		SetItemPickupMenuDirty(DIRTYLEVEL2);
 
 		bChecked = FALSE;
 	}
