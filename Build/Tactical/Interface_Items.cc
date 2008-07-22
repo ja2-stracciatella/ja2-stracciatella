@@ -5367,31 +5367,27 @@ BOOLEAN HandleItemPickupMenu( )
 }
 
 
-static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnMoneyButtonCallback(GUI_BUTTON* const btn, INT32 const reason)
 {
-	INT8	i;
-	if(reason & MSYS_CALLBACK_REASON_RBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 	}
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		INT32 amount   = 0;
-		UINT8	ubButton = MSYS_GetBtnUserData(btn);
 
-		switch( ubButton )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	{
+		INT32       amount   = 0;
+		UINT8	const ubButton = MSYS_GetBtnUserData(btn);
+		switch (ubButton)
 		{
 			case M_1000: amount = 1000; break;
 			case M_100:  amount =  100; break;
 			case M_10:   amount =   10; break;
 
 			case M_DONE:
-			{
 				RemoveMoney();
-
-				DeleteItemDescriptionBox( );
-			}
-			break;
+				DeleteItemDescriptionBox();
+				break;
 		}
 
 		if (amount != 0 && gRemoveMoney.uiMoneyRemaining >= amount)
@@ -5408,50 +5404,36 @@ static void BtnMoneyButtonCallback(GUI_BUTTON* btn, INT32 reason)
 			gRemoveMoney.uiMoneyRemoving  += amount;
 
 			RenderItemDescriptionBox( );
-			for( i=0; i<MAX_ATTACHMENTS; i++ )
+			for (INT8 i = 0; i < MAX_ATTACHMENTS; ++i)
 			{
-				MarkAButtonDirty( guiMoneyButtonBtn[ i ] );
+				MarkAButtonDirty(guiMoneyButtonBtn[i]);
 			}
 		}
 	}
 
-
-	if(reason & MSYS_CALLBACK_REASON_RBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
-		UINT8	ubButton = MSYS_GetBtnUserData(btn);
+		btn->uiFlags &= ~BUTTON_CLICKED_ON;
 
-		btn->uiFlags &= (~BUTTON_CLICKED_ON );
-
-
-		switch( ubButton )
+		INT32       amount   = 0;
+		UINT8	const ubButton = MSYS_GetBtnUserData(btn);
+		switch (ubButton)
 		{
-			case M_1000:
-				if( gRemoveMoney.uiMoneyRemoving >= 1000 )
-				{
-					gRemoveMoney.uiMoneyRemaining += 1000;
-					gRemoveMoney.uiMoneyRemoving -= 1000;
-				}
-				break;
-			case M_100:
-				if( gRemoveMoney.uiMoneyRemoving >= 100 )
-				{
-					gRemoveMoney.uiMoneyRemaining += 100;
-					gRemoveMoney.uiMoneyRemoving -= 100;
-				}
-				break;
-			case M_10:
-				if( gRemoveMoney.uiMoneyRemoving >= 10 )
-				{
-					gRemoveMoney.uiMoneyRemaining += 10;
-					gRemoveMoney.uiMoneyRemoving -= 10;
-				}
-				break;
+			case M_1000: amount = 1000; break;
+			case M_100:  amount =  100; break;
+			case M_10:   amount =   10; break;
 		}
 
-		RenderItemDescriptionBox( );
-		for( i=0; i<MAX_ATTACHMENTS; i++ )
+		if (amount != 0 && gRemoveMoney.uiMoneyRemoving >= amount)
 		{
-			MarkAButtonDirty( guiMoneyButtonBtn[ i ] );
+			gRemoveMoney.uiMoneyRemaining += amount;
+			gRemoveMoney.uiMoneyRemoving  -= amount;
+		}
+
+		RenderItemDescriptionBox();
+		for (INT8 i = 0; i < MAX_ATTACHMENTS; ++i)
+		{
+			MarkAButtonDirty(guiMoneyButtonBtn[i]);
 		}
 	}
 }
