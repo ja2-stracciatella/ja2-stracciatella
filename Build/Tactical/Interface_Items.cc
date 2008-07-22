@@ -4520,7 +4520,7 @@ static void ItemPopupFullRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 #define NUM_PICKUP_SLOTS				6
 
-typedef struct
+struct ITEM_PICKUP_MENU_STRUCT
 {
 	ITEM_POOL			*pItemPool;
 	INT16					sX;
@@ -4556,11 +4556,9 @@ typedef struct
 	MOUSE_REGION	BackRegions;
 	MOUSE_REGION	BackRegion;
 	BOOLEAN				*pfSelectedArray;
-	BOOLEAN				fAtLeastOneSelected;
 	OBJECTTYPE		CompAmmoObject;
 	BOOLEAN				fAllSelected;
-
-} ITEM_PICKUP_MENU_STRUCT;
+};
 
 #define					ITEMPICK_UP_X				55
 #define					ITEMPICK_UP_Y				5
@@ -4678,15 +4676,14 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 		sY = gsVIEWPORT_WINDOW_END_Y - menu.sHeight;
 	}
 
-	menu.sX                  = sX;
-	menu.sY                  = sY;
-	menu.bCurSelect          = 0;
-	menu.pSoldier            = pSoldier;
-	menu.fHandled            = FALSE;
-	menu.sGridNo             = sGridNo;
-	menu.bZLevel             = bZLevel;
-	menu.fAtLeastOneSelected = FALSE;
-	menu.fAllSelected        = FALSE;
+	menu.sX           = sX;
+	menu.sY           = sY;
+	menu.bCurSelect   = 0;
+	menu.pSoldier     = pSoldier;
+	menu.fHandled     = FALSE;
+	menu.sGridNo      = sGridNo;
+	menu.bZLevel      = bZLevel;
+	menu.fAllSelected = FALSE;
 
 	//Load images for buttons
 	BUTTON_PICS* const pics  = LoadButtonImage("INTERFACE/itembox.sti",   -1, 5, -1, 10, -1);
