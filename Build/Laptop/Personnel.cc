@@ -1,7 +1,6 @@
 #include "Font.h"
 #include "HImage.h"
 #include "Laptop.h"
-#include "Local.h"
 #include "Personnel.h"
 #include "VObject.h"
 #include "Debug.h"
@@ -1179,7 +1178,7 @@ static void DisplayCharInventory(const SOLDIERTYPE* const s)
 		const INT16              cen_y = PosY + abs(22 - pTrav->usHeight) / 2 - pTrav->sOffsetY;
 		BltVideoObjectOutline(FRAME_BUFFER, gfx, item->ubGraphicNum, cen_x, cen_y, TRANSPARENT);
 
-		SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		SetFontDestBuffer(FRAME_BUFFER);
 
 		wcslcpy(sString, ItemNames[item_idx], lengthof(sString));
 		ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);

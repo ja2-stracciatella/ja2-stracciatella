@@ -655,7 +655,7 @@ static void DrawBoxText(const PopUpBox* const box)
 		InvalidateRegion(tlx - 1, tly, brx, bry);
 	}
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 }
 
 

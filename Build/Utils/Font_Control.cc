@@ -1,5 +1,4 @@
 #include "Font.h"
-#include "Local.h"
 #include "HImage.h"
 #include "VObject.h"
 #include "VSurface.h"
@@ -59,7 +58,7 @@ void InitializeFonts(void)
 #undef M
 
 	// Set default for font system
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 }
 
 

@@ -1142,14 +1142,14 @@ static void DisplayCharacterInfo(void)
 	const SOLDIERTYPE* const s = GetSelectedInfoChar();
 	if (s == NULL) return;
 
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(guiSAVEBUFFER);
 
 	// draw character info and face
 	DrawCharacterInfo(s);
 
 	RenderHandPosItem();
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 
 	RenderIconsForUpperLeftCornerPiece(s);
 
@@ -1620,13 +1620,13 @@ static void DisplayCharacterList(void)
 
 	if (fShowAssignmentMenu && !fTeamPanelDirty)
 	{
-		SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		SetFontDestBuffer(FRAME_BUFFER);
 		return;
 	}
 
 
 	// set dest buffer
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(guiSAVEBUFFER);
 	SetFont( MAP_SCREEN_FONT );
 	SetFontBackground(FONT_BLACK);
 
@@ -1672,7 +1672,7 @@ static void DisplayCharacterList(void)
 	}
 
 	HandleDisplayOfSelectedMercArrows( );
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 
 	EnableDisableTeamListRegionsAndHelpText( );
 
@@ -4519,19 +4519,19 @@ static void BltCharInvPanel(void)
   RenderInvBodyPanel(pSoldier, INV_BODY_X, INV_BODY_Y );
 
 	// reset font destination buffer to the save buffer
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(guiSAVEBUFFER);
 
 	// render items in each of chars slots
   HandleRenderInvSlots( pSoldier, DIRTYLEVEL2 );
 
 	// reset font destination buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0,0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 
  	SetFont( BLOCKFONT2 );
 
 	// Render Values for stats!
 	// Set font drawing to saved buffer
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(guiSAVEBUFFER);
 
 	SetFontBackground( FONT_MCOLOR_BLACK );
 	SetFontForeground( MAP_INV_STATS_TITLE_FONT_COLOR );
@@ -4567,7 +4567,7 @@ static void BltCharInvPanel(void)
 		// blit gold key on top of key ring if key ring is not empty
 	}
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 }
 
 
@@ -4954,7 +4954,7 @@ static void RenderAttributeStringsForUpperLeftHandCorner(SGPVSurface* const uiBu
 	SetFont( CHAR_FONT );
 	SetFontForeground( CHAR_TITLE_FONT_COLOR );
 	SetFontBackground( FONT_BLACK );
-	SetFontDestBuffer(uiBufferToRenderTo, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(uiBufferToRenderTo);
 
 
 	// assignment strings
@@ -4987,7 +4987,7 @@ static void RenderAttributeStringsForUpperLeftHandCorner(SGPVSurface* const uiBu
 
 
 	// restore buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 }
 
 

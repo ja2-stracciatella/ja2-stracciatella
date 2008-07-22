@@ -368,9 +368,9 @@ static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 	vs->Fill(0);
 
 	//write the string onto the surface
-	SetFontDestBuffer(vs, 0, 0, CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString);
+	SetFontDestBuffer(vs);
 	DisplayWrappedString(0, 1, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pString, 0, gubCrdtJustification);
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 
 	if (g_credits_tail == NULL)
 	{

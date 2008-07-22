@@ -2,7 +2,6 @@
 
 #include "HImage.h"
 #include "Handle_Items.h"
-#include "Local.h"
 #include "Edit_Sys.h"
 #include "TileDat.h"
 #include "VSurface.h"
@@ -302,7 +301,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 
 			SetFont(SMALLCOMPFONT);
 			SetFontForeground( FONT_MCOLOR_WHITE );
-			SetFontDestBuffer(eInfo.uiBuffer, 0, 0, w, h);
+			SetFontDestBuffer(eInfo.uiBuffer);
 
 			swprintf(pStr, lengthof(pStr), L"%hs", LockTable[i].ubEditorName);
 			DisplayWrappedString(x, y + 25, 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
@@ -400,7 +399,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 
 				SetFont(SMALLCOMPFONT);
 				SetFontForeground( FONT_MCOLOR_WHITE );
-				SetFontDestBuffer(eInfo.uiBuffer, 0, 0, w, h);
+				SetFontDestBuffer(eInfo.uiBuffer);
 
 
 				if( eInfo.uiItemType != TBAR_MODE_ITEM_TRIGGERS )
@@ -469,7 +468,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			usCounter++;
 		}
 	}
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 	SetClippingRect(&SaveRect);
 	gfRenderTaskbar = TRUE;
 }

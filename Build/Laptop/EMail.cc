@@ -2392,7 +2392,7 @@ static void DisplayNumberOfPagesToThisEmail(INT32 iViewerY)
 	// turn off the shadows
 	SetFontShadow(NO_SHADOW);
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 
 	FindFontCenterCoordinates(VIEWER_X + INDENT_X_OFFSET, 0,INDENT_X_WIDTH, 0, sString, FONT12ARIAL, &sX, &sY);
 	MPrint(sX, VIEWER_Y + iViewerY + INDENT_Y_OFFSET - 2, sString);

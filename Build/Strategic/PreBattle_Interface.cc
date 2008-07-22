@@ -1,6 +1,5 @@
 #include "Font.h"
 #include "Input.h"
-#include "Local.h"
 #include "MessageBoxScreen.h"
 #include "PreBattle_Interface.h"
 #include "Button_System.h"
@@ -905,7 +904,7 @@ void RenderPreBattleInterface()
 	if( gfRenderPBInterface )
 	{
 		// set font destinanation buffer to the save buffer
-		SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		SetFontDestBuffer(guiSAVEBUFFER);
 
 		if( gfPBButtonsHidden )
 		{
@@ -1134,7 +1133,7 @@ void RenderPreBattleInterface()
 		RestoreExternBackgroundRect( 0, 0, 261, 359 );
 
 		// restore font destinanation buffer to the frame buffer
-		SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		SetFontDestBuffer(FRAME_BUFFER);
 	}
 	else if( gfBlinkHeader )
 	{

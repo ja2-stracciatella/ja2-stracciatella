@@ -868,7 +868,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 			if (s->bOppCnt > 0)
 #endif
 			{
-				SetFontDestBuffer(uiRenderBuffer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				SetFontDestBuffer(uiRenderBuffer);
 
 				wchar_t sString[32];
 				swprintf(sString, lengthof(sString), L"%d", s->bOppCnt);
@@ -883,7 +883,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 				const INT16 sY2 = sY1 + GetFontHeight(TINYFONT1) - 1;
 
 				MPrint(sX1 + 1, sY1 - 1, sString);
-				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				SetFontDestBuffer(FRAME_BUFFER);
 
 				// Draw box
 				SGPVSurface::Lock l(uiRenderBuffer);
@@ -909,7 +909,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 				SetFontBackground(FONT_MCOLOR_BLACK);
 				SetFontForeground(FONT_MCOLOR_WHITE);
 
-				SetFontDestBuffer(uiRenderBuffer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				SetFontDestBuffer(uiRenderBuffer);
 
 				INT16 sFontX;
 				INT16 sFontY;
@@ -927,7 +927,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 					f->fDisplayTextOver = FACE_NO_TEXT_OVER;
 				}
 
-				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				SetFontDestBuffer(FRAME_BUFFER);
 			}
 		}
 
@@ -1030,7 +1030,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
       // ATE: Show numbers only in mapscreen
 			if (fShowNumber)
 			{
-				SetFontDestBuffer(uiRenderBuffer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				SetFontDestBuffer(uiRenderBuffer);
 
 				wchar_t sString[32];
 				swprintf(sString, lengthof(sString), L"%d/%d", sPtsAvailable, usMaximumPts);
@@ -1041,7 +1041,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 
 				const UINT16 usTextWidth = StringPixLength(sString, FONT10ARIAL) + 1;
 				MPrint(sFaceX + f->usFaceWidth - usTextWidth, sFaceY + 3, sString);
-				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				SetFontDestBuffer(FRAME_BUFFER);
 			}
 		}
 	}

@@ -1782,7 +1782,7 @@ static void DisplayBookMarks(void)
 	MPrint(sX, sY, pBookMarkStrings[CANCEL_STRING]);
 	i++;
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 	SetFontShadow(DEFAULT_SHADOW);
 
 	InvalidateRegion(BOOK_X, BOOK_TOP_Y + i * BOOK_HEIGHT + 12, BOOK_X + BOOK_WIDTH, BOOK_TOP_Y + (i + 1) * BOOK_HEIGHT + 16);
@@ -2326,9 +2326,9 @@ static void InitTitleBarMaximizeGraphics(const SGPVObject* const uiBackgroundGra
 	BltVideoObject(guiTitleBarSurface, uiBackgroundGraphic, 0, 0, 0);
 	BltVideoObject(guiTitleBarSurface, uiIconGraphic, usIconGraphicIndex, LAPTOP_TITLE_BAR_ICON_OFFSET_X, LAPTOP_TITLE_BAR_ICON_OFFSET_Y);
 
-	SetFontDestBuffer(guiTitleBarSurface, 0, 0, LAPTOP_TITLE_BAR_WIDTH, LAPTOP_TITLE_BAR_HEIGHT);
+	SetFontDestBuffer(guiTitleBarSurface);
 	DrawTextToScreen(pTitle, LAPTOP_TITLE_BAR_TEXT_OFFSET_X, LAPTOP_TITLE_BAR_TEXT_OFFSET_Y, 0, FONT14ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 }
 
 

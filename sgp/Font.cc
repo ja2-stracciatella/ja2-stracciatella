@@ -216,6 +216,12 @@ void SetFontDestBuffer(SGPVSurface* const dst, const INT32 x1, const INT32 y1, c
 }
 
 
+void SetFontDestBuffer(SGPVSurface* const dst)
+{
+	SetFontDestBuffer(dst, 0, 0, dst->Width(), dst->Height());
+}
+
+
 void FindFontRightCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, Font const font, INT16* psNewX, INT16* psNewY)
 {
 	// Compute the coordinates to right justify the text

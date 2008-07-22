@@ -1335,7 +1335,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 
 			// Render Values for stats!
 			// Set font drawing to saved buffer
-			SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			SetFontDestBuffer(guiSAVEBUFFER);
 
 			SetFontBackground( FONT_MCOLOR_BLACK );
 			SetFontForeground( STATS_TITLE_FONT_COLOR );
@@ -1396,7 +1396,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 			MPrint(usX, usY, sString);
 
 			// reset to frame buffer!
-			SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			SetFontDestBuffer(FRAME_BUFFER);
 
 			RestoreExternBackgroundRect(INTERFACE_START_X, INV_INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X, SCREEN_HEIGHT - INV_INTERFACE_START_Y);
 		}
@@ -2568,13 +2568,13 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				SetFontBackground(FONT_MCOLOR_BLACK);
 
 				// RENDER ON SAVE BUFFER!
-				SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				SetFontDestBuffer(guiSAVEBUFFER);
 				INT16 sFontX;
 				INT16 sFontY;
 				FindFontCenterCoordinates(dx + TM_NAME_X, dy + TM_NAME_Y, TM_NAME_WIDTH, TM_NAME_HEIGHT, s->name, BLOCKFONT2, &sFontX, &sFontY);
 				MPrint(sFontX, sFontY, s->name);
 				// reset to frame buffer!
-				SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+				SetFontDestBuffer(FRAME_BUFFER);
 			}
 		}
 

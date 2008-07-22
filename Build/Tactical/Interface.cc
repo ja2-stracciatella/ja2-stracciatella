@@ -1835,7 +1835,7 @@ static void CreateTopMessage(void)
 	const TacticalStatusType* const ts  = &gTacticalStatus;
 	SGPVSurface*              const dst = gTopMessage.uiSurface;
 
-	SetFontDestBuffer(dst, 0, 0, SCREEN_WIDTH, 20);
+	SetFontDestBuffer(dst);
 	SetFont(TINYFONT1);
 	SetFontBackground(FONT_MCOLOR_BLACK);
 
@@ -1934,7 +1934,7 @@ static void CreateTopMessage(void)
 	FindFontCenterCoordinates(bar->x, bar->y, bar->w, bar->h, msg, TINYFONT1, &sX, &sY);
 	MPrint(sX, sY, msg);
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 	SetFontShadow(DEFAULT_SHADOW);
 
 	gfTopMessageDirty = TRUE;

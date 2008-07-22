@@ -1,6 +1,5 @@
 #include "Buffer.h"
 #include "Debug.h"
-#include "Local.h"
 #include "Font.h"
 #include "LoadSaveData.h"
 #include "PODObj.h"
@@ -658,7 +657,7 @@ void DisplayStringsInMapScreenMessageList(void)
 		ubCurrentStringIndex = (ubCurrentStringIndex + 1) % 256;
 	}
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 }
 
 

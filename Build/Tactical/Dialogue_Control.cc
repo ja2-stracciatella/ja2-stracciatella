@@ -4,7 +4,6 @@
 #include "Handle_UI.h"
 #include "Interface.h"
 #include "Isometric_Utils.h"
-#include "Local.h"
 #include "MessageBoxScreen.h"
 #include "Soldier_Control.h"
 #include "Encrypted_File.h"
@@ -1958,7 +1957,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 		if ( pSoldier )
 		{
 		  //reset the font dest buffer
-		  SetFontDestBuffer(pBlitter->uiDestBuff, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		  SetFontDestBuffer(pBlitter->uiDestBuff);
 
 			FindFontCenterCoordinates(pBlitter->sX + 12, pBlitter->sY + 55, 73, 9, pSoldier->name, BLOCKFONT2, &sFontX, &sFontY);
 			MPrint(sFontX, sFontY, pSoldier->name);
@@ -1975,7 +1974,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 			}
 
 		  //reset the font dest buffer
-			SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			SetFontDestBuffer(FRAME_BUFFER);
 
 			DrawSoldierUIBars(pSoldier, pBlitter->sX + 69, pBlitter->sY + 47, FALSE, pBlitter->uiDestBuff);
 		}

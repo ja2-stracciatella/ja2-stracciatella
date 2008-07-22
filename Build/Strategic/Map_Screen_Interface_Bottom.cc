@@ -374,7 +374,7 @@ static void DrawNameOfLoadedSector(void)
 	wchar_t sString[ 128 ];
   INT16 sFontX, sFontY;
 
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 
 	SetFont( COMPFONT );
 	SetFontForeground( 183 );
@@ -603,7 +603,7 @@ static void DisplayCompressMode(void)
 	}
 
 	RestoreExternBackgroundRect( 489, 456, 522 - 489, 467 - 454 );
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 	SetFont( COMPFONT );
 
 	if( GetJA2Clock() - guiCompressionStringBaseTime >= PAUSE_GAME_TIMER )
@@ -987,8 +987,7 @@ static void DisplayCurrentBalanceTitleForMapBottom(void)
 	const wchar_t* sString;
 	INT16 sFontX, sFontY;
 
-	// ste the font buffer
-	SetFontDestBuffer(guiSAVEBUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(guiSAVEBUFFER);
 
 	SetFont( COMPFONT );
 	SetFontForeground( MAP_BOTTOM_FONT_COLOR );
@@ -1002,8 +1001,7 @@ static void DisplayCurrentBalanceTitleForMapBottom(void)
 	FindFontCenterCoordinates(359, 433 - 14,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, sString);
 
-	// ste the font buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 }
 
 
@@ -1013,8 +1011,7 @@ static void DisplayCurrentBalanceForMapBottom(void)
 	CHAR16 sString[ 128 ];
 	INT16 sFontX, sFontY;
 
-	// ste the font buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 
 	// set up the font
 	SetFont( COMPFONT );
@@ -1103,8 +1100,7 @@ static void DisplayProjectedDailyMineIncome(void)
 		// if screen was not dirtied, leave
 		if (!fMapBottomDirtied) return;
 	}
-		// ste the font buffer
-	SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetFontDestBuffer(FRAME_BUFFER);
 
 	// set up the font
 	SetFont( COMPFONT );
