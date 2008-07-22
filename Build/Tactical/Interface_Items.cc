@@ -4549,7 +4549,7 @@ struct ITEM_PICKUP_MENU_STRUCT
 	INT8					bZLevel;
 	INT16					sButtomPanelStartY;
 	SOLDIERTYPE		*pSoldier;
-	ITEM_POOL			*ItemPoolSlots[ NUM_PICKUP_SLOTS ];
+	INT32         items[NUM_PICKUP_SLOTS];
 	MOUSE_REGION	Regions[ NUM_PICKUP_SLOTS ];
 	MOUSE_REGION	BackRegions;
 	MOUSE_REGION	BackRegion;
@@ -4750,8 +4750,11 @@ static void SetupPickupPage(INT8 bPage)
 	ITEM_POOL				*pTempItemPool;
   INT16           sValue;
 
-	// Zero out page slots
-	memset( gItemPickupMenu.ItemPoolSlots, 0, sizeof( gItemPickupMenu.ItemPoolSlots )  );
+	// Reset page slots
+	for (INT32* i = gItemPickupMenu.items; i != endof(gItemPickupMenu.items); ++i)
+	{
+		*i = -1;
+	}
 
 	// Get lower bound
 	iStart = bPage * NUM_PICKUP_SLOTS;
@@ -4788,9 +4791,10 @@ static void SetupPickupPage(INT8 bPage)
 
 		if ( cnt >= iStart )
 		{
-			gItemPickupMenu.ItemPoolSlots[ cnt - iStart ] = pTempItemPool;
+			INT32 const item = pTempItemPool->iItemIndex;
+			gItemPickupMenu.items[cnt - iStart] = item;
 
-			const OBJECTTYPE* const pObject = &GetWorldItem(pTempItemPool->iItemIndex)->o;
+			const OBJECTTYPE* const pObject = &GetWorldItem(item)->o;
 
 		  sValue = pObject->bStatus[ 0 ];
 
@@ -4915,11 +4919,11 @@ void RenderItemPickupMenu()
 		UINT16 const outline_col = Get16BPPColor(FROMRGB(255, 255, 0));
 		for (INT32 cnt = 0; cnt < menu.bNumSlotsPerPage; ++cnt)
 		{
-			ITEM_POOL const* const ip = menu.ItemPoolSlots[cnt];
-			if (!ip) continue;
+			INT32 const item = menu.items[cnt];
+			if (item == -1) continue;
 
 			// Get item to render
-			OBJECTTYPE const* const pObject = &GetWorldItem(ip->iItemIndex)->o;
+			OBJECTTYPE const* const pObject = &GetWorldItem(item)->o;
 			INVTYPE    const* const pItem   = &Item[pObject->usItem];
 
 			UINT16              const usItemTileIndex = GetTileGraphicForItem(pItem);
@@ -5156,8 +5160,8 @@ static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* const pRegion, INT32 con
 		if (bChecked) return;
 
 		// Show compatible ammo
-		ITEM_POOL  const* const pTempItemPool = gItemPickupMenu.ItemPoolSlots[uiItemPos];
-		OBJECTTYPE const* const o             = &GetWorldItem(pTempItemPool->iItemIndex)->o;
+		INT32             const item = gItemPickupMenu.items[uiItemPos];
+		OBJECTTYPE const* const o    = &GetWorldItem(item)->o;
 
 		gItemPickupMenu.CompAmmoObject = *o;
 
