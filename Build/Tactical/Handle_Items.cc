@@ -1428,7 +1428,7 @@ void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGr
 							// Freeze guy!
 							pSoldier->fPauseAllAnimation = TRUE;
 
-							InitializeItemPickupMenu( pSoldier, sGridNo, pItemPool, 0, 0, bZLevel );
+							InitializeItemPickupMenu(pSoldier, sGridNo, pItemPool, bZLevel);
 
 							guiPendingOverrideEvent = G_GETTINGITEM;
 						}

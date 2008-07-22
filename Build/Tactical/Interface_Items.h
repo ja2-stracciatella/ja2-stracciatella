@@ -28,7 +28,7 @@ typedef struct
 
 
 // Itempickup stuff
-void InitializeItemPickupMenu(SOLDIERTYPE* pSoldier, INT16 sGridNo, ITEM_POOL* pItemPool, INT16 sScreenX, INT16 sScreenY, INT8 bZLevel);
+void InitializeItemPickupMenu(SOLDIERTYPE* pSoldier, INT16 sGridNo, ITEM_POOL* pItemPool, INT8 bZLevel);
 void RenderItemPickupMenu(void);
 void RemoveItemPickupMenu(void);
 void SetItemPickupMenuDirty( BOOLEAN fDirtyLevel );

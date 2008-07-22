@@ -4607,7 +4607,7 @@ static void ItemPickupScrollUp(GUI_BUTTON* btn, INT32 reason);
 static void SetupPickupPage(INT8 bPage);
 
 
-void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, ITEM_POOL* const pItemPool, INT16 const sScreenX, INT16 const sScreenY, INT8 const bZLevel)
+void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, ITEM_POOL* const pItemPool, INT8 const bZLevel)
 {
 	ITEM_POOL				*pTempItemPool;
 	INT32						cnt;
@@ -4675,16 +4675,8 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 	// Get XY
 	{
 		// First get mouse xy screen location
-		if( sGridNo != NOWHERE )
-		{
-			sX = gusMouseXPos;
-			sY = gusMouseYPos;
-		}
-		else
-		{
-			 sX = sScreenX;
-			 sY = sScreenY;
-		}
+		sX = gusMouseXPos;
+		sY = gusMouseYPos;
 
 		// CHECK FOR LEFT/RIGHT
 		if (sX + gItemPickupMenu.sWidth > SCREEN_WIDTH)
