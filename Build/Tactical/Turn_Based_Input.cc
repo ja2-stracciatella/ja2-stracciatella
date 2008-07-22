@@ -1586,108 +1586,33 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					break;
 
 				case SDLK_F1:
-					if( fShift )
-					{
-						HandleSelectMercSlot( 0, LOCATE_MERC_ONCE );
-					}
-#ifdef JA2TESTVERSION
-					else if( fAlt )
-					{
-						TestMeanWhile( 15 );
-					}
-					else if( fCtrl )
-					{
-						TestMeanWhile( 10 );
-					}
-#endif
-					else
-						HandleSelectMercSlot( 0, LOCATEANDSELECT_MERC );
-					break;
-
 				case SDLK_F2:
-					if( fShift )
-						HandleSelectMercSlot( 1, LOCATE_MERC_ONCE );
-#ifdef JA2TESTVERSION
-					else if( fAlt )
-					{
-						TestMeanWhile( 1 );
-					}
-					else if( fCtrl )
-					{
-						TestMeanWhile( 11 );
-					}
-#endif
-					else
-						HandleSelectMercSlot( 1, LOCATEANDSELECT_MERC );
-					break;
-
 				case SDLK_F3:
-					if( fShift )
-						HandleSelectMercSlot( 2, LOCATE_MERC_ONCE );
-#ifdef JA2TESTVERSION
-					else if( fAlt )
-					{
-						TestMeanWhile( 2 );
-					}
-					else if( fCtrl )
-					{
-						TestMeanWhile( 12 );
-					}
-#endif
-					else
-						HandleSelectMercSlot( 2, LOCATEANDSELECT_MERC );
-					break;
-
 				case SDLK_F4:
-					if( fShift )
-						HandleSelectMercSlot( 3, LOCATE_MERC_ONCE );
-#ifdef JA2TESTVERSION
-					else if( fAlt )
-					{
-						TestMeanWhile( 3 );
-					}
-					else if( fCtrl )
-					{
-						TestMeanWhile( 13 );
-					}
-#endif
-					else
-						HandleSelectMercSlot( 3, LOCATEANDSELECT_MERC );
-					break;
-
 				case SDLK_F5:
-					if( fShift )
-						HandleSelectMercSlot( 4, LOCATE_MERC_ONCE );
-#ifdef JA2TESTVERSION
-					else if( fAlt )
-					{
-						TestMeanWhile( 4 );
-					}
-					else if( fCtrl )
-					{
-						TestMeanWhile( 14 );
-					}
-#endif
-					else
-						HandleSelectMercSlot( 4, LOCATEANDSELECT_MERC );
-					break;
-
 				case SDLK_F6:
-					if( fShift )
-						HandleSelectMercSlot( 5, LOCATE_MERC_ONCE );
-#ifdef JA2TESTVERSION
-					else if( fAlt )
+				{
+					UINT const idx = InputEvent.usParam - SDLK_F1;
+					if (fShift)
 					{
-						TestMeanWhile( 5 );
+						HandleSelectMercSlot(idx, LOCATE_MERC_ONCE);
 					}
-					else if( fCtrl )
+#if defined JA2TESTVERSION
+					else if (fAlt)
 					{
-						TestMeanWhile( 15 );
+						TestMeanWhile(idx != 0 ? idx : 15);
+					}
+					else if (fCtrl)
+					{
+						TestMeanWhile(10 + idx);
 					}
 #endif
 					else
-						HandleSelectMercSlot( 5, LOCATEANDSELECT_MERC );
+					{
+						HandleSelectMercSlot(idx, LOCATEANDSELECT_MERC);
+					}
 					break;
+				}
 
 #ifdef JA2TESTVERSION
 				case SDLK_F7: if (fAlt) TestMeanWhile(16); break;
