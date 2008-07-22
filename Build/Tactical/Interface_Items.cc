@@ -5183,49 +5183,24 @@ static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* const pRegion, INT32 con
 }
 
 
-static void ItemPickMenuMouseClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void ItemPickMenuMouseClickCallback(MOUSE_REGION* const pRegion, INT32 const iReason)
 {
-	INT32				  	uiItemPos;
-	UINT8						cnt;
-	BOOLEAN					fEnable = FALSE;
-
-	uiItemPos = MSYS_GetRegionUserData( pRegion, 0 );
-
-
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if ( uiItemPos + gItemPickupMenu.ubScrollAnchor < gItemPickupMenu.ubTotalItems )
-		{
-			// Toggle selection... ONLY IF LEGAL!!
-			gItemPickupMenu.pfSelectedArray[ uiItemPos + gItemPickupMenu.ubScrollAnchor ] = !gItemPickupMenu.pfSelectedArray[  uiItemPos + gItemPickupMenu.ubScrollAnchor ];
+		INT32 const item_pos = MSYS_GetRegionUserData(pRegion, 0) + gItemPickupMenu.ubScrollAnchor;
+		if (item_pos >= gItemPickupMenu.ubTotalItems) return;
 
-			// OK, pickup item....
-			//gItemPickupMenu.fHandled = TRUE;
-
-			//pTempItemPool = gItemPickupMenu.ItemPoolSlots[ gItemPickupMenu.bCurSelect - gItemPickupMenu.ubScrollAnchor ];
-
-			// Tell our soldier to pickup this item!
-			//SoldierGetItemFromWorld( gItemPickupMenu.pSoldier, pTempItemPool->iItemIndex, gItemPickupMenu.sGridNo, gItemPickupMenu.bZLevel );
-		}
+		BOOLEAN& selected = gItemPickupMenu.pfSelectedArray[item_pos];
+		selected = !selected;
 
 		// Loop through all and set /unset OK
-		for ( cnt = 0; cnt < gItemPickupMenu.ubTotalItems; cnt++ )
+		for (UINT8 i = 0; i < gItemPickupMenu.ubTotalItems; ++i)
 		{
-			if ( gItemPickupMenu.pfSelectedArray[ cnt ] )
-			{
-				fEnable = TRUE;
-				break;
-			}
+			if (!gItemPickupMenu.pfSelectedArray[i]) continue;
+			EnableButton(gItemPickupMenu.iOKButton);
+			return;
 		}
-
-		if ( fEnable )
-		{
-			EnableButton( gItemPickupMenu.iOKButton );
-		}
-		else
-		{
-			DisableButton( gItemPickupMenu.iOKButton );
-		}
+		DisableButton(gItemPickupMenu.iOKButton);
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
 	{
