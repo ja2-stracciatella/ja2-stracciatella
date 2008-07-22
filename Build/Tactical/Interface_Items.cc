@@ -4936,173 +4936,132 @@ void SetPickUpMenuDirtyLevel( BOOLEAN fDirtyLevel )
 }
 
 
-void RenderItemPickupMenu( )
+void RenderItemPickupMenu()
 {
-	INT32			cnt;
-	INT16			sX, sY, sCenX, sCenY, sFontX, sFontY, sNewX, sNewY;
-	wchar_t			pStr[ 100 ];
-	UINT16			uiStringLength;
+	wchar_t pStr[100];
 
+	if (!gfInItemPickupMenu) return;
 
-	if ( !gfInItemPickupMenu )
+	ITEM_PICKUP_MENU_STRUCT& menu = gItemPickupMenu;
+	if (menu.fDirtyLevel != DIRTYLEVEL2) return;
+
+	MarkButtonsDirty();
+
+	// Build background
+	INT16 sX = menu.sX;
+	INT16 sY = menu.sY;
+
+	for (INT32 cnt = 0; cnt < menu.bNumSlotsPerPage; ++cnt)
 	{
-		return;
+		UINT16 const usSubRegion = (cnt == 0 ? 0 : 1);
+
+		BltVideoObject(FRAME_BUFFER, menu.uiPanelVo, usSubRegion, sX, sY);
+
+		// Add height of object
+		ETRLEObject const* const ETRLEProps = menu.uiPanelVo->SubregionProperties(usSubRegion);
+		sY += ETRLEProps->usHeight;
 	}
 
+	// Do end
+	UINT16 const gfx =
+		menu.bNumSlotsPerPage == NUM_PICKUP_SLOTS &&
+		menu.ubTotalItems     >  NUM_PICKUP_SLOTS ?
+			2 : 3;
+	BltVideoObject(FRAME_BUFFER, menu.uiPanelVo, gfx, sX, sY);
 
-	// Do everything!
-	if ( gItemPickupMenu.fDirtyLevel == DIRTYLEVEL2 )
-	{
-		MarkButtonsDirty( );
+	// Render items....
+	sX = menu.sX + ITEMPICK_GRAPHIC_X;
+	sY = menu.sY + ITEMPICK_GRAPHIC_Y;
 
-		// Build background
-		sX = gItemPickupMenu.sX;
-		sY = gItemPickupMenu.sY;
+	SetFont(ITEMDESC_FONT);
+	SetFontBackground(FONT_MCOLOR_BLACK);
+	SetFontShadow(ITEMDESC_FONTSHADOW2);
 
-		for ( cnt = 0; cnt < gItemPickupMenu.bNumSlotsPerPage; cnt++ )
+	{ SGPVSurface::Lock l(FRAME_BUFFER);
+		UINT16* const pDestBuf         = l.Buffer<UINT16>();
+		UINT32  const uiDestPitchBYTES = l.Pitch();
+
+		UINT16 const outline_col = Get16BPPColor(FROMRGB(255, 255, 0));
+		for (INT32 cnt = 0; cnt < menu.bNumSlotsPerPage; ++cnt)
 		{
-			UINT16 usSubRegion = (cnt == 0 ? 0 : 1);
+			ITEM_POOL const* const ip = menu.ItemPoolSlots[cnt];
+			if (!ip) continue;
 
-			BltVideoObject(FRAME_BUFFER, gItemPickupMenu.uiPanelVo, usSubRegion, sX, sY);
+			// Get item to render
+			OBJECTTYPE const* const pObject = &GetWorldItem(ip->iItemIndex)->o;
+			INVTYPE    const* const pItem   = &Item[pObject->usItem];
 
-			// Add height of object
-			ETRLEObject const* const ETRLEProps = gItemPickupMenu.uiPanelVo->SubregionProperties(usSubRegion);
-			sY += ETRLEProps->usHeight;
-		}
+			UINT16              const usItemTileIndex = GetTileGraphicForItem(pItem);
+			TILE_ELEMENT const* const te              = &gTileDatabase[usItemTileIndex];
 
-		// Do end
-		if ( gItemPickupMenu.bNumSlotsPerPage == NUM_PICKUP_SLOTS && gItemPickupMenu.ubTotalItems > NUM_PICKUP_SLOTS )
-		{
-			BltVideoObject(FRAME_BUFFER, gItemPickupMenu.uiPanelVo, 2, sX, sY);
-		}
-		else
-		{
-			BltVideoObject(FRAME_BUFFER, gItemPickupMenu.uiPanelVo, 3, sX, sY);
-		}
+			// ATE: Adjust to basic shade.....
+			te->hTileSurface->CurrentShade(4);
 
-		// Render items....
-		sX = ITEMPICK_GRAPHIC_X + gItemPickupMenu.sX;
-		sY = ITEMPICK_GRAPHIC_Y + gItemPickupMenu.sY;
+			UINT16 const outline = (menu.pfSelectedArray[cnt + menu.ubScrollAnchor] ? outline_col : TRANSPARENT);
+			Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sX, sY, te->usRegionIndex, outline);
 
-		SetFont( ITEMDESC_FONT );
-		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontShadow( ITEMDESC_FONTSHADOW2 );
-
-		{ SGPVSurface::Lock l(FRAME_BUFFER);
-			UINT16* const pDestBuf         = l.Buffer<UINT16>();
-			UINT32  const uiDestPitchBYTES = l.Pitch();
-
-			const UINT16 outline_col = Get16BPPColor(FROMRGB(255, 255, 0));
-			for ( cnt = 0; cnt < gItemPickupMenu.bNumSlotsPerPage; cnt++ )
+			if (pObject->ubNumberOfObjects > 1)
 			{
-				const ITEM_POOL* const ip = gItemPickupMenu.ItemPoolSlots[cnt];
-				if (ip == NULL) continue;
+				SetFont(ITEM_FONT);
+				SetFontForeground(FONT_GRAY4);
+				SetFontShadow(DEFAULT_SHADOW);
 
-				// Get item to render
-				const OBJECTTYPE* const pObject = &GetWorldItem(ip->iItemIndex)->o;
-				const INVTYPE*    const pItem   = &Item[pObject->usItem];
+				swprintf(pStr, lengthof(pStr), L"%d", pObject->ubNumberOfObjects);
 
-				const UINT16 usItemTileIndex = GetTileGraphicForItem(pItem);
-				const TILE_ELEMENT* const te = &gTileDatabase[usItemTileIndex];
-
-				// Render
-				sX = ITEMPICK_GRAPHIC_X + gItemPickupMenu.sX;
-
-				sCenX = sX;
-				sCenY = sY;
-
-				// ATE: Adjust to basic shade.....
-				te->hTileSurface->CurrentShade(4);
-
-				const UINT16 outline = (gItemPickupMenu.pfSelectedArray[cnt + gItemPickupMenu.ubScrollAnchor] ? outline_col : TRANSPARENT);
-				Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, outline);
-
-				// Draw text.....
-				SetFont( ITEM_FONT );
-				if ( pObject->ubNumberOfObjects > 1 )
-				{
-					SetFontForeground( FONT_GRAY4 );
-					SetFontShadow( DEFAULT_SHADOW );
-
-					sCenX = sX - 4;
-					sCenY = sY + 14;
-
-					swprintf( pStr, lengthof(pStr), L"%d", pObject->ubNumberOfObjects );
-
-					FindFontRightCoordinates(sCenX, sCenY, 42, 1, pStr, ITEM_FONT, &sFontX, &sFontY);
-					mprintf_buffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
-				}
-				SetFont( ITEMDESC_FONT );
-
-
-				// Render attachment symbols
-				if ( ItemHasAttachments( pObject ) )
-				{
-					SetFontForeground( FONT_GREEN );
-					SetFontShadow( DEFAULT_SHADOW );
-
-					sNewY = sCenY + 2;
-					const wchar_t* AttachMarker = L"*";
-
-					// Get length of string
-					uiStringLength = StringPixLength(AttachMarker, ITEM_FONT);
-
-					sNewX = sCenX + 43 - uiStringLength - 4;
-
-					mprintf_buffer(pDestBuf, uiDestPitchBYTES, sNewX, sNewY, AttachMarker);
-				}
-
-				if ( gItemPickupMenu.bCurSelect == ( cnt + gItemPickupMenu.ubScrollAnchor ) )
-				{
-					//SetFontForeground( ITEMDESC_FONTSHADOW2 );
-					//if ( gItemPickupMenu.pfSelectedArray[  cnt + gItemPickupMenu.ubScrollAnchor ] )
-					//{
-					//	SetFontForeground( FONT_MCOLOR_LTYELLOW );
-					//	SetFontShadow( ITEMDESC_FONTSHADOW2 );
-					//}
-					//else
-					//{
-					SetFontForeground( FONT_WHITE );
-					SetFontShadow( DEFAULT_SHADOW );
-					//}
-					// Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, Get16BPPColor(FROMRGB(255, 0, 0)));
-					// Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sCenX, sCenY, te->usRegionIndex, Get16BPPColor(FROMRGB(255, 0, 0)));
-				}
-				else
-				{
-					SetFontForeground( FONT_BLACK );
-					SetFontShadow( ITEMDESC_FONTSHADOW2 );
-				}
-
-				// Render name
-				sCenX = ITEMPICK_TEXT_X + gItemPickupMenu.sX;
-				sCenY = ITEMPICK_TEXT_Y + gItemPickupMenu.sY + ( ITEMPICK_TEXT_YSPACE * (INT16)cnt );
-
-				// If we are money...
-				if ( Item[ pObject->usItem ].usItemClass == IC_MONEY )
-				{
-					wchar_t pStr2[20];
-					SPrintMoney(pStr2, pObject->uiMoneyAmount);
-					swprintf( pStr, lengthof(pStr), L"%ls (%ls)", ItemNames[ pObject->usItem ], pStr2 );
-				}
-				else
-				{
-					wcslcpy(pStr, ShortItemNames[pObject->usItem], lengthof(pStr));
-				}
-				FindFontCenterCoordinates(sCenX, sCenY, ITEMPICK_TEXT_WIDTH, 1, pStr, ITEMDESC_FONT, &sFontX, &sFontY);
+				INT16 sFontX;
+				INT16 sFontY;
+				FindFontRightCoordinates(sX - 4, sY + 14, 42, 1, pStr, ITEM_FONT, &sFontX, &sFontY);
 				mprintf_buffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
-
-				sY += ITEMPICK_GRAPHIC_YSPACE;
+				SetFont(ITEMDESC_FONT);
 			}
+
+			if (ItemHasAttachments(pObject))
+			{ // Render attachment symbols
+				SetFontForeground(FONT_GREEN);
+				SetFontShadow(DEFAULT_SHADOW);
+				wchar_t const* const AttachMarker   = L"*";
+				UINT16         const uiStringLength = StringPixLength(AttachMarker, ITEM_FONT);
+				INT16          const sNewX          = sX + 43 - uiStringLength - 4;
+				INT16          const sNewY          = sY + 2;
+				mprintf_buffer(pDestBuf, uiDestPitchBYTES, sNewX, sNewY, AttachMarker);
+			}
+
+			if (menu.bCurSelect == cnt + menu.ubScrollAnchor)
+			{
+				SetFontForeground(FONT_WHITE);
+				SetFontShadow(DEFAULT_SHADOW);
+			}
+			else
+			{
+				SetFontForeground(FONT_BLACK);
+				SetFontShadow(ITEMDESC_FONTSHADOW2);
+			}
+
+			// Render name
+			if (Item[pObject->usItem].usItemClass == IC_MONEY)
+			{
+				wchar_t pStr2[20];
+				SPrintMoney(pStr2, pObject->uiMoneyAmount);
+				swprintf(pStr, lengthof(pStr), L"%ls (%ls)", ItemNames[pObject->usItem], pStr2);
+			}
+			else
+			{
+				wcslcpy(pStr, ShortItemNames[pObject->usItem], lengthof(pStr));
+			}
+			INT16 sFontX;
+			INT16 sFontY;
+			INT16 const x = ITEMPICK_TEXT_X + menu.sX;
+			INT16 const y = ITEMPICK_TEXT_Y + menu.sY + ITEMPICK_TEXT_YSPACE * cnt;
+			FindFontCenterCoordinates(x, y, ITEMPICK_TEXT_WIDTH, 1, pStr, ITEMDESC_FONT, &sFontX, &sFontY);
+			mprintf_buffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
+
+			sY += ITEMPICK_GRAPHIC_YSPACE;
 		}
-
-		SetFontShadow( DEFAULT_SHADOW );
-
-		InvalidateRegion( gItemPickupMenu.sX, gItemPickupMenu.sY, gItemPickupMenu.sX + gItemPickupMenu.sWidth, gItemPickupMenu.sY + gItemPickupMenu.sHeight );
-
-		gItemPickupMenu.fDirtyLevel = 0;
-
 	}
+
+	SetFontShadow(DEFAULT_SHADOW);
+	InvalidateRegion(menu.sX, menu.sY, menu.sX + menu.sWidth, menu.sY + menu.sHeight);
+	menu.fDirtyLevel = 0;
 }
 
 
