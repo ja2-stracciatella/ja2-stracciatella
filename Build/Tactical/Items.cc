@@ -3750,24 +3750,17 @@ static void CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
 }
 
 
-static BOOLEAN CreateMagazine(UINT16 usItem, OBJECTTYPE* pObj)
+static void CreateMagazine(UINT16 usItem, OBJECTTYPE* pObj)
 {
-	if (pObj == NULL)
-	{
-		return( FALSE );
-	}
 	memset( pObj, 0, sizeof( OBJECTTYPE ) );
 	pObj->usItem = usItem;
 	pObj->ubNumberOfObjects = 1;
 	pObj->ubShotsLeft[0] = Magazine[ Item[usItem].ubClassIndex ].ubMagSize;
 	pObj->ubWeight = CalculateObjectWeight( pObj );
-	return( TRUE );
 }
 
 BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 {
-	BOOLEAN fRet;
-
 	memset( pObj, 0, sizeof( OBJECTTYPE ) );
 	if (usItem >= MAXITEMS)
 	{
@@ -3776,11 +3769,10 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 	if (Item[ usItem ].usItemClass == IC_GUN)
 	{
 		CreateGun( usItem, bStatus, pObj );
-		fRet = TRUE;
 	}
 	else if (Item[ usItem ].usItemClass == IC_AMMO)
 	{
-		fRet = CreateMagazine( usItem, pObj );
+		CreateMagazine(usItem, pObj);
 	}
 	else
 	{
@@ -3798,16 +3790,13 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 			pObj->bStatus[0] = bStatus;
 		}
 		pObj->ubWeight = CalculateObjectWeight( pObj );
-		fRet = TRUE;
 	}
-	if (fRet)
+
+	if (Item[ usItem ].fFlags & ITEM_DEFAULT_UNDROPPABLE)
 	{
-		if (Item[ usItem ].fFlags & ITEM_DEFAULT_UNDROPPABLE)
-		{
-			pObj->fFlags |= OBJECT_UNDROPPABLE;
-		}
+		pObj->fFlags |= OBJECT_UNDROPPABLE;
 	}
-	return( fRet );
+	return TRUE;
 }
 
 BOOLEAN CreateItems( UINT16 usItem, INT8 bStatus, UINT8 ubNumber, OBJECTTYPE * pObj )
