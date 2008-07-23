@@ -3702,16 +3702,9 @@ UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard )
 }
 
 
-static BOOLEAN CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
+static void CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
 {
 	UINT16 usAmmo;
-
-
-	Assert( pObj != NULL);
-	if ( pObj == NULL )
-	{
-		return( FALSE );
-	}
 
 	memset( pObj, 0, sizeof( OBJECTTYPE ) );
 	pObj->usItem = usItem;
@@ -3754,9 +3747,6 @@ static BOOLEAN CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
 		}
 		*/
 	}
-
-	// succesful
-	return( TRUE );
 }
 
 
@@ -3785,7 +3775,8 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 	}
 	if (Item[ usItem ].usItemClass == IC_GUN)
 	{
-		fRet = CreateGun( usItem, bStatus, pObj );
+		CreateGun( usItem, bStatus, pObj );
+		fRet = TRUE;
 	}
 	else if (Item[ usItem ].usItemClass == IC_AMMO)
 	{
