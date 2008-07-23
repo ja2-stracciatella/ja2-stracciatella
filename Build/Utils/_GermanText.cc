@@ -1189,7 +1189,6 @@ const wchar_t* const TacticalStr[] =
 	L"Niemand braucht Erste Hilfe.",
 	L"Klemmt.",			//Short form of JAMMED, for small inv slots
 	L"Kann da nicht hin.",					// used ( now ) for when we click on a cliff
-	L"Weg ist blockiert. Mit dieser Person den Platz tauschen?",
 	L"Person will sich nicht bewegen",
 	// In the following message, '%s' would be replaced with a quantity of money (e.g. $200)
 	L"Mit der Zahlung von %ls einverstanden?",

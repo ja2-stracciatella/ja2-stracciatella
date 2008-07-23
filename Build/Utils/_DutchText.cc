@@ -1232,7 +1232,6 @@ const wchar_t* const TacticalStr[] =
 	L"Niemand heeft EHBO nodig.",			// L"No one needs first aid.",
 	L"Vast.",						// Short form of JAMMED, for small inv slots
 	L"Kan daar niet heen.",				// used ( now ) for when we click on a cliff
-	L"Pad is geblokkeerd. Wil je met deze persoon van plaats wisselen?",
 	L"Persoon weigert weg te gaan.",
 	// In the following message, '%ls' would be replaced with a quantity of money (e.g. $200)
 	L"Ben je het eens met %ls?",					// L"Do you agree to pay %ls?",

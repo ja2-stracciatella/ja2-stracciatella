@@ -1217,7 +1217,6 @@ const wchar_t* const TacticalStr[] =
 	L"Nessuno ha bisogno del pronto soccorso.",
 	L"Bloccato.",											// Short form of JAMMED, for small inv slots
 	L"Non può andare là.",					// used ( now ) for when we click on a cliff
-	L"Il sentiero è bloccato. Vuoi scambiare le posizioni con questa persona?",
 	L"La persona rifiuta di muoversi.",
 	// In the following message, '%ls' would be replaced with a quantity of money (e.g. $200)
 	L"Sei d'accordo a pagare %ls?",

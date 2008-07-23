@@ -1217,7 +1217,6 @@ const wchar_t* const TacticalStr[] =
 	L"Некого лечить.",
 	L"Слом.",											// Short form of JAMMED, for small inv slots
 	L"Туда не добраться.",					// used ( now ) for when we click on a cliff
-	L"Путь блокирован. Хотите поменяться местами с этим человеком?",
 	L"Человек отказывается двигаться.",
 	// In the following message, '%ls' would be replaced with a quantity of money (e.g. $200)
 	L"Заплатить %ls?",
