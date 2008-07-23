@@ -3358,7 +3358,8 @@ BOOLEAN RemoveKeyFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECT
 			pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = INVALID_KEY_NUMBER;
 		}
 
-		return( CreateKeyObject( pObj, 1, ubItem ) );
+		CreateKeyObject(pObj, 1, ubItem);
+		return TRUE;
 	}
 }
 
@@ -3395,8 +3396,8 @@ BOOLEAN RemoveKeysFromSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, UINT8
 			pSoldier->pKeyRing[ bKeyRingPosition ].ubKeyID = INVALID_KEY_NUMBER;
 		}
 
-		// create an object
-		return( CreateKeyObject( pObj, ubNumberOfKeys, ubItems ) );
+		CreateKeyObject(pObj, ubNumberOfKeys, ubItems);
+		return TRUE;
 	}
 }
 
@@ -3463,18 +3464,10 @@ UINT8 SwapKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE 
 }
 
 
-BOOLEAN CreateKeyObject( OBJECTTYPE * pObj , UINT8 ubNumberOfKeys, UINT8 ubKeyID )
+void CreateKeyObject(OBJECTTYPE* const pObj, UINT8 const ubNumberOfKeys, UINT8 const ubKeyID)
 {
-	BOOLEAN fRet;
-
-	fRet = CreateItems( (UINT16) (FIRST_KEY + LockTable[ ubKeyID ].usKeyItem), 100, ubNumberOfKeys, pObj );
-	if (fRet)
-	{
-		pObj->ubKeyID = ubKeyID;
-	}
-	//fRet = CreateItems( (UINT16)(ubKeyIdValue + FIRST_KEY) , 100, ubNumberOfKeys, pObj )
-	//return(  );
-	return( fRet );
+	CreateItems(FIRST_KEY + LockTable[ubKeyID].usKeyItem, 100, ubNumberOfKeys, pObj);
+	pObj->ubKeyID = ubKeyID;
 }
 
 
@@ -3759,13 +3752,15 @@ static void CreateMagazine(UINT16 usItem, OBJECTTYPE* pObj)
 	pObj->ubWeight = CalculateObjectWeight( pObj );
 }
 
-BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
+
+void CreateItem(UINT16 const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
 {
 	memset( pObj, 0, sizeof( OBJECTTYPE ) );
 	if (usItem >= MAXITEMS)
 	{
-		return( FALSE );
+		throw std::logic_error("Tried to create item with invalid ID");
 	}
+
 	if (Item[ usItem ].usItemClass == IC_GUN)
 	{
 		CreateGun( usItem, bStatus, pObj );
@@ -3796,12 +3791,11 @@ BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj )
 	{
 		pObj->fFlags |= OBJECT_UNDROPPABLE;
 	}
-	return TRUE;
 }
 
-BOOLEAN CreateItems( UINT16 usItem, INT8 bStatus, UINT8 ubNumber, OBJECTTYPE * pObj )
+
+void CreateItems(UINT16 const usItem, INT8 const bStatus, UINT8 ubNumber, OBJECTTYPE* const pObj)
 {
-	BOOLEAN fOk;
 	UINT8		ubLoop;
 
 	// can't create any more than this, the loop for setting the bStatus[] of others will overwrite memory!
@@ -3813,33 +3807,24 @@ BOOLEAN CreateItems( UINT16 usItem, INT8 bStatus, UINT8 ubNumber, OBJECTTYPE * p
 		ubNumber = MAX_OBJECTS_PER_SLOT;
 	}
 
-	fOk = CreateItem( usItem, bStatus, pObj );
-	if (fOk)
+	CreateItem(usItem, bStatus, pObj);
+	for (ubLoop = 1; ubLoop < ubNumber; ubLoop++)
 	{
-		for (ubLoop = 1; ubLoop < ubNumber; ubLoop++)
-		{
-			// we reference status[0] here because the status value might actually be a
-			// # of rounds of ammo, in which case the value won't be the bStatus value
-			// passed in.
-			pObj->bStatus[ubLoop] = pObj->bStatus[0];
-		}
-		pObj->ubNumberOfObjects = ubNumber;
-		return( TRUE );
+		// we reference status[0] here because the status value might actually be a
+		// # of rounds of ammo, in which case the value won't be the bStatus value
+		// passed in.
+		pObj->bStatus[ubLoop] = pObj->bStatus[0];
 	}
-	return( FALSE );
+	pObj->ubNumberOfObjects = ubNumber;
 }
 
-BOOLEAN CreateMoney( UINT32 uiMoney, OBJECTTYPE * pObj )
+
+void CreateMoney(UINT32 const uiMoney, OBJECTTYPE* const pObj)
 {
-	BOOLEAN fOk;
-
-	fOk = CreateItem( MONEY, 100, pObj );
-	if (fOk)
-	{
-		pObj->uiMoneyAmount = uiMoney;
-	}
-	return( fOk );
+	CreateItem(MONEY, 100, pObj);
+	pObj->uiMoneyAmount = uiMoney;
 }
+
 
 BOOLEAN ArmBomb( OBJECTTYPE * pObj, INT8 bSetting )
 {

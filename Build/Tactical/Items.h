@@ -44,9 +44,9 @@ extern UINT16 TotalPoints(const OBJECTTYPE*);
 extern UINT16 UseKitPoints( OBJECTTYPE * pObj, UINT16 usPoints, SOLDIERTYPE *pSoldier );
 
 extern BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo );
-extern BOOLEAN CreateItem( UINT16 usItem, INT8 bStatus, OBJECTTYPE * pObj );
-extern BOOLEAN CreateItems( UINT16 usItem, INT8 bStatus, UINT8 ubNumber, OBJECTTYPE * pObj );
-extern BOOLEAN CreateMoney( UINT32 uiMoney, OBJECTTYPE * pObj );
+void CreateItem(UINT16 usItem, INT8 bStatus, OBJECTTYPE*);
+void CreateItems(UINT16 usItem, INT8 bStatus, UINT8 ubNumber, OBJECTTYPE*);
+void CreateMoney(UINT32 uiMoney, OBJECTTYPE*);
 extern UINT16 DefaultMagazine( UINT16 usItem );
 UINT16 RandomMagazine( UINT16 usItem, UINT8 ubPercentStandard );
 extern BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo );
@@ -78,7 +78,7 @@ BOOLEAN RemoveObjectFromSlot( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pO
 UINT8 SwapKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE * pObj );
 
 // create a keyobject
-BOOLEAN CreateKeyObject( OBJECTTYPE * pObj , UINT8 ubNumberOfKeys, UINT8 ubKeyIdValue );
+void CreateKeyObject(OBJECTTYPE*, UINT8 ubNumberOfKeys, UINT8 ubKeyIdValue);
 BOOLEAN DeleteKeyObject( OBJECTTYPE * pObj );
 void    AllocateObject(OBJECTTYPE** pObj);
 

@@ -2342,16 +2342,15 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 			DeleteItemDescriptionBox( );
 
-			if ( CreateItem( gpItemDescObject->usAttachItem[ uiItemPos ], gpItemDescObject->bAttachStatus[ uiItemPos ], &Object2 ) )
-			{
-				gfItemDescObjectIsAttachment = TRUE;
-				InternalInitItemDescriptionBox( &Object2, gsInvDescX, gsInvDescY, 0, gpItemDescSoldier );
+			CreateItem(gpItemDescObject->usAttachItem[uiItemPos], gpItemDescObject->bAttachStatus[uiItemPos], &Object2);
 
-				if ( fShopkeeperItem )
-				{
-					pShopKeeperItemDescObject = &Object2;
-					StartSKIDescriptionBox( );
-				}
+			gfItemDescObjectIsAttachment = TRUE;
+			InternalInitItemDescriptionBox(&Object2, gsInvDescX, gsInvDescY, 0, gpItemDescSoldier);
+
+			if (fShopkeeperItem)
+			{
+				pShopKeeperItemDescObject = &Object2;
+				StartSKIDescriptionBox();
 			}
 		}
 	}

@@ -1783,10 +1783,7 @@ BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 	{
 		//Create the object
 		memset( &TempObject, 0, sizeof( OBJECTTYPE ) );
-		if( !CreateMoney( gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash, &TempObject ) )
-		{
-			return( FALSE );
-		}
+		CreateMoney(gArmsDealerStatus[bArmsDealer].uiArmsDealersCash, &TempObject);
 
 		//add the money item to the dealers feet
 		AddItemToPool( pSoldier->sInitialGridNo, &TempObject, INVISIBLE, 0, 0, 0 );
