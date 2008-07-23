@@ -793,7 +793,7 @@ static void RenderEditorInfo(void)
 		swprintf(FPSText, lengthof(FPSText), L"   (%d)   ", iMapIndex);
 	else
 		swprintf(FPSText, lengthof(FPSText), L"          ");
-	mprintfEditor(50 - StringPixLength(FPSText, FONT12POINT1) / 2, 463, FPSText);
+	mprintfEditor(50 - StringPixLength(FPSText, FONT12POINT1) / 2, 103, FPSText);
 
 	switch( iCurrentTaskbar )
 	{
