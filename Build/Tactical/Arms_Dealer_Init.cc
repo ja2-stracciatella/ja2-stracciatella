@@ -1781,8 +1781,6 @@ BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 	//if the dealer has money
 	if( gArmsDealerStatus[ bArmsDealer ].uiArmsDealersCash > 0 )
 	{
-		//Create the object
-		memset( &TempObject, 0, sizeof( OBJECTTYPE ) );
 		CreateMoney(gArmsDealerStatus[bArmsDealer].uiArmsDealersCash, &TempObject);
 
 		//add the money item to the dealers feet
@@ -1810,9 +1808,6 @@ void MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclIte
 		bItemCondition *= -1;
 	}
 
-	memset( pObject, 0, sizeof( OBJECTTYPE ) );
-
-	//Create the item object
 	CreateItems( usItemIndex, bItemCondition, ubHowMany, pObject );
 
 	// set the ImprintID

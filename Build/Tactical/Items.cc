@@ -3699,7 +3699,6 @@ static void CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
 {
 	UINT16 usAmmo;
 
-	memset( pObj, 0, sizeof( OBJECTTYPE ) );
 	pObj->usItem = usItem;
 	pObj->ubNumberOfObjects = 1;
 	pObj->bGunStatus = bStatus;
@@ -3745,7 +3744,6 @@ static void CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
 
 static void CreateMagazine(UINT16 usItem, OBJECTTYPE* pObj)
 {
-	memset( pObj, 0, sizeof( OBJECTTYPE ) );
 	pObj->usItem = usItem;
 	pObj->ubNumberOfObjects = 1;
 	pObj->ubShotsLeft[0] = Magazine[ Item[usItem].ubClassIndex ].ubMagSize;
