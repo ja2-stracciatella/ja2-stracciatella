@@ -1538,13 +1538,13 @@ void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate)
 		{
 			MPrint(MAP_LEFT, MAP_BOTTOM + 100, str);
 			InvalidateRegion( MAP_LEFT, MAP_BOTTOM+100, MAP_LEFT+150,	MAP_BOTTOM+110 );
-			CreateProgressBar( 0, MAP_LEFT, MAP_BOTTOM+110, MAP_LEFT+140, MAP_BOTTOM+120 );
+			CreateProgressBar(0, MAP_LEFT, MAP_BOTTOM + 110, 140, 10);
 		}
 		else
 		{
 			MPrint((SCREEN_WIDTH - StringPixLength(str, FONT10ARIAL)) / 2, 190, str);
 			InvalidateRegion( 200, 190, 400, 200 );
-			CreateProgressBar( 0, 250, 200, 390, 210 );
+			CreateProgressBar(0, 250, 200, 140, 10);
 		}
 
 		char szCoord[40];
@@ -1961,7 +1961,7 @@ static void SummaryLoadMapCallback(GUI_BUTTON* btn, INT32 reason)
 		SetFontForeground( FONT_LTKHAKI );
 		SetFontShadow( FONT_NEARBLACK );
 
-		CreateProgressBar( 0, MAP_LEFT+5, MAP_BOTTOM+110, 573, MAP_BOTTOM+120 );
+		CreateProgressBar(0, MAP_LEFT + 5, MAP_BOTTOM + 110, 151, 10);
 
 		DefineProgressBarPanel( 0, 65, 79, 94, MAP_LEFT, 318, 578, 356 );
 		swprintf(str, lengthof(str), L"Loading map:  %ls", gszDisplayName);
@@ -2265,10 +2265,10 @@ static void RegenerateSummaryInfoForAllOutdatedMaps(void)
 {
 	INT32 x, y;
 	SUMMARYFILE *pSF;
-	//CreateProgressBar( 0, 20, 120, 300, 132 ); //slave (individual)
-	//CreateProgressBar( 1, 20, 100, 300, 112 ); //master (total)
+	//CreateProgressBar(0, 20, 120, 280, 12); //slave (individual)
+	//CreateProgressBar(1, 20, 100, 280, 12); //master (total)
 	//DefineProgressBarPanel( 0, 65, 79, 94, 10, 80, 310, 152 );
-	CreateProgressBar( 0, 20, 100, 300, 112 ); //master (total)
+	CreateProgressBar(0, 20, 100, 280, 12); //master (total)
 	DefineProgressBarPanel( 0, 65, 79, 94, 10, 80, 310, 132 );
 	SetProgressBarTitle( 0, L"Generating map information", BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 	SetProgressBarMsgAttributes( 0, SMALLCOMPFONT, FONT_BLACK, FONT_BLACK );
@@ -2349,7 +2349,7 @@ static void SummaryUpdateCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		CreateProgressBar( 0, 20, 100, 300, 112 ); //slave (individual)
+		CreateProgressBar(0, 20, 100, 280, 12); //slave (individual)
 		DefineProgressBarPanel( 0, 65, 79, 94, 10, 80, 310, 132 );
 		SetProgressBarTitle( 0, L"Generating map summary", BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 		SetProgressBarMsgAttributes( 0, SMALLCOMPFONT, FONT_BLACK, FONT_BLACK );
@@ -2408,7 +2408,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 	swprintf(str, lengthof(str), L"There are %d maps requiring a major version update.", gusNumberOfMapsToBeForceUpdated);
 	MPrint((SCREEN_WIDTH - StringPixLength(str, FONT10ARIAL)) / 2, 130, str);
 
-	CreateProgressBar( 2, 120, 170, 520, 202 );
+	CreateProgressBar(2, 120, 170, 400, 32);
 	DefineProgressBarPanel( 2, 65, 79, 94, 100, 150, 540, 222 );
 	SetProgressBarTitle( 2, L"Updating all outdated maps", BLOCKFONT2, FONT_RED, 0 );
 	SetProgressBarMsgAttributes( 2, SMALLCOMPFONT, FONT_BLACK, FONT_BLACK );

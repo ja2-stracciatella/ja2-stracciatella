@@ -29,7 +29,7 @@ ENUM_BITSET(ProgressBarFlags)
 typedef struct PROGRESSBAR
 {
 	ProgressBarFlags flags;
-	UINT16 usBarLeft, usBarTop, usBarRight, usBarBottom;
+	SGPBox           pos;
 	UINT16 usPanelLeft, usPanelTop, usPanelRight, usPanelBottom;
 	UINT16 usColor, usLtColor, usDkColor;
 	wchar_t *swzTitle;
@@ -47,7 +47,7 @@ static PROGRESSBAR* pBar[MAX_PROGRESSBARS];
 
 void CreateLoadingScreenProgressBar()
 {
-	CreateProgressBar( 0, 162, 427, 480, 443 );
+	CreateProgressBar(0, 162, 427, 318, 16);
 	pBar[0]->flags |= PROGRESS_LOAD_BAR;
 }
 
@@ -58,7 +58,7 @@ void RemoveLoadingScreenProgressBar()
 }
 
 
-void CreateProgressBar(const UINT8 ubProgressBarID, const UINT16 usLeft, const UINT16 usTop, const UINT16 usRight, const UINT16 usBottom)
+void CreateProgressBar(const UINT8 ubProgressBarID, const UINT16 x, const UINT16 y, const UINT16 w, const UINT16 h)
 {
 	PROGRESSBAR* const pNew = MALLOCZ(PROGRESSBAR);
 
@@ -67,14 +67,14 @@ void CreateProgressBar(const UINT8 ubProgressBarID, const UINT16 usLeft, const U
 
 	pBar[ ubProgressBarID ] = pNew;
 	//Assign coordinates
-	pNew->flags = PROGRESS_NONE;
-	pNew->usBarLeft = usLeft;
-	pNew->usBarTop = usTop;
-	pNew->usBarRight = usRight;
-	pNew->usBarBottom = usBottom;
+	pNew->flags                = PROGRESS_NONE;
+	pNew->pos.x                = x;
+	pNew->pos.y                = y;
+	pNew->pos.w                = w;
+	pNew->pos.h                = h;
 	//Init default data
-	pNew->usMsgFont = FONT12POINT1;
-	pNew->ubMsgFontForeColor = FONT_BLACK;
+	pNew->usMsgFont            = FONT12POINT1;
+	pNew->ubMsgFontForeColor   = FONT_BLACK;
 	pNew->ubMsgFontShadowColor = 0;
 	SetRelativeStartAndEndPercentage(ubProgressBarID, 0, 100, NULL);
 	pNew->swzTitle = NULL;
@@ -213,17 +213,19 @@ void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32
 		//Draw message
 		if( str )
 		{
+			INT32 const x = pCurr->pos.x;
+			INT32 const y = pCurr->pos.y + pCurr->pos.h;
 			if (pCurr->flags & PROGRESS_USE_SAVEBUFFER)
 			{
 				UINT16 usFontHeight = GetFontHeight( pCurr->usMsgFont );
-				RestoreExternBackgroundRect(pCurr->usBarLeft, pCurr->usBarBottom, pCurr->usBarRight - pCurr->usBarLeft, usFontHeight + 3);
+				RestoreExternBackgroundRect(x, y, pCurr->pos.w, usFontHeight + 3);
 			}
 
 			SetFont( pCurr->usMsgFont );
 			SetFontForeground( pCurr->ubMsgFontForeColor );
 			SetFontShadow( pCurr->ubMsgFontShadowColor );
 			SetFontBackground( 0 );
-			MPrint(pCurr->usBarLeft, pCurr->usBarBottom + 3, str);
+			MPrint(x, y + 3, str);
 		}
 	}
 }
@@ -238,7 +240,6 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 	double rActual;
 	PROGRESSBAR *pCurr=NULL;
 	//UINT32 r, g;
-	INT32 end;
 
 	Assert( ubID < MAX_PROGRESSBARS );
 	pCurr = pBar[ubID];
@@ -257,28 +258,29 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 
 		pCurr->rLastActual = ( DOUBLE )( ( INT32)( rActual * 100 ) * 0.01 );
 
-		end = (INT32)(pCurr->usBarLeft+2.0+rActual*(pCurr->usBarRight-pCurr->usBarLeft-4));
-		if( end < pCurr->usBarLeft+2 || end > pCurr->usBarRight-2 )
-		{
-			return;
-		}
+		INT32 const x   = pCurr->pos.x;
+		INT32 const y   = pCurr->pos.y;
+		INT32 const w   = pCurr->pos.w;
+		INT32 const h   = pCurr->pos.h;
+		INT32 const end = (INT32)(x + 2.0 + rActual * (w - 4));
+		if (end < x + 2 || x + w - 2 < end) return;
 		if (pCurr->flags & PROGRESS_LOAD_BAR)
 		{
-			ColorFillVideoSurfaceArea(FRAME_BUFFER, pCurr->usBarLeft, pCurr->usBarTop, end, pCurr->usBarBottom, Get16BPPColor(pCurr->fill_colour));
+			ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, end, y + h, Get16BPPColor(pCurr->fill_colour));
 		}
 		else
 		{
 			//Border edge of the progress bar itself in gray
 			ColorFillVideoSurfaceArea( FRAME_BUFFER,
-				pCurr->usBarLeft, pCurr->usBarTop, pCurr->usBarRight, pCurr->usBarBottom,
+				x, y, x + w, y + h,
 				Get16BPPColor(FROMRGB(160, 160, 160)) );
 			//Interior of progress bar in black
 			ColorFillVideoSurfaceArea( FRAME_BUFFER,
-				pCurr->usBarLeft+2, pCurr->usBarTop+2, pCurr->usBarRight-2, pCurr->usBarBottom-2,
+				x + 2, y + 2, x + w - 2, y + h - 2,
 				Get16BPPColor(FROMRGB(  0,   0,   0)) );
-			ColorFillVideoSurfaceArea(FRAME_BUFFER,	pCurr->usBarLeft+2, pCurr->usBarTop+2, end, pCurr->usBarBottom-2, Get16BPPColor(FROMRGB(72 , 155, 24)));
+			ColorFillVideoSurfaceArea(FRAME_BUFFER,	x + 2, y + 2, end, y + h - 2, Get16BPPColor(FROMRGB(72 , 155, 24)));
 		}
-		InvalidateRegion( pCurr->usBarLeft, pCurr->usBarTop, pCurr->usBarRight, pCurr->usBarBottom );
+		InvalidateRegion(x, y, x + w, y + h);
 		ExecuteBaseDirtyRectQueue();
 		EndFrameBufferRender();
 		RefreshScreen();
@@ -328,6 +330,6 @@ void SetProgressBarTextDisplayFlag( UINT8 ubID, BOOLEAN fDisplayText, BOOLEAN fU
 		UINT16 usFontHeight = GetFontHeight( pCurr->usMsgFont )+3;
 
 		//blit everything to the save buffer ( cause the save buffer can bleed through )
-		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, pCurr->usBarLeft, pCurr->usBarBottom, pCurr->usBarRight - pCurr->usBarLeft, usFontHeight);
+		BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, pCurr->pos.x, pCurr->pos.y + pCurr->pos.h, pCurr->pos.w, usFontHeight);
 	}
 }

@@ -416,7 +416,7 @@ ScreenID LoadSaveScreenHandle(void)
 				return LOADSAVE_SCREEN;
 			}
 			RemoveFileDialog();
-			CreateProgressBar( 0, 118, 183, 522, 202 );
+			CreateProgressBar(0, 118, 183, 404, 19);
 			DefineProgressBarPanel( 0, 65, 79, 94, 100, 155, 540, 235 );
 			wchar_t zOrigName[60];
 			swprintf(zOrigName, lengthof(zOrigName), L"Loading map:  %ls", gzFilename);

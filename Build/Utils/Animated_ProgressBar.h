@@ -11,7 +11,7 @@ void RemoveLoadingScreenProgressBar(void);
 /* This creates a single progress bar given the coordinates without a panel
  * (containing a title and background).  A panel is automatically created if you
  * specify a title using SetProgressBarTitle() */
-void CreateProgressBar(UINT8 ubProgressBarID, UINT16 usLeft, UINT16 usTop, UINT16 usRight, UINT16 usBottom);
+void CreateProgressBar(UINT8 ubProgressBarID, UINT16 x, UINT16 y, UINT16 w, UINT16 h);
 
 //You may also define a panel to go in behind the progress bar.  You can now assign a title to go with
 //the panel.
