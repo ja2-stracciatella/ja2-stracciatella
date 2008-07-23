@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Font_Control.h"
 #include "Handle_Items.h"
 #include "Items.h"
@@ -3569,7 +3571,7 @@ UINT16 DefaultMagazine( UINT16 usItem )
 
 	if (!(Item[usItem].usItemClass & IC_GUN))
 	{
-		return( 0 );
+		throw std::logic_error("Tried to get default ammo for item which is not a gun");
 	}
 
 	WEAPONTYPE const* const pWeapon = &Weapon[usItem];
@@ -3585,7 +3587,7 @@ UINT16 DefaultMagazine( UINT16 usItem )
 		usLoop++;
 	}
 
-	return( 0 );
+	throw std::logic_error("Found no default ammo for gun");
 }
 
 
@@ -3740,26 +3742,17 @@ static BOOLEAN CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
 	else
 	{
 		usAmmo = DefaultMagazine( usItem );
-		Assert( usAmmo != 0 );
-		if (usAmmo == 0)
+		pObj->usGunAmmoItem = usAmmo;
+		pObj->ubGunAmmoType = Magazine[ Item[ usAmmo ].ubClassIndex].ubAmmoType;
+		pObj->bGunAmmoStatus = 100;
+		pObj->ubGunShotsLeft = Magazine[ Item[ usAmmo ].ubClassIndex ].ubMagSize;
+		/*
+		if (usItem == CAWS)
 		{
-			// item's calibre & mag size not found in magazine list!
-			return( FALSE );
+			pObj->usAttachItem[0] = DUCKBILL;
+			pObj->bAttachStatus[0] = 100;
 		}
-		else
-		{
-			pObj->usGunAmmoItem = usAmmo;
-			pObj->ubGunAmmoType = Magazine[ Item[ usAmmo ].ubClassIndex].ubAmmoType;
-			pObj->bGunAmmoStatus = 100;
-			pObj->ubGunShotsLeft = Magazine[ Item[ usAmmo ].ubClassIndex ].ubMagSize;
-			/*
-			if (usItem == CAWS)
-			{
-				pObj->usAttachItem[0] = DUCKBILL;
-				pObj->bAttachStatus[0] = 100;
-			}
-			*/
-		}
+		*/
 	}
 
 	// succesful
