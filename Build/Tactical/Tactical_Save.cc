@@ -1623,7 +1623,7 @@ void	SetNumberOfVisibleWorldItemsInSectorStructureForSector( INT16 sMapX, INT16 
 
 static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const BOOLEAN fLoadingGame)
 {
-	UINT32     uiTotalNumberOfItems = 0;
+	UINT32     uiTotalNumberOfItems;
 	WORLDITEM* pTotalSectorList;
 	LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiTotalNumberOfItems, &pTotalSectorList);
 

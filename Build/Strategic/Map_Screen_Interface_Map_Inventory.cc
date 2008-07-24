@@ -702,8 +702,7 @@ static void BuildStashForSelectedSector(const INT16 sMapX, const INT16 sMapY, co
 	}
 	else
 	{
-		UINT32 item_count = 0;
-		items             = NULL;
+		UINT32 item_count;
 		LoadWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ, &item_count, &items);
 		items_end  = items + item_count;
 	}
