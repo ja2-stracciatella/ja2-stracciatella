@@ -1624,7 +1624,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, Vi
 
 	if (pObject->usItem == SWITCH && !fObjectInOpenable)
 	{
-		if (bVisible != -2)
+		if (bVisible != HIDDEN_IN_OBJECT)
 		{
 			// switch items which are not hidden inside objects should be considered buried
 			bVisible = BURIED;
@@ -1697,7 +1697,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, Vi
 	}
 
 	// If bbisible is true, render makered world
-	if (bVisible == 1 && GridNoOnScreen(sNewGridNo))
+	if (bVisible == VISIBLE && GridNoOnScreen(sNewGridNo))
 	{
 		//gpWorldLevelData[sNewGridNo].uiFlags |= MAPELEMENT_REDRAW;
 		//SetRenderFlags(RENDER_FLAG_MARKED);

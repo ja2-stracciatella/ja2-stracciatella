@@ -1468,8 +1468,8 @@ static void HandleMapSectorInventory(void)
 //CJC look here to add/remove checks for the sector inventory
 BOOLEAN IsMapScreenWorldItemVisibleInMapInventory(const WORLDITEM* const pWorldItem)
 {
-	if( pWorldItem->bVisible == 1 &&
-			pWorldItem->fExists &&
+	if (pWorldItem->fExists             &&
+			pWorldItem->bVisible == VISIBLE &&
 			pWorldItem->o.usItem != SWITCH &&
 			pWorldItem->o.usItem != ACTION_ITEM &&
 			pWorldItem->o.bTrap <= 0 )
