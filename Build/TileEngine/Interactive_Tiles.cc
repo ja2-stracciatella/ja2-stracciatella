@@ -40,17 +40,17 @@
 #define MAX_INTTILE_STACK 10
 
 
-typedef struct CUR_INTERACTIVE_TILE
+struct CUR_INTERACTIVE_TILE
 {
-	INT16      sGridNo;
-	INT16      sTileIndex;
-	INT16      sHeighestScreenY;
-	BOOLEAN    fFound;
-	LEVELNODE* pFoundNode;
-	INT16      sFoundGridNo;
-	UINT16     usStructureID;
-	BOOLEAN    fStructure;
-} CUR_INTERACTIVE_TILE;
+	INT16            sGridNo;
+	INT16            sTileIndex;
+	INT16            sHeighestScreenY;
+	BOOLEAN          fFound;
+	LEVELNODE const* pFoundNode;
+	INT16            sFoundGridNo;
+	UINT16           usStructureID;
+	BOOLEAN          fStructure;
+};
 
 
 typedef struct INTERACTIVE_TILE_STACK_TYPE
@@ -384,7 +384,7 @@ void SetActionModeDoorCursorText( )
 }
 
 
-static void GetLevelNodeScreenRect(LEVELNODE* pNode, SGPRect* pRect, INT16 sXPos, INT16 sYPos, INT16 sGridNo)
+static void GetLevelNodeScreenRect(LEVELNODE const* const pNode, SGPRect* const pRect, INT16 const sXPos, INT16 const sYPos, INT16 const sGridNo)
 {
 		INT16 sScreenX, sScreenY;
 		INT16 sOffsetX, sOffsetY;
@@ -461,82 +461,60 @@ static void GetLevelNodeScreenRect(LEVELNODE* pNode, SGPRect* pRect, INT16 sXPos
 }
 
 
-static BOOLEAN RefineLogicOnStruct(INT16 sGridNo, LEVELNODE* pNode);
-static BOOLEAN RefinePointCollisionOnStruct(INT16 sGridNo, INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE* pNode);
+static BOOLEAN RefineLogicOnStruct(INT16 sGridNo, LEVELNODE const* pNode);
+static BOOLEAN RefinePointCollisionOnStruct(INT16 sGridNo, INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE const* pNode);
 
 
-void LogMouseOverInteractiveTile( INT16 sGridNo )
+void LogMouseOverInteractiveTile(INT16 const sGridNo)
 {
-	SGPRect				aRect;
-	INT16					sXMapPos, sYMapPos, sScreenX, sScreenY;
-	LEVELNODE			*pNode;
-
 	// OK, for now, don't allow any interactive tiles on higher interface level!
-	if ( gsInterfaceLevel > 0 )
-	{
-		return;
-	}
+	if (gsInterfaceLevel > 0) return;
 
-	// Also, don't allow for mercs who are on upper level...
-	const SOLDIERTYPE* const sel = GetSelectedMan();
-	if (sel != NULL && sel->bLevel == 1) return;
+	// Also, don't allow for mercs who are on upper level
+	SOLDIERTYPE const* const sel = GetSelectedMan();
+	if (sel && sel->bLevel == 1) return;
 
 	// Get World XY From gridno
-	ConvertGridNoToCellXY( sGridNo, &sXMapPos, &sYMapPos );
+	INT16 sXMapPos;
+	INT16 sYMapPos;
+	ConvertGridNoToCellXY(sGridNo, &sXMapPos, &sYMapPos);
 
 	// Set mouse stuff
-	sScreenX = gusMouseXPos;
-	sScreenY = gusMouseYPos;
+	INT16 const sScreenX = gusMouseXPos;
+	INT16 const sScreenY = gusMouseYPos;
 
-	pNode = gpWorldLevelData[ sGridNo ].pStructHead;
-
-	while( pNode != NULL )
+	for (LEVELNODE const* n = gpWorldLevelData[sGridNo].pStructHead; n; n = n->pNext)
 	{
-		{
-			GetLevelNodeScreenRect( pNode, &aRect, sXMapPos, sYMapPos , sGridNo );
+		SGPRect aRect;
+		GetLevelNodeScreenRect(n, &aRect, sXMapPos, sYMapPos, sGridNo);
 
-			// Make sure we are always on guy if we are on same gridno
-			if ( IsPointInScreenRect( sScreenX, sScreenY, &aRect ) )
-			{
-				// OK refine it!
-				if ( RefinePointCollisionOnStruct( sGridNo, sScreenX, sScreenY, (INT16)aRect.iLeft, (INT16)aRect.iBottom, pNode ) )
-				{
-					// Do some additional checks here!
-					if ( RefineLogicOnStruct( sGridNo, pNode ) )
-					{
+		// Make sure we are always on guy if we are on same gridno
+		if (!IsPointInScreenRect(sScreenX, sScreenY, &aRect)) continue;
 
-						gCurIntTile.fFound = TRUE;
+		if (!RefinePointCollisionOnStruct(sGridNo, sScreenX, sScreenY, aRect.iLeft, aRect.iBottom, n)) continue;
 
-						// Only if we are not currently cycling....
-						if ( !gfCycleIntTile )
-						{
-							// Accumulate them!
-							gCurIntTileStack.bTiles[ gCurIntTileStack.bNum ].pFoundNode		= pNode;
-							gCurIntTileStack.bTiles[ gCurIntTileStack.bNum ].sFoundGridNo = sGridNo;
-							gCurIntTileStack.bNum++;
+		if (!RefineLogicOnStruct(sGridNo, n)) continue;
 
+		gCurIntTile.fFound = TRUE;
 
-							// Determine if it's the best one
-							if ( aRect.iBottom > gCurIntTile.sHeighestScreenY )
-							{
-								gCurIntTile.sHeighestScreenY = aRect.iBottom;
+		if (gfCycleIntTile) continue;
 
-								// Set it!
-								gCurIntTile.pFoundNode = pNode;
-								gCurIntTile.sFoundGridNo = sGridNo;
+		// Accumulate them!
+		gCurIntTileStack.bTiles[gCurIntTileStack.bNum].pFoundNode   = n;
+		gCurIntTileStack.bTiles[gCurIntTileStack.bNum].sFoundGridNo = sGridNo;
+		gCurIntTileStack.bNum++;
 
-								// Set stack current one...
-								gCurIntTileStack.bCur = gCurIntTileStack.bNum-1;
-							}
-						}
-					}
-				}
-			}
+		// Determine if it's the best one
+		if (aRect.iBottom <= gCurIntTile.sHeighestScreenY) continue;
 
-			pNode = pNode->pNext;
-		}
+		gCurIntTile.sHeighestScreenY = aRect.iBottom;
+
+		gCurIntTile.pFoundNode   = n;
+		gCurIntTile.sFoundGridNo = sGridNo;
+
+		// Set stack current one
+		gCurIntTileStack.bCur = gCurIntTileStack.bNum - 1;
 	}
-
 }
 
 
@@ -663,7 +641,7 @@ void EndCurInteractiveTileCheck( )
 }
 
 
-static BOOLEAN RefineLogicOnStruct(INT16 sGridNo, LEVELNODE* pNode)
+static BOOLEAN RefineLogicOnStruct(INT16 const sGridNo, LEVELNODE const* const pNode)
 {
 	STRUCTURE		 *pStructure;
 
@@ -766,7 +744,7 @@ static BOOLEAN RefineLogicOnStruct(INT16 sGridNo, LEVELNODE* pNode)
 }
 
 
-static BOOLEAN RefinePointCollisionOnStruct(INT16 sGridNo, INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE* pNode)
+static BOOLEAN RefinePointCollisionOnStruct(INT16 const sGridNo, INT16 const sTestX, INT16 const sTestY, INT16 const sSrcX, INT16 const sSrcY, LEVELNODE const* const pNode)
 {
 	TILE_ELEMENT *TileElem;
 
