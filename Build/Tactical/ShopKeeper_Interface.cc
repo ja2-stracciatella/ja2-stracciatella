@@ -5693,7 +5693,7 @@ static BOOLEAN ShopkeeperAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj
 
 // The Shopkeeper interface *MUST* use this intermediary function instead of calling AddItemToPool() directly!
 // This is because the OBJECTTYPEs used within Shopkeeper may contain an illegal ubNumberOfObjects
-static void ShopkeeperAddItemToPool(INT16 const sGridNo, OBJECTTYPE* const pObject, Visibility const bVisible, UINT8 const ubLevel, UINT16 const usFlags, INT8 const bRenderZHeightAboveLevel)
+static void ShopkeeperAddItemToPool(INT16 const sGridNo, OBJECTTYPE* const pObject, UINT8 const ubLevel)
 {
 	OBJECTTYPE CopyOfObject;
 	UINT8 ubObjectsLeftToPlace;
@@ -5710,7 +5710,7 @@ static void ShopkeeperAddItemToPool(INT16 const sGridNo, OBJECTTYPE* const pObje
 		pObject->ubNumberOfObjects = MIN( MAX_OBJECTS_PER_SLOT, ubObjectsLeftToPlace);
 		ubObjectsLeftToPlace -= pObject->ubNumberOfObjects;
 
-		AddItemToPool( sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel );
+		AddItemToPool(sGridNo, pObject, VISIBLE, ubLevel, 0, 0);
 
 		// restore object properties from our backup copy
 		*pObject = CopyOfObject;
@@ -6074,7 +6074,7 @@ static void ReturnItemToPlayerSomehow(INVENTORY_IN_SLOT* pInvSlot, SOLDIERTYPE* 
 		{
 			// failed to add item, inventory probably filled up or item is unowned and current merc ineligible.
 			// drop it at the specified guy's feet instead
-			ShopkeeperAddItemToPool( pDropSoldier->sGridNo, &pInvSlot->ItemObject, VISIBLE, pDropSoldier->bLevel, 0, 0 );
+			ShopkeeperAddItemToPool(pDropSoldier->sGridNo, &pInvSlot->ItemObject, pDropSoldier->bLevel);
 		}
 	}
 }
@@ -6313,7 +6313,7 @@ static void SelectArmsDealersDropItemToGroundRegionCallBack(MOUSE_REGION* pRegio
 		if( gMoveingItem.sItemIndex != 0 )
 		{
 			//add the item to the ground
-			ShopkeeperAddItemToPool( pDropSoldier->sGridNo, &gMoveingItem.ItemObject, VISIBLE, pDropSoldier->bLevel, 0, 0 );
+			ShopkeeperAddItemToPool(pDropSoldier->sGridNo, &gMoveingItem.ItemObject, pDropSoldier->bLevel);
 
 			//Reset the cursor
 			SetSkiCursor( CURSOR_NORMAL );
