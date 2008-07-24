@@ -1476,12 +1476,32 @@ void EndCaptureSequence( )
 
 }
 
+
+static void CaptureSoldier(SOLDIERTYPE* const s, INT16 const x, INT16 const y, GridNo const soldier_pos, GridNo const item_pos)
+{
+	s->sSectorX                 = x;
+	s->sSectorY                 = y;
+	s->bSectorZ                 = 0;
+	s->bLevel                   = 0; // put him on the floor
+	s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+	s->usStrategicInsertionData = soldier_pos;
+
+	// Drop all items
+	for (INT32 i = 0; i < NUM_INV_SLOTS; ++i)
+	{
+		OBJECTTYPE* const o = &s->inv[i];
+		if (o->usItem == NOTHING)
+
+		AddItemsToUnLoadedSector(x, y, 0, item_pos, 1, o, 0, 0, 0, VISIBILITY_0);
+		DeleteObj(o);
+	}
+}
+
+
 void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 {
-	INT32					i;
   BOOLEAN       fMadeCorpse;
   INT32         iNumEnemiesInSector;
-
 
 	static INT16 sAlmaCaptureGridNos[] = { 9208, 9688, 9215 };
 	static INT16 sAlmaCaptureItemsGridNo[] = { 12246, 12406, 13046 };
@@ -1551,55 +1571,17 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 	// Is this the first one..?
 	if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTNOTSTARTED )
 	{
-		//-teleport him to NE Alma sector (not Tixa as originally planned)
-		pSoldier->sSectorX = 13;
-		pSoldier->sSectorY = 9;
-		pSoldier->bSectorZ = 0;
-
-		// put him on the floor!!
-		pSoldier->bLevel = 0;
-
-		// OK, drop all items!
-		const GridNo drop_pos = sAlmaCaptureItemsGridNo[gStrategicStatus.ubNumCapturedForRescue];
-		for ( i = 0; i < NUM_INV_SLOTS; i++ )
-		{
-			if( pSoldier->inv[ i ].usItem != 0 )
-			{
-				AddItemsToUnLoadedSector(13, 9, 0, drop_pos, 1, &pSoldier->inv[i], 0, 0, 0, VISIBILITY_0);
-				DeleteObj( &( pSoldier->inv[ i ] ) );
-			}
-		}
-
-		pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-		pSoldier->usStrategicInsertionData = sAlmaCaptureGridNos[ gStrategicStatus.ubNumCapturedForRescue ];
-
-		gStrategicStatus.ubNumCapturedForRescue++;
+		UINT8& idx = gStrategicStatus.ubNumCapturedForRescue;
+		// Teleport him to NE Alma sector (not Tixa as originally planned)
+		CaptureSoldier(pSoldier, 13, 9, sAlmaCaptureGridNos[idx], sAlmaCaptureItemsGridNo[idx]);
+		++idx;
 	}
 	else if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTDONE )
 	{
-		//-teleport him to N7
-		pSoldier->sSectorX = 7;
-		pSoldier->sSectorY = 14;
-		pSoldier->bSectorZ = 0;
-
-		// put him on the floor!!
-		pSoldier->bLevel = 0;
-
-		// OK, drop all items!
-		const GridNo drop_pos = sInterrogationItemGridNo[gStrategicStatus.ubNumCapturedForRescue];
-		for ( i = 0; i < NUM_INV_SLOTS; i++ )
-		{
-			if( pSoldier->inv[ i ].usItem != 0 )
-			{
-				AddItemsToUnLoadedSector(7, 14, 0, drop_pos, 1, &pSoldier->inv[i], 0, 0, 0, VISIBILITY_0);
-				DeleteObj( &( pSoldier->inv[ i ] ) );
-			}
-		}
-
-		pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-		pSoldier->usStrategicInsertionData = gsInterrogationGridNo[ gStrategicStatus.ubNumCapturedForRescue ];
-
-		gStrategicStatus.ubNumCapturedForRescue++;
+		// Teleport him to N7
+		UINT8& idx = gStrategicStatus.ubNumCapturedForRescue;
+		CaptureSoldier(pSoldier, 7, 14, gsInterrogationGridNo[idx], sInterrogationItemGridNo[idx]);
+		++idx;
 	}
 
 	//Bandaging him would prevent him from dying (due to low HP)
