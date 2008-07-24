@@ -982,47 +982,46 @@ static void HandleLoyaltyForDemolitionOfBuilding(SOLDIERTYPE* pSoldier, INT16 sP
 }
 
 
-void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubChance )
+void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16 const sSectorZ, UINT8 const ubChance)
 {
-	// remove random items in sector
-	UINT32 uiNewTotal = 0;
-	CHAR16 wSectorName[ 128 ];
-
-	// stealing should fail anyway 'cause there shouldn't be a temp file for unvisited sectors, but let's check anyway
+	/* Stealing should fail anyway 'cause there shouldn't be a temp file for
+	 * unvisited sectors, but let's check anyway */
 	Assert(GetSectorFlagStatus(sSectorX, sSectorY, sSectorZ, SF_ALREADY_VISITED));
 
-	// get sector name string
-	GetSectorIDString( sSectorX, sSectorY, ( INT8 ) sSectorZ, wSectorName, lengthof(wSectorName), TRUE );
+	wchar_t wSectorName[128];
+	GetSectorIDString(sSectorX, sSectorY, sSectorZ, wSectorName, lengthof(wSectorName), TRUE);
 
 	// go through list of items in sector and randomly remove them
 
 	// if unloaded sector
-	if( gWorldSectorX != sSectorX || gWorldSectorY != sSectorY || gbWorldSectorZ != sSectorZ )
+	if (gWorldSectorX  != sSectorX ||
+			gWorldSectorY  != sSectorY ||
+			gbWorldSectorZ != sSectorZ)
 	{
-		// if the player has never been there, there's no temp file, and 0 items will get returned, preventing any stealing
+		/* if the player has never been there, there's no temp file, and 0 items
+		 * will get returned, preventing any stealing */
 		UINT32     uiNumberOfItems;
 		WORLDITEM* pItemList;
 		LoadWorldItemsFromTempItemFile(sSectorX, sSectorY, sSectorZ, &uiNumberOfItems, &pItemList);
 		if (uiNumberOfItems == 0) return;
 
-		uiNewTotal = uiNumberOfItems;
+		UINT32 uiNewTotal = uiNumberOfItems;
 
 		// set up item list ptrs
-		for (UINT32 iCounter = 0; iCounter < uiNumberOfItems; ++iCounter)
+		WORLDITEM const* const end = pItemList + uiNumberOfItems;
+		for (WORLDITEM* wi = pItemList; wi != end; ++wi)
 		{
 			//if the item exists, and is visible and reachable, see if it should be stolen
-			if ( pItemList[ iCounter ].fExists && pItemList[ iCounter ].bVisible == TRUE && pItemList[ iCounter ].usFlags & WORLD_ITEM_REACHABLE )
-			{
-				if( Random( 100 ) < ubChance )
-				{
-					// remove
-					uiNewTotal--;
-					pItemList[ iCounter ].fExists = FALSE;
+			if (!wi->fExists)                          continue;
+			if (wi->bVisible != VISIBLE)               continue;
+			if (!(wi->usFlags & WORLD_ITEM_REACHABLE)) continue;
+			if (Random(100) >= ubChance)               continue;
 
-					// debug message
-					ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls stolen in %ls!", ItemNames[pItemList[iCounter].o.usItem], wSectorName);
-				}
-			}
+			// remove
+			--uiNewTotal;
+			wi->fExists = FALSE;
+
+			ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls stolen in %ls!", ItemNames[wi->o.usItem], wSectorName);
 		}
 
 		// only save if something was stolen
@@ -1031,22 +1030,18 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 			SaveWorldItemsToTempItemFile(sSectorX, sSectorY, sSectorZ, uiNumberOfItems, pItemList);
 		}
 
-		// mem free
-		MemFree( pItemList );
+		MemFree(pItemList);
 	}
 	else	// handle a loaded sector
 	{
 		FOR_ALL_WORLD_ITEMS(wi)
 		{
-			// note, can't do reachable test here because we'd have to do a path call...
-			if (wi->bVisible == TRUE)
-			{
-				if( Random( 100 ) < ubChance )
-				{
-					ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls stolen in %ls!", ItemNames[wi->o.usItem], wSectorName);
-					RemoveItemFromPool(wi);
-				}
-			}
+			// note, can't do reachable test here because we'd have to do a path call
+			if (wi->bVisible != VISIBLE) continue;
+			if (Random(100) >= ubChance) continue;
+
+			ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls stolen in %ls!", ItemNames[wi->o.usItem], wSectorName);
+			RemoveItemFromPool(wi);
 		}
 	}
 }
