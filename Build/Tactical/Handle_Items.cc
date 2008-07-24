@@ -1801,18 +1801,16 @@ INT8 GetZLevelOfItemPoolGivenStructure(const INT16 sGridNo, const UINT8 ubLevel,
 }
 
 
-INT8 GetLargestZLevelOfItemPool(const ITEM_POOL* pItemPool)
+INT8 GetLargestZLevelOfItemPool(ITEM_POOL const* ip)
 {
-	// OK, loop through pools and get any height != 0........
-	while( pItemPool != NULL )
+	// Loop through pool and get any height != 0
+	for (; ip; ip = ip->pNext)
 	{
-		const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
-		if (wi->bRenderZHeightAboveLevel > 0) return wi->bRenderZHeightAboveLevel;
-
-		pItemPool = pItemPool->pNext;
+		WORLDITEM const* const wi = GetWorldItem(ip->iItemIndex);
+		if (wi->bRenderZHeightAboveLevel <= 0) continue;
+		return wi->bRenderZHeightAboveLevel;
 	}
-
-	return( 0 );
+	return 0;
 }
 
 
