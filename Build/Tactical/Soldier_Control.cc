@@ -5926,7 +5926,6 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 	if ( ubReason != TAKE_DAMAGE_BLOODLOSS && !(AM_A_ROBOT( pSoldier )) )
 	{
 		INT16 sTestOne, sTestTwo, sChanceToDrop;
-		INT8	bVisible = -1;
 
 		sTestOne = EffectiveStrength( pSoldier );
 		sTestTwo = ( 2 * ( __max( sLifeDeduct, ( sBreathLoss / 100 ) ) ) );
@@ -5959,11 +5958,8 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 				if ( !( pSoldier->inv[ HANDPOS ].fFlags & OBJECT_UNDROPPABLE ) )
 				{
 					// ATE: if our guy, make visible....
-					if ( pSoldier->bTeam == gbPlayerNum )
-					{
-						bVisible = 1;
-					}
-
+					Visibility  const bVisible = pSoldier->bTeam == gbPlayerNum ?
+						VISIBLE : INVISIBLE;
 					AddItemToPool( pSoldier->sGridNo, &(pSoldier->inv[ HANDPOS ]), bVisible, pSoldier->bLevel, 0, -1 );
 					DeleteObj( &(pSoldier->inv[HANDPOS]) );
 				}

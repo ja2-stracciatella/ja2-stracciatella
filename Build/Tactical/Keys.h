@@ -1,6 +1,7 @@
 #ifndef		_KEYS_H_
 #define		_KEYS_H_
 
+#include "Handle_Items.h"
 #include "Item_Types.h"
 #include "Types.h"
 
@@ -223,6 +224,6 @@ void ExamineDoorsOnEnteringSector(void);
 
 void AttachStringToDoor( INT16 sGridNo );
 
-void DropKeysInKeyRing( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8 bVisible, BOOLEAN fAddToDropList, INT32 iDropListSlot, BOOLEAN fUseUnLoaded );
+void DropKeysInKeyRing(SOLDIERTYPE*, INT16 sGridNo, INT8 bLevel, Visibility, BOOLEAN fAddToDropList, INT32 iDropListSlot, BOOLEAN fUseUnLoaded);
 
 #endif

@@ -1486,7 +1486,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 						else
 						{
 							// No room to hold it so the item should drop in our tile again
-							AddItemToPool( pSoldier->sGridNo, &(pTargetSoldier->inv[HANDPOS]), 1, pSoldier->bLevel, 0, -1 );
+							AddItemToPool(pSoldier->sGridNo, &pTargetSoldier->inv[HANDPOS], VISIBLE, pSoldier->bLevel, 0, -1);
 							DeleteObj( &(pTargetSoldier->inv[HANDPOS]) );
 						}
 					}
@@ -1503,12 +1503,12 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 						if (iDiceRoll < iHitChance)
 						{
 							// Drop item in the our tile
-							AddItemToPool( pSoldier->sGridNo, &(pTargetSoldier->inv[HANDPOS]), 1, pSoldier->bLevel, 0, -1 );
+							AddItemToPool(pSoldier->sGridNo, &(pTargetSoldier->inv[HANDPOS]), VISIBLE, pSoldier->bLevel, 0, -1);
 						}
 						else
 						{
 							// Drop item in the target's tile
-							AddItemToPool( pTargetSoldier->sGridNo, &(pTargetSoldier->inv[HANDPOS]), 1, pSoldier->bLevel, 0, -1 );
+							AddItemToPool(pTargetSoldier->sGridNo, &pTargetSoldier->inv[HANDPOS], VISIBLE, pSoldier->bLevel, 0, -1);
 						}
 						DeleteObj( &(pTargetSoldier->inv[HANDPOS]) );
 					}
@@ -1999,7 +1999,7 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 					// Add item
 					CreateItem( THROWING_KNIFE, bWeaponStatus, &Object );
 
-					AddItemToPool( sGridNo, &Object, -1 , 0, 0, -1 );
+					AddItemToPool(sGridNo, &Object, INVISIBLE, 0, 0, -1);
 
 					// Make team look for items
 					NotifySoldiersToLookforItems( );
@@ -2513,7 +2513,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 				pInHand->bAttachStatus[ bAttachPos ] = 0;
 
 				// drop it to ground
-				AddItemToPool( pSoldier->sGridNo, &Temp, 1, pSoldier->bLevel, 0, -1 );
+				AddItemToPool(pSoldier->sGridNo, &Temp, VISIBLE, pSoldier->bLevel, 0, -1);
 
 				// big penalty to hit
 				iChance -= 30;

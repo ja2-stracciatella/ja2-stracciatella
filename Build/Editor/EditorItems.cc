@@ -743,8 +743,8 @@ void AddSelectedItemToWorld(INT16 sGridNo)
 		CreateItem(eInfo.pusItemIndex[eInfo.sSelItemIndex], 100, &tempObject);
 	}
 
-	INT8   bVisibility = INVISIBLE;
-	UINT16 usFlags     = 0;
+	Visibility bVisibility = INVISIBLE;
+	UINT16     usFlags     = 0;
 	switch (tempObject.usItem)
 	{
 		case MINE:

@@ -3684,8 +3684,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 					case ANIM_CROUCH:
 					case ANIM_PRONE:
-
-						AddItemToPool( usMapPos, gpItemPointer, 1, gpItemPointerSoldier->bLevel, 0 , -1 );
+						AddItemToPool(usMapPos, gpItemPointer, VISIBLE, gpItemPointerSoldier->bLevel, 0 , -1);
 						NotifySoldiersToLookforItems( );
 						break;
 				}
@@ -5470,7 +5469,7 @@ void CancelItemPointer( )
 				if ( !AutoPlaceObject( gpItemPointerSoldier, gpItemPointer, FALSE ) )
         {
           // Alright, place of the friggen ground!
-			    AddItemToPool( gpItemPointerSoldier->sGridNo, gpItemPointer, 1, gpItemPointerSoldier->bLevel, 0 , -1 );
+			    AddItemToPool(gpItemPointerSoldier->sGridNo, gpItemPointer, VISIBLE, gpItemPointerSoldier->bLevel, 0 , -1);
 			    NotifySoldiersToLookforItems( );
         }
       }
@@ -5478,7 +5477,7 @@ void CancelItemPointer( )
 		else
 		{
 			// We drop it here.....
-			AddItemToPool( gpItemPointerSoldier->sGridNo, gpItemPointer, 1, gpItemPointerSoldier->bLevel, 0 , -1 );
+			AddItemToPool(gpItemPointerSoldier->sGridNo, gpItemPointer, VISIBLE, gpItemPointerSoldier->bLevel, 0 , -1);
 			NotifySoldiersToLookforItems( );
 		}
 		EndItemPointer( );

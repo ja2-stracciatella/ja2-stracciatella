@@ -384,7 +384,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer )
 			{ //all armed bombs are buried
 				dummyItem.bVisible = BURIED;
 			}
-			const INT32 iItemIndex = AddItemToPool(dummyItem.sGridNo, &dummyItem.o, dummyItem.bVisible, dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel);
+			INT32 const iItemIndex = AddItemToPool(dummyItem.sGridNo, &dummyItem.o, static_cast<Visibility>(dummyItem.bVisible), dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel);
 			GetWorldItem(iItemIndex)->ubNonExistChance = dummyItem.ubNonExistChance;
 		}
 	}
@@ -489,6 +489,6 @@ void RefreshWorldItemsIntoItemPools(const WORLDITEM* const items, const INT32 it
 	{
 		if (!i->fExists) continue;
 		OBJECTTYPE o = i->o; // XXX AddItemToPool() may alter the object
-		AddItemToPool(i->sGridNo, &o, i->bVisible, i->ubLevel, i->usFlags, i->bRenderZHeightAboveLevel);
+		AddItemToPool(i->sGridNo, &o, static_cast<Visibility>(i->bVisible), i->ubLevel, i->usFlags, i->bRenderZHeightAboveLevel);
 	}
 }

@@ -1537,7 +1537,7 @@ void ExamineDoorsOnEnteringSector( )
 }
 
 
-void DropKeysInKeyRing( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bLevel, INT8 bVisible, BOOLEAN fAddToDropList, INT32 iDropListSlot, BOOLEAN fUseUnLoaded )
+void DropKeysInKeyRing(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, INT8 const bLevel, Visibility const bVisible, BOOLEAN const fAddToDropList, INT32 const iDropListSlot, BOOLEAN const fUseUnLoaded)
 {
 	UINT8		    ubLoop;
   UINT8       ubItem;

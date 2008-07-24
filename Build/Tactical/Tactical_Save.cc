@@ -281,7 +281,7 @@ void LoadWorldItemsFromTempItemFile(INT16 const x, INT16 const y, INT8 const z, 
 }
 
 
-void AddItemsToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, INT16 const sGridNo, UINT32 const uiNumberOfItemsToAdd, OBJECTTYPE const* const pObject, UINT8 const ubLevel, UINT16 const usFlags, INT8 const bRenderZHeightAboveLevel, INT8 const bVisible)
+void AddItemsToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, INT16 const sGridNo, UINT32 const uiNumberOfItemsToAdd, OBJECTTYPE const* const pObject, UINT8 const ubLevel, UINT16 const usFlags, INT8 const bRenderZHeightAboveLevel, Visibility const bVisible)
 {
 	UINT32     uiNumberOfItems;
 	WORLDITEM* wis;
@@ -779,7 +779,7 @@ static void LoadAndAddWorldItemsFromTempFile(INT16 const sMapX, INT16 const sMap
 			if (new_pos != NOWHERE) pos = new_pos;
 		}
 
-		AddItemToPool(pos, &i->o, i->bVisible, i->ubLevel, i->usFlags, i->bRenderZHeightAboveLevel);
+		AddItemToPool(pos, &i->o, static_cast<Visibility>(i->bVisible), i->ubLevel, i->usFlags, i->bRenderZHeightAboveLevel);
 	}
 
 	MemFree(items);
@@ -933,7 +933,7 @@ void AddWorldItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const I
 	for (const WORLDITEM* wi = wis; wi != wis + item_count; ++wi)
 	{
 		if (!wi->fExists) continue;
-		AddItemsToUnLoadedSector(sMapX, sMapY, bMapZ, wi->sGridNo, 1, &wi->o, wi->ubLevel, wi->usFlags, wi->bRenderZHeightAboveLevel, wi->bVisible);
+		AddItemsToUnLoadedSector(sMapX, sMapY, bMapZ, wi->sGridNo, 1, &wi->o, wi->ubLevel, wi->usFlags, wi->bRenderZHeightAboveLevel, static_cast<Visibility>(wi->bVisible));
 	}
 }
 
@@ -1317,13 +1317,13 @@ void AddDeadSoldierToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, UINT8 
 				if( !(pSoldier->inv[ i ].fFlags & OBJECT_UNDROPPABLE) || pSoldier->bTeam == gbPlayerNum )
 				{
 					ReduceAmmoDroppedByNonPlayerSoldiers( pSoldier, i );
-					AddItemsToUnLoadedSector(sMapX, sMapY, bMapZ, sGridNo, 1, &pSoldier->inv[i], pSoldier->bLevel, uiFlagsForWorldItems, 0, TRUE);
+					AddItemsToUnLoadedSector(sMapX, sMapY, bMapZ, sGridNo, 1, &pSoldier->inv[i], pSoldier->bLevel, uiFlagsForWorldItems, 0, VISIBLE);
 				}
 			}
 		}
 	}
 
-  DropKeysInKeyRing( pSoldier, sGridNo, pSoldier->bLevel, 1, FALSE, 0, TRUE );
+	DropKeysInKeyRing(pSoldier, sGridNo, pSoldier->bLevel, VISIBLE, FALSE, 0, TRUE);
 
 	//
 	//Convert the soldier into a rottng corpse

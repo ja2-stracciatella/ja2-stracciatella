@@ -194,7 +194,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 						// damage the item a random amount!
 						const INT8 status = (70 + Random(11)) * (INT32)Object.bStatus[0] / 100;
 						Object.bStatus[0] = MAX(1, status);
-						AddItemToPool(usStandardMapPos, &Object, -1, 0, 0, 0);
+						AddItemToPool(usStandardMapPos, &Object, INVISIBLE, 0, 0, 0);
 					}
 					else
 					{
@@ -238,7 +238,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 			// the item in Object will be the item to deliver
 			if (fSectorLoaded)
 			{
-				AddItemToPool(usStandardMapPos, &Object, -1, 0, 0, 0);
+				AddItemToPool(usStandardMapPos, &Object, INVISIBLE, 0, 0, 0);
 			}
 			else
 			{
@@ -256,7 +256,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 				// stack as many as possible
 				if (fSectorLoaded)
 				{
-					AddItemToPool(usStandardMapPos, &Object, -1, 0, 0, 0);
+					AddItemToPool(usStandardMapPos, &Object, INVISIBLE, 0, 0, 0);
 				}
 				else
 				{
@@ -273,10 +273,10 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	{
 		//add all the items from the array that was built above
 		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
-		AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, usStandardMapPos, uiCount, pObject, 0, 0, 0, -1);
+		AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, usStandardMapPos, uiCount, pObject, 0, 0, 0, INVISIBLE);
 		if (uiStolenCount > 0)
 		{
-			AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, PABLOS_STOLEN_DEST_GRIDNO, uiStolenCount, pStolenObject, 0, 0, 0, -1);
+			AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, PABLOS_STOLEN_DEST_GRIDNO, uiStolenCount, pStolenObject, 0, 0, 0, INVISIBLE);
 		}
 		MemFree(pObject);
 		MemFree(pStolenObject);
@@ -396,11 +396,11 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 			}
 			if ( ( gWorldSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X ) && ( gWorldSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y ) && ( gbWorldSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z ) )
 			{
-				AddItemToPool( BOBBYR_SHIPPING_DEST_GRIDNO, &Object, -1, 0, 0, 0 );
+				AddItemToPool(BOBBYR_SHIPPING_DEST_GRIDNO, &Object, INVISIBLE, 0, 0, 0);
 			}
 			else
 			{
-				AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, BOBBYR_SHIPPING_DEST_GRIDNO, 1, &Object, 0, 0, 0, -1);
+				AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, BOBBYR_SHIPPING_DEST_GRIDNO, 1, &Object, 0, 0, 0, INVISIBLE);
 			}
 		}
 	}
@@ -1065,7 +1065,7 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 			// stack as many as possible
 			if( fSectorLoaded )
 			{
-				AddItemToPool( MEDUNA_ITEM_DROP_OFF_GRIDNO, &Object, -1, 0, 0, 0 );
+				AddItemToPool(MEDUNA_ITEM_DROP_OFF_GRIDNO, &Object, INVISIBLE, 0, 0, 0);
 			}
 			else
 			{
@@ -1083,7 +1083,7 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 		//add all the items from the array that was built above
 
 		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
-		AddItemsToUnLoadedSector(MEDUNA_ITEM_DROP_OFF_SECTOR_X, MEDUNA_ITEM_DROP_OFF_SECTOR_Y, MEDUNA_ITEM_DROP_OFF_SECTOR_Z, MEDUNA_ITEM_DROP_OFF_GRIDNO, uiCount, pObject, 0, 0, 0, -1);
+		AddItemsToUnLoadedSector(MEDUNA_ITEM_DROP_OFF_SECTOR_X, MEDUNA_ITEM_DROP_OFF_SECTOR_Y, MEDUNA_ITEM_DROP_OFF_SECTOR_Z, MEDUNA_ITEM_DROP_OFF_GRIDNO, uiCount, pObject, 0, 0, 0, INVISIBLE);
 		MemFree( pObject );
 		pObject = NULL;
 	}

@@ -1,7 +1,7 @@
 #ifndef __TACTICAL_SAVE_H_
 #define __TACTICAL_SAVE_H_
 
-
+#include "Handle_Items.h"
 #include "World_Items.h"
 #include "WorldDef.h"
 #include "Rotting_Corpses.h"
@@ -30,7 +30,7 @@ void LoadWorldItemsFromTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32
 
 //  Adds an array of Item Objects to the specified location on a unloaded map.
 //  If you want to overwrite all the items in the array set fReplaceEntireFile to TRUE.
-void AddItemsToUnLoadedSector(INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sGridNo, UINT32 uiNumberOfItems, OBJECTTYPE const* pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, INT8 bVisible);
+void AddItemsToUnLoadedSector(INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sGridNo, UINT32 uiNumberOfItems, OBJECTTYPE const* pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, Visibility);
 
 
 void AddWorldItemsToUnLoadedSector(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, const WORLDITEM* pWorldItem);

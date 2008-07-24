@@ -409,7 +409,7 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, real DeltaTime)
 						// ATE; If an armed object, don't add....
 						if ( pObject->ubActionCode != THROW_ARM_ITEM )
 						{
-							AddItemToPool( pObject->sGridNo, &( pObject->Obj ), 1, bLevel, 0, -1 );
+							AddItemToPool(pObject->sGridNo, &pObject->Obj, VISIBLE, bLevel, 0, -1);
 						}
 					}
 				}

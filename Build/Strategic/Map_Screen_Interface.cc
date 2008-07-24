@@ -1081,16 +1081,16 @@ void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE* const s)
 	    if (s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY || s->bSectorZ != gbWorldSectorZ)
 	    {
         // Set flag for item...
-				AddItemsToUnLoadedSector(s->sSectorX, s->sSectorY, s->bSectorZ , sGridNo, 1, &s->inv[iCounter], s->bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, 1);
+				AddItemsToUnLoadedSector(s->sSectorX, s->sSectorY, s->bSectorZ , sGridNo, 1, &s->inv[iCounter], s->bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, VISIBLE);
       }
 			else
 			{
-				AddItemToPool(sGridNo, &s->inv[iCounter], 1, s->bLevel, WORLD_ITEM_REACHABLE, 0);
+				AddItemToPool(sGridNo, &s->inv[iCounter], VISIBLE, s->bLevel, WORLD_ITEM_REACHABLE, 0);
 			}
 		}
 	}
 
-  DropKeysInKeyRing(s, sGridNo, s->bLevel, 1, FALSE, 0, FALSE);
+	DropKeysInKeyRing(s, sGridNo, s->bLevel, VISIBLE, FALSE, 0, FALSE);
 }
 
 
@@ -1158,11 +1158,11 @@ static void HandleEquipmentLeft(const UINT32 uiSlotIndex, const UINT sector, con
 			if (gWorldSectorX != SECTORX(sector) || gWorldSectorY != SECTORY(sector) || gbWorldSectorZ != 0)
 			{
 				// given this slot value, add to sector item list
-				AddItemsToUnLoadedSector(SECTORX(sector), SECTORY(sector), 0, grid, 1, &pItem->o, 0, WORLD_ITEM_REACHABLE, 0, 1);
+				AddItemsToUnLoadedSector(SECTORX(sector), SECTORY(sector), 0, grid, 1, &pItem->o, 0, WORLD_ITEM_REACHABLE, 0, VISIBLE);
 			}
 			else
 			{
-				AddItemToPool(grid, &pItem->o, 1, 0, WORLD_ITEM_REACHABLE, 0);
+				AddItemToPool(grid, &pItem->o, VISIBLE, 0, WORLD_ITEM_REACHABLE, 0);
 			}
 		}
 	}
@@ -1297,7 +1297,7 @@ static INT32 SetUpDropItemListForMerc(SOLDIERTYPE* const s)
 
   // ATE: Added this to drop keyring keys - the 2nd last paramter says to add it to a leave list...
   // the gridno, level and visiblity are ignored
-  DropKeysInKeyRing(s, NOWHERE, 0, 0, TRUE, iSlotIndex, FALSE);
+	DropKeysInKeyRing(s, NOWHERE, 0, VISIBILITY_0, TRUE, iSlotIndex, FALSE);
 
 	// zero out profiles
 	MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];

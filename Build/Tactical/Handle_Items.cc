@@ -1018,7 +1018,7 @@ void SoldierHandleDropItem( SOLDIERTYPE *pSoldier )
 			PlayLocationJA2Sample(pSoldier->sGridNo, THROW_IMPACT_2, MIDVOLUME, 1);
 		}
 
-		AddItemToPool( pSoldier->sGridNo, pSoldier->pTempObject, 1, pSoldier->bLevel, 0 , -1 );
+		AddItemToPool(pSoldier->sGridNo, pSoldier->pTempObject, VISIBLE, pSoldier->bLevel, 0 , -1);
 		NotifySoldiersToLookforItems( );
 
 		MemFree( pSoldier->pTempObject );
@@ -1077,7 +1077,7 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 				// OK, JUST DROP ITEM!
 				if ( pSoldier->pTempObject != NULL )
 				{
-					AddItemToPool( sGridNo, pSoldier->pTempObject, 1, pSoldier->bLevel, 0, -1 );
+					AddItemToPool(sGridNo, pSoldier->pTempObject, VISIBLE, pSoldier->bLevel, 0, -1);
 					NotifySoldiersToLookforItems( );
 
 					MemFree( pSoldier->pTempObject );
@@ -1213,7 +1213,7 @@ static void HandleAutoPlaceFail(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const o
 	else
 	{
 		// Add back to world
-		AddItemToPool(sGridNo, o, 1, pSoldier->bLevel, 0, -1);
+		AddItemToPool(sGridNo, o, VISIBLE, pSoldier->bLevel, 0, -1);
 		DoMercBattleSound(pSoldier, BATTLE_SOUND_CURSE1);
 	}
 }
@@ -1504,7 +1504,7 @@ static void RemoveItemGraphicFromWorld(INT16 const sGridNo, UINT8 const ubLevel,
 }
 
 
-INT32 AddItemToPool(INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisible, const UINT8 ubLevel, const UINT16 usFlags, const INT8 bRenderZHeightAboveLevel)
+INT32 AddItemToPool(INT16 sGridNo, OBJECTTYPE* const pObject, Visibility const bVisible, UINT8 const ubLevel, UINT16 const usFlags, INT8 const bRenderZHeightAboveLevel)
 {
 	return InternalAddItemToPool(&sGridNo, pObject, bVisible, ubLevel, usFlags, bRenderZHeightAboveLevel);
 }
@@ -1513,7 +1513,7 @@ INT32 AddItemToPool(INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisibl
 static void HandleItemObscuredFlag(INT16 sGridNo, UINT8 ubLevel);
 
 
-INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel)
+INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, Visibility bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel)
 {
 	Assert(pObject->ubNumberOfObjects <= MAX_OBJECTS_PER_SLOT);
 
@@ -1589,8 +1589,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, IN
 				// Openable.. check if it's closed, if so, set visiblity...
 				if (!(pStructure->fFlags & STRUCTURE_OPEN))
 				{
-					// -2 means - don't reveal!
-					bVisible = -2;
+					bVisible = HIDDEN_IN_OBJECT;
 				}
 
 				bRenderZHeightAboveLevel = CONVERT_INDEX_TO_PIXELS(StructureHeight(pStructure));
@@ -1881,7 +1880,7 @@ static void HandleItemObscuredFlag(INT16 const sGridNo, UINT8 const ubLevel)
 static void SetItemPoolLocator(ITEM_POOL* pItemPool, ITEM_POOL_LOCATOR_HOOK Callback);
 
 
-BOOLEAN SetItemsVisibilityOn(GridNo const grid_no, UINT8 const level, INT8 const bAllGreaterThan, BOOLEAN const fSetLocator)
+BOOLEAN SetItemsVisibilityOn(GridNo const grid_no, UINT8 const level, Visibility const bAllGreaterThan, BOOLEAN const fSetLocator)
 {
 	ITEM_POOL* const ip = GetItemPool(grid_no, level);
 
@@ -1989,7 +1988,7 @@ void MoveItemPools(INT16 const sStartPos, INT16 const sEndPos)
 		WORLDITEM* const wi            = GetWorldItem(pItemPool->iItemIndex);
 		WORLDITEM        TempWorldItem = *wi;
 		RemoveItemFromPool(wi);
-		AddItemToPool( sEndPos, &(TempWorldItem.o), -1, TempWorldItem.ubLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel );
+		AddItemToPool(sEndPos, &TempWorldItem.o, INVISIBLE, TempWorldItem.ubLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel);
 	}
 }
 
@@ -2375,7 +2374,7 @@ SOLDIERTYPE* VerifyGiveItem(SOLDIERTYPE* const pSoldier)
 	{
 		if ( pSoldier->pTempObject != NULL )
 		{
-			AddItemToPool( pSoldier->sGridNo, pSoldier->pTempObject, 1, pSoldier->bLevel, 0 , -1 );
+			AddItemToPool(pSoldier->sGridNo, pSoldier->pTempObject, VISIBLE, pSoldier->bLevel, 0 , -1);
 
 			// Place it on the ground!
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ITEM_HAS_BEEN_PLACED_ON_GROUND_STR ], ShortItemNames[ pSoldier->pTempObject->usItem ] );
@@ -2527,7 +2526,7 @@ Changed because if the player gave 1 item from a pile, the rest of the items in 
 					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 				}
 
-				AddItemToPool( pSoldier->sGridNo, &TempObject, 1, pSoldier->bLevel, 0 , -1 );
+				AddItemToPool(pSoldier->sGridNo, &TempObject, VISIBLE, pSoldier->bLevel, 0 , -1);
 
 				// We could not place it!
 				// Drop it on the ground?
@@ -2762,7 +2761,7 @@ static void BombMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 				// value of 1 is stored in maps for SIDE of bomb owner... when we want to use IDs!
 				// so we add 2 to all owner IDs passed through here and subtract 2 later
 				gpTempSoldier->inv[HANDPOS].ubBombOwner = gpTempSoldier->ubID + 2;
-				AddItemToPool( gsTempGridno, &(gpTempSoldier->inv[HANDPOS]), 1, gpTempSoldier->bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
+				AddItemToPool(gsTempGridno, &gpTempSoldier->inv[HANDPOS], VISIBLE, gpTempSoldier->bLevel, WORLD_ITEM_ARMED_BOMB, 0);
 				DeleteObj( &(gpTempSoldier->inv[HANDPOS]) );
 			}
 		}

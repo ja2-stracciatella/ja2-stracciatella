@@ -1823,7 +1823,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 			// Add item
 			CreateItem( THROWING_KNIFE, (INT8) pBullet->ubItemStatus, &Object );
 
-			AddItemToPool( pTarget->sGridNo, &Object, -1 , pTarget->bLevel, 0, 0 );
+			AddItemToPool(pTarget->sGridNo, &Object, INVISIBLE, pTarget->bLevel, 0, 0);
 
 			// Make team look for items
 			NotifySoldiersToLookforItems( );
@@ -4109,11 +4109,11 @@ void MoveBullet(BULLET* const pBullet)
 
 												if ( sDesiredLevel == STRUCTURE_ON_GROUND )
 												{
-													AddItemToPool( (INT16) iKnifeGridNo, &Object, -1, 0, 0, 0 );
+													AddItemToPool(iKnifeGridNo, &Object, INVISIBLE, 0, 0, 0);
 												}
 												else
 												{
-													AddItemToPool( (INT16) iKnifeGridNo, &Object, -1, 0, 1, 0 );
+													AddItemToPool(iKnifeGridNo, &Object, INVISIBLE, 0, 1, 0);
 												}
 
 												// Make team look for items

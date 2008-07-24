@@ -604,7 +604,6 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
 	UINT8												ubType;
 	INT32												cnt;
 	UINT16											usItemFlags = 0; //WORLD_ITEM_DONTRENDER;
-	INT8												bVisible = -1;
 	OBJECTTYPE									*pObj;
   UINT8                       ubNumGoo;
   INT16                       sNewGridNo;
@@ -688,10 +687,9 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
 
 	// ATE: If the queen is killed, she should
 	// make items visible because it ruins end sequence....
-	if ( pSoldier->ubProfile == QUEEN || pSoldier->bTeam == gbPlayerNum )
-	{
-		bVisible = 1;
-	}
+	Visibility const bVisible =
+		pSoldier->bTeam == gbPlayerNum || pSoldier->ubProfile == QUEEN ?
+			VISIBLE : INVISIBLE;
 
   // Not for a robot...
   if ( AM_A_ROBOT( pSoldier ) )

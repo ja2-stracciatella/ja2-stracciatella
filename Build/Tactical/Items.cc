@@ -2149,7 +2149,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 						if ( !AutoPlaceObject( pSoldier, &OldAmmo, FALSE ) )
 						{
 							// put it on the ground
-							AddItemToPool( pSoldier->sGridNo, &OldAmmo, 1, pSoldier->bLevel, 0 , -1 );
+							AddItemToPool(pSoldier->sGridNo, &OldAmmo, VISIBLE, pSoldier->bLevel, 0 , -1);
 						}
 						// delete the object now in the cursor
 						DeleteObj( pAmmo );
@@ -4090,7 +4090,7 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 						if (RemoveAttachment(pObject, bLoop2, &Attachment))
 						{
 							// drop it in Madlab's tile
-							AddItemToPool( pSoldier->sGridNo, &Attachment, 1, 0, 0, 0 );
+							AddItemToPool(pSoldier->sGridNo, &Attachment, VISIBLE, 0, 0, 0);
 						}
 					}
 				}

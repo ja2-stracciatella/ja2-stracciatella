@@ -21,13 +21,16 @@
 
 #define ITEM_IGNORE_Z_LEVEL											-1
 
-// visibility defines
-#define ANY_VISIBILITY_VALUE  -10
-#define HIDDEN_ITEM -4
-#define BURIED -3
-#define HIDDEN_IN_OBJECT -2
-#define INVISIBLE -1
-#define VISIBLE 1
+enum Visibility
+{
+	ANY_VISIBILITY_VALUE = -10,
+	HIDDEN_ITEM          =  -4,
+	BURIED               =  -3,
+	HIDDEN_IN_OBJECT     =  -2,
+	INVISIBLE            =  -1,
+	VISIBILITY_0         =   0, // XXX investigate
+	VISIBLE              =   1
+};
 
 #define	ITEM_LOCATOR_LOCKED 0x02
 
@@ -67,8 +70,8 @@ void AllSoldiersLookforItems(void);
 
 void SoldierGetItemFromWorld(SOLDIERTYPE* pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel, const BOOLEAN* pfSelectionList);
 
-INT32 AddItemToPool(INT16 sGridNo, OBJECTTYPE *pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel);
-INT32 InternalAddItemToPool(INT16* psGridNo, OBJECTTYPE* pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel);
+INT32 AddItemToPool(INT16 sGridNo, OBJECTTYPE *pObject, Visibility, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel);
+INT32 InternalAddItemToPool(INT16* psGridNo, OBJECTTYPE* pObject, Visibility, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel);
 
 INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 ITEM_POOL* GetItemPool(UINT16 usMapPos, UINT8 ubLevel);
@@ -76,7 +79,7 @@ void       DrawItemPoolList(const ITEM_POOL* pItemPool, INT8 bZLevel, INT16 sXPo
 void       RemoveItemFromPool(WORLDITEM*);
 void       MoveItemPools(INT16 sStartPos, INT16 sEndPos);
 
-BOOLEAN SetItemsVisibilityOn(GridNo, UINT8 level, INT8 bAllGreaterThan, BOOLEAN fSetLocator);
+BOOLEAN SetItemsVisibilityOn(GridNo, UINT8 level, Visibility bAllGreaterThan, BOOLEAN fSetLocator);
 
 void SetItemsVisibilityHidden(GridNo, UINT8 level);
 

@@ -1240,7 +1240,7 @@ void HandleNPCItemGiven( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos )
 		SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubNPC);
 		if ( pNPC )
 		{
-			AddItemToPool( pNPC->sGridNo, &(pNPC->inv[bInvPos]), TRUE, 0, 0, 0 );
+			AddItemToPool(pNPC->sGridNo, &pNPC->inv[bInvPos], VISIBLE, 0, 0, 0);
 			TriggerNPCWithGivenApproach( ubNPC, APPROACH_DONE_GIVING_ITEM, TRUE );
 		}
 	}
@@ -2168,7 +2168,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					if (pSoldier)
 					{
 						CreateMoney(10000, &Object);
-						const INT32 iWorldItem = AddItemToPool(sGridNo, &Object, -1, pSoldier->bLevel, 0, 0);
+						INT32 const iWorldItem = AddItemToPool(sGridNo, &Object, INVISIBLE, pSoldier->bLevel, 0, 0);
 
 						// shouldn't have any current action but make sure everything
 						// is clear... and set pending action so the guy won't move
@@ -2490,7 +2490,7 @@ unlock:
 					const INT8 bItemIn = FindObj(pSoldier, DEED);
 					if (bItemIn != NO_SLOT)
 					{
-						AddItemToPool( 12541, &(pSoldier->inv[bItemIn]), -1 , 0, 0, 0 );
+						AddItemToPool(12541, &pSoldier->inv[bItemIn], INVISIBLE, 0, 0, 0);
 						DeleteObj( &(pSoldier->inv[ bItemIn ]) );
 						RemoveObjectFromSoldierProfile( ubTargetNPC, DEED );
 					}

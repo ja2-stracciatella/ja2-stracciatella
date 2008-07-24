@@ -2331,7 +2331,7 @@ no_cry:
 							PlayLocationJA2Sample(pSoldier->sGridNo, THROW_IMPACT_2, MIDVOLUME, 1);
 						}
 
-						AddItemToPool( pSoldier->sPendingActionData2, pSoldier->pTempObject, 1, pSoldier->bLevel, 0 , -1 );
+						AddItemToPool(pSoldier->sPendingActionData2, pSoldier->pTempObject, VISIBLE, pSoldier->bLevel, 0, -1);
 						NotifySoldiersToLookforItems( );
 
 						MemFree( pSoldier->pTempObject );

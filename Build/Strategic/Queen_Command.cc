@@ -1565,7 +1565,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 		{
 			if( pSoldier->inv[ i ].usItem != 0 )
 			{
-				AddItemsToUnLoadedSector(13, 9, 0, drop_pos, 1, &pSoldier->inv[i], 0, 0, 0, FALSE);
+				AddItemsToUnLoadedSector(13, 9, 0, drop_pos, 1, &pSoldier->inv[i], 0, 0, 0, VISIBILITY_0);
 				DeleteObj( &( pSoldier->inv[ i ] ) );
 			}
 		}
@@ -1591,7 +1591,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 		{
 			if( pSoldier->inv[ i ].usItem != 0 )
 			{
-				AddItemsToUnLoadedSector(7, 14, 0, drop_pos, 1, &pSoldier->inv[i], 0, 0, 0, FALSE);
+				AddItemsToUnLoadedSector(7, 14, 0, drop_pos, 1, &pSoldier->inv[i], 0, 0, 0, VISIBILITY_0);
 				DeleteObj( &( pSoldier->inv[ i ] ) );
 			}
 		}

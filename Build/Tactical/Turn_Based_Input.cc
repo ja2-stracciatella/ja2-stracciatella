@@ -3125,7 +3125,7 @@ static void CreateRandomItem(void)
 	if (usMapPos != NOWHERE)
 	{
 		CreateItem( (UINT16) (Random( 35 ) + 1), 100, &Object );
-		AddItemToPool( usMapPos, &Object, -1 , 0, 0, 0 );
+		AddItemToPool(usMapPos, &Object, INVISIBLE, 0, 0, 0);
 	}
 }
 

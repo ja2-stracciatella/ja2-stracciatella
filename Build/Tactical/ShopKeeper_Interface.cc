@@ -5693,7 +5693,7 @@ static BOOLEAN ShopkeeperAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj
 
 // The Shopkeeper interface *MUST* use this intermediary function instead of calling AddItemToPool() directly!
 // This is because the OBJECTTYPEs used within Shopkeeper may contain an illegal ubNumberOfObjects
-static void ShopkeeperAddItemToPool(INT16 sGridNo, OBJECTTYPE* pObject, INT8 bVisible, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel)
+static void ShopkeeperAddItemToPool(INT16 const sGridNo, OBJECTTYPE* const pObject, Visibility const bVisible, UINT8 const ubLevel, UINT16 const usFlags, INT8 const bRenderZHeightAboveLevel)
 {
 	OBJECTTYPE CopyOfObject;
 	UINT8 ubObjectsLeftToPlace;
