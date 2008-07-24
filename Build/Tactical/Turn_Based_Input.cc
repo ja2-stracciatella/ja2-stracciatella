@@ -3474,58 +3474,45 @@ static void CreatePlayerControlledMonster(void)
 }
 
 
-static INT8 CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* pSoldier, UINT16 usMapPos, BOOLEAN fMovementMode)
+static bool CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* const s, UINT16 const usMapPos, BOOLEAN const fMovementMode)
 {
-	// Look for an item pool
-	INT16							sAPCost = 0;
+	SOLDIERTYPE const* const tgt = gUIFullTarget;
+	if (!tgt)                          return false;
+	if (!OK_ENTERABLE_VEHICLE(tgt))    return false;
+	if (tgt->bVisible == -1)           return false;
+	if (!OKUseVehicle(tgt->ubProfile)) return false;
 
-	const SOLDIERTYPE* const pTSoldier = gUIFullTarget;
-	if (pTSoldier != NULL)
+	VEHICLETYPE* const v = GetVehicle(tgt->bVehicleID);
+	if (GetNumberInVehicle(v) != 0 && fMovementMode) return false;
+
+	// Find a gridno closest to sweetspot
+	GridNo const action_pos = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 5, 0, tgt);
+	if (action_pos == NOWHERE) return false;
+
+	// Calculate AP costs
+	INT16 const ap_cost = PlotPath(s, action_pos, NO_COPYROUTE, FALSE, s->usUIMovementMode, s->bActionPoints);
+	if (!EnoughPoints(s, ap_cost, 0, TRUE)) return false;
+
+	DoMercBattleSound(s, BATTLE_SOUND_OK1);
+
+	// Check if we are at this gridno now
+	if (s->sGridNo != action_pos)
 	{
-		 if ( OK_ENTERABLE_VEHICLE( pTSoldier ) && pTSoldier->bVisible != -1 && OKUseVehicle( pTSoldier->ubProfile ) )
-		 {
-			VEHICLETYPE* const v = GetVehicle(pTSoldier->bVehicleID);
-			if (GetNumberInVehicle(v) == 0 || !fMovementMode)
-			 {
-				 // Find a gridno closest to sweetspot...
-				const INT16 sActionGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(pSoldier, pSoldier->usUIMovementMode, 5, 0, pTSoldier);
-				 if ( sActionGridNo != NOWHERE )
-				 {
-						// Calculate AP costs...
-						//sAPCost = GetAPsToBeginFirstAid( pSoldier );
-						sAPCost += PlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, FALSE, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
-
-						if ( EnoughPoints( pSoldier, sAPCost, 0, TRUE ) )
-						{
-							DoMercBattleSound( pSoldier, BATTLE_SOUND_OK1 );
-
-							// CHECK IF WE ARE AT THIS GRIDNO NOW
-							if ( pSoldier->sGridNo != sActionGridNo )
-							{
-								// SEND PENDING ACTION
-								pSoldier->ubPendingAction = MERC_ENTER_VEHICLE;
-								pSoldier->sPendingActionData2  = pTSoldier->sGridNo;
-								pSoldier->ubPendingActionAnimCount = 0;
-
-								// WALK UP TO DEST FIRST
-								EVENT_InternalGetNewSoldierPath( pSoldier, sActionGridNo, pSoldier->usUIMovementMode, 3 , pSoldier->fNoAPToFinishMove );
-
-								SetUIBusy(pSoldier);
-							}
-							else
-							{
-								PutSoldierInVehicle(pSoldier, v);
-							}
-
-							return( -1 );
-						}
-				 }
-			 }
-		 }
+		// Send pending action
+		s->ubPendingAction          = MERC_ENTER_VEHICLE;
+		s->sPendingActionData2      = tgt->sGridNo;
+		s->ubPendingActionAnimCount = 0;
+		// Walk up to dest first
+		EVENT_InternalGetNewSoldierPath(s, action_pos, s->usUIMovementMode, 3, s->fNoAPToFinishMove);
+		SetUIBusy(s);
 	}
-
-	return( 0 );
+	else
+	{
+		PutSoldierInVehicle(s, v);
+	}
+	return true;
 }
+
 
 void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 {
@@ -3546,7 +3533,7 @@ void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
 		  return;
 	  }
 
-		if ( CheckForAndHandleHandleVehicleInteractiveClick( pSoldier, usMapPos, FALSE ) == -1 )
+		if (CheckForAndHandleHandleVehicleInteractiveClick(pSoldier, usMapPos, FALSE))
 		{
 			return;
 		}
@@ -3704,7 +3691,7 @@ INT8 HandleMoveModeInteractiveClick(UINT16 const usMapPos)
 	}
 
 	// See if we are over a vehicle, and walk up to it and enter
-	if (CheckForAndHandleHandleVehicleInteractiveClick(sel, usMapPos, TRUE) == -1)
+	if (CheckForAndHandleHandleVehicleInteractiveClick(sel, usMapPos, TRUE))
 	{
 		return -1;
 	}
