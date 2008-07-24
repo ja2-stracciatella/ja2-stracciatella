@@ -44,7 +44,6 @@ typedef struct CUR_INTERACTIVE_TILE
 {
 	INT16      sGridNo;
 	INT16      sTileIndex;
-	INT16      sMaxScreenY;
 	INT16      sHeighestScreenY;
 	BOOLEAN    fFound;
 	LEVELNODE* pFoundNode;
@@ -520,8 +519,7 @@ void LogMouseOverInteractiveTile( INT16 sGridNo )
 							// Determine if it's the best one
 							if ( aRect.iBottom > gCurIntTile.sHeighestScreenY )
 							{
-								gCurIntTile.sMaxScreenY = (UINT16)aRect.iBottom;
-								gCurIntTile.sHeighestScreenY = gCurIntTile.sMaxScreenY;
+								gCurIntTile.sHeighestScreenY = aRect.iBottom;
 
 								// Set it!
 								gCurIntTile.pFoundNode = pNode;
