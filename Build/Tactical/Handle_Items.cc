@@ -1784,20 +1784,11 @@ static BOOLEAN LookForHiddenItems(INT16 const sGridNo, INT8 const ubLevel)
 }
 
 
-INT8 GetZLevelOfItemPoolGivenStructure(const INT16 sGridNo, const UINT8 ubLevel, const STRUCTURE* const pStructure)
+INT8 GetZLevelOfItemPoolGivenStructure(INT16 const sGridNo, UINT8 const ubLevel, STRUCTURE const* const pStructure)
 {
-	if ( pStructure == NULL )
-	{
-		return( 0 );
-	}
-
-	// OK, check if this struct contains items....
-	const ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
-	if (pItemPool != NULL)
-	{
-		return( GetLargestZLevelOfItemPool( pItemPool ) );
-	}
-	return( 0 );
+	if (!pStructure) return 0;
+	ITEM_POOL const* const ip = GetItemPool(sGridNo, ubLevel);
+	return GetLargestZLevelOfItemPool(ip);
 }
 
 
