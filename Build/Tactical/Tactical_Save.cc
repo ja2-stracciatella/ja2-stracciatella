@@ -744,81 +744,45 @@ static UINT32 GetLastTimePlayerWasInSector(void)
 
 static void LoadAndAddWorldItemsFromTempFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
-	UINT32	cnt;
-  INT16   sNewGridNo;
+	UINT32     n_items;
+	WORLDITEM* items;
+	LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &n_items, &items);
 
-	UINT32     uiNumberOfItems;
-	WORLDITEM* pWorldItems;
-	LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ, &uiNumberOfItems, &pWorldItems);
-
-	if (uiNumberOfItems == 0)
+	// Have we already been to the sector?
+	if (GetSectorFlagStatus(sMapX, sMapY, bMapZ, SF_ALREADY_LOADED))
 	{
-		//if there are no items in the temp, the player might have cleared all of them out, check to see
-		//If we have already been to the sector
-		if( GetSectorFlagStatus( sMapX, sMapY, bMapZ, SF_ALREADY_LOADED ) )
-		{
-			//
-			//Completly replace the current sectors item table because all the items SHOULD be in the temp file!!
-			//
-
-			//Destroy the current sectors item table
-			TrashWorldItems();
-
-			//Add each item to the pool, handle below, outside of the if
-		}
-
-		//there are no items in the file
-		return;
-	}
-
-	//If we have already been to the sector
-	if( GetSectorFlagStatus( sMapX, sMapY, bMapZ, SF_ALREADY_LOADED ) )
-	{
-		//
-		//Completly replace the current sectors item table because all the items SHOULD be in the temp file!!
-		//
-
-		//Destroy the current sectors item table
+		/* Completly replace the current sectors item table because all the items
+		 * SHOULD be in the temp file. */
 		TrashWorldItems();
-
-		//Add each item to the pool, handle below, outside of the if
 	}
 
-	//
-	//Append the items in the file with to the current sectors item table
-	//
+	if (n_items == 0) return;
 
-	//Loop through all the items loaded from the file
-	for( cnt=0; cnt< uiNumberOfItems; cnt++)
+	// Add the items in the file to the current sector's item table
+	WORLDITEM const* const end = items + n_items;
+	for (WORLDITEM* i = items; i != end; ++i)
 	{
-		//If the item in the array is valid
-		if( pWorldItems[cnt].fExists )
-		{
-			//Check the flags to see if we have to find a gridno to place the items at
-			if( pWorldItems[cnt].usFlags & WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO )
-			{
-			  sNewGridNo = FindNearestAvailableGridNoForItem( pWorldItems[cnt].sGridNo, 5 );
-			  if( sNewGridNo == NOWHERE )
-				  sNewGridNo = FindNearestAvailableGridNoForItem( pWorldItems[cnt].sGridNo, 15 );
+		if (!i->fExists) continue;
 
-        if ( sNewGridNo != NOWHERE )
-        {
-          pWorldItems[cnt].sGridNo = sNewGridNo;
-        }
-			}
-
-			//If the item has an invalid gridno, use the maps entry point
-			if( pWorldItems[cnt].usFlags & WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT )
-			{
-				pWorldItems[cnt].sGridNo = gMapInformation.sCenterGridNo;
-			}
-
-			//add the item to the world
-			AddItemToPool( pWorldItems[cnt].sGridNo, &pWorldItems[cnt].o, pWorldItems[cnt].bVisible, pWorldItems[cnt].ubLevel, pWorldItems[cnt].usFlags, pWorldItems[cnt].bRenderZHeightAboveLevel );
+		GridNo pos = i->sGridNo;
+		if (i->usFlags & WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT)
+		{ // The item has an invalid gridno, use the maps entry point
+			pos = gMapInformation.sCenterGridNo;
 		}
+		else if (i->usFlags & WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO)
+		{ // Find a gridno to place the item at
+			GridNo new_pos = FindNearestAvailableGridNoForItem(pos, 5);
+			if (new_pos == NOWHERE)
+			{
+				new_pos = FindNearestAvailableGridNoForItem(pos, 15);
+			}
+			if (new_pos != NOWHERE) pos = new_pos;
+		}
+
+		AddItemToPool(pos, &i->o, i->bVisible, i->ubLevel, i->usFlags, i->bRenderZHeightAboveLevel);
 	}
 
-	MemFree(pWorldItems);
+	MemFree(items);
 }
 
 
