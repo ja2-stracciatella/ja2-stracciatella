@@ -10,7 +10,7 @@
 (r4366) Fix a vanilla crash in the editor when looking at the items summary and there are no items in the current sector.
 (r4361) Enable scrolling the items lists in the editor with the mouse wheel.
 (r4360) Enable scrolling the terrain and building graphics lists in the editor with the mouse wheel.
-(r4358) Fix a vanilla buffer underrun, which occurs when displaying a multiline text containing a word longer than the maximum line width.  The most prominent example is the item view in the map editor with the German data files ("Leichte Panzerabwehrwaffe").
+(r4359) Fix a vanilla buffer underrun, which occurs when displaying a multiline text containing a word longer than the maximum line width.  The most prominent example is the item view in the map editor with the German data files ("Leichte Panzerabwehrwaffe").
 (r4357) Make the map editor available via the command line parameter -editor.
 (r4303) Fix a vanilla bug, which restored a wrong amount of breath points at the start of the turn.
 
@@ -21,7 +21,7 @@ v0.10 - 2008-06-02 - Caramel
 (r4200) Fix a vanilla bug, which caused stacked items to be too heavy.
 (r4169) Enable scrolling the sector inventory with the mouse wheel.
 (r4040) Fix several vanilla inconsistencies when placing the assignment dropdown menus.
-(r3952, r3955, r3957, r3965, r3966, r3967, r3968, r3969, r3971) Plug vanilla memory and file leaks (mostly in error handling).
+(r3952, r3955, r3957, r3965, r3966, r3967, r3968, r3969, r3972) Plug vanilla memory and file leaks (mostly in error handling).
 (r3920) Fix a vanilla string buffer overrun, occuring in the French and Italian translations, when displaying the turn message at the top in combat.
 (r3919, r4161) Fix vanilla bugs, which accessed uninitialised data.
 (r3918) Fix a bug in r3226, which broke saving/loading savegames in the Windows version.
@@ -48,7 +48,7 @@ v0.9 - 2008-04-22 - Blueberry
 (r3529) Fix a bug caused by change of behaviour in r2719, which lead to truncation of the finance records.
 (r3489) Fix a vanilla out of bounds access (which is a NULL-pointer access since r2625) when looking at the sector inventory and no merc is on the team.
 (r3444, r3445, r3600, r3605) Fix several vanilla graphical deviations when drawing items.
-(r3432) Fix a vanilla display bug of the remaining time on Slay's contract.  It was always 2982616d 4h.
+(r3433) Fix a vanilla display bug of the remaining time on Slay's contract.  It was always 2982616d 4h.
 (r3400) Fix a vanilla bug, which under rare circumstances caused items to disappear when changing sectors and looking at the sector inventory.
 (r3340) Fix a bug, which caused corrupted savegames when saving pseudo objects.  Most common symptom is corrupted savegames after receiving the "donation" from Armand.
 (r3325, r3327) Plug vanilla memory leaks which occur during strategic movement planning.
@@ -62,11 +62,11 @@ v0.8 - 2008-02-20 - Lemon
 (r3064) Add support for Maemo, so the menu button acts as modifier key to perform right clicks.
 (r3059) (Partially) fix a vanilla bug: Mercs could perform actions while looking into the opposite direction, when they were moving backwards just before.  In most cases this was harmless, but in some instances (climbing down a roof, jumping over a fence) the merc would end up in the wrong spot.
 (r3052) Minor improvement of the English translation.
-(r3028) Fix a vanilla glich, which prevented showing the assignment menu by right-clicking in tactical mode, when a soldier was targeted, but no soldier was selected.
+(r3028) Fix a vanilla glitch, which prevented showing the assignment menu by right-clicking in tactical mode, when a soldier was targeted, but no soldier was selected.
 (r3027) Fix a vanilla bug, which bogusly allowed giving vehicles other assignments (like "train") by right-clicking them in tactical mode.
 (r3023) Fix a vanilla glitch: When a random soldier in a vehicle should say a battle sound maybe none was said though there were soldiers in the vehicle.
 (r2984) Fix a vanilla memory leak when handling delayed/stolen items from Bobby Ray's.
-(r2930) Fix a vanilla out of bounds array access (which now is a NULL-pointer access) when clicking on a vehicle in the tactical screen.
+(r2931) Fix a vanilla out of bounds array access (which now is a NULL-pointer access) when clicking on a vehicle in the tactical screen.
 (r2896) Fix a vanilla out of bounds array access (which now is a NULL-pointer access) when loading a savegame, which starts in tacical, and opening the assignment menu of a merc.
 (r2832) Fix a bug in the sound system: Some sounds are sampled at 44kHz, but the sound system uses 22kHz as playback rate, so resample these sounds before playing.
 (r2678) Fix a crash, which is caused by a vanilla mixup of SoldierID and ProfileID, in the insurance contract screen when there are no insurable mercs.
@@ -74,7 +74,7 @@ v0.8 - 2008-02-20 - Lemon
 (r2580) Fix a vanilla memory leak of the radar image when a meanwhile sequence is playing.
 (r2576) Fix a vanilla glitch: After a battle against bloodcats probably a wrong soldier (e.g. a soldier not in the battle sector) tried to say his "cool"-line.
 (r2569, r2575) Fix a vanilla glitch: The clickable area of the vehicle selection box did not have the same width as the graphics of the box.
-(r2564) Fix a vanilla graphical glitch: The gap between the left and right column of popup boxes was displayed wider than specified.
+(r2565) Fix a vanilla graphical glitch: The gap between the left and right column of popup boxes was displayed wider than specified.
 (r2531) Fix a vanilla graphical glitch: The level indicator was misplaced by one pixel.
 (r2493) Fix a vanilla bug (mismatch of format specifier and argument of swscanf()), which caused wrong colours (or other undefined behaviour) in the credits screen.
 (r2370) Fix vanilla inconsistencies in placing the item graphics and the "unload ammo" button between tactical and map screen.
@@ -125,7 +125,7 @@ v0.5 - 2007-07-24 - Hazelnut
 (r1233) Fix wide string/string format specifiers.
 (r1219) Fix two transcription errors in Blt8BPPDataTo16BPPBufferMonoShadowClip(), which is used for blitting text:
         - Do not draw a background pixel, if the background colour is transparent
-				- Draw background pixels in transparent areas (if the background colour is not transparent)
+        - Draw background pixels in transparent areas (if the background colour is not transparent)
 (r1215) Fix a vanilla bug: When doctoring and the character only has first aid kits available, a big item (from the second hand position) could end up in a small pocket and/or multiple first aid kits could be placed into the first hand position.
 (r1210, r1214) Fixes for porting to 64bit platforms
 (r1201) Adjust the char/glyph mapping table for two Russian releases (BUKA Agonia Vlasti and Russian Gold) and fix the incorrectly encoded Russian texts when loading them from the data files.
@@ -175,7 +175,7 @@ v0.2 - 2007-03-15 - Pistachio
 (r497) Fix scrolling of the tactical view: SDL_UpdateRect() was missing.
 (r491) Implement sound support.
 (r484) Fix some vanilla format string vulnerabilities which lead to crashes when a text field (for example the savegame title) contains a percent sign.
-(r480) Fix vanilla odditities in string  handling: Properly print percent ("%") signs.  Some strings get parsed by printf()-like functions multiple times. Of course only the first time (if at all) they should be interpreted as format strings. Therefore Do The Right Thing(tm) and use "%S" as format string and the already parsed string as argument in the subsequent runs. The directly visible effect is dissapearing percent signs. There are some gross (and partially incorrect, because they had a dangling % in the format string) workarounds for this in the code. Now that these strings are correctly handled remove those workarounds.
+(r480) Fix vanilla odditities in string handling: Properly print percent ("%") signs.  Some strings get parsed by printf()-like functions multiple times. Of course only the first time (if at all) they should be interpreted as format strings. Therefore Do The Right Thing(tm) and use "%S" as format string and the already parsed string as argument in the subsequent runs. The directly visible effect is dissapearing percent signs. There are some gross (and partially incorrect, because they had a dangling % in the format string) workarounds for this in the code. Now that these strings are correctly handled remove those workarounds.
 (r479, r486) Fix wide string/string format specifiers.
 (r468) Do not try to close a file when it was not opened.
 (r467) Use %C instead of %c to print wchar_ts.
