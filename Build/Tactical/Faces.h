@@ -34,9 +34,6 @@
 #define	 FACE_NO_TEXT_OVER					0
 
 
-// duration for talking
-#define		FINAL_TALKING_DURATION	2000
-
 typedef struct AUDIO_GAP
 {
 	UINT32 start;

@@ -264,9 +264,6 @@ void SpecialCharacterDialogueEventWithExtraParam(UINT32 uiSpecialEventFlag, UINT
 // Called when a face stops talking...
 void HandleDialogueEnd( FACETYPE *pFace );
 
-// shut down last quotetext box
-void ShutDownLastQuoteTacticalTextBox( void );
-
 // Called to advance speech
 // Used for option when no speech sound file
 void DialogueAdvanceSpeech(void);
@@ -295,9 +292,6 @@ void BeginLoggingForBleedMeToos( BOOLEAN fStart );
 void UnSetEngagedInConvFromPCAction( SOLDIERTYPE *pSoldier );
 void SetEngagedInConvFromPCAction( SOLDIERTYPE *pSoldier );
 
-
-extern UINT32 guiDialogueLastQuoteTime;
-extern UINT32 guiDialogueLastQuoteDelay;
 
 void SetStopTimeQuoteCallback( MODAL_HOOK pCallBack );
 

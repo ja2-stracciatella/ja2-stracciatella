@@ -73,10 +73,6 @@ static UINT32  uiStartOfPauseTime = 0;
 
 extern BOOLEAN gfFacePanelActive;
 
-// region created and due to last quote box
-extern BOOLEAN fTextBoxMouseRegionCreated;
-extern BOOLEAN fDialogueBoxDueToLastMessage;
-
 
 static ScrollStringSt* AddString(const wchar_t* pString, UINT16 usColor, BOOLEAN fStartOfNewString)
 {
@@ -156,7 +152,6 @@ void ClearDisplayedListOfTacticalStrings(void)
 
 
 static INT32 GetMessageQueueSize(void);
-static void HandleLastQuotePopUpTimer(void);
 static void PlayNewMessageSound(void);
 
 
@@ -164,9 +159,6 @@ void ScrollString(void)
 {
 	// UPDATE TIMER
 	UINT32 suiTimer = GetJA2Clock();
-
-	// might have pop up text timer
-	HandleLastQuotePopUpTimer();
 
 	if (guiCurrentScreen == MAP_SCREEN)
 	{
@@ -796,24 +788,6 @@ void LoadMapScreenMessagesFromSaveGameFile(HWFILE const hFile)
 
 	// this will set a valid value for gubFirstMapscreenMessageIndex, which isn't being saved/restored
 	MoveToEndOfMapScreenMessageList();
-}
-
-
-static void HandleLastQuotePopUpTimer(void)
-{
-	if (!fTextBoxMouseRegionCreated || !fDialogueBoxDueToLastMessage)
-	{
-		return;
-	}
-
-	// check if timed out
-	if (GetJA2Clock() - guiDialogueLastQuoteTime >  guiDialogueLastQuoteDelay)
-	{
-		// done clear up
-		ShutDownLastQuoteTacticalTextBox();
-		guiDialogueLastQuoteTime = 0;
-		guiDialogueLastQuoteDelay = 0;
-	}
 }
 
 

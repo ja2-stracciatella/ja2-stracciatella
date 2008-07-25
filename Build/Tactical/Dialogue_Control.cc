@@ -169,15 +169,8 @@ INT8	gubLogForMeTooBleeds = FALSE;
 
 
 // has the text region been created?
-BOOLEAN fTextBoxMouseRegionCreated = FALSE;
-BOOLEAN	fExternFaceBoxRegionCreated = FALSE;
-
-// due to last quote system?
-BOOLEAN fDialogueBoxDueToLastMessage = FALSE;
-
-// last quote timers
-UINT32 guiDialogueLastQuoteTime = 0;
-UINT32 guiDialogueLastQuoteDelay = 0;
+static BOOLEAN fTextBoxMouseRegionCreated  = FALSE;
+static BOOLEAN fExternFaceBoxRegionCreated = FALSE;
 
 
 void UnPauseGameDuringNextQuote( void )
@@ -1635,21 +1628,6 @@ static void HandleTacticalTextUI(const ProfileID profile_id, const wchar_t* cons
 }
 
 
-static void ExecuteTacticalTextBoxForLastQuote(const INT16 sLeftPosition, const wchar_t* const pString)
-{
-	UINT32 uiDelay = FindDelayForString( pString );
-
-	fDialogueBoxDueToLastMessage = TRUE;
-
-	guiDialogueLastQuoteTime = GetJA2Clock();
-
-	guiDialogueLastQuoteDelay = ( ( uiDelay < FINAL_TALKING_DURATION ) ?  FINAL_TALKING_DURATION : uiDelay );
-
-	// now execute box
-	ExecuteTacticalTextBox(sLeftPosition, pString );
-}
-
-
 static void RenderSubtitleBoxOverlay(VIDEO_OVERLAY* pBlitter);
 static void TextOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
@@ -2177,13 +2155,6 @@ static void TextOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		if(  gpCurrentTalkingFace != NULL )
 		{
 			InternalShutupaYoFace(gpCurrentTalkingFace, FALSE);
-
-			// Did we succeed in shutting them up?
-			if ( !gpCurrentTalkingFace->fTalking )
-			{
-				// shut down last quote box
-				ShutDownLastQuoteTacticalTextBox( );
-			}
 		}
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
@@ -2213,23 +2184,6 @@ static void FaceOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		fLButtonDown = FALSE;
-	}
-}
-
-void ShutDownLastQuoteTacticalTextBox( void )
-{
-	if( fDialogueBoxDueToLastMessage )
-	{
-		RemoveVideoOverlay(g_text_box_overlay);
-		g_text_box_overlay = NULL;
-
-		if ( fTextBoxMouseRegionCreated )
-		{
-			MSYS_RemoveRegion( &gTextBoxMouseRegion );
-			fTextBoxMouseRegionCreated = FALSE;
-		}
-
-		fDialogueBoxDueToLastMessage = FALSE;
 	}
 }
 
