@@ -237,7 +237,14 @@ static SGPVObject* guiDEPARTEDTEAM;
 static SGPVObject* guiCURRENTTEAM;
 static SGPVObject* guiPersonnelInventory;
 
-static GUIButtonRef giPersonnelButton[6];
+static struct
+{
+	GUIButtonRef prev;
+	GUIButtonRef next;
+	GUIButtonRef depart_up;
+	GUIButtonRef depart_dn;
+} g_personnel;
+
 static GUIButtonRef giPersonnelInventoryButtons[2];
 
 // buttons for ATM
@@ -594,18 +601,18 @@ static void RightButtonCallBack(GUI_BUTTON* btn, INT32 reason);
 static void CreatePersonnelButtons(void)
 {
 	// left/right buttons
-	giPersonnelButton[0] = QuickCreateButtonImg("LAPTOP/personnelbuttons.sti", -1, 0, -1, 1, -1, PREV_MERC_FACE_X, MERC_FACE_SCROLL_Y, MSYS_PRIORITY_HIGHEST - 1, LeftButtonCallBack);
-	giPersonnelButton[1] = QuickCreateButtonImg("LAPTOP/personnelbuttons.sti", -1, 2, -1, 3, -1, NEXT_MERC_FACE_X, MERC_FACE_SCROLL_Y, MSYS_PRIORITY_HIGHEST - 1, RightButtonCallBack);
+	g_personnel.prev = QuickCreateButtonImg("LAPTOP/personnelbuttons.sti", -1, 0, -1, 1, -1, PREV_MERC_FACE_X, MERC_FACE_SCROLL_Y, MSYS_PRIORITY_HIGHEST - 1, LeftButtonCallBack);
+	g_personnel.next = QuickCreateButtonImg("LAPTOP/personnelbuttons.sti", -1, 2, -1, 3, -1, NEXT_MERC_FACE_X, MERC_FACE_SCROLL_Y, MSYS_PRIORITY_HIGHEST - 1, RightButtonCallBack);
 
-	giPersonnelButton[0]->SetCursor(CURSOR_LAPTOP_SCREEN);
-	giPersonnelButton[1]->SetCursor(CURSOR_LAPTOP_SCREEN);
+	g_personnel.prev->SetCursor(CURSOR_LAPTOP_SCREEN);
+	g_personnel.next->SetCursor(CURSOR_LAPTOP_SCREEN);
 }
 
 
 static void DeletePersonnelButtons(void)
 {
-	RemoveButton(giPersonnelButton[0]);
-	RemoveButton(giPersonnelButton[1]);
+	RemoveButton(g_personnel.prev);
+	RemoveButton(g_personnel.next);
 }
 
 
@@ -873,13 +880,13 @@ static void SetPersonnelButtonStates(void)
 		GetNumberOfPastMercsOnPlayersTeam();
 	if (merc_count == 1)
 	{
-		DisableButton(giPersonnelButton[0]);
-		DisableButton(giPersonnelButton[1]);
+		DisableButton(g_personnel.prev);
+		DisableButton(g_personnel.next);
 	}
 	else
 	{
-		EnableButton(giPersonnelButton[0]);
-		EnableButton(giPersonnelButton[1]);
+		EnableButton(g_personnel.prev);
+		EnableButton(g_personnel.next);
 	}
 }
 
@@ -1775,19 +1782,19 @@ static void CreateDestroyButtonsForDepartedTeamList(const BOOLEAN create)
 	{
 		if (fCreated) return;
 		// not created. create
-		giPersonnelButton[4] = QuickCreateButtonImg("LAPTOP/departuresbuttons.sti", -1, 0, -1, 2, -1, PERS_DEPARTED_UP_X, PERS_DEPARTED_UP_Y,   MSYS_PRIORITY_HIGHEST - 1, DepartedUpCallBack);
-		giPersonnelButton[5] = QuickCreateButtonImg("LAPTOP/departuresbuttons.sti", -1, 1, -1, 3, -1, PERS_DEPARTED_UP_X, PERS_DEPARTED_DOWN_Y, MSYS_PRIORITY_HIGHEST - 1, DepartedDownCallBack);
+		g_personnel.depart_up = QuickCreateButtonImg("LAPTOP/departuresbuttons.sti", -1, 0, -1, 2, -1, PERS_DEPARTED_UP_X, PERS_DEPARTED_UP_Y,   MSYS_PRIORITY_HIGHEST - 1, DepartedUpCallBack);
+		g_personnel.depart_dn = QuickCreateButtonImg("LAPTOP/departuresbuttons.sti", -1, 1, -1, 3, -1, PERS_DEPARTED_UP_X, PERS_DEPARTED_DOWN_Y, MSYS_PRIORITY_HIGHEST - 1, DepartedDownCallBack);
 
 		// set up cursors for these buttons
-		giPersonnelButton[4]->SetCursor(CURSOR_LAPTOP_SCREEN);
-		giPersonnelButton[5]->SetCursor(CURSOR_LAPTOP_SCREEN);
+		g_personnel.depart_up->SetCursor(CURSOR_LAPTOP_SCREEN);
+		g_personnel.depart_dn->SetCursor(CURSOR_LAPTOP_SCREEN);
 	}
 	else
 	{
 		if (!fCreated) return;
 		// created. destroy
-		RemoveButton(giPersonnelButton[4]);
-		RemoveButton(giPersonnelButton[5]);
+		RemoveButton(g_personnel.depart_up);
+		RemoveButton(g_personnel.depart_dn);
 		fReDrawScreenFlag = TRUE;
 	}
 	fCreated = create;
@@ -2044,19 +2051,19 @@ static void EnableDisableDeparturesButtons(void)
 	}
 
 	// disable both buttons
-	DisableButton(giPersonnelButton[4]);
-	DisableButton(giPersonnelButton[5]);
+	DisableButton(g_personnel.depart_up);
+	DisableButton(g_personnel.depart_dn);
 
 
 	if (giCurrentUpperLeftPortraitNumber != 0)
 	{
 		// enable up button
-		EnableButton(giPersonnelButton[4]);
+		EnableButton(g_personnel.depart_up);
 	}
 	if (GetNumberOfPastMercsOnPlayersTeam() - giCurrentUpperLeftPortraitNumber >= PERSONNEL_PORTRAIT_NUMBER)
 	{
 		// enable down button
-		EnableButton(giPersonnelButton[5]);
+		EnableButton(g_personnel.depart_dn);
 	}
 }
 
