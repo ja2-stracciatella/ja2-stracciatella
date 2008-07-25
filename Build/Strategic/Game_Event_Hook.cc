@@ -82,8 +82,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		//The rest of the events will be delayed until AFTER we leave the viewer.
 		if( guiCurrentScreen == AIVIEWER_SCREEN )
 		{
-			if( pEvent->ubCallbackID != EVENT_BEGIN_CREATURE_QUEST &&
-					pEvent->ubCallbackID != EVENT_CREATURE_SPREAD &&
+			if (pEvent->ubCallbackID != EVENT_CREATURE_SPREAD &&
 					pEvent->ubCallbackID != EVENT_DELAYED_HIRING_OF_MERC &&
 					pEvent->ubCallbackID != EVENT_GROUP_ARRIVAL	&&
 					pEvent->ubCallbackID != EVENT_EVALUATE_QUEEN_SITUATION &&
@@ -288,8 +287,6 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 				BeginMeanwhile( (UINT8)pEvent->uiParam );
 				InterruptTime();
 			}
-			break;
-		case EVENT_BEGIN_CREATURE_QUEST:
 			break;
 		case EVENT_CREATURE_SPREAD:
 			SpreadCreatures();

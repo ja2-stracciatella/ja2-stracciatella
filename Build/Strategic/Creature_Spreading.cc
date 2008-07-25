@@ -42,14 +42,6 @@
 //it gets added on to it's counterpart via:
 //								XXX_VALUE + Random( 1 + XXX_BONUS )
 
-//The start day random bonus that the queen begins
-//#define EASY_QUEEN_START_DAY								10	//easy start day 10-13
-//#define EASY_QUEEN_START_BONUS							3
-//#define NORMAL_QUEEN_START_DAY							8		//normal start day 8-10
-//#define NORMAL_QUEEN_START_BONUS						2
-//#define HARD_QUEEN_START_DAY								7		//hard start day 7-8
-//#define HARD_QUEEN_START_BONUS							1
-
 //This is how often the creatures spread, once the quest begins.  The smaller the gap,
 //the faster the creatures will advance.  This is also directly related to the reproduction
 //rates which are applied each time the creatures spread.
@@ -914,29 +906,6 @@ void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest )
 }
 
 
-//Called by campaign init.
-static void ChooseCreatureQuestStartDay(void)
-{
-//	INT32 iRandom, iDay;
-	if( !gGameOptions.fSciFi )
-		return; //only available in science fiction mode.
-	//Post the event.  Once it becomes due, it will setup the queen monster's location, and
-	//begin spreading and attacking towns from there.
-	switch( gGameOptions.ubDifficultyLevel )
-	{
-		case DIF_LEVEL_EASY:
-			//AddPeriodStrategicEvent( EVENT_BEGIN_CREATURE_QUEST, (EASY_QUEEN_START_DAY + Random( 1 + EASY_QUEEN_START_BONUS )) * 1440 , 0 );
-			break;
-		case DIF_LEVEL_MEDIUM:
-			//AddPeriodStrategicEvent( EVENT_BEGIN_CREATURE_QUEST, (NORMAL_QUEEN_START_DAY + Random( 1 + NORMAL_QUEEN_START_BONUS )) * 1440, 0 );
-			break;
-		case DIF_LEVEL_HARD:
-			//AddPeriodStrategicEvent( EVENT_BEGIN_CREATURE_QUEST, (HARD_QUEEN_START_DAY + Random( 1 + HARD_QUEEN_START_BONUS )) * 1440, 0 );
-			break;
-	}
-}
-
-
 static void DeleteDirectiveNode(CREATURE_DIRECTIVE** node)
 {
 	if( (*node)->next )
@@ -958,7 +927,6 @@ void ClearCreatureQuest()
 	//This will remove all of the underground sector information and reinitialize it.
 	//The only part that doesn't get added are the queen's lair.
 	BuildUndergroundSectorInfoList();
-	DeleteAllStrategicEventsOfType( EVENT_BEGIN_CREATURE_QUEST );
 	DeleteCreatureDirectives();
 }
 

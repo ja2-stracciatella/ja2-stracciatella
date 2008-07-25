@@ -12,7 +12,6 @@ CalculateOverrideStatus(): szFilename yuck
 CaptureTimerCallback(): complicated
 CenterX(): use %
 CheckForAndHandleSoldierDeath(): interface complicated, return *pfMadeCorpse?
-ChooseCreatureQuestStartDay(): empty
 ConfirmActionCancel(): overkill
 ContractBoxGlow(): empty
 ContractListRegionBoxGlow: giContractHighLine == -1 test unnecessary
