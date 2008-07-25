@@ -39,7 +39,7 @@ typedef struct
 CASSERT(sizeof(MEANWHILE_DEFINITION) == 8)
 
 
-void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime );
+void ScheduleMeanwhileEvent(INT16 x, INT16 y, UINT16 trigger_event, UINT8 meanwhile_id, UINT8 npc_profile, UINT32 time);
 
 void BeginMeanwhile(UINT8 ubMeanwhileID);
 

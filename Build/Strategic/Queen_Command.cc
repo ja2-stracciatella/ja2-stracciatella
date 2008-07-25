@@ -1452,18 +1452,7 @@ void EndCaptureSequence( )
 			// CJC Dec 1 2002: fixing multiple captures:
 			gStrategicStatus.uiFlags |= STRATEGIC_PLAYER_CAPTURED_FOR_ESCAPE;
 
-			// OK! - Schedule Meanwhile now!
-			{
-				MEANWHILE_DEFINITION MeanwhileDef;
-
-				MeanwhileDef.sSectorX = 7;
-				MeanwhileDef.sSectorY = 14;
-				MeanwhileDef.ubNPCNumber = QUEEN;
-				MeanwhileDef.usTriggerEvent = 0;
-				MeanwhileDef.ubMeanwhileID = INTERROGATION;
-
-				ScheduleMeanwhileEvent( &MeanwhileDef, 10 );
-			}
+			ScheduleMeanwhileEvent(7, 14, 0, INTERROGATION, QUEEN, 10);
 		}
 		// CJC Dec 1 2002: fixing multiple captures
 		else

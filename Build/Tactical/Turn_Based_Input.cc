@@ -3828,18 +3828,12 @@ static void HandleSelectMercSlot(UINT8 ubPanelSlot, INT8 bCode)
 
 static void TestMeanWhile(INT32 iID)
 {
-	MEANWHILE_DEFINITION MeanwhileDef;
-
-	MeanwhileDef.sSectorX = 3;
-	MeanwhileDef.sSectorY = 16;
-	MeanwhileDef.ubNPCNumber = QUEEN;
-	MeanwhileDef.usTriggerEvent = 0;
-	MeanwhileDef.ubMeanwhileID = (UINT8)iID;
-
+	INT16 x;
+	INT16 y;
 	if ( iID == INTERROGATION )
 	{
-		MeanwhileDef.sSectorX = 7;
-		MeanwhileDef.sSectorY = 14;
+		x =  7;
+		y = 14;
 
 		// Loop through our mercs and set gridnos once some found.....
 		FOR_ALL_IN_TEAM(s, gbPlayerNum)
@@ -3852,9 +3846,14 @@ static void TestMeanWhile(INT32 iID)
 			}
 		}
 	}
+	else
+	{
+		x =  3;
+		y = 16;
+	}
 
 #ifndef JA2DEMO
-	ScheduleMeanwhileEvent( &MeanwhileDef, 10 );
+	ScheduleMeanwhileEvent(x, y, 0, iID, QUEEN, 10);
 #endif
 }
 

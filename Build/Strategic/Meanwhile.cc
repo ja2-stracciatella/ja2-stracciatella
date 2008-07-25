@@ -275,19 +275,24 @@ static NPC_SAVE_INFO* GetFreeNPCSave(void)
 }
 
 
-void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime )
+void ScheduleMeanwhileEvent(INT16 const x, INT16 const y, UINT16 const trigger_event, UINT8 const meanwhile_id, UINT8 const npc, UINT32 const time)
 {
 	// event scheduled to happen before, ignore
-	if (GetMeanWhileFlag(pMeanwhileDef->ubMeanwhileID)) return;
+	if (GetMeanWhileFlag(meanwhile_id)) return;
 
 	// set the meanwhile flag for this event
-	SetMeanWhileFlag( pMeanwhileDef->ubMeanwhileID );
+	SetMeanWhileFlag(meanwhile_id);
 
 	// set the id value
-	ubCurrentMeanWhileId = pMeanwhileDef->ubMeanwhileID;
+	ubCurrentMeanWhileId = meanwhile_id;
 
 	// Copy definiaiotn structure into position in global array....
-	gMeanwhileDef[pMeanwhileDef->ubMeanwhileID] = *pMeanwhileDef;
+	MEANWHILE_DEFINITION& m = gMeanwhileDef[meanwhile_id];
+	m.sSectorX       = x;
+	m.sSectorY       = y;
+	m.usTriggerEvent = trigger_event;
+	m.ubMeanwhileID  = meanwhile_id;
+	m.ubNPCNumber    = npc;
 
   // A meanwhile.. poor elliot!
   // increment his slapped count...
@@ -298,7 +303,7 @@ void ScheduleMeanwhileEvent( MEANWHILE_DEFINITION *pMeanwhileDef, UINT32 uiTime 
     gMercProfiles[ ELLIOT ].bNPCData++;
   }
 
-	AddStrategicEvent( EVENT_MEANWHILE, uiTime, pMeanwhileDef->ubMeanwhileID );
+	AddStrategicEvent(EVENT_MEANWHILE, time, meanwhile_id);
 }
 
 
@@ -805,172 +810,68 @@ UINT8 GetMeanwhileID( )
 
 void HandleCreatureRelease( void )
 {
-	UINT32 uiTime = 0;
-	MEANWHILE_DEFINITION MeanwhileDef;
-
-	MeanwhileDef.sSectorX = 3;
-	MeanwhileDef.sSectorY = 16;
-	MeanwhileDef.ubNPCNumber = QUEEN;
-	MeanwhileDef.usTriggerEvent = 0;
-
-	uiTime = GetWorldTotalMin() + 5;
-
-	MeanwhileDef.ubMeanwhileID = CREATURES;
-
-	// schedule the event
-	ScheduleMeanwhileEvent( &MeanwhileDef, uiTime );
+	UINT32 const uiTime = GetWorldTotalMin() + 5;
+	ScheduleMeanwhileEvent(3, 16, 0, CREATURES, QUEEN, uiTime);
 }
 
 
 void HandleMeanWhileEventPostingForTownLiberation( UINT8 bTownId )
 {
-	// post event for meanwhile whithin the next 6 hours if it still will be daylight, otherwise the next morning
-	UINT32 uiTime = 0;
-	MEANWHILE_DEFINITION MeanwhileDef;
-	UINT8 ubId = 0;
-	BOOLEAN fHandled = FALSE;
+	UINT32 const uiTime = GetWorldTotalMin() + 5;
 
-	MeanwhileDef.sSectorX = 3;
-	MeanwhileDef.sSectorY = 16;
-	MeanwhileDef.ubNPCNumber = QUEEN;
-	MeanwhileDef.usTriggerEvent = 0;
-
-	uiTime = GetWorldTotalMin() + 5;
-
-	// which town iberated?
-	switch( bTownId )
+	UINT8 ubId;
+	switch (bTownId) // which town liberated?
 	{
-		case DRASSEN:
-			ubId = DRASSEN_LIBERATED;
-			fHandled = TRUE;
-			break;
-		case CAMBRIA:
-			ubId = CAMBRIA_LIBERATED;
-			fHandled = TRUE;
-			break;
-		case ALMA:
-			ubId = ALMA_LIBERATED;
-			fHandled = TRUE;
-			break;
-		case GRUMM:
-			ubId = GRUMM_LIBERATED;
-			fHandled = TRUE;
-			break;
-		case CHITZENA:
-			ubId = CHITZENA_LIBERATED;
-			fHandled = TRUE;
-			break;
-		case BALIME:
-			ubId = BALIME_LIBERATED;
-			fHandled = TRUE;
-			break;
+		case DRASSEN:  ubId = DRASSEN_LIBERATED;  break;
+		case CAMBRIA:  ubId = CAMBRIA_LIBERATED;  break;
+		case ALMA:     ubId = ALMA_LIBERATED;     break;
+		case GRUMM:    ubId = GRUMM_LIBERATED;    break;
+		case CHITZENA: ubId = CHITZENA_LIBERATED; break;
+		case BALIME:   ubId = BALIME_LIBERATED;   break;
+		default: return;
 	}
-
-	if( fHandled )
-	{
-		MeanwhileDef.ubMeanwhileID = ubId;
-
-		// schedule the event
-		ScheduleMeanwhileEvent( &MeanwhileDef, uiTime );
-	}
+	ScheduleMeanwhileEvent(3, 16, 0, ubId, QUEEN, uiTime);
 }
 
 
 void HandleMeanWhileEventPostingForTownLoss()
 {
-	UINT32 uiTime = 0;
-	MEANWHILE_DEFINITION MeanwhileDef;
-
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( LOST_TOWN ) )
 	{
 		return;
 	}
 
-	MeanwhileDef.sSectorX = 3;
-	MeanwhileDef.sSectorY = 16;
-	MeanwhileDef.ubNPCNumber = QUEEN;
-	MeanwhileDef.usTriggerEvent = 0;
-
-	uiTime = GetWorldTotalMin() + 5;
-
-	MeanwhileDef.ubMeanwhileID = LOST_TOWN;
-
-	// schedule the event
-	ScheduleMeanwhileEvent( &MeanwhileDef, uiTime );
+	UINT32 const uiTime = GetWorldTotalMin() + 5;
+	ScheduleMeanwhileEvent(3, 16, 0, LOST_TOWN, QUEEN, uiTime);
 }
+
 
 void HandleMeanWhileEventPostingForSAMLiberation( INT8 bSamId )
 {
-	UINT32 uiTime = 0;
-	MEANWHILE_DEFINITION MeanwhileDef;
-	UINT8 ubId = 0;
-	BOOLEAN fHandled = FALSE;
-
-	if ( bSamId == -1 )
+	UINT8 ubId;
+	switch (bSamId) // which SAM liberated?
 	{
-		// invalid parameter!
-		return;
+		case 0:  ubId = NW_SAM;      break;
+		case 1:  ubId = NE_SAM;      break;
+		case 2:  ubId = CENTRAL_SAM; break;
+		case 3:  return; // no meanwhile scene for this SAM site
+		default: return; // invalid parameter
 	}
-	else if ( bSamId == 3 )
-	{
-		// no meanwhile scene for this SAM site
-		return;
-	}
-
-	MeanwhileDef.sSectorX = 3;
-	MeanwhileDef.sSectorY = 16;
-	MeanwhileDef.ubNPCNumber = QUEEN;
-	MeanwhileDef.usTriggerEvent = 0;
-
-	uiTime = GetWorldTotalMin() + 5;
-
-	// which SAM iberated?
-	switch( bSamId )
-	{
-		case 0:
-			ubId = NW_SAM;
-			fHandled = TRUE;
-			break;
-		case 1:
-			ubId = NE_SAM;
-			fHandled = TRUE;
-			break;
-		case 2:
-			ubId = CENTRAL_SAM;
-			fHandled = TRUE;
-			break;
-		default:
-			// wtf?
-			break;
-	}
-
-	if( fHandled )
-	{
-		MeanwhileDef.ubMeanwhileID = ubId;
-
-		// schedule the event
-		ScheduleMeanwhileEvent( &MeanwhileDef, uiTime );
-	}
-
-
+	UINT32 const uiTime = GetWorldTotalMin() + 5;
+	ScheduleMeanwhileEvent(3, 16, 0, ubId, QUEEN, uiTime);
 }
+
 
 void HandleFlowersMeanwhileScene( INT8 bTimeCode )
 {
 	UINT32 uiTime = 0;
-	MEANWHILE_DEFINITION MeanwhileDef;
 
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( FLOWERS ) )
 	{
 		return;
 	}
-
-	MeanwhileDef.sSectorX = 3;
-	MeanwhileDef.sSectorY = 16;
-	MeanwhileDef.ubNPCNumber = QUEEN;
-	MeanwhileDef.usTriggerEvent = 0;
 
 	// time delay should be based on time code, 0 next day, 1 seeral days (random)
 	if ( bTimeCode == 0 )
@@ -984,143 +885,75 @@ void HandleFlowersMeanwhileScene( INT8 bTimeCode )
 		uiTime = GetWorldTotalMin() + 60 * ( 24 + Random( 48 ) );
 	}
 
-	MeanwhileDef.ubMeanwhileID = FLOWERS;
-
-	// schedule the event
-	ScheduleMeanwhileEvent( &MeanwhileDef, uiTime );
+	ScheduleMeanwhileEvent(3, 16, 0, FLOWERS, QUEEN, uiTime);
 }
+
 
 void HandleOutskirtsOfMedunaMeanwhileScene( void )
 {
-	UINT32 uiTime = 0;
-	MEANWHILE_DEFINITION MeanwhileDef;
-
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( OUTSKIRTS_MEDUNA ) )
 	{
 		return;
 	}
 
-	MeanwhileDef.sSectorX = 3;
-	MeanwhileDef.sSectorY = 16;
-	MeanwhileDef.ubNPCNumber = QUEEN;
-	MeanwhileDef.usTriggerEvent = 0;
-
-	uiTime = GetWorldTotalMin() + 5;
-
-	MeanwhileDef.ubMeanwhileID = OUTSKIRTS_MEDUNA;
-
-	// schedule the event
-	ScheduleMeanwhileEvent( &MeanwhileDef, uiTime );
+	UINT32 const uiTime = GetWorldTotalMin() + 5;
+	ScheduleMeanwhileEvent(3, 16, 0, OUTSKIRTS_MEDUNA, QUEEN, uiTime);
 }
+
 
 void HandleKillChopperMeanwhileScene( void )
 {
-	UINT32 uiTime = 0;
-	MEANWHILE_DEFINITION MeanwhileDef;
-
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( KILL_CHOPPER ) )
 	{
 		return;
 	}
 
-	MeanwhileDef.sSectorX = 3;
-	MeanwhileDef.sSectorY = 16;
-	MeanwhileDef.ubNPCNumber = QUEEN;
-	MeanwhileDef.usTriggerEvent = 0;
-
-	uiTime = GetWorldTotalMin() + 55 + Random( 10 );
-
-	MeanwhileDef.ubMeanwhileID = KILL_CHOPPER;
-
-	// schedule the event
-	ScheduleMeanwhileEvent( &MeanwhileDef, uiTime );
+	UINT32 const uiTime = GetWorldTotalMin() + 55 + Random(10);
+	ScheduleMeanwhileEvent(3, 16, 0, KILL_CHOPPER, QUEEN, uiTime);
 }
+
 
 void HandleScientistAWOLMeanwhileScene( void )
 {
-	UINT32 uiTime = 0;
-	MEANWHILE_DEFINITION MeanwhileDef;
-
 	// make sure scene hasn't been used before
 	if ( GetMeanWhileFlag( AWOL_SCIENTIST ) )
 	{
 		return;
 	}
 
-	MeanwhileDef.sSectorX = 3;
-	MeanwhileDef.sSectorY = 16;
-	MeanwhileDef.ubNPCNumber = QUEEN;
-	MeanwhileDef.usTriggerEvent = 0;
-
-	uiTime = GetWorldTotalMin() + 5;
-
-	MeanwhileDef.ubMeanwhileID = AWOL_SCIENTIST;
-
-	// schedule the event
-	ScheduleMeanwhileEvent( &MeanwhileDef, uiTime );
+	UINT32 const uiTime = GetWorldTotalMin() + 5;
+	ScheduleMeanwhileEvent(3, 16, 0, AWOL_SCIENTIST, QUEEN, uiTime);
 }
 
 
 static void HandleFirstBattleVictory(void)
 {
-	UINT32 uiTime = 0;
-	MEANWHILE_DEFINITION MeanwhileDef;
-	UINT8 ubId = 0;
-
 	if ( GetMeanWhileFlag( END_OF_PLAYERS_FIRST_BATTLE ) )
 	{
 		return;
 	}
 
-	MeanwhileDef.sSectorX = 3;
-	MeanwhileDef.sSectorY = 16;
-	MeanwhileDef.ubNPCNumber = QUEEN;
-	MeanwhileDef.usTriggerEvent = 0;
-
-	uiTime = GetWorldTotalMin() + 5;
-
-	ubId = END_OF_PLAYERS_FIRST_BATTLE;
-
-	MeanwhileDef.ubMeanwhileID = ubId;
-
-	// schedule the event
-	ScheduleMeanwhileEvent( &MeanwhileDef, uiTime );
-
+	UINT32 const uiTime = GetWorldTotalMin() + 5;
+	ScheduleMeanwhileEvent(3, 16, 0, END_OF_PLAYERS_FIRST_BATTLE, QUEEN, uiTime);
 }
 
 
 static void HandleDelayedFirstBattleVictory(void)
 {
-	UINT32 uiTime = 0;
-	MEANWHILE_DEFINITION MeanwhileDef;
-	UINT8 ubId = 0;
-
 	if ( GetMeanWhileFlag( END_OF_PLAYERS_FIRST_BATTLE ) )
 	{
 		return;
 	}
 
-	MeanwhileDef.sSectorX = 3;
-	MeanwhileDef.sSectorY = 16;
-	MeanwhileDef.ubNPCNumber = QUEEN;
-	MeanwhileDef.usTriggerEvent = 0;
-
 	/*
 	//It is theoretically impossible to liberate a town within 60 minutes of the first battle (which is supposed to
 	//occur outside of a town in this scenario).  The delay is attributed to the info taking longer to reach the queen.
-	uiTime = GetWorldTotalMin() + 60;
+	UINT32 const uiTime = GetWorldTotalMin() + 60;
 	*/
-	uiTime = GetWorldTotalMin() + 5;
-
-	ubId = END_OF_PLAYERS_FIRST_BATTLE;
-
-	MeanwhileDef.ubMeanwhileID = ubId;
-
-	// schedule the event
-	ScheduleMeanwhileEvent( &MeanwhileDef, uiTime );
-
+	UINT32 const uiTime = GetWorldTotalMin() + 5;
+	ScheduleMeanwhileEvent(3, 16, 0, END_OF_PLAYERS_FIRST_BATTLE, QUEEN, uiTime);
 }
 
 
