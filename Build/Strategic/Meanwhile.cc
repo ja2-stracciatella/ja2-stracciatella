@@ -1062,32 +1062,6 @@ void HandleScientistAWOLMeanwhileScene( void )
 }
 
 
-// handle interrogation meanwhile
-static void HandleInterrogationMeanwhileScene(void)
-{
-		UINT32 uiTime = 0;
-	MEANWHILE_DEFINITION MeanwhileDef;
-
-	// make sure scene hasn't been used before
-	if ( GetMeanWhileFlag( INTERROGATION ) )
-	{
-		return;
-	}
-
-	MeanwhileDef.sSectorX = 7; // what sector?
-	MeanwhileDef.sSectorY = MAP_ROW_N;
-	MeanwhileDef.ubNPCNumber = QUEEN;
-	MeanwhileDef.usTriggerEvent = 0;
-
-	uiTime = GetWorldTotalMin() + 60;
-
-	MeanwhileDef.ubMeanwhileID = INTERROGATION;
-
-	// schedule the event
-	ScheduleMeanwhileEvent( &MeanwhileDef, uiTime );
-}
-
-
 static void HandleFirstBattleVictory(void)
 {
 	UINT32 uiTime = 0;
