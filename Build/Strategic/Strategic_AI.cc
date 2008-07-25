@@ -2108,7 +2108,6 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 							pGroup->pEnemyGroup->ubPendingReinforcements = 0;
 							ValidateLargeGroup( pGroup );
 						}
-						//RequestHighPriorityStagingGroupReinforcements( pGroup );
 					}
 					else if( SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ) != gGarrisonGroup[ pSector->ubGarrisonID ].ubSectorID )
 					{
@@ -3917,17 +3916,6 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 	//If there are any enemy groups that will be moving through this sector due, they will have to repath which
 	//will cause them to avoid the sector.  Returns the number of redirected groups.
 	RedirectEnemyGroupsMovingThroughSector( (UINT8)sSectorX, (UINT8)sSectorY );
-}
-
-
-static void RequestHighPriorityStagingGroupReinforcements(GROUP* pGroup)
-{
-//	GROUP *pClosestGroup;
-	if( !pGroup->pEnemyGroup->ubPendingReinforcements )
-	{
-		return;
-	}
-	//pClosestGroup = SearchForClosestGroup( pGroup );
 }
 
 
