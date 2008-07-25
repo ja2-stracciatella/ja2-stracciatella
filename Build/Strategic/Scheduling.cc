@@ -1138,32 +1138,6 @@ BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * p
 	{
 		return( FALSE );
 	}
-
-}
-
-
-static BOOLEAN GetEarliestMorningScheduleEvent(SCHEDULENODE* pSchedule, UINT32* puiTime)
-{
-	INT32			iLoop;
-
-	*puiTime = 100000;
-
-	for ( iLoop = 0; iLoop < MAX_SCHEDULE_ACTIONS; iLoop++ )
-	{
-		if ( pSchedule->usTime[ iLoop ] < (12*60) && pSchedule->usTime[ iLoop ] < *puiTime )
-		{
-			*puiTime = pSchedule->usTime[ iLoop ];
-		}
-	}
-
-	if ( *puiTime == 100000 )
-	{
-		return( FALSE );
-	}
-	else
-	{
-		return( TRUE );
-	}
 }
 
 
