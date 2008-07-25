@@ -3794,29 +3794,9 @@ BOOLEAN HandleUIReloading(SOLDIERTYPE* pSoldier)
 }
 
 
-BOOLEAN ConfirmActionCancel(UINT16 usMapPos, UINT16 usOldMapPos)
+BOOLEAN ConfirmActionCancel(UINT16 const usMapPos, UINT16 const usOldMapPos)
 {
-	// OK, most times we want to leave confirm mode if our
-	// gridno is different... but if we are in the grenade throw
-	// confirm UI, we want a bigger radius...
-	//if ( InAimCubeUI( ) )
-	//{
-		// Calculate distence between both gridnos.....
-	//	if ( GetRangeFromGridNoDiff( GetInAimCubeUIGridNo( ), usOldMapPos ) > 1 )
-		//if ( usMapPos != usOldMapPos )
-	//	{
-	//		return( TRUE );
-	//	}
-	//
-	//else
-	{
-		if ( usMapPos != usOldMapPos )
-		{
-			return( TRUE );
-		}
-	}
-
-	return( FALSE );
+	return usMapPos != usOldMapPos;
 }
 
 

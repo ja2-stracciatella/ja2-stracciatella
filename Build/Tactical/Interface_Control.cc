@@ -569,7 +569,6 @@ void RenderTopmostTacticalInterface()
 		RenderArrows();
 	}
 
-	RenderAimCubeUI();
 	EndViewportOverlays();
 	RenderRubberBanding();
 

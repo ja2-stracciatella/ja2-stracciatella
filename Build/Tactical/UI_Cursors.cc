@@ -1578,13 +1578,7 @@ void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 			RESETCOUNTER( NONGUNTARGETREFINE );
 			break;
 
-		case TOSSCURS:
-
-			//BeginAimCubeUI( pSoldier, sGridNo, (INT8)gsInterfaceLevel, 0, 0 );
-			//break;
-
 		default:
-
 			// GOTO DIRECTLY TO USING ITEM
 			guiPendingOverrideEvent = CA_MERC_SHOOT;
 	}
@@ -1774,10 +1768,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 			}
 			break;
 
-		case TOSSCURS:
-
-			//IncrementAimCubeUI( );
-			break;
+		case TOSSCURS: break;
 
 		default:
 

@@ -72,8 +72,6 @@ REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* pGameObj, real dLifeLength, 
 void RemoveAllPhysicsObjects(void);
 
 
-FLOAT CalculateLaunchItemAngle( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubHeight, real dForce, OBJECTTYPE *pItem, INT16 *psGridNo );
-
 BOOLEAN CalculateLaunchItemChanceToGetThrough(const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pItem, INT16 sGridNo, UINT8 ubLevel, INT16 sEndZ, INT16* psFinalGridNo, BOOLEAN fArmed, INT8* pbLevel, BOOLEAN fFromUI);
 
 void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubLevel, INT16 sZPos, OBJECTTYPE* pItem, INT8 bMissBy, UINT8 ubActionCode, SOLDIERTYPE* target);

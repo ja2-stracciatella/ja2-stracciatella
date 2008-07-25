@@ -189,8 +189,6 @@ void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies );
 const wchar_t* GetSoldierHealthString(const SOLDIERTYPE* s);
 
 
-void RenderAimCubeUI(void);
-
 void ResetPhysicsTrajectoryUI(void);
 void SetupPhysicsTrajectoryUI(void);
 void EndPhysicsTrajectoryUI(void);

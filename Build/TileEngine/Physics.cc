@@ -1554,20 +1554,6 @@ static INT32 ChanceToGetThroughObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE
 		return( 0 );
 	}
 	return( 100 );
-
-}
-
-
-
-
-FLOAT CalculateLaunchItemAngle( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubHeight, real dForce, OBJECTTYPE *pItem, INT16 *psGridNo )
-{
-	real				dAngle;
-
-	dAngle = FindBestAngleForTrajectory( pSoldier->sGridNo, sGridNo, GET_SOLDIER_THROW_HEIGHT( pSoldier->bLevel ), ubHeight, dForce, pItem, psGridNo );
-
-	// new we have defaut angle value...
-	return( dAngle );
 }
 
 
