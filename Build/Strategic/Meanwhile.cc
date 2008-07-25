@@ -836,12 +836,6 @@ void HandleMeanWhileEventPostingForTownLiberation( UINT8 bTownId )
 
 void HandleMeanWhileEventPostingForTownLoss()
 {
-	// make sure scene hasn't been used before
-	if ( GetMeanWhileFlag( LOST_TOWN ) )
-	{
-		return;
-	}
-
 	UINT32 const uiTime = GetWorldTotalMin() + 5;
 	ScheduleMeanwhileEvent(3, 16, 0, LOST_TOWN, QUEEN, uiTime);
 }
@@ -891,12 +885,6 @@ void HandleFlowersMeanwhileScene( INT8 bTimeCode )
 
 void HandleOutskirtsOfMedunaMeanwhileScene( void )
 {
-	// make sure scene hasn't been used before
-	if ( GetMeanWhileFlag( OUTSKIRTS_MEDUNA ) )
-	{
-		return;
-	}
-
 	UINT32 const uiTime = GetWorldTotalMin() + 5;
 	ScheduleMeanwhileEvent(3, 16, 0, OUTSKIRTS_MEDUNA, QUEEN, uiTime);
 }
@@ -917,12 +905,6 @@ void HandleKillChopperMeanwhileScene( void )
 
 void HandleScientistAWOLMeanwhileScene( void )
 {
-	// make sure scene hasn't been used before
-	if ( GetMeanWhileFlag( AWOL_SCIENTIST ) )
-	{
-		return;
-	}
-
 	UINT32 const uiTime = GetWorldTotalMin() + 5;
 	ScheduleMeanwhileEvent(3, 16, 0, AWOL_SCIENTIST, QUEEN, uiTime);
 }
@@ -930,11 +912,6 @@ void HandleScientistAWOLMeanwhileScene( void )
 
 static void HandleFirstBattleVictory(void)
 {
-	if ( GetMeanWhileFlag( END_OF_PLAYERS_FIRST_BATTLE ) )
-	{
-		return;
-	}
-
 	UINT32 const uiTime = GetWorldTotalMin() + 5;
 	ScheduleMeanwhileEvent(3, 16, 0, END_OF_PLAYERS_FIRST_BATTLE, QUEEN, uiTime);
 }
@@ -942,11 +919,6 @@ static void HandleFirstBattleVictory(void)
 
 static void HandleDelayedFirstBattleVictory(void)
 {
-	if ( GetMeanWhileFlag( END_OF_PLAYERS_FIRST_BATTLE ) )
-	{
-		return;
-	}
-
 	/*
 	//It is theoretically impossible to liberate a town within 60 minutes of the first battle (which is supposed to
 	//occur outside of a town in this scenario).  The delay is attributed to the info taking longer to reach the queen.
