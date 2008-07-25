@@ -1097,50 +1097,6 @@ void PostNextSchedule( SOLDIERTYPE *pSoldier )
 }
 
 
-static BOOLEAN ExtractScheduleEntryAndExitInfo(SOLDIERTYPE* pSoldier, UINT32* puiEntryTime, UINT32* puiExitTime)
-{
-	INT32			iLoop;
-	BOOLEAN		fFoundEntryTime = FALSE, fFoundExitTime = FALSE;
-	SCHEDULENODE *pSchedule;
-
-	*puiEntryTime = 0;
-	*puiExitTime = 0;
-
-	pSchedule = GetSchedule( pSoldier->ubScheduleID );
-	if ( !pSchedule )
-	{
-		// If person had default schedule then would have been assigned and this would
-		// have succeeded.
-		// Hence this is an error.
-		return( FALSE );
-	}
-
-	for ( iLoop = 0; iLoop < MAX_SCHEDULE_ACTIONS; iLoop++ )
-	{
-		if ( pSchedule->ubAction[ iLoop ] == SCHEDULE_ACTION_ENTERSECTOR )
-		{
-			fFoundEntryTime = TRUE;
-			*puiEntryTime = pSchedule->usTime[ iLoop ];
-		}
-		else if ( pSchedule->ubAction[ iLoop ] == SCHEDULE_ACTION_LEAVESECTOR )
-		{
-			fFoundExitTime = TRUE;
-			*puiExitTime = pSchedule->usTime[ iLoop ];
-		}
-	}
-
-	if ( fFoundEntryTime && fFoundExitTime )
-	{
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
-
-}
-
-
 // This is for determining shopkeeper's opening/closing hours
 BOOLEAN ExtractScheduleDoorLockAndUnlockInfo( SOLDIERTYPE * pSoldier, UINT32 * puiOpeningTime, UINT32 * puiClosingTime )
 {
