@@ -1692,7 +1692,7 @@ void CheckIfEntireTownHasBeenLost( INT8 bTownId, INT16 sSectorX, INT16 sSectorY 
 		// the whole town is under enemy control, check if we libed this town before
 		if ( gTownLoyalty[ bTownId ].fLiberatedAlready )
 		{
-			HandleMeanWhileEventPostingForTownLoss( bTownId );
+			HandleMeanWhileEventPostingForTownLoss();
 		}
 	}
 }

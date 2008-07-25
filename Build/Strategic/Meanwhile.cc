@@ -875,7 +875,8 @@ void HandleMeanWhileEventPostingForTownLiberation( UINT8 bTownId )
 	}
 }
 
-void HandleMeanWhileEventPostingForTownLoss( UINT8 bTownId )
+
+void HandleMeanWhileEventPostingForTownLoss()
 {
 	UINT32 uiTime = 0;
 	MEANWHILE_DEFINITION MeanwhileDef;

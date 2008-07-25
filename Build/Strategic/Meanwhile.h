@@ -67,7 +67,7 @@ void HandleFirstMeanWhileSetUpWithTrashWorld( void );
 void HandleFirstBattleEndingWhileInTown( INT16 sSectorX, INT16 sSectorY, INT16 bSectorZ, BOOLEAN fFromAutoResolve );
 
 // lost an entire town to the enemy!
-void HandleMeanWhileEventPostingForTownLoss( UINT8 bTownId );
+void HandleMeanWhileEventPostingForTownLoss();
 
 // handle short cutting past a meanwhilescene while it is being handled
 void HandleShortCuttingOfMeanwhileSceneByPlayer( UINT8 ubMeanwhileID, INT32 iLastProfileId, INT32 iLastProfileAction );
