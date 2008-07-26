@@ -777,10 +777,6 @@ extern		const wchar_t *AimPolicyText[];
 
 
 //Aim Member.c
-enum
-{
-	AIM_MEMBER_CLICK_INSTRUCTIONS,
-};
 extern		const wchar_t *AimMemberText[];
 
 
