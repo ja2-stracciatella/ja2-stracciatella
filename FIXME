@@ -33,18 +33,15 @@ DoneFadeInWarp(): pointless?
 DoorToggleLockedCallback(): pointless?
 DrawBreathUIBar(): overdraw
 ET_ENDENEMYS_TURN: unused
-EndOfHelicoptersPath(): complicated
 EnoughTimeOnAssignment(): complicated
 EnvBeginRainStorm(), EnvEndRainStorm(): TODO
 EvaluateWorld(): complicated
 ExecuteGameEvent(): code duplication
-FaceRegionMvtCallback(): unused
 Filler, Padding, Unused, filler: remove, partially bogus
 FindCacheStructDataIndex(): should return pointer instead of index
 FindValidInsertionCode(): MARK_DIRTY necessary?
 GetCostOfPassageForHelicopter(): callers
 GetDialogueDataFilename(): checking for MANNY does nothing
-GetHelpTextForItem(): complicated
 GetLoadedSectorString(): gbWorldSectorZ <-> !gbWorldSectorZ
 GetNumberOfPastMercsOnPlayersTeam(): callers
 GetRootName(): complicated
@@ -69,22 +66,18 @@ IMPVideoObjects.h: many needlessly called functions?
 I_CHANGELEVEL: unused
 InitializeLibrary(): invalid use of strlen()
 InitializeStrategicMapSectorTownNames(): complicated?
-InternalIsPerceivedDifferentThanReality(): complicated
 InvPanelButtonClickCallback(): pointless
 IsDoorPerceivedOpen(): sGridNo is INT16, but used as %s
 IsItRaining(): complicated
-IsMapScreenWorldItemVisibleInMapInventory(), IsMapScreenWorldItemInvisibleInMapInventory(): complicated
+IsMapScreenWorldItemVisibleInMapInventory(): complicated
 IsTownUnderCompleteControlByEnemy(): complicated
 ItemHasAttachments(): complicated
 KeyRingSlotInvClickCallback: one caller
 LackOfProgressTolerance(): callers
 LightIlluminateWall(): empty
-LightLoad(): complicated
-LightSave(): complicated
-LoadAmbientControlFile(): complicated, pointless strcpy()
 LoadCivQuoteFile(): string copy necessary?
 LoadEnemySoldiersFromTempFile(): ubStrategicCreatures > ubNumCreatures
-LoadSaveScreenHandle(), LoadSaveScreenInit(), LoadSaveScreenShutdown(): Investigate if the duplication can be removed
+LoadSaveScreenHandle(), LoadSaveScreenInit(): Investigate if the duplication can be removed
 LoadSavedGameHeader(): invalid use of strlen()
 LoadSavedGameWarningMessageBoxCallBack(): users
 LoadShadeTablesFromTextFile(): *scanf()
@@ -110,11 +103,8 @@ OBJECT_MODIFIED: unused
 PLAYER_TEAM_DEAD: never set
 PayMilitiaTrainingYesNoBoxCallback(): users
 PlayerGroupInMotion(): overkill
-ProcessMercEditing(): code duplication
 ProcessPlayerInputActivationString(): complicated
-ProcessTransactionString(): complicated?
 ProcessUpdateStats(): pbSoldierStatPtr write-only
-QsortCompare(): complicated
 ReadRLEColMapImage(), ReadRLERGBImage(): empty
 RemoveAllOnRoofsOfTypeRange(): O(n^2)
 RemoveAllShadows(): O(n^2)
@@ -203,7 +193,6 @@ wcscat(): check for overkill
 {Head,Pants,Skin,Vest}Pal: buffer necessary? pointer instead?
 {Load,Save}ShadeTable(): code duplication
 {Load,Save}ShadeTable(): filename generation ugly
-{Loading,Saving}Screen*(): unused?
 {Lock,Unlock}{Back,Frame,Mouse}Buffer(): SDL_LockSurface()?
 
 
