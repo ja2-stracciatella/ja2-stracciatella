@@ -4630,64 +4630,40 @@ void SaveLeaveItemList(HWFILE const hFile)
 }
 
 
-void LoadLeaveItemList(HWFILE const hFile)
+void LoadLeaveItemList(HWFILE const f)
 {
-	INT32 iCounter = 0;
-	MERC_LEAVE_ITEM *pCurrentItem;
-	UINT32 uiCount=0;
-	BOOLEAN	fNodeExists = FALSE;
-	UINT32	uiSubItem;
+	ShutDownLeaveList();
+	InitLeaveList();
 
-	//Shutdown the list
-	ShutDownLeaveList( );
-
-	//init the list
-	InitLeaveList( );
-
-	//loop through all the lists
-	for( iCounter = 0; iCounter < NUM_LEAVE_LIST_SLOTS; iCounter++ )
+	for (INT32 i = 0; i < NUM_LEAVE_LIST_SLOTS; ++i)
 	{
-		// load the flag that specifis that a node DOES exist
-		FileRead(hFile, &fNodeExists, sizeof(BOOLEAN));
+		// Load flag which specifies whether a node exists
+		BOOLEAN	node_exists;
+		FileRead(f, &node_exists, sizeof(BOOLEAN));
+		if (!node_exists) continue;
 
-		// if a root node is supposed to exist
-		if( fNodeExists )
+		// Load the number specifing how many items there are in the list
+		UINT32 n_items;
+		FileRead(f, &n_items, sizeof(UINT32));
+
+		MERC_LEAVE_ITEM** anchor = &gpLeaveListHead[i];
+		for (UINT32 n = n_items; n != 0; --n)
 		{
-			// load the number specifing how many items there are in the list
-			FileRead(hFile, &uiCount, sizeof(UINT32));
+			MERC_LEAVE_ITEM* const li = MALLOCZ(MERC_LEAVE_ITEM);
 
-			gpLeaveListHead[iCounter] = MALLOCZ(MERC_LEAVE_ITEM);
+			FileRead(f, li, sizeof(MERC_LEAVE_ITEM));
+			li->pNext = NULL;
 
-			pCurrentItem = gpLeaveListHead[ iCounter ];
-
-			for( uiSubItem=0; uiSubItem< uiCount; uiSubItem++ )
-			{
-				MERC_LEAVE_ITEM* const pItem = MALLOCZ(MERC_LEAVE_ITEM);
-
-				// Load the items
-				FileRead(hFile, pItem, sizeof(MERC_LEAVE_ITEM));
-
-				pItem->pNext = NULL;
-
-				//add the node to the list
-				if( uiSubItem == 0 )
-				{
-					gpLeaveListHead[ iCounter ] = pItem;
-					pCurrentItem = gpLeaveListHead[ iCounter ];
-				}
-				else
-				{
-					pCurrentItem->pNext = pItem;
-					pCurrentItem = pCurrentItem->pNext;
-				}
-			}
+			// Append node to list
+			*anchor = li;
+			anchor  = &li->pNext;
 		}
 	}
 
-	//Load the leave list profile id's
-	for( iCounter = 0; iCounter < NUM_LEAVE_LIST_SLOTS; iCounter++ )
+	// Load the leave list profile IDs
+	for (INT32 i = 0; i < NUM_LEAVE_LIST_SLOTS; ++i)
 	{
-		FileRead(hFile, &guiLeaveListOwnerProfileId[iCounter], sizeof(UINT32));
+		FileRead(f, &guiLeaveListOwnerProfileId[i], sizeof(UINT32));
 	}
 }
 
