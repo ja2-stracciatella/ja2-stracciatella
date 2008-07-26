@@ -2906,7 +2906,6 @@ const wchar_t *zSaveLoadText[] =
 #endif
 
 	L"Are you sure you want to overwrite the saved game in slot #%d?",
-	L"Do you want to load the game from slot #",
 
 
 	//The first %d is a number that contains the amount of free space on the users hard drive,

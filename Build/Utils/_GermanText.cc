@@ -2733,7 +2733,6 @@ const wchar_t *zSaveLoadText[] =
 #endif
 
 	L"Gespeichertes Spiel in Slot #%d wirklich überschreiben?",
-	L"Wollen Sie das Spiel aus Slot # speichern?",
 
 	//The first %d is a number that contains the amount of free space on the users hard drive,
 	//the second is the recommended amount of free space.

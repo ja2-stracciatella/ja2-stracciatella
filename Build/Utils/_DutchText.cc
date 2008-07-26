@@ -2920,7 +2920,6 @@ const wchar_t* 		zSaveLoadText[] =
 #endif
 
 	L"Weet je zeker dat je het spel in slot #%d wil overschrijven?",
-	L"Wil je het spel laden van slot #",
 
 
 	//The first %d is a number that contains the amount of free space on the users hard drive,

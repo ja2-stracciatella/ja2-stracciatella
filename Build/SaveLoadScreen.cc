@@ -918,14 +918,6 @@ static void SaveLoadGameNumber(INT8 bSaveGameID)
 		}
 		else
 		{
-/*
-			IF YOU UNCOMMENT THIS -- LOCALIZE IT!!!
-			CHAR16	sText[512];
-
-			swprintf(sText, L"%ls%d?", zSaveLoadText[SLG_CONFIRM_LOAD], bSaveGameID);
-
-			DoSaveLoadMessageBox(sText, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmLoadSavedGameMessageBoxCallBack);
-*/
 			//Setup up the fade routines
 			StartFadeOutForSaveLoadScreen();
 		}

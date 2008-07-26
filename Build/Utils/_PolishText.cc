@@ -2905,7 +2905,6 @@ const wchar_t* zSaveLoadText[] =
 #endif
 
 	L"Czy na pewno chcesz nadpisać grę na pozycji %d?",
-	L"Chcesz odczytać grę z pozycji",
 
 
 	//The first %d is a number that contains the amount of free space on the users hard drive,

@@ -2905,7 +2905,6 @@ const wchar_t* zSaveLoadText[] =
 #endif
 
 	L"Etes-vous sûr de vouloir écraser la sauvegarde #%d ?",
-	L"Voulez-vous charger la sauvegarde #%d ?",
 
 
 	//The first %d is a number that contains the amount of free space on the users hard drive,

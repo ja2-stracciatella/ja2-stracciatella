@@ -2905,7 +2905,6 @@ const wchar_t* zSaveLoadText[] =
 #endif
 
 	L"Siete sicuri di volere sovrascrivere la partita salvata nello slot #%d?",
-	L"Volete caricare la partita dallo slot #",
 
 
 	//The first %d is a number that contains the amount of free space on the users hard drive,
