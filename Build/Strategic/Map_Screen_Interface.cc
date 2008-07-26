@@ -4572,60 +4572,42 @@ static BOOLEAN CanSoldierMoveWithVehicleId(const SOLDIERTYPE* const pSoldier, co
 }
 
 
-void SaveLeaveItemList(HWFILE const hFile)
+void SaveLeaveItemList(HWFILE const f)
 {
-	INT32 iCounter = 0;
-	MERC_LEAVE_ITEM *pCurrentItem;
-	UINT32 uiCount=0;
-	BOOLEAN	fNodeExists = FALSE;
-	UINT32	uiCnt;
-
-	for( iCounter = 0; iCounter < NUM_LEAVE_LIST_SLOTS; iCounter++ )
+	for (INT32 i = 0; i < NUM_LEAVE_LIST_SLOTS; ++i)
 	{
-		// go through nodes and save them
-		if ( gpLeaveListHead[ iCounter ] != NULL )
+		MERC_LEAVE_ITEM const* const head = gpLeaveListHead[i];
+		if (head)
 		{
-			fNodeExists = TRUE;
+			// Save to specify that a node DOES exist
+			BOOLEAN const node_exists = TRUE;
+			FileWrite(f, &node_exists, sizeof(BOOLEAN));
 
-			// Save the to specify that a node DOES exist
-			FileWrite(hFile, &fNodeExists, sizeof(BOOLEAN));
-
-			uiCount = 1;
-			pCurrentItem = gpLeaveListHead[ iCounter ];
-
-			//loop through all the nodes to see how many there are
-			while( pCurrentItem->pNext )
+			// Save number of items
+			UINT32 n_items = 0;
+			for (MERC_LEAVE_ITEM const* i = head; i; i = i->pNext)
 			{
-				 pCurrentItem = pCurrentItem->pNext;
-				 uiCount++;
+				++n_items;
 			}
+			FileWrite(f, &n_items, sizeof(UINT32));
 
-			// Save the number specifing how many items there are in the list
-			FileWrite(hFile, &uiCount, sizeof(UINT32));
-
-			pCurrentItem = gpLeaveListHead[ iCounter ];
-
-			//loop through all the nodes to see how many there are
-			for( uiCnt=0; uiCnt<uiCount; uiCnt++)
+			for (MERC_LEAVE_ITEM const* i = head; i; i = i->pNext)
 			{
-				// Save the items
-				FileWrite(hFile, pCurrentItem, sizeof(MERC_LEAVE_ITEM));
-
-				pCurrentItem = pCurrentItem->pNext;
+				FileWrite(f, i, sizeof(MERC_LEAVE_ITEM));
 			}
 		}
 		else
 		{
-			fNodeExists = FALSE;
-			// Save the to specify that a node DOENST exist
-			FileWrite(hFile, &fNodeExists, sizeof(BOOLEAN));
+			// Save to specify that a node DOENST exist
+			BOOLEAN const node_exists = FALSE;
+			FileWrite(f, &node_exists, sizeof(BOOLEAN));
 		}
 	}
 
-	//Save the leave list profile id's
-	for( iCounter = 0; iCounter < NUM_LEAVE_LIST_SLOTS; iCounter++ )
+	// Save the leave list profile IDs
+	for (INT32 i = 0; i < NUM_LEAVE_LIST_SLOTS; ++i)
 	{
-		FileWrite(hFile, &guiLeaveListOwnerProfileId[iCounter], sizeof(UINT32));
+		FileWrite(f, &guiLeaveListOwnerProfileId[i], sizeof(UINT32));
 	}
 }
 
