@@ -360,7 +360,6 @@ BOOLEAN fShowDescriptionFlag=FALSE;
 
 static BOOLEAN gfHotKeyEnterSector   = FALSE;
 static BOOLEAN fOneFrame             = FALSE;
-static BOOLEAN fShowFaceHightLight   = FALSE;
 static BOOLEAN fShowItemHighLight    = FALSE;
 static BOOLEAN fJustFinishedPlotting = FALSE;
 
@@ -575,60 +574,6 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	RectangleDraw(TRUE, TIME_REMAINING_X, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH, usY + GetFontHeight(MAP_SCREEN_FONT) + 2, usColor, l.Buffer<UINT8>());
 	InvalidateRegion(TIME_REMAINING_X - 1, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH + 1, usY + GetFontHeight( MAP_SCREEN_FONT ) + 3 );
-}
-
-
-static void GlowFace(void)
-{
- static INT32 iColorNum =10;
- static BOOLEAN fDelta=FALSE;
- static BOOLEAN fOldFaceGlow = FALSE;
-
-	// not glowing right now, leave
-	if (!fShowFaceHightLight)
-	{
-		iColorNum =0;
-		fDelta = TRUE;
-
-		if (fOldFaceGlow)
-		{
-			RestoreExternBackgroundRect( 9, 18, ( UINT16 )( 61 - 9 ), ( UINT16 )( 64 - 18 ) );
-		}
-
-		fOldFaceGlow = FALSE;
-		return;
-	}
-
-	// if not ready to change glow phase yet, leave
-	if ( !gfGlowTimerExpired )
-		return;
-
-
-	fOldFaceGlow = TRUE;
-
-	// change direction of glow?
-	if((iColorNum==0)||(iColorNum==10))
-	{
-	 fDelta=!fDelta;
-	}
-
-	// increment color
-	if(!fDelta)
-		iColorNum++;
-	else
-		iColorNum--;
-
-	// glow contract box
-	UINT16 usColor = GlowColor(iColorNum);
-	{ SGPVSurface::Lock l(FRAME_BUFFER);
-		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		RectangleDraw(TRUE, 9, 18, 60, 63 , usColor, l.Buffer<UINT8>());
-		InvalidateRegion(9, 18, 61, 64);
-	}
-
-	// restore background
-	if((iColorNum==0)||(iColorNum==1))
-		RestoreExternBackgroundRect( 9, 18, ( UINT16 )( 61 - 9 ), ( UINT16 )( 64 - 18 ) );
 }
 
 
@@ -1886,8 +1831,6 @@ try
 		// reset show aircraft flag
 		//fShowAircraftFlag = FALSE;
 
-		// reset fact we are showing white bounding box around face
-		fShowFaceHightLight = FALSE;
 		fShowItemHighLight = FALSE;
 
 		// reset all selected character flags
@@ -2248,7 +2191,6 @@ try
 		HandleAutoFaces( );
 		HandleTalkingAutoFaces( );
 /*
-		GlowFace( );
 		GlowItem( );
 */
 
@@ -2451,7 +2393,6 @@ try
 		// handle changing of highlighted lines
 		HandleChangeOfHighLightedLine( );
 
-		GlowFace( );
 		GlowItem( );
 	}
 
@@ -6856,25 +6797,6 @@ static void FaceRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		RequestToggleMercInventoryPanel();
-	}
-}
-
-
-static void FaceRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
-	if (GetSelectedInfoChar() == NULL)
-	{
-		fShowFaceHightLight = FALSE;
-		return;
-	}
-
-	if( ( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE ) )
-	{
-		fShowFaceHightLight = TRUE;
-	}
-	else if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-	{
-		fShowFaceHightLight = FALSE;
 	}
 }
 
