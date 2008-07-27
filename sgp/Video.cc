@@ -654,14 +654,14 @@ void RefreshScreen(void)
 
 SDL_Surface* GetBackBufferObject(void)
 {
-	if (!MouseCursor) throw std::logic_error("Tried to access screen surface before its creation");
+	if (!ScreenBuffer) throw std::logic_error("Tried to access screen surface before its creation");
 	return ScreenBuffer;
 }
 
 
 SDL_Surface* GetFrameBufferObject(void)
 {
-	if (!MouseCursor) throw std::logic_error("Tried to access frame surface before its creation");
+	if (!FrameBuffer) throw std::logic_error("Tried to access frame surface before its creation");
 	return FrameBuffer;
 }
 
