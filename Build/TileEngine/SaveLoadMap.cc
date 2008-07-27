@@ -236,55 +236,33 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 }
 
 
-void AddStructToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
+static void AddToMapTempFile(UINT32 const uiMapIndex, UINT16 const usIndex, UINT8 const type)
 {
-	MODIFY_MAP Map;
+	if (!gfApplyChangesToTempFile) return;
+	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) return;
 
-	if( !gfApplyChangesToTempFile )
-		return;
+	UINT32 const uiType     = GetTileType(usIndex);
+	UINT16 const usSubIndex = GetSubIndexFromTileIndex(usIndex);
 
-	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-		return;
-
-	const UINT32 uiType     = GetTileType(usIndex);
-	const UINT16 usSubIndex = GetSubIndexFromTileIndex(usIndex);
-
-	memset( &Map, 0, sizeof( MODIFY_MAP ) );
-
-	Map.usGridNo = (UINT16)uiMapIndex;
-//	Map.usIndex		= usIndex;
-	Map.usImageType = (UINT16)uiType;
-	Map.usSubImageIndex = usSubIndex;
-
-	Map.ubType		= SLM_STRUCT;
-
-	SaveModifiedMapStructToMapTempFile( &Map, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+	MODIFY_MAP m;
+	memset(&m, 0, sizeof(m));
+	m.usGridNo        = uiMapIndex;
+	m.usImageType     = uiType;
+	m.usSubImageIndex = usSubIndex;
+	m.ubType          = type;
+	SaveModifiedMapStructToMapTempFile(&m, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 }
 
 
-void AddObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
+void AddStructToMapTempFile(UINT32 const uiMapIndex, UINT16 const usIndex)
 {
-	MODIFY_MAP Map;
+	AddToMapTempFile(uiMapIndex, usIndex, SLM_STRUCT);
+}
 
-	if( !gfApplyChangesToTempFile )
-		return;
 
-	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-		return;
-
-	const UINT32 uiType     = GetTileType(usIndex);
-	const UINT16 usSubIndex = GetSubIndexFromTileIndex(usIndex);
-
-	memset( &Map, 0, sizeof( MODIFY_MAP ) );
-
-	Map.usGridNo = (UINT16)uiMapIndex;
-//	Map.usIndex		= usIndex;
-	Map.usImageType = (UINT16)uiType;
-	Map.usSubImageIndex = usSubIndex;
-
-	Map.ubType		= SLM_OBJECT;
-
-	SaveModifiedMapStructToMapTempFile( &Map, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+void AddObjectToMapTempFile(UINT32 const uiMapIndex, UINT16 const usIndex)
+{
+	AddToMapTempFile(uiMapIndex, usIndex, SLM_OBJECT);
 }
 
 
@@ -293,56 +271,16 @@ static void AddObjectFromMapTempFileToMap(UINT32 uiMapIndex, UINT16 usIndex)
 	AddObjectToHead( uiMapIndex, usIndex );
 }
 
-void AddRemoveObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
+
+void AddRemoveObjectToMapTempFile(UINT32 const uiMapIndex, UINT16 const usIndex)
 {
-	MODIFY_MAP Map;
-
-	if( !gfApplyChangesToTempFile )
-		return;
-
-	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-		return;
-
-	const UINT32 uiType     = GetTileType(usIndex);
-	const UINT16 usSubIndex = GetSubIndexFromTileIndex(usIndex);
-
-	memset( &Map, 0, sizeof( MODIFY_MAP ) );
-
-	Map.usGridNo = (UINT16)uiMapIndex;
-//	Map.usIndex		= usIndex;
-	Map.usImageType = (UINT16)uiType;
-	Map.usSubImageIndex = usSubIndex;
-
-	Map.ubType		= SLM_REMOVE_OBJECT;
-
-	SaveModifiedMapStructToMapTempFile( &Map, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+	AddToMapTempFile(uiMapIndex, usIndex, SLM_REMOVE_OBJECT);
 }
 
 
-void RemoveStructFromMapTempFile( UINT32 uiMapIndex, UINT16 usIndex )
+void RemoveStructFromMapTempFile(UINT32 const uiMapIndex, UINT16 const usIndex)
 {
-	MODIFY_MAP Map;
-
-	if( !gfApplyChangesToTempFile )
-		return;
-
-	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-		return;
-
-	const UINT32 uiType     = GetTileType(usIndex);
-	const UINT16 usSubIndex = GetSubIndexFromTileIndex(usIndex);
-
-	memset( &Map, 0, sizeof( MODIFY_MAP ) );
-
-	Map.usGridNo	= (UINT16)uiMapIndex;
-//	Map.usIndex			= usIndex;
-	Map.usImageType = (UINT16)uiType;
-	Map.usSubImageIndex = usSubIndex;
-
-	Map.ubType			= SLM_REMOVE_STRUCT;
-
-	SaveModifiedMapStructToMapTempFile( &Map, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-
+	AddToMapTempFile(uiMapIndex, usIndex, SLM_REMOVE_STRUCT);
 }
 
 
