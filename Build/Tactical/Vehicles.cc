@@ -463,7 +463,7 @@ VEHICLETYPE* GetVehicle(INT32 const vehicle_id)
 	if (0 <= vehicle_id && vehicle_id < ubNumberOfVehicles)
 	{
 		VEHICLETYPE* const v = &pVehicleList[vehicle_id];
-		if (v) return v;
+		if (v->fValid) return v;
 	}
 	throw std::logic_error("Invalid vehicle ID");
 }
