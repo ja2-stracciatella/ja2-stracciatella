@@ -1854,6 +1854,20 @@ static AIMVideoMode WillMercAcceptCall(void)
 }
 
 
+static INT GetFirstBuddyOnTeam(MERCPROFILESTRUCT const* const p)
+{
+	for (INT i = 0; i != 3; ++i)
+	{
+		INT8 const buddy = p->bBuddy[i];
+		if (buddy < 0 || !IsMercOnTeam(buddy) || IsMercDead(buddy)) continue;
+
+		return buddy;
+	}
+
+	return -1;
+}
+
+
 static BOOLEAN CanMercBeHired(void)
 {
 	StopMercTalking();
@@ -1870,6 +1884,8 @@ static BOOLEAN CanMercBeHired(void)
 		return FALSE;
 	}
 
+	INT const buddy = GetFirstBuddyOnTeam(p);
+
 	// loop through the list of people the merc hates
 	for (UINT8 i = 0; i < NUMBER_HATED_MERCS_ONTEAM; ++i)
 	{
@@ -1881,20 +1897,16 @@ static BOOLEAN CanMercBeHired(void)
 		if (!IsMercOnTeamAndInOmertaAlready(bMercID)) continue;
 
 		//if the merc hates someone on the team, see if a buddy is on the team
-		for (UINT8 j = 0; j < NUMBER_HATED_MERCS_ONTEAM; ++j)
+		//if a buddy is on the team, the merc will join
+		switch (buddy)
 		{
-			//if a buddy is on the team, the merc will join
-			INT8 const bMercID = p->bBuddy[j];
-			if (bMercID < 0) continue;
-
-			if (!IsMercOnTeam(bMercID) || IsMercDead(bMercID)) continue;
-
-			UINT16 const quote =
-				j == 0 ? QUOTE_JOINING_CAUSE_BUDDY_1_ON_TEAM :
-				j == 1 ? QUOTE_JOINING_CAUSE_BUDDY_2_ON_TEAM :
-								 QUOTE_JOINING_CAUSE_LEARNED_TO_LIKE_BUDDY_ON_TEAM;
-			InitVideoFaceTalking(pid, quote);
-			return TRUE;
+			UINT16 quote;
+			case 0: quote = QUOTE_JOINING_CAUSE_BUDDY_1_ON_TEAM;               goto join_buddy;
+			case 1: quote = QUOTE_JOINING_CAUSE_BUDDY_2_ON_TEAM;               goto join_buddy;
+			case 2: quote = QUOTE_JOINING_CAUSE_LEARNED_TO_LIKE_BUDDY_ON_TEAM; goto join_buddy;
+join_buddy:
+				InitVideoFaceTalking(pid, quote);
+				return TRUE;
 		}
 
 		// the merc doesnt like anybody on the team
@@ -1928,7 +1940,7 @@ static BOOLEAN CanMercBeHired(void)
 		return FALSE;
 	}
 
-	if (DoesMercHaveABuddyOnTheTeam(pid)) return TRUE;
+	if (buddy >= 0) return TRUE;
 
 	// Check the players Death rate
 	if (MercThinksDeathRateTooHigh(p))

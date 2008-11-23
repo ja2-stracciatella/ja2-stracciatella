@@ -213,9 +213,6 @@ BOOLEAN IsProfileAHeadMiner( UINT8 ubProfile );
 void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs );
 
 
-// Returns true if a buddy of the merc is on team
-BOOLEAN DoesMercHaveABuddyOnTheTeam( UINT8 ubMercID );
-
 void DecideOnAssassin( void );
 
 extern BOOLEAN gubNumTerrorists;

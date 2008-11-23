@@ -1130,35 +1130,6 @@ void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs )
 }
 
 
-
-BOOLEAN DoesMercHaveABuddyOnTheTeam( UINT8 ubMercID )
-{
-	UINT8	ubCnt;
-	INT8	bBuddyID;
-
-	// loop through the list of people the merc is buddies with
-	for(ubCnt=0; ubCnt< 3; ubCnt++)
-	{
-		//see if the merc has a buddy on the team
-		bBuddyID = gMercProfiles[ ubMercID ].bBuddy[ubCnt];
-
-		//If its not a valid 'buddy'
-		if( bBuddyID < 0 )
-			continue;
-
-		if( IsMercOnTeam( bBuddyID ) )
-		{
-			if( !IsMercDead( bBuddyID ) )
-			{
-				return( TRUE );
-			}
-		}
-	}
-
-	return( FALSE );
-}
-
-
 static BOOLEAN MercIsHot(SOLDIERTYPE* pSoldier)
 {
 	if ( pSoldier->ubProfile != NO_PROFILE && gMercProfiles[ pSoldier->ubProfile ].bPersonalityTrait == HEAT_INTOLERANT )
