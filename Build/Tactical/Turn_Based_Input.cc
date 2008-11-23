@@ -110,6 +110,13 @@ const SOLDIERTYPE* gUITargetSoldier = NULL;
 
 UINT8			gubCheatLevel		= STARTING_CHEAT_LEVEL;
 
+static char const cheat_code[] =
+#ifdef GERMAN
+	"iguana";
+#else
+	"gabbi";
+#endif
+
 
 static void QueryTBLeftButton(UINT32* puiNewEvent);
 static void QueryTBRightButton(UINT32* puiNewEvent);
@@ -1209,7 +1216,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 {
   InputAtom					InputEvent;
 	BOOLEAN						fKeyTaken = FALSE;
-	BOOLEAN						fGoodCheatLevelKey = FALSE;
 
 	SGPPoint MousePos;
 	GetMousePos(&MousePos);
@@ -1528,6 +1534,30 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			fAlt = InputEvent.usKeyState & ALT_DOWN ? TRUE : FALSE;
 			fCtrl = InputEvent.usKeyState & CTRL_DOWN ? TRUE : FALSE;
 			fShift = InputEvent.usKeyState & SHIFT_DOWN ? TRUE : FALSE;
+
+			if (fCtrl && !fAlt)
+			{
+				if (gubCheatLevel < lengthof(cheat_code) - 1)
+				{
+					if (InputEvent.usParam == cheat_code[gubCheatLevel])
+					{
+						if (++gubCheatLevel == lengthof(cheat_code) - 1)
+						{
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[MSG_CHEAT_LEVEL_TWO]);
+							AddHistoryToPlayersLog(HISTORY_CHEAT_ENABLED, 0, GetWorldTotalMin(), -1, -1);
+						}
+						continue;
+					}
+				}
+				else if (gubCheatLevel == lengthof(cheat_code) - 1 && InputEvent.usParam == 'b')
+				{
+					++gubCheatLevel;
+					continue;
+				}
+			}
+
+			if (gubCheatLevel < lengthof(cheat_code) - 1) RESET_CHEAT_LEVEL();
+
 			switch( InputEvent.usParam )
 			{
 				case SDLK_SPACE:
@@ -1845,34 +1875,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 					if ( fCtrl )
 					{
-#ifdef GERMAN
-						if ( gubCheatLevel == 3 )
-						{
-							gubCheatLevel++;
-							fGoodCheatLevelKey = TRUE;
-						}
-						else if ( gubCheatLevel == 5 )
-						{
-							gubCheatLevel++;
-							// ATE; We're done.... start cheat mode....
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_CHEAT_LEVEL_TWO ] );
-							AddHistoryToPlayersLog(HISTORY_CHEAT_ENABLED, 0, GetWorldTotalMin(), -1, -1);
-						}
-						else
-						{
-							RESET_CHEAT_LEVEL();
-						}
-#else
-						if ( gubCheatLevel == 1 )
-						{
-							gubCheatLevel++;
-							fGoodCheatLevelKey = TRUE;
-						}
-						else
-						{
-							RESET_CHEAT_LEVEL();
-						}
-#endif
 					}
 					else
 					{
@@ -1911,37 +1913,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 					else if( fCtrl )
 					{
-#ifndef GERMAN
-						if ( gubCheatLevel == 2 )
-						{
-							gubCheatLevel++;
-							fGoodCheatLevelKey = TRUE;
-						}
-						else if ( gubCheatLevel == 3 )
-						{
-							gubCheatLevel++;
-							fGoodCheatLevelKey = TRUE;
-						}
-						else if ( gubCheatLevel == 5 )
-						{
-							gubCheatLevel++;
-							fGoodCheatLevelKey = TRUE;
-						}
-						else
-						{
-							RESET_CHEAT_LEVEL( );
-						}
-#else
-						if ( gubCheatLevel == 6 )
-						{
-							gubCheatLevel++;
-							fGoodCheatLevelKey = TRUE;
-						}
-						else
-						{
-							RESET_CHEAT_LEVEL( );
-						}
-#endif
 						//gGameSettings.fOptions[ TOPTION_HIDE_BULLETS ] ^= TRUE;
 					}
 					else
@@ -2094,27 +2065,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 					if( fCtrl )
 					{
-#ifdef GERMAN
-						if ( gubCheatLevel == 1 )
-						{
-							gubCheatLevel++;
-							fGoodCheatLevelKey = TRUE;
-						}
-						else
-						{
-							RESET_CHEAT_LEVEL();
-						}
-#else
-						if ( gubCheatLevel == 0 )
-						{
-							gubCheatLevel++;
-							fGoodCheatLevelKey = TRUE;
-						}
-						else
-						{
-							RESET_CHEAT_LEVEL();
-						}
-#endif
 					}
 					else if ( fAlt )
 					{
@@ -2162,26 +2112,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 					else if( fCtrl )
 					{
-#ifdef GERMAN
-						if ( gubCheatLevel == 0 )
-						{
-							fGoodCheatLevelKey = TRUE;
-							gubCheatLevel++;
-						}
-#else
-						if ( gubCheatLevel == 4 )
-						{
-							gubCheatLevel++;
-							fGoodCheatLevelKey = TRUE;
-							// ATE; We're done.... start cheat mode....
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_CHEAT_LEVEL_TWO ] );
-							AddHistoryToPlayersLog(HISTORY_CHEAT_ENABLED, 0, GetWorldTotalMin(), -1, -1);
-						}
-						else
-						{
-							RESET_CHEAT_LEVEL();
-						}
-#endif
 					}
 					else
 					{
@@ -2387,21 +2317,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 					else if( fCtrl )
 					{
-#ifdef GERMAN
-						if ( gubCheatLevel == 4 )
-						{
-							fGoodCheatLevelKey = TRUE;
-							gubCheatLevel++;
-#if 0
-							// ATE: Level one reached.....
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_CHEAT_LEVEL_ONE ] );
-#endif
-						}
-						else
-						{
-							RESET_CHEAT_LEVEL();
-						}
-#endif
 					}
 					else
 					if( !CycleSoldierFindStack( usMapPos ) )// Are we over a merc stack?
@@ -2608,18 +2523,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 					else if( fCtrl )
 					{
-#ifdef GERMAN
-						if ( gubCheatLevel == 2 )
-						{
-							fGoodCheatLevelKey = TRUE;
-							gubCheatLevel++;
-						}
-						else
-						{
-							RESET_CHEAT_LEVEL();
-						}
-#endif
-
 						if (CHEATER_CHEAT_LEVEL() && GetSelectedMan() != NULL)
 						{
 							FOR_ALL_IN_TEAM(s, gbPlayerNum)
@@ -2858,19 +2761,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					break;
 
 			}
-
-#ifdef GERMAN
-			if ( !fGoodCheatLevelKey && gubCheatLevel < 5 )
-			{
-				RESET_CHEAT_LEVEL( );
-			}
-#else
-			if ( !fGoodCheatLevelKey && gubCheatLevel < 4 )
-			{
-				RESET_CHEAT_LEVEL( );
-			}
-#endif
-
 		}
 	}
 }
