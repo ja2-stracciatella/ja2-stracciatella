@@ -1,3 +1,4 @@
+(r4829) Fix a vanilla bug, which made it possible to hire a merc, if there is a hated merc on the team, though he should refuse for other reasons.
 (r4768) Enable scrolling the item pickup list with the mouse wheel.
 (r4765) Fix a vanilla bug, when trying to remove more than $20.000 from the player's account by clicking on $100 or $10 while trading with a shopkeeper (broken display).
 (r4722) Restore path cancellation when right clicking on the destination column in the map screen, which was broken in r3592.

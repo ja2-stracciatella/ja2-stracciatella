@@ -7,6 +7,8 @@
 // An enumeration for dialog quotes
 typedef enum DialogQuoteIDs
 {
+	QUOTE_NONE = 0xFFFF,
+
 	// 0
 	QUOTE_SEE_ENEMY = 0,
 	QUOTE_SEE_ENEMY_VARIATION,

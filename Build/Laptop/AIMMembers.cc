@@ -1887,6 +1887,7 @@ static BOOLEAN CanMercBeHired(void)
 	INT const buddy = GetFirstBuddyOnTeam(p);
 
 	// loop through the list of people the merc hates
+	UINT16 join_quote = QUOTE_NONE;
 	for (UINT8 i = 0; i < NUMBER_HATED_MERCS_ONTEAM; ++i)
 	{
 		//see if someone the merc hates is on the team
@@ -1916,8 +1917,8 @@ join_buddy:
 			case 0:
 				if (p->bHatedTime[i] >= 24)
 				{
-					InitVideoFaceTalking(pid, QUOTE_PERSONALITY_BIAS_WITH_MERC_1);
-					return TRUE;
+					join_quote = QUOTE_PERSONALITY_BIAS_WITH_MERC_1;
+					continue;
 				}
 				quote = QUOTE_HATE_MERC_1_ON_TEAM;
 				break;
@@ -1925,8 +1926,8 @@ join_buddy:
 			case 1:
 				if (p->bHatedTime[i] >= 24)
 				{
-					InitVideoFaceTalking(pid, QUOTE_PERSONALITY_BIAS_WITH_MERC_2);
-					return TRUE;
+					join_quote = QUOTE_PERSONALITY_BIAS_WITH_MERC_2;
+					continue;
 				}
 				quote = QUOTE_HATE_MERC_2_ON_TEAM;
 				break;
@@ -1958,6 +1959,7 @@ join_buddy:
 		return FALSE;
 	}
 
+	if (join_quote != QUOTE_NONE) InitVideoFaceTalking(pid, join_quote);
 	return TRUE;
 }
 
