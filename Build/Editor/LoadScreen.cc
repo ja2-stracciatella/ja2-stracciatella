@@ -850,6 +850,10 @@ static void SetGlobalSectorValues(const wchar_t* szFilename)
 				gbWorldSectorZ = (INT8)(pStr[ 2 ] - 0x30);
 			}
 		}
+		else
+		{
+			gbWorldSectorZ = 0;
+		}
 	}
 	else
 	{
