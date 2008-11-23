@@ -786,6 +786,7 @@ static void RenderEditorInfo(void)
 	SetFont( FONT12POINT1 );
 	SetFontForeground( FONT_BLACK );
 	SetFontBackground( FONT_BLACK );
+	SetFontShadow(NO_SHADOW);
 
 	//Display the mapindex position
 	const GridNo iMapIndex = GetMouseMapPos();
