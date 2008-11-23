@@ -716,8 +716,6 @@ try
 
 	//Save the rest of the information in the mapelement.
 	pNewMapElement->uiFlags							= pOldMapElement->uiFlags;
-	pNewMapElement->sSumRealLights[0]		= pOldMapElement->sSumRealLights[0];
-	pNewMapElement->sSumRealLights[1]		= pOldMapElement->sSumRealLights[1];
 	pNewMapElement->sHeight							= pOldMapElement->sHeight;
 	pNewMapElement->ubTerrainID					= pOldMapElement->ubTerrainID;
 	pNewMapElement->ubReservedSoldierID = pOldMapElement->ubReservedSoldierID;

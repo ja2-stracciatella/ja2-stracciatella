@@ -200,7 +200,6 @@ typedef struct MAP_ELEMENT
 
 	UINT16									uiFlags;
 	UINT8										ubExtFlags[2];
-	UINT16									sSumRealLights[1];
 	UINT8										sHeight;
 	UINT8										ubAdjacentSoldierCnt;
 	UINT8										ubTerrainID;

@@ -1762,8 +1762,6 @@ INT32		iOldX, iOldY;
 BOOLEAN	fBlocked = FALSE;
 BOOLEAN fOnlyWalls;
 
-//MAP_ELEMENT * pMapElement;
-
 	const LightTemplate* const t = l->light_template;
 	if (t->lights == NULL) return FALSE;
 
@@ -1772,30 +1770,6 @@ BOOLEAN fOnlyWalls;
 	{
 		t->lights[uiCount].uiFlags &= ~LIGHT_NODE_DRAWN;
 	}
-
-/*
-	if (!(l->uiFlags & MERC_LIGHT))
-	{
-		uiFlags |= LIGHT_FAKE
-
-		pMapElement = &(gpWorldLevelData[]);
-		if (pMapElement->pLand != NULL)
-		{
-			// only do this for visible locations
-			// adjust tile's recorded light level
-			pMapElement->sSumRealLight1+=sShadeAdd;
-
-			sSum=pMapElement->pLand->ubNaturalShadeLevel - __max( pMapElement->sSumRealLights[0], pMapElement->pLand->sSumLights[1]);
-
-			sSum=__min(SHADE_MIN, sSum);
-			sSum=__max(SHADE_MAX, sSum);
-
-			gpWorldLevelData[ ].ubRealShadeLevel = (UINT8) sSum;
-
-		}
-
-	}
-*/
 
 	const INT16 iX = l->iX;
 	const INT16 iY = l->iY;
