@@ -190,32 +190,28 @@ LEVELNODE* GetHorizontalWall( UINT32 iMapIndex )
 	return NULL;
 }
 
-UINT16 GetVerticalWallType( UINT32 iMapIndex )
+
+UINT16 GetVerticalWallType(UINT32 const iMapIndex)
 {
-	LEVELNODE *pWall;
-	pWall = GetVerticalWall( iMapIndex );
-	if( pWall )
-	{
-		UINT32 uiTileType = GetTileType(pWall->usIndex);
-		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
-			uiTileType = SearchForWallType( iMapIndex );
-		return (UINT16)uiTileType;
-	}
-	return 0;
+	LEVELNODE const* const pWall = GetVerticalWall(iMapIndex);
+	if (!pWall) return 0;
+
+	UINT32 const uiTileType = GetTileType(pWall->usIndex);
+	if (uiTileType < FIRSTDOOR || LASTDOOR < uiTileType) return uiTileType;
+
+	return SearchForWallType(iMapIndex);
 }
 
-UINT16 GetHorizontalWallType( UINT32 iMapIndex )
+
+UINT16 GetHorizontalWallType(UINT32 const iMapIndex)
 {
-	LEVELNODE *pWall;
-	pWall = GetHorizontalWall( iMapIndex );
-	if( pWall )
-	{
-		UINT32 uiTileType = GetTileType(pWall->usIndex);
-		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
-			uiTileType = SearchForWallType( iMapIndex );
-		return (UINT16)uiTileType;
-	}
-	return 0;
+	LEVELNODE const* const pWall = GetHorizontalWall(iMapIndex);
+	if (!pWall) return 0;
+
+	UINT32 const uiTileType = GetTileType(pWall->usIndex);
+	if (uiTileType < FIRSTDOOR || LASTDOOR < uiTileType) return uiTileType;
+
+	return SearchForWallType(iMapIndex);
 }
 
 
