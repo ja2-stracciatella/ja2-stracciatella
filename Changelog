@@ -1,3 +1,4 @@
+(r4832) Fix error in r1643, which lead to a null-pointer access in the personnel screen, when there are mercs with some stat values of 0.
 (r4831) Fix a vanilla bug in the editor: The Z coordinate of the map was not set for surface maps.
 (r4830) Fix a vanilla glitch: Some text in the editor taskbar sometimes got a shadow.
 (r4829) Fix a vanilla bug, which made it possible to hire a merc, if there is a hated merc on the team, though he should refuse for other reasons.

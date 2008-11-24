@@ -1505,7 +1505,7 @@ static void DisplayTeamStats(void)
 
 		const wchar_t* min_name = NULL;
 		const wchar_t* max_name = NULL;
-		INT32 min_val           = 100 + 1;
+		INT32 min_val           = 100;
 		INT32 max_val           = 0;
 		INT32 sum_val           = 0;
 		INT32 count             = 0;
@@ -1532,12 +1532,12 @@ static void DisplayTeamStats(void)
 
 					default: abort(); // HACK000E
 				}
-				if (min_val > val)
+				if (min_val >= val)
 				{
 					min_name = s->name;
 					min_val  = val;
 				}
-				if (max_val < val)
+				if (max_val <= val)
 				{
 					max_name = s->name;
 					max_val = val;
@@ -1583,12 +1583,12 @@ static void DisplayTeamStats(void)
 
 						default: abort(); // HACK000E
 					}
-					if (min_val > val)
+					if (min_val >= val)
 					{
 						min_name = p->zNickname;
 						min_val  = val;
 					}
-					if (max_val < val)
+					if (max_val <= val)
 					{
 						max_name = p->zNickname;
 						max_val = val;
