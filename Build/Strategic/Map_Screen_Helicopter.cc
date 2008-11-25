@@ -87,7 +87,7 @@ UINT8 ubRefuelList[ NUMBER_OF_REFUEL_SITES ][ 2 ] =
 
 INT16 sRefuelStartGridNo[ NUMBER_OF_REFUEL_SITES ] ={
 	 9001, // drassen
-	 13068, // estoni
+	13067, // estoni
 };
 
 // whether or not helicopter can refuel at this site
