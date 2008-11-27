@@ -267,7 +267,6 @@ struct MERCPROFILESTRUCT
 	UINT8	ubInvUndroppable;
 	UINT8	ubRoomRangeStart[2];
 	UINT16 inv[19];
-	INT8 bMercTownReputation[ 20 ];
 
 	UINT16 usStatChangeChances[ 12 ];		// used strictly for balancing, never shown!
 	UINT16 usStatChangeSuccesses[ 12 ];	// used strictly for balancing, never shown!

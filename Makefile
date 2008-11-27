@@ -264,7 +264,6 @@ SRCS += Build/Strategic/Strategic_Movement_Costs.cc
 SRCS += Build/Strategic/Strategic_Pathing.cc
 SRCS += Build/Strategic/Strategic_Status.cc
 SRCS += Build/Strategic/Strategic_Town_Loyalty.cc
-SRCS += Build/Strategic/Strategic_Town_Reputation.cc
 SRCS += Build/Strategic/Strategic_Turns.cc
 SRCS += Build/Strategic/Town_Militia.cc
 SRCS += Build/Sys_Globals.cc

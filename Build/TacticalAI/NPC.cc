@@ -478,7 +478,7 @@ UINT8 CalcDesireToTalk( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach )
 	pNPCProfile = &(gMercProfiles[ubNPC]);
 	pMercProfile = &(gMercProfiles[ubMerc]);
 
-	iPersonalVal = 50 + pNPCProfile->bMercOpinion[ubMerc]; /* + pNPCProfile->bMercTownReputation[ pNPCProfile->bTown ] */
+	iPersonalVal = 50 + pNPCProfile->bMercOpinion[ubMerc];
 
 	// ARM: NOTE - for towns which don't use loyalty (San Mona, Estoni, Tixa, Orta )
 	// loyalty will always remain 0 (this was OKed by Ian)

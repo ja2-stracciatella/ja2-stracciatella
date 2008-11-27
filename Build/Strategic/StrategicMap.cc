@@ -3024,8 +3024,6 @@ void SetupNewStrategicGame( )
 	AddEveryDayStrategicEvent( EVENT_MERC_DAILY_UPDATE, 0, 0 );
 	// Daily mine production processing events
 	AddEveryDayStrategicEvent( EVENT_SETUP_MINE_INCOME, 0, 0 );
-	// Daily merc reputation processing events
-	AddEveryDayStrategicEvent( EVENT_SETUP_TOWN_OPINION, 0, 0 );
 	// Daily checks for E-mail from Enrico
 	AddEveryDayStrategicEvent( EVENT_ENRICO_MAIL, ENRICO_MAIL_TIME , 0 );
 

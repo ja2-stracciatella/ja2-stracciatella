@@ -33,7 +33,6 @@
 #include "AIM.h"
 #include "Interface_Dialogue.h"
 #include "GameSettings.h"
-#include "Strategic_Town_Reputation.h"
 #include "Interface_Utils.h"
 #include "StrategicMap.h"
 #include "Game_Event_Hook.h"
@@ -281,9 +280,6 @@ BOOLEAN LoadMercProfiles(void)
 
 	// initialize mercs' status
 	StartSomeMercsOnAssignment();
-
-	// initial recruitable mercs' reputation in each town
-	InitializeProfilesForTownReputation();
 
 #ifdef JA2EDITOR
 	gfProfileDataLoaded = TRUE;
@@ -1211,10 +1207,9 @@ SOLDIERTYPE* SwapLarrysProfiles(SOLDIERTYPE* const s)
 	dst->bExplosivesDelta   = src->bExplosivesDelta;
 */
 
-	memcpy(dst->bInvStatus,          src->bInvStatus,          sizeof(dst->bInvStatus));
-	memcpy(dst->bInvNumber,          src->bInvStatus,          sizeof(dst->bInvNumber));
-	memcpy(dst->inv,                 src->inv,                 sizeof(dst->inv));
-	memcpy(dst->bMercTownReputation, src->bMercTownReputation, sizeof(dst->bMercTownReputation));
+	memcpy(dst->bInvStatus, src->bInvStatus, sizeof(dst->bInvStatus));
+	memcpy(dst->bInvNumber, src->bInvStatus, sizeof(dst->bInvNumber));
+	memcpy(dst->inv,        src->inv,        sizeof(dst->inv));
 
 	DeleteSoldierFace(s);
 	s->ubProfile = dst_id;

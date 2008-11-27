@@ -220,7 +220,6 @@ bArmourAttractiveness: overwritten after load from data file
 bMainGunAttractiveness: overwritten after load from data file
 fUseProfileInsertionInfo: overwritten after load from data file
 sGridNo: overwritten after load from data file
-bMercTownReputation: probably always INITIAL_TOWN_REPUTATION (0)
 bRace
 bNationality
 bAppearance

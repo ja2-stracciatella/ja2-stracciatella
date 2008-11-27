@@ -23,7 +23,6 @@
 #include "Scheduling.h"
 #include "BobbyRGuns.h"
 #include "Arms_Dealer_Init.h"
-#include "Strategic_Town_Reputation.h"
 #include "Air_Raid.h"
 #include "Meanwhile.h"
 #include "Overhead.h"
@@ -218,12 +217,6 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			break;
 		case EVENT_SETUP_MINE_INCOME:
 			PostEventsForMineProduction();
-			break;
-		case EVENT_SETUP_TOWN_OPINION:
-			PostEventsForSpreadOfTownOpinion( );
-			break;
-		case EVENT_HANDLE_TOWN_OPINION:
-			HandleSpreadOfAllTownsOpinion( );
 			break;
 		case EVENT_SET_BY_NPC_SYSTEM:
 			HandleNPCSystemEvent( pEvent->uiParam );
