@@ -96,18 +96,6 @@
 // THESE VALUES ARE ALL AFFECTED BY CHANGES to "GAIN_PTS_PER_LOYALTY_PT", SO BEWARE IF THAT SHOULD CHANGE
 
 
-/* Delayed loyalty effects elimininated.  Sep.12/98.  ARM
-
-// macros for delayed town loyalty events
-// get increment
-#define GET_TOWN_INCREMENT( iValue ) ( ( uiValue << 31 ) >> 31 )
-// town id
-#define GET_TOWN_ID_FOR_LOYALTY( iValue ) ( uiValue >> 24 )
-// the amount
-#define GET_TOWN_LOYALTY_CHANGE( iValue ) ( ( uiValue << 8 ) >> 9 )
-*/
-
-
 // town loyalty table
 TOWN_LOYALTY gTownLoyalty[ NUM_TOWNS ];
 
@@ -859,32 +847,6 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 	}
 
 
-/* Delayed loyalty effects elimininated.  Sep.12/98.  ARM
-	// figure out how long before the news of the murder spreads and lowers town loyalty
-	UINT32 uiLoyaltyEffectDelay;
-	if (bSeenState == 0)
-	{
-		// nobody saw nothing.  Will be some time before the grisly remains are discovered...
-		uiLoyaltyEffectDelay = 60 * (1 + Random(12));	// 1-12 hrs in minutes
-	}
-	else
-	{
-		// there are witnesses, news reported & spread very quickly
-		uiLoyaltyEffectDelay = 30;
-	}
-
-
-	// create the event value, with bTownId & for iLoyaltyChange as data
-	const UINT32 uiValue = BuildLoyaltyEventValue(bTownId, iLoyaltyChange, fIncrement);
-	// post the event
-	AddStrategicEvent( EVENT_TOWN_LOYALTY_UPDATE, GetWorldTotalMin() + uiLoyaltyEffectDelay, uiValue );
-
-	// ideally, we'd like to also call AffectAllTownsLoyaltyByDistanceFrom() here to spread the news to all other towns,
-	// but we don't have that available on a delay right now, and it would be a bit of a pain, since we only have 32 bits
-	// of event data to pass in, and that would have to store iLoyaltyChange, sSectorX, and sSectorY (64 bits)
-*/
-
-
 	// if it's a decrement, negate the value
 	if ( !fIncrement )
 	{
@@ -1123,58 +1085,6 @@ void BuildListOfTownSectors( void )
 		}
 	}
 }
-
-
-/* Delayed loyalty effects elimininated.  Sep.12/98.  ARM
-void HandleDelayedTownLoyaltyEvent( UINT32 uiValue )
-{
-	INT8 bTownId = 0;
-	UINT32 uiLoyaltyChange = 0;
-	BOOLEAN fIncrement = FALSE;
-
-	// first 8 bits are town id, 23 are amount and last is increment or decrement
-
-	// get increment
-	fIncrement = ( BOOLEAN )( GET_TOWN_INCREMENT( iValue ) ) ;
-
-	// town id
-	bTownId = ( INT8 )( GET_TOWN_ID_FOR_LOYALTY( iValue ) );
-
-	// the amount
-	uiLoyaltyChange = ( INT32 )( GET_TOWN_LOYALTY_CHANGE( iValue ) );
-
-	if (fIncrement)
-	{
-		IncrementTownLoyalty( bTownId, uiLoyaltyChange );
-	}
-	else
-	{
-		DecrementTownLoyalty( bTownId, uiLoyaltyChange );
-	}
-}
-
-
-UINT32 BuildLoyaltyEventValue( INT8 bTownValue, UINT32 uiValue, BOOLEAN fIncrement )
-{
-	UINT32 uiReturnValue  = 0;
-	UINT32 uiTempValue = 0;
-
-	// the town name in 8 most sig bits
-	uiTempValue = ( UINT32 )( bTownValue );
-
-	uiReturnValue += ( uiTempValue << 24 );
-
-	// the incrment decrement amount is
-	uiTempValue = ( UINT32 )( uiValue );
-
-	uiTempValue = ( ( uiTempValue << 8 ) >> 7 );
-	uiReturnValue += uiTempValue;
-
-	uiReturnValue += ( fIncrement != 0 ? 1: 0 );
-
-	return( uiReturnValue );
-}
-*/
 
 
 void SaveStrategicTownLoyaltyToSaveGameFile(HWFILE const hFile)

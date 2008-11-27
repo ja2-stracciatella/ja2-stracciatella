@@ -123,14 +123,6 @@ void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 void BuildListOfTownSectors( void );
 
 
-/* Delayed loyalty effects elimininated.  Sep.12/98.  ARM
-// delayed town loyalty event
-void HandleDelayedTownLoyaltyEvent( UINT32 uiValue );
-// build loyalty event value
-UINT32 BuildLoyaltyEventValue( INT8 bTownValue, UINT32 uiValue, BOOLEAN fIncrement );
-*/
-
-
 void LoadStrategicTownLoyaltyFromSavedGameFile(HWFILE);
 void SaveStrategicTownLoyaltyToSaveGameFile(HWFILE);
 

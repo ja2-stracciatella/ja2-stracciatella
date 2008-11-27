@@ -2622,13 +2622,6 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 
 			case ELDIN:
 				// the security guard...  Results in an extra loyalty penalty for Balime (in addition to civilian murder)
-
-/* Delayed loyalty effects elimininated.  Sep.12/98.  ARM
-				// create the event value, for town BALIME
-				uiLoyaltyValue = BuildLoyaltyEventValue( BALIME, LOYALTY_PENALTY_ELDIN_KILLED, FALSE );
-				// post the event, 30 minute delay
-				AddStrategicEvent( EVENT_TOWN_LOYALTY_UPDATE, GetWorldTotalMin() + 30, uiLoyaltyValue );
-*/
 				DecrementTownLoyalty(BALIME, LOYALTY_PENALTY_ELDIN_KILLED);
 				break;
 
@@ -2643,23 +2636,10 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 				{
 					// Martha has a heart attack and croaks
 					TriggerNPCRecord(MARTHA, 17);
-
-/* Delayed loyalty effects elimininated.  Sep.12/98.  ARM
-					// create the event value, for town CAMBRIA
-					uiLoyaltyValue = BuildLoyaltyEventValue( CAMBRIA, LOYALTY_PENALTY_MARTHA_HEART_ATTACK, FALSE );
-					// post the event, 30 minute delay
-					AddStrategicEvent( EVENT_TOWN_LOYALTY_UPDATE, GetWorldTotalMin() + 30, uiLoyaltyValue );
-*/
 					DecrementTownLoyalty(CAMBRIA, LOYALTY_PENALTY_MARTHA_HEART_ATTACK);
 				}
 				else // Martha doesn't see it.  She lives, but Joey is found a day or so later anyways
 				{
-/*
-					// create the event value, for town CAMBRIA
-					uiLoyaltyValue = BuildLoyaltyEventValue( CAMBRIA, LOYALTY_PENALTY_JOEY_KILLED, FALSE );
-					// post the event, 30 minute delay
-					AddStrategicEvent( EVENT_TOWN_LOYALTY_UPDATE, GetWorldTotalMin() + ( ( 12 + Random(13)) * 60 ), uiLoyaltyValue );
-*/
 					DecrementTownLoyalty(CAMBRIA, LOYALTY_PENALTY_JOEY_KILLED);
 				}
 				break;

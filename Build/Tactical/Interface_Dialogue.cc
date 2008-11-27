@@ -3408,9 +3408,6 @@ unlock:
 
 				break;
 			case NPC_ACTION_KROTT_ALIVE_LOYALTY_BOOST:
-/* Delayed loyalty effects elimininated.  Sep.12/98.  ARM
-				AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, 480 + Random( 60 ), NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_KROTT_ALIVE_LOYALTY_BOOST, 1 );
-*/
 				if ( gMercProfiles[ SERGEANT ].bMercStatus != MERC_IS_DEAD )
 				{
 					// give loyalty bonus to Alma
