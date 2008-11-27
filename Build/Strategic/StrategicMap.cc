@@ -546,18 +546,6 @@ void InitStrategicEngine()
 
 	// set up town stuff
 	BuildListOfTownSectors( );
-
-	// town distances are pre-calculated and read in from a data file
-	// since it takes quite a while to plot strategic paths between all pairs of town sectors...
-
-//#define RECALC_TOWN_DISTANCES
-#ifdef RECALC_TOWN_DISTANCES
-	CalcDistancesBetweenTowns ( );
-	WriteOutDistancesBetweenTowns( );
-	DumpDistancesBetweenTowns( );
-#endif
-
-	ReadInDistancesBetweenTowns( );
 }
 
 

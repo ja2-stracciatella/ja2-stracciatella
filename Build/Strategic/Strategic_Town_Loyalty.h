@@ -119,29 +119,8 @@ void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier );
 // remove random item from this sector
 void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubChance );
 
-// get the shortest distance between these two towns via roads
-INT32 GetTownDistances( UINT8 ubTown, UINT8 ubTownA );
-
 // build list of town sectors
 void BuildListOfTownSectors( void );
-
-
-#ifdef JA2TESTVERSION
-
-	// calculate shortest distances between towns
-	void CalcDistancesBetweenTowns( void );
-
-	// write out distances between towns to a data file
-	void WriteOutDistancesBetweenTowns( void );
-
-	// dumps the calc'ed distances into a text file table for easy verification
-	void DumpDistancesBetweenTowns(void);
-
-#endif // JA2TESTVERSION
-
-
-// read in distances between towns
-void ReadInDistancesBetweenTowns( void );
 
 
 /* Delayed loyalty effects elimininated.  Sep.12/98.  ARM
