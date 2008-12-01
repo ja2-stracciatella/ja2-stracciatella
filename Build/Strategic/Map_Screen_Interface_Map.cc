@@ -5373,51 +5373,35 @@ static BOOLEAN CanMilitiaAutoDistribute(void)
 
 static void ShowItemsOnMap(void)
 {
-	INT16 sMapX, sMapY;
-	INT16 sXCorner, sYCorner;
-	UINT32 uiItemCnt;
-	CHAR16 sString[ 10 ];
-
-
-	// clip blits to mapscreen region
-	ClipBlitsToMapViewRegion( );
-
+	ClipBlitsToMapViewRegion();
 	SetFontDestBuffer(guiSAVEBUFFER, MapScreenRect.iLeft + 2, MapScreenRect.iTop, MapScreenRect.iRight, MapScreenRect.iBottom);
-
 	SetFont(MAP_FONT);
   SetFontForeground(FONT_MCOLOR_LTGREEN);
   SetFontBackground(FONT_MCOLOR_BLACK);
 
 	// run through sectors
-	for( sMapX = 1; sMapX < ( MAP_WORLD_X - 1 ); sMapX++ )
+	for (INT16 x = 1; x < MAP_WORLD_X - 1; ++x)
 	{
-		for( sMapY = 1; sMapY < ( MAP_WORLD_Y - 1 ); sMapY++ )
+		for (INT16 y = 1; y < MAP_WORLD_Y - 1; ++y)
 		{
 			// to speed this up, only look at sector that player has visited
-			if( GetSectorFlagStatus( sMapX, sMapY, ( UINT8 ) iCurrentMapSectorZ, SF_ALREADY_VISITED ) )
-			{
-				uiItemCnt = GetNumberOfVisibleWorldItemsFromSectorStructureForSector( sMapX, sMapY, ( UINT8 ) iCurrentMapSectorZ );
+			if (!GetSectorFlagStatus(x, y, iCurrentMapSectorZ, SF_ALREADY_VISITED)) continue;
 
-				if ( uiItemCnt > 0 )
-				{
-					sXCorner = ( INT16 )( MAP_VIEW_START_X + ( sMapX * MAP_GRID_X ) );
-					sYCorner = ( INT16 )( MAP_VIEW_START_Y + ( sMapY * MAP_GRID_Y ) );
+			UINT32 const n_items = GetNumberOfVisibleWorldItemsFromSectorStructureForSector(x, y, iCurrentMapSectorZ);
+			if (n_items == 0) continue;
 
-					swprintf( sString, lengthof(sString), L"%d", uiItemCnt );
-
-					INT16 usXPos;
-					INT16 usYPos;
-					FindFontCenterCoordinates( sXCorner, sYCorner, MAP_GRID_X, MAP_GRID_Y, sString, MAP_FONT, &usXPos, &usYPos );
-	//				sXPos -= StringPixLength( sString, MAP_FONT ) / 2;
-					GDirtyPrint(usXPos, usYPos, sString);
-				}
-			}
+			INT16       usXPos;
+			INT16       usYPos;
+			INT16 const sXCorner = MAP_VIEW_START_X + x * MAP_GRID_X;
+			INT16 const sYCorner = MAP_VIEW_START_Y + y * MAP_GRID_Y;
+			wchar_t     sString[10];
+			swprintf(sString, lengthof(sString), L"%d", n_items);
+			FindFontCenterCoordinates(sXCorner, sYCorner, MAP_GRID_X, MAP_GRID_Y, sString, MAP_FONT, &usXPos, &usYPos);
+			GDirtyPrint(usXPos, usYPos, sString);
 		}
 	}
 
-
-	// restore clip blits
-	RestoreClipRegionToFullScreen( );
+	RestoreClipRegionToFullScreen();
 }
 
 
