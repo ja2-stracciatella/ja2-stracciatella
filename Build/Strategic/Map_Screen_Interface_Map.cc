@@ -481,47 +481,42 @@ INT32 giAnimateRouteBaseTime = 0;
 INT32 giPotHeliPathBaseTime = 0;
 
 
-void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow )
+void DrawMapIndexBigMap(BOOLEAN fSelectedCursorIsYellow)
 {
 	// this procedure will draw the coord indexes on the zoomed out map
-	INT16 usX, usY;
-	INT32 iCount=0;
-	BOOLEAN fDrawCursors;
-
 	SetFontDestBuffer(FRAME_BUFFER);
-  //SetFontColors(FONT_FCOLOR_GREEN)
-  SetFont(MAP_FONT);
-  SetFontForeground(MAP_INDEX_COLOR);
-	// Dk Red is 163
-  SetFontBackground(FONT_MCOLOR_BLACK);
+	SetFont(MAP_FONT);
+	SetFontBackground(FONT_MCOLOR_BLACK);
 
-	fDrawCursors = CanDrawSectorCursor( );
-
-	for(iCount=1; iCount <= MAX_VIEW_SECTORS; iCount++)
+	bool  const draw_cursors  = CanDrawSectorCursor();
+	bool  const sel_candidate = bSelectedDestChar == -1 && !fPlotForHelicopter;
+	UINT8 const sel_colour    = fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE;
+	for (INT32 i = 1; i <= MAX_VIEW_SECTORS; ++i)
 	{
-		if (fDrawCursors && iCount == sSelMapX && bSelectedDestChar == -1 && !fPlotForHelicopter)
-		SetFontForeground(fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE);
-   else if( fDrawCursors && ( iCount == gsHighlightSectorX ) )
-    SetFontForeground(FONT_WHITE);
-   else
-    SetFontForeground(MAP_INDEX_COLOR);
+		INT16 usX;
+		INT16 usY;
 
-	 FindFontCenterCoordinates(MAP_HORT_INDEX_X + (iCount - 1) * MAP_GRID_X, MAP_HORT_INDEX_Y, MAP_GRID_X, MAP_HORT_HEIGHT, pMapHortIndex[iCount], MAP_FONT, &usX, &usY);
-		MPrint(usX, usY, pMapHortIndex[iCount]);
+		UINT8 const colour_x =
+			!draw_cursors                  ? MAP_INDEX_COLOR :
+			i == sSelMapX && sel_candidate ? sel_colour      :
+			i == gsHighlightSectorX        ? FONT_WHITE      :
+			MAP_INDEX_COLOR;
+		SetFontForeground(colour_x);
+		FindFontCenterCoordinates(MAP_HORT_INDEX_X + (i - 1) * MAP_GRID_X, MAP_HORT_INDEX_Y, MAP_GRID_X, MAP_HORT_HEIGHT, pMapHortIndex[i], MAP_FONT, &usX, &usY);
+		MPrint(usX, usY, pMapHortIndex[i]);
 
-		if (fDrawCursors && iCount == sSelMapY && bSelectedDestChar == -1 && !fPlotForHelicopter)
-		SetFontForeground(fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE);
-   else if( fDrawCursors && ( iCount == gsHighlightSectorY ) )
-    SetFontForeground(FONT_WHITE);
-   else
-    SetFontForeground(MAP_INDEX_COLOR);
-
-	 FindFontCenterCoordinates(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y + (iCount - 1) * MAP_GRID_Y, MAP_HORT_HEIGHT, MAP_GRID_Y, pMapVertIndex[iCount], MAP_FONT, &usX, &usY);
-		MPrint(usX, usY, pMapVertIndex[iCount]);
+		UINT8 const colour_y =
+			!draw_cursors                  ? MAP_INDEX_COLOR :
+			i == sSelMapY && sel_candidate ? sel_colour      :
+			i == gsHighlightSectorY        ? FONT_WHITE      :
+			MAP_INDEX_COLOR;
+		SetFontForeground(colour_y);
+		FindFontCenterCoordinates(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y + (i - 1) * MAP_GRID_Y, MAP_HORT_HEIGHT, MAP_GRID_Y, pMapVertIndex[i], MAP_FONT, &usX, &usY);
+		MPrint(usX, usY, pMapVertIndex[i]);
 	}
 
-  InvalidateRegion(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y,MAP_VERT_INDEX_X+MAP_HORT_HEIGHT,  MAP_VERT_INDEX_Y+( iCount - 1 ) * MAP_GRID_Y );
-  InvalidateRegion(MAP_HORT_INDEX_X, MAP_HORT_INDEX_Y,MAP_HORT_INDEX_X + ( iCount - 1) * MAP_GRID_X,  MAP_HORT_INDEX_Y+ MAP_HORT_HEIGHT);
+	InvalidateRegion(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y, MAP_VERT_INDEX_X + MAP_HORT_HEIGHT,               MAP_VERT_INDEX_Y + MAX_VIEW_SECTORS * MAP_GRID_Y);
+	InvalidateRegion(MAP_HORT_INDEX_X, MAP_HORT_INDEX_Y, MAP_HORT_INDEX_X + MAX_VIEW_SECTORS * MAP_GRID_X, MAP_HORT_INDEX_Y + MAP_HORT_HEIGHT);
 }
 
 
