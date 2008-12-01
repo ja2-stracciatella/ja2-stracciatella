@@ -4852,27 +4852,21 @@ static void MilitiaDoneButtonCallback(GUI_BUTTON *btn, INT32 reason)
 static void RenderShadingForUnControlledSectors(void)
 {
 	// now render shading over any uncontrolled sectors
-	// get the sector value for the upper left corner
-	INT16 sBaseSectorValue = 0, sCurrentSectorValue = 0, sX = 0, sY = 0;
-	INT32 iCounter = 0;
-
-	// get the base sector value
-	sBaseSectorValue = GetBaseSectorForCurrentTown( );
-
-	// render icons for map
-	for( iCounter = 0; iCounter < 9; iCounter++ )
+	INT16 const sBaseSectorValue = GetBaseSectorForCurrentTown();
+	for (INT32 dy = 0; dy != 3; ++dy)
 	{
-		// grab current sector value
-		sCurrentSectorValue = sBaseSectorValue + ( ( iCounter % MILITIA_BOX_ROWS ) + ( iCounter / MILITIA_BOX_ROWS ) * ( 16 ) );
-
-		if( ( StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( sCurrentSectorValue ) ].bNameId != BLANK_SECTOR ) &&
-			( ( StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( sCurrentSectorValue ) ].fEnemyControlled ) ||
-				( NumHostilesInSector( ( INT16 ) SECTORX( sCurrentSectorValue ), ( INT16 ) SECTORY( sCurrentSectorValue ), 0 ) ) ) )
+		for (INT32 dx = 0; dx != 3; ++dx)
 		{
-			// shade this sector, not under our control
-			sX = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + ( ( iCounter % MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_WIDTH );
-			sY = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + ( ( iCounter / MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_HEIGHT );
+			INT32 const x = SECTORX(sBaseSectorValue) + dx;
+			INT32 const y = SECTORY(sBaseSectorValue) + dy;
 
+			StrategicMapElement const& e = StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)];
+			if (e.bNameId == BLANK_SECTOR) continue;
+			if (!e.fEnemyControlled && NumHostilesInSector(x, y, 0) == 0) continue;
+
+			// shade this sector, not under our control
+			INT16 const sX = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + dx * MILITIA_BOX_BOX_WIDTH;
+			INT16 const sY = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + dy * MILITIA_BOX_BOX_HEIGHT;
 			FRAME_BUFFER->ShadowRect(sX, sY, sX + MILITIA_BOX_BOX_WIDTH - 1, sY + MILITIA_BOX_BOX_HEIGHT - 1);
 		}
 	}
