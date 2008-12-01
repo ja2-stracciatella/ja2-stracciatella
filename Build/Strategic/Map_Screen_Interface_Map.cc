@@ -4158,102 +4158,66 @@ static INT16 GetBaseSectorForCurrentTown(void);
 
 static void RenderIconsPerSectorForSelectedTown(void)
 {
-	INT16 sBaseSectorValue = 0;
-	INT16 sCurrentSectorValue = 0;
-	INT32 iCounter = 0;
-	INT32 iNumberOfGreens = 0;
-	INT32 iNumberOfRegulars = 0;
-	INT32 iNumberOfElites = 0;
-	INT32 iTotalNumberOfTroops = 0;
-	INT32 iCurrentTroopIcon = 0;
-	INT32 iCurrentIcon = 0;
-	INT16 sX, sY;
-	CHAR16 sString[ 32 ];
-	INT16 sSectorX = 0, sSectorY = 0;
-
-
-	// get the sector value for the upper left corner
-	sBaseSectorValue = GetBaseSectorForCurrentTown( );
-
 	// render icons for map
-	for( iCounter = 0; iCounter < 9; iCounter++ )
+	INT16 const sBaseSectorValue = GetBaseSectorForCurrentTown();
+	for (INT32 iCounter = 0; iCounter != 9; ++iCounter)
 	{
-		// grab current sector value
-		sCurrentSectorValue = sBaseSectorValue + ( ( iCounter % MILITIA_BOX_ROWS ) + ( iCounter / MILITIA_BOX_ROWS ) * ( 16 ) );
-
-		sSectorX = SECTORX( sCurrentSectorValue );
-		sSectorY = SECTORY( sCurrentSectorValue );
+		INT32 const dx    = iCounter % MILITIA_BOX_ROWS;
+		INT32 const dy    = iCounter / MILITIA_BOX_ROWS;
+		INT16 const sec_x = SECTORX(sBaseSectorValue) + dx;
+		INT16 const sec_y = SECTORY(sBaseSectorValue) + dy;
 
 		// skip sectors not in the selected town (nearby other towns or wilderness SAM Sites)
-		if( GetTownIdForSector( sSectorX, sSectorY ) != sSelectedMilitiaTown )
-		{
-			continue;
-		}
+		if (GetTownIdForSector(sec_x, sec_y) != sSelectedMilitiaTown) continue;
 
 		// get number of each
-		iNumberOfGreens = SectorInfo[ sCurrentSectorValue ].ubNumberOfCivsAtLevel[ GREEN_MILITIA ];
-		iNumberOfRegulars = SectorInfo[ sCurrentSectorValue ].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ];
-		iNumberOfElites = SectorInfo[ sCurrentSectorValue ].ubNumberOfCivsAtLevel[ ELITE_MILITIA ];
+		SECTORINFO const& si         = SectorInfo[SECTOR(sec_x, sec_y)];
+		INT32      const  n_greens   = si.ubNumberOfCivsAtLevel[GREEN_MILITIA];
+		INT32      const  n_regulars = si.ubNumberOfCivsAtLevel[REGULAR_MILITIA];
+		INT32      const  n_elites   = si.ubNumberOfCivsAtLevel[ELITE_MILITIA];
+		INT32      const  n_total    = n_greens + n_regulars + n_elites;
 
-		// get total
-		iTotalNumberOfTroops = iNumberOfGreens + iNumberOfRegulars + iNumberOfElites;
-
-		// printf number of troops
-		SetFont( FONT10ARIAL );
-		swprintf( sString, lengthof(sString), L"%d", iTotalNumberOfTroops );
-		FindFontRightCoordinates(MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + iCounter % MILITIA_BOX_ROWS * MILITIA_BOX_BOX_WIDTH, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + iCounter / MILITIA_BOX_ROWS * MILITIA_BOX_BOX_HEIGHT, MILITIA_BOX_BOX_WIDTH, 0, sString, FONT10ARIAL, &sX, &sY);
-
-		if( StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( sCurrentSectorValue ) ].bNameId != BLANK_SECTOR &&
-				!StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( sCurrentSectorValue ) ].fEnemyControlled )
+		StrategicMapElement const& e = StrategicMap[CALCULATE_STRATEGIC_INDEX(sec_x, sec_y)];
+		if (e.bNameId != BLANK_SECTOR && !e.fEnemyControlled)
 		{
-			INT32 const x = (sSectorMilitiaMapSector != iCounter ? sX : sX - 15);
-			MPrint(x, sY + MILITIA_BOX_BOX_HEIGHT - 5, sString);
+			// print number of troops
+			SetFont(FONT10ARIAL);
+			wchar_t sString[32];
+			swprintf(sString, lengthof(sString), L"%d", n_total);
+			INT16       sX;
+			INT16       sY;
+			INT16 const x  = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + dx * MILITIA_BOX_BOX_WIDTH;
+			INT16 const y  = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + dy * MILITIA_BOX_BOX_HEIGHT;
+			FindFontRightCoordinates(x, y, MILITIA_BOX_BOX_WIDTH, 0, sString, FONT10ARIAL, &sX, &sY);
+			MPrint(sSectorMilitiaMapSector != iCounter ? sX : sX - 15, sY + MILITIA_BOX_BOX_HEIGHT - 5, sString);
 		}
 
 		// now display
-		for( iCurrentTroopIcon = 0; iCurrentTroopIcon < iTotalNumberOfTroops; iCurrentTroopIcon++ )
+		for (INT32 i = 0; i < n_total; ++i)
 		{
 			// get screen x and y coords
-			if( sSectorMilitiaMapSector == iCounter )
+			INT16  x = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + dx * MILITIA_BOX_BOX_WIDTH;
+			INT16  y = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + dy * MILITIA_BOX_BOX_HEIGHT;
+			UINT16 icon_base;
+			if (sSectorMilitiaMapSector == iCounter)
 			{
-				sX =  ( iCurrentTroopIcon % POPUP_MILITIA_ICONS_PER_ROW ) * MEDIUM_MILITIA_ICON_SPACING + MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + ( ( iCounter % MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_WIDTH ) + 2;
-				sY =  ( iCurrentTroopIcon / POPUP_MILITIA_ICONS_PER_ROW ) * ( MEDIUM_MILITIA_ICON_SPACING - 1 ) + MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + ( ( iCounter / MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_HEIGHT ) + 3;
-
-				if( iCurrentTroopIcon < iNumberOfGreens )
-				{
-					iCurrentIcon = 5;
-				}
-				else if( iCurrentTroopIcon < iNumberOfGreens + iNumberOfRegulars )
-				{
-					iCurrentIcon = 6;
-				}
-				else
-				{
-					iCurrentIcon = 7;
-				}
+				x         += i % POPUP_MILITIA_ICONS_PER_ROW * MEDIUM_MILITIA_ICON_SPACING       + 2;
+				y         += i / POPUP_MILITIA_ICONS_PER_ROW * (MEDIUM_MILITIA_ICON_SPACING - 1) + 3;
+				icon_base  = 5;
 			}
 			else
 			{
-				sX =  ( iCurrentTroopIcon % POPUP_MILITIA_ICONS_PER_ROW ) * MEDIUM_MILITIA_ICON_SPACING + MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + ( ( iCounter % MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_WIDTH ) + 3;
-				sY =  ( iCurrentTroopIcon / POPUP_MILITIA_ICONS_PER_ROW ) * ( MEDIUM_MILITIA_ICON_SPACING ) + MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + ( ( iCounter / MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_HEIGHT ) + 3;
-
-				if( iCurrentTroopIcon < iNumberOfGreens )
-				{
-					iCurrentIcon = 8;
-				}
-				else if( iCurrentTroopIcon < iNumberOfGreens + iNumberOfRegulars )
-				{
-					iCurrentIcon = 9;
-				}
-				else
-				{
-					iCurrentIcon = 10;
-				}
+				x         += i % POPUP_MILITIA_ICONS_PER_ROW * MEDIUM_MILITIA_ICON_SPACING + 3;
+				y         += i / POPUP_MILITIA_ICONS_PER_ROW * MEDIUM_MILITIA_ICON_SPACING + 3;
+				icon_base  = 8;
 			}
 
-			BltVideoObject(FRAME_BUFFER, guiMilitia, iCurrentIcon, sX, sY);
+			UINT16 const icon =
+				i < n_greens              ? icon_base     :
+				i < n_greens + n_regulars ? icon_base + 1 :
+				icon_base + 2;
+			BltVideoObject(FRAME_BUFFER, guiMilitia, icon, x, y);
 		}
-
 	}
 }
 
