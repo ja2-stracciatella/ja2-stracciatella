@@ -4105,49 +4105,41 @@ static void MilitiaRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void MilitiaRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-void CreateDestroyMilitiaPopUPRegions( void )
+void CreateDestroyMilitiaPopUPRegions(void)
 {
 	static INT16 sOldTown = 0;
-	INT32 iCounter = 0;
 
 	// create destroy militia pop up regions for mapscreen militia pop up box
-	if( sSelectedMilitiaTown != 0 )
+	if (sSelectedMilitiaTown != 0)
 	{
 		sOldTown = sSelectedMilitiaTown;
 	}
 
-	if( fShowMilitia && sSelectedMilitiaTown && !gfMilitiaPopupCreated )
+	if (fShowMilitia && sSelectedMilitiaTown && !gfMilitiaPopupCreated)
 	{
-
-		for( iCounter = 0; iCounter < 9; iCounter++ )
+		for (INT32 i = 0; i < 9; ++i)
 		{
-			MSYS_DefineRegion( &gMapScreenMilitiaBoxRegions[ iCounter ], ( INT16 ) ( MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + ( iCounter % MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_WIDTH ), ( INT16 )( MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + ( iCounter / MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_HEIGHT ), ( INT16 )( MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + ( ( ( iCounter  ) % MILITIA_BOX_ROWS ) + 1 ) * MILITIA_BOX_BOX_WIDTH ), ( INT16 )( MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + ( ( ( iCounter ) / MILITIA_BOX_ROWS ) + 1 ) * MILITIA_BOX_BOX_HEIGHT ), MSYS_PRIORITY_HIGHEST - 3,
-							 MSYS_NO_CURSOR, MilitiaRegionMoveCallback, MilitiaRegionClickCallback );
-
-			MSYS_SetRegionUserData( &gMapScreenMilitiaBoxRegions[ iCounter ], 0, iCounter );
-
+			MOUSE_REGION* const r = gMapScreenMilitiaBoxRegions[i];
+			UINT16        const x = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + i % MILITIA_BOX_ROWS * MILITIA_BOX_BOX_WIDTH;
+			UINT16        const y = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + i / MILITIA_BOX_ROWS * MILITIA_BOX_BOX_HEIGHT;
+			MSYS_DefineRegion(r, x, y, x + MILITIA_BOX_BOX_WIDTH, y + MILITIA_BOX_BOX_HEIGHT, MSYS_PRIORITY_HIGHEST - 3, MSYS_NO_CURSOR, MilitiaRegionMoveCallback, MilitiaRegionClickCallback);
+			MSYS_SetRegionUserData(r, 0, i);
 		}
 
-		// create militia panel buttons
-		CreateMilitiaPanelBottomButton( );
-
-
+		CreateMilitiaPanelBottomButton();
 		gfMilitiaPopupCreated = TRUE;
 	}
-	else if( gfMilitiaPopupCreated  && ( !fShowMilitia || !sSelectedMilitiaTown ) )
+	else if (gfMilitiaPopupCreated  && (!fShowMilitia || !sSelectedMilitiaTown))
 	{
-
-		for( iCounter = 0; iCounter < 9; iCounter++ )
+		for (INT32 i = 0; i < 9; ++i)
 		{
-			// remove region
-			MSYS_RemoveRegion( &gMapScreenMilitiaBoxRegions[ iCounter ] );
+			MSYS_RemoveRegion(&gMapScreenMilitiaBoxRegions[i]);
 		}
 
 		// handle the shutdown of the panel...there maybe people on the cursor, distribute them evenly over all the sectors
-		HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor( sOldTown );
+		HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(sOldTown);
 
-		DeleteMilitiaPanelBottomButton( );
-
+		DeleteMilitiaPanelBottomButton();
 		gfMilitiaPopupCreated = FALSE;
 	}
 }
