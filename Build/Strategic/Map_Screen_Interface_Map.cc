@@ -3840,45 +3840,6 @@ static void BlitMineGridMarkers(void)
 }
 
 
-/*
-void CheckIfAnyoneLeftInSector( INT16 sX, INT16 sY, INT16 sNewX, INT16 sNewY, INT8 bZ )
-{
-	// if this map sector is currently selected
-	if( ( sX == sSelMapX ) && ( sY == sSelMapY ) && ( bZ == iCurrentMapSectorZ ) )
-	{
-		// check if anyone left in the old sector
-		if( NumFriendlyInSector( (INT8)sX, (INT8)sY, bZ ) == 0)
-		{
-			ChangeSelectedMapSector( sNewX, sNewY, bZ );
-			fMapScreenBottomDirty = TRUE;
-		}
-	}
-}
-
-
-UINT8 NumFriendlyInSector( INT16 sX, INT16 sY, INT8 bZ )
-{
-	UINT8				ubNumFriendlies = 0;
-
-	// Check if the battle is won!
-	// Loop through all mercs and make go
-	CFOR_ALL_SOLDIERS(pTeamSoldier)
-	{
-		if (pTeamSoldier->bLife > 0)
-		{
-			if ( (pTeamSoldier->bSide == gbPlayerNum ) && ( pTeamSoldier->sSectorX == sX ) && ( pTeamSoldier->sSectorY == sY ) && ( pTeamSoldier->bSectorZ == bZ ) )
-			{
-				ubNumFriendlies++;
-			}
-		}
-	}
-
-	return( ubNumFriendlies );
-
-}
-*/
-
-
 static void DisplayLevelString(void)
 {
 	// given the current level being displayed on the map, show a sub level message
@@ -4119,7 +4080,7 @@ void CreateDestroyMilitiaPopUPRegions(void)
 	{
 		for (INT32 i = 0; i < 9; ++i)
 		{
-			MOUSE_REGION* const r = gMapScreenMilitiaBoxRegions[i];
+			MOUSE_REGION* const r = &gMapScreenMilitiaBoxRegions[i];
 			UINT16        const x = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + i % MILITIA_BOX_ROWS * MILITIA_BOX_BOX_WIDTH;
 			UINT16        const y = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + i / MILITIA_BOX_ROWS * MILITIA_BOX_BOX_HEIGHT;
 			MSYS_DefineRegion(r, x, y, x + MILITIA_BOX_BOX_WIDTH, y + MILITIA_BOX_BOX_HEIGHT, MSYS_PRIORITY_HIGHEST - 3, MSYS_NO_CURSOR, MilitiaRegionMoveCallback, MilitiaRegionClickCallback);
