@@ -4790,114 +4790,49 @@ static void RenderShadingForUnControlledSectors(void)
 }
 
 
+static void DrawMilitiaForcesForSector(INT32 const sector)
+{
+	INT16 const x = SECTORX(sector);
+	INT16 const y = SECTORY(sector);
+
+	if (StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].fEnemyControlled) return;
+
+	/* Large/small icon offset in the .sti */
+	INT32      const  icon = fZoomFlag ? 11 : 5;
+	INT32             pos  = 0;
+	SECTORINFO const& si   = SectorInfo[sector];
+	for (INT32 i = si.ubNumberOfCivsAtLevel[GREEN_MILITIA]; i != 0; --i)
+	{
+		DrawMapBoxIcon(guiMilitia, icon, x, y, pos++);
+	}
+	for (INT32 i = si.ubNumberOfCivsAtLevel[REGULAR_MILITIA]; i != 0; --i)
+	{
+		DrawMapBoxIcon(guiMilitia, icon + 1, x, y, pos++);
+	}
+	for (INT32 i = si.ubNumberOfCivsAtLevel[ELITE_MILITIA]; i != 0; --i)
+	{
+		DrawMapBoxIcon(guiMilitia, icon + 2, x, y, pos++);
+	}
+}
+
+
 static void DrawTownMilitiaForcesOnMap(void)
 {
-	INT32 iCounter = 0, iCounterB = 0, iTotalNumberOfTroops = 0, iIconValue = 0;
-	INT32 iNumberOfGreens = 0, iNumberOfRegulars = 0,  iNumberOfElites = 0;
-	INT16 sSectorX = 0, sSectorY = 0;
+	ClipBlitsToMapViewRegion();
 
-	// clip blits to mapscreen region
-	ClipBlitsToMapViewRegion( );
-
-	while( pTownNamesList[ iCounter ] != 0 )
+	for (INT32 i = 0; pTownNamesList[i] != 0; ++i)
 	{
-		// run through each town sector and plot the icons for the militia forces in the town
-		if( !StrategicMap[ pTownLocationsList[ iCounter ] ].fEnemyControlled )
-		{
-			sSectorX = GET_X_FROM_STRATEGIC_INDEX( pTownLocationsList[ iCounter ] );
-			sSectorY = GET_Y_FROM_STRATEGIC_INDEX( pTownLocationsList[ iCounter ] );
-
-			// get number of each
-			iNumberOfGreens =  SectorInfo[ STRATEGIC_INDEX_TO_SECTOR_INFO( pTownLocationsList[ iCounter ] ) ].ubNumberOfCivsAtLevel[ GREEN_MILITIA ];
-			iNumberOfRegulars = SectorInfo[ STRATEGIC_INDEX_TO_SECTOR_INFO( pTownLocationsList[ iCounter ] ) ].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ];
-			iNumberOfElites = SectorInfo[ STRATEGIC_INDEX_TO_SECTOR_INFO( pTownLocationsList[ iCounter ] ) ].ubNumberOfCivsAtLevel[ ELITE_MILITIA ];
-
-			// set the total for loop upper bound
-			iTotalNumberOfTroops = iNumberOfGreens + iNumberOfRegulars + iNumberOfElites;
-
-			for( iCounterB = 0; iCounterB < iTotalNumberOfTroops; iCounterB++ )
-			{
-				if( fZoomFlag )
-				{
-					// LARGE icon offset in the .sti
-					iIconValue = 11;
-				}
-				else
-				{
-					// SMALL icon offset in the .sti
-					iIconValue = 5;
-				}
-
-				// get the offset further into the .sti
-				if( iCounterB < iNumberOfGreens )
-				{
-					iIconValue += 0;
-				}
-				else if( iCounterB < iNumberOfGreens + iNumberOfRegulars )
-				{
-					iIconValue += 1;
-				}
-				else
-				{
-					iIconValue += 2;
-				}
-
-				DrawMapBoxIcon(guiMilitia, iIconValue, sSectorX, sSectorY, iCounterB);
-			}
-		}
-
-		iCounter++;
+		INT32 const sector = STRATEGIC_INDEX_TO_SECTOR_INFO(pTownLocationsList[i]);
+		DrawMilitiaForcesForSector(sector);
 	}
 
 	// now handle militia for sam sectors
-	for( iCounter = 0; iCounter < NUMBER_OF_SAMS; iCounter++ )
+	for (INT32 i = 0; i != NUMBER_OF_SAMS; ++i)
 	{
-		sSectorX = SECTORX( pSamList[ iCounter ] );
-		sSectorY = SECTORY( pSamList[ iCounter ] );
-
-		if( !StrategicMap[ CALCULATE_STRATEGIC_INDEX( sSectorX, sSectorY ) ].fEnemyControlled )
-		{
-			// get number of each
-			iNumberOfGreens =  SectorInfo[ pSamList[ iCounter ] ].ubNumberOfCivsAtLevel[ GREEN_MILITIA ];
-			iNumberOfRegulars = SectorInfo[ pSamList[ iCounter ] ].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ];
-			iNumberOfElites = SectorInfo[pSamList[ iCounter ] ].ubNumberOfCivsAtLevel[ ELITE_MILITIA ];
-
-			// ste the total for loop upper bound
-			iTotalNumberOfTroops = iNumberOfGreens + iNumberOfRegulars + iNumberOfElites;
-
-			for( iCounterB = 0; iCounterB < iTotalNumberOfTroops; iCounterB++ )
-			{
-				if( fZoomFlag )
-				{
-					// LARGE icon offset in the .sti
-					iIconValue = 11;
-				}
-				else
-				{
-					// SMALL icon offset in the .sti
-					iIconValue = 5;
-				}
-
-				// get the offset further into the .sti
-				if( iCounterB < iNumberOfGreens )
-				{
-					iIconValue += 0;
-				}
-				else if( iCounterB < iNumberOfGreens + iNumberOfRegulars )
-				{
-					iIconValue += 1;
-				}
-				else
-				{
-					iIconValue += 2;
-				}
-
-				DrawMapBoxIcon(guiMilitia, iIconValue, sSectorX, sSectorY, iCounterB);
-			}
-		}
+		DrawMilitiaForcesForSector(pSamList[i]);
 	}
-	// restore clip blits
-	RestoreClipRegionToFullScreen( );
+
+	RestoreClipRegionToFullScreen();
 }
 
 
