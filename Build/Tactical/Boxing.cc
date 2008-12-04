@@ -36,74 +36,65 @@ UINT8	gubBoxersRests = 0;
 BOOLEAN gfBoxersResting = FALSE;
 
 
-void ExitBoxing( void )
+void ExitBoxing(void)
 {
-	UINT8						ubRoom;
-	UINT8						ubPass;
-
 	// find boxers and turn them neutral again
 
 	// first time through loop, look for AI guy, then for PC guy.... for stupid
 	// oppcnt/alert status reasons
-	for( ubPass = 0; ubPass < 2; ubPass++ )
+	for (UINT8 ubPass = 0; ubPass < 2; ++ubPass)
 	{
 		// because boxer could die, loop through all soldier ptrs
-		FOR_ALL_NON_PLANNING_SOLDIERS(pSoldier)
+		FOR_ALL_NON_PLANNING_SOLDIERS(s)
 		{
-			if ( ( pSoldier->uiStatusFlags & SOLDIER_BOXER ) && InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom == BOXING_RING )
-			{
-				if ( pSoldier->uiStatusFlags & SOLDIER_PC )
-				{
-					if ( ubPass == 0 ) // pass 0, only handle AI
-					{
-						continue;
-					}
-					// put guy under AI control temporarily
-					pSoldier->uiStatusFlags |= SOLDIER_PCUNDERAICONTROL;
-				}
-				else
-				{
-					if ( ubPass == 1 ) // pass 1, only handle PCs
-					{
-						continue;
-					}
-					// reset AI boxer to neutral
-					SetSoldierNeutral( pSoldier );
-					RecalculateOppCntsDueToBecomingNeutral( pSoldier );
-				}
-				CancelAIAction(pSoldier);
-				pSoldier->bAlertStatus = STATUS_GREEN;
-				pSoldier->bUnderFire = 0;
+			if (!(s->uiStatusFlags & SOLDIER_BOXER)) continue;
+			UINT8 ubRoom;
+			if (!InARoom(s->sGridNo, &ubRoom))       continue;
+			if (ubRoom != BOXING_RING)               continue;
 
-				// if necessary, revive boxer so he can leave ring
-				if (pSoldier->bLife > 0 && (pSoldier->bLife < OKLIFE || pSoldier->bBreath < OKBREATH ) )
+			if (s->uiStatusFlags & SOLDIER_PC)
+			{
+				if (ubPass == 0) continue; // pass 0, only handle AI
+				// put guy under AI control temporarily
+				s->uiStatusFlags |= SOLDIER_PCUNDERAICONTROL;
+			}
+			else
+			{
+				if (ubPass == 1) continue; // pass 1, only handle PCs
+				// reset AI boxer to neutral
+				SetSoldierNeutral(s);
+				RecalculateOppCntsDueToBecomingNeutral(s);
+			}
+			CancelAIAction(s);
+			s->bAlertStatus = STATUS_GREEN;
+			s->bUnderFire   = 0;
+
+			// if necessary, revive boxer so he can leave ring
+			if (s->bLife > 0 && (s->bLife < OKLIFE || s->bBreath < OKBREATH))
+			{
+				s->bLife = __max(OKLIFE * 2, s->bLife);
+				if (s->bBreath < 100)
 				{
-					pSoldier->bLife = __max( OKLIFE * 2, pSoldier->bLife );
-					if (pSoldier->bBreath < 100)
-					{
-						// deduct -ve BPs to grant some BPs back (properly)
-						DeductPoints( pSoldier, 0, (INT16) - ( (100 - pSoldier->bBreath) * 100 ) );
-					}
-					BeginSoldierGetup( pSoldier );
+					// deduct -ve BPs to grant some BPs back (properly)
+					DeductPoints(s, 0, -100 * (100 - s->bBreath));
 				}
+				BeginSoldierGetup(s);
 			}
 		}
 	}
 
 	DeleteTalkingMenu();
-
 	EndAllAITurns();
 
-	if ( CheckForEndOfCombatMode( FALSE ) )
+	if (CheckForEndOfCombatMode(FALSE))
 	{
 		EndTopMessage();
-		SetMusicMode( MUSIC_TACTICAL_NOTHING );
-
+		SetMusicMode(MUSIC_TACTICAL_NOTHING);
 		// Lock UI until we get out of the ring
 		guiPendingOverrideEvent = LU_BEGINUILOCK;
-
 	}
 }
+
 
 // in both these cases we're going to want the AI to take over and move the boxers
 // out of the ring!
