@@ -27,18 +27,9 @@ void InitRoomDatabase()
 }
 
 
-BOOLEAN InARoom( UINT16 sGridNo, UINT8 *pubRoomNo )
+UINT8 GetRoom(UINT16 const gridno)
 {
-	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
-	{
-		if ( pubRoomNo )
-		{
-			*pubRoomNo = gubWorldRoomInfo[ sGridNo ];
-		}
-		return( TRUE );
-	}
-
-	return( FALSE );
+	return gubWorldRoomInfo[gridno];
 }
 
 

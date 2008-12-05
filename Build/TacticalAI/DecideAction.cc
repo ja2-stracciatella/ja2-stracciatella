@@ -516,43 +516,40 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 
 static INT8 DecideActionBoxerEnteringRing(SOLDIERTYPE* pSoldier)
 {
-	UINT8 ubRoom;
 	INT16	sDesiredMercLoc;
 
 	// boxer, should move into ring!
-	if ( InARoom( pSoldier->sGridNo, &ubRoom ))
+	UINT8 const room = GetRoom(pSoldier->sGridNo);
+	if (room == BOXING_RING)
 	{
-		if (ubRoom == BOXING_RING)
+		// look towards nearest player
+		sDesiredMercLoc = ClosestPC( pSoldier, NULL );
+		if ( sDesiredMercLoc != NOWHERE )
 		{
-			// look towards nearest player
-			sDesiredMercLoc = ClosestPC( pSoldier, NULL );
-			if ( sDesiredMercLoc != NOWHERE )
+			// see if we are facing this person
+			const UINT8 ubDesiredMercDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sDesiredMercLoc);
+
+			// if not already facing in that direction,
+			if ( pSoldier->bDirection != ubDesiredMercDir && InternalIsValidStance( pSoldier, ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
 			{
-				// see if we are facing this person
-				const UINT8 ubDesiredMercDir = GetDirectionToGridNoFromGridNo(pSoldier->sGridNo, sDesiredMercLoc);
 
-				// if not already facing in that direction,
-				if ( pSoldier->bDirection != ubDesiredMercDir && InternalIsValidStance( pSoldier, ubDesiredMercDir, gAnimControl[ pSoldier->usAnimState ].ubEndHeight ) )
-				{
+				pSoldier->usActionData = ubDesiredMercDir;
 
-					pSoldier->usActionData = ubDesiredMercDir;
+				#ifdef DEBUGDECISIONS
+				sprintf(tempstr,"%s - TURNS TOWARDS CLOSEST PC to face direction %d",pSoldier->name,pSoldier->usActionData);
+				AIPopMessage(tempstr);
+				#endif
 
-					#ifdef DEBUGDECISIONS
-					sprintf(tempstr,"%s - TURNS TOWARDS CLOSEST PC to face direction %d",pSoldier->name,pSoldier->usActionData);
-					AIPopMessage(tempstr);
-					#endif
-
-					return( AI_ACTION_CHANGE_FACING );
-				}
+				return( AI_ACTION_CHANGE_FACING );
 			}
-			return( AI_ACTION_ABSOLUTELY_NONE );
 		}
-		else
-		{
-			// move to starting spot
-			pSoldier->usActionData = FindClosestBoxingRingSpot( pSoldier, TRUE );
-			return( AI_ACTION_GET_CLOSER );
-		}
+		return( AI_ACTION_ABSOLUTELY_NONE );
+	}
+	else if (room != NO_ROOM)
+	{
+		// move to starting spot
+		pSoldier->usActionData = FindClosestBoxingRingSpot( pSoldier, TRUE );
+		return( AI_ACTION_GET_CLOSER );
 	}
 
 	return( AI_ACTION_ABSOLUTELY_NONE );
@@ -680,44 +677,41 @@ static INT8 DecideActionGreen(SOLDIERTYPE* pSoldier)
 			}
 			else
 			{
-				UINT8	ubRoom;
 				UINT8 ubLoop;
 
 				// boxer... but since in status green, it's time to leave the ring!
-				if ( InARoom( pSoldier->sGridNo, &ubRoom ))
+				UINT8 const room = GetRoom(pSoldier->sGridNo);
+				if (room == BOXING_RING)
 				{
-					if (ubRoom == BOXING_RING)
+					for ( ubLoop = 0; ubLoop < NUM_BOXERS; ubLoop++ )
 					{
-						for ( ubLoop = 0; ubLoop < NUM_BOXERS; ubLoop++ )
+						if (pSoldier == gBoxer[ubLoop])
 						{
-							if (pSoldier == gBoxer[ubLoop])
-							{
-								// we should go back where we started
-								pSoldier->usActionData = gsBoxerGridNo[ ubLoop ];
-								return( AI_ACTION_GET_CLOSER );
-							}
+							// we should go back where we started
+							pSoldier->usActionData = gsBoxerGridNo[ ubLoop ];
+							return( AI_ACTION_GET_CLOSER );
 						}
-						pSoldier->usActionData = FindClosestBoxingRingSpot( pSoldier, FALSE );
-						return( AI_ACTION_GET_CLOSER );
 					}
-					else
+					pSoldier->usActionData = FindClosestBoxingRingSpot( pSoldier, FALSE );
+					return( AI_ACTION_GET_CLOSER );
+				}
+				else if (room != NO_ROOM)
+				{
+					// done!
+					pSoldier->uiStatusFlags &= ~(SOLDIER_BOXER);
+					if (pSoldier->bTeam == gbPlayerNum)
 					{
-						// done!
-						pSoldier->uiStatusFlags &= ~(SOLDIER_BOXER);
-						if (pSoldier->bTeam == gbPlayerNum)
-						{
-							pSoldier->uiStatusFlags &= (~SOLDIER_PCUNDERAICONTROL);
-							TriggerEndOfBoxingRecord( pSoldier );
-						}
-						else if ( CountPeopleInBoxingRing() == 0 )
-						{
-							// Probably disqualified by jumping out of ring; the player
-							// character then didn't trigger the end of boxing record
-							// (and we know from the if statement above that we're
-							// still in a boxing state of some sort...)
-							TriggerEndOfBoxingRecord( NULL );
+						pSoldier->uiStatusFlags &= (~SOLDIER_PCUNDERAICONTROL);
+						TriggerEndOfBoxingRecord( pSoldier );
+					}
+					else if ( CountPeopleInBoxingRing() == 0 )
+					{
+						// Probably disqualified by jumping out of ring; the player
+						// character then didn't trigger the end of boxing record
+						// (and we know from the if statement above that we're
+						// still in a boxing state of some sort...)
+						TriggerEndOfBoxingRecord( NULL );
 
-						}
 					}
 				}
 

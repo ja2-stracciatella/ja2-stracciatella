@@ -4312,8 +4312,8 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE* const pSoldier)
 	if ( ( pSoldier->sSectorX == 12 ) && ( pSoldier->sSectorY == MAP_ROW_L ) && ( pSoldier->bSectorZ == 0 ) &&
 			 ( !pSoldier->fBetweenSectors ) && gMercProfiles[ ELDIN ].bMercStatus != MERC_IS_DEAD )
 	{
-		UINT8	ubRoom;
-		if ( InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom >= 22 && ubRoom <= 41 )
+		UINT8	const room = GetRoom(pSoldier->sGridNo);
+		if (22 <= room && room <= 41)
 		{
 			CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 			{

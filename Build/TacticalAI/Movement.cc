@@ -367,7 +367,6 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	UINT16 usMaxDist;
 	UINT8 ubDirection,ubDirsLeft,ubDirChecked[8],fFound = FALSE;
 	INT8 fPathFlags;
-	UINT8 ubRoomRequired = 0, ubTempRoom;
 
 	INT8 bAPsLeft = -1; // XXX HACK000E
 
@@ -389,16 +388,13 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	// obtain maximum roaming distance from soldier's sOrigin
 	usMaxDist = RoamingRange(pSoldier,&sOrigin);
 
-	if ( pSoldier->bOrders <= CLOSEPATROL && (pSoldier->bTeam == CIV_TEAM || pSoldier->ubProfile != NO_PROFILE ) )
+	UINT8 room_required = NO_ROOM;
+	if (pSoldier->bOrders <= CLOSEPATROL &&
+			(pSoldier->bTeam == CIV_TEAM || pSoldier->ubProfile != NO_PROFILE) &&
+			/* make sure this doesn't interfere with pathing for scripts */
+			pSoldier->sAbsoluteFinalDestination != NOWHERE)
 	{
-		if ( InARoom( pSoldier->usPatrolGrid[0], &ubRoomRequired ) )
-		{
-			// make sure this doesn't interfere with pathing for scripts
-			if ( pSoldier->sAbsoluteFinalDestination != NOWHERE )
-			{
-				ubRoomRequired = 0;
-			}
-		}
+		room_required = GetRoom(pSoldier->usPatrolGrid[0]);
 	}
 
 	pSoldier->usUIMovementMode = DetermineMovementMode(pSoldier, bAction );
@@ -559,15 +555,11 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
    if (SpacesAway(sOrigin,sTempDest) > usMaxDist)
      break;           // quit here, sGoToGrid is where we are going
 
-
-	 if ( ubRoomRequired )
-	 {
-		if ( !( InARoom( sTempDest, &ubTempRoom ) && ubTempRoom == ubRoomRequired ) )
+		if (room_required != NO_ROOM && room_required != GetRoom(sTempDest))
 		{
-		 // quit here, limited by room!
-		 break;
+			// quit here, limited by room!
+			break;
 		}
-	 }
 
    if ( (fFlags & FLAG_STOPSHORT) && SpacesAway( sDesGrid, sTempDest ) <= STOPSHORTDIST )
 	 {

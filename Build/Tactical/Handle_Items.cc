@@ -2644,9 +2644,7 @@ static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 	{
 		#ifdef JA2DEMO
 			{
-				UINT8 ubRoom;
-
-				if ( InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom == 31 )
+				if (GetRoom(pSoldier->sGridNo) == 31)
 				{
 					SetOffBombsByFrequency(pSoldier, FIRST_MAP_PLACED_FREQUENCY + 4);
 					DoMercBattleSound( pSoldier, BATTLE_SOUND_OK1 );
@@ -2664,8 +2662,7 @@ static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 			// Check what sector we are in....
 			if ( gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_O && gbWorldSectorZ == 0 )
 			{
-				UINT8 ubRoom;
-				if ( InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom == 4 )
+				if (GetRoom(pSoldier->sGridNo) == 4)
 				{
 					DoMercBattleSound( pSoldier, BATTLE_SOUND_OK1 );
 

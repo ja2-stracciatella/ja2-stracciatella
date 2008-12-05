@@ -799,13 +799,9 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 	INT8										bBodyType = CROW;
-	UINT8										ubRoomNum;
 
 	// No crows inside :(
-	if ( InARoom( pCorpse->def.sGridNo, &ubRoomNum ) )
-	{
-		return;
-	}
+	if (GetRoom(pCorpse->def.sGridNo) != NO_ROOM) return;
 
 	// Put him flying over corpse pisition
 	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );

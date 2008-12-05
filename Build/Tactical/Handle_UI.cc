@@ -789,8 +789,6 @@ static void SetUIMouseCursor(void)
 
 		if ( gfUIShowExitExitGrid )
 		{
-			UINT8	 ubRoomNum;
-
 			gfUIDisplayActionPoints = FALSE;
 			ErasePath( TRUE );
 
@@ -801,7 +799,7 @@ static void SetUIMouseCursor(void)
 				if (sel != NULL && sel->bLevel == 0)
 				{
 					// ATE: Is this place revealed?
-					if ( !InARoom( usMapPos, &ubRoomNum ) || ( InARoom( usMapPos, &ubRoomNum ) && gpWorldLevelData[ usMapPos ].uiFlags & MAPELEMENT_REVEALED ) )
+					if (GetRoom(usMapPos) == NO_ROOM || gpWorldLevelData[usMapPos].uiFlags & MAPELEMENT_REVEALED)
 					{
 						if ( sOldExitGridNo != usMapPos )
 						{

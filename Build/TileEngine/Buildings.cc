@@ -335,7 +335,6 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 BUILDING * FindBuilding( INT16 sGridNo )
 {
 	UINT8					ubBuildingID;
-	//UINT8					ubRoomNo;
 
 	if (sGridNo <= 0 || sGridNo > WORLD_MAX)
 	{
@@ -351,7 +350,7 @@ BUILDING * FindBuilding( INT16 sGridNo )
 		// need extra checks to see if is valid spot...
 		// must have valid room information and be a flat-roofed
 		// building
-		if ( InARoom( sGridNo, &ubRoomNo ) && (FindStructure( sGridNo, STRUCTURE_NORMAL_ROOF ) != NULL) )
+		if (GetRoom(sGridNo) != NO_ROOM && FindStructure(sGridNo, STRUCTURE_NORMAL_ROOF) != NULL)
 		{
 			return( GenerateBuilding( sGridNo ) );
 		}

@@ -48,9 +48,7 @@ void ExitBoxing(void)
 		FOR_ALL_NON_PLANNING_SOLDIERS(s)
 		{
 			if (!(s->uiStatusFlags & SOLDIER_BOXER)) continue;
-			UINT8 ubRoom;
-			if (!InARoom(s->sGridNo, &ubRoom))       continue;
-			if (ubRoom != BOXING_RING)               continue;
+			if (GetRoom(s->sGridNo) != BOXING_RING)  continue;
 
 			if (s->uiStatusFlags & SOLDIER_PC)
 			{
@@ -153,12 +151,11 @@ void TriggerEndOfBoxingRecord( SOLDIERTYPE * pSoldier )
 
 UINT8 CountPeopleInBoxingRing( void )
 {
-	UINT8 ubRoom;
 	UINT8 ubTotalInRing = 0;
 
 	FOR_ALL_MERCS(i)
 	{
-		if (InARoom((*i)->sGridNo, &ubRoom) && ubRoom == BOXING_RING)
+		if (GetRoom((*i)->sGridNo) == BOXING_RING)
 		{
 			++ubTotalInRing;
 		}
@@ -174,7 +171,6 @@ static BOOLEAN PickABoxer(void);
 static void CountPeopleInBoxingRingAndDoActions(void)
 {
 	UINT8						ubTotalInRing = 0;
-	UINT8						ubRoom;
 	UINT8						ubPlayersInRing = 0;
 	SOLDIERTYPE *		pInRing[2] = { NULL, NULL };
 	SOLDIERTYPE *		pNonBoxingPlayer = NULL;
@@ -182,7 +178,7 @@ static void CountPeopleInBoxingRingAndDoActions(void)
 	FOR_ALL_MERCS(i)
 	{
 		SOLDIERTYPE* const s = *i;
-		if (!InARoom(s->sGridNo, &ubRoom) || ubRoom != BOXING_RING) continue;
+		if (GetRoom(s->sGridNo) != BOXING_RING) continue;
 
 		if (ubTotalInRing < 2) pInRing[ubTotalInRing] = s;
 		++ubTotalInRing;
@@ -411,9 +407,7 @@ BOOLEAN AnotherFightPossible( void )
 
 void BoxingMovementCheck( SOLDIERTYPE * pSoldier )
 {
-	UINT8 ubRoom;
-
-	if ( InARoom( pSoldier->sGridNo, &ubRoom ) && ubRoom == BOXING_RING)
+	if (GetRoom(pSoldier->sGridNo) == BOXING_RING)
 	{
 		// someone moving in/into the ring
 		CountPeopleInBoxingRingAndDoActions();

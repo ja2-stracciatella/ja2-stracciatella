@@ -1314,9 +1314,8 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 
 	if ( (pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP) && (pOpponent->bTeam == gbPlayerNum ) )
 	{
-		UINT8 ubRoom;
-
-		if ( InARoom( pOpponent->sGridNo, &ubRoom ) && IN_BROTHEL( ubRoom ) && ( IN_BROTHEL_GUARD_ROOM( ubRoom ) ) )
+		UINT8 const ubRoom = GetRoom(pOpponent->sGridNo);
+		if (IN_BROTHEL(ubRoom) && IN_BROTHEL_GUARD_ROOM(ubRoom))
 		{
 			// unauthorized!
 			// make guard run to block guard room
@@ -1709,11 +1708,9 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 							case ELDIN:
 								if ( pSoldier->bNeutral )
 								{
-									UINT8 ubRoom = 0;
 									// if player is in behind the ropes of the museum display
 									// or if alarm has gone off (status red)
-									InARoom( pOpponent->sGridNo, &ubRoom );
-
+									UINT8 const ubRoom = GetRoom(pOpponent->sGridNo);
 									if ((!CheckFact(FACT_MUSEUM_OPEN, 0) && 22 <= ubRoom && ubRoom <= 41) ||
 											CheckFact(FACT_MUSEUM_ALARM_WENT_OFF, 0)                          ||
 											ubRoom == 39                                                      ||
@@ -1827,11 +1824,10 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 						}
 						else
 						{
-							UINT8 ubRoom;
-
+							UINT8 const room = GetRoom(pOpponent->sGridNo);
 							// JA2 Gold: only go hostile if see player IN guard room
-							//if ( InARoom( pOpponent->sGridNo, &ubRoom ) && IN_BROTHEL( ubRoom ) && ( gMercProfiles[ MADAME ].bNPCData == 0 || IN_BROTHEL_GUARD_ROOM( ubRoom ) ) )
-							if ( InARoom( pOpponent->sGridNo, &ubRoom ) && IN_BROTHEL_GUARD_ROOM( ubRoom ) )
+							//if (IN_BROTHEL(room) && (gMercProfiles[MADAME].bNPCData == 0 || IN_BROTHEL_GUARD_ROOM(room)))
+							if (IN_BROTHEL_GUARD_ROOM(room))
 							{
 								// unauthorized!
 								MakeCivHostile( pSoldier, 2 );

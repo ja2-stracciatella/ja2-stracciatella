@@ -258,12 +258,11 @@ INT16 MostImportantNoiseHeard( SOLDIERTYPE *pSoldier, INT32 *piRetValue, BOOLEAN
 		// make civs not walk to noises outside their room if on close patrol/onguard
 		if ( pSoldier->bOrders <= CLOSEPATROL && (pSoldier->bTeam == CIV_TEAM || pSoldier->ubProfile != NO_PROFILE ) )
 		{
-			UINT8	ubRoom, ubNewRoom;
-
-			// any other combo uses the default of ubRoom == 0, set above
-			if ( InARoom( pSoldier->usPatrolGrid[0], &ubRoom ) )
+			UINT8 const room = GetRoom(pSoldier->usPatrolGrid[0]);
+			if (room != NO_ROOM)
 			{
-				if ( !InARoom( pSoldier->usPatrolGrid[0], &ubNewRoom ) || ubRoom != ubNewRoom )
+				UINT8 const new_room = GetRoom(pSoldier->usPatrolGrid[0]);
+				if (new_room == NO_ROOM || new_room != room)
 				{
 					*pfReachable = FALSE;
 				}

@@ -3362,7 +3362,7 @@ static INT8 IsHiddenTileMarkerThere(INT16 sGridNo)
 	}
 	else
 	{
-		//if ( InARoom( sGridNo, &ubRoom ) )
+		//if (GetRoom(sGridNo) != NO_ROOM)
 		{
 			//if ( !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
 			{

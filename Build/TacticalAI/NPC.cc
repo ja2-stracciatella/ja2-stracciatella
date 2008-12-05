@@ -826,29 +826,17 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 								else
 								{
 									// find Kingpin, if he's in his house, invoke the script to move him to the bar
-									UINT8						ubKingpinRoom;
-
-									const SOLDIERTYPE* const pKingpin = FindSoldierByProfileID(KINGPIN);
-									if ( pKingpin && InARoom( pKingpin->sGridNo, &ubKingpinRoom ) )
+									UINT8                    id      = 31;
+									SOLDIERTYPE const* const kingpin = FindSoldierByProfileID(KINGPIN);
+									if (kingpin)
 									{
-										if ( IN_KINGPIN_HOUSE( ubKingpinRoom ) )
-										{
-											// first boxer, bring kingpin over
-											(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[17];
-											(*pubQuoteNum)       = 17;
-										}
-										else
-										{
-											(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[31];
-											(*pubQuoteNum)       = 31;
-										}
-									}
-									else
-									{
-										(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[31];
-										(*pubQuoteNum)       = 31;
+										UINT8 const room = GetRoom(kingpin->sGridNo);
+										// first boxer, bring kingpin over
+										if (IN_KINGPIN_HOUSE(room)) id = 17;
 									}
 
+									*ppResultQuoteInfo = &pNPCQuoteInfoArray[id];
+									*pubQuoteNum       = id;
 								}
 
 								return( (*ppResultQuoteInfo)->ubOpinionRequired );

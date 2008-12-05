@@ -769,22 +769,10 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 					// CJC, Sept 16: if we destroy any wall of the brothel, make Kingpin's men hostile!
 					if ( gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0 )
 					{
-						UINT8			ubRoom;
-						BOOLEAN		fInRoom;
-
-						fInRoom = InARoom( sGridNo, &ubRoom );
-						if ( !fInRoom )
-						{
-							// try to south
-							fInRoom = InARoom( (INT16)( sGridNo + DirectionInc( SOUTH ) ), &ubRoom );
-							if ( !fInRoom )
-							{
-								// try to east
-								fInRoom = InARoom( (INT16)( sGridNo + DirectionInc( EAST ) ), &ubRoom );
-							}
-						}
-
-						if ( fInRoom && IN_BROTHEL( ubRoom ) )
+						UINT8 room = GetRoom(sGridNo);
+						if (room == NO_ROOM) room = GetRoom(sGridNo + DirectionInc(SOUTH));
+						if (room == NO_ROOM) room = GetRoom(sGridNo + DirectionInc(EAST));
+						if (room != NO_ROOM && IN_BROTHEL(room))
 						{
 							CivilianGroupChangesSides( KINGPIN_CIV_GROUP );
 						}
@@ -2078,14 +2066,12 @@ static BOOLEAN HookerInRoom(UINT8 ubRoom)
 {
 	FOR_ALL_IN_TEAM(s, CIV_TEAM)
 	{
-		if (s->bInSector && s->bLife >= OKLIFE && s->bNeutral && s->ubBodyType == MINICIV)
-		{
-			UINT8 ubTempRoom;
-			if (InARoom(s->sGridNo, &ubTempRoom) && ubTempRoom == ubRoom)
-			{
-				return TRUE;
-			}
-		}
+		if (!s->bInSector)                 continue;
+		if (s->bLife < OKLIFE)             continue;
+		if (!s->bNeutral)                  continue;
+		if (s->ubBodyType != MINICIV)      continue;
+		if (GetRoom(s->sGridNo) != ubRoom) continue;
+		return TRUE;
 	}
 	return FALSE;
 }
@@ -2376,16 +2362,17 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 				INT16		sTeleportSpot;
 				INT16		sDoorSpot;
 				UINT8		ubDirection;
-				UINT8		ubRoom, ubOldRoom;
 
 				const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, 0);
 				if (tgt != NULL)
 					if (tgt->bTeam == gbPlayerNum)
 					{
-						if (InARoom(sGridNo, &ubRoom) && InARoom(tgt->sOldGridNo, &ubOldRoom) && ubOldRoom != ubRoom)
+						UINT8 const room     = GetRoom(sGridNo);
+						UINT8 const old_room = GetRoom(tgt->sOldGridNo);
+						if (room != NO_ROOM && old_room != NO_ROOM && old_room != room)
 						{
 							// also require there to be a miniskirt civ in the room
-							if ( HookerInRoom( ubRoom ) )
+							if (HookerInRoom(room))
 							{
 
 								// stop the merc...

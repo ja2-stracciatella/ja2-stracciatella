@@ -14,7 +14,8 @@ extern UINT8 gubWorldRoomInfo[WORLD_MAX];
 void InitRoomDatabase(void);
 
 void RemoveRoomRoof( UINT16 sGridNo, UINT8 bRoomNum, SOLDIERTYPE *pSoldier );
-BOOLEAN InARoom( UINT16 sGridNo, UINT8 *pubRoomNo );
+
+UINT8 GetRoom(UINT16 gridno);
 BOOLEAN InAHiddenRoom( UINT16 sGridNo, UINT8 *pubRoomNo );
 
 void SetGridNoRevealedFlag( UINT16 sGridNo );

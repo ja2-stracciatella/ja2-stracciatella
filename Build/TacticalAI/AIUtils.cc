@@ -658,7 +658,6 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 	INT16 sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXRange, sYRange, sXOffset, sYOffset;
 	INT16 sOrigX, sOrigY;
 	INT16 sX, sY;
-	UINT8	ubRoom = 0, ubTempRoom;
 
 	sOrigX = sOrigY = -1;
 	sMaxLeft = sMaxRight = sMaxUp = sMaxDown = sXRange = sYRange = -1;
@@ -678,13 +677,11 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 	INT16  usOrigin;
 	UINT16 usMaxDist = RoamingRange(pSoldier,&usOrigin);
 
+	UINT8 room = NO_ROOM;
 	if ( pSoldier->bOrders <= CLOSEPATROL && (pSoldier->bTeam == CIV_TEAM || pSoldier->ubProfile != NO_PROFILE ) )
 	{
-		// any other combo uses the default of ubRoom == 0, set above
-		if ( !InARoom( pSoldier->usPatrolGrid[0], &ubRoom ) )
-		{
-			ubRoom = 0;
-		}
+		// any other combo uses the default of room == NO_ROOM, set above
+		room = GetRoom(pSoldier->usPatrolGrid[0]);
 	}
 
 	// if the maxDist is truly a restriction
@@ -770,11 +767,15 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 				sRandDest = (INT16) PreRandom(GRIDSIZE);
 			}
 
-			if ( ubRoom && InARoom( sRandDest, &ubTempRoom ) && ubTempRoom != ubRoom )
+			if (room != NO_ROOM)
 			{
-				// outside of room available for patrol!
-				sRandDest = NOWHERE;
-				continue;
+				UINT8 const temp_room = GetRoom(sRandDest);
+				if (temp_room != NO_ROOM && temp_room != room)
+				{
+					// outside of room available for patrol!
+					sRandDest = NOWHERE;
+					continue;
+				}
 			}
 
 			if (!LegalNPCDestination(pSoldier,sRandDest,ENSURE_PATH,NOWATER,0))
@@ -1684,10 +1685,7 @@ BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel )
 	}
 
 	// could've been placed here, ignore the light
-	if ( InARoom( sGridNo, NULL ) )
-	{
-		return( FALSE );
-	}
+	if (GetRoom(sGridNo) != NO_ROOM) return FALSE;
 
 	// NB light levels are backwards, so a lower light level means the
 	// spot in question is BRIGHTER

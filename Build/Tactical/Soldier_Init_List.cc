@@ -505,8 +505,6 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 			// quest-related overrides
 			if ( gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C )
 			{
-				UINT8	ubRoom;
-
 				// Kinpin guys might be guarding Tony
 				if ( tempDetailedPlacement.ubCivilianGroup == KINGPIN_CIV_GROUP && ( gTacticalStatus.fCivGroupHostile[ KINGPIN_CIV_GROUP ] == CIV_GROUP_WILL_BECOME_HOSTILE || ( (gubQuest[ QUEST_KINGPIN_MONEY ] == QUESTINPROGRESS) && (CheckFact( FACT_KINGPIN_CAN_SEND_ASSASSINS, KINGPIN )) ) ) )
 				{
@@ -544,10 +542,14 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 						// she shouldn't be here!
 						return( TRUE );
 					}
-					else if ( tempDetailedPlacement.ubProfile == NO_PROFILE && InARoom( tempDetailedPlacement.sInsertionGridNo, &ubRoom ) && IN_BROTHEL( ubRoom ) )
+					else if (tempDetailedPlacement.ubProfile == NO_PROFILE)
 					{
-						// must be a hooker, shouldn't be there
-						return( TRUE );
+						UINT8 const room = GetRoom(tempDetailedPlacement.sInsertionGridNo);
+						if (IN_BROTHEL(room))
+						{
+							// must be a hooker, shouldn't be there
+							return TRUE;
+						}
 					}
 				}
 			}

@@ -2906,9 +2906,8 @@ unlock:
 				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(KINGPIN);
 				if (pSoldier)
 				{
-					UINT8 ubRoom;
-
-					if ( InARoom( pSoldier->sGridNo, &ubRoom ) && (ubRoom == 1 || ubRoom == 2 || ubRoom == 3 ) )
+					UINT8 const room = GetRoom(pSoldier->sGridNo);
+					if (1 <= room && room <= 3)
 					{	// Kingpin is in the club
 						TriggerNPCRecord( DARREN, 31 );
 						break;
@@ -3897,9 +3896,7 @@ add_log:
 				{
 					if ( gpSrcSoldier )
 					{
-						UINT8 ubRoom;
-
-						if ( InARoom( gpSrcSoldier->sGridNo, &ubRoom ) && (ubRoom == 49) )
+						if (GetRoom(gpSrcSoldier->sGridNo) == 49)
 						{
 							TriggerNPCRecord( HANS, 18 );
 						}

@@ -855,7 +855,6 @@ UINT16 FindRandomGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const IN
 	INT16  sTop, sBottom;
 	INT16  sLeft, sRight;
 	INT16  cnt1, cnt2;
-	UINT8	 ubRoomNum;
 
 	//Save AI pathing vars.  changing the distlimit restricts how
 	//far away the pathing will consider.
@@ -914,7 +913,7 @@ UINT16 FindRandomGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const IN
 				// If we are a crow, we need this additional check
 				if ( pSoldier->ubBodyType == CROW )
 				{
-					if ( !InARoom( sGridNo, &ubRoomNum ) )
+					if (GetRoom(sGridNo) == NO_ROOM)
 					{
 						fFound = TRUE;
 					}

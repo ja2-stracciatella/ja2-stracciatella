@@ -751,24 +751,19 @@ static INT8 CalcIfSoldierCanSeeGridNo(const SOLDIERTYPE* pSoldier, INT16 sTarget
 
 static BOOLEAN IsTheRoofVisible(INT16 sGridNo)
 {
-	UINT8 ubRoom;
+	if (GetRoom(sGridNo) == NO_ROOM) return FALSE;
 
-	if( InARoom( sGridNo, &ubRoom ) )
+	if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED )
 	{
-		if( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED )
-		{
-			if( gTacticalStatus.uiFlags & SHOW_ALL_ROOFS )
-				return( TRUE );
-			else
-				return( FALSE );
-		}
-		else
-		{
+		if( gTacticalStatus.uiFlags & SHOW_ALL_ROOFS )
 			return( TRUE );
-		}
+		else
+			return( FALSE );
 	}
-
-	return( FALSE );
+	else
+	{
+		return( TRUE );
+	}
 }
 
 
