@@ -2632,64 +2632,53 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 static void BombMessageBoxCallBack(MessageBoxReturnValue);
 
 
-static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo)
+static void StartBombMessageBox(SOLDIERTYPE* const s, INT16 const gridno)
 {
-	gpTempSoldier = pSoldier;
-	gsTempGridno = sGridNo;
-	if (pSoldier->inv[HANDPOS].usItem == REMOTEBOMBTRIGGER)
+	gpTempSoldier = s;
+	gsTempGridno  = gridno;
+
+	wchar_t    const* text;
+	OBJECTTYPE const& o = s->inv[HANDPOS];
+	if (o.usItem == REMOTETRIGGER)
 	{
-		DoMessageBox(MSG_BOX_BASIC_SMALL_BUTTONS, TacticalStr[CHOOSE_BOMB_FREQUENCY_STR], GAME_SCREEN, MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS, BombMessageBoxCallBack, NULL);
+#ifdef JA2DEMO
+		if (GetRoom(s->sGridNo) == 31)
+		{
+			SetOffBombsByFrequency(s, FIRST_MAP_PLACED_FREQUENCY + 4);
+			DoMercBattleSound(s, BATTLE_SOUND_OK1);
+		}
+#else
+		PlayJA2Sample(USE_STATUE_REMOTE, HIGHVOLUME, 1, MIDDLEPAN);
+
+		// Check what sector we are in....
+		if (gWorldSectorX       == 3         &&
+				gWorldSectorY       == MAP_ROW_O &&
+				gbWorldSectorZ      == 0         &&
+				GetRoom(s->sGridNo) == 4)
+		{
+			ChangeO3SectorStatue(FALSE); // Open statue
+			DoMercBattleSound(s, BATTLE_SOUND_OK1);
+		}
+#endif
+		else
+		{
+			DoMercBattleSound(s, BATTLE_SOUND_CURSE1);
+		}
+		return;
 	}
-	else if (pSoldier->inv[HANDPOS].usItem == REMOTETRIGGER)
+	else if (o.usItem == REMOTEBOMBTRIGGER)
 	{
-		#ifdef JA2DEMO
-			{
-				if (GetRoom(pSoldier->sGridNo) == 31)
-				{
-					SetOffBombsByFrequency(pSoldier, FIRST_MAP_PLACED_FREQUENCY + 4);
-					DoMercBattleSound( pSoldier, BATTLE_SOUND_OK1 );
-				}
-				else
-				{
-					DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
-				}
-			}
-		#else
-      // PLay sound....
-      PlayJA2Sample(USE_STATUE_REMOTE, HIGHVOLUME, 1, MIDDLEPAN);
-
-
-			// Check what sector we are in....
-			if ( gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_O && gbWorldSectorZ == 0 )
-			{
-				if (GetRoom(pSoldier->sGridNo) == 4)
-				{
-					DoMercBattleSound( pSoldier, BATTLE_SOUND_OK1 );
-
-					// Open statue
-					ChangeO3SectorStatue( FALSE );
-
-				}
-				else
-				{
-					DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
-				}
-			}
-			else
-			{
-				DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
-			}
-
-		#endif
+		text = TacticalStr[CHOOSE_BOMB_FREQUENCY_STR];
 	}
-	else if ( FindAttachment( &(pSoldier->inv[HANDPOS]), DETONATOR) != ITEM_NOT_FOUND )
+	else if (FindAttachment(&o, DETONATOR) != ITEM_NOT_FOUND)
 	{
-		DoMessageBox(MSG_BOX_BASIC_SMALL_BUTTONS, TacticalStr[CHOOSE_TIMER_STR], GAME_SCREEN, MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS, BombMessageBoxCallBack, NULL);
+		text = TacticalStr[CHOOSE_TIMER_STR];
 	}
-	else if ( FindAttachment( &(pSoldier->inv[HANDPOS]), REMDETONATOR) != ITEM_NOT_FOUND )
+	else if (FindAttachment(&o, REMDETONATOR) != ITEM_NOT_FOUND)
 	{
-		DoMessageBox(MSG_BOX_BASIC_SMALL_BUTTONS, TacticalStr[CHOOSE_REMOTE_FREQUENCY_STR], GAME_SCREEN, MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS, BombMessageBoxCallBack, NULL);
+		text = TacticalStr[CHOOSE_REMOTE_FREQUENCY_STR];
 	}
+	DoMessageBox(MSG_BOX_BASIC_SMALL_BUTTONS, text, GAME_SCREEN, MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS, BombMessageBoxCallBack, NULL);
 }
 
 
