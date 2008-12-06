@@ -536,14 +536,17 @@ void RemoveHigherLandLevels(UINT32 const iMapIndex, UINT32 const fSrcType, UINT3
 #endif
 
 
-static void AddNodeToWorld(const UINT32 iMapIndex, const UINT16 usIndex, const INT8 level, LEVELNODE* const n)
+static LEVELNODE* AddNodeToWorld(UINT32 const iMapIndex, UINT16 const usIndex, INT8 const level)
 {
-	if (usIndex >= NUMBEROFTILES) return;
+	LEVELNODE* const n = CreateLevelNode();
+	n->usIndex = usIndex;
+
+	if (usIndex >= NUMBEROFTILES) return n;
 
 	const DB_STRUCTURE_REF* const sr = gTileDatabase[usIndex].pDBStructureRef;
-	if (sr == NULL) return;
+	if (!sr) return n;
 
-	if (AddStructureToWorld(iMapIndex, level, sr, n)) return;
+	if (AddStructureToWorld(iMapIndex, level, sr, n)) return n;
 
 	MemFree(n);
 	throw std::runtime_error("Failed to add node to world");
@@ -553,29 +556,8 @@ static void AddNodeToWorld(const UINT32 iMapIndex, const UINT16 usIndex, const I
 // Struct layer
 // #################################################################
 
-static LEVELNODE* AddStructToTailCommon(UINT32 iMapIndex, UINT16 usIndex, BOOLEAN fAddStructDBInfo);
-
-
-LEVELNODE* AddStructToTail(UINT32 iMapIndex, UINT16 usIndex)
+static LEVELNODE* AddStructToTailCommon(UINT32 const iMapIndex, UINT16 const usIndex, LEVELNODE* const n)
 {
-	return AddStructToTailCommon(iMapIndex, usIndex, TRUE);
-}
-
-
-LEVELNODE* ForceStructToTail(UINT32 iMapIndex, UINT16 usIndex)
-{
-	return AddStructToTailCommon(iMapIndex, usIndex, FALSE);
-}
-
-
-static LEVELNODE* AddStructToTailCommon(const UINT32 iMapIndex, const UINT16 usIndex, const BOOLEAN fAddStructDBInfo)
-{
-	LEVELNODE* const n = CreateLevelNode();
-
-	if (fAddStructDBInfo) AddNodeToWorld(iMapIndex, usIndex, 0, n);
-
-	n->usIndex = usIndex;
-
 	// Append node to list
 	LEVELNODE** anchor = &gpWorldLevelData[iMapIndex].pStructHead;
 	while (*anchor != NULL) anchor = &(*anchor)->pNext;
@@ -613,11 +595,24 @@ static LEVELNODE* AddStructToTailCommon(const UINT32 iMapIndex, const UINT16 usI
 }
 
 
-void AddStructToHead(const UINT32 iMapIndex, const UINT16 usIndex)
+LEVELNODE* AddStructToTail(UINT32 iMapIndex, UINT16 usIndex)
+{
+	LEVELNODE* const n = AddNodeToWorld(iMapIndex, usIndex, 0);
+	return AddStructToTailCommon(iMapIndex, usIndex, n);
+}
+
+
+LEVELNODE* ForceStructToTail(UINT32 iMapIndex, UINT16 usIndex)
 {
 	LEVELNODE* const n = CreateLevelNode();
-	AddNodeToWorld(iMapIndex, usIndex, 0, n);
 	n->usIndex = usIndex;
+	return AddStructToTailCommon(iMapIndex, usIndex, n);
+}
+
+
+void AddStructToHead(const UINT32 iMapIndex, const UINT16 usIndex)
+{
+	LEVELNODE* const n = AddNodeToWorld(iMapIndex, usIndex, 0);
 
 	// Prepend node to list
 	LEVELNODE** const head = &gpWorldLevelData[iMapIndex].pStructHead;
@@ -675,9 +670,7 @@ static void InsertStructIndex(const UINT32 iMapIndex, const UINT16 usIndex, cons
 		pStruct = pStruct->pNext;
 	}
 
-	LEVELNODE* const n = CreateLevelNode();
-	n->usIndex = usIndex;
-	AddNodeToWorld(iMapIndex, usIndex, 0, n);
+	LEVELNODE* const n = AddNodeToWorld(iMapIndex, usIndex, 0);
 
 	// Set links, according to position!
 	n->pNext       = pStruct->pNext;
@@ -1344,9 +1337,7 @@ BOOLEAN RemoveMerc(UINT32 iMapIndex, SOLDIERTYPE* pSoldier, BOOLEAN fPlaceHolder
 
 static LEVELNODE* AddRoof(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	LEVELNODE* const n = CreateLevelNode();
-	AddNodeToWorld(iMapIndex, usIndex, 1, n);
-	n->usIndex = usIndex;
+	LEVELNODE* const n = AddNodeToWorld(iMapIndex, usIndex, 1);
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ROOF);
 	return n;
 }
@@ -1516,9 +1507,7 @@ void SetRoofIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 
 
 static LEVELNODE* AddOnRoof(const UINT32 iMapIndex, const UINT16 usIndex)
 {
-	LEVELNODE* const n = CreateLevelNode();
-	AddNodeToWorld(iMapIndex, usIndex, 1, n);
-	n->usIndex = usIndex;
+	LEVELNODE* const n = AddNodeToWorld(iMapIndex, usIndex, 1);
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_ONROOF);
 	return n;
 }
