@@ -360,21 +360,18 @@ static BOOLEAN gfItemDescHelpTextOffset = FALSE;
 
 
 // A STRUCT USED INTERNALLY FOR INV SLOT REGIONS
-typedef struct
+struct INV_REGIONS
 {
-	const INT16   sBarDx;
-	const INT16   sBarDy;
-	const INT16   sWidth;
-	const INT16   sHeight;
-	INT16         sX; // starts at 0, gets set via InitInvSlotInterface()
-	INT16         sY; // starts at 0, gets set via InitInvSlotInterface()
-} INV_REGIONS;
-
-#define M(w, h) { INV_BAR_DX, INV_BAR_DY, w, h, 0, 0 }
+	INT16 const sWidth;
+	INT16 const sHeight;
+	INT16       sX; // starts at 0, gets set via InitInvSlotInterface()
+	INT16       sY; // starts at 0, gets set via InitInvSlotInterface()
+};
 
 // ARRAY FOR INV PANEL INTERFACE ITEM POSITIONS (sX,sY get set via InitInvSlotInterface() )
 static INV_REGIONS gSMInvData[] =
 {
+#define M(w, h) { w, h, 0, 0 }
 	M(HEAD_INV_SLOT_WIDTH, HEAD_INV_SLOT_HEIGHT), // HELMETPOS
 	M(VEST_INV_SLOT_WIDTH, VEST_INV_SLOT_HEIGHT), // VESTPOS
 	M(LEGS_INV_SLOT_WIDTH, LEGS_INV_SLOT_HEIGHT), // LEGPOS,
@@ -394,9 +391,8 @@ static INV_REGIONS gSMInvData[] =
 	M(SM_INV_SLOT_WIDTH,   SM_INV_SLOT_HEIGHT  ), // SMALLPOCK6
 	M(SM_INV_SLOT_WIDTH,   SM_INV_SLOT_HEIGHT  ), // SMALLPOCK7
 	M(SM_INV_SLOT_WIDTH,   SM_INV_SLOT_HEIGHT  )  // SMALLPOCK8
-};
-
 #undef M
+};
 
 
 typedef struct
@@ -851,7 +847,6 @@ void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel)
 static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UINT8 fDirtyLevel)
 {
 	INT16 sX, sY;
-	INT16	sBarX, sBarY;
 	UINT8		fRenderDirtyLevel;
 	BOOLEAN fHatchItOut = FALSE;
 
@@ -966,8 +961,8 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 	if ( pObject->usItem != NOTHING )
 	{
 		// Add item status bar
-		sBarX = sX - gSMInvData[ sPocket ].sBarDx;
-		sBarY = sY + gSMInvData[ sPocket ].sBarDy;
+		INT16 const sBarX = sX - INV_BAR_DX;
+		INT16 const sBarY = sY + INV_BAR_DY;
 		DrawItemUIBarEx(pObject, 0, sBarX, sBarY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
 	}
 }
