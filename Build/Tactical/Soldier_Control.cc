@@ -939,6 +939,16 @@ static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, 
 }
 
 
+static bool IsRifle(UINT16 const item_id)
+{
+	return
+		item_id != NOTHING                  &&
+		item_id != ROCKET_LAUNCHER          &&
+		Item[item_id].usItemClass == IC_GUN &&
+		Item[item_id].fFlags & ITEM_TWO_HANDED;
+}
+
+
 static void HandleAnimationProfile(SOLDIERTYPE* pSoldier, UINT16 usAnimState, BOOLEAN fRemove);
 static void SetSoldierLocatorOffsets(SOLDIERTYPE* pSoldier);
 
@@ -1184,42 +1194,18 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 		// OK, make guy transition if a big merc...
 		if ( pSoldier->uiAnimSubFlags & SUB_ANIM_BIGGUYTHREATENSTANCE )
 		{
-			if ( usNewState == KNEEL_DOWN && pSoldier->usAnimState != BIGMERC_CROUCH_TRANS_INTO )
+			if (usNewState            == KNEEL_DOWN                &&
+					pSoldier->usAnimState != BIGMERC_CROUCH_TRANS_INTO &&
+					IsRifle(pSoldier->inv[HANDPOS].usItem))
 			{
-				UINT16 usItem;
-
-				// Do we have a rifle?
-				usItem = pSoldier->inv[ HANDPOS ].usItem;
-
-				if ( usItem != NOTHING )
-				{
-					if ( Item[ usItem ].usItemClass == IC_GUN && usItem != ROCKET_LAUNCHER )
-					{
-						if ( (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
-						{
-							usNewState = BIGMERC_CROUCH_TRANS_INTO;
-						}
-					}
-				}
+				usNewState = BIGMERC_CROUCH_TRANS_INTO;
 			}
 
-			if ( usNewState == KNEEL_UP && pSoldier->usAnimState != BIGMERC_CROUCH_TRANS_OUTOF )
+			if (usNewState            == KNEEL_UP                   &&
+					pSoldier->usAnimState != BIGMERC_CROUCH_TRANS_OUTOF &&
+					IsRifle(pSoldier->inv[HANDPOS].usItem))
 			{
-				UINT16 usItem;
-
-				// Do we have a rifle?
-				usItem = pSoldier->inv[ HANDPOS ].usItem;
-
-				if ( usItem != NOTHING )
-				{
-					if ( Item[ usItem ].usItemClass == IC_GUN && usItem != ROCKET_LAUNCHER )
-					{
-						if ( (Item[ usItem ].fFlags & ITEM_TWO_HANDED) )
-						{
-							usNewState = BIGMERC_CROUCH_TRANS_OUTOF;
-						}
-					}
-				}
+				usNewState = BIGMERC_CROUCH_TRANS_OUTOF;
 			}
 		}
 
@@ -7728,16 +7714,6 @@ void EVENT_StopMerc( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDirection )
 	UnSetUIBusy(pSoldier);
 
 	UnMarkMovementReserved( pSoldier );
-}
-
-
-static bool IsRifle(UINT16 const item_id)
-{
-	return
-		item_id != NOTHING                  &&
-		item_id != ROCKET_LAUNCHER          &&
-		Item[item_id].usItemClass == IC_GUN &&
-		Item[item_id].fFlags & ITEM_TWO_HANDED;
 }
 
 
