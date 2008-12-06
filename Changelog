@@ -1,3 +1,4 @@
+(r4849) Fix a vanilla out of bounds array access, when a soldier puts an item in his primary hand, which is not a weapon.  This caused burst mode to be reset, when reloading a gun.
 (r4837) Fix a bug in r894, which caused the list of available skills in the IMP character generator to be filtered improperly.
 (r4833) Fix a vanilla bug: The helicopter was missing a piece when landed in Estoni.
 (r4832) Fix error in r1643, which lead to a null-pointer access in the personnel screen, when there are mercs with some stat values of 0.

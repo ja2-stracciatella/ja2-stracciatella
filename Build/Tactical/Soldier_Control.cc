@@ -7742,7 +7742,7 @@ void ReLoadSoldierAnimationDueToHandItemChange( SOLDIERTYPE *pSoldier, UINT16 us
 
 	// Shutoff burst....
 	// ( we could be on, then change gun that does not have burst )
-	if ( Weapon[ usNewItem ].ubShotsPerBurst == 0 )
+	if (Item[usNewItem].usItemClass & IC_WEAPON && Weapon[usNewItem].ubShotsPerBurst == 0)
 	{
 		pSoldier->bDoBurst		= FALSE;
 		pSoldier->bWeaponMode = WM_NORMAL;
