@@ -7728,86 +7728,69 @@ void EVENT_StopMerc( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDirection )
 	UnSetUIBusy(pSoldier);
 
 	UnMarkMovementReserved( pSoldier );
-
 }
 
 
-void ReLoadSoldierAnimationDueToHandItemChange( SOLDIERTYPE *pSoldier, UINT16 usOldItem, UINT16 usNewItem )
+static bool IsRifle(UINT16 const item_id)
+{
+	return
+		item_id != NOTHING                  &&
+		item_id != ROCKET_LAUNCHER          &&
+		Item[item_id].usItemClass == IC_GUN &&
+		Item[item_id].fFlags & ITEM_TWO_HANDED;
+}
+
+
+void ReLoadSoldierAnimationDueToHandItemChange(SOLDIERTYPE* const s, UINT16 const usOldItem, UINT16 const usNewItem)
 {
 	// DON'T continue aiming!
 	// GOTO STANCE
 	// CHECK FOR AIMING ANIMATIONS
-	BOOLEAN	fOldRifle = FALSE;
-	BOOLEAN	fNewRifle = FALSE;
 
 	// Shutoff burst....
 	// ( we could be on, then change gun that does not have burst )
 	if (Item[usNewItem].usItemClass & IC_WEAPON && Weapon[usNewItem].ubShotsPerBurst == 0)
 	{
-		pSoldier->bDoBurst		= FALSE;
-		pSoldier->bWeaponMode = WM_NORMAL;
+		s->bDoBurst    = FALSE;
+		s->bWeaponMode = WM_NORMAL;
 	}
 
-	if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_FIREREADY )
+	if (gAnimControl[s->usAnimState].uiFlags & ANIM_FIREREADY)
 	{
 		// Stop aiming!
-		SoldierGotoStationaryStance( pSoldier );
+		SoldierGotoStationaryStance(s);
 	}
 
-	// Cancel services...
-	GivingSoldierCancelServices( pSoldier );
-
-	// Did we have a rifle and do we now not have one?
-	if ( usOldItem != NOTHING )
-	{
-		if ( Item[ usOldItem ].usItemClass == IC_GUN )
-		{
-			if ( (Item[ usOldItem ].fFlags & ITEM_TWO_HANDED) && usOldItem != ROCKET_LAUNCHER )
-			{
-				fOldRifle = TRUE;
-			}
-		}
-	}
-
-	if ( usNewItem != NOTHING )
-	{
-		if ( Item[ usNewItem ].usItemClass == IC_GUN )
-		{
-			if ( (Item[ usNewItem ].fFlags & ITEM_TWO_HANDED) && usNewItem != ROCKET_LAUNCHER )
-			{
-				fNewRifle = TRUE;
-			}
-		}
-	}
+	GivingSoldierCancelServices(s);
 
 	// Switch on stance!
-	switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
+	switch (gAnimControl[s->usAnimState].ubEndHeight)
 	{
 		case ANIM_STAND:
-
-			if ( fOldRifle && !fNewRifle )
+		{
+			// Did we have a rifle and do we now not have one?
+			bool const old_rifle = IsRifle(usOldItem);
+			bool const new_rifle = IsRifle(usNewItem);
+			if (old_rifle && !new_rifle)
 			{
 				// Put it away!
-				EVENT_InitNewSoldierAnim( pSoldier, LOWER_RIFLE, 0 , FALSE );
+				EVENT_InitNewSoldierAnim(s, LOWER_RIFLE, 0, FALSE);
+				break;
 			}
-			else if ( !fOldRifle && fNewRifle )
+			else if (!old_rifle && new_rifle)
 			{
 				// Bring it up!
-				EVENT_InitNewSoldierAnim( pSoldier, RAISE_RIFLE, 0 , FALSE );
+				EVENT_InitNewSoldierAnim(s, RAISE_RIFLE, 0, FALSE);
+				break;
 			}
-			else
-			{
-				SetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
-			}
-			break;
+			/* FALLTHROUGH */
+		}
 
 		case ANIM_CROUCH:
 		case ANIM_PRONE:
-
-			SetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
+			SetSoldierAnimationSurface(s, s->usAnimState);
 			break;
 	}
-
 }
 
 
