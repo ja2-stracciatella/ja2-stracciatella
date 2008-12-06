@@ -1884,80 +1884,65 @@ void StackObjs(OBJECTTYPE* pSourceObj, OBJECTTYPE* pTargetObj, UINT8 ubNumberToC
 }
 
 
-void CleanUpStack(OBJECTTYPE* pObj, OBJECTTYPE* pCursorObj)
+void CleanUpStack(OBJECTTYPE* const o, OBJECTTYPE* const cursor_o)
 {
-	INT8	bLoop, bLoop2;
-	INT8	bMaxPoints, bPointsToMove;
-
-	if ( !(Item[ pObj->usItem ].usItemClass & IC_AMMO || Item[ pObj->usItem ].usItemClass & IC_KIT || Item[ pObj->usItem ].usItemClass & IC_MEDKIT ) )
+	INVTYPE const& item = Item[o->usItem];
+	if (!(item.usItemClass & IC_AMMO) &&
+			!(item.usItemClass & IC_KIT)  &&
+			!(item.usItemClass & IC_MEDKIT))
 	{
 		return;
 	}
 
-	if ( Item[ pObj->usItem ].usItemClass & IC_AMMO )
-	{
-		bMaxPoints = Magazine[ Item[ pObj->usItem ].ubClassIndex ].ubMagSize;
-	}
-	else
-	{
-		bMaxPoints = 100;
-	}
+	INT8 const max_points = item.usItemClass & IC_AMMO ?
+		Magazine[item.ubClassIndex].ubMagSize : 100;
 
-	if ( pCursorObj && pCursorObj->usItem == pObj->usItem )
+	if (cursor_o && cursor_o->usItem == o->usItem)
 	{
-		for ( bLoop = (INT8) pCursorObj->ubNumberOfObjects - 1; bLoop >= 0; bLoop-- )
+		for (INT8 i = (INT8)cursor_o->ubNumberOfObjects - 1; i >= 0; --i)
 		{
-			if ( pCursorObj->bStatus[ bLoop ] > 0 )
-			{
-				// take the points here and distribute over the lower #d items
-				for ( bLoop2 = pObj->ubNumberOfObjects - 1; bLoop2 >= 0; bLoop2-- )
-				{
-					if ( pObj->bStatus[ bLoop2 ] < bMaxPoints )
-					{
-						bPointsToMove = bMaxPoints - pObj->bStatus[ bLoop2 ];
-						bPointsToMove = __min( bPointsToMove, pCursorObj->bStatus[ bLoop ] );
+			INT8& src_status = cursor_o->bStatus[i];
+			if (src_status <= 0) continue;
 
-						pObj->bStatus[ bLoop2 ] += bPointsToMove;
-
-						pCursorObj->bStatus[ bLoop ] -= bPointsToMove;
-						if ( pCursorObj->bStatus[ bLoop ] == 0 )
-						{
-							// done!
-							pCursorObj->ubNumberOfObjects--;
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	for ( bLoop = (INT8) pObj->ubNumberOfObjects - 1; bLoop >= 0; bLoop-- )
-	{
-		if ( pObj->bStatus[ bLoop ] > 0 )
-		{
 			// take the points here and distribute over the lower #d items
-			for ( bLoop2 = bLoop - 1; bLoop2 >= 0; bLoop2-- )
+			for (INT8 k = o->ubNumberOfObjects - 1; k >= 0; --k)
 			{
-				if ( pObj->bStatus[ bLoop2 ] < bMaxPoints )
-				{
-					bPointsToMove = bMaxPoints - pObj->bStatus[ bLoop2 ];
-					bPointsToMove = __min( bPointsToMove, pObj->bStatus[ bLoop ] );
+				INT8& dst_status = o->bStatus[k];
+				if (dst_status >= max_points) continue;
 
-					pObj->bStatus[ bLoop2 ] += bPointsToMove;
+				INT8 const points_to_move = MIN(max_points - dst_status, src_status);
+				dst_status += points_to_move;
+				src_status -= points_to_move;
+				if (src_status != 0) continue;
 
-					pObj->bStatus[ bLoop ] -= bPointsToMove;
-					if ( pObj->bStatus[ bLoop ] == 0 )
-					{
-						// done!
-						pObj->ubNumberOfObjects--;
-						break;
-					}
-				}
+				// done!
+				--cursor_o->ubNumberOfObjects;
+				break;
 			}
 		}
 	}
 
+	for (INT8 i = (INT8)o->ubNumberOfObjects - 1; i >= 0; --i)
+	{
+		INT8& src_status = o->bStatus[i];
+		if (src_status <= 0) continue;
+
+		// take the points here and distribute over the lower #d items
+		for (INT8 k = i - 1; k >= 0; --k)
+		{
+			INT8& dst_status = o->bStatus[k];
+			if (dst_status >= max_points) continue;
+
+			INT8 const points_to_move = MIN(max_points - dst_status, src_status);
+			dst_status += points_to_move;
+			src_status -= points_to_move;
+			if (src_status != 0) continue;
+
+			// done!
+			--o->ubNumberOfObjects;
+			break;
+		}
+	}
 }
 
 
