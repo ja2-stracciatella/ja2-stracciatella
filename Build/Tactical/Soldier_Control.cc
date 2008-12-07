@@ -959,7 +959,6 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 	INT16		sBPCost = 0;
 	UINT32	uiOldAnimFlags;
 	UINT32  uiNewAnimFlags;
-	UINT16	usItem;
 	BOOLEAN	fTryingToRestart = FALSE;
 
 	CHECKF( usNewState < NUMANIMATIONSTATES );
@@ -1097,12 +1096,10 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 				// If this animation is a raise_weapon animation
 				if ( ( gAnimControl[ usNewState ].uiFlags & ANIM_RAISE_WEAPON ) && !( gAnimControl[ pSoldier->usAnimState ].uiFlags & ( ANIM_RAISE_WEAPON | ANIM_NOCHANGE_WEAPON ) ) )
 				{
-					// We are told that we need to rasie weapon
+					// We are told that we need to raise weapon
 					// Do so only if
 					// 1) We have a rifle in hand...
-					usItem = pSoldier->inv[ HANDPOS ].usItem;
-
-					if ( usItem != NOTHING && (Item[ usItem ].fFlags & ITEM_TWO_HANDED) && usItem != ROCKET_LAUNCHER )
+					if (IsRifle(pSoldier->inv[HANDPOS].usItem))
 					{
 						// Switch on height!
 						switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
@@ -1120,12 +1117,10 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 				// If this animation is a lower_weapon animation
 				if ( ( gAnimControl[ usNewState ].uiFlags & ANIM_LOWER_WEAPON ) && !( gAnimControl[ pSoldier->usAnimState ].uiFlags & ( ANIM_LOWER_WEAPON | ANIM_NOCHANGE_WEAPON ) ) )
 				{
-					// We are told that we need to rasie weapon
+					// We are told that we need to lower weapon
 					// Do so only if
 					// 1) We have a rifle in hand...
-					usItem = pSoldier->inv[ HANDPOS ].usItem;
-
-					if ( usItem != NOTHING && (Item[ usItem ].fFlags & ITEM_TWO_HANDED) && usItem != ROCKET_LAUNCHER )
+					if (IsRifle(pSoldier->inv[HANDPOS].usItem))
 					{
 						// Switch on height!
 						switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
