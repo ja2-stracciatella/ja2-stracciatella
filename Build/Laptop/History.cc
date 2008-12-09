@@ -866,7 +866,7 @@ static INT32 GetNumberOfHistoryPages(void)
 {
 	AutoSGPFile f(FileOpen(HISTORY_DATA_FILE, FILE_ACCESS_READ));
 
-	const UINT32 uiFileSize = FileGetSize(f) - 1;
+	const UINT32 uiFileSize = FileGetSize(f);
 
 	if (uiFileSize == 0) return 1;
 
