@@ -1542,7 +1542,6 @@ static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 
 	INT32 i;
 //	UINT16 usRandomNum;
 	UINT32 uiItemClass;
-	UINT8 ubNumMatches = 0;
 	UINT16 usItem;
 	UINT8 ubAmmoDropRate;
 	UINT8 ubGrenadeDropRate;
