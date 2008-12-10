@@ -1407,7 +1407,7 @@ const wchar_t *pMapInventoryStrings[] =
 // movement menu text
 const wchar_t *pMovementMenuStrings[] =
 {
-	L"Söldner in Sektor bewegen", 	// title for movement box
+	L"Söldner in Sektor %ls bewegen", 	// title for movement box
 	L"Route planen", 		// done with movement menu, start plotting movement
 	L"Abbruch", 	// cancel this menu
 	L"Andere",			// title for group of mercs not on squads nor in vehicles

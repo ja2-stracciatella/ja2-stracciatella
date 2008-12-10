@@ -2682,7 +2682,7 @@ static void AddStringsToMoveBox(PopUpBox* const box)
 
 	// add title
 	GetShortSectorString( sSelMapX, sSelMapY, sStringB, lengthof(sStringB));
-	swprintf( sString, lengthof(sString), L"%ls %ls", pMovementMenuStrings[ 0 ], sStringB );
+	swprintf(sString, lengthof(sString), pMovementMenuStrings[0], sStringB);
 	AddMonoString(box, sString);
 
 

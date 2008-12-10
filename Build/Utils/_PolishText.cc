@@ -1446,7 +1446,7 @@ const wchar_t* pMapInventoryStrings[] =
 
 const wchar_t* pMovementMenuStrings[] =
 {
-	L"Przemieść najemników", 	// title for movement box
+	L"Przemieść najemników %ls", 	// title for movement box
 	L"Nanieś trasę podróży", 		// done with movement menu, start plotting movement
 	L"Anuluj", 		// cancel this menu
 	L"Inni",		// title for group of mercs not on squads nor in vehicles
