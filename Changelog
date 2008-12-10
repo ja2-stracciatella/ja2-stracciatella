@@ -1,3 +1,4 @@
+(r4857) Fix a glitch in r4280: The wrong dying sound was played for animals and monsters.
 (r4856) Minor improvement of the German translation.
 (r4855) Fix a glitch in r3732, which caused that the last page of the history was missing, if there is a single entry on that page.
 (r4849) Fix a vanilla out of bounds array access, when a soldier puts an item in his primary hand, which is not a weapon.  This caused burst mode to be reset, when reloading a gun.

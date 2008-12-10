@@ -6113,6 +6113,7 @@ BOOLEAN InternalDoMercBattleSound(SOLDIERTYPE* s, BattleSound battle_snd_id, INT
 
 				default: goto no_sub;
 			}
+			break;
 
 		default:
 			// OK. any other sound, not hits, robot makes a beep
