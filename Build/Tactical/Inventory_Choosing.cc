@@ -1507,6 +1507,36 @@ static BOOLEAN PlaceObjectInSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, OBJECT
 }
 
 
+static void MakeOneItemOfClassDroppable(SOLDIERCREATE_STRUCT* const sc, UINT32 const item_class)
+{
+	/* XXX TODO001B: OBJECT_NO_OVERWRITE test should probably continue instead of
+	 * break, but it was this way in the original code.  This is even more
+	 * plausible, because the OBJECT_NO_OVERWRITE condition in the second loop
+	 * never can be true in the current configuration.  A comment below says that
+	 * no object of that class should be dropped if any has this flag set, but the
+	 * code did not do this. */
+	UINT8 n_matches = 0;
+	for (INT32 i = 0; i != NUM_INV_SLOTS; ++i)
+	{
+		OBJECTTYPE const& o = sc->Inv[i];
+		if (!(Item[o.usItem].usItemClass & item_class)) continue;
+		if (o.fFlags & OBJECT_NO_OVERWRITE)             break;
+		++n_matches;
+	}
+	if (n_matches == 0) return;
+
+	for (INT32 i = 0; i != NUM_INV_SLOTS; ++i)
+	{
+		OBJECTTYPE& o = sc->Inv[i];
+		if (!(Item[o.usItem].usItemClass & item_class)) continue;
+		if (o.fFlags & OBJECT_NO_OVERWRITE)             break;
+		if (Random(n_matches--) != 0)                   continue;
+		o.fFlags &= ~OBJECT_UNDROPPABLE;
+		break;
+	}
+}
+
+
 static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 bSoldierClass)
 {
 	INT32 i;
@@ -1674,71 +1704,8 @@ static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 
 		}
 	}
 
-	if( fWeapon )
-	{
-		ubNumMatches = 0;
-		for( i = 0; i < NUM_INV_SLOTS; i++ )
-		{
-			uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
-			if( uiItemClass == IC_GUN || uiItemClass == IC_LAUNCHER )
-			{
-				if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
-					break;
-				else
-					ubNumMatches++;
-			}
-		}
-		if ( ubNumMatches > 0 )
-		{
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
-			{
-				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
-				if( uiItemClass == IC_GUN || uiItemClass == IC_LAUNCHER )
-				{
-					if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
-						break;
-					else if( !Random( ubNumMatches-- ) )
-					{
-						pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	if( fArmour )
-	{
-		ubNumMatches = 0;
-		for( i = 0; i < NUM_INV_SLOTS; i++ )
-		{
-			uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
-			if( uiItemClass == IC_ARMOUR )
-			{
-				if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
-					break;
-				else
-					ubNumMatches++;
-			}
-		}
-		if ( ubNumMatches > 0 )
-		{
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
-			{
-				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
-				if( uiItemClass == IC_ARMOUR )
-				{
-					if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
-						break;
-					else if( !Random( ubNumMatches-- ) )
-					{
-						pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
-						break;
-					}
-				}
-			}
-		}
-	}
+	if (fWeapon) MakeOneItemOfClassDroppable(pp, IC_LAUNCHER | IC_GUN);
+	if (fArmour) MakeOneItemOfClassDroppable(pp, IC_ARMOUR);
 
 	if( fKnife)
 	{
@@ -1760,137 +1727,10 @@ static void RandomlyChooseWhichItemsAreDroppable(SOLDIERCREATE_STRUCT* pp, INT8 
 	}
 
 	// note that they'll only drop ONE TYPE of grenade if they have multiple types (very common)
-	if( fGrenades )
-	{
-		ubNumMatches = 0;
-		for( i = 0; i < NUM_INV_SLOTS; i++ )
-		{
-			uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
-			if( uiItemClass & IC_GRENADE )
-			{
-				if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
-					break;
-				else
-					ubNumMatches++;
-			}
-		}
-		if ( ubNumMatches > 0 )
-		{
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
-			{
-				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
-				if( uiItemClass & IC_GRENADE )
-				{
-					if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
-						break;
-					else if( !Random( ubNumMatches-- ) )
-					{
-						pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	if( fKit )
-	{
-		ubNumMatches = 0;
-		for( i = 0; i < NUM_INV_SLOTS; i++ )
-		{
-			uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
-			if( uiItemClass == IC_MEDKIT || uiItemClass == IC_KIT )
-			{
-				if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
-					break;
-				else
-					ubNumMatches++;
-			}
-		}
-		if ( ubNumMatches > 0 )
-		{
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
-			{
-				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
-				if( uiItemClass == IC_MEDKIT || uiItemClass == IC_KIT )
-				{
-					if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
-						break;
-					else if( !Random( ubNumMatches-- ) )
-					{
-						pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	if( fFace )
-	{
-		ubNumMatches = 0;
-		for( i = 0; i < NUM_INV_SLOTS; i++ )
-		{
-			uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
-			if( uiItemClass == IC_FACE )
-			{
-				if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
-					break;
-				else
-					ubNumMatches++;
-			}
-		}
-		if ( ubNumMatches > 0 )
-		{
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
-			{
-				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
-				if( uiItemClass == IC_FACE )
-				{
-					if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
-						break;
-					else if( !Random( ubNumMatches-- ) )
-					{
-						pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	if( fMisc )
-	{
-		ubNumMatches = 0;
-		for( i = 0; i < NUM_INV_SLOTS; i++ )
-		{
-			uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
-			if( uiItemClass == IC_MISC )
-			{
-				if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
-					break;
-				else
-					ubNumMatches++;
-			}
-		}
-		if ( ubNumMatches > 0 )
-		{
-			for( i = 0; i < NUM_INV_SLOTS; i++ )
-			{
-				uiItemClass = Item[ pp->Inv[ i ].usItem ].usItemClass;
-				if( uiItemClass == IC_MISC )
-				{
-					if( pp->Inv[ i ].fFlags & OBJECT_NO_OVERWRITE )
-						break;
-					else if( !Random( ubNumMatches-- ) )
-					{
-						pp->Inv[ i ].fFlags &= ~OBJECT_UNDROPPABLE;
-						break;
-					}
-				}
-			}
-		}
-	}
+	if (fGrenades) MakeOneItemOfClassDroppable(pp, IC_GRENADE);
+	if (fKit)      MakeOneItemOfClassDroppable(pp, IC_KIT | IC_MEDKIT);
+	if (fFace)     MakeOneItemOfClassDroppable(pp, IC_FACE);
+	if (fMisc)     MakeOneItemOfClassDroppable(pp, IC_MISC);
 }
 
 
