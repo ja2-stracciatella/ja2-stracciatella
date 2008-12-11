@@ -672,15 +672,15 @@ static INT8 GetTrainingStatValue(const SOLDIERTYPE* const s, const INT8 stat)
 {
 	switch (stat)
 	{
-		case STRENGTH:         return s->bStrength;     break;
-		case DEXTERITY:        return s->bDexterity;    break;
-		case AGILITY:          return s->bAgility;      break;
-		case HEALTH:           return s->bLifeMax;      break;
-		case MARKSMANSHIP:     return s->bMarksmanship; break;
-		case MEDICAL:          return s->bMedical;      break;
-		case MECHANICAL:       return s->bMechanical;   break;
-		case LEADERSHIP:       return s->bLeadership;   break;
-		case EXPLOSIVE_ASSIGN: return s->bExplosive;    break;
+		case STRENGTH:         return s->bStrength;
+		case DEXTERITY:        return s->bDexterity;
+		case AGILITY:          return s->bAgility;
+		case HEALTH:           return s->bLifeMax;
+		case MARKSMANSHIP:     return s->bMarksmanship;
+		case MEDICAL:          return s->bMedical;
+		case MECHANICAL:       return s->bMechanical;
+		case LEADERSHIP:       return s->bLeadership;
+		case EXPLOSIVE_ASSIGN: return s->bExplosive;
 		// NOTE: Wisdom can't be trained!
 
 		default:
