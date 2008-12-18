@@ -1164,163 +1164,120 @@ void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 }
 
 
-static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode)
+static void AddSoldierToSectorGridNo(SOLDIERTYPE* const s, INT16 const sGridNo, UINT8 const ubDirection, BOOLEAN const fUseAnimation, UINT16 const usAnimState, UINT16 const usAnimCode)
 {
-	UINT8	ubInsertionCode;
-
 	// Add merc to gridno
 
 	// Set reserved location!
-	pSoldier->sReservedMovementGridNo = NOWHERE;
+	s->sReservedMovementGridNo = NOWHERE;
 
 	// Save OLD insertion code.. as this can change...
-	ubInsertionCode = pSoldier->ubStrategicInsertionCode;
+	UINT8 const insertion_code = s->ubStrategicInsertionCode;
 
 	// Remove any pending animations
-	pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-	pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
-	pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+	s->usPendingAnimation = NO_PENDING_ANIMATION;
+	s->ubPendingDirection = NO_PENDING_DIRECTION;
+	s->ubPendingAction		= NO_PENDING_ACTION;
 
 	//If we are not loading a saved game
 	SetSoldierPosFlags set_pos_flags = SSP_NONE;
-	if( (gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
+	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME)
 	{
 		// Set final dest to be the same...
 		set_pos_flags = SSP_NO_DEST | SSP_NO_FINAL_DEST;
 	}
 
 	// If this is a special insertion location, get path!
-	if ( ubInsertionCode == INSERTION_CODE_ARRIVING_GAME )
+	if (insertion_code == INSERTION_CODE_ARRIVING_GAME)
 	{
-		EVENT_SetSoldierPosition(pSoldier, sGridNo, set_pos_flags);
-		EVENT_SetSoldierDirection( pSoldier, ubDirection );
-		EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
+		EVENT_SetSoldierPosition(        s, sGridNo, set_pos_flags);
+		EVENT_SetSoldierDirection(       s, ubDirection);
+		EVENT_SetSoldierDesiredDirection(s, ubDirection);
 	}
-	else if ( ubInsertionCode == INSERTION_CODE_CHOPPER )
+	else if (insertion_code != INSERTION_CODE_CHOPPER)
 	{
+		EVENT_SetSoldierPosition(s, sGridNo, set_pos_flags);
 
-	}
-	else
-	{
-		EVENT_SetSoldierPosition(pSoldier, sGridNo, set_pos_flags);
-
-		//if we are loading, dont set the direction ( they are already set )
-		if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
+		// if we are loading, dont set the direction (they are already set)
+		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 		{
-			EVENT_SetSoldierDirection( pSoldier, ubDirection );
-
-			EVENT_SetSoldierDesiredDirection( pSoldier, ubDirection );
+			EVENT_SetSoldierDirection(       s, ubDirection);
+			EVENT_SetSoldierDesiredDirection(s, ubDirection);
 		}
 	}
 
-	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
+	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) return;
+
+	if (!(s->uiStatusFlags & SOLDIER_DEAD) && s->bTeam == gbPlayerNum)
 	{
-		if ( !( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
+		RevealRoofsAndItems(s, FALSE);
+
+		// ATE: Patch fix: If we are in an non-interruptable animation, stop!
+		if (s->usAnimState == HOPFENCE)
 		{
-			if ( pSoldier->bTeam == gbPlayerNum )
-			{
-				RevealRoofsAndItems(pSoldier, FALSE);
-
-        // ATE: Patch fix: If we are in an non-interruptable animation, stop!
-        if ( pSoldier->usAnimState == HOPFENCE )
-        {
-          pSoldier->fInNonintAnim = FALSE;
-          SoldierGotoStationaryStance( pSoldier );
-        }
-
-				EVENT_StopMerc( pSoldier, sGridNo, ubDirection );
-			}
+			s->fInNonintAnim = FALSE;
+			SoldierGotoStationaryStance(s);
 		}
 
-		// If just arriving, set a destination to walk into from!
-		if ( ubInsertionCode == INSERTION_CODE_ARRIVING_GAME )
-		{
-			// Find a sweetspot near...
-			const INT16 sNewGridNo = FindGridNoFromSweetSpot(pSoldier, gMapInformation.sNorthGridNo, 4);
-			EVENT_GetNewSoldierPath( pSoldier, sNewGridNo, WALKING );
-		}
+		EVENT_StopMerc(s, sGridNo, ubDirection);
+	}
 
-		// If he's an enemy... set presence
-		if ( !pSoldier->bNeutral && (pSoldier->bSide != gbPlayerNum ) )
+	// If just arriving, set a destination to walk into from!
+	if (insertion_code == INSERTION_CODE_ARRIVING_GAME)
+	{
+		// Find a sweetspot near...
+		INT16 const new_gridno = FindGridNoFromSweetSpot(s, gMapInformation.sNorthGridNo, 4);
+		EVENT_GetNewSoldierPath(s, new_gridno, WALKING);
+	}
+
+	// If he's an enemy... set presence
+	// ATE: Added if not bloodcats, only do this once they are seen
+	if (!s->bNeutral && s->bSide != gbPlayerNum && s->ubBodyType != BLOODCAT)
+	{
+		SetEnemyPresence();
+	}
+
+	if (s->uiStatusFlags & SOLDIER_DEAD) return;
+
+	// ATE: Double check if we are on the roof that there is a roof there!
+	if (s->bLevel == 1 && !FindStructure(s->sGridNo, STRUCTURE_ROOF))
+	{
+		SetSoldierHeight(s, 0.0);
+	}
+
+	if (insertion_code == INSERTION_CODE_ARRIVING_GAME) return;
+
+	// default to standing on arrival
+	if (s->usAnimState != HELIDROP)
+	{
+		if (fUseAnimation)
 		{
-      // ATE: Added if not bloodcats
-      // only do this once they are seen.....
-      if ( pSoldier->ubBodyType != BLOODCAT )
-      {
-			  SetEnemyPresence( );
-      }
+			EVENT_InitNewSoldierAnim(s, usAnimState, usAnimCode, TRUE);
+		}
+		else if (s->ubBodyType != CROW)
+		{
+			EVENT_InitNewSoldierAnim(s, STANDING, 1, TRUE);
 		}
 	}
 
-	if ( !( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
+	// ATE: if we are below OK life, make them lie down!
+	if (s->bLife < OKLIFE)
 	{
-		//if we are loading a 'pristine' map ( ie, not loading a saved game )
-		if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
-		{
-			// ATE: Double check if we are on the roof that there is a roof there!
-			if ( pSoldier->bLevel == 1 )
-			{
-				if ( !FindStructure( pSoldier->sGridNo, STRUCTURE_ROOF ) )
-				{
-					SetSoldierHeight( pSoldier, (FLOAT)( 0 )  );
-				}
-			}
-
-			if ( ubInsertionCode != INSERTION_CODE_ARRIVING_GAME )
-			{
-				// default to standing on arrival
-				if ( pSoldier->usAnimState != HELIDROP )
-				{
-					if ( fUseAnimation )
-					{
-						EVENT_InitNewSoldierAnim( pSoldier, usAnimState, usAnimCode, TRUE );
-					}
-					else if ( pSoldier->ubBodyType != CROW )
-					{
-						EVENT_InitNewSoldierAnim( pSoldier, STANDING, 1, TRUE );
-					}
-				}
-
-				// ATE: if we are below OK life, make them lie down!
-				if ( pSoldier->bLife < OKLIFE )
-				{
-					SoldierInSectorIncompaciated( pSoldier, pSoldier->sInsertionGridNo );
-				}
-				else if (pSoldier->fMercAsleep)
-				{
-					InternalSoldierInSectorSleep(pSoldier, pSoldier->sInsertionGridNo);
-				}
-				else if ( pSoldier->bAssignment == PATIENT )
-				{
-					SoldierInSectorPatient( pSoldier, pSoldier->sInsertionGridNo );
-				}
-				else if ( pSoldier->bAssignment == DOCTOR )
-				{
-					SoldierInSectorDoctor( pSoldier, pSoldier->sInsertionGridNo );
-				}
-				else if ( pSoldier->bAssignment == REPAIR )
-				{
-					SoldierInSectorRepair( pSoldier, pSoldier->sInsertionGridNo );
-				}
-
-        // ATE: Make sure movement mode is up to date!
-  			pSoldier->usUIMovementMode =  GetMoveStateBasedOnStance( pSoldier, gAnimControl[ pSoldier->usAnimState ].ubEndHeight );
-
-			}
-		}
-		else
-		{
-			// THIS ALL SHOULD HAVE BEEN HANDLED BY THE FACT THAT A GAME WAS LOADED
-
-			//EVENT_InitNewSoldierAnim( pSoldier, pSoldier->usAnimState, pSoldier->usAniCode, TRUE );
-
-			// if the merc had a final destination, get the merc walking there
-			//if( pSoldier->sFinalDestination != pSoldier->sGridNo )
-			//{
-			//	EVENT_GetNewSoldierPath( pSoldier, pSoldier->sFinalDestination, pSoldier->usUIMovementMode );
-			//}
-		}
+		SoldierInSectorIncompaciated(s, s->sInsertionGridNo);
 	}
+	else if (s->fMercAsleep)
+	{
+		InternalSoldierInSectorSleep(s, s->sInsertionGridNo);
+	}
+	else switch (s->bAssignment)
+	{
+		case PATIENT: SoldierInSectorPatient(s, s->sInsertionGridNo); break;
+		case DOCTOR:  SoldierInSectorDoctor( s, s->sInsertionGridNo); break;
+		case REPAIR:  SoldierInSectorRepair( s, s->sInsertionGridNo); break;
+	}
+
+	// ATE: Make sure movement mode is up to date!
+	s->usUIMovementMode = GetMoveStateBasedOnStance(s, gAnimControl[s->usAnimState].ubEndHeight);
 }
 
 
