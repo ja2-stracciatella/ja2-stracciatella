@@ -1479,130 +1479,113 @@ static BOOLEAN EnterSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 }
 
 
-void UpdateMercsInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+void UpdateMercsInSector(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
 {
-	INT32					cnt;
-	SOLDIERTYPE		*pSoldier;
-	BOOLEAN				fPOWSquadSet = FALSE;
-	UINT8					ubPOWSquad=0;
-
 	// Remove from interface slot
-	RemoveAllPlayersFromSlot( );
+	RemoveAllPlayersFromSlot();
 
 	// Remove tactical interface stuff
 	guiPendingOverrideEvent = I_CHANGE_TO_IDLE;
 
 	//If we are in this function during the loading of a sector
-	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
+	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 	{
 		//DONT set these values
 		SetSelectedMan(NULL);
 		gfGameScreenLocateToSoldier = TRUE;
 	}
 
-	// Set all faces intactive
-	SetAllAutoFacesInactive( );
+	SetAllAutoFacesInactive();
 
-	if ( fUsingEdgePointsForStrategicEntry )
+	if (fUsingEdgePointsForStrategicEntry)
 	{
 		BeginMapEdgepointSearch();
 	}
 
-	//if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
+	UINT8       pow_squad   = NO_CURRENT_SQUAD;
+	UINT8 const first_enemy = gTacticalStatus.Team[ENEMY_TEAM].bFirstID;
+	UINT8 const last_enemy  = gTacticalStatus.Team[CREATURE_TEAM].bLastID;
+	for (INT32 i = 0; i != MAX_NUM_SOLDIERS; ++i)
 	{
-		for (cnt = 0, pSoldier = GetMan(cnt); cnt < MAX_NUM_SOLDIERS; cnt++, pSoldier++)
+		if (gfRestoringEnemySoldiersFromTempFile &&
+				first_enemy <= i && i <= last_enemy)
+		{ /* Don't update enemies/creatures (consec. teams) if they were just
+			 * restored via the temp map files */
+			continue;
+		}
+
+		SOLDIERTYPE* const s = GetMan(i);
+		RemoveMercSlot(s);
+
+		s->bInSector = FALSE;
+
+		if (!s->bActive) continue;
+
+		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 		{
-			if ( gfRestoringEnemySoldiersFromTempFile &&
-					cnt >= gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID &&
-					cnt <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID )
-			{ //Don't update enemies/creatures (consec. teams) if they were
-				//just restored via the temp map files...
-				continue;
-			}
-			// Remove old merc, if exists
-			RemoveMercSlot( pSoldier );
-
-			pSoldier->bInSector = FALSE;
-
-			if ( pSoldier->bActive  )
+			if (gMapInformation.sCenterGridNo != -1 &&
+					gfBlitBattleSectorLocator           &&
+					s->bTeam != CIV_TEAM                &&
+					(
+						gubEnemyEncounterCode == ENEMY_AMBUSH_CODE ||
+						gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE
+					))
 			{
-				if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
-				{
-					if( gMapInformation.sCenterGridNo != -1 && gfBlitBattleSectorLocator &&
-							(gubEnemyEncounterCode == ENEMY_AMBUSH_CODE || gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE) && pSoldier->bTeam != CIV_TEAM )
-					{
-						pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-						pSoldier->usStrategicInsertionData = gMapInformation.sCenterGridNo;
-					}
-					else if( gfOverrideInsertionWithExitGrid )
-					{
-						pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-						pSoldier->usStrategicInsertionData = gExitGrid.usGridNo;
-					}
-				}
-
-				if ( pSoldier->sSectorX == sSectorX && pSoldier->sSectorY == sSectorY && pSoldier->bSectorZ == bSectorZ && !pSoldier->fBetweenSectors )
-				{
-					UpdateMercInSector( pSoldier, sSectorX, sSectorY, bSectorZ );
-
-					if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
-					{
-						if ( pSoldier->bAssignment == ASSIGNMENT_POW )
-						{
-							if ( !fPOWSquadSet )
-							{
-								fPOWSquadSet = TRUE;
-
-								// ATE: If we are in i13 - pop up message!
-								if ( sSectorY == MAP_ROW_I && sSectorX == 13 )
-								{
-									DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[POW_MERCS_ARE_HERE], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
-								}
-								else
-								{
-									AddCharacterToUniqueSquad( pSoldier );
-									ubPOWSquad = pSoldier->bAssignment;
-									pSoldier->bNeutral		= FALSE;
-								}
-							}
-							else
-							{
-								if ( sSectorY != MAP_ROW_I && sSectorX != 13 )
-								{
-									AddCharacterToSquad( pSoldier, ubPOWSquad );
-								}
-							}
-
-							// ATE: Call actions based on what POW we are on...
-							if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTINPROGRESS )
-							{
-								// Complete quest
-								EndQuest( QUEST_HELD_IN_ALMA, sSectorX, sSectorY );
-
-								// Do action
-								HandleNPCDoAction( 0, NPC_ACTION_GRANT_EXPERIENCE_3, 0 );
-
-							}
-
-						}
-					}
-				}
-				else
-				{
-					pSoldier->bInSector = FALSE;
-				}
+				s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+				s->usStrategicInsertionData = gMapInformation.sCenterGridNo;
 			}
+			else if (gfOverrideInsertionWithExitGrid)
+			{
+				s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+				s->usStrategicInsertionData = gExitGrid.usGridNo;
+			}
+		}
+
+		if (s->sSectorX != sSectorX) continue;
+		if (s->sSectorY != sSectorY) continue;
+		if (s->bSectorZ != bSectorZ) continue;
+		if (s->fBetweenSectors)      continue;
+
+		UpdateMercInSector(s, sSectorX, sSectorY, bSectorZ);
+
+		if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) continue;
+		if (s->bAssignment != ASSIGNMENT_POW)             continue;
+
+		if (pow_squad == NO_CURRENT_SQUAD)
+		{
+			// ATE: If we are in i13 - pop up message!
+			if (sSectorY == MAP_ROW_I && sSectorX == 13)
+			{
+				DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[POW_MERCS_ARE_HERE], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
+			}
+			else
+			{
+				AddCharacterToUniqueSquad(s);
+				pow_squad   = s->bAssignment;
+				s->bNeutral = FALSE;
+			}
+		}
+		else
+		{
+			if (sSectorY != MAP_ROW_I && sSectorX != 13)
+			{
+				AddCharacterToSquad(s, pow_squad);
+			}
+		}
+
+		// ATE: Call actions based on what POW we are on...
+		if (gubQuest[QUEST_HELD_IN_ALMA] == QUESTINPROGRESS)
+		{
+			EndQuest(QUEST_HELD_IN_ALMA, sSectorX, sSectorY);
+			HandleNPCDoAction(0, NPC_ACTION_GRANT_EXPERIENCE_3, 0);
 		}
 	}
 
-	if ( fUsingEdgePointsForStrategicEntry )
+	if (fUsingEdgePointsForStrategicEntry)
 	{
 		EndMapEdgepointSearch();
-
-		// Set to false
 		fUsingEdgePointsForStrategicEntry = FALSE;
 	}
-
 }
 
 
