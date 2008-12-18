@@ -1,4 +1,4 @@
-HACK000F
+HACK0010
 TODO001B
 
 - HACK0001 put the process properly to sleep during idle phases instead of SDL_Delay(1)
@@ -10,6 +10,7 @@ TODO001B
 - HACK000D SDL_BlitSurface() sometimes returns with the direction flag set on x86, which violates the ABI.  Remove the "cld" hack once SDL is fixed.
 - HACK000E uninitialised variables
 - HACK000F Investigate whether this workaround, when loading a map containing underflow fillers, is correct
+- HACK0010 workaround for maps with overlapping objects: F6, K13, H15 are currently known
 
 - TODO0000 remove RestrictMouseCursor() et al.
 - TODO0001 implement blitters and related functions

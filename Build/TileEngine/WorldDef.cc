@@ -2559,7 +2559,15 @@ try
       }
 
 			// Add layer
-			AddStructToTail( cnt, usTileIndex );
+			try
+			{
+				AddStructToTail(cnt, usTileIndex);
+			}
+			catch (FailedToAddNode const&)
+			{
+				/* HACK0010 Workaround: ignore, because there are defective maps with
+				 * overlapping objects */
+			}
 
 			offset += 2;
 		}

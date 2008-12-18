@@ -549,7 +549,7 @@ static LEVELNODE* AddNodeToWorld(UINT32 const iMapIndex, UINT16 const usIndex, I
 	if (AddStructureToWorld(iMapIndex, level, sr, n)) return n;
 
 	MemFree(n);
-	throw std::runtime_error("Failed to add node to world");
+	throw FailedToAddNode();
 }
 
 
