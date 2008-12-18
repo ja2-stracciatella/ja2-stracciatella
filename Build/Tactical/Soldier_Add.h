@@ -21,11 +21,11 @@ UINT16 FindRandomGridNoFromSweetSpot(const SOLDIERTYPE* pSoldier, INT16 sSweetGr
 
 // Adds a soldier ( already created in mercptrs[] array )!
 // Finds a good placement based on data in the loaded sector and if they are enemy's or not, etc...
-BOOLEAN AddSoldierToSector(SOLDIERTYPE* s);
+void AddSoldierToSector(SOLDIERTYPE*);
 
-BOOLEAN AddSoldierToSectorNoCalculateDirection(SOLDIERTYPE* s);
+void AddSoldierToSectorNoCalculateDirection(SOLDIERTYPE*);
 
-BOOLEAN AddSoldierToSectorNoCalculateDirectionUseAnimation(SOLDIERTYPE* s, UINT16 usAnimState, UINT16 usAnimCode);
+void AddSoldierToSectorNoCalculateDirectionUseAnimation(SOLDIERTYPE*, UINT16 usAnimState, UINT16 usAnimCode);
 
 // IsMercOnTeam() checks to see if the passed in Merc Profile ID is currently on the player's team
 BOOLEAN IsMercOnTeam(UINT8 ubMercID);

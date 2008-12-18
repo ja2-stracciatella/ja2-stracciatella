@@ -944,9 +944,9 @@ UINT16 FindRandomGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const IN
 static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode);
 
 
-static BOOLEAN InternalAddSoldierToSector(SOLDIERTYPE* const s, BOOLEAN calculate_direction, BOOLEAN const use_animation, UINT16 const anim_state, UINT16 const anim_code)
+static void InternalAddSoldierToSector(SOLDIERTYPE* const s, BOOLEAN calculate_direction, BOOLEAN const use_animation, UINT16 const anim_state, UINT16 const anim_code)
 {
-	if (!s->bActive) return FALSE;
+	if (!s->bActive) return;
 
 	// ATE: Make sure life of elliot is OK if from a meanwhile
 	if (AreInMeanwhile() && s->ubProfile == ELLIOT && s->bLife < OKLIFE)
@@ -969,8 +969,8 @@ static BOOLEAN InternalAddSoldierToSector(SOLDIERTYPE* const s, BOOLEAN calculat
 	}
 
 	// If a driver or passenger - stop here!
-	if (s->uiStatusFlags & SOLDIER_DRIVER)    return FALSE;
-	if (s->uiStatusFlags & SOLDIER_PASSENGER) return FALSE;
+	if (s->uiStatusFlags & SOLDIER_DRIVER)    return;
+	if (s->uiStatusFlags & SOLDIER_PASSENGER) return;
 
 	CheckForAndAddMercToTeamPanel(s);
 
@@ -1046,25 +1046,24 @@ static BOOLEAN InternalAddSoldierToSector(SOLDIERTYPE* const s, BOOLEAN calculat
 	AddSoldierToSectorGridNo(s, gridno, direction, use_animation, anim_state, anim_code);
 
 	CheckForPotentialAddToBattleIncrement(s);
-	return TRUE;
 }
 
 
-BOOLEAN AddSoldierToSector(SOLDIERTYPE* const s)
+void AddSoldierToSector(SOLDIERTYPE* const s)
 {
-	return InternalAddSoldierToSector(s, TRUE, FALSE, 0 , 0);
+	InternalAddSoldierToSector(s, TRUE, FALSE, 0 , 0);
 }
 
 
-BOOLEAN AddSoldierToSectorNoCalculateDirection(SOLDIERTYPE* const s)
+void AddSoldierToSectorNoCalculateDirection(SOLDIERTYPE* const s)
 {
-	return InternalAddSoldierToSector(s, FALSE, FALSE, 0, 0);
+	InternalAddSoldierToSector(s, FALSE, FALSE, 0, 0);
 }
 
 
-BOOLEAN AddSoldierToSectorNoCalculateDirectionUseAnimation(SOLDIERTYPE* const s, UINT16 const usAnimState, UINT16 const usAnimCode)
+void AddSoldierToSectorNoCalculateDirectionUseAnimation(SOLDIERTYPE* const s, UINT16 const usAnimState, UINT16 const usAnimCode)
 {
-	return InternalAddSoldierToSector(s, FALSE, TRUE, usAnimState, usAnimCode);
+	InternalAddSoldierToSector(s, FALSE, TRUE, usAnimState, usAnimCode);
 }
 
 
