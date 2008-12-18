@@ -533,7 +533,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	INT16	*		pusLastLoc;
 	INT8 *		pbPersOL;
 	INT8 *		pbPublOL;
-	UINT16 usMovementMode;
 	INT8	fHasGasMask;
 
 	UINT8	ubBackgroundLightLevel;
@@ -621,10 +620,10 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		iSearchRange /= 2;
 	}
 
-	usMovementMode = DetermineMovementMode( pSoldier, AI_ACTION_TAKE_COVER );
-
 	if (pSoldier->bAlertStatus >= STATUS_RED)          // if already in battle
 	{
+		UINT16 const usMovementMode = DetermineMovementMode(pSoldier, AI_ACTION_TAKE_COVER);
+
 		// must be able to reach the cover, so it can't possibly be more than
 		// action points left (rounded down) tiles away, since minimum
 		// cost to move per tile is 1 points.
@@ -835,7 +834,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 	// set the distance limit of the square region
 	gubNPCDistLimit = (UINT8) iSearchRange;
-	gusNPCMovementMode = usMovementMode;
 
 	// reset the "reachable" flags in the region we're looking at
 	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)

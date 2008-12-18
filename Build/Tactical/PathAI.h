@@ -33,7 +33,6 @@ INT16 RecalculatePathCost( SOLDIERTYPE *pSoldier, UINT16 usMovementMode );
 // Exporting these global variables
 extern UINT32 guiPathingData[256];
 extern UINT8 gubNPCAPBudget;
-extern UINT16 gusNPCMovementMode;
 extern UINT8 gubNPCDistLimit;
 extern UINT8 gubNPCPathCount;
 extern BOOLEAN gfPlotPathToExitGrid;

@@ -377,7 +377,6 @@ static path_t * pClosedHead;
 #define ORANGESTEPSTART		64
 
 UINT8 gubNPCAPBudget = 0;
-UINT16 gusNPCMovementMode;
 UINT8 gubNPCDistLimit = 0;
 BOOLEAN gfNPCCircularDistLimit = FALSE;
 UINT8	gubNPCPathCount;
