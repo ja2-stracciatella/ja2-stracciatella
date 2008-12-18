@@ -1078,29 +1078,20 @@ static void PlaceSoldierNearSweetSpot(SOLDIERTYPE* const s, const UINT16 anim, c
 }
 
 
-static void InternalSoldierInSectorSleep(SOLDIERTYPE* pSoldier, INT16 sGridNo)
+static void InternalSoldierInSectorSleep(SOLDIERTYPE* const s, INT16 const gridno)
 {
-	if ( !pSoldier->bInSector )
-	{
-		return;
-	}
-
-	const UINT16 anim = (AM_AN_EPC(pSoldier) ? STANDING : SLEEPING);
-	PlaceSoldierNearSweetSpot(pSoldier, anim, sGridNo);
-	EVENT_InitNewSoldierAnim(pSoldier, anim, 1, TRUE);
+	if (!s->bInSector) return;
+	UINT16 const anim = AM_AN_EPC(s) ? STANDING : SLEEPING;
+	PlaceSoldierNearSweetSpot(s, anim, gridno);
+	EVENT_InitNewSoldierAnim( s, anim, 1, TRUE);
 }
 
 
-static void SoldierInSectorIncompaciated(SOLDIERTYPE* pSoldier, INT16 sGridNo)
+static void SoldierInSectorIncompaciated(SOLDIERTYPE* const s, INT16 const gridno)
 {
-	if ( !pSoldier->bInSector )
-	{
-		return;
-	}
-
-	PlaceSoldierNearSweetSpot(pSoldier, STAND_FALLFORWARD_STOP, sGridNo);
-
-	EVENT_InitNewSoldierAnim( pSoldier, STAND_FALLFORWARD_STOP, 1, TRUE );
+	if (!s->bInSector) return;
+	PlaceSoldierNearSweetSpot(s, STAND_FALLFORWARD_STOP, gridno);
+	EVENT_InitNewSoldierAnim( s, STAND_FALLFORWARD_STOP, 1, TRUE);
 }
 
 
