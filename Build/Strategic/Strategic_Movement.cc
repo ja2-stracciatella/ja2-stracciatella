@@ -2684,24 +2684,26 @@ BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnt
 	}
 }
 
-void MoveAllGroupsInCurrentSectorToSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
+
+void MoveAllGroupsInCurrentSectorToSector(UINT8 const x, UINT8 const y, UINT8 const z)
 {
-	FOR_ALL_PLAYER_GROUPS(pGroup)
+	FOR_ALL_PLAYER_GROUPS(g)
 	{
-		if (pGroup->ubSectorX == gWorldSectorX  &&
-				pGroup->ubSectorY == gWorldSectorY  &&
-			  pGroup->ubSectorZ == gbWorldSectorZ && !pGroup->fBetweenSectors )
-		{ //This player group is in the currently loaded sector...
-			pGroup->ubSectorX = ubSectorX;
-			pGroup->ubSectorY = ubSectorY;
-			pGroup->ubSectorZ = ubSectorZ;
-			CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
-			{
-				pPlayer->pSoldier->sSectorX = ubSectorX;
-				pPlayer->pSoldier->sSectorY = ubSectorY;
-				pPlayer->pSoldier->bSectorZ = ubSectorZ;
-				pPlayer->pSoldier->fBetweenSectors = FALSE;
-			}
+		if (g->ubSectorX != gWorldSectorX)  continue;
+		if (g->ubSectorY != gWorldSectorY)  continue;
+		if (g->ubSectorZ != gbWorldSectorZ) continue;
+		if (g->fBetweenSectors)             continue;
+
+		// This player group is in the currently loaded sector
+		g->ubSectorX = x;
+		g->ubSectorY = y;
+		g->ubSectorZ = z;
+		CFOR_ALL_PLAYERS_IN_GROUP(p, g)
+		{
+			p->pSoldier->sSectorX        = x;
+			p->pSoldier->sSectorY        = y;
+			p->pSoldier->bSectorZ        = z;
+			p->pSoldier->fBetweenSectors = FALSE;
 		}
 	}
 	CheckAndHandleUnloadingOfCurrentWorld();
