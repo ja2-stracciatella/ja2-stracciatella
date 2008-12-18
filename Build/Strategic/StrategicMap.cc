@@ -1519,7 +1519,11 @@ void UpdateMercsInSector(INT16 const sSectorX, INT16 const sSectorY, INT8 const 
 
 		s->bInSector = FALSE;
 
-		if (!s->bActive) continue;
+		if (!s->bActive)             continue;
+		if (s->sSectorX != sSectorX) continue;
+		if (s->sSectorY != sSectorY) continue;
+		if (s->bSectorZ != bSectorZ) continue;
+		if (s->fBetweenSectors)      continue;
 
 		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 		{
@@ -1540,11 +1544,6 @@ void UpdateMercsInSector(INT16 const sSectorX, INT16 const sSectorY, INT8 const 
 				s->usStrategicInsertionData = gExitGrid.usGridNo;
 			}
 		}
-
-		if (s->sSectorX != sSectorX) continue;
-		if (s->sSectorY != sSectorY) continue;
-		if (s->bSectorZ != bSectorZ) continue;
-		if (s->fBetweenSectors)      continue;
 
 		UpdateMercInSector(s, sSectorX, sSectorY, bSectorZ);
 
