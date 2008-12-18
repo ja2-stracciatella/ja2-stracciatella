@@ -170,45 +170,51 @@ void LoadExitGrids( INT8 **hBuffer )
 	gfLoadingExitGrids = FALSE;
 }
 
-void AttemptToChangeFloorLevel( INT8 bRelativeZLevel )
+
+void AttemptToChangeFloorLevel(INT8 const relative_z_level)
 {
-	UINT8 ubLookForLevel=0;
-	UINT16 i;
-	if( bRelativeZLevel != 1 && bRelativeZLevel != -1 )
-		return;
-	//Check if on ground level -- if so, can't go up!
-	if( bRelativeZLevel == -1 && !gbWorldSectorZ )
+	if (relative_z_level == -1)
 	{
-		ScreenMsg( FONT_DKYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_CANT_GO_UP ], ubLookForLevel );
-		return;
-	}
-	//Check if on bottom level -- if so, can't go down!
-	if( bRelativeZLevel == 1 && gbWorldSectorZ == 3 )
-	{
-
-		ScreenMsg( FONT_DKYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_CANT_GO_DOWN ], ubLookForLevel );
-		return;
-	}
-	ubLookForLevel = (UINT8)(gbWorldSectorZ + bRelativeZLevel);
-	for( i = 0; i < WORLD_MAX; i++ )
-	{
-		if( GetExitGrid( i, &gExitGrid ) )
-		{
-			if( gExitGrid.ubGotoSectorZ == ubLookForLevel )
-			{ //found an exit grid leading to the goal sector!
-				gfOverrideInsertionWithExitGrid = TRUE;
-				//change all current mercs in the loaded sector, and move them
-				//to the new sector.
-				MoveAllGroupsInCurrentSectorToSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, ubLookForLevel );
-				if( ubLookForLevel )
-					ScreenMsg( FONT_YELLOW, MSG_INTERFACE, pMessageStrings[ MSG_ENTERING_LEVEL ], ubLookForLevel );
-				else
-					ScreenMsg( FONT_YELLOW, MSG_INTERFACE, pMessageStrings[ MSG_LEAVING_BASEMENT ] );
-
-				SetCurrentWorldSector( gWorldSectorX, gWorldSectorY, ubLookForLevel );
-				gfOverrideInsertionWithExitGrid = FALSE;
-			}
+		if (gbWorldSectorZ == 0)
+		{ // on ground level -- can't go up!
+			ScreenMsg(FONT_DKYELLOW, MSG_INTERFACE, pMessageStrings[MSG_CANT_GO_UP]);
+			return;
 		}
+	}
+	else if (relative_z_level == 1)
+	{
+		if (gbWorldSectorZ == 3)
+		{ // on bottom level -- can't go down!
+			ScreenMsg(FONT_DKYELLOW, MSG_INTERFACE, pMessageStrings[MSG_CANT_GO_DOWN]);
+			return;
+		}
+	}
+	else
+	{
+		return;
+	}
+
+	UINT8 const look_for_level = gbWorldSectorZ + relative_z_level;
+	for (UINT16 i = 0; i != WORLD_MAX; ++i)
+	{
+		if (!GetExitGrid(i, &gExitGrid))               continue;
+		if (gExitGrid.ubGotoSectorZ != look_for_level) continue;
+		// found an exit grid leading to the goal sector!
+
+		gfOverrideInsertionWithExitGrid = TRUE;
+		/* change all current mercs in the loaded sector, and move them to the new
+		 * sector. */
+		MoveAllGroupsInCurrentSectorToSector(gWorldSectorX, gWorldSectorY, look_for_level);
+		if (look_for_level)
+		{
+			ScreenMsg(FONT_YELLOW, MSG_INTERFACE, pMessageStrings[MSG_ENTERING_LEVEL], look_for_level);
+		}
+		else
+		{
+			ScreenMsg(FONT_YELLOW, MSG_INTERFACE, pMessageStrings[MSG_LEAVING_BASEMENT]);
+		}
+		SetCurrentWorldSector(gWorldSectorX, gWorldSectorY, look_for_level);
+		gfOverrideInsertionWithExitGrid = FALSE;
 	}
 }
 
