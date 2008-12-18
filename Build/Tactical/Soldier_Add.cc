@@ -944,136 +944,109 @@ UINT16 FindRandomGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const IN
 static void AddSoldierToSectorGridNo(SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubDirection, BOOLEAN fUseAnimation, UINT16 usAnimState, UINT16 usAnimCode);
 
 
-static BOOLEAN InternalAddSoldierToSector(SOLDIERTYPE* const pSoldier, BOOLEAN fCalculateDirection, const BOOLEAN fUseAnimation, const UINT16 usAnimState, const UINT16 usAnimCode)
+static BOOLEAN InternalAddSoldierToSector(SOLDIERTYPE* const s, BOOLEAN calculate_direction, BOOLEAN const use_animation, UINT16 const anim_state, UINT16 const anim_code)
 {
-	UINT8					ubDirection, ubCalculatedDirection;
-	INT16					sGridNo;
-	INT16					sExitGridNo;
+	if (!s->bActive) return FALSE;
 
-	if ( pSoldier->bActive  )
+	// ATE: Make sure life of elliot is OK if from a meanwhile
+	if (AreInMeanwhile() && s->ubProfile == ELLIOT && s->bLife < OKLIFE)
 	{
-    // ATE: Make sure life of elliot is OK if from a meanwhile
-    if ( AreInMeanwhile() && pSoldier->ubProfile == ELLIOT )
-    {
-      if ( pSoldier->bLife < OKLIFE )
-      {
-        pSoldier->bLife = 25;
-      }
-    }
-
-		// ADD SOLDIER TO SLOT!
-		if (pSoldier->uiStatusFlags & SOLDIER_OFF_MAP)
-		{
-			AddAwaySlot( pSoldier );
-
-			// Guy is NOT "in sector"
-			pSoldier->bInSector = FALSE;
-
-		}
-		else
-		{
-			AddMercSlot( pSoldier );
-
-			// Add guy to sector flag
-			pSoldier->bInSector = TRUE;
-
-		}
-
-		// If a driver or passenger - stop here!
-		if ( pSoldier->uiStatusFlags & SOLDIER_DRIVER || pSoldier->uiStatusFlags & SOLDIER_PASSENGER )
-		{
-			return( FALSE );
-		}
-
-		// Add to panel
-		CheckForAndAddMercToTeamPanel( pSoldier );
-
-		pSoldier->usQuoteSaidFlags &= (~SOLDIER_QUOTE_SAID_SPOTTING_CREATURE_ATTACK);
-		pSoldier->usQuoteSaidFlags &= (~SOLDIER_QUOTE_SAID_SMELLED_CREATURE);
-		pSoldier->usQuoteSaidFlags &= (~SOLDIER_QUOTE_SAID_WORRIED_ABOUT_CREATURES);
-
-		// Add to interface if the are ours
-		if ( pSoldier->bTeam == CREATURE_TEAM )
-		{
-			sGridNo = FindGridNoFromSweetSpotWithStructData( pSoldier, STANDING, pSoldier->sInsertionGridNo, 7, &ubCalculatedDirection, FALSE );
-			if( fCalculateDirection )
-				ubDirection = ubCalculatedDirection;
-			else
-				ubDirection = pSoldier->ubInsertionDirection;
-		}
-		else
-		{
-			if( pSoldier->sInsertionGridNo == NOWHERE )
-			{ //Add the soldier to the respective entrypoint.  This is an error condition.
-
-
-			}
-			if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
-			{
-				sGridNo = FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst( pSoldier, STANDING, pSoldier->sInsertionGridNo, 12, &ubCalculatedDirection, FALSE, pSoldier->ubInsertionDirection );
-        // ATE: Override insertion direction
-				pSoldier->ubInsertionDirection = ubCalculatedDirection;
-			}
-			else
-			{
-				sGridNo = FindGridNoFromSweetSpot(pSoldier, pSoldier->sInsertionGridNo, 7);
-
-        // ATE: Error condition - if nowhere use insertion gridno!
-        if ( sGridNo == NOWHERE )
-        {
-          sGridNo = pSoldier->sInsertionGridNo;
-        }
-				else
-				{
-					ubCalculatedDirection = GetDirectionToGridNoFromGridNo(sGridNo, CENTER_GRIDNO);
-				}
-			}
-
-			// Override calculated direction if we were told to....
-			if ( pSoldier->ubInsertionDirection > 100 )
-			{
-				pSoldier->ubInsertionDirection = pSoldier->ubInsertionDirection - 100;
-				fCalculateDirection = FALSE;
-			}
-
-			if ( fCalculateDirection )
-			{
-				ubDirection = ubCalculatedDirection;
-
-				// Check if we need to get direction from exit grid...
-				if ( pSoldier->bUseExitGridForReentryDirection )
-				{
-					pSoldier->bUseExitGridForReentryDirection = FALSE;
-
-					// OK, we know there must be an exit gridno SOMEWHERE close...
-					sExitGridNo = FindClosestExitGrid( pSoldier, sGridNo, 10 );
-
-					if ( sExitGridNo != NOWHERE )
-					{
-						// We found one
-						// Calculate direction...
-						ubDirection = (UINT8)GetDirectionToGridNoFromGridNo( sExitGridNo, sGridNo );
-					}
-				}
-			}
-			else
-			{
-				ubDirection = pSoldier->ubInsertionDirection;
-			}
-		}
-
-		//Add
-		if(gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-			AddSoldierToSectorGridNo( pSoldier, sGridNo, pSoldier->bDirection, fUseAnimation, usAnimState, usAnimCode );
-		else
-			AddSoldierToSectorGridNo( pSoldier, sGridNo, ubDirection, fUseAnimation, usAnimState, usAnimCode );
-
-		CheckForPotentialAddToBattleIncrement( pSoldier );
-
-		return( TRUE );
+		s->bLife = 25;
 	}
 
-	return( FALSE );
+	// ADD SOLDIER TO SLOT!
+	if (s->uiStatusFlags & SOLDIER_OFF_MAP)
+	{
+		AddAwaySlot(s);
+		// Guy is NOT "in sector"
+		s->bInSector = FALSE;
+	}
+	else
+	{
+		AddMercSlot(s);
+		// Add guy to sector flag
+		s->bInSector = TRUE;
+	}
+
+	// If a driver or passenger - stop here!
+	if (s->uiStatusFlags & SOLDIER_DRIVER)    return FALSE;
+	if (s->uiStatusFlags & SOLDIER_PASSENGER) return FALSE;
+
+	CheckForAndAddMercToTeamPanel(s);
+
+	s->usQuoteSaidFlags &= ~SOLDIER_QUOTE_SAID_SPOTTING_CREATURE_ATTACK;
+	s->usQuoteSaidFlags &= ~SOLDIER_QUOTE_SAID_SMELLED_CREATURE;
+	s->usQuoteSaidFlags &= ~SOLDIER_QUOTE_SAID_WORRIED_ABOUT_CREATURES;
+
+	INT16 gridno;
+	UINT8 direction;
+	UINT8 calculated_direction;
+	if (s->bTeam == CREATURE_TEAM)
+	{
+		gridno    = FindGridNoFromSweetSpotWithStructData(s, STANDING, s->sInsertionGridNo, 7, &calculated_direction, FALSE);
+		direction = calculate_direction ? calculated_direction : s->ubInsertionDirection;
+	}
+	else
+	{
+		if (s->sInsertionGridNo == NOWHERE)
+		{ //Add the soldier to the respective entrypoint.  This is an error condition.
+		}
+
+		if (s->uiStatusFlags & SOLDIER_VEHICLE)
+		{
+			gridno = FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(s, STANDING, s->sInsertionGridNo, 12, &calculated_direction, FALSE, s->ubInsertionDirection);
+			// ATE: Override insertion direction
+			s->ubInsertionDirection = calculated_direction;
+		}
+		else
+		{
+			gridno = FindGridNoFromSweetSpot(s, s->sInsertionGridNo, 7);
+			if (gridno == NOWHERE)
+			{ // ATE: Error condition - if nowhere use insertion gridno!
+				gridno = s->sInsertionGridNo;
+			}
+			else
+			{
+				calculated_direction = GetDirectionToGridNoFromGridNo(gridno, CENTER_GRIDNO);
+			}
+		}
+
+		// Override calculated direction if we were told to....
+		if (s->ubInsertionDirection > 100)
+		{
+			s->ubInsertionDirection -= 100;
+			calculate_direction      = FALSE;
+		}
+
+		if (calculate_direction)
+		{
+			direction = calculated_direction;
+
+			// Check if we need to get direction from exit grid
+			if (s->bUseExitGridForReentryDirection)
+			{
+				s->bUseExitGridForReentryDirection = FALSE;
+
+				// OK, we know there must be an exit gridno SOMEWHERE close
+				INT16 const sExitGridNo = FindClosestExitGrid(s, gridno, 10);
+				if (sExitGridNo != NOWHERE)
+				{
+					// We found one, calculate direction
+					direction = (UINT8)GetDirectionToGridNoFromGridNo(sExitGridNo, gridno);
+				}
+			}
+		}
+		else
+		{
+			direction = s->ubInsertionDirection;
+		}
+	}
+
+	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) direction = s->bDirection;
+	AddSoldierToSectorGridNo(s, gridno, direction, use_animation, anim_state, anim_code);
+
+	CheckForPotentialAddToBattleIncrement(s);
+	return TRUE;
 }
 
 
@@ -1089,7 +1062,7 @@ BOOLEAN AddSoldierToSectorNoCalculateDirection(SOLDIERTYPE* const s)
 }
 
 
-BOOLEAN AddSoldierToSectorNoCalculateDirectionUseAnimation(SOLDIERTYPE* const s, UINT16 usAnimState, UINT16 usAnimCode)
+BOOLEAN AddSoldierToSectorNoCalculateDirectionUseAnimation(SOLDIERTYPE* const s, UINT16 const usAnimState, UINT16 const usAnimCode)
 {
 	return InternalAddSoldierToSector(s, FALSE, TRUE, usAnimState, usAnimCode);
 }
