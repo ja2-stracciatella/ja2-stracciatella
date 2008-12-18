@@ -1104,63 +1104,30 @@ static void SoldierInSectorIncompaciated(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 }
 
 
-void SoldierInSectorPatient( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+static void SoldierInSectorAnim(SOLDIERTYPE* const s, INT16 const gridno, UINT16 anim_state)
 {
-	if ( !pSoldier->bInSector )
-	{
-		return;
-	}
-
-	PlaceSoldierNearSweetSpot(pSoldier, BEING_PATIENT, sGridNo);
-
-	if ( !IS_MERC_BODY_TYPE( pSoldier ) )
-	{
-		EVENT_InitNewSoldierAnim( pSoldier, STANDING, 1, TRUE );
-	}
-	else
-	{
-		EVENT_InitNewSoldierAnim( pSoldier, BEING_PATIENT, 1, TRUE );
-	}
+	if (!s->bInSector) return;
+	PlaceSoldierNearSweetSpot(s, anim_state, gridno);
+	if (!IS_MERC_BODY_TYPE(s)) anim_state = STANDING;
+	EVENT_InitNewSoldierAnim(s, anim_state, 1, TRUE);
 }
 
 
-void SoldierInSectorDoctor( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+void SoldierInSectorPatient(SOLDIERTYPE* const s, INT16 const gridno)
 {
-	if ( !pSoldier->bInSector )
-	{
-		return;
-	}
-
-	PlaceSoldierNearSweetSpot(pSoldier, BEING_DOCTOR, sGridNo);
-
-	if ( !IS_MERC_BODY_TYPE( pSoldier ) )
-	{
-		EVENT_InitNewSoldierAnim( pSoldier, STANDING, 1, TRUE );
-	}
-	else
-	{
-		EVENT_InitNewSoldierAnim( pSoldier, BEING_DOCTOR, 1, TRUE );
-	}
+	SoldierInSectorAnim(s, gridno, BEING_PATIENT);
 }
 
 
-void SoldierInSectorRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+void SoldierInSectorDoctor(SOLDIERTYPE* const s, INT16 const gridno)
 {
-	if ( !pSoldier->bInSector )
-	{
-		return;
-	}
+	SoldierInSectorAnim(s, gridno, BEING_DOCTOR);
+}
 
-	PlaceSoldierNearSweetSpot(pSoldier, BEING_REPAIRMAN, sGridNo);
 
-	if ( !IS_MERC_BODY_TYPE( pSoldier ) )
-	{
-		EVENT_InitNewSoldierAnim( pSoldier, STANDING, 1, TRUE );
-	}
-	else
-	{
-		EVENT_InitNewSoldierAnim( pSoldier, BEING_REPAIRMAN, 1, TRUE );
-	}
+void SoldierInSectorRepair(SOLDIERTYPE* const s, INT16 const gridno)
+{
+	SoldierInSectorAnim(s, gridno, BEING_REPAIRMAN);
 }
 
 
