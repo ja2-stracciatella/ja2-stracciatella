@@ -883,227 +883,186 @@ BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
 }
 
 
-//If we are saving a game and we are in the sector, we will need to preserve the links between the
-//soldiers and the soldier init list.  Otherwise, the temp file will be deleted.
+/* If we are saving a game and we are in the sector, we will need to preserve
+ * the links between the soldiers and the soldier init list.  Otherwise, the
+ * temp file will be deleted. */
 void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ, BOOLEAN const fEnemy, BOOLEAN const fValidateOnly)
 {
-	INT32 i;
-	INT32 slots = 0;
-	UINT32 uiTimeStamp;
-	CHAR8		zMapName[ 128 ];
-	UINT8 ubSectorID;
-
-	UINT8	ubStartID=0;
-	UINT8	ubEndID = 0;
-
-
-
 	//if we are saving the enemy info to the enemy temp file
-	if( fEnemy )
+	UINT8  first_team;
+	UINT8  last_team;
+	UINT32 file_flag;
+	if (fEnemy)
 	{
-		ubStartID = ENEMY_TEAM;
-		ubEndID = CREATURE_TEAM;
+		first_team = ENEMY_TEAM;
+		last_team  = CREATURE_TEAM;
+		file_flag  = SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS;
 	}
-
-	//else its the civilian team
 	else
-	{
-		ubStartID = CIV_TEAM;
-		ubEndID = CIV_TEAM;
+	{ // It's the civilian team
+		first_team = CIV_TEAM;
+		last_team  = CIV_TEAM;
+		file_flag  = SF_CIV_PRESERVED_TEMP_FILE_EXISTS;
 	}
 
+	UINT8 const first = gTacticalStatus.Team[first_team].bFirstID;
+	UINT8 const last  = gTacticalStatus.Team[last_team ].bLastID;
 
+	// STEP ONE:  Prep the soldiers for saving
 
-	//STEP ONE:  Prep the soldiers for saving...
-
-	//modify the map's soldier init list to reflect the changes to the member's still alive...
-	for( i = gTacticalStatus.Team[ ubStartID ].bFirstID; i <= gTacticalStatus.Team[ ubEndID ].bLastID; i++ )
+	/* Modify the map's soldier init list to reflect the changes to the member's
+	 * still alive */
+	INT32 slots = 0;
+	for (INT32 i = first; i <= last; ++i)
 	{
-		const SOLDIERTYPE* const pSoldier = GetMan(i);
+		SOLDIERTYPE const* const s = GetMan(i);
 
-		//make sure the person is active, alive, in the sector, and is not a profiled person
-		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife && pSoldier->ubProfile == NO_PROFILE )
-		{ //soldier is valid, so find the matching soldier init list entry for modification.
-			SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(pSoldier);
-			if (curr && pSoldier->ubProfile == NO_PROFILE)
-			{ //found a match.
+		// Make sure the person is active, alive, and is not a profiled person
+		if (!s->bActive || s->bLife == 0 || s->ubProfile != NO_PROFILE) continue;
+		// Soldier is valid, so find the matching soldier init list entry for modification.
+		SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(s);
+		if (!curr) continue;
 
-				if( !fValidateOnly )
-				{
-					if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) )
-					{
-						if( !curr->pDetailedPlacement )
-						{ //need to upgrade the placement to detailed placement
-							curr->pBasicPlacement->fDetailedPlacement = TRUE;
-							curr->pDetailedPlacement = MALLOCZ(SOLDIERCREATE_STRUCT);
-						}
+		// Increment the counter, so we know how many there are.
+		slots++;
 
-						//Copy over the data of the soldier.
-						curr->pDetailedPlacement->ubProfile							= NO_PROFILE;
-						curr->pDetailedPlacement->bLife									= pSoldier->bLife;
-						curr->pDetailedPlacement->bLifeMax  						= pSoldier->bLifeMax;
-						curr->pDetailedPlacement->bAgility							= pSoldier->bAgility;
-						curr->pDetailedPlacement->bDexterity						= pSoldier->bDexterity;
-						curr->pDetailedPlacement->bExpLevel							= pSoldier->bExpLevel;
-						curr->pDetailedPlacement->bMarksmanship					= pSoldier->bMarksmanship;
-						curr->pDetailedPlacement->bMedical							= pSoldier->bMedical;
-						curr->pDetailedPlacement->bMechanical						= pSoldier->bMechanical;
-						curr->pDetailedPlacement->bExplosive						= pSoldier->bExplosive;
-						curr->pDetailedPlacement->bLeadership						= pSoldier->bLeadership;
-						curr->pDetailedPlacement->bStrength							= pSoldier->bStrength;
-						curr->pDetailedPlacement->bWisdom								= pSoldier->bWisdom;
-						curr->pDetailedPlacement->bAttitude							= pSoldier->bAttitude;
-						curr->pDetailedPlacement->bOrders								= pSoldier->bOrders;
-						curr->pDetailedPlacement->bMorale								= pSoldier->bMorale;
-						curr->pDetailedPlacement->bAIMorale							= pSoldier->bAIMorale;
-						curr->pDetailedPlacement->bBodyType							= pSoldier->ubBodyType;
-						curr->pDetailedPlacement->ubCivilianGroup				= pSoldier->ubCivilianGroup;
-						curr->pDetailedPlacement->ubScheduleID					= pSoldier->ubScheduleID;
-						curr->pDetailedPlacement->fHasKeys							= pSoldier->bHasKeys;
-						curr->pDetailedPlacement->sSectorX							= pSoldier->sSectorX;
-						curr->pDetailedPlacement->sSectorY							= pSoldier->sSectorY;
-						curr->pDetailedPlacement->bSectorZ							= pSoldier->bSectorZ;
-						curr->pDetailedPlacement->ubSoldierClass				= pSoldier->ubSoldierClass;
-						curr->pDetailedPlacement->bTeam									= pSoldier->bTeam;
-						curr->pDetailedPlacement->bDirection						= pSoldier->bDirection;
+		if (fValidateOnly)                                continue;
+		if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) continue;
 
-						//we don't want the player to think that all the enemies start in the exact position when we
-						//left the map, so randomize the start locations either current position or original position.
-						if( PreRandom( 2 ) )
-						{ //use current position
-							curr->pDetailedPlacement->fOnRoof								= pSoldier->bLevel;
-							curr->pDetailedPlacement->sInsertionGridNo			= pSoldier->sGridNo;
-						}
-						else
-						{ //use original position
-							curr->pDetailedPlacement->fOnRoof								= curr->pBasicPlacement->fOnRoof;
-							curr->pDetailedPlacement->sInsertionGridNo			= curr->pBasicPlacement->usStartingGridNo;
-						}
-
-						wcslcpy(curr->pDetailedPlacement->name, pSoldier->name, lengthof(curr->pDetailedPlacement->name));
-
-						//Copy patrol points
-						curr->pDetailedPlacement->bPatrolCnt						= pSoldier->bPatrolCnt;
-						memcpy( curr->pDetailedPlacement->sPatrolGrid, pSoldier->usPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
-
-						//copy colors for soldier based on the body type.
-						strcpy(curr->pDetailedPlacement->HeadPal,  pSoldier->HeadPal);
-						strcpy(curr->pDetailedPlacement->VestPal,  pSoldier->VestPal);
-						strcpy(curr->pDetailedPlacement->SkinPal,  pSoldier->SkinPal);
-						strcpy(curr->pDetailedPlacement->PantsPal, pSoldier->PantsPal);
-
-						//copy soldier's inventory
-						memcpy( curr->pDetailedPlacement->Inv, pSoldier->inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
-					}
-				}
-
-				//DONE, now increment the counter, so we know how many there are.
-				slots++;
-			}
+		SOLDIERCREATE_STRUCT* dp = curr->pDetailedPlacement;
+		if (!dp)
+		{ //need to upgrade the placement to detailed placement
+			dp                                        = MALLOCZ(SOLDIERCREATE_STRUCT);
+			curr->pDetailedPlacement                  = dp;
+			curr->pBasicPlacement->fDetailedPlacement = TRUE;
 		}
-	}
 
-	if( !slots )
-	{
-		if( fEnemy )
-		{
-			//No need to save anything, so return successfully
-			RemoveEnemySoldierTempFile( sSectorX, sSectorY, bSectorZ );
+		//Copy over the data of the soldier.
+		dp->ubProfile       = NO_PROFILE;
+		dp->bLife           = s->bLife;
+		dp->bLifeMax        = s->bLifeMax;
+		dp->bAgility        = s->bAgility;
+		dp->bDexterity      = s->bDexterity;
+		dp->bExpLevel       = s->bExpLevel;
+		dp->bMarksmanship   = s->bMarksmanship;
+		dp->bMedical        = s->bMedical;
+		dp->bMechanical     = s->bMechanical;
+		dp->bExplosive      = s->bExplosive;
+		dp->bLeadership     = s->bLeadership;
+		dp->bStrength       = s->bStrength;
+		dp->bWisdom         = s->bWisdom;
+		dp->bAttitude       = s->bAttitude;
+		dp->bOrders         = s->bOrders;
+		dp->bMorale         = s->bMorale;
+		dp->bAIMorale       = s->bAIMorale;
+		dp->bBodyType       = s->ubBodyType;
+		dp->ubCivilianGroup = s->ubCivilianGroup;
+		dp->ubScheduleID    = s->ubScheduleID;
+		dp->fHasKeys        = s->bHasKeys;
+		dp->sSectorX        = s->sSectorX;
+		dp->sSectorY        = s->sSectorY;
+		dp->bSectorZ        = s->bSectorZ;
+		dp->ubSoldierClass  = s->ubSoldierClass;
+		dp->bTeam           = s->bTeam;
+		dp->bDirection      = s->bDirection;
+
+		/* We don't want the player to think that all the enemies start in the exact
+		 * position when we left the map, so randomize the start locations either
+		 * current position or original position. */
+		if (PreRandom(2))
+		{ // Use current position
+			dp->fOnRoof          = s->bLevel;
+			dp->sInsertionGridNo = s->sGridNo;
 		}
 		else
-		{
-			//No need to save anything, so return successfully
-			RemoveCivilianTempFile( sSectorX, sSectorY, bSectorZ );
+		{ // Use original position
+			dp->fOnRoof          = curr->pBasicPlacement->fOnRoof;
+			dp->sInsertionGridNo = curr->pBasicPlacement->usStartingGridNo;
 		}
+
+		wcslcpy(dp->name, s->name, lengthof(dp->name));
+
+		// Copy patrol points
+		dp->bPatrolCnt = s->bPatrolCnt;
+		memcpy(dp->sPatrolGrid, s->usPatrolGrid, sizeof(dp->sPatrolGrid));
+
+		// Copy colors for soldier based on the body type.
+		strcpy(dp->HeadPal,  s->HeadPal);
+		strcpy(dp->VestPal,  s->VestPal);
+		strcpy(dp->SkinPal,  s->SkinPal);
+		strcpy(dp->PantsPal, s->PantsPal);
+
+		// Copy soldier's inventory
+		memcpy(dp->Inv, s->inv, sizeof(dp->Inv));
+	}
+
+	if (slots == 0)
+	{
+		// No need to save anything, so return successfully
+		RemoveTempFile(sSectorX, sSectorY, bSectorZ, file_flag);
 		return;
 	}
 
 	if (fValidateOnly) return;
 
-	//STEP TWO:  Set up the temp file to write to.
+	// STEP TWO:  Set up the temp file to write to.
 
-	if( fEnemy )
-	{
-		GetMapTempFileName( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
-	}
-	else
-	{
-		GetMapTempFileName( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
-	}
+	char map_name[128];
+	GetMapTempFileName(file_flag, map_name, sSectorX, sSectorY, bSectorZ);
+	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 
-	AutoSGPFile hfile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	FileWrite(f, &sSectorY, 2);
 
-	FileWrite(hfile, &sSectorY, 2);
+	// STEP THREE:  Save the data
 
-	//STEP THREE:  Save the data
+	// This works for both civs and enemies
+	SaveSoldierInitListLinks(f);
 
-	//this works for both civs and enemies
-	SaveSoldierInitListLinks( hfile );
+	FileWrite(f, &sSectorX, 2);
 
-	FileWrite(hfile, &sSectorX, 2);
-
-	//This check may appear confusing.  It is intended to abort if the player is saving the game.  It is only
-	//supposed to preserve the links to the placement list, so when we finally do leave the level with enemies remaining,
-	//we will need the links that are only added when the map is loaded, and are normally lost when restoring a save.
-	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
+	/* This check may appear confusing.  It is intended to abort if the player is
+	 * saving the game.  It is only supposed to preserve the links to the
+	 * placement list, so when we finally do leave the level with enemies
+	 * remaining, we will need the links that are only added when the map is
+	 * loaded, and are normally lost when restoring a save. */
+	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME)
 	{
 		slots = 0;
 	}
 
-	FileWrite(hfile, &slots, 4);
+	FileWrite(f, &slots, 4);
 
-	uiTimeStamp = GetWorldTotalMin();
-	FileWrite(hfile, &uiTimeStamp, 4);
+	UINT32 const timestamp = GetWorldTotalMin();
+	FileWrite(f, &timestamp, 4);
 
-	FileWrite(hfile, &bSectorZ, 1);
+	FileWrite(f, &bSectorZ, 1);
 
-	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
+	/* If we are saving the game, we don't need to preserve the soldier
+	 * information, just preserve the links to the placement list. */
+	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 	{
-		//if we are saving the game, we don't need to preserve the soldier information, just
-		//preserve the links to the placement list.
-		slots = 0;
-
-		if( fEnemy )
+		for (INT32 i = first; i <= last; ++i)
 		{
-			SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS );
+			SOLDIERTYPE const* const s = GetMan(i);
+			// CJC: note that bInSector is not required; the civ could be offmap!
+			if (!s->bActive || s->bLife == 0 || s->ubProfile != NO_PROFILE) continue;
+
+			// Soldier is valid, so find the matching soldier init list entry for modification.
+			SOLDIERINITNODE const* const curr = FindSoldierInitNodeBySoldier(s);
+			if (!curr) continue;
+
+			SOLDIERCREATE_STRUCT const* const dp = curr->pDetailedPlacement;
+			InjectSoldierCreateIntoFile(f, dp);
+			// Insert a checksum equation (anti-hack)
+			UINT16 const checksum = CalcSoldierCreateCheckSum(dp);
+			FileWrite(f, &checksum, 2);
 		}
-		else
-		{
-			SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_CIV_PRESERVED_TEMP_FILE_EXISTS );
-		}
-		return;
+
+		UINT8 const sector_id = SECTOR(sSectorX, sSectorY);
+		FileWrite(f, &sector_id, 1);
 	}
 
-	for( i = gTacticalStatus.Team[ ubStartID ].bFirstID; i <= gTacticalStatus.Team[ ubEndID ].bLastID; i++ )
-	{
-		const SOLDIERTYPE* const pSoldier = GetMan(i);
-		// CJC: note that bInSector is not required; the civ could be offmap!
-		if( pSoldier->bActive /*&& pSoldier->bInSector*/ && pSoldier->bLife )
-		{
-			//soldier is valid, so find the matching soldier init list entry for modification.
-			const SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(pSoldier);
-			if (curr && pSoldier->ubProfile == NO_PROFILE)
-			{
-				//found a match.
-				InjectSoldierCreateIntoFile(hfile, curr->pDetailedPlacement);
-				//insert a checksum equation (anti-hack)
-				const UINT16 usCheckSum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
-				FileWrite(hfile, &usCheckSum, 2);
-			}
-		}
-	}
-
-	ubSectorID = SECTOR( sSectorX, sSectorY );
-	FileWrite(hfile, &ubSectorID, 1);
-
-	if( fEnemy )
-	{
-		SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS );
-	}
-	else
-	{
-		SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_CIV_PRESERVED_TEMP_FILE_EXISTS );
-	}
+	SetSectorFlag(sSectorX, sSectorY, bSectorZ, file_flag);
 }
 
 
