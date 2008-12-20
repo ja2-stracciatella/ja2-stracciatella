@@ -1857,128 +1857,105 @@ static void SaveSoldierStructure(HWFILE const hFile)
 }
 
 
-static void LoadSoldierStructure(HWFILE const hFile)
+static void LoadSoldierStructure(HWFILE const f)
 {
-	UINT16	cnt;
-	SOLDIERTYPE SavedSoldierInfo;
-	UINT8		ubOne = 1;
-	UINT8		ubActive = 1;
-	UINT32	uiPercentage;
-
-	//Loop through all the soldier and delete them all
+	// Loop through all the soldier and delete them all
 	FOR_ALL_SOLDIERS(s) TacticalRemoveSoldier(s);
 
-	//Loop through all the soldier structs to load
-	for( cnt=0; cnt< TOTAL_SOLDIERS; cnt++)
+	// Loop through all the soldier structs to load
+	for (UINT16 i = 0; i < TOTAL_SOLDIERS; ++i)
 	{
+		// Update the progress bar
+		UINT32 const percentage = (i * 100) / (TOTAL_SOLDIERS - 1);
+		RenderProgressBar(0, percentage);
 
-		//update the progress bar
-		uiPercentage = (cnt * 100) / (TOTAL_SOLDIERS-1);
+		// Read in a byte to tell us whether or not there is a soldier loaded here.
+		UINT8 active;
+		FileRead(f, &active, 1);
+		if (!active) continue;
 
-		RenderProgressBar( 0, uiPercentage );
-
-
-		//Read in a byte to tell us whether or not there is a soldier loaded here.
-		FileRead(hFile, &ubActive, 1);
-
-		// if the soldier is not active, continue
-		if( !ubActive )
+#ifdef _WIN32 // XXX HACK000A
+		BYTE Data[2328];
+#else
+		BYTE Data[2352];
+#endif
+		//Read in the saved soldier info into a Temp structure
+		if (guiSaveGameVersion < 87)
 		{
-			continue;
+			JA2EncryptedFileRead(f, Data, sizeof(Data));
 		}
-
-		// else if there is a soldier
 		else
 		{
-#ifdef _WIN32 // XXX HACK000A
-			BYTE Data[2328];
-#else
-			BYTE Data[2352];
-#endif
-			//Read in the saved soldier info into a Temp structure
-			if ( guiSaveGameVersion < 87 )
+			NewJA2EncryptedFileRead(f, Data, sizeof(Data));
+		}
+		SOLDIERTYPE SavedSoldierInfo;
+		ExtractSoldierType(Data, &SavedSoldierInfo);
+		// check checksum
+		if (MercChecksum(&SavedSoldierInfo) != SavedSoldierInfo.uiMercChecksum)
+		{
+			throw std::runtime_error("soldier checksum mismatch");
+		}
+
+		SOLDIERTYPE* const s = TacticalCreateSoldierFromExisting(&SavedSoldierInfo);
+		Assert(s->ubID == i);
+
+		LoadMercPath(f, &s->pMercPath);
+
+		// Read the file to see if we have to load the keys
+		UINT8 has_keyring;
+		FileRead(f, &has_keyring, 1);
+		if (has_keyring)
+		{
+			// Now Load the ....
+			FileRead(f, s->pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING));
+		}
+		else
+		{
+			Assert(s->pKeyRing == NULL);
+		}
+
+		//if the soldier is an IMP character
+		if (s->ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER && s->bTeam == gbPlayerNum)
+		{
+			ResetIMPCharactersEyesAndMouthOffsets(s->ubProfile);
+		}
+
+		// If the saved game version is before x, calculate the amount of money paid to mercs
+		if (guiSaveGameVersion < 83 && s->ubProfile != NO_PROFILE)
+		{
+			MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
+			if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
 			{
-				JA2EncryptedFileRead(hFile, Data, sizeof(Data));
+				p->uiTotalCostToDate = p->sSalary * p->iMercMercContractLength;
 			}
 			else
 			{
-				NewJA2EncryptedFileRead(hFile, Data, sizeof(Data));
+				p->uiTotalCostToDate = p->sSalary * s->iTotalContractLength;
 			}
-			ExtractSoldierType(Data, &SavedSoldierInfo);
-			// check checksum
-			if ( MercChecksum( &SavedSoldierInfo ) != SavedSoldierInfo.uiMercChecksum )
-			{
-				throw std::runtime_error("soldier checksum mismatch");
-			}
-
-			SOLDIERTYPE* const s = TacticalCreateSoldierFromExisting(&SavedSoldierInfo);
-			Assert(s->ubID == cnt);
-
-			// Load the pMercPath
-			LoadMercPath(hFile, &s->pMercPath);
-
-			//do we have a 	KEY_ON_RING									*pKeyRing;
-
-			// Read the file to see if we have to load the keys
-			FileRead(hFile, &ubOne, 1);
-
-			if( ubOne )
-			{
-				// Now Load the ....
-				FileRead(hFile, s->pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING));
-			}
-			else
-			{
-				Assert(s->pKeyRing == NULL);
-			}
-
-			//if the soldier is an IMP character
-			if (s->ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER && s->bTeam == gbPlayerNum)
-			{
-				ResetIMPCharactersEyesAndMouthOffsets(s->ubProfile);
-			}
-
-			//if the saved game version is before x, calculate the amount of money paid to mercs
-			if( guiSaveGameVersion < 83 )
-			{
-				//if the soldier is someone
-				if (s->ubProfile != NO_PROFILE)
-				{
-					MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
-					if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
-					{
-						p->uiTotalCostToDate = p->sSalary * p->iMercMercContractLength;
-					}
-					else
-					{
-						p->uiTotalCostToDate = p->sSalary * s->iTotalContractLength;
-					}
-				}
-			}
+		}
 
 #ifdef GERMAN
-			// Fix neutral flags
-			if ( guiSaveGameVersion < 94 )
-			{
-				if (s->bTeam == OUR_TEAM && s->bNeutral && s->bAssignment != ASSIGNMENT_POW)
-				{
-					// turn off neutral flag
-					s->bNeutral = FALSE;
-				}
-			}
+		// Fix neutral flags
+		if (guiSaveGameVersion < 94 &&
+				s->bTeam == OUR_TEAM    &&
+				s->bNeutral             &&
+				s->bAssignment != ASSIGNMENT_POW)
+		{
+			// turn off neutral flag
+			s->bNeutral = FALSE;
+		}
 #endif
-			// JA2Gold: fix next-to-previous attacker value
-			if ( guiSaveGameVersion < 99 )
-			{
-				s->next_to_previous_attacker = NULL;
-			}
+		// JA2Gold: fix next-to-previous attacker value
+		if (guiSaveGameVersion < 99)
+		{
+			s->next_to_previous_attacker = NULL;
 		}
 	}
 
 	// Fix robot
-	if ( guiSaveGameVersion <= 87 )
+	if (guiSaveGameVersion <= 87)
 	{
-		MERCPROFILESTRUCT* const robot_p = &gMercProfiles[ROBOT];
+		MERCPROFILESTRUCT* const robot_p = GetProfile(ROBOT);
 		if (robot_p->inv[VESTPOS] == SPECTRA_VEST)
 		{
 			// update this
