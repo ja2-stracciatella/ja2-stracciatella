@@ -768,7 +768,6 @@ struct SOLDIERTYPE
 	const SOLDIERTYPE*          CTGTTarget;
 
 	TIMECOUNTER									PanelAnimateCounter;
-	UINT32											uiMercChecksum;
 
 	INT8												bCurrentCivQuote;
 	INT8												bCurrentCivQuoteDelta;

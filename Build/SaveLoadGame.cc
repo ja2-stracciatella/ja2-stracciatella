@@ -1800,14 +1800,12 @@ static void SaveSoldierStructure(HWFILE const f)
 	// Loop through all the soldier structs to save
 	for (UINT16 i = 0; i < TOTAL_SOLDIERS; ++i)
 	{
-		SOLDIERTYPE* const s = GetMan(i);
+		SOLDIERTYPE const* const s = GetMan(i);
 
 		// If the soldier isn't active, don't add them to the saved game file.
 		FileWrite(f, &s->bActive, 1);
 		if (!s->bActive) continue;
 
-		// Calculate checksum for soldier
-		s->uiMercChecksum = MercChecksum(s);
 		// Save the soldier structure
 #ifdef _WIN32 // XXX HACK000A
 		BYTE Data[2328];
@@ -1869,11 +1867,6 @@ static void LoadSoldierStructure(HWFILE const f)
 		}
 		SOLDIERTYPE SavedSoldierInfo;
 		ExtractSoldierType(Data, &SavedSoldierInfo);
-		// check checksum
-		if (MercChecksum(&SavedSoldierInfo) != SavedSoldierInfo.uiMercChecksum)
-		{
-			throw std::runtime_error("soldier checksum mismatch");
-		}
 
 		SOLDIERTYPE* const s = TacticalCreateSoldierFromExisting(&SavedSoldierInfo);
 		Assert(s->ubID == i);

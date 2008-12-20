@@ -1394,8 +1394,7 @@ void InitExitGameDialogBecauseFileHackDetected()
 }
 
 
-
-UINT32 MercChecksum( SOLDIERTYPE * pSoldier )
+UINT32 MercChecksum(SOLDIERTYPE const* const pSoldier)
 {
 	UINT32	uiChecksum = 1;
 	UINT32	uiLoop;
