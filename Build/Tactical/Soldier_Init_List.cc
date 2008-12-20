@@ -1616,31 +1616,29 @@ void SaveSoldierInitListLinks(HWFILE const hfile)
 }
 
 
-void LoadSoldierInitListLinks(HWFILE const hfile)
+void LoadSoldierInitListLinks(HWFILE const f)
 {
-	UINT8 ubSlots, ubSoldierID, ubNodeID;
-
-	FileRead(hfile, &ubSlots, 1);
-	while( ubSlots-- )
+	UINT8 slots;
+	FileRead(f, &slots, 1);
+	for (UINT8 n = slots; n != 0; --n)
 	{
-		FileRead(hfile, &ubNodeID,    1);
-		FileRead(hfile, &ubSoldierID, 1);
+		UINT8 node_id;
+		UINT8 soldier_id;
+		FileRead(f, &node_id,    1);
+		FileRead(f, &soldier_id, 1);
 
-		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
+		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME)) continue;
+
+		FOR_ALL_SOLDIERINITNODES(curr)
 		{
-			FOR_ALL_SOLDIERINITNODES(curr)
-			{
-				if( curr->ubNodeID == ubNodeID )
-				{
-					curr->ubSoldierID = ubSoldierID;
-					if( ubSoldierID >= gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID &&
-							ubSoldierID <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID ||
-							ubSoldierID >= gTacticalStatus.Team[ CIV_TEAM ].bFirstID &&
-							ubSoldierID <= gTacticalStatus.Team[ CIV_TEAM ].bLastID )
-					{ //only enemies and creatures.
-						curr->pSoldier = GetMan(ubSoldierID);
-					}
-				}
+			if (curr->ubNodeID != node_id) continue;
+
+			curr->ubSoldierID = soldier_id;
+			TacticalTeamType* const team = gTacticalStatus.Team;
+			if ((team[ENEMY_TEAM].bFirstID <= soldier_id && soldier_id <= team[CREATURE_TEAM].bLastID) ||
+					(team[CIV_TEAM  ].bFirstID <= soldier_id && soldier_id <= team[CIV_TEAM     ].bLastID))
+			{ // only enemies and creatures
+				curr->pSoldier = GetMan(soldier_id);
 			}
 		}
 	}
