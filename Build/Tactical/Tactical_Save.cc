@@ -1422,7 +1422,8 @@ UINT32 MercChecksum(SOLDIERTYPE const* const pSoldier)
 	return( uiChecksum );
 }
 
-UINT32 ProfileChecksum( MERCPROFILESTRUCT * pProfile )
+
+UINT32 ProfileChecksum(MERCPROFILESTRUCT const* const pProfile)
 {
 	UINT32	uiChecksum = 1;
 	UINT32	uiLoop;

@@ -1,7 +1,10 @@
+#include <stdexcept>
+
 #include "Debug.h"
 #include "FileMan.h"
 #include "LoadSaveData.h"
 #include "LoadSaveMercProfile.h"
+#include "Tactical_Save.h"
 
 
 void ExtractMercProfileUTF16(const BYTE* Src, MERCPROFILESTRUCT* Merc)
@@ -162,7 +165,6 @@ void ExtractMercProfileUTF16(const BYTE* Src, MERCPROFILESTRUCT* Merc)
 	EXTR_U32(S, Merc->uiPrecedentQuoteSaid)
 	Assert(S == Src + 696);
 
-	Merc->uiProfileChecksum            = 0;
 	Merc->sPreCombatGridNo             = 0;
 	Merc->ubTimeTillNextHatedComplaint = 0;
 	Merc->ubSuspiciousDeath            = 0;
@@ -322,7 +324,7 @@ void ExtractMercProfileUTF16(const BYTE* Src, MERCPROFILESTRUCT* Merc)
 	EXTR_U8(S, Merc->ubDaysOfMoraleHangover)
 	EXTR_U8(S, Merc->ubNumTimesDrugUseInLifetime)
 	EXTR_U32(S, Merc->uiPrecedentQuoteSaid)
-	EXTR_U32(S, Merc->uiProfileChecksum)
+	EXTR_SKIP(S, 4)
 	EXTR_I16(S, Merc->sPreCombatGridNo)
 	EXTR_U8(S, Merc->ubTimeTillNextHatedComplaint)
 	EXTR_U8(S, Merc->ubSuspiciousDeath)
@@ -494,19 +496,24 @@ void ExtractMercProfile(const BYTE* Src, MERCPROFILESTRUCT* Merc)
 	EXTR_U8(S, Merc->ubDaysOfMoraleHangover)
 	EXTR_U8(S, Merc->ubNumTimesDrugUseInLifetime)
 	EXTR_U32(S, Merc->uiPrecedentQuoteSaid)
-	EXTR_U32(S, Merc->uiProfileChecksum)
+	UINT32 checksum;
+	EXTR_U32(S, checksum)
 	EXTR_I16(S, Merc->sPreCombatGridNo)
 	EXTR_U8(S, Merc->ubTimeTillNextHatedComplaint)
 	EXTR_U8(S, Merc->ubSuspiciousDeath)
 	EXTR_I32(S, Merc->iMercMercContractLength)
 	EXTR_U32(S, Merc->uiTotalCostToDate)
 	EXTR_SKIP(S, 4)
-
 #ifdef _WIN32 // XXX HACK000A
 	Assert(S == Src + 716);
 #else
 	Assert(S == Src + 796);
 #endif
+
+	if (checksum != ProfileChecksum(Merc))
+	{
+		throw std::runtime_error("Merc profile checksum mismatch");
+	}
 }
 
 
@@ -682,14 +689,14 @@ void InjectMercProfile(BYTE* Dst, const MERCPROFILESTRUCT* Merc)
 	INJ_U8(D, Merc->ubDaysOfMoraleHangover)
 	INJ_U8(D, Merc->ubNumTimesDrugUseInLifetime)
 	INJ_U32(D, Merc->uiPrecedentQuoteSaid)
-	INJ_U32(D, Merc->uiProfileChecksum)
+	UINT32 const checksum = ProfileChecksum(Merc);
+	INJ_U32(D, checksum)
 	INJ_I16(D, Merc->sPreCombatGridNo)
 	INJ_U8(D, Merc->ubTimeTillNextHatedComplaint)
 	INJ_U8(D, Merc->ubSuspiciousDeath)
 	INJ_I32(D, Merc->iMercMercContractLength)
 	INJ_U32(D, Merc->uiTotalCostToDate)
 	INJ_SKIP(D, 4)
-
 #ifdef _WIN32 // XXX HACK000A
 	Assert(D == Dst + 716);
 #else

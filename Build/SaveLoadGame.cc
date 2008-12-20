@@ -1747,7 +1747,6 @@ static void SaveMercProfiles(HWFILE const hFile)
 	//Lopp through all the profiles to save
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
-		gMercProfiles[ cnt ].uiProfileChecksum = ProfileChecksum( &(gMercProfiles[ cnt ]) );
 #ifdef _WIN32 // XXX HACK000A
 		BYTE Data[716];
 #else
@@ -1786,11 +1785,7 @@ static void LoadSavedMercProfiles(HWFILE const hFile)
 		{
 			NewJA2EncryptedFileRead(hFile, Data, sizeof(Data));
 		}
-		ExtractMercProfile(Data,  &gMercProfiles[cnt]);
-		if ( gMercProfiles[ cnt ].uiProfileChecksum != ProfileChecksum( &(gMercProfiles[ cnt ]) ) )
-		{
-			throw std::runtime_error("Merc profile checksum mismatch");
-		}
+		ExtractMercProfile(Data, &gMercProfiles[cnt]);
 	}
 }
 

@@ -75,7 +75,7 @@ void LoadTempNpcQuoteArrayToSaveGameFile(HWFILE);
 void SaveTempNpcQuoteArrayToSaveGameFile(HWFILE);
 
 UINT32 MercChecksum(SOLDIERTYPE const*);
-UINT32 ProfileChecksum( MERCPROFILESTRUCT * pProfile );
+UINT32 ProfileChecksum(MERCPROFILESTRUCT const*);
 
 void JA2EncryptedFileRead( HWFILE, BYTE*       data, UINT32 uiBytesToRead);
 void JA2EncryptedFileWrite(HWFILE, BYTE const* data, UINT32 uiBytesToWrite);

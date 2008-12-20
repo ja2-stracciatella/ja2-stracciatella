@@ -329,7 +329,6 @@ struct MERCPROFILESTRUCT
 
 	// Flags used for the precedent to repeating oneself in Contract negotiations.  Used for quote 80 -  ~107.  Gets reset every day
 	UINT32	uiPrecedentQuoteSaid;
-	UINT32	uiProfileChecksum;
 	INT16		sPreCombatGridNo;
 	UINT8		ubTimeTillNextHatedComplaint;
 	UINT8		ubSuspiciousDeath;
