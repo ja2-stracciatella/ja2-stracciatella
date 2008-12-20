@@ -1205,33 +1205,26 @@ static void ReplaceSleepSpot(SCHEDULENODE* pSchedule, UINT16 usNewSpot)
 }
 
 
-static void SecureSleepSpot(SOLDIERTYPE* pSoldier, UINT16 usSleepSpot)
+static void SecureSleepSpot(SOLDIERTYPE* const pSoldier, UINT16 const usSleepSpot)
 {
-	UINT32						uiLoop;
-	SCHEDULENODE *		pSchedule;
-
 	// start after this soldier's ID so we don't duplicate work done in previous passes
-	for ( uiLoop = pSoldier->ubID + 1; uiLoop <= gTacticalStatus.Team[ CIV_TEAM ].bLastID; uiLoop++ )
+	for (UINT32 i = pSoldier->ubID + 1; i <= gTacticalStatus.Team[CIV_TEAM].bLastID; ++i)
 	{
-		const SOLDIERTYPE* const pSoldier2 = GetMan(uiLoop);
-		if ( pSoldier2->bActive && pSoldier2->bInSector && pSoldier2->ubScheduleID != 0 )
-		{
-			pSchedule = GetSchedule( pSoldier2->ubScheduleID );
-			if ( pSchedule )
-			{
-				const UINT16 usSleepSpot2 = FindSleepSpot(pSchedule);
-				if ( usSleepSpot2 == usSleepSpot )
-				{
-					// conflict!
-					//UINT8 ubDirection;
-					//const UINT16 usNewSleepSpot = (INT16) FindGridNoFromSweetSpotWithStructData( pSoldier2, pSoldier2->usAnimState, usSleepSpot2, 3, &ubDirection, FALSE );
-					const UINT16 usNewSleepSpot = FindGridNoFromSweetSpotExcludingSweetSpot(pSoldier2, usSleepSpot2, 3);
-					if ( usNewSleepSpot != NOWHERE )
-					{
-						ReplaceSleepSpot( pSchedule, usNewSleepSpot );
-					}
-				}
-			}
-		}
+		SOLDIERTYPE const* const pSoldier2 = GetMan(i);
+		if (!pSoldier2->bActive || !pSoldier2->bInSector || pSoldier2->ubScheduleID == 0) continue;
+
+		SCHEDULENODE* const pSchedule = GetSchedule(pSoldier2->ubScheduleID);
+		if (!pSchedule) continue;
+
+		UINT16 const usSleepSpot2 = FindSleepSpot(pSchedule);
+		if (usSleepSpot2 != usSleepSpot) continue;
+
+		// conflict!
+		//UINT8 ubDirection;
+		//const UINT16 usNewSleepSpot = FindGridNoFromSweetSpotWithStructData(pSoldier2, pSoldier2->usAnimState, usSleepSpot2, 3, &ubDirection, FALSE);
+		UINT16 const usNewSleepSpot = FindGridNoFromSweetSpotExcludingSweetSpot(pSoldier2, usSleepSpot2, 3);
+		if (usNewSleepSpot == NOWHERE) continue;
+
+		ReplaceSleepSpot(pSchedule, usNewSleepSpot);
 	}
 }
