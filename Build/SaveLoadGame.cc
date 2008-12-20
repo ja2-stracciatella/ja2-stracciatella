@@ -1795,64 +1795,43 @@ static void LoadSavedMercProfiles(HWFILE const hFile)
 }
 
 
-static void SaveSoldierStructure(HWFILE const hFile)
+static void SaveSoldierStructure(HWFILE const f)
 {
-	UINT16	cnt;
-	UINT8		ubOne = 1;
-	UINT8		ubZero = 0;
-
-	//Loop through all the soldier structs to save
-	for( cnt=0; cnt< TOTAL_SOLDIERS; cnt++)
+	// Loop through all the soldier structs to save
+	for (UINT16 i = 0; i < TOTAL_SOLDIERS; ++i)
 	{
-		SOLDIERTYPE* const s = GetMan(cnt);
-		//if the soldier isnt active, dont add them to the saved game file.
-		if (!s->bActive)
+		SOLDIERTYPE* const s = GetMan(i);
+
+		// If the soldier isn't active, don't add them to the saved game file.
+		FileWrite(f, &s->bActive, 1);
+		if (!s->bActive) continue;
+
+		// Calculate checksum for soldier
+		s->uiMercChecksum = MercChecksum(s);
+		// Save the soldier structure
+#ifdef _WIN32 // XXX HACK000A
+		BYTE Data[2328];
+#else
+		BYTE Data[2352];
+#endif
+		InjectSoldierType(Data, s);
+		if (guiSavedGameVersion < 87)
 		{
-			// Save the byte specifing to NOT load the soldiers
-			FileWrite(hFile, &ubZero, 1);
+			JA2EncryptedFileWrite(f, Data, sizeof(Data));
 		}
 		else
 		{
-			// Save the byte specifing to load the soldiers
-			FileWrite(hFile, &ubOne, 1);
-
-			// calculate checksum for soldier
-			s->uiMercChecksum = MercChecksum(s);
-			// Save the soldier structure
-#ifdef _WIN32 // XXX HACK000A
-			BYTE Data[2328];
-#else
-			BYTE Data[2352];
-#endif
-			InjectSoldierType(Data, s);
-			if ( guiSavedGameVersion < 87 )
-			{
-				JA2EncryptedFileWrite(hFile, Data, sizeof(Data));
-			}
-			else
-			{
-				NewJA2EncryptedFileWrite(hFile, Data, sizeof(Data));
-			}
-
-			// Save all the pointer info from the structure
-
-			SaveMercPath(hFile, s->pMercPath);
-
-			//do we have a 	KEY_ON_RING									*pKeyRing;
-			if (s->pKeyRing != NULL)
-			{
-				// write to the file saying we have the ....
-				FileWrite(hFile, &ubOne, 1);
-
-				// Now save the ....
-				FileWrite(hFile, s->pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING));
-			}
-			else
-			{
-				// write to the file saying we DO NOT have the Key ring
-				FileWrite(hFile, &ubZero, 1);
-			}
+			NewJA2EncryptedFileWrite(f, Data, sizeof(Data));
 		}
+
+		// Save all the pointer info from the structure
+		SaveMercPath(f, s->pMercPath);
+
+		// Save the key ring
+		UINT8 const has_keyring = s->pKeyRing != NULL;
+		FileWrite(f, &has_keyring, sizeof(has_keyring));
+		if (!has_keyring) continue;
+		FileWrite(f, s->pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING));
 	}
 }
 
