@@ -1413,62 +1413,52 @@ static void HandleLocateToGuyAsHeWalks(SOLDIERTYPE* pSoldier)
 }
 
 
-static void CheckIfNearbyGroundSeemsWrong(SOLDIERTYPE* pSoldier, UINT16 GridNo, BOOLEAN CheckAround, BOOLEAN* pfKeepMoving)
+static void CheckIfNearbyGroundSeemsWrong(SOLDIERTYPE* const s, UINT16 const gridno, BOOLEAN const check_around, BOOLEAN* const keep_moving)
 {
-	INT16 sMineGridNo;
-	if (NearbyGroundSeemsWrong(pSoldier, GridNo, CheckAround, &sMineGridNo))
-	{
-		if (pSoldier->uiStatusFlags & SOLDIER_PC)
+	INT16 mine_gridno;
+	if (!NearbyGroundSeemsWrong(s, gridno, check_around, &mine_gridno)) return;
+
+	if (s->uiStatusFlags & SOLDIER_PC)
+	{ /* NearbyGroundSeemsWrong() returns true with gridno NOWHERE if we find
+		 * something by metal detector.  We should definitely stop but we won't
+		 * place a locator or say anything */
+		if (gTacticalStatus.uiFlags & INCOMBAT)
 		{
-			// NearbyGroundSeemsWrong returns true with gridno NOWHERE if
-			// we find something by metal detector... we should definitely stop
-			// but we won't place a locator or say anything
-
-			// IF not in combat, stop them all
-			if (!(gTacticalStatus.uiFlags & INCOMBAT))
-			{
-				INT32 cnt2 = gTacticalStatus.Team[gbPlayerNum].bLastID;
-
-				// look for all mercs on the same team,
-				for (SOLDIERTYPE* pSoldier2 = GetMan(cnt2); cnt2 >= gTacticalStatus.Team[gbPlayerNum].bFirstID; cnt2--, pSoldier2--)
-				{
-					if (pSoldier2->bActive)
-					{
-						EVENT_StopMerc(pSoldier2, pSoldier2->sGridNo, pSoldier2->bDirection);
-					}
-				}
-			}
-			else
-			{
-				EVENT_StopMerc(pSoldier, pSoldier->sGridNo, pSoldier->bDirection);
-			}
-
-			*pfKeepMoving = FALSE;
-
-			if (sMineGridNo != NOWHERE)
-			{
-				LocateGridNo(sMineGridNo);
-				// we reuse the boobytrap gridno variable here
-				gsBoobyTrapGridNo = sMineGridNo;
-				gpBoobyTrapSoldier = pSoldier;
-				SetStopTimeQuoteCallback(MineSpottedDialogueCallBack);
-				TacticalCharacterDialogue(pSoldier, QUOTE_SUSPICIOUS_GROUND);
-			}
+			EVENT_StopMerc(s, s->sGridNo, s->bDirection);
 		}
 		else
-		{
-			if (sMineGridNo != NOWHERE)
+		{ // Not in combat, stop them all
+			for (INT32 i = gTacticalStatus.Team[gbPlayerNum].bLastID; i >= gTacticalStatus.Team[gbPlayerNum].bFirstID; i--)
 			{
-				EVENT_StopMerc(pSoldier, pSoldier->sGridNo, pSoldier->bDirection);
-				*pfKeepMoving = FALSE;
-
-				gpWorldLevelData[sMineGridNo].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
-
-				// better stop and reconsider what to do...
-				SetNewSituation(pSoldier);
-				ActionDone(pSoldier);
+				SOLDIERTYPE* const s2 = GetMan(i);
+				if (!s2->bActive) continue;
+				EVENT_StopMerc(s2, s2->sGridNo, s2->bDirection);
 			}
 		}
+
+		*keep_moving = FALSE;
+
+		if (mine_gridno == NOWHERE) return;
+
+		// We reuse the boobytrap gridno variable here
+		gpBoobyTrapSoldier = s;
+		gsBoobyTrapGridNo  = mine_gridno;
+		LocateGridNo(mine_gridno);
+		SetStopTimeQuoteCallback(MineSpottedDialogueCallBack);
+		TacticalCharacterDialogue(s, QUOTE_SUSPICIOUS_GROUND);
+	}
+	else
+	{
+		if (mine_gridno == NOWHERE) return;
+
+		EVENT_StopMerc(s, s->sGridNo, s->bDirection);
+		*keep_moving = FALSE;
+
+		gpWorldLevelData[mine_gridno].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
+
+		// Better stop and reconsider what to do
+		SetNewSituation(s);
+		ActionDone(s);
 	}
 }
 
