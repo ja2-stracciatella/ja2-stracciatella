@@ -756,72 +756,41 @@ INT32 GetLastSquadActive( void )
 }
 
 
-void SaveSquadInfoToSavedGameFile(HWFILE const hFile)
+void SaveSquadInfoToSavedGameFile(HWFILE const f)
 {
-	SAVE_SQUAD_INFO_STRUCT sSquadSaveStruct[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
-	UINT32	uiSaveSize=0;
-	//Reset the current squad info
-	INT32 iCounterB = 0;
-	INT32 iCounter =0;
-
-
-	for( iCounter = 0; iCounter <  NUMBER_OF_SQUADS; iCounter++ )
+	// Save the squad info to the Saved Game File
+	SAVE_SQUAD_INFO_STRUCT save_squad_info[NUMBER_OF_SQUADS][NUMBER_OF_SOLDIERS_PER_SQUAD];
+	for (INT32 squad = 0; squad < NUMBER_OF_SQUADS; ++squad)
 	{
-		for( iCounterB =0; iCounterB < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounterB++ )
+		for (INT32 slot = 0; slot < NUMBER_OF_SOLDIERS_PER_SQUAD; ++slot)
 		{
-			const SOLDIERTYPE* const s = Squad[iCounter][iCounterB];
-			sSquadSaveStruct[iCounter][iCounterB].uiID = (s != NULL ? s->ubID : -1);
+			SOLDIERTYPE const* const s = Squad[squad][slot];
+			save_squad_info[squad][slot].uiID = s != NULL ? s->ubID : -1;
 		}
 	}
+	FileWrite(f, save_squad_info, sizeof(save_squad_info));
 
-	//Save the squad info to the Saved Game File
-	uiSaveSize = sizeof( SAVE_SQUAD_INFO_STRUCT ) * NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD;
-
-	FileWrite(hFile, sSquadSaveStruct, uiSaveSize);
-
-	//Save all the squad movement id's
-	FileWrite(hFile, SquadMovementGroups, sizeof(INT8) * NUMBER_OF_SQUADS);
+	// Save all the squad movement IDs
+	FileWrite(f, SquadMovementGroups, sizeof(SquadMovementGroups));
 }
 
 
-void LoadSquadInfoFromSavedGameFile(HWFILE const hFile)
+void LoadSquadInfoFromSavedGameFile(HWFILE const f)
 {
-	SAVE_SQUAD_INFO_STRUCT sSquadSaveStruct[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
-	UINT32	uiSaveSize=0;
-
-	//Reset the current squad info
-	INT32 iCounterB = 0;
-	INT32 iCounter =0;
-
-	// null each list of ptrs.
-	for( iCounter = 0; iCounter <  NUMBER_OF_SQUADS; iCounter++ )
-	{
-		for( iCounterB =0; iCounterB < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounterB++ )
-		{
-		  // squad, soldier
-		  Squad[ iCounter ][ iCounterB ]= NULL;
-		}
-	}
-
-
 	// Load in the squad info
-	uiSaveSize = sizeof( SAVE_SQUAD_INFO_STRUCT ) * NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD;
-
-	FileRead(hFile, sSquadSaveStruct, uiSaveSize);
-
-	// Loop through the array loaded in
-	for( iCounter = 0; iCounter <  NUMBER_OF_SQUADS; iCounter++ )
+	SAVE_SQUAD_INFO_STRUCT save_squad_info[NUMBER_OF_SQUADS][NUMBER_OF_SOLDIERS_PER_SQUAD];
+	FileRead(f, save_squad_info, sizeof(save_squad_info));
+	for (INT32 squad = 0; squad != NUMBER_OF_SQUADS; ++squad)
 	{
-		for( iCounterB =0; iCounterB < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounterB++ )
+		for (INT32 slot = 0; slot != NUMBER_OF_SOLDIERS_PER_SQUAD; ++slot)
 		{
-			const INT16 id = sSquadSaveStruct[iCounter][iCounterB].uiID;
-			Squad[iCounter][iCounterB] = (id != -1 ? GetMan(id) : NULL);
+			INT16 const id = save_squad_info[squad][slot].uiID;
+			Squad[squad][slot] = id != -1 ? GetMan(id) : NULL;
 		}
 	}
 
-
-	//Load in the Squad movement id's
-	FileRead(hFile, SquadMovementGroups, sizeof(INT8) * NUMBER_OF_SQUADS);
+	// Load in the Squad movement IDs
+	FileRead(f, SquadMovementGroups, sizeof(SquadMovementGroups));
 }
 
 
