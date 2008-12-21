@@ -1,7 +1,9 @@
+#include "Campaign_Init.h"
 #include "Overhead.h"
 #include "FileMan.h"
 #include "Creature_Spreading.h"
 #include "Campaign_Types.h"
+#include "Queen_Command.h"
 #include "Strategic_Movement.h"
 #include "Game_Event_Hook.h"
 #include "GameSettings.h"
@@ -122,9 +124,6 @@ UINT8 gubAdultMalesAttackingTown = 0;
 UINT8 gubAdultFemalesAttackingTown = 0;
 UINT8 gubCreatureBattleCode = CREATURE_BATTLE_CODE_NONE;
 UINT8 gubSectorIDOfCreatureAttack = 0;
-
-extern UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ );
-extern void BuildUndergroundSectorInfoList();
 
 
 static CREATURE_DIRECTIVE* NewDirective(UINT8 ubSectorID, UINT8 ubSectorZ, UINT8 ubCreatureHabitat)
