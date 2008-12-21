@@ -1980,55 +1980,36 @@ void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* const pSoldier, INT16 sGridN
 static BOOLEAN DoCatchObject(REAL_OBJECT* pObject);
 
 
-static BOOLEAN CheckForCatcher(REAL_OBJECT* pObject, UINT16 usStructureID)
+static BOOLEAN CheckForCatcher(REAL_OBJECT* const o, UINT16 const structure_id)
 {
 	// Do we want to catch?
-	if ( pObject->fTestObject ==  NO_TEST_OBJECT )
-	{
-		if ( pObject->ubActionCode == THROW_TARGET_MERC_CATCH )
-		{
-			// Is it a guy?
-			if ( usStructureID < INVALID_STRUCTURE_ID )
-			{
-				//Is it the same guy?
-				if (GetMan(usStructureID) == pObject->target)
-				{
-					if ( DoCatchObject( pObject ) )
-					{
-						pObject->fAlive = FALSE;
-						return( TRUE );
-					}
-				}
-			}
-		}
-	}
-	return( FALSE );
+	if (o->fTestObject  != NO_TEST_OBJECT)          return FALSE;
+	if (o->ubActionCode != THROW_TARGET_MERC_CATCH) return FALSE;
+	// Is it a guy?
+	if (structure_id    >= INVALID_STRUCTURE_ID)    return FALSE;
+	// Is it the same guy?
+	if (o->target       != GetMan(structure_id))    return FALSE;
+	if (!DoCatchObject(o))                          return FALSE;
+
+	o->fAlive = FALSE;
+	return TRUE;
 }
 
 
-static void CheckForObjectHittingMerc(REAL_OBJECT* pObject, UINT16 usStructureID)
+static void CheckForObjectHittingMerc(REAL_OBJECT* const o, UINT16 const structure_id)
 {
-  INT16       sDamage, sBreath;
-
 	// Do we want to catch?
-	if ( pObject->fTestObject ==  NO_TEST_OBJECT )
-	{
-		// Is it a guy?
-		if ( usStructureID < INVALID_STRUCTURE_ID )
-		{
-      if ( pObject->ubLastTargetTakenDamage != (UINT8)usStructureID )
-      {
-			  SOLDIERTYPE* const pSoldier = GetMan(usStructureID);
+	if (o->fTestObject != NO_TEST_OBJECT)             return;
+	// Is it a guy?
+	if (structure_id   >= INVALID_STRUCTURE_ID)       return;
+	if (structure_id   == o->ubLastTargetTakenDamage) return;
 
-        sDamage = 1;
-        sBreath = 0;
+	SOLDIERTYPE* const s      = GetMan(structure_id);
+	INT16        const damage = 1;
+	INT16        const breath = 0;
+	EVENT_SoldierGotHit(s, NOTHING, damage, breath, s->bDirection, 0, o->owner, FIRE_WEAPON_TOSSED_OBJECT_SPECIAL, 0, NOWHERE);
 
-				EVENT_SoldierGotHit(pSoldier, NOTHING, sDamage, sBreath, pSoldier->bDirection, 0, pObject->owner, FIRE_WEAPON_TOSSED_OBJECT_SPECIAL, 0, NOWHERE);
-
-        pObject->ubLastTargetTakenDamage = (UINT8)( usStructureID );
-      }
-		}
-	}
+	o->ubLastTargetTakenDamage = structure_id;
 }
 
 
