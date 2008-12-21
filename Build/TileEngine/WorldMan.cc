@@ -1809,25 +1809,24 @@ BOOLEAN IsRoofVisible2(INT16 sMapPos)
 }
 
 
-SOLDIERTYPE* WhoIsThere2(INT16 sGridNo, INT8 bLevel)
+SOLDIERTYPE* WhoIsThere2(INT16 const gridno, INT8 const level)
 {
-	if (!GridNoOnVisibleWorldTile(sGridNo)) return NULL;
+	if (!GridNoOnVisibleWorldTile(gridno)) return NULL;
 
-	for (const STRUCTURE* pStructure = gpWorldLevelData[sGridNo].pStructureHead; pStructure != NULL; pStructure = pStructure->pNext)
+	for (STRUCTURE const* structure = gpWorldLevelData[gridno].pStructureHead; structure; structure = structure->pNext)
 	{
-		if (!(pStructure->fFlags & STRUCTURE_PERSON)) continue;
+		if (!(structure->fFlags & STRUCTURE_PERSON)) continue;
 
-		SOLDIERTYPE* const tgt = GetMan(pStructure->usStructureID);
+		SOLDIERTYPE* const tgt = GetMan(structure->usStructureID);
 		// person must either have their pSoldier->sGridNo here or be non-passable
-		if (!(pStructure->fFlags & STRUCTURE_PASSABLE) || tgt->sGridNo == sGridNo)
+		if (structure->fFlags & STRUCTURE_PASSABLE && tgt->sGridNo != gridno) continue;
+
+		if ((level == 0 && structure->sCubeOffset == 0) ||
+				(level >  0 && structure->sCubeOffset >  0))
 		{
-			if (bLevel == 0 && pStructure->sCubeOffset == 0 ||
-					(bLevel > 0 && pStructure->sCubeOffset > 0))
-			{
-				// found a person, on the right level!
-				// structure ID and merc ID are identical for merc structures
-				return tgt;
-			}
+			// found a person, on the right level!
+			// structure ID and merc ID are identical for merc structures
+			return tgt;
 		}
 	}
 
