@@ -676,34 +676,23 @@ static void SetLastTimePlayerWasInSector(void)
 
 static UINT32 GetLastTimePlayerWasInSector(void)
 {
-	if( !gbWorldSectorZ )
-		return( SectorInfo[ SECTOR( gWorldSectorX,gWorldSectorY) ].uiTimeCurrentSectorWasLastLoaded );
-	else if( gbWorldSectorZ > 0 )
+	if (gbWorldSectorZ == 0)
 	{
-		UNDERGROUND_SECTORINFO *pTempNode = gpUndergroundSectorInfoHead;
-
-		pTempNode = gpUndergroundSectorInfoHead;
-
-		//loop through and look for the right underground sector
-		while( pTempNode )
-		{
-			if( ( pTempNode->ubSectorX == gWorldSectorX ) &&
-					( pTempNode->ubSectorY == gWorldSectorY ) &&
-					( pTempNode->ubSectorZ == gbWorldSectorZ ) )
-			{
-				//set the flag indicating that ther is a temp item file exists for the sector
-				return( pTempNode->uiTimeCurrentSectorWasLastLoaded );
-			}
-			pTempNode = pTempNode->next;
-		}
-
-		#ifdef JA2TESTVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Failed to Get the 'uiTimeCurrentSectorWasLastLoaded' from an underground sector" );
-		#endif
-
-		return( 0 );
+		return SectorInfo[SECTOR(gWorldSectorX,gWorldSectorY)].uiTimeCurrentSectorWasLastLoaded;
 	}
-	return( 0 );
+	else if (gbWorldSectorZ > 0)
+	{
+		UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+		if (!u)
+		{
+#ifdef JA2TESTVERSION
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Failed to Get the 'uiTimeCurrentSectorWasLastLoaded' from an underground sector");
+#endif
+			return 0;
+		}
+		return u->uiTimeCurrentSectorWasLastLoaded;
+	}
+	return 0;
 }
 
 
