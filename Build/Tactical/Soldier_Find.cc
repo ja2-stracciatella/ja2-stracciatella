@@ -515,12 +515,6 @@ BOOLEAN SoldierOnScreen(const SOLDIERTYPE* s)
 }
 
 
-BOOLEAN SoldierOnVisibleWorldTile(SOLDIERTYPE const * const s)
-{
-	return GridNoOnVisibleWorldTile(s->sGridNo);
-}
-
-
 BOOLEAN SoldierLocationRelativeToScreen(const INT16 sGridNo, INT8* const pbDirection, UINT32* const puiScrollFlags)
 {
 	INT16 sWorldX;

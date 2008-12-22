@@ -303,9 +303,9 @@ void RenderRadarScreen()
 					continue;
 				}
 
-				if (s->uiStatusFlags & SOLDIER_DEAD) continue;
-				if (s->ubBodyType == CROW)           continue;
-				if (!SoldierOnVisibleWorldTile(s))   continue;
+				if (s->uiStatusFlags & SOLDIER_DEAD)       continue;
+				if (s->ubBodyType == CROW)                 continue;
+				if (!GridNoOnVisibleWorldTile(s->sGridNo)) continue;
 
 				// Get fullscreen coordinate for guy's position
 				INT16	sXSoldScreen;
