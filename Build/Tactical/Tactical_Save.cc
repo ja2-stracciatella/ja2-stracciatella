@@ -1051,13 +1051,6 @@ void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16
 }
 
 
-static BOOLEAN GetUnderGroundSectorFlagStatus(INT16 const x, INT16 const y, UINT8 const z, UINT32 const flag_to_check)
-{
-	UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(x, y, z);
-	return u && u->uiFlags & flag_to_check;
-}
-
-
 void SetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, UINT32 const flag_to_set)
 {
 	if (flag_to_set == SF_ALREADY_VISITED)
@@ -1110,12 +1103,17 @@ void ReSetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, UINT32 const f
 }
 
 
-BOOLEAN GetSectorFlagStatus( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, UINT32 uiFlagToSet )
+BOOLEAN GetSectorFlagStatus(INT16 const x, INT16 const y, UINT8 const z, UINT32 const flag_to_check)
 {
-	if( bMapZ == 0 )
-		return( (SectorInfo[ SECTOR( sMapX, sMapY ) ].uiFlags & uiFlagToSet ) ? 1 : 0 );
+	if (z == 0)
+	{
+		return (SectorInfo[SECTOR(x, y)].uiFlags & flag_to_check) != 0;
+	}
 	else
-		return( (GetUnderGroundSectorFlagStatus( sMapX, sMapY, bMapZ, uiFlagToSet ) ) ? 1 : 0  );
+	{
+		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(x, y, z);
+		return u && u->uiFlags & flag_to_check;
+	}
 }
 
 
