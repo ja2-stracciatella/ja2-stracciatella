@@ -544,25 +544,23 @@ static void    LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, IN
 BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile()
 try
 {
-	BOOLEAN fUsedTempFile = FALSE;
+	INT16 const x = gWorldSectorX;
+	INT16 const y = gWorldSectorY;
+	INT8  const z = gbWorldSectorZ;
 
-	//
-	// Load in the sectors ITems
-	//
-
-	if( AreInMeanwhile() )
-	{ //There will never be a temp file for the meanwhile scene, so return TRUE.  However,
-		//set a flag to not save it either!
+	if (AreInMeanwhile())
+	{ /* There will never be a temp file for the meanwhile scene, so return TRUE.
+		 * However, set a flag to not save it either! */
 		gfWasInMeanwhile = TRUE;
 
-		// OK  - this is true except for interrotations - we need that item temp file to be
-		// processed!
-		if ( GetMeanwhileID() == INTERROGATION )
+		/* OK  - this is true except for interrogations - we need that item temp
+		 * file to be processed! */
+		if (GetMeanwhileID() == INTERROGATION)
 		{
 			//If there is a file, load in the Items array
-			if( DoesTempFileExistsForMap( SF_ITEM_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
+			if (DoesTempFileExistsForMap(SF_ITEM_TEMP_FILE_EXISTS, x, y, z))
 			{
-				LoadAndAddWorldItemsFromTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+				LoadAndAddWorldItemsFromTempFile(x, y, z);
 			}
 
 			gfWasInMeanwhile = FALSE;
@@ -570,111 +568,94 @@ try
 		return TRUE;
 	}
 
-	//if we are in an above ground sector
+	bool used_tempfile = false;
 
-	//If there is a file, load in the Items array
-	if( DoesTempFileExistsForMap( SF_ITEM_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
+	if (DoesTempFileExistsForMap(SF_ITEM_TEMP_FILE_EXISTS, x, y, z))
 	{
-		fUsedTempFile = TRUE;
-		LoadAndAddWorldItemsFromTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+		LoadAndAddWorldItemsFromTempFile(x, y, z);
+		used_tempfile = true;
 	}
 
-	//If there is a rotting corpse temp file, load the data from the temp file
-	if( DoesTempFileExistsForMap( SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
+	if (DoesTempFileExistsForMap(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, x, y, z))
 	{
-		fUsedTempFile = TRUE;
-		LoadRottingCorpsesFromTempCorpseFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+		LoadRottingCorpsesFromTempCorpseFile(x, y, z);
+		used_tempfile = true;
 	}
 
-	//If there is a map modifications file, load the data from the temp file
-	if( DoesTempFileExistsForMap( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
+	if (DoesTempFileExistsForMap(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, x, y, z))
 	{
-		fUsedTempFile = TRUE;
 		LoadAllMapChangesFromMapTempFileAndApplyThem();
+		used_tempfile = true;
 	}
 
-	//if there is a door table temp file, load the data from the temp file
-	if( DoesTempFileExistsForMap( SF_DOOR_TABLE_TEMP_FILES_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
+	if (DoesTempFileExistsForMap(SF_DOOR_TABLE_TEMP_FILES_EXISTS, x, y, z))
 	{
-		fUsedTempFile = TRUE;
 		LoadDoorTableFromDoorTableTempFile();
+		used_tempfile = true;
 	}
 
-	//if there is a revealed status temp file, load the data from the temp file
-	if( DoesTempFileExistsForMap( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
+	if (DoesTempFileExistsForMap(SF_REVEALED_STATUS_TEMP_FILE_EXISTS, x, y, z))
 	{
-		fUsedTempFile = TRUE;
 		LoadRevealedStatusArrayFromRevealedTempFile();
+		used_tempfile = true;
 	}
 
-	//if there is a door status temp file, load the data from the temp file
-	if( DoesTempFileExistsForMap( SF_DOOR_STATUS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
+	if (DoesTempFileExistsForMap(SF_DOOR_STATUS_TEMP_FILE_EXISTS, x, y, z))
 	{
-		fUsedTempFile = TRUE;
 		LoadDoorStatusArrayFromDoorStatusTempFile();
+		used_tempfile = true;
 	}
 
-	//if the save is an older version, use theold way of oading it up
-	if( guiSavedGameVersion < 57 )
+	// if the save is an older version, use the old way of loading it up
+	if (guiSavedGameVersion < 57)
 	{
-		if( DoesTempFileExistsForMap( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
+		if (DoesTempFileExistsForMap(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z))
 		{
-			fUsedTempFile = TRUE;
-			if( !LoadEnemySoldiersFromTempFile( ) )
-				return( FALSE );
+			if (!LoadEnemySoldiersFromTempFile())
+				return FALSE;
+			used_tempfile = true;
 		}
 	}
-
-	//else use the new way of loading the enemy and civilian placements
 	else
-	{
-		if( DoesTempFileExistsForMap( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
+	{ // use the new way of loading the enemy and civilian placements
+		if (DoesTempFileExistsForMap(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z))
 		{
-			fUsedTempFile = TRUE;
-			if( !NewWayOfLoadingEnemySoldiersFromTempFile( ) )
-				return( FALSE );
+			if (!NewWayOfLoadingEnemySoldiersFromTempFile())
+				return FALSE;
+			used_tempfile = true;
 		}
-
-		if( DoesTempFileExistsForMap( SF_CIV_PRESERVED_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
+		if (DoesTempFileExistsForMap(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, x, y, z))
 		{
-			fUsedTempFile = TRUE;
-			if( !NewWayOfLoadingCiviliansFromTempFile( ) )
-				return( FALSE );
+			if (!NewWayOfLoadingCiviliansFromTempFile())
+				return FALSE;
+			used_tempfile = true;
 		}
 	}
 
-	if( DoesTempFileExistsForMap( SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
+	if (DoesTempFileExistsForMap(SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, x, y, z))
 	{
-		fUsedTempFile = TRUE;
-		LoadSmokeEffectsFromMapTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+		LoadSmokeEffectsFromMapTempFile(x, y, z);
+		used_tempfile = true;
 	}
 
-	if( DoesTempFileExistsForMap( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
+	if (DoesTempFileExistsForMap(SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, x, y, z))
 	{
-		fUsedTempFile = TRUE;
-		LoadLightEffectsFromMapTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+		LoadLightEffectsFromMapTempFile(x, y, z);
+		used_tempfile = true;
 	}
 
-	//if we are loading a saved game
-//	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-	{
-		//Init the world since we have modified the map
-		InitLoadedWorld();
-	}
+	// Init the world since we have modified the map
+	InitLoadedWorld();
 
-
-	// Get the last time the player was in the sector
 	guiTimeCurrentSectorWasLastLoaded = GetLastTimePlayerWasInSector();
 
-	if( fUsedTempFile )
-	{
-//		ValidateSoldierInitLinks( 3 );
-	}
-
+#if 0 // XXX was commented out
+	if (used_tempfile) ValidateSoldierInitLinks(3);
+#endif
 
 	StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated();
 
-	return( TRUE );
+	return TRUE;
 }
 catch (...) { return FALSE; }
 
