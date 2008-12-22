@@ -1051,15 +1051,6 @@ void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16
 }
 
 
-static BOOLEAN SetUnderGroundSectorFlag(INT16 const x, INT16 const y, UINT8 const z, UINT32 const flag_to_set)
-{
-	UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(x, y, z);
-	if (!u) return FALSE;
-	u->uiFlags |= flag_to_set;
-	return TRUE;
-}
-
-
 static BOOLEAN ReSetUnderGroundSectorFlag(INT16 const x, INT16 const y, UINT8 const z, UINT32 const flag_to_clear)
 {
 	UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(x, y, z);
@@ -1108,7 +1099,8 @@ void SetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, UINT32 const fla
 	}
 	else
 	{
-		SetUnderGroundSectorFlag(x, y, z, flag_to_set);
+		UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(x, y, z);
+		if (u) u->uiFlags |= flag_to_set;
 	}
 }
 
