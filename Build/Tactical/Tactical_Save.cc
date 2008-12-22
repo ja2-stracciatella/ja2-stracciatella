@@ -535,10 +535,9 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 }
 
 
-static BOOLEAN DoesTempFileExistsForMap(UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
-static void    LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
-static UINT32  GetLastTimePlayerWasInSector(void);
-static void    LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+static void   LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+static UINT32 GetLastTimePlayerWasInSector(void);
+static void   LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
 void LoadCurrentSectorsInformationFromTempItemsFile()
@@ -546,6 +545,17 @@ void LoadCurrentSectorsInformationFromTempItemsFile()
 	INT16 const x = gWorldSectorX;
 	INT16 const y = gWorldSectorY;
 	INT8  const z = gbWorldSectorZ;
+
+	UINT32 flags;
+	if (z == 0)
+	{
+		flags = SectorInfo[SECTOR(x, y)].uiFlags;
+	}
+	else
+	{
+		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(x, y, z);
+		flags = u ? u->uiFlags : 0;
+	}
 
 	if (AreInMeanwhile())
 	{ /* There will never be a temp file for the meanwhile scene, so return TRUE.
@@ -557,7 +567,7 @@ void LoadCurrentSectorsInformationFromTempItemsFile()
 		if (GetMeanwhileID() == INTERROGATION)
 		{
 			//If there is a file, load in the Items array
-			if (DoesTempFileExistsForMap(SF_ITEM_TEMP_FILE_EXISTS, x, y, z))
+			if (flags & SF_ITEM_TEMP_FILE_EXISTS)
 			{
 				LoadAndAddWorldItemsFromTempFile(x, y, z);
 			}
@@ -569,37 +579,37 @@ void LoadCurrentSectorsInformationFromTempItemsFile()
 
 	bool used_tempfile = false;
 
-	if (DoesTempFileExistsForMap(SF_ITEM_TEMP_FILE_EXISTS, x, y, z))
+	if (flags & SF_ITEM_TEMP_FILE_EXISTS)
 	{
 		LoadAndAddWorldItemsFromTempFile(x, y, z);
 		used_tempfile = true;
 	}
 
-	if (DoesTempFileExistsForMap(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, x, y, z))
+	if (flags & SF_ROTTING_CORPSE_TEMP_FILE_EXISTS)
 	{
 		LoadRottingCorpsesFromTempCorpseFile(x, y, z);
 		used_tempfile = true;
 	}
 
-	if (DoesTempFileExistsForMap(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, x, y, z))
+	if (flags & SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS)
 	{
 		LoadAllMapChangesFromMapTempFileAndApplyThem();
 		used_tempfile = true;
 	}
 
-	if (DoesTempFileExistsForMap(SF_DOOR_TABLE_TEMP_FILES_EXISTS, x, y, z))
+	if (flags & SF_DOOR_TABLE_TEMP_FILES_EXISTS)
 	{
 		LoadDoorTableFromDoorTableTempFile();
 		used_tempfile = true;
 	}
 
-	if (DoesTempFileExistsForMap(SF_REVEALED_STATUS_TEMP_FILE_EXISTS, x, y, z))
+	if (flags & SF_REVEALED_STATUS_TEMP_FILE_EXISTS)
 	{
 		LoadRevealedStatusArrayFromRevealedTempFile();
 		used_tempfile = true;
 	}
 
-	if (DoesTempFileExistsForMap(SF_DOOR_STATUS_TEMP_FILE_EXISTS, x, y, z))
+	if (flags & SF_DOOR_STATUS_TEMP_FILE_EXISTS)
 	{
 		LoadDoorStatusArrayFromDoorStatusTempFile();
 		used_tempfile = true;
@@ -608,7 +618,7 @@ void LoadCurrentSectorsInformationFromTempItemsFile()
 	// if the save is an older version, use the old way of loading it up
 	if (guiSavedGameVersion < 57)
 	{
-		if (DoesTempFileExistsForMap(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z))
+		if (flags & SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS)
 		{
 			LoadEnemySoldiersFromTempFile();
 			used_tempfile = true;
@@ -616,25 +626,25 @@ void LoadCurrentSectorsInformationFromTempItemsFile()
 	}
 	else
 	{ // use the new way of loading the enemy and civilian placements
-		if (DoesTempFileExistsForMap(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z))
+		if (flags & SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS)
 		{
 			NewWayOfLoadingEnemySoldiersFromTempFile();
 			used_tempfile = true;
 		}
-		if (DoesTempFileExistsForMap(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, x, y, z))
+		if (flags & SF_CIV_PRESERVED_TEMP_FILE_EXISTS)
 		{
 			NewWayOfLoadingCiviliansFromTempFile();
 			used_tempfile = true;
 		}
 	}
 
-	if (DoesTempFileExistsForMap(SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, x, y, z))
+	if (flags & SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS)
 	{
 		LoadSmokeEffectsFromMapTempFile(x, y, z);
 		used_tempfile = true;
 	}
 
-	if (DoesTempFileExistsForMap(SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, x, y, z))
+	if (flags & SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS)
 	{
 		LoadLightEffectsFromMapTempFile(x, y, z);
 		used_tempfile = true;
@@ -920,20 +930,6 @@ static void SaveNPCInformationToProfileStruct(void)
 		p->fUseProfileInsertionInfo = TRUE;
 		p->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 		p->usStrategicInsertionData = s->sGridNo;
-	}
-}
-
-
-static BOOLEAN DoesTempFileExistsForMap(UINT32 const type, INT16 const x, INT16 const y, INT8 const z)
-{
-	if (z == 0)
-	{
-		return (SectorInfo[SECTOR(x, y)].uiFlags & type) != 0;
-	}
-	else
-	{
-		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(x, y, z);
-		return u && u->uiFlags & type;
 	}
 }
 
