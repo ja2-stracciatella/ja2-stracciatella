@@ -268,7 +268,7 @@ void SlideToLocation(INT16 sDestGridNo);
 
 void RebuildAllSoldierShadeTables(void);
 void HandlePlayerTeamMemberDeath( SOLDIERTYPE *pSoldier );
-BOOLEAN SoldierOnVisibleWorldTile( SOLDIERTYPE *pSoldier );
+BOOLEAN SoldierOnVisibleWorldTile(SOLDIERTYPE const*);
 
 SOLDIERTYPE* FindNextActiveAndAliveMerc(const SOLDIERTYPE* curr, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs);
 SOLDIERTYPE* FindPrevActiveAndAliveMerc(const SOLDIERTYPE* curr, BOOLEAN fGoodForLessOKLife, BOOLEAN fOnlyRegularMercs);

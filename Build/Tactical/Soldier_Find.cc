@@ -515,9 +515,9 @@ BOOLEAN SoldierOnScreen(const SOLDIERTYPE* s)
 }
 
 
-BOOLEAN SoldierOnVisibleWorldTile( SOLDIERTYPE *pSoldier )
+BOOLEAN SoldierOnVisibleWorldTile(SOLDIERTYPE const * const s)
 {
-	return( GridNoOnVisibleWorldTile( pSoldier->sGridNo ) );
+	return GridNoOnVisibleWorldTile(s->sGridNo);
 }
 
 

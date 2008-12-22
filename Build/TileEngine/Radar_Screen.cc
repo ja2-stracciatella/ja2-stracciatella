@@ -206,41 +206,20 @@ static void CreateDestroyMouseRegionsForSquadList(void);
 static void RenderSquadList(void);
 
 
-void RenderRadarScreen( )
+void RenderRadarScreen()
 {
-	INT16 sRadarTLX, sRadarTLY;
-	INT16 sRadarBRX, sRadarBRY;
-	INT16 sRadarCX, sRadarCY;
-	INT32 iItemNumber = 0;
-
-	INT16	sX_S, sY_S;
-	INT16 sScreenCenterX, sScreenCenterY;
-	INT16 sDistToCenterY, sDistToCenterX;
-	INT16 sTopLeftWorldX, sTopLeftWorldY;
-	INT16 sBottomRightWorldX, sBottomRightWorldY;
-
-	INT16	sXSoldScreen, sYSoldScreen, sXSoldRadar, sYSoldRadar;
-
-	UINT16										 usLineColor;
-	INT16											 sHeight, sWidth, sX;
-	INT32											 iCounter = 0;
-
-
 	// create / destroy squad list regions as nessacary
-	CreateDestroyMouseRegionsForSquadList( );
+	CreateDestroyMouseRegionsForSquadList();
 
 	// check if we are allowed to do anything?
 	if (!fRenderRadarScreen)
 	{
-		RenderSquadList( );
+		RenderSquadList();
 		return;
 	}
 
-	if (AreInMeanwhile())
-	{
-		// in a meanwhile, don't render any map
-		ClearOutRadarMapImage();
-	}
+	// in a meanwhile, don't render any map
+	if (AreInMeanwhile()) ClearOutRadarMapImage();
 
 	if (fInterfacePanelDirty == DIRTYLEVEL2 && gusRadarImage)
 	{
@@ -252,205 +231,130 @@ void RenderRadarScreen( )
 				(guiCurrentScreen == GAME_SCREEN && gbWorldSectorZ     == 0)
 			) ? 1 : 0;
 		gusRadarImage->CurrentShade(shade);
-
 		BltVideoObject(guiSAVEBUFFER, gusRadarImage, 0, RADAR_WINDOW_X, gsRadarY);
 	}
 
-	// FIRST DELETE WHAT'S THERE
-	RestoreExternBackgroundRect( RADAR_WINDOW_X, gsRadarY, RADAR_WINDOW_WIDTH + 1 , RADAR_WINDOW_HEIGHT + 1 );
-
-	// Determine scale factors
-
-	// Find the diustance from render center to true world center
-	sDistToCenterX = gsRenderCenterX - gCenterWorldX;
-	sDistToCenterY = gsRenderCenterY - gCenterWorldY;
-
-	// From render center in world coords, convert to render center in "screen" coords
-	FromCellToScreenCoordinates( sDistToCenterX , sDistToCenterY, &sScreenCenterX, &sScreenCenterY );
-
-	// Subtract screen center
-	sScreenCenterX += gsCX;
-	sScreenCenterY += gsCY;
-
-	// Get corners in screen coords
-	// TOP LEFT
-	sX_S = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 );
-	sY_S = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 );
-
-	sTopLeftWorldX = sScreenCenterX  - sX_S;
-	sTopLeftWorldY = sScreenCenterY  - sY_S;
-
-	sBottomRightWorldX = sScreenCenterX  + sX_S;
-	sBottomRightWorldY = sScreenCenterY  + sY_S;
-
-
-	// Determine radar coordinates
-	sRadarCX	= (INT16)( gsCX * gdScaleX );
-	sRadarCY	= (INT16)( gsCY * gdScaleY );
-
-
-	sWidth		= ( RADAR_WINDOW_WIDTH );
-	sHeight		= ( RADAR_WINDOW_HEIGHT );
-	sX				= RADAR_WINDOW_X;
-
-
-	sRadarTLX = (INT16)( ( sTopLeftWorldX * gdScaleX ) - sRadarCX  + sX + ( sWidth /2 ) );
-	sRadarTLY = (INT16)( ( sTopLeftWorldY * gdScaleY ) - sRadarCY + gsRadarY + ( sHeight /2 ) );
-	sRadarBRX = (INT16)( ( sBottomRightWorldX * gdScaleX ) - sRadarCX + sX + ( sWidth /2 ) );
-	sRadarBRY = (INT16)( ( sBottomRightWorldY * gdScaleY ) - sRadarCY + gsRadarY + ( sHeight /2 ) );
+	// First delete what's there
+	RestoreExternBackgroundRect(RADAR_WINDOW_X, gsRadarY, RADAR_WINDOW_WIDTH + 1, RADAR_WINDOW_HEIGHT + 1);
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
 
 		SetClippingRegionAndImageWidth(l.Pitch(), RADAR_WINDOW_X, gsRadarY, RADAR_WINDOW_X + RADAR_WINDOW_WIDTH - 1, gsRadarY + RADAR_WINDOW_HEIGHT - 1);
 		UINT8* const pDestBuf = l.Buffer<UINT8>();
 
-		if( !( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-		{
-			usLineColor = Get16BPPColor(FROMRGB(0, 255, 0));
-			RectangleDraw(TRUE, sRadarTLX, sRadarTLY, sRadarBRX, sRadarBRY - 1, usLineColor, pDestBuf);
-		}
-
 		// Cycle fFlash variable
-		if ( COUNTERDONE( RADAR_MAP_BLINK ) )
+		if (COUNTERDONE(RADAR_MAP_BLINK))
 		{
-			RESETCOUNTER( RADAR_MAP_BLINK );
-
+			RESETCOUNTER(RADAR_MAP_BLINK);
 			gfRadarCurrentGuyFlash = !gfRadarCurrentGuyFlash;
 		}
 
-		if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN && fShowMapInventoryPool)
+		if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
 		{
-			for( iCounter = 0; iCounter < MAP_INVENTORY_POOL_SLOT_COUNT; iCounter++ )
-			{
+			// Find the diustance from render center to true world center
+			INT16 const sDistToCenterX = gsRenderCenterX - gCenterWorldX;
+			INT16 const sDistToCenterY = gsRenderCenterY - gCenterWorldY;
 
-				iItemNumber = iCounter + iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT;
-				// stolen item
-				if( ( pInventoryPoolList[ iItemNumber ].o.ubNumberOfObjects == 0 )||( pInventoryPoolList[ iItemNumber ].sGridNo == 0 ) )
-				{
-					// yep, continue on
-					continue;
-				}
+			// From render center in world coords, convert to render center in "screen" coords
+			INT16 sScreenCenterX;
+			INT16 sScreenCenterY;
+			FromCellToScreenCoordinates(sDistToCenterX, sDistToCenterY, &sScreenCenterX, &sScreenCenterY);
 
-				GetAbsoluteScreenXYFromMapPos(pInventoryPoolList[iItemNumber].sGridNo, &sXSoldScreen, &sYSoldScreen);
+			// Subtract screen center
+			sScreenCenterX += gsCX;
+			sScreenCenterY += gsCY;
 
-				// get radar x and y postion
-				sXSoldRadar = (INT16)( sXSoldScreen * gdScaleX );
-				sYSoldRadar = (INT16)( sYSoldScreen * gdScaleY );
+			// Get corners in screen coords
+			// TOP LEFT
+			INT16 const sX_S = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2;
+			INT16 const sY_S = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2;
 
+			INT16 const sTopLeftWorldX     = sScreenCenterX - sX_S;
+			INT16 const sTopLeftWorldY     = sScreenCenterY - sY_S;
+			INT16 const sBottomRightWorldX = sScreenCenterX + sX_S;
+			INT16 const sBottomRightWorldY = sScreenCenterY + sY_S;
 
-				// Add starting relative to interface
-				sXSoldRadar += RADAR_WINDOW_X;
-				sYSoldRadar += gsRadarY;
+			// Determine radar coordinates
+			INT16 const sRadarCX = gsCX * gdScaleX;
+			INT16 const sRadarCY = gsCY * gdScaleY;
 
-				if (fFlashHighLightInventoryItemOnradarMap)
-				{
-					usLineColor = Get16BPPColor(FROMRGB(0, 255, 0));
-				}
-				else
-				{
-					usLineColor = Get16BPPColor(FROMRGB(255, 255, 255));
-				}
+			INT16 const sWidth  = RADAR_WINDOW_WIDTH;
+			INT16 const sHeight = RADAR_WINDOW_HEIGHT;
+			INT16 const sX      = RADAR_WINDOW_X;
 
-				if (iCurrentlyHighLightedItem == iCounter)
-				{
-					RectangleDraw(TRUE, sXSoldRadar, sYSoldRadar, sXSoldRadar + 1, sYSoldRadar + 1, usLineColor, pDestBuf);
-				}
-			}
-		}
+			INT16 const sRadarTLX = sTopLeftWorldX     * gdScaleX - sRadarCX + sX       + sWidth  / 2;
+			INT16 const sRadarTLY = sTopLeftWorldY     * gdScaleY - sRadarCY + gsRadarY + sHeight / 2;
+			INT16 const sRadarBRX = sBottomRightWorldX * gdScaleX - sRadarCX + sX       + sWidth  / 2;
+			INT16 const sRadarBRY = sBottomRightWorldY * gdScaleY - sRadarCY + gsRadarY + sHeight / 2;
 
-		if( !( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
-		{
-			// RE-RENDER RADAR
+			UINT16 const line_colour = Get16BPPColor(FROMRGB(0, 255, 0));
+			RectangleDraw(TRUE, sRadarTLX, sRadarTLY, sRadarBRX, sRadarBRY - 1, line_colour, pDestBuf);
+
+			// Re-render radar
 			FOR_ALL_MERCS(i)
 			{
-				SOLDIERTYPE* const pSoldier = *i;
+				SOLDIERTYPE const* const s = *i;
 
 				// Don't place guys in radar until visible!
-				if ( pSoldier->bVisible == -1 && !(gTacticalStatus.uiFlags&SHOW_ALL_MERCS) && !(pSoldier->ubMiscSoldierFlags & SOLDIER_MISC_XRAYED) )
+				if (s->bVisible == -1 &&
+						!(gTacticalStatus.uiFlags & SHOW_ALL_MERCS) &&
+						!(s->ubMiscSoldierFlags & SOLDIER_MISC_XRAYED))
 				{
 					continue;
 				}
 
-				// Don't render guys if they are dead!
-				if ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
-				{
-					continue;
-				}
+				if (s->uiStatusFlags & SOLDIER_DEAD) continue;
+				if (s->ubBodyType == CROW)           continue;
+				if (!SoldierOnVisibleWorldTile(s))   continue;
 
-				// Don't render crows
-				if ( pSoldier->ubBodyType == CROW )
-				{
-					continue;
-				}
+				// Get fullscreen coordinate for guy's position
+				INT16	sXSoldScreen;
+				INT16 sYSoldScreen;
+				GetAbsoluteScreenXYFromMapPos(s->sGridNo, &sXSoldScreen, &sYSoldScreen);
 
-				// Get FULL screen coordinate for guy's position
-				GetAbsoluteScreenXYFromMapPos(pSoldier->sGridNo, &sXSoldScreen, &sYSoldScreen);
+				// Get radar x and y postion and add starting relative to interface
+				INT16 const x = sXSoldScreen * gdScaleX + RADAR_WINDOW_X;
+				INT16 const y = sYSoldScreen * gdScaleY + gsRadarY;
 
-				sXSoldRadar = (INT16)( sXSoldScreen * gdScaleX );
-				sYSoldRadar = (INT16)( sYSoldScreen * gdScaleY );
+				UINT32 const line_colour =
+					/* flash selected merc */
+					s == GetSelectedMan() && gfRadarCurrentGuyFlash                 ? 0                      :
+					/* on roof */
+					s->bTeam == gbPlayerNum && s->bLevel > 0                        ? FROMRGB(150, 150,   0) :
+					/* unconscious enemy */
+					s->bTeam != gbPlayerNum && s->bLife < OKLIFE                    ? FROMRGB(128, 128, 128) :
+					/* hostile civilian */
+					s->bTeam == CIV_TEAM && !s->bNeutral && s->bSide != gbPlayerNum ? FROMRGB(255,   0,   0) :
+					gTacticalStatus.Team[s->bTeam].RadarColor;
 
-				if ( !SoldierOnVisibleWorldTile( pSoldier ) )
-				{
-					continue;
-				}
-
-				// Add starting relative to interface
-				sXSoldRadar += RADAR_WINDOW_X;
-				sYSoldRadar += gsRadarY;
-
-				// Are we a selected guy?
-				if (pSoldier == GetSelectedMan())
-				{
-					if (gfRadarCurrentGuyFlash)
-					{
-						usLineColor = 0;
-					}
-					else
-					{
-						// If on roof, make darker....
-						if (pSoldier->bLevel > 0)
-						{
-							usLineColor = Get16BPPColor(FROMRGB(150, 150, 0));
-						}
-						else
-						{
-							usLineColor = Get16BPPColor(gTacticalStatus.Team[pSoldier->bTeam].RadarColor);
-						}
-					}
-				}
-				else
-				{
-					usLineColor = Get16BPPColor(gTacticalStatus.Team[pSoldier->bTeam].RadarColor);
-
-					// Override civ team with red if hostile...
-					if (pSoldier->bTeam == CIV_TEAM && !pSoldier->bNeutral && pSoldier->bSide != gbPlayerNum)
-					{
-						usLineColor = Get16BPPColor(FROMRGB(255, 0, 0));
-					}
-
-					// Render different color if an enemy and he's unconscious
-					if (pSoldier->bTeam != gbPlayerNum && pSoldier->bLife < OKLIFE)
-					{
-						usLineColor = Get16BPPColor(FROMRGB(128, 128, 128));
-					}
-
-					// If on roof, make darker....
-					if (pSoldier->bTeam == gbPlayerNum && pSoldier->bLevel > 0)
-					{
-						usLineColor = Get16BPPColor(FROMRGB(150, 150, 0));
-					}
-				}
-
-				RectangleDraw(TRUE, sXSoldRadar, sYSoldRadar, sXSoldRadar + 1, sYSoldRadar + 1, usLineColor, pDestBuf);
+				RectangleDraw(TRUE, x, y, x + 1, y + 1, Get16BPPColor(line_colour), pDestBuf);
 			}
 		}
-	}
+		else if (fShowMapInventoryPool)
+		{
+			if (iCurrentlyHighLightedItem != -1)
+			{
+				INT32     const  item_idx = iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT + iCurrentlyHighLightedItem;
+				WORLDITEM const& wi       = pInventoryPoolList[item_idx];
+				if (wi.o.ubNumberOfObjects != 0 && wi.sGridNo != 0)
+				{
+					INT16	sXSoldScreen;
+					INT16 sYSoldScreen;
+					GetAbsoluteScreenXYFromMapPos(wi.sGridNo, &sXSoldScreen, &sYSoldScreen);
 
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN && fShowMapInventoryPool)
-	{
-		InvalidateRegion( RADAR_WINDOW_X, gsRadarY,
-										RADAR_WINDOW_X + RADAR_WINDOW_WIDTH,
-										gsRadarY + RADAR_WINDOW_HEIGHT );
+					// Get radar x and y postion and add starting relative to interface
+					INT16  const x = sXSoldScreen * gdScaleX + RADAR_WINDOW_X;
+					INT16  const y = sYSoldScreen * gdScaleY + gsRadarY;
+
+					UINT16 const line_colour = fFlashHighLightInventoryItemOnradarMap ?
+						Get16BPPColor(FROMRGB(  0, 255,   0)) :
+						Get16BPPColor(FROMRGB(255, 255, 255));
+
+					RectangleDraw(TRUE, x, y, x + 1, y + 1, line_colour, pDestBuf);
+				}
+			}
+			InvalidateRegion(RADAR_WINDOW_X, gsRadarY, RADAR_WINDOW_X + RADAR_WINDOW_WIDTH, gsRadarY + RADAR_WINDOW_HEIGHT);
+		}
 	}
 }
 
