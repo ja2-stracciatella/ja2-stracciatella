@@ -45,12 +45,6 @@ static void RemoveEnemySoldierTempFile(const INT16 x, const INT16 y, const INT8 
 }
 
 
-static void RemoveCivilianTempFile(const INT16 x, const INT16 y, const INT8 z)
-{
-	RemoveTempFile(x, y, z, SF_CIV_PRESERVED_TEMP_FILE_EXISTS);
-}
-
-
 static UINT16 CalcSoldierCreateCheckSum(const SOLDIERCREATE_STRUCT* const s)
 {
 	return
