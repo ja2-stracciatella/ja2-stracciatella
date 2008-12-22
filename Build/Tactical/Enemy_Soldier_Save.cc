@@ -39,12 +39,6 @@ static void RemoveTempFile(const INT16 x, const INT16 y, const INT8 z, const UIN
 }
 
 
-static void RemoveEnemySoldierTempFile(const INT16 x, const INT16 y, const INT8 z)
-{
-	RemoveTempFile(x, y, z, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS);
-}
-
-
 static UINT16 CalcSoldierCreateCheckSum(const SOLDIERCREATE_STRUCT* const s)
 {
 	return
@@ -135,7 +129,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile()
 		if( GetWorldTotalMin() > uiTimeStamp + 300 )
 		{ //the file has aged.  Use the regular method for adding soldiers.
 			hfile.Deallocate(); // Close the file before deleting it
-			RemoveEnemySoldierTempFile( sSectorX, sSectorY, bSectorZ );
+			RemoveTempFile(sSectorX, sSectorY, bSectorZ, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS);
 			gfRestoringEnemySoldiersFromTempFile = FALSE;
 			return TRUE;
 		}
@@ -384,7 +378,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 				ubStrategicAdmins    != ubNumAdmins ||
 				ubStrategicCreatures != ubNumCreatures)
 		{
-			RemoveEnemySoldierTempFile(x, y, z);
+			RemoveTempFile(x, y, z, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS);
 			return;
 		}
 	}
@@ -437,7 +431,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	if (GetWorldTotalMin() > timestamp + 300)
 	{ // The file has aged.  Use the regular method for adding soldiers.
-		RemoveEnemySoldierTempFile(x, y, z);
+		RemoveTempFile(x, y, z, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS);
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
 		return;
 	}
