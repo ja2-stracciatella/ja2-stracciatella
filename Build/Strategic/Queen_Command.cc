@@ -1396,29 +1396,18 @@ void LoadUnderGroundSectorInfoFromSavedGame(HWFILE const hFile)
 }
 
 
-UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ )
+UNDERGROUND_SECTORINFO* FindUnderGroundSector(INT16 const x, INT16 const y, UINT8 const z)
 {
-	UNDERGROUND_SECTORINFO *pUnderground;
-	pUnderground = gpUndergroundSectorInfoHead;
-
-	//Loop through all the underground sectors looking for specified sector
-	while( pUnderground )
+	UNDERGROUND_SECTORINFO* i = gpUndergroundSectorInfoHead;
+	for (; i; i = i->next)
 	{
-		//If the sector is the right one
-		if( pUnderground->ubSectorX == sMapX &&
-			  pUnderground->ubSectorY == sMapY &&
-				pUnderground->ubSectorZ == bMapZ )
-		{
-			return( pUnderground );
-		}
-		pUnderground = pUnderground->next;
+		if (i->ubSectorX != x) continue;
+		if (i->ubSectorY != y) continue;
+		if (i->ubSectorZ != z) continue;
+		break;
 	}
-
-
-	return( NULL );
+	return i;
 }
-
-
 
 
 void BeginCaptureSquence( )
