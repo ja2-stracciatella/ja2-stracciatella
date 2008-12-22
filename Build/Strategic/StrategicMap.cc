@@ -1383,71 +1383,56 @@ static void SetupProfileInsertionDataForCivilians(void)
 }
 
 
-static BOOLEAN EnterSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+static BOOLEAN EnterSector(INT16 const x, INT16 const y, INT8 const z)
 {
-	UNDERGROUND_SECTORINFO *pNode = NULL;
-	CHAR8 bFilename[ 50 ];
+	PauseGame();
+	// Stop time for this frame
+	InterruptTime();
 
-	// pause game
-	PauseGame( );
-
-	// stop time for this frame
-	InterruptTime( );
-
-	//Setup the tactical existance of RPCs and CIVs in the last sector before moving on to a new sector.
+	/* Setup the tactical existance of RPCs and CIVs in the last sector before
+	 * moving on to a new sector. */
 	//@@@Evaluate
 	if (gfWorldLoaded) SetupProfileInsertionDataForCivilians();
 
-	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
+	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 	{
 		// Handle NPC stuff related to changing sectors
-		HandleQuestCodeOnSectorEntry( sSectorX, sSectorY, bSectorZ );
+		HandleQuestCodeOnSectorEntry(x, y, z);
 	}
 
-	// Begin Load
-	BeginLoadScreen( );
+	BeginLoadScreen();
 
-	// This has tobe done before loadworld, as it will remmove old gridnos if present
-	RemoveMercsInSector( );
+	/* This has to be done before loadworld, as it will remmove old gridnos if
+	 * present */
+	RemoveMercsInSector();
 
 	if (!AreInMeanwhile())
 	{
-		SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_ALREADY_VISITED );
+		SetSectorFlag(x, y, z, SF_ALREADY_VISITED);
 	}
-
-
-	GetMapFileName( sSectorX, sSectorY, bSectorZ,  bFilename, TRUE, TRUE );
 
 	CreateLoadingScreenProgressBar();
-	#ifdef JA2BETAVERSION
-	//set the font
-	SetProgressBarMsgAttributes( 0, FONT12ARIAL, FONT_MCOLOR_WHITE, 0 );
+#ifdef JA2BETAVERSION
+	SetProgressBarMsgAttributes(0, FONT12ARIAL, FONT_MCOLOR_WHITE, 0);
+	// Set the tile so we do not see the text come up
+	SetProgressBarTextDisplayFlag(0, TRUE, TRUE, TRUE);
+#endif
 
-	//Set the tile so we don see the text come up
-	SetProgressBarTextDisplayFlag( 0, TRUE, TRUE, TRUE );
-	#endif
-
-	if( !LoadWorld( bFilename ) )
-	{
-		return( FALSE );
-	}
+	char filename[50];
+	GetMapFileName(x, y, z, filename, TRUE, TRUE);
+	if (!LoadWorld(filename)) return FALSE;
 
 	// underground?
-	if( bSectorZ )
+	if (z != 0)
 	{
-		pNode = FindUnderGroundSector( sSectorX, sSectorY, bSectorZ );
-
-		// is there a sector?..if so set flag
-		if( pNode )
-		{
-			pNode->fVisited = TRUE;
-		}
+		UNDERGROUND_SECTORINFO* const underground_info = FindUnderGroundSector(x, y, z);
+		// is there a sector?  If so set flag
+		if (underground_info) underground_info->fVisited = TRUE;
 	}
 
-	// if we arent loading a saved game
-	// ATE: Moved this form above, so that we can have the benefit of
-	// changing the world BEFORE adding guys to it...
-	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
+	/* ATE: Moved this form above, so that we can have the benefit of changing the
+	 * world BEFORE adding guys to it. */
+	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 	{
 		try
 		{ // Load the current sectors Information From the temporary files
@@ -1462,9 +1447,8 @@ static BOOLEAN EnterSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 	}
 
 	RemoveLoadingScreenProgressBar();
-	//RemoveProgressBar( 0 );
 
-	if( gfEnterTacticalPlacementGUI )
+	if (gfEnterTacticalPlacementGUI)
 	{
 		SetPendingNewScreen(GAME_SCREEN);
 		InitTacticalPlacementGUI();
@@ -1474,12 +1458,11 @@ static BOOLEAN EnterSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 		PrepareLoadedSector();
 	}
 
-//	UnPauseGame( );
-
-	// This function will either hide or display the tree tops, depending on the game setting
+	/* This function will either hide or display the tree tops, depending on the
+	 * game setting */
 	SetTreeTopStateForMap();
 
-	return TRUE; //because the map was loaded.
+	return TRUE;
 }
 
 
