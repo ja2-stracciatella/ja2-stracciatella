@@ -611,8 +611,7 @@ try
 	{
 		if (DoesTempFileExistsForMap(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z))
 		{
-			if (!LoadEnemySoldiersFromTempFile())
-				return FALSE;
+			LoadEnemySoldiersFromTempFile();
 			used_tempfile = true;
 		}
 	}

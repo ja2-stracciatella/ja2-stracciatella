@@ -5,7 +5,7 @@
 
 
 //This funciton load both the enemies AND the civilians, now only used to load old saves
-BOOLEAN LoadEnemySoldiersFromTempFile(void);
+void LoadEnemySoldiersFromTempFile(void);
 
 //The new way of loading in enemies from the temp file.  ONLY the ENEMIES are stored in the e_* temp file
 void NewWayOfLoadingEnemySoldiersFromTempFile(void);
