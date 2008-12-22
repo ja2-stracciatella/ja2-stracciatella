@@ -566,197 +566,153 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 }
 
 
-BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
+void NewWayOfLoadingCiviliansFromTempFile()
 {
-#ifdef JA2TESTVERSION
-	char reason[256];
-#endif
-
 	gfRestoringCiviliansFromTempFile = TRUE;
 
 	INT16 const x = gWorldSectorX;
 	INT16 const y = gWorldSectorY;
 	INT8  const z = gbWorldSectorZ;
 
-	try
+	// STEP ONE: Set up the temp file to read from.
+	char map_name[128];
+	GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
+	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_READ));
+
+	/* STEP TWO:  Determine whether or not we should use this data.  Because it
+	 * is the demo, it is automatically used. */
+
+	INT16 saved_y;
+	FileRead(f, &saved_y, 2);
+	if (y != saved_y)
 	{
-		// STEP ONE: Set up the temp file to read from.
-		char map_name[128];
-		GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
-		AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_READ));
+		throw std::runtime_error("Sector Y mismatch");
+	}
 
-		/* STEP TWO:  Determine whether or not we should use this data.  Because it
-		 * is the demo, it is automatically used. */
+	NewWayOfLoadingCivilianInitListLinks(f);
 
-		INT16 saved_y;
-		FileRead(f, &saved_y, 2);
-		if (y != saved_y)
-		{
-#ifdef JA2TESTVERSION
-			strcpy(reason, "Civilian -- sector Y mismatch.  KM");
-#endif
-			goto FAIL_LOAD;
-		}
+	// STEP THREE:  read the data
 
-		NewWayOfLoadingCivilianInitListLinks(f);
+	INT16 saved_x;
+	FileRead(f, &saved_x, 2);
+	if (x != saved_x)
+	{
+		throw std::runtime_error("Sector X mismatch");
+	}
 
-		// STEP THREE:  read the data
+	INT32 saved_slots;
+	FileRead(f, &saved_slots, 4);
+	INT32 const slots = saved_slots;
 
-		INT16 saved_x;
-		FileRead(f, &saved_x, 2);
-		if (x != saved_x)
-		{
-#ifdef JA2TESTVERSION
-			strcpy(reason, "Civilian -- sector X mismatch.  KM");
-#endif
-			goto FAIL_LOAD;
-		}
+	UINT32 timestamp;
+	FileRead(f, &timestamp, 4);
+	UINT32 const time_since_last_loaded = GetWorldTotalMin() - timestamp;
 
-		INT32 saved_slots;
-		FileRead(f, &saved_slots, 4);
-		INT32 const slots = saved_slots;
+	INT8 saved_z;
+	FileRead(f, &saved_z, 1);
+	if (z != saved_z)
+	{
+		throw std::runtime_error("Sector Z mismatch");
+	}
 
-		UINT32 timestamp;
-		FileRead(f, &timestamp, 4);
-		UINT32 const time_since_last_loaded = GetWorldTotalMin() - timestamp;
+	if (slots == 0)
+	{ /* No need to restore the civilians to the map.  This means we are
+		 * restoring a saved game. */
+		gfRestoringCiviliansFromTempFile = FALSE;
+		return;
+	}
 
-		INT8 saved_z;
-		FileRead(f, &saved_z, 1);
-		if (z != saved_z)
-		{
-#ifdef JA2TESTVERSION
-			strcpy(reason, "Civilian -- sector Z mismatch.  KM");
-#endif
-			goto FAIL_LOAD;
-		}
+	if (slots < 0 || 64 <= slots)
+	{ //bad IO!
+		throw std::runtime_error("Invalid slot count");
+	}
 
-		if (slots == 0)
-		{ /* No need to restore the civilians to the map.  This means we are
-			 * restoring a saved game. */
-			gfRestoringCiviliansFromTempFile = FALSE;
-			return TRUE;
-		}
+	/* For all the civilian slots, clear the fPriorityExistance flag.  We will
+	 * use these flags to determine which slots have been modified as we load
+	 * the data into the map pristine soldier init list. */
+	CFOR_ALL_SOLDIERINITNODES(curr)
+	{
+		BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
+		if (!bp->fPriorityExistance) continue;
+		if (bp->bTeam != CIV_TEAM)   continue;
+		bp->fPriorityExistance = FALSE;
+	}
 
-		if (slots < 0 || 64 <= slots)
-		{ //bad IO!
-#ifdef JA2TESTVERSION
-			sprintf(reason, "Civilian -- illegal slot value of %d.  KM", slots);
-#endif
-			goto FAIL_LOAD;
-		}
-
-		/* For all the civilian slots, clear the fPriorityExistance flag.  We will
-		 * use these flags to determine which slots have been modified as we load
-		 * the data into the map pristine soldier init list. */
-		CFOR_ALL_SOLDIERINITNODES(curr)
+	SOLDIERCREATE_STRUCT tempDetailedPlacement;
+	for (INT32 i = 0; i != slots; ++i)
+	{
+		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement);
+		FOR_ALL_SOLDIERINITNODES(curr)
 		{
 			BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
-			if (!bp->fPriorityExistance) continue;
-			if (bp->bTeam != CIV_TEAM)   continue;
-			bp->fPriorityExistance = FALSE;
-		}
-
-		SOLDIERCREATE_STRUCT tempDetailedPlacement;
-		for (INT32 i = 0; i != slots; ++i)
-		{
-			ExtractSoldierCreateFromFile(f, &tempDetailedPlacement);
-			FOR_ALL_SOLDIERINITNODES(curr)
-			{
-				BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
-				if (bp->fPriorityExistance)                   continue;
-				if (bp->bTeam != tempDetailedPlacement.bTeam) continue;
-
-				SOLDIERCREATE_STRUCT* dp = curr->pDetailedPlacement;
-				if (dp && dp->ubProfile != NO_PROFILE) continue;
-
-				bp->fPriorityExistance = TRUE;
-
-				if (!dp)
-				{ // Need to upgrade the placement to detailed placement
-					dp = MALLOC(SOLDIERCREATE_STRUCT);
-					curr->pDetailedPlacement = dp;
-				}
-				/* Now replace the map pristine placement info with the temp map file
-				 * version. */
-				*dp = tempDetailedPlacement;
-
-				bp->fPriorityExistance = TRUE;
-				bp->bDirection         = dp->bDirection;
-				bp->bOrders            = dp->bOrders;
-				bp->bAttitude          = dp->bAttitude;
-				bp->bBodyType          = dp->bBodyType;
-				bp->fOnRoof            = dp->fOnRoof;
-				bp->ubSoldierClass     = dp->ubSoldierClass;
-				bp->ubCivilianGroup    = dp->ubCivilianGroup;
-				bp->fHasKeys           = dp->fHasKeys;
-				bp->usStartingGridNo   = dp->sInsertionGridNo;
-				bp->bPatrolCnt         = dp->bPatrolCnt;
-				memcpy(bp->sPatrolGrid, dp->sPatrolGrid, sizeof(INT16) * bp->bPatrolCnt);
-
-				UINT16 saved_checksum;
-				FileRead(f, &saved_checksum, 2);
-				// Verify the checksum equation (anti-hack) -- see save
-				UINT16 const checksum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
-				if (saved_checksum != checksum)
-				{
-					// Hacker has modified the stats on the civilian placements.
-#ifdef JA2TESTVERSION
-					sprintf(reason, "Civilian -- checksum for placement %d failed.  KM", i);
-#endif
-					goto FAIL_LOAD;
-				}
-
-				if (dp->bLife < dp->bLifeMax)
-				{ // Add 4 life for every hour that passes.
-					INT32 const new_life = MIN(dp->bLife + time_since_last_loaded / 15, dp->bLifeMax);
-					dp->bLife = (INT8)new_life;
-				}
-
-				if (bp->bTeam == CIV_TEAM) break;
-			}
-		}
-
-		// now remove any non-priority placement which matches the conditions!
-		FOR_ALL_SOLDIERINITNODES_SAFE(curr)
-		{
-			BASIC_SOLDIERCREATE_STRUCT const* const bp = curr->pBasicPlacement;
 			if (bp->fPriorityExistance)                   continue;
 			if (bp->bTeam != tempDetailedPlacement.bTeam) continue;
-			SOLDIERCREATE_STRUCT       const* const dp = curr->pDetailedPlacement;
-			if (dp && dp->ubProfile != NO_PROFILE)        continue;
-			RemoveSoldierNodeFromInitList(curr);
-		}
 
-		UINT8 saved_sector_id;
-		FileRead(f, &saved_sector_id, 1);
-#if 0 // XXX was commented out
-		if (saved_sector_id != SECTOR(sSectorX, sSectorY))
-		{
-#ifdef JA2TESTVERSION
-			strcpy(reason, "Civilian -- saved_sector_id mismatch.  KM");
-#endif
-			goto FAIL_LOAD;
-		}
-#endif
+			SOLDIERCREATE_STRUCT* dp = curr->pDetailedPlacement;
+			if (dp && dp->ubProfile != NO_PROFILE) continue;
 
-		return TRUE;
+			bp->fPriorityExistance = TRUE;
+
+			if (!dp)
+			{ // Need to upgrade the placement to detailed placement
+				dp = MALLOC(SOLDIERCREATE_STRUCT);
+				curr->pDetailedPlacement = dp;
+			}
+			/* Now replace the map pristine placement info with the temp map file
+			 * version. */
+			*dp = tempDetailedPlacement;
+
+			bp->fPriorityExistance = TRUE;
+			bp->bDirection         = dp->bDirection;
+			bp->bOrders            = dp->bOrders;
+			bp->bAttitude          = dp->bAttitude;
+			bp->bBodyType          = dp->bBodyType;
+			bp->fOnRoof            = dp->fOnRoof;
+			bp->ubSoldierClass     = dp->ubSoldierClass;
+			bp->ubCivilianGroup    = dp->ubCivilianGroup;
+			bp->fHasKeys           = dp->fHasKeys;
+			bp->usStartingGridNo   = dp->sInsertionGridNo;
+			bp->bPatrolCnt         = dp->bPatrolCnt;
+			memcpy(bp->sPatrolGrid, dp->sPatrolGrid, sizeof(INT16) * bp->bPatrolCnt);
+
+			UINT16 saved_checksum;
+			FileRead(f, &saved_checksum, 2);
+			// Verify the checksum equation (anti-hack) -- see save
+			UINT16 const checksum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
+			if (saved_checksum != checksum)
+			{ // Hacker has modified the stats on the civilian placements.
+				throw std::runtime_error("Invalid checksum for placement");
+			}
+
+			if (dp->bLife < dp->bLifeMax)
+			{ // Add 4 life for every hour that passes.
+				INT32 const new_life = MIN(dp->bLife + time_since_last_loaded / 15, dp->bLifeMax);
+				dp->bLife = (INT8)new_life;
+			}
+
+			if (bp->bTeam == CIV_TEAM) break;
+		}
 	}
-	catch (...)
+
+	// now remove any non-priority placement which matches the conditions!
+	FOR_ALL_SOLDIERINITNODES_SAFE(curr)
 	{
-#ifdef JA2TESTVERSION
-		strcpy(reason, "Civilian -- I/O error");
-#endif
+		BASIC_SOLDIERCREATE_STRUCT const* const bp = curr->pBasicPlacement;
+		if (bp->fPriorityExistance)                   continue;
+		if (bp->bTeam != tempDetailedPlacement.bTeam) continue;
+		SOLDIERCREATE_STRUCT       const* const dp = curr->pDetailedPlacement;
+		if (dp && dp->ubProfile != NO_PROFILE)        continue;
+		RemoveSoldierNodeFromInitList(curr);
 	}
 
-FAIL_LOAD:
-	/* The temp file load failed either because of IO problems related to
-	 * hacking/logic, or various checks failed for hacker validation.  If we reach
-	 * this point, the "error: exit game" dialog would appear in a
-	 * non-testversion. */
-#ifdef JA2TESTVERSION
-	AssertMsg(0, reason);
+	UINT8 saved_sector_id;
+	FileRead(f, &saved_sector_id, 1);
+#if 0 // XXX was commented out
+	if (saved_sector_id != SECTOR(sSectorX, sSectorY))
+	{
+		throw std::runtime_error("Sector ID mismatch");
+	}
 #endif
-	return FALSE;
 }
 
 

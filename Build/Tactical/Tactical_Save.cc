@@ -625,8 +625,7 @@ try
 		}
 		if (DoesTempFileExistsForMap(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, x, y, z))
 		{
-			if (!NewWayOfLoadingCiviliansFromTempFile())
-				return FALSE;
+			NewWayOfLoadingCiviliansFromTempFile();
 			used_tempfile = true;
 		}
 	}

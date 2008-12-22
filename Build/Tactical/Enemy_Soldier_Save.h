@@ -11,7 +11,7 @@ BOOLEAN LoadEnemySoldiersFromTempFile(void);
 void NewWayOfLoadingEnemySoldiersFromTempFile(void);
 
 //The new way of loading in CIVILIANS from the temp file.  ONLY the CIVILIEANS are stored in the c_* temp file
-BOOLEAN NewWayOfLoadingCiviliansFromTempFile(void);
+void NewWayOfLoadingCiviliansFromTempFile(void);
 
 
 void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, BOOLEAN fEnemy, BOOLEAN fValidateOnly);
