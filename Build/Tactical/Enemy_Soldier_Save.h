@@ -8,7 +8,7 @@
 BOOLEAN LoadEnemySoldiersFromTempFile(void);
 
 //The new way of loading in enemies from the temp file.  ONLY the ENEMIES are stored in the e_* temp file
-BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile(void);
+void NewWayOfLoadingEnemySoldiersFromTempFile(void);
 
 //The new way of loading in CIVILIANS from the temp file.  ONLY the CIVILIEANS are stored in the c_* temp file
 BOOLEAN NewWayOfLoadingCiviliansFromTempFile(void);

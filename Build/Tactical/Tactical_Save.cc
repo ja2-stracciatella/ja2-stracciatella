@@ -620,8 +620,7 @@ try
 	{ // use the new way of loading the enemy and civilian placements
 		if (DoesTempFileExistsForMap(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z))
 		{
-			if (!NewWayOfLoadingEnemySoldiersFromTempFile())
-				return FALSE;
+			NewWayOfLoadingEnemySoldiersFromTempFile();
 			used_tempfile = true;
 		}
 		if (DoesTempFileExistsForMap(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, x, y, z))
