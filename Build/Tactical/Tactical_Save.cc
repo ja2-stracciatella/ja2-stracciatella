@@ -657,7 +657,7 @@ static void SetLastTimePlayerWasInSector(void)
 {
 	if (gbWorldSectorZ == 0)
 	{
-		SectorInfo[SECTOR(gWorldSectorX,gWorldSectorY)].uiTimeCurrentSectorWasLastLoaded = GetWorldTotalMin();
+		SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)].uiTimeCurrentSectorWasLastLoaded = GetWorldTotalMin();
 	}
 	else if (gbWorldSectorZ > 0)
 	{
@@ -678,11 +678,11 @@ static UINT32 GetLastTimePlayerWasInSector(void)
 {
 	if (gbWorldSectorZ == 0)
 	{
-		return SectorInfo[SECTOR(gWorldSectorX,gWorldSectorY)].uiTimeCurrentSectorWasLastLoaded;
+		return SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)].uiTimeCurrentSectorWasLastLoaded;
 	}
 	else if (gbWorldSectorZ > 0)
 	{
-		UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 		if (!u)
 		{
 #ifdef JA2TESTVERSION
@@ -924,27 +924,17 @@ static void SaveNPCInformationToProfileStruct(void)
 }
 
 
-static BOOLEAN DoesTempFileExistsForMap(UINT32 uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ)
+static BOOLEAN DoesTempFileExistsForMap(UINT32 const type, INT16 const x, INT16 const y, INT8 const z)
 {
-	UNDERGROUND_SECTORINFO *TempNode = gpUndergroundSectorInfoHead;
-
-	if( bMapZ == 0 )
+	if (z == 0)
 	{
-		return( (SectorInfo[ SECTOR( sMapX,sMapY) ].uiFlags & uiType) ? 1 : 0 );
+		return (SectorInfo[SECTOR(x, y)].uiFlags & type) != 0;
 	}
 	else
 	{
-		while( TempNode )
-		{
-			if( TempNode->ubSectorX == sMapX && TempNode->ubSectorY == sMapY && TempNode->ubSectorZ == bMapZ )
-			{
-				return( (TempNode->uiFlags & uiType ) ? 1 : 0 );
-			}
-			TempNode = TempNode->next;
-		}
+		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(x, y, z);
+		return u && u->uiFlags & type;
 	}
-
-	return( FALSE );
 }
 
 
