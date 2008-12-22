@@ -1060,28 +1060,12 @@ static BOOLEAN SetUnderGroundSectorFlag(INT16 const x, INT16 const y, UINT8 cons
 }
 
 
-static BOOLEAN ReSetUnderGroundSectorFlag(INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ, UINT32 uiFlagToSet)
+static BOOLEAN ReSetUnderGroundSectorFlag(INT16 const x, INT16 const y, UINT8 const z, UINT32 const flag_to_clear)
 {
-	UNDERGROUND_SECTORINFO *pTempNode = gpUndergroundSectorInfoHead;
-
-	pTempNode = gpUndergroundSectorInfoHead;
-
-	//loop through and look for the right underground sector
-	while( pTempNode )
-	{
-		if( ( pTempNode->ubSectorX == (UINT8)sSectorX ) &&
-				( pTempNode->ubSectorY == (UINT8)sSectorY ) &&
-				( pTempNode->ubSectorZ == ubSectorZ ) )
-		{
-			//set the flag indicating that ther is a temp item file exists for the sector
-			pTempNode->uiFlags &= ~( uiFlagToSet );
-
-			return( TRUE );
-		}
-		pTempNode = pTempNode->next;
-	}
-
-	return( FALSE );
+	UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(x, y, z);
+	if (!u) return FALSE;
+	u->uiFlags &= ~flag_to_clear;
+	return TRUE;
 }
 
 
