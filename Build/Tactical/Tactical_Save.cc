@@ -1076,42 +1076,40 @@ static BOOLEAN GetUnderGroundSectorFlagStatus(INT16 const x, INT16 const y, UINT
 }
 
 
-void SetSectorFlag(INT16 const sMapX, INT16 const sMapY, UINT8 const bMapZ, UINT32 const uiFlagToSet)
+void SetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, UINT32 const flag_to_set)
 {
-	if( uiFlagToSet == SF_ALREADY_VISITED )
-	{
-		// do certain things when particular sectors are visited
-		if ( ( sMapX == TIXA_SECTOR_X ) && ( sMapY == TIXA_SECTOR_Y ) )
+	if (flag_to_set == SF_ALREADY_VISITED)
+	{ // Do certain things when particular sectors are visited
+		if (x == TIXA_SECTOR_X && y == TIXA_SECTOR_Y)
 		{
 			// Tixa prison (not seen until Tixa visited)
-			SectorInfo[ SEC_J9 ].uiFacilitiesFlags |= SFCF_PRISON;
+			SectorInfo[SEC_J9].uiFacilitiesFlags |= SFCF_PRISON;
 		}
-
-		if ( ( sMapX == GUN_RANGE_X ) && ( sMapY == GUN_RANGE_Y ) && ( bMapZ == GUN_RANGE_Z ) )
+		else if (x == GUN_RANGE_X && y == GUN_RANGE_Y && z == GUN_RANGE_Z)
 		{
 			// Alma shooting range (not seen until sector visited)
-			SectorInfo[ SEC_H13 ].uiFacilitiesFlags |= SFCF_GUN_RANGE;
-			SectorInfo[ SEC_H14 ].uiFacilitiesFlags |= SFCF_GUN_RANGE;
-			SectorInfo[ SEC_I13 ].uiFacilitiesFlags |= SFCF_GUN_RANGE;
-			SectorInfo[ SEC_I14 ].uiFacilitiesFlags |= SFCF_GUN_RANGE;
+			SectorInfo[SEC_H13].uiFacilitiesFlags |= SFCF_GUN_RANGE;
+			SectorInfo[SEC_H14].uiFacilitiesFlags |= SFCF_GUN_RANGE;
+			SectorInfo[SEC_I13].uiFacilitiesFlags |= SFCF_GUN_RANGE;
+			SectorInfo[SEC_I14].uiFacilitiesFlags |= SFCF_GUN_RANGE;
 		}
 
-		if ( !GetSectorFlagStatus( sMapX, sMapY, bMapZ, SF_ALREADY_VISITED ) )
-		{
-			// increment daily counter of sectors visited
-			gStrategicStatus.ubNumNewSectorsVisitedToday++;
-			if ( gStrategicStatus.ubNumNewSectorsVisitedToday == NEW_SECTORS_EQUAL_TO_ACTIVITY )
-			{
-				// visited enough to count as an active day
-				UpdateLastDayOfPlayerActivity( (UINT16) GetWorldDay() );
-			}
+		// Increment daily counter of sectors visited
+		if (!GetSectorFlagStatus(x, y, z, SF_ALREADY_VISITED) &&
+				++gStrategicStatus.ubNumNewSectorsVisitedToday == NEW_SECTORS_EQUAL_TO_ACTIVITY)
+		{ // Visited enough to count as an active day
+			UpdateLastDayOfPlayerActivity(GetWorldDay());
 		}
 	}
 
-	if( bMapZ == 0 )
-		SectorInfo[ SECTOR( sMapX,sMapY) ].uiFlags |= uiFlagToSet;
+	if (z == 0)
+	{
+		SectorInfo[SECTOR(x, y)].uiFlags |= flag_to_set;
+	}
 	else
-		SetUnderGroundSectorFlag( sMapX, sMapY, bMapZ, uiFlagToSet );
+	{
+		SetUnderGroundSectorFlag(x, y, z, flag_to_set);
+	}
 }
 
 
