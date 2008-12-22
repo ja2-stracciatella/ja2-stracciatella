@@ -1422,14 +1422,6 @@ static BOOLEAN EnterSector(INT16 const x, INT16 const y, INT8 const z)
 	GetMapFileName(x, y, z, filename, TRUE, TRUE);
 	if (!LoadWorld(filename)) return FALSE;
 
-	// underground?
-	if (z != 0)
-	{
-		UNDERGROUND_SECTORINFO* const underground_info = FindUnderGroundSector(x, y, z);
-		// is there a sector?  If so set flag
-		if (underground_info) underground_info->fVisited = TRUE;
-	}
-
 	/* ATE: Moved this form above, so that we can have the benefit of changing the
 	 * world BEFORE adding guys to it. */
 	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
@@ -1812,7 +1804,7 @@ void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *
 	else if( bSectorZ != 0 )
 	{
 		pUnderground = FindUnderGroundSector( sSectorX, sSectorY, bSectorZ );
-		if( pUnderground && ( pUnderground->fVisited || gfGettingNameFromSaveLoadScreen ) )
+		if (pUnderground && (pUnderground->uiFlags & SF_ALREADY_VISITED || gfGettingNameFromSaveLoadScreen))
 		{
 			bMineIndex = GetIdOfMineForSector( sSectorX, sSectorY, bSectorZ );
 			if( bMineIndex != -1 )

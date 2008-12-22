@@ -202,7 +202,6 @@ typedef struct UNDERGROUND_SECTORINFO
 	UINT32 uiFlags;
 	UINT8 ubSectorX, ubSectorY, ubSectorZ;
 	UINT8 ubNumElites, ubNumTroops, ubNumAdmins, ubNumCreatures;
-	UINT8 fVisited;
 	UINT32	uiTimeCurrentSectorWasLastLoaded;		//Specifies the last time the player was in the sector
 	struct UNDERGROUND_SECTORINFO *next;
 	UINT8	ubAdjacentSectors;	//mask containing which sectors are adjacent

@@ -4899,14 +4899,14 @@ static void HideExistenceOfUndergroundMapSector(UINT8 ubSectorX, UINT8 ubSectorY
 static void ShadeSubLevelsNotVisited(void)
 {
 	// Obtain the 16-bit version of the same color used in the mine STIs
- 	gusUndergroundNearBlack = Get16BPPColor(FROMRGB(2, 2, 0));
+	gusUndergroundNearBlack = Get16BPPColor(FROMRGB(2, 2, 0));
 
 	// Run through all (real & possible) underground sectors
 	for (UNDERGROUND_SECTORINFO const* i = gpUndergroundSectorInfoHead; i; i = i->next)
 	{
 		if (i->ubSectorZ != (UINT8)iCurrentMapSectorZ) continue;
-		if (i->fVisited)                               continue;
-		/* The sector is on the currently displayed sublevel, and has never been
+		if (i->uiFlags & SF_ALREADY_VISITED)           continue;
+		/* The sector is on the currently displayed sublevel and has never been
 		 * visited.  Remove that portion of the "mine" graphics from view. */
 		HideExistenceOfUndergroundMapSector(i->ubSectorX, i->ubSectorY);
 	}

@@ -22,6 +22,7 @@
 #include "Arms_Dealer_Init.h"
 #include "Random.h"
 #include "Assignments.h"
+#include "Tactical_Save.h"
 #include "Town_Militia.h"
 #include "Strategic.h"
 #include "Strategic_Event_Handler.h"
@@ -821,13 +822,9 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 
 		case FACT_PLAYER_BEEN_TO_K4:
-			{
-				UNDERGROUND_SECTORINFO * pUnderGroundSector;
-
-				pUnderGroundSector = FindUnderGroundSector( 4, MAP_ROW_K, 1 );
-				gubFact[usFact] = pUnderGroundSector->fVisited;
-			}
+			gubFact[usFact] = GetSectorFlagStatus(4, MAP_ROW_K, 1, SF_ALREADY_VISITED);
 			break;
+
 		case FACT_WARDEN_DEAD:
 			gubFact[usFact] = ( gMercProfiles[ WARDEN ].bMercStatus == MERC_IS_DEAD );
 			break;
