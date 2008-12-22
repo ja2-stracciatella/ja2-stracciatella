@@ -619,35 +619,25 @@ BOOLEAN PrepareEnemyForSectorBattle()
 
 static BOOLEAN PrepareEnemyForUndergroundBattle(void)
 {
-	UNDERGROUND_SECTORINFO *pUnderground;
-	UINT8 ubTotalAdmins, ubTotalTroops, ubTotalElites;
-	pUnderground = gpUndergroundSectorInfoHead;
-	while( pUnderground )
-	{
-		if( pUnderground->ubSectorX == gWorldSectorX &&
-			  pUnderground->ubSectorY == gWorldSectorY &&
-				pUnderground->ubSectorZ == gbWorldSectorZ )
-		{ //This is the sector we are going to be fighting in.
-			if( pUnderground->ubNumAdmins || pUnderground->ubNumTroops || pUnderground->ubNumElites )
-			{
-				ubTotalAdmins = (UINT8)(pUnderground->ubNumAdmins - pUnderground->ubAdminsInBattle);
-				ubTotalTroops = (UINT8)(pUnderground->ubNumTroops - pUnderground->ubTroopsInBattle);
-				ubTotalElites = (UINT8)(pUnderground->ubNumElites - pUnderground->ubElitesInBattle);
-				pUnderground->ubAdminsInBattle += ubTotalAdmins;
-				pUnderground->ubTroopsInBattle += ubTotalTroops;
-				pUnderground->ubElitesInBattle += ubTotalElites;
-				AddSoldierInitListEnemyDefenceSoldiers( pUnderground->ubNumAdmins, pUnderground->ubNumTroops, pUnderground->ubNumElites );
-				ValidateEnemiesHaveWeapons();
-			}
-			return ( ( BOOLEAN) ( pUnderground->ubNumAdmins + pUnderground->ubNumTroops + pUnderground->ubNumElites > 0 ) );
-		}
-		pUnderground = pUnderground->next;
-	}
+	// This is the sector we are going to be fighting in.
+	UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+	Assert(u);
+	if (!u) return FALSE;
 
-	// underground sector not found in list
-	Assert( FALSE );
-	return FALSE;
+	if (u->ubNumAdmins != 0 || u->ubNumTroops != 0 || u->ubNumElites != 0)
+	{
+		UINT8 const ubTotalAdmins = u->ubNumAdmins - u->ubAdminsInBattle;
+		UINT8 const ubTotalTroops = u->ubNumTroops - u->ubTroopsInBattle;
+		UINT8 const ubTotalElites = u->ubNumElites - u->ubElitesInBattle;
+		u->ubAdminsInBattle += ubTotalAdmins;
+		u->ubTroopsInBattle += ubTotalTroops;
+		u->ubElitesInBattle += ubTotalElites;
+		AddSoldierInitListEnemyDefenceSoldiers(u->ubNumAdmins, u->ubNumTroops, u->ubNumElites);
+		ValidateEnemiesHaveWeapons();
+	}
+	return u->ubNumAdmins + u->ubNumTroops + u->ubNumElites > 0;
 }
+
 
 //The queen AI layer must process the event by subtracting forces, etc.
 void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
