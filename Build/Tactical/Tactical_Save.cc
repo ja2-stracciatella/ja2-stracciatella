@@ -535,6 +535,20 @@ void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bS
 }
 
 
+static UINT32 GetSectorFlags(INT16 const x, INT16 const y, UINT8 const z)
+{
+	if (z == 0)
+	{
+		return SectorInfo[SECTOR(x, y)].uiFlags;
+	}
+	else
+	{
+		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(x, y, z);
+		return u ? u->uiFlags : 0;
+	}
+}
+
+
 static void   LoadAndAddWorldItemsFromTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 static UINT32 GetLastTimePlayerWasInSector(void);
 static void   LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
@@ -542,20 +556,10 @@ static void   LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT
 
 void LoadCurrentSectorsInformationFromTempItemsFile()
 {
-	INT16 const x = gWorldSectorX;
-	INT16 const y = gWorldSectorY;
-	INT8  const z = gbWorldSectorZ;
-
-	UINT32 flags;
-	if (z == 0)
-	{
-		flags = SectorInfo[SECTOR(x, y)].uiFlags;
-	}
-	else
-	{
-		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(x, y, z);
-		flags = u ? u->uiFlags : 0;
-	}
+	INT16  const x     = gWorldSectorX;
+	INT16  const y     = gWorldSectorY;
+	INT8   const z     = gbWorldSectorZ;
+	UINT32 const flags = GetSectorFlags(x, y, z);
 
 	if (AreInMeanwhile())
 	{ /* There will never be a temp file for the meanwhile scene, so return TRUE.
@@ -1101,15 +1105,7 @@ void ReSetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, UINT32 const f
 
 BOOLEAN GetSectorFlagStatus(INT16 const x, INT16 const y, UINT8 const z, UINT32 const flag_to_check)
 {
-	if (z == 0)
-	{
-		return (SectorInfo[SECTOR(x, y)].uiFlags & flag_to_check) != 0;
-	}
-	else
-	{
-		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(x, y, z);
-		return u && u->uiFlags & flag_to_check;
-	}
+	return (GetSectorFlags(x, y, z) & flag_to_check) != 0;
 }
 
 
