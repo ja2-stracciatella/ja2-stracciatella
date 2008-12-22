@@ -541,8 +541,7 @@ static UINT32  GetLastTimePlayerWasInSector(void);
 static void    LoadRottingCorpsesFromTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
-BOOLEAN LoadCurrentSectorsInformationFromTempItemsFile()
-try
+void LoadCurrentSectorsInformationFromTempItemsFile()
 {
 	INT16 const x = gWorldSectorX;
 	INT16 const y = gWorldSectorY;
@@ -565,7 +564,7 @@ try
 
 			gfWasInMeanwhile = FALSE;
 		}
-		return TRUE;
+		return;
 	}
 
 	bool used_tempfile = false;
@@ -651,10 +650,7 @@ try
 #endif
 
 	StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated();
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
 
 
 static void SetLastTimePlayerWasInSector(void)

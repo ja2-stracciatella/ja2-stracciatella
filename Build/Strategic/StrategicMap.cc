@@ -1449,9 +1449,13 @@ static BOOLEAN EnterSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 	// changing the world BEFORE adding guys to it...
 	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
-		// Load the current sectors Information From the temporary files
-		if( !LoadCurrentSectorsInformationFromTempItemsFile() )
-		{ //The integrity of the temp files have been compromised.  Boot out of the game after warning message.
+		try
+		{ // Load the current sectors Information From the temporary files
+			LoadCurrentSectorsInformationFromTempItemsFile();
+		}
+		catch (...)
+		{ /* The integrity of the temp files have been compromised.  Boot out of the
+			 * game after warning message. */
 			InitExitGameDialogBecauseFileHackDetected();
 			return TRUE;
 		}

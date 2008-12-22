@@ -1501,12 +1501,15 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	//if the world is loaded, apply the temp files to the loaded map
 	if( SaveGameHeader.fWorldLoaded || SaveGameHeader.uiSavedGameVersion < 50 )
 	{
-		// Load the current sectors Information From the temporary files
-		if( !LoadCurrentSectorsInformationFromTempItemsFile() )
+		try
+		{ // Load the current sectors Information From the temporary files
+			LoadCurrentSectorsInformationFromTempItemsFile();
+		}
+		catch (...)
 		{
 			InitExitGameDialogBecauseFileHackDetected();
 			guiSaveGameVersion=0;
-			return( TRUE );
+			return TRUE;
 		}
 	}
 
