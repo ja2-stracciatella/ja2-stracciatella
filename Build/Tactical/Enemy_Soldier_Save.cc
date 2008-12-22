@@ -343,333 +343,270 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 
 BOOLEAN NewWayOfLoadingEnemySoldiersFromTempFile()
 {
-	SOLDIERCREATE_STRUCT tempDetailedPlacement;
-	INT32 i;
-	INT32 slots = 0;
-	UINT32 uiTimeStamp;
-	INT16 sSectorX, sSectorY;
-	CHAR8		zMapName[ 128 ];
-	#ifdef JA2TESTVERSION
-		CHAR8		zReason[256];
-	#endif
-	INT8 bSectorZ;
-	UINT8 ubSectorID;
-	UINT8 ubNumElites = 0, ubNumTroops = 0, ubNumAdmins = 0, ubNumCreatures = 0;
-	UINT8 ubStrategicElites, ubStrategicTroops, ubStrategicAdmins, ubStrategicCreatures;
+#ifdef JA2TESTVERSION
+	char reason[256];
+#endif
+	UINT8 ubStrategicElites;
+	UINT8 ubStrategicTroops;
+	UINT8 ubStrategicAdmins;
+	UINT8 ubStrategicCreatures;
 
 	gfRestoringEnemySoldiersFromTempFile = TRUE;
 
-	//STEP ONE:  Set up the temp file to read from.
+	INT16 const x = gWorldSectorX;
+	INT16 const y = gWorldSectorY;
+	INT8  const z = gbWorldSectorZ;
 
-	GetMapTempFileName( SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-
-	//Count the number of enemies ( elites, regulars, admins and creatures ) that are in the temp file.
-
-	if( gbWorldSectorZ )
+	/* Count the number of enemies (elites, regulars, admins and creatures) that
+	 * are in the temp file. */
+	UNDERGROUND_SECTORINFO const* underground_info = NULL;
+	UINT8                         ubNumElites      = 0;
+	UINT8                         ubNumTroops      = 0;
+	UINT8                         ubNumAdmins      = 0;
+	UINT8                         ubNumCreatures   = 0;
+	if (z != 0)
 	{
-		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-		if( !pSector )
+		underground_info = FindUnderGroundSector(x, y, z);
+		if (!underground_info)
 		{
-		#ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)  KM", gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-		#endif
-
+#ifdef JA2TESTVERSION
+			sprintf(reason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)  KM", x, y, z);
+#endif
 			goto FAIL_LOAD;
 		}
 	}
 	else
 	{
-		SECTORINFO *pSector;
-		pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
-
-		ubNumElites = pSector->ubNumElites;
-		ubNumTroops = pSector->ubNumTroops;
-		ubNumAdmins = pSector->ubNumAdmins;
-		ubNumCreatures = pSector->ubNumCreatures;
+		SECTORINFO const* const sector_info = &SectorInfo[SECTOR(x, y)];
+		ubNumElites    = sector_info->ubNumElites;
+		ubNumTroops    = sector_info->ubNumTroops;
+		ubNumAdmins    = sector_info->ubNumAdmins;
+		ubNumCreatures = sector_info->ubNumCreatures;
 	}
 
-	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
+	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 	{
 		// Get the number of enemies form the temp file
-		CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile( &ubStrategicElites, &ubStrategicTroops, &ubStrategicAdmins, &ubStrategicCreatures );
-
-		//If any of the counts differ from what is in memory
-		if( ubStrategicElites != ubNumElites || ubStrategicTroops != ubNumTroops || ubStrategicAdmins != ubNumAdmins || ubStrategicCreatures != ubNumCreatures )
+		CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile(&ubStrategicElites, &ubStrategicTroops, &ubStrategicAdmins, &ubStrategicCreatures);
+		// If any of the counts differ from what is in memory
+		if (ubStrategicElites    != ubNumElites ||
+				ubStrategicTroops    != ubNumTroops ||
+				ubStrategicAdmins    != ubNumAdmins ||
+				ubStrategicCreatures != ubNumCreatures)
 		{
-			//remove the file
-			RemoveEnemySoldierTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-			return( TRUE );
+			RemoveEnemySoldierTempFile(x, y, z);
+			return TRUE;
 		}
 	}
 
-	//reset
-	ubNumElites = ubNumTroops = ubNumAdmins = ubNumCreatures = 0;
+	// reset
+	ubNumElites    = 0;
+	ubNumTroops    = 0;
+	ubNumAdmins    = 0;
+	ubNumCreatures = 0;
 
 	try
 	{
-		AutoSGPFile hfile(FileOpen(zMapName, FILE_ACCESS_READ));
+		// STEP ONE:  Set up the temp file to read from.
+		char map_name[128];
+		GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
+		AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_READ));
 
-		//STEP TWO:  determine whether or not we should use this data.
-		//because it is the demo, it is automatically used.
+		/* STEP TWO:  Determine whether or not we should use this data.  Because it
+		 * is the demo, it is automatically used. */
 
-		FileRead(hfile, &sSectorY, 2);
-		if( gWorldSectorY != sSectorY )
+		INT16 saved_y;
+		FileRead(f, &saved_y, 2);
+		if (y != saved_y)
 		{
 #ifdef JA2TESTVERSION
-			strcpy(zReason, "EnemySoldier -- sSectorY mismatch.  KM");
+			strcpy(reason, "EnemySoldier -- sector Y mismatch.  KM");
 #endif
 			goto FAIL_LOAD;
 		}
 
-		//	LoadSoldierInitListLinks( hfile );
-		NewWayOfLoadingEnemySoldierInitListLinks( hfile );
+		NewWayOfLoadingEnemySoldierInitListLinks(f);
 
-		//STEP THREE:  read the data
+		// STEP THREE:  read the data
 
-		FileRead(hfile, &sSectorX, 2);
-		if( gWorldSectorX != sSectorX )
+		INT16 saved_x;
+		FileRead(f, &saved_x, 2);
+		if (x != saved_x)
 		{
 #ifdef JA2TESTVERSION
-			strcpy(zReason, "EnemySoldier -- sSectorX mismatch.  KM");
+			strcpy(reason, "EnemySoldier -- sector X mismatch.  KM");
 #endif
 			goto FAIL_LOAD;
 		}
 
-		FileRead( hfile, &slots, 4);
+		INT32 saved_slots;
+		FileRead(f, &saved_slots, 4);
+		INT32 const slots = saved_slots;
 
-		FileRead(hfile, &uiTimeStamp, 4);
+		UINT32 timestamp;
+		FileRead(f, &timestamp, 4);
 
-		FileRead(hfile, &bSectorZ, 1);
-		if( gbWorldSectorZ != bSectorZ )
+		INT8 saved_z;
+		FileRead(f, &saved_z, 1);
+		if (z != saved_z)
 		{
 #ifdef JA2TESTVERSION
-			strcpy(zReason, "EnemySoldier -- bSectorZ mismatch.  KM");
+			strcpy(reason, "EnemySoldier -- sector Z mismatch.  KM");
 #endif
 			goto FAIL_LOAD;
 		}
 
-		if( GetWorldTotalMin() > uiTimeStamp + 300 )
-		{ //the file has aged.  Use the regular method for adding soldiers.
-			RemoveEnemySoldierTempFile( sSectorX, sSectorY, bSectorZ );
+		if (GetWorldTotalMin() > timestamp + 300)
+		{ // The file has aged.  Use the regular method for adding soldiers.
+			RemoveEnemySoldierTempFile(x, y, z);
 			gfRestoringEnemySoldiersFromTempFile = FALSE;
 			return TRUE;
 		}
 
-		if( !slots )
-		{ //no need to restore the enemy's to the map.  This means we are restoring a saved game.
+		if (slots == 0)
+		{ /* no need to restore the enemy's to the map.  This means we are restoring
+			 * a saved game. */
 			gfRestoringEnemySoldiersFromTempFile = FALSE;
 			return TRUE;
 		}
 
-
-		if( slots < 0 || slots >= 64 )
+		if (slots < 0 || 64 <= slots)
 		{ //bad IO!
 #ifdef JA2TESTVERSION
-			sprintf( zReason, "EnemySoldier -- illegal slot value of %d.  KM", slots );
+			sprintf(reason, "EnemySoldier -- illegal slot value of %d.  KM", slots);
 #endif
 			goto FAIL_LOAD;
 		}
 
-		//For all the enemy slots (enemy/creature), clear the fPriorityExistance flag.  We will use these flags
-		//to determine which slots have been modified as we load the data into the map pristine soldier init list.
+		/* For all the enemy slots (enemy/creature), clear the fPriorityExistance
+		 * flag.  We will use these flags to determine which slots have been
+		 * modified as we load the data into the map pristine soldier init list. */
 		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
-			if( curr->pBasicPlacement->fPriorityExistance )
-			{
-				if( curr->pBasicPlacement->bTeam == ENEMY_TEAM || curr->pBasicPlacement->bTeam == CREATURE_TEAM )
-				{
-					curr->pBasicPlacement->fPriorityExistance = FALSE;
-				}
-			}
+			BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
+			if (!bp->fPriorityExistance)                               continue;
+			if (bp->bTeam != ENEMY_TEAM && bp->bTeam != CREATURE_TEAM) continue;
+			bp->fPriorityExistance = FALSE;
 		}
 
-		//get the number of enemies in this sector.
-		if( bSectorZ )
+		// Get the number of enemies in this sector.
+		if (z != 0)
 		{
-			UNDERGROUND_SECTORINFO *pSector;
-			pSector = FindUnderGroundSector( sSectorX, sSectorY, bSectorZ );
-			if( !pSector )
-			{
-#ifdef JA2TESTVERSION
-				sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)  KM", sSectorX, sSectorY, bSectorZ );
-#endif
-				goto FAIL_LOAD;
-			}
-			ubStrategicElites		 = pSector->ubNumElites;
-			ubStrategicTroops		 = pSector->ubNumTroops;
-			ubStrategicAdmins		 = pSector->ubNumAdmins;
-			ubStrategicCreatures = pSector->ubNumCreatures;
+			ubStrategicElites		 = underground_info->ubNumElites;
+			ubStrategicTroops		 = underground_info->ubNumTroops;
+			ubStrategicAdmins		 = underground_info->ubNumAdmins;
+			ubStrategicCreatures = underground_info->ubNumCreatures;
 		}
 		else
 		{
-			SECTORINFO *pSector;
-			pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
-			ubStrategicCreatures = pSector->ubNumCreatures;
-			GetNumberOfEnemiesInSector( sSectorX, sSectorY, &ubStrategicAdmins, &ubStrategicTroops, &ubStrategicElites );
+			SECTORINFO const* const sector_info = &SectorInfo[SECTOR(x, y)];
+			ubStrategicCreatures = sector_info->ubNumCreatures;
+			GetNumberOfEnemiesInSector(x, y, &ubStrategicAdmins, &ubStrategicTroops, &ubStrategicElites);
 		}
 
-		for( i = 0; i < slots; i++ )
+		for (INT32 i = 0; i != slots; ++i)
 		{
-			ExtractSoldierCreateFromFile(hfile, &tempDetailedPlacement);
+			SOLDIERCREATE_STRUCT tempDetailedPlacement;
+			ExtractSoldierCreateFromFile(f, &tempDetailedPlacement);
 			FOR_ALL_SOLDIERINITNODES(curr)
 			{
-				if( !curr->pBasicPlacement->fPriorityExistance )
-				{
-					if( curr->pBasicPlacement->bTeam == tempDetailedPlacement.bTeam )
-					{
-						curr->pBasicPlacement->fPriorityExistance = TRUE;
-						if( !curr->pDetailedPlacement )
-						{ //need to upgrade the placement to detailed placement
-							curr->pDetailedPlacement = MALLOC(SOLDIERCREATE_STRUCT);
-						}
-						//now replace the map pristine placement info with the temp map file version..
-						*curr->pDetailedPlacement = tempDetailedPlacement;
+				BASIC_SOLDIERCREATE_STRUCT* const bp = curr->pBasicPlacement;
+				if (bp->fPriorityExistance)                   continue;
+				if (bp->bTeam != tempDetailedPlacement.bTeam) continue;
 
-						curr->pBasicPlacement->fPriorityExistance	=	TRUE;
-						curr->pBasicPlacement->bDirection					= curr->pDetailedPlacement->bDirection;
-						curr->pBasicPlacement->bOrders						= curr->pDetailedPlacement->bOrders;
-						curr->pBasicPlacement->bAttitude					= curr->pDetailedPlacement->bAttitude;
-						curr->pBasicPlacement->bBodyType					= curr->pDetailedPlacement->bBodyType;
-						curr->pBasicPlacement->fOnRoof						= curr->pDetailedPlacement->fOnRoof;
-						curr->pBasicPlacement->ubSoldierClass			= curr->pDetailedPlacement->ubSoldierClass;
-						curr->pBasicPlacement->ubCivilianGroup		= curr->pDetailedPlacement->ubCivilianGroup;
-						curr->pBasicPlacement->fHasKeys						= curr->pDetailedPlacement->fHasKeys;
-						curr->pBasicPlacement->usStartingGridNo		= curr->pDetailedPlacement->sInsertionGridNo;
-
-						curr->pBasicPlacement->bPatrolCnt			= curr->pDetailedPlacement->bPatrolCnt;
-						memcpy( curr->pBasicPlacement->sPatrolGrid, curr->pDetailedPlacement->sPatrolGrid,
-								sizeof( INT16 ) * curr->pBasicPlacement->bPatrolCnt );
-
-						UINT16 usCheckSum;
-						FileRead(hfile, &usCheckSum, 2);
-						//verify the checksum equation (anti-hack) -- see save
-						const UINT16 usFileCheckSum = CalcSoldierCreateCheckSum(curr->pDetailedPlacement);
-						if( usCheckSum != usFileCheckSum )
-						{	//Hacker has modified the stats on the enemy placements.
-#ifdef JA2TESTVERSION
-							sprintf( zReason, "EnemySoldier -- checksum for placement %d failed.  KM", i );
-#endif
-							goto FAIL_LOAD;
-						}
-
-
-						//Add preserved placements as long as they don't exceed the actual population.
-						switch( curr->pBasicPlacement->ubSoldierClass )
-						{
-							case SOLDIER_CLASS_ELITE:
-								ubNumElites++;
-								if( ubNumElites <= ubStrategicElites )
-								{
-									//def:								AddPlacementToWorld( curr );
-								}
-								break;
-							case SOLDIER_CLASS_ARMY:
-								ubNumTroops++;
-								if( ubNumTroops <= ubStrategicTroops )
-								{
-									//def:								AddPlacementToWorld( curr );
-								}
-								break;
-							case SOLDIER_CLASS_ADMINISTRATOR:
-								ubNumAdmins++;
-								if( ubNumAdmins <= ubStrategicAdmins )
-								{
-									//def:								AddPlacementToWorld( curr );
-								}
-								break;
-							case SOLDIER_CLASS_CREATURE:
-								ubNumCreatures++;
-								if( ubNumCreatures <= ubStrategicCreatures )
-								{
-									//def:								AddPlacementToWorld( curr );
-								}
-								break;
-						}
-						break;
-					}
+				bp->fPriorityExistance = TRUE;
+				SOLDIERCREATE_STRUCT* dp = curr->pDetailedPlacement;
+				if (!dp)
+				{ // Need to upgrade the placement to detailed placement
+					dp = MALLOC(SOLDIERCREATE_STRUCT);
+					curr->pDetailedPlacement = dp;
 				}
+				/* Now replace the map pristine placement info with the temp map file
+				 * version. */
+				*dp = tempDetailedPlacement;
+
+				bp->fPriorityExistance  =  TRUE;
+				bp->bDirection          = dp->bDirection;
+				bp->bOrders             = dp->bOrders;
+				bp->bAttitude           = dp->bAttitude;
+				bp->bBodyType           = dp->bBodyType;
+				bp->fOnRoof             = dp->fOnRoof;
+				bp->ubSoldierClass      = dp->ubSoldierClass;
+				bp->ubCivilianGroup     = dp->ubCivilianGroup;
+				bp->fHasKeys            = dp->fHasKeys;
+				bp->usStartingGridNo    = dp->sInsertionGridNo;
+				bp->bPatrolCnt          = dp->bPatrolCnt;
+				memcpy(bp->sPatrolGrid, dp->sPatrolGrid, sizeof(INT16) * bp->bPatrolCnt);
+
+				UINT16 saved_checksum;
+				FileRead(f, &saved_checksum, 2);
+				// verify the checksum equation (anti-hack) -- see save
+				UINT16 const checksum = CalcSoldierCreateCheckSum(dp);
+				if (saved_checksum != checksum)
+				{	// Hacker has modified the stats on the enemy placements.
+#ifdef JA2TESTVERSION
+					sprintf(reason, "EnemySoldier -- checksum for placement %d failed.  KM", i);
+#endif
+					goto FAIL_LOAD;
+				}
+
+				/* Add preserved placements as long as they don't exceed the actual
+				 * population. */
+				switch (bp->ubSoldierClass)
+				{
+					case SOLDIER_CLASS_ELITE:         ++ubNumElites;    break;
+					case SOLDIER_CLASS_ARMY:          ++ubNumTroops;    break;
+					case SOLDIER_CLASS_ADMINISTRATOR: ++ubNumAdmins;    break;
+					case SOLDIER_CLASS_CREATURE:      ++ubNumCreatures; break;
+				}
+				break;
 			}
 		}
 
-		FileRead(hfile, &ubSectorID, 1);
-		if( ubSectorID != SECTOR( sSectorX, sSectorY ) )
+		UINT8 saved_sector_id;
+		FileRead(f, &saved_sector_id, 1);
+		if (saved_sector_id != SECTOR(x, y))
 		{
 #ifdef JA2TESTVERSION
-			strcpy(zReason, "EnemySoldier -- ubSectorID mismatch.  KM");
+			strcpy(reason, "EnemySoldier -- sector ID mismatch.  KM");
 #endif
 			goto FAIL_LOAD;
 		}
 
 		//now add any extra enemies that have arrived since the temp file was made.
-		if( ubStrategicTroops > ubNumTroops || ubStrategicElites > ubNumElites || ubStrategicAdmins > ubNumAdmins )
+		if (ubStrategicTroops > ubNumTroops ||
+				ubStrategicElites > ubNumElites ||
+				ubStrategicAdmins > ubNumAdmins)
 		{
-			ubStrategicTroops = ( ubStrategicTroops > ubNumTroops ) ? ubStrategicTroops - ubNumTroops : 0;
-			ubStrategicElites = ( ubStrategicElites > ubNumElites ) ? ubStrategicElites - ubNumElites : 0;
-			ubStrategicAdmins = ( ubStrategicAdmins > ubNumAdmins ) ? ubStrategicAdmins - ubNumAdmins : 0;
-			AddSoldierInitListEnemyDefenceSoldiers( ubStrategicAdmins, ubStrategicTroops, ubStrategicElites );
+			ubStrategicTroops = ubStrategicTroops > ubNumTroops ? ubStrategicTroops - ubNumTroops : 0;
+			ubStrategicElites = ubStrategicElites > ubNumElites ? ubStrategicElites - ubNumElites : 0;
+			ubStrategicAdmins = ubStrategicAdmins > ubNumAdmins ? ubStrategicAdmins - ubNumAdmins : 0;
+			AddSoldierInitListEnemyDefenceSoldiers(ubStrategicAdmins, ubStrategicTroops, ubStrategicElites);
 		}
-		if( ubStrategicCreatures > ubNumCreatures )
+		if (ubStrategicCreatures > ubNumCreatures)
 		{
-			ubStrategicCreatures;  //not sure if this wil ever happen.  If so, needs to be handled.
+			ubStrategicCreatures; // not sure if this will ever happen.  If so, needs to be handled.
 		}
-
-
-
-		//set the number of enemies in the sector
-		if( bSectorZ )
-		{
-			UNDERGROUND_SECTORINFO *pSector;
-			pSector = FindUnderGroundSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-			if( !pSector )
-			{
-#ifdef JA2TESTVERSION
-				sprintf( zReason, "EnemySoldier -- Couldn't find underground sector info for (%d,%d,%d)  KM", sSectorX, sSectorY, bSectorZ );
-#endif
-				goto FAIL_LOAD;
-
-				/*
-					 pSector->ubElitesInBattle = ubStrategicElites;
-					 pSector->ubTroopsInBattle = ubStrategicTroops;
-					 pSector->ubAdminsInBattle = ubStrategicAdmins;
-					 pSector->ubCreaturesInBattle = ubStrategicCreatures;
-				 */
-			}
-		}
-		else
-		{
-			SECTORINFO *pSector;
-			pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
-			/*
-				 pSector->ubElitesInBattle = ubStrategicElites;
-				 pSector->ubTroopsInBattle = ubStrategicTroops;
-				 pSector->ubAdminsInBattle = ubStrategicAdmins;
-				 pSector->ubCreaturesInBattle = ubStrategicCreatures;
-			 */
-		}
-
-		//if in battle, what about the ubNumInBAttle
 
 		return TRUE;
 	}
 	catch (...)
 	{
 #ifdef JA2TESTVERSION
-		strcpy(zReason, "EnemySoldier -- I/O error");
+		strcpy(reason, "EnemySoldier -- I/O error");
 #endif
 	}
 
-	//The temp file load failed either because of IO problems related to hacking/logic, or
-	//various checks failed for hacker validation.  If we reach this point, the "error: exit game"
-	//dialog would appear in a non-testversion.
+	/* The temp file load failed either because of IO problems related to
+	 * hacking/logic, or various checks failed for hacker validation.  If we reach
+	 * this point, the "error: exit game" dialog would appear in a
+	 * non-testversion. */
 FAIL_LOAD:
-		#ifdef JA2TESTVERSION
-			AssertMsg( 0, zReason );
-		#endif
-		return FALSE;
+#ifdef JA2TESTVERSION
+	AssertMsg(0, reason);
+#endif
+	return FALSE;
 }
-
-
 
 
 BOOLEAN NewWayOfLoadingCiviliansFromTempFile()
