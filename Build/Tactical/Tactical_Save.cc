@@ -1484,24 +1484,16 @@ UINT32 GetNumberOfVisibleWorldItemsFromSectorStructureForSector(INT16 const x, I
 }
 
 
-void	SetNumberOfVisibleWorldItemsInSectorStructureForSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems )
+void SetNumberOfVisibleWorldItemsInSectorStructureForSector(INT16 const x, INT16 const y, INT8 const z, UINT32 const n_items)
 {
-	UNDERGROUND_SECTORINFO *pSector=NULL;
-
-	//if the sector is above ground
-	if( bMapZ == 0 )
+	if (z == 0)
 	{
-		SectorInfo[ SECTOR( sMapX, sMapY ) ].uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer = uiNumberOfItems;
+		SectorInfo[SECTOR(x, y)].uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer = n_items;
 	}
 	else
 	{
-		//find the underground sector
-		pSector = FindUnderGroundSector( sMapX, sMapY, bMapZ );
-		if( pSector != NULL )
-		{
-			//get the number of items
-			pSector->uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer = uiNumberOfItems ;
-		}
+		UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(x, y, z);
+		if (u) u->uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer = n_items;
 	}
 }
 
