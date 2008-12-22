@@ -1457,41 +1457,32 @@ void GetMapTempFileName(const UINT32 uiType, char* const pMapName, const INT16 s
 static UINT32 UpdateLoadedSectorsItemInventory(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems);
 
 
-UINT32	GetNumberOfVisibleWorldItemsFromSectorStructureForSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+UINT32 GetNumberOfVisibleWorldItemsFromSectorStructureForSector(INT16 const x, INT16 const y, INT8 const z)
 {
-	UINT32 uiNumberOfItems=0;
-	UNDERGROUND_SECTORINFO *pSector=NULL;
-
-	//if the sector is above ground
-	if( bMapZ == 0 )
+	UINT32 n_items;
+	if (z == 0)
 	{
-		uiNumberOfItems = SectorInfo[ SECTOR( sMapX, sMapY ) ].uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer;
+		n_items = SectorInfo[SECTOR(x, y)].uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer;
 	}
 	else
 	{
 		//find the underground sector
-		pSector = FindUnderGroundSector( sMapX, sMapY, bMapZ );
-		if( pSector != NULL )
-		{
-			//get the number of items
-			uiNumberOfItems = pSector->uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer;
-		}
+		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(x, y, z);
+		n_items = u ? u->uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer : 0;
 	}
 
-	//if there is a sector loaded
-	if( gfWorldLoaded )
-	{
-		//and it is the sector we are interested in
-		if( sMapX == gWorldSectorX && sMapY == gWorldSectorY && bMapZ == gbWorldSectorZ )
-		{
-			//since items might have been added, update
-			uiNumberOfItems = UpdateLoadedSectorsItemInventory( sMapX, sMapY, bMapZ, uiNumberOfItems );
-		}
+	// If the requested sector is currently loaded
+	if (gfWorldLoaded      &&
+			x == gWorldSectorX &&
+			y == gWorldSectorY &&
+			z == gbWorldSectorZ)
+	{ // Since items might have been added, update
+		n_items = UpdateLoadedSectorsItemInventory(x, y, z, n_items);
 	}
 
-
-	return( uiNumberOfItems );
+	return n_items;
 }
+
 
 void	SetNumberOfVisibleWorldItemsInSectorStructureForSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems )
 {
