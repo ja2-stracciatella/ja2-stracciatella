@@ -2445,30 +2445,26 @@ INT32 GetSectorMvtTimeForGroup(UINT8 const ubSector, UINT8 const ubDirection, GR
 }
 
 
-
-//Counts the number of live mercs in any given sector.
-UINT8 PlayerMercsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
+// Counts the number of live mercs in any given sector.
+UINT8 PlayerMercsInSector(UINT8 const x, UINT8 const y, UINT8 const z)
 {
-	UINT8 ubNumMercs = 0;
-	CFOR_ALL_PLAYER_GROUPS(pGroup)
+	UINT8 n_mercs = 0;
+	CFOR_ALL_PLAYER_GROUPS(g)
 	{
-		if (!pGroup->fBetweenSectors)
+		if (g->fBetweenSectors) continue;
+		if (g->ubSectorX != x || g->ubSectorY != y || g->ubSectorZ != z) continue;
+		/* We have a group, make sure that it isn't a group containing only dead
+		 * members. */
+		CFOR_ALL_PLAYERS_IN_GROUP(p, g)
 		{
-			if ( pGroup->ubSectorX == ubSectorX && pGroup->ubSectorY == ubSectorY && pGroup->ubSectorZ == ubSectorZ )
-			{
-				//we have a group, make sure that it isn't a group containing only dead members.
-				CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
-				{
-					// robots count as mercs here, because they can fight, but vehicles don't
-					if( ( pPlayer->pSoldier->bLife ) && !( pPlayer->pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
-					{
-						ubNumMercs++;
-					}
-				}
-			}
+			SOLDIERTYPE const* const s = p->pSoldier;
+			if (s->bLife == 0)                      continue;
+			// Robots count as mercs here, because they can fight, but vehicles don't
+			if (s->uiStatusFlags & SOLDIER_VEHICLE) continue;
+			n_mercs++;
 		}
 	}
-	return ubNumMercs;
+	return n_mercs;
 }
 
 
