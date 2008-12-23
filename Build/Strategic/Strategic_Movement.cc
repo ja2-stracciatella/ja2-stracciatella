@@ -2471,28 +2471,24 @@ UINT8 PlayerMercsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
 	return ubNumMercs;
 }
 
-UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ )
+
+UINT8 PlayerGroupsInSector(UINT8 const x, UINT8 const y, UINT8 const z)
 {
-	UINT8 ubNumGroups = 0;
-	CFOR_ALL_PLAYER_GROUPS(pGroup)
+	UINT8 n_groups = 0;
+	CFOR_ALL_PLAYER_GROUPS(g)
 	{
-		if (!pGroup->fBetweenSectors)
+		if (g->fBetweenSectors) continue;
+		if (g->ubSectorX != x || g->ubSectorY != y || g->ubSectorZ != z) continue;
+		/* We have a group, make sure that it isn't a group containing only dead
+		 * members. */
+		CFOR_ALL_PLAYERS_IN_GROUP(p, g)
 		{
-			if ( pGroup->ubSectorX == ubSectorX && pGroup->ubSectorY == ubSectorY && pGroup->ubSectorZ == ubSectorZ )
-			{
-				//we have a group, make sure that it isn't a group containing only dead members.
-				CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
-				{
-					if( pPlayer->pSoldier->bLife )
-					{
-						ubNumGroups++;
-						break;
-					}
-				}
-			}
+			if (p->pSoldier->bLife == 0) continue;
+			++n_groups;
+			break;
 		}
 	}
-	return ubNumGroups;
+	return n_groups;
 }
 
 
@@ -2642,7 +2638,7 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 	}
 
 	// if there was actually anyone leaving this sector and entering next
-	return *iCountEnter > 0;
+	return *n_enter > 0;
 }
 
 
