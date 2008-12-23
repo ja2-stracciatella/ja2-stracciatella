@@ -274,7 +274,7 @@ no_add:
 }
 
 
-static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile(UINT8* n_elites, UINT8* n_regulars, UINT8* n_admins, UINT8* n_creatures);
+static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile(UINT8* n_elites, UINT8* n_regulars, UINT8* n_admins, UINT8* n_creatures);
 
 
 void NewWayOfLoadingEnemySoldiersFromTempFile()
@@ -833,12 +833,8 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 }
 
 
-static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile(UINT8* const n_elites, UINT8* const n_regulars, UINT8* const n_admins, UINT8* const n_creatures)
+static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFile(UINT8* const n_elites, UINT8* const n_regulars, UINT8* const n_admins, UINT8* const n_creatures)
 {
-#ifdef JA2TESTVERSION
-	char reason[256];
-#endif
-
 	// Make sure the variables are initialized
 	*n_elites    = 0;
 	*n_regulars  = 0;
@@ -849,114 +845,78 @@ static BOOLEAN CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTem
 	INT16 const y = gWorldSectorY;
 	INT8  const z = gbWorldSectorZ;
 
-	try
+	// STEP ONE: Set up the temp file to read from.
+	char map_name[128];
+	GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
+	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_READ));
+
+	/* STEP TWO: Determine whether or not we should use this data.  Because it
+	 * is the demo, it is automatically used. */
+
+	INT16 saved_y;
+	FileRead(f, &saved_y, 2);
+	if (y != saved_y)
 	{
-		// STEP ONE: Set up the temp file to read from.
-		char map_name[128];
-		GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
-		AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_READ));
+		throw std::runtime_error("Sector Y mismatch");
+	}
 
-		/* STEP TWO: Determine whether or not we should use this data.  Because it
-		 * is the demo, it is automatically used. */
+	NewWayOfLoadingEnemySoldierInitListLinks(f);
 
-		INT16 saved_y;
-		FileRead(f, &saved_y, 2);
-		if (y != saved_y)
-		{
-#ifdef JA2TESTVERSION
-			strcpy(reason, "Check EnemySoldier -- sector Y mismatch.  KM");
-#endif
-			goto FAIL_LOAD;
-		}
+	// STEP THREE: Read the data
 
-		NewWayOfLoadingEnemySoldierInitListLinks(f);
+	INT16 saved_x;
+	FileRead(f, &saved_x, 2);
+	if (x != saved_x)
+	{
+		throw std::runtime_error("Sector X mismatch");
+	}
 
-		// STEP THREE: Read the data
+	INT32 saved_slots = 0;
+	FileRead(f, &saved_slots, 4);
+	INT32 slots = saved_slots;
 
-		INT16 saved_x;
-		FileRead(f, &saved_x, 2);
-		if (x != saved_x)
-		{
-#ifdef JA2TESTVERSION
-			strcpy(reason, "Check EnemySoldier -- sector X mismatch.  KM");
-#endif
-			goto FAIL_LOAD;
-		}
+	// Skip timestamp
+	FileSeek(f, 4, FILE_SEEK_FROM_CURRENT);
 
-		INT32 saved_slots = 0;
-		FileRead(f, &saved_slots, 4);
-		INT32 slots = saved_slots;
+	INT8 saved_z;
+	FileRead(f, &saved_z, 1);
+	if (z != saved_z)
+	{
+		throw std::runtime_error("Sector Z mismatch");
+	}
 
-		// Skip timestamp
-		FileSeek(f, 4, FILE_SEEK_FROM_CURRENT);
-
-		INT8 saved_z;
-		FileRead(f, &saved_z, 1);
-		if (z != saved_z)
-		{
-#ifdef JA2TESTVERSION
-			strcpy(reason, "Check EnemySoldier -- sector Z mismatch.  KM");
-#endif
-			goto FAIL_LOAD;
-		}
-
-		if (slots == 0)
-		{ /* No need to restore the enemy's to the map.  This means we are restoring
-			 * a saved game. */
-			return TRUE;
-		}
-
-		if (slots < 0 || 64 <= slots)
-		{ //bad IO!
-#ifdef JA2TESTVERSION
-			sprintf(reason, "Check EnemySoldier -- illegal slot value of %d.  KM", slots);
-#endif
-			goto FAIL_LOAD;
-		}
-
-		for (INT32 i = 0; i != slots; ++i)
-		{
-			SOLDIERCREATE_STRUCT tempDetailedPlacement;
-			ExtractSoldierCreateFromFile(f, &tempDetailedPlacement);
-			// Increment the current type of soldier
-			switch (tempDetailedPlacement.ubSoldierClass)
-			{
-				case SOLDIER_CLASS_ELITE:         ++*n_elites;    break;
-				case SOLDIER_CLASS_ARMY:          ++*n_regulars;  break;
-				case SOLDIER_CLASS_ADMINISTRATOR: ++*n_admins;    break;
-				case SOLDIER_CLASS_CREATURE:      ++*n_creatures; break;
-			}
-
-			// Skip checksum
-			FileSeek(f, 2, FILE_SEEK_FROM_CURRENT);
-		}
-
-		UINT8 saved_sector_id;
-		FileRead(f, &saved_sector_id, 1);
-		if (saved_sector_id != SECTOR(x, y))
-		{
-#ifdef JA2TESTVERSION
-			strcpy(reason, "Check EnemySoldier -- sector ID mismatch.  KM");
-#endif
-			goto FAIL_LOAD;
-		}
-
+	if (slots == 0)
+	{ /* No need to restore the enemy's to the map.  This means we are restoring
+		 * a saved game. */
 		return TRUE;
 	}
-	catch (...)
-	{
-#ifdef JA2TESTVERSION
-		strcpy(reason, "Check EnemySoldier -- I/O error");
-#endif
+
+	if (slots < 0 || 64 <= slots)
+	{ //bad IO!
+		throw std::runtime_error("Invalid slot count");
 	}
 
-FAIL_LOAD:
-	/* The temp file load failed either because of IO problems related to
-	 * hacking/logic, or various checks failed for hacker validation.  If we reach
-	 * this point, the "error: exit game" dialog would appear in a
-	 * non-testversion. */
-#ifdef JA2TESTVERSION
-	AssertMsg(0, reason);
-#endif
-	return FALSE;
+	for (INT32 i = 0; i != slots; ++i)
+	{
+		SOLDIERCREATE_STRUCT tempDetailedPlacement;
+		ExtractSoldierCreateFromFile(f, &tempDetailedPlacement);
+		// Increment the current type of soldier
+		switch (tempDetailedPlacement.ubSoldierClass)
+		{
+			case SOLDIER_CLASS_ELITE:         ++*n_elites;    break;
+			case SOLDIER_CLASS_ARMY:          ++*n_regulars;  break;
+			case SOLDIER_CLASS_ADMINISTRATOR: ++*n_admins;    break;
+			case SOLDIER_CLASS_CREATURE:      ++*n_creatures; break;
+		}
+
+		// Skip checksum
+		FileSeek(f, 2, FILE_SEEK_FROM_CURRENT);
+	}
+
+	UINT8 saved_sector_id;
+	FileRead(f, &saved_sector_id, 1);
+	if (saved_sector_id != SECTOR(x, y))
+	{
+		throw std::runtime_error("Sector ID mismatch");
+	}
 }
