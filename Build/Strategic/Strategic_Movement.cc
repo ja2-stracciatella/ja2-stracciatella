@@ -2578,110 +2578,71 @@ void HandleArrivalOfReinforcements(GROUP const* const pGroup)
 	}
 }
 
-BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnter, INT32 *iCountExit, BOOLEAN *fAboutToArriveEnter )
+
+BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT32* const n_enter, INT32* const n_exit, BOOLEAN* const about_to_arrive_enter)
 {
-	INT16 sBattleSector = -1;
-	BOOLEAN fMayRetreatFromBattle = FALSE;
-	BOOLEAN fRetreatingFromBattle = FALSE;
-	BOOLEAN fHelicopterGroup = FALSE;
-	UINT8 ubMercsInGroup = 0;
+	*n_enter               = 0;
+	*n_exit                = 0;
+	*about_to_arrive_enter = FALSE;
 
+	GROUP const* const bg         = gpBattleGroup;
+	INT16        const sec_battle = bg ? SECTOR(bg->ubSectorX, bg->ubSectorY) : -1;
 
-	*iCountEnter = 0;
-	*iCountExit = 0;
-	*fAboutToArriveEnter = FALSE;
+	/* Get number of characters entering/existing between these two sectors.
+	 * Special conditions during pre-battle interface to return where this
+	 * function is used to show potential retreating directions instead! */
 
-
-	if( gpBattleGroup )
-	{
-		//Assert( gfPreBattleInterfaceActive );
-		sBattleSector = (INT16)SECTOR( gpBattleGroup->ubSectorX, gpBattleGroup->ubSectorY );
-	}
-
-	// get number of characters entering/existing between these two sectors.  Special conditions during
-	// pre-battle interface to return where this function is used to show potential retreating directions instead!
-
-	//	check all groups
 	CFOR_ALL_PLAYER_GROUPS(curr)
 	{
-		fHelicopterGroup = IsGroupTheHelicopterGroup( curr );
+		bool const is_heli_group = IsGroupTheHelicopterGroup(curr);
 
-		// if this group is aboard the helicopter and we're showing the airspace layer, don't count any mercs aboard the
-		// chopper, because the chopper icon itself serves the function of showing the location/size of this group
-		if ( !fHelicopterGroup || !fShowAircraftFlag )
+		/* If this group is aboard the helicopter and we're showing the airspace
+		 * layer, don't count any mercs aboard the chopper, because the chopper icon
+		 * itself serves the function of showing the location/size of this group. */
+		if (is_heli_group && fShowAircraftFlag) continue;
+
+		/* If only showing retreat paths, ignore groups not in the battle sector.
+		 * If NOT showing retreat paths, ignore groups not between sectors. */
+		if (gfDisplayPotentialRetreatPaths ? sec_battle != sec_src : !curr->fBetweenSectors) continue;
+
+		INT16 const sec_prev = SECTOR(curr->ubPrevX,   curr->ubPrevY);
+		INT16 const sec_cur  = SECTOR(curr->ubSectorX, curr->ubSectorY);
+		INT16 const sec_next = SECTOR(curr->ubNextX,   curr->ubNextY);
+
+		bool const may_retreat_from_battle =
+			sec_battle == sec_src && sec_cur == sec_src && sec_prev == sec_dst;
+
+		bool const retreating_from_battle =
+			sec_battle == sec_dst && sec_cur == sec_dst && sec_prev == sec_src;
+
+		UINT8 n_mercs = curr->ubGroupSize;
+		// If it's a valid vehicle, but not the helicopter (which can fly empty)
+		if (curr->fVehicle && !is_heli_group)
 		{
-			// if only showing retreat paths, ignore groups not in the battle sector
-			// if NOT showing retreat paths, ignore groups not between sectors
-			if (gfDisplayPotentialRetreatPaths ? sBattleSector == sSource : curr->fBetweenSectors)
+			// make sure empty vehicles (besides helicopter) aren't in motion!
+			Assert(n_mercs > 0);
+			// subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
+			n_mercs--;
+		}
+
+		if (may_retreat_from_battle || (sec_cur == sec_src && sec_next == sec_dst))
+		{
+			*n_enter += n_mercs;
+
+			if (may_retreat_from_battle ||
+					curr->uiArrivalTime - GetWorldTotalMin() <= ABOUT_TO_ARRIVE_DELAY)
 			{
-				fMayRetreatFromBattle = FALSE;
-				fRetreatingFromBattle = FALSE;
-
-				if( ( sBattleSector == sSource ) && ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sSource ) && ( SECTOR( curr -> ubPrevX, curr->ubPrevY ) == sDest ) )
-				{
-					fMayRetreatFromBattle = TRUE;
-				}
-
-				if( ( sBattleSector == sDest ) && ( SECTOR( curr -> ubSectorX, curr -> ubSectorY ) == sDest ) && ( SECTOR( curr -> ubPrevX, curr->ubPrevY ) == sSource ) )
-				{
-					fRetreatingFromBattle = TRUE;
-				}
-
-				ubMercsInGroup = curr->ubGroupSize;
-
-				if (fMayRetreatFromBattle ||
-						(
-							SECTOR(curr->ubSectorX, curr->ubSectorY) == sSource &&
-							SECTOR(curr->ubNextX,   curr->ubNextY)   == sDest
-						))
-				{
-					// if it's a valid vehicle, but not the helicopter (which can fly empty)
-					if (curr->fVehicle && !fHelicopterGroup)
-					{
-						// make sure empty vehicles (besides helicopter) aren't in motion!
-						Assert( ubMercsInGroup > 0 );
-						// subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
-						ubMercsInGroup--;
-					}
-
-					*iCountEnter += ubMercsInGroup;
-
-					if (fMayRetreatFromBattle ||
-							curr->uiArrivalTime - GetWorldTotalMin() <= ABOUT_TO_ARRIVE_DELAY)
-					{
-						*fAboutToArriveEnter = TRUE;
-					}
-				}
-				else if (fRetreatingFromBattle ||
-						(
-							SECTOR(curr->ubSectorX, curr->ubSectorY) == sDest &&
-							SECTOR(curr->ubNextX,   curr->ubNextY)   == sSource
-						))
-				{
-					// if it's a valid vehicle, but not the helicopter (which can fly empty)
-					if (curr->fVehicle && !fHelicopterGroup)
-					{
-						// make sure empty vehicles (besides helicopter) aren't in motion!
-						Assert( ubMercsInGroup > 0 );
-						// subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
-						ubMercsInGroup--;
-					}
-
-					*iCountExit += ubMercsInGroup;
-				}
+				*about_to_arrive_enter = TRUE;
 			}
+		}
+		else if (retreating_from_battle || (sec_cur == sec_dst && sec_next == sec_src))
+		{
+			*n_exit += n_mercs;
 		}
 	}
 
 	// if there was actually anyone leaving this sector and entering next
-	if( *iCountEnter > 0 )
-	{
-		return ( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
+	return *iCountEnter > 0;
 }
 
 
