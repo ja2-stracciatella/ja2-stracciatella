@@ -2608,17 +2608,17 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 			sec_battle == sec_dst && sec_cur == sec_dst && sec_prev == sec_src;
 
 		UINT8 n_mercs = curr->ubGroupSize;
-		// If it's a valid vehicle, but not the helicopter (which can fly empty)
-		if (curr->fVehicle && !is_heli_group)
-		{
-			// make sure empty vehicles (besides helicopter) aren't in motion!
-			Assert(n_mercs > 0);
-			// subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
-			n_mercs--;
-		}
-
 		if (may_retreat_from_battle || (sec_cur == sec_src && sec_next == sec_dst))
 		{
+			// If it's a valid vehicle, but not the helicopter (which can fly empty)
+			if (curr->fVehicle && !is_heli_group)
+			{
+				// make sure empty vehicles (besides helicopter) aren't in motion!
+				Assert(n_mercs > 0);
+				// subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
+				n_mercs--;
+			}
+
 			*n_enter += n_mercs;
 
 			if (may_retreat_from_battle ||
@@ -2629,6 +2629,15 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 		}
 		else if (retreating_from_battle || (sec_cur == sec_dst && sec_next == sec_src))
 		{
+			// If it's a valid vehicle, but not the helicopter (which can fly empty)
+			if (curr->fVehicle && !is_heli_group)
+			{
+				// make sure empty vehicles (besides helicopter) aren't in motion!
+				Assert(n_mercs > 0);
+				// subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
+				n_mercs--;
+			}
+
 			*n_exit += n_mercs;
 		}
 	}
