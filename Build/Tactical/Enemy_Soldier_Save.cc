@@ -888,7 +888,7 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 	if (slots == 0)
 	{ /* No need to restore the enemy's to the map.  This means we are restoring
 		 * a saved game. */
-		return TRUE;
+		return;
 	}
 
 	if (slots < 0 || 64 <= slots)
