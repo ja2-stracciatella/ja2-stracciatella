@@ -77,6 +77,12 @@ WRAPPED_STRING* LineWrap(Font const font, UINT16 usLineWidthPixels, UINT16* cons
 			line_end   = word_start;
 			line_w     = word_w;
 		}
+		if (*i == '-')
+		{ // Allow separation at hyphens
+			line_end   = i + 1;
+			word_start = i + 1;
+			word_w     = 0;
+		}
 	}
 }
 

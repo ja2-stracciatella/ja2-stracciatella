@@ -1,3 +1,4 @@
+(r4923) Allow word separation at hyphens when formatting text.
 (r4864) Fix a vanilla bug: In an ambush all mercs were moved to the centre of their sectors, even if they were in different sectors than the ambush.
 (r4857) Fix a glitch in r4280: The wrong dying sound was played for animals and monsters.
 (r4856) Minor improvement of the German translation.
