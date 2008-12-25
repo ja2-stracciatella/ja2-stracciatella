@@ -36,44 +36,46 @@ WRAPPED_STRING* LineWrap(Font const font, UINT16 usLineWidthPixels, UINT16* cons
 	size_t         line_w     = 0;
 	wchar_t const* line_start = i;
 	wchar_t const* line_end   = i;
-	for (;;)
+	wchar_t const* word_start = i;
+	size_t         word_w     = 0;
+	for (;; ++i)
 	{
-		wchar_t const* word_start = i;
-		size_t         word_w     = 0;
-		for (; *i != L' '; ++i)
+		if (*i == L' ')
 		{
-			if (*i == L'\0')
+			line_end = i;
+			for (; *i == L' '; ++i)
 			{
-				if (line_start != i) // Append last line
-				{
-					WRAPPED_STRING* const ws = AllocWrappedString(line_start, i);
-					*anchor = ws;
-				}
-				return head;
+				line_w += GetCharWidth(font, *i);
 			}
-			size_t const w = GetCharWidth(font, *i);
-			word_w += w;
-			line_w += w;
-			if (line_w > max_w)
-			{
-				if (line_start == line_end)
-				{ // A single word is longer than a line. Split the word.
-					line_end   = i;
-					word_start = i;
-					word_w     = 0;
-				}
-				WRAPPED_STRING* const ws = AllocWrappedString(line_start, line_end);
-				*anchor    = ws;
-				anchor     = &ws->pNextWrappedString;
-				line_start = word_start;
-				line_end   = word_start;
-				line_w     = word_w;
-			}
+			word_start = i;
+			word_w     = 0;
 		}
-		line_end = i;
-		for (; *i == L' '; ++i)
+		if (*i == L'\0')
 		{
-			line_w += GetCharWidth(font, *i);
+			if (line_start != i) // Append last line
+			{
+				WRAPPED_STRING* const ws = AllocWrappedString(line_start, i);
+				*anchor = ws;
+			}
+			return head;
+		}
+		size_t const w = GetCharWidth(font, *i);
+		word_w += w;
+		line_w += w;
+		if (line_w > max_w)
+		{
+			if (line_start == line_end)
+			{ // A single word is longer than a line. Split the word.
+				line_end   = i;
+				word_start = i;
+				word_w     = 0;
+			}
+			WRAPPED_STRING* const ws = AllocWrappedString(line_start, line_end);
+			*anchor    = ws;
+			anchor     = &ws->pNextWrappedString;
+			line_start = word_start;
+			line_end   = word_start;
+			line_w     = word_w;
 		}
 	}
 }
