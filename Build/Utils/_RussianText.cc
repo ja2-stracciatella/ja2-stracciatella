@@ -523,7 +523,6 @@ const wchar_t* pUpperLeftMapScreenStrings[] =
 	L"Здоровье", // the health level of the current merc
 	L"Настрой", // the morale of the current merc
 	L"Сост.",	// the condition of the current vehicle
-	L"Горючее",	// the fuel level of the current vehicle
 };
 
 const wchar_t* pTrainingStrings[] =
