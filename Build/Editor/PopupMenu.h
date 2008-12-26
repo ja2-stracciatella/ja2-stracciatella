@@ -58,33 +58,6 @@ enum popupMenuIDs
 #define DIR_DOWNRIGHT	(DNMASK + RTMASK)
 #define DIR_DOWNLEFT	(DNMASK + LTMASK)
 
-#define POPUP_ACTIVETYPE_NOT_YET_DETERMINED		0
-#define POPUP_ACTIVETYPE_PERSISTANT						1
-#define POPUP_ACTIVETYPE_NONPERSISTANT				2
-
-#define MAX_COLUMNS														8
-
-//This structure contains all the required information for rendering
-//the popup menu while in
-typedef struct currentPopupMenuInformation{
-	UINT8 ubPopupMenuID;
-	UINT8 ubSelectedIndex;							//current popup menu index hilited.
-	UINT8 ubNumEntries;
-	UINT8 ubColumns;
-	UINT8 ubMaxEntriesPerColumn;
-	UINT8 ubColumnWidth[ MAX_COLUMNS ];
-	UINT8 ubActiveType;
-	Font    usFont;
-	BOOLEAN fActive;
-	BOOLEAN fUseKeyboardInfoUntilMouseMoves;
-  UINT16 usLeft, usTop, usRight, usBottom;	//popup region coords.
-	UINT16 usLastMouseX, usLastMouseY;
-}CurrentPopupMenuInformation;
-
-//A global var that keeps the popup menu information.
-extern CurrentPopupMenuInformation gPopup;
-extern UINT16 *popupMenuStrings[5];
-
 //These are the two main functions that outside users would call.
 void InitPopupMenu(GUIButtonRef, UINT8 ubPopupMenuID, UINT8 ubDirection);
 BOOLEAN ProcessPopupMenuIfActive(void);

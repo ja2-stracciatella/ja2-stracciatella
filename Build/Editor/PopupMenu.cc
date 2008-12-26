@@ -36,12 +36,40 @@
 #include "WorldDef.h"
 
 
-CurrentPopupMenuInformation gPopup;
+#define POPUP_ACTIVETYPE_NOT_YET_DETERMINED 0
+#define POPUP_ACTIVETYPE_PERSISTANT         1
+#define POPUP_ACTIVETYPE_NONPERSISTANT      2
 
-MOUSE_REGION popupRegion;
+#define MAX_COLUMNS                         8
 
-UINT16 gusEntryHeight;
-BOOLEAN fWaitingForLButtonRelease = FALSE;
+/* This structure contains all the required information for rendering the popup
+ * menu */
+struct CurrentPopupMenuInformation
+{
+	UINT8   ubPopupMenuID;
+	UINT8   ubSelectedIndex; // current popup menu index hilited.
+	UINT8   ubNumEntries;
+	UINT8   ubColumns;
+	UINT8   ubMaxEntriesPerColumn;
+	UINT8   ubColumnWidth[MAX_COLUMNS];
+	UINT8   ubActiveType;
+	Font    usFont;
+	BOOLEAN fActive;
+	BOOLEAN fUseKeyboardInfoUntilMouseMoves;
+	UINT16  usLeft; // popup region coords.
+	UINT16  usTop;
+	UINT16  usRight;
+	UINT16  usBottom;
+	UINT16  usLastMouseX;
+	UINT16  usLastMouseY;
+};
+
+static CurrentPopupMenuInformation gPopup;
+
+static MOUSE_REGION popupRegion;
+
+static UINT16  gusEntryHeight;
+static BOOLEAN fWaitingForLButtonRelease = FALSE;
 
 extern const wchar_t* gszScheduleActions[NUM_SCHEDULE_ACTIONS];
 
