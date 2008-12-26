@@ -523,7 +523,7 @@ const wchar_t *pAssignMenuStrings[] =
 	L"Doktor", // the merc is acting as a doctor
 	L"Patient", // the merc is receiving medical attention
 	L"Fahrzeug", // the merc is in a vehicle
-	L"Repar.", // the merc is repairing items
+	L"Reparieren", // the merc is repairing items
 	L"Training", // the merc is training
 	L"Abbrechen", // cancel this menu
 };
@@ -907,7 +907,7 @@ const wchar_t *sKeyDescriptionStrings[2]=
 //The headers used to describe various weapon statistics.
 const wchar_t* gWeaponStatsDesc[] =
 {
-	L"Gew. (%ls):", //weight
+	L"Gewicht (%ls):", //weight
 	L"Status:",
 	L"Anzahl:", 		// Number of bullets left in a magazine
 	L"Reichw.:",		// Range
@@ -1995,7 +1995,7 @@ const wchar_t *pWebPagesTitles[] =
 	L"Bobby Rays - Waffen",
 	L"Bobby Rays - Munition",
 	L"Bobby Rays - Rüstungen",
-	L"Bobby Rays - Sonst.",							//misc is an abbreviation for miscellaneous
+	L"Bobby Rays - Sonstiges",							//misc is an abbreviation for miscellaneous
 	L"Bobby Rays - Gebraucht",
 	L"Bobby Rays - Mail Order",
 	L"B.S.E",
@@ -2167,7 +2167,7 @@ const wchar_t *InsInfoText[] =
 const wchar_t *MercAccountText[] =
 {
 	// Text on the buttons on the bottom of the screen
-	L"Befugnis ert.",
+	L"Befugnis erteilen",
 	L"Home",
 	L"Konto #:",
 	L"Söldner",
@@ -2490,7 +2490,7 @@ const wchar_t *CharacterInfo[] =
 	L"Weiter",
 	L"Zusatzinfo",				// Title for the additional info for the merc's bio
 	L"Aktive Mitglieder", // Title of the page
-	L"Zusätzl. Ausrüst:",				// Displays the optional gear cost
+	L"Zusätzliche Ausrüstung:",				// Displays the optional gear cost
 	L"VERSICHERUNG erforderlich",			// If the merc required a medical deposit, this is displayed
 };
 
@@ -2870,7 +2870,7 @@ const wchar_t *gpDemoIntroString[] =
 //Strings used in the popup box when withdrawing, or depositing money from the $ sign at the bottom of the single merc panel
 const wchar_t *gzMoneyWithdrawMessageText[] =
 {
-	L"Sie können nur max. 20,000$ abheben.",
+	L"Sie können nur maximal 20,000$ abheben.",
 	L"Wollen Sie wirklich %ls auf Ihr Konto einzahlen?",
 };
 
@@ -2893,8 +2893,8 @@ const wchar_t *zOptionsToggleText[] =
 	L"Schlaf-/Wachmeldung anzeigen",
 	L"Metrisches System benutzen",
 	L"Boden beleuchten",
-	L"Cursor autom. auf Söldner",
-	L"Cursor autom. auf Türen",
+	L"Cursor automatisch auf Söldner",
+	L"Cursor automatisch auf Türen",
 	L"Gegenstände leuchten",
 	L"Baumkronen zeigen",
 	L"Drahtgitter zeigen",
@@ -3234,12 +3234,12 @@ const wchar_t *pNewNoiseStr[] =
 
 const wchar_t *wMapScreenSortButtonHelpText[] =
 {
-	L"Sort. nach Name (|F|1)",
-	L"Sort. nach Auftrag (|F|2)",
-	L"Sort. nach wach/schlafend (|F|3)",
-	L"Sort. nach Ort (|F|4)",
-	L"Sort. nach Ziel (|F|5)",
-	L"Sort. nach Vertragsende (|F|6)",
+	L"Sortieren nach Name (|F|1)",
+	L"Sortieren nach Auftrag (|F|2)",
+	L"Sortieren nach wach/schlafend (|F|3)",
+	L"Sortieren nach Ort (|F|4)",
+	L"Sortieren nach Ziel (|F|5)",
+	L"Sortieren nach Vertragsende (|F|6)",
 };
 
 const wchar_t *BrokenLinkText[] =
@@ -3454,7 +3454,7 @@ const wchar_t *gzLateLocalizedString[] =
 
 	//58
 	//Displayed with the version information when cheats are enabled.
-	L"Aktueller/Max. Fortschritt: %d%%/%d%%",
+	L"Aktueller/Maximaler Fortschritt: %d%%/%d%%",
 
 	//59
 	L"John und Mary eskortieren?",
