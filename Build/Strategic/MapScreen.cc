@@ -4900,7 +4900,7 @@ static void RenderAttributeStringsForUpperLeftHandCorner(SGPVSurface* const uiBu
 	if ( ( pSoldier == NULL ) || ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) ) )
 	{
 		// health
-		DrawString(pUpperLeftMapScreenStrings[ 2 ], 87, 80, CHAR_FONT);
+		DrawString(pUpperLeftMapScreenStrings[1], 87, 80, CHAR_FONT);
 
 		for( iCounter = 0; iCounter < 5; iCounter++ )
 		{
@@ -4908,16 +4908,13 @@ static void RenderAttributeStringsForUpperLeftHandCorner(SGPVSurface* const uiBu
 			DrawString(pShortAttributeStrings[iCounter + 5], 133, 22 + iCounter * 10, CHAR_FONT);
 		}
 
-		// contract
-		//DrawString(pUpperLeftMapScreenStrings[ 1 ], 194, 52,  CHAR_FONT);
-
 		// morale
-		DrawString(pUpperLeftMapScreenStrings[ 3 ], 87, 94,  CHAR_FONT);
+		DrawString(pUpperLeftMapScreenStrings[2], 87, 94,  CHAR_FONT);
 	}
 	else
 	{
 		// condition
-		DrawString(pUpperLeftMapScreenStrings[ 4 ], 96, 80, CHAR_FONT);
+		DrawString(pUpperLeftMapScreenStrings[3], 96, 80, CHAR_FONT);
 	}
 
 

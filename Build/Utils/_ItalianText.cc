@@ -520,7 +520,6 @@ const wchar_t* pShortAttributeStrings[] =
 const wchar_t* pUpperLeftMapScreenStrings[] =
 {
 	L"Compito", // the mercs current assignment
-	L"Accordo", // the contract info about the merc
 	L"Salute", // the health level of the current merc
 	L"Morale", // the morale of the current merc
 	L"Cond.",	// the condition of the current vehicle
