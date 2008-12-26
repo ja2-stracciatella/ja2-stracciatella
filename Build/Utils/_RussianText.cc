@@ -3650,13 +3650,11 @@ const wchar_t* gzLateLocalizedString[] =
 
 	L"CD Агония Власти не найден. Программа выходит в ОС.",
 
-	L"Предметы успешно соединены.",
-
-	//58
+	//57
 	//Displayed with the version information when cheats are enabled.
 	L"Текущий/Максимальный: %d%%/%d%%",
 
-	//59
+	//58
 	L"Сопроводить Джона и Мэри?",
 
 	L"Выключатель нажат."

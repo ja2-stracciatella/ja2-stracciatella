@@ -3646,13 +3646,11 @@ const wchar_t* gzLateLocalizedString[] =
 
 	L"Kan de Jagged Alliance 2 SPEL CD niet vinden. Programma wordt afgesloten.",
 
-	L"Items succesvol gecombineerd.",
-
-	//58
+	//57
 	//Displayed with the version information when cheats are enabled.
 	L"Huidig/Max Voortgang: %d%%/%d%%",
 
-	//59
+	//58
 	L"John en Mary escorteren?",
 
 	L"Schakelaar geactiveerd.",

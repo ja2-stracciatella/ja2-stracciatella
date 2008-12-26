@@ -3637,13 +3637,11 @@ const wchar_t* gzLateLocalizedString[] =
 
 	L"Il CD ddel gioco Jagged Alliance 2 non è stato trovato. Il programma verrà terminato.",
 
-	L"Oggetti combinati con successo.",
-
-	//58
+	//57
 	//Displayed with the version information when cheats are enabled.
 	L"Attuale/Massimo Progresso: %d%%/%d%%",
 
-	//59
+	//58
 	L"Accompagnate John e Mary?",
 
   L"Interruttore attivato.",

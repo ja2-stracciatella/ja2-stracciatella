@@ -208,7 +208,7 @@ void DisplayGameSettings( )
 
 	if (CHEATER_CHEAT_LEVEL())
 	{
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[58], CurrentPlayerProgressPercentage(), HighestPlayerProgressPercentage());
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[57], CurrentPlayerProgressPercentage(), HighestPlayerProgressPercentage());
 	}
 }
 

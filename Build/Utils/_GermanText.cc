@@ -3450,13 +3450,11 @@ const wchar_t *gzLateLocalizedString[] =
 
 	//L"Im Sektor sind Feinde entdeckt worden",		//STR_DETECTED_SIMULTANEOUS_ARRIVAL
 
-	L"Die Gegenstände wurden erfolgreich miteinander kombiniert.",
-
-	//58
+	//57
 	//Displayed with the version information when cheats are enabled.
 	L"Aktueller/Maximaler Fortschritt: %d%%/%d%%",
 
-	//59
+	//58
 	L"John und Mary eskortieren?",
 
   L"Switch Activated.",

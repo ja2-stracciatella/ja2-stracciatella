@@ -3632,15 +3632,13 @@ const wchar_t *gzLateLocalizedString[] =
 
 	L"The Jagged Alliance 2 PLAY DISK was not found. Program will now exit.",
 
-	L"Items successfully combined.",
-
-	//58
+	//57
 	//Displayed with the version information when cheats are enabled.
 	L"Current/Max Progress: %d%%/%d%%",
 
 	L"Escort John and Mary?",
 
-	// 60
+	// 59
   L"Switch Activated.",
 };
 

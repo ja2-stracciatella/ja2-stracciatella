@@ -3631,13 +3631,11 @@ const wchar_t* gzLateLocalizedString[] =
 
 	L"Le CD Play de Jagged Alliance 2 est introuvable. L'application va se terminer.",
 
-	L"Objets associés.",
-
-	//58
+	//57
 	//Displayed with the version information when cheats are enabled.
 	L"Actuel/Maximum : %d%%/%d%%",
 
-	//59
+	//58
 	L"Escorter John et Mary ?",
 
   L"Interrupteur activé.",

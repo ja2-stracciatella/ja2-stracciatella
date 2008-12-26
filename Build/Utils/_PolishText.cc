@@ -3633,13 +3633,11 @@ const wchar_t* gzLateLocalizedString[] =
 
 	L"Nie odnaleziono płyty nr 2 Jagged Alliance 2.",
 
-	L"Przedmioty zostały pomyślnie połączone.",
-
-	//58
+	//57
 	//Displayed with the version information when cheats are enabled.
 	L"Bieżący/Maks. postęp: %d%%/%d%%",
 
-	//59
+	//58
 	L"Eskortować Johna i Mary?",
 
   L"Przełącznik aktywowany.",
