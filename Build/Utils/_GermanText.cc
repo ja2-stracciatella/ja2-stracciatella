@@ -3455,7 +3455,7 @@ const wchar_t *gzLateLocalizedString[] =
 	//57
 	L"John und Mary eskortieren?",
 
-  L"Switch Activated.",
+  L"Schalter betätigt.",
 };
 
 const wchar_t str_ceramic_plates_smashed[] = L"%lss Keramikplatten wurden zertrümmert!";
