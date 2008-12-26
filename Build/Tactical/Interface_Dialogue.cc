@@ -4111,7 +4111,7 @@ static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 		case NPC_ACTION_ASK_ABOUT_ESCORTING_EPC:
 			if ( (ubProfileID == JOHN && gMercProfiles[ MARY ].bMercStatus != MERC_IS_DEAD) || (ubProfileID == MARY && gMercProfiles[ JOHN ].bMercStatus != MERC_IS_DEAD) )
 			{
-				swprintf(zTemp, lengthof(zTemp), gzLateLocalizedString[58]);
+				swprintf(zTemp, lengthof(zTemp), gzLateLocalizedString[57]);
 			}
 			else
 			{

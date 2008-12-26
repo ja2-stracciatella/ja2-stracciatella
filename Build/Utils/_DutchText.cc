@@ -3644,13 +3644,11 @@ const wchar_t* gzLateLocalizedString[] =
 	//55
 	L"Kan tijd niet versneller tijdens bekijken van sector inventaris.",
 
-	L"Kan de Jagged Alliance 2 SPEL CD niet vinden. Programma wordt afgesloten.",
-
-	//57
+	//56
 	//Displayed with the version information when cheats are enabled.
 	L"Huidig/Max Voortgang: %d%%/%d%%",
 
-	//58
+	//57
 	L"John en Mary escorteren?",
 
 	L"Schakelaar geactiveerd.",

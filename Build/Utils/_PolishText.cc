@@ -3631,13 +3631,11 @@ const wchar_t* gzLateLocalizedString[] =
 	//55
 	L"Nie można kompresować czasu, gdy otwarty jest inwentarz sektora.",
 
-	L"Nie odnaleziono płyty nr 2 Jagged Alliance 2.",
-
-	//57
+	//56
 	//Displayed with the version information when cheats are enabled.
 	L"Bieżący/Maks. postęp: %d%%/%d%%",
 
-	//58
+	//57
 	L"Eskortować Johna i Mary?",
 
   L"Przełącznik aktywowany.",

@@ -3146,7 +3146,7 @@ static void SwitchMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 	if ( ubExitValue == MSG_BOX_RETURN_YES )
 	{
     // Message that switch is activated...
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[59]);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[58]);
 		SetOffBombsByFrequency(gpTempSoldier, bTempFrequency);
 	}
 }

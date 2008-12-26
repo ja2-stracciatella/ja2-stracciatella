@@ -3630,15 +3630,13 @@ const wchar_t *gzLateLocalizedString[] =
 	//55
 	L"Can't compress time while viewing sector inventory.",
 
-	L"The Jagged Alliance 2 PLAY DISK was not found. Program will now exit.",
-
-	//57
+	//56
 	//Displayed with the version information when cheats are enabled.
 	L"Current/Max Progress: %d%%/%d%%",
 
 	L"Escort John and Mary?",
 
-	// 59
+	// 58
   L"Switch Activated.",
 };
 

@@ -3446,15 +3446,13 @@ const wchar_t *gzLateLocalizedString[] =
 	//55
 	L"Die Zeit kann nicht komprimiert werden während das Sektorinventar eingesehen wird.",
 
-	L"Die Jagged Alliance 2 PLAY CD wurde nicht gefunden. Das Programm wird jetzt beendet.",
-
 	//L"Im Sektor sind Feinde entdeckt worden",		//STR_DETECTED_SIMULTANEOUS_ARRIVAL
 
-	//57
+	//56
 	//Displayed with the version information when cheats are enabled.
 	L"Aktueller/Maximaler Fortschritt: %d%%/%d%%",
 
-	//58
+	//57
 	L"John und Mary eskortieren?",
 
   L"Switch Activated.",

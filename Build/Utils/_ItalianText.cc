@@ -3635,13 +3635,11 @@ const wchar_t* gzLateLocalizedString[] =
 	//55
 	L"Non potete comprimere il tempo mentre visualizzate l'inventario del settore.",
 
-	L"Il CD ddel gioco Jagged Alliance 2 non è stato trovato. Il programma verrà terminato.",
-
-	//57
+	//56
 	//Displayed with the version information when cheats are enabled.
 	L"Attuale/Massimo Progresso: %d%%/%d%%",
 
-	//58
+	//57
 	L"Accompagnate John e Mary?",
 
   L"Interruttore attivato.",
