@@ -1180,39 +1180,23 @@ void ShutdownSMPanel(void)
 }
 
 
-static void PrintAP(SOLDIERTYPE* s, INT16 x, INT16 y, INT16 w, INT16 h)
+static void PrintAP(SOLDIERTYPE* const s, INT16 const x, INT16 const y, INT16 const w, INT16 const h)
 {
-	if (!(gTacticalStatus.uiFlags & TURNBASED) ||
-			!(gTacticalStatus.uiFlags & INCOMBAT) ||
-			s->bLife < OKLIFE)
-	{
-		return;
-	}
+	if (!(gTacticalStatus.uiFlags & TURNBASED)) return;
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))  return;
+	if (s->bLife < OKLIFE)                      return;
 
-	SetFont(TINYFONT1);
-
-	const INT8 ap = GetUIApsToDisplay(s);
-
-	if (!EnoughPoints(s, MinAPsToAttack(s, s->sLastTarget, TRUE), 0, FALSE) || ap < 0)
-	{
-		SetFontForeground(FONT_MCOLOR_DKRED);
-	}
-	else
-	{
-		if (MercUnderTheInfluence(s))
-		{
-			SetFontForeground(FONT_MCOLOR_LTBLUE);
-		}
-		else if (s->bStealthMode)
-		{
-			SetFontForeground(FONT_MCOLOR_LTYELLOW);
-		}
-		else
-		{
-			SetFontForeground(FONT_MCOLOR_LTGRAY);
-		}
-	}
+	INT8  const ap         = GetUIApsToDisplay(s);
+	UINT8 const min_ap     = MinAPsToAttack(s, s->sLastTarget, TRUE);
+	UINT8 const foreground =
+		!EnoughPoints(s, min_ap, 0, FALSE) ? FONT_MCOLOR_DKRED    :
+		ap < 0                             ? FONT_MCOLOR_DKRED    :
+		MercUnderTheInfluence(s)           ? FONT_MCOLOR_LTBLUE   :
+		s->bStealthMode                    ? FONT_MCOLOR_LTYELLOW :
+		FONT_MCOLOR_LTGRAY;
+	SetFontForeground(foreground);
 	SetFontBackground(FONT_MCOLOR_BLACK);
+	SetFont(TINYFONT1);
 
 	RestoreExternBackgroundRect(x, y, w, h);
 	wchar_t buf[16];
