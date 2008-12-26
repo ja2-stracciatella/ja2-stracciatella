@@ -359,6 +359,7 @@ static BOOLEAN gfDisplayNoRoomMsg = FALSE;
 //Blanket the entire screen
 static MOUSE_REGION gSKI_EntireScreenMouseRegions;
 
+static MOUSE_REGION g_dealer_inventory_scroll_region;
 
 static MOUSE_REGION gDealersInventoryMouseRegions[SKI_NUM_ARMS_DEALERS_INV_SLOTS];
 static MOUSE_REGION gRepairmanInventorySmallFaceMouseRegions[SKI_NUM_ARMS_DEALERS_INV_SLOTS];
@@ -1164,16 +1165,33 @@ static void DisplayAllDealersCash(void)
 static void EnableDisableDealersInventoryPageButtons(void);
 
 
+static void ShopInventoryPageUp()
+{
+	if (gSelectArmsDealerInfo.ubCurrentPage > 1)
+	{
+		--gSelectArmsDealerInfo.ubCurrentPage;
+		gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
+		EnableDisableDealersInventoryPageButtons();
+	}
+}
+
+
+static void ShopInventoryPageDown()
+{
+	if (gSelectArmsDealerInfo.ubCurrentPage < gSelectArmsDealerInfo.ubNumberOfPages)
+	{
+		++gSelectArmsDealerInfo.ubCurrentPage;
+		gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
+		EnableDisableDealersInventoryPageButtons();
+	}
+}
+
+
 static void BtnSKI_InvPageUpButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if( gSelectArmsDealerInfo.ubCurrentPage > 1 )
-		{
-			gSelectArmsDealerInfo.ubCurrentPage--;
-			gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
-			EnableDisableDealersInventoryPageButtons();
-		}
+		ShopInventoryPageUp();
 	}
 }
 
@@ -1182,12 +1200,7 @@ static void BtnSKI_InvPageDownButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if( gSelectArmsDealerInfo.ubCurrentPage < gSelectArmsDealerInfo.ubNumberOfPages )
-		{
-			gSelectArmsDealerInfo.ubCurrentPage++;
-			gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;
-			EnableDisableDealersInventoryPageButtons();
-		}
+		ShopInventoryPageDown();
 	}
 }
 
@@ -1222,6 +1235,19 @@ static void BtnSKI_DoneButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
+static void DealerInventoryScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		ShopInventoryPageUp();
+	}
+	else if (reason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		ShopInventoryPageDown();
+	}
+}
+
+
 static void SelectDealersInventoryMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectDealersInventoryRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectDealersOfferSlotsMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
@@ -1235,6 +1261,7 @@ static void CreateSkiInventorySlotMouseRegions(void)
 	UINT8	x,y,ubCnt;
 	UINT16	usPosX, usPosY;
 
+	MSYS_DefineRegion(&g_dealer_inventory_scroll_region, 161, 27, 532, 137, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, NULL, DealerInventoryScrollRegionCallback);
 
 	// Create the mouse regions for the shopkeeper's inventory
 	usPosY = SKI_ARMS_DEALERS_INV_START_Y;
@@ -1336,6 +1363,8 @@ static void CreateSkiInventorySlotMouseRegions(void)
 static void DestroySkiInventorySlotMouseRegions(void)
 {
 	UINT8	i;
+
+	MSYS_RemoveRegion(&g_dealer_inventory_scroll_region);
 
 	for(i=0; i<SKI_NUM_ARMS_DEALERS_INV_SLOTS; i++)
 	{
@@ -1500,6 +1529,14 @@ static void SelectDealersInventoryRegionCallBack(MOUSE_REGION* pRegion, INT32 iR
 			}
 		}
 */
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		ShopInventoryPageUp();
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		ShopInventoryPageDown();
 	}
 }
 
