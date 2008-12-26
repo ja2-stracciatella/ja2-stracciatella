@@ -5344,11 +5344,6 @@ void DeleteShopKeeperItemDescBox()
 	CheckForDisabledForGiveItem( );
 	DisableInvRegions( gfSMDisableForItems );	//actually does an enable if current merc is in range
 
-	EnableButton( guiSKI_InvPageUpButton );
-	EnableButton( guiSKI_InvPageDownButton );
-	EnableButton( guiSKI_TransactionButton );
-	EnableButton( guiSKI_DoneButton );
-
 	EnableDisableDealersInventoryPageButtons();
 	EnableDisableEvaluateAndTransactionButtons();
 
