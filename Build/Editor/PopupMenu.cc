@@ -232,69 +232,55 @@ void InitPopupMenu(GUIButtonRef const button, UINT8 const ubPopupMenuID, UINT8 c
 
 static void RenderPopupMenu(void)
 {
-	UINT16 usX, usY;
-	UINT8 ubColumn, ubEntry, ubCounter;
-	UINT16 usLineColor;
-	UINT16 usStringWidth;
-	UINT16 usStart;
+	CurrentPopupMenuInformation const& p = gPopup;
 
-	//Draw the menu
-	ColorFillVideoSurfaceArea(FRAME_BUFFER,
-		gPopup.usLeft, gPopup.usTop, gPopup.usRight, gPopup.usBottom,
-		Get16BPPColor(FROMRGB(128, 128, 128) ) );
+	// Draw the menu
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, p.usLeft, p.usTop, p.usRight, p.usBottom, Get16BPPColor(FROMRGB(128, 128, 128)));
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
-		UINT8*  const pDestBuf         = l.Buffer<UINT8>();
-		UINT32  const uiDestPitchBYTES = l.Pitch();
-		SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		usLineColor = Get16BPPColor( FROMRGB( 64, 64, 64 ) );
-		RectangleDraw( TRUE, gPopup.usLeft, gPopup.usTop, gPopup.usRight, gPopup.usBottom,
-				usLineColor, pDestBuf );
-		if( gPopup.ubColumns > 1 )
-		{ //draw a vertical line between each column
-			usStart = gPopup.usLeft + gPopup.ubColumnWidth[ 0 ];
-			for( ubColumn = 1; ubColumn < gPopup.ubColumns; ubColumn++ )
-			{
-				LineDraw( TRUE, usStart, gPopup.usTop, usStart, gPopup.usBottom, usLineColor, pDestBuf );
-			}
-			usStart += (UINT16)gPopup.ubColumnWidth[ ubColumn ];
+		UINT8* const pDestBuf = l.Buffer<UINT8>();
+		UINT32 const pitch    = l.Pitch();
+		SetClippingRegionAndImageWidth(pitch, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		UINT16 const line_colour = Get16BPPColor(FROMRGB(64, 64, 64));
+		RectangleDraw(TRUE, p.usLeft, p.usTop, p.usRight - 1, p.usBottom - 1, line_colour, pDestBuf);
+		// Draw a vertical line between each column
+		UINT16 x = p.usLeft;
+		for (UINT8 column = 1; column < p.ubColumns; ++column)
+		{
+			x += p.ubColumnWidth[column - 1];
+			LineDraw(TRUE, x, p.usTop, x, p.usBottom, line_colour, pDestBuf);
 		}
 	}
 
-	//Set up the text attributes.
-	SetFont( gPopup.usFont);
-	SetFontBackground( FONT_MCOLOR_BLACK );
-	SetFontForeground( FONT_MCOLOR_WHITE );
+	// Set up the text attributes.
+	Font const font = p.usFont;
+	SetFont(font);
+	SetFontBackground(FONT_MCOLOR_BLACK);
 
-	usX = gPopup.usLeft + 1;
-	ubCounter = 0;
-	usStart = gPopup.usLeft;
-	for( ubColumn = 0; ubColumn < gPopup.ubColumns; ubColumn++ )
+	UINT8  const n_rows    = p.ubMaxEntriesPerColumn;
+	UINT8  const n_entries = p.ubNumEntries;
+	UINT8  const selected  = p.ubSelectedIndex - 1;
+	UINT8        entry     = 0;
+	UINT16       dx        = p.usLeft;
+	UINT16 const dy        = p.usTop + 1;
+	UINT16 const h         = gusEntryHeight;
+	for (UINT8 column = 0;; ++column)
 	{
-		for( ubEntry = 0; ubEntry < gPopup.ubMaxEntriesPerColumn; ubEntry++ )
+		UINT8 const w = p.ubColumnWidth[column];
+		for (UINT8 row = 0; row != n_rows; ++entry, ++row)
 		{
-			if( ubCounter >= gPopup.ubNumEntries )
-				return; //done
-			//Calc current string's width in pixels.  Adding 14 pixels which is the width of
-			//two padded gPopup.usFont spaces not stored in the string.
-			usStringWidth = 14 + StringPixLength( GetPopupMenuString( ubCounter ), gPopup.usFont );
-			//Horizontally center the string inside the popup menu
-			usX = usStart + ( gPopup.ubColumnWidth[ ubColumn ] - usStringWidth ) / 2;
-			usY = gPopup.usTop + 1 + ubEntry * gusEntryHeight;
-			if( ubCounter == gPopup.ubSelectedIndex - 1 )
-			{
-				//This is the highlighted menu entry.
-				SetFontForeground( FONT_MCOLOR_LTBLUE );
-				mprintf(usX, usY, L" %ls ", GetPopupMenuString(ubCounter));
-				SetFontForeground( FONT_MCOLOR_WHITE );
-			}
-			else
-			{
-				mprintf(usX, usY, L" %ls ", GetPopupMenuString(ubCounter));
-			}
-			ubCounter++;
+			if (entry >= n_entries) return; // done
+
+			SetFontForeground(entry == selected ? FONT_MCOLOR_LTBLUE : FONT_MCOLOR_WHITE);
+
+			wchar_t const* const str   = GetPopupMenuString(entry);
+			UINT16         const str_w = StringPixLength(str, font);
+			// Horizontally center the string inside the popup menu
+			UINT16         const x     = dx + (w - str_w) / 2;
+			UINT16         const y     = dy + row * h;
+			MPrint(x, y, str);
 		}
-		usStart += gPopup.ubColumnWidth[ ubColumn ];
+		dx += w;
 	}
 }
 
