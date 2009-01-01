@@ -84,6 +84,8 @@ enum{
 // the page flipping buttons
 static GUIButtonRef giHistoryButton[2];
 
+static MOUSE_REGION g_scroll_region;
+
 
 static BOOLEAN fInHistoryMode = FALSE;
 // current page displayed
@@ -254,6 +256,23 @@ static void DrawHistoryTitleText(void)
 }
 
 
+static void LoadNextHistoryPage(void);
+static void LoadPreviousHistoryPage(void);
+
+
+static void ScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		LoadPreviousHistoryPage();
+	}
+	else if (reason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		LoadNextHistoryPage();
+	}
+}
+
+
 static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason);
 static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, INT32 reason);
 
@@ -267,20 +286,24 @@ static void CreateHistoryButtons(void)
 	// set buttons
 	giHistoryButton[0]->SetCursor(CURSOR_LAPTOP_SCREEN);
 	giHistoryButton[1]->SetCursor(CURSOR_LAPTOP_SCREEN);
+
+	UINT16 const x = TOP_X +  8;
+	UINT16 const y = TOP_Y + 53;
+	UINT16 const w = 482;
+	UINT16 const h = 354;
+	MSYS_DefineRegion(&g_scroll_region, x, y, x + w, y + h, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ScrollRegionCallback);
 }
 
 
 static void DestroyHistoryButtons(void)
 {
 	// remove History buttons and images from memory
+	MSYS_RemoveRegion(&g_scroll_region);
 	// next page button
 	RemoveButton(giHistoryButton[1] );
 	// prev page button
 	RemoveButton(giHistoryButton[0] );
 }
-
-
-static void LoadPreviousHistoryPage(void);
 
 
 static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, INT32 reason)
@@ -293,13 +316,8 @@ static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		LoadPreviousHistoryPage();
-		SetHistoryButtonStates();
-		fReDrawScreenFlag = TRUE;
 	}
 }
-
-
-static void LoadNextHistoryPage(void);
 
 
 static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason)
@@ -312,8 +330,6 @@ static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		LoadNextHistoryPage();
-		SetHistoryButtonStates();
-		fReDrawScreenFlag = TRUE;
 	}
 }
 
@@ -774,6 +790,8 @@ static void LoadNextHistoryPage(void)
 	{
 		LoadInHistoryRecords( iCurrentHistoryPage );
 	}
+	SetHistoryButtonStates();
+	fReDrawScreenFlag = TRUE;
 }
 
 
@@ -782,6 +800,8 @@ static void LoadPreviousHistoryPage(void)
 {
 	if (iCurrentHistoryPage <= 1) return;
 	LoadInHistoryRecords(--iCurrentHistoryPage);
+	SetHistoryButtonStates();
+	fReDrawScreenFlag = TRUE;
 }
 
 
