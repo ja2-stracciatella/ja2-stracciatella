@@ -132,10 +132,6 @@
 
 BobbyRayPurchaseStruct BobbyRayPurchases[ MAX_PURCHASE_AMOUNT ];
 
-//BobbyRayOrderStruct *BobbyRayOrdersOnDeliveryArray=NULL;
-//UINT8	usNumberOfBobbyRayOrderItems = 0;
-//UINT8	usNumberOfBobbyRayOrderUsed = 0;
-
 
 extern	BOOLEAN fExitingLaptopFlag;
 
@@ -144,49 +140,51 @@ static SGPVObject* guiGunsGrid;
 static SGPVObject* guiBrTitle;
 
 UINT16		gusCurWeaponIndex;
-UINT8			gubCurPage;
-UINT8			ubCatalogueButtonValues[] = {
-							LAPTOP_MODE_BOBBY_R_GUNS,
-							LAPTOP_MODE_BOBBY_R_AMMO,
-							LAPTOP_MODE_BOBBY_R_ARMOR,
-							LAPTOP_MODE_BOBBY_R_MISC,
-							LAPTOP_MODE_BOBBY_R_USED};
+static UINT8 gubCurPage;
+static UINT8 const ubCatalogueButtonValues[] =
+{
+	LAPTOP_MODE_BOBBY_R_GUNS,
+	LAPTOP_MODE_BOBBY_R_AMMO,
+	LAPTOP_MODE_BOBBY_R_ARMOR,
+	LAPTOP_MODE_BOBBY_R_MISC,
+	LAPTOP_MODE_BOBBY_R_USED
+};
 
-UINT16		gusLastItemIndex=0;
-UINT16		gusFirstItemIndex=0;
-UINT8			gubNumItemsOnScreen;
-UINT8			gubNumPages;
+static UINT16 gusLastItemIndex  = 0;
+static UINT16 gusFirstItemIndex = 0;
+static UINT8  gubNumItemsOnScreen;
+static UINT8  gubNumPages;
 
-BOOLEAN		gfBigImageMouseRegionCreated;
-UINT16		gusItemNumberForItemsOnScreen[ BOBBYR_NUM_WEAPONS_ON_PAGE ];
+static BOOLEAN gfBigImageMouseRegionCreated;
+static UINT16  gusItemNumberForItemsOnScreen[ BOBBYR_NUM_WEAPONS_ON_PAGE ];
 
 
-BOOLEAN		gfOnUsedPage;
+static BOOLEAN gfOnUsedPage;
 
-UINT16		gusOldItemNumOnTopOfPage=65535;
+static UINT16 gusOldItemNumOnTopOfPage = 65535;
 
 //The menu bar at the bottom that changes to different pages
 static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, INT32 reason);
 static BUTTON_PICS* guiBobbyRPageMenuImage;
-GUIButtonRef guiBobbyRPageMenu[NUM_CATALOGUE_BUTTONS];
+static GUIButtonRef guiBobbyRPageMenu[NUM_CATALOGUE_BUTTONS];
 
 //The next and previous buttons
 static BUTTON_PICS* guiBobbyRPreviousPageImage;
-GUIButtonRef guiBobbyRPreviousPage;
+static GUIButtonRef guiBobbyRPreviousPage;
 
 static BUTTON_PICS* guiBobbyRNextPageImage;
-GUIButtonRef guiBobbyRNextPage;
+static GUIButtonRef guiBobbyRNextPage;
 
 
 static MOUSE_REGION g_scroll_region;
 
 // Big Image Mouse region
-MOUSE_REGION    gSelectedBigImageRegion[ BOBBYR_NUM_WEAPONS_ON_PAGE ];
+static MOUSE_REGION gSelectedBigImageRegion[BOBBYR_NUM_WEAPONS_ON_PAGE];
 
 // The order form button
 static void BtnBobbyROrderFormCallback(GUI_BUTTON* btn, INT32 reason);
 static BUTTON_PICS* guiBobbyROrderFormImage;
-GUIButtonRef guiBobbyROrderForm;
+static GUIButtonRef guiBobbyROrderForm;
 
 // The Home button
 static void BtnBobbyRHomeButtonCallback(GUI_BUTTON* btn, INT32 reason);
@@ -195,7 +193,7 @@ static GUIButtonRef guiBobbyRHome;
 
 
 // Link from the title
-MOUSE_REGION    gSelectedTitleImageLinkRegion;
+static MOUSE_REGION gSelectedTitleImageLinkRegion;
 
 
 void GameInitBobbyRGuns()
