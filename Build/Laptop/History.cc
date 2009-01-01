@@ -299,7 +299,7 @@ static void BtnHistoryDisplayPrevPageCallBack(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static BOOLEAN LoadNextHistoryPage(void);
+static void LoadNextHistoryPage(void);
 
 
 static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason)
@@ -763,20 +763,17 @@ catch (...) { return FALSE; }
 
 
 // clear out old list of records, and load in next page worth of records
-static BOOLEAN LoadNextHistoryPage(void)
+static void LoadNextHistoryPage(void)
 {
 	// now load in previous page's records, if we can
   if ( LoadInHistoryRecords( iCurrentHistoryPage + 1 ) )
 	{
 		iCurrentHistoryPage++;
-	  return ( TRUE );
 	}
 	else
 	{
 		LoadInHistoryRecords( iCurrentHistoryPage );
-	  return ( FALSE );
 	}
-
 }
 
 
