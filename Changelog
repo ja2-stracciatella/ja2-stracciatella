@@ -1,3 +1,4 @@
+(r4939) Enable scrolling of Bobby Ray's items list with the mouse wheel.
 (r4936) Remove the duplicate weight display for weapons and armour from Bobby Ray's.
 (r4929) Enable scrolling the dealer inventory with the mouse wheel.
 (r4925) Fix a vanilla graphics glitch in the editor: The right and lower border of popup menus was missing.

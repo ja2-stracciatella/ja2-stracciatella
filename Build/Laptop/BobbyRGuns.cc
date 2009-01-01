@@ -178,6 +178,8 @@ static BUTTON_PICS* guiBobbyRNextPageImage;
 GUIButtonRef guiBobbyRNextPage;
 
 
+static MOUSE_REGION g_scroll_region;
+
 // Big Image Mouse region
 MOUSE_REGION    gSelectedBigImageRegion[ BOBBYR_NUM_WEAPONS_ON_PAGE ];
 
@@ -396,16 +398,32 @@ static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
+static void NextPage()
+{
+	if (gubCurPage == gubNumPages - 1) return;
+	++gubCurPage;
+	DeleteMouseRegionForBigImage();
+	fReDrawScreenFlag       = TRUE;
+	fPausedReDrawScreenFlag = TRUE;
+}
+
+
 static void BtnBobbyRNextPageCallback(GUI_BUTTON* const btn, INT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (gubCurPage == gubNumPages - 1) return;
-		++gubCurPage;
-		DeleteMouseRegionForBigImage();
-		fReDrawScreenFlag       = TRUE;
-		fPausedReDrawScreenFlag = TRUE;
+		NextPage();
 	}
+}
+
+
+static void PrevPage()
+{
+	if (gubCurPage == 0) return;
+	--gubCurPage;
+	DeleteMouseRegionForBigImage();
+	fReDrawScreenFlag       = TRUE;
+	fPausedReDrawScreenFlag = TRUE;
 }
 
 
@@ -413,11 +431,7 @@ static void BtnBobbyRPreviousPageCallback(GUI_BUTTON* const btn, INT32 const rea
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (gubCurPage == 0) return;
-		--gubCurPage;
-		DeleteMouseRegionForBigImage();
-		fReDrawScreenFlag       = TRUE;
-		fPausedReDrawScreenFlag = TRUE;
+		PrevPage();
 	}
 }
 
@@ -989,6 +1003,19 @@ void SetFirstLastPagesForUsed()
 }
 
 
+static void ScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		PrevPage();
+	}
+	else if (reason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		NextPage();
+	}
+}
+
+
 static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(const INVTYPE* ammo);
 static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
@@ -996,6 +1023,14 @@ static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void CreateMouseRegionForBigImage(UINT16 y, const UINT8 n_regions, const INVTYPE* const items[])
 {
 	if (gfBigImageMouseRegionCreated) return;
+
+	{
+		UINT16 const x = BOBBYR_GRIDLOC_X;
+		UINT16 const y = BOBBYR_GRIDLOC_Y;
+		UINT16 const w = 493;
+		UINT16 const h = 290;
+		MSYS_DefineRegion(&g_scroll_region, x, y, x + w, y + h, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ScrollRegionCallback);
+	}
 
 	UINT16 const x = BOBBYR_GRID_PIC_X;
 	UINT16 const w = BOBBYR_GRID_PIC_WIDTH;
@@ -1027,6 +1062,8 @@ static void CreateMouseRegionForBigImage(UINT16 y, const UINT8 n_regions, const 
 void DeleteMouseRegionForBigImage()
 {
 	if (!gfBigImageMouseRegionCreated) return;
+
+	MSYS_RemoveRegion(&g_scroll_region);
 
 	for (UINT8 i = 0; i != gubNumItemsOnScreen; ++i)
 	{
@@ -1077,6 +1114,14 @@ static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		UnPurchaseBobbyRayItem( gusItemNumberForItemsOnScreen[ usItemNum] );
 		fReDrawScreenFlag = TRUE;
 		fPausedReDrawScreenFlag = TRUE;
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		PrevPage();
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		NextPage();
 	}
 }
 
