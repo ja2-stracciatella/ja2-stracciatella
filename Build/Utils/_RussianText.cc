@@ -2512,7 +2512,6 @@ const wchar_t* BobbyRText[] =
 	L"Склад:",		// The number of items still in the store's inventory
 	L"Заказано, шт:",		// The number of items on order
 	L"Повреждение",			// If the item is damaged
-	L"Вес:",			// the Weight of the item
 	L"Итого:",			// The total cost of all items on order
 	L"* процент исправности",		// if the item is damaged, displays the percent function of the item
 

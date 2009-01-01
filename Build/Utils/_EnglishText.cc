@@ -2497,7 +2497,6 @@ const wchar_t *BobbyRText[] =
 	L"In stock:",			// The number of items still in the store's inventory
 	L"Qty on Order:",		// The number of items on order
 	L"Damaged",			// If the item is damaged
-	L"Weight:",			// the Weight of the item
 	L"SubTotal:",			// The total cost of all items on order
 	L"* % Functional",		// if the item is damaged, displays the percent function of the item
 

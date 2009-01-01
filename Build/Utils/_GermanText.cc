@@ -2377,7 +2377,6 @@ const wchar_t *BobbyRText[] =
 	L"Vorrätig:",			// The number of items still in the store's inventory
 	L"Bestellt:",		// The number of items on order
 	L"Beschädigt",			// If the item is damaged
-	L"Gew.:",			// the Weight of the item
 	L"Summe:",			// The total cost of all items on order
 	L"* % funktionstüchtig",		// if the item is damaged, displays the percent function of the item
 

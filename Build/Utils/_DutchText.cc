@@ -2512,7 +2512,6 @@ const wchar_t* 		BobbyRText[] =
 	L"Aanwezig:",			// The number of items still in the store's inventory
 	L"# Besteld:",		// The number of items on order
 	L"Beschadigd",			// If the item is damaged
-	L"Gewicht:",			// the Weight of the item
 	L"SubTotaal:",			// The total cost of all items on order
 	L"* % Functioneel",		// if the item is damaged, displays the percent function of the item
 
