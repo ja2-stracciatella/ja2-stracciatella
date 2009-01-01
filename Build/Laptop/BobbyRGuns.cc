@@ -78,9 +78,6 @@
 
 #define		BOBBYR_CATALOGUE_BUTTON_TEXT_Y		BOBBYR_CATALOGUE_BUTTON_Y + 5
 
-#define		BOBBYR_PREVIOUS_PAGE							0
-#define		BOBBYR_NEXT_PAGE									1
-
 #define		BOBBYR_ITEM_DESC_START_X					BOBBYR_GRIDLOC_X + 172 + 5
 #define		BOBBYR_ITEM_DESC_START_Y					BOBBYR_GRIDLOC_Y + 6
 #define		BOBBYR_ITEM_DESC_START_WIDTH			214 - 10 + 20
@@ -174,7 +171,6 @@ static BUTTON_PICS* guiBobbyRPageMenuImage;
 GUIButtonRef guiBobbyRPageMenu[NUM_CATALOGUE_BUTTONS];
 
 //The next and previous buttons
-static void BtnBobbyRNextPreviousPageCallback(GUI_BUTTON* btn, INT32 reason);
 static BUTTON_PICS* guiBobbyRPreviousPageImage;
 GUIButtonRef guiBobbyRPreviousPage;
 
@@ -322,6 +318,10 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 }
 
 
+static void BtnBobbyRNextPageCallback(GUI_BUTTON*, INT32 reason);
+static void BtnBobbyRPreviousPageCallback(GUI_BUTTON*, INT32 reason);
+
+
 void InitBobbyMenuBar(void)
 {
 	UINT8	i;
@@ -330,8 +330,7 @@ void InitBobbyMenuBar(void)
 
 	// Previous button
 	guiBobbyRPreviousPageImage = LoadButtonImage("LAPTOP/PreviousButton.sti", -1,0,-1,1,-1 );
-	guiBobbyRPreviousPage = MakeButton(guiBobbyRPreviousPageImage, BobbyRText[BOBBYR_GUNS_PREVIOUS_ITEMS], BOBBYR_PREVIOUS_BUTTON_X, BOBBYR_PREVIOUS_BUTTON_Y, BtnBobbyRNextPreviousPageCallback);
-	MSYS_SetBtnUserData(guiBobbyRPreviousPage, BOBBYR_PREVIOUS_PAGE);
+	guiBobbyRPreviousPage = MakeButton(guiBobbyRPreviousPageImage, BobbyRText[BOBBYR_GUNS_PREVIOUS_ITEMS], BOBBYR_PREVIOUS_BUTTON_X, BOBBYR_PREVIOUS_BUTTON_Y, BtnBobbyRPreviousPageCallback);
 	guiBobbyRPreviousPage->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 
 
@@ -339,8 +338,7 @@ void InitBobbyMenuBar(void)
 
 	// Next button
 	guiBobbyRNextPageImage  = LoadButtonImage("LAPTOP/NextButton.sti", -1,0,-1,1,-1 );
-	guiBobbyRNextPage = MakeButton(guiBobbyRNextPageImage, BobbyRText[BOBBYR_GUNS_MORE_ITEMS], BOBBYR_NEXT_BUTTON_X, BOBBYR_NEXT_BUTTON_Y, BtnBobbyRNextPreviousPageCallback);
-	MSYS_SetBtnUserData(guiBobbyRNextPage, BOBBYR_NEXT_PAGE);
+	guiBobbyRNextPage = MakeButton(guiBobbyRNextPageImage, BobbyRText[BOBBYR_GUNS_MORE_ITEMS], BOBBYR_NEXT_BUTTON_X, BOBBYR_NEXT_BUTTON_Y, BtnBobbyRNextPageCallback);
 	guiBobbyRNextPage->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 
 
@@ -398,28 +396,27 @@ static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnBobbyRNextPreviousPageCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnBobbyRNextPageCallback(GUI_BUTTON* const btn, INT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		//if previous screen
-		UINT32 bNewValue = MSYS_GetBtnUserData(btn);
-		if( bNewValue == BOBBYR_PREVIOUS_PAGE)
-		{
-			if( gubCurPage > 0 )
-				gubCurPage--;
-		}
-		//else next screen
-		else
-		{
-			if( gubCurPage < gubNumPages-1 )
-				gubCurPage++;
-		}
-
-
+		if (gubCurPage == gubNumPages - 1) return;
+		++gubCurPage;
 		DeleteMouseRegionForBigImage();
+		fReDrawScreenFlag       = TRUE;
+		fPausedReDrawScreenFlag = TRUE;
+	}
+}
 
-		fReDrawScreenFlag = TRUE;
+
+static void BtnBobbyRPreviousPageCallback(GUI_BUTTON* const btn, INT32 const reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	{
+		if (gubCurPage == 0) return;
+		--gubCurPage;
+		DeleteMouseRegionForBigImage();
+		fReDrawScreenFlag       = TRUE;
 		fPausedReDrawScreenFlag = TRUE;
 	}
 }
