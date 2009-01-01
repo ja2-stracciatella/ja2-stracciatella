@@ -427,7 +427,7 @@ static void BtnBobbyRNextPreviousPageCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void CalcFirstIndexForPage(STORE_INVENTORY* pInv, UINT32 uiItemClass);
 static UINT32 CalculateTotalPurchasePrice(void);
-static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, const INVTYPE* items[]);
+static void CreateMouseRegionForBigImage(UINT16 usPosY, UINT8 ubCount, const INVTYPE* const items[]);
 static void DisableBobbyRButtons(void);
 static void DisplayAmmoInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
 static void DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex);
@@ -996,60 +996,49 @@ static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(const INVTYPE* ammo)
 static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static void CreateMouseRegionForBigImage(UINT16 usPosY, const UINT8 ubCount, const INVTYPE* items[])
+static void CreateMouseRegionForBigImage(UINT16 y, const UINT8 n_regions, const INVTYPE* const items[])
 {
-	UINT8	i;
-	CHAR16		zItemName[ SIZE_ITEM_NAME ];
-	UINT8			ubItemCount=0;
+	if (gfBigImageMouseRegionCreated) return;
 
-	if( gfBigImageMouseRegionCreated )
-		return;
-
-	for(i=0; i<ubCount; i++)
+	UINT16 const x = BOBBYR_GRID_PIC_X;
+	UINT16 const w = BOBBYR_GRID_PIC_WIDTH;
+	UINT16 const h = BOBBYR_GRID_PIC_HEIGHT;
+	for (UINT8 i = 0; i != n_regions; y += BOBBYR_GRID_OFFSET, ++i)
 	{
-		//Mouse region for the Big Item Image
-		MSYS_DefineRegion( &gSelectedBigImageRegion[ i ], BOBBYR_GRID_PIC_X, usPosY, (BOBBYR_GRID_PIC_X + BOBBYR_GRID_PIC_WIDTH), (UINT16)(usPosY + BOBBYR_GRID_PIC_HEIGHT), MSYS_PRIORITY_HIGH,
-								 CURSOR_WWW, MSYS_NO_CALLBACK, SelectBigImageRegionCallBack);
-		MSYS_SetRegionUserData( &gSelectedBigImageRegion[ i ], 0, i);
+		// Mouse region for the Big Item Image
+		MOUSE_REGION& r = gSelectedBigImageRegion[i];
+		MSYS_DefineRegion(&r, x, y, x + w, y + h, MSYS_PRIORITY_HIGH, CURSOR_WWW, MSYS_NO_CALLBACK, SelectBigImageRegionCallBack);
+		MSYS_SetRegionUserData(&r, 0, i);
 
-		//specify the help text only if the items is ammo
-		const INVTYPE* const item = items[i];
-		if (item->usItemClass == IC_AMMO)
-		{
-			//and only if the user has an item that can use the particular type of ammo
-			ubItemCount = CheckPlayersInventoryForGunMatchingGivenAmmoID(item);
-			if( ubItemCount != 0 )
-			{
-				swprintf(zItemName, lengthof(zItemName), str_bobbyr_guns_num_guns_that_use_ammo, ubItemCount);
-			}
-			else
-				zItemName[0] = '\0';
-		}
-		else
-			zItemName[0] = '\0';
+		// Specify the help text only if the items is ammo
+		INVTYPE const* const item = items[i];
+		if (item->usItemClass != IC_AMMO) continue;
+		// And only if the user has an item that can use the particular type of ammo
+		UINT8 const n_guns = CheckPlayersInventoryForGunMatchingGivenAmmoID(item);
+		if (n_guns == 0) continue;
 
-		gSelectedBigImageRegion[i].SetFastHelpText(zItemName);
-
-		usPosY += BOBBYR_GRID_OFFSET;
+		wchar_t buf[SIZE_ITEM_NAME];
+		swprintf(buf, lengthof(buf), str_bobbyr_guns_num_guns_that_use_ammo, n_guns);
+		r.SetFastHelpText(buf);
 	}
 
-	gubNumItemsOnScreen = ubCount;
+	gubNumItemsOnScreen          = n_regions;
 	gfBigImageMouseRegionCreated = TRUE;
 }
 
+
 void DeleteMouseRegionForBigImage()
 {
-	UINT8 i;
+	if (!gfBigImageMouseRegionCreated) return;
 
-	if( !gfBigImageMouseRegionCreated )
-		return;
-
-	for(i=0; i<gubNumItemsOnScreen; i++)
-		MSYS_RemoveRegion( &gSelectedBigImageRegion[i]);
+	for (UINT8 i = 0; i != gubNumItemsOnScreen; ++i)
+	{
+		MSYS_RemoveRegion(&gSelectedBigImageRegion[i]);
+	}
 
 	gfBigImageMouseRegionCreated = FALSE;
-	gusOldItemNumOnTopOfPage = 65535;
-	gubNumItemsOnScreen = 0;
+	gusOldItemNumOnTopOfPage     = 65535;
+	gubNumItemsOnScreen          = 0;
 }
 
 
