@@ -1,4 +1,5 @@
 #include "Font.h"
+#include "HImage.h"
 #include "Laptop.h"
 #include "Files.h"
 #include "Game_Clock.h"
@@ -67,7 +68,9 @@ enum
 #define FILES_SENDER_TEXT_X							TOP_X + 15
 #define MAX_FILES_LIST_LENGTH						28
 #define FILE_VIEWER_X										236
-#define FILE_VIEWER_Y										85
+#define FILE_VIEWER_Y                    81
+#define FILE_VIEWER_W                   364
+#define FILE_VIEWER_H                   353
 #define FILE_GAP												2
 #define FILE_TEXT_COLOR									FONT_BLACK
 #define FILE_STRING_SIZE								400
@@ -110,7 +113,6 @@ BOOLEAN fNewFilesInFileViewer = FALSE;
 
 // graphics handles
 static SGPVObject* guiTITLE;
-static SGPVObject* guiFileBack;
 static SGPVObject* guiTOP;
 static SGPVObject* guiHIGHLIGHT;
 
@@ -344,9 +346,6 @@ static void LoadFiles(void)
 
 	// the highlight
 	guiHIGHLIGHT = AddVideoObjectFromFile("LAPTOP/highlight.sti");
-
-  	// top portion of the screen background
-	guiFileBack = AddVideoObjectFromFile("LAPTOP/fileviewerwhite.sti");
 }
 
 
@@ -356,7 +355,6 @@ static void RemoveFiles(void)
 	DeleteVideoObject(guiTOP);
 	DeleteVideoObject(guiTITLE);
   DeleteVideoObject(guiHIGHLIGHT);
-  DeleteVideoObject(guiFileBack);
 }
 
 
@@ -589,7 +587,10 @@ static void DisplayFormattedText(void)
   // set file as read
 	pFilesList->fRead = TRUE;
 
-	BltVideoObject(FRAME_BUFFER, guiFileBack, 0, FILE_VIEWER_X, FILE_VIEWER_Y - 4);
+	UINT16 const white = Get16BPPColor(FROMRGB(255, 255, 255));
+	INT32  const x     = FILE_VIEWER_X;
+	INT32  const y     = FILE_VIEWER_Y;
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + FILE_VIEWER_W, y + FILE_VIEWER_H, white);
 
   // get the offset in the file
   while( iCounter < iMessageCode)
@@ -846,7 +847,7 @@ static void HandleSpecialFiles(void)
 		if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, font, String) < MAX_FILE_MESSAGE_PAGE_SIZE)
 		{
 			 // now print it
-			 iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, font, FILE_TEXT_COLOR, String, 0, IAN_WRAP_NO_SHADOW);
+			 iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + 4 + iYPositionOnPage, iFileLineWidth, FILE_GAP, font, FILE_TEXT_COLOR, String, 0, IAN_WRAP_NO_SHADOW);
 			 fGoingOffCurrentPage = FALSE;
 		}
 		else
@@ -1261,7 +1262,7 @@ static void HandleSpecialTerroristFile(INT32 const iFileNumber)
 			if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, font, String) < MAX_FILE_MESSAGE_PAGE_SIZE)
 			{
      	   // now print it
-		     iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + iYPositionOnPage, iFileLineWidth, FILE_GAP, font, FILE_TEXT_COLOR, String, 0, IAN_WRAP_NO_SHADOW);
+		     iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + 4 + iYPositionOnPage, iFileLineWidth, FILE_GAP, font, FILE_TEXT_COLOR, String, 0, IAN_WRAP_NO_SHADOW);
 				 fGoingOffCurrentPage = FALSE;
 			}
 			else
