@@ -137,6 +137,7 @@ static UINT32 guiLastPageInRecordsList = 0;
 // finance screen buttons
 static GUIButtonRef giFinanceButton[4];
 static BUTTON_PICS* giFinanceButtonImage[4];
+static MOUSE_REGION g_scroll_region;
 
 // internal functions
 static void ProcessAndEnterAFinacialRecord(UINT8 ubCode, UINT32 uiDate, INT32 iAmount, UINT8 ubSecondCode, INT32 iBalanceToDate);
@@ -154,8 +155,6 @@ static void WriteBalanceToDisk(void);
 static void AppendFinanceToEndOfFile(void);
 static void SetLastPageInRecords(void);
 static void LoadInRecords(UINT32 page);
-static void LoadPreviousPage(void);
-static void LoadNextPage(void);
 
 static void SetFinanceButtonStates(void);
 static INT32 GetTodaysDebits(void);
@@ -747,6 +746,23 @@ static void ProcessAndEnterAFinacialRecord(const UINT8 ubCode, const UINT32 uiDa
 }
 
 
+static void LoadPreviousPage(void);
+static void LoadNextPage(void);
+
+
+static void ScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		LoadPreviousPage();
+	}
+	else if (reason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		LoadNextPage();
+	}
+}
+
+
 static void CreateFinanceButtons(void)
 {
   giFinanceButtonImage[PREV_PAGE_BUTTON] =  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,0,-1,1,-1  );
@@ -769,11 +785,19 @@ static void CreateFinanceButtons(void)
   giFinanceButton[1]->SetCursor(CURSOR_LAPTOP_SCREEN);
   giFinanceButton[2]->SetCursor(CURSOR_LAPTOP_SCREEN);
   giFinanceButton[3]->SetCursor(CURSOR_LAPTOP_SCREEN);
+
+	UINT16 const x = TOP_X +  8;
+	UINT16 const y = TOP_Y + 53;
+	UINT16 const w = 482;
+	UINT16 const h = 354;
+	MSYS_DefineRegion(&g_scroll_region, x, y, x + w, y + h, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ScrollRegionCallback);
 }
 
 
 static void DestroyFinanceButtons(void)
 {
+	MSYS_RemoveRegion(&g_scroll_region);
+
 	UINT32 uiCnt;
 
 	for( uiCnt=0; uiCnt<4; uiCnt++ )
