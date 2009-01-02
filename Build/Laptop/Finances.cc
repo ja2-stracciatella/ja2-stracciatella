@@ -781,26 +781,22 @@ static void BtnFinanceLastPageCallBack(GUI_BUTTON* const, INT32 const reason)
 }
 
 
+static void MakeButton(size_t const idx, BUTTON_PICS* const img, INT16 const x, GUI_CALLBACK const callback)
+{
+	giFinanceButtonImage[idx] = img;
+	GUIButtonRef const btn    = QuickCreateButton(img, x, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, callback);
+	giFinanceButton[idx]      = btn;
+	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
+}
+
+
 static void CreateFinanceButtons(void)
 {
-  giFinanceButtonImage[PREV_PAGE_BUTTON] =  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,0,-1,1,-1  );
-	giFinanceButton[PREV_PAGE_BUTTON] = QuickCreateButton(giFinanceButtonImage[PREV_PAGE_BUTTON], PREV_BTN_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnFinanceDisplayPrevPageCallBack);
-
-	giFinanceButtonImage[NEXT_PAGE_BUTTON]=  UseLoadedButtonImage( giFinanceButtonImage[PREV_PAGE_BUTTON] ,-1,6,-1,7,-1 );
-	giFinanceButton[NEXT_PAGE_BUTTON] = QuickCreateButton(giFinanceButtonImage[NEXT_PAGE_BUTTON], NEXT_BTN_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnFinanceDisplayNextPageCallBack);
-
-	//button to go to the first page
-  giFinanceButtonImage[FIRST_PAGE_BUTTON]=  UseLoadedButtonImage( giFinanceButtonImage[PREV_PAGE_BUTTON], -1,3,-1,4,-1  );
-	giFinanceButton[FIRST_PAGE_BUTTON] = QuickCreateButton(giFinanceButtonImage[FIRST_PAGE_BUTTON], FIRST_PAGE_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnFinanceFirstPageCallBack);
-
-	//button to go to the last page
-  giFinanceButtonImage[LAST_PAGE_BUTTON]=  UseLoadedButtonImage( giFinanceButtonImage[PREV_PAGE_BUTTON], -1,9,-1,10,-1  );
-	giFinanceButton[LAST_PAGE_BUTTON] = QuickCreateButton(giFinanceButtonImage[LAST_PAGE_BUTTON], LAST_PAGE_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnFinanceLastPageCallBack);
-
-	giFinanceButton[0]->SetCursor(CURSOR_LAPTOP_SCREEN);
-  giFinanceButton[1]->SetCursor(CURSOR_LAPTOP_SCREEN);
-  giFinanceButton[2]->SetCursor(CURSOR_LAPTOP_SCREEN);
-  giFinanceButton[3]->SetCursor(CURSOR_LAPTOP_SCREEN);
+	BUTTON_PICS* const img = LoadButtonImage("LAPTOP/arrows.sti", -1, 0, -1, 1, -1);
+	MakeButton(PREV_PAGE_BUTTON,  img,                                          PREV_BTN_X,   BtnFinanceDisplayPrevPageCallBack);
+	MakeButton(NEXT_PAGE_BUTTON,  UseLoadedButtonImage(img, -1, 6, -1,  7, -1), NEXT_BTN_X,   BtnFinanceDisplayNextPageCallBack);
+	MakeButton(FIRST_PAGE_BUTTON, UseLoadedButtonImage(img, -1, 3, -1,  4, -1), FIRST_PAGE_X, BtnFinanceFirstPageCallBack);
+	MakeButton(LAST_PAGE_BUTTON,  UseLoadedButtonImage(img, -1, 9, -1, 10, -1), LAST_PAGE_X,  BtnFinanceLastPageCallBack);
 
 	UINT16 const x = TOP_X +  8;
 	UINT16 const y = TOP_Y + 53;
@@ -813,13 +809,10 @@ static void CreateFinanceButtons(void)
 static void DestroyFinanceButtons(void)
 {
 	MSYS_RemoveRegion(&g_scroll_region);
-
-	UINT32 uiCnt;
-
-	for( uiCnt=0; uiCnt<4; uiCnt++ )
+	for (UINT32 i = 0; i != 4; ++i)
 	{
-		RemoveButton( giFinanceButton[ uiCnt ] );
-		UnloadButtonImage( giFinanceButtonImage[ uiCnt ] );
+		RemoveButton(giFinanceButton[i]);
+		UnloadButtonImage(giFinanceButtonImage[i]);
 	}
 }
 
