@@ -145,9 +145,6 @@ static void LoadFinances(void);
 static void RemoveFinances(void);
 static void ClearFinanceList(void);
 static void DrawRecordsColumnHeadersText(void);
-static void BtnFinanceDisplayNextPageCallBack(GUI_BUTTON *btn, INT32 reason);
-static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason);
-static void BtnFinanceDisplayPrevPageCallBack(GUI_BUTTON *btn, INT32 reason);
 static void CreateFinanceButtons(void);
 static void DestroyFinanceButtons(void);
 static void GetBalanceFromDisk(void);
@@ -763,6 +760,24 @@ static void ScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
 }
 
 
+static void BtnFinanceDisplayPrevPageCallBack(GUI_BUTTON* const, INT32 const reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	{
+		LoadPreviousPage();
+	}
+}
+
+
+static void BtnFinanceDisplayNextPageCallBack(GUI_BUTTON* const, INT32 const reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	{
+		LoadNextPage();
+	}
+}
+
+
 static void BtnFinanceFirstPageCallBack(GUI_BUTTON* const, INT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -813,28 +828,6 @@ static void DestroyFinanceButtons(void)
 	{
 		RemoveButton(giFinanceButton[i]);
 		UnloadButtonImage(giFinanceButtonImage[i]);
-	}
-}
-
-
-static void BtnFinanceDisplayPrevPageCallBack(GUI_BUTTON *btn, INT32 reason)
-{
-
-   if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	 {
-		 // if greater than page zero, we can move back, decrement iCurrentPage counter
-		 LoadPreviousPage( );
-	 }
-
-}
-
-
-static void BtnFinanceDisplayNextPageCallBack(GUI_BUTTON *btn, INT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		 // increment currentPage
-     LoadNextPage( );
 	}
 }
 
