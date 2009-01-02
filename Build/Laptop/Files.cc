@@ -566,56 +566,29 @@ static void HandleSpecialTerroristFile(INT32 iFileNumber);
 
 static void DisplayFormattedText(void)
 {
-	FilesUnit* pFilesList = pFilesListHead;
-
-	INT32 iCounter=0;
-	INT32 iOffSet=0;
-	INT32 iMessageCode;
-
 	fWaitAFrame = FALSE;
-
-	// get the file that was highlighted
-  while(iCounter < iHighLightFileLine)
-	{
-	  iCounter++;
-		pFilesList=pFilesList->Next;
-	}
-
-  // message code found, reset counter
-  iMessageCode = pFilesList->ubCode;
-	iCounter=0;
-
-  // set file as read
-	pFilesList->fRead = TRUE;
 
 	UINT16 const white = Get16BPPColor(FROMRGB(255, 255, 255));
 	INT32  const x     = FILE_VIEWER_X;
 	INT32  const y     = FILE_VIEWER_Y;
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + FILE_VIEWER_W, y + FILE_VIEWER_H, white);
 
-  // get the offset in the file
-  while( iCounter < iMessageCode)
+	// Get the file that was highlighted
+	FilesUnit* fu = pFilesListHead;
+	for (INT32 n = iHighLightFileLine; n != 0; --n)
 	{
-	  // increment increment offset
-    iOffSet+=ubFileRecordsLength[iCounter];
-
-		// increment counter
-		iCounter++;
+		fu = fu->Next;
 	}
 
-	// reset counter
-	iCounter=0;
+	fu->fRead = TRUE;
 
-	// no shadow
-	SetFontShadow(NO_SHADOW);
-
-	switch (pFilesList->ubCode)
+	switch (fu->ubCode)
 	{
-		case ENRICO_BACKGROUND: HandleSpecialFiles();                           break;
-		default:                HandleSpecialTerroristFile(pFilesList->ubCode); break;
+		case ENRICO_BACKGROUND: HandleSpecialFiles();                   break;
+		default:                HandleSpecialTerroristFile(fu->ubCode); break;
 	}
 
-	HandleFileViewerButtonStates( );
+	HandleFileViewerButtonStates();
 	SetFontShadow(DEFAULT_SHADOW);
 }
 
