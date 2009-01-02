@@ -763,6 +763,24 @@ static void ScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
 }
 
 
+static void BtnFinanceFirstPageCallBack(GUI_BUTTON* const, INT32 const reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	{
+		LoadInRecords(0);
+	}
+}
+
+
+static void BtnFinanceLastPageCallBack(GUI_BUTTON* const, INT32 const reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	{
+		LoadInRecords(guiLastPageInRecordsList + 1);
+	}
+}
+
+
 static void CreateFinanceButtons(void)
 {
   giFinanceButtonImage[PREV_PAGE_BUTTON] =  LoadButtonImage( "LAPTOP/arrows.sti" ,-1,0,-1,1,-1  );
@@ -773,13 +791,11 @@ static void CreateFinanceButtons(void)
 
 	//button to go to the first page
   giFinanceButtonImage[FIRST_PAGE_BUTTON]=  UseLoadedButtonImage( giFinanceButtonImage[PREV_PAGE_BUTTON], -1,3,-1,4,-1  );
-	giFinanceButton[FIRST_PAGE_BUTTON] = QuickCreateButton(giFinanceButtonImage[FIRST_PAGE_BUTTON], FIRST_PAGE_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnFinanceFirstLastPageCallBack);
-	MSYS_SetBtnUserData(giFinanceButton[FIRST_PAGE_BUTTON], 0);
+	giFinanceButton[FIRST_PAGE_BUTTON] = QuickCreateButton(giFinanceButtonImage[FIRST_PAGE_BUTTON], FIRST_PAGE_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnFinanceFirstPageCallBack);
 
 	//button to go to the last page
   giFinanceButtonImage[LAST_PAGE_BUTTON]=  UseLoadedButtonImage( giFinanceButtonImage[PREV_PAGE_BUTTON], -1,9,-1,10,-1  );
-	giFinanceButton[LAST_PAGE_BUTTON] = QuickCreateButton(giFinanceButtonImage[LAST_PAGE_BUTTON], LAST_PAGE_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnFinanceFirstLastPageCallBack);
-	MSYS_SetBtnUserData(giFinanceButton[LAST_PAGE_BUTTON], 1);
+	giFinanceButton[LAST_PAGE_BUTTON] = QuickCreateButton(giFinanceButtonImage[LAST_PAGE_BUTTON], LAST_PAGE_X, BTN_Y, MSYS_PRIORITY_HIGHEST - 1, BtnFinanceLastPageCallBack);
 
 	giFinanceButton[0]->SetCursor(CURSOR_LAPTOP_SCREEN);
   giFinanceButton[1]->SetCursor(CURSOR_LAPTOP_SCREEN);
@@ -826,27 +842,6 @@ static void BtnFinanceDisplayNextPageCallBack(GUI_BUTTON *btn, INT32 reason)
 	{
 		 // increment currentPage
      LoadNextPage( );
-	}
-}
-
-
-static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		UINT32 uiButton = MSYS_GetBtnUserData(btn);
-
-		//if its the first page button
-		if( uiButton == 0 )
-		{
-			LoadInRecords(0);
-		}
-
-		//else its the last page button
-		else
-		{
-			LoadInRecords(guiLastPageInRecordsList + 1);
-		}
 	}
 }
 
