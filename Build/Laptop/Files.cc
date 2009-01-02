@@ -509,13 +509,16 @@ static void FilesBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 static void InitializeFilesMouseRegions(void)
 {
-	INT32 iCounter=0;
-	// init mouseregions
-	for(iCounter=0; iCounter <MAX_FILES_PAGE; iCounter++)
+	UINT16 const x = FILES_LIST_X;
+	UINT16       y = FILES_LIST_Y;
+	UINT16 const w = FILES_LIST_WIDTH;
+	UINT16 const h = BLOCK_HEIGHT + 2;
+	for (INT32 i = 0; i != MAX_FILES_PAGE; ++i)
 	{
-	 MSYS_DefineRegion(&pFilesRegions[iCounter],FILES_LIST_X ,(INT16)(FILES_LIST_Y + iCounter * ( BLOCK_HEIGHT + 2 ) ), FILES_LIST_X + FILES_LIST_WIDTH ,(INT16)(FILES_LIST_Y + ( iCounter + 1 ) * ( BLOCK_HEIGHT + 2 ) ),
-			MSYS_PRIORITY_NORMAL+2,MSYS_NO_CURSOR, MSYS_NO_CALLBACK, FilesBtnCallBack );
-		MSYS_SetRegionUserData(&pFilesRegions[iCounter],0,iCounter);
+		MOUSE_REGION* const r = &pFilesRegions[i];
+		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL + 2, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, FilesBtnCallBack);
+		y += h;
+		MSYS_SetRegionUserData(r, 0, i);
 	}
 }
 
