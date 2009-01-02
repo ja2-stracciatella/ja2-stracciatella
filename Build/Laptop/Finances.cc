@@ -155,7 +155,7 @@ static void AppendFinanceToEndOfFile(void);
 static void SetLastPageInRecords(void);
 static BOOLEAN LoadInRecords(UINT32 uiPage);
 static void LoadPreviousPage(void);
-static BOOLEAN LoadNextPage(void);
+static void LoadNextPage(void);
 
 static void SetFinanceButtonStates(void);
 static INT32 GetTodaysDebits(void);
@@ -287,6 +287,8 @@ void EnterFinances()
 
 	// set button state
 	SetFinanceButtonStates( );
+
+	LoadInRecords(iCurrentPage);
 
   RenderFinances( );
 }
@@ -830,6 +832,8 @@ static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
+		ClearFinanceList();
+
 		UINT32 uiButton = MSYS_GetBtnUserData(btn);
 
 		//if its the first page button
@@ -1015,26 +1019,20 @@ static void LoadPreviousPage(void)
 }
 
 
-static BOOLEAN LoadNextPage(void)
+static void LoadNextPage(void)
 {
-
 	// clear out old list of records, and load in previous page worth of records
   ClearFinanceList( );
-
-
 
 	// now load in previous page's records, if we can
   if ( LoadInRecords( iCurrentPage + 1 ) )
 	{
 		iCurrentPage++;
-	  return ( TRUE );
 	}
 	else
 	{
 		LoadInRecords( iCurrentPage );
-	  return ( FALSE );
 	}
-
 }
 
 
@@ -1332,12 +1330,8 @@ static void SetFinanceButtonStates(void)
 		EnableButton( giFinanceButton[FIRST_PAGE_BUTTON] );
 	}
 
-	if( LoadNextPage( ) )
+	if (iCurrentPage <= guiLastPageInRecordsList)
 	{
-		// decrement page
-    LoadPreviousPage( );
-
-
 		// enable buttons
 		EnableButton( giFinanceButton[ NEXT_PAGE_BUTTON ] );
 		EnableButton( giFinanceButton[ LAST_PAGE_BUTTON ] );
