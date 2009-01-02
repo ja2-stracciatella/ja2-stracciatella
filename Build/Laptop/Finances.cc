@@ -153,7 +153,7 @@ static void GetBalanceFromDisk(void);
 static void WriteBalanceToDisk(void);
 static void AppendFinanceToEndOfFile(void);
 static void SetLastPageInRecords(void);
-static BOOLEAN LoadInRecords(UINT32 uiPage);
+static void LoadInRecords(UINT32 uiPage);
 static void LoadPreviousPage(void);
 static void LoadNextPage(void);
 
@@ -998,90 +998,60 @@ static void SetLastPageInRecords(void)
 static void LoadPreviousPage(void)
 {
 	// clear out old list of records, and load in previous page worth of records
-  ClearFinanceList( );
-
-	// load previous page
-	if( ( iCurrentPage == 1 )||( iCurrentPage == 0 ) )
-	{
-		iCurrentPage = 0;
-		return;
-	}
-
-	// now load in previous page's records, if we can
-  if ( LoadInRecords( iCurrentPage - 1 ) )
-	{
-		iCurrentPage--;
-	}
-	else
-	{
-    LoadInRecords( iCurrentPage );
-	}
+	if (iCurrentPage == 0) return;
+	ClearFinanceList();
+	LoadInRecords(--iCurrentPage);
 }
 
 
 static void LoadNextPage(void)
 {
 	// clear out old list of records, and load in previous page worth of records
-  ClearFinanceList( );
-
-	// now load in previous page's records, if we can
-  if ( LoadInRecords( iCurrentPage + 1 ) )
-	{
-		iCurrentPage++;
-	}
-	else
-	{
-		LoadInRecords( iCurrentPage );
-	}
+	if (iCurrentPage > guiLastPageInRecordsList) return;
+	ClearFinanceList();
+	LoadInRecords(++iCurrentPage);
 }
 
 
 // Loads in records belonging to page
-static BOOLEAN LoadInRecords(const UINT32 page)
-try
+static void LoadInRecords(UINT32 const page)
 {
-	if (page == 0) return FALSE; // check if bad page
+	if (page == 0) return; // check if bad page
 
 	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
 
-	BOOLEAN      ret  = FALSE;
-	const UINT32 size = FileGetSize(f);
-	if (size >= FINANCE_HEADER_SIZE)
+	UINT32 const size = FileGetSize(f);
+	if (size < FINANCE_HEADER_SIZE) return;
+
+	UINT32       records      = (size - FINANCE_HEADER_SIZE) / FINANCE_RECORD_SIZE;
+	UINT32 const skip_records = NUM_RECORDS_PER_PAGE * (page - 1);
+	if (records <= skip_records) return;
+
+	records -= skip_records;
+	FileSeek(f, FINANCE_HEADER_SIZE + FINANCE_RECORD_SIZE * skip_records, FILE_SEEK_FROM_START);
+
+	if (records > NUM_RECORDS_PER_PAGE) records = NUM_RECORDS_PER_PAGE;
+	for (; records > 0; --records)
 	{
-		UINT32       records      = (size - FINANCE_HEADER_SIZE) / FINANCE_RECORD_SIZE;
-		const UINT32 skip_records = NUM_RECORDS_PER_PAGE * (page - 1);
-		if (records > skip_records)
-		{
-			records -= skip_records;
-			FileSeek(f, FINANCE_HEADER_SIZE + FINANCE_RECORD_SIZE * skip_records, FILE_SEEK_FROM_START);
+		BYTE data[FINANCE_RECORD_SIZE];
+		FileRead(f, data, sizeof(data));
 
-			if (records > NUM_RECORDS_PER_PAGE) records = NUM_RECORDS_PER_PAGE;
-			for (; records > 0; --records)
-			{
-				BYTE data[FINANCE_RECORD_SIZE];
-				FileRead(f, data, sizeof(data));
+		UINT8  code;
+		UINT8  second_code;
+		UINT32 date;
+		INT32  amount;
+		INT32  balance_to_date;
+		const BYTE* d = data;
+		EXTR_U8(d, code);
+		EXTR_U8(d, second_code);
+		EXTR_U32(d, date);
+		EXTR_I32(d, amount);
+		EXTR_I32(d, balance_to_date);
+		Assert(d == endof(data));
 
-				UINT8  code;
-				UINT8  second_code;
-				UINT32 date;
-				INT32  amount;
-				INT32  balance_to_date;
-				const BYTE* d = data;
-				EXTR_U8(d, code);
-				EXTR_U8(d, second_code);
-				EXTR_U32(d, date);
-				EXTR_I32(d, amount);
-				EXTR_I32(d, balance_to_date);
-				Assert(d == endof(data));
-
-				ProcessAndEnterAFinacialRecord(code, date, amount, second_code, balance_to_date);
-			}
-			ret = TRUE;
-		}
+		ProcessAndEnterAFinacialRecord(code, date, amount, second_code, balance_to_date);
 	}
-	return ret;
 }
-catch (...) { return FALSE; }
 
 
 static void InternalSPrintMoney(wchar_t* Str, INT32 Amount)
