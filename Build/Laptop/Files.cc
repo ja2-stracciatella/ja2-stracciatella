@@ -164,6 +164,7 @@ static const UINT16 usProfileIdsForTerroristFiles[] =
 
 // buttons for next and previous pages
 static GUIButtonRef giFilesPageButtons[2];
+static MOUSE_REGION g_scroll_region;
 
 
 // the previous and next pages buttons
@@ -925,6 +926,43 @@ static void ClearFileStringList(void)
 }
 
 
+static void LoadPreviousPage()
+{
+	if (fWaitAFrame) return;
+	if (giFilesPage == 0) return;
+
+	--giFilesPage;
+	fWaitAFrame       = TRUE;
+	fReDrawScreenFlag = TRUE;
+	MarkButtonsDirty();
+}
+
+
+static void LoadNextPage()
+{
+	if (fWaitAFrame) return;
+	if (fOnLastFilesPageFlag) return;
+
+	++giFilesPage;
+	fWaitAFrame       = TRUE;
+	fReDrawScreenFlag = TRUE;
+	MarkButtonsDirty();
+}
+
+
+static void ScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		LoadPreviousPage();
+	}
+	else if (reason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		LoadNextPage();
+	}
+}
+
+
 static void BtnNextFilePageCallback(GUI_BUTTON *btn, INT32 reason);
 static void BtnPreviousFilePageCallback(GUI_BUTTON *btn, INT32 reason);
 
@@ -937,12 +975,17 @@ static void CreateButtonsForFilesPage(void)
 
 	giFilesPageButtons[0]->SetCursor(CURSOR_LAPTOP_SCREEN);
 	giFilesPageButtons[1]->SetCursor(CURSOR_LAPTOP_SCREEN);
+
+	UINT16 const x = FILE_VIEWER_X;
+	UINT16 const y = FILE_VIEWER_Y;
+	MSYS_DefineRegion(&g_scroll_region, x, y, x + FILE_VIEWER_W - 1, y + FILE_VIEWER_H - 1, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ScrollRegionCallback);
 }
 
 
 static void DeleteButtonsForFilesPage(void)
 {
 	// destroy buttons for the files page
+	MSYS_RemoveRegion(&g_scroll_region);
 	RemoveButton(giFilesPageButtons[ 0 ] );
 	RemoveButton(giFilesPageButtons[ 1 ] );
 }
@@ -952,16 +995,8 @@ static void BtnPreviousFilePageCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (fWaitAFrame) return;
-
-		if (giFilesPage > 0)
-		{
-			giFilesPage--;
-			fWaitAFrame = TRUE;
-		}
-		fReDrawScreenFlag = TRUE;
-		MarkButtonsDirty();
-  }
+		LoadPreviousPage();
+	}
 }
 
 
@@ -969,16 +1004,7 @@ static void BtnNextFilePageCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (fWaitAFrame) return;
-
-		if (!fOnLastFilesPageFlag)
-		{
-			fWaitAFrame = TRUE;
-			giFilesPage++;
-		}
-
-		fReDrawScreenFlag = TRUE;
-		MarkButtonsDirty();
+		LoadNextPage();
 	}
 }
 

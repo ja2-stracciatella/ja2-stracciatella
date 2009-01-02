@@ -1,3 +1,4 @@
+(r4949) Enable scrolling with the mouse wheel in the file viewer.
 (r4953) Fix a vanilla graphics glitch in the laptop file viewer: The background of the content area was not completely filled.
 (r4949) Enable scrolling of the finance log with the mouse wheel.
 (r4942) Enable scrolling of the history log with the mouse wheel.
