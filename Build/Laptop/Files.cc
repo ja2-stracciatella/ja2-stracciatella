@@ -1234,6 +1234,14 @@ static void HandleSpecialTerroristFile(INT32 const iFileNumber)
 				fOnLastFilesPageFlag = TRUE;
 			}
 
+			// show picture
+			if (giFilesPage == 0 && iCounter == 4)
+			{
+				char filename[128];
+				sprintf(filename, "FACES/BIGFACES/%02d.sti", usProfileIdsForTerroristFiles[iFileNumber + 1]);
+				BltVideoObjectOnce(FRAME_BUFFER, filename,                     0, FILE_VIEWER_X + 30, iYPositionOnPage + 76);
+				BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/InterceptBorder.sti", 0, FILE_VIEWER_X + 25, iYPositionOnPage + 71);
+			}
 
 			// set up font
 			Font font = FILES_TEXT_FONT;
@@ -1286,15 +1294,6 @@ static void HandleSpecialTerroristFile(INT32 const iFileNumber)
 			if (fGoingOffCurrentPage)
 			{
 				pTempString = NULL;
-			}
-
-			// show picture
-			if( ( giFilesPage == 0 ) && ( iCounter == 5 ) )
-			{
-				char sTemp[128];
-				sprintf(sTemp, "%s%02d.sti", "FACES/BIGFACES/",	usProfileIdsForTerroristFiles[iFileNumber + 1]);
-				BltVideoObjectOnce(FRAME_BUFFER, sTemp,                        0, FILE_VIEWER_X + 30, iYPositionOnPage + 21);
-				BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/InterceptBorder.sti", 0, FILE_VIEWER_X + 25, iYPositionOnPage + 16);
 			}
 
 			iCounter++;
