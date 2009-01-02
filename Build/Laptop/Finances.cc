@@ -153,7 +153,7 @@ static void GetBalanceFromDisk(void);
 static void WriteBalanceToDisk(void);
 static void AppendFinanceToEndOfFile(void);
 static void SetLastPageInRecords(void);
-static void LoadInRecords(UINT32 uiPage);
+static void LoadInRecords(UINT32 page);
 static void LoadPreviousPage(void);
 static void LoadNextPage(void);
 
@@ -263,10 +263,6 @@ void EnterFinances()
 
   fInFinancialMode=TRUE;
 
-	// reset page we are on
-	iCurrentPage = LaptopSaveInfo.iCurrentFinancesPage;
-
-
   // get the balance
   GetBalanceFromDisk( );
 
@@ -282,10 +278,11 @@ void EnterFinances()
   // create buttons
   CreateFinanceButtons( );
 
+	// reset page we are on
+	LoadInRecords(LaptopSaveInfo.iCurrentFinancesPage);
+
 	// set button state
 	SetFinanceButtonStates( );
-
-	LoadInRecords(iCurrentPage);
 
   RenderFinances( );
 }
@@ -834,16 +831,13 @@ static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason)
 		//if its the first page button
 		if( uiButton == 0 )
 		{
-			iCurrentPage = 0;
-			LoadInRecords( iCurrentPage );
+			LoadInRecords(0);
 		}
 
 		//else its the last page button
 		else
 		{
-			LoadInRecords( guiLastPageInRecordsList + 1 );
-
-			iCurrentPage = guiLastPageInRecordsList + 1;
+			LoadInRecords(guiLastPageInRecordsList + 1);
 		}
 
 		// set button state
@@ -993,14 +987,14 @@ static void SetLastPageInRecords(void)
 static void LoadPreviousPage(void)
 {
 	if (iCurrentPage == 0) return;
-	LoadInRecords(--iCurrentPage);
+	LoadInRecords(iCurrentPage - 1);
 }
 
 
 static void LoadNextPage(void)
 {
 	if (iCurrentPage > guiLastPageInRecordsList) return;
-	LoadInRecords(++iCurrentPage);
+	LoadInRecords(iCurrentPage + 1);
 }
 
 
@@ -1009,6 +1003,7 @@ static void LoadInRecords(UINT32 const page)
 {
 	ClearFinanceList();
 
+	iCurrentPage = page;
 	if (page == 0) return; // check if bad page
 
 	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
