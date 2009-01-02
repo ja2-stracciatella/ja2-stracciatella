@@ -266,9 +266,6 @@ void EnterFinances()
   // get the balance
   GetBalanceFromDisk( );
 
-  // force redraw of the entire screen
-  fReDrawScreenFlag=TRUE;
-
   // set number of pages
 	SetLastPageInRecords( );
 
@@ -280,9 +277,6 @@ void EnterFinances()
 
 	// reset page we are on
 	LoadInRecords(LaptopSaveInfo.iCurrentFinancesPage);
-
-	// set button state
-	SetFinanceButtonStates( );
 
   RenderFinances( );
 }
@@ -797,10 +791,6 @@ static void BtnFinanceDisplayPrevPageCallBack(GUI_BUTTON *btn, INT32 reason)
 	 {
 		 // if greater than page zero, we can move back, decrement iCurrentPage counter
 		 LoadPreviousPage( );
-
-		 // set button state
-	   SetFinanceButtonStates( );
-		 fReDrawScreenFlag=TRUE;
 	 }
 
 }
@@ -812,12 +802,6 @@ static void BtnFinanceDisplayNextPageCallBack(GUI_BUTTON *btn, INT32 reason)
 	{
 		 // increment currentPage
      LoadNextPage( );
-
-		 // set button state
-	   SetFinanceButtonStates( );
-
-		 // redraw screen
-		 fReDrawScreenFlag=TRUE;
 	}
 }
 
@@ -839,12 +823,6 @@ static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason)
 		{
 			LoadInRecords(guiLastPageInRecordsList + 1);
 		}
-
-		// set button state
-		SetFinanceButtonStates( );
-
-		// redraw screen
-		fReDrawScreenFlag=TRUE;
 	}
 }
 
@@ -1001,9 +979,10 @@ static void LoadNextPage(void)
 // Loads in records belonging to page
 static void LoadInRecords(UINT32 const page)
 {
+	iCurrentPage      = page;
+	fReDrawScreenFlag = TRUE;
+	SetFinanceButtonStates();
 	ClearFinanceList();
-
-	iCurrentPage = page;
 	if (page == 0) return; // check if bad page
 
 	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
