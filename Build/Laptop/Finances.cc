@@ -154,7 +154,7 @@ static void WriteBalanceToDisk(void);
 static void AppendFinanceToEndOfFile(void);
 static void SetLastPageInRecords(void);
 static BOOLEAN LoadInRecords(UINT32 uiPage);
-static BOOLEAN LoadPreviousPage(void);
+static void LoadPreviousPage(void);
 static BOOLEAN LoadNextPage(void);
 
 static void SetFinanceButtonStates(void);
@@ -991,9 +991,8 @@ static void SetLastPageInRecords(void)
 }
 
 
-static BOOLEAN LoadPreviousPage(void)
+static void LoadPreviousPage(void)
 {
-
 	// clear out old list of records, and load in previous page worth of records
   ClearFinanceList( );
 
@@ -1001,19 +1000,17 @@ static BOOLEAN LoadPreviousPage(void)
 	if( ( iCurrentPage == 1 )||( iCurrentPage == 0 ) )
 	{
 		iCurrentPage = 0;
-		return ( FALSE );
+		return;
 	}
 
 	// now load in previous page's records, if we can
   if ( LoadInRecords( iCurrentPage - 1 ) )
 	{
 		iCurrentPage--;
-		return ( TRUE );
 	}
 	else
 	{
     LoadInRecords( iCurrentPage );
-		return ( FALSE );
 	}
 }
 
