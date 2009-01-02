@@ -270,9 +270,6 @@ void EnterFinances()
   // get the balance
   GetBalanceFromDisk( );
 
-  // clear the list
-  ClearFinanceList( );
-
   // force redraw of the entire screen
   fReDrawScreenFlag=TRUE;
 
@@ -832,8 +829,6 @@ static void BtnFinanceFirstLastPageCallBack(GUI_BUTTON *btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		ClearFinanceList();
-
 		UINT32 uiButton = MSYS_GetBtnUserData(btn);
 
 		//if its the first page button
@@ -997,18 +992,14 @@ static void SetLastPageInRecords(void)
 
 static void LoadPreviousPage(void)
 {
-	// clear out old list of records, and load in previous page worth of records
 	if (iCurrentPage == 0) return;
-	ClearFinanceList();
 	LoadInRecords(--iCurrentPage);
 }
 
 
 static void LoadNextPage(void)
 {
-	// clear out old list of records, and load in previous page worth of records
 	if (iCurrentPage > guiLastPageInRecordsList) return;
-	ClearFinanceList();
 	LoadInRecords(++iCurrentPage);
 }
 
@@ -1016,6 +1007,8 @@ static void LoadNextPage(void)
 // Loads in records belonging to page
 static void LoadInRecords(UINT32 const page)
 {
+	ClearFinanceList();
+
 	if (page == 0) return; // check if bad page
 
 	AutoSGPFile f(FileOpen(FINANCES_DATA_FILE, FILE_ACCESS_READ));
