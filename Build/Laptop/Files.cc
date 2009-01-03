@@ -1151,30 +1151,21 @@ static void OpenFirstUnreadFile(void)
 
 static void CheckForUnreadFiles(void)
 {
-	BOOLEAN	fStatusOfNewFileFlag = fNewFilesInFileViewer;
-
-	// willc heck for any unread files and set flag if any
-	FilesUnit* pFilesList = pFilesListHead;
-
-	fNewFilesInFileViewer = FALSE;
-
-
-	while( pFilesList )
+	// will check for any unread files and set flag if any
+	BOOLEAN any_unread = FALSE;
+	for (FilesUnit const* i = pFilesListHead; i; i = i->Next)
   {
-		// unread?...if so, set flag
-		if (!pFilesList->fRead)
-		{
-			fNewFilesInFileViewer = TRUE;
-		}
-		// next element in list
-		pFilesList = pFilesList->Next;
+		if (i->fRead) continue;
+		any_unread = TRUE;
+		break;
 	}
 
-	//if the old flag and the new flag arent the same, either create or destory the fast help region
-	if( fNewFilesInFileViewer != fStatusOfNewFileFlag )
-	{
-		CreateFileAndNewEmailIconFastHelpText(LAPTOP_BN_HLP_TXT_YOU_HAVE_NEW_FILE, !fNewFilesInFileViewer);
-	}
+	/* If the old flag and the new flag aren't the same, either create or destory
+	 * the fast help region */
+	if (fNewFilesInFileViewer == any_unread) return;
+
+	fNewFilesInFileViewer = any_unread;
+	CreateFileAndNewEmailIconFastHelpText(LAPTOP_BN_HLP_TXT_YOU_HAVE_NEW_FILE, !fNewFilesInFileViewer);
 }
 
 
