@@ -848,41 +848,30 @@ static void BtnNextFilePageCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void HandleFileViewerButtonStates(void)
 {
-	// handle state of email viewer buttons
-
-	if( iHighLightFileLine == -1 )
+	if (iHighLightFileLine == -1)
 	{
 		// not displaying message, leave
-		DisableButton( giFilesPageButtons[ 0 ] );
-		DisableButton( giFilesPageButtons[ 1 ] );
-		giFilesPageButtons[0]->uiFlags &= ~BUTTON_CLICKED_ON;
-		giFilesPageButtons[1]->uiFlags &= ~BUTTON_CLICKED_ON;
-
-
+		DisableButton(giFilesPageButtons[0]);
+		DisableButton(giFilesPageButtons[1]);
 		return;
 	}
 
-	// turn off previous page button
-	if( giFilesPage == 0 )
-	{
-		DisableButton( giFilesPageButtons[ 0 ] );
-		giFilesPageButtons[0]->uiFlags &= ~BUTTON_CLICKED_ON;
+	if (giFilesPage == 0)
+	{ // turn off previous page button
+		DisableButton(giFilesPageButtons[0]);
 	}
 	else
 	{
-		EnableButton( giFilesPageButtons[ 0 ] );
+		EnableButton(giFilesPageButtons[0]);
 	}
 
-
-	// turn off next page button
 	if (fOnLastFilesPageFlag)
-	{
-		DisableButton( giFilesPageButtons[ 1 ] );
-		giFilesPageButtons[1]->uiFlags &= ~BUTTON_CLICKED_ON;
+	{ // turn off next page button
+		DisableButton(giFilesPageButtons[1]);
 	}
 	else
 	{
-		EnableButton( giFilesPageButtons[ 1 ] );
+		EnableButton(giFilesPageButtons[1]);
 	}
 }
 
