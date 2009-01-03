@@ -456,29 +456,23 @@ static void ClearFilesList(void)
 
 static void DisplayFilesList(void)
 {
-  // this function will run through the list of files of files and display the 'sender'
-	FilesUnit* pFilesList = pFilesListHead;
-  INT32 iCounter=0;
-
-	// font stuff
-  SetFont(FILES_TEXT_FONT);
-  SetFontForeground(FONT_BLACK);
+	// this function will run through the list of files of files and display the 'sender'
+	SetFont(FILES_TEXT_FONT);
+	SetFontForeground(FONT_BLACK);
 	SetFontBackground(FONT_BLACK);
 	SetFontShadow(NO_SHADOW);
 
-	// runt hrough list displaying 'sender'
-	while((pFilesList))//&&(iCounter < MAX_FILES_LIST_LENGTH))
+	INT32 i = 0;
+	for (FilesUnit const* fu = pFilesListHead; fu; ++i, fu = fu->Next)
 	{
-		if (iCounter==iHighLightFileLine)
+		INT32 const y = 9 * BLOCK_HEIGHT - 4 + i * (BLOCK_HEIGHT + 2);
+		if (i == iHighLightFileLine)
 		{
-			BltVideoObject(FRAME_BUFFER, guiHIGHLIGHT, 0, FILES_SENDER_TEXT_X - 5, (iCounter + 9) * BLOCK_HEIGHT + iCounter * 2 - 4);
+			BltVideoObject(FRAME_BUFFER, guiHIGHLIGHT, 0, FILES_SENDER_TEXT_X - 5, y);
 		}
-    MPrint(FILES_SENDER_TEXT_X, (iCounter + 9) * BLOCK_HEIGHT + iCounter * 2 - 2, pFilesSenderList[pFilesList->ubCode]);
-		iCounter++;
-		pFilesList=pFilesList->Next;
+		MPrint(FILES_SENDER_TEXT_X, y + 2, pFilesSenderList[fu->ubCode]);
 	}
 
-	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
 }
 
