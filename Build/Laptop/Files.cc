@@ -99,8 +99,6 @@ static INT32 iHighLightFileLine = -1;
 // the files record list
 static FilesUnit* pFilesListHead = NULL;
 
-static FileString* pFileStringList = NULL;
-
 // are we in files mode
 static BOOLEAN fInFilesMode=FALSE;
 static BOOLEAN fOnLastFilesPageFlag = FALSE;
@@ -662,30 +660,55 @@ static FileString const* GetFirstStringOnThisPage(FileString const* RecordList, 
 }
 
 
-static void AddStringToFilesList(const wchar_t* pString);
-static void ClearFileStringList(void);
+static FileString* LoadStringsIntoFileList(char const* const filename, UINT32 offset, size_t n)
+{
+	FileString*  head   = 0;
+	FileString** anchor = &head;
+	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
+	for (; n != 0; ++offset, --n)
+	{
+		wchar_t str[FILE_STRING_SIZE];
+		LoadEncryptedData(f, str, lengthof(str) * offset, lengthof(str));
+
+		FileString* const fs = MALLOC(FileString);
+		fs->Next    = 0;
+		fs->pString = MALLOCN(wchar_t, wcslen(str) + 1);
+		wcscpy(fs->pString, str);
+
+		// Append node to list
+		*anchor = fs;
+		anchor  = &fs->Next;
+	}
+	return head;
+}
+
+
+static void ClearFileStringList(FileString* i)
+{
+	while (i)
+	{
+		FileString* const del = i;
+		i = i->Next;
+		MemFree(del->pString);
+		MemFree(del);
+	}
+}
+
+
 static void ClearOutWidthRecordsList(FileRecordWidth* pFileRecordWidthList);
 static FileRecordWidth* CreateWidthRecordsForAruloIntelFile(void);
 
 
 static void HandleSpecialFiles(void)
 {
-	// load data
-	// read one record from file manager file
-	for (INT32 i = 0; i != LENGTH_OF_ENRICO_FILE; ++i)
-	{
-		wchar_t str[FILE_STRING_SIZE];
-		LoadEncryptedDataFromFile("BINARYDATA/RIS.EDT", str, FILE_STRING_SIZE * i, FILE_STRING_SIZE);
-		AddStringToFilesList(str);
-	}
-
 	FileRecordWidth*  const width_list = CreateWidthRecordsForAruloIntelFile();
-	FileString const*       i          = pFileStringList;
-	FileString const* const start      = GetFirstStringOnThisPage(i, FILES_TEXT_FONT,  350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, width_list);
+	FileString*       const head       = LoadStringsIntoFileList("BINARYDATA/RIS.EDT", 0, LENGTH_OF_ENRICO_FILE);
+	FileString const* const start      = GetFirstStringOnThisPage(head, FILES_TEXT_FONT, 350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, width_list);
 	ClearOutWidthRecordsList(width_list);
 
-	// find out where this string is
-	INT32 clause = 0;
+	// Find out where this string is
+	FileString const* i      = head;
+	INT32             clause = 0;
 	for (; i != start; i = i->Next)
 	{
 		++clause;
@@ -727,7 +750,7 @@ static void HandleSpecialFiles(void)
 		i = i->Next;
 		fOnLastFilesPageFlag = !i;
 	}
-	ClearFileStringList();
+	ClearFileStringList(head);
 
 	// place pictures
 	switch (giFilesPage)
@@ -736,33 +759,6 @@ static void HandleSpecialFiles(void)
 		case 4: BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_Y.sti",      0, 260, 225); break; // Kid pic
 		case 5: BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_W.sti",      0, 260,  85); break; // Wedding pic
 	}
-}
-
-
-static void AddStringToFilesList(wchar_t const* const pString)
-{
-	FileString* const fs = MALLOC(FileString);
-	fs->Next    = 0;
-	fs->pString = MALLOCN(wchar_t, wcslen(pString) + 1);
-	wcscpy(fs->pString, pString);
-
-	// Append node to list
-	FileString** anchor = &pFileStringList;
-	while (*anchor) anchor = &(*anchor)->Next;
-	*anchor = fs;
-}
-
-
-static void ClearFileStringList(void)
-{
-	for (FileString* i = pFileStringList; i;)
-	{
-		FileString* const del = i;
-		i = i->Next;
-		MemFree(del->pString);
-		MemFree(del);
-	}
-	pFileStringList = 0;
 }
 
 
@@ -1006,23 +1002,16 @@ static void CheckForUnreadFiles(void)
 
 static void HandleSpecialTerroristFile(INT32 const file_idx)
 {
-	FileInfo const& info   = g_file_info[file_idx];
-	UINT16   const  offset = info.file_offset;
-	UINT8    const  length = info.record_length;
-	for (INT32 i = 0; i != length; ++i)
-	{
-		wchar_t str[FILE_STRING_SIZE];
-		LoadEncryptedDataFromFile("BINARYDATA/files.EDT", str, FILE_STRING_SIZE * (offset + i), FILE_STRING_SIZE);
-		AddStringToFilesList(str);
-	}
 
 	FileRecordWidth*  const width_list = CreateWidthRecordsForTerroristFile();
-	FileString const*       i          = pFileStringList;
-	FileString const* const start      = GetFirstStringOnThisPage(i, FILES_TEXT_FONT, 350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, width_list);
+	FileInfo   const&       info       = g_file_info[file_idx];
+	FileString*       const head       = LoadStringsIntoFileList("BINARYDATA/files.EDT", info.file_offset, info.record_length);
+	FileString const* const start      = GetFirstStringOnThisPage(head, FILES_TEXT_FONT, 350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, width_list);
 	ClearOutWidthRecordsList(width_list);
 
 	// Find out where this string is
-	INT32 clause = 0;
+	FileString const* i      = head;
+	INT32             clause = 0;
 	for (; i != start; i = i->Next)
 	{
 		++clause;
@@ -1071,8 +1060,7 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 		i = i->Next;
 		fOnLastFilesPageFlag = !i;
 	}
-
-	ClearFileStringList();
+	ClearFileStringList(head);
 }
 
 
