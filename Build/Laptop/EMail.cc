@@ -76,7 +76,6 @@ BOOLEAN fOldNewMailFlag=FALSE;
 BOOLEAN fDisplayMessageFlag=FALSE;
 static BOOLEAN fOldDisplayMessageFlag = FALSE;
 static BOOLEAN fReDrawMessageFlag = FALSE;
-static BOOLEAN fOnLastPageFlag = FALSE;
 BOOLEAN fOpenMostRecentUnReadFlag = FALSE;
 static INT32 iViewerPositionY = 0;
 
@@ -1076,9 +1075,7 @@ static void PrevMailPage()
 
 static void NextMailPage()
 {
-	// not on last page, move ahead one
 	if (giMessagePage + 1 >= giNumberOfPagesToCurrentEmail - 1) return;
-	if (fOnLastPageFlag) return;
 	++giMessagePage;
 	MarkButtonsDirty();
 	fReDrawScreenFlag = TRUE;
@@ -2531,8 +2528,6 @@ static void PreProcessEmail(Email* pMail)
 
 	if( iTotalHeight < MAX_EMAIL_MESSAGE_PAGE_SIZE )
 	{
-		fOnLastPageFlag = TRUE;
-
 		if( pTempRecord && pMail->usOffset != IMP_EMAIL_PROFILE_RESULTS)
 		{
 			pTempRecord = pTempRecord->Next;
@@ -2569,7 +2564,6 @@ static void PreProcessEmail(Email* pMail)
 	}
 	else
 	{
-		fOnLastPageFlag = FALSE;
 		pTempList = pMessageRecordList;
 
 		if( pTempList && pMail->usOffset != IMP_EMAIL_PROFILE_RESULTS)
@@ -2591,13 +2585,6 @@ static void PreProcessEmail(Email* pMail)
 			// go to the right record
 			while( pTempRecord )
 			{
-				if (pTempRecord->pRecord[0] == L'\0')
-				{
-					// on last page
-					fOnLastPageFlag = TRUE;
-				}
-
-
 				if (iYPositionOnPage + IanWrappedStringHeight(MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, pTempRecord->pRecord) <= MAX_EMAIL_MESSAGE_PAGE_SIZE)
 				{
      			// now print it
