@@ -4,6 +4,8 @@
 #include "Files.h"
 #include "Game_Clock.h"
 #include "LoadSaveData.h"
+#include "Soldier_Control.h"
+#include "Soldier_Profile.h"
 #include "VObject.h"
 #include "Debug.h"
 #include "WordWrap.h"
@@ -124,40 +126,23 @@ static INT32 giFilesPage = 0;
 #define ENRICO_LENGTH 0
 
 
-static const UINT8 ubFileRecordsLength[] =
+struct FileInfo
 {
-	ENRICO_LENGTH,
-	SLAY_LENGTH,
-	SLAY_LENGTH,
-	SLAY_LENGTH,
-	SLAY_LENGTH,
-	SLAY_LENGTH,
-	SLAY_LENGTH,
+	UINT16 profile_id;
+	UINT16 file_offset;
+	UINT8  record_length;
 };
 
 
-static const UINT16 ubFileOffsets[] =
+static const FileInfo g_file_info[] =
 {
-	0,
-	ENRICO_LENGTH,
-	SLAY_LENGTH + ENRICO_LENGTH,
-	2 * SLAY_LENGTH + ENRICO_LENGTH,
-	3 * SLAY_LENGTH + ENRICO_LENGTH,
-	4 * SLAY_LENGTH + ENRICO_LENGTH,
-	5 * SLAY_LENGTH + ENRICO_LENGTH,
-};
-
-
-static const UINT16 usProfileIdsForTerroristFiles[] =
-{
-	0, // no body
-	112, // elgin
-	64, // slay
-	82, // mom
-	83, // imposter
-	110, // tiff
-	111, // t-rex
-	112, // elgin
+	{ NO_PROFILE, 0,                               ENRICO_LENGTH },
+	{ DRUGGIST,   ENRICO_LENGTH,                   SLAY_LENGTH   }, // Elgin
+	{ SLAY,       ENRICO_LENGTH + SLAY_LENGTH,     SLAY_LENGTH   }, // Slay
+	{ ANNIE,      ENRICO_LENGTH + SLAY_LENGTH * 2, SLAY_LENGTH   }, // MOM
+	{ CHRIS,      ENRICO_LENGTH + SLAY_LENGTH * 3, SLAY_LENGTH   }, // Imposter
+	{ TIFFANY,    ENRICO_LENGTH + SLAY_LENGTH * 4, SLAY_LENGTH   }, // Tiff
+	{ T_REX,      ENRICO_LENGTH + SLAY_LENGTH * 5, SLAY_LENGTH   }  // T-Rex
 };
 
 
@@ -1122,8 +1107,9 @@ static void CheckForUnreadFiles(void)
 
 static void HandleSpecialTerroristFile(INT32 const file_idx)
 {
-	UINT16 const offset = ubFileOffsets[file_idx];
-	UINT8  const length = ubFileRecordsLength[file_idx];
+	FileInfo const& info   = g_file_info[file_idx];
+	UINT16   const  offset = info.file_offset;
+	UINT8    const  length = info.record_length;
 	for (INT32 i = 0; i != length; ++i)
 	{
 		wchar_t str[FILE_STRING_SIZE];
@@ -1150,7 +1136,7 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 		if (giFilesPage == 0 && clause == 4)
 		{
 			char filename[128];
-			sprintf(filename, "FACES/BIGFACES/%02d.sti", usProfileIdsForTerroristFiles[file_idx + 1]);
+			sprintf(filename, "FACES/BIGFACES/%02d.sti", info.profile_id);
 			BltVideoObjectOnce(FRAME_BUFFER, filename,                     0, FILE_VIEWER_X + 30, y + 76);
 			BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/InterceptBorder.sti", 0, FILE_VIEWER_X + 25, y + 71);
 		}
@@ -1194,10 +1180,9 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 // add a file about this terrorist
 BOOLEAN AddFileAboutTerrorist(INT32 const profile_id)
 {
-	for (INT32 i = 1; i != 7; ++i)
+	for (INT32 i = 1; i != lengthof(g_file_info); ++i)
 	{
-		if (usProfileIdsForTerroristFiles[i] != profile_id) continue;
-
+		if (g_file_info[i].profile_id != profile_id) continue;
 		AddFilesToPlayersLog(i);
 		return TRUE;
 	}
