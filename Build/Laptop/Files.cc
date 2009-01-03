@@ -429,23 +429,14 @@ static void OpenAndWriteFilesFile(void)
 
 static void ClearFilesList(void)
 {
-	// remove each element from list of transactions
-	FilesUnit* pFilesList = pFilesListHead;
-	FilesUnit* pFilesNode = pFilesList;
-
-	// while there are elements in the list left, delete them
-	while( pFilesList )
+	FilesUnit* i   = pFilesListHead;
+  pFilesListHead = NULL;
+	while (i)
 	{
-    // set node to list head
-		pFilesNode=pFilesList;
-
-		// set list head to next node
-		pFilesList=pFilesList->Next;
-
-		// delete current node
-		MemFree(pFilesNode);
+		FilesUnit* const del = i;
+		i = i->Next;
+		MemFree(del);
 	}
-  pFilesListHead=NULL;
 }
 
 
