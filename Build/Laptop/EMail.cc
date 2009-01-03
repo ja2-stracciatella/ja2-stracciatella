@@ -823,6 +823,24 @@ void LookForUnread()
 }
 
 
+static void PrevListPage()
+{
+	if (iCurrentPage == 0) return;
+	--iCurrentPage;
+	RenderEmail();
+	MarkButtonsDirty();
+}
+
+
+static void NextListPage()
+{
+	if (iCurrentPage == iLastPage) return;
+	++iCurrentPage;
+	RenderEmail();
+	MarkButtonsDirty();
+}
+
+
 static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
  INT32 iCount;
@@ -875,6 +893,14 @@ static void EmailBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			MailToDelete = Mail;
 	 }
  }
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		PrevListPage();
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		NextListPage();
+	}
 }
 
 
@@ -1293,13 +1319,7 @@ static void NextRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		// not on last page, move ahead one
-		if (iCurrentPage < iLastPage)
-		{
-			iCurrentPage++;
-			RenderEmail();
-			MarkButtonsDirty();
-		}
+		NextListPage();
 	}
 }
 
@@ -1338,13 +1358,7 @@ static void PreviousRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		// if we are not on forst page, more back one
-		if (iCurrentPage > 0)
-		{
-			iCurrentPage--;
-			RenderEmail();
-			MarkButtonsDirty();
-		}
+		PrevListPage();
 	}
 }
 
