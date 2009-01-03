@@ -64,8 +64,7 @@ enum
 #define TITLE_Y													33
 #define FILES_TITLE_FONT								FONT14ARIAL
 #define FILES_TEXT_FONT									FONT10ARIAL//FONT12ARIAL
-#define BLOCK_HEIGHT										10
-#define FILES_SENDER_TEXT_X							TOP_X + 15
+#define FILES_SENDER_TEXT_X             (FILES_LIST_X + 5)
 #define MAX_FILES_LIST_LENGTH						28
 #define FILE_VIEWER_X										236
 #define FILE_VIEWER_Y                    81
@@ -75,9 +74,10 @@ enum
 #define FILE_TEXT_COLOR									FONT_BLACK
 #define FILE_STRING_SIZE								400
 #define MAX_FILES_PAGE									MAX_FILES_LIST_LENGTH
-#define FILES_LIST_X										FILES_SENDER_TEXT_X
-#define FILES_LIST_Y										( 9 * BLOCK_HEIGHT )
-#define FILES_LIST_WIDTH								100
+#define FILES_LIST_X                    (TOP_X + 10)
+#define FILES_LIST_Y                     85
+#define FILES_LIST_W                    107
+#define FILES_LIST_H                     12
 #define LENGTH_OF_ENRICO_FILE						68
 #define MAX_FILE_MESSAGE_PAGE_SIZE			325
 #define PREVIOUS_FILE_PAGE_BUTTON_X			553
@@ -114,7 +114,6 @@ BOOLEAN fNewFilesInFileViewer = FALSE;
 // graphics handles
 static SGPVObject* guiTITLE;
 static SGPVObject* guiTOP;
-static SGPVObject* guiHIGHLIGHT;
 
 
 // currewnt page of multipage files we are on
@@ -344,9 +343,6 @@ static void LoadFiles(void)
 
 	// top portion of the screen background
 	guiTOP = AddVideoObjectFromFile("LAPTOP/fileviewer.sti");
-
-	// the highlight
-	guiHIGHLIGHT = AddVideoObjectFromFile("LAPTOP/highlight.sti");
 }
 
 
@@ -355,7 +351,6 @@ static void RemoveFiles(void)
 	// delete files video objects from memory
 	DeleteVideoObject(guiTOP);
 	DeleteVideoObject(guiTITLE);
-  DeleteVideoObject(guiHIGHLIGHT);
 }
 
 
@@ -462,15 +457,20 @@ static void DisplayFilesList(void)
 	SetFontBackground(FONT_BLACK);
 	SetFontShadow(NO_SHADOW);
 
-	INT32 i = 0;
+	INT32       i = 0;
+	INT32 const x = FILES_LIST_X;
+	INT32       y = FILES_LIST_Y;
+	INT32 const w = FILES_LIST_W;
+	INT32 const h = FILES_LIST_H;
 	for (FilesUnit const* fu = pFilesListHead; fu; ++i, fu = fu->Next)
 	{
-		INT32 const y = 9 * BLOCK_HEIGHT - 4 + i * (BLOCK_HEIGHT + 2);
 		if (i == iHighLightFileLine)
 		{
-			BltVideoObject(FRAME_BUFFER, guiHIGHLIGHT, 0, FILES_SENDER_TEXT_X - 5, y);
+			UINT16 const colour = Get16BPPColor(FROMRGB(240, 240, 200));
+			ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + w, y + h, colour);
 		}
 		MPrint(FILES_SENDER_TEXT_X, y + 2, pFilesSenderList[fu->ubCode]);
+		y += h;
 	}
 
 	SetFontShadow(DEFAULT_SHADOW);
@@ -505,12 +505,12 @@ static void InitializeFilesMouseRegions(void)
 {
 	UINT16 const x = FILES_LIST_X;
 	UINT16       y = FILES_LIST_Y;
-	UINT16 const w = FILES_LIST_WIDTH;
-	UINT16 const h = BLOCK_HEIGHT + 2;
+	UINT16 const w = FILES_LIST_W;
+	UINT16 const h = FILES_LIST_H;
 	for (INT32 i = 0; i != MAX_FILES_PAGE; ++i)
 	{
 		MOUSE_REGION* const r = &pFilesRegions[i];
-		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_NORMAL + 2, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, FilesBtnCallBack);
+		MSYS_DefineRegion(r, x, y, x + w - 1, y + h - 1, MSYS_PRIORITY_NORMAL + 2, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, FilesBtnCallBack);
 		y += h;
 		MSYS_SetRegionUserData(r, 0, i);
 	}

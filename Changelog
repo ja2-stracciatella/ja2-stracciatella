@@ -1,3 +1,4 @@
+(r4959) Fix vanilla inconsistencies between the displayed file list and the clickable regions in the file viewer.
 (r4956) Fix a vanilla display glitch in the file viewer (at least in the German version): MOM's portrait was displayed at a different height compared to all other portraits.
 (r4954) Enable scrolling with the mouse wheel in the file viewer.
 (r4953) Fix a vanilla graphics glitch in the laptop file viewer: The background of the content area was not completely filled.
