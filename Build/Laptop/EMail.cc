@@ -213,6 +213,7 @@ static GUIButtonRef giSortButton[4];
 static GUIButtonRef giNewMailButton;
 static GUIButtonRef giMailMessageButtons[3];
 static GUIButtonRef giMailPageButtons[2];
+static MOUSE_REGION g_mail_scroll_region;
 
 
 // the message record list, for the currently displayed message
@@ -1064,6 +1065,39 @@ static GUIButtonRef MakeButtonNewMail(INT32 image, INT16 x, INT16 y, GUI_CALLBAC
 }
 
 
+static void PrevMailPage()
+{
+	if (giMessagePage == 0) return;
+	--giMessagePage;
+	RenderEmail();
+	MarkButtonsDirty();
+}
+
+
+static void NextMailPage()
+{
+	// not on last page, move ahead one
+	if (giMessagePage + 1 >= giNumberOfPagesToCurrentEmail - 1) return;
+	if (fOnLastPageFlag) return;
+	++giMessagePage;
+	MarkButtonsDirty();
+	fReDrawScreenFlag = TRUE;
+}
+
+
+static void MailScrollRegionCallback(MOUSE_REGION* const, INT32 const reason)
+{
+	if (reason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		PrevMailPage();
+	}
+	else if (reason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		NextMailPage();
+	}
+}
+
+
 static void BtnDeleteCallback(GUI_BUTTON* btn, INT32 iReason);
 static void BtnNextEmailPageCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnPreviousEmailPageCallback(GUI_BUTTON* btn, INT32 reason);
@@ -1086,9 +1120,16 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 		if( giNumberOfPagesToCurrentEmail > 2 )
 		{
 			// add next and previous mail page buttons
-			const INT16 y = LOWER_BUTTON_Y + iViewerY + 2;
-			giMailMessageButtons[0] = MakeButtonNewMail(0, PREVIOUS_PAGE_BUTTON_X, y, BtnPreviousEmailPageCallback);
-			giMailMessageButtons[1] = MakeButtonNewMail(1, NEXT_PAGE_BUTTON_X,     y, BtnNextEmailPageCallback);
+			{ INT16 const y = LOWER_BUTTON_Y + iViewerY + 2;
+				giMailMessageButtons[0] = MakeButtonNewMail(0, PREVIOUS_PAGE_BUTTON_X, y, BtnPreviousEmailPageCallback);
+				giMailMessageButtons[1] = MakeButtonNewMail(1, NEXT_PAGE_BUTTON_X,     y, BtnNextEmailPageCallback);
+			}
+			{ UINT16 const x = VIEWER_X + MESSAGE_X + 1;
+				UINT16 const y = VIEWER_MESSAGE_BODY_START_Y + iViewerPositionY;
+				UINT16 const w = MESSAGE_WIDTH + 3;
+				UINT16 const h = 227;
+				MSYS_DefineRegion(&g_mail_scroll_region, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 1, MSYS_NO_CURSOR, NULL, MailScrollRegionCallback);
+			}
 			gfPageButtonsWereCreated = TRUE;
 		}
 
@@ -1106,6 +1147,7 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 		// net/previous email page buttons
     if( gfPageButtonsWereCreated )
 		{
+			MSYS_RemoveRegion(&g_mail_scroll_region);
 			RemoveButton(giMailMessageButtons[0] );
 			RemoveButton(giMailMessageButtons[1] );
 			gfPageButtonsWereCreated = FALSE;
@@ -1277,9 +1319,7 @@ static void BtnPreviousEmailPageCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (giMessagePage > 0) giMessagePage--;
-		RenderEmail();
-		MarkButtonsDirty();
+		PrevMailPage();
   }
 }
 
@@ -1288,17 +1328,7 @@ static void BtnNextEmailPageCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-    // not on last page, move ahead one
-		if (giNumberOfPagesToCurrentEmail - 1 <= giMessagePage) return;
-
-    if (!fOnLastPageFlag)
-		{
-			if (giNumberOfPagesToCurrentEmail - 1 > giMessagePage + 1)
-				giMessagePage++;
-		}
-
-		MarkButtonsDirty();
-		fReDrawScreenFlag = TRUE;
+		NextMailPage();
   }
 }
 
