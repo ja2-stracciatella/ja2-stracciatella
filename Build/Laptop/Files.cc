@@ -558,7 +558,7 @@ static void FilesBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 
 static void HandleSpecialFiles(void);
-static void HandleSpecialTerroristFile(INT32 iFileNumber);
+static void HandleSpecialTerroristFile(INT32 file_idx);
 
 
 static void DisplayFormattedText(void)
@@ -590,10 +590,10 @@ static void DisplayFormattedText(void)
 }
 
 
-static FileString* GetFirstStringOnThisPage(FileString* RecordList, Font const font, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize, FileRecordWidth* WidthList)
+static FileString const* GetFirstStringOnThisPage(FileString const* RecordList, Font const font, UINT16 usWidth, UINT8 ubGap, INT32 iPage, INT32 iPageSize, FileRecordWidth* WidthList)
 {
 	// get the first record on this page - build pages up until this point
-	FileString* CurrentRecord = NULL;
+	FileString const* CurrentRecord = NULL;
 
 	INT32 iCurrentPositionOnThisPage = 0;
 	INT32 iCurrentPage =0;
@@ -700,8 +700,8 @@ static FileRecordWidth* CreateWidthRecordsForAruloIntelFile(void);
 static void HandleSpecialFiles(void)
 {
 	INT32 iCounter = 0;
-	FileString* pTempString = NULL;
-	FileString* pLocatorString = NULL;
+	FileString const* pTempString = NULL;
+	FileString const* pLocatorString = NULL;
 	INT32 iYPositionOnPage = 0;
 	INT32 iFileLineWidth = 0;
 	INT32 iFileStartX = 0;
@@ -1178,128 +1178,74 @@ static void CheckForUnreadFiles(void)
 }
 
 
-static void HandleSpecialTerroristFile(INT32 const iFileNumber)
+static void HandleSpecialTerroristFile(INT32 const file_idx)
 {
-	INT32 iCounter = 0;
-	FileString* pTempString = NULL;
-	FileString* pLocatorString = NULL;
-	INT32 iYPositionOnPage = 0;
-	INT32 iFileLineWidth = 0;
-	INT32 iFileStartX = 0;
-	BOOLEAN fGoingOffCurrentPage = FALSE;
-	FileRecordWidth* WidthList = NULL;
-	INT32 iOffset = 0;
-
-	iOffset = ubFileOffsets[ iFileNumber ] ;
-
-	// grab width list
-	WidthList = CreateWidthRecordsForTerroristFile( );
-
-
-	while( iCounter < ubFileRecordsLength[ iFileNumber ] )
+	UINT16 const offset = ubFileOffsets[file_idx];
+	UINT8  const length = ubFileRecordsLength[file_idx];
+	for (INT32 i = 0; i != length; ++i)
 	{
-		wchar_t sString[FILE_STRING_SIZE];
-		LoadEncryptedDataFromFile("BINARYDATA/files.EDT", sString, FILE_STRING_SIZE * (iOffset + iCounter), FILE_STRING_SIZE);
-		AddStringToFilesList( sString );
-		iCounter++;
+		wchar_t str[FILE_STRING_SIZE];
+		LoadEncryptedDataFromFile("BINARYDATA/files.EDT", str, FILE_STRING_SIZE * (offset + i), FILE_STRING_SIZE);
+		AddStringToFilesList(str);
 	}
 
-	pTempString = pFileStringList;
+	FileRecordWidth*  const width_list = CreateWidthRecordsForTerroristFile();
+	FileString const*       i          = pFileStringList;
+	FileString const* const start      = GetFirstStringOnThisPage(i, FILES_TEXT_FONT, 350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, width_list);
+	ClearOutWidthRecordsList(width_list);
 
+	// Find out where this string is
+	INT32 clause = 0;
+	for (; i != start; i = i->Next)
+	{
+		++clause;
+	}
 
-	iYPositionOnPage = 0;
-	iCounter = 0;
-	pLocatorString = pTempString;
-
-	pTempString = GetFirstStringOnThisPage( pFileStringList,FILES_TEXT_FONT,  350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, WidthList);
-
-		// find out where this string is
-		while( pLocatorString != pTempString )
+	// Move through list and display
+	for (INT32 y = 0; i; ++clause)
+	{
+		// Show picture
+		if (giFilesPage == 0 && clause == 4)
 		{
-			iCounter++;
-			pLocatorString = pLocatorString -> Next;
+			char filename[128];
+			sprintf(filename, "FACES/BIGFACES/%02d.sti", usProfileIdsForTerroristFiles[file_idx + 1]);
+			BltVideoObjectOnce(FRAME_BUFFER, filename,                     0, FILE_VIEWER_X + 30, y + 76);
+			BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/InterceptBorder.sti", 0, FILE_VIEWER_X + 25, y + 71);
 		}
 
+		Font const font = giFilesPage == 0 && clause == 0 ?
+			FILES_TITLE_FONT : FILES_TEXT_FONT;
 
-		// move through list and display
-		while( pTempString )
+		/* Based on the record we are at, selected X start position and the width to
+		 * wrap the line, to fit around pictures */
+		INT32 max_width;
+		INT32 start_x;
+		if (4 <= clause && clause < 7)
 		{
-			const wchar_t* String = pTempString->pString;
-			if (String[0] == L'\0')
-			{
-				// on last page
-				fOnLastFilesPageFlag = TRUE;
-			}
-
-			// show picture
-			if (giFilesPage == 0 && iCounter == 4)
-			{
-				char filename[128];
-				sprintf(filename, "FACES/BIGFACES/%02d.sti", usProfileIdsForTerroristFiles[iFileNumber + 1]);
-				BltVideoObjectOnce(FRAME_BUFFER, filename,                     0, FILE_VIEWER_X + 30, iYPositionOnPage + 76);
-				BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/InterceptBorder.sti", 0, FILE_VIEWER_X + 25, iYPositionOnPage + 71);
-			}
-
-			// set up font
-			Font font = FILES_TEXT_FONT;
-			if( giFilesPage == 0 )
-			{
-				switch (iCounter)
-				{
-				  case 0: font = FILES_TITLE_FONT; break;
-				}
-			}
-
-			if( ( iCounter > 3 ) && ( iCounter < 7 ) )
-			{
-				iFileLineWidth = 170;
-				iFileStartX = (UINT16) ( FILE_VIEWER_X  +  180 );
-			}
-			else
-			{
-				// reset width
-				iFileLineWidth = 350;
-				iFileStartX = (UINT16) ( FILE_VIEWER_X +  10 );
-			}
-
-			// based on the record we are at, selected X start position and the width to wrap the line, to fit around pictures
-			if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, font, String) < MAX_FILE_MESSAGE_PAGE_SIZE)
-			{
-     	   // now print it
-		     iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + 4 + iYPositionOnPage, iFileLineWidth, FILE_GAP, font, FILE_TEXT_COLOR, String, 0, IAN_WRAP_NO_SHADOW);
-				 fGoingOffCurrentPage = FALSE;
-			}
-			else
-			{
-				 // gonna get cut off...end now
-				 fGoingOffCurrentPage = TRUE;
-			}
-
-			pTempString = pTempString ->Next;
-
-			if (pTempString == NULL && !fGoingOffCurrentPage)
-			{
-				// on last page
-				fOnLastFilesPageFlag = TRUE;
-			}
-			else
-			{
-				fOnLastFilesPageFlag = FALSE;
-			}
-
-			// going over the edge, stop now
-			if (fGoingOffCurrentPage)
-			{
-				pTempString = NULL;
-			}
-
-			iCounter++;
+			max_width = 170;
+			start_x   = FILE_VIEWER_X + 180;
+		}
+		else
+		{
+			max_width = 350;
+			start_x   = FILE_VIEWER_X + 10;
 		}
 
+		wchar_t const* const txt = i->pString;
+		if (y + IanWrappedStringHeight(max_width, FILE_GAP, font, txt) >= MAX_FILE_MESSAGE_PAGE_SIZE)
+		{
+			// gonna get cut off, end now
+			fOnLastFilesPageFlag = FALSE;
+			break;
+		}
 
+		y += IanDisplayWrappedString(start_x, FILE_VIEWER_Y + 4 + y, max_width, FILE_GAP, font, FILE_TEXT_COLOR, txt, 0, IAN_WRAP_NO_SHADOW);
 
-		ClearOutWidthRecordsList( WidthList );
-		ClearFileStringList( );
+		i = i->Next;
+		fOnLastFilesPageFlag = !i;
+	}
+
+	ClearFileStringList();
 }
 
 
