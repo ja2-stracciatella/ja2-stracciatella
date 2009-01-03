@@ -93,7 +93,7 @@ enum
 
 
 // the highlighted line
-INT32 iHighLightFileLine=-1;
+static INT32 iHighLightFileLine = -1;
 
 
 // the files record list
