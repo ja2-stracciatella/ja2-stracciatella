@@ -683,15 +683,20 @@ static FileString* LoadStringsIntoFileList(char const* const filename, UINT32 of
 }
 
 
-static void ClearFileStringList(FileString* i)
+namespace
 {
-	while (i)
+	void ClearFileStringList(FileString* i)
 	{
-		FileString* const del = i;
-		i = i->Next;
-		MemFree(del->pString);
-		MemFree(del);
+		while (i)
+		{
+			FileString* const del = i;
+			i = i->Next;
+			MemFree(del->pString);
+			MemFree(del);
+		}
 	}
+
+	typedef SGP::AutoObj<FileString, ClearFileStringList>::Type AutoStringList;
 }
 
 
@@ -702,7 +707,7 @@ static FileRecordWidth* CreateWidthRecordsForAruloIntelFile(void);
 static void HandleSpecialFiles(void)
 {
 	FileRecordWidth*  const width_list = CreateWidthRecordsForAruloIntelFile();
-	FileString*       const head       = LoadStringsIntoFileList("BINARYDATA/RIS.EDT", 0, LENGTH_OF_ENRICO_FILE);
+	AutoStringList    const head(LoadStringsIntoFileList("BINARYDATA/RIS.EDT", 0, LENGTH_OF_ENRICO_FILE));
 	FileString const* const start      = GetFirstStringOnThisPage(head, FILES_TEXT_FONT, 350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, width_list);
 	ClearOutWidthRecordsList(width_list);
 
@@ -750,7 +755,6 @@ static void HandleSpecialFiles(void)
 		i = i->Next;
 		fOnLastFilesPageFlag = !i;
 	}
-	ClearFileStringList(head);
 
 	// place pictures
 	switch (giFilesPage)
@@ -1005,7 +1009,7 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 
 	FileRecordWidth*  const width_list = CreateWidthRecordsForTerroristFile();
 	FileInfo   const&       info       = g_file_info[file_idx];
-	FileString*       const head       = LoadStringsIntoFileList("BINARYDATA/files.EDT", info.file_offset, info.record_length);
+	AutoStringList    const head(LoadStringsIntoFileList("BINARYDATA/files.EDT", info.file_offset, info.record_length));
 	FileString const* const start      = GetFirstStringOnThisPage(head, FILES_TEXT_FONT, 350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, width_list);
 	ClearOutWidthRecordsList(width_list);
 
@@ -1060,7 +1064,6 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 		i = i->Next;
 		fOnLastFilesPageFlag = !i;
 	}
-	ClearFileStringList(head);
 }
 
 
