@@ -670,172 +670,71 @@ static FileRecordWidth* CreateWidthRecordsForAruloIntelFile(void);
 
 static void HandleSpecialFiles(void)
 {
-	INT32 iCounter = 0;
-	FileString const* pTempString = NULL;
-	FileString const* pLocatorString = NULL;
-	INT32 iYPositionOnPage = 0;
-	INT32 iFileLineWidth = 0;
-	INT32 iFileStartX = 0;
-	BOOLEAN fGoingOffCurrentPage = FALSE;
-	FileRecordWidth* WidthList = NULL;
-
-	ClearFileStringList( );
-
 	// load data
 	// read one record from file manager file
-
-	WidthList = CreateWidthRecordsForAruloIntelFile( );
-	while( iCounter < LENGTH_OF_ENRICO_FILE )
+	for (INT32 i = 0; i != LENGTH_OF_ENRICO_FILE; ++i)
 	{
-		wchar_t sString[FILE_STRING_SIZE];
-		LoadEncryptedDataFromFile("BINARYDATA/RIS.EDT", sString, FILE_STRING_SIZE * iCounter, FILE_STRING_SIZE);
-		AddStringToFilesList( sString );
-		iCounter++;
+		wchar_t str[FILE_STRING_SIZE];
+		LoadEncryptedDataFromFile("BINARYDATA/RIS.EDT", str, FILE_STRING_SIZE * i, FILE_STRING_SIZE);
+		AddStringToFilesList(str);
 	}
 
-	pTempString = pFileStringList;
-
-
-	iYPositionOnPage = 0;
-	iCounter = 0;
-	pLocatorString = pTempString;
-
-	pTempString = GetFirstStringOnThisPage( pFileStringList,FILES_TEXT_FONT,  350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, WidthList);
+	FileRecordWidth*  const width_list = CreateWidthRecordsForAruloIntelFile();
+	FileString const*       i          = pFileStringList;
+	FileString const* const start      = GetFirstStringOnThisPage(i, FILES_TEXT_FONT,  350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, width_list);
+	ClearOutWidthRecordsList(width_list);
 
 	// find out where this string is
-	while( pLocatorString != pTempString )
+	INT32 clause = 0;
+	for (; i != start; i = i->Next)
 	{
-		iCounter++;
-		pLocatorString = pLocatorString->Next;
+		++clause;
 	}
 
-
-	// move through list and display
-	while( pTempString )
+	// Move through list and display
+	for (INT32 y = 0; i; clause++)
 	{
-		const wchar_t* String = pTempString->pString;
+		Font const font = giFilesPage == 0 && clause == 0 ?
+			FILES_TITLE_FONT : FILES_TEXT_FONT;
 
-		if (String[0] == L'\0')
+		/* Based on the record we are at, selected X start position and the width to
+		 * wrap the line, to fit around pictures */
+		INT32 max_width = 350;
+		INT32 start_x   = FILE_VIEWER_X +  10;
+		switch (clause)
 		{
-			// on last page
-			fOnLastFilesPageFlag = TRUE;
+			case FILES_COUNTER_1_WIDTH:
+				if (giFilesPage == 0) y = MAX_FILE_MESSAGE_PAGE_SIZE;
+				break;
+
+			case FILES_COUNTER_2_WIDTH:
+			case FILES_COUNTER_3_WIDTH:
+				max_width = 200;
+				start_x   = FILE_VIEWER_X + 150;
+				break;
 		}
 
-
-		// set up font
-		Font font = FILES_TEXT_FONT;
-		if( giFilesPage == 0 )
+		wchar_t const* const txt = i->pString;
+		if (y + IanWrappedStringHeight(max_width, FILE_GAP, font, txt) >= MAX_FILE_MESSAGE_PAGE_SIZE)
 		{
-			switch (iCounter)
-			{
-				case 0: font = FILES_TITLE_FONT; break;
-			}
-		}
-
-		// reset width
-		iFileLineWidth = 350;
-		iFileStartX = (UINT16) ( FILE_VIEWER_X +  10 );
-
-		// based on the record we are at, selected X start position and the width to wrap the line, to fit around pictures
-
-		if( iCounter == 0 )
-		{
-			// title
-			iFileLineWidth = 350;
-			iFileStartX = (UINT16) ( FILE_VIEWER_X  +  10 );
-
-		}
-		else if( iCounter == 1 )
-		{
-			// opening on first page
-			iFileLineWidth = 350;
-			iFileStartX = (UINT16) ( FILE_VIEWER_X  +  10 );
-
-		}
-		else if( ( iCounter > 1) &&( iCounter < FILES_COUNTER_1_WIDTH ) )
-		{
-			iFileLineWidth = 350;
-			iFileStartX = (UINT16) ( FILE_VIEWER_X  +  10 );
-
-		}
-		else if( iCounter == FILES_COUNTER_1_WIDTH )
-		{
-			if( giFilesPage == 0 )
-			{
-				iYPositionOnPage += ( MAX_FILE_MESSAGE_PAGE_SIZE - iYPositionOnPage );
-			}
-			iFileLineWidth = 350;
-			iFileStartX = (UINT16) ( FILE_VIEWER_X  +  10 );
-		}
-
-		else if( iCounter == FILES_COUNTER_2_WIDTH )
-		{
-			iFileLineWidth = 200;
-			iFileStartX = (UINT16) ( FILE_VIEWER_X  +  150 );
-		}
-		else if( iCounter == FILES_COUNTER_3_WIDTH )
-		{
-			iFileLineWidth = 200;
-			iFileStartX = (UINT16) ( FILE_VIEWER_X  +  150 );
-		}
-
-		else
-		{
-			iFileLineWidth = 350;
-			iFileStartX = (UINT16) ( FILE_VIEWER_X +  10 );
-		}
-		// not far enough, advance
-
-		if (iYPositionOnPage + IanWrappedStringHeight(iFileLineWidth, FILE_GAP, font, String) < MAX_FILE_MESSAGE_PAGE_SIZE)
-		{
-			 // now print it
-			 iYPositionOnPage += IanDisplayWrappedString(iFileStartX, FILE_VIEWER_Y + 4 + iYPositionOnPage, iFileLineWidth, FILE_GAP, font, FILE_TEXT_COLOR, String, 0, IAN_WRAP_NO_SHADOW);
-			 fGoingOffCurrentPage = FALSE;
-		}
-		else
-		{
-			 // gonna get cut off...end now
-			 fGoingOffCurrentPage = TRUE;
-		}
-
-		pTempString = pTempString ->Next;
-
-		if( pTempString == NULL )
-		{
-			// on last page
-			fOnLastFilesPageFlag = TRUE;
-		}
-		else
-		{
+			// gonna get cut off, end now
 			fOnLastFilesPageFlag = FALSE;
+			break;
 		}
 
-		// going over the edge, stop now
-		if (fGoingOffCurrentPage)
-		{
-			pTempString = NULL;
-		}
-		iCounter++;
+		y += IanDisplayWrappedString(start_x, FILE_VIEWER_Y + 4 + y, max_width, FILE_GAP, font, FILE_TEXT_COLOR, txt, 0, IAN_WRAP_NO_SHADOW);
+
+		i = i->Next;
+		fOnLastFilesPageFlag = !i;
 	}
-	ClearOutWidthRecordsList( WidthList );
-	ClearFileStringList( );
+	ClearFileStringList();
 
 	// place pictures
-	// page 1 picture of country
-	if( giFilesPage == 0 )
+	switch (giFilesPage)
 	{
-		// title bar
-		BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/ArucoFilesMap.sti", 0, 300, 270);
-	}
-	else if( giFilesPage == 4 )
-	{
-		// kid pic
-		BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_Y.sti", 0, 260, 225);
-	}
-	else if( giFilesPage == 5 )
-	{
-			// wedding pic
-		BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_W.sti", 0, 260, 85);
+		case 0: BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/ArucoFilesMap.sti", 0, 300, 270); break; // Picture of country
+		case 4: BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_Y.sti",      0, 260, 225); break; // Kid pic
+		case 5: BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/Enrico_W.sti",      0, 260,  85); break; // Wedding pic
 	}
 }
 
