@@ -498,7 +498,7 @@ const wchar_t* pLongAttributeStrings[] =
 const wchar_t* pInvPanelTitleStrings[] =
 {
 	L"Wapen", // the armor rating of the merc
-	L"Gew.", // the weight the merc is carrying
+	L"Gewicht", // the weight the merc is carrying
 	L"Camo", // the merc's camouflage rating
 };
 
@@ -522,7 +522,7 @@ const wchar_t* pUpperLeftMapScreenStrings[] =
 	L"Opdracht", // the mercs current assignment
 	L"Gezond", // the health level of the current merc
 	L"Moraal", // the morale of the current merc
-	L"Cond.",	// the condition of the current vehicle
+	L"Conditie",	// the condition of the current vehicle
 };
 
 const wchar_t* pTrainingStrings[] =

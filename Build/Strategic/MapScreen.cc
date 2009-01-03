@@ -4914,7 +4914,7 @@ static void RenderAttributeStringsForUpperLeftHandCorner(SGPVSurface* const uiBu
 	else
 	{
 		// condition
-		DrawString(pUpperLeftMapScreenStrings[3], 96, 80, CHAR_FONT);
+		DrawString(pUpperLeftMapScreenStrings[3], 87, 80, CHAR_FONT);
 	}
 
 
