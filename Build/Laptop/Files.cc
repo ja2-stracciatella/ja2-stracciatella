@@ -482,19 +482,14 @@ static void DisplayFormattedText(void);
 
 static void DisplayFileMessage(void)
 {
-	// get the currently selected message
-  if(iHighLightFileLine!=-1)
+  if (iHighLightFileLine != -1)
   {
-		// display text
-    DisplayFormattedText( );
+    DisplayFormattedText();
 	}
 	else
 	{
-		HandleFileViewerButtonStates( );
+		HandleFileViewerButtonStates();
 	}
-
-	// reset shadow
-	SetFontShadow(DEFAULT_SHADOW);
 }
 
 
