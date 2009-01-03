@@ -1127,25 +1127,12 @@ static void ClearOutWidthRecordsList(FileRecordWidth* pFileRecordWidthList)
 static void OpenFirstUnreadFile(void)
 {
 	// open the first unread file in the list
-	INT32 iCounter = 0;
-	FilesUnit* pFilesList = pFilesListHead;
-
-	// make sure is a valid
-	 while( pFilesList )
-   {
-
-		 // if iCounter = iFileId, is a valid file
-		if (!pFilesList->fRead)
-		 {
-			 iHighLightFileLine = iCounter;
-		 }
-
-		 // next element in list
-		 pFilesList = pFilesList->Next;
-
-		 // increment counter
-		 iCounter++;
-	 }
+	INT32 i = 0;
+	for (FilesUnit* fu = pFilesListHead; fu; ++i, fu = fu->Next)
+	{
+		if (fu->fRead) continue;
+		iHighLightFileLine = i;
+	}
 }
 
 
