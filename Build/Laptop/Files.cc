@@ -720,7 +720,7 @@ static void HandleSpecialFiles(void)
 	}
 
 	// Move through list and display
-	for (INT32 y = 0; i; clause++)
+	for (INT32 y = 0; i; clause++, i = i->Next)
 	{
 		Font const font = giFilesPage == 0 && clause == 0 ?
 			FILES_TITLE_FONT : FILES_TEXT_FONT;
@@ -746,15 +746,12 @@ static void HandleSpecialFiles(void)
 		if (y + IanWrappedStringHeight(max_width, FILE_GAP, font, txt) >= MAX_FILE_MESSAGE_PAGE_SIZE)
 		{
 			// gonna get cut off, end now
-			fOnLastFilesPageFlag = FALSE;
 			break;
 		}
 
 		y += IanDisplayWrappedString(start_x, FILE_VIEWER_Y + 4 + y, max_width, FILE_GAP, font, FILE_TEXT_COLOR, txt, 0, IAN_WRAP_NO_SHADOW);
-
-		i = i->Next;
-		fOnLastFilesPageFlag = !i;
 	}
+	fOnLastFilesPageFlag = !i;
 
 	// place pictures
 	switch (giFilesPage)
@@ -1022,7 +1019,7 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 	}
 
 	// Move through list and display
-	for (INT32 y = 0; i; ++clause)
+	for (INT32 y = 0; i; ++clause, i = i->Next)
 	{
 		// Show picture
 		if (giFilesPage == 0 && clause == 4)
@@ -1055,15 +1052,12 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 		if (y + IanWrappedStringHeight(max_width, FILE_GAP, font, txt) >= MAX_FILE_MESSAGE_PAGE_SIZE)
 		{
 			// gonna get cut off, end now
-			fOnLastFilesPageFlag = FALSE;
 			break;
 		}
 
 		y += IanDisplayWrappedString(start_x, FILE_VIEWER_Y + 4 + y, max_width, FILE_GAP, font, FILE_TEXT_COLOR, txt, 0, IAN_WRAP_NO_SHADOW);
-
-		i = i->Next;
-		fOnLastFilesPageFlag = !i;
 	}
+	fOnLastFilesPageFlag = !i;
 }
 
 
