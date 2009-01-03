@@ -983,118 +983,67 @@ static void HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail);
 static void PreProcessEmail(Email* pMail);
 
 
-static INT32 DisplayEmailMessage(Email* pMail)
+static INT32 DisplayEmailMessage(Email* const m)
 {
-	INT32 iCounter=1;
-	INT32 iOffSet=0;
-	Record* pTempRecord;
-	BOOLEAN fDonePrintingMessage = FALSE;
+	if (!m) return 0;
 
-
-
-	if(!pMail)
-		return 0;
-
-  iOffSet=(INT32)pMail->usOffset;
-
-  // reset redraw email message flag
+	// reset redraw email message flag
 	fReDrawMessageFlag = FALSE;
 
 	// we KNOW the player is going to "read" this, so mark it as so
-	pMail->fRead=TRUE;
+	m->fRead = TRUE;
 
-	// is there any special event meant for this mail?..if so, handle it
-	HandleAnySpecialEmailMessageEvents( iOffSet );
+	INT32 const offset = m->usOffset;
+	HandleAnySpecialEmailMessageEvents(offset);
+	HandleMailSpecialMessages(offset, m);
 
-	HandleMailSpecialMessages(iOffSet, pMail);
+	PreProcessEmail(m);
 
-	PreProcessEmail( pMail );
+	INT32 const by = iViewerPositionY;
 
+	BltVideoObject(FRAME_BUFFER, guiEmailMessage,  0, VIEWER_X,     VIEWER_Y + by);
+	BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 0, VIEWER_X + 5, VIEWER_Y + by + 2);
 
-  pTempRecord = pMessageRecordList;
+	DisplayEmailMessageSubjectDateFromLines(m, by);
+	DrawEmailMessageDisplayTitleText(by);
 
+	UINT16 const h = GetFontHeight(MESSAGE_FONT);
+	INT32        y = VIEWER_MESSAGE_BODY_START_Y + by;
 
-  // blt in top line of message as a blank graphic
-	// place the graphic on the frame buffer
-	BltVideoObject(FRAME_BUFFER, guiEmailMessage, 1, VIEWER_X, VIEWER_MESSAGE_BODY_START_Y + iViewerPositionY);
-  BltVideoObject(FRAME_BUFFER, guiEmailMessage, 1, VIEWER_X, VIEWER_MESSAGE_BODY_START_Y + iViewerPositionY + GetFontHeight(MESSAGE_FONT));
+	BltVideoObject(FRAME_BUFFER, guiEmailMessage, 1, VIEWER_X, y);
+	y += h;
 
-	// set shadow
-	SetFontShadow(NO_SHADOW);
-
-	BltVideoObject(FRAME_BUFFER, guiEmailMessage,  0, VIEWER_X,     VIEWER_Y + iViewerPositionY);
-	BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 0, VIEWER_X + 5, VIEWER_Y + iViewerPositionY + 2);
-
-	// display header text
-  DisplayEmailMessageSubjectDateFromLines( pMail, iViewerPositionY );
-
-	// display title text
-	DrawEmailMessageDisplayTitleText( iViewerPositionY );
-
-
-
-  iCounter=0;
-  // now blit the text background based on height
-	for (iCounter=2; iCounter < ( ( iTotalHeight ) / ( GetFontHeight( MESSAGE_FONT ) ) ); iCounter++ )
+	// Blit the text background based on height
+	for (INT32 i = 1; i < iTotalHeight / h; ++i)
 	{
-	  BltVideoObject(FRAME_BUFFER, guiEmailMessage, 1, VIEWER_X, iViewerPositionY + VIEWER_MESSAGE_BODY_START_Y + GetFontHeight(MESSAGE_FONT) * iCounter);
+		BltVideoObject(FRAME_BUFFER, guiEmailMessage, 1, VIEWER_X, y);
+		y += h;
 	}
+	// The bottom piece to the message viewer
+	BltVideoObject(FRAME_BUFFER, guiEmailMessage, giNumberOfPagesToCurrentEmail <= 2 ? 2 : 3, VIEWER_X, y);
 
-
-	// now the bottom piece to the message viewer
-	BltVideoObject(FRAME_BUFFER, guiEmailMessage, giNumberOfPagesToCurrentEmail <= 2 ? 2 : 3, VIEWER_X, iViewerPositionY + VIEWER_MESSAGE_BODY_START_Y + GetFontHeight(MESSAGE_FONT) * iCounter);
-
-	// reset iCounter and iHeight
-	iCounter = 1;
-	INT32 iHeight = GetFontHeight(MESSAGE_FONT);
-
-  // draw body of text. Any particular email can encompass more than one "record" in the
-	// email file. Draw each record (length is number of records)
-
-	// now place the text
-
-	// reset ptemprecord to head of list
-	pTempRecord = pMessageRecordList;
-  // reset shadow
-	SetFontShadow( NO_SHADOW );
-
-	pTempRecord = pEmailPageInfo[ giMessagePage ].pFirstRecord;
-
-	if( pTempRecord )
+	/* Draw body of text. Any particular email can encompass more than one
+	 * "record" in the email file. Draw each record (length is number of records)
+	 */
+	if (Record const* i = pEmailPageInfo[giMessagePage].pFirstRecord)
 	{
-		while (!fDonePrintingMessage)
+		for (INT32 y = VIEWER_MESSAGE_BODY_START_Y + by + h;;)
 		{
-			// get the height of the string, ONLY!...must redisplay ON TOP OF background graphic
-			iHeight += IanDisplayWrappedString(VIEWER_X + MESSAGE_X + 4, VIEWER_MESSAGE_BODY_START_Y + iHeight + iViewerPositionY, MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pTempRecord->pRecord, 0, IAN_WRAP_NO_SHADOW);
+			y += IanDisplayWrappedString(VIEWER_X + MESSAGE_X + 4, y, MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, i->pRecord, 0, IAN_WRAP_NO_SHADOW);
 
-			// increment email record ptr
-			pTempRecord = pTempRecord -> Next;
-
-
-
-			if( pTempRecord == NULL )
-			{
-				fDonePrintingMessage = TRUE;
-			}
-			else if( ( pTempRecord == pEmailPageInfo[ giMessagePage ].pLastRecord ) && (  pEmailPageInfo[ giMessagePage + 1 ].pFirstRecord != NULL ) )
-			{
-				fDonePrintingMessage = TRUE;
-			}
+			i = i->Next;
+			if (!i) break;
+			if ( pEmailPageInfo[giMessagePage    ].pLastRecord != i) continue;
+			if (!pEmailPageInfo[giMessagePage + 1].pFirstRecord)     continue;
+			break;
 		}
 	}
 
-	// show number of pages to this email
-	DisplayNumberOfPagesToThisEmail( iViewerPositionY );
+	DisplayNumberOfPagesToThisEmail(by);
 
-	// mark this area dirty
-	InvalidateRegion( LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_LR_Y );
+	InvalidateRegion(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_LR_Y);
 
-
-	// reset shadow
-	SetFontShadow( DEFAULT_SHADOW );
-
-
-	return iViewerPositionY;
+	return by;
 }
 
 
