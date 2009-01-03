@@ -1250,19 +1250,14 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 
 
 // add a file about this terrorist
-BOOLEAN AddFileAboutTerrorist( INT32 iProfileId )
+BOOLEAN AddFileAboutTerrorist(INT32 const profile_id)
 {
-	INT32 iCounter = 0;
-
-	for( iCounter = 1; iCounter < 7; iCounter++ )
+	for (INT32 i = 1; i != 7; ++i)
 	{
-		if( usProfileIdsForTerroristFiles[ iCounter ] == iProfileId )
-		{
-			// checked, and this file is there
-			AddFilesToPlayersLog(iCounter);
-				return( TRUE );
-		}
-	}
+		if (usProfileIdsForTerroristFiles[i] != profile_id) continue;
 
-	return( FALSE );
+		AddFilesToPlayersLog(i);
+		return TRUE;
+	}
+	return FALSE;
 }
