@@ -1090,36 +1090,14 @@ static FileRecordWidth* CreateWidthRecordsForTerroristFile(void)
 }
 
 
-static void ClearOutWidthRecordsList(FileRecordWidth* pFileRecordWidthList)
+static void ClearOutWidthRecordsList(FileRecordWidth* i)
 {
-	FileRecordWidth* pTempRecord = NULL;
-	FileRecordWidth* pDeleteRecord = NULL;
-
-	// set up to head of the list
-	pTempRecord = pDeleteRecord = pFileRecordWidthList;
-
-	// error check
-	if( pFileRecordWidthList == NULL )
+	while (i)
 	{
-		return;
+		FileRecordWidth* const del = i;
+		i = i->Next;
+		MemFree(del);
 	}
-
-	while( pTempRecord -> Next )
-	{
-		// set up delete record
-		pDeleteRecord = pTempRecord;
-
-		// move to next record
-		pTempRecord = pTempRecord -> Next;
-
-		MemFree( pDeleteRecord );
-	}
-
-	// now get the last element
-	MemFree( pTempRecord );
-
-	// null out passed ptr
-	pFileRecordWidthList = NULL;
 }
 
 
