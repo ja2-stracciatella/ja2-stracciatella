@@ -473,7 +473,7 @@ void DisplayItemInfo(UINT32 uiItemClass)
 
 
 	if( uiItemClass == BOBBYR_USED_ITEMS )
-		CalcFirstIndexForPage( LaptopSaveInfo.BobbyRayUsedInventory, uiItemClass );
+		CalcFirstIndexForPage(LaptopSaveInfo.BobbyRayUsedInventory, IC_ALL);
 	else
 		CalcFirstIndexForPage( LaptopSaveInfo.BobbyRayInventory, uiItemClass );
 
@@ -1391,12 +1391,7 @@ static void CalcFirstIndexForPage(STORE_INVENTORY* const pInv, UINT32 const item
 	UINT16 inv_idx = 0;
 	for (UINT16 i = gusFirstItemIndex; i <= gusLastItemIndex; ++i)
 	{
-		if (item_class != BOBBYR_USED_ITEMS &&
-				!(Item[pInv[i].usItemIndex].usItemClass & item_class))
-		{
-			continue;
-		}
-
+		if (!(Item[pInv[i].usItemIndex].usItemClass & item_class)) continue;
 		// If we have some of the inventory on hand
 		if (pInv[i].ubQtyOnHand == 0) continue;
 

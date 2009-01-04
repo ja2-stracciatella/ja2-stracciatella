@@ -188,6 +188,8 @@ typedef struct
 #define IC_MONEY					0x20000000
 
 // PARENT TYPES
+#define IC_ALL            0xFFFFFFFF
+
 #define IC_WEAPON					( IC_GUN | IC_BLADE | IC_THROWING_KNIFE | IC_LAUNCHER | IC_TENTACLES )
 #define IC_EXPLOSV				( IC_GRENADE | IC_BOMB )
 
