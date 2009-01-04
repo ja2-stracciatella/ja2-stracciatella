@@ -1438,30 +1438,25 @@ static void CalcFirstIndexForPage(STORE_INVENTORY* pInv, UINT32 uiItemClass)
 }
 
 
-static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(const INVTYPE* const ammo)
+static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INVTYPE const* const ammo)
 {
-	UINT8	ubItemCount=0;
-	UINT8	ubPocketCount;
-
+	UINT8	      n_items = 0;
+	UINT8 const calibre = Magazine[ammo->ubClassIndex].ubCalibre;
 	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		//loop through all the pockets on the merc
-		for( ubPocketCount=0; ubPocketCount<NUM_INV_SLOTS; ubPocketCount++)
+		// Loop through all the pockets on the merc
+		for (UINT8 pocket = 0; pocket != NUM_INV_SLOTS; ++pocket)
 		{
-			const OBJECTTYPE* const o = &s->inv[ubPocketCount];
-			//if there is a weapon here
-			if (Item[o->usItem].usItemClass == IC_GUN)
-			{
-				//if the weapon uses the same kind of ammo as the one passed in, return true
-				if (Weapon[o->usItem].ubCalibre == Magazine[ammo->ubClassIndex].ubCalibre)
-				{
-					ubItemCount++;
-				}
-			}
+			OBJECTTYPE const& o = s->inv[pocket];
+			// If there is a weapon here
+			if (Item[o.usItem].usItemClass != IC_GUN) continue;
+			// If the weapon uses the same kind of ammo as the one passed in
+			if (Weapon[o.usItem].ubCalibre != calibre) continue;
+
+			++n_items;
 		}
 	}
-
-	return( ubItemCount );
+	return n_items;
 }
 
 
