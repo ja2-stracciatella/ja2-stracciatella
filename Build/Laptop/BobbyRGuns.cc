@@ -1382,58 +1382,26 @@ static void DisableBobbyRButtons(void)
 }
 
 
-static void CalcFirstIndexForPage(STORE_INVENTORY* pInv, UINT32 uiItemClass)
+static void CalcFirstIndexForPage(STORE_INVENTORY* const pInv, UINT32 const item_class)
 {
-	UINT16	i;
-	UINT16	usNumItems=0;
-
-	//Reset the Current weapon Index
+	// Reset the Current weapon Index
 	gusCurWeaponIndex = 0;
 
-	if( uiItemClass == BOBBYR_USED_ITEMS )
+	// Get to the first index on the page
+	UINT16 inv_idx = 0;
+	for (UINT16 i = gusFirstItemIndex; i <= gusLastItemIndex; ++i)
 	{
-		//Get to the first index on the page
-		for(i=gusFirstItemIndex; i<=gusLastItemIndex; i++)
+		if (item_class != BOBBYR_USED_ITEMS &&
+				!(Item[pInv[i].usItemIndex].usItemClass & item_class))
 		{
-			//If we have some of the inventory on hand
-			if( pInv[ i ].ubQtyOnHand != 0 )
-			{
-				if( gubCurPage == 0 )
-				{
-					gusCurWeaponIndex = i;
-					break;
-				}
-
-				if( usNumItems <= ( gubCurPage * 4 ) )
-					gusCurWeaponIndex = i;
-
-				usNumItems++;
-			}
+			continue;
 		}
-	}
-	else
-	{
-		//Get to the first index on the page
-		for(i=gusFirstItemIndex; i<=gusLastItemIndex; i++)
-		{
-			if( Item[ pInv[ i ].usItemIndex ].usItemClass & uiItemClass )
-			{
-				//If we have some of the inventory on hand
-				if( pInv[ i ].ubQtyOnHand != 0 )
-				{
-					if( gubCurPage == 0 )
-					{
-						gusCurWeaponIndex = i;
-						break;
-					}
 
-					if( usNumItems <= ( gubCurPage * 4 ) )
-						gusCurWeaponIndex = i;
+		// If we have some of the inventory on hand
+		if (pInv[i].ubQtyOnHand == 0) continue;
 
-					usNumItems++;
-				}
-			}
-		}
+		gusCurWeaponIndex = i;
+		if (inv_idx++ == gubCurPage * 4) break;
 	}
 }
 
