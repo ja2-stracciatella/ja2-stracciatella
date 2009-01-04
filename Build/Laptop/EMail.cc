@@ -2364,32 +2364,22 @@ static void OpenMostRecentUnreadEmail(void)
 }
 
 
-static void DisplayNumberOfPagesToThisEmail(INT32 iViewerY)
+static void DisplayNumberOfPagesToThisEmail(INT32 const iViewerY)
 {
 	// display the indent for the display of pages to this email..along with the current page/number of pages
-	INT16 sX = 0, sY = 0;
-	CHAR16 sString[ 32 ];
-
-	giNumberOfPagesToCurrentEmail = ( giNumberOfPagesToCurrentEmail );
-
-	// parse current page and max number of pages to email
-	swprintf( sString, lengthof(sString), L"%d / %d", ( giMessagePage + 1 ), ( giNumberOfPagesToCurrentEmail - 1 ) );
-
-	SetFont( FONT12ARIAL );
-	SetFontForeground( FONT_BLACK );
-	SetFontBackground( FONT_BLACK );
-
-	// turn off the shadows
+	SetFont(FONT12ARIAL);
+	SetFontForeground(FONT_BLACK);
+	SetFontBackground(FONT_BLACK);
 	SetFontShadow(NO_SHADOW);
 
-	SetFontDestBuffer(FRAME_BUFFER);
+	wchar_t str[32];
+	swprintf(str, lengthof(str), L"%d / %d", giMessagePage + 1, giNumberOfPagesToCurrentEmail - 1);
+	INT16 sX;
+	INT16 sY;
+	FindFontCenterCoordinates(VIEWER_X + INDENT_X_OFFSET, 0, INDENT_X_WIDTH, 0, str, FONT12ARIAL, &sX, &sY);
+	MPrint(sX, VIEWER_Y + iViewerY + INDENT_Y_OFFSET - 2, str);
 
-	FindFontCenterCoordinates(VIEWER_X + INDENT_X_OFFSET, 0,INDENT_X_WIDTH, 0, sString, FONT12ARIAL, &sX, &sY);
-	MPrint(sX, VIEWER_Y + iViewerY + INDENT_Y_OFFSET - 2, sString);
-
-
-	// restore shadows
-	SetFontShadow( DEFAULT_SHADOW );
+	SetFontShadow(DEFAULT_SHADOW);
 }
 
 
