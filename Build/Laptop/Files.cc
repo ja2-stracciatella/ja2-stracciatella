@@ -135,12 +135,12 @@ struct FileInfo
 static const FileInfo g_file_info[] =
 {
 	{ NO_PROFILE, 0,                               ENRICO_LENGTH },
-	{ DRUGGIST,   ENRICO_LENGTH,                   SLAY_LENGTH   }, // Elgin
-	{ SLAY,       ENRICO_LENGTH + SLAY_LENGTH,     SLAY_LENGTH   }, // Slay
-	{ ANNIE,      ENRICO_LENGTH + SLAY_LENGTH * 2, SLAY_LENGTH   }, // MOM
-	{ CHRIS,      ENRICO_LENGTH + SLAY_LENGTH * 3, SLAY_LENGTH   }, // Imposter
-	{ TIFFANY,    ENRICO_LENGTH + SLAY_LENGTH * 4, SLAY_LENGTH   }, // Tiff
-	{ T_REX,      ENRICO_LENGTH + SLAY_LENGTH * 5, SLAY_LENGTH   }  // T-Rex
+	{ SLAY,       ENRICO_LENGTH,                   SLAY_LENGTH   }, // Slay
+	{ ANNIE,      ENRICO_LENGTH + SLAY_LENGTH * 1, SLAY_LENGTH   }, // MOM
+	{ CHRIS,      ENRICO_LENGTH + SLAY_LENGTH * 2, SLAY_LENGTH   }, // Imposter
+	{ TIFFANY,    ENRICO_LENGTH + SLAY_LENGTH * 3, SLAY_LENGTH   }, // Tiff
+	{ T_REX,      ENRICO_LENGTH + SLAY_LENGTH * 4, SLAY_LENGTH   }, // T-Rex
+	{ DRUGGIST,   ENRICO_LENGTH + SLAY_LENGTH * 5, SLAY_LENGTH   }  // Elgin
 };
 
 
@@ -1050,14 +1050,10 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 }
 
 
-// add a file about this terrorist
-BOOLEAN AddFileAboutTerrorist(INT32 const profile_id)
+void AddFilesAboutTerrorists()
 {
 	for (INT32 i = 1; i != lengthof(g_file_info); ++i)
 	{
-		if (g_file_info[i].profile_id != profile_id) continue;
 		AddFilesToPlayersLog(i);
-		return TRUE;
 	}
-	return FALSE;
 }

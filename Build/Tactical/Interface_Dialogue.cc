@@ -2623,25 +2623,12 @@ unlock:
 			}
 
 			case NPC_ACTION_DECIDE_ACTIVE_TERRORISTS:
-				{
-					// only (now) add all terrorist files to laptop
-					UINT8		ubLoop;
+				// only (now) add all terrorist files to laptop
+				AddFilesAboutTerrorists();
 
-					// one terrorist will always be Elgin
-					// determine how many more terrorists - 2 to 4 more
-
-					ubLoop = 0;
-					while ( gubTerrorists[ ubLoop ] != 0 )
-					{
-						AddFileAboutTerrorist( gubTerrorists[ ubLoop ] );
-						ubLoop++;
-					}
-
-					// Carmen has received 0 terrorist heads recently
-					GetProfile(CARMEN)->bNPCData2 = 0;
-				}
+				// Carmen has received 0 terrorist heads recently
+				GetProfile(CARMEN)->bNPCData2 = 0;
 				break;
-
 
 			case NPC_ACTION_CHECK_LAST_TERRORIST_HEAD:
 			{

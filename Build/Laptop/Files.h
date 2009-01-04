@@ -12,7 +12,7 @@ void RenderFiles(void);
 extern BOOLEAN fEnteredFileViewerFromNewFileIcon;
 extern BOOLEAN fNewFilesInFileViewer;
 
-// add a file about this terrorist
-BOOLEAN AddFileAboutTerrorist(INT32 iProfileId);
+// add all files about terrorists
+void AddFilesAboutTerrorists();
 
 #endif
