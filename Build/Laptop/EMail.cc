@@ -2435,201 +2435,102 @@ void ShutDownEmailList()
 }
 
 
-static void PreProcessEmail(Email* pMail)
+static void PreProcessEmail(Email* const m)
 {
-	Record* pTempRecord;
-	Record* pCurrentRecord = NULL; // XXX HACK000E
-	Record* pLastRecord;
-	Record* pTempList;
-	INT32 iCounter = 0, iHeight = 0, iOffSet = 0;
-	BOOLEAN fGoingOffCurrentPage = FALSE;
-	INT32 iYPositionOnPage = 0;
+	// already processed?
+	if (pEmailPageInfo[0].pFirstRecord) return;
 
-	iOffSet=(INT32)pMail->usOffset;
-
-	// set record ptr to head of list
-	pTempRecord=pMessageRecordList;
-
-	if( pEmailPageInfo[ 0 ].pFirstRecord != NULL )
-	{
-		// already processed
-		return;
-	}
-
-	// list doesn't exist, reload
-	if( !pTempRecord )
-  {
-	  while(pMail->usLength > iCounter)
+	if (!pMessageRecordList)
+	{ // List doesn't exist, reload
+		INT32 const offset = m->usOffset;
+		for (INT32 i = 0; i != m->usLength; ++i)
 		{
-      // read one record from email file
-			wchar_t pString[MAIL_STRING_SIZE];
-			LoadEMailText(pString, iOffSet + iCounter);
-
-			// add to list
-			AddEmailRecordToList( pString );
-
-      // increment email record counter
-		  iCounter++;
-    }
+			// read one record from email file
+			wchar_t str[MAIL_STRING_SIZE];
+			LoadEMailText(str, offset + i);
+			AddEmailRecordToList(str);
+		}
 		PreviousMail = CurrentMail;
 	}
 
-	// set record ptr to head of list
-	pTempRecord=pMessageRecordList;
-//def removed
-	// pass the subject line
-	if( pTempRecord && pMail->usOffset != IMP_EMAIL_PROFILE_RESULTS)
-	{
-		pTempRecord = pTempRecord->Next;
+	Record* start = pMessageRecordList;
+	if (start && m->usOffset != IMP_EMAIL_PROFILE_RESULTS)
+	{ // pass the subject line
+		start = start->Next;
 	}
 
 	// get number of pages to this email
-	giNumberOfPagesToCurrentEmail = GetNumberOfPagesToEmail( );
+	giNumberOfPagesToCurrentEmail = GetNumberOfPagesToEmail();
 
-
-	while( pTempRecord )
+	INT32 h = 0;
+	for (Record const* i = start; i; i = i->Next)
 	{
-	  // get the height of the string, ONLY!...must redisplay ON TOP OF background graphic
-		iHeight += IanWrappedStringHeight(MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, pTempRecord->pRecord);
-
-		// next message record string
-		pTempRecord = pTempRecord -> Next;
-
+		// get the height of the string, ONLY!...must redisplay ON TOP OF background graphic
+		h += IanWrappedStringHeight(MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, i->pRecord);
 	}
 
 	// set iViewerY so to center the viewer
-  iViewerPositionY =  ( LAPTOP_SCREEN_LR_Y - 2 * VIEWER_Y - 2 * VIEWER_MESSAGE_BODY_START_Y  - iHeight ) /2;
+	iViewerPositionY = (LAPTOP_SCREEN_LR_Y - 2 * VIEWER_Y - 2 * VIEWER_MESSAGE_BODY_START_Y  - h) / 2;
+	if (iViewerPositionY < 0) iViewerPositionY = 0;
 
-	if ( iViewerPositionY < 0 )
-	{
-		iViewerPositionY = 0;
+	UINT16 const line_h = GetFontHeight(MESSAGE_FONT);
+	if (h < line_h * MIN_MESSAGE_HEIGHT_IN_LINES)
+	{ // Use minimum height
+		h = line_h * MIN_MESSAGE_HEIGHT_IN_LINES;
+	}
+	else if (h > MAX_EMAIL_MESSAGE_PAGE_SIZE)
+	{ // Message to big to fit on page
+		h = MAX_EMAIL_MESSAGE_PAGE_SIZE;
 	}
 
 	// set total height to height of records displayed
-  iTotalHeight=iHeight;
+	iTotalHeight = h + 10;
 
-		// if the message background is less than MIN_MESSAGE_HEIGHT_IN_LINES, set to that number
-  if( ( iTotalHeight / GetFontHeight( MESSAGE_FONT ) ) < MIN_MESSAGE_HEIGHT_IN_LINES)
+	INT32 page = 0;
+	if (iTotalHeight < MAX_EMAIL_MESSAGE_PAGE_SIZE)
 	{
-		iTotalHeight=GetFontHeight( MESSAGE_FONT ) * MIN_MESSAGE_HEIGHT_IN_LINES;
-	}
+		EmailPageInfoStruct& info = pEmailPageInfo[page];
+		info.pFirstRecord = start;
+		info.iPageNumber  = 0;
 
-  if(iTotalHeight > MAX_EMAIL_MESSAGE_PAGE_SIZE)
-	{
-    // if message to big to fit on page
-		iTotalHeight = MAX_EMAIL_MESSAGE_PAGE_SIZE + 10;
-	}
-	else
-	{
-		iTotalHeight += 10;
-	}
-
-	pTempRecord=pMessageRecordList;
-
-	if( iTotalHeight < MAX_EMAIL_MESSAGE_PAGE_SIZE )
-	{
-		if( pTempRecord && pMail->usOffset != IMP_EMAIL_PROFILE_RESULTS)
+		Record* last_record = 0;
+		for (Record* i = start; i; i = i->Next)
 		{
-			pTempRecord = pTempRecord->Next;
-		}
-
-		pEmailPageInfo[ 0 ].pFirstRecord = pTempRecord ;
-		pEmailPageInfo[ 0 ].iPageNumber = 0;
-
-
-		Assert(pTempRecord);		// required, otherwise we're testing pCurrentRecord when undefined later
-
-	  while( pTempRecord )
-		{
-			pCurrentRecord = pTempRecord;
-
-			// increment email record ptr
-		  pTempRecord = pTempRecord -> Next;
-
+			last_record = i;
 		}
 
 		// only one record to this email?..then set next to null
-		if( pCurrentRecord == pEmailPageInfo[ 0 ].pFirstRecord )
-		{
-			pCurrentRecord = NULL;
-		}
-
-		// set up the last record for the page
-		pEmailPageInfo[ 0 ].pLastRecord = pCurrentRecord;
-
-		// now set up the next page
-		pEmailPageInfo[ 1 ].pFirstRecord = NULL;
-		pEmailPageInfo[ 1 ].pLastRecord = NULL;
-		pEmailPageInfo[ 1 ].iPageNumber = 1;
+		info.pLastRecord = last_record == info.pFirstRecord ? 0 : last_record;
+		++page;
 	}
 	else
 	{
-		pTempList = pMessageRecordList;
-
-		if( pTempList && pMail->usOffset != IMP_EMAIL_PROFILE_RESULTS)
-		{
-			pTempList = pTempList->Next;
-		}
-
-		iCounter = 0;
-
 		// more than one page
-		while (pTempRecord = GetFirstRecordOnThisPage(pTempList, iCounter))
+		for (Record* i; i = GetFirstRecordOnThisPage(start, page); ++page)
 		{
-			iYPositionOnPage = 0;
-
-			pEmailPageInfo[ iCounter ].pFirstRecord = pTempRecord;
-			pEmailPageInfo[ iCounter ].iPageNumber = iCounter;
-			pLastRecord = NULL;
+			EmailPageInfoStruct& info = pEmailPageInfo[page];
+			info.pFirstRecord = i;
+			info.iPageNumber  = page;
 
 			// go to the right record
-			while( pTempRecord )
+			Record* last_record = 0;
+			INT32   y           = 0;
+			for (; i; i = last_record = i->Next)
 			{
-				if (iYPositionOnPage + IanWrappedStringHeight(MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, pTempRecord->pRecord) <= MAX_EMAIL_MESSAGE_PAGE_SIZE)
-				{
-     			// now print it
-					iYPositionOnPage += IanWrappedStringHeight(MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, pTempRecord->pRecord);
-					fGoingOffCurrentPage = FALSE;
-				}
-				else
-				{
-					// gonna get cut off...end now
-					fGoingOffCurrentPage = TRUE;
-				}
-
-
-
-				pCurrentRecord = pTempRecord;
-				pTempRecord = pTempRecord ->Next;
-
-				if (!fGoingOffCurrentPage)
-				{
-					pLastRecord = pTempRecord;
-				}
-				// record get cut off?...end now
-
-				if (fGoingOffCurrentPage)
-				{
-					pTempRecord = NULL;
-				}
+				UINT16 const h = IanWrappedStringHeight(MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, i->pRecord);
+				// Gonna get cut off?  End now
+				if (y + h > MAX_EMAIL_MESSAGE_PAGE_SIZE) break;
+				y += h;
 			}
 
-			if( pLastRecord == pEmailPageInfo[ iCounter ].pFirstRecord )
-			{
-				pLastRecord = NULL;
-			}
-
-			pEmailPageInfo[ iCounter ].pLastRecord = pLastRecord;
-			iCounter++;
+			info.pLastRecord = last_record == info.pFirstRecord ? 0 : last_record;
 		}
-
-		pEmailPageInfo[ iCounter ].pFirstRecord = NULL;
-		pEmailPageInfo[ iCounter ].pLastRecord = NULL;
-		pEmailPageInfo[ iCounter ].iPageNumber = iCounter;
 	}
 
-
-
+	EmailPageInfoStruct& info = pEmailPageInfo[page];
+	info.pFirstRecord = 0;
+	info.pLastRecord  = 0;
+	info.iPageNumber  = page;
 }
 
 
