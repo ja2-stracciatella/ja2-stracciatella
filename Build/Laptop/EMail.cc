@@ -2416,21 +2416,15 @@ static INT32 GetNumberOfPagesToEmail(void)
 
 void ShutDownEmailList()
 {
-	Email* pEmail = pEmailList;
-	Email* pTempEmail = NULL;
-
-	//loop through all the emails to delete them
-	while( pEmail )
+	// Loop through all the emails to delete them
+	Email* i = pEmailList;
+	pEmailList = 0;
+	while (i)
 	{
-		pTempEmail = pEmail;
-
-		pEmail = pEmail->Next;
-
-		MemFree( pTempEmail );
-		pTempEmail = NULL;
+		Email* const del = i;
+		i = i->Next;
+		MemFree(del);
 	}
-	pEmailList = NULL;
-
 	ClearPages();
 }
 
