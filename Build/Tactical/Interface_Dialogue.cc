@@ -613,14 +613,11 @@ void RenderTalkingMenu()
 
 	if (!gfInTalkPanel) return;
 
-	SetFont(MILITARYFONT1);
-
 	// Render box!
 	BltVideoObject(FRAME_BUFFER, tp->uiPanelVO, 0, tp->sX, tp->sY);
 
 	// Render name
-	SetFontForeground(tp->fOnName ? FONT_WHITE : 33);
-	SetFontBackground(FONT_MCOLOR_BLACK);
+	SetFontFgBg(MILITARYFONT1, tp->fOnName ? FONT_WHITE : 33, FONT_MCOLOR_BLACK);
 	wchar_t const* const name = GetProfile(pid)->zNickname;
 	INT16                sFontX;
 	INT16                sFontY;

@@ -595,13 +595,7 @@ static void DisplayPlayerNameStrings(void)
 	RenderNameIndent(    194, 132);
 	RenderNickNameIndent(194, 192);
 
-	// setup the font stuff
-	SetFont(FONT14ARIAL);
-	SetFontForeground(184);
-	SetFontBackground(FONT_BLACK);
-
-  // reset shadow
-	SetFontShadow(DEFAULT_SHADOW);
+	SetFontAttributes(FONT14ARIAL, 184, DEFAULT_SHADOW);
 	MPrint(LAPTOP_SCREEN_UL_X + 196, FULL_NAME_CURSOR_Y + 1, pFullNameString);
 	MPrint(LAPTOP_SCREEN_UL_X + 196, NICK_NAME_CURSOR_Y + 4, pNickNameString);
 
@@ -825,14 +819,8 @@ static void RenderGender(void)
 
 static void Print8CharacterOnlyString(void)
 {
-	SetFontBackground( FONT_BLACK );
-	SetFontForeground( FONT_BLACK );
-	SetFont( FONT12ARIAL );
-	SetFontShadow(NO_SHADOW);
-
+	SetFontAttributes(FONT12ARIAL, FONT_BLACK, NO_SHADOW);
 	MPrint(430, LAPTOP_SCREEN_WEB_DELTA_Y + 228, pIMPBeginScreenStrings);
-
-	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
 }
 

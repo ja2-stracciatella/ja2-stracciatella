@@ -708,10 +708,7 @@ void RestoreShiftedVideoOverlays(const INT16 sShiftX, const INT16 sShiftY)
 // Common callbacks for topmost blitters
 void BlitMFont( VIDEO_OVERLAY *pBlitter )
 {
-	SetFont( pBlitter->uiFontID );
-	SetFontBackground( pBlitter->ubFontBack );
-	SetFontForeground( pBlitter->ubFontFore );
-
+	SetFontFgBg(pBlitter->uiFontID, pBlitter->ubFontFore, pBlitter->ubFontBack);
 	SGPVSurface::Lock l(pBlitter->uiDestBuff);
 	mprintf_buffer(l.Buffer<UINT16>(), l.Pitch(), pBlitter->sX, pBlitter->sY, pBlitter->zText);
 }

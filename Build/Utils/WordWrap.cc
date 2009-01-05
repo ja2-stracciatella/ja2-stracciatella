@@ -162,10 +162,7 @@ void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 
 		usPosY = usLocY;
 	}
 
-	SetFont(font);
-
-	SetFontForeground(ubColor);
-	SetFontBackground(ubBackGroundColor);
+	SetFontFgBg(font, ubColor, ubBackGroundColor);
 
 	if( ulFlags & TEXT_SHADOWED )
 		ShadowText( FRAME_BUFFER, pStr, font, (UINT16)(usPosX-1), (UINT16)(usPosY-1 ) );

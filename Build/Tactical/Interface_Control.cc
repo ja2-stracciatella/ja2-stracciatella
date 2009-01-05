@@ -509,9 +509,7 @@ void RenderTopmostTacticalInterface()
 #ifdef JA2TESTVERSION
 	if (gUIDeadlockedSoldier != NOBODY)
 	{
-		SetFont(LARGEFONT1);
-		SetFontBackground(FONT_MCOLOR_BLACK);
-		SetFontForeground(FONT_MCOLOR_WHITE);
+		SetFontFgBg(LARGEFONT1, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK);
 		GDirtyPrintF(0, 300, L"OPPONENT %d DEADLOCKED - 'Q' TO DEBUG, <ALT><ENTER> END OPP TURN", gUIDeadlockedSoldier);
 	}
 #endif
@@ -557,9 +555,7 @@ void RenderTopmostTacticalInterface()
 			}
 		}
 
-		SetFont(TINYFONT1);
-		SetFontBackground(FONT_MCOLOR_BLACK);
-		SetFontForeground(FONT_MCOLOR_WHITE);
+		SetFontFgBg(TINYFONT1, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK);
 		GDirtyPrintF(x, y, L"-%d", s->sDamage);
 	}
 

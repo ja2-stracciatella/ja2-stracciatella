@@ -481,9 +481,7 @@ void DrawEditorInfoBox(const wchar_t* str, Font const font, UINT16 x, UINT16 y, 
 		return;
 	}
 	//center the string vertically and horizontally.
-	SetFont(font);
-	SetFontForeground( FONT_BLACK );
-	SetFontShadow( FONT_BLACK );
+	SetFontFgSh(font, FONT_BLACK, NO_SHADOW);
 	x += (w - StringPixLength(str, font)) / 2;
 	y += (h - GetFontHeight(font)) / 2;
 	MPrint(x, y, str);
@@ -670,9 +668,7 @@ static void RenderDoorLockInfo(void)
 		DisplayWrappedString(xp, yp, 60, 2, FONT10ARIAL, FONT_LTKHAKI, str, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 		if( DoorTable[ i ].ubTrapID )
 		{
-			SetFont( FONT10ARIAL );
-			SetFontForeground( FONT_RED );
-			SetFontShadow( FONT_NEARBLACK );
+			SetFontFgSh(FONT10ARIAL, FONT_RED, FONT_NEARBLACK);
 			const wchar_t* TrapType; // HACK000E
 			switch( DoorTable[ i ].ubTrapID )
 			{
@@ -720,9 +716,7 @@ static void RenderSelectedItemBlownUp(void)
 	BltVideoObjectOutline(FRAME_BUFFER, vo, Item[gpItem->usItem].ubGraphicNum, xp, yp, Get16BPPColor(FROMRGB(0, 140, 170)));
 
 	//Display the item name above it
-	SetFont( FONT10ARIAL );
-	SetFontForeground( FONT_YELLOW );
-	SetFontShadow( FONT_NEARBLACK );
+	SetFontFgSh(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
 	if( gpItem->usItem == ACTION_ITEM || gpItem->usItem == SWITCH )
 	{
 		BuildTriggerName(gpItem, szItemName, lengthof(szItemName));
@@ -783,10 +777,7 @@ static void RenderEditorInfo(void)
 {
 	wchar_t					FPSText[ 50 ];
 
-	SetFont( FONT12POINT1 );
-	SetFontForeground( FONT_BLACK );
-	SetFontBackground( FONT_BLACK );
-	SetFontShadow(NO_SHADOW);
+	SetFontAttributes(FONT12POINT1, FONT_BLACK, NO_SHADOW);
 
 	//Display the mapindex position
 	const GridNo iMapIndex = GetMouseMapPos();

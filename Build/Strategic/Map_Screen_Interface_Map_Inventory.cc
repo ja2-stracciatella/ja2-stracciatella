@@ -231,9 +231,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	wcscpy(sString, ShortItemNames[item->o.usItem]);
 	ReduceStringLength(sString, lengthof(sString), name_box->w, MAP_IVEN_FONT);
 
-	SetFont(MAP_IVEN_FONT);
-	SetFontForeground(FONT_WHITE);
-	SetFontBackground(FONT_BLACK);
+	SetFontFgBg(MAP_IVEN_FONT, FONT_WHITE, FONT_BLACK);
 
 	INT16 x;
 	INT16 y;
@@ -1081,11 +1079,7 @@ static void DisplayPagesForMapInventoryPool(void)
 	CHAR16 sString[ 32 ];
 	INT16 sX, sY;
 
-	SetFont( COMPFONT );
-	SetFontForeground( 183 );
-	SetFontBackground( FONT_BLACK );
-
-	// set the buffer
+	SetFontFgBg(COMPFONT, 183, FONT_BLACK);
 	SetFontDestBuffer(guiSAVEBUFFER);
 
 	// grab current and last pages
@@ -1147,12 +1141,7 @@ static void DrawNumberOfIventoryPoolItems(void)
 	// get number of items
 	swprintf( sString, lengthof(sString), L"%d", iNumberOfItems );
 
-	// set font stuff
-	SetFont( COMPFONT );
-	SetFontForeground( 183 );
-	SetFontBackground( FONT_BLACK );
-
-	// set the buffer
+	SetFontFgBg(COMPFONT, 183, FONT_BLACK);
 	SetFontDestBuffer(guiSAVEBUFFER);
 
 	// grab centered coords
@@ -1187,12 +1176,7 @@ static void DisplayCurrentSector(void)
 
 	swprintf( sString, lengthof(sString), L"%ls%ls%ls", pMapVertIndex[ sSelMapY ], pMapHortIndex[ sSelMapX ], pMapDepthIndex[ iCurrentMapSectorZ ] );
 
-	// set font stuff
-	SetFont( COMPFONT );
-	SetFontForeground( 183 );
-	SetFontBackground( FONT_BLACK );
-
-	// set the buffer
+	SetFontFgBg(COMPFONT, 183, FONT_BLACK);
 	SetFontDestBuffer(guiSAVEBUFFER);
 
 	// grab centered coords
@@ -1231,11 +1215,7 @@ static void DrawTextOnMapInventoryBackground(void)
 //	CHAR16 sString[ 64 ];
 	UINT16 usStringHeight;
 
-	SetFont( MAP_IVEN_FONT );
-	SetFontBackground( FONT_BLACK );
-	SetFontForeground( FONT_BEIGE );
-
-	// set the buffer
+	SetFontFgBg(MAP_IVEN_FONT, FONT_BEIGE, FONT_BLACK);
 	SetFontDestBuffer(guiSAVEBUFFER);
 
 	//Calculate the height of the string, as it needs to be vertically centered.
@@ -1292,10 +1272,7 @@ void HandleButtonStatesWhileMapInventoryActive( void )
 static void DrawTextOnSectorInventory(void)
 {
 	SetFontDestBuffer(guiSAVEBUFFER);
-
-	SetFont(FONT14ARIAL);
-	SetFontForeground(FONT_WHITE);
-	SetFontBackground(FONT_BLACK);
+	SetFontFgBg(FONT14ARIAL, FONT_WHITE, FONT_BLACK);
 
 	INT16 x;
 	INT16 y;

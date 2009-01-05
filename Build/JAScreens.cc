@@ -92,20 +92,11 @@ void DisplayFrameRate( )
 	}
 
 	// Create string
-	SetFont( SMALLFONT1 );
 
 	//DebugMsg(TOPIC_JA2, DBG_LEVEL_0, String( "FPS: %d ", __min( uiFPS, 1000 ) ) );
 
-	if ( uiFPS < 20 )
-	{
-		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_LTRED );
-	}
-	else
-	{
-		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_DKGRAY );
-	}
+	UINT8 const foreground = uiFPS < 20 ? FONT_MCOLOR_LTRED : FONT_MCOLOR_DKGRAY;
+	SetFontFgBg(SMALLFONT1, foreground, FONT_MCOLOR_BLACK);
 
 	if ( gbFPSDisplay == SHOW_FULL_FPS )
 	{
@@ -118,9 +109,7 @@ void DisplayFrameRate( )
 
 	if ( ( gTacticalStatus.uiFlags & GODMODE ) )
 	{
-		SetFont( SMALLFONT1 );
-		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_DKRED );
+		SetFontFgBg(SMALLFONT1, FONT_MCOLOR_DKRED, FONT_MCOLOR_BLACK);
 		//GDirtyPrint(0, 0, L"GOD MODE");
 	}
 }
@@ -132,15 +121,11 @@ ScreenID ErrorScreenHandle(void)
 	static BOOLEAN	fFirstTime = FALSE;
 
 	// Create string
-	SetFont( LARGEFONT1 );
-	SetFontBackground( FONT_MCOLOR_BLACK );
-	SetFontForeground( FONT_MCOLOR_LTGRAY );
+	SetFontFgBg(LARGEFONT1, FONT_MCOLOR_LTGRAY, FONT_MCOLOR_BLACK);
 	MPrint(50, 200, L"RUNTIME ERROR");
 	MPrint(50, 225, L"PRESS <ESC> TO EXIT");
 
-	SetFont( FONT12ARIAL );
-	SetFontForeground( FONT_YELLOW );
-	SetFontShadow( 60 );		 //60 is near black
+	SetFontFgSh(FONT12ARIAL, FONT_YELLOW, 60); // 60 is near black
 	mprintf(50, 255, L"%hs", gubErrorText);
 	SetFontForeground( FONT_LTRED );
 
@@ -200,10 +185,7 @@ ScreenID InitScreenHandle(void)
 
 		// Init screen
 
-		// Set Font
-		SetFont( TINYFONT1 );
-		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_WHITE );
+		SetFontFgBg(TINYFONT1, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK);
 
 		const INT32 x = 10;
 		const INT32 y = SCREEN_HEIGHT;
@@ -601,9 +583,7 @@ void DoDemoIntroduction(void)
 	InvalidateScreen();
 
 	//print out the information
-	SetFont( FONT14HUMANIST );
-	SetFontForeground( FONT_YELLOW );
-	SetFontShadow( FONT_NEARBLACK );
+	SetFontFgSh(FONT14HUMANIST, FONT_YELLOW, FONT_NEARBLACK);
 
 	yp = 50;
 	height = DisplayWrappedString(20, yp, 400, 3, FONT14ARIAL, FONT_YELLOW, gpDemoIntroString[0], FONT_BLACK, LEFT_JUSTIFIED);
@@ -808,9 +788,7 @@ ScreenID DemoExitScreenHandle(void)
 		uiStartTime = uiTime;
 		usCenter = SCREEN_WIDTH / 2 - (StringPixLength(gpDemoString[0], FONT14ARIAL) + 10) + (StringPixLength(gpDemoString[0], FONT14ARIAL) + 10);
 		uiWidthString = StringPixLength( gpDemoString[0], FONT14ARIAL );
-		SetFont( FONT14ARIAL );
-		SetFontForeground( FONT_YELLOW );
-		SetFontShadow( FONT_NEARBLACK );
+		SetFontFgSh(FONT14ARIAL, FONT_YELLOW, FONT_NEARBLACK);
 	}
 
 	// type out the title message, "The best of Strategy. The best of Role-playing."
@@ -1165,9 +1143,7 @@ ScreenID DemoExitScreenHandle(void)
 			uiStartTime = GetJA2Clock();
 			uiCharsPrinted = 0;
 			uiWidthString = StringPixLength( gpDemoString[40], FONT14ARIAL );
-			SetFont( FONT14ARIAL );
-			SetFontForeground( FONT_YELLOW );
-			SetFontShadow( FONT_NEARBLACK );
+			SetFontFgSh(FONT14ARIAL, FONT_YELLOW, FONT_NEARBLACK);
 		}
 		iPercentage = (uiTime - uiStartTime) * 100 / 1600;
 		if( gfFastAnim )

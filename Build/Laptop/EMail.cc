@@ -1233,19 +1233,12 @@ BOOLEAN DisplayNewMailBox( void )
   BltVideoObject(FRAME_BUFFER, guiEmailWarning,  0, EMAIL_WARNING_X,     EMAIL_WARNING_Y);
   BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 0, EMAIL_WARNING_X + 5, EMAIL_WARNING_Y + 2);
 
-	// font stuff
-	SetFont( EMAIL_HEADER_FONT );
-	SetFontForeground( FONT_WHITE );
-	SetFontBackground( FONT_BLACK );
-	SetFontShadow( DEFAULT_SHADOW );
+	SetFontAttributes(EMAIL_HEADER_FONT, FONT_WHITE, DEFAULT_SHADOW);
 
 	// print warning
 	MPrint(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText);
 
-  // font stuff
-	SetFontShadow( NO_SHADOW );
-	SetFont( EMAIL_WARNING_FONT );
-  SetFontForeground( FONT_BLACK );
+	SetFontFgSh(EMAIL_WARNING_FONT, FONT_BLACK, NO_SHADOW);
 
 	// printf warning string
 	MPrint(EMAIL_WARNING_X + 60, EMAIL_WARNING_Y + 63, pNewMailStrings);
@@ -1416,21 +1409,14 @@ static BOOLEAN DisplayDeleteNotice(Email* pMail)
 
   BltVideoObject(FRAME_BUFFER, guiEmailWarning, 0, EMAIL_WARNING_X, EMAIL_WARNING_Y);
 
-	// font stuff
-	SetFont( EMAIL_HEADER_FONT );
-	SetFontForeground( FONT_WHITE );
-	SetFontBackground( FONT_BLACK );
-	SetFontShadow( DEFAULT_SHADOW );
+	SetFontAttributes(EMAIL_HEADER_FONT, FONT_WHITE, DEFAULT_SHADOW);
 
   BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 0, EMAIL_WARNING_X + 5, EMAIL_WARNING_Y + 2);
 
   // title
 	MPrint(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText);
 
-	// shadow, font, and foreground
-	SetFontShadow( NO_SHADOW );
-	SetFont( EMAIL_WARNING_FONT );
-  SetFontForeground( FONT_BLACK );
+	SetFontFgSh(EMAIL_WARNING_FONT, FONT_BLACK, NO_SHADOW);
 
 	// draw text based on mail being read or not
 	if((pMail->fRead))
@@ -1542,13 +1528,7 @@ static void ReadCallback(GUI_BUTTON *btn, INT32 iReason)
 static void DisplayTextOnTitleBar(void)
 {
 	// draw email screen title text
-
-	// font stuff
-  SetFont( EMAIL_TITLE_FONT );
-  SetFontForeground( FONT_WHITE );
-	SetFontBackground( FONT_BLACK );
-
-	// printf the title
+	SetFontFgBg(EMAIL_TITLE_FONT, FONT_WHITE, FONT_BLACK);
 	MPrint(EMAIL_TITLE_X, EMAIL_TITLE_Y, pEmailTitleText);
 }
 
@@ -1592,11 +1572,7 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 	// this procedure will draw the title/headers to From, Subject, Date fields in the display
 	// message box
 
-	// font stuff
-	SetFont(MESSAGE_FONT);
-	SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-	SetFontShadow(NO_SHADOW);
+	SetFontAttributes(MESSAGE_FONT, FONT_BLACK, NO_SHADOW);
 
 	// all headers, but not info are right justified
 	INT16 usX;
@@ -1632,13 +1608,7 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 static void DrawEmailMessageDisplayTitleText(INT32 iViewerY)
 {
   // this procedure will display the title of the email message display box
-
-	// font stuff
-  SetFont( EMAIL_HEADER_FONT );
-	SetFontForeground( FONT_WHITE );
-	SetFontBackground( FONT_BLACK );
-
-	// dsiplay mail viewer title on message viewer
+	SetFontFgBg(EMAIL_HEADER_FONT, FONT_WHITE, FONT_BLACK);
   MPrint(VIEWER_X + 30, VIEWER_Y + 8 + iViewerY, pEmailTitleText);
 }
 
@@ -2311,11 +2281,7 @@ static void UpdateStatusOfNextPreviousButtons(void)
 static void DisplayWhichPageOfEmailProgramIsDisplayed(void)
 {
 	// will draw the number of the email program we are viewing right now
-	// font stuff
-	SetFont(MESSAGE_FONT);
-	SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-	SetFontShadow(NO_SHADOW);
+	SetFontAttributes(MESSAGE_FONT, FONT_BLACK, NO_SHADOW);
 
 	// page number
 	INT32 CPage;
@@ -2367,10 +2333,7 @@ static void OpenMostRecentUnreadEmail(void)
 static void DisplayNumberOfPagesToThisEmail(INT32 const iViewerY)
 {
 	// display the indent for the display of pages to this email..along with the current page/number of pages
-	SetFont(FONT12ARIAL);
-	SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-	SetFontShadow(NO_SHADOW);
+	SetFontAttributes(FONT12ARIAL, FONT_BLACK, NO_SHADOW);
 
 	wchar_t str[32];
 	swprintf(str, lengthof(str), L"%d / %d", giMessagePage + 1, giNumberOfPagesToCurrentEmail - 1);

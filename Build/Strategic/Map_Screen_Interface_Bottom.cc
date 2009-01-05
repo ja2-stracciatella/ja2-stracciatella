@@ -375,11 +375,7 @@ static void DrawNameOfLoadedSector(void)
   INT16 sFontX, sFontY;
 
 	SetFontDestBuffer(FRAME_BUFFER);
-
-	SetFont( COMPFONT );
-	SetFontForeground( 183 );
-	SetFontBackground( FONT_BLACK );
-
+	SetFontFgBg(COMPFONT, 183, FONT_BLACK);
 
 	GetSectorIDString( sSelMapX, sSelMapY, ( INT8 )( iCurrentMapSectorZ ),sString, lengthof(sString), TRUE );
 	ReduceStringLength( sString, lengthof(sString), 80, COMPFONT );
@@ -604,7 +600,6 @@ static void DisplayCompressMode(void)
 
 	RestoreExternBackgroundRect( 489, 456, 522 - 489, 467 - 454 );
 	SetFontDestBuffer(FRAME_BUFFER);
-	SetFont( COMPFONT );
 
 	if( GetJA2Clock() - guiCompressionStringBaseTime >= PAUSE_GAME_TIMER )
 	{
@@ -625,8 +620,7 @@ static void DisplayCompressMode(void)
 		usColor = FONT_LTGREEN;
 	}
 
-	SetFontForeground( usColor );
-	SetFontBackground( FONT_BLACK );
+	SetFontFgBg(COMPFONT, usColor, FONT_BLACK);
 	FindFontCenterCoordinates(489, 456, 522 - 489, 467 - 454, Time, COMPFONT, &sX, &sY);
 	MPrint(sX, sY, Time);
 }
@@ -988,10 +982,7 @@ static void DisplayCurrentBalanceTitleForMapBottom(void)
 	INT16 sFontX, sFontY;
 
 	SetFontDestBuffer(guiSAVEBUFFER);
-
-	SetFont( COMPFONT );
-	SetFontForeground( MAP_BOTTOM_FONT_COLOR );
-	SetFontBackground( FONT_BLACK );
+	SetFontFgBg(COMPFONT, MAP_BOTTOM_FONT_COLOR, FONT_BLACK);
 
 	sString = pMapScreenBottomText;
 	FindFontCenterCoordinates(359, 387 - 14,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
@@ -1012,14 +1003,8 @@ static void DisplayCurrentBalanceForMapBottom(void)
 	INT16 sFontX, sFontY;
 
 	SetFontDestBuffer(FRAME_BUFFER);
-
-	// set up the font
-	SetFont( COMPFONT );
-	SetFontForeground( 183 );
-	SetFontBackground( FONT_BLACK );
-
+	SetFontFgBg(COMPFONT, 183, FONT_BLACK);
 	SPrintMoney(sString, LaptopSaveInfo.iCurrentBalance);
-
 	FindFontCenterCoordinates(359, 387 + 2,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, sString);
 }
@@ -1100,15 +1085,10 @@ static void DisplayProjectedDailyMineIncome(void)
 		// if screen was not dirtied, leave
 		if (!fMapBottomDirtied) return;
 	}
+
 	SetFontDestBuffer(FRAME_BUFFER);
-
-	// set up the font
-	SetFont( COMPFONT );
-	SetFontForeground( 183 );
-	SetFontBackground( FONT_BLACK );
-
+	SetFontFgBg(COMPFONT, 183, FONT_BLACK);
 	SPrintMoney(sString, iRate);
-
 	FindFontCenterCoordinates(359, 433 + 2,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, sString);
 }

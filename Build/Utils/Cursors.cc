@@ -1284,11 +1284,7 @@ static void DrawMouseText(void)
 		SetFontDestBuffer(MOUSE_BUFFER);
 
 		FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, gzLocation, TINYFONT1, &sX, &sY);
-		SetFont(TINYFONT1);
-
-		SetFontBackground(FONT_MCOLOR_BLACK);
-		SetFontForeground(FONT_MCOLOR_WHITE);
-
+		SetFontFgBg(TINYFONT1, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK);
 		MPrint(sX, sY + 12, gzLocation);
 		// reset
 		SetFontDestBuffer(FRAME_BUFFER);
@@ -1300,11 +1296,7 @@ static void DrawMouseText(void)
 		SetFontDestBuffer(MOUSE_BUFFER);
 
 		FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, gzIntTileLocation, TINYFONT1, &sX, &sY);
-		SetFont(TINYFONT1);
-
-		SetFontBackground(FONT_MCOLOR_BLACK);
-		SetFontForeground(FONT_MCOLOR_WHITE);
-
+		SetFontFgBg(TINYFONT1, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK);
 		MPrint(sX, sY + 6, gzIntTileLocation);
 		// reset
 		SetFontDestBuffer(FRAME_BUFFER);
@@ -1316,11 +1308,7 @@ static void DrawMouseText(void)
 		SetFontDestBuffer(MOUSE_BUFFER);
 
 		FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, gzIntTileLocation2, TINYFONT1, &sX, &sY);
-		SetFont(TINYFONT1);
-
-		SetFontBackground(FONT_MCOLOR_BLACK);
-		SetFontForeground(FONT_MCOLOR_WHITE);
-
+		SetFontFgBg(TINYFONT1, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK);
 		MPrint(sX, sY - 2, gzIntTileLocation2);
 		// reset
 		SetFontDestBuffer(FRAME_BUFFER);
@@ -1414,10 +1402,7 @@ static void DrawMouseText(void)
 
 			FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, pStr, TINYFONT1, &sX, &sY);
 
-			SetFont(TINYFONT1);
-			SetFontBackground(FONT_MCOLOR_BLACK);
-			SetFontForeground(FONT_MCOLOR_WHITE);
-			SetFontShadow(DEFAULT_SHADOW);
+			SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE, DEFAULT_SHADOW);
 			mprintf(sX + 10, sY - 10, L"x%d", gpItemPointer->ubNumberOfObjects);
 
 			SetFontDestBuffer(FRAME_BUFFER);

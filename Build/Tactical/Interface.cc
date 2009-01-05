@@ -1096,9 +1096,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const s)
 	GetSoldierAboveGuyPositions(s, &sXPos, &sYPos, FALSE);
 
 	// Display name
-	SetFont(TINYFONT1);
-	SetFontBackground(FONT_MCOLOR_BLACK);
-	SetFontForeground(FONT_MCOLOR_WHITE);
+	SetFontFgBg(TINYFONT1, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK);
 
 	INT16 sX;
 	INT16 sY;
@@ -1831,33 +1829,32 @@ static void CreateTopMessage(void)
 	SGPVSurface*              const dst = gTopMessage.uiSurface;
 
 	SetFontDestBuffer(dst);
-	SetFont(TINYFONT1);
-	SetFontBackground(FONT_MCOLOR_BLACK);
 
 	const char* bar_file;
 	UINT16      bar_gfx     = 0;
 	BOOLEAN	    fDoLimitBar = FALSE;
+	UINT8       foreground;
 	switch (ts->ubTopMessageType)
 	{
 		case COMPUTER_TURN_MESSAGE:
 		case COMPUTER_INTERRUPT_MESSAGE:
 		case MILITIA_INTERRUPT_MESSAGE:
 		case AIR_RAID_TURN_MESSAGE:
-			bar_file = "INTERFACE/rect.sti";
-			SetFontForeground(FONT_MCOLOR_WHITE);
+			bar_file   = "INTERFACE/rect.sti";
+			foreground = FONT_MCOLOR_WHITE;
 			fDoLimitBar = TRUE;
 			break;
 
 		case PLAYER_INTERRUPT_MESSAGE:
-			bar_file = "INTERFACE/timebaryellow.sti";
-			SetFontForeground(FONT_MCOLOR_BLACK);
+			bar_file   = "INTERFACE/timebaryellow.sti";
+			foreground = FONT_MCOLOR_BLACK;
 			SetFontShadow(NO_SHADOW);
 			if (gGameOptions.fTurnTimeLimit) fDoLimitBar = TRUE;
 			break;
 
 		case PLAYER_TURN_MESSAGE:
-			bar_file = "INTERFACE/timebargreen.sti";
-			SetFontForeground(FONT_MCOLOR_BLACK);
+			bar_file   = "INTERFACE/timebargreen.sti";
+			foreground = FONT_MCOLOR_BLACK;
 			SetFontShadow(NO_SHADOW);
 			if (gGameOptions.fTurnTimeLimit)
 			{
@@ -1872,6 +1869,7 @@ static void CreateTopMessage(void)
 		default:
 			abort();
 	}
+	SetFontFgBg(TINYFONT1, foreground, FONT_MCOLOR_BLACK);
 
 	const SGPBox* const bar = &g_progress_bar_box;
 	{

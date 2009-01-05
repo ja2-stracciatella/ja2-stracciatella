@@ -798,15 +798,17 @@ void DisplayWayPoints(void)
 		if( sScreenY <= 355 )
 		{
 			// Shown it on screen!
-			SetFont(TINYFONT1);
+			UINT8 background;
 			if( pSoldier->bLevel == 1 )
 			{
-				SetFontBackground( FONT_LTBLUE );
 				sScreenY -= 68;
+				background = FONT_LTBLUE;
 			}
 			else
-				SetFontBackground( FONT_LTRED );
-			SetFontForeground( FONT_WHITE );
+			{
+				background = FONT_LTRED;
+			}
+			SetFontFgBg(TINYFONT1, FONT_WHITE, background);
 			wchar_t buf[16];
 			swprintf(buf, lengthof(buf), L"%d", bPoint);
 			FindFontCenterCoordinates(sScreenX, sScreenY, 1, 1, buf, TINYFONT1, &sX, &sY);
@@ -1854,9 +1856,7 @@ void UpdateMercsInfo()
 		case MERC_GENERALMODE:
 			BltVideoObject(FRAME_BUFFER, guiExclamation, 0, 188, 362);
 			BltVideoObject(FRAME_BUFFER, guiKeyImage,    0, 186, 387);
-			SetFont( SMALLCOMPFONT );
-			SetFontForeground( FONT_YELLOW );
-			SetFontShadow( FONT_NEARBLACK );
+			SetFontFgSh(SMALLCOMPFONT, FONT_YELLOW, FONT_NEARBLACK);
 			MPrint(240, 363, L" --=ORDERS=-- ");
 			MPrint(240, 419, L"--=ATTITUDE=--");
 			if( iDrawMode == DRAW_MODE_CREATURE )
@@ -1886,9 +1886,7 @@ void UpdateMercsInfo()
 			}
 			break;
 		case MERC_ATTRIBUTEMODE:
-			SetFont( FONT10ARIAL );
-			SetFontForeground( FONT_YELLOW );
-			SetFontShadow( FONT_NEARBLACK );
+			SetFontFgSh(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
 			MPrint(225, 370, L"Exp. Level");
 			MPrint(225, 395, L"Life");
 			MPrint(225, 420, L"LifeMax");
@@ -1903,13 +1901,13 @@ void UpdateMercsInfo()
 			MPrint(425, 445, L"Mechanical");
 			MPrint(525, 370, L"Morale");
 			break;
+
 		case MERC_APPEARANCEMODE:
-			SetFont( FONT10ARIAL );
-			if( gpSelected->pDetailedPlacement->fVisible || gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
-				SetFontForeground( FONT_YELLOW );
-			else
-				SetFontForeground( FONT_DKYELLOW );
-			SetFontShadow( FONT_NEARBLACK );
+		{
+			SOLDIERCREATE_STRUCT const& dp         = *gpSelected->pDetailedPlacement;
+			UINT8                const  foreground =
+				dp.fVisible || dp.ubProfile != NO_PROFILE ? FONT_YELLOW : FONT_DKYELLOW;
+			SetFontFgSh(FONT10ARIAL, foreground, FONT_NEARBLACK);
 
 			MPrint(396, 364, L"Hair color:");
 			MPrint(396, 388, L"Skin color:");
@@ -1936,10 +1934,10 @@ void UpdateMercsInfo()
 			}
 			DisplayBodyTypeInfo();
 			break;
+		}
+
 		case MERC_PROFILEMODE:
-			SetFont( FONT10ARIAL );
-			SetFontForeground( FONT_YELLOW );
-			SetFontShadow( FONT_NEARBLACK );
+			SetFontFgSh(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
 			{ //scope trick
 				wchar_t tempStr[500];
 				swprintf(tempStr, lengthof(tempStr),
@@ -1964,9 +1962,7 @@ void UpdateMercsInfo()
 			}
 			break;
 		case MERC_SCHEDULEMODE:
-			SetFont( FONT10ARIAL );
-			SetFontForeground( FONT_WHITE );
-			SetFontShadow( FONT_NEARBLACK );
+			SetFontFgSh(FONT10ARIAL, FONT_WHITE, FONT_NEARBLACK);
 			switch( gpSelected->pSoldier->bOrders )
 			{
 				case STATIONARY:  MPrint(430, 363, L"STATIONARY");    break;
@@ -2519,9 +2515,7 @@ void RenderMercStrings()
 			const SOLDIERTYPE* const pSoldier = curr->pSoldier;
 			GetSoldierAboveGuyPositions( pSoldier, &sXPos, &sYPos, FALSE );
 			// Display name
-			SetFont( TINYFONT1 );
-			SetFontBackground( FONT_BLACK );
-			SetFontForeground( FONT_WHITE );
+			SetFontFgBg(TINYFONT1, FONT_WHITE, FONT_BLACK);
 			if ( pSoldier->ubProfile != NO_PROFILE )
 			{
 				FindFontCenterCoordinates(sXPos, sYPos, 80, 1, pSoldier->name, TINYFONT1, &sX, &sY);
@@ -2533,9 +2527,7 @@ void RenderMercStrings()
 
 				pStr = GetSoldierHealthString( pSoldier );
 
-				SetFont( TINYFONT1 );
-				SetFontBackground( FONT_BLACK  );
-				SetFontForeground( FONT_RED );
+				SetFontFgBg(TINYFONT1, FONT_RED, FONT_BLACK);
 
 				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, pStr, TINYFONT1, &sX, &sY );
 				if( sY < 352 )
@@ -2557,9 +2549,7 @@ void RenderMercStrings()
 			{
 				pStr = GetSoldierHealthString( pSoldier );
 
-				SetFont( TINYFONT1 );
-				SetFontBackground( FONT_BLACK );
-				SetFontForeground( FONT_RED );
+				SetFontFgBg(TINYFONT1, FONT_RED, FONT_BLACK);
 
 				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, pStr, TINYFONT1, &sX, &sY );
 				if( sY < 352 )
@@ -2917,9 +2907,7 @@ static void RenderCurrentSchedule(void)
 		if( sScreenY <= 355 )
 		{
 			// Shown it on screen!
-			SetFont(TINYFONT1);
-			SetFontBackground( FONT_LTKHAKI );
-			SetFontForeground( FONT_WHITE );
+			SetFontFgBg(TINYFONT1, FONT_WHITE, FONT_LTKHAKI);
 			swprintf(str, lengthof(str), L"%d%c", i / 2 + 1, 'A' + i % 2);
 			FindFontCenterCoordinates(sScreenX, sScreenY, 1, 1, str, TINYFONT1, &sX, &sY);
 			MPrint(sX, sY, str);

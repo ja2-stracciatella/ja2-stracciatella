@@ -637,10 +637,7 @@ void FindNextLockedDoor()
 void RenderDoorEditingWindow()
 {
 	InvalidateRegion( 200, 130, 440, 230 );
-	SetFont( FONT10ARIAL );
-	SetFontForeground( FONT_YELLOW );
-	SetFontShadow( FONT_NEARBLACK );
-	SetFontBackground( 0 );
+	SetFontAttributes(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
 	mprintf( 210, 140, L"Editing lock attributes at map index %d.", iDoorMapIndex );
 
 	SetFontForeground( FONT_GRAY2 );

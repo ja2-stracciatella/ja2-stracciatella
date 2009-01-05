@@ -2481,10 +2481,7 @@ void RenderItemDescriptionBox(void)
 	}
 
 	// Render font desc
-	SetFont(ITEMDESC_FONT);
-	SetFontForeground(FONT_FCOLOR_WHITE);
-	SetFontBackground(FONT_MCOLOR_BLACK);
-	SetFontShadow(ITEMDESC_FONTSHADOW3);
+	SetFontAttributes(ITEMDESC_FONT, FONT_FCOLOR_WHITE, ITEMDESC_FONTSHADOW3);
 
 	{
 		// Render name
@@ -4930,9 +4927,7 @@ void RenderItemPickupMenu()
 
 			if (pObject->ubNumberOfObjects > 1)
 			{
-				SetFont(ITEM_FONT);
-				SetFontForeground(FONT_GRAY4);
-				SetFontShadow(DEFAULT_SHADOW);
+				SetFontFgSh(ITEM_FONT, FONT_GRAY4, DEFAULT_SHADOW);
 
 				swprintf(pStr, lengthof(pStr), L"%d", pObject->ubNumberOfObjects);
 

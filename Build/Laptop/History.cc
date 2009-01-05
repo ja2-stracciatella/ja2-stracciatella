@@ -245,13 +245,8 @@ static void RenderHistoryBackGround(void)
 
 static void DrawHistoryTitleText(void)
 {
-	// setup the font stuff
-	SetFont(HISTORY_HEADER_FONT);
-  SetFontForeground(FONT_WHITE);
-	SetFontBackground(FONT_BLACK);
-  SetFontShadow(DEFAULT_SHADOW);
-
 	// draw the pages title
+	SetFontAttributes(HISTORY_HEADER_FONT, FONT_WHITE, DEFAULT_SHADOW);
 	MPrint(TITLE_X, TITLE_Y, pHistoryTitle);
 }
 
@@ -406,12 +401,7 @@ void ClearHistoryList(void)
 static void DisplayHistoryListHeaders(void)
 {
   // this procedure will display the headers to each column in History
-
-	// font stuff
-	SetFont(HISTORY_TEXT_FONT);
-  SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-	SetFontShadow(NO_SHADOW);
+	SetFontAttributes(HISTORY_TEXT_FONT, FONT_BLACK, NO_SHADOW);
 
   INT16 usX;
   INT16 usY;
@@ -573,15 +563,9 @@ static void DisplayPageNumberAndDateRange(void)
 		last_date        = h->uiDate / (24 * 60);
 	}
 
-	SetFont(HISTORY_TEXT_FONT);
-  SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-  SetFontShadow(NO_SHADOW);
-
+	SetFontAttributes(HISTORY_TEXT_FONT, FONT_BLACK, NO_SHADOW);
 	mprintf(PAGE_NUMBER_X,  PAGE_NUMBER_Y,  L"%ls  %d / %d", pHistoryHeaders[1], current_page, count_pages);
 	mprintf(HISTORY_DATE_X, HISTORY_DATE_Y, L"%ls %d - %d",  pHistoryHeaders[2], first_date,   last_date);
-
-	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
 }
 

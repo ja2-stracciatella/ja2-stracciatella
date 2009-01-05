@@ -1141,10 +1141,8 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 									sXPos += pTrav->sOffsetX;
 									sYPos += pTrav->sOffsetY;
 
-									SetFontBackground(FONT_MCOLOR_BLACK);
-									SetFontForeground(gfUIDisplayActionPointsBlack ? FONT_MCOLOR_BLACK : FONT_MCOLOR_WHITE);
-
-									SetFont(TINYFONT1);
+									UINT8 const foreground = gfUIDisplayActionPointsBlack ? FONT_MCOLOR_BLACK : FONT_MCOLOR_WHITE;
+									SetFontFgBg(TINYFONT1, foreground, FONT_MCOLOR_BLACK);
 									SetFontDestBuffer(guiSAVEBUFFER, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y);
 									wchar_t buf[16];
 									swprintf(buf, lengthof(buf), L"%d", pNode->uiAPCost);

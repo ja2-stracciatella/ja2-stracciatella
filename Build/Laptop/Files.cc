@@ -305,14 +305,8 @@ static void RenderFilesBackGround(void)
 
 static void DrawFilesTitleText(void)
 {
-	// setup the font stuff
-	SetFont(FILES_TITLE_FONT);
-  SetFontForeground(FONT_WHITE);
-	SetFontBackground(FONT_BLACK);
-  // reset shadow
-	SetFontShadow(DEFAULT_SHADOW);
-
 	// draw the pages title
+	SetFontAttributes(FILES_TITLE_FONT, FONT_WHITE, DEFAULT_SHADOW);
 	MPrint(TITLE_X, TITLE_Y, pFilesTitle);
 }
 
@@ -426,10 +420,7 @@ static void ClearFilesList(void)
 static void DisplayFilesList(void)
 {
 	// this function will run through the list of files of files and display the 'sender'
-	SetFont(FILES_TEXT_FONT);
-	SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-	SetFontShadow(NO_SHADOW);
+	SetFontAttributes(FILES_TEXT_FONT, FONT_BLACK, NO_SHADOW);
 
 	INT32       i = 0;
 	INT32 const x = FILES_LIST_X;

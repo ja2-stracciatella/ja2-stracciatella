@@ -564,10 +564,7 @@ static void DrawFileDialog(void)
 	RenderButtons();
 	RenderButtonsFastHelp();
 
-	SetFont( FONT10ARIAL );
-	SetFontForeground( FONT_LTKHAKI );
-	SetFontShadow( FONT_DKKHAKI );
-	SetFontBackground( FONT_BLACK );
+	SetFontAttributes(FONT10ARIAL, FONT_LTKHAKI, FONT_DKKHAKI);
 	MPrint(183, 217, L"Filename");
 
 	if (iFileDlgButtons[6]) MPrint(200, 231, L"Update world info");
@@ -883,10 +880,7 @@ static ScreenID ProcessFileIO(void)
 	{
 		case INITIATE_MAP_SAVE:	//draw save message
 			SaveFontSettings();
-			SetFont( HUGEFONT );
-			SetFontForeground( FONT_LTKHAKI );
-			SetFontShadow( FONT_DKKHAKI );
-			SetFontBackground( 0 );
+			SetFontAttributes(HUGEFONT, FONT_LTKHAKI, FONT_DKKHAKI);
 			wchar_t zOrigName[60];
 			swprintf(zOrigName, lengthof(zOrigName), L"Saving map:  %ls", gzFilename);
 			usStartX = (SCREEN_WIDTH - StringPixLength(zOrigName, HUGEFONT)) / 2;

@@ -873,9 +873,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 				wchar_t sString[32];
 				swprintf(sString, lengthof(sString), L"%d", s->bOppCnt);
 
-				SetFont(TINYFONT1);
-				SetFontForeground(FONT_DKRED);
-				SetFontBackground(FONT_NEARBLACK);
+				SetFontFgBg(TINYFONT1, FONT_DKRED, FONT_NEARBLACK);
 
 				const INT16 sX1 = sFaceX;
 				const INT16 sY1 = sFaceY;
@@ -905,10 +903,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 					!f->fInvalidAnim &&
 					f->fDisplayTextOver != FACE_NO_TEXT_OVER)
 			{
-				SetFont(TINYFONT1);
-				SetFontBackground(FONT_MCOLOR_BLACK);
-				SetFontForeground(FONT_MCOLOR_WHITE);
-
+				SetFontFgBg(TINYFONT1, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK);
 				SetFontDestBuffer(uiRenderBuffer);
 
 				INT16 sFontX;
@@ -1035,9 +1030,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 				wchar_t sString[32];
 				swprintf(sString, lengthof(sString), L"%d/%d", sPtsAvailable, usMaximumPts);
 
-				SetFont(FONT10ARIAL);
-				SetFontForeground(FONT_YELLOW);
-				SetFontBackground(FONT_BLACK);
+				SetFontFgBg(FONT10ARIAL, FONT_YELLOW, FONT_BLACK);
 
 				const UINT16 usTextWidth = StringPixLength(sString, FONT10ARIAL) + 1;
 				MPrint(sFaceX + f->usFaceWidth - usTextWidth, sFaceY + 3, sString);

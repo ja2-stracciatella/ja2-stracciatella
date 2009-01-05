@@ -414,10 +414,7 @@ static void BtnIMPAttributeFinishCallback(GUI_BUTTON* btn, INT32 reason)
 void RenderAttributeBoxes(void)
 {
 	// this function will render the boxes in the sliding attribute bar, based on position
-	SetFont(FONT10ARIAL);
-	SetFontShadow(NO_SHADOW);
-	SetFontForeground(FONT_WHITE);
-	SetFontBackground(FONT_BLACK);
+	SetFontAttributes(FONT10ARIAL, FONT_WHITE, NO_SHADOW);
 
 	// run through and render each slider bar
 	for (INT32 i = HEALTH_ATTRIBUTE; i <= MECHANICAL_SKILL; ++i)
@@ -746,10 +743,7 @@ void DrawBonusPointsRemaining(void)
 	// just reviewing, don't blit stats
 	if (fReviewStats) return;
 
-	// set font color
-	SetFontForeground(FONT_WHITE);
-	SetFontBackground(FONT_BLACK);
-	SetFont(FONT12ARIAL);
+	SetFontFgBg(FONT12ARIAL, FONT_WHITE, FONT_BLACK);
 	mprintf(LAPTOP_SCREEN_UL_X + 425, LAPTOP_SCREEN_WEB_UL_Y + 51, L"%d", iCurrentBonusPoints);
 	InvalidateRegion(LAPTOP_SCREEN_UL_X + 425, LAPTOP_SCREEN_WEB_UL_Y + 51, LAPTOP_SCREEN_UL_X + 475, LAPTOP_SCREEN_WEB_UL_Y + 71);
 }

@@ -1115,9 +1115,7 @@ ScreenID LaptopScreenHandle()
 
 			//BltStretchVideoSurface(FRAME_BUFFER, guiEXTRABUFFER, &SrcRect1, &DstRect);
 
-			//SetFont( FONT10ARIAL );
-			//SetFontForeground( FONT_YELLOW );
-			//SetFontShadow( FONT_NEARBLACK );
+			//SetFontFgSh(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
 			//mprintf( 10, 10, L"%d -> %d", iRealPercentage, iPercentage );
 			//{ SGPVSurface::Lock(FRAME_BUFFER);
 			//	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -1524,9 +1522,7 @@ void LeaveLapTopScreen(void)
 
 				//BltStretchVideoSurface(FRAME_BUFFER, guiEXTRABUFFER, &SrcRect1, &DstRect);
 
-				//SetFont( FONT10ARIAL );
-				//SetFontForeground( FONT_YELLOW );
-				//SetFontShadow( FONT_NEARBLACK );
+				//SetFontFgSh(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
 				//mprintf( 10, 10, L"%d -> %d", iRealPercentage, iPercentage );
 				//{ SGPVSurface::Lock(FRAME_BUFFER);
 				//	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -2072,10 +2068,7 @@ static void DisplayLoadPending(void)
 	BltVideoObject(FRAME_BUFFER, guiDOWNLOADBOT,   0, DOWNLOAD_X,     DOWNLOAD_Y + DOWN_HEIGHT * 2);
 	BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 1, DOWNLOAD_X + 4, DOWNLOAD_Y + 1);
 
-	SetFont(DOWNLOAD_FONT);
-	SetFontForeground(FONT_WHITE);
-	SetFontBackground(FONT_BLACK);
-	SetFontShadow(NO_SHADOW);
+	SetFontAttributes(DOWNLOAD_FONT, FONT_WHITE, NO_SHADOW);
 
 	// reload or download?
 	const wchar_t* const str = (fFastLoadFlag ? pDownloadString[1] : pDownloadString[0]);
@@ -2841,10 +2834,7 @@ static void DeleteDesktopBackground(void)
 
 void PrintBalance(void)
 {
-	SetFont(FONT10ARIAL);
-	SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-	SetFontShadow(NO_SHADOW);
+	SetFontAttributes(FONT10ARIAL, FONT_BLACK, NO_SHADOW);
 
 	wchar_t pString[32];
 	SPrintMoney(pString, LaptopSaveInfo.iCurrentBalance);
@@ -2864,10 +2854,7 @@ void PrintBalance(void)
 
 void PrintNumberOnTeam(void)
 {
-	SetFont(FONT10ARIAL);
-	SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-	SetFontShadow(NO_SHADOW);
+	SetFontAttributes(FONT10ARIAL, FONT_BLACK, NO_SHADOW);
 
 	const INT32 iCounter = NumberOfMercsOnPlayerTeam();
 
@@ -2886,10 +2873,7 @@ void PrintNumberOnTeam(void)
 
 void PrintDate(void)
 {
-	SetFont(FONT10ARIAL);
-	SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-	SetFontShadow(NO_SHADOW);
+	SetFontAttributes(FONT10ARIAL, FONT_BLACK, NO_SHADOW);
 	MPrint(30 + (70 - StringPixLength(WORLDTIMESTR, FONT10ARIAL)) / 2, 433, WORLDTIMESTR);
 	SetFontShadow(DEFAULT_SHADOW);
 }
@@ -3102,9 +3086,7 @@ void RenderWWWProgramTitleBar(void)
 	BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/programtitlebar.sti", 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
 
 	// now slapdown text
-	SetFont(FONT14ARIAL);
-	SetFontForeground(FONT_WHITE);
-	SetFontBackground(FONT_BLACK);
+	SetFontFgBg(FONT14ARIAL, FONT_WHITE, FONT_BLACK);
 
 	// display title
 
@@ -3422,11 +3404,7 @@ static void DisplayWebBookMarkNotify(void)
 		BltVideoObject(FRAME_BUFFER, guiDOWNLOADBOT,   0,DOWNLOAD_X,     DOWNLOAD_Y + 2 * DOWN_HEIGHT);
 		BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 1,DOWNLOAD_X + 4, DOWNLOAD_Y + 1);
 
-		// font stuff
-		SetFont(DOWNLOAD_FONT);
-		SetFontForeground(FONT_WHITE);
-		SetFontBackground(FONT_BLACK);
-		SetFontShadow(NO_SHADOW);
+		SetFontAttributes(DOWNLOAD_FONT, FONT_WHITE, NO_SHADOW);
 
 		// display download string
 		MPrint(DOWN_STRING_X, DOWN_STRING_Y, pShowBookmarkString[0]);

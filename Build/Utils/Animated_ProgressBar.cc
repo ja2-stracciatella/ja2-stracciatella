@@ -200,10 +200,7 @@ void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32
 								 (pCurr->usPanelRight - pCurr->usPanelLeft)/2 -								// + half width
 								 StringPixLength( pCurr->swzTitle, pCurr->usTitleFont ) / 2;	// - half string width
 			usStartY = pCurr->usPanelTop + 3;
-			SetFont( pCurr->usTitleFont );
-			SetFontForeground( pCurr->ubTitleFontForeColor );
-			SetFontShadow( pCurr->ubTitleFontShadowColor );
-			SetFontBackground( 0 );
+			SetFontAttributes(pCurr->usTitleFont, pCurr->ubTitleFontForeColor, pCurr->ubTitleFontShadowColor);
 			MPrint(usStartX, usStartY, pCurr->swzTitle);
 		}
 	}
@@ -221,10 +218,7 @@ void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32
 				RestoreExternBackgroundRect(x, y, pCurr->pos.w, usFontHeight + 3);
 			}
 
-			SetFont( pCurr->usMsgFont );
-			SetFontForeground( pCurr->ubMsgFontForeColor );
-			SetFontShadow( pCurr->ubMsgFontShadowColor );
-			SetFontBackground( 0 );
+			SetFontAttributes(pCurr->usMsgFont, pCurr->ubMsgFontForeColor, pCurr->ubMsgFontShadowColor);
 			MPrint(x, y + 3, str);
 		}
 	}

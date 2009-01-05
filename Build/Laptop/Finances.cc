@@ -439,12 +439,7 @@ static void DrawRecordsBackGround(void)
 static void DrawRecordsColumnHeadersText(void)
 {
   // write the headers text for each column
-
-	// font stuff
-	SetFont(FINANCE_TEXT_FONT);
-  SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-	SetFontShadow(NO_SHADOW);
+	SetFontAttributes(FINANCE_TEXT_FONT, FONT_BLACK, NO_SHADOW);
 
 	INT16 usX;
 	INT16 usY;
@@ -542,14 +537,8 @@ static void DrawRecordsText(void)
 
 static void DrawFinanceTitleText(void)
 {
-	// setup the font stuff
-	SetFont(FINANCE_HEADER_FONT);
-  SetFontForeground(FONT_WHITE);
-	SetFontBackground(FONT_BLACK);
-  // reset shadow
-	SetFontShadow(DEFAULT_SHADOW);
-
 	// draw the pages title
+	SetFontAttributes(FINANCE_HEADER_FONT, FONT_WHITE, DEFAULT_SHADOW);
 	MPrint(TITLE_X, TITLE_Y, pFinanceTitle);
 }
 
@@ -568,12 +557,7 @@ static void DrawSummaryText(void)
   wchar_t pString[100];
 	INT32 iBalance = 0;
 
-
-	// setup the font stuff
-  SetFont(FINANCE_TEXT_FONT);
-  SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-	SetFontShadow(NO_SHADOW);
+	SetFontAttributes(FINANCE_TEXT_FONT, FONT_BLACK, NO_SHADOW);
 
 	// draw summary text to the screen
 	MPrint(TEXT_X, YESTERDAYS_INCOME,              pFinanceSummary[2]);
@@ -888,14 +872,8 @@ static void ProcessTransactionString(wchar_t pString[], const size_t Length, con
 
 static void DisplayFinancePageNumberAndDateRange(void)
 {
-  // setup the font stuff
-	SetFont(FINANCE_TEXT_FONT);
-  SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
-  SetFontShadow(NO_SHADOW);
-
+	SetFontAttributes(FINANCE_TEXT_FONT, FONT_BLACK, NO_SHADOW);
 	mprintf(PAGE_NUMBER_X, PAGE_NUMBER_Y, L"%ls %d / %d", pFinanceHeaders[5], iCurrentPage + 1, guiLastPageInRecordsList + 2);
-
 	SetFontShadow(DEFAULT_SHADOW);
 }
 

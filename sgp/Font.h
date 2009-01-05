@@ -88,6 +88,10 @@ void SetFontDestBuffer(SGPVSurface* dst);
 
 void SetFont(Font);
 
+void SetFontAttributes(Font, UINT8 foreground, UINT8 shadow, UINT8 background = 0);
+void SetFontFgSh(Font, UINT8 foreground, UINT8 shadow);
+void SetFontFgBg(Font, UINT8 foreground, UINT8 background);
+
 Font   LoadFontFile(const char* filename);
 UINT16 GetFontHeight(Font);
 void   InitializeFontManager(void);

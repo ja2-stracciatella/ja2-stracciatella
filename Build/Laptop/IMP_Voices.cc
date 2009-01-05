@@ -311,11 +311,7 @@ static void RenderVoiceIndex(void)
 
 	// render the voice index value on the the blank portrait
 	swprintf(sString, lengthof(sString), L"%ls %d", pIMPVoicesStrings, iCurrentVoices + 1);
-
 	FindFontCenterCoordinates( 290 + LAPTOP_UL_X, 0, 100, 0, sString, FONT12ARIAL, &sX, &sY );
-
-	SetFont( FONT12ARIAL );
-	SetFontForeground( FONT_WHITE );
-	SetFontBackground( FONT_BLACK );
+	SetFontFgBg(FONT12ARIAL, FONT_WHITE, FONT_BLACK);
 	MPrint(sX, 320, sString);
 }

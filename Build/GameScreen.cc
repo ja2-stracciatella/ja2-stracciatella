@@ -644,9 +644,7 @@ ScreenID MainGameScreenHandle(void)
 #ifdef JA2TESTVERSION
 	if ( gTacticalStatus.uiFlags & ENGAGED_IN_CONV )
 	{
-		SetFont( MILITARYFONT1 );
-		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_LTGREEN );
+		SetFontFgBg(MILITARYFONT1, FONT_MCOLOR_LTGREEN, FONT_MCOLOR_BLACK);
 		GPrintDirtyF(0, 0, L"IN CONVERSATION %d", giNPCReferenceCount);
 	}
 
@@ -654,9 +652,7 @@ ScreenID MainGameScreenHandle(void)
 
 	if (GamePaused())
 	{
-		SetFont( MILITARYFONT1 );
-		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_LTGREEN );
+		SetFontFgBg(MILITARYFONT1, FONT_MCOLOR_LTGREEN, FONT_MCOLOR_BLACK);
 		GPrintDirty(0, 10, L"Game Clock Paused");
 	}
 
@@ -669,9 +665,7 @@ ScreenID MainGameScreenHandle(void)
 		INT32 iSchedules;
 		SCHEDULENODE *curr;
 
-		SetFont( MILITARYFONT1 );
-		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_LTGREEN );
+		SetFontFgBg(MILITARYFONT1, FONT_MCOLOR_LTGREEN, FONT_MCOLOR_BLACK);
 
 		GPrintDirtyF(0, 15, L"Attacker Busy Count: %d", gTacticalStatus.ubAttackBusyCount);
 

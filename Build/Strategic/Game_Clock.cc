@@ -271,18 +271,10 @@ BOOLEAN HasTimeCompressOccured( void )
 
 void RenderClock(void)
 {
-	SetFont( CLOCK_FONT );
-	SetFontBackground( FONT_MCOLOR_BLACK );
-
 	// Are we in combat?
-	if ( gTacticalStatus.uiFlags & INCOMBAT )
-	{
-		SetFontForeground( FONT_FCOLOR_NICERED );
-	}
-	else
-	{
-		SetFontForeground( FONT_LTGREEN );
-	}
+	UINT8 const foreground = gTacticalStatus.uiFlags & INCOMBAT ?
+		FONT_FCOLOR_NICERED : FONT_LTGREEN;
+	SetFontFgBg(CLOCK_FONT, foreground, FONT_MCOLOR_BLACK);
 
 	// Erase first!
 	INT16 x = CLOCK_X;

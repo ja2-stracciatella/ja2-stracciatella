@@ -592,9 +592,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 				// display the mercs name
 				const wchar_t* const Name = doctor->name;
 				FindFontCenterCoordinates(sCurrentXPosition, sCurrentYPosition, TACT_UPDATE_MERC_FACE_X_WIDTH - 25, 0, Name, TINYFONT1, &sX, &sY);
-				SetFont( TINYFONT1 );
-				SetFontForeground( FONT_LTRED );
-				SetFontBackground( FONT_BLACK );
+				SetFontFgBg(TINYFONT1, FONT_LTRED, FONT_BLACK);
 
 				sY+= 35;
 				sCurrentXPosition -= TACT_UPDATE_MERC_FACE_X_OFFSET;
@@ -620,9 +618,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 	BltVideoObject( FRAME_BUFFER , hBackGroundHandle, 13, sXPosition + iTotalPixelsWide , sYPosition + ( ( iNumberDoctorsHigh ) * TACT_UPDATE_MERC_FACE_X_HEIGHT ));
 
 
-	SetFont( TINYFONT1 );
-	SetFontForeground( FONT_WHITE );
-	SetFontBackground( FONT_BLACK );
+	SetFontFgBg(TINYFONT1, FONT_WHITE, FONT_BLACK);
 
 //	iCurPixelY = sYPosition;
 	iCurPixelY = sYPosition + ( ( iCounterA - 1 ) * TACT_UPDATE_MERC_FACE_X_HEIGHT );
@@ -667,9 +663,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 				// display the mercs name
 				const wchar_t* const Name = patient->name;
 				FindFontCenterCoordinates(sCurrentXPosition, sCurrentYPosition, TACT_UPDATE_MERC_FACE_X_WIDTH - 25, 0, Name, TINYFONT1, &sX, &sY);
-				SetFont( TINYFONT1 );
-				SetFontForeground( FONT_LTRED );
-				SetFontBackground( FONT_BLACK );
+				SetFontFgBg(TINYFONT1, FONT_LTRED, FONT_BLACK);
 				sY+= 35;
 				MPrint(sX, sY, Name);
 			}
@@ -731,9 +725,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 		CreateTerminateAutoBandageButton( ( INT16 )( sXPosition + TACT_UPDATE_MERC_FACE_X_WIDTH), ( INT16 )( sYPosition + iTotalPixelsHigh + 3) );
 	}
 
-	SetFont( TINYFONT1 );
-	SetFontForeground( FONT_WHITE );
-	SetFontBackground( FONT_BLACK );
+	SetFontFgBg(TINYFONT1, FONT_WHITE, FONT_BLACK);
 
 	const wchar_t* Patients = zMarksMapScreenText[14];
 	FindFontCenterCoordinates(sXPosition, sCurrentYPosition, iTotalPixelsWide, 0, Patients, TINYFONT1, &sX, &sY);

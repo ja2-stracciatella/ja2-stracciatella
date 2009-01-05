@@ -1194,9 +1194,7 @@ static void PrintAP(SOLDIERTYPE* const s, INT16 const x, INT16 const y, INT16 co
 		MercUnderTheInfluence(s)           ? FONT_MCOLOR_LTBLUE   :
 		s->bStealthMode                    ? FONT_MCOLOR_LTYELLOW :
 		FONT_MCOLOR_LTGRAY;
-	SetFontForeground(foreground);
-	SetFontBackground(FONT_MCOLOR_BLACK);
-	SetFont(TINYFONT1);
+	SetFontFgBg(TINYFONT1, foreground, FONT_MCOLOR_BLACK);
 
 	RestoreExternBackgroundRect(x, y, w, h);
 	wchar_t buf[16];
@@ -1315,14 +1313,10 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 		{
 			RenderInvBodyPanel(gpSMCurrentMerc, SM_BODYINV_X, SM_BODYINV_Y);
 
-			SetFont( BLOCKFONT2 );
-
 			// Render Values for stats!
 			// Set font drawing to saved buffer
 			SetFontDestBuffer(guiSAVEBUFFER);
-
-			SetFontBackground( FONT_MCOLOR_BLACK );
-			SetFontForeground( STATS_TITLE_FONT_COLOR );
+			SetFontFgBg(BLOCKFONT2, STATS_TITLE_FONT_COLOR, FONT_MCOLOR_BLACK);
 			for( cnt = 0; cnt < 5; cnt++ )
 			{
 				const INT32 y = dy + 7 + cnt * 10;
@@ -1386,17 +1380,8 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 		}
 
 		// Render Name!
-		SetFont( BLOCKFONT2 );
-
-		if ( gpSMCurrentMerc->bStealthMode )
-		{
-			SetFontForeground(FONT_MCOLOR_LTYELLOW);
-		}
-		else
-		{
-			SetFontForeground(FONT_MCOLOR_LTGRAY);
-		}
-		SetFontBackground(FONT_MCOLOR_BLACK);
+		UINT8 const foreground = gpSMCurrentMerc->bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
+		SetFontFgBg(BLOCKFONT2, foreground, FONT_MCOLOR_BLACK);
 
 		const INT32 x = SM_SELMERCNAME_X;
 		const INT32 y = dy + SM_SELMERCNAME_Y;
@@ -2539,17 +2524,8 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				// Restore AP/LIFE POSIITONS
 
 				// Render name!
-				SetFont(BLOCKFONT2);
-
-				if (s->bStealthMode)
-				{
-					SetFontForeground(FONT_MCOLOR_LTYELLOW);
-				}
-				else
-				{
-					SetFontForeground(FONT_MCOLOR_LTGRAY);
-				}
-				SetFontBackground(FONT_MCOLOR_BLACK);
+				UINT8 const foreground = s->bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
+				SetFontFgBg(BLOCKFONT2, foreground, FONT_MCOLOR_BLACK);
 
 				// RENDER ON SAVE BUFFER!
 				SetFontDestBuffer(guiSAVEBUFFER);
@@ -3353,10 +3329,7 @@ void RenderTownIDString(void)
 	INT16 sFontX, sFontY;
 
 	// Render town, position
-	SetFont( COMPFONT );
-	SetFontForeground( 183 );
-	SetFontBackground( FONT_BLACK );
-
+	SetFontFgBg(COMPFONT, 183, FONT_BLACK);
 	GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTownIDString, lengthof(zTownIDString), TRUE );
 	ReduceStringLength( zTownIDString, lengthof(zTownIDString), 80, COMPFONT );
 	FindFontCenterCoordinates(548, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);

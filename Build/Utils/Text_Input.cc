@@ -1232,11 +1232,8 @@ void RenderInactiveTextField( UINT8 ubID )
 	if( !pNode || !pNode->szString )
 		return;
 	SaveFontSettings();
-	SetFont( pColors->usFont );
 	UINT16 usOffset = (pNode->region.RegionBottomRightY - pNode->region.RegionTopLeftY - GetFontHeight(pColors->usFont)) / 2;
-	SetFontForeground( pColors->ubForeColor );
-	SetFontShadow( pColors->ubShadowColor );
-	SetFontBackground( 0 );
+	SetFontAttributes(pColors->usFont, pColors->ubForeColor, pColors->ubShadowColor);
 	RenderBackgroundField( pNode );
 	MPrint(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, pNode->szString);
 	RestoreFontSettings();
@@ -1248,19 +1245,15 @@ static void RenderInactiveTextFieldNode(TEXTINPUTNODE* pNode)
 	if( !pNode || !pNode->szString )
 		return;
 	SaveFontSettings();
-	SetFont( pColors->usFont );
 	if( !pNode->fEnabled && pColors->fUseDisabledAutoShade )
 	{ //use the color scheme specified by the user.
-		SetFontForeground( pColors->ubDisabledForeColor );
-		SetFontShadow( pColors->ubDisabledShadowColor );
+		SetFontAttributes(pColors->usFont, pColors->ubDisabledForeColor, pColors->ubDisabledShadowColor);
 	}
 	else
 	{
-		SetFontForeground( pColors->ubForeColor );
-		SetFontShadow( pColors->ubShadowColor );
+		SetFontAttributes(pColors->usFont, pColors->ubForeColor, pColors->ubShadowColor);
 	}
 	UINT16 usOffset = (pNode->region.RegionBottomRightY - pNode->region.RegionTopLeftY - GetFontHeight(pColors->usFont)) / 2;
-	SetFontBackground( 0 );
 	RenderBackgroundField( pNode );
 	MPrint(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, pNode->szString);
 	RestoreFontSettings();

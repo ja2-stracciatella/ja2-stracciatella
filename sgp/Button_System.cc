@@ -1452,11 +1452,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 		xp = b->Area.RegionTopLeftX + b->bTextXOffset;
 	}
 
-	// Set the printing font to the button text font
-	SetFont(b->usFont);
-
 	// print the text
-	SetFontBackground(FONT_MCOLOR_BLACK);
 
 	//Override the colors if necessary.
 	INT16 sForeColor;
@@ -1472,7 +1468,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	{
 		sForeColor = b->sForeColor;
 	}
-	SetFontForeground(sForeColor);
+	SetFontFgBg(b->usFont, sForeColor, FONT_MCOLOR_BLACK);
 
 	if (b->uiFlags & BUTTON_ENABLED && b->Area.uiFlags & MSYS_MOUSE_IN_AREA && b->sShadowColorHilited != -1)
 	{
