@@ -468,20 +468,17 @@ static void RenderPersonnelStats(const SOLDIERTYPE* const s)
 static void RenderPersonnelFace(const MERCPROFILESTRUCT* const p, const BOOLEAN alive)
 try
 {
-	char sTemp[100];
-	sprintf(sTemp, FACES_DIR "%02d.sti", p->ubFaceIndex);
-
-	SGPVObject* const guiFACE = AddVideoObjectFromFile(sTemp);
-
-	if (!alive)
-	{
-		guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
-		//set the red pallete to the face
-		guiFACE->CurrentShade(0);
+	{ char sTemp[100];
+		sprintf(sTemp, FACES_DIR "%02d.sti", p->ubFaceIndex);
+		AutoSGPVObject guiFACE(AddVideoObjectFromFile(sTemp));
+		if (!alive)
+		{
+			guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+			//set the red pallete to the face
+			guiFACE->CurrentShade(0);
+		}
+		BltVideoObject(FRAME_BUFFER, guiFACE, 0, IMAGE_BOX_X, IMAGE_BOX_Y);
 	}
-
-	BltVideoObject(FRAME_BUFFER, guiFACE, 0, IMAGE_BOX_X, IMAGE_BOX_Y);
-	DeleteVideoObject(guiFACE);
 
 	// Display the merc's name on the portrait
 	const wchar_t* name = p->zName;
@@ -970,21 +967,19 @@ try
 	CFOR_ALL_PERSONNEL(s)
 	{
 		// found the next actual guy
-		char sTemp[100];
-		sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[s->ubProfile].ubFaceIndex);
-
-		SGPVObject* const guiFACE = AddVideoObjectFromFile(sTemp);
-
-		if (s->bLife <= 0)
-		{
-			guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
-			//set the red pallete to the face
-			guiFACE->CurrentShade(0);
+		INT32 const x = SMALL_PORTRAIT_START_X + i % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;
+		INT32 const y = SMALL_PORTRAIT_START_Y + i / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
+		{ char sTemp[100];
+			sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[s->ubProfile].ubFaceIndex);
+			AutoSGPVObject guiFACE(AddVideoObjectFromFile(sTemp));
+			if (s->bLife <= 0)
+			{
+				guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+				//set the red pallete to the face
+				guiFACE->CurrentShade(0);
+			}
+			BltVideoObject(FRAME_BUFFER, guiFACE, 0, x, y);
 		}
-
-		const INT32 x = SMALL_PORTRAIT_START_X + i % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;
-		const INT32 y = SMALL_PORTRAIT_START_Y + i / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
-		BltVideoObject(FRAME_BUFFER, guiFACE, 0, x, y);
 
 		if (s->bLife <= 0)
 		{
@@ -992,7 +987,6 @@ try
 			DrawTextToScreen(AimPopUpText[AIM_MEMBER_DEAD], x, y + SMALL_PORT_HEIGHT / 2, SMALL_PORTRAIT_WIDTH_NO_BORDERS, FONT10ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 		}
 
-		DeleteVideoObject(guiFACE);
 		i++;
 	}
 }
@@ -1969,8 +1963,7 @@ try
 {
 	char sTemp[100];
 	sprintf(sTemp, SMALL_FACES_DIR "%02d.sti", gMercProfiles[iId].ubFaceIndex);
-
-	SGPVObject* const guiFACE = AddVideoObjectFromFile(sTemp);
+	AutoSGPVObject guiFACE(AddVideoObjectFromFile(sTemp));
 
 	if (fDead)
 	{
@@ -1982,8 +1975,6 @@ try
 	const INT32 x = SMALL_PORTRAIT_START_X + iCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;
 	const INT32 y = SMALL_PORTRAIT_START_Y + iCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
 	BltVideoObject(FRAME_BUFFER, guiFACE, 0, x, y);
-
-	DeleteVideoObject(guiFACE);
 
 	return TRUE;
 }
