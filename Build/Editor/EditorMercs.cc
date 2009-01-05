@@ -2087,7 +2087,6 @@ static void RenderSelectedMercsInventory(void)
 			}
 			xp += MERCPANEL_X;
 			yp += MERCPANEL_Y;
-			SetFont( SMALLCOMPFONT );
 			if( i == gbCurrSelect )
 				ubFontColor = FONT_LTRED;
 			else if( i == gbCurrHilite )
