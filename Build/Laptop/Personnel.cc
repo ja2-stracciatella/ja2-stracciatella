@@ -1813,7 +1813,7 @@ static void DepartedDownCallBack(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static BOOLEAN DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDead);
+static void DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDead);
 
 
 static void DisplayPastMercsPortraits(void)
@@ -1958,7 +1958,7 @@ static PastMercInfo GetSelectedPastMercInfo(void)
 }
 
 
-static BOOLEAN DisplayPortraitOfPastMerc(const INT32 iId, const INT32 iCounter, const BOOLEAN fDead)
+static void DisplayPortraitOfPastMerc(const INT32 iId, const INT32 iCounter, const BOOLEAN fDead)
 try
 {
 	char sTemp[100];
@@ -1975,10 +1975,8 @@ try
 	const INT32 x = SMALL_PORTRAIT_START_X + iCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;
 	const INT32 y = SMALL_PORTRAIT_START_Y + iCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
 	BltVideoObject(FRAME_BUFFER, guiFACE, 0, x, y);
-
-	return TRUE;
 }
-catch (...) { return FALSE; }
+catch (...) { /* XXX ignore */ }
 
 
 static void DisplayDepartedCharStats(const MERCPROFILESTRUCT* const p, const INT32 iState)
