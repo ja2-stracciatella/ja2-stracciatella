@@ -1738,8 +1738,6 @@ static void LoadBookmark(void)
 
 static void DisplayBookMarks(void)
 {
-	// will look at bookmarklist and set accordingly
-
 	// check if we are maximizing or minimizing.. if so, do not display
 	if (fMaximizingProgram || fMinizingProgram) return;
 
@@ -1750,39 +1748,32 @@ static void DisplayBookMarks(void)
 	SetFontDestBuffer(FRAME_BUFFER, BOOK_X, BOOK_TOP_Y, BOOK_X + BOOK_WIDTH - 10, SCREEN_HEIGHT);
 
 	// blt in book mark background
-	INT32 i;
-	for (i = 1; LaptopSaveInfo.iBookMarkList[i - 1] != -1; ++i)
+	INT32 const h  = BOOK_HEIGHT + 6;
+	INT32 const sy = BOOK_TOP_Y + 6 + h;
+	INT32       y  = sy;
+	INT32       i  = 0;
+	for (;;)
 	{
-		const INT32 y = BOOK_TOP_Y + i * (BOOK_HEIGHT + 6) + 6;
-
-		const SGPVObject* const vo = (iHighLightBookLine == i - 1 ? guiBOOKHIGH : guiBOOKMARK);
+		bool              const highlighted = iHighLightBookLine == i;
+		SGPVObject const* const vo          = highlighted ? guiBOOKHIGH : guiBOOKMARK;
 		BltVideoObject(FRAME_BUFFER, vo, 0, BOOK_X, y);
 
-		SetFontForeground(iHighLightBookLine == i - 1 ? FONT_WHITE : FONT_BLACK);
-		INT16 sX;
-		INT16 sY;
-		FindFontCenterCoordinates(BOOK_X + 3, y + 2, BOOK_WIDTH - 3, BOOK_HEIGHT + 6, pBookMarkStrings[LaptopSaveInfo.iBookMarkList[i - 1]], BOOK_FONT, &sX, &sY);
-		MPrint(sX, sY, pBookMarkStrings[LaptopSaveInfo.iBookMarkList[i - 1]]);
+		SetFontForeground(highlighted ? FONT_WHITE : FONT_BLACK);
+		INT32          const idx = LaptopSaveInfo.iBookMarkList[i];
+		wchar_t const* const txt = pBookMarkStrings[idx != -1 ? idx : CANCEL_STRING];
+		INT16                sX;
+		INT16                sY;
+		FindFontCenterCoordinates(BOOK_X + 3, y + 2, BOOK_WIDTH - 3, h, txt, BOOK_FONT, &sX, &sY);
+		MPrint(sX, sY, txt);
+		++i;
+		y += h;
+		if (idx == -1) break;
 	}
-
-	// blit one more
-	const INT32 y = BOOK_TOP_Y + i * (BOOK_HEIGHT + 6) + 6;
-
-	const SGPVObject* const vo = (iHighLightBookLine == i - 1 ? guiBOOKHIGH : guiBOOKMARK);
-	BltVideoObject(FRAME_BUFFER, vo, 0, BOOK_X, y);
-
-	SetFontForeground(iHighLightBookLine == i - 1 ? FONT_WHITE : FONT_BLACK);
-	INT16 sX;
-	INT16 sY;
-	FindFontCenterCoordinates(BOOK_X + 3, y + 2, BOOK_WIDTH - 3, BOOK_HEIGHT + 6, pBookMarkStrings[CANCEL_STRING], BOOK_FONT, &sX, &sY);
-	MPrint(sX, sY, pBookMarkStrings[CANCEL_STRING]);
-	i++;
 
 	SetFontDestBuffer(FRAME_BUFFER);
 	SetFontShadow(DEFAULT_SHADOW);
 
-	InvalidateRegion(BOOK_X, BOOK_TOP_Y + i * BOOK_HEIGHT + 12, BOOK_X + BOOK_WIDTH, BOOK_TOP_Y + (i + 1) * BOOK_HEIGHT + 16);
-	InvalidateRegion(BOOK_X, BOOK_TOP_Y,                        BOOK_X + BOOK_WIDTH, BOOK_TOP_Y + (i + 6) * BOOK_HEIGHT + 16);
+	InvalidateRegion(BOOK_X, sy, BOOK_X + BOOK_WIDTH, y);
 }
 
 
