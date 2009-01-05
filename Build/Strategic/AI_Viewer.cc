@@ -1554,8 +1554,6 @@ static void PrintEnemyPopTable(void)
 	usY += POP_TABLE_Y_GAP;
 	usX += POP_TABLE_X_OFFSET;
 
-	SetFontForeground( FONT_YELLOW );
-
 	// print table values
 	for ( ubEnemyRank = 0; ubEnemyRank < TABLE_ENEMY_RANKS; ubEnemyRank++ )
 	{
@@ -1693,8 +1691,6 @@ static void PrintEnemiesKilledTable(void)
 	// over to first column, and down 1 line
 	usY += KILLED_TABLE_Y_GAP;
 	usX += KILLED_TABLE_X_OFFSET;
-
-	SetFontForeground( FONT_YELLOW );
 
 	// print table values
 	for ( ubEnemyRank = 0; ubEnemyRank < TABLE_ENEMY_RANKS; ubEnemyRank++ )
