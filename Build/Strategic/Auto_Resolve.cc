@@ -1366,7 +1366,7 @@ static void RenderAutoResolve(void)
 	}
 
 	//Render the titles
-	SetFontFgSh(FONT10ARIALBOLD, FONT_WHITE, FONT_NEARBLACK);
+	SetFontAttributes(FONT10ARIALBOLD, FONT_WHITE, FONT_NEARBLACK);
 
 	const wchar_t* EncounterType; // XXX HACK000E
 	switch( gubEnemyEncounterCode )
@@ -1386,7 +1386,7 @@ static void RenderAutoResolve(void)
 	yp = gpAR->Rect.iTop + 15;
 	MPrint(xp, yp, EncounterType);
 
-	SetFontFgSh(FONT10ARIAL, FONT_GRAY2, FONT_NEARBLACK);
+	SetFontAttributes(FONT10ARIAL, FONT_GRAY2, FONT_NEARBLACK);
 
 	GetSectorIDString( gpAR->ubSectorX, gpAR->ubSectorY, 0, str, lengthof(str), TRUE );
 	xp = gpAR->sCenterStartX + 70 - StringPixLength( str, FONT10ARIAL )/2;

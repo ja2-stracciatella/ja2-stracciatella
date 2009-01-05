@@ -1238,7 +1238,7 @@ BOOLEAN DisplayNewMailBox( void )
 	// print warning
 	MPrint(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText);
 
-	SetFontFgSh(EMAIL_WARNING_FONT, FONT_BLACK, NO_SHADOW);
+	SetFontAttributes(EMAIL_WARNING_FONT, FONT_BLACK, NO_SHADOW);
 
 	// printf warning string
 	MPrint(EMAIL_WARNING_X + 60, EMAIL_WARNING_Y + 63, pNewMailStrings);
@@ -1416,7 +1416,7 @@ static BOOLEAN DisplayDeleteNotice(Email* pMail)
   // title
 	MPrint(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText);
 
-	SetFontFgSh(EMAIL_WARNING_FONT, FONT_BLACK, NO_SHADOW);
+	SetFontAttributes(EMAIL_WARNING_FONT, FONT_BLACK, NO_SHADOW);
 
 	// draw text based on mail being read or not
 	if((pMail->fRead))

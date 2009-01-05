@@ -563,7 +563,7 @@ void RenderEditorItemsInfo()
 		{
 			INT16 x = (i / 2 - eInfo.sScrollIndex) * 60 + 110;
 			INT16 y = 360 + (i % 2) * 40;
-			SetFontFgSh(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
+			SetFontAttributes(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
 			if( usNumItems == usQuantity )
 				mprintf( x + 12, y + 4, L"%d", usNumItems );
 			else

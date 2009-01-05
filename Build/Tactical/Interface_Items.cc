@@ -4927,7 +4927,7 @@ void RenderItemPickupMenu()
 
 			if (pObject->ubNumberOfObjects > 1)
 			{
-				SetFontFgSh(ITEM_FONT, FONT_GRAY4, DEFAULT_SHADOW);
+				SetFontAttributes(ITEM_FONT, FONT_GRAY4, DEFAULT_SHADOW);
 
 				swprintf(pStr, lengthof(pStr), L"%d", pObject->ubNumberOfObjects);
 

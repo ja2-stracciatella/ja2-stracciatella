@@ -212,14 +212,6 @@ void SetFontAttributes(Font const font, UINT8 const foreground, UINT8 const shad
 }
 
 
-void SetFontFgSh(Font const font, UINT8 const foreground, UINT8 const shadow)
-{
-	SetFont(font);
-	SetFontForeground(foreground);
-	SetFontShadow(shadow);
-}
-
-
 void SetFontFgBg(Font const font, UINT8 const foreground, UINT8 const background)
 {
 	SetFont(font);

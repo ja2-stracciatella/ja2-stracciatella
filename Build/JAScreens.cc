@@ -125,7 +125,7 @@ ScreenID ErrorScreenHandle(void)
 	MPrint(50, 200, L"RUNTIME ERROR");
 	MPrint(50, 225, L"PRESS <ESC> TO EXIT");
 
-	SetFontFgSh(FONT12ARIAL, FONT_YELLOW, 60); // 60 is near black
+	SetFontAttributes(FONT12ARIAL, FONT_YELLOW, 60); // 60 is near black
 	mprintf(50, 255, L"%hs", gubErrorText);
 	SetFontForeground( FONT_LTRED );
 
@@ -583,7 +583,7 @@ void DoDemoIntroduction(void)
 	InvalidateScreen();
 
 	//print out the information
-	SetFontFgSh(FONT14HUMANIST, FONT_YELLOW, FONT_NEARBLACK);
+	SetFontAttributes(FONT14HUMANIST, FONT_YELLOW, FONT_NEARBLACK);
 
 	yp = 50;
 	height = DisplayWrappedString(20, yp, 400, 3, FONT14ARIAL, FONT_YELLOW, gpDemoIntroString[0], FONT_BLACK, LEFT_JUSTIFIED);
@@ -788,7 +788,7 @@ ScreenID DemoExitScreenHandle(void)
 		uiStartTime = uiTime;
 		usCenter = SCREEN_WIDTH / 2 - (StringPixLength(gpDemoString[0], FONT14ARIAL) + 10) + (StringPixLength(gpDemoString[0], FONT14ARIAL) + 10);
 		uiWidthString = StringPixLength( gpDemoString[0], FONT14ARIAL );
-		SetFontFgSh(FONT14ARIAL, FONT_YELLOW, FONT_NEARBLACK);
+		SetFontAttributes(FONT14ARIAL, FONT_YELLOW, FONT_NEARBLACK);
 	}
 
 	// type out the title message, "The best of Strategy. The best of Role-playing."
@@ -1143,7 +1143,7 @@ ScreenID DemoExitScreenHandle(void)
 			uiStartTime = GetJA2Clock();
 			uiCharsPrinted = 0;
 			uiWidthString = StringPixLength( gpDemoString[40], FONT14ARIAL );
-			SetFontFgSh(FONT14ARIAL, FONT_YELLOW, FONT_NEARBLACK);
+			SetFontAttributes(FONT14ARIAL, FONT_YELLOW, FONT_NEARBLACK);
 		}
 		iPercentage = (uiTime - uiStartTime) * 100 / 1600;
 		if( gfFastAnim )
