@@ -1937,7 +1937,6 @@ void UpdateMercsInfo()
 		}
 
 		case MERC_PROFILEMODE:
-			SetFontAttributes(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
 			{ //scope trick
 				wchar_t tempStr[500];
 				swprintf(tempStr, lengthof(tempStr),
@@ -1946,6 +1945,7 @@ void UpdateMercsInfo()
 					L"though, you will still be able to view stats, etc.  Pressing ENTER will automatically "
 					L"extract the number you have typed.  A blank field will clear the profile.  The current "
 					L"number of profiles range from 0 to %d.", NUM_PROFILES);
+				SetFontShadow(FONT_NEARBLACK);
 				DisplayWrappedString(180, 370, 400, 2, FONT10ARIAL, 146, tempStr,	FONT_BLACK, LEFT_JUSTIFIED);
 				SetFont( FONT12POINT1 );
 				if( gpSelected->pDetailedPlacement->ubProfile == NO_PROFILE )

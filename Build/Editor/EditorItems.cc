@@ -299,8 +299,6 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			//Store these item pointers for later when rendering selected items.
 			eInfo.pusItemIndex[i] = KeyTable[ 0 ].usItem + LockTable[ i ].usKeyItem;
 
-			SetFont(SMALLCOMPFONT);
-			SetFontForeground( FONT_MCOLOR_WHITE );
 			SetFontDestBuffer(eInfo.uiBuffer);
 
 			swprintf(pStr, lengthof(pStr), L"%hs", LockTable[i].ubEditorName);
@@ -397,10 +395,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 				//Store these item pointers for later when rendering selected items.
 				eInfo.pusItemIndex[i] = usCounter;
 
-				SetFont(SMALLCOMPFONT);
-				SetFontForeground( FONT_MCOLOR_WHITE );
 				SetFontDestBuffer(eInfo.uiBuffer);
-
 
 				if( eInfo.uiItemType != TBAR_MODE_ITEM_TRIGGERS )
 				{

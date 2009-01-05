@@ -583,7 +583,7 @@ void DoDemoIntroduction(void)
 	InvalidateScreen();
 
 	//print out the information
-	SetFontAttributes(FONT14HUMANIST, FONT_YELLOW, FONT_NEARBLACK);
+	SetFontShadow(FONT_NEARBLACK);
 
 	yp = 50;
 	height = DisplayWrappedString(20, yp, 400, 3, FONT14ARIAL, FONT_YELLOW, gpDemoIntroString[0], FONT_BLACK, LEFT_JUSTIFIED);

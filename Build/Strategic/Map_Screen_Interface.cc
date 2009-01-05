@@ -1995,9 +1995,6 @@ static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 	//ColorFillVideoSurfaceArea(FRAME_BUFFER, iX, iY, (iX + iW), (iY + iH), 0);
 	//ColorFillVideoSurfaceArea(FRAME_BUFFER, (iX + 1), (iY + 1), (iX + iW - 1), (iY + iH - 1), usFillColor);
 
-	SetFont( FONT10ARIAL );
-	SetFontForeground( FONT_BEIGE );
-
 	iH = DisplayWrappedString(iX + 10, iY + 6, pRegion->iW, 0, FONT10ARIAL, FONT_BEIGE, pRegion->FastHelpText, FONT_NEARBLACK, MARK_DIRTY);
 
 	InvalidateRegion(  iX, iY, (iX + iW) , (iY + iH + 20 ) );

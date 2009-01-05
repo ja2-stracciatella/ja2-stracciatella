@@ -1215,7 +1215,6 @@ static void DrawTextOnMapInventoryBackground(void)
 //	CHAR16 sString[ 64 ];
 	UINT16 usStringHeight;
 
-	SetFontFgBg(MAP_IVEN_FONT, FONT_BEIGE, FONT_BLACK);
 	SetFontDestBuffer(guiSAVEBUFFER);
 
 	//Calculate the height of the string, as it needs to be vertically centered.

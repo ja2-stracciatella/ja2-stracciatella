@@ -2493,7 +2493,6 @@ void RenderItemDescriptionBox(void)
 #endif
 	}
 
-	SetFontForeground(FONT_BLACK);
 	SetFontShadow(ITEMDESC_FONTSHADOW2);
 
 	{

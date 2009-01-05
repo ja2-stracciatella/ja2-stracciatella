@@ -3409,11 +3409,8 @@ static void DisplayWebBookMarkNotify(void)
 		// display download string
 		MPrint(DOWN_STRING_X, DOWN_STRING_Y, pShowBookmarkString[0]);
 
-		SetFont(BOOK_FONT);
-		SetFontForeground(FONT_BLACK);
-
 		// now draw the message
-		DisplayWrappedString(DOWN_STRING_X - 42, DOWN_STRING_Y + 20, BOOK_WIDTH + 45, 2, BOOK_FONT,FONT_BLACK, pShowBookmarkString[1], FONT_BLACK, CENTER_JUSTIFIED);
+		DisplayWrappedString(DOWN_STRING_X - 42, DOWN_STRING_Y + 20, BOOK_WIDTH + 45, 2, BOOK_FONT, FONT_BLACK, pShowBookmarkString[1], FONT_BLACK, CENTER_JUSTIFIED);
 
 		// invalidate region
 		InvalidateRegion(DOWNLOAD_X, DOWNLOAD_Y, DOWNLOAD_X + 150, DOWNLOAD_Y + 100);
