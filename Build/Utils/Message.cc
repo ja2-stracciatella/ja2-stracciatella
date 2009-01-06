@@ -402,26 +402,23 @@ static void WriteMessageToFile(const wchar_t* pString);
 
 
 // this function sets up the string into several single line structures
-static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA, ...)
+static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t* const fmt, ...)
 {
-	if (giTimeCompressMode > TIME_COMPRESS_X1 ||
-			fDisableJustForIan && ubPriority != MSG_ERROR && ubPriority != MSG_INTERFACE)
-	{
-		return;
-	}
+	if (giTimeCompressMode > TIME_COMPRESS_X1) return;
+	if (fDisableJustForIan && priority != MSG_ERROR && priority != MSG_INTERFACE) return;
 
-	va_list argptr;
-	va_start(argptr, pStringA);
-	wchar_t DestString[512];
-	vswprintf(DestString, lengthof(DestString), pStringA, argptr);
-	va_end(argptr);
+	va_list ap;
+	va_start(ap, fmt);
+	wchar_t msg[512];
+	vswprintf(msg, lengthof(msg), fmt, ap);
+	va_end(ap);
 
-	switch (ubPriority)
+	switch (priority)
 	{
 		case MSG_BETAVERSION:
 #if defined JA2BETAVERSION || defined JA2TESTVERSION
-			WriteMessageToFile(DestString);
-			usColor = BETAVERSION_COLOR;
+			WriteMessageToFile(msg);
+			colour = BETAVERSION_COLOR;
 			break;
 #else
 			return;
@@ -429,8 +426,8 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 
 		case MSG_TESTVERSION:
 #if defined JA2TESTVERSION
-			WriteMessageToFile(DestString);
-			usColor = TESTVERSION_COLOR;
+			WriteMessageToFile(msg);
+			colour = TESTVERSION_COLOR;
 			break;
 #else
 			return;
@@ -440,49 +437,35 @@ static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* p
 #if defined _DEBUG && !defined JA2DEMO
 		{
 			wchar_t DestStringA[512];
-			wcscpy(DestStringA, DestString);
-			swprintf(DestString, lengthof(DestString), L"Debug: %ls", DestStringA);
+			wcscpy(DestStringA, msg);
+			swprintf(msg, lengthof(msg), L"Debug: %ls", DestStringA);
 			WriteMessageToFile(DestStringA);
-			usColor = DEBUG_COLOR;
+			colour = DEBUG_COLOR;
 			break;
 		}
 #else
 			return;
 #endif
 
-		case MSG_DIALOG:    usColor = DIALOGUE_COLOR;  break;
-		case MSG_INTERFACE: usColor = INTERFACE_COLOR; break;
+		case MSG_DIALOG:    colour = DIALOGUE_COLOR;  break;
+		case MSG_INTERFACE: colour = INTERFACE_COLOR; break;
 	}
 
-	WRAPPED_STRING* pStringWrapperHead = LineWrap(TINYFONT1, LINE_WIDTH, NULL, DestString);
-	WRAPPED_STRING* pStringWrapper = pStringWrapperHead;
-	if (pStringWrapper == NULL) return;
+	WRAPPED_STRING* const head = LineWrap(TINYFONT1, LINE_WIDTH, NULL, msg);
 
-	ScrollStringSt* tail = pStringS;
-	if (tail != NULL)
+	ScrollStringSt** anchor = &pStringS;
+	while (*anchor) anchor = &(*anchor)->pNext;
+
+	BOOLEAN new_string = TRUE;
+	for (WRAPPED_STRING* i = head; i; i = i->pNextWrappedString)
 	{
-		while (tail->pNext != NULL) tail = tail->pNext;
+		ScrollStringSt* const tmp = AddString(i->sString, colour, new_string);
+		*anchor    = tmp;
+		anchor     = &tmp->pNext;
+		new_string = FALSE;
 	}
 
-	BOOLEAN fNewString = TRUE;
-	do
-	{
-		ScrollStringSt* pTempStringSt = AddString(pStringWrapper->sString, usColor, fNewString);
-		if (tail == NULL)
-		{
-			pStringS = pTempStringSt;
-		}
-		else
-		{
-			tail->pNext = pTempStringSt;
-		}
-		tail = pTempStringSt;
-		fNewString = FALSE;
-		pStringWrapper = pStringWrapper->pNextWrappedString;
-	}
-	while (pStringWrapper != NULL);
-
-	ClearWrappedStrings(pStringWrapperHead);
+	ClearWrappedStrings(head);
 }
 
 
