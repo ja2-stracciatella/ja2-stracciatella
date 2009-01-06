@@ -2502,108 +2502,72 @@ static void RenderCurrentSchedule(void);
 
 void RenderMercStrings()
 {
-	INT16 sXPos, sYPos;
-	INT16 sX, sY;
-	const wchar_t* pStr;
-	wchar_t str[50];
-
 	CFOR_ALL_SOLDIERINITNODES(curr)
 	{
-		if( curr->pSoldier && curr->pSoldier->bVisible == 1 )
-		{ //Render the health text
-			const SOLDIERTYPE* const pSoldier = curr->pSoldier;
-			GetSoldierAboveGuyPositions( pSoldier, &sXPos, &sYPos, FALSE );
-			// Display name
-			SetFontFgBg(TINYFONT1, FONT_WHITE, FONT_BLACK);
-			if ( pSoldier->ubProfile != NO_PROFILE )
+		SOLDIERTYPE const* const s = curr->pSoldier;
+		if (!s || s->bVisible != 1) continue;
+
+		INT16 sX;
+		INT16 sY;
+		INT16 sXPos;
+		INT16 sYPos;
+		GetSoldierAboveGuyPositions(s, &sXPos, &sYPos, FALSE);
+
+		// Display name
+		SetFontFgBg(TINYFONT1, FONT_WHITE, FONT_BLACK);
+		if (s->ubProfile != NO_PROFILE)
+		{
+			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, s->name, TINYFONT1, &sX, &sY);
+			if (sY < 352)
 			{
-				FindFontCenterCoordinates(sXPos, sYPos, 80, 1, pSoldier->name, TINYFONT1, &sX, &sY);
-				if( sY < 352 )
-				{
-					GDirtyPrint(sX, sY, pSoldier->name);
-				}
-				sYPos += 10;
-
-				pStr = GetSoldierHealthString( pSoldier );
-
-				SetFontFgBg(TINYFONT1, FONT_RED, FONT_BLACK);
-
-				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, pStr, TINYFONT1, &sX, &sY );
-				if( sY < 352 )
-				{
-					GDirtyPrint(sX, sY, pStr);
-				}
-				sYPos += 10;
-
-				SetFontForeground( FONT_GRAY2 );
-				swprintf(str, lengthof(str), L"Slot #%d", pSoldier->ubID);
-				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, str, TINYFONT1, &sX, &sY );
-				if( sY < 352 )
-				{
-					GDirtyPrint(sX, sY, str);
-				}
-				sYPos += 10;
+				GDirtyPrint(sX, sY, s->name);
 			}
-			else
+			sYPos += 10;
+		}
+
+		// Render the health text
+		wchar_t const* const health = GetSoldierHealthString(s);
+		SetFontForeground(FONT_RED);
+		FindFontCenterCoordinates(sXPos, sYPos, 80, 1, health, TINYFONT1, &sX, &sY);
+		if (sY < 352)
+		{
+			GDirtyPrint(sX, sY, health);
+		}
+		sYPos += 10;
+
+		SetFontForeground(FONT_GRAY2);
+		wchar_t str[50];
+		swprintf(str, lengthof(str), L"Slot #%d", s->ubID);
+		FindFontCenterCoordinates(sXPos, sYPos, 80, 1, str, TINYFONT1, &sX, &sY);
+		if (sY < 352)
+		{
+			GDirtyPrint(sX, sY, str);
+		}
+		sYPos += 10;
+
+		// Make sure the placement has at least one waypoint.
+		BASIC_SOLDIERCREATE_STRUCT const& bp = *curr->pBasicPlacement;
+		bool const has_patrol_order  = bp.bOrders == RNDPTPATROL || bp.bOrders == POINTPATROL;
+		bool const has_patrol_points = bp.bPatrolCnt != 0;
+		if (has_patrol_order != has_patrol_points)
+		{
+			SetFontForeground(GetJA2Clock() % 1000 < 500 ? FONT_DKRED : FONT_RED);
+			wchar_t const* const msg = has_patrol_points ?
+				L"Waypoints with no patrol orders" :
+				L"Patrol orders with no waypoints";
+			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, msg, TINYFONT1, &sX, &sY);
+			if (sY < 352)
 			{
-				pStr = GetSoldierHealthString( pSoldier );
-
-				SetFontFgBg(TINYFONT1, FONT_RED, FONT_BLACK);
-
-				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, pStr, TINYFONT1, &sX, &sY );
-				if( sY < 352 )
-				{
-					GDirtyPrint(sX, sY, pStr);
-				}
-				sYPos += 10;
-
-				SetFontForeground( FONT_GRAY2 );
-				swprintf(str, lengthof(str), L"Slot #%d", pSoldier->ubID);
-				FindFontCenterCoordinates( sXPos, sYPos, 80, 1, str, TINYFONT1, &sX, &sY );
-				if( sY < 352 )
-				{
-					GDirtyPrint(sX, sY, str);
-				}
-				sYPos += 10;
-			}
-			if( curr->pBasicPlacement->bOrders == RNDPTPATROL || curr->pBasicPlacement->bOrders == POINTPATROL )
-			{ //make sure the placement has at least one waypoint.
-				if( !curr->pBasicPlacement->bPatrolCnt )
-				{
-					if( GetJA2Clock() % 1000 < 500 )
-						SetFontForeground( FONT_DKRED );
-					else
-						SetFontForeground( FONT_RED );
-					const wchar_t* Msg = L"Patrol orders with no waypoints";
-					FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Msg, TINYFONT1, &sX, &sY);
-					if( sY < 352 )
-					{
-						GDirtyPrint(sX, sY, Msg);
-					}
-					sYPos += 10;
-				}
-			}
-			else if( curr->pBasicPlacement->bPatrolCnt )
-			{
-				if( GetJA2Clock() % 1000 < 500 )
-					SetFontForeground( FONT_DKRED );
-				else
-					SetFontForeground( FONT_RED );
-				const wchar_t* Msg = L"Waypoints with no patrol orders";
-				FindFontCenterCoordinates(sXPos, sYPos, 80, 1, Msg, TINYFONT1, &sX, &sY);
-				if( sY < 352 )
-				{
-					GDirtyPrint(sX, sY, Msg);
-				}
-				sYPos += 10;
+				GDirtyPrint(sX, sY, msg);
 			}
 		}
 	}
-	if( gubCurrMercMode == MERC_SCHEDULEMODE )
+	if (gubCurrMercMode == MERC_SCHEDULEMODE)
 	{
 		RenderCurrentSchedule();
 	}
 }
+
 
 void SetMercTeamVisibility( INT8 bTeam, BOOLEAN fVisible )
 {
