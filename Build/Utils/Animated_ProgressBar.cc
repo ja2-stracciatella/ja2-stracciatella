@@ -182,8 +182,7 @@ void SetRelativeStartAndEndPercentage(UINT8 const id, UINT32 const uiRelStartPer
 
 	//Render the entire panel now, as it doesn't need update during the normal rendering
 	if (bar->flags & PROGRESS_PANEL)
-	{
-		// Draw panel
+	{ // Draw panel
 		UINT16 const l = bar->usPanelLeft;
 		UINT16 const t = bar->usPanelTop;
 		UINT16 const r = bar->usPanelRight;
@@ -192,11 +191,11 @@ void SetRelativeStartAndEndPercentage(UINT8 const id, UINT32 const uiRelStartPer
 		ColorFillVideoSurfaceArea(FRAME_BUFFER, l + 1, t + 1, r,     b,     bar->usDkColor);
 		ColorFillVideoSurfaceArea(FRAME_BUFFER, l + 1, t + 1, r - 1, b - 1, bar->usColor);
 		InvalidateRegion(l, t, r, b);
-		if (bar->swzTitle)
+		wchar_t const* const title = bar->swzTitle;
+		if (title)
 		{ // Draw title
-			Font           const font  = bar->usTitleFont;
-			wchar_t const* const title = bar->swzTitle;
-			INT32          const x     = (r + l - StringPixLength(title, font)) / 2; // Center
+			Font  const font = bar->usTitleFont;
+			INT32 const x    = (r + l - StringPixLength(title, font)) / 2; // Center
 			SetFontAttributes(font, bar->ubTitleFontForeColor, bar->ubTitleFontShadowColor);
 			MPrint(x, t + 3, title);
 		}
