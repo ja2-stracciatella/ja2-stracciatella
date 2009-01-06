@@ -109,8 +109,6 @@
 #define ETA_FONT BLOCKFONT2
 
 // Colors
-#define CHAR_INFO_PANEL_BLOCK_COLOR 60
-
 #define FONT_MAP_DKYELLOW 170
 
 #define CHAR_TITLE_FONT_COLOR 6
@@ -729,7 +727,6 @@ static void RenderHandPosItem(void)
 		return;
 	}
 
-	SetFontFgBg(BLOCKFONT2, CHAR_INFO_PANEL_BLOCK_COLOR, FONT_BLACK);
 	INVRenderItem(guiSAVEBUFFER, pSoldier, &pSoldier->inv[HANDPOS], SOLDIER_HAND_X, SOLDIER_HAND_Y,	58, 23, DIRTYLEVEL2, 0, TRANSPARENT);
 }
 
