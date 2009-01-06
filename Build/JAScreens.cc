@@ -91,13 +91,6 @@ void DisplayFrameRate( )
 		uiFrameCount = 0;
 	}
 
-	// Create string
-
-	//DebugMsg(TOPIC_JA2, DBG_LEVEL_0, String( "FPS: %d ", __min( uiFPS, 1000 ) ) );
-
-	UINT8 const foreground = uiFPS < 20 ? FONT_MCOLOR_LTRED : FONT_MCOLOR_DKGRAY;
-	SetFontFgBg(SMALLFONT1, foreground, FONT_MCOLOR_BLACK);
-
 	if ( gbFPSDisplay == SHOW_FULL_FPS )
 	{
 		// FRAME RATE
@@ -105,12 +98,6 @@ void DisplayFrameRate( )
 
 		// TIMER COUNTER
 		SetVideoOverlayTextF(g_counter_period_overlay, L"%ld", __min(giTimerDiag, 1000));
-	}
-
-	if ( ( gTacticalStatus.uiFlags & GODMODE ) )
-	{
-		SetFontFgBg(SMALLFONT1, FONT_MCOLOR_DKRED, FONT_MCOLOR_BLACK);
-		//GDirtyPrint(0, 0, L"GOD MODE");
 	}
 }
 
