@@ -161,68 +161,63 @@ void RemoveProgressBar( UINT8 ubID )
 	}
 }
 
-//An important setup function.  The best explanation is through example.  The example being the loading
-//of a file -- there are many stages of the map loading.  In JA2, the first step is to load the tileset.
-//Because it is a large chunk of the total loading of the map, we may gauge that it takes up 30% of the
-//total load.  Because it is also at the beginning, we would pass in the arguments ( 0, 30, "text" ).
-//As the process animates using UpdateProgressBar( 0 to 100 ), the total progress bar will only reach 30%
-//at the 100% mark within UpdateProgressBar.  At that time, you would go onto the next step, resetting the
-//relative start and end percentage from 30 to whatever, until your done.
-void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32 uiRelEndPerc, const wchar_t *str)
+/* An important setup function.  The best explanation is through example.  The
+ * example being the loading of a file -- there are many stages of the map
+ * loading.  In JA2, the first step is to load the tileset.  Because it is a
+ * large chunk of the total loading of the map, we may gauge that it takes up
+ * 30% of the total load.  Because it is also at the beginning, we would pass in
+ * the arguments (0, 30, "text").  As the process animates using
+ * UpdateProgressBar(0 to 100), the total progress bar will only reach 30% at
+ * the 100% mark within UpdateProgressBar.  At that time, you would go onto the
+ * next step, resetting the relative start and end percentage from 30 to
+ * whatever, until your done. */
+void SetRelativeStartAndEndPercentage(UINT8 const id, UINT32 const uiRelStartPerc, UINT32 const uiRelEndPerc, wchar_t const* const str)
 {
-	PROGRESSBAR *pCurr;
-	UINT16 usStartX, usStartY;
+	Assert(id < MAX_PROGRESSBARS);
+	PROGRESSBAR* const bar = pBar[id];
+	if (!bar) return;
 
-	Assert( ubID < MAX_PROGRESSBARS );
-	pCurr = pBar[ ubID ];
-	if( !pCurr )
-		return;
-
-	pCurr->rStart = uiRelStartPerc*0.01;
-	pCurr->rEnd = uiRelEndPerc*0.01;
+	bar->rStart = uiRelStartPerc * 0.01;
+	bar->rEnd   = uiRelEndPerc   * 0.01;
 
 	//Render the entire panel now, as it doesn't need update during the normal rendering
-	if (pCurr->flags & PROGRESS_PANEL)
+	if (bar->flags & PROGRESS_PANEL)
 	{
-		//Draw panel
-		ColorFillVideoSurfaceArea( FRAME_BUFFER,
-			pCurr->usPanelLeft, pCurr->usPanelTop, pCurr->usPanelRight, pCurr->usPanelBottom, pCurr->usLtColor );
-		ColorFillVideoSurfaceArea( FRAME_BUFFER,
-			pCurr->usPanelLeft+1, pCurr->usPanelTop+1, pCurr->usPanelRight, pCurr->usPanelBottom, pCurr->usDkColor );
-		ColorFillVideoSurfaceArea( FRAME_BUFFER,
-			pCurr->usPanelLeft+1, pCurr->usPanelTop+1, pCurr->usPanelRight-1, pCurr->usPanelBottom-1, pCurr->usColor );
-		InvalidateRegion( pCurr->usPanelLeft, pCurr->usPanelTop, pCurr->usPanelRight, pCurr->usPanelBottom );
-		//Draw title
-
-		if( pCurr->swzTitle )
-		{
-			usStartX = pCurr->usPanelLeft +																					// left position
-								 (pCurr->usPanelRight - pCurr->usPanelLeft)/2 -								// + half width
-								 StringPixLength( pCurr->swzTitle, pCurr->usTitleFont ) / 2;	// - half string width
-			usStartY = pCurr->usPanelTop + 3;
-			SetFontAttributes(pCurr->usTitleFont, pCurr->ubTitleFontForeColor, pCurr->ubTitleFontShadowColor);
-			MPrint(usStartX, usStartY, pCurr->swzTitle);
+		// Draw panel
+		UINT16 const l = bar->usPanelLeft;
+		UINT16 const t = bar->usPanelTop;
+		UINT16 const r = bar->usPanelRight;
+		UINT16 const b = bar->usPanelBottom;
+		ColorFillVideoSurfaceArea(FRAME_BUFFER, l,     t,     r,     b,     bar->usLtColor);
+		ColorFillVideoSurfaceArea(FRAME_BUFFER, l + 1, t + 1, r,     b,     bar->usDkColor);
+		ColorFillVideoSurfaceArea(FRAME_BUFFER, l + 1, t + 1, r - 1, b - 1, bar->usColor);
+		InvalidateRegion(l, t, r, b);
+		if (bar->swzTitle)
+		{ // Draw title
+			Font           const font  = bar->usTitleFont;
+			wchar_t const* const title = bar->swzTitle;
+			INT32          const x     = (r + l - StringPixLength(title, font)) / 2; // Center
+			SetFontAttributes(font, bar->ubTitleFontForeColor, bar->ubTitleFontShadowColor);
+			MPrint(x, t + 3, title);
 		}
 	}
 
-	if (pCurr->flags & PROGRESS_DISPLAY_TEXT)
-	{
-		//Draw message
-		if( str )
+	if (bar->flags & PROGRESS_DISPLAY_TEXT && str)
+	{ // Draw message
+		INT32 const x    = bar->pos.x;
+		INT32 const y    = bar->pos.y + bar->pos.h;
+		Font  const font = bar->usMsgFont;
+		if (bar->flags & PROGRESS_USE_SAVEBUFFER)
 		{
-			INT32 const x = pCurr->pos.x;
-			INT32 const y = pCurr->pos.y + pCurr->pos.h;
-			if (pCurr->flags & PROGRESS_USE_SAVEBUFFER)
-			{
-				UINT16 usFontHeight = GetFontHeight( pCurr->usMsgFont );
-				RestoreExternBackgroundRect(x, y, pCurr->pos.w, usFontHeight + 3);
-			}
-
-			SetFontAttributes(pCurr->usMsgFont, pCurr->ubMsgFontForeColor, pCurr->ubMsgFontShadowColor);
-			MPrint(x, y + 3, str);
+			UINT16 const h = GetFontHeight(font);
+			RestoreExternBackgroundRect(x, y, bar->pos.w, h + 3);
 		}
+
+		SetFontAttributes(font, bar->ubMsgFontForeColor, bar->ubMsgFontShadowColor);
+		MPrint(x, y + 3, str);
 	}
 }
+
 
 //This part renders the progress bar at the percentage level that you specify.  If you have set relative
 //percentage values in the above function, then the uiPercentage will be reflected based off of the relative
