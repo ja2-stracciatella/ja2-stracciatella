@@ -458,7 +458,6 @@ static void EndLoadScreen(void)
 	uiEnterSectorEndTime = GetJA2Clock();
 	uiSeconds = (uiEnterSectorEndTime - uiEnterSectorStartTime) / 1000;
 	uiHundreths = ((uiEnterSectorEndTime - uiEnterSectorStartTime) / 10) % 100;
-	SetFontFgBg(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
 	if( !gbWorldSectorZ )
 	{
 		swprintf(str, lengthof(str), L"%c%d ENTER SECTOR TIME:  %d.%02d seconds.",
