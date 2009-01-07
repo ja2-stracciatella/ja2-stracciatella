@@ -808,7 +808,7 @@ void DisplayWayPoints(void)
 			{
 				background = FONT_LTRED;
 			}
-			SetFontFgBg(TINYFONT1, FONT_WHITE, background);
+			SetFontAttributes(TINYFONT1, FONT_WHITE, DEFAULT_SHADOW, background);
 			wchar_t buf[16];
 			swprintf(buf, lengthof(buf), L"%d", bPoint);
 			FindFontCenterCoordinates(sScreenX, sScreenY, 1, 1, buf, TINYFONT1, &sX, &sY);
@@ -2514,7 +2514,7 @@ void RenderMercStrings()
 		GetSoldierAboveGuyPositions(s, &sXPos, &sYPos, FALSE);
 
 		// Display name
-		SetFontFgBg(TINYFONT1, FONT_WHITE, FONT_BLACK);
+		SetFontAttributes(TINYFONT1, FONT_WHITE);
 		if (s->ubProfile != NO_PROFILE)
 		{
 			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, s->name, TINYFONT1, &sX, &sY);
@@ -2870,7 +2870,7 @@ static void RenderCurrentSchedule(void)
 		if( sScreenY <= 355 )
 		{
 			// Shown it on screen!
-			SetFontFgBg(TINYFONT1, FONT_WHITE, FONT_LTKHAKI);
+			SetFontAttributes(TINYFONT1, FONT_WHITE, DEFAULT_SHADOW, FONT_LTKHAKI);
 			swprintf(str, lengthof(str), L"%d%c", i / 2 + 1, 'A' + i % 2);
 			FindFontCenterCoordinates(sScreenX, sScreenY, 1, 1, str, TINYFONT1, &sX, &sY);
 			MPrint(sX, sY, str);
