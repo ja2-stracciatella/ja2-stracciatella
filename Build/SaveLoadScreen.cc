@@ -59,19 +59,15 @@ BOOLEAN gfSchedulesHosed = FALSE;
 #define		SAVE_LOAD_NORMAL_SHADOW_COLOR				2//125
 */
 
-#define		SAVE_LOAD_QUICKSAVE_FONT						FONT12ARIAL
 #define		SAVE_LOAD_QUICKSAVE_COLOR						2//FONT_MCOLOR_DKGRAY//FONT_MCOLOR_WHITE
 #define		SAVE_LOAD_QUICKSAVE_SHADOW_COLOR		189//248//2
 
-#define		SAVE_LOAD_EMPTYSLOT_FONT						FONT12ARIAL
 #define		SAVE_LOAD_EMPTYSLOT_COLOR						2//125//FONT_MCOLOR_WHITE
 #define		SAVE_LOAD_EMPTYSLOT_SHADOW_COLOR		121//118
 
-#define		SAVE_LOAD_HIGHLIGHTED_FONT					FONT12ARIAL
 #define		SAVE_LOAD_HIGHLIGHTED_COLOR					FONT_MCOLOR_WHITE
 #define		SAVE_LOAD_HIGHLIGHTED_SHADOW_COLOR	2
 
-#define		SAVE_LOAD_SELECTED_FONT							FONT12ARIAL
 #define		SAVE_LOAD_SELECTED_COLOR						2//145//FONT_MCOLOR_WHITE
 #define		SAVE_LOAD_SELECTED_SHADOW_COLOR			130//2
 
@@ -95,14 +91,11 @@ BOOLEAN gfSchedulesHosed = FALSE;
 #define		SLG_DATE_OFFSET_Y										11
 
 #define		SLG_SECTOR_OFFSET_X									95//105//114
-#define		SLG_SECTOR_OFFSET_Y									SLG_DATE_OFFSET_Y
 #define		SLG_SECTOR_WIDTH										98
 
 #define		SLG_NUM_MERCS_OFFSET_X							196//190//SLG_DATE_OFFSET_X
-#define		SLG_NUM_MERCS_OFFSET_Y							SLG_DATE_OFFSET_Y//26
 
 #define		SLG_BALANCE_OFFSET_X								260//SLG_SECTOR_OFFSET_X
-#define		SLG_BALANCE_OFFSET_Y								SLG_DATE_OFFSET_Y//SLG_NUM_MERCS_OFFSET_Y
 
 #define		SLG_SAVE_GAME_DESC_X								318//320//204
 #define		SLG_SAVE_GAME_DESC_Y								SLG_DATE_OFFSET_Y//SLG_DATE_OFFSET_Y + 7
@@ -965,257 +958,168 @@ static void DisplaySaveGameList(void)
 }
 
 
-static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID)
+static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 {
-	CHAR16		zDateString[128];
-	CHAR16		zLocationString[128];
-	CHAR16		zNumMercsString[128];
-	CHAR16		zBalanceString[128];
-	SAVED_GAME_HEADER SaveGameHeader;
-	UINT16		usPosX=SLG_FIRST_SAVED_SPOT_X;
-	Font              font = SAVE_LOAD_TITLE_FONT;
-	UINT8			ubFontColor=SAVE_LOAD_TITLE_COLOR;
-	UINT16		usPosY = SLG_FIRST_SAVED_SPOT_Y + ( SLG_GAP_BETWEEN_LOCATIONS * bEntryID );
+	if (entry_idx == -1) return TRUE;
+	// If we are going to be instantly leaving the screen, dont draw the numbers
+	if (gfLoadGameUponEntry) return TRUE;
+	// If we are currently fading out, leave
+	if (gfStartedFadingOut) return TRUE;
 
-	//if we are going to be instantly leaving the screen, dont draw the numbers
-	if( gfLoadGameUponEntry )
-	{
-		return( TRUE );
+	UINT16 const bx = SLG_FIRST_SAVED_SPOT_X;
+	UINT16 const by = SLG_FIRST_SAVED_SPOT_Y + SLG_GAP_BETWEEN_LOCATIONS * entry_idx;
+
+	// Background
+	BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, gbSaveGameSelectedLocation[entry_idx], bx, by);
+
+	bool const is_selected = entry_idx == gbSelectedSaveLocation;
+	bool const save_exists = gbSaveGameArray[entry_idx];
+
+	Font  font = SAVE_LOAD_NORMAL_FONT;
+	UINT8 foreground;
+	UINT8 shadow;
+	if (entry_idx == 0 && gfSaveGame)
+	{ // The QuickSave slot
+		FRAME_BUFFER->ShadowRect(bx, by, bx + SLG_SAVELOCATION_WIDTH, by + SLG_SAVELOCATION_HEIGHT);
+		foreground = SAVE_LOAD_QUICKSAVE_COLOR;
+		shadow     = SAVE_LOAD_QUICKSAVE_SHADOW_COLOR;
 	}
-
-	if( bEntryID == -1 )
-		return( TRUE );
-
-	//if we are currently fading out, leave
-	if( gfStartedFadingOut )
-		return( TRUE );
-
-	//background
-	BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, gbSaveGameSelectedLocation[bEntryID], usPosX, usPosY);
-
-
-	//
-	//Set the shadow color
-	//
-
-	//if its the QuickSave slot
-	if( bEntryID == 0 && gfSaveGame )
-	{
-		SetFontShadow( SAVE_LOAD_QUICKSAVE_SHADOW_COLOR );
-		ubFontColor = SAVE_LOAD_QUICKSAVE_COLOR;
-		font = SAVE_LOAD_QUICKSAVE_FONT;
-
-		//Shadow the slot
-//		if( !gbSaveGameArray[ bEntryID ] )
-		FRAME_BUFFER->ShadowRect(usPosX, usPosY, usPosX + SLG_SAVELOCATION_WIDTH, usPosY + SLG_SAVELOCATION_HEIGHT);
+	else if (is_selected)
+	{ // The currently selected location
+		foreground = SAVE_LOAD_SELECTED_COLOR;
+		shadow     = SAVE_LOAD_SELECTED_SHADOW_COLOR;
 	}
-
-	//else if its the currently selected location
-	else if( bEntryID == gbSelectedSaveLocation )
-	{
-
-		SetFontShadow( SAVE_LOAD_SELECTED_SHADOW_COLOR );			//130
-		ubFontColor = SAVE_LOAD_SELECTED_COLOR;//SAVE_LOAD_NORMAL_COLOR;
-		font = SAVE_LOAD_SELECTED_FONT;
+	else if (entry_idx == gbHighLightedLocation)
+	{ // The highlighted slot
+		foreground = SAVE_LOAD_HIGHLIGHTED_COLOR;
+		shadow     = SAVE_LOAD_HIGHLIGHTED_SHADOW_COLOR;
 	}
-
-	//else it is the highlighted slot
-	else if( bEntryID == gbHighLightedLocation )
-	{
-		SetFontShadow( SAVE_LOAD_HIGHLIGHTED_SHADOW_COLOR );
-		ubFontColor = SAVE_LOAD_HIGHLIGHTED_COLOR;
-		font = SAVE_LOAD_HIGHLIGHTED_FONT;
+	else if (save_exists)
+	{ // The file exists
+		foreground = SAVE_LOAD_NORMAL_COLOR;
+		shadow     = SAVE_LOAD_NORMAL_SHADOW_COLOR;
 	}
-
-	//if the file doesnt exists
-	else if( !gbSaveGameArray[ bEntryID ] )
-	{
-		//if we are loading a game
-		if( !gfSaveGame )
-		{
-			SetFontShadow( SAVE_LOAD_QUICKSAVE_SHADOW_COLOR );
-			ubFontColor = SAVE_LOAD_QUICKSAVE_COLOR;
-			font = SAVE_LOAD_QUICKSAVE_FONT;
-
-			//Shadow the surface
-			FRAME_BUFFER->ShadowRect(usPosX, usPosY, usPosX + SLG_SAVELOCATION_WIDTH, usPosY + SLG_SAVELOCATION_HEIGHT);
-		}
-		else
-		{
-			SetFontShadow( SAVE_LOAD_EMPTYSLOT_SHADOW_COLOR		 );
-			ubFontColor = SAVE_LOAD_EMPTYSLOT_COLOR;
-			font = SAVE_LOAD_EMPTYSLOT_FONT;
-		}
+	else if (gfSaveGame)
+	{ // We are saving a game
+		foreground = SAVE_LOAD_EMPTYSLOT_COLOR;
+		shadow     = SAVE_LOAD_EMPTYSLOT_SHADOW_COLOR;
 	}
 	else
 	{
-		SetFontShadow( SAVE_LOAD_NORMAL_SHADOW_COLOR );
-		ubFontColor = SAVE_LOAD_NORMAL_COLOR;
-		font = SAVE_LOAD_NORMAL_FONT;
+		FRAME_BUFFER->ShadowRect(bx, by, bx + SLG_SAVELOCATION_WIDTH, by + SLG_SAVELOCATION_HEIGHT);
+		foreground = SAVE_LOAD_QUICKSAVE_COLOR;
+		shadow     = SAVE_LOAD_QUICKSAVE_SHADOW_COLOR;
 	}
+	SetFontShadow(shadow);
 
-
-
-
-
-	//if the file exists
-	if( gbSaveGameArray[ bEntryID ] || gbSelectedSaveLocation == bEntryID )
-	{
-		//
-		// Setup the strings to be displayed
-		//
-
-		//if we are saving AND it is the currently selected slot
-		if( gfSaveGame && gbSelectedSaveLocation == bEntryID )
+	if (save_exists || is_selected)
+	{ // Setup the strings to be displayed
+		SAVED_GAME_HEADER header;
+		if (gfSaveGame && is_selected)
+		{ // The user has selected a spot to save.  Fill out all the required information
+			wcscpy(header.sSavedGameDesc, gzGameDescTextField);
+			header.uiDay                     = GetWorldDay();
+			header.ubHour                    = GetWorldHour();
+			header.ubMin                     = guiMin;
+			GetBestPossibleSectorXYZValues(&header.sSectorX, &header.sSectorY, &header.bSectorZ);
+			header.ubNumOfMercsOnPlayersTeam = NumberOfMercsOnPlayerTeam();
+			header.iCurrentBalance           = LaptopSaveInfo.iCurrentBalance;
+			header.sInitialGameOptions       = gGameOptions;
+		}
+		else if (!LoadSavedGameHeader(entry_idx, &header))
 		{
-			//the user has selected a spot to save.  Fill out all the required information
-			SaveGameHeader.uiDay = GetWorldDay();
-			SaveGameHeader.ubHour = (UINT8)GetWorldHour();
-			SaveGameHeader.ubMin = (UINT8)guiMin;
+			return FALSE;
+		}
 
-			//Get the sector value to save.
-			GetBestPossibleSectorXYZValues(&SaveGameHeader.sSectorX, &SaveGameHeader.sSectorY, &SaveGameHeader.bSectorZ);
+		UINT16 x = bx;
+		UINT16 y = by + SLG_DATE_OFFSET_Y;
+		if (is_selected)
+		{ // This is the currently selected location, move the text up a bit
+			x++;
+			y--;
+		}
 
-			SaveGameHeader.ubNumOfMercsOnPlayersTeam = NumberOfMercsOnPlayerTeam();
-			SaveGameHeader.iCurrentBalance = LaptopSaveInfo.iCurrentBalance;
-			wcscpy( SaveGameHeader.sSavedGameDesc, gzGameDescTextField );
+		if (!gfSaveGame && gfKeyState[CTRL] && is_selected)
+		{ // The user is LOADING and holding down the CTRL key, display the additional info
+			// Create a string for difficulty level
+			wchar_t difficulty[256];
+			swprintf(difficulty, lengthof(difficulty), L"%ls %ls", gzGIOScreenText[GIO_EASY_TEXT + header.sInitialGameOptions.ubDifficultyLevel - 1], zSaveLoadText[SLG_DIFF]);
 
-			//copy over the initial game options
-			SaveGameHeader.sInitialGameOptions = gGameOptions;
+			// Make a string containing the extended options
+			wchar_t options[256];
+			swprintf(options, lengthof(options), L"%20ls     %22ls     %22ls     %22ls",
+				difficulty,
+				/*gzGIOScreenText[GIO_TIMED_TURN_TITLE_TEXT + header.sInitialGameOptions.fTurnTimeLimit + 1],*/
+				header.sInitialGameOptions.fIronManMode ? gzGIOScreenText[GIO_IRON_MAN_TEXT] : gzGIOScreenText[GIO_SAVE_ANYWHERE_TEXT],
+				header.sInitialGameOptions.fGunNut      ? zSaveLoadText[SLG_ADDITIONAL_GUNS] : zSaveLoadText[SLG_NORMAL_GUNS],
+				header.sInitialGameOptions.fSciFi       ? zSaveLoadText[SLG_SCIFI]           : zSaveLoadText[SLG_REALISTIC]
+			);
+
+			// The date
+			DrawTextToScreen(options, x + SLG_DATE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		}
 		else
-		{
-			//Get the header for the specified saved game
-			if( !LoadSavedGameHeader( bEntryID, &SaveGameHeader ) )
-			{
-				return( FALSE );
-			}
-		}
+		{ // Display the Saved game information
+			// The date
+			wchar_t date[128];
+			swprintf(date, lengthof(date), L"%ls %d, %02d:%02d", pMessageStrings[MSG_DAY], header.uiDay, header.ubHour, header.ubMin);
+			DrawTextToScreen(date, x + SLG_DATE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-
-		//if this is the currently selected location, move the text down a bit
-		if( gbSelectedSaveLocation == bEntryID )
-		{
-			usPosX++;
-			usPosY--;
-		}
-
-		//if the user is LOADING and holding down the CTRL key, display the additional info
-		if( !gfSaveGame && gfKeyState[ CTRL ] && gbSelectedSaveLocation == bEntryID )
-		{
-			CHAR16		zMouseHelpTextString[256];
-			CHAR16		zDifString[256];
-
-			//Create a string for difficulty level
-			swprintf( zDifString, lengthof(zDifString), L"%ls %ls", gzGIOScreenText[ GIO_EASY_TEXT + SaveGameHeader.sInitialGameOptions.ubDifficultyLevel - 1 ], zSaveLoadText[ SLG_DIFF ] );
-
-			//make a string containing the extended options
-			swprintf(zMouseHelpTextString, lengthof(zMouseHelpTextString), L"%20ls     %22ls     %22ls     %22ls", zDifString,
-						/*gzGIOScreenText[ GIO_TIMED_TURN_TITLE_TEXT + SaveGameHeader.sInitialGameOptions.fTurnTimeLimit + 1],*/
-
-						SaveGameHeader.sInitialGameOptions.fIronManMode ? gzGIOScreenText[ GIO_IRON_MAN_TEXT ] : gzGIOScreenText[ GIO_SAVE_ANYWHERE_TEXT ],
-
-						SaveGameHeader.sInitialGameOptions.fGunNut ? zSaveLoadText[ SLG_ADDITIONAL_GUNS ] : zSaveLoadText[ SLG_NORMAL_GUNS ],
-
-						SaveGameHeader.sInitialGameOptions.fSciFi ? zSaveLoadText[ SLG_SCIFI ] : zSaveLoadText[ SLG_REALISTIC ] );
-
-
-			//The date
-			DrawTextToScreen(zMouseHelpTextString, usPosX + SLG_DATE_OFFSET_X, usPosY + SLG_DATE_OFFSET_Y, 0, font, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-		}
-		else
-		{
-			//Create the string for the Data
-			swprintf( zDateString, lengthof(zDateString), L"%ls %d, %02d:%02d", pMessageStrings[ MSG_DAY ], SaveGameHeader.uiDay, SaveGameHeader.ubHour, SaveGameHeader.ubMin );
-
-			//Create the string for the current location
-			if( SaveGameHeader.sSectorX == -1 && SaveGameHeader.sSectorY == -1 || SaveGameHeader.bSectorZ < 0 )
-			{
-				const wchar_t* Location;
-				if( ( SaveGameHeader.uiDay * NUM_SEC_IN_DAY + SaveGameHeader.ubHour * NUM_SEC_IN_HOUR + SaveGameHeader.ubMin * NUM_SEC_IN_MIN ) <= STARTING_TIME )
-					Location = gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION];
-				else
-					Location = gzLateLocalizedString[14];
-				wcslcpy(zLocationString, Location, lengthof(zLocationString));
-			}
-			else
+			// The sector
+			wchar_t location[128];
+			if (header.sSectorX != -1 && header.sSectorY != -1 && header.bSectorZ >= 0)
 			{
 				gfGettingNameFromSaveLoadScreen = TRUE;
-
-				GetSectorIDString( SaveGameHeader.sSectorX, SaveGameHeader.sSectorY, SaveGameHeader.bSectorZ, zLocationString, lengthof(zLocationString), FALSE );
-
+				GetSectorIDString(header.sSectorX, header.sSectorY, header.bSectorZ, location, lengthof(location), FALSE);
 				gfGettingNameFromSaveLoadScreen = FALSE;
 			}
-
-			//
-			// Number of mercs on the team
-			//
-
-			//if only 1 merc is on the team
-			if( SaveGameHeader.ubNumOfMercsOnPlayersTeam == 1 )
+			else if (header.uiDay * NUM_SEC_IN_DAY + header.ubHour * NUM_SEC_IN_HOUR + header.ubMin * NUM_SEC_IN_MIN <= STARTING_TIME)
 			{
-				//use "merc"
-				swprintf( zNumMercsString, lengthof(zNumMercsString), L"%d %ls", SaveGameHeader.ubNumOfMercsOnPlayersTeam, MercAccountText[ MERC_ACCOUNT_MERC ] );
+				wcslcpy(location, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], lengthof(location));
 			}
 			else
 			{
-				//use "mercs"
-				swprintf( zNumMercsString, lengthof(zNumMercsString), L"%d %ls", SaveGameHeader.ubNumOfMercsOnPlayersTeam, pMessageStrings[ MSG_MERCS ] );
+				wcslcpy(location, gzLateLocalizedString[14], lengthof(location));
 			}
+			ReduceStringLength(location, lengthof(location), SLG_SECTOR_WIDTH, font);
+			DrawTextToScreen(location, x + SLG_SECTOR_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-			SPrintMoney(zBalanceString, SaveGameHeader.iCurrentBalance);
+			// Number of mercs on the team
+			// If only 1 merc is on the team use "merc" else "mercs"
+			UINT8          const n_mercs = header.ubNumOfMercsOnPlayersTeam;
+			wchar_t const* const merc    = n_mercs == 1 ?
+				MercAccountText[MERC_ACCOUNT_MERC] :
+				pMessageStrings[MSG_MERCS];
+			wchar_t merc_count[128];
+			swprintf(merc_count, lengthof(merc_count), L"%d %ls", n_mercs, merc);
+			DrawTextToScreen(merc_count, x + SLG_NUM_MERCS_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-			//
-			// Display the Saved game information
-			//
+			// The balance
+			wchar_t balance[128];
+			SPrintMoney(balance, header.iCurrentBalance);
+			DrawTextToScreen(balance, x + SLG_BALANCE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-			//The date
-			DrawTextToScreen(zDateString, usPosX + SLG_DATE_OFFSET_X, usPosY + SLG_DATE_OFFSET_Y, 0, font, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-			//if the sector string exceeds the width, and the ...
-			ReduceStringLength(zLocationString, lengthof(zLocationString), SLG_SECTOR_WIDTH, font);
-
-			//The Sector
-			DrawTextToScreen(zLocationString, usPosX + SLG_SECTOR_OFFSET_X, usPosY + SLG_SECTOR_OFFSET_Y, 0, font, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-			//The Num of mercs
-			DrawTextToScreen(zNumMercsString, usPosX + SLG_NUM_MERCS_OFFSET_X, usPosY + SLG_NUM_MERCS_OFFSET_Y, 0, font, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-			//The balance
-			DrawTextToScreen(zBalanceString, usPosX + SLG_BALANCE_OFFSET_X, usPosY + SLG_BALANCE_OFFSET_Y, 0, font, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-			if( gbSaveGameArray[ bEntryID ] || ( gfSaveGame && !gfUserInTextInputMode && ( gbSelectedSaveLocation == bEntryID ) ) )
+			if (save_exists || (gfSaveGame && !gfUserInTextInputMode && is_selected))
 			{
-				//The Saved Game description
-				DrawTextToScreen(SaveGameHeader.sSavedGameDesc, usPosX + SLG_SAVE_GAME_DESC_X, usPosY + SLG_SAVE_GAME_DESC_Y, 0, font, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+				// The saved game description
+				DrawTextToScreen(header.sSavedGameDesc, x + SLG_SAVE_GAME_DESC_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 			}
 		}
 	}
 	else
 	{
-		//if this is the quick save slot
-		if( bEntryID == 0 )
-		{
-			//display the empty spot
-			DrawTextToScreen(pMessageStrings[MSG_EMPTY_QUICK_SAVE_SLOT], usPosX, usPosY + SLG_DATE_OFFSET_Y, 609, font, ubFontColor, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-		}
-		else
-		{
-			//display the empty spot
-			DrawTextToScreen(pMessageStrings[MSG_EMPTYSLOT], usPosX, usPosY + SLG_DATE_OFFSET_Y, 609, font, ubFontColor, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-		}
+		// If this is the quick save slot
+		wchar_t const* const txt = entry_idx == 0 ?
+			pMessageStrings[MSG_EMPTY_QUICK_SAVE_SLOT] :
+			pMessageStrings[MSG_EMPTYSLOT];
+		DrawTextToScreen(txt, bx, by + SLG_DATE_OFFSET_Y, 609, font, foreground, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
-	//REset the shadow color
+	// Reset the shadow color
 	SetFontShadow(DEFAULT_SHADOW);
 
-
-	usPosX=SLG_FIRST_SAVED_SPOT_X;
-	usPosY = SLG_FIRST_SAVED_SPOT_Y + ( SLG_GAP_BETWEEN_LOCATIONS * bEntryID );
-
-	InvalidateRegion( usPosX, usPosY, usPosX+SLG_SAVELOCATION_WIDTH, usPosY+SLG_SAVELOCATION_HEIGHT );
-
-	return( TRUE );
+	InvalidateRegion(bx, by, bx + SLG_SAVELOCATION_WIDTH, by + SLG_SAVELOCATION_HEIGHT);
+	return TRUE;
 }
 
 
