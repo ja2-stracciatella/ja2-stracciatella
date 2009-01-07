@@ -1561,9 +1561,6 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		SetUIBusy(GetSelectedMan());
 	}
 
-	//Reset the shadow
-  SetFontShadow( DEFAULT_SHADOW );
-
 	//if we succesfully LOADED! the game, mark this entry as the last saved game file
 	gGameSettings.bLastSavedGameSlot		= ubSavedGameID;
 
