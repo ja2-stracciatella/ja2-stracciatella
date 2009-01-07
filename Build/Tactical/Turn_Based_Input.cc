@@ -3058,20 +3058,13 @@ static void CycleSelectedMercsItem(void)
 
 static void ToggleWireFrame(void)
 {
-	if ( gGameSettings.fOptions[ TOPTION_TOGGLE_WIREFRAME ] )
-	{
-		gGameSettings.fOptions[ TOPTION_TOGGLE_WIREFRAME ] = FALSE;
-
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_WIREFRAMES_REMOVED ] );
-	}
-	else
-	{
-		gGameSettings.fOptions[ TOPTION_TOGGLE_WIREFRAME ] = TRUE;
-
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_WIREFRAMES_ADDED ] );
-	}
-
-	SetRenderFlags(RENDER_FLAG_FULL );
+	UINT8& show_wireframe = gGameSettings.fOptions[TOPTION_TOGGLE_WIREFRAME];
+	show_wireframe = !show_wireframe;
+	wchar_t const* const msg = show_wireframe ?
+		pMessageStrings[MSG_WIREFRAMES_ADDED] :
+		pMessageStrings[MSG_WIREFRAMES_REMOVED];
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
+	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
 
