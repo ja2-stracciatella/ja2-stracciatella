@@ -441,7 +441,7 @@ void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex )
 //called from the taskbar renderer.
 void UpdateItemStatsPanel()
 {
-	SetFontAttributes(FONT10ARIAL, FONT_GRAY2, FONT_NEARBLACK);
+	SetFontAttributes(FONT10ARIAL, FONT_GRAY2);
 	if( gpItem && iCurrentTaskbar == TASK_ITEMS &&
 			gbEditingMode != EDITING_TRIGGERS && gbEditingMode != EDITING_ACTIONITEMS )
 	{

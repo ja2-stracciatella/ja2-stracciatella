@@ -450,7 +450,7 @@ static void RenderSectorInformation(void)
 	if( m->sIsolatedGridNo != -1 )
 		ePoints++;
 	//start at 10,35
-	SetFontAttributes(FONT10ARIAL, FONT_ORANGE, FONT_NEARBLACK);
+	SetFontAttributes(FONT10ARIAL, FONT_ORANGE);
 	mprintf(10, 32, L"Tileset:  %ls", gTilesets[s->ubTilesetID].zName);
 	if( m->ubMapVersion < 10 )
 		SetFontForeground( FONT_RED );
@@ -607,7 +607,7 @@ static void RenderItemDetails(void)
 	UINT32 uiTriggerQuantity[8], uiActionQuantity[8], uiTriggerExistChance[8], uiActionExistChance[8];
 	UINT32 xp, yp;
 	INT8 bFreqIndex;
-	SetFontAttributes(FONT10ARIAL, FONT_GRAY2, FONT_NEARBLACK);
+	SetFontAttributes(FONT10ARIAL, FONT_GRAY2);
 	MPrint(364, 49, L"R");
 	MPrint(390, 49, L"S");
 	MPrint(364, 62, L"Enemy");
@@ -1521,7 +1521,7 @@ void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate)
 
 	if( fUpdate )
 	{
-		SetFontAttributes(FONT10ARIAL, FONT_LTKHAKI, FONT_NEARBLACK);
+		SetFontAttributes(FONT10ARIAL, FONT_LTKHAKI);
 		swprintf(str, lengthof(str), L"Analyzing map:  %ls...", gszFilename);
 
 		if( gfSummaryWindowActive )
@@ -1947,7 +1947,7 @@ static void SummaryLoadMapCallback(GUI_BUTTON* btn, INT32 reason)
 		wchar_t str[50];
 		gfRenderSummary = TRUE;
 
-		SetFontAttributes(FONT10ARIAL, FONT_LTKHAKI, FONT_NEARBLACK);
+		SetFontAttributes(FONT10ARIAL, FONT_LTKHAKI);
 
 		CreateProgressBar(0, MAP_LEFT + 5, MAP_BOTTOM + 110, 151, 10);
 
@@ -2386,7 +2386,7 @@ void ApologizeOverrideAndForceUpdateEverything()
 	//Draw it
 	iSummaryButton[SUMMARY_BACKGROUND]->Draw();
 	InvalidateScreen();
-	SetFontAttributes(HUGEFONT, FONT_RED, FONT_NEARBLACK);
+	SetFontAttributes(HUGEFONT, FONT_RED);
 	const wchar_t* UpdateInfo = L"MAJOR VERSION UPDATE";
 	MPrint((SCREEN_WIDTH - StringPixLength(UpdateInfo, HUGEFONT)) / 2, 105, UpdateInfo);
 	SetFont( FONT10ARIAL );

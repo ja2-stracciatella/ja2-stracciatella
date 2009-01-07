@@ -269,7 +269,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 
 	if( gfSchedulesHosed )
 	{
-		SetFontAttributes(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
+		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 		FRAME_BUFFER->Fill(0);
 		MPrint(5, 5, L"Error loading save, attempting to patch save to version 1.02...");
 	}
@@ -279,7 +279,7 @@ void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
 	}
 	catch (...)
 	{ //Failed to load the file, so use a black screen and print out message.
-		SetFontAttributes(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
+		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 		FRAME_BUFFER->Fill(0);
 		mprintf(5, 5, L"%hs loadscreen data file not found...", ImageFile);
 	}

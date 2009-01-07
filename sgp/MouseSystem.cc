@@ -857,7 +857,7 @@ static void DisplayHelpTokenizedString(wchar_t const* const text, INT16 const sx
 				foreground = FONT_BEIGE;
 				break;
 		}
-		SetFontAttributes(font, foreground, FONT_NEARBLACK);
+		SetFontAttributes(font, foreground);
 		mprintf(x, y, L"%lc", c);
 		x += GetCharWidth(font, c);
 	}

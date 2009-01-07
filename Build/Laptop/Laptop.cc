@@ -1115,7 +1115,7 @@ ScreenID LaptopScreenHandle()
 
 			//BltStretchVideoSurface(FRAME_BUFFER, guiEXTRABUFFER, &SrcRect1, &DstRect);
 
-			//SetFontAttributes(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
+			//SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 			//mprintf( 10, 10, L"%d -> %d", iRealPercentage, iPercentage );
 			//{ SGPVSurface::Lock(FRAME_BUFFER);
 			//	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -1522,7 +1522,7 @@ void LeaveLapTopScreen(void)
 
 				//BltStretchVideoSurface(FRAME_BUFFER, guiEXTRABUFFER, &SrcRect1, &DstRect);
 
-				//SetFontAttributes(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
+				//SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 				//mprintf( 10, 10, L"%d -> %d", iRealPercentage, iPercentage );
 				//{ SGPVSurface::Lock(FRAME_BUFFER);
 				//	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);

@@ -668,7 +668,7 @@ static void RenderDoorLockInfo(void)
 		DisplayWrappedString(xp, yp, 60, 2, FONT10ARIAL, FONT_LTKHAKI, str, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 		if( DoorTable[ i ].ubTrapID )
 		{
-			SetFontAttributes(FONT10ARIAL, FONT_RED, FONT_NEARBLACK);
+			SetFontAttributes(FONT10ARIAL, FONT_RED);
 			const wchar_t* TrapType; // HACK000E
 			switch( DoorTable[ i ].ubTrapID )
 			{
@@ -716,7 +716,7 @@ static void RenderSelectedItemBlownUp(void)
 	BltVideoObjectOutline(FRAME_BUFFER, vo, Item[gpItem->usItem].ubGraphicNum, xp, yp, Get16BPPColor(FROMRGB(0, 140, 170)));
 
 	//Display the item name above it
-	SetFontAttributes(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
+	SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 	if( gpItem->usItem == ACTION_ITEM || gpItem->usItem == SWITCH )
 	{
 		BuildTriggerName(gpItem, szItemName, lengthof(szItemName));

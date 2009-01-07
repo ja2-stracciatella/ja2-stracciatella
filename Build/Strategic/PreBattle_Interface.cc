@@ -815,7 +815,7 @@ static void RenderPBHeader(INT32* piX, INT32* piWidth)
 		!gfBlinkHeader             ? FONT_BEIGE :
 		GetJA2Clock() % 1000 < 667 ? FONT_WHITE :
 		FONT_LTRED;
-	SetFontAttributes(FONT10ARIALBOLD, foreground, FONT_NEARBLACK);
+	SetFontAttributes(FONT10ARIALBOLD, foreground);
 	const wchar_t* str; // XXX HACK000E
 	if( !gfPersistantPBI )
 	{
@@ -995,7 +995,7 @@ void RenderPreBattleInterface()
 		}
 
 		//location
-		SetFontAttributes(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
+		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 		GetSectorIDString( gubPBSectorX, gubPBSectorY, gubPBSectorZ, pSectorName, lengthof(pSectorName), TRUE );
 		mprintf( 70, 17, L"%ls %ls", gpStrategicString[ STR_PB_SECTOR ], pSectorName );
 

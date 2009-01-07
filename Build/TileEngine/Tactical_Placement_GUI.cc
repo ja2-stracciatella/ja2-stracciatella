@@ -414,7 +414,7 @@ static void RenderTacticalPlacementGUI(void)
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+42, iStartY, xp+43, yp+29, Get16BPPColor( FROMRGB( 8, 156, 8 ) ) );
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, xp+43, iStartY, xp+44, yp+29, Get16BPPColor( FROMRGB( 8, 107, 8 ) ) );
 		}
-		SetFontAttributes(BLOCKFONT, FONT_BEIGE, 141);
+		SetFontAttributes(BLOCKFONT, FONT_BEIGE);
 		GetSectorIDString( gubPBSectorX, gubPBSectorY, gubPBSectorZ, str, lengthof(str), TRUE );
 		mprintf( 120, 335, L"%ls %ls -- %ls...", gpStrategicString[ STR_TP_SECTOR ], str, gpStrategicString[ STR_TP_CHOOSEENTRYPOSITIONS ] );
 
@@ -482,7 +482,7 @@ static void RenderTacticalPlacementGUI(void)
 		{
 			ubColor = FONT_GRAY3;
 		}
-		SetFontAttributes(FONT10ARIALBOLD, ubColor, 141);
+		SetFontAttributes(FONT10ARIALBOLD, ubColor);
 		//Render the question mark over the face if the merc hasn't yet been placed.
 		if( gMercPlacement[ i ].fPlaced )
 		{

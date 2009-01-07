@@ -1856,7 +1856,7 @@ void UpdateMercsInfo()
 		case MERC_GENERALMODE:
 			BltVideoObject(FRAME_BUFFER, guiExclamation, 0, 188, 362);
 			BltVideoObject(FRAME_BUFFER, guiKeyImage,    0, 186, 387);
-			SetFontAttributes(SMALLCOMPFONT, FONT_YELLOW, FONT_NEARBLACK);
+			SetFontAttributes(SMALLCOMPFONT, FONT_YELLOW);
 			MPrint(240, 363, L" --=ORDERS=-- ");
 			MPrint(240, 419, L"--=ATTITUDE=--");
 			if( iDrawMode == DRAW_MODE_CREATURE )
@@ -1886,7 +1886,7 @@ void UpdateMercsInfo()
 			}
 			break;
 		case MERC_ATTRIBUTEMODE:
-			SetFontAttributes(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
+			SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 			MPrint(225, 370, L"Exp. Level");
 			MPrint(225, 395, L"Life");
 			MPrint(225, 420, L"LifeMax");
@@ -1907,7 +1907,7 @@ void UpdateMercsInfo()
 			SOLDIERCREATE_STRUCT const& dp         = *gpSelected->pDetailedPlacement;
 			UINT8                const  foreground =
 				dp.fVisible || dp.ubProfile != NO_PROFILE ? FONT_YELLOW : FONT_DKYELLOW;
-			SetFontAttributes(FONT10ARIAL, foreground, FONT_NEARBLACK);
+			SetFontAttributes(FONT10ARIAL, foreground);
 
 			MPrint(396, 364, L"Hair color:");
 			MPrint(396, 388, L"Skin color:");
@@ -1962,7 +1962,7 @@ void UpdateMercsInfo()
 			}
 			break;
 		case MERC_SCHEDULEMODE:
-			SetFontAttributes(FONT10ARIAL, FONT_WHITE, FONT_NEARBLACK);
+			SetFontAttributes(FONT10ARIAL, FONT_WHITE);
 			switch( gpSelected->pSoldier->bOrders )
 			{
 				case STATIONARY:  MPrint(430, 363, L"STATIONARY");    break;

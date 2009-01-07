@@ -729,7 +729,7 @@ static void RenderViewer(void)
 			MarkAButtonDirty( iViewerButton[ i ] );
 		}
 
-		SetFontAttributes(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
+		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 		MPrint(38, VIEWER_BOTTOM + 33, L"Admins");
 		MPrint(38, VIEWER_BOTTOM + 53, L"Troops");
 		MPrint(38, VIEWER_BOTTOM + 73, L"Elites");
@@ -771,7 +771,7 @@ static void RenderViewer(void)
 		if( gbViewLevel )
 		{
 			UNDERGROUND_SECTORINFO *pUnder;
-			SetFontAttributes(FONT10ARIAL, FONT_YELLOW, FONT_NEARBLACK);
+			SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 			for( y = 0; y < 16; y++ )
 			{
 				SGPRect ClipRect;

@@ -72,7 +72,6 @@
 
 #define		ITEMDESC_FONT							BLOCKFONT2
 #define		ITEMDESC_FONTSHADOW2			32
-#define		ITEMDESC_FONTSHADOW3			34
 
 #define		ITEMDESC_FONTAPFORE					218
 #define		ITEMDESC_FONTHPFORE					24
@@ -2481,7 +2480,7 @@ void RenderItemDescriptionBox(void)
 	}
 
 	// Render font desc
-	SetFontAttributes(ITEMDESC_FONT, FONT_FCOLOR_WHITE, ITEMDESC_FONTSHADOW3);
+	SetFontAttributes(ITEMDESC_FONT, FONT_FCOLOR_WHITE);
 
 	{
 		// Render name
@@ -2528,7 +2527,7 @@ void RenderItemDescriptionBox(void)
 			INT32         const h   = box->h;
 
 			SetFontForeground(FONT_MCOLOR_DKWHITE2);
-			SetFontShadow(ITEMDESC_FONTSHADOW3);
+			SetFontShadow(DEFAULT_SHADOW);
 			MPrint(x, y,     gzProsLabel);
 			MPrint(x, y + h, gzConsLabel);
 
