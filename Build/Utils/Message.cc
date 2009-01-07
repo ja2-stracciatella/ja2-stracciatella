@@ -451,7 +451,7 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t
 		case MSG_INTERFACE: colour = INTERFACE_COLOR; break;
 	}
 
-	WRAPPED_STRING* const head = LineWrap(TINYFONT1, LINE_WIDTH, NULL, msg);
+	WRAPPED_STRING* const head = LineWrap(TINYFONT1, LINE_WIDTH, msg);
 
 	ScrollStringSt** anchor = &pStringS;
 	while (*anchor) anchor = &(*anchor)->pNext;
@@ -542,7 +542,7 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 		case MSG_INTERFACE: usColor = INTERFACE_COLOR; break;
 	}
 
-	WRAPPED_STRING* pStringWrapperHead = LineWrap(MAP_SCREEN_MESSAGE_FONT, MAP_LINE_WIDTH, NULL, DestString);
+	WRAPPED_STRING* pStringWrapperHead = LineWrap(MAP_SCREEN_MESSAGE_FONT, MAP_LINE_WIDTH, DestString);
 	WRAPPED_STRING* pStringWrapper = pStringWrapperHead;
 	if (!pStringWrapper) return;
 

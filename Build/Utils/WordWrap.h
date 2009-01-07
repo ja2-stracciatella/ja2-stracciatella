@@ -38,7 +38,7 @@ typedef struct _WRAPPEDSTRING
 } WRAPPED_STRING;
 
 
-WRAPPED_STRING* LineWrap(Font, UINT16 usLineWidthPixels, UINT16* pusLineWidthIfWordIsWiderThenWidth, const wchar_t* pString);
+WRAPPED_STRING* LineWrap(Font, UINT16 usLineWidthPixels, wchar_t const* pString);
 UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, Font, UINT8 ubColor, const wchar_t* pString, UINT8 ubBackGroundColor, UINT32 ulFlags);
 void CleanOutControlCodesFromString(const wchar_t* pSourceString, wchar_t* pDestString);
 void DrawTextToScreen(const wchar_t* pStr, UINT16 LocX, UINT16 LocY, UINT16 usWidth, Font, UINT8 ubColor, UINT8 ubBackGroundColor, UINT32 ulFlags);

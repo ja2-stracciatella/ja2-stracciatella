@@ -18,13 +18,8 @@ static WRAPPED_STRING* AllocWrappedString(const wchar_t* start, const wchar_t* e
 }
 
 
-WRAPPED_STRING* LineWrap(Font const font, UINT16 usLineWidthPixels, UINT16* const pusLineWidthIfWordIsWiderThenWidth, wchar_t const* const pString)
+WRAPPED_STRING* LineWrap(Font const font, UINT16 const usLineWidthPixels, wchar_t const* const pString)
 {
-	if (pusLineWidthIfWordIsWiderThenWidth)
-	{
-		*pusLineWidthIfWordIsWiderThenWidth = usLineWidthPixels;
-	}
-
 	size_t const max_w = usLineWidthPixels;
 
 	WRAPPED_STRING*  head   = 0;
@@ -92,14 +87,9 @@ WRAPPED_STRING* LineWrap(Font const font, UINT16 usLineWidthPixels, UINT16* cons
 //					the gap in between the lines
 UINT16 DisplayWrappedString(UINT16 const x, UINT16 y, UINT16 w, UINT8 const gap, Font const font, UINT8 const foreground, const wchar_t* const string, UINT8 const background, UINT32 const flags)
 {
-	UINT16 usLineWidthIfWordIsWiderThenWidth;
-	WRAPPED_STRING* i = LineWrap(font, w, &usLineWidthIfWordIsWiderThenWidth, string);
-	// if an error occured and a word was bigger then the width passed in, reset the width
-	w = usLineWidthIfWordIsWiderThenWidth;
-
 	UINT16       total_h = 0;
   UINT16 const h       = GetFontHeight(font) + gap;
-	while (i)
+	for (WRAPPED_STRING* i = LineWrap(font, w, string); i;)
 	{
 		DrawTextToScreen(i->sString, x, y, w, font, foreground, background, flags);
 		WRAPPED_STRING* const del = i;
