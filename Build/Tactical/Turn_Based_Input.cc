@@ -3021,18 +3021,8 @@ static void CreateRandomItem(void)
 
 
 static void ToggleViewAllMercs(void)
-{
-	// Set option to show all mercs
-	if ( gTacticalStatus.uiFlags&SHOW_ALL_MERCS )
-	{
-		gTacticalStatus.uiFlags&= (~SHOW_ALL_MERCS );
-	}
-	else
-	{
-		gTacticalStatus.uiFlags|= SHOW_ALL_MERCS;
-	}
-
-	// RE-RENDER
+{ // Set option to show all mercs
+	gTacticalStatus.uiFlags ^= SHOW_ALL_MERCS;
 	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
