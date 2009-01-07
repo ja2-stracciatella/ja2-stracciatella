@@ -3153,16 +3153,9 @@ static void ToggleTreeTops(void)
 
 static void ToggleZBuffer(void)
 {
-	// Set option to show all mercs
-	if ( gTacticalStatus.uiFlags&SHOW_Z_BUFFER )
-	{
-		gTacticalStatus.uiFlags&= (~SHOW_Z_BUFFER );
-		SetRenderFlags(SHOW_Z_BUFFER);
-	}
-	else
-	{
-		gTacticalStatus.uiFlags|= SHOW_Z_BUFFER;
-	}
+	UINT32& flags = gTacticalStatus.uiFlags;
+	flags ^= SHOW_Z_BUFFER;
+	if (!(flags & SHOW_Z_BUFFER)) SetRenderFlags(SHOW_Z_BUFFER);
 }
 
 
