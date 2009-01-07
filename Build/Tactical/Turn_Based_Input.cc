@@ -3141,9 +3141,11 @@ static void TeleportSelectedSoldier(void)
 
 static void ToggleTreeTops(void)
 {
-	BOOLEAN* const show_trees = &gGameSettings.fOptions[TOPTION_TOGGLE_TREE_TOPS];
-	*show_trees = !*show_trees;
-	const wchar_t* const msg = (*show_trees ? TacticalStr[SHOWING_TREETOPS_STR] : TacticalStr[REMOVING_TREETOPS_STR]);
+	UINT8& show_trees = gGameSettings.fOptions[TOPTION_TOGGLE_TREE_TOPS];
+	show_trees = !show_trees;
+	wchar_t const* const msg = show_trees ?
+		TacticalStr[SHOWING_TREETOPS_STR] :
+		TacticalStr[REMOVING_TREETOPS_STR];
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
 	SetTreeTopStateForMap();
 }
