@@ -3029,19 +3029,8 @@ static void ToggleViewAllMercs(void)
 
 static void ToggleViewAllItems(void)
 {
-	// Set option to show all mercs
-	if( gTacticalStatus.uiFlags & SHOW_ALL_ITEMS )
-	{
-		gTacticalStatus.uiFlags &= ~SHOW_ALL_ITEMS ;
-	}
-	else
-	{
-		gTacticalStatus.uiFlags |= SHOW_ALL_ITEMS;
-	}
-
+	gTacticalStatus.uiFlags ^= SHOW_ALL_ITEMS;
 	ToggleItemGlow(gGameSettings.fOptions[TOPTION_GLOW_ITEMS]);
-
-	// RE-RENDER
 	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
