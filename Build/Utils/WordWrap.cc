@@ -87,42 +87,28 @@ WRAPPED_STRING* LineWrap(Font const font, UINT16 usLineWidthPixels, UINT16* cons
 }
 
 
-//
 // Pass in, the x,y location for the start of the string,
 //					the width of the buffer
 //					the gap in between the lines
-//
-
-UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, Font const font, UINT8 ubColor, const wchar_t* pString, UINT8 ubBackGroundColor, UINT32 uiFlags)
+UINT16 DisplayWrappedString(UINT16 const x, UINT16 y, UINT16 w, UINT8 const gap, Font const font, UINT8 const foreground, const wchar_t* const string, UINT8 const background, UINT32 const flags)
 {
-	WRAPPED_STRING *pFirstWrappedString, *pTempWrappedString;
-	UINT16	uiCounter=0;
-	UINT16	usLineWidthIfWordIsWiderThenWidth=0;
-  UINT16	usHeight;
+	UINT16 usLineWidthIfWordIsWiderThenWidth;
+	WRAPPED_STRING* i = LineWrap(font, w, &usLineWidthIfWordIsWiderThenWidth, string);
+	// if an error occured and a word was bigger then the width passed in, reset the width
+	w = usLineWidthIfWordIsWiderThenWidth;
 
-  usHeight = GetFontHeight(font);
-
-	pFirstWrappedString = LineWrap(font, usWidth, &usLineWidthIfWordIsWiderThenWidth, pString);
-
-	//if an error occured and a word was bigger then the width passed in, reset the width
-	if( usLineWidthIfWordIsWiderThenWidth != usWidth )
-		usWidth = usLineWidthIfWordIsWiderThenWidth;
-
-	while(pFirstWrappedString != NULL)
+	UINT16       total_h = 0;
+  UINT16 const h       = GetFontHeight(font) + gap;
+	while (i)
 	{
-		DrawTextToScreen(pFirstWrappedString->sString, usPosX, usPosY, usWidth, font, ubColor, ubBackGroundColor, uiFlags);
-
-		pTempWrappedString = pFirstWrappedString;
-		pFirstWrappedString = pTempWrappedString->pNextWrappedString;
-		MemFree( pTempWrappedString );
-		pTempWrappedString = NULL;
-
-		uiCounter++;
-
-		usPosY += usHeight + ubGap;
+		DrawTextToScreen(i->sString, x, y, w, font, foreground, background, flags);
+		WRAPPED_STRING* const del = i;
+		i = i->pNextWrappedString;
+		MemFree(del);
+		total_h += h;
+		y       += h;
 	}
-
-	return uiCounter * (GetFontHeight(font) + ubGap);
+	return total_h;
 }
 
 
