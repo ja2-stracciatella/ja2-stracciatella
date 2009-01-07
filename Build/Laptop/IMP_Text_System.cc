@@ -88,19 +88,24 @@ void PrintImpText(void)
 			break;
 
 		case IMP_MAIN_PAGE:
+		{
 			// title
 			LoadAndDisplayIMPText(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y + 19, sWidth, IMP_MAIN_1, FONT14ARIAL, FONT_WHITE, TRUE, CENTER_JUSTIFIED);
 
 			// set up for IMP text for title box area
+			UINT16 const x = LAPTOP_SCREEN_UL_X + 173;
+			UINT16 const y = LAPTOP_SCREEN_WEB_UL_Y + 91;
+			UINT16 const w = 329 - 173;
 			switch (iCurrentProfileMode)
 			{
-				case 0: LoadAndDisplayIMPText(LAPTOP_SCREEN_UL_X + 173, LAPTOP_SCREEN_WEB_UL_Y + 91, 329 - 173, IMP_MAIN_2, FONT10ARIAL, 142, TRUE, 0); break;
-				case 1: IanDisplayWrappedString(LAPTOP_SCREEN_UL_X + 173, LAPTOP_SCREEN_WEB_UL_Y + 91, 329 - 173, 2, FONT10ARIAL, 142, pExtraIMPStrings[0], 0, 0); break;
-				case 2: IanDisplayWrappedString(LAPTOP_SCREEN_UL_X + 173, LAPTOP_SCREEN_WEB_UL_Y + 91, 329 - 173, 2, FONT10ARIAL, 142, pExtraIMPStrings[1], 0, 0); break;
-				case 3: IanDisplayWrappedString(LAPTOP_SCREEN_UL_X + 173, LAPTOP_SCREEN_WEB_UL_Y + 91, 329 - 173, 2, FONT10ARIAL, 142, pExtraIMPStrings[2], 0, 0); break;
-				case 4: IanDisplayWrappedString(LAPTOP_SCREEN_UL_X + 173, LAPTOP_SCREEN_WEB_UL_Y + 91, 329 - 173, 2, FONT10ARIAL, 142, pExtraIMPStrings[3], 0, 0); break;
+				case 0: LoadAndDisplayIMPText(x, y, w, IMP_MAIN_2, FONT10ARIAL, 142, TRUE, 0); break;
+				case 1: DisplayWrappedString( x, y, w, 2, FONT10ARIAL, 142, pExtraIMPStrings[0], 0, 0); break;
+				case 2: DisplayWrappedString( x, y, w, 2, FONT10ARIAL, 142, pExtraIMPStrings[1], 0, 0); break;
+				case 3: DisplayWrappedString( x, y, w, 2, FONT10ARIAL, 142, pExtraIMPStrings[2], 0, 0); break;
+				case 4: DisplayWrappedString( x, y, w, 2, FONT10ARIAL, 142, pExtraIMPStrings[3], 0, 0); break;
 			}
 			break;
+		}
 
 		case IMP_BEGIN:
 
