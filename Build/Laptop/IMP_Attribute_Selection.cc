@@ -743,7 +743,7 @@ void DrawBonusPointsRemaining(void)
 	// just reviewing, don't blit stats
 	if (fReviewStats) return;
 
-	SetFontFgBg(FONT12ARIAL, FONT_WHITE, FONT_BLACK);
+	SetFontAttributes(FONT12ARIAL, FONT_WHITE);
 	mprintf(LAPTOP_SCREEN_UL_X + 425, LAPTOP_SCREEN_WEB_UL_Y + 51, L"%d", iCurrentBonusPoints);
 	InvalidateRegion(LAPTOP_SCREEN_UL_X + 425, LAPTOP_SCREEN_WEB_UL_Y + 51, LAPTOP_SCREEN_UL_X + 475, LAPTOP_SCREEN_WEB_UL_Y + 71);
 }

@@ -274,7 +274,7 @@ void RenderClock(void)
 	// Are we in combat?
 	UINT8 const foreground = gTacticalStatus.uiFlags & INCOMBAT ?
 		FONT_FCOLOR_NICERED : FONT_LTGREEN;
-	SetFontFgBg(CLOCK_FONT, foreground, FONT_MCOLOR_BLACK);
+	SetFontAttributes(CLOCK_FONT, foreground);
 
 	// Erase first!
 	INT16 x = CLOCK_X;

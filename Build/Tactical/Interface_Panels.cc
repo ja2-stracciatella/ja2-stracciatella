@@ -1194,7 +1194,7 @@ static void PrintAP(SOLDIERTYPE* const s, INT16 const x, INT16 const y, INT16 co
 		MercUnderTheInfluence(s)           ? FONT_MCOLOR_LTBLUE   :
 		s->bStealthMode                    ? FONT_MCOLOR_LTYELLOW :
 		FONT_MCOLOR_LTGRAY;
-	SetFontFgBg(TINYFONT1, foreground, FONT_MCOLOR_BLACK);
+	SetFontAttributes(TINYFONT1, foreground);
 
 	RestoreExternBackgroundRect(x, y, w, h);
 	wchar_t buf[16];
@@ -1316,7 +1316,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 			// Render Values for stats!
 			// Set font drawing to saved buffer
 			SetFontDestBuffer(guiSAVEBUFFER);
-			SetFontFgBg(BLOCKFONT2, STATS_TITLE_FONT_COLOR, FONT_MCOLOR_BLACK);
+			SetFontAttributes(BLOCKFONT2, STATS_TITLE_FONT_COLOR);
 			for( cnt = 0; cnt < 5; cnt++ )
 			{
 				const INT32 y = dy + 7 + cnt * 10;
@@ -1381,7 +1381,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 
 		// Render Name!
 		UINT8 const foreground = gpSMCurrentMerc->bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
-		SetFontFgBg(BLOCKFONT2, foreground, FONT_MCOLOR_BLACK);
+		SetFontAttributes(BLOCKFONT2, foreground);
 
 		const INT32 x = SM_SELMERCNAME_X;
 		const INT32 y = dy + SM_SELMERCNAME_Y;
@@ -2525,7 +2525,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 
 				// Render name!
 				UINT8 const foreground = s->bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
-				SetFontFgBg(BLOCKFONT2, foreground, FONT_MCOLOR_BLACK);
+				SetFontAttributes(BLOCKFONT2, foreground);
 
 				// RENDER ON SAVE BUFFER!
 				SetFontDestBuffer(guiSAVEBUFFER);
@@ -3329,7 +3329,7 @@ void RenderTownIDString(void)
 	INT16 sFontX, sFontY;
 
 	// Render town, position
-	SetFontFgBg(COMPFONT, 183, FONT_BLACK);
+	SetFontAttributes(COMPFONT, 183);
 	GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTownIDString, lengthof(zTownIDString), TRUE );
 	ReduceStringLength( zTownIDString, lengthof(zTownIDString), 80, COMPFONT );
 	FindFontCenterCoordinates(548, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);

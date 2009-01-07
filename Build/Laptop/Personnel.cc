@@ -454,7 +454,7 @@ static void DisplayCharInventory(const SOLDIERTYPE*);
 static void RenderPersonnelStats(const SOLDIERTYPE* const s)
 {
 	// will render the stats of person iId
-	SetFontFgBg(PERS_FONT, PERS_TEXT_FONT_COLOR, FONT_BLACK);
+	SetFontAttributes(PERS_FONT, PERS_TEXT_FONT_COLOR);
 
 	switch (gubPersonnelInfoState)
 	{
@@ -640,7 +640,7 @@ static void DisplayCharName(const SOLDIERTYPE* const s)
 	// get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
 
-	SetFontFgBg(CHAR_NAME_FONT, PERS_TEXT_FONT_COLOR, FONT_BLACK);
+	SetFontAttributes(CHAR_NAME_FONT, PERS_TEXT_FONT_COLOR);
 
 	const wchar_t* sTownName = NULL;
 	if (s->bAssignment != ASSIGNMENT_POW &&
@@ -1376,7 +1376,7 @@ static void DisplayStateOfPastTeamMembers(void);
 static void DisplayPersonnelSummary(void)
 {
 	// display number on team
-	SetFontFgBg(FONT10ARIAL, PERS_TEXT_FONT_COLOR, FONT_BLACK);
+	SetFontAttributes(FONT10ARIAL, PERS_TEXT_FONT_COLOR);
 
 	if (fCurrentTeamMode)
 	{
@@ -1466,7 +1466,7 @@ static void DisplayTeamStats(void)
 	INT16 sX;
 	INT16 sY;
 
-	SetFontFgBg(FONT10ARIAL, PERS_TEXT_FONT_COLOR, FONT_BLACK);
+	SetFontAttributes(FONT10ARIAL, PERS_TEXT_FONT_COLOR);
 
 	// display headers
 	// lowest
@@ -1985,7 +1985,7 @@ static void DisplayDepartedCharStats(const MERCPROFILESTRUCT* const p, const INT
 	INT16 sX;
 	INT16 sY;
 
-	SetFontFgBg(FONT10ARIAL, PERS_TEXT_FONT_COLOR, FONT_BLACK);
+	SetFontAttributes(FONT10ARIAL, PERS_TEXT_FONT_COLOR);
 
 	const INT8 life = p->bLife;
 	const INT8 cur  = (iState == DEPARTED_DEAD ? 0 : life);
@@ -2052,7 +2052,7 @@ static void DisplayDepartedCharName(const MERCPROFILESTRUCT* const p, const INT3
 	// get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
 
-	SetFontFgBg(CHAR_NAME_FONT, PERS_TEXT_FONT_COLOR, FONT_BLACK);
+	SetFontAttributes(CHAR_NAME_FONT, PERS_TEXT_FONT_COLOR);
 
 	const wchar_t* name = p->zNickname;
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, name, CHAR_NAME_FONT, &sX, &sY);
@@ -2066,7 +2066,7 @@ static void DisplayDepartedCharName(const MERCPROFILESTRUCT* const p, const INT3
 
 static void DisplayPersonnelTextOnTitleBar(void)
 {
-	SetFontFgBg(FONT14ARIAL, FONT_WHITE, FONT_BLACK);
+	SetFontAttributes(FONT14ARIAL, FONT_WHITE);
 	MPrint(PERS_TITLE_X, PERS_TITLE_Y, pPersTitleText);
 }
 
@@ -2446,7 +2446,7 @@ static void DisplayAmountOnChar(const SOLDIERTYPE* const s)
 	CHAR16 sString[64];
 	SPrintMoney(sString, GetFundsOnMerc(s));
 
-	SetFontFgBg(ATM_FONT, FONT_WHITE, FONT_BLACK);
+	SetFontAttributes(ATM_FONT, FONT_WHITE);
 
 	INT16 sX;
 	INT16 sY;

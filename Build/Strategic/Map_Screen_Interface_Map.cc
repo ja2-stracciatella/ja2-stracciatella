@@ -530,7 +530,7 @@ void DrawMapIndexSmallMap( BOOLEAN fSelectedCursorIsYellow )
 
 
 	SetFontDestBuffer(FRAME_BUFFER, MAP_HORT_INDEX_X, MAP_HORT_INDEX_Y, MAP_HORT_INDEX_X + MAX_VIEW_SECTORS * MAP_GRID_X, MAP_HORT_INDEX_Y + MAP_GRID_Y);
-	SetFontFgBg(MAP_FONT, MAP_INDEX_COLOR, FONT_MCOLOR_BLACK);
+	SetFontAttributes(MAP_FONT, MAP_INDEX_COLOR);
 
 	fDrawCursors = CanDrawSectorCursor( );
 
@@ -3160,7 +3160,7 @@ static void ShowPeopleInMotion(INT16 sX, INT16 sY)
 
 				// blit the text
 				UINT8 const foreground = fAboutToEnter ? FONT_BLACK : FONT_WHITE;
-				SetFontFgBg(MAP_MVT_ICON_FONT, foreground, FONT_BLACK);
+				SetFontAttributes(MAP_MVT_ICON_FONT, foreground);
 
 				swprintf( sString, lengthof(sString), L"%d", sExiting );
 
@@ -3258,7 +3258,7 @@ void DisplayDistancesForHelicopter()
 
 	BltVideoObject(FRAME_BUFFER, guiMapBorderHeliSectors, 0, MAP_HELICOPTER_ETA_POPUP_X, sYPosition);
 
-	SetFontFgBg(MAP_FONT, FONT_LTGREEN, FONT_BLACK);
+	SetFontAttributes(MAP_FONT, FONT_LTGREEN);
 
 	INT32 const x = MAP_HELICOPTER_ETA_POPUP_X + 5;
 	INT32       y = sYPosition + 5;
@@ -3439,7 +3439,7 @@ void DisplayPositionOfHelicopter( void )
 
 			BltVideoObject(FRAME_BUFFER, guiHelicopterIcon, HELI_ICON, x, y);
 
-			SetFontFgBg(MAP_MVT_ICON_FONT, FONT_WHITE, FONT_BLACK);
+			SetFontAttributes(MAP_MVT_ICON_FONT, FONT_WHITE);
 			mprintf(x + 5, y + 1,  L"%d", GetNumberOfPassengersInHelicopter());
 
 			InvalidateRegion( x, y, x + HELI_ICON_WIDTH, y + HELI_ICON_HEIGHT );
@@ -3642,7 +3642,7 @@ static void BlitMineText(INT16 sMapX, INT16 sMapY)
 	// show detailed mine info (name, production rate, daily production)
 
 	SetFontDestBuffer(guiSAVEBUFFER, MAP_VIEW_START_X, MAP_VIEW_START_Y, MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT + 7);
-	SetFontFgBg(MAP_FONT, FONT_LTGREEN, FONT_BLACK);
+	SetFontAttributes(MAP_FONT, FONT_LTGREEN);
 
 	UINT8 const mine_idx = GetMineIndexForSector(sMapX, sMapY);
 	INT32 const x        = sScreenX;
@@ -3826,7 +3826,7 @@ static void DisplayLevelString(void)
 	// otherwise we will have to display the string with the level number
 
 	SetFontDestBuffer(guiSAVEBUFFER, MAP_VIEW_START_X, MAP_VIEW_START_Y, MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT + 7);
-	SetFontFgBg(MAP_FONT, MAP_INDEX_COLOR, FONT_BLACK);
+	SetFontAttributes(MAP_FONT, MAP_INDEX_COLOR);
 	mprintf(MAP_LEVEL_STRING_X, MAP_LEVEL_STRING_Y, L"%ls %d", sMapLevelString, iCurrentMapSectorZ);
 	SetFontDestBuffer(FRAME_BUFFER);
 }
@@ -5152,7 +5152,7 @@ static void ShowSAMSitesOnStrategicMap(void)
 			ClipBlitsToMapViewRegion( );
 
 			// Green on green doesn't contrast well, use Yellow
-			SetFontFgBg(MAP_FONT, FONT_MCOLOR_LTYELLOW, FONT_MCOLOR_BLACK);
+			SetFontAttributes(MAP_FONT, FONT_MCOLOR_LTYELLOW);
 
 			// draw the text
 			GDirtyPrint(sX, sY, SAMSite);
@@ -5272,7 +5272,7 @@ static void ShowItemsOnMap(void)
 {
 	ClipBlitsToMapViewRegion();
 	SetFontDestBuffer(guiSAVEBUFFER, MapScreenRect.iLeft + 2, MapScreenRect.iTop, MapScreenRect.iRight, MapScreenRect.iBottom);
-	SetFontFgBg(MAP_FONT, FONT_MCOLOR_LTGREEN, FONT_MCOLOR_BLACK);
+	SetFontAttributes(MAP_FONT, FONT_MCOLOR_LTGREEN);
 
 	// run through sectors
 	for (INT16 x = 1; x < MAP_WORLD_X - 1; ++x)

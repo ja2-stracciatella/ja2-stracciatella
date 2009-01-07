@@ -1468,20 +1468,26 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	{
 		sForeColor = b->sForeColor;
 	}
-	SetFontFgBg(b->usFont, sForeColor, FONT_MCOLOR_BLACK);
 
+	UINT8 shadow;
 	if (b->uiFlags & BUTTON_ENABLED && b->Area.uiFlags & MSYS_MOUSE_IN_AREA && b->sShadowColorHilited != -1)
 	{
-		SetFontShadow(b->sShadowColorHilited);
+		shadow = b->sShadowColorHilited;
 	}
 	else if (b->uiFlags & BUTTON_CLICKED_ON && b->sShadowColorDown != -1)
 	{
-		SetFontShadow(b->sShadowColorDown);
+		shadow = b->sShadowColorDown;
 	}
 	else if (b->sShadowColor != -1)
 	{
-		SetFontShadow(b->sShadowColor);
+		shadow = b->sShadowColor;
 	}
+	else
+	{
+		shadow = DEFAULT_SHADOW;
+	}
+
+	SetFontAttributes(b->usFont, sForeColor, shadow);
 
 	if (b->uiFlags & BUTTON_CLICKED_ON && b->fShiftText)
 	{

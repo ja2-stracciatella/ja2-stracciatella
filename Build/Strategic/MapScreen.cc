@@ -775,7 +775,7 @@ static void PrintStat(const UINT32 change_time, const UINT16 stat_gone_up_bit, c
 // Draw attributes & skills for given soldier
 static void DrawCharStats(const SOLDIERTYPE* const s)
 {
-	SetFontFgBg(CHAR_FONT, CHAR_TEXT_FONT_COLOR, FONT_BLACK);
+	SetFontAttributes(CHAR_FONT, CHAR_TEXT_FONT_COLOR);
 
 	const UINT16 vgu = s->usValueGoneUp;
 	PrintStat(s->uiChangeAgilityTime,      vgu & AGIL_INCREASE,     s->bAgility,      AGL_X, AGL_Y); // agility
@@ -866,7 +866,7 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 
 	// draw particular info about a character that are neither attributes nor skills
 
-	SetFontFgBg(CHAR_FONT, CHAR_TEXT_FONT_COLOR, FONT_BLACK);
+	SetFontAttributes(CHAR_FONT, CHAR_TEXT_FONT_COLOR);
 
 	const wchar_t* nickname; // Nickname (beneath Picture)
 	const wchar_t* name;     // Full name (Top Box)
@@ -1223,7 +1223,7 @@ static void DisplayGroundEta(void)
 	const UINT32 iTotalTime = GetGroundTravelTimeOfSoldier(s);
 
 	// now display it
-	SetFontFgBg(ETA_FONT, FONT_LTGREEN, FONT_BLACK);
+	SetFontAttributes(ETA_FONT, FONT_LTGREEN);
 	MPrint(CLOCK_ETA_X, CLOCK_Y_START, pEtaString);
 
 	// if less than one day
@@ -4454,7 +4454,7 @@ static void BltCharInvPanel(void)
   HandleRenderInvSlots( pSoldier, DIRTYLEVEL2 );
 
 	// Render Values for stats!
-	SetFontFgBg(BLOCKFONT2, MAP_INV_STATS_TITLE_FONT_COLOR, FONT_MCOLOR_BLACK);
+	SetFontAttributes(BLOCKFONT2, MAP_INV_STATS_TITLE_FONT_COLOR);
 
 	INT16 usX;
 	INT16 usY;
@@ -4871,7 +4871,7 @@ static void RenderAttributeStringsForUpperLeftHandCorner(SGPVSurface* const uiBu
 {
 	INT32 iCounter = 0;
 
-	SetFontFgBg(CHAR_FONT, CHAR_TITLE_FONT_COLOR, FONT_BLACK);
+	SetFontAttributes(CHAR_FONT, CHAR_TITLE_FONT_COLOR);
 	SetFontDestBuffer(uiBufferToRenderTo);
 
 	// assignment strings

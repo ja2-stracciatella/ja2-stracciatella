@@ -3077,7 +3077,7 @@ void RenderWWWProgramTitleBar(void)
 	BltVideoObjectOnce(FRAME_BUFFER, "LAPTOP/programtitlebar.sti", 0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
 
 	// now slapdown text
-	SetFontFgBg(FONT14ARIAL, FONT_WHITE, FONT_BLACK);
+	SetFontAttributes(FONT14ARIAL, FONT_WHITE);
 
 	// display title
 

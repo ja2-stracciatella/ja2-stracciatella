@@ -275,7 +275,7 @@ static void DisplayMercNameInOverhead(const SOLDIERTYPE* const pSoldier)
 	sWorldScreenY += ( gsRenderHeight / 5 );
 
 	// Display name
-	SetFontFgBg(TINYFONT1, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK);
+	SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
 
 	// Center here....
 	FindFontCenterCoordinates(sWorldScreenX, sWorldScreenY, 1, 1, pSoldier->name, TINYFONT1, &sX, &sY);

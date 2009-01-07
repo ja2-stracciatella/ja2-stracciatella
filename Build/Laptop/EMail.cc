@@ -1528,7 +1528,7 @@ static void ReadCallback(GUI_BUTTON *btn, INT32 iReason)
 static void DisplayTextOnTitleBar(void)
 {
 	// draw email screen title text
-	SetFontFgBg(EMAIL_TITLE_FONT, FONT_WHITE, FONT_BLACK);
+	SetFontAttributes(EMAIL_TITLE_FONT, FONT_WHITE);
 	MPrint(EMAIL_TITLE_X, EMAIL_TITLE_Y, pEmailTitleText);
 }
 
@@ -1608,7 +1608,7 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 static void DrawEmailMessageDisplayTitleText(INT32 iViewerY)
 {
   // this procedure will display the title of the email message display box
-	SetFontFgBg(EMAIL_HEADER_FONT, FONT_WHITE, FONT_BLACK);
+	SetFontAttributes(EMAIL_HEADER_FONT, FONT_WHITE);
   MPrint(VIEWER_X + 30, VIEWER_Y + 8 + iViewerY, pEmailTitleText);
 }
 

@@ -314,7 +314,7 @@ static void RenderCharFullName(void)
 	INT16 sX, sY;
 
 	// render the characters full name
-	SetFontFgBg(FONT14ARIAL, FONT_WHITE, FONT_BLACK);
+	SetFontAttributes(FONT14ARIAL, FONT_WHITE);
 	swprintf(sString, lengthof(sString), pIMPFinishStrings, pFullName);
   FindFontCenterCoordinates(LAPTOP_SCREEN_UL_X, 0, LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X, 0 , sString , FONT14ARIAL, &sX, &sY);
 	MPrint(sX, LAPTOP_SCREEN_WEB_DELTA_Y + 33, sString);

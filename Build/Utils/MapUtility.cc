@@ -274,7 +274,7 @@ ScreenID MapUtilScreenHandle()
 		WriteSTIFile( pDataPtr, pPalette, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, zFilename2, CONVERT_ETRLE_COMPRESS, 0 );
 	}
 
-	SetFontFgBg(TINYFONT1, FONT_MCOLOR_DKGRAY, FONT_MCOLOR_BLACK);
+	SetFontAttributes(TINYFONT1, FONT_MCOLOR_DKGRAY);
 	mprintf( 10, 340, L"Writing radar image %ls", zFilename2 );
 	mprintf(10, 350, L"Using tileset %ls", gTilesets[giCurrentTilesetID].zName);
 

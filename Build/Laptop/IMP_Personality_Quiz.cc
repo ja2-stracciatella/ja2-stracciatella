@@ -816,7 +816,7 @@ static void PrintQuizQuestionNumber(void)
 {
   // this function will print the number of the current question and the numebr of questions
 
-	SetFontFgBg(FONT12ARIAL, FONT_WHITE, FONT_BLACK);
+	SetFontAttributes(FONT12ARIAL, FONT_WHITE);
 
 	// print current question number
 	mprintf(LAPTOP_SCREEN_UL_X + 345, LAPTOP_SCREEN_WEB_UL_Y + 370, L"%d", giCurrentPersonalityQuizQuestion + 1);

@@ -2159,7 +2159,7 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT8 bZLevel, cons
 		y = sYPos - h / 2;
 	}
 
-	SetFontFgBg(SMALLFONT1, FONT_MCOLOR_DKGRAY, FONT_MCOLOR_BLACK);
+	SetFontAttributes(SMALLFONT1, FONT_MCOLOR_DKGRAY);
 
 	// Draw the item names
 	UINT display_count = 0;

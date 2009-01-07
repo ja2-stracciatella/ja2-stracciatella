@@ -231,7 +231,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	wcscpy(sString, ShortItemNames[item->o.usItem]);
 	ReduceStringLength(sString, lengthof(sString), name_box->w, MAP_IVEN_FONT);
 
-	SetFontFgBg(MAP_IVEN_FONT, FONT_WHITE, FONT_BLACK);
+	SetFontAttributes(MAP_IVEN_FONT, FONT_WHITE);
 
 	INT16 x;
 	INT16 y;
@@ -1079,7 +1079,7 @@ static void DisplayPagesForMapInventoryPool(void)
 	CHAR16 sString[ 32 ];
 	INT16 sX, sY;
 
-	SetFontFgBg(COMPFONT, 183, FONT_BLACK);
+	SetFontAttributes(COMPFONT, 183);
 	SetFontDestBuffer(guiSAVEBUFFER);
 
 	// grab current and last pages
@@ -1141,7 +1141,7 @@ static void DrawNumberOfIventoryPoolItems(void)
 	// get number of items
 	swprintf( sString, lengthof(sString), L"%d", iNumberOfItems );
 
-	SetFontFgBg(COMPFONT, 183, FONT_BLACK);
+	SetFontAttributes(COMPFONT, 183);
 	SetFontDestBuffer(guiSAVEBUFFER);
 
 	// grab centered coords
@@ -1176,7 +1176,7 @@ static void DisplayCurrentSector(void)
 
 	swprintf( sString, lengthof(sString), L"%ls%ls%ls", pMapVertIndex[ sSelMapY ], pMapHortIndex[ sSelMapX ], pMapDepthIndex[ iCurrentMapSectorZ ] );
 
-	SetFontFgBg(COMPFONT, 183, FONT_BLACK);
+	SetFontAttributes(COMPFONT, 183);
 	SetFontDestBuffer(guiSAVEBUFFER);
 
 	// grab centered coords
@@ -1271,7 +1271,7 @@ void HandleButtonStatesWhileMapInventoryActive( void )
 static void DrawTextOnSectorInventory(void)
 {
 	SetFontDestBuffer(guiSAVEBUFFER);
-	SetFontFgBg(FONT14ARIAL, FONT_WHITE, FONT_BLACK);
+	SetFontAttributes(FONT14ARIAL, FONT_WHITE);
 
 	INT16 x;
 	INT16 y;

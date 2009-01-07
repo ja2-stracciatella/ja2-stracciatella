@@ -375,7 +375,7 @@ static void DrawNameOfLoadedSector(void)
   INT16 sFontX, sFontY;
 
 	SetFontDestBuffer(FRAME_BUFFER);
-	SetFontFgBg(COMPFONT, 183, FONT_BLACK);
+	SetFontAttributes(COMPFONT, 183);
 
 	GetSectorIDString( sSelMapX, sSelMapY, ( INT8 )( iCurrentMapSectorZ ),sString, lengthof(sString), TRUE );
 	ReduceStringLength( sString, lengthof(sString), 80, COMPFONT );
@@ -620,7 +620,7 @@ static void DisplayCompressMode(void)
 		usColor = FONT_LTGREEN;
 	}
 
-	SetFontFgBg(COMPFONT, usColor, FONT_BLACK);
+	SetFontAttributes(COMPFONT, usColor);
 	FindFontCenterCoordinates(489, 456, 522 - 489, 467 - 454, Time, COMPFONT, &sX, &sY);
 	MPrint(sX, sY, Time);
 }
@@ -982,7 +982,7 @@ static void DisplayCurrentBalanceTitleForMapBottom(void)
 	INT16 sFontX, sFontY;
 
 	SetFontDestBuffer(guiSAVEBUFFER);
-	SetFontFgBg(COMPFONT, MAP_BOTTOM_FONT_COLOR, FONT_BLACK);
+	SetFontAttributes(COMPFONT, MAP_BOTTOM_FONT_COLOR);
 
 	sString = pMapScreenBottomText;
 	FindFontCenterCoordinates(359, 387 - 14,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
@@ -1003,7 +1003,7 @@ static void DisplayCurrentBalanceForMapBottom(void)
 	INT16 sFontX, sFontY;
 
 	SetFontDestBuffer(FRAME_BUFFER);
-	SetFontFgBg(COMPFONT, 183, FONT_BLACK);
+	SetFontAttributes(COMPFONT, 183);
 	SPrintMoney(sString, LaptopSaveInfo.iCurrentBalance);
 	FindFontCenterCoordinates(359, 387 + 2,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, sString);
@@ -1087,7 +1087,7 @@ static void DisplayProjectedDailyMineIncome(void)
 	}
 
 	SetFontDestBuffer(FRAME_BUFFER);
-	SetFontFgBg(COMPFONT, 183, FONT_BLACK);
+	SetFontAttributes(COMPFONT, 183);
 	SPrintMoney(sString, iRate);
 	FindFontCenterCoordinates(359, 433 + 2,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, sString);

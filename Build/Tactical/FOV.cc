@@ -478,7 +478,7 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 
 			 RenderFOVDebug( );
 
-			 SetFontFgBg(LARGEFONT1, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK);
+			 SetFontAttributes(LARGEFONT1, FONT_MCOLOR_WHITE);
 			 mprintf( 10,  10 , L"%d", maincnt  );
 			 //mprintf( 10,  20 , L"%d", marker  );
 			 //mprintf( 50,  20 , L"%d", pSoldier->sGridNo  );

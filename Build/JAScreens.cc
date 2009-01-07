@@ -108,7 +108,7 @@ ScreenID ErrorScreenHandle(void)
 	static BOOLEAN	fFirstTime = FALSE;
 
 	// Create string
-	SetFontFgBg(LARGEFONT1, FONT_MCOLOR_LTGRAY, FONT_MCOLOR_BLACK);
+	SetFontAttributes(LARGEFONT1, FONT_MCOLOR_LTGRAY);
 	MPrint(50, 200, L"RUNTIME ERROR");
 	MPrint(50, 225, L"PRESS <ESC> TO EXIT");
 
@@ -172,7 +172,7 @@ ScreenID InitScreenHandle(void)
 
 		// Init screen
 
-		SetFontFgBg(TINYFONT1, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK);
+		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
 
 		const INT32 x = 10;
 		const INT32 y = SCREEN_HEIGHT;

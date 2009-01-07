@@ -1928,7 +1928,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 		BltVideoObject(pBlitter->uiDestBuff, vo, 0, pBlitter->sX, pBlitter->sY);
 
 		// Display name, location ( if not current )
-		SetFontFgBg(BLOCKFONT2, FONT_MCOLOR_LTGRAY, FONT_MCOLOR_BLACK);
+		SetFontAttributes(BLOCKFONT2, FONT_MCOLOR_LTGRAY);
 
 		if ( pSoldier )
 		{
