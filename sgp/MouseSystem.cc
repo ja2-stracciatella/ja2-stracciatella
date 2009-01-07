@@ -760,7 +760,7 @@ static size_t GetNumberOfLinesInHeight(const wchar_t* String)
 
 
 static size_t GetWidthOfString(const wchar_t* String);
-static void DisplayHelpTokenizedString(const wchar_t* pStringA, INT16 sX, INT16 sY);
+static void DisplayHelpTokenizedString(const wchar_t* text, INT16 sx, INT16 sy);
 
 
 static void DisplayFastHelp(MOUSE_REGION* const r)
@@ -794,8 +794,6 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 		FRAME_BUFFER->ShadowRect(x + 2, y + 2, x + w - 3, y + h - 3);
 		FRAME_BUFFER->ShadowRect(x + 2, y + 2, x + w - 3, y + h - 3);
 
-		SetFont(FONT10ARIAL);
-		SetFontShadow(FONT_NEARBLACK);
 		DisplayHelpTokenizedString(r->FastHelpText, x + 5, y + 5);
 		InvalidateRegion(x, y, x + w, y + h);
 	}
@@ -827,39 +825,39 @@ static size_t GetWidthOfString(const wchar_t* pStringA)
 }
 
 
-static void DisplayHelpTokenizedString(const wchar_t* pStringA, INT16 sX, INT16 sY)
+static void DisplayHelpTokenizedString(wchar_t const* const text, INT16 const sx, INT16 const sy)
 {
-	Font const BoldFont   = FONT10ARIALBOLD;
-	Font const NormalFont = FONT10ARIAL;
-	INT32 h = GetFontHeight(FONT10ARIAL) + 1;
-	INT32 x = sX;
-	INT32 y = sY;
-	for (const wchar_t* i = pStringA;; i++)
+	Font  const bold_font   = FONT10ARIALBOLD;
+	Font  const normal_font = FONT10ARIAL;
+	INT32 const h           = GetFontHeight(normal_font) + 1;
+	INT32       x           = sx;
+	INT32       y           = sy;
+	for (wchar_t const* i = text;; ++i)
 	{
 		wchar_t c = *i;
-		Font font;
+		Font    font;
+		UINT8   foreground;
 		switch (c)
 		{
 			case L'\0': return;
 
 			case L'\n':
-				x = sX;
+				x  = sx;
 				y += h;
 				continue;
 
 			case L'|':
 				c = *++i;
-				SetFont(FONT10ARIALBOLD);
-				SetFontForeground(146);
-				font = BoldFont;
+				font       = bold_font;
+				foreground = 146;
 				break;
 
 			default:
-				SetFont(FONT10ARIAL);
-				SetFontForeground(FONT_BEIGE);
-				font = NormalFont;
+				font       = normal_font;
+				foreground = FONT_BEIGE;
 				break;
 		}
+		SetFontAttributes(font, foreground, FONT_NEARBLACK);
 		mprintf(x, y, L"%lc", c);
 		x += GetCharWidth(font, c);
 	}
