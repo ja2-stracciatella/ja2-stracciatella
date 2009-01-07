@@ -246,7 +246,7 @@ static void RenderHistoryBackGround(void)
 static void DrawHistoryTitleText(void)
 {
 	// draw the pages title
-	SetFontAttributes(HISTORY_HEADER_FONT, FONT_WHITE, DEFAULT_SHADOW);
+	SetFontAttributes(HISTORY_HEADER_FONT, FONT_WHITE);
 	MPrint(TITLE_X, TITLE_Y, pHistoryTitle);
 }
 

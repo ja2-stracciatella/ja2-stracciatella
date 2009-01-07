@@ -595,7 +595,7 @@ static void DisplayPlayerNameStrings(void)
 	RenderNameIndent(    194, 132);
 	RenderNickNameIndent(194, 192);
 
-	SetFontAttributes(FONT14ARIAL, 184, DEFAULT_SHADOW);
+	SetFontAttributes(FONT14ARIAL, 184);
 	MPrint(LAPTOP_SCREEN_UL_X + 196, FULL_NAME_CURSOR_Y + 1, pFullNameString);
 	MPrint(LAPTOP_SCREEN_UL_X + 196, NICK_NAME_CURSOR_Y + 4, pNickNameString);
 

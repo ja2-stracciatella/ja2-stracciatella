@@ -306,7 +306,7 @@ static void RenderFilesBackGround(void)
 static void DrawFilesTitleText(void)
 {
 	// draw the pages title
-	SetFontAttributes(FILES_TITLE_FONT, FONT_WHITE, DEFAULT_SHADOW);
+	SetFontAttributes(FILES_TITLE_FONT, FONT_WHITE);
 	MPrint(TITLE_X, TITLE_Y, pFilesTitle);
 }
 

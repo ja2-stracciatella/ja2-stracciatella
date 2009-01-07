@@ -538,7 +538,7 @@ static void DrawRecordsText(void)
 static void DrawFinanceTitleText(void)
 {
 	// draw the pages title
-	SetFontAttributes(FINANCE_HEADER_FONT, FONT_WHITE, DEFAULT_SHADOW);
+	SetFontAttributes(FINANCE_HEADER_FONT, FONT_WHITE);
 	MPrint(TITLE_X, TITLE_Y, pFinanceTitle);
 }
 

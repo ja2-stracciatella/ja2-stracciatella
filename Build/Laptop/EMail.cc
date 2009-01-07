@@ -1233,7 +1233,7 @@ BOOLEAN DisplayNewMailBox( void )
   BltVideoObject(FRAME_BUFFER, guiEmailWarning,  0, EMAIL_WARNING_X,     EMAIL_WARNING_Y);
   BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 0, EMAIL_WARNING_X + 5, EMAIL_WARNING_Y + 2);
 
-	SetFontAttributes(EMAIL_HEADER_FONT, FONT_WHITE, DEFAULT_SHADOW);
+	SetFontAttributes(EMAIL_HEADER_FONT, FONT_WHITE);
 
 	// print warning
 	MPrint(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText);
@@ -1409,7 +1409,7 @@ static BOOLEAN DisplayDeleteNotice(Email* pMail)
 
   BltVideoObject(FRAME_BUFFER, guiEmailWarning, 0, EMAIL_WARNING_X, EMAIL_WARNING_Y);
 
-	SetFontAttributes(EMAIL_HEADER_FONT, FONT_WHITE, DEFAULT_SHADOW);
+	SetFontAttributes(EMAIL_HEADER_FONT, FONT_WHITE);
 
   BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 0, EMAIL_WARNING_X + 5, EMAIL_WARNING_Y + 2);
 

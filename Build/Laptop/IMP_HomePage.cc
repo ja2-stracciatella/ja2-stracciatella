@@ -158,7 +158,7 @@ static void DisplayPlayerActivationString(void)
 	// restore background
 	RenderActivationIndent( 257, 328 );
 
-	SetFontAttributes(FONT14ARIAL, 184, DEFAULT_SHADOW);
+	SetFontAttributes(FONT14ARIAL, 184);
 	MPrint(IMP_PLAYER_ACTIVATION_STRING_X, IMP_PLAYER_ACTIVATION_STRING_Y, pPlayerActivationString);
 
 	fNewCharInActivationString = FALSE;

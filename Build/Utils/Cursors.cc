@@ -1402,7 +1402,7 @@ static void DrawMouseText(void)
 
 			FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, pStr, TINYFONT1, &sX, &sY);
 
-			SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE, DEFAULT_SHADOW);
+			SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
 			mprintf(sX + 10, sY - 10, L"x%d", gpItemPointer->ubNumberOfObjects);
 
 			SetFontDestBuffer(FRAME_BUFFER);
