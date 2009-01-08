@@ -605,10 +605,11 @@ static FileString const* GetFirstStringOnThisPage(FileString const* RecordList, 
 		}
 
 		// build record list to this point
-		while (iCurrentPositionOnThisPage + IanWrappedStringHeight(usCurrentWidth, ubGap, font, CurrentRecord->pString) < iPageSize)
+		UINT16 const h = IanWrappedStringHeight(usCurrentWidth, ubGap, font, CurrentRecord->pString);
+		while (iCurrentPositionOnThisPage + h < iPageSize)
 		{
 			// still room on this page
-			iCurrentPositionOnThisPage += IanWrappedStringHeight(usCurrentWidth, ubGap, font, CurrentRecord->pString);
+			iCurrentPositionOnThisPage += h;
 
 			// next record
 			CurrentRecord = CurrentRecord->Next;

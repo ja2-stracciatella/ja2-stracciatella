@@ -948,11 +948,11 @@ static Record* GetFirstRecordOnThisPage(Record* const RecordList, INT32 const iP
 	while( iCurrentPage < iPage )
 	{
 		// build record list to this point
-		while (iCurrentPositionOnThisPage + IanWrappedStringHeight(MESSAGE_WIDTH, MESSAGE_GAP, font, CurrentRecord->pRecord) <= MAX_EMAIL_MESSAGE_PAGE_SIZE)
+		UINT16 const h = IanWrappedStringHeight(MESSAGE_WIDTH, MESSAGE_GAP, font, CurrentRecord->pRecord);
+		while (iCurrentPositionOnThisPage + h <= MAX_EMAIL_MESSAGE_PAGE_SIZE)
 		{
-
 			// still room on this page
-			iCurrentPositionOnThisPage += IanWrappedStringHeight(MESSAGE_WIDTH, MESSAGE_GAP, font, CurrentRecord->pRecord);
+			iCurrentPositionOnThisPage += h;
 
 			// next record
 			CurrentRecord = CurrentRecord -> Next;
