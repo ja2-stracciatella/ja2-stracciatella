@@ -1,6 +1,5 @@
 #ifdef JA2EDITOR
 
-#include <stdlib.h>
 #include "Structure.h"
 #include "TileDef.h"
 #include "WorldDef.h"

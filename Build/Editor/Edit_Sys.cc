@@ -1,6 +1,5 @@
 #ifdef JA2EDITOR
 
-#include <stdlib.h>
 #include "HImage.h"
 #include "Structure.h"
 #include "TileDef.h"

@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "Font.h"
 #include "Font_Control.h"
 #include "Soldier_Tile.h"

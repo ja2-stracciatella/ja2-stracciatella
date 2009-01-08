@@ -1,6 +1,5 @@
 #ifdef JA2EDITOR
 
-#include <stdlib.h>
 #include "NewSmooth.h"
 #include "TileDef.h"
 #include "WorldDef.h"	//for LEVELNODE def

@@ -18,7 +18,6 @@
 #include "Environment.h"
 #include "Lighting.h"
 #include "Soldier_Create.h"
-#include <stdlib.h>
 
 
 //

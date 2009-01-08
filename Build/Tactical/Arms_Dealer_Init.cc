@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "Types.h"
 #include "Arms_Dealer_Init.h"
 #include "Debug.h"

@@ -19,7 +19,6 @@
 #include "Exit_Grids.h"
 #include "Debug.h"
 #include "Structure.h"
-#include <stdlib.h>
 
 
 // SO, STEPS IN CREATING A MERC!

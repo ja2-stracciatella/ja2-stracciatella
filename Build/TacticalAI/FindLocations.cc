@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "Animation_Control.h"
 #include "Animation_Data.h"
 #include "FindLocations.h"
