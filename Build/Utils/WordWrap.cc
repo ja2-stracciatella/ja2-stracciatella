@@ -339,85 +339,41 @@ UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const ma
 }
 
 
-void CleanOutControlCodesFromString(const wchar_t* pSourceString, wchar_t* pDestString)
+/* This procedure will run through a string and strip out all control
+ * characters. This is a nessacary as wcscmp and the like tend not to like
+ * control chars in their strings */
+void CleanOutControlCodesFromString(wchar_t const* const src, wchar_t* const dst)
 {
-	INT32		iSourceCounter=0;
-	INT32		iDestCounter=0;
-
-	BOOLEAN fRemoveCurrentChar;
-	BOOLEAN fRemoveCurrentCharAndNextChar;
-
-	// this procedure will run through a string and strip out all control characters. This is a nessacary as wcscmp and the like tend not to like control chars in thier strings
-
-	fRemoveCurrentChar = FALSE;
-	fRemoveCurrentCharAndNextChar = FALSE;
-
 	// while not end of source string,
-	while( pSourceString[ iSourceCounter ] != 0 )
+	wchar_t const* s = src;
+	wchar_t*       d = dst;
+	while (*s != L'\0')
 	{
-		if( pSourceString[ iSourceCounter + 1 ] == 0 )
+		if (s[1] == L'\0')
 		{
-			fRemoveCurrentCharAndNextChar = FALSE;
-			fRemoveCurrentChar = TRUE;
+			++s;
 		}
-		else
+		else switch (*s)
 		{
-			switch ( pSourceString[iSourceCounter] )
-			{
-				case TEXT_CODE_CENTER:
-				case TEXT_CODE_NEWCOLOR:
-				case TEXT_CODE_BOLD:
-				case TEXT_CODE_DEFCOLOR:
-
-					if( pSourceString[ iSourceCounter + 1 ] == TEXT_SPACE )
-					{
-						fRemoveCurrentCharAndNextChar = TRUE;
-						fRemoveCurrentChar = FALSE;
-					}
-					else
-					{
-						fRemoveCurrentCharAndNextChar = FALSE;
-						fRemoveCurrentChar = TRUE;
-					}
-
+			case TEXT_CODE_CENTER:
+			case TEXT_CODE_NEWCOLOR:
+			case TEXT_CODE_BOLD:
+			case TEXT_CODE_DEFCOLOR:
+				++s;
+				if (*s == TEXT_SPACE && s[1] != L'\0')
+					++s;
 				break;
 
-				case TEXT_CODE_NEWLINE:
-					fRemoveCurrentCharAndNextChar = FALSE;
-					fRemoveCurrentChar = TRUE;
+			case TEXT_CODE_NEWLINE:
+				++s;
 				break;
 
-				default:
-					fRemoveCurrentCharAndNextChar = FALSE;
-					fRemoveCurrentChar = FALSE;
+			default:
+				*d++ = *s++;
 				break;
-			}
 		}
-
-		if( fRemoveCurrentChar )
-		{
-			iSourceCounter++;
-		}
-		else if( fRemoveCurrentCharAndNextChar )
-		{
-			if( pSourceString[ iSourceCounter + 2 ] != 0 )
-				iSourceCounter += 2;
-			else
-				iSourceCounter ++;
-		}
-		else
-		{
-			pDestString[ iDestCounter ] = pSourceString[ iSourceCounter ];
-
-			iDestCounter++;
-			iSourceCounter++;
-		}
-
-		fRemoveCurrentCharAndNextChar = FALSE;
-		fRemoveCurrentChar = FALSE;
 	}
-
-	pDestString[ iDestCounter ] = L'\0';
+	*d = *s;
 }
 
 
