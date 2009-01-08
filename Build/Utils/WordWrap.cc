@@ -374,225 +374,99 @@ void CleanOutControlCodesFromString(wchar_t const* const src, wchar_t* const dst
 
 
 // now variant for grabbing height
-UINT16 IanWrappedStringHeight(UINT16 usWidth, UINT8 ubGap, Font const font, const wchar_t* pString)
+UINT16 IanWrappedStringHeight(UINT16 const max_w, UINT8 const gap, Font const font, wchar_t const* const str)
 {
-	UINT16	usSourceCounter=0,usDestCounter=0,usWordLengthPixels,usLineLengthPixels=0;
-	UINT16	usLinesUsed=1;
-	Font    uiLocalFont = font;
-	UINT16	usJustification = LEFT_JUSTIFIED;
-	BOOLEAN fBoldOn=FALSE;
-	CHAR16	zLineString[640] = L"",zWordString[640]= L"";
+	UINT16  line_w             = 0;
+	UINT16  n_lines            = 1;
+	Font    cur_font           = font;
+	UINT16  justification      = LEFT_JUSTIFIED;
+	bool    is_bold            = FALSE;
 
-	// simply a cut and paste operation on Ian Display Wrapped, but will not write string to screen
-	// since this all we want to do, everything IanWrapped will do but without displaying string
+	/* simply a cut and paste operation on Ian Display Wrapped, but will not write
+	 * string to screen since this all we want to do, everything IanWrapped will
+	 * do but without displaying string */
 
+	wchar_t const* i = str;
 	do
 	{
 		// each character goes towards building a new word
-		if (pString[usSourceCounter] != TEXT_SPACE && pString[usSourceCounter] != 0)
+		wchar_t const* word_start = i;
+		while (*i != TEXT_SPACE && *i != L'\0') i++;
+
+		// we hit a space (or end of record), so this is the END of a word!
+		switch (word_start[0])
 		{
-			zWordString[usDestCounter++] = pString[usSourceCounter];
-		}
-		else
-		{
-			// we hit a space (or end of record), so this is the END of a word!
-
-			// is this a special CODE?
-			if (zWordString[0] >= TEXT_CODE_NEWLINE && zWordString[0] <= TEXT_CODE_DEFCOLOR)
-			{
-				switch(zWordString[0])
+			case TEXT_CODE_CENTER:
+				if (justification != CENTER_JUSTIFIED)
 				{
-					case TEXT_CODE_CENTER:
-
-						if (usJustification != CENTER_JUSTIFIED)
-						{
-							usJustification = CENTER_JUSTIFIED;
-
-							// erase this word string we've been building - it was just a code
-							memset(zWordString,0,sizeof(zWordString));
-
-							// erase the line string, we're starting from scratch
-							memset(zLineString,0,sizeof(zLineString));
-
-							// reset the line length - we're starting from scratch
-							usLineLengthPixels = 0;
-
-							// reset dest char counter
-							usDestCounter = 0;
-						}
-						else	// turn OFF centering...
-						{
-							// we just used a line, so note that
-							usLinesUsed++;
-
-							// erase line string
-							memset(zLineString,0,sizeof(zLineString));
-
-							// erase word string
-							memset(zWordString,0,sizeof(zWordString));
-
-							// reset the line length
-							usLineLengthPixels = 0;
-
-							// reset dest char counter
-							usDestCounter = 0;
-
-							// turn off centering...
-							usJustification = LEFT_JUSTIFIED;
-						}
-
-						break;
-
-
-
-					case TEXT_CODE_NEWLINE:
-
-						// NEWLINE character!
-
-						// we just used a line, so note that
-						usLinesUsed++;
-
-						// erase line string
-						memset(zLineString,0,sizeof(zLineString));
-
-						// erase word string
-						memset(zWordString,0,sizeof(zWordString));
-
-						// reset the line length
-						usLineLengthPixels = 0;
-
-						// reset dest char counter
-						usDestCounter = 0;
-
-						break;
-
-
-					case TEXT_CODE_BOLD:
-
-						if (!fBoldOn)
-						{
-							// erase line string
-							memset(zLineString,0,sizeof(zLineString));
-
-							// erase word string
-							memset(zWordString,0,sizeof(zWordString));
-
-							// turn bold ON
-							uiLocalFont = FONT10ARIALBOLD;
-							SetFontShadow(NO_SHADOW);
-							fBoldOn     = TRUE;
-
-							// reset dest char counter
-							usDestCounter = 0;
-						}
-						else
-						{
-							// erase line string
-							memset(zLineString,0,sizeof(zLineString));
-
-							// erase word string
-							memset(zWordString,0,sizeof(zWordString));
-
-							// turn bold OFF
-							uiLocalFont = font;
-							fBoldOn     = FALSE;
-
-							// reset dest char counter
-							usDestCounter = 0;
-						}
-
-						break;
-
-
-
-					case TEXT_CODE_NEWCOLOR:
-						// erase line string
-						memset(zLineString,0,sizeof(zLineString));
-
-						// erase word string
-						memset(zWordString,0,sizeof(zWordString));
-
-						// reset dest char counter
-						usDestCounter = 0;
-						break;
-
-
-
-					case TEXT_CODE_DEFCOLOR:
-						// erase line string
-						memset(zLineString,0,sizeof(zLineString));
-
-						// erase word string
-						memset(zWordString,0,sizeof(zWordString));
-
-						// reset dest char counter
-						usDestCounter = 0;
-						break;
-
-
-				}		// end of switch of CODES
-
-			}
-			else // not a special character
-			{
-				// terminate the string TEMPORARILY
-				zWordString[usDestCounter]   = 0;
-
-				// get the length (in pixels) of this word
-				usWordLengthPixels = StringPixLength(zWordString, uiLocalFont);
-
-				// add a space (in case we add another word to it)
-				zWordString[usDestCounter++] = 32;
-
-				// RE-terminate the string
-				zWordString[usDestCounter]   = 0;
-
-				// can we fit it onto the length of our "line" ?
-				if ((usLineLengthPixels + usWordLengthPixels) <= usWidth)
+					justification = CENTER_JUSTIFIED;
+				}
+				else	// turn OFF centering...
 				{
-					// yes we can fit this word.
+					// we just used a line, so note that
+					++n_lines;
 
-					// get the length AGAIN (in pixels with the SPACE) for this word
-  				usWordLengthPixels = StringPixLength(zWordString, uiLocalFont);
+					// turn off centering...
+					justification = LEFT_JUSTIFIED;
+				}
 
-					// calc new pixel length for the line
-					usLineLengthPixels += usWordLengthPixels;
+				// reset the line length
+				line_w = 0;
+				break;
 
-					// reset dest char counter
-					usDestCounter = 0;
+			case TEXT_CODE_NEWLINE:
+				// we just used a line, so note that
+				++n_lines;
 
-					// add the word (with the space) to the line
-					wcscat(zLineString, zWordString);
+				// reset the line length
+				line_w = 0;
+				break;
+
+			case TEXT_CODE_BOLD:
+				is_bold = !is_bold;
+				if (is_bold)
+				{ // turn bold ON
+					cur_font = FONT10ARIALBOLD;
 				}
 				else
+				{ // turn bold OFF
+					cur_font = font;
+				}
+				break;
+
+			case TEXT_CODE_NEWCOLOR:
+			case TEXT_CODE_DEFCOLOR:
+				break;
+
+			default:
+				// get the length (in pixels) of this word
+				UINT16 word_w = 0;
+				for (wchar_t const* k = word_start; k != i; ++k)
 				{
-					// can't fit this word!
+					word_w += GetCharWidth(cur_font, *k);
+				}
+
+				// can we fit it onto the length of our "line"?
+				if (line_w + word_w > max_w)
+				{ // can't fit this word!
 
 					// we just used a line, so note that
-					usLinesUsed++;
-
-					// start off next line string with the word we couldn't fit
-					wcscpy(zLineString,zWordString);
+					++n_lines;
 
 					// remeasure the line length
-  				usLineLengthPixels = StringPixLength(zLineString, uiLocalFont);
-
-					// reset dest char counter
-					usDestCounter = 0;
+					line_w = 0;
 				}
-			}		// end of this word was NOT a special code
 
+				// calc new pixel length for the line
+				line_w += word_w + GetCharWidth(cur_font, L' ');
 		}
-
-
-
-	} while (pString[usSourceCounter++] != 0);
+	}
+	while (*i++ != L'\0');
 
 	SetFontShadow(DEFAULT_SHADOW);
 
-
 	// return how many Y pixels we used
-	return usLinesUsed * (GetFontHeight(font) + ubGap);
+	return n_lines * (GetFontHeight(font) + gap);
 }
 
 
