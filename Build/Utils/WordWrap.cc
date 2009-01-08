@@ -463,8 +463,6 @@ UINT16 IanWrappedStringHeight(UINT16 const max_w, UINT8 const gap, Font const fo
 	}
 	while (*i++ != L'\0');
 
-	SetFontShadow(DEFAULT_SHADOW);
-
 	// return how many Y pixels we used
 	return n_lines * (GetFontHeight(font) + gap);
 }
