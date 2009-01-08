@@ -1468,36 +1468,18 @@ static UINT16 CountNumberOfKeysOfTypeInWorld(UINT8 ubKeyID)
 	return num;
 }
 
+
 void DisplayItemStatistics()
 {
-	BOOLEAN fUseSelectedItem;
-	INT16 usItemIndex;
+	if (!eInfo.fActive)      return;
+	if (!eInfo.pusItemIndex) return;
 
-	if( !eInfo.fActive )
-	{
-		return;
-	}
-
-	//If there is nothing else currently highlited by the mouse, use the selected item.
-	fUseSelectedItem = eInfo.sHilitedItemIndex == -1 || eInfo.sHilitedItemIndex == eInfo.sSelItemIndex;
-
-	SetFont( SMALLCOMPFONT );
-	SetFontForeground(fUseSelectedItem ? FONT_LTRED : FONT_YELLOW);
-
-	//Extract all of the item information.
-	if( !eInfo.pusItemIndex )
-		return;
-	usItemIndex = eInfo.pusItemIndex[ fUseSelectedItem ? eInfo.sSelItemIndex : eInfo.sHilitedItemIndex ];
-	const wchar_t* ItemName = ItemNames[usItemIndex];
-
-	MPrint(50 - StringPixLength(ItemName, SMALLCOMPFONT) / 2, 403, ItemName);
-	MPrint( 2, 410, L"Status Info Line 1");
-	MPrint( 2, 420, L"Status Info Line 2");
-	MPrint( 2, 430, L"Status Info Line 3");
-	MPrint( 2, 440, L"Status Info Line 4");
-	MPrint( 2, 450, L"Status Info Line 5");
+	// If there is nothing else currently highlited by the mouse, use the selected item.
+	INT16          const highlited  = eInfo.sHilitedItemIndex;
+	INT16          const idx        = highlited != -1 ? highlited : eInfo.sSelItemIndex;
+	UINT8          const foreground = idx == highlited ? FONT_LTRED : FONT_YELLOW;
+	wchar_t const* const item_name  = ItemNames[eInfo.pusItemIndex[idx]];
+	DisplayWrappedString(2, 401, 97, 2, SMALLCOMPFONT, foreground, item_name, FONT_BLACK, CENTER_JUSTIFIED);
 }
-
-
 
 #endif

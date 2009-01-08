@@ -1,3 +1,4 @@
+(r5023) Make the info box left of the item selection in the editor a bit more useful: Remove the static "Status Info Line [12345]" text and do not overflow the box with the item name.
 (r5005) Fix a vanilla display glitch in the editor: Now always draw a shadow for the name, health, slot and waypoints for mercs instead of doing it randomly.
 (r4977) Enable scrolling through emails with the mouse wheel.
 (r4949) Enable scrolling of the email list with the mouse wheel.
