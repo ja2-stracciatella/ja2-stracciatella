@@ -102,9 +102,6 @@ UINT16 DisplayWrappedString(UINT16 const x, UINT16 y, UINT16 w, UINT8 const gap,
 }
 
 
-static void ShadowText(SGPVSurface* dst, const wchar_t* pString, Font, UINT16 usPosX, UINT16 usPosY);
-
-
 // DrawTextToScreen	Parameters:
 //			The string,
 //			X position
@@ -115,49 +112,42 @@ static void ShadowText(SGPVSurface* dst, const wchar_t* pString, Font, UINT16 us
 //			the color of the background
 //			do you want to display it using dirty rects, TRUE or FALSE
 //			flags for either LEFT_JUSTIFIED, CENTER_JUSTIFIED, RIGHT_JUSTIFIED
-void DrawTextToScreen(const wchar_t* pStr, UINT16 usLocX, UINT16 usLocY, UINT16 usWidth, Font const font, UINT8 ubColor, UINT8 ubBackGroundColor, UINT32 ulFlags)
+void DrawTextToScreen(wchar_t const* const str, UINT16 x, UINT16 const y, UINT16 const max_w, Font const font, UINT8 const foreground, UINT8 const background, UINT32 const flags)
 {
-	UINT16	usFontHeight=0;
-	UINT16	usStringWidth=0;
+	if (flags & DONT_DISPLAY_TEXT) return;
 
-	if (ulFlags & DONT_DISPLAY_TEXT) return;
+	INT16 const w = flags & (CENTER_JUSTIFIED | RIGHT_JUSTIFIED | TEXT_SHADOWED | INVALIDATE_TEXT) ?
+		StringPixLength(str, font) : 0;
 
-	INT16 usPosX;
-	INT16 usPosY;
-	if (ulFlags & CENTER_JUSTIFIED)
+	if (flags & CENTER_JUSTIFIED)
 	{
-		FindFontCenterCoordinates(usLocX, usLocY, usWidth, GetFontHeight(font), pStr, font, &usPosX, &usPosY);
+		x += (max_w - w) / 2;
 	}
-	else if( ulFlags & RIGHT_JUSTIFIED )
+	else if (flags & RIGHT_JUSTIFIED)
 	{
-  	FindFontRightCoordinates(usLocX, usLocY, usWidth, GetFontHeight(font), pStr, font, &usPosX, &usPosY);
-	}
-	else
-	{
-		usPosX = usLocX;
-		usPosY = usLocY;
+		x += max_w - w;
 	}
 
-	SetFontFgBg(font, ubColor, ubBackGroundColor);
-
-	if( ulFlags & TEXT_SHADOWED )
-		ShadowText( FRAME_BUFFER, pStr, font, (UINT16)(usPosX-1), (UINT16)(usPosY-1 ) );
-
-	if (ulFlags & MARK_DIRTY)
+	if (flags & TEXT_SHADOWED)
 	{
-		GPrintDirty(usPosX, usPosY, pStr);
+		UINT16 const h = GetFontHeight(font);
+		FRAME_BUFFER->ShadowRect(x - 1, y - 1, x + w, y + h);
+	}
+
+	SetFontFgBg(font, foreground, background);
+	if (flags & MARK_DIRTY)
+	{
+		GPrintDirty(x, y, str);
 	}
 	else
 	{
-		MPrint(usPosX, usPosY, pStr);
+		MPrint(x, y, str);
 	}
 
-	if( ulFlags & INVALIDATE_TEXT )
+	if (flags & INVALIDATE_TEXT)
 	{
-		usFontHeight  = GetFontHeight(font);
-		usStringWidth = StringPixLength(pStr, font);
-
-  		InvalidateRegion( usPosX, usPosY, usPosX+usStringWidth, usPosY+usFontHeight );
+		UINT16 const h = GetFontHeight(font);
+		InvalidateRegion(x, y, x + w, y + h);
 	}
 }
 
@@ -465,15 +455,6 @@ UINT16 IanWrappedStringHeight(UINT16 const max_w, UINT8 const gap, Font const fo
 
 	// return how many Y pixels we used
 	return n_lines * (GetFontHeight(font) + gap);
-}
-
-
-// Places a shadow the width an height of the string, to PosX, posY
-static void ShadowText(SGPVSurface* const dst, const wchar_t* pString, Font const font, UINT16 usPosX, UINT16 usPosY)
-{
-	UINT32 const uiLength     = StringPixLength(pString, font);
-	UINT16 const usFontHeight = GetFontHeight(font);
-	dst->ShadowRect(usPosX, usPosY, usPosX + uiLength + 1, usPosY + usFontHeight + 1);
 }
 
 
