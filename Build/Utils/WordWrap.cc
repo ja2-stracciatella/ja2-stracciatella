@@ -347,20 +347,16 @@ void CleanOutControlCodesFromString(wchar_t const* const src, wchar_t* const dst
 	// while not end of source string,
 	wchar_t const* s = src;
 	wchar_t*       d = dst;
-	while (*s != L'\0')
+	for (;;)
 	{
-		if (s[1] == L'\0')
-		{
-			++s;
-		}
-		else switch (*s)
+		switch (*s)
 		{
 			case TEXT_CODE_CENTER:
 			case TEXT_CODE_NEWCOLOR:
 			case TEXT_CODE_BOLD:
 			case TEXT_CODE_DEFCOLOR:
 				++s;
-				if (*s == TEXT_SPACE && s[1] != L'\0')
+				if (*s == TEXT_SPACE)
 					++s;
 				break;
 
@@ -369,11 +365,11 @@ void CleanOutControlCodesFromString(wchar_t const* const src, wchar_t* const dst
 				break;
 
 			default:
-				*d++ = *s++;
+				if ((*d++ = *s++) == L'\0')
+					return;
 				break;
 		}
 	}
-	*d = *s;
 }
 
 
