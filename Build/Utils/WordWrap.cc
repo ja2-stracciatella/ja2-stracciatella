@@ -134,7 +134,9 @@ void DrawTextToScreen(wchar_t const* const str, UINT16 x, UINT16 const y, UINT16
 		FRAME_BUFFER->ShadowRect(x - 1, y - 1, x + w, y + h);
 	}
 
-	SetFontFgBg(font, foreground, background);
+	SetFont(font);
+	SetFontForeground(foreground);
+	SetFontBackground(background);
 	if (flags & MARK_DIRTY)
 	{
 		GPrintDirty(x, y, str);

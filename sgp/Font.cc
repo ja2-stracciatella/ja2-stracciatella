@@ -212,14 +212,6 @@ void SetFontAttributes(Font const font, UINT8 const foreground, UINT8 const shad
 }
 
 
-void SetFontFgBg(Font const font, UINT8 const foreground, UINT8 const background)
-{
-	SetFont(font);
-	SetFontForeground(foreground);
-	SetFontBackground(background);
-}
-
-
 void SetFontDestBuffer(SGPVSurface* const dst, const INT32 x1, const INT32 y1, const INT32 x2, const INT32 y2)
 {
 	Assert(x2 > x1);
