@@ -8978,64 +8978,40 @@ void GetMapscreenMercDestinationString(const SOLDIERTYPE* pSoldier, wchar_t sStr
 }
 
 
-void GetMapscreenMercDepartureString(const SOLDIERTYPE* pSoldier, wchar_t sString[], size_t Length, UINT8* pubFontColor)
+void GetMapscreenMercDepartureString(SOLDIERTYPE const* const s, wchar_t* const str, size_t const length, UINT8* const text_colour)
 {
-	INT32 iMinsRemaining = 0;
-	INT32 iDaysRemaining = 0;
-	INT32 iHoursRemaining = 0;
-
-
-	if( ( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC && pSoldier->ubProfile != SLAY ) || pSoldier->bLife == 0 )
+	if ((s->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC && s->ubProfile != SLAY) ||
+			s->bLife == 0)
 	{
-		wcslcpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], Length);
+		wcslcpy(str, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION], length);
+		return;
 	}
-	else
+
+	INT32 mins_remaining = s->iEndofContractTime - GetWorldTotalMin();
+	if (s->bAssignment == IN_TRANSIT)
 	{
-		iMinsRemaining = pSoldier->iEndofContractTime - GetWorldTotalMin();
-
-		//if the merc is in transit
-		if( pSoldier->bAssignment == IN_TRANSIT )
+		INT32 const contract_length = s->iTotalContractLength * NUM_MIN_IN_DAY;
+		if (mins_remaining > contract_length)
 		{
-			//and if the time left on the cotract is greater then the contract time
-			if( iMinsRemaining > (INT32)( pSoldier->iTotalContractLength * NUM_MIN_IN_DAY ) )
-			{
-				iMinsRemaining = ( pSoldier->iTotalContractLength * NUM_MIN_IN_DAY );
-			}
-		}
-
-		// if 3 or more days remain
-		if( iMinsRemaining >= MAP_TIME_UNDER_THIS_DISPLAY_AS_HOURS )
-		{
-			iDaysRemaining = iMinsRemaining / (24*60);
-
-			*pubFontColor = FONT_LTGREEN;
-
-			swprintf(sString, Length, L"%d%ls", iDaysRemaining, gpStrategicString[ STR_PB_DAYS_ABBREVIATION ] );
-		}
-		else	// less than 3 days
-		{
-			if( iMinsRemaining > 5 )
-			{
-				iHoursRemaining = ( iMinsRemaining + 59 ) / 60;
-			}
-			else
-			{
-				iHoursRemaining = 0;
-			}
-
-		 // last 3 days is Red, last 4 hours start flashing red/white!
-			if (iMinsRemaining <= MINS_TO_FLASH_CONTRACT_TIME && fFlashContractFlag)
-		 {
-			 *pubFontColor = FONT_WHITE;
-		 }
-		 else
-		 {
-			 *pubFontColor = FONT_RED;
-		 }
-
-		 swprintf(sString, Length, L"%d%ls", iHoursRemaining, gpStrategicString[ STR_PB_HOURS_ABBREVIATION ] );
+			mins_remaining = contract_length;
 		}
 	}
+
+	if (mins_remaining >= MAP_TIME_UNDER_THIS_DISPLAY_AS_HOURS)
+	{ // 3 or more days remain
+		INT32 const days_remaining = mins_remaining / (24*60);
+		swprintf(str, length, L"%d%ls", days_remaining, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
+		*text_colour = FONT_LTGREEN;
+		return;
+	}
+
+	// less than 3 days
+	INT32 const hours_remaining = mins_remaining > 5 ?  (mins_remaining + 59) / 60 : 0;
+	swprintf(str, length, L"%d%ls", hours_remaining, gpStrategicString[STR_PB_HOURS_ABBREVIATION]);
+
+	// last 3 days is Red, last 4 hours start flashing red/white!
+	*text_colour = mins_remaining <= MINS_TO_FLASH_CONTRACT_TIME && fFlashContractFlag ?
+		FONT_WHITE : FONT_RED;
 }
 
 
