@@ -577,20 +577,20 @@ static void UpdateSectorExitMenu(void)
 	}
 }
 
-void RenderSectorExitMenu( )
-{
-	InputAtom Event;
 
+void RenderSectorExitMenu()
+{
 	RestoreBackgroundRects();
 	// ATE: Reset mouse Y
 	gsGlobalCursorYOffset = 0;
-	SetCurrentCursorFromDatabase( CURSOR_NORMAL );
+	SetCurrentCursorFromDatabase(CURSOR_NORMAL);
 
-	while( DequeueEvent( &Event ) )
+	InputAtom Event;
+	while (DequeueEvent(&Event))
 	{
-		if( Event.usEvent == KEY_DOWN )
+		if (Event.usEvent == KEY_DOWN)
 		{
-			switch( Event.usParam )
+			switch (Event.usParam)
 			{
 				case SDLK_ESCAPE: RemoveSectorExitMenu(FALSE); return;
 				case SDLK_RETURN: RemoveSectorExitMenu(TRUE);  return;
@@ -598,75 +598,52 @@ void RenderSectorExitMenu( )
 		}
 	}
 
-	UpdateSectorExitMenu( );
+	UpdateSectorExitMenu();
 
-	RenderMercPopUpBox(gExitDialog.box, gExitDialog.sX, gExitDialog.sY,  FRAME_BUFFER);
-	InvalidateRegion( gExitDialog.sX, gExitDialog.sY, gExitDialog.usWidth, gExitDialog.usHeight );
+	INT16 const x = gExitDialog.sX;
+	INT16 const y = gExitDialog.sY;
 
-	SetFont( FONT12ARIAL );
-	SetFontBackground( FONT_MCOLOR_BLACK );
+	RenderMercPopUpBox(gExitDialog.box, x, y,  FRAME_BUFFER);
+	InvalidateRegion(x, y, gExitDialog.usWidth, gExitDialog.usHeight);
 
+	SetFont(FONT12ARIAL);
+	SetFontBackground(FONT_MCOLOR_BLACK);
 
-	if ( gExitDialog.fSingleMoveDisabled )
-	{
-		SetFontForeground( FONT_MCOLOR_DKGRAY );
-	}
-	else if ( gExitDialog.fSingleMoveHilighted )
-	{
-		SetFontForeground( FONT_MCOLOR_LTYELLOW );
-	}
-	else
-	{
-		SetFontForeground( FONT_MCOLOR_WHITE );
-	}
-	MPrint(gExitDialog.sX + 45, gExitDialog.sY + 37, TacticalStr[EXIT_GUI_SELECTED_MERC_STR]);
-
-
-	if ( gExitDialog.fAllMoveDisabled )
-	{
-		SetFontForeground( FONT_MCOLOR_DKGRAY );
-	}
-	else if ( gExitDialog.fAllMoveHilighted )
-	{
-		SetFontForeground( FONT_MCOLOR_LTYELLOW );
-	}
-	else
-	{
-		SetFontForeground( FONT_MCOLOR_WHITE );
-	}
-	MPrint(gExitDialog.sX + 45, gExitDialog.sY + 57, TacticalStr[EXIT_GUI_ALL_MERCS_IN_SQUAD_STR]);
-
-
-	if ( gExitDialog.fGotoSectorDisabled )
-	{
-		SetFontForeground( FONT_MCOLOR_DKGRAY );
-	}
-	else if ( gExitDialog.fGotoSectorHilighted )
-	{
-		SetFontForeground( FONT_MCOLOR_LTYELLOW );
-	}
-	else
-	{
-		SetFontForeground( FONT_MCOLOR_WHITE );
+	{ UINT8 const foreground =
+			gExitDialog.fSingleMoveDisabled  ? FONT_MCOLOR_DKGRAY   :
+			gExitDialog.fSingleMoveHilighted ? FONT_MCOLOR_LTYELLOW :
+			FONT_MCOLOR_WHITE;
+		SetFontForeground(foreground);
+		MPrint(x + 45, y + 37, TacticalStr[EXIT_GUI_SELECTED_MERC_STR]);
 	}
 
-	if( gExitDialog.fGotoSectorText )
-	{ //only if tactical traversal is from one town sector to another town sector (5 minute convenience warp)
-		MPrint(gExitDialog.sX + 180, gExitDialog.sY + 45, TacticalStr[EXIT_GUI_GOTO_SECTOR_STR]);
+	{ UINT8 const foreground =
+			gExitDialog.fAllMoveDisabled  ? FONT_MCOLOR_DKGRAY   :
+			gExitDialog.fAllMoveHilighted ? FONT_MCOLOR_LTYELLOW :
+			FONT_MCOLOR_WHITE;
+		SetFontForeground(foreground);
+		MPrint(x + 45, y + 57, TacticalStr[EXIT_GUI_ALL_MERCS_IN_SQUAD_STR]);
 	}
-	else
-	{ //most sectors don't allow tactical traversal.  Exiting results in entering the mapscreen.
-		MPrint(gExitDialog.sX + 180, gExitDialog.sY + 45, TacticalStr[EXIT_GUI_GOTO_MAP_STR]);
+
+	{ UINT8 const foreground =
+			gExitDialog.fGotoSectorDisabled  ? FONT_MCOLOR_DKGRAY   :
+			gExitDialog.fGotoSectorHilighted ? FONT_MCOLOR_LTYELLOW :
+			FONT_MCOLOR_WHITE;
+		SetFontForeground(foreground);
+		wchar_t const* const msg = gExitDialog.fGotoSectorText ?
+			TacticalStr[EXIT_GUI_GOTO_SECTOR_STR] : // 5 minute convenience warp for town traversal
+			TacticalStr[EXIT_GUI_GOTO_MAP_STR];     // Enter map screen
+		MPrint(x + 180, y + 45, msg);
 	}
 
 	SaveBackgroundRects();
 	RenderFastHelp();
 
-	MarkAButtonDirty( gExitDialog.uiLoadCheckButton );
-	MarkAButtonDirty( gExitDialog.uiSingleMoveButton );
-	MarkAButtonDirty( gExitDialog.uiAllMoveButton );
-	MarkAButtonDirty( gExitDialog.uiOKButton );
-	MarkAButtonDirty( gExitDialog.uiCancelButton );
+	MarkAButtonDirty(gExitDialog.uiLoadCheckButton);
+	MarkAButtonDirty(gExitDialog.uiSingleMoveButton);
+	MarkAButtonDirty(gExitDialog.uiAllMoveButton);
+	MarkAButtonDirty(gExitDialog.uiOKButton);
+	MarkAButtonDirty(gExitDialog.uiCancelButton);
 }
 
 
