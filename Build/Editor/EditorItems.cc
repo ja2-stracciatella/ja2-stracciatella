@@ -175,6 +175,18 @@ void EntryInitEditorItemsInfo()
 	}
 }
 
+
+static void DrawItemCentered(INVTYPE const& item, SGPVSurface* const vs, INT32 x, INT32 const y, INT16 const outline)
+{
+	// Calculate the center position of the graphic in a 60 pixel wide area.
+	SGPVObject  const* const vo  = GetInterfaceGraphicForItem(&item);
+	UINT               const gfx = item.ubGraphicNum;
+	ETRLEObject const* const e   = vo->SubregionProperties(gfx);
+	x += (60 - e->usWidth) / 2 - e->sOffsetX;
+	BltVideoObjectOutline(vs, vo, gfx, x, y, outline);
+}
+
+
 void InitEditorItemsInfo(UINT32 uiItemType)
 {
 	SGPRect	SaveRect, NewRect;
@@ -304,14 +316,8 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 			swprintf(pStr, lengthof(pStr), L"%hs", LockTable[i].ubEditorName);
 			DisplayWrappedString(x, y + 25, 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
-			const SGPVObject* uiVideoObjectIndex = GetInterfaceGraphicForItem(item);
-			//Calculate the center position of the graphic in a 60 pixel wide area.
-			ETRLEObject const* const ETRLEProps = uiVideoObjectIndex->SubregionProperties(item->ubGraphicNum);
-			INT16 sWidth  = ETRLEProps->usWidth;
-			INT16 sOffset = ETRLEProps->sOffsetX;
-			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
+			DrawItemCentered(*item, eInfo.uiBuffer, x, y + 2, TRANSPARENT);
 
-			BltVideoObjectOutline(eInfo.uiBuffer, uiVideoObjectIndex, item->ubGraphicNum, sStart, y + 2, TRANSPARENT);
 			//cycle through the various slot positions (0,0), (0,40), (60,0), (60,40), (120,0)...
 			if( y == 0 )
 			{
@@ -438,17 +444,8 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 				}
 				DisplayWrappedString(x, y + 25, 60, 2, SMALLCOMPFONT, FONT_WHITE, pStr, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
-				const SGPVObject* const vo = GetInterfaceGraphicForItem(item);
-				//Calculate the center position of the graphic in a 60 pixel wide area.
-				ETRLEObject const* const ETRLEProps = vo->SubregionProperties(item->ubGraphicNum);
-				INT16 sWidth  = ETRLEProps->usWidth;
-				INT16 sOffset = ETRLEProps->sOffsetX;
-				INT16 sStart = x + (60 - sWidth - sOffset*2) / 2;
+				DrawItemCentered(*item, eInfo.uiBuffer, x, y + 2, TRANSPARENT);
 
-				if( sWidth )
-				{
-					BltVideoObjectOutline(eInfo.uiBuffer, vo, item->ubGraphicNum, sStart, y + 2, TRANSPARENT);
-				}
 				//cycle through the various slot positions (0,0), (0,40), (60,0), (60,40), (120,0)...
 				if( y == 0 )
 				{
@@ -516,18 +513,10 @@ void RenderEditorItemsInfo()
 	{
 		if( eInfo.pusItemIndex )
 		{
-			INT16 x = (eInfo.sHilitedItemIndex / 2 - eInfo.sScrollIndex) * 60 + 110;
-			INT16 y = 360 + (eInfo.sHilitedItemIndex % 2) * 40;
-			const INVTYPE* item = &Item[eInfo.pusItemIndex[eInfo.sHilitedItemIndex]];
-			const SGPVObject* const vo = GetInterfaceGraphicForItem(item);
-			ETRLEObject const* const ETRLEProps = vo->SubregionProperties(item->ubGraphicNum);
-			INT16 sWidth  = ETRLEProps->usWidth;
-			INT16 sOffset = ETRLEProps->sOffsetX;
-			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
-			if( sWidth )
-			{
-				BltVideoObjectOutline(FRAME_BUFFER, vo, item->ubGraphicNum, sStart, y + 2, Get16BPPColor(FROMRGB(250, 250, 0)));
-			}
+			INT16   const  x    = (eInfo.sHilitedItemIndex / 2 - eInfo.sScrollIndex) * 60 + 110;
+			INT16   const  y    = 360 + (eInfo.sHilitedItemIndex % 2) * 40;
+			INVTYPE const& item = Item[eInfo.pusItemIndex[eInfo.sHilitedItemIndex]];
+			DrawItemCentered(item, FRAME_BUFFER, x, y + 2, Get16BPPColor(FROMRGB(250, 250, 0)));
 		}
 	}
 	//draw the selected item
@@ -535,18 +524,10 @@ void RenderEditorItemsInfo()
 	{
 		if( eInfo.pusItemIndex )
 		{
-			INT16 x = (eInfo.sSelItemIndex / 2 - eInfo.sScrollIndex) * 60 + 110;
-			INT16 y = 360 + (eInfo.sSelItemIndex % 2) * 40;
-			const INVTYPE* item = &Item[eInfo.pusItemIndex[eInfo.sSelItemIndex]];
-			const SGPVObject* const vo = GetInterfaceGraphicForItem(item);
-			ETRLEObject const* const ETRLEProps = vo->SubregionProperties(item->ubGraphicNum);
-			INT16 sWidth  = ETRLEProps->usWidth;
-			INT16 sOffset = ETRLEProps->sOffsetX;
-			INT16 sStart = x + (60 - sWidth - sOffset * 2) / 2;
-			if( sWidth )
-			{
-				BltVideoObjectOutline(FRAME_BUFFER, vo, item->ubGraphicNum, sStart, y + 2, Get16BPPColor(FROMRGB(250, 0, 0)));
-			}
+			INT16   const  x    = (eInfo.sSelItemIndex / 2 - eInfo.sScrollIndex) * 60 + 110;
+			INT16   const  y    = 360 + (eInfo.sSelItemIndex % 2) * 40;
+			INVTYPE const& item = Item[eInfo.pusItemIndex[eInfo.sSelItemIndex]];
+			DrawItemCentered(item, FRAME_BUFFER, x, y + 2, Get16BPPColor(FROMRGB(250, 0, 0)));
 		}
 	}
 	//draw the numbers of each visible item that currently resides in the world.
