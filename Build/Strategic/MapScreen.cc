@@ -1548,69 +1548,45 @@ static void EnableDisableTeamListRegionsAndHelpText(void);
 
 static void DisplayCharacterList(void)
 {
-	INT16 sCount=0;
-	UINT8 ubForegroundColor = 0;
-
 	if (fShowAssignmentMenu && !fTeamPanelDirty)
 	{
 		SetFontDestBuffer(FRAME_BUFFER);
 		return;
 	}
 
-
-	// set dest buffer
 	SetFontDestBuffer(guiSAVEBUFFER);
-	SetFont( MAP_SCREEN_FONT );
+	SetFont(MAP_SCREEN_FONT);
 	SetFontBackground(FONT_BLACK);
 
-
-	for (sCount = 0; sCount < MAX_CHARACTER_COUNT; sCount++)
+	for (INT16 i = 0; i != MAX_CHARACTER_COUNT; ++i)
 	{
-		const SOLDIERTYPE* const s = gCharactersList[sCount].merc;
-		if (s == NULL) continue;
+		SOLDIERTYPE const* const s = gCharactersList[i].merc;
+		if (!s) continue;
 
-		if( sCount == ( INT16 ) giHighLine )
-		{
-			ubForegroundColor = FONT_WHITE;
-		}
-		// check to see if character is still alive
-		else if (s->bLife == 0)
-		{
-			ubForegroundColor = FONT_METALGRAY;
-		}
-		else if (CharacterIsGettingPathPlotted(sCount))
-		{
-			ubForegroundColor = FONT_LTBLUE;
-		}
-		// in current sector?
-		else if (s->sSectorX == sSelMapX &&
-				s->sSectorY == sSelMapY &&
-				s->bSectorZ == iCurrentMapSectorZ)
-		{
-			// mobile ?
-			if (s->bAssignment < ON_DUTY || s->bAssignment == VEHICLE)
-				ubForegroundColor = FONT_YELLOW;
-			else
-				ubForegroundColor = FONT_MAP_DKYELLOW;
-		}
-		else
-		{
-			// not in current sector
-			ubForegroundColor = 5;
-		}
-
-		SetFontForeground( ubForegroundColor );
-
-		DrawCharInfo(sCount, ubForegroundColor);
+		UINT8 const foreground =
+			i == (INT16)giHighLine            ? FONT_WHITE     :
+			s->bLife == 0                     ? FONT_METALGRAY :
+			CharacterIsGettingPathPlotted(i)  ? FONT_LTBLUE    :
+			/* Not in current sector? */
+			s->sSectorX != sSelMapX ||
+			s->sSectorY != sSelMapY ||
+			s->bSectorZ != iCurrentMapSectorZ ? 5              :
+			/* Mobile? */
+			s->bAssignment < ON_DUTY ||
+			s->bAssignment == VEHICLE         ? FONT_YELLOW    :
+			FONT_MAP_DKYELLOW;
+		SetFontForeground(foreground);
+		DrawCharInfo(i, foreground);
 	}
 
-	HandleDisplayOfSelectedMercArrows( );
+	HandleDisplayOfSelectedMercArrows();
 	SetFontDestBuffer(FRAME_BUFFER);
 
-	EnableDisableTeamListRegionsAndHelpText( );
+	EnableDisableTeamListRegionsAndHelpText();
 
-	// mark all pop ups as dirty, so that any open assigment menus get reblitted over top of the team list
-	MarkAllBoxesAsAltered( );
+	/* Mark all pop ups as dirty, so that any open assigment menus get reblitted
+	 * over top of the team list */
+	MarkAllBoxesAsAltered();
 }
 
 
