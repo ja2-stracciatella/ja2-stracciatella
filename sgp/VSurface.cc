@@ -356,7 +356,7 @@ void DeleteVideoSurface(SGPVSurface* const vs)
 
 
 // Will drop down into user-defined blitter if 8->16 BPP blitting is being done
-void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const INT32 iDestX, const INT32 iDestY, const SGPRect* const SRect)
+void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const iDestX, INT32 const iDestY, SGPBox const* const src_box)
 {
 	Assert(dst);
 	Assert(src);
@@ -367,12 +367,12 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const INT32
 	{
 		SDL_Rect* src_rect = 0;
 		SDL_Rect  r;
-		if (SRect)
+		if (src_box)
 		{
-			r.x = SRect->iLeft;
-			r.y = SRect->iTop;
-			r.w = SRect->iRight  - SRect->iLeft;
-			r.h = SRect->iBottom - SRect->iTop;
+			r.x = src_box->x;
+			r.y = src_box->y;
+			r.w = src_box->w;
+			r.h = src_box->h;
 			src_rect = &r;
 		}
 
@@ -386,9 +386,15 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const INT32
 	}
 	else if (src_bpp < dst_bpp)
 	{
-		SGPRect const* src_rect = SRect;
-		SGPRect        r;
-		if (!src_rect)
+		SGPRect src_rect;
+		if (src_box)
+		{
+			src_rect.iLeft   = src_box->x;
+			src_rect.iTop    = src_box->y;
+			src_rect.iRight  = src_box->x + src_box->w;
+			src_rect.iBottom = src_box->y + src_box->h;
+		}
+		else
 		{
 			// Check Sizes, SRC size MUST be <= DEST size
 			if (dst->Height() < src->Height())
@@ -402,11 +408,10 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const INT32
 				return;
 			}
 
-			r.iLeft   = 0;
-			r.iTop    = 0;
-			r.iRight  = src->Width();
-			r.iBottom = src->Height();
-			src_rect = &r;
+			src_rect.iLeft   = 0;
+			src_rect.iTop    = 0;
+			src_rect.iRight  = src->Width();
+			src_rect.iBottom = src->Height();
 		}
 
 		SGPVSurface::Lock lsrc(src);
@@ -415,7 +420,7 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const INT32
 		UINT32  const spitch = lsrc.Pitch();
 		UINT16* const d_buf  = ldst.Buffer<UINT16>();
 		UINT32  const dpitch = ldst.Pitch();
-		Blt8BPPDataSubTo16BPPBuffer(d_buf, dpitch, src, s_buf, spitch, iDestX, iDestY, src_rect);
+		Blt8BPPDataSubTo16BPPBuffer(d_buf, dpitch, src, s_buf, spitch, iDestX, iDestY, &src_rect);
 	}
 	else
 	{

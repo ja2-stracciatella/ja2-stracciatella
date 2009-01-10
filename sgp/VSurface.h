@@ -48,7 +48,7 @@ class SGPVSurface
 		friend void ColorFillVideoSurfaceArea(SGPVSurface*, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, UINT16 Color16BPP);
 
 		// Blits a video Surface to another video Surface
-		friend void BltVideoSurface(SGPVSurface* dst, SGPVSurface* src, INT32 iDestX, INT32 iDestY, const SGPRect* SrcRect);
+		friend void BltVideoSurface(SGPVSurface* dst, SGPVSurface* src, INT32 iDestX, INT32 iDestY, SGPBox const* src_rect);
 
 		/* This function will stretch the source image to the size of the dest rect.
 		 * If the 2 images are not 16 Bpp, it returns false. */

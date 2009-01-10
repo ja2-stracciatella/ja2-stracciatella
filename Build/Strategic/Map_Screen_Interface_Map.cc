@@ -614,15 +614,15 @@ void DrawMap(void)
 			if (iZoomY < NORTH_ZOOM_BOUND + 1) iZoomY = NORTH_ZOOM_BOUND;
 			if (iZoomY > SOUTH_ZOOM_BOUND)     iZoomY = SOUTH_ZOOM_BOUND;
 
-			SGPRect clip;
-			clip.iLeft   = iZoomX - 2;
-			clip.iTop    = iZoomY - 3;
-			clip.iRight  = clip.iLeft + MAP_VIEW_WIDTH  + 2;
-			clip.iBottom = clip.iTop  + MAP_VIEW_HEIGHT - 1;
-
-			if (clip.iBottom > guiBIGMAP->Height()) clip.iBottom = guiBIGMAP->Height();
-			if (clip.iRight  > guiBIGMAP->Width())  clip.iRight  = guiBIGMAP->Width();
-
+			INT16 const  x     = iZoomX - 2;
+			INT16 const  y     = iZoomY - 3;
+			INT16        w     = MAP_VIEW_WIDTH  + 2;
+			INT16        h     = MAP_VIEW_HEIGHT - 1;
+			UINT16 const src_w = guiBIGMAP->Width();
+			UINT16 const src_h = guiBIGMAP->Height();
+			if (w > src_w - x) w = src_w - x;
+			if (h > src_h - x) h = src_h - y;
+			SGPBox const clip = { x, y, w, h };
 			BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, MAP_VIEW_START_X + MAP_GRID_X, MAP_VIEW_START_Y + MAP_GRID_Y - 2, &clip);
 		}
 		else
@@ -1141,10 +1141,11 @@ static void ShadeMapElemZoomIn(const INT16 sMapX, const INT16 sMapY, INT32 iColo
 			default: return;
 		}
 
+		SGPBox       const r       = { clip.iLeft, clip.iTop, clip.iRight - clip.iLeft, clip.iBottom - clip.iTop };
 		SGPVSurface* const map     = guiBIGMAP;
 		UINT16*      const org_pal = map->p16BPPPalette;
 		map->p16BPPPalette = pal;
-		BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
+		BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &r);
 		map->p16BPPPalette = org_pal;
 	}
 }

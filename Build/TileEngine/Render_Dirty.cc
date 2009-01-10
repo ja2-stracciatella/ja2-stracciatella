@@ -716,7 +716,7 @@ void BlitMFont( VIDEO_OVERLAY *pBlitter )
 
 void BlitBufferToBuffer(SGPVSurface* const src, SGPVSurface* const dst, const UINT16 usSrcX, const UINT16 usSrcY, const UINT16 usWidth, const UINT16 usHeight)
 {
-	const SGPRect r = { usSrcX, usSrcY, usSrcX + usWidth, usSrcY + usHeight };
+	SGPBox const r = { usSrcX, usSrcY, usWidth, usHeight };
 	BltVideoSurface(dst, src, usSrcX, usSrcY, &r);
 }
 

@@ -2800,7 +2800,7 @@ static void RenderSoldierCellHealth(SOLDIERCELL* pCell)
 	//Restore the background before drawing text.
 	xp = pCell->xp +  2;
 	yp = pCell->yp + 32;
-	const SGPRect r = { xp - gpAR->Rect.iLeft, yp - gpAR->Rect.iTop, xp - gpAR->Rect.iLeft + 46, yp - gpAR->Rect.iTop + 10 };
+	SGPBox const r = { xp - gpAR->Rect.iLeft, yp - gpAR->Rect.iTop, 46, 10 };
 	BltVideoSurface(FRAME_BUFFER, gpAR->iInterfaceBuffer, xp, yp, &r);
 
 	if( pCell->pSoldier->bLife )

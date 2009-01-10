@@ -1962,7 +1962,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 
 		//RenderAutoFace( gpCurrentTalkingFace->iID );
 
-		const SGPRect r = { 0, 0, gpCurrentTalkingFace->usFaceWidth, gpCurrentTalkingFace->usFaceHeight };
+		SGPBox const r = { 0, 0, gpCurrentTalkingFace->usFaceWidth, gpCurrentTalkingFace->usFaceHeight };
 		BltVideoSurface(pBlitter->uiDestBuff, gpCurrentTalkingFace->uiAutoDisplayBuffer, pBlitter->sX + 14, pBlitter->sY + 6, &r);
 
 		InvalidateRegion( pBlitter->sX, pBlitter->sY, pBlitter->sX + 99, pBlitter->sY + 98 );

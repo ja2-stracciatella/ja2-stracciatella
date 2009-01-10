@@ -289,7 +289,7 @@ void InitEditorItemsInfo(UINT32 uiItemType)
 	//copy a blank chunk of the editor interface to the new buffer.
 	for (i = 0; i < w; i += 60)
 	{
-		const SGPRect r = { 100, 360, 100 + 60, 360 + 80 };
+		SGPBox const r = { 100, 360, 60, 80 };
 		BltVideoSurface(eInfo.uiBuffer, FRAME_BUFFER, i, 0, &r);
 	}
 
@@ -496,7 +496,7 @@ void RenderEditorItemsInfo()
 
 	INT16 const scroll_idx = eInfo.sScrollIndex;
 
-	SGPRect const r = { 60 * scroll_idx, 0, 60 * scroll_idx + 360, 80 };
+	SGPBox const r = { 60 * scroll_idx, 0, 360, 80 };
 	BltVideoSurface(FRAME_BUFFER, eInfo.uiBuffer, 110, 360, &r);
 
 	/* Calculate the min and max index that is currently shown.  This determines

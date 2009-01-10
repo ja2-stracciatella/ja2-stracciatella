@@ -201,11 +201,7 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground const u
 	}
 	else
 	{
-		SGPRect DestRect;
-		DestRect.iLeft   = 0;
-		DestRect.iTop    = 0;
-		DestRect.iRight  = usWidth;
-		DestRect.iBottom = usHeight;
+		SGPBox const DestRect = { 0, 0, usWidth, usHeight };
 		BltVideoSurface(vs, box->uiMercTextPopUpBackground, 0, 0, &DestRect);
 	}
 

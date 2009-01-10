@@ -513,7 +513,7 @@ static void DrawBox(const PopUpBox* const box)
 	SGPVSurface* const dst = box->uiBuffer;
 
 	// blit in texture first, then borders
-	const SGPRect clip = { 0, 0, w, h };
+	SGPBox const clip = { 0, 0, w, h };
 	BltVideoSurface(dst, box->iBackGroundSurface, x, y, &clip);
 
 	const SGPVObject* const border = box->iBorderObjectIndex;

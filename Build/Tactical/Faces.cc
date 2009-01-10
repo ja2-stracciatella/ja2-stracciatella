@@ -1343,7 +1343,7 @@ void HandleTalkingAutoFaces( )
 
 static void FaceRestoreSavedBackgroundRect(FACETYPE const* const pFace, INT16 const sDestLeft, INT16 const sDestTop, INT16 const sSrcLeft, INT16 const sSrcTop, INT16 const sWidth, INT16 const sHeight)
 {
-	const SGPRect r = { sSrcLeft, sSrcTop, sSrcLeft + sWidth, sSrcTop + sHeight };
+	SGPBox const r = { sSrcLeft, sSrcTop, sWidth, sHeight };
 	BltVideoSurface(pFace->uiAutoDisplayBuffer, pFace->uiAutoRestoreBuffer, sDestLeft, sDestTop, &r);
 
 	// Add rect to frame buffer queue
