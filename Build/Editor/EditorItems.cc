@@ -486,67 +486,66 @@ static UINT16 CountNumberOfEditorPlacementsInWorld(UINT16 usEInfoIndex, UINT16* 
 
 void RenderEditorItemsInfo()
 {
-	INT16 i;
-	INT16 minIndex, maxIndex;
-	UINT16 usNumItems;
-	UINT16 usQuantity;
+	if (!eInfo.fActive) return;
 
-	if(!eInfo.fActive)
-	{
-		return;
-	}
-	if( gusMouseXPos < 110 || gusMouseXPos > 480 || gusMouseYPos < 360 || gusMouseYPos > 440 )
-	{ //Mouse has moved out of the items display region -- so nothing can be highlighted.
+	if (gusMouseXPos < 110 || 480 < gusMouseXPos ||
+			gusMouseYPos < 360 || 440 < gusMouseYPos)
+	{ // Mouse has moved out of the items display region -- so nothing can be highlighted.
 		eInfo.sHilitedItemIndex = -1;
 	}
 
-	const SGPRect r = { 60 * eInfo.sScrollIndex, 0, 60 * eInfo.sScrollIndex + 360, 80 };
+	INT16 const scroll_idx = eInfo.sScrollIndex;
+
+	SGPRect const r = { 60 * scroll_idx, 0, 60 * scroll_idx + 360, 80 };
 	BltVideoSurface(FRAME_BUFFER, eInfo.uiBuffer, 110, 360, &r);
 
-	//calculate the min and max index that is currently shown.  This determines
-	//if the highlighted and/or selected items are drawn with the outlines.
-	minIndex = eInfo.sScrollIndex * 2;
-	maxIndex = minIndex + 11;
+	/* Calculate the min and max index that is currently shown.  This determines
+	 * if the highlighted and/or selected items are drawn with the outlines. */
+	INT16 const min_idx = scroll_idx * 2;
+	INT16 const end_idx = MIN(min_idx + 12, eInfo.sNumItems);
 
-	//draw the hilighted item if applicable.
-	if( eInfo.sHilitedItemIndex >= minIndex && eInfo.sHilitedItemIndex <= maxIndex )
+	// Draw the hilighted and selected items if applicable.
+	if (eInfo.pusItemIndex)
 	{
-		if( eInfo.pusItemIndex )
+		INT16 const highlighted = eInfo.sHilitedItemIndex;
+		if (min_idx <= highlighted && highlighted < end_idx)
 		{
-			INT16   const  x    = (eInfo.sHilitedItemIndex / 2 - eInfo.sScrollIndex) * 60 + 110;
-			INT16   const  y    = 360 + (eInfo.sHilitedItemIndex % 2) * 40;
-			INVTYPE const& item = Item[eInfo.pusItemIndex[eInfo.sHilitedItemIndex]];
+			INT16   const  x    = (highlighted / 2 - scroll_idx) * 60 + 110;
+			INT16   const  y    = 360 + (highlighted % 2) * 40;
+			INVTYPE const& item = Item[eInfo.pusItemIndex[highlighted]];
 			DrawItemCentered(item, FRAME_BUFFER, x, y + 2, Get16BPPColor(FROMRGB(250, 250, 0)));
 		}
-	}
-	//draw the selected item
-	if( eInfo.sSelItemIndex >= minIndex && eInfo.sSelItemIndex <= maxIndex )
-	{
-		if( eInfo.pusItemIndex )
+		INT16 const selected = eInfo.sSelItemIndex;
+		if (min_idx <= selected && selected < end_idx)
 		{
-			INT16   const  x    = (eInfo.sSelItemIndex / 2 - eInfo.sScrollIndex) * 60 + 110;
-			INT16   const  y    = 360 + (eInfo.sSelItemIndex % 2) * 40;
-			INVTYPE const& item = Item[eInfo.pusItemIndex[eInfo.sSelItemIndex]];
+			INT16   const  x    = (selected / 2 - scroll_idx) * 60 + 110;
+			INT16   const  y    = 360 + selected % 2 * 40;
+			INVTYPE const& item = Item[eInfo.pusItemIndex[selected]];
 			DrawItemCentered(item, FRAME_BUFFER, x, y + 2, Get16BPPColor(FROMRGB(250, 0, 0)));
 		}
 	}
-	//draw the numbers of each visible item that currently resides in the world.
-	maxIndex = MIN( maxIndex, eInfo.sNumItems-1 );
-	for( i = minIndex; i <= maxIndex; i++ )
+
+	// Draw the numbers of each visible item that currently resides in the world.
+	for (INT16 i = min_idx; i < end_idx; ++i)
 	{
-		usNumItems = CountNumberOfEditorPlacementsInWorld( i, &usQuantity );
-		if( usNumItems )
+		UINT16       quantity;
+		UINT16 const n_items = CountNumberOfEditorPlacementsInWorld(i, &quantity);
+		if (n_items == 0) continue;
+
+		INT16 const x = (i / 2 - scroll_idx) * 60 + 110;
+		INT16 const y = 360 + (i % 2) * 40;
+		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
+		if (n_items == quantity)
 		{
-			INT16 x = (i / 2 - eInfo.sScrollIndex) * 60 + 110;
-			INT16 y = 360 + (i % 2) * 40;
-			SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
-			if( usNumItems == usQuantity )
-				mprintf( x + 12, y + 4, L"%d", usNumItems );
-			else
-				mprintf( x + 12, y + 4, L"%d(%d)", usNumItems, usQuantity );
+			mprintf(x + 12, y + 4, L"%d", n_items);
+		}
+		else
+		{
+			mprintf(x + 12, y + 4, L"%d(%d)", n_items, quantity);
 		}
 	}
 }
+
 
 void ClearEditorItemsInfo()
 {
