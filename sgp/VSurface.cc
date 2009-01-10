@@ -358,65 +358,64 @@ void DeleteVideoSurface(SGPVSurface* const vs)
 // Will drop down into user-defined blitter if 8->16 BPP blitting is being done
 void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, const INT32 iDestX, const INT32 iDestY, const SGPRect* const SRect)
 {
-	Assert(dst != NULL);
-	Assert(src != NULL);
-
-	// Check for source coordinate options - specific rect or full src dimensions
-	SDL_Rect src_rect;
-	if (SRect != NULL)
-	{
-		src_rect.x = SRect->iLeft;
-		src_rect.y = SRect->iTop;
-		src_rect.w = SRect->iRight  - SRect->iLeft;
-		src_rect.h = SRect->iBottom - SRect->iTop;
-	}
-	else
-	{
-		// Here, use default, which is entire Video Surface
-		// Check Sizes, SRC size MUST be <= DEST size
-		if (dst->Height() < src->Height())
-		{
-			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
-			return;
-		}
-		if (dst->Width() < src->Width())
-		{
-			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
-			return;
-		}
-
-		src_rect.x = 0;
-		src_rect.y = 0;
-		src_rect.w = src->Width();
-		src_rect.h = src->Height();
-	}
+	Assert(dst);
+	Assert(src);
 
 	const UINT8 src_bpp = src->BPP();
 	const UINT8 dst_bpp = dst->BPP();
 	if (src_bpp == dst_bpp)
 	{
+		SDL_Rect* src_rect = 0;
+		SDL_Rect  r;
+		if (SRect)
+		{
+			r.x = SRect->iLeft;
+			r.y = SRect->iTop;
+			r.w = SRect->iRight  - SRect->iLeft;
+			r.h = SRect->iBottom - SRect->iTop;
+			src_rect = &r;
+		}
+
 		SDL_Rect dstrect;
 		dstrect.x = iDestX;
 		dstrect.y = iDestY;
-		SDL_BlitSurface(src->surface_, &src_rect, dst->surface_, &dstrect);
+		SDL_BlitSurface(src->surface_, src_rect, dst->surface_, &dstrect);
 #if defined __GNUC__ && defined i386
 		__asm__ __volatile__("cld"); // XXX HACK000D
 #endif
 	}
 	else if (src_bpp < dst_bpp)
 	{
-		SGPRect r;
-		r.iLeft   = src_rect.x;
-		r.iTop    = src_rect.y;
-		r.iRight  = src_rect.x + src_rect.w;
-		r.iBottom = src_rect.y + src_rect.h;
+		SGPRect const* src_rect = SRect;
+		SGPRect        r;
+		if (!src_rect)
+		{
+			// Check Sizes, SRC size MUST be <= DEST size
+			if (dst->Height() < src->Height())
+			{
+				DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
+				return;
+			}
+			if (dst->Width() < src->Width())
+			{
+				DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Incompatible height size given in Video Surface blit");
+				return;
+			}
+
+			r.iLeft   = 0;
+			r.iTop    = 0;
+			r.iRight  = src->Width();
+			r.iBottom = src->Height();
+			src_rect = &r;
+		}
+
 		SGPVSurface::Lock lsrc(src);
 		SGPVSurface::Lock ldst(dst);
 		UINT8*  const s_buf  = lsrc.Buffer<UINT8>();
 		UINT32  const spitch = lsrc.Pitch();
 		UINT16* const d_buf  = ldst.Buffer<UINT16>();
 		UINT32  const dpitch = ldst.Pitch();
-		Blt8BPPDataSubTo16BPPBuffer(d_buf, dpitch, src, s_buf, spitch, iDestX, iDestY, &r);
+		Blt8BPPDataSubTo16BPPBuffer(d_buf, dpitch, src, s_buf, spitch, iDestX, iDestY, src_rect);
 	}
 	else
 	{
