@@ -5095,20 +5095,17 @@ BlitDone:
 	Blits a subrect from a flat 8 bit surface to a 16-bit buffer.
 
 **********************************************************************************************/
-BOOLEAN Blt8BPPDataSubTo16BPPBuffer(UINT16* const pBuffer, UINT32 const uiDestPitchBYTES, SGPVSurface* const hSrcVSurface, UINT8* const pSrcBuffer, UINT32 const uiSrcPitch, INT32 const iX, INT32 const iY, SGPRect const* pRect)
+BOOLEAN Blt8BPPDataSubTo16BPPBuffer(UINT16* const pBuffer, UINT32 const uiDestPitchBYTES, SGPVSurface* const hSrcVSurface, UINT8* const pSrcBuffer, UINT32 const uiSrcPitch, INT32 const iX, INT32 const iY, SGPBox const* const rect)
 {
 	UINT16 *p16BPPPalette;
 	UINT8	 *SrcPtr, *DestPtr;
-	UINT32 LineSkip, LeftSkip, RightSkip, TopSkip, BlitLength, SrcSkip, BlitHeight;
+	UINT32 LineSkip, SrcSkip;
 	INT32	 iTempX, iTempY;
 
 	// Assertions
 	Assert( hSrcVSurface != NULL );
 	Assert( pSrcBuffer != NULL );
 	Assert( pBuffer != NULL );
-
-	// Get Offsets from Index into structure
-	UINT32 const usWidth = hSrcVSurface->Width();
 
 	// Add to start position of dest buffer
 	iTempX = iX;
@@ -5118,11 +5115,10 @@ BOOLEAN Blt8BPPDataSubTo16BPPBuffer(UINT16* const pBuffer, UINT32 const uiDestPi
 	CHECKF( iTempX >= 0 );
 	CHECKF( iTempY >= 0 );
 
-	LeftSkip=pRect->iLeft;
-	RightSkip=usWidth-pRect->iRight;
-	TopSkip=pRect->iTop*uiSrcPitch;
-	BlitLength=pRect->iRight-pRect->iLeft;
-	BlitHeight=pRect->iBottom-pRect->iTop;
+	UINT32 const LeftSkip   = rect->x;
+	UINT32 const TopSkip    = rect->y * uiSrcPitch;
+	UINT32 const BlitLength = rect->w;
+	UINT32       BlitHeight = rect->h;
 	SrcSkip=uiSrcPitch-BlitLength;
 
 	SrcPtr= (UINT8 *)(pSrcBuffer+TopSkip+LeftSkip);

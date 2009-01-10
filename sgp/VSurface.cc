@@ -386,15 +386,9 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const
 	}
 	else if (src_bpp < dst_bpp)
 	{
-		SGPRect src_rect;
-		if (src_box)
-		{
-			src_rect.iLeft   = src_box->x;
-			src_rect.iTop    = src_box->y;
-			src_rect.iRight  = src_box->x + src_box->w;
-			src_rect.iBottom = src_box->y + src_box->h;
-		}
-		else
+		SGPBox const* src_rect = src_box;
+		SGPBox        r;
+		if (!src_rect)
 		{
 			// Check Sizes, SRC size MUST be <= DEST size
 			if (dst->Height() < src->Height())
@@ -408,10 +402,11 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const
 				return;
 			}
 
-			src_rect.iLeft   = 0;
-			src_rect.iTop    = 0;
-			src_rect.iRight  = src->Width();
-			src_rect.iBottom = src->Height();
+			r.x = 0;
+			r.y = 0;
+			r.w = src->Width();
+			r.h = src->Height();
+			src_rect = &r;
 		}
 
 		SGPVSurface::Lock lsrc(src);
@@ -420,7 +415,7 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const
 		UINT32  const spitch = lsrc.Pitch();
 		UINT16* const d_buf  = ldst.Buffer<UINT16>();
 		UINT32  const dpitch = ldst.Pitch();
-		Blt8BPPDataSubTo16BPPBuffer(d_buf, dpitch, src, s_buf, spitch, iDestX, iDestY, &src_rect);
+		Blt8BPPDataSubTo16BPPBuffer(d_buf, dpitch, src, s_buf, spitch, iDestX, iDestY, src_rect);
 	}
 	else
 	{
