@@ -2676,6 +2676,10 @@ static void StartBombMessageBox(SOLDIERTYPE* const s, INT16 const gridno)
 	{
 		text = TacticalStr[CHOOSE_REMOTE_FREQUENCY_STR];
 	}
+	else
+	{
+		return;
+	}
 	DoMessageBox(MSG_BOX_BASIC_SMALL_BUTTONS, text, GAME_SCREEN, MSG_BOX_FLAG_FOUR_NUMBERED_BUTTONS, BombMessageBoxCallBack, NULL);
 }
 
