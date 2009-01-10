@@ -129,13 +129,12 @@ typedef struct AUTORESOLVE_STRUCT
 	UINT32 uiPrevTime, uiCurrTime;
 	UINT32 uiPreRandomIndex;
 
-	SGPRect Rect;
+	SGPBox rect;
 
 	UINT16 usPlayerAttack;
 	UINT16 usPlayerDefence;
 	UINT16 usEnemyAttack;
 	UINT16 usEnemyDefence;
-	INT16 sWidth, sHeight;
 	INT16 sCenterStartX;
 
 	UINT8 ubEnemyLeadership;
@@ -421,20 +420,19 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 
 	gpAR->fShowInterface = TRUE;
 
-	INT32  const x = gpAR->Rect.iLeft;
-	INT32  const y = gpAR->Rect.iTop;
-	INT32  const w = gpAR->Rect.iRight  - x + 1;
-	INT32  const h = gpAR->Rect.iBottom - y + 1;
-	SGPBox const SrcRect = { x, y, w, h };
-
 	uiTimeRange = 1000;
 	iPercentage = 0;
 	uiStartTime = GetClock();
 
+	INT32 const x = gpAR->rect.x;
+	INT32 const y = gpAR->rect.y;
+	INT32 const w = gpAR->rect.w;
+	INT32 const h = gpAR->rect.h;
+
 	INT16 const sStartLeft = 59;
 	INT16 const sStartTop  = 69;
-	INT16 const sEndLeft   = x + gpAR->sWidth  / 2;
-	INT16 const sEndTop    = y + gpAR->sHeight / 2;
+	INT16 const sEndLeft   = x + w / 2;
+	INT16 const sEndTop    = y + h / 2;
 
 	//save the prebattle/mapscreen interface background
 	BltVideoSurface(guiEXTRABUFFER, FRAME_BUFFER, 0, 0, NULL);
@@ -475,7 +473,7 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 			MAX(1, h * iPercentage / 100)
 		};
 
-		BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &SrcRect, &DstRect);
+		BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &gpAR->rect, &DstRect);
 		InvalidateScreen();
 		RefreshScreen();
 
@@ -745,13 +743,13 @@ static void CalculateSoldierCells(BOOLEAN fReset)
 	}
 	gpAR->uiTimeSlice = gpAR->uiTimeSlice * gpAR->ubTimeModifierPercentage / 100;
 
-	iTop = (SCREEN_HEIGHT - gpAR->sHeight) / 2;
+	iTop = (SCREEN_HEIGHT - gpAR->rect.h) / 2;
 	if( iTop > 120 )
 		iTop -= 40;
 
 	if( gpAR->ubMercs )
 	{
-		iStartY = iTop + (gpAR->sHeight - ((gpAR->ubMercRows+gpAR->ubCivRows)*47+7))/2 + 6;
+		iStartY = iTop + (gpAR->rect.h - ((gpAR->ubMercRows + gpAR->ubCivRows) * 47 + 7)) / 2 + 6;
 		y = gpAR->ubMercRows;
 		x = gpAR->ubMercCols;
 		i = gpAR->ubMercs;
@@ -788,7 +786,7 @@ static void CalculateSoldierCells(BOOLEAN fReset)
 	}
 	if( gpAR->ubCivs )
 	{
-		iStartY = iTop + (gpAR->sHeight - ((gpAR->ubMercRows+gpAR->ubCivRows)*47+7))/2 + gpAR->ubMercRows*47 + 5;
+		iStartY = iTop + (gpAR->rect.h - ((gpAR->ubMercRows + gpAR->ubCivRows) * 47 + 7)) / 2 + gpAR->ubMercRows * 47 + 5;
 		y = gpAR->ubCivRows;
 		x = gpAR->ubCivCols;
 		i = gpAR->ubCivs;
@@ -806,7 +804,7 @@ static void CalculateSoldierCells(BOOLEAN fReset)
 	}
 	if( gpAR->ubEnemies )
 	{
-		iStartY = iTop + (gpAR->sHeight - (gpAR->ubEnemyRows*47+7))/2 + 5;
+		iStartY = iTop + (gpAR->rect.h - (gpAR->ubEnemyRows * 47 + 7)) / 2 + 5;
 		y = gpAR->ubEnemyRows;
 		x = gpAR->ubEnemyCols;
 		i = gpAR->ubEnemies;
@@ -959,18 +957,16 @@ static void BuildInterfaceBuffer(void)
 	INT32						x,y;
 
 	//Setup the blitting clip regions, so we don't draw outside of the region (for excess panelling)
-	gpAR->Rect.iLeft   = (SCREEN_WIDTH  - gpAR->sWidth)  / 2;
-	gpAR->Rect.iTop    = (SCREEN_HEIGHT - gpAR->sHeight) / 2;
-	if (gpAR->Rect.iTop > 120) gpAR->Rect.iTop -= 40;
-	gpAR->Rect.iRight  = gpAR->Rect.iLeft + gpAR->sWidth;
-	gpAR->Rect.iBottom = gpAR->Rect.iTop  + gpAR->sHeight;
+	gpAR->rect.x = (SCREEN_WIDTH  - gpAR->rect.w) / 2;
+	gpAR->rect.y = (SCREEN_HEIGHT - gpAR->rect.h) / 2;
+	if (gpAR->rect.y > 120) gpAR->rect.y -= 40;
 
 	DestRect.iLeft			= 0;
 	DestRect.iTop				= 0;
-	DestRect.iRight			= gpAR->sWidth;
-	DestRect.iBottom		= gpAR->sHeight;
+	DestRect.iRight			= gpAR->rect.w;
+	DestRect.iBottom		= gpAR->rect.h;
 
-	gpAR->iInterfaceBuffer = AddVideoSurface(gpAR->sWidth, gpAR->sHeight, PIXEL_DEPTH);
+	gpAR->iInterfaceBuffer = AddVideoSurface(gpAR->rect.w, gpAR->rect.h, PIXEL_DEPTH);
 
 	GetClippingRect( &ClipRect );
 	SetClippingRect( &DestRect );
@@ -1006,16 +1002,16 @@ static void BuildInterfaceBuffer(void)
 	BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, BR_BORDER, DestRect.iRight-10, DestRect.iBottom-9);
 
 	//Blit the center pieces
-	x = gpAR->sCenterStartX - gpAR->Rect.iLeft;
+	x = gpAR->sCenterStartX - gpAR->rect.x;
 	y = 0;
 	//Top
 	BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, TOP_MIDDLE, x, y);
 	//Middle
-	for( y = 40; y < gpAR->sHeight - 40; y += 40 )
+	for (y = 40; y < gpAR->rect.h - 40; y += 40)
 	{
 		BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, AUTO_MIDDLE, x, y);
 	}
-	y = gpAR->sHeight - 40;
+	y = gpAR->rect.h - 40;
 	BltVideoObject( gpAR->iInterfaceBuffer, gpAR->iPanelImages, BOT_MIDDLE, x, y);
 
 	SetClippingRect( &ClipRect );
@@ -1347,7 +1343,7 @@ static void RenderAutoResolve(void)
 	}
 	gpAR->fRenderAutoResolve = FALSE;
 
-	BltVideoSurface(FRAME_BUFFER, gpAR->iInterfaceBuffer, gpAR->Rect.iLeft, gpAR->Rect.iTop, 0);
+	BltVideoSurface(FRAME_BUFFER, gpAR->iInterfaceBuffer, gpAR->rect.x, gpAR->rect.y, 0);
 
 	for (INT32 i = 0; i < gpAR->ubMercs; ++i)
 	{
@@ -1380,7 +1376,7 @@ static void RenderAutoResolve(void)
 	}
 
 	xp = gpAR->sCenterStartX + 70 - StringPixLength(EncounterType, FONT10ARIALBOLD) / 2;
-	yp = gpAR->Rect.iTop + 15;
+	yp = gpAR->rect.y + 15;
 	MPrint(xp, yp, EncounterType);
 
 	SetFontAttributes(FONT10ARIAL, FONT_GRAY2);
@@ -1763,7 +1759,7 @@ static void CreateAutoResolveInterface(void)
 
 	/* If we are bumping up the interface, then also use that piece of info to
 	 * move the buttons up by the same amount. */
-	ar->bVerticalOffset = (SCREEN_HEIGHT - ar->sHeight) / 2 > 120 ? -40 : 0;
+	ar->bVerticalOffset = (SCREEN_HEIGHT - ar->rect.h) / 2 > 120 ? -40 : 0;
 
 	const INT16 dx = ar->sCenterStartX;
 	const INT16 dy = ar->bVerticalOffset + SCREEN_HEIGHT / 2;
@@ -2550,18 +2546,18 @@ static void CalculateRowsAndColumns(void)
 	}
 
 	if( gpAR->ubMercCols + gpAR->ubEnemyCols == 9 )
-		gpAR->sWidth = SCREEN_WIDTH;
+		gpAR->rect.w = SCREEN_WIDTH;
 	else
-		gpAR->sWidth = 146 + 55 * (MAX( MAX( gpAR->ubMercCols, gpAR->ubCivCols ), 2 ) + MAX( gpAR->ubEnemyCols, 2 ));
+		gpAR->rect.w = 146 + 55 * (MAX(MAX(gpAR->ubMercCols, gpAR->ubCivCols), 2) + MAX(gpAR->ubEnemyCols, 2));
 
-	gpAR->sCenterStartX = 323 - gpAR->sWidth/2 + MAX( MAX( gpAR->ubMercCols, 2), MAX( gpAR->ubCivCols, 2 ) ) *55;
+	gpAR->sCenterStartX = 323 - gpAR->rect.w / 2 + MAX(MAX(gpAR->ubMercCols, 2), MAX(gpAR->ubCivCols, 2)) * 55;
 
 	//Anywhere from 48*3 to 48*10
-	gpAR->sHeight = 48 * MAX( 3, MAX( gpAR->ubMercRows + gpAR->ubCivRows, gpAR->ubEnemyRows ) );
+	gpAR->rect.h = 48 * MAX(3, MAX(gpAR->ubMercRows + gpAR->ubCivRows, gpAR->ubEnemyRows));
 	//Make it an even multiple of 40 (rounding up).
-	gpAR->sHeight += 39;
-	gpAR->sHeight /= 40;
-	gpAR->sHeight *= 40;
+	gpAR->rect.h += 39;
+	gpAR->rect.h /= 40;
+	gpAR->rect.h *= 40;
 
 	//Here is a extremely bitchy case.  The formulae throughout this module work for most cases.
 	//However, when combining mercs and civs, the column must be the same.  However, we retract that
@@ -2797,7 +2793,7 @@ static void RenderSoldierCellHealth(SOLDIERCELL* pCell)
 	//Restore the background before drawing text.
 	xp = pCell->xp +  2;
 	yp = pCell->yp + 32;
-	SGPBox const r = { xp - gpAR->Rect.iLeft, yp - gpAR->Rect.iTop, 46, 10 };
+	SGPBox const r = { xp - gpAR->rect.x, yp - gpAR->rect.y, 46, 10 };
 	BltVideoSurface(FRAME_BUFFER, gpAR->iInterfaceBuffer, xp, yp, &r);
 
 	if( pCell->pSoldier->bLife )
