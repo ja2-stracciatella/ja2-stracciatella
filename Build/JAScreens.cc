@@ -695,7 +695,6 @@ ScreenID DemoExitScreenHandle(void)
 	UINT32								uiCharsToPrint;
 	INT32									iPercentage;
 	static INT32					iPrevPercentage = 0;
-	SGPRect								SrcRect, DstRect;
 	INT32									iFactor;
 	static BOOLEAN				fSetMusicToFade = FALSE;
 	wchar_t str[150];
@@ -918,32 +917,33 @@ ScreenID DemoExitScreenHandle(void)
 
 		if( iPercentage < 50 )
 		{ //do the logo entrance section
-			SrcRect.iLeft = 131 - 131 * iPercentage / 50;
-			SrcRect.iRight = 132 + 131 * iPercentage / 50;
-			SrcRect.iTop = 48 - 48 * iPercentage / 50;
-			SrcRect.iBottom = 49 + 161 * iPercentage / 50;
-			//SrcRect.iLeft = 145 - 145 * iPercentage / 50;
-			//SrcRect.iRight = 146 + 117 * iPercentage / 50;
-			//SrcRect.iTop = 117 - 117 * iPercentage / 50;
-			//SrcRect.iBottom = 118 + 92 * iPercentage / 50;
-			DstRect.iLeft   = 0;
-			DstRect.iTop    = 0;
-			DstRect.iRight  = SCREEN_WIDTH;
-			DstRect.iBottom = SCREEN_HEIGHT;
+			SGPBox const SrcRect =
+			{
+#if 1
+				131 - 131 * iPercentage / 50,
+				 48 - 48  * iPercentage / 50,
+#else
+				145 - 145 * iPercentage / 50,
+				117 - 117 * iPercentage / 50,
+#endif
+				  1 + 262 * iPercentage / 50,
+				  1 + 209 * iPercentage / 50
+			};
+			SGPBox const DstRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 			BltVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, NULL);
 			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, &SrcRect, &DstRect);
 			InvalidateScreen();
 		}
 		else
 		{ //scale down the logo and stamp it.
-			SrcRect.iLeft = 0;
-			SrcRect.iRight = 263;
-			SrcRect.iTop = 0;
-			SrcRect.iBottom = 210;
-			DstRect.iLeft   =                 189 * (iPercentage - 50) / 50;
-			DstRect.iTop    =                  20 * (iPercentage - 50) / 50;
-			DstRect.iRight  = SCREEN_WIDTH  - 188 * (iPercentage - 50) / 50;
-			DstRect.iBottom = SCREEN_HEIGHT - 250 * (iPercentage - 50) / 50;
+			SGPBox const SrcRect = { 0, 0, 263, 210 };
+			SGPBox const DstRect =
+			{
+				189 * (iPercentage - 50) / 50,
+				 20 * (iPercentage - 50) / 50,
+				SCREEN_WIDTH  - 377 * (iPercentage - 50) / 50,
+				SCREEN_HEIGHT - 270 * (iPercentage - 50) / 50
+			};
 			BltVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, NULL);
 			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, &SrcRect, &DstRect);
 			InvalidateScreen();
@@ -1079,32 +1079,32 @@ ScreenID DemoExitScreenHandle(void)
 
 		if( iPercentage < 50 )
 		{ //do the logo entrance section
-			SrcRect.iLeft = 165 - 165 * iPercentage / 50;
-			SrcRect.iRight = 166 + 165 * iPercentage / 50;
-			SrcRect.iTop = 74 - 74 * iPercentage / 50;
-			SrcRect.iBottom = 75 + 73 * iPercentage / 50;
-			DstRect.iLeft   = 0;
-			DstRect.iTop    = 0;
-			DstRect.iRight  = SCREEN_WIDTH;
-			DstRect.iBottom = SCREEN_HEIGHT;
+			SGPBox const SrcRect =
+			{
+				165 - 165 * iPercentage / 50,
+				 74 -  74 * iPercentage / 50,
+				  1 + 330 * iPercentage / 50,
+				  1 + 147 * iPercentage / 50
+			};
+			SGPBox const DstRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 			BltVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, NULL);
 			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, &SrcRect, &DstRect);
 			InvalidateScreen();
 		}
 		else
 		{ //scale down the logo and stamp it.
-			SrcRect.iLeft = 0;
-			SrcRect.iRight = 331;
-			SrcRect.iTop = 0;
-			SrcRect.iBottom = 148;
-			DstRect.iLeft   =                 155 * (iPercentage - 50) / 50;
-			DstRect.iTop    =                 246 * (iPercentage - 50) / 50;
-			DstRect.iRight  = SCREEN_WIDTH  - 154 * (iPercentage - 50) / 50;
-			DstRect.iBottom = SCREEN_HEIGHT -  86 * (iPercentage - 50) / 50;
-			#ifdef GERMAN
-				DstRect.iTop -= (iPercentage-50);
-				DstRect.iBottom -= (iPercentage-50);
-			#endif
+			SGPBox const SrcRect = { 0, 0, 331, 148 };
+			SGPBox const DstRect =
+			{
+				155 * (iPercentage - 50) / 50,
+#ifdef GERMAN
+				246 * (iPercentage - 50) / 50 - iPercentage + 50,
+#else
+				246 * (iPercentage - 50) / 50,
+#endif
+				SCREEN_WIDTH  - 309 * (iPercentage - 50) / 50,
+				SCREEN_HEIGHT - 332 * (iPercentage - 50) / 50
+			};
 			BltVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, NULL);
 			BltStretchVideoSurface(FRAME_BUFFER, uiCollageID, &SrcRect, &DstRect);
 			InvalidateScreen();
