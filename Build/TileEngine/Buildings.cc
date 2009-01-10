@@ -324,7 +324,6 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 	RenderWorld();
 	RenderCoverDebug( );
 	InvalidateScreen( );
-	EndFrameBufferRender();
 	RefreshScreen();
 #endif
 */

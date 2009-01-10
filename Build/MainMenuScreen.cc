@@ -105,7 +105,6 @@ ScreenID MainMenuScreenHandle(void)
 		guiSplashFrameFade--;
 
 		InvalidateScreen();
-		EndFrameBufferRender();
 		return MAINMENU_SCREEN;
 	}
 

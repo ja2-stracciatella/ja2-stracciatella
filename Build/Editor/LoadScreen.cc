@@ -352,7 +352,6 @@ ScreenID LoadSaveScreenHandle(void)
 	InvalidateScreen();
 
 	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender();
 
 	switch( iFDlgState )
 	{
@@ -546,7 +545,6 @@ static void RemoveFileDialog(void)
 	KillTextInputMode();
 	MarkWorldDirty();
 	RenderWorld();
-	EndFrameBufferRender();
 }
 
 
@@ -888,7 +886,6 @@ static ScreenID ProcessFileIO(void)
 			MPrint(usStartX, usStartY, zOrigName);
 
 			InvalidateScreen( );
-			EndFrameBufferRender( );
 			gbCurrentFileIOStatus = SAVING_MAP;
 			return LOADSAVE_SCREEN;
 		case SAVING_MAP: //save map

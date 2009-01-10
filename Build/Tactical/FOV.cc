@@ -484,7 +484,6 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 			 //mprintf( 50,  20 , L"%d", pSoldier->sGridNo  );
 
 			 InvalidateScreen( );
-			 EndFrameBufferRender();
 			 RefreshScreen();
 
 			 do

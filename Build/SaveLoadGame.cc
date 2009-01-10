@@ -411,7 +411,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	InvalidateScreen();
 
 	ExecuteBaseDirtyRectQueue( );
-	EndFrameBufferRender( );
 	RefreshScreen();
 
 	//

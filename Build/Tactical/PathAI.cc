@@ -1828,7 +1828,6 @@ ENDOFLOOP:
 				RenderWorld();
 				RenderCoverDebug( );
 				InvalidateScreen( );
-				EndFrameBufferRender();
 				RefreshScreen();
 			}
 		}
@@ -1892,7 +1891,6 @@ ENDOFLOOP:
 				RenderWorld();
 				RenderCoverDebug( );
 				InvalidateScreen( );
-				EndFrameBufferRender();
 				RefreshScreen();
 			}
 		#endif

@@ -428,7 +428,6 @@ static BOOLEAN EditModeShutdown(void)
 
 	InvalidateScreen( );
 	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender( );
 
 	gRadarRegion.Enable();
 	CreateCurrentTacticalPanelButtons( );
@@ -2385,7 +2384,6 @@ static ScreenID WaitForHelpScreenResponse(void)
 
 	InvalidateScreen( );
 	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender();
 
 	return( EDIT_SCREEN );
 }
@@ -2432,14 +2430,12 @@ static ScreenID WaitForSelectionWindowResponse(void)
 		}
 		InvalidateScreen( );
 		ExecuteBaseDirtyRectQueue();
-		EndFrameBufferRender( );
 	}
 	else
 	{
 		DisplaySelectionWindowGraphicalInformation();
 		InvalidateScreen( );
 		ExecuteBaseDirtyRectQueue();
-		EndFrameBufferRender( );
 	}
 
 	return( EDIT_SCREEN );

@@ -124,7 +124,6 @@ ScreenID ErrorScreenHandle(void)
 
 	// For quick setting of new video stuff / to be changed
 	InvalidateScreen( );
-	EndFrameBufferRender( );
 
 	// Check for esc
 	while (DequeueEvent(&InputEvent))
