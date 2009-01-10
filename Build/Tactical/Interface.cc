@@ -2042,13 +2042,9 @@ void HandleTopMessages(void)
 		gTopMessage.sWorldRenderX = gsRenderCenterX;
 		gTopMessage.sWorldRenderY = gsRenderCenterY;
 
-		SGPRect SrcRect;
-		SrcRect.iLeft   =  0;
-		SrcRect.iTop    =  0;
-		SrcRect.iRight  = SCREEN_WIDTH;
-		SrcRect.iBottom = 20;
-		BltVideoSurface(FRAME_BUFFER,  gTopMessage.uiSurface, 0, 0, &SrcRect);
-		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER,          0, 0, &SrcRect);
+		SGPVSurface* const src = gTopMessage.uiSurface;
+		BltVideoSurface(FRAME_BUFFER,  src, 0, 0, 0);
+		BltVideoSurface(guiSAVEBUFFER, src, 0, 0, 0);
 		InvalidateRegion(0, 0, SCREEN_WIDTH, 20);
 	}
 }
