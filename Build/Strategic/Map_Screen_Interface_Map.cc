@@ -1028,11 +1028,13 @@ static void ShadeMapElem(const INT16 sMapX, const INT16 sMapY, const INT32 iColo
 		// compensate for original BIG_MAP blit being done at MAP_VIEW_START_X + 1
 		sScreenX += 1;
 
-		SGPRect clip;
-	  clip.iLeft   = 2 * (sScreenX - (MAP_VIEW_START_X + 1));
-		clip.iTop    = 2 * (sScreenY -  MAP_VIEW_START_Y     );
-		clip.iRight  = clip.iLeft + 2 * MAP_GRID_X;
-		clip.iBottom = clip.iTop  + 2 * MAP_GRID_Y;
+		SGPBox const clip =
+		{
+			2 * (sScreenX - (MAP_VIEW_START_X + 1)),
+			2 * (sScreenY -  MAP_VIEW_START_Y     ),
+			2 * MAP_GRID_X,
+			2 * MAP_GRID_Y
+		};
 
 		// non-airspace
 		if (iColor == MAP_SHADE_BLACK) sScreenY -= 1;

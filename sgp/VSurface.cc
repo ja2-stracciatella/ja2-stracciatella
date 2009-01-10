@@ -279,7 +279,7 @@ static void DeletePrimaryVideoSurfaces(void)
 }
 
 
-void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, const INT32 DestX, const INT32 DestY, const SGPRect* const SrcRect)
+void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, INT32 const DestX, INT32 const DestY, SGPBox const* const src_rect)
 {
 	SGPVSurface::Lock lsrc(src);
 	SGPVSurface::Lock ldst(dst);
@@ -287,13 +287,13 @@ void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, const I
 	UINT32  const SrcPitchBYTES  = lsrc.Pitch();
 	UINT16* const DestBuf        = ldst.Buffer<UINT16>();
 	UINT32  const DestPitchBYTES = ldst.Pitch();
-	if (SrcRect == NULL)
+	if (!src_rect)
 	{
 		Blt8BPPDataTo16BPPBufferHalf(DestBuf, DestPitchBYTES, src, SrcBuf, SrcPitchBYTES, DestX, DestY);
 	}
 	else
 	{
-		Blt8BPPDataTo16BPPBufferHalfRect(DestBuf, DestPitchBYTES, src, SrcBuf, SrcPitchBYTES, DestX, DestY, SrcRect);
+		Blt8BPPDataTo16BPPBufferHalfRect(DestBuf, DestPitchBYTES, src, SrcBuf, SrcPitchBYTES, DestX, DestY, src_rect);
 	}
 }
 

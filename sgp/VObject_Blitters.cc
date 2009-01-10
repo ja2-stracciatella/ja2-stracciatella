@@ -5439,10 +5439,9 @@ exactly half the size, from a sub-region.
 		number of pixels blitted to the destination.
 
 **********************************************************************************************/
-BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect(UINT16* pBuffer, UINT32 uiDestPitchBYTES, SGPVSurface* hSrcVSurface, const UINT8* pSrcBuffer, UINT32 uiSrcPitch, INT32 iX, INT32 iY, const SGPRect* pRect)
+BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect(UINT16* const pBuffer, UINT32 const uiDestPitchBYTES, SGPVSurface* const hSrcVSurface, UINT8 const* const pSrcBuffer, UINT32 const uiSrcPitch, INT32 const iX, INT32 const iY, SGPBox const* const rect)
 {
 	UINT16 *p16BPPPalette;
-	UINT32 usHeight, usWidth;
 	UINT8	 *SrcPtr, *DestPtr;
 	UINT32 LineSkip;
 	INT32	 iTempX, iTempY;
@@ -5452,11 +5451,11 @@ BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect(UINT16* pBuffer, UINT32 uiDestPitchBYTE
 	Assert( hSrcVSurface != NULL );
 	Assert( pSrcBuffer != NULL );
 	Assert( pBuffer != NULL );
-	Assert( pRect != NULL );
+	Assert(rect);
 
 	// Get Offsets from Index into structure
-	usWidth		= (UINT32)(pRect->iRight-pRect->iLeft);
-	usHeight	= (UINT32)(pRect->iBottom-pRect->iTop);
+	UINT32 const usWidth  = (UINT32)rect->w;
+	UINT32       usHeight = (UINT32)rect->h;
 
 	// Add to start position of dest buffer
 	iTempX = iX;
@@ -5470,7 +5469,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferHalfRect(UINT16* pBuffer, UINT32 uiDestPitchBYTE
 	CHECKF(usWidth  <= hSrcVSurface->Width());
 	CHECKF(usHeight <= hSrcVSurface->Height());
 
-	SrcPtr				= (UINT8 *)pSrcBuffer + (uiSrcPitch*pRect->iTop) + (pRect->iLeft);
+	SrcPtr        = (UINT8*)pSrcBuffer + uiSrcPitch * rect->y + rect->x;
 	DestPtr				= (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	p16BPPPalette = hSrcVSurface->p16BPPPalette;
 	LineSkip			= (uiDestPitchBYTES-(usWidth&0xfffffffe));
