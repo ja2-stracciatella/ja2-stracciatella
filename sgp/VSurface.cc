@@ -424,7 +424,7 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const
 }
 
 
-void BltStretchVideoSurface(SGPVSurface* const dst, const SGPVSurface* const src, SGPRect* const SrcRect, SGPRect* const DestRect)
+void BltStretchVideoSurface(SGPVSurface* const dst, SGPVSurface const* const src, SGPBox const* const src_rect, SGPBox const* const dst_rect)
 {
 	if (dst->BPP() != 16 || src->BPP() != 16) return;
 
@@ -433,13 +433,13 @@ void BltStretchVideoSurface(SGPVSurface* const dst, const SGPVSurface* const src
 
 	const UINT32  s_pitch = ssurface->pitch >> 1;
 	const UINT32  d_pitch = dsurface->pitch >> 1;
-	const UINT16* os      = (const UINT16*)ssurface->pixels + s_pitch * SrcRect->iTop  + SrcRect->iLeft;
-	UINT16*       d       =       (UINT16*)dsurface->pixels + d_pitch * DestRect->iTop + DestRect->iLeft;
+	UINT16 const* os      = (const UINT16*)ssurface->pixels + s_pitch * src_rect->y + src_rect->x;
+	UINT16*       d       =       (UINT16*)dsurface->pixels + d_pitch * dst_rect->y + dst_rect->x;
 
-	const UINT width  = DestRect->iRight  - DestRect->iLeft;
-	const UINT height = DestRect->iBottom - DestRect->iTop;
-	const UINT dx = SrcRect->iRight  - SrcRect->iLeft;
-	const UINT dy = SrcRect->iBottom - SrcRect->iTop;
+	UINT const width  = dst_rect->w;
+	UINT const height = dst_rect->h;
+	UINT const dx     = src_rect->w;
+	UINT const dy     = src_rect->h;
 	UINT py = 0;
 	if (ssurface->flags & SDL_SRCCOLORKEY)
 	{

@@ -1051,11 +1051,7 @@ ScreenID LaptopScreenHandle()
 
 		//Step 2:  The mapscreen image is in the EXTRABUFFER, and laptop is in the SAVEBUFFER
 		//         Start transitioning the screen.
-		SGPRect DstRect;
-		DstRect.iLeft   = 0;
-		DstRect.iTop    = 0;
-		DstRect.iRight  = SCREEN_WIDTH;
-		DstRect.iBottom = SCREEN_HEIGHT;
+		SGPBox const DstRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 		const UINT32 uiTimeRange = 1000;
 		INT32 iPercentage     = 0;
 		INT32 iRealPercentage = 0;
@@ -1103,11 +1099,7 @@ ScreenID LaptopScreenHandle()
 			const INT32 iX      = 472 - (472 - 320) * iScalePercentage / 5333;
 			const INT32 iY      = 424 - (424 - 240) * iScalePercentage / 5333;
 
-			SGPRect SrcRect2;
-			SrcRect2.iLeft   = iX             - iWidth / 2;
-			SrcRect2.iRight  = SrcRect2.iLeft + iWidth;
-			SrcRect2.iTop    = iY             - iHeight / 2;
-			SrcRect2.iBottom = SrcRect2.iTop  + iHeight;
+			SGPBox const SrcRect2 = { iX - iWidth / 2, iY - iHeight / 2, iWidth, iHeight };
 			//SrcRect2.iLeft = 464 - 464 * iScalePercentage / 100;
 			//SrcRect2.iRight = 477 + 163 * iScalePercentage / 100;
 			//SrcRect2.iTop = 417 - 417 * iScalePercentage / 100;
@@ -1456,11 +1448,7 @@ void LeaveLapTopScreen(void)
 
 			//Step 2:  The mapscreen image is in the EXTRABUFFER, and laptop is in the SAVEBUFFER
 			//         Start transitioning the screen.
-			SGPRect DstRect;
-			DstRect.iLeft   = 0;
-			DstRect.iTop    = 0;
-			DstRect.iRight  = SCREEN_WIDTH;
-			DstRect.iBottom = SCREEN_HEIGHT;
+			SGPBox const DstRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 			const UINT32 uiTimeRange = 1000;
 			INT32 iPercentage     = 100;
 			INT32 iRealPercentage = 100;
@@ -1510,11 +1498,7 @@ void LeaveLapTopScreen(void)
 				const INT32 iX = 472 - (472 - 320) * iScalePercentage / 5333;
 				const INT32 iY = 424 - (424 - 240) * iScalePercentage / 5333;
 
-				SGPRect SrcRect2;
-				SrcRect2.iLeft   = iX             - iWidth / 2;
-				SrcRect2.iRight  = SrcRect2.iLeft + iWidth;
-				SrcRect2.iTop    = iY             - iHeight / 2;
-				SrcRect2.iBottom = SrcRect2.iTop  + iHeight;
+				SGPBox const SrcRect2 = { iX - iWidth / 2, iY - iHeight / 2, iWidth, iHeight };
 				//SrcRect2.iLeft = 464 - 464 * iScalePercentage / 100;
 				//SrcRect2.iRight = 477 + 163 * iScalePercentage / 100;
 				//SrcRect2.iTop = 417 - 417 * iScalePercentage / 100;
@@ -2318,8 +2302,8 @@ static void InitTitleBarMaximizeGraphics(const SGPVObject* const uiBackgroundGra
 
 static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, UINT16 usTopLeftX, UINT16 usTopLeftY, UINT16 usTopRightX)
 {
-	static INT8    ubCount;
-	static SGPRect LastRect;
+	static INT8   ubCount;
+	static SGPBox LastRect;
 
 	if (fInit)
 	{
@@ -2347,27 +2331,23 @@ static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, U
 
 	const INT16 sPosBottomY = LAPTOP_TITLE_BAR_HEIGHT;
 
-	SGPRect SrcRect;
-	SrcRect.iLeft   = 0;
-	SrcRect.iTop    = 0;
-	SrcRect.iRight  = LAPTOP_TITLE_BAR_WIDTH;
-	SrcRect.iBottom = LAPTOP_TITLE_BAR_HEIGHT;
+	SGPBox const SrcRect = { 0, 0, LAPTOP_TITLE_BAR_WIDTH, LAPTOP_TITLE_BAR_HEIGHT };
 
 	//if its the last fram, bit the tittle bar to the final position
-	SGPRect DestRect;
+	SGPBox DestRect;
 	if (ubCount == NUMBER_OF_LAPTOP_TITLEBAR_ITERATIONS)
 	{
-		DestRect.iLeft   = LAPTOP_TITLE_BAR_TOP_LEFT_X;
-		DestRect.iTop    = LAPTOP_TITLE_BAR_TOP_LEFT_Y;
-		DestRect.iRight  = LAPTOP_TITLE_BAR_TOP_RIGHT_X;
-		DestRect.iBottom = DestRect.iTop + sPosBottomY;
+		DestRect.x = LAPTOP_TITLE_BAR_TOP_LEFT_X;
+		DestRect.y = LAPTOP_TITLE_BAR_TOP_LEFT_Y;
+		DestRect.w = LAPTOP_TITLE_BAR_TOP_RIGHT_X - LAPTOP_TITLE_BAR_TOP_LEFT_X;
+		DestRect.h = sPosBottomY;
 	}
 	else
 	{
-		DestRect.iLeft   = sPosX;
-		DestRect.iTop    = sPosY;
-		DestRect.iRight  = sPosRightX;
-		DestRect.iBottom = DestRect.iTop + sPosBottomY;
+		DestRect.x = sPosX;
+		DestRect.y = sPosY;
+		DestRect.w = sPosRightX - sPosX;
+		DestRect.h = sPosBottomY;
 	}
 
 	if (fForward)
@@ -2375,17 +2355,13 @@ static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, U
 		//Restore the old rect
 		if (ubCount > 1)
 		{
-			const INT16 sWidth  = LastRect.iRight  - LastRect.iLeft;
-			const INT16 sHeight = LastRect.iBottom - LastRect.iTop;
-			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, LastRect.iLeft, LastRect.iTop, sWidth, sHeight);
+			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, LastRect.x, LastRect.y, LastRect.w, LastRect.h);
 		}
 
 		//Save rectangle
 		if (ubCount > 0)
 		{
-			const INT16 sWidth  = DestRect.iRight  - DestRect.iLeft;
-			const INT16 sHeight = DestRect.iBottom - DestRect.iTop;
-			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.iLeft, DestRect.iTop, sWidth, sHeight);
+			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.x, DestRect.y, DestRect.w, DestRect.h);
 		}
 	}
 	else
@@ -2393,24 +2369,20 @@ static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, U
 		//Restore the old rect
 		if (ubCount < NUMBER_OF_LAPTOP_TITLEBAR_ITERATIONS - 1)
 		{
-			const INT16 sWidth  = LastRect.iRight  - LastRect.iLeft;
-			const INT16 sHeight = LastRect.iBottom - LastRect.iTop;
-			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, LastRect.iLeft, LastRect.iTop, sWidth, sHeight);
+			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, LastRect.x, LastRect.y, LastRect.w, LastRect.h);
 		}
 
 		//Save rectangle
 		if (ubCount < NUMBER_OF_LAPTOP_TITLEBAR_ITERATIONS)
 		{
-			const INT16 sWidth  = DestRect.iRight  - DestRect.iLeft;
-			const INT16 sHeight = DestRect.iBottom - DestRect.iTop;
-			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.iLeft, DestRect.iTop, sWidth, sHeight);
+			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.x, DestRect.y, DestRect.w, DestRect.h);
 		}
 	}
 
 	BltStretchVideoSurface(FRAME_BUFFER, guiTitleBarSurface, &SrcRect, &DestRect);
 
-	InvalidateRegion(DestRect.iLeft, DestRect.iTop, DestRect.iRight, DestRect.iBottom);
-	InvalidateRegion(LastRect.iLeft, LastRect.iTop, LastRect.iRight, LastRect.iBottom);
+	InvalidateRegion(DestRect.x, DestRect.y, DestRect.x + DestRect.w, DestRect.y + DestRect.h);
+	InvalidateRegion(LastRect.x, LastRect.y, LastRect.x + LastRect.w, LastRect.y + LastRect.h);
 
 	LastRect = DestRect;
 

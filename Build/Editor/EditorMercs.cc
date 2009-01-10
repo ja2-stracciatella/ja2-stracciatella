@@ -2116,7 +2116,6 @@ void DeleteSelectedMercsItem()
 // NOTE:  Step one can be skipped (when selecting an existing merc).  By setting the
 static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 {
-	SGPRect	SrcRect, DstRect;
 	INT32 iDstWidth, iDstHeight;
 	float rScalar, rWidthScalar, rHeightScalar;
 	BOOLEAN fUnDroppable;
@@ -2182,6 +2181,8 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 	//build the rects
 	iDstWidth = gbCurrSelect < 3 ? MERCINV_SMSLOT_WIDTH : MERCINV_LGSLOT_WIDTH;
 	iDstHeight = MERCINV_SLOT_HEIGHT;
+	SGPRect	SrcRect;
+	SGPRect DstRect;
 	SrcRect.iLeft = 0;
 	SrcRect.iTop = 0;
 	SrcRect.iRight = 60;
@@ -2208,10 +2209,13 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 	ETRLEObject const* const pObject = vo->SubregionProperties(item->ubGraphicNum);
 	INT32 iSrcWidth  = pObject->usWidth;
 	INT32 iSrcHeight = pObject->usHeight;
-	SrcRect.iLeft   +=	pObject->sOffsetX;
-	SrcRect.iRight  =		SrcRect.iLeft + iSrcWidth;
-	SrcRect.iTop    +=	pObject->sOffsetY;
-	SrcRect.iBottom =		SrcRect.iTop + iSrcHeight;
+	SGPBox const src_rect =
+	{
+		SrcRect.iLeft +	pObject->sOffsetX,
+		SrcRect.iTop  +	pObject->sOffsetY,
+		iSrcWidth,
+		iSrcHeight
+	};
 
 	//if the source image width is less than 30 (small slot), then modify the DstRect.
 	if( iSrcWidth < 30 )
@@ -2250,13 +2254,16 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 		iDstHeight = MERCINV_SLOT_HEIGHT;
 
 	//use the new width and height values to calculate the new dest rect (center the item)
-	DstRect.iLeft		= (DstRect.iRight - DstRect.iLeft - iDstWidth) / 2;
-	DstRect.iRight	= DstRect.iLeft + iDstWidth;
-	DstRect.iTop		= (DstRect.iBottom - DstRect.iTop - iDstHeight) / 2;
-	DstRect.iBottom = DstRect.iTop + iDstHeight;
+	SGPBox const dst_rect =
+	{
+		(DstRect.iRight  - DstRect.iLeft - iDstWidth)  / 2,
+		(DstRect.iBottom - DstRect.iTop  - iDstHeight) / 2,
+		iDstWidth,
+		iDstHeight
+	};
 
 	//scale the item down to the smaller buffer.
-	BltStretchVideoSurface(uiDstID, uiSrcID, &SrcRect, &DstRect);
+	BltStretchVideoSurface(uiDstID, uiSrcID, &src_rect, &dst_rect);
 
 	//invalidate the mercs new item index
 	gusMercsNewItemIndex = 0xffff;

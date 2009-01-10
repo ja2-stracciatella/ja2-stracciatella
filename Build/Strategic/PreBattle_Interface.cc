@@ -665,7 +665,6 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 
 static void DoTransitionFromMapscreenToPreBattleInterface(void)
 {
-	SGPRect DstRect, PBIRect;
 	UINT32 uiStartTime, uiCurrTime;
 	INT32 iPercentage, iFactor;
 	UINT32 uiTimeRange;
@@ -675,10 +674,6 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 
 	PauseTime( FALSE );
 
-	PBIRect.iLeft = 0;
-	PBIRect.iTop = 0;
-	PBIRect.iRight = 261;
-	PBIRect.iBottom = 359;
 	iWidth = 261;
 	iHeight = 359;
 
@@ -723,6 +718,7 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 	InvalidateScreen();
 	RefreshScreen();
 
+	SGPBox const PBIRect = { 0, 0, 261, 359 };
 	while( iPercentage < 100  )
 	{
 		uiCurrTime = GetClock();
@@ -743,10 +739,13 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 		else
 			iTop = sStartTop + (sEndTop-sStartTop+1) * iPercentage / 100;
 
-		DstRect.iLeft = iLeft - iWidth * iPercentage / 200;
-		DstRect.iRight = DstRect.iLeft + MAX( iWidth * iPercentage / 100, 1 );
-		DstRect.iTop = iTop - iHeight * iPercentage / 200;
-		DstRect.iBottom = DstRect.iTop + MAX( iHeight * iPercentage / 100, 1 );
+		SGPBox const DstRect =
+		{
+			iLeft - iWidth  * iPercentage / 200,
+			iTop  - iHeight * iPercentage / 200,
+			MAX(1, iWidth  * iPercentage / 100),
+			MAX(1, iHeight * iPercentage / 100)
+		};
 
 		BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &PBIRect, &DstRect);
 
@@ -754,8 +753,7 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 		RefreshScreen();
 
 		//Restore the previous rect.
-		BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, (UINT16)DstRect.iLeft, (UINT16)DstRect.iTop,
-			(UINT16)(DstRect.iRight-DstRect.iLeft+1), (UINT16)(DstRect.iBottom-DstRect.iTop+1) );
+		BlitBufferToBuffer(guiEXTRABUFFER, FRAME_BUFFER, DstRect.x, DstRect.y, DstRect.w + 1, DstRect.h + 1);
 	}
 	BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 }

@@ -897,8 +897,6 @@ static BOOLEAN HandleSpeckTalking(BOOLEAN fReset)
 {
 	static BOOLEAN fWasTheMercTalking=FALSE;
 	BOOLEAN		fIsTheMercTalking;
-	SGPRect		SrcRect;
-	SGPRect		DestRect;
 
 	if( fReset )
 	{
@@ -906,21 +904,13 @@ static BOOLEAN HandleSpeckTalking(BOOLEAN fReset)
 		return( TRUE );
 	}
 
-	SrcRect.iLeft = 0;
-	SrcRect.iTop = 0;
-	SrcRect.iRight = 48;
-	SrcRect.iBottom = 43;
-
-	DestRect.iLeft = MERC_VIDEO_FACE_X;
-	DestRect.iTop = MERC_VIDEO_FACE_Y;
-	DestRect.iRight = DestRect.iLeft + MERC_VIDEO_FACE_WIDTH;
-	DestRect.iBottom = DestRect.iTop + MERC_VIDEO_FACE_HEIGHT;
-
 	HandleDialogue();
 	HandleAutoFaces( );
 	HandleTalkingAutoFaces( );
 
 	//Blt the face surface to the video background surface
+	SGPBox const SrcRect  = { 0, 0, 48, 43 };
+	SGPBox const DestRect = { MERC_VIDEO_FACE_X, MERC_VIDEO_FACE_Y, MERC_VIDEO_FACE_WIDTH, MERC_VIDEO_FACE_HEIGHT };
 	BltStretchVideoSurface(FRAME_BUFFER, guiMercVideoFaceBackground, &SrcRect, &DestRect);
 
 	//HandleCurrentMercDistortion();

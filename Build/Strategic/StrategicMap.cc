@@ -340,7 +340,6 @@ static UINT32 UndergroundTacticalTraversalTime(INT8 bExitDirection)
 
 void BeginLoadScreen( )
 {
-	SGPRect SrcRect, DstRect;
 	UINT32 uiStartTime, uiCurrTime;
 	INT32 iPercentage, iFactor;
 	UINT32 uiTimeRange;
@@ -355,10 +354,7 @@ void BeginLoadScreen( )
 
 	if( guiCurrentScreen == MAP_SCREEN && !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) && !AreInMeanwhile() )
 	{
-		DstRect.iLeft   = 0;
-		DstRect.iTop    = 0;
-		DstRect.iRight  = SCREEN_WIDTH;
-		DstRect.iBottom = SCREEN_HEIGHT;
+		SGPBox const DstRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 		uiTimeRange = 2000;
 		iPercentage = 0;
 		iLastShadePercentage = 0;
@@ -395,10 +391,13 @@ void BeginLoadScreen( )
 			//	}
 			}
 
-			SrcRect.iLeft   =                 536 * iPercentage / 100;
-			SrcRect.iRight  = SCREEN_WIDTH  -       iPercentage /  20;
-			SrcRect.iTop    =                 367 * iPercentage / 100;
-			SrcRect.iBottom = SCREEN_HEIGHT -  39 * iPercentage / 100;
+			SGPBox const SrcRect =
+			{
+				536 * iPercentage / 100,
+				367 * iPercentage / 100,
+				SCREEN_WIDTH  - 541 * iPercentage / 100,
+				SCREEN_HEIGHT - 406 * iPercentage / 100
+			};
 			BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &SrcRect, &DstRect);
 			InvalidateScreen();
 			RefreshScreen();

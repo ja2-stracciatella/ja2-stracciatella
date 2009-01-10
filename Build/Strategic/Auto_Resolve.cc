@@ -413,33 +413,28 @@ static void RenderAutoResolve(void);
 
 static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 {
-	SGPRect SrcRect, DstRect;
 	UINT32 uiStartTime, uiCurrTime;
 	INT32 iPercentage, iFactor;
 	UINT32 uiTimeRange;
-	INT16 sStartLeft, sEndLeft, sStartTop, sEndTop;
-	INT32 iLeft, iTop, iWidth, iHeight;
 
 	PauseTime( FALSE );
 
 	gpAR->fShowInterface = TRUE;
 
-	SrcRect.iLeft = gpAR->Rect.iLeft;
-	SrcRect.iTop = gpAR->Rect.iTop;
-	SrcRect.iRight = gpAR->Rect.iRight;
-	SrcRect.iBottom = gpAR->Rect.iBottom;
-
-	iWidth = SrcRect.iRight - SrcRect.iLeft + 1;
-	iHeight = SrcRect.iBottom - SrcRect.iTop + 1;
+	INT32  const x = gpAR->Rect.iLeft;
+	INT32  const y = gpAR->Rect.iTop;
+	INT32  const w = gpAR->Rect.iRight  - x + 1;
+	INT32  const h = gpAR->Rect.iBottom - y + 1;
+	SGPBox const SrcRect = { x, y, w, h };
 
 	uiTimeRange = 1000;
 	iPercentage = 0;
 	uiStartTime = GetClock();
 
-	sStartLeft = 59;
-	sStartTop = 69;
-	sEndLeft = SrcRect.iLeft + gpAR->sWidth / 2;
-	sEndTop = SrcRect.iTop + gpAR->sHeight / 2;
+	INT16 const sStartLeft = 59;
+	INT16 const sStartTop  = 69;
+	INT16 const sEndLeft   = x + gpAR->sWidth  / 2;
+	INT16 const sEndTop    = y + gpAR->sHeight / 2;
 
 	//save the prebattle/mapscreen interface background
 	BltVideoSurface(guiEXTRABUFFER, FRAME_BUFFER, 0, 0, NULL);
@@ -449,10 +444,10 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	RenderButtons();
 	RenderButtonsFastHelp();
 	//save it
-	BlitBufferToBuffer( FRAME_BUFFER, guiSAVEBUFFER, (UINT16)SrcRect.iLeft, (UINT16)SrcRect.iTop, (UINT16)SrcRect.iRight, (UINT16)SrcRect.iBottom );
+	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, x, y, w, h);
 
 	//hide the autoresolve
-	BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, (UINT16)SrcRect.iLeft, (UINT16)SrcRect.iTop, (UINT16)SrcRect.iRight, (UINT16)SrcRect.iBottom );
+	BlitBufferToBuffer(guiEXTRABUFFER, FRAME_BUFFER, x, y, w, h);
 
 	PlayJA2SampleFromFile("SOUNDS/Laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 	while( iPercentage < 100  )
@@ -469,21 +464,23 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 			iPercentage = (UINT32)(iPercentage + (100-iPercentage) * iFactor * 0.01 + 0.05);
 
 		//Calculate the center point.
-		iLeft = sStartLeft + (sEndLeft-sStartLeft+1) * iPercentage / 100;
-		iTop = sStartTop + (sEndTop-sStartTop+1) * iPercentage / 100;
+		INT32 const iLeft = sStartLeft + (sEndLeft - sStartLeft + 1) * iPercentage / 100;
+		INT32 const iTop  = sStartTop  + (sEndTop  - sStartTop  + 1) * iPercentage / 100;
 
-		DstRect.iLeft = iLeft - iWidth * iPercentage / 200;
-		DstRect.iRight = DstRect.iLeft + MAX( iWidth * iPercentage / 100, 1 );
-		DstRect.iTop = iTop - iHeight * iPercentage / 200;
-		DstRect.iBottom = DstRect.iTop + MAX( iHeight * iPercentage / 100, 1 );
+		SGPBox const DstRect =
+		{
+			iLeft - w * iPercentage / 200,
+			iTop  - h * iPercentage / 200,
+			MAX(1, w * iPercentage / 100),
+			MAX(1, h * iPercentage / 100)
+		};
 
 		BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &SrcRect, &DstRect);
 		InvalidateScreen();
 		RefreshScreen();
 
 		//Restore the previous rect.
-		BlitBufferToBuffer( guiEXTRABUFFER, FRAME_BUFFER, (UINT16)DstRect.iLeft, (UINT16)DstRect.iTop,
-			(UINT16)(DstRect.iRight-DstRect.iLeft+1), (UINT16)(DstRect.iBottom-DstRect.iTop+1) );
+		BlitBufferToBuffer(guiEXTRABUFFER, FRAME_BUFFER, DstRect.x, DstRect.y, DstRect.w + 1, DstRect.h + 1);
 	}
 }
 

@@ -1727,20 +1727,6 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(const FACETYPE* const face)
 {
 	static BOOLEAN fWasTheMercTalking=FALSE;
 	BOOLEAN		fIsTheMercTalking;
-	SGPRect		SrcRect;
-	SGPRect		DestRect;
-
-
-	//Test
-	SrcRect.iLeft = 0;
-	SrcRect.iTop = 0;
-	SrcRect.iRight = 48;
-	SrcRect.iBottom = 43;
-
-	DestRect.iLeft = AIM_MEMBER_VIDEO_FACE_X;
-	DestRect.iTop = AIM_MEMBER_VIDEO_FACE_Y;
-	DestRect.iRight = DestRect.iLeft + AIM_MEMBER_VIDEO_FACE_WIDTH;
-	DestRect.iBottom = DestRect.iTop + AIM_MEMBER_VIDEO_FACE_HEIGHT;
 
 	//If the answering machine graphics is up, dont handle the faces
 	if (gfIsAnsweringMachineActive) giMercFaceIndex->fInvalidAnim = TRUE;
@@ -1752,12 +1738,23 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(const FACETYPE* const face)
 	//If the answering machine is up, dont display the face
 //	if( !gfIsAnsweringMachineActive )
 	{
+		//Test
+		SGPBox const SrcRect = { 0, 0, 48, 43 };
+
+		SGPBox const DestRect =
+		{
+			AIM_MEMBER_VIDEO_FACE_X,
+			AIM_MEMBER_VIDEO_FACE_Y,
+			AIM_MEMBER_VIDEO_FACE_WIDTH,
+			AIM_MEMBER_VIDEO_FACE_HEIGHT
+		};
+
 		//Blt the face surface to the video background surface
 		BltStretchVideoSurface(FRAME_BUFFER, guiVideoFaceBackground, &SrcRect, &DestRect);
 
 		//if the merc is not at home and the players is leaving a message, shade the players face
 		if( gfIsAnsweringMachineActive )
-			FRAME_BUFFER->ShadowRect(DestRect.iLeft, DestRect.iTop, DestRect.iRight - 1, DestRect.iBottom - 1);
+			FRAME_BUFFER->ShadowRect(DestRect.x, DestRect.y, DestRect.x + DestRect.w - 1, DestRect.y + DestRect.h - 1);
 
 
 		//If the answering machine graphics is up, place a message on the screen
@@ -2850,48 +2847,32 @@ static INT32 Interpolate(INT32 start, INT32 end, INT32 step)
 
 static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward)
 {
-	static UINT8   ubCount;
-	static SGPRect LastRect;
+	static UINT8  ubCount;
+	static SGPBox LastRect;
 
 	if (gfJustSwitchedVideoConferenceMode)
 	{
 		ubCount = (fForward ? 1 : AIM_MEMBER_VIDEO_TITLE_ITERATIONS - 1);
 	}
 
-	const UINT16 usPosX      = Interpolate(331, 125, ubCount);
-	const UINT16 usPosRightX = Interpolate(405, 490, ubCount);
-
-	const UINT16 usPosY       = Interpolate(AIM_MEMBER_VIDEO_TITLE_START_Y, 96, ubCount);
-	const UINT16 usPosBottomY = usPosY + AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT;
-
-	SGPRect SrcRect;
-	SrcRect.iLeft   = 0;
-	SrcRect.iTop    = 0;
-	SrcRect.iRight  = AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH;
-	SrcRect.iBottom = AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT;
-
-	SGPRect DestRect;
-	DestRect.iLeft   = usPosX;
-	DestRect.iTop    = usPosY;
-	DestRect.iRight  = usPosRightX;
-	DestRect.iBottom = usPosBottomY;
+	UINT16 const usPosX      = Interpolate(331, 125, ubCount);
+	UINT16 const usPosRightX = Interpolate(405, 490, ubCount);
+	UINT16 const usPosY      = Interpolate(AIM_MEMBER_VIDEO_TITLE_START_Y, 96, ubCount);
+	SGPBox const SrcRect     = { 0,      0,      AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT };
+	SGPBox const DestRect    = { usPosX, usPosY, usPosRightX - usPosX,             AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT };
 
 	if (fForward)
 	{
 		//Restore the old rect
 		if (ubCount > 2)
 		{
-			const UINT16 usWidth  = LastRect.iRight  - LastRect.iLeft;
-			const UINT16 usHeight = LastRect.iBottom - LastRect.iTop;
-			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, LastRect.iLeft, LastRect.iTop, usWidth, usHeight);
+			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, LastRect.x, LastRect.y, LastRect.w, LastRect.h);
 		}
 
 		//Save rectangle
 		if (ubCount > 1)
 		{
-			const UINT16 usWidth  = DestRect.iRight  - DestRect.iLeft;
-			const UINT16 usHeight = DestRect.iBottom - DestRect.iTop;
-			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.iLeft, DestRect.iTop, usWidth, usHeight);
+			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.x, DestRect.y, DestRect.w, DestRect.h);
 		}
 	}
 	else
@@ -2899,24 +2880,20 @@ static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward)
 		//Restore the old rect
 		if (ubCount < AIM_MEMBER_VIDEO_TITLE_ITERATIONS - 2)
 		{
-			const UINT16 usWidth  = LastRect.iRight  - LastRect.iLeft;
-			const UINT16 usHeight = LastRect.iBottom - LastRect.iTop;
-			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, LastRect.iLeft, LastRect.iTop, usWidth, usHeight);
+			BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, LastRect.x, LastRect.y, LastRect.w, LastRect.h);
 		}
 
 		//Save rectangle
 		if (ubCount < AIM_MEMBER_VIDEO_TITLE_ITERATIONS - 1)
 		{
-			const UINT16 usWidth  = DestRect.iRight  - DestRect.iLeft;
-			const UINT16 usHeight = DestRect.iBottom - DestRect.iTop;
-			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.iLeft, DestRect.iTop, usWidth, usHeight);
+			BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, DestRect.x, DestRect.y, DestRect.w, DestRect.h);
 		}
 	}
 
 	BltStretchVideoSurface(FRAME_BUFFER, guiVideoTitleBar, &SrcRect, &DestRect);
 
-	InvalidateRegion(DestRect.iLeft, DestRect.iTop, DestRect.iRight, DestRect.iBottom);
-	InvalidateRegion(LastRect.iLeft, LastRect.iTop, LastRect.iRight, LastRect.iBottom);
+	InvalidateRegion(DestRect.x, DestRect.y, DestRect.x + DestRect.w, DestRect.y + DestRect.h);
+	InvalidateRegion(LastRect.x, LastRect.y, LastRect.x + LastRect.w, LastRect.y + LastRect.h);
 
 	LastRect = DestRect;
 
