@@ -114,7 +114,6 @@ ScreenID ErrorScreenHandle(void)
 
 	SetFontAttributes(FONT12ARIAL, FONT_YELLOW);
 	mprintf(50, 255, L"%hs", gubErrorText);
-	SetFontForeground( FONT_LTRED );
 
 	if ( !fFirstTime )
 	{

@@ -120,7 +120,6 @@ void UpdateMapInfo()
 	MPrint(368, 392, L"Bsmt. Level");
 	MPrint(378, 403, L"Dest.");
 	MPrint(378, 412, L"GridNo");
-	SetFontForeground( FONT_RED );
 }
 
 void UpdateMapInfoFields()

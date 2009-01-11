@@ -912,8 +912,6 @@ static void FlowerOrderDrawSelectedCity(UINT8 ubNumber)
 	SetFontShadow(DEFAULT_SHADOW);
 
 	FlowerOrderDisplayShippingLocationCity();
-	SetFontShadow(DEFAULT_SHADOW);
-
 }
 
 

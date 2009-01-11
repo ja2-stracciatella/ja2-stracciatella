@@ -321,7 +321,6 @@ static void InitEditorBuildingsToolbar(void)
 
 static void InitEditorItemsToolbar(void)
 {
-	SetFontForeground( FONT_MCOLOR_LTRED );
 	INT16 const y = TASKBAR_Y;
 	iEditorButton[ITEMS_WEAPONS]    = CreateTextButton(L"Weapons",    BLOCKFONT, FONT_MCOLOR_DKWHITE, FONT_BLACK, 100, y + 80, 59, 20, MSYS_PRIORITY_NORMAL, ItemsWeaponsCallback);
 	iEditorButton[ITEMS_AMMO]       = CreateTextButton(L"Ammo",       BLOCKFONT, FONT_MCOLOR_DKWHITE, FONT_BLACK, 159, y + 80, 40, 20, MSYS_PRIORITY_NORMAL, ItemsAmmoCallback);

@@ -788,8 +788,6 @@ static void DrawCharStats(const SOLDIERTYPE* const s)
 	PrintStat(s->uiChangeExplosivesTime,   vgu & EXP_INCREASE,      s->bExplosive,    EXP_X, EXP_Y); // explosives
 	PrintStat(s->uiChangeMechanicalTime,   vgu & MECH_INCREASE,     s->bMechanical,   MEC_X, MEC_Y); // mechanical
 	PrintStat(s->uiChangeMedicalTime,      vgu & MED_INCREASE,      s->bMedical,      MED_X, MED_Y); // medical
-
-	SetFontForeground(CHAR_TEXT_FONT_COLOR);
 }
 
 
@@ -987,7 +985,6 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 			//calculate the exact time left on the contract (ex 1.8 days)
 			const float dTimeLeft = iTimeRemaining / (60 * 24.0);
 			// more than a day, display in green
-			SetFontForeground(FONT_LTGREEN);
 			swprintf(sString, lengthof(sString), L"%.1f%ls/%d%ls", dTimeLeft, gpStrategicString[STR_PB_DAYS_ABBREVIATION], s->iTotalContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 		}
 		else
@@ -1003,7 +1000,6 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 			{
 				iTimeRemaining /= 60;
 			}
-			SetFontForeground(FONT_RED);
 			swprintf(sString, lengthof(sString), L"%d%ls/%d%ls", iTimeRemaining, gpStrategicString[STR_PB_HOURS_ABBREVIATION], s->iTotalContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 		}
 	}
