@@ -137,7 +137,7 @@ enum{
 #define DEAD_MERC_COLOR_BLUE   55
 
 
-void DoLapTopSystemMessageBoxWithRect(MessageBoxStyleID, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
+void DoLapTopSystemMessageBoxWithRect(MessageBoxStyleID, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPBox const* centering_rect);
 
 void     LaptopScreenInit(void);
 ScreenID LaptopScreenHandle(void);

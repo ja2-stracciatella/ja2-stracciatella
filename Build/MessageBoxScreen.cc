@@ -104,7 +104,7 @@ static MessageBoxStyle const g_msg_box_style[] =
 static MessageBoxStyle const g_msg_box_style_default = { BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, "INTERFACE/msgboxbuttons.sti", 0, 1, FONT_MCOLOR_WHITE, DEFAULT_SHADOW, CURSOR_NORMAL };
 
 
-void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
+void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPBox const* const centering_rect)
 {
 	GetMousePos(&pOldMousePosition);
 
@@ -117,20 +117,6 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 
 	MessageBoxStyle const& style = ubStyle < lengthof(g_msg_box_style) ?
 		g_msg_box_style[ubStyle] : g_msg_box_style_default;
-
-	SGPRect	aRect;
-	if (pCenteringRect != NULL)
-	{
-		aRect = *pCenteringRect;
-	}
-	else
-	{
-		// Use default!
-		aRect.iLeft   = 0;
-		aRect.iTop    = 0;
-		aRect.iRight  = SCREEN_WIDTH;
-		aRect.iBottom = SCREEN_HEIGHT;
-	}
 
 	// Set some values!
 	gMsgBox.usFlags      = usFlags;
@@ -148,9 +134,17 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 	gMsgBox.usWidth  = usTextBoxWidth;
 	gMsgBox.usHeight = usTextBoxHeight;
 
-	// Determine position ( centered in rect )
-	gMsgBox.sX = ((aRect.iRight  - aRect.iLeft) - usTextBoxWidth)  / 2 + aRect.iLeft;
-	gMsgBox.sY = ((aRect.iBottom - aRect.iTop)  - usTextBoxHeight) / 2 + aRect.iTop;
+	// Determine position (centered in rect)
+	if (centering_rect)
+	{
+		gMsgBox.sX = centering_rect->x + (centering_rect->w  - usTextBoxWidth)  / 2;
+		gMsgBox.sY = centering_rect->y + (centering_rect->h  - usTextBoxHeight) / 2;
+	}
+	else
+	{
+		gMsgBox.sX = (SCREEN_WIDTH  - usTextBoxWidth)  / 2;
+		gMsgBox.sY = (SCREEN_HEIGHT - usTextBoxHeight) / 2;
+	}
 
 	if (guiCurrentScreen == GAME_SCREEN)
 	{
@@ -590,26 +584,26 @@ void MessageBoxScreenShutdown()
 }
 
 
-static void DoScreenIndependantMessageBoxWithRect(wchar_t const* zString, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPRect const* pCenteringRect);
+static void DoScreenIndependantMessageBoxWithRect(wchar_t const* zString, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPBox const* centering_rect);
 
 
 // a basic box that don't care what screen we came from
 void DoScreenIndependantMessageBox(wchar_t const* const zString, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
-	const SGPRect CenteringRect = {0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
-	DoScreenIndependantMessageBoxWithRect(zString, usFlags, ReturnCallback, &CenteringRect);
+	SGPBox const centering_rect = {0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
+	DoScreenIndependantMessageBoxWithRect(zString, usFlags, ReturnCallback, &centering_rect);
 }
 
 
 // a basic box that don't care what screen we came from
 void DoLowerScreenIndependantMessageBox(wchar_t const* const zString, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
 {
-	const SGPRect CenteringRect = {0, INV_INTERFACE_START_Y / 2, SCREEN_WIDTH, INV_INTERFACE_START_Y };
-	DoScreenIndependantMessageBoxWithRect(zString, usFlags, ReturnCallback, &CenteringRect);
+	SGPBox const centering_rect = {0, INV_INTERFACE_START_Y / 2, SCREEN_WIDTH, INV_INTERFACE_START_Y / 2 };
+	DoScreenIndependantMessageBoxWithRect(zString, usFlags, ReturnCallback, &centering_rect);
 }
 
 
-static void DoScreenIndependantMessageBoxWithRect(wchar_t const* const zString, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
+static void DoScreenIndependantMessageBoxWithRect(wchar_t const* const zString, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPBox const* const centering_rect)
 {
 	/// which screen are we in?
 
@@ -623,22 +617,22 @@ static void DoScreenIndependantMessageBoxWithRect(wchar_t const* const zString, 
 		// auto resolve is a special case
 		if (guiCurrentScreen == AUTORESOLVE_SCREEN)
 		{
-			DoMessageBox(MSG_BOX_BASIC_STYLE, zString, AUTORESOLVE_SCREEN, usFlags, ReturnCallback, pCenteringRect);
+			DoMessageBox(MSG_BOX_BASIC_STYLE, zString, AUTORESOLVE_SCREEN, usFlags, ReturnCallback, centering_rect);
 		}
 		else
 		{
 			// set up for mapscreen
-			DoMapMessageBoxWithRect(MSG_BOX_BASIC_STYLE, zString, MAP_SCREEN, usFlags, ReturnCallback, pCenteringRect);
+			DoMapMessageBoxWithRect(MSG_BOX_BASIC_STYLE, zString, MAP_SCREEN, usFlags, ReturnCallback, centering_rect);
 		}
 	}
 	else
 	{
 		switch (guiCurrentScreen)
 		{
-			case LAPTOP_SCREEN:    DoLapTopSystemMessageBoxWithRect(MSG_BOX_LAPTOP_DEFAULT, zString, LAPTOP_SCREEN,    usFlags, ReturnCallback, pCenteringRect); break;
-			case SAVE_LOAD_SCREEN: DoSaveLoadMessageBoxWithRect(                            zString, SAVE_LOAD_SCREEN, usFlags, ReturnCallback, pCenteringRect); break;
-			case OPTIONS_SCREEN:   DoOptionsMessageBoxWithRect(                             zString, OPTIONS_SCREEN,   usFlags, ReturnCallback, pCenteringRect); break;
-			case GAME_SCREEN:      DoMessageBox(                    MSG_BOX_BASIC_STYLE,    zString, guiCurrentScreen, usFlags, ReturnCallback, pCenteringRect); break;
+			case LAPTOP_SCREEN:    DoLapTopSystemMessageBoxWithRect(MSG_BOX_LAPTOP_DEFAULT, zString, LAPTOP_SCREEN,    usFlags, ReturnCallback, centering_rect); break;
+			case SAVE_LOAD_SCREEN: DoSaveLoadMessageBoxWithRect(                            zString, SAVE_LOAD_SCREEN, usFlags, ReturnCallback, centering_rect); break;
+			case OPTIONS_SCREEN:   DoOptionsMessageBoxWithRect(                             zString, OPTIONS_SCREEN,   usFlags, ReturnCallback, centering_rect); break;
+			case GAME_SCREEN:      DoMessageBox(                    MSG_BOX_BASIC_STYLE,    zString, guiCurrentScreen, usFlags, ReturnCallback, centering_rect); break;
 		}
 	}
 }

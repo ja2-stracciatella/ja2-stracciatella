@@ -5031,8 +5031,8 @@ void DoSkiMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, 
 	gfExitSKIDueToMessageBox = TRUE;
 
 	// do message box and return
-	const SGPRect pCenteringRect = { 0, 0, SCREEN_WIDTH, 339 };
-	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, uiExitScreen, ubFlags, ReturnCallback, &pCenteringRect);
+	SGPBox const centering_rect = { 0, 0, SCREEN_WIDTH, 339 };
+	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, uiExitScreen, ubFlags, ReturnCallback, &centering_rect);
 }
 
 

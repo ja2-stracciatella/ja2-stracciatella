@@ -364,7 +364,7 @@ void HandleShortCutExitState( void )
 	// look at the state of fGameIsRunning, if set false, then prompt user for confirmation
 
 	// use YES/NO Pop up box, settup for particular screen
-	const SGPRect pCenteringRect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
+	const SGPBox pCenteringRect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
 
 	if( guiCurrentScreen == ERROR_SCREEN )
 	{ //an assert failure, don't bring up the box!

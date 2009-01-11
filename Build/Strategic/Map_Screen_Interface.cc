@@ -835,10 +835,10 @@ void EnableTeamInfoPanels( void )
 }
 
 
-void DoMapMessageBoxWithRect(MessageBoxStyleID const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPRect const* const pCenteringRect)
+void DoMapMessageBoxWithRect(MessageBoxStyleID const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPBox const* const centering_rect)
 {	// reset the highlighted line
 	giHighLine = -1;
-	DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, pCenteringRect);
+	DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, centering_rect);
 }
 
 
@@ -848,8 +848,8 @@ void DoMapMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zStri
 	giHighLine = -1;
 
 	// do message box and return
-	const SGPRect CenteringRect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
-	DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, &CenteringRect);
+	SGPBox const centering_rect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
+	DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, &centering_rect);
 }
 
 
