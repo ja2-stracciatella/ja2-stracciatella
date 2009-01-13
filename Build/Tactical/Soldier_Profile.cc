@@ -398,104 +398,82 @@ static void DecideActiveTerrorists(void)
 	gubNumTerrorists = 1 + ubNumAdditionalTerrorists;
 }
 
-void MakeRemainingTerroristsTougher( void )
+
+void MakeRemainingTerroristsTougher()
 {
-	UINT8					ubRemainingTerrorists = 0, ubLoop;
-	UINT16				usNewItem, usOldItem;
-	OBJECTTYPE		Object;
-	UINT8					ubRemainingDifficulty;
-
-	for ( ubLoop = 0; ubLoop < NUM_TERRORISTS; ubLoop++ )
+	UINT8 n_remaining_terrorists = 0;
+	for (UINT8 i = 0; i != NUM_TERRORISTS; ++i)
 	{
-		if ( gMercProfiles[ gubTerrorists[ ubLoop ] ].bMercStatus != MERC_IS_DEAD && gMercProfiles[ gubTerrorists[ ubLoop ] ].sSectorX != 0 && gMercProfiles[ gubTerrorists[ ubLoop ] ].sSectorY != 0 )
-		{
-			if ( gubTerrorists[ ubLoop ] == SLAY )
-			{
-				if (FindSoldierByProfileIDOnPlayerTeam(SLAY) != NULL)
-				{
-					// Slay on player's team, doesn't count towards remaining terrorists
-					continue;
-				}
-			}
-			ubRemainingTerrorists++;
-		}
+		ProfileID         const  pid = gubTerrorists[i];
+		MERCPROFILESTRUCT const& p   = *GetProfile(pid);
+		if (p.bMercStatus == MERC_IS_DEAD || p.sSectorX == 0 || p.sSectorY == 0) continue;
+		// Slay on player's team, doesn't count towards remaining terrorists
+		if (pid == SLAY && FindSoldierByProfileIDOnPlayerTeam(SLAY)) continue;
+		++n_remaining_terrorists;
 	}
 
-	ubRemainingDifficulty = (60 / gubNumTerrorists) * (gubNumTerrorists - ubRemainingTerrorists);
+	UINT8 remaining_difficulty = 60 / gubNumTerrorists * (gubNumTerrorists - n_remaining_terrorists);
 
-	switch( gGameOptions.ubDifficultyLevel )
+	switch (gGameOptions.ubDifficultyLevel)
 	{
-		case DIF_LEVEL_MEDIUM:
-			ubRemainingDifficulty = (ubRemainingDifficulty * 13) / 10;
-			break;
-		case DIF_LEVEL_HARD:
-			ubRemainingDifficulty = (ubRemainingDifficulty * 16) / 10;
-			break;
-		default:
-			break;
+		case DIF_LEVEL_MEDIUM: remaining_difficulty = remaining_difficulty * 13 / 10; break;
+		case DIF_LEVEL_HARD:   remaining_difficulty = remaining_difficulty * 16 / 10; break;
+		default: break;
 	}
 
-	if ( ubRemainingDifficulty < 14 )
-	{
-		// nothing
+	UINT16 old_item;
+	UINT16 new_item;
+	if (remaining_difficulty < 14)
+	{ // nothing
 		return;
 	}
-	else if ( ubRemainingDifficulty < 28 )
-	{
-		// mini grenade
-		usOldItem = NOTHING;
-		usNewItem = MINI_GRENADE;
+	else if (remaining_difficulty < 28)
+	{ // mini grenade
+		old_item = NOTHING;
+		new_item = MINI_GRENADE;
 	}
-	else if ( ubRemainingDifficulty < 42)
-	{
-		// hand grenade
-		usOldItem = MINI_GRENADE;
-		usNewItem = HAND_GRENADE;
+	else if (remaining_difficulty < 42)
+	{ // hand grenade
+		old_item = MINI_GRENADE;
+		new_item = HAND_GRENADE;
 	}
-	else if ( ubRemainingDifficulty < 56)
-	{
-		// mustard
-		usOldItem = HAND_GRENADE;
-		usNewItem = MUSTARD_GRENADE;
+	else if (remaining_difficulty < 56)
+	{ // mustard
+		old_item = HAND_GRENADE;
+		new_item = MUSTARD_GRENADE;
 	}
-	else if ( ubRemainingDifficulty < 70)
-	{
-		// LAW
-		usOldItem = MUSTARD_GRENADE;
-		usNewItem = ROCKET_LAUNCHER;
+	else if (remaining_difficulty < 70)
+	{ // LAW
+		old_item = MUSTARD_GRENADE;
+		new_item = ROCKET_LAUNCHER;
 	}
 	else
-	{
-		// LAW and hand grenade
-		usOldItem = NOTHING;
-		usNewItem = HAND_GRENADE;
+	{ // LAW and hand grenade
+		old_item = NOTHING;
+		new_item = HAND_GRENADE;
 	}
 
-	DeleteObj( &Object );
-	Object.usItem = usNewItem;
-	Object.bStatus[ 0 ] = 100;
+	OBJECTTYPE Object;
+	DeleteObj(&Object);
+	Object.usItem     = new_item;
+	Object.bStatus[0] = 100;
 
-	for ( ubLoop = 0; ubLoop < NUM_TERRORISTS; ubLoop++ )
+	for (UINT8 i = 0; i != NUM_TERRORISTS; ++i)
 	{
-		if ( gMercProfiles[ gubTerrorists[ ubLoop ] ].bMercStatus != MERC_IS_DEAD && gMercProfiles[ gubTerrorists[ ubLoop ] ].sSectorX != 0 && gMercProfiles[ gubTerrorists[ ubLoop ] ].sSectorY != 0 )
-		{
-			if ( gubTerrorists[ ubLoop ] == SLAY )
-			{
-				if (FindSoldierByProfileIDOnPlayerTeam(SLAY) != NULL)
-				{
-					// Slay on player's team, doesn't count towards remaining terrorists
-					continue;
-				}
-			}
+		ProfileID         const  pid = gubTerrorists[i];
+		MERCPROFILESTRUCT const& p   = *GetProfile(pid);
+		if (p.bMercStatus == MERC_IS_DEAD || p.sSectorX == 0 || p.sSectorY == 0) continue;
+		// Slay on player's team, doesn't count towards remaining terrorists
+		if (pid == SLAY && FindSoldierByProfileIDOnPlayerTeam(SLAY)) continue;
 
-			if ( usOldItem != NOTHING )
-			{
-				RemoveObjectFromSoldierProfile( gubTerrorists[ ubLoop ], usOldItem );
-			}
-			PlaceObjectInSoldierProfile( gubTerrorists[ ubLoop ], &Object );
+		if (old_item != NOTHING)
+		{
+			RemoveObjectFromSoldierProfile(pid, old_item);
 		}
+		PlaceObjectInSoldierProfile(pid, &Object);
 	}
 }
+
 
 void DecideOnAssassin( void )
 {
