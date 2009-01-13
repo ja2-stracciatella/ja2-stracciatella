@@ -1735,8 +1735,7 @@ static void DisplayBookMarks(void)
 	INT32 const h  = BOOK_HEIGHT + 6;
 	INT32 const sy = BOOK_TOP_Y + 6 + h;
 	INT32       y  = sy;
-	INT32       i  = 0;
-	for (;;)
+	for (INT32 i = 0;; ++i)
 	{
 		bool              const highlighted = iHighLightBookLine == i;
 		SGPVObject const* const vo          = highlighted ? guiBOOKHIGH : guiBOOKMARK;
@@ -1749,7 +1748,6 @@ static void DisplayBookMarks(void)
 		INT16                sY;
 		FindFontCenterCoordinates(BOOK_X + 3, y + 2, BOOK_WIDTH - 3, h, txt, BOOK_FONT, &sX, &sY);
 		MPrint(sX, sY, txt);
-		++i;
 		y += h;
 		if (idx == -1) break;
 	}
