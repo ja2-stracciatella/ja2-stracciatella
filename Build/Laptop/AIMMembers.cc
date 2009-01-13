@@ -1817,21 +1817,9 @@ void DisplayTextForMercFaceVideoPopUp(const wchar_t* const pString)
 
 static void SelectShutUpMercRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	BOOLEAN fInCallBack=TRUE;
-
-	if(fInCallBack)
+	if (iReason & (MSYS_CALLBACK_REASON_LBUTTON_UP | MSYS_CALLBACK_REASON_RBUTTON_UP))
 	{
-		if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
-		{
-			gfStopMercFromTalking = TRUE;
-		}
-		else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-		{
-			fInCallBack = FALSE;
-
-			gfStopMercFromTalking = TRUE;
-			fInCallBack = TRUE;
-		}
+		gfStopMercFromTalking = TRUE;
 	}
 }
 
