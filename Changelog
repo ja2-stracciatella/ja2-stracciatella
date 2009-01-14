@@ -1,3 +1,4 @@
+(r5051) Make the whole keypad useable by mapping all keypad keys to normal keys, e.g. keypad enter behaves the same as the return key.
 (r5027) Fix a glitch in r5021 which caused wrong display in the file and email viewers.
 
 v0.11 - 2009-01-08 - Liquorice
