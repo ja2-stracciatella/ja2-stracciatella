@@ -188,6 +188,7 @@ static void KeyChange(SDL_keysym const* const key_sym, bool const pressed)
 {
 	SDLKey       key = key_sym->sym;
 	SDLMod const mod = key_sym->mod;
+	bool   const num = mod & KMOD_NUM;
 	switch (key)
 	{
 #if defined WITH_MAEMO
@@ -195,19 +196,25 @@ static void KeyChange(SDL_keysym const* const key_sym, bool const pressed)
 		case SDLK_F4: return;
 #endif
 
-		case SDLK_KP0: key = mod & KMOD_NUM ? SDLK_0 : SDLK_INSERT;   break;
-		case SDLK_KP1: key = mod & KMOD_NUM ? SDLK_1 : SDLK_END;      break;
-		case SDLK_KP2: key = mod & KMOD_NUM ? SDLK_2 : SDLK_DOWN;     break;
-		case SDLK_KP3: key = mod & KMOD_NUM ? SDLK_3 : SDLK_PAGEDOWN; break;
-		case SDLK_KP4: key = mod & KMOD_NUM ? SDLK_4 : SDLK_LEFT;     break;
+		case SDLK_KP0:         key = num ? SDLK_0      : SDLK_INSERT;   break;
+		case SDLK_KP1:         key = num ? SDLK_1      : SDLK_END;      break;
+		case SDLK_KP2:         key = num ? SDLK_2      : SDLK_DOWN;     break;
+		case SDLK_KP3:         key = num ? SDLK_3      : SDLK_PAGEDOWN; break;
+		case SDLK_KP4:         key = num ? SDLK_4      : SDLK_LEFT;     break;
 		case SDLK_KP5:
-			if (!(mod & KMOD_NUM)) return;
+			if (!num) return;
 			key = SDLK_5;
 			break;
-		case SDLK_KP6: key = mod & KMOD_NUM ? SDLK_6 : SDLK_RIGHT;    break;
-		case SDLK_KP7: key = mod & KMOD_NUM ? SDLK_7 : SDLK_HOME;     break;
-		case SDLK_KP8: key = mod & KMOD_NUM ? SDLK_8 : SDLK_UP;       break;
-		case SDLK_KP9: key = mod & KMOD_NUM ? SDLK_9 : SDLK_PAGEUP;   break;
+		case SDLK_KP6:         key = num ? SDLK_6      : SDLK_RIGHT;    break;
+		case SDLK_KP7:         key = num ? SDLK_7      : SDLK_HOME;     break;
+		case SDLK_KP8:         key = num ? SDLK_8      : SDLK_UP;       break;
+		case SDLK_KP9:         key = num ? SDLK_9      : SDLK_PAGEUP;   break;
+		case SDLK_KP_PERIOD:   key = num ? SDLK_PERIOD : SDLK_DELETE;   break;
+		case SDLK_KP_DIVIDE:   key = SDLK_SLASH;                        break;
+		case SDLK_KP_MULTIPLY: key = SDLK_ASTERISK;                     break;
+		case SDLK_KP_MINUS:    key = SDLK_MINUS;                        break;
+		case SDLK_KP_PLUS:     key = SDLK_PLUS;                         break;
+		case SDLK_KP_ENTER:    key = SDLK_RETURN;                       break;
 
 		default:
 			if (key >= lengthof(gfKeyState)) return;
