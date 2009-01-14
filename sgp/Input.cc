@@ -184,54 +184,55 @@ right_button:
 }
 
 
-static void KeyChange(const SDL_keysym* KeySym, BOOLEAN Pressed)
+static void KeyChange(SDL_keysym const* const key_sym, bool const pressed)
 {
-	SDLKey Key = KeySym->sym;
+	SDLKey key = key_sym->sym;
 #if defined WITH_MAEMO
 	/* Use the menu button (mapped to F4) as modifier for right click */
-	if (Key == SDLK_F4) return;
+	if (key == SDLK_F4) return;
 #endif
 
-	if (Key >= SDLK_KP0 && Key <= SDLK_KP9)
+	if (SDLK_KP0 <= key && key <= SDLK_KP9)
 	{
-		if (KeySym->mod & KMOD_NUM)
+		if (key_sym->mod & KMOD_NUM)
 		{
-			Key = (SDLKey)(Key - SDLK_KP0 + SDLK_0);
+			key = (SDLKey)(key - SDLK_KP0 + SDLK_0);
 		}
 		else
 		{
-			switch (Key)
+			switch (key)
 			{
-				case SDLK_KP0: Key = SDLK_INSERT;   break;
-				case SDLK_KP1: Key = SDLK_END;      break;
-				case SDLK_KP2: Key = SDLK_DOWN;     break;
-				case SDLK_KP3: Key = SDLK_PAGEDOWN; break;
-				case SDLK_KP4: Key = SDLK_LEFT;     break;
+				case SDLK_KP0: key = SDLK_INSERT;   break;
+				case SDLK_KP1: key = SDLK_END;      break;
+				case SDLK_KP2: key = SDLK_DOWN;     break;
+				case SDLK_KP3: key = SDLK_PAGEDOWN; break;
+				case SDLK_KP4: key = SDLK_LEFT;     break;
 				case SDLK_KP5: return;
-				case SDLK_KP6: Key = SDLK_RIGHT;    break;
-				case SDLK_KP7: Key = SDLK_HOME;     break;
-				case SDLK_KP8: Key = SDLK_UP;       break;
-				case SDLK_KP9: Key = SDLK_PAGEUP;   break;
+				case SDLK_KP6: key = SDLK_RIGHT;    break;
+				case SDLK_KP7: key = SDLK_HOME;     break;
+				case SDLK_KP8: key = SDLK_UP;       break;
+				case SDLK_KP9: key = SDLK_PAGEUP;   break;
 			}
 		}
 	}
-	else if (Key >= lengthof(gfKeyState))
+	else if (key >= lengthof(gfKeyState))
 	{
 		return;
 	}
 
-	UINT EventType;
-	if (Pressed)
+	UINT     event_type;
+	BOOLEAN& key_state = gfKeyState[key];
+	if (pressed)
 	{
-		EventType = gfKeyState[Key] ? KEY_REPEAT : KEY_DOWN;
+		event_type = key_state ? KEY_REPEAT : KEY_DOWN;
 	}
 	else
 	{
-		if (!gfKeyState[Key]) return;
-		EventType = KEY_UP;
+		if (!key_state) return;
+		event_type = KEY_UP;
 	}
-	gfKeyState[Key] = Pressed;
-	QueueKeyEvent(EventType, Key, KeySym->mod, KeySym->unicode);
+	key_state = pressed;
+	QueueKeyEvent(event_type, key, key_sym->mod, key_sym->unicode);
 }
 
 
@@ -259,7 +260,7 @@ void KeyDown(const SDL_keysym* KeySym)
 			break;
 
 		default:
-			KeyChange(KeySym, TRUE);
+			KeyChange(KeySym, true);
 			break;
 	}
 }
@@ -305,7 +306,7 @@ void KeyUp(const SDL_keysym* KeySym)
 			/* FALLTHROUGH */
 
 		default:
-			KeyChange(KeySym, FALSE);
+			KeyChange(KeySym, false);
 			break;
 	}
 }
