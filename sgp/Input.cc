@@ -186,38 +186,32 @@ right_button:
 
 static void KeyChange(SDL_keysym const* const key_sym, bool const pressed)
 {
-	SDLKey key = key_sym->sym;
+	SDLKey       key = key_sym->sym;
+	SDLMod const mod = key_sym->mod;
+	switch (key)
+	{
 #if defined WITH_MAEMO
-	/* Use the menu button (mapped to F4) as modifier for right click */
-	if (key == SDLK_F4) return;
+		/* Use the menu button (mapped to F4) as modifier for right click */
+		case SDLK_F4: return;
 #endif
 
-	if (SDLK_KP0 <= key && key <= SDLK_KP9)
-	{
-		if (key_sym->mod & KMOD_NUM)
-		{
-			key = (SDLKey)(key - SDLK_KP0 + SDLK_0);
-		}
-		else
-		{
-			switch (key)
-			{
-				case SDLK_KP0: key = SDLK_INSERT;   break;
-				case SDLK_KP1: key = SDLK_END;      break;
-				case SDLK_KP2: key = SDLK_DOWN;     break;
-				case SDLK_KP3: key = SDLK_PAGEDOWN; break;
-				case SDLK_KP4: key = SDLK_LEFT;     break;
-				case SDLK_KP5: return;
-				case SDLK_KP6: key = SDLK_RIGHT;    break;
-				case SDLK_KP7: key = SDLK_HOME;     break;
-				case SDLK_KP8: key = SDLK_UP;       break;
-				case SDLK_KP9: key = SDLK_PAGEUP;   break;
-			}
-		}
-	}
-	else if (key >= lengthof(gfKeyState))
-	{
-		return;
+		case SDLK_KP0: key = mod & KMOD_NUM ? SDLK_0 : SDLK_INSERT;   break;
+		case SDLK_KP1: key = mod & KMOD_NUM ? SDLK_1 : SDLK_END;      break;
+		case SDLK_KP2: key = mod & KMOD_NUM ? SDLK_2 : SDLK_DOWN;     break;
+		case SDLK_KP3: key = mod & KMOD_NUM ? SDLK_3 : SDLK_PAGEDOWN; break;
+		case SDLK_KP4: key = mod & KMOD_NUM ? SDLK_4 : SDLK_LEFT;     break;
+		case SDLK_KP5:
+			if (!(mod & KMOD_NUM)) return;
+			key = SDLK_5;
+			break;
+		case SDLK_KP6: key = mod & KMOD_NUM ? SDLK_6 : SDLK_RIGHT;    break;
+		case SDLK_KP7: key = mod & KMOD_NUM ? SDLK_7 : SDLK_HOME;     break;
+		case SDLK_KP8: key = mod & KMOD_NUM ? SDLK_8 : SDLK_UP;       break;
+		case SDLK_KP9: key = mod & KMOD_NUM ? SDLK_9 : SDLK_PAGEUP;   break;
+
+		default:
+			if (key >= lengthof(gfKeyState)) return;
+			break;
 	}
 
 	UINT     event_type;
@@ -232,7 +226,7 @@ static void KeyChange(SDL_keysym const* const key_sym, bool const pressed)
 		event_type = KEY_UP;
 	}
 	key_state = pressed;
-	QueueKeyEvent(event_type, key, key_sym->mod, key_sym->unicode);
+	QueueKeyEvent(event_type, key, mod, key_sym->unicode);
 }
 
 
