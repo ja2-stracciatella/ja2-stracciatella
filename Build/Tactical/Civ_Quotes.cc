@@ -389,7 +389,7 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	UINT16 const w = gusCivQuoteBoxWidth;
 	UINT16 const h = gusCivQuoteBoxHeight;
 
-	gCivQuoteData.video_overlay = RegisterVideoOverlay(0, RenderCivQuoteBoxOverlay, sX, sY, w, h);
+	gCivQuoteData.video_overlay = RegisterVideoOverlay(RenderCivQuoteBoxOverlay, sX, sY, w, h);
 
 	//Define main region
 	MSYS_DefineRegion(&gCivQuoteData.MouseRegion, sX, sY, sX + w, sY + h, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, QuoteOverlayClickCallback);

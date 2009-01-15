@@ -369,12 +369,6 @@ void ShutdownBackgroundRects(void)
 }
 
 
-static void DisableBackgroundRect(BACKGROUND_SAVE* const b, const BOOLEAN fDisabled)
-{
-	b->fDisabled = fDisabled;
-}
-
-
 void UpdateSaveBuffer(void)
 {
 	// Update saved buffer - do for the viewport size ony!
@@ -488,7 +482,7 @@ static VIDEO_OVERLAY* GetFreeVideoOverlay(void)
 }
 
 
-VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 const flags, OVERLAY_CALLBACK const callback, INT16 const x, INT16 const y, INT16 const w, INT16 const h)
+VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK const callback, INT16 const x, INT16 const y, INT16 const w, INT16 const h)
 {
 	BACKGROUND_SAVE* const bgs = RegisterBackgroundRect(BGND_FLAG_PERMANENT, x, y, x + w, y + h);
 	if (!bgs) return 0;
@@ -499,30 +493,21 @@ VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 const flags, OVERLAY_CALLBACK const c
 
 	// Init new blitter
 	memset(v, 0, sizeof(*v));
-	v->uiFlags     = flags;
 	v->fAllocated  = 2;
 	v->background  = bgs;
 	v->sX          = x;
 	v->sY          = y;
 	v->uiDestBuff  = FRAME_BUFFER;
 	v->BltCallback = callback;
-
-	// Set disabled flag to true
-	if (flags & VOVERLAY_STARTDISABLED)
-	{
-		v->fDisabled = TRUE;
-		DisableBackgroundRect(v->background, TRUE);
-	}
-
 	return v;
 }
 
 
-VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 const flags, OVERLAY_CALLBACK const callback, INT16 const x, INT16 const y, Font const font, UINT8 const foreground, UINT8 const background, wchar_t const* const text)
+VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK const callback, INT16 const x, INT16 const y, Font const font, UINT8 const foreground, UINT8 const background, wchar_t const* const text)
 {
 	INT16          const w = StringPixLength(text, font);
 	INT16          const h = GetFontHeight(font);
-	VIDEO_OVERLAY* const v = RegisterVideoOverlay(flags, callback, x, y, w, h);
+	VIDEO_OVERLAY* const v = RegisterVideoOverlay(callback, x, y, w, h);
 	if (v)
 	{
 		v->uiFontID   = font;
@@ -722,8 +707,8 @@ void EnableVideoOverlay(const BOOLEAN fEnable, VIDEO_OVERLAY* const v)
 	if (v == NULL) return;
 	if (!v->fAllocated) return;
 
-	v->fDisabled = !fEnable;
-	DisableBackgroundRect(v->background, !fEnable);
+	v->fDisabled             = !fEnable;
+	v->background->fDisabled = !fEnable;
 }
 
 

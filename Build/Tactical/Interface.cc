@@ -1734,7 +1734,7 @@ void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text)
 	if (g_ui_message_overlay == NULL)
 	{
 		INT16 const x = (SCREEN_WIDTH - gusUIMessageWidth) / 2;
-		g_ui_message_overlay = RegisterVideoOverlay(0, RenderUIMessage, x, 150, gusUIMessageWidth, gusUIMessageHeight);
+		g_ui_message_overlay = RegisterVideoOverlay(RenderUIMessage, x, 150, gusUIMessageWidth, gusUIMessageHeight);
 	}
 
 	gfUseSkullIconMessage = fUseSkullIcon;
@@ -1752,7 +1752,7 @@ void BeginMapUIMessage(INT16 delta_y, const wchar_t* text)
 	{
 		INT16 const x = MAP_VIEW_START_X + (MAP_VIEW_WIDTH  - gusUIMessageWidth)  / 2 + 20;
 		INT16 const y = MAP_VIEW_START_Y + (MAP_VIEW_HEIGHT - gusUIMessageHeight) / 2 + delta_y;
-		g_ui_message_overlay = RegisterVideoOverlay(0, RenderUIMessage, x, y, gusUIMessageWidth, gusUIMessageHeight);
+		g_ui_message_overlay = RegisterVideoOverlay(RenderUIMessage, x, y, gusUIMessageWidth, gusUIMessageHeight);
 	}
 }
 

@@ -12,8 +12,6 @@
 #define BGND_FLAG_SAVERECT		0x08000000
 #define BGND_FLAG_ANIMATED		0x00000001
 
-#define VOVERLAY_STARTDISABLED 0x00000002
-
 
 // Callback for topmost blitters
 typedef void (*OVERLAY_CALLBACK)(VIDEO_OVERLAY*);
@@ -21,7 +19,6 @@ typedef void (*OVERLAY_CALLBACK)(VIDEO_OVERLAY*);
 // Struct for topmost blitters
 struct VIDEO_OVERLAY
 {
-	UINT32           uiFlags;
 	BOOLEAN          fAllocated;
 	BOOLEAN          fDisabled;
 	BOOLEAN          fActivelySaving;
@@ -76,8 +73,8 @@ void GPrintInvalidateF(INT16 x, INT16 y, wchar_t const* fmt, ...);
 
 
 // VIDEO OVERLAY STUFF
-VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 flags, OVERLAY_CALLBACK callback, INT16 x, INT16 y, INT16 w, INT16 h);
-VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 flags, OVERLAY_CALLBACK callback, INT16 x, INT16 y, Font font, UINT8 foreground, UINT8 background, wchar_t const* text);
+VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, INT16 w, INT16 h);
+VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, Font font, UINT8 foreground, UINT8 background, wchar_t const* text);
 void ExecuteVideoOverlays(void);
 void SaveVideoOverlaysArea(SGPVSurface* src);
 void DeleteVideoOverlaysArea(void);

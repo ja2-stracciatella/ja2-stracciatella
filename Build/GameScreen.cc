@@ -122,10 +122,12 @@ void MainGameScreenInit(void)
 
 	// Init Video Overlays
 	// FIRST, FRAMERATE
-	g_fps_overlay = RegisterVideoOverlay(VOVERLAY_STARTDISABLED, BlitMFont, 0, 0, SMALLFONT1, FONT_MCOLOR_DKGRAY, FONT_MCOLOR_BLACK, L"90");
+	g_fps_overlay = RegisterVideoOverlay(BlitMFont, 0, 0, SMALLFONT1, FONT_MCOLOR_DKGRAY, FONT_MCOLOR_BLACK, L"90");
+	EnableVideoOverlay(false, g_fps_overlay);
 
 	// SECOND, PERIOD COUNTER
-	g_counter_period_overlay = RegisterVideoOverlay(VOVERLAY_STARTDISABLED, BlitMFont, 30, 0, SMALLFONT1, FONT_MCOLOR_DKGRAY, FONT_MCOLOR_BLACK, L"Levelnodes: 100000");
+	g_counter_period_overlay = RegisterVideoOverlay(BlitMFont, 30, 0, SMALLFONT1, FONT_MCOLOR_DKGRAY, FONT_MCOLOR_BLACK, L"Levelnodes: 100000");
+	EnableVideoOverlay(false, g_counter_period_overlay);
 }
 
 

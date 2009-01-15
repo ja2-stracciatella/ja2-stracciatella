@@ -1645,7 +1645,7 @@ static void ExecuteTacticalTextBox(const INT16 sLeftPosition, const wchar_t* con
 	UINT16 const w = gusSubtitleBoxWidth;
 	UINT16 const h = gusSubtitleBoxHeight;
 
-	g_text_box_overlay = RegisterVideoOverlay(0, RenderSubtitleBoxOverlay, x, y, w, h);
+	g_text_box_overlay = RegisterVideoOverlay(RenderSubtitleBoxOverlay, x, y, w, h);
 
 	gsTopPosition = 20;
 
@@ -1683,7 +1683,7 @@ static void HandleExternNPCSpeechFace(FACETYPE* const face)
 		y = gsExternPanelYPosition;
 	}
 
-	gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(0, RenderFaceOverlay, x, y, w, h);
+	gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(RenderFaceOverlay, x, y, w, h);
 
 	RenderAutoFace(face);
 
@@ -1743,7 +1743,7 @@ static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE* const f
 		INT16 const w = 99;
 		INT16 const h = 98;
 
-		gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(0, RenderFaceOverlay, x, y, w, h);
+		gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(RenderFaceOverlay, x, y, w, h);
 
 		RenderAutoFace(face);
 

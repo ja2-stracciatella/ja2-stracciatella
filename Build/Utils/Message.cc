@@ -213,7 +213,7 @@ void ScrollString(void)
 
 			// now add in the new string
 			gpDisplayList[0] = pStringS;
-			pStringS->video_overlay = RegisterVideoOverlay(0, BlitString, X_START, Y_START, TINYFONT1, pStringS->usColor, FONT_MCOLOR_BLACK, pStringS->pString16);
+			pStringS->video_overlay = RegisterVideoOverlay(BlitString, X_START, Y_START, TINYFONT1, pStringS->usColor, FONT_MCOLOR_BLACK, pStringS->pString16);
 			if (pStringS->fBeginningOfNewString)
 			{
 				iNumberOfNewStrings++;
