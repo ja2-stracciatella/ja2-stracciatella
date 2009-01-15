@@ -12,8 +12,7 @@
 #define BGND_FLAG_SAVERECT		0x08000000
 #define BGND_FLAG_ANIMATED		0x00000001
 
-#define VOVERLAY_DIRTYBYTEXT					0x00000001
-#define	VOVERLAY_STARTDISABLED				0x00000002
+#define VOVERLAY_STARTDISABLED 0x00000002
 
 
 // Callback for topmost blitters
@@ -38,21 +37,6 @@ struct VIDEO_OVERLAY
 	SGPVSurface*     uiDestBuff;
 	OVERLAY_CALLBACK BltCallback;
 };
-
-
-// Struct for init topmost blitter
-typedef struct
-{
-		INT16				sLeft;
-		INT16				sTop;
-		INT16				sRight;
-		INT16				sBottom;
-		Font             uiFontID;
-		UINT8				ubFontBack;
-		UINT8				ubFontFore;
-		wchar_t const*   text;
-		OVERLAY_CALLBACK		BltCallback;
-}	VIDEO_OVERLAY_DESC;
 
 
 // GLOBAL VARIABLES
@@ -92,7 +76,8 @@ void GPrintInvalidateF(INT16 x, INT16 y, wchar_t const* fmt, ...);
 
 
 // VIDEO OVERLAY STUFF
-VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 uiFlags, const VIDEO_OVERLAY_DESC* pTopmostDesc);
+VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 flags, OVERLAY_CALLBACK callback, INT16 x, INT16 y, INT16 w, INT16 h);
+VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 flags, OVERLAY_CALLBACK callback, INT16 x, INT16 y, Font font, UINT8 foreground, UINT8 background, wchar_t const* text);
 void ExecuteVideoOverlays(void);
 void SaveVideoOverlaysArea(SGPVSurface* src);
 void DeleteVideoOverlaysArea(void);

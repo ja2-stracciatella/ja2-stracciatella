@@ -87,23 +87,6 @@ static ScrollStringSt* AddString(const wchar_t* pString, UINT16 usColor, BOOLEAN
 }
 
 
-static void BlitString(VIDEO_OVERLAY* pBlitter);
-
-
-static void CreateStringVideoOverlay(ScrollStringSt* pStringSt, UINT16 usX, UINT16 usY)
-{
-	VIDEO_OVERLAY_DESC VideoOverlayDesc;
-	VideoOverlayDesc.sLeft       = usX;
-	VideoOverlayDesc.sTop        = usY;
-	VideoOverlayDesc.uiFontID    = TINYFONT1;
-	VideoOverlayDesc.ubFontBack  = FONT_MCOLOR_BLACK;
-	VideoOverlayDesc.ubFontFore  = pStringSt->usColor;
-	VideoOverlayDesc.BltCallback = BlitString;
-	VideoOverlayDesc.text        = pStringSt->pString16;
-	pStringSt->video_overlay = RegisterVideoOverlay(VOVERLAY_DIRTYBYTEXT, &VideoOverlayDesc);
-}
-
-
 static void RemoveStringVideoOverlay(ScrollStringSt* pStringSt)
 {
 	// error check, remove one not there
@@ -147,6 +130,7 @@ void ClearDisplayedListOfTacticalStrings(void)
 }
 
 
+static void BlitString(VIDEO_OVERLAY*);
 static INT32 GetMessageQueueSize(void);
 static void PlayNewMessageSound(void);
 
@@ -229,7 +213,7 @@ void ScrollString(void)
 
 			// now add in the new string
 			gpDisplayList[0] = pStringS;
-			CreateStringVideoOverlay(pStringS, X_START, Y_START);
+			pStringS->video_overlay = RegisterVideoOverlay(0, BlitString, X_START, Y_START, TINYFONT1, pStringS->usColor, FONT_MCOLOR_BLACK, pStringS->pString16);
 			if (pStringS->fBeginningOfNewString)
 			{
 				iNumberOfNewStrings++;

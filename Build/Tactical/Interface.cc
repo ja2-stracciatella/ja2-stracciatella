@@ -1715,8 +1715,6 @@ static UINT32 CalcUIMessageDuration(const wchar_t* wString);
 
 void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text)
 {
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-
 	guiUIMessageTime = GetJA2Clock( );
 	guiUIMessageTimeDelay = CalcUIMessageDuration(text);
 
@@ -1735,15 +1733,8 @@ void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text)
 
 	if (g_ui_message_overlay == NULL)
 	{
-		memset( &VideoOverlayDesc, 0, sizeof( VideoOverlayDesc ) );
-
-		// Set Overlay
-		VideoOverlayDesc.sLeft       = (SCREEN_WIDTH - gusUIMessageWidth) / 2;
-		VideoOverlayDesc.sTop        = 150;
-		VideoOverlayDesc.sRight      = VideoOverlayDesc.sLeft + gusUIMessageWidth;
-		VideoOverlayDesc.sBottom     = VideoOverlayDesc.sTop + gusUIMessageHeight;
-		VideoOverlayDesc.BltCallback = RenderUIMessage;
-		g_ui_message_overlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
+		INT16 const x = (SCREEN_WIDTH - gusUIMessageWidth) / 2;
+		g_ui_message_overlay = RegisterVideoOverlay(0, RenderUIMessage, x, 150, gusUIMessageWidth, gusUIMessageHeight);
 	}
 
 	gfUseSkullIconMessage = fUseSkullIcon;
@@ -1759,14 +1750,9 @@ void BeginMapUIMessage(INT16 delta_y, const wchar_t* text)
 
 	if (g_ui_message_overlay == NULL)
 	{
-		VIDEO_OVERLAY_DESC VideoOverlayDesc;
-		memset(&VideoOverlayDesc, 0, sizeof(VideoOverlayDesc));
-		VideoOverlayDesc.sLeft       = MAP_VIEW_START_X + (MAP_VIEW_WIDTH  - gusUIMessageWidth)  / 2 + 20;
-		VideoOverlayDesc.sTop        = MAP_VIEW_START_Y + (MAP_VIEW_HEIGHT - gusUIMessageHeight) / 2 + delta_y;
-		VideoOverlayDesc.sRight      = VideoOverlayDesc.sLeft + gusUIMessageWidth;
-		VideoOverlayDesc.sBottom     = VideoOverlayDesc.sTop  + gusUIMessageHeight;
-		VideoOverlayDesc.BltCallback = RenderUIMessage;
-		g_ui_message_overlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
+		INT16 const x = MAP_VIEW_START_X + (MAP_VIEW_WIDTH  - gusUIMessageWidth)  / 2 + 20;
+		INT16 const y = MAP_VIEW_START_Y + (MAP_VIEW_HEIGHT - gusUIMessageHeight) / 2 + delta_y;
+		g_ui_message_overlay = RegisterVideoOverlay(0, RenderUIMessage, x, y, gusUIMessageWidth, gusUIMessageHeight);
 	}
 }
 

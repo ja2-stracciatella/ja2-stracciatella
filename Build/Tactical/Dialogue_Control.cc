@@ -1634,28 +1634,23 @@ static void TextOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 static void ExecuteTacticalTextBox(const INT16 sLeftPosition, const wchar_t* const pString)
 {
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-
 	// check if mouse region created, if so, do not recreate
 	if (fTextBoxMouseRegionCreated) return;
-
-	memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
 
 	// Prepare text box
 	g_dialogue_box = PrepareMercPopupBox(g_dialogue_box, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, pString, DIALOGUE_DEFAULT_SUBTITLE_WIDTH, 0, 0, 0, &gusSubtitleBoxWidth, &gusSubtitleBoxHeight);
 
-	VideoOverlayDesc.sLeft			 = sLeftPosition;
-	VideoOverlayDesc.sTop				 = gsTopPosition;
-	VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + gusSubtitleBoxWidth;
-	VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + gusSubtitleBoxHeight;
-	VideoOverlayDesc.BltCallback = RenderSubtitleBoxOverlay;
-	g_text_box_overlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
+	INT16  const x = sLeftPosition;
+	INT16  const y = gsTopPosition;
+	UINT16 const w = gusSubtitleBoxWidth;
+	UINT16 const h = gusSubtitleBoxHeight;
+
+	g_text_box_overlay = RegisterVideoOverlay(0, RenderSubtitleBoxOverlay, x, y, w, h);
 
 	gsTopPosition = 20;
 
 	//Define main region
-	MSYS_DefineRegion( &gTextBoxMouseRegion,  VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,  VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
-						 CURSOR_NORMAL, MSYS_NO_CALLBACK, TextOverlayClickCallback );
+	MSYS_DefineRegion(&gTextBoxMouseRegion, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, TextOverlayClickCallback);
 
 	fTextBoxMouseRegionCreated = TRUE;
 }
@@ -1667,36 +1662,28 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter);
 
 static void HandleExternNPCSpeechFace(FACETYPE* const face)
 {
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-
 	// Enable it!
 	SetAutoFaceActive(FACE_AUTO_DISPLAY_BUFFER, FACE_AUTO_RESTORE_BUFFER, face, 0, 0);
 
 	// Set flag to say WE control when to set inactive!
 	face->uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
-	if ( guiCurrentScreen != MAP_SCREEN )
+	INT16       x;
+	INT16       y;
+	INT16 const w = 99;
+	INT16 const h = 98;
+	if (guiCurrentScreen != MAP_SCREEN)
 	{
-		// Setup video overlay!
-		VideoOverlayDesc.sLeft			 = 10;
-		VideoOverlayDesc.sTop				 = 20;
-		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + 99;
-		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + 98;
-		VideoOverlayDesc.BltCallback = RenderFaceOverlay;
+		x = 10;
+		y = 20;
 	}
 	else
 	{
-		// Setup video overlay!
-
-		VideoOverlayDesc.sLeft			 = gsExternPanelXPosition;
-		VideoOverlayDesc.sTop				 = gsExternPanelYPosition;
-
-		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + 99;
-		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + 98;
-		VideoOverlayDesc.BltCallback = RenderFaceOverlay;
+		x = gsExternPanelXPosition;
+		y = gsExternPanelYPosition;
 	}
 
-	gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
+	gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(0, RenderFaceOverlay, x, y, w, h);
 
 	RenderAutoFace(face);
 
@@ -1706,8 +1693,7 @@ static void HandleExternNPCSpeechFace(FACETYPE* const face)
 		fExternFaceBoxRegionCreated = TRUE;
 
 		//Define main region
-		MSYS_DefineRegion( &gFacePopupMouseRegion,  VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,  VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
-							 CURSOR_NORMAL, MSYS_NO_CALLBACK, FaceOverlayClickCallback );
+		MSYS_DefineRegion(&gFacePopupMouseRegion, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, FaceOverlayClickCallback);
 	}
 
 	gfFacePanelActive = TRUE;
@@ -1716,10 +1702,7 @@ static void HandleExternNPCSpeechFace(FACETYPE* const face)
 
 static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE* const face)
 {
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
 	BOOLEAN								fDoExternPanel = FALSE;
-
-	memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
 
 	// Get soldier pointer, if there is one...
 	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubCharacterNum);
@@ -1755,14 +1738,12 @@ static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE* const f
 			gfRerenderInterfaceFromHelpText = TRUE;
 		}
 
-		// Setup video overlay!
-		VideoOverlayDesc.sLeft			 = 10;
-		VideoOverlayDesc.sTop				 = 20;
-		VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + 99;
-		VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + 98;
-		VideoOverlayDesc.BltCallback = RenderFaceOverlay;
+		INT16 const x = 10;
+		INT16 const y = 20;
+		INT16 const w = 99;
+		INT16 const h = 98;
 
-		gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
+		gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(0, RenderFaceOverlay, x, y, w, h);
 
 		RenderAutoFace(face);
 
@@ -1772,8 +1753,7 @@ static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE* const f
 			fExternFaceBoxRegionCreated = TRUE;
 
 			//Define main region
-			MSYS_DefineRegion( &gFacePopupMouseRegion,  VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,  VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
-								 CURSOR_NORMAL, MSYS_NO_CALLBACK, FaceOverlayClickCallback );
+			MSYS_DefineRegion(&gFacePopupMouseRegion, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, FaceOverlayClickCallback);
 		}
 
 		gfFacePanelActive = TRUE;

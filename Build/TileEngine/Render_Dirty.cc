@@ -488,51 +488,47 @@ static VIDEO_OVERLAY* GetFreeVideoOverlay(void)
 }
 
 
-VIDEO_OVERLAY* RegisterVideoOverlay(const UINT32 uiFlags, const VIDEO_OVERLAY_DESC* const vod)
+VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 const flags, OVERLAY_CALLBACK const callback, INT16 const x, INT16 const y, INT16 const w, INT16 const h)
 {
-	INT16 right;
-	INT16 bottom;
-	if (uiFlags & VOVERLAY_DIRTYBYTEXT)
-	{
-		const UINT16 uiStringLength = StringPixLength(vod->text, vod->uiFontID);
-		const UINT16 uiStringHeight = GetFontHeight(vod->uiFontID);
-		right  = vod->sLeft + uiStringLength;
-		bottom = vod->sTop  + uiStringHeight;
-	}
-	else
-	{
-		right  = vod->sRight;
-		bottom = vod->sBottom;
-	}
-
-	BACKGROUND_SAVE* const bgs = RegisterBackgroundRect(BGND_FLAG_PERMANENT, vod->sLeft, vod->sTop, right, bottom);
-	if (bgs == NO_BGND_RECT) return NULL;
+	BACKGROUND_SAVE* const bgs = RegisterBackgroundRect(BGND_FLAG_PERMANENT, x, y, x + w, y + h);
+	if (!bgs) return 0;
 
 	// Get next free topmost blitter index
 	VIDEO_OVERLAY* const v = GetFreeVideoOverlay();
-	if (v == NULL) return NULL;
+	if (!v) return 0;
 
 	// Init new blitter
 	memset(v, 0, sizeof(*v));
-	v->uiFlags     = uiFlags;
+	v->uiFlags     = flags;
 	v->fAllocated  = 2;
 	v->background  = bgs;
-	v->uiFontID    = vod->uiFontID;
-	v->sX          = vod->sLeft;
-	v->sY          = vod->sTop;
-	v->ubFontBack  = vod->ubFontBack;
-	v->ubFontFore  = vod->ubFontFore;
+	v->sX          = x;
+	v->sY          = y;
 	v->uiDestBuff  = FRAME_BUFFER;
-	v->BltCallback = vod->BltCallback;
-	if (vod->text) wcslcpy(v->zText, vod->text, lengthof(v->zText));
+	v->BltCallback = callback;
 
 	// Set disabled flag to true
-	if (uiFlags & VOVERLAY_STARTDISABLED)
+	if (flags & VOVERLAY_STARTDISABLED)
 	{
 		v->fDisabled = TRUE;
 		DisableBackgroundRect(v->background, TRUE);
 	}
 
+	return v;
+}
+
+
+VIDEO_OVERLAY* RegisterVideoOverlay(UINT32 const flags, OVERLAY_CALLBACK const callback, INT16 const x, INT16 const y, Font const font, UINT8 const foreground, UINT8 const background, wchar_t const* const text)
+{
+	INT16          const w = StringPixLength(text, font);
+	INT16          const h = GetFontHeight(font);
+	VIDEO_OVERLAY* const v = RegisterVideoOverlay(flags, callback, x, y, w, h);
+	if (v)
+	{
+		v->uiFontID   = font;
+		v->ubFontFore = foreground;
+		v->ubFontBack = background;
+	}
 	return v;
 }
 
@@ -748,8 +744,8 @@ void SetVideoOverlayPos(VIDEO_OVERLAY* const v, const INT16 X, const INT16 Y)
 	if (v == NULL) return;
 	if (!v->fAllocated) return;
 
-	// If position has changed and flags are of type that use dirty rects, adjust
-	if (v->uiFlags & VOVERLAY_DIRTYBYTEXT)
+	// If position has changed and there is text, adjust
+	if (v->zText[0] != L'\0')
 	{
 		UINT16 uiStringLength = StringPixLength(v->zText, v->uiFontID);
 		UINT16 uiStringHeight = GetFontHeight(v->uiFontID);

@@ -113,8 +113,6 @@ BOOLEAN	guiTacticalLeaveScreen		= FALSE;
 
 void MainGameScreenInit(void)
 {
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-
 	gpZBuffer = InitZBuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
 	InitializeBackgroundRects();
 
@@ -124,21 +122,10 @@ void MainGameScreenInit(void)
 
 	// Init Video Overlays
 	// FIRST, FRAMERATE
-	VideoOverlayDesc.sLeft			 = 0;
-	VideoOverlayDesc.sTop				 = 0;
-	VideoOverlayDesc.uiFontID    = SMALLFONT1;
-	VideoOverlayDesc.ubFontBack  = FONT_MCOLOR_BLACK ;
-	VideoOverlayDesc.ubFontFore  = FONT_MCOLOR_DKGRAY ;
-	VideoOverlayDesc.text        = L"90";
-	VideoOverlayDesc.BltCallback = BlitMFont;
-	g_fps_overlay = RegisterVideoOverlay(VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT, &VideoOverlayDesc);
+	g_fps_overlay = RegisterVideoOverlay(VOVERLAY_STARTDISABLED, BlitMFont, 0, 0, SMALLFONT1, FONT_MCOLOR_DKGRAY, FONT_MCOLOR_BLACK, L"90");
 
 	// SECOND, PERIOD COUNTER
-	VideoOverlayDesc.sLeft			 = 30;
-	VideoOverlayDesc.sTop				 = 0;
-	VideoOverlayDesc.text        = L"Levelnodes: 100000";
-	VideoOverlayDesc.BltCallback = BlitMFont;
-	g_counter_period_overlay = RegisterVideoOverlay(VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT, &VideoOverlayDesc);
+	g_counter_period_overlay = RegisterVideoOverlay(VOVERLAY_STARTDISABLED, BlitMFont, 30, 0, SMALLFONT1, FONT_MCOLOR_DKGRAY, FONT_MCOLOR_BLACK, L"Levelnodes: 100000");
 }
 
 

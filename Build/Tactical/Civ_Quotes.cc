@@ -334,8 +334,6 @@ static void QuoteOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT16 sX, INT16 sY )
 {
-	VIDEO_OVERLAY_DESC		VideoOverlayDesc;
-
 	// OK, do we have another on?
 	if ( gCivQuoteData.bActive )
 	{
@@ -357,9 +355,6 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	{
 		MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  gzCivQuote );
 	}
-
-	// Create video oeverlay....
-	memset( &VideoOverlayDesc, 0, sizeof( VIDEO_OVERLAY_DESC ) );
 
 	// Prepare text box
 	gCivQuoteData.dialogue_box = PrepareMercPopupBox(0, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, gzCivQuote, DIALOGUE_DEFAULT_WIDTH, 0, 0, 0, &gusCivQuoteBoxWidth, &gusCivQuoteBoxHeight);
@@ -391,17 +386,13 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 		sY = MIN(sY, gsVIEWPORT_WINDOW_END_Y - gusCivQuoteBoxHeight);
 	}
 
-	VideoOverlayDesc.sLeft			 = sX;
-	VideoOverlayDesc.sTop				 = sY;
-	VideoOverlayDesc.sRight			 = VideoOverlayDesc.sLeft + gusCivQuoteBoxWidth;
-	VideoOverlayDesc.sBottom		 = VideoOverlayDesc.sTop + gusCivQuoteBoxHeight;
-	VideoOverlayDesc.BltCallback = RenderCivQuoteBoxOverlay;
-	gCivQuoteData.video_overlay = RegisterVideoOverlay(0, &VideoOverlayDesc);
+	UINT16 const w = gusCivQuoteBoxWidth;
+	UINT16 const h = gusCivQuoteBoxHeight;
+
+	gCivQuoteData.video_overlay = RegisterVideoOverlay(0, RenderCivQuoteBoxOverlay, sX, sY, w, h);
 
 	//Define main region
-	MSYS_DefineRegion( &(gCivQuoteData.MouseRegion), VideoOverlayDesc.sLeft, VideoOverlayDesc.sTop,  VideoOverlayDesc.sRight, VideoOverlayDesc.sBottom, MSYS_PRIORITY_HIGHEST,
-						 CURSOR_NORMAL, MSYS_NO_CALLBACK, QuoteOverlayClickCallback );
-
+	MSYS_DefineRegion(&gCivQuoteData.MouseRegion, sX, sY, sX + w, sY + h, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, QuoteOverlayClickCallback);
 
 	gCivQuoteData.bActive = TRUE;
 
