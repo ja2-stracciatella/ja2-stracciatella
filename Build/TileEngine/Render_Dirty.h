@@ -19,6 +19,8 @@ typedef void (*OVERLAY_CALLBACK)(VIDEO_OVERLAY*);
 // Struct for topmost blitters
 struct VIDEO_OVERLAY
 {
+	VIDEO_OVERLAY*   prev;
+	VIDEO_OVERLAY*   next;
 	BOOLEAN          fAllocated;
 	BOOLEAN          fDisabled;
 	BOOLEAN          fActivelySaving;

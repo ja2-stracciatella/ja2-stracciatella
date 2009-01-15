@@ -14,8 +14,7 @@
 #include "Debug.h"
 
 
-#define		BACKGROUND_BUFFERS	500
-#define		VIDEO_OVERLAYS			100
+#define BACKGROUND_BUFFERS 500
 
 
 // Struct for backgrounds
@@ -41,16 +40,12 @@ struct BACKGROUND_SAVE
 static BACKGROUND_SAVE gBackSaves[BACKGROUND_BUFFERS];
 UINT32 guiNumBackSaves=0;
 
-static VIDEO_OVERLAY gVideoOverlays[VIDEO_OVERLAYS];
-static UINT32        guiNumVideoOverlays = 0;
+static VIDEO_OVERLAY* gVideoOverlays;
 
 
-#define FOR_ALL_VIDEO_OVERLAYS(iter)                                      \
-	for (VIDEO_OVERLAY* iter        = gVideoOverlays,                       \
-	                  * iter##__end = gVideoOverlays + guiNumVideoOverlays; \
-	     iter != iter##__end;                                               \
-	     ++iter)                                                            \
-		if (!iter->fAllocated || iter->fDisabled) continue; else
+#define FOR_ALL_VIDEO_OVERLAYS(iter)                                  \
+	for (VIDEO_OVERLAY* iter = gVideoOverlays; iter; iter = iter->next) \
+		if (iter->fDisabled) continue; else
 
 
 SGPRect gDirtyClipRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
@@ -469,38 +464,28 @@ void GPrintInvalidateF(INT16 const x, INT16 const y, wchar_t const* const fmt, .
 }
 
 
-static VIDEO_OVERLAY* GetFreeVideoOverlay(void)
-{
-	VIDEO_OVERLAY* v;
-	for (v = gVideoOverlays; v != gVideoOverlays + guiNumVideoOverlays; ++v)
-	{
-		if (!v->fAllocated) return v;
-	}
-	if (v == endof(gVideoOverlays)) return NULL;
-	++guiNumVideoOverlays;
-	return v;
-}
-
-
 VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK const callback, INT16 const x, INT16 const y, INT16 const w, INT16 const h)
+try
 {
 	BACKGROUND_SAVE* const bgs = RegisterBackgroundRect(BGND_FLAG_PERMANENT, x, y, x + w, y + h);
 	if (!bgs) return 0;
 
-	// Get next free topmost blitter index
-	VIDEO_OVERLAY* const v = GetFreeVideoOverlay();
-	if (!v) return 0;
-
-	// Init new blitter
-	memset(v, 0, sizeof(*v));
+	VIDEO_OVERLAY* const v    = MALLOCZ(VIDEO_OVERLAY);
+	VIDEO_OVERLAY* const head = gVideoOverlays;
+	v->prev        = 0;
+	v->next        = head;
 	v->fAllocated  = 2;
 	v->background  = bgs;
 	v->sX          = x;
 	v->sY          = y;
 	v->uiDestBuff  = FRAME_BUFFER;
 	v->BltCallback = callback;
+
+	if (head) head->prev = v;
+	gVideoOverlays = v;
 	return v;
 }
+catch (...) { return 0; }
 
 
 VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK const callback, INT16 const x, INT16 const y, Font const font, UINT8 const foreground, UINT8 const background, wchar_t const* const text)
@@ -520,8 +505,7 @@ VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK const callback, INT16 const
 
 void RemoveVideoOverlay(VIDEO_OVERLAY* const v)
 {
-	if (v == NULL) return;
-	if (!v->fAllocated) return;
+	if (!v) return;
 
 	// Check if we are actively scrolling
 	if (v->fActivelySaving)
@@ -537,7 +521,11 @@ void RemoveVideoOverlay(VIDEO_OVERLAY* const v)
 		if (v->pSaveArea != NULL) MemFree(v->pSaveArea);
 		v->pSaveArea = NULL;
 
-		v->fAllocated = FALSE;
+		VIDEO_OVERLAY* const prev = v->prev;
+		VIDEO_OVERLAY* const next = v->next;
+		*(prev ? &prev->next : &gVideoOverlays) = next;
+		if (next) next->prev = prev;
+		MemFree(v);
 	}
 }
 
@@ -576,7 +564,6 @@ void ExecuteVideoOverlaysToAlternateBuffer(SGPVSurface* const buffer)
 
 static void AllocateVideoOverlayArea(VIDEO_OVERLAY* const v)
 {
-	Assert(v->fAllocated);
 	Assert(!v->fDisabled);
 
 	// Get buffer size
@@ -704,9 +691,7 @@ void BlitBufferToBuffer(SGPVSurface* const src, SGPVSurface* const dst, const UI
 
 void EnableVideoOverlay(const BOOLEAN fEnable, VIDEO_OVERLAY* const v)
 {
-	if (v == NULL) return;
-	if (!v->fAllocated) return;
-
+	if (!v) return;
 	v->fDisabled             = !fEnable;
 	v->background->fDisabled = !fEnable;
 }
@@ -714,9 +699,7 @@ void EnableVideoOverlay(const BOOLEAN fEnable, VIDEO_OVERLAY* const v)
 
 void SetVideoOverlayTextF(VIDEO_OVERLAY* const v, const wchar_t* Fmt, ...)
 {
-	if (v == NULL) return;
-	if (!v->fAllocated) return;
-
+	if (!v) return;
 	va_list Arg;
 	va_start(Arg, Fmt);
 	vswprintf(v->zText, lengthof(v->zText), Fmt, Arg);
@@ -726,8 +709,7 @@ void SetVideoOverlayTextF(VIDEO_OVERLAY* const v, const wchar_t* Fmt, ...)
 
 void SetVideoOverlayPos(VIDEO_OVERLAY* const v, const INT16 X, const INT16 Y)
 {
-	if (v == NULL) return;
-	if (!v->fAllocated) return;
+	if (!v) return;
 
 	// If position has changed and there is text, adjust
 	if (v->zText[0] != L'\0')
