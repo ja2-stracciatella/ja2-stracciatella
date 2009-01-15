@@ -50,7 +50,7 @@ typedef struct
 		Font             uiFontID;
 		UINT8				ubFontBack;
 		UINT8				ubFontFore;
-		wchar_t				pzText[ 200 ];
+		wchar_t const*   text;
 		OVERLAY_CALLBACK		BltCallback;
 }	VIDEO_OVERLAY_DESC;
 

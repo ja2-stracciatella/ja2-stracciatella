@@ -99,7 +99,7 @@ static void CreateStringVideoOverlay(ScrollStringSt* pStringSt, UINT16 usX, UINT
 	VideoOverlayDesc.ubFontBack  = FONT_MCOLOR_BLACK;
 	VideoOverlayDesc.ubFontFore  = pStringSt->usColor;
 	VideoOverlayDesc.BltCallback = BlitString;
-	wcslcpy(VideoOverlayDesc.pzText, pStringSt->pString16, lengthof(VideoOverlayDesc.pzText));
+	VideoOverlayDesc.text        = pStringSt->pString16;
 	pStringSt->video_overlay = RegisterVideoOverlay(VOVERLAY_DIRTYBYTEXT, &VideoOverlayDesc);
 }
 

@@ -494,7 +494,7 @@ VIDEO_OVERLAY* RegisterVideoOverlay(const UINT32 uiFlags, const VIDEO_OVERLAY_DE
 	INT16 bottom;
 	if (uiFlags & VOVERLAY_DIRTYBYTEXT)
 	{
-		const UINT16 uiStringLength = StringPixLength(vod->pzText, vod->uiFontID);
+		const UINT16 uiStringLength = StringPixLength(vod->text, vod->uiFontID);
 		const UINT16 uiStringHeight = GetFontHeight(vod->uiFontID);
 		right  = vod->sLeft + uiStringLength;
 		bottom = vod->sTop  + uiStringHeight;
@@ -524,7 +524,7 @@ VIDEO_OVERLAY* RegisterVideoOverlay(const UINT32 uiFlags, const VIDEO_OVERLAY_DE
 	v->ubFontFore  = vod->ubFontFore;
 	v->uiDestBuff  = FRAME_BUFFER;
 	v->BltCallback = vod->BltCallback;
-	wcslcpy(v->zText, vod->pzText, lengthof(v->zText));
+	if (vod->text) wcslcpy(v->zText, vod->text, lengthof(v->zText));
 
 	// Set disabled flag to true
 	if (uiFlags & VOVERLAY_STARTDISABLED)

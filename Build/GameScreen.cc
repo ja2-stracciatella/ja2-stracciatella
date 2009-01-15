@@ -129,14 +129,14 @@ void MainGameScreenInit(void)
 	VideoOverlayDesc.uiFontID    = SMALLFONT1;
 	VideoOverlayDesc.ubFontBack  = FONT_MCOLOR_BLACK ;
 	VideoOverlayDesc.ubFontFore  = FONT_MCOLOR_DKGRAY ;
-	wcslcpy(VideoOverlayDesc.pzText, L"90", lengthof(VideoOverlayDesc.pzText));
+	VideoOverlayDesc.text        = L"90";
 	VideoOverlayDesc.BltCallback = BlitMFont;
 	g_fps_overlay = RegisterVideoOverlay(VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT, &VideoOverlayDesc);
 
 	// SECOND, PERIOD COUNTER
 	VideoOverlayDesc.sLeft			 = 30;
 	VideoOverlayDesc.sTop				 = 0;
-	wcslcpy(VideoOverlayDesc.pzText, L"Levelnodes: 100000", lengthof(VideoOverlayDesc.pzText));
+	VideoOverlayDesc.text        = L"Levelnodes: 100000";
 	VideoOverlayDesc.BltCallback = BlitMFont;
 	g_counter_period_overlay = RegisterVideoOverlay(VOVERLAY_STARTDISABLED | VOVERLAY_DIRTYBYTEXT, &VideoOverlayDesc);
 }
