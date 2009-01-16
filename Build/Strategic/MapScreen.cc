@@ -7180,7 +7180,6 @@ void HandlePreloadOfMapGraphics(void)
 	guiHelicopterIcon              = AddVideoObjectFromFile("INTERFACE/Helicop.sti");
 	guiMapBorderEtaPopUp           = AddVideoObjectFromFile("INTERFACE/eta_pop_up.sti");
 	guiMapBorderHeliSectors        = AddVideoObjectFromFile("INTERFACE/pos2.sti");
-	guiSecItemHiddenVO             = AddVideoObjectFromFile("INTERFACE/secondary_gun_hidden.sti");
 	guiSelectedCharArrow           = AddVideoObjectFromFile("INTERFACE/selectedchararrow.sti");
 	guiMINEICON                    = AddVideoObjectFromFile("INTERFACE/mine.sti");
 	guiSectorLocatorGraphicID      = AddVideoObjectFromFile("INTERFACE/hilite.sti");
@@ -7234,7 +7233,6 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 	DeleteVideoObject(guiCHARBETWEENSECTORICONSCLOSE);
 	DeleteVideoObject(guiLEVELMARKER);
 	DeleteVideoObject(guiMapBorderEtaPopUp);
-	DeleteVideoObject(guiSecItemHiddenVO);
 	DeleteVideoObject(guiSelectedCharArrow);
 	DeleteVideoObject(guiMapBorderHeliSectors);
 	DeleteVideoObject(guiHelicopterIcon);
