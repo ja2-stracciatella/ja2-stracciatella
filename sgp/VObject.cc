@@ -254,19 +254,6 @@ void ShutdownVideoObjectManager(void)
 }
 
 
-#ifdef JA2TESTVERSION
-static UINT32 CountVideoObjectNodes(void)
-{
-	UINT32 i = 0;
-	for (const VOBJECT_NODE* curr = gpVObjectHead; curr != NULL; curr = curr->next)
-	{
-		i++;
-	}
-	return i;
-}
-#endif
-
-
 static void AddStandardVideoObject(HVOBJECT hVObject)
 {
 	VOBJECT_NODE* const Node = MALLOC(VOBJECT_NODE);
@@ -287,14 +274,7 @@ static void AddStandardVideoObject(HVOBJECT hVObject)
 		gpVObjectTail->next = Node;
 	}
 	gpVObjectTail = Node;
-
 	guiVObjectSize++;
-#ifdef JA2TESTVERSION
-	if (CountVideoObjectNodes() != guiVObjectSize)
-	{
-		guiVObjectSize = guiVObjectSize;
-	}
-#endif
 }
 
 
@@ -339,12 +319,6 @@ void DeleteVideoObject(SGPVObject* const vo)
 #endif
 			MemFree(curr);
 			guiVObjectSize--;
-#ifdef JA2TESTVERSION
-			if (CountVideoObjectNodes() != guiVObjectSize)
-			{
-				guiVObjectSize = guiVObjectSize;
-			}
-#endif
 			return;
 		}
 		prev = curr;
