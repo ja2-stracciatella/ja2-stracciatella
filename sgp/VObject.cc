@@ -23,12 +23,22 @@
 // *******************************************************************************
 
 
+static SGPVObject* gpVObjectHead = 0;
+static SGPVObject* gpVObjectTail = 0;
+UINT32 guiVObjectSize = 0;
+
+
 SGPVObject::SGPVObject(SGPImage const* const img) :
 	flags_(),
 	palette16_(),
 	pShades(),
 	current_shade_(),
-	ppZStripInfo()
+	ppZStripInfo(),
+#ifdef SGP_VIDEO_DEBUGGING
+	name_(),
+	code_(),
+#endif
+	next_()
 {
 	if (!(img->fFlags & IMAGE_TRLECOMPRESSED))
 	{
@@ -56,11 +66,26 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 		palette16_     = Create16BPPPalette(pal);
 		current_shade_ = palette16_;
 	}
+
+	*(gpVObjectTail ? &gpVObjectTail->next_ : &gpVObjectHead) = this;
+	gpVObjectTail = this;
+	++guiVObjectSize;
 }
 
 
 SGPVObject::~SGPVObject()
 {
+	SGPVObject* prev = 0;
+	for (SGPVObject* i = gpVObjectHead;; prev = i, i = i->next_)
+	{
+		if (i != this) continue;
+
+		*(prev ? &prev->next_ : &gpVObjectHead) = next_;
+		if (gpVObjectTail == this) gpVObjectTail = prev;
+		--guiVObjectSize;
+		break;
+	}
+
 	DestroyPalettes();
 
 	if (pix_data_)     MemFree(pix_data_);
@@ -78,6 +103,11 @@ SGPVObject::~SGPVObject()
 		}
 		MemFree(ppZStripInfo);
 	}
+
+#ifdef SGP_VIDEO_DEBUGGING
+	if (name_) MemFree(name_);
+	if (code_) MemFree(code_);
+#endif
 }
 
 
@@ -209,21 +239,6 @@ void SGPVObject::ShareShadetables(SGPVObject* const other)
 }
 
 
-typedef struct VOBJECT_NODE
-{
-	HVOBJECT hVObject;
-  struct VOBJECT_NODE* next;
-#ifdef SGP_VIDEO_DEBUGGING
-	char* pName;
-	char* pCode;
-#endif
-} VOBJECT_NODE;
-
-static VOBJECT_NODE* gpVObjectHead = NULL;
-static VOBJECT_NODE* gpVObjectTail = NULL;
-UINT32 guiVObjectSize = 0;
-
-
 void InitializeVideoObjectManager(void)
 {
 	//Shouldn't be calling this if the video object manager already exists.
@@ -237,44 +252,10 @@ void InitializeVideoObjectManager(void)
 
 void ShutdownVideoObjectManager(void)
 {
-	while (gpVObjectHead != NULL)
+	while (gpVObjectHead)
 	{
-		VOBJECT_NODE* curr = gpVObjectHead;
-		gpVObjectHead = gpVObjectHead->next;
-		delete curr->hVObject;
-#ifdef SGP_VIDEO_DEBUGGING
-		if (curr->pName != NULL) MemFree(curr->pName);
-		if (curr->pCode != NULL) MemFree(curr->pCode);
-#endif
-		MemFree(curr);
+		delete gpVObjectHead;
 	}
-	gpVObjectHead = NULL;
-	gpVObjectTail = NULL;
-	guiVObjectSize = 0;
-}
-
-
-static void AddStandardVideoObject(HVOBJECT hVObject)
-{
-	VOBJECT_NODE* const Node = MALLOC(VOBJECT_NODE);
-	Node->hVObject = hVObject;
-
-	Node->next = NULL;
-#ifdef SGP_VIDEO_DEBUGGING
-	Node->pName = NULL;
-	Node->pCode = NULL;
-#endif
-
-	if (gpVObjectTail == NULL)
-	{
-		gpVObjectHead = Node;
-	}
-	else
-	{
-		gpVObjectTail->next = Node;
-	}
-	gpVObjectTail = Node;
-	guiVObjectSize++;
 }
 
 
@@ -283,9 +264,7 @@ static
 #endif
 SGPVObject* AddStandardVideoObjectFromHImage(HIMAGE hImage)
 {
-	SGPVObject* const vo = new SGPVObject(hImage);
-	AddStandardVideoObject(vo);
-	return vo;
+	return new SGPVObject(hImage);
 }
 
 
@@ -296,34 +275,6 @@ SGPVObject* AddStandardVideoObjectFromFile(const char* const ImageFile)
 {
 	AutoSGPImage hImage(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
 	return AddStandardVideoObjectFromHImage(hImage);
-}
-
-
-void DeleteVideoObject(SGPVObject* const vo)
-{
-	VOBJECT_NODE* prev = NULL;
-	VOBJECT_NODE* curr = gpVObjectHead;
-	while (curr != NULL)
-	{
-		if (curr->hVObject == vo)
-		{ //Found the node, so detach it and delete it.
-			delete vo;
-
-			if (curr == gpVObjectHead) gpVObjectHead = gpVObjectHead->next;
-			if (curr == gpVObjectTail) gpVObjectTail = prev;
-			if (prev != NULL) prev->next = curr->next;
-
-#ifdef SGP_VIDEO_DEBUGGING
-			if (curr->pName != NULL) MemFree(curr->pName);
-			if (curr->pCode != NULL) MemFree(curr->pCode);
-#endif
-			MemFree(curr);
-			guiVObjectSize--;
-			return;
-		}
-		prev = curr;
-		curr = curr->next;
-	}
 }
 
 
@@ -416,10 +367,10 @@ static void DumpVObjectInfoIntoFile(const char* filename, BOOLEAN fAppend)
 
 	//Loop through the list and record every unique filename and count them
 	UINT32 uiUniqueID = 0;
-	for (const VOBJECT_NODE* curr = gpVObjectHead; curr != NULL; curr = curr->next)
+	for (SGPVObject const* i = gpVObjectHead; i; i = i->next_)
 	{
-		const char* Name = curr->pName;
-		const char* Code = curr->pCode;
+		char const* const Name = i->name_;
+		char const* const Code = i->code_;
 		BOOLEAN fFound = FALSE;
 		for (UINT32 i = 0; i < uiUniqueID; i++)
 		{
@@ -456,24 +407,24 @@ static void DumpVObjectInfoIntoFile(const char* filename, BOOLEAN fAppend)
 
 
 //Debug wrapper for adding vObjects
-static void RecordVObject(const char* Filename, UINT32 uiLineNum, const char* pSourceFile)
+static void RecordVObject(SGPVObject* const vo, const char* Filename, UINT32 uiLineNum, const char* pSourceFile)
 {
 	//record the filename of the vObject (some are created via memory though)
-	gpVObjectTail->pName = MALLOCN(char, strlen(Filename) + 1);
-	strcpy(gpVObjectTail->pName, Filename);
+	vo->name_ = MALLOCN(char, strlen(Filename) + 1);
+	strcpy(vo->name_, Filename);
 
 	//record the code location of the calling creating function.
 	char str[256];
 	sprintf(str, "%s -- line(%d)", pSourceFile, uiLineNum);
-	gpVObjectTail->pCode = MALLOCN(char, strlen(str) + 1);
-	strcpy(gpVObjectTail->pCode, str);
+	vo->code_ = MALLOCN(char, strlen(str) + 1);
+	strcpy(vo->code_, str);
 }
 
 
 SGPVObject* AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32 uiLineNum, const char* pSourceFile)
 {
 	SGPVObject* const vo = AddStandardVideoObjectFromHImage(hImage);
-	RecordVObject("<IMAGE>", uiLineNum, pSourceFile);
+	RecordVObject(vo, "<IMAGE>", uiLineNum, pSourceFile);
 	return vo;
 }
 
@@ -481,7 +432,7 @@ SGPVObject* AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32 uiLineNum, const
 SGPVObject* AddAndRecordVObjectFromFile(const char* ImageFile, UINT32 uiLineNum, const char* pSourceFile)
 {
 	SGPVObject* const vo = AddStandardVideoObjectFromFile(ImageFile);
-	RecordVObject(ImageFile, uiLineNum, pSourceFile);
+	RecordVObject(vo, ImageFile, uiLineNum, pSourceFile);
 	return vo;
 }
 

@@ -1,7 +1,7 @@
 #ifndef __VOBJECT_H
 #define __VOBJECT_H
 
-#include "AutoObj.h"
+#include "AutoPtr.h"
 #include "Buffer.h"
 #include "Types.h"
 
@@ -82,6 +82,13 @@ class SGPVObject
 	private:
 		UINT16                       subregion_count_;               // Total number of objects
 		UINT8                        bit_depth_;                     // BPP
+
+	public:
+#ifdef SGP_VIDEO_DEBUGGING
+		char*                        name_;
+		char*                        code_;
+#endif
+		SGPVObject*                  next_;
 };
 ENUM_BITSET(SGPVObject::Flags)
 
@@ -107,7 +114,10 @@ void ShutdownVideoObjectManager(void);
 #endif
 
 // Removes a video object
-void DeleteVideoObject(SGPVObject*);
+static inline void DeleteVideoObject(SGPVObject* const vo)
+{
+	delete vo;
+}
 
 // Blits a video object to another video object
 BOOLEAN BltVideoObject(SGPVSurface* dst, const SGPVObject* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
@@ -121,6 +131,6 @@ void BltVideoObjectOnce(SGPVSurface* dst, char const* filename, UINT16 region, I
 
 extern UINT32 guiVObjectSize;
 
-typedef SGP::AutoObj<SGPVObject, DeleteVideoObject>::Type AutoSGPVObject;
+typedef SGP::AutoPtr<SGPVObject>::Type AutoSGPVObject;
 
 #endif
