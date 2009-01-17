@@ -9,8 +9,27 @@
 #include "Video.h"
 
 
+static SGPVSurface* gpVSurfaceHead = 0;
+static SGPVSurface* gpVSurfaceTail = 0;
+
+
+static void LinkVSurface(SGPVSurface* const s)
+{
+	*(gpVSurfaceTail ? &gpVSurfaceTail->next_ : &gpVSurfaceHead) = s;
+	gpVSurfaceTail = s;
+#ifdef SGP_VIDEO_DEBUGGING
+	++guiVSurfaceSize;
+#endif
+}
+
+
 SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
-	p16BPPPalette()
+	p16BPPPalette(),
+#ifdef SGP_VIDEO_DEBUGGING
+	name_(),
+	code_(),
+#endif
+	next_()
 {
 	Assert(w > 0);
 	Assert(h > 0);
@@ -34,12 +53,44 @@ SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
 	}
 	if (!s) throw std::runtime_error("Failed to create SDL surface");
 	surface_ = s;
+	LinkVSurface(this);
+}
+
+
+SGPVSurface::SGPVSurface(SDL_Surface* const s) :
+	surface_(s),
+	p16BPPPalette(),
+#ifdef SGP_VIDEO_DEBUGGING
+	name_(),
+	code_(),
+#endif
+	next_()
+{
+	LinkVSurface(this);
 }
 
 
 SGPVSurface::~SGPVSurface()
 {
+	SGPVSurface* prev = 0;
+	for (SGPVSurface* i = gpVSurfaceHead;; prev = i, i = i->next_)
+	{
+		if (i != this) continue;
+
+		*(prev ? &prev->next_ : &gpVSurfaceHead) = next_;
+		if (gpVSurfaceTail == this) gpVSurfaceTail = prev;
+#ifdef SGP_VIDEO_DEBUGGING
+		--guiVSurfaceSize;
+#endif
+		break;
+	}
+
 	if (p16BPPPalette) MemFree(p16BPPPalette);
+
+#ifdef SGP_VIDEO_DEBUGGING
+	if (name_) MemFree(name_);
+	if (code_) MemFree(code_);
+#endif
 }
 
 
@@ -121,21 +172,6 @@ void SGPVSurface::ShadowRectUsingLowPercentTable(INT32 const x1, INT32 const y1,
 static void DeletePrimaryVideoSurfaces(void);
 
 
-typedef struct VSURFACE_NODE
-{
-	SGPVSurface*   hVSurface;
-	VSURFACE_NODE* next;
-
-#ifdef SGP_VIDEO_DEBUGGING
-	char* pName;
-	char* pCode;
-#endif
-} VSURFACE_NODE;
-
-static VSURFACE_NODE* gpVSurfaceHead = NULL;
-static VSURFACE_NODE* gpVSurfaceTail = NULL;
-
-
 SGPVSurface* g_back_buffer;
 SGPVSurface* g_frame_buffer;
 SGPVSurface* g_mouse_buffer;
@@ -165,46 +201,10 @@ void ShutdownVideoSurfaceManager(void)
 	// Delete primary viedeo surfaces
 	DeletePrimaryVideoSurfaces();
 
-	while (gpVSurfaceHead != NULL)
+	while (gpVSurfaceHead)
 	{
-		VSURFACE_NODE* curr = gpVSurfaceHead;
-		gpVSurfaceHead = gpVSurfaceHead->next;
-		delete curr->hVSurface;
-#ifdef SGP_VIDEO_DEBUGGING
-		if (curr->pName != NULL) MemFree(curr->pName);
-		if (curr->pCode != NULL) MemFree(curr->pCode);
-#endif
-		MemFree(curr);
+		delete gpVSurfaceHead;
 	}
-	gpVSurfaceHead = NULL;
-	gpVSurfaceTail = NULL;
-#ifdef SGP_VIDEO_DEBUGGING
-	guiVSurfaceSize = 0;
-#endif
-}
-
-
-static void AddStandardVideoSurface(SGPVSurface* const hVSurface)
-{
-	VSURFACE_NODE* const Node = MALLOC(VSURFACE_NODE);
-	Node->hVSurface = hVSurface;
-
-	Node->next      = NULL;
-#ifdef SGP_VIDEO_DEBUGGING
-	Node->pName     = NULL;
-	Node->pCode     = NULL;
-	++guiVSurfaceSize;
-#endif
-
-	if (gpVSurfaceTail == NULL)
-	{
-		gpVSurfaceHead = Node;
-	}
-	else
-	{
-		gpVSurfaceTail->next = Node;
-	}
-	gpVSurfaceTail = Node;
 }
 
 
@@ -215,7 +215,6 @@ static void AddStandardVideoSurface(SGPVSurface* const hVSurface)
 SGPVSurface* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth)
 {
 	SGPVSurface* const vs = new SGPVSurface(Width, Height, BitDepth);
-	AddStandardVideoSurface(vs);
 	return vs;
 }
 
@@ -248,9 +247,29 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 
 	if (img->ubBitDepth == 8) vs->SetPalette(img->pPalette);
 
-	AddStandardVideoSurface(vs);
 	return vs;
 }
+
+
+#ifdef SGP_VIDEO_DEBUGGING
+
+static void RecordVSurface(SGPVSurface* const vs, char const* const Filename, UINT32 const LineNum, char const* const SourceFile)
+{
+	//record the filename of the vsurface (some are created via memory though)
+	vs->name_ = MALLOCN(char, strlen(Filename) + 1);
+	strcpy(vs->name_, Filename);
+
+	//record the code location of the calling creating function.
+	char str[256];
+	sprintf(str, "%s -- line(%d)", SourceFile, LineNum);
+	vs->code_ = MALLOCN(char, strlen(str) + 1);
+	strcpy(vs->code_, str);
+}
+
+#	define RECORD(vs, name) RecordVSurface((vs), (name), __LINE__, __FILE__)
+#else
+#	define RECORD(cs, name) ((void)0)
+#endif
 
 
 static void SetPrimaryVideoSurfaces(void)
@@ -260,10 +279,15 @@ static void SetPrimaryVideoSurfaces(void)
 
 #ifdef JA2
 	g_back_buffer  = new SGPVSurface(GetBackBufferObject());
+	RECORD(g_back_buffer, "<BACKBUFFER>");
 	g_mouse_buffer = new SGPVSurface(GetMouseBufferObject());
+	RECORD(g_mouse_buffer, "<MOUSE_BUFFER>");
 #endif
 	g_frame_buffer = new SGPVSurface(GetFrameBufferObject());
+	RECORD(g_frame_buffer, "<FRAME_BUFFER>");
 }
+
+#undef RECORD
 
 
 static void DeletePrimaryVideoSurfaces(void)
@@ -323,35 +347,6 @@ void ColorFillVideoSurfaceArea(SGPVSurface* const dst, INT32 iDestX1, INT32 iDes
 	Rect.w = iDestX2 - iDestX1;
 	Rect.h = iDestY2 - iDestY1;
 	SDL_FillRect(dst->surface_, &Rect, Color16BPP);
-}
-
-
-void DeleteVideoSurface(SGPVSurface* const vs)
-{
-	VSURFACE_NODE* prev = NULL;
-	VSURFACE_NODE* curr = gpVSurfaceHead;
-	while (curr != NULL)
-	{
-		if (curr->hVSurface == vs)
-		{ //Found the node, so detach it and delete it.
-			delete vs;
-
-			if (curr == gpVSurfaceHead) gpVSurfaceHead = gpVSurfaceHead->next;
-			if (curr == gpVSurfaceTail) gpVSurfaceTail = prev;
-			if (prev != NULL) prev->next = curr->next;
-
-#ifdef SGP_VIDEO_DEBUGGING
-			if (curr->pName != NULL) MemFree(curr->pName);
-			if (curr->pCode != NULL) MemFree(curr->pCode);
-			--guiVSurfaceSize;
-#endif
-
-			MemFree(curr);
-			return;
-		}
-		prev = curr;
-		curr = curr->next;
-	}
 }
 
 
@@ -512,10 +507,10 @@ void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend)
 
 	//Loop through the list and record every unique filename and count them
 	UINT32 uiUniqueID = 0;
-	for (const VSURFACE_NODE* curr = gpVSurfaceHead; curr != NULL; curr = curr->next)
+	for (SGPVSurface const* i = gpVSurfaceHead; i; i = i->next_)
 	{
-		const char* Name = curr->pName;
-		const char* Code = curr->pCode;
+		char const* const Name = i->name_;
+		char const* const Code = i->code_;
 		BOOLEAN fFound = FALSE;
 		for (UINT32 i = 0; i < uiUniqueID; i++)
 		{
@@ -550,24 +545,10 @@ void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend)
 }
 
 
-static void RecordVSurface(const char* Filename, UINT32 LineNum, const char* SourceFile)
-{
-	//record the filename of the vsurface (some are created via memory though)
-	gpVSurfaceTail->pName = MALLOCN(char, strlen(Filename) + 1);
-	strcpy(gpVSurfaceTail->pName, Filename);
-
-	//record the code location of the calling creating function.
-	char str[256];
-	sprintf(str, "%s -- line(%d)", SourceFile, LineNum);
-	gpVSurfaceTail->pCode = MALLOCN(char, strlen(str) + 1);
-	strcpy(gpVSurfaceTail->pCode, str);
-}
-
-
 SGPVSurface* AddAndRecordVSurface(const UINT16 Width, const UINT16 Height, const UINT8 BitDepth, const UINT32 LineNum, const char* const SourceFile)
 {
 	SGPVSurface* const vs = AddVideoSurface(Width, Height, BitDepth);
-	RecordVSurface("<EMPTY>", LineNum, SourceFile);
+	RecordVSurface(vs, "<EMPTY>", LineNum, SourceFile);
 	return vs;
 }
 
@@ -575,7 +556,7 @@ SGPVSurface* AddAndRecordVSurface(const UINT16 Width, const UINT16 Height, const
 SGPVSurface* AddAndRecordVSurfaceFromFile(const char* const Filename, const UINT32 LineNum, const char* const SourceFile)
 {
 	SGPVSurface* const vs = AddVideoSurfaceFromFile(Filename);
-	RecordVSurface(Filename, LineNum, SourceFile);
+	RecordVSurface(vs, Filename, LineNum, SourceFile);
 	return vs;
 }
 

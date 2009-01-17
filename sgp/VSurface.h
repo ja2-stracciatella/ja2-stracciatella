@@ -2,6 +2,7 @@
 #define VSURFACE_H
 
 #include "AutoObj.h"
+#include "AutoPtr.h"
 #include "Buffer.h"
 #include "Types.h"
 #include <SDL.h>
@@ -21,8 +22,7 @@ class SGPVSurface
 {
 	public:
 		SGPVSurface(UINT16 w, UINT16 h, UINT8 bpp);
-
-		SGPVSurface(SDL_Surface* s) : surface_(s), p16BPPPalette() {}
+		SGPVSurface(SDL_Surface*);
 
 		~SGPVSurface();
 
@@ -59,7 +59,11 @@ class SGPVSurface
 		SGP::Buffer<SGPPaletteEntry>               palette_;
 	public:
 		UINT16*                                    p16BPPPalette; // A 16BPP palette used for 8->16 blits
-
+#ifdef SGP_VIDEO_DEBUGGING
+		char*                        name_;
+		char*                        code_;
+#endif
+		SGPVSurface*                 next_;
 
 	private:
 		class LockBase
@@ -143,10 +147,13 @@ extern UINT32 guiVSurfaceSize;
 void BltVideoSurfaceHalf(SGPVSurface* dst, SGPVSurface* src, INT32 DestX, INT32 DestY, SGPBox const* src_rect);
 
 // Deletes all data, including palettes
-void DeleteVideoSurface(SGPVSurface*);
+static inline void DeleteVideoSurface(SGPVSurface* const vs)
+{
+	delete vs;
+}
 
 void BltVideoSurfaceOnce(SGPVSurface* dst, const char* filename, INT32 x, INT32 y);
 
-typedef SGP::AutoObj<SGPVSurface, DeleteVideoSurface>::Type AutoSGPVSurface;
+typedef SGP::AutoPtr<SGPVSurface>::Type AutoSGPVSurface;
 
 #endif
