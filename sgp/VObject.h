@@ -101,6 +101,8 @@ void ShutdownVideoObjectManager(void);
 
 // Creates and adds a video object to list
 #ifdef SGP_VIDEO_DEBUGGING
+extern UINT32 guiVObjectSize;
+
 	void PerformVideoInfoDumpIntoFile(const char* filename, BOOLEAN fAppend);
 	SGPVObject* AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32 uiLineNum, const char* pSourceFile);
 	SGPVObject* AddAndRecordVObjectFromFile(const char* ImageFile, UINT32 uiLineNum, const char* pSourceFile);
@@ -128,8 +130,6 @@ BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* dst, const SGPVObject* src, UIN
 
 /* Loads a video object, blits it once and frees it */
 void BltVideoObjectOnce(SGPVSurface* dst, char const* filename, UINT16 region, INT32 x, INT32 y);
-
-extern UINT32 guiVObjectSize;
 
 typedef SGP::AutoPtr<SGPVObject>::Type AutoSGPVObject;
 

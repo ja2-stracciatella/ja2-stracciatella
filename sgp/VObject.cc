@@ -25,7 +25,6 @@
 
 static SGPVObject* gpVObjectHead = 0;
 static SGPVObject* gpVObjectTail = 0;
-UINT32 guiVObjectSize = 0;
 
 
 SGPVObject::SGPVObject(SGPImage const* const img) :
@@ -69,7 +68,9 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 
 	*(gpVObjectTail ? &gpVObjectTail->next_ : &gpVObjectHead) = this;
 	gpVObjectTail = this;
+#ifdef SGP_VIDEO_DEBUGGING
 	++guiVObjectSize;
+#endif
 }
 
 
@@ -82,7 +83,9 @@ SGPVObject::~SGPVObject()
 
 		*(prev ? &prev->next_ : &gpVObjectHead) = next_;
 		if (gpVObjectTail == this) gpVObjectTail = prev;
+#ifdef SGP_VIDEO_DEBUGGING
 		--guiVObjectSize;
+#endif
 		break;
 	}
 
@@ -346,6 +349,9 @@ void BltVideoObjectOnce(SGPVSurface* const dst, char const* const filename, UINT
 
 
 #ifdef SGP_VIDEO_DEBUGGING
+
+UINT32 guiVObjectSize = 0;
+
 
 typedef struct DUMPINFO
 {
