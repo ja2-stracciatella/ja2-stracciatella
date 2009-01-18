@@ -784,23 +784,17 @@ BOOLEAN IsThisSquadOnTheMove( INT8 bSquadValue )
 
 
 // rebuild this squad after someone has been removed, to 'squeeze' together any empty spots
-static void RebuildSquad(INT8 bSquadValue)
+static void RebuildSquad(INT8 const squad_id)
 {
-	INT32 iCounter = 0, iCounterB = 0;
-
-	for( iCounterB = 0; iCounterB <NUMBER_OF_SOLDIERS_PER_SQUAD - 1; iCounterB++ )
+	SOLDIERTYPE** const squad = Squad[squad_id];
+	SOLDIERTYPE** const end   = endof(Squad[squad_id]);
+	SOLDIERTYPE**       dst   = squad;
+	for (SOLDIERTYPE** i = squad; i != end; ++i)
 	{
-		for( iCounter = 0 ;iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD - 1; iCounter++ )
-		{
-			SOLDIERTYPE** const cur  = &Squad[bSquadValue][iCounter];
-			SOLDIERTYPE** const next = &Squad[bSquadValue][iCounter + 1];
-			if (*cur == NULL && *next != NULL)
-			{
-				*cur  = *next;
-				*next = NULL;
-			}
-		}
+		if (!*i) continue;
+		*dst++ = *i;
 	}
+	for (; dst != end; ++dst) *dst = 0;
 }
 
 
