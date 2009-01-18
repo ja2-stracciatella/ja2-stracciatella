@@ -969,20 +969,16 @@ BOOLEAN DoesVehicleExistInSquad( INT8 bSquadValue )
 	return(FALSE );
 }
 
-void CheckSquadMovementGroups( void )
-{
-	INT32			iSquad;
-	GROUP *		pGroup;
 
-	for( iSquad = 0; iSquad < NUMBER_OF_SQUADS; iSquad++ )
+void CheckSquadMovementGroups()
+{
+	for (INT8* i = SquadMovementGroups; i != endof(SquadMovementGroups); ++i)
 	{
-		pGroup = GetGroup( SquadMovementGroups[ iSquad ] );
-		if ( pGroup == NULL )
-		{
-			// recreate group
-			GROUP* const g = CreateNewPlayerGroupDepartingFromSector(1, 1);
-			g->fPersistant = TRUE;
-			SquadMovementGroups[iSquad] = g->ubGroupID;
-		}
+		if (GetGroup(*i)) continue;
+
+		// recreate group
+		GROUP* const g = CreateNewPlayerGroupDepartingFromSector(1, 1);
+		g->fPersistant = TRUE;
+		*i = g->ubGroupID;
 	}
 }
