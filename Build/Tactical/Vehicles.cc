@@ -51,9 +51,6 @@ VEHICLETYPE *pVehicleList = NULL;
 // number of vehicle slots on the list
 UINT8 ubNumberOfVehicles = 0;
 
-// the sqaud mvt groups
-extern INT8 SquadMovementGroups[ ];
-
 
 //ATE: These arrays below should all be in a large LUT which contains
 // static info for each vehicle....
