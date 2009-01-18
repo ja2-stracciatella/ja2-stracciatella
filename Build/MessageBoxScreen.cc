@@ -61,7 +61,6 @@ wchar_t gzUserDefinedButton2[128];
 
 static void ContractMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
 static void LieMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
-static void MsgBoxClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void NOMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
 static void NumberedMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
 static void OKMsgBoxCallback(GUI_BUTTON* btn, INT32 reason);
@@ -170,7 +169,7 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 
 	UINT16 const cursor = style.cursor;
 	// Create top-level mouse region
-	MSYS_DefineRegion(&gMsgBox.BackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, cursor, MSYS_NO_CALLBACK, MsgBoxClickCallback);
+	MSYS_DefineRegion(&gMsgBox.BackRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, cursor, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	if (!gGameSettings.fOptions[TOPTION_DONT_MOVE_MOUSE])
 	{
@@ -280,11 +279,6 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 
 	gfNewMessageBox = TRUE;
 	gfInMsgBox     = TRUE;
-}
-
-
-static void MsgBoxClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
 }
 
 
