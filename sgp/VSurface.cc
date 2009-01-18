@@ -10,17 +10,6 @@
 
 
 static SGPVSurface* gpVSurfaceHead = 0;
-static SGPVSurface* gpVSurfaceTail = 0;
-
-
-static void LinkVSurface(SGPVSurface* const s)
-{
-	*(gpVSurfaceTail ? &gpVSurfaceTail->next_ : &gpVSurfaceHead) = s;
-	gpVSurfaceTail = s;
-#ifdef SGP_VIDEO_DEBUGGING
-	++guiVSurfaceSize;
-#endif
-}
 
 
 SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
@@ -29,7 +18,7 @@ SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
 	name_(),
 	code_(),
 #endif
-	next_()
+	next_(gpVSurfaceHead)
 {
 	Assert(w > 0);
 	Assert(h > 0);
@@ -53,7 +42,10 @@ SGPVSurface::SGPVSurface(UINT16 const w, UINT16 const h, UINT8 const bpp) :
 	}
 	if (!s) throw std::runtime_error("Failed to create SDL surface");
 	surface_ = s;
-	LinkVSurface(this);
+	gpVSurfaceHead = this;
+#ifdef SGP_VIDEO_DEBUGGING
+	++guiVSurfaceSize;
+#endif
 }
 
 
@@ -64,21 +56,21 @@ SGPVSurface::SGPVSurface(SDL_Surface* const s) :
 	name_(),
 	code_(),
 #endif
-	next_()
+	next_(gpVSurfaceHead)
 {
-	LinkVSurface(this);
+	gpVSurfaceHead = this;
+#ifdef SGP_VIDEO_DEBUGGING
+	++guiVSurfaceSize;
+#endif
 }
 
 
 SGPVSurface::~SGPVSurface()
 {
-	SGPVSurface* prev = 0;
-	for (SGPVSurface* i = gpVSurfaceHead;; prev = i, i = i->next_)
+	for (SGPVSurface** anchor = &gpVSurfaceHead;; anchor = &(*anchor)->next_)
 	{
-		if (i != this) continue;
-
-		*(prev ? &prev->next_ : &gpVSurfaceHead) = next_;
-		if (gpVSurfaceTail == this) gpVSurfaceTail = prev;
+		if (*anchor != this) continue;
+		*anchor = next_;
 #ifdef SGP_VIDEO_DEBUGGING
 		--guiVSurfaceSize;
 #endif
@@ -185,9 +177,7 @@ void InitializeVideoSurfaceManager(void)
 	//Shouldn't be calling this if the video surface manager already exists.
 	//Call shutdown first...
 	Assert(gpVSurfaceHead == NULL);
-	Assert(gpVSurfaceTail == NULL);
 	gpVSurfaceHead = NULL;
-	gpVSurfaceTail = NULL;
 
 	// Create primary and backbuffer from globals
 	SetPrimaryVideoSurfaces();

@@ -24,7 +24,6 @@
 
 
 static SGPVObject* gpVObjectHead = 0;
-static SGPVObject* gpVObjectTail = 0;
 
 
 SGPVObject::SGPVObject(SGPImage const* const img) :
@@ -37,7 +36,7 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 	name_(),
 	code_(),
 #endif
-	next_()
+	next_(gpVObjectHead)
 {
 	if (!(img->fFlags & IMAGE_TRLECOMPRESSED))
 	{
@@ -66,8 +65,7 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 		current_shade_ = palette16_;
 	}
 
-	*(gpVObjectTail ? &gpVObjectTail->next_ : &gpVObjectHead) = this;
-	gpVObjectTail = this;
+	gpVObjectHead = this;
 #ifdef SGP_VIDEO_DEBUGGING
 	++guiVObjectSize;
 #endif
@@ -76,13 +74,10 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 
 SGPVObject::~SGPVObject()
 {
-	SGPVObject* prev = 0;
-	for (SGPVObject* i = gpVObjectHead;; prev = i, i = i->next_)
+	for (SGPVObject** anchor = &gpVObjectHead;; anchor = &(*anchor)->next_)
 	{
-		if (i != this) continue;
-
-		*(prev ? &prev->next_ : &gpVObjectHead) = next_;
-		if (gpVObjectTail == this) gpVObjectTail = prev;
+		if (*anchor != this) continue;
+		*anchor = next_;
 #ifdef SGP_VIDEO_DEBUGGING
 		--guiVObjectSize;
 #endif
@@ -247,9 +242,7 @@ void InitializeVideoObjectManager(void)
 	//Shouldn't be calling this if the video object manager already exists.
 	//Call shutdown first...
 	Assert(gpVObjectHead == NULL);
-	Assert(gpVObjectTail == NULL);
 	gpVObjectHead = NULL;
-	gpVObjectTail = NULL;
 }
 
 
