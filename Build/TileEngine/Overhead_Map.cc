@@ -406,7 +406,6 @@ BOOLEAN InOverheadMap( )
 
 
 static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason);
-static void MoveOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason);
 
 
 void GoIntoOverheadMap( )
@@ -423,8 +422,7 @@ void GoIntoOverheadMap( )
 
 	MSYS_DefineRegion(&OverheadBackgroundRegion, 0, 0, SCREEN_WIDTH, 360, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-	MSYS_DefineRegion( &OverheadRegion, 0, 0 ,gsVIEWPORT_END_X, 320, MSYS_PRIORITY_HIGH,
-						 CURSOR_NORMAL, MoveOverheadRegionCallback, ClickOverheadRegionCallback );
+	MSYS_DefineRegion(&OverheadRegion, 0, 0, gsVIEWPORT_END_X, 320, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, MSYS_NO_CALLBACK, ClickOverheadRegionCallback);
 
 	// LOAD CLOSE ANIM
 	uiOVERMAP = AddVideoObjectFromFile("INTERFACE/MAP_BORD.sti");
@@ -1078,11 +1076,6 @@ static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason)
 	{
 		KillOverheadMap();
 	}
-}
-
-
-static void MoveOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason)
-{
 }
 
 

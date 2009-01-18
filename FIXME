@@ -93,8 +93,6 @@ MergeMessageBoxCallBack(): users
 MinAPsToThrow(): usInHand is INT16, but used as %s
 MoveBullet(): RemoveBullet() before BulletMissed() (twice) and CorpseHit() seems wrong
 MoveGroupFromSectorToSectorButAvoidLastSector(): caller
-MoveOverheadRegionCallback(): empty
-MsgBoxClickCallback(): empty
 NPC.h: RUSSIAN quirk
 NPCQuoteInfo: weird preprocessor magic
 NewOKDestination(): boolean parameter with three (four?) values
