@@ -7,15 +7,28 @@
 #include "Assignments.h"
 #include "Animation_Data.h"
 
-// MACROS
-#define RPC_RECRUITED( p )	( ( p->ubProfile == NO_PROFILE ) ? FALSE : ( gMercProfiles[ p->ubProfile ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED ) )
+static inline bool RPC_RECRUITED(SOLDIERTYPE const* const s)
+{
+	UINT8 const pid = s->ubProfile;
+	return pid != NO_PROFILE && GetProfile(pid)->ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED;
+}
 
-#define AM_AN_EPC( p )	( ( p->ubProfile == NO_PROFILE ) ? FALSE : ( gMercProfiles[ p->ubProfile ].ubMiscFlags & PROFILE_MISC_FLAG_EPCACTIVE ) )
+static inline bool AM_AN_EPC(SOLDIERTYPE const* const s)
+{
+	UINT8 const pid = s->ubProfile;
+	return pid != NO_PROFILE && GetProfile(pid)->ubMiscFlags & PROFILE_MISC_FLAG_EPCACTIVE;
+}
 
-#define AM_A_ROBOT( p )	( ( p->ubProfile == NO_PROFILE ) ? FALSE : ( gMercProfiles[ p->ubProfile ].ubBodyType == ROBOTNOWEAPON ) )
+static inline bool AM_A_ROBOT(SOLDIERTYPE const* const s)
+{
+	UINT8 const pid = s->ubProfile;
+	return pid != NO_PROFILE && GetProfile(pid)->ubBodyType == ROBOTNOWEAPON;
+}
 
-
-#define OK_ENEMY_MERC( p ) ( !p->bNeutral && (p->bSide != gbPlayerNum ) && p->bLife >= OKLIFE )
+static inline bool OK_ENEMY_MERC(SOLDIERTYPE const* const s)
+{
+	return !s->bNeutral && s->bSide != gbPlayerNum && s->bLife >= OKLIFE;
+}
 
 // Checks if our guy can be controllable .... checks bInSector, team, on duty, etc...
 static inline BOOLEAN OkControllableMerc(const SOLDIERTYPE* const s)
