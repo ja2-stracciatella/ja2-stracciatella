@@ -62,9 +62,6 @@ void AddCharacterToAnySquad(SOLDIERTYPE*);
 BOOLEAN RemoveCharacterFromSquads( SOLDIERTYPE *pCharacter );
 
 
-// return which squad character is in, -1 if none found
-INT8 SquadCharacterIsIn( SOLDIERTYPE *pCharacter );
-
 // return number of people in this squad
 INT8 NumberOfPeopleInSquad( INT8 bSquadValue );
 

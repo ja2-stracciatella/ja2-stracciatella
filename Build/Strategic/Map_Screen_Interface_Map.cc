@@ -1385,20 +1385,14 @@ void CancelPathForVehicle( VEHICLETYPE *pVehicle, BOOLEAN fAlreadyReversed )
 }
 
 
-static void CopyPathToCharactersSquadIfInOne(SOLDIERTYPE* pCharacter)
+static void CopyPathToCharactersSquadIfInOne(SOLDIERTYPE* const s)
 {
-	INT8 bSquad = 0;
-
 	// check if on a squad, if so, do same thing for all characters
 
-	// what squad is character in?
-	bSquad = SquadCharacterIsIn( pCharacter );
-
 	// check to see if character is on a squad, if so, copy path to squad
-	if( bSquad != -1)
+	if (s->bAssignment < ON_DUTY)
 	{
-		// copy path over
-		CopyPathOfCharacterToSquad( pCharacter, bSquad );
+		CopyPathOfCharacterToSquad(s, s->bAssignment);
 	}
 }
 

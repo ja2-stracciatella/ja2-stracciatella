@@ -370,31 +370,6 @@ BOOLEAN RemoveCharacterFromSquads(SOLDIERTYPE* const s)
 }
 
 
-INT8 SquadCharacterIsIn( SOLDIERTYPE *pCharacter )
-{
-	// returns which squad character is in, -1 if none found
-	INT8 iCounterA =0, iCounter = 0;
-
-	// squad?
-	for( iCounterA = 0; iCounterA < NUMBER_OF_SQUADS ; iCounterA++ )
-	{
-		// slot?
-		for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD ; iCounter++ )
-		{
-
-			// check if on current squad and current slot?
-			if( Squad[ iCounterA ][ iCounter ] == pCharacter )
-			{
-				// return value
-				return ( iCounterA );
-			}
-		}
-	}
-
-	// return failure
-	return ( -1 );
-}
-
 INT8 NumberOfPeopleInSquad( INT8 bSquadValue )
 {
 	INT8 bCounter = 0;
