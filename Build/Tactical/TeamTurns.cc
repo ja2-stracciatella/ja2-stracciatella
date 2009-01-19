@@ -558,9 +558,9 @@ static void StartInterrupt(void)
 		// build string in separate loop here, want to linearly process squads...
 		for (INT32 iSquad = 0; iSquad < NUMBER_OF_SQUADS; ++iSquad)
 		{
-			for (INT32 iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; ++iCounter)
+			FOR_ALL_SLOTS_IN_SQUAD(i, iSquad)
 			{
-				const SOLDIERTYPE* const pTempSoldier = Squad[iSquad][iCounter];
+				SOLDIERTYPE const* const pTempSoldier = *i;
 				if ( pTempSoldier && pTempSoldier->bActive && pTempSoldier->bInSector && !pTempSoldier->bMoved )
 				{
 					// then this guy got an interrupt...

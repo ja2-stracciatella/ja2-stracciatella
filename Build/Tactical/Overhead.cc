@@ -3142,9 +3142,9 @@ static SOLDIERTYPE* FindNextActiveSquadRange(INT8 begin, INT8 end)
 {
 	for (INT32 i = begin; i != end; ++i)
 	{
-		for (INT32 j = 0; j < NUMBER_OF_SOLDIERS_PER_SQUAD; ++j)
+		FOR_ALL_SLOTS_IN_SQUAD(j, i)
 		{
-			SOLDIERTYPE* const s = Squad[i][j];
+			SOLDIERTYPE* const s = *j;
 			if (s != NULL && s->bInSector && OK_INTERRUPT_MERC(s) && OK_CONTROLLABLE_MERC(s) && !(s->uiStatusFlags & SOLDIER_VEHICLE))
 			{
 				return s;

@@ -2148,14 +2148,11 @@ static BOOLEAN CanMoveBoxSoldierMoveStrategically(SOLDIERTYPE* pSoldier, BOOLEAN
 
 static void SelectSquadForMovement(INT32 iSquadNumber)
 {
-	INT32 iCounter = 0, iCount = 0;
 	BOOLEAN fSomeCantMove = FALSE;
-	SOLDIERTYPE *pSoldier = NULL;
 	BOOLEAN fFirstFailure;
 
-
 	// run through squad list and set them on
-	for( iCounter = 0; iCounter < giNumberOfSquadsInSectorMoving; iCounter++ )
+	for (INT32 iCounter = 0; iCounter < giNumberOfSquadsInSectorMoving; ++iCounter)
 	{
 		if( iSquadMovingList[ iCounter ] == iSquadNumber )
 		{
@@ -2164,10 +2161,9 @@ static void SelectSquadForMovement(INT32 iSquadNumber)
 			fFirstFailure = TRUE;
 
 			// try to select everyone in squad
-			for( iCount = 0; iCount < NUMBER_OF_SOLDIERS_PER_SQUAD; iCount++ )
+			FOR_ALL_SLOTS_IN_SQUAD(i, iSquadNumber)
 			{
-				pSoldier = Squad[ iSquadNumber ][ iCount ];
-
+				SOLDIERTYPE* const pSoldier = *i;
 				if ( pSoldier && pSoldier->bActive )
 				{
 					// is he able & allowed to move?  (Report only the first reason for failure encountered)
@@ -2196,11 +2192,8 @@ static void SelectSquadForMovement(INT32 iSquadNumber)
 
 static void DeselectSquadForMovement(INT32 iSquadNumber)
 {
-	INT32 iCounter = 0, iCount = 0;
-	SOLDIERTYPE *pSoldier = NULL;
-
 	// run through squad list and set them off
-	for( iCounter = 0; iCounter < giNumberOfSquadsInSectorMoving; iCounter++ )
+	for (INT32 iCounter = 0; iCounter < giNumberOfSquadsInSectorMoving; ++iCounter)
 	{
 		if( iSquadMovingList[ iCounter ] == iSquadNumber )
 		{
@@ -2208,10 +2201,9 @@ static void DeselectSquadForMovement(INT32 iSquadNumber)
 			fSquadIsMoving[ iCounter ] = FALSE;
 
 			// now deselect everyone in squad
-			for( iCount = 0; iCount < NUMBER_OF_SOLDIERS_PER_SQUAD; iCount++ )
+			FOR_ALL_SLOTS_IN_SQUAD(i, iSquadNumber)
 			{
-				pSoldier = Squad[ iSquadNumber ][ iCount ];
-
+				SOLDIERTYPE* const pSoldier = *i;
 				if ( pSoldier && pSoldier->bActive )
 				{
 					DeselectSoldierForMovement( pSoldier );

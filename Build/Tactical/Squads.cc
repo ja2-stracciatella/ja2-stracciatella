@@ -20,10 +20,6 @@
 #include "FileMan.h"
 
 
-#define FOR_ALL_SLOTS_IN_SQUAD(iter, squad) \
-	for (SOLDIERTYPE** iter = Squad[(squad)], *const * const iter##__end = endof(Squad[(squad)]); iter != iter##__end; ++iter)
-
-
 typedef struct
 {
 	INT16	uiID;						// The soldiers ID
