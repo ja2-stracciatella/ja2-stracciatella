@@ -258,28 +258,12 @@ void AddCharacterToAnySquad(SOLDIERTYPE* const pCharacter)
 
 
 // find the first slot we can fit the guy in
-INT8 AddCharacterToUniqueSquad( SOLDIERTYPE *pCharacter )
+INT8 AddCharacterToUniqueSquad(SOLDIERTYPE* const s)
 {
-	// add character to any squad, if character is assigned to a squad, returns TRUE
-	INT8 bCounter = 0;
-
-	// check if character on a squad
-
-		// remove them
-	RemoveCharacterFromSquads( pCharacter ); // REDUNDANT AddCharacterToSquad()
-
-	for( bCounter = 0; bCounter < NUMBER_OF_SQUADS; bCounter++ )
-	{
-		if (SquadIsEmpty(bCounter))
-		{
-			if (AddCharacterToSquad(pCharacter, bCounter))
-			{
-				return ( bCounter );
-			}
-		}
-	}
-
-	throw std::logic_error("Failed to add character to unique squad");
+	RemoveCharacterFromSquads(s); // REDUNDANT AddCharacterToSquad()
+	INT8 const squad = GetFirstEmptySquad();
+	AddCharacterToSquad(s, squad);
+	return squad;
 }
 
 
