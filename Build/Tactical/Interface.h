@@ -62,10 +62,18 @@ enum
 };
 
 
-extern BOOLEAN gfSwitchPanel;
-extern BOOLEAN gfUIStanceDifferent;
-extern UINT8   gbNewPanel;
-extern INT16   gsCurInterfacePanel;
+enum InterfacePanelKind
+{
+	SM_PANEL,
+	TEAM_PANEL,
+	NUM_UI_PANELS
+};
+
+
+extern BOOLEAN            gfSwitchPanel;
+extern BOOLEAN            gfUIStanceDifferent;
+extern InterfacePanelKind gbNewPanel;
+extern InterfacePanelKind gsCurInterfacePanel;
 
 
 extern SGPVObject* guiCLOSE;
@@ -100,15 +108,6 @@ extern MOUSE_REGION gRadarRegion;
 #define				DIRTYLEVEL2							2
 
 
-typedef enum
-{
-	SM_PANEL,
-	TEAM_PANEL,
-	NUM_UI_PANELS
-
-} InterfacePanelDefines;
-
-
 void InitializeTacticalInterface(void);
 extern BOOLEAN fInterfacePanelDirty;
 extern BOOLEAN gfPausedTacticalRenderFlags;
@@ -137,7 +136,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* s);
 void CreateCurrentTacticalPanelButtons(void);
 void RemoveCurrentTacticalPanelButtons(void);
 void SetCurrentTacticalPanelCurrentMerc(SOLDIERTYPE* s);
-void SetCurrentInterfacePanel( UINT8 ubNewPanel );
+void SetCurrentInterfacePanel(InterfacePanelKind);
 BOOLEAN IsMercPortraitVisible(const SOLDIERTYPE* s);
 
 void InitializeCurrentPanel(void);

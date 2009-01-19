@@ -274,9 +274,9 @@ static BUTTON_PICS* iTEAMPanelImages[NUM_TEAM_BUTTON_IMAGES];
 static BUTTON_PICS* giSMStealthImages;
 GUIButtonRef giSMStealthButton;
 
-BOOLEAN									gfSwitchPanel = FALSE;
-UINT8										gbNewPanel		= SM_PANEL;
-SOLDIERTYPE* gNewPanelSoldier = NULL;
+BOOLEAN            gfSwitchPanel    = FALSE;
+InterfacePanelKind gbNewPanel       = SM_PANEL;
+SOLDIERTYPE*       gNewPanelSoldier = 0;
 
 BOOLEAN									gfUIStanceDifferent = FALSE;
 static BOOLEAN gfAllDisabled = FALSE;

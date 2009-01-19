@@ -1059,7 +1059,7 @@ void PrepareLoadedSector()
 			SetPendingNewScreen(GAME_SCREEN);
 
       // Make interface the team panel always...
-			SetCurrentInterfacePanel( (UINT8)TEAM_PANEL );
+			SetCurrentInterfacePanel(TEAM_PANEL);
 		}
 
 

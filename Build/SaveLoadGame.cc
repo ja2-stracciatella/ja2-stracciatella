@@ -2612,7 +2612,7 @@ static void LoadGeneralInfo(HWFILE const hFile)
 	ShutdownCurrentPanel( );
 
 	//Restore the current tactical panel mode
-	gsCurInterfacePanel = sGeneralInfo.sCurInterfacePanel;
+	gsCurInterfacePanel = static_cast<InterfacePanelKind>(sGeneralInfo.sCurInterfacePanel);
 
 	/*
 	//moved to last stage in the LoadSaveGame() function

@@ -194,9 +194,9 @@ static BACKGROUND_SAVE* giUpArrowRect   = NO_BGND_RECT;
 static BACKGROUND_SAVE* giDownArrowRect = NO_BGND_RECT;
 
 
-BOOLEAN	fInterfacePanelDirty	  = DIRTYLEVEL2;
-INT16		gsInterfaceLevel			  = I_GROUND_LEVEL;
-INT16		gsCurInterfacePanel			= TEAM_PANEL;
+BOOLEAN            fInterfacePanelDirty = DIRTYLEVEL2;
+INT16              gsInterfaceLevel     = I_GROUND_LEVEL;
+InterfacePanelKind gsCurInterfacePanel  = TEAM_PANEL;
 
 
 void InitializeTacticalInterface()
@@ -342,7 +342,7 @@ void CreateCurrentTacticalPanelButtons(void)
 }
 
 
-void SetCurrentInterfacePanel( UINT8 ubNewPanel )
+void SetCurrentInterfacePanel(InterfacePanelKind const ubNewPanel)
 {
 	ShutdownCurrentPanel( );
 

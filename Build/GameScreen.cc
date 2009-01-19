@@ -186,7 +186,7 @@ void EnterTacticalScreen(void)
 	else
 	{
 		// otherwise, make sure interface is team panel...
-		SetCurrentInterfacePanel( (UINT8)TEAM_PANEL );
+		SetCurrentInterfacePanel(TEAM_PANEL);
 	}
 
 	if (!gfTacticalPlacementGUIActive) gRadarRegion.Enable();
@@ -206,7 +206,7 @@ void EnterTacticalScreen(void)
 		if( gsCurInterfacePanel < 0 || gsCurInterfacePanel >= NUM_UI_PANELS )
 			gsCurInterfacePanel = TEAM_PANEL;
 
-		SetCurrentInterfacePanel( (UINT8)gsCurInterfacePanel );
+		SetCurrentInterfacePanel(gsCurInterfacePanel);
 	}
 
 	SetTacticalInterfaceFlags( 0 );

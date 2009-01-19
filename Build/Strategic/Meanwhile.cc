@@ -759,7 +759,7 @@ static void DoneFadeOutMeanwhileOnceDone(void)
 
 		case GAME_SCREEN:
 			// restore old interface panel flag
-			SetCurrentInterfacePanel( (UINT8)TEAM_PANEL );
+			SetCurrentInterfacePanel(TEAM_PANEL);
 			break;
 	}
 
