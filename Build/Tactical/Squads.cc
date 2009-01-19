@@ -1,6 +1,7 @@
 #include <stdexcept>
 
 #include "Interface_Panels.h"
+#include "LoadSaveData.h"
 #include "Types.h"
 #include "Squads.h"
 #include "Strategic_Pathing.h"
@@ -19,14 +20,6 @@
 #include "ScreenIDs.h"
 #include "FileMan.h"
 
-
-typedef struct
-{
-	INT16	uiID;						// The soldiers ID
-	INT16 sPadding[ 5 ];
-//	INT8	bSquadValue;		// The squad id
-
-} SAVE_SQUAD_INFO_STRUCT;
 
 // squad array
 SOLDIERTYPE *Squad[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
@@ -674,16 +667,19 @@ INT32 GetLastSquadActive( void )
 void SaveSquadInfoToSavedGameFile(HWFILE const f)
 {
 	// Save the squad info to the Saved Game File
-	SAVE_SQUAD_INFO_STRUCT save_squad_info[NUMBER_OF_SQUADS][NUMBER_OF_SOLDIERS_PER_SQUAD];
+	BYTE data[NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD * 12];
+	BYTE* d = data;
 	for (INT32 squad = 0; squad < NUMBER_OF_SQUADS; ++squad)
 	{
-		for (INT32 slot = 0; slot < NUMBER_OF_SOLDIERS_PER_SQUAD; ++slot)
+		FOR_ALL_SLOTS_IN_SQUAD(slot, squad)
 		{
-			SOLDIERTYPE const* const s = Squad[squad][slot];
-			save_squad_info[squad][slot].uiID = s != NULL ? s->ubID : -1;
+			SOLDIERTYPE const* const s = *slot;
+			INJ_I16(d, s ? s->ubID : -1)
+			INJ_SKIP(d, 10)
 		}
 	}
-	FileWrite(f, save_squad_info, sizeof(save_squad_info));
+	Assert(d == endof(data));
+	FileWrite(f, data, sizeof(data));
 
 	// Save all the squad movement IDs
 	FileWrite(f, SquadMovementGroups, sizeof(SquadMovementGroups));
@@ -693,16 +689,20 @@ void SaveSquadInfoToSavedGameFile(HWFILE const f)
 void LoadSquadInfoFromSavedGameFile(HWFILE const f)
 {
 	// Load in the squad info
-	SAVE_SQUAD_INFO_STRUCT save_squad_info[NUMBER_OF_SQUADS][NUMBER_OF_SOLDIERS_PER_SQUAD];
-	FileRead(f, save_squad_info, sizeof(save_squad_info));
+	BYTE data[NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD * 12];
+	BYTE const* d = data;
+	FileRead(f, data, sizeof(data));
 	for (INT32 squad = 0; squad != NUMBER_OF_SQUADS; ++squad)
 	{
-		for (INT32 slot = 0; slot != NUMBER_OF_SOLDIERS_PER_SQUAD; ++slot)
+		FOR_ALL_SLOTS_IN_SQUAD(slot, squad)
 		{
-			INT16 const id = save_squad_info[squad][slot].uiID;
-			Squad[squad][slot] = id != -1 ? GetMan(id) : NULL;
+			INT16 id;
+			EXTR_I16(d, id)
+			EXTR_SKIP(d, 10)
+			*slot = id != -1 ? GetMan(id) : NULL;
 		}
 	}
+	Assert(d == endof(data));
 
 	// Load in the Squad movement IDs
 	FileRead(f, SquadMovementGroups, sizeof(SquadMovementGroups));
