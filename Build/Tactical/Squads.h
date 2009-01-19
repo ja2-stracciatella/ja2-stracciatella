@@ -46,6 +46,10 @@ extern SOLDIERTYPE *Squad[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
 #define FOR_ALL_SLOTS_IN_SQUAD(iter, squad) \
 	for (SOLDIERTYPE** iter = Squad[(squad)], *const * const iter##__end = endof(Squad[(squad)]); iter != iter##__end; ++iter)
 
+#define FOR_ALL_IN_SQUAD(iter, squad) \
+	FOR_ALL_SLOTS_IN_SQUAD(iter, squad) \
+		if (!*iter) continue; else
+
 extern INT32 iCurrentTacticalSquad;
 
 

@@ -2161,21 +2161,19 @@ static void SelectSquadForMovement(INT32 iSquadNumber)
 			fFirstFailure = TRUE;
 
 			// try to select everyone in squad
-			FOR_ALL_SLOTS_IN_SQUAD(i, iSquadNumber)
+			FOR_ALL_IN_SQUAD(i, iSquadNumber)
 			{
 				SOLDIERTYPE* const pSoldier = *i;
-				if ( pSoldier && pSoldier->bActive )
+				if (!pSoldier->bActive) continue;
+				// is he able & allowed to move?  (Report only the first reason for failure encountered)
+				if ( CanMoveBoxSoldierMoveStrategically( pSoldier, fFirstFailure ) )
 				{
-					// is he able & allowed to move?  (Report only the first reason for failure encountered)
-					if ( CanMoveBoxSoldierMoveStrategically( pSoldier, fFirstFailure ) )
-					{
-						SelectSoldierForMovement( pSoldier );
-					}
-					else
-					{
-						fSomeCantMove = TRUE;
-						fFirstFailure = FALSE;
-					}
+					SelectSoldierForMovement( pSoldier );
+				}
+				else
+				{
+					fSomeCantMove = TRUE;
+					fFirstFailure = FALSE;
 				}
 			}
 
@@ -2201,13 +2199,11 @@ static void DeselectSquadForMovement(INT32 iSquadNumber)
 			fSquadIsMoving[ iCounter ] = FALSE;
 
 			// now deselect everyone in squad
-			FOR_ALL_SLOTS_IN_SQUAD(i, iSquadNumber)
+			FOR_ALL_IN_SQUAD(i, iSquadNumber)
 			{
 				SOLDIERTYPE* const pSoldier = *i;
-				if ( pSoldier && pSoldier->bActive )
-				{
-					DeselectSoldierForMovement( pSoldier );
-				}
+				if (!pSoldier->bActive) continue;
+				DeselectSoldierForMovement(pSoldier);
 			}
 
 			break;

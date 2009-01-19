@@ -293,9 +293,9 @@ INT8 AddCharacterToUniqueSquad( SOLDIERTYPE *pCharacter )
 BOOLEAN SquadIsEmpty( INT8 bSquadValue )
 {
 	// run through this squad's slots and find if they ALL are empty
-	FOR_ALL_SLOTS_IN_SQUAD(i, bSquadValue)
+	FOR_ALL_IN_SQUAD(i, bSquadValue)
 	{
-		if (*i) return FALSE;
+		return FALSE;
 	}
 	return TRUE;
 }
@@ -361,9 +361,9 @@ INT8 NumberOfPeopleInSquad( INT8 bSquadValue )
 	}
 
 	// find number of characters in particular squad.
-	FOR_ALL_SLOTS_IN_SQUAD(i, bSquadValue)
+	FOR_ALL_IN_SQUAD(i, bSquadValue)
 	{
-		if (*i) ++bSquadCount;
+		++bSquadCount;
 	}
 
 	// return number found
@@ -380,10 +380,10 @@ INT8 NumberOfNonEPCsInSquad( INT8 bSquadValue )
 	}
 
 	// find number of characters in particular squad.
-	FOR_ALL_SLOTS_IN_SQUAD(i, bSquadValue)
+	FOR_ALL_IN_SQUAD(i, bSquadValue)
 	{
 		// valid slot?
-		if (*i && !AM_AN_EPC(*i)) ++bSquadCount;
+		if (!AM_AN_EPC(*i)) ++bSquadCount;
 	}
 
 	// return number found
@@ -398,10 +398,10 @@ BOOLEAN IsRobotControllerInSquad( INT8 bSquadValue )
 	}
 
 	// find number of characters in particular squad.
-	FOR_ALL_SLOTS_IN_SQUAD(i, bSquadValue)
+	FOR_ALL_IN_SQUAD(i, bSquadValue)
 	{
 		// valid slot?
-		if (*i && ControllingRobot(*i)) return TRUE;
+		if (ControllingRobot(*i)) return TRUE;
 	}
 
 	// return number found
@@ -414,12 +414,10 @@ BOOLEAN SectorSquadIsIn(const INT8 bSquadValue, INT16* const sMapX, INT16* const
 	// returns if there is anyone on the squad and what sector ( strategic ) they are in
 	Assert( bSquadValue < ON_DUTY );
 
-	FOR_ALL_SLOTS_IN_SQUAD(i, bSquadValue)
+	FOR_ALL_IN_SQUAD(i, bSquadValue)
 	{
 		SOLDIERTYPE const* const s = *i;
 		// if valid soldier, get current sector and return
-		if (!s) continue;
-
 		*sMapX = s->sSectorX;
 		*sMapY = s->sSectorY;
 		*sMapZ = s->bSectorZ;
@@ -434,18 +432,15 @@ BOOLEAN SectorSquadIsIn(const INT8 bSquadValue, INT16* const sMapX, INT16* const
 static BOOLEAN CopyPathOfSquadToCharacter(SOLDIERTYPE* pCharacter, INT8 bSquadValue)
 {
 	// copy path from squad to character
-	FOR_ALL_SLOTS_IN_SQUAD(i, bSquadValue)
+	FOR_ALL_IN_SQUAD(i, bSquadValue)
 	{
 		SOLDIERTYPE const* const t = *i;
-		if (t != NULL && t != pCharacter)
-		{
-			// valid character, copy paths
-			ClearStrategicPathList(pCharacter->pMercPath, 0);
-			pCharacter->pMercPath = CopyPaths(t->pMercPath);
-
-			 // return success
-			 return ( TRUE );
-		}
+		if (t == pCharacter) continue;
+		// valid character, copy paths
+		ClearStrategicPathList(pCharacter->pMercPath, 0);
+		pCharacter->pMercPath = CopyPaths(t->pMercPath);
+		// return success
+		return TRUE;
 	}
 
 	// return failure
@@ -456,15 +451,13 @@ static BOOLEAN CopyPathOfSquadToCharacter(SOLDIERTYPE* pCharacter, INT8 bSquadVa
 void CopyPathOfCharacterToSquad(SOLDIERTYPE* const pCharacter, const INT8 bSquadValue)
 {
 	// copy path of this character to members of squad
-	FOR_ALL_SLOTS_IN_SQUAD(i, bSquadValue)
+	FOR_ALL_IN_SQUAD(i, bSquadValue)
 	{
 		SOLDIERTYPE* const t = *i;
-		if (t != NULL && t != pCharacter)
-		{
-			// valid character, copy paths
-			ClearStrategicPathList(t->pMercPath, -1);
-			t->pMercPath = CopyPaths(pCharacter->pMercPath);
-		}
+		if (t == pCharacter) continue;
+		// valid character, copy paths
+		ClearStrategicPathList(t->pMercPath, -1);
+		t->pMercPath = CopyPaths(pCharacter->pMercPath);
 	}
 }
 
@@ -528,10 +521,10 @@ BOOLEAN SetCurrentSquad( INT32 iCurrentSquad, BOOLEAN fForce )
 
 	if (iCurrentSquad != NO_CURRENT_SQUAD)
 	{
-		FOR_ALL_SLOTS_IN_SQUAD(i, iCurrentSquad)
+		FOR_ALL_IN_SQUAD(i, iCurrentSquad)
 		{
 			// squad set, now add soldiers in
-			if (*i) CheckForAndAddMercToTeamPanel(*i);
+			CheckForAndAddMercToTeamPanel(*i);
 		}
 	}
 
@@ -570,10 +563,10 @@ void RebuildCurrentSquad( void )
 
 	if( iCurrentTacticalSquad != NO_CURRENT_SQUAD )
 	{
-		FOR_ALL_SLOTS_IN_SQUAD(i, iCurrentTacticalSquad)
+		FOR_ALL_IN_SQUAD(i, iCurrentTacticalSquad)
 		{
 			// squad set, now add soldiers in
-			if (*i) CheckForAndAddMercToTeamPanel(*i);
+			CheckForAndAddMercToTeamPanel(*i);
 		}
 
 		for (INT32 iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; ++iCounter)
@@ -613,19 +606,16 @@ BOOLEAN IsSquadOnCurrentTacticalMap( INT32 iCurrentSquad )
 	}
 
 	// go through memebrs of squad...if anyone on this map, return true
-	FOR_ALL_SLOTS_IN_SQUAD(i, iCurrentSquad)
+	FOR_ALL_IN_SQUAD(i, iCurrentSquad)
 	{
 		SOLDIERTYPE const* const s = *i;
-		if (s != NULL)
+		// ATE; Added more checks here for being in sector ( fBetweenSectors and SectorZ )
+		if (s->sSectorX == gWorldSectorX  &&
+				s->sSectorY == gWorldSectorY  &&
+				s->bSectorZ == gbWorldSectorZ &&
+				!s->fBetweenSectors)
 		{
-			// ATE; Added more checks here for being in sector ( fBetweenSectors and SectorZ )
-			if (s->sSectorX == gWorldSectorX  &&
-					s->sSectorY == gWorldSectorY  &&
-					s->bSectorZ == gbWorldSectorZ &&
-					!s->fBetweenSectors)
-			{
-				return( TRUE );
-			}
+			return( TRUE );
 		}
 	}
 
@@ -670,9 +660,10 @@ INT32 GetLastSquadActive( void )
 
 	for( iCounter = 0; iCounter < NUMBER_OF_SQUADS; iCounter++ )
 	{
-		FOR_ALL_SLOTS_IN_SQUAD(i, iCounter)
+		FOR_ALL_IN_SQUAD(i, iCounter)
 		{
-			if (*i) iLastSquad = iCounter;
+			iLastSquad = iCounter;
+			break;
 		}
 	}
 
@@ -720,13 +711,11 @@ void LoadSquadInfoFromSavedGameFile(HWFILE const f)
 
 BOOLEAN IsThisSquadOnTheMove( INT8 bSquadValue )
 {
-	FOR_ALL_SLOTS_IN_SQUAD(i, bSquadValue)
+	FOR_ALL_IN_SQUAD(i, bSquadValue)
 	{
-		SOLDIERTYPE const* const s = *i;
-		if (s) return s->fBetweenSectors;
+		return (*i)->fBetweenSectors;
 	}
-
-	return( FALSE );
+	return FALSE;
 }
 
 
@@ -864,17 +853,14 @@ INT8 NumberOfPlayerControllableMercsInSquad( INT8 bSquadValue )
 	}
 
 	// find number of characters in particular squad.
-	FOR_ALL_SLOTS_IN_SQUAD(i, bSquadValue)
+	FOR_ALL_IN_SQUAD(i, bSquadValue)
 	{
 		SOLDIERTYPE const* const pSoldier = *i;
-		if (pSoldier != NULL)
+		//Kris:  This breaks the CLIENT of this function, tactical traversal.  Do NOT check for EPCS or ROBOT here.
+		//if ( !AM_AN_EPC( pSoldier ) && !AM_A_ROBOT( pSoldier ) &&
+		if( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 		{
-			//Kris:  This breaks the CLIENT of this function, tactical traversal.  Do NOT check for EPCS or ROBOT here.
-			//if ( !AM_AN_EPC( pSoldier ) && !AM_A_ROBOT( pSoldier ) &&
-			if( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
-			{
-				bSquadCount++;
-			}
+			bSquadCount++;
 		}
 	}
 
@@ -891,10 +877,9 @@ BOOLEAN DoesVehicleExistInSquad( INT8 bSquadValue )
 	}
 
 	// find number of characters in particular squad.
-	FOR_ALL_SLOTS_IN_SQUAD(i, bSquadValue)
+	FOR_ALL_IN_SQUAD(i, bSquadValue)
 	{
-		SOLDIERTYPE const* const s = *i;
-		if (s != NULL && s->uiStatusFlags & SOLDIER_VEHICLE) return TRUE;
+		if ((*i)->uiStatusFlags & SOLDIER_VEHICLE) return TRUE;
 	}
 
 	return(FALSE );

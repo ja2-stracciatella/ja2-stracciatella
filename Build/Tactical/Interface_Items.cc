@@ -1050,11 +1050,10 @@ void HandleAnyMercInSquadHasCompatibleStuff(const OBJECTTYPE* const o)
 	const INT32 squad = CurrentSquad();
 	if (squad == NUMBER_OF_SQUADS) return;
 
-	FOR_ALL_SLOTS_IN_SQUAD(i, squad)
+	FOR_ALL_IN_SQUAD(i, squad)
 	{
 		SOLDIERTYPE const* const s = *i;
-		if (s == NULL) continue;
-		FACETYPE* const f = s->face;
+		FACETYPE*          const f = s->face;
 		Assert(f || s->uiStatusFlags & SOLDIER_VEHICLE);
 		if (f == NULL) continue;
 

@@ -558,29 +558,29 @@ static void StartInterrupt(void)
 		// build string in separate loop here, want to linearly process squads...
 		for (INT32 iSquad = 0; iSquad < NUMBER_OF_SQUADS; ++iSquad)
 		{
-			FOR_ALL_SLOTS_IN_SQUAD(i, iSquad)
+			FOR_ALL_IN_SQUAD(i, iSquad)
 			{
-				SOLDIERTYPE const* const pTempSoldier = *i;
-				if ( pTempSoldier && pTempSoldier->bActive && pTempSoldier->bInSector && !pTempSoldier->bMoved )
+				SOLDIERTYPE const* const s = *i;
+				if (!s->bActive)   continue;
+				if (!s->bInSector) continue;
+				if (s->bMoved)     continue;
+				// then this guy got an interrupt...
+				ubInterrupters++;
+				if ( ubInterrupters > 6 )
 				{
-					// then this guy got an interrupt...
-					ubInterrupters++;
-					if ( ubInterrupters > 6 )
-					{
-						// flush... display string, then clear it (we could have 20 names!)
-						// add comma to end, we know we have another person after this...
-						wcscat( sTemp, L", " );
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sTemp );
-						wcscpy( sTemp, L"" );
-						ubInterrupters = 1;
-					}
-
-					if ( ubInterrupters > 1 )
-					{
-						wcscat( sTemp, L", " );
-					}
-					wcscat( sTemp, pTempSoldier->name );
+					// flush... display string, then clear it (we could have 20 names!)
+					// add comma to end, we know we have another person after this...
+					wcscat( sTemp, L", " );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sTemp );
+					wcscpy( sTemp, L"" );
+					ubInterrupters = 1;
 				}
+
+				if ( ubInterrupters > 1 )
+				{
+					wcscat( sTemp, L", " );
+				}
+				wcscat(sTemp, s->name);
 			}
 		}
 
