@@ -1288,7 +1288,6 @@ void HandleExitsFromMapScreen( void )
 				break;
 
 			case MAP_EXIT_TO_TACTICAL:
-				EndMapScreen(FALSE);
 				#ifdef JA2DEMO
 					HandleLeavingOfMapScreenDuringDemo( );
 					gfDontStartTransitionFromLaptop = TRUE;

@@ -1443,6 +1443,7 @@ static BOOLEAN EnterSector(INT16 const x, INT16 const y, INT8 const z)
 	}
 	else
 	{
+		EndMapScreen(FALSE);
 		PrepareLoadedSector();
 	}
 
