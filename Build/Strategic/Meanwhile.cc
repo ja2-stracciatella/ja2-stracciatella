@@ -431,9 +431,6 @@ static void StartMeanwhile(void)
 
 	gfWorldWasLoaded = gfWorldLoaded;
 
-	// OK, we have been told to start.....
-	SetCurrentInterfacePanel( (UINT8)TEAM_PANEL );
-
 	// Setup NPC locations, depending on meanwhile type...
 	switch( gCurrentMeanwhileDef.ubMeanwhileID )
 	{

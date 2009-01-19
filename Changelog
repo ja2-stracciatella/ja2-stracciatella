@@ -1,4 +1,4 @@
-(r5072) Plug a vanilla memory leak when loading a new sector and entering the tactical screen from the map screen.
+(r5072, r5073) Plug a vanilla memory leak (now a null-pointer access) when loading a new sector and entering the tactical screen from the map screen.
 (r5051) Make the whole keypad useable by mapping all keypad keys to normal keys, e.g. keypad enter behaves the same as the return key.
 (r5027) Fix a glitch in r5021 which caused wrong display in the file and email viewers.
 
