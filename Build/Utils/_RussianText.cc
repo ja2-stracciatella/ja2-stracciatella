@@ -1815,7 +1815,7 @@ const wchar_t* pMiscMapScreenMouseRegionHelpText[] =
 
 
 const wchar_t str_he_leaves_where_drop_equipment[]  = L"%ls должен оставить снаряжение в (%ls) или потом, в %ls, перед вылетом из Арулько?";
-const wchar_t str_she_leaves_where_drop_equipment[] = L"%ls должна оставить свое снаряжение в (%ls) или потом, в Драссене (B13) перед вылетом из Арулько?";
+const wchar_t str_she_leaves_where_drop_equipment[] = L"%ls должна оставить свое снаряжение в (%ls) или потом, в %ls, перед вылетом из Арулько?";
 const wchar_t str_he_leaves_drops_equipment[]       = L"%ls собрался уйти, оставив свое снаряжение в %ls.";
 const wchar_t str_she_leaves_drops_equipment[]      = L"%ls собралась уйти, оставив свое снаряжение в %ls.";
 
