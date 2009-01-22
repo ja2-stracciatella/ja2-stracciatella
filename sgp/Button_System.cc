@@ -1281,8 +1281,8 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 	if (!b->icon) return;
 
 	// Get width and height of button area
-	INT32 const width  = b->Area.RegionBottomRightX - b->X();
-	INT32 const height = b->Area.RegionBottomRightY - b->Y();
+	INT32 const width  = b->W();
+	INT32 const height = b->H();
 
 	// Compute viewable area (inside borders)
 	SGPRect NewClip;
@@ -1378,8 +1378,8 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	if (b->string == NULL) return;
 
 	// Get the width and height of this button
-	INT32 const width  = b->Area.RegionBottomRightX - b->X();
-	INT32 const height = b->Area.RegionBottomRightY - b->Y();
+	INT32 const width  = b->W();
+	INT32 const height = b->H();
 
 	// Compute the viewable area on this button
 	SGPRect NewClip;
@@ -1615,8 +1615,8 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 #endif
 
 	// Compute the number of button "chunks" needed to be blitted
-	INT32 const width         = b->Area.RegionBottomRightX - b->X();
-	INT32 const height        = b->Area.RegionBottomRightY - b->Y();
+	INT32 const width         = b->W();
+	INT32 const height        = b->H();
 	const INT32 NumChunksWide = width  / iBorderWidth;
 	INT32       NumChunksHigh = height / iBorderHeight;
 	const INT32 hremain       = height % iBorderHeight;
