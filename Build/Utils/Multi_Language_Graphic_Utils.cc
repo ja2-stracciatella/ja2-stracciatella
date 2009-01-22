@@ -127,7 +127,11 @@ const char* GetMLGFilename(const MultiLanguageGraphic id)
 		case MLG_MORTUARYLINK:       s = STI("MortuaryLink");       break;
 		case MLG_PREBATTLEPANEL:     s = STI("PreBattlePanel");     break;
 		case MLG_SMALLTITLE:         s = STI("SmallTitle");         break;
+#if defined RUSSIAN
+		case MLG_STOREPLAQUE:        s = STI("BobbyStorePlaque");   break;
+#else
 		case MLG_STOREPLAQUE:        s = STI("StorePlaque");        break;
+#endif
 		case MLG_TITLETEXT:          s = STI("titletext");          break;
 		case MLG_TOALUMNI:           s = STI("ToAlumni");           break;
 		case MLG_TOMUGSHOTS:         s = STI("ToMugShots");         break;
