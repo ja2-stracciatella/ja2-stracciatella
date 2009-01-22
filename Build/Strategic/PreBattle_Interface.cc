@@ -876,10 +876,9 @@ void RenderPreBattleInterface()
 	GUIButtonRef const retreat = iPBButton[2];
 	if (retreat->uiFlags & BUTTON_ENABLED)
 	{
-		const MOUSE_REGION* const r = &retreat->Area;
-		const BOOLEAN fMouseInRetreatButtonArea =
-			r->RegionTopLeftX <= gusMouseXPos && gusMouseXPos <= r->RegionBottomRightX &&
-			r->RegionTopLeftY <= gusMouseYPos && gusMouseYPos <= r->RegionBottomRightY;
+		BOOLEAN const fMouseInRetreatButtonArea =
+			retreat->X() <= gusMouseXPos && gusMouseXPos <= retreat->BottomRightX() &&
+			retreat->Y() <= gusMouseYPos && gusMouseYPos <= retreat->BottomRightY();
 		if( fMouseInRetreatButtonArea != gfDisplayPotentialRetreatPaths )
 		{
 			gfDisplayPotentialRetreatPaths = fMouseInRetreatButtonArea;
@@ -1158,7 +1157,7 @@ static void AutoResolveBattleCallback(GUI_BUTTON* btn, INT32 reason)
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
 					btn->Draw();
-					InvalidateRegion(btn->X(), btn->Y(), btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+					InvalidateRegion(btn->X(), btn->Y(), btn->BottomRightX(), btn->BottomRightY());
 					ExecuteBaseDirtyRectQueue();
 					EndFrameBufferRender( );
 					RefreshScreen();
@@ -1199,7 +1198,7 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
 					btn->Draw();
-					InvalidateRegion(btn->X(), btn->Y(), btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+					InvalidateRegion(btn->X(), btn->Y(), btn->BottomRightX(), btn->BottomRightY());
 					ExecuteBaseDirtyRectQueue();
 					EndFrameBufferRender( );
 					RefreshScreen();
@@ -1217,7 +1216,7 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 			}
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
 			btn->Draw();
-			InvalidateRegion(btn->X(), btn->Y(), btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+			InvalidateRegion(btn->X(), btn->Y(), btn->BottomRightX(), btn->BottomRightY());
 			ExecuteBaseDirtyRectQueue();
 			EndFrameBufferRender( );
 			RefreshScreen();
@@ -1273,7 +1272,7 @@ static void RetreatMercsCallback(GUI_BUTTON* btn, INT32 reason)
 
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
 			btn->Draw();
-			InvalidateRegion(btn->X(), btn->Y(), btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+			InvalidateRegion(btn->X(), btn->Y(), btn->BottomRightX(), btn->BottomRightY());
 			ExecuteBaseDirtyRectQueue();
 			EndFrameBufferRender( );
 			RefreshScreen();

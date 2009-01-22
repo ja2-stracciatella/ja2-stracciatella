@@ -94,10 +94,12 @@ struct GUI_BUTTON
 	void DrawCheckBoxOnOff(BOOLEAN on);
 
 	// Coordinates where button is on the screen
-	INT16 X() const { return Area.RegionTopLeftX; }
-	INT16 Y() const { return Area.RegionTopLeftY; }
-	INT16 W() const { return Area.RegionBottomRightX - Area.RegionTopLeftX; }
-	INT16 H() const { return Area.RegionBottomRightY - Area.RegionTopLeftY; }
+	INT16 X()            const { return Area.RegionTopLeftX; }
+	INT16 Y()            const { return Area.RegionTopLeftY; }
+	INT16 W()            const { return Area.RegionBottomRightX - Area.RegionTopLeftX; }
+	INT16 H()            const { return Area.RegionBottomRightY - Area.RegionTopLeftY; }
+	INT16 BottomRightX() const { return Area.RegionBottomRightX; }
+	INT16 BottomRightY() const { return Area.RegionBottomRightY; }
 
 	INT16 MouseX()    const { return Area.MouseXPos; }
 	INT16 MouseY()    const { return Area.MouseYPos; }

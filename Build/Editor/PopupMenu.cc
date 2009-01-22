@@ -139,16 +139,16 @@ void InitPopupMenu(GUIButtonRef const button, UINT8 const ubPopupMenuID, UINT8 c
 			usY = button->Y();
 			break;
 		case DIR_UPLEFT:
-			usX = button->Area.RegionBottomRightX;
+			usX = button->BottomRightX();
 			usY = button->Y();
 			break;
 		case DIR_DOWNRIGHT:
 			usX = button->X();
-			usY = button->Area.RegionBottomRightY;
+			usY = button->BottomRightY();
 			break;
 		case DIR_DOWNLEFT:
-			usX = button->Area.RegionBottomRightX;
-			usY = button->Area.RegionBottomRightY;
+			usX = button->BottomRightX();
+			usY = button->BottomRightY();
 			break;
 
 		default: abort(); // HACK000E

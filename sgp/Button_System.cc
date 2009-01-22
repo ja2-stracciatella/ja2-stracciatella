@@ -57,18 +57,18 @@ static void AssertFailIfIdenticalButtonAttributesFound(const GUI_BUTTON* b)
 	for (INT32 x = 0; x < MAX_BUTTONS; ++x)
 	{
 		const GUI_BUTTON* const c = ButtonList[x];
-		if (!c)                                                       continue;
-		if (c->uiFlags                 &   BUTTON_DELETION_PENDING  ) continue;
-		if (c->uiFlags                 &   BUTTON_NO_DUPLICATE      ) continue;
-		if (b->Area.PriorityLevel      != c->Area.PriorityLevel     ) continue;
-		if (b->X()                     != c->X()                    ) continue;
-		if (b->Y()                     != c->Y()                    ) continue;
-		if (b->Area.RegionBottomRightX != c->Area.RegionBottomRightX) continue;
-		if (b->Area.RegionBottomRightY != c->Area.RegionBottomRightY) continue;
-		if (b->ClickCallback           != c->ClickCallback          ) continue;
-		if (b->MoveCallback            != c->MoveCallback           ) continue;
-		if (b->X()                     != c->X()                    ) continue;
-		if (b->Y()                     != c->Y()                    ) continue;
+		if (!c)                                                continue;
+		if (c->uiFlags            &   BUTTON_DELETION_PENDING) continue;
+		if (c->uiFlags            &   BUTTON_NO_DUPLICATE)     continue;
+		if (b->Area.PriorityLevel != c->Area.PriorityLevel)    continue;
+		if (b->X()                != c->X())                   continue;
+		if (b->Y()                != c->Y())                   continue;
+		if (b->BottomRightX()     != c->BottomRightX())        continue;
+		if (b->BottomRightY()     != c->BottomRightY())        continue;
+		if (b->ClickCallback      != c->ClickCallback)         continue;
+		if (b->MoveCallback       != c->MoveCallback)          continue;
+		if (b->X()                != c->X())                   continue;
+		if (b->Y()                != c->Y())                   continue;
 		/* if we get this far, it is reasonably safe to assume that the newly
 		 * created button already exists.  Placing a break point on the following
 		 * assert will allow the coder to easily isolate the case!
@@ -972,7 +972,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 #if defined JA2
 	if (StateBefore != StateAfter)
 	{
-		InvalidateRegion(b->X(), b->Y(), b->Area.RegionBottomRightX, b->Area.RegionBottomRightY);
+		InvalidateRegion(b->X(), b->Y(), b->BottomRightX(), b->BottomRightY());
 	}
 #endif
 
@@ -1016,7 +1016,7 @@ void RenderButtons(void)
 			DrawButtonFromPtr(b);
 
 #if defined JA2
-			InvalidateRegion(b->X(), b->Y(), b->Area.RegionBottomRightX, b->Area.RegionBottomRightY);
+			InvalidateRegion(b->X(), b->Y(), b->BottomRightX(), b->BottomRightY());
 #endif
 		}
 	}
@@ -1179,9 +1179,9 @@ static void DrawHatchOnButton(const GUI_BUTTON* b)
 {
 	SGPRect ClipRect;
 	ClipRect.iLeft   = b->X();
-	ClipRect.iRight  = b->Area.RegionBottomRightX - 1;
+	ClipRect.iRight  = b->BottomRightX() - 1;
 	ClipRect.iTop    = b->Y();
-	ClipRect.iBottom = b->Area.RegionBottomRightY - 1;
+	ClipRect.iBottom = b->BottomRightY() - 1;
 	SGPVSurface::Lock l(ButtonDestBuffer);
 	Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
 }
@@ -1189,8 +1189,7 @@ static void DrawHatchOnButton(const GUI_BUTTON* b)
 
 static void DrawShadeOnButton(const GUI_BUTTON* b)
 {
-	const MOUSE_REGION* r = &b->Area;
-	ButtonDestBuffer->ShadowRect(r->RegionTopLeftX, r->RegionTopLeftY, r->RegionBottomRightX, r->RegionBottomRightY);
+	ButtonDestBuffer->ShadowRect(b->X(), b->Y(), b->BottomRightX(), b->BottomRightY());
 }
 
 
@@ -1520,7 +1519,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 			switch (b->bJustification)
 			{
 				case GUI_BUTTON::TEXT_RIGHT:
-					xp = b->Area.RegionBottomRightX - 3 - b->sWrappedWidth;
+					xp = b->BottomRightX() - 3 - b->sWrappedWidth;
 					if (b->fShiftText && b->uiFlags & BUTTON_CLICKED_ON)
 					{
 						xp++;
@@ -1628,7 +1627,7 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	INT32 const cy = by + (NumChunksHigh - 1) * iBorderHeight + hremain;
 
 	// Fill the button's area with the button's background color
-	ColorFillVideoSurfaceArea(ButtonDestBuffer, b->X(), b->Y(), b->Area.RegionBottomRightX, b->Area.RegionBottomRightY, GenericButtonFillColors);
+	ColorFillVideoSurfaceArea(ButtonDestBuffer, b->X(), b->Y(), b->BottomRightX(), b->BottomRightY(), GenericButtonFillColors);
 
 	SGPVSurface::Lock l(ButtonDestBuffer);
 	UINT16* const pDestBuf         = l.Buffer<UINT16>();
@@ -1713,7 +1712,7 @@ static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason)
 			}
 		}
 #if defined JA2
-		InvalidateRegion(btn->X(), btn->Y(), btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		InvalidateRegion(btn->X(), btn->Y(), btn->BottomRightX(), btn->BottomRightY());
 #endif
 	}
 	else if (reason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
@@ -1724,7 +1723,7 @@ static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason)
 			PlayButtonSound(btn, BUTTON_SOUND_CLICKED_ON);
 		}
 #if defined JA2
-		InvalidateRegion(btn->X(), btn->Y(), btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		InvalidateRegion(btn->X(), btn->Y(), btn->BottomRightX(), btn->BottomRightY());
 #endif
 	}
 }
@@ -1735,8 +1734,8 @@ void ReleaseAnchorMode(void)
   GUI_BUTTON* const b = gpAnchoredButton;
   if (!b) return;
 
-	if (gusMouseXPos < b->X() || gusMouseXPos > b->Area.RegionBottomRightX ||
-			gusMouseYPos < b->Y() || gusMouseYPos > b->Area.RegionBottomRightY)
+	if (gusMouseXPos < b->X() || b->BottomRightX() < gusMouseXPos ||
+			gusMouseYPos < b->Y() || b->BottomRightY() < gusMouseYPos)
 	{
 		//released outside button area, so restore previous button state.
 		if (gfAnchoredState)
@@ -1748,7 +1747,7 @@ void ReleaseAnchorMode(void)
 			b->uiFlags &= ~BUTTON_CLICKED_ON;
 		}
 #if defined JA2
-		InvalidateRegion(b->X(), b->Y(), b->Area.RegionBottomRightX, b->Area.RegionBottomRightY);
+		InvalidateRegion(b->X(), b->Y(), b->BottomRightX(), b->BottomRightY());
 #endif
 	}
 	gpPrevAnchoredButton = b;
@@ -1761,7 +1760,7 @@ void GUI_BUTTON::Hide()
 	Area.uiFlags &= ~MSYS_REGION_ENABLED;
 	uiFlags      |= BUTTON_DIRTY;
 #if defined JA2
-	InvalidateRegion(X(), Y(), Area.RegionBottomRightX, Area.RegionBottomRightY);
+	InvalidateRegion(X(), Y(), BottomRightX(), BottomRightY());
 #endif
 }
 
@@ -1778,7 +1777,7 @@ void GUI_BUTTON::Show()
 	Area.uiFlags |= MSYS_REGION_ENABLED;
 	uiFlags      |= BUTTON_DIRTY;
 #if defined JA2
-	InvalidateRegion(X(), Y(), Area.RegionBottomRightX, Area.RegionBottomRightY);
+	InvalidateRegion(X(), Y(), BottomRightX(), BottomRightY());
 #endif
 }
 
