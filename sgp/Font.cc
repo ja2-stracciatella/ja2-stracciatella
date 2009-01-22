@@ -11,6 +11,9 @@
 #include "VObject_Blitters.h"
 
 
+typedef UINT8 GlyphIdx;
+
+
 #define MAX_FONTS 25
 
 
@@ -103,7 +106,7 @@ void UnloadFont(Font const font)
 
 
 /* Returns the width of a given character in the font. */
-static UINT32 GetWidth(HVOBJECT hSrcVObject, INT16 ssIndex)
+static UINT32 GetWidth(HVOBJECT const hSrcVObject, GlyphIdx const ssIndex)
 {
 	Assert(hSrcVObject != NULL);
 
@@ -173,9 +176,9 @@ UINT16 GetFontHeight(Font const font)
 /* Given a wide char, this function returns the index of the glyph. Returns 0
  * - the index of 'A' (or ' ', depending on data files) - if no glyph exists for
  * the requested wide char. */
-static INT16 GetIndex(wchar_t c)
+static GlyphIdx GetGlyphIndex(wchar_t const c)
 {
-	UINT16 Idx = 0;
+	GlyphIdx Idx = 0;
 	if (c < lengthof(TranslationTable)) Idx = TranslationTable[c];
 #if defined RUSSIAN
 	if (Idx == 0 && c != L' ')
@@ -192,7 +195,7 @@ static INT16 GetIndex(wchar_t c)
 
 UINT32 GetCharWidth(HVOBJECT Font, wchar_t c)
 {
-	return GetWidth(Font, GetIndex(c));
+	return GetWidth(Font, GetGlyphIndex(c));
 }
 
 
@@ -278,9 +281,9 @@ UINT32 gprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 	Font const font = FontDefault;
 	for (const wchar_t* curletter = string; *curletter != L'\0'; curletter++)
 	{
-		wchar_t transletter = GetIndex(*curletter);
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, font, destx, desty, transletter, &FontDestRegion);
-		destx += GetWidth(font, transletter);
+		GlyphIdx const glyph = GetGlyphIndex(*curletter);
+		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, font, destx, desty, glyph, &FontDestRegion);
+		destx += GetWidth(font, glyph);
 	}
 
 	return 0;
@@ -292,7 +295,7 @@ static void mprint_buffer(UINT16* const pDestBuf, UINT32 const uiDestPitchBYTES,
 	Font const font = FontDefault;
 	for (; *str != L'\0'; ++str)
 	{
-		wchar_t const glyph = GetIndex(*str);
+		GlyphIdx const glyph = GetGlyphIndex(*str);
 		Blt8BPPDataTo16BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, font, x, y, glyph, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
 		x += GetWidth(font, glyph);
 	}
@@ -359,9 +362,9 @@ static UINT32 vmprintf_buffer_coded(UINT16* const pDestBuf, const UINT32 uiDestP
 			curletter++;
 		}
 
-		wchar_t transletter = GetIndex(*curletter);
-		Blt8BPPDataTo16BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, font, destx, desty, transletter, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
-		destx += GetWidth(font, transletter);
+		GlyphIdx const glyph = GetGlyphIndex(*curletter);
+		Blt8BPPDataTo16BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, font, destx, desty, glyph, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
+		destx += GetWidth(font, glyph);
 	}
 
 	return 0;
