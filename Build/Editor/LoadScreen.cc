@@ -1020,7 +1020,7 @@ static void FDlgNamesCallback(GUI_BUTTON* butn, INT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
-		SelectFileDialogYPos( butn->Area.RelativeYPos );
+		SelectFileDialogYPos(butn->RelativeY());
 	}
 }
 

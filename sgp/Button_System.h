@@ -97,8 +97,10 @@ struct GUI_BUTTON
 	INT16 X() const { return Area.RegionTopLeftX; }
 	INT16 Y() const { return Area.RegionTopLeftY; }
 
-	INT16 MouseX() const { return Area.MouseXPos; }
-	INT16 MouseY() const { return Area.MouseYPos; }
+	INT16 MouseX()    const { return Area.MouseXPos; }
+	INT16 MouseY()    const { return Area.MouseYPos; }
+	INT16 RelativeX() const { return Area.RelativeXPos; }
+	INT16 RelativeY() const { return Area.RelativeYPos; }
 
 	INT32        IDNum;         // ID Number, contains it's own button number
 	BUTTON_PICS* image;         // Image to use (see DOCs for details)
