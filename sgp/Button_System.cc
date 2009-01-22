@@ -1732,28 +1732,27 @@ static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason)
 
 void ReleaseAnchorMode(void)
 {
-  if (!gpAnchoredButton) return;
+  GUI_BUTTON* const b = gpAnchoredButton;
+  if (!b) return;
 
-	if (gusMouseXPos < gpAnchoredButton->Area.RegionTopLeftX     ||
-			gusMouseXPos > gpAnchoredButton->Area.RegionBottomRightX ||
-			gusMouseYPos < gpAnchoredButton->Area.RegionTopLeftY     ||
-			gusMouseYPos > gpAnchoredButton->Area.RegionBottomRightY)
+	if (gusMouseXPos < b->X() || gusMouseXPos > b->Area.RegionBottomRightX ||
+			gusMouseYPos < b->Y() || gusMouseYPos > b->Area.RegionBottomRightY)
 	{
 		//released outside button area, so restore previous button state.
 		if (gfAnchoredState)
 		{
-			gpAnchoredButton->uiFlags |= BUTTON_CLICKED_ON;
+			b->uiFlags |= BUTTON_CLICKED_ON;
 		}
 		else
 		{
-			gpAnchoredButton->uiFlags &= ~BUTTON_CLICKED_ON;
+			b->uiFlags &= ~BUTTON_CLICKED_ON;
 		}
 #if defined JA2
-		InvalidateRegion(gpAnchoredButton->Area.RegionTopLeftX, gpAnchoredButton->Area.RegionTopLeftY, gpAnchoredButton->Area.RegionBottomRightX, gpAnchoredButton->Area.RegionBottomRightY);
+		InvalidateRegion(b->X(), b->Y(), b->Area.RegionBottomRightX, b->Area.RegionBottomRightY);
 #endif
 	}
-	gpPrevAnchoredButton = gpAnchoredButton;
-	gpAnchoredButton = NULL;
+	gpPrevAnchoredButton = b;
+	gpAnchoredButton     = 0;
 }
 
 
