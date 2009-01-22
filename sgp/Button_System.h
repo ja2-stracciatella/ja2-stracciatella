@@ -93,6 +93,10 @@ struct GUI_BUTTON
 
 	void DrawCheckBoxOnOff(BOOLEAN on);
 
+	// Coordinates where button is on the screen
+	INT16 X() const { return Area.RegionTopLeftX; }
+	INT16 Y() const { return Area.RegionTopLeftY; }
+
 	INT32        IDNum;         // ID Number, contains it's own button number
 	BUTTON_PICS* image;         // Image to use (see DOCs for details)
 	MOUSE_REGION Area;          // Mouse System's mouse region to use for this button
@@ -100,8 +104,6 @@ struct GUI_BUTTON
 	GUI_CALLBACK MoveCallback;  // Button Callback when mouse moved on this region
 	UINT32       uiFlags;       // Button state flags etc.( 32-bit )
 	UINT32       uiOldFlags;    // Old flags from previous render loop
-	INT16        XLoc;          // Coordinates where button is on the screen
-	INT16        YLoc;
 	union                       // Place holder for user data etc.
 	{
 		INT32 Data;

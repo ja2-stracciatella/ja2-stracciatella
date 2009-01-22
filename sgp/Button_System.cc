@@ -496,8 +496,6 @@ GUI_BUTTON::GUI_BUTTON(UINT32 const flags, INT16 const left, INT16 const top, IN
 	MoveCallback(move),
 	uiFlags(BUTTON_DIRTY | BUTTON_ENABLED | flags),
 	uiOldFlags(0),
-	XLoc(left),
-	YLoc(top),
 	bDisabledStyle(GUI_BUTTON::DISABLED_STYLE_DEFAULT),
 	string(0),
 	usFont(0),
@@ -1173,7 +1171,7 @@ static void DrawQuickButton(const GUI_BUTTON* b)
 		}
 	}
 
-	BltVideoObject(ButtonDestBuffer, pics->vobj, UseImage, b->XLoc, b->YLoc);
+	BltVideoObject(ButtonDestBuffer, pics->vobj, UseImage, b->X(), b->Y());
 }
 
 
@@ -1274,7 +1272,7 @@ static void DrawCheckBoxButton(const GUI_BUTTON *b)
 		}
 	}
 
-	BltVideoObject(ButtonDestBuffer, pics->vobj, UseImage, b->XLoc, b->YLoc);
+	BltVideoObject(ButtonDestBuffer, pics->vobj, UseImage, b->X(), b->Y());
 }
 
 
@@ -1288,10 +1286,10 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 
 	// Compute viewable area (inside borders)
 	SGPRect NewClip;
-	NewClip.iLeft   = b->XLoc + 3;
-	NewClip.iRight  = b->XLoc + width - 3;
-	NewClip.iTop    = b->YLoc + 2;
-	NewClip.iBottom = b->YLoc + height - 2;
+	NewClip.iLeft   = b->X() + 3;
+	NewClip.iRight  = b->X() + width - 3;
+	NewClip.iTop    = b->Y() + 2;
+	NewClip.iBottom = b->Y() + height - 2;
 
 	// Get Icon's blit start coordinates
 	INT32 IconX = NewClip.iLeft;
@@ -1385,10 +1383,10 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 
 	// Compute the viewable area on this button
 	SGPRect NewClip;
-	NewClip.iLeft   = b->XLoc + 3;
-	NewClip.iRight  = b->XLoc + width - 3;
-	NewClip.iTop    = b->YLoc + 2;
-	NewClip.iBottom = b->YLoc + height - 2;
+	NewClip.iLeft   = b->X() + 3;
+	NewClip.iRight  = b->X() + width - 3;
+	NewClip.iTop    = b->Y() + 2;
+	NewClip.iBottom = b->Y() + height - 2;
 
 	// Get the starting coordinates to print
 	const INT32 TextX = NewClip.iLeft;
@@ -1624,8 +1622,10 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	const INT32 hremain       = height % iBorderHeight;
 	const INT32 wremain       = width  % iBorderWidth;
 
-	INT32 cx = b->XLoc + (NumChunksWide - 1) * iBorderWidth  + wremain;
-	INT32 cy = b->YLoc + (NumChunksHigh - 1) * iBorderHeight + hremain;
+	INT32 const bx = b->X();
+	INT32 const by = b->Y();
+	INT32 const cx = bx + (NumChunksWide - 1) * iBorderWidth  + wremain;
+	INT32 const cy = by + (NumChunksHigh - 1) * iBorderHeight + hremain;
 
 	// Fill the button's area with the button's background color
 	ColorFillVideoSurfaceArea(ButtonDestBuffer, b->Area.RegionTopLeftX, b->Area.RegionTopLeftY, b->Area.RegionBottomRightX, b->Area.RegionBottomRightY, GenericButtonFillColors);
@@ -1640,29 +1640,29 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	// Draw the button's borders and corners (horizontally)
 	for (INT32 q = 0; q < NumChunksWide; q++)
 	{
-		const INT32 ImgNum = (q == 0 ? 0 : 1);
-		const INT32 x = b->XLoc + q * iBorderWidth;
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, x,  b->YLoc, ImgNum,     &ClipRect);
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, x,  cy,      ImgNum + 5, &ClipRect);
+		INT32 const ImgNum = (q == 0 ? 0 : 1);
+		INT32 const x = bx + q * iBorderWidth;
+		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, x,  by, ImgNum,     &ClipRect);
+		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, x,  cy, ImgNum + 5, &ClipRect);
 	}
 	// Blit the right side corners
-	Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, b->YLoc, 2, &ClipRect);
-	Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, cy,      7, &ClipRect);
+	Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, by, 2, &ClipRect);
+	Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, cy, 7, &ClipRect);
 	// Draw the vertical members of the button's borders
 	NumChunksHigh--;
 
 	if (hremain != 0)
 	{
-		const INT32 y = b->YLoc + NumChunksHigh * iBorderHeight - iBorderHeight + hremain;
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, b->XLoc, y, 3, &ClipRect);
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx,      y, 4, &ClipRect);
+		INT32 const y = by + NumChunksHigh * iBorderHeight - iBorderHeight + hremain;
+		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, bx, y, 3, &ClipRect);
+		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, y, 4, &ClipRect);
 	}
 
 	for (INT32 q = 1; q < NumChunksHigh; q++)
 	{
-		const INT32 y = b->YLoc + q * iBorderHeight;
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, b->XLoc, y, 3, &ClipRect);
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx,      y, 4, &ClipRect);
+		INT32 const y = by + q * iBorderHeight;
+		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, bx, y, 3, &ClipRect);
+		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, BPic, cx, y, 4, &ClipRect);
 	}
 }
 
