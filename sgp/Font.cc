@@ -183,7 +183,8 @@ static INT16 GetIndex(wchar_t c)
 	if (Idx == 0 && c != L'A')
 #endif
 	{
-		DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error: Invalid character given U%04X", c));
+		DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error: Invalid character given U+%04X", c));
+		Idx = TranslationTable[L'?'];
 	}
 	return Idx;
 }
