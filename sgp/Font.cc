@@ -14,9 +14,6 @@
 typedef UINT8 GlyphIdx;
 
 
-#define MAX_FONTS 25
-
-
 // Destination printing parameters
 Font                FontDefault      = 0;
 static SGPVSurface* FontDestBuffer;
