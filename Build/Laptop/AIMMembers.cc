@@ -1120,13 +1120,11 @@ static void BtnContractLengthButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		UINT8	ubRetValue = MSYS_GetBtnUserData(btn);
-
-		gubContractLength = ubRetValue;
 		DisplaySelectLights(TRUE, FALSE);
 	}
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
+		gubContractLength = MSYS_GetBtnUserData(btn);
 		DisplaySelectLights(FALSE, FALSE);
 		guiMercAttitudeTime = GetJA2Clock();
 		DisplayMercChargeAmount();
@@ -1138,11 +1136,11 @@ static void BtnBuyEquipmentButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		gfBuyEquipment = MSYS_GetBtnUserData(btn);
 		DisplaySelectLights(FALSE, TRUE);
 	}
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
+		gfBuyEquipment = MSYS_GetBtnUserData(btn);
 		DisplaySelectLights(FALSE, FALSE);
 		DisplayMercChargeAmount();
 		guiMercAttitudeTime = GetJA2Clock();
