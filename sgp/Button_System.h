@@ -89,7 +89,7 @@ struct GUI_BUTTON
 	void SpecifyIcon(SGPVObject const* icon, UINT16 usVideoObjectIndex, INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage);
 
 	// will simply set the cursor for the mouse region the button occupies
-	void SetCursor(UINT16 cursor);
+	void SetCursor(UINT16 const cursor) { Area.ChangeCursor(cursor); }
 
 	void DrawCheckBoxOnOff(BOOLEAN on);
 

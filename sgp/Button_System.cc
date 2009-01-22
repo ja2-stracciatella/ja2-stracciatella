@@ -614,12 +614,6 @@ GUIButtonRef CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, IN
 }
 
 
-void GUI_BUTTON::SetCursor(UINT16 const cursor)
-{
-	Area.Cursor = cursor;
-}
-
-
 static GUIButtonRef QuickCreateButtonInternal(BUTTON_PICS* const pics, const INT16 xloc, const INT16 yloc, const INT32 Type, const INT16 Priority, const GUI_CALLBACK MoveCallback, const GUI_CALLBACK ClickCallback)
 {
 	// Is there a QuickButton image in the given image slot?
