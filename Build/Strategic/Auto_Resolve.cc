@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Font.h"
 #include "HImage.h"
 #include "Isometric_Utils.h"
@@ -2183,20 +2185,22 @@ static void DoneButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
+// Find the merc with the same region.
+static SOLDIERCELL* GetCell(MOUSE_REGION const* const reg)
+{
+	for (INT32 i = 0; i != gpAR->ubMercs; ++i)
+	{
+		SOLDIERCELL& c = gpMercs[i];
+		if (c.pRegion != reg) continue;
+		return &c;
+	}
+	throw std::logic_error("Region does not belong to a soldier cell");
+}
+
+
 static void MercCellMouseMoveCallback(MOUSE_REGION* reg, INT32 reason)
 {
-	//Find the merc with the same region.
-	INT32 i;
-	SOLDIERCELL *pCell = NULL;
-	for( i = 0; i < gpAR->ubMercs; i++ )
-	{
-		if( gpMercs[ i ].pRegion == reg )
-		{
-			pCell = &gpMercs[ i ];
-			break;
-		}
-	}
-	Assert( pCell );
+	SOLDIERCELL* const pCell = GetCell(reg);
 	if( gpAR->fPendingSurrender )
 	{ //Can't setup retreats when pending surrender.
 		pCell->uiFlags &= ~CELL_SHOWRETREATTEXT;
@@ -2223,30 +2227,17 @@ static void MercCellMouseClickCallback(MOUSE_REGION* reg, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		//Find the merc with the same region.
-		INT32 i;
-		SOLDIERCELL *pCell = NULL;
-
 		if( gpAR->fPendingSurrender )
 		{ //Can't setup retreats when pending surrender.
 			return;
 		}
 
-		for( i = 0; i < gpAR->ubMercs; i++ )
-		{
-			if( gpMercs[ i ].pRegion == reg )
-			{
-				pCell = &gpMercs[ i ];
-				break;
-			}
-		}
+		SOLDIERCELL* const pCell = GetCell(reg);
 
 		if( pCell->uiFlags & ( CELL_RETREATING | CELL_RETREATED ) )
 		{ //already retreated/retreating.
 			return;
 		}
-
-		Assert( pCell );
 
 		if( pCell == gpAR->pRobotCell )
 		{ //robot retreats only when controller retreats
