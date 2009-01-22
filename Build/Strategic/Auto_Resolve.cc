@@ -94,7 +94,7 @@ enum
 typedef struct SOLDIERCELL
 {
 	SOLDIERTYPE *pSoldier;
-	MOUSE_REGION *pRegion; //only used for player mercs.
+	MouseRegion* pRegion; // only used for player mercs.
 	SGPVObject* uiVObjectID;
 	UINT16 usIndex;
 	UINT32 uiFlags;
@@ -776,10 +776,8 @@ static void CalculateSoldierCells(BOOLEAN fReset)
 					gpMercs[ index ].uiFlags |= CELL_EPC;
 				}
 			}
-			gpMercs[index].pRegion = MALLOCZ(MOUSE_REGION);
-			MSYS_DefineRegion( gpMercs[ index ].pRegion, gpMercs[ index ].xp, gpMercs[ index ].yp,
-				(UINT16)(gpMercs[ index ].xp + 50), (UINT16)(gpMercs[ index ].yp + 44), MSYS_PRIORITY_HIGH, 0,
-				MercCellMouseMoveCallback, MercCellMouseClickCallback );
+			SOLDIERCELL& c = gpMercs[index];
+			c.pRegion = new MouseRegion(c.xp, c.yp, 50, 44, MSYS_PRIORITY_HIGH, 0, MercCellMouseMoveCallback, MercCellMouseClickCallback);
 			if( fReset )
 				RefreshMerc( gpMercs[ index ].pSoldier );
 			if( !gpMercs[ index ].pSoldier->bLife )
@@ -1873,12 +1871,9 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 			DeleteVideoObject(gpMercs[i].uiVObjectID);
 			gpMercs[i].uiVObjectID = 0;
 		}
-		if( gpMercs[ i ].pRegion )
-		{
-			MSYS_RemoveRegion( gpMercs[ i ].pRegion );
-			MemFree( gpMercs[ i ].pRegion );
-			gpMercs[ i ].pRegion = NULL;
-		}
+		MouseRegion*& r = gpMercs[i].pRegion;
+		delete r;
+		r = 0;
 	}
 	//Delete all militia
 	gbGreenToElitePromotions = 0;
@@ -2191,7 +2186,7 @@ static SOLDIERCELL* GetCell(MOUSE_REGION const* const reg)
 	for (INT32 i = 0; i != gpAR->ubMercs; ++i)
 	{
 		SOLDIERCELL& c = gpMercs[i];
-		if (c.pRegion != reg) continue;
+		if (&c.pRegion->Base() != reg) continue;
 		return &c;
 	}
 	throw std::logic_error("Region does not belong to a soldier cell");

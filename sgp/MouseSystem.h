@@ -161,4 +161,24 @@ void RenderFastHelp(void);
 // Hook to the SGP's mouse handler
 void MouseSystemHook(UINT16 Type, UINT16 Xcoord, UINT16 Ycoord);
 
+class MouseRegion : private MOUSE_REGION
+{
+	public:
+		MouseRegion(UINT16 const x, UINT16 const y, UINT16 const w, UINT16 const h, INT8 const priority, UINT16 const cursor, MOUSE_CALLBACK const movecallback, MOUSE_CALLBACK const buttoncallback)
+		{
+			MOUSE_REGION* const r = this;
+			memset(r, 0, sizeof(*r));
+			MSYS_DefineRegion(r, x, y, x + w, y + h, priority, cursor, movecallback, buttoncallback);
+		}
+
+		~MouseRegion()
+		{
+			MSYS_RemoveRegion(this);
+		}
+
+		MOUSE_REGION const& Base() const { return *this; } // XXX hack
+
+		using MOUSE_REGION::Disable;
+};
+
 #endif
