@@ -690,13 +690,13 @@ void RenderSelectionWindow( void )
 		GUIButtonRef const button = iSelectWin;
 		if (!button) return;
 
-		if ( (abs( iStartClickX - button->Area.MouseXPos ) > 9) ||
-			   (abs( iStartClickY - (button->Area.MouseYPos + iTopWinCutOff - (INT16)g_sel_win_box.y)) > 9) )
+		if (abs(iStartClickX - button->MouseX()) > 9 ||
+				abs(iStartClickY - (button->MouseY() + iTopWinCutOff - (INT16)g_sel_win_box.y)) > 9)
 		{
 //			iSX = (INT32)iStartClickX;
-//			iEX = (INT32)button->Area.MouseXPos;
+//			iEX = (INT32)button->MouseX();
 //			iSY = (INT32)iStartClickY;
-//			iEY = (INT32)(button->Area.MouseYPos + iTopWinCutOff - (INT16)g_sel_win_box.y);
+//			iEY = (INT32)(button->MouseY() + iTopWinCutOff - (INT16)g_sel_win_box.y);
 
 			iSX = iStartClickX;
 			iSY = iStartClickY - iTopWinCutOff + g_sel_win_box.y;
@@ -756,8 +756,8 @@ static void SelWinClkCallback(GUI_BUTTON* button, INT32 reason)
 	if (!(button->uiFlags & BUTTON_ENABLED))
 		return;
 
-	iClickX = button->Area.MouseXPos;
-	iClickY = button->Area.MouseYPos + iTopWinCutOff - (INT16)g_sel_win_box.y;
+	iClickX = button->MouseX();
+	iClickY = button->MouseY() + iTopWinCutOff - (INT16)g_sel_win_box.y;
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
