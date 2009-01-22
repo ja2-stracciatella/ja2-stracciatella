@@ -1158,7 +1158,7 @@ static void AutoResolveBattleCallback(GUI_BUTTON* btn, INT32 reason)
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
 					btn->Draw();
-					InvalidateRegion( btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY );
+					InvalidateRegion(btn->X(), btn->Y(), btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 					ExecuteBaseDirtyRectQueue();
 					EndFrameBufferRender( );
 					RefreshScreen();
@@ -1199,7 +1199,7 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
 					btn->Draw();
-					InvalidateRegion( btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY );
+					InvalidateRegion(btn->X(), btn->Y(), btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 					ExecuteBaseDirtyRectQueue();
 					EndFrameBufferRender( );
 					RefreshScreen();
@@ -1217,7 +1217,7 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 			}
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
 			btn->Draw();
-			InvalidateRegion( btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY );
+			InvalidateRegion(btn->X(), btn->Y(), btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 			ExecuteBaseDirtyRectQueue();
 			EndFrameBufferRender( );
 			RefreshScreen();
@@ -1273,7 +1273,7 @@ static void RetreatMercsCallback(GUI_BUTTON* btn, INT32 reason)
 
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
 			btn->Draw();
-			InvalidateRegion( btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY );
+			InvalidateRegion(btn->X(), btn->Y(), btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 			ExecuteBaseDirtyRectQueue();
 			EndFrameBufferRender( );
 			RefreshScreen();

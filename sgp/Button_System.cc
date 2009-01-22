@@ -61,8 +61,8 @@ static void AssertFailIfIdenticalButtonAttributesFound(const GUI_BUTTON* b)
 		if (c->uiFlags                 &   BUTTON_DELETION_PENDING  ) continue;
 		if (c->uiFlags                 &   BUTTON_NO_DUPLICATE      ) continue;
 		if (b->Area.PriorityLevel      != c->Area.PriorityLevel     ) continue;
-		if (b->Area.RegionTopLeftX     != c->Area.RegionTopLeftX    ) continue;
-		if (b->Area.RegionTopLeftY     != c->Area.RegionTopLeftY    ) continue;
+		if (b->X()                     != c->X()                    ) continue;
+		if (b->Y()                     != c->Y()                    ) continue;
 		if (b->Area.RegionBottomRightX != c->Area.RegionBottomRightX) continue;
 		if (b->Area.RegionBottomRightY != c->Area.RegionBottomRightY) continue;
 		if (b->ClickCallback           != c->ClickCallback          ) continue;
@@ -972,7 +972,7 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 #if defined JA2
 	if (StateBefore != StateAfter)
 	{
-		InvalidateRegion(b->Area.RegionTopLeftX, b->Area.RegionTopLeftY, b->Area.RegionBottomRightX, b->Area.RegionBottomRightY);
+		InvalidateRegion(b->X(), b->Y(), b->Area.RegionBottomRightX, b->Area.RegionBottomRightY);
 	}
 #endif
 
@@ -1016,7 +1016,7 @@ void RenderButtons(void)
 			DrawButtonFromPtr(b);
 
 #if defined JA2
-			InvalidateRegion(b->Area.RegionTopLeftX, b->Area.RegionTopLeftY, b->Area.RegionBottomRightX, b->Area.RegionBottomRightY);
+			InvalidateRegion(b->X(), b->Y(), b->Area.RegionBottomRightX, b->Area.RegionBottomRightY);
 #endif
 		}
 	}
@@ -1178,9 +1178,9 @@ static void DrawQuickButton(const GUI_BUTTON* b)
 static void DrawHatchOnButton(const GUI_BUTTON* b)
 {
 	SGPRect ClipRect;
-	ClipRect.iLeft   = b->Area.RegionTopLeftX;
+	ClipRect.iLeft   = b->X();
 	ClipRect.iRight  = b->Area.RegionBottomRightX - 1;
-	ClipRect.iTop    = b->Area.RegionTopLeftY;
+	ClipRect.iTop    = b->Y();
 	ClipRect.iBottom = b->Area.RegionBottomRightY - 1;
 	SGPVSurface::Lock l(ButtonDestBuffer);
 	Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
@@ -1281,8 +1281,8 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 	if (!b->icon) return;
 
 	// Get width and height of button area
-	INT32 width  = b->Area.RegionBottomRightX - b->Area.RegionTopLeftX;
-	INT32 height = b->Area.RegionBottomRightY - b->Area.RegionTopLeftY;
+	INT32 const width  = b->Area.RegionBottomRightX - b->X();
+	INT32 const height = b->Area.RegionBottomRightY - b->Y();
 
 	// Compute viewable area (inside borders)
 	SGPRect NewClip;
@@ -1338,7 +1338,7 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 	}
 	else
 	{
-		xp = b->Area.RegionTopLeftX + b->bIconXOffset;
+		xp = b->X() + b->bIconXOffset;
 	}
 
 	INT32 yp;
@@ -1349,7 +1349,7 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 	}
 	else
 	{
-		yp = b->Area.RegionTopLeftY + b->bIconYOffset;
+		yp = b->Y() + b->bIconYOffset;
 	}
 
 	/* Was the button clicked on? if so, move the image slightly for the illusion
@@ -1378,8 +1378,8 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	if (b->string == NULL) return;
 
 	// Get the width and height of this button
-	const INT32 width  = b->Area.RegionBottomRightX - b->Area.RegionTopLeftX;
-	const INT32 height = b->Area.RegionBottomRightY - b->Area.RegionTopLeftY;
+	INT32 const width  = b->Area.RegionBottomRightX - b->X();
+	INT32 const height = b->Area.RegionBottomRightY - b->Y();
 
 	// Compute the viewable area on this button
 	SGPRect NewClip;
@@ -1431,7 +1431,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	}
 	else
 	{
-		yp = b->Area.RegionTopLeftY + b->bTextYOffset;
+		yp = b->Y() + b->bTextYOffset;
 	}
 
 	INT32 xp;
@@ -1447,7 +1447,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	}
 	else
 	{
-		xp = b->Area.RegionTopLeftX + b->bTextXOffset;
+		xp = b->X() + b->bTextXOffset;
 	}
 
 	// print the text
@@ -1515,7 +1515,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 			 * way over to the left.  I've added the necessary code for the right and
 			 * center justification.
 			 */
-			yp = b->Area.RegionTopLeftY + 2;
+			yp = b->Y() + 2;
 
 			switch (b->bJustification)
 			{
@@ -1529,7 +1529,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 					break;
 
 				case GUI_BUTTON::TEXT_CENTER:
-					xp = b->Area.RegionTopLeftX + 3 + b->sWrappedWidth / 2;
+					xp = b->X() + 3 + b->sWrappedWidth / 2;
 					if (b->fShiftText && b->uiFlags & BUTTON_CLICKED_ON)
 					{
 						xp++;
@@ -1615,8 +1615,8 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 #endif
 
 	// Compute the number of button "chunks" needed to be blitted
-	const INT32 width         = b->Area.RegionBottomRightX - b->Area.RegionTopLeftX;
-	const INT32 height        = b->Area.RegionBottomRightY - b->Area.RegionTopLeftY;
+	INT32 const width         = b->Area.RegionBottomRightX - b->X();
+	INT32 const height        = b->Area.RegionBottomRightY - b->Y();
 	const INT32 NumChunksWide = width  / iBorderWidth;
 	INT32       NumChunksHigh = height / iBorderHeight;
 	const INT32 hremain       = height % iBorderHeight;
@@ -1628,7 +1628,7 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	INT32 const cy = by + (NumChunksHigh - 1) * iBorderHeight + hremain;
 
 	// Fill the button's area with the button's background color
-	ColorFillVideoSurfaceArea(ButtonDestBuffer, b->Area.RegionTopLeftX, b->Area.RegionTopLeftY, b->Area.RegionBottomRightX, b->Area.RegionBottomRightY, GenericButtonFillColors);
+	ColorFillVideoSurfaceArea(ButtonDestBuffer, b->X(), b->Y(), b->Area.RegionBottomRightX, b->Area.RegionBottomRightY, GenericButtonFillColors);
 
 	SGPVSurface::Lock l(ButtonDestBuffer);
 	UINT16* const pDestBuf         = l.Buffer<UINT16>();
@@ -1713,7 +1713,7 @@ static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason)
 			}
 		}
 #if defined JA2
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		InvalidateRegion(btn->X(), btn->Y(), btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 #endif
 	}
 	else if (reason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
@@ -1724,7 +1724,7 @@ static void DefaultMoveCallback(GUI_BUTTON* btn, INT32 reason)
 			PlayButtonSound(btn, BUTTON_SOUND_CLICKED_ON);
 		}
 #if defined JA2
-		InvalidateRegion(btn->Area.RegionTopLeftX, btn->Area.RegionTopLeftY, btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
+		InvalidateRegion(btn->X(), btn->Y(), btn->Area.RegionBottomRightX, btn->Area.RegionBottomRightY);
 #endif
 	}
 }
@@ -1761,7 +1761,7 @@ void GUI_BUTTON::Hide()
 	Area.uiFlags &= ~MSYS_REGION_ENABLED;
 	uiFlags      |= BUTTON_DIRTY;
 #if defined JA2
-	InvalidateRegion(Area.RegionTopLeftX, Area.RegionTopLeftY, Area.RegionBottomRightX, Area.RegionBottomRightY);
+	InvalidateRegion(X(), Y(), Area.RegionBottomRightX, Area.RegionBottomRightY);
 #endif
 }
 
@@ -1778,7 +1778,7 @@ void GUI_BUTTON::Show()
 	Area.uiFlags |= MSYS_REGION_ENABLED;
 	uiFlags      |= BUTTON_DIRTY;
 #if defined JA2
-	InvalidateRegion(Area.RegionTopLeftX, Area.RegionTopLeftY, Area.RegionBottomRightX, Area.RegionBottomRightY);
+	InvalidateRegion(X(), Y(), Area.RegionBottomRightX, Area.RegionBottomRightY);
 #endif
 }
 

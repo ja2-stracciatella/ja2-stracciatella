@@ -135,15 +135,15 @@ void InitPopupMenu(GUIButtonRef const button, UINT8 const ubPopupMenuID, UINT8 c
 	switch( ubDirection )
 	{
 		case DIR_UPRIGHT:
-			usX = button->Area.RegionTopLeftX;
-			usY = button->Area.RegionTopLeftY;
+			usX = button->X();
+			usY = button->Y();
 			break;
 		case DIR_UPLEFT:
 			usX = button->Area.RegionBottomRightX;
-			usY = button->Area.RegionTopLeftY;
+			usY = button->Y();
 			break;
 		case DIR_DOWNRIGHT:
-			usX = button->Area.RegionTopLeftX;
+			usX = button->X();
 			usY = button->Area.RegionBottomRightY;
 			break;
 		case DIR_DOWNLEFT:
