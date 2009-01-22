@@ -67,8 +67,8 @@ static void AssertFailIfIdenticalButtonAttributesFound(const GUI_BUTTON* b)
 		if (b->Area.RegionBottomRightY != c->Area.RegionBottomRightY) continue;
 		if (b->ClickCallback           != c->ClickCallback          ) continue;
 		if (b->MoveCallback            != c->MoveCallback           ) continue;
-		if (b->XLoc                    != c->XLoc                   ) continue;
-		if (b->YLoc                    != c->YLoc                   ) continue;
+		if (b->X()                     != c->X()                    ) continue;
+		if (b->Y()                     != c->Y()                    ) continue;
 		/* if we get this far, it is reasonably safe to assume that the newly
 		 * created button already exists.  Placing a break point on the following
 		 * assert will allow the coder to easily isolate the case!
