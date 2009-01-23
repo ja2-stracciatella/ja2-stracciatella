@@ -518,55 +518,35 @@ static void MSYS_UpdateMouseRegion(void)
 
 
 
-//=================================================================================================
-//	MSYS_DefineRegion
-//
-//	Inits a MOUSE_REGION structure for use with the mouse system
-//
-void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UINT16 bry,INT8 priority,
-					   UINT16 crsr,MOUSE_CALLBACK movecallback,MOUSE_CALLBACK buttoncallback)
+/* Inits a MOUSE_REGION structure for use with the mouse system */
+void MSYS_DefineRegion(MOUSE_REGION* const r, UINT16 const tlx, UINT16 const tly, UINT16 const brx, UINT16 const bry, INT8 priority, UINT16 const crsr, MOUSE_CALLBACK const movecallback, MOUSE_CALLBACK const buttoncallback)
 {
-	#ifdef MOUSESYSTEM_DEBUGGING
-		if( region->uiFlags & MSYS_REGION_EXISTS )
-			AssertMsg( 0, "Attempting to define a region that already exists." );
-	#endif
+#ifdef MOUSESYSTEM_DEBUGGING
+	AssertMsg(!(r->uiFlags & MSYS_REGION_EXISTS), "Attempting to define a region that already exists.");
+#endif
 
-	if (priority <= MSYS_PRIORITY_LOWEST)
-		priority = MSYS_PRIORITY_LOWEST;
+	if (priority <= MSYS_PRIORITY_LOWEST) priority = MSYS_PRIORITY_LOWEST;
 
-	region->PriorityLevel = priority;
+	r->PriorityLevel      = priority;
+	r->uiFlags            = MSYS_REGION_ENABLED | MSYS_REGION_EXISTS;
+	r->RegionTopLeftX     = tlx;
+	r->RegionTopLeftY     = tly;
+	r->RegionBottomRightX = brx;
+	r->RegionBottomRightY = bry;
+	r->MouseXPos          = 0;
+	r->MouseYPos          = 0;
+	r->RelativeXPos       = 0;
+	r->RelativeYPos       = 0;
+	r->ButtonState	      = 0;
+	r->Cursor             = crsr;
+	r->MovementCallback   = movecallback;
+	r->ButtonCallback     = buttoncallback;
+	r->FastHelpTimer      = 0;
+	r->FastHelpText       = 0;
+	r->next               = 0;
+	r->prev               = 0;
 
-	region->uiFlags = MSYS_NO_FLAGS;
-
-	region->MovementCallback = movecallback;
-	region->ButtonCallback = buttoncallback;
-
-	region->Cursor = crsr;
-
-	region->RegionTopLeftX = tlx;
-	region->RegionTopLeftY = tly;
-	region->RegionBottomRightX = brx;
-	region->RegionBottomRightY = bry;
-
-	region->MouseXPos = 0;
-	region->MouseYPos = 0;
-	region->RelativeXPos = 0;
-	region->RelativeYPos = 0;
-	region->ButtonState	= 0;
-
-	//Init fasthelp
-	region->FastHelpText = NULL;
-	region->FastHelpTimer = 0;
-
-	region->next = NULL;
-	region->prev = NULL;
-
-	//Add region to system list
-	MSYS_AddRegionToList(region);
-	region->uiFlags|= MSYS_REGION_ENABLED | MSYS_REGION_EXISTS;
-
-
-	// Dirty our update flag
+	MSYS_AddRegionToList(r);
 	gfRefreshUpdate = TRUE;
 }
 
