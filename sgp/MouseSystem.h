@@ -180,6 +180,7 @@ class MouseRegion : private MOUSE_REGION
 
 		using MOUSE_REGION::ChangeCursor;
 		using MOUSE_REGION::Disable;
+		using MOUSE_REGION::Enable;
 		using MOUSE_REGION::MouseXPos;
 		using MOUSE_REGION::MouseYPos;
 		using MOUSE_REGION::PriorityLevel;

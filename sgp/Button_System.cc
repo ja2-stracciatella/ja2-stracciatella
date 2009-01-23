@@ -1736,8 +1736,8 @@ void ReleaseAnchorMode(void)
 
 void GUI_BUTTON::Hide()
 {
-	Area.uiFlags &= ~MSYS_REGION_ENABLED;
-	uiFlags      |= BUTTON_DIRTY;
+	Area.Disable();
+	uiFlags |= BUTTON_DIRTY;
 #if defined JA2
 	InvalidateRegion(X(), Y(), BottomRightX(), BottomRightY());
 #endif
@@ -1753,8 +1753,8 @@ void HideButton(GUIButtonRef const b)
 
 void GUI_BUTTON::Show()
 {
-	Area.uiFlags |= MSYS_REGION_ENABLED;
-	uiFlags      |= BUTTON_DIRTY;
+	Area.Enable();
+	uiFlags |= BUTTON_DIRTY;
 #if defined JA2
 	InvalidateRegion(X(), Y(), BottomRightX(), BottomRightY());
 #endif
