@@ -201,59 +201,41 @@ static void MSYS_TrashRegList(void)
 static void MSYS_DeleteRegionFromList(MOUSE_REGION*);
 
 
-//======================================================================================================
-//	MSYS_AddRegionToList
-//
-//	Add a region struct to the current list. The list is sorted by priority levels. If two entries
-//	have the same priority level, then the latest to enter the list gets the higher priority.
-//
-static void MSYS_AddRegionToList(MOUSE_REGION* region)
+/* Add a region struct to the current list. The list is sorted by priority
+ * levels. If two entries have the same priority level, then the latest to enter
+ * the list gets the higher priority. */
+static void MSYS_AddRegionToList(MOUSE_REGION* const r)
 {
-	MOUSE_REGION *curr;
-	INT32 done;
-
 	/* If region seems to already be in list, delete it so we can re-insert the
 	 * region. */
-	MSYS_DeleteRegionFromList(region);
+	MSYS_DeleteRegionFromList(r);
 
-	if( !MSYS_RegList )
-	{ // Null list, so add it straight up.
-		MSYS_RegList = region;
+	MOUSE_REGION* i = MSYS_RegList;
+	if (!i)
+	{ // Empty list, so add it straight up.
+		MSYS_RegList = r;
 	}
 	else
 	{
 		// Walk down list until we find place to insert (or at end of list)
-		curr=MSYS_RegList;
-		done=FALSE;
-		while((curr->next != NULL) && !done)
+		for (; i->next; i = i->next)
 		{
-			if(curr->PriorityLevel <= region->PriorityLevel)
-				done=TRUE;
-			else
-				curr = curr->next;
+			if (i->PriorityLevel <= r->PriorityLevel) break;
 		}
 
-		if(curr->PriorityLevel > region->PriorityLevel)
-		{
-			// Add after curr node
-			region->next = curr->next;
-			curr->next = region;
-			region->prev = curr;
-			if(region->next != NULL)
-				region->next->prev = region;
+		if (i->PriorityLevel > r->PriorityLevel)
+		{ // Add after node
+			r->prev = i;
+			r->next = i->next;
+			if (r->next) r->next->prev = r;
+			i->next = r;
 		}
 		else
-		{
-			// Add before curr node
-			region->next = curr;
-			region->prev = curr->prev;
-
-			curr->prev = region;
-			if(region->prev != NULL)
-				region->prev->next = region;
-
-			if(MSYS_RegList==curr)	// Make sure if adding at start, to adjust the list pointer
-				MSYS_RegList=region;
+		{ // Add before node
+			r->prev = i->prev;
+			r->next = i;
+			*(r->prev ? &r->prev->next : &MSYS_RegList) = r;
+			i->prev = r;
 		}
 	}
 }
