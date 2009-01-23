@@ -603,57 +603,38 @@ void MOUSE_REGION::ChangeCursor(UINT16 const crsr)
 }
 
 
-//=================================================================================================
-//	MSYS_RemoveRegion
-//
-//	Removes a region from the list, disables it, then calls the callback functions for
-//	de-initialization.
-//
-void MSYS_RemoveRegion(MOUSE_REGION *region)
+void MSYS_RemoveRegion(MOUSE_REGION* const r)
 {
 #ifdef MOUSESYSTEM_DEBUGGING
-	AssertMsg(region, "Attempting to remove a NULL region.");
+	AssertMsg(r, "Attempting to remove a NULL region.");
 #endif
-	if (!region) return;
-	#ifdef MOUSESYSTEM_DEBUGGING
-	if( !(region->uiFlags & MSYS_REGION_EXISTS) )
-		AssertMsg( 0, "Attempting to remove an already removed region." );
-	#endif
+	if (!r) return;
+#ifdef MOUSESYSTEM_DEBUGGING
+	AssertMsg(r->uiFlags & MSYS_REGION_EXISTS, "Attempting to remove an already removed region.");
+#endif
 
 #ifdef _JA2_RENDER_DIRTY
-	if( region->uiFlags & MSYS_HAS_BACKRECT )
+	if (r->uiFlags & MSYS_HAS_BACKRECT)
 	{
-		FreeBackgroundRectPending( region->FastHelpRect );
-		region->uiFlags &= (~MSYS_HAS_BACKRECT);
-
-
+		FreeBackgroundRectPending(r->FastHelpRect);
+		r->uiFlags &= ~MSYS_HAS_BACKRECT;
 	}
 #endif
 
-	// Get rid of the FastHelp text (if applicable)
-	if( region->FastHelpText )
+	if (r->FastHelpText)
 	{
-		MemFree( region->FastHelpText );
+		MemFree(r->FastHelpText);
+		r->FastHelpText = 0;
 	}
-	region->FastHelpText = NULL;
 
-	MSYS_DeleteRegionFromList(region);
+	MSYS_DeleteRegionFromList(r);
 
-	//if the previous region is the one that we are deleting, reset the previous region
-	if ( MSYS_PrevRegion == region )
-		MSYS_PrevRegion = NULL;
-	//if the current region is the one that we are deleting, then clear it.
-	if( MSYS_CurrRegion == region )
-		MSYS_CurrRegion = NULL;
+	if (MSYS_PrevRegion  == r) MSYS_PrevRegion  = 0;
+	if (MSYS_CurrRegion  == r) MSYS_CurrRegion  = 0;
+	if (g_clicked_region == r) g_clicked_region = 0;
 
-	//dirty our update flag
 	gfRefreshUpdate = TRUE;
-
-	// Check if this is a locked region, and unlock if so
-	if (g_clicked_region == region) g_clicked_region = 0;
-
-	//clear all internal values (including the region exists flag)
-	memset( region, 0, sizeof( MOUSE_REGION ) );
+	memset(r, 0, sizeof(*r));
 }
 
 
