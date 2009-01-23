@@ -1211,7 +1211,6 @@ void CreateDestroyNewMailButton()
 
 BOOLEAN DisplayNewMailBox( void )
 {
-	static BOOLEAN fOldNewMailFlag=FALSE;
 	// will display a new mail box whenever new mail has arrived
 
 	// check if we are video conferencing, if so, do nothing
@@ -1219,13 +1218,6 @@ BOOLEAN DisplayNewMailBox( void )
   {
 	  return( FALSE );
   }
-
-	// just stopped displaying box, reset old flag
-	if( ( !fNewMailFlag ) && ( fOldNewMailFlag ) )
-	{
-		fOldNewMailFlag=FALSE;
-		return ( FALSE );
-	}
 
 	// not even set, leave NOW!
 	if( !fNewMailFlag )
@@ -1254,11 +1246,6 @@ BOOLEAN DisplayNewMailBox( void )
 	SetFontShadow( DEFAULT_SHADOW );
 
 	// redraw icons
-
-	// set box as displayed
-	fOldNewMailFlag=TRUE;
-
-
 
 	// return
 	return ( TRUE );
