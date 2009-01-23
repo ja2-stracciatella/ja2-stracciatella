@@ -1208,8 +1208,8 @@ ScreenID LaptopScreenHandle()
 	GetLaptopKeyboardInput();
 
 	// check to see if new mail box needs to be displayed
-	DisplayNewMailBox();
 	CreateDestroyNewMailButton();
+	DisplayNewMailBox();
 
 	// create various mouse regions that are global to laptop system
 	CreateDestoryBookMarkRegions();
