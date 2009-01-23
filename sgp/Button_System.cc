@@ -490,6 +490,7 @@ static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason);
 GUI_BUTTON::GUI_BUTTON(UINT32 const flags, INT16 const left, INT16 const top, INT16 const width, INT16 const height, INT8 const priority, GUI_CALLBACK const click, GUI_CALLBACK const move) :
 	IDNum(GetNextButtonNumber()),
 	image(0),
+	Area(left, top, width, height, priority, MSYS_STARTING_CURSORVAL, QuickButtonCallbackMMove, QuickButtonCallbackMButn),
 	ClickCallback(click),
 	MoveCallback(move),
 	uiFlags(BUTTON_DIRTY | BUTTON_ENABLED | flags),
@@ -519,18 +520,6 @@ GUI_BUTTON::GUI_BUTTON(UINT32 const flags, INT16 const left, INT16 const top, IN
 {
 	AssertMsg(left >= 0 && top >= 0 && width >= 0 && height >= 0, String("Attempting to create button with invalid coordinates %dx%d+%dx%d", left, top, width, height));
 
-	memset(&Area, 0, sizeof(Area));
-	MSYS_DefineRegion(
-		&Area,
-		left,
-		top,
-		left + width,
-		top  + height,
-		priority,
-		MSYS_STARTING_CURSORVAL,
-		QuickButtonCallbackMMove,
-		QuickButtonCallbackMButn
-	);
 	Area.SetUserPtr(this);
 
 #ifdef BUTTONSYSTEM_DEBUGGING
@@ -549,8 +538,6 @@ GUI_BUTTON::~GUI_BUTTON()
 	if (this == gpPrevAnchoredButton) gpPrevAnchoredButton = 0;
 
 	ButtonList[IDNum] = 0;
-
-	MSYS_RemoveRegion(&Area);
 
 	if (uiFlags & BUTTON_SELFDELETE_IMAGE)
 	{

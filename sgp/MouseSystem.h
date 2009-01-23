@@ -178,7 +178,20 @@ class MouseRegion : private MOUSE_REGION
 
 		MOUSE_REGION const& Base() const { return *this; } // XXX hack
 
+		using MOUSE_REGION::ChangeCursor;
 		using MOUSE_REGION::Disable;
+		using MOUSE_REGION::MouseXPos;
+		using MOUSE_REGION::MouseYPos;
+		using MOUSE_REGION::PriorityLevel;
+		using MOUSE_REGION::RegionBottomRightX;
+		using MOUSE_REGION::RegionBottomRightY;
+		using MOUSE_REGION::RegionTopLeftX;
+		using MOUSE_REGION::RegionTopLeftY;
+		using MOUSE_REGION::RelativeXPos;
+		using MOUSE_REGION::RelativeYPos;
+		using MOUSE_REGION::SetFastHelpText;
+		using MOUSE_REGION::SetUserPtr;
+		using MOUSE_REGION::uiFlags;
 };
 
 #endif

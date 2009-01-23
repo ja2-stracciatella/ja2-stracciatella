@@ -108,7 +108,7 @@ struct GUI_BUTTON
 
 	INT32        IDNum;         // ID Number, contains it's own button number
 	BUTTON_PICS* image;         // Image to use (see DOCs for details)
-	MOUSE_REGION Area;          // Mouse System's mouse region to use for this button
+	MouseRegion  Area;          // Mouse System's mouse region to use for this button
 	GUI_CALLBACK ClickCallback; // Button Callback when button is clicked
 	GUI_CALLBACK MoveCallback;  // Button Callback when mouse moved on this region
 	UINT32       uiFlags;       // Button state flags etc.( 32-bit )
