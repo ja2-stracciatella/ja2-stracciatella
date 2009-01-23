@@ -52,7 +52,6 @@ static INT16 MSYS_Action         = 0;
 static BOOLEAN MSYS_SystemInitialized   = FALSE;
 
 static MOUSE_REGION* g_clicked_region;
-static BOOLEAN       gfClickedModeOn = FALSE;
 
 static MOUSE_REGION* MSYS_RegList = NULL;
 
@@ -375,7 +374,7 @@ static void MSYS_UpdateMouseRegion(void)
 		}
 
 		// OK, if we do not have a button down, any button is game!
-		if (!gfClickedModeOn || g_clicked_region == cur)
+		if (!g_clicked_region || g_clicked_region == cur)
 		{
 			cur->uiFlags |= MSYS_MOUSE_IN_AREA;
 
@@ -403,27 +402,25 @@ static void MSYS_UpdateMouseRegion(void)
 					if (MSYS_Action & MSYS_DO_LBUTTON_DWN)
 					{
 						ButtonReason |= MSYS_CALLBACK_REASON_LBUTTON_DWN;
-						gfClickedModeOn = TRUE;
 						g_clicked_region = cur;
 					}
 
 					if (MSYS_Action & MSYS_DO_LBUTTON_UP)
 					{
 						ButtonReason |= MSYS_CALLBACK_REASON_LBUTTON_UP;
-						gfClickedModeOn = FALSE;
+						g_clicked_region = 0;
 					}
 
 					if (MSYS_Action & MSYS_DO_RBUTTON_DWN)
 					{
 						ButtonReason |= MSYS_CALLBACK_REASON_RBUTTON_DWN;
-						gfClickedModeOn = TRUE;
 						g_clicked_region = cur;
 					}
 
 					if (MSYS_Action & MSYS_DO_RBUTTON_UP)
 					{
 						ButtonReason |= MSYS_CALLBACK_REASON_RBUTTON_UP;
-						gfClickedModeOn = FALSE;
+						g_clicked_region = 0;
 					}
 
 					// ATE: Added repeat resons....
@@ -514,8 +511,8 @@ static void MSYS_UpdateMouseRegion(void)
 		{
 			// OK here, if we have release a button, UNSET LOCK wherever you are....
 			// Just don't give this button the message....
-			if (MSYS_Action & MSYS_DO_RBUTTON_UP) gfClickedModeOn = FALSE;
-			if (MSYS_Action & MSYS_DO_LBUTTON_UP) gfClickedModeOn = FALSE;
+			if (MSYS_Action & MSYS_DO_RBUTTON_UP) g_clicked_region = 0;
+			if (MSYS_Action & MSYS_DO_LBUTTON_UP) g_clicked_region = 0;
 
 			// OK, you still want move messages however....
 			cur->uiFlags |= MSYS_MOUSE_IN_AREA;
@@ -653,11 +650,7 @@ void MSYS_RemoveRegion(MOUSE_REGION *region)
 	gfRefreshUpdate = TRUE;
 
 	// Check if this is a locked region, and unlock if so
-	if (g_clicked_region == region)
-	{
-		g_clicked_region = 0;
-		gfClickedModeOn  = FALSE;
-	}
+	if (g_clicked_region == region) g_clicked_region = 0;
 
 	//clear all internal values (including the region exists flag)
 	memset( region, 0, sizeof( MOUSE_REGION ) );
