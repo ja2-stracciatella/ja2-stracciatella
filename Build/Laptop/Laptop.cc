@@ -1775,20 +1775,17 @@ static void BookmarkMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 static void CreateBookMarkMouseRegions(void)
 {
-	INT32 i;
 	// creates regions based on number of entries
-	for (i = 0; LaptopSaveInfo.iBookMarkList[i] != -1; ++i)
+	for (INT32 i = 0;; ++i)
 	{
-		const UINT16 y = BOOK_TOP_Y + (i + 1) * (BOOK_HEIGHT + 6) + 6;
-		MSYS_DefineRegion(&gBookmarkMouseRegions[i], BOOK_X, y, BOOK_X + BOOK_WIDTH, y + BOOK_HEIGHT + 6, MSYS_PRIORITY_HIGHEST - 2, CURSOR_LAPTOP_SCREEN, BookmarkMvtCallBack, BookmarkCallBack);
-		MSYS_SetRegionUserData(&gBookmarkMouseRegions[i], 0, i);
-
-		gBookmarkMouseRegions[i].SetFastHelpText(gzLaptopHelpText[BOOKMARK_TEXT_ASSOCIATION_OF_INTERNATION_MERCENARIES + LaptopSaveInfo.iBookMarkList[i]]);
+		UINT16        const y = BOOK_TOP_Y + (i + 1) * (BOOK_HEIGHT + 6) + 6;
+		MOUSE_REGION* const r = &gBookmarkMouseRegions[i];
+		MSYS_DefineRegion(r, BOOK_X, y, BOOK_X + BOOK_WIDTH, y + BOOK_HEIGHT + 6, MSYS_PRIORITY_HIGHEST - 2, CURSOR_LAPTOP_SCREEN, BookmarkMvtCallBack, BookmarkCallBack);
+		MSYS_SetRegionUserData(r, 0, i);
+		INT32 const idx = LaptopSaveInfo.iBookMarkList[i];
+		if (idx == -1) break; // just added region for cancel
+		r->SetFastHelpText(gzLaptopHelpText[BOOKMARK_TEXT_ASSOCIATION_OF_INTERNATION_MERCENARIES + idx]);
 	}
-	// now add one more for the cancel button
-	const UINT16 y = BOOK_TOP_Y + (i + 1) * (BOOK_HEIGHT + 6) + 6;
-	MSYS_DefineRegion(&gBookmarkMouseRegions[i], BOOK_X, y, BOOK_X + BOOK_WIDTH, y + BOOK_HEIGHT + 6, MSYS_PRIORITY_HIGHEST - 2, CURSOR_LAPTOP_SCREEN, BookmarkMvtCallBack, BookmarkCallBack);
-	MSYS_SetRegionUserData(&gBookmarkMouseRegions[i], 0, i);
 }
 
 
