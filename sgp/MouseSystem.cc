@@ -11,6 +11,8 @@
 //
 //=================================================================================================
 
+#include <stdexcept>
+
 #include "Font.h"
 #include "HImage.h"
 #include "Types.h"
@@ -607,34 +609,17 @@ void MSYS_SetCurrentCursor(UINT16 Cursor)
 }
 
 
-//=================================================================================================
-//	MSYS_SetRegionUserData
-//
-//	Sets one of the four user data entries in a mouse region
-//
-void MSYS_SetRegionUserData(MOUSE_REGION *region,INT32 index,INT32 userdata)
+void MSYS_SetRegionUserData(MOUSE_REGION* const r, UINT32 const index, INT32 const userdata)
 {
-#ifdef MOUSESYSTEM_DEBUGGING
-	AssertMsg(0 <= index && index < 4, String("Attempting MSYS_SetRegionUserData() with out of range index %d.", index));
-#endif
-	if (index < 0 || 4 <= index) return;
-	region->user.data[index] = userdata;
+	if (lengthof(r->user.data) <= index) throw std::logic_error("User data index is out of range");
+	r->user.data[index] = userdata;
 }
 
 
-
-//=================================================================================================
-//	MSYS_GetRegionUserData
-//
-//	Retrieves one of the four user data entries in a mouse region
-//
-INT32 MSYS_GetRegionUserData(MOUSE_REGION *region,INT32 index)
+INT32 MSYS_GetRegionUserData(MOUSE_REGION* const r, UINT32 const index)
 {
-#ifdef MOUSESYSTEM_DEBUGGING
-	AssertMsg(0 <= index && index < 4, String("Attempting MSYS_GetRegionUserData() with out of range index %d", index));
-#endif
-	if (index < 0 || 4 <= index) return 0;
-	return region->user.data[index];
+	if (lengthof(r->user.data) <= index) throw std::logic_error("User data index is out of range");
+	return r->user.data[index];
 }
 
 
