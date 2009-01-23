@@ -84,11 +84,9 @@ struct MOUSE_REGION
 // Mouse region priorities
 #define MSYS_PRIORITY_LOWEST		0
 #define MSYS_PRIORITY_LOW				15
-#define MSYS_PRIORITY_BASE			31
 #define MSYS_PRIORITY_NORMAL		31
 #define MSYS_PRIORITY_HIGH			63
 #define MSYS_PRIORITY_HIGHEST		127
-#define MSYS_PRIORITY_AUTO			-1
 
 // Mouse system defines used during updates
 #define MSYS_NO_ACTION					0

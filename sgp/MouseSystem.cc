@@ -549,9 +549,7 @@ void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UIN
 			AssertMsg( 0, "Attempting to define a region that already exists." );
 	#endif
 
-	if(priority == MSYS_PRIORITY_AUTO)
-		priority = MSYS_PRIORITY_BASE;
-	else if(priority <= MSYS_PRIORITY_LOWEST)
+	if (priority <= MSYS_PRIORITY_LOWEST)
 		priority = MSYS_PRIORITY_LOWEST;
 	else if(priority >= MSYS_PRIORITY_HIGHEST)
 		priority = MSYS_PRIORITY_HIGHEST;
