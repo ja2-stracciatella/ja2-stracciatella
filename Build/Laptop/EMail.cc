@@ -1209,19 +1209,15 @@ void CreateDestroyNewMailButton()
 }
 
 
-BOOLEAN DisplayNewMailBox( void )
+void DisplayNewMailBox(void)
 {
 	// will display a new mail box whenever new mail has arrived
 
 	// check if we are video conferencing, if so, do nothing
-	if (gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE)
-  {
-	  return( FALSE );
-  }
+	if (gubVideoConferencingMode != AIM_VIDEO_NOT_DISPLAYED_MODE) return;
 
 	// not even set, leave NOW!
-	if( !fNewMailFlag )
-		return ( FALSE );
+	if (!fNewMailFlag) return;
 
   BltVideoObject(FRAME_BUFFER, guiEmailWarning,  0, EMAIL_WARNING_X,     EMAIL_WARNING_Y);
   BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 0, EMAIL_WARNING_X + 5, EMAIL_WARNING_Y + 2);
@@ -1244,12 +1240,8 @@ BOOLEAN DisplayNewMailBox( void )
 
 	// reset shadow
 	SetFontShadow( DEFAULT_SHADOW );
-
-	// redraw icons
-
-	// return
-	return ( TRUE );
 }
+
 
 void ReDrawNewMailBox( void )
 {

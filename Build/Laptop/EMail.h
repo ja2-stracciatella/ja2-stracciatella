@@ -187,7 +187,7 @@ void LookForUnread(void);
 void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 uiFirstData, UINT32 uiSecondData);
 void AddEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate);
 void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate);
-BOOLEAN DisplayNewMailBox(void);
+void DisplayNewMailBox(void);
 void CreateDestroyNewMailButton(void);
 void CreateDestroyDeleteNoticeMailButton(void);
 void ReDrawNewMailBox( void );
