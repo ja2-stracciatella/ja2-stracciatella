@@ -49,15 +49,19 @@
 #endif
 
 
+#define FOR_ALL_BUTTONS(iter) \
+	for (GUI_BUTTON** iter = ButtonList; iter != endof(ButtonList); ++iter) \
+		if (!*iter) continue; else
+
+
 #ifdef BUTTONSYSTEM_DEBUGGING
 
 // Called immediately before assigning the button to the button list.
 static void AssertFailIfIdenticalButtonAttributesFound(const GUI_BUTTON* b)
 {
-	for (INT32 x = 0; x < MAX_BUTTONS; ++x)
+	FOR_ALL_BUTTONS(i)
 	{
-		const GUI_BUTTON* const c = ButtonList[x];
-		if (!c)                                                continue;
+		GUI_BUTTON const* const c = *i;
 		if (c->uiFlags            &   BUTTON_DELETION_PENDING) continue;
 		if (c->uiFlags            &   BUTTON_NO_DUPLICATE)     continue;
 		if (b->Area.PriorityLevel != c->Area.PriorityLevel)    continue;
@@ -428,9 +432,9 @@ void InitButtonSystem(void)
 void ShutdownButtonSystem(void)
 {
 	// Kill off all buttons in the system
-	for (GUI_BUTTON** i = ButtonList; i != endof(ButtonList); ++i)
+	FOR_ALL_BUTTONS(i)
 	{
-		if (*i) delete *i;
+		delete *i;
 	}
 	ShutdownButtonImageManager();
 }
@@ -438,9 +442,9 @@ void ShutdownButtonSystem(void)
 
 static void RemoveButtonsMarkedForDeletion(void)
 {
-	for (GUI_BUTTON** i = ButtonList; i != endof(ButtonList); ++i)
+	FOR_ALL_BUTTONS(i)
 	{
-		if (*i && (*i)->uiFlags & BUTTON_DELETION_PENDING) delete *i;
+		if ((*i)->uiFlags & BUTTON_DELETION_PENDING) delete *i;
 	}
 }
 
@@ -965,12 +969,12 @@ static void DrawButtonFromPtr(GUI_BUTTON* b);
 void RenderButtons(void)
 {
 	SaveFontSettings();
-	for (INT32 iButtonID = 0; iButtonID < MAX_BUTTONS; ++iButtonID)
+	FOR_ALL_BUTTONS(i)
 	{
 		// If the button exists, and it's not owned by another object, draw it
 		// Kris:  and make sure that the button isn't hidden.
-		GUI_BUTTON* b = ButtonList[iButtonID];
-		if (b == NULL || !(b->Area.uiFlags & MSYS_REGION_ENABLED)) continue;
+		GUI_BUTTON* const b = *i;
+		if (!(b->Area.uiFlags & MSYS_REGION_ENABLED)) continue;
 
 		if ((b->uiFlags ^ b->uiOldFlags) & (BUTTON_CLICKED_ON | BUTTON_ENABLED))
 		{
@@ -1014,9 +1018,9 @@ void MarkAButtonDirty(GUIButtonRef const b)
 
 void MarkButtonsDirty(void)
 {
-	for (INT32 x = 0; x < MAX_BUTTONS; ++x)
+	FOR_ALL_BUTTONS(i)
 	{
-		if (ButtonList[x]) ButtonList[x]->uiFlags |= BUTTON_DIRTY;
+		(*i)->uiFlags |= BUTTON_DIRTY;
 	}
 }
 
@@ -1030,10 +1034,9 @@ void UnMarkButtonDirty(GUIButtonRef const b)
 
 void UnmarkButtonsDirty(void)
 {
-	for (INT32 x = 0; x < MAX_BUTTONS; ++x)
+	FOR_ALL_BUTTONS(i)
 	{
-		GUI_BUTTON* const b = ButtonList[x];
-		if (b) UnMarkButtonDirty(b);
+		UnMarkButtonDirty(*i);
 	}
 }
 
