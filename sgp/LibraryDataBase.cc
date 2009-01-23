@@ -343,18 +343,15 @@ void CloseLibraryFile(LibraryFile* const f)
 
 BOOLEAN LibraryFileSeek(LibraryFile* const f, INT32 distance, const FileSeekMode how)
 {
-	UINT32       uiCurPos = f->uiFilePosInFile;
-	const UINT32 uiSize   = f->pFileHeader->uiFileLength;
-
+	UINT32 pos;
 	switch (how)
 	{
-		case FILE_SEEK_FROM_START:   uiCurPos  = distance;          break;
-		case FILE_SEEK_FROM_END:     uiCurPos  = uiSize - distance; break;
-		case FILE_SEEK_FROM_CURRENT: uiCurPos += distance;          break;
+		case FILE_SEEK_FROM_START:   pos = 0;                            break;
+		case FILE_SEEK_FROM_END:     pos = f->pFileHeader->uiFileLength; break;
+		case FILE_SEEK_FROM_CURRENT: pos = f->uiFilePosInFile;           break;
 		default:                     return FALSE;
 	}
-
-	f->uiFilePosInFile = uiCurPos;
+	f->uiFilePosInFile = pos + distance;
 	return TRUE;
 }
 

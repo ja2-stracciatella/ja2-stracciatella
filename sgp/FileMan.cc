@@ -409,13 +409,8 @@ void FileSeek(HWFILE const f, INT32 distance, FileSeekMode const how)
 		switch (how)
 		{
 			case FILE_SEEK_FROM_START: whence = SEEK_SET; break;
-
-			case FILE_SEEK_FROM_END:
-				whence = SEEK_END;
-				if (distance > 0) distance = -distance;
-				break;
-
-			default: whence = SEEK_CUR; break;
+			case FILE_SEEK_FROM_END:   whence = SEEK_END; break;
+			default:                   whence = SEEK_CUR; break;
 		}
 
 		success = fseek(f->u.file, distance, whence) == 0;

@@ -1067,7 +1067,7 @@ static INT32 GetPreviousDaysBalance(void)
 	INT32 iCounter = 1;
 	for (UINT32 iByteCount = FINANCE_HEADER_SIZE; iByteCount < size; iByteCount += RECORD_SIZE)
 	{
-		FileSeek(f, RECORD_SIZE * iCounter++, FILE_SEEK_FROM_END);
+		FileSeek(f, -(INT32)(RECORD_SIZE * iCounter++), FILE_SEEK_FROM_END);
 
 		BYTE data[RECORD_SIZE];
 		FileRead(f, data, sizeof(data));
@@ -1109,7 +1109,7 @@ static INT32 GetTodaysBalance(void)
 	INT32 iCounter = 1;
 	for (UINT32 iByteCount = FINANCE_HEADER_SIZE; iByteCount < size; iByteCount += RECORD_SIZE)
 	{
-		FileSeek(f,  RECORD_SIZE * iCounter++, FILE_SEEK_FROM_END);
+		FileSeek(f, -(INT32)(RECORD_SIZE * iCounter++), FILE_SEEK_FROM_END);
 
 		BYTE data[RECORD_SIZE];
 		FileRead(f, data, sizeof(data));
@@ -1152,7 +1152,7 @@ static INT32 GetPreviousDaysIncome(void)
 	BOOLEAN fOkToIncrement = FALSE;
 	for (UINT32 iByteCount = FINANCE_HEADER_SIZE; iByteCount < size; iByteCount += RECORD_SIZE)
 	{
-		FileSeek(f,  RECORD_SIZE * iCounter++, FILE_SEEK_FROM_END);
+		FileSeek(f, -(INT32)(RECORD_SIZE * iCounter++), FILE_SEEK_FROM_END);
 
 		BYTE data[RECORD_SIZE];
 		FileRead(f, data, sizeof(data));
@@ -1199,7 +1199,7 @@ static INT32 GetTodaysDaysIncome(void)
 	BOOLEAN fOkToIncrement = FALSE;
 	for (UINT32 iByteCount = sizeof(INT32); iByteCount < size; iByteCount += RECORD_SIZE)
 	{
-		FileSeek(f,  RECORD_SIZE * iCounter++, FILE_SEEK_FROM_END);
+		FileSeek(f, -(INT32)(RECORD_SIZE * iCounter++), FILE_SEEK_FROM_END);
 
 		BYTE data[RECORD_SIZE];
 		FileRead(f, data, sizeof(data));
@@ -1280,7 +1280,7 @@ static INT32 GetTodaysOtherDeposits(void)
 	BOOLEAN fOkToIncrement = FALSE;
 	for (UINT32 iByteCount = FINANCE_HEADER_SIZE; iByteCount < size; iByteCount += RECORD_SIZE)
 	{
-		FileSeek(f, RECORD_SIZE * iCounter++, FILE_SEEK_FROM_END);
+		FileSeek(f, -(INT32)(RECORD_SIZE * iCounter++), FILE_SEEK_FROM_END);
 
 		BYTE data[RECORD_SIZE];
 		FileRead(f, data, sizeof(data));
@@ -1330,7 +1330,7 @@ static INT32 GetYesterdaysOtherDeposits(void)
 	BOOLEAN fOkToIncrement = FALSE;
 	for (UINT32 iByteCount = FINANCE_HEADER_SIZE; iByteCount < FileGetSize(f); iByteCount += RECORD_SIZE)
 	{
-		FileSeek(f,  RECORD_SIZE * iCounter++, FILE_SEEK_FROM_END);
+		FileSeek(f, -(INT32)(RECORD_SIZE * iCounter++), FILE_SEEK_FROM_END);
 
 		BYTE data[RECORD_SIZE];
 		FileRead(f, data, sizeof(data));
