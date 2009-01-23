@@ -123,8 +123,10 @@
 
 //Number of Inventory slots
 #define		SKI_NUM_ARMS_DEALERS_INV_SLOTS			15
-#define		SKI_NUM_ARMS_DEALERS_INV_ROWS				3
 #define		SKI_NUM_ARMS_DEALERS_INV_COLS				5
+
+#define		SKI_NUM_TRADING_INV_SLOTS						12
+#define		SKI_NUM_TRADING_INV_COLS						6
 
 //Inventory Slots size and offsets
 #define		SKI_INV_SLOT_WIDTH									67
@@ -1260,138 +1262,86 @@ static void SelectPlayersOfferSlotsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 
 static void CreateSkiInventorySlotMouseRegions(void)
 {
-	UINT8	x,y,ubCnt;
-	UINT16	usPosX, usPosY;
-
 	MSYS_DefineRegion(&g_dealer_inventory_scroll_region, 161, 27, 532, 137, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, NULL, DealerInventoryScrollRegionCallback);
 
+	bool const does_repairs = ArmsDealerInfo[gbSelectedArmsDealerID].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS;
+
 	// Create the mouse regions for the shopkeeper's inventory
-	usPosY = SKI_ARMS_DEALERS_INV_START_Y;
-	ubCnt=0;
-	for(y=0; y<SKI_NUM_ARMS_DEALERS_INV_ROWS; y++)
+	for (UINT32 i = 0; i != SKI_NUM_ARMS_DEALERS_INV_SLOTS; ++i)
 	{
-		usPosX = SKI_ARMS_DEALERS_INV_START_X;
-
-		for(x=0; x<SKI_NUM_ARMS_DEALERS_INV_COLS; x++)
-		{
-			MSYS_DefineRegion( &gDealersInventoryMouseRegions[ ubCnt ], usPosX, usPosY, (INT16)(usPosX + SKI_INV_SLOT_WIDTH), (INT16)(usPosY + SKI_INV_SLOT_HEIGHT), MSYS_PRIORITY_HIGH,
-										 CURSOR_NORMAL, SelectDealersInventoryMovementRegionCallBack, SelectDealersInventoryRegionCallBack );
-			MSYS_SetRegionUserData( &gDealersInventoryMouseRegions[ ubCnt ], 0, ubCnt);
-			MSYS_SetRegionUserData( &gDealersInventoryMouseRegions[ ubCnt ], 1, ARMS_DEALER_INVENTORY );
-
-			//if the dealer repairs
-			if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
-			{
-				//Small Faces
-				MSYS_DefineRegion( &gRepairmanInventorySmallFaceMouseRegions[ ubCnt ], (UINT16)(usPosX+SKI_SMALL_FACE_OFFSET_X), (UINT16)(usPosY), (INT16)(usPosX + SKI_SMALL_FACE_OFFSET_X + SKI_SMALL_FACE_WIDTH), (INT16)(usPosY+ SKI_SMALL_FACE_HEIGHT), MSYS_PRIORITY_HIGH+1,
-											 CURSOR_NORMAL, NULL, NULL );
-				MSYS_SetRegionUserData( &gRepairmanInventorySmallFaceMouseRegions[ ubCnt ], 0, ubCnt );
-				MSYS_SetRegionUserData( &gRepairmanInventorySmallFaceMouseRegions[ ubCnt ], 1, ARMS_DEALER_INVENTORY );
-			}
-
-			usPosX += SKI_INV_OFFSET_X;
-			ubCnt++;
+		UINT16 const x = SKI_ARMS_DEALERS_INV_START_X + i % SKI_NUM_ARMS_DEALERS_INV_COLS * SKI_INV_OFFSET_X;
+		UINT16 const y = SKI_ARMS_DEALERS_INV_START_Y + i / SKI_NUM_ARMS_DEALERS_INV_COLS * SKI_INV_OFFSET_Y;
+		{ MOUSE_REGION* const r = &gDealersInventoryMouseRegions[i];
+			MSYS_DefineRegion(r, x, y, x + SKI_INV_SLOT_WIDTH, y + SKI_INV_SLOT_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectDealersInventoryMovementRegionCallBack, SelectDealersInventoryRegionCallBack);
+			MSYS_SetRegionUserData(r, 0, i);
+			MSYS_SetRegionUserData(r, 1, ARMS_DEALER_INVENTORY);
 		}
-		usPosY += SKI_INV_OFFSET_Y;
+		if (does_repairs)
+		{ // Small Faces
+			MOUSE_REGION* const r = &gRepairmanInventorySmallFaceMouseRegions[i];
+			MSYS_DefineRegion(r, x + SKI_SMALL_FACE_OFFSET_X, y, x + SKI_SMALL_FACE_OFFSET_X + SKI_SMALL_FACE_WIDTH, y + SKI_SMALL_FACE_HEIGHT, MSYS_PRIORITY_HIGH + 1, CURSOR_NORMAL, NULL, NULL);
+			MSYS_SetRegionUserData(r, 0, i);
+			MSYS_SetRegionUserData(r, 1, ARMS_DEALER_INVENTORY);
+		}
 	}
 
 	// Create the mouse regions for the shopkeeper's trading slots
-	usPosY = SKI_ARMS_DEALERS_TRADING_INV_Y;
-	ubCnt=0;
-	for(y=0; y<SKI_NUM_TRADING_INV_ROWS; y++)
+	for (UINT32 i = 0; i != SKI_NUM_TRADING_INV_SLOTS; ++i)
 	{
-		usPosX = SKI_ARMS_DEALERS_TRADING_INV_X;
-
-		for(x=0; x<SKI_NUM_TRADING_INV_COLS; x++)
-		{
-			MSYS_DefineRegion( &gDealersOfferSlotsMouseRegions[ ubCnt ], usPosX, usPosY, (INT16)(usPosX + SKI_INV_SLOT_WIDTH), (INT16)(usPosY + SKI_INV_SLOT_HEIGHT), MSYS_PRIORITY_HIGH,
-										 CURSOR_NORMAL, SelectDealersOfferSlotsMovementRegionCallBack, SelectDealersOfferSlotsRegionCallBack );
-			MSYS_SetRegionUserData( &gDealersOfferSlotsMouseRegions[ ubCnt ], 0, ubCnt);
-
-
-			//if the dealer repairs
-			if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
-			{
-				//Small Faces
-				MSYS_DefineRegion( &gDealersOfferSlotsSmallFaceMouseRegions[ ubCnt ], (UINT16)(usPosX+SKI_SMALL_FACE_OFFSET_X), (UINT16)(usPosY), (INT16)(usPosX + SKI_SMALL_FACE_OFFSET_X + SKI_SMALL_FACE_WIDTH), (INT16)(usPosY+ SKI_SMALL_FACE_HEIGHT), MSYS_PRIORITY_HIGH+1,
-											 CURSOR_NORMAL, SelectDealersOfferSlotsMovementRegionCallBack, SelectDealersOfferSlotsRegionCallBack );
-				MSYS_SetRegionUserData( &gDealersOfferSlotsSmallFaceMouseRegions[ ubCnt ], 0, ubCnt);
-				MSYS_SetRegionUserData( &gDealersOfferSlotsSmallFaceMouseRegions[ ubCnt ], 1, ARMS_DEALER_OFFER_AREA );
-			}
-
-
-			usPosX += SKI_INV_OFFSET_X;
-			ubCnt++;
+		UINT16 const x = SKI_ARMS_DEALERS_TRADING_INV_X + i % SKI_NUM_TRADING_INV_COLS * SKI_INV_OFFSET_X;
+		UINT16 const y = SKI_ARMS_DEALERS_TRADING_INV_Y + i / SKI_NUM_TRADING_INV_COLS * SKI_INV_OFFSET_Y;
+		{ MOUSE_REGION* const r = &gDealersOfferSlotsMouseRegions[i];
+			MSYS_DefineRegion(r, x, y, x + SKI_INV_SLOT_WIDTH, y + SKI_INV_SLOT_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectDealersOfferSlotsMovementRegionCallBack, SelectDealersOfferSlotsRegionCallBack);
+			MSYS_SetRegionUserData(r, 0, i);
 		}
-		usPosY += SKI_INV_OFFSET_Y;
+		if (does_repairs)
+		{ // Small Faces
+			MOUSE_REGION* const r = &gDealersOfferSlotsSmallFaceMouseRegions[i];
+			MSYS_DefineRegion(r, x + SKI_SMALL_FACE_OFFSET_X, y, x + SKI_SMALL_FACE_OFFSET_X + SKI_SMALL_FACE_WIDTH, y + SKI_SMALL_FACE_HEIGHT, MSYS_PRIORITY_HIGH + 1, CURSOR_NORMAL, SelectDealersOfferSlotsMovementRegionCallBack, SelectDealersOfferSlotsRegionCallBack);
+			MSYS_SetRegionUserData(r, 0, i);
+			MSYS_SetRegionUserData(r, 1, ARMS_DEALER_OFFER_AREA);
+		}
 	}
 
 	// Create the mouse regions for the Players trading slots
-	usPosY = SKI_PLAYERS_TRADING_INV_Y;
-	ubCnt=0;
-	for(y=0; y<SKI_NUM_TRADING_INV_ROWS; y++)
+	for (UINT32 i = 0; i != SKI_NUM_TRADING_INV_SLOTS; ++i)
 	{
-		usPosX = SKI_PLAYERS_TRADING_INV_X;
-
-		for(x=0; x<SKI_NUM_TRADING_INV_COLS; x++)
-		{
-			//Trading Slots
-			MSYS_DefineRegion( &gPlayersOfferSlotsMouseRegions[ ubCnt ], usPosX, usPosY, (INT16)(usPosX + SKI_INV_SLOT_WIDTH), (INT16)(usPosY + SKI_INV_SLOT_HEIGHT), MSYS_PRIORITY_HIGH,
-										 CURSOR_NORMAL, SelectPlayersOfferSlotsMovementRegionCallBack, SelectPlayersOfferSlotsRegionCallBack );
-			MSYS_SetRegionUserData( &gPlayersOfferSlotsMouseRegions[ ubCnt ], 0, ubCnt);
-/*
-			//if the dealer repairs
-			if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
-			{
-				MSYS_SetRegionUserData( &gPlayersOfferSlotsSmallFaceMouseRegions[ ubCnt ], 1, PLAYERS_OFFER_AREA );
-			}
-*/
-			//Small Faces
-			MSYS_DefineRegion( &gPlayersOfferSlotsSmallFaceMouseRegions[ ubCnt ], (UINT16)(usPosX+SKI_SMALL_FACE_OFFSET_X), (UINT16)(usPosY), (INT16)(usPosX + SKI_SMALL_FACE_OFFSET_X + SKI_SMALL_FACE_WIDTH), (INT16)(usPosY+ SKI_SMALL_FACE_HEIGHT), MSYS_PRIORITY_HIGH+1,
-										 CURSOR_NORMAL, SelectPlayersOfferSlotsMovementRegionCallBack, SelectPlayersOfferSlotsRegionCallBack );
-			MSYS_SetRegionUserData( &gPlayersOfferSlotsSmallFaceMouseRegions[ ubCnt ], 0, ubCnt);
-			MSYS_SetRegionUserData( &gPlayersOfferSlotsSmallFaceMouseRegions[ ubCnt ], 1, PLAYERS_OFFER_AREA );
-
-			usPosX += SKI_INV_OFFSET_X;
-			ubCnt++;
+		UINT16 const x = SKI_PLAYERS_TRADING_INV_X + i % SKI_NUM_TRADING_INV_COLS * SKI_INV_OFFSET_X;
+		UINT16 const y = SKI_PLAYERS_TRADING_INV_Y + i / SKI_NUM_TRADING_INV_COLS * SKI_INV_OFFSET_Y;
+		{ // Trading Slots
+			MOUSE_REGION* const r = &gPlayersOfferSlotsMouseRegions[i];
+			MSYS_DefineRegion(r, x, y, x + SKI_INV_SLOT_WIDTH, y + SKI_INV_SLOT_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectPlayersOfferSlotsMovementRegionCallBack, SelectPlayersOfferSlotsRegionCallBack);
+			MSYS_SetRegionUserData(r, 0, i);
 		}
-		usPosY += SKI_INV_OFFSET_Y;
+		{ // Small Faces
+			MOUSE_REGION* const r = &gPlayersOfferSlotsSmallFaceMouseRegions[i];
+			MSYS_DefineRegion(r, x + SKI_SMALL_FACE_OFFSET_X, y, x + SKI_SMALL_FACE_OFFSET_X + SKI_SMALL_FACE_WIDTH, y + SKI_SMALL_FACE_HEIGHT, MSYS_PRIORITY_HIGH + 1, CURSOR_NORMAL, SelectPlayersOfferSlotsMovementRegionCallBack, SelectPlayersOfferSlotsRegionCallBack);
+			MSYS_SetRegionUserData(r, 0, i);
+			MSYS_SetRegionUserData(r, 1, PLAYERS_OFFER_AREA);
+		}
 	}
-
-
 }
 
 
 static void DestroySkiInventorySlotMouseRegions(void)
 {
-	UINT8	i;
-
 	MSYS_RemoveRegion(&g_dealer_inventory_scroll_region);
 
-	for(i=0; i<SKI_NUM_ARMS_DEALERS_INV_SLOTS; i++)
-	{
-		MSYS_RemoveRegion( &gDealersInventoryMouseRegions[ i ] );
+	bool const does_repairs = ArmsDealerInfo[gbSelectedArmsDealerID].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS;
 
-		//if the dealer repairs
-		if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
-		{
-			MSYS_RemoveRegion( &gRepairmanInventorySmallFaceMouseRegions[ i ] );
-		}
+	for (UINT32 i = 0; i != SKI_NUM_ARMS_DEALERS_INV_SLOTS; ++i)
+	{
+		MSYS_RemoveRegion(&gDealersInventoryMouseRegions[i]);
+		if (does_repairs) MSYS_RemoveRegion(&gRepairmanInventorySmallFaceMouseRegions[i]);
 	}
 
-	for(i=0; i<SKI_NUM_TRADING_INV_SLOTS; i++)
+	for (UINT32 i = 0; i != SKI_NUM_TRADING_INV_SLOTS; ++i)
 	{
-		MSYS_RemoveRegion( &gDealersOfferSlotsMouseRegions[ i ] );
+		MSYS_RemoveRegion(&gDealersOfferSlotsMouseRegions[i]);
+		if (does_repairs) MSYS_RemoveRegion(&gDealersOfferSlotsSmallFaceMouseRegions[i]);
 
-		//if the dealer repairs
-		if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
-		{
-			MSYS_RemoveRegion( &gDealersOfferSlotsSmallFaceMouseRegions[ i ] );
-		}
-
-		MSYS_RemoveRegion( &gPlayersOfferSlotsMouseRegions[ i ] );
-
-		MSYS_RemoveRegion( &gPlayersOfferSlotsSmallFaceMouseRegions[ i ] );
+		MSYS_RemoveRegion(&gPlayersOfferSlotsMouseRegions[i]);
+		MSYS_RemoveRegion(&gPlayersOfferSlotsSmallFaceMouseRegions[i]);
 	}
 }
 

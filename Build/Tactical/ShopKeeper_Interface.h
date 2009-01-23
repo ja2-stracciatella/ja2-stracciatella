@@ -9,11 +9,6 @@
 #include "ScreenIDs.h"
 
 
-#define		SKI_NUM_TRADING_INV_SLOTS						12
-#define		SKI_NUM_TRADING_INV_ROWS						2
-#define		SKI_NUM_TRADING_INV_COLS						6
-
-
 //Enums used for when the user clicks on an item and the item goes to..
 enum
 {
