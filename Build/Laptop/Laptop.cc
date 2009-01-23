@@ -1782,7 +1782,6 @@ static void CreateBookMarkMouseRegions(void)
 		const UINT16 y = BOOK_TOP_Y + (i + 1) * (BOOK_HEIGHT + 6) + 6;
 		MSYS_DefineRegion(&gBookmarkMouseRegions[i], BOOK_X, y, BOOK_X + BOOK_WIDTH, y + BOOK_HEIGHT + 6, MSYS_PRIORITY_HIGHEST - 2, CURSOR_LAPTOP_SCREEN, BookmarkMvtCallBack, BookmarkCallBack);
 		MSYS_SetRegionUserData(&gBookmarkMouseRegions[i], 0, i);
-		MSYS_SetRegionUserData(&gBookmarkMouseRegions[i], 1, 0);
 
 		gBookmarkMouseRegions[i].SetFastHelpText(gzLaptopHelpText[BOOKMARK_TEXT_ASSOCIATION_OF_INTERNATION_MERCENARIES + LaptopSaveInfo.iBookMarkList[i]]);
 	}
@@ -1790,7 +1789,6 @@ static void CreateBookMarkMouseRegions(void)
 	const UINT16 y = BOOK_TOP_Y + (i + 1) * (BOOK_HEIGHT + 6) + 6;
 	MSYS_DefineRegion(&gBookmarkMouseRegions[i], BOOK_X, y, BOOK_X + BOOK_WIDTH, y + BOOK_HEIGHT + 6, MSYS_PRIORITY_HIGHEST - 2, CURSOR_LAPTOP_SCREEN, BookmarkMvtCallBack, BookmarkCallBack);
 	MSYS_SetRegionUserData(&gBookmarkMouseRegions[i], 0, i);
-	MSYS_SetRegionUserData(&gBookmarkMouseRegions[i], 1, CANCEL_STRING);
 }
 
 
@@ -1833,15 +1831,16 @@ static void BookmarkCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		const INT32 i = MSYS_GetRegionUserData(pRegion, 0);
-		if (MSYS_GetRegionUserData(pRegion, 1) == CANCEL_STRING)
+		INT32 const i   = MSYS_GetRegionUserData(pRegion, 0);
+		INT32 const idx = LaptopSaveInfo.iBookMarkList[i];
+		if (idx != -1)
 		{
-			gfShowBookmarks = FALSE;
-			fReDrawScreenFlag = TRUE;
+			GoToWebPage(idx);
 		}
-		if (LaptopSaveInfo.iBookMarkList[i] != -1)
+		else
 		{
-			GoToWebPage(LaptopSaveInfo.iBookMarkList[i]);
+			gfShowBookmarks   = FALSE;
+			fReDrawScreenFlag = TRUE;
 		}
 	}
 }
