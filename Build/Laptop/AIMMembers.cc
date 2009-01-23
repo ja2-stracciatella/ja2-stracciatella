@@ -1113,19 +1113,19 @@ static void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const wc
 
 
 static void DisplayMercChargeAmount(void);
-static void DisplaySelectLights(BOOLEAN fContractDown, BOOLEAN fBuyEquipDown);
+static void DisplaySelectLights();
 
 
 static void BtnContractLengthButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		DisplaySelectLights(TRUE, FALSE);
+		DisplaySelectLights();
 	}
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gubContractLength = MSYS_GetBtnUserData(btn);
-		DisplaySelectLights(FALSE, FALSE);
+		DisplaySelectLights();
 		guiMercAttitudeTime = GetJA2Clock();
 		DisplayMercChargeAmount();
 	}
@@ -1136,12 +1136,12 @@ static void BtnBuyEquipmentButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
-		DisplaySelectLights(FALSE, TRUE);
+		DisplaySelectLights();
 	}
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gfBuyEquipment = MSYS_GetBtnUserData(btn);
-		DisplaySelectLights(FALSE, FALSE);
+		DisplaySelectLights();
 		DisplayMercChargeAmount();
 		guiMercAttitudeTime = GetJA2Clock();
 	}
@@ -1374,65 +1374,44 @@ static void DisplayMercsVideoFace(void)
 
 	//Display the Select light on the merc
 	if(gubVideoConferencingMode == AIM_VIDEO_HIRE_MERC_MODE)
-		DisplaySelectLights(FALSE, FALSE);
+		DisplaySelectLights();
 }
 
 
-static void DisplaySelectLights(BOOLEAN fContractDown, BOOLEAN fBuyEquipDown)
+static void DrawButtonSelection(GUI_BUTTON const* const btn, bool const selected)
 {
-	UINT16 i, usPosY, usPosX;
-
-	//First draw the select light for the contract length buttons
-	usPosY = AIM_MEMBER_BUY_CONTRACT_LENGTH_Y;
-	for(i=0; i<3; i++)
+	INT32 x = btn->X();
+	INT32 y = btn->Y();
+	if (btn->uiFlags & BUTTON_CLICKED_ON)
 	{
-		// if the if is true, the light is on
-		if( gubContractLength == i)
-		{
-			if( fContractDown)
-			{
-				usPosX = AIM_MEMBER_BUY_CONTRACT_LENGTH_X + AIM_SELECT_LIGHT_ON_X;
-				ColorFillVideoSurfaceArea( FRAME_BUFFER, usPosX, usPosY+AIM_SELECT_LIGHT_ON_Y, usPosX+8,	usPosY+AIM_SELECT_LIGHT_ON_Y+8, Get16BPPColor( FROMRGB( 0, 255, 0 ) ) );
-			}
-			else
-			{
-				usPosX = AIM_MEMBER_BUY_CONTRACT_LENGTH_X + AIM_SELECT_LIGHT_OFF_X;
-				ColorFillVideoSurfaceArea( FRAME_BUFFER, usPosX, usPosY+AIM_SELECT_LIGHT_OFF_Y, usPosX+8,	usPosY+AIM_SELECT_LIGHT_OFF_Y+8, Get16BPPColor( FROMRGB( 0, 255, 0 ) ) );
-			}
-		}
-		else
-		{
-			usPosX = AIM_MEMBER_BUY_CONTRACT_LENGTH_X + AIM_SELECT_LIGHT_OFF_X;
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, usPosX, usPosY+AIM_SELECT_LIGHT_OFF_Y, usPosX+8,	usPosY+AIM_SELECT_LIGHT_OFF_Y+8, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-		}
-		usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
+		x += AIM_SELECT_LIGHT_ON_X;
+		y += AIM_SELECT_LIGHT_ON_Y;
+	}
+	else
+	{
+		x += AIM_SELECT_LIGHT_OFF_X;
+		y += AIM_SELECT_LIGHT_OFF_Y;
+	}
+	UINT32 const fill_colour = selected ? FROMRGB(0, 255, 0) : FROMRGB(0, 0, 0);
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + 8, y + 8, Get16BPPColor(fill_colour));
+}
+
+
+static void DisplaySelectLights()
+{
+	//First draw the select light for the contract length buttons
+	for (UINT16 i = 0; i != 3; ++i)
+	{
+		DrawButtonSelection(giContractLengthButton[i], gubContractLength == i);
 	}
 
 	//draw the select light for the buy equipment buttons
-	usPosY = AIM_MEMBER_BUY_CONTRACT_LENGTH_Y;
-	for(i=0; i<2; i++)
+	for (UINT16 i = 0; i != 3; ++i)
 	{
-		if( gfBuyEquipment == i)
-		{
-			if( fBuyEquipDown)
-			{
-				usPosX = AIM_MEMBER_BUY_EQUIPMENT_X + AIM_SELECT_LIGHT_ON_X;
-				ColorFillVideoSurfaceArea( FRAME_BUFFER, usPosX, usPosY+AIM_SELECT_LIGHT_ON_Y, usPosX+8,	usPosY+AIM_SELECT_LIGHT_ON_Y+8, Get16BPPColor( FROMRGB( 0, 255, 0 ) ) );
-			}
-			else
-			{
-				usPosX = AIM_MEMBER_BUY_EQUIPMENT_X + AIM_SELECT_LIGHT_OFF_X;
-				ColorFillVideoSurfaceArea( FRAME_BUFFER, usPosX, usPosY+AIM_SELECT_LIGHT_OFF_Y, usPosX+8,	usPosY+AIM_SELECT_LIGHT_OFF_Y+8, Get16BPPColor( FROMRGB( 0, 255, 0 ) ) );
-			}
-		}
-		else
-		{
-			usPosX = AIM_MEMBER_BUY_EQUIPMENT_X + AIM_SELECT_LIGHT_OFF_X;
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, usPosX, usPosY+AIM_SELECT_LIGHT_OFF_Y, usPosX+8,	usPosY+AIM_SELECT_LIGHT_OFF_Y+8, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-		}
-		usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
+		DrawButtonSelection(giBuyEquipmentButton[i], gfBuyEquipment == i);
 	}
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+
+	InvalidateRegion(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 
