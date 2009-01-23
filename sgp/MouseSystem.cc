@@ -551,8 +551,6 @@ void MSYS_DefineRegion(MOUSE_REGION *region,UINT16 tlx,UINT16 tly,UINT16 brx,UIN
 
 	if (priority <= MSYS_PRIORITY_LOWEST)
 		priority = MSYS_PRIORITY_LOWEST;
-	else if(priority >= MSYS_PRIORITY_HIGHEST)
-		priority = MSYS_PRIORITY_HIGHEST;
 
 	region->PriorityLevel = priority;
 
