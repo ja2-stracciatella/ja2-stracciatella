@@ -284,15 +284,5 @@ ubLastDamageReason: necessary?
 BUGS
 KillPreBattleInterface(): EnableDisAbleMapScreenOptionsButton(TRUE) maybe tries to enable non-existent buttons
 
-1. Create a new game
-2. Hire one merc
-3. Close laptop
-4. Enable time compression (The game goes to tactical view)
-5. Go to strategic view
-6. Enter laptop
--> non-existent button access
-
-DisplayNewMailBox(): MarkAButtonDirty(giNewMailButton[0]); sometimes accesses non-existent button
-
 
 WORKLIST
