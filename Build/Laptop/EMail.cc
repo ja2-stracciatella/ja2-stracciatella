@@ -1243,36 +1243,12 @@ void DisplayNewMailBox(void)
 }
 
 
-void ReDrawNewMailBox( void )
-{
-	// this function will check to see if the new mail region needs to be redrawn
-	if (fReDrawNewMailFlag)
-	{
-		if( fNewMailFlag )
-		{
-			// set display flag back to orginal
-			fNewMailFlag = FALSE;
-
-			// display new mail box
-      DisplayNewMailBox( );
-
-		  // dirty buttons
-			MarkAButtonDirty(giNewMailButton);
-
-
-
-			// set display flag back to orginal
-			fNewMailFlag = TRUE;
-
-		  // time to redraw
-      DisplayNewMailBox( );
-		}
-
-		// reset flag for redraw
-		  fReDrawNewMailFlag = FALSE;
-
-		return;
-	}
+void ReDrawNewMailBox(void)
+{ // check to see if the new mail region needs to be redrawn
+	if (!fReDrawNewMailFlag) return;
+	fReDrawNewMailFlag = FALSE;
+	if (!fNewMailFlag) return;
+	DisplayNewMailBox();
 }
 
 
