@@ -1274,14 +1274,12 @@ static void CreateSkiInventorySlotMouseRegions(void)
 		{ MOUSE_REGION* const r = &gDealersInventoryMouseRegions[i];
 			MSYS_DefineRegion(r, x, y, x + SKI_INV_SLOT_WIDTH, y + SKI_INV_SLOT_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectDealersInventoryMovementRegionCallBack, SelectDealersInventoryRegionCallBack);
 			MSYS_SetRegionUserData(r, 0, i);
-			MSYS_SetRegionUserData(r, 1, ARMS_DEALER_INVENTORY);
 		}
 		if (does_repairs)
 		{ // Small Faces
 			MOUSE_REGION* const r = &gRepairmanInventorySmallFaceMouseRegions[i];
 			MSYS_DefineRegion(r, x + SKI_SMALL_FACE_OFFSET_X, y, x + SKI_SMALL_FACE_OFFSET_X + SKI_SMALL_FACE_WIDTH, y + SKI_SMALL_FACE_HEIGHT, MSYS_PRIORITY_HIGH + 1, CURSOR_NORMAL, NULL, NULL);
 			MSYS_SetRegionUserData(r, 0, i);
-			MSYS_SetRegionUserData(r, 1, ARMS_DEALER_INVENTORY);
 		}
 	}
 
@@ -1299,7 +1297,6 @@ static void CreateSkiInventorySlotMouseRegions(void)
 			MOUSE_REGION* const r = &gDealersOfferSlotsSmallFaceMouseRegions[i];
 			MSYS_DefineRegion(r, x + SKI_SMALL_FACE_OFFSET_X, y, x + SKI_SMALL_FACE_OFFSET_X + SKI_SMALL_FACE_WIDTH, y + SKI_SMALL_FACE_HEIGHT, MSYS_PRIORITY_HIGH + 1, CURSOR_NORMAL, SelectDealersOfferSlotsMovementRegionCallBack, SelectDealersOfferSlotsRegionCallBack);
 			MSYS_SetRegionUserData(r, 0, i);
-			MSYS_SetRegionUserData(r, 1, ARMS_DEALER_OFFER_AREA);
 		}
 	}
 
@@ -1317,7 +1314,6 @@ static void CreateSkiInventorySlotMouseRegions(void)
 			MOUSE_REGION* const r = &gPlayersOfferSlotsSmallFaceMouseRegions[i];
 			MSYS_DefineRegion(r, x + SKI_SMALL_FACE_OFFSET_X, y, x + SKI_SMALL_FACE_OFFSET_X + SKI_SMALL_FACE_WIDTH, y + SKI_SMALL_FACE_HEIGHT, MSYS_PRIORITY_HIGH + 1, CURSOR_NORMAL, SelectPlayersOfferSlotsMovementRegionCallBack, SelectPlayersOfferSlotsRegionCallBack);
 			MSYS_SetRegionUserData(r, 0, i);
-			MSYS_SetRegionUserData(r, 1, PLAYERS_OFFER_AREA);
 		}
 	}
 }
