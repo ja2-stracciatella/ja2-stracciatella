@@ -3807,16 +3807,14 @@ static UINT32 CalcChanceToSteal(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, 
 }
 
 
-void ReloadWeapon( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
+void ReloadWeapon(SOLDIERTYPE* const s, UINT8 const inv_pos)
 {
 	// NB this is a cheat function, don't award experience
+	OBJECTTYPE& o = s->inv[inv_pos];
+	if (o.usItem == NOTHING) return;
 
-	if ( pSoldier->inv[ ubHandPos ].usItem != NOTHING )
-	{
-		pSoldier->inv[ ubHandPos ].ubGunShotsLeft = Weapon[ pSoldier->inv[ ubHandPos ].usItem ].ubMagSize;
-		// Dirty Bars
-		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL1 );
-	}
+	o.ubGunShotsLeft = Weapon[o.usItem].ubMagSize;
+	DirtyMercPanelInterface(s, DIRTYLEVEL1);
 }
 
 
