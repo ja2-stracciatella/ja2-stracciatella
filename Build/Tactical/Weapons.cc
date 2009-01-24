@@ -3824,7 +3824,6 @@ bool IsGunBurstCapable(SOLDIERTYPE const* const s, UINT8 const inv_pos)
 {
 	UINT16 const item = s->inv[inv_pos].usItem;
 	return
-		item != NOTHING                    &&
 		Item[item].usItemClass & IC_WEAPON &&
 		Weapon[item].ubShotsPerBurst > 0;
 }
