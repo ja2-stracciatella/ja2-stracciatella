@@ -1041,7 +1041,7 @@ static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 }
 
 
-BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, EXPLOSIVETYPE* const pExplosive, const INT16 sSubsequent, const BOOLEAN fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, SOLDIERTYPE* const owner)
+BOOLEAN DishOutGasDamage(SOLDIERTYPE* const pSoldier, EXPLOSIVETYPE const* const pExplosive, INT16 const sSubsequent, BOOLEAN const fRecompileMovementCosts, INT16 sWoundAmt, INT16 sBreathAmt, SOLDIERTYPE* const owner)
 {
  INT8		bPosOfMask = NO_SLOT;
 
@@ -1192,7 +1192,6 @@ static void HandleBuldingDestruction(INT16 sGridNo, const SOLDIERTYPE* owner);
 static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UINT32 uiDist, const UINT16 usItem, SOLDIERTYPE* const owner, const INT16 sSubsequent, BOOLEAN* const pfMercHit, const INT8 bLevel, const SMOKEEFFECT* const smoke)
 {
 	INT16 sWoundAmt = 0, sBreathAmt = 0, sStructDmgAmt;
-	EXPLOSIVETYPE *pExplosive;
 	BOOLEAN fRecompileMovementCosts = FALSE;
 	BOOLEAN fSmokeEffect=FALSE;
 	BOOLEAN fStunEffect = FALSE;
@@ -1254,7 +1253,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 
 	// OK, here we:
 	// Get explosive data from table
-	pExplosive = &(Explosive[ Item[ usItem ].ubClassIndex ] );
+	EXPLOSIVETYPE const* const pExplosive = &Explosive[Item[usItem].ubClassIndex];
 
 	uiRoll = PreRandom( 100 );
 

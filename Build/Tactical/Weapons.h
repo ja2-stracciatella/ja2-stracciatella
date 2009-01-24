@@ -226,10 +226,10 @@ typedef struct
 
 //GLOBALS
 
-extern WEAPONTYPE const Weapon[];
-extern ARMOURTYPE Armour[];
-extern MAGTYPE Magazine[];
-extern EXPLOSIVETYPE Explosive[];
+extern WEAPONTYPE    const Weapon[];
+extern ARMOURTYPE    const Armour[];
+extern MAGTYPE       const Magazine[];
+extern EXPLOSIVETYPE const Explosive[];
 
 INT8 EffectiveArmour(const OBJECTTYPE* pObj);
 extern INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier );

@@ -201,7 +201,7 @@ CASSERT(lengthof(Weapon) == MAX_WEAPONS)
 
 
 
-MAGTYPE Magazine[] =
+MAGTYPE const Magazine[] =
 {
 	// calibre,			 mag size,			ammo type
 	{ AMMO9,						15,					AMMO_REGULAR },
@@ -252,7 +252,7 @@ MAGTYPE Magazine[] =
 	{ NOAMMO,						0,					0 }
 };
 
-ARMOURTYPE Armour[] =
+ARMOURTYPE const Armour[] =
 {
 	//	Class					      Protection	Degradation%			Description
 	//  -------------       ----------  ------------      ----------------
@@ -298,7 +298,7 @@ ARMOURTYPE Armour[] =
 	{		ARMOURCLASS_VEST,				32,					10			}, /* Kevlar 2 jack w Y */
 };
 
-EXPLOSIVETYPE Explosive[] =
+EXPLOSIVETYPE const Explosive[] =
 {
 	//	Type							Yield		Yield2		Radius		Volume		Volatility	Animation			Description
 	//										-----		-------		------		------		----------	--------- 		------------------

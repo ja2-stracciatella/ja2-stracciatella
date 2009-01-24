@@ -1677,7 +1677,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 					bPosOfMask = NO_SLOT;
 				}
 
-				EXPLOSIVETYPE* pExplosive = NULL;
+				EXPLOSIVETYPE const* pExplosive = 0;
 				if (!AM_A_ROBOT(pSoldier))
 				{
 					if (gpWorldLevelData[pSoldier->sGridNo].ubExtFlags[pSoldier->bLevel] & MAPELEMENT_EXT_TEARGAS)
