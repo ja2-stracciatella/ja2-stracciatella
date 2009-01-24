@@ -3820,23 +3820,13 @@ void ReloadWeapon( SOLDIERTYPE *pSoldier, UINT8 ubHandPos )
 }
 
 
-BOOLEAN IsGunBurstCapable(const SOLDIERTYPE* const pSoldier, const UINT8 ubHandPos)
+bool IsGunBurstCapable(SOLDIERTYPE const* const s, UINT8 const inv_pos)
 {
-	BOOLEAN fCapable = FALSE;
-
-	if ( pSoldier->inv[ ubHandPos ].usItem != NOTHING )
-	{
-		// ATE: Check for being a weapon....
-		if ( Item[ pSoldier->inv[ ubHandPos ].usItem ].usItemClass & IC_WEAPON )
-		{
-			if ( Weapon[ pSoldier->inv[ ubHandPos ].usItem ].ubShotsPerBurst > 0 )
-			{
-				fCapable = TRUE;
-			}
-		}
-	}
-
-	return( fCapable );
+	UINT16 const item = s->inv[inv_pos].usItem;
+	return
+		item != NOTHING                    &&
+		Item[item].usItemClass & IC_WEAPON &&
+		Weapon[item].ubShotsPerBurst > 0;
 }
 
 
