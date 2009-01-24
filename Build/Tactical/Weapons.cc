@@ -364,30 +364,18 @@ static const char* const gzBurstSndStrings[] =
 static const UINT8 BodyImpactReduction[4] = { 0, 15, 30, 23 };
 
 
-UINT16 GunRange(const OBJECTTYPE* pObj)
+UINT16 GunRange(OBJECTTYPE const* const o)
 {
-	INT8 bAttachPos;
+	// return a minimal value of 1 tile
+	if (!(Item[o->usItem].usItemClass & IC_WEAPON)) return CELL_X_SIZE;
 
-	if ( Item[ pObj->usItem ].usItemClass & IC_WEAPON )
+	INT8   const attach_pos = FindAttachment(o, GUN_BARREL_EXTENDER);
+	UINT16       range      = Weapon[o->usItem].usRange;
+	if (attach_pos != ITEM_NOT_FOUND)
 	{
-
-		bAttachPos = FindAttachment( pObj, GUN_BARREL_EXTENDER );
-
-		if ( bAttachPos == ITEM_NOT_FOUND )
-		{
-			return( Weapon[ pObj->usItem ].usRange );
-		}
-		else
-		{
-			return( Weapon[ pObj->usItem ].usRange + (GUN_BARREL_RANGE_BONUS * WEAPON_STATUS_MOD(pObj->bAttachStatus[ bAttachPos ]) / 100 ) );
-		}
-
+		range += GUN_BARREL_RANGE_BONUS * WEAPON_STATUS_MOD(o->bAttachStatus[attach_pos]) / 100;
 	}
-	else
-	{
-		// return a minimal value of 1 tile
-		return( CELL_X_SIZE );
-	}
+	return range;
 }
 
 
