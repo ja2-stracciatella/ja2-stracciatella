@@ -379,29 +379,20 @@ UINT16 GunRange(OBJECTTYPE const* const o)
 }
 
 
-INT8 EffectiveArmour(const OBJECTTYPE* pObj)
+INT8 EffectiveArmour(OBJECTTYPE const* const o)
 {
-	INT32		iValue;
-	INT8		bPlate;
+	if (!o) return 0;
 
-	if (pObj == NULL || Item[pObj->usItem].usItemClass != IC_ARMOUR)
+	INVTYPE const& item = Item[o->usItem];
+	if (item.usItemClass != IC_ARMOUR) return 0;
+
+	INT32       armour_val = Armour[item.ubClassIndex].ubProtection * o->bStatus[0] / 100;
+	INT8  const plate_pos  = FindAttachment(o, CERAMIC_PLATES);
+	if (plate_pos != ITEM_NOT_FOUND)
 	{
-		return( 0 );
+		armour_val += Armour[Item[CERAMIC_PLATES].ubClassIndex].ubProtection * o->bAttachStatus[plate_pos] / 100;
 	}
-	iValue = Armour[ Item[pObj->usItem].ubClassIndex ].ubProtection;
-	iValue = iValue * pObj->bStatus[0] / 100;
-
-	bPlate = FindAttachment( pObj, CERAMIC_PLATES );
-	if ( bPlate != ITEM_NOT_FOUND )
-	{
-		INT32 iValue2;
-
-		iValue2 = Armour[ Item[ CERAMIC_PLATES ].ubClassIndex ].ubProtection;
-		iValue2 = iValue2 * pObj->bAttachStatus[ bPlate ] / 100;
-
-		iValue += iValue2;
-	}
-	return( (INT8) iValue );
+	return armour_val;
 }
 
 
