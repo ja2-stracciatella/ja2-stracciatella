@@ -1468,50 +1468,27 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos )
 }
 
 
-UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
+static INT16 GetMovePlusActionAPCosts(SOLDIERTYPE* const s, GridNo const pos, INT16 const action_ap)
 {
-	UINT16						sAPCost = 0;
-	INT16							sActionGridNo;
-
-	// Check if we are over an item pool
-	if (GetItemPool(usMapPos, pSoldier->bLevel) != NULL)
-	{
-		// If we are in the same tile, just return pickup cost
-		sActionGridNo = AdjustGridNoForItemPlacement( pSoldier, usMapPos );
-
-		if ( pSoldier->sGridNo != sActionGridNo )
-		{
-			sAPCost = PlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, NO_PLOT, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
-
-			// If point cost is zero, return 0
-			if ( sAPCost != 0 )
-			{
-				// ADD APS TO PICKUP
-				sAPCost += AP_PICKUP_ITEM;
-			}
-		}
-		else
-		{
-				sAPCost += AP_PICKUP_ITEM;
-		}
-	}
-
-	return( sAPCost );
+	if (s->sGridNo == pos) return action_ap;
+	INT16 const move_ap = PlotPath(s, pos, NO_COPYROUTE, NO_PLOT, s->usUIMovementMode, s->bActionPoints);
+	if (move_ap == 0) return 0; // Destination unreachable
+	return move_ap + action_ap;
 }
 
 
-UINT16 GetAPsToGiveItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos )
+UINT16 GetAPsToPickupItem(SOLDIERTYPE* const s, UINT16 const usMapPos)
 {
-	UINT16 sAPCost = PlotPath(pSoldier, usMapPos, NO_COPYROUTE, NO_PLOT, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
+	// Check if we are over an item pool
+	if (!GetItemPool(usMapPos, s->bLevel)) return 0;
+	INT16 const sActionGridNo = AdjustGridNoForItemPlacement(s, usMapPos);
+	return GetMovePlusActionAPCosts(s, sActionGridNo, AP_PICKUP_ITEM);
+}
 
-	// If point cost is zero, return 0
-	if ( sAPCost != 0 || pSoldier->sGridNo == usMapPos )
-	{
-		// ADD APS TO PICKUP
-		sAPCost += AP_GIVE_ITEM;
-	}
 
-	return( sAPCost );
+UINT16 GetAPsToGiveItem(SOLDIERTYPE* const s, UINT16 const usMapPos)
+{
+	return GetMovePlusActionAPCosts(s, usMapPos, AP_GIVE_ITEM);
 }
 
 
@@ -1598,20 +1575,10 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 }
 
 
-UINT16 GetAPsToReloadRobot(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pRobot)
+UINT16 GetAPsToReloadRobot(SOLDIERTYPE* const s, SOLDIERTYPE const* const robot)
 {
-	const INT16 sActionGridNo = FindAdjacentGridEx(pSoldier, pRobot->sGridNo, NULL, NULL, TRUE, FALSE);
-
-	UINT16 sAPCost = PlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, NO_PLOT, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
-
-	// If point cost is zero, return 0
-	if ( sAPCost != 0 || sActionGridNo == pSoldier->sGridNo )
-	{
-		// ADD APS TO RELOAD
-		sAPCost += 4;
-	}
-
-	return( sAPCost );
+	GridNo const sActionGridNo = FindAdjacentGridEx(s, robot->sGridNo, NULL, NULL, TRUE, FALSE);
+	return GetMovePlusActionAPCosts(s, sActionGridNo, 4);
 }
 
 
