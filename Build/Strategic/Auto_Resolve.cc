@@ -3263,19 +3263,11 @@ static BOOLEAN FireAShot(SOLDIERCELL* pAttacker)
 }
 
 
-static BOOLEAN AttackerHasKnife(SOLDIERCELL* pAttacker)
+static BOOLEAN AttackerHasKnife(SOLDIERCELL* const attacker)
 {
-	INT32 i;
-	for( i = 0; i < NUM_INV_SLOTS; i++ )
-	{
-		if( Item[ pAttacker->pSoldier->inv[ i ].usItem ].usItemClass == IC_BLADE )
-		{
-			pAttacker->bWeaponSlot = (INT8)i;
-			return TRUE;
-		}
-	}
-	pAttacker->bWeaponSlot = -1;
-	return FALSE;
+	INT8 const slot = FindObjClass(attacker->pSoldier, IC_BLADE);
+	attacker->bWeaponSlot = slot;
+	return slot != NO_SLOT;
 }
 
 
