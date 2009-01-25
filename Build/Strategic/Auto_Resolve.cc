@@ -1781,6 +1781,18 @@ static void CreateAutoResolveInterface(void)
 }
 
 
+static bool IsAnybodyWounded()
+{
+	for (INT32 i = 0; i != gpAR->ubMercs; ++i)
+	{
+		SOLDIERTYPE const& s = *gpMercs[i].pSoldier;
+		if (s.bBleeding == 0 || s.bLife == 0) continue;
+		return true;
+	}
+	return false;
+}
+
+
 static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 {
 	INT32 i;
@@ -1800,14 +1812,10 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 		//KM: By request of AM, I have added this bleeding event in cases where autoresolve is
 		//	  complete and there are bleeding mercs remaining.  AM coded the internals
 		//    of the strategic event.
-		for( i = 0; i < gpAR->ubMercs; i++ )
+		if (IsAnybodyWounded())
 		{
-			if( gpMercs[ i ].pSoldier->bBleeding && gpMercs[ i ].pSoldier->bLife )
-			{
-				// ARM: only one event is needed regardless of how many are bleeding
-				AddStrategicEvent( EVENT_BANDAGE_BLEEDING_MERCS, GetWorldTotalMin() + 1, 0 );
-				break;
-			}
+			// ARM: only one event is needed regardless of how many are bleeding
+			AddStrategicEvent(EVENT_BANDAGE_BLEEDING_MERCS, GetWorldTotalMin() + 1, 0);
 		}
 
 		// ARM: Update assignment flashing: Doctors may now have new patients or lost them all, etc.
@@ -2100,18 +2108,6 @@ static void RetreatButtonCallback(GUI_BUTTON* btn, INT32 reason)
 			}
 		}
 	}
-}
-
-
-static bool IsAnybodyWounded()
-{
-	for (INT32 i = 0; i != gpAR->ubMercs; ++i)
-	{
-		SOLDIERTYPE const& s = *gpMercs[i].pSoldier;
-		if (s.bBleeding == 0 || s.bLife == 0) continue;
-		return true;
-	}
-	return false;
 }
 
 
