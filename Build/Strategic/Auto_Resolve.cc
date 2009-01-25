@@ -1189,102 +1189,81 @@ static OBJECTTYPE* FindMedicalKit(void)
 static void AutoBandageFinishedCallback(MessageBoxReturnValue);
 
 
-static UINT32 AutoBandageMercs(void)
+static void AutoBandageMercs(void)
 {
-  INT32 i, iBest;
-	UINT32 uiPointsUsed, uiCurrPointsUsed, uiMaxPointsUsed, uiParallelPointsUsed;
-	UINT16 usKitPts;
-	OBJECTTYPE *pKit = NULL;
-	BOOLEAN fComplete = TRUE;
-	INT8 bSlot, cnt;
+	OBJECTTYPE* kit = 0;
 
-	//Do we have any doctors?  If so, bandage selves first.
-	uiMaxPointsUsed = uiParallelPointsUsed = 0;
-	for( i = 0; i < gpAR->ubMercs; i++ )
+	// Do we have any doctors?  If so, bandage selves first.
+	UINT32       max_points_used = 0; // XXX write-only, should probably be assigned to parallel_points_used
+	SOLDIERTYPE* best            = 0;
+	for (INT32 i = 0; i != gpAR->ubMercs; ++i)
 	{
-		if( gpMercs[ i ].pSoldier->bLife >= OKLIFE &&
-			  !gpMercs[ i ].pSoldier->bCollapsed &&
-				gpMercs[ i ].pSoldier->bMedical > 0 &&
-				( bSlot = FindObjClass( gpMercs[ i ].pSoldier, IC_MEDKIT ) ) != NO_SLOT )
+		SOLDIERTYPE& s = *gpMercs[i].pSoldier;
+		if (s.bLife < OKLIFE) continue;
+		if (s.bCollapsed)     continue;
+		if (s.bMedical == 0)  continue;
+
+		// Find the best rated doctor to do all of the further bandaging.
+		if (best->bMedical < s.bMedical) best = &s;
+
+		INT8 slot = FindObjClass(&s, IC_MEDKIT);
+		if (slot == NO_SLOT) continue;
+
+		// Bandage self first!
+		UINT32 curr_points_used = 0;
+		INT8   cnt              = 0;
+		while (s.bBleeding)
 		{
-			//bandage self first!
-			uiCurrPointsUsed = 0;
-			cnt = 0;
-			while( gpMercs[ i ].pSoldier->bBleeding )
-			{
-				pKit = &gpMercs[ i ].pSoldier->inv[ bSlot ];
-				usKitPts = TotalPoints( pKit );
-				if( !usKitPts )
-				{ //attempt to find another kit before stopping
-					if( ( bSlot = FindObjClass( gpMercs[ i ].pSoldier, IC_MEDKIT ) ) != NO_SLOT )
-					  continue;
-					break;
-				}
-				uiPointsUsed = VirtualSoldierDressWound( gpMercs[ i ].pSoldier, gpMercs[ i ].pSoldier, pKit, usKitPts, usKitPts );
-				UseKitPoints( pKit, (UINT16)uiPointsUsed, gpMercs[ i ].pSoldier );
-				uiCurrPointsUsed += uiPointsUsed;
-				cnt++;
-				if( cnt > 50 )
-					break;
-			}
-			if( uiCurrPointsUsed > uiMaxPointsUsed )
-				uiMaxPointsUsed = uiCurrPointsUsed;
-			if( !pKit )
-				break;
-		}
-	}
-
-
-	//Find the best rated doctor to do all of the bandaging.
-	iBest = 0;
-	for( i = 0; i < gpAR->ubMercs; i++ )
-	{
-		if( gpMercs[ i ].pSoldier->bLife >= OKLIFE && !gpMercs[ i ].pSoldier->bCollapsed && gpMercs[ i ].pSoldier->bMedical > 0 )
-		{
-			if( gpMercs[ i ].pSoldier->bMedical > gpMercs[ iBest ].pSoldier->bMedical )
-			{
-				iBest = i;
-			}
-		}
-	}
-
-	for( i = 0; i < gpAR->ubMercs; i++ )
-	{
-		while( gpMercs[ i ].pSoldier->bBleeding && gpMercs[ i ].pSoldier->bLife )
-		{ //This merc needs medical attention
-			if( !pKit )
-			{
-				pKit = FindMedicalKit();
-				if( !pKit )
-				{
-					fComplete = FALSE;
-					break;
-				}
-			}
-			usKitPts = TotalPoints( pKit );
-			if( !usKitPts )
-			{
-				pKit = NULL;
-				fComplete = FALSE;
+			kit = &s.inv[slot];
+			UINT16 const kit_pts = TotalPoints(kit);
+			if (kit_pts == 0)
+			{ // Attempt to find another kit before stopping
+				slot = FindObjClass(&s, IC_MEDKIT);
+				if (slot == NO_SLOT) break;
 				continue;
 			}
-			uiPointsUsed = VirtualSoldierDressWound( gpMercs[ iBest ].pSoldier, gpMercs[ i ].pSoldier, pKit, usKitPts, usKitPts );
-			UseKitPoints( pKit, (UINT16)uiPointsUsed, gpMercs[ i ].pSoldier );
-			uiParallelPointsUsed += uiPointsUsed;
-			fComplete = TRUE;
+			UINT32 const points_used = VirtualSoldierDressWound(&s, &s, kit, kit_pts, kit_pts);
+			UseKitPoints(kit, points_used, &s);
+			curr_points_used += points_used;
+			if (++cnt > 50) break;
 		}
-	}
-	if( fComplete )
-	{
-		DoScreenIndependantMessageBox( gzLateLocalizedString[ 13 ], MSG_BOX_FLAG_OK, AutoBandageFinishedCallback );
-	}
-	else
-	{
-		DoScreenIndependantMessageBox( gzLateLocalizedString[ 10 ], MSG_BOX_FLAG_OK, AutoBandageFinishedCallback );
+		if (max_points_used < curr_points_used) max_points_used = curr_points_used;
+		if (!kit) break;
 	}
 
-	gpAR->uiTotalElapsedBattleTimeInMilliseconds += uiParallelPointsUsed * 200;
-	return 1;
+	UINT32 parallel_points_used = 0;
+	bool   complete             = true;
+	for (INT32 i = 0; i != gpAR->ubMercs; ++i)
+	{
+		SOLDIERTYPE& s = *gpMercs[i].pSoldier;
+		while (s.bBleeding != 0 && s.bLife != 0)
+		{ // This merc needs medical attention
+			if (!kit)
+			{
+				kit = FindMedicalKit();
+				if (!kit)
+				{
+					complete = false;
+					break;
+				}
+			}
+			UINT16 const kit_pts = TotalPoints(kit);
+			if (kit_pts == 0)
+			{
+				kit      = 0;
+				complete = false;
+				continue;
+			}
+			UINT32 const points_used = VirtualSoldierDressWound(best, &s, kit, kit_pts, kit_pts);
+			UseKitPoints(kit, points_used, &s);
+			parallel_points_used += points_used;
+			complete              = true;
+		}
+	}
+	wchar_t const* const msg = complete ? gzLateLocalizedString[13] : gzLateLocalizedString[10];
+	DoScreenIndependantMessageBox(msg, MSG_BOX_FLAG_OK, AutoBandageFinishedCallback);
+
+	gpAR->uiTotalElapsedBattleTimeInMilliseconds += parallel_points_used * 200;
 }
 
 
