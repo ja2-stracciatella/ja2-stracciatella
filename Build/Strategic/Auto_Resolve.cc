@@ -2103,58 +2103,54 @@ static void RetreatButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
+static bool IsAnybodyWounded()
+{
+	for (INT32 i = 0; i != gpAR->ubMercs; ++i)
+	{
+		SOLDIERTYPE const& s = *gpMercs[i].pSoldier;
+		if (s.bBleeding == 0 || s.bLife == 0) continue;
+		return true;
+	}
+	return false;
+}
+
+
+static bool CanAnybodyBandage()
+{
+	for (INT32 i = 0; i != gpAR->ubMercs; ++i)
+	{
+		SOLDIERTYPE const& s = *gpMercs[i].pSoldier;
+		if (s.bLife < OKLIFE || s.bCollapsed || s.bMedical == 0) continue;
+		return true;
+	}
+	return false;
+}
+
+
 static void DetermineBandageButtonState(void)
 {
-  INT32 i;
-	OBJECTTYPE *pKit = NULL;
-	BOOLEAN fFound = FALSE;
-
-	//Does anyone need bandaging?
-	for( i = 0; i < gpAR->ubMercs; i++ )
+	wchar_t const* help;
+	bool           enable = false;
+	if (!IsAnybodyWounded()) // Does anyone need bandaging?
 	{
-		if( gpMercs[ i ].pSoldier->bBleeding && gpMercs[ i ].pSoldier->bLife )
-		{
-			fFound = TRUE;
-			break;
-		}
+		help = gzLateLocalizedString[11];
 	}
-	if( !fFound )
-	{
-		DisableButton( gpAR->iButton[ BANDAGE_BUTTON ] );
-		SetButtonFastHelpText( gpAR->iButton[ BANDAGE_BUTTON ], gzLateLocalizedString[ 11 ] );
-		return;
+	else if (!CanAnybodyBandage()) // Do we have any doctors?
+	{	// No doctors
+		help = gzLateLocalizedString[8];
 	}
-
-	//Do we have any doctors?
-	fFound = FALSE;
-	for( i = 0; i < gpAR->ubMercs; i++ )
-	{
-		if( gpMercs[ i ].pSoldier->bLife >= OKLIFE &&
-			  !gpMercs[ i ].pSoldier->bCollapsed &&
-				gpMercs[ i ].pSoldier->bMedical > 0 )
-		{
-			fFound = TRUE;
-		}
+	else if (!FindMedicalKit()) // Do have a kit?
+	{ // No kits
+		help = gzLateLocalizedString[9];
 	}
-	if( !fFound )
-	{	//No doctors
-		DisableButton( gpAR->iButton[ BANDAGE_BUTTON ] );
-		SetButtonFastHelpText( gpAR->iButton[ BANDAGE_BUTTON ], gzLateLocalizedString[ 8 ] );
-		return;
+	else
+	{ // Allow bandaging
+		help   = gzLateLocalizedString[12];
+		enable = true;
 	}
-
-	//Do have a kit?
-	pKit = FindMedicalKit();
-	if( !pKit )
-	{ //No kits
-		DisableButton( gpAR->iButton[ BANDAGE_BUTTON ] );
-		SetButtonFastHelpText( gpAR->iButton[ BANDAGE_BUTTON ], gzLateLocalizedString[ 9 ] );
-		return;
-	}
-
-	//Allow bandaging.
-	EnableButton( gpAR->iButton[ BANDAGE_BUTTON ] );
-	SetButtonFastHelpText( gpAR->iButton[ BANDAGE_BUTTON ], gzLateLocalizedString[ 12 ] );
+	GUI_BUTTON* const b = gpAR->iButton[BANDAGE_BUTTON];
+	enable ? EnableButton(b) : DisableButton(b);
+	SetButtonFastHelpText(b, help);
 }
 
 
