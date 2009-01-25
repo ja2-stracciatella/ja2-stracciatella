@@ -280,6 +280,9 @@ SOLDIERCELL *gpEnemies = NULL;
 #define FOR_ALL_AR_CIVS(iter) \
 	for (SOLDIERCELL* iter = gpCivs, *const iter##__end = &gpCivs[gpAR->ubCivs]; iter != iter##__end; ++iter)
 
+#define FOR_ALL_AR_ENEMIES(iter) \
+	for (SOLDIERCELL* iter = gpEnemies, *const iter##__end = &gpEnemies[gpAR->ubEnemies]; iter != iter##__end; ++iter)
+
 
 //Simple wrappers for autoresolve sounds that are played.
 static void PlayAutoResolveSample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
@@ -299,13 +302,11 @@ static void EliminateAllMercs(void)
 	SOLDIERCELL *pAttacker = NULL;
 	if( gpAR )
 	{
-		for (INT32 i = 0; i < gpAR->ubEnemies; i++)
+		FOR_ALL_AR_ENEMIES(i)
 		{
-			if( gpEnemies[ i ].pSoldier->bLife )
-			{
-				pAttacker = &gpEnemies[ i ];
-				break;
-			}
+			if (i->pSoldier->bLife == 0) continue;
+			pAttacker = i;
+			break;
 		}
 		if( pAttacker )
 		{
@@ -345,7 +346,6 @@ static void EliminateAllFriendlies(void)
 void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 {
 	SECTORINFO *pSector;
-	INT32 i;
 	UINT8 ubNumEnemies[ NUM_ENEMY_RANKS ];
 	UINT8 ubRankIndex;
 
@@ -363,7 +363,7 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 
 		for ( ubRankIndex = 0; ubRankIndex < NUM_ENEMY_RANKS; ubRankIndex++ )
 		{
-			for ( i = 0; i < ubNumEnemies[ ubRankIndex ]; i++ )
+			for (INT32 i = 0; i < ubNumEnemies[ubRankIndex]; ++i)
 			{
 				HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_ENEMY_KILLED, ubSectorX, ubSectorY, 0 );
 				TrackEnemiesKilled( ENEMY_KILLED_IN_AUTO_RESOLVE, RankIndexToSoldierClass( ubRankIndex ) );
@@ -404,9 +404,9 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 
 	if( gpAR )
 	{
-		for( i = 0; i < gpAR->ubEnemies; i++ )
+		FOR_ALL_AR_ENEMIES(i)
 		{
-			gpEnemies[ i ].pSoldier->bLife = 0;
+			i->pSoldier->bLife = 0;
 		}
 		gpAR->ubAliveEnemies = 0;
 	}
@@ -638,7 +638,6 @@ static void AssociateEnemiesWithStrategicGroups(void)
 	SECTORINFO *pSector;
 	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
 	UINT8 ubNumElitesInGroup, ubNumTroopsInGroup, ubNumAdminsInGroup;
-	INT32 i;
 
 	if( gubEnemyEncounterCode == CREATURE_ATTACK_CODE )
 		return;
@@ -652,26 +651,26 @@ static void AssociateEnemiesWithStrategicGroups(void)
 
 	//Now go through our enemies in the autoresolve array, and assign the ubGroupID to the soldier
 	//Stationary groups have a group ID of 0
-	for( i = 0; i < gpAR->ubEnemies; i++ )
+	FOR_ALL_AR_ENEMIES(i)
 	{
-		if( gpEnemies[ i ].uiFlags & CELL_ELITE && ubNumElites )
+		if (i->uiFlags & CELL_ELITE && ubNumElites != 0)
 		{
-			gpEnemies[ i ].pSoldier->ubGroupID = 0;
-			gpEnemies[ i ].uiFlags |= CELL_ASSIGNED;
-			ubNumElites--;
+			--ubNumElites;
 		}
-		else if( gpEnemies[ i ].uiFlags & CELL_TROOP && ubNumTroops )
+		else if (i->uiFlags & CELL_TROOP && ubNumTroops != 0)
 		{
-			gpEnemies[ i ].pSoldier->ubGroupID = 0;
-			gpEnemies[ i ].uiFlags |= CELL_ASSIGNED;
-			ubNumTroops--;
+			--ubNumTroops;
 		}
-		else if( gpEnemies[ i ].uiFlags & CELL_ADMIN && ubNumAdmins )
+		else if (i->uiFlags & CELL_ADMIN && ubNumAdmins != 0)
 		{
-			gpEnemies[ i ].pSoldier->ubGroupID = 0;
-			gpEnemies[ i ].uiFlags |= CELL_ASSIGNED;
-			ubNumAdmins--;
+			--ubNumAdmins;
 		}
+		else
+		{
+			continue;
+		}
+		i->uiFlags             |= CELL_ASSIGNED;
+		i->pSoldier->ubGroupID  = 0;
 	}
 
 	ubNumAdmins = gpAR->ubAdmins - pSector->ubNumAdmins;
@@ -692,32 +691,31 @@ static void AssociateEnemiesWithStrategicGroups(void)
 			ubNumElitesInGroup = pGroup->pEnemyGroup->ubNumElites;
 			ubNumTroopsInGroup = pGroup->pEnemyGroup->ubNumTroops;
 			ubNumAdminsInGroup = pGroup->pEnemyGroup->ubNumAdmins;
-			for( i = 0; i < gpAR->ubEnemies; i++ )
+			FOR_ALL_AR_ENEMIES(i)
 			{
-				if( !(gpEnemies[ i ].uiFlags & CELL_ASSIGNED) )
+				if (i->uiFlags & CELL_ASSIGNED) continue;
+
+				if (ubNumElites != 0 && ubNumElitesInGroup != 0)
 				{
-					if( ubNumElites && ubNumElitesInGroup )
-					{
-						gpEnemies[ i ].pSoldier->ubGroupID = pGroup->ubGroupID;
-						gpEnemies[ i ].uiFlags |= CELL_ASSIGNED;
-						ubNumElites--;
-						ubNumElitesInGroup--;
-					}
-					else if( ubNumTroops && ubNumTroopsInGroup )
-					{
-						gpEnemies[ i ].pSoldier->ubGroupID = pGroup->ubGroupID;
-						gpEnemies[ i ].uiFlags |= CELL_ASSIGNED;
-						ubNumTroops--;
-						ubNumTroopsInGroup--;
-					}
-					else if( ubNumAdmins && ubNumAdminsInGroup )
-					{
-						gpEnemies[ i ].pSoldier->ubGroupID = pGroup->ubGroupID;
-						gpEnemies[ i ].uiFlags |= CELL_ASSIGNED;
-						ubNumAdmins--;
-						ubNumAdminsInGroup--;
-					}
+					--ubNumElites;
+					--ubNumElitesInGroup;
 				}
+				else if (ubNumTroops != 0 && ubNumTroopsInGroup != 0)
+				{
+					--ubNumTroops;
+					--ubNumTroopsInGroup;
+				}
+				else if (ubNumAdmins != 0 && ubNumAdminsInGroup != 0)
+				{
+					--ubNumAdmins;
+					--ubNumAdminsInGroup;
+				}
+				else
+				{
+					continue;
+				}
+				i->uiFlags             |= CELL_ASSIGNED;
+				i->pSoldier->ubGroupID  = pGroup->ubGroupID;
 			}
 		}
 	}
@@ -1307,12 +1305,10 @@ static void RenderAutoResolve(void)
 			if (!(i->uiFlags & CELL_DIRTY)) continue;
 			RenderSoldierCell(i);
 		}
-		for (INT32 i = 0; i < gpAR->ubEnemies; ++i)
+		FOR_ALL_AR_ENEMIES(i)
 		{
-			if( gpEnemies[ i ].uiFlags & CELL_DIRTY )
-			{
-				RenderSoldierCell( &gpEnemies[ i ] );
-			}
+			if (!(i->uiFlags & CELL_DIRTY)) continue;
+			RenderSoldierCell(i);
 		}
 		return;
 	}
@@ -1328,9 +1324,9 @@ static void RenderAutoResolve(void)
 	{
 		RenderSoldierCell(i);
 	}
-	for (INT32 i = 0; i < gpAR->ubEnemies; ++i)
+	FOR_ALL_AR_ENEMIES(i)
 	{
-		RenderSoldierCell( &gpEnemies[ i ] );
+		RenderSoldierCell(i);
 	}
 
 	//Render the titles
@@ -2892,13 +2888,11 @@ static void DetermineTeamLeader(BOOLEAN fFriendlyTeam)
 	}
 	//ENEMY TEAM
 	gpAR->ubEnemyLeadership = 0;
-	for (INT32 i = 0; i < gpAR->ubEnemies; i++)
+	FOR_ALL_AR_ENEMIES(i)
 	{
-		if( gpEnemies[ i ].pSoldier->bLeadership > gpAR->ubEnemyLeadership )
-		{
-			gpAR->ubEnemyLeadership = gpEnemies[ i ].pSoldier->bLeadership;
-			pBestLeaderCell = &gpEnemies[ i ];
-		}
+		if (gpAR->ubEnemyLeadership >= i->pSoldier->bLeadership) continue;
+		gpAR->ubEnemyLeadership = i->pSoldier->bLeadership;
+		pBestLeaderCell         = i;
 	}
 	if( pBestLeaderCell )
 	{
@@ -2921,7 +2915,6 @@ static void ResetNextAttackCounter(SOLDIERCELL* pCell)
 
 static void CalculateAttackValues(void)
 {
-	INT32 i;
 	SOLDIERCELL *pCell;
 	SOLDIERTYPE *pSoldier;
 	UINT16 usBonus;
@@ -2940,7 +2933,7 @@ static void CalculateAttackValues(void)
 	//	sOutnumberBonus = (INT16)MIN( sOutnumberBonus, MAX( sMaxBonus, 0 ) );
 	//}
 
-	for( i = 0; i < gpAR->ubMercs; i++ )
+	for (INT32 i = 0; i < gpAR->ubMercs; i++)
 	{
 		pCell = &gpMercs[ i ];
 		pSoldier = pCell->pSoldier;
@@ -2994,7 +2987,7 @@ static void CalculateAttackValues(void)
 			usBestAttack = pCell->usNextAttack;
 	}
 	//CIVS
-	for( i = 0; i < gpAR->ubCivs; i++ )
+	for (INT32 i = 0; i < gpAR->ubCivs; i++)
 	{
 		pCell = &gpCivs[ i ];
 		pSoldier = pCell->pSoldier;
@@ -3041,7 +3034,7 @@ static void CalculateAttackValues(void)
 	//	sOutnumberBonus = (INT16)MIN( sOutnumberBonus, MAX( sMaxBonus, 0 ) );
 	//}
 
-	for( i = 0; i < gpAR->ubEnemies; i++ )
+	for (INT32 i = 0; i < gpAR->ubEnemies; i++)
 	{
 		pCell = &gpEnemies[ i ];
 		pSoldier = pCell->pSoldier;
@@ -3090,8 +3083,10 @@ static void CalculateAttackValues(void)
 	{
 		i->usNextAttack -= usBestAttack;
 	}
-	for( i = 0; i < gpAR->ubEnemies; i++ )
-		gpEnemies[ i ].usNextAttack -= usBestAttack;
+	FOR_ALL_AR_ENEMIES(i)
+	{
+		i->usNextAttack -= usBestAttack;
+	}
 }
 
 
@@ -3789,20 +3784,18 @@ static BOOLEAN IsBattleOver(void)
 				gpAR->ubAliveMercs--;
 			}
 		}
-		for (INT32 i = 0; i < gpAR->ubEnemies; i++)
+		FOR_ALL_AR_ENEMIES(i)
 		{
-			if( gpEnemies[ i ].pSoldier->bLife )
+			if (i->pSoldier->bLife == 0) continue;
+			if (gubEnemyEncounterCode != CREATURE_ATTACK_CODE)
 			{
-				if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
-				{
-					DoMercBattleSound( gpEnemies[ i ].pSoldier, BATTLE_SOUND_LAUGH1 );
-				}
-				else
-				{
-					PlayJA2Sample(ACR_EATFLESH, 50, 1, MIDDLEPAN);
-				}
-				break;
+				DoMercBattleSound(i->pSoldier, BATTLE_SOUND_LAUGH1);
 			}
+			else
+			{
+				PlayJA2Sample(ACR_EATFLESH, 50, 1, MIDDLEPAN);
+			}
+			break;
 		}
 		gpAR->ubBattleStatus = BATTLE_DEFEAT;
 	}
@@ -3861,12 +3854,10 @@ static BOOLEAN AttemptPlayerCapture(void)
 	}
 	//make sure that these enemies are actually concious!
 	iConciousEnemies = 0;
-	for (INT32 i = 0; i < gpAR->ubEnemies; i++)
+	FOR_ALL_AR_ENEMIES(i)
 	{
-		if( gpEnemies[ i ].pSoldier->bLife >= OKLIFE )
-		{
-			iConciousEnemies++;
-		}
+		if (i->pSoldier->bLife < OKLIFE) continue;
+		++iConciousEnemies;
 	}
 	if( iConciousEnemies < gpAR->ubAliveMercs * 2 )
 	{
@@ -4056,8 +4047,8 @@ static void ProcessBattleFrame(void)
 			i->uiFlags &= ~CELL_PROCESSED;
 		FOR_ALL_AR_CIVS(i)
 			i->uiFlags &= ~CELL_PROCESSED;
-		for (INT32 i = 0; i < gpAR->ubEnemies; i++)
-			gpEnemies[ i ].uiFlags &= ~CELL_PROCESSED;
+		FOR_ALL_AR_ENEMIES(i)
+			i->uiFlags &= ~CELL_PROCESSED;
 		while( --iTotal )
 		{
 			INT32 cnt;
