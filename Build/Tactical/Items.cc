@@ -1295,7 +1295,8 @@ INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem)
 	return( ITEM_NOT_FOUND );
 }
 
-INT8 FindAttachmentByClass( OBJECTTYPE * pObj, UINT32 uiItemClass )
+
+INT8 FindAttachmentByClass(OBJECTTYPE const* const pObj, UINT32 const uiItemClass)
 {
 	INT8	bLoop;
 

@@ -1381,60 +1381,35 @@ INT8 MinAPsToStartMovement(const SOLDIERTYPE* pSoldier, UINT16 usMovementMode)
 	return( bAPs );
 }
 
-BOOLEAN EnoughAmmo( SOLDIERTYPE *pSoldier, BOOLEAN fDisplay, INT8 bInvPos )
+
+BOOLEAN EnoughAmmo(SOLDIERTYPE* const s, BOOLEAN const fDisplay, INT8 const inv_pos)
 {
-	if ( pSoldier->inv[ bInvPos ].usItem != NOTHING )
+	OBJECTTYPE const& o        = s->inv[inv_pos];
+	UINT16     const  item_idx = o.usItem;
+	if (item_idx == NOTHING) return FALSE;
+
+	if (s->bWeaponMode == WM_ATTACHED) return TRUE;
+
+	// hack... they turn empty afterwards anyways
+	if (item_idx == ROCKET_LAUNCHER) return TRUE;
+
+	INVTYPE const& item = Item[item_idx];
+	if (item.usItemClass == IC_LAUNCHER || item_idx == TANK_CANNON)
 	{
-		if ( pSoldier->bWeaponMode == WM_ATTACHED )
-		{
-			return( TRUE );
-		}
-		else
-		{
-			if ( pSoldier->inv[ bInvPos ].usItem == ROCKET_LAUNCHER )
-			{
-				// hack... they turn empty afterwards anyways
-				return( TRUE );
-			}
-
-			if (Item[ pSoldier->inv[ bInvPos ].usItem ].usItemClass == IC_LAUNCHER || pSoldier->inv[ bInvPos ].usItem == TANK_CANNON )
-			{
-				if ( FindAttachmentByClass( &(pSoldier->inv[ bInvPos ]), IC_GRENADE ) != ITEM_NOT_FOUND )
-				{
-					return( TRUE );
-				}
-
-				// ATE: Did an else if here...
-				if ( FindAttachmentByClass( &(pSoldier->inv[ bInvPos ]), IC_BOMB ) != ITEM_NOT_FOUND )
-				{
-					return( TRUE );
-				}
-
-				if ( fDisplay )
-				{
-					TacticalCharacterDialogue( pSoldier, QUOTE_OUT_OF_AMMO );
-				}
-
-				return( FALSE );
-			}
-			else if (Item[ pSoldier->inv[ bInvPos ].usItem ].usItemClass == IC_GUN)
-			{
-				if ( pSoldier->inv[ bInvPos ].ubGunShotsLeft == 0 )
-				{
-					if ( fDisplay )
-					{
-						TacticalCharacterDialogue( pSoldier, QUOTE_OUT_OF_AMMO );
-					}
-					return( FALSE );
-				}
-			}
-		}
-
-		return( TRUE );
+		if (FindAttachmentByClass(&o, IC_GRENADE) != ITEM_NOT_FOUND) return TRUE;
+		if (FindAttachmentByClass(&o, IC_BOMB)    != ITEM_NOT_FOUND) return TRUE;
+	}
+	else if (item.usItemClass == IC_GUN)
+	{
+		if (o.ubGunShotsLeft != 0) return TRUE;
+	}
+	else
+	{
+		return TRUE;
 	}
 
-	return( FALSE );
-
+	if (fDisplay) TacticalCharacterDialogue(s, QUOTE_OUT_OF_AMMO);
+	return FALSE;
 }
 
 

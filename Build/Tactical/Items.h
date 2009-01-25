@@ -127,7 +127,7 @@ INT8 FindAmmoToReload( SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExcludeSlot
 
 void SwapHandItems( SOLDIERTYPE * pSoldier );
 
-INT8 FindAttachmentByClass( OBJECTTYPE * pObj, UINT32 uiItemClass );
+INT8 FindAttachmentByClass(OBJECTTYPE const*, UINT32 uiItemClass);
 void RemoveObjs( OBJECTTYPE * pObj, UINT8 ubNumberToRemove );
 
 void WaterDamage( SOLDIERTYPE *pSoldier );
