@@ -274,6 +274,10 @@ SOLDIERCELL *gpCivs = NULL;
 SOLDIERCELL *gpEnemies = NULL;
 
 
+#define FOR_ALL_AR_MERCS(iter) \
+	for (SOLDIERCELL* iter = gpMercs, *const iter##__end = &gpMercs[gpAR->ubMercs]; iter != iter##__end; ++iter)
+
+
 //Simple wrappers for autoresolve sounds that are played.
 static void PlayAutoResolveSample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
 {
@@ -290,10 +294,9 @@ extern void ClearPreviousAIGroupAssignment( GROUP *pGroup );
 static void EliminateAllMercs(void)
 {
 	SOLDIERCELL *pAttacker = NULL;
-	INT32 i, iNum = 0;
 	if( gpAR )
 	{
-		for( i = 0; i < gpAR->ubEnemies; i++ )
+		for (INT32 i = 0; i < gpAR->ubEnemies; i++)
 		{
 			if( gpEnemies[ i ].pSoldier->bLife )
 			{
@@ -303,16 +306,16 @@ static void EliminateAllMercs(void)
 		}
 		if( pAttacker )
 		{
-			for( i = 0; i < gpAR->ubMercs; i++ )
+			INT32 iNum = 0;
+			FOR_ALL_AR_MERCS(i)
 			{
-				if( gpMercs[ i ].pSoldier->bLife )
-				{
-					iNum++;
-					gpMercs[ i ].pSoldier->bLife = 1;
-					gpMercs[ i ].usNextHit[0] = (UINT16)(250 * iNum);
-					gpMercs[ i ].usHitDamage[0] = 100;
-					gpMercs[ i ].pAttacker[0] = pAttacker;
-				}
+				SOLDIERTYPE& s = *i->pSoldier;
+				if (s.bLife == 0) continue;
+
+				s.bLife           = 1;
+				i->usNextHit[0]   = 250 * ++iNum;
+				i->usHitDamage[0] = 100;
+				i->pAttacker[0]   = pAttacker;
 			}
 		}
 	}
@@ -321,15 +324,14 @@ static void EliminateAllMercs(void)
 
 static void EliminateAllFriendlies(void)
 {
-	INT32 i;
 	if( gpAR )
 	{
-		for( i = 0; i < gpAR->ubMercs; i++ )
+		FOR_ALL_AR_MERCS(i)
 		{
-			gpMercs[ i ].pSoldier->bLife = 0;
+			i->pSoldier->bLife = 0;
 		}
 		gpAR->ubAliveMercs = 0;
-		for( i = 0; i < gpAR->ubCivs; i++ )
+		for (INT32 i = 0; i < gpAR->ubCivs; i++)
 		{
 			gpCivs[ i ].pSoldier->bLife = 0;
 		}
@@ -1172,17 +1174,14 @@ UINT32 VirtualSoldierDressWound(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVictim, OBJ
 
 static OBJECTTYPE* FindMedicalKit(void)
 {
-	INT32 i;
-	INT32 iSlot;
-	for( i = 0; i < gpAR->ubMercs; i++ )
+	FOR_ALL_AR_MERCS(i)
 	{
-		iSlot = FindObjClass( gpMercs[ i ].pSoldier, IC_MEDKIT );
-		if( iSlot != NO_SLOT )
-		{
-			return( &gpMercs[ i ].pSoldier->inv[ iSlot ] );
-		}
+		SOLDIERTYPE& s = *i->pSoldier;
+		INT32 const slot = FindObjClass(&s, IC_MEDKIT);
+		if (slot == NO_SLOT) continue;
+		return &s.inv[slot];
 	}
-	return NULL;
+	return 0;
 }
 
 
@@ -1196,9 +1195,9 @@ static void AutoBandageMercs(void)
 	// Do we have any doctors?  If so, bandage selves first.
 	UINT32       max_points_used = 0; // XXX write-only, should probably be assigned to parallel_points_used
 	SOLDIERTYPE* best            = 0;
-	for (INT32 i = 0; i != gpAR->ubMercs; ++i)
+	FOR_ALL_AR_MERCS(i)
 	{
-		SOLDIERTYPE& s = *gpMercs[i].pSoldier;
+		SOLDIERTYPE& s = *i->pSoldier;
 		if (s.bLife < OKLIFE) continue;
 		if (s.bCollapsed)     continue;
 		if (s.bMedical == 0)  continue;
@@ -1233,9 +1232,9 @@ static void AutoBandageMercs(void)
 
 	UINT32 parallel_points_used = 0;
 	bool   complete             = true;
-	for (INT32 i = 0; i != gpAR->ubMercs; ++i)
+	FOR_ALL_AR_MERCS(i)
 	{
-		SOLDIERTYPE& s = *gpMercs[i].pSoldier;
+		SOLDIERTYPE& s = *i->pSoldier;
 		while (s.bBleeding != 0 && s.bLife != 0)
 		{ // This merc needs medical attention
 			if (!kit)
@@ -1295,12 +1294,10 @@ static void RenderAutoResolve(void)
 
 	if( !gpAR->fRenderAutoResolve && !gpAR->fDebugInfo )
 	{ //update the dirty cells only
-		for (INT32 i = 0; i < gpAR->ubMercs; ++i)
+		FOR_ALL_AR_MERCS(i)
 		{
-			if( gpMercs[ i ].uiFlags & CELL_DIRTY )
-			{
-				RenderSoldierCell( &gpMercs[ i ] );
-			}
+			if (!(i->uiFlags & CELL_DIRTY)) continue;
+			RenderSoldierCell(i);
 		}
 		for (INT32 i = 0; i < gpAR->ubCivs; ++i)
 		{
@@ -1322,9 +1319,9 @@ static void RenderAutoResolve(void)
 
 	BltVideoSurface(FRAME_BUFFER, gpAR->iInterfaceBuffer, gpAR->rect.x, gpAR->rect.y, 0);
 
-	for (INT32 i = 0; i < gpAR->ubMercs; ++i)
+	FOR_ALL_AR_MERCS(i)
 	{
-		RenderSoldierCell( &gpMercs[ i ] );
+		RenderSoldierCell(i);
 	}
 	for (INT32 i = 0; i < gpAR->ubCivs; ++i)
 	{
@@ -1629,9 +1626,8 @@ static void CreateAutoResolveInterface(void)
 	ar->iIndent = AddVideoObjectFromFile("Interface/indent.sti");
 
 	// Add all the faces now
-	for (INT32 i = 0; i < ar->ubMercs; ++i)
+	FOR_ALL_AR_MERCS(cell)
 	{
-		SOLDIERCELL* const cell = &gpMercs[i];
 		//Load the face
 		SGPFILENAME ImageFile;
 		sprintf(ImageFile, "Faces/65Face/%02d.sti", GetProfile(cell->pSoldier->ubProfile)->ubFaceIndex);
@@ -1760,9 +1756,9 @@ static void CreateAutoResolveInterface(void)
 
 static bool IsAnybodyWounded()
 {
-	for (INT32 i = 0; i != gpAR->ubMercs; ++i)
+	FOR_ALL_AR_MERCS(i)
 	{
-		SOLDIERTYPE const& s = *gpMercs[i].pSoldier;
+		SOLDIERTYPE const& s = *i->pSoldier;
 		if (s.bBleeding == 0 || s.bLife == 0) continue;
 		return true;
 	}
@@ -2053,17 +2049,14 @@ static void RetreatButtonCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		INT32 i;
-		for( i = 0; i < gpAR->ubMercs; i++ )
+		FOR_ALL_AR_MERCS(i)
 		{
-			if( !(gpMercs[ i ].uiFlags & (CELL_RETREATING|CELL_RETREATED)) )
-			{
-				gpMercs[ i ].uiFlags |= CELL_RETREATING | CELL_DIRTY;
-				//Gets to retreat after a total of 2 attacks.
-				gpMercs[ i ].usNextAttack = (UINT16)((1000 + gpMercs[ i ].usNextAttack * 2 + PreRandom( 2000 - gpMercs[ i ].usAttack ))*2);
-				gpAR->usPlayerAttack -= gpMercs[ i ].usAttack;
-				gpMercs[ i ].usAttack = 0;
-			}
+			if (i->uiFlags & (CELL_RETREATING | CELL_RETREATED)) continue;
+			i->uiFlags           |= CELL_RETREATING | CELL_DIRTY;
+			// Gets to retreat after a total of 2 attacks.
+			i->usNextAttack       = (1000 + i->usNextAttack * 2 + PreRandom(2000 - i->usAttack)) * 2;
+			gpAR->usPlayerAttack -= i->usAttack;
+			i->usAttack           = 0;
 		}
 		if( gpAR->pRobotCell )
 		{ //if robot is retreating, set the retreat time to be the same as the robot's controller.
@@ -2075,13 +2068,12 @@ static void RetreatButtonCallback(GUI_BUTTON* btn, INT32 reason)
 				gpAR->pRobotCell->usNextAttack = 0xffff;
 				return;
 			}
-			for( i = 0; i < gpAR->ubMercs; i++ )
+			FOR_ALL_AR_MERCS(i)
 			{
-				if (robot_controller == gpMercs[i].pSoldier)
-				{ //Found the controller, make the robot's retreat time match the contollers.
-					gpAR->pRobotCell->usNextAttack = gpMercs[ i ].usNextAttack;
-					return;
-				}
+				if (robot_controller != i->pSoldier) continue;
+				// Found the controller, make the robot's retreat time match the contollers.
+				gpAR->pRobotCell->usNextAttack = i->usNextAttack;
+				return;
 			}
 		}
 	}
@@ -2090,9 +2082,9 @@ static void RetreatButtonCallback(GUI_BUTTON* btn, INT32 reason)
 
 static bool CanAnybodyBandage()
 {
-	for (INT32 i = 0; i != gpAR->ubMercs; ++i)
+	FOR_ALL_AR_MERCS(i)
 	{
-		SOLDIERTYPE const& s = *gpMercs[i].pSoldier;
+		SOLDIERTYPE const& s = *i->pSoldier;
 		if (s.bLife < OKLIFE || s.bCollapsed || s.bMedical == 0) continue;
 		return true;
 	}
@@ -2152,11 +2144,10 @@ static void DoneButtonCallback(GUI_BUTTON* btn, INT32 reason)
 // Find the merc with the same region.
 static SOLDIERCELL* GetCell(MOUSE_REGION const* const reg)
 {
-	for (INT32 i = 0; i != gpAR->ubMercs; ++i)
+	FOR_ALL_AR_MERCS(i)
 	{
-		SOLDIERCELL& c = gpMercs[i];
-		if (&c.pRegion->Base() != reg) continue;
-		return &c;
+		if (&i->pRegion->Base() != reg) continue;
+		return i;
 	}
 	throw std::logic_error("Region does not belong to a soldier cell");
 }
@@ -2872,22 +2863,19 @@ static void CreateTempPlayerMerc(void)
 
 static void DetermineTeamLeader(BOOLEAN fFriendlyTeam)
 {
-	INT32 i;
 	SOLDIERCELL *pBestLeaderCell = NULL;
 	//For each team (civs and players count as same team), find the merc with the best
 	//leadership ability.
 	if( fFriendlyTeam )
 	{
 		gpAR->ubPlayerLeadership = 0;
-		for( i = 0; i < gpAR->ubMercs; i++ )
+		FOR_ALL_AR_MERCS(i)
 		{
-			if( gpMercs[ i ].pSoldier->bLeadership > gpAR->ubPlayerLeadership )
-			{
-				gpAR->ubPlayerLeadership = gpMercs[ i ].pSoldier->bLeadership;
-				pBestLeaderCell = &gpMercs[ i ];
-			}
+			if (gpAR->ubPlayerLeadership >= i->pSoldier->bLeadership) continue;
+			gpAR->ubPlayerLeadership = i->pSoldier->bLeadership;
+			pBestLeaderCell          = i;
 		}
-		for( i = 0; i < gpAR->ubCivs; i++ )
+		for (INT32 i = 0; i < gpAR->ubCivs; i++)
 		{
 			if( gpCivs[ i ].pSoldier->bLeadership > gpAR->ubPlayerLeadership )
 			{
@@ -2905,7 +2893,7 @@ static void DetermineTeamLeader(BOOLEAN fFriendlyTeam)
 	}
 	//ENEMY TEAM
 	gpAR->ubEnemyLeadership = 0;
-	for( i = 0; i < gpAR->ubEnemies; i++ )
+	for (INT32 i = 0; i < gpAR->ubEnemies; i++)
 	{
 		if( gpEnemies[ i ].pSoldier->bLeadership > gpAR->ubEnemyLeadership )
 		{
@@ -3095,8 +3083,10 @@ static void CalculateAttackValues(void)
 	//Now, because we are starting a new battle, we want to get the ball rolling a bit earlier.  So,
 	//we will take the usBestAttack value and subtract 60% of it from everybody's next attack.
 	usBestAttack = usBestAttack * 60 / 100;
-	for( i = 0; i < gpAR->ubMercs; i++ )
-		gpMercs[ i ].usNextAttack -= usBestAttack;
+	FOR_ALL_AR_MERCS(i)
+	{
+		i->usNextAttack -= usBestAttack;
+	}
 	for( i = 0; i < gpAR->ubCivs; i++ )
 		gpCivs[ i ].usNextAttack -= usBestAttack;
 	for( i = 0; i < gpAR->ubEnemies; i++ )
@@ -3743,25 +3733,21 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 
 static BOOLEAN IsBattleOver(void)
 {
-	INT32 i;
 	INT32 iNumInvolvedMercs = 0;
 	INT32 iNumMercsRetreated = 0;
 	BOOLEAN fOnlyEPCsLeft = TRUE;
 	if( gpAR->ubBattleStatus != BATTLE_IN_PROGRESS )
 		return TRUE;
-	for( i = 0; i < gpAR->ubMercs; i++ )
+	FOR_ALL_AR_MERCS(i)
 	{
-		if( !(gpMercs[ i ].uiFlags & CELL_RETREATED) && gpMercs[ i ].pSoldier->bLife )
+		if (i->uiFlags & CELL_RETREATED)
 		{
-			if( !(gpMercs[ i ].uiFlags & CELL_EPC) )
-			{
-				fOnlyEPCsLeft = FALSE;
-				iNumInvolvedMercs++;
-			}
+			++iNumMercsRetreated;
 		}
-		if( gpMercs[ i ].uiFlags & CELL_RETREATED )
+		else if (i->pSoldier->bLife != 0 && !(i->uiFlags & CELL_EPC))
 		{
-			iNumMercsRetreated++;
+			fOnlyEPCsLeft = FALSE;
+			iNumInvolvedMercs++;
 		}
 	}
 	if( gpAR->pRobotCell )
@@ -3794,17 +3780,15 @@ static BOOLEAN IsBattleOver(void)
 	{ //DEFEAT
 		if( fOnlyEPCsLeft )
 		{ //Kill the EPCs.
-			for( i = 0; i < gpAR->ubMercs; i++ )
+			FOR_ALL_AR_MERCS(i)
 			{
-				if( gpMercs[ i ].uiFlags & CELL_EPC )
-				{
-					DoMercBattleSound( gpMercs[ i ].pSoldier, BATTLE_SOUND_DIE1 );
-					gpMercs[ i ].pSoldier->bLife = 0;
-					gpAR->ubAliveMercs--;
-				}
+				if (!(i->uiFlags & CELL_EPC)) continue;
+				DoMercBattleSound(i->pSoldier, BATTLE_SOUND_DIE1);
+				i->pSoldier->bLife = 0;
+				gpAR->ubAliveMercs--;
 			}
 		}
-		for( i = 0; i < gpAR->ubEnemies; i++ )
+		for (INT32 i = 0; i < gpAR->ubEnemies; i++)
 		{
 			if( gpEnemies[ i ].pSoldier->bLife )
 			{
@@ -3842,7 +3826,6 @@ static void SetupSurrenderInterface(void);
 
 static BOOLEAN AttemptPlayerCapture(void)
 {
-	INT32 i;
 	BOOLEAN fConcious;
 	INT32 iConciousEnemies;
 
@@ -3877,7 +3860,7 @@ static BOOLEAN AttemptPlayerCapture(void)
 	}
 	//make sure that these enemies are actually concious!
 	iConciousEnemies = 0;
-	for( i = 0; i < gpAR->ubEnemies; i++ )
+	for (INT32 i = 0; i < gpAR->ubEnemies; i++)
 	{
 		if( gpEnemies[ i ].pSoldier->bLife >= OKLIFE )
 		{
@@ -3893,21 +3876,13 @@ static BOOLEAN AttemptPlayerCapture(void)
 	//wounded and/or unconcious.  If any are concious, we will prompt for a surrender, otherwise,
 	//it is automatic.
 	fConcious = FALSE;
-	for( i = 0; i < gpAR->ubMercs; i++ )
+	FOR_ALL_AR_MERCS(i)
 	{
 		//if any of the 2 or 3 mercs has more than 60% life, then return.
-		if( gpMercs[ i ].uiFlags & CELL_ROBOT )
-		{
-			return FALSE;
-		}
-		if( gpMercs[ i ].pSoldier->bLife*100 > gpMercs[ i ].pSoldier->bLifeMax*60 )
-		{
-			return FALSE;
-		}
-		if( gpMercs[ i ].pSoldier->bLife >= OKLIFE )
-		{
-			fConcious = TRUE;
-		}
+		if (i->uiFlags & CELL_ROBOT) return FALSE;
+		SOLDIERTYPE const& s = *i->pSoldier;
+		if (s.bLife * 100 > s.bLifeMax * 60) return FALSE;
+		if (s.bLife >= OKLIFE) fConcious = TRUE;
 	}
 	if( fConcious )
 	{
@@ -3931,7 +3906,6 @@ static BOOLEAN AttemptPlayerCapture(void)
 
 static void SetupDoneInterface(void)
 {
-	INT32 i;
 	gpAR->fRenderAutoResolve = TRUE;
 
 	HideButton( gpAR->iButton[ PAUSE_BUTTON ] );
@@ -3951,9 +3925,9 @@ static void SetupDoneInterface(void)
 		ShowButton( gpAR->iButton[ DONELOSE_BUTTON ] );
 	}
 	DetermineBandageButtonState();
-	for( i = 0; i < gpAR->ubMercs; i++ )
+	FOR_ALL_AR_MERCS(i)
 	{ //So they can't retreat!
-		gpMercs[i].pRegion->Disable();
+		i->pRegion->Disable();
 	}
 }
 
@@ -4018,7 +3992,6 @@ static void RejectSurrenderCallback(GUI_BUTTON* btn, INT32 reason)
 static void ProcessBattleFrame(void)
 {
 	INT32 iRandom;
-	INT32 i;
 	SOLDIERCELL *pAttacker, *pTarget;
 	UINT32 uiDiff;
 	static INT32 iTimeSlice = 0;
@@ -4078,11 +4051,11 @@ static void ProcessBattleFrame(void)
 		iMercs	 = iMercsLeft		= gpAR->ubMercs;
 		iCivs		 = iCivsLeft		= gpAR->ubCivs;
 		iEnemies = iEnemiesLeft = gpAR->ubEnemies;
-		for( i = 0; i < gpAR->ubMercs; i++ )
-			gpMercs[ i ].uiFlags &= ~CELL_PROCESSED;
-		for( i = 0; i < gpAR->ubCivs; i++ )
+		FOR_ALL_AR_MERCS(i)
+			i->uiFlags &= ~CELL_PROCESSED;
+		for (INT32 i = 0; i < gpAR->ubCivs; i++)
 			gpCivs[ i ].uiFlags &= ~CELL_PROCESSED;
-		for( i = 0; i < gpAR->ubEnemies; i++ )
+		for (INT32 i = 0; i < gpAR->ubEnemies; i++)
 			gpEnemies[ i ].uiFlags &= ~CELL_PROCESSED;
 		while( --iTotal )
 		{
