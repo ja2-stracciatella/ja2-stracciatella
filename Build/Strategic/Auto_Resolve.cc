@@ -277,6 +277,9 @@ SOLDIERCELL *gpEnemies = NULL;
 #define FOR_ALL_AR_MERCS(iter) \
 	for (SOLDIERCELL* iter = gpMercs, *const iter##__end = &gpMercs[gpAR->ubMercs]; iter != iter##__end; ++iter)
 
+#define FOR_ALL_AR_CIVS(iter) \
+	for (SOLDIERCELL* iter = gpCivs, *const iter##__end = &gpCivs[gpAR->ubCivs]; iter != iter##__end; ++iter)
+
 
 //Simple wrappers for autoresolve sounds that are played.
 static void PlayAutoResolveSample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
@@ -331,9 +334,9 @@ static void EliminateAllFriendlies(void)
 			i->pSoldier->bLife = 0;
 		}
 		gpAR->ubAliveMercs = 0;
-		for (INT32 i = 0; i < gpAR->ubCivs; i++)
+		FOR_ALL_AR_CIVS(i)
 		{
-			gpCivs[ i ].pSoldier->bLife = 0;
+			i->pSoldier->bLife = 0;
 		}
 		gpAR->ubAliveCivs = 0;
 	}
@@ -1299,12 +1302,10 @@ static void RenderAutoResolve(void)
 			if (!(i->uiFlags & CELL_DIRTY)) continue;
 			RenderSoldierCell(i);
 		}
-		for (INT32 i = 0; i < gpAR->ubCivs; ++i)
+		FOR_ALL_AR_CIVS(i)
 		{
-			if( gpCivs[ i ].uiFlags & CELL_DIRTY )
-			{
-				RenderSoldierCell( &gpCivs[ i ] );
-			}
+			if (!(i->uiFlags & CELL_DIRTY)) continue;
+			RenderSoldierCell(i);
 		}
 		for (INT32 i = 0; i < gpAR->ubEnemies; ++i)
 		{
@@ -1323,9 +1324,9 @@ static void RenderAutoResolve(void)
 	{
 		RenderSoldierCell(i);
 	}
-	for (INT32 i = 0; i < gpAR->ubCivs; ++i)
+	FOR_ALL_AR_CIVS(i)
 	{
-		RenderSoldierCell( &gpCivs[ i ] );
+		RenderSoldierCell(i);
 	}
 	for (INT32 i = 0; i < gpAR->ubEnemies; ++i)
 	{
@@ -2875,13 +2876,11 @@ static void DetermineTeamLeader(BOOLEAN fFriendlyTeam)
 			gpAR->ubPlayerLeadership = i->pSoldier->bLeadership;
 			pBestLeaderCell          = i;
 		}
-		for (INT32 i = 0; i < gpAR->ubCivs; i++)
+		FOR_ALL_AR_CIVS(i)
 		{
-			if( gpCivs[ i ].pSoldier->bLeadership > gpAR->ubPlayerLeadership )
-			{
-				gpAR->ubPlayerLeadership = gpCivs[ i ].pSoldier->bLeadership;
-				pBestLeaderCell = &gpCivs[ i ];
-			}
+			if (gpAR->ubPlayerLeadership >= i->pSoldier->bLeadership) continue;
+			gpAR->ubPlayerLeadership = i->pSoldier->bLeadership;
+			pBestLeaderCell          = i;
 		}
 
 		if( pBestLeaderCell )
@@ -3087,8 +3086,10 @@ static void CalculateAttackValues(void)
 	{
 		i->usNextAttack -= usBestAttack;
 	}
-	for( i = 0; i < gpAR->ubCivs; i++ )
-		gpCivs[ i ].usNextAttack -= usBestAttack;
+	FOR_ALL_AR_CIVS(i)
+	{
+		i->usNextAttack -= usBestAttack;
+	}
 	for( i = 0; i < gpAR->ubEnemies; i++ )
 		gpEnemies[ i ].usNextAttack -= usBestAttack;
 }
@@ -4053,8 +4054,8 @@ static void ProcessBattleFrame(void)
 		iEnemies = iEnemiesLeft = gpAR->ubEnemies;
 		FOR_ALL_AR_MERCS(i)
 			i->uiFlags &= ~CELL_PROCESSED;
-		for (INT32 i = 0; i < gpAR->ubCivs; i++)
-			gpCivs[ i ].uiFlags &= ~CELL_PROCESSED;
+		FOR_ALL_AR_CIVS(i)
+			i->uiFlags &= ~CELL_PROCESSED;
 		for (INT32 i = 0; i < gpAR->ubEnemies; i++)
 			gpEnemies[ i ].uiFlags &= ~CELL_PROCESSED;
 		while( --iTotal )
