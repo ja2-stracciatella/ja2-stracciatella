@@ -1250,14 +1250,12 @@ static void AutoBandageMercs(void)
 			UINT16 const kit_pts = TotalPoints(kit);
 			if (kit_pts == 0)
 			{
-				kit      = 0;
-				complete = false;
+				kit = 0;
 				continue;
 			}
 			UINT32 const points_used = VirtualSoldierDressWound(best, &s, kit, kit_pts, kit_pts);
 			UseKitPoints(kit, points_used, &s);
 			parallel_points_used += points_used;
-			complete              = true;
 		}
 	}
 	wchar_t const* const msg = complete ? gzLateLocalizedString[13] : gzLateLocalizedString[10];
