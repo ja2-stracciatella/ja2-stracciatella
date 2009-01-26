@@ -3050,7 +3050,7 @@ const wchar_t *pMessageStrings[] =
 	L"US$",					//Abbreviation for US Dollars
 	L"n.a",					//Lowercase acronym for not applicable.
 	L"Inzwischen",		//Meanwhile
-	L"%ls ist angekommen im Sektor %ls%ls", //Name/Squad has arrived in sector A9. Order must not change without notifying SirTech
+	L"%ls ist im Sektor %ls%ls angekommen", //Name/Squad has arrived in sector A9. Order must not change without notifying SirTech
 	L"Version",
 	L"Leerer Quick-Save-Slot",
 	L"Dieser Slot ist nur für Quick-Saves aus den Map Screens und dem Taktik-Bildschirm. Speichern mit ALT+S",
