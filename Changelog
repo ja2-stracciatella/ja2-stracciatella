@@ -1,3 +1,4 @@
+(r5143) Fix a vanilla graphics glitch: The battle sector locator on the strategic map was not fully drawn.
 (r5142) Slightly improve German translation.
 (r5138) Fix a vanilla bug: In turnbased mode it was not possible for a merc to place an explosive on the tile he is currently at.
 (r5082) Fix a vanilla glitch: In the Russian (Agoniya Vlasti) version the plaque on Bobby Ray's page was missing, because the image file is named different than for other languages.
