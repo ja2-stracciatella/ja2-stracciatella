@@ -1895,16 +1895,10 @@ UINT16 GetAPsToDropBomb( SOLDIERTYPE *pSoldier )
 	return( AP_DROP_BOMB );
 }
 
-UINT16 GetTotalAPsToDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+
+UINT16 GetTotalAPsToDropBomb(SOLDIERTYPE* const s, INT16 const sGridNo)
 {
-	INT16 sAPs = PlotPath(pSoldier, sGridNo, NO_COPYROUTE, NO_PLOT, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
-
-	if ( sAPs > 0 )
-	{
-		sAPs += AP_DROP_BOMB;
-	}
-
-	return( sAPs );
+	return GetMovePlusActionAPCosts(s, sGridNo, AP_DROP_BOMB);
 }
 
 

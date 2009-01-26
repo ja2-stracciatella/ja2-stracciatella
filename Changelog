@@ -1,3 +1,4 @@
+(r5138) Fix a vanilla bug: In turnbased mode it was not possible for a merc to place an explosive on the tile he is currently at.
 (r5082) Fix a vanilla glitch: In the Russian (Agoniya Vlasti) version the plaque on Bobby Ray's page was missing, because the image file is named different than for other languages.
 (r5081) Fix a vanilla bug, which allowed recruiting AIM mercs for two weeks at the price for one day.
 (r5072, r5073, r5074) Plug a vanilla memory leak (now a null-pointer access) when loading a new sector and entering the tactical screen from the map screen.
