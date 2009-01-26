@@ -979,32 +979,31 @@ INT32 HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLevel, const 
 }
 
 
-void HandleSoldierDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+void HandleSoldierDropBomb(SOLDIERTYPE* const s, INT16 const sGridNo)
 {
+	OBJECTTYPE& o = s->inv[HANDPOS];
 	// Does this have detonator that needs info?
-	if (IsDetonatorAttached(&pSoldier->inv[HANDPOS]))
+	if (IsDetonatorAttached(&o))
 	{
-		StartBombMessageBox( pSoldier, sGridNo );
+		StartBombMessageBox(s, sGridNo);
 	}
-	else
+	else if (ArmBomb(&o, 0)) // We have something, all we do is place
 	{
-		// We have something... all we do is place...
-		if ( ArmBomb( &(pSoldier->inv[ HANDPOS ]), 0 ) )
-		{
-			// EXPLOSIVES GAIN (25):  Place a bomb, or buried and armed a mine
-			StatChange( pSoldier, EXPLODEAMT, 25, FALSE );
+		// EXPLOSIVES GAIN (25):  Place a bomb, or buried and armed a mine
+		StatChange(s, EXPLODEAMT, 25, FALSE);
 
-			pSoldier->inv[ HANDPOS ].bTrap = __min( 10, ( EffectiveExplosive( pSoldier ) / 20) + (EffectiveExpLevel( pSoldier ) / 3) );
-			pSoldier->inv[ HANDPOS ].ubBombOwner = pSoldier->ubID + 2;
+		INT8 const trap_lvl = EffectiveExplosive(s) / 20 + EffectiveExpLevel(s) / 3;
+		o.bTrap       = __min(trap_lvl, 10);
+		o.ubBombOwner = s->ubID + 2;
 
-			// we now know there is something nasty here
-			gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_PLAYER_MINE_PRESENT;
+		// we now know there is something nasty here
+		gpWorldLevelData[sGridNo].uiFlags |= MAPELEMENT_PLAYER_MINE_PRESENT;
 
-			AddItemToPool( sGridNo, &(pSoldier->inv[ HANDPOS ] ), BURIED, pSoldier->bLevel, WORLD_ITEM_ARMED_BOMB, 0 );
-			DeleteObj( &(pSoldier->inv[ HANDPOS ]) );
-		}
+		AddItemToPool(sGridNo, &o, BURIED, s->bLevel, WORLD_ITEM_ARMED_BOMB, 0);
+		DeleteObj(&o);
 	}
 }
+
 
 void HandleSoldierUseRemote( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
