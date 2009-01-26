@@ -498,6 +498,7 @@ VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK const callback, INT16 const
 		v->uiFontID   = font;
 		v->ubFontFore = foreground;
 		v->ubFontBack = background;
+		wcslcpy(v->zText, text, lengthof(v->zText));
 	}
 	return v;
 }
