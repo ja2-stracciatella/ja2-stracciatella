@@ -170,6 +170,14 @@ BOOLEAN HandleCheckForBadChangeToGetThrough(SOLDIERTYPE* const pSoldier, const S
 }
 
 
+static bool IsDetonatorAttached(OBJECTTYPE const* const o)
+{
+	return
+		FindAttachment(o, DETONATOR)    != ITEM_NOT_FOUND ||
+		FindAttachment(o, REMDETONATOR) != ITEM_NOT_FOUND;
+}
+
+
 static BOOLEAN HandItemWorks(SOLDIERTYPE* pSoldier, INT8 bSlot);
 static void StartBombMessageBox(SOLDIERTYPE* pSoldier, INT16 sGridNo);
 
@@ -789,15 +797,10 @@ INT32 HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLevel, const 
 	if (item->ubCursor == BOMBCURS) fDropBomb = TRUE;
 
 	// Check for a bomb like a mine, that uses a pressure detonator
-	if (item->ubCursor == INVALIDCURS)
+	if (item->ubCursor == INVALIDCURS &&
+			IsDetonatorAttached(&s->inv[s->ubAttackingHand]))
 	{
-		// Found detonator...
-		const OBJECTTYPE* const obj = &s->inv[s->ubAttackingHand];
-		if (FindAttachment(obj, DETONATOR)    != ITEM_NOT_FOUND ||
-				FindAttachment(obj, REMDETONATOR) != ITEM_NOT_FOUND)
-		{
-			fDropBomb = TRUE;
-		}
+		fDropBomb = TRUE;
 	}
 
 	if (fDropBomb)
@@ -979,7 +982,7 @@ INT32 HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLevel, const 
 void HandleSoldierDropBomb( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
 	// Does this have detonator that needs info?
-	if ( FindAttachment( &(pSoldier->inv[ HANDPOS ] ), DETONATOR) != ITEM_NOT_FOUND || FindAttachment( &(pSoldier->inv[ HANDPOS ] ), REMDETONATOR ) != ITEM_NOT_FOUND )
+	if (IsDetonatorAttached(&pSoldier->inv[HANDPOS]))
 	{
 		StartBombMessageBox( pSoldier, sGridNo );
 	}
