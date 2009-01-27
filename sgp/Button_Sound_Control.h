@@ -3,7 +3,7 @@
 
 #include "Button_System.h"
 
-typedef enum ButtonSoundScheme
+enum ButtonSoundScheme
 {
 	BUTTON_SOUND_SCHEME_NONE,
 	BUTTON_SOUND_SCHEME_GENERIC,
@@ -15,7 +15,7 @@ typedef enum ButtonSoundScheme
 	BUTTON_SOUND_SCHEME_BIGSWITCH3,
 	BUTTON_SOUND_SCHEME_COMPUTERBEEP2,
 	BUTTON_SOUND_SCHEME_COMPUTERSWITCH1,
-} ButtonSoundScheme;
+};
 
 void SpecifyButtonSoundScheme(GUIButtonRef, ButtonSoundScheme);
 

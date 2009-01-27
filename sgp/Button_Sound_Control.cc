@@ -5,52 +5,49 @@
 #include "ScreenIDs.h"
 
 
-void SpecifyButtonSoundScheme(GUIButtonRef const b, ButtonSoundScheme SoundScheme)
+void SpecifyButtonSoundScheme(GUIButtonRef const b, ButtonSoundScheme scheme)
 {
-	b->ubSoundSchemeID = SoundScheme;
-	if (SoundScheme == BUTTON_SOUND_SCHEME_GENERIC)
+#ifdef JA2
+	if (scheme == BUTTON_SOUND_SCHEME_GENERIC)
 	{
-		#ifdef JA2
-		switch( guiCurrentScreen )
+		switch (guiCurrentScreen)
 		{
 			case MAINMENU_SCREEN:
 			case OPTIONS_SCREEN:
 			case LOADSAVE_SCREEN:
 			case SAVE_LOAD_SCREEN:
 			case INIT_SCREEN:
-				b->ubSoundSchemeID = BUTTON_SOUND_SCHEME_BIGSWITCH3;
+				scheme = BUTTON_SOUND_SCHEME_BIGSWITCH3;
 				break;
 
 			case LAPTOP_SCREEN:
-				b->ubSoundSchemeID = BUTTON_SOUND_SCHEME_COMPUTERBEEP2;
+				scheme = BUTTON_SOUND_SCHEME_COMPUTERBEEP2;
 				break;
 
 			case AUTORESOLVE_SCREEN:
 			case MAP_SCREEN:
 			case GAME_SCREEN:
 			case SHOPKEEPER_SCREEN:
-				b->ubSoundSchemeID = BUTTON_SOUND_SCHEME_SMALLSWITCH2;
+				scheme = BUTTON_SOUND_SCHEME_SMALLSWITCH2;
 				break;
 
 			case GAME_INIT_OPTIONS_SCREEN:
-				b->ubSoundSchemeID = BUTTON_SOUND_SCHEME_VERYSMALLSWITCH2;
+				scheme = BUTTON_SOUND_SCHEME_VERYSMALLSWITCH2;
 				break;
 
 			//Anything not handled gets NO sound.
 			//SHOPKEEPER_SCREEN,
 			//GAME_SCREEN,
 			//MSG_BOX_SCREEN,
-
 			//ERROR_SCREEN,
 			//ANIEDIT_SCREEN,
 			//PALEDIT_SCREEN,
 			//DEBUG_SCREEN,
 			//SEX_SCREEN,
 		}
-		#endif
-		if (SoundScheme == BUTTON_SOUND_SCHEME_GENERIC)
-			SoundScheme = BUTTON_SOUND_SCHEME_NONE;
 	}
+#endif
+	b->ubSoundSchemeID = scheme;
 }
 
 
