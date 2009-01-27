@@ -789,12 +789,6 @@ static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
 	Assert(reg != NULL);
 	GUI_BUTTON* const b = reg->GetUserPtr<GUI_BUTTON>();
 
-	if (b->uiFlags & BUTTON_ENABLED &&
-			reason & (MSYS_CALLBACK_REASON_LOST_MOUSE | MSYS_CALLBACK_REASON_GAIN_MOUSE))
-	{
-		b->uiFlags |= BUTTON_DIRTY;
-	}
-
 	// ATE: New stuff for toggle buttons that work with new Win95 paradigm
 	if (b->uiFlags & BUTTON_NEWTOGGLE &&
 			reason & MSYS_CALLBACK_REASON_LOST_MOUSE &&
@@ -804,11 +798,14 @@ static void QuickButtonCallbackMMove(MOUSE_REGION* reg, INT32 reason)
 		b->ubToggleButtonActivated = FALSE;
 	}
 
-	/* If this button is enabled and there is a callback function associated with
-	 * it, call the callback function.
-	 */
-	if (b->uiFlags & BUTTON_ENABLED && b->MoveCallback != NULL)
-		b->MoveCallback(b, reason);
+	if (!(b->uiFlags & BUTTON_ENABLED)) return;
+
+	if (reason & (MSYS_CALLBACK_REASON_LOST_MOUSE | MSYS_CALLBACK_REASON_GAIN_MOUSE))
+	{
+		b->uiFlags |= BUTTON_DIRTY;
+	}
+
+	if (b->MoveCallback) b->MoveCallback(b, reason);
 }
 
 
@@ -820,11 +817,22 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 	Assert(reg != NULL);
 	GUI_BUTTON* const b = reg->GetUserPtr<GUI_BUTTON>();
 
-	BOOLEAN MouseBtnDown = (reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_RBUTTON_DWN)) != 0;
-	BOOLEAN StateBefore  = (b->uiFlags & BUTTON_CLICKED_ON) != 0;
+	// ATE: New stuff for toggle buttons that work with new Win95 paradigm
+	if (!(b->uiFlags & BUTTON_ENABLED))
+	{
+		// Should we play a sound if clicked on while disabled?
+		if (b->ubSoundSchemeID &&
+				reason & (MSYS_CALLBACK_REASON_LBUTTON_DWN | MSYS_CALLBACK_REASON_RBUTTON_DWN))
+		{
+			PlayButtonSound(b, BUTTON_SOUND_DISABLED_CLICK);
+		}
+		return;
+	}
 
-	// ATE: New stuff for toggle buttons that work with new Win95 paridigm
-	if (b->uiFlags & BUTTON_NEWTOGGLE && b->uiFlags & BUTTON_ENABLED)
+	BOOLEAN StateBefore = (b->uiFlags & BUTTON_CLICKED_ON) != 0;
+	BOOLEAN StateAfter  = TRUE; // XXX HACK000E
+
+	if (b->uiFlags & BUTTON_NEWTOGGLE)
 	{
 		if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 		{
@@ -840,70 +848,54 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 		}
 	}
 
-	BOOLEAN StateAfter = TRUE; // XXX HACK000E
-
 	/* Kris:
 	 * Set the anchored button incase the user moves mouse off region while still
 	 * holding down the button, but only if the button is up.  In Win95, buttons
 	 * that are already down, and anchored never change state, unless you release
 	 * the mouse in the button area.
 	 */
-	if (b->uiFlags & BUTTON_ENABLED)
+	if (b->MoveCallback == DefaultMoveCallback)
 	{
-		if (b->MoveCallback == DefaultMoveCallback)
+		if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 		{
-			if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-			{
-				gpAnchoredButton = b;
-				gfAnchoredState = StateBefore;
-				b->uiFlags |= BUTTON_CLICKED_ON;
-			}
-			else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-			{
-				b->uiFlags &= ~BUTTON_CLICKED_ON;
-			}
+			gpAnchoredButton = b;
+			gfAnchoredState = StateBefore;
+			b->uiFlags |= BUTTON_CLICKED_ON;
 		}
-		else if (b->uiFlags & BUTTON_CHECKBOX)
+		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		{
-			if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
-			{
-				/* The check box button gets anchored, though it doesn't actually use the
-				 * anchoring move callback.  The effect is different, we don't want to
-				 * toggle the button state, but we do want to anchor this button so that
-				 * we don't effect any other buttons while we move the mouse around in
-				 * anchor mode.
-				 */
-				gpAnchoredButton = b;
-				gfAnchoredState = StateBefore;
-
-				/* Trick the before state of the button to be different so the sound will
-				 * play properly as checkbox buttons are processed differently.
-				 */
-				StateBefore = (b->uiFlags & BUTTON_CLICKED_ON) ? FALSE : TRUE;
-				StateAfter = !StateBefore;
-			}
-			else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-			{
-				b->uiFlags ^= BUTTON_CLICKED_ON; //toggle the checkbox state upon release inside button area.
-				/* Trick the before state of the button to be different so the sound will
-				 * play properly as checkbox buttons are processed differently.
-				 */
-				StateBefore = (b->uiFlags & BUTTON_CLICKED_ON) ? FALSE : TRUE;
-				StateAfter = !StateBefore;
-			}
+			b->uiFlags &= ~BUTTON_CLICKED_ON;
 		}
 	}
-	else
+	else if (b->uiFlags & BUTTON_CHECKBOX)
 	{
-		// Should we play a sound if clicked on while disabled?
-		if (b->ubSoundSchemeID && MouseBtnDown)
+		if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 		{
-			PlayButtonSound(b, BUTTON_SOUND_DISABLED_CLICK);
+			/* The check box button gets anchored, though it doesn't actually use the
+			 * anchoring move callback.  The effect is different, we don't want to
+			 * toggle the button state, but we do want to anchor this button so that
+			 * we don't effect any other buttons while we move the mouse around in
+			 * anchor mode.
+			 */
+			gpAnchoredButton = b;
+			gfAnchoredState = StateBefore;
+
+			/* Trick the before state of the button to be different so the sound will
+			 * play properly as checkbox buttons are processed differently.
+			 */
+			StateBefore = (b->uiFlags & BUTTON_CLICKED_ON) ? FALSE : TRUE;
+			StateAfter  = !StateBefore;
+		}
+		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+		{
+			b->uiFlags ^= BUTTON_CLICKED_ON; //toggle the checkbox state upon release inside button area.
+			/* Trick the before state of the button to be different so the sound will
+			 * play properly as checkbox buttons are processed differently.
+			 */
+			StateBefore = (b->uiFlags & BUTTON_CLICKED_ON) ? FALSE : TRUE;
+			StateAfter  = !StateBefore;
 		}
 	}
-
-	// If this button is disabled, and no callbacks allowed when disabled callback
-	if (!(b->uiFlags & BUTTON_ENABLED)) return;
 
 	// If there is a callback function with this button, call it
 	if (b->ClickCallback != NULL)
