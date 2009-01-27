@@ -53,13 +53,13 @@ void SpecifyButtonSoundScheme(GUIButtonRef const b, ButtonSoundScheme scheme)
 
 void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const sound_type)
 {
+#ifdef JA2
 	UINT32 sample;
 	switch (sound_type)
 	{
 		case BUTTON_SOUND_CLICKED_ON:
 			switch (btn->ubSoundSchemeID)
 			{
-#ifdef JA2
 				case BUTTON_SOUND_SCHEME_VERYSMALLSWITCH1: sample = VSM_SWITCH1_IN;      break;
 				case BUTTON_SOUND_SCHEME_VERYSMALLSWITCH2: sample = VSM_SWITCH2_IN;      break;
 				case BUTTON_SOUND_SCHEME_SMALLSWITCH1:     sample = SM_SWITCH1_IN;       break;
@@ -68,7 +68,6 @@ void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const sound_type)
 				case BUTTON_SOUND_SCHEME_BIGSWITCH3:       sample = BIG_SWITCH3_IN;      break;
 				case BUTTON_SOUND_SCHEME_COMPUTERBEEP2:    sample = COMPUTER_BEEP2_IN;   break;
 				case BUTTON_SOUND_SCHEME_COMPUTERSWITCH1:  sample = COMPUTER_SWITCH1_IN; break;
-#endif
 
 				default: return;
 			}
@@ -77,7 +76,6 @@ void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const sound_type)
 		case BUTTON_SOUND_CLICKED_OFF:
 			switch (btn->ubSoundSchemeID)
 			{
-#ifdef JA2
 				case BUTTON_SOUND_SCHEME_VERYSMALLSWITCH1: sample = VSM_SWITCH1_OUT;      break;
 				case BUTTON_SOUND_SCHEME_VERYSMALLSWITCH2: sample = VSM_SWITCH2_OUT;      break;
 				case BUTTON_SOUND_SCHEME_SMALLSWITCH1:     sample = SM_SWITCH1_OUT;       break;
@@ -86,7 +84,6 @@ void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const sound_type)
 				case BUTTON_SOUND_SCHEME_BIGSWITCH3:       sample = BIG_SWITCH3_OUT;      break;
 				case BUTTON_SOUND_SCHEME_COMPUTERBEEP2:    sample = COMPUTER_BEEP2_OUT;   break;
 				case BUTTON_SOUND_SCHEME_COMPUTERSWITCH1:  sample = COMPUTER_SWITCH1_OUT; break;
-#endif
 
 				default: return;
 			}
@@ -95,7 +92,6 @@ void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const sound_type)
 		case BUTTON_SOUND_DISABLED_CLICK:
 			switch (btn->ubSoundSchemeID)
 			{
-#ifdef JA2
 				case BUTTON_SOUND_SCHEME_VERYSMALLSWITCH1:
 				case BUTTON_SOUND_SCHEME_VERYSMALLSWITCH2:
 				case BUTTON_SOUND_SCHEME_SMALLSWITCH1:
@@ -106,7 +102,6 @@ void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const sound_type)
 				case BUTTON_SOUND_SCHEME_COMPUTERSWITCH1:
 					PlayJA2SampleFromFile("Sounds/Disabled Button.wav", 15, 1, MIDDLEPAN);
 					return;
-#endif
 
 				default: return;
 			}
@@ -114,4 +109,5 @@ void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const sound_type)
 		default: return;
 	}
 	PlayJA2Sample(sample, 15, 1, MIDDLEPAN);
+#endif
 }
