@@ -314,8 +314,8 @@ static void FreeBackgroundRectNow(BACKGROUND_SAVE* const b)
 {
 	if (b->fFreeMemory)
 	{
-		//MemFree(b->pSaveArea);
-		if (b->pZSaveArea != NULL) MemFree(b->pZSaveArea);
+		if (b->pSaveArea)  MemFree(b->pSaveArea);
+		if (b->pZSaveArea) MemFree(b->pZSaveArea);
 	}
 
 	b->fAllocated  = FALSE;
