@@ -674,15 +674,6 @@ void RestoreShiftedVideoOverlays(const INT16 sShiftX, const INT16 sShiftY)
 }
 
 
-// Common callbacks for topmost blitters
-void BlitMFont( VIDEO_OVERLAY *pBlitter )
-{
-	SetFontAttributes(pBlitter->uiFontID, pBlitter->ubFontFore, DEFAULT_SHADOW, pBlitter->ubFontBack);
-	SGPVSurface::Lock l(pBlitter->uiDestBuff);
-	mprintf_buffer(l.Buffer<UINT16>(), l.Pitch(), pBlitter->sX, pBlitter->sY, pBlitter->zText);
-}
-
-
 void BlitBufferToBuffer(SGPVSurface* const src, SGPVSurface* const dst, const UINT16 usSrcX, const UINT16 usSrcY, const UINT16 usWidth, const UINT16 usHeight)
 {
 	SGPBox const r = { usSrcX, usSrcY, usWidth, usHeight };

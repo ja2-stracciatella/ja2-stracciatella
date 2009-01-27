@@ -88,9 +88,6 @@ void EnableVideoOverlay(BOOLEAN fEnable, VIDEO_OVERLAY*);
 void SetVideoOverlayTextF(VIDEO_OVERLAY*, const wchar_t* fmt, ...);
 void SetVideoOverlayPos(VIDEO_OVERLAY*, INT16 X, INT16 Y);
 
-
-void BlitMFont( VIDEO_OVERLAY *pBlitter );
-
 void BlitBufferToBuffer(SGPVSurface* src, SGPVSurface* dst, UINT16 usSrcX, UINT16 usSrcY, UINT16 usWidth, UINT16 usHeight);
 
 #endif

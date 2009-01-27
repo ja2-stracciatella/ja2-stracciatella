@@ -111,6 +111,14 @@ static ScreenID guiTacticalLeaveScreenID = ERROR_SCREEN; // XXX TODO001A had no 
 BOOLEAN	guiTacticalLeaveScreen		= FALSE;
 
 
+static void BlitMFont(VIDEO_OVERLAY* const ovr)
+{
+	SetFontAttributes(ovr->uiFontID, ovr->ubFontFore, DEFAULT_SHADOW, ovr->ubFontBack);
+	SGPVSurface::Lock l(ovr->uiDestBuff);
+	mprintf_buffer(l.Buffer<UINT16>(), l.Pitch(), ovr->sX, ovr->sY, ovr->zText);
+}
+
+
 void MainGameScreenInit(void)
 {
 	gpZBuffer = InitZBuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
