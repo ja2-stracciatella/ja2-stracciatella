@@ -930,14 +930,14 @@ static void QuickButtonCallbackMButn(MOUSE_REGION* reg, INT32 reason)
 	{
 		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		{
-			if (b->ubSoundSchemeID && StateBefore && !StateAfter)
+			if (StateBefore && !StateAfter)
 			{
 				PlayButtonSound(b, BUTTON_SOUND_CLICKED_OFF);
 			}
 		}
 		else if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 		{
-			if (b->ubSoundSchemeID && !StateBefore && StateAfter)
+			if (!StateBefore && StateAfter)
 			{
 				PlayButtonSound(b, BUTTON_SOUND_CLICKED_ON);
 			}
