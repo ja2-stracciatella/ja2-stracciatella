@@ -89,7 +89,7 @@ void UnLoadCarPortraits( void )
 }
 
 
-static void DrawBar(UINT32 XPos, UINT32 YPos, UINT32 Height, UINT16 Color, UINT16 ShadowColor, UINT8* DestBuf)
+static void DrawBar(UINT32 const XPos, UINT32 const YPos, UINT32 const Height, UINT16 const Color, UINT16 const ShadowColor, UINT16* const DestBuf)
 {
 	LineDraw(TRUE, XPos + 0, YPos, XPos + 0, YPos - Height, ShadowColor, DestBuf);
 	LineDraw(TRUE, XPos + 1, YPos, XPos + 1, YPos - Height, Color,       DestBuf);
@@ -97,7 +97,7 @@ static void DrawBar(UINT32 XPos, UINT32 YPos, UINT32 Height, UINT16 Color, UINT1
 }
 
 
-static void DrawLifeUIBar(const SOLDIERTYPE* pSoldier, UINT32 XPos, UINT32 YPos, UINT32 MaxHeight, UINT8* pDestBuf)
+static void DrawLifeUIBar(SOLDIERTYPE const* const pSoldier, UINT32 const XPos, UINT32 YPos, UINT32 const MaxHeight, UINT16* const pDestBuf)
 {
 	UINT32 Height;
 
@@ -125,7 +125,7 @@ static void DrawLifeUIBar(const SOLDIERTYPE* pSoldier, UINT32 XPos, UINT32 YPos,
 }
 
 
-static void DrawBreathUIBar(const SOLDIERTYPE* pSoldier, UINT32 XPos, UINT32 sYPos, UINT32 MaxHeight, UINT8* pDestBuf)
+static void DrawBreathUIBar(SOLDIERTYPE const* const pSoldier, UINT32 const XPos, UINT32 const sYPos, UINT32 const MaxHeight, UINT16* const pDestBuf)
 {
 	UINT32 Height;
 
@@ -145,7 +145,7 @@ static void DrawBreathUIBar(const SOLDIERTYPE* pSoldier, UINT32 XPos, UINT32 sYP
 }
 
 
-static void DrawMoraleUIBar(const SOLDIERTYPE* pSoldier, UINT32 XPos, UINT32 YPos, UINT32 MaxHeight, UINT8* pDestBuf)
+static void DrawMoraleUIBar(SOLDIERTYPE const* const pSoldier, UINT32 const XPos, UINT32 const YPos, UINT32 const MaxHeight, UINT16* const pDestBuf)
 {
 	UINT32 Height = MaxHeight * pSoldier->bMorale / 100;
 	DrawBar(XPos, YPos, Height, Get16BPPColor(MORALE_BAR), Get16BPPColor(MORALE_BAR_SHADOW), pDestBuf);
@@ -188,7 +188,7 @@ void DrawSoldierUIBars(const SOLDIERTYPE* const pSoldier, const INT16 sXPos, con
 
 	SGPVSurface::Lock l(uiBuffer);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	UINT8* const pDestBuf = l.Buffer<UINT8>();
+	UINT16* const pDestBuf = l.Buffer<UINT16>();
 
 	DrawLifeUIBar(pSoldier, sXPos, sYPos, BarHeight, pDestBuf);
 	if (!(pSoldier->uiStatusFlags & SOLDIER_ROBOT))
@@ -227,7 +227,7 @@ void DrawItemUIBarEx(const OBJECTTYPE* const o, const UINT8 ubStatus, const INT1
 
 	{ SGPVSurface::Lock l(uiBuffer);
 		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		UINT8* const pDestBuf = l.Buffer<UINT8>();
+		UINT16* const pDestBuf = l.Buffer<UINT16>();
 
 		--max_h; // LineDraw() includes the end point
 		const INT h = max_h * value / 100;

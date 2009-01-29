@@ -378,7 +378,7 @@ static void RenderRubberBanding(void)
 
 	// Draw rectangle.....
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT8* const pDestBuf = l.Buffer<UINT8>();
+	UINT16* const pDestBuf = l.Buffer<UINT16>();
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y );
 
 	usLineColor = Get16BPPColor( guiColors[ iFlashColor ] );

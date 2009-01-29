@@ -240,7 +240,7 @@ void RenderRadarScreen()
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
 
 		SetClippingRegionAndImageWidth(l.Pitch(), RADAR_WINDOW_X, gsRadarY, RADAR_WINDOW_X + RADAR_WINDOW_WIDTH - 1, gsRadarY + RADAR_WINDOW_HEIGHT - 1);
-		UINT8* const pDestBuf = l.Buffer<UINT8>();
+		UINT16* const pDestBuf = l.Buffer<UINT16>();
 
 		// Cycle fFlash variable
 		if (COUNTERDONE(RADAR_MAP_BLINK))

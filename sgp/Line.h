@@ -21,7 +21,7 @@ void SetClippingRegionAndImageWidth(int iImageWidth, int iClipStartX, int iClipS
 //  that your line will be within the region you want it to be in, set
 //	fClip == FALSE.
 void PixelDraw(BOOLEAN fClip, INT32 xp, INT32 yp, INT16 sColor, UINT16* pScreen);
-void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT8* ScreenPtr);
-void RectangleDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT8* ScreenPtr);
+void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT16* ScreenPtr);
+void RectangleDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT16* ScreenPtr);
 
 #endif

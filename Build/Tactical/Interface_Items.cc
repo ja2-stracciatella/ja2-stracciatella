@@ -883,7 +883,7 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 
 				//usLineColor = Get16BPPColor( FROMRGB( 255, 255, 0 ) );
 				usLineColor = Get16BPPColor( FROMRGB( 230, 215, 196 ) );
-				RectangleDraw(TRUE, sX + 1, sY + 1, sX + gSMInvData[sPocket].sWidth - 2, sY + gSMInvData[sPocket].sHeight - 2, usLineColor, l.Buffer<UINT8>());
+				RectangleDraw(TRUE, sX + 1, sY + 1, sX + gSMInvData[sPocket].sWidth - 2, sY + gSMInvData[sPocket].sHeight - 2, usLineColor, l.Buffer<UINT16>());
 
 				SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			}

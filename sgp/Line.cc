@@ -94,12 +94,12 @@ static BOOLEAN Clip2D(int* ix0, int* iy0, int* ix1, int* iy1)
 }
 
 
-static void DrawHorizontalRun(UINT8** ScreenPtr, int XAdvance, int RunLength, int Color);
-static void DrawVerticalRun(UINT8** ScreenPtr, int XAdvance, int RunLength, int Color);
+static void DrawHorizontalRun(UINT16** ScreenPtr, int XAdvance, int RunLength, int Color);
+static void DrawVerticalRun(UINT16** ScreenPtr, int XAdvance, int RunLength, int Color);
 
 
 /* Draws a line between the specified endpoints in color Color. */
-void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT8* ScreenPtr)
+void LineDraw(BOOLEAN const fClip, int XStart, int YStart, int XEnd, int YEnd, short const Color, UINT16* ScreenPtr)
 {
 	if (fClip && !Clip2D(&XStart, &YStart, &XEnd, &YEnd)) return;
 
@@ -117,8 +117,10 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
 		XEnd = Temp;
 	}
 
+	int const pitch = giImageWidth >> 1;
+
 	// point to the bitmap address first pixel to draw
-	ScreenPtr = ScreenPtr + YStart * giImageWidth + XStart * 2;
+	ScreenPtr += YStart * pitch + XStart;
 
 	/*	Figure out whether we're going left or right, and how far we're
 	going horizontally */
@@ -143,8 +145,8 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
 		/* Vertical line */
 		for (int i = 0; i <= YDelta; i++)
 		{
-			*(UINT16*)ScreenPtr = Color;
-			ScreenPtr += giImageWidth;
+			*ScreenPtr = Color;
+			ScreenPtr += pitch;
 		}
 		return;
 	}
@@ -153,8 +155,8 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
 		/* Horizontal line */
 		for (int i = 0; i <= XDelta; i++)
 		{
-			*(UINT16*)ScreenPtr = Color;
-			ScreenPtr += XAdvance * 2;
+			*ScreenPtr = Color;
+			ScreenPtr += XAdvance;
 		}
 		return;
 	}
@@ -163,8 +165,8 @@ void LineDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short C
 		/* Diagonal line */
 		for (int i = 0; i <= XDelta; i++)
 		{
-			*(UINT16*)ScreenPtr = Color;
-			ScreenPtr += XAdvance * 2 + giImageWidth;
+			*ScreenPtr = Color;
+			ScreenPtr += XAdvance + pitch;
 		}
 		return;
 	}
@@ -302,40 +304,41 @@ void PixelDraw(const BOOLEAN fClip, const INT32 xp, const INT32 yp, const INT16 
 
 /* Draws a horizontal run of pixels, then advances the bitmap pointer to the
  * first pixel of the next run. */
-static void DrawHorizontalRun(UINT8** ScreenPtr, int XAdvance, int RunLength, int Color)
+static void DrawHorizontalRun(UINT16** const ScreenPtr, int const XAdvance, int const RunLength, int const Color)
 {
-	UINT8* WorkingScreenPtr = *ScreenPtr;
+	UINT16* WorkingScreenPtr = *ScreenPtr;
 
 	for (int i = 0; i < RunLength; i++)
 	{
-		*(UINT16*)WorkingScreenPtr = Color;
-		WorkingScreenPtr += XAdvance * 2;
+		*WorkingScreenPtr = Color;
+		WorkingScreenPtr += XAdvance;
 	}
 	/* Advance to the next scan line */
-	WorkingScreenPtr += giImageWidth;
+	WorkingScreenPtr += giImageWidth >> 1;
 	*ScreenPtr = WorkingScreenPtr;
 }
 
 
 /* Draws a vertical run of pixels, then advances the bitmap pointer to the
  * first pixel of the next run. */
-static void DrawVerticalRun(UINT8** ScreenPtr, int XAdvance, int RunLength, int Color)
+static void DrawVerticalRun(UINT16** const ScreenPtr, int const XAdvance, int const RunLength, int const Color)
 {
-	UINT8* WorkingScreenPtr = *ScreenPtr;
+	UINT16* WorkingScreenPtr = *ScreenPtr;
 
+	int const pitch = giImageWidth >> 1;
 	for (int i = 0; i < RunLength; i++)
 	{
-		*(UINT16*)WorkingScreenPtr = Color;
-		WorkingScreenPtr += giImageWidth;
+		*WorkingScreenPtr = Color;
+		WorkingScreenPtr += pitch;
 	}
 	/* Advance to the next column */
-	WorkingScreenPtr += XAdvance * 2;
+	WorkingScreenPtr += XAdvance;
 	*ScreenPtr = WorkingScreenPtr;
 }
 
 
 /* Draws a rectangle between the specified endpoints in color Color. */
-void RectangleDraw(BOOLEAN fClip, int XStart, int YStart, int XEnd, int YEnd, short Color, UINT8* ScreenPtr)
+void RectangleDraw(BOOLEAN const fClip, int const XStart, int const YStart, int const XEnd, int const YEnd, short const Color, UINT16* const ScreenPtr)
 {
 	LineDraw(fClip, XStart, YStart, XEnd,   YStart, Color, ScreenPtr);
 	LineDraw(fClip, XStart, YEnd,   XEnd,   YEnd,   Color, ScreenPtr);

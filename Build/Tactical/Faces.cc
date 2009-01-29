@@ -580,7 +580,7 @@ static void DrawFaceRect(const FACETYPE* const f, SGPVSurface* const buffer, con
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, x - 2, y - 1, x + f->usFaceWidth + 4, y + f->usFaceHeight + 4);
 
 	const UINT16 usLineColor = Get16BPPColor(colour);
-	RectangleDraw(TRUE, x - 2, y - 1, x + f->usFaceWidth + 1, y + f->usFaceHeight, usLineColor, l.Buffer<UINT8>());
+	RectangleDraw(TRUE, x - 2, y - 1, x + f->usFaceWidth + 1, y + f->usFaceHeight, usLineColor, l.Buffer<UINT16>());
 
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
@@ -888,7 +888,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 				SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 				const UINT16 usLineColor = Get16BPPColor(FROMRGB(105, 8, 9));
-				RectangleDraw(TRUE, sX1, sY1, sX2, sY2, usLineColor, l.Buffer<UINT8>());
+				RectangleDraw(TRUE, sX1, sY1, sX2, sY2, usLineColor, l.Buffer<UINT16>());
 			}
 
 			if ((s->bInSector && (gTacticalStatus.ubCurrentTeam != OUR_TEAM || !OK_INTERRUPT_MERC(s)) && !gfHiddenInterrupt) ||

@@ -1265,7 +1265,7 @@ static void DisplaySectionLine(void)
 	usEndY = 475;
 
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT8* const pDestBuf = l.Buffer<UINT8>();
+	UINT16* const pDestBuf = l.Buffer<UINT16>();
 
   // draw the line in b/n the first and second section
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -1872,7 +1872,7 @@ static void DrawQdsScrollRectangle(void)
 
 	//display the line
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT8* const pDestBuf = l.Buffer<UINT8>();
+	UINT16* const pDestBuf = l.Buffer<UINT16>();
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
   // draw the gold highlite line on the top and left

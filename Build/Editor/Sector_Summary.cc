@@ -1235,7 +1235,7 @@ void RenderSummaryWindow()
 		MPrint(354, 18, L"Summary");
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
 			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			RectangleDraw(TRUE, 350, 15, 405, 28, 0, l.Buffer<UINT8>());
+			RectangleDraw(TRUE, 350, 15, 405, 28, 0, l.Buffer<UINT16>());
 		}
 		FRAME_BUFFER->ShadowRectUsingLowPercentTable(351, 16, 404, 27);
 		if( gpCurrentSectorSummary )
@@ -1252,7 +1252,7 @@ void RenderSummaryWindow()
 		MPrint(354, 33, L"Items");
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
 			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			RectangleDraw(TRUE, 350, 30, 405, 43, 0, l.Buffer<UINT8>());
+			RectangleDraw(TRUE, 350, 30, 405, 43, 0, l.Buffer<UINT16>());
 		}
 		if( gpCurrentSectorSummary )
 			/*&& gpCurrentSectorSummary->usNumItems ||
@@ -1293,7 +1293,7 @@ void RenderSummaryWindow()
 		{
 			UINT16 pos;
 			SGPVSurface::Lock l(FRAME_BUFFER);
-			UINT8* const pDestBuf = l.Buffer<UINT8>();
+			UINT16* const pDestBuf = l.Buffer<UINT16>();
 			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			for( i = 1; i <= 15; i++ )
 			{
@@ -1377,7 +1377,7 @@ void RenderSummaryWindow()
 	if( gfGlobalSummaryExists )
 	{
 		SGPVSurface::Lock l(FRAME_BUFFER);
-		UINT8* const pDestBuf = l.Buffer<UINT8>();
+		UINT16* const pDestBuf = l.Buffer<UINT16>();
 		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		//Render the grid for the map currently residing in memory (blue).
 		if( gfWorldLoaded && !gfTempFile && gsSectorX )

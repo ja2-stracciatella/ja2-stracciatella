@@ -703,7 +703,7 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 	else
 	{
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
-			UINT8* const buf = l.Buffer<UINT8>();
+			UINT16* const buf = l.Buffer<UINT16>();
 			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			RectangleDraw(TRUE, x + 1, y + 1, x + w - 1, y + h - 1, Get16BPPColor(FROMRGB( 65,  57, 15)), buf);
 			RectangleDraw(TRUE, x,     y,     x + w - 2, y + h - 2, Get16BPPColor(FROMRGB(227, 198, 88)), buf);

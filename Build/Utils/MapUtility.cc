@@ -253,9 +253,9 @@ ScreenID MapUtilScreenHandle()
 				for ( cnt = 0; cnt < 256; cnt++ )
 				{
 					usLineColor = Get16BPPColor(FROMRGB(pPalette[cnt].r, pPalette[cnt].g, pPalette[cnt].b));
-					RectangleDraw( TRUE, sX, sY, sX, (INT16)( sY+10 ), usLineColor, (UINT8*)pDestBuf );
+					RectangleDraw(TRUE, sX, sY, sX, sY + 10, usLineColor, pDestBuf);
 					sX++;
-					RectangleDraw( TRUE, sX, sY, sX, (INT16)( sY+10 ), usLineColor, (UINT8*)pDestBuf );
+					RectangleDraw(TRUE, sX, sY, sX, sY + 10, usLineColor, pDestBuf);
 					sX++;
 				}
 			}

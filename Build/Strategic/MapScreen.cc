@@ -570,7 +570,7 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 	UINT16 usColor = GlowColor(iColorNum);
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw(TRUE, TIME_REMAINING_X, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH, usY + GetFontHeight(MAP_SCREEN_FONT) + 2, usColor, l.Buffer<UINT8>());
+	RectangleDraw(TRUE, TIME_REMAINING_X, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH, usY + GetFontHeight(MAP_SCREEN_FONT) + 2, usColor, l.Buffer<UINT16>());
 	InvalidateRegion(TIME_REMAINING_X - 1, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH + 1, usY + GetFontHeight( MAP_SCREEN_FONT ) + 3 );
 }
 
@@ -629,7 +629,7 @@ static void GlowItem(void)
 	UINT16 usColor = GlowColor(iColorNum);
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw(TRUE, 3, 80, 64, 104, usColor, l.Buffer<UINT8>());
+	RectangleDraw(TRUE, 3, 80, 64, 104, usColor, l.Buffer<UINT16>());
 	InvalidateRegion( 3, 80, 65, 105 );
 }
 
@@ -666,7 +666,7 @@ static void GlowTrashCan(void)
 	UINT16 usColor = GlowColor(iColorNum);
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
 		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		RectangleDraw(TRUE, TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT, usColor, l.Buffer<UINT8>());
+		RectangleDraw(TRUE, TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT, usColor, l.Buffer<UINT16>());
 		InvalidateRegion( TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH + 1, TRASH_CAN_Y + TRASH_CAN_HEIGHT + 1 );
 	}
 
@@ -1294,7 +1294,7 @@ static void HighLightAssignLine(void)
 
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	UINT8* const pDestBuf = l.Buffer<UINT8>();
+	UINT16* const pDestBuf = l.Buffer<UINT16>();
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
 	{
@@ -1370,7 +1370,7 @@ static void HighLightDestLine(void)
 
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	UINT8* const pDestBuf = l.Buffer<UINT8>();
+	UINT16* const pDestBuf = l.Buffer<UINT16>();
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
 	{
@@ -1450,7 +1450,7 @@ static void HighLightSleepLine(void)
 
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	UINT8* const pDestBuf = l.Buffer<UINT8>();
+	UINT16* const pDestBuf = l.Buffer<UINT16>();
 
 	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
 	{
@@ -4093,8 +4093,8 @@ static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOO
 
 	// blit in the highlighted sector
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT8* const pDestBuf         = l.Buffer<UINT8>();
-	UINT32 const uiDestPitchBYTES = l.Pitch();
+	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	// clip to view region
 	ClipBlitsToMapViewRegionForRectangleAndABit( uiDestPitchBYTES );
@@ -7794,7 +7794,7 @@ static void DisplayExitToTacticalGlowDuringDemo(void)
 	UINT16 usColor = GlowColor(iColorNum);
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw(TRUE, 495, 409, 528, 442, usColor, l.Buffer<UINT8>());
+	RectangleDraw(TRUE, 495, 409, 528, 442, usColor, l.Buffer<UINT16>());
 	InvalidateRegion(495, 408, 529+1, 442+1);
 }
 

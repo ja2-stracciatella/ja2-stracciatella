@@ -800,7 +800,7 @@ static void RenderViewer(void)
 	}
 
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT8* const pDestBuf = l.Buffer<UINT8>();
+	UINT16* const pDestBuf = l.Buffer<UINT16>();
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	//Render the grid for the sector if the mouse is over it (yellow).

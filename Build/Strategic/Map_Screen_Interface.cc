@@ -1984,7 +1984,7 @@ static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
 		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		UINT8* const pDestBuf = l.Buffer<UINT8>();
+		UINT16* const pDestBuf = l.Buffer<UINT16>();
 		RectangleDraw(TRUE, iX + 1, iY + 1, iX + iW - 1, iY + iH - 1, Get16BPPColor(FROMRGB( 65,  57, 15)), pDestBuf);
 		RectangleDraw(TRUE, iX,     iY,     iX + iW - 2, iY + iH - 2, Get16BPPColor(FROMRGB(227, 198, 88)), pDestBuf);
 	}

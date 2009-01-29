@@ -3702,8 +3702,8 @@ static void BlitTownGridMarkers(void)
 
 	// blit in the highlighted sector
 	SGPVSurface::Lock l(guiSAVEBUFFER);
-	UINT8* const pDestBuf         = l.Buffer<UINT8>();
-	UINT32 const uiDestPitchBYTES = l.Pitch();
+	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	// clip to view region
 	ClipBlitsToMapViewRegionForRectangleAndABit( uiDestPitchBYTES );
@@ -3802,7 +3802,7 @@ static void BlitMineGridMarkers(void)
 		}
 
 		// draw rectangle
-		RectangleDraw(TRUE, sScreenX, sScreenY - 1, sScreenX + sWidth, sScreenY + sHeight - 1, usColor, l.Buffer<UINT8>());
+		RectangleDraw(TRUE, sScreenX, sScreenY - 1, sScreenX + sWidth, sScreenY + sHeight - 1, usColor, l.Buffer<UINT16>());
 	}
 
 	// restore clips
@@ -5204,7 +5204,7 @@ static void BlitSAMGridMarkers(void)
 		}
 
 		// draw rectangle
-		RectangleDraw(TRUE, sScreenX, sScreenY - 1, sScreenX + sWidth, sScreenY + sHeight - 1, usColor, l.Buffer<UINT8>());
+		RectangleDraw(TRUE, sScreenX, sScreenY - 1, sScreenX + sWidth, sScreenY + sHeight - 1, usColor, l.Buffer<UINT16>());
 	}
 
 	// restore clips

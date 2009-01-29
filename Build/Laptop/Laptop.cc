@@ -1111,7 +1111,7 @@ ScreenID LaptopScreenHandle()
 			//mprintf( 10, 10, L"%d -> %d", iRealPercentage, iPercentage );
 			//{ SGPVSurface::Lock(FRAME_BUFFER);
 			//	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			//	UINT8* const pDestBuf = l.Buffer<UINT8>();
+			//	UINT16* const pDestBuf = l.Buffer<UINT16>();
 			//	RectangleDraw(TRUE, SrcRect1.iLeft, SrcRect1.iTop, SrcRect1.iRight, SrcRect1.iBottom, Get16BPPColor(FROMRGB(255, 100, 0)), pDestBuf);
 			//	RectangleDraw(TRUE, SrcRect2.iLeft, SrcRect2.iTop, SrcRect2.iRight, SrcRect2.iBottom, Get16BPPColor(FROMRGB(100, 255, 0)), pDestBuf);
 			//}
@@ -1510,7 +1510,7 @@ void LeaveLapTopScreen(void)
 				//mprintf( 10, 10, L"%d -> %d", iRealPercentage, iPercentage );
 				//{ SGPVSurface::Lock(FRAME_BUFFER);
 				//	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-				//	UINT8* const pDestBuf = l.Buffer<UINT8>();
+				//	UINT16* const pDestBuf = l.Buffer<UINT16>();
 				//	RectangleDraw(TRUE, SrcRect1.iLeft, SrcRect1.iTop, SrcRect1.iRight, SrcRect1.iBottom, Get16BPPColor(FROMRGB(255, 100, 0)), pDestBuf);
 				//	RectangleDraw(TRUE, SrcRect2.iLeft, SrcRect2.iTop, SrcRect2.iRight, SrcRect2.iBottom, Get16BPPColor(FROMRGB(100, 255, 0)), pDestBuf);
 				//}

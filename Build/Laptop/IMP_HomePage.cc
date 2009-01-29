@@ -212,7 +212,7 @@ static void DisplayActivationStringCursor(void)
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
 		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		// draw line in current state
-		LineDraw(TRUE, uiCursorPosition, CURSOR_Y, uiCursorPosition, CURSOR_Y + CURSOR_HEIGHT, Get16BPPColor(GlowColorsList[iCurrentState]), l.Buffer<UINT8>());
+		LineDraw(TRUE, uiCursorPosition, CURSOR_Y, uiCursorPosition, CURSOR_Y + CURSOR_HEIGHT, Get16BPPColor(GlowColorsList[iCurrentState]), l.Buffer<UINT16>());
 	}
 
   InvalidateRegion((UINT16) uiCursorPosition , CURSOR_Y , (UINT16)uiCursorPosition + 1, CURSOR_Y + CURSOR_HEIGHT + 1);
