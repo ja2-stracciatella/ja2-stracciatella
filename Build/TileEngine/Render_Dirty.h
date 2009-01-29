@@ -50,7 +50,7 @@ void ExecuteBaseDirtyRectQueue(void);
 // BACKGROUND RECT BUFFERING STUFF
 void             InitializeBackgroundRects(void);
 void             ShutdownBackgroundRects(void);
-BACKGROUND_SAVE* RegisterBackgroundRect(UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom);
+BACKGROUND_SAVE* RegisterBackgroundRect(UINT32 uiFlags, INT16 x, INT16 y, INT16 w, INT16 h);
 void             FreeBackgroundRect(BACKGROUND_SAVE*);
 void             FreeBackgroundRectPending(BACKGROUND_SAVE*);
 void             FreeBackgroundRectType(UINT32 uiFlags);

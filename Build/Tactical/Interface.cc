@@ -958,8 +958,8 @@ static void GetArrowsBackground(void)
 	EraseRenderArrows();
 
 	// Register dirty rects
-	giDownArrowRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT, gsDownArrowX, gsDownArrowY, gsDownArrowX + sArrowWidth, gsDownArrowY + sArrowHeight);
-	giUpArrowRect   = RegisterBackgroundRect(BGND_FLAG_PERMANENT, gsUpArrowX,   gsUpArrowY,   gsUpArrowX   + sArrowWidth, gsUpArrowY   + sArrowHeight);
+	giDownArrowRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT, gsDownArrowX, gsDownArrowY, sArrowWidth, sArrowHeight);
+	giUpArrowRect   = RegisterBackgroundRect(BGND_FLAG_PERMANENT, gsUpArrowX,   gsUpArrowY,   sArrowWidth, sArrowHeight);
 }
 
 

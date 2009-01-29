@@ -977,9 +977,7 @@ static void RenderOverheadOverlays(void)
 				s->bTeam;
 			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, region);
 			ETRLEObject const& e = *marker->SubregionProperties(region);
-			INT16       const  x = sX + e.sOffsetX;
-			INT16       const  y = sY + e.sOffsetY;
-			RegisterBackgroundRect(BGND_FLAG_SINGLE, x, y, x + e.usWidth, y + e.usHeight);
+			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX + e.sOffsetX, sY + e.sOffsetY, e.usWidth, e.usHeight);
 		}
 	}
 

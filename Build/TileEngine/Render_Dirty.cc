@@ -123,7 +123,7 @@ static void RecountBackgrounds(void)
 }
 
 
-BACKGROUND_SAVE* RegisterBackgroundRect(const UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom)
+BACKGROUND_SAVE* RegisterBackgroundRect(const UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 const usWidth, INT16 const usHeight)
 try
 {
 	const INT32 ClipX1 = gDirtyClipRect.iLeft;
@@ -131,8 +131,8 @@ try
 	const INT32 ClipX2 = gDirtyClipRect.iRight;
 	const INT32 ClipY2 = gDirtyClipRect.iBottom;
 
-	const UINT32 usHeight = sBottom - sTop;
-	const UINT32 usWidth  = sRight -  sLeft;
+	INT16 sRight  = sLeft + usWidth;
+	INT16 sBottom = sTop  + usHeight;
 
 	const INT32 iTempX = sLeft;
 	const INT32 iTempY = sTop;
@@ -180,7 +180,7 @@ catch (...) { return NO_BGND_RECT; }
 
 void RegisterBackgroundRectSingleFilled(INT16 const x, INT16 const y, INT16 const w, INT16 const h)
 {
-	BACKGROUND_SAVE* const b = RegisterBackgroundRect(BGND_FLAG_SINGLE, x, y, x + w, y + h);
+	BACKGROUND_SAVE* const b = RegisterBackgroundRect(BGND_FLAG_SINGLE, x, y, w, h);
 	if (b == NO_BGND_RECT) return;
 
 	b->fFilled = TRUE;
@@ -467,7 +467,7 @@ void GPrintInvalidateF(INT16 const x, INT16 const y, wchar_t const* const fmt, .
 VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK const callback, INT16 const x, INT16 const y, INT16 const w, INT16 const h)
 try
 {
-	BACKGROUND_SAVE* const bgs = RegisterBackgroundRect(BGND_FLAG_PERMANENT, x, y, x + w, y + h);
+	BACKGROUND_SAVE* const bgs = RegisterBackgroundRect(BGND_FLAG_PERMANENT, x, y, w, h);
 	if (!bgs) return 0;
 
 	VIDEO_OVERLAY* const v    = MALLOCZ(VIDEO_OVERLAY);
@@ -713,7 +713,7 @@ void SetVideoOverlayPos(VIDEO_OVERLAY* const v, const INT16 X, const INT16 Y)
 		// Remove background
 		FreeBackgroundRectPending(v->background);
 
-		v->background = RegisterBackgroundRect(BGND_FLAG_PERMANENT, X, Y, X + uiStringLength, Y + uiStringHeight);
+		v->background = RegisterBackgroundRect(BGND_FLAG_PERMANENT, X, Y, uiStringLength, uiStringHeight);
 		v->sX         = X;
 		v->sY         = Y;
 	}

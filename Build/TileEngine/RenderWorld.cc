@@ -1247,12 +1247,11 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 										sXPos += pTrav->sOffsetX;
 										sYPos += pTrav->sOffsetY;
 
-										INT16 const right  = sXPos + uiBrushWidth;
-										INT16 const bottom = __min(sYPos + uiBrushHeight, gsVIEWPORT_WINDOW_END_Y);
-										RegisterBackgroundRect(uiDirtyFlags, sXPos, sYPos, right, bottom);
+										INT16 const h = MIN(uiBrushHeight, gsVIEWPORT_WINDOW_END_Y - sYPos);
+										RegisterBackgroundRect(uiDirtyFlags, sXPos, sYPos, uiBrushWidth, h);
 										if (fSaveZ)
 										{
-											RegisterBackgroundRect(uiDirtyFlags | BGND_FLAG_SAVE_Z, sXPos, sYPos, right, bottom);
+											RegisterBackgroundRect(uiDirtyFlags | BGND_FLAG_SAVE_Z, sXPos, sYPos, uiBrushWidth, h);
 										}
 									}
 								}

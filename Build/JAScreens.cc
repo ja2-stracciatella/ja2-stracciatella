@@ -257,7 +257,7 @@ ScreenID PalEditScreenHandle(void)
 		SetRenderHook(PalEditRenderHook);
 		SetUIKeyboardHook(PalEditKeyboardHook);
 
-		guiBackgroundRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT, 50, 10, 600 , 400);
+		guiBackgroundRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT, 50, 10, 550, 390);
 	}
 	else
 	{
@@ -360,7 +360,7 @@ ScreenID DebugScreenHandle(void)
 
 	if (guiBackgroundRect == NO_BGND_RECT)
 	{
-		guiBackgroundRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT, 0, 0, 600 , 360);
+		guiBackgroundRect = RegisterBackgroundRect(BGND_FLAG_PERMANENT, 0, 0, 600, 360);
 	}
 
 

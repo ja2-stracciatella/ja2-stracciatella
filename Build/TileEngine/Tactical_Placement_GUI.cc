@@ -486,7 +486,7 @@ static void RenderTacticalPlacementGUI(void)
 		//Render the question mark over the face if the merc hasn't yet been placed.
 		if( gMercPlacement[ i ].fPlaced )
 		{
-			RegisterBackgroundRect(BGND_FLAG_SINGLE, xp + 16, yp + 14, xp + 24, yp + 22);
+			RegisterBackgroundRect(BGND_FLAG_SINGLE, xp + 16, yp + 14, 8, 8);
 		}
 		else
 		{
