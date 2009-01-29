@@ -562,8 +562,8 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 	sAnchorPosY_S = sStartPointY_S;
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
-		UINT8* const pDestBuf         = l.Buffer<UINT8>();
-		UINT32 const uiDestPitchBYTES = l.Pitch();
+		UINT16* const pDestBuf         = l.Buffer<UINT16>();
+		UINT32  const uiDestPitchBYTES = l.Pitch();
 
 		do
 		{
@@ -598,7 +598,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 
 						pTile->vo->CurrentShade(pNode->ubShadeLevel);
 
-						Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex );
+						Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex);
 
 						pNode = pNode->pPrevNode;
 					}
@@ -699,7 +699,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 								pTile->vo->CurrentShade(pNode->ubShadeLevel);
 
 								// RENDER!
-								Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex );
+								Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex);
 							}
 						}
 
@@ -721,7 +721,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 							pTile->vo->CurrentShade(pNode->ubShadeLevel);
 
 							// RENDER!
-							Blt8BPPDataTo16BPPBufferShadow((UINT16*)pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex );
+							Blt8BPPDataTo16BPPBufferShadow(pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex);
 						}
 
 						pNode = pNode->pNext;
@@ -755,7 +755,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 								pTile->vo->CurrentShade(pNode->ubShadeLevel);
 
 								// RENDER!
-								Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex );
+								Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex);
 							}
 						}
 
@@ -847,7 +847,7 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 									pTile->vo->CurrentShade(pNode->ubShadeLevel);
 
 									// RENDER!
-									Blt8BPPDataTo16BPPBufferTransparent((UINT16*)pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex );
+									Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex);
 								}
 							}
 							pNode = pNode->pNext;
