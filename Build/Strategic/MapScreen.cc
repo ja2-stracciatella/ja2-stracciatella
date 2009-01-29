@@ -1297,7 +1297,7 @@ static void HighLightSelection(HighLightState& state, INT32 const line, UINT16 c
 		LineDraw(TRUE, x,     y, x,     y + h, colour, pDestBuf);
 		LineDraw(TRUE, x + w, y, x + w, y + h, colour, pDestBuf);
 
-		InvalidateRegion(x, y, x + w, y + h);
+		InvalidateRegion(x, y, x + w + 1, y + h + 1);
 	}
 }
 
