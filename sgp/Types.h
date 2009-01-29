@@ -40,6 +40,13 @@
 #define MAX(a, b) __max(a, b)
 #define MIN(a, b) __min(a, b)
 
+template<typename T> static inline void Swap(T& a, T& b)
+{
+	T t(a);
+	a = b;
+	b = t;
+}
+
 
 typedef          int  INT;
 typedef unsigned int UINT;

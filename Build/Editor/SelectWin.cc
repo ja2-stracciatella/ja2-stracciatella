@@ -704,19 +704,8 @@ void RenderSelectionWindow( void )
 			iEY = gusMouseYPos;
 
 
-			if (iEX < iSX)
-			{
-				iEX ^= iSX;
-				iSX ^= iEX;
-				iEX ^= iSX;
-			}
-
-			if (iEY < iSY)
-			{
-				iEY ^= iSY;
-				iSY ^= iEY;
-				iEY ^= iSY;
-			}
+			if (iEX < iSX) Swap(iEX, iSX);
+			if (iEY < iSY) Swap(iEY, iSY);
 
 			iEX = MIN( iEX, 600 );
 			iSY = MAX(g_sel_win_box.y, iSY);
@@ -809,19 +798,8 @@ static void SelWinClkCallback(GUI_BUTTON* button, INT32 reason)
 
 		gfRenderSquareArea = FALSE;
 
-		if( iEndClickX < iStartClickX )
-		{
-			iStartClickX ^= iEndClickX;
-			iEndClickX ^= iStartClickX;
-			iStartClickX ^= iEndClickX;
-		}
-
-		if( iEndClickY < iStartClickY )
-		{
-			iStartClickY ^= iEndClickY;
-			iEndClickY ^= iStartClickY;
-			iStartClickY ^= iEndClickY;
-		}
+		if (iEndClickX < iStartClickX) Swap(iEndClickX, iStartClickX);
+		if (iEndClickY < iStartClickY) Swap(iEndClickY, iStartClickY);
 
 		iXInc = iYInc = 1;
 		for( iClickY = iStartClickY; iClickY <= iEndClickY; iClickY += iYInc )
