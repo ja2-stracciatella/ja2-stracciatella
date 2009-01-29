@@ -1875,6 +1875,7 @@ ENDOFLOOP:
 
 			for (iCnt=0; z != 0; iCnt++)
 		  {
+			  Assert(iCnt < lengthof(guiPathingData)); // XXX TODO001C
 			  guiPathingData[ iCnt ] = trailTree[z].stepDir;
 
 			  z = trailTree[z].nextLink;
@@ -2314,6 +2315,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 			{
 				if (bPlot && iCnt < iLastGrid - 1)
 				{
+					Assert(giPlotCnt < lengthof(guiPlottedPath)); // XXX TODO001C
 					guiPlottedPath[giPlotCnt++] = sTempGrid;
 
 					// we need a footstep graphic ENTERING the next tile
