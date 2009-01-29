@@ -2329,7 +2329,7 @@ void RenderTopmostFlashingItems(void)
 		sXPos -= 20;
 		sYPos -= 20;
 
-		RegisterBackgroundRectSingleFilled(sXPos, sYPos, sXPos + 40, sYPos + 40);
+		RegisterBackgroundRectSingleFilled(sXPos, sYPos, 40, 40);
 
 		BltVideoObject(FRAME_BUFFER, guiRADIO, l->bRadioFrame, sXPos, sYPos);
 

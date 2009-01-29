@@ -179,7 +179,7 @@ void RenderAccumulatedBurstLocations( )
 			//sXPos -= 10;
 			//sYPos -= 10;
 
-			RegisterBackgroundRectSingleFilled(sXPos, sYPos, sXPos + 40, sYPos + 40);
+			RegisterBackgroundRectSingleFilled(sXPos, sYPos, 40, 40);
 
 			BltVideoObject(FRAME_BUFFER, guiBURSTACCUM, 1, sXPos, sYPos);
 		}

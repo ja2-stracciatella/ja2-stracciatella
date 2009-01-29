@@ -376,18 +376,18 @@ static void RenderRubberBanding(void)
 	{
 		if (l > r) Swap(l, r);
 		LineDraw(TRUE, l, t, r, t, colour, pDestBuf);
-		RegisterBackgroundRectSingleFilled(l, t, r + 1, t + 1);
+		RegisterBackgroundRectSingleFilled(l, t, r - l + 1, 1);
 		LineDraw(TRUE, l, b, r, b, colour, pDestBuf);
-		RegisterBackgroundRectSingleFilled(l, b, r + 1, b + 1);
+		RegisterBackgroundRectSingleFilled(l, b, r - l + 1, 1);
 	}
 
 	if (t != b)
 	{
 		if (t > b) Swap(t, b);
 		LineDraw(TRUE, l, t, l, b, colour, pDestBuf);
-		RegisterBackgroundRectSingleFilled(l, t, l + 1, b);
+		RegisterBackgroundRectSingleFilled(l, t, 1, b - t + 1);
 		LineDraw(TRUE, r, t, r, b, colour, pDestBuf);
-		RegisterBackgroundRectSingleFilled(r, t, r + 1, b);
+		RegisterBackgroundRectSingleFilled(r, t, 1, b - t + 1);
 	}
 }
 

@@ -178,9 +178,9 @@ try
 catch (...) { return NO_BGND_RECT; }
 
 
-void RegisterBackgroundRectSingleFilled(const INT16 left, const INT16 top, const INT16 right, const INT16 bottom)
+void RegisterBackgroundRectSingleFilled(INT16 const x, INT16 const y, INT16 const w, INT16 const h)
 {
-	BACKGROUND_SAVE* const b = RegisterBackgroundRect(BGND_FLAG_SINGLE, left, top, right, bottom);
+	BACKGROUND_SAVE* const b = RegisterBackgroundRect(BGND_FLAG_SINGLE, x, y, x + w, y + h);
 	if (b == NO_BGND_RECT) return;
 
 	b->fFilled = TRUE;
@@ -399,7 +399,7 @@ static void GDirty(INT16 const x, INT16 const y, wchar_t const* const str)
 	if (length > 0)
 	{
 		UINT16 const height = GetFontHeight(FontDefault);
-		RegisterBackgroundRectSingleFilled(x, y, x + length, y + height);
+		RegisterBackgroundRectSingleFilled(x, y, length, height);
 	}
 }
 

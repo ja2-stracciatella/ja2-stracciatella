@@ -1057,7 +1057,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const s)
 			sYPos += 25;
 
 			// Add bars
-			RegisterBackgroundRectSingleFilled(sXPos, sYPos, sXPos + 40, sYPos + 40);
+			RegisterBackgroundRectSingleFilled(sXPos, sYPos, 40, 40);
 
 			SGPVObject const* const gfx = s->bNeutral || s->bSide == gbPlayerNum ?
 				guiRADIO : guiRADIO2;
@@ -1181,7 +1181,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE* const s)
 			}
 
 			// Add bars
-			RegisterBackgroundRectSingleFilled(sXPos, sYPos, sXPos + 34, sYPos + 11);
+			RegisterBackgroundRectSingleFilled(sXPos, sYPos, 34, 11);
 			TILE_ELEMENT const& TileElem = gTileDatabase[usGraphicToUse];
 			BltVideoObject(FRAME_BUFFER, TileElem.hTileSurface, TileElem.usRegionIndex, sXPos, sYPos);
 
@@ -2322,7 +2322,7 @@ void RenderTopmostMultiPurposeLocator( )
 	sXPos -= 20;
 	sYPos -= 20;
 
-	RegisterBackgroundRectSingleFilled(sXPos, sYPos, sXPos + 40, sYPos + 40);
+	RegisterBackgroundRectSingleFilled(sXPos, sYPos, 40, 40);
 
 	BltVideoObject(FRAME_BUFFER, guiRADIO, gbMultiPurposeLocatorFrame, sXPos, sYPos);
 }

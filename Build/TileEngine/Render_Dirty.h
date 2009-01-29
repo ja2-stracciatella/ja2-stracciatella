@@ -59,7 +59,7 @@ void             SaveBackgroundRects(void);
 void             InvalidateBackgroundRects(void);
 void             UpdateSaveBuffer(void);
 void             RestoreExternBackgroundRect(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight);
-void             RegisterBackgroundRectSingleFilled(INT16 left, INT16 top, INT16 right, INT16 bottom);
+void             RegisterBackgroundRectSingleFilled(INT16 x, INT16 y, INT16 w, INT16 h);
 void             EmptyBackgroundRects(void);
 void             RestoreExternBackgroundRectGivenID(const BACKGROUND_SAVE*);
 
