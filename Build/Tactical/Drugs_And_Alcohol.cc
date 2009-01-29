@@ -57,7 +57,6 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 {
 	UINT8 ubDrugType;
 	UINT8	ubKitPoints;
-	INT8	bRegenPointsGained;
 	UINT16	usItem;
 
 	usItem = pObject->usItem;
@@ -171,13 +170,17 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 	{
 		if ( ubDrugType == DRUG_TYPE_REGENERATION )
 		{
+			UINT8 const n      = --pObject->ubNumberOfObjects;
+			INT8  const status = pObject->bStatus[n];
+			if (n == 0) DeleteObj(pObject);
+
 			// each use of a regen booster over 1, each day, reduces the effect
-			bRegenPointsGained = REGEN_POINTS_PER_BOOSTER * pObject->bStatus[0] / 100;
+			INT8 bRegenPointsGained = REGEN_POINTS_PER_BOOSTER * status / 100;
 			// are there fractional %s left over?
-			if ( ( pObject->bStatus[0] % (100 / REGEN_POINTS_PER_BOOSTER ) ) != 0 )
+			if (status % (100 / REGEN_POINTS_PER_BOOSTER) != 0)
 			{
 				// chance of an extra point
-				if ( PreRandom( 100 / REGEN_POINTS_PER_BOOSTER ) < (UINT32) ( pObject->bStatus[0] % (100 / REGEN_POINTS_PER_BOOSTER ) ) )
+				if (PreRandom(100 / REGEN_POINTS_PER_BOOSTER) < (UINT32)(status % (100 / REGEN_POINTS_PER_BOOSTER)))
 				{
 					bRegenPointsGained++;
 				}
@@ -191,9 +194,6 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 			}
 			pSoldier->bRegenBoostersUsedToday++;
 		}
-
-		// remove object
-		DeleteObj( pObject );
 	}
 
 	if ( ubDrugType == DRUG_TYPE_ALCOHOL )
