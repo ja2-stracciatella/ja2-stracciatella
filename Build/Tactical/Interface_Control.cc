@@ -328,103 +328,66 @@ void ResetInterface( )
 }
 
 
-UINT32	guiColors[ 12 ] =
+static UINT32 const guiColors[] =
 {
-	FROMRGB( 198, 163, 0 ),
-	FROMRGB( 185, 150, 0 ),
-	FROMRGB( 172, 136, 0 ),
-	FROMRGB( 159, 123, 0 ),
-	FROMRGB( 146, 110, 0 ),
-	FROMRGB( 133, 96, 0 ),
-	FROMRGB( 120, 83, 0 ),
-	FROMRGB( 133, 96, 0 ),
-	FROMRGB( 146, 110, 0 ),
-	FROMRGB( 159, 123, 0 ),
-	FROMRGB( 172, 136, 0 ),
-	FROMRGB( 185, 150, 0 )
+	FROMRGB(198, 163, 0),
+	FROMRGB(185, 150, 0),
+	FROMRGB(172, 136, 0),
+	FROMRGB(159, 123, 0),
+	FROMRGB(146, 110, 0),
+	FROMRGB(133,  96, 0),
+	FROMRGB(120,  83, 0),
+	FROMRGB(133,  96, 0),
+	FROMRGB(146, 110, 0),
+	FROMRGB(159, 123, 0),
+	FROMRGB(172, 136, 0),
+	FROMRGB(185, 150, 0)
 };
 
 
 static void RenderRubberBanding(void)
 {
-	UINT16										 usLineColor;
-	INT16											 iLeft, iRight, iTop, iBottom;
-	static INT32							 iFlashColor = 0;
-	static INT32							 uiTimeOfLastUpdate = 0;
+	static INT32 flash_colour        = 0;
+	static INT32 time_of_last_update = 0;
 
-	if ( !gRubberBandActive )
-		return;
+	if (!gRubberBandActive) return;
 
-	iLeft		= (INT16)gRubberBandRect.iLeft;
-	iRight	= (INT16)gRubberBandRect.iRight;
-	iTop		= (INT16)gRubberBandRect.iTop;
-	iBottom	= (INT16)gRubberBandRect.iBottom;
+	INT16 l = gRubberBandRect.iLeft;
+	INT16 r = gRubberBandRect.iRight;
+	INT16 t = gRubberBandRect.iTop;
+	INT16 b = gRubberBandRect.iBottom;
 
-	if ( iLeft == iRight && iTop == iBottom )
+	if (l == r && t == b) return;
+
+	UINT32 const now = GetJA2Clock();
+	if (now - time_of_last_update > 60)
 	{
-		return;
+		time_of_last_update = now;
+		if (++flash_colour == lengthof(guiColors)) flash_colour = 0;
 	}
-
-	if ( ( GetJA2Clock( ) - uiTimeOfLastUpdate ) > 60 )
-	{
-		uiTimeOfLastUpdate = GetJA2Clock( );
-		iFlashColor++;
-
-		if ( iFlashColor == 12 )
-		{
-			iFlashColor = 0;
-		}
-	}
+	UINT16 const colour = Get16BPPColor(guiColors[flash_colour]);
 
 	// Draw rectangle.....
-	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT16* const pDestBuf = l.Buffer<UINT16>();
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y );
+	SGPVSurface::Lock lock(FRAME_BUFFER);
+	UINT16* const pDestBuf = lock.Buffer<UINT16>();
+	SetClippingRegionAndImageWidth(lock.Pitch(), 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_WINDOW_END_Y);
 
-	usLineColor = Get16BPPColor( guiColors[ iFlashColor ] );
-
-	if ( ( iRight - iLeft ) > 0 )
+	if (l != r)
 	{
-		LineDraw( TRUE, iLeft, iTop, iRight, iTop, usLineColor, pDestBuf );
-		RegisterBackgroundRectSingleFilled(iLeft, iTop, iRight + 1, iTop + 1);
-	}
-	else if ( ( iRight - iLeft ) < 0 )
-	{
-		LineDraw( TRUE, iLeft, iTop, iRight, iTop, usLineColor, pDestBuf );
-		RegisterBackgroundRectSingleFilled(iRight, iTop, iLeft + 1, iTop + 1);
+		if (l > r) Swap(l, r);
+		LineDraw(TRUE, l, t, r, t, colour, pDestBuf);
+		RegisterBackgroundRectSingleFilled(l, t, r + 1, t + 1);
+		LineDraw(TRUE, l, b, r, b, colour, pDestBuf);
+		RegisterBackgroundRectSingleFilled(l, b, r + 1, b + 1);
 	}
 
-	if ( ( iRight - iLeft ) > 0 )
+	if (t != b)
 	{
-		LineDraw( TRUE, iLeft, iBottom, iRight, iBottom, usLineColor, pDestBuf );
-		RegisterBackgroundRectSingleFilled(iLeft, iBottom, iRight + 1, iBottom + 1);
-	}
-	else if ( ( iRight - iLeft ) < 0 )
-	{
-		LineDraw( TRUE, iLeft, iBottom, iRight, iBottom, usLineColor, pDestBuf );
-		RegisterBackgroundRectSingleFilled(iRight, iBottom, iLeft + 1, iBottom + 1);
-	}
-
-	if ( ( iBottom - iTop ) > 0 )
-	{
-		LineDraw( TRUE, iLeft, iTop, iLeft, iBottom, usLineColor, pDestBuf );
-		RegisterBackgroundRectSingleFilled(iLeft, iTop, iLeft + 1, iBottom);
-	}
-	else if ( ( iBottom - iTop ) < 0 )
-	{
-		LineDraw( TRUE, iLeft, iTop, iLeft, iBottom, usLineColor, pDestBuf );
-		RegisterBackgroundRectSingleFilled(iLeft, iBottom, iLeft + 1, iTop);
-	}
-
-	if ( ( iBottom - iTop ) > 0 )
-	{
-		LineDraw( TRUE, iRight, iTop, iRight, iBottom, usLineColor, pDestBuf );
-		RegisterBackgroundRectSingleFilled(iRight, iTop, iRight + 1, iBottom);
-	}
-	else if ( ( iBottom - iTop ) < 0 )
-	{
-		LineDraw( TRUE, iRight, iTop, iRight, iBottom, usLineColor, pDestBuf );
-		RegisterBackgroundRectSingleFilled(iRight, iBottom, iRight + 1, iTop);
+		if (t > b) Swap(t, b);
+		LineDraw(TRUE, l, t, l, b, colour, pDestBuf);
+		RegisterBackgroundRectSingleFilled(l, t, l + 1, b);
+		LineDraw(TRUE, r, t, r, b, colour, pDestBuf);
+		RegisterBackgroundRectSingleFilled(r, t, r + 1, b);
 	}
 }
 
