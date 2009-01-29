@@ -1242,247 +1242,84 @@ static void DisplayGroundEta(void)
 }
 
 
-static void HighLightAssignLine(void)
+struct HighLightState
 {
-	static INT32 iColorNum = STARTING_COLOR_NUM;
-	static BOOLEAN fDelta=FALSE;
-	static INT32 uiOldHighlight = MAX_CHARACTER_COUNT + 1;
-	INT16 usCount = 0;
-	UINT16 usX;
-	UINT16 usY;
+	INT32 colour_idx;
+	bool  delta;
+	INT32 old_highlight;
+};
 
 
+static void HighLightSelection(HighLightState& state, INT32 const line, UINT16 const x, UINT16 const w, BOOLEAN (& predicate)(INT16))
+{
 	// is this a valid line?
-	if( ( giAssignHighLine == -1 ) || fShowInventoryFlag )
+	if (line == -1 || fShowInventoryFlag)
 	{
-		uiOldHighlight = MAX_CHARACTER_COUNT + 1;
+		state.old_highlight = MAX_CHARACTER_COUNT + 1;
 		return;
 	}
 
 	// if not ready to change glow phase yet, leave
-	if ( !gfGlowTimerExpired )
-		return;
-
+	if (!gfGlowTimerExpired) return;
 
 	// check if we have moved lines, if so, reset
-	if( uiOldHighlight != giAssignHighLine )
+	if (state.old_highlight != line)
 	{
-		iColorNum = STARTING_COLOR_NUM;
-		fDelta = FALSE;
-
-		uiOldHighlight = giAssignHighLine;
+		state.old_highlight = line;
+		state.colour_idx    = STARTING_COLOR_NUM;
+		state.delta         = false;
 	}
 
-
-	if((iColorNum==0)||(iColorNum==10))
-	{
-	 fDelta=!fDelta;
-	}
-	if(!fDelta)
-		iColorNum++;
-	else
-		iColorNum--;
-
-
-	//usY=Y_START+(giHighLine*GetFontHeight((MAP_SCREEN_FONT)));
-	usY = ( Y_OFFSET * giAssignHighLine - 1 ) + ( Y_START + ( giAssignHighLine * Y_SIZE ) );
-
-	if( giAssignHighLine >= FIRST_VEHICLE )
-	{
-		usY += 6;
-	}
+	if (state.colour_idx == 0 || state.colour_idx == 10) state.delta = !state.delta;
+	state.colour_idx += state.delta ? -1 : +1;
 
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	UINT16* const pDestBuf = l.Buffer<UINT16>();
 
-	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
+	UINT16 const colour = GlowColor(state.colour_idx);
+	INT32  const h      = Y_SIZE + Y_OFFSET;
+	for (INT16 i = 0; i != MAX_CHARACTER_COUNT; ++i)
 	{
-		if (IsCharacterSelectedForAssignment(usCount))
+		if (!predicate(i)) continue;
+
+		UINT16 y = Y_START - 1 + i * h;
+		if (i >= FIRST_VEHICLE) y += 6;
+
+		if (i == 0 || !predicate(i - 1) || i == FIRST_VEHICLE)
 		{
-			usX=ASSIGN_X;
-			//usY=Y_START+(giHighLine*GetFontHeight((MAP_SCREEN_FONT)));
-			usY=(Y_OFFSET*usCount-1)+(Y_START+(usCount*Y_SIZE));
-			if( usCount >= FIRST_VEHICLE )
-			{
-				usY += 6;
-			}
-
-			UINT16 usColor = GlowColor(iColorNum);
-
-			LineDraw(TRUE, usX, usY, usX, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
-			LineDraw(TRUE, usX+ASSIGN_WIDTH, usY, usX+ASSIGN_WIDTH, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
-			if( ( usCount == 0 ) || ( usCount != 0 ? !( IsCharacterSelectedForAssignment( ( UINT16 )( usCount - 1 ) ) ) : 0 ) || ( usCount == FIRST_VEHICLE ) )
-			{
-				LineDraw( TRUE, usX, usY, usX+ASSIGN_WIDTH, usY, usColor,pDestBuf);
-			}
-
-			if( ( ( usCount == MAX_CHARACTER_COUNT - 1 ) ) || ( usCount != ( MAX_CHARACTER_COUNT - 1 ) ? !( IsCharacterSelectedForAssignment( ( UINT16 )( usCount + 1 ) ) ) : 0) || ( usCount == FIRST_VEHICLE - 1 ) )
-			{
-				LineDraw(TRUE, usX, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usX+ASSIGN_WIDTH, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
-			}
-
-			InvalidateRegion( usX, usY, usX+ASSIGN_WIDTH+1, usY+GetFontHeight(MAP_SCREEN_FONT)+3);
+			LineDraw(TRUE, x, y, x + w, y, colour, pDestBuf);
 		}
+		if (i == MAX_CHARACTER_COUNT - 1 || !predicate(i + 1) || i == FIRST_VEHICLE - 1)
+		{
+			LineDraw(TRUE, x, y + h, x + w, y + h, colour, pDestBuf);
+		}
+		LineDraw(TRUE, x,     y, x,     y + h, colour, pDestBuf);
+		LineDraw(TRUE, x + w, y, x + w, y + h, colour, pDestBuf);
+
+		InvalidateRegion(x, y, x + w, y + h);
 	}
+}
+
+
+static void HighLightAssignLine(void)
+{
+	static HighLightState state = { STARTING_COLOR_NUM, false, MAX_CHARACTER_COUNT + 1 };
+	HighLightSelection(state, giAssignHighLine, ASSIGN_X, ASSIGN_WIDTH, IsCharacterSelectedForAssignment);
 }
 
 
 static void HighLightDestLine(void)
 {
-	static INT32 iColorNum = STARTING_COLOR_NUM;
-	static BOOLEAN fDelta=FALSE;
-	static INT32 uiOldHighlight = MAX_CHARACTER_COUNT + 1;
-	UINT16 usCount = 0;
-	UINT16 usX;
-	UINT16 usY;
-
-
-	if( ( giDestHighLine == -1 ) || fShowInventoryFlag )
-	{
-		uiOldHighlight = MAX_CHARACTER_COUNT + 1;
-		return;
-	}
-
-	// if not ready to change glow phase yet, leave
-	if ( !gfGlowTimerExpired )
-		return;
-
-
-	// check if we have moved lines, if so, reset
-	if( uiOldHighlight != giDestHighLine )
-	{
-		iColorNum = STARTING_COLOR_NUM;
-		fDelta = FALSE;
-
-		uiOldHighlight = giDestHighLine;
-	}
-
-
-	if((iColorNum==0)||(iColorNum==10))
-	{
-	 fDelta=!fDelta;
-	}
-	if(!fDelta)
-		iColorNum++;
-	else
-		iColorNum--;
-
-	SGPVSurface::Lock l(FRAME_BUFFER);
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	UINT16* const pDestBuf = l.Buffer<UINT16>();
-
-	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
-	{
-		if (CharacterIsGettingPathPlotted(usCount))
-		{
-			usX=DEST_ETA_X-4;
-			//usY=Y_START+(giHighLine*GetFontHeight((MAP_SCREEN_FONT)));
-			usY=(Y_OFFSET*usCount-1)+(Y_START+(usCount*Y_SIZE));
-			if( usCount >= FIRST_VEHICLE )
-			{
-				usY += 6;
-			}
-
-			UINT16 usColor = GlowColor(iColorNum);
-
-			if( ( usCount == 0 ) || ( usCount != 0 ? !( CharacterIsGettingPathPlotted( ( UINT16 )( usCount - 1 ) ) ) : 0 ) || ( usCount == FIRST_VEHICLE ) )
-			{
-				LineDraw( TRUE, usX+4, usY, usX+DEST_ETA_WIDTH+4, usY, usColor,pDestBuf);
-			}
-			if( ( ( usCount == MAX_CHARACTER_COUNT - 1 ) ) || ( usCount != ( MAX_CHARACTER_COUNT - 1 ) ? !( CharacterIsGettingPathPlotted( ( UINT16 )( usCount + 1 ) ) ) : 0) || ( usCount == FIRST_VEHICLE - 1 ) )
-			{
-				LineDraw(TRUE, usX+4, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usX+DEST_ETA_WIDTH+4, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
-			}
-
-
-			LineDraw(TRUE, usX+4, usY, usX+4, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
-			LineDraw(TRUE, usX+DEST_ETA_WIDTH+4, usY, usX+DEST_ETA_WIDTH+4, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
-
-			InvalidateRegion( usX, usY, usX + DEST_ETA_WIDTH + 5, usY + GetFontHeight(MAP_SCREEN_FONT)+3 );
-		}
-	}
-	//InvalidateRegion( usX+4, usY, DEST_ETA_WIDTH-10, usY+GetFontHeight(MAP_SCREEN_FONT)+3);
-	//InvalidateRegion( usX+10, usY, usX+ASSIGN_WIDTH, usY+GetFontHeight(MAP_SCREEN_FONT)+3);
+	static HighLightState state = { STARTING_COLOR_NUM, false, MAX_CHARACTER_COUNT + 1 };
+	HighLightSelection(state, giDestHighLine, DEST_ETA_X, DEST_ETA_WIDTH, CharacterIsGettingPathPlotted);
 }
 
 
 static void HighLightSleepLine(void)
 {
-	static INT32 iColorNum = STARTING_COLOR_NUM;
-	static BOOLEAN fDelta=FALSE;
-	static INT32 uiOldHighlight = MAX_CHARACTER_COUNT + 1;
-	UINT16 usCount = 0;
-	UINT16 usX, usX2;
-	UINT16 usY;
-
-
-	// is this a valid line?
-	if( ( giSleepHighLine == -1 ) || fShowInventoryFlag )
-	{
-		uiOldHighlight = MAX_CHARACTER_COUNT + 1;
-		return;
-	}
-
-	// if not ready to change glow phase yet, leave
-	if ( !gfGlowTimerExpired )
-		return;
-
-
-	// check if we have moved lines, if so, reset
-	if( uiOldHighlight != giSleepHighLine )
-	{
-		iColorNum = STARTING_COLOR_NUM;
-		fDelta = FALSE;
-
-		uiOldHighlight = giSleepHighLine;
-	}
-
-
-	if((iColorNum==0)||(iColorNum==10))
-	{
-	 fDelta=!fDelta;
-	}
-	if(!fDelta)
-		iColorNum++;
-	else
-		iColorNum--;
-
-	SGPVSurface::Lock l(FRAME_BUFFER);
-	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	UINT16* const pDestBuf = l.Buffer<UINT16>();
-
-	for( usCount = 0; usCount < MAX_CHARACTER_COUNT; usCount++ )
-	{
-		if (IsCharacterSelectedForSleep(usCount))
-		{
-			usX=SLEEP_X-4;
-			usX2 = SLEEP_X + SLEEP_WIDTH;
-
-			//usY=Y_START+(giHighLine*GetFontHeight((MAP_SCREEN_FONT)));
-			usY=(Y_OFFSET*usCount-1)+(Y_START+(usCount*Y_SIZE));
-			if( usCount >= FIRST_VEHICLE )
-			{
-				usY += 6;
-			}
-
-			UINT16 usColor = GlowColor(iColorNum);
-
-			if( ( usCount == 0 ) || ( usCount != 0 ? !( IsCharacterSelectedForSleep( ( UINT16 )( usCount - 1 ) ) ) : 0 ) || ( usCount == FIRST_VEHICLE ) )
-			{
-				LineDraw( TRUE, usX+4, usY, usX2, usY, usColor,pDestBuf);
-			}
-			if( ( ( usCount == MAX_CHARACTER_COUNT - 1 ) ) || ( usCount != ( MAX_CHARACTER_COUNT - 1 ) ? !( IsCharacterSelectedForSleep( ( UINT16 )( usCount + 1 ) ) ) : 0) || ( usCount == FIRST_VEHICLE - 1 ) )
-			{
-				LineDraw(TRUE, usX+4, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usX2, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
-			}
-
-			LineDraw(TRUE, usX+ 4, usY, usX + 4, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
-			LineDraw(TRUE, usX2, usY, usX2, usY+GetFontHeight(MAP_SCREEN_FONT)+2, usColor, pDestBuf);
-
-			InvalidateRegion( usX, usY, usX2 + 5, usY + GetFontHeight(MAP_SCREEN_FONT)+3 );
-		}
-	}
+	static HighLightState state = { STARTING_COLOR_NUM, false, MAX_CHARACTER_COUNT + 1 };
+	HighLightSelection(state, giSleepHighLine, SLEEP_X, SLEEP_WIDTH, IsCharacterSelectedForSleep);
 }
 
 

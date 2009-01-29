@@ -716,7 +716,7 @@ void PlayGlowRegionSound( void )
 
 
 
-INT16 CharacterIsGettingPathPlotted( INT16 sCharNumber )
+BOOLEAN CharacterIsGettingPathPlotted(INT16 const sCharNumber)
 {
 	// valid character number?
 	if( ( sCharNumber < 0 ) || ( sCharNumber >= MAX_CHARACTER_COUNT ) )

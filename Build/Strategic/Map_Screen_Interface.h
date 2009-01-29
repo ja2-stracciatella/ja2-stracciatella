@@ -292,7 +292,7 @@ void RestoreBackgroundForSleepGlowRegionList( void );
 void PlayGlowRegionSound( void );
 
 // is this character in the action of plotting a path?
-INT16 CharacterIsGettingPathPlotted( INT16 sCharNumber );
+BOOLEAN CharacterIsGettingPathPlotted(INT16 sCharNumber);
 
 // disable team info panels
 void DisableTeamInfoPanels( void );
