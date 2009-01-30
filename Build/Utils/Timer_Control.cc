@@ -11,62 +11,62 @@
 
 
 INT32	giClockTimer = -1;
-INT32	giTimerDiag = 0;
+INT32	giTimerDiag  =  0;
 
-UINT32	guiBaseJA2Clock = 0;
+UINT32 guiBaseJA2Clock = 0;
 
 static BOOLEAN gfPauseClock = FALSE;
 
 const INT32 giTimerIntervals[NUMTIMERS] =
 {
-		5,					// Tactical Overhead
-		20,					// NEXTSCROLL
-		200,				// Start Scroll
-		200,				// Animate tiles
-		1000,				// FPS Counter
-		80,					// PATH FIND COUNTER
-		150,				// CURSOR TIMER
-		250,				// RIGHT CLICK FOR MENU
-		300,				// LEFT
-		200,				// TARGET REFINE TIMER
-		150,					// CURSOR/AP FLASH
-		20,					// PHYSICS UPDATE
-		100,				// FADE ENEMYS
-		20,					// STRATEGIC OVERHEAD
-		40,
-		500,				// NON GUN TARGET REFINE TIMER
-		250,				// IMPROVED CURSOR FLASH
-		500,				// 2nd CURSOR FLASH
-		400,					// RADARMAP BLINK AND OVERHEAD MAP BLINK SHOUDL BE THE SAME
-		10,					// Music Overhead
+	   5, // Tactical Overhead
+	  20, // NEXTSCROLL
+	 200, // Start Scroll
+	 200, // Animate tiles
+	1000, // FPS Counter
+	  80, // PATH FIND COUNTER
+	 150, // CURSOR TIMER
+	 250, // RIGHT CLICK FOR MENU
+	 300, // LEFT
+	 200, // TARGET REFINE TIMER
+	 150, // CURSOR/AP FLASH
+	  20, // PHYSICS UPDATE
+	 100, // FADE ENEMYS
+	  20, // STRATEGIC OVERHEAD
+	  40,
+	 500, // NON GUN TARGET REFINE TIMER
+	 250, // IMPROVED CURSOR FLASH
+	 500, // 2nd CURSOR FLASH
+	 400, // RADARMAP BLINK AND OVERHEAD MAP BLINK SHOUDL BE THE SAME
+	  10  // Music Overhead
 };
 
 // TIMER COUNTERS
-INT32		giTimerCounters[ NUMTIMERS ];
+INT32 giTimerCounters[NUMTIMERS];
 
-INT32		giTimerAirRaidQuote				= 0;
-INT32		giTimerAirRaidDiveStarted = 0;
-INT32		giTimerAirRaidUpdate			= 0;
-INT32		giTimerCustomizable				= 0;
-INT32		giTimerTeamTurnUpdate			= 0;
+INT32 giTimerAirRaidQuote       = 0;
+INT32 giTimerAirRaidDiveStarted = 0;
+INT32 giTimerAirRaidUpdate      = 0;
+INT32 giTimerCustomizable       = 0;
+INT32 giTimerTeamTurnUpdate     = 0;
 
-CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback = NULL;
+CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback = 0;
 
 // Clock Callback event ID
 static SDL_TimerID g_timer;
 
 
 extern UINT32 guiCompressionStringBaseTime;
-extern INT32 giFlashHighlightedItemBaseTime;
-extern INT32 giCompatibleItemBaseTime;
-extern INT32 giAnimateRouteBaseTime;
-extern INT32 giPotHeliPathBaseTime;
+extern INT32  giFlashHighlightedItemBaseTime;
+extern INT32  giCompatibleItemBaseTime;
+extern INT32  giAnimateRouteBaseTime;
+extern INT32  giPotHeliPathBaseTime;
 extern UINT32 guiSectorLocatorBaseTime;
-extern INT32 giCommonGlowBaseTime;
-extern INT32 giFlashAssignBaseTime;
-extern INT32 giFlashContractBaseTime;
+extern INT32  giCommonGlowBaseTime;
+extern INT32  giFlashAssignBaseTime;
+extern INT32  giFlashContractBaseTime;
 extern UINT32 guiFlashCursorBaseTime;
-extern INT32 giPotCharPathBaseTime;
+extern INT32  giPotCharPathBaseTime;
 
 
 static UINT32 TimeProc(UINT32 const interval, void*)
@@ -150,61 +150,52 @@ void ShutdownJA2Clock(void)
 }
 
 
-void PauseTime( BOOLEAN fPaused )
+void PauseTime(BOOLEAN const fPaused)
 {
 	gfPauseClock = fPaused;
 }
 
-void SetCustomizableTimerCallbackAndDelay( INT32 iDelay, CUSTOMIZABLE_TIMER_CALLBACK pCallback, BOOLEAN fReplace )
+
+void SetCustomizableTimerCallbackAndDelay(INT32 const delay, CUSTOMIZABLE_TIMER_CALLBACK const callback, BOOLEAN const replace)
 {
-	if ( gpCustomizableTimerCallback )
-	{
-		if ( !fReplace )
-		{
-			// replace callback but call the current callback first
-			gpCustomizableTimerCallback();
-		}
+	if (!replace && gpCustomizableTimerCallback)
+	{ // Replace callback but call the current callback first
+		gpCustomizableTimerCallback();
 	}
 
-	RESETTIMECOUNTER( giTimerCustomizable, iDelay );
-	gpCustomizableTimerCallback = pCallback;
-}
-
-void CheckCustomizableTimer( void )
-{
-	if ( gpCustomizableTimerCallback )
-	{
-		if ( TIMECOUNTERDONE( giTimerCustomizable, 0 ) )
-		{
-			// set the callback to a temp variable so we can reset the global variable
-			// before calling the callback, so that if the callback sets up another
-			// instance of the timer, we don't reset it afterwards
-			CUSTOMIZABLE_TIMER_CALLBACK pTempCallback;
-
-			pTempCallback = gpCustomizableTimerCallback;
-			gpCustomizableTimerCallback = NULL;
-			pTempCallback();
-		}
-	}
+	RESETTIMECOUNTER(giTimerCustomizable, delay);
+	gpCustomizableTimerCallback = callback;
 }
 
 
-
-void ResetJA2ClockGlobalTimers( void )
+void CheckCustomizableTimer(void)
 {
-	UINT32 uiCurrentTime = GetJA2Clock();
+	if (!gpCustomizableTimerCallback)             return;
+	if (!TIMECOUNTERDONE(giTimerCustomizable, 0)) return;
+
+	/* Set the callback to a temp variable so we can reset the global variable
+	 * before calling the callback, so that if the callback sets up another
+	 * instance of the timer, we don't reset it afterwards. */
+	CUSTOMIZABLE_TIMER_CALLBACK const callback = gpCustomizableTimerCallback;
+	gpCustomizableTimerCallback = 0;
+	callback();
+}
 
 
-	guiCompressionStringBaseTime = uiCurrentTime;
-	giFlashHighlightedItemBaseTime = uiCurrentTime;
-	giCompatibleItemBaseTime = uiCurrentTime;
-  giAnimateRouteBaseTime = uiCurrentTime;
-	giPotHeliPathBaseTime = uiCurrentTime;
-	guiSectorLocatorBaseTime = uiCurrentTime;
+void ResetJA2ClockGlobalTimers(void)
+{
+	UINT32 const now = GetJA2Clock();
 
-	giCommonGlowBaseTime = uiCurrentTime;
-	giFlashAssignBaseTime = uiCurrentTime;
-	giFlashContractBaseTime = uiCurrentTime;
-	guiFlashCursorBaseTime = uiCurrentTime;
-	giPotCharPathBaseTime = uiCurrentTime;
+	guiCompressionStringBaseTime   = now;
+	giFlashHighlightedItemBaseTime = now;
+	giCompatibleItemBaseTime       = now;
+	giAnimateRouteBaseTime         = now;
+	giPotHeliPathBaseTime          = now;
+	guiSectorLocatorBaseTime       = now;
+
+	giCommonGlowBaseTime           = now;
+	giFlashAssignBaseTime          = now;
+	giFlashContractBaseTime        = now;
+	guiFlashCursorBaseTime         = now;
+	giPotCharPathBaseTime          = now;
 }
