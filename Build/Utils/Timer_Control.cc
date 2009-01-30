@@ -1,3 +1,6 @@
+#include <SDL.h>
+#include <stdexcept>
+
 #include "Debug.h"
 #include "Soldier_Control.h"
 #include "Timer_Control.h"
@@ -5,7 +8,6 @@
 #include "Handle_Items.h"
 #include "WorldDef.h"
 #include "Interface_Control.h"
-#include <SDL.h>
 
 
 INT32	giClockTimer = -1;
@@ -143,10 +145,7 @@ void InitializeJA2Clock(void)
 	}
 
 	g_timer = SDL_AddTimer(BASETIMESLICE, TimeProc, 0);
-	if (!g_timer)
-	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Could not create timer callback");
-	}
+	if (!g_timer) throw std::runtime_error("Could not create timer callback");
 #endif
 }
 
