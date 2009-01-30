@@ -71,64 +71,56 @@ extern INT32 giPotCharPathBaseTime;
 
 static UINT32 TimeProc(UINT32 const interval, void*)
 {
-	static BOOLEAN fInFunction = FALSE;
-
-	if (!fInFunction)
+	if (!gfPauseClock)
 	{
-		fInFunction = TRUE;
+		guiBaseJA2Clock += BASETIMESLICE;
 
-		if (!gfPauseClock)
+		for (UINT32 i = 0; i != NUMTIMERS; i++)
 		{
-			guiBaseJA2Clock += BASETIMESLICE;
-
-			for (UINT32 i = 0; i != NUMTIMERS; i++)
-			{
-				UPDATECOUNTER(i);
-			}
-
-			// Update some specialized countdown timers...
-			UPDATETIMECOUNTER(giTimerAirRaidQuote);
-			UPDATETIMECOUNTER(giTimerAirRaidDiveStarted);
-			UPDATETIMECOUNTER(giTimerAirRaidUpdate);
-			UPDATETIMECOUNTER(giTimerTeamTurnUpdate);
-
-			if (gpCustomizableTimerCallback)
-			{
-				UPDATETIMECOUNTER(giTimerCustomizable);
-			}
-
-#ifndef BOUNDS_CHECKER
-			if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
-			{
-				// IN Mapscreen, loop through player's team
-				FOR_ALL_IN_TEAM(s, gbPlayerNum)
-				{
-					UPDATETIMECOUNTER(s->PortraitFlashCounter);
-					UPDATETIMECOUNTER(s->PanelAnimateCounter);
-				}
-			}
-			else
-			{
-				// Set update flags for soldiers
-				FOR_ALL_MERCS(i)
-				{
-					SOLDIERTYPE* const s = *i;
-					UPDATETIMECOUNTER(s->UpdateCounter);
-					UPDATETIMECOUNTER(s->DamageCounter);
-					UPDATETIMECOUNTER(s->ReloadCounter);
-					UPDATETIMECOUNTER(s->BlinkSelCounter);
-					UPDATETIMECOUNTER(s->PortraitFlashCounter);
-					UPDATETIMECOUNTER(s->AICounter);
-					UPDATETIMECOUNTER(s->FadeCounter);
-					UPDATETIMECOUNTER(s->NextTileCounter);
-					UPDATETIMECOUNTER(s->PanelAnimateCounter);
-				}
-			}
-#endif
+			UPDATECOUNTER(i);
 		}
 
-		fInFunction = FALSE;
+		// Update some specialized countdown timers...
+		UPDATETIMECOUNTER(giTimerAirRaidQuote);
+		UPDATETIMECOUNTER(giTimerAirRaidDiveStarted);
+		UPDATETIMECOUNTER(giTimerAirRaidUpdate);
+		UPDATETIMECOUNTER(giTimerTeamTurnUpdate);
+
+		if (gpCustomizableTimerCallback)
+		{
+			UPDATETIMECOUNTER(giTimerCustomizable);
+		}
+
+#ifndef BOUNDS_CHECKER
+		if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+		{
+			// IN Mapscreen, loop through player's team
+			FOR_ALL_IN_TEAM(s, gbPlayerNum)
+			{
+				UPDATETIMECOUNTER(s->PortraitFlashCounter);
+				UPDATETIMECOUNTER(s->PanelAnimateCounter);
+			}
+		}
+		else
+		{
+			// Set update flags for soldiers
+			FOR_ALL_MERCS(i)
+			{
+				SOLDIERTYPE* const s = *i;
+				UPDATETIMECOUNTER(s->UpdateCounter);
+				UPDATETIMECOUNTER(s->DamageCounter);
+				UPDATETIMECOUNTER(s->ReloadCounter);
+				UPDATETIMECOUNTER(s->BlinkSelCounter);
+				UPDATETIMECOUNTER(s->PortraitFlashCounter);
+				UPDATETIMECOUNTER(s->AICounter);
+				UPDATETIMECOUNTER(s->FadeCounter);
+				UPDATETIMECOUNTER(s->NextTileCounter);
+				UPDATETIMECOUNTER(s->PanelAnimateCounter);
+			}
+		}
+#endif
 	}
+
 	return interval;
 }
 
