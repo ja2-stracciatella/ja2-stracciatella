@@ -1274,7 +1274,8 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-		if (version	>= 37)
+		// No longer need to load Light effects.  They are now in temp files
+		if (37 <= version && version < 76)
 		{
 			LoadLightEffectsFromLoadGameFile(f);
 			LoadGameFilePosition(f, "Lighting Effects");

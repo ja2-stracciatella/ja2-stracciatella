@@ -168,29 +168,25 @@ void DecayLightEffects( UINT32 uiTime )
 
 void LoadLightEffectsFromLoadGameFile(HWFILE const hFile)
 {
-	//no longer need to load Light effects.  They are now in temp files
-	if( guiSaveGameVersion < 76 )
+	memset( gLightEffectData, 0, sizeof( LIGHTEFFECT ) *  NUM_LIGHT_EFFECT_SLOTS );
+
+	//Load the Number of Light Effects
+	FileRead(hFile, &guiNumLightEffects, sizeof(UINT32));
+
+	//if there are lights saved.
+	if( guiNumLightEffects != 0 )
 	{
-		memset( gLightEffectData, 0, sizeof( LIGHTEFFECT ) *  NUM_LIGHT_EFFECT_SLOTS );
-
-		//Load the Number of Light Effects
-		FileRead(hFile, &guiNumLightEffects, sizeof(UINT32));
-
-		//if there are lights saved.
-		if( guiNumLightEffects != 0 )
-		{
-			//loop through and apply the light effects to the map
-			for (UINT32 uiCount = 0; uiCount < guiNumLightEffects; ++uiCount)
-			{
-				ExtractLightEffectFromFile(hFile, &gLightEffectData[uiCount]);
-			}
-		}
-
 		//loop through and apply the light effects to the map
-		FOR_ALL_LIGHTEFFECTS(l)
+		for (UINT32 uiCount = 0; uiCount < guiNumLightEffects; ++uiCount)
 		{
-			UpdateLightingSprite(l);
+			ExtractLightEffectFromFile(hFile, &gLightEffectData[uiCount]);
 		}
+	}
+
+	//loop through and apply the light effects to the map
+	FOR_ALL_LIGHTEFFECTS(l)
+	{
+		UpdateLightingSprite(l);
 	}
 }
 
