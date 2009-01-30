@@ -446,41 +446,37 @@ void DecaySmokeEffects( UINT32 uiTime )
 }
 
 
-void LoadSmokeEffectsFromLoadGameFile(HWFILE const hFile)
+void LoadSmokeEffectsFromLoadGameFile(HWFILE const hFile, UINT32 const savegame_version)
 {
 	UINT32	uiCnt=0;
 
-	//no longer need to load smoke effects.  They are now in temp files
-	if( guiSaveGameVersion < 75 )
+	//Clear out the old list
+	memset( gSmokeEffectData, 0, sizeof( SMOKEEFFECT ) * NUM_SMOKE_EFFECT_SLOTS );
+
+	//Load the Number of Smoke Effects
+	FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32));
+
+	//This is a TEMP hack to allow us to use the saves
+	if (savegame_version < 37 && guiNumSmokeEffects == 0)
 	{
-		//Clear out the old list
-		memset( gSmokeEffectData, 0, sizeof( SMOKEEFFECT ) * NUM_SMOKE_EFFECT_SLOTS );
+		ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[0]);
+	}
 
-		//Load the Number of Smoke Effects
-		FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32));
 
+	//loop through and load the list
+	for( uiCnt=0; uiCnt<guiNumSmokeEffects;uiCnt++)
+	{
+		ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[uiCnt]);
 		//This is a TEMP hack to allow us to use the saves
-		if( guiSaveGameVersion < 37 && guiNumSmokeEffects == 0 )
-		{
-			ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[0]);
-		}
+		if (savegame_version < 37)
+			break;
+	}
 
-
-		//loop through and load the list
-		for( uiCnt=0; uiCnt<guiNumSmokeEffects;uiCnt++)
-		{
-			ExtractSmokeEffectFromFile(hFile, &gSmokeEffectData[uiCnt]);
-			//This is a TEMP hack to allow us to use the saves
-			if( guiSaveGameVersion < 37 )
-				break;
-		}
-
-		//loop through and apply the smoke effects to the map
-		FOR_ALL_SMOKE_EFFECTS(s)
-		{
-			const INT8 bLevel = (s->bFlags & SMOKE_EFFECT_ON_ROOF ? 1 : 0);
-			SpreadEffectSmoke(s, TRUE, bLevel);
-		}
+	//loop through and apply the smoke effects to the map
+	FOR_ALL_SMOKE_EFFECTS(s)
+	{
+		const INT8 bLevel = (s->bFlags & SMOKE_EFFECT_ON_ROOF ? 1 : 0);
+		SpreadEffectSmoke(s, TRUE, bLevel);
 	}
 }
 

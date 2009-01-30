@@ -1131,7 +1131,8 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-		LoadSmokeEffectsFromLoadGameFile(f);
+		// No longer need to load smoke effects.  They are now in temp files
+		if (version < 75) LoadSmokeEffectsFromLoadGameFile(f, version);
 		LoadGameFilePosition(f, "Smoke Effect Structures");
 
 		uiRelEndPerc += 1;
