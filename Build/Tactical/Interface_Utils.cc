@@ -39,52 +39,50 @@
 
 
 // car portraits
-enum{
-	ELDORADO_PORTRAIT =0,
+enum
+{
+	ELDORADO_PORTRAIT = 0,
 	HUMMER_PORTRAIT,
-	ICE_CREAM_TRUCT_PORTRAIT,
+	ICE_CREAM_TRUCK_PORTRAIT,
 	JEEP_PORTRAIT,
-	NUMBER_CAR_PORTRAITS,
+	NUMBER_CAR_PORTRAITS
 };
 
 // the ids for the car portraits
-static SGPVObject* giCarPortraits[4];
-
-// the car portrait file names
-const char *pbCarPortraitFileNames[] = {
-	"INTERFACE/eldorado.sti",
-	"INTERFACE/Hummer.sti",
-	"INTERFACE/ice Cream Truck.sti",
-	"INTERFACE/Jeep.sti",
-};
+static SGPVObject* giCarPortraits[NUMBER_CAR_PORTRAITS];
 
 
-// load int he portraits for the car faces that will be use in mapscreen
+// Load in the portraits for the car faces that will be use in mapscreen
 void LoadCarPortraitValues(void)
 {
 #ifndef JA2DEMO
-	INT32 iCounter = 0;
+	// the car portrait file names
+	static char const* const pbCarPortraitFileNames[] =
+	{
+		"INTERFACE/eldorado.sti",
+		"INTERFACE/Hummer.sti",
+		"INTERFACE/ice Cream Truck.sti",
+		"INTERFACE/Jeep.sti"
+	};
 
 	if (giCarPortraits[0]) return;
-	for( iCounter = 0; iCounter < NUMBER_CAR_PORTRAITS; iCounter++ )
+	for (INT32 i = 0; i != NUMBER_CAR_PORTRAITS; ++i)
 	{
-		giCarPortraits[iCounter] = AddVideoObjectFromFile(pbCarPortraitFileNames[iCounter]);
+		giCarPortraits[i] = AddVideoObjectFromFile(pbCarPortraitFileNames[i]);
 	}
 #endif
 }
 
 
 // get rid of the images we loaded for the mapscreen car portraits
-void UnLoadCarPortraits( void )
+void UnLoadCarPortraits(void)
 {
-	INT32 iCounter = 0;
-
 	// car protraits loaded?
 	if (!giCarPortraits[0]) return;
-	for( iCounter = 0; iCounter < NUMBER_CAR_PORTRAITS; iCounter++ )
+	for (INT32 i = 0; i != NUMBER_CAR_PORTRAITS; ++i)
 	{
-		DeleteVideoObject(giCarPortraits[iCounter]);
-		giCarPortraits[iCounter] = NULL;
+		DeleteVideoObject(giCarPortraits[i]);
+		giCarPortraits[i] = 0;
 	}
 }
 
