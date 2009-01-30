@@ -1066,8 +1066,8 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"All the Map Temp files...");
 		uiRelStartPerc = uiRelEndPerc;
 
-		// Load all the map temp files from the saved game file into the maps\temp directory
-		LoadMapTempFilesFromSavedGameFile(f);
+		// Load all the map temp files from the saved game file into the maps/temp directory
+		LoadMapTempFilesFromSavedGameFile(f, version);
 		LoadGameFilePosition(f, "All the Map Temp files");
 
 		uiRelEndPerc += 1;

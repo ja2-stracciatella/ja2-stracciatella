@@ -135,10 +135,10 @@ static void RetrieveTempFileFromSavedGame(HWFILE const f, UINT32 const flags, UI
 }
 
 
-static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 sMapX, INT16 sMapY, INT8 bMapZ, BOOLEAN fLoadingGame);
+static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 sMapX, INT16 sMapY, INT8 bMapZ, bool check_consistency);
 
 
-static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, INT16 const x, INT16 const y, INT8 const z)
+static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, INT16 const x, INT16 const y, INT8 const z, UINT32 const savegame_version)
 {
 	RetrieveTempFileFromSavedGame(f, flags, SF_ITEM_TEMP_FILE_EXISTS,              x, y, z);
 	RetrieveTempFileFromSavedGame(f, flags, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS,    x, y, z);
@@ -153,12 +153,12 @@ static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, INT16 
 
 	if (flags & SF_ITEM_TEMP_FILE_EXISTS)
 	{
-		SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(x, y, z, TRUE);
+		SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(x, y, z, savegame_version >= 86);
 	}
 
 	if (flags & SF_CIV_PRESERVED_TEMP_FILE_EXISTS    &&
 			gTacticalStatus.uiFlags & LOADING_SAVED_GAME &&
-			guiSaveGameVersion < 78)
+			savegame_version < 78)
 	{
 		// Delete the file, because it is corrupted
 		char map_name[128];
@@ -169,11 +169,12 @@ static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, INT16 
 }
 
 
-// LoadMapTempFilesFromSavedGameFile() loads all the temp files from the saved game file and writes them into the temp directory
-void LoadMapTempFilesFromSavedGameFile(HWFILE const f)
+/* Load all the temp files from the saved game file and write them into the temp
+ * directory */
+void LoadMapTempFilesFromSavedGameFile(HWFILE const f, UINT32 const savegame_version)
 {
 	// HACK FOR GABBY
-	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME && guiSaveGameVersion < 81)
+	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME && savegame_version < 81)
 	{
 		MERCPROFILESTRUCT* const gabby = GetProfile(GABBY);
 		if (gabby->bMercStatus != MERC_IS_DEAD)
@@ -210,7 +211,7 @@ void LoadMapTempFilesFromSavedGameFile(HWFILE const f)
 		for (INT16 x = 1; x <= 16; ++x)
 		{
 			UINT32& flags = SectorInfo[SECTOR(x, y)].uiFlags;
-			RetrieveTempFilesFromSavedGame(f, flags, x, y, 0);
+			RetrieveTempFilesFromSavedGame(f, flags, x, y, 0, savegame_version);
 
 			UINT32 const percentage = ++counter * 100 / 255;
 			RenderProgressBar(0, percentage);
@@ -224,7 +225,7 @@ void LoadMapTempFilesFromSavedGameFile(HWFILE const f)
 		INT16  const y     = u->ubSectorY;
 		INT8   const z     = u->ubSectorZ;
 		UINT32&      flags = u->uiFlags;
-		RetrieveTempFilesFromSavedGame(f, flags, x, y, z);
+		RetrieveTempFilesFromSavedGame(f, flags, x, y, z, savegame_version);
 	}
 }
 
@@ -249,7 +250,7 @@ void SaveWorldItemsToTempItemFile(INT16 const sMapX, INT16 const sMapY, INT8 con
 	}
 
 	SetSectorFlag(sMapX, sMapY, bMapZ, SF_ITEM_TEMP_FILE_EXISTS);
-	SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(sMapX, sMapY, bMapZ, FALSE);
+	SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(sMapX, sMapY, bMapZ, false);
 }
 
 
@@ -1474,7 +1475,7 @@ void SetNumberOfVisibleWorldItemsInSectorStructureForSector(INT16 const x, INT16
 }
 
 
-static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const BOOLEAN fLoadingGame)
+static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, bool const check_consistency)
 {
 	UINT32     uiTotalNumberOfItems;
 	WORLDITEM* pTotalSectorList;
@@ -1492,7 +1493,7 @@ static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const INT1
 	}
 
 #ifdef JA2BETAVERSION
-	if (fLoadingGame && guiSaveGameVersion >= 86)
+	if (check_consistency)
 	{
 		const UINT32 uiReported = GetNumberOfVisibleWorldItemsFromSectorStructureForSector(sMapX, sMapY, bMapZ);
 		if (uiItemCount != uiReported)

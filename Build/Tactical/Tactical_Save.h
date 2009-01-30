@@ -13,7 +13,7 @@
 
 
 //Load the Map modifications from the saved game file
-void LoadMapTempFilesFromSavedGameFile(HWFILE);
+void LoadMapTempFilesFromSavedGameFile(HWFILE, UINT32 savegame_version);
 
 //Save the Map Temp files to the saved game file
 void SaveMapTempFilesToSavedGameFile(HWFILE);
