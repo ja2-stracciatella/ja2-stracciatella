@@ -51,7 +51,7 @@ INT32		giTimerTeamTurnUpdate			= 0;
 CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback = NULL;
 
 // Clock Callback event ID
-static SDL_TimerID gTimerID;
+static SDL_TimerID g_timer;
 
 
 extern UINT32 guiCompressionStringBaseTime;
@@ -67,54 +67,49 @@ extern UINT32 guiFlashCursorBaseTime;
 extern INT32 giPotCharPathBaseTime;
 
 
-static UINT32 TimeProc(UINT32 interval, void* params)
+static UINT32 TimeProc(UINT32 const interval, void*)
 {
 	static BOOLEAN fInFunction = FALSE;
-	//SOLDIERTYPE		*pSoldier;
-	Assert(interval > 0);
 
-	if ( !fInFunction )
+	if (!fInFunction)
 	{
 		fInFunction = TRUE;
 
-		if ( !gfPauseClock )
+		if (!gfPauseClock)
 		{
 			guiBaseJA2Clock += BASETIMESLICE;
 
-			for (UINT32 gCNT = 0; gCNT < NUMTIMERS; gCNT++)
+			for (UINT32 i = 0; i != NUMTIMERS; i++)
 			{
-				UPDATECOUNTER( gCNT );
+				UPDATECOUNTER(i);
 			}
 
 			// Update some specialized countdown timers...
-			UPDATETIMECOUNTER( giTimerAirRaidQuote );
-			UPDATETIMECOUNTER( giTimerAirRaidDiveStarted );
-			UPDATETIMECOUNTER( giTimerAirRaidUpdate );
-			UPDATETIMECOUNTER( giTimerTeamTurnUpdate );
+			UPDATETIMECOUNTER(giTimerAirRaidQuote);
+			UPDATETIMECOUNTER(giTimerAirRaidDiveStarted);
+			UPDATETIMECOUNTER(giTimerAirRaidUpdate);
+			UPDATETIMECOUNTER(giTimerTeamTurnUpdate);
 
-			if ( gpCustomizableTimerCallback )
+			if (gpCustomizableTimerCallback)
 			{
-				UPDATETIMECOUNTER( giTimerCustomizable );
+				UPDATETIMECOUNTER(giTimerCustomizable);
 			}
 
 #ifndef BOUNDS_CHECKER
-
-      // If mapscreen...
-      if( guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN )
-      {
-        // IN Mapscreen, loop through player's team.....
+			if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+			{
+				// IN Mapscreen, loop through player's team
 				FOR_ALL_IN_TEAM(s, gbPlayerNum)
-			  {
+				{
 					UPDATETIMECOUNTER(s->PortraitFlashCounter);
 					UPDATETIMECOUNTER(s->PanelAnimateCounter);
-        }
-      }
-      else
-      {
-			  // Set update flags for soldiers
-			  ////////////////////////////
+				}
+			}
+			else
+			{
+				// Set update flags for soldiers
 				FOR_ALL_MERCS(i)
-			  {
+				{
 					SOLDIERTYPE* const s = *i;
 					UPDATETIMECOUNTER(s->UpdateCounter);
 					UPDATETIMECOUNTER(s->DamageCounter);
@@ -125,11 +120,10 @@ static UINT32 TimeProc(UINT32 interval, void* params)
 					UPDATETIMECOUNTER(s->FadeCounter);
 					UPDATETIMECOUNTER(s->NextTileCounter);
 					UPDATETIMECOUNTER(s->PanelAnimateCounter);
-			  }
-      }
+				}
+			}
 #endif
 		}
-
 
 		fInFunction = FALSE;
 	}
@@ -140,38 +134,28 @@ static UINT32 TimeProc(UINT32 interval, void* params)
 void InitializeJA2Clock(void)
 {
 #ifdef CALLBACKTIMER
-
-
-	INT32			cnt;
 	SDL_InitSubSystem(SDL_INIT_TIMER);
 
 	// Init timer delays
-	for ( cnt = 0; cnt < NUMTIMERS; cnt++ )
+	for (INT32 i = 0; i != NUMTIMERS; ++i)
 	{
-		giTimerCounters[ cnt ] = giTimerIntervals[ cnt ];
+		giTimerCounters[i] = giTimerIntervals[i];
 	}
 
-
-	gTimerID = SDL_AddTimer(BASETIMESLICE,&TimeProc,NULL);
-
-	if ( !gTimerID )
+	g_timer = SDL_AddTimer(BASETIMESLICE, TimeProc, 0);
+	if (!g_timer)
 	{
-		 DebugMsg( TOPIC_JA2, DBG_LEVEL_3, "Could not create timer callback");
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Could not create timer callback");
 	}
-
-
 #endif
 }
 
 
-void    ShutdownJA2Clock(void)
+void ShutdownJA2Clock(void)
 {
 #ifdef CALLBACKTIMER
-
-	SDL_RemoveTimer(gTimerID);
-
+	SDL_RemoveTimer(g_timer);
 #endif
-
 }
 
 
