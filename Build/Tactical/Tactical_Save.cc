@@ -73,7 +73,7 @@ typedef struct
 #define		NPC_TEMP_QUOTE_FILE			"Temp/NpcQuote.tmp"
 
 
-static void AddTempFileToSavedGame(HWFILE const f, UINT32 const flags, UINT32 const type, INT16 const x, INT16 const y, INT8 const z)
+static void AddTempFileToSavedGame(HWFILE const f, UINT32 const flags, SectorFlags const type, INT16 const x, INT16 const y, INT8 const z)
 {
 	if (!(flags & type)) return;
 
@@ -125,7 +125,7 @@ void SaveMapTempFilesToSavedGameFile(HWFILE const f)
 }
 
 
-static void RetrieveTempFileFromSavedGame(HWFILE const f, UINT32 const flags, UINT32 const type, INT16 const x, INT16 const y, INT8 const z)
+static void RetrieveTempFileFromSavedGame(HWFILE const f, UINT32 const flags, SectorFlags const type, INT16 const x, INT16 const y, INT8 const z)
 {
 	if (!(flags & type)) return;
 
@@ -1052,7 +1052,7 @@ void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16
 }
 
 
-void SetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, UINT32 const flag_to_set)
+void SetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, SectorFlags const flag_to_set)
 {
 	if (flag_to_set == SF_ALREADY_VISITED)
 	{ // Do certain things when particular sectors are visited
@@ -1090,7 +1090,7 @@ void SetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, UINT32 const fla
 }
 
 
-void ReSetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, UINT32 const flag_to_clear)
+void ReSetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, SectorFlags const flag_to_clear)
 {
 	if (z == 0)
 	{
@@ -1104,7 +1104,7 @@ void ReSetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, UINT32 const f
 }
 
 
-BOOLEAN GetSectorFlagStatus(INT16 const x, INT16 const y, UINT8 const z, UINT32 const flag_to_check)
+BOOLEAN GetSectorFlagStatus(INT16 const x, INT16 const y, UINT8 const z, SectorFlags const flag_to_check)
 {
 	return (GetSectorFlags(x, y, z) & flag_to_check) != 0;
 }
@@ -1394,7 +1394,7 @@ void JA2EncryptedFileWrite(HWFILE const hFile, BYTE const* const data, UINT32 co
 }
 
 
-void GetMapTempFileName(const UINT32 uiType, char* const pMapName, const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ)
+void GetMapTempFileName(SectorFlags const uiType, char* const pMapName, INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
 	// Convert the current sector location into a file name
 	char zTempName[512];

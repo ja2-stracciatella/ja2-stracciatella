@@ -27,7 +27,7 @@ BOOLEAN gfRestoringEnemySoldiersFromTempFile = FALSE;
 BOOLEAN gfRestoringCiviliansFromTempFile = FALSE;
 
 
-static void RemoveTempFile(const INT16 x, const INT16 y, const INT8 z, const UINT32 file_flag)
+static void RemoveTempFile(INT16 const x, INT16 const y, INT8 const z, SectorFlags const file_flag)
 {
 	if (!GetSectorFlagStatus(x, y, z, file_flag)) return;
 
@@ -656,9 +656,9 @@ void NewWayOfLoadingCiviliansFromTempFile()
 void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ, BOOLEAN const fEnemy, BOOLEAN const fValidateOnly)
 {
 	//if we are saving the enemy info to the enemy temp file
-	UINT8  first_team;
-	UINT8  last_team;
-	UINT32 file_flag;
+	UINT8       first_team;
+	UINT8       last_team;
+	SectorFlags file_flag;
 	if (fEnemy)
 	{
 		first_team = ENEMY_TEAM;

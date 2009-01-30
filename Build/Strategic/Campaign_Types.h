@@ -34,37 +34,40 @@ enum
 
 
 //Various flag definitions
+enum SectorFlags
+{
+	SF_USE_MAP_SETTINGS                   = 0x00000001,
+	SF_ENEMY_AMBUSH_LOCATION              = 0x00000002,
 
-#define SF_USE_MAP_SETTINGS											0x00000001
-#define SF_ENEMY_AMBUSH_LOCATION								0x00000002
+	/* Special case flag used when players encounter enemies in a sector, then
+	 * retreat.  The number of enemies will display on mapscreen until time is
+	 * compressed.  When time is compressed, the flag is cleared, and a question
+	 * mark is displayed to reflect that the player no longer knows. */
+	SF_PLAYER_KNOWS_ENEMIES_ARE_HERE      = 0x00000004,
 
-//Special case flag used when players encounter enemies in a sector, then retreat.  The number of enemies
-//will display on mapscreen until time is compressed.  When time is compressed, the flag is cleared, and
-//a question mark is displayed to reflect that the player no longer knows.
-#define SF_PLAYER_KNOWS_ENEMIES_ARE_HERE				0x00000004
-
-#define SF_SAM_SITE															0x00000008
-#define SF_MINING_SITE													0x00000010
-#define	SF_ALREADY_VISITED											0x00000020
-#define SF_USE_ALTERNATE_MAP										0x00000040
-#define SF_PENDING_ALTERNATE_MAP								0x00000080
-#define SF_ALREADY_LOADED												0x00000100
-#define SF_HAS_ENTERED_TACTICAL									0x00000200
-#define SF_SKYRIDER_NOTICED_ENEMIES_HERE				0x00000400
-#define SF_HAVE_USED_GUIDE_QUOTE								0x00000800
+	SF_SAM_SITE                           = 0x00000008,
+	SF_MINING_SITE                        = 0x00000010,
+	SF_ALREADY_VISITED                    = 0x00000020,
+	SF_USE_ALTERNATE_MAP                  = 0x00000040,
+	SF_PENDING_ALTERNATE_MAP              = 0x00000080,
+	SF_ALREADY_LOADED                     = 0x00000100,
+	SF_HAS_ENTERED_TACTICAL               = 0x00000200,
+	SF_SKYRIDER_NOTICED_ENEMIES_HERE      = 0x00000400,
+	SF_HAVE_USED_GUIDE_QUOTE              = 0x00000800,
 
 
-#define	SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS				0x00100000		//Temp File starts with sm_
-#define	SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS		0x00200000		//Temp File starts with l_
+	SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS     = 0x00100000,	// Temp File starts with sm_
+	SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS  = 0x00200000,	// Temp File starts with l_
 
-#define	SF_REVEALED_STATUS_TEMP_FILE_EXISTS			0x01000000		//Temp File starts with v_
-#define	SF_DOOR_STATUS_TEMP_FILE_EXISTS					0x02000000		//Temp File starts with ds_
-#define SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS			0x04000000		//Temp File starts with e_
-#define SF_CIV_PRESERVED_TEMP_FILE_EXISTS				0x08000000		//Temp File starts with c_
-#define	SF_ITEM_TEMP_FILE_EXISTS								0x10000000		//Temp File starts with i_
-#define	SF_ROTTING_CORPSE_TEMP_FILE_EXISTS			0x20000000		//Temp File starts with r_
-#define	SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS		0x40000000		//Temp File starts with m_
-#define	SF_DOOR_TABLE_TEMP_FILES_EXISTS					0x80000000		//Temp File starts with d_
+	SF_REVEALED_STATUS_TEMP_FILE_EXISTS   = 0x01000000,	// Temp File starts with v_
+	SF_DOOR_STATUS_TEMP_FILE_EXISTS       = 0x02000000,	// Temp File starts with ds_
+	SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS   = 0x04000000,	// Temp File starts with e_
+	SF_CIV_PRESERVED_TEMP_FILE_EXISTS     = 0x08000000,	// Temp File starts with c_
+	SF_ITEM_TEMP_FILE_EXISTS              = 0x10000000,	// Temp File starts with i_
+	SF_ROTTING_CORPSE_TEMP_FILE_EXISTS    = 0x20000000,	// Temp File starts with r_
+	SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS = 0x40000000,	// Temp File starts with m_
+	SF_DOOR_TABLE_TEMP_FILES_EXISTS       = 0x80000000  // Temp File starts with d_
+};
 
 
 // town militia experience categories

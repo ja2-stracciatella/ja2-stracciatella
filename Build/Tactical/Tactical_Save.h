@@ -1,6 +1,7 @@
 #ifndef __TACTICAL_SAVE_H_
 #define __TACTICAL_SAVE_H_
 
+#include "Campaign_Types.h"
 #include "Handle_Items.h"
 #include "World_Items.h"
 #include "WorldDef.h"
@@ -63,9 +64,9 @@ void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 sMapX, INT16 sMapY
 void AddDeadSoldierToUnLoadedSector(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT32 uiFlags);
 
 
-BOOLEAN GetSectorFlagStatus( INT16 sMapX, INT16 sMapY, UINT8 bMapZ, UINT32 uiFlagToSet );
-void    SetSectorFlag(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, UINT32 uiFlagToSet);
-void    ReSetSectorFlag(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, UINT32 uiFlagToSet);
+BOOLEAN GetSectorFlagStatus(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
+void    SetSectorFlag(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
+void    ReSetSectorFlag(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
 
 
 //Saves the NPC temp Quote file to the saved game file
@@ -89,7 +90,7 @@ void InitExitGameDialogBecauseFileHackDetected(void);
 
 void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
-void GetMapTempFileName(UINT32 uiType, char* pMapName, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+void GetMapTempFileName(SectorFlags uiType, char* pMapName, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
 UINT32	GetNumberOfVisibleWorldItemsFromSectorStructureForSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
