@@ -77,9 +77,9 @@ extern CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback;
 #define		RESETTIMECOUNTER( c, d )			( c = d )
 
 #ifdef BOUNDS_CHECKER
-	#define   TIMECOUNTERDONE( c, d )				( TRUE )
+#	define TIMECOUNTERDONE(c, d) true
 #else
-	#define   TIMECOUNTERDONE( c, d )				( c == 0 ) ? TRUE : FALSE
+#	define TIMECOUNTERDONE(c, d) (c == 0)
 #endif
 
 #define SYNCTIMECOUNTER() (void)0
@@ -93,7 +93,7 @@ extern CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback;
 
 #define   UPDATETIMECOUNTER( c )
 #define   RESETTIMECOUNTER( c, d )			( c = giClockTimer )
-#define   TIMECOUNTERDONE( c, d )				( giClockTimer - c >  d ) ? TRUE : FALSE
+#define   TIMECOUNTERDONE(c, d)         (giClockTimer - c >  d)
 #define		SYNCTIMECOUNTER( )						( giClockTimer = GetJA2Clock() )
 
 #endif
