@@ -802,43 +802,34 @@ static void LoadGameFilePosition(HWFILE load, const char* pMsg);
 #endif
 
 
-BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
+BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 {
-	SAVED_GAME_HEADER SaveGameHeader;
+	TrashAllSoldiers();
+	RemoveAllGroups();
 
-	INT16 sLoadSectorX;
-	INT16 sLoadSectorY;
-	INT8 bLoadSectorZ;
-	CHAR8		zSaveGameName[ 512 ];
+	// Empty the dialogue Queue cause someone could still have a quote in waiting
+	EmptyDialogueQueue();
 
-	UINT32 uiRelStartPerc;
-	UINT32 uiRelEndPerc;
+	// If there is someone talking, stop them
+	StopAnyCurrentlyTalkingSpeech();
 
-	uiRelStartPerc = uiRelEndPerc =0;
-
-  TrashAllSoldiers( );
-  RemoveAllGroups();
-
-	//Empty the dialogue Queue cause someone could still have a quote in waiting
-	EmptyDialogueQueue( );
-
-	//If there is someone talking, stop them
-	StopAnyCurrentlyTalkingSpeech( );
-
-  ZeroAnimSurfaceCounts( );
+	ZeroAnimSurfaceCounts();
 
 	ShutdownNPCQuotes();
 
 	//is it a valid save number
-	if( ubSavedGameID >= NUM_SAVE_GAMES )
+	if (save_slot_id >= NUM_SAVE_GAMES)
 	{
-		if( ubSavedGameID != SAVE__END_TURN_NUM )
-			return( FALSE );
+		if (save_slot_id != SAVE__END_TURN_NUM)
+			return FALSE;
 	}
-	else if( !gbSaveGameArray[ ubSavedGameID ] )
-		return( FALSE );
+	else
+	{
+		if (!gbSaveGameArray[save_slot_id])
+			return FALSE;
+	}
 
-	InitShutDownMapTempFileTest(TRUE, "LoadMapTempFile", ubSavedGameID);
+	InitShutDownMapTempFileTest(TRUE, "LoadMapTempFile", save_slot_id);
 
 	//Used in mapescreen to disable the annoying 'swoosh' transitions
 	gfDontStartTransitionFromLaptop = TRUE;
@@ -846,30 +837,32 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 	// Reset timer callbacks
 	gpCustomizableTimerCallback = NULL;
 
-	gubSaveGameLoc = ubSavedGameID;
+	gubSaveGameLoc = save_slot_id;
 	InitLoadGameFilePosition();
 
 	//Set the fact that we are loading a saved game
 	gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
 
-	//Trash the existing world.  This is done to ensure that if we are loading a game that doesn't have
-	//a world loaded, that we trash it beforehand -- else the player could theoretically enter that sector
-	//where it would be in a pre-load state.
+	/* Trash the existing world.  This is done to ensure that if we are loading a
+	 * game that doesn't have a world loaded, that we trash it beforehand -- else
+	 * the player could theoretically enter that sector where it would be in a
+	 * pre-load state. */
 	TrashWorld();
 
+	// Deletes all the Temp files in the Maps/Temp directory
+	InitTacticalSave(TRUE);
 
-	//Deletes all the Temp files in the Maps\Temp directory
-	InitTacticalSave( TRUE );
+	// ATE: Added to empty dialogue q
+	EmptyDialogueQueue();
 
-	// ATE; Added to empry dialogue q
-	EmptyDialogueQueue( );
-
-	//Create the name of the file
-	CreateSavedGameFileNameFromNumber( ubSavedGameID, zSaveGameName );
-
+	SAVED_GAME_HEADER SaveGameHeader;
+	UINT32            version;
+	UINT32            uiRelStartPerc = 0;
+	UINT32            uiRelEndPerc   = 0;
 	try
 	{
-		// open the save game file
+		char zSaveGameName[512];
+		CreateSavedGameFileNameFromNumber(save_slot_id, zSaveGameName);
 		AutoSGPFile f(FileOpen(zSaveGameName, FILE_ACCESS_READ));
 		LoadGameFilePosition(f, "Just Opened File");
 
@@ -877,18 +870,20 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		FileRead(f, &SaveGameHeader, sizeof(SAVED_GAME_HEADER));
 		LoadGameFilePosition(f, "Save Game Header");
 
-		guiJA2EncryptionSet = CalcJA2EncryptionSet( &SaveGameHeader );
+		guiJA2EncryptionSet = CalcJA2EncryptionSet(&SaveGameHeader);
 
-		guiBrokenSaveGameVersion = SaveGameHeader.uiSavedGameVersion;
+		version = SaveGameHeader.uiSavedGameVersion;
+		guiBrokenSaveGameVersion = version;
 
-		//if the player is loading up an older version of the game, and the person DOESNT have the cheats on,
-		if (SaveGameHeader.uiSavedGameVersion < 65 && !CHEATER_CHEAT_LEVEL()) goto load_failed;
+		/* If the player is loading up an older version of the game and the person
+		 * DOESN'T have the cheats on. */
+		if (version < 65 && !CHEATER_CHEAT_LEVEL()) goto load_failed;
 
 		//Store the loading screenID that was saved
 		gubLastLoadingScreenID = SaveGameHeader.ubLoadScreenID;
 
 		//HACK
-		guiSaveGameVersion = SaveGameHeader.uiSavedGameVersion;
+		guiSaveGameVersion = version;
 
 #if 0 // XXX was commented out
 		LoadGeneralInfo(f);
@@ -908,68 +903,61 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		LoadGameFilePosition(f, "Game Clock");
 
 		//if we are suppose to use the alternate sector
-		if( SaveGameHeader.fAlternateSector )
+		if (SaveGameHeader.fAlternateSector)
 		{
-			SetSectorFlag( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_USE_ALTERNATE_MAP );
+			SetSectorFlag(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_USE_ALTERNATE_MAP);
 			gfUseAlternateMap = TRUE;
 		}
 
-
 		//if the world was loaded when saved, reload it, otherwise dont
-		if( SaveGameHeader.fWorldLoaded || SaveGameHeader.uiSavedGameVersion < 50 )
+		if (SaveGameHeader.fWorldLoaded || version < 50)
 		{
 			//Get the current world sector coordinates
-			sLoadSectorX = gWorldSectorX;
-			sLoadSectorY = gWorldSectorY;
-			bLoadSectorZ = gbWorldSectorZ;
+			INT16 const sLoadSectorX = gWorldSectorX;
+			INT16 const sLoadSectorY = gWorldSectorY;
+			INT8  const bLoadSectorZ = gbWorldSectorZ;
 
 			// This will guarantee that the sector will be loaded
 			gbWorldSectorZ = -1;
 
-
-			//if we should load a sector ( if the person didnt just start the game game )
-			if( ( gWorldSectorX != 0 ) && ( gWorldSectorY != 0 ) )
+			//if we should load a sector (if the person didnt just start the game game)
+			if (gWorldSectorX != 0 && gWorldSectorY != 0)
 			{
 				//Load the sector
-				SetCurrentWorldSector( sLoadSectorX, sLoadSectorY, bLoadSectorZ );
+				SetCurrentWorldSector(sLoadSectorX, sLoadSectorY, bLoadSectorZ);
 			}
 		}
 		else
 		{ //By clearing these values, we can avoid "in sector" checks -- at least, that's the theory.
-			gWorldSectorX = gWorldSectorY = 0;
+			gWorldSectorX = 0;
+			gWorldSectorY = 0;
 
-			//Since there is no
-			if( SaveGameHeader.sSectorX == -1 || SaveGameHeader.sSectorY == -1 || SaveGameHeader.bSectorZ == -1 )
-				gubLastLoadingScreenID = LOADINGSCREEN_HELI;
-			else
-				gubLastLoadingScreenID = GetLoadScreenID( SaveGameHeader.sSectorX, SaveGameHeader.sSectorY, SaveGameHeader.bSectorZ );
+			INT16 const x = SaveGameHeader.sSectorX;
+			INT16 const y = SaveGameHeader.sSectorY;
+			INT8  const z = SaveGameHeader.bSectorZ;
+			gubLastLoadingScreenID = x == -1 || y == -1 || z == -1 ?
+				LOADINGSCREEN_HELI : GetLoadScreenID(x, y, z);
 
 			BeginLoadScreen();
 		}
 
 		CreateLoadingScreenProgressBar();
-		SetProgressBarColor( 0, 0, 0, 150 );
+		SetProgressBarColor(0, 0, 0, 150);
 
 #ifdef JA2BETAVERSION
-		//set the font
-		SetProgressBarMsgAttributes( 0, FONT12ARIAL, FONT_MCOLOR_WHITE, 0 );
+		SetProgressBarMsgAttributes(0, FONT12ARIAL, FONT_MCOLOR_WHITE, 0);
 
 		//
 		// Set the tile so we don see the text come up
 		//
 
 		//if the world is unloaded, we must use the save buffer for the text
-		if( SaveGameHeader.fWorldLoaded )
-			SetProgressBarTextDisplayFlag( 0, TRUE, TRUE, FALSE );
-		else
-			SetProgressBarTextDisplayFlag( 0, TRUE, TRUE, TRUE );
+		SetProgressBarTextDisplayFlag(0, TRUE, TRUE, !SaveGameHeader.fWorldLoaded);
 #endif
 
-		uiRelStartPerc = 0;
-
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Strategic Events..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Strategic Events...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
 		//load the game events
@@ -977,8 +965,8 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		LoadGameFilePosition(f, "Strategic Events");
 
 		uiRelEndPerc += 0;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Laptop Info" );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Laptop Info");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
 
@@ -986,408 +974,362 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		LoadGameFilePosition(f, "Laptop Info");
 
 		uiRelEndPerc += 0;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Merc Profiles..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Merc Profiles...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-		//
 		// Load all the saved Merc profiles
-		//
 		LoadSavedMercProfiles(f);
 		LoadGameFilePosition(f, "Merc Profiles");
 
 		uiRelEndPerc += 30;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Soldier Structure..." );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Soldier Structure...");
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		//
 		// Load the soldier structure info
-		//
 		LoadSoldierStructure(f);
 		LoadGameFilePosition(f, "Soldier Structure");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Finances Data File..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Finances Data File...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		//
 		// Load the Finances Data and write it to a new file
-		//
 		LoadFilesFromSavedGame(FINANCES_DATA_FILE, f);
 		LoadGameFilePosition(f, "Finances Data File");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"History File..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"History File...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		//
 		// Load the History Data and write it to a new file
-		//
 		LoadFilesFromSavedGame(HISTORY_DATA_FILE, f);
 		LoadGameFilePosition(f, "History File");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"The Laptop FILES file..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"The Laptop FILES file...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		//
 		// Load the Files Data and write it to a new file
-		//
 		LoadFilesFromSavedGame(FILES_DAT_FILE, f);
 		LoadGameFilePosition(f, "The Laptop FILES file");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Email..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Email...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
-
 
 		// Load the data for the emails
 		LoadEmailFromSavedGame(f);
 		LoadGameFilePosition(f, "Email");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Strategic Information..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Strategic Information...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		//Load the strategic Information
+		// Load the strategic Information
 		LoadStrategicInfoFromSavedFile(f);
 		LoadGameFilePosition(f, "Strategic Information");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"UnderGround Information..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"UnderGround Information...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		//Load the underground information
+		// Load the underground information
 		LoadUnderGroundSectorInfoFromSavedGame(f);
 		LoadGameFilePosition(f, "UnderGround Information");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Squad Info..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Squad Info...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
-
 
 		// Load all the squad info from the saved game file
 		LoadSquadInfoFromSavedGameFile(f);
 		LoadGameFilePosition(f, "Squad Info");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Strategic Movement Groups..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Strategic Movement Groups...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		//Load the group linked list
+		// Load the group linked list
 		LoadStrategicMovementGroupsFromSavedGameFile(f);
 		LoadGameFilePosition(f, "Strategic Movement Groups");
 
 		uiRelEndPerc += 30;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"All the Map Temp files..." );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"All the Map Temp files...");
 		uiRelStartPerc = uiRelEndPerc;
-
 
 		// Load all the map temp files from the saved game file into the maps\temp directory
 		LoadMapTempFilesFromSavedGameFile(f);
 		LoadGameFilePosition(f, "All the Map Temp files");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Quest Info..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Quest Info...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
-
 
 		LoadQuestInfoFromSavedGameFile(f);
 		LoadGameFilePosition(f, "Quest Info");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"OppList Info..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"OppList Info...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
-
 
 		LoadOppListInfoFromSavedGame(f);
 		LoadGameFilePosition(f, "OppList Info");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"MapScreen Messages..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"MapScreen Messages...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
-
 
 		LoadMapScreenMessagesFromSaveGameFile(f);
 		LoadGameFilePosition(f, "MapScreen Messages");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"NPC Info..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"NPC Info...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		LoadNPCInfoFromSavedGameFile(f, SaveGameHeader.uiSavedGameVersion);
+		LoadNPCInfoFromSavedGameFile(f, version);
 		LoadGameFilePosition(f, "NPC Info");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"KeyTable..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"KeyTable...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
-
 
 		LoadKeyTableFromSaveedGameFile(f);
 		LoadGameFilePosition(f, "KeyTable");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Npc Temp Quote File..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Npc Temp Quote File...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
-
 
 		LoadTempNpcQuoteArrayToSaveGameFile(f);
 		LoadGameFilePosition(f, "Npc Temp Quote File");
 
 		uiRelEndPerc += 0;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"PreGenerated Random Files..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"PreGenerated Random Files...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
-
 
 		LoadPreRandomNumbersFromSaveGameFile(f);
 		LoadGameFilePosition(f, "PreGenerated Random Files");
 
 		uiRelEndPerc += 0;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Smoke Effect Structures..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Smoke Effect Structures...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
-
 
 		LoadSmokeEffectsFromLoadGameFile(f);
 		LoadGameFilePosition(f, "Smoke Effect Structures");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Arms Dealers Inventory..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Arms Dealers Inventory...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		LoadArmsDealerInventoryFromSavedGameFile(f, SaveGameHeader.uiSavedGameVersion >= 54, SaveGameHeader.uiSavedGameVersion >= 55);
+		LoadArmsDealerInventoryFromSavedGameFile(f, version >= 54, version >= 55);
 		LoadGameFilePosition(f, "Arms Dealers Inventory");
 
 		uiRelEndPerc += 0;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Misc info..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Misc info...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
-
 
 		LoadGeneralInfo(f);
 		LoadGameFilePosition(f, "Misc info");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Mine Status..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Mine Status...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
-
 
 		LoadMineStatusFromSavedGameFile(f);
 		LoadGameFilePosition(f, "Mine Status");
 
 		uiRelEndPerc += 0;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Town Loyalty..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Town Loyalty...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion	>= 21 )
+		if (version	>= 21)
 		{
 			LoadStrategicTownLoyaltyFromSavedGameFile(f);
 			LoadGameFilePosition(f, "Town Loyalty");
 		}
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Vehicle Information..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Vehicle Information...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion	>= 22 )
+		if (version	>= 22)
 		{
-			LoadVehicleInformationFromSavedGameFile(f, SaveGameHeader.uiSavedGameVersion);
+			LoadVehicleInformationFromSavedGameFile(f, version);
 			LoadGameFilePosition(f, "Vehicle Information");
 		}
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Bullet Information..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Bullet Information...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion	>= 24 )
+		if (version	>= 24)
 		{
 			LoadBulletStructureFromSavedGameFile(f);
 			LoadGameFilePosition(f, "Bullet Information");
 		}
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Physics table..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Physics table...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion	>= 24 )
+		if (version	>= 24)
 		{
 			LoadPhysicsTableFromSavedGameFile(f);
 			LoadGameFilePosition(f, "Physics table");
 		}
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Air Raid Info..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Air Raid Info...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion	>= 24 )
+		if (version	>= 24)
 		{
 			LoadAirRaidInfoFromSaveGameFile(f);
 			LoadGameFilePosition(f, "Air Raid Info");
 		}
 
 		uiRelEndPerc += 0;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Team Turn Info..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Team Turn Info...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion	>= 24 )
+		if (version	>= 24)
 		{
 			LoadTeamTurnsFromTheSavedGameFile(f);
 			LoadGameFilePosition(f, "Team Turn Info");
 		}
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Explosion Table..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Explosion Table...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion	>= 25 )
+		if (version	>= 25)
 		{
 			LoadExplosionTableFromSavedGameFile(f);
 			LoadGameFilePosition(f, "Explosion Table");
 		}
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Creature Spreading..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Creature Spreading...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion	>= 27 )
+		if (version	>= 27)
 		{
-			LoadCreatureDirectives(f, SaveGameHeader.uiSavedGameVersion);
+			LoadCreatureDirectives(f, version);
 			LoadGameFilePosition(f, "Creature Spreading");
 		}
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Strategic Status..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Strategic Status...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
 
-		if( SaveGameHeader.uiSavedGameVersion	>= 28 )
+		if (version	>= 28)
 		{
 			LoadStrategicStatusFromSaveGameFile(f);
 			LoadGameFilePosition(f, "Strategic Status");
 		}
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Strategic AI..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Strategic AI...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion	>= 31 )
+		if (version	>= 31)
 		{
 			LoadStrategicAI(f);
 			LoadGameFilePosition(f, "Strategic AI");
 		}
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Lighting Effects..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Lighting Effects...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion	>= 37 )
+		if (version	>= 37)
 		{
 			LoadLightEffectsFromLoadGameFile(f);
 			LoadGameFilePosition(f, "Lighting Effects");
 		}
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Watched Locs Info..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Watched Locs Info...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion	>= 38 )
+		if (version	>= 38)
 		{
 			LoadWatchedLocsFromSavedGame(f);
 		}
 		LoadGameFilePosition(f, "Watched Locs Info");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Item cursor Info..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Item cursor Info...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion	>= 39 )
+		if (version	>= 39)
 		{
 			LoadItemCursorFromSavedGame(f);
 		}
 		LoadGameFilePosition(f, "Item cursor Info");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Civ Quote System..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Civ Quote System...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion >= 51 )
+		if (version >= 51)
 		{
 			LoadCivQuotesFromLoadGameFile(f);
 		}
 		LoadGameFilePosition(f, "Civ Quote System");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Backed up NPC Info..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Backed up NPC Info...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion >= 53 )
+		if (version >= 53)
 		{
-			LoadBackupNPCInfoFromSavedGameFile(f, SaveGameHeader.uiSavedGameVersion);
+			LoadBackupNPCInfoFromSavedGameFile(f, version);
 		}
 		LoadGameFilePosition(f, "Backed up NPC Info");
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Meanwhile definitions..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Meanwhile definitions...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion >= 58 )
+		if (version >= 58)
 		{
 			LoadMeanwhileDefsFromSaveGameFile(f);
 			LoadGameFilePosition(f, "Meanwhile definitions");
@@ -1397,14 +1339,12 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 			gMeanwhileDef[gCurrentMeanwhileDef.ubMeanwhileID] = gCurrentMeanwhileDef;
 		}
 
-
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Schedules..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Schedules...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion >= 59 )
+		if (version >= 59)
 		{
 			// trash schedules loaded from map
 			DestroyAllSchedulesWithoutDestroyingEvents();
@@ -1413,92 +1353,83 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		}
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Extra Vehicle Info..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Extra Vehicle Info...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-		if( SaveGameHeader.uiSavedGameVersion >= 61 )
+		if (version >= 61)
 		{
-			if( SaveGameHeader.uiSavedGameVersion < 84 )
+			if (version < 84)
 			{
 				LoadVehicleMovementInfoFromSavedGameFile(f);
-				LoadGameFilePosition(f, "Extra Vehicle Info");
 			}
 			else
 			{
 				NewLoadVehicleMovementInfoFromSavedGameFile(f);
-				LoadGameFilePosition(f, "Extra Vehicle Info");
 			}
+			LoadGameFilePosition(f, "Extra Vehicle Info");
 		}
 
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Contract renweal sequence stuff..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Contract renweal sequence stuff...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-
-
-		if( SaveGameHeader.uiSavedGameVersion < 62 )
-		{
-			// the older games had a bug where this flag was never being set
+		if (version < 62)
+		{ // The older games had a bug where this flag was never being set
 			gfResetAllPlayerKnowsEnemiesFlags = TRUE;
 		}
 
-		if( SaveGameHeader.uiSavedGameVersion >= 67 )
+		if (version >= 67)
 		{
 			LoadContractRenewalDataFromSaveGameFile(f);
 			LoadGameFilePosition(f, "Contract renweal sequence stuff");
 		}
 
-		if( SaveGameHeader.uiSavedGameVersion >= 70 )
+		if (version >= 70)
 		{
 			LoadLeaveItemList(f);
 			LoadGameFilePosition(f, "Leave List");
 		}
 
-		if( SaveGameHeader.uiSavedGameVersion <= 73 )
-		{
-			// Patch vehicle fuel
-			AddVehicleFuelToSave( );
+		if (version <= 73)
+		{ // Patch vehicle fuel
+			AddVehicleFuelToSave();
 		}
 
-
-		if( SaveGameHeader.uiSavedGameVersion >= 85 )
+		if (version >= 85)
 		{
 			NewWayOfLoadingBobbyRMailOrdersToSaveGameFile(f);
 			LoadGameFilePosition(f, "New way of loading Bobby R mailorders");
 		}
 
-		//If there are any old Bobby R Mail orders, tranfer them to the new system
-		if( SaveGameHeader.uiSavedGameVersion < 85 )
+		// If there are any old Bobby R Mail orders, tranfer them to the new system
+		if (version < 85)
 		{
 			HandleOldBobbyRMailOrders();
 		}
 
-
 		uiRelEndPerc += 1;
-		SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Final Checks..." );
-		RenderProgressBar( 0, 100 );
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Final Checks...");
+		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 	}
 	catch (...) { goto load_failed; }
 
-	// ATE: Patch? Patch up groups.....( will only do for old saves.. )
-	UpdatePersistantGroupsFromOldSave( SaveGameHeader.uiSavedGameVersion );
+	// ATE: Patch? Patch up groups (will only do for old saves)
+	UpdatePersistantGroupsFromOldSave(version);
 
-
-	if( SaveGameHeader.uiSavedGameVersion	<= 40 )
-	{
-		// Cancel all pending purchase orders for BobbyRay's.  Starting with version 41, the BR orders events are
-		// posted with the usItemIndex itself as the parameter, rather than the inventory slot index.  This was
-		// done to make it easier to modify BR's traded inventory lists later on without breaking saves.
+	if (version	<= 40)
+	{ /* Cancel all pending purchase orders for BobbyRay's.  Starting with version
+		 * 41, the BR orders events are posted with the usItemIndex itself as the
+		 * parameter, rather than the inventory slot index.  This was done to make
+		 * it easier to modify BR's traded inventory lists later on without
+		 * breaking saves. */
 		CancelAllPendingBRPurchaseOrders();
 	}
 
-
-	//if the world is loaded, apply the temp files to the loaded map
-	if( SaveGameHeader.fWorldLoaded || SaveGameHeader.uiSavedGameVersion < 50 )
+	// if the world is loaded, apply the temp files to the loaded map
+	if (SaveGameHeader.fWorldLoaded || version < 50)
 	{
 		try
 		{ // Load the current sectors Information From the temporary files
@@ -1507,231 +1438,199 @@ BOOLEAN LoadSavedGame( UINT8 ubSavedGameID )
 		catch (...)
 		{
 			InitExitGameDialogBecauseFileHackDetected();
-			guiSaveGameVersion=0;
+			guiSaveGameVersion = 0;
 			return TRUE;
 		}
 	}
 
 	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Final Checks..." );
-	RenderProgressBar( 0, 100 );
+	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Final Checks...");
+	RenderProgressBar(0, 100);
 	uiRelStartPerc = uiRelEndPerc;
 
 	InitAI();
 
-	//Update the mercs in the sector with the new soldier info
-	UpdateMercsInSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+	// Update the mercs in the sector with the new soldier info
+	UpdateMercsInSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 
 	PostSchedules();
 
-
 	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Final Checks..." );
-	RenderProgressBar( 0, 100 );
+	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Final Checks...");
+	RenderProgressBar(0, 100);
 	uiRelStartPerc = uiRelEndPerc;
 
-
-	//Reset the lighting level if we are outside
-	if( gbWorldSectorZ == 0 )
-		LightSetBaseLevel( GetTimeOfDayAmbientLightLevel() );
+	// Reset the lighting level if we are outside
+	if (gbWorldSectorZ == 0)
+		LightSetBaseLevel(GetTimeOfDayAmbientLightLevel());
 
 	//if we have been to this sector before
-//	if( SectorInfo[ SECTOR( gWorldSectorX,gWorldSectorY) ].uiFlags & SF_ALREADY_VISITED )
+//	if (SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)].uiFlags & SF_ALREADY_VISITED)
 	{
 		//Reset the fact that we are loading a saved game
 		gTacticalStatus.uiFlags &= ~LOADING_SAVED_GAME;
 	}
 
-	// CJC January 13: we can't do this because (a) it resets militia IN THE MIDDLE OF
-	// COMBAT, and (b) if we add militia to the teams while LOADING_SAVED_GAME is set,
-	// the team counters will not be updated properly!!!
+	/* CJC January 13: we can't do this because (a) it resets militia IN THE
+	 * MIDDLE OF COMBAT, and (b) if we add militia to the teams while
+	 * LOADING_SAVED_GAME is set, the team counters will not be updated properly!
+	 */
 //	ResetMilitia();
 
-
 	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Final Checks..." );
-	RenderProgressBar( 0, 100 );
+	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Final Checks...");
+	RenderProgressBar(0, 100);
 	uiRelStartPerc = uiRelEndPerc;
 
-	//if the UI was locked in the saved game file
-	if( gTacticalStatus.ubAttackBusyCount > 1 )
-	{
-		//Lock the ui
+	// if the UI was locked in the saved game file
+	if (gTacticalStatus.ubAttackBusyCount > 1)
+	{ // Lock the ui
 		SetUIBusy(GetSelectedMan());
 	}
 
-	//if we succesfully LOADED! the game, mark this entry as the last saved game file
-	gGameSettings.bLastSavedGameSlot		= ubSavedGameID;
+	// if we succesfully LOADED! the game, mark this entry as the last saved game file
+	gGameSettings.bLastSavedGameSlot = save_slot_id;
 
 	//Save the save game settings
 	SaveGameSettings();
 
-
 	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Final Checks..." );
-	RenderProgressBar( 0, 100 );
+	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Final Checks...");
+	RenderProgressBar(0, 100);
 	uiRelStartPerc = uiRelEndPerc;
 
-
-	//Reset the Ai Timer clock
+	// Reset the AI Timer clock
 	giRTAILastUpdateTime = 0;
 
-	//if we are in tactical
-	if( guiScreenToGotoAfterLoadingSavedGame == GAME_SCREEN )
-	{
-		//Initialize the current panel
-		InitializeCurrentPanel( );
-
+	// If we are in tactical
+	if (guiScreenToGotoAfterLoadingSavedGame == GAME_SCREEN)
+	{ //Initialize the current panel
+		InitializeCurrentPanel();
 		SelectSoldier(GetSelectedMan(), SELSOLDIER_FORCE_RESELECT);
 	}
 
 	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Final Checks..." );
-	RenderProgressBar( 0, 100 );
+	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Final Checks...");
+	RenderProgressBar(0, 100);
 	uiRelStartPerc = uiRelEndPerc;
 
-
-	// init extern faces
-	InitalizeStaticExternalNPCFaces( );
-
-	// load portraits
-	LoadCarPortraitValues( );
+	InitalizeStaticExternalNPCFaces();
+	LoadCarPortraitValues();
 
 	// OK, turn OFF show all enemies....
-	gTacticalStatus.uiFlags&= (~SHOW_ALL_MERCS );
-	gTacticalStatus.uiFlags &= ~SHOW_ALL_ITEMS ;
+	gTacticalStatus.uiFlags &= ~(SHOW_ALL_MERCS | SHOW_ALL_ITEMS);
 
-	InitShutDownMapTempFileTest(FALSE, "LoadMapTempFile", ubSavedGameID);
+	InitShutDownMapTempFileTest(FALSE, "LoadMapTempFile", save_slot_id);
 
-	if ( (gTacticalStatus.uiFlags & INCOMBAT) )
+	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Setting attack busy count to 0 from load");
 		gTacticalStatus.ubAttackBusyCount = 0;
 	}
 
-	if( SaveGameHeader.uiSavedGameVersion	< 64 )
-	{ //Militia/enemies/creature team sizes have been changed from 32 to 20.  This function
-		//will simply kill off the excess.  This will allow the ability to load previous saves, though
-		//there will still be problems, though a LOT less than there would be without this call.
+	if (version	< 64)
+	{ /* Militia/enemies/creature team sizes have been changed from 32 to 20.
+		 * This function will simply kill off the excess.  This will allow the
+		 * ability to load previous saves, though there will still be problems,
+		 * though a LOT less than there would be without this call. */
 		TruncateStrategicGroupSizes();
 	}
 
 	// ATE: if we are within this window where skyridder was foobared, fix!
-	if ( SaveGameHeader.uiSavedGameVersion >= 61 && SaveGameHeader.uiSavedGameVersion <= 65 )
+	if (61 <= version && version <= 65 && !fSkyRiderSetUp)
 	{
-		MERCPROFILESTRUCT *pProfile;
+		// see if we can find him and remove him if so....
+		SOLDIERTYPE* const s = FindSoldierByProfileID(SKYRIDER);
+		if (s) TacticalRemoveSoldier(s);
 
-		if ( !fSkyRiderSetUp )
+		// add the pilot at a random location!
+		INT16 x;
+		INT16 y;
+		switch (Random(4))
 		{
-			// see if we can find him and remove him if so....
-			SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(SKYRIDER);
-			if (pSoldier != NULL) TacticalRemoveSoldier(pSoldier);
-
-			// add the pilot at a random location!
-			pProfile = &(gMercProfiles[ SKYRIDER ]);
-			switch( Random( 4 ) )
-			{
-				case 0:
-					pProfile->sSectorX = 15;
-					pProfile->sSectorY = MAP_ROW_B;
-					pProfile->bSectorZ = 0;
-					break;
-				case 1:
-					pProfile->sSectorX = 14;
-					pProfile->sSectorY = MAP_ROW_E;
-					pProfile->bSectorZ = 0;
-					break;
-				case 2:
-					pProfile->sSectorX = 12;
-					pProfile->sSectorY = MAP_ROW_D;
-					pProfile->bSectorZ = 0;
-					break;
-				case 3:
-					pProfile->sSectorX = 16;
-					pProfile->sSectorY = MAP_ROW_C;
-					pProfile->bSectorZ = 0;
-					break;
-			}
+			case 0: x = 15; y = MAP_ROW_B; break;
+			case 1: x = 14; y = MAP_ROW_E; break;
+			case 2: x = 12; y = MAP_ROW_D; break;
+			case 3: x = 16; y = MAP_ROW_C; break;
+			default: abort(); // HACK000E
 		}
+		MERCPROFILESTRUCT& p = *GetProfile(SKYRIDER);
+		p.sSectorX = x;
+		p.sSectorY = y;
+		p.bSectorZ = 0;
 	}
 
-	if ( SaveGameHeader.uiSavedGameVersion < 68 )
+	if (version < 68)
 	{
 		// correct bVehicleUnderRepairID for all mercs
 		FOR_ALL_NON_PLANNING_SOLDIERS(s) s->bVehicleUnderRepairID = -1;
 	}
 
-	if ( SaveGameHeader.uiSavedGameVersion < 73 )
+	if (version < 73 && LaptopSaveInfo.fMercSiteHasGoneDownYet)
 	{
-		if( LaptopSaveInfo.fMercSiteHasGoneDownYet )
-			LaptopSaveInfo.fFirstVisitSinceServerWentDown = 2;
+		LaptopSaveInfo.fFirstVisitSinceServerWentDown = 2;
 	}
 
-
-	//Update the MERC merc contract lenght.  Before save version 77 the data was stored in the SOLDIERTYPE,
-	//after 77 the data is stored in the profile
-	if ( SaveGameHeader.uiSavedGameVersion < 77 )
+	/* Update the MERC merc contract length.  Before save version 77 the data was
+	 * stored in the SOLDIERTYPE, after 77 the data is stored in the profile */
+	if (version < 77)
 	{
 		UpdateMercMercContractInfo();
 	}
 
-
-	if ( SaveGameHeader.uiSavedGameVersion <= 89 )
-	{
-		// ARM: A change was made in version 89 where refuel site availability now also depends on whether the player has
-		// airspace control over that sector.  To update the settings immediately, must call it here.
+	if (version <= 89)
+	{ /* ARM: A change was made in version 89 where refuel site availability now
+		 * also depends on whether the player has airspace control over that sector.
+		 * To update the settings immediately, must call it here. */
 		UpdateRefuelSiteAvailability();
 	}
 
-	if( SaveGameHeader.uiSavedGameVersion < 91 )
-	{
-		//update the amount of money that has been paid to speck
+	if (version < 91)
+	{ // Update the amount of money that has been paid to speck
 		CalcAproximateAmountPaidToSpeck();
 	}
 
 	gfLoadedGame = TRUE;
 
 	uiRelEndPerc = 100;
-	SetRelativeStartAndEndPercentage( 0, uiRelStartPerc, uiRelEndPerc, L"Done!" );
-	RenderProgressBar( 0, 100 );
+	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Done!");
+	RenderProgressBar(0, 100);
 
 	RemoveLoadingScreenProgressBar();
 
-	SetMusicMode( gMusicModeToPlay );
+	SetMusicMode(gMusicModeToPlay);
 
 #ifndef JA2TESTVERSION
-	RESET_CHEAT_LEVEL( );
+	RESET_CHEAT_LEVEL();
 #endif
 
 #ifdef JA2BETAVERSION
-	if( fDisableDueToBattleRoster || fDisableMapInterfaceDueToBattle )
+	if (fDisableDueToBattleRoster || fDisableMapInterfaceDueToBattle)
 	{
 		gubReportMapscreenLock = 1;
 	}
 #endif
 
 	// reset to 0
-	guiSaveGameVersion=0;
+	guiSaveGameVersion = 0;
 
 	// reset once-per-convo records for everyone in the loaded sector
 	ResetOncePerConvoRecordsForAllNPCsInLoadedSector();
 
-	if ( !(gTacticalStatus.uiFlags & INCOMBAT) )
-	{
-		// fix lingering attack busy count problem on loading saved game by resetting a.b.c
-		// if we're not in combat.
+	if (!(gTacticalStatus.uiFlags & INCOMBAT))
+	{ /* Fix lingering attack busy count problem on loading saved game by
+		 * resetting a.b.c if we're not in combat. */
 		gTacticalStatus.ubAttackBusyCount = 0;
 	}
 
 	// fix squads
 	CheckSquadMovementGroups();
 
-	//The above function LightSetBaseLevel adjusts ALL the level node light values including the merc node,
-	//we must reset the values
-	HandlePlayerTogglingLightEffects( FALSE );
+	/* The above function LightSetBaseLevel adjusts ALL the level node light
+	 * values including the merc node, we must reset the values */
+	HandlePlayerTogglingLightEffects(FALSE);
 
-
-	return( TRUE );
+	return TRUE;
 
 load_failed:
 	guiSaveGameVersion = 0;
