@@ -782,12 +782,12 @@ UINT32 guiBrokenSaveGameVersion = 0;
 
 
 static void HandleOldBobbyRMailOrders(void);
-static void LoadGeneralInfo(HWFILE);
-static void LoadMeanwhileDefsFromSaveGameFile(HWFILE);
+static void LoadGeneralInfo(HWFILE, UINT32 savegame_version);
+static void LoadMeanwhileDefsFromSaveGameFile(HWFILE, UINT32 savegame_version);
 static void LoadOppListInfoFromSavedGame(HWFILE);
 static void LoadPreRandomNumbersFromSaveGameFile(HWFILE);
-static void LoadSavedMercProfiles(HWFILE);
-static void LoadSoldierStructure(HWFILE);
+static void LoadSavedMercProfiles(HWFILE, UINT32 savegame_version);
+static void LoadSoldierStructure(HWFILE, UINT32 savegame_version);
 static void LoadTacticalStatusFromSavedGame(HWFILE);
 static void LoadWatchedLocsFromSavedGame(HWFILE);
 static void TruncateStrategicGroupSizes(void);
@@ -886,7 +886,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		guiSaveGameVersion = version;
 
 #if 0 // XXX was commented out
-		LoadGeneralInfo(f);
+		LoadGeneralInfo(f, version);
 		LoadGameFilePosition(f, "Misc info");
 #endif
 
@@ -979,7 +979,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		uiRelStartPerc = uiRelEndPerc;
 
 		// Load all the saved Merc profiles
-		LoadSavedMercProfiles(f);
+		LoadSavedMercProfiles(f, version);
 		LoadGameFilePosition(f, "Merc Profiles");
 
 		uiRelEndPerc += 30;
@@ -987,7 +987,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		uiRelStartPerc = uiRelEndPerc;
 
 		// Load the soldier structure info
-		LoadSoldierStructure(f);
+		LoadSoldierStructure(f, version);
 		LoadGameFilePosition(f, "Soldier Structure");
 
 		uiRelEndPerc += 1;
@@ -1148,7 +1148,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-		LoadGeneralInfo(f);
+		LoadGeneralInfo(f, version);
 		LoadGameFilePosition(f, "Misc info");
 
 		uiRelEndPerc += 1;
@@ -1333,7 +1333,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		if (version >= 58)
 		{
-			LoadMeanwhileDefsFromSaveGameFile(f);
+			LoadMeanwhileDefsFromSaveGameFile(f, version);
 			LoadGameFilePosition(f, "Meanwhile definitions");
 		}
 		else
@@ -1665,11 +1665,13 @@ static void SaveMercProfiles(HWFILE const hFile)
 }
 
 
-static void LoadSavedMercProfiles(HWFILE const hFile)
+static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version)
 {
 	UINT16	cnt;
 
 	//Lopp through all the profiles to Load
+	void (&reader)(HWFILE, BYTE*, UINT32) = savegame_version < 87 ?
+		JA2EncryptedFileRead : NewJA2EncryptedFileRead;
 	for( cnt=0; cnt< NUM_PROFILES; cnt++)
 	{
 #ifdef _WIN32 // XXX HACK000A
@@ -1677,14 +1679,7 @@ static void LoadSavedMercProfiles(HWFILE const hFile)
 #else
 		BYTE Data[796];
 #endif
-		if ( guiSaveGameVersion < 87 )
-		{
-			JA2EncryptedFileRead(hFile, Data, sizeof(Data));
-		}
-		else
-		{
-			NewJA2EncryptedFileRead(hFile, Data, sizeof(Data));
-		}
+		reader(f, Data, sizeof(Data));
 		ExtractMercProfile(Data, &gMercProfiles[cnt]);
 	}
 }
@@ -1729,12 +1724,14 @@ static void SaveSoldierStructure(HWFILE const f)
 }
 
 
-static void LoadSoldierStructure(HWFILE const f)
+static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version)
 {
 	// Loop through all the soldier and delete them all
 	FOR_ALL_SOLDIERS(s) TacticalRemoveSoldier(s);
 
 	// Loop through all the soldier structs to load
+	void (&reader)(HWFILE, BYTE*, UINT32) = savegame_version < 87 ?
+		JA2EncryptedFileRead : NewJA2EncryptedFileRead;
 	for (UINT16 i = 0; i < TOTAL_SOLDIERS; ++i)
 	{
 		// Update the progress bar
@@ -1752,14 +1749,7 @@ static void LoadSoldierStructure(HWFILE const f)
 		BYTE Data[2352];
 #endif
 		//Read in the saved soldier info into a Temp structure
-		if (guiSaveGameVersion < 87)
-		{
-			JA2EncryptedFileRead(f, Data, sizeof(Data));
-		}
-		else
-		{
-			NewJA2EncryptedFileRead(f, Data, sizeof(Data));
-		}
+		reader(f, Data, sizeof(Data));
 		SOLDIERTYPE SavedSoldierInfo;
 		ExtractSoldierType(Data, &SavedSoldierInfo);
 
@@ -1788,7 +1778,7 @@ static void LoadSoldierStructure(HWFILE const f)
 		}
 
 		// If the saved game version is before x, calculate the amount of money paid to mercs
-		if (guiSaveGameVersion < 83 && s->ubProfile != NO_PROFILE)
+		if (savegame_version < 83 && s->ubProfile != NO_PROFILE)
 		{
 			MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
 			if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
@@ -1803,9 +1793,9 @@ static void LoadSoldierStructure(HWFILE const f)
 
 #ifdef GERMAN
 		// Fix neutral flags
-		if (guiSaveGameVersion < 94 &&
-				s->bTeam == OUR_TEAM    &&
-				s->bNeutral             &&
+		if (savegame_version < 94 &&
+				s->bTeam == OUR_TEAM  &&
+				s->bNeutral           &&
 				s->bAssignment != ASSIGNMENT_POW)
 		{
 			// turn off neutral flag
@@ -1813,14 +1803,14 @@ static void LoadSoldierStructure(HWFILE const f)
 		}
 #endif
 		// JA2Gold: fix next-to-previous attacker value
-		if (guiSaveGameVersion < 99)
+		if (savegame_version < 99)
 		{
 			s->next_to_previous_attacker = NULL;
 		}
 	}
 
 	// Fix robot
-	if (guiSaveGameVersion <= 87)
+	if (savegame_version <= 87)
 	{
 		MERCPROFILESTRUCT* const robot_p = GetProfile(ROBOT);
 		if (robot_p->inv[VESTPOS] == SPECTRA_VEST)
@@ -2416,7 +2406,7 @@ static void SaveGeneralInfo(HWFILE const hFile)
 }
 
 
-static void LoadGeneralInfo(HWFILE const hFile)
+static void LoadGeneralInfo(HWFILE const hFile, UINT32 const savegame_version)
 {
 	GENERAL_SAVE_INFO sGeneralInfo;
 	memset( &sGeneralInfo, 0, sizeof( GENERAL_SAVE_INFO ) );
@@ -2565,7 +2555,7 @@ static void LoadGeneralInfo(HWFILE const hFile)
 	gubScreenCount = sGeneralInfo.gubScreenCount;
 
 	//used for the mean while screen
-	if ( guiSaveGameVersion < 71 )
+	if (savegame_version < 71)
 	{
 		uiMeanWhileFlags = sGeneralInfo.usOldMeanWhileFlags;
 	}
@@ -2661,9 +2651,9 @@ static void LoadPreRandomNumbersFromSaveGameFile(HWFILE const hFile)
 }
 
 
-static void LoadMeanwhileDefsFromSaveGameFile(HWFILE const hFile)
+static void LoadMeanwhileDefsFromSaveGameFile(HWFILE const hFile, UINT32 const savegame_version)
 {
-	if ( guiSaveGameVersion < 72 )
+	if (savegame_version < 72)
 	{
 		//Load the array of meanwhile defs
 		FileRead(hFile, gMeanwhileDef, sizeof(MEANWHILE_DEFINITION) * (NUM_MEANWHILES - 1));
