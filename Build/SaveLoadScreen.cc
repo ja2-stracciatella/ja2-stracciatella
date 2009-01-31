@@ -1840,14 +1840,13 @@ void DoQuickSave()
 }
 
 
-BOOLEAN DoQuickLoad()
+void DoQuickLoad()
 {
 	//Build the save game array
 	InitSaveGameArray();
 
 	//if there is no save in the quick save slot
-	if( !gbSaveGameArray[ 0 ] )
-		return( FALSE );
+	if (!gbSaveGameArray[0]) return;
 
 	//Set the selection to be the quick save slot
 	gbSelectedSaveLocation = 0;
@@ -1864,8 +1863,6 @@ BOOLEAN DoQuickLoad()
 	FadeOutNextFrame( );
 	gfStartedFadingOut = TRUE;
 	gfDoingQuickLoad = TRUE;
-
-	return( TRUE );
 }
 
 
