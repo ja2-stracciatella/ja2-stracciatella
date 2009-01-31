@@ -127,8 +127,6 @@ BOOLEAN		gfSaveLoadScreenEntry = TRUE;
 BOOLEAN		gfSaveLoadScreenExit	= FALSE;
 BOOLEAN		gfRedrawSaveLoadScreen = TRUE;
 
-BOOLEAN		gfExitAfterMessageBox = FALSE;
-
 static ScreenID guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
 
 
@@ -321,11 +319,6 @@ static void SetSaveLoadExitScreen(ScreenID const uiScreen)
 	{
 		EnterTacticalScreen( );
 	}
-
-	//If we are currently in the Message box loop
-//	if( gfExitAfterMessageBox )
-//		ExitSaveLoadScreen();
-
 
 	gfSaveLoadScreenExit	= TRUE;
 
@@ -594,8 +587,6 @@ static void ExitSaveLoadScreen(void)
 
 	gfSaveLoadScreenExit = FALSE;
 	gfSaveLoadScreenEntry = TRUE;
-	gfExitAfterMessageBox = FALSE;
-
 
 	UnloadButtonImage( guiSlgButtonImage );
 
@@ -1583,8 +1574,6 @@ static void LoadSavedGameDeleteAllSaveGameMessageBoxCallBack(MessageBoxReturnVal
 		gfSaveLoadScreenExit = TRUE;
 	}
 
-	gfExitAfterMessageBox = TRUE;
-
 	SetSaveLoadExitScreen( OPTIONS_SCREEN );
 
 	gbSelectedSaveLocation=-1;
@@ -1787,10 +1776,6 @@ static void ConfirmLoadSavedGameMessageBoxCallBack(UINT8 bExitValue)
 	{
 		//Setup up the fade routines
 		StartFadeOutForSaveLoadScreen();
-	}
-	else
-	{
-		gfExitAfterMessageBox = FALSE;
 	}
 }
 
@@ -2010,8 +1995,6 @@ static void SaveGameToSlotNum(void)
 		DoSaveLoadMessageBox(zSaveLoadText[SLG_SAVE_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}
 
-//			gfExitAfterMessageBox = TRUE;
-
 	SetSaveLoadExitScreen( guiPreviousOptionScreen );
 }
 
@@ -2028,5 +2011,4 @@ static void StartFadeOutForSaveLoadScreen(void)
 
 	FadeOutNextFrame( );
 	gfStartedFadingOut = TRUE;
-	gfExitAfterMessageBox = TRUE;
 }
