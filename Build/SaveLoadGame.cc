@@ -800,18 +800,6 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 	ShutdownNPCQuotes();
 
-	//is it a valid save number
-	if (save_slot_id >= NUM_SAVE_GAMES)
-	{
-		if (save_slot_id != SAVE__END_TURN_NUM)
-			return FALSE;
-	}
-	else
-	{
-		if (!gbSaveGameArray[save_slot_id])
-			return FALSE;
-	}
-
 	InitShutDownMapTempFileTest(TRUE, "LoadMapTempFile", save_slot_id);
 
 	//Used in mapescreen to disable the annoying 'swoosh' transitions

@@ -131,7 +131,7 @@ static ScreenID guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
 
 
 //Contains the array of valid save game locations
-BOOLEAN			gbSaveGameArray[ NUM_SAVE_GAMES ];
+static BOOLEAN gbSaveGameArray[NUM_SAVE_GAMES];
 
 BOOLEAN		gfDoingQuickLoad = FALSE;
 

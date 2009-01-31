@@ -17,8 +17,6 @@ extern BOOLEAN gfSaveGame;
 //if there is to be a slot selected when entering this screen
 extern INT8			gbSetSlotToBeSelected;
 
-extern	BOOLEAN			gbSaveGameArray[ NUM_SAVE_GAMES ];
-
 extern	BOOLEAN			gfCameDirectlyFromGame;
 
 void     SaveLoadScreenInit(void);
