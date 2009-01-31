@@ -1412,18 +1412,7 @@ void GetMapTempFileName(SectorFlags const uiType, char* const pMapName, INT16 co
 		case SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS:   prefix = "e";  break;
 		case SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS:     prefix = "sm"; break;
 		case SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS:  prefix = "l";  break;
-
-		case SF_CIV_PRESERVED_TEMP_FILE_EXISTS:
-			// NB save game version 0 is "saving game"
-			if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME && guiSaveGameVersion != 0 && guiSaveGameVersion < 78)
-			{
-				prefix = "c";
-			}
-			else
-			{
-				prefix = "cc";
-			}
-			break;
+		case SF_CIV_PRESERVED_TEMP_FILE_EXISTS:     prefix = "c";  break;
 
 		default: Assert(0); return;
 	}
