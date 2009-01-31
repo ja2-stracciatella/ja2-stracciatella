@@ -26,7 +26,7 @@ ScreenID SaveLoadScreenHandle(void);
 
 void DoSaveLoadMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 
-BOOLEAN DoQuickSave(void);
+void    DoQuickSave(void);
 BOOLEAN DoQuickLoad(void);
 
 BOOLEAN IsThereAnySavedGameFiles(void);

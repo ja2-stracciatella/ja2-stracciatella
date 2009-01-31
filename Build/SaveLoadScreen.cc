@@ -1826,7 +1826,7 @@ static void FailedLoadingGameCallBack(MessageBoxReturnValue const bExitValue)
 }
 
 
-BOOLEAN DoQuickSave()
+void DoQuickSave()
 {
 	gzGameDescTextField[0] = '\0';
 
@@ -1837,9 +1837,8 @@ BOOLEAN DoQuickSave()
 		else
 			DoMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL );
 	}
-
-	return( TRUE );
 }
+
 
 BOOLEAN DoQuickLoad()
 {
