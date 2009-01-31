@@ -52,7 +52,6 @@ CASSERT(sizeof(SAVED_GAME_HEADER) == 688)
 
 
 extern ScreenID guiScreenToGotoAfterLoadingSavedGame;
-extern UINT32   guiSaveGameVersion;
 
 void CreateSavedGameFileNameFromNumber(UINT8 ubSaveGameID, char* pzNewFileName);
 

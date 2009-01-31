@@ -350,9 +350,6 @@ typedef struct
 CASSERT(sizeof(GENERAL_SAVE_INFO) == 1024)
 
 
-UINT32	guiSaveGameVersion=0;
-
-
 static UINT8 gubSaveGameLoc = 0;
 
 ScreenID guiScreenToGotoAfterLoadingSavedGame = ERROR_SCREEN; // XXX TODO001A was not properly initialised (0)
@@ -877,13 +874,10 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		/* If the player is loading up an older version of the game and the person
 		 * DOESN'T have the cheats on. */
-		if (version < 65 && !CHEATER_CHEAT_LEVEL()) goto load_failed;
+		if (version < 65 && !CHEATER_CHEAT_LEVEL()) return FALSE;
 
 		//Store the loading screenID that was saved
 		gubLastLoadingScreenID = SaveGameHeader.ubLoadScreenID;
-
-		//HACK
-		guiSaveGameVersion = version;
 
 #if 0 // XXX was commented out
 		LoadGeneralInfo(f, version);
@@ -1416,7 +1410,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 	}
-	catch (...) { goto load_failed; }
+	catch (...) { return FALSE; }
 
 	// ATE: Patch? Patch up groups (will only do for old saves)
 	UpdatePersistantGroupsFromOldSave(version);
@@ -1440,7 +1434,6 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		catch (...)
 		{
 			InitExitGameDialogBecauseFileHackDetected();
-			guiSaveGameVersion = 0;
 			return TRUE;
 		}
 	}
@@ -1613,9 +1606,6 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 	}
 #endif
 
-	// reset to 0
-	guiSaveGameVersion = 0;
-
 	// reset once-per-convo records for everyone in the loaded sector
 	ResetOncePerConvoRecordsForAllNPCsInLoadedSector();
 
@@ -1633,10 +1623,6 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 	HandlePlayerTogglingLightEffects(FALSE);
 
 	return TRUE;
-
-load_failed:
-	guiSaveGameVersion = 0;
-	return FALSE;
 }
 
 
