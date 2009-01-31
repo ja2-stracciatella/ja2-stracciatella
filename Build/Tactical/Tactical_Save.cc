@@ -156,9 +156,7 @@ static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, INT16 
 		SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(x, y, z, savegame_version >= 86);
 	}
 
-	if (flags & SF_CIV_PRESERVED_TEMP_FILE_EXISTS    &&
-			gTacticalStatus.uiFlags & LOADING_SAVED_GAME &&
-			savegame_version < 78)
+	if (flags & SF_CIV_PRESERVED_TEMP_FILE_EXISTS && savegame_version < 78)
 	{
 		// Delete the file, because it is corrupted
 		char map_name[128];
@@ -174,7 +172,7 @@ static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, INT16 
 void LoadMapTempFilesFromSavedGameFile(HWFILE const f, UINT32 const savegame_version)
 {
 	// HACK FOR GABBY
-	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME && savegame_version < 81)
+	if (savegame_version < 81)
 	{
 		MERCPROFILESTRUCT* const gabby = GetProfile(GABBY);
 		if (gabby->bMercStatus != MERC_IS_DEAD)
