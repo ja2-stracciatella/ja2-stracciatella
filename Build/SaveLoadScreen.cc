@@ -1292,8 +1292,6 @@ static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reas
 		gbHighLightedLocation = -1;
 //		DisplaySaveGameList();
 		DisplaySaveGameEntry( bTemp );
-
-		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);
 	}
 	else if( reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
@@ -1305,8 +1303,6 @@ static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reas
 
 		gbHighLightedLocation = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 		DisplaySaveGameEntry( gbHighLightedLocation );//, usPosY );
-
-		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);
 	}
 }
 
