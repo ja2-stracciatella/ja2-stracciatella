@@ -3224,7 +3224,6 @@ const wchar_t* pMessageStrings[] =
 	L"LEUGEN",
 	L"Geen beschrijving", //Save slots that don't have a description.
 	L"Spel opgeslagen.",
-	L"Spel opgeslagen.",
 	L"Dag",
 	L"Huurl",
 	L"Leeg Slot",		//An empty save game slot

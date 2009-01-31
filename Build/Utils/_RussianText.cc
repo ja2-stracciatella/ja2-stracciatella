@@ -3228,7 +3228,6 @@ const wchar_t* pMessageStrings[] =
 	L"ЛОЖЬ",
 	L"Нет описания", //Save slots that don't have a description.
 	L"Игра сохранена",
-	L"Игра сохранена",
 	L"День",
 	L"Наемников",
 	L"Пустая ячейка сохранения", 		//An empty save game slot

@@ -3209,7 +3209,6 @@ const wchar_t* pMessageStrings[] =
 	L"MENT",
 	L"Sans description", //Save slots that don't have a description.
 	L"Partie sauvegardée.",
-	L"Partie sauvegardée.",
 	L"Jour",
 	L"Mercs",
 	L"Vide", //An empty save game slot

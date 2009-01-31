@@ -734,25 +734,17 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	//Save the save game settings
 	SaveGameSettings();
 
-	//
 	// Display a screen message that the save was succesful
-	//
-
-	//if its the quick save slot
-	if( ubSaveGameID == 0 )
+	if (ubSaveGameID != SAVE__END_TURN_NUM)
 	{
-		ScreenMsg( FONT_MCOLOR_WHITE, MSG_INTERFACE, pMessageStrings[ MSG_SAVESUCCESS ] );
+		ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, pMessageStrings[MSG_SAVESUCCESS]);
 	}
 //#ifdef JA2BETAVERSION
-	else if( ubSaveGameID == SAVE__END_TURN_NUM )
+	else
 	{
 //		ScreenMsg( FONT_MCOLOR_WHITE, MSG_INTERFACE, pMessageStrings[ MSG_END_TURN_AUTO_SAVE ] );
 	}
 //#endif
-	else
-	{
-		ScreenMsg( FONT_MCOLOR_WHITE, MSG_INTERFACE, pMessageStrings[ MSG_SAVESLOTSUCCESS ] );
-	}
 
 	//restore the music mode
 	SetMusicMode( gubMusicMode );
