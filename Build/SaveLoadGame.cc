@@ -722,6 +722,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 			gubReportMapscreenLock = 2;
 		}
 #endif
+		gTacticalStatus.uiFlags &= ~LOADING_SAVED_GAME;
 		return FALSE;
 	}
 

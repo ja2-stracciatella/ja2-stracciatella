@@ -1847,9 +1847,6 @@ BOOLEAN DoQuickSave()
 
 	if( !SaveGame( 0, gzGameDescTextField ) )
 	{
-		//Unset the fact that we are saving a game
-		gTacticalStatus.uiFlags &= ~LOADING_SAVED_GAME;
-
 		if( guiPreviousOptionScreen == MAP_SCREEN )
 			DoMapMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
 		else
@@ -2010,9 +2007,6 @@ static void SaveGameToSlotNum(void)
 
 	if( !SaveGame( gbSelectedSaveLocation, gzGameDescTextField ) )
 	{
-		//Unset the fact that we are saving a game
-		gTacticalStatus.uiFlags &= ~LOADING_SAVED_GAME;
-
 		DoSaveLoadMessageBox(zSaveLoadText[SLG_SAVE_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}
 
