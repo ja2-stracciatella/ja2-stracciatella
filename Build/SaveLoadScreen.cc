@@ -1546,65 +1546,40 @@ static void FailedLoadingGameCallBack(MessageBoxReturnValue);
 
 static void DoneFadeOutForSaveLoadScreen(void)
 {
-	//Make sure we DONT reset the levels if we are loading a game
+	// Make sure we DON'T reset the levels if we are loading a game
 	gfHadToMakeBasementLevels = FALSE;
 
-	if( !LoadSavedGame( gbSelectedSaveLocation ) )
+	if (!LoadSavedGame(gbSelectedSaveLocation))
 	{
-		if( guiBrokenSaveGameVersion < 95 && !gfSchedulesHosed )
-		{ //Hack problem with schedules getting misaligned.
+		if (guiBrokenSaveGameVersion < 95 && !gfSchedulesHosed)
+		{ // Hack problem with schedules getting misaligned.
 			gfSchedulesHosed = TRUE;
-			if( !LoadSavedGame( gbSelectedSaveLocation ) )
-			{
-				DoSaveLoadMessageBox(zSaveLoadText[SLG_LOAD_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack);
-				NextLoopCheckForEnoughFreeHardDriveSpace();
-			}
-			else
-			{
-				gfSchedulesHosed = FALSE;
-				goto SUCCESSFULLY_CORRECTED_SAVE;
-			}
+			bool const success = LoadSavedGame(gbSelectedSaveLocation);
 			gfSchedulesHosed = FALSE;
+			if (success) goto SUCCESSFULLY_CORRECTED_SAVE;
 		}
-		else
-		{
-			DoSaveLoadMessageBox(zSaveLoadText[SLG_LOAD_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack);
-			NextLoopCheckForEnoughFreeHardDriveSpace();
-		}
+		DoSaveLoadMessageBox(zSaveLoadText[SLG_LOAD_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack);
+		NextLoopCheckForEnoughFreeHardDriveSpace();
 	}
 	else
 	{
-		SUCCESSFULLY_CORRECTED_SAVE:
-		#ifdef JA2BETAVERSION
-//		if( ValidateSoldierInitLinks( 1 ) )
-		ValidateSoldierInitLinks( 1 );
-		{
-		#endif
-			gFadeInDoneCallback = DoneFadeInForSaveLoadScreen;
+SUCCESSFULLY_CORRECTED_SAVE:
+#ifdef JA2BETAVERSION
+		ValidateSoldierInitLinks(1);
+#endif
+		gFadeInDoneCallback = DoneFadeInForSaveLoadScreen;
 
-			//If we are to go to map screen after loading the game
-			if( guiScreenToGotoAfterLoadingSavedGame == MAP_SCREEN )
-			{
-				SetSaveLoadExitScreen( guiScreenToGotoAfterLoadingSavedGame );
-
-	//			LeaveTacticalScreen( MAP_SCREEN );
-
-				FadeInNextFrame( );
-			}
-
-			else
-			{
-				//if we are to go to the Tactical screen after loading
-				SetSaveLoadExitScreen( guiScreenToGotoAfterLoadingSavedGame );
-
-				PauseTime( FALSE );
-
-	//			EnterTacticalScreen( );
-				FadeInGameScreen( );
-			}
-		#ifdef JA2BETAVERSION
+		ScreenID const screen = guiScreenToGotoAfterLoadingSavedGame;
+		SetSaveLoadExitScreen(screen);
+		if (screen == MAP_SCREEN)
+		{ // We are to go to map screen after loading the game
+			FadeInNextFrame();
 		}
-		#endif
+		else
+		{ // We are to go to the Tactical screen after loading
+			PauseTime(FALSE);
+			FadeInGameScreen();
+		}
 	}
 	gfStartedFadingOut = FALSE;
 }
