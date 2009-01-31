@@ -350,8 +350,6 @@ typedef struct
 CASSERT(sizeof(GENERAL_SAVE_INFO) == 1024)
 
 
-static UINT8 gubSaveGameLoc = 0;
-
 ScreenID guiScreenToGotoAfterLoadingSavedGame = ERROR_SCREEN; // XXX TODO001A was not properly initialised (0)
 
 extern		UINT32		guiCurrentUniqueSoldierId;
@@ -370,13 +368,13 @@ static void SaveTacticalStatusToSavedGame(HWFILE);
 static void SaveWatchedLocsToSavedGame(HWFILE);
 
 #ifdef JA2BETAVERSION
-static void InitSaveGameFilePosition(void);
+static void InitSaveGameFilePosition(UINT8 slot);
 static void InitShutDownMapTempFileTest(BOOLEAN fInit, const char* pNameOfFile, UINT8 ubSaveGameID);
-static void SaveGameFilePosition(const HWFILE save, const char* pMsg);
+static void SaveGameFilePosition(UINT8 slot, const HWFILE save, const char* pMsg);
 #else
-#	define InitSaveGameFilePosition()                  ((void)0)
+#	define InitSaveGameFilePosition(slot)              ((void)0)
 #	define InitShutDownMapTempFileTest(init, name, id) ((void)0)
-#	define SaveGameFilePosition(file, msg)             ((void)0)
+#	define SaveGameFilePosition(slot, file, msg)       ((void)0)
 #endif
 
 
@@ -432,12 +430,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 		gfRedrawSaveLoadScreen = TRUE;
 	}
 
-
-
-
-	gubSaveGameLoc = ubSaveGameID;
-
-	InitSaveGameFilePosition();
+	InitSaveGameFilePosition(ubSaveGameID);
 
 	//Set the fact that we are saving a game
 	gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
@@ -477,7 +470,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 
 		// create the save game file
 		AutoSGPFile f(FileOpen(zSaveGameName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-		SaveGameFilePosition(f, "Just Opened File");
+		SaveGameFilePosition(ubSaveGameID, f, "Just Opened File");
 
 		//
 		// If there are no enemy or civilians to save, we have to check BEFORE savinf the sector info struct because
@@ -537,7 +530,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 		// Save the Save Game header file
 		//
 		FileWrite(f, &SaveGameHeader, sizeof(SAVED_GAME_HEADER));
-		SaveGameFilePosition(f, "Save Game Header");
+		SaveGameFilePosition(ubSaveGameID, f, "Save Game Header");
 
 		guiJA2EncryptionSet = CalcJA2EncryptionSet( &SaveGameHeader );
 
@@ -545,161 +538,161 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 		//Save the gTactical Status array, plus the curent secotr location
 		//
 		SaveTacticalStatusToSavedGame(f);
-		SaveGameFilePosition(f, "Tactical Status");
+		SaveGameFilePosition(ubSaveGameID, f, "Tactical Status");
 
 		// save the game clock info
 		SaveGameClock(f, fPausedStateBeforeSaving, fLockPauseStateBeforeSaving);
-		SaveGameFilePosition(f, "Game Clock");
+		SaveGameFilePosition(ubSaveGameID, f, "Game Clock");
 
 		// save the strategic events
 		SaveStrategicEventsToSavedGame(f);
-		SaveGameFilePosition(f, "Strategic Events");
+		SaveGameFilePosition(ubSaveGameID, f, "Strategic Events");
 
 		SaveLaptopInfoToSavedGame(f);
-		SaveGameFilePosition(f, "Laptop Info");
+		SaveGameFilePosition(ubSaveGameID, f, "Laptop Info");
 
 		//
 		// Save the merc profiles
 		//
 		SaveMercProfiles(f);
-		SaveGameFilePosition(f, "Merc Profiles");
+		SaveGameFilePosition(ubSaveGameID, f, "Merc Profiles");
 
 		//
 		// Save the soldier structure
 		//
 		SaveSoldierStructure(f);
-		SaveGameFilePosition(f, "Soldier Structure");
+		SaveGameFilePosition(ubSaveGameID, f, "Soldier Structure");
 
 		//Save the Finaces Data file
 		SaveFilesToSavedGame(FINANCES_DATA_FILE, f);
-		SaveGameFilePosition(f, "Finances Data File");
+		SaveGameFilePosition(ubSaveGameID, f, "Finances Data File");
 
 		//Save the history file
 		SaveFilesToSavedGame(HISTORY_DATA_FILE, f);
-		SaveGameFilePosition(f, "History file");
+		SaveGameFilePosition(ubSaveGameID, f, "History file");
 
 		//Save the Laptop File file
 		SaveFilesToSavedGame(FILES_DAT_FILE, f);
-		SaveGameFilePosition(f, "The Laptop FILES file");
+		SaveGameFilePosition(ubSaveGameID, f, "The Laptop FILES file");
 
 		//Save email stuff to save file
 		SaveEmailToSavedGame(f);
-		SaveGameFilePosition(f, "Email");
+		SaveGameFilePosition(ubSaveGameID, f, "Email");
 
 		//Save the strategic information
 		SaveStrategicInfoToSavedFile(f);
-		SaveGameFilePosition(f, "Strategic Information");
+		SaveGameFilePosition(ubSaveGameID, f, "Strategic Information");
 
 		//save the underground information
 		SaveUnderGroundSectorInfoToSaveGame(f);
-		SaveGameFilePosition(f, "Underground Information");
+		SaveGameFilePosition(ubSaveGameID, f, "Underground Information");
 
 		//save the squad info
 		SaveSquadInfoToSavedGameFile(f);
-		SaveGameFilePosition(f, "Squad Info");
+		SaveGameFilePosition(ubSaveGameID, f, "Squad Info");
 
 		SaveStrategicMovementGroupsToSaveGameFile(f);
-		SaveGameFilePosition(f, "Strategic Movement Groups");
+		SaveGameFilePosition(ubSaveGameID, f, "Strategic Movement Groups");
 
 		//Save all the map temp files from the maps\temp directory into the saved game file
 		SaveMapTempFilesToSavedGameFile(f);
-		SaveGameFilePosition(f, "All the Map Temp files");
+		SaveGameFilePosition(ubSaveGameID, f, "All the Map Temp files");
 
 		SaveQuestInfoToSavedGameFile(f);
-		SaveGameFilePosition(f, "Quest Info");
+		SaveGameFilePosition(ubSaveGameID, f, "Quest Info");
 
 		SaveOppListInfoToSavedGame(f);
-		SaveGameFilePosition(f, "OppList info");
+		SaveGameFilePosition(ubSaveGameID, f, "OppList info");
 
 		SaveMapScreenMessagesToSaveGameFile(f);
-		SaveGameFilePosition(f, "MapScreen Messages");
+		SaveGameFilePosition(ubSaveGameID, f, "MapScreen Messages");
 
 		SaveNPCInfoToSaveGameFile(f);
-		SaveGameFilePosition(f, "NPC Info");
+		SaveGameFilePosition(ubSaveGameID, f, "NPC Info");
 
 		SaveKeyTableToSaveGameFile(f);
-		SaveGameFilePosition(f, "KeyTable");
+		SaveGameFilePosition(ubSaveGameID, f, "KeyTable");
 
 		SaveTempNpcQuoteArrayToSaveGameFile(f);
-		SaveGameFilePosition(f, "NPC Temp Quote File");
+		SaveGameFilePosition(ubSaveGameID, f, "NPC Temp Quote File");
 
 		SavePreRandomNumbersToSaveGameFile(f);
-		SaveGameFilePosition(f, "PreGenerated Random Files");
+		SaveGameFilePosition(ubSaveGameID, f, "PreGenerated Random Files");
 
 		SaveArmsDealerInventoryToSaveGameFile(f);
-		SaveGameFilePosition(f, "Arms Dealers Inventory");
+		SaveGameFilePosition(ubSaveGameID, f, "Arms Dealers Inventory");
 
 		SaveGeneralInfo(f);
-		SaveGameFilePosition(f, "Misc. Info");
+		SaveGameFilePosition(ubSaveGameID, f, "Misc. Info");
 
 		SaveMineStatusToSaveGameFile(f);
-		SaveGameFilePosition(f, "Mine Status");
+		SaveGameFilePosition(ubSaveGameID, f, "Mine Status");
 
 		SaveStrategicTownLoyaltyToSaveGameFile(f);
-		SaveGameFilePosition(f, "Town Loyalty");
+		SaveGameFilePosition(ubSaveGameID, f, "Town Loyalty");
 
 		SaveVehicleInformationToSaveGameFile(f);
-		SaveGameFilePosition(f, "Vehicle Information");
+		SaveGameFilePosition(ubSaveGameID, f, "Vehicle Information");
 
 		SaveBulletStructureToSaveGameFile(f);
-		SaveGameFilePosition(f, "Bullet Information");
+		SaveGameFilePosition(ubSaveGameID, f, "Bullet Information");
 
 		SavePhysicsTableToSaveGameFile(f);
-		SaveGameFilePosition(f, "Physics Table");
+		SaveGameFilePosition(ubSaveGameID, f, "Physics Table");
 
 		SaveAirRaidInfoToSaveGameFile(f);
-		SaveGameFilePosition(f, "Air Raid Info");
+		SaveGameFilePosition(ubSaveGameID, f, "Air Raid Info");
 
 		SaveTeamTurnsToTheSaveGameFile(f);
-		SaveGameFilePosition(f, "Team Turn Info");
+		SaveGameFilePosition(ubSaveGameID, f, "Team Turn Info");
 
 		SaveExplosionTableToSaveGameFile(f);
-		SaveGameFilePosition(f, "Explosion Table");
+		SaveGameFilePosition(ubSaveGameID, f, "Explosion Table");
 
 		SaveCreatureDirectives(f);
-		SaveGameFilePosition(f, "Creature Spreading");
+		SaveGameFilePosition(ubSaveGameID, f, "Creature Spreading");
 
 		SaveStrategicStatusToSaveGameFile(f);
-		SaveGameFilePosition(f, "Strategic Status");
+		SaveGameFilePosition(ubSaveGameID, f, "Strategic Status");
 
 		SaveStrategicAI(f);
-		SaveGameFilePosition(f, "Strategic AI");
+		SaveGameFilePosition(ubSaveGameID, f, "Strategic AI");
 
 		SaveWatchedLocsToSavedGame(f);
-		SaveGameFilePosition(f, "Watched Locs Info");
+		SaveGameFilePosition(ubSaveGameID, f, "Watched Locs Info");
 
 		SaveItemCursorToSavedGame(f);
-		SaveGameFilePosition(f, "ItemCursor Info");
+		SaveGameFilePosition(ubSaveGameID, f, "ItemCursor Info");
 
 		SaveCivQuotesToSaveGameFile(f);
-		SaveGameFilePosition(f, "Civ Quote System");
+		SaveGameFilePosition(ubSaveGameID, f, "Civ Quote System");
 
 		SaveBackupNPCInfoToSaveGameFile(f);
-		SaveGameFilePosition(f, "Backed up NPC Info");
+		SaveGameFilePosition(ubSaveGameID, f, "Backed up NPC Info");
 
 		SaveMeanwhileDefsFromSaveGameFile(f);
-		SaveGameFilePosition(f, "Meanwhile Definitions");
+		SaveGameFilePosition(ubSaveGameID, f, "Meanwhile Definitions");
 
 		// save meanwhiledefs
 
 		SaveSchedules(f);
-		SaveGameFilePosition(f, "Schedules");
+		SaveGameFilePosition(ubSaveGameID, f, "Schedules");
 
 		// Save extra vehicle info
 		NewSaveVehicleMovementInfoToSavedGameFile(f);
-		SaveGameFilePosition(f, "Vehicle Movement Stuff");
+		SaveGameFilePosition(ubSaveGameID, f, "Vehicle Movement Stuff");
 
 		// Save contract renewal sequence stuff
 		SaveContractRenewalDataToSaveGameFile(f);
-		SaveGameFilePosition(f, "Contract Renewal Data");
+		SaveGameFilePosition(ubSaveGameID, f, "Contract Renewal Data");
 
 		// Save leave list stuff
 		SaveLeaveItemList(f);
-		SaveGameFilePosition(f, "leave list");
+		SaveGameFilePosition(ubSaveGameID, f, "leave list");
 
 		//do the new way of saving bobbyr mail order items
 		NewWayOfSavingBobbyRMailOrdersToSaveGameFile(f);
-		SaveGameFilePosition(f, "New way of saving Bobby R mailorders");
+		SaveGameFilePosition(ubSaveGameID, f, "New way of saving Bobby R mailorders");
 	}
 	catch (...)
 	{
@@ -784,11 +777,11 @@ static void TruncateStrategicGroupSizes(void);
 static void UpdateMercMercContractInfo(void);
 
 #ifdef JA2BETAVERSION
-static void InitLoadGameFilePosition(void);
-static void LoadGameFilePosition(HWFILE load, const char* pMsg);
+static void InitLoadGameFilePosition(UINT8 slot);
+static void LoadGameFilePosition(UINT8 slot, HWFILE load, const char* pMsg);
 #else
-#	define InitLoadGameFilePosition()      ((void)0)
-#	define LoadGameFilePosition(file, msg) ((void)0)
+#	define InitLoadGameFilePosition(slot)        ((void)0)
+#	define LoadGameFilePosition(slot, file, msg) ((void)0)
 #endif
 
 
@@ -827,8 +820,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 	// Reset timer callbacks
 	gpCustomizableTimerCallback = NULL;
 
-	gubSaveGameLoc = save_slot_id;
-	InitLoadGameFilePosition();
+	InitLoadGameFilePosition(save_slot_id);
 
 	//Set the fact that we are loading a saved game
 	gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
@@ -854,11 +846,11 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		char zSaveGameName[512];
 		CreateSavedGameFileNameFromNumber(save_slot_id, zSaveGameName);
 		AutoSGPFile f(FileOpen(zSaveGameName, FILE_ACCESS_READ));
-		LoadGameFilePosition(f, "Just Opened File");
+		LoadGameFilePosition(save_slot_id, f, "Just Opened File");
 
 		//Load the Save Game header file
 		FileRead(f, &SaveGameHeader, sizeof(SAVED_GAME_HEADER));
-		LoadGameFilePosition(f, "Save Game Header");
+		LoadGameFilePosition(save_slot_id, f, "Save Game Header");
 
 		guiJA2EncryptionSet = CalcJA2EncryptionSet(&SaveGameHeader);
 
@@ -874,12 +866,12 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 #if 0 // XXX was commented out
 		LoadGeneralInfo(f, version);
-		LoadGameFilePosition(f, "Misc info");
+		LoadGameFilePosition(save_slot_id, f, "Misc info");
 #endif
 
 		//Load the gtactical status structure plus the current sector x,y,z
 		LoadTacticalStatusFromSavedGame(f);
-		LoadGameFilePosition(f, "Tactical Status");
+		LoadGameFilePosition(save_slot_id, f, "Tactical Status");
 
 		//This gets reset by the above function
 		gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
@@ -887,7 +879,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		//Load the game clock ingo
 		LoadGameClock(f);
-		LoadGameFilePosition(f, "Game Clock");
+		LoadGameFilePosition(save_slot_id, f, "Game Clock");
 
 		//if we are suppose to use the alternate sector
 		if (SaveGameHeader.fAlternateSector)
@@ -949,7 +941,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		//load the game events
 		LoadStrategicEventsFromSavedGame(f);
-		LoadGameFilePosition(f, "Strategic Events");
+		LoadGameFilePosition(save_slot_id, f, "Strategic Events");
 
 		uiRelEndPerc += 0;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Laptop Info");
@@ -958,7 +950,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 
 		LoadLaptopInfoFromSavedGame(f);
-		LoadGameFilePosition(f, "Laptop Info");
+		LoadGameFilePosition(save_slot_id, f, "Laptop Info");
 
 		uiRelEndPerc += 0;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Merc Profiles...");
@@ -967,7 +959,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		// Load all the saved Merc profiles
 		LoadSavedMercProfiles(f, version);
-		LoadGameFilePosition(f, "Merc Profiles");
+		LoadGameFilePosition(save_slot_id, f, "Merc Profiles");
 
 		uiRelEndPerc += 30;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Soldier Structure...");
@@ -975,7 +967,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		// Load the soldier structure info
 		LoadSoldierStructure(f, version);
-		LoadGameFilePosition(f, "Soldier Structure");
+		LoadGameFilePosition(save_slot_id, f, "Soldier Structure");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Finances Data File...");
@@ -984,7 +976,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		// Load the Finances Data and write it to a new file
 		LoadFilesFromSavedGame(FINANCES_DATA_FILE, f);
-		LoadGameFilePosition(f, "Finances Data File");
+		LoadGameFilePosition(save_slot_id, f, "Finances Data File");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"History File...");
@@ -993,7 +985,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		// Load the History Data and write it to a new file
 		LoadFilesFromSavedGame(HISTORY_DATA_FILE, f);
-		LoadGameFilePosition(f, "History File");
+		LoadGameFilePosition(save_slot_id, f, "History File");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"The Laptop FILES file...");
@@ -1002,7 +994,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		// Load the Files Data and write it to a new file
 		LoadFilesFromSavedGame(FILES_DAT_FILE, f);
-		LoadGameFilePosition(f, "The Laptop FILES file");
+		LoadGameFilePosition(save_slot_id, f, "The Laptop FILES file");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Email...");
@@ -1011,7 +1003,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		// Load the data for the emails
 		LoadEmailFromSavedGame(f);
-		LoadGameFilePosition(f, "Email");
+		LoadGameFilePosition(save_slot_id, f, "Email");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Strategic Information...");
@@ -1020,7 +1012,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		// Load the strategic Information
 		LoadStrategicInfoFromSavedFile(f);
-		LoadGameFilePosition(f, "Strategic Information");
+		LoadGameFilePosition(save_slot_id, f, "Strategic Information");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"UnderGround Information...");
@@ -1029,7 +1021,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		// Load the underground information
 		LoadUnderGroundSectorInfoFromSavedGame(f);
-		LoadGameFilePosition(f, "UnderGround Information");
+		LoadGameFilePosition(save_slot_id, f, "UnderGround Information");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Squad Info...");
@@ -1038,7 +1030,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		// Load all the squad info from the saved game file
 		LoadSquadInfoFromSavedGameFile(f);
-		LoadGameFilePosition(f, "Squad Info");
+		LoadGameFilePosition(save_slot_id, f, "Squad Info");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Strategic Movement Groups...");
@@ -1047,7 +1039,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		// Load the group linked list
 		LoadStrategicMovementGroupsFromSavedGameFile(f);
-		LoadGameFilePosition(f, "Strategic Movement Groups");
+		LoadGameFilePosition(save_slot_id, f, "Strategic Movement Groups");
 
 		uiRelEndPerc += 30;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"All the Map Temp files...");
@@ -1055,7 +1047,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		// Load all the map temp files from the saved game file into the maps/temp directory
 		LoadMapTempFilesFromSavedGameFile(f, version);
-		LoadGameFilePosition(f, "All the Map Temp files");
+		LoadGameFilePosition(save_slot_id, f, "All the Map Temp files");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Quest Info...");
@@ -1063,7 +1055,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		uiRelStartPerc = uiRelEndPerc;
 
 		LoadQuestInfoFromSavedGameFile(f);
-		LoadGameFilePosition(f, "Quest Info");
+		LoadGameFilePosition(save_slot_id, f, "Quest Info");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"OppList Info...");
@@ -1071,7 +1063,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		uiRelStartPerc = uiRelEndPerc;
 
 		LoadOppListInfoFromSavedGame(f);
-		LoadGameFilePosition(f, "OppList Info");
+		LoadGameFilePosition(save_slot_id, f, "OppList Info");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"MapScreen Messages...");
@@ -1079,7 +1071,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		uiRelStartPerc = uiRelEndPerc;
 
 		LoadMapScreenMessagesFromSaveGameFile(f);
-		LoadGameFilePosition(f, "MapScreen Messages");
+		LoadGameFilePosition(save_slot_id, f, "MapScreen Messages");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"NPC Info...");
@@ -1087,7 +1079,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		uiRelStartPerc = uiRelEndPerc;
 
 		LoadNPCInfoFromSavedGameFile(f, version);
-		LoadGameFilePosition(f, "NPC Info");
+		LoadGameFilePosition(save_slot_id, f, "NPC Info");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"KeyTable...");
@@ -1095,7 +1087,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		uiRelStartPerc = uiRelEndPerc;
 
 		LoadKeyTableFromSaveedGameFile(f);
-		LoadGameFilePosition(f, "KeyTable");
+		LoadGameFilePosition(save_slot_id, f, "KeyTable");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Npc Temp Quote File...");
@@ -1103,7 +1095,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		uiRelStartPerc = uiRelEndPerc;
 
 		LoadTempNpcQuoteArrayToSaveGameFile(f);
-		LoadGameFilePosition(f, "Npc Temp Quote File");
+		LoadGameFilePosition(save_slot_id, f, "Npc Temp Quote File");
 
 		uiRelEndPerc += 0;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"PreGenerated Random Files...");
@@ -1111,7 +1103,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		uiRelStartPerc = uiRelEndPerc;
 
 		LoadPreRandomNumbersFromSaveGameFile(f);
-		LoadGameFilePosition(f, "PreGenerated Random Files");
+		LoadGameFilePosition(save_slot_id, f, "PreGenerated Random Files");
 
 		uiRelEndPerc += 0;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Smoke Effect Structures...");
@@ -1120,7 +1112,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		// No longer need to load smoke effects.  They are now in temp files
 		if (version < 75) LoadSmokeEffectsFromLoadGameFile(f, version);
-		LoadGameFilePosition(f, "Smoke Effect Structures");
+		LoadGameFilePosition(save_slot_id, f, "Smoke Effect Structures");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Arms Dealers Inventory...");
@@ -1128,7 +1120,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		uiRelStartPerc = uiRelEndPerc;
 
 		LoadArmsDealerInventoryFromSavedGameFile(f, version >= 54, version >= 55);
-		LoadGameFilePosition(f, "Arms Dealers Inventory");
+		LoadGameFilePosition(save_slot_id, f, "Arms Dealers Inventory");
 
 		uiRelEndPerc += 0;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Misc info...");
@@ -1136,7 +1128,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		uiRelStartPerc = uiRelEndPerc;
 
 		LoadGeneralInfo(f, version);
-		LoadGameFilePosition(f, "Misc info");
+		LoadGameFilePosition(save_slot_id, f, "Misc info");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Mine Status...");
@@ -1144,7 +1136,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		uiRelStartPerc = uiRelEndPerc;
 
 		LoadMineStatusFromSavedGameFile(f);
-		LoadGameFilePosition(f, "Mine Status");
+		LoadGameFilePosition(save_slot_id, f, "Mine Status");
 
 		uiRelEndPerc += 0;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Town Loyalty...");
@@ -1154,7 +1146,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (version	>= 21)
 		{
 			LoadStrategicTownLoyaltyFromSavedGameFile(f);
-			LoadGameFilePosition(f, "Town Loyalty");
+			LoadGameFilePosition(save_slot_id, f, "Town Loyalty");
 		}
 
 		uiRelEndPerc += 1;
@@ -1165,7 +1157,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (version	>= 22)
 		{
 			LoadVehicleInformationFromSavedGameFile(f, version);
-			LoadGameFilePosition(f, "Vehicle Information");
+			LoadGameFilePosition(save_slot_id, f, "Vehicle Information");
 		}
 
 		uiRelEndPerc += 1;
@@ -1176,7 +1168,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (version	>= 24)
 		{
 			LoadBulletStructureFromSavedGameFile(f);
-			LoadGameFilePosition(f, "Bullet Information");
+			LoadGameFilePosition(save_slot_id, f, "Bullet Information");
 		}
 
 		uiRelEndPerc += 1;
@@ -1187,7 +1179,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (version	>= 24)
 		{
 			LoadPhysicsTableFromSavedGameFile(f);
-			LoadGameFilePosition(f, "Physics table");
+			LoadGameFilePosition(save_slot_id, f, "Physics table");
 		}
 
 		uiRelEndPerc += 1;
@@ -1198,7 +1190,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (version	>= 24)
 		{
 			LoadAirRaidInfoFromSaveGameFile(f);
-			LoadGameFilePosition(f, "Air Raid Info");
+			LoadGameFilePosition(save_slot_id, f, "Air Raid Info");
 		}
 
 		uiRelEndPerc += 0;
@@ -1209,7 +1201,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (version	>= 24)
 		{
 			LoadTeamTurnsFromTheSavedGameFile(f);
-			LoadGameFilePosition(f, "Team Turn Info");
+			LoadGameFilePosition(save_slot_id, f, "Team Turn Info");
 		}
 
 		uiRelEndPerc += 1;
@@ -1220,7 +1212,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (version	>= 25)
 		{
 			LoadExplosionTableFromSavedGameFile(f);
-			LoadGameFilePosition(f, "Explosion Table");
+			LoadGameFilePosition(save_slot_id, f, "Explosion Table");
 		}
 
 		uiRelEndPerc += 1;
@@ -1231,7 +1223,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (version	>= 27)
 		{
 			LoadCreatureDirectives(f, version);
-			LoadGameFilePosition(f, "Creature Spreading");
+			LoadGameFilePosition(save_slot_id, f, "Creature Spreading");
 		}
 
 		uiRelEndPerc += 1;
@@ -1243,7 +1235,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (version	>= 28)
 		{
 			LoadStrategicStatusFromSaveGameFile(f);
-			LoadGameFilePosition(f, "Strategic Status");
+			LoadGameFilePosition(save_slot_id, f, "Strategic Status");
 		}
 
 		uiRelEndPerc += 1;
@@ -1254,7 +1246,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (version	>= 31)
 		{
 			LoadStrategicAI(f);
-			LoadGameFilePosition(f, "Strategic AI");
+			LoadGameFilePosition(save_slot_id, f, "Strategic AI");
 		}
 
 		uiRelEndPerc += 1;
@@ -1266,7 +1258,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (37 <= version && version < 76)
 		{
 			LoadLightEffectsFromLoadGameFile(f);
-			LoadGameFilePosition(f, "Lighting Effects");
+			LoadGameFilePosition(save_slot_id, f, "Lighting Effects");
 		}
 
 		uiRelEndPerc += 1;
@@ -1278,7 +1270,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		{
 			LoadWatchedLocsFromSavedGame(f);
 		}
-		LoadGameFilePosition(f, "Watched Locs Info");
+		LoadGameFilePosition(save_slot_id, f, "Watched Locs Info");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Item cursor Info...");
@@ -1289,7 +1281,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		{
 			LoadItemCursorFromSavedGame(f);
 		}
-		LoadGameFilePosition(f, "Item cursor Info");
+		LoadGameFilePosition(save_slot_id, f, "Item cursor Info");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Civ Quote System...");
@@ -1300,7 +1292,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		{
 			LoadCivQuotesFromLoadGameFile(f);
 		}
-		LoadGameFilePosition(f, "Civ Quote System");
+		LoadGameFilePosition(save_slot_id, f, "Civ Quote System");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Backed up NPC Info...");
@@ -1311,7 +1303,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		{
 			LoadBackupNPCInfoFromSavedGameFile(f, version);
 		}
-		LoadGameFilePosition(f, "Backed up NPC Info");
+		LoadGameFilePosition(save_slot_id, f, "Backed up NPC Info");
 
 		uiRelEndPerc += 1;
 		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Meanwhile definitions...");
@@ -1321,7 +1313,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (version >= 58)
 		{
 			LoadMeanwhileDefsFromSaveGameFile(f, version);
-			LoadGameFilePosition(f, "Meanwhile definitions");
+			LoadGameFilePosition(save_slot_id, f, "Meanwhile definitions");
 		}
 		else
 		{
@@ -1338,7 +1330,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 			// trash schedules loaded from map
 			DestroyAllSchedulesWithoutDestroyingEvents();
 			LoadSchedulesFromSave(f);
-			LoadGameFilePosition(f, "Schedules");
+			LoadGameFilePosition(save_slot_id, f, "Schedules");
 		}
 
 		uiRelEndPerc += 1;
@@ -1356,7 +1348,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 			{
 				NewLoadVehicleMovementInfoFromSavedGameFile(f);
 			}
-			LoadGameFilePosition(f, "Extra Vehicle Info");
+			LoadGameFilePosition(save_slot_id, f, "Extra Vehicle Info");
 		}
 
 		uiRelEndPerc += 1;
@@ -1372,13 +1364,13 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (version >= 67)
 		{
 			LoadContractRenewalDataFromSaveGameFile(f);
-			LoadGameFilePosition(f, "Contract renweal sequence stuff");
+			LoadGameFilePosition(save_slot_id, f, "Contract renweal sequence stuff");
 		}
 
 		if (version >= 70)
 		{
 			LoadLeaveItemList(f);
-			LoadGameFilePosition(f, "Leave List");
+			LoadGameFilePosition(save_slot_id, f, "Leave List");
 		}
 
 		if (version <= 73)
@@ -1389,7 +1381,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (version >= 85)
 		{
 			NewWayOfLoadingBobbyRMailOrdersToSaveGameFile(f);
-			LoadGameFilePosition(f, "New way of loading Bobby R mailorders");
+			LoadGameFilePosition(save_slot_id, f, "New way of loading Bobby R mailorders");
 		}
 
 		// If there are any old Bobby R Mail orders, tranfer them to the new system
@@ -2125,21 +2117,21 @@ void LoadMercPath(HWFILE const hFile, PathSt** const head)
 
 
 #ifdef JA2BETAVERSION
-static void InitSaveGameFilePosition(void)
+static void InitSaveGameFilePosition(UINT8 const slot)
 {
 	CHAR8		zFileName[128];
-	sprintf(zFileName, "%s/SaveGameFilePos%2d.txt", g_savegame_dir, gubSaveGameLoc);
+	sprintf(zFileName, "%s/SaveGameFilePos%2d.txt", g_savegame_dir, slot);
 	FileDelete( zFileName );
 }
 
 
-static void SaveGameFilePosition(const HWFILE save, const char* const pMsg)
+static void SaveGameFilePosition(UINT8 const slot, const HWFILE save, const char* const pMsg)
 {
 	CHAR8		zTempString[512];
 	UINT32	uiStrLen=0;
 	CHAR8		zFileName[128];
 
-	sprintf(zFileName, "%s/SaveGameFilePos%2d.txt", g_savegame_dir, gubSaveGameLoc);
+	sprintf(zFileName, "%s/SaveGameFilePos%2d.txt", g_savegame_dir, slot);
 
 	// create the save game file
 	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
@@ -2151,21 +2143,21 @@ static void SaveGameFilePosition(const HWFILE save, const char* const pMsg)
 }
 
 
-static void InitLoadGameFilePosition(void)
+static void InitLoadGameFilePosition(UINT8 const slot)
 {
 	CHAR8		zFileName[128];
-	sprintf(zFileName, "%s/LoadGameFilePos%2d.txt", g_savegame_dir, gubSaveGameLoc);
+	sprintf(zFileName, "%s/LoadGameFilePos%2d.txt", g_savegame_dir, slot);
 	FileDelete( zFileName );
 }
 
 
-static void LoadGameFilePosition(const HWFILE load, const char* const pMsg)
+static void LoadGameFilePosition(UINT8 const slot, const HWFILE load, const char* const pMsg)
 {
 	CHAR8		zTempString[512];
 	UINT32	uiStrLen=0;
 
 	CHAR8		zFileName[128];
-	sprintf(zFileName, "%s/LoadGameFilePos%2d.txt", g_savegame_dir, gubSaveGameLoc);
+	sprintf(zFileName, "%s/LoadGameFilePos%2d.txt", g_savegame_dir, slot);
 
 	// create the save game file
 	AutoSGPFile hFile(FileOpen(zFileName, FILE_ACCESS_APPEND | FILE_OPEN_ALWAYS));
