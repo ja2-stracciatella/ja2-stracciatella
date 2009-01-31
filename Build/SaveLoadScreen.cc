@@ -142,7 +142,6 @@ BOOLEAN		gfSaveGame=TRUE;
 
 BOOLEAN		gfSaveLoadScreenButtonsCreated = FALSE;
 
-INT8			gbSaveGameSelectedLocation[ NUM_SAVE_GAMES ];
 INT8			gbSelectedSaveLocation=-1;
 INT8			gbHighLightedLocation=-1;
 INT8			gbLastHighLightedLocation=-1;
@@ -466,10 +465,6 @@ Removed so that the user can click on it and get displayed a message that the qu
 	//Create the screen mask to enable ability to righ click to cancel the sace game
 	MSYS_DefineRegion(&gSLSEntireScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 10, CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectedSLSEntireRegionCallBack);
 
-	//Reset the regions
-//	for( i=0; i<NUM_SAVE_GAMES; i++)
-//		gbSaveGameSelectedLocation[i] = SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
-//	gbSelectedSaveLocation=-1;
 	ClearSelectedSaveSlot();
 
 
@@ -505,14 +500,12 @@ Removed so that the user can click on it and get displayed a message that the qu
 				if( !gfSaveGame || gfSaveGame && gGameSettings.bLastSavedGameSlot != 0 )
 				{
 					gbSelectedSaveLocation = gGameSettings.bLastSavedGameSlot;
-					gbSaveGameSelectedLocation[ gbSelectedSaveLocation ] = SLG_SELECTED_SLOT_GRAPHICS_NUMBER;
 
 					//load the save gamed header string
 
 					//Get the heade for the saved game
 					if( !LoadSavedGameHeader( gbSelectedSaveLocation, &SaveGameHeader ) )
 					{
-						gbSaveGameSelectedLocation[ gbSelectedSaveLocation ] = SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
 						gbSaveGameArray[ gbSelectedSaveLocation ] = FALSE;
 						gbSelectedSaveLocation = gGameSettings.bLastSavedGameSlot = -1;
 					}
@@ -774,9 +767,6 @@ static void GetSaveLoadScreenUserInput(void)
 					}
 					else
 					{
-						//Reset the selected slot background graphic
-						gbSaveGameSelectedLocation[ gbSelectedSaveLocation ] = SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
-
 						//reset selected slot
 						gbSelectedSaveLocation = -1;
 						gfRedrawSaveLoadScreen = TRUE;
@@ -942,11 +932,13 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 	UINT16 const bx = SLG_FIRST_SAVED_SPOT_X;
 	UINT16 const by = SLG_FIRST_SAVED_SPOT_Y + SLG_GAP_BETWEEN_LOCATIONS * entry_idx;
 
-	// Background
-	BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, gbSaveGameSelectedLocation[entry_idx], bx, by);
-
 	bool const is_selected = entry_idx == gbSelectedSaveLocation;
 	bool const save_exists = gbSaveGameArray[entry_idx];
+
+	// Background
+	UINT16 const gfx = is_selected ?
+		SLG_SELECTED_SLOT_GRAPHICS_NUMBER : SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
+	BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, gfx, bx, by);
 
 	Font  font = SAVE_LOAD_NORMAL_FONT;
 	UINT8 foreground;
@@ -1161,7 +1153,6 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		UINT8	bSelected = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
 		static UINT32	uiLastTime = 0;
 		UINT32	uiCurTime = GetJA2Clock();
-		INT32	i;
 
 /*
 		//If we are saving and this is the quick save slot
@@ -1182,10 +1173,6 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			DoSaveLoadMessageBox(pMessageStrings[MSG_QUICK_SAVE_RESERVED_FOR_TACTICAL], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, RedrawSaveLoadScreenAfterMessageBox);
 			return;
 		}
-
-		//Reset the regions
-		for( i=0; i<NUM_SAVE_GAMES; i++)
-			gbSaveGameSelectedLocation[i] = SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
 
 		//if the user is selecting an unselected saved game slot
 		if( gbSelectedSaveLocation != bSelected )
@@ -1217,9 +1204,6 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 				uiLastTime = GetJA2Clock();
 			}
 
-			//Set the selected region to be highlighted
-			gbSaveGameSelectedLocation[ bSelected ] = SLG_SELECTED_SLOT_GRAPHICS_NUMBER;
-
 			gfRedrawSaveLoadScreen = TRUE;
 
 			uiLastTime = GetJA2Clock();
@@ -1247,9 +1231,6 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 					}
 
 					InitSaveLoadScreenTextInputBoxes();
-
-					//Set the selected region to be highlighted
-					gbSaveGameSelectedLocation[ bSelected ] = SLG_SELECTED_SLOT_GRAPHICS_NUMBER;
 
 					gfRedrawSaveLoadScreen = TRUE;
 
@@ -1283,8 +1264,6 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 						}
 					}
 				}
-				//Set the selected region to be highlighted
-				gbSaveGameSelectedLocation[ bSelected ] = SLG_SELECTED_SLOT_GRAPHICS_NUMBER;
 			}
 			//else we are loading
 			else
@@ -1300,10 +1279,6 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 				}
 			}
 		}
-		//Set the selected region to be highlighted
-		gbSaveGameSelectedLocation[ bSelected ] = SLG_SELECTED_SLOT_GRAPHICS_NUMBER;
-
-
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
@@ -1418,11 +1393,8 @@ static void SetSelection(UINT8 ubNewSelection)
 			return;
 	}
 
-	//Reset the selected slot background graphic
 	if( gbSelectedSaveLocation != -1 )
 	{
-		gbSaveGameSelectedLocation[ gbSelectedSaveLocation ] = SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
-
 		//reset the slots help text
 		gSelectedSaveRegion[gbSelectedSaveLocation].SetFastHelpText(L"");
 	}
@@ -1461,9 +1433,6 @@ static void SetSelection(UINT8 ubNewSelection)
 
 	//reset selected slot
 	gbSelectedSaveLocation = ubNewSelection;
-
-	//Set the selected slot background graphic
-	gbSaveGameSelectedLocation[ gbSelectedSaveLocation ] = SLG_SELECTED_SLOT_GRAPHICS_NUMBER;
 
 /*
 	//if we are saving AND it is the currently selected slot
@@ -1951,10 +1920,6 @@ static void MoveSelectionUpOrDown(BOOLEAN fUp)
 
 static void ClearSelectedSaveSlot(void)
 {
-	INT32	i;
-	for( i=0; i<NUM_SAVE_GAMES; i++)
-		gbSaveGameSelectedLocation[i] = SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
-
 	gbSelectedSaveLocation = -1;
 }
 
