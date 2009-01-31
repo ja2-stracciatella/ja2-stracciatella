@@ -1769,15 +1769,12 @@ static void FailedLoadingGameCallBack(MessageBoxReturnValue const bExitValue)
 
 void DoQuickSave()
 {
-	gzGameDescTextField[0] = '\0';
+	if (SaveGame(0, L"")) return;
 
-	if( !SaveGame( 0, gzGameDescTextField ) )
-	{
-		if( guiPreviousOptionScreen == MAP_SCREEN )
-			DoMapMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
-		else
-			DoMessageBox( MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL );
-	}
+	if (guiPreviousOptionScreen == MAP_SCREEN)
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+	else
+		DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
 }
 
 
