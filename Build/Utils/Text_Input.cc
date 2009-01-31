@@ -409,23 +409,6 @@ void SetInputFieldStringWith8BitString(UINT8 ubField, const char* szNewText)
 }
 
 
-//Allows external functions to access the strings within the fields at anytime.
-static void Get8BitStringFromField(UINT8 ubField, char* szString)
-{
-	TEXTINPUTNODE *curr;
-  curr = gpTextInputHead;
-	while( curr )
-	{
-		if( curr->ubID == ubField )
-		{
-			sprintf( szString, "%ls", curr->szString );
-			return;
-		}
-		curr = curr->next;
-	}
-	szString[0] = '\0';
-}
-
 void Get16BitStringFromField( UINT8 ubField, wchar_t *szString, size_t Length)
 {
 	TEXTINPUTNODE *curr;
