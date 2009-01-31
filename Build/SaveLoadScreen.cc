@@ -612,31 +612,16 @@ static void DisplaySaveGameList(void);
 
 static void RenderSaveLoadScreen(void)
 {
-	//if we are going to be instantly leaving the screen, dont draw the numbers
-	if( gfLoadGameUponEntry )
-	{
-		return;
-	}
+	// If we are going to be instantly leaving the screen, don't draw the numbers
+	if (gfLoadGameUponEntry) return;
 
 	BltVideoObject(FRAME_BUFFER, guiSlgBackGroundImage, 0, 0, 0);
 
-	if( gfSaveGame )
-	{
-		// If we are saving a game
-
-		//Display the Title
-		BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, 1, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
-	}
-	else
-	{
-		// If we are Loading a game
-
-		//Display the Title
-		BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, 0, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
-	}
+	// Display the Title
+	UINT16 const gfx = gfSaveGame ? 1 : 0;
+	BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, gfx, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
 
 	DisplaySaveGameList();
-
 	InvalidateScreen();
 }
 
