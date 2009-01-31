@@ -2,83 +2,82 @@
 #include "Multi_Language_Graphic_Utils.h"
 
 
-const char* GetMLGFilename(const MultiLanguageGraphic id)
+char const* GetMLGFilename(MultiLanguageGraphic const id)
 {
-	const char* s;
 	switch (id)
 	{
 #if defined ENGLISH || defined FRENCH || defined RUSSIAN_GOLD
-		case MLG_AIMSYMBOL:          s = "LAPTOP/AimSymbol.sti";             break;
-		case MLG_BOBBYNAME:          s = "LAPTOP/BobbyName.sti";             break;
-		case MLG_BOBBYRAYAD21:       s = "LAPTOP/BobbyRayAd_21.sti";         break;
-		case MLG_BOBBYRAYLINK:       s = "LAPTOP/BobbyRayLink.sti";          break;
-		case MLG_CLOSED:             s = "LAPTOP/Closed.sti";                break;
-		case MLG_CONFIRMORDER:       s = "LAPTOP/ConfirmOrder.sti";          break;
-		case MLG_DESKTOP:            s = "LAPTOP/desktop.pcx";               break;
-		case MLG_FUNERALAD9:         s = "LAPTOP/FuneralAd_9.sti";           break;
-		case MLG_GOLDPIECEBUTTONS:   s = "INTERFACE/goldpiecebuttons.sti";   break;
-		case MLG_HISTORY:            s = "LAPTOP/history.sti";               break;
-		case MLG_INSURANCEAD10:      s = "LAPTOP/insurancead_10.sti";        break;
-		case MLG_INSURANCELINK:      s = "LAPTOP/insurancelink.sti";         break;
-		case MLG_INSURANCETITLE:     s = "LAPTOP/largetitle.sti";            break;
-		case MLG_LARGEFLORISTSYMBOL: s = "LAPTOP/LargeSymbol.sti";           break;
-		case MLG_SMALLFLORISTSYMBOL: s = "LAPTOP/SmallSymbol.sti";           break;
-		case MLG_MCGILLICUTTYS:      s = "LAPTOP/McGillicuttys.sti";         break;
-		case MLG_MORTUARY:           s = "LAPTOP/Mortuary.sti";              break;
-		case MLG_MORTUARYLINK:       s = "LAPTOP/MortuaryLink.sti";          break;
-		case MLG_ORDERGRID:          s = "LAPTOP/OrderGrid.sti";             break;
-		case MLG_PREBATTLEPANEL:     s = "INTERFACE/PreBattlePanel.sti";     break;
-		case MLG_SMALLTITLE:         s = "LAPTOP/SmallTitle.sti";            break;
-		case MLG_STATSBOX:           s = "LAPTOP/StatsBox.sti";              break;
-		case MLG_STOREPLAQUE:        s = "LAPTOP/BobbyStorePlaque.sti";      break;
+		case MLG_AIMSYMBOL:          return "LAPTOP/AimSymbol.sti";
+		case MLG_BOBBYNAME:          return "LAPTOP/BobbyName.sti";
+		case MLG_BOBBYRAYAD21:       return "LAPTOP/BobbyRayAd_21.sti";
+		case MLG_BOBBYRAYLINK:       return "LAPTOP/BobbyRayLink.sti";
+		case MLG_CLOSED:             return "LAPTOP/Closed.sti";
+		case MLG_CONFIRMORDER:       return "LAPTOP/ConfirmOrder.sti";
+		case MLG_DESKTOP:            return "LAPTOP/desktop.pcx";
+		case MLG_FUNERALAD9:         return "LAPTOP/FuneralAd_9.sti";
+		case MLG_GOLDPIECEBUTTONS:   return "INTERFACE/goldpiecebuttons.sti";
+		case MLG_HISTORY:            return "LAPTOP/history.sti";
+		case MLG_INSURANCEAD10:      return "LAPTOP/insurancead_10.sti";
+		case MLG_INSURANCELINK:      return "LAPTOP/insurancelink.sti";
+		case MLG_INSURANCETITLE:     return "LAPTOP/largetitle.sti";
+		case MLG_LARGEFLORISTSYMBOL: return "LAPTOP/LargeSymbol.sti";
+		case MLG_SMALLFLORISTSYMBOL: return "LAPTOP/SmallSymbol.sti";
+		case MLG_MCGILLICUTTYS:      return "LAPTOP/McGillicuttys.sti";
+		case MLG_MORTUARY:           return "LAPTOP/Mortuary.sti";
+		case MLG_MORTUARYLINK:       return "LAPTOP/MortuaryLink.sti";
+		case MLG_ORDERGRID:          return "LAPTOP/OrderGrid.sti";
+		case MLG_PREBATTLEPANEL:     return "INTERFACE/PreBattlePanel.sti";
+		case MLG_SMALLTITLE:         return "LAPTOP/SmallTitle.sti";
+		case MLG_STATSBOX:           return "LAPTOP/StatsBox.sti";
+		case MLG_STOREPLAQUE:        return "LAPTOP/BobbyStorePlaque.sti";
 #	if defined JA2DEMO
-		case MLG_TITLETEXT:          s = "INTERFACE/titletext.sti";          break;
+		case MLG_TITLETEXT:          return "INTERFACE/titletext.sti";
 #	else
-		case MLG_TITLETEXT:          s = "LOADSCREENS/titletext.sti";        break;
+		case MLG_TITLETEXT:          return "LOADSCREENS/titletext.sti";
 #	endif
-		case MLG_TOALUMNI:           s = "LAPTOP/ToAlumni.sti";              break;
-		case MLG_TOMUGSHOTS:         s = "LAPTOP/ToMugShots.sti";            break;
-		case MLG_TOSTATS:            s = "LAPTOP/ToStats.sti";               break;
-		case MLG_WARNING:            s = "LAPTOP/Warning.sti";               break;
-		case MLG_YOURAD13:           s = "LAPTOP/YourAd_13.sti";             break;
-		case MLG_OPTIONHEADER:       s = "INTERFACE/optionscreenaddons.sti"; break;
-		case MLG_LOADSAVEHEADER:     s = "INTERFACE/loadscreenaddons.sti";   break;
-		case MLG_SPLASH:             s = "INTERFACE/splash.sti";             break;
-		case MLG_IMPSYMBOL:          s = "LAPTOP/IMPSymbol.sti";             break;
+		case MLG_TOALUMNI:           return "LAPTOP/ToAlumni.sti";
+		case MLG_TOMUGSHOTS:         return "LAPTOP/ToMugShots.sti";
+		case MLG_TOSTATS:            return "LAPTOP/ToStats.sti";
+		case MLG_WARNING:            return "LAPTOP/Warning.sti";
+		case MLG_YOURAD13:           return "LAPTOP/YourAd_13.sti";
+		case MLG_OPTIONHEADER:       return "INTERFACE/optionscreenaddons.sti";
+		case MLG_LOADSAVEHEADER:     return "INTERFACE/loadscreenaddons.sti";
+		case MLG_SPLASH:             return "INTERFACE/splash.sti";
+		case MLG_IMPSYMBOL:          return "LAPTOP/IMPSymbol.sti";
 #elif defined GERMAN
-		case MLG_AIMSYMBOL:          s = "LAPTOP/AimSymbol.sti";                 break; //Same graphic (no translation needed)
-		case MLG_BOBBYNAME:          s = "LAPTOP/BobbyName.sti";                 break; //Same graphic (no translation needed)
-		case MLG_BOBBYRAYAD21:       s = "LAPTOP/BobbyRayAd_21.sti";             break; //Same graphic (no translation needed)
-		case MLG_BOBBYRAYLINK:       s = "GERMAN/BobbyRayLink_german.sti";       break;
-		case MLG_CLOSED:             s = "GERMAN/Closed_german.sti";             break;
-		case MLG_CONFIRMORDER:       s = "GERMAN/ConfirmOrder_german.sti";       break;
-		case MLG_DESKTOP:            s = "GERMAN/desktop_german.pcx";            break;
-		case MLG_FUNERALAD9:         s = "GERMAN/FuneralAd_12_german.sti";       break;
-		case MLG_GOLDPIECEBUTTONS:   s = "GERMAN/goldpiecebuttons_german.sti";   break;
-		case MLG_HISTORY:            s = "GERMAN/history_german.sti";            break;
-		case MLG_IMPSYMBOL:          s = "German/IMPSymbol_german.sti";          break;
-		case MLG_INSURANCEAD10:      s = "GERMAN/insurancead_10_german.sti";     break;
-		case MLG_INSURANCELINK:      s = "GERMAN/insurancelink_german.sti";      break;
-		case MLG_INSURANCETITLE:     s = "GERMAN/largetitle_german.sti";         break;
-		case MLG_LARGEFLORISTSYMBOL: s = "GERMAN/LargeSymbol_german.sti";        break;
-		case MLG_SMALLFLORISTSYMBOL: s = "GERMAN/SmallSymbol_german.sti";        break;
-		case MLG_MCGILLICUTTYS:      s = "GERMAN/McGillicuttys_german.sti";      break;
-		case MLG_MORTUARY:           s = "GERMAN/Mortuary_german.sti";           break;
-		case MLG_MORTUARYLINK:       s = "GERMAN/MortuaryLink_german.sti";       break;
-		case MLG_PREBATTLEPANEL:     s = "GERMAN/PreBattlePanel_german.sti";     break;
-		case MLG_SMALLTITLE:         s = "GERMAN/SmallTitle_german.sti";         break;
-		case MLG_STATSBOX:           s = "LAPTOP/StatsBox.sti";                  break; //Same file
-		case MLG_STOREPLAQUE:        s = "GERMAN/StorePlaque_german.sti";        break;
-		case MLG_TITLETEXT:          s = "GERMAN/titletext_german.sti";          break;
-		case MLG_TOALUMNI:           s = "GERMAN/ToAlumni_german.sti";           break;
-		case MLG_TOMUGSHOTS:         s = "GERMAN/ToMugShots_german.sti";         break;
-		case MLG_TOSTATS:            s = "GERMAN/ToStats_german.sti";            break;
-		case MLG_WARNING:            s = "GERMAN/Warning_german.sti";            break;
-		case MLG_YOURAD13:           s = "GERMAN/YourAd_13_german.sti";          break;
-		case MLG_OPTIONHEADER:       s = "GERMAN/optionscreenaddons_german.sti"; break;
-		case MLG_LOADSAVEHEADER:     s = "GERMAN/loadscreenaddons_german.sti";   break;
-		case MLG_ORDERGRID:          s = "LAPTOP/OrderGrid.sti";                 break; //Same file
-		case MLG_SPLASH:             s = "German/splash_german.sti";             break;
+		case MLG_AIMSYMBOL:          return "LAPTOP/AimSymbol.sti";     // Same graphic (no translation needed)
+		case MLG_BOBBYNAME:          return "LAPTOP/BobbyName.sti";     // Same graphic (no translation needed)
+		case MLG_BOBBYRAYAD21:       return "LAPTOP/BobbyRayAd_21.sti"; // Same graphic (no translation needed)
+		case MLG_BOBBYRAYLINK:       return "GERMAN/BobbyRayLink_german.sti";
+		case MLG_CLOSED:             return "GERMAN/Closed_german.sti";
+		case MLG_CONFIRMORDER:       return "GERMAN/ConfirmOrder_german.sti";
+		case MLG_DESKTOP:            return "GERMAN/desktop_german.pcx";
+		case MLG_FUNERALAD9:         return "GERMAN/FuneralAd_12_german.sti";
+		case MLG_GOLDPIECEBUTTONS:   return "GERMAN/goldpiecebuttons_german.sti";
+		case MLG_HISTORY:            return "GERMAN/history_german.sti";
+		case MLG_IMPSYMBOL:          return "GERMAN/IMPSymbol_german.sti";
+		case MLG_INSURANCEAD10:      return "GERMAN/insurancead_10_german.sti";
+		case MLG_INSURANCELINK:      return "GERMAN/insurancelink_german.sti";
+		case MLG_INSURANCETITLE:     return "GERMAN/largetitle_german.sti";
+		case MLG_LARGEFLORISTSYMBOL: return "GERMAN/LargeSymbol_german.sti";
+		case MLG_SMALLFLORISTSYMBOL: return "GERMAN/SmallSymbol_german.sti";
+		case MLG_MCGILLICUTTYS:      return "GERMAN/McGillicuttys_german.sti";
+		case MLG_MORTUARY:           return "GERMAN/Mortuary_german.sti";
+		case MLG_MORTUARYLINK:       return "GERMAN/MortuaryLink_german.sti";
+		case MLG_PREBATTLEPANEL:     return "GERMAN/PreBattlePanel_german.sti";
+		case MLG_SMALLTITLE:         return "GERMAN/SmallTitle_german.sti";
+		case MLG_STATSBOX:           return "LAPTOP/StatsBox.sti"; // Same file
+		case MLG_STOREPLAQUE:        return "GERMAN/StorePlaque_german.sti";
+		case MLG_TITLETEXT:          return "GERMAN/titletext_german.sti";
+		case MLG_TOALUMNI:           return "GERMAN/ToAlumni_german.sti";
+		case MLG_TOMUGSHOTS:         return "GERMAN/ToMugShots_german.sti";
+		case MLG_TOSTATS:            return "GERMAN/ToStats_german.sti";
+		case MLG_WARNING:            return "GERMAN/Warning_german.sti";
+		case MLG_YOURAD13:           return "GERMAN/YourAd_13_german.sti";
+		case MLG_OPTIONHEADER:       return "GERMAN/optionscreenaddons_german.sti";
+		case MLG_LOADSAVEHEADER:     return "GERMAN/loadscreenaddons_german.sti";
+		case MLG_ORDERGRID:          return "LAPTOP/OrderGrid.sti"; // Same file
+		case MLG_SPLASH:             return "GERMAN/splash_german.sti";
 #else
 	//The foreign language defined determines the name of the directory and filename.
 	//For example, the German version of:
@@ -105,45 +104,44 @@ const char* GetMLGFilename(const MultiLanguageGraphic id)
 #define STI(x) GEN(x, ".sti")
 #define PCX(x) GEN(x, ".pcx")
 
-		case MLG_AIMSYMBOL:          s = STI("AimSymbol");          break;
-		case MLG_BOBBYNAME:          s = STI("BobbyName");          break;
-		case MLG_BOBBYRAYAD21:       s = STI("BobbyRayAd_21");      break;
-		case MLG_BOBBYRAYLINK:       s = STI("BobbyRayLink");       break;
-		case MLG_CLOSED:             s = STI("Closed");             break;
-		case MLG_CONFIRMORDER:       s = STI("ConfirmOrder");       break;
-		case MLG_DESKTOP:            s = PCX("desktop");            break;
-		case MLG_FUNERALAD9:         s = STI("FuneralAd_9");        break;
-		case MLG_GOLDPIECEBUTTONS:   s = STI("goldpiecebuttons");   break;
-		case MLG_HISTORY:            s = STI("history");            break;
-		case MLG_INSURANCEAD10:      s = STI("insurancead_10");     break;
-		case MLG_INSURANCELINK:      s = STI("insurancelink");      break;
-		case MLG_INSURANCETITLE:     s = STI("largetitle");         break;
-		case MLG_LARGEFLORISTSYMBOL: s = STI("LargeSymbol");        break;
-		case MLG_ORDERGRID:          s = STI("OrderGrid");          break;
-		case MLG_SMALLFLORISTSYMBOL: s = STI("SmallSymbol");        break;
-		case MLG_STATSBOX:           s = STI("StatsBox");           break;
-		case MLG_MCGILLICUTTYS:      s = STI("McGillicuttys");      break;
-		case MLG_MORTUARY:           s = STI("Mortuary");           break;
-		case MLG_MORTUARYLINK:       s = STI("MortuaryLink");       break;
-		case MLG_PREBATTLEPANEL:     s = STI("PreBattlePanel");     break;
-		case MLG_SMALLTITLE:         s = STI("SmallTitle");         break;
+		case MLG_AIMSYMBOL:          return STI("AimSymbol");
+		case MLG_BOBBYNAME:          return STI("BobbyName");
+		case MLG_BOBBYRAYAD21:       return STI("BobbyRayAd_21");
+		case MLG_BOBBYRAYLINK:       return STI("BobbyRayLink");
+		case MLG_CLOSED:             return STI("Closed");
+		case MLG_CONFIRMORDER:       return STI("ConfirmOrder");
+		case MLG_DESKTOP:            return PCX("desktop");
+		case MLG_FUNERALAD9:         return STI("FuneralAd_9");
+		case MLG_GOLDPIECEBUTTONS:   return STI("goldpiecebuttons");
+		case MLG_HISTORY:            return STI("history");
+		case MLG_INSURANCEAD10:      return STI("insurancead_10");
+		case MLG_INSURANCELINK:      return STI("insurancelink");
+		case MLG_INSURANCETITLE:     return STI("largetitle");
+		case MLG_LARGEFLORISTSYMBOL: return STI("LargeSymbol");
+		case MLG_ORDERGRID:          return STI("OrderGrid");
+		case MLG_SMALLFLORISTSYMBOL: return STI("SmallSymbol");
+		case MLG_STATSBOX:           return STI("StatsBox");
+		case MLG_MCGILLICUTTYS:      return STI("McGillicuttys");
+		case MLG_MORTUARY:           return STI("Mortuary");
+		case MLG_MORTUARYLINK:       return STI("MortuaryLink");
+		case MLG_PREBATTLEPANEL:     return STI("PreBattlePanel");
+		case MLG_SMALLTITLE:         return STI("SmallTitle");
 #if defined RUSSIAN
-		case MLG_STOREPLAQUE:        s = STI("BobbyStorePlaque");   break;
+		case MLG_STOREPLAQUE:        return STI("BobbyStorePlaque");
 #else
-		case MLG_STOREPLAQUE:        s = STI("StorePlaque");        break;
+		case MLG_STOREPLAQUE:        return STI("StorePlaque");
 #endif
-		case MLG_TITLETEXT:          s = STI("titletext");          break;
-		case MLG_TOALUMNI:           s = STI("ToAlumni");           break;
-		case MLG_TOMUGSHOTS:         s = STI("ToMugShots");         break;
-		case MLG_TOSTATS:            s = STI("ToStats");            break;
-		case MLG_WARNING:            s = STI("Warning");            break;
-		case MLG_YOURAD13:           s = STI("YourAd_13");          break;
-		case MLG_OPTIONHEADER:       s = STI("optionscreenaddons"); break;
-		case MLG_LOADSAVEHEADER:     s = STI("loadscreenaddons");   break;
-		case MLG_SPLASH:             s = STI("splash");             break;
-		case MLG_IMPSYMBOL:          s = STI("IMPSymbol");          break;
+		case MLG_TITLETEXT:          return STI("titletext");
+		case MLG_TOALUMNI:           return STI("ToAlumni");
+		case MLG_TOMUGSHOTS:         return STI("ToMugShots");
+		case MLG_TOSTATS:            return STI("ToStats");
+		case MLG_WARNING:            return STI("Warning");
+		case MLG_YOURAD13:           return STI("YourAd_13");
+		case MLG_OPTIONHEADER:       return STI("optionscreenaddons");
+		case MLG_LOADSAVEHEADER:     return STI("loadscreenaddons");
+		case MLG_SPLASH:             return STI("splash");
+		case MLG_IMPSYMBOL:          return STI("IMPSymbol");
 #endif
 		default:                     abort();
 	}
-	return s;
 }

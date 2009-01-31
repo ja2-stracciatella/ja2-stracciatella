@@ -2,7 +2,7 @@
 #define __MULTI_LANGUAGE_GRAPHIC_UTILS_H
 
 
-typedef enum MultiLanguageGraphic
+enum MultiLanguageGraphic
 {
 	MLG_AIMSYMBOL,
 	MLG_BOBBYNAME,
@@ -38,8 +38,8 @@ typedef enum MultiLanguageGraphic
 	MLG_TOSTATS,
 	MLG_WARNING,
 	MLG_YOURAD13,
-} MultiLanguageGraphic;
+};
 
-const char* GetMLGFilename(MultiLanguageGraphic);
+char const* GetMLGFilename(MultiLanguageGraphic);
 
 #endif
