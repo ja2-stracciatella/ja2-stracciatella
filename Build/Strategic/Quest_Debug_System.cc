@@ -2282,7 +2282,6 @@ static void CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* pStr
 		case QD_DROP_DOWN_CANCEL:
 		case QD_DROP_DOWN_DESTROY:
 		{
-			wchar_t	zText[ 32 ];
 			INT32		iTextEntryNumber;
 
 			if( !fMouseRegionCreated )
@@ -2305,9 +2304,7 @@ static void CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* pStr
 			//redraw the entire screen
 			gfRedrawQuestDebugSystem = TRUE;
 
-			//get the striong from the text field
-			Get16BitStringFromField( 0, zText, lengthof(zText));
-
+			wchar_t const* const zText = GetStringFromField(0);
 			//if the text is not null
 			if( zText[0] != '\0' )
 			{

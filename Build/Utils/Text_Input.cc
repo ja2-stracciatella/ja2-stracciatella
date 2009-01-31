@@ -409,15 +409,14 @@ void SetInputFieldStringWith8BitString(UINT8 ubField, const char* szNewText)
 }
 
 
-void Get16BitStringFromField(UINT8 const ubField, wchar_t* const szString, size_t const Length)
+wchar_t const* GetStringFromField(UINT8 const ubField)
 {
 	for (TEXTINPUTNODE const* i = gpTextInputHead; i; i = i->next)
 	{
 		if (i->ubID != ubField) continue;
-		wcslcpy(szString, i->szString, Length);
-		return;
+		return i->szString;
 	}
-	szString[0] = L'\0';
+	return L"";
 }
 
 
@@ -425,17 +424,13 @@ void Get16BitStringFromField(UINT8 const ubField, wchar_t* const szString, size_
 //returns -1 if blank or invalid.  Only works for positive numbers.
 INT32 GetNumericStrictValueFromField( UINT8 ubField )
 {
-	wchar_t *ptr;
-	wchar_t str[20];
 	INT32 total;
-	Get16BitStringFromField( ubField, str, lengthof(str));
+	wchar_t const* ptr = GetStringFromField(ubField);
 	//Blank string, so return -1
-	if( str[0] == '\0' )
-		return -1;
+	if (ptr[0] == L'\0') return -1;
 	//Convert the string to a number.  Don't trust other functions.  This will
 	//ensure that nonnumeric values automatically return -1.
 	total = 0;
-	ptr = str;
 	while( *ptr != '\0' )									//if char is a valid char...
 	{
 		if( *ptr >= '0' && *ptr <= '9' )		//...make sure it is numeric...

@@ -753,7 +753,7 @@ static void GetSaveLoadScreenUserInput(void)
 						bActiveTextField = (INT8)GetActiveFieldID();
 						if( bActiveTextField && bActiveTextField != -1 )
 						{
-							Get16BitStringFromField( (UINT8)bActiveTextField, gzGameDescTextField, lengthof(gzGameDescTextField));
+							wcslcpy(gzGameDescTextField, GetStringFromField(bActiveTextField), lengthof(gzGameDescTextField));
 							SetActiveField(0);
 
 							DestroySaveLoadTextInputBoxes();
@@ -809,7 +809,7 @@ static void SaveLoadGameNumber(INT8 bSaveGameID)
 		bActiveTextField = (INT8)GetActiveFieldID();
 		if( bActiveTextField && bActiveTextField != -1 )
 		{
-			Get16BitStringFromField( (UINT8)bActiveTextField, gzGameDescTextField, lengthof(gzGameDescTextField));
+			wcslcpy(gzGameDescTextField, GetStringFromField(bActiveTextField), lengthof(gzGameDescTextField));
 		}
 
 		//if there is save game in the slot, ask for confirmation before overwriting
@@ -1209,7 +1209,7 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 					bActiveTextField = (INT8)GetActiveFieldID();
 					if( bActiveTextField && bActiveTextField != -1 )
 					{
-						Get16BitStringFromField( (UINT8)bActiveTextField, gzGameDescTextField, lengthof(gzGameDescTextField));
+						wcslcpy(gzGameDescTextField, GetStringFromField(bActiveTextField), lengthof(gzGameDescTextField));
 						SetActiveField(0);
 
 						DestroySaveLoadTextInputBoxes();

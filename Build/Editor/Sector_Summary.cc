@@ -2363,8 +2363,7 @@ static void SummaryUpdateCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void ExtractTempFilename(void)
 {
-	wchar_t str[40];
-	Get16BitStringFromField(1, str, lengthof(str));
+	wchar_t const* const str = GetStringFromField(1);
 	if( wcscmp( gszTempFilename, str ) )
 	{
 		wcscpy( gszTempFilename, str );

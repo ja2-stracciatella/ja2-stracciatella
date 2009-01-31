@@ -111,7 +111,7 @@ void SetInputFieldStringWith16BitString( UINT8 ubField, const wchar_t *szNewText
 void SetInputFieldStringWith8BitString(UINT8 ubField, const char* szNewText);
 
 //Allows external functions to access the strings within the fields at anytime.
-void Get16BitStringFromField( UINT8 ubField, wchar_t *szString, size_t Length);
+wchar_t const* GetStringFromField(UINT8 ubField);
 
 //Utility functions for the INPUTTYPE_EXCLUSIVE_24HOURCLOCK input type.
 UINT16 GetExclusive24HourTimeValueFromField( UINT8 ubField );

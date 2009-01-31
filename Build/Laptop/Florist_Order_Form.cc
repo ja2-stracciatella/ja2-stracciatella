@@ -371,8 +371,8 @@ void ExitFloristOrderForm()
 	RemoveButton( guiFlowerOrderGalleryButton );
 
 	//Store the text fields
-	Get16BitStringFromField( 1, gsSentimentTextField, lengthof(gsSentimentTextField));
-	Get16BitStringFromField( 2, gsNameTextField, lengthof(gsNameTextField));
+	wcslcpy(gsSentimentTextField, GetStringFromField(1), lengthof(gsSentimentTextField));
+	wcslcpy(gsNameTextField,      GetStringFromField(2), lengthof(gsNameTextField));
 	gbCurrentlySelectedCard = -1;
 
 
@@ -768,12 +768,12 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 			//if its the personel sentiment field
 			if( ubTextFieldID == 1 )
 			{
-				Get16BitStringFromField( ubTextFieldID, gsSentimentTextField, lengthof(gsSentimentTextField));
+				wcslcpy(gsSentimentTextField, GetStringFromField(ubTextFieldID), lengthof(gsSentimentTextField));
 			}
 			else if( ubTextFieldID == 2 )
 			{
 				//else its the name field
-				Get16BitStringFromField( ubTextFieldID, gsNameTextField, lengthof(gsNameTextField));
+				wcslcpy(gsNameTextField, GetStringFromField(ubTextFieldID), lengthof(gsNameTextField));
 			}
 
 			SetActiveField(0);
@@ -801,7 +801,7 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 
 			//disable the text entry fields
 //			DisableAllTextFields();
-				Get16BitStringFromField( 1, gsSentimentTextField, lengthof(gsSentimentTextField));
+				wcslcpy(gsSentimentTextField, GetStringFromField(1), lengthof(gsSentimentTextField));
 				KillTextInputMode();
 
 			//disable the clear order and accept order buttons, (their rendering interferes with the drop down graphics)
@@ -982,12 +982,12 @@ static void HandleFloristOrderKeyBoardInput(void)
 					//if its the personel sentiment field
 					if( ubTextFieldID == 1 )
 					{
-						Get16BitStringFromField( ubTextFieldID, gsSentimentTextField, lengthof(gsSentimentTextField));
+						wcslcpy(gsSentimentTextField, GetStringFromField(ubTextFieldID), lengthof(gsSentimentTextField));
 					}
 					else if( ubTextFieldID == 2 )
 					{
 						//else its the name field
-						Get16BitStringFromField( ubTextFieldID, gsNameTextField, lengthof(gsNameTextField));
+						wcslcpy(gsNameTextField, GetStringFromField(ubTextFieldID), lengthof(gsNameTextField));
 					}
 
 					SetActiveField(0);

@@ -1065,7 +1065,7 @@ static void FDlgDwnCallback(GUI_BUTTON* butn, INT32 reason)
 
 static BOOLEAN ExtractFilenameFromFields(void)
 {
-	Get16BitStringFromField(0, gzFilename, lengthof(gzFilename));
+	wcslcpy(gzFilename, GetStringFromField(0), lengthof(gzFilename));
 	return ValidFilename();
 }
 

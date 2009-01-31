@@ -150,7 +150,6 @@ void UpdateMapInfoFields()
 
 void ExtractAndUpdateMapInfo()
 {
-	wchar_t str[10];
 	INT32 temp;
 	BOOLEAN fUpdateLight1 = FALSE;
 	//extract light1 colors
@@ -200,13 +199,12 @@ void ExtractAndUpdateMapInfo()
 		gMapInformation.ubRestrictedScrollID = (UINT8)temp;
 
 	//set up fields for exitgrid information
-	Get16BitStringFromField(7, str, lengthof(str));
-	if( str[0] >= 'a' && str[0] <= 'z' )
-		str[0] -= 32; //uppercase it!
-	if( str[0] >= 'A' && str[0] <= 'Z' &&
-		  str[1] >= '0' && str[1] <= '9' )
+	wchar_t const* const str = GetStringFromField(7);
+	wchar_t row = str[0];
+	if ('a' <= row && row <= 'z' ) row -= 32; //uppercase it!
+	if ('A' <= row && row <= 'Z' && '0' <= str[1] && str[1] <= '9')
 	{ //only update, if coordinate is valid.
-		gExitGrid.ubGotoSectorY = (UINT8)(str[0] - 'A' + 1);
+		gExitGrid.ubGotoSectorY = (UINT8)(row    - 'A' + 1);
 		gExitGrid.ubGotoSectorX = (UINT8)(str[1] - '0');
 		if( str[2] >= '0' && str[2] <= '9' )
 			gExitGrid.ubGotoSectorX = (UINT8)(gExitGrid.ubGotoSectorX * 10 + str[2] - '0' );
