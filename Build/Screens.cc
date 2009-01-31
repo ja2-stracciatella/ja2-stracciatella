@@ -48,7 +48,7 @@ Screens const GameScreens[] =
 	{ NULL,                 MessageBoxScreenHandle,      MessageBoxScreenShutdown  },
 	{ NULL,                 MainMenuScreenHandle,        NULL                      },
 	{ NULL,                 AutoResolveScreenHandle,     AutoResolveScreenShutdown },
-	{ SaveLoadScreenInit,   SaveLoadScreenHandle,        NULL                      },
+	{ NULL,                 SaveLoadScreenHandle,        NULL                      },
 	{ OptionsScreenInit,    OptionsScreenHandle,         NULL                      },
 	{ ShopKeeperScreenInit, ShopKeeperScreenHandle,      ShopKeeperScreenShutdown  },
 	{ NULL,                 SexScreenHandle,             NULL                      },

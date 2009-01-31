@@ -16,7 +16,6 @@ extern BOOLEAN gfSaveGame;
 
 extern	BOOLEAN			gfCameDirectlyFromGame;
 
-void     SaveLoadScreenInit(void);
 ScreenID SaveLoadScreenHandle(void);
 
 void DoSaveLoadMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);

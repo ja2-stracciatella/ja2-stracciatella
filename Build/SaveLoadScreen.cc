@@ -188,22 +188,6 @@ MOUSE_REGION    gSelectedSaveRegion[ NUM_SAVE_GAMES ];
 MOUSE_REGION		gSLSEntireScreenRegion;
 
 
-static void ClearSelectedSaveSlot(void);
-
-
-void SaveLoadScreenInit()
-{
-	//Set so next time we come in, we can set up
-	gfSaveLoadScreenEntry = TRUE;
-
-	memset( gbSaveGameArray, -1, NUM_SAVE_GAMES);
-
-	ClearSelectedSaveSlot();
-
-	gbHighLightedLocation=-1;
-}
-
-
 static void EnterSaveLoadScreen(void);
 static void ExitSaveLoadScreen(void);
 static void GetSaveLoadScreenUserInput(void);
@@ -343,6 +327,7 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 
 static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason);
+static void ClearSelectedSaveSlot(void);
 static void ConfirmLoadSavedGameMessageBoxCallBack(UINT8 bExitValue);
 static void InitSaveGameArray(void);
 static BOOLEAN LoadSavedGameHeader(INT8 bEntry, SAVED_GAME_HEADER* pSaveGameHeader);
