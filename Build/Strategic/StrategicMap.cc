@@ -344,7 +344,6 @@ void BeginLoadScreen( )
 	INT32 iPercentage, iFactor;
 	UINT32 uiTimeRange;
 	INT32 iLastShadePercentage;
-	UINT8 ubLoadScreenID;
 
 #ifdef JA2DEMOADS
 	DoDemoIntroduction();
@@ -411,15 +410,10 @@ void BeginLoadScreen( )
 	// ( which gets reloaded into gubLastLoadingScreenID )
 	if( !gfGotoSectorTransition )
 	{
-		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
-		{
-			DisplayLoadScreenWithID( gubLastLoadingScreenID );
-		}
-		else
-		{
-			ubLoadScreenID = GetLoadScreenID( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-			DisplayLoadScreenWithID( ubLoadScreenID );
-		}
+		LoadingScreenID const id = gTacticalStatus.uiFlags & LOADING_SAVED_GAME ?
+			gubLastLoadingScreenID :
+			GetLoadScreenID(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+		DisplayLoadScreenWithID(id);
 	}
 
 #ifdef JA2TESTVERSION

@@ -870,7 +870,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		if (version < 65 && !CHEATER_CHEAT_LEVEL()) return FALSE;
 
 		//Store the loading screenID that was saved
-		gubLastLoadingScreenID = SaveGameHeader.ubLoadScreenID;
+		gubLastLoadingScreenID = static_cast<LoadingScreenID>(SaveGameHeader.ubLoadScreenID);
 
 #if 0 // XXX was commented out
 		LoadGeneralInfo(f, version);

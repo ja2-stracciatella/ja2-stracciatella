@@ -11,10 +11,10 @@
 #include "Debug.h"
 
 
-UINT8 gubLastLoadingScreenID = LOADINGSCREEN_NOTHING;
+LoadingScreenID gubLastLoadingScreenID = LOADINGSCREEN_NOTHING;
 
 //returns the UINT8 ID for the specified sector.
-UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+LoadingScreenID GetLoadScreenID(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
 {
 	SECTORINFO *pSector;
 	UINT8 ubSectorID;
@@ -206,7 +206,7 @@ extern BOOLEAN gfSchedulesHosed;
 
 //sets up the loadscreen with specified ID, and draws it to the FRAME_BUFFER,
 //and refreshing the screen with it.
-void DisplayLoadScreenWithID( UINT8 ubLoadScreenID )
+void DisplayLoadScreenWithID(LoadingScreenID const ubLoadScreenID)
 {
 	const char* ImageFile;
 

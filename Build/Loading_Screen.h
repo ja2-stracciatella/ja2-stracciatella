@@ -2,7 +2,7 @@
 #define __LOADING_SCREEN_H
 
 
-enum
+enum LoadingScreenID
 {
 	LOADINGSCREEN_NOTHING,
 	LOADINGSCREEN_DAYGENERIC,
@@ -52,13 +52,13 @@ enum
 
 
 //For use by the game loader, before it can possibly know the situation.
-extern UINT8 gubLastLoadingScreenID;
+extern LoadingScreenID gubLastLoadingScreenID;
 
 //returns the UINT8 ID for the specified sector.
-UINT8 GetLoadScreenID( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
+LoadingScreenID GetLoadScreenID(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 //sets up the loadscreen with specified ID, and draws it to the FRAME_BUFFER,
 //and refreshing the screen with it.
-void DisplayLoadScreenWithID( UINT8 ubLoadScreenID );
+void DisplayLoadScreenWithID(LoadingScreenID);
 
 #endif
