@@ -144,7 +144,6 @@ BOOLEAN		gfSaveLoadScreenButtonsCreated = FALSE;
 
 INT8			gbSelectedSaveLocation=-1;
 INT8			gbHighLightedLocation=-1;
-INT8			gbLastHighLightedLocation=-1;
 
 static SGPVObject* guiSlgBackGroundImage;
 static SGPVObject* guiBackGroundAddOns;
@@ -1249,8 +1248,6 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 //						EnableButton( guiSlgSaveLoadBtn );
 
-						DisplaySaveGameEntry( gbLastHighLightedLocation );
-
 						gfRedrawSaveLoadScreen = TRUE;
 
 
@@ -1306,10 +1303,7 @@ static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reas
 			return;
 		}
 
-		gbLastHighLightedLocation = gbHighLightedLocation;
 		gbHighLightedLocation = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
-
-		DisplaySaveGameEntry( gbLastHighLightedLocation );
 		DisplaySaveGameEntry( gbHighLightedLocation );//, usPosY );
 
 		InvalidateRegion(pRegion->RegionTopLeftX, pRegion->RegionTopLeftY, pRegion->RegionBottomRightX, pRegion->RegionBottomRightY);
