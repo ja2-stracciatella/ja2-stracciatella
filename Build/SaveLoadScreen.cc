@@ -146,7 +146,6 @@ INT8			gbSaveGameSelectedLocation[ NUM_SAVE_GAMES ];
 INT8			gbSelectedSaveLocation=-1;
 INT8			gbHighLightedLocation=-1;
 INT8			gbLastHighLightedLocation=-1;
-INT8			gbSetSlotToBeSelected=-1;
 
 static SGPVObject* guiSlgBackGroundImage;
 static SGPVObject* guiBackGroundAddOns;
@@ -360,9 +359,6 @@ static void EnterSaveLoadScreen(void)
 	UINT16 usPosX = SLG_FIRST_SAVED_SPOT_X;
 	UINT16 usPosY = SLG_FIRST_SAVED_SPOT_Y;
 
-//	if( guiPreviousOptionScreen != MAINMENU_SCREEN )
-//		gbSetSlotToBeSelected = -1;
-
 	// This is a hack to get sector names , but... if the underground sector is NOT loaded
 	if( !gpUndergroundSectorInfoHead )
 	{
@@ -436,9 +432,7 @@ static void EnterSaveLoadScreen(void)
 //	if( !gfSaveGame )
 	{
 		guiSlgSaveLoadBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
-
-		if( gbSetSlotToBeSelected == -1 )
-			DisableButton( guiSlgSaveLoadBtn );
+		DisableButton(guiSlgSaveLoadBtn);
 	}
 
 
@@ -534,18 +528,6 @@ Removed so that the user can click on it and get displayed a message that the qu
 		else
 			EnableButton( guiSlgSaveLoadBtn );
 	}
-
-
-/*
-	if( gbSetSlotToBeSelected != -1 )
-	{
-		gbSelectedSaveLocation = gbSetSlotToBeSelected;
-		gbSetSlotToBeSelected = -1;
-
-		//Set the selected slot background graphic
-		gbSaveGameSelectedLocation[ gbSelectedSaveLocation ] = SLG_SELECTED_SLOT_GRAPHICS_NUMBER;
-	}
-*/
 
 
 	RenderSaveLoadScreen();

@@ -14,9 +14,6 @@
 // gfSaveGame=FALSE		For loading a game
 extern BOOLEAN gfSaveGame;
 
-//if there is to be a slot selected when entering this screen
-extern INT8			gbSetSlotToBeSelected;
-
 extern	BOOLEAN			gfCameDirectlyFromGame;
 
 void     SaveLoadScreenInit(void);
