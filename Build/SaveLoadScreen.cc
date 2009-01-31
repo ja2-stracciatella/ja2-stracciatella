@@ -1750,26 +1750,14 @@ void DoQuickSave()
 
 void DoQuickLoad()
 {
-	//Build the save game array
+	// If there is no save in the quick save slot
 	InitSaveGameArray();
-
-	//if there is no save in the quick save slot
 	if (!gbSaveGameArray[0]) return;
 
-	//Set the selection to be the quick save slot
+	// Set the selection to be the quick save slot
 	gbSelectedSaveLocation = 0;
 
-	//if the game is paused, and we are in tactical, unpause
-	if( guiCurrentScreen == GAME_SCREEN )
-	{
-		PauseTime( FALSE );
-	}
-
-	//Do a fade out before we load the game
-	gFadeOutDoneCallback = DoneFadeOutForSaveLoadScreen;
-
-	FadeOutNextFrame( );
-	gfStartedFadingOut = TRUE;
+	StartFadeOutForSaveLoadScreen();
 	gfDoingQuickLoad = TRUE;
 }
 
