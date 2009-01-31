@@ -409,21 +409,17 @@ void SetInputFieldStringWith8BitString(UINT8 ubField, const char* szNewText)
 }
 
 
-void Get16BitStringFromField( UINT8 ubField, wchar_t *szString, size_t Length)
+void Get16BitStringFromField(UINT8 const ubField, wchar_t* const szString, size_t const Length)
 {
-	TEXTINPUTNODE *curr;
-  curr = gpTextInputHead;
-	while( curr )
+	for (TEXTINPUTNODE const* i = gpTextInputHead; i; i = i->next)
 	{
-		if( curr->ubID == ubField )
-		{
-			wcslcpy(szString, curr->szString, Length);
-			return;
-		}
-		curr = curr->next;
+		if (i->ubID != ubField) continue;
+		wcslcpy(szString, i->szString, Length);
+		return;
 	}
 	szString[0] = L'\0';
 }
+
 
 //Converts the field's string into a number, then returns that number
 //returns -1 if blank or invalid.  Only works for positive numbers.
