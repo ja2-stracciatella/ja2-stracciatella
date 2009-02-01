@@ -204,98 +204,85 @@ void KillAllTextInputModes()
 }
 
 
+static TEXTINPUTNODE* AllocateTextInputNode(BOOLEAN const start_editing)
+{
+	TEXTINPUTNODE* const n = MALLOCZ(TEXTINPUTNODE);
+	n->fEnabled = TRUE;
+  if (!gpTextInputHead)
+	{ // First entry, so we start with text input.
+		gfEditingText   = start_editing;
+		gpTextInputHead = n;
+		gpActive        = n;
+		n->ubID         = 0;
+	}
+	else
+	{ // Add to the end of the list.
+		TEXTINPUTNODE* const tail = gpTextInputTail;
+		tail->next = n;
+		n->prev    = tail;
+		n->ubID    = tail->ubID + 1;
+	}
+	gpTextInputTail = n;
+	return n;
+}
+
+
 static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason);
 static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason);
 
 
-//After calling InitTextInputMode, you want to define one or more text input fields.  The order
-//of calls to this function dictate the TAB order from traversing from one field to the next.  This
-//function adds mouse regions and processes them for you, as well as deleting them when you are done.
-void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT8 bPriority, const wchar_t* szInitText, UINT8 ubMaxChars, UINT16 usInputType)
+/* After calling InitTextInputMode, you want to define one or more text input
+ * fields.  The order of calls to this function dictate the TAB order from
+ * traversing from one field to the next.  This function adds mouse regions and
+ * processes them for you, as well as deleting them when you are done. */
+void AddTextInputField(INT16 const sLeft, INT16 const sTop, INT16 const sWidth, INT16 const sHeight, INT8 const bPriority, wchar_t const* const szInitText, UINT8 ubMaxChars, UINT16 const usInputType)
 {
-	TEXTINPUTNODE* const pNode = MALLOCZ(TEXTINPUTNODE);
-	pNode->next = NULL;
-  if( !gpTextInputHead ) //first entry, so we start with text input.
-	{
-		gfEditingText = TRUE;
-		gpTextInputHead = gpTextInputTail = pNode;
-		pNode->prev = NULL;
-		pNode->ubID = 0;
-		gpActive = pNode;
-	}
-	else //add to the end of the list.
-	{
-		gpTextInputTail->next = pNode;
-		pNode->prev = gpTextInputTail;
-		pNode->ubID = (UINT8)(gpTextInputTail->ubID+1);
-		gpTextInputTail = gpTextInputTail->next;
-	}
+	TEXTINPUTNODE* const n = AllocateTextInputNode(TRUE);
 	//Setup the information for the node
-	pNode->usInputType = usInputType;	//setup the filter type
-	//All 24hourclock inputtypes have 6 characters.  01:23 (null terminated)
-	if( usInputType == INPUTTYPE_EXCLUSIVE_24HOURCLOCK )
-		ubMaxChars = 6;
-	//Allocate and copy the string.
-	pNode->szString = MALLOCN(wchar_t, ubMaxChars + 1);
-	if( szInitText )
+	n->usInputType = usInputType;	//setup the filter type
+	// All 24hourclock inputtypes have 6 characters.  01:23 (null terminated)
+	if (usInputType == INPUTTYPE_EXCLUSIVE_24HOURCLOCK) ubMaxChars = 6;
+	// Allocate and copy the string.
+	n->ubMaxChars = ubMaxChars;
+	n->szString   = MALLOCN(wchar_t, ubMaxChars + 1);
+	if (szInitText)
 	{
-		pNode->ubStrLen = (UINT8)wcslen( szInitText );
-		Assert( pNode->ubStrLen <= ubMaxChars );
-		wcslcpy(pNode->szString, szInitText, ubMaxChars + 1);
+		n->ubStrLen = wcslen(szInitText);
+		Assert(n->ubStrLen <= ubMaxChars);
+		wcslcpy(n->szString, szInitText, ubMaxChars + 1);
 	}
 	else
 	{
-		pNode->ubStrLen = 0;
-		pNode->szString[0] = L'\0';
+		n->ubStrLen = 0;
+		n->szString[0] = L'\0';
 	}
-	pNode->ubMaxChars = ubMaxChars; //max string length
 
-	//if this is the first field, then hilight it.
-	if( gpTextInputHead == pNode )
+	// If this is the first field, then hilight it.
+	if (gpTextInputHead == n)
 	{
 		gubStartHilite = 0;
-		gubCursorPos = pNode->ubStrLen;
+		gubCursorPos   = n->ubStrLen;
 	}
-	pNode->fUserField = FALSE;
-	pNode->fEnabled = TRUE;
-	//Setup the region.
-	MSYS_DefineRegion( &pNode->region, sLeft, sTop, (INT16)(sLeft+sWidth), (INT16)(sTop+sHeight), bPriority,
-						 gusTextInputCursor, MouseMovedInTextRegionCallback, MouseClickedInTextRegionCallback );
-	MSYS_SetRegionUserData( &pNode->region, 0, pNode->ubID );
+	// Setup the region.
+	MSYS_DefineRegion(&n->region, sLeft, sTop, sLeft + sWidth, sTop + sHeight, bPriority, gusTextInputCursor, MouseMovedInTextRegionCallback, MouseClickedInTextRegionCallback);
+	MSYS_SetRegionUserData(&n->region, 0, n->ubID);
 }
 
-//This allows you to insert special processing functions and modes that can't be determined here.  An example
-//would be a file dialog where there would be a file list.  This file list would be accessed using the Win95
-//convention by pressing TAB.  In there, your key presses would be handled differently and by adding a userinput
-//field, you can make this hook into your function to accomplish this.  In a filedialog, alpha characters
-//would be used to jump to the file starting with that letter, and setting the field in the text input
-//field.  Pressing TAB again would place you back in the text input field.  All of that stuff would be handled
-//externally, except for the TAB keys.
-void AddUserInputField( INPUT_CALLBACK userFunction )
+
+/* This allows you to insert special processing functions and modes that can't
+ * be determined here.  An example would be a file dialog where there would be a
+ * file list.  This file list would be accessed using the Win95 convention by
+ * pressing TAB.  In there, your key presses would be handled differently and by
+ * adding a userinput field, you can make this hook into your function to
+ * accomplish this.  In a filedialog, alpha characters would be used to jump to
+ * the file starting with that letter, and setting the field in the text input
+ * field.  Pressing TAB again would place you back in the text input field.
+ * All of that stuff would be handled externally, except for the TAB keys. */
+void AddUserInputField(INPUT_CALLBACK const userFunction)
 {
-	TEXTINPUTNODE* const pNode = MALLOC(TEXTINPUTNODE);
-	pNode->next = NULL;
-  if( !gpTextInputHead ) //first entry, so we don't start with text input.
-	{
-		gfEditingText = FALSE;
-		gpTextInputHead = gpTextInputTail = pNode;
-		pNode->prev = NULL;
-		pNode->ubID = 0;
-		gpActive = pNode;
-	}
-	else //add to the end of the list.
-	{
-		gpTextInputTail->next = pNode;
-		pNode->prev = gpTextInputTail;
-		pNode->ubID = (UINT8)(gpTextInputTail->ubID+1);
-		gpTextInputTail = gpTextInputTail->next;
-	}
-	//Setup the information for the node
-	pNode->fUserField = TRUE;
-	pNode->szString = NULL;
-	pNode->fEnabled = TRUE;
-	//Setup the callback
-	pNode->InputCallback = userFunction;
+	TEXTINPUTNODE* const n = AllocateTextInputNode(FALSE);
+	n->fUserField    = TRUE;
+	n->InputCallback = userFunction;
 }
 
 
