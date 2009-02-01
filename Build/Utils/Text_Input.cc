@@ -285,34 +285,41 @@ void AddUserInputField(INPUT_CALLBACK const userFunction)
 }
 
 
-/* Remove the specified field from the existing fields.  If it doesn't exist,
- * then there will be an assertion failure. */
-static void RemoveTextInputField(UINT8 const ubField)
+static TEXTINPUTNODE* GetTextInputField(UINT8 const id)
 {
 	for (TEXTINPUTNODE* i = gpTextInputHead; i; i = i->next)
 	{
-		if (i->ubID != ubField) continue;
-
-		if (i == gpActive) SelectNextField();
-		TEXTINPUTNODE* const prev = i->prev;
-		TEXTINPUTNODE* const next = i->next;
-		*(next ? &next->prev : &gpTextInputTail) = prev;
-		*(prev ? &prev->next : &gpTextInputHead) = next;
-		if (i->szString)
-		{
-			MemFree(i->szString);
-			i->szString = 0;
-			MSYS_RemoveRegion(&i->region);
-		}
-		MemFree(i);
-		if (!gpTextInputHead)
-		{
-			gfTextInputMode = FALSE;
-			gfEditingText   = FALSE;
-		}
-		return;
+		if (i->ubID == id) return i;
 	}
-	AssertMsg(0, "Attempt to remove a text input field that doesn't exist.  Check your IDs.");
+	return 0;
+}
+
+
+/* Remove the specified field from the existing fields.  If it doesn't exist,
+ * then there will be an assertion failure. */
+static void RemoveTextInputField(UINT8 const id)
+{
+	TEXTINPUTNODE* const n = GetTextInputField(id);
+	AssertMsg(n, "Attempt to remove a text input field that doesn't exist.  Check your IDs.");
+	if (!n) return;
+
+	if (n == gpActive) SelectNextField();
+	TEXTINPUTNODE* const prev = n->prev;
+	TEXTINPUTNODE* const next = n->next;
+	*(next ? &next->prev : &gpTextInputTail) = prev;
+	*(prev ? &prev->next : &gpTextInputHead) = next;
+	if (n->szString)
+	{
+		MemFree(n->szString);
+		n->szString = 0;
+		MSYS_RemoveRegion(&n->region);
+	}
+	MemFree(n);
+	if (!gpTextInputHead)
+	{
+		gfTextInputMode = FALSE;
+		gfEditingText   = FALSE;
+	}
 }
 
 
@@ -329,72 +336,54 @@ INT16 GetActiveFieldID()
 //the arrows, or even using alpha chars to jump to the appropriate filename.
 void SetInputFieldStringWith16BitString( UINT8 ubField, const wchar_t *szNewText)
 {
-	TEXTINPUTNODE *curr;
-  curr = gpTextInputHead;
-	while( curr )
+	TEXTINPUTNODE* const curr = GetTextInputField(ubField);
+	if (!curr) return;
+
+	if (szNewText)
 	{
-		if( curr->ubID == ubField )
-		{
-			if( szNewText)
-			{
-				curr->ubStrLen = (UINT8)wcslen( szNewText );
-				Assert( curr->ubStrLen <= curr->ubMaxChars );
-				wcslcpy(curr->szString, szNewText, curr->ubMaxChars + 1);
-			}
-			else if( !curr->fUserField )
-			{
-				curr->ubStrLen = 0;
-				curr->szString[0] = L'\0';
-			}
-			else
-			{
-				AssertMsg( 0, String( "Attempting to illegally set text into user field %d", curr->ubID ) );
-			}
-			return;
-		}
-		curr = curr->next;
+		curr->ubStrLen = (UINT8)wcslen(szNewText);
+		Assert(curr->ubStrLen <= curr->ubMaxChars);
+		wcslcpy(curr->szString, szNewText, curr->ubMaxChars + 1);
+	}
+	else if (!curr->fUserField)
+	{
+		curr->ubStrLen = 0;
+		curr->szString[0] = L'\0';
+	}
+	else
+	{
+		AssertMsg(0, String("Attempting to illegally set text into user field %d", curr->ubID));
 	}
 }
 
 
 void SetInputFieldStringWith8BitString(UINT8 ubField, const char* szNewText)
 {
-	TEXTINPUTNODE *curr;
-  curr = gpTextInputHead;
-	while( curr )
+	TEXTINPUTNODE* const curr = GetTextInputField(ubField);
+	if (!curr) return;
+
+	if (szNewText)
 	{
-		if( curr->ubID == ubField )
-		{
-			if( szNewText )
-			{
-				curr->ubStrLen = (UINT8)strlen( szNewText );
-				Assert( curr->ubStrLen <= curr->ubMaxChars );
-				swprintf(curr->szString, curr->ubMaxChars + 1, L"%hs", szNewText);
-			}
-			else if( !curr->fUserField )
-			{
-				curr->ubStrLen = 0;
-				curr->szString[0] = L'\0';
-			}
-			else
-			{
-				AssertMsg( 0, String( "Attempting to illegally set text into user field %d", curr->ubID ) );
-			}
-			return;
-		}
-		curr = curr->next;
+		curr->ubStrLen = (UINT8)strlen(szNewText);
+		Assert(curr->ubStrLen <= curr->ubMaxChars);
+		swprintf(curr->szString, curr->ubMaxChars + 1, L"%hs", szNewText);
+	}
+	else if (!curr->fUserField)
+	{
+		curr->ubStrLen = 0;
+		curr->szString[0] = L'\0';
+	}
+	else
+	{
+		AssertMsg(0, String("Attempting to illegally set text into user field %d", curr->ubID));
 	}
 }
 
 
 wchar_t const* GetStringFromField(UINT8 const ubField)
 {
-	for (TEXTINPUTNODE const* i = gpTextInputHead; i; i = i->next)
-	{
-		if (i->ubID != ubField) continue;
-		return i->szString;
-	}
-	return L"";
+	TEXTINPUTNODE const* const n = GetTextInputField(ubField);
+	return n ? n->szString : L"";
 }
 
 
@@ -426,57 +415,47 @@ INT32 GetNumericStrictValueFromField( UINT8 ubField )
 //field will be blank.
 void SetInputFieldStringWithNumericStrictValue( UINT8 ubField, INT32 iNumber )
 {
-	TEXTINPUTNODE *curr;
-	curr = gpTextInputHead;
-	while( curr )
+	TEXTINPUTNODE* const curr = GetTextInputField(ubField);
+	if (!curr) return;
+
+	AssertMsg(!curr->fUserField, String("Attempting to illegally set text into user field %d", curr->ubID));
+	if (iNumber < 0) //negative number converts to blank string
 	{
-		if( curr->ubID == ubField )
-		{
-			AssertMsg(!curr->fUserField, String("Attempting to illegally set text into user field %d", curr->ubID));
-			if( iNumber < 0 ) //negative number converts to blank string
-			{
-				curr->szString[0] = L'\0';
-			}
-			else
-			{
-				INT32 iMax = (INT32)pow( 10.0, curr->ubMaxChars );
-				if( iNumber > iMax ) //set string to max value based on number of chars.
-					swprintf( curr->szString, curr->ubMaxChars + 1, L"%d", iMax - 1 );
-				else	//set string to the number given
-					swprintf( curr->szString, curr->ubMaxChars + 1, L"%d", iNumber );
-			}
-			curr->ubStrLen = (UINT8)wcslen( curr->szString );
-			return;
-		}
-		curr = curr->next;
+		curr->szString[0] = L'\0';
 	}
+	else
+	{
+		INT32 iMax = (INT32)pow(10.0, curr->ubMaxChars);
+		if (iNumber > iMax) //set string to max value based on number of chars.
+			swprintf(curr->szString, curr->ubMaxChars + 1, L"%d", iMax - 1);
+		else	//set string to the number given
+			swprintf(curr->szString, curr->ubMaxChars + 1, L"%d", iNumber);
+	}
+	curr->ubStrLen = (UINT8)wcslen(curr->szString);
 }
 
 //Sets the active field to the specified ID passed.
 void SetActiveField( UINT8 ubField )
 {
-	TEXTINPUTNODE *curr;
-	curr = gpTextInputHead;
-	while( curr )
+	TEXTINPUTNODE* const curr = GetTextInputField(ubField);
+	if (!curr) return;
+
+	if (curr != gpActive && curr->fEnabled)
 	{
-		if( curr != gpActive && curr->ubID == ubField && curr->fEnabled )
+		gpActive = curr;
+		if (gpActive->szString)
 		{
-			gpActive = curr;
-			if( gpActive->szString )
-			{
-				gubStartHilite = 0;
-				gubCursorPos = gpActive->ubStrLen;
-				gfEditingText = TRUE;
-			}
-			else
-			{
-				gfEditingText = FALSE;
-				if( gpActive->InputCallback )
-					(gpActive->InputCallback)(gpActive->ubID, TRUE);
-			}
-			return;
+			gubStartHilite = 0;
+			gubCursorPos = gpActive->ubStrLen;
+			gfEditingText = TRUE;
 		}
-		curr = curr->next;
+		else
+		{
+			gfEditingText = FALSE;
+			if (gpActive->InputCallback)
+				(gpActive->InputCallback)(gpActive->ubID, TRUE);
+		}
+		return;
 	}
 }
 
@@ -1048,7 +1027,7 @@ static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 }
 
 
-static void RenderBackgroundField(TEXTINPUTNODE* pNode)
+static void RenderBackgroundField(TEXTINPUTNODE const* const pNode)
 {
 	UINT16 usColor;
 	if( pColors->fBevelling )
@@ -1148,17 +1127,7 @@ static void RenderActiveTextField(void)
 
 void RenderInactiveTextField( UINT8 ubID )
 {
-	TEXTINPUTNODE* pNode, *curr;
-	curr = gpTextInputHead;
-	pNode = NULL;
-	while( curr )
-	{
-		if( curr->ubID == ubID )
-		{
-			pNode = curr;
-			break;
-		}
-	}
+	TEXTINPUTNODE const* const pNode = GetTextInputField(ubID);
 	if( !pNode || !pNode->szString )
 		return;
 	SaveFontSettings();
@@ -1225,48 +1194,24 @@ void RenderAllTextFields()
 }
 
 
-static void EnableTextField(UINT8 ubID)
+static void EnableTextField(UINT8 const id)
 {
-	TEXTINPUTNODE *curr;
-  curr = gpTextInputHead;
-	while( curr )
-	{
-		if( curr->ubID == ubID )
-		{
-			if( !curr->fEnabled )
-			{
-				if( !gpActive )
-					gpActive = curr;
-				curr->region.Enable();
-				curr->fEnabled = TRUE;
-			}
-			else
-				return;
-		}
-		curr = curr->next;
-	}
+	TEXTINPUTNODE* const n = GetTextInputField(id);
+	if (!n || n->fEnabled) return;
+	if (!gpActive) gpActive = n;
+	n->region.Enable();
+	n->fEnabled = TRUE;
 }
 
-void DisableTextField( UINT8 ubID )
+
+void DisableTextField(UINT8 const id)
 {
-	TEXTINPUTNODE *curr;
-  curr = gpTextInputHead;
-	while( curr )
-	{
-		if( curr->ubID == ubID )
-		{
-			if( gpActive == curr )
-				SelectNextField();
-			if( curr->fEnabled )
-			{
-				curr->region.Disable();
-				curr->fEnabled = FALSE;
-			}
-			else
-				return;
-		}
-		curr = curr->next;
-	}
+	TEXTINPUTNODE* const n = GetTextInputField(id);
+	if (!n)            return;
+	if (gpActive == n) SelectNextField();
+	if (!n->fEnabled)  return;
+	n->region.Disable();
+	n->fEnabled = FALSE;
 }
 
 void EnableTextFields( UINT8 ubFirstID, UINT8 ubLastID )
@@ -1487,46 +1432,37 @@ void SetTextInputCursor( UINT16 usNewCursor )
 //Utility functions for the INPUTTYPE_EXCLUSIVE_24HOURCLOCK input type.
 UINT16 GetExclusive24HourTimeValueFromField( UINT8 ubField )
 {
-	TEXTINPUTNODE *curr;
-	UINT16 usTime;
-	curr = gpTextInputHead;
-	while( curr )
-	{
-		if( curr->ubID == ubField )
-		{
-			if( curr->usInputType != INPUTTYPE_EXCLUSIVE_24HOURCLOCK )
-				return 0xffff; //illegal!
-			//First validate the hours 00-23
-			if( curr->szString[0] == '2' && curr->szString[1] >= '0' &&		//20-23
-					curr->szString[1] <='3' ||
-					curr->szString[0] >= '0' && curr->szString[0] <= '1' &&		// 00-19
-				  curr->szString[1] >= '0' && curr->szString[1] <= '9' )
-			{ //Next, validate the colon, and the minutes 00-59
-				if(	curr->szString[2] == ':' &&	curr->szString[5] == 0	 &&	//	:
-						curr->szString[3] >= '0' && curr->szString[3] <= '5' &&	// 0-5
-						curr->szString[4] >= '0' && curr->szString[4] <= '9' )	// 0-9
-				{
-					//Hours
-					usTime = ((curr->szString[0]-0x30) * 10 + curr->szString[1]-0x30) * 60;
-					//Minutes
-					usTime += (curr->szString[3]-0x30) * 10 + curr->szString[4]-0x30;
-					return usTime;
-				}
-			}
-			// invalid
-			return 0xffff;
-		}
-		curr = curr->next;
-	}
+	TEXTINPUTNODE const* const curr = GetTextInputField(ubField);
+	AssertMsg(curr, String("GetExclusive24HourTimeValueFromField: Invalid field %d", ubField));
+	if (!curr) return 0xffff;
 
-	AssertMsg( FALSE, String( "GetExclusive24HourTimeValueFromField: Invalid field %d", ubField ) );
+	UINT16 usTime;
+	if (curr->usInputType != INPUTTYPE_EXCLUSIVE_24HOURCLOCK)
+		return 0xffff; //illegal!
+	//First validate the hours 00-23
+	if (curr->szString[0] == '2' && curr->szString[1] >= '0' && //20-23
+			curr->szString[1] <='3' ||
+			curr->szString[0] >= '0' && curr->szString[0] <= '1' && // 00-19
+			curr->szString[1] >= '0' && curr->szString[1] <= '9')
+	{ //Next, validate the colon, and the minutes 00-59
+		if (curr->szString[2] == ':' &&	curr->szString[5] == 0   && //	:
+				curr->szString[3] >= '0' && curr->szString[3] <= '5' && // 0-5
+				curr->szString[4] >= '0' && curr->szString[4] <= '9')   // 0-9
+		{
+			//Hours
+			usTime = ((curr->szString[0]-0x30) * 10 + curr->szString[1]-0x30) * 60;
+			//Minutes
+			usTime += (curr->szString[3]-0x30) * 10 + curr->szString[4]-0x30;
+			return usTime;
+		}
+	}
+	// invalid
 	return 0xffff;
 }
 
 //Utility functions for the INPUTTYPE_EXCLUSIVE_24HOURCLOCK input type.
 void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 {
-	TEXTINPUTNODE *curr;
 	//First make sure the time is a valid time.  If not, then use 23:59
 	if( usTime == 0xffff )
 	{
@@ -1534,21 +1470,16 @@ void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 		return;
 	}
 	usTime = MIN( 1439, usTime );
-	curr = gpTextInputHead;
-	while( curr )
-	{
-		if( curr->ubID == ubField )
-		{
-			AssertMsg(!curr->fUserField, String("Attempting to illegally set text into user field %d", curr->ubID ));
-			curr->szString[0] = (usTime / 600) + 0x30;			//10 hours
-			curr->szString[1] = (usTime / 60 % 10) + 0x30;	//1 hour
-			usTime %= 60;																		//truncate the hours
-			curr->szString[2] = ':';
-			curr->szString[3] = (usTime / 10) + 0x30;				//10 minutes
-			curr->szString[4] = (usTime % 10) + 0x30;				//1 minute;
-			curr->szString[5] = 0;
-			return;
-		}
-		curr = curr->next;
-	}
+
+	TEXTINPUTNODE* const curr = GetTextInputField(ubField);
+	if (!curr) return;
+
+	AssertMsg(!curr->fUserField, String("Attempting to illegally set text into user field %d", curr->ubID));
+	curr->szString[0] = (usTime / 600)     + 0x30; //10 hours
+	curr->szString[1] = (usTime / 60 % 10) + 0x30; //1 hour
+	usTime %= 60;                                  //truncate the hours
+	curr->szString[2] = ':';
+	curr->szString[3] = (usTime / 10) + 0x30;      //10 minutes
+	curr->szString[4] = (usTime % 10) + 0x30;      //1 minute;
+	curr->szString[5] = 0;
 }
