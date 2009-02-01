@@ -739,14 +739,17 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 				RemoveChar(gubCursorPos);
 			}
 			break;
+
 		default:  //check for typing keys
+			wchar_t key = Event->Char;
+			/* If the key has no character associated, bail out */
+			if (key == L'\0') return FALSE;
+
 			DeleteHilitedText();
 			if( gpActive->usInputType >= INPUTTYPE_EXCLUSIVE_BASEVALUE )
-				HandleExclusiveInput(Event->Char);
+				HandleExclusiveInput(key);
 			else
 			{
-				//Use abbreviations
-				UINT32 key = Event->Char;
 				UINT16 type = gpActive->usInputType;
 				//Handle space key
 				if (key == L' ' && type & INPUTTYPE_SPACES)
