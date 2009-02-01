@@ -285,44 +285,36 @@ void AddUserInputField(INPUT_CALLBACK const userFunction)
 }
 
 
-//Removes the specified field from the existing fields.  If it doesn't exist, then there will be an
-//assertion failure.
-static void RemoveTextInputField(UINT8 ubField)
+/* Remove the specified field from the existing fields.  If it doesn't exist,
+ * then there will be an assertion failure. */
+static void RemoveTextInputField(UINT8 const ubField)
 {
-	TEXTINPUTNODE *curr;
-	curr = gpTextInputHead;
-	while( curr )
+	for (TEXTINPUTNODE* i = gpTextInputHead; i; i = i->next)
 	{
-		if( curr->ubID == ubField )
+		if (i->ubID != ubField) continue;
+
+		if (i == gpActive) SelectNextField();
+		TEXTINPUTNODE* const prev = i->prev;
+		TEXTINPUTNODE* const next = i->next;
+		*(next ? &next->prev : &gpTextInputTail) = prev;
+		*(prev ? &prev->next : &gpTextInputHead) = next;
+		if (i->szString)
 		{
-			if( curr == gpActive )
-				SelectNextField();
-			if( curr == gpTextInputHead )
-				gpTextInputHead = gpTextInputHead->next;
-			//Detach the node.
-			if( curr->next )
-				curr->next->prev = curr->prev;
-			if( curr->prev )
-				curr->prev->next = curr->next;
-			if( curr->szString )
-			{
-				MemFree( curr->szString );
-				curr->szString = NULL;
-				MSYS_RemoveRegion( &curr->region );
-			}
-			MemFree( curr );
-			curr = NULL;
-			if( !gpTextInputHead )
-			{
-				gfTextInputMode = FALSE;
-				gfEditingText = FALSE;
-			}
-			return;
+			MemFree(i->szString);
+			i->szString = 0;
+			MSYS_RemoveRegion(&i->region);
 		}
-		curr = curr->next;
+		MemFree(i);
+		if (!gpTextInputHead)
+		{
+			gfTextInputMode = FALSE;
+			gfEditingText   = FALSE;
+		}
+		return;
 	}
-	AssertMsg( 0, "Attempt to remove a text input field that doesn't exist.  Check your IDs." );
+	AssertMsg(0, "Attempt to remove a text input field that doesn't exist.  Check your IDs.");
 }
+
 
 //Returns the gpActive field ID number.  It'll return -1 if no field is active.
 INT16 GetActiveFieldID()
