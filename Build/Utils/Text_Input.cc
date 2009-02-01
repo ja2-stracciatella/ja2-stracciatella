@@ -155,43 +155,42 @@ void InitTextInputModeWithScheme( UINT8 ubSchemeID )
 	}
 }
 
-//Clears any existing fields, and ends text input mode.
+
+// Clear any existing fields, and end text input mode.
 void KillTextInputMode()
 {
-	TEXTINPUTNODE *curr;
-	if( !gpTextInputHead )
-//		AssertMsg( 0, "Called KillTextInputMode() without any text input mode defined.");
-		return;
-	curr = gpTextInputHead;
-	while( curr )
+	TEXTINPUTNODE* i = gpTextInputHead;
+	if (!i) return;
+	while (i)
 	{
-		gpTextInputHead = gpTextInputHead->next;
-		if( curr->szString )
+		TEXTINPUTNODE* const del = i;
+		i = i->next;
+		if (del->szString)
 		{
-			MemFree( curr->szString );
-			curr->szString = NULL;
-			MSYS_RemoveRegion( &curr->region );
+			MemFree(del->szString);
+			del->szString = 0;
+			MSYS_RemoveRegion(&del->region);
 		}
-		MemFree( curr );
-		curr = gpTextInputHead;
+		MemFree(del);
 	}
-	MemFree( pColors );
-	pColors = NULL;
-	gpTextInputHead = NULL;
-	if( pInputStack )
+	MemFree(pColors);
+	pColors         = 0;
+	gpTextInputHead = 0;
+
+	if (pInputStack)
 	{
 		PopTextInputLevel();
-		SetActiveField( 0 );
+		SetActiveField(0);
 	}
 	else
 	{
 		gfTextInputMode = FALSE;
-		gfEditingText = FALSE;
+		gfEditingText   = FALSE;
 	}
 
-	if( !gpTextInputHead )
-		gpActive = NULL;
+	if (!gpTextInputHead) gpActive = 0;
 }
+
 
 //Kills all levels of text input modes.  When you init a second consecutive text input mode, without
 //first removing them, the existing mode will be preserved.  This function removes all of them in one
