@@ -151,7 +151,7 @@ void MSYS_RemoveRegion(MOUSE_REGION *region);
 void MSYS_SetRegionUserData(MOUSE_REGION*, UINT32 index, INT32 userdata);
 
 /* Retrieve one of the user data entries in a mouse region */
-INT32 MSYS_GetRegionUserData(MOUSE_REGION*, UINT32 index);
+INT32 MSYS_GetRegionUserData(MOUSE_REGION const*, UINT32 index);
 
 // This function will force a re-evaluation of mous regions
 // Usually used to force change of mouse cursor if panels switch, etc
