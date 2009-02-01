@@ -1279,55 +1279,40 @@ static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reas
 
 static void InitSaveLoadScreenTextInputBoxes(void)
 {
-	UINT16	usPosY;
-	SAVED_GAME_HEADER SaveGameHeader;
-
-	if( gbSelectedSaveLocation == -1 )
-		return;
-
-	if( !gfSaveGame )
-		return;
-
-	//if we are exiting, dont create the fields
-	if( gfSaveLoadScreenExit || guiSaveLoadExitScreen != SAVE_LOAD_SCREEN )
-		return;
-
+	if (gbSelectedSaveLocation == -1)              return;
+	if (!gfSaveGame)                               return;
+	// If we are exiting, don't create the fields
+	if (gfSaveLoadScreenExit)                      return;
+	if (guiSaveLoadExitScreen != SAVE_LOAD_SCREEN) return;
 
 	InitTextInputMode();
+	SetTextInputCursor(CUROSR_IBEAM_WHITE);
+	SetTextInputFont(FONT12ARIALFIXEDWIDTH);
+	Set16BPPTextFieldColor(Get16BPPColor(FROMRGB(0, 0, 0)));
+	SetBevelColors(Get16BPPColor(FROMRGB(136, 138, 135)), Get16BPPColor(FROMRGB(24, 61, 81)));
+	SetTextInputRegularColors(FONT_WHITE, 2);
+	SetTextInputHilitedColors(2, FONT_WHITE, FONT_WHITE);
+	SetCursorColor(Get16BPPColor(FROMRGB(255, 255, 255)));
 
-	SetTextInputCursor( CUROSR_IBEAM_WHITE );
-	SetTextInputFont(FONT12ARIALFIXEDWIDTH); //FONT12ARIAL //FONT12ARIALFIXEDWIDTH
-	Set16BPPTextFieldColor( Get16BPPColor(FROMRGB( 0, 0, 0) ) );
-	SetBevelColors( Get16BPPColor(FROMRGB(136, 138, 135)), Get16BPPColor(FROMRGB(24, 61, 81)) );
-	SetTextInputRegularColors( FONT_WHITE, 2 );
-	SetTextInputHilitedColors( 2, FONT_WHITE, FONT_WHITE  );
-	SetCursorColor( Get16BPPColor(FROMRGB(255, 255, 255) ) );
+	AddUserInputField(NULL);
 
-	AddUserInputField( NULL );
-
-	usPosY = SLG_FIRST_SAVED_SPOT_Y + SLG_GAP_BETWEEN_LOCATIONS * gbSelectedSaveLocation;
-
-	//if there is already a string here, use its string
-	if( gbSaveGameArray[ gbSelectedSaveLocation ] )
+	// If we are modifying a previously modifed string, use it
+	if (!gbSaveGameArray[gbSelectedSaveLocation])
 	{
-		//if we are modifying a previously modifed string, use it
-		if( gzGameDescTextField[0] != '\0' )
-		{
-		}
-		else
-		{
-			//Get the header for the specified saved game
-			LoadSavedGameHeader( gbSelectedSaveLocation, &SaveGameHeader );
-			wcscpy( gzGameDescTextField, SaveGameHeader.sSavedGameDesc );
-		}
-	}
-	else
 		gzGameDescTextField[0] = '\0';
+	}
+	else if (gzGameDescTextField[0] == '\0')
+	{
+		SAVED_GAME_HEADER SaveGameHeader;
+		LoadSavedGameHeader(gbSelectedSaveLocation, &SaveGameHeader);
+		wcscpy(gzGameDescTextField, SaveGameHeader.sSavedGameDesc);
+	}
 
-	//Game Desc Field
-	AddTextInputField( SLG_FIRST_SAVED_SPOT_X+SLG_SAVE_GAME_DESC_X, (INT16)(usPosY+SLG_SAVE_GAME_DESC_Y-5), SLG_SAVELOCATION_WIDTH-SLG_SAVE_GAME_DESC_X-7, 17, MSYS_PRIORITY_HIGH+2, gzGameDescTextField, 46, INPUTTYPE_ASCII );//23
-
-	SetActiveField( 1 );
+	// Game Desc Field
+	INT16 const x = SLG_FIRST_SAVED_SPOT_X + SLG_SAVE_GAME_DESC_X;
+	INT16 const y = SLG_FIRST_SAVED_SPOT_Y + SLG_SAVE_GAME_DESC_Y - 5 + SLG_GAP_BETWEEN_LOCATIONS * gbSelectedSaveLocation;
+	AddTextInputField(x, y, SLG_SAVELOCATION_WIDTH - SLG_SAVE_GAME_DESC_X - 7, 17, MSYS_PRIORITY_HIGH + 2, gzGameDescTextField, 46, INPUTTYPE_ASCII);
+	SetActiveField(1);
 
 	gfUserInTextInputMode = TRUE;
 }
