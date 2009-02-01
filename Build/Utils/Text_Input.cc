@@ -265,7 +265,7 @@ void AddTextInputField(INT16 const sLeft, INT16 const sTop, INT16 const sWidth, 
 	}
 	// Setup the region.
 	MSYS_DefineRegion(&n->region, sLeft, sTop, sLeft + sWidth, sTop + sHeight, bPriority, gusTextInputCursor, MouseMovedInTextRegionCallback, MouseClickedInTextRegionCallback);
-	MSYS_SetRegionUserData(&n->region, 0, n->ubID);
+	n->region.SetUserPtr(n);
 }
 
 
@@ -985,18 +985,11 @@ static void RemoveChar(UINT8 ubArrayIndex)
 
 static void SetActiveFieldMouse(MOUSE_REGION const* const r)
 {
-	UINT8 const id = MSYS_GetRegionUserData(r, 0);
-	if (id == gpActive->ubID) return;
-
-	// Deselect the current text edit region if applicable, then find the new one.
+	TEXTINPUTNODE* const n = r->GetUserPtr<TEXTINPUTNODE>();
+	if (n == gpActive) return;
+	// Deselect the current text edit region if applicable, then set the new one.
 	RenderInactiveTextFieldNode(gpActive);
-
-	for (TEXTINPUTNODE* i = gpTextInputHead; i; i = i->next)
-	{
-		if (i->ubID != id) continue;
-		gpActive = i;
-		break;
-	}
+	gpActive = n;
 }
 
 
