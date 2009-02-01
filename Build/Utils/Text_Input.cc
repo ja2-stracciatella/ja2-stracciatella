@@ -983,32 +983,33 @@ static void RemoveChar(UINT8 ubArrayIndex)
 }
 
 
+static void SetActiveFieldMouse(MOUSE_REGION const* const r)
+{
+	UINT8 const id = MSYS_GetRegionUserData(r, 0);
+	if (id == gpActive->ubID) return;
+
+	// Deselect the current text edit region if applicable, then find the new one.
+	RenderInactiveTextFieldNode(gpActive);
+
+	for (TEXTINPUTNODE* i = gpTextInputHead; i; i = i->next)
+	{
+		if (i->ubID != id) continue;
+		gpActive = i;
+		break;
+	}
+}
+
+
 //Internally used to continue highlighting text
 static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 {
-	TEXTINPUTNODE *curr;
 	if( gfLeftButtonState )
 	{
 		if( reason & MSYS_CALLBACK_REASON_MOVE ||
 				reason & MSYS_CALLBACK_REASON_LOST_MOUSE ||
 				reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 		{
-			UINT8 ubNewID;
-			ubNewID = (UINT8)MSYS_GetRegionUserData( reg, 0 );
-			if( ubNewID != gpActive->ubID )
-			{ //deselect the current text edit region if applicable, then find the new one.
-				RenderInactiveTextFieldNode( gpActive );
-				curr = gpTextInputHead;
-				while( curr )
-				{
-					if( curr->ubID == ubNewID )
-					{
-						gpActive = curr;
-						break;
-					}
-					curr = curr->next;
-				}
-			}
+			SetActiveFieldMouse(reg);
 			if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 			{
 				if( gusMouseYPos < reg->RegionTopLeftY )
@@ -1042,25 +1043,9 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 //Internally used to calculate where to place the cursor.
 static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 {
-	TEXTINPUTNODE *curr;
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		UINT8 ubNewID;
-		ubNewID = (UINT8)MSYS_GetRegionUserData( reg, 0 );
-		if( ubNewID != gpActive->ubID )
-		{ //deselect the current text edit region if applicable, then find the new one.
-			RenderInactiveTextFieldNode( gpActive );
-			curr = gpTextInputHead;
-			while( curr )
-			{
-				if( curr->ubID == ubNewID )
-				{
-					gpActive = curr;
-					break;
-				}
-				curr = curr->next;
-			}
-		}
+		SetActiveFieldMouse(reg);
 		//Signifies that we are typing text now.
 		gfEditingText = TRUE;
 		//Calculate the cursor position.
