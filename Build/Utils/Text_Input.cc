@@ -1116,16 +1116,16 @@ static void RenderActiveTextField(void)
 	RestoreFontSettings();
 }
 
-void RenderInactiveTextField( UINT8 ubID )
+
+void RenderInactiveTextField(UINT8 const id)
 {
-	TEXTINPUTNODE const* const pNode = GetTextInputField(ubID);
-	if( !pNode || !pNode->szString )
-		return;
+	TEXTINPUTNODE const* const n = GetTextInputField(id);
+	if (!n || !n->szString) return;
 	SaveFontSettings();
-	UINT16 usOffset = (pNode->region.RegionBottomRightY - pNode->region.RegionTopLeftY - GetFontHeight(pColors->usFont)) / 2;
 	SetFontAttributes(pColors->usFont, pColors->ubForeColor, pColors->ubShadowColor);
-	RenderBackgroundField( pNode );
-	MPrint(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, pNode->szString);
+	RenderBackgroundField(n);
+	UINT16 const offset = (n->region.RegionBottomRightY - n->region.RegionTopLeftY - GetFontHeight(pColors->usFont)) / 2;
+	MPrint(n->region.RegionTopLeftX + 3, n->region.RegionTopLeftY + offset, n->szString);
 	RestoreFontSettings();
 }
 
