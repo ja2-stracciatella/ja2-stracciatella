@@ -343,8 +343,55 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
+static void EnterKey(InputAtom const& a, wchar_t* const buf, UINT32 const buf_len, UINT32& pos_char, UINT32 const max_w, UINT32& pos_cursor)
+{
+	switch (a.usParam)
+	{
+		case SDLK_BACKSPACE: // Delete char left of cursor
+		{
+			if (pos_char == 0) break;
+			wchar_t const c = buf[--pos_char];
+			buf[pos_char] = L'\0';
+			pos_cursor -= GetCharWidth(FONT14ARIAL, c);
+			fNewCharInString = TRUE;
+			break;
+		}
+
+		default: // Append new char, if it is valid and there is space left
+		{
+			wchar_t const c = a.Char;
+			if (('A' <= c && c <= 'Z') ||
+					('a' <= c && c <= 'z') ||
+					('0' <= c && c <= '9') ||
+					c == '_' || c == '.' || c == ' ')
+			{
+				if (pos_char >= buf_len) break;
+				UINT32 const new_pos_cursor = pos_cursor + GetCharWidth(FONT14ARIAL, c);
+				if (new_pos_cursor > LAPTOP_SCREEN_UL_X + 196 + max_w) break;
+				pos_cursor = new_pos_cursor;
+				buf[  pos_char] = c;
+				buf[++pos_char] = L'\0';
+				fNewCharInString = TRUE;
+			}
+			break;
+		}
+	}
+}
+
+
+static void HandleBeginScreenTextEvent(InputAtom const& a)
+{
+	/* this function checks to see if a letter or a backspace was pressed, if so,
+	 * either put char to screen or delete it */
+	switch (ubTextEnterMode)
+	{
+		case FULL_NAME_MODE: EnterKey(a, pFullNameString, MAX_FULL_NAME, uiFullNameCharacterPosition, FULL_NAME_REGION_WIDTH, uiFullNameCursorPosition); break;
+		case NICK_NAME_MODE: EnterKey(a, pNickNameString, MAX_NICK_NAME, uiNickNameCharacterPosition, NICK_NAME_REGION_WIDTH, uiNickNameCursorPosition); break;
+	}
+}
+
+
 static void DecrementTextEnterMode(void);
-static void HandleBeginScreenTextEvent(const InputAtom* Inp);
 static void IncrementTextEnterMode(void);
 
 
@@ -389,7 +436,7 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 				}
 				else
 				{
-					HandleBeginScreenTextEvent(&InputEvent);
+					HandleBeginScreenTextEvent(InputEvent);
 				}
 				fNewCharInString = TRUE;
 				break;
@@ -410,124 +457,11 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 				  break;
 
 				default:
-					HandleBeginScreenTextEvent(&InputEvent);
+					HandleBeginScreenTextEvent(InputEvent);
 				break;
 			}
 		}
   }
-}
-
-
-static void HandleBeginScreenTextEvent(const InputAtom* Inp)
-{
-	/* this function checks to see if a letter or a backspace was pressed, if so,
-	 * either put char to screen or delete it */
-  switch (Inp->usParam)
-	{
-		case SDLK_BACKSPACE:
-			switch (ubTextEnterMode)
-			{
-				case( FULL_NAME_MODE ):
-					// decrement StringPosition
-					if (uiFullNameCharacterPosition > 0) uiFullNameCharacterPosition -= 1;
-
-					// null out char
-					pFullNameString[uiFullNameCharacterPosition] = 0;
-
-					// move cursor back by sizeof char
-					uiFullNameCursorPosition = 196 + LAPTOP_SCREEN_UL_X + StringPixLength( pFullNameString, FONT14ARIAL );
-
-					// string has been altered, redisplay
-					fNewCharInString = TRUE;
-					break;
-
-			  case NICK_NAME_MODE:
-					// decrement StringPosition
-					if (uiNickNameCharacterPosition > 0) uiNickNameCharacterPosition -= 1;
-
-					// null out char
-					pNickNameString[uiNickNameCharacterPosition] = 0;
-
-					 // move cursor back by sizeof char
-					uiNickNameCursorPosition = 196 + LAPTOP_SCREEN_UL_X + StringPixLength( pNickNameString, FONT14ARIAL );
-
-					// string has been altered, redisplay
-					fNewCharInString = TRUE;
-			  	break;
-			}
-			break;
-
-	  default:
-		{
-			wchar_t Char = Inp->Char;
-	    if (Char >= 'A' && Char <= 'Z' ||
-					Char >= 'a' && Char <= 'z' ||
-					Char >= '0' && Char <= '9' ||
-					Char == '_' || Char == '.' ||
-					Char == ' ')
-			{
-				// if the current string position is at max or great, do nothing
-        switch (ubTextEnterMode)
-				{
-					case FULL_NAME_MODE:
-					{
-						if (uiFullNameCharacterPosition >= MAX_FULL_NAME) break;
-
-						// make sure we haven't moved too far
-						if (uiFullNameCursorPosition + GetCharWidth(FONT14ARIAL, Char) > FULL_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X)
-						{
-							// do nothing for now, when pop up is in place, display
-							break;
-						}
-						// valid char, capture and convert to CHAR16
-						pFullNameString[uiFullNameCharacterPosition] = Char;
-
-						// null out next char position
-						pFullNameString[uiFullNameCharacterPosition + 1] = 0;
-
-						// move cursor position ahead
-						uiFullNameCursorPosition = 196 + LAPTOP_SCREEN_UL_X + StringPixLength( pFullNameString, FONT14ARIAL );
-
-						// increment string position
-						uiFullNameCharacterPosition += 1;
-
-						// string has been altered, redisplay
-						fNewCharInString = TRUE;
-						break;
-					}
-
-					case NICK_NAME_MODE:
-					{
-						if (uiNickNameCharacterPosition >= MAX_NICK_NAME) break;
-
-						// make sure we haven't moved too far
-						if (uiNickNameCursorPosition + GetCharWidth(FONT14ARIAL, Char) > NICK_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X)
-						{
-							// do nothing for now, when pop up is in place, display
-							break;
-						}
-
-						// valid char, capture and convert to CHAR16
-						pNickNameString[uiNickNameCharacterPosition] = Char;
-
-						// null out next char position
-						pNickNameString[uiNickNameCharacterPosition + 1] = 0;
-
-						// move cursor position ahead
-						uiNickNameCursorPosition = 196 + LAPTOP_SCREEN_UL_X + StringPixLength(pNickNameString, FONT14ARIAL);
-
-						// increment string position
-						uiNickNameCharacterPosition += 1;
-
-						// string has been altered, redisplay
-						fNewCharInString = TRUE;
-						break;
-					}
-				}
-			}
-			break;
-		}
-	}
 }
 
 
