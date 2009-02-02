@@ -770,22 +770,11 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 					return TRUE;
 				}
 				//Handle alphas
-				if( type & INPUTTYPE_ALPHA )
+				if (type & INPUTTYPE_ALPHA &&
+						(('A' <= key && key <= 'Z') || ('a' <= key && key <= 'z')))
 				{
-					if( key >= 'A' && key <= 'Z' )
-					{
-						if( type & INPUTTYPE_LOWERCASE )
-							key -= 32;
-						AddChar( key );
-						return TRUE;
-					}
-					if( key >= 'a' && key <= 'z' )
-					{
-						if( type & INPUTTYPE_UPPERCASE )
-							key += 32;
-						AddChar( key );
-						return TRUE;
-					}
+					AddChar(key);
+					return TRUE;
 				}
 				//Handle special characters
 				if( type & INPUTTYPE_SPECIAL )
