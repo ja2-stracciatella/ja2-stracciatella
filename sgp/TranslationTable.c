@@ -112,61 +112,64 @@ unsigned char const TranslationTable[] =
 # if defined RUSSIAN_GOLD
 
 	// duplicate 196, // Ä
-	[192] = 164, // À
-	[193] = 165, // Á
-	[194] = 166, // Â
-	[199] = 167, // Ç
-	[203] = 168, // Ë
-	[200] = 169, // È
-	[201] = 170, // É
-	[202] = 171, // Ê
-	[207] = 172, // Ï
+	[192] = 165, // À
+	[193] = 166, // Á
+	[194] = 167, // Â
+	[199] = 168, // Ç
+	[203] = 169, // Ë
+	[200] = 170, // È
+	[201] = 171, // É
+	[202] = 172, // Ê
+	[207] = 173, // Ï
 	// duplicate 214, // Ö
-	[210] = 174, // Ò
-	[211] = 175, // Ó
-	[212] = 176, // Ô
+	[210] = 175, // Ò
+	[211] = 176, // Ó
+	[212] = 177, // Ô
 	// duplicate 220, // Ü
-	[217] = 178, // Ù
-	[218] = 179, // Ú
-	[219] = 180, // Û
+	[217] = 179, // Ù
+	[218] = 180, // Ú
+	[219] = 181, // Û
+
+	// missing lowercase glyphs, reuse uppercase from above
 	// duplicate 228, // ä
-	[224] = 182, // à
-	[225] = 183, // á
-	[226] = 184, // â
-	[231] = 185, // ç
-	[235] = 186, // ë
-	[232] = 187, // è
-	[233] = 188, // é
-	[234] = 189, // ê
-	[239] = 190, // ï
+	[224] = 165, // à
+	[225] = 166, // á
+	[226] = 167, // â
+	[231] = 168, // ç
+	[235] = 169, // ë
+	[232] = 170, // è
+	[233] = 171, // é
+	[234] = 172, // ê
+	[239] = 173, // ï
 	// duplicate 246, // ö
-	[242] = 192, // ò
-	[243] = 193, // ó
-	[244] = 194, // ô
+	[242] = 175, // ò
+	[243] = 176, // ó
+	[244] = 177, // ô
 	// duplicate 252, // ü
-	[249] = 196, // ù
-	[250] = 197, // ú
-	[251] = 198, // û
-	[0x00CC] = 199, // I with grave
-	[0x00EC] = 200, // i with grave
-	[0x0104] = 201, // A with ogonek
-	[0x0106] = 202, // C with acute
-	[0x0118] = 203, // E with ogonek
-	[0x0141] = 204, // L with stroke
-	[0x0143] = 205, // N with acute
-	[0x00D3] = 206, // O with acute (duplicate)
-	[0x015A] = 207, // S with acute
-	[0x017B] = 208, // Z with dot above
-	[0x0179] = 209, // Z with acute
-	[0x0105] = 210, // a with ogonek
-	[0x0107] = 211, // c with acute
-	[0x0119] = 212, // e with ogonek
-	[0x0142] = 213, // l with stroke
-	[0x0144] = 214, // n with acute
-	[0x00F3] = 215, // o with acute (duplicate)
-	[0x015B] = 216, // s with acute
-	[0x017C] = 217, // z with dot above
-	[0x017A] = 218, // z with acute
+	[249] = 179, // ù
+	[250] = 180, // ú
+	[251] = 181, // û
+
+	[0x00CC] = 182, // I with grave
+	[0x00EC] = 183, // i with grave
+	[0x0104] = 184, // A with ogonek
+	[0x0106] = 185, // C with acute
+	[0x0118] = 186, // E with ogonek
+	[0x0141] = 187, // L with stroke
+	[0x0143] = 188, // N with acute
+	[0x00D3] = 189, // O with acute (duplicate)
+	[0x015A] = 190, // S with acute
+	[0x017B] = 191, // Z with dot above
+	[0x0179] = 192, // Z with acute
+	[0x0105] = 193, // a with ogonek
+	[0x0107] = 194, // c with acute
+	[0x0119] = 195, // e with ogonek
+	[0x0142] = 196, // l with stroke
+	[0x0144] = 197, // n with acute
+	[0x00F3] = 198, // o with acute (duplicate)
+	[0x015B] = 199, // s with acute
+	[0x017C] = 200, // z with dot above
+	[0x017A] = 201, // z with acute
 
 	[0x0410] = 100, // CYRILLIC CAPITAL LETTER A
 	[0x0411] = 101, // CYRILLIC CAPITAL LETTER BE
