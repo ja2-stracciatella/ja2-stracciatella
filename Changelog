@@ -1,3 +1,4 @@
+(r5213) Allow all printable chars in the name and nickname of IMPs. E.g. umlauts and cyrillic letters are allowed now.
 (r5207) Fix a vanilla glitch: The highlighted text of a text input field was deleted, when a non-character key (like cursor up) was pressed.
 (r5161) Fix a vanilla bug: Only consume one regeneration booster at a time, even when multiple are selected (only the effects of one are applied).
 (r5149) Plug a vanilla memory leak.

@@ -360,10 +360,7 @@ static void EnterKey(InputAtom const& a, wchar_t* const buf, UINT32 const buf_le
 		default: // Append new char, if it is valid and there is space left
 		{
 			wchar_t const c = a.Char;
-			if (('A' <= c && c <= 'Z') ||
-					('a' <= c && c <= 'z') ||
-					('0' <= c && c <= '9') ||
-					c == '_' || c == '.' || c == ' ')
+			if (IsPrintableChar(c))
 			{
 				if (pos_char >= buf_len) break;
 				UINT32 const new_pos_cursor = pos_cursor + GetCharWidth(FONT14ARIAL, c);

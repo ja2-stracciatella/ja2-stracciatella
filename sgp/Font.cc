@@ -177,6 +177,13 @@ UINT16 GetFontHeight(Font const font)
 #endif
 
 
+bool IsPrintableChar(wchar_t const c)
+{
+	if (lengthof(TranslationTable) <= c) return false;
+	return TranslationTable[c] != 0 || c == ZERO_GLYPH_CHAR;
+}
+
+
 /* Given a wide char, this function returns the index of the glyph. If no glyph
  * exists for the requested wide char, the glyph index of '?' is returned. */
 static GlyphIdx GetGlyphIndex(wchar_t const c)

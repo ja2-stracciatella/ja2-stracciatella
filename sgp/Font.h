@@ -104,4 +104,6 @@ extern void RestoreFontSettings(void);
 void FindFontRightCoordinates( INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, Font, INT16* psNewX, INT16* psNewY);
 void FindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, Font, INT16* psNewX, INT16* psNewY);
 
+bool IsPrintableChar(wchar_t);
+
 #endif
