@@ -1019,27 +1019,26 @@ static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
 }
 
 
-static void RenderBackgroundField(TEXTINPUTNODE const* const pNode)
+static void RenderBackgroundField(TEXTINPUTNODE const* const n)
 {
-	UINT16 usColor;
-	if( pColors->fBevelling )
+	INT16           const  tlx  = n->region.RegionTopLeftX;
+	INT16           const  tly  = n->region.RegionTopLeftY;
+	INT16           const  brx  = n->region.RegionBottomRightX;
+	INT16           const  bry  = n->region.RegionBottomRightY;
+	TextInputColors const& clrs = *pColors;
+
+	if (clrs.fBevelling)
 	{
-		ColorFillVideoSurfaceArea(FRAME_BUFFER,	pNode->region.RegionTopLeftX, pNode->region.RegionTopLeftY,
-											pNode->region.RegionBottomRightX, pNode->region.RegionBottomRightY, pColors->usDarkerColor );
-		ColorFillVideoSurfaceArea(FRAME_BUFFER,	pNode->region.RegionTopLeftX+1, pNode->region.RegionTopLeftY+1,
-											pNode->region.RegionBottomRightX, pNode->region.RegionBottomRightY, pColors->usBrighterColor );
+		ColorFillVideoSurfaceArea(FRAME_BUFFER,	tlx,     tly,     brx, bry, clrs.usDarkerColor);
+		ColorFillVideoSurfaceArea(FRAME_BUFFER,	tlx + 1, tly + 1, brx, bry, clrs.usBrighterColor);
 	}
-	if( !pNode->fEnabled && !pColors->fUseDisabledAutoShade )
-		usColor = pColors->usDisabledTextFieldColor;
-	else
-		usColor = pColors->usTextFieldColor;
 
-	ColorFillVideoSurfaceArea(FRAME_BUFFER,	pNode->region.RegionTopLeftX+1, pNode->region.RegionTopLeftY+1,
-										pNode->region.RegionBottomRightX-1, pNode->region.RegionBottomRightY-1, usColor );
+	UINT16 const colour = n->fEnabled || clrs.fUseDisabledAutoShade ?
+		clrs.usTextFieldColor :
+		clrs.usDisabledTextFieldColor;
+	ColorFillVideoSurfaceArea(FRAME_BUFFER,	tlx + 1, tly + 1, brx - 1, bry - 1, colour);
 
-	InvalidateRegion( pNode->region.RegionTopLeftX, pNode->region.RegionTopLeftY,
-										pNode->region.RegionBottomRightX, pNode->region.RegionBottomRightY );
-
+	InvalidateRegion(tlx, tly, brx, bry);
 }
 
 
