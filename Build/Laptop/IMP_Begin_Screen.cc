@@ -474,8 +474,7 @@ static void HandleBeginScreenTextEvent(const InputAtom* Inp)
 						if (uiFullNameCharacterPosition >= MAX_FULL_NAME) break;
 
 						// make sure we haven't moved too far
-						wchar_t Temp[] = { Char, L'\0' };
-						if ((uiFullNameCursorPosition + StringPixLength(Temp, FONT14ARIAL)) > FULL_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X)
+						if (uiFullNameCursorPosition + GetCharWidth(FONT14ARIAL, Char) > FULL_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X)
 						{
 							// do nothing for now, when pop up is in place, display
 							break;
@@ -502,8 +501,7 @@ static void HandleBeginScreenTextEvent(const InputAtom* Inp)
 						if (uiNickNameCharacterPosition >= MAX_NICK_NAME) break;
 
 						// make sure we haven't moved too far
-						wchar_t Temp[] = { Char, L'\0' };
-						if ((uiNickNameCursorPosition + StringPixLength(Temp, FONT14ARIAL)) > NICK_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X)
+						if (uiNickNameCursorPosition + GetCharWidth(FONT14ARIAL, Char) > NICK_NAME_REGION_WIDTH + 196 + LAPTOP_SCREEN_UL_X)
 						{
 							// do nothing for now, when pop up is in place, display
 							break;
