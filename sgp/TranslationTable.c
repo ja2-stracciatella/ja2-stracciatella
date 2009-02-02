@@ -3,7 +3,7 @@
 
 unsigned char const TranslationTable[] =
 {
-#if !defined RUSSIAN || defined RUSSIAN_GOLD
+#if !defined RUSSIAN
 
 	[L'A'] =   0,
 	[L'B'] =   1,
