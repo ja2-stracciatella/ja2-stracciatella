@@ -170,23 +170,24 @@ UINT16 GetFontHeight(Font const font)
 }
 
 
-/* Given a wide char, this function returns the index of the glyph. Returns 0
- * - the index of 'A' (or ' ', depending on data files) - if no glyph exists for
- * the requested wide char. */
+#if defined RUSSIAN
+#	define ZERO_GLYPH_CHAR L' '
+#else
+#	define ZERO_GLYPH_CHAR L'A'
+#endif
+
+
+/* Given a wide char, this function returns the index of the glyph. If no glyph
+ * exists for the requested wide char, the glyph index of '?' is returned. */
 static GlyphIdx GetGlyphIndex(wchar_t const c)
 {
-	GlyphIdx Idx = 0;
-	if (c < lengthof(TranslationTable)) Idx = TranslationTable[c];
-#if defined RUSSIAN
-	if (Idx == 0 && c != L' ')
-#else
-	if (Idx == 0 && c != L'A')
-#endif
+	if (c < lengthof(TranslationTable))
 	{
-		DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error: Invalid character given U+%04X", c));
-		Idx = TranslationTable[L'?'];
+		GlyphIdx const idx = TranslationTable[c];
+		if (idx != 0 || c == ZERO_GLYPH_CHAR) return idx;
 	}
-	return Idx;
+	DebugMsg(TOPIC_FONT_HANDLER, DBG_LEVEL_0, String("Error: Invalid character given U+%04X", c));
+	return TranslationTable[L'?'];
 }
 
 
