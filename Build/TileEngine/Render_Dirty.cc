@@ -47,6 +47,10 @@ static VIDEO_OVERLAY* gVideoOverlays;
 	for (VIDEO_OVERLAY* iter = gVideoOverlays; iter; iter = iter->next) \
 		if (iter->fDisabled) continue; else
 
+#define FOR_ALL_VIDEO_OVERLAYS_SAFE(iter)                             \
+	for (VIDEO_OVERLAY* iter = gVideoOverlays, * iter##__next; iter; iter = iter##__next) \
+		if (iter##__next = iter->next, iter->fDisabled) continue; else
+
 
 SGPRect gDirtyClipRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
@@ -609,7 +613,7 @@ void SaveVideoOverlaysArea(SGPVSurface* const src)
 
 void DeleteVideoOverlaysArea(void)
 {
-	FOR_ALL_VIDEO_OVERLAYS(v)
+	FOR_ALL_VIDEO_OVERLAYS_SAFE(v)
 	{
 		if (v->pSaveArea != NULL) MemFree(v->pSaveArea);
 		v->pSaveArea       = NULL;
@@ -630,7 +634,7 @@ void RestoreShiftedVideoOverlays(const INT16 sShiftX, const INT16 sShiftY)
 	UINT16* const pDestBuf         = l.Buffer<UINT16>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
-	FOR_ALL_VIDEO_OVERLAYS(v)
+	FOR_ALL_VIDEO_OVERLAYS_SAFE(v)
 	{
 		if (v->pSaveArea == NULL) continue;
 
