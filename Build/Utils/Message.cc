@@ -110,7 +110,7 @@ static void BlitString(VIDEO_OVERLAY* pBlitter)
 
 	SetFontAttributes(pBlitter->uiFontID, pBlitter->ubFontFore, DEFAULT_SHADOW, pBlitter->ubFontBack);
 	SGPVSurface::Lock l(pBlitter->uiDestBuff);
-	mprintf_buffer_coded(l.Buffer<UINT16>(), l.Pitch(), pBlitter->sX, pBlitter->sY, pBlitter->zText);
+	MPrintBuffer(l.Buffer<UINT16>(), l.Pitch(), pBlitter->sX, pBlitter->sY, pBlitter->zText);
 }
 
 
@@ -604,7 +604,7 @@ void DisplayStringsInMapScreenMessageList(void)
 		if (s == NULL) break;
 
 		SetFontForeground(s->usColor);
-		mprintf_coded(20, sY, s->pString16);
+		MPrint(20, sY, s->pString16);
 
 		sY += usSpacing;
 

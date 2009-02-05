@@ -1605,9 +1605,6 @@ static void HandleTacticalTextUI(const ProfileID profile_id, const wchar_t* cons
 	wchar_t								zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft = 0;
 
-	//BUild text
-	// How do we do this with defines?
-	//swprintf(zText, L"\xb4\xa2 %ls: \xb5 \"%ls\"", gMercProfiles[ubCharacterNum].zNickname, zQuoteStr);
 	swprintf( zText, lengthof(zText), L"\"%ls\"", zQuoteStr );
 	sLeft	= 110;
 

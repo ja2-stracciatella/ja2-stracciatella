@@ -340,64 +340,6 @@ void mprintf_buffer(UINT16* const pDestBuf, UINT32 const uiDestPitchBYTES, INT32
 }
 
 
-static UINT32 vmprintf_buffer_coded(UINT16* const pDestBuf, const UINT32 uiDestPitchBYTES, const INT32 x, const INT32 y, const wchar_t* const pFontString, va_list ArgPtr)
-{
-	Assert(pFontString != NULL);
-
-	wchar_t	string[512];
-	vswprintf(string, lengthof(string), pFontString, ArgPtr);
-
-	INT32 destx = x;
-	INT32 desty = y;
-
-	UINT16 usOldForeColor = FontForeground16;
-
-	Font const font = FontDefault;
-	for (const wchar_t* curletter = string; *curletter != 0; curletter++)
-	{
-		if (*curletter == 180)
-		{
-			curletter++;
-			SetFontForeground(*curletter);
-			curletter++;
-		}
-		else if (*curletter == 181)
-		{
-			FontForeground16 = usOldForeColor;
-			curletter++;
-		}
-
-		GlyphIdx const glyph = GetGlyphIndex(*curletter);
-		Blt8BPPDataTo16BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, font, destx, desty, glyph, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
-		destx += GetWidth(font, glyph);
-	}
-
-	return 0;
-}
-
-
-void mprintf_buffer_coded(UINT16* const pDestBuf, const UINT32 uiDestPitchBYTES, const INT32 x, const INT32 y, const wchar_t* const pFontString, ...)
-{
-	va_list ArgPtr;
-	va_start(ArgPtr, pFontString);
-	vmprintf_buffer_coded(pDestBuf, uiDestPitchBYTES, x, y, pFontString, ArgPtr);
-	va_end(ArgPtr);
-}
-
-
-void mprintf_coded(INT32 x, INT32 y, const wchar_t* pFontString, ...)
-{
-	SGPVSurface::Lock l(FontDestBuffer);
-	UINT16* const pDestBuf         = l.Buffer<UINT16>();
-	UINT32        uiDestPitchBYTES = l.Pitch();
-
-	va_list ArgPtr;
-	va_start(ArgPtr, pFontString);
-	vmprintf_buffer_coded(pDestBuf, uiDestPitchBYTES, x, y, pFontString, ArgPtr);
-	va_end(ArgPtr);
-}
-
-
 void InitializeFontManager(void)
 {
 	FontDefault    = 0;
