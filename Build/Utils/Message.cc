@@ -130,7 +130,6 @@ void ClearDisplayedListOfTacticalStrings(void)
 }
 
 
-static void BlitString(VIDEO_OVERLAY*);
 static INT32 GetMessageQueueSize(void);
 static void PlayNewMessageSound(void);
 
