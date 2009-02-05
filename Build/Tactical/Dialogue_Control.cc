@@ -1554,8 +1554,6 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
 // Handlers for tactical UI stuff
 static void HandleTacticalNPCTextUI(const UINT8 ubCharacterNum, const wchar_t* const zQuoteStr)
 {
-	wchar_t zText[ QUOTE_MESSAGE_SIZE ];
-
 	// Setup dialogue text box
 	if ( guiCurrentScreen != MAP_SCREEN )
 	{
@@ -1565,8 +1563,7 @@ static void HandleTacticalNPCTextUI(const UINT8 ubCharacterNum, const wchar_t* c
 
 	// post message to mapscreen message system
 	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%ls\"", zQuoteStr );
-	swprintf( zText, lengthof(zText), L"%ls: \"%ls\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  zText );
+	MapScreenMessage(FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls: \"%ls\"", GetProfile(ubCharacterNum)->zNickname, zQuoteStr);
 }
 
 
@@ -1576,9 +1573,7 @@ static void ExecuteTacticalTextBox(INT16 sLeftPosition, const wchar_t* pString);
 // Handlers for tactical UI stuff
 static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t* const zQuoteStr)
 {
-	wchar_t								zText[ QUOTE_MESSAGE_SIZE ];
 	INT16									sLeft;
-
 
 	// Setup dialogue text box
 	if ( guiCurrentScreen != MAP_SCREEN )
@@ -1589,8 +1584,7 @@ static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t*
 
 	// post message to mapscreen message system
 	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%ls\"", zQuoteStr );
-	swprintf( zText, lengthof(zText), L"%ls: \"%ls\"", gMercProfiles[ ubCharacterNum ].zNickname, zQuoteStr );
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  zText );
+	MapScreenMessage(FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls: \"%ls\"", GetProfile(ubCharacterNum)->zNickname, zQuoteStr);
 
 	if ( guiCurrentScreen == MAP_SCREEN )
 	{
@@ -1623,8 +1617,7 @@ static void HandleTacticalTextUI(const ProfileID profile_id, const wchar_t* cons
 
 	ExecuteTacticalTextBox( sLeft, zText );
 
-	swprintf(zText, lengthof(zText), L"%ls: \"%ls\"", gMercProfiles[profile_id].zNickname, zQuoteStr);
-	MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  zText );
+	MapScreenMessage(FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls: \"%ls\"", GetProfile(profile_id)->zNickname, zQuoteStr);
 }
 
 
