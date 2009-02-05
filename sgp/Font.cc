@@ -295,7 +295,7 @@ UINT32 gprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 }
 
 
-static void mprint_buffer(UINT16* const pDestBuf, UINT32 const uiDestPitchBYTES, INT32 x, INT32 const y, wchar_t const* str)
+void MPrintBuffer(UINT16* const pDestBuf, UINT32 const uiDestPitchBYTES, INT32 x, INT32 const y, wchar_t const* str)
 {
 	Font const font = FontDefault;
 	for (; *str != L'\0'; ++str)
@@ -310,7 +310,7 @@ static void mprint_buffer(UINT16* const pDestBuf, UINT32 const uiDestPitchBYTES,
 void MPrint(INT32 const x, INT32 const y, wchar_t const* const str)
 {
 	SGPVSurface::Lock l(FontDestBuffer);
-	mprint_buffer(l.Buffer<UINT16>(), l.Pitch(), x, y, str);
+	MPrintBuffer(l.Buffer<UINT16>(), l.Pitch(), x, y, str);
 }
 
 
@@ -336,7 +336,7 @@ void mprintf_buffer(UINT16* const pDestBuf, UINT32 const uiDestPitchBYTES, INT32
 	va_start(ap, fmt);
 	vswprintf(str, lengthof(str), fmt, ap);
 	va_end(ap);
-	mprint_buffer(pDestBuf, uiDestPitchBYTES, x, y, str);
+	MPrintBuffer(pDestBuf, uiDestPitchBYTES, x, y, str);
 }
 
 

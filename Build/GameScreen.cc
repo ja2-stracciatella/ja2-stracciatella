@@ -115,7 +115,7 @@ static void BlitMFont(VIDEO_OVERLAY* const ovr)
 {
 	SetFontAttributes(ovr->uiFontID, ovr->ubFontFore, DEFAULT_SHADOW, ovr->ubFontBack);
 	SGPVSurface::Lock l(ovr->uiDestBuff);
-	mprintf_buffer(l.Buffer<UINT16>(), l.Pitch(), ovr->sX, ovr->sY, ovr->zText);
+	MPrintBuffer(l.Buffer<UINT16>(), l.Pitch(), ovr->sX, ovr->sY, ovr->zText);
 }
 
 

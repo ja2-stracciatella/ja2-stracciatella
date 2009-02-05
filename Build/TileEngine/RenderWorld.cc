@@ -1149,7 +1149,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 									INT16 sX;
 									INT16 sY;
 									FindFontCenterCoordinates(sXPos, sYPos, 1, 1, buf, TINYFONT1, &sX, &sY);
-									mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, buf);
+									MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY, buf);
 									SetFontDestBuffer(FRAME_BUFFER);
 								}
 								else if (uiLevelNodeFlags & LEVELNODE_ITEM && !(uiFlags & TILES_DIRTY))
@@ -1544,7 +1544,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 									INT16 sX;
 									INT16 sY;
 									FindFontCenterCoordinates(sXPos, sYPos, 1, 1, buf, TINYFONT1, &sX, &sY);
-									mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, buf);
+									MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY, buf);
 									SetFontDestBuffer(FRAME_BUFFER);
 								}
 							}
@@ -5433,7 +5433,7 @@ static void RenderFOVDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16
 					SetFont(SMALLCOMPFONT);
 					SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, gsVIEWPORT_END_Y);
 					SetFontForeground(FONT_FCOLOR_YELLOW);
-					mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY + 4, L"x");
+					MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY + 4, L"x");
 					SetFontDestBuffer(FRAME_BUFFER);
 				}
 			}

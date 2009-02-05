@@ -4931,7 +4931,7 @@ void RenderItemPickupMenu()
 				INT16 sFontX;
 				INT16 sFontY;
 				FindFontRightCoordinates(sX - 4, sY + 14, 42, 1, pStr, ITEM_FONT, &sFontX, &sFontY);
-				mprintf_buffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
+				MPrintBuffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
 				SetFont(ITEMDESC_FONT);
 			}
 
@@ -4943,7 +4943,7 @@ void RenderItemPickupMenu()
 				UINT16         const uiStringLength = StringPixLength(AttachMarker, ITEM_FONT);
 				INT16          const sNewX          = sX + 43 - uiStringLength - 4;
 				INT16          const sNewY          = sY + 2;
-				mprintf_buffer(pDestBuf, uiDestPitchBYTES, sNewX, sNewY, AttachMarker);
+				MPrintBuffer(pDestBuf, uiDestPitchBYTES, sNewX, sNewY, AttachMarker);
 			}
 
 			if (menu.bCurSelect == cnt + menu.ubScrollAnchor)
@@ -4973,7 +4973,7 @@ void RenderItemPickupMenu()
 			INT16 const x = ITEMPICK_TEXT_X + menu.sX;
 			INT16 const y = ITEMPICK_TEXT_Y + menu.sY + ITEMPICK_TEXT_YSPACE * cnt;
 			FindFontCenterCoordinates(x, y, ITEMPICK_TEXT_WIDTH, 1, pStr, ITEMDESC_FONT, &sFontX, &sFontY);
-			mprintf_buffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
+			MPrintBuffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
 
 			sY += ITEMPICK_GRAPHIC_YSPACE;
 		}
