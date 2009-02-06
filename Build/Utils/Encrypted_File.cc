@@ -21,7 +21,18 @@ void LoadEncryptedData(HWFILE const File, wchar_t* DestString, UINT32 const seek
 		 * UTF-16 to store them in the data files. Undo this damage here. */
 		if (0xC0 <= c && c <= 0xFF) c += 0x0350;
 #else
-#	if defined POLISH
+# if defined ENGLISH
+		/* The English data files are incorrectly encoded. The original texts seem
+		 * to be encoded in CP437, but then they were converted from CP1252 (!) to
+		 * UTF-16 to store them in the data files. Undo this damage here. This
+		 * problem only occurs for a few lines by Malice. */
+		switch (c)
+		{
+			case 128: c = 0x00C7; break; // Ç
+			case 130: c = 0x00E9; break; // é
+			case 135: c = 0x00E7; break; // ç
+		}
+#	elif defined POLISH
 		/* The Polish data files are incorrectly encoded. The original texts seem to
 		 * be encoded in CP1250, but then they were converted from CP1252 (!) to
 		 * UTF-16 to store them in the data files. Undo this damage here.
