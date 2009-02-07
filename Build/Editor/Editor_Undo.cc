@@ -305,7 +305,7 @@ BOOLEAN AddToUndoList( INT32 iMapIndex )
 }
 
 
-static void CopyMapElementFromWorld(MAP_ELEMENT* pNewMapElement, INT32 iMapIndex);
+static MAP_ELEMENT* CopyMapElementFromWorld(INT32 iMapIndex);
 
 
 static void AddToUndoListCmd(INT32 const iMapIndex, INT32 const iCmdCount)
@@ -317,8 +317,7 @@ static void AddToUndoListCmd(INT32 const iMapIndex, INT32 const iCmdCount)
 	SGP::PODObj<undo_struct> pUndoInfo;
 
 	// Copy the world map's tile
-	SGP::PODObj<MAP_ELEMENT> pData;
-	CopyMapElementFromWorld(pData, iMapIndex);
+	MAP_ELEMENT* const pData = CopyMapElementFromWorld(iMapIndex);
 
 	STRUCTURE* pStructure = pData->pStructureHead;
 
@@ -327,7 +326,7 @@ static void AddToUndoListCmd(INT32 const iMapIndex, INT32 const iCmdCount)
 
 	pUndoInfo->fLightSaved = FALSE;
 	pUndoInfo->ubLightRadius = 0;
-	pUndoInfo->pMapTile = pData.Release();
+	pUndoInfo->pMapTile = pData;
 	pUndoInfo->iMapIndex = iMapIndex;
 
 	pNode->pData = pUndoInfo.Release();
@@ -528,41 +527,45 @@ static void SmoothUndoMapTileTerrain(INT32 iWorldTile, MAP_ELEMENT* pUndoTile)
 }
 
 
-//Because of the potentially huge amounts of memory that can be allocated due to the inefficient
-//undo methods coded by Bret, it is feasible that it could fail.  Instead of using assertions to
-//terminate the program, destroy the memory allocated thusfar.
-static void DeleteMapElementContentsAfterCreationFail(MAP_ELEMENT* pNewMapElement)
+namespace
 {
-	LEVELNODE *pLevelNode;
-	STRUCTURE *pStructure;
-	INT32 x;
-	for( x = 0; x < 9; x++ )
+	//Because of the potentially huge amounts of memory that can be allocated due to the inefficient
+	//undo methods coded by Bret, it is feasible that it could fail.  Instead of using assertions to
+	//terminate the program, destroy the memory allocated thusfar.
+	void DeleteMapElementContentsAfterCreationFail(MAP_ELEMENT* pNewMapElement)
 	{
-		if( x == 1 )
-			continue;
-		pLevelNode = pNewMapElement->pLevelNodes[ x ];
-		while( pLevelNode )
+		LEVELNODE *pLevelNode;
+		STRUCTURE *pStructure;
+		INT32 x;
+		for( x = 0; x < 9; x++ )
 		{
-			LEVELNODE *temp;
-			temp = pLevelNode;
-			pLevelNode = pLevelNode->pNext;
+			if( x == 1 )
+				continue;
+			pLevelNode = pNewMapElement->pLevelNodes[ x ];
+			while( pLevelNode )
+			{
+				LEVELNODE *temp;
+				temp = pLevelNode;
+				pLevelNode = pLevelNode->pNext;
+				MemFree( temp );
+			}
+		}
+		pStructure = pNewMapElement->pStructureHead;
+		while( pStructure )
+		{
+			STRUCTURE *temp;
+			temp = pStructure;
+			pStructure = pStructure->pNext;
 			MemFree( temp );
 		}
-	}
-	pStructure = pNewMapElement->pStructureHead;
-	while( pStructure )
-	{
-		STRUCTURE *temp;
-		temp = pStructure;
-		pStructure = pStructure->pNext;
-		MemFree( temp );
 	}
 }
 
 
-static void CopyMapElementFromWorld(MAP_ELEMENT* const pNewMapElement, INT32 const iMapIndex)
-try
+static MAP_ELEMENT* CopyMapElementFromWorld(INT32 const iMapIndex)
 {
+	SGP::AutoObj<MAP_ELEMENT, DeleteMapElementContentsAfterCreationFail> pNewMapElement(MALLOCZ(MAP_ELEMENT));
+
 	MAP_ELEMENT			*pOldMapElement;
 	LEVELNODE				*pOldLevelNode;
 	LEVELNODE				*pNewLevelNode;
@@ -719,11 +722,7 @@ try
 	pNewMapElement->sHeight							= pOldMapElement->sHeight;
 	pNewMapElement->ubTerrainID					= pOldMapElement->ubTerrainID;
 	pNewMapElement->ubReservedSoldierID = pOldMapElement->ubReservedSoldierID;
-}
-catch (...)
-{
-	DeleteMapElementContentsAfterCreationFail(pNewMapElement);
-	throw;
+	return pNewMapElement.Release();
 }
 
 
