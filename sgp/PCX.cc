@@ -71,9 +71,8 @@ SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
 	// Read and allocate bitmap block if requested
 	if (contents & IMAGE_BITMAPDATA)
 	{
-		SGP::Buffer<UINT8> img_data(img->usWidth * img->usHeight);
+		UINT8* const img_data = img->pImageData.Allocate(img->usWidth * img->usHeight);
 		BlitPcxToBuffer(pcx_obj, img_data, img->usWidth, img->usHeight, 0, 0, FALSE);
-		img->pImageData = img_data.Release();
 	}
 
 	if (contents & IMAGE_PALETTE)

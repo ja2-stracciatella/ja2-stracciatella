@@ -81,7 +81,6 @@ struct SGPImage
 		fFlags(),
 		pui16BPPPalette(),
 		uiAppDataSize(),
-		pImageData(),
 		uiSizePixData(),
 		usNumberOfObjects()
 	{}
@@ -96,7 +95,7 @@ struct SGPImage
 	UINT16*                      pui16BPPPalette;
 	SGP::Buffer<UINT8>           pAppData;
 	UINT32                       uiAppDataSize;
-	void*                        pImageData;
+	SGP::Buffer<UINT8>           pImageData;
 	UINT32                       uiSizePixData;
 	SGP::Buffer<ETRLEObject>     pETRLEObject;
 	UINT16                       usNumberOfObjects;

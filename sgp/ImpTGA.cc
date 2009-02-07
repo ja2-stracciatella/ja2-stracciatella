@@ -78,20 +78,16 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 	{
 		if (uiImagePixelSize == 16)
 		{
-			SGP::Buffer<UINT16> img_data(uiWidth * uiHeight);
-
+			UINT16* const img_data = (UINT16*)(UINT8*)img->pImageData.Allocate(uiWidth * uiHeight * 2);
 			// Data is stored top-bottom - reverse for SGP HIMAGE format
 			for (size_t y = uiHeight; y != 0;)
 			{
 				FileRead(f, &img_data[uiWidth * --y], uiWidth * 2);;
 			}
-
-			img->pImageData = img_data.Release();
 		}
 		else if (uiImagePixelSize == 24)
 		{
-			SGP::Buffer<UINT8> img_data(uiWidth * uiHeight * 3);
-
+			UINT8* const img_data = img->pImageData.Allocate(uiWidth * uiHeight * 3);
 			for (size_t y = uiHeight; y != 0;)
 			{
 				UINT8* const line = &img_data[uiWidth * 3 * --y];
@@ -104,8 +100,6 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 					line[x * 3 + 2] = bgr[0];
 				}
 			}
-
-			img->pImageData = img_data.Release();
 		}
 		else
 		{

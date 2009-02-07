@@ -49,16 +49,8 @@ static SGPImage* STCILoadRGB(UINT16 const contents, HWFILE const f, STCIHeader c
 	if (contents & IMAGE_BITMAPDATA)
 	{
 		// Allocate memory for the image data and read it in
-		img->pImageData = MALLOCN(UINT8, header->uiStoredSize);
-		try
-		{
-			FileRead(f, img->pImageData, header->uiStoredSize);
-		}
-		catch (...)
-		{
-			MemFree(img->pImageData);
-			throw;
-		}
+		UINT8* const img_data = img->pImageData.Allocate(header->uiStoredSize);
+		FileRead(f, img_data, header->uiStoredSize);
 
 		img->fFlags |= IMAGE_BITMAPDATA;
 
@@ -73,7 +65,7 @@ static SGPImage* STCILoadRGB(UINT16 const contents, HWFILE const f, STCIHeader c
 				DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Converting to current RGB distribution!");
 				// Convert the image to the current hardware's specifications
 				size_t  const size = header->usWidth * header->usHeight;
-				UINT16* const data = static_cast<UINT16*>(img->pImageData);
+				UINT16* const data = (UINT16*)(UINT8*)img->pImageData;
 				if (gusRedMask == 0x7C00 && gusGreenMask == 0x03E0 && gusBlueMask == 0x001F)
 				{
 					ConvertRGBDistribution565To555(data, size);
@@ -129,7 +121,6 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 		FileSeek(f, sizeof(STCIPaletteElement) * header->Indexed.uiNumberOfColours, FILE_SEEK_FROM_CURRENT);
 	}
 
-	SGP::Buffer<UINT8> image_data;
 	if (contents & IMAGE_BITMAPDATA)
 	{
 		if (header->fFlags & STCI_ETRLE_COMPRESSED)
@@ -147,7 +138,7 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 			img->fFlags        |= IMAGE_TRLECOMPRESSED;
 		}
 
-		image_data.Allocate(header->uiStoredSize);
+		UINT8* const image_data = img->pImageData.Allocate(header->uiStoredSize);
 		FileRead(f, image_data, header->uiStoredSize);
 
 		img->fFlags |= IMAGE_BITMAPDATA;
@@ -171,6 +162,5 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 		img->uiAppDataSize = 0;
 	}
 
-	img->pImageData = image_data.Release();
 	return img.Release();
 }
