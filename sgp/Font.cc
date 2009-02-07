@@ -84,9 +84,6 @@ void SetFontBackground(UINT8 ubBackground)
 /* Loads a font from an ETRLE file */
 Font LoadFontFile(const char *filename)
 {
-	Assert(filename != NULL);
-	Assert(strlen(filename));
-
 	Font const font = AddVideoObjectFromFile(filename);
 	if (!FontDefault) FontDefault = font;
 	return font;
@@ -105,8 +102,6 @@ void UnloadFont(Font const font)
 /* Returns the width of a given character in the font. */
 static UINT32 GetWidth(HVOBJECT const hSrcVObject, GlyphIdx const ssIndex)
 {
-	Assert(hSrcVObject != NULL);
-
 	// Get Offsets from Index into structure
 	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(ssIndex);
 	return pTrav->usWidth + pTrav->sOffsetX;
@@ -154,8 +149,6 @@ void RestoreFontSettings(void)
 /* Returns the height of a given character in the font. */
 static UINT32 GetHeight(HVOBJECT hSrcVObject, INT16 ssIndex)
 {
-	Assert(hSrcVObject != NULL);
-
 	// Get Offsets from Index into structure
 	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(ssIndex);
 	return pTrav->usHeight + pTrav->sOffsetY;
@@ -165,7 +158,6 @@ static UINT32 GetHeight(HVOBJECT hSrcVObject, INT16 ssIndex)
 /* Returns the height of the first character in a font. */
 UINT16 GetFontHeight(Font const font)
 {
-	Assert(font);
 	return GetHeight(font, 0);
 }
 
@@ -268,8 +260,6 @@ void FindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHei
  * than 512 word-characters. */
 UINT32 gprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 {
-	Assert(pFontString != NULL);
-
 	va_list argptr;
 	va_start(argptr, pFontString);
 	wchar_t	string[512];
