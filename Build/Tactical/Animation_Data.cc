@@ -662,7 +662,7 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 			}
 
 			// Valid auxiliary data, so get # of frames from data
-			const AuxObjectData* const pAuxData = (const AuxObjectData*)hImage->pAppData;
+			AuxObjectData const* const pAuxData = (AuxObjectData const*)(UINT8 const*)hImage->pAppData;
 			a->uiNumFramesPerDir = pAuxData->ubNumberOfFrames;
 
 			// get structure data if any

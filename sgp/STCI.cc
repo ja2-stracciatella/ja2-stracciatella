@@ -157,11 +157,10 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 		FileSeek(f, header->uiStoredSize, FILE_SEEK_FROM_CURRENT);
 	}
 
-	SGP::Buffer<UINT8> app_data;
 	if (contents & IMAGE_APPDATA && header->uiAppDataSize > 0)
 	{
 		// load application-specific data
-		app_data.Allocate(header->uiAppDataSize);
+		UINT8* const app_data = img->pAppData.Allocate(header->uiAppDataSize);
 		FileRead(f, app_data, header->uiAppDataSize);
 
 		img->uiAppDataSize  = header->uiAppDataSize;
@@ -172,7 +171,6 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 		img->uiAppDataSize = 0;
 	}
 
-	img->pAppData   = app_data.Release();
 	img->pImageData = image_data.Release();
 	return img.Release();
 }

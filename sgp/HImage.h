@@ -80,7 +80,6 @@ struct SGPImage
 		ubBitDepth(bpp),
 		fFlags(),
 		pui16BPPPalette(),
-		pAppData(),
 		uiAppDataSize(),
 		pImageData(),
 		uiSizePixData(),
@@ -95,7 +94,7 @@ struct SGPImage
 	UINT16                       fFlags;
 	SGP::Buffer<SGPPaletteEntry> pPalette;
 	UINT16*                      pui16BPPPalette;
-	UINT8*                       pAppData;
+	SGP::Buffer<UINT8>           pAppData;
 	UINT32                       uiAppDataSize;
 	void*                        pImageData;
 	UINT32                       uiSizePixData;

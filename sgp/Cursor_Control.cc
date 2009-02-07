@@ -93,7 +93,7 @@ static void LoadCursorData(UINT32 uiCursorIndex)
 			if (hImage->uiAppDataSize > 0)
 			{
 				// Valid auxiliary data, so get # od frames from data
-				const AuxObjectData* pAuxData = (const AuxObjectData*)hImage->pAppData;
+				AuxObjectData const* const pAuxData = (AuxObjectData const*)(UINT8 const*)hImage->pAppData;
 				if (pAuxData->fFlags & AUX_ANIMATED_TILE)
 				{
 					CFData->ubNumberOfFrames = pAuxData->ubNumberOfFrames;

@@ -44,7 +44,6 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 SGPImage::~SGPImage()
 {
 	if (pImageData)      MemFree(pImageData);
-	if (pAppData)        MemFree(pAppData);
 	if (pui16BPPPalette) MemFree(pui16BPPPalette);
 }
 
