@@ -30,8 +30,6 @@ namespace SGP
 				return p;
 			}
 
-			operator T*() const { return p_; }
-
 			T* operator ->() const { return p_; }
 
 		private:
