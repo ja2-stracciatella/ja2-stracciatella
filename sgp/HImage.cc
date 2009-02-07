@@ -41,12 +41,6 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 }
 
 
-SGPImage::~SGPImage()
-{
-	if (pui16BPPPalette) MemFree(pui16BPPPalette);
-}
-
-
 static BOOLEAN Copy8BPPImageTo8BPPBuffer(  HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
 static BOOLEAN Copy16BPPImageTo16BPPBuffer(HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
 static BOOLEAN Copy8BPPImageTo16BPPBuffer( HIMAGE hImage, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_box);
