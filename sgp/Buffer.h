@@ -15,19 +15,20 @@ namespace SGP
 
 			~Buffer() { if (buf_) MemFree(buf_); }
 
-			Buffer& Allocate(size_t const n)
-			{
-				T* const buf = MALLOCN(T, n);
-				if (buf_) MemFree(buf_);
-				buf_ = buf;
-				return *this;
-			}
+			Buffer& Allocate(size_t const n) { return *this = MALLOCN(T, n); }
 
 			T* Release()
 			{
 				T* const buf = buf_;
 				buf_ = 0;
 				return buf;
+			}
+
+			Buffer& operator =(T* const buf)
+			{
+				if (buf_) MemFree(buf_);
+				buf_ = buf;
+				return *this;
 			}
 
 			operator T*()             { return buf_; }
