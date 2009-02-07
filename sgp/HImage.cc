@@ -47,7 +47,6 @@ SGPImage::~SGPImage()
 	if (pImageData)      MemFree(pImageData);
 	if (pAppData)        MemFree(pAppData);
 	if (pui16BPPPalette) MemFree(pui16BPPPalette);
-	if (pPalette)        MemFree(pPalette);
 }
 
 

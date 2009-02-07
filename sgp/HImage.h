@@ -2,6 +2,7 @@
 #define __IMAGE_H
 
 #include "AutoPtr.h"
+#include "Buffer.h"
 #include "Types.h"
 
 // The HIMAGE module provides a common interface for managing image data. This module
@@ -78,7 +79,6 @@ struct SGPImage
 		usHeight(h),
 		ubBitDepth(bpp),
 		fFlags(),
-		pPalette(),
 		pui16BPPPalette(),
 		pAppData(),
 		uiAppDataSize(),
@@ -90,18 +90,18 @@ struct SGPImage
 
 	~SGPImage();
 
-	UINT16					usWidth;
-	UINT16					usHeight;
-	UINT8						ubBitDepth;
-	UINT16					fFlags;
-	SGPPaletteEntry *pPalette;
-	UINT16					*pui16BPPPalette;
-	UINT8 *					pAppData;
-	UINT32					uiAppDataSize;
-	void*            pImageData;
-	UINT32           uiSizePixData;
-	ETRLEObject*     pETRLEObject;
-	UINT16           usNumberOfObjects;
+	UINT16                       usWidth;
+	UINT16                       usHeight;
+	UINT8                        ubBitDepth;
+	UINT16                       fFlags;
+	SGP::Buffer<SGPPaletteEntry> pPalette;
+	UINT16*                      pui16BPPPalette;
+	UINT8*                       pAppData;
+	UINT32                       uiAppDataSize;
+	void*                        pImageData;
+	UINT32                       uiSizePixData;
+	ETRLEObject*                 pETRLEObject;
+	UINT16                       usNumberOfObjects;
 };
 
 

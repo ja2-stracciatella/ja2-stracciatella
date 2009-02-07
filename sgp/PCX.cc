@@ -56,9 +56,8 @@ typedef struct PcxObject
 } PcxObject;
 
 
-static SGPPaletteEntry* SetPcxPalette(PcxObject* pCurrentPcxObject);
-static void             BlitPcxToBuffer(PcxObject*, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp);
-static PcxObject*       LoadPcx(const char* filename);
+static void       BlitPcxToBuffer(PcxObject*, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp);
+static PcxObject* LoadPcx(const char* filename);
 
 
 SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
@@ -79,8 +78,16 @@ SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
 
 	if (contents & IMAGE_PALETTE)
 	{
-		img->pPalette        = SetPcxPalette(pcx_obj);
-		img->pui16BPPPalette = Create16BPPPalette(img->pPalette);
+		SGPPaletteEntry* const dst = img->pPalette.Allocate(256);
+		UINT8 const*     const src = pcx_obj->ubPalette;
+		for (UINT16 Index = 0; Index < 256; Index++)
+		{
+			dst[Index].r      = src[Index * 3 + 0];
+			dst[Index].g      = src[Index * 3 + 1];
+			dst[Index].b      = src[Index * 3 + 2];
+			dst[Index].unused = 0;
+		}
+		img->pui16BPPPalette = Create16BPPPalette(dst);
 	}
 
 	MemFree(pcx_obj->pPcxBuffer);
@@ -317,26 +324,4 @@ static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBu
       }
     }
   }
-}
-
-
-static SGPPaletteEntry* SetPcxPalette(PcxObject* const pCurrentPcxObject)
-{
-	UINT16 Index;
-	UINT8  *pubPalette;
-
-	pubPalette = &(pCurrentPcxObject->ubPalette[0]);
-
-	// Allocate memory for palette
-	SGPPaletteEntry* const pal = MALLOCN(SGPPaletteEntry, 256);
-
-  // Initialize the proper palette entries
-  for (Index = 0; Index < 256; Index++)
-  {
-		pal[Index].r      = pubPalette[Index * 3 + 0];
-		pal[Index].g      = pubPalette[Index * 3 + 1];
-		pal[Index].b      = pubPalette[Index * 3 + 2];
-		pal[Index].unused = 0;
-  }
-  return pal;
 }

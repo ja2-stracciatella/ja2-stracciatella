@@ -100,8 +100,7 @@ static SGPImage* STCILoadRGB(UINT16 const contents, HWFILE const f, STCIHeader c
 
 static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHeader const* const header)
 {
-	AutoSGPImage                 img(new SGPImage(header->usWidth, header->usHeight, header->ubDepth));
-	SGP::Buffer<SGPPaletteEntry> palette;
+	AutoSGPImage img(new SGPImage(header->usWidth, header->usHeight, header->ubDepth));
 	if (contents & IMAGE_PALETTE)
 	{ // Allocate memory for reading in the palette
 		if (header->Indexed.uiNumberOfColours != 256)
@@ -114,7 +113,7 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 		// Read in the palette
 		FileRead(f, pSTCIPalette, sizeof(*pSTCIPalette) * 256);
 
-		palette.Allocate(256);
+		SGPPaletteEntry* const palette = img->pPalette.Allocate(256);
 		for (size_t i = 0; i < 256; i++)
 		{
 			palette[i].r      = pSTCIPalette[i].ubRed;
@@ -177,6 +176,5 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 	img->pAppData     = app_data.Release();
 	img->pImageData   = image_data.Release();
 	img->pETRLEObject = etrle_objects.Release();
-	img->pPalette     = palette.Release();
 	return img.Release();
 }
