@@ -1,6 +1,7 @@
 #ifdef JA2EDITOR
 
 #include "Buffer.h"
+#include "Debug.h"
 #include "Types.h"
 #include "ImgFmt.h"
 #include "HImage.h"
@@ -71,7 +72,6 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 
 	STCIHeader					Header;
 	UINT32							uiLoop;
-	SGPImage            Image;
 
 	SGPPaletteEntry *		pSGPPaletteEntry;
 	STCIPaletteElement	STCIPaletteEntry;
@@ -83,8 +83,6 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 	//UINT16							usLoop;
 
 	memset(&Header, 0, sizeof(Header));
-	memset(&Image, 0, sizeof(Image));
-
 
 	uiOriginalSize = sWidth * sHeight * (8 / 8);
 
@@ -152,29 +150,14 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 	}
 
 	// write file data
-	if (Header.fFlags & STCI_ETRLE_COMPRESSED)
-	{
-		fwrite( pOutputBuffer, Header.uiStoredSize, 1, pOutput );
-	}
-	else
-	{
-		fwrite( Image.pImageData, Header.uiStoredSize, 1, pOutput );
-	}
+	Assert(Header.fFlags & STCI_ETRLE_COMPRESSED);
+	Assert(pOutputBuffer);
+	fwrite( pOutputBuffer, Header.uiStoredSize, 1, pOutput );
 
 	// write app-specific data (blanked to 0)
-	if (Image.pAppData == NULL )
+	for (uiLoop = 0; uiLoop < Header.uiAppDataSize; uiLoop++)
 	{
-		if (Header.uiAppDataSize > 0)
-		{
-			for (uiLoop = 0; uiLoop < Header.uiAppDataSize; uiLoop++)
-			{
-				fputc( 0, pOutput );
-			}
-		}
-	}
-	else
-	{
-		fwrite( Image.pAppData, Header.uiAppDataSize, 1, pOutput );
+		fputc( 0, pOutput );
 	}
 
 	fclose( pOutput );
