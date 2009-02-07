@@ -41,15 +41,13 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 }
 
 
-void DestroyImage(SGPImage* const img)
+SGPImage::~SGPImage()
 {
-	Assert(img);
-	if (img->pPalette)        MemFree(img->pPalette);
-	if (img->pui16BPPPalette) MemFree(img->pui16BPPPalette);
-	if (img->pImageData)      MemFree(img->pImageData);
-	if (img->pETRLEObject)    MemFree(img->pETRLEObject);
-	if (img->pAppData)        MemFree(img->pAppData);
-	MemFree(img);
+	if (pETRLEObject)    MemFree(pETRLEObject);
+	if (pImageData)      MemFree(pImageData);
+	if (pAppData)        MemFree(pAppData);
+	if (pui16BPPPalette) MemFree(pui16BPPPalette);
+	if (pPalette)        MemFree(pPalette);
 }
 
 

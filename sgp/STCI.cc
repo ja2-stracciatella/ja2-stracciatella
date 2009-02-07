@@ -6,7 +6,6 @@
 #include "ImgFmt.h"
 #include "HImage.h"
 #include "Debug.h"
-#include "PODObj.h"
 #include "STCI.h"
 
 
@@ -31,16 +30,11 @@ SGPImage* LoadSTCIFileToImage(char const* const filename, UINT16 const fContents
 	}
 
 	// Determine from the header the data stored in the file. and run the appropriate loader
-	SGPImage* const image =
+	return
 		header.fFlags & STCI_RGB     ? STCILoadRGB(    fContents, f, &header) :
 		header.fFlags & STCI_INDEXED ? STCILoadIndexed(fContents, f, &header) :
 		/* Unsupported type of data, or the right flags weren't set! */
 		throw std::runtime_error("Unknown data organization in STCI file.");
-
-	image->usWidth    = header.usWidth;
-	image->usHeight   = header.usHeight;
-	image->ubBitDepth = header.ubDepth;
-	return image;
 }
 
 
@@ -51,7 +45,7 @@ static SGPImage* STCILoadRGB(UINT16 const contents, HWFILE const f, STCIHeader c
 		throw std::logic_error("Invalid combination of content load flags");
 	}
 
-	SGP::PODObj<SGPImage> img;
+	AutoSGPImage img(new SGPImage(header->usWidth, header->usHeight, header->ubDepth));
 	if (contents & IMAGE_BITMAPDATA)
 	{
 		// Allocate memory for the image data and read it in
@@ -106,7 +100,7 @@ static SGPImage* STCILoadRGB(UINT16 const contents, HWFILE const f, STCIHeader c
 
 static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHeader const* const header)
 {
-	SGP::PODObj<SGPImage>        img;
+	AutoSGPImage                 img(new SGPImage(header->usWidth, header->usHeight, header->ubDepth));
 	SGP::Buffer<SGPPaletteEntry> palette;
 	if (contents & IMAGE_PALETTE)
 	{ // Allocate memory for reading in the palette

@@ -3,7 +3,6 @@
 #include "Buffer.h"
 #include "HImage.h"
 #include "LoadSaveData.h"
-#include "PODObj.h"
 #include "Types.h"
 #include "FileMan.h"
 #include "ImpTGA.h"
@@ -73,10 +72,7 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 		FileSeek(f, uiColMapLength * (uiImagePixelSize / 8), FILE_SEEK_FROM_CURRENT);
 	}
 
-	SGP::PODObj<SGPImage> img;
-	img->usWidth    = uiWidth;
-	img->usHeight   = uiHeight;
-	img->ubBitDepth = uiImagePixelSize;
+	AutoSGPImage img(new SGPImage(uiWidth, uiHeight, uiImagePixelSize));
 
 	if (contents & IMAGE_BITMAPDATA)
 	{

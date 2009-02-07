@@ -1,7 +1,7 @@
 #ifndef __IMAGE_H
 #define __IMAGE_H
 
-#include "AutoObj.h"
+#include "AutoPtr.h"
 #include "Types.h"
 
 // The HIMAGE module provides a common interface for managing image data. This module
@@ -73,6 +73,23 @@ typedef struct tagETRLEData
 // Image header structure
 struct SGPImage
 {
+	SGPImage(UINT16 const w, UINT16 const h, UINT8 const bpp) :
+		usWidth(w),
+		usHeight(h),
+		ubBitDepth(bpp),
+		fFlags(),
+		pPalette(),
+		pui16BPPPalette(),
+		pAppData(),
+		uiAppDataSize(),
+		pImageData(),
+		uiSizePixData(),
+		pETRLEObject(),
+		usNumberOfObjects()
+	{}
+
+	~SGPImage();
+
 	UINT16					usWidth;
 	UINT16					usHeight;
 	UINT8						ubBitDepth;
@@ -94,9 +111,6 @@ struct SGPImage
 
 
 SGPImage* CreateImage(const char* ImageFile, UINT16 fContents);
-
-// This function destroys the HIMAGE structure as well as its contents
-void DestroyImage(SGPImage*);
 
 // This function will run the appropriate copy function based on the type of HIMAGE object
 BOOLEAN CopyImageToBuffer(HIMAGE hImage, UINT32 fBufferType, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, const SGPBox* src_rect);
@@ -126,6 +140,6 @@ void ConvertRGBDistribution565To655( UINT16 * p16BPPData, UINT32 uiNumberOfPixel
 void ConvertRGBDistribution565To556( UINT16 * p16BPPData, UINT32 uiNumberOfPixels );
 void ConvertRGBDistribution565ToAny( UINT16 * p16BPPData, UINT32 uiNumberOfPixels );
 
-typedef SGP::AutoObj<SGPImage, DestroyImage>::Type AutoSGPImage;
+typedef SGP::AutoPtr<SGPImage>::Type AutoSGPImage;
 
 #endif

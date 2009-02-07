@@ -65,12 +65,9 @@ SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
 {
 	PcxObject* const pcx_obj = LoadPcx(filename);
 
-	SGP::PODObj<SGPImage> img;
+	AutoSGPImage img(new SGPImage(pcx_obj->usWidth, pcx_obj->usHeight, 8));
 	// Set some header information
-	img->usWidth     = pcx_obj->usWidth;
-	img->usHeight    = pcx_obj->usHeight;
-	img->ubBitDepth  = 8;
-	img->fFlags     |= contents;
+	img->fFlags |= contents;
 
 	// Read and allocate bitmap block if requested
 	if (contents & IMAGE_BITMAPDATA)
