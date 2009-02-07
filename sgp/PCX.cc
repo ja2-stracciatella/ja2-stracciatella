@@ -56,9 +56,9 @@ typedef struct PcxObject
 } PcxObject;
 
 
-static void       SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage);
-static void       BlitPcxToBuffer(PcxObject*, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp);
-static PcxObject* LoadPcx(const char* filename);
+static SGPPaletteEntry* SetPcxPalette(PcxObject* pCurrentPcxObject);
+static void             BlitPcxToBuffer(PcxObject*, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp);
+static PcxObject*       LoadPcx(const char* filename);
 
 
 SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
@@ -82,7 +82,7 @@ SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
 
 	if (contents & IMAGE_PALETTE)
 	{
-		SetPcxPalette(pcx_obj, img);
+		img->pPalette        = SetPcxPalette(pcx_obj);
 		img->pui16BPPPalette = Create16BPPPalette(img->pPalette);
 	}
 
@@ -323,7 +323,7 @@ static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBu
 }
 
 
-static void SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage)
+static SGPPaletteEntry* SetPcxPalette(PcxObject* const pCurrentPcxObject)
 {
 	UINT16 Index;
 	UINT8  *pubPalette;
@@ -331,14 +331,15 @@ static void SetPcxPalette(PcxObject* pCurrentPcxObject, HIMAGE hImage)
 	pubPalette = &(pCurrentPcxObject->ubPalette[0]);
 
 	// Allocate memory for palette
-	hImage->pPalette = MALLOCN(SGPPaletteEntry, 256);
+	SGPPaletteEntry* const pal = MALLOCN(SGPPaletteEntry, 256);
 
   // Initialize the proper palette entries
   for (Index = 0; Index < 256; Index++)
   {
-		hImage->pPalette[Index].r      = pubPalette[Index * 3 + 0];
-		hImage->pPalette[Index].g      = pubPalette[Index * 3 + 1];
-		hImage->pPalette[Index].b      = pubPalette[Index * 3 + 2];
-		hImage->pPalette[Index].unused = 0;
+		pal[Index].r      = pubPalette[Index * 3 + 0];
+		pal[Index].g      = pubPalette[Index * 3 + 1];
+		pal[Index].b      = pubPalette[Index * 3 + 2];
+		pal[Index].unused = 0;
   }
+  return pal;
 }
