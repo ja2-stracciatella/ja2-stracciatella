@@ -27,11 +27,9 @@ namespace SGP
 				p_ = p;
 			}
 
-			T*       operator ->()       { return p_; }
-			T const* operator ->() const { return p_; }
+			T* operator ->() const { return p_; }
 
-			operator T*()             { return p_; }
-			operator T const*() const { return p_; }
+			operator T*() const { return p_; }
 
 		private:
 			T* p_;
