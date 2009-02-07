@@ -13,11 +13,11 @@ static void STCILoadRGB(    SGPImage*, UINT16 contents, HWFILE, STCIHeader const
 static void STCILoadIndexed(SGPImage*, UINT16 contents, HWFILE, STCIHeader const*);
 
 
-void LoadSTCIFileToImage(HIMAGE const image, UINT16 const fContents)
+void LoadSTCIFileToImage(char const* const filename, HIMAGE const image, UINT16 const fContents)
 {
 	Assert(image != NULL);
 
-	AutoSGPFile f(FileOpen(image->ImageFile, FILE_ACCESS_READ));
+	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
 
 	STCIHeader header;
 	FileRead(f, &header, sizeof(header));

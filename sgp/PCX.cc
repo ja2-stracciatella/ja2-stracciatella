@@ -61,9 +61,9 @@ static void       BlitPcxToBuffer(PcxObject*, UINT8* pBuffer, UINT16 usBufferWid
 static PcxObject* LoadPcx(const char* filename);
 
 
-void LoadPCXFileToImage(SGPImage* const img, UINT16 const contents)
+void LoadPCXFileToImage(char const* const filename, SGPImage* const img, UINT16 const contents)
 {
-	PcxObject* const pcx_obj = LoadPcx(img->ImageFile);
+	PcxObject* const pcx_obj = LoadPcx(filename);
 
 	// Set some header information
 	img->usWidth     = pcx_obj->usWidth;

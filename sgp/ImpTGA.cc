@@ -16,13 +16,13 @@ static void ReadRLEColMapImage(   HIMAGE, HWFILE, UINT8 uiImgID, UINT8 uiColMap,
 static void ReadRLERGBImage(      HIMAGE, HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
 
 
-void LoadTGAFileToImage(HIMAGE const hImage, UINT16 fContents)
+void LoadTGAFileToImage(char const* const filename, HIMAGE const hImage, UINT16 const fContents)
 {
 	UINT8		uiImgID, uiColMap, uiType;
 
 	Assert( hImage != NULL );
 
-	AutoSGPFile hFile(FileOpen(hImage->ImageFile, FILE_ACCESS_READ));
+	AutoSGPFile hFile(FileOpen(filename, FILE_ACCESS_READ));
 
 	FileRead(hFile, &uiImgID,  sizeof(UINT8));
 	FileRead(hFile, &uiColMap, sizeof(UINT8));

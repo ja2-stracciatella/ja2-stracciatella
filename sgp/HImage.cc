@@ -35,20 +35,19 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 	const char* const ext = dot + 1;
 
 	SGP::PODObj<SGPImage> img;
-	strcpy(img->ImageFile, filename);
 
 	// determine type from extension
 	if (strcasecmp(ext, "STI") == 0)
 	{
-		LoadSTCIFileToImage(img, fContents);
+		LoadSTCIFileToImage(filename, img, fContents);
 	}
 	else if (strcasecmp(ext, "PCX") == 0)
 	{
-		LoadPCXFileToImage(img, fContents);
+		LoadPCXFileToImage(filename, img, fContents);
 	}
 	else if (strcasecmp(ext, "TGA") == 0)
 	{
-		LoadTGAFileToImage(img, fContents);
+		LoadTGAFileToImage(filename, img, fContents);
 	}
 	else
 	{

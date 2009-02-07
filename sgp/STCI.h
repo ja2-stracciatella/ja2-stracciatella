@@ -4,6 +4,6 @@
 #include "Types.h"
 
 
-void LoadSTCIFileToImage(HIMAGE, UINT16 fContents);
+void LoadSTCIFileToImage(char const* filename, HIMAGE, UINT16 fContents);
 
 #endif

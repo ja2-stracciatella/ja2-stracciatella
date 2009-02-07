@@ -4,6 +4,6 @@
 #include "Types.h"
 
 
-void LoadPCXFileToImage(HIMAGE, UINT16 fContents);
+void LoadPCXFileToImage(char const* filename, HIMAGE, UINT16 fContents);
 
 #endif

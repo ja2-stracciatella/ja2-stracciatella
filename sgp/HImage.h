@@ -77,7 +77,6 @@ struct SGPImage
 	UINT16					usHeight;
 	UINT8						ubBitDepth;
 	UINT16					fFlags;
-	SGPFILENAME			ImageFile;
 	SGPPaletteEntry *pPalette;
 	UINT16					*pui16BPPPalette;
 	UINT8 *					pAppData;

@@ -4,6 +4,6 @@
 #include "Types.h"
 
 
-void LoadTGAFileToImage(HIMAGE, UINT16 fContents);
+void LoadTGAFileToImage(char const* filename, HIMAGE, UINT16 fContents);
 
 #endif
