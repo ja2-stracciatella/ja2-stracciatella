@@ -4,6 +4,6 @@
 #include "Types.h"
 
 
-void LoadPCXFileToImage(char const* filename, HIMAGE, UINT16 fContents);
+SGPImage* LoadPCXFileToImage(char const* filename, UINT16 fContents);
 
 #endif

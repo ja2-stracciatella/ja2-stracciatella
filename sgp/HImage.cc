@@ -6,7 +6,6 @@
 #include "HImage.h"
 #include "ImpTGA.h"
 #include "PCX.h"
-#include "PODObj.h"
 #include "STCI.h"
 #include "WCheck.h"
 #include "VObject.h"
@@ -34,27 +33,11 @@ SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
 	if (!dot) throw std::logic_error("Tried to load image with no extension");
 	const char* const ext = dot + 1;
 
-	SGP::PODObj<SGPImage> img;
-
-	// determine type from extension
-	if (strcasecmp(ext, "STI") == 0)
-	{
-		LoadSTCIFileToImage(filename, img, fContents);
-	}
-	else if (strcasecmp(ext, "PCX") == 0)
-	{
-		LoadPCXFileToImage(filename, img, fContents);
-	}
-	else if (strcasecmp(ext, "TGA") == 0)
-	{
-		LoadTGAFileToImage(filename, img, fContents);
-	}
-	else
-	{
+	return
+		strcasecmp(ext, "STI") == 0 ? LoadSTCIFileToImage(filename, fContents) :
+		strcasecmp(ext, "PCX") == 0 ? LoadPCXFileToImage( filename, fContents) :
+		strcasecmp(ext, "TGA") == 0 ? LoadTGAFileToImage( filename, fContents) :
 		throw std::logic_error("Tried to load image with unknown extension");
-	}
-
-	return img.Release();
 }
 
 

@@ -3,6 +3,7 @@
 #include "Buffer.h"
 #include "HImage.h"
 #include "LoadSaveData.h"
+#include "PODObj.h"
 #include "Types.h"
 #include "FileMan.h"
 #include "ImpTGA.h"
@@ -16,11 +17,9 @@ static void ReadRLEColMapImage(   HIMAGE, HWFILE, UINT8 uiImgID, UINT8 uiColMap,
 static void ReadRLERGBImage(      HIMAGE, HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
 
 
-void LoadTGAFileToImage(char const* const filename, HIMAGE const hImage, UINT16 const fContents)
+SGPImage* LoadTGAFileToImage(char const* const filename, UINT16 const fContents)
 {
 	UINT8		uiImgID, uiColMap, uiType;
-
-	Assert( hImage != NULL );
 
 	AutoSGPFile hFile(FileOpen(filename, FILE_ACCESS_READ));
 
@@ -28,6 +27,7 @@ void LoadTGAFileToImage(char const* const filename, HIMAGE const hImage, UINT16 
 	FileRead(hFile, &uiColMap, sizeof(UINT8));
 	FileRead(hFile, &uiType,   sizeof(UINT8));
 
+	SGP::PODObj<SGPImage> hImage;
 	switch (uiType)
 	{
 		case  1: ReadUncompColMapImage(hImage, hFile, uiImgID, uiColMap, fContents); break;
@@ -36,6 +36,7 @@ void LoadTGAFileToImage(char const* const filename, HIMAGE const hImage, UINT16 
 		case 10: ReadRLERGBImage(      hImage, hFile, uiImgID, uiColMap, fContents); break;
 		default: throw std::runtime_error("Unsupported TGA format");
 	}
+	return hImage.Release();
 }
 
 

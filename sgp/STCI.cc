@@ -6,6 +6,7 @@
 #include "ImgFmt.h"
 #include "HImage.h"
 #include "Debug.h"
+#include "PODObj.h"
 #include "STCI.h"
 
 
@@ -13,10 +14,8 @@ static void STCILoadRGB(    SGPImage*, UINT16 contents, HWFILE, STCIHeader const
 static void STCILoadIndexed(SGPImage*, UINT16 contents, HWFILE, STCIHeader const*);
 
 
-void LoadSTCIFileToImage(char const* const filename, HIMAGE const image, UINT16 const fContents)
+SGPImage* LoadSTCIFileToImage(char const* const filename, UINT16 const fContents)
 {
-	Assert(image != NULL);
-
 	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
 
 	STCIHeader header;
@@ -31,6 +30,7 @@ void LoadSTCIFileToImage(char const* const filename, HIMAGE const image, UINT16 
 		throw std::runtime_error("Cannot handle zlib compressed STCI files");
 	}
 
+	SGP::PODObj<SGPImage> image;
 	// Determine from the header the data stored in the file. and run the appropriate loader
 	if (header.fFlags & STCI_RGB)
 	{
@@ -49,6 +49,7 @@ void LoadSTCIFileToImage(char const* const filename, HIMAGE const image, UINT16 
 	image->usWidth    = header.usWidth;
 	image->usHeight   = header.usHeight;
 	image->ubBitDepth = header.ubDepth;
+	return image.Release();
 }
 
 
