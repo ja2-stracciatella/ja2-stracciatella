@@ -84,7 +84,6 @@ struct SGPImage
 		uiAppDataSize(),
 		pImageData(),
 		uiSizePixData(),
-		pETRLEObject(),
 		usNumberOfObjects()
 	{}
 
@@ -100,7 +99,7 @@ struct SGPImage
 	UINT32                       uiAppDataSize;
 	void*                        pImageData;
 	UINT32                       uiSizePixData;
-	ETRLEObject*                 pETRLEObject;
+	SGP::Buffer<ETRLEObject>     pETRLEObject;
 	UINT16                       usNumberOfObjects;
 };
 

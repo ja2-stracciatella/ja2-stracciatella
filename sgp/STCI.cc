@@ -129,8 +129,7 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 		FileSeek(f, sizeof(STCIPaletteElement) * header->Indexed.uiNumberOfColours, FILE_SEEK_FROM_CURRENT);
 	}
 
-	SGP::Buffer<ETRLEObject> etrle_objects;
-	SGP::Buffer<UINT8>       image_data;
+	SGP::Buffer<UINT8> image_data;
 	if (contents & IMAGE_BITMAPDATA)
 	{
 		if (header->fFlags & STCI_ETRLE_COMPRESSED)
@@ -141,7 +140,7 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 			UINT16 const n_subimages = header->Indexed.usNumberOfSubImages;
 			img->usNumberOfObjects = n_subimages;
 
-			etrle_objects.Allocate(n_subimages);
+			ETRLEObject* const etrle_objects = img->pETRLEObject.Allocate(n_subimages);
 			FileRead(f, etrle_objects, sizeof(*etrle_objects) * n_subimages);
 
 			img->uiSizePixData  = header->uiStoredSize;
@@ -173,8 +172,7 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 		img->uiAppDataSize = 0;
 	}
 
-	img->pAppData     = app_data.Release();
-	img->pImageData   = image_data.Release();
-	img->pETRLEObject = etrle_objects.Release();
+	img->pAppData   = app_data.Release();
+	img->pImageData = image_data.Release();
 	return img.Release();
 }
