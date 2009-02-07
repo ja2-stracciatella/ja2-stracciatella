@@ -81,29 +81,10 @@ struct SGPImage
 	UINT16					*pui16BPPPalette;
 	UINT8 *					pAppData;
 	UINT32					uiAppDataSize;
-	union
-	{
-		struct
-		{
-			PTR		pImageData;
-		};
-		struct
-		{
-			UINT8						*p8BPPData;
-		};
-		struct
-		{
-
-			UINT16 *p16BPPData;
-		};
-		struct
-		{
-			UINT8 *					pPixData8;
-			UINT32					uiSizePixData;
-			ETRLEObject *		pETRLEObject;
-			UINT16					usNumberOfObjects;
-		};
-	};
+	void*            pImageData;
+	UINT32           uiSizePixData;
+	ETRLEObject*     pETRLEObject;
+	UINT16           usNumberOfObjects;
 };
 
 

@@ -78,23 +78,24 @@ static SGPImage* STCILoadRGB(UINT16 const contents, HWFILE const f, STCIHeader c
 				// colour distribution of the file is different from hardware!  We have to change it!
 				DebugMsg(TOPIC_HIMAGE, DBG_LEVEL_3, "Converting to current RGB distribution!");
 				// Convert the image to the current hardware's specifications
-				size_t const size = header->usWidth * header->usHeight;
+				size_t  const size = header->usWidth * header->usHeight;
+				UINT16* const data = static_cast<UINT16*>(img->pImageData);
 				if (gusRedMask == 0x7C00 && gusGreenMask == 0x03E0 && gusBlueMask == 0x001F)
 				{
-					ConvertRGBDistribution565To555(img->p16BPPData, size);
+					ConvertRGBDistribution565To555(data, size);
 				}
 				else if (gusRedMask == 0xFC00 && gusGreenMask == 0x03E0 && gusBlueMask == 0x001F)
 				{
-					ConvertRGBDistribution565To655(img->p16BPPData, size);
+					ConvertRGBDistribution565To655(data, size);
 				}
 				else if (gusRedMask == 0xF800 && gusGreenMask == 0x07C0 && gusBlueMask == 0x003F)
 				{
-					ConvertRGBDistribution565To556(img->p16BPPData, size);
+					ConvertRGBDistribution565To556(data, size);
 				}
 				else
 				{
 					// take the long route
-					ConvertRGBDistribution565ToAny(img->p16BPPData, size);
+					ConvertRGBDistribution565ToAny(data, size);
 				}
 			}
 		}

@@ -97,7 +97,7 @@ static BOOLEAN Copy8BPPImageTo8BPPBuffer(const HIMAGE hImage, BYTE* const pDestB
 
 	// Assertions
 	Assert( hImage != NULL );
-	Assert( hImage->p16BPPData != NULL );
+	Assert(hImage->pImageData);
 
 	// Validations
 	//CHECKF( usX >= 0 ); /* XXX unsigned < 0 ? */
@@ -118,7 +118,7 @@ static BOOLEAN Copy8BPPImageTo8BPPBuffer(const HIMAGE hImage, BYTE* const pDestB
 
 	// Copy line by line
 	pDest = ( UINT8*)pDestBuf + uiDestStart;
-	pSrc =  hImage->p8BPPData + uiSrcStart;
+	pSrc = static_cast<UINT8*>(hImage->pImageData) + uiSrcStart;
 
 	for( cnt = 0; cnt < uiNumLines-1; cnt++ )
 	{
@@ -140,7 +140,7 @@ static BOOLEAN Copy16BPPImageTo16BPPBuffer(const HIMAGE hImage, BYTE* const pDes
 	UINT16 *pDest, *pSrc;
 
 	Assert( hImage != NULL );
-	Assert( hImage->p16BPPData != NULL );
+	Assert(hImage->pImageData);
 
 	// Validations
 	//CHECKF( usX >= 0 ); /* XXX unsigned < 0 ? */
@@ -161,7 +161,7 @@ static BOOLEAN Copy16BPPImageTo16BPPBuffer(const HIMAGE hImage, BYTE* const pDes
 
 	// Copy line by line
 	pDest = ( UINT16*)pDestBuf + uiDestStart;
-	pSrc =  hImage->p16BPPData + uiSrcStart;
+	pSrc = static_cast<UINT16*>(hImage->pImageData) + uiSrcStart;
 
 	for( cnt = 0; cnt < uiNumLines-1; cnt++ )
 	{
@@ -192,7 +192,7 @@ static BOOLEAN Copy8BPPImageTo16BPPBuffer(const HIMAGE hImage, BYTE* const pDest
 	Assert( hImage != NULL );
 
 	// Validations
-	CHECKF( hImage->p16BPPData != NULL );
+	CHECKF(hImage->pImageData);
 	//CHECKF( usX >= 0 ); /* XXX unsigned < 0 ? */
 	CHECKF( usX < usDestWidth );
 	//CHECKF( usY >= 0 ); /* XXX unsigned < 0 ? */
@@ -211,7 +211,7 @@ static BOOLEAN Copy8BPPImageTo16BPPBuffer(const HIMAGE hImage, BYTE* const pDest
 
 	// Convert to Pixel specification
 	pDest = ( UINT16*)pDestBuf + uiDestStart;
-	pSrc =  hImage->p8BPPData + uiSrcStart;
+	pSrc = static_cast<UINT8*>(hImage->pImageData) + uiSrcStart;
 	DebugMsg( TOPIC_HIMAGE, DBG_LEVEL_3, String( "Start Copying at %p", pDest ) );
 
 	// For every entry, look up into 16BPP palette
@@ -365,7 +365,7 @@ void GetETRLEImageData(SGPImage const* const img, ETRLEData* const buf)
 	memcpy(etrle_objs, img->pETRLEObject, sizeof(*etrle_objs) * img->usNumberOfObjects);
 
 	SGP::Buffer<UINT8> pix_data(img->uiSizePixData);
-	memcpy(pix_data, img->pPixData8, sizeof(*pix_data) * img->uiSizePixData);
+	memcpy(pix_data, img->pImageData, sizeof(*pix_data) * img->uiSizePixData);
 
 	buf->pPixData          = pix_data.Release();
 	buf->uiSizePixData     = img->uiSizePixData;

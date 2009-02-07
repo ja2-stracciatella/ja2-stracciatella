@@ -90,7 +90,7 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 				FileRead(f, &img_data[uiWidth * --y], uiWidth * 2);;
 			}
 
-			img->p16BPPData = img_data.Release();
+			img->pImageData = img_data.Release();
 		}
 		else if (uiImagePixelSize == 24)
 		{
@@ -109,7 +109,7 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 				}
 			}
 
-			img->p8BPPData = img_data.Release();
+			img->pImageData = img_data.Release();
 		}
 		else
 		{

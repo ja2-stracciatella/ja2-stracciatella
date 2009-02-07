@@ -77,7 +77,7 @@ SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
 	{
 		SGP::Buffer<UINT8> img_data(img->usWidth * img->usHeight);
 		BlitPcxToBuffer(pcx_obj, img_data, img->usWidth, img->usHeight, 0, 0, FALSE);
-		img->p8BPPData = img_data.Release();
+		img->pImageData = img_data.Release();
 	}
 
 	if (contents & IMAGE_PALETTE)
