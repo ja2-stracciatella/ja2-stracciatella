@@ -10,8 +10,8 @@
 #include "STCI.h"
 
 
-static void STCILoadRGB(    SGPImage*, UINT16 contents, HWFILE, STCIHeader const*);
-static void STCILoadIndexed(SGPImage*, UINT16 contents, HWFILE, STCIHeader const*);
+static SGPImage* STCILoadIndexed(UINT16 contents, HWFILE, STCIHeader const*);
+static SGPImage* STCILoadRGB(    UINT16 contents, HWFILE, STCIHeader const*);
 
 
 SGPImage* LoadSTCIFileToImage(char const* const filename, UINT16 const fContents)
@@ -30,36 +30,28 @@ SGPImage* LoadSTCIFileToImage(char const* const filename, UINT16 const fContents
 		throw std::runtime_error("Cannot handle zlib compressed STCI files");
 	}
 
-	SGP::PODObj<SGPImage> image;
 	// Determine from the header the data stored in the file. and run the appropriate loader
-	if (header.fFlags & STCI_RGB)
-	{
-		STCILoadRGB(image, fContents, f, &header);
-	}
-	else if (header.fFlags & STCI_INDEXED)
-	{
-		STCILoadIndexed(image, fContents, f, &header);
-	}
-	else
-	{
-		// Unsupported type of data, or the right flags weren't set!
+	SGPImage* const image =
+		header.fFlags & STCI_RGB     ? STCILoadRGB(    fContents, f, &header) :
+		header.fFlags & STCI_INDEXED ? STCILoadIndexed(fContents, f, &header) :
+		/* Unsupported type of data, or the right flags weren't set! */
 		throw std::runtime_error("Unknown data organization in STCI file.");
-	}
 
 	image->usWidth    = header.usWidth;
 	image->usHeight   = header.usHeight;
 	image->ubBitDepth = header.ubDepth;
-	return image.Release();
+	return image;
 }
 
 
-static void STCILoadRGB(SGPImage* const img, UINT16 const contents, HWFILE const f, STCIHeader const* const header)
+static SGPImage* STCILoadRGB(UINT16 const contents, HWFILE const f, STCIHeader const* const header)
 {
 	if (contents & IMAGE_PALETTE && (contents & IMAGE_ALLIMAGEDATA) != IMAGE_ALLIMAGEDATA)
 	{ // RGB doesn't have a palette!
 		throw std::logic_error("Invalid combination of content load flags");
 	}
 
+	SGP::PODObj<SGPImage> img;
 	if (contents & IMAGE_BITMAPDATA)
 	{
 		// Allocate memory for the image data and read it in
@@ -107,11 +99,13 @@ static void STCILoadRGB(SGPImage* const img, UINT16 const contents, HWFILE const
 			}
 		}
 	}
+	return img.Release();
 }
 
 
-static void STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFILE const f, STCIHeader const* const header)
+static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHeader const* const header)
 {
+	SGP::PODObj<SGPImage>        img;
 	SGP::Buffer<SGPPaletteEntry> palette;
 	if (contents & IMAGE_PALETTE)
 	{ // Allocate memory for reading in the palette
@@ -189,4 +183,5 @@ static void STCILoadIndexed(SGPImage* const img, UINT16 const contents, HWFILE c
 	img->pImageData   = image_data.Release();
 	img->pETRLEObject = etrle_objects.Release();
 	img->pPalette     = palette.Release();
+	return img.Release();
 }
