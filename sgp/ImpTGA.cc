@@ -11,10 +11,10 @@
 #include "Debug.h"
 
 
-static void ReadUncompColMapImage(HIMAGE, HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
-static void ReadUncompRGBImage(   HIMAGE, HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
-static void ReadRLEColMapImage(   HIMAGE, HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
-static void ReadRLERGBImage(      HIMAGE, HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
+static SGPImage* ReadRLEColMapImage(   HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
+static SGPImage* ReadRLERGBImage(      HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
+static SGPImage* ReadUncompColMapImage(HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
+static SGPImage* ReadUncompRGBImage(   HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
 
 
 SGPImage* LoadTGAFileToImage(char const* const filename, UINT16 const fContents)
@@ -27,26 +27,24 @@ SGPImage* LoadTGAFileToImage(char const* const filename, UINT16 const fContents)
 	FileRead(hFile, &uiColMap, sizeof(UINT8));
 	FileRead(hFile, &uiType,   sizeof(UINT8));
 
-	SGP::PODObj<SGPImage> hImage;
 	switch (uiType)
 	{
-		case  1: ReadUncompColMapImage(hImage, hFile, uiImgID, uiColMap, fContents); break;
-		case  2: ReadUncompRGBImage(   hImage, hFile, uiImgID, uiColMap, fContents); break;
-		case  9: ReadRLEColMapImage(   hImage, hFile, uiImgID, uiColMap, fContents); break;
-		case 10: ReadRLERGBImage(      hImage, hFile, uiImgID, uiColMap, fContents); break;
+		case  1: return ReadUncompColMapImage(hFile, uiImgID, uiColMap, fContents);
+		case  2: return ReadUncompRGBImage(   hFile, uiImgID, uiColMap, fContents);
+		case  9: return ReadRLEColMapImage(   hFile, uiImgID, uiColMap, fContents);
+		case 10: return ReadRLERGBImage(      hFile, uiImgID, uiColMap, fContents);
 		default: throw std::runtime_error("Unsupported TGA format");
 	}
-	return hImage.Release();
 }
 
 
-static void ReadUncompColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
+static SGPImage* ReadUncompColMapImage(HWFILE const hFile, UINT8 const uiImgID, UINT8 const uiColMap, UINT16 const fContents)
 {
 	throw std::runtime_error("TGA format 1 loading is unimplemented");
 }
 
 
-static void ReadUncompRGBImage(SGPImage* const img, HWFILE const f, UINT8 const uiImgID, UINT8 const uiColMap, UINT16 const contents)
+static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 const uiColMap, UINT16 const contents)
 {
 	UINT16	uiColMapLength;
 	UINT16	uiWidth;
@@ -75,6 +73,7 @@ static void ReadUncompRGBImage(SGPImage* const img, HWFILE const f, UINT8 const 
 		FileSeek(f, uiColMapLength * (uiImagePixelSize / 8), FILE_SEEK_FROM_CURRENT);
 	}
 
+	SGP::PODObj<SGPImage> img;
 	img->usWidth    = uiWidth;
 	img->usHeight   = uiHeight;
 	img->ubBitDepth = uiImagePixelSize;
@@ -118,16 +117,18 @@ static void ReadUncompRGBImage(SGPImage* const img, HWFILE const f, UINT8 const 
 		}
 		img->fFlags |= IMAGE_BITMAPDATA;
 	}
+
+	return img.Release();
 }
 
 
-static void ReadRLEColMapImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
+static SGPImage* ReadRLEColMapImage(HWFILE const hFile, UINT8 const uiImgID, UINT8 const uiColMap, UINT16 const fContents)
 {
 	throw std::runtime_error("TGA format 9 loading is unimplemented");
 }
 
 
-static void ReadRLERGBImage(HIMAGE hImage, HWFILE hFile, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents)
+static SGPImage* ReadRLERGBImage(HWFILE const hFile, UINT8 const uiImgID, UINT8 const uiColMap, UINT16 const fContents)
 {
 	throw std::runtime_error("TGA format 10 loading is unimplemented");
 }
