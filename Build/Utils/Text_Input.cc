@@ -599,7 +599,7 @@ void SetCursorColor( UINT16 usCursorColor )
 }
 
 
-static void AddChar(UINT32 uiKey);
+static void AddChar(wchar_t);
 static void DeleteHilitedText(void);
 static void HandleExclusiveInput(wchar_t Char);
 static void RemoveChar(UINT8 ubArrayIndex);
@@ -871,36 +871,28 @@ static void HandleExclusiveInput(wchar_t Char)
 }
 
 
-static void AddChar(UINT32 uiKey)
+static void AddChar(wchar_t const c)
 {
 	PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
-	if( gpActive->ubStrLen >= gpActive->ubMaxChars )
+	TEXTINPUTNODE& n   = *gpActive;
+	wchar_t* const str = n.szString;
+	UINT8&         len = n.ubStrLen;
+	if (len >= n.ubMaxChars)
 	{	//max length reached.  Just replace the last character with new one.
-		gpActive->ubStrLen = gpActive->ubMaxChars;
-		gpActive->szString[ gpActive->ubStrLen-1 ] = (UINT16)uiKey;
-		gpActive->szString[ gpActive->ubStrLen ] = '\0';
-		return;
-	}
-	else if( gubCursorPos == gpActive->ubStrLen )
-	{ //add character to end
-		gpActive->szString[ gpActive->ubStrLen ] = (UINT16)uiKey;
-		gpActive->szString[ gpActive->ubStrLen + 1 ] = '\0';
-		gpActive->ubStrLen++;
-		gubCursorPos = gpActive->ubStrLen;
+		len = n.ubMaxChars;
+		str[len - 1] = c;
+		str[len]     = L'\0';
 	}
 	else
-	{ //insert character after cursor
-		INT16 sChar = gpActive->ubStrLen;
-		while( sChar >= gubCursorPos )
+	{ // Insert character after cursor
+		for (size_t i = len + 1; i > gubCursorPos; --i)
 		{
-			gpActive->szString[ sChar + 1 ] = gpActive->szString[ sChar ];
-			sChar--;
+			str[i] = str[i - 1];
 		}
-		gpActive->szString[ gubCursorPos ] = (UINT16)uiKey;
-		gpActive->ubStrLen++;
-		gubCursorPos++;
+		++len;
+		str[gubCursorPos] = c;
+		gubStartHilite = ++gubCursorPos;
 	}
-	gubStartHilite = gubCursorPos;
 }
 
 
