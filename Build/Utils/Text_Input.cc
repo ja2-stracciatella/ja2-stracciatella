@@ -759,12 +759,6 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 					AddChar( key );
 					return TRUE;
 				}
-				//Handle allowing minus key only at the beginning of a field.
-				if( key == '-' && type & INPUTTYPE_FIRSTPOSMINUS && !gubCursorPos )
-				{
-					AddChar( key );
-					return TRUE;
-				}
 				//Handle numerics
 				if( key >= '0' && key <= '9' && type & INPUTTYPE_NUMERICSTRICT )
 				{
