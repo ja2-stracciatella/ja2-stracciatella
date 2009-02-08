@@ -79,12 +79,9 @@ void LoadRadarScreenBitmap(const char* const filename)
 {
 	ClearOutRadarMapImage();
 
-	// get the length of the filename without the extension
-	const size_t base_len = strcspn(filename, ".");
-
 	// Grab the Map image
 	SGPFILENAME image_filename;
-	sprintf(image_filename, "RADARMAPS/%.*s.STI", (int)base_len, filename);
+	ReplacePath(image_filename, lengthof(image_filename), "RADARMAPS/", filename, ".STI");
 	SGPVObject* const radar = AddVideoObjectFromFile(image_filename);
 	gusRadarImage = radar;
 

@@ -18,12 +18,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 
 	// strip .wav and change to .gap
 	char sFileName[256];
-	strcpy(sFileName, zSoundFile);
-	char* const dot = strchr(sFileName, '.');
-	dot[1] = 'g';
-	dot[2] = 'a';
-	dot[3] = 'p';
-	dot[4] = '\0';
+	ReplacePath(sFileName, lengthof(sFileName), 0, zSoundFile, ".gap");
 
 	try
 	{

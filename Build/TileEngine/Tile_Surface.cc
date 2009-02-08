@@ -31,18 +31,8 @@ try
 	// Load structure data, if any.
 	// Start by hacking the image filename into that for the structure data
 	SGPFILENAME cStructureFilename;
-	strcpy( cStructureFilename, cFilename );
-	char* cEndOfName = strchr( cStructureFilename, '.' );
-	if (cEndOfName != NULL)
-	{
-		cEndOfName++;
-		*cEndOfName = '\0';
-	}
-	else
-	{
-		strcat( cStructureFilename, "." );
-	}
-	strcat( cStructureFilename, STRUCTURE_FILE_EXTENSION );
+	ReplacePath(cStructureFilename, lengthof(cStructureFilename), 0, cFilename, "." STRUCTURE_FILE_EXTENSION);
+
 	AutoStructureFileRef pStructureFileRef;
 	if (FileExists( cStructureFilename ))
 	{
