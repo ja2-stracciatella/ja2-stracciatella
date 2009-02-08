@@ -1048,71 +1048,57 @@ static void RenderBackgroundField(TEXTINPUTNODE const* const n)
  * cursor. */
 static void RenderActiveTextField(void)
 {
-	if( !gpActive || !gpActive->szString )
-		return;
+	TEXTINPUTNODE const* const n = gpActive;
+	if (!n || !n->szString) return;
 
 	SaveFontSettings();
-	SetFont( pColors->usFont );
-	UINT16 usOffset = (gpActive->region.RegionBottomRightY - gpActive->region.RegionTopLeftY - GetFontHeight(pColors->usFont)) / 2;
-	RenderBackgroundField( gpActive );
-	if (gubStartHilite != gubCursorPos)
-	{ //Some or all of the text is hilighted, so we will use a different method.
-		UINT16 i;
-		UINT16 usStart, usEnd;
-		//sort the hilite order.
-		if (gubStartHilite < gubCursorPos)
+	RenderBackgroundField(n);
+
+	TextInputColors const& clrs  = *pColors;
+	Font            const  font  = clrs.usFont;
+	UINT16          const  h     = GetFontHeight(font);
+	INT32           const  y     = n->region.RegionTopLeftY + (n->region.RegionBottomRightY - n->region.RegionTopLeftY - h) / 2;
+	wchar_t const*  const  str   = n->szString;
+	wchar_t const*         start = str + gubStartHilite;
+	wchar_t const*         end   = str + gubCursorPos;
+	if (start != end)
+	{ // Some or all of the text is hilighted, so we will use a different method.
+		// Sort the hilite order.
+		if (start > end) Swap(start, end);
+		// Traverse the string one character at a time, and draw the highlited part differently.
+		UINT32 x = n->region.RegionTopLeftX + 3;
+		for (wchar_t const* i = str; *i != L'\0'; ++i)
 		{
-			usStart = gubStartHilite;
-			usEnd = gubCursorPos;
-		}
-		else
-		{
-			usStart = gubCursorPos;
-			usEnd = gubStartHilite;
-		}
-		//Traverse the string one character at a time, and draw the highlited part differently.
-		UINT32 x = gpActive->region.RegionTopLeftX + 3;
-		UINT32 y = gpActive->region.RegionTopLeftY + usOffset;
-		for( i = 0; i < gpActive->ubStrLen; i++ )
-		{
-			if( i >= usStart && i < usEnd )
-			{ //in highlighted part of text
-				SetFontForeground( pColors->ubHiForeColor );
-				SetFontShadow( pColors->ubHiShadowColor );
-				SetFontBackground( pColors->ubHiBackColor );
+			if (start <= i && i < end)
+			{ // In highlighted part of text
+				SetFontAttributes(font, clrs.ubHiForeColor, clrs.ubHiShadowColor, clrs.ubHiBackColor);
 			}
 			else
-			{ //in regular part of text
-				SetFontForeground( pColors->ubForeColor );
-				SetFontShadow( pColors->ubShadowColor );
-				SetFontBackground( 0 );
+			{ // In regular part of text
+				SetFontAttributes(font, clrs.ubForeColor, clrs.ubShadowColor, 0);
 			}
-			x += MPrintChar(x, y, gpActive->szString[i]);
+			x += MPrintChar(x, y, *i);
 		}
 	}
 	else
 	{
-		SetFontForeground( pColors->ubForeColor );
-		SetFontShadow( pColors->ubShadowColor );
-		SetFontBackground( 0 );
-		MPrint(gpActive->region.RegionTopLeftX + 3, gpActive->region.RegionTopLeftY + usOffset, gpActive->szString);
+		SetFontAttributes(font, clrs.ubForeColor, clrs.ubShadowColor, 0);
+		MPrint(n->region.RegionTopLeftX + 3, y, str);
 	}
-	//Draw the cursor in the correct position.
-	if (gfEditingText && gpActive->szString && GetJA2Clock() % 1000 < 500)
-	{	//draw the blinking ibeam cursor during the on blink period.
-		UINT32         dx   = 2;
-		Font const     font = pColors->usFont;
-		const wchar_t* str  = gpActive->szString;
+
+	// Draw the blinking ibeam cursor during the on blink period.
+	if (gfEditingText && str && GetJA2Clock() % 1000 < 500)
+	{
+		INT32          x = n->region.RegionTopLeftX + 2;
+		wchar_t const* c = str;
 		for (size_t i = gubCursorPos; i != 0; --i)
 		{
-			Assert(*str != L'\0');
-			dx += GetCharWidth(font, *str++);
+			Assert(*c != L'\0');
+			x += GetCharWidth(font, *c++);
 		}
-
-		const INT32 x = gpActive->region.RegionTopLeftX + dx;
-		const INT32 y = gpActive->region.RegionTopLeftY + usOffset;
-		ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + 1, y + GetFontHeight(pColors->usFont), pColors->usCursorColor);
+		ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + 1, y + h, clrs.usCursorColor);
 	}
+
 	RestoreFontSettings();
 }
 
