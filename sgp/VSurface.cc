@@ -231,7 +231,7 @@ SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
 		BOOLEAN const Ret   = CopyImageToBuffer(img, buffer_bpp, dst, pitch, vs->Height(), 0, 0, &box);
 		if (!Ret)
 		{
-			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Error Occured Copying HIMAGE to video surface");
+			DebugMsg(TOPIC_VIDEOSURFACE, DBG_LEVEL_2, "Error Occured Copying SGPImage to video surface");
 		}
 	}
 

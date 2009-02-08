@@ -79,7 +79,7 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 		if (uiImagePixelSize == 16)
 		{
 			UINT16* const img_data = (UINT16*)(UINT8*)img->pImageData.Allocate(uiWidth * uiHeight * 2);
-			// Data is stored top-bottom - reverse for SGP HIMAGE format
+			// Data is stored top-bottom - reverse for SGPImage format
 			for (size_t y = uiHeight; y != 0;)
 			{
 				FileRead(f, &img_data[uiWidth * --y], uiWidth * 2);;

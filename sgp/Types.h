@@ -125,8 +125,7 @@ typedef struct AuxObjectData   AuxObjectData;
 typedef struct ETRLEObject     ETRLEObject;
 typedef struct RelTileLoc      RelTileLoc;
 
-typedef struct SGPImage    SGPImage;
-typedef SGPImage*          HIMAGE;
+struct SGPImage;
 
 #ifdef __cplusplus
 class SGPVObject;

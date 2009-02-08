@@ -82,7 +82,7 @@ static void LoadCursorData(UINT32 uiCursorIndex)
 		if (CFData->hVObject == NULL)
 		{
 			// The file containing the video object hasn't been loaded yet. Let's load it now
-			// FIRST LOAD AS AN HIMAGE SO WE CAN GET AUX DATA!
+			// First load as an SGPImage so we can get aux data!
 			Assert(CFData->Filename != NULL);
 
 			AutoSGPImage hImage(CreateImage(CFData->Filename, IMAGE_ALLDATA));

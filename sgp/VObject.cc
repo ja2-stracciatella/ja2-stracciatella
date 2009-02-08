@@ -258,9 +258,9 @@ void ShutdownVideoObjectManager(void)
 #ifdef SGP_VIDEO_DEBUGGING
 static
 #endif
-SGPVObject* AddStandardVideoObjectFromHImage(HIMAGE hImage)
+SGPVObject* AddStandardVideoObjectFromHImage(SGPImage* const img)
 {
-	return new SGPVObject(hImage);
+	return new SGPVObject(img);
 }
 
 
@@ -420,9 +420,9 @@ static void RecordVObject(SGPVObject* const vo, const char* Filename, UINT32 uiL
 }
 
 
-SGPVObject* AddAndRecordVObjectFromHImage(HIMAGE hImage, UINT32 uiLineNum, const char* pSourceFile)
+SGPVObject* AddAndRecordVObjectFromHImage(SGPImage* const img, UINT32 uiLineNum, const char* pSourceFile)
 {
-	SGPVObject* const vo = AddStandardVideoObjectFromHImage(hImage);
+	SGPVObject* const vo = AddStandardVideoObjectFromHImage(img);
 	RecordVObject(vo, "<IMAGE>", uiLineNum, pSourceFile);
 	return vo;
 }
