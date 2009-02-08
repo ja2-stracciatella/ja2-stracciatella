@@ -877,22 +877,14 @@ static void AddChar(wchar_t const c)
 	TEXTINPUTNODE& n   = *gpActive;
 	wchar_t* const str = n.szString;
 	UINT8&         len = n.ubStrLen;
-	if (len >= n.ubMaxChars)
-	{	//max length reached.  Just replace the last character with new one.
-		len = n.ubMaxChars;
-		str[len - 1] = c;
-		str[len]     = L'\0';
+	if (len >= n.ubMaxChars) return;
+	// Insert character after cursor
+	for (size_t i = ++len; i > gubCursorPos; --i)
+	{
+		str[i] = str[i - 1];
 	}
-	else
-	{ // Insert character after cursor
-		for (size_t i = len + 1; i > gubCursorPos; --i)
-		{
-			str[i] = str[i - 1];
-		}
-		++len;
-		str[gubCursorPos] = c;
-		gubStartHilite = ++gubCursorPos;
-	}
+	str[gubCursorPos] = c;
+	gubStartHilite = ++gubCursorPos;
 }
 
 
