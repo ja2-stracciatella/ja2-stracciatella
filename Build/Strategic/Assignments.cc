@@ -1868,84 +1868,52 @@ static void DoActualRepair(SOLDIERTYPE* pSoldier, UINT16 usItem, INT8* pbStatus,
 }
 
 
-static BOOLEAN RepairObject(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOwner, OBJECTTYPE* pObj, UINT8* pubRepairPtsLeft)
+static bool DoRepair(SOLDIERTYPE* const repairer, SOLDIERTYPE const* const owner, UINT16 const item, INT8& status, UINT8* const repair_pts_left)
 {
-	UINT8	ubLoop, ubItemsInPocket;
-	BOOLEAN fSomethingWasRepaired = FALSE;
-
-
-	ubItemsInPocket = pObj->ubNumberOfObjects;
-
-	for ( ubLoop = 0; ubLoop < ubItemsInPocket; ubLoop++ )
-	{
-		// if it's repairable and NEEDS repairing
-		if ( IsItemRepairable( pObj->usItem, pObj->bStatus[ubLoop] ) )
+	// if it's repairable and NEEDS repairing
+	if (!IsItemRepairable(item, status)) return false;
+	DoActualRepair(repairer, item, &status, repair_pts_left);
+	if (status == 100)
+	{ // report it as fixed
+		if (repairer == owner)
 		{
-			// repairable, try to repair it
-
-			DoActualRepair( pSoldier, pObj->usItem, &(pObj->bStatus[ ubLoop ]), pubRepairPtsLeft );
-
-			fSomethingWasRepaired = TRUE;
-
-			if ( pObj->bStatus[ ubLoop ] == 100 )
-			{
-				// report it as fixed
-				if ( pSoldier == pOwner )
-				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[ STR_REPAIRED ], pSoldier->name, ItemNames[ pObj->usItem ] );
-				}
-				else
-				{
-					// NOTE: may need to be changed for localized versions
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 35 ], pSoldier->name, pOwner->name, ItemNames[ pObj->usItem ] );
-				}
-			}
-
-			if ( *pubRepairPtsLeft == 0 )
-			{
-				// we're out of points!
-				break;
-			}
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_REPAIRED], repairer->name, ItemNames[item]);
 		}
+		else
+		{ // NOTE: may need to be changed for localized versions
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[35], repairer->name, owner->name, ItemNames[item]);
+		}
+	}
+	return true;
+}
+
+
+static bool RepairObject(SOLDIERTYPE* const repairer, SOLDIERTYPE const* const owner, OBJECTTYPE* const pObj, UINT8* const repair_pts_left)
+{
+	bool something_was_repaired = false;
+
+	UINT8 const n_items = pObj->ubNumberOfObjects;
+	for (UINT8 i = 0; i != n_items; ++i)
+	{
+		UINT16 const item   = pObj->usItem;
+		INT8&        status = pObj->bStatus[i];
+		if (!DoRepair(repairer, owner, item, status, repair_pts_left)) continue;
+		something_was_repaired = true;
+		if (*repair_pts_left == 0) break; // we're out of points!
 	}
 
 	// now check for attachments
-	for ( ubLoop = 0; ubLoop < MAX_ATTACHMENTS; ubLoop++ )
+	for (UINT8 i = 0; i != MAX_ATTACHMENTS; ++i)
 	{
-		if ( pObj->usAttachItem[ ubLoop ] != NOTHING )
-		{
-			if ( IsItemRepairable( pObj->usAttachItem[ ubLoop ], pObj->bAttachStatus[ ubLoop ] ) )
-			{
-				// repairable, try to repair it
-
-				DoActualRepair( pSoldier, pObj->usAttachItem[ ubLoop ], &(pObj->bAttachStatus[ ubLoop ]), pubRepairPtsLeft );
-
-				fSomethingWasRepaired = TRUE;
-
-				if ( pObj->bAttachStatus[ ubLoop ] == 100 )
-				{
-					// report it as fixed
-					if ( pSoldier == pOwner )
-					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[ STR_REPAIRED ], pSoldier->name, ItemNames[ pObj->usAttachItem[ ubLoop ] ] );
-					}
-					else
-					{
-						// NOTE: may need to be changed for localized versions
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[ 35 ], pSoldier->name, pOwner->name, ItemNames[ pObj->usAttachItem[ ubLoop ] ] );
-					}
-				}
-
-				if ( *pubRepairPtsLeft == 0 )
-				{
-					// we're out of points!
-					break;
-				}
-			}
-		}
+		UINT16 const item = pObj->usAttachItem[i];
+		if (item == NOTHING) continue;
+		INT8& status = pObj->bAttachStatus[i];
+		if (!DoRepair(repairer, owner, item, status, repair_pts_left)) continue;
+		something_was_repaired = true;
+		if (*repair_pts_left == 0) break; // we're out of points!
 	}
 
-	return( fSomethingWasRepaired );
+	return something_was_repaired;
 }
 
 
