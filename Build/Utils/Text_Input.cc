@@ -242,7 +242,7 @@ void AddTextInputField(INT16 const sLeft, INT16 const sTop, INT16 const sWidth, 
 	//Setup the information for the node
 	n->usInputType = usInputType;	//setup the filter type
 	// All 24hourclock inputtypes have 6 characters.  01:23 (null terminated)
-	if (usInputType == INPUTTYPE_EXCLUSIVE_24HOURCLOCK) ubMaxChars = 6;
+	if (usInputType == INPUTTYPE_24HOURCLOCK) ubMaxChars = 6;
 	// Allocate and copy the string.
 	n->ubMaxChars = ubMaxChars;
 	n->szString   = MALLOCN(wchar_t, ubMaxChars + 1);
@@ -601,7 +601,7 @@ void SetCursorColor( UINT16 usCursorColor )
 
 static void AddChar(wchar_t);
 static void DeleteHilitedText(void);
-static void HandleExclusiveInput(wchar_t Char);
+static void HandleRegularInput(wchar_t);
 static void RemoveChar(UINT8 ubArrayIndex);
 
 
@@ -747,15 +747,15 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			/* If the key has no character associated, bail out */
 			if (c == L'\0') return FALSE;
 			DeleteHilitedText();
-			HandleExclusiveInput(c);
+			HandleRegularInput(c);
 			return TRUE;
 	}
 	return TRUE;
 }
 
 
-// All exclusive input types are handled in this function.
-static void HandleExclusiveInput(wchar_t const c)
+// All input types are handled in this function.
+static void HandleRegularInput(wchar_t const c)
 {
 	TEXTINPUTNODE const& n = *gpActive;
 	switch (n.usInputType)
@@ -768,7 +768,7 @@ static void HandleExclusiveInput(wchar_t const c)
 			if (L' ' <= c && c <= L'}') AddChar(c);
 			break;
 
-		case INPUTTYPE_EXCLUSIVE_DOSFILENAME: // DOS file names
+		case INPUTTYPE_DOSFILENAME: // DOS file names
 			if ((L'A' <= c && c <= L'Z') ||
 					(L'a' <= c && c <= L'z') ||
 					/* Cannot begin a new filename with a number */
@@ -779,7 +779,7 @@ static void HandleExclusiveInput(wchar_t const c)
 			}
 			break;
 
-		case INPUTTYPE_EXCLUSIVE_COORDINATE: // coordinates such as a9, z78, etc.
+		case INPUTTYPE_COORDINATE: // coordinates such as a9, z78, etc.
 			// First char is an lower case alpha, subsequent chars are numeric
 			if (gubCursorPos == 0)
 			{
@@ -798,7 +798,7 @@ static void HandleExclusiveInput(wchar_t const c)
 			}
 			break;
 
-		case INPUTTYPE_EXCLUSIVE_24HOURCLOCK:
+		case INPUTTYPE_24HOURCLOCK:
 			switch (gubCursorPos)
 			{
 				case 0:
@@ -1363,7 +1363,7 @@ void SetTextInputCursor( UINT16 usNewCursor )
 	}
 }
 
-//Utility functions for the INPUTTYPE_EXCLUSIVE_24HOURCLOCK input type.
+//Utility functions for the INPUTTYPE_24HOURCLOCK input type.
 UINT16 GetExclusive24HourTimeValueFromField( UINT8 ubField )
 {
 	TEXTINPUTNODE const* const curr = GetTextInputField(ubField);
@@ -1371,7 +1371,7 @@ UINT16 GetExclusive24HourTimeValueFromField( UINT8 ubField )
 	if (!curr) return 0xffff;
 
 	UINT16 usTime;
-	if (curr->usInputType != INPUTTYPE_EXCLUSIVE_24HOURCLOCK)
+	if (curr->usInputType != INPUTTYPE_24HOURCLOCK)
 		return 0xffff; //illegal!
 	//First validate the hours 00-23
 	if (curr->szString[0] == '2' && curr->szString[1] >= '0' && //20-23
@@ -1394,7 +1394,7 @@ UINT16 GetExclusive24HourTimeValueFromField( UINT8 ubField )
 	return 0xffff;
 }
 
-//Utility functions for the INPUTTYPE_EXCLUSIVE_24HOURCLOCK input type.
+//Utility functions for the INPUTTYPE_24HOURCLOCK input type.
 void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 {
 	//First make sure the time is a valid time.  If not, then use 23:59

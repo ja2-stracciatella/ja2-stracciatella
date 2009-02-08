@@ -480,7 +480,7 @@ static void CreateFileDialog(const wchar_t* zTitle)
 	//Add the text input fields
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 	//field 1 (filename)
-	AddTextInputField( /*233*/183, 195, 190, 20, MSYS_PRIORITY_HIGH, gzFilename, 30, INPUTTYPE_EXCLUSIVE_DOSFILENAME );
+	AddTextInputField(/*233*/183, 195, 190, 20, MSYS_PRIORITY_HIGH, gzFilename, 30, INPUTTYPE_DOSFILENAME);
 	//field 2 -- user field that allows mouse/key interaction with the filename list
 	AddUserInputField( FileDialogModeCallback );
 }

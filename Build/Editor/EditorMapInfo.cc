@@ -72,7 +72,7 @@ void SetupTextInputForMapInfo()
 
 	//exit grid input fields
 	swprintf(str, lengthof(str), L"%c%d", gExitGrid.ubGotoSectorY + 'A' - 1, gExitGrid.ubGotoSectorX);
-	AddTextInputField( 338, 363, 30, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_EXCLUSIVE_COORDINATE );
+	AddTextInputField(338, 363, 30, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_COORDINATE);
 	swprintf(str, lengthof(str), L"%d", gExitGrid.ubGotoSectorZ);
 	AddTextInputField( 338, 383, 30, 18, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
 	swprintf(str, lengthof(str), L"%d", gExitGrid.usGridNo);

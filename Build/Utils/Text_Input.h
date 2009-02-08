@@ -21,7 +21,6 @@
 //	-max number of fields 255 (per level)
 //  -max num of chars in field 255
 
-//Exclusive handlers
 //The dosfilename inputtype is a perfect example of what is a exclusive handler.
 //In this method, the input accepts only alphas and an underscore as the first character,
 //then alphanumerics afterwards.  For further support, chances are you'll want to treat it
@@ -30,9 +29,9 @@ enum
 {
 	INPUTTYPE_NUMERICSTRICT,
 	INPUTTYPE_ASCII,
-	INPUTTYPE_EXCLUSIVE_DOSFILENAME,
-	INPUTTYPE_EXCLUSIVE_COORDINATE,
-	INPUTTYPE_EXCLUSIVE_24HOURCLOCK
+	INPUTTYPE_DOSFILENAME,
+	INPUTTYPE_COORDINATE,
+	INPUTTYPE_24HOURCLOCK
 };
 
 //Simply initiates that you wish to begin inputting text.  This should only apply to screen
@@ -94,7 +93,7 @@ void SetInputFieldStringWith8BitString(UINT8 ubField, const char* szNewText);
 //Allows external functions to access the strings within the fields at anytime.
 wchar_t const* GetStringFromField(UINT8 ubField);
 
-//Utility functions for the INPUTTYPE_EXCLUSIVE_24HOURCLOCK input type.
+//Utility functions for the INPUTTYPE_24HOURCLOCK input type.
 UINT16 GetExclusive24HourTimeValueFromField( UINT8 ubField );
 void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime );
 

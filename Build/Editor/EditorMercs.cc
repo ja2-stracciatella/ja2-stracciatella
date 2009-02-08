@@ -1262,13 +1262,13 @@ static void SetupTextInputForMercSchedule(void)
 {
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 	AddUserInputField( NULL );
-	AddTextInputField( 268, 373, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_EXCLUSIVE_24HOURCLOCK );
+	AddTextInputField(268, 373, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 1, gCurrSchedule.usTime[0] );
-	AddTextInputField( 268, 394, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_EXCLUSIVE_24HOURCLOCK );
+	AddTextInputField(268, 394, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 2, gCurrSchedule.usTime[1] );
-	AddTextInputField( 268, 415, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_EXCLUSIVE_24HOURCLOCK );
+	AddTextInputField(268, 415, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 3, gCurrSchedule.usTime[2] );
-	AddTextInputField( 268, 436, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_EXCLUSIVE_24HOURCLOCK );
+	AddTextInputField(268, 436, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 4, gCurrSchedule.usTime[3] );
 }
 
