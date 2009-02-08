@@ -285,6 +285,17 @@ UINT32 gprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
 }
 
 
+UINT32 MPrintChar(INT32 const x, INT32 const y, wchar_t const c)
+{
+	GlyphIdx const glyph = GetGlyphIndex(c);
+	Font     const font  = FontDefault;
+	{ SGPVSurface::Lock l(FontDestBuffer);
+		Blt8BPPDataTo16BPPBufferMonoShadowClip(l.Buffer<UINT16>(), l.Pitch(), font, x, y, glyph, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
+	}
+	return GetWidth(font, glyph);
+}
+
+
 void MPrintBuffer(UINT16* const pDestBuf, UINT32 const uiDestPitchBYTES, INT32 x, INT32 const y, wchar_t const* str)
 {
 	Font const font = FontDefault;

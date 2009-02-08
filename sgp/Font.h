@@ -74,10 +74,11 @@ void SetFontShadow(UINT8 ubBackground);
 
 extern UINT32		 gprintf(INT32 x, INT32 y, const wchar_t *pFontString, ...);
 
-void MPrintBuffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, wchar_t const* str);
-void MPrint(INT32 x, INT32 y, wchar_t const* str);
-void mprintf(INT32 x, INT32 y, wchar_t const* fmt, ...);
-void mprintf_buffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, wchar_t const* fmt, ...);
+UINT32 MPrintChar(INT32 x, INT32 y, wchar_t);
+void   MPrintBuffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, wchar_t const* str);
+void   MPrint(INT32 x, INT32 y, wchar_t const* str);
+void   mprintf(INT32 x, INT32 y, wchar_t const* fmt, ...);
+void   mprintf_buffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, wchar_t const* fmt, ...);
 
 /* Sets the destination buffer for printing to and the clipping rectangle. */
 void SetFontDestBuffer(SGPVSurface* dst, INT32 x1, INT32 y1, INT32 x2, INT32 y2);

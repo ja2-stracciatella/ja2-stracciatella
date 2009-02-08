@@ -1071,7 +1071,6 @@ static void RenderActiveTextField(void)
 			usEnd = gubStartHilite;
 		}
 		//Traverse the string one character at a time, and draw the highlited part differently.
-		Font const font = pColors->usFont;
 		UINT32 x = gpActive->region.RegionTopLeftX + 3;
 		UINT32 y = gpActive->region.RegionTopLeftY + usOffset;
 		for( i = 0; i < gpActive->ubStrLen; i++ )
@@ -1088,8 +1087,7 @@ static void RenderActiveTextField(void)
 				SetFontShadow( pColors->ubShadowColor );
 				SetFontBackground( 0 );
 			}
-			mprintf(x, y, L"%lc", gpActive->szString[i]);
-			x += GetCharWidth(font, gpActive->szString[i]);
+			x += MPrintChar(x, y, gpActive->szString[i]);
 		}
 	}
 	else
