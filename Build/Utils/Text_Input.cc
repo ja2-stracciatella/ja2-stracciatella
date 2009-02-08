@@ -875,16 +875,15 @@ static void AddChar(wchar_t const c)
 {
 	PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
 	TEXTINPUTNODE& n   = *gpActive;
-	wchar_t* const str = n.szString;
 	UINT8&         len = n.ubStrLen;
 	if (len >= n.ubMaxChars) return;
 	// Insert character after cursor
-	for (size_t i = ++len; i > gubCursorPos; --i)
-	{
-		str[i] = str[i - 1];
-	}
-	str[gubCursorPos] = c;
+	wchar_t*       const str = n.szString;
+	wchar_t*             i   = str + ++len;
+	wchar_t const* const end = str + gubCursorPos;
 	gubStartHilite = ++gubCursorPos;
+	for (; i != end; --i) *i = i[-1];
+	*i = c;
 }
 
 
