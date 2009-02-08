@@ -90,29 +90,27 @@ typedef CHAR8 SGPFILENAME[SGPFILENAME_LEN];
 #define NULL 0
 #endif
 
-typedef struct SGPBox
+struct SGPBox
 {
 	INT16 x;
 	INT16 y;
 	INT16 w;
 	INT16 h;
-} SGPBox;
+};
 
-typedef struct
+struct SGPRect
 {
   INT32 iLeft;
   INT32 iTop;
   INT32 iRight;
   INT32 iBottom;
+};
 
-} SGPRect;
-
-typedef struct
+struct SGPPoint
 {
 	INT32 	iX;
 	INT32   iY;
-
-} SGPPoint;
+};
 
 
 struct SDL_Color;
@@ -121,25 +119,21 @@ typedef SDL_Color SGPPaletteEntry;
 
 typedef UINT32 COLORVAL;
 
-typedef struct AuxObjectData   AuxObjectData;
-typedef struct ETRLEObject     ETRLEObject;
-typedef struct RelTileLoc      RelTileLoc;
-
+struct AuxObjectData;
+struct ETRLEObject;
+struct RelTileLoc;
 struct SGPImage;
 
-#ifdef __cplusplus
 class SGPVObject;
 typedef SGPVObject* HVOBJECT;
-
 typedef SGPVObject* Font;
 
 class SGPVSurface;
-#endif
 
-typedef struct BUTTON_PICS BUTTON_PICS;
+struct BUTTON_PICS;
 
-typedef struct SGPFile SGPFile;
-typedef SGPFile*       HWFILE;
+struct SGPFile;
+typedef SGPFile* HWFILE;
 
 
 #define TRANSPARENT ((UINT16)0)
