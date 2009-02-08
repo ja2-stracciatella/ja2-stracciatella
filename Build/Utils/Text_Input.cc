@@ -793,72 +793,83 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 
 
 // All exclusive input types are handled in this function.
-static void HandleExclusiveInput(wchar_t Char)
+static void HandleExclusiveInput(wchar_t const c)
 {
-	switch( gpActive->usInputType )
+	TEXTINPUTNODE const& n = *gpActive;
+	switch (n.usInputType)
 	{
-		case INPUTTYPE_EXCLUSIVE_DOSFILENAME: //dos file names
-			if (Char >= 'A' && Char <= 'Z' ||
-					Char >= 'a' && Char <= 'z' ||
-					Char >= '0' && Char <= '9' ||
-					Char == '_' || Char == '.' )
+		case INPUTTYPE_EXCLUSIVE_DOSFILENAME: // DOS file names
+			if ((L'A' <= c && c <= L'Z') ||
+					(L'a' <= c && c <= L'z') ||
+					/* Cannot begin a new filename with a number */
+					(L'0' <= c && c <= L'9' && gubCursorPos != 0) ||
+					c == L'_' || c == L'.')
 			{
-				if (!gubCursorPos && Char >= '0' && Char <= '9')
-				{	//can't begin a new filename with a number
-					return;
+				AddChar(c);
+			}
+			break;
+
+		case INPUTTYPE_EXCLUSIVE_COORDINATE: // coordinates such as a9, z78, etc.
+			// First char is an lower case alpha, subsequent chars are numeric
+			if (gubCursorPos == 0)
+			{
+				if (L'a' <= c && c <= L'z')
+				{
+					AddChar(c);
 				}
-				AddChar(Char);
+				else if (L'A' <= c && c <= L'Z')
+				{
+					AddChar(c + 32); // Convert to lowercase
+				}
+			}
+			else
+			{
+				if (L'0' <= c && c <= L'9') AddChar(c);
 			}
 			break;
-		case INPUTTYPE_EXCLUSIVE_COORDINATE:  //coordinates such as a9, z78, etc.
-			if( !gubCursorPos ) //first char is an lower case alpha
-			{
-				if (Char >= 'a' && Char <= 'z')
-					AddChar(Char);
-				else if (Char >= 'A' && Char <= 'Z')
-					AddChar(Char + 32); //convert to lowercase
-			}
-			else //subsequent chars are numeric
-			{
-				if (Char >= '0' && Char <= '9') AddChar(Char);
-			}
-			break;
+
 		case INPUTTYPE_EXCLUSIVE_24HOURCLOCK:
-			if( !gubCursorPos )
+			switch (gubCursorPos)
 			{
-				if (Char >= '0' && Char <= '2') AddChar(Char);
-			}
-			else if( gubCursorPos == 1 )
-			{
-				if (Char >= '0' && Char <= '9')
-				{
-					if (gpActive->szString[0] == '2' && Char > '3') break;
-					AddChar(Char);
-				}
-				if( !gpActive->szString[ 2 ] )
-					AddChar( ':' );
-				else
-				{
-					gubCursorPos++;
-					gubStartHilite = gubCursorPos;
-				}
-			}
-			else if( gubCursorPos == 2 )
-			{
-				if (Char == ':') AddChar(Char);
-				else if (Char >= '0' && Char <= '9')
-				{
-					AddChar( ':' );
-					AddChar(Char);
-				}
-			}
-			else if( gubCursorPos == 3 )
-			{
-				if (Char >= '0' && Char <= '5') AddChar(Char);
-			}
-			else if( gubCursorPos == 4 )
-			{
-				if (Char >= '0' && Char <= '9') AddChar(Char);
+				case 0:
+					if (L'0' <= c && c <= L'2') AddChar(c);
+					break;
+
+				case 1:
+					if (L'0' <= c && c <= L'9')
+					{
+						if (n.szString[0] == L'2' && c > L'3') break;
+						AddChar(c);
+					}
+					if (n.szString[2] == L'\0')
+					{
+						AddChar(L':');
+					}
+					else
+					{
+						gubStartHilite = ++gubCursorPos;
+					}
+					break;
+
+				case 2:
+					if (c == L':')
+					{
+						AddChar(c);
+					}
+					else if (L'0' <= c && c <= L'9')
+					{
+						AddChar(L':');
+						AddChar(c);
+					}
+					break;
+
+				case 3:
+					if (L'0' <= c && c <= L'5') AddChar(c);
+					break;
+
+				case 4:
+					if (L'0' <= c && c <= L'9') AddChar(c);
+					break;
 			}
 			break;
 	}
