@@ -79,15 +79,14 @@ static const UINT16 gusMeanWhileGridNo[] =
 };
 
 
-typedef struct
+struct NPC_SAVE_INFO
 {
 	UINT8		ubProfile;
 	INT16		sX;
 	INT16		sY;
 	INT16		sZ;
 	INT16		sGridNo;
-
-} NPC_SAVE_INFO;
+};
 
 
 // BEGIN SERALIZATION

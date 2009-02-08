@@ -9,7 +9,6 @@
 #define MAX_COLOURS 255
 
 
-typedef struct NODE NODE;
 struct NODE
 {
 	BOOLEAN bIsLeaf;     // TRUE if node has no children

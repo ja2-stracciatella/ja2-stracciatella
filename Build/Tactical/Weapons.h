@@ -174,7 +174,7 @@ enum
 #define AIM_PENALTY_BLIND						80
 #define AIM_PENALTY_FIRING_UP				25
 
-typedef struct
+struct WEAPONTYPE
 {
  UINT8	ubWeaponClass;             // handgun/shotgun/rifle/knife
  UINT8	ubWeaponType;							 // exact type (for display purposes)
@@ -195,24 +195,23 @@ typedef struct
  UINT16	sBurstSound;
  UINT16	sReloadSound;
  UINT16	sLocknLoadSound;
+};
 
-} WEAPONTYPE;
-
-typedef struct
+struct MAGTYPE
 {
 	UINT8	ubCalibre;
 	UINT8 ubMagSize;
 	UINT8	ubAmmoType;
-} MAGTYPE;
+};
 
-typedef struct
+struct ARMOURTYPE
 {
 	UINT8	ubArmourClass;
 	UINT8	ubProtection;
 	UINT8	ubDegradePercent;
-} ARMOURTYPE;
+};
 
-typedef struct
+struct EXPLOSIVETYPE
 {
 	UINT8		ubType;					// type of explosive
 	UINT8		ubDamage;				// damage value
@@ -221,8 +220,7 @@ typedef struct
 	UINT8		ubVolume;				// sound radius of explosion
 	UINT8		ubVolatility;		// maximum chance of accidental explosion
 	UINT8		ubAnimationID;	// Animation enum to use
-
-} EXPLOSIVETYPE;
+};
 
 //GLOBALS
 

@@ -13,7 +13,7 @@
 #define WORLD_ITEM_REACHABLE												0x0200
 #define WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT		0x0400
 
-typedef struct
+struct WORLDITEM
 {
 	BOOLEAN				fExists;
 	INT16					sGridNo;
@@ -30,7 +30,7 @@ typedef struct
 	//Because this value is zero in the saved maps, we can't change it to 100, hence the reversal method.
 	//This check is only performed the first time a map is loaded.  Later, it is entirely skipped.
 	UINT8					ubNonExistChance;
-} WORLDITEM;
+};
 CASSERT(sizeof(WORLDITEM) == 52)
 
 
@@ -66,11 +66,11 @@ void SaveWorldItemsToMap( HWFILE fp );
 
 void TrashWorldItems(void);
 
-typedef struct
+struct WORLDBOMB
 {
 	BOOLEAN				fExists;
 	INT32					iItemIndex;
-} WORLDBOMB;
+};
 
 extern WORLDBOMB * gWorldBombs;
 extern UINT32 guiNumWorldBombs;

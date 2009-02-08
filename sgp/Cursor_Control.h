@@ -33,24 +33,24 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex);
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-typedef struct CursorFileData
+struct CursorFileData
 {
 	const char* Filename;         // If NULL then an extern video object is used
 	HVOBJECT    hVObject;
 	UINT8       ubFlags;
 	UINT8       ubNumberOfFrames; // If != 0 then the cursor is animated
-} CursorFileData;
+};
 
-typedef struct CursorImage
+struct CursorImage
 {
 	UINT32 uiFileIndex;
 	UINT16 uiSubIndex;
 	UINT32 uiCurrentFrame;
 	INT16  usPosX;
 	INT16  usPosY;
-} CursorImage;
+};
 
-typedef struct CursorData
+struct CursorData
 {
 	CursorImage	Composites[MAX_COMPOSITES];
 	UINT16			usNumComposites;
@@ -60,7 +60,7 @@ typedef struct CursorData
 	UINT16			usWidth;
 	UINT8				bFlags;
 	UINT8				bFlashIndex;
-} CursorData;
+};
 
 extern INT16 gsGlobalCursorYOffset;
 

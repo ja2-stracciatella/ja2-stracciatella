@@ -6,13 +6,13 @@
 #include "MapScreen.h"
 
 
-typedef struct StrategicMapElement
+struct StrategicMapElement
 {
 	INT8  bNameId;
 	BOOLEAN fEnemyControlled;   // enemy controlled or not
 	BOOLEAN fEnemyAirControlled;
 	INT8 bSAMCondition; // SAM Condition .. 0 - 100, just like an item's status
-} StrategicMapElement;
+};
 
 enum
 {

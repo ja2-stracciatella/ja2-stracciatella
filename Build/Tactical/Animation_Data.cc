@@ -462,11 +462,11 @@ AnimationSurfaceType gAnimSurfaceDatabase[NUMANIMATIONSURFACETYPES] =
 #undef M
 
 
-typedef struct
+struct AnimationStructureType
 {
 	const char* const   Filename;
 	STRUCTURE_FILE_REF* pStructureFileRef;
-} AnimationStructureType;
+};
 
 
 #define PATH_STRUCT "ANIMS/STRUCTDATA/"

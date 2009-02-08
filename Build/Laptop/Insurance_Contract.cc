@@ -132,11 +132,11 @@ GUIButtonRef guiInsContractNextBackButton;
 static BUTTON_PICS* guiInsuranceAcceptClearFormButtonImage;
 
 
-typedef struct InsuranceInfo
+struct InsuranceInfo
 {
 	GUIButtonRef button;
 	SOLDIERTYPE* soldier;
-} InsuranceInfo;
+};
 
 
 static InsuranceInfo insurance_info[3];

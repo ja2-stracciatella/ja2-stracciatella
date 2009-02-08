@@ -42,11 +42,11 @@ extern ITEM_POOL		*gpEditingItemPool;
 
 INT32 giDefaultExistChance = 100;
 
-typedef struct IPListNode
+struct IPListNode
 {
 	INT16 sGridNo;
-	struct IPListNode *next;
-}IPListNode;
+	IPListNode* next;
+};
 
 static IPListNode* pIPHead = NULL;
 

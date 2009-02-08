@@ -28,7 +28,7 @@ enum
 #define	ARMS_INV_PLAYERS_ITEM_HAS_BEEN_EVALUATED	0x00000080			// The Players item has been evaluated
 
 
-typedef struct
+struct INVENTORY_IN_SLOT
 {
 	BOOLEAN			fActive;
 	INT16				sItemIndex;
@@ -42,8 +42,7 @@ typedef struct
 
 	INT16				sSpecialItemElement;				// refers to which special item element an item in a dealer's inventory area
 																					// occupies.  -1 Means the item is "perfect" and has no associated special item.
-
-} INVENTORY_IN_SLOT;
+};
 
 
 extern INT32	giShopKeepDialogueEventinProgress;

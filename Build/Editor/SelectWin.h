@@ -41,12 +41,12 @@ extern void ScrollSelWinDown(void);
 
 #define MAX_SELECTIONS		120
 
-typedef struct _Selections
+struct Selections
 {
 	UINT32		uiObject;
 	UINT16		usIndex;
 	INT16			sCount;
-} Selections;
+};
 
 
 INT32 GetRandomSelection( void );

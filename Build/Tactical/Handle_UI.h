@@ -34,7 +34,7 @@
 
 #define	MOVEUI_RETURN_ON_TARGET_MERC		1
 
-typedef enum
+enum	UI_MODE
 {
 	DONT_CHANGEMODE,
 	IDLE_MODE,
@@ -56,8 +56,7 @@ typedef enum
 	EXITSECTORMENU_MODE,
 	RUBBERBAND_MODE,
 	JUMPOVER_MODE,
-
-}	UI_MODE;
+};
 
 struct UI_EVENT
 {
@@ -74,7 +73,7 @@ struct UI_EVENT
 
 
 // EVENT ENUMERATION
-typedef enum
+enum UI_EVENT_DEFINES
 {
 	I_DO_NOTHING,
 	I_NEW_MERC,
@@ -148,8 +147,7 @@ typedef enum
 	JP_JUMP,
 
 	NUM_UI_EVENTS
-
-} UI_EVENT_DEFINES;
+};
 
 typedef BOOLEAN (*UIKEYBOARD_HOOK)( InputAtom *pInputEvent );
 

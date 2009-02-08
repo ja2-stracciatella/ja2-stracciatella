@@ -71,12 +71,12 @@ UINT32 guiMinimumMineProduction[]={
 };
 
 
-typedef struct HEAD_MINER_TYPE
+struct HEAD_MINER_TYPE
 {
 	UINT16 usProfileId;
 	INT8   bQuoteNum[NUM_HEAD_MINER_STRATEGIC_QUOTES];
 	UINT8  ubExternalFace;
-} HEAD_MINER_TYPE;
+};
 
 
 static const HEAD_MINER_TYPE gHeadMinerData[NUM_HEAD_MINERS] =

@@ -243,15 +243,14 @@ const OBJECTTYPE* gpHighLightedItemObject = NULL;
 static BOOLEAN gfResetShopKeepIdleQuote = FALSE;
 static BOOLEAN gfDoEvaluationAfterOpening = FALSE;
 
-typedef struct
+struct SELECTED_ARMS_DEALERS_STATS
 {
 	UINT32	uiNumDistinctInventoryItems;
 	UINT8		ubCurrentPage;
 	UINT8		ubNumberOfPages;
 
 	UINT8		ubFirstItemIndexOnPage;
-
-} SELECTED_ARMS_DEALERS_STATS;
+};
 
 
 
@@ -323,13 +322,12 @@ static UINT32	guiLastTimeDealerSaidNormalEvaluationQuote = 0;
 
 static BOOLEAN gfSkiDisplayDropItemToGroundText = FALSE;
 
-typedef struct
+struct ITEM_TO_ADD_AFTER_SKI_OPEN
 {
 	BOOLEAN			fActive;
 	OBJECTTYPE	ItemObject;
 	INT8 bPreviousInvPos;
-
-} ITEM_TO_ADD_AFTER_SKI_OPEN;
+};
 static ITEM_TO_ADD_AFTER_SKI_OPEN gItemToAdd;
 
 

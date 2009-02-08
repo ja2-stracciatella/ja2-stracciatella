@@ -1084,11 +1084,11 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-typedef struct PastMercInfo
+struct PastMercInfo
 {
 	MERCPROFILESTRUCT* profile;
 	INT8               state;
-} PastMercInfo;
+};
 
 
 static void DisplayAmountOnChar(const SOLDIERTYPE*);

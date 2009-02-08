@@ -1,7 +1,7 @@
 #ifndef SLIDER_H
 #define SLIDER_H
 
-typedef struct SLIDER SLIDER;
+struct SLIDER;
 
 //defines for the different styles of sliders
 enum

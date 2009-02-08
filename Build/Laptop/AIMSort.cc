@@ -69,7 +69,7 @@
 #define		AIM_SORT_FIRST_SORT_CLOUMN_GAP	22
 
 
-typedef struct AIMSortInfo
+struct AIMSortInfo
 {
 	UINT16         const x;
 	UINT16         const y;
@@ -77,7 +77,7 @@ typedef struct AIMSortInfo
 	const wchar_t* const text;
 	MOUSE_CALLBACK const click;
 	MOUSE_REGION         region;
-} AIMSortInfo;
+};
 
 
 static void SelectAscendBoxRegionCallBack(    MOUSE_REGION* pRegion, INT32 iReason);

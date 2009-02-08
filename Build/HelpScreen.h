@@ -18,9 +18,7 @@ enum
 };
 
 
-
-
-typedef struct
+struct HELP_SCREEN_STRUCT
 {
 	INT8		bCurrentHelpScreen;
 	UINT32	uiFlags;
@@ -57,8 +55,7 @@ typedef struct
 	INT32		iLineAtTopOfTextBuffer;
 	UINT16	usTotalNumberOfLinesInBuffer;
 	BOOLEAN	fForceHelpScreenToComeUp;
-
-} HELP_SCREEN_STRUCT;
+};
 
 extern HELP_SCREEN_STRUCT gHelpScreen;
 

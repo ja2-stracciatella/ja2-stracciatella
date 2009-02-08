@@ -8,7 +8,7 @@
 
 #define	NUM_CORPSE_SHADES		17
 
-typedef enum RottingCorpseDefines
+enum RottingCorpseDefines
 {
 	NO_CORPSE,
 	SMERC_JFK,
@@ -71,7 +71,7 @@ typedef enum RottingCorpseDefines
   EXPLODE_DEAD,
 
   NUM_CORPSES
-} RottingCorpseDefines;
+};
 
 
 #define		ROTTING_CORPSE_FIND_SWEETSPOT_FROM_GRIDNO			0x01		//Find the closest spot to the given gridno
@@ -82,7 +82,7 @@ typedef enum RottingCorpseDefines
 #define   ROTTING_CORPSE_USE_CAMO_PALETTE               0x20    //We use camo palette here....
 #define		ROTTING_CORPSE_VEHICLE												0x40		//Vehicle Corpse
 
-typedef struct
+struct ROTTING_CORPSE_DEFINITION
 {
 	UINT8												ubType;
 	UINT8												ubBodyType;
@@ -106,10 +106,10 @@ typedef struct
 	UINT8												ubProfile;
   BOOLEAN                     fHeadTaken;
   	UINT8												ubAIWarningValue;
-} ROTTING_CORPSE_DEFINITION;
+};
 
 
-typedef struct
+struct ROTTING_CORPSE
 {
 	ROTTING_CORPSE_DEFINITION		def;
 	BOOLEAN											fActivated;
@@ -117,7 +117,7 @@ typedef struct
 	ANITILE											*pAniTile;
 
 	UINT16											*pShades[ NUM_CORPSE_SHADES ];
-} ROTTING_CORPSE;
+};
 
 
 ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* pCorpseDef);

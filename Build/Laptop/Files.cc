@@ -20,7 +20,6 @@
 #include "FileMan.h"
 
 
-typedef struct FilesUnit FilesUnit;
 struct FilesUnit
 {
 	UINT8 ubCode; // the code index in the files code table
@@ -29,7 +28,6 @@ struct FilesUnit
 };
 
 
-typedef struct FileString FileString;
 struct FileString
 {
 	wchar_t* pString;
@@ -37,7 +35,6 @@ struct FileString
 };
 
 
-typedef struct FileRecordWidth FileRecordWidth;
 struct FileRecordWidth
 {
 	INT32 iRecordNumber;

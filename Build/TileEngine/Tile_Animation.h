@@ -41,7 +41,7 @@ enum AnimationLevel
 };
 
 
-typedef union AniUserData
+union AniUserData
 {
 	struct
 	{
@@ -52,12 +52,12 @@ typedef union AniUserData
 	BULLET*            bullet;
 	const REAL_OBJECT* object;
 	UINT32             sound;
-} AniUserData;
+};
 
 
-typedef struct TAG_anitile
+struct ANITILE
 {
-	struct TAG_anitile			 	  *pNext;
+	ANITILE*       pNext;
 	AnimationFlags              uiFlags;							// flags struct
 	UINT32											uiTimeLastUpdate;			// Stuff for animated tiles
 
@@ -85,7 +85,7 @@ typedef struct TAG_anitile
 
 	INT8												bFrameCountAfterStart;
 
-} ANITILE;
+};
 
 
 struct ANITILE_PARAMS
@@ -112,14 +112,14 @@ struct ANITILE_PARAMS
 };
 
 
-typedef enum KeyFrameEnums
+enum KeyFrameEnums
 {
 	ANI_KEYFRAME_NO_CODE,
 	ANI_KEYFRAME_BEGIN_TRANSLUCENCY,
 	ANI_KEYFRAME_BEGIN_DAMAGE,
 	ANI_KEYFRAME_CHAIN_WATER_EXPLOSION,
   ANI_KEYFRAME_DO_SOUND
-} KeyFrameEnums;
+};
 
 
 ANITILE* CreateAnimationTile(const ANITILE_PARAMS*);

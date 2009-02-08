@@ -62,14 +62,14 @@
 extern INT8	 gbSAMGraphicList[ NUMBER_OF_SAMS ];
 
 
-typedef struct ExplosionInfo
+struct ExplosionInfo
 {
 	const char* blast_anim;
 	UINT32      sound;
 	UINT8       blast_speed;
 	UINT8       transparent_key_frame;
 	UINT8       damage_key_frame;
-} ExplosionInfo;
+};
 
 static const ExplosionInfo explosion_info[] =
 {

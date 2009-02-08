@@ -3,16 +3,16 @@
 
 #include "Soldier_Create.h"
 
-typedef struct SOLDIERINITNODE
+struct SOLDIERINITNODE
 {
 	UINT8 ubNodeID;
 	UINT8 ubSoldierID;
 	BASIC_SOLDIERCREATE_STRUCT *pBasicPlacement;
 	SOLDIERCREATE_STRUCT *pDetailedPlacement;
 	SOLDIERTYPE *pSoldier;
-	struct SOLDIERINITNODE *prev;
-	struct SOLDIERINITNODE *next;
-}SOLDIERINITNODE;
+	SOLDIERINITNODE* prev;
+	SOLDIERINITNODE* next;
+};
 
 extern SOLDIERINITNODE *gSoldierInitHead;
 extern SOLDIERINITNODE *gSoldierInitTail;

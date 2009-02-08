@@ -22,7 +22,7 @@ static inline MERCPROFILESTRUCT* GetProfile(ProfileID id)
 #define AIM_AND_MERC_MERCS		51		// A.I.M. is 0-39, M.E.R.C.s are 40-50
 
 //enums for the mercs
-typedef enum NPCIDs
+enum NPCIDs
 {
 	BARRY   =  0,
 	BLOOD   =  1,
@@ -188,7 +188,7 @@ typedef enum NPCIDs
 	NPC167,
 	NPC168,
 	NPC169
-} NPCIDs;
+};
 
 BOOLEAN LoadMercProfiles(void);
 

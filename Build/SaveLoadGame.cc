@@ -140,7 +140,7 @@ UINT32	guiLastSaveGameNum;
 
 UINT32	guiJA2EncryptionSet = 0;
 
-typedef struct
+struct GENERAL_SAVE_INFO
 {
 	//The screen that the gaem was saved from
 	UINT32	uiCurrentScreen;
@@ -345,8 +345,7 @@ typedef struct
 	INT8	fMikeShouldSayHi;
 
 	UINT8		ubFiller[550];		//This structure should be 1024 bytes
-
-} GENERAL_SAVE_INFO;
+};
 CASSERT(sizeof(GENERAL_SAVE_INFO) == 1024)
 
 

@@ -23,7 +23,6 @@
 #define MAX_AI_PRIORITY 100
 
 
-typedef struct AILIST AILIST;
 struct AILIST
 {
 	SOLDIERTYPE* soldier;

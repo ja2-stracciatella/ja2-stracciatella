@@ -74,14 +74,14 @@ static BOOLEAN gfProgBarActive   = FALSE;
 static UINT8   gubProgNumEnemies = 0;
 static UINT8   gubProgCurEnemy   = 0;
 
-typedef struct TOP_MESSAGE
+struct TOP_MESSAGE
 {
 	SGPVSurface* uiSurface;
 	UINT32			uiTimeSinceLastBeep;
 	BOOLEAN			fCreated;
 	INT16				sWorldRenderX;
 	INT16				sWorldRenderY;
-} TOP_MESSAGE;
+};
 
 static TOP_MESSAGE gTopMessage;
 BOOLEAN gfTopMessageDirty = FALSE;
@@ -1382,14 +1382,14 @@ void DirtyMercPanelInterface( SOLDIERTYPE *pSoldier, UINT8 ubDirtyLevel )
 
 }
 
-typedef struct
+struct OPENDOOR_MENU
 {
 	SOLDIERTYPE *pSoldier;
 	INT16				sX;
 	INT16				sY;
 	BOOLEAN			fMenuHandled;
 	BOOLEAN			fClosingDoor;
-} OPENDOOR_MENU;
+};
 
 static OPENDOOR_MENU gOpenDoorMenu;
 BOOLEAN				gfInOpenDoorMenu = FALSE;

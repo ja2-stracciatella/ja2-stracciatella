@@ -77,7 +77,7 @@ static INT32  giNumFrames;
 AIR_RAID_DEFINITION	gAirRaidDef;
 
 
-typedef	struct
+struct AIR_RAID_SAVE_STRUCT
 {
 	BOOLEAN				fInAirRaid;
 	BOOLEAN				fAirRaidScheduled;
@@ -119,8 +119,7 @@ typedef	struct
 
 
 	UINT8					ubFiller[ 32 ];
-
-} AIR_RAID_SAVE_STRUCT;
+};
 CASSERT(sizeof(AIR_RAID_SAVE_STRUCT) == 132)
 
 
@@ -128,19 +127,17 @@ CASSERT(sizeof(AIR_RAID_SAVE_STRUCT) == 132)
 SOLDIERTYPE		*gpRaidSoldier;
 
 
-typedef struct
+struct AIR_RAID_DIR
 {
 	INT8 bDir1;
 	INT8 bDir2;
+};
 
-} AIR_RAID_DIR;
-
-typedef struct
+struct AIR_RAID_POS
 {
 	INT8 bX;
 	INT8 bY;
-
-} AIR_RAID_POS;
+};
 
 
 AIR_RAID_DIR	ubPerpDirections[ ] =

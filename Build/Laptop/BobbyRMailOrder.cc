@@ -33,13 +33,13 @@
 #include "FileMan.h"
 
 
-typedef struct
+struct BobbyROrderLocationStruct
 {
 	const wchar_t **psCityLoc;
 	UINT16	usOverNightExpress;
 	UINT16	us2DaysService;
 	UINT16	usStandardService;
-} BobbyROrderLocationStruct;
+};
 
 
 BobbyROrderLocationStruct BobbyROrderLocations[]=

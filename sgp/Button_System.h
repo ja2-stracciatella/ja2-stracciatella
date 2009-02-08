@@ -34,10 +34,10 @@
 
 extern SGPVSurface* ButtonDestBuffer;
 
-typedef struct GUI_BUTTON GUI_BUTTON;
+struct GUI_BUTTON;
 
 // GUI_BUTTON callback function type
-typedef void (*GUI_CALLBACK)(struct GUI_BUTTON*, INT32);
+typedef void (*GUI_CALLBACK)(GUI_BUTTON*, INT32);
 
 // GUI_BUTTON structure definitions.
 struct GUI_BUTTON
@@ -272,11 +272,11 @@ void UnmarkButtonsDirty(void); // unmark ALL the buttoms on the screen dirty
 void ForceButtonUnDirty(GUIButtonRef); // forces button undirty no matter the reason, only lasts one frame
 
 
-typedef struct ButtonDimensions
+struct ButtonDimensions
 {
 	UINT32 w;
 	UINT32 h;
-} ButtonDimensions;
+};
 
 const ButtonDimensions* GetDimensionsOfButtonPic(const BUTTON_PICS*);
 

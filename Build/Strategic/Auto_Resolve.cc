@@ -91,7 +91,7 @@ enum
 };
 
 
-typedef struct SOLDIERCELL
+struct SOLDIERCELL
 {
 	SOLDIERTYPE *pSoldier;
 	MouseRegion* pRegion; // only used for player mercs.
@@ -104,12 +104,12 @@ typedef struct SOLDIERCELL
 	UINT16 usNextAttack;
 	UINT16 usNextHit[3];
 	UINT16 usHitDamage[3];
-	struct SOLDIERCELL *pAttacker[3];
+	SOLDIERCELL* pAttacker[3];
 	UINT32 uiFlashTime;
 	INT8 bWeaponSlot;
-}SOLDIERCELL;
+};
 
-typedef struct AUTORESOLVE_STRUCT
+struct AUTORESOLVE_STRUCT
 {
 	SOLDIERCELL *pRobotCell;
 
@@ -171,8 +171,7 @@ typedef struct AUTORESOLVE_STRUCT
 	BOOLEAN fCaptureNotPermittedDueToEPCs;
 
 	MOUSE_REGION AutoResolveRegion;
-
-}AUTORESOLVE_STRUCT;
+};
 
 //Classifies the type of soldier the soldier cell is
 #define CELL_MERC							0x00000001

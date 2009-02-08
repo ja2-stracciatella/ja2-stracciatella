@@ -45,7 +45,7 @@
 // Loyalty penalty for being inactive, per day after the third
 #define LOYALTY_PENALTY_INACTIVE													(10 * GAIN_PTS_PER_LOYALTY_PT)
 
-typedef enum
+enum GlobalLoyaltyEventTypes
 {
 	// There are only for distance-adjusted global loyalty effects.  Others go into list above instead!
 	GLOBAL_LOYALTY_BATTLE_WON,
@@ -61,11 +61,10 @@ typedef enum
 	GLOBAL_LOYALTY_GAIN_SAM,
 	GLOBAL_LOYALTY_LOSE_SAM,
 	GLOBAL_LOYALTY_QUEEN_BATTLE_WON,
+};
 
-} GlobalLoyaltyEventTypes;
 
-
-typedef struct TOWN_LOYALTY
+struct TOWN_LOYALTY
 {
 	UINT8			ubRating;
 	INT16			sChange;
@@ -73,7 +72,7 @@ typedef struct TOWN_LOYALTY
 	UINT8			UNUSEDubRebelSentiment;		// current rebel sentiment.  Events could change the starting value...
 	BOOLEAN		fLiberatedAlready;
 	BYTE			filler[19];					// reserved for expansion
-} TOWN_LOYALTY;
+};
 CASSERT(sizeof(TOWN_LOYALTY) == 26)
 
 

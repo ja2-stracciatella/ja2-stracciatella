@@ -85,14 +85,14 @@ UINT8 ubLightningTable[3][10][2]=
 																		{9, 0}	}	};
 
 
-typedef enum
+enum Temperatures
 {
 	COOL,
 	WARM,
 	HOT
-} Temperatures;
+};
 
-typedef enum
+enum TemperatureEvents
 {
 	TEMPERATURE_DESERT_COOL,
 	TEMPERATURE_DESERT_WARM,
@@ -100,7 +100,7 @@ typedef enum
 	TEMPERATURE_GLOBAL_COOL,
 	TEMPERATURE_GLOBAL_WARM,
 	TEMPERATURE_GLOBAL_HOT,
-} TemperatureEvents;
+};
 
 #define DESERT_WARM_START		( 8 * 60 )
 #define DESERT_HOT_START		( 9 * 60 )

@@ -55,14 +55,14 @@ static const UINT32 gScrollSlideInertiaDirection[NUM_WORLD_DIRECTIONS] =
 };
 
 // Struct used for cycling through multiple mercs per mouse position
-typedef struct
+struct SOLDIER_STACK_TYPE
 {
 	INT8         bNum;
 	SOLDIERTYPE* mercs[MAX_STACKED_MERCS];
 	INT8         bCur;
 	BOOLEAN      fUseGridNo;
 	UINT16       sUseGridNoGridNo;
-} SOLDIER_STACK_TYPE;
+};
 
 static SOLDIER_STACK_TYPE gSoldierStack;
 static BOOLEAN            gfHandleStack = FALSE;

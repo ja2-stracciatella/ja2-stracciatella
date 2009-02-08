@@ -24,7 +24,7 @@ typedef INT32 FIXEDPT;
 
 #define	OK_CHANCE_TO_GET_THROUGH		10
 
-typedef enum CollisionEnums
+enum CollisionEnums
 {
 	COLLISION_NONE,
 	COLLISION_GROUND,
@@ -43,7 +43,7 @@ typedef enum CollisionEnums
 	COLLISION_INTERIOR_ROOF,
 	COLLISION_STRUCTURE_Z,
 	COLLISION_WATER
-} CollisionEnums;
+};
 
 
 INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ, UINT16* pusStructureID, FLOAT* pdNormalX, FLOAT* pdNormalY, FLOAT* pdNormalZ);
@@ -134,7 +134,7 @@ enum {
 #define VERY_CLOSE_TO_FIRER 21
 
 #ifdef LOS_DEBUG
-typedef struct LOSResults
+struct LOSResults
 {
 	BOOLEAN			fLOSTestPerformed;
 	BOOLEAN			fLOSClear;
@@ -153,7 +153,7 @@ typedef struct LOSResults
 	INT32				iStoppedZ;
 	INT32				iCurrCubesZ;
 	UINT8				ubChanceToGetThrough;
-} LOSResults;
+};
 
 extern LOSResults gLOSTestResults;
 

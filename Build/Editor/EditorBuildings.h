@@ -18,11 +18,11 @@ void UpdateBuildingsInfo(void);
 void KillBuilding( UINT32 iMapIndex );
 
 
-typedef struct BUILDINGLAYOUTNODE
+struct BUILDINGLAYOUTNODE
 {
-	struct BUILDINGLAYOUTNODE *next;
+	BUILDINGLAYOUTNODE* next;
 	INT16 sGridNo;
-}BUILDINGLAYOUTNODE;
+};
 
 extern BUILDINGLAYOUTNODE *gpBuildingLayoutList;
 extern INT16 gsBuildingLayoutAnchorGridNo;

@@ -27,7 +27,7 @@
 //These are the placement slots used by the editor to define where characters are in a map, what
 //they are, what team they are on, personality traits, etc.  The Merc section of the editor is
 //what is used to define these values.
-typedef struct
+struct BASIC_SOLDIERCREATE_STRUCT
 {
 	BOOLEAN fDetailedPlacement;			//Specialized information.  Has a counterpart containing all info.
 	UINT16 usStartingGridNo;				//Where the placement position is.
@@ -46,10 +46,10 @@ typedef struct
 	BOOLEAN fPriorityExistance;			//These slots are used first
 	BOOLEAN fHasKeys;
 	INT8 PADDINGSLOTS[ 14 ];
-} BASIC_SOLDIERCREATE_STRUCT; //50 bytes
+}; //50 bytes
 CASSERT(sizeof(BASIC_SOLDIERCREATE_STRUCT) == 52)
 
-typedef struct
+struct SOLDIERCREATE_STRUCT
 {
 	//Bulletproofing so static detailed placements aren't used to tactically create soldiers.
 	//Used by editor for validation purposes.
@@ -120,7 +120,7 @@ typedef struct
 	BOOLEAN						fUseGivenVehicle;
 	INT8							bUseGivenVehicleID;
 	BOOLEAN						fHasKeys;
-} SOLDIERCREATE_STRUCT;
+};
 
 
 //Original functions currently used throughout the game.

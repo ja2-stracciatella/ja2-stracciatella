@@ -59,7 +59,7 @@ static SOLDIERTYPE* gLastInterruptedGuy = NULL;
 
 extern UINT8 gubSightFlags;
 
-typedef struct
+struct TEAM_TURN_SAVE_STRUCT
 {
 	UINT8		ubOutOfTurnPersons;
 
@@ -70,7 +70,7 @@ typedef struct
 	UINT8		ubLastInterruptedGuy;
 
 	UINT8	ubFiller[16];
-} TEAM_TURN_SAVE_STRUCT;
+};
 CASSERT(sizeof(TEAM_TURN_SAVE_STRUCT) == 26)
 
 

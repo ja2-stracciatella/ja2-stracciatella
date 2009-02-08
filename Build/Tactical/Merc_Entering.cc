@@ -35,7 +35,7 @@
 #define		ME_SCRIPT_DELAY				100
 #define		NUM_PER_HELI_RUN		6
 
-typedef enum HeliStateEnums
+enum HeliStateEnums
 {
 	HELI_APPROACH,
 	HELI_MOVETO,
@@ -45,9 +45,9 @@ typedef enum HeliStateEnums
 	HELI_MOVEAWAY,
 	HELI_EXIT,
 	NUM_HELI_STATES
-} HeliStateEnums;
+};
 
-typedef enum HeliCodes
+enum HeliCodes
 {
 	HELI_REST,
 	HELI_MOVE_DOWN,
@@ -65,7 +65,7 @@ typedef enum HeliCodes
 	HELI_GOTO_MOVETO,
 	HELI_GOTO_MOVEAWAY,
 	HELI_DONE
-} HeliCodes;
+};
 
 
 static const UINT8 ubHeliScripts[NUM_HELI_STATES][MAX_HELI_SCRIPT] =

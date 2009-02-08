@@ -75,7 +75,7 @@
 typedef void (*ITEM_POOL_LOCATOR_HOOK)(void);
 
 
-typedef struct
+struct ITEM_POOL_LOCATOR
 {
 	ITEM_POOL*             pItemPool;
 	UINT8                  ubFlags;
@@ -83,7 +83,7 @@ typedef struct
 	INT8                   bRadioFrame;
 	UINT32                 uiLastFrameUpdate;
 	ITEM_POOL_LOCATOR_HOOK Callback;
-} ITEM_POOL_LOCATOR;
+};
 
 
 static ITEM_POOL_LOCATOR FlashItemSlots[NUM_ITEM_FLASH_SLOTS];

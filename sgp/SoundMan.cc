@@ -77,7 +77,7 @@ enum
 
 // Struct definition for sample slots in the cache
 // Holds the regular sample data, as well as the data for the random samples
-typedef struct
+struct SAMPLETAG
 {
 	CHAR8   pName[128];  // Path to sample data
 	UINT32  n_samples;
@@ -96,12 +96,12 @@ typedef struct
 	UINT32  uiPanMax;
 	UINT32  uiInstances;
 	UINT32  uiMaxInstances;
-} SAMPLETAG;
+};
 
 
 // Structure definition for slots in the sound output
 // These are used for both the cached and double-buffered streams
-typedef struct
+struct SOUNDTAG
 {
 	volatile UINT State;
 	SAMPLETAG*    pSample;
@@ -116,7 +116,7 @@ typedef struct
 	UINT32        pos;
 	UINT32        Loops;
 	UINT32        Pan;
-} SOUNDTAG;
+};
 
 
 static const UINT32 guiSoundDefaultVolume  = MAXVOLUME;

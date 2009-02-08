@@ -82,12 +82,11 @@ enum{
 };
 
 
-typedef struct TOWN_TRAINER_TYPE
+struct TOWN_TRAINER_TYPE
 {
 	SOLDIERTYPE *pSoldier;
 	INT16	sTrainingPts;
-
-} TOWN_TRAINER_TYPE;
+};
 
 
 // can character train militia?

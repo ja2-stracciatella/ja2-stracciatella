@@ -101,11 +101,11 @@ enum
 	MINE_EXIT,				//the area that creatures can initiate town attacks if lots of monsters.
 };
 
-typedef struct CREATURE_DIRECTIVE
+struct CREATURE_DIRECTIVE
 {
-	struct CREATURE_DIRECTIVE *next;
+	CREATURE_DIRECTIVE*     next;
 	UNDERGROUND_SECTORINFO *pLevel;
-}CREATURE_DIRECTIVE;
+};
 
 CREATURE_DIRECTIVE *lair;
 INT32	giHabitatedDistance = 0;

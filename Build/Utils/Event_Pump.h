@@ -18,42 +18,42 @@ enum GameEvent
 #define DEMAND_EVENT_DELAY 0xFFFF
 
 
-typedef struct
+struct EV_S_GETNEWPATH
 {
 	UINT16	 usSoldierID;
 	UINT32	 uiUniqueId;
 	INT16		 sDestGridNo;
 	UINT16		usMovementAnim;
-} EV_S_GETNEWPATH;
+};
 
-typedef struct
+struct EV_S_SETDESIREDDIRECTION
 {
 	UINT16  usSoldierID;
 	UINT32  uiUniqueId;
 	UINT16	usDesiredDirection;
-} EV_S_SETDESIREDDIRECTION;
+};
 
 
-typedef struct
+struct EV_S_BEGINFIREWEAPON
 {
 	UINT16  usSoldierID;
 	UINT32  uiUniqueId;
 	INT16		sTargetGridNo;
 	INT8		bTargetLevel;
 	INT8		bTargetCubeLevel;
-} EV_S_BEGINFIREWEAPON;
+};
 
 
-typedef struct
+struct EV_S_FIREWEAPON
 {
 	UINT16  usSoldierID;
 	UINT32  uiUniqueId;
 	INT16		sTargetGridNo;
 	INT8		bTargetLevel;
 	INT8		bTargetCubeLevel;
-} EV_S_FIREWEAPON;
+};
 
-typedef struct
+struct EV_S_WEAPONHIT
 {
 	UINT16  usSoldierID;
 	UINT16	usWeaponIndex;
@@ -67,9 +67,9 @@ typedef struct
 	UINT8		ubAttackerID;
 	UINT8		ubSpecial;
 	UINT8		ubLocation;
-} EV_S_WEAPONHIT;
+};
 
-typedef struct
+struct EV_S_NOISE
 {
 	UINT8 ubNoiseMaker;
 	INT16 sGridNo;
@@ -77,7 +77,7 @@ typedef struct
 	UINT8 ubTerrType;
 	UINT8 ubVolume;
 	UINT8 ubNoiseType;
-} EV_S_NOISE;
+};
 
 
 void    AddGameEvent(GameEvent, UINT16 usDelay, PTR pEventData);

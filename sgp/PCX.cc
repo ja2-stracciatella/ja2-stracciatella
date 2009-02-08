@@ -24,7 +24,7 @@
 #define PCX_OUTOFMEMORY    8
 
 
-typedef struct PcxHeader
+struct PcxHeader
 {
 	UINT8  ubManufacturer;
 	UINT8  ubVersion;
@@ -42,18 +42,18 @@ typedef struct PcxHeader
 	UINT16 usBytesPerLine;
 	UINT16 usPaletteType;
 	UINT8  ubFiller[58];
-} PcxHeader;
+};
 CASSERT(sizeof(PcxHeader) == 128)
 
 
-typedef struct PcxObject
+struct PcxObject
 {
 	UINT8* pPcxBuffer;
 	UINT8  ubPalette[768];
 	UINT16 usWidth, usHeight;
 	UINT32 uiBufferSize;
 	UINT16 usPcxFlags;
-} PcxObject;
+};
 
 
 static void       BlitPcxToBuffer(PcxObject*, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp);

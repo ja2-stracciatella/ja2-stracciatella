@@ -11,13 +11,13 @@
 
 
 // Z-buffer info structure for properly assigning Z values
-typedef struct
+struct ZStripInfo
 {
 	INT8  bInitialZChange;    // difference in Z value between the leftmost and base strips
 	UINT8 ubFirstZStripWidth; // # of pixels in the leftmost strip
 	UINT8 ubNumberOfZChanges; // number of strips (after the first)
 	INT8* pbZChange;          // change to the Z value in each strip (after the first)
-} ZStripInfo;
+};
 
 // This definition mimics what is found in WINDOWS.H ( for Direct Draw compatiblity )
 // From RGB to COLORVAL

@@ -182,11 +182,11 @@ extern BOOLEAN fShowContractMenu ;
 extern BOOLEAN fLockOutMapScreenInterface;
 
 // The character data structure
-typedef struct MapScreenCharacterSt
+struct MapScreenCharacterSt
 {
 	SOLDIERTYPE* merc;
 	BOOLEAN      selected;
-} MapScreenCharacterSt;
+};
 
 
 // map screen character structure list, contrains soldier ids into menptr
@@ -472,7 +472,7 @@ void AddSoldierToWaitingListQueue(const SOLDIERTYPE* s);
 void AddReasonToWaitingListQueue( INT32 iReason );
 void AddDisplayBoxToWaitingQueue( void );
 
-typedef enum MoveError
+enum MoveError
 {
 	ME_CUSTOM          = -99,
 	ME_OK              =   0,
@@ -488,7 +488,7 @@ typedef enum MoveError
 	ME_VEHICLE_NO_GAS  =  42,
 	ME_VEHICLE_DAMAGED =  47,
 	ME_ROBOT_ALONE     =  49
-} MoveError;
+};
 
 // can this group move it out
 MoveError CanEntireMovementGroupMercIsInMove(SOLDIERTYPE*);

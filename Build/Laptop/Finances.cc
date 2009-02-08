@@ -26,7 +26,6 @@
 
 
 // the financial structure
-typedef struct FinanceUnit FinanceUnit;
 struct FinanceUnit
 {
 	UINT8 ubCode; // the code index in the finance code table

@@ -15,7 +15,7 @@
 #define		SAVE__ERROR_NUM						99
 #define		SAVE__END_TURN_NUM				98
 
-typedef struct
+struct SAVED_GAME_HEADER
 {
 	UINT32	uiSavedGameVersion;
 	char zGameVersionNumber[GAME_VERSION_LENGTH];
@@ -47,7 +47,7 @@ typedef struct
 	UINT32	uiRandom;
 
 	UINT8		ubFiller[110];
-} SAVED_GAME_HEADER;
+};
 CASSERT(sizeof(SAVED_GAME_HEADER) == 688)
 
 

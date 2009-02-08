@@ -57,15 +57,14 @@ enum{
 
 
 // the strategic mine structures
-typedef struct MINE_LOCATION_TYPE
+struct MINE_LOCATION_TYPE
 {
 	INT16	   sSectorX;						// x value of sector mine is in
 	INT16    sSectorY;						// y value of sector mine is in
 	INT8	   bAssociatedTown;			// associated town of this mine
+};
 
-} MINE_LOCATION_TYPE;
-
-typedef struct MINE_STATUS_TYPE
+struct MINE_STATUS_TYPE
 {
 	UINT8    ubMineType;								// type of mine (silver or gold)
 	BYTE		 filler1[3];
@@ -89,7 +88,7 @@ typedef struct MINE_STATUS_TYPE
 	UINT32   uiTimePlayerProductionStarted;		// time in minutes when 'fMineHasProducedForPlayer' was first set
 
 	BYTE     filler[11];					// reserved for expansion
-} MINE_STATUS_TYPE;
+};
 CASSERT(sizeof(MINE_STATUS_TYPE) == 44)
 
 

@@ -15,14 +15,12 @@
 #define		MAX_BURST_LOCATIONS		50
 
 
-typedef struct
+struct BURST_LOCATIONS
 {
 	INT16 sX;
 	INT16 sY;
 	INT16 sGridNo;
-
-} BURST_LOCATIONS;
-
+};
 
 
 static BURST_LOCATIONS gsBurstLocations[MAX_BURST_LOCATIONS];

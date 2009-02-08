@@ -9,11 +9,11 @@
 #include "Editor_Undo.h"
 
 
-typedef struct MACROSTRUCT
+struct MACROSTRUCT
 {
 	INT16 sMacroID;
 	INT16 sOffset;
-}MACROSTRUCT;
+};
 //road macros
 
 //These define the macros for the 32 road pieces.  The column contains the macro ID and

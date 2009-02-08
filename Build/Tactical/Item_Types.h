@@ -36,13 +36,13 @@
 #define MAX_ATTACHMENTS 4
 #define MAX_MONEY_PER_SLOT 20000
 
-typedef enum
+enum DetonatorType
 {
 	BOMB_TIMED = 1,
 	BOMB_REMOTE,
 	BOMB_PRESSURE,
 	BOMB_SWITCH
-} DetonatorType;
+};
 
 #define FIRST_MAP_PLACED_FREQUENCY 50
 #define PANIC_FREQUENCY 127
@@ -58,7 +58,7 @@ typedef enum
 #define OBJECT_ALARM_TRIGGER				0x40
 #define OBJECT_NO_OVERWRITE					0x80
 
-typedef struct
+struct OBJECTTYPE
 {
 	UINT16	usItem;
 	UINT8		ubNumberOfObjects;
@@ -130,12 +130,12 @@ typedef struct
 	UINT8		ubImprintID;	// ID of merc that item is imprinted on
 	UINT8		ubWeight;
 	UINT8		fUsed;				// flags for whether the item is used or not
-} OBJECTTYPE;
+};
 CASSERT(sizeof(OBJECTTYPE) == 36)
 
 
 /*
-typedef struct
+struct INVTYPE
 {
 	UINT8		ubCursor;
 	INT8		bSoundType;
@@ -155,7 +155,7 @@ typedef struct
 	UINT16	ubPrice;
 	UINT8		ubMission;
 	UINT8		ubCoolness;
-} INVTYPE;
+};
 
 */
 
@@ -241,7 +241,7 @@ typedef struct
 
 #define EXPLOSIVE_GUN( x ) ( x == ROCKET_LAUNCHER || x == TANK_CANNON )
 
-typedef struct
+struct INVTYPE
 {
 	UINT32		usItemClass;
 	UINT8			ubClassIndex;
@@ -255,7 +255,7 @@ typedef struct
 	INT8			bReliability;
 	INT8			bRepairEase;
 	UINT16		fFlags;
-} INVTYPE;
+};
 
 #define FIRST_WEAPON 1
 #define FIRST_AMMO 71
@@ -265,7 +265,7 @@ typedef struct
 #define FIRST_KEY 271
 
 #define NOTHING NONE
-typedef enum
+enum ITEMDEFINE
 {
 	NONE									= 0,
 
@@ -639,7 +639,7 @@ typedef enum
 	UNUSED_48, // 350
 
 	MAXITEMS
-} ITEMDEFINE;
+};
 
 #define FIRST_HELMET STEEL_HELMET
 #define LAST_HELMET SPECTRA_HELMET_Y

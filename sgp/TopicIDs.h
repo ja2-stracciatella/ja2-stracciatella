@@ -1,7 +1,7 @@
 #ifndef TOPICIDS_H
 #define TOPICIDS_H
 
-typedef enum TopicID
+enum TopicID
 {
 	TOPIC_MEMORY_MANAGER,
 	TOPIC_GAME,
@@ -19,6 +19,6 @@ typedef enum TopicID
 	TOPIC_JA2AI,
 	TOPIC_JA2SAI,
 	TOPIC_JA2EDITOR
-} TopicID;
+};
 
 #endif

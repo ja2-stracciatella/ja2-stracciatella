@@ -14,7 +14,7 @@
 
 
 // Sector name identifiers
-typedef enum Towns
+enum Towns
 {
   BLANK_SECTOR=0,
 	OMERTA,
@@ -30,7 +30,7 @@ typedef enum Towns
 	MEDUNA,
   CHITZENA,
 	NUM_TOWNS
-} Towns;
+};
 
 #define FIRST_TOWN	OMERTA
 //#define PALACE			NUM_TOWNS

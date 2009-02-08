@@ -4,7 +4,7 @@
 #include "Types.h"
 
 
-typedef struct SMKFLIC SMKFLIC;
+struct SMKFLIC;
 
 void     SmkInitialize(void);
 void     SmkShutdown(void);

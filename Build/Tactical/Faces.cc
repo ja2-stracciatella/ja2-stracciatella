@@ -56,14 +56,14 @@ static UINT32   guiNumFaces = 0;
 		if (!iter->fAllocated) continue; else
 
 
-typedef struct RPC_SMALL_FACE_VALUES
+struct RPC_SMALL_FACE_VALUES
 {
 	ProfileID profile;
 	INT8      bEyesX;
 	INT8      bEyesY;
 	INT8      bMouthX;
 	INT8      bMouthY;
-} RPC_SMALL_FACE_VALUES;
+};
 
 
 // TODO0013

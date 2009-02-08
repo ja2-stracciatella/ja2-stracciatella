@@ -31,11 +31,11 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 #define       IAN_WRAP_NO_SHADOW  32
 
 
-typedef struct _WRAPPEDSTRING
+struct WRAPPED_STRING
 {
-	struct _WRAPPEDSTRING *pNextWrappedString;
+	WRAPPED_STRING* pNextWrappedString;
 	wchar_t sString[];
-} WRAPPED_STRING;
+};
 
 
 WRAPPED_STRING* LineWrap(Font, UINT16 usLineWidthPixels, wchar_t const* pString);

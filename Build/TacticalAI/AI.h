@@ -15,7 +15,7 @@ extern INT16 gsCoverValue[WORLD_MAX];
 
 // AI actions
 
-typedef enum CreatureCalls
+enum CreatureCalls
 {
 	CALL_NONE = 0,
 	CALL_1_PREY,
@@ -23,12 +23,12 @@ typedef enum CreatureCalls
 	CALL_ATTACKED,
 	CALL_CRIPPLED,
 	NUM_CREATURE_CALLS
-} CreatureCalls;
+};
 
 // ANY NEW ACTIONS ADDED - UPDATE OVERHEAD.C ARRAY WITH ACTION'S STRING VALUE
 #define FIRST_MOVEMENT_ACTION AI_ACTION_RANDOM_PATROL
 #define LAST_MOVEMENT_ACTION AI_ACTION_MOVE_TO_CLIMB
-typedef enum
+enum ActionType
 {
 	AI_ACTION_NONE = 0,						// maintain current position & facing
 
@@ -89,10 +89,10 @@ typedef enum
 	AI_ACTION_END_COWER_AND_MOVE,	// sort of dummy value, special for civilians who are to go somewhere at end of battle
 	AI_ACTION_TRAVERSE_DOWN,			// move down a level
 	AI_ACTION_OFFER_SURRENDER,		// offer surrender to the player
-} ActionType;
+};
 
 
-typedef enum QuoteActionType
+enum QuoteActionType
 {
 	QUOTE_ACTION_ID_CHECKFORDEST = 1,
 	QUOTE_ACTION_ID_TURNTOWARDSPLAYER,
@@ -102,7 +102,7 @@ typedef enum QuoteActionType
 	QUOTE_ACTION_ID_TRAVERSE_SOUTH,
 	QUOTE_ACTION_ID_TRAVERSE_WEST,
 	QUOTE_ACTION_ID_TRAVERSE_NORTH
-} QuoteActionType;
+};
 
 // NB THESE THREE FLAGS SHOULD BE REMOVED FROM CODE
 #define AI_RTP_OPTION_CAN_RETREAT				0x01

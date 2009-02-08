@@ -654,7 +654,7 @@ INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 /////////////////////////////////////////////////////////
 #define		NUM_POSITION_SOUND_EFFECT_SLOTS					10
 
-typedef struct
+struct POSITIONSND
 {
   UINT32        uiFlags;
   INT16         sGridNo;
@@ -663,8 +663,7 @@ typedef struct
   const SOLDIERTYPE* SoundSource;
   BOOLEAN       fAllocated;
   BOOLEAN       fInActive;
-
-} POSITIONSND;
+};
 
 
 // GLOBAL FOR SMOKE LISTING

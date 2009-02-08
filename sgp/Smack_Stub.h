@@ -35,7 +35,6 @@ struct Smack
   UINT32 Frames;
   UINT32 FrameNum;
 };
-typedef struct Smack Smack;
 
 typedef void SmackBuf;
 

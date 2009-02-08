@@ -12,7 +12,7 @@ enum
 };
 
 
-typedef struct
+struct LIGHTEFFECT
 {
 	INT16		sGridNo;          // gridno at which the tear gas cloud is centered
 
@@ -23,7 +23,7 @@ typedef struct
 	INT8		bType;
 	LIGHT_SPRITE* light;
 	UINT32	uiTimeOfLastUpdate;
-} LIGHTEFFECT;
+};
 
 
 // Decays all light effects...

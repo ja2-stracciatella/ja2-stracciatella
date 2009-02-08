@@ -265,15 +265,15 @@ enum
 // but they can't attack empty vehicles!!
 #define CONSIDERED_NEUTRAL( me, them ) ( (them->bNeutral) && ( me->bTeam != CREATURE_TEAM || (them->uiStatusFlags & SOLDIER_VEHICLE) ) )
 
-typedef struct
+struct KEY_ON_RING
 {
 	UINT8			ubKeyID;
 	UINT8			ubNumber;
-} KEY_ON_RING;
+};
 CASSERT(sizeof(KEY_ON_RING) == 2)
 
 
-typedef struct
+struct THROW_PARAMS
 {
 	float				dX;
 	float				dY;
@@ -284,7 +284,7 @@ typedef struct
 	float				dLifeSpan;
 	UINT8				ubActionCode;
 	SOLDIERTYPE* target;
-} THROW_PARAMS;
+};
 
 #define DELAYED_MOVEMENT_FLAG_PATH_THROUGH_PEOPLE 0x01
 
@@ -697,7 +697,7 @@ struct SOLDIERTYPE
 	INT8												bWeaponMode;
 	INT8												bAIScheduleProgress;
 	INT16												sOffWorldGridNo;
-	struct TAG_anitile					*pAniTile;
+	ANITILE*                    pAniTile;
 	INT8												bCamo;
 	INT16												sAbsoluteFinalDestination;
 	UINT8												ubHiResDirection;
@@ -825,29 +825,27 @@ struct SOLDIERTYPE
 #define LVL_INCREASE				0x0400
 
 
-typedef enum WeaponModes
+enum WeaponModes
 {
 	WM_NORMAL = 0,
 	WM_BURST,
 	WM_ATTACHED,
 	NUM_WEAPON_MODES
-} WeaponModes;
+};
 
 // TYPEDEFS FOR ANIMATION PROFILES
-typedef struct
+struct ANIM_PROF_TILE
 {
 	UINT16	usTileFlags;
 	INT8		bTileX;
 	INT8		bTileY;
+};
 
-} ANIM_PROF_TILE;
-
-typedef struct
+struct ANIM_PROF_DIR
 {
 	UINT8							ubNumTiles;
 	ANIM_PROF_TILE		*pTiles;
-
-}	ANIM_PROF_DIR;
+};
 
 struct ANIM_PROF
 {
@@ -855,13 +853,13 @@ struct ANIM_PROF
 };
 
 
-typedef struct PaletteReplacementType
+struct PaletteReplacementType
 {
 	UINT8            ubType;
 	PaletteRepID     ID;
 	UINT8            ubPaletteSize;
 	SGPPaletteEntry* rgb;
-} PaletteReplacementType;
+};
 
 
 // VARIABLES FOR PALETTE REPLACEMENTS FOR HAIR, ETC
@@ -882,13 +880,13 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 
 void ChangeSoldierState(SOLDIERTYPE* pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce);
 
-typedef enum SetSoldierPosFlags
+enum SetSoldierPosFlags
 {
 	SSP_NONE          = 0,
 	SSP_NO_DEST       = 1U << 0,
 	SSP_NO_FINAL_DEST = 1U << 1,
 	SSP_FORCE_DELETE  = 1U << 2
-} SetSoldierPosFlags;
+};
 ENUM_BITSET(SetSoldierPosFlags)
 
 void EVENT_SetSoldierPosition(SOLDIERTYPE* s, GridNo gridno, SetSoldierPosFlags flags);

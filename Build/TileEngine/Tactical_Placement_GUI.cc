@@ -40,14 +40,14 @@
 #include "JAScreens.h"
 
 
-typedef struct MERCPLACEMENT
+struct MERCPLACEMENT
 {
 	SOLDIERTYPE		*pSoldier;
 	SGPVObject*   uiVObjectID;
 	MOUSE_REGION	region;
 	UINT8					ubStrategicInsertionCode;
 	BOOLEAN				fPlaced;
-}MERCPLACEMENT;
+};
 
 MERCPLACEMENT *gMercPlacement = NULL;
 

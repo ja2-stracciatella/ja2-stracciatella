@@ -12,7 +12,7 @@
 #endif
 
 
-typedef enum FileOpenFlags
+enum FileOpenFlags
 {
 	FILE_ACCESS_READ      = 1U << 0,
 	FILE_ACCESS_WRITE     = 1U << 1,
@@ -20,21 +20,21 @@ typedef enum FileOpenFlags
 	FILE_ACCESS_APPEND    = 1U << 2,
 	FILE_CREATE_ALWAYS    = 1U << 3, // create new file. overwrite existing
 	FILE_OPEN_ALWAYS      = 1U << 4  // open a file, create if doesn't exist
-} FileOpenFlags;
+};
 ENUM_BITSET(FileOpenFlags)
 
-typedef enum FileSeekMode
+enum FileSeekMode
 {
 	FILE_SEEK_FROM_START,
 	FILE_SEEK_FROM_END,
 	FILE_SEEK_FROM_CURRENT
-} FileSeekMode;
+};
 
-typedef struct SGP_FILETIME
+struct SGP_FILETIME
 {
 	UINT32 Lo;
 	UINT32 Hi;
-} SGP_FILETIME;
+};
 
 
 void InitializeFileManager(void);
@@ -95,13 +95,13 @@ namespace SGP
 }
 
 
-typedef enum FileAttributes
+enum FileAttributes
 {
 	FILE_ATTR_NONE      = 0,
 	FILE_ATTR_READONLY  = 1U << 0,
 	FILE_ATTR_DIRECTORY = 1U << 1,
 	FILE_ATTR_ERROR     = 0xFFFFFFFFU
-} FileAttributes;
+};
 ENUM_BITSET(FileAttributes)
 
 FileAttributes FileGetAttributes(const char* filename);

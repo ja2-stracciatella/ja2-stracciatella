@@ -18,13 +18,11 @@
 #define DEALER_SELLING		1
 
 
-
-typedef struct
+struct DEALER_POSSIBLE_INV
 {
 	INT16		sItemIndex;
 	UINT8		ubOptimalNumber;
-
-} DEALER_POSSIBLE_INV;
+};
 
 
 INT8 GetDealersMaxItemAmount(ArmsDealerID, UINT16 usItemIndex);

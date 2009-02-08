@@ -6,7 +6,6 @@
 #include "ScreenIDs.h"
 
 
-typedef struct FDLG_LIST FDLG_LIST;
 struct FDLG_LIST
 {
 	char       filename[260];

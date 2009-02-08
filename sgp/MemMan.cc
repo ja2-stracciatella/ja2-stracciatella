@@ -59,7 +59,6 @@ static const wchar_t* const gzJA2ScreenNames[] =
 #endif
 
 #ifdef EXTREME_MEMORY_DEBUGGING
-typedef struct MEMORY_NODE MEMORY_NODE;
 struct MEMORY_NODE
 {
 	PTR pBlock;
@@ -370,12 +369,12 @@ PTR	MemReallocXDebug(PTR ptr, size_t size, const char* szCodeString, INT32 iLine
 }
 
 
-typedef struct DUMPINFO
+struct DUMPINFO
 {
 	size_t Size;
 	UINT32 Counter;
 	char   Code[70];
-} DUMPINFO;
+};
 
 
 void DumpMemoryInfoIntoFile(const char* filename, BOOLEAN fAppend)

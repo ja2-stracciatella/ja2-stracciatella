@@ -45,7 +45,7 @@ enum
 	SLM_WINDOW_HIT,
 };
 
-typedef struct
+struct MODIFY_MAP
 {
 	UINT16	usGridNo;				//The gridno the graphic will be applied to
 	UINT16	usImageType;			//graphic index
@@ -54,7 +54,7 @@ typedef struct
 	UINT8		ubType;						// the layer it will be applied to
 
 	UINT8		ubExtra;					// Misc. variable used to strore arbritary values
-} MODIFY_MAP;
+};
 
 
 // Call this function, to set whether the map changes will be added to the  map temp file

@@ -6,15 +6,14 @@
 
 #define	TILE_CACHE_START_INDEX		36000
 
-typedef struct
+struct TILE_CACHE_ELEMENT
 {
 	CHAR8					zName[ 128 ];			// Name of tile ( filename and directory here )
 	TILE_IMAGERY	*pImagery;				// Tile imagery
 	INT16					sHits;
 	UINT8					ubNumFrames;
 	INT16					sStructRefID;
-
-} TILE_CACHE_ELEMENT;
+};
 
 
 extern TILE_CACHE_ELEMENT* gpTileCache;

@@ -221,11 +221,11 @@ static UINT16 gusOriginalAttachItem[MAX_ATTACHMENTS];
 static UINT8 gbOriginalAttachStatus[MAX_ATTACHMENTS];
 static SOLDIERTYPE* gpAttachSoldier;
 
-typedef struct
+struct MoneyLoc
 {
 	UINT16 x;
 	UINT16 y;
-} MoneyLoc;
+};
 
 static const MoneyLoc gMoneyButtonLoc = { 343, INV_INTERFACE_START_Y + 11 };
 static const MoneyLoc gMoneyButtonOffsets[] = { { 0, 0 }, { 34, 0 }, { 0, 32 }, { 34, 32 }, { 8, 22 } };
@@ -268,12 +268,12 @@ GUIButtonRef giMapInvDescButton;
 static BOOLEAN gfItemPopupRegionCallbackEndFix = FALSE;
 
 
-typedef struct
+struct INV_DESC_STATS
 {
 	INT16 sX;
 	INT16 sY;
 	INT16 sValDx;
-} INV_DESC_STATS;
+};
 
 
 static const SGPBox gMapDescNameBox = {  7, 65, 247, 8 };
@@ -327,12 +327,12 @@ static const INV_DESC_STATS gMapWeaponStats[] =
 };
 
 
-typedef struct AttachmentGfxInfo
+struct AttachmentGfxInfo
 {
 	SGPBox   item_box; // Bounding box of the item relative to a slot
 	SGPBox   bar_box;  // Bounding box of the status bar relative to a slot
 	SGPPoint slot[4];
-} AttachmentGfxInfo;
+};
 
 static const AttachmentGfxInfo g_attachment_info =
 {
@@ -394,13 +394,12 @@ static INV_REGIONS gSMInvData[] =
 };
 
 
-typedef struct
+struct REMOVE_MONEY
 {
 	UINT32	uiTotalAmount;
 	UINT32	uiMoneyRemaining;
 	UINT32	uiMoneyRemoving;
-
-} REMOVE_MONEY;
+};
 static REMOVE_MONEY gRemoveMoney;
 
 static MOUSE_REGION gSMInvRegion[NUM_INV_SLOTS];
@@ -5472,15 +5471,14 @@ void CancelItemPointer( )
 }
 
 
-typedef struct
+struct ITEM_CURSOR_SAVE_INFO
 {
 	OBJECTTYPE	ItemPointerInfo;
 	UINT8				ubSoldierID;
 	UINT8				ubInvSlot;
 	BOOLEAN			fCursorActive;
 	INT8				bPadding[5];
-
-} ITEM_CURSOR_SAVE_INFO;
+};
 
 
 void LoadItemCursorFromSavedGame(HWFILE const hFile)

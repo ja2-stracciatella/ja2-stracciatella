@@ -6,11 +6,10 @@
 
 typedef float real;
 
-typedef struct
+struct vector_3
 {
 	real x, y, z;
-
-} vector_3;
+};
 
 
 vector_3	VAdd( vector_3 *a, vector_3 *b );

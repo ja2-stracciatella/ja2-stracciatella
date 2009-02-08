@@ -29,11 +29,11 @@
 #endif
 
 
-typedef enum SGPFileFlags
+enum SGPFileFlags
 {
 	SGPFILE_NONE = 0U,
 	SGPFILE_REAL = 1U << 0
-} SGPFileFlags;
+};
 
 struct SGPFile
 {

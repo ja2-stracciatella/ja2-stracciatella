@@ -27,7 +27,6 @@
 #define HISTORY_QUEST_TEXT_SIZE 80
 
 
-typedef struct HistoryUnit HistoryUnit;
 struct HistoryUnit
 {
 	UINT8 ubCode; // the code index in the finance code table

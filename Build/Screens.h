@@ -9,12 +9,12 @@
 // function (which loads up the screen if necessary), a Handler function which is called while the screen is showing and
 // a shutdown function which is called when the screen is getting ready to make another screen active.
 
-typedef struct Screens
+struct Screens
 {
   void     (*InitializeScreen)(void);
   ScreenID (*HandleScreen)(void);
 	void     (*ShutdownScreen)(void);
-} Screens;
+};
 
 // This extern is made available to make sure that external modules will have access to the screen information
 

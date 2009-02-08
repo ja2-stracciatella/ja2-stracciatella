@@ -203,7 +203,7 @@ enum
 
 
 // Enumerate directions
-typedef enum WorldDirections
+enum WorldDirections
 {
 	NORTH = 0,
 	NORTHEAST,
@@ -216,7 +216,7 @@ typedef enum WorldDirections
 	NUM_WORLD_DIRECTIONS,
 	DIRECTION_IRRELEVANT,
 	DIRECTION_EXITGRID = 255
-} WorldDirections;
+};
 
 
 // ENUMERATION OF SOLDIER POSIITONS IN GLOBAL SOLDIER LIST
@@ -270,7 +270,7 @@ enum
 
 
 // boxing state
-typedef enum BoxingStates
+enum BoxingStates
 {
 	NOT_BOXING = 0,
 	BOXING_WAITING_FOR_PLAYER,
@@ -279,7 +279,7 @@ typedef enum BoxingStates
 	DISQUALIFIED,
 	WON_ROUND,
 	LOST_ROUND
-} BoxingStates;
+};
 
 //NOTE:  The editor uses these enumerations, so please update the text as well if you modify or
 //			 add new groups.  Try to abbreviate the team name as much as possible.  The text is in

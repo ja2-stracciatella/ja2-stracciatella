@@ -54,7 +54,7 @@ static BOOLEAN gfWasInMeanwhile = FALSE;
 
 
 // This struct is used to save info from the NPCQuoteInfo struct that can change.
-typedef struct
+struct TempNPCQuoteInfoSave
 {
 	UINT16	usFlags;
 
@@ -65,9 +65,7 @@ typedef struct
 	};
 
 	UINT16	usGoToGridno;
-
-} TempNPCQuoteInfoSave;
-
+};
 
 
 #define		NPC_TEMP_QUOTE_FILE			"Temp/NpcQuote.tmp"

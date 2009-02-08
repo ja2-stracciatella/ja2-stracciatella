@@ -118,7 +118,7 @@ extern UINT8 AtHeight[PROFILE_Z_SIZE];
 #define TILE_ON_ROOF						0x01
 #define TILE_PASSABLE						0x02
 
-typedef struct TAG_STRUCTURE_TILE
+struct DB_STRUCTURE_TILE
 {
 	INT16			sPosRelToBase;  // "single-axis"
 	INT8			bXPosRelToBase;
@@ -127,13 +127,13 @@ typedef struct TAG_STRUCTURE_TILE
 	UINT8			fFlags;
 	UINT8			ubVehicleHitLocation;
 	BYTE			bUnused[1];
-} DB_STRUCTURE_TILE; // 32 bytes
+}; // 32 bytes
 
 #define BASE_TILE 0
 
 #define NO_PARTNER_STRUCTURE 0
 
-typedef struct TAG_DB_STRUCTURE
+struct DB_STRUCTURE
 {
 	UINT8								ubArmour;
 	UINT8								ubHitPoints;
@@ -147,7 +147,7 @@ typedef struct TAG_DB_STRUCTURE
 	INT8								bZTileOffsetX;
 	INT8								bZTileOffsetY;
 	BYTE								bUnused[1];
-} DB_STRUCTURE; // 16 bytes
+}; // 16 bytes
 
 struct DB_STRUCTURE_REF
 {

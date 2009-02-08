@@ -131,7 +131,6 @@
 #define	BOBBY_R_MEDUNA_SHIPMENT_LENGTH				4
 
 
-typedef struct Email Email;
 struct Email
 {
 	wchar_t pSubject[128];

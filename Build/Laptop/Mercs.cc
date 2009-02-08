@@ -125,13 +125,12 @@ enum
 	NUM_MERC_ARRIVALS,
 };
 
-typedef struct
+struct CONTITION_FOR_MERC_AVAILABLE
 {
 	UINT16	usMoneyPaid;
 	UINT16	usDay;
 	UINT8		ubMercArrayID;
-
-}	CONTITION_FOR_MERC_AVAILABLE;
+};
 
 CONTITION_FOR_MERC_AVAILABLE gConditionsForMercAvailability[ NUM_MERC_ARRIVALS ] =
 {
@@ -212,12 +211,12 @@ BOOLEAN		gfRedrawMercSite=FALSE;
 BOOLEAN		gfFirstTimeIntoMERCSiteSinceEnteringLaptop=FALSE;
 
 //used for the random quotes to try to balance the ones that are said
-typedef struct
+struct NUMBER_TIMES_QUOTE_SAID
 {
 	UINT8		ubQuoteID;
 	UINT32	uiNumberOfTimesQuoteSaid;
+};
 
-} NUMBER_TIMES_QUOTE_SAID;
 NUMBER_TIMES_QUOTE_SAID			gNumberOfTimesQuoteSaid[ MERC_NUMBER_OF_RANDOM_QUOTES ] =
 {
 		{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_BIFF, 0 },

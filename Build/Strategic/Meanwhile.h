@@ -27,7 +27,7 @@ enum
 };
 
 
-typedef struct
+struct MEANWHILE_DEFINITION
 {
 	INT16				sSectorX;
 	INT16				sSectorY;
@@ -35,7 +35,7 @@ typedef struct
 
 	UINT8				ubMeanwhileID;
 	UINT8				ubNPCNumber;
-} MEANWHILE_DEFINITION;
+};
 CASSERT(sizeof(MEANWHILE_DEFINITION) == 8)
 
 

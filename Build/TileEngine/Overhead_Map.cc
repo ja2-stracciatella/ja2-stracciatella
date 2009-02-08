@@ -59,16 +59,16 @@ extern SOLDIERINITNODE *gpSelected;
 #define FASTMAPROWCOLTOPOS( r, c )									( (r) * WORLD_COLS + (c) )
 
 
-typedef struct
+struct SMALL_TILE_SURF
 {
 	HVOBJECT vo;
-} SMALL_TILE_SURF;
+};
 
-typedef struct
+struct SMALL_TILE_DB
 {
 	HVOBJECT	vo;
 	UINT16		usSubIndex;
-} SMALL_TILE_DB;
+};
 
 
 static SMALL_TILE_SURF gSmTileSurf[NUMBEROFTILETYPES];

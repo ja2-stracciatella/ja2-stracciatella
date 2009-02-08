@@ -78,7 +78,7 @@
 #define FOUND_INVALID_ANIMATION			0xFFF1
 
 
-typedef struct
+struct ANIMCONTROLTYPE
 {
 	const char* zAnimStr;
 	FLOAT       dMovementChange;
@@ -86,18 +86,17 @@ typedef struct
 	INT16       sSpeed;
 	UINT8       ubHeight;
 	UINT8       ubEndHeight;
-} ANIMCONTROLTYPE;
+};
 
 
-typedef struct
+struct ANI_SPEED_DEF
 {
 	INT16			sSpeed;
 	FLOAT			dMovementChange;
+};
 
-} ANI_SPEED_DEF;
 
-
-typedef struct
+struct RANDOM_ANI_DEF
 {
 	UINT8		ubHandRestriction;
 	INT16		sAnimID;
@@ -106,11 +105,11 @@ typedef struct
 	UINT8		ubFlags;
 	UINT8		ubAnimHeight;
 	const char* zSoundFile;
-} RANDOM_ANI_DEF;
+};
 
 
 // Enumeration of animation states
-typedef enum AnimationStates
+enum AnimationStates
 {
 	WALKING = 0,
 	STANDING,
@@ -517,7 +516,7 @@ typedef enum AnimationStates
   LOCKPICK_CROUCHED,
 
 	NUMANIMATIONSTATES
-} AnimationStates;
+};
 
 
 extern UINT16                gusAnimInst[MAX_ANIMATIONS][MAX_FRAMES_PER_ANIM];

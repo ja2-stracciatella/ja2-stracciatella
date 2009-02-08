@@ -15,21 +15,21 @@
 #define CAN_CALL( s ) (s->ubBodyType != BLOODCAT && s->ubBodyType != LARVAE_MONSTER && s->ubBodyType != INFANT_MONSTER)
 #define CAN_LISTEN_TO_CALL( s ) (s->ubBodyType != BLOODCAT && s->ubBodyType != LARVAE_MONSTER)
 
-typedef enum CreatureCaller
+enum CreatureCaller
 {
 	CALLER_FEMALE  = 0,
 	CALLER_MALE,
 	CALLER_INFANT,
 	CALLER_QUEEN,
 	NUM_CREATURE_CALLERS
-} CreatureCaller;
+};
 
-typedef enum CreatureMobility
+enum CreatureMobility
 {
 	CREATURE_MOBILE = 0,
 	CREATURE_CRAWLER,
 	CREATURE_IMMOBILE
-} CreatureMobility;
+};
 
 #define FRENZY_THRESHOLD 8
 #define MAX_EAT_DIST 5

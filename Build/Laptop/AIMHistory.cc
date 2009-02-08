@@ -67,7 +67,7 @@ static BUTTON_PICS* guiHistoryMenuButtonImage;
 
 
 // These enums represent which paragraph they are located in the AimHist.edt file
-typedef enum AimHistoryTextLocations
+enum AimHistoryTextLocations
 {
 	IN_THE_BEGINNING =6,
 	IN_THE_BEGINNING_1,
@@ -90,7 +90,7 @@ typedef enum AimHistoryTextLocations
 	INCORPORATION_2,
 	DUNN_AND_BRADROAD,
 	INCORPORATION_3
-} AimHistoryTextLocations;
+};
 
 
 void EnterInitAimHistory()

@@ -26,7 +26,7 @@ struct EXPLOSIONTYPE
 };
 
 
-typedef enum EXPLOSION_TYPES
+enum EXPLOSION_TYPES
 {
 	NO_BLAST,
 	BLAST_1,
@@ -39,14 +39,14 @@ typedef enum EXPLOSION_TYPES
   MUSTARD_EXP,
 
 	NUM_EXP_TYPES
-} EXPLOSION_TYPES;
+};
 
-typedef struct
+struct ExplosionQueueElement
 {
 	UINT32	uiWorldBombIndex;
 	UINT32	uiTimeStamp;
 	UINT8		fExists;
-} ExplosionQueueElement;
+};
 CASSERT(sizeof(ExplosionQueueElement) == 12)
 
 

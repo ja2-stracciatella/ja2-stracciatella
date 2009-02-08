@@ -19,7 +19,7 @@
 static UINT16* szClipboard;
 BOOLEAN gfNoScroll = FALSE;
 
-typedef struct TextInputColors
+struct TextInputColors
 {
 	//internal values that contain all of the colors for the text editing fields.
 	Font    usFont;
@@ -36,12 +36,13 @@ typedef struct TextInputColors
 	UINT8	ubDisabledForeColor;
 	UINT8	ubDisabledShadowColor;
 	UINT16 usDisabledTextFieldColor;
-}TextInputColors;
+};
 
 static TextInputColors* pColors = NULL;
 
 //Internal nodes for keeping track of the text and user defined fields.
-typedef struct TEXTINPUTNODE{
+struct TEXTINPUTNODE
+{
 	UINT8 ubID;
 	UINT16 usInputType;
 	UINT8 ubMaxChars;
@@ -51,16 +52,17 @@ typedef struct TEXTINPUTNODE{
 	BOOLEAN fUserField;
 	MOUSE_REGION region;
 	INPUT_CALLBACK InputCallback;
-	struct TEXTINPUTNODE *next, *prev;
-}TEXTINPUTNODE;
+	TEXTINPUTNODE* next;
+	TEXTINPUTNODE* prev;
+};
 
 //Stack list containing the head nodes of each level.  Only the top level is the active level.
-typedef struct STACKTEXTINPUTNODE
+struct STACKTEXTINPUTNODE
 {
 	TEXTINPUTNODE *head;
 	TextInputColors *pColors;
-	struct STACKTEXTINPUTNODE *next;
-}STACKTEXTINPUTNODE;
+	STACKTEXTINPUTNODE* next;
+};
 
 static STACKTEXTINPUTNODE* pInputStack = NULL;
 

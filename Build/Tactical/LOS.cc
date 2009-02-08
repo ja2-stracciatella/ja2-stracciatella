@@ -230,7 +230,7 @@ static void DebugLOS(const char* const szOutput)
 #define DebugLOS( a )
 #endif
 
-typedef enum LocationCode
+enum LocationCode
 {
 	LOC_OTHER,
 	LOC_0_4,
@@ -238,7 +238,7 @@ typedef enum LocationCode
 	LOC_4_0,
 	LOC_4_3,
 	LOC_4_4
-} LocationCode;
+};
 
 
 static BOOLEAN ResolveHitOnWall(STRUCTURE* pStructure, INT32 iGridNo, INT8 bLOSIndexX, INT8 bLOSIndexY, DOUBLE ddHorizAngle)

@@ -21,7 +21,7 @@
 //#define		MERC_ARRIVAL_TIME_OF_DAY				 (7 * 60 + 30)		// 7:30 am
 
 
-typedef struct
+struct MERC_HIRE_STRUCT
 {
 	UINT8		ubProfileID;
 	INT16		sSectorX;
@@ -33,8 +33,7 @@ typedef struct
 	UINT8		ubInsertionCode;
 	UINT16	usInsertionData;
 	BOOLEAN	fUseLandingZoneForArrival;
-
-} MERC_HIRE_STRUCT;
+};
 
 // ATE: Globals that dictate where the mercs will land once being hired
 extern INT16	gsMercArriveSectorX;

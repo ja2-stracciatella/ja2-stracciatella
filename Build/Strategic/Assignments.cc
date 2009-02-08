@@ -101,11 +101,11 @@ enum {
 #define FINAL_REPAIR_PASS			REPAIR_POCKETS
 
 
-typedef struct REPAIR_PASS_SLOTS_TYPE
+struct REPAIR_PASS_SLOTS_TYPE
 {
 	UINT8		ubChoices;						// how many valid choices there are in this pass
 	INT8		bSlot[ 12 ];					// list of slots to be repaired in this pass
-} REPAIR_PASS_SLOTS_TYPE;
+};
 
 
 REPAIR_PASS_SLOTS_TYPE gRepairPassSlotList[ NUM_REPAIR_PASS_TYPES ] =
@@ -302,7 +302,7 @@ static BOOLEAN IsSoldierInHelicopterInHostileSector(const SOLDIERTYPE* const s)
 
 
 /* Which conditions are allowed to perform an assignment? */
-typedef enum AssignmentConditions
+enum AssignmentConditions
 {
 	AC_NONE                      = 0,
 	AC_IMPASSABLE                = 1U << 0,
@@ -313,7 +313,7 @@ typedef enum AssignmentConditions
 	AC_MECHANICAL                = 1U << 5,
 	AC_MOVING                    = 1U << 6,
 	AC_UNDERGROUND               = 1U << 7
-} AssignmentConditions;
+};
 ENUM_BITSET(AssignmentConditions)
 
 

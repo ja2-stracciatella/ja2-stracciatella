@@ -101,7 +101,7 @@ enum SkillTrait
 	NUM_SKILLTRAITS
 };
 
-typedef enum
+enum PersonalityTrait
 {
 	NO_PERSONALITYTRAIT = 0,
 	HEAT_INTOLERANT,
@@ -111,11 +111,11 @@ typedef enum
 	FEAR_OF_INSECTS,
 	FORGETFUL,
 	PSYCHO
-} PersonalityTrait;
+};
 
 #define NERVOUS_RADIUS 10
 
-typedef enum
+enum Attitudes
 {
 	ATT_NORMAL = 0,
 	ATT_FRIENDLY,
@@ -128,30 +128,31 @@ typedef enum
 	ATT_ASSHOLE,
 	ATT_COWARD,
 	NUM_ATTITUDES
-} Attitudes;
+};
 
-typedef enum
+enum Sexes
 {
 	MALE = 0,
 	FEMALE
-} Sexes;
+};
 
-typedef enum
+enum SexistLevels
 {
 	NOT_SEXIST = 0,
 	SOMEWHAT_SEXIST,
 	VERY_SEXIST,
 	GENTLEMAN
-} SexistLevels;
+};
 
 
 
 // training defines for evolution, no stat increase, stat decrease( de-evolve )
-typedef enum{
+enum CharacterEvolution
+{
 	NORMAL_EVOLUTION =0,
 	NO_EVOLUTION,
 	DEVOLVE,
-} CharacterEvolution;
+};
 
 #define BUDDY_MERC( prof, bud ) ((prof)->bBuddy[0] == (bud) || (prof)->bBuddy[1] == (bud) || (prof)->bBuddy[2] == (bud) )
 #define HATED_MERC( prof, hat ) ((prof)->bHated[0] == (hat) || (prof)->bHated[1] == (hat) || (prof)->bHated[2] == (hat) )

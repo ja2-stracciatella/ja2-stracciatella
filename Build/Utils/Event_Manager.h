@@ -3,7 +3,7 @@
 
 #include "Types.h"
 
-typedef struct
+struct EVENT
 {
 	UINT32 TimeStamp;
 	UINT32	uiFlags;
@@ -11,7 +11,7 @@ typedef struct
 	UINT32	uiEvent;
 	UINT32	uiDataSize;
 	BYTE   Data[];
-} EVENT;
+};
 
 enum EventQueueID
 {

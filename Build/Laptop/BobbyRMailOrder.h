@@ -46,7 +46,7 @@ void DrawBobbyROrderTitle(void);
 void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16 usGridY, BobbyRayPurchaseStruct *pBobbyRayPurchase, BOOLEAN fJustDisplayTitles, INT32 iOrderNum );
 
 
-typedef struct
+struct NewBobbyRayOrderStruct
 {
 	BOOLEAN	fActive;
 	UINT8		ubDeliveryLoc;				// the city the shipment is going to
@@ -60,7 +60,7 @@ typedef struct
 	BOOLEAN	fDisplayedInShipmentPage;
 
 	UINT8		ubFiller[7];
-} NewBobbyRayOrderStruct;
+};
 CASSERT(sizeof(NewBobbyRayOrderStruct) == 104)
 
 

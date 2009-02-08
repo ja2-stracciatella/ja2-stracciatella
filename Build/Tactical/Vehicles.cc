@@ -56,7 +56,7 @@ UINT8 ubNumberOfVehicles = 0;
 // static info for each vehicle....
 
 
-typedef struct VehicleTypeInfo
+struct VehicleTypeInfo
 {
 	INT32     enter_sound;
 	INT32     move_sound;
@@ -64,7 +64,7 @@ typedef struct VehicleTypeInfo
 	UINT8     movement_type;
 	UINT16    armour_type;
 	UINT8     seats;
-} VehicleTypeInfo;
+};
 
 static const VehicleTypeInfo g_vehicle_type_info[] =
 {

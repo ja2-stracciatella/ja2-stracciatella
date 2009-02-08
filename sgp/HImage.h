@@ -63,13 +63,13 @@ struct ETRLEObject
 	UINT16			usWidth;
 };
 
-typedef struct tagETRLEData
+struct ETRLEData
 {
 	PTR								pPixData;
 	UINT32						uiSizePixData;
 	ETRLEObject *			pETRLEObject;
 	UINT16						usNumberOfObjects;
-} ETRLEData;
+};
 
 // Image header structure
 struct SGPImage

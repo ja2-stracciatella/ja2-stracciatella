@@ -111,13 +111,13 @@ enum{
 INT32 iUpdateBoxWaitingList[ MAX_CHARACTER_COUNT ];
 
 
-typedef struct FASTHELPREGION
+struct FASTHELPREGION
 {
 	wchar_t FastHelpText[256];
 	INT32 iX;
 	INT32 iY;
 	INT32 iW;
-} FASTHELPREGION;
+};
 
 
 static FASTHELPREGION pFastHelpMapScreenList[MAX_MAPSCREEN_FAST_HELP];
@@ -232,7 +232,6 @@ GUIButtonRef guiUpdatePanelButtons[2];
 // the update panel
 SGPVObject* guiUpdatePanelTactical;
 
-typedef struct MERC_LEAVE_ITEM MERC_LEAVE_ITEM;
 struct MERC_LEAVE_ITEM
 {
 	OBJECTTYPE o;

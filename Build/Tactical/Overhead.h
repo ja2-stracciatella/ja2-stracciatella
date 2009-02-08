@@ -19,7 +19,7 @@ enum
 
 
 // TACTICAL ENGINE STATUS FLAGS
-typedef struct
+struct TacticalTeamType
 {
 	UINT8        bFirstID;
 	UINT8        bLastID;
@@ -29,7 +29,7 @@ typedef struct
 	INT8         bAwareOfOpposition;
 	INT8         bHuman;
 	SOLDIERTYPE* last_merc_to_radio;
-} TacticalTeamType;
+};
 
 
 #define PANIC_BOMBS_HERE    0x01
@@ -39,7 +39,7 @@ typedef struct
 
 #define ENEMY_OFFERED_SURRENDER 0x01
 
-typedef struct
+struct TacticalStatusType
 {
 	UINT32           uiFlags;
 	TacticalTeamType Team[MAXTEAMS];
@@ -117,7 +117,7 @@ typedef struct
 	BOOLEAN          fDontAddNewCrows;
 	UINT16           sCreatureTenseQuoteDelay;
 	UINT32           uiCreatureTenseQuoteLastUpdate;
-} TacticalStatusType;
+};
 
 
 extern UINT8 gbPlayerNum;
@@ -246,13 +246,13 @@ void ExecuteOverhead(void);
 void EndTurn(UINT8 ubNextTeam);
 void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode );
 
-typedef enum SelSoldierFlags
+enum SelSoldierFlags
 {
 	SELSOLDIER_NONE           = 0,
 	SELSOLDIER_ACKNOWLEDGE    = 1U << 0,
 	SELSOLDIER_FORCE_RESELECT = 1U << 1,
 	SELSOLDIER_FROM_UI        = 1U << 2
-} SelSoldierFlags;
+};
 ENUM_BITSET(SelSoldierFlags)
 
 void SelectSoldier(SOLDIERTYPE* s, SelSoldierFlags flags);

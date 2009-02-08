@@ -17,15 +17,15 @@
 #define DB_ADD_FILE_ID( exp )						( exp & 0xC00000 )
 
 
-typedef struct
+struct FileHeaderStruct
 {
 	char*  pFileName;
 	UINT32	uiFileLength;
 	UINT32	uiFileOffset;
-} FileHeaderStruct;
+};
 
 
-typedef struct
+struct LibraryHeaderStruct
 {
 	char* sLibraryPath;
 	FILE* hLibraryHandle;
@@ -39,16 +39,15 @@ typedef struct
 	#ifdef JA2TESTVERSION
 		UINT32	uiTotalMemoryAllocatedForLibrary;
 	#endif
+};
 
-} LibraryHeaderStruct;
 
-
-typedef struct LibraryFile
+struct LibraryFile
 {
 	UINT32                  uiFilePosInFile; // current position in the file
 	LibraryHeaderStruct*    lib;
 	const FileHeaderStruct* pFileHeader;
-} LibraryFile;
+};
 
 
 void    InitializeFileDatabase(char const* LibFilenames[], UINT LibCount);

@@ -77,7 +77,7 @@
 
 
 // These enums represent which paragraph they are located in the AimPol.edt file
-typedef enum AimPolicyTextLocations
+enum AimPolicyTextLocations
 {
 	AIM_STATEMENT_OF_POLICY,
 	AIM_STATEMENT_OF_POLICY_1,
@@ -136,7 +136,7 @@ typedef enum AimPolicyTextLocations
 	POLICY_MEDICAL_4,
 
 	NUM_AIM_POLICY_LOCATIONS
-} AimPolicyTextLocations;
+};
 
 
 //Toc menu mouse regions

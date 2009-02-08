@@ -149,12 +149,12 @@ static SGPPoint const g_order_check_box_pos[]=
 };
 
 
-typedef struct
+struct FlowerOrderLocationStruct
 {
 	const wchar_t **psCityLoc;
 	UINT8	ubNextDayDeliveryCost;
 	UINT8	ubWhenItGetsThereCost;
-} FlowerOrderLocationStruct;
+};
 
 #define		FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS		17
 

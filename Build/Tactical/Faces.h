@@ -34,19 +34,19 @@
 #define	 FACE_NO_TEXT_OVER					0
 
 
-typedef struct AUDIO_GAP
+struct AUDIO_GAP
 {
 	UINT32 start;
 	UINT32 end;
-} AUDIO_GAP;
+};
 
 /* This is a structure that will contain data about the gaps in a particular
  * wave file */
-typedef struct AudioGapList
+struct AudioGapList
 {
 	AUDIO_GAP*       gaps; // Pointer to gap array
 	const AUDIO_GAP* end;  // Pointer one past the end of the gap array
-} AudioGapList;
+};
 
 
 struct FACETYPE

@@ -139,7 +139,7 @@ struct LEVELNODE
 		// Some can contains index values into animated tile data
 		struct
 		{
-			struct TAG_anitile				*pAniTile;
+			ANITILE* pAniTile;
 		};
 
 		// Can be an item pool as well...
@@ -168,7 +168,7 @@ struct LEVELNODE
 #define		TOPMOST_START_INDEX								8
 
 
-typedef struct MAP_ELEMENT
+struct MAP_ELEMENT
 {
 	union
 	{
@@ -207,7 +207,7 @@ typedef struct MAP_ELEMENT
  	UINT8										ubReservedSoldierID;
 	UINT8										ubBloodInfo;
 	UINT8										ubSmellInfo;
-} MAP_ELEMENT;
+};
 
 
 // World Data

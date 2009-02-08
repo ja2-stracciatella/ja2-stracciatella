@@ -38,7 +38,7 @@ enum WallOrientationDefines
 };
 
 // TERRAIN ID VALUES.
-typedef enum TerrainTypeDefines
+enum TerrainTypeDefines
 {
 	NO_TERRAIN,
 	FLAT_GROUND,
@@ -52,7 +52,7 @@ typedef enum TerrainTypeDefines
 	MED_WATER,
 	DEEP_WATER,
 	NUM_TERRAIN_TYPES
-} TerrainTypeDefines;
+};
 
 
 // These structures are placed in a list and used for all tile imagery
@@ -70,17 +70,16 @@ struct TILE_IMAGERY
 	BYTE													bReserved[ 2 ];
 };
 
-typedef struct
+struct TILE_ANIMATION_DATA
 {
 	UINT16							*pusFrames;
 	INT8								bCurrentFrame;
 	UINT8								ubNumFrames;
-
-} TILE_ANIMATION_DATA;
+};
 
 
 // Tile data element
-typedef struct
+struct TILE_ELEMENT
 {
 	UINT16							fType;
 	HVOBJECT						hTileSurface;
@@ -113,9 +112,7 @@ typedef struct
 
 	// Reserved for added room and 32-byte boundaries
 	BYTE													bReserved[ 3 ];
-
-
-} TILE_ELEMENT, *PTILE_ELEMENT;
+};
 
 
 // Globals used

@@ -26,7 +26,7 @@ enum ProgressBarFlags
 };
 ENUM_BITSET(ProgressBarFlags)
 
-typedef struct PROGRESSBAR
+struct PROGRESSBAR
 {
 	ProgressBarFlags flags;
 	SGPBox           pos;
@@ -40,7 +40,7 @@ typedef struct PROGRESSBAR
 	UINT32 fill_colour;
 	double rStart, rEnd;
 	double rLastActual;
-}PROGRESSBAR;
+};
 
 static PROGRESSBAR* pBar[MAX_PROGRESSBARS];
 

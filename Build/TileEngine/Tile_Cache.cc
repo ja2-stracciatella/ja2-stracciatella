@@ -11,11 +11,11 @@
 #include "Vector.h"
 
 
-typedef struct TILE_CACHE_STRUCT
+struct TILE_CACHE_STRUCT
 {
 	char zRootName[30];
 	STRUCTURE_FILE_REF* pStructureFileRef;
-} TILE_CACHE_STRUCT;
+};
 
 
 static const UINT32 guiMaxTileCacheSize = 50;

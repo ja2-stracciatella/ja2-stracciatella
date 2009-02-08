@@ -54,7 +54,7 @@ enum
 };
 
 
-typedef struct
+struct GAME_SETTINGS
 {
 	INT8				bLastSavedGameSlot;							// The last saved game number goes in here
 
@@ -77,7 +77,7 @@ typedef struct
 	UINT8				ubSizeOfLOS;
 
 	UINT8		ubFiller[17];
-}	GAME_SETTINGS;
+};
 CASSERT(sizeof(GAME_SETTINGS) == 76)
 
 
@@ -92,7 +92,7 @@ enum
 };
 
 
-typedef struct
+struct GAME_OPTIONS
 {
 	BOOLEAN fGunNut;
 	BOOLEAN	fSciFi;
@@ -101,8 +101,7 @@ typedef struct
 	BOOLEAN	fIronManMode;
 
 	UINT8		ubFiller[7];
-
-} GAME_OPTIONS;
+};
 CASSERT(sizeof(GAME_OPTIONS) == 12)
 
 //This structure will contain general Ja2 settings  NOT individual game settings.

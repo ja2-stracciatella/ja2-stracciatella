@@ -33,13 +33,13 @@ static BUTTON_PICS* giIMPConfirmButtonImage[2];
 GUIButtonRef giIMPConfirmButton[2];
 
 
-typedef struct FacePosInfo
+struct FacePosInfo
 {
 	UINT8 eye_x;
 	UINT8 eye_y;
 	UINT8 mouth_x;
 	UINT8 mouth_y;
-} FacePosInfo;
+};
 
 static const FacePosInfo g_face_info[] =
 {

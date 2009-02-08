@@ -28,13 +28,13 @@
 #define BUTTON_REPEAT_TIMEOUT			250
 #define BUTTON_REPEAT_TIME				50
 
-typedef struct
+struct InputAtom
 {
   UINT16 usKeyState;
   UINT16 usEvent;
   UINT32 usParam;
 	wchar_t Char;
-} InputAtom;
+};
 
 
 extern BOOLEAN			DequeueEvent(InputAtom *Event);

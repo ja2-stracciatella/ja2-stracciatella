@@ -153,7 +153,7 @@ enum
 //Used by ubGarrisonID when a sector doesn't point to a garrison.  Used by strategic AI only.
 #define NO_GARRISON							255
 
-typedef struct SECTORINFO
+struct SECTORINFO
 {
 	//information pertaining to this sector
 	UINT32	uiFlags;						//various special conditions
@@ -191,7 +191,7 @@ typedef struct SECTORINFO
 	BOOLEAN fSurfaceWasEverPlayerControlled;
 
 	UINT32	uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer;
-} SECTORINFO;
+};
 
 #define NO_ADJACENT_SECTOR		0x00
 #define NORTH_ADJACENT_SECTOR	0x01
@@ -200,19 +200,19 @@ typedef struct SECTORINFO
 #define WEST_ADJACENT_SECTOR	0x08
 
 
-typedef struct UNDERGROUND_SECTORINFO
+struct UNDERGROUND_SECTORINFO
 {
 	UINT32 uiFlags;
 	UINT8 ubSectorX, ubSectorY, ubSectorZ;
 	UINT8 ubNumElites, ubNumTroops, ubNumAdmins, ubNumCreatures;
 	UINT32	uiTimeCurrentSectorWasLastLoaded;		//Specifies the last time the player was in the sector
-	struct UNDERGROUND_SECTORINFO *next;
+	UNDERGROUND_SECTORINFO* next;
 	UINT8	ubAdjacentSectors;	//mask containing which sectors are adjacent
 	UINT8 ubCreatureHabitat;	//determines how creatures live in this sector (see creature spreading.c)
 	UINT8 ubElitesInBattle, ubTroopsInBattle, ubAdminsInBattle, ubCreaturesInBattle;
 
 	UINT32	uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer;
-}UNDERGROUND_SECTORINFO;
+};
 
 
 //The sector information required for the strategic AI.  Contains the number of enemy troops,

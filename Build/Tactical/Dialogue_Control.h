@@ -5,7 +5,7 @@
 #include "GameScreen.h"
 
 // An enumeration for dialog quotes
-typedef enum DialogQuoteIDs
+enum DialogQuoteIDs
 {
 	QUOTE_NONE = 0xFFFF,
 
@@ -154,7 +154,7 @@ typedef enum DialogQuoteIDs
 	QUOTE_PERSONALITY_BIAS_WITH_MERC_2,
 	QUOTE_MERC_LEAVING_ALSUCO_SOON,
 	QUOTE_MERC_GONE_UP_IN_PRICE
-} DialogQuoteIDs;
+};
 
 
 #define			DEFAULT_EXTERN_PANEL_X_POS      320

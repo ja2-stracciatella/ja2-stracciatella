@@ -17,42 +17,42 @@
 #define SPECK_QUOTE__SENT_EMAIL_ABOUT_LACK_OF_PAYMENT						0x00000002
 
 
-typedef struct
+struct LIFE_INSURANCE_PAYOUT
 {
 	BOOLEAN	fActive;
 	UINT8		ubSoldierID;
 	UINT8		ubMercID;
 	INT32		iPayOutPrice;
-} LIFE_INSURANCE_PAYOUT;
+};
 CASSERT(sizeof(LIFE_INSURANCE_PAYOUT) == 8)
 
 
-typedef struct
+struct LAST_HIRED_MERC_STRUCT
 {
 	BOOLEAN	fHaveDisplayedPopUpInLaptop;		// Is set when the popup gets displayed, reset when entering laptop again.
 	INT32		iIdOfMerc;
 	UINT32	uiArrivalTime;
-} LAST_HIRED_MERC_STRUCT;
+};
 CASSERT(sizeof(LAST_HIRED_MERC_STRUCT) == 12)
 
 
-typedef struct
+struct BobbyRayPurchaseStruct
 {
 	UINT16	usItemIndex;
 	UINT8		ubNumberPurchased;
 	INT8		bItemQuality;
 	UINT16	usBobbyItemIndex;						//Item number in the BobbyRayInventory structure
 	BOOLEAN	fUsed;											//Indicates wether or not the item is from the used inventory or the regular inventory
-} BobbyRayPurchaseStruct;
+};
 CASSERT(sizeof(BobbyRayPurchaseStruct) == 8)
 
 
-typedef struct
+struct BobbyRayOrderStruct
 {
 	BOOLEAN	fActive;
 	BobbyRayPurchaseStruct BobbyRayPurchase[ MAX_PURCHASE_AMOUNT ];
 	UINT8	ubNumberPurchases;
-} BobbyRayOrderStruct;
+};
 CASSERT(sizeof(BobbyRayOrderStruct) == 84)
 
 
@@ -65,7 +65,7 @@ enum
 };
 
 
-typedef struct
+struct LaptopSaveInfoStruct
 {
 	//General Laptop Info
 	BOOLEAN							gfNewGameLaptop;									//Is it the firs time in Laptop
@@ -153,7 +153,7 @@ typedef struct
 
 	UINT8								ubLastMercAvailableId;
 	UINT8 bPadding[ 86 ];
-} LaptopSaveInfoStruct;
+};
 CASSERT(sizeof(LaptopSaveInfoStruct) == 7440)
 
 

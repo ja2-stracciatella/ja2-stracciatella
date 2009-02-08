@@ -32,16 +32,15 @@
 #define MAIL_STRING_SIZE 320
 
 
-typedef enum EMailSortCriteria
+enum EMailSortCriteria
 {
 	SENDER,
 	RECEIVED,
 	SUBJECT,
 	READ
-} EMailSortCriteria;
+};
 
 
-typedef struct Page Page;
 struct Page
 {
 	Email* Mail[MAX_MESSAGES_PAGE];
@@ -49,7 +48,6 @@ struct Page
 };
 
 
-typedef struct Record Record;
 struct Record
 {
 	wchar_t pRecord[640];
@@ -57,12 +55,12 @@ struct Record
 };
 
 
-typedef struct EmailPageInfoStruct
+struct EmailPageInfoStruct
 {
 	Record* pFirstRecord;
 	Record* pLastRecord;
 	INT32 iPageNumber;
-} EmailPageInfoStruct;
+};
 
 
 Email* pEmailList;
@@ -1847,18 +1845,18 @@ static void HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail)
 #define IMP_RESULTS_END_LENGTH 3
 
 
-typedef enum SkillBits
+enum SkillBits
 {
 	SKILL_NONE = 0,
 	SKILL_MECH = 1 << 0,
 	SKILL_MARK = 1 << 1,
 	SKILL_MED  = 1 << 2,
 	SKILL_EXPL = 1 << 3
-} SkillBits;
+};
 ENUM_BITSET(SkillBits)
 
 
-typedef enum PhysicalBits
+enum PhysicalBits
 {
 	PHYS_NONE = 0,
 	PHYS_HLTH = 1 << 0,
@@ -1867,7 +1865,7 @@ typedef enum PhysicalBits
 	PHYS_AGI  = 1 << 3,
 	PHYS_WIS  = 1 << 4,
 	PHYS_LDR  = 1 << 5
-} PhysicalBits;
+};
 ENUM_BITSET(PhysicalBits)
 
 

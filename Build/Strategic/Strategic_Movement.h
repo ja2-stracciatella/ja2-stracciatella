@@ -36,23 +36,23 @@ enum
 //This structure contains all of the information about a group moving in the strategic
 //layer.  This includes all troops, equipment, and waypoints, and location.
 //NOTE:  This is used for groups that are initiating a movement to another sector.
-typedef struct WAYPOINT
+struct WAYPOINT
 {
 	UINT8 x;											//sector x position of waypoint
 	UINT8 y;											//sector y position of waypoint
-	struct WAYPOINT *next;				//next waypoint in list
-}WAYPOINT;
+	WAYPOINT* next; //next waypoint in list
+};
 CASSERT(sizeof(WAYPOINT) == 8)
 
 
-typedef struct PLAYERGROUP
+struct PLAYERGROUP
 {
 	SOLDIERTYPE *pSoldier;				//direct access to the soldier pointer
-	struct PLAYERGROUP *next;			//next player in list
-}PLAYERGROUP;
+	PLAYERGROUP* next;			//next player in list
+};
 
 
-typedef struct ENEMYGROUP
+struct ENEMYGROUP
 {
 	UINT8 ubNumTroops;						//number of regular troops in the group
 	UINT8 ubNumElites;						//number of elite troops in the group
@@ -64,7 +64,7 @@ typedef struct ENEMYGROUP
 	UINT8 ubTroopsInBattle;				//number of soldiers currently in battle.
 	UINT8 ubElitesInBattle;				//number of elite soldiers currently in battle.
 	INT8  bPadding[20];
-}ENEMYGROUP;
+};
 CASSERT(sizeof(ENEMYGROUP) == 29)
 
 
@@ -117,7 +117,7 @@ struct GROUP
 		PLAYERGROUP *pPlayerList;		//list of players in the group
 		ENEMYGROUP *pEnemyGroup;		//a structure containing general enemy info
 	};
-	struct GROUP *next;						//next group
+	GROUP* next;						//next group
 };
 
 

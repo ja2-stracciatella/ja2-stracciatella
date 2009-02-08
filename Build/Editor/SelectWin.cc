@@ -35,7 +35,7 @@ ENUM_BITSET(DisplayWindowFlags)
 #define DISPLAY_ALL_OBJECTS 0xFFFF
 
 
-typedef struct DisplaySpec
+struct DisplaySpec
 {
 	UINT8 ubType;
 	union
@@ -52,10 +52,9 @@ typedef struct DisplaySpec
 			UINT16* pString;
 		};
 	};
-} DisplaySpec;
+};
 
 
-typedef struct DisplayList DisplayList;
 struct DisplayList
 {
 	HVOBJECT     hObj;

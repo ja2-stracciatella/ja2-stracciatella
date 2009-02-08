@@ -24,24 +24,24 @@
 #include "Types.h"
 
 
-typedef struct ListHeader
+struct ListHeader
 {
 	UINT32 uiTotal_items;
 	UINT32 uiSiz_of_elem;
 	UINT32 uiMax_size;
 	UINT32 uiHead;
 	UINT32 uiTail;
-} ListHeader;
+};
 
 
-typedef struct QueueHeader
+struct QueueHeader
 {
 	UINT32 uiTotal_items;
 	UINT32 uiSiz_of_elem;
 	UINT32 uiMax_size;
 	UINT32 uiHead;
 	UINT32 uiTail;
-} QueueHeader;
+};
 
 
 // Parameter List : num_items - estimated number of items in queue

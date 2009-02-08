@@ -12,15 +12,14 @@
 #define AMB_TOD_DUSK					2
 #define AMB_TOD_NIGHT					3
 
-typedef struct
+struct AMBIENTDATA_STRUCT
 {
 	UINT32				uiMinTime;
 	UINT32				uiMaxTime;
 	UINT8					ubTimeCatagory;
 	SGPFILENAME		zFilename;
 	UINT32				uiVol;
-
-} AMBIENTDATA_STRUCT;
+};
 CASSERT(sizeof(AMBIENTDATA_STRUCT) == 116)
 
 

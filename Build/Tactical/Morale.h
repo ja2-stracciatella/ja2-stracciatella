@@ -6,7 +6,7 @@
 
 #define	DEFAULT_MORALE		50
 
-typedef enum
+enum MoraleEventNames
 {
 	MORALE_KILLED_ENEMY = 0,
 	MORALE_SQUADMATE_DIED,
@@ -44,19 +44,19 @@ typedef enum
 	MORALE_QUEEN_BATTLE_WON,
 	MORALE_SEX,
 	NUM_MORALE_EVENTS
-} MoraleEventNames;
+};
 
-typedef enum
+enum MoraleEventType
 {
 	TACTICAL_MORALE_EVENT = 0,
 	STRATEGIC_MORALE_EVENT
-} MoraleEventType;
+};
 
-typedef struct MoraleEvent
+struct MoraleEvent
 {
 	UINT8 ubType;
 	INT8	bChange;
-} MoraleEvent;
+};
 
 extern void HandleMoraleEvent( SOLDIERTYPE * pSoldier, INT8 bMoraleEvent, INT16 sMapX, INT16 sMapY, INT8 bMapZ );
 extern void RefreshSoldierMorale( SOLDIERTYPE * pSoldier );

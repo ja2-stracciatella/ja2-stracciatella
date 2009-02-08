@@ -12,12 +12,12 @@
 
 #define NUM_BOXERS 3
 
-typedef enum DisqualificationReasons
+enum DisqualificationReasons
 {
 	BOXER_OUT_OF_RING,
 	NON_BOXER_IN_RING,
 	BAD_ATTACK
-} DisqualificationReasons;
+};
 
 extern INT16 gsBoxerGridNo[ NUM_BOXERS ];
 extern SOLDIERTYPE* gBoxer[NUM_BOXERS];

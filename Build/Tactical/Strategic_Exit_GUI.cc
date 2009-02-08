@@ -37,7 +37,7 @@
 BOOLEAN		gfInSectorExitMenu = FALSE;
 
 
-typedef struct
+struct EXIT_DIALOG_STRUCT
 {
 	MOUSE_REGION			BackRegion;
 	MOUSE_REGION			SingleRegion;
@@ -79,8 +79,7 @@ typedef struct
 	BOOLEAN						fSelectedMercIsEPC;
 	BOOLEAN						fSquadHasMultipleEPCs;
 	BOOLEAN						fUncontrolledRobotInSquad;
-
-} EXIT_DIALOG_STRUCT;
+};
 
 
 EXIT_DIALOG_STRUCT	gExitDialog;

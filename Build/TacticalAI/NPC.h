@@ -34,7 +34,7 @@
 #define ACCEPT_ANY_ITEM 1000
 #define ANY_RIFLE 1001
 
-typedef struct
+struct NPCQuoteInfo
 {
 #if defined RUSSIAN
 	UINT8		ubIdentifier[4];
@@ -74,11 +74,11 @@ typedef struct
 #if !defined RUSSIAN
 	UINT8		ubUnused[4];
 #endif
-} NPCQuoteInfo;																									// 32 bytes
+};																									// 32 bytes
 CASSERT(sizeof(NPCQuoteInfo) == 32)
 
 
-typedef enum
+enum Approaches
 {
 	APPROACH_FRIENDLY = 1,
 	APPROACH_DIRECT,
@@ -115,9 +115,9 @@ typedef enum
 	APPROACH_BUYSELL,
 	APPROACH_ONE_OF_FOUR_STANDARD,
 	APPROACH_FRIENDLY_DIRECT_OR_RECRUIT,	// 30
-} Approaches;
+};
 
-typedef enum
+enum StandardQuoteIDs
 {
 	QUOTE_INTRO = 0,
 	QUOTE_SUBS_INTRO,
@@ -129,8 +129,7 @@ typedef enum
 	QUOTE_RECRUIT_NO,
 	QUOTE_BYE,
 	QUOTE_GETLOST
-
-} StandardQuoteIDs;
+};
 
 #define NUM_REAL_APPROACHES APPROACH_RECRUIT
 

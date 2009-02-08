@@ -2,7 +2,8 @@
 #ifndef __EDITORITEMS_H
 #define __EDITORITEMS_H
 
-typedef struct{
+struct EditorItemsInfo
+{
 	BOOLEAN fGameInit;	//Used for initializing save variables the first time.
 	BOOLEAN fActive;		//currently active
 	UINT16 *pusItemIndex;		//a dynamic array of Item indices
@@ -20,7 +21,7 @@ typedef struct{
 					sSaveTriggersScrollIndex, sSaveKeysScrollIndex;
 	INT16   sNumWeapons, sNumAmmo, sNumArmour, sNumExplosives, sNumEquipment1, sNumEquipment2, sNumEquipment3,
 					sNumTriggers, sNumKeys;
-}EditorItemsInfo;
+};
 
 extern EditorItemsInfo eInfo;
 

@@ -7,7 +7,7 @@
 #define AIR_RAID_CAN_RANDOMIZE_TEASE_DIVES		0x00000002
 
 
-typedef struct
+struct AIR_RAID_DEFINITION
 {
 	INT16		sSectorX;
 	INT16		sSectorY;
@@ -16,8 +16,7 @@ typedef struct
 	UINT32	uiFlags;
 	UINT8		ubNumMinsFromCurrentTime;
 	UINT8		ubFiller[8];
-
-} AIR_RAID_DEFINITION;
+};
 
 
 extern BOOLEAN gfInAirRaid;
@@ -25,7 +24,7 @@ extern BOOLEAN gfInAirRaid;
 // what ari raid mode are we in?
 extern UINT8 gubAirRaidMode;
 
-typedef enum AIR_RAID_STATES
+enum AIR_RAID_STATES
 {
 	AIR_RAID_TRYING_TO_START,
 	AIR_RAID_START,
@@ -38,7 +37,7 @@ typedef enum AIR_RAID_STATES
 	AIR_RAID_END_BOMBING,
 	AIR_RAID_START_END,
 	AIR_RAID_END
-} AIR_RAID_STATES;
+};
 
 
 void HandleAirRaid(void);

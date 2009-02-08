@@ -9,6 +9,7 @@ typedef UINT8 ProfileID;
 typedef INT32 TIMECOUNTER;
 
 struct ANIM_PROF;
+struct ANITILE;
 struct BACKGROUND_SAVE;
 struct BULLET;
 struct DB_STRUCTURE_REF;

@@ -7,7 +7,7 @@
 #define GLOBAL_SUMMARY_VERSION		14
 #define MINIMUMVERSION						7
 
-typedef struct TEAMSUMMARY
+struct TEAMSUMMARY
 {
 	UINT8 ubTotal;
 	UINT8 ubDetailed;
@@ -16,7 +16,7 @@ typedef struct TEAMSUMMARY
 	UINT8 ubNumAnimals;
 	UINT8 ubBadA, ubPoorA, ubAvgA, ubGoodA, ubGreatA; //attributes
 	UINT8 ubBadE, ubPoorE, ubAvgE, ubGoodE, ubGreatE; //equipment
-}TEAMSUMMARY; //15 bytes
+}; //15 bytes
 CASSERT(sizeof(TEAMSUMMARY) == 15)
 
 struct SUMMARYFILE

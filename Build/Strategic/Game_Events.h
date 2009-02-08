@@ -6,9 +6,9 @@
 
 #define SEF_DELETION_PENDING	0x02
 
-typedef struct STRATEGICEVENT
+struct STRATEGICEVENT
 {
-	struct STRATEGICEVENT	 *next;
+	STRATEGICEVENT* next;
 	UINT32									uiTimeStamp;
 	UINT32									uiParam;
 	UINT32									uiTimeOffset;
@@ -16,7 +16,7 @@ typedef struct STRATEGICEVENT
 	UINT8										ubCallbackID;
 	UINT8										ubFlags;
 	INT8										bPadding[6];
-} STRATEGICEVENT;
+};
 CASSERT(sizeof(STRATEGICEVENT) == 28)
 
 

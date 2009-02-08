@@ -18,7 +18,7 @@
 
 
 // NOTE:  The following structs are also used by the datalib98 utility
-typedef struct LIBHEADER
+struct LIBHEADER
 {
 	char    sLibName[FILENAME_SIZE];
 	char    sPathToLibrary[FILENAME_SIZE];
@@ -28,11 +28,11 @@ typedef struct LIBHEADER
 	UINT16  iVersion;
 	BOOLEAN	fContainsSubDirectories;
 	INT32   iReserved;
-} LIBHEADER;
+};
 CASSERT(sizeof(LIBHEADER) == 532)
 
 
-typedef struct
+struct DIRENTRY
 {
 	char         sFileName[FILENAME_SIZE];
 	UINT32       uiOffset;
@@ -41,15 +41,15 @@ typedef struct
 	UINT8        ubReserved;
 	SGP_FILETIME sFileTime;
 	UINT16       usReserved2;
-} DIRENTRY;
+};
 CASSERT(sizeof(DIRENTRY) == 280)
 
 
-typedef struct
+struct DatabaseManagerHeaderStruct
 {
 	LibraryHeaderStruct* pLibraries;
 	UINT16               usNumberOfLibraries;
-} DatabaseManagerHeaderStruct;
+};
 
 
 static DatabaseManagerHeaderStruct gFileDataBase;

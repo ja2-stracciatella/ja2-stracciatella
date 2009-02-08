@@ -30,7 +30,7 @@ BOOLEAN gfPlotToAvoidPlayerInfuencedSectors = FALSE;
 
 
 // Globals
-struct path_s
+struct path_t
 {
 	INT16 nextLink;           //2
 	INT16 prevLink;           //2
@@ -40,14 +40,11 @@ struct path_s
 	INT16 pathNdx;            //2
 };
 
-typedef struct path_s path_t;
-
-struct trail_s
+struct trail_t
 {
 	short nextLink;
 	short diStratDelta;
 };
-typedef struct trail_s trail_t;
 
 #define MAXTRAILTREE	(4096)
 #define MAXpathQ			(512)

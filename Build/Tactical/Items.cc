@@ -453,13 +453,13 @@ const INVTYPE Item[] =
 CASSERT(lengthof(Item) == MAXITEMS);
 
 
-typedef struct
+struct AttachmentInfoStruct
 {
 	UINT16	usItem;
 	UINT32	uiItemClass;
 	INT8		bAttachmentSkillCheck;
 	INT8		bAttachmentSkillCheckMod;
-} AttachmentInfoStruct;
+};
 
 
 // NB hack:  if an item appears in this array with an item class of IC_MISC,
@@ -838,12 +838,12 @@ static MergeInfo const Merge[] =
 	{ NOTHING,  NOTHING, NOTHING, DESTRUCTION}
 };
 
-typedef struct
+struct ComboMergeInfoStruct
 {
 	UINT16	usItem;
 	UINT16	usAttachment[2];
 	UINT16	usResult;
-} ComboMergeInfoStruct;
+};
 
 
 ComboMergeInfoStruct AttachmentComboMerge[] =

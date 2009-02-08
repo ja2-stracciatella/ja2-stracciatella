@@ -14,7 +14,7 @@ enum //for use with MAPCREATE_STRUCT.ubEditorSmoothingType
 	SMOOTHING_CAVES
 };
 
-typedef struct
+struct MAPCREATE_STRUCT
 {
 	//These are the mandatory entry points for a map.  If any of the values are -1, then that means that
 	//the point has been specifically not used and that the map is not traversable to or from an adjacent
@@ -34,7 +34,7 @@ typedef struct
 	INT16 sCenterGridNo;
 	INT16 sIsolatedGridNo;
 	INT8 bPadding[83];	//I'm sure lots of map info will be added
-}MAPCREATE_STRUCT; //99 bytes
+}; //99 bytes
 CASSERT(sizeof(MAPCREATE_STRUCT) == 100)
 
 

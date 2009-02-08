@@ -11,7 +11,7 @@
 #define UICURSOR_DONTSHOW2NDLEVEL				0x00000100
 
 
-typedef enum
+enum UICursorDefines
 {
 	NO_UICURSOR,
 	NORMAL_FREEUICURSOR,
@@ -187,16 +187,15 @@ typedef enum
 	REFUEL_RED_UICURSOR,
 
 	NUM_UI_CURSORS
+};
 
-} UICursorDefines;
-
-typedef struct
+struct UICursor
 {
 	UINT32 uiCursorID;
 	UINT32 uiFlags;
 	UINT16 usFreeCursorName;
 	UINT16 usAdditionalData;
-} UICursor;
+};
 
 extern const UICursor gUICursors[NUM_UI_CURSORS];
 

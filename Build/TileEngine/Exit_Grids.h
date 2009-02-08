@@ -3,14 +3,14 @@
 
 #include "WorldDef.h"
 
-typedef struct //for exit grids (object level)
+struct EXITGRID //for exit grids (object level)
 { //if an item pool is also in same gridno, then this would be a separate levelnode
 	//in the object level list
 	UINT16 usGridNo; //sweet spot for placing mercs in new sector.
 	UINT8 ubGotoSectorX;
 	UINT8 ubGotoSectorY;
 	UINT8 ubGotoSectorZ;
-}EXITGRID;
+};
 
 BOOLEAN	ExitGridAtGridNo( UINT16 usMapIndex );
 BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid );

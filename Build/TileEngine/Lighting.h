@@ -60,7 +60,7 @@
 #define		LIGHT_NIGHTTIME			0x0100		// light stays on when dark outside
 
 
-typedef struct LightTemplate LightTemplate;
+struct LightTemplate;
 
 
 // structure of light instance, or sprite (a copy of the template)

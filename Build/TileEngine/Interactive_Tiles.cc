@@ -53,12 +53,12 @@ struct CUR_INTERACTIVE_TILE
 };
 
 
-typedef struct INTERACTIVE_TILE_STACK_TYPE
+struct INTERACTIVE_TILE_STACK_TYPE
 {
 	INT8                 bNum;
 	CUR_INTERACTIVE_TILE bTiles[MAX_INTTILE_STACK];
 	INT8                 bCur;
-} INTERACTIVE_TILE_STACK_TYPE;
+};
 
 
 static INTERACTIVE_TILE_STACK_TYPE gCurIntTileStack;

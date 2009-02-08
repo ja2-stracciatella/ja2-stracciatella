@@ -5,7 +5,7 @@
 
 // INDIVIDUAL CURSORS
 
-typedef enum
+enum CursorTypeDefines
 {
 	CURSOR_NORMAL,
 	CURSOR_TARGET,
@@ -156,9 +156,9 @@ typedef enum
 	CURSOR_JUMP_OVER,
   CURSOR_FUEL,
   CURSOR_FUEL_RED
-} CursorTypeDefines;
+};
 
-typedef enum
+enum CursorSurfaceDefines
 {
 	C_MISC,
 	C_ACTIONMODE,
@@ -230,7 +230,7 @@ typedef enum
 	C_FUEL_RED,
 
 	NUM_CURSOR_FILES
-} CursorSurfaceDefines;
+};
 
 
 void InitCursors(void);

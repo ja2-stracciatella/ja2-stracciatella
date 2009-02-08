@@ -75,7 +75,7 @@ enum
 
 #define SEE_THRU_COVER_THRESHOLD        5      // min chance to get through
 
-typedef struct
+struct THREATTYPE
 {
  SOLDIERTYPE *	pOpponent;
  INT16					sGridNo;
@@ -83,12 +83,12 @@ typedef struct
  INT32					iAPs;
  INT32					iCertainty;
  INT32					iOrigRange;
-} THREATTYPE;
+};
 
 // define for bAimTime for bursting
 #define BURSTING 5
 
-typedef struct
+struct ATTACKTYPE
 {
 	SOLDIERTYPE* opponent;      // which soldier is the victim?
  UINT8 ubPossible;            // is this attack form possible?  T/F
@@ -99,18 +99,18 @@ typedef struct
  INT8  bTargetLevel;					// target level of this attack
  UINT8 ubAPCost;							// how many APs the attack will use up
  INT8	 bWeaponIn;							// the inv slot of the weapon in question
-} ATTACKTYPE;
+};
 
 extern THREATTYPE Threat[MAXMERCS];
 extern int ThreatPercent[10];
 extern UINT8 SkipCoverCheck;
 
-typedef enum
+enum ItemSearchReasons
 {
 	SEARCH_GENERAL_ITEMS,
 	SEARCH_AMMO,
 	SEARCH_WEAPONS
-} ItemSearchReasons;
+};
 
 // go as far as possible flags
 #define FLAG_CAUTIOUS		0x01

@@ -1,7 +1,7 @@
 #ifndef C_CONFIG_H
 #define C_CONFIG_H
 
-typedef struct ConfigEntry ConfigEntry;
+struct ConfigEntry;
 
 /* Registers a key. ConfigParseFile will only add key/value-pairs
  * which are registered

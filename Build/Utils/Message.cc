@@ -24,7 +24,6 @@
 #include "FileMan.h"
 
 
-typedef struct ScrollStringSt ScrollStringSt;
 struct ScrollStringSt
 {
 	wchar_t*        pString16;

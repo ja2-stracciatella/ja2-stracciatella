@@ -41,8 +41,7 @@ bool IsItemPoolVisible(ITEM_POOL const*);
 
 struct ITEM_POOL
 {
-	struct ITEM_POOL* pNext;
-
+	ITEM_POOL*  pNext;
 	INT32				iItemIndex;
 	LEVELNODE*  pLevelNode;
 };

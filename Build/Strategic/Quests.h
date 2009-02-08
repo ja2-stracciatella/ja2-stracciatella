@@ -42,7 +42,7 @@
 //  Q U E S T     D E F I N E S
 // --------------------------------------------------------------------------------------
 
-typedef enum Quests
+enum Quests
 {
 	QUEST_DELIVER_LETTER = 0,
 	QUEST_FOOD_ROUTE,
@@ -70,7 +70,7 @@ typedef enum Quests
 	QUEST_LEATHER_SHOP_DREAM,
 
 	QUEST_KILL_DEIDRANNA = 25
-} Quests;
+};
 /*
 // The first quest is mandatory. Player must find Miguel and deliver letter to him. The tough
 // part is finding him. Miguel is UNDERGROUND in EAST OMERTA. Only by talking to Miguel's right

@@ -346,12 +346,12 @@ void BltVideoObjectOnce(SGPVSurface* const dst, char const* const filename, UINT
 UINT32 guiVObjectSize = 0;
 
 
-typedef struct DUMPINFO
+struct DUMPINFO
 {
 	UINT32 Counter;
 	char Name[256];
 	char Code[256];
-} DUMPINFO;
+};
 
 
 static void DumpVObjectInfoIntoFile(const char* filename, BOOLEAN fAppend)

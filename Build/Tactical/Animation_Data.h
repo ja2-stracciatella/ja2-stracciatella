@@ -28,7 +28,7 @@
 
 #define NUMSOLDIERBODYTYPES	4
 
-typedef enum SoldierBodyTypes
+enum SoldierBodyTypes
 {
 	REGMALE = 0,
 	BIGMALE,
@@ -63,7 +63,7 @@ typedef enum SoldierBodyTypes
 	JEEP,
 
   TOTALBODYTYPES
-} SoldierBodyTypes;
+};
 
 
 // This enumeration defines the graphic image file per animation
@@ -71,7 +71,7 @@ typedef enum SoldierBodyTypes
 // RGM = Regular Male
 // (RG) = Body desc ( Regular - RG, Short Stocky ( SS ), etc
 // (M) = Sex, Male, female
-typedef enum
+enum AnimationSurfaceTypes
 {
 	RGMBASICWALKING = 0,
 	RGMSTANDING,
@@ -496,8 +496,7 @@ typedef enum
 	BODYEXPLODE,
 
 	NUMANIMATIONSURFACETYPES
-
-} AnimationSurfaceTypes;
+};
 
 // Enumerations for struct data
 enum
@@ -513,7 +512,7 @@ enum
 };
 
 // Struct for animation 'surface' information
-typedef struct
+struct AnimationSurfaceType
 {
 	const UINT16 ubName;
 	const char   Filename[50];
@@ -524,7 +523,7 @@ typedef struct
 	HVOBJECT     hVideoObject;
 	INT8         bUsageCount;
 	const INT8   bProfile;
-} AnimationSurfaceType;
+};
 
 
 extern AnimationSurfaceType gAnimSurfaceDatabase[NUMANIMATIONSURFACETYPES];

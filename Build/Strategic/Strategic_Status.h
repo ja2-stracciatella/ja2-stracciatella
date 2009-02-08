@@ -71,7 +71,7 @@ enum
 };
 
 
-typedef struct STRATEGIC_STATUS
+struct STRATEGIC_STATUS
 {
 	UINT32		uiFlags;
 	UINT8			ubNumCapturedForRescue;
@@ -100,7 +100,7 @@ typedef struct STRATEGIC_STATUS
 	UINT8			ubNumberOfDaysOfInactivity;
 
 	INT8 bPadding[70];
-} STRATEGIC_STATUS;
+};
 CASSERT(sizeof(STRATEGIC_STATUS) == 192)
 
 

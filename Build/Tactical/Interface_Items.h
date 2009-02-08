@@ -20,11 +20,11 @@
 
 
 // USED TO SETUP REGION POSITIONS, ETC
-typedef struct
+struct INV_REGION_DESC
 {
 	INT16			sX;
 	INT16			sY;
-} INV_REGION_DESC;
+};
 
 
 // Itempickup stuff

@@ -173,12 +173,11 @@ static void BuildSightDir(UINT32 dir, UINT32* One, UINT32* Two, UINT32* Three, U
 
 #define		NUM_SLANT_ROOF_SLOTS					200
 
-typedef struct
+struct SLANT_ROOF_FOV_TYPE
 {
 	INT16			sGridNo;
 	BOOLEAN		fAllocated;
-
-} SLANT_ROOF_FOV_TYPE;
+};
 
 
 SLANT_ROOF_FOV_TYPE		gSlantRoofData[ NUM_SLANT_ROOF_SLOTS ];

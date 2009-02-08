@@ -14,7 +14,8 @@
 #define MAX_POPUP_BOX_COUNT 20
 
 
-typedef struct PopUpString {
+struct PopUpString
+{
 	wchar_t* pString;
 	UINT8 ubForegroundColor;
 	UINT8 ubBackgroundColor;
@@ -24,7 +25,7 @@ typedef struct PopUpString {
 	BOOLEAN fHighLightFlag;
 	BOOLEAN fShadeFlag;
 	BOOLEAN fSecondaryShadeFlag;
-} PopUpString;
+};
 
 struct PopUpBox
 {

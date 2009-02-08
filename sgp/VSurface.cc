@@ -477,12 +477,12 @@ void BltVideoSurfaceOnce(SGPVSurface* const dst, const char* const filename, INT
 UINT32 guiVSurfaceSize = 0;
 
 
-typedef struct DUMPINFO
+struct DUMPINFO
 {
 	UINT32 Counter;
 	char Name[256];
 	char Code[256];
-} DUMPINFO;
+};
 
 
 void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend)

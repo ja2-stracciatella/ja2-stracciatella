@@ -350,7 +350,7 @@ extern UINT32 guiGameClock;
 typedef void (*LISTBOX_DISPLAY_FNCTN)();    // Define Display Callback function
 typedef void (*TEXT_ENTRY_CALLBACK)(INT32); // Callback for when the text entry field is finished
 
-typedef struct
+struct SCROLL_BOX
 {
 	LISTBOX_DISPLAY_FNCTN DisplayFunction; // The array of items
 
@@ -373,8 +373,7 @@ typedef struct
 	UINT16 usMaxNumDisplayedItems;         // Max number of Displayed items
 
 	UINT8  ubCurScrollBoxAction;           // Holds the status of the current action ( create; destroy... )
-
-} SCROLL_BOX;
+};
 
 
 //Enums for the possible panels the mercs can use

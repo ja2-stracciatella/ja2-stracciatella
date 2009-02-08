@@ -21,7 +21,6 @@
 #include "WordWrap.h"
 
 
-typedef struct CRDT_NODE CRDT_NODE;
 struct CRDT_NODE
 {
 	INT16        sPosY;
@@ -90,7 +89,7 @@ struct CRDT_NODE
 #define		CRDT_EYES_CLOSED_TIME						150
 
 
-typedef struct
+struct CDRT_FACE
 {
 	const INT16  sX;
 	const INT16  sY;
@@ -106,7 +105,7 @@ typedef struct
 	const UINT16 sBlinkFreq;
 	UINT32       uiLastBlinkTime;
 	UINT32       uiEyesClosedTime;
-} CDRT_FACE;
+};
 
 static CDRT_FACE gCreditFaces[] =
 {

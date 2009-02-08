@@ -10,7 +10,7 @@ extern UINT8 gubSrcSoldierProfile;
 
 
 // Structure used in Tactical display of NPC dialogue
-typedef struct
+struct NPC_DIALOGUE_TYPE
 {
 	FACETYPE*     face;
 	INT16					sX;
@@ -40,8 +40,7 @@ typedef struct
 	BOOLEAN				fRenderSubTitlesNow;
 	BOOLEAN				fSetupSubTitles;
 	wchar_t				zQuoteStr[ 480 ];			//QIALOGUE_SIZE is in dialog control which includes this file...
-
-} NPC_DIALOGUE_TYPE;
+};
 
 
 // GLOBAL NPC STRUCT

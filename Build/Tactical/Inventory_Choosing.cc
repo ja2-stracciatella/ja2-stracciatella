@@ -28,11 +28,11 @@
 UINT32 guiMortarsRolledByTeam = 0;
 
 
-typedef struct ARMY_GUN_CHOICE_TYPE
+struct ARMY_GUN_CHOICE_TYPE
 {
 	UINT8 ubChoices;  // how many valid choices there are in this category
 	INT8  bItemNo[5]; // room for up to 5 choices of gun in each category
-} ARMY_GUN_CHOICE_TYPE;
+};
 
 
 static const ARMY_GUN_CHOICE_TYPE gRegularArmyGunChoices[ARMY_GUN_LEVELS] =

@@ -191,7 +191,7 @@ INT16   gsRenderWorldOffsetX = -1;
 INT16   gsRenderWorldOffsetY = -1;
 
 
-typedef struct RenderFXType
+struct RenderFXType
 {
 	BOOLEAN fDynamic;
 	BOOLEAN fZWrite;
@@ -201,7 +201,7 @@ typedef struct RenderFXType
 	BOOLEAN fMerc;
 	BOOLEAN fCheckForRedundency;
 	BOOLEAN fObscured;
-} RenderFXType;
+};
 
 
 static const RenderFXType RenderFX[] =

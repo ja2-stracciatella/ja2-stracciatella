@@ -245,7 +245,7 @@ void FreeStructureFile(STRUCTURE_FILE_REF* const sfr)
  * any structures that are not defined.
  * For image information, however, an array is stored with every entry filled
  * regardless of whether there is non-zero data defined for that graphic! */
-typedef struct STRUCTURE_FILE_HEADER
+struct STRUCTURE_FILE_HEADER
 {
 	char szId[4];
 	union
@@ -258,7 +258,7 @@ typedef struct STRUCTURE_FILE_HEADER
 	UINT8  fFlags;
 	UINT8  bUnused[3];
 	UINT16 usNumberOfImageTileLocsStored;
-} STRUCTURE_FILE_HEADER;
+};
 CASSERT(sizeof(STRUCTURE_FILE_HEADER) == 16)
 
 // "J2SD" = Jagged 2 Structure Data

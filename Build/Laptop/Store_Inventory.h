@@ -4,7 +4,7 @@
 #include "Item_Types.h"
 
 
-typedef struct
+struct STORE_INVENTORY
 {
 	UINT16	usItemIndex;								//Index into the item table
 	UINT8		ubQtyOnHand;
@@ -13,8 +13,7 @@ typedef struct
 	BOOLEAN fPreviouslyEligible;				// whether or not dealer has been eligible to sell this item in days prior to today
 
 	UINT8		filler;
-
-} STORE_INVENTORY;
+};
 CASSERT(sizeof(STORE_INVENTORY) == 8)
 
 

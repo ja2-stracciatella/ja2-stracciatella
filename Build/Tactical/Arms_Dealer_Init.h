@@ -89,7 +89,7 @@ enum
 
 
 // THIS STRUCTURE HAS UNCHANGING INFO THAT DOESN'T GET SAVED/RESTORED/RESET
-typedef struct
+struct ARMS_DEALER_INFO
 {
 	union
 	{
@@ -109,11 +109,11 @@ typedef struct
 	UINT8		ubTypeOfArmsDealer;			// Whether he buys/sells, sells, buys, or repairs
 	INT32		iInitialCash;						// How much cash dealer starts with (we now reset to this amount once / day)
 	UINT32	uiFlags;								// various flags which control the dealer's operations
-} ARMS_DEALER_INFO;
+};
 
 
 // THIS STRUCTURE GETS SAVED/RESTORED/RESET
-typedef struct
+struct ARMS_DEALER_STATUS
 {
 	UINT32	uiArmsDealersCash;			// How much money the arms dealer currently has
 
@@ -125,12 +125,11 @@ typedef struct
 	UINT32	uiTimePlayerLastInSKI;	// game time (in total world minutes) when player last talked to this dealer in SKI
 
 	UINT8		ubPadding[ 8 ];
-
-} ARMS_DEALER_STATUS;
+};
 CASSERT(sizeof(ARMS_DEALER_STATUS) == 20)
 
 
-typedef struct
+struct SPECIAL_ITEM_INFO
 {
 	UINT16	usAttachment[MAX_ATTACHMENTS];		// item index of any attachments on the item
 
@@ -143,12 +142,11 @@ typedef struct
 	INT8		bAttachmentStatus[MAX_ATTACHMENTS];	// status of any attachments on the item
 
 	UINT8		ubPadding[2];					// filler
-
-} SPECIAL_ITEM_INFO;
+};
 CASSERT(sizeof(SPECIAL_ITEM_INFO) == 16)
 
 
-typedef struct
+struct DEALER_SPECIAL_ITEM
 {
 	// Individual "special" items are stored here as needed, *one* per slot
 	// An item is special if it is used (status < 100), has been imprinted, or has a permanent attachment
@@ -162,12 +160,11 @@ typedef struct
 	UINT8		ubOwnerProfileId;			// stores which merc previously owned an item being repaired
 
 	UINT8		ubPadding[6];					// filler
-
-} DEALER_SPECIAL_ITEM;
+};
 CASSERT(sizeof(DEALER_SPECIAL_ITEM) == 28)
 
 
-typedef struct
+struct DEALER_ITEM_HEADER
 {
 	// Non-special items are all the identical and are totaled inside ubPerfectItems.
 	// Items being repaired are also stored here, with a negative condition.
@@ -185,8 +182,7 @@ typedef struct
 	BOOLEAN	fPreviouslyEligible;	// whether or not dealer has been eligible to sell this item in days prior to today
 
 	UINT8		ubPadding[2];					// filler
-
-} DEALER_ITEM_HEADER;
+};
 CASSERT(sizeof(DEALER_ITEM_HEADER) == 16)
 
 

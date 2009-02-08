@@ -87,10 +87,10 @@ extern BOOLEAN gfGeneratingMapEdgepoints;
 
 // OLD PATHAI STUFF
 /////////////////////////////////////////////////
-struct path_s
+struct path_t
 {
 	INT32							iLocation;						//4
-	struct path_s *		pNext[ABSMAX_SKIPLIST_LEVEL];   //4 * MAX_SKIPLIST_LEVEL (5) = 20
+	path_t*       pNext[ABSMAX_SKIPLIST_LEVEL];   //4 * MAX_SKIPLIST_LEVEL (5) = 20
 	INT16							sPathNdx;							//2
 	TRAILCELLTYPE			usCostSoFar;          //2
 	TRAILCELLTYPE			usCostToGo;           //2
@@ -100,21 +100,18 @@ struct path_s
 	UINT8							ubLegDistance;				//1
 };
 
-typedef struct path_s path_t;
-
-struct trail_s
+struct trail_t
 {
 	INT16 nextLink;
 	INT8	stepDir;
 	INT8	fFlags;
 	INT16	sGridNo;
 };
-typedef struct trail_s trail_t;
 
-typedef enum TrailFlags
+enum TrailFlags
 {
 	STEP_BACKWARDS = 0x01
-} TrailFlags;
+};
 
 #define EASYWATERCOST	TRAVELCOST_FLAT / 2
 #define ISWATER(t)	(((t)==TRAVELCOST_KNEEDEEP) || ((t)==TRAVELCOST_DEEPWATER))

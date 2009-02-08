@@ -92,7 +92,7 @@ enum
 };
 
 
-typedef struct ARMY_COMPOSITION
+struct ARMY_COMPOSITION
 {
 	INT32 iReadability;					//contains the enumeration which is useless, but helps readability.
 	INT8 bPriority;
@@ -102,11 +102,11 @@ typedef struct ARMY_COMPOSITION
 	INT8 bDesiredPopulation;
 	INT8 bStartPopulation;
 	INT8 bPadding[10];
-}ARMY_COMPOSITION;
+};
 CASSERT(sizeof(ARMY_COMPOSITION) == 20)
 
 //Defines the patrol groups -- movement groups.
-typedef struct PATROL_GROUP
+struct PATROL_GROUP
 {
 	INT8	bSize;
 	INT8	bPriority;
@@ -116,19 +116,19 @@ typedef struct PATROL_GROUP
 	INT8	bWeight;
 	UINT8 ubPendingGroupID;
 	INT8  bPadding[10];
-}PATROL_GROUP;
+};
 CASSERT(sizeof(PATROL_GROUP) == 20)
 
 
 //Defines all stationary defence forces.
-typedef struct GARRISON_GROUP
+struct GARRISON_GROUP
 {
 	UINT8 ubSectorID;
 	UINT8	ubComposition;
 	INT8 bWeight;
 	UINT8 ubPendingGroupID;
 	INT8 bPadding[10];
-}GARRISON_GROUP;
+};
 CASSERT(sizeof(GARRISON_GROUP) == 14)
 
 #if defined JA2BETAVERSION

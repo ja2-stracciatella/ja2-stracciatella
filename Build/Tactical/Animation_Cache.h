@@ -7,13 +7,12 @@
 #define MIN_CACHE_SIZE		2
 
 
-typedef struct
+struct AnimationSurfaceCacheType
 {
 	UINT16	*usCachedSurfaces;
 	INT16		*sCacheHits;
 	UINT8		ubCacheSize;
-
-} AnimationSurfaceCacheType;
+};
 
 void GetCachedAnimationSurface(UINT16 usSoldierID, AnimationSurfaceCacheType* pAnimCache, UINT16 usSurfaceIndex, UINT16 usCurrentAnimation);
 void InitAnimationCache(UINT16 usSoldierID, AnimationSurfaceCacheType*);

@@ -19,12 +19,11 @@
 #define EMPTY_INDEX						999
 
 
-typedef struct
+struct ANIMSUBTYPE
 {
 	UINT16	usAnimState;
 	UINT16	usAnimationSurfaces[ 4 ];
-
-} ANIMSUBTYPE;
+};
 
 
 //Block for anim file

@@ -130,15 +130,14 @@ static UINT8 ExtOneCDirection(const UINT8 exdir)
 }
 
 
-typedef struct
+struct BATTLESNDS_STRUCT
 {
 	CHAR8				zName[20];
 	UINT8				ubRandomVal;
 	BOOLEAN			fBadGuy;
 	BOOLEAN			fDontAllowTwoInRow;
 	BOOLEAN			fStopDialogue;
-
-} BATTLESNDS_STRUCT;
+};
 
 
 static const BATTLESNDS_STRUCT gBattleSndsData[] =
@@ -190,11 +189,11 @@ static const INT16 gsTerrainTypeSpeedModifiers[] =
 };
 
 
-typedef struct PaletteSubRangeType
+struct PaletteSubRangeType
 {
 	UINT8 ubStart;
 	UINT8 ubEnd;
-} PaletteSubRangeType;
+};
 
 
 // Palette ranges

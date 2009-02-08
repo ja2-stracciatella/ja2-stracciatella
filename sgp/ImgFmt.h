@@ -28,7 +28,7 @@
 // NB if you're going to change the header definition:
 // - make sure that everything in this header is nicely aligned
 // - don't exceed the 64-byte maximum
-typedef struct
+struct STCIHeader
 {
 	UINT8		cID[STCI_ID_LEN];
 	UINT32	uiOriginalSize;
@@ -63,11 +63,11 @@ typedef struct
 	UINT8		ubDepth;	// size in bits of one pixel as stored in the file
 	UINT32	uiAppDataSize;
 	UINT8		cUnused[12];
-} STCIHeader;
+};
 CASSERT(sizeof(STCIHeader) == 64)
 
 
-typedef struct
+struct STCISubImage
 {
 	UINT32			uiDataOffset;
 	UINT32			uiDataLength;
@@ -75,15 +75,15 @@ typedef struct
 	INT16				sOffsetY;
 	UINT16			usHeight;
 	UINT16			usWidth;
-} STCISubImage;
+};
 CASSERT(sizeof(STCISubImage) == 16)
 
-typedef struct
+struct STCIPaletteElement
 {
 	UINT8				ubRed;
 	UINT8				ubGreen;
 	UINT8				ubBlue;
-} STCIPaletteElement;
+};
 CASSERT(sizeof(STCIPaletteElement) == 3)
 
 #endif

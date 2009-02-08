@@ -13,12 +13,12 @@
 #define MAX_BUILDINGS 31
 
 
-typedef struct BUILDING
+struct BUILDING
 {
 	INT16			sUpClimbSpots[MAX_CLIMBSPOTS_PER_BUILDING];
 	INT16 		sDownClimbSpots[MAX_CLIMBSPOTS_PER_BUILDING];
 	UINT8			ubNumClimbSpots;
-} BUILDING;
+};
 
 extern UINT8 gubBuildingInfo[ WORLD_MAX ];
 

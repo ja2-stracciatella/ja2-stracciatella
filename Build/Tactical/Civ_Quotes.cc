@@ -38,11 +38,11 @@
 #define			CIV_QUOTE_HINT							99
 
 
-typedef struct
+struct CIV_QUOTE
 {
 	UINT8	ubNumEntries;
 	UINT8	ubUnusedCurrentEntry;
-} CIV_QUOTE;
+};
 CASSERT(sizeof(CIV_QUOTE) == 2)
 
 
@@ -107,7 +107,7 @@ UINT8	gubNumEntries[ NUM_CIV_QUOTES ] =
 };
 
 
-typedef struct
+struct QUOTE_SYSTEM_STRUCT
 {
 	BOOLEAN				bActive;
 	MOUSE_REGION	MouseRegion;
@@ -116,7 +116,7 @@ typedef struct
 	UINT32				uiTimeOfCreation;
 	UINT32				uiDelayTime;
 	SOLDIERTYPE *	pCiv;
-} QUOTE_SYSTEM_STRUCT;
+};
 
 
 static QUOTE_SYSTEM_STRUCT gCivQuoteData;
