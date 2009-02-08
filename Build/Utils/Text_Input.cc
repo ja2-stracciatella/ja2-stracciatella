@@ -764,8 +764,8 @@ static void HandleRegularInput(wchar_t const c)
 			if (L'0' <= c && c <= L'9') AddChar(c);
 			break;
 
-		case INPUTTYPE_ASCII:
-			if (L' ' <= c && c <= L'}') AddChar(c);
+		case INPUTTYPE_FULL_TEXT:
+			if (IsPrintableChar(c)) AddChar(c);
 			break;
 
 		case INPUTTYPE_DOSFILENAME: // DOS file names
