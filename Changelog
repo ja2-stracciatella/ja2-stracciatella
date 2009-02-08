@@ -1,3 +1,4 @@
+(r5250) Fix a vanilla buffer overrun, which occurs when entering text into a text input field.
 (r5223) Fix incorrectly encoded texts in the English version when loading them from data files. A few sentences by Malice contain accented letters, which were not displayed correctly.
 (r5213) Allow all printable chars in the name and nickname of IMPs. E.g. umlauts and cyrillic letters are allowed now.
 (r5207) Fix a vanilla glitch: The highlighted text of a text input field was deleted, when a non-character key (like cursor up) was pressed.
