@@ -743,49 +743,11 @@ BOOLEAN HandleTextInput( InputAtom *Event )
 			break;
 
 		default:  //check for typing keys
-			wchar_t key = Event->Char;
+			wchar_t const c = Event->Char;
 			/* If the key has no character associated, bail out */
-			if (key == L'\0') return FALSE;
-
+			if (c == L'\0') return FALSE;
 			DeleteHilitedText();
-			if( gpActive->usInputType >= INPUTTYPE_EXCLUSIVE_BASEVALUE )
-				HandleExclusiveInput(key);
-			else
-			{
-				UINT16 type = gpActive->usInputType;
-				//Handle space key
-				if (key == L' ' && type & INPUTTYPE_SPACES)
-				{
-					AddChar( key );
-					return TRUE;
-				}
-				//Handle numerics
-				if( key >= '0' && key <= '9' && type & INPUTTYPE_NUMERICSTRICT )
-				{
-					AddChar( key );
-					return TRUE;
-				}
-				//Handle alphas
-				if (type & INPUTTYPE_ALPHA &&
-						(('A' <= key && key <= 'Z') || ('a' <= key && key <= 'z')))
-				{
-					AddChar(key);
-					return TRUE;
-				}
-				//Handle special characters
-				if( type & INPUTTYPE_SPECIAL )
-				{
-					//More can be added, but not all of the fonts support these
-					if( key >= 0x21 && key <= 0x2f || // ! " # $ % & ' ( ) * + , - . /
-						  key >= 0x3a && key <= 0x40 || // : ; < = > ? @
-							key >= 0x5b && key <= 0x5f || // [ \ ] ^ _
-							key >= 0x7b && key <= 0x7d  ) // { | }
-					{
-						AddChar( key );
-						return TRUE;
-					}
-				}
-			}
+			HandleExclusiveInput(c);
 			return TRUE;
 	}
 	return TRUE;
@@ -798,6 +760,14 @@ static void HandleExclusiveInput(wchar_t const c)
 	TEXTINPUTNODE const& n = *gpActive;
 	switch (n.usInputType)
 	{
+		case INPUTTYPE_NUMERICSTRICT:
+			if (L'0' <= c && c <= L'9') AddChar(c);
+			break;
+
+		case INPUTTYPE_ASCII:
+			if (L' ' <= c && c <= L'}') AddChar(c);
+			break;
+
 		case INPUTTYPE_EXCLUSIVE_DOSFILENAME: // DOS file names
 			if ((L'A' <= c && c <= L'Z') ||
 					(L'a' <= c && c <= L'z') ||

@@ -21,21 +21,6 @@
 //	-max number of fields 255 (per level)
 //  -max num of chars in field 255
 
-//These are the definitions for the input types.  I didn't like the input filter idea,
-//and the lack of freedom it gives you.  This method is much simpler to use.
-//NOTE:  Feel free to expand this to your needs, though you also need to support it in the filter
-//			 section.
-#define	INPUTTYPE_NUMERICSTRICT	0x0001 //0-9 only, no minus signs.
-#define INPUTTYPE_ALPHA					0x0002 //a-z A-Z
-#define INPUTTYPE_SPACES				0x0004 //allows spaces in input
-#define INPUTTYPE_SPECIAL				0x0008 //  !@#$%^&*()_+`|\[]{};':"<>,./? (spaces not included)
-#define INPUTTYPE_SPECIALCHARS	(INPUTTYPE_SPECIAL | INPUTTYPE_SPACES)
-#define INPUTTYPE_ALPHANUMERIC	(INPUTTYPE_ALPHA | INPUTTYPE_NUMERICSTRICT)
-#define INPUTTYPE_ASCII					(INPUTTYPE_ALPHANUMERIC | INPUTTYPE_SPECIALCHARS)
-
-//DON'T GO ABOVE INPUTTYPE_EXCLUSIVE_BASEVALUE FOR INPUTTYPE MASKED VALUES LISTED ABOVE!!!
-#define INPUTTYPE_EXCLUSIVE_BASEVALUE			0x1000  //increase this value if necessary
-
 //Exclusive handlers
 //The dosfilename inputtype is a perfect example of what is a exclusive handler.
 //In this method, the input accepts only alphas and an underscore as the first character,
@@ -43,10 +28,11 @@
 //as an exclusive handler, and you'll have to process it in the filter input function.
 enum
 {
-	INPUTTYPE_EXCLUSIVE_DOSFILENAME	= INPUTTYPE_EXCLUSIVE_BASEVALUE,
+	INPUTTYPE_NUMERICSTRICT,
+	INPUTTYPE_ASCII,
+	INPUTTYPE_EXCLUSIVE_DOSFILENAME,
 	INPUTTYPE_EXCLUSIVE_COORDINATE,
-	INPUTTYPE_EXCLUSIVE_24HOURCLOCK,
-	//INPUTTYPE_EXCLUSIVE_NEWNEWNEW, etc...
+	INPUTTYPE_EXCLUSIVE_24HOURCLOCK
 };
 
 //Simply initiates that you wish to begin inputting text.  This should only apply to screen
