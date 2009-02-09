@@ -139,7 +139,7 @@ void SetCursorColor( UINT16 usCursorColor );
 //	}
 //}
 //It is only necessary for event loops that contain text input fields.
-BOOLEAN HandleTextInput( InputAtom *Event );
+BOOLEAN HandleTextInput(InputAtom const*);
 
 void RenderInactiveTextField( UINT8 ubID );
 void RenderAllTextFields(void);

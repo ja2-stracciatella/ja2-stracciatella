@@ -605,151 +605,148 @@ static void HandleRegularInput(wchar_t);
 static void RemoveChar(UINT8 ubArrayIndex);
 
 
-//All CTRL and ALT keys combinations, F1-F12 keys, ENTER and ESC are ignored allowing
-//processing to be done with your own input handler.  Otherwise, the keyboard event
-//is absorbed by this input handler, if used in the appropriate manner.
-//This call must be added at the beginning of your input handler in this format:
-//while( DequeueEvent(&Event) )
-//{
-//	if(	!HandleTextInput( &Event ) && (your conditions...ex:  Event.usEvent == KEY_DOWN ) )
-//  {
-//		switch( Event.usParam )
-//		{
-//			//Normal key cases here.
-//		}
-//	}
-//}
-//It is only necessary for event loops that contain text input fields.
-BOOLEAN HandleTextInput( InputAtom *Event )
+BOOLEAN HandleTextInput(InputAtom const* const a)
 {
-	//Check the multitude of terminating conditions...
-
-	//not in text input mode
 	gfNoScroll = FALSE;
-	if( !gfTextInputMode )
-		return FALSE;
-	//unless we are psycho typers, we only want to process these key events.
-	if( Event->usEvent != KEY_DOWN && Event->usEvent != KEY_REPEAT )
-		return FALSE;
-	//currently in a user field, so return unless TAB is pressed.
-	if (!gfEditingText && Event->usParam != SDLK_TAB) return FALSE;
-	//ESC and ENTER must be handled externally, due to the infinite uses for it.
-	//When editing text, ESC is equivalent to cancel, and ENTER is to confirm.
-	if (Event->usParam == SDLK_ESCAPE)
-		return FALSE;
-	if (Event->usParam == SDLK_RETURN)
+	// Not in text input mode
+	if (!gfTextInputMode) return FALSE;
+	// Unless we are psycho typers, we only want to process these key events.
+	if (a->usEvent != KEY_DOWN && a->usEvent != KEY_REPEAT) return FALSE;
+	// Currently in a user field, so return unless TAB is pressed.
+	if (!gfEditingText && a->usParam != SDLK_TAB) return FALSE;
+
+	switch (a->usKeyState)
 	{
-		PlayJA2Sample(REMOVING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
-		return FALSE;
-	}
-	//For any number of reasons, these ALT and CTRL combination key presses
-	//will be processed externally
+		case 0:
+			switch (a->usParam)
+			{
+				/* ESC and ENTER must be handled externally, due to the infinite uses
+				 * for them. */
+				case SDLK_ESCAPE: return FALSE; // ESC is equivalent to cancel
+
+				case SDLK_RETURN: // ENTER is to confirm.
+					PlayJA2Sample(REMOVING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
+					return FALSE;
+
+				case SDLK_TAB:
+					/* Always select the next field, even when a user defined field is
+					 * currently selected. The order in which you add your text and user
+					 * fields dictates the cycling order when TAB is pressed. */
+					SelectNextField();
+					return TRUE;
+
+				case SDLK_LEFT:
+					gfNoScroll = TRUE;
+					if (gubCursorPos != 0) --gubCursorPos;
+					gubStartHilite = gubCursorPos;
+					return TRUE;
+
+				case SDLK_RIGHT:
+					if (gubCursorPos < gpActive->ubStrLen) ++gubCursorPos;
+					gubStartHilite = gubCursorPos;
+					return TRUE;
+
+				case SDLK_END:
+					gubCursorPos   = gpActive->ubStrLen;
+					gubStartHilite = gubCursorPos;
+					return TRUE;
+
+				case SDLK_HOME:
+					gubCursorPos   = 0;
+					gubStartHilite = gubCursorPos;
+					return TRUE;
+
+				case SDLK_DELETE:
+					/* DEL either deletes the selected text, or the character to the right
+					 * of the cursor if applicable. */
+					if (gubStartHilite != gubCursorPos)
+					{
+						DeleteHilitedText();
+					}
+					else
+					{
+						RemoveChar(gubCursorPos);
+					}
+					break;
+
+				case SDLK_BACKSPACE:
+					/* Delete the selected text, or the character to the left of the
+					 * cursor if applicable. */
+					if (gubStartHilite != gubCursorPos)
+					{
+						DeleteHilitedText();
+					}
+					else if (gubCursorPos > 0)
+					{
+						gubStartHilite = --gubCursorPos;
+						RemoveChar(gubCursorPos);
+					}
+					else
+					{
+						return TRUE;
+					}
+					break;
+
+				default: goto enter_character;
+			}
+
+		case SHIFT_DOWN:
+			switch (a->usParam)
+			{
+				case SDLK_TAB: // See comment for non-shifted TAB above
+					SelectPrevField();
+					return TRUE;
+
+				case SDLK_LEFT:
+					gfNoScroll = TRUE;
+					if (gubCursorPos != 0) --gubCursorPos;
+					return TRUE;
+
+				case SDLK_RIGHT:
+					if (gubCursorPos < gpActive->ubStrLen) ++gubCursorPos;
+					return TRUE;
+
+				case SDLK_END:
+					gubCursorPos = gpActive->ubStrLen;
+					return TRUE;
+
+				case SDLK_HOME:
+					gubCursorPos = 0;
+					return TRUE;
+
+				default: // Check for typing keys
+enter_character:
+					wchar_t const c = a->Char;
+					/* If the key has no character associated, bail out */
+					if (c == L'\0') return FALSE;
+					DeleteHilitedText();
+					HandleRegularInput(c);
+					return TRUE;
+			}
+
+		case CTRL_DOWN:
+			switch (a->usParam)
+			{
 #if 0
-	if( Event->usKeyState & CTRL_DOWN  )
-	{
-		if (Event->usParam == SDLK_c)
-		{
-			ExecuteCopyCommand();
-			return TRUE;
-		}
-		else if (Event->usParam == SDLK_x)
-		{
-			ExecuteCutCommand();
-			return TRUE;
-		}
-		else if (Event->usParam == SDLK_v)
-		{
-			ExecutePasteCommand();
-			return TRUE;
-		}
-	}
+				case SDLK_c: ExecuteCopyCommand();  return TRUE;
+				case SDLK_x: ExecuteCutCommand();   return TRUE;
+				case SDLK_v: ExecutePasteCommand(); return TRUE;
 #endif
-	if (Event->usKeyState & ALT_DOWN || Event->usKeyState & CTRL_DOWN && Event->usParam != SDLK_DELETE)
-		return FALSE;
-	//F1-F12 regardless of state are processed externally as well.
-	if (Event->usParam >= SDLK_F1 && Event->usParam <= SDLK_F12) return FALSE;
-	//If we have met all of the conditions, we then have a valid key press
-	//which will be handled universally for all text input fields
-	switch( Event->usParam )
-	{
-		case SDLK_TAB:
-			//Always selects the next field, even when a user defined field is currently selected.
-			//The order in which you add your text and user fields dictates the cycling order when
-			//TAB is pressed.
-			if (Event->usKeyState & SHIFT_DOWN)
-			{
-				SelectPrevField();
+
+				case SDLK_DELETE:
+					// Delete the entire text field, regardless of hilighting.
+					gubStartHilite = 0;
+					gubCursorPos   = gpActive->ubStrLen;
+					DeleteHilitedText();
+					break;
+
+				default: return FALSE;
 			}
-			else
-			{
-				SelectNextField();
-			}
-			break;
 
-		case SDLK_LEFT:
-			gfNoScroll = TRUE;
-			if (gubCursorPos) gubCursorPos--;
-			if (!(Event->usKeyState & SHIFT_DOWN)) gubStartHilite = gubCursorPos;
-			break;
-
-		case SDLK_RIGHT:
-			if (gubCursorPos < gpActive->ubStrLen) gubCursorPos++;
-			if (!(Event->usKeyState & SHIFT_DOWN)) gubStartHilite = gubCursorPos;
-			break;
-
-		case SDLK_END:
-			gubCursorPos = gpActive->ubStrLen;
-			if (!(Event->usKeyState & SHIFT_DOWN)) gubStartHilite = gubCursorPos;
-			break;
-
-		case SDLK_HOME:
-			gubCursorPos = 0;
-			if (!(Event->usKeyState & SHIFT_DOWN)) gubStartHilite = gubCursorPos;
-			break;
-
-		case SDLK_DELETE:
-			//CTRL+DEL will delete the entire text field, regardless of hilighting.
-			//DEL will either delete the selected text, or the character to the right
-			//of the cursor if applicable.
-			PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
-			if( Event->usKeyState & CTRL_DOWN )
-			{
-				gubStartHilite = 0;
-				gubCursorPos = gpActive->ubStrLen;
-				DeleteHilitedText();
-			}
-			else if (gubStartHilite != gubCursorPos)
-			{
-				DeleteHilitedText();
-			}
-			else
-				RemoveChar( gubCursorPos );
-			break;
-
-		case SDLK_BACKSPACE:
-			//Will delete the selected text, or the character to the left of the cursor if applicable.
-			if (gubStartHilite != gubCursorPos)
-			{
-				PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
-				DeleteHilitedText();
-			}
-			else if( gubCursorPos > 0 )
-			{
-				PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
-				--gubCursorPos;
-				gubStartHilite = gubCursorPos;
-				RemoveChar(gubCursorPos);
-			}
-			break;
-
-		default:  //check for typing keys
-			wchar_t const c = Event->Char;
-			/* If the key has no character associated, bail out */
-			if (c == L'\0') return FALSE;
-			DeleteHilitedText();
-			HandleRegularInput(c);
-			return TRUE;
+		default: return FALSE;
 	}
+
+	PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
 	return TRUE;
 }
 
