@@ -864,27 +864,15 @@ static void AddChar(wchar_t const c)
 
 static void DeleteHilitedText(void)
 {
-	UINT8 ubCount;
-	UINT8 ubStart, ubEnd;
-	if (gubStartHilite != gubCursorPos)
+	UINT8 start = gubStartHilite;
+	UINT8 end   = gubCursorPos;
+	if (start == end) return;
+	if (start >  end) Swap(start, end);
+	gubStartHilite = start;
+	gubCursorPos   = start;
+	for (UINT8 n = end - start; n != 0; --n)
 	{
-		if (gubStartHilite < gubCursorPos)
-		{
-			ubStart = gubStartHilite;
-			ubEnd = gubCursorPos;
-		}
-		else
-		{
-			ubStart = gubCursorPos;
-			ubEnd = gubStartHilite;
-		}
-		ubCount = (UINT8)(ubEnd - ubStart);
-		while( ubCount--)
-		{
-			RemoveChar( ubStart );
-		}
-		gubStartHilite = ubStart;
-		gubCursorPos = ubStart;
+		RemoveChar(start);
 	}
 }
 
