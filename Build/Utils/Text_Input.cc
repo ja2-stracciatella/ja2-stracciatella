@@ -663,9 +663,13 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 					{
 						DeleteHilitedText();
 					}
-					else
+					else if (gubCursorPos < gpActive->ubStrLen)
 					{
 						RemoveChar(gubCursorPos);
+					}
+					else
+					{
+						return TRUE;
 					}
 					break;
 
@@ -689,6 +693,7 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 
 				default: goto enter_character;
 			}
+			break;
 
 		case SHIFT_DOWN:
 			switch (a->usParam)
@@ -742,6 +747,7 @@ enter_character:
 
 				default: return FALSE;
 			}
+			break;
 
 		default: return FALSE;
 	}
