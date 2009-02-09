@@ -389,29 +389,21 @@ wchar_t const* GetStringFromField(UINT8 const ubField)
 }
 
 
-//Converts the field's string into a number, then returns that number
-//returns -1 if blank or invalid.  Only works for positive numbers.
-INT32 GetNumericStrictValueFromField( UINT8 ubField )
+INT32 GetNumericStrictValueFromField(UINT8 const id)
 {
-	INT32 total;
-	wchar_t const* ptr = GetStringFromField(ubField);
-	//Blank string, so return -1
-	if (ptr[0] == L'\0') return -1;
-	//Convert the string to a number.  Don't trust other functions.  This will
-	//ensure that nonnumeric values automatically return -1.
-	total = 0;
-	while( *ptr != '\0' )									//if char is a valid char...
+	wchar_t const* i = GetStringFromField(id);
+	if (*i == L'\0') return -1; // Blank string, so return -1
+	/* Convert the string to a number. This ensures that non-numeric values
+	 * automatically return -1. */
+	INT32 total = 0;
+	for (; *i != '\0'; ++i)
 	{
-		if( *ptr >= '0' && *ptr <= '9' )		//...make sure it is numeric...
-		{	//Multiply prev total by 10 and add converted char digit value.
-			total = total * 10 + (*ptr - '0');
-		}
-		else																//...else the string is invalid.
-			return -1;
-		ptr++;	//point to next char in string.
+		if (*i < L'0' || L'9' < *i) return -1;
+		total = total * 10 + (*i - '0');
 	}
-	return total; //if we made it this far, then we have a valid number.
+	return total;
 }
+
 
 //Converts a number to a numeric strict value.  If the number is negative, the
 //field will be blank.

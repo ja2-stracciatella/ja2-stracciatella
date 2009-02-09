@@ -97,9 +97,9 @@ wchar_t const* GetStringFromField(UINT8 ubField);
 UINT16 GetExclusive24HourTimeValueFromField( UINT8 ubField );
 void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime );
 
-//Converts the field's string into a number, then returns that number
-//returns -1 if blank or invalid.  Only works for positive numbers.
-INT32 GetNumericStrictValueFromField( UINT8 ubField );
+/* Return the field's string as a number. Return -1 if blank or invalid.  Only
+ * works for positive numbers. */
+INT32 GetNumericStrictValueFromField(UINT8 id);
 
 //Converts a number to a numeric strict value.  If the number is negative, the
 //field will be blank.
