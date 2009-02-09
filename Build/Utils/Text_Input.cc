@@ -602,7 +602,7 @@ void SetCursorColor( UINT16 usCursorColor )
 static void AddChar(wchar_t);
 static void DeleteHilitedText(void);
 static void HandleRegularInput(wchar_t);
-static void RemoveChar(UINT8 ubArrayIndex);
+static void RemoveChars(size_t pos, size_t n);
 
 
 BOOLEAN HandleTextInput(InputAtom const* const a)
@@ -665,7 +665,7 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 					}
 					else if (gubCursorPos < gpActive->ubStrLen)
 					{
-						RemoveChar(gubCursorPos);
+						RemoveChars(gubCursorPos, 1);
 					}
 					else
 					{
@@ -683,7 +683,7 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 					else if (gubCursorPos > 0)
 					{
 						gubStartHilite = --gubCursorPos;
-						RemoveChar(gubCursorPos);
+						RemoveChars(gubCursorPos, 1);
 					}
 					else
 					{
@@ -873,25 +873,16 @@ static void DeleteHilitedText(void)
 	if (start >  end) Swap(start, end);
 	gubStartHilite = start;
 	gubCursorPos   = start;
-	for (UINT8 n = end - start; n != 0; --n)
-	{
-		RemoveChar(start);
-	}
+	RemoveChars(start, end - start);
 }
 
 
-static void RemoveChar(UINT8 ubArrayIndex)
+static void RemoveChars(size_t const pos, size_t const n)
 {
-	BOOLEAN fDeleting = FALSE;
-	while( ubArrayIndex < gpActive->ubStrLen )
-	{
-		gpActive->szString[ ubArrayIndex ] = gpActive->szString[ ubArrayIndex + 1 ];
-		ubArrayIndex++;
-		fDeleting = TRUE;
-	}
-	//if we deleted a char, then decrement the strlen.
-	if( fDeleting )
-		gpActive->ubStrLen--;
+	TEXTINPUTNODE& t = *gpActive;
+	Assert(pos + n <= t.ubStrLen);
+	t.ubStrLen -= n;
+	for (wchar_t* str = t.szString + pos; (*str = str[n]) != L'\0'; ++str) {}
 }
 
 
