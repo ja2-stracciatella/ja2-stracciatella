@@ -214,15 +214,8 @@ static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 					wcscpy( gzFilename, L"" );
 				else
 					swprintf(gzFilename, lengthof(gzFilename), L"%hs", temp->filename);
-				if( ValidFilename() )
-				{
-					SetInputFieldStringWith16BitString( 0, gzFilename );
-				}
-				else
-				{
-					SetInputFieldStringWith16BitString( 0, L"" );
-					wcscpy( gzFilename, L"" );
-				}
+				if (!ValidFilename()) gzFilename[0] = L'\0';
+				SetInputFieldStringWith16BitString(0, gzFilename);
 				RemoveFromFDlgList( &FileList, curr );
 				iTotalFiles--;
 				if( !iTotalFiles )
@@ -597,15 +590,8 @@ static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 			iCurrFileShown = x;
 			FListNode->filename[30] = '\0';
 			swprintf(gzFilename, lengthof(gzFilename), L"%hs", FListNode->filename);
-			if( ValidFilename() )
-			{
-				SetInputFieldStringWith16BitString( 0, gzFilename );
-			}
-			else
-			{
-				SetInputFieldStringWith16BitString( 0, L"" );
-				wcscpy( gzFilename, L"" );
-			}
+			if (!ValidFilename()) gzFilename[0] = L'\0';
+			SetInputFieldStringWith16BitString(0, gzFilename);
 
 			RenderInactiveTextField( 0 );
 

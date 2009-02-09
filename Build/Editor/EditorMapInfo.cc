@@ -139,10 +139,7 @@ void UpdateMapInfoFields()
 	swprintf(str, lengthof(str), L"%d", gusLightLevel);
 	SetInputFieldStringWith16BitString( 5, str );
 
-	if( !gMapInformation.ubRestrictedScrollID )
-		swprintf(str, lengthof(str), L"");
-	else
-		swprintf(str, lengthof(str), L"%d", gMapInformation.ubRestrictedScrollID);
+	swprintf(str, lengthof(str), L"%.d", gMapInformation.ubRestrictedScrollID);
 	SetInputFieldStringWith16BitString( 6, str );
 
 	ApplyNewExitGridValuesToTextFields();
