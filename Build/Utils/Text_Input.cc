@@ -896,66 +896,61 @@ static void SetActiveFieldMouse(MOUSE_REGION const* const r)
 }
 
 
-//Internally used to continue highlighting text
-static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
+static size_t CalculateCursorPos(INT32 const click_x)
 {
-	if( gfLeftButtonState )
+	Font           const font     = pColors->usFont;
+	wchar_t const* const str      = gpActive->szString;
+	INT32                char_pos = 0;
+	size_t               i;
+	for (i = 0; str[i] != L'\0'; ++i)
 	{
-		if( reason & MSYS_CALLBACK_REASON_MOVE ||
-				reason & MSYS_CALLBACK_REASON_LOST_MOUSE ||
-				reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
-		{
-			SetActiveFieldMouse(reg);
-			if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
-			{
-				if( gusMouseYPos < reg->RegionTopLeftY )
-				{
-					gubCursorPos = 0;
-					return;
-				}
-				else if( gusMouseYPos > reg->RegionBottomRightY )
-				{
-					gubCursorPos = gpActive->ubStrLen;
-					return;
-				}
-			}
+		char_pos += GetCharWidth(font, str[i]);
+		if (char_pos >= click_x) break;
+	}
+	return i;
+}
 
-			//Calculate the cursor position.
-			Font const font = pColors->usFont;
-			INT32 click_x = gusMouseXPos - reg->RegionTopLeftX;
-			size_t i;
-			INT32 char_pos = 0;
-			for (i = 0; i < gpActive->ubStrLen; i++)
+
+//Internally used to continue highlighting text
+static void MouseMovedInTextRegionCallback(MOUSE_REGION* const reg, INT32 const reason)
+{
+	if (!gfLeftButtonState) return;
+
+	if (reason & MSYS_CALLBACK_REASON_MOVE       ||
+			reason & MSYS_CALLBACK_REASON_LOST_MOUSE ||
+			reason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
+	{
+		SetActiveFieldMouse(reg);
+		if (reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
+		{
+			if (gusMouseYPos < reg->RegionTopLeftY)
 			{
-				char_pos += GetCharWidth(font, gpActive->szString[i]);
-				if (char_pos >= click_x) break;
+				gubCursorPos = 0;
 			}
-			gubCursorPos = i;
+			else if (gusMouseYPos > reg->RegionBottomRightY)
+			{
+				gubCursorPos = gpActive->ubStrLen;
+			}
+		}
+		else
+		{
+			gubCursorPos = CalculateCursorPos(gusMouseXPos - reg->RegionTopLeftX);
 		}
 	}
 }
 
 
 //Internally used to calculate where to place the cursor.
-static void MouseClickedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason)
+static void MouseClickedInTextRegionCallback(MOUSE_REGION* const reg, INT32 const reason)
 {
-	if( reason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		SetActiveFieldMouse(reg);
 		//Signifies that we are typing text now.
 		gfEditingText = TRUE;
-		//Calculate the cursor position.
-		Font const font = pColors->usFont;
-		INT32 click_x = gusMouseXPos - reg->RegionTopLeftX;
-		size_t i;
-		INT32 char_pos = 0;
-		for (i = 0; i < gpActive->ubStrLen; i++)
-		{
-			char_pos += GetCharWidth(font, gpActive->szString[i]);
-			if (char_pos >= click_x) break;
-		}
-		gubCursorPos   = i;
-		gubStartHilite = i;
+		size_t const pos = CalculateCursorPos(gusMouseXPos - reg->RegionTopLeftX);
+		gubCursorPos   = pos;
+		gubStartHilite = pos;
 	}
 }
 
