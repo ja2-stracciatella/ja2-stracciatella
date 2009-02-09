@@ -436,28 +436,26 @@ void SetInputFieldStringWithNumericStrictValue( UINT8 ubField, INT32 iNumber )
 	curr->ubStrLen = (UINT8)wcslen(curr->szString);
 }
 
-//Sets the active field to the specified ID passed.
-void SetActiveField( UINT8 ubField )
-{
-	TEXTINPUTNODE* const curr = GetTextInputField(ubField);
-	if (!curr) return;
 
-	if (curr != gpActive && curr->fEnabled)
+// Set the active field to the specified ID passed.
+void SetActiveField(UINT8 const id)
+{
+	TEXTINPUTNODE* const n = GetTextInputField(id);
+	if (!n)            return;
+	if (n == gpActive) return;
+	if (!n->fEnabled)  return;
+
+	gpActive = n;
+	if (n->szString)
 	{
-		gpActive = curr;
-		if (gpActive->szString)
-		{
-			gubStartHilite = 0;
-			gubCursorPos = gpActive->ubStrLen;
-			gfEditingText = TRUE;
-		}
-		else
-		{
-			gfEditingText = FALSE;
-			if (gpActive->InputCallback)
-				(gpActive->InputCallback)(gpActive->ubID, TRUE);
-		}
-		return;
+		gubStartHilite = 0;
+		gubCursorPos   = n->ubStrLen;
+		gfEditingText  = TRUE;
+	}
+	else
+	{
+		gfEditingText = FALSE;
+		if (n->InputCallback) n->InputCallback(n->ubID, TRUE);
 	}
 }
 
