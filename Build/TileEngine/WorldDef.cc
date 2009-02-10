@@ -3,6 +3,7 @@
 #include "Animation_Data.h"
 #include "Buffer.h"
 #include "HImage.h"
+#include "LoadSaveData.h"
 #include "LoadSaveLightSprite.h"
 #include "LoadSaveSoldierCreate.h"
 #include "TileDef.h"
@@ -64,7 +65,6 @@
 #define	 TEMP_FILE_FOR_TILESET_CHANGE				"jatileS34.dat"
 
 #define	 MAP_FULLSOLDIER_SAVED				0x00000001
-#define	 MAP_WORLDONLY_SAVED					0x00000002
 #define	 MAP_WORLDLIGHTS_SAVED				0x00000004
 #define	 MAP_WORLDITEMS_SAVED					0x00000008
 #define  MAP_EXITGRIDS_SAVED					0x00000010
@@ -1339,474 +1339,317 @@ void CompileWorldMovementCosts( )
 
 #ifdef JA2EDITOR
 
+static bool LimitCheck(UINT8 const n, INT32 const gridno, UINT32& n_warnings, wchar_t const* const kind)
+{
+	if (n > 15)
+	{
+		SetErrorCatchString(
+			L"SAVE ABORTED!  %ls count too high (%d) for gridno %d.  Need to fix before map can be saved!  There are %d additional warnings.",
+			kind, n, gridno, n_warnings);
+		return false;
+	}
+	if (n > 10)
+	{
+		++n_warnings;
+		SetErrorCatchString(
+			L"Warnings %d -- Last warning:  %ls count warning of %d for gridno %d.",
+			n_warnings, kind, n, gridno);
+	}
+	return true;
+}
+
+
+static void WriteLevelNode(HWFILE const f, LEVELNODE const* const n)
+{
+	// Write out object type and sub-index
+	UINT16 const idx            = n->usIndex;
+	UINT32 const type           = GetTileType(idx);
+	UINT8  const type_sub_index = (UINT8)GetTypeSubIndexFromTileIndex(type, idx);
+	BYTE  data[2];
+	BYTE* d = data;
+	INJ_U8(d, (UINT8)type)
+	INJ_U8(d, (UINT8)type_sub_index)
+	FileWrite(f, data, sizeof(data));
+}
+
+
 static void RemoveWorldWireFrameTiles(void);
-static void SaveMapLights(HWFILE hfile);
+static void SaveMapLights(HWFILE);
 
 
-// SAVING CODE
-BOOLEAN SaveWorld(const char *puiFilename)
+BOOLEAN SaveWorld(char const* const filename)
 try
 {
-	INT32			cnt;
-	UINT32		uiSoldierSize;
-	UINT32		uiFlags;
-	UINT32		uiNumWarningsCaught = 0;
-	LEVELNODE	*pLand;
-	LEVELNODE	*pObject;
-	LEVELNODE	*pStruct;
-	LEVELNODE	*pShadow;
-	LEVELNODE	*pRoof;
-	LEVELNODE	*pOnRoof;
-	LEVELNODE	*pTailLand=NULL;
-	UINT16		usNumExitGrids = 0;
-	UINT8			LayerCount;
-	UINT8			ObjectCount;
-	UINT8			StructCount;
-	UINT8			ShadowCount;
-	UINT8			RoofCount;
-	UINT8			OnRoofCount;
-	UINT8			ubType;
-	UINT8			ubTest = 1;
-	CHAR8			aFilename[ 255 ];
-	UINT8			ubCombine;
-	UINT8			bCounts[ WORLD_MAX ][8];
-
-	sprintf( aFilename, "MAPS/%s", puiFilename );
-
-	AutoSGPFile hfile(FileOpen(aFilename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	char full_filename[255];
+	sprintf(full_filename, "MAPS/%s", filename);
+	AutoSGPFile f(FileOpen(full_filename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 
 	// Write JA2 Version ID
-	FileWrite(hfile, &gdMajorMapVersion, sizeof(FLOAT));
-	if( gdMajorMapVersion >= 4.00 )
+	FileWrite(f, &gdMajorMapVersion, sizeof(FLOAT));
+	if (gdMajorMapVersion >= 4.00)
 	{
-		FileWrite(hfile, &gubMinorMapVersion, sizeof(UINT8));
+		FileWrite(f, &gubMinorMapVersion, sizeof(UINT8));
 	}
 
 	// Write FLAGS FOR WORLD
-	//uiFlags = MAP_WORLDONLY_SAVED;
-	uiFlags = 0;
-	uiFlags |= MAP_FULLSOLDIER_SAVED;
-	uiFlags |= MAP_EXITGRIDS_SAVED;
-	uiFlags |= MAP_WORLDLIGHTS_SAVED;
-	uiFlags |= MAP_DOORTABLE_SAVED;
-	uiFlags |= MAP_WORLDITEMS_SAVED;
-	uiFlags |= MAP_EDGEPOINTS_SAVED;
-	if( gfBasement || gfCaves )
-		uiFlags |= MAP_AMBIENTLIGHTLEVEL_SAVED;
-	uiFlags |= MAP_NPCSCHEDULES_SAVED;
+	UINT32 flags = 0;
+	flags |= MAP_FULLSOLDIER_SAVED;
+	flags |= MAP_WORLDLIGHTS_SAVED;
+	flags |= MAP_WORLDITEMS_SAVED;
+	flags |= MAP_EXITGRIDS_SAVED;
+	flags |= MAP_DOORTABLE_SAVED;
+	flags |= MAP_EDGEPOINTS_SAVED;
+	flags |= MAP_NPCSCHEDULES_SAVED;
+	if (gfBasement || gfCaves)
+		flags |= MAP_AMBIENTLIGHTLEVEL_SAVED;
 
-	FileWrite(hfile, &uiFlags, sizeof(INT32));
+	FileWrite(f, &flags, sizeof(INT32));
 
 	// Write tileset ID
-	FileWrite(hfile, &giCurrentTilesetID, sizeof(INT32));
+	FileWrite(f, &giCurrentTilesetID, sizeof(INT32));
 
-	// Write SOLDIER CONTROL SIZE
-	uiSoldierSize = sizeof( SOLDIERTYPE );
-	FileWrite(hfile, &uiSoldierSize, sizeof(INT32));
+	// Write soldier control size
+	UINT32 const uiSoldierSize = sizeof(SOLDIERTYPE);
+	FileWrite(f, &uiSoldierSize, sizeof(UINT32));
 
+	// Remove world visibility tiles
+	RemoveWorldWireFrameTiles();
 
-	// REMOVE WORLD VISIBILITY TILES
-	RemoveWorldWireFrameTiles( );
+	MAP_ELEMENT const* const world_data = gpWorldLevelData;
 
 	{ // Write out height values
 		UINT8 heights[2 * WORLD_MAX];
-		for (cnt = 0; cnt < WORLD_MAX; ++cnt)
+		for (INT32 i = 0; i != WORLD_MAX; ++i)
 		{
-			heights[2 * cnt]     = gpWorldLevelData[cnt].sHeight;
-			heights[2 * cnt + 1] = 0; // Filler byte
+			heights[2 * i]     = world_data[i].sHeight;
+			heights[2 * i + 1] = 0; // Filler byte
 		}
-		FileWrite(hfile, heights, sizeof(heights));
+		FileWrite(f, heights, sizeof(heights));
 	}
 
 	// Write out # values - we'll have no more than 15 per level!
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
-  {
-		// Determine number of land
-		pLand = gpWorldLevelData[ cnt ].pLandHead;
-		LayerCount = 0;
+	UINT8  bCounts[WORLD_MAX][8];
+	UINT32 n_warnings = 0;
+	UINT8  ubCombine;
+	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	{
+		MAP_ELEMENT const& e = world_data[cnt];
 
-		while( pLand != NULL )
-		{
-			LayerCount++;
-			pLand = pLand->pNext;
-		}
-		if( LayerCount > 15 )
-		{
-			SetErrorCatchString(L"SAVE ABORTED!  Land count too high (%d) for gridno %d."
-				L"  Need to fix before map can be saved!  There are %d additional warnings.",
-				LayerCount, cnt, uiNumWarningsCaught );
-			return FALSE;
-		}
-		if( LayerCount > 10 )
-		{
-			uiNumWarningsCaught++;
-			SetErrorCatchString(L"Warnings %d -- Last warning:  Land count warning of %d for gridno %d.",
-				uiNumWarningsCaught, LayerCount, cnt );
-		}
-		bCounts[ cnt ][ 0 ] = LayerCount;
+		// Determine # of land
+		UINT8 n_layers = 0;
+		for (LEVELNODE const* i = e.pLandHead; i; i = i->pNext) ++n_layers;
+		if (!LimitCheck(n_layers, cnt, n_warnings, L"Land")) return FALSE;
+		bCounts[cnt][0] = n_layers;
 
-		// Combine # of land layers with worlddef flags ( first 4 bits )
-		ubCombine = (UINT8)( ( LayerCount&0xf ) | ( (gpWorldLevelData[ cnt ].uiFlags&0xf)<<4 ) );
-		// Write combination
-		FileWrite(hfile, &ubCombine, sizeof(ubCombine));
+		// Combine # of land layers with worlddef flags (first 4 bits)
+		ubCombine = (n_layers & 0xf) | ((e.uiFlags & 0xf) << 4);
+		FileWrite(f, &ubCombine, sizeof(ubCombine));
 
 
 		// Determine # of objects
-		pObject = gpWorldLevelData[ cnt ].pObjectHead;
-		ObjectCount = 0;
-		while( pObject != NULL )
+		UINT8 n_objects = 0;
+		for (LEVELNODE const* i = e.pObjectHead; i; i = i->pNext)
 		{
 			// DON'T WRITE ANY ITEMS
-			if ( !(pObject->uiFlags & ( LEVELNODE_ITEM ) ) )
-			{
-				//Make sure this isn't a UI Element
-				const UINT32 uiTileType = GetTileType(pObject->usIndex);
-				if( uiTileType < FIRSTPOINTERS )
-					ObjectCount++;
-			}
-			pObject = pObject->pNext;
+			if (i->uiFlags & LEVELNODE_ITEM) continue;
+			//Make sure this isn't a UI Element
+			UINT32 const uiTileType = GetTileType(i->usIndex);
+			if (uiTileType >= FIRSTPOINTERS) continue;
+			++n_objects;
 		}
-		if( ObjectCount > 15 )
-		{
-			SetErrorCatchString(L"SAVE ABORTED!  Object count too high (%d) for gridno %d."
-				L"  Need to fix before map can be saved!  There are %d additional warnings.",
-				ObjectCount, cnt, uiNumWarningsCaught );
-			return FALSE;
-		}
-		if( ObjectCount > 10 )
-		{
-			uiNumWarningsCaught++;
-			SetErrorCatchString(L"Warnings %d -- Last warning:  Object count warning of %d for gridno %d.",
-				uiNumWarningsCaught, ObjectCount, cnt );
-		}
-		bCounts[ cnt ][ 1 ] = ObjectCount;
+		if (!LimitCheck(n_objects, cnt, n_warnings, L"Object")) return FALSE;
+		bCounts[cnt][1] = n_objects;
 
 		// Determine # of structs
-		pStruct = gpWorldLevelData[ cnt ].pStructHead;
-		StructCount = 0;
-		while( pStruct != NULL )
+		UINT8 n_structs = 0;
+		for (LEVELNODE const* i = e.pStructHead; i; i = i->pNext)
 		{
 			// DON'T WRITE ANY ITEMS
-			if ( !(pStruct->uiFlags & ( LEVELNODE_ITEM ) ) )
-			{
-				StructCount++;
-			}
-			pStruct = pStruct->pNext;
+			if (i->uiFlags & LEVELNODE_ITEM) continue;
+			++n_structs;
 		}
-		if( StructCount > 15 )
-		{
-			SetErrorCatchString(L"SAVE ABORTED!  Struct count too high (%d) for gridno %d."
-				L"  Need to fix before map can be saved!  There are %d additional warnings.",
-				StructCount, cnt, uiNumWarningsCaught );
-			return FALSE;
-		}
-		if( StructCount > 10 )
-		{
-			uiNumWarningsCaught++;
-			SetErrorCatchString(L"Warnings %d -- Last warning:  Struct count warning of %d for gridno %d.",
-				uiNumWarningsCaught, StructCount, cnt );
-		}
-		bCounts[ cnt ][ 2 ] = StructCount;
+		if (!LimitCheck(n_structs, cnt, n_warnings, L"Struct")) return FALSE;
+		bCounts[cnt][2] = n_structs;
 
-		ubCombine = (UINT8)( ( ObjectCount&0xf ) | ( (StructCount&0xf)<<4 ) );
-		// Write combination
-		FileWrite(hfile, &ubCombine, sizeof(ubCombine));
+		ubCombine = (n_objects & 0xf) | ((n_structs & 0xf) << 4);
+		FileWrite(f, &ubCombine, sizeof(ubCombine));
 
 
 		// Determine # of shadows
-		pShadow = gpWorldLevelData[ cnt ].pShadowHead;
-		ShadowCount = 0;
-		while( pShadow != NULL )
+		UINT8 n_shadows = 0;
+		for (LEVELNODE const* i = e.pShadowHead; i; i = i->pNext)
 		{
 			// Don't write any shadowbuddys or exit grids
-			if ( !(pShadow->uiFlags & ( LEVELNODE_BUDDYSHADOW  | LEVELNODE_EXITGRID ) ) )
-			{
-				ShadowCount++;
-			}
-			pShadow = pShadow->pNext;
+			if (i->uiFlags & (LEVELNODE_BUDDYSHADOW  | LEVELNODE_EXITGRID)) continue;
+			++n_shadows;
 		}
-		if( ShadowCount > 15 )
-		{
-			SetErrorCatchString(L"SAVE ABORTED!  Shadow count too high (%d) for gridno %d."
-				L"  Need to fix before map can be saved!  There are %d additional warnings.",
-				ShadowCount, cnt, uiNumWarningsCaught );
-			return FALSE;
-		}
-		if( ShadowCount > 10 )
-		{
-			uiNumWarningsCaught++;
-			SetErrorCatchString(L"Warnings %d -- Last warning:  Shadow count warning of %d for gridno %d.",
-				uiNumWarningsCaught, ShadowCount, cnt );
-		}
-		bCounts[ cnt ][ 3 ] = ShadowCount;
+		if (!LimitCheck(n_shadows, cnt, n_warnings, L"Shadow")) return FALSE;
+		bCounts[cnt][3] = n_shadows;
 
 		// Determine # of Roofs
-		pRoof = gpWorldLevelData[ cnt ].pRoofHead;
-		RoofCount = 0;
-		while( pRoof != NULL )
+		UINT8 n_roofs = 0;
+		for (LEVELNODE const* i = e.pRoofHead; i; i = i->pNext)
 		{
 			// ATE: Don't save revealed roof info...
-			if ( pRoof->usIndex != SLANTROOFCEILING1 )
-			{
-				RoofCount++;
-			}
-			pRoof = pRoof->pNext;
+			if (i->usIndex == SLANTROOFCEILING1) continue;
+			++n_roofs;
 		}
-		if( RoofCount > 15 )
-		{
-			SetErrorCatchString(L"SAVE ABORTED!  Roof count too high (%d) for gridno %d."
-				L"  Need to fix before map can be saved!  There are %d additional warnings.",
-				RoofCount, cnt, uiNumWarningsCaught );
-			return FALSE;
-		}
-		if( RoofCount > 10 )
-		{
-			uiNumWarningsCaught++;
-			SetErrorCatchString(L"Warnings %d -- Last warning:  Roof count warning of %d for gridno %d.",
-				uiNumWarningsCaught, RoofCount, cnt );
-		}
-		bCounts[ cnt ][ 4 ] = RoofCount;
+		if (!LimitCheck(n_roofs, cnt, n_warnings, L"Roof")) return FALSE;
+		bCounts[cnt][4] = n_roofs;
 
-		ubCombine = (UINT8)( ( ShadowCount&0xf ) | ( (RoofCount&0xf)<<4 ) );
-		// Write combination
-		FileWrite(hfile, &ubCombine, sizeof(ubCombine));
+		ubCombine = (n_shadows & 0xf) | ((n_roofs & 0xf) << 4);
+		FileWrite(f, &ubCombine, sizeof(ubCombine));
 
 
-		// Write OnRoof layer
 		// Determine # of OnRoofs
-		pOnRoof = gpWorldLevelData[ cnt ].pOnRoofHead;
-		OnRoofCount = 0;
-
-		while( pOnRoof != NULL )
+		UINT8 n_on_roofs = 0;
+		for (LEVELNODE const* i = e.pOnRoofHead; i; i = i->pNext)
 		{
-			OnRoofCount++;
-			pOnRoof = pOnRoof->pNext;
+			++n_on_roofs;
 		}
-		if( OnRoofCount > 15 )
-		{
-			SetErrorCatchString(L"SAVE ABORTED!  OnRoof count too high (%d) for gridno %d."
-				L"  Need to fix before map can be saved!  There are %d additional warnings.",
-				OnRoofCount, cnt, uiNumWarningsCaught );
-			return FALSE;
-		}
-		if( OnRoofCount > 10 )
-		{
-			uiNumWarningsCaught++;
-			SetErrorCatchString(L"Warnings %d -- Last warning:  OnRoof count warning of %d for gridno %d.",
-				uiNumWarningsCaught, OnRoofCount, cnt );
-		}
-		bCounts[ cnt ][ 5 ] = RoofCount;
+		if (!LimitCheck(n_on_roofs, cnt, n_warnings, L"OnRoof")) return FALSE;
+		bCounts[cnt][5] = n_roofs;
 
-
-		// Write combination of onroof and nothing...
-		ubCombine = (UINT8)( ( OnRoofCount&0xf ) );
-		// Write combination
-		FileWrite(hfile, &ubCombine, sizeof(ubCombine));
-
-
-
+		// Write combination of onroof and nothing
+		ubCombine = n_on_roofs & 0xf;
+		FileWrite(f, &ubCombine, sizeof(ubCombine));
 	}
 
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
-  {
-
-		if ( bCounts[ cnt ][ 0 ] == 0 )
+	UINT8 const test[] = { 1, 1 };
+	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	{ // Write land layers
+		if (bCounts[cnt][0] == 0)
 		{
-			FileWrite(hfile, &ubTest, sizeof(UINT8));
-			FileWrite(hfile, &ubTest, sizeof(UINT8));
+			FileWrite(f, &test, sizeof(test));
 		}
 		else
-		{
-
-			// Write land layers
-			// Write out land peices backwards so that they are loaded properly
-			pLand = gpWorldLevelData[ cnt ].pLandHead;
-			// GET TAIL
-			while( pLand != NULL )
+		{ // Write out land pieces backwards so that they are loaded properly
+			LEVELNODE const* i = world_data[cnt].pLandHead;
+			while (i->pNext) i = i->pNext;
+			for (; i; i = i->pPrevNode)
 			{
-				pTailLand = pLand;
-				pLand = pLand->pNext;
-			}
-
-			while( pTailLand != NULL )
-			{
-				// Write out object type and sub-index
-				const UINT32 uiType = GetTileType(pTailLand->usIndex);
-				ubType = (UINT8)uiType;
-				UINT8 const ubTypeSubIndex = (UINT8)GetTypeSubIndexFromTileIndex(uiType, pTailLand->usIndex);
-				FileWrite(hfile, &ubType, sizeof(UINT8));
-				FileWrite(hfile, &ubTypeSubIndex, sizeof(UINT8));
-
-				pTailLand = pTailLand->pPrevNode;
+				WriteLevelNode(f, i);
 			}
 		}
 	}
 
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
-  {
-
-		// Write object layer
-		pObject = gpWorldLevelData[ cnt ].pObjectHead;
-		while( pObject != NULL )
+	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	{ // Write object layer
+		for (LEVELNODE const* i = world_data[cnt].pObjectHead; i; i = i->pNext)
 		{
-			// DON'T WRITE ANY ITEMS
-			if ( !(pObject->uiFlags & ( LEVELNODE_ITEM ) ) )
-			{
-				// Write out object type and sub-index
-				const UINT32 uiType = GetTileType(pObject->usIndex);
-				//Make sure this isn't a UI Element
-				if( uiType < FIRSTPOINTERS )
-				{
-					//We are writing 2 bytes for the type subindex in the object layer because the
-					//ROADPIECES slot contains more than 256 subindices.
-					ubType = (UINT8)uiType;
-					UINT16 const usTypeSubIndex = GetTypeSubIndexFromTileIndex(uiType, pObject->usIndex);
-					FileWrite(hfile, &ubType, sizeof(UINT8));
-					FileWrite(hfile, &usTypeSubIndex, sizeof(UINT16));
-				}
-			}
-			pObject = pObject->pNext;
+			// Don't write any items
+			if (i->uiFlags & LEVELNODE_ITEM) continue;
+
+			// Write out object type and sub-index
+			UINT32 const type = GetTileType(i->usIndex);
+			// Make sure this isn't a UI Element
+			if (type >= FIRSTPOINTERS) continue;
+
+			/* We are writing 2 bytes for the type subindex in the object layer
+			 * because the ROADPIECES slot contains more than 256 subindices. */
+			UINT16 const type_sub_index = GetTypeSubIndexFromTileIndex(type, i->usIndex);
+
+			BYTE  data[3];
+			BYTE* d = data;
+			INJ_U8( d, (UINT8)type)
+			INJ_U16(d, type_sub_index) // XXX misaligned
+			FileWrite(f, data, sizeof(data));
 		}
 	}
 
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
-  {
-		// Write struct layer
-		pStruct = gpWorldLevelData[ cnt ].pStructHead;
-		while( pStruct != NULL )
+	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	{ // Write struct layer
+		for (LEVELNODE const* i = world_data[cnt].pStructHead; i; i = i->pNext)
 		{
-			// DON'T WRITE ANY ITEMS
-			if ( !(pStruct->uiFlags & ( LEVELNODE_ITEM ) ) )
-			{
-				// Write out object type and sub-index
-				const UINT32 uiType = GetTileType(pStruct->usIndex);
-				ubType = (UINT8)uiType;
-				UINT8 const ubTypeSubIndex = (UINT8)GetTypeSubIndexFromTileIndex(uiType, pStruct->usIndex);
-					FileWrite(hfile, &ubType, sizeof(UINT8));
-					FileWrite(hfile, &ubTypeSubIndex, sizeof(UINT8));
-			}
+			// Don't write any items
+			if (i->uiFlags & LEVELNODE_ITEM) continue;
 
-			pStruct = pStruct->pNext;
+			WriteLevelNode(f, i);
 		}
 	}
 
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
-  {
-		// Write shadows
-		pShadow = gpWorldLevelData[ cnt ].pShadowHead;
-		while( pShadow != NULL )
+	UINT16 n_exit_grids = 0;
+	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	{ // Write shadows
+		for (LEVELNODE const* i = world_data[cnt].pShadowHead; i; i = i->pNext)
 		{
 			// Dont't write any buddys or exit grids
-			if ( !(pShadow->uiFlags & ( LEVELNODE_BUDDYSHADOW | LEVELNODE_EXITGRID ) ) )
+			if (!(i->uiFlags & (LEVELNODE_BUDDYSHADOW | LEVELNODE_EXITGRID)))
 			{
-				// Write out object type and sub-index
-				// Write out object type and sub-index
-				const UINT32 uiType = GetTileType(pShadow->usIndex);
-				ubType = (UINT8)uiType;
-				UINT8 const ubTypeSubIndex = (UINT8)GetTypeSubIndexFromTileIndex(uiType, pShadow->usIndex);
-				FileWrite(hfile, &ubType, sizeof(UINT8));
-				FileWrite(hfile, &ubTypeSubIndex, sizeof(UINT8));
-
+				WriteLevelNode(f, i);
 			}
-			else if( pShadow->uiFlags & LEVELNODE_EXITGRID )
-			{	//count the number of exitgrids
-				usNumExitGrids++;
+			else if (i->uiFlags & LEVELNODE_EXITGRID)
+			{	// Count the number of exitgrids
+				++n_exit_grids;
 			}
-
-			pShadow = pShadow->pNext;
 		}
 	}
 
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
-  {
-		pRoof = gpWorldLevelData[ cnt ].pRoofHead;
-		while( pRoof != NULL )
+	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	{
+		for (LEVELNODE const* i = world_data[cnt].pRoofHead; i; i = i->pNext)
 		{
-			// ATE: Don't save revealed roof info...
-			if ( pRoof->usIndex != SLANTROOFCEILING1 )
-			{
-				// Write out object type and sub-index
-				const UINT32 uiType = GetTileType(pRoof->usIndex);
-				ubType = (UINT8)uiType;
-				UINT8 const ubTypeSubIndex = (UINT8)GetTypeSubIndexFromTileIndex(uiType, pRoof->usIndex);
-				FileWrite(hfile, &ubType, sizeof(UINT8));
-				FileWrite(hfile, &ubTypeSubIndex, sizeof(UINT8));
-			}
+			// ATE: Don't save revealed roof info
+			if (i->usIndex == SLANTROOFCEILING1) continue;
 
-			pRoof = pRoof->pNext;
+			WriteLevelNode(f, i);
 		}
 	}
 
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
-  {
-		// Write OnRoofs
-		pOnRoof = gpWorldLevelData[ cnt ].pOnRoofHead;
-		while( pOnRoof != NULL )
+	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	{ // Write OnRoofs
+		for (LEVELNODE const* i = world_data[cnt].pOnRoofHead; i; i = i->pNext)
 		{
-			// Write out object type and sub-index
-			const UINT32 uiType = GetTileType(pOnRoof->usIndex);
-			ubType = (UINT8)uiType;
-			UINT8 const ubTypeSubIndex = (UINT8)GetTypeSubIndexFromTileIndex(uiType, pOnRoof->usIndex);
-			FileWrite(hfile, &ubType, sizeof(UINT8));
-			FileWrite(hfile, &ubTypeSubIndex, sizeof(UINT8));
-
-
-			pOnRoof = pOnRoof->pNext;
+			WriteLevelNode(f, i);
 		}
 	}
 
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
-  {
-		// Write out room information
-		FileWrite(hfile, &gubWorldRoomInfo[cnt], sizeof(INT8));
+	// Write out room information
+	FileWrite(f, gubWorldRoomInfo, sizeof(gubWorldRoomInfo));
 
-	}
-
-	if ( uiFlags & MAP_WORLDITEMS_SAVED )
+	if (flags & MAP_WORLDITEMS_SAVED)
 	{
-		// Write out item information
-		SaveWorldItemsToMap( hfile );
+		SaveWorldItemsToMap(f);
 	}
 
-	if( uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED )
+	if (flags & MAP_AMBIENTLIGHTLEVEL_SAVED)
 	{
-		FileWrite(hfile, &gfBasement, 1);
-		FileWrite(hfile, &gfCaves, 1);
-		FileWrite(hfile, &ubAmbientLightLevel, 1);
+		FileWrite(f, &gfBasement,          1);
+		FileWrite(f, &gfCaves,             1);
+		FileWrite(f, &ubAmbientLightLevel, 1);
 	}
 
-	if( uiFlags & MAP_WORLDLIGHTS_SAVED )
+	if (flags & MAP_WORLDLIGHTS_SAVED)
 	{
-
-		SaveMapLights( hfile );
+		SaveMapLights(f);
 	}
 
-	SaveMapInformation( hfile );
+	SaveMapInformation(f);
 
-	if( uiFlags & MAP_FULLSOLDIER_SAVED )
+	if (flags & MAP_FULLSOLDIER_SAVED)
 	{
-		SaveSoldiersToMap( hfile );
+		SaveSoldiersToMap(f);
 	}
-	if( uiFlags & MAP_EXITGRIDS_SAVED )
+	if (flags & MAP_EXITGRIDS_SAVED)
 	{
-		SaveExitGrids( hfile, usNumExitGrids );
+		SaveExitGrids(f, n_exit_grids);
 	}
-	if( uiFlags & MAP_DOORTABLE_SAVED )
+	if (flags & MAP_DOORTABLE_SAVED)
 	{
-		SaveDoorTableToMap( hfile );
+		SaveDoorTableToMap(f);
 	}
-	if( uiFlags & MAP_EDGEPOINTS_SAVED )
+	if (flags & MAP_EDGEPOINTS_SAVED)
 	{
 		CompileWorldMovementCosts();
 		GenerateMapEdgepoints();
-		SaveMapEdgepoints( hfile );
+		SaveMapEdgepoints(f);
 	}
-	if( uiFlags & MAP_NPCSCHEDULES_SAVED )
+	if (flags & MAP_NPCSCHEDULES_SAVED)
 	{
-		SaveSchedules( hfile );
+		SaveSchedules(f);
 	}
 
-	strlcpy(g_filename, puiFilename, lengthof(g_filename));
+	strlcpy(g_filename, filename, lengthof(g_filename));
 	return TRUE;
 }
 catch (...) { return FALSE; }
