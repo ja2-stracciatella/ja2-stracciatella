@@ -1428,7 +1428,6 @@ try
 	}
 
 	// Write out # values - we'll have no more than 15 per level!
-	UINT8  bCounts[WORLD_MAX][8];
 	UINT32 n_warnings = 0;
 	UINT8  ubCombine;
 	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
@@ -1439,7 +1438,6 @@ try
 		UINT8 n_layers = 0;
 		for (LEVELNODE const* i = e.pLandHead; i; i = i->pNext) ++n_layers;
 		if (!LimitCheck(n_layers, cnt, n_warnings, L"Land")) return FALSE;
-		bCounts[cnt][0] = n_layers;
 
 		// Combine # of land layers with worlddef flags (first 4 bits)
 		ubCombine = (n_layers & 0xf) | ((e.uiFlags & 0xf) << 4);
@@ -1458,7 +1456,6 @@ try
 			++n_objects;
 		}
 		if (!LimitCheck(n_objects, cnt, n_warnings, L"Object")) return FALSE;
-		bCounts[cnt][1] = n_objects;
 
 		// Determine # of structs
 		UINT8 n_structs = 0;
@@ -1469,7 +1466,6 @@ try
 			++n_structs;
 		}
 		if (!LimitCheck(n_structs, cnt, n_warnings, L"Struct")) return FALSE;
-		bCounts[cnt][2] = n_structs;
 
 		ubCombine = (n_objects & 0xf) | ((n_structs & 0xf) << 4);
 		FileWrite(f, &ubCombine, sizeof(ubCombine));
@@ -1484,7 +1480,6 @@ try
 			++n_shadows;
 		}
 		if (!LimitCheck(n_shadows, cnt, n_warnings, L"Shadow")) return FALSE;
-		bCounts[cnt][3] = n_shadows;
 
 		// Determine # of Roofs
 		UINT8 n_roofs = 0;
@@ -1495,7 +1490,6 @@ try
 			++n_roofs;
 		}
 		if (!LimitCheck(n_roofs, cnt, n_warnings, L"Roof")) return FALSE;
-		bCounts[cnt][4] = n_roofs;
 
 		ubCombine = (n_shadows & 0xf) | ((n_roofs & 0xf) << 4);
 		FileWrite(f, &ubCombine, sizeof(ubCombine));
@@ -1508,7 +1502,6 @@ try
 			++n_on_roofs;
 		}
 		if (!LimitCheck(n_on_roofs, cnt, n_warnings, L"OnRoof")) return FALSE;
-		bCounts[cnt][5] = n_roofs;
 
 		// Write combination of onroof and nothing
 		ubCombine = n_on_roofs & 0xf;
@@ -1518,13 +1511,13 @@ try
 	UINT8 const test[] = { 1, 1 };
 	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
 	{ // Write land layers
-		if (bCounts[cnt][0] == 0)
+		LEVELNODE const* i = world_data[cnt].pLandHead;
+		if (!i)
 		{
 			FileWrite(f, &test, sizeof(test));
 		}
 		else
 		{ // Write out land pieces backwards so that they are loaded properly
-			LEVELNODE const* i = world_data[cnt].pLandHead;
 			while (i->pNext) i = i->pNext;
 			for (; i; i = i->pPrevNode)
 			{
