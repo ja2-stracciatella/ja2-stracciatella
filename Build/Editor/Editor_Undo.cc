@@ -306,7 +306,7 @@ BOOLEAN AddToUndoList( INT32 iMapIndex )
 }
 
 
-static MAP_ELEMENT* CopyMapElementFromWorld(INT32 iMapIndex);
+static MAP_ELEMENT* CopyMapElementFromWorld(INT32 map_index);
 
 
 static void AddToUndoListCmd(INT32 const iMapIndex, INT32 const iCmdCount)
@@ -563,167 +563,89 @@ namespace
 }
 
 
-static MAP_ELEMENT* CopyMapElementFromWorld(INT32 const iMapIndex)
+static MAP_ELEMENT* CopyMapElementFromWorld(INT32 const map_index)
 {
-	SGP::AutoObj<MAP_ELEMENT, DeleteMapElementContentsAfterCreationFail> pNewMapElement(MALLOCZ(MAP_ELEMENT));
+	SGP::AutoObj<MAP_ELEMENT, DeleteMapElementContentsAfterCreationFail> new_me(MALLOCZ(MAP_ELEMENT));
 
-	MAP_ELEMENT			*pOldMapElement;
-	LEVELNODE				*pOldLevelNode;
-	LEVELNODE				*pNewLevelNode;
-	LEVELNODE				*tail;
-	INT32						x;
+	MAP_ELEMENT const* const old_me = &gpWorldLevelData[map_index];
 
-	STRUCTURE				*pOldStructure;
-
-	//Get a pointer to the current map index
-	pOldMapElement = &gpWorldLevelData[ iMapIndex ];
-
-	//Save the structure information from the mapelement
-	pOldStructure = pOldMapElement->pStructureHead;
-	if( pOldStructure )
+	// Save the structure information from the mapelement
+	STRUCTURE*  tail   = 0;
+	STRUCTURE** anchor = &new_me->pStructureHead;
+	for (STRUCTURE const* i = old_me->pStructureHead; i; i = i->pNext)
 	{
-		STRUCTURE				*pNewStructure;
-		STRUCTURE				*tail;
-		tail = NULL;
-		pNewStructure = NULL;
-		while( pOldStructure )
-		{
-			STRUCTURE* const pStructure = MALLOC(STRUCTURE);
-			if( !tail )
-			{ //first node in structure list
-				tail = pStructure;
-				*tail = *pOldStructure;
-				tail->pPrev = NULL;
-				tail->pNext = NULL;
-			}
-			else
-			{ //add to the end of the levelnode list
-				tail->pNext = pStructure;
-				*pStructure = *pOldStructure;
-				pStructure->pPrev = tail;
-				pStructure->pNext = NULL;
-				tail = tail->pNext;
-			}
-			//place the new node inside of the new map element
-			if( !pNewStructure )
-			{
-			  pNewMapElement->pStructureHead = pStructure;
-				pNewStructure = pStructure;
-			}
-			else
-			{
-				pNewStructure->pNext = pStructure;
-				pNewStructure = pNewStructure->pNext;
-			}
-			pOldStructure = pOldStructure->pNext;
-		}
-		if( tail )
-		{
-			pNewMapElement->pStructureTail = tail;
-		}
+		STRUCTURE* const s = MALLOC(STRUCTURE);
+		*s       = *i;
+		s->pPrev = tail;
+		s->pNext = 0;
+		tail     = s;
+		*anchor  = s;
+		anchor   = &s->pNext;
 	}
+	new_me->pStructureTail = tail;
 
-	//For each of the 9 levelnodes, save each one
-	//except for levelnode[1] which is a pointer to the first land to render.
-	for( x = 0; x < 9; x++ )
+	/* For each of the 9 levelnodes, save each one, except for levelnode[1] which
+	 * is a pointer to the first land to render. */
+	for (INT32 x = 0; x != 9; ++x)
 	{
-		if( x == 1 || x == 5 ) //skip the pLandStart and pMercLevel LEVELNODES
-			continue;
-		tail = NULL;
-		pOldLevelNode = pOldMapElement->pLevelNodes[ x ];
-		pNewLevelNode = NULL;
-		while( pOldLevelNode )
+		if (x == 1 || x == 5) continue; // Skip the pLandStart and pMercLevel levelnodes
+		LEVELNODE*  tail   = 0;
+		LEVELNODE** anchor = &new_me->pLevelNodes[x];
+		for (LEVELNODE const* i = old_me->pLevelNodes[x]; i; i = i->pNext)
 		{
-			//copy the level node
-			LEVELNODE* pLevelNode = MALLOC(LEVELNODE);
-			if( !tail )
-			{ //first node in levelnode list
-				tail = pLevelNode;
-				*tail = *pOldLevelNode;
-				if( !x ) //land layer only
-					tail->pPrevNode = NULL;
-				tail->pNext = NULL;
-			}
-			else
-			{ //add to the end of the levelnode list
-				tail->pNext = pLevelNode;
-				*pLevelNode = *pOldLevelNode;
-				if( !x ) //land layer only
-					pLevelNode->pPrevNode = tail;
-				pLevelNode->pNext = NULL;
-				tail = tail->pNext;
-			}
-			//place the new node inside of the new map element
-			if( !pNewLevelNode )
+			LEVELNODE* const l = MALLOC(LEVELNODE);
+			*l       = *i;
+			if (x == 0) l->pPrevNode = tail; // Land layer only
+			l->pNext = 0;
+			tail     = l;
+			*anchor  = l;
+			anchor   = &l->pNext;
+
+			// Handle levelnode layer specific stuff
+			switch (x)
 			{
-			  pNewMapElement->pLevelNodes[ x ] = pLevelNode;
-				pNewLevelNode = pLevelNode;
-			}
-			else
-			{
-				pNewLevelNode->pNext = pLevelNode;
-				pNewLevelNode = pNewLevelNode->pNext;
-			}
-			//Handle levelnode layer specific stuff
-			switch( x )
-			{
-				case 0: //LAND LAYER
-					if( pOldLevelNode == pOldMapElement->pLandStart )
-					{ //set the new landstart to point to the new levelnode.
-						pNewMapElement->pLandStart = pNewLevelNode;
-					}
+				case 0: // Land layer
+					// Set the new landstart to point to the new levelnode.
+					if (old_me->pLandStart == i) new_me->pLandStart = l;
 					break;
-				case 2: //OBJECT LAYER
-					if( pOldLevelNode->pItemPool )
-					{ //save the item pool?
-						//pNewLevelNode->pItemPool = MALLOC(ITEM_POOL);
-					}
-					break;
-				case 3: //STRUCT LAYER
-				case 6:	//ROOF LAYER
-				case 7: //ON ROOF LAYER
-					if( pOldLevelNode->pStructureData )
-					{ //make sure the structuredata pointer points to the parallel structure
-						STRUCTURE *pOld, *pNew;
-						//both lists are exactly the same size and contain the same information,
-						//but the addresses are different.  We will traverse the old list until
-						//we find the match, then
-						pOld = pOldMapElement->pStructureHead;
-						pNew = pNewMapElement->pStructureHead;
-						while( pOld )
+
+				case 3: // Struct layer
+				case 6:	// Roof layer
+				case 7: // On roof layer
+					if (i->pStructureData)
+					{ /* Make sure the structuredata pointer points to the parallel
+						 * structure. Both lists are exactly the same size and contain the
+						 * same information, but the addresses are different.  We will
+						 * traverse the old list until we find the match, then */
+						STRUCTURE const* o = old_me->pStructureHead;
+						STRUCTURE*       n = new_me->pStructureHead;
+						for (;; o = o->pNext, n = n->pNext)
 						{
-							Assert( pNew );
-							if( pOld == pOldLevelNode->pStructureData )
+							/* Kris: If this assert should fail, that means there is something
+							 * wrong with the preservation of the structure data within the
+							 * mapelement. */
+							// OUCH!!! THIS IS HAPPENING.  DISABLED IT FOR LINDA'S SAKE
+							if (!o) break;
+							Assert(o);
+							Assert(n);
+							if (o == i->pStructureData)
 							{
-								pNewLevelNode->pStructureData = pNew;
+								l->pStructureData = n;
 								break;
 							}
-							pOld = pOld->pNext;
-							pNew = pNew->pNext;
-						}
-						//Kris:
-						//If this assert should fail, that means there is something wrong with
-						//the preservation of the structure data within the mapelement.
-						if( pOld != pOldLevelNode->pStructureData )
-						{
-							//OUCH!!! THIS IS HAPPENING.  DISABLED IT FOR LINDA'S SAKE
-							Assert( 1 );
 						}
 					}
 					break;
 			}
-			//Done, go to next node in this level
-			pOldLevelNode = pOldLevelNode->pNext;
 		}
-		//Done, go to next level
 	}
 
-	//Save the rest of the information in the mapelement.
-	pNewMapElement->uiFlags							= pOldMapElement->uiFlags;
-	pNewMapElement->sHeight							= pOldMapElement->sHeight;
-	pNewMapElement->ubTerrainID					= pOldMapElement->ubTerrainID;
-	pNewMapElement->ubReservedSoldierID = pOldMapElement->ubReservedSoldierID;
-	return pNewMapElement.Release();
+	// Save the rest of the information in the mapelement.
+	new_me->uiFlags							= old_me->uiFlags;
+	new_me->sHeight							= old_me->sHeight;
+	new_me->ubTerrainID					= old_me->ubTerrainID;
+	new_me->ubReservedSoldierID = old_me->ubReservedSoldierID;
+	return new_me.Release();
 }
 
 
