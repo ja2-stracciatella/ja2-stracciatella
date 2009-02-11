@@ -65,7 +65,6 @@ IMPVideoObjects.h: many needlessly called functions?
 I_CHANGELEVEL: unused
 InitializeLibrary(): invalid use of strlen()
 InitializeStrategicMapSectorTownNames(): complicated?
-InvPanelButtonClickCallback(): pointless
 IsDoorPerceivedOpen(): sGridNo is INT16, but used as %s
 IsItRaining(): complicated
 IsMapScreenWorldItemVisibleInMapInventory(): complicated

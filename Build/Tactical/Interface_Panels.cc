@@ -935,7 +935,6 @@ void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup)
 }
 
 
-static void InvPanelButtonClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void SMInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void SMInvMoneyButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
@@ -966,7 +965,7 @@ void InitializeSMPanel(void)
 
 	// Set viewports
 	// Define region for panel
-	MSYS_DefineRegion(&gSMPanelRegion, 0, dy, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, InvPanelButtonClickCallback);
+	MSYS_DefineRegion(&gSMPanelRegion, 0, dy, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	INT32 x;
 	INT32 y;
@@ -1486,11 +1485,6 @@ static void SMInvMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			fInterfacePanelDirty		= DIRTYLEVEL2;
 		}
 	}
-}
-
-
-static void InvPanelButtonClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
-{
 }
 
 
