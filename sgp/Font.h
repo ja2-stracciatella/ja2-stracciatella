@@ -8,8 +8,6 @@
 #define		MILITARY_SHADOW			67
 #define		NO_SHADOW						0
 
-#ifdef JA2
-
 // these are bogus! No palette is set yet!
 // font foreground color symbols
 #define		FONT_FCOLOR_WHITE			208
@@ -31,37 +29,6 @@
 #define		FONT_BCOLOR_BROWN			80
 #define		FONT_BCOLOR_ORANGE		76
 #define		FONT_BCOLOR_PURPLE		160
-
-#else
-
-// font foreground color symbols
-#define		FONT_FCOLOR_WHITE			0x0000
-#define		FONT_FCOLOR_RED				0x0000
-#define		FONT_FCOLOR_BLUE			0x0000
-#define		FONT_FCOLOR_GREEN			0x0000
-#define		FONT_FCOLOR_YELLOW		0x0000
-#define		FONT_FCOLOR_BROWN			0x0000
-#define		FONT_FCOLOR_ORANGE		0x0000
-#define		FONT_FCOLOR_PURPLE		0x0000
-
-// font background color symbols
-#define		FONT_BCOLOR_WHITE			0x0000
-#define		FONT_BCOLOR_RED				0x0000
-#define		FONT_BCOLOR_BLUE			0x0000
-#define		FONT_BCOLOR_GREEN			0x0000
-#define		FONT_BCOLOR_YELLOW		0x0000
-#define		FONT_BCOLOR_BROWN			0x0000
-#define		FONT_BCOLOR_ORANGE		0x0000
-#define		FONT_BCOLOR_PURPLE		0x0000
-
-// font glyphs for spell targeting types
-#define		FONT_GLYPH_TARGET_POINT		0xFFF0
-#define		FONT_GLYPH_TARGET_CONE		0xFFF1
-#define		FONT_GLYPH_TARGET_SINGLE	0xFFF2
-#define		FONT_GLYPH_TARGET_GROUP		0xFFF3
-#define		FONT_GLYPH_TARGET_NONE		0xFFF4
-
-#endif
 
 
 extern Font FontDefault;
