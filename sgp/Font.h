@@ -20,16 +20,6 @@
 #define		FONT_FCOLOR_ORANGE		76
 #define		FONT_FCOLOR_PURPLE		160
 
-// font background color symbols
-#define		FONT_BCOLOR_WHITE			208
-#define		FONT_BCOLOR_RED				162
-#define		FONT_BCOLOR_BLUE			203
-#define		FONT_BCOLOR_GREEN			184
-#define		FONT_BCOLOR_YELLOW		144
-#define		FONT_BCOLOR_BROWN			80
-#define		FONT_BCOLOR_ORANGE		76
-#define		FONT_BCOLOR_PURPLE		160
-
 
 extern Font FontDefault;
 
