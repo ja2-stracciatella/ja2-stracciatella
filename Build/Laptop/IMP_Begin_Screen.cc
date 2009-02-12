@@ -438,7 +438,7 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 				fNewCharInString = TRUE;
 				break;
 
-		    case SDLK_ESCAPE: LeaveLapTopScreen(); break;
+		    case SDLK_ESCAPE: HandleLapTopESCKey(); break;
 
 				case SDLK_TAB:
 			    // tab hit, increment to next selection box

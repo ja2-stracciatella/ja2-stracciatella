@@ -1016,6 +1016,7 @@ static void DisplayWebBookMarkNotify(void);
 static void FlickerHDLight(void);
 static void HandleSlidingTitleBar(void);
 static void HandleWWWSubSites(void);
+static void LeaveLapTopScreen(void);
 static void PostButtonRendering(void);
 static void ShouldNewMailBeDisplayed(void);
 static void ShowLights(void);
@@ -1408,7 +1409,7 @@ static void BtnOnCallback(GUI_BUTTON *btn, INT32 reason)
 static BOOLEAN ExitLaptopDone(void);
 
 
-void LeaveLapTopScreen(void)
+static void LeaveLapTopScreen(void)
 {
 	if (ExitLaptopDone())
 	{
@@ -2132,7 +2133,7 @@ static void CheckIfNewWWWW(void)
 }
 
 
-static void HandleLapTopESCKey(void)
+void HandleLapTopESCKey(void)
 {
 	// will handle esc key events, since handling depends on state of laptop
 	if (fNewMailFlag)

@@ -8,8 +8,8 @@
 
 
 void ExitLaptop(void);
+void HandleLapTopESCKey(void);
 void SetBookMark(INT32 iBookId);
-void LeaveLapTopScreen(void);
 void SetLaptopExitScreen(ScreenID uiExitScreen);
 void SetLaptopNewGameFlag(void);
 void LapTopScreenCallBack(MOUSE_REGION* pRegion, INT32 iReason);

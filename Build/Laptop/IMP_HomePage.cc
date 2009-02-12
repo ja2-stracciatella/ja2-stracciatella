@@ -242,7 +242,7 @@ static void GetPlayerKeyBoardInputForIMPHomePage(void)
 					}
 				break;
 
-				case SDLK_ESCAPE: LeaveLapTopScreen(); break;
+				case SDLK_ESCAPE: HandleLapTopESCKey(); break;
 
 				default:
 					if(InputEvent.usEvent == KEY_DOWN || InputEvent.usEvent == KEY_REPEAT )
