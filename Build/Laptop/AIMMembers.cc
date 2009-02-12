@@ -1234,12 +1234,6 @@ static INT8 AimMemberHireMerc(void)
 	h.fCopyProfileItemsOver     = gfBuyEquipment;
 	h.uiTimeTillMercArrives     = GetMercArrivalTimeOfDay();
 
-	MERCPROFILESTRUCT& p = *GetProfile(pid);
-	if (gfBuyEquipment)
-	{
-		p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
-	}
-
 	INT8  contract_type;
 	INT16 contract_length;
 	switch (gubContractLength)
@@ -1270,6 +1264,9 @@ static INT8 AimMemberHireMerc(void)
 		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(pid);
 		if (!s) return FALSE;
 		s->bTypeOfLastContract = contract_type;
+
+		MERCPROFILESTRUCT& p = *GetProfile(pid);
+		if (gfBuyEquipment) p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
 
 		// Add an entry in the finacial page for the hiring of the merc
 		AddTransactionToPlayersBook(HIRED_MERC, pid, GetWorldTotalMin(), -giContractAmount + p.sMedicalDepositAmount);
@@ -3003,14 +3000,14 @@ static void QuickHireMerc(void)
 		gfKeyState[CTRL] ?  7 :
 		1;
 
-	MERCPROFILESTRUCT& p = *GetProfile(pid);
-	p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
-
 	SetFlagToForceHireMerc(TRUE);
 	INT8 const ret = HireMerc(&h);
 	SetFlagToForceHireMerc(FALSE);
 	if (ret == MERC_HIRE_OK)
 	{
+		MERCPROFILESTRUCT& p = *GetProfile(pid);
+		p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
+
 		UINT32 const now = GetWorldTotalMin();
 		// Add an entry in the finacial page for the hiring of the merc
 		AddTransactionToPlayersBook(HIRED_MERC, pid, now, -p.sSalary);

@@ -1,3 +1,4 @@
+(r5277) Fix a vanilla bug: When trying to hire a merc while the team is full, the option to buy his equipment is lost.
 (r5275) Fix a vanilla bug: When closing the laptop via the ESC key while visiting the IMP site the "X" button for closing was not removed.
 (r5258) Allow all printable chars in text input fields. E.g. umlauts and cyrillic letters are allowed in savegame descriptions now.
 (r5250) Fix a vanilla buffer overrun, which occurs when entering text into a text input field.
