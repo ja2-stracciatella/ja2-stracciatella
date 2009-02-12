@@ -2992,9 +2992,6 @@ static void DelayMercSpeech(UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, B
 }
 
 
-
-
-
 #ifdef JA2TESTVERSION
 
 extern void SetFlagToForceHireMerc(BOOLEAN fForceHire);
@@ -3082,7 +3079,6 @@ static void TempHandleAimMemberKeyBoardInput(void)
 		{
 			switch (InputEvent.usParam)
 			{
-#ifdef JA2TESTVERSION
 				case SDLK_SPACE: QuickHireMerc(); break;
 
 				case '~':
@@ -3091,7 +3087,6 @@ static void TempHandleAimMemberKeyBoardInput(void)
 					MercDailyUpdate();
 					gfRedrawScreen = TRUE;
 					break;
-#endif
 
 				default:
 					HandleKeyBoardShortCutsForLapTop( InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState );
