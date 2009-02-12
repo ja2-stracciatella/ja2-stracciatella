@@ -2997,75 +2997,51 @@ static void DelayMercSpeech(UINT8 ubMercID, UINT16 usQuoteNum, UINT16 usDelay, B
 extern void SetFlagToForceHireMerc(BOOLEAN fForceHire);
 
 
-//TEMP!!!
-static BOOLEAN QuickHireMerc(void)
+static void QuickHireMerc(void)
 {
-	INT8	bReturnCode;
-	MERC_HIRE_STRUCT HireMercStruct;
-	UINT8		ubCurrentSoldier = AimMercArray[gbCurrentIndex];
+	ProfileID const pid = AimMercArray[gbCurrentIndex];
+	if (FindSoldierByProfileIDOnPlayerTeam(pid)) return;
 
-	giContractAmount = 0;
+	MERC_HIRE_STRUCT h;
+	h.ubProfileID               = pid;
+	h.sSectorX                  = gsMercArriveSectorX;
+	h.sSectorY                  = gsMercArriveSectorY;
+	h.bSectorZ                  = 0;
+	h.fUseLandingZoneForArrival = TRUE;
+	h.ubInsertionCode	          = INSERTION_CODE_ARRIVING_GAME;
+	h.fCopyProfileItemsOver     = TRUE;
+	h.uiTimeTillMercArrives     = GetMercArrivalTimeOfDay();
+	h.iTotalContractLength      =
+		gfKeyState[ALT]  ? 14 :
+		gfKeyState[CTRL] ?  7 :
+		1;
 
-//	if( !IsMercHireable( ubCurrentSoldier ) )
-//		return( FALSE );
-	if (FindSoldierByProfileIDOnPlayerTeam(ubCurrentSoldier) != NULL) return FALSE;
+	MERCPROFILESTRUCT& p = *GetProfile(pid);
+	p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
 
-	HireMercStruct.ubProfileID = ubCurrentSoldier;
-
-	//DEF: temp
-	HireMercStruct.sSectorX = gsMercArriveSectorX;
-	HireMercStruct.sSectorY = gsMercArriveSectorY;
-	HireMercStruct.bSectorZ = 0;
-	HireMercStruct.fUseLandingZoneForArrival = TRUE;
-	HireMercStruct.ubInsertionCode	= INSERTION_CODE_ARRIVING_GAME;
-
-	HireMercStruct.fCopyProfileItemsOver = TRUE;
-	gMercProfiles[ ubCurrentSoldier ].ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
-
-
-
-	if( gfKeyState[ ALT ] )
-		HireMercStruct.iTotalContractLength = 14;
-	else if( gfKeyState[ CTRL ] )
-		HireMercStruct.iTotalContractLength = 7;
-	else
-		HireMercStruct.iTotalContractLength = 1;
-
-
-	//specify when the merc should arrive
-	HireMercStruct.uiTimeTillMercArrives = GetMercArrivalTimeOfDay( );// + ubCurrentSoldier;
-
-	SetFlagToForceHireMerc( TRUE );
-	bReturnCode = HireMerc( &HireMercStruct );
-	SetFlagToForceHireMerc( FALSE );
-	if( bReturnCode == MERC_HIRE_OVER_20_MERCS_HIRED )
+	SetFlagToForceHireMerc(TRUE);
+	INT8 const ret = HireMerc(&h);
+	SetFlagToForceHireMerc(FALSE);
+	if (ret == MERC_HIRE_OK)
 	{
-		//display a warning saying u cant hire more then 20 mercs
-		DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, AimPopUpText[ AIM_MEMBER_ALREADY_HAVE_20_MERCS ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-		return(FALSE);
+		UINT32 const now = GetWorldTotalMin();
+		// Add an entry in the finacial page for the hiring of the merc
+		AddTransactionToPlayersBook(HIRED_MERC, pid, now, -p.sSalary);
+
+		if (p.bMedicalDeposit)
+		{ // Add an entry in the finacial page for the medical deposit
+			AddTransactionToPlayersBook(MEDICAL_DEPOSIT, pid, now, -p.sMedicalDepositAmount);
+		}
+
+		// Add an entry in the history page for the hiring of the merc
+		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, pid, now, -1, -1);
+
+		gfRedrawScreen = TRUE;
 	}
-	else if( bReturnCode == MERC_HIRE_FAILED )
-	{
-		return(FALSE);
+	else if (ret == MERC_HIRE_OVER_20_MERCS_HIRED)
+	{ // Display a warning saying you can't hire more then 20 mercs
+		DoLapTopMessageBox(MSG_BOX_LAPTOP_DEFAULT, AimPopUpText[AIM_MEMBER_ALREADY_HAVE_20_MERCS], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}
-
-	//add an entry in the finacial page for the hiring of the merc
-	giContractAmount = gMercProfiles[gbCurrentSoldier].sSalary;
-
-	AddTransactionToPlayersBook(HIRED_MERC, ubCurrentSoldier, GetWorldTotalMin(), -( giContractAmount ) );//- gMercProfiles[gbCurrentSoldier].sMedicalDepositAmount
-
-	if( gMercProfiles[ gbCurrentSoldier ].bMedicalDeposit )
-	{
-		//add an entry in the finacial page for the medical deposit
-		AddTransactionToPlayersBook(	MEDICAL_DEPOSIT, ubCurrentSoldier, GetWorldTotalMin(), -(gMercProfiles[gbCurrentSoldier].sMedicalDepositAmount) );
-	}
-
-	//add an entry in the history page for the hiring of the merc
-	AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, ubCurrentSoldier, GetWorldTotalMin(), -1, -1 );
-
-	gfRedrawScreen = TRUE;
-
-	return( TRUE );
 }
 
 
