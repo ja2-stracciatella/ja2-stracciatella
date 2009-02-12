@@ -1209,99 +1209,86 @@ static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 static INT8 AimMemberHireMerc(void)
 {
-	MERC_HIRE_STRUCT HireMercStruct;
-	UINT8		ubCurrentSoldier = AimMercArray[gbCurrentIndex];
-	INT8		bReturnCode;
-	INT8		bTypeOfContract=0;
-
-
-	if( LaptopSaveInfo.iCurrentBalance < giContractAmount )
-	{
-		//wasnt hired because of lack of funds
+	if (LaptopSaveInfo.iCurrentBalance < giContractAmount)
+	{ // Wasn't hired because of lack of funds
 		CreateAimPopUpBox(AimPopUpText[AIM_MEMBER_FUNDS_TRANSFER_FAILED], AimPopUpText[AIM_MEMBER_NOT_ENOUGH_FUNDS], AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_FAILURE);
 
-		//Disable the buttons behind the message box
-		EnableDisableCurrentVideoConferenceButtons( TRUE );
-
+		// Disable the buttons behind the message box
+		EnableDisableCurrentVideoConferenceButtons(TRUE);
 		giBuyEquipmentButton[0]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 		giBuyEquipmentButton[1]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 
-		DelayMercSpeech( gbCurrentSoldier, QUOTE_REFUSAL_TO_JOIN_LACK_OF_FUNDS, 750, TRUE, FALSE );
-
-		return(FALSE);
+		DelayMercSpeech(gbCurrentSoldier, QUOTE_REFUSAL_TO_JOIN_LACK_OF_FUNDS, 750, TRUE, FALSE);
+		return FALSE;
 	}
 
-	memset(&HireMercStruct, 0, sizeof(MERC_HIRE_STRUCT));
+	ProfileID const pid = AimMercArray[gbCurrentIndex];
 
-	HireMercStruct.ubProfileID = ubCurrentSoldier;
+	MERC_HIRE_STRUCT h;
+	memset(&h, 0, sizeof(h));
+	h.ubProfileID               = pid;
+	h.sSectorX                  = gsMercArriveSectorX;
+	h.sSectorY                  = gsMercArriveSectorY;
+	h.fUseLandingZoneForArrival = TRUE;
+	h.ubInsertionCode           = INSERTION_CODE_ARRIVING_GAME;
+	h.fCopyProfileItemsOver     = gfBuyEquipment;
+	h.uiTimeTillMercArrives     = GetMercArrivalTimeOfDay();
 
-	//DEF: temp
-	HireMercStruct.sSectorX = gsMercArriveSectorX;
-	HireMercStruct.sSectorY = gsMercArriveSectorY;
-	HireMercStruct.fUseLandingZoneForArrival = TRUE;
-	HireMercStruct.ubInsertionCode	= INSERTION_CODE_ARRIVING_GAME;
-
-	HireMercStruct.fCopyProfileItemsOver = gfBuyEquipment;
-	//if the players is buyibng the equipment
-	if( gfBuyEquipment )
+	MERCPROFILESTRUCT& p = *GetProfile(pid);
+	if (gfBuyEquipment)
 	{
-		gMercProfiles[ ubCurrentSoldier ].ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
+		p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
 	}
 
-		//If 1 day
-	if( gubContractLength == AIM_CONTRACT_LENGTH_ONE_DAY)
+	INT8  contract_type;
+	INT16 contract_length;
+	switch (gubContractLength)
 	{
-		bTypeOfContract = CONTRACT_EXTEND_1_DAY;
-		HireMercStruct.iTotalContractLength = 1;
+		case AIM_CONTRACT_LENGTH_ONE_DAY:
+			contract_type   = CONTRACT_EXTEND_1_DAY;
+			contract_length =  1;
+			break;
+
+		case AIM_CONTRACT_LENGTH_ONE_WEEK:
+			contract_type   = CONTRACT_EXTEND_1_WEEK;
+			contract_length =  7;
+			break;
+
+		case AIM_CONTRACT_LENGTH_TWO_WEEKS:
+			contract_type   = CONTRACT_EXTEND_2_WEEK;
+			contract_length = 14;
+			break;
+
+		default: abort();
 	}
-	else if( gubContractLength == AIM_CONTRACT_LENGTH_ONE_WEEK)
+	h.iTotalContractLength = contract_length;
+
+	INT8 const ret = HireMerc(&h);
+	if (ret == MERC_HIRE_OK)
 	{
-		bTypeOfContract = CONTRACT_EXTEND_1_WEEK;
-		HireMercStruct.iTotalContractLength = 7;
+		// Set the type of contract the merc is on
+		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(pid);
+		if (!s) return FALSE;
+		s->bTypeOfLastContract = contract_type;
+
+		// Add an entry in the finacial page for the hiring of the merc
+		AddTransactionToPlayersBook(HIRED_MERC, pid, GetWorldTotalMin(), -giContractAmount + p.sMedicalDepositAmount);
+
+		if (p.bMedicalDeposit)
+		{ // Add an entry in the finacial page for the medical deposit
+			AddTransactionToPlayersBook(MEDICAL_DEPOSIT, pid, GetWorldTotalMin(), -p.sMedicalDepositAmount);
+		}
+
+		// Add an entry in the history page for the hiring of the merc
+		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, pid, GetWorldTotalMin(), -1, -1);
+		return TRUE;
 	}
-	else if( gubContractLength == AIM_CONTRACT_LENGTH_TWO_WEEKS)
+	else if (ret == MERC_HIRE_OVER_20_MERCS_HIRED)
 	{
-		bTypeOfContract = CONTRACT_EXTEND_2_WEEK;
-		HireMercStruct.iTotalContractLength = 14;
+		// Display a warning saying you can't hire more then 20 mercs
+		DoLapTopMessageBox(MSG_BOX_LAPTOP_DEFAULT, AimPopUpText[AIM_MEMBER_ALREADY_HAVE_20_MERCS], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}
-
-	//specify when the merc should arrive
-	HireMercStruct.uiTimeTillMercArrives = GetMercArrivalTimeOfDay( );// + ubCurrentSoldier
-
-	//Set the time and ID of the last hired merc will arrive
-//	LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = HireMercStruct.ubProfileID;
-//	LaptopSaveInfo.sLastHiredMerc.uiArrivalTime = HireMercStruct.uiTimeTillMercArrives;
-
-	//if we succesfully hired the merc
-	bReturnCode = HireMerc( &HireMercStruct );
-	if( bReturnCode == MERC_HIRE_OVER_20_MERCS_HIRED )
-	{
-		//display a warning saying u cant hire more then 20 mercs
-		DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, AimPopUpText[ AIM_MEMBER_ALREADY_HAVE_20_MERCS ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-		return(FALSE);
-	}
-	else if( bReturnCode == MERC_HIRE_FAILED )
-	{
-		return(FALSE);
-	}
-
-	//Set the type of contract the merc is on
-	SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubCurrentSoldier);
-	if (s == NULL) return FALSE;
-	s->bTypeOfLastContract = bTypeOfContract;
-
-	//add an entry in the finacial page for the hiring of the merc
-	AddTransactionToPlayersBook(HIRED_MERC, ubCurrentSoldier, GetWorldTotalMin(), -( giContractAmount - gMercProfiles[gbCurrentSoldier].sMedicalDepositAmount ) );
-
-	if( gMercProfiles[ gbCurrentSoldier ].bMedicalDeposit )
-	{
-		//add an entry in the finacial page for the medical deposit
-		AddTransactionToPlayersBook(	MEDICAL_DEPOSIT, ubCurrentSoldier, GetWorldTotalMin(), -(gMercProfiles[gbCurrentSoldier].sMedicalDepositAmount) );
-	}
-
-	//add an entry in the history page for the hiring of the merc
-	AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, ubCurrentSoldier, GetWorldTotalMin(), -1, -1 );
-	return(TRUE);
+	return FALSE;
 }
 
 
