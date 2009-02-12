@@ -2770,7 +2770,7 @@ void ResetMercAnnoyanceAtPlayer(ProfileID ubMercID)
 	}
 	INT8& status = GetProfile(ubMercID)->bMercStatus;
 	if (status == MERC_ANNOYED_WONT_CONTACT ||
-			status == MERC_ANNOYED_WONT_CONTACT)
+			status == MERC_ANNOYED_BUT_CAN_STILL_CONTACT)
 	{
 		status = 0;
 	}
