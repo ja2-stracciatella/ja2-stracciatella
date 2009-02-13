@@ -724,34 +724,18 @@ UINT16 Launchable[][2] =
 	{0, 0}
 };
 
-UINT16 CompatibleFaceItems[][2] =
+static UINT16 const CompatibleFaceItems[][2] =
 {
-	{EXTENDEDEAR,			NIGHTGOGGLES},
-	{EXTENDEDEAR,			UVGOGGLES},
-	{EXTENDEDEAR,			SUNGOGGLES},
-	{EXTENDEDEAR,			GASMASK},
-	{EXTENDEDEAR,			NOTHING},
-	{WALKMAN,					NIGHTGOGGLES},
-	{WALKMAN,					UVGOGGLES},
-	{WALKMAN,					SUNGOGGLES},
-	{WALKMAN,					GASMASK},
-	{WALKMAN,					NOTHING},
+	{ NIGHTGOGGLES, EXTENDEDEAR },
+	{ NIGHTGOGGLES, WALKMAN     },
+	{ SUNGOGGLES,   EXTENDEDEAR },
+	{ SUNGOGGLES,   WALKMAN     },
+	{ UVGOGGLES,    EXTENDEDEAR },
+	{ UVGOGGLES,    WALKMAN     },
+	{ GASMASK,      EXTENDEDEAR },
+	{ GASMASK,      WALKMAN     },
 
-	{NIGHTGOGGLES,		EXTENDEDEAR},
-	{NIGHTGOGGLES,		WALKMAN},
-	{NIGHTGOGGLES,		NOTHING},
-	{SUNGOGGLES,			EXTENDEDEAR},
-	{SUNGOGGLES,			WALKMAN},
-	{SUNGOGGLES,			NOTHING},
-	{UVGOGGLES,				EXTENDEDEAR},
-	{UVGOGGLES,				WALKMAN},
-	{UVGOGGLES,				NOTHING},
-	{GASMASK,					EXTENDEDEAR},
-	{GASMASK,					WALKMAN},
-	{GASMASK,					NOTHING},
-
-	{ROBOT_REMOTE_CONTROL, NOTHING},
-	{0,								0},
+	{ NOTHING,      NOTHING     }
 };
 
 
@@ -1539,39 +1523,16 @@ BOOLEAN ValidAmmoType( UINT16 usItem, UINT16 usAmmoType )
 	return( FALSE );
 }
 
-BOOLEAN CompatibleFaceItem( UINT16 usItem1, UINT16 usItem2 )
-{
-	INT32 iLoop = 0;
 
-	// look for the section of the array pertaining to this attachment...
-	while( 1 )
+BOOLEAN CompatibleFaceItem(UINT16 const item1, UINT16 const item2)
+{
+	if (item2 == NOTHING) return TRUE;
+	for (UINT16 const (*i)[2] = CompatibleFaceItems; (*i)[0] != NOTHING; ++i)
 	{
-		if (CompatibleFaceItems[iLoop][0] == usItem1)
-		{
-			break;
-		}
-		iLoop++;
-		if (CompatibleFaceItems[iLoop][0] == 0)
-		{
-			// the proposed item cannot fit with anything!
-			return( FALSE );
-		}
+		if ((*i)[0] == item1 && (*i)[1] == item2) return TRUE;
+		if ((*i)[0] == item2 && (*i)[1] == item1) return TRUE;
 	}
-	// now look through this section for the item in question
-	while( 1 )
-	{
-		if (CompatibleFaceItems[iLoop][1] == usItem2)
-		{
-			break;
-		}
-		iLoop++;
-		if (CompatibleFaceItems[iLoop][0] != usItem1)
-		{
-			// the proposed item cannot be attached to the item in question
-			return( FALSE );
-		}
-	}
-	return( TRUE );
+	return FALSE;
 }
 
 
