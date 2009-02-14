@@ -23,9 +23,7 @@
 #include "MemMan.h"
 
 
-UINT16 gusPlottedPath[256];
 UINT16 gusMapPathingData[256];
-UINT16 gusPathDataSize;
 BOOLEAN gfPlotToAvoidPlayerInfuencedSectors = FALSE;
 
 
@@ -429,9 +427,6 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const* c
 
 			  z = trailStratTreeB[z].nextLink;
 		  }
-
-		  gusPathDataSize = (UINT16) iCnt;
-
 
 		// return path length : serves as a "successful" flag and a path length counter
 		return(iCnt);
