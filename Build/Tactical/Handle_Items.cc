@@ -3300,57 +3300,40 @@ void MakeNPCGrumpyForMinorOffense(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE
 }
 
 
-static void TestPotentialOwner(SOLDIERTYPE* pSoldier)
+static void TestPotentialOwner(SOLDIERTYPE* const s)
 {
-	if (pSoldier->bInSector && pSoldier->bLife >= OKLIFE)
-	{
-		if ( SoldierToSoldierLineOfSightTest( pSoldier, gpTempSoldier, (UINT8) DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, 0, gpTempSoldier->sGridNo, gpTempSoldier->bLevel ), TRUE ) )
-		{
-			MakeNPCGrumpyForMinorOffense( pSoldier, gpTempSoldier );
-		}
-	}
+	if (!s->bInSector || s->bLife < OKLIFE) return;
+	INT16 const sight_limit = DistanceVisible(s, DIRECTION_IRRELEVANT, 0, gpTempSoldier->sGridNo, gpTempSoldier->bLevel);
+	if (!SoldierToSoldierLineOfSightTest(s, gpTempSoldier, sight_limit, TRUE)) return;
+	MakeNPCGrumpyForMinorOffense(s, gpTempSoldier);
 }
 
 
 static void CheckForPickedOwnership(void)
 {
-	// LOOP THROUGH LIST TO FIND NODE WE WANT
-	const ITEM_POOL* pItemPool = GetItemPool(gsTempGridno, gpTempSoldier->bLevel);
-
-	while( pItemPool )
+	for (ITEM_POOL const* i = GetItemPool(gsTempGridno, gpTempSoldier->bLevel); i; i = i->pNext)
 	{
-		const OBJECTTYPE* const o = &GetWorldItem(pItemPool->iItemIndex)->o;
-		if (o->usItem == OWNERSHIP)
-		{
-			if (o->ubOwnerProfile != NO_PROFILE)
-			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(o->ubOwnerProfile);
-				if ( pSoldier )
-				{
-					TestPotentialOwner( pSoldier );
-				}
-			}
-			const UINT8 ubCivGroup = o->ubOwnerCivGroup;
-			if (ubCivGroup != NON_CIV_GROUP)
-			{
-				if ( ubCivGroup == HICKS_CIV_GROUP && CheckFact( FACT_HICKS_MARRIED_PLAYER_MERC, 0 ) )
-				{
-					// skip because hicks appeased
-					pItemPool = pItemPool->pNext;
-					continue;
-				}
-				FOR_ALL_IN_TEAM(s, CIV_TEAM)
-				{
-					if (s->ubCivilianGroup == ubCivGroup)
-					{
-						TestPotentialOwner(s);
-					}
-				}
-			}
-		}
-		pItemPool = pItemPool->pNext;
-	}
+		OBJECTTYPE const& o = GetWorldItem(i->iItemIndex)->o;
+		if (o.usItem != OWNERSHIP) continue;
 
+		if (o.ubOwnerProfile != NO_PROFILE)
+		{
+			SOLDIERTYPE* const s = FindSoldierByProfileID(o.ubOwnerProfile);
+			if (s) TestPotentialOwner(s);
+		}
+
+		UINT8 const civ_group = o.ubOwnerCivGroup;
+		if (civ_group == NON_CIV_GROUP) continue;
+		if (civ_group == HICKS_CIV_GROUP && CheckFact(FACT_HICKS_MARRIED_PLAYER_MERC, 0))
+		{ // skip because hicks appeased
+			continue;
+		}
+		FOR_ALL_IN_TEAM(s, CIV_TEAM)
+		{
+			if (s->ubCivilianGroup != civ_group) continue;
+			TestPotentialOwner(s);
+		}
+	}
 }
 
 
