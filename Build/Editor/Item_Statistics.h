@@ -79,7 +79,7 @@ enum
 };
 extern const wchar_t* gszActionItemDesc[NUM_ACTIONITEMS];
 //Returns a pointer to one of the above string array.
-extern const wchar_t* GetActionItemName(OBJECTTYPE* pItem);
+extern wchar_t const* GetActionItemName(OBJECTTYPE const*);
 //Called by the popup menu, when a selection is made.
 extern void UpdateActionItem( INT8 bActionItemIndex );
 //Changes an action item into the type specified by the ACTIONITEM enumeration.

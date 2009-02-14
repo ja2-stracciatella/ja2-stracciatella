@@ -69,7 +69,7 @@ const wchar_t* gszActionItemDesc[NUM_ACTIONITEMS] =
 	L"Big teargas",
 };
 
-const wchar_t* GetActionItemName(OBJECTTYPE* pItem)
+wchar_t const* GetActionItemName(OBJECTTYPE const* const pItem)
 {
 	if( !pItem || pItem->usItem != ACTION_ITEM )
 		return NULL;

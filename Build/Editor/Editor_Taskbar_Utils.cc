@@ -619,7 +619,7 @@ static void RenderMapEntryPointsAndLights(void)
 }
 
 
-static void BuildTriggerName(OBJECTTYPE* pItem, wchar_t* szItemName, size_t length)
+static void BuildTriggerName(OBJECTTYPE const * const pItem, wchar_t* const szItemName, size_t const length)
 {
 	if( pItem->usItem == SWITCH )
 	{
@@ -693,82 +693,72 @@ static void RenderDoorLockInfo(void)
 
 static void RenderSelectedItemBlownUp(void)
 {
-	INT16 sScreenX, sScreenY, xp, yp;
-	wchar_t szItemName[SIZE_ITEM_NAME];
-	INT32 i;
+	INT16 screen_x;
+	INT16 screen_y;
+	GetGridNoScreenPos(gsItemGridNo, 0, &screen_x, &screen_y);
+	if (screen_y > 340) return;
 
-	GetGridNoScreenPos( gsItemGridNo, 0, &sScreenX, &sScreenY );
+	OBJECTTYPE const& o    = *gpItem;
+	INVTYPE    const& item = Item[o.usItem];
+	INT16             x;
+	INT16             y;
 
-	if( sScreenY > 340 )
-		return;
+	// Display the enlarged item graphic
+	SGPVObject  const& vo = *GetInterfaceGraphicForItem(&item);
+	ETRLEObject const& e  = *vo.SubregionProperties(item.ubGraphicNum);
+	x = screen_x - e.sOffsetX + (40 - e.usWidth)  / 2;
+	y = screen_y - e.sOffsetY + (20 - e.usHeight) / 2;
+	BltVideoObjectOutline(FRAME_BUFFER, &vo, item.ubGraphicNum, x, y, Get16BPPColor(FROMRGB(0, 140, 170)));
 
-	//Display the enlarged item graphic
-	const SGPVObject* const vo = GetInterfaceGraphicForItem(&Item[gpItem->usItem]);
-	ETRLEObject const* const ETRLEProps = vo->SubregionProperties(Item[gpItem->usItem].ubGraphicNum);
-	INT16 sWidth   = ETRLEProps->usWidth;
-	INT16 sOffsetX = ETRLEProps->sOffsetX;
-	xp = sScreenX + (40 - sWidth - sOffsetX*2) / 2;
-
-	INT16 sHeight  = ETRLEProps->usHeight;
-	INT16 sOffsetY = ETRLEProps->sOffsetY;
-	yp = sScreenY + (20 - sHeight - sOffsetY*2) / 2;
-
-	BltVideoObjectOutline(FRAME_BUFFER, vo, Item[gpItem->usItem].ubGraphicNum, xp, yp, Get16BPPColor(FROMRGB(0, 140, 170)));
-
-	//Display the item name above it
+	// Display the item name above it
 	SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
-	if( gpItem->usItem == ACTION_ITEM || gpItem->usItem == SWITCH )
+	wchar_t const* item_name;
+	wchar_t        buf[SIZE_ITEM_NAME];
+	if (o.usItem == ACTION_ITEM || o.usItem == SWITCH)
 	{
-		BuildTriggerName(gpItem, szItemName, lengthof(szItemName));
+		BuildTriggerName(&o, buf, lengthof(buf));
+		item_name = buf;
 	}
-	else if( Item[ gpItem->usItem ].usItemClass == IC_KEY )
+	else if (item.usItemClass == IC_KEY)
 	{
-		swprintf(szItemName, lengthof(szItemName), L"%hs", LockTable[gpItem->ubKeyID].ubEditorName);
+		swprintf(buf, lengthof(buf), L"%hs", LockTable[o.ubKeyID].ubEditorName);
+		item_name = buf;
 	}
 	else
 	{
-		wcslcpy(szItemName, ItemNames[gpItem->usItem], lengthof(szItemName));
+		item_name = ItemNames[o.usItem];
 	}
-	xp = sScreenX - (StringPixLength( szItemName, FONT10ARIAL ) - 40) / 2;
-	yp -= 10;
-	MPrint(xp, yp, szItemName);
+	x  = screen_x - (StringPixLength(item_name, FONT10ARIAL) - 40) / 2;
+	y -= 10;
+	MPrint(x, y, item_name);
 
-	if( gpItem->usItem == ACTION_ITEM )
+	if (o.usItem == ACTION_ITEM)
 	{
-		const wchar_t* pStr;
-		pStr = GetActionItemName( gpItem );
-		xp = sScreenX - (StringPixLength( pStr, FONT10ARIALBOLD ) - 40) / 2;
-		yp += 10;
-		SetFont( FONT10ARIALBOLD );
-		SetFontForeground( FONT_LTKHAKI );
-		MPrint(xp, yp, pStr);
-		SetFontForeground( FONT_YELLOW );
+		SetFont(FONT10ARIALBOLD);
+		SetFontForeground(FONT_LTKHAKI);
+		wchar_t const* const name = GetActionItemName(&o);
+		x  = screen_x - (StringPixLength(name, FONT10ARIALBOLD) - 40) / 2;
+		y += 10;
+		MPrint(x, y, name);
+		SetFontForeground(FONT_YELLOW);
 	}
 
-	//Count the number of items in the current pool, and display that.
-	i = 0;
-	const ITEM_POOL* pItemPool = GetItemPool(gsItemGridNo, 0);
-	Assert( pItemPool );
-	while( pItemPool )
+	// Count the number of items in the current pool, and display that.
+	INT32 n = 0;
+	for (ITEM_POOL const* i = GetItemPool(gsItemGridNo, 0); i; i = i->pNext)
 	{
-		i++;
-		pItemPool = pItemPool->pNext;
+		++n;
 	}
-	xp = sScreenX;
-	yp = sScreenY + 10;
-	mprintf( xp, yp, L"%d", i );
+	mprintf(screen_x, screen_y + 10, L"%d", n);
 
-	//If the item is hidden, render a blinking H (just like DG)
-	const WORLDITEM* const wi = GetWorldItem(gpItemPool->iItemIndex);
-	if (wi->bVisible == HIDDEN_ITEM || wi->bVisible == BURIED)
+	// If the item is hidden, render a blinking H (just like DG)
+	WORLDITEM const& wi = *GetWorldItem(gpItemPool->iItemIndex);
+	if (wi.bVisible == HIDDEN_ITEM || wi.bVisible == BURIED)
 	{
-		SetFont( FONT10ARIALBOLD );
-		if( GetJA2Clock() % 1000 > 500 )
-		{
-			SetFontForeground( 249 );
-		}
-		MPrint(sScreenX + 16, sScreenY + 7, L"H");
-		InvalidateRegion( sScreenX + 16, sScreenY + 7, sScreenX + 24, sScreenY + 27 );
+		SetFont(FONT10ARIALBOLD);
+		if (GetJA2Clock() % 1000 > 500) SetFontForeground(249);
+		MPrint(screen_x + 16, screen_y + 7, L"H");
+		InvalidateRegion(screen_x + 16, screen_y + 7, screen_x + 24, screen_y + 27);
 	}
 }
 
