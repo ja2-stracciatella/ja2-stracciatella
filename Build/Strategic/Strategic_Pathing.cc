@@ -23,8 +23,8 @@
 #include "MemMan.h"
 
 
-UINT16 gusMapPathingData[256];
-BOOLEAN gfPlotToAvoidPlayerInfuencedSectors = FALSE;
+static UINT16  gusMapPathingData[256];
+static BOOLEAN gfPlotToAvoidPlayerInfuencedSectors = FALSE;
 
 
 // Globals
@@ -55,10 +55,10 @@ struct trail_t
 //#define VEINCOST TRAVELCOST_FLAT     //actual cost for bridges and doors and such
 #define TRAILCELLTYPE UINT32
 
-static path_t pathQB[MAXpathQ];
+static path_t        pathQB[MAXpathQ];
 static TRAILCELLTYPE trailCostB[MAP_LENGTH];
-static trail_t trailStratTreeB[MAXTRAILTREE];
-short trailStratTreedxB=0;
+static trail_t       trailStratTreeB[MAXTRAILTREE];
+static short         trailStratTreedxB = 0;
 
 #define QHEADNDX (0)
 #define QPOOLNDX (MAXpathQ-1)
@@ -159,10 +159,10 @@ short trailStratTreedxB=0;
 	while (0)
 
 
-INT32 queRequests;
+static INT32 queRequests;
 
 
-INT16 diStratDelta[8]=
+static INT16 const diStratDelta[]=
 {
 	-MAP_WIDTH,        //N
 	1-MAP_WIDTH,       //NE
