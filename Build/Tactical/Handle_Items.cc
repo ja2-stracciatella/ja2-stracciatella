@@ -1358,12 +1358,11 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 
 static void BoobyTrapMessageBoxCallBack(MessageBoxReturnValue);
 static BOOLEAN DoesItemPoolContainAllHiddenItems(const ITEM_POOL* pItemPool);
-static INT16 GetNumOkForDisplayItemsInPool(const ITEM_POOL* pItemPool, INT8 bZLevel);
 
 
 void HandleSoldierPickupItem(SOLDIERTYPE* const s, INT32 const item_idx, INT16 const gridno, INT8 const z_level)
 {
-	ITEM_POOL* item_pool = GetItemPool(gridno, s->bLevel);
+	ITEM_POOL* const item_pool = GetItemPool(gridno, s->bLevel);
 	if (!item_pool)
 	{
 		DoMercBattleSound(s, BATTLE_SOUND_NOTHING);
@@ -1405,29 +1404,30 @@ void HandleSoldierPickupItem(SOLDIERTYPE* const s, INT32 const item_idx, INT16 c
 		{
 			DoMercBattleSound(s, BATTLE_SOUND_NOTHING);
 		}
+		return;
 	}
-	else
+
+	ITEM_POOL const* first = 0;
+	for (ITEM_POOL* i = item_pool; i; i = i->pNext)
 	{
-		UINT16 const n_items = GetNumOkForDisplayItemsInPool(item_pool, z_level);
-		if (n_items == 1)
-		{ // Find first OK item
-			while (!ItemPoolOKForDisplay(item_pool, z_level))
-			{
-				item_pool = item_pool->pNext;
-			}
-			SoldierGetItemFromWorld(s, item_pool->iItemIndex, gridno, z_level, 0);
-		}
-		else if (n_items != 0)
-		{ // More than one item, draw menu
+		if (!ItemPoolOKForDisplay(i, z_level)) continue;
+		if (first)
+		{ // More than one item, show menu
 			// Freeze guy!
 			s->fPauseAllAnimation = TRUE;
 			InitializeItemPickupMenu(s, gridno, item_pool, z_level);
 			guiPendingOverrideEvent = G_GETTINGITEM;
+			return;
 		}
-		else
-		{
-			DoMercBattleSound(s, BATTLE_SOUND_NOTHING);
-		}
+		first = i;
+	}
+	if (first)
+	{ // Pick up the only item
+		SoldierGetItemFromWorld(s, first->iItemIndex, gridno, z_level, 0);
+	}
+	else
+	{
+		DoMercBattleSound(s, BATTLE_SOUND_NOTHING);
 	}
 }
 
@@ -1984,26 +1984,6 @@ void NotifySoldiersToLookforItems(void)
 void AllSoldiersLookforItems(void)
 {
 	FOR_ALL_MERCS(i) RevealRoofsAndItems(*i, TRUE);
-}
-
-
-static INT16 GetNumOkForDisplayItemsInPool(const ITEM_POOL* pItemPool, INT8 bZLevel)
-{
-	INT32						cnt;
-
-	//Determine total #
-	cnt = 0;
-	while( pItemPool != NULL )
-	{
-		if ( ItemPoolOKForDisplay( pItemPool, bZLevel ) )
-		{
-			cnt++;
-		}
-
-		pItemPool = pItemPool->pNext;
-	}
-
-	return( (UINT16) cnt );
 }
 
 
