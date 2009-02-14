@@ -1357,7 +1357,6 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 
 
 static void BoobyTrapMessageBoxCallBack(MessageBoxReturnValue);
-static BOOLEAN DoesItemPoolContainAllHiddenItems(const ITEM_POOL* pItemPool);
 
 
 void HandleSoldierPickupItem(SOLDIERTYPE* const s, INT32 const item_idx, INT16 const gridno, INT8 const z_level)
@@ -1368,7 +1367,6 @@ void HandleSoldierPickupItem(SOLDIERTYPE* const s, INT32 const item_idx, INT16 c
 		DoMercBattleSound(s, BATTLE_SOUND_NOTHING);
 		return;
 	}
-
 
 	if (s->bTeam != gbPlayerNum)
 	{ // An enemy, go directly (skip menu)
@@ -1390,26 +1388,12 @@ void HandleSoldierPickupItem(SOLDIERTYPE* const s, INT32 const item_idx, INT16 c
 		return;
 	}
 
-	if (DoesItemPoolContainAllHiddenItems(item_pool))
-	{ // Only hidden items exist
-		// He has touched them
-		if (LookForHiddenItems(gridno, s->bLevel))
-		{
-			// WISDOM GAIN (5):  Found a hidden object
-			StatChange(s, WISDOMAMT, 5, FALSE);
-			// We've found something!
-			TacticalCharacterDialogue(s, QUOTE_SPOTTED_SOMETHING_ONE + Random(2));
-		}
-		else
-		{
-			DoMercBattleSound(s, BATTLE_SOUND_NOTHING);
-		}
-		return;
-	}
-
-	ITEM_POOL const* first = 0;
+	ITEM_POOL const* first      = 0;
+	bool             all_hidden = true;
 	for (ITEM_POOL* i = item_pool; i; i = i->pNext)
 	{
+		if (GetWorldItem(i->iItemIndex)->bVisible == HIDDEN_ITEM) continue;
+		all_hidden = false;
 		if (!ItemPoolOKForDisplay(i, z_level)) continue;
 		if (first)
 		{ // More than one item, show menu
@@ -1424,6 +1408,13 @@ void HandleSoldierPickupItem(SOLDIERTYPE* const s, INT32 const item_idx, INT16 c
 	if (first)
 	{ // Pick up the only item
 		SoldierGetItemFromWorld(s, first->iItemIndex, gridno, z_level, 0);
+	}
+	else if (all_hidden && LookForHiddenItems(gridno, s->bLevel))
+	{
+		// Wisdom gain (5):  Found a hidden object
+		StatChange(s, WISDOMAMT, 5, FALSE);
+		// We've found something!
+		TacticalCharacterDialogue(s, QUOTE_SPOTTED_SOMETHING_ONE + Random(2));
 	}
 	else
 	{
@@ -1729,23 +1720,6 @@ BOOLEAN DoesItemPoolContainAnyHiddenItems(const ITEM_POOL* pItemPool)
 	}
 
 	return( FALSE );
-}
-
-
-static BOOLEAN DoesItemPoolContainAllHiddenItems(const ITEM_POOL* pItemPool)
-{
-	// LOOP THROUGH LIST TO FIND NODE WE WANT
-	while( pItemPool != NULL )
-	{
-		if (GetWorldItem(pItemPool->iItemIndex)->bVisible != HIDDEN_ITEM)
-		{
-			return( FALSE );
-		}
-
-		pItemPool = pItemPool->pNext;
-	}
-
-	return( TRUE );
 }
 
 
