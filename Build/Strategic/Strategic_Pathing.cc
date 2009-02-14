@@ -33,9 +33,9 @@ struct path_t
 	INT16 nextLink;           //2
 	INT16 prevLink;           //2
 	INT16 location;           //2
+	INT16 pathNdx;            //2
 	INT32 costSoFar;          //4
 	INT32 costToGo;           //4
-	INT16 pathNdx;            //2
 };
 
 struct trail_t
