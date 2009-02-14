@@ -10,18 +10,6 @@
 
 #define PCX_NORMAL         1
 #define PCX_RLE            2
-#define PCX_256COLOR       4
-#define PCX_TRANSPARENT    8
-#define PCX_CLIPPED        16
-#define PCX_REALIZEPALETTE 32
-#define PCX_X_CLIPPING     64
-#define PCX_Y_CLIPPING     128
-#define PCX_NOTLOADED      256
-
-#define PCX_ERROROPENING   1
-#define PCX_INVALIDFORMAT  2
-#define PCX_INVALIDLEN     4
-#define PCX_OUTOFMEMORY    8
 
 
 struct PcxHeader
@@ -52,7 +40,6 @@ struct PcxObject
 	UINT8  ubPalette[768];
 	UINT16 usWidth, usHeight;
 	UINT32 uiBufferSize;
-	UINT16 usPcxFlags;
 };
 
 
@@ -117,7 +104,6 @@ static PcxObject* LoadPcx(const char* const filename)
 	FileRead(f, pcx_obj->ubPalette, sizeof(pcx_obj->ubPalette));
 
 	pcx_obj->pPcxBuffer   = pcx_buffer.Release();
-	pcx_obj->usPcxFlags   = (header.ubBitsPerPixel == 8 ? PCX_256COLOR : 0);
 	pcx_obj->usWidth      = header.usRight  - header.usLeft + 1;
 	pcx_obj->usHeight     = header.usBottom - header.usTop  + 1;
 	pcx_obj->uiBufferSize = buffer_size;
@@ -207,7 +193,6 @@ static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBu
   { // Pre-compute PCX blitting aspects.
     if ((pCurrentPcxObject->usWidth + usX) >= usBufferWidth)
     {
-      pCurrentPcxObject->usPcxFlags |= PCX_X_CLIPPING;
       usMaxX = usBufferWidth - 1;
     }
     else
@@ -217,7 +202,6 @@ static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBu
 
     if ((pCurrentPcxObject->usHeight + usY) >= usBufferHeight)
     {
-      pCurrentPcxObject->usPcxFlags |= PCX_Y_CLIPPING;
       uiImageSize = pCurrentPcxObject->usWidth * (usBufferHeight - usY);
       usMaxY = usBufferHeight - 1;
     }
