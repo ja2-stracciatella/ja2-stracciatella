@@ -1361,94 +1361,74 @@ static BOOLEAN DoesItemPoolContainAllHiddenItems(const ITEM_POOL* pItemPool);
 static INT16 GetNumOkForDisplayItemsInPool(const ITEM_POOL* pItemPool, INT8 bZLevel);
 
 
-void HandleSoldierPickupItem( SOLDIERTYPE *pSoldier, INT32 iItemIndex, INT16 sGridNo, INT8 bZLevel )
+void HandleSoldierPickupItem(SOLDIERTYPE* const s, INT32 const item_idx, INT16 const gridno, INT8 const z_level)
 {
-	UINT16				usNum;
-
-	// Draw menu if more than one item!
-	ITEM_POOL* pItemPool = GetItemPool(sGridNo, pSoldier->bLevel);
-	if (pItemPool != NULL)
+	ITEM_POOL* item_pool = GetItemPool(gridno, s->bLevel);
+	if (!item_pool)
 	{
-		// OK, if an enemy, go directly ( skip menu )
-		if ( pSoldier->bTeam != gbPlayerNum )
+		DoMercBattleSound(s, BATTLE_SOUND_NOTHING);
+		return;
+	}
+
+
+	if (s->bTeam != gbPlayerNum)
+	{ // An enemy, go directly (skip menu)
+		SoldierGetItemFromWorld(s, item_idx, gridno, z_level, 0);
+		return;
+	}
+
+	if (gpWorldLevelData[gridno].uiFlags & MAPELEMENT_PLAYER_MINE_PRESENT)
+	{ // Have the computer ask us if we want to proceed
+		// Override the item index passed in with the one for the bomb in this tile
+		INT32 const trap_item_idx = FindWorldItemForBombInGridNo(gridno, s->bLevel);
+		g_booby_trap_item     = trap_item_idx;
+		gpBoobyTrapSoldier    = s;
+		gsBoobyTrapGridNo     = gridno;
+		gbBoobyTrapLevel      = s->bLevel;
+		gfDisarmingBuriedBomb = TRUE;
+		gbTrapDifficulty      = GetWorldItem(trap_item_idx)->o.bTrap;
+		DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[DISARM_TRAP_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, BoobyTrapMessageBoxCallBack, 0);
+		return;
+	}
+
+	if (DoesItemPoolContainAllHiddenItems(item_pool))
+	{ // Only hidden items exist
+		// He has touched them
+		if (LookForHiddenItems(gridno, s->bLevel))
 		{
-			SoldierGetItemFromWorld( pSoldier, iItemIndex, sGridNo, bZLevel, NULL );
+			// WISDOM GAIN (5):  Found a hidden object
+			StatChange(s, WISDOMAMT, 5, FALSE);
+			// We've found something!
+			TacticalCharacterDialogue(s, QUOTE_SPOTTED_SOMETHING_ONE + Random(2));
 		}
 		else
 		{
-			if (gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_PLAYER_MINE_PRESENT)
-			{
-				// have the computer ask us if we want to proceed
-
-				// override the item index passed in with the one for the bomb in this
-				// tile
-				iItemIndex = FindWorldItemForBombInGridNo( sGridNo, pSoldier->bLevel );
-				g_booby_trap_item     = iItemIndex;
-				gpBoobyTrapSoldier    = pSoldier;
-				gsBoobyTrapGridNo     = sGridNo;
-				gbBoobyTrapLevel      = pSoldier->bLevel;
-				gfDisarmingBuriedBomb = TRUE;
-				gbTrapDifficulty      = GetWorldItem(iItemIndex)->o.bTrap;
-				DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[DISARM_TRAP_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, BoobyTrapMessageBoxCallBack, NULL);
-			}
-			else
-			{
-				// OK, only hidden items exist...
-				if ( pSoldier->bTeam == gbPlayerNum && DoesItemPoolContainAllHiddenItems( pItemPool ) )
-				{
-					// He's touched them....
-					if (LookForHiddenItems(sGridNo, pSoldier->bLevel))
-					{
-						// WISDOM GAIN (5):  Found a hidden object
-						StatChange( pSoldier, WISDOMAMT, 5, FALSE );
-
-						// We've found something!
-						TacticalCharacterDialogue( pSoldier, (UINT16)( QUOTE_SPOTTED_SOMETHING_ONE + Random( 2 ) ) );
-					}
-					else
-					{
-						// Say NOTHING quote...
-						DoMercBattleSound( pSoldier, BATTLE_SOUND_NOTHING );
-					}
-				}
-				else
-				{
-					// If only one good item exists....
-					if ( ( usNum = GetNumOkForDisplayItemsInPool( pItemPool, bZLevel ) ) == 1 )
-					{
-						// Find first OK item....
-						while( !ItemPoolOKForDisplay( pItemPool, bZLevel  ) )
-						{
-							pItemPool = pItemPool->pNext;
-						}
-						SoldierGetItemFromWorld( pSoldier, pItemPool->iItemIndex, sGridNo, bZLevel, NULL );
-					}
-					else
-					{
-						if ( usNum != 0 )
-						{
-							// Freeze guy!
-							pSoldier->fPauseAllAnimation = TRUE;
-
-							InitializeItemPickupMenu(pSoldier, sGridNo, pItemPool, bZLevel);
-
-							guiPendingOverrideEvent = G_GETTINGITEM;
-						}
-						else
-						{
-							DoMercBattleSound( pSoldier, BATTLE_SOUND_NOTHING );
-						}
-					}
-				}
-			}
+			DoMercBattleSound(s, BATTLE_SOUND_NOTHING);
 		}
 	}
 	else
 	{
-		// Say NOTHING quote...
-		DoMercBattleSound( pSoldier, BATTLE_SOUND_NOTHING );
+		UINT16 const n_items = GetNumOkForDisplayItemsInPool(item_pool, z_level);
+		if (n_items == 1)
+		{ // Find first OK item
+			while (!ItemPoolOKForDisplay(item_pool, z_level))
+			{
+				item_pool = item_pool->pNext;
+			}
+			SoldierGetItemFromWorld(s, item_pool->iItemIndex, gridno, z_level, 0);
+		}
+		else if (n_items != 0)
+		{ // More than one item, draw menu
+			// Freeze guy!
+			s->fPauseAllAnimation = TRUE;
+			InitializeItemPickupMenu(s, gridno, item_pool, z_level);
+			guiPendingOverrideEvent = G_GETTINGITEM;
+		}
+		else
+		{
+			DoMercBattleSound(s, BATTLE_SOUND_NOTHING);
+		}
 	}
-
 }
 
 
