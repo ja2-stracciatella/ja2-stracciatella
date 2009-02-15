@@ -3214,7 +3214,7 @@ static INT8 GetTeamSlotFromPlayer(const SOLDIERTYPE* const s)
 }
 
 
-static BOOLEAN RemovePlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot);
+static BOOLEAN RemovePlayerFromInterfaceTeamSlot(TeamPanelSlot&);
 
 
 BOOLEAN RemovePlayerFromTeamSlot(const SOLDIERTYPE* const s)
@@ -3223,11 +3223,10 @@ BOOLEAN RemovePlayerFromTeamSlot(const SOLDIERTYPE* const s)
 
 	for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
 	{
-		if (gTeamPanel[cnt].merc == s)
-		{
-			RemovePlayerFromInterfaceTeamSlot(cnt);
-			return TRUE;
-		}
+		TeamPanelSlot& tp = gTeamPanel[cnt];
+		if (tp.merc != s) continue;
+		RemovePlayerFromInterfaceTeamSlot(tp);
+		return TRUE;
 	}
 
 	return( FALSE );
@@ -3272,20 +3271,16 @@ void RemoveAllPlayersFromSlot(void)
 
 	for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
 	{
-		RemovePlayerFromInterfaceTeamSlot( (UINT8)cnt );
+		RemovePlayerFromInterfaceTeamSlot(gTeamPanel[cnt]);
 	}
 }
 
 
-static BOOLEAN RemovePlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot)
+static BOOLEAN RemovePlayerFromInterfaceTeamSlot(TeamPanelSlot& tp)
 {
-	if ( ubPanelSlot >= NUM_TEAM_SLOTS )
-	{
-		return( FALSE );
-	}
-
-	SOLDIERTYPE* const s = gTeamPanel[ubPanelSlot].merc;
-	if (s == NULL) return FALSE;
+	SOLDIERTYPE* const s = tp.merc;
+	if (!s) return FALSE;
+	tp.merc = 0;
 
 	if (!(s->uiStatusFlags & SOLDIER_DEAD))
 	{
@@ -3295,8 +3290,6 @@ static BOOLEAN RemovePlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot)
 
 	// Set face to inactive...
 	SetAutoFaceInActive(s->face);
-
-	gTeamPanel[ubPanelSlot].merc = NULL;
 
 	// DIRTY INTERFACE
 	fInterfacePanelDirty = DIRTYLEVEL2;
