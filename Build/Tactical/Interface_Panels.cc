@@ -2370,8 +2370,8 @@ void InitializeTEAMPanel(void)
 
 		INT32 const face_x = dx + TM_FACE_X;
 		INT32 const face_y = dy + TM_FACE_Y;
-		MakeRegion(tp, tp.face,            face_x,     face_y,     TM_FACE_WIDTH,       TM_FACE_HEIGHT,       MercFacePanelMoveCallback, MercFacePanelCallback);
-		MakeRegion(tp, tp.enemy_indicator, face_x + 1, face_y + 1, INDICATOR_BOX_WIDTH, INDICATOR_BOX_HEIGHT, MSYS_NO_CALLBACK,          EnemyIndicatorClickCallback);
+		MakeRegion(tp, tp.face,            face_x,     face_y,     TM_FACE_WIDTH,           TM_FACE_HEIGHT,           MercFacePanelMoveCallback, MercFacePanelCallback);
+		MakeRegion(tp, tp.enemy_indicator, face_x + 1, face_y + 1, INDICATOR_BOX_WIDTH - 1, INDICATOR_BOX_HEIGHT - 1, MSYS_NO_CALLBACK,          EnemyIndicatorClickCallback);
 
 		if (IsMouseInRegion(tp.face))
 		{
