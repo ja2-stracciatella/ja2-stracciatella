@@ -8,10 +8,6 @@
 #include "PODObj.h"
 
 
-#define PCX_NORMAL         1
-#define PCX_RLE            2
-
-
 struct PcxHeader
 {
 	UINT8  ubManufacturer;
@@ -42,7 +38,7 @@ struct PcxObject
 };
 
 
-static void       BlitPcxToBuffer(UINT8 const* pcx_buffer, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight);
+static void       BlitPcxToBuffer(UINT8 const* src, UINT8* dst, UINT16 w, UINT16 h);
 static PcxObject* LoadPcx(const char* filename);
 
 
@@ -109,41 +105,21 @@ static PcxObject* LoadPcx(const char* const filename)
 }
 
 
-static void BlitPcxToBuffer(UINT8 const* const pPcxBuffer, UINT8* const pBuffer, UINT16 const usBufferWidth, UINT16 const usBufferHeight)
+static void BlitPcxToBuffer(UINT8 const* src, UINT8* dst, UINT16 const w, UINT16 const h)
 {
-  UINT8      ubRepCount;
-  UINT32     uiImageSize;
-  UINT8      ubCurrentByte = 0;
-  UINT8      ubMode;
-  UINT32     uiOffset, uiIndex;
-
-	// Pre-compute PCX blitting aspects.
-	uiImageSize = usBufferWidth * usBufferHeight;
-	ubMode      = PCX_NORMAL;
-	uiOffset    = 0;
-	ubRepCount  = 0;
-
-	for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
+	for (size_t n = w * h; n != 0;)
 	{
-		if (ubMode == PCX_NORMAL)
+		if (*src >= 0xC0)
 		{
-			ubCurrentByte = *(pPcxBuffer + uiOffset++);
-			if (ubCurrentByte > 0x0BF)
-			{
-				ubRepCount = ubCurrentByte & 0x03F;
-				ubCurrentByte = *(pPcxBuffer + uiOffset++);
-				if (--ubRepCount > 0)
-				{
-					ubMode = PCX_RLE;
-				}
-			}
+			size_t      n_px   = *src++ & 0x3F;
+			UINT8 const colour = *src++;
+			n = n >= n_px ? n - n_px : n_px = n, 0;
+			for (; n_px != 0; --n_px) *dst++ = colour;
 		}
 		else
 		{
-			if (--ubRepCount == 0)
-			{ ubMode = PCX_NORMAL;
-			}
+			--n;
+			*dst++ = *src++;
 		}
-		*(pBuffer + uiIndex) = ubCurrentByte;
 	}
 }
