@@ -42,7 +42,7 @@ struct PcxObject
 };
 
 
-static void       BlitPcxToBuffer(PcxObject*, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight);
+static void       BlitPcxToBuffer(UINT8 const* pcx_buffer, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight);
 static PcxObject* LoadPcx(const char* filename);
 
 
@@ -58,7 +58,7 @@ SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
 	if (contents & IMAGE_BITMAPDATA)
 	{
 		UINT8* const img_data = img->pImageData.Allocate(img->usWidth * img->usHeight);
-		BlitPcxToBuffer(pcx_obj, img_data, img->usWidth, img->usHeight);
+		BlitPcxToBuffer(pcx_obj->pPcxBuffer, img_data, img->usWidth, img->usHeight);
 	}
 
 	if (contents & IMAGE_PALETTE)
@@ -109,129 +109,41 @@ static PcxObject* LoadPcx(const char* const filename)
 }
 
 
-static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBuffer, UINT16 const usBufferWidth, UINT16 const usBufferHeight)
+static void BlitPcxToBuffer(UINT8 const* const pPcxBuffer, UINT8* const pBuffer, UINT16 const usBufferWidth, UINT16 const usBufferHeight)
 {
-  UINT8     *pPcxBuffer;
   UINT8      ubRepCount;
-  UINT16     usMaxX, usMaxY;
   UINT32     uiImageSize;
   UINT8      ubCurrentByte = 0;
   UINT8      ubMode;
-  UINT16     usCurrentX, usCurrentY;
   UINT32     uiOffset, uiIndex;
-  UINT32     uiNextLineOffset, uiStartOffset, uiCurrentOffset;
 
-  pPcxBuffer = pCurrentPcxObject->pPcxBuffer;
+	// Pre-compute PCX blitting aspects.
+	uiImageSize = usBufferWidth * usBufferHeight;
+	ubMode      = PCX_NORMAL;
+	uiOffset    = 0;
+	ubRepCount  = 0;
 
-  if (pCurrentPcxObject->usWidth == usBufferWidth && pCurrentPcxObject->usHeight == usBufferHeight)
-  { // Pre-compute PCX blitting aspects.
-    uiImageSize = usBufferWidth * usBufferHeight;
-    ubMode      = PCX_NORMAL;
-    uiOffset    = 0;
-    ubRepCount  = 0;
-
-		for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
+	for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
+	{
+		if (ubMode == PCX_NORMAL)
 		{
-			if (ubMode == PCX_NORMAL)
+			ubCurrentByte = *(pPcxBuffer + uiOffset++);
+			if (ubCurrentByte > 0x0BF)
 			{
+				ubRepCount = ubCurrentByte & 0x03F;
 				ubCurrentByte = *(pPcxBuffer + uiOffset++);
-				if (ubCurrentByte > 0x0BF)
+				if (--ubRepCount > 0)
 				{
-					ubRepCount = ubCurrentByte & 0x03F;
-					ubCurrentByte = *(pPcxBuffer + uiOffset++);
-					if (--ubRepCount > 0)
-					{
-						ubMode = PCX_RLE;
-					}
-				}
-			}
-			else
-			{
-				if (--ubRepCount == 0)
-				{ ubMode = PCX_NORMAL;
-				}
-			}
-			*(pBuffer + uiIndex) = ubCurrentByte;
-		}
-  } else
-  { // Pre-compute PCX blitting aspects.
-    if (pCurrentPcxObject->usWidth >= usBufferWidth)
-    {
-      usMaxX = usBufferWidth - 1;
-    }
-    else
-    {
-      usMaxX = pCurrentPcxObject->usWidth;
-    }
-
-    if (pCurrentPcxObject->usHeight >= usBufferHeight)
-    {
-      uiImageSize = pCurrentPcxObject->usWidth * usBufferHeight;
-      usMaxY = usBufferHeight - 1;
-    }
-    else
-    { uiImageSize = pCurrentPcxObject->usWidth * pCurrentPcxObject->usHeight;
-      usMaxY = pCurrentPcxObject->usHeight;
-    }
-
-    ubMode     = PCX_NORMAL;
-    uiOffset   = 0;
-    ubRepCount = 0;
-    usCurrentX = 0;
-    usCurrentY = 0;
-
-		uiStartOffset = (usCurrentY*usBufferWidth) + usCurrentX;
-		uiNextLineOffset = uiStartOffset + usBufferWidth;
-		uiCurrentOffset = uiStartOffset;
-
-		for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
-		{
-
-			if (ubMode == PCX_NORMAL)
-			{
-				ubCurrentByte = *(pPcxBuffer + uiOffset++);
-				if (ubCurrentByte > 0x0BF)
-				{
-					ubRepCount = ubCurrentByte & 0x03F;
-					ubCurrentByte = *(pPcxBuffer + uiOffset++);
-					if (--ubRepCount > 0)
-					{
-						ubMode = PCX_RLE;
-					}
-				}
-			}
-			else
-			{
-				if (--ubRepCount == 0)
-				{
-					ubMode = PCX_NORMAL;
-				}
-			}
-
-			if (usCurrentX < usMaxX)
-			{ // We are within the visible bounds so we write the byte to buffer
-				*(pBuffer + uiCurrentOffset) = ubCurrentByte;
-				uiCurrentOffset++;
-				usCurrentX++;
-			}
-			else
-			{ if ((uiCurrentOffset + 1)< uiNextLineOffset)
-				{ // Increment the uiCurrentOffset
-					uiCurrentOffset++;
-				}
-				else
-				{ // Go to next line
-					usCurrentX = 0;
-					usCurrentY++;
-					if (usCurrentY > usMaxY)
-					{
-						break;
-					}
-					uiStartOffset = (usCurrentY*usBufferWidth) + usCurrentX;
-					uiNextLineOffset = uiStartOffset + usBufferWidth;
-					uiCurrentOffset = uiStartOffset;
+					ubMode = PCX_RLE;
 				}
 			}
 		}
-  }
+		else
+		{
+			if (--ubRepCount == 0)
+			{ ubMode = PCX_NORMAL;
+			}
+		}
+		*(pBuffer + uiIndex) = ubCurrentByte;
+	}
 }
