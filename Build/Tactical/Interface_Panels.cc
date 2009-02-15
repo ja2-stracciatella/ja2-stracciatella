@@ -348,12 +348,6 @@ static MOUSE_REGION gSM_SELMERCBarsRegion;
 MOUSE_REGION		gSM_SELMERCMoneyRegion;
 static MOUSE_REGION gSM_SELMERCEnemyIndicatorRegion;
 static MOUSE_REGION gTEAM_PanelRegion;
-static MOUSE_REGION gTEAM_FaceRegions[NUM_TEAM_SLOTS];
-static MOUSE_REGION gTEAM_BarsRegions[NUM_TEAM_SLOTS];
-static MOUSE_REGION gTEAM_LeftBarsRegions[NUM_TEAM_SLOTS];
-static MOUSE_REGION gTEAM_FirstHandInv[NUM_TEAM_SLOTS];
-static MOUSE_REGION gTEAM_SecondHandInv[NUM_TEAM_SLOTS];
-static MOUSE_REGION gTEAM_EnemyIndicator[NUM_TEAM_SLOTS];
 
 
 // Globals - for one - the current merc here
@@ -362,12 +356,18 @@ SOLDIERTYPE			*gpSMCurrentMerc = NULL;
 MOUSE_REGION gSMPanelRegion;
 
 
-struct TEAM_PANEL_SLOTS_TYPE
+struct TeamPanelSlot
 {
 	SOLDIERTYPE* merc;
+	MOUSE_REGION face;
+	MOUSE_REGION enemy_indicator;
+	MOUSE_REGION bars;
+	MOUSE_REGION left_bars;
+	MOUSE_REGION first_hand;
+	MOUSE_REGION second_hand;
 };
 
-static TEAM_PANEL_SLOTS_TYPE gTeamPanel[NUM_TEAM_SLOTS];
+static TeamPanelSlot gTeamPanel[NUM_TEAM_SLOTS];
 
 
 // Wraps up check for AP-s get from a different soldier for in a vehicle...
@@ -548,8 +548,8 @@ void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 	{
 		for (INT32 cnt = 0; cnt < NUM_TEAM_SLOTS; ++cnt)
 		{
-			if (gTeamPanel[cnt].merc == pSoldier &&
-					IsMouseInRegion(gTEAM_FaceRegions[cnt]))
+			TeamPanelSlot const& tp = gTeamPanel[cnt];
+			if (tp.merc == pSoldier && IsMouseInRegion(tp.face))
 			{
 				HandleMouseOverSoldierFaceForContMove(pSoldier, fOn);
 			}
@@ -2356,21 +2356,22 @@ void InitializeTEAMPanel(void)
 
 	for (UINT32 i = 0; i < NUM_TEAM_SLOTS; ++i)
 	{
-		const INT32 dx = TM_INV_HAND_SEP * i;
-		const INT32 dy = INTERFACE_START_Y;
+		TeamPanelSlot& tp = gTeamPanel[i];
+		INT32 const    dx = TM_INV_HAND_SEP * i;
+		INT32 const    dy = INTERFACE_START_Y;
 
 		INT32 x;
 		INT32 y;
 
 		x = dx + TM_FACE_X;
 		y = dy + TM_FACE_Y;
-		MSYS_DefineRegion(&gTEAM_FaceRegions[i], x, y , x + TM_FACE_WIDTH, y + TM_FACE_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MercFacePanelMoveCallback, MercFacePanelCallback);
-		MSYS_SetRegionUserData(&gTEAM_FaceRegions[i], 0, i);
+		MSYS_DefineRegion(&tp.face, x, y , x + TM_FACE_WIDTH, y + TM_FACE_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MercFacePanelMoveCallback, MercFacePanelCallback);
+		MSYS_SetRegionUserData(&tp.face, 0, i);
 
-		MSYS_DefineRegion(&gTEAM_EnemyIndicator[i], x + 1, y + 1, x + INDICATOR_BOX_WIDTH, y + INDICATOR_BOX_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, EnemyIndicatorClickCallback);
-		MSYS_SetRegionUserData(&gTEAM_EnemyIndicator[i], 0, i);
+		MSYS_DefineRegion(&tp.enemy_indicator, x + 1, y + 1, x + INDICATOR_BOX_WIDTH, y + INDICATOR_BOX_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, EnemyIndicatorClickCallback);
+		MSYS_SetRegionUserData(&tp.enemy_indicator, 0, i);
 
-		if (IsMouseInRegion(gTEAM_FaceRegions[i]))
+		if (IsMouseInRegion(tp.face))
 		{
 			SOLDIERTYPE* const s = gTeamPanel[i].merc;
 			if (s != NULL) HandleMouseOverSoldierFaceForContMove(s, TRUE);
@@ -2378,22 +2379,22 @@ void InitializeTEAMPanel(void)
 
 		x = dx + TM_BARS_X;
 		y = dy + TM_BARS_Y;
-		MSYS_DefineRegion(&gTEAM_BarsRegions[i], x, y , x + TM_BARS_WIDTH, y + TM_BARS_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback);
-		MSYS_SetRegionUserData(&gTEAM_BarsRegions[i], 0, i);
+		MSYS_DefineRegion(&tp.bars, x, y , x + TM_BARS_WIDTH, y + TM_BARS_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback);
+		MSYS_SetRegionUserData(&tp.bars, 0, i);
 
 		x = dx + TM_FACE_X;
 		y = dy + TM_FACE_Y;
-		MSYS_DefineRegion(&gTEAM_LeftBarsRegions[i], x - 8, y, x, y + TM_BARS_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback);
-		MSYS_SetRegionUserData(&gTEAM_LeftBarsRegions[i], 0, i);
+		MSYS_DefineRegion(&tp.left_bars, x - 8, y, x, y + TM_BARS_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MercFacePanelCallback);
+		MSYS_SetRegionUserData(&tp.left_bars, 0, i);
 
 		x = dx + TM_INV_HAND1STARTX;
 		y = dy + TM_INV_HAND1STARTY;
-		MSYS_DefineRegion(&gTEAM_FirstHandInv[i], x, y, x + TM_INV_WIDTH, y + TM_INV_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, TMClickFirstHandInvCallback);
-		MSYS_SetRegionUserData(&gTEAM_FirstHandInv[i], 0, i);
+		MSYS_DefineRegion(&tp.first_hand, x, y, x + TM_INV_WIDTH, y + TM_INV_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, TMClickFirstHandInvCallback);
+		MSYS_SetRegionUserData(&tp.first_hand, 0, i);
 
 		y += TM_INV_HAND_SEPY;
-		MSYS_DefineRegion(&gTEAM_SecondHandInv[i], x, y, x + TM_INV_WIDTH, y + TM_INV_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, TMClickSecondHandInvCallback);
-		MSYS_SetRegionUserData(&gTEAM_SecondHandInv[i], 0, i);
+		MSYS_DefineRegion(&tp.second_hand, x, y, x + TM_INV_WIDTH, y + TM_INV_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, TMClickSecondHandInvCallback);
+		MSYS_SetRegionUserData(&tp.second_hand, 0, i);
 	}
 }
 
@@ -2411,12 +2412,13 @@ void ShutdownTEAMPanel(void)
 
 	for (UINT32 i = 0; i < NUM_TEAM_SLOTS; ++i)
 	{
-		MSYS_RemoveRegion(&gTEAM_EnemyIndicator[i]);
-		MSYS_RemoveRegion(&gTEAM_FaceRegions[i]);
-		MSYS_RemoveRegion(&gTEAM_BarsRegions[i]);
-		MSYS_RemoveRegion(&gTEAM_LeftBarsRegions[i]);
-		MSYS_RemoveRegion(&gTEAM_FirstHandInv[i]);
-		MSYS_RemoveRegion(&gTEAM_SecondHandInv[i]);
+		TeamPanelSlot& tp = gTeamPanel[i];
+		MSYS_RemoveRegion(&tp.face);
+		MSYS_RemoveRegion(&tp.enemy_indicator);
+		MSYS_RemoveRegion(&tp.bars);
+		MSYS_RemoveRegion(&tp.left_bars);
+		MSYS_RemoveRegion(&tp.first_hand);
+		MSYS_RemoveRegion(&tp.second_hand);
 
 		SOLDIERTYPE* const s = gTeamPanel[i].merc;
 		if (s != NULL) HandleMouseOverSoldierFaceForContMove(s, FALSE);
@@ -2462,7 +2464,8 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 			const INT32 dx = TM_INV_HAND_SEP * i;
 			const INT32 dy = INTERFACE_START_Y;
 
-			const SOLDIERTYPE* const s = gTeamPanel[i].merc;
+			TeamPanelSlot&           tp = gTeamPanel[i];
+			SOLDIERTYPE const* const s  = tp.merc;
 			if (s)
 			{
 				RenderSoldierFace(s, dx + TM_FACE_X, dy + TM_FACE_Y);
@@ -2497,7 +2500,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 					GetHelpTextForItem(help_buf, lengthof(help_buf), &s->inv[HANDPOS]);
 					help = help_buf;
 				}
-				gTEAM_FirstHandInv[i].SetFastHelpText(help);
+				tp.first_hand.SetFastHelpText(help);
 
 				// Add text for seonc hand popup
 				if (s->uiStatusFlags & (SOLDIER_PASSENGER | SOLDIER_DRIVER))
@@ -2513,7 +2516,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 					GetHelpTextForItem(help_buf, lengthof(help_buf), &s->inv[SECONDHANDPOS]);
 					help = help_buf;
 				}
-				gTEAM_SecondHandInv[i].SetFastHelpText(help);
+				tp.second_hand.SetFastHelpText(help);
 
 				// Restore AP/LIFE POSIITONS
 
@@ -2540,8 +2543,9 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 	// Loop through all mercs and make go
 	for (UINT32 i = 0; i < NUM_TEAM_SLOTS; ++i)
 	{
-		SOLDIERTYPE* const s = gTeamPanel[i].merc;
-		if (s == NULL) continue;
+		TeamPanelSlot&     tp = gTeamPanel[i];
+		SOLDIERTYPE* const s  = tp.merc;
+		if (!s) continue;
 
 		// Update animations....
 		if (s->fClosePanel || s->fClosePanelToDie)
@@ -2555,11 +2559,8 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 
 		if (fDirty != DIRTYLEVEL0)
 		{
-			// UPdate stats!
-			if (fDirty == DIRTYLEVEL2)
-			{
-				SetStatsHelp(&gTEAM_BarsRegions[i], s);
-			}
+			// Update stats!
+			if (fDirty == DIRTYLEVEL2) SetStatsHelp(&tp.bars, s);
 
 			const INT32 x = dx + TM_AP_X;
 			const INT32 y = dy + TM_AP_Y;
@@ -2702,9 +2703,10 @@ static void UpdateTEAMPanel(void)
 		// OK, disable item regions.......
 		for (INT32 i = 0; i < NUM_TEAM_SLOTS; ++i)
 		{
-			gTEAM_EnemyIndicator[i].Disable();
-			gTEAM_FirstHandInv[i].Disable();
-			gTEAM_SecondHandInv[i].Disable();
+			TeamPanelSlot& tp = gTeamPanel[i];
+			tp.enemy_indicator.Disable();
+			tp.first_hand.Disable();
+			tp.second_hand.Disable();
 		}
 
 		//disable the radar map region
@@ -2717,9 +2719,10 @@ static void UpdateTEAMPanel(void)
 
 		for (INT32 i = 0; i < NUM_TEAM_SLOTS; ++i)
 		{
-			gTEAM_EnemyIndicator[i].Enable();
-			gTEAM_FirstHandInv[i].Enable();
-			gTEAM_SecondHandInv[i].Enable();
+			TeamPanelSlot& tp = gTeamPanel[i];
+			tp.enemy_indicator.Enable();
+			tp.first_hand.Enable();
+			tp.second_hand.Enable();
 		}
 
 		gRadarRegion.Enable();
