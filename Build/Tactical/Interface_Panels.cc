@@ -2444,7 +2444,7 @@ static void RenderTeamSlotBorder(const SOLDIERTYPE* const s, const INT32 dx, con
 }
 
 
-static void RenderSoldierTeamInv(SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY, UINT8 ubPanelNum, BOOLEAN fDirty);
+static void RenderSoldierTeamInv(SOLDIERTYPE const*, INT16 sX, INT16 sY, BOOLEAN fDirty);
 static void UpdateTEAMPanel(void);
 
 
@@ -2578,7 +2578,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 			}
 		}
 
-		RenderSoldierTeamInv(s, dx + TM_INV_HAND1STARTX, dy + TM_INV_HAND1STARTY, i, fDirty);
+		RenderSoldierTeamInv(s, dx + TM_INV_HAND1STARTX, dy + TM_INV_HAND1STARTY, fDirty);
 	}
 	UpdateTEAMPanel();
 
@@ -3116,7 +3116,7 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 }
 
 
-static void RenderSoldierTeamInv(SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY, UINT8 ubPanelNum, BOOLEAN fDirty)
+static void RenderSoldierTeamInv(SOLDIERTYPE const* const pSoldier, INT16 const sX, INT16 const sY, BOOLEAN const fDirty)
 {
 	if ( pSoldier->bActive && !(pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
 	{
