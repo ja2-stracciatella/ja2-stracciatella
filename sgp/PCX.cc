@@ -42,7 +42,7 @@ struct PcxObject
 };
 
 
-static void       BlitPcxToBuffer(PcxObject*, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY);
+static void       BlitPcxToBuffer(PcxObject*, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight);
 static PcxObject* LoadPcx(const char* filename);
 
 
@@ -58,7 +58,7 @@ SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
 	if (contents & IMAGE_BITMAPDATA)
 	{
 		UINT8* const img_data = img->pImageData.Allocate(img->usWidth * img->usHeight);
-		BlitPcxToBuffer(pcx_obj, img_data, img->usWidth, img->usHeight, 0, 0);
+		BlitPcxToBuffer(pcx_obj, img_data, img->usWidth, img->usHeight);
 	}
 
 	if (contents & IMAGE_PALETTE)
@@ -109,7 +109,7 @@ static PcxObject* LoadPcx(const char* const filename)
 }
 
 
-static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBuffer, UINT16 const usBufferWidth, UINT16 const usBufferHeight, UINT16 const usX, UINT16 const usY)
+static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBuffer, UINT16 const usBufferWidth, UINT16 const usBufferHeight)
 {
   UINT8     *pPcxBuffer;
   UINT8      ubRepCount;
@@ -123,7 +123,7 @@ static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBu
 
   pPcxBuffer = pCurrentPcxObject->pPcxBuffer;
 
-  if (((pCurrentPcxObject->usWidth + usX) == usBufferWidth)&&((pCurrentPcxObject->usHeight + usY)== usBufferHeight))
+  if (pCurrentPcxObject->usWidth == usBufferWidth && pCurrentPcxObject->usHeight == usBufferHeight)
   { // Pre-compute PCX blitting aspects.
     uiImageSize = usBufferWidth * usBufferHeight;
     ubMode      = PCX_NORMAL;
@@ -155,30 +155,30 @@ static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBu
 		}
   } else
   { // Pre-compute PCX blitting aspects.
-    if ((pCurrentPcxObject->usWidth + usX) >= usBufferWidth)
+    if (pCurrentPcxObject->usWidth >= usBufferWidth)
     {
       usMaxX = usBufferWidth - 1;
     }
     else
     {
-      usMaxX = pCurrentPcxObject->usWidth + usX;
+      usMaxX = pCurrentPcxObject->usWidth;
     }
 
-    if ((pCurrentPcxObject->usHeight + usY) >= usBufferHeight)
+    if (pCurrentPcxObject->usHeight >= usBufferHeight)
     {
-      uiImageSize = pCurrentPcxObject->usWidth * (usBufferHeight - usY);
+      uiImageSize = pCurrentPcxObject->usWidth * usBufferHeight;
       usMaxY = usBufferHeight - 1;
     }
     else
     { uiImageSize = pCurrentPcxObject->usWidth * pCurrentPcxObject->usHeight;
-      usMaxY = pCurrentPcxObject->usHeight + usY;
+      usMaxY = pCurrentPcxObject->usHeight;
     }
 
     ubMode     = PCX_NORMAL;
     uiOffset   = 0;
     ubRepCount = 0;
-    usCurrentX = usX;
-    usCurrentY = usY;
+    usCurrentX = 0;
+    usCurrentY = 0;
 
 		uiStartOffset = (usCurrentY*usBufferWidth) + usCurrentX;
 		uiNextLineOffset = uiStartOffset + usBufferWidth;
@@ -221,7 +221,7 @@ static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBu
 				}
 				else
 				{ // Go to next line
-					usCurrentX = usX;
+					usCurrentX = 0;
 					usCurrentY++;
 					if (usCurrentY > usMaxY)
 					{
