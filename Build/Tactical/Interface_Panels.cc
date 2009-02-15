@@ -2329,10 +2329,10 @@ static void BtnLookCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void MakeRegion(UINT32 const idx, MOUSE_REGION& r, INT32 const x, INT32 const y, INT32 const w, INT32 const h, MOUSE_CALLBACK const move, MOUSE_CALLBACK const click)
+static void MakeRegion(TeamPanelSlot& tp, MOUSE_REGION& r, INT32 const x, INT32 const y, INT32 const w, INT32 const h, MOUSE_CALLBACK const move, MOUSE_CALLBACK const click)
 {
 	MSYS_DefineRegion(&r, x, y , x + w, y + h, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, move, click);
-	MSYS_SetRegionUserData(&r, 0, idx);
+	r.SetUserPtr(&tp);
 }
 
 
@@ -2369,8 +2369,8 @@ void InitializeTEAMPanel(void)
 
 		INT32 const face_x = dx + TM_FACE_X;
 		INT32 const face_y = dy + TM_FACE_Y;
-		MakeRegion(i, tp.face,            face_x,     face_y,     TM_FACE_WIDTH,       TM_FACE_HEIGHT,       MercFacePanelMoveCallback, MercFacePanelCallback);
-		MakeRegion(i, tp.enemy_indicator, face_x + 1, face_y + 1, INDICATOR_BOX_WIDTH, INDICATOR_BOX_HEIGHT, MSYS_NO_CALLBACK,          EnemyIndicatorClickCallback);
+		MakeRegion(tp, tp.face,            face_x,     face_y,     TM_FACE_WIDTH,       TM_FACE_HEIGHT,       MercFacePanelMoveCallback, MercFacePanelCallback);
+		MakeRegion(tp, tp.enemy_indicator, face_x + 1, face_y + 1, INDICATOR_BOX_WIDTH, INDICATOR_BOX_HEIGHT, MSYS_NO_CALLBACK,          EnemyIndicatorClickCallback);
 
 		if (IsMouseInRegion(tp.face))
 		{
@@ -2378,13 +2378,13 @@ void InitializeTEAMPanel(void)
 			if (s != NULL) HandleMouseOverSoldierFaceForContMove(s, TRUE);
 		}
 
-		MakeRegion(i, tp.bars,      dx + TM_BARS_X,     dy + TM_BARS_Y, TM_BARS_WIDTH, TM_BARS_HEIGHT, MSYS_NO_CALLBACK, MercFacePanelCallback);
-		MakeRegion(i, tp.left_bars, dx + TM_FACE_X - 8, dy + TM_FACE_Y, 8,             TM_BARS_HEIGHT, MSYS_NO_CALLBACK, MercFacePanelCallback);
+		MakeRegion(tp, tp.bars,      dx + TM_BARS_X,     dy + TM_BARS_Y, TM_BARS_WIDTH, TM_BARS_HEIGHT, MSYS_NO_CALLBACK, MercFacePanelCallback);
+		MakeRegion(tp, tp.left_bars, dx + TM_FACE_X - 8, dy + TM_FACE_Y, 8,             TM_BARS_HEIGHT, MSYS_NO_CALLBACK, MercFacePanelCallback);
 
 		INT32 const hand_x = dx + TM_INV_HAND1STARTX;
 		INT32 const hand_y = dy + TM_INV_HAND1STARTY;
-		MakeRegion(i, tp.first_hand,  hand_x, hand_y,                    TM_INV_WIDTH,  TM_INV_HEIGHT,  MSYS_NO_CALLBACK, TMClickFirstHandInvCallback);
-		MakeRegion(i, tp.second_hand, hand_x, hand_y + TM_INV_HAND_SEPY, TM_INV_WIDTH,  TM_INV_HEIGHT,  MSYS_NO_CALLBACK, TMClickSecondHandInvCallback);
+		MakeRegion(tp, tp.first_hand,  hand_x, hand_y,                    TM_INV_WIDTH,  TM_INV_HEIGHT,  MSYS_NO_CALLBACK, TMClickFirstHandInvCallback);
+		MakeRegion(tp, tp.second_hand, hand_x, hand_y + TM_INV_HAND_SEPY, TM_INV_WIDTH,  TM_INV_HEIGHT,  MSYS_NO_CALLBACK, TMClickSecondHandInvCallback);
 	}
 }
 
@@ -2725,9 +2725,8 @@ static void MercFacePanelMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	// If our flags are set to do this, gofoit!
 	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN) return;
 
-	const UINT8 ubID     = MSYS_GetRegionUserData(pRegion, 0);
-	SOLDIERTYPE* const s = gTeamPanel[ubID].merc;
-	if (s == NULL || !s->bActive) return;
+	SOLDIERTYPE* const s = pRegion->GetUserPtr<TeamPanelSlot>()->merc;
+	if (!s || !s->bActive) return;
 
 	if (iReason & MSYS_CALLBACK_REASON_MOVE)
 	{
@@ -2742,9 +2741,8 @@ static void MercFacePanelMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void EnemyIndicatorClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	const UINT8 ubID     = MSYS_GetRegionUserData(pRegion, 0);
-	SOLDIERTYPE* const s = gTeamPanel[ubID].merc;
-	if (s == NULL || !s->bActive) return;
+	SOLDIERTYPE* const s = pRegion->GetUserPtr<TeamPanelSlot>()->merc;
+	if (!s || !s->bActive) return;
 
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
@@ -2765,9 +2763,8 @@ static void EnemyIndicatorClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	const UINT8 ubID     = MSYS_GetRegionUserData(pRegion, 0);
-	SOLDIERTYPE* const s = gTeamPanel[ubID].merc;
-	if (s == NULL || !s->bActive) return;
+	SOLDIERTYPE* const s = pRegion->GetUserPtr<TeamPanelSlot>()->merc;
+	if (!s || !s->bActive) return;
 
 	// If our flags are set to do this, gofoit!
 	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
@@ -3137,9 +3134,8 @@ static void RenderSoldierTeamInv(SOLDIERTYPE const* const pSoldier, INT16 const 
 
 static void TMClickFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	const UINT8 ubID     = MSYS_GetRegionUserData(pRegion, 0);
-	SOLDIERTYPE* const s = gTeamPanel[ubID].merc;
-	if (s == NULL) return;
+	SOLDIERTYPE* const s = pRegion->GetUserPtr<TeamPanelSlot>()->merc;
+	if (!s) return;
 
 	if (iReason == MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
@@ -3162,9 +3158,8 @@ static void TMClickFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void TMClickSecondHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	const UINT8 ubID     = MSYS_GetRegionUserData(pRegion, 0);
-	SOLDIERTYPE* const s = gTeamPanel[ubID].merc;
-	if (s == NULL) return;
+	SOLDIERTYPE* const s = pRegion->GetUserPtr<TeamPanelSlot>()->merc;
+	if (!s) return;
 
 	if (iReason == MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
