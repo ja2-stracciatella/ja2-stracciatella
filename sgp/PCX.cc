@@ -39,7 +39,6 @@ struct PcxObject
 	UINT8* pPcxBuffer;
 	UINT8  ubPalette[768];
 	UINT16 usWidth, usHeight;
-	UINT32 uiBufferSize;
 };
 
 
@@ -106,7 +105,6 @@ static PcxObject* LoadPcx(const char* const filename)
 	pcx_obj->pPcxBuffer   = pcx_buffer.Release();
 	pcx_obj->usWidth      = header.usRight  - header.usLeft + 1;
 	pcx_obj->usHeight     = header.usBottom - header.usTop  + 1;
-	pcx_obj->uiBufferSize = buffer_size;
 	return pcx_obj.Release();
 }
 
