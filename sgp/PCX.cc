@@ -30,78 +30,57 @@ struct PcxHeader
 CASSERT(sizeof(PcxHeader) == 128)
 
 
-struct PcxObject
-{
-	UINT8* pPcxBuffer;
-	UINT8  ubPalette[768];
-	UINT16 usWidth, usHeight;
-};
-
-
-static void       BlitPcxToBuffer(UINT8 const* src, UINT8* dst, UINT16 w, UINT16 h);
-static PcxObject* LoadPcx(const char* filename);
+static void BlitPcxToBuffer(UINT8 const* src, UINT8* dst, UINT16 w, UINT16 h);
 
 
 SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
 {
-	PcxObject* const pcx_obj = LoadPcx(filename);
+	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
 
-	AutoSGPImage img(new SGPImage(pcx_obj->usWidth, pcx_obj->usHeight, 8));
+	PcxHeader header;
+	FileRead(f, &header, sizeof(header));
+	if (header.ubManufacturer != 10 || header.ubEncoding != 1)
+	{
+		throw std::runtime_error("PCX file has invalid header");
+	}
+
+	UINT32 const file_size   = FileGetSize(f);
+	UINT32 const buffer_size = file_size - sizeof(PcxHeader) - 768;
+
+	SGP::Buffer<UINT8> pcx_buffer(buffer_size);
+	FileRead(f, pcx_buffer, buffer_size);
+
+	UINT8 palette[768];
+	FileRead(f, palette, sizeof(palette));
+
+	UINT16 const w = header.usRight  - header.usLeft + 1;
+	UINT16 const h = header.usBottom - header.usTop  + 1;
+
+	AutoSGPImage img(new SGPImage(w, h, 8));
 	// Set some header information
 	img->fFlags |= contents;
 
 	// Read and allocate bitmap block if requested
 	if (contents & IMAGE_BITMAPDATA)
 	{
-		UINT8* const img_data = img->pImageData.Allocate(img->usWidth * img->usHeight);
-		BlitPcxToBuffer(pcx_obj->pPcxBuffer, img_data, img->usWidth, img->usHeight);
+		UINT8* const img_data = img->pImageData.Allocate(w * h);
+		BlitPcxToBuffer(pcx_buffer, img_data, w, h);
 	}
 
 	if (contents & IMAGE_PALETTE)
 	{
 		SGPPaletteEntry* const dst = img->pPalette.Allocate(256);
-		UINT8 const*     const src = pcx_obj->ubPalette;
-		for (UINT16 Index = 0; Index < 256; Index++)
+		for (size_t i = 0; i < 256; ++i)
 		{
-			dst[Index].r      = src[Index * 3 + 0];
-			dst[Index].g      = src[Index * 3 + 1];
-			dst[Index].b      = src[Index * 3 + 2];
-			dst[Index].unused = 0;
+			dst[i].r      = palette[i * 3 + 0];
+			dst[i].g      = palette[i * 3 + 1];
+			dst[i].b      = palette[i * 3 + 2];
+			dst[i].unused = 0;
 		}
 		img->pui16BPPPalette = Create16BPPPalette(dst);
 	}
 
-	MemFree(pcx_obj->pPcxBuffer);
-	MemFree(pcx_obj);
 	return img.Release();
-}
-
-
-static PcxObject* LoadPcx(const char* const filename)
-{
-	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
-
-	PcxHeader header;
-	FileRead(f, &header, sizeof(header));
-	if (header.ubManufacturer != 10 ||
-			header.ubEncoding     !=  1)
-	{
-		throw std::runtime_error("PCX file has invalid header");
-	}
-
-	const UINT32 file_size   = FileGetSize(f);
-	const UINT32 buffer_size = file_size - sizeof(PcxHeader) - 768;
-
-	SGP::Buffer<UINT8> pcx_buffer(buffer_size);
-	FileRead(f, pcx_buffer, buffer_size);
-
-	SGP::PODObj<PcxObject> pcx_obj;
-	FileRead(f, pcx_obj->ubPalette, sizeof(pcx_obj->ubPalette));
-
-	pcx_obj->pPcxBuffer   = pcx_buffer.Release();
-	pcx_obj->usWidth      = header.usRight  - header.usLeft + 1;
-	pcx_obj->usHeight     = header.usBottom - header.usTop  + 1;
-	return pcx_obj.Release();
 }
 
 
