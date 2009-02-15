@@ -3201,19 +3201,6 @@ static BOOLEAN PlayerExistsInSlot(const SOLDIERTYPE* const s)
 }
 
 
-static INT8 GetTeamSlotFromPlayer(const SOLDIERTYPE* const s)
-{
-	INT8 cnt;
-
-	for ( cnt = 0; cnt < NUM_TEAM_SLOTS; cnt++ )
-	{
-		if (gTeamPanel[cnt].merc == s) return cnt;
-	}
-
-	return( -1 );
-}
-
-
 static void RemovePlayerFromInterfaceTeamSlot(TeamPanelSlot&);
 
 
@@ -3352,40 +3339,26 @@ void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* const s)
 
 SOLDIERTYPE* FindNextMercInTeamPanel(SOLDIERTYPE* const prev)
 {
-	INT32 cnt;
-  INT32 bFirstID;
-
-	bFirstID = GetTeamSlotFromPlayer(prev);
-	if (bFirstID == -1) return prev;
-
-	for ( cnt = ( bFirstID + 1 ); cnt < NUM_TEAM_SLOTS; cnt++ )
+	bool         seen_prev = false;
+	SOLDIERTYPE* before    = 0;
+	for (TeamPanelSlot* i = gTeamPanel; i != endof(gTeamPanel); ++i)
 	{
-		SOLDIERTYPE* const next = gTeamPanel[cnt].merc;
-		if (next != NULL &&
-				OK_CONTROLLABLE_MERC(next) &&
-				OK_INTERRUPT_MERC(next) &&
-				prev->bAssignment == next->bAssignment)
-		{
-			return next;
-		}
-  }
+		SOLDIERTYPE* const s = i->merc;
+		if (!s) continue;
 
-	// none found,
-	// Now loop back
-	for ( cnt = 0; cnt < bFirstID; cnt++ )
-	{
-		SOLDIERTYPE* const next = gTeamPanel[cnt].merc;
-		if (next != NULL &&
-				OK_CONTROLLABLE_MERC(next) &&
-				OK_INTERRUPT_MERC(next) &&
-				prev->bAssignment == next->bAssignment)
+		if (s == prev)
 		{
-			return next;
+			seen_prev = true;
+			continue;
 		}
+
+		if (!OK_CONTROLLABLE_MERC(s))            continue;
+		if (!OK_INTERRUPT_MERC(s))               continue;
+		if (s->bAssignment != prev->bAssignment) continue;
+		if (seen_prev) return s;
+		if (!before) before = s;
 	}
-
-	// IF we are here, keep as we always were!
-	return prev;
+	return seen_prev && before ? before : prev;
 }
 
 
