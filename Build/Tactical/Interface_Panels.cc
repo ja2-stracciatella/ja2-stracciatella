@@ -528,7 +528,7 @@ void SetSMPanelCurrentMerc(SOLDIERTYPE* s)
 
 
 static void HandleMouseOverSoldierFaceForContMove(SOLDIERTYPE* pSoldier, BOOLEAN fOn);
-static BOOLEAN IsMouseInRegion(MOUSE_REGION* pRegion);
+static bool IsMouseInRegion(MOUSE_REGION const&);
 
 
 void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
@@ -538,7 +538,7 @@ void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 		if ( gpSMCurrentMerc != NULL )
 		{
 			// Check if mouse is in region and if so, adjust...
-			if ( IsMouseInRegion( &gSM_SELMERCPanelRegion ) )
+			if (IsMouseInRegion(gSM_SELMERCPanelRegion))
 			{
 				HandleMouseOverSoldierFaceForContMove( gpSMCurrentMerc, fOn );
 			}
@@ -549,7 +549,7 @@ void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 		for (INT32 cnt = 0; cnt < NUM_TEAM_SLOTS; ++cnt)
 		{
 			if (gTeamPanel[cnt].merc == pSoldier &&
-					IsMouseInRegion(&gTEAM_FaceRegions[cnt]))
+					IsMouseInRegion(gTEAM_FaceRegions[cnt]))
 			{
 				HandleMouseOverSoldierFaceForContMove(pSoldier, fOn);
 			}
@@ -986,7 +986,7 @@ void InitializeSMPanel(void)
 	gSM_SELMERCMoneyRegion.SetFastHelpText(TacticalStr[MONEY_BUTTON_HELP_TEXT]);
 
 	// Check if mouse is in region and if so, adjust...
-	if (IsMouseInRegion(&gSM_SELMERCPanelRegion))
+	if (IsMouseInRegion(gSM_SELMERCPanelRegion))
 	{
 		HandleMouseOverSoldierFaceForContMove(gpSMCurrentMerc, TRUE);
 	}
@@ -2370,7 +2370,7 @@ void InitializeTEAMPanel(void)
 		MSYS_DefineRegion(&gTEAM_EnemyIndicator[i], x + 1, y + 1, x + INDICATOR_BOX_WIDTH, y + INDICATOR_BOX_HEIGHT, MSYS_PRIORITY_NORMAL, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, EnemyIndicatorClickCallback);
 		MSYS_SetRegionUserData(&gTEAM_EnemyIndicator[i], 0, i);
 
-		if (IsMouseInRegion(&gTEAM_FaceRegions[i]))
+		if (IsMouseInRegion(gTEAM_FaceRegions[i]))
 		{
 			SOLDIERTYPE* const s = gTeamPanel[i].merc;
 			if (s != NULL) HandleMouseOverSoldierFaceForContMove(s, TRUE);
@@ -3776,16 +3776,11 @@ void DisableSMPpanelButtonsWhenInShopKeeperInterface(void)
 }
 
 
-static BOOLEAN IsMouseInRegion(MOUSE_REGION* pRegion)
+static bool IsMouseInRegion(MOUSE_REGION const& r)
 {
-	if ( (gusMouseXPos >= pRegion->RegionTopLeftX ) && (gusMouseXPos <= pRegion->RegionBottomRightX ) && (gusMouseYPos >= pRegion->RegionTopLeftY ) && (gusMouseYPos <= pRegion->RegionBottomRightY ) )
-	{
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
+	return
+		r.RegionTopLeftX <= gusMouseXPos && gusMouseXPos <= r.RegionBottomRightX &&
+		r.RegionTopLeftY <= gusMouseYPos && gusMouseYPos <= r.RegionBottomRightY;
 }
 
 
