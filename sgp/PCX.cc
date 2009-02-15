@@ -92,7 +92,8 @@ static void BlitPcxToBuffer(UINT8 const* src, UINT8* dst, UINT16 const w, UINT16
 		{
 			size_t      n_px   = *src++ & 0x3F;
 			UINT8 const colour = *src++;
-			n = n >= n_px ? n - n_px : n_px = n, 0;
+			if (n_px > n) n_px = n;
+			n -= n_px;
 			for (; n_px != 0; --n_px) *dst++ = colour;
 		}
 		else
