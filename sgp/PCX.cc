@@ -42,7 +42,7 @@ struct PcxObject
 };
 
 
-static void       BlitPcxToBuffer(PcxObject*, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY, BOOLEAN fTransp);
+static void       BlitPcxToBuffer(PcxObject*, UINT8* pBuffer, UINT16 usBufferWidth, UINT16 usBufferHeight, UINT16 usX, UINT16 usY);
 static PcxObject* LoadPcx(const char* filename);
 
 
@@ -58,7 +58,7 @@ SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
 	if (contents & IMAGE_BITMAPDATA)
 	{
 		UINT8* const img_data = img->pImageData.Allocate(img->usWidth * img->usHeight);
-		BlitPcxToBuffer(pcx_obj, img_data, img->usWidth, img->usHeight, 0, 0, FALSE);
+		BlitPcxToBuffer(pcx_obj, img_data, img->usWidth, img->usHeight, 0, 0);
 	}
 
 	if (contents & IMAGE_PALETTE)
@@ -109,7 +109,7 @@ static PcxObject* LoadPcx(const char* const filename)
 }
 
 
-static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBuffer, UINT16 const usBufferWidth, UINT16 const usBufferHeight, UINT16 const usX, UINT16 const usY, BOOLEAN const fTransp)
+static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBuffer, UINT16 const usBufferWidth, UINT16 const usBufferHeight, UINT16 const usX, UINT16 const usY)
 {
   UINT8     *pPcxBuffer;
   UINT8      ubRepCount;
@@ -130,63 +130,29 @@ static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBu
     uiOffset    = 0;
     ubRepCount  = 0;
 
-    // Blit Pcx object. Two main cases, one for transparency (0's are skipped and for without transparency.
-		if (fTransp)
-    {
-      for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
-      {
-        if (ubMode == PCX_NORMAL)
-        {
-          ubCurrentByte = *(pPcxBuffer + uiOffset++);
-          if (ubCurrentByte > 0x0BF)
-          {
-            ubRepCount = ubCurrentByte & 0x03F;
-            ubCurrentByte = *(pPcxBuffer + uiOffset++);
-            if (--ubRepCount > 0)
-            {
-              ubMode = PCX_RLE;
-            }
-          }
-        }
-        else
-        {
-          if (--ubRepCount == 0)
-          {
-            ubMode = PCX_NORMAL;
-          }
-        }
-        if (ubCurrentByte != 0)
-        {
-          *(pBuffer + uiIndex) = ubCurrentByte;
-        }
-      }
-    }
-    else
-    {
-      for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
-      {
-        if (ubMode == PCX_NORMAL)
-        {
-          ubCurrentByte = *(pPcxBuffer + uiOffset++);
-          if (ubCurrentByte > 0x0BF)
-          {
-            ubRepCount = ubCurrentByte & 0x03F;
-            ubCurrentByte = *(pPcxBuffer + uiOffset++);
-            if (--ubRepCount > 0)
-            {
-              ubMode = PCX_RLE;
-            }
-          }
-        }
-        else
-        {
-          if (--ubRepCount == 0)
-          { ubMode = PCX_NORMAL;
-          }
-        }
-        *(pBuffer + uiIndex) = ubCurrentByte;
-      }
-    }
+		for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
+		{
+			if (ubMode == PCX_NORMAL)
+			{
+				ubCurrentByte = *(pPcxBuffer + uiOffset++);
+				if (ubCurrentByte > 0x0BF)
+				{
+					ubRepCount = ubCurrentByte & 0x03F;
+					ubCurrentByte = *(pPcxBuffer + uiOffset++);
+					if (--ubRepCount > 0)
+					{
+						ubMode = PCX_RLE;
+					}
+				}
+			}
+			else
+			{
+				if (--ubRepCount == 0)
+				{ ubMode = PCX_NORMAL;
+				}
+			}
+			*(pBuffer + uiIndex) = ubCurrentByte;
+		}
   } else
   { // Pre-compute PCX blitting aspects.
     if ((pCurrentPcxObject->usWidth + usX) >= usBufferWidth)
@@ -214,95 +180,58 @@ static void BlitPcxToBuffer(PcxObject* const pCurrentPcxObject, UINT8* const pBu
     usCurrentX = usX;
     usCurrentY = usY;
 
-    // Blit Pcx object. Two main cases, one for transparency (0's are skipped and for without transparency.
-		if (fTransp)
-    {
-      for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
-      {
-        if (ubMode == PCX_NORMAL)
-        {
-          ubCurrentByte = *(pPcxBuffer + uiOffset++);
-          if (ubCurrentByte > 0x0BF)
-          {
-            ubRepCount = ubCurrentByte & 0x03F;
-            ubCurrentByte = *(pPcxBuffer + uiOffset++);
-            if (--ubRepCount > 0)
-            {
-              ubMode = PCX_RLE;
-            }
-          }
-        }
-        else
-        {
-          if (--ubRepCount == 0)
-          { ubMode = PCX_NORMAL;
-          }
-        }
-        if (ubCurrentByte != 0)
-        { *(pBuffer + (usCurrentY*usBufferWidth) + usCurrentX) = ubCurrentByte;
-        }
-        usCurrentX++;
-        if (usCurrentX > usMaxX)
-        {
-          usCurrentX = usX;
-          usCurrentY++;
-        }
-      }
-    } else
-    {
-      uiStartOffset = (usCurrentY*usBufferWidth) + usCurrentX;
-      uiNextLineOffset = uiStartOffset + usBufferWidth;
-      uiCurrentOffset = uiStartOffset;
+		uiStartOffset = (usCurrentY*usBufferWidth) + usCurrentX;
+		uiNextLineOffset = uiStartOffset + usBufferWidth;
+		uiCurrentOffset = uiStartOffset;
 
-      for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
-      {
+		for (uiIndex = 0; uiIndex < uiImageSize; uiIndex++)
+		{
 
-        if (ubMode == PCX_NORMAL)
-        {
-          ubCurrentByte = *(pPcxBuffer + uiOffset++);
-          if (ubCurrentByte > 0x0BF)
-          {
-            ubRepCount = ubCurrentByte & 0x03F;
-            ubCurrentByte = *(pPcxBuffer + uiOffset++);
-            if (--ubRepCount > 0)
-            {
-              ubMode = PCX_RLE;
-            }
-          }
-        }
-        else
-        {
-          if (--ubRepCount == 0)
-          {
-            ubMode = PCX_NORMAL;
-          }
-        }
+			if (ubMode == PCX_NORMAL)
+			{
+				ubCurrentByte = *(pPcxBuffer + uiOffset++);
+				if (ubCurrentByte > 0x0BF)
+				{
+					ubRepCount = ubCurrentByte & 0x03F;
+					ubCurrentByte = *(pPcxBuffer + uiOffset++);
+					if (--ubRepCount > 0)
+					{
+						ubMode = PCX_RLE;
+					}
+				}
+			}
+			else
+			{
+				if (--ubRepCount == 0)
+				{
+					ubMode = PCX_NORMAL;
+				}
+			}
 
-        if (usCurrentX < usMaxX)
-        { // We are within the visible bounds so we write the byte to buffer
-          *(pBuffer + uiCurrentOffset) = ubCurrentByte;
-          uiCurrentOffset++;
-          usCurrentX++;
-        }
-        else
-        { if ((uiCurrentOffset + 1)< uiNextLineOffset)
-          { // Increment the uiCurrentOffset
-            uiCurrentOffset++;
-          }
-          else
-          { // Go to next line
-            usCurrentX = usX;
-            usCurrentY++;
-            if (usCurrentY > usMaxY)
-            {
-              break;
-            }
-            uiStartOffset = (usCurrentY*usBufferWidth) + usCurrentX;
-            uiNextLineOffset = uiStartOffset + usBufferWidth;
-            uiCurrentOffset = uiStartOffset;
-          }
-        }
-      }
-    }
+			if (usCurrentX < usMaxX)
+			{ // We are within the visible bounds so we write the byte to buffer
+				*(pBuffer + uiCurrentOffset) = ubCurrentByte;
+				uiCurrentOffset++;
+				usCurrentX++;
+			}
+			else
+			{ if ((uiCurrentOffset + 1)< uiNextLineOffset)
+				{ // Increment the uiCurrentOffset
+					uiCurrentOffset++;
+				}
+				else
+				{ // Go to next line
+					usCurrentX = usX;
+					usCurrentY++;
+					if (usCurrentY > usMaxY)
+					{
+						break;
+					}
+					uiStartOffset = (usCurrentY*usBufferWidth) + usCurrentX;
+					uiNextLineOffset = uiStartOffset + usBufferWidth;
+					uiCurrentOffset = uiStartOffset;
+				}
+			}
+		}
   }
 }
