@@ -370,8 +370,6 @@ BUILDING * FindBuilding( INT16 sGridNo )
 
 void GenerateBuildings( void )
 {
-	UINT32	uiLoop;
-
 	// init building structures and variables
 	memset( &gubBuildingInfo, 0, WORLD_MAX * sizeof( UINT8 ) );
 	memset( &gBuildings, 0, MAX_BUILDINGS * sizeof( BUILDING ) );
@@ -385,16 +383,16 @@ void GenerateBuildings( void )
 	// reset ALL reachable flags
 	// do once before we start building generation for
 	// whole map
-	for ( uiLoop = 0; uiLoop < WORLD_MAX; uiLoop++ )
+	FOR_ALL_WORLD_TILES(i)
 	{
-		gpWorldLevelData[ uiLoop ].uiFlags &= ~(MAPELEMENT_REACHABLE);
-		gpWorldLevelData[ uiLoop ].ubExtFlags[0] &= ~(MAPELEMENT_EXT_ROOFCODE_VISITED);
+		i->uiFlags       &= ~MAPELEMENT_REACHABLE;
+		i->ubExtFlags[0] &= ~MAPELEMENT_EXT_ROOFCODE_VISITED;
 	}
 
 	// search through world
 	// for each location in a room try to find building info
 
-	for ( uiLoop = 0; uiLoop < WORLD_MAX; uiLoop++ )
+	for (UINT32 uiLoop = 0; uiLoop < WORLD_MAX; ++uiLoop)
 	{
 		if ( (gubWorldRoomInfo[ uiLoop ] != NO_ROOM) && (gubBuildingInfo[ uiLoop ] == NO_BUILDING) && (FindStructure( (INT16) uiLoop, STRUCTURE_NORMAL_ROOF ) != NULL) )
 		{

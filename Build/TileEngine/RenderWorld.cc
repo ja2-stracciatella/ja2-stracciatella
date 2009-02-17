@@ -2550,9 +2550,9 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 
 static void ClearMarkedTiles(void)
 {
-	for (UINT32 i = 0; i < WORLD_MAX; ++i)
+	FOR_ALL_WORLD_TILES(i)
 	{
-		gpWorldLevelData[i].uiFlags &= ~MAPELEMENT_REDRAW;
+		i->uiFlags &= ~MAPELEMENT_REDRAW;
 	}
 }
 
@@ -2560,9 +2560,9 @@ static void ClearMarkedTiles(void)
 void InvalidateWorldRedundency(void)
 {
 	SetRenderFlags(RENDER_FLAG_CHECKZ);
-	for (UINT32 i = 0; i < WORLD_MAX; ++i)
+	FOR_ALL_WORLD_TILES(i)
 	{
-		gpWorldLevelData[i].uiFlags |= MAPELEMENT_REEVALUATE_REDUNDENCY;
+		i->uiFlags |= MAPELEMENT_REEVALUATE_REDUNDENCY;
 	}
 }
 

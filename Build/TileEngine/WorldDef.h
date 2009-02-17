@@ -213,6 +213,9 @@ struct MAP_ELEMENT
 // World Data
 extern MAP_ELEMENT* gpWorldLevelData;
 
+#define FOR_ALL_WORLD_TILES(iter) \
+	for (MAP_ELEMENT* iter = gpWorldLevelData, * const iter##__end = gpWorldLevelData + WORLD_MAX; iter != iter##__end; ++iter)
+
 // World Movement Costs
 extern UINT8 gubWorldMovementCosts[WORLD_MAX][MAXDIR][2];
 

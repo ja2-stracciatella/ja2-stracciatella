@@ -1509,9 +1509,9 @@ try
 	}
 
 	UINT8 const test[] = { 1, 1 };
-	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	FOR_ALL_WORLD_TILES(e)
 	{ // Write land layers
-		LEVELNODE const* i = world_data[cnt].pLandHead;
+		LEVELNODE const* i = e->pLandHead;
 		if (!i)
 		{
 			FileWrite(f, &test, sizeof(test));
@@ -1526,9 +1526,9 @@ try
 		}
 	}
 
-	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	FOR_ALL_WORLD_TILES(e)
 	{ // Write object layer
-		for (LEVELNODE const* i = world_data[cnt].pObjectHead; i; i = i->pNext)
+		for (LEVELNODE const* i = e->pObjectHead; i; i = i->pNext)
 		{
 			// Don't write any items
 			if (i->uiFlags & LEVELNODE_ITEM) continue;
@@ -1550,9 +1550,9 @@ try
 		}
 	}
 
-	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	FOR_ALL_WORLD_TILES(e)
 	{ // Write struct layer
-		for (LEVELNODE const* i = world_data[cnt].pStructHead; i; i = i->pNext)
+		for (LEVELNODE const* i = e->pStructHead; i; i = i->pNext)
 		{
 			// Don't write any items
 			if (i->uiFlags & LEVELNODE_ITEM) continue;
@@ -1562,9 +1562,9 @@ try
 	}
 
 	UINT16 n_exit_grids = 0;
-	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	FOR_ALL_WORLD_TILES(e)
 	{ // Write shadows
-		for (LEVELNODE const* i = world_data[cnt].pShadowHead; i; i = i->pNext)
+		for (LEVELNODE const* i = e->pShadowHead; i; i = i->pNext)
 		{
 			// Dont't write any buddys or exit grids
 			if (!(i->uiFlags & (LEVELNODE_BUDDYSHADOW | LEVELNODE_EXITGRID)))
@@ -1578,9 +1578,9 @@ try
 		}
 	}
 
-	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	FOR_ALL_WORLD_TILES(e)
 	{
-		for (LEVELNODE const* i = world_data[cnt].pRoofHead; i; i = i->pNext)
+		for (LEVELNODE const* i = e->pRoofHead; i; i = i->pNext)
 		{
 			// ATE: Don't save revealed roof info
 			if (i->usIndex == SLANTROOFCEILING1) continue;
@@ -1589,9 +1589,9 @@ try
 		}
 	}
 
-	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	FOR_ALL_WORLD_TILES(e)
 	{ // Write OnRoofs
-		for (LEVELNODE const* i = world_data[cnt].pOnRoofHead; i; i = i->pNext)
+		for (LEVELNODE const* i = e->pOnRoofHead; i; i = i->pNext)
 		{
 			WriteLevelNode(f, i);
 		}
@@ -1694,17 +1694,14 @@ static void OptimizeMapForShadows(void)
 
 static void SetBlueFlagFlags(void)
 {
-	INT32		cnt;
-	LEVELNODE * pNode;
-
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	FOR_ALL_WORLD_TILES(i)
 	{
-		pNode = gpWorldLevelData[ cnt ].pStructHead;
+		LEVELNODE* pNode = i->pStructHead;
 		while ( pNode )
 		{
 			if ( pNode->usIndex == BLUEFLAG_GRAPHIC)
 			{
-				gpWorldLevelData[ cnt ].uiFlags |= MAPELEMENT_PLAYER_MINE_PRESENT;
+				i->uiFlags |= MAPELEMENT_PLAYER_MINE_PRESENT;
 				break;
 			}
 			pNode = pNode->pNext;
@@ -2231,10 +2228,10 @@ try
 
 	//FP 0x000010
 
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	FOR_ALL_WORLD_TILES(i)
   {
 		// Read height values
-		gpWorldLevelData[cnt].sHeight = *pBuffer++;
+		i->sHeight = *pBuffer++;
 		++pBuffer; // Skip filler byte
 	}
 
@@ -2776,10 +2773,8 @@ void TrashWorld(void)
 	// On trash world check if we have to set up the first meanwhile
 	HandleFirstMeanWhileSetUpWithTrashWorld();
 
-	for (INT32 i = 0; i < WORLD_MAX; ++i)
+	FOR_ALL_WORLD_TILES(me)
 	{
-		MAP_ELEMENT* const me = &gpWorldLevelData[i];
-
 		// Free the memory associated with the map tile link lists
 		FreeLevelNodeList(&me->pLandHead);
 		FreeLevelNodeList(&me->pObjectHead);
@@ -2804,9 +2799,9 @@ void TrashWorld(void)
 	memset(gpWorldLevelData, 0, WORLD_MAX * sizeof(*gpWorldLevelData));
 
 	// Set some default flags
-	for (INT32 i = 0; i < WORLD_MAX; ++i)
+	FOR_ALL_WORLD_TILES(i)
 	{
-		gpWorldLevelData[i].uiFlags |= MAPELEMENT_RECALCULATE_WIREFRAMES;
+		i->uiFlags |= MAPELEMENT_RECALCULATE_WIREFRAMES;
 	}
 
 	TrashDoorTable();

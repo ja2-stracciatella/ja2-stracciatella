@@ -918,11 +918,10 @@ void RaiseWorldLand( )
 
 	fRaiseSet=FALSE;
 
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	FOR_ALL_WORLD_TILES(i)
 	{
-			gpWorldLevelData[cnt].uiFlags &= (~MAPELEMENT_RAISE_LAND_START );
-			gpWorldLevelData[cnt].uiFlags &= (~MAPELEMENT_RAISE_LAND_END );
-
+		i->uiFlags &= ~MAPELEMENT_RAISE_LAND_START;
+		i->uiFlags &= ~MAPELEMENT_RAISE_LAND_END;
 	}
 
 	UINT16 usIndex = (UINT16)-1; // XXX HACK000E

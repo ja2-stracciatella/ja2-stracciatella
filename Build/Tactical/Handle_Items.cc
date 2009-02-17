@@ -3351,9 +3351,8 @@ static void LoopLevelNodeForItemGlowFlag(LEVELNODE* pNode, BOOLEAN fOn)
 
 void ToggleItemGlow(BOOLEAN fOn)
 {
-	for (UINT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	FOR_ALL_WORLD_TILES(e)
 	{
-		MAP_ELEMENT* const e = &gpWorldLevelData[cnt];
 		LoopLevelNodeForItemGlowFlag(e->pStructHead, fOn);
 		LoopLevelNodeForItemGlowFlag(e->pOnRoofHead, fOn);
 	}

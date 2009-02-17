@@ -1124,11 +1124,9 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 
 void AnalyseCaveMapForStructureInfo()
 {
-	LEVELNODE *pStruct;
-	INT32 iMapIndex;
-	for( iMapIndex = 0; iMapIndex < WORLD_MAX; iMapIndex++ )
+	FOR_ALL_WORLD_TILES(i)
 	{
-		pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
+		LEVELNODE* pStruct = i->pStructHead;
 		while( pStruct )
 		{
 			if ( pStruct->usIndex != NO_TILE )

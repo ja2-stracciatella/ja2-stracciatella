@@ -147,14 +147,10 @@ void RemoveBlood( INT16 sGridNo, INT8 bLevel )
 
 void DecaySmells( void )
 {
-	UINT32					uiLoop;
-	MAP_ELEMENT *		pMapElement;
-
 	//return;
 
-	for (uiLoop = 0, pMapElement = gpWorldLevelData; uiLoop < WORLD_MAX; uiLoop++, pMapElement++)
+	FOR_ALL_WORLD_TILES(pMapElement)
 	{
-
 		if (pMapElement->ubSmellInfo)
 		{
 			// decay smell strength!
@@ -171,10 +167,7 @@ void DecaySmells( void )
 
 static void DecayBlood(void)
 {
-	UINT32					uiLoop;
-	MAP_ELEMENT *		pMapElement;
-
-	for (uiLoop = 0, pMapElement = gpWorldLevelData; uiLoop < WORLD_MAX; uiLoop++, pMapElement++)
+	FOR_ALL_WORLD_TILES(pMapElement)
 	{
 		if (pMapElement->ubBloodInfo)
 		{

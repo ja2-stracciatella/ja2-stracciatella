@@ -60,9 +60,8 @@ void CountLevelNodes(void)
 		guiLNCount[uiLoop2] = 0;
 	}
 
-	for (UINT32 uiLoop = 0; uiLoop < WORLD_MAX; uiLoop++)
+	FOR_ALL_WORLD_TILES(pME)
 	{
-		const MAP_ELEMENT* pME = &gpWorldLevelData[uiLoop];
 		// start at 1 to skip land head ptr; 0 stores total
 		for (UINT32 uiLoop2 = 1; uiLoop2 < 9; uiLoop2++)
 		{
@@ -1969,9 +1968,9 @@ LEVELNODE* FindShadow(INT16 sGridNo, UINT16 usStructIndex)
 
 void WorldHideTrees(void)
 {
-	for (UINT32 cnt = 0; cnt < WORLD_MAX; cnt++)
+	FOR_ALL_WORLD_TILES(i)
 	{
-		for (LEVELNODE* pNode = gpWorldLevelData[cnt].pStructHead; pNode != NULL; pNode = pNode->pNext)
+		for (LEVELNODE* pNode = i->pStructHead; pNode != NULL; pNode = pNode->pNext)
 		{
 			if (pNode->uiFlags & LEVELNODE_ANIMATION) continue;
 			if (GetTileFlags(pNode->usIndex) & FULL3D_TILE)
@@ -1987,9 +1986,9 @@ void WorldHideTrees(void)
 
 void WorldShowTrees(void)
 {
-	for (UINT32 cnt = 0; cnt < WORLD_MAX; cnt++)
+	FOR_ALL_WORLD_TILES(i)
 	{
-		for (LEVELNODE* pNode = gpWorldLevelData[cnt].pStructHead; pNode != NULL; pNode = pNode->pNext)
+		for (LEVELNODE* pNode = i->pStructHead; pNode != NULL; pNode = pNode->pNext)
 		{
 			if (pNode->uiFlags & LEVELNODE_ANIMATION) continue;
 			if (GetTileFlags(pNode->usIndex) & FULL3D_TILE)

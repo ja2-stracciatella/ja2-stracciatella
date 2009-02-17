@@ -1933,7 +1933,6 @@ ENDOFLOOP:
 void GlobalReachableTest( INT16 sStartGridNo )
 {
 	SOLDIERTYPE s;
-	INT32 iCurrentGridNo =0;
 
 	memset( &s, 0, sizeof( SOLDIERTYPE ) );
 	s.sGridNo = sStartGridNo;
@@ -1941,9 +1940,9 @@ void GlobalReachableTest( INT16 sStartGridNo )
 	s.bTeam = 1;
 
 	//reset the flag for gridno's
-	for( iCurrentGridNo =0; iCurrentGridNo < WORLD_MAX; iCurrentGridNo++ )
+	FOR_ALL_WORLD_TILES(i)
 	{
-		gpWorldLevelData[ iCurrentGridNo ].uiFlags &= ~( MAPELEMENT_REACHABLE );
+		i->uiFlags &= ~MAPELEMENT_REACHABLE;
 	}
 
 	ReconfigurePathAI( ABSMAX_SKIPLIST_LEVEL, ABSMAX_TRAIL_TREE, ABSMAX_PATHQ );
@@ -1996,7 +1995,6 @@ void LocalReachableTest( INT16 sStartGridNo, INT8 bRadius )
 void GlobalItemsReachableTest( INT16 sStartGridNo1, INT16 sStartGridNo2 )
 {
 	SOLDIERTYPE s;
-	INT32 iCurrentGridNo =0;
 
 	memset( &s, 0, sizeof( SOLDIERTYPE ) );
 	s.sGridNo = sStartGridNo1;
@@ -2004,9 +2002,9 @@ void GlobalItemsReachableTest( INT16 sStartGridNo1, INT16 sStartGridNo2 )
 	s.bTeam = 1;
 
 	//reset the flag for gridno's
-	for( iCurrentGridNo =0; iCurrentGridNo < WORLD_MAX; iCurrentGridNo++ )
+	FOR_ALL_WORLD_TILES(i)
 	{
-		gpWorldLevelData[ iCurrentGridNo ].uiFlags &= ~( MAPELEMENT_REACHABLE );
+		i->uiFlags &= ~MAPELEMENT_REACHABLE;
 	}
 
 	ReconfigurePathAI( ABSMAX_SKIPLIST_LEVEL, ABSMAX_TRAIL_TREE, ABSMAX_PATHQ );
