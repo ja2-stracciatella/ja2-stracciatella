@@ -996,93 +996,33 @@ UINT32 uiIndex;
 }
 
 
-/* Resets the light level of individual LEVELNODEs to the value contained in
+/* Reset the light level of all LEVELNODEs on a level to the value contained in
  * the natural light level. */
-static void LightResetTileNode(LEVELNODE* pNode)
+static void LightResetLevel(LEVELNODE* n)
 {
-	pNode->ubSumLights=0;
-	pNode->ubMaxLights=0;
-	pNode->ubShadeLevel = pNode->ubNaturalShadeLevel;
-	pNode->ubFakeShadeLevel = 0;
+	for (; n; n = n->pNext)
+	{
+		n->ubSumLights      = 0;
+		n->ubMaxLights      = 0;
+		n->ubShadeLevel     = n->ubNaturalShadeLevel;
+		n->ubFakeShadeLevel = 0;
+	}
 }
 
 
-/* Resets the light values of all objects on a given tile to the "natural"
- * light level for that tile. */
-static BOOLEAN LightResetTile(INT16 iX, INT16 iY)
-{
-LEVELNODE *pLand, *pStruct, *pObject, *pRoof, *pOnRoof, *pTopmost, *pMerc;
-UINT32 uiTile;
-
-	CHECKF(gpWorldLevelData!=NULL);
-
-	uiTile = MAPROWCOLTOPOS( iY, iX );
-
-	CHECKF(uiTile!=0xffff);
-
-	pLand = gpWorldLevelData[uiTile].pLandHead;
-
-	while(pLand!=NULL)
-	{
-		LightResetTileNode(pLand);
-		pLand=pLand->pNext;
-	}
-
-	pStruct = gpWorldLevelData[ uiTile ].pStructHead;
-
-	while(pStruct!=NULL)
-	{
-		LightResetTileNode(pStruct);
-		pStruct=pStruct->pNext;
-	}
-
-	pObject = gpWorldLevelData[ uiTile ].pObjectHead;
-	while(pObject!=NULL)
-	{
-		LightResetTileNode(pObject);
-		pObject=pObject->pNext;
-	}
-
-	pRoof = gpWorldLevelData[ uiTile ].pRoofHead;
-	while(pRoof!=NULL)
-	{
-		LightResetTileNode(pRoof);
-		pRoof=pRoof->pNext;
-	}
-
-	pOnRoof = gpWorldLevelData[ uiTile ].pOnRoofHead;
-	while(pOnRoof!=NULL)
-	{
-		LightResetTileNode(pOnRoof);
-		pOnRoof=pOnRoof->pNext;
-	}
-
-	pTopmost = gpWorldLevelData[ uiTile ].pTopmostHead;
-	while(pTopmost!=NULL)
-	{
-		LightResetTileNode(pTopmost);
-		pTopmost=pTopmost->pNext;
-	}
-
-	pMerc = gpWorldLevelData[ uiTile ].pMercHead;
-	while(pMerc!=NULL)
-	{
-		LightResetTileNode(pMerc);
-		pMerc=pMerc->pNext;
-	}
-
-	return(TRUE);
-}
-
-
-// Resets all tiles on the map to their baseline values.
+// Reset all tiles on the map to their baseline values.
 static void LightResetAllTiles(void)
 {
-INT16 iCountY, iCountX;
-
-	for(iCountY=0; iCountY < WORLD_ROWS; iCountY++)
-		for(iCountX=0; iCountX < WORLD_COLS; iCountX++)
-			LightResetTile(iCountX, iCountY);
+	FOR_ALL_WORLD_TILES(i)
+	{
+		LightResetLevel(i->pLandHead);
+		LightResetLevel(i->pObjectHead);
+		LightResetLevel(i->pStructHead);
+		LightResetLevel(i->pMercHead);
+		LightResetLevel(i->pRoofHead);
+		LightResetLevel(i->pOnRoofHead);
+		LightResetLevel(i->pTopmostHead);
+	}
 }
 
 
