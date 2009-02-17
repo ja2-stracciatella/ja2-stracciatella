@@ -913,86 +913,32 @@ BOOLEAN fFake; // only passed in to land and roof layers; others get fed FALSE
 }
 
 
-// Sets the natural light level (as well as the current) on individual LEVELNODEs.
-static void LightSetNaturalTileNode(LEVELNODE* pNode, UINT8 ubShade)
+/* Set the natural light level (as well as the current) on all LEVELNODEs on a
+ * level. */
+static void LightSetNaturalLevel(LEVELNODE* n, UINT8 const shade)
 {
-		Assert(pNode!=NULL);
-
-		pNode->ubSumLights=0;
-		pNode->ubMaxLights=0;
-		pNode->ubNaturalShadeLevel = ubShade;
-		pNode->ubShadeLevel = ubShade;
+	for (; n; n = n->pNext)
+	{
+		n->ubSumLights         = 0;
+		n->ubMaxLights         = 0;
+		n->ubNaturalShadeLevel = shade;
+		n->ubShadeLevel        = shade;
+	}
 }
 
 
-/* Sets the natural light value of all objects on a given tile to the specified
+/* Set the natural light value of all objects on a given tile to the specified
  * value.  This is the light value a tile has with no artificial lighting
  * affecting it. */
-static BOOLEAN LightSetNaturalTile(INT16 iX, INT16 iY, UINT8 ubShade)
+static void LightSetNaturalTile(MAP_ELEMENT const& e, UINT8 shade)
 {
-LEVELNODE *pLand, *pStruct, *pObject, *pRoof, *pOnRoof, *pTopmost, *pMerc;
-UINT32 uiIndex;
-
-	CHECKF(gpWorldLevelData!=NULL);
-
-	uiIndex = MAPROWCOLTOPOS( iY, iX );
-
-	Assert(uiIndex!=0xffff);
-
-	ubShade=__max(SHADE_MAX, ubShade);
-	ubShade=__min(SHADE_MIN, ubShade);
-
-	pLand = gpWorldLevelData[ uiIndex ].pLandHead;
-
-	while(pLand!=NULL)
-	{
-		LightSetNaturalTileNode(pLand, ubShade);
-		pLand=pLand->pNext;
-	}
-
-	pStruct = gpWorldLevelData[ uiIndex ].pStructHead;
-
-	while(pStruct!=NULL)
-	{
-		LightSetNaturalTileNode(pStruct, ubShade);
-		pStruct=pStruct->pNext;
-	}
-
-	pObject = gpWorldLevelData[ uiIndex ].pObjectHead;
-	while(pObject!=NULL)
-	{
-		LightSetNaturalTileNode(pObject, ubShade);
-		pObject=pObject->pNext;
-	}
-
-	pRoof = gpWorldLevelData[ uiIndex ].pRoofHead;
-	while(pRoof!=NULL)
-	{
-		LightSetNaturalTileNode(pRoof, ubShade);
-		pRoof=pRoof->pNext;
-	}
-
-	pOnRoof = gpWorldLevelData[ uiIndex ].pOnRoofHead;
-	while(pOnRoof!=NULL)
-	{
-		LightSetNaturalTileNode(pOnRoof, ubShade);
-		pOnRoof=pOnRoof->pNext;
-	}
-
-	pTopmost = gpWorldLevelData[ uiIndex ].pTopmostHead;
-	while(pTopmost!=NULL)
-	{
-		LightSetNaturalTileNode(pTopmost, ubShade);
-		pTopmost=pTopmost->pNext;
-	}
-
-	pMerc = gpWorldLevelData[ uiIndex ].pMercHead;
-	while(pMerc!=NULL)
-	{
-		LightSetNaturalTileNode(pMerc, ubShade);
-		pMerc=pMerc->pNext;
-	}
-	return(TRUE);
+	LightSetNaturalLevel(e.pLandHead,    shade);
+	LightSetNaturalLevel(e.pObjectHead,  shade);
+	LightSetNaturalLevel(e.pStructHead,  shade);
+	LightSetNaturalLevel(e.pMercHead,    shade);
+	LightSetNaturalLevel(e.pRoofHead,    shade);
+	LightSetNaturalLevel(e.pOnRoofHead,  shade);
+	LightSetNaturalLevel(e.pTopmostHead, shade);
 }
 
 
@@ -1558,8 +1504,6 @@ INT16 iX, iY;
 ***************************************************************************************/
 void LightSetBaseLevel(UINT8 iIntensity)
 {
-	INT16 iCountY, iCountX;
-
 	ubAmbientLightLevel=iIntensity;
 
 	if( !gfEditMode )
@@ -1572,9 +1516,13 @@ void LightSetBaseLevel(UINT8 iIntensity)
 		}
 	}
 
-	for(iCountY=0; iCountY < WORLD_ROWS; iCountY++)
-		for(iCountX=0; iCountX < WORLD_COLS; iCountX++)
-			LightSetNaturalTile(iCountX, iCountY, iIntensity);
+	UINT16 shade = iIntensity;
+	shade = __max(SHADE_MAX, shade);
+	shade = __min(SHADE_MIN, shade);
+	FOR_ALL_WORLD_TILES(i)
+	{
+		LightSetNaturalTile(*i, shade);
+	}
 
 	LightSpriteRenderAll();
 
