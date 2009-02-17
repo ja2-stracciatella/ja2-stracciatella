@@ -70,6 +70,13 @@ struct LightTemplate
 
 static LightTemplate g_light_templates[MAX_LIGHT_TEMPLATES];
 
+#define FOR_ALL_LIGHT_TEMPLATE_SLOTS(iter) \
+	for (LightTemplate* iter = g_light_templates, * const iter##__end = endof(g_light_templates); iter != iter##__end; ++iter)
+
+#define FOR_ALL_LIGHT_TEMPLATES(iter) \
+	FOR_ALL_LIGHT_TEMPLATE_SLOTS(iter) \
+		if (!iter->lights) continue; else
+
 
 // Sprite data
 LIGHT_SPRITE	LightSprites[MAX_LIGHT_SPRITES];
@@ -239,13 +246,10 @@ static BOOLEAN LightDelete(LightTemplate*);
 ***************************************************************************************/
 void ShutdownLightingSystem(void)
 {
-UINT32 uiCount;
-
 	// free up all allocated light nodes
-	for(uiCount=0; uiCount < MAX_LIGHT_TEMPLATES; uiCount++)
+	FOR_ALL_LIGHT_TEMPLATES(t)
 	{
-		LightTemplate* const t = &g_light_templates[uiCount];
-		if (t->lights != NULL) LightDelete(t);
+		LightDelete(t);
 	}
 }
 
@@ -259,10 +263,9 @@ UINT32 uiCount;
 void LightReset(void)
 {
 	// reset all light lists
-	for (UINT32 uiCount = 0; uiCount < MAX_LIGHT_TEMPLATES; ++uiCount)
+	FOR_ALL_LIGHT_TEMPLATES(t)
 	{
-		LightTemplate* const t = &g_light_templates[uiCount];
-		if (t->lights != NULL) LightDelete(t);
+		LightDelete(t);
 	}
 
 	// init all light sprites
@@ -518,9 +521,8 @@ static BOOLEAN LightDelete(LightTemplate* const t)
 /* Returns an available slot for a new light template. */
 static LightTemplate* LightGetFree(void)
 {
-	for (UINT32 i = 0; i != lengthof(g_light_templates); ++i)
+	FOR_ALL_LIGHT_TEMPLATE_SLOTS(t)
 	{
-		LightTemplate* const t = &g_light_templates[i];
 		if (!t->lights) return t;
 	}
 	throw std::runtime_error("Out of light template slots");
@@ -2232,16 +2234,11 @@ static LightTemplate* LightLoad(const char* pFilename)
  * loaded from disk. */
 static LightTemplate* LightLoadCachedTemplate(const char* pFilename)
 {
-INT32 iCount;
-
-	for(iCount=0; iCount < MAX_LIGHT_TEMPLATES; iCount++)
+	FOR_ALL_LIGHT_TEMPLATES(t)
 	{
-		LightTemplate* const t = &g_light_templates[iCount];
-		const char* const name = t->name;
-		if (name != NULL && strcasecmp(pFilename, name) == 0) return t;
+		if (strcasecmp(pFilename, t->name) == 0) return t;
 	}
-
-	return(LightLoad(pFilename));
+	return LightLoad(pFilename);
 }
 
 
