@@ -133,7 +133,7 @@ static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
 		EXTR_U16(d, i->usGoToGridno)
 		EXTR_I16(d, i->sActionData)
 #if !defined RUSSIAN
-		EXTR_U8A(d, i->ubUnused, lengthof(i->ubUnused))
+		EXTR_SKIP(d, 4)
 #endif
 		Assert(d == endof(data));
 	}
@@ -196,8 +196,10 @@ static void ConditionalInjectNPCQuoteInfoArrayIntoFile(HWFILE const f, NPCQuoteI
 		INJ_U16(d, i->usGoToGridno)
 		INJ_I16(d, i->sActionData)
 #if !defined RUSSIAN
-		INJ_U8A(d, i->ubUnused, lengthof(i->ubUnused))
+		INJ_SKIP(d, 4)
 #endif
+		Assert(d == endof(data));
+		FileWrite(f, data, sizeof(data));
 	}
 }
 

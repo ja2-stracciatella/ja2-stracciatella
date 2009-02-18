@@ -70,12 +70,7 @@ struct NPCQuoteInfo
 	UINT16	usGiftItem;			// item NPC gives to merc after saying quote
 	UINT16	usGoToGridno;
 	INT16		sActionData;		// special action value
-
-#if !defined RUSSIAN
-	UINT8		ubUnused[4];
-#endif
 };																									// 32 bytes
-CASSERT(sizeof(NPCQuoteInfo) == 32)
 
 
 enum Approaches
