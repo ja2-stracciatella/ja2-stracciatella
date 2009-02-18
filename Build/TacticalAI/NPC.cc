@@ -2722,7 +2722,7 @@ void SaveBackupNPCInfoToSaveGameFile(HWFILE const hFile)
 }
 
 
-void LoadBackupNPCInfoFromSavedGameFile(HWFILE const hFile, UINT32 const uiSaveGameVersion)
+void LoadBackupNPCInfoFromSavedGameFile(HWFILE const hFile)
 {
 	UINT32		cnt;
 	UINT8			ubLoadQuote=0;

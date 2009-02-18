@@ -180,7 +180,7 @@ BOOLEAN NPCHasUnusedRecordWithGivenApproach( UINT8 ubNPC, UINT8 ubApproach );
 BOOLEAN NPCWillingToAcceptItem( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * pObj );
 
 void SaveBackupNPCInfoToSaveGameFile(HWFILE);
-void LoadBackupNPCInfoFromSavedGameFile(HWFILE, UINT32 uiSaveGameVersion);
+void LoadBackupNPCInfoFromSavedGameFile(HWFILE);
 
 #ifdef JA2BETAVERSION
 void ToggleNPCRecordDisplay( void );

@@ -1288,7 +1288,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 		if (version >= 53)
 		{
-			LoadBackupNPCInfoFromSavedGameFile(f, version);
+			LoadBackupNPCInfoFromSavedGameFile(f);
 		}
 		LoadGameFilePosition(save_slot_id, f, "Backed up NPC Info");
 
