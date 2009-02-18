@@ -1,5 +1,6 @@
 #include "Buffer.h"
 #include "Font_Control.h"
+#include "LoadSaveData.h"
 #include "Types.h"
 #include "Overhead.h"
 #include "AI.h"
@@ -98,6 +99,109 @@ UINT8	gubAlternateNPCFileNumsForElliotMeanwhiles[] = { 180, 181, 182, 183, 184, 
 BOOLEAN gfDisplayScreenMsgOnRecordUsage = FALSE;
 #endif
 
+
+static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
+{
+	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
+	for (NPCQuoteInfo* i = buf; i != buf + NUM_NPC_QUOTE_RECORDS; ++i)
+	{
+		BYTE data[32];
+		FileRead(f, data, sizeof(data));
+
+		BYTE const* d = data;
+#if defined RUSSIAN
+		EXTR_U8A(d, i->ubIdentifier, lengthof(i->ubIdentifier))
+#endif
+		EXTR_U16(d, i->fFlags)
+		EXTR_I16(d, i->sRequiredItem)
+		EXTR_U16(d, i->usFactMustBeTrue)
+		EXTR_U16(d, i->usFactMustBeFalse)
+		EXTR_U8( d, i->ubQuest)
+		EXTR_U8( d, i->ubFirstDay)
+		EXTR_U8( d, i->ubLastDay)
+		EXTR_U8( d, i->ubApproachRequired)
+		EXTR_U8( d, i->ubOpinionRequired)
+		EXTR_U8( d, i->ubQuoteNum)
+		EXTR_U8( d, i->ubNumQuotes)
+		EXTR_U8( d, i->ubStartQuest)
+		EXTR_U8( d, i->ubEndQuest)
+		EXTR_U8( d, i->ubTriggerNPC)
+		EXTR_U8( d, i->ubTriggerNPCRec)
+		EXTR_U8( d, i->ubFiller)
+		EXTR_U16(d, i->usSetFactTrue)
+		EXTR_U16(d, i->usGiftItem)
+		EXTR_U16(d, i->usGoToGridno)
+		EXTR_I16(d, i->sActionData)
+#if !defined RUSSIAN
+		EXTR_U8A(d, i->ubUnused, lengthof(i->ubUnused))
+#endif
+		Assert(d == endof(data));
+	}
+	return buf.Release();
+}
+
+
+static void ConditionalExtractNPCQuoteInfoArrayFromFile(HWFILE const f, NPCQuoteInfo*& q)
+{
+	UINT8 present;
+	FileRead(f, &present, sizeof(present));
+
+	if (q)
+	{
+		MemFree(q);
+		q = 0;
+	}
+
+	if (!present) return;
+	q = ExtractNPCQuoteInfoArrayFromFile(f);
+}
+
+
+static void ConditionalInjectNPCQuoteInfoArrayIntoFile(HWFILE const f, NPCQuoteInfo const* const q)
+{
+	if (!q)
+	{
+		static UINT8 const zero = 0;
+		FileWrite(f, &zero, sizeof(zero));
+	}
+
+	static UINT8 const one = 0;
+	FileWrite(f, &one, sizeof(one));
+
+	for (NPCQuoteInfo const* i = q; i != q + NUM_NPC_QUOTE_RECORDS; ++i)
+	{
+		BYTE  data[32];
+		BYTE* d = data;
+#if defined RUSSIAN
+		INJ_U8A(d, i->ubIdentifier, lengthof(i->ubIdentifier))
+#endif
+		INJ_U16(d, i->fFlags)
+		INJ_I16(d, i->sRequiredItem)
+		INJ_U16(d, i->usFactMustBeTrue)
+		INJ_U16(d, i->usFactMustBeFalse)
+		INJ_U8( d, i->ubQuest)
+		INJ_U8( d, i->ubFirstDay)
+		INJ_U8( d, i->ubLastDay)
+		INJ_U8( d, i->ubApproachRequired)
+		INJ_U8( d, i->ubOpinionRequired)
+		INJ_U8( d, i->ubQuoteNum)
+		INJ_U8( d, i->ubNumQuotes)
+		INJ_U8( d, i->ubStartQuest)
+		INJ_U8( d, i->ubEndQuest)
+		INJ_U8( d, i->ubTriggerNPC)
+		INJ_U8( d, i->ubTriggerNPCRec)
+		INJ_U8( d, i->ubFiller)
+		INJ_U16(d, i->usSetFactTrue)
+		INJ_U16(d, i->usGiftItem)
+		INJ_U16(d, i->usGoToGridno)
+		INJ_I16(d, i->sActionData)
+#if !defined RUSSIAN
+		INJ_U8A(d, i->ubUnused, lengthof(i->ubUnused))
+#endif
+	}
+}
+
+
 //
 // NPC QUOTE LOW LEVEL ROUTINES
 //
@@ -139,11 +243,8 @@ try
 
 	}
 
-	AutoSGPFile               hFile(FileOpen(zFileName, FILE_ACCESS_READ));
-	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
-	const UINT32 uiFileSize = sizeof(*buf) * NUM_NPC_QUOTE_RECORDS;
-	FileRead(hFile, buf, uiFileSize);
-	return buf.Release();
+	AutoSGPFile f(FileOpen(zFileName, FILE_ACCESS_READ));
+	return ExtractNPCQuoteInfoArrayFromFile(f);
 }
 catch (...) { return 0; }
 
@@ -319,11 +420,8 @@ try
 	  sprintf( zFileName, "NPCData/%c%d.npc", 'A' + ( gsCivQuoteSector[ ubIndex ][ 1 ] - 1 ), gsCivQuoteSector[ ubIndex ][ 0 ] );
   }
 
-	AutoSGPFile               hFile(FileOpen(zFileName, FILE_ACCESS_READ));
-	SGP::Buffer<NPCQuoteInfo> buf(NUM_NPC_QUOTE_RECORDS);
-	const UINT32 uiFileSize = sizeof(*buf) * NUM_NPC_QUOTE_RECORDS;
-	FileRead(hFile, buf, uiFileSize);
-	return buf.Release();
+	AutoSGPFile f(FileOpen(zFileName, FILE_ACCESS_READ));
+	return ExtractNPCQuoteInfoArrayFromFile(f);
 }
 catch (...) { return 0; }
 
@@ -2502,58 +2600,24 @@ BOOLEAN TriggerNPCWithGivenApproach( UINT8 ubTriggerNPC, UINT8 ubApproach, BOOLE
 }
 
 
-void SaveNPCInfoToSaveGameFile(HWFILE const hFile)
+void SaveNPCInfoToSaveGameFile(HWFILE const f)
 {
-	UINT32		cnt;
-	UINT8			ubOne = 1;
-	UINT8			ubZero = 0;
-
-
-	//Loop through all the NPC quotes
-	for( cnt=0; cnt<NUM_PROFILES; cnt++)
+	for (NPCQuoteInfo* const* i = gpNPCQuoteInfoArray; i != endof(gpNPCQuoteInfoArray); ++i)
 	{
-		//if there is a npc qutoe
-		if( gpNPCQuoteInfoArray[ cnt ] )
-		{
-			//save a byte specify that there is an npc quote saved
-			FileWrite(hFile, &ubOne, sizeof(UINT8));
-
-			//Save the NPC quote entry
-			FileWrite(hFile, gpNPCQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS);
-		}
-		else
-		{
-			//save a byte specify that there is an npc quote saved
-			FileWrite(hFile, &ubZero, sizeof(UINT8));
-		}
+		ConditionalInjectNPCQuoteInfoArrayIntoFile(f, *i);
 	}
 
-	for( cnt = 0; cnt < NUM_CIVQUOTE_SECTORS; cnt++)
+	for (NPCQuoteInfo* const* i = gpCivQuoteInfoArray; i != endof(gpCivQuoteInfoArray); ++i)
 	{
-		//if there is a civ quote
-		if( gpCivQuoteInfoArray[ cnt ] )
-		{
-			//save a byte specify that there is an npc quote saved
-			FileWrite(hFile, &ubOne, sizeof(UINT8));
-
-			//Save the NPC quote entry
-			FileWrite(hFile, gpCivQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS);
-		}
-		else
-		{
-			//save a byte specify that there is an npc quote saved
-			FileWrite(hFile, &ubZero, sizeof(UINT8));
-		}
+		ConditionalInjectNPCQuoteInfoArrayIntoFile(f, *i);
 	}
 }
 
 
-void LoadNPCInfoFromSavedGameFile(HWFILE const hFile, UINT32 const uiSaveGameVersion)
+void LoadNPCInfoFromSavedGameFile(HWFILE const f, UINT32 const uiSaveGameVersion)
 {
 	UINT32		cnt;
-	UINT8			ubLoadQuote=0;
 	UINT32		uiNumberToLoad=0;
-
 
 	// If we are trying to restore a saved game prior to version 44, use the
 	// MAX_NUM_SOLDIERS, else use NUM_PROFILES.  Dave used the wrong define!
@@ -2565,62 +2629,14 @@ void LoadNPCInfoFromSavedGameFile(HWFILE const hFile, UINT32 const uiSaveGameVer
 	//Loop through all the NPC quotes
 	for( cnt=0; cnt<uiNumberToLoad; cnt++ )
 	{
-		//Load a byte specify that there is an npc quote Loadd
-		FileRead(hFile, &ubLoadQuote, sizeof(UINT8));
-
-		//if there is an existing quote
-		if( gpNPCQuoteInfoArray[ cnt ] )
-		{
-			//delete it
-			MemFree( gpNPCQuoteInfoArray[ cnt ] );
-			gpNPCQuoteInfoArray[ cnt ] = NULL;
-		}
-
-		//if there is a npc quote
-		if( ubLoadQuote )
-		{
-			//if there is no memory allocated
-			if( gpNPCQuoteInfoArray[ cnt ] == NULL )
-			{
-				//allocate memory for the quote
-				gpNPCQuoteInfoArray[cnt] = MALLOCNZ(NPCQuoteInfo, NUM_NPC_QUOTE_RECORDS);
-			}
-
-			//Load the NPC quote entry
-			FileRead(hFile, gpNPCQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS);
-		}
-		else
-		{
-		}
+		ConditionalExtractNPCQuoteInfoArrayFromFile(f, gpNPCQuoteInfoArray[cnt]);
 	}
 
 	if ( uiSaveGameVersion >= 56 )
 	{
 		for( cnt = 0; cnt < NUM_CIVQUOTE_SECTORS; cnt++)
 		{
-			FileRead(hFile, &ubLoadQuote, sizeof(UINT8));
-
-			//if there is an existing quote
-			if( gpCivQuoteInfoArray[ cnt ] )
-			{
-				//delete it
-				MemFree( gpCivQuoteInfoArray[ cnt ] );
-				gpCivQuoteInfoArray[ cnt ] = NULL;
-			}
-
-			// if there is a civ quote file
-			if( ubLoadQuote )
-			{
-				//if there is no memory allocated
-				if( gpCivQuoteInfoArray[ cnt ] == NULL )
-				{
-					//allocate memory for the quote
-					gpCivQuoteInfoArray[cnt] = MALLOCNZ(NPCQuoteInfo, NUM_NPC_QUOTE_RECORDS);
-				}
-
-				//Load the civ quote entry
-				FileRead(hFile, gpCivQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS);
-			}
+			ConditionalExtractNPCQuoteInfoArrayFromFile(f, gpCivQuoteInfoArray[cnt]);
 		}
 	}
 
@@ -2694,38 +2710,18 @@ void LoadNPCInfoFromSavedGameFile(HWFILE const hFile, UINT32 const uiSaveGameVer
 }
 
 
-void SaveBackupNPCInfoToSaveGameFile(HWFILE const hFile)
+void SaveBackupNPCInfoToSaveGameFile(HWFILE const f)
 {
-	UINT32		cnt;
-	UINT8			ubOne = 1;
-	UINT8			ubZero = 0;
-
-
-	//Loop through all the NPC quotes
-	for( cnt=0; cnt<NUM_PROFILES; cnt++)
+	for (NPCQuoteInfo* const* i = gpBackupNPCQuoteInfoArray; i != endof(gpBackupNPCQuoteInfoArray); ++i)
 	{
-		//if there is a npc qutoe
-		if( gpBackupNPCQuoteInfoArray[ cnt ] )
-		{
-			//save a byte specify that there is an npc quote saved
-			FileWrite(hFile, &ubOne, sizeof(UINT8));
-
-			//Save the NPC quote entry
-			FileWrite(hFile, gpBackupNPCQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS);
-		}
-		else
-		{
-			//save a byte specify that there is an npc quote saved
-			FileWrite(hFile, &ubZero, sizeof(UINT8));
-		}
+		ConditionalInjectNPCQuoteInfoArrayIntoFile(f, *i);
 	}
 }
 
 
-void LoadBackupNPCInfoFromSavedGameFile(HWFILE const hFile)
+void LoadBackupNPCInfoFromSavedGameFile(HWFILE const f)
 {
 	UINT32		cnt;
-	UINT8			ubLoadQuote=0;
 	UINT32		uiNumberOfProfilesToLoad=0;
 
 	uiNumberOfProfilesToLoad = NUM_PROFILES;
@@ -2733,33 +2729,7 @@ void LoadBackupNPCInfoFromSavedGameFile(HWFILE const hFile)
 	//Loop through all the NPC quotes
 	for( cnt=0; cnt<uiNumberOfProfilesToLoad; cnt++ )
 	{
-		//Load a byte specify that there is an npc quote Loadd
-		FileRead(hFile, &ubLoadQuote, sizeof(UINT8));
-
-		//if there is an existing quote
-		if( gpBackupNPCQuoteInfoArray[ cnt ] )
-		{
-			//delete it
-			MemFree( gpBackupNPCQuoteInfoArray[ cnt ] );
-			gpBackupNPCQuoteInfoArray[ cnt ] = NULL;
-		}
-
-		//if there is a npc quote
-		if( ubLoadQuote )
-		{
-			//if there is no memory allocated
-			if( gpBackupNPCQuoteInfoArray[ cnt ] == NULL )
-			{
-				//allocate memory for the quote
-				gpBackupNPCQuoteInfoArray[cnt] = MALLOCNZ(NPCQuoteInfo, NUM_NPC_QUOTE_RECORDS);
-			}
-
-			//Load the NPC quote entry
-			FileRead(hFile, gpBackupNPCQuoteInfoArray[cnt], sizeof(NPCQuoteInfo) * NUM_NPC_QUOTE_RECORDS);
-		}
-		else
-		{
-		}
+		ConditionalExtractNPCQuoteInfoArrayFromFile(f, gpBackupNPCQuoteInfoArray[cnt]);
 	}
 }
 
