@@ -2255,22 +2255,20 @@ BOOLEAN TriggerNPCWithIHateYouQuote( UINT8 ubTriggerNPC )
 
 }
 
-BOOLEAN NPCHasUnusedRecordWithGivenApproach( UINT8 ubNPC, UINT8 ubApproach )
+
+BOOLEAN NPCHasUnusedRecordWithGivenApproach(UINT8 const ubNPC, UINT8 const approach)
 {
 	// Check if we have a quote that could be used
-	UINT8					ubLoop;
 
-	NPCQuoteInfo* const pNPCQuoteInfoArray = EnsureQuoteFileLoaded(ubNPC);
-	if (!pNPCQuoteInfoArray) return FALSE; // error
+	NPCQuoteInfo* const quotes = EnsureQuoteFileLoaded(ubNPC);
+	if (!quotes) return FALSE; // error
 
-	for ( ubLoop = 0; ubLoop < NUM_NPC_QUOTE_RECORDS; ubLoop++ )
+	for (UINT8 i = 0; i != NUM_NPC_QUOTE_RECORDS; ++i)
 	{
-		if ( NPCConsiderQuote( ubNPC, 0, ubApproach, ubLoop, 0, pNPCQuoteInfoArray ) )
-		{
-			return( TRUE );
-		}
+		if (!NPCConsiderQuote(ubNPC, 0, approach, i, 0, quotes)) continue;
+		return TRUE;
 	}
-	return( FALSE );
+	return FALSE;
 }
 
 
