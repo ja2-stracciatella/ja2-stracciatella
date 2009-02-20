@@ -426,14 +426,14 @@ static NPCQuoteInfo* LoadCivQuoteFile(UINT8 const idx)
 }
 
 
-static BOOLEAN EnsureCivQuoteFileLoaded(UINT8 const idx)
+static bool EnsureCivQuoteFileLoaded(UINT8 const idx)
 try
 {
 	NPCQuoteInfo*& q = gpCivQuoteInfoArray[idx];
 	if (!q) q = LoadCivQuoteFile(idx);
-	return TRUE;
+	return true;
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 
 static bool ReloadCivQuoteFileIfLoaded(UINT8 const idx)
