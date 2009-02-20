@@ -9,7 +9,7 @@ namespace SGP
 	template<typename T> class Buffer
 	{
 		public:
-			explicit Buffer() : buf_(0) {}
+			explicit Buffer(T* const buf = 0) : buf_(buf) {}
 
 			explicit Buffer(size_t const n) : buf_(MALLOCN(T, n)) {}
 
