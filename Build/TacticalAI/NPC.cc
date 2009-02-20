@@ -2329,22 +2329,20 @@ BOOLEAN NPCWillingToAcceptItem( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * pObj )
 BOOLEAN GetInfoForAbandoningEPC(UINT8 const ubNPC, UINT16* const pusQuoteNum, Fact* const fact_to_set_true)
 {
 	// Check if we have a quote that could be used
-	UINT8					ubLoop;
+	NPCQuoteInfo* const quotes = EnsureQuoteFileLoaded(ubNPC);
+	if (!quotes) return FALSE; // error
 
-	NPCQuoteInfo* const pNPCQuoteInfoArray = EnsureQuoteFileLoaded(ubNPC);
-	if (!pNPCQuoteInfoArray) return FALSE; // error
-
-	for ( ubLoop = 0; ubLoop < NUM_NPC_QUOTE_RECORDS; ubLoop++ )
+	for (UINT8 i = 0; i != NUM_NPC_QUOTE_RECORDS; ++i)
 	{
-		if ( NPCConsiderQuote( ubNPC, 0, APPROACH_EPC_IN_WRONG_SECTOR, ubLoop, 0, pNPCQuoteInfoArray ) )
-		{
-			*pusQuoteNum = pNPCQuoteInfoArray[ubLoop].ubQuoteNum;
-			*fact_to_set_true = (Fact)pNPCQuoteInfoArray[ubLoop].usSetFactTrue;
-			return( TRUE );
-		}
+		if (!NPCConsiderQuote(ubNPC, 0, APPROACH_EPC_IN_WRONG_SECTOR, i, 0, quotes)) continue;
+		NPCConsiderQuote const& q = quotes[i];
+		*pusQuoteNum      = q.ubQuoteNum;
+		*fact_to_set_true = (Fact)q.usSetFactTrue;
+		return TRUE;
 	}
-	return( FALSE );
+	return FALSE;
 }
+
 
 BOOLEAN TriggerNPCWithGivenApproach( UINT8 ubTriggerNPC, UINT8 ubApproach, BOOLEAN fShowPanel )
 {
