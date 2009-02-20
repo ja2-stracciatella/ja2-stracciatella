@@ -1379,16 +1379,12 @@ static void ReplaceLocationInNPCData(NPCQuoteInfo* pNPCQuoteInfoArray, INT16 sOl
 	}
 }
 
-void ReplaceLocationInNPCDataFromProfileID( UINT8 ubNPC, INT16 sOldGridNo, INT16 sNewGridNo )
+
+void ReplaceLocationInNPCDataFromProfileID(UINT8 const ubNPC, INT16 const sOldGridNo, INT16 const sNewGridNo)
 {
-	NPCQuoteInfo *				pNPCQuoteInfoArray;
-
 	if (!EnsureQuoteFileLoaded(ubNPC)) return; // error
-
-	pNPCQuoteInfoArray = gpNPCQuoteInfoArray[ubNPC];
-
-	ReplaceLocationInNPCData( pNPCQuoteInfoArray, sOldGridNo, sNewGridNo );
-
+	NPCQuoteInfo* const quotes = gpNPCQuoteInfoArray[ubNPC];
+	ReplaceLocationInNPCData(quotes, sOldGridNo, sNewGridNo);
 }
 
 
