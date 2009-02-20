@@ -409,7 +409,6 @@ static void RefreshNPCScriptRecord(UINT8 const ubNPC, UINT8 const ubRecord)
 
 
 static NPCQuoteInfo* LoadCivQuoteFile(UINT8 const idx)
-try
 {
 	char const* filename;
 	char        buf[255];
@@ -425,16 +424,16 @@ try
 	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
 	return ExtractNPCQuoteInfoArrayFromFile(f);
 }
-catch (...) { return 0; }
 
 
 static BOOLEAN EnsureCivQuoteFileLoaded(UINT8 const idx)
+try
 {
 	NPCQuoteInfo*& q = gpCivQuoteInfoArray[idx];
-	if (q) return TRUE;
-	q = LoadCivQuoteFile(idx);
-	return q != 0;
+	if (!q) q = LoadCivQuoteFile(idx);
+	return TRUE;
 }
+catch (...) { return FALSE; }
 
 
 static BOOLEAN ReloadCivQuoteFileIfLoaded(UINT8 ubIndex)
