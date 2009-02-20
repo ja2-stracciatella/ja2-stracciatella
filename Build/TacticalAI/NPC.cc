@@ -2968,44 +2968,32 @@ static INT8 FindCivQuoteFileIndex(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ
 	return( -1 );
 }
 
-INT8 ConsiderCivilianQuotes( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, BOOLEAN fSetAsUsed )
+
+INT8 ConsiderCivilianQuotes(INT16 const x, INT16 const y, INT16 const z, BOOLEAN const set_as_used)
 {
-	INT8							bLoop, bCivQuoteSectorIndex;
-	NPCQuoteInfo *		pCivQuoteInfoArray;
+	INT8 const quote_file_idx = FindCivQuoteFileIndex(x, y, z);
+	if (quote_file_idx == -1) return -1; // no hints for this sector
 
-	bCivQuoteSectorIndex = FindCivQuoteFileIndex( sSectorX, sSectorY, sSectorZ );
-	if ( bCivQuoteSectorIndex == -1 )
+	if (!EnsureCivQuoteFileLoaded(quote_file_idx)) return -1; // error
+
+	NPCQuoteInfo* const quotes = gpCivQuoteInfoArray[quote_file_idx];
+	for (INT8 i = 0; i != NUM_NPC_QUOTE_RECORDS; ++i)
 	{
-		// no hints for this sector!
-		return( -1 );
-	}
+		if (!NPCConsiderQuote(NO_PROFILE, NO_PROFILE, 0, i, 0, quotes)) continue;
+		NPCQuoteInfo& q = quotes[i];
 
-	if (!EnsureCivQuoteFileLoaded(bCivQuoteSectorIndex))
-	{
-		// error!!!
-		return( -1 );
-	}
-
-	pCivQuoteInfoArray = gpCivQuoteInfoArray[ bCivQuoteSectorIndex ];
-
-	for ( bLoop = 0; bLoop < NUM_NPC_QUOTE_RECORDS; bLoop++ )
-	{
-		if ( NPCConsiderQuote( NO_PROFILE, NO_PROFILE, 0, bLoop, 0, pCivQuoteInfoArray ) )
+		if (set_as_used)
 		{
-			if ( fSetAsUsed )
-			{
-				TURN_FLAG_ON( pCivQuoteInfoArray[ bLoop ].fFlags, QUOTE_FLAG_SAID );
-			}
-
-			if (pCivQuoteInfoArray[ bLoop ].ubStartQuest != NO_QUEST)
-			{
-				StartQuest( pCivQuoteInfoArray[ bLoop ].ubStartQuest, gWorldSectorX, gWorldSectorY );
-			}
-
-			// return quote #
-			return( pCivQuoteInfoArray[ bLoop ].ubQuoteNum );
+			TURN_FLAG_ON(q.fFlags, QUOTE_FLAG_SAID);
 		}
+
+		if (q.ubStartQuest != NO_QUEST)
+		{
+			StartQuest(q.ubStartQuest, gWorldSectorX, gWorldSectorY);
+		}
+
+		return q.ubQuoteNum;
 	}
 
-	return( -1 );
+	return -1;
 }
