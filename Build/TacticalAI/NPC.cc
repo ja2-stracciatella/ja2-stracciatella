@@ -2708,39 +2708,32 @@ void HandleNPCChangesForTacticalTraversal(const SOLDIERTYPE* s)
 }
 
 
-void HandleVictoryInNPCSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
+void HandleVictoryInNPCSector(INT16 const x, INT16 const y, INT16 const z)
 {
 	// handle special cases of victory in certain sector
-	INT16 sSector = 0;
 
 	// not the surface?..leave
-	if( sSectorZ != 0 )
-	{
-		return;
-	}
+	if (z != 0) return;
 
-	// grab sector value
-	sSector = SECTOR( sSectorX, sSectorY );
-
-	switch( sSector )
+	switch (SECTOR(x, y))
 	{
-		case( SEC_F10 ):
-		{
+		case SEC_F10:
 			// we won over the hillbillies
 			// set fact they are dead
 			if (!CheckFact(FACT_HILLBILLIES_KILLED, KEITH))
 			{
-				SetFactTrue( FACT_HILLBILLIES_KILLED );
+				SetFactTrue(FACT_HILLBILLIES_KILLED);
 			}
 
 			// check if keith is out of business
-			if( CheckFact( FACT_KEITH_OUT_OF_BUSINESS, KEITH ) == TRUE )
+			if (CheckFact(FACT_KEITH_OUT_OF_BUSINESS, KEITH) == TRUE)
 			{
-				SetFactFalse( FACT_KEITH_OUT_OF_BUSINESS );
+				SetFactFalse(FACT_KEITH_OUT_OF_BUSINESS);
 			}
-		}
+			break;
 	}
 }
+
 
 BOOLEAN HandleShopKeepHasBeenShutDown( UINT8 ubCharNum )
 {
