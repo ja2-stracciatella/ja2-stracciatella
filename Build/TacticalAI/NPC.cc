@@ -462,37 +462,24 @@ void SetQuoteRecordAsUsed( UINT8 ubNPC, UINT8 ubRecord )
 }
 
 
-static INT32 CalcThreateningEffectiveness(UINT8 ubMerc)
+static INT32 CalcThreateningEffectiveness(UINT8 const ubMerc)
 {
-	INT32					iStrength, iDeadliness;
-
 	// effective threat is 1/3 strength, 1/3 weapon deadliness, 1/3 leadership
 
-	SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMerc);
-	if ( !pSoldier )
-	{
-		return( 0 );
-	}
+	SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubMerc);
+	if (!s) return 0;
 
-	iStrength = EffectiveStrength( pSoldier );
+	UINT16 const item_idx = s->inv[HANDPOS].usItem;
+	INT32 deadliness =
+		Item[item_idx].usItemClass & IC_WEAPON ? Weapon[item_idx].ubDeadliness :
+		0;
 
-	if ( Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass & IC_WEAPON )
-	{
-		iDeadliness = Weapon[ pSoldier->inv[HANDPOS].usItem ].ubDeadliness;
-	}
-	else
-	{
-		iDeadliness = 0;
-	}
+	if (deadliness == 0) deadliness = -30; // penalize!
 
-	if ( iDeadliness == 0 )
-	{
-		// penalize!
-		iDeadliness = -30;
-	}
-
-	return( (EffectiveLeadership( pSoldier ) + iStrength + iDeadliness) / 2 );
+	INT32 const strength = EffectiveStrength(s);
+	return (EffectiveLeadership(s) + strength + deadliness) / 2;
 }
+
 
 UINT8 CalcDesireToTalk( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach )
 {
