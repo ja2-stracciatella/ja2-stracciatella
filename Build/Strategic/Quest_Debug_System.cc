@@ -2175,41 +2175,31 @@ static void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON* btn, INT32 reaso
 }
 
 
-static void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnQuestDebugNPCRefreshButtonButtonCallback(GUI_BUTTON* const btn, INT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		BOOLEAN fRetVal = FALSE;
-		CHAR16	zTemp[128];
-		UINT8		ubMercID=0;
-
-		if( gfUseLocalNPCs )
+		bool  success  = false;
+		UINT8 ubMercID = 0;
+		if (gfUseLocalNPCs)
 		{
-			ubMercID = gubCurrentNpcInSector[ gNpcListBox.sCurSelectedItem ];
-			fRetVal = ReloadQuoteFile( gubCurrentNpcInSector[ gNpcListBox.sCurSelectedItem ] );
+			ubMercID = gubCurrentNpcInSector[gNpcListBox.sCurSelectedItem];
+			success  = ReloadQuoteFile(ubMercID);
 		}
-		else
+		else if (gNpcListBox.sCurSelectedItem != -1)
 		{
-			if( gNpcListBox.sCurSelectedItem != -1 )
-			{
-				// NB ubMercID is really profile ID
-				ubMercID = (UINT8)gNpcListBox.sCurSelectedItem;
-				fRetVal = ReloadQuoteFile( (UINT8)gNpcListBox.sCurSelectedItem );
-				gMercProfiles[ ubMercID ].ubLastDateSpokenTo = 0;
-			}
+			// NB ubMercID is really profile ID
+			ubMercID = (UINT8)gNpcListBox.sCurSelectedItem;
+			success  = ReloadQuoteFile(ubMercID);
+			gMercProfiles[ubMercID].ubLastDateSpokenTo = 0;
 		}
 
-		//if the function succeded
-		if( fRetVal )
-		{
-			swprintf(zTemp, lengthof(zTemp), L"%ls %ls", QuestDebugText[QUEST_DBS_REFRESH_OK], gMercProfiles[ubMercID].zNickname);
-		}
-		else
-		{
-			swprintf(zTemp, lengthof(zTemp), L"%ls %ls", QuestDebugText[QUEST_DBS_REFRESH_FAILED], gMercProfiles[ubMercID].zNickname);
-		}
-
-		DoQDSMessageBox(zTemp, QUEST_DEBUG_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		wchar_t const* const msg =
+			success ? QuestDebugText[QUEST_DBS_REFRESH_OK] :
+			QuestDebugText[QUEST_DBS_REFRESH_FAILED];
+		wchar_t buf[128];
+		swprintf(buf, lengthof(buf), L"%ls %ls", msg, gMercProfiles[ubMercID].zNickname);
+		DoQDSMessageBox(buf, QUEST_DEBUG_SCREEN, MSG_BOX_FLAG_OK, NULL);
 	}
 }
 
