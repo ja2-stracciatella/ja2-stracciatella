@@ -408,21 +408,21 @@ static void RefreshNPCScriptRecord(UINT8 const ubNPC, UINT8 const ubRecord)
 //
 
 
-static NPCQuoteInfo* LoadCivQuoteFile(UINT8 ubIndex)
+static NPCQuoteInfo* LoadCivQuoteFile(UINT8 const idx)
 try
 {
-	CHAR8						zFileName[255];
-
-  if ( ubIndex == MINERS_CIV_QUOTE_INDEX )
-  {
-	  strcpy(zFileName, "NPCData/miners.npc");
-  }
-  else
-  {
-	  sprintf( zFileName, "NPCData/%c%d.npc", 'A' + ( gsCivQuoteSector[ ubIndex ][ 1 ] - 1 ), gsCivQuoteSector[ ubIndex ][ 0 ] );
-  }
-
-	AutoSGPFile f(FileOpen(zFileName, FILE_ACCESS_READ));
+	char const* filename;
+	char        buf[255];
+	if (idx == MINERS_CIV_QUOTE_INDEX)
+	{
+		filename = "NPCData/miners.npc";
+	}
+	else
+	{
+		sprintf(buf, "NPCData/%c%d.npc", 'A' + gsCivQuoteSector[idx][1] - 1, gsCivQuoteSector[idx][0]);
+		filename = buf;
+	}
+	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
 	return ExtractNPCQuoteInfoArrayFromFile(f);
 }
 catch (...) { return 0; }
