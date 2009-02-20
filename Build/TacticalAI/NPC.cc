@@ -709,7 +709,7 @@ static UINT8 UseQuote(NPCQuoteInfo* const quotes, NPCQuoteInfo** const quote, UI
 }
 
 
-static void HandleNPCBeingGivenMoneyByPlayer(UINT8 ubNPC, UINT32 uiMoneyAmount, UINT8* pQuoteValue);
+static UINT8 HandleNPCBeingGivenMoneyByPlayer(UINT8 ubNPC, UINT32 uiMoneyAmount);
 
 
 static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE* pObj, NPCQuoteInfo* pNPCQuoteInfoArray, NPCQuoteInfo** ppResultQuoteInfo, UINT8* pubQuoteNum)
@@ -996,26 +996,23 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 								else
 								{
 									// handle the player giving NPC some money
-									HandleNPCBeingGivenMoneyByPlayer( ubNPC, pObj->uiMoneyAmount, pubQuoteNum );
-									(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[ *pubQuoteNum ];
-									return( (*ppResultQuoteInfo)->ubOpinionRequired );
+									UINT8 const quote_id = HandleNPCBeingGivenMoneyByPlayer(ubNPC, pObj->uiMoneyAmount);
+									return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, quote_id);
 								}
 							}
 							else
 							{
 								// handle the player giving NPC some money
-								HandleNPCBeingGivenMoneyByPlayer( ubNPC, pObj->uiMoneyAmount, pubQuoteNum );
-								(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[ *pubQuoteNum ];
-								return( (*ppResultQuoteInfo)->ubOpinionRequired );
+								UINT8 const quote_id = HandleNPCBeingGivenMoneyByPlayer(ubNPC, pObj->uiMoneyAmount);
+								return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, quote_id);
 							}
 						}
 						break;
 					case KINGPIN:
 						if ( usItemToConsider == MONEY && gubQuest[ QUEST_KINGPIN_MONEY ] == QUESTINPROGRESS )
 						{
-							HandleNPCBeingGivenMoneyByPlayer( ubNPC, pObj->uiMoneyAmount, pubQuoteNum );
-							(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[ *pubQuoteNum ];
-							return( (*ppResultQuoteInfo)->ubOpinionRequired );
+							UINT8 const quote_id = HandleNPCBeingGivenMoneyByPlayer(ubNPC, pObj->uiMoneyAmount);
+							return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, quote_id);
 						}
 						break;
 					default:
@@ -1047,8 +1044,9 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 
 
 // handle money being npc being
-static void HandleNPCBeingGivenMoneyByPlayer(UINT8 const ubNPC, UINT32 const uiMoneyAmount, UINT8* const pQuoteValue)
+static UINT8 HandleNPCBeingGivenMoneyByPlayer(UINT8 const ubNPC, UINT32 const uiMoneyAmount)
 {
+	UINT8 quote_id;
 	switch( ubNPC )
 	{
 		// handle for STEVE and VINCE
@@ -1065,11 +1063,11 @@ static void HandleNPCBeingGivenMoneyByPlayer(UINT8 const ubNPC, UINT32 const uiM
 					// enough cash, check how much help is needed
 					if( CheckFact( FACT_WOUNDED_MERCS_NEARBY , ubNPC) )
 					{
-						*pQuoteValue = 26;
+						quote_id = 26;
 					}
 					else if( CheckFact( FACT_ONE_WOUNDED_MERC_NEARBY, ubNPC ) )
 					{
-						*pQuoteValue = 25;
+						quote_id = 25;
 					}
 
 					if ( giHospitalRefund > 0 )
@@ -1089,7 +1087,7 @@ static void HandleNPCBeingGivenMoneyByPlayer(UINT8 const ubNPC, UINT32 const uiM
 						Message[ STR_NEED_TO_GIVE_MONEY ],
 						gMercProfiles[ ubNPC ].zNickname,
 						sTempString );
-					*pQuoteValue = 27;
+					quote_id = 27;
 					giHospitalTempBalance += uiMoneyAmount;
 				}
 			}
@@ -1097,51 +1095,57 @@ static void HandleNPCBeingGivenMoneyByPlayer(UINT8 const ubNPC, UINT32 const uiM
 		case KINGPIN:
 			if ( (INT32) uiMoneyAmount < -gMercProfiles[ KINGPIN ].iBalance )
 			{
-				*pQuoteValue = 9;
+				quote_id = 9;
 			}
 			else
 			{
-				*pQuoteValue = 10;
+				quote_id = 10;
 			}
 			gMercProfiles[ KINGPIN ].iBalance += (INT32) uiMoneyAmount;
 			break;
 		case WALTER:
 			if ( gMercProfiles[ WALTER ].iBalance == 0 )
 			{
-				*pQuoteValue = 12;
+				quote_id = 12;
 			}
 			else
 			{
-				*pQuoteValue = 13;
+				quote_id = 13;
 			}
 			gMercProfiles[ WALTER ].iBalance += uiMoneyAmount;
 			break;
 		case FRANK:
 			gArmsDealerStatus[ ARMS_DEALER_FRANK ].uiArmsDealersCash += uiMoneyAmount;
+			quote_id = 0;
 			break;
+
 		case GERARD:
 			gMercProfiles[ GERARD ].iBalance += uiMoneyAmount;
 			if ( (gMercProfiles[ GERARD ].iBalance) >= 10000 )
 			{
-				*pQuoteValue = 12;
+				quote_id = 12;
 			}
 			else
 			{
-				*pQuoteValue = 11;
+				quote_id = 11;
 			}
 			break;
 		case JOE:
 			gMercProfiles[ JOE ].iBalance += uiMoneyAmount;
 			if ( (gMercProfiles[ JOE ].iBalance) >= 10000 )
 			{
-				*pQuoteValue = 7;
+				quote_id = 7;
 			}
 			else
 			{
-				*pQuoteValue = 6;
+				quote_id = 6;
 			}
 			break;
+
+		default:
+			quote_id = 0;
 	}
+	return quote_id;
 }
 
 
