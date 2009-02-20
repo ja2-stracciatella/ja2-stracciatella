@@ -2273,36 +2273,30 @@ BOOLEAN NPCHasUnusedRecordWithGivenApproach( UINT8 ubNPC, UINT8 ubApproach )
 	return( FALSE );
 }
 
-BOOLEAN NPCHasUnusedHostileRecord( UINT8 ubNPC, UINT8 ubApproach )
+
+BOOLEAN NPCHasUnusedHostileRecord(UINT8 const ubNPC, UINT8 const approach)
 {
-	// this is just like the standard check BUT we must skip any
-	// records using fact 289 and print debug msg for any records which can't be marked as used
+	/* this is just like the standard check BUT we must skip any records using
+	 * fact 289 and print debug msg for any records which can't be marked as used
+	 */
 	// Check if we have a quote that could be used
-	NPCQuoteInfo	*pQuotePtr;
-	UINT8					ubLoop;
+	NPCQuoteInfo* const quotes = EnsureQuoteFileLoaded(ubNPC);
+	if (!quotes) return FALSE; // error
 
-	NPCQuoteInfo* const pNPCQuoteInfoArray = EnsureQuoteFileLoaded(ubNPC);
-	if (!pNPCQuoteInfoArray) return FALSE; // error
-
-	for ( ubLoop = 0; ubLoop < NUM_NPC_QUOTE_RECORDS; ubLoop++ )
+	for (UINT8 i = 0; i != NUM_NPC_QUOTE_RECORDS; ++i)
 	{
-		pQuotePtr = &(pNPCQuoteInfoArray[ubLoop]);
-		if ( NPCConsiderQuote( ubNPC, 0, ubApproach, ubLoop, 0, pNPCQuoteInfoArray ) )
+		if (!NPCConsiderQuote(ubNPC, 0, approach, i, 0, quotes)) continue;
+		NPCQuoteInfo const& q = quotes[i];
+		if (q.usFactMustBeTrue == FACT_NPC_HOSTILE_OR_PISSED_OFF) continue;
+#ifdef JA2BETAVERSION
+		if (!(q.fFlags & QUOTE_FLAG_ERASE_ONCE_SAID))
 		{
-			if ( pQuotePtr->usFactMustBeTrue == FACT_NPC_HOSTILE_OR_PISSED_OFF )
-			{
-				continue;
-			}
-			#ifdef JA2BETAVERSION
-			if ( !(pQuotePtr->fFlags & QUOTE_FLAG_ERASE_ONCE_SAID)  )
-			{
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"Warning: possible infinite quote loop to follow." );
-			}
-			#endif
-			return( TRUE );
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"Warning: possible infinite quote loop to follow.");
 		}
+#endif
+		return TRUE;
 	}
-	return( FALSE );
+	return FALSE;
 }
 
 
