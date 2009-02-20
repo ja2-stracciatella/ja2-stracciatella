@@ -554,149 +554,109 @@ static void ApproachedForFirstTime(MERCPROFILESTRUCT* pNPCProfile, INT8 bApproac
 static UINT8 NPCConsiderQuote(UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8 ubQuoteNum, UINT8 ubTalkDesire, NPCQuoteInfo* pNPCQuoteInfoArray);
 
 
-static UINT8 NPCConsiderTalking(UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT8 ubRecord, NPCQuoteInfo* pNPCQuoteInfoArray, NPCQuoteInfo** ppResultQuoteInfo, UINT8* pubQuoteNum)
+static UINT8 NPCConsiderTalking(UINT8 const ubNPC, UINT8 const ubMerc, INT8 const approach, UINT8 const record, NPCQuoteInfo* const pNPCQuoteInfoArray, NPCQuoteInfo** const ppResultQuoteInfo, UINT8* const pubQuoteNum)
 {
 	// This function returns the opinion level required of the "most difficult" quote
 	// that the NPC is willing to say to the merc.  It can also provide the quote #.
-	MERCPROFILESTRUCT *		pNPCProfile=NULL;
-	NPCQuoteInfo *				pNPCQuoteInfo=NULL;
-	UINT8									ubTalkDesire, ubLoop, ubQuote, ubHighestOpinionRequired = 0;
-	BOOLEAN								fQuoteFound = FALSE;
-	UINT8									ubFirstQuoteRecord, ubLastQuoteRecord;
+	SOLDIERTYPE const* const s = FindSoldierByProfileID(ubNPC);
+	if (!s) return 0;
 
-	ubTalkDesire = ubQuote = 0;
+	if (ppResultQuoteInfo) *ppResultQuoteInfo = 0;
+	if (pubQuoteNum)       *pubQuoteNum       = 0;
 
-	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubNPC);
-	if (pSoldier == NULL)
+	UINT8 talk_desire = 0;
+	if (approach <= NUM_REAL_APPROACHES)
 	{
-		return( 0 );
-	}
-
-	if (ppResultQuoteInfo)
-	{
-		(*ppResultQuoteInfo) = NULL;
-	}
-
-	if ( pubQuoteNum )
-	{
-		(*pubQuoteNum) = 0;
-	}
-
-	if (bApproach <= NUM_REAL_APPROACHES)
-	{
-		pNPCProfile = &(gMercProfiles[ubNPC]);
+		MERCPROFILESTRUCT* const p = GetProfile(ubNPC);
 		// What's our willingness to divulge?
-		ubTalkDesire = CalcDesireToTalk( ubNPC, ubMerc, bApproach );
-		if ( bApproach < NUM_REAL_APPROACHES && !(pNPCProfile->bApproached & gbFirstApproachFlags[bApproach - 1]) )
+		talk_desire = CalcDesireToTalk(ubNPC, ubMerc, approach);
+		if (approach < NUM_REAL_APPROACHES && !(p->bApproached & gbFirstApproachFlags[approach - 1]))
 		{
-			ApproachedForFirstTime( pNPCProfile, bApproach );
+			ApproachedForFirstTime(p, approach);
 		}
 	}
-	else if ( ubNPC == PABLO && bApproach == APPROACH_SECTOR_NOT_SAFE ) // for Pablo, consider as threaten
+	else if (ubNPC == PABLO && approach == APPROACH_SECTOR_NOT_SAFE) // for Pablo, consider as threaten
 	{
-		pNPCProfile = &(gMercProfiles[ubNPC]);
+		MERCPROFILESTRUCT* const p = GetProfile(ubNPC);
 		// What's our willingness to divulge?
-		ubTalkDesire = CalcDesireToTalk( ubNPC, ubMerc, APPROACH_THREATEN );
-		if ( pNPCProfile->bApproached & gbFirstApproachFlags[APPROACH_THREATEN - 1] )
+		talk_desire = CalcDesireToTalk(ubNPC, ubMerc, APPROACH_THREATEN);
+		if (p->bApproached & gbFirstApproachFlags[APPROACH_THREATEN - 1])
 		{
-			ApproachedForFirstTime( pNPCProfile, APPROACH_THREATEN );
+			ApproachedForFirstTime(p, APPROACH_THREATEN);
 		}
 	}
 
-	switch( bApproach )
+	UINT8 first_quote_record;
+	UINT8 last_quote_record;
+	switch (approach)
 	{
-	/*
-		case APPROACH_RECRUIT:
-			ubFirstQuoteRecord = 0;
-			ubLastQuoteRecord = 0;
-			break;
-			*/
 		case TRIGGER_NPC:
-			ubFirstQuoteRecord = ubRecord;
-			ubLastQuoteRecord = ubRecord;
+			first_quote_record = record;
+			last_quote_record  = record;
 			break;
+
 		default:
-			ubFirstQuoteRecord = 0;
-			ubLastQuoteRecord = NUM_NPC_QUOTE_RECORDS - 1;
+			first_quote_record = 0;
+			last_quote_record  = NUM_NPC_QUOTE_RECORDS - 1;
 			break;
 	}
 
-	for (ubLoop = ubFirstQuoteRecord; ubLoop <= ubLastQuoteRecord; ubLoop++)
+	bool          fQuoteFound              = false;
+	UINT8         ubHighestOpinionRequired = 0;
+	NPCQuoteInfo* pNPCQuoteInfo            = 0;
+	UINT8         ubQuote                  = 0;
+	for (UINT8 i = first_quote_record; i <= last_quote_record; ++i)
 	{
-		pNPCQuoteInfo = &(pNPCQuoteInfoArray[ ubLoop ]);
+		pNPCQuoteInfo = &pNPCQuoteInfoArray[i];
 
 		// Check if we have the item / are in right spot
-		if ( pNPCQuoteInfo->sRequiredItem > 0 )
+		if (pNPCQuoteInfo->sRequiredItem > 0)
 		{
-			if ( !ObjectExistsInSoldierProfile( ubNPC, pNPCQuoteInfo->sRequiredItem )  )
+			if (!ObjectExistsInSoldierProfile(ubNPC, pNPCQuoteInfo->sRequiredItem))
 			{
 				continue;
 			}
 		}
-		else if ( pNPCQuoteInfo->sRequiredGridno < 0 )
+		else if (pNPCQuoteInfo->sRequiredGridno < 0)
 		{
-			if ( pSoldier->sGridNo != -(pNPCQuoteInfo->sRequiredGridno) )
+			if (s->sGridNo != -pNPCQuoteInfo->sRequiredGridno)
 			{
 				continue;
 			}
 		}
 
-		if ( NPCConsiderQuote( ubNPC, ubMerc, bApproach, ubLoop, ubTalkDesire, pNPCQuoteInfoArray ) )
-		{
-			if (bApproach == NPC_INITIATING_CONV)
-			{
-				// want to find the quote with the highest required opinion rating that we're willing
-				// to say
-				if ( pNPCQuoteInfo->ubOpinionRequired > ubHighestOpinionRequired )
-				{
-					fQuoteFound = TRUE;
-					ubHighestOpinionRequired = pNPCQuoteInfo->ubOpinionRequired;
-					ubQuote = pNPCQuoteInfo->ubQuoteNum;
-				}
-			}
-			else
-			{
-				// we do have a quote to say, and we want to say this one right away!
-				if (ppResultQuoteInfo)
-				{
-					(*ppResultQuoteInfo) = pNPCQuoteInfo;
-				}
-				if ( pubQuoteNum )
-				{
-					(*pubQuoteNum) = ubLoop;
-				}
+		if (!NPCConsiderQuote(ubNPC, ubMerc, approach, i, talk_desire, pNPCQuoteInfoArray)) continue;
 
-				return( pNPCQuoteInfo->ubOpinionRequired );
-			}
+		if (approach != NPC_INITIATING_CONV)
+		{
+			// we do have a quote to say, and we want to say this one right away!
+			if (ppResultQuoteInfo) *ppResultQuoteInfo = pNPCQuoteInfo;
+			if (pubQuoteNum)       *pubQuoteNum       = i;
+			return pNPCQuoteInfo->ubOpinionRequired;
 		}
 
+		// want to find the quote with the highest required opinion rating that we're willing
+		// to say
+		if (pNPCQuoteInfo->ubOpinionRequired > ubHighestOpinionRequired)
+		{
+			fQuoteFound              = true;
+			ubHighestOpinionRequired = pNPCQuoteInfo->ubOpinionRequired;
+			ubQuote                  = pNPCQuoteInfo->ubQuoteNum;
+		}
 	}
 
 	// Whew, checked them all.  If we found a quote, return the appropriate values.
 	if (fQuoteFound)
 	{
-		if (ppResultQuoteInfo)
-		{
-			(*ppResultQuoteInfo) = pNPCQuoteInfo;
-		}
-		if ( pubQuoteNum )
-		{
-			(*pubQuoteNum) = ubQuote;
-		}
-
-		return( ubHighestOpinionRequired );
+		if (ppResultQuoteInfo) *ppResultQuoteInfo = pNPCQuoteInfo;
+		if (pubQuoteNum)       *pubQuoteNum       = ubQuote;
+		return ubHighestOpinionRequired;
 	}
 	else
 	{
-		if (ppResultQuoteInfo)
-		{
-			(*ppResultQuoteInfo) = NULL;
-		}
-		if ( pubQuoteNum )
-		{
-			(*pubQuoteNum) = 0;
-		}
-		return( 0 );
+		if (ppResultQuoteInfo) *ppResultQuoteInfo = 0;
+		if (pubQuoteNum)       *pubQuoteNum       = 0;
+		return 0;
 	}
 }
 
