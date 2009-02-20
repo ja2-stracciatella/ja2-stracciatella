@@ -149,7 +149,7 @@ extern void TriggerNPCRecordImmediately( UINT8 ubTriggerNPC, UINT8 ubTriggerNPCR
 extern BOOLEAN TriggerNPCWithGivenApproach( UINT8 ubTriggerNPC, UINT8 ubApproach, BOOLEAN fShowPanel );
 
 
-extern BOOLEAN ReloadQuoteFile( UINT8 ubNPC );
+bool ReloadQuoteFile(UINT8 ubNPC);
 void ReloadAllQuoteFiles(void);
 
 // Save and loads the npc info to a saved game file

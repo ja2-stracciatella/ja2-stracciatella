@@ -322,20 +322,11 @@ static BOOLEAN EnsureQuoteFileLoaded(UINT8 const ubNPC)
 }
 
 
-BOOLEAN ReloadQuoteFile( UINT8 ubNPC )
+bool ReloadQuoteFile(UINT8 const ubNPC)
 {
-	if (gpNPCQuoteInfoArray[ubNPC] != NULL)
-	{
-		MemFree( gpNPCQuoteInfoArray[ubNPC] );
-		gpNPCQuoteInfoArray[ubNPC] = NULL;
-	}
-	// zap backup if any
-	if ( gpBackupNPCQuoteInfoArray[ ubNPC ] != NULL )
-	{
-		MemFree( gpBackupNPCQuoteInfoArray[ ubNPC ] );
-		gpBackupNPCQuoteInfoArray[ ubNPC ] = NULL;
-	}
-	return( EnsureQuoteFileLoaded( ubNPC ) );
+	FreeNull(gpNPCQuoteInfoArray[ubNPC]);
+	FreeNull(gpBackupNPCQuoteInfoArray[ubNPC]);
+	return EnsureQuoteFileLoaded(ubNPC);
 }
 
 
