@@ -2668,33 +2668,20 @@ void TriggerFriendWithHostileQuote( UINT8 ubNPC )
 	}
 }
 
-UINT8 ActionIDForMovementRecord( UINT8 ubNPC, UINT8 ubRecord )
+
+UINT8 ActionIDForMovementRecord(UINT8 const ubNPC, UINT8 const record)
 {
 	// Check if we have a quote to trigger...
-	NPCQuoteInfo	*pQuotePtr;
+	NPCQuoteInfo* const quotes = EnsureQuoteFileLoaded(ubNPC);
+	if (!quotes) return FALSE; // error
 
-	NPCQuoteInfo* const pNPCQuoteInfoArray = EnsureQuoteFileLoaded(ubNPC);
-	if (!pNPCQuoteInfoArray) return FALSE; // error
-
-	pQuotePtr = &( pNPCQuoteInfoArray[ ubRecord ] );
-
-	switch( pQuotePtr->sActionData )
+	switch (quotes[record].sActionData)
 	{
-		case NPC_ACTION_TRAVERSE_MAP_EAST:
-			return( QUOTE_ACTION_ID_TRAVERSE_EAST );
-
-		case NPC_ACTION_TRAVERSE_MAP_SOUTH:
-			return( QUOTE_ACTION_ID_TRAVERSE_SOUTH );
-
-		case NPC_ACTION_TRAVERSE_MAP_WEST:
-			return( QUOTE_ACTION_ID_TRAVERSE_WEST );
-
-		case NPC_ACTION_TRAVERSE_MAP_NORTH:
-			return( QUOTE_ACTION_ID_TRAVERSE_NORTH );
-
-		default:
-			return( QUOTE_ACTION_ID_CHECKFORDEST );
-
+		case NPC_ACTION_TRAVERSE_MAP_EAST:  return QUOTE_ACTION_ID_TRAVERSE_EAST;
+		case NPC_ACTION_TRAVERSE_MAP_SOUTH: return QUOTE_ACTION_ID_TRAVERSE_SOUTH;
+		case NPC_ACTION_TRAVERSE_MAP_WEST:  return QUOTE_ACTION_ID_TRAVERSE_WEST;
+		case NPC_ACTION_TRAVERSE_MAP_NORTH: return QUOTE_ACTION_ID_TRAVERSE_NORTH;
+		default:                            return QUOTE_ACTION_ID_CHECKFORDEST;
 	}
 }
 
