@@ -2947,25 +2947,17 @@ BOOLEAN RecordHasDialogue( UINT8 ubNPC, UINT8 ubRecord )
 }
 
 
-static INT8 FindCivQuoteFileIndex(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ)
+static INT8 FindCivQuoteFileIndex(INT16 const x, INT16 const y, INT16 const z)
 {
-	UINT8			ubLoop;
+  if (z > 0) return MINERS_CIV_QUOTE_INDEX;
 
-  if ( sSectorZ > 0 )
-  {
-    return( MINERS_CIV_QUOTE_INDEX );
-  }
-  else
-  {
-	  for ( ubLoop = 0; ubLoop < NUM_CIVQUOTE_SECTORS; ubLoop++ )
-	  {
-		  if ( gsCivQuoteSector[ ubLoop ][ 0 ] == sSectorX && gsCivQuoteSector[ ubLoop ][ 1 ] == sSectorY )
-		  {
-			  return( ubLoop );
-		  }
-	  }
-  }
-	return( -1 );
+	for (UINT8 i = 0; i != NUM_CIVQUOTE_SECTORS; ++i)
+	{
+		if (gsCivQuoteSector[i][0] != x) continue;
+		if (gsCivQuoteSector[i][1] != y) continue;
+		return i;
+	}
+	return -1;
 }
 
 
