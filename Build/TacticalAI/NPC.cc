@@ -2306,23 +2306,17 @@ BOOLEAN NPCHasUnusedHostileRecord( UINT8 ubNPC, UINT8 ubApproach )
 }
 
 
-BOOLEAN NPCWillingToAcceptItem( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * pObj )
+BOOLEAN NPCWillingToAcceptItem(UINT8 const ubNPC, UINT8 const ubMerc, OBJECTTYPE* const o)
 {
 	// Check if we have a quote that could be used, that applies to this item
-	NPCQuoteInfo *		pQuotePtr;
-	UINT8							ubOpinion, ubQuoteNum;
 
-	NPCQuoteInfo* const pNPCQuoteInfoArray = EnsureQuoteFileLoaded(ubNPC);
-	if (!pNPCQuoteInfoArray) return FALSE; // error
+	NPCQuoteInfo* const quotes = EnsureQuoteFileLoaded(ubNPC);
+	if (!quotes) return FALSE; // error
 
-	ubOpinion = NPCConsiderReceivingItemFromMerc( ubNPC, ubMerc, pObj, pNPCQuoteInfoArray, &pQuotePtr, &ubQuoteNum );
-
-	if ( pQuotePtr )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
+	NPCQuoteInfo* q;
+	UINT8         ubQuoteNum;
+	NPCConsiderReceivingItemFromMerc(ubNPC, ubMerc, o, quotes, &q, &ubQuoteNum);
+	return q != 0;
 }
 
 
@@ -2335,7 +2329,7 @@ BOOLEAN GetInfoForAbandoningEPC(UINT8 const ubNPC, UINT16* const pusQuoteNum, Fa
 	for (UINT8 i = 0; i != NUM_NPC_QUOTE_RECORDS; ++i)
 	{
 		if (!NPCConsiderQuote(ubNPC, 0, APPROACH_EPC_IN_WRONG_SECTOR, i, 0, quotes)) continue;
-		NPCConsiderQuote const& q = quotes[i];
+		NPCQuoteInfo const& q = quotes[i];
 		*pusQuoteNum      = q.ubQuoteNum;
 		*fact_to_set_true = (Fact)q.usSetFactTrue;
 		return TRUE;
