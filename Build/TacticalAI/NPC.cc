@@ -330,18 +330,13 @@ bool ReloadQuoteFile(UINT8 const ubNPC)
 }
 
 
-static BOOLEAN ReloadQuoteFileIfLoaded(UINT8 ubNPC)
+static bool ReloadQuoteFileIfLoaded(UINT8 const ubNPC)
 {
-	if (gpNPCQuoteInfoArray[ubNPC] != NULL)
-	{
-		MemFree( gpNPCQuoteInfoArray[ubNPC] );
-		gpNPCQuoteInfoArray[ubNPC] = NULL;
-		return( EnsureQuoteFileLoaded( ubNPC ) );
-	}
-	else
-	{
-		return( TRUE );
-	}
+	NPCQuoteInfo*& q = gpNPCQuoteInfoArray[ubNPC];
+	if (!q) return TRUE;
+	MemFree(q);
+	q = 0;
+	return EnsureQuoteFileLoaded(ubNPC);
 }
 
 
