@@ -426,14 +426,14 @@ static NPCQuoteInfo* LoadCivQuoteFile(UINT8 const idx)
 }
 
 
-static bool EnsureCivQuoteFileLoaded(UINT8 const idx)
+static NPCQuoteInfo* EnsureCivQuoteFileLoaded(UINT8 const idx)
 try
 {
 	NPCQuoteInfo*& q = gpCivQuoteInfoArray[idx];
 	if (!q) q = LoadCivQuoteFile(idx);
-	return true;
+	return q;
 }
-catch (...) { return false; }
+catch (...) { return 0; }
 
 
 static bool ReloadCivQuoteFileIfLoaded(UINT8 const idx)
@@ -2974,9 +2974,9 @@ INT8 ConsiderCivilianQuotes(INT16 const x, INT16 const y, INT16 const z, BOOLEAN
 	INT8 const quote_file_idx = FindCivQuoteFileIndex(x, y, z);
 	if (quote_file_idx == -1) return -1; // no hints for this sector
 
-	if (!EnsureCivQuoteFileLoaded(quote_file_idx)) return -1; // error
+	NPCQuoteInfo* const quotes = EnsureCivQuoteFileLoaded(quote_file_idx);
+	if (!quotes) return -1; // error
 
-	NPCQuoteInfo* const quotes = gpCivQuoteInfoArray[quote_file_idx];
 	for (INT8 i = 0; i != NUM_NPC_QUOTE_RECORDS; ++i)
 	{
 		if (!NPCConsiderQuote(NO_PROFILE, NO_PROFILE, 0, i, 0, quotes)) continue;
