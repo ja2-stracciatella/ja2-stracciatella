@@ -2206,28 +2206,22 @@ void TriggerNPCRecord(UINT8 const ubTriggerNPC, UINT8 const record)
 }
 
 
-void TriggerNPCRecordImmediately( UINT8 ubTriggerNPC, UINT8 ubTriggerNPCRec )
+void TriggerNPCRecordImmediately(UINT8 const ubTriggerNPC, UINT8 const record)
 {
 	// Check if we have a quote to trigger...
-	BOOLEAN      fDisplayDialogue = TRUE;
 
 	NPCQuoteInfo* const quotes = EnsureQuoteFileLoaded(ubTriggerNPC);
 	if (!quotes) return; // error
-	NPCQuoteInfo* const pQuotePtr = &quotes[ubTriggerNPCRec];
-	if ( pQuotePtr->ubQuoteNum == IRRELEVANT )
-	{
-		fDisplayDialogue = FALSE;
-	}
+	NPCQuoteInfo const& q                = quotes[record];
+	bool         const  display_dialogue = q.ubQuoteNum != IRRELEVANT;
 
-	if (NPCConsiderQuote(ubTriggerNPC, 0, TRIGGER_NPC, ubTriggerNPCRec, 0, quotes))
-	{
-		// trigger IMMEDIATELY
-		HandleNPCTriggerNPC( ubTriggerNPC, ubTriggerNPCRec, fDisplayDialogue, TRIGGER_NPC );
+	if (NPCConsiderQuote(ubTriggerNPC, 0, TRIGGER_NPC, record, 0, quotes))
+	{ // trigger IMMEDIATELY
+		HandleNPCTriggerNPC(ubTriggerNPC, record, display_dialogue, TRIGGER_NPC);
 	}
 	else
-	{
-		// don't do anything
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "WARNING: trigger of %d, record %d cannot proceed, possible error", ubTriggerNPC, ubTriggerNPCRec ) );
+	{ // don't do anything
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("WARNING: trigger of %d, record %d cannot proceed, possible error", ubTriggerNPC, record));
 	}
 }
 
