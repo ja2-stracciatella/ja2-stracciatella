@@ -269,66 +269,58 @@ static void BackupOriginalQuoteFile(UINT8 ubNPC)
 }
 
 
-static BOOLEAN EnsureQuoteFileLoaded(UINT8 ubNPC)
+static BOOLEAN EnsureQuoteFileLoaded(UINT8 const ubNPC)
 {
-	BOOLEAN			fLoadFile = FALSE;
+	if (ubNPC == ROBOT) return FALSE;
 
-	if ( ubNPC == ROBOT )
-	{
-		return( FALSE );
-	}
+	NPCQuoteInfo*& q         = gpNPCQuoteInfoArray[ubNPC];
+	bool           load_file = !q;
 
-	if (gpNPCQuoteInfoArray[ubNPC] == NULL)
+	if (FIRST_RPC <= ubNPC && ubNPC < FIRST_NPC)
 	{
-		fLoadFile = TRUE;
-	}
-
-	if ( ubNPC >= FIRST_RPC && ubNPC < FIRST_NPC )
-	{
-		if (gMercProfiles[ ubNPC ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)
-		{
-			// recruited
-			if ( gpBackupNPCQuoteInfoArray[ ubNPC ] == NULL )
+		if (GetProfile(ubNPC)->ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)
+		{ // recruited
+			if (!gpBackupNPCQuoteInfoArray[ubNPC])
 			{
 				// no backup stored of current script, so need to backup
-				fLoadFile = TRUE;
+				load_file = true;
 				// set pointer to back up script!
-				BackupOriginalQuoteFile( ubNPC );
+				BackupOriginalQuoteFile(ubNPC);
 			}
 			// else have backup, are recruited, nothing special
 		}
 		else
-		{
-			// not recruited
-			if ( gpBackupNPCQuoteInfoArray[ ubNPC ] != NULL )
+		{ // not recruited
+			if (gpBackupNPCQuoteInfoArray[ubNPC])
 			{
 				// backup stored, restore backup
-				RevertToOriginalQuoteFile( ubNPC );
+				RevertToOriginalQuoteFile(ubNPC);
 			}
 			// else are no backup, nothing special
 		}
 	}
 
-	if ( fLoadFile )
+	if (load_file)
 	{
-		gpNPCQuoteInfoArray[ubNPC] = LoadQuoteFile( ubNPC );
-		if (gpNPCQuoteInfoArray[ubNPC] == NULL)
+		q = LoadQuoteFile(ubNPC);
+		if (!q)
 		{
-		#ifdef JA2TESTVERSION
+#ifdef JA2TESTVERSION
 			if (!gfTriedToLoadQuoteInfoArray[ubNPC]) // don't report the error a second time
 			{
 
 				ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"ERROR: NPC.C - NPC needs NPC file: %d.", ubNPC );
 				gfTriedToLoadQuoteInfoArray[ubNPC] = TRUE;
 			}
-		#endif
+#endif
 			// error message at this point!
-			return( FALSE );
+			return FALSE;
 		}
 	}
 
-	return( TRUE );
+	return TRUE;
 }
+
 
 BOOLEAN ReloadQuoteFile( UINT8 ubNPC )
 {
