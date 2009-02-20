@@ -157,9 +157,10 @@ static void ConditionalInjectNPCQuoteInfoArrayIntoFile(HWFILE const f, NPCQuoteI
 	{
 		static UINT8 const zero = 0;
 		FileWrite(f, &zero, sizeof(zero));
+		return;
 	}
 
-	static UINT8 const one = 0;
+	static UINT8 const one = 1;
 	FileWrite(f, &one, sizeof(one));
 
 	for (NPCQuoteInfo const* i = q; i != q + NUM_NPC_QUOTE_RECORDS; ++i)
