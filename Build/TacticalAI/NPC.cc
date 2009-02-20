@@ -701,6 +701,14 @@ static UINT8 NPCConsiderTalking(UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT8
 }
 
 
+static UINT8 UseQuote(NPCQuoteInfo* const quotes, NPCQuoteInfo** const quote, UINT8* const quote_id, UINT8 const quote_to_use)
+{
+	*quote    = &quotes[quote_to_use];
+	*quote_id = quote_to_use;
+	return quotes[quote_to_use].ubOpinionRequired;
+}
+
+
 static void HandleNPCBeingGivenMoneyByPlayer(UINT8 ubNPC, UINT32 uiMoneyAmount, UINT8* pQuoteValue);
 
 
@@ -799,16 +807,12 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 							if (pObj->uiMoneyAmount < 1000)
 							{
 								// refuse, bet too low - record 15
-								(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[15];
-								(*pubQuoteNum)       = 15;
-								return( (*ppResultQuoteInfo)->ubOpinionRequired );
+								return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 15);
 							}
 							else if (pObj->uiMoneyAmount > 5000)
 							{
 								// refuse, bet too high - record 16
-								(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[16];
-								(*pubQuoteNum)       = 16;
-								return( (*ppResultQuoteInfo)->ubOpinionRequired );
+								return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 16);
 							}
 							else
 							{
@@ -833,8 +837,7 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 								// else use record 18
 								if ( ! ( gpNPCQuoteInfoArray[ DARREN ][ 17 ].fFlags & QUOTE_FLAG_SAID ) ) // record 17 not used
 								{
-									(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[17];
-									(*pubQuoteNum)       = 17;
+									return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 17);
 								}
 								else
 								{
@@ -848,11 +851,8 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 										if (IN_KINGPIN_HOUSE(room)) id = 17;
 									}
 
-									*ppResultQuoteInfo = &pNPCQuoteInfoArray[id];
-									*pubQuoteNum       = id;
+									return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, id);
 								}
-
-								return( (*ppResultQuoteInfo)->ubOpinionRequired );
 							}
 						}
 						break;
@@ -862,23 +862,17 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 							if (pObj->uiMoneyAmount < Item[LEATHER_JACKET_W_KEVLAR].usPrice)
 							{
 								// refuse, bet too low - record 8
-								(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[8];
-								(*pubQuoteNum)       = 8;
-								return( (*ppResultQuoteInfo)->ubOpinionRequired );
+								return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 8);
 							}
 							else if (pObj->uiMoneyAmount > Item[LEATHER_JACKET_W_KEVLAR].usPrice)
 							{
 								// refuse, bet too high - record 9
-								(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[9];
-								(*pubQuoteNum)       = 9;
-								return( (*ppResultQuoteInfo)->ubOpinionRequired );
+								return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 9);
 							}
 							else
 							{
 								// accept - record 10
-								(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[10];
-								(*pubQuoteNum)       = 10;
-								return( (*ppResultQuoteInfo)->ubOpinionRequired );
+								return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 10);
 							}
 						}
 						break;
@@ -888,9 +882,7 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 							if ( gMercProfiles[ ubMerc ].bSex == FEMALE )
 							{
 								// say quote about not catering to women!
-								(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[5];
-								(*pubQuoteNum)       = 5;
-								return( (*ppResultQuoteInfo)->ubOpinionRequired );
+								return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 5);
 							}
 							switch( pObj->uiMoneyAmount )
 							{
@@ -904,9 +896,7 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 									else
 									{
 										// see default case
-										(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[25];
-										(*pubQuoteNum)       = 25;
-										return( (*ppResultQuoteInfo)->ubOpinionRequired );
+										return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 25);
 									}
 									break;
 								case 500:
@@ -919,9 +909,7 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 									else
 									{
 										// see default case
-										(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[25];
-										(*pubQuoteNum)       = 25;
-										return( (*ppResultQuoteInfo)->ubOpinionRequired );
+										return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 25);
 									}
 									break;
 								case 300:
@@ -934,9 +922,7 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 									else
 									{
 										// see default case
-										(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[25];
-										(*pubQuoteNum)       = 25;
-										return( (*ppResultQuoteInfo)->ubOpinionRequired );
+										return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 25);
 									}
 									break;
 								case 400:
@@ -949,17 +935,13 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 									else
 									{
 										// see default case
-										(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[25];
-										(*pubQuoteNum)       = 25;
-										return( (*ppResultQuoteInfo)->ubOpinionRequired );
+										return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 25);
 									}
 									break;
 								default:
 									// play quotes 39-42 (plus 44 if quest 22 on) plus 43 if >1 PC
 									// and return money
-									(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[25];
-									(*pubQuoteNum)       = 25;
-									return( (*ppResultQuoteInfo)->ubOpinionRequired );
+									return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 25);
 							}
 
 						}
@@ -1055,10 +1037,7 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 				}
 				// This is great!
 				// Return desire value
-				(*ppResultQuoteInfo) = pNPCQuoteInfo;
-				(*pubQuoteNum)       = ubLoop;
-
-				return( pNPCQuoteInfo->ubOpinionRequired );
+				return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, ubLoop);
 			}
 		}
 	}
