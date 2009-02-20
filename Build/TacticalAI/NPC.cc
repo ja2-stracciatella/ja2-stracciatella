@@ -2330,38 +2330,22 @@ BOOLEAN GetInfoForAbandoningEPC(UINT8 const ubNPC, UINT16* const pusQuoteNum, Fa
 }
 
 
-BOOLEAN TriggerNPCWithGivenApproach( UINT8 ubTriggerNPC, UINT8 ubApproach, BOOLEAN fShowPanel )
+BOOLEAN TriggerNPCWithGivenApproach(UINT8 const ubTriggerNPC, UINT8 const approach, BOOLEAN show_panel)
 {
 	// Check if we have a quote to trigger...
-	NPCQuoteInfo	*pQuotePtr;
-	UINT8					ubLoop;
 
-	NPCQuoteInfo* const pNPCQuoteInfoArray = EnsureQuoteFileLoaded(ubTriggerNPC);
-	if (!pNPCQuoteInfoArray) return FALSE; // error
+	NPCQuoteInfo* const quotes = EnsureQuoteFileLoaded(ubTriggerNPC);
+	if (!quotes) return FALSE; // error
 
-	for ( ubLoop = 0; ubLoop < NUM_NPC_QUOTE_RECORDS; ubLoop++ )
+	for (UINT8 i = 0; i != NUM_NPC_QUOTE_RECORDS; ++i)
 	{
-		pQuotePtr = &(pNPCQuoteInfoArray[ubLoop]);
-		if ( NPCConsiderQuote( ubTriggerNPC, 0, ubApproach, ubLoop, 0, pNPCQuoteInfoArray ) )
-		{
-			if ( pQuotePtr->ubQuoteNum == IRRELEVANT )
-			{
-				fShowPanel = FALSE;
-			}
-			else
-			{
-				fShowPanel = TRUE;
-			}
+		if (!NPCConsiderQuote(ubTriggerNPC, 0, approach, i, 0, quotes)) continue;
 
-			// trigger this quote!
-			// reset approach required value so that we can trigger it
-			//pQuotePtr->ubApproachRequired = TRIGGER_NPC;
-			NPCTriggerNPC( ubTriggerNPC, ubLoop, ubApproach, fShowPanel );
-			return( TRUE );
-		}
+		show_panel = quotes[i].ubQuoteNum != IRRELEVANT;
+		NPCTriggerNPC(ubTriggerNPC, i, approach, show_panel);
+		return TRUE;
 	}
-	return( FALSE );
-
+	return FALSE;
 }
 
 
