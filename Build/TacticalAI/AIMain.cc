@@ -818,12 +818,11 @@ void FreeUpNPCFromPendingAction( 	SOLDIERTYPE *pSoldier )
 				}
 				else if (pSoldier->usAnimState == END_OPENSTRUCT)
 				{
-					TriggerNPCWithGivenApproach( pSoldier->ubProfile, APPROACH_DONE_OPEN_STRUCTURE, TRUE );
-					//TriggerNPCWithGivenApproach( pSoldier->ubProfile, APPROACH_DONE_OPEN_STRUCTURE, FALSE );
+					TriggerNPCWithGivenApproach(pSoldier->ubProfile, APPROACH_DONE_OPEN_STRUCTURE);
 				}
 				else if (pSoldier->usAnimState == PICKUP_ITEM || pSoldier->usAnimState == ADJACENT_GET_ITEM )
 				{
-					TriggerNPCWithGivenApproach( pSoldier->ubProfile, APPROACH_DONE_GET_ITEM, TRUE );
+					TriggerNPCWithGivenApproach(pSoldier->ubProfile, APPROACH_DONE_GET_ITEM);
 				}
 			}
 			ActionDone(pSoldier);

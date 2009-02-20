@@ -223,7 +223,7 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 		{
 			if ( pSoldier->ubProfile != NO_PROFILE )
 			{
-				TriggerNPCWithGivenApproach( pSoldier->ubProfile, APPROACH_DONE_OPEN_STRUCTURE, FALSE );
+				TriggerNPCWithGivenApproach(pSoldier->ubProfile, APPROACH_DONE_OPEN_STRUCTURE);
 			}
 		}
 

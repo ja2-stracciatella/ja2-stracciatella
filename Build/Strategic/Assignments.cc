@@ -7360,7 +7360,7 @@ void UnEscortEPC(SOLDIERTYPE* const s)
 	else
 	{
 		// how do we handle this if it's the right sector?
-		TriggerNPCWithGivenApproach(s->ubProfile, APPROACH_EPC_IN_WRONG_SECTOR, TRUE);
+		TriggerNPCWithGivenApproach(s->ubProfile, APPROACH_EPC_IN_WRONG_SECTOR);
 	}
 }
 

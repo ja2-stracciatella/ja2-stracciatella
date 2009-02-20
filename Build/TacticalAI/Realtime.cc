@@ -56,7 +56,7 @@ static INT8 RTDecideAction(SOLDIERTYPE* pSoldier)
 		// handle traversal
 		if ( (pSoldier->ubProfile != NO_PROFILE) && (gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags3 & PROFILE_MISC_FLAG3_HANDLE_DONE_TRAVERSAL ) )
 		{
-			TriggerNPCWithGivenApproach( pSoldier->ubProfile, APPROACH_DONE_TRAVERSAL, FALSE );
+			TriggerNPCWithGivenApproach(pSoldier->ubProfile, APPROACH_DONE_TRAVERSAL);
 			gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags3 &= (~PROFILE_MISC_FLAG3_HANDLE_DONE_TRAVERSAL);
 			pSoldier->ubQuoteActionID = 0;
 			// wait a tiny bit

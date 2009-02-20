@@ -2330,7 +2330,7 @@ BOOLEAN GetInfoForAbandoningEPC(UINT8 const ubNPC, UINT16* const pusQuoteNum, Fa
 }
 
 
-BOOLEAN TriggerNPCWithGivenApproach(UINT8 const ubTriggerNPC, UINT8 const approach, BOOLEAN show_panel)
+BOOLEAN TriggerNPCWithGivenApproach(UINT8 const ubTriggerNPC, UINT8 const approach)
 {
 	// Check if we have a quote to trigger...
 
@@ -2341,7 +2341,7 @@ BOOLEAN TriggerNPCWithGivenApproach(UINT8 const ubTriggerNPC, UINT8 const approa
 	{
 		if (!NPCConsiderQuote(ubTriggerNPC, 0, approach, i, 0, quotes)) continue;
 
-		show_panel = quotes[i].ubQuoteNum != IRRELEVANT;
+		bool const show_panel = quotes[i].ubQuoteNum != IRRELEVANT;
 		NPCTriggerNPC(ubTriggerNPC, i, approach, show_panel);
 		return TRUE;
 	}

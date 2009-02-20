@@ -1020,7 +1020,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							pSoldier->uiStatusFlags &= (~SOLDIER_NPC_DOING_PUNCH );
 
 							// Trigger approach...
-							TriggerNPCWithGivenApproach( pSoldier->ubProfile, (UINT8)pSoldier->uiPendingActionData4, FALSE );
+							TriggerNPCWithGivenApproach(pSoldier->ubProfile, (UINT8)pSoldier->uiPendingActionData4);
 						}
 
 
@@ -1339,7 +1339,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					SoldierGiveItemFromAnimation( pSoldier );
 					if (pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile >= FIRST_NPC )
 					{
-						TriggerNPCWithGivenApproach( pSoldier->ubProfile, APPROACH_DONE_GIVING_ITEM, FALSE );
+						TriggerNPCWithGivenApproach(pSoldier->ubProfile, APPROACH_DONE_GIVING_ITEM);
 					}
 					break;
 
@@ -2271,9 +2271,8 @@ no_cry:
 					break;
 
 				case 758:
-
 					// Trigger after slap...
-					TriggerNPCWithGivenApproach( QUEEN, APPROACH_DONE_SLAPPED , TRUE );
+					TriggerNPCWithGivenApproach(QUEEN, APPROACH_DONE_SLAPPED);
 					break;
 
 				case 759:
@@ -3076,7 +3075,7 @@ static void CheckForAndHandleSoldierIncompacitated(SOLDIERTYPE* pSoldier)
 		const SOLDIERTYPE* const pQueen = FindSoldierByProfileID(QUEEN);
 		if ( pQueen )
 		{
-			TriggerNPCWithGivenApproach( QUEEN, APPROACH_DONE_SLAPPED, FALSE );
+			TriggerNPCWithGivenApproach(QUEEN, APPROACH_DONE_SLAPPED);
 		}
 	}
 

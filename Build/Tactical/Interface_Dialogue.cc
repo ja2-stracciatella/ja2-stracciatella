@@ -791,7 +791,7 @@ static void TalkPanelClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				{
 					if ( NPCHasUnusedRecordWithGivenApproach( gTalkPanel.ubCharNum, APPROACH_BUYSELL ) )
 					{
-						TriggerNPCWithGivenApproach( gTalkPanel.ubCharNum, APPROACH_BUYSELL, TRUE );
+						TriggerNPCWithGivenApproach(gTalkPanel.ubCharNum, APPROACH_BUYSELL);
 					}
 					else
 					{
@@ -1238,7 +1238,7 @@ void HandleNPCItemGiven( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos )
 		if ( pNPC )
 		{
 			AddItemToPool(pNPC->sGridNo, &pNPC->inv[bInvPos], VISIBLE, 0, 0, 0);
-			TriggerNPCWithGivenApproach( ubNPC, APPROACH_DONE_GIVING_ITEM, TRUE );
+			TriggerNPCWithGivenApproach(ubNPC, APPROACH_DONE_GIVING_ITEM);
 		}
 	}
 	else
@@ -3028,7 +3028,7 @@ unlock:
 					}
 					else
 					{
-						TriggerNPCWithGivenApproach( pSoldier->ubProfile, (UINT8)pSoldier->uiPendingActionData4, FALSE );
+						TriggerNPCWithGivenApproach(pSoldier->ubProfile, (UINT8)pSoldier->uiPendingActionData4);
 					}
 				}
 				break;
@@ -3127,7 +3127,7 @@ unlock:
 					if ( cnt == 3 )
 					{
 						// If here, nobody was found...
-						TriggerNPCWithGivenApproach( pSoldier->ubProfile, (UINT8)pSoldier->uiPendingActionData4, FALSE );
+						TriggerNPCWithGivenApproach(pSoldier->ubProfile, (UINT8)pSoldier->uiPendingActionData4);
 					}
 				}
 				break;
@@ -4561,7 +4561,7 @@ static BOOLEAN NPCOpenThing(SOLDIERTYPE* pSoldier, BOOLEAN fDoor)
 	if ( pStructure->fFlags & STRUCTURE_OPEN )
 	{
 		// it's already open!
-		TriggerNPCWithGivenApproach( pSoldier->ubProfile, APPROACH_DONE_OPEN_STRUCTURE, FALSE );
+		TriggerNPCWithGivenApproach(pSoldier->ubProfile, APPROACH_DONE_OPEN_STRUCTURE);
 		return( FALSE );
 	}
 

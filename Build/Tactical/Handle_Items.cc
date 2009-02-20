@@ -2376,14 +2376,14 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 
 			if ( NPCHasUnusedRecordWithGivenApproach( pTSoldier->ubProfile, APPROACH_BUYSELL ) )
 			{
-				TriggerNPCWithGivenApproach( pTSoldier->ubProfile, APPROACH_BUYSELL, TRUE );
+				TriggerNPCWithGivenApproach(pTSoldier->ubProfile, APPROACH_BUYSELL);
 				return;
 			}
 			// now also check for buy/sell lines (Oct 13)
 			/*
 			else if ( NPCWillingToAcceptItem( pTSoldier->ubProfile, pSoldier->ubProfile, &TempObject ) )
 			{
-				TriggerNPCWithGivenApproach( pTSoldier->ubProfile, APPROACH_GIVINGITEM, TRUE );
+				TriggerNPCWithGivenApproach(pTSoldier->ubProfile, APPROACH_GIVINGITEM);
 				return;
 			}*/
 			else if ( !NPCWillingToAcceptItem( pTSoldier->ubProfile, pSoldier->ubProfile, &TempObject ) )
