@@ -672,43 +672,29 @@ static UINT8 UseQuote(NPCQuoteInfo* const quotes, NPCQuoteInfo** const quote, UI
 static UINT8 HandleNPCBeingGivenMoneyByPlayer(UINT8 ubNPC, UINT32 uiMoneyAmount);
 
 
-static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE* pObj, NPCQuoteInfo* pNPCQuoteInfoArray, NPCQuoteInfo** ppResultQuoteInfo, UINT8* pubQuoteNum)
+static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 const ubNPC, UINT8 const ubMerc, OBJECTTYPE const* const o, NPCQuoteInfo* const pNPCQuoteInfoArray, NPCQuoteInfo** const ppResultQuoteInfo, UINT8* const pubQuoteNum)
 {
 	// This function returns the opinion level required of the "most difficult" quote
 	// that the NPC is willing to say to the merc.  It can also provide the quote #.
-	NPCQuoteInfo *				pNPCQuoteInfo;
-	UINT8 ubTalkDesire, ubLoop;
-	UINT8									ubFirstQuoteRecord, ubLastQuoteRecord;
-	UINT16								usItemToConsider;
+	*ppResultQuoteInfo = 0;
+	*pubQuoteNum       = 0;
 
-	(*ppResultQuoteInfo) = NULL;
-	(*pubQuoteNum)			 = 0;
-
-	if ( CheckFact( FACT_NPC_IS_ENEMY, ubNPC ) && ubNPC != JOE )
-	{
-		// don't accept any items when we are the player's enemy
-		return( 0 );
-	}
+	// don't accept any items when we are the player's enemy
+	if (CheckFact(FACT_NPC_IS_ENEMY, ubNPC) && ubNPC != JOE) return 0;
 
 	// How much do we want to talk with this merc?
+	UINT8 const ubTalkDesire = CalcDesireToTalk(ubNPC, ubMerc, APPROACH_GIVINGITEM);
 
-	ubTalkDesire = CalcDesireToTalk( ubNPC, ubMerc, APPROACH_GIVINGITEM );
-
-	ubFirstQuoteRecord = 0;
-	ubLastQuoteRecord = NUM_NPC_QUOTE_RECORDS - 1;
-
-	usItemToConsider = pObj->usItem;
-	if ( Item[ usItemToConsider ].usItemClass == IC_GUN && usItemToConsider != ROCKET_LAUNCHER )
+	UINT16 item_to_consider = o->usItem;
+	if (Item[item_to_consider].usItemClass == IC_GUN && item_to_consider != ROCKET_LAUNCHER)
 	{
-		UINT8 ubWeaponClass;
-
-		ubWeaponClass = Weapon[ usItemToConsider ].ubWeaponClass;
-		if ( ubWeaponClass == RIFLECLASS || ubWeaponClass == MGCLASS )
+		UINT8 const weapon_class = Weapon[item_to_consider].ubWeaponClass;
+		if (weapon_class == RIFLECLASS || weapon_class == MGCLASS)
 		{
-			usItemToConsider = ANY_RIFLE; // treat all rifles the same
+			item_to_consider = ANY_RIFLE; // treat all rifles the same
 		}
 	}
-	switch( usItemToConsider )
+	switch (item_to_consider)
 	{
 		case HEAD_2:
 		case HEAD_3:
@@ -717,289 +703,256 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 ubNPC, UINT8 ubMerc, OBJECTT
 		case HEAD_6:
 		case HEAD_7:
 			// all treated the same in the NPC code
-			usItemToConsider = HEAD_2;
+			item_to_consider = HEAD_2;
 			break;
+
 		case MONEY:
 		case SILVER:
 		case GOLD:
-			if (pObj->uiMoneyAmount < LARGE_AMOUNT_MONEY)
-			{
-				SetFactTrue( FACT_SMALL_AMOUNT_OF_MONEY );
-			}
-			else
-			{
-				SetFactTrue( FACT_LARGE_AMOUNT_OF_MONEY );
-			}
-			usItemToConsider = MONEY;
+		{
+			Fact const fact =
+				o->uiMoneyAmount < LARGE_AMOUNT_MONEY ? FACT_SMALL_AMOUNT_OF_MONEY :
+				FACT_LARGE_AMOUNT_OF_MONEY;
+			SetFactTrue(fact);
+			item_to_consider = MONEY;
 			break;
+		}
+
 		case WINE:
 		case BEER:
-			usItemToConsider = ALCOHOL;
+			item_to_consider = ALCOHOL;
 			break;
+
 		default:
 			break;
 	}
 
-	if (pObj->bStatus[0] < 50)
+	if (o->bStatus[0] < 50)
 	{
-		SetFactTrue( FACT_ITEM_POOR_CONDITION );
+		SetFactTrue(FACT_ITEM_POOR_CONDITION);
 	}
 	else
 	{
-		SetFactFalse( FACT_ITEM_POOR_CONDITION );
+		SetFactFalse(FACT_ITEM_POOR_CONDITION);
 	}
 
-	for (ubLoop = ubFirstQuoteRecord; ubLoop <= ubLastQuoteRecord; ubLoop++)
+	for (UINT8 i = 0; i != NUM_NPC_QUOTE_RECORDS; ++i)
 	{
-		pNPCQuoteInfo = &(pNPCQuoteInfoArray[ ubLoop ]);
+		NPCQuoteInfo& q = pNPCQuoteInfoArray[i];
 
 		// First see if we want that item....
-		if ( pNPCQuoteInfo->sRequiredItem > 0 && ( pNPCQuoteInfo->sRequiredItem == usItemToConsider || pNPCQuoteInfo->sRequiredItem == ACCEPT_ANY_ITEM ) )
+		INT16 const req_item = q.sRequiredItem;
+		if (req_item <= 0) continue;
+		if (req_item != item_to_consider && req_item != ACCEPT_ANY_ITEM) continue;
+
+		// Now see if everyhting else is OK
+		if (!NPCConsiderQuote(ubNPC, ubMerc, APPROACH_GIVINGITEM, i, ubTalkDesire, pNPCQuoteInfoArray)) continue;
+
+		switch (ubNPC)
 		{
-			// Now see if everyhting else is OK
-			if ( NPCConsiderQuote( ubNPC, ubMerc, APPROACH_GIVINGITEM, ubLoop, ubTalkDesire, pNPCQuoteInfoArray ) )
-			{
-				switch( ubNPC )
+			case DARREN:
+				if (item_to_consider == MONEY && q.sActionData == NPC_ACTION_DARREN_GIVEN_CASH)
 				{
-					case DARREN:
-						if (usItemToConsider == MONEY && pNPCQuoteInfo->sActionData == NPC_ACTION_DARREN_GIVEN_CASH)
+					if (o->uiMoneyAmount < 1000)
+					{
+						// refuse, bet too low - record 15
+						return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 15);
+					}
+					else if (o->uiMoneyAmount > 5000)
+					{
+						// refuse, bet too high - record 16
+						return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 16);
+					}
+					else
+					{
+						// record amount of bet
+						gMercProfiles[DARREN].iBalance = o->uiMoneyAmount;
+						SetFactFalse(FACT_DARREN_EXPECTING_MONEY);
+
+						// if never fought before, use record 17
+						// if fought before, today, use record 31
+						// else use record 18
+						if (!(gpNPCQuoteInfoArray[DARREN][17].fFlags & QUOTE_FLAG_SAID)) // record 17 not used
 						{
-							if (pObj->uiMoneyAmount < 1000)
-							{
-								// refuse, bet too low - record 15
-								return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 15);
-							}
-							else if (pObj->uiMoneyAmount > 5000)
-							{
-								// refuse, bet too high - record 16
-								return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 16);
-							}
-							else
-							{
-								// accept - record 17
-								/*
-								{
-									INT8									bMoney;
-									INT8									bEmptySlot;
-
-									SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(DARREN);
-									bMoney = FindObjWithin( pSoldier, MONEY, BIGPOCK1POS, SMALLPOCK8POS );
-									bEmptySlot = FindObjWithin( pSoldier, NOTHING, BIGPOCK1POS, SMALLPOCK8POS );
-								}
-								*/
-
-								// record amount of bet
-								gMercProfiles[ DARREN ].iBalance = pObj->uiMoneyAmount;
-								SetFactFalse( FACT_DARREN_EXPECTING_MONEY );
-
-								// if never fought before, use record 17
-								// if fought before, today, use record 31
-								// else use record 18
-								if ( ! ( gpNPCQuoteInfoArray[ DARREN ][ 17 ].fFlags & QUOTE_FLAG_SAID ) ) // record 17 not used
-								{
-									return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 17);
-								}
-								else
-								{
-									// find Kingpin, if he's in his house, invoke the script to move him to the bar
-									UINT8                    id      = 31;
-									SOLDIERTYPE const* const kingpin = FindSoldierByProfileID(KINGPIN);
-									if (kingpin)
-									{
-										UINT8 const room = GetRoom(kingpin->sGridNo);
-										// first boxer, bring kingpin over
-										if (IN_KINGPIN_HOUSE(room)) id = 17;
-									}
-
-									return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, id);
-								}
-							}
+							return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 17);
 						}
-						break;
-					case ANGEL:
-						if (usItemToConsider == MONEY && pNPCQuoteInfo->sActionData == NPC_ACTION_ANGEL_GIVEN_CASH)
+						else
 						{
-							if (pObj->uiMoneyAmount < Item[LEATHER_JACKET_W_KEVLAR].usPrice)
+							// find Kingpin, if he's in his house, invoke the script to move him to the bar
+							UINT8                    id      = 31;
+							SOLDIERTYPE const* const kingpin = FindSoldierByProfileID(KINGPIN);
+							if (kingpin)
 							{
-								// refuse, bet too low - record 8
-								return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 8);
-							}
-							else if (pObj->uiMoneyAmount > Item[LEATHER_JACKET_W_KEVLAR].usPrice)
-							{
-								// refuse, bet too high - record 9
-								return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 9);
-							}
-							else
-							{
-								// accept - record 10
-								return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 10);
-							}
-						}
-						break;
-					case MADAME:
-						if ( usItemToConsider == MONEY )
-						{
-							if ( gMercProfiles[ ubMerc ].bSex == FEMALE )
-							{
-								// say quote about not catering to women!
-								return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 5);
-							}
-							switch( pObj->uiMoneyAmount )
-							{
-								case 100:
-								case 200: // Carla
-									if ( CheckFact( FACT_CARLA_AVAILABLE, 0 ) )
-									{
-										gMercProfiles[ MADAME ].bNPCData += (INT8) (pObj->uiMoneyAmount / 100);
-										TriggerNPCRecord( MADAME, 16 );
-									}
-									else
-									{
-										// see default case
-										return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 25);
-									}
-									break;
-								case 500:
-								case 1000: // Cindy
-									if ( CheckFact( FACT_CINDY_AVAILABLE, 0 ) )
-									{
-										gMercProfiles[ MADAME ].bNPCData += (INT8) (pObj->uiMoneyAmount / 500);
-										TriggerNPCRecord( MADAME, 17 );
-									}
-									else
-									{
-										// see default case
-										return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 25);
-									}
-									break;
-								case 300:
-								case 600: // Bambi
-									if ( CheckFact( FACT_BAMBI_AVAILABLE, 0 ) )
-									{
-										gMercProfiles[ MADAME ].bNPCData += (INT8) (pObj->uiMoneyAmount / 300);
-										TriggerNPCRecord( MADAME, 18 );
-									}
-									else
-									{
-										// see default case
-										return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 25);
-									}
-									break;
-								case 400:
-								case 800: // Maria?
-									if ( gubQuest[ QUEST_RESCUE_MARIA ] == QUESTINPROGRESS )
-									{
-										gMercProfiles[ MADAME ].bNPCData += (INT8) (pObj->uiMoneyAmount / 400);
-										TriggerNPCRecord( MADAME, 19 );
-									}
-									else
-									{
-										// see default case
-										return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 25);
-									}
-									break;
-								default:
-									// play quotes 39-42 (plus 44 if quest 22 on) plus 43 if >1 PC
-									// and return money
-									return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 25);
+								UINT8 const room = GetRoom(kingpin->sGridNo);
+								// first boxer, bring kingpin over
+								if (IN_KINGPIN_HOUSE(room)) id = 17;
 							}
 
+							return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, id);
 						}
-						break;
-					case JOE:
-						if ( ubNPC == JOE && usItemToConsider == MONEY && pNPCQuoteInfo->sActionData != NPC_ACTION_JOE_GIVEN_CASH )
-						{
+					}
+				}
+				break;
+
+			case ANGEL:
+				if (item_to_consider == MONEY && q.sActionData == NPC_ACTION_ANGEL_GIVEN_CASH)
+				{
+					if (o->uiMoneyAmount < Item[LEATHER_JACKET_W_KEVLAR].usPrice)
+					{ // refuse, bet too low - record 8
+						return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 8);
+					}
+					else if (o->uiMoneyAmount > Item[LEATHER_JACKET_W_KEVLAR].usPrice)
+					{ // refuse, bet too high - record 9
+						return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 9);
+					}
+					else
+					{ // accept - record 10
+						return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 10);
+					}
+				}
+				break;
+
+			case MADAME:
+				if (item_to_consider == MONEY)
+				{
+					if (GetProfile(ubMerc)->bSex == FEMALE)
+					{
+						// say quote about not catering to women!
+						return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 5);
+					}
+
+					switch (o->uiMoneyAmount)
+					{
+						case 100:
+						case 200: // Carla
+							if (!CheckFact(FACT_CARLA_AVAILABLE, 0)) goto madame_default;
+							gMercProfiles[MADAME].bNPCData += (INT8)(o->uiMoneyAmount / 100);
+							TriggerNPCRecord(MADAME, 16);
 							break;
-						}
-						// else fall through
-					case GERARD:
-						if ( ubNPC == GERARD && usItemToConsider == MONEY && pNPCQuoteInfo->sActionData != NPC_ACTION_GERARD_GIVEN_CASH )
-						{
+
+						case 500:
+						case 1000: // Cindy
+							if (!CheckFact(FACT_CINDY_AVAILABLE, 0)) goto madame_default;
+							gMercProfiles[MADAME].bNPCData += (INT8)(o->uiMoneyAmount / 500);
+							TriggerNPCRecord(MADAME, 17);
 							break;
-						}
-						// else fall through
-					case STEVE:
-					case VINCE:
-					case WALTER:
-					case FRANK:
-						if (usItemToConsider == MONEY)
+
+						case 300:
+						case 600: // Bambi
+							if (!CheckFact(FACT_BAMBI_AVAILABLE, 0)) goto madame_default;
+							gMercProfiles[MADAME].bNPCData += (INT8)(o->uiMoneyAmount / 300);
+							TriggerNPCRecord(MADAME, 18);
+							break;
+
+						case 400:
+						case 800: // Maria
+							if (gubQuest[QUEST_RESCUE_MARIA] != QUESTINPROGRESS) goto madame_default;
+							gMercProfiles[MADAME].bNPCData += (INT8)(o->uiMoneyAmount / 400);
+							TriggerNPCRecord(MADAME, 19);
+							break;
+
+						default:
+madame_default:
+							// play quotes 39-42 (plus 44 if quest 22 on) plus 43 if >1 PC
+							// and return money
+							return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 25);
+					}
+				}
+				break;
+
+			case JOE:
+				if (item_to_consider == MONEY && q.sActionData != NPC_ACTION_JOE_GIVEN_CASH)
+				{
+					break;
+				}
+				goto check_give_money;
+
+			case GERARD:
+				if (item_to_consider == MONEY && q.sActionData != NPC_ACTION_GERARD_GIVEN_CASH)
+				{
+					break;
+				}
+				goto check_give_money;
+
+			case STEVE:
+			case VINCE:
+			case WALTER:
+			case FRANK:
+check_give_money:
+				if (item_to_consider == MONEY)
+				{
+					if (ubNPC == VINCE || ubNPC == STEVE)
+					{
+						if (!CheckFact(FACT_VINCE_EXPECTING_MONEY, ubNPC) &&
+								gMercProfiles[ubNPC].iBalance < 0             &&
+								q.sActionData != NPC_ACTION_DONT_ACCEPT_ITEM)
 						{
-							if ( ubNPC == VINCE || ubNPC == STEVE )
+							MERCPROFILESTRUCT& p = *GetProfile(ubNPC);
+							// increment balance
+							p.iBalance          += (INT32)o->uiMoneyAmount;
+							p.uiTotalCostToDate += o->uiMoneyAmount;
+							if (p.iBalance > 0) p.iBalance = 0;
+							ScreenMsg(FONT_YELLOW, MSG_INTERFACE, TacticalStr[BALANCE_OWED_STR], p.zNickname, -p.iBalance);
+						}
+						else if (!CheckFact(FACT_VINCE_EXPECTING_MONEY, ubNPC) &&
+								q.sActionData != NPC_ACTION_DONT_ACCEPT_ITEM)
+						{
+							// just accept cash!
+							if (ubNPC == VINCE)
 							{
-								if (!CheckFact(FACT_VINCE_EXPECTING_MONEY, ubNPC) &&
-										gMercProfiles[ubNPC].iBalance < 0             &&
-										pNPCQuoteInfo->sActionData != NPC_ACTION_DONT_ACCEPT_ITEM)
-								{
-									// increment balance
-									gMercProfiles[ ubNPC ].iBalance += (INT32) pObj->uiMoneyAmount;
-									gMercProfiles[ ubNPC ].uiTotalCostToDate += pObj->uiMoneyAmount;
-									if ( gMercProfiles[ ubNPC ].iBalance > 0 )
-									{
-										gMercProfiles[ ubNPC ].iBalance = 0;
-									}
-									ScreenMsg( FONT_YELLOW, MSG_INTERFACE, TacticalStr[ BALANCE_OWED_STR ], gMercProfiles[ubNPC].zNickname, -gMercProfiles[ubNPC].iBalance );
-								}
-								else if (!CheckFact(FACT_VINCE_EXPECTING_MONEY, ubNPC) &&
-										pNPCQuoteInfo->sActionData != NPC_ACTION_DONT_ACCEPT_ITEM)
-								{
-									// just accept cash!
-									if ( ubNPC == VINCE )
-									{
-										(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[ 8 ];
-									}
-									else
-									{
-										(*ppResultQuoteInfo) = &pNPCQuoteInfoArray[ 7 ];
-									}
-									return( (*ppResultQuoteInfo)->ubOpinionRequired );
-								}
-								else
-								{
-									// handle the player giving NPC some money
-									UINT8 const quote_id = HandleNPCBeingGivenMoneyByPlayer(ubNPC, pObj->uiMoneyAmount);
-									return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, quote_id);
-								}
+								*ppResultQuoteInfo = &pNPCQuoteInfoArray[8];
 							}
 							else
 							{
-								// handle the player giving NPC some money
-								UINT8 const quote_id = HandleNPCBeingGivenMoneyByPlayer(ubNPC, pObj->uiMoneyAmount);
-								return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, quote_id);
+								*ppResultQuoteInfo = &pNPCQuoteInfoArray[7];
 							}
+							return (*ppResultQuoteInfo)->ubOpinionRequired;
 						}
-						break;
-					case KINGPIN:
-						if ( usItemToConsider == MONEY && gubQuest[ QUEST_KINGPIN_MONEY ] == QUESTINPROGRESS )
+						else
 						{
-							UINT8 const quote_id = HandleNPCBeingGivenMoneyByPlayer(ubNPC, pObj->uiMoneyAmount);
+							// handle the player giving NPC some money
+							UINT8 const quote_id = HandleNPCBeingGivenMoneyByPlayer(ubNPC, o->uiMoneyAmount);
 							return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, quote_id);
 						}
-						break;
-					default:
-						if ( usItemToConsider == MONEY && (ubNPC == SKYRIDER || (ubNPC >= FIRST_RPC && ubNPC < FIRST_NPC) ) )
-						{
-							if ( gMercProfiles[ ubNPC ].iBalance < 0 && pNPCQuoteInfo->sActionData != NPC_ACTION_DONT_ACCEPT_ITEM )
-							{
-								// increment balance
-								gMercProfiles[ ubNPC ].iBalance += (INT32) pObj->uiMoneyAmount;
-								gMercProfiles[ ubNPC ].uiTotalCostToDate += pObj->uiMoneyAmount;
-								if ( gMercProfiles[ ubNPC ].iBalance > 0 )
-								{
-									gMercProfiles[ ubNPC ].iBalance = 0;
-								}
-								ScreenMsg( FONT_YELLOW, MSG_INTERFACE, TacticalStr[ BALANCE_OWED_STR ], gMercProfiles[ubNPC].zNickname, -gMercProfiles[ubNPC].iBalance );
-							}
-						}
-						break;
+					}
+					else
+					{
+						// handle the player giving NPC some money
+						UINT8 const quote_id = HandleNPCBeingGivenMoneyByPlayer(ubNPC, o->uiMoneyAmount);
+						return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, quote_id);
+					}
 				}
-				// This is great!
-				// Return desire value
-				return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, ubLoop);
-			}
+				break;
+
+			case KINGPIN:
+				if (item_to_consider == MONEY && gubQuest[QUEST_KINGPIN_MONEY] == QUESTINPROGRESS)
+				{
+					UINT8 const quote_id = HandleNPCBeingGivenMoneyByPlayer(ubNPC, o->uiMoneyAmount);
+					return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, quote_id);
+				}
+				break;
+
+			default:
+				if (item_to_consider == MONEY && (ubNPC == SKYRIDER || (FIRST_RPC <= ubNPC && ubNPC < FIRST_NPC)))
+				{
+					MERCPROFILESTRUCT& p = *GetProfile(ubNPC);
+					if (p.iBalance < 0 && q.sActionData != NPC_ACTION_DONT_ACCEPT_ITEM)
+					{
+						// increment balance
+						p.iBalance          += (INT32)o->uiMoneyAmount;
+						p.uiTotalCostToDate += o->uiMoneyAmount;
+						if (p.iBalance > 0) p.iBalance = 0;
+						ScreenMsg(FONT_YELLOW, MSG_INTERFACE, TacticalStr[BALANCE_OWED_STR], p.zNickname, -p.iBalance);
+					}
+				}
+				break;
 		}
+		// This is great!
+		// Return desire value
+		return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, i);
 	}
 
-	return( 0 );
+	return 0;
 }
 
 
