@@ -428,25 +428,12 @@ try
 catch (...) { return 0; }
 
 
-static BOOLEAN EnsureCivQuoteFileLoaded(UINT8 ubIndex)
+static BOOLEAN EnsureCivQuoteFileLoaded(UINT8 const idx)
 {
-	BOOLEAN			fLoadFile = FALSE;
-
-	if (gpCivQuoteInfoArray[ubIndex] == NULL)
-	{
-		fLoadFile = TRUE;
-	}
-
-	if ( fLoadFile )
-	{
-		gpCivQuoteInfoArray[ubIndex] = LoadCivQuoteFile( ubIndex );
-		if (gpCivQuoteInfoArray[ubIndex] == NULL)
-		{
-			return( FALSE );
-		}
-	}
-
-	return( TRUE );
+	NPCQuoteInfo*& q = gpCivQuoteInfoArray[idx];
+	if (q) return TRUE;
+	q = LoadCivQuoteFile(idx);
+	return q != 0;
 }
 
 
