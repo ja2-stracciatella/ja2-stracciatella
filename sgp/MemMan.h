@@ -55,6 +55,14 @@ static inline void* MallocZ(const size_t n)
 	return p;
 }
 
+template<typename T> static inline void FreeNull(T*& r) throw()
+{
+	T* const p = r;
+	if (!p) return;
+	r = 0;
+	MemFree(p);
+}
+
 #define MALLOC(type)          (type*)MemAlloc(sizeof(type))
 #define MALLOCE(type, extra)  (type*)MemAlloc(sizeof(type) + (extra))
 #define MALLOCN(type, count)  (type*)MemAlloc(sizeof(type) * (count))
