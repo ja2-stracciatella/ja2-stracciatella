@@ -333,44 +333,34 @@ static bool ReloadQuoteFileIfLoaded(UINT8 const ubNPC)
 }
 
 
-static void RefreshNPCScriptRecord(UINT8 const ubNPC, UINT8 const ubRecord)
+static void RefreshNPCScriptRecord(UINT8 const ubNPC, UINT8 const record)
 {
-	UINT8							ubLoop;
-	NPCQuoteInfo *		pNewArray;
-
-	if ( ubNPC == NO_PROFILE )
+	if (ubNPC == NO_PROFILE)
 	{
-		// we have some work to do...
 		// loop through all PCs, and refresh their copy of this record
-		for ( ubLoop = 0; ubLoop < FIRST_RPC; ubLoop++ ) // need more finesse here
+		for (UINT8 i = 0; i != FIRST_RPC; ++i)
 		{
-			RefreshNPCScriptRecord( ubLoop, ubRecord );
+			RefreshNPCScriptRecord(i, record);
 		}
-		for ( ubLoop = FIRST_RPC; ubLoop < FIRST_NPC; ubLoop++ )
+		for (UINT8 i = FIRST_RPC; i != FIRST_NPC; ++i)
 		{
-			if ( gMercProfiles[ ubNPC ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED && gpBackupNPCQuoteInfoArray[ ubNPC ] != NULL )
-			{
-				RefreshNPCScriptRecord( ubLoop, ubRecord );
-			}
+			if (!(GetProfile(ubNPC)->ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)) continue;
+			if (!gpBackupNPCQuoteInfoArray[ubNPC]) continue;
+			RefreshNPCScriptRecord(i, record);
 		}
 		return;
 	}
 
-	if ( gpNPCQuoteInfoArray[ ubNPC ] )
-	{
-		if ( CHECK_FLAG( gpNPCQuoteInfoArray[ ubNPC ][ ubRecord ].fFlags, QUOTE_FLAG_SAID ) )
-		{
-			// already used so we don't have to refresh!
-			return;
-		}
+	NPCQuoteInfo* const quotes = gpNPCQuoteInfoArray[ubNPC];
+	if (!quotes) return;
 
-		pNewArray = LoadQuoteFile( ubNPC );
-		if ( pNewArray )
-		{
-			gpNPCQuoteInfoArray[ubNPC][ubRecord] = pNewArray[ubRecord];
-			MemFree( pNewArray );
-		}
-	}
+	NPCQuoteInfo& q = quotes[record];
+	// already used? so we don't have to refresh!
+	if (CHECK_FLAG(q.fFlags, QUOTE_FLAG_SAID)) return;
+
+	SGP::Buffer<NPCQuoteInfo> new_quotes(LoadQuoteFile(ubNPC));
+	if (!new_quotes) return;
+	q = new_quotes[record];
 }
 
 
