@@ -436,19 +436,18 @@ try
 catch (...) { return FALSE; }
 
 
-static BOOLEAN ReloadCivQuoteFileIfLoaded(UINT8 ubIndex)
+static bool ReloadCivQuoteFileIfLoaded(UINT8 const idx)
+try
 {
-	if (gpCivQuoteInfoArray[ubIndex] != NULL)
-	{
-		MemFree( gpCivQuoteInfoArray[ubIndex] );
-		gpCivQuoteInfoArray[ubIndex] = NULL;
-		return( EnsureCivQuoteFileLoaded( ubIndex ) );
-	}
-	else
-	{
-		return( TRUE );
-	}
+	NPCQuoteInfo*& q = gpCivQuoteInfoArray[idx];
+	if (!q) return true;
+	MemFree(q);
+	q = 0;
+	q = LoadCivQuoteFile(idx);
+	return true;
 }
+catch (...) { return false; }
+
 
 void ShutdownNPCQuotes( void )
 {
