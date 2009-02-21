@@ -455,28 +455,29 @@ void GoIntoOverheadMap( )
 
 static void HandleOverheadUI(void)
 {
-  InputAtom					InputEvent;
-	while (DequeueEvent(&InputEvent))
-  {
-    if( ( InputEvent.usEvent == KEY_DOWN ) )
-    {
-			switch( InputEvent.usParam )
+	InputAtom a;
+	while (DequeueEvent(&a))
+	{
+		if (a.usEvent == KEY_DOWN)
+		{
+			switch (a.usParam)
 			{
 				case SDLK_ESCAPE:
 				case SDLK_INSERT:
 					KillOverheadMap();
-				break;
+					break;
 
-				case( 'x' ):
-					if( ( InputEvent.usKeyState & ALT_DOWN ) )
+				case 'x':
+					if (a.usKeyState & ALT_DOWN)
 					{
-						HandleShortCutExitState( );
+						HandleShortCutExitState();
 					}
-				break;
+					break;
 			}
-    }
+		}
 	}
 }
+
 
 void KillOverheadMap()
 {
