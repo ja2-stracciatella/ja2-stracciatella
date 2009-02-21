@@ -158,71 +158,28 @@ static void SetMeanWhileFlag(UINT8 const meanwhile_id)
 
 
 // is this flag set?
-static BOOLEAN GetMeanWhileFlag(UINT8 ubMeanwhileID)
+static bool GetMeanWhileFlag(UINT8 const meanwhile_id)
 {
-	UINT32 uiTrue = FALSE;
-	switch( ubMeanwhileID )
+	switch (meanwhile_id)
 	{
-		case END_OF_PLAYERS_FIRST_BATTLE:
-			uiTrue = ( uiMeanWhileFlags & END_OF_PLAYERS_FIRST_BATTLE_FLAG );
-			break;
-		case DRASSEN_LIBERATED:
-			uiTrue = ( uiMeanWhileFlags & DRASSEN_LIBERATED_FLAG );
-			break;
-		case CAMBRIA_LIBERATED:
-			uiTrue = ( uiMeanWhileFlags & CAMBRIA_LIBERATED_FLAG );
-			break;
-		case ALMA_LIBERATED:
-			uiTrue = ( uiMeanWhileFlags & ALMA_LIBERATED_FLAG );
-			break;
-		case GRUMM_LIBERATED:
-			uiTrue = ( uiMeanWhileFlags & GRUMM_LIBERATED_FLAG );
-			break;
-		case CHITZENA_LIBERATED:
-			uiTrue = ( uiMeanWhileFlags & CHITZENA_LIBERATED_FLAG );
-			break;
-		case BALIME_LIBERATED:
-			uiTrue = ( uiMeanWhileFlags & BALIME_LIBERATED_FLAG );
-			break;
-		case NW_SAM:
-			uiTrue = ( uiMeanWhileFlags & NW_SAM_FLAG );
-			break;
-		case NE_SAM:
-			uiTrue = ( uiMeanWhileFlags & NE_SAM_FLAG );
-			break;
-		case CENTRAL_SAM:
-			uiTrue = ( uiMeanWhileFlags & CENTRAL_SAM_FLAG );
-			break;
-		case FLOWERS:
-			uiTrue = ( uiMeanWhileFlags & FLOWERS_FLAG );
-			break;
-		case LOST_TOWN:
-			uiTrue = ( uiMeanWhileFlags & LOST_TOWN_FLAG );
-			break;
-		case CREATURES:
-			uiTrue = ( uiMeanWhileFlags & CREATURES_FLAG );
-			break;
-		case KILL_CHOPPER:
-			uiTrue = ( uiMeanWhileFlags & KILL_CHOPPER_FLAG );
-			break;
-		case AWOL_SCIENTIST:
-			uiTrue = ( uiMeanWhileFlags & AWOL_SCIENTIST_FLAG );
-			break;
-		case OUTSKIRTS_MEDUNA:
-			uiTrue = ( uiMeanWhileFlags & OUTSKIRTS_MEDUNA_FLAG );
-			break;
-		case INTERROGATION:
-			uiTrue = ( uiMeanWhileFlags & INTERROGATION_FLAG );
-			break;
-	}
-
-	if( uiTrue )
-	{
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
+		case END_OF_PLAYERS_FIRST_BATTLE: return uiMeanWhileFlags & END_OF_PLAYERS_FIRST_BATTLE_FLAG;
+		case DRASSEN_LIBERATED:           return uiMeanWhileFlags & DRASSEN_LIBERATED_FLAG;
+		case CAMBRIA_LIBERATED:           return uiMeanWhileFlags & CAMBRIA_LIBERATED_FLAG;
+		case ALMA_LIBERATED:              return uiMeanWhileFlags & ALMA_LIBERATED_FLAG;
+		case GRUMM_LIBERATED:             return uiMeanWhileFlags & GRUMM_LIBERATED_FLAG;
+		case CHITZENA_LIBERATED:          return uiMeanWhileFlags & CHITZENA_LIBERATED_FLAG;
+		case BALIME_LIBERATED:            return uiMeanWhileFlags & BALIME_LIBERATED_FLAG;
+		case NW_SAM:                      return uiMeanWhileFlags & NW_SAM_FLAG;
+		case NE_SAM:                      return uiMeanWhileFlags & NE_SAM_FLAG;
+		case CENTRAL_SAM:                 return uiMeanWhileFlags & CENTRAL_SAM_FLAG;
+		case FLOWERS:                     return uiMeanWhileFlags & FLOWERS_FLAG;
+		case LOST_TOWN:                   return uiMeanWhileFlags & LOST_TOWN_FLAG;
+		case CREATURES:                   return uiMeanWhileFlags & CREATURES_FLAG;
+		case KILL_CHOPPER:                return uiMeanWhileFlags & KILL_CHOPPER_FLAG;
+		case AWOL_SCIENTIST:              return uiMeanWhileFlags & AWOL_SCIENTIST_FLAG;
+		case OUTSKIRTS_MEDUNA:            return uiMeanWhileFlags & OUTSKIRTS_MEDUNA_FLAG;
+		case INTERROGATION:               return uiMeanWhileFlags & INTERROGATION_FLAG;
+		default:                          return false;
 	}
 }
 
