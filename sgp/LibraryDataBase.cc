@@ -396,15 +396,17 @@ static BOOLEAN IsLibraryOpened(INT16 const sLibraryID)
 static int CompareDirEntryFileNames(const void* key, const void* member);
 
 
-BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pLastWriteTime )
+BOOLEAN GetLibraryFileTime(LibraryFile const* const f, SGP_FILETIME* const pLastWriteTime)
 try
 {
 #if 1 // XXX TODO
 	UNIMPLEMENTED
 #else
-	if (!IsLibraryOpened(sLibraryID)) return FALSE;
-	const LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[sLibraryID];
-	if (lib->pOpenFiles[uiFileNum].uiFileID == 0) return FALSE;
+	LibraryHeaderStruct const* const lib = f->lib;
+	if (!lib) return FALSE;
+
+	LibFileHeader const* const file = lib->pFileHeader;
+	if (!file) return FALSE;
 
 	UINT16	usNumEntries=0;
 	UINT32	uiNumBytesRead;
@@ -426,11 +428,6 @@ try
 		return( FALSE );
 	}
 
-
-	//If the file number is greater then the number in the lirary, return false
-	if( uiFileNum >= (UINT32)LibFileHeader.iEntries )
-		return( FALSE );
-
 	DIRENTRY* const pAllEntries = MALLOCN(DIRENTRY, LibFileHeader.iEntries);
 	memset( pAllEntries, 0, sizeof( DIRENTRY ) );
 
@@ -451,7 +448,7 @@ try
 	}
 
 	DIRENTRY* pDirEntry = bsearch(
-		lib->pOpenFiles[uiFileNum].pFileHeader->pFileName,
+		file->pFileName,
 		pAllEntries,
 		LibFileHeader.iEntries,
 		sizeof(*pAllEntries),
