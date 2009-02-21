@@ -224,19 +224,10 @@ static const FileHeaderStruct* GetFileHeaderFromLibrary(const LibraryHeaderStruc
 static INT16 GetLibraryIDFromFileName(char const* filename);
 
 
-BOOLEAN CheckIfFileExistInLibrary(const char *pFileName)
+bool CheckIfFileExistInLibrary(char const* const filename)
 {
-	INT16 sLibraryID;
-
-	//get thelibrary that file is in
-	sLibraryID = GetLibraryIDFromFileName( pFileName );
-	if( sLibraryID == -1 )
-	{
-		//not in any library
-		return( FALSE );
-	}
-
-	return GetFileHeaderFromLibrary(&gFileDataBase.pLibraries[sLibraryID], pFileName) != NULL;
+	INT16 const lib_id = GetLibraryIDFromFileName(filename);
+	return lib_id != -1 && GetFileHeaderFromLibrary(&gFileDataBase.pLibraries[lib_id], filename);
 }
 
 

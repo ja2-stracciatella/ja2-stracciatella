@@ -50,9 +50,9 @@ struct LibraryFile
 };
 
 
-void    InitializeFileDatabase(char const* LibFilenames[], UINT LibCount);
-void    ShutDownFileDatabase(void);
-BOOLEAN CheckIfFileExistInLibrary(const char *pFileName);
+void InitializeFileDatabase(char const* LibFilenames[], UINT LibCount);
+void ShutDownFileDatabase(void);
+bool CheckIfFileExistInLibrary(char const* filename);
 
 BOOLEAN OpenFileFromLibrary(const char* filename, LibraryFile*);
 /* Close an individual file that is contained in the library */
