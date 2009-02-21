@@ -2,6 +2,7 @@
 #define __WORLDDEF_H
 
 #include "JA2Types.h"
+#include "World_Tileset_Enums.h"
 
 
 #define WORLD_TILE_X		40
@@ -220,7 +221,7 @@ extern MAP_ELEMENT* gpWorldLevelData;
 extern UINT8 gubWorldMovementCosts[WORLD_MAX][MAXDIR][2];
 
 
-extern INT32 giCurrentTilesetID;
+extern TileSetID giCurrentTilesetID;
 
 extern INT16		gsRecompileAreaTop;
 extern INT16		gsRecompileAreaLeft;
@@ -249,7 +250,7 @@ void RecompileLocalMovementCosts( INT16 sCentreGridNo );
 void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius );
 
 
-void LoadMapTileset(INT32 iTilesetID);
+void LoadMapTileset(TileSetID);
 
 void CalculateWorldWireFrameTiles( BOOLEAN fForce );
 
@@ -257,7 +258,7 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce );
 LEVELNODE *GetAnimProfileFlags( UINT16 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode );
 
 #ifdef JA2EDITOR
-void ReloadTileset( UINT8 ubID );
+void ReloadTileset(TileSetID);
 #endif
 
 BOOLEAN FloorAtGridNo( UINT32 iMapIndex );

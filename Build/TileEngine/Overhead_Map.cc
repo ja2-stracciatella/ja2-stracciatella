@@ -73,7 +73,7 @@ struct SMALL_TILE_DB
 
 static SMALL_TILE_SURF gSmTileSurf[NUMBEROFTILETYPES];
 static SMALL_TILE_DB   gSmTileDB[NUMBEROFTILES];
-static UINT8           gubSmTileNum                   = 0;
+static TileSetID       gubSmTileNum                   = TILESET_INVALID;
 static BOOLEAN         gfSmTileLoaded = FALSE;
 static BOOLEAN         gfInOverheadMap = FALSE;
 static MOUSE_REGION    OverheadRegion;
@@ -90,7 +90,7 @@ static INT16           gsOveritemPoolGridNo           = NOWHERE;
 static void CopyOverheadDBShadetablesFromTileset(void);
 
 
-void InitNewOverheadDB(const UINT8 ubTilesetID)
+void InitNewOverheadDB(TileSetID const ubTilesetID)
 {
 	for (UINT32 i = 0; i < NUMBEROFTILETYPES; ++i)
 	{

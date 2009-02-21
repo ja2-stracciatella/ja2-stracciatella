@@ -471,7 +471,7 @@ static void ProcessPopupMenuSelection(void)
 	{
 		case CHANGETSET_POPUP:
 			//change the tileset here.
-			ReloadTileset( (UINT8)(gPopup.ubSelectedIndex - 1 ) );
+			ReloadTileset(static_cast<TileSetID>(gPopup.ubSelectedIndex - 1));
 			InitJA2SelectionWindow( );
 			break;
 		case CHANGECIVGROUP_POPUP:

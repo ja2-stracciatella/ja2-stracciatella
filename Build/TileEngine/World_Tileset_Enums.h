@@ -1,8 +1,10 @@
 #ifndef WORLD_TILESET_NUMS_H
 #define WORLD_TILESET_NUMS_H
 
-enum
+enum TileSetID
 {
+	TILESET_INVALID = -1,
+
 	GENERIC_1,
 	CAVES_1,
 	DESERT_1,

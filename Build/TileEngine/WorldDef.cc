@@ -77,7 +77,7 @@
 #	include "LoadScreen.h"
 #endif
 
-INT32						giCurrentTilesetID = 0;
+TileSetID giCurrentTilesetID = TILESET_INVALID;
 
 UINT32			gCurrentBackground = FIRSTTEXTURE;
 
@@ -159,7 +159,7 @@ static UINT8 gbDefaultSurfaceUsed[NUMBEROFTILETYPES];
 
 void InitializeWorld()
 {
-	giCurrentTilesetID = -1;
+	giCurrentTilesetID = TILESET_INVALID;
 
 	// DB Adds the _8 to the names if we're in 8 bit mode.
 	//ProcessTilesetNamesForBPP();
@@ -209,10 +209,10 @@ void DeinitializeWorld( )
 }
 
 
-static void AddTileSurface(char const* Filename, UINT32 ubType, UINT8 ubTilesetID);
+static void AddTileSurface(char const* Filename, UINT32 ubType, TileSetID);
 
 
-static void LoadTileSurfaces(char ppTileSurfaceFilenames[][32], UINT8 ubTilesetID)
+static void LoadTileSurfaces(char ppTileSurfaceFilenames[][32], TileSetID const ubTilesetID)
 try
 {
 	UINT32					uiLoop;
@@ -241,7 +241,7 @@ try
 		//EndFrameBufferRender( );
 
 		const char* filename       = ppTileSurfaceFilenames[uiLoop];
-		UINT8       tileset_to_add = ubTilesetID;
+		TileSetID   tileset_to_add = ubTilesetID;
 		if (filename[0] == '\0')
 		{
 			// USE FIRST TILESET VALUE!
@@ -266,7 +266,7 @@ catch (...)
 }
 
 
-static void AddTileSurface(char const* const Filename, UINT32 const ubType, UINT8 const ubTilesetID)
+static void AddTileSurface(char const* const Filename, UINT32 const ubType, TileSetID const ubTilesetID)
 {
 	// Delete the surface first!
 	if ( gTileSurfaceArray[ ubType ] != NULL )
@@ -2218,7 +2218,7 @@ try
 #ifdef JA2TESTVERSION
 	uiStartTime = GetJA2Clock();
 #endif
-	LoadMapTileset(iTilesetID);
+	LoadMapTileset(static_cast<TileSetID>(iTilesetID));
 #ifdef JA2TESTVERSION
 	uiLoadMapTilesetTime = GetJA2Clock() - uiStartTime;
 #endif
@@ -2837,7 +2837,7 @@ static void TrashMapTile(const INT16 MapTile)
 }
 
 
-void LoadMapTileset(INT32 const iTilesetID)
+void LoadMapTileset(TileSetID const iTilesetID)
 {
 	if ( iTilesetID >= NUM_TILESETS )
 	{
@@ -3218,10 +3218,10 @@ static INT8 IsHiddenTileMarkerThere(INT16 sGridNo)
 
 #ifdef JA2EDITOR
 
-void ReloadTileset( UINT8 ubID )
+void ReloadTileset(TileSetID const ubID)
 {
 	CHAR8	aFilename[ 255 ];
-	INT32 iCurrTilesetID = giCurrentTilesetID;
+	TileSetID const iCurrTilesetID = giCurrentTilesetID;
 
 	// Set gloabal
 	giCurrentTilesetID = ubID;

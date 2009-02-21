@@ -506,7 +506,7 @@ static void UpdateOldVersionMap(void)
 	if( gMapInformation.ubMapVersion < 23 )
 	{ //Allow map edgepoints to be regenerated as new system has been reenabled.
 		gMapInformation.ubMapVersion = 23;
-		if( giCurrentTilesetID == 1 ) //cave/mine tileset only
+		if (giCurrentTilesetID == CAVES_1) //cave/mine tileset only
 		{ //convert all civilians to miners which use uniforms and more masculine body types.
 			CFOR_ALL_SOLDIERINITNODES(curr)
 			{

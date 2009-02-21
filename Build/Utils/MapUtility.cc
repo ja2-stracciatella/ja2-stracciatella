@@ -117,7 +117,7 @@ ScreenID MapUtilScreenHandle()
 	}
 
 	// Render small map
-	InitNewOverheadDB( (UINT8)giCurrentTilesetID );
+	InitNewOverheadDB(giCurrentTilesetID);
 
 	gfOverheadMapDirty = TRUE;
 

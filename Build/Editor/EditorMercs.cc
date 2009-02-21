@@ -359,7 +359,7 @@ void AddMercToWorld( INT32 iMapIndex )
 			gTempBasicPlacement.bTeam = CIV_TEAM;
 			gTempBasicPlacement.bBodyType = RANDOM;
 			gTempBasicPlacement.ubCivilianGroup = gubCivGroup;
-			if( giCurrentTilesetID == 1 ) //caves
+			if (giCurrentTilesetID == CAVES_1)
 			{
 				gTempBasicPlacement.ubSoldierClass = SOLDIER_CLASS_MINER;
 			}
@@ -2994,7 +2994,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 			gTempBasicPlacement.bTeam = CIV_TEAM;
 			gTempBasicPlacement.bBodyType = RANDOM;
 			gTempBasicPlacement.ubCivilianGroup = gubCivGroup;
-			if( giCurrentTilesetID == 1 ) //caves
+			if (giCurrentTilesetID == CAVES_1)
 			{
 				gTempBasicPlacement.ubSoldierClass = SOLDIER_CLASS_MINER;
 			}

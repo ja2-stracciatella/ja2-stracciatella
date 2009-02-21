@@ -642,7 +642,7 @@ UINT8 AddSoldierInitListTeamToWorld( INT8 bTeam, UINT8 ubMaxNum )
 	//-Any placements with existing soldiers last (overrides others)
 	SortSoldierInitList();
 
-	if( giCurrentTilesetID == 1 ) //cave/mine tileset only
+	if (giCurrentTilesetID == CAVES_1) //cave/mine tileset only
 	{ //convert all civilians to miners which use uniforms and more masculine body types.
 		CFOR_ALL_SOLDIERINITNODES(curr)
 		{

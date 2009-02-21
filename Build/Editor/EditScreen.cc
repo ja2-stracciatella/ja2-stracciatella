@@ -2176,7 +2176,7 @@ static void CreateNewMap(void)
 		DestroySummaryWindow();
 
 	if( !gfWorldLoaded )
-		LoadMapTileset( 0 );
+		LoadMapTileset(GENERIC_1);
 
 	LightReset();
 	NewWorld( );
