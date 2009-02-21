@@ -82,7 +82,7 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 			// Data is stored top-bottom - reverse for SGPImage format
 			for (size_t y = uiHeight; y != 0;)
 			{
-				FileRead(f, &img_data[uiWidth * --y], uiWidth * 2);;
+				FileRead(f, &img_data[uiWidth * --y], uiWidth * 2);
 			}
 		}
 		else if (uiImagePixelSize == 24)

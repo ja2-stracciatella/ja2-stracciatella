@@ -685,7 +685,7 @@ void ResizeBoxToText(PopUpBox* const box)
 	const UINT32 r_off = max_lw + box->uiSecondColumnMinimunOffset;
 	box->uiSecondColumnCurrentOffset = r_off;
 
-	UINT32 w = box->uiLeftMargin + r_off + max_rw + box->uiRightMargin;;
+	UINT32 w = box->uiLeftMargin + r_off + max_rw + box->uiRightMargin;
 	if (w < box->uiBoxMinWidth) w = box->uiBoxMinWidth;
 	box->pos.w = w;
 

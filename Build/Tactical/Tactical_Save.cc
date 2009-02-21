@@ -846,7 +846,7 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const sMapX, INT16 const 
 		}
 		else if( def.usFlags & ROTTING_CORPSE_USE_SOUTH_ENTRY_POINT )
 		{
-			def.sGridNo = gMapInformation.sSouthGridNo;;
+			def.sGridNo = gMapInformation.sSouthGridNo;
 		}
 		else if( def.usFlags & ROTTING_CORPSE_USE_EAST_ENTRY_POINT )
 		{
