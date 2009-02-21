@@ -48,8 +48,6 @@
 #include "VSurface.h"
 
 
-extern ITEM_POOL *gpItemPool;
-
 //editor icon storage vars
 INT32	giEditMercDirectionIcons[2];
 SGPVObject* guiMercInventoryPanel;

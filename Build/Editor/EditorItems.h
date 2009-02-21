@@ -49,5 +49,7 @@ void HandleItemsPanel( UINT16 usScreenX, UINT16 usScreenY, INT8 bEvent );
 
 extern INT32 giDefaultExistChance;
 
+extern ITEM_POOL* gpItemPool;
+
 #endif
 #endif
