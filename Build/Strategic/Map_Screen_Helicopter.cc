@@ -867,7 +867,7 @@ static void HandleSkyRiderMonologueAboutEstoniRefuel(UINT32 const uiSpecialCode)
 			break;
 		}
 
-		case 1: // highlight Estoni
+		case 1: // Highlight Estoni
 			fShowEstoniRefuelHighLight = TRUE;
 			break;
 
@@ -878,42 +878,40 @@ static void HandleSkyRiderMonologueAboutEstoniRefuel(UINT32 const uiSpecialCode)
 }
 
 
-static void HandleSkyRiderMonologueAboutDrassenSAMSite(UINT32 uiSpecialCode)
+static void HandleSkyRiderMonologueAboutDrassenSAMSite(UINT32 const uiSpecialCode)
 {
-	switch( uiSpecialCode )
+	switch (uiSpecialCode)
 	{
-		case( 0 ):
-			//gpCurrentTalkingFace = uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE];
-			//gubCurrentTalkingID = SKYRIDER;
-
+		case 0:
+		{
+			UINT16    const quote   = MENTION_DRASSEN_SAM_SITE;
+			FACETYPE* const face    = uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE];
+			UINT8     const handler = DIALOGUE_EXTERNAL_NPC_UI;
+			UINT32    const flag    = DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT;
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
-			CharacterDialogue( SKYRIDER, MENTION_DRASSEN_SAM_SITE, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE );
-			CharacterDialogueWithSpecialEvent( SKYRIDER, MENTION_DRASSEN_SAM_SITE, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI , FALSE , TRUE , DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT ,SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 1 );
+			CharacterDialogue(                SKYRIDER, quote, face, handler, FALSE, FALSE );
+			CharacterDialogueWithSpecialEvent(SKYRIDER, quote, face, handler, FALSE, TRUE, flag, SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 1);
 
 			if (!SAMSitesUnderPlayerControl(SAM_2_X, SAM_2_Y))
 			{
-				CharacterDialogue( SKYRIDER, SECOND_HALF_OF_MENTION_DRASSEN_SAM_SITE, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE );
+				CharacterDialogue(SKYRIDER, SECOND_HALF_OF_MENTION_DRASSEN_SAM_SITE, face, handler, FALSE, FALSE);
 			}
-			else
-			{
-				// Ian says don't use the SAM site quote unless player has tried flying already
-				if ( CheckFact( FACT_SKYRIDER_USED_IN_MAPSCREEN, SKYRIDER ) )
-				{
-					CharacterDialogue( SKYRIDER, SAM_SITE_TAKEN, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE );
-					gfSkyriderSaidCongratsOnTakingSAM = TRUE;
-				}
+			else if (CheckFact(FACT_SKYRIDER_USED_IN_MAPSCREEN, SKYRIDER))
+			{ // Ian says don't use the SAM site quote unless player has tried flying already
+				CharacterDialogue(SKYRIDER, SAM_SITE_TAKEN, face, handler, FALSE, FALSE);
+				gfSkyriderSaidCongratsOnTakingSAM = TRUE;
 			}
 
-			CharacterDialogueWithSpecialEvent( SKYRIDER, MENTION_DRASSEN_SAM_SITE, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI , FALSE , TRUE , DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT ,SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 2 );
+			CharacterDialogueWithSpecialEvent(SKYRIDER, quote, face, handler, FALSE, TRUE, flag, SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 2);
 			break;
+		}
 
-		case( 1 ):
-			 // highlight Drassen SAM site sector
+		case 1: // Highlight Drassen SAM site sector
 			fShowDrassenSAMHighLight = TRUE;
-			SetSAMSiteAsFound( SAM_SITE_TWO );
+			SetSAMSiteAsFound(SAM_SITE_TWO);
 			break;
 
-		case( 2 ):
+		case 2:
 			fShowDrassenSAMHighLight = FALSE;
 			break;
 	}
