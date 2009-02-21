@@ -85,8 +85,7 @@ static void MSYS_TrashRegList(void);
 //
 void MSYS_Init(void)
 {
-	if(MSYS_RegList!=NULL)
-		MSYS_TrashRegList();
+	MSYS_TrashRegList();
 
 	MSYS_CurrentMX = 0;
 	MSYS_CurrentMY = 0;
