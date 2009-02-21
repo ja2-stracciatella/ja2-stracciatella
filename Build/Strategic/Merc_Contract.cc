@@ -534,9 +534,16 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 
 	if (say_quote)
 	{
+		// If a buddy is around, agree to renew, but tell us why we're doing it.
+		UINT16 const quote =
+			usBuddyQuote != QUOTE_NONE              ? usBuddyQuote :
+#if 0 // ARM: Delay quote too vague, no longer to be used
+			SoldierWantsToDelayRenewalOfContract(s) ? QUOTE_DELAY_CONTRACT_RENEWAL :
+#endif
+			usReasonQuote;
+
 		// check if we say the precedent for merc
-		UINT8 const quote_bit =
-			GetQuoteBitNumberFromQuoteID(usBuddyQuote != QUOTE_NONE ? usBuddyQuote : usReasonQuote);
+		UINT8 const quote_bit = GetQuoteBitNumberFromQuoteID(quote);
 		if (GetMercPrecedentQuoteBitStatus(p, quote_bit))
 		{
 			HandleImportantMercQuoteLocked(s, QUOTE_PRECEDENT_TO_REPEATING_ONESELF_RENEW);
@@ -546,13 +553,6 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 			SetMercPrecedentQuoteBitStatus(p, quote_bit);
 		}
 
-		// If a buddy is around, agree to renew, but tell us why we're doing it.
-		UINT16 const quote =
-			usBuddyQuote != QUOTE_NONE              ? usBuddyQuote :
-#if 0 // ARM: Delay quote too vague, no longer to be used
-			SoldierWantsToDelayRenewalOfContract(s) ? QUOTE_DELAY_CONTRACT_RENEWAL :
-#endif
-			                                          usReasonQuote;
 		HandleImportantMercQuoteLocked(s, quote);
 	}
 
