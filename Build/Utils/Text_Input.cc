@@ -43,14 +43,14 @@ static TextInputColors* pColors = NULL;
 //Internal nodes for keeping track of the text and user defined fields.
 struct TEXTINPUTNODE
 {
-	UINT8 ubID;
-	UINT16 usInputType;
-	UINT8 ubMaxChars;
-	wchar_t *szString;
-	UINT8 ubStrLen;
-	BOOLEAN fEnabled;
-	BOOLEAN fUserField;
-	MOUSE_REGION region;
+	InputType      usInputType;
+	UINT8          ubID;
+	UINT8          ubMaxChars;
+	wchar_t*       szString;
+	UINT8          ubStrLen;
+	BOOLEAN        fEnabled;
+	BOOLEAN        fUserField;
+	MOUSE_REGION   region;
 	INPUT_CALLBACK InputCallback;
 	TEXTINPUTNODE* next;
 	TEXTINPUTNODE* prev;
@@ -236,7 +236,7 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason);
  * fields.  The order of calls to this function dictate the TAB order from
  * traversing from one field to the next.  This function adds mouse regions and
  * processes them for you, as well as deleting them when you are done. */
-void AddTextInputField(INT16 const sLeft, INT16 const sTop, INT16 const sWidth, INT16 const sHeight, INT8 const bPriority, wchar_t const* const szInitText, UINT8 ubMaxChars, UINT16 const usInputType)
+void AddTextInputField(INT16 const sLeft, INT16 const sTop, INT16 const sWidth, INT16 const sHeight, INT8 const bPriority, wchar_t const* const szInitText, UINT8 ubMaxChars, InputType const usInputType)
 {
 	TEXTINPUTNODE* const n = AllocateTextInputNode(TRUE);
 	//Setup the information for the node

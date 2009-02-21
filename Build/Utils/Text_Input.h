@@ -25,7 +25,7 @@
 //In this method, the input accepts only alphas and an underscore as the first character,
 //then alphanumerics afterwards.  For further support, chances are you'll want to treat it
 //as an exclusive handler, and you'll have to process it in the filter input function.
-enum
+enum InputType
 {
 	INPUTTYPE_NUMERICSTRICT,
 	INPUTTYPE_FULL_TEXT,
@@ -68,7 +68,7 @@ void SetTextInputCursor( UINT16 usNewCursor );
 //After calling InitTextInputMode, you want to define one or more text input fields.  The order
 //of calls to this function dictate the TAB order from traversing from one field to the next.  This
 //function adds mouse regions and processes them for you, as well as deleting them when you are done.
-void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT8 bPriority, const wchar_t *szInitText, UINT8 ubMaxChars, UINT16 usInputType);
+void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT8 bPriority, const wchar_t *szInitText, UINT8 ubMaxChars, InputType);
 
 //This allows you to insert special processing functions and modes that can't be determined here.  An example
 //would be a file dialog where there would be a file list.  This file list would be accessed using the Win95
