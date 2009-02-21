@@ -240,35 +240,30 @@ static void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-UINT32 PlayVoice( void )
+UINT32 PlayVoice(void)
 {
-	// gender?
+	char const* filename;
 	if (fCharacterIsMale)
 	{
-	  switch( iCurrentVoices )
+		switch (iCurrentVoices)
 		{
-		  case( 0 ):
-	     return PlayJA2SampleFromFile("Speech/051_001.wav", MIDVOLUME, 1, MIDDLEPAN);
-			case( 1 ):
-	     return PlayJA2SampleFromFile("Speech/052_001.wav", MIDVOLUME, 1, MIDDLEPAN);
-			case( 2 ):
-				return PlayJA2SampleFromFile("Speech/053_001.wav", MIDVOLUME, 1, MIDDLEPAN);
+			case 0:  filename = "Speech/051_001.wav";
+			case 1:  filename = "Speech/052_001.wav";
+			case 2:  filename = "Speech/053_001.wav";
+			default: return 0;
 		}
 	}
 	else
 	{
-    switch( iCurrentVoices )
+		switch (iCurrentVoices)
 		{
-		  case( 0 ):
-				return PlayJA2SampleFromFile("Speech/054_001.wav", MIDVOLUME, 1, MIDDLEPAN);
-			case( 1 ):
-	    	return PlayJA2SampleFromFile("Speech/055_001.wav", MIDVOLUME, 1, MIDDLEPAN);
-			case( 2 ):
-				return PlayJA2SampleFromFile("Speech/056_001.wav", MIDVOLUME, 1, MIDDLEPAN);
+			case 0:  filename = "Speech/054_001.wav";
+			case 1:  filename = "Speech/055_001.wav";
+			case 2:  filename = "Speech/056_001.wav";
+			default: return 0;
 		}
-
 	}
-	return 0;
+	PlayJA2SampleFromFile(filename, MIDVOLUME, 1, MIDDLEPAN);
 }
 
 
