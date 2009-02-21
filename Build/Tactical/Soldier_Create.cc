@@ -117,7 +117,7 @@ void RandomizeNewSoldierStats( SOLDIERCREATE_STRUCT *pCreateStruct )
 static void CopyProfileItems(SOLDIERTYPE* pSoldier, const SOLDIERCREATE_STRUCT* pCreateStruct);
 static void InitSoldierStruct(SOLDIERTYPE* pSoldier);
 static void TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT const* pCreateStruct);
-static void TacticalCopySoldierFromProfile(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT const* pCreateStruct);
+static void TacticalCopySoldierFromProfile(SOLDIERTYPE&, SOLDIERCREATE_STRUCT const&);
 
 
 SOLDIERTYPE* TacticalCreateSoldier(SOLDIERCREATE_STRUCT const* const pCreateStruct)
@@ -174,7 +174,7 @@ try
 
 	if (profile != NO_PROFILE)
 	{
-		TacticalCopySoldierFromProfile(s, pCreateStruct);
+		TacticalCopySoldierFromProfile(*s, *pCreateStruct);
 	}
 	else
 	{
@@ -478,58 +478,51 @@ SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE* const existing
 }
 
 
-static void TacticalCopySoldierFromProfile(SOLDIERTYPE* const pSoldier, SOLDIERCREATE_STRUCT const* const pCreateStruct)
+static void TacticalCopySoldierFromProfile(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT const& c)
 {
-	UINT8						ubProfileIndex;
-	MERCPROFILESTRUCT * pProfile;
+	ProfileID         const  pid = c.ubProfile;
+	MERCPROFILESTRUCT const& p   = *GetProfile(pid);
 
-	ubProfileIndex = pCreateStruct->ubProfile;
-	pProfile = &(gMercProfiles[ubProfileIndex]);
+	SET_PALETTEREP_ID(s.HeadPal,  p.HAIR);
+	SET_PALETTEREP_ID(s.VestPal,  p.VEST);
+	SET_PALETTEREP_ID(s.SkinPal,  p.SKIN);
+	SET_PALETTEREP_ID(s.PantsPal, p.PANTS);
 
-	SET_PALETTEREP_ID ( pSoldier->HeadPal,		pProfile->HAIR );
-	SET_PALETTEREP_ID ( pSoldier->VestPal,		pProfile->VEST );
-	SET_PALETTEREP_ID ( pSoldier->SkinPal,		pProfile->SKIN );
-	SET_PALETTEREP_ID ( pSoldier->PantsPal,   pProfile->PANTS );
+	s.ubProfile       = pid;
+	s.ubScheduleID    = c.ubScheduleID;
+	s.bHasKeys        = c.fHasKeys;
 
-	// Set profile index!
-	pSoldier->ubProfile									= ubProfileIndex;
-	pSoldier->ubScheduleID							= pCreateStruct->ubScheduleID;
-	pSoldier->bHasKeys									= pCreateStruct->fHasKeys;
+	wcscpy(s.name, p.zNickname);
 
-	wcscpy( pSoldier->name, pProfile->zNickname );
+	s.bLife           = p.bLife;
+	s.bLifeMax        = p.bLifeMax;
+	s.bAgility        = p.bAgility;
+	s.bLeadership     = p.bLeadership;
+	s.bDexterity      = p.bDexterity;
+	s.bStrength       = p.bStrength;
+	s.bWisdom         = p.bWisdom;
+	s.bExpLevel       = p.bExpLevel;
+	s.bMarksmanship   = p.bMarksmanship;
+	s.bMedical        = p.bMedical;
+	s.bMechanical     = p.bMechanical;
+	s.bExplosive      = p.bExplosive;
 
-	pSoldier->bLife 										= pProfile->bLife;
-	pSoldier->bLifeMax									= pProfile->bLifeMax;
-	pSoldier->bAgility									= pProfile->bAgility;
-	pSoldier->bLeadership								= pProfile->bLeadership;
-	pSoldier->bDexterity								= pProfile->bDexterity;
-	pSoldier->bStrength									= pProfile->bStrength;
-	pSoldier->bWisdom										= pProfile->bWisdom;
-	pSoldier->bExpLevel									= pProfile->bExpLevel;
-	pSoldier->bMarksmanship							= pProfile->bMarksmanship;
-	pSoldier->bMedical									= pProfile->bMedical;
-	pSoldier->bMechanical								= pProfile->bMechanical;
-	pSoldier->bExplosive								= pProfile->bExplosive;
+	s.uiAnimSubFlags  = p.uiBodyTypeSubFlags;
+	s.ubBodyType      = p.ubBodyType;
+	s.ubCivilianGroup = p.ubCivilianGroup;
 
-	pSoldier->uiAnimSubFlags						= pProfile->uiBodyTypeSubFlags;
-	pSoldier->ubBodyType								= pProfile->ubBodyType;
-	pSoldier->ubCivilianGroup						= pProfile->ubCivilianGroup;
-	//OK set initial duty
-//  pSoldier->bAssignment=ON_DUTY;
+	s.ubSkillTrait1   = p.bSkillTrait;
+	s.ubSkillTrait2   = p.bSkillTrait2;
 
-	pSoldier->ubSkillTrait1 = pProfile->bSkillTrait;
-	pSoldier->ubSkillTrait2 = pProfile->bSkillTrait2;
+	s.bOrders         = c.bOrders;
+	s.bAttitude       = c.bAttitude;
+	s.bDirection      = c.bDirection;
+	s.bPatrolCnt      = c.bPatrolCnt;
+	memcpy(s.usPatrolGrid, c.sPatrolGrid, sizeof(s.usPatrolGrid));
 
-	pSoldier->bOrders								= pCreateStruct->bOrders;
-	pSoldier->bAttitude							= pCreateStruct->bAttitude;
-	pSoldier->bDirection						= pCreateStruct->bDirection;
-	pSoldier->bPatrolCnt						= pCreateStruct->bPatrolCnt;
-	memcpy( pSoldier->usPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
-
-	if ( HAS_SKILL_TRAIT( pSoldier, CAMOUFLAGED ) )
-	{
-		// set camouflaged to 100 automatically
-		pSoldier->bCamo = 100;
+	if (HAS_SKILL_TRAIT(&s, CAMOUFLAGED))
+	{ // Set camouflaged to 100 automatically
+		s.bCamo = 100;
 	}
 }
 
@@ -1578,7 +1571,7 @@ void UpdateSoldierWithStaticDetailedInformation( SOLDIERTYPE *s, SOLDIERCREATE_S
 	//authority.
 	if( spp->ubProfile != NO_PROFILE )
 	{
-		TacticalCopySoldierFromProfile( s, spp );
+		TacticalCopySoldierFromProfile(*s, *spp);
 		UpdateStaticDetailedPlacementWithProfileInformation( spp, spp->ubProfile );
 		SetSoldierAnimationSurface( s, s->usAnimState );
 		CreateSoldierPalettes( s );
@@ -1721,9 +1714,7 @@ void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
 
 	memset( &CreateStruct, 0, sizeof( CreateStruct ) );
 	CreateStruct.ubProfile = ubProfileID;
-
-
-	TacticalCopySoldierFromProfile( pSoldier, &CreateStruct );
+	TacticalCopySoldierFromProfile(*pSoldier, CreateStruct);
 
 	// Delete face and re-create
 	DeleteSoldierFace( pSoldier );
