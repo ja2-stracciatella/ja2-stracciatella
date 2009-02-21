@@ -116,7 +116,7 @@ void RandomizeNewSoldierStats( SOLDIERCREATE_STRUCT *pCreateStruct )
 
 static void CopyProfileItems(SOLDIERTYPE* pSoldier, const SOLDIERCREATE_STRUCT* pCreateStruct);
 static void InitSoldierStruct(SOLDIERTYPE* pSoldier);
-static void TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* pSoldier, SOLDIERCREATE_STRUCT const* pCreateStruct);
+static void TacticalCopySoldierFromCreateStruct(SOLDIERTYPE&, SOLDIERCREATE_STRUCT const&);
 static void TacticalCopySoldierFromProfile(SOLDIERTYPE&, SOLDIERCREATE_STRUCT const&);
 
 
@@ -178,7 +178,7 @@ try
 	}
 	else
 	{
-		TacticalCopySoldierFromCreateStruct(s, pCreateStruct);
+		TacticalCopySoldierFromCreateStruct(*s, *pCreateStruct);
 	}
 
 	if (team_id == OUR_TEAM || team_id == PLAYER_PLAN)
@@ -790,151 +790,114 @@ static void GeneratePaletteForSoldier(SOLDIERTYPE* pSoldier, UINT8 ubSoldierClas
 }
 
 
-static void TacticalCopySoldierFromCreateStruct(SOLDIERTYPE* const pSoldier, SOLDIERCREATE_STRUCT const* const pCreateStruct)
+static void TacticalCopySoldierFromCreateStruct(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT const& c)
 {
-	pSoldier->ubProfile							= NO_PROFILE;
+	s.ubProfile       = NO_PROFILE;
 
-	// Randomize attributes
-	pSoldier->bLife	  							= pCreateStruct->bLife;
-	pSoldier->bLifeMax  						= pCreateStruct->bLifeMax;
-	pSoldier->bAgility							= pCreateStruct->bAgility;
-	pSoldier->bDexterity						= pCreateStruct->bDexterity;
-	pSoldier->bExpLevel							= pCreateStruct->bExpLevel;
+	s.bLife           = c.bLife;
+	s.bLifeMax        = c.bLifeMax;
+	s.bAgility        = c.bAgility;
+	s.bDexterity      = c.bDexterity;
+	s.bExpLevel       = c.bExpLevel;
 
-	pSoldier->bMarksmanship					= pCreateStruct->bMarksmanship;
-	pSoldier->bMedical							= pCreateStruct->bMedical;
-	pSoldier->bMechanical						= pCreateStruct->bMechanical;
-	pSoldier->bExplosive						= pCreateStruct->bExplosive;
-	pSoldier->bLeadership						= pCreateStruct->bLeadership;
-	pSoldier->bStrength							= pCreateStruct->bStrength;
-	pSoldier->bWisdom								= pCreateStruct->bWisdom;
+	s.bMarksmanship   = c.bMarksmanship;
+	s.bMedical        = c.bMedical;
+	s.bMechanical     = c.bMechanical;
+	s.bExplosive      = c.bExplosive;
+	s.bLeadership     = c.bLeadership;
+	s.bStrength       = c.bStrength;
+	s.bWisdom         = c.bWisdom;
 
-	pSoldier->bAttitude							= pCreateStruct->bAttitude;
-	pSoldier->bOrders								= pCreateStruct->bOrders;
-	pSoldier->bMorale								= pCreateStruct->bMorale;
-	pSoldier->bAIMorale							= pCreateStruct->bAIMorale;
-	pSoldier->ubBodyType						= pCreateStruct->bBodyType;
-	pSoldier->ubCivilianGroup				= pCreateStruct->ubCivilianGroup;
+	s.bAttitude       = c.bAttitude;
+	s.bOrders         = c.bOrders;
+	s.bMorale         = c.bMorale;
+	s.bAIMorale       = c.bAIMorale;
+	s.ubBodyType      = c.bBodyType;
+	s.ubCivilianGroup = c.ubCivilianGroup;
 
-	pSoldier->ubScheduleID					= pCreateStruct->ubScheduleID;
-	pSoldier->bHasKeys							= pCreateStruct->fHasKeys;
-	pSoldier->ubSoldierClass				= pCreateStruct->ubSoldierClass;
+	s.ubScheduleID    = c.ubScheduleID;
+	s.bHasKeys        = c.fHasKeys;
+	s.ubSoldierClass  = c.ubSoldierClass;
 
-	if( pCreateStruct->fVisible )
+	if (c.fVisible)
 	{
-		strcpy(pSoldier->HeadPal,  pCreateStruct->HeadPal);
-		strcpy(pSoldier->PantsPal, pCreateStruct->PantsPal);
-		strcpy(pSoldier->VestPal,  pCreateStruct->VestPal);
-		strcpy(pSoldier->SkinPal,  pCreateStruct->SkinPal);
+		strcpy(s.HeadPal,  c.HeadPal);
+		strcpy(s.PantsPal, c.PantsPal);
+		strcpy(s.VestPal,  c.VestPal);
+		strcpy(s.SkinPal,  c.SkinPal);
 	}
 
-	//KM:  March 25, 1999
-	//Assign nightops traits to enemies/militia
-	if( pSoldier->ubSoldierClass == SOLDIER_CLASS_ELITE || pSoldier->ubSoldierClass == SOLDIER_CLASS_ELITE_MILITIA )
+	/* KM:  March 25, 1999
+	 * Assign nightops traits to enemies/militia */
+	switch (s.ubSoldierClass)
 	{
-		INT32 iChance;
-		UINT8	ubProgress;
+		INT32 chance;
+		UINT8 expert_progess;
+		INT32 expert_chance;
 
-		ubProgress = HighestPlayerProgressPercentage();
+		case SOLDIER_CLASS_ELITE:
+		case SOLDIER_CLASS_ELITE_MILITIA:
+			chance         = 40;
+			expert_progess = 40;
+			expert_chance  = 30;
+			goto maybe_nightops;
 
-		if ( ubProgress < 60 )
-		{
-			// ramp chance from 40 to 80% over the course of 60% progress
-			// 60 * 2/3 = 40, and 40+40 = 80
-			iChance = 40 + (ubProgress * 2) / 3;
-		}
-		else
-		{
-			iChance = 80;
-		}
-
-		if ( Chance( iChance ) )
-		{
-			pSoldier->ubSkillTrait1 = NIGHTOPS;
-			if ( ubProgress >= 40 && Chance( 30 ) )
-			{
-				pSoldier->ubSkillTrait2 = NIGHTOPS;
-			}
-		}
-	}
-	else if( pSoldier->ubSoldierClass == SOLDIER_CLASS_ARMY || pSoldier->ubSoldierClass == SOLDIER_CLASS_REG_MILITIA )
-	{
-		INT32 iChance;
-		UINT8	ubProgress;
-
-		ubProgress = HighestPlayerProgressPercentage();
-
-		if ( ubProgress < 60 )
-		{
+		case SOLDIER_CLASS_ARMY:
+		case SOLDIER_CLASS_REG_MILITIA:
+			chance         =  0;
+			expert_progess = 50;
+			expert_chance  = 20;
+maybe_nightops:
+			UINT8 const progress = HighestPlayerProgressPercentage();
 			// ramp chance from 0 to 40% over the course of 60% progress
-			// 60 * 2/3 = 40
-			iChance = (ubProgress * 2) / 3;
-		}
-		else
-		{
-			iChance = 40;
-		}
-
-		if ( Chance( iChance ) )
-		{
-			pSoldier->ubSkillTrait1 = NIGHTOPS;
-			if ( ubProgress >= 50 && Chance( 20 ) )
+			chance += progress < 60 ? progress * 2 / 3 : 40;
+			if (Chance(chance))
 			{
-				pSoldier->ubSkillTrait2 = NIGHTOPS;
+				s.ubSkillTrait1 = NIGHTOPS;
+				if (progress >= expert_progess && Chance(expert_chance))
+				{
+					s.ubSkillTrait2 = NIGHTOPS;
+				}
 			}
-		}
+			break;
 	}
 
-	//KM:  November 10, 1997
-	//Adding patrol points
-	//CAUTION:  CONVERTING SIGNED TO UNSIGNED though the values should never be negative.
-	pSoldier->bPatrolCnt						= pCreateStruct->bPatrolCnt;
-	memcpy( pSoldier->usPatrolGrid, pCreateStruct->sPatrolGrid, sizeof( INT16 ) * MAXPATROLGRIDS );
+	/* KM:  November 10, 1997
+	 * Adding patrol points
+	 * CAUTION:  CONVERTING SIGNED TO UNSIGNED though the values should never be
+	 * negative. */
+	s.bPatrolCnt = c.bPatrolCnt;
+	memcpy(s.usPatrolGrid, c.sPatrolGrid, sizeof(s.usPatrolGrid));
 
-	//Kris:  November 10, 1997
-	//Expanded the default names based on team.
-	const wchar_t* Name;
-	switch( pCreateStruct->bTeam )
+	/* Kris:  November 10, 1997
+	 * Expanded the default names based on team. */
+	wchar_t const* name;
+	switch (c.bTeam)
 	{
-		case ENEMY_TEAM:    Name = TacticalStr[ENEMY_TEAM_MERC_NAME];   break;
-		case MILITIA_TEAM:  Name = TacticalStr[MILITIA_TEAM_MERC_NAME]; break;
+		case ENEMY_TEAM:   name = TacticalStr[ENEMY_TEAM_MERC_NAME];   break;
+		case MILITIA_TEAM: name = TacticalStr[MILITIA_TEAM_MERC_NAME]; break;
 
 		case CIV_TEAM:
-			if( pSoldier->ubSoldierClass == SOLDIER_CLASS_MINER )
-			{
-				Name = TacticalStr[CIV_TEAM_MINER_NAME];
-			}
-			else if (pSoldier->ubBodyType == CROW)
-			{
-				Name = TacticalStr[CROW_HIT_LOCATION_STR];
-			}
-			else
-			{
-				Name = TacticalStr[CIV_TEAM_MERC_NAME];
-			}
+			name =
+				s.ubSoldierClass == SOLDIER_CLASS_MINER ? TacticalStr[CIV_TEAM_MINER_NAME]   :
+				s.ubBodyType     == CROW                ? TacticalStr[CROW_HIT_LOCATION_STR] :
+				TacticalStr[CIV_TEAM_MERC_NAME];
 			break;
 
 		case CREATURE_TEAM:
-			if( pSoldier->ubBodyType == BLOODCAT )
-			{
-				Name = gzLateLocalizedString[36];
-			}
-			else
-			{
-				Name = TacticalStr[CREATURE_TEAM_MERC_NAME];
-			}
+			name =
+				s.ubBodyType == BLOODCAT ? gzLateLocalizedString[36] :
+				TacticalStr[CREATURE_TEAM_MERC_NAME];
 			break;
 
 		default: goto no_name; // XXX fishy
 	}
-	wcslcpy(pSoldier->name, Name, lengthof(pSoldier->name));
+	wcslcpy(s.name, name, lengthof(s.name));
 no_name:
 
-	//Generate colors for soldier based on the body type.
-	GeneratePaletteForSoldier( pSoldier, pCreateStruct->ubSoldierClass );
+	GeneratePaletteForSoldier(&s, c.ubSoldierClass);
 
-	// Copy item info over
-	memcpy( pSoldier->inv, pCreateStruct->Inv, sizeof( OBJECTTYPE ) * NUM_INV_SLOTS );
+	memcpy(s.inv, c.Inv, sizeof(s.inv));
 }
 
 
