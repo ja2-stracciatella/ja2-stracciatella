@@ -408,6 +408,64 @@ BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction )
 }
 
 
+static UINT16 FindRefusalReason(SOLDIERTYPE const* const s)
+{
+	/* Check for sources of unhappiness in order of importance, which is:
+	 * 1) Hated Mercs (Highest), 2) Death Rate, 3) Morale (lowest) */
+	MERCPROFILESTRUCT const& p = *GetProfile(s->ubProfile);
+
+	// see if someone the merc hates is on the team
+	for (UINT8 i = 0; i < 2; ++i)
+	{
+		INT8 const bMercID = p.bHated[i];
+		if (bMercID < 0) continue;
+
+		if (!IsMercOnTeamAndInOmertaAlreadyAndAlive(bMercID)) continue;
+
+		if (p.bHatedCount[i] != 0)
+		{ // tolerance is > 0, only gripe if in same sector
+			SOLDIERTYPE const* const hated = FindSoldierByProfileIDOnPlayerTeam(bMercID);
+			if (!hated)                         continue;
+			if (hated->sSectorX != s->sSectorX) continue;
+			if (hated->sSectorY != s->sSectorY) continue;
+			if (hated->bSectorZ != s->bSectorZ) continue;
+		}
+
+		// our tolerance has run out!
+		// use first hated in case there are multiple
+		return
+			i == 0 ? QUOTE_HATE_MERC_1_ON_TEAM_WONT_RENEW :
+			QUOTE_HATE_MERC_2_ON_TEAM_WONT_RENEW;
+	}
+
+	// now check for learn to hate
+	INT8 const bMercID = p.bLearnToHate;
+	if (bMercID >= 0 && IsMercOnTeamAndInOmertaAlreadyAndAlive(bMercID))
+	{
+		if (p.bLearnToHateCount == 0)
+		{
+			// our tolerance has run out!
+			return QUOTE_LEARNED_TO_HATE_MERC_1_ON_TEAM_WONT_RENEW;
+		}
+		else if (p.bLearnToHateCount <= p.bLearnToHateTime / 2)
+		{
+			const SOLDIERTYPE* const pHated = FindSoldierByProfileIDOnPlayerTeam(bMercID);
+			if (pHated &&
+					pHated->sSectorX == s->sSectorX &&
+					pHated->sSectorY == s->sSectorY &&
+					pHated->bSectorZ == s->bSectorZ)
+			{
+				return QUOTE_LEARNED_TO_HATE_MERC_1_ON_TEAM_WONT_RENEW;
+			}
+		}
+	}
+
+	if (MercThinksDeathRateTooHigh(&p)) return QUOTE_DEATH_RATE_RENEWAL;
+	if (MercThinksHisMoraleIsTooLow(s)) return QUOTE_REFUSAL_RENEW_DUE_TO_MORALE;
+	return QUOTE_NONE;
+}
+
+
 BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 {
 	if (s->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) return FALSE;
@@ -423,92 +481,10 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 		return FALSE;
 	}
 
-	MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
-
-	// WE CHECK FOR SOURCES OF UNHAPPINESS IN ORDER OF IMPORTANCE, which is:
-	// 1) Hated Mercs (Highest), 2) Death Rate, 3) Morale (lowest)
-	BOOLEAN fUnhappy      = FALSE;
-	UINT16  usReasonQuote = 0;
-
-	// see if someone the merc hates is on the team
-	// loop through the list of people the merc hates
-	for (UINT8 i = 0; i < 2; ++i)
-	{
-		INT8 const bMercID = p->bHated[i];
-		if (bMercID < 0) continue;
-
-		if (!IsMercOnTeamAndInOmertaAlreadyAndAlive(bMercID)) continue;
-
-		if (p->bHatedCount[i] == 0)
-		{
-			// our tolerance has run out!
-			fUnhappy = TRUE;
-		}
-		else // else tolerance is > 0, only gripe if in same sector
-		{
-			const SOLDIERTYPE* const pHated = FindSoldierByProfileIDOnPlayerTeam(bMercID);
-			if (pHated &&
-					pHated->sSectorX == s->sSectorX &&
-					pHated->sSectorY == s->sSectorY &&
-					pHated->bSectorZ == s->bSectorZ)
-			{
-				fUnhappy = TRUE;
-			}
-		}
-
-		if (fUnhappy)
-		{
-			usReasonQuote =
-				i == 0 ? QUOTE_HATE_MERC_1_ON_TEAM_WONT_RENEW :
-								 QUOTE_HATE_MERC_2_ON_TEAM_WONT_RENEW;
-			// use first hated in case there are multiple
-			break;
-		}
-	}
-
-	if (!fUnhappy)
-	{
-		// now check for learn to hate
-		INT8 const bMercID = p->bLearnToHate;
-		if (bMercID >= 0 &&
-				IsMercOnTeamAndInOmertaAlreadyAndAlive(bMercID))
-		{
-			if (p->bLearnToHateCount == 0)
-			{
-				// our tolerance has run out!
-				fUnhappy      = TRUE;
-				usReasonQuote = QUOTE_LEARNED_TO_HATE_MERC_1_ON_TEAM_WONT_RENEW;
-			}
-			else if (p->bLearnToHateCount <= p->bLearnToHateTime / 2)
-			{
-				const SOLDIERTYPE* const pHated = FindSoldierByProfileIDOnPlayerTeam(bMercID);
-				if (pHated &&
-						pHated->sSectorX == s->sSectorX &&
-						pHated->sSectorY == s->sSectorY &&
-						pHated->bSectorZ == s->bSectorZ)
-				{
-					fUnhappy      = TRUE;
-					usReasonQuote = QUOTE_LEARNED_TO_HATE_MERC_1_ON_TEAM_WONT_RENEW;
-				}
-			}
-		}
-	}
-
-	if (!fUnhappy && MercThinksDeathRateTooHigh(p))
-	{
-		fUnhappy      = TRUE;
-		usReasonQuote = QUOTE_DEATH_RATE_RENEWAL;
-	}
-
-	if (!fUnhappy && MercThinksHisMoraleIsTooLow(s))
-	{
-		fUnhappy      = TRUE;
-		usReasonQuote = QUOTE_REFUSAL_RENEW_DUE_TO_MORALE;
-	}
-
+	UINT16 const reason_quote = FindRefusalReason(s);
 	// happy? no problem
-	if (!fUnhappy) return TRUE;
-	Assert(usReasonQuote != 0);
+	if (reason_quote == QUOTE_NONE) return TRUE;
+	MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
 
 	// find out if the merc has a buddy working for the player
 	UINT16 buddy_quote;
@@ -528,7 +504,7 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 #if 0 // ARM: Delay quote too vague, no longer to be used
 			SoldierWantsToDelayRenewalOfContract(s) ? QUOTE_DELAY_CONTRACT_RENEWAL :
 #endif
-			usReasonQuote;
+			reason_quote;
 
 		// check if we say the precedent for merc
 		UINT8 const quote_bit = GetQuoteBitNumberFromQuoteID(quote);
