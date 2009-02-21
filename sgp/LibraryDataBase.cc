@@ -221,7 +221,7 @@ BOOLEAN LoadDataFromLibrary(LibraryFile* const f, void* const pData, const UINT3
 
 
 static const FileHeaderStruct* GetFileHeaderFromLibrary(const LibraryHeaderStruct* lib, const char* filename);
-static INT16 GetLibraryIDFromFileName(const char* pFileName);
+static INT16 GetLibraryIDFromFileName(char const* filename);
 
 
 BOOLEAN CheckIfFileExistInLibrary(const char *pFileName)
@@ -240,47 +240,35 @@ BOOLEAN CheckIfFileExistInLibrary(const char *pFileName)
 }
 
 
-/* This function finds out if the file CAN be in a library.  It determines if
- * the library that the file MAY be in is open.  Eg. file is  Laptop/Test.sti,
- * if the Laptop/ library is open, it returns true */
-static INT16 GetLibraryIDFromFileName(const char* pFileName)
+/* Find out if the file CAN be in a library.  It determines if the library that
+ * the file MAY be in is open.  E.g. file is  Laptop/Test.sti, if the Laptop/
+ * library is open, it returns true */
+static INT16 GetLibraryIDFromFileName(char const* const filename)
 {
-INT16 sLoop1, sBestMatch=-1;
-
-	//loop through all the libraries to check which library the file is in
-	for( sLoop1=0; sLoop1<gFileDataBase.usNumberOfLibraries; sLoop1++)
+	// Loop through all the libraries to check which library the file is in
+	INT16 best_match = -1;
+	for (INT16 i = 0; i != gFileDataBase.usNumberOfLibraries; ++i)
 	{
-		//if the library is not loaded, dont try to access the array
-		if( IsLibraryOpened( sLoop1 ) )
-		{
-			const char* const lib_path = gFileDataBase.pLibraries[sLoop1].sLibraryPath;
-			//if the library path name is of size zero, ( the library is for the default path )
-			if (strlen(lib_path) == 0)
-			{
-				//determine if there is a directory in the file name
-				if (strchr(pFileName, '/') == NULL)
-				{
-					//There is no directory in the file name
-					return( sLoop1 );
-				}
-			}
+		if (!IsLibraryOpened(i)) continue;
 
-			//compare the library name to the file name that is passed in
-			else
-			{
-				// if the directory paths are the same, to the length of the lib's path
-				if (strncasecmp(lib_path, pFileName, strlen(lib_path)) == 0)
-				{
-					// if we've never matched, or this match's path is longer than the previous match (meaning it's more exact)
-					if (sBestMatch == -1 || strlen(lib_path) > strlen(gFileDataBase.pLibraries[sBestMatch].sLibraryPath))
-						sBestMatch = sLoop1;
-				}
-			}
+		char const* const lib_path = gFileDataBase.pLibraries[i].sLibraryPath;
+		if (lib_path[0] == '\0')
+		{ // The library is for the default path
+			if (strchr(filename, '/')) continue;
+			// There is no directory in the file name
+			return i;
+		}
+		else
+		{ // Compare the library name to the file name that is passed in
+			size_t const lib_path_len = strlen(lib_path);
+			if (strncasecmp(lib_path, filename, lib_path_len) != 0) continue;
+			// The directory paths are the same to the length of the lib's path
+			if (best_match != -1 && strlen(gFileDataBase.pLibraries[best_match].sLibraryPath) >= lib_path_len) continue;
+			// We've never matched or this match's path is longer than the previous match (meaning it's more exact)
+			best_match = i;
 		}
 	}
-
-	//no library was found, return an error
-	return(sBestMatch);
+	return best_match;
 }
 
 
