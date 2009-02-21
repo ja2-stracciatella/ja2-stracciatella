@@ -115,7 +115,7 @@ void RandomizeNewSoldierStats( SOLDIERCREATE_STRUCT *pCreateStruct )
 
 
 static void CopyProfileItems(SOLDIERTYPE* pSoldier, const SOLDIERCREATE_STRUCT* pCreateStruct);
-static void InitSoldierStruct(SOLDIERTYPE* pSoldier);
+static void InitSoldierStruct(SOLDIERTYPE&);
 static void TacticalCopySoldierFromCreateStruct(SOLDIERTYPE&, SOLDIERCREATE_STRUCT const&);
 static void TacticalCopySoldierFromProfile(SOLDIERTYPE&, SOLDIERCREATE_STRUCT const&);
 
@@ -168,7 +168,7 @@ try
 	}
 
 	// Some values initialized here but could be changed before going to the common one
-	InitSoldierStruct(s);
+	InitSoldierStruct(*s);
 	s->ubID                   = id;
 	s->uiUniqueSoldierIdValue = guiCurrentUniqueSoldierId++;
 
@@ -901,58 +901,49 @@ no_name:
 }
 
 
-static void InitSoldierStruct(SOLDIERTYPE* pSoldier)
+static void InitSoldierStruct(SOLDIERTYPE& s)
 {
-	// Memset values
-	memset( pSoldier, 0, sizeof( SOLDIERTYPE ) );
-
-	// Set default values
-	pSoldier->bVisible							= -1;
-	pSoldier->face = NULL;
-
-	// Set morale default
-	pSoldier->bMorale								= DEFAULT_MORALE;
-
-	pSoldier->attacker                  = NULL;
-	pSoldier->previous_attacker         = NULL;
-	pSoldier->next_to_previous_attacker = NULL;
-
-	pSoldier->light = NULL;
-
-	// Set update time to new speed
-	pSoldier->ubDesiredHeight				= NO_DESIRED_HEIGHT;
-	pSoldier->bViewRange						= NORMAL_VIEW_RANGE;
-	pSoldier->bInSector							= FALSE;
-	pSoldier->sGridNo								= NO_MAP_POS;
-	pSoldier->muzzle_flash          = NULL;
-	pSoldier->usPendingAnimation		= NO_PENDING_ANIMATION;
-	pSoldier->ubPendingStanceChange	= NO_PENDING_STANCE;
-	pSoldier->ubPendingDirection		= NO_PENDING_DIRECTION;
-	pSoldier->ubPendingAction				= NO_PENDING_ACTION;
-	pSoldier->bLastRenderVisibleValue	= -1;
-	pSoldier->bBreath								= 99;
-	pSoldier->bBreathMax						= 100;
-	pSoldier->bActive									= TRUE;
-	pSoldier->fShowLocator						= FALSE;
-	pSoldier->sLastTarget							= NOWHERE;
-	pSoldier->sAbsoluteFinalDestination = NOWHERE;
-	pSoldier->sZLevelOverride					= -1;
-	pSoldier->service_partner 				= NULL;
-	pSoldier->ubAttackingHand					= HANDPOS;
-	pSoldier->usAnimState							= STANDING;
-	pSoldier->bInterruptDuelPts				= NO_INTERRUPT;
-	pSoldier->bMoved									= FALSE;
-	pSoldier->robot_remote_holder  		= NULL;
-	pSoldier->sNoiseGridno						= NOWHERE;
-	pSoldier->ubPrevSectorID					= 255;
-	pSoldier->bNextPatrolPnt					= 1;
-	pSoldier->bCurrentCivQuote				= -1;
-	pSoldier->bCurrentCivQuoteDelta		= 0;
-	pSoldier->uiBattleSoundID					= NO_SAMPLE;
-	pSoldier->xrayed_by 							= NULL;
-	pSoldier->uiXRayActivatedTime			= 0;
-	pSoldier->bBulletsLeft						= 0;
-	pSoldier->bVehicleUnderRepairID		= -1;
+	memset(&s, 0, sizeof(s));
+	s.bVisible                  = -1;
+	s.face                      = 0;
+	s.bMorale                   = DEFAULT_MORALE;
+	s.attacker                  = 0;
+	s.previous_attacker         = 0;
+	s.next_to_previous_attacker = 0;
+	s.light                     = 0;
+	s.ubDesiredHeight           = NO_DESIRED_HEIGHT;
+	s.bViewRange                = NORMAL_VIEW_RANGE;
+	s.bInSector                 = FALSE;
+	s.sGridNo                   = NO_MAP_POS;
+	s.muzzle_flash              = 0;
+	s.usPendingAnimation        = NO_PENDING_ANIMATION;
+	s.ubPendingStanceChange     = NO_PENDING_STANCE;
+	s.ubPendingDirection        = NO_PENDING_DIRECTION;
+	s.ubPendingAction           = NO_PENDING_ACTION;
+	s.bLastRenderVisibleValue   = -1;
+	s.bBreath                   = 99;
+	s.bBreathMax                = 100;
+	s.bActive                   = TRUE;
+	s.fShowLocator              = FALSE;
+	s.sLastTarget               = NOWHERE;
+	s.sAbsoluteFinalDestination = NOWHERE;
+	s.sZLevelOverride           = -1;
+	s.service_partner           = 0;
+	s.ubAttackingHand           = HANDPOS;
+	s.usAnimState               = STANDING;
+	s.bInterruptDuelPts         = NO_INTERRUPT;
+	s.bMoved                    = FALSE;
+	s.robot_remote_holder       = 0;
+	s.sNoiseGridno              = NOWHERE;
+	s.ubPrevSectorID            = 255;
+	s.bNextPatrolPnt            = 1;
+	s.bCurrentCivQuote          = -1;
+	s.bCurrentCivQuoteDelta     = 0;
+	s.uiBattleSoundID           = NO_SAMPLE;
+	s.xrayed_by                 = 0;
+	s.uiXRayActivatedTime       = 0;
+	s.bBulletsLeft              = 0;
+	s.bVehicleUnderRepairID     = -1;
 }
 
 
