@@ -1600,7 +1600,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 
 static void SaveMercProfiles(HWFILE const f)
 {
-	//Lopp through all the profiles to save
+	// Loop through all the profiles to save
 	void (&writer)(HWFILE, BYTE const*, UINT32) = guiSavedGameVersion < 87 ?
 		JA2EncryptedFileWrite : NewJA2EncryptedFileWrite;
 	for (MERCPROFILESTRUCT* i = gMercProfiles; i != endof(gMercProfiles); ++i)
@@ -1618,20 +1618,18 @@ static void SaveMercProfiles(HWFILE const f)
 
 static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version)
 {
-	UINT16	cnt;
-
-	//Lopp through all the profiles to Load
+	// Loop through all the profiles to load
 	void (&reader)(HWFILE, BYTE*, UINT32) = savegame_version < 87 ?
 		JA2EncryptedFileRead : NewJA2EncryptedFileRead;
-	for( cnt=0; cnt< NUM_PROFILES; cnt++)
+	for (MERCPROFILESTRUCT* i = gMercProfiles; i != endof(gMercProfiles); ++i)
 	{
 #ifdef _WIN32 // XXX HACK000A
-		BYTE Data[716];
+		BYTE data[716];
 #else
-		BYTE Data[796];
+		BYTE data[796];
 #endif
-		reader(f, Data, sizeof(Data));
-		ExtractMercProfile(Data, &gMercProfiles[cnt]);
+		reader(f, data, sizeof(data));
+		ExtractMercProfile(data, i);
 	}
 }
 
