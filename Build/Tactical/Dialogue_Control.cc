@@ -117,8 +117,23 @@ const ProfileID g_external_face_profile_ids[] =
 };
 CASSERT(lengthof(g_external_face_profile_ids) == NUMBER_OF_EXTERNAL_NPC_FACES)
 
-UINT8	gubMercValidPrecedentQuoteID[ NUMBER_VALID_MERC_PRECEDENT_QUOTES ] =
-					{ 80, 81, 82, 83, 86, 87, 88, 95, 97, 99, 100, 101, 102 };
+
+static UINT8 const gubMercValidPrecedentQuoteID[] =
+{
+	QUOTE_REPUTATION_REFUSAL,
+	QUOTE_DEATH_RATE_REFUSAL,
+	QUOTE_LAME_REFUSAL,
+	QUOTE_WONT_RENEW_CONTRACT_LAME_REFUSAL,
+	QUOTE_HATE_MERC_1_ON_TEAM,
+	QUOTE_HATE_MERC_2_ON_TEAM,
+	QUOTE_LEARNED_TO_HATE_MERC_ON_TEAM,
+	QUOTE_REFUSAL_RENEW_DUE_TO_MORALE,
+	QUOTE_REFUSAL_TO_JOIN_LACK_OF_FUNDS,
+	QUOTE_DEATH_RATE_RENEWAL,
+	QUOTE_HATE_MERC_1_ON_TEAM_WONT_RENEW,
+	QUOTE_HATE_MERC_2_ON_TEAM_WONT_RENEW,
+	QUOTE_LEARNED_TO_HATE_MERC_1_ON_TEAM_WONT_RENEW
+};
 
 
 UINT16	gusStopTimeQuoteList[ ] =
@@ -2242,21 +2257,15 @@ void SetMercPrecedentQuoteBitStatus(MERCPROFILESTRUCT* const p, UINT8 const ubBi
 }
 
 
-UINT8	GetQuoteBitNumberFromQuoteID( UINT32 uiQuoteID )
+UINT8	GetQuoteBitNumberFromQuoteID(UINT32 const uiQuoteID)
 {
-	UINT8 ubCnt;
-
-	//loop through all the quotes
-	for( ubCnt=0; ubCnt<NUMBER_VALID_MERC_PRECEDENT_QUOTES;ubCnt++)
+	for (size_t i = 0; i != lengthof(gubMercValidPrecedentQuoteID); ++i)
 	{
-		if( gubMercValidPrecedentQuoteID[ ubCnt ] == uiQuoteID )
-		{
-			return( ubCnt );
-		}
+		if (gubMercValidPrecedentQuoteID[i] == uiQuoteID) return i;
 	}
-
-	return( 0 );
+	return 0;
 }
+
 
 void HandleShutDownOfMapScreenWhileExternfaceIsTalking( void )
 {

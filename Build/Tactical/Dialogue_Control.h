@@ -303,10 +303,6 @@ extern INT32 giNPCReferenceCount;
 extern INT32 giNPCSpecialReferenceCount;
 
 
-#define	NUMBER_VALID_MERC_PRECEDENT_QUOTES	13
-
-extern	UINT8	gubMercValidPrecedentQuoteID[ NUMBER_VALID_MERC_PRECEDENT_QUOTES ];
-
 BOOLEAN GetMercPrecedentQuoteBitStatus(const MERCPROFILESTRUCT*, UINT8 ubQuoteBit);
 void    SetMercPrecedentQuoteBitStatus(MERCPROFILESTRUCT*, UINT8 ubBitToSet);
 UINT8	GetQuoteBitNumberFromQuoteID( UINT32 uiQuoteID );
