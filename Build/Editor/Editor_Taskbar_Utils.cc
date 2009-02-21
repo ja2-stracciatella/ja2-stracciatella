@@ -619,33 +619,33 @@ static void RenderMapEntryPointsAndLights(void)
 }
 
 
-static void BuildTriggerName(OBJECTTYPE const * const pItem, wchar_t* const szItemName, size_t const length)
+static wchar_t const* BuildTriggerName(OBJECTTYPE const& o, wchar_t* const buf, size_t const length)
 {
-	if( pItem->usItem == SWITCH )
+	if (o.usItem == SWITCH)
 	{
-		switch (pItem->bFrequency)
+		switch (o.bFrequency)
 		{
-			case PANIC_FREQUENCY:   wcslcpy(szItemName, L"Panic Trigger1", length); break;
-			case PANIC_FREQUENCY_2: wcslcpy(szItemName, L"Panic Trigger2", length); break;
-			case PANIC_FREQUENCY_3: wcslcpy(szItemName, L"Panic Trigger3", length); break;
-			default: swprintf(szItemName, length, L"Trigger%d", pItem->bFrequency - 50); break;
+			case PANIC_FREQUENCY:   return L"Panic Trigger1";
+			case PANIC_FREQUENCY_2: return L"Panic Trigger2";
+			case PANIC_FREQUENCY_3: return L"Panic Trigger3";
+			default: swprintf(buf, length, L"Trigger%d", o.bFrequency - 50); break;
 		}
 	}
 	else
-	{ //action item
-		if( pItem->bDetonatorType == BOMB_PRESSURE )
-			wcslcpy(szItemName, L"Pressure Action", length);
-		else
+	{ // Action item
+		if (o.bDetonatorType == BOMB_PRESSURE)
 		{
-			switch (pItem->bFrequency)
-			{
-				case PANIC_FREQUENCY:   wcslcpy(szItemName, L"Panic Action1", length); break;
-				case PANIC_FREQUENCY_2: wcslcpy(szItemName, L"Panic Action2", length); break;
-				case PANIC_FREQUENCY_3: wcslcpy(szItemName, L"Panic Action3", length); break;
-				default: swprintf(szItemName, length, L"Action%d", pItem->bFrequency - 50); break;
-			}
+			return L"Pressure Action";
+		}
+		else switch (o.bFrequency)
+		{
+			case PANIC_FREQUENCY:   return L"Panic Action1";
+			case PANIC_FREQUENCY_2: return L"Panic Action2";
+			case PANIC_FREQUENCY_3: return L"Panic Action3";
+			default: swprintf(buf, length, L"Action%d", o.bFrequency - 50); break;
 		}
 	}
+	return buf;
 }
 
 
@@ -716,8 +716,7 @@ static void RenderSelectedItemBlownUp(void)
 	wchar_t        buf[SIZE_ITEM_NAME];
 	if (o.usItem == ACTION_ITEM || o.usItem == SWITCH)
 	{
-		BuildTriggerName(&o, buf, lengthof(buf));
-		item_name = buf;
+		item_name = BuildTriggerName(o, buf, lengthof(buf));
 	}
 	else if (item.usItemClass == IC_KEY)
 	{
