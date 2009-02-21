@@ -109,16 +109,16 @@ static UINT32 GetWidth(HVOBJECT const hSrcVObject, GlyphIdx const ssIndex)
 
 
 /* Returns the length of a string in pixels, depending on the font given. */
-INT16 StringPixLength(const wchar_t *string, Font const font)
+INT16 StringPixLength(wchar_t const* const string, Font const font)
 {
-	if (string == NULL) return 0;
+	if (!string) return 0;
 
-	UINT32 Cur = 0;
-	for (const wchar_t* curletter = string; *curletter != L'\0'; curletter++)
+	UINT32 w = 0;
+	for (wchar_t const* c = string; *c != L'\0'; ++c)
 	{
-		Cur += GetCharWidth(font, *curletter);
+		w += GetCharWidth(font, *c);
 	}
-	return Cur;
+	return w;
 }
 
 
