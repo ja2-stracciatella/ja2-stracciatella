@@ -446,13 +446,7 @@ try
 		SetSoldierHeight(s, 58.0);
 	}
 
-	/* If we are loading, DON'T add men to team, because the number is restored in
-	 * gTacticalStatus */
-	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
-	{
-		AddManToTeam(team_id);
-	}
-
+	AddManToTeam(team_id);
 	return s;
 }
 catch (...) { return 0; }
