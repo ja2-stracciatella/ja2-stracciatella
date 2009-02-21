@@ -1254,13 +1254,6 @@ BOOLEAN IsMercOnTeamAndAlive(UINT8 ubMercID)
 }
 
 
-BOOLEAN IsMercOnTeamAndInOmertaAlready(UINT8 ubMercID)
-{
-	const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
-	return s != NULL && s->bAssignment != IN_TRANSIT;
-}
-
-
 BOOLEAN IsMercOnTeamAndInOmertaAlreadyAndAlive(UINT8 ubMercID)
 {
 	const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubMercID);

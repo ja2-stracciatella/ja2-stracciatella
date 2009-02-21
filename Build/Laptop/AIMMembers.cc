@@ -1840,8 +1840,7 @@ static BOOLEAN CanMercBeHired(void)
 		INT8 const bMercID = p->bHated[i];
 		if (bMercID < 0) continue;
 
-		if (IsMercDead(bMercID))                      continue;
-		if (!IsMercOnTeamAndInOmertaAlready(bMercID)) continue;
+		if (!IsMercOnTeamAndInOmertaAlreadyAndAlive(bMercID)) continue;
 
 		//if the merc hates someone on the team, see if a buddy is on the team
 		//if a buddy is on the team, the merc will join
