@@ -849,26 +849,29 @@ void HandleSkyRiderMonologueEvent( UINT32 uiEventCode, UINT32 uiSpecialCode )
 }
 
 
-static void HandleSkyRiderMonologueAboutEstoniRefuel(UINT32 uiSpecialCode)
+static void HandleSkyRiderMonologueAboutEstoniRefuel(UINT32 const uiSpecialCode)
 {
-	// once estoni is free tell player about refueling
-
-	switch( uiSpecialCode )
+	// Once Estoni is free tell player about refueling
+	switch (uiSpecialCode)
 	{
-		case( 0 ):
-			CharacterDialogueWithSpecialEvent( SKYRIDER, SPIEL_ABOUT_ESTONI_AIRSPACE, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ] , DIALOGUE_EXTERNAL_NPC_UI , FALSE , FALSE , DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT ,SKYRIDER_MONOLOGUE_EVENT_ESTONI_REFUEL, 1 );
+		case 0:
+		{
+			UINT16    const quote   = SPIEL_ABOUT_ESTONI_AIRSPACE;
+			FACETYPE* const face    = uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE];
+			UINT8     const handler = DIALOGUE_EXTERNAL_NPC_UI;
+			UINT32    const flag    = DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT;
+			CharacterDialogueWithSpecialEvent(SKYRIDER, quote, face, handler, FALSE, FALSE, flag, SKYRIDER_MONOLOGUE_EVENT_ESTONI_REFUEL, 1);
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
-      CharacterDialogue( SKYRIDER, SPIEL_ABOUT_ESTONI_AIRSPACE, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE );
-
-			CharacterDialogueWithSpecialEvent( SKYRIDER, SPIEL_ABOUT_ESTONI_AIRSPACE, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ] , DIALOGUE_EXTERNAL_NPC_UI , FALSE , FALSE , DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT ,SKYRIDER_MONOLOGUE_EVENT_ESTONI_REFUEL, 2 );
+			CharacterDialogue(                SKYRIDER, quote, face, handler, FALSE, FALSE);
+			CharacterDialogueWithSpecialEvent(SKYRIDER, quote, face, handler, FALSE, FALSE, flag, SKYRIDER_MONOLOGUE_EVENT_ESTONI_REFUEL, 2);
 			break;
+		}
 
-		case( 1 ):
-			 // highlight Estoni
+		case 1: // highlight Estoni
 			fShowEstoniRefuelHighLight = TRUE;
 			break;
 
-		case( 2 ):
+		case 2:
 			fShowEstoniRefuelHighLight = FALSE;
 			break;
 	}
