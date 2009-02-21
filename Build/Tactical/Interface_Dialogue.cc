@@ -933,20 +933,13 @@ BOOLEAN TalkingMenuDialogue( UINT16 usQuoteNum )
 	return( TRUE );
 }
 
-BOOLEAN ProfileCurrentlyTalkingInDialoguePanel( UINT8 ubProfile )
-{
-	if ( gfInTalkPanel )
-	{
-		if ( gpDestSoldier != NULL )
-		{
-			if ( gpDestSoldier->ubProfile == ubProfile )
-			{
-				return( TRUE );
-			}
-		}
-	}
 
-	return( FALSE );
+bool ProfileCurrentlyTalkingInDialoguePanel(UINT8 const ubProfile)
+{
+	return
+		gfInTalkPanel &&
+		gpDestSoldier &&
+		gpDestSoldier->ubProfile == ubProfile;
 }
 
 

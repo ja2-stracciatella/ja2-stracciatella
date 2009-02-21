@@ -82,7 +82,7 @@ void HandleNPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShow
 void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubRecordNum );
 void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum );
 
-BOOLEAN ProfileCurrentlyTalkingInDialoguePanel( UINT8 ubProfile );
+bool ProfileCurrentlyTalkingInDialoguePanel(UINT8 ubProfile);
 
 void InternalInitTalkingMenu(UINT8 ubCharacterNum, INT16 sX, INT16 sY);
 
