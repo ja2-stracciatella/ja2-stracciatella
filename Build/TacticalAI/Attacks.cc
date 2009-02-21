@@ -1702,29 +1702,6 @@ static INT8 TryToReload(SOLDIERTYPE* pSoldier)
 	return( NOSHOOT_NOAMMO );
 }
 
-/*
-INT8 TryToReloadLauncher( SOLDIERTYPE * pSoldier )
-{
-	UINT16	usWeapon;
-	INT8		bSlot;
-
-	usWeapon = pSoldier->inv[HANDPOS].usItem;
-
-	if ( usWeapon == TANK_CANNON )
-	{
-		bSlot = FindObj( pSoldier, TANK_SHELL );
-	}
-	else
-	{
-		bSlot = FindLaunchable( pSoldier, usWeapon );
-	}
-
-	if (bSlot != NO_SLOT)
-	{
-	}
-	return( NOSHOOT_NOAMMO );
-}
-*/
 
 INT8 CanNPCAttack(SOLDIERTYPE *pSoldier)
 {
