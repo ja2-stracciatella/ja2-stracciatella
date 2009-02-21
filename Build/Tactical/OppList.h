@@ -104,7 +104,7 @@ void DebugSoldierPage4(void);
 
 UINT8 MovementNoise( SOLDIERTYPE *pSoldier );
 UINT8 DoorOpeningNoise( SOLDIERTYPE *pSoldier );
-void MakeNoise(SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubVolume, UINT8 ubNoiseType);
+void MakeNoise(SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType);
 void OurNoise(SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType);
 
 void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType);

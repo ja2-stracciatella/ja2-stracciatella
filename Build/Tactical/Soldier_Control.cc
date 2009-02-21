@@ -2990,7 +2990,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	// DO APPROPRIATE HITWHILE DOWN ANIMATION
 	if ( !( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_HITSTOP ) || pSoldier->usAnimState != JFK_HITDEATH_STOP )
 	{
-		MakeNoise(pSoldier, pSoldier->sGridNo, pSoldier->bLevel, pSoldier->bOverTerrainType, ubVolume, NOISE_SCREAM);
+		MakeNoise(pSoldier, pSoldier->sGridNo, pSoldier->bLevel, ubVolume, NOISE_SCREAM);
 	}
 
 	// IAN ADDED THIS SAT JUNE 14th : HAVE TO SHOW VICTIM!

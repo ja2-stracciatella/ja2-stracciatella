@@ -2037,7 +2037,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 		const UINT8 ubVolume = MovementNoise(pSoldier);
 		if (ubVolume > 0)
 		{
-			MakeNoise(pSoldier, pSoldier->sGridNo, pSoldier->bLevel, pSoldier->bOverTerrainType, ubVolume, NOISE_MOVEMENT);
+			MakeNoise(pSoldier, pSoldier->sGridNo, pSoldier->bLevel, ubVolume, NOISE_MOVEMENT);
 			if (pSoldier->uiStatusFlags & SOLDIER_PC && pSoldier->bStealthMode)
 			{
 				PlayStealthySoldierFootstepSound(pSoldier);

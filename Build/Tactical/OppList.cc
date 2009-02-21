@@ -3730,7 +3730,7 @@ UINT8 DoorOpeningNoise( SOLDIERTYPE *pSoldier )
 }
 
 
-void MakeNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubTerrType, const UINT8 ubVolume, const UINT8 ubNoiseType)
+void MakeNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubVolume, const UINT8 ubNoiseType)
 {
 	if ( gTacticalStatus.ubAttackBusyCount )
 	{

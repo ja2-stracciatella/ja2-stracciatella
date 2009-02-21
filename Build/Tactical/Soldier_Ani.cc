@@ -1611,7 +1611,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 							  InitOpplistForDoorOpening();
 
-								MakeNoise(pSoldier, pSoldier->sGridNo, pSoldier->bLevel, gpWorldLevelData[pSoldier->sGridNo].ubTerrainID, pSoldier->ubDoorOpeningNoise, NOISE_CREAKING);
+								MakeNoise(pSoldier, pSoldier->sGridNo, pSoldier->bLevel, pSoldier->ubDoorOpeningNoise, NOISE_CREAKING);
 						  //	gfDelayResolvingBestSighting = FALSE;
 
 								gInterruptProvoker = pSoldier;
