@@ -131,56 +131,43 @@ UINT32 uiMeanWhileFlags = 0;
 #define BALIME_LIBERATED_FLAG									0x00010000
 
 
-// set flag for this event
-static void SetMeanWhileFlag(UINT8 const meanwhile_id)
+static UINT32 MeanwhileIDToFlag(UINT8 const meanwhile_id)
 {
 	switch (meanwhile_id)
 	{
-		case END_OF_PLAYERS_FIRST_BATTLE: uiMeanWhileFlags |= END_OF_PLAYERS_FIRST_BATTLE_FLAG; break;
-		case DRASSEN_LIBERATED:           uiMeanWhileFlags |= DRASSEN_LIBERATED_FLAG;           break;
-		case CAMBRIA_LIBERATED:           uiMeanWhileFlags |= CAMBRIA_LIBERATED_FLAG;           break;
-		case ALMA_LIBERATED:              uiMeanWhileFlags |= ALMA_LIBERATED_FLAG;              break;
-		case GRUMM_LIBERATED:             uiMeanWhileFlags |= GRUMM_LIBERATED_FLAG;             break;
-		case CHITZENA_LIBERATED:          uiMeanWhileFlags |= CHITZENA_LIBERATED_FLAG;          break;
-		case BALIME_LIBERATED:            uiMeanWhileFlags |= BALIME_LIBERATED_FLAG;            break;
-		case NW_SAM:                      uiMeanWhileFlags |= NW_SAM_FLAG;                      break;
-		case NE_SAM:                      uiMeanWhileFlags |= NE_SAM_FLAG;                      break;
-		case CENTRAL_SAM:                 uiMeanWhileFlags |= CENTRAL_SAM_FLAG;                 break;
-		case FLOWERS:                     uiMeanWhileFlags |= FLOWERS_FLAG;                     break;
-		case LOST_TOWN:                   uiMeanWhileFlags |= LOST_TOWN_FLAG;                   break;
-		case CREATURES:                   uiMeanWhileFlags |= CREATURES_FLAG;                   break;
-		case KILL_CHOPPER:                uiMeanWhileFlags |= KILL_CHOPPER_FLAG;                break;
-		case AWOL_SCIENTIST:              uiMeanWhileFlags |= AWOL_SCIENTIST_FLAG;              break;
-		case OUTSKIRTS_MEDUNA:            uiMeanWhileFlags |= OUTSKIRTS_MEDUNA_FLAG;            break;
-		case INTERROGATION:               uiMeanWhileFlags |= INTERROGATION_FLAG;               break;
+		case END_OF_PLAYERS_FIRST_BATTLE: return END_OF_PLAYERS_FIRST_BATTLE_FLAG;
+		case DRASSEN_LIBERATED:           return DRASSEN_LIBERATED_FLAG;
+		case CAMBRIA_LIBERATED:           return CAMBRIA_LIBERATED_FLAG;
+		case ALMA_LIBERATED:              return ALMA_LIBERATED_FLAG;
+		case GRUMM_LIBERATED:             return GRUMM_LIBERATED_FLAG;
+		case CHITZENA_LIBERATED:          return CHITZENA_LIBERATED_FLAG;
+		case BALIME_LIBERATED:            return BALIME_LIBERATED_FLAG;
+		case NW_SAM:                      return NW_SAM_FLAG;
+		case NE_SAM:                      return NE_SAM_FLAG;
+		case CENTRAL_SAM:                 return CENTRAL_SAM_FLAG;
+		case FLOWERS:                     return FLOWERS_FLAG;
+		case LOST_TOWN:                   return LOST_TOWN_FLAG;
+		case CREATURES:                   return CREATURES_FLAG;
+		case KILL_CHOPPER:                return KILL_CHOPPER_FLAG;
+		case AWOL_SCIENTIST:              return AWOL_SCIENTIST_FLAG;
+		case OUTSKIRTS_MEDUNA:            return OUTSKIRTS_MEDUNA_FLAG;
+		case INTERROGATION:               return INTERROGATION_FLAG;
+		default:                          return 0;
 	}
+}
+
+
+// set flag for this event
+static void SetMeanWhileFlag(UINT8 const meanwhile_id)
+{
+	uiMeanWhileFlags |= MeanwhileIDToFlag(meanwhile_id);
 }
 
 
 // is this flag set?
 static bool GetMeanWhileFlag(UINT8 const meanwhile_id)
 {
-	switch (meanwhile_id)
-	{
-		case END_OF_PLAYERS_FIRST_BATTLE: return uiMeanWhileFlags & END_OF_PLAYERS_FIRST_BATTLE_FLAG;
-		case DRASSEN_LIBERATED:           return uiMeanWhileFlags & DRASSEN_LIBERATED_FLAG;
-		case CAMBRIA_LIBERATED:           return uiMeanWhileFlags & CAMBRIA_LIBERATED_FLAG;
-		case ALMA_LIBERATED:              return uiMeanWhileFlags & ALMA_LIBERATED_FLAG;
-		case GRUMM_LIBERATED:             return uiMeanWhileFlags & GRUMM_LIBERATED_FLAG;
-		case CHITZENA_LIBERATED:          return uiMeanWhileFlags & CHITZENA_LIBERATED_FLAG;
-		case BALIME_LIBERATED:            return uiMeanWhileFlags & BALIME_LIBERATED_FLAG;
-		case NW_SAM:                      return uiMeanWhileFlags & NW_SAM_FLAG;
-		case NE_SAM:                      return uiMeanWhileFlags & NE_SAM_FLAG;
-		case CENTRAL_SAM:                 return uiMeanWhileFlags & CENTRAL_SAM_FLAG;
-		case FLOWERS:                     return uiMeanWhileFlags & FLOWERS_FLAG;
-		case LOST_TOWN:                   return uiMeanWhileFlags & LOST_TOWN_FLAG;
-		case CREATURES:                   return uiMeanWhileFlags & CREATURES_FLAG;
-		case KILL_CHOPPER:                return uiMeanWhileFlags & KILL_CHOPPER_FLAG;
-		case AWOL_SCIENTIST:              return uiMeanWhileFlags & AWOL_SCIENTIST_FLAG;
-		case OUTSKIRTS_MEDUNA:            return uiMeanWhileFlags & OUTSKIRTS_MEDUNA_FLAG;
-		case INTERROGATION:               return uiMeanWhileFlags & INTERROGATION_FLAG;
-		default:                          return false;
-	}
+	return uiMeanWhileFlags & MeanwhileIDToFlag(meanwhile_id);
 }
 
 
