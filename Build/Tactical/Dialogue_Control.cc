@@ -136,13 +136,11 @@ static UINT8 const gubMercValidPrecedentQuoteID[] =
 };
 
 
-UINT16	gusStopTimeQuoteList[ ] =
+static UINT16 const gusStopTimeQuoteList[] =
 {
 	QUOTE_BOOBYTRAP_ITEM,
 	QUOTE_SUSPICIOUS_GROUND
 };
-
-UINT8							gubNumStopTimeQuotes = 2;
 
 
 // QUEUE UP DIALOG!
@@ -2199,19 +2197,13 @@ void UnSetEngagedInConvFromPCAction( SOLDIERTYPE *pSoldier )
 }
 
 
-static BOOLEAN IsStopTimeQuote(UINT16 usQuoteNum)
+static bool IsStopTimeQuote(UINT16 const quote_id)
 {
-	INT32 cnt;
-
-	for ( cnt = 0; cnt < gubNumStopTimeQuotes; cnt++ )
+	for (UINT16 const* i = gusStopTimeQuoteList; i != endof(gusStopTimeQuoteList); ++i)
 	{
-		if ( gusStopTimeQuoteList[ cnt ] == usQuoteNum )
-		{
-			return( TRUE );
-		}
+		if (*i == quote_id) return true;
 	}
-
-	return( FALSE );
+	return false;
 }
 
 
