@@ -247,9 +247,9 @@ UINT32 PlayVoice(void)
 	{
 		switch (iCurrentVoices)
 		{
-			case 0:  filename = "Speech/051_001.wav";
-			case 1:  filename = "Speech/052_001.wav";
-			case 2:  filename = "Speech/053_001.wav";
+			case 0:  filename = "Speech/051_001.wav"; break;
+			case 1:  filename = "Speech/052_001.wav"; break;
+			case 2:  filename = "Speech/053_001.wav"; break;
 			default: return 0;
 		}
 	}
@@ -257,13 +257,13 @@ UINT32 PlayVoice(void)
 	{
 		switch (iCurrentVoices)
 		{
-			case 0:  filename = "Speech/054_001.wav";
-			case 1:  filename = "Speech/055_001.wav";
-			case 2:  filename = "Speech/056_001.wav";
+			case 0:  filename = "Speech/054_001.wav"; break;
+			case 1:  filename = "Speech/055_001.wav"; break;
+			case 2:  filename = "Speech/056_001.wav"; break;
 			default: return 0;
 		}
 	}
-	PlayJA2SampleFromFile(filename, MIDVOLUME, 1, MIDDLEPAN);
+	return PlayJA2SampleFromFile(filename, MIDVOLUME, 1, MIDDLEPAN);
 }
 
 
