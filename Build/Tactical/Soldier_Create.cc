@@ -114,7 +114,7 @@ void RandomizeNewSoldierStats( SOLDIERCREATE_STRUCT *pCreateStruct )
 }
 
 
-static void CopyProfileItems(SOLDIERTYPE* pSoldier, const SOLDIERCREATE_STRUCT* pCreateStruct);
+static void CopyProfileItems(SOLDIERTYPE&, SOLDIERCREATE_STRUCT const&);
 static void InitSoldierStruct(SOLDIERTYPE&);
 static void TacticalCopySoldierFromCreateStruct(SOLDIERTYPE&, SOLDIERCREATE_STRUCT const&);
 static void TacticalCopySoldierFromProfile(SOLDIERTYPE&, SOLDIERCREATE_STRUCT const&);
@@ -198,7 +198,7 @@ try
 
 	if (profile != NO_PROFILE)
 	{
-		CopyProfileItems(s, &c);
+		CopyProfileItems(*s, c);
 		if (team_id == OUR_TEAM) InitSoldierFace(s);
 	}
 
@@ -2012,29 +2012,27 @@ static BOOLEAN TryToAttach(SOLDIERTYPE* const s, OBJECTTYPE* const o)
 }
 
 
-static void CopyProfileItems(SOLDIERTYPE* const s, const SOLDIERCREATE_STRUCT* const pCreateStruct)
+static void CopyProfileItems(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT const& c)
 {
-	MERCPROFILESTRUCT* const p = GetProfile(pCreateStruct->ubProfile);
-
-	// Copy over inv if we want to
-	if (s->bTeam != OUR_TEAM)
+	MERCPROFILESTRUCT& p = *GetProfile(c.ubProfile);
+	if (s.bTeam != OUR_TEAM)
 	{
-		for (UINT32 i = 0; i < NUM_INV_SLOTS; ++i)
+		for (UINT32 i = 0; i != NUM_INV_SLOTS; ++i)
 		{
-			const UINT16      item = p->inv[i];
-			OBJECTTYPE* const slot = &s->inv[i];
+			UINT16      const item = p.inv[i];
+			OBJECTTYPE* const slot = &s.inv[i];
 			if (item != NOTHING)
 			{
-				const UINT8 count = p->bInvNumber[i];
+				UINT8 const count = p.bInvNumber[i];
 				if (Item[item].usItemClass == IC_KEY)
 				{
-					/* since keys depend on 2 values, they pretty much have to be
+					/* Since keys depend on 2 values, they pretty much have to be
 					 * hardcoded.  if a case isn't handled here it's better to not give
 					 * any key than to provide one which doesn't work and would confuse
 					 * everything. */
 					if (KEY_1 <= item && item <= KEY_32)
 					{
-						switch (pCreateStruct->ubProfile)
+						switch (c.ubProfile)
 						{
 							case BREWSTER: CreateKeyObject(slot, count, 19); break;
 							case SKIPPER:  CreateKeyObject(slot, count, 11); break;
@@ -2049,13 +2047,13 @@ static void CopyProfileItems(SOLDIERTYPE* const s, const SOLDIERCREATE_STRUCT* c
 				}
 				else
 				{
-					CreateItems(item, p->bInvStatus[i], count, slot);
+					CreateItems(item, p.bInvStatus[i], count, slot);
 				}
 				if (item == ROCKET_RIFLE || item == AUTO_ROCKET_RIFLE)
 				{
-					slot->ubImprintID = s->ubProfile;
+					slot->ubImprintID = s.ubProfile;
 				}
-				if (p->ubInvUndroppable & gubItemDroppableFlag[i])
+				if (p.ubInvUndroppable & gubItemDroppableFlag[i])
 				{
 					slot->fFlags |= OBJECT_UNDROPPABLE;
 				}
@@ -2066,32 +2064,32 @@ static void CopyProfileItems(SOLDIERTYPE* const s, const SOLDIERCREATE_STRUCT* c
 			}
 		}
 
-		for (UINT32 money_left = p->uiMoney; money_left > 0;)
+		for (UINT32 money_left = p.uiMoney; money_left > 0;)
 		{
-			const INT8 slot_id = FindEmptySlotWithin(s, BIGPOCK1POS, SMALLPOCK8POS);
+			INT8 const slot_id = FindEmptySlotWithin(&s, BIGPOCK1POS, SMALLPOCK8POS);
 			if (slot_id == NO_SLOT) break;
-			OBJECTTYPE* const slot = &s->inv[slot_id];
+			OBJECTTYPE* const slot = &s.inv[slot_id];
 
-			const UINT32 slot_limit  = MoneySlotLimit(slot_id);
-			const UINT32 slot_amount = MIN(money_left, slot_limit);
+			UINT32 const slot_limit  = MoneySlotLimit(slot_id);
+			UINT32 const slot_amount = MIN(money_left, slot_limit);
 			CreateMoney(slot_amount, slot);
 			money_left -= slot_amount;
 		}
 	}
-	else if (pCreateStruct->fCopyProfileItemsOver)
+	else if (c.fCopyProfileItemsOver) // Copy over inv if we want to
 	{
 		/* do some special coding to put stuff in the profile in better-looking
 		 * spots */
-		memset(s->inv, 0, sizeof(s->inv));
-		for (UINT32 i = 0; i < NUM_INV_SLOTS; ++i)
+		memset(s.inv, 0, sizeof(s.inv));
+		for (UINT32 i = 0; i != NUM_INV_SLOTS; ++i)
 		{
-			if (p->inv[i] == NOTHING) continue;
+			if (p.inv[i] == NOTHING) continue;
 
 			OBJECTTYPE o;
-			CreateItems(p->inv[i], p->bInvStatus[i], p->bInvNumber[i], &o);
-			if (!TryToAttach(s, &o)) AutoPlaceObject(s, &o, FALSE);
+			CreateItems(p.inv[i], p.bInvStatus[i], p.bInvNumber[i], &o);
+			if (!TryToAttach(&s, &o)) AutoPlaceObject(&s, &o, FALSE);
 		}
-		p->usOptionalGearCost = 0;
+		p.usOptionalGearCost = 0;
 	}
 }
 
