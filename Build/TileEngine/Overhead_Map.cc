@@ -74,7 +74,6 @@ struct SMALL_TILE_DB
 static SMALL_TILE_SURF gSmTileSurf[NUMBEROFTILETYPES];
 static SMALL_TILE_DB   gSmTileDB[NUMBEROFTILES];
 static TileSetID       gubSmTileNum                   = TILESET_INVALID;
-static BOOLEAN         gfSmTileLoaded = FALSE;
 static BOOLEAN         gfInOverheadMap = FALSE;
 static MOUSE_REGION    OverheadRegion;
 static MOUSE_REGION    OverheadBackgroundRegion;
@@ -92,10 +91,13 @@ static void CopyOverheadDBShadetablesFromTileset(void);
 
 void InitNewOverheadDB(TileSetID const ubTilesetID)
 {
+	if (gubSmTileNum == ubTilesetID) return;
+	TrashOverheadMap();
+
 	for (UINT32 i = 0; i < NUMBEROFTILETYPES; ++i)
 	{
 		const char* filename    = gTilesets[ubTilesetID].TileSurfaceFilenames[i];
-		UINT8       use_tileset = ubTilesetID;
+		TileSetID   use_tileset = ubTilesetID;
 		if (filename[0] == '\0')
 		{
 			// Try loading from default tileset
@@ -161,6 +163,7 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 
 	// Copy over shade tables from main tileset
 	CopyOverheadDBShadetablesFromTileset();
+	gubSmTileNum = ubTilesetID;
 }
 
 
@@ -295,18 +298,7 @@ void HandleOverheadMap(void)
 	gfInOverheadMap      = TRUE;
 	gsOveritemPoolGridNo = NOWHERE;
 
-	// Check tileset numbers
-	if (gubSmTileNum != giCurrentTilesetID)
-	{
-		gubSmTileNum = giCurrentTilesetID;
-		TrashOverheadMap();
-	}
-
-	if (!gfSmTileLoaded)
-	{
-		InitNewOverheadDB(gubSmTileNum);
-		gfSmTileLoaded = TRUE;
-	}
+	InitNewOverheadDB(giCurrentTilesetID);
 
 	RestoreBackgroundRects();
 
@@ -1153,8 +1145,8 @@ static void CopyOverheadDBShadetablesFromTileset(void)
 
 void TrashOverheadMap(void)
 {
-	if (!gfSmTileLoaded) return;
-	gfSmTileLoaded = FALSE;
+	if (gubSmTileNum == TILESET_INVALID) return;
+	gubSmTileNum = TILESET_INVALID;
 
 	for (SMALL_TILE_SURF* i = gSmTileSurf; i != endof(gSmTileSurf); ++i)
 	{
