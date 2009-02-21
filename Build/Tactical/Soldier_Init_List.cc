@@ -607,7 +607,7 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 		}
 	}
 
-	SOLDIERTYPE* pSoldier = TacticalCreateSoldier(&tempDetailedPlacement);
+	SOLDIERTYPE* pSoldier = TacticalCreateSoldier(tempDetailedPlacement);
 	if (pSoldier != NULL)
 	{
 		curr->pSoldier = pSoldier;
@@ -1833,7 +1833,7 @@ void AddProfilesUsingProfileInsertionData()
 			MercCreateStruct.sSectorY					= gWorldSectorY;
 			MercCreateStruct.bSectorZ					= gbWorldSectorZ;
 
-			pSoldier = TacticalCreateSoldier(&MercCreateStruct);
+			pSoldier = TacticalCreateSoldier(MercCreateStruct);
 		}
 		if ( pSoldier )
 		{ //Now, insert the soldier.

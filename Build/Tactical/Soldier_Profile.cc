@@ -733,7 +733,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		MercCreateStruct.bUseGivenVehicleID	= pSoldier->bVehicleID;
 	}
 
-	SOLDIERTYPE* const pNewSoldier = TacticalCreateSoldier(&MercCreateStruct);
+	SOLDIERTYPE* const pNewSoldier = TacticalCreateSoldier(MercCreateStruct);
 	if (pNewSoldier != NULL)
 	{
 		// Copy vital stats back!

@@ -2848,8 +2848,7 @@ static void CreateTempPlayerMerc(void)
 	MercCreateStruct.fCopyProfileItemsOver	= TRUE;
 
 	//Create the player soldier
-
-	gpMercs[gpAR->iNumMercFaces].pSoldier = TacticalCreateSoldier(&MercCreateStruct);
+	gpMercs[gpAR->iNumMercFaces].pSoldier = TacticalCreateSoldier(MercCreateStruct);
 	if( gpMercs[ gpAR->iNumMercFaces ].pSoldier )
 	{
 		gpAR->iNumMercFaces++;

@@ -2445,7 +2445,7 @@ static void AddNPCToGridNo(INT32 iGridNo)
 
 //	RandomizeNewSoldierStats( &MercCreateStruct );
 
-	SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+	SOLDIERTYPE* const s = TacticalCreateSoldier(MercCreateStruct);
 	if (s != NULL)
 	{
 		AddSoldierToSector(s);

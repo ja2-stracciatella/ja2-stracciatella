@@ -100,7 +100,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT* const h)
 	MercCreateStruct.bSectorZ              = h->bSectorZ;
 	MercCreateStruct.bTeam                 = OUR_TEAM;
 	MercCreateStruct.fCopyProfileItemsOver = h->fCopyProfileItemsOver;
-	SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+	SOLDIERTYPE* const s = TacticalCreateSoldier(MercCreateStruct);
 	if (s == NULL)
 	{
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "TacticalCreateSoldier in HireMerc():  Failed to Add Merc");

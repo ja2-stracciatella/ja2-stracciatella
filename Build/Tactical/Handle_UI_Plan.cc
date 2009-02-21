@@ -73,7 +73,7 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 			MercCreateStruct.sInsertionGridNo		= sGridNo;
 
 			// Get Grid Corrdinates of mouse
-			SOLDIERTYPE* const pPlanSoldier = TacticalCreateSoldier(&MercCreateStruct);
+			SOLDIERTYPE* const pPlanSoldier = TacticalCreateSoldier(MercCreateStruct);
 			if (pPlanSoldier != NULL)
 			{
 				pPlanSoldier->sPlannedTargetX = -1;
@@ -150,7 +150,7 @@ BOOLEAN AddUIPlan( UINT16 sGridNo, UINT8 ubPlanID )
 				MercCreateStruct.sInsertionGridNo		= sGridNo;
 
 				// Get Grid Corrdinates of mouse
-				SOLDIERTYPE* const pPlanSoldier = TacticalCreateSoldier(&MercCreateStruct);
+				SOLDIERTYPE* const pPlanSoldier = TacticalCreateSoldier(MercCreateStruct);
 				if (pPlanSoldier != NULL)
 				{
 					pPlanSoldier->sPlannedTargetX = -1;

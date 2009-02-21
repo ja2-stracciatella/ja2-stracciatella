@@ -815,7 +815,7 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 	MercCreateStruct.sInsertionGridNo		= pCorpse->def.sGridNo;
 	RandomizeNewSoldierStats( &MercCreateStruct );
 
-	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(&MercCreateStruct);
+	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(MercCreateStruct);
 	if (pSoldier != NULL)
 	{
 		const INT16 sGridNo = FindRandomGridNoFromSweetSpot(pSoldier, pCorpse->def.sGridNo, 2);

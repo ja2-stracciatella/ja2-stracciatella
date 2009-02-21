@@ -3249,7 +3249,7 @@ static void CreateNextCivType(void)
 	MercCreateStruct.sInsertionGridNo = usMapPos;
 	RandomizeNewSoldierStats(&MercCreateStruct);
 
-	SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+	SOLDIERTYPE* const s = TacticalCreateSoldier(MercCreateStruct);
 	if (s != NULL)
 	{
 		AddSoldierToSector(s);
@@ -3326,7 +3326,7 @@ static void CreatePlayerControlledMonster(void)
 	MercCreateStruct.sInsertionGridNo = usMapPos;
 	RandomizeNewSoldierStats(&MercCreateStruct);
 
-	SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+	SOLDIERTYPE* const s = TacticalCreateSoldier(MercCreateStruct);
 	if (s != NULL) AddSoldierToSector(s);
 }
 

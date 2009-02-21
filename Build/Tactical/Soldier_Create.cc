@@ -120,16 +120,16 @@ static void TacticalCopySoldierFromCreateStruct(SOLDIERTYPE&, SOLDIERCREATE_STRU
 static void TacticalCopySoldierFromProfile(SOLDIERTYPE&, SOLDIERCREATE_STRUCT const&);
 
 
-SOLDIERTYPE* TacticalCreateSoldier(SOLDIERCREATE_STRUCT const* const pCreateStruct)
+SOLDIERTYPE* TacticalCreateSoldier(SOLDIERCREATE_STRUCT const& c)
 try
 {
 	/* Kris: Huge no no! See the header file for description of static detailed
 	 * placements. If this expression ever evaluates to true, then it will expose
 	 * serious problems. Simply returning won't help. */
-	Assert(!pCreateStruct->fStatic);
+	Assert(!c.fStatic);
 
-	ProfileID const profile = pCreateStruct->ubProfile;
-	INT8      const team_id = pCreateStruct->bTeam;
+	ProfileID const profile = c.ubProfile;
+	INT8      const team_id = c.bTeam;
 
 	// Given team, get an ID for this guy!
 	SOLDIERTYPE* s;
@@ -147,7 +147,7 @@ try
 		// ATE: If we are a vehicle, and a player, start at a different slot (2 - max)
 		if (team_id == gbPlayerNum)
 		{
-			switch (profile != NO_PROFILE ? GetProfile(profile)->ubBodyType : pCreateStruct->bBodyType)
+			switch (profile != NO_PROFILE ? GetProfile(profile)->ubBodyType : c.bBodyType)
 			{
 				case ELDORADO:
 				case HUMVEE:
@@ -174,11 +174,11 @@ try
 
 	if (profile != NO_PROFILE)
 	{
-		TacticalCopySoldierFromProfile(*s, *pCreateStruct);
+		TacticalCopySoldierFromProfile(*s, c);
 	}
 	else
 	{
-		TacticalCopySoldierFromCreateStruct(*s, *pCreateStruct);
+		TacticalCopySoldierFromCreateStruct(*s, c);
 	}
 
 	if (team_id == OUR_TEAM || team_id == PLAYER_PLAN)
@@ -198,21 +198,21 @@ try
 
 	if (profile != NO_PROFILE)
 	{
-		CopyProfileItems(s, pCreateStruct);
+		CopyProfileItems(s, &c);
 		if (team_id == OUR_TEAM) InitSoldierFace(s);
 	}
 
 	s->bActionPoints        = CalcActionPoints(s);
 	s->bInitialActionPoints = s->bActionPoints;
 	s->bSide                = gTacticalStatus.Team[team_id].bSide;
-	s->sSectorX             = pCreateStruct->sSectorX;
-	s->sSectorY             = pCreateStruct->sSectorY;
-	s->bSectorZ             = pCreateStruct->bSectorZ;
-	s->ubInsertionDirection = pCreateStruct->bDirection;
-	s->bDesiredDirection    = pCreateStruct->bDirection;
-	s->bDominantDir         = pCreateStruct->bDirection;
-	s->bDirection           = pCreateStruct->bDirection;
-	s->sInsertionGridNo     = pCreateStruct->sInsertionGridNo;
+	s->sSectorX             = c.sSectorX;
+	s->sSectorY             = c.sSectorY;
+	s->bSectorZ             = c.bSectorZ;
+	s->ubInsertionDirection = c.bDirection;
+	s->bDesiredDirection    = c.bDirection;
+	s->bDominantDir         = c.bDirection;
+	s->bDirection           = c.bDirection;
+	s->sInsertionGridNo     = c.sInsertionGridNo;
 	s->bOldLife             = s->bLifeMax;
 
 	if (team_id == CIV_TEAM)
@@ -416,7 +416,7 @@ try
 			}
 
 			s->bVehicleID =
-				pCreateStruct->fUseGivenVehicle ? pCreateStruct->bUseGivenVehicleID :
+				c.fUseGivenVehicle ? c.bUseGivenVehicleID :
 				(INT8)AddVehicleToList(s->sSectorX, s->sSectorY, s->bSectorZ, ubVehicleID);
 			SetVehicleValuesIntoSoldierType(s);
 			break;
@@ -441,7 +441,7 @@ try
 	// We are set to create the merc, stuff after here can fail
 	CreateSoldierCommon(s);
 
-	if (pCreateStruct->fOnRoof && FlatRoofAboveGridNo(pCreateStruct->sInsertionGridNo))
+	if (c.fOnRoof && FlatRoofAboveGridNo(c.sInsertionGridNo))
 	{
 		SetSoldierHeight(s, 58.0);
 	}
@@ -1750,7 +1750,7 @@ SOLDIERTYPE* TacticalCreateAdministrator()
 	bp.bBodyType = -1;
 	bp.ubSoldierClass = SOLDIER_CLASS_ADMINISTRATOR;
 	CreateDetailedPlacementGivenBasicPlacementInfo( &pp, &bp );
-	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(&pp);
+	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(pp);
 	if ( pSoldier )
 	{
 		// send soldier to centre of map, roughly
@@ -1781,7 +1781,7 @@ SOLDIERTYPE* TacticalCreateArmyTroop()
 	bp.bBodyType = -1;
 	bp.ubSoldierClass = SOLDIER_CLASS_ARMY;
 	CreateDetailedPlacementGivenBasicPlacementInfo( &pp, &bp );
-	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(&pp);
+	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(pp);
 	if ( pSoldier )
 	{
 		// send soldier to centre of map, roughly
@@ -1821,7 +1821,7 @@ SOLDIERTYPE* TacticalCreateEliteEnemy()
 	//NOTE:  We don't want to add Mike or Iggy if this is being called from autoresolve!
 	OkayToUpgradeEliteToSpecialProfiledEnemy( &pp );
 
-	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(&pp);
+	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(pp);
 	if ( pSoldier )
 	{
 		// send soldier to centre of map, roughly
@@ -1847,7 +1847,7 @@ SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 	//bp.bAttitude = AGGRESSIVE;
 	bp.bBodyType = -1;
 	CreateDetailedPlacementGivenBasicPlacementInfo( &pp, &bp );
-	return TacticalCreateSoldier(&pp);
+	return TacticalCreateSoldier(pp);
 }
 
 SOLDIERTYPE* TacticalCreateCreature( INT8 bCreatureBodyType )
@@ -1870,7 +1870,7 @@ SOLDIERTYPE* TacticalCreateCreature( INT8 bCreatureBodyType )
 	bp.bAttitude = AGGRESSIVE;
 	bp.bBodyType = bCreatureBodyType;
 	CreateDetailedPlacementGivenBasicPlacementInfo( &pp, &bp );
-	return TacticalCreateSoldier(&pp);
+	return TacticalCreateSoldier(pp);
 }
 
 
@@ -1992,7 +1992,7 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 
 	RandomizeNewSoldierStats(&MercCreateStruct);
 
-	SOLDIERTYPE* const s = TacticalCreateSoldier(&MercCreateStruct);
+	SOLDIERTYPE* const s = TacticalCreateSoldier(MercCreateStruct);
 	if (s != NULL)
 	{
 		AddSoldierToSector(s);
