@@ -1800,20 +1800,6 @@ static AIMVideoMode WillMercAcceptCall(void)
 }
 
 
-static INT GetFirstBuddyOnTeam(MERCPROFILESTRUCT const* const p)
-{
-	for (INT i = 0; i != 3; ++i)
-	{
-		INT8 const buddy = p->bBuddy[i];
-		if (buddy < 0 || !IsMercOnTeam(buddy) || IsMercDead(buddy)) continue;
-
-		return buddy;
-	}
-
-	return -1;
-}
-
-
 static BOOLEAN CanMercBeHired(void)
 {
 	StopMercTalking();

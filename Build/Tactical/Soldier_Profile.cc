@@ -1023,6 +1023,18 @@ INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated )
 }
 
 
+INT8 GetFirstBuddyOnTeam(MERCPROFILESTRUCT const* const p)
+{
+	for (INT i = 0; i != 3; ++i)
+	{
+		INT8 const buddy = p->bBuddy[i];
+		if (buddy < 0 || !IsMercOnTeam(buddy) || IsMercDead(buddy)) continue;
+		return buddy;
+	}
+	return -1;
+}
+
+
 BOOLEAN IsProfileATerrorist(UINT8 ubProfile)
 {
 	switch (ubProfile)
