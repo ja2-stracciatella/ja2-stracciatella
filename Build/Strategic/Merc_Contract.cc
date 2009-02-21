@@ -512,8 +512,7 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 
 	// find out if the merc has a buddy working for the player
 	// loop through the list of people the merc considers buddies
-	BOOLEAN fBuddyAround  = FALSE;
-	UINT16  usBuddyQuote  = 0;
+	UINT16 usBuddyQuote = QUOTE_NONE;
 	for (UINT8 i = 0; i < 5; ++i)
 	{
 		INT8 const bMercID = p->bBuddy[i];
@@ -522,8 +521,6 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 		// is this buddy on the team?
 		if (IsMercOnTeamAndAlive(bMercID))
 		{
-			fBuddyAround = TRUE;
-
 			switch (i)
 			{
 				case 0:  usBuddyQuote = QUOTE_RENEWING_CAUSE_BUDDY_1_ON_TEAM;               break;
@@ -539,7 +536,7 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 	{
 		// check if we say the precedent for merc
 		UINT8 const quote_bit =
-			GetQuoteBitNumberFromQuoteID(fBuddyAround ? usBuddyQuote : usReasonQuote);
+			GetQuoteBitNumberFromQuoteID(usBuddyQuote != QUOTE_NONE ? usBuddyQuote : usReasonQuote);
 		if (GetMercPrecedentQuoteBitStatus(p, quote_bit))
 		{
 			HandleImportantMercQuoteLocked(s, QUOTE_PRECEDENT_TO_REPEATING_ONESELF_RENEW);
@@ -551,7 +548,7 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 
 		// If a buddy is around, agree to renew, but tell us why we're doing it.
 		UINT16 const quote =
-			fBuddyAround                            ? usBuddyQuote :
+			usBuddyQuote != QUOTE_NONE              ? usBuddyQuote :
 #if 0 // ARM: Delay quote too vague, no longer to be used
 			SoldierWantsToDelayRenewalOfContract(s) ? QUOTE_DELAY_CONTRACT_RENEWAL :
 #endif
@@ -559,7 +556,7 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 		HandleImportantMercQuoteLocked(s, quote);
 	}
 
-	return fBuddyAround;
+	return usBuddyQuote != QUOTE_NONE;
 }
 
 
