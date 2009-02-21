@@ -1246,14 +1246,6 @@ BOOLEAN IsMercOnTeam(UINT8 ubMercID)
 }
 
 
-// ATE: Added this new function for contract renewals
-BOOLEAN IsMercOnTeamAndAlive(UINT8 ubMercID)
-{
-	const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
-	return s != NULL && s->bLife > 0;
-}
-
-
 BOOLEAN IsMercOnTeamAndInOmertaAlreadyAndAlive(UINT8 ubMercID)
 {
 	const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
