@@ -227,7 +227,6 @@ extern INT32 iEditorToolbarState;
 extern INT32 iDrawMode;
 extern INT32 iCurrentAction;
 extern INT32 iActionParam;
-extern INT32 iEditAction;
 
 extern UINT16	gusLightLevel;
 extern UINT16 gusLightLevelPercentage;

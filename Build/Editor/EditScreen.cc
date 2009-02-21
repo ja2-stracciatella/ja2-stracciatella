@@ -137,7 +137,6 @@ static INT32 giMusicID = 0;
 
 INT32 iDrawMode = DRAW_MODE_NOTHING;
 INT32 iCurrentAction,iActionParam;
-INT32 iEditAction = ACTION_NULL;
 
 GUIButtonRef iEditorButton[NUMBER_EDITOR_BUTTONS];
 INT32 iEditorToolbarState;
