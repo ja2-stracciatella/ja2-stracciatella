@@ -2207,19 +2207,15 @@ static bool IsStopTimeQuote(UINT16 const quote_id)
 }
 
 
-static void CheckForStopTimeQuotes(UINT16 usQuoteNum)
+static void CheckForStopTimeQuotes(UINT16 const usQuoteNum)
 {
-	if ( IsStopTimeQuote( usQuoteNum ) )
-	{
-		// Stop Time, game
-		EnterModalTactical( TACTICAL_MODAL_NOMOUSE );
-
-		gpCurrentTalkingFace->uiFlags		|= FACE_MODAL;
-
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Starting Modal Tactical Quote." );
-
-	}
+	if (!IsStopTimeQuote(usQuoteNum)) return; return;
+	// Stop Time, game
+	EnterModalTactical(TACTICAL_MODAL_NOMOUSE);
+	gpCurrentTalkingFace->uiFlags |= FACE_MODAL;
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Starting Modal Tactical Quote.");
 }
+
 
 void SetStopTimeQuoteCallback( MODAL_HOOK pCallBack )
 {
