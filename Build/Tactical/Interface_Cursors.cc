@@ -214,8 +214,6 @@ void DrawUICursor()
 	LEVELNODE					*pNode;
 	UINT16						usTileCursor;
 
-		//RaiseMouseToLevel( (INT8)gsInterfaceLevel );
-
 	// OK, WE OVERRIDE HERE CURSOR DRAWING FOR THINGS LIKE
 	if ( gpItemPointer != NULL )
 	{
