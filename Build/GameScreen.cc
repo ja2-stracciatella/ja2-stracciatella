@@ -79,12 +79,8 @@ VIDEO_OVERLAY* g_fps_overlay            = NULL;
 VIDEO_OVERLAY* g_counter_period_overlay = NULL;
 
 
-BOOLEAN	gfExitToNewSector					= FALSE;
-//UINT8		gubNewSectorExitDirection;
-
 BOOLEAN	gfGameScreenLocateToSoldier = FALSE;
 BOOLEAN	gfEnteringMapScreen					= FALSE;
-UINT32	uiOldMouseCursor;
 SOLDIERTYPE* gPreferredInitialSelectedGuy = NULL;
 
 BOOLEAN				gfTacticalIsModal = FALSE;
@@ -368,39 +364,6 @@ ScreenID MainGameScreenHandle(void)
 #ifdef JA2DEMO
 		SetGameTimeCompressionLevel( TIME_COMPRESS_X1 );
 #endif
-/*
-	if ( gfExitToNewSector )
-	{
-		// Shade screen one frame
-		if ( gfExitToNewSector == 1 )
-		{
-			// Disable any saved regions!
-			EmptyBackgroundRects( );
-
-			// Remove cursor
-			uiOldMouseCursor = gViewportRegion.Cursor;
-			SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
-
-			//Shadow area
-			FRAME_BUFFER->ShadowRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			InvalidateScreen( );
-
-			// Next frame please
-			gfExitToNewSector++;
-
-			return( GAME_SCREEN );
-		}
-		else
-		{
-			// Go into sector
-			JumpIntoAdjacentSector( gubNewSectorExitDirection );
-			gfExitToNewSector = FALSE;
-
-			// Restore mouse
-			SetCurrentCursorFromDatabase( uiOldMouseCursor );
-		}
-	}
-*/
 
 	if ( gfTacticalIsModal )
 	{
