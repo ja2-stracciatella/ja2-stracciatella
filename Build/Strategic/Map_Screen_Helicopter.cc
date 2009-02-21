@@ -918,23 +918,25 @@ static void HandleSkyRiderMonologueAboutDrassenSAMSite(UINT32 const uiSpecialCod
 }
 
 
-static void HandleSkyRiderMonologueAboutCambriaHospital(UINT32 uiSpecialCode)
+static void HandleSkyRiderMonologueAboutCambriaHospital(UINT32 const uiSpecialCode)
 {
-	switch( uiSpecialCode )
+	switch (uiSpecialCode)
 	{
-		case( 0 ):
-			//gpCurrentTalkingFace = uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE];
-			//gubCurrentTalkingID = SKYRIDER;
-
+		case 0:
+		{
+			UINT16    const quote   = MENTION_HOSPITAL_IN_CAMBRIA;
+			FACETYPE* const face    = uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE];
+			UINT8     const handler = DIALOGUE_EXTERNAL_NPC_UI;
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
-			CharacterDialogue( SKYRIDER, MENTION_HOSPITAL_IN_CAMBRIA, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE );
-			CharacterDialogueWithSpecialEvent( SKYRIDER, MENTION_HOSPITAL_IN_CAMBRIA, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI , FALSE , TRUE , DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT ,SKYRIDER_MONOLOGUE_EVENT_CAMBRIA_HOSPITAL, 1 );
+			CharacterDialogue(                SKYRIDER, quote, face, handler, FALSE, FALSE);
+			CharacterDialogueWithSpecialEvent(SKYRIDER, quote, face, handler, FALSE, TRUE, DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT, SKYRIDER_MONOLOGUE_EVENT_CAMBRIA_HOSPITAL, 1);
 
-			// highlight Drassen hospital sector
+			// Highlight Cambria hospital sector
 			fShowCambriaHospitalHighLight = TRUE;
 			break;
+		}
 
-		case( 1 ):
+		case 1:
 			fShowCambriaHospitalHighLight = FALSE;
 			break;
 	}
