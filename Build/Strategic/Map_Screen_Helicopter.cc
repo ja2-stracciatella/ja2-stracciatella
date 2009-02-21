@@ -943,36 +943,40 @@ static void HandleSkyRiderMonologueAboutCambriaHospital(UINT32 const uiSpecialCo
 }
 
 
-static void HandleSkyRiderMonologueAboutOtherSAMSites(UINT32 uiSpecialCode)
+static void HandleSkyRiderMonologueAboutOtherSAMSites(UINT32 const uiSpecialCode)
 {
-	// handle skyrider telling player about other sam sites..on fifth hiring or after one near drassen is taken out
-
-	switch( uiSpecialCode )
+	/* Handle skyrider telling player about other SAM sites on fifth hiring or
+	 * after one near drassen is taken out */
+	switch (uiSpecialCode)
 	{
-		case( 0 ):
+		case 0:
+		{
+			UINT16    const quote   = SPIEL_ABOUT_OTHER_SAM_SITES;
+			FACETYPE* const face    = uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE];
+			UINT8     const handler = DIALOGUE_EXTERNAL_NPC_UI;
+			UINT32    const flag    = DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT;
 			// do quote 21
-			gpCurrentTalkingFace = uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE];
-			gubCurrentTalkingID = SKYRIDER;
+			gpCurrentTalkingFace = face;
+			gubCurrentTalkingID  = SKYRIDER;
 
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
-			CharacterDialogue( SKYRIDER, SPIEL_ABOUT_OTHER_SAM_SITES, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE );
-			CharacterDialogueWithSpecialEvent( SKYRIDER, SPIEL_ABOUT_OTHER_SAM_SITES, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ] , DIALOGUE_EXTERNAL_NPC_UI , FALSE , FALSE , DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT ,SKYRIDER_MONOLOGUE_EVENT_OTHER_SAM_SITES, 1 );
+			CharacterDialogue(                SKYRIDER, quote,                                      face, handler, FALSE, FALSE );
+			CharacterDialogueWithSpecialEvent(SKYRIDER, quote,                                      face, handler, FALSE, FALSE, flag, SKYRIDER_MONOLOGUE_EVENT_OTHER_SAM_SITES, 1);
 
-			CharacterDialogue( SKYRIDER, SECOND_HALF_OF_SPIEL_ABOUT_OTHER_SAM_SITES, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE );
-			CharacterDialogueWithSpecialEvent( SKYRIDER, SPIEL_ABOUT_OTHER_SAM_SITES, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ] , DIALOGUE_EXTERNAL_NPC_UI , FALSE , FALSE , DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT ,SKYRIDER_MONOLOGUE_EVENT_OTHER_SAM_SITES, 2 );
-
+			CharacterDialogue(                SKYRIDER, SECOND_HALF_OF_SPIEL_ABOUT_OTHER_SAM_SITES, face, handler, FALSE, FALSE );
+			CharacterDialogueWithSpecialEvent(SKYRIDER, quote,                                      face, handler, FALSE, FALSE, flag, SKYRIDER_MONOLOGUE_EVENT_OTHER_SAM_SITES, 2);
 			break;
+		}
 
-		case( 1 ):
-			// highlight other SAMs
+		case 1: // Highlight other SAMs
 			fShowOtherSAMHighLight = TRUE;
-			// reveal other 3 SAM sites
-			SetSAMSiteAsFound( SAM_SITE_ONE );
-			SetSAMSiteAsFound( SAM_SITE_THREE );
-			SetSAMSiteAsFound( SAM_SITE_FOUR );
+			// Reveal other 3 SAM sites
+			SetSAMSiteAsFound(SAM_SITE_ONE);
+			SetSAMSiteAsFound(SAM_SITE_THREE);
+			SetSAMSiteAsFound(SAM_SITE_FOUR);
 			break;
 
-		case( 2 ):
+		case 2:
 			fShowOtherSAMHighLight = FALSE;
 			break;
 	}
