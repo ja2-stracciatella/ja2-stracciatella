@@ -3751,7 +3751,7 @@ void MakeNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 b
 }
 
 
-static void ProcessNoise(SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubTerrType, UINT8 ubBaseVolume, UINT8 ubNoiseType);
+static void ProcessNoise(SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubBaseVolume, UINT8 ubNoiseType);
 
 
 void OurNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubTerrType, const UINT8 ubVolume, const UINT8 ubNoiseType)
@@ -3761,7 +3761,7 @@ void OurNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bL
 #endif
 
 	// see if anyone actually hears this noise, sees noise_maker, etc.
-	ProcessNoise(noise_maker, sGridNo, bLevel, ubTerrType, ubVolume, ubNoiseType);
+	ProcessNoise(noise_maker, sGridNo, bLevel, ubVolume, ubNoiseType);
 
 	if (noise_maker != NULL                 &&
 			gTacticalStatus.uiFlags & TURNBASED &&
@@ -3780,7 +3780,7 @@ static UINT8 CalcEffVolume(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLev
 static void TellPlayerAboutNoise(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 ubNoiseDir);
 
 
-static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubTerrType, const UINT8 ubBaseVolume, const UINT8 ubNoiseType)
+static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubBaseVolume, const UINT8 ubNoiseType)
 {
 	UINT8 ubLoudestEffVolume, ubEffVolume;
 //	UINT8 ubPlayVolume;
@@ -3789,8 +3789,8 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, co
 	UINT8 ubLoudestNoiseDir = (UINT8)-1; // XXX HACK000E
 
 #ifdef RECORDOPPLIST
-	fprintf(OpplistFile,"PN: nType=%s, nMaker=%d, g=%d, tType=%d, bVol=%d\n",
-		NoiseTypeStr[noiseType], SOLDIER2ID(noise_maker), sGridNo, ubTerrType, baseVolume);
+	fprintf(OpplistFile,"PN: nType=%s, nMaker=%d, g=%d, bVol=%d\n",
+		NoiseTypeStr[noiseType], SOLDIER2ID(noise_maker), sGridNo, baseVolume);
 #endif
 
 	// if the base volume itself was negligible
