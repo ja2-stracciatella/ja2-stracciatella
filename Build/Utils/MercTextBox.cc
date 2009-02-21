@@ -14,9 +14,6 @@
 #include "MemMan.h"
 
 
-#define		TEXT_POPUP_WINDOW_TEXT_OFFSET_X		8
-#define		TEXT_POPUP_WINDOW_TEXT_OFFSET_Y		8
-#define		TEXT_POPUP_STRING_WIDTH						296
 #define		TEXT_POPUP_GAP_BN_LINES						10
 #define		TEXT_POPUP_FONT										FONT12ARIAL
 #define		TEXT_POPUP_COLOR									FONT_MCOLOR_WHITE
