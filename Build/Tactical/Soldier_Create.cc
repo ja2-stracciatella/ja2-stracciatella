@@ -2202,91 +2202,20 @@ UINT8 GetPythDistanceFromPalace( INT16 sSectorX, INT16 sSectorY )
 }
 
 
-static void ReduceHighExpLevels(INT8* pbExpLevel)
+/* Reduce the experience levels of very high level enemies to something that
+ * player can compete with for interrupts. It doesn't affect attributes and
+ * skills, those are rolled prior to this reduction! */
+static void ReduceHighExpLevels(INT8* const exp_level)
 {
-	UINT8 ubRoll;
-	// important: must reset these to 0 by default for logic to work!
-	UINT8 ubChanceLvl8 = 0;
-	UINT8 ubChanceLvl7 = 0;
-	UINT8 ubChanceLvl6 = 0;
-	UINT8 ubChanceLvl5 = 0;
-
-
-	// this function reduces the experience levels of very high level enemies to something that player can compete with
-	// for interrupts.  It doesn't affect attributes and skills, those are rolled prior to this reduction!
-
-
-	// adjust for game difficulty level
-	switch( gGameOptions.ubDifficultyLevel )
+	INT8 max_level;
+	switch (gGameOptions.ubDifficultyLevel)
 	{
-		case DIF_LEVEL_EASY:
-			// max level: 6
-			switch ( *pbExpLevel )
-			{
-				case 6:
-					ubChanceLvl6 = 25;
-					ubChanceLvl5 = 100;
-					break;
-				case 7:
-					ubChanceLvl6 = 50;
-					ubChanceLvl5 = 100;
-					break;
-				case 8:
-					ubChanceLvl6 = 75;
-					ubChanceLvl5 = 100;
-					break;
-				case 9:
-					ubChanceLvl6 = 100;
-					break;
-			}
-			break;
-
-		case DIF_LEVEL_MEDIUM:
-			// max level: 7
-			switch ( *pbExpLevel )
-			{
-				case 7:
-					ubChanceLvl7 = 25;
-					ubChanceLvl6 = 100;
-					break;
-				case 8:
-					ubChanceLvl7 = 50;
-					ubChanceLvl6 = 100;
-					break;
-				case 9:
-					ubChanceLvl7 = 75;
-					ubChanceLvl6 = 100;
-					break;
-			}
-			break;
-
-		case DIF_LEVEL_HARD:
-			// max level: 8
-			switch ( *pbExpLevel )
-			{
-				case 8:
-					ubChanceLvl8 = 25;
-					ubChanceLvl7 = 100;
-					break;
-				case 9:
-					ubChanceLvl8 = 50;
-					ubChanceLvl7 = 100;
-					break;
-			}
-			break;
+		case DIF_LEVEL_EASY:   max_level = 6; break;
+		case DIF_LEVEL_MEDIUM: max_level = 7; break;
+		case DIF_LEVEL_HARD:   max_level = 8; break;
+		default: return;
 	}
-
-
-	ubRoll = ( UINT8 ) Random( 100 );
-
-	if			( ubRoll < ubChanceLvl8 )
-		*pbExpLevel	= 8;
-	else if ( ubRoll < ubChanceLvl7 )
-		*pbExpLevel	= 7;
-	else if ( ubRoll < ubChanceLvl6 )
-		*pbExpLevel	= 6;
-	else if ( ubRoll < ubChanceLvl5 )
-		*pbExpLevel	= 5;
-	// else leave it alone
-
+	if (*exp_level < max_level) return;
+	UINT32 const chance_max_lvl = (*exp_level - max_level + 1) * 25;
+	*exp_level = Chance(chance_max_lvl) ? max_level : max_level - 1;
 }
