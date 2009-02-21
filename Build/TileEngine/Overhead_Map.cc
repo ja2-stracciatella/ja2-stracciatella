@@ -167,52 +167,31 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 }
 
 
-static const ITEM_POOL* GetClosestItemPool(INT16 sSweetGridNo, UINT8 ubRadius, INT8 bLevel)
+static ITEM_POOL const* GetClosestItemPool(INT16 const sweet_gridno, UINT8 const radius, INT8 const level)
 {
-	const ITEM_POOL* ClosestItemPool = NULL;
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT16		sGridNo;
-	INT32		uiRange, uiLowestRange = 999999;
-	INT32					leftmost;
-
-	//create dummy soldier, and use the pathing to determine which nearby slots are
-	//reachable.
-
-	sTop		= ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
-
-	uiLowestRange = 999999;
-
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
+	ITEM_POOL const* closest_item_pool = 0;
+	INT32            lowest_range      = 999999;
+	for (INT16 y = -radius; y <= radius; ++y)
 	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
+		INT32 const leftmost = (sweet_gridno + WORLD_COLS * y) / WORLD_COLS * WORLD_COLS;
+		for (INT16 x = -radius; x <= radius; ++x)
 		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
-			{
-				// Go on sweet stop
-				const ITEM_POOL* pItemPool = GetItemPool(sGridNo, bLevel);
-				if (pItemPool != NULL)
-				{
-					uiRange = GetRangeInCellCoordsFromGridNoDiff( sSweetGridNo, sGridNo );
+			INT16 const gridno = sweet_gridno + WORLD_COLS * y + x;
+			if (gridno < 0        || WORLD_MAX             <= gridno) continue;
+			if (gridno < leftmost || leftmost + WORLD_COLS <= gridno) continue;
 
-					if ( uiRange < uiLowestRange )
-					{
-						ClosestItemPool = pItemPool;
-						uiLowestRange = uiRange;
-					}
-				}
-			}
+			ITEM_POOL const* item_pool = GetItemPool(gridno, level);
+			if (!item_pool) continue;
+
+			INT32 const range = GetRangeInCellCoordsFromGridNoDiff(sweet_gridno, gridno);
+			if (range >= lowest_range) continue;
+
+			closest_item_pool = item_pool;
+			lowest_range     = range;
 		}
 	}
 
-	return ClosestItemPool;
+	return closest_item_pool;
 }
 
 
