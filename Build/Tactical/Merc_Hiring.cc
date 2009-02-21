@@ -408,15 +408,15 @@ void HandleMercArrivesQuotes(SOLDIERTYPE* const s)
 	}
 
 	// Check to see if anyone hates this merc and will now complain
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_ALL_IN_TEAM(other, gbPlayerNum)
 	{
-		if (s->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) continue;
+		if (other->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) continue;
 
 		// hates the merc who has arrived and is going to gripe about it!
-		switch (WhichHated(s->ubProfile, s->ubProfile))
+		switch (WhichHated(other->ubProfile, s->ubProfile))
 		{
-			case 0:  TacticalCharacterDialogue(s, QUOTE_HATED_1_ARRIVES); break;
-			case 1:  TacticalCharacterDialogue(s, QUOTE_HATED_2_ARRIVES); break;
+			case 0:  TacticalCharacterDialogue(other, QUOTE_HATED_1_ARRIVES); break;
+			case 1:  TacticalCharacterDialogue(other, QUOTE_HATED_2_ARRIVES); break;
 			default: break;
 		}
 	}
