@@ -118,7 +118,7 @@ BOOLEAN MercThinksBadReputationTooHigh(MERCPROFILESTRUCT const* const p)
 
 
 // only meaningful for already hired mercs
-BOOLEAN MercThinksHisMoraleIsTooLow( SOLDIERTYPE *pSoldier )
+BOOLEAN MercThinksHisMoraleIsTooLow(SOLDIERTYPE const* const pSoldier)
 {
 	INT8	bRepTolerance;
 	INT8	bMoraleTolerance;

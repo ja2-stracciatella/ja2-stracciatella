@@ -118,7 +118,7 @@ void ModifyPlayerReputation(INT8 bRepChange);
 
 BOOLEAN MercThinksDeathRateTooHigh(MERCPROFILESTRUCT const*);
 BOOLEAN MercThinksBadReputationTooHigh(MERCPROFILESTRUCT const*);
-BOOLEAN MercThinksHisMoraleIsTooLow( SOLDIERTYPE *pSoldier );
+BOOLEAN MercThinksHisMoraleIsTooLow(SOLDIERTYPE const*);
 
 void HandleEnricoEmail(void);
 
