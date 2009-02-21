@@ -52,17 +52,18 @@ BOOLEAN PerformDensityTest()
 	return FALSE;
 }
 
+
 void IncreaseSelectionDensity()
 {
-	if( gusSelectionDensity == 100 )
-		gusSelectionDensity = 2;
-	else if( gusSelectionDensity == 2 )
-		gusSelectionDensity = 5;
-	else if( gusSelectionDensity == 5 )
-		gusSelectionDensity = 10;
-	else
-		gusSelectionDensity += 10;
+	switch (gusSelectionDensity)
+	{
+		case   2: gusSelectionDensity  =  5; break;
+		case   5: gusSelectionDensity  = 10; break;
+		default:  gusSelectionDensity += 10; break;
+		case 100: gusSelectionDensity  =  2; break;
+	}
 }
+
 
 void DecreaseSelectionDensity()
 {
