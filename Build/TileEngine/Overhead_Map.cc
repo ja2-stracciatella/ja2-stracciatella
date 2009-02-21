@@ -184,61 +184,42 @@ static ITEM_POOL const* GetClosestItemPool(INT16 const sweet_gridno, UINT8 const
 			if (!item_pool) continue;
 
 			INT32 const range = GetRangeInCellCoordsFromGridNoDiff(sweet_gridno, gridno);
-			if (range >= lowest_range) continue;
+			if (lowest_range <= range) continue;
 
+			lowest_range      = range;
 			closest_item_pool = item_pool;
-			lowest_range     = range;
 		}
 	}
-
 	return closest_item_pool;
 }
 
 
-static SOLDIERTYPE* GetClosestMercInOverheadMap(INT16 sSweetGridNo, UINT8 ubRadius)
+static SOLDIERTYPE* GetClosestMercInOverheadMap(INT16 const sweet_gridno, UINT8 const radius)
 {
-	INT16  sTop, sBottom;
-	INT16  sLeft, sRight;
-	INT16  cnt1, cnt2;
-	INT16		sGridNo;
-	INT32		uiRange, uiLowestRange = 999999;
-	INT32					leftmost;
-
-	//create dummy soldier, and use the pathing to determine which nearby slots are
-	//reachable.
-
-	sTop		= ubRadius;
-	sBottom = -ubRadius;
-	sLeft   = - ubRadius;
-	sRight  = ubRadius;
-
-	uiLowestRange = 999999;
-
-	SOLDIERTYPE* res = NULL;
-	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
+	SOLDIERTYPE* res          = 0;
+	INT32        lowest_range = 999999;
+	for (INT16 y = -radius; y <= radius; ++y)
 	{
-		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * cnt1 ) )/ WORLD_COLS ) * WORLD_COLS;
-
-		for( cnt2 = sLeft; cnt2 <= sRight; cnt2++ )
+		INT32 const leftmost = (sweet_gridno + WORLD_COLS * y) / WORLD_COLS * WORLD_COLS;
+		for (INT16 x = -radius; x <= radius; ++x)
 		{
-			sGridNo = sSweetGridNo + ( WORLD_COLS * cnt1 ) + cnt2;
-			if( sGridNo >=0 && sGridNo < WORLD_MAX && sGridNo >= leftmost && sGridNo < ( leftmost + WORLD_COLS ) )
-			{
-				// Go on sweet stop
-        if ( gpWorldLevelData[ sGridNo ].pMercHead != NULL && gpWorldLevelData[ sGridNo ].pMercHead->pSoldier->bVisible != -1 )
-				{
-					uiRange = GetRangeInCellCoordsFromGridNoDiff( sSweetGridNo, sGridNo );
+			INT16 const gridno = sweet_gridno + WORLD_COLS * y + x;
+			if (gridno  < 0       || WORLD_MAX             <= gridno) continue;
+			if (gridno < leftmost || leftmost + WORLD_COLS <= gridno) continue;
 
-					if ( uiRange < uiLowestRange )
-					{
-						res = gpWorldLevelData[sGridNo].pMercHead->pSoldier;
-						uiLowestRange = uiRange;
-					}
-				}
-			}
+			// Go on sweet stop
+			LEVELNODE const* const l = gpWorldLevelData[gridno].pMercHead;
+			if (!l) continue;
+			SOLDIERTYPE* const s = l->pSoldier;
+			if (!l || s->bVisible == -1) continue;
+
+			INT32 const range = GetRangeInCellCoordsFromGridNoDiff(sweet_gridno, gridno);
+			if (lowest_range <= range) continue;
+
+			lowest_range = range;
+			res          = s;
 		}
 	}
-
 	return res;
 }
 
