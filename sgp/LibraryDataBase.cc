@@ -221,13 +221,13 @@ BOOLEAN LoadDataFromLibrary(LibraryFile* const f, void* const pData, const UINT3
 
 
 static const FileHeaderStruct* GetFileHeaderFromLibrary(const LibraryHeaderStruct* lib, const char* filename);
-static INT16 GetLibraryIDFromFileName(char const* filename);
+static LibraryHeaderStruct*    GetLibraryFromFileName(char const* filename);
 
 
 bool CheckIfFileExistInLibrary(char const* const filename)
 {
-	INT16 const lib_id = GetLibraryIDFromFileName(filename);
-	return lib_id != -1 && GetFileHeaderFromLibrary(&gFileDataBase.pLibraries[lib_id], filename);
+	LibraryHeaderStruct const* const lib = GetLibraryFromFileName(filename);
+	return lib && GetFileHeaderFromLibrary(lib, filename);
 }
 
 
@@ -237,29 +237,30 @@ static BOOLEAN IsLibraryOpened(INT16 sLibraryID);
 /* Find out if the file CAN be in a library.  It determines if the library that
  * the file MAY be in is open.  E.g. file is  Laptop/Test.sti, if the Laptop/
  * library is open, it returns true */
-static INT16 GetLibraryIDFromFileName(char const* const filename)
+static LibraryHeaderStruct* GetLibraryFromFileName(char const* const filename)
 {
 	// Loop through all the libraries to check which library the file is in
-	INT16 best_match = -1;
+	LibraryHeaderStruct* best_match = 0;
 	for (INT16 i = 0; i != gFileDataBase.usNumberOfLibraries; ++i)
 	{
 		if (!IsLibraryOpened(i)) continue;
 
-		char const* const lib_path = gFileDataBase.pLibraries[i].sLibraryPath;
+		LibraryHeaderStruct* const lib      = &gFileDataBase.pLibraries[i];
+		char const*          const lib_path = lib->sLibraryPath;
 		if (lib_path[0] == '\0')
 		{ // The library is for the default path
 			if (strchr(filename, '/')) continue;
 			// There is no directory in the file name
-			return i;
+			return lib;
 		}
 		else
 		{ // Compare the library name to the file name that is passed in
 			size_t const lib_path_len = strlen(lib_path);
 			if (strncasecmp(lib_path, filename, lib_path_len) != 0) continue;
 			// The directory paths are the same to the length of the lib's path
-			if (best_match != -1 && strlen(gFileDataBase.pLibraries[best_match].sLibraryPath) >= lib_path_len) continue;
+			if (best_match && strlen(best_match->sLibraryPath) >= lib_path_len) continue;
 			// We've never matched or this match's path is longer than the previous match (meaning it's more exact)
-			best_match = i;
+			best_match = lib;
 		}
 	}
 	return best_match;
@@ -299,10 +300,8 @@ static int CompareFileNames(const void* key, const void* member)
 BOOLEAN OpenFileFromLibrary(const char* const pName, LibraryFile* const f)
 {
 	//Check if the file can be contained from an open library ( the path to the file a library path )
-	const INT16 sLibraryID = GetLibraryIDFromFileName(pName);
-	if (sLibraryID == -1) return FALSE;
-
-	LibraryHeaderStruct* const lib = &gFileDataBase.pLibraries[sLibraryID];
+	LibraryHeaderStruct* const lib = GetLibraryFromFileName(pName);
+	if (!lib) return FALSE;
 
 	//if the file is in a library, get the file
 	const FileHeaderStruct* const pFileHeader = GetFileHeaderFromLibrary(lib, pName);
