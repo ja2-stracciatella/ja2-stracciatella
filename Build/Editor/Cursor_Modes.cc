@@ -67,15 +67,15 @@ void IncreaseSelectionDensity()
 
 void DecreaseSelectionDensity()
 {
-	if( gusSelectionDensity == 10 )
-		gusSelectionDensity = 5;
-	else if( gusSelectionDensity == 5 )
-		gusSelectionDensity = 2;
-	else if( gusSelectionDensity == 2 )
-		gusSelectionDensity = 100;
-	else
-		gusSelectionDensity -= 10;
+	switch (gusSelectionDensity)
+	{
+		case  2: gusSelectionDensity  = 100; break;
+		case  5: gusSelectionDensity  =   2; break;
+		case 10: gusSelectionDensity  =   5; break;
+		default: gusSelectionDensity -=  10; break;
+	}
 }
+
 
 void RemoveCursors()
 {
