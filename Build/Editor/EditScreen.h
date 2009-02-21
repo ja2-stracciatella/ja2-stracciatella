@@ -39,7 +39,6 @@ void ProcessAreaSelection( BOOLEAN fWithLeftButton );
 void ShowEntryPoints(void);
 
 extern BOOLEAN			gfConfirmExitFirst;
-extern BOOLEAN			gfConfirmExitPending;
 extern BOOLEAN			gfIntendOnEnteringEditor;
 
 void     EditScreenInit(void);

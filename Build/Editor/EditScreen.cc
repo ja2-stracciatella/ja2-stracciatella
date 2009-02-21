@@ -102,7 +102,7 @@ static BOOLEAN gfScheduleReversalPending = FALSE;
 static BOOLEAN gfRemoveLightsPending     = FALSE;
 static BOOLEAN gfScheduleClearPending    = FALSE;
 BOOLEAN			gfConfirmExitFirst = TRUE;
-BOOLEAN			gfConfirmExitPending = FALSE;
+static BOOLEAN gfConfirmExitPending      = FALSE;
 BOOLEAN			gfIntendOnEnteringEditor = FALSE;
 
 //original
