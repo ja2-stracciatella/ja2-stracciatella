@@ -1637,6 +1637,8 @@ static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version)
 static void SaveSoldierStructure(HWFILE const f)
 {
 	// Loop through all the soldier structs to save
+	void (&writer)(HWFILE, BYTE const*, UINT32) = guiSavedGameVersion < 87 ?
+		JA2EncryptedFileWrite : NewJA2EncryptedFileWrite;
 	for (UINT16 i = 0; i < TOTAL_SOLDIERS; ++i)
 	{
 		SOLDIERTYPE const* const s = GetMan(i);
@@ -1647,25 +1649,18 @@ static void SaveSoldierStructure(HWFILE const f)
 
 		// Save the soldier structure
 #ifdef _WIN32 // XXX HACK000A
-		BYTE Data[2328];
+		BYTE data[2328];
 #else
-		BYTE Data[2352];
+		BYTE data[2352];
 #endif
-		InjectSoldierType(Data, s);
-		if (guiSavedGameVersion < 87)
-		{
-			JA2EncryptedFileWrite(f, Data, sizeof(Data));
-		}
-		else
-		{
-			NewJA2EncryptedFileWrite(f, Data, sizeof(Data));
-		}
+		InjectSoldierType(data, s);
+		writer(f, data, sizeof(data));
 
 		// Save all the pointer info from the structure
 		SaveMercPath(f, s->pMercPath);
 
 		// Save the key ring
-		UINT8 const has_keyring = s->pKeyRing != NULL;
+		UINT8 const has_keyring = s->pKeyRing != 0;
 		FileWrite(f, &has_keyring, sizeof(has_keyring));
 		if (!has_keyring) continue;
 		FileWrite(f, s->pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING));
