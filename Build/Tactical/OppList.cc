@@ -3746,7 +3746,7 @@ void MakeNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 b
 	}
 	else
 	{
-		OurNoise(noise_maker, sGridNo, bLevel, ubTerrType, ubVolume, ubNoiseType);
+		OurNoise(noise_maker, sGridNo, bLevel, ubVolume, ubNoiseType);
 	}
 }
 
@@ -3754,7 +3754,7 @@ void MakeNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 b
 static void ProcessNoise(SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubBaseVolume, UINT8 ubNoiseType);
 
 
-void OurNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubTerrType, const UINT8 ubVolume, const UINT8 ubNoiseType)
+void OurNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubVolume, const UINT8 ubNoiseType)
 {
 #ifdef BYPASSNOISE
 	return;
