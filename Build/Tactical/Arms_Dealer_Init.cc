@@ -1680,7 +1680,7 @@ void RemoveSpecialItemFromArmsDealerInventoryAtElement(ArmsDealerID const ubArms
 
 
 
-BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
+BOOLEAN AddDeadArmsDealerItemsToWorld(SOLDIERTYPE const* const pSoldier)
 {
 	UINT16	usItemIndex;
 	UINT8 ubElement;
@@ -1691,9 +1691,8 @@ BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 	DEALER_SPECIAL_ITEM *pSpecialItem;
 	SPECIAL_ITEM_INFO SpclItemInfo;
 
-
 	//Get Dealer ID from from merc Id
-	ArmsDealerID const bArmsDealer = GetArmsDealerIDFromMercID(ubMercID);
+	ArmsDealerID const bArmsDealer = GetArmsDealerIDFromMercID(pSoldier->ubProfile);
 	if (bArmsDealer == ARMS_DEALER_INVALID)
 	{
 		// not a dealer, that's ok, we get called for every dude that croaks.
@@ -1703,18 +1702,6 @@ BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID )
 
 	// mark the dealer as being out of business!
 	gArmsDealerStatus[ bArmsDealer ].fOutOfBusiness = TRUE;
-
-
-	//Get a pointer to the dealer
-	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubMercID);
-	if( pSoldier == NULL )
-	{
-		// This should never happen, a dealer getting knocked off without the sector being loaded, should it?
-		// If it's possible, we should modify code below to dump his belongings into the sector without using pSoldier->sGridNo
-		Assert(0);
-		return( FALSE );
-	}
-
 
 	//loop through all the items in the dealer's inventory, and drop them all where the dealer was set up.
 

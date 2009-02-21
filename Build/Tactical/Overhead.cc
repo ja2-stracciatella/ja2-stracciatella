@@ -2772,7 +2772,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 	}
 
 	//if the NPC is a dealer, add the dealers items to the ground
-	AddDeadArmsDealerItemsToWorld(pSoldierOld->ubProfile);
+	AddDeadArmsDealerItemsToWorld(pSoldierOld);
 
 	//The queen AI layer must process the event by subtracting forces, etc.
 	ProcessQueenCmdImplicationsOfDeath(pSoldierOld);

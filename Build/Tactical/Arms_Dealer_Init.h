@@ -3,6 +3,7 @@
 
 #include "Arms_Dealer.h"
 #include "Item_Types.h"
+#include "JA2Types.h"
 
 
 //the enums for the different kinds of arms dealers
@@ -223,7 +224,7 @@ BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID );
 BOOLEAN CanDealerTransactItem(ArmsDealerID, UINT16 usItemIndex, BOOLEAN fPurchaseFromPlayer);
 BOOLEAN CanDealerRepairItem(ArmsDealerID, UINT16 usItemIndex);
 
-BOOLEAN AddDeadArmsDealerItemsToWorld( UINT8 ubMercID );
+BOOLEAN AddDeadArmsDealerItemsToWorld(SOLDIERTYPE const*);
 
 void		MakeObjectOutOfDealerItems( UINT16 usItemIndex, SPECIAL_ITEM_INFO *pSpclItemInfo, OBJECTTYPE *pObject, UINT8 ubHowMany );
 
