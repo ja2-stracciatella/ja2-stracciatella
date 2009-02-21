@@ -3739,7 +3739,6 @@ void MakeNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 b
 		SNoise.ubNoiseMaker = SOLDIER2ID(noise_maker);
 		SNoise.sGridNo      = sGridNo;
 		SNoise.bLevel       = bLevel;
-		SNoise.ubTerrType   = ubTerrType;
 		SNoise.ubVolume     = ubVolume;
 		SNoise.ubNoiseType  = ubNoiseType;
 		AddGameEvent( S_NOISE, DEMAND_EVENT_DELAY, &SNoise );

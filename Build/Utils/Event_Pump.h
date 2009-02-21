@@ -74,7 +74,6 @@ struct EV_S_NOISE
 	UINT8 ubNoiseMaker;
 	INT16 sGridNo;
 	UINT8 bLevel;
-	UINT8 ubTerrType;
 	UINT8 ubVolume;
 	UINT8 ubNoiseType;
 };
