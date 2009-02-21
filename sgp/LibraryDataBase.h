@@ -60,8 +60,6 @@ void    CloseLibraryFile(LibraryFile*);
 BOOLEAN LoadDataFromLibrary(LibraryFile*, void* pData, UINT32 uiBytesToRead);
 BOOLEAN LibraryFileSeek(LibraryFile*, INT32 distance, FileSeekMode);
 
-BOOLEAN IsLibraryOpened( INT16 sLibraryID );
-
 BOOLEAN GetLibraryFileTime( INT16 sLibraryID, UINT32 uiFileNum, SGP_FILETIME	*pLastWriteTime );
 
 #endif

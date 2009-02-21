@@ -240,6 +240,9 @@ BOOLEAN CheckIfFileExistInLibrary(const char *pFileName)
 }
 
 
+static BOOLEAN IsLibraryOpened(INT16 sLibraryID);
+
+
 /* Find out if the file CAN be in a library.  It determines if the library that
  * the file MAY be in is open.  E.g. file is  Laptop/Test.sti, if the Laptop/
  * library is open, it returns true */
@@ -392,7 +395,7 @@ static BOOLEAN CloseLibrary(INT16 sLibraryID)
 }
 
 
-BOOLEAN IsLibraryOpened(const INT16 sLibraryID)
+static BOOLEAN IsLibraryOpened(INT16 const sLibraryID)
 {
 	return
 		sLibraryID < gFileDataBase.usNumberOfLibraries &&
