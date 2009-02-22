@@ -2293,149 +2293,131 @@ INT32 FindTravelTimeBetweenWaypoints(WAYPOINT const* const pSource, WAYPOINT con
 }
 
 
+#define FOOT_TRAVEL_TIME    89
+#define CAR_TRAVEL_TIME     30
+#define TRUCK_TRAVEL_TIME   32
+#define TRACKED_TRAVEL_TIME 46
+#define AIR_TRAVEL_TIME     10
 
-#define FOOT_TRAVEL_TIME		89
-#define CAR_TRAVEL_TIME			30
-#define TRUCK_TRAVEL_TIME		32
-#define TRACKED_TRAVEL_TIME	46
-#define AIR_TRAVEL_TIME			10
 
-
-//CHANGES:  ubDirection contains the strategic move value, not the delta value.
-INT32 GetSectorMvtTimeForGroup(UINT8 const ubSector, UINT8 const ubDirection, GROUP const* const pGroup)
+// Changes: direction contains the strategic move value, not the delta value.
+INT32 GetSectorMvtTimeForGroup(UINT8 const ubSector, UINT8 const direction, GROUP const* const g)
 {
-	INT32 iTraverseTime;
-	INT32 iBestTraverseTime = 1000000;
-	INT32 iEncumbrance, iHighestEncumbrance = 0;
-	SOLDIERTYPE *pSoldier;
-	BOOLEAN fFoot, fCar, fTruck, fTracked, fAir;
-	UINT8 ubTraverseType;
-	UINT8 ubTraverseMod;
+	/* Determine the group's method(s) of transportation.  If more than one, we
+	 * will always use the highest time. */
+	UINT8 const transport_mask     = g->ubTransportationMask;
+	UINT8 const traverse_type      = SectorInfo[ubSector].ubTraversability[direction];
+	INT32       best_traverse_time = 1000000;
 
+	if (traverse_type == EDGEOFWORLD) return 0xFFFFFFFF; // Can't travel here!
 
-	// THIS FUNCTION WAS WRITTEN TO HANDLE MOVEMENT TYPES WHERE MORE THAN ONE TRANSPORTAION TYPE IS AVAILABLE.
+	/* ARM: Made air-only travel take its normal time per sector even through
+	 * towns.  Because Skyrider charges by the sector, not by flying time, it's
+	 * annoying when his default route detours through a town to save time, but
+	 * costs extra money. This isn't exactly unrealistic, since the chopper
+	 * shouldn't be faster flying over a town anyway. Not that other kinds of
+	 * travel should be either - but the towns represents a kind of warping of our
+	 * space-time scale as it is. */
+	if (traverse_type == TOWN && transport_mask != AIR)
+		return 5; // Very fast, and vehicle types don't matter.
 
-	//Determine the group's method(s) of tranportation.  If more than one,
-	//we will always use the highest time.
-	fFoot = (UINT8)(pGroup->ubTransportationMask & FOOT);
-	fCar = (UINT8)(pGroup->ubTransportationMask & CAR);
-	fTruck = (UINT8)(pGroup->ubTransportationMask & TRUCK);
-	fTracked = (UINT8)(pGroup->ubTransportationMask & TRACKED);
-	fAir = (UINT8)(pGroup->ubTransportationMask & AIR);
-
-	ubTraverseType = SectorInfo[ ubSector ].ubTraversability[ ubDirection ];
-
-	if( ubTraverseType == EDGEOFWORLD )
-		return 0xffffffff; //can't travel here!
-
-	// ARM: Made air-only travel take its normal time per sector even through towns.  Because Skyrider charges by the sector,
-	// not by flying time, it's annoying when his default route detours through a town to save time, but costs extra money.
-	// This isn't exactly unrealistic, since the chopper shouldn't be faster flying over a town anyway...  Not that other
-	// kinds of travel should be either - but the towns represents a kind of warping of our space-time scale as it is...
-	if( ( ubTraverseType == TOWN ) && ( pGroup->ubTransportationMask != AIR ) )
-		return 5; //very fast, and vehicle types don't matter.
-
-	if( fFoot )
+	if (transport_mask & FOOT)
 	{
-		switch( ubTraverseType )
+		UINT8 traverse_mod;
+		switch (traverse_type)
 		{
-			case ROAD:						ubTraverseMod = 100;break;
-			case PLAINS:					ubTraverseMod = 85; break;
-			case SAND:						ubTraverseMod = 50;	break;
-			case SPARSE:					ubTraverseMod = 70;	break;
-			case DENSE:						ubTraverseMod = 60;	break;
-			case SWAMP:						ubTraverseMod = 35;	break;
-			case WATER:						ubTraverseMod = 25;	break;
-			case HILLS:						ubTraverseMod = 50;	break;
-			case GROUNDBARRIER:		ubTraverseMod = 0;	break;
-			case NS_RIVER:				ubTraverseMod = 25;	break;
-			case EW_RIVER:				ubTraverseMod = 25;	break;
-			default:
-				Assert( 0 );
-				return 0xffffffff;
+			case ROAD:     traverse_mod = 100; break;
+			case PLAINS:   traverse_mod =  85; break;
+			case SAND:     traverse_mod =  50; break;
+			case SPARSE:   traverse_mod =  70; break;
+			case DENSE:    traverse_mod =  60; break;
+			case SWAMP:    traverse_mod =  35; break;
+			case WATER:    traverse_mod =  25; break;
+			case HILLS:    traverse_mod =  50; break;
+			case NS_RIVER: traverse_mod =  25; break;
+			case EW_RIVER: traverse_mod =  25; break;
+			default:       return 0xFFFFFFFF; // Group can't traverse here.
 		}
-		if( ubTraverseMod == 0 )
-			return 0xffffffff; //Group can't traverse here.
-		iTraverseTime  = FOOT_TRAVEL_TIME * 100 / ubTraverseMod;
-		if( iTraverseTime < iBestTraverseTime )
-			iBestTraverseTime = iTraverseTime;
+		INT32 const traverse_time = FOOT_TRAVEL_TIME * 100 / traverse_mod;
+		if (best_traverse_time > traverse_time)
+			best_traverse_time = traverse_time;
 
-		if( pGroup->fPlayer )
+		if (g->fPlayer)
 		{
-			CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
+			INT32 highest_encumbrance = 100;
+			CFOR_ALL_PLAYERS_IN_GROUP(curr, g)
 			{
-				pSoldier = curr->pSoldier;
-				if( pSoldier->bAssignment != VEHICLE )
-				{ //Soldier is on foot and travelling.  Factor encumbrance into movement rate.
-					iEncumbrance = CalculateCarriedWeight( pSoldier );
-					if( iEncumbrance > iHighestEncumbrance )
-					{
-						iHighestEncumbrance = iEncumbrance;
-					}
+				SOLDIERTYPE const* const s = curr->pSoldier;
+				if (s->bAssignment == VEHICLE) continue;
+				/* Soldier is on foot and travelling.  Factor encumbrance into movement
+				 * rate. */
+				INT32 const encumbrance = CalculateCarriedWeight(s);
+				if (highest_encumbrance < encumbrance)
+				{
+					highest_encumbrance = encumbrance;
 				}
 			}
-			if( iHighestEncumbrance > 100 )
-			{
-				iBestTraverseTime = iBestTraverseTime * iHighestEncumbrance / 100;
-			}
+			best_traverse_time = best_traverse_time * highest_encumbrance / 100;
 		}
 	}
-	if( fCar )
+
+	if (transport_mask & CAR)
 	{
-		switch( ubTraverseType )
+		UINT8 traverse_mod;
+		switch (traverse_type)
 		{
-			case ROAD:					ubTraverseMod = 100;	break;
-			default:						ubTraverseMod = 0;		break;
+			case ROAD: traverse_mod = 100; break;
+			default:   return 0xFFFFFFFF; // Group can't traverse here.
 		}
-		if( ubTraverseMod == 0 )
-			return 0xffffffff; //Group can't traverse here.
-		iTraverseTime  = CAR_TRAVEL_TIME * 100 / ubTraverseMod;
-		if( iTraverseTime < iBestTraverseTime )
-			iBestTraverseTime = iTraverseTime;
+		INT32 const traverse_time = CAR_TRAVEL_TIME * 100 / traverse_mod;
+		if (best_traverse_time > traverse_time)
+			best_traverse_time = traverse_time;
 	}
-	if( fTruck )
+
+	if (transport_mask & TRUCK)
 	{
-		switch( ubTraverseType )
+		UINT8 traverse_mod;
+		switch (traverse_type)
 		{
-			case ROAD:					ubTraverseMod = 100;	break;
-			case PLAINS:				ubTraverseMod = 75;	break;
-			case SPARSE:				ubTraverseMod = 60;	break;
-			case HILLS:					ubTraverseMod = 50;	break;
-			default:						ubTraverseMod = 0;	break;
+			case ROAD:   traverse_mod = 100; break;
+			case PLAINS: traverse_mod =  75; break;
+			case SPARSE: traverse_mod =  60; break;
+			case HILLS:  traverse_mod =  50; break;
+			default:     return 0xFFFFFFFF; // Group can't traverse here.
 		}
-		if( ubTraverseMod == 0 )
-			return 0xffffffff; //Group can't traverse here.
-		iTraverseTime  = TRUCK_TRAVEL_TIME * 100 / ubTraverseMod;
-		if( iTraverseTime < iBestTraverseTime )
-			iBestTraverseTime = iTraverseTime;
+		INT32 const traverse_time = TRUCK_TRAVEL_TIME * 100 / traverse_mod;
+		if (best_traverse_time > traverse_time)
+			best_traverse_time = traverse_time;
 	}
-	if( fTracked )
+
+	if (transport_mask & TRACKED)
 	{
-		switch( ubTraverseType )
+		UINT8 traverse_mod;
+		switch (traverse_type)
 		{
-			case ROAD:					ubTraverseMod = 100;	break;
-			case PLAINS:				ubTraverseMod = 100;	break;
-			case SAND:					ubTraverseMod = 70;		break;
-			case SPARSE:				ubTraverseMod = 60;		break;
-			case HILLS:					ubTraverseMod = 60;		break;
-			case NS_RIVER:			ubTraverseMod = 20;		break;
-			case EW_RIVER:			ubTraverseMod = 20;		break;
-			case WATER:					ubTraverseMod = 10;		break;
-			default:						ubTraverseMod = 0;		break;
+			case ROAD:     traverse_mod = 100; break;
+			case PLAINS:   traverse_mod = 100; break;
+			case SAND:     traverse_mod =  70; break;
+			case SPARSE:   traverse_mod =  60; break;
+			case HILLS:    traverse_mod =  60; break;
+			case NS_RIVER: traverse_mod =  20; break;
+			case EW_RIVER: traverse_mod =  20; break;
+			case WATER:    traverse_mod =  10; break;
+			default:       return 0xFFFFFFFF; // Group can't traverse here.
 		}
-		if( ubTraverseMod == 0 )
-			return 0xffffffff; //Group can't traverse here.
-		iTraverseTime  = TRACKED_TRAVEL_TIME * 100 / ubTraverseMod;
-		if( iTraverseTime < iBestTraverseTime )
-			iBestTraverseTime = iTraverseTime;
+		INT32 const traverse_time = TRACKED_TRAVEL_TIME * 100 / traverse_mod;
+		if (best_traverse_time > traverse_time)
+			best_traverse_time = traverse_time;
 	}
-	if( fAir )
+
+	if (transport_mask & AIR)
 	{
-		iTraverseTime  = AIR_TRAVEL_TIME;
-		if( iTraverseTime < iBestTraverseTime )
-			iBestTraverseTime = iTraverseTime;
+		INT32 const traverse_time = AIR_TRAVEL_TIME;
+		if (best_traverse_time > traverse_time)
+			best_traverse_time = traverse_time;
 	}
-	return iBestTraverseTime;
+
+	return best_traverse_time;
 }
 
 
