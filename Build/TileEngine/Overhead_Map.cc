@@ -243,7 +243,7 @@ static void DisplayMercNameInOverhead(SOLDIERTYPE const& s)
 	y += gsStartRestrictedY - 8;
 
 	y += s.sHeightAdjustment / 5;
-	y += GetOffsetLandHeight(s.sGridNo) / 5;
+	y -= GetOffsetLandHeight(s.sGridNo) / 5;
 	y += gsRenderHeight / 5;
 
 	INT16 sX;
