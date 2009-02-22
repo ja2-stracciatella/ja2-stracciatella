@@ -230,27 +230,27 @@ static INT16 GetOffsetLandHeight(INT32 const gridno)
 }
 
 
-static void DisplayMercNameInOverhead(const SOLDIERTYPE* const pSoldier)
+static void DisplayMercNameInOverhead(SOLDIERTYPE const& s)
 {
-	INT16		sWorldScreenX, sX;
-	INT16		sWorldScreenY, sY;
+	// Get Screen position of guy
+	INT16 sWorldScreenX;
+	INT16 sWorldScreenY;
+	GetAbsoluteScreenXYFromMapPos(s.sGridNo, &sWorldScreenX, &sWorldScreenY);
+	INT16 x = sWorldScreenX / 5;
+	INT16 y = sWorldScreenY / 5;
 
-	// Get Screen position of guy.....
-	GetAbsoluteScreenXYFromMapPos(GETWORLDINDEXFROMWORLDCOORDS(pSoldier->sY, pSoldier->sX), &sWorldScreenX, &sWorldScreenY);
+	x += gsStartRestrictedX + 5;
+	y += gsStartRestrictedY - 8;
 
-	sWorldScreenX = gsStartRestrictedX + ( sWorldScreenX / 5 ) + 5;
-	sWorldScreenY = gsStartRestrictedY + ( sWorldScreenY / 5 ) + ( pSoldier->sHeightAdjustment / 5 ) + (GetOffsetLandHeight(pSoldier->sGridNo) / 5) - 8;
+	y += s.sHeightAdjustment / 5;
+	y += GetOffsetLandHeight(s.sGridNo) / 5;
+	y += gsRenderHeight / 5;
 
-	sWorldScreenY += ( gsRenderHeight / 5 );
-
-	// Display name
+	INT16 sX;
+	INT16 sY;
 	SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-
-	// Center here....
-	FindFontCenterCoordinates(sWorldScreenX, sWorldScreenY, 1, 1, pSoldier->name, TINYFONT1, &sX, &sY);
-
-	// OK, selected guy is here...
-	GDirtyPrint(sX, sY, pSoldier->name);
+	FindFontCenterCoordinates(x, y, 1, 1, s.name, TINYFONT1, &sX, &sY);
+	GDirtyPrint(sX, sY, s.name);
 }
 
 
@@ -336,7 +336,7 @@ void HandleOverheadMap(void)
 			if (s != NULL)
 			{
 				if (s->bTeam == gbPlayerNum) gSelectedGuy = s;
-				DisplayMercNameInOverhead(s);
+				DisplayMercNameInOverhead(*s);
       }
 		}
 	}
@@ -345,7 +345,7 @@ void HandleOverheadMap(void)
 	if (!gfEditMode && !gfTacticalPlacementGUIActive)
 	{
 		const SOLDIERTYPE* const sel = GetSelectedMan();
-		if (sel != NULL) DisplayMercNameInOverhead(sel);
+		if (sel != NULL) DisplayMercNameInOverhead(*sel);
 	}
 
 	RenderButtons();
