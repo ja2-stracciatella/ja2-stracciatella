@@ -253,7 +253,7 @@ static void DisplayMercNameInOverhead(SOLDIERTYPE const& s)
 	INT16 x;
 	INT16 y;
 	GetOverheadScreenXYFromGridNo(s.sGridNo, &x, &y);
-	y += s.sHeightAdjustment / 5 - 13;
+	y -= s.sHeightAdjustment / 5 + 13;
 
 	INT16 sX;
 	INT16 sY;

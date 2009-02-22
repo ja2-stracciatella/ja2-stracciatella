@@ -1,3 +1,4 @@
+(r5421) Fix a vanilla glitch: In the overhead map the name of soldiers on a roof was not properly printed over their markers.
 (r5418) Fix a vanilla glitch: In the overhead map for sectors with elevated land (e.g. D13) the name of soldiers was not properly printed over their markers.
 (r5416) Fix a vanilla glitch: In the overhead map for sectors with elevated land (e.g. D13) the mouse cursors did not align with the displayed soldier and item markers.
 (r5277) Fix a vanilla bug: When trying to hire a merc while the team is full, the option to buy his equipment is lost.
