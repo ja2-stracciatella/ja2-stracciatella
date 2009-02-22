@@ -306,8 +306,7 @@ void HandleOverheadMap(void)
 	{
 		HandleAnyMercInSquadHasCompatibleStuff(NULL);
 
-		INT16 usMapPos;
-		usMapPos = GetOverheadMouseGridNo();
+		INT16 const usMapPos = GetOverheadMouseGridNo();
 		if (usMapPos != NOWHERE)
 		{
 			const ITEM_POOL* pItemPool;
@@ -336,9 +335,17 @@ void HandleOverheadMap(void)
 				}
 			}
     }
+	}
+
+	RenderOverheadOverlays();
+
+	if (!gfEditMode && !gfTacticalPlacementGUIActive)
+	{
+		const SOLDIERTYPE* const sel = GetSelectedMan();
+		if (sel != NULL) DisplayMercNameInOverhead(*sel);
 
 		gSelectedGuy = NULL;
-		usMapPos = GetOverheadMouseGridNoForFullSoldiersGridNo();
+		INT16 const usMapPos = GetOverheadMouseGridNoForFullSoldiersGridNo();
 		if (usMapPos != NOWHERE)
     {
 			SOLDIERTYPE* const s = GetClosestMercInOverheadMap(usMapPos, 1);
@@ -348,13 +355,6 @@ void HandleOverheadMap(void)
 				DisplayMercNameInOverhead(*s);
       }
 		}
-	}
-
-	RenderOverheadOverlays();
-	if (!gfEditMode && !gfTacticalPlacementGUIActive)
-	{
-		const SOLDIERTYPE* const sel = GetSelectedMan();
-		if (sel != NULL) DisplayMercNameInOverhead(*sel);
 	}
 
 	RenderButtons();
