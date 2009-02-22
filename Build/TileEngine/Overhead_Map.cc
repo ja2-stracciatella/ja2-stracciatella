@@ -480,382 +480,264 @@ static INT16 GetModifiedOffsetLandHeight(INT32 const gridno)
 }
 
 
-void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStartPointX_S, INT16 sStartPointY_S, INT16 sEndXS, INT16 sEndYS, BOOLEAN fFromMapUtility )
+void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, INT16 const sStartPointX_S, INT16 const sStartPointY_S, INT16 const sEndXS, INT16 const sEndYS, BOOLEAN const fFromMapUtility)
 {
-	INT8				bXOddFlag = 0;
-	INT16				sModifiedHeight = 0;
-	INT16				sAnchorPosX_M, sAnchorPosY_M;
-	INT16				sAnchorPosX_S, sAnchorPosY_S;
-	INT16				sTempPosX_M, sTempPosY_M;
-	INT16				sTempPosX_S, sTempPosY_S;
-	BOOLEAN			fEndRenderRow = FALSE, fEndRenderCol = FALSE;
-	UINT32			usTileIndex;
-	INT16				sX, sY;
-	LEVELNODE		*pNode;
-	SMALL_TILE_DB	*pTile;
-	INT16				sHeight;
-	INT16				sX1, sX2, sY1, sY2;
-
 	if (!gfOverheadMapDirty) return;
-	// Black out.......
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, sStartPointX_S, sStartPointY_S, sEndXS,	sEndYS, 0 );
 
-	InvalidateScreen( );
+	// Black out
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, sStartPointX_S, sStartPointY_S, sEndXS,	sEndYS, 0);
+
+	InvalidateScreen();
 	gfOverheadMapDirty = FALSE;
-
-	// Begin Render Loop
-	sAnchorPosX_M = sStartPointX_M;
-	sAnchorPosY_M = sStartPointY_M;
-	sAnchorPosX_S = sStartPointX_S;
-	sAnchorPosY_S = sStartPointY_S;
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
 		UINT16* const pDestBuf         = l.Buffer<UINT16>();
 		UINT32  const uiDestPitchBYTES = l.Pitch();
 
-		do
-		{
-
-			fEndRenderRow = FALSE;
-			sTempPosX_M = sAnchorPosX_M;
-			sTempPosY_M = sAnchorPosY_M;
-			sTempPosX_S = sAnchorPosX_S;
-			sTempPosY_S = sAnchorPosY_S;
-
-			if(bXOddFlag > 0)
-				sTempPosX_S += 4;
-
-
+		{ // Begin Render Loop
+			INT16 sAnchorPosX_M = sStartPointX_M;
+			INT16 sAnchorPosY_M = sStartPointY_M;
+			INT16 sAnchorPosX_S = sStartPointX_S;
+			INT16 sAnchorPosY_S = sStartPointY_S;
+			bool  bXOddFlag     = false;
 			do
 			{
-
-				usTileIndex=FASTMAPROWCOLTOPOS( sTempPosY_M, sTempPosX_M );
-
-				if ( usTileIndex < GRIDSIZE )
-				{
-					sHeight=( GetOffsetLandHeight(usTileIndex) /5);
-
-					pNode = gpWorldLevelData[ usTileIndex ].pLandStart;
-					while( pNode != NULL )
-					{
-
-						pTile = &( gSmTileDB[ pNode->usIndex ] );
-
-						sX = sTempPosX_S;
-						sY = sTempPosY_S - sHeight + ( gsRenderHeight / 5 );
-
-						pTile->vo->CurrentShade(pNode->ubShadeLevel);
-
-						Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex);
-
-						pNode = pNode->pPrevNode;
-					}
-
-				}
-
-				sTempPosX_S += 8;
-				sTempPosX_M ++;
-				sTempPosY_M --;
-
-				if ( sTempPosX_S >= sEndXS )
-				{
-					fEndRenderRow = TRUE;
-				}
-
-			} while( !fEndRenderRow );
-
-			if ( bXOddFlag > 0 )
-			{
-				sAnchorPosY_M ++;
-			}
-			else
-			{
-				sAnchorPosX_M ++;
-			}
-
-
-			bXOddFlag = !bXOddFlag;
-			sAnchorPosY_S += 2;
-
-			if ( sAnchorPosY_S >= sEndYS )
-			{
-				fEndRenderCol = TRUE;
-			}
-
-		}
-		while( !fEndRenderCol );
-
-
-
-		// Begin Render Loop
-		sAnchorPosX_M = sStartPointX_M;
-		sAnchorPosY_M = sStartPointY_M;
-		sAnchorPosX_S = sStartPointX_S;
-		sAnchorPosY_S = sStartPointY_S;
-		bXOddFlag = 0;
-		fEndRenderRow = FALSE;
-		fEndRenderCol = FALSE;
-
-		do
-		{
-
-			fEndRenderRow = FALSE;
-			sTempPosX_M = sAnchorPosX_M;
-			sTempPosY_M = sAnchorPosY_M;
-			sTempPosX_S = sAnchorPosX_S;
-			sTempPosY_S = sAnchorPosY_S;
-
-			if(bXOddFlag > 0)
-				sTempPosX_S += 4;
-
-
-			do
-			{
-
-				usTileIndex=FASTMAPROWCOLTOPOS( sTempPosY_M, sTempPosX_M );
-
-				if ( usTileIndex < GRIDSIZE )
-				{
-					sHeight=( GetOffsetLandHeight(usTileIndex) /5);
-					sModifiedHeight = ( GetModifiedOffsetLandHeight( usTileIndex ) / 5 );
-
-					pNode = gpWorldLevelData[ usTileIndex ].pObjectHead;
-					while( pNode != NULL )
-					{
-
-						if ( pNode->usIndex < NUMBEROFTILES )
-						{
-							// Don't render itempools!
-							if ( !( pNode->uiFlags & LEVELNODE_ITEM ) )
-							{
-								pTile = &( gSmTileDB[ pNode->usIndex ] );
-
-								sX = sTempPosX_S;
-								sY = sTempPosY_S;
-
-								if( gTileDatabase[ pNode->usIndex ].uiFlags & IGNORE_WORLD_HEIGHT )
-								{
-									sY -= sModifiedHeight;
-								}
-								else
-								{
-									sY -= sHeight;
-								}
-
-								sY += ( gsRenderHeight / 5 );
-
-								pTile->vo->CurrentShade(pNode->ubShadeLevel);
-
-								// RENDER!
-								Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex);
-							}
-						}
-
-						pNode = pNode->pNext;
-					}
-
-
-					pNode = gpWorldLevelData[ usTileIndex ].pShadowHead;
-					while( pNode != NULL )
-					{
-						if ( pNode->usIndex < NUMBEROFTILES )
-						{
-							pTile = &( gSmTileDB[ pNode->usIndex ] );
-							sX = sTempPosX_S;
-							sY = sTempPosY_S - sHeight;
-
-							sY += ( gsRenderHeight / 5 );
-
-							pTile->vo->CurrentShade(pNode->ubShadeLevel);
-
-							// RENDER!
-							Blt8BPPDataTo16BPPBufferShadow(pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex);
-						}
-
-						pNode = pNode->pNext;
-					}
-
-					pNode = gpWorldLevelData[ usTileIndex ].pStructHead;
-
-					while( pNode != NULL )
-					{
-						if ( pNode->usIndex < NUMBEROFTILES )
-						{
-							// Don't render itempools!
-							if ( !( pNode->uiFlags & LEVELNODE_ITEM ) )
-							{
-								pTile = &( gSmTileDB[ pNode->usIndex ] );
-
-								sX = sTempPosX_S;
-								sY = sTempPosY_S - (gTileDatabase[ pNode->usIndex ].sOffsetHeight/5);
-
-								if( gTileDatabase[ pNode->usIndex ].uiFlags & IGNORE_WORLD_HEIGHT )
-								{
-									sY -= sModifiedHeight;
-								}
-								else
-								{
-									sY -= sHeight;
-								}
-
-								sY += ( gsRenderHeight / 5 );
-
-								pTile->vo->CurrentShade(pNode->ubShadeLevel);
-
-								// RENDER!
-								Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex);
-							}
-						}
-
-						pNode = pNode->pNext;
-					}
-				}
-
-				sTempPosX_S += 8;
-				sTempPosX_M ++;
-				sTempPosY_M --;
-
-				if ( sTempPosX_S >= sEndXS )
-				{
-					fEndRenderRow = TRUE;
-				}
-
-			} while( !fEndRenderRow );
-
-			if ( bXOddFlag > 0 )
-			{
-				sAnchorPosY_M ++;
-			}
-			else
-			{
-				sAnchorPosX_M ++;
-			}
-
-
-			bXOddFlag = !bXOddFlag;
-			sAnchorPosY_S += 2;
-
-			if ( sAnchorPosY_S >= sEndYS )
-			{
-				fEndRenderCol = TRUE;
-			}
-
-		}
-		while( !fEndRenderCol );
-
-		//if ( !fFromMapUtility && !gfEditMode )
-		{
-
-			// ROOF RENDR LOOP
-			// Begin Render Loop
-			sAnchorPosX_M = sStartPointX_M;
-			sAnchorPosY_M = sStartPointY_M;
-			sAnchorPosX_S = sStartPointX_S;
-			sAnchorPosY_S = sStartPointY_S;
-			bXOddFlag = 0;
-			fEndRenderRow = FALSE;
-			fEndRenderCol = FALSE;
-
-			do
-			{
-
-				fEndRenderRow = FALSE;
-				sTempPosX_M = sAnchorPosX_M;
-				sTempPosY_M = sAnchorPosY_M;
-				sTempPosX_S = sAnchorPosX_S;
-				sTempPosY_S = sAnchorPosY_S;
-
-				if(bXOddFlag > 0)
-					sTempPosX_S += 4;
-
+				INT16 sTempPosX_M = sAnchorPosX_M;
+				INT16 sTempPosY_M = sAnchorPosY_M;
+				INT16 sTempPosX_S = sAnchorPosX_S;
+				INT16 sTempPosY_S = sAnchorPosY_S;
+				if (bXOddFlag) sTempPosX_S += 4;
 				do
 				{
-					usTileIndex=FASTMAPROWCOLTOPOS( sTempPosY_M, sTempPosX_M );
-
-					if ( usTileIndex < GRIDSIZE )
+					UINT32 const usTileIndex = FASTMAPROWCOLTOPOS(sTempPosY_M, sTempPosX_M);
+					if (usTileIndex < GRIDSIZE)
 					{
-						sHeight=( GetOffsetLandHeight(usTileIndex) /5);
-
-						pNode = gpWorldLevelData[ usTileIndex ].pRoofHead;
-						while( pNode != NULL )
+						INT16 const sHeight = GetOffsetLandHeight(usTileIndex) / 5;
+						for (LEVELNODE const* n = gpWorldLevelData[usTileIndex].pLandStart; n; n = n->pPrevNode)
 						{
-							if ( pNode->usIndex < NUMBEROFTILES )
-							{
-								if ( !( pNode->uiFlags & LEVELNODE_HIDDEN ) )
-								{
-									pTile = &( gSmTileDB[ pNode->usIndex ] );
-
-									sX = sTempPosX_S;
-									sY = sTempPosY_S - (gTileDatabase[ pNode->usIndex ].sOffsetHeight/5) -sHeight;
-
-									sY -= ( WALL_HEIGHT/5 );
-
-									sY += ( gsRenderHeight / 5 );
-
-									pTile->vo->CurrentShade(pNode->ubShadeLevel);
-
-									// RENDER!
-									Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile->vo, sX, sY, pTile->usSubIndex);
-								}
-							}
-							pNode = pNode->pNext;
+							SMALL_TILE_DB const& pTile = gSmTileDB[n->usIndex];
+							INT16         const  sX    = sTempPosX_S;
+							INT16         const  sY    = sTempPosY_S - sHeight + gsRenderHeight / 5;
+							pTile.vo->CurrentShade(n->ubShadeLevel);
+							Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
 						}
 					}
 
 					sTempPosX_S += 8;
-					sTempPosX_M ++;
-					sTempPosY_M --;
+					++sTempPosX_M;
+					--sTempPosY_M;
+				}
+				while (sTempPosX_S < sEndXS);
 
-					if ( sTempPosX_S >= sEndXS )
-					{
-						fEndRenderRow = TRUE;
-					}
-
-				} while( !fEndRenderRow );
-
-				if ( bXOddFlag > 0 )
+				if (bXOddFlag)
 				{
-					sAnchorPosY_M ++;
+					++sAnchorPosY_M;
 				}
 				else
 				{
-					sAnchorPosX_M ++;
+					++sAnchorPosX_M;
 				}
-
 
 				bXOddFlag = !bXOddFlag;
 				sAnchorPosY_S += 2;
+			}
+			while (sAnchorPosY_S < sEndYS);
+		}
 
-				if ( sAnchorPosY_S >= sEndYS )
+		{ // Begin Render Loop
+			INT16 sAnchorPosX_M = sStartPointX_M;
+			INT16 sAnchorPosY_M = sStartPointY_M;
+			INT16 sAnchorPosX_S = sStartPointX_S;
+			INT16 sAnchorPosY_S = sStartPointY_S;
+			bool  bXOddFlag     = false;
+			do
+			{
+				INT16 sTempPosX_M = sAnchorPosX_M;
+				INT16 sTempPosY_M = sAnchorPosY_M;
+				INT16 sTempPosX_S = sAnchorPosX_S;
+				INT16 sTempPosY_S = sAnchorPosY_S;
+				if (bXOddFlag) sTempPosX_S += 4;
+				do
 				{
-					fEndRenderCol = TRUE;
+					UINT32 const usTileIndex = FASTMAPROWCOLTOPOS(sTempPosY_M, sTempPosX_M);
+					if (usTileIndex < GRIDSIZE)
+					{
+						INT16 const sHeight         = GetOffsetLandHeight(usTileIndex) / 5;
+						INT16 const sModifiedHeight = GetModifiedOffsetLandHeight(usTileIndex) / 5;
+
+						for (LEVELNODE const* n = gpWorldLevelData[usTileIndex].pObjectHead; n; n = n->pNext)
+						{
+							if (n->usIndex >= NUMBEROFTILES) continue;
+							// Don't render itempools!
+							if (n->uiFlags & LEVELNODE_ITEM) continue;
+
+							SMALL_TILE_DB const& pTile = gSmTileDB[n->usIndex];
+							INT16         const  sX    = sTempPosX_S;
+							INT16                sY    = sTempPosY_S;
+
+							if (gTileDatabase[n->usIndex].uiFlags & IGNORE_WORLD_HEIGHT)
+							{
+								sY -= sModifiedHeight;
+							}
+							else
+							{
+								sY -= sHeight;
+							}
+
+							sY += gsRenderHeight / 5;
+
+							pTile.vo->CurrentShade(n->ubShadeLevel);
+							Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
+						}
+
+						for (LEVELNODE const* n = gpWorldLevelData[usTileIndex].pShadowHead; n; n = n->pNext)
+						{
+							if (n->usIndex >= NUMBEROFTILES) continue;
+
+							SMALL_TILE_DB const& pTile = gSmTileDB[n->usIndex];
+							INT16         const  sX    = sTempPosX_S;
+							INT16                sY    = sTempPosY_S - sHeight;
+
+							sY += gsRenderHeight / 5;
+
+							pTile.vo->CurrentShade(n->ubShadeLevel);
+							Blt8BPPDataTo16BPPBufferShadow(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
+						}
+
+						for (LEVELNODE const* n = gpWorldLevelData[usTileIndex].pStructHead; n; n = n->pNext)
+						{
+							if (n->usIndex >= NUMBEROFTILES) continue;
+							// Don't render itempools!
+							if (n->uiFlags & LEVELNODE_ITEM) continue;
+
+							SMALL_TILE_DB const& pTile = gSmTileDB[n->usIndex];
+							INT16         const  sX    = sTempPosX_S;
+							INT16                sY    = sTempPosY_S - gTileDatabase[n->usIndex].sOffsetHeight / 5;
+
+							if (gTileDatabase[n->usIndex].uiFlags & IGNORE_WORLD_HEIGHT)
+							{
+								sY -= sModifiedHeight;
+							}
+							else
+							{
+								sY -= sHeight;
+							}
+
+							sY += gsRenderHeight / 5;
+
+							pTile.vo->CurrentShade(n->ubShadeLevel);
+							Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
+						}
+					}
+
+					sTempPosX_S += 8;
+					++sTempPosX_M;
+					--sTempPosY_M;
+				}
+				while (sTempPosX_S < sEndXS);
+
+				if (bXOddFlag)
+				{
+					++sAnchorPosY_M;
+				}
+				else
+				{
+					++sAnchorPosX_M;
 				}
 
+				bXOddFlag = !bXOddFlag;
+				sAnchorPosY_S += 2;
 			}
-			while( !fEndRenderCol );
+			while (sAnchorPosY_S < sEndYS);
+		}
+
+		{ // ROOF RENDR LOOP
+			// Begin Render Loop
+			INT16 sAnchorPosX_M = sStartPointX_M;
+			INT16 sAnchorPosY_M = sStartPointY_M;
+			INT16 sAnchorPosX_S = sStartPointX_S;
+			INT16 sAnchorPosY_S = sStartPointY_S;
+			bool  bXOddFlag     = false;
+			do
+			{
+				INT16 sTempPosX_M = sAnchorPosX_M;
+				INT16 sTempPosY_M = sAnchorPosY_M;
+				INT16 sTempPosX_S = sAnchorPosX_S;
+				INT16 sTempPosY_S = sAnchorPosY_S;
+				if (bXOddFlag) sTempPosX_S += 4;
+				do
+				{
+					UINT32 const usTileIndex = FASTMAPROWCOLTOPOS(sTempPosY_M, sTempPosX_M);
+					if (usTileIndex < GRIDSIZE)
+					{
+						INT16 const sHeight = GetOffsetLandHeight(usTileIndex) / 5;
+
+						for (LEVELNODE const* n = gpWorldLevelData[usTileIndex].pRoofHead; n; n = n->pNext)
+						{
+							if (n->usIndex >= NUMBEROFTILES)   continue;
+							if (n->uiFlags & LEVELNODE_HIDDEN) continue;
+
+							SMALL_TILE_DB const& pTile = gSmTileDB[n->usIndex];
+							INT16         const  sX    = sTempPosX_S;
+							INT16                sY    = sTempPosY_S - gTileDatabase[n->usIndex].sOffsetHeight / 5 - sHeight;
+
+							sY -= WALL_HEIGHT / 5;
+							sY += gsRenderHeight / 5;
+
+							pTile.vo->CurrentShade(n->ubShadeLevel);
+
+							// RENDER!
+							Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, pTile.vo, sX, sY, pTile.usSubIndex);
+						}
+					}
+
+					sTempPosX_S += 8;
+					++sTempPosX_M;
+					--sTempPosY_M;
+				}
+				while (sTempPosX_S < sEndXS);
+
+				if (bXOddFlag)
+				{
+					++sAnchorPosY_M;
+				}
+				else
+				{
+					++sAnchorPosX_M;
+				}
+
+				bXOddFlag = !bXOddFlag;
+				sAnchorPosY_S += 2;
+			}
+			while (sAnchorPosY_S < sEndYS);
 		}
 	}
 
 	// OK, blacken out edges of smaller maps...
-	if ( gMapInformation.ubRestrictedScrollID != 0 )
+	if (gMapInformation.ubRestrictedScrollID != 0)
 	{
-		CalculateRestrictedMapCoords( NORTH, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS );
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, sX1, sY1, sX2, sY2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+		UINT16 const black = Get16BPPColor(FROMRGB(0, 0, 0));
+		INT16 sX1;
+		INT16 sX2;
+		INT16 sY1;
+		INT16 sY2;
 
-		CalculateRestrictedMapCoords( WEST, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS );
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, sX1, sY1, sX2, sY2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+		CalculateRestrictedMapCoords(NORTH, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS);
+		ColorFillVideoSurfaceArea(FRAME_BUFFER, sX1, sY1, sX2, sY2, black);
 
-		CalculateRestrictedMapCoords( SOUTH, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS );
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, sX1, sY1, sX2, sY2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+		CalculateRestrictedMapCoords(WEST, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS);
+		ColorFillVideoSurfaceArea(FRAME_BUFFER, sX1, sY1, sX2, sY2, black);
 
-		CalculateRestrictedMapCoords( EAST, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS );
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, sX1, sY1, sX2, sY2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+		CalculateRestrictedMapCoords(SOUTH, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS);
+		ColorFillVideoSurfaceArea(FRAME_BUFFER, sX1, sY1, sX2, sY2, black);
+
+		CalculateRestrictedMapCoords(EAST, &sX1, &sY1, &sX2, &sY2, sEndXS, sEndYS);
+		ColorFillVideoSurfaceArea(FRAME_BUFFER, sX1, sY1, sX2, sY2, black);
 
 	}
 
-	if ( !fFromMapUtility )
-	{
-		// Render border!
+	if (!fFromMapUtility)
+	{ // Render border!
 		BltVideoObject(FRAME_BUFFER, uiOVERMAP, 0, 0, 0);
 	}
 
