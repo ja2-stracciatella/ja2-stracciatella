@@ -224,6 +224,12 @@ static SOLDIERTYPE* GetClosestMercInOverheadMap(INT16 const sweet_gridno, UINT8 
 }
 
 
+static INT16 GetOffsetLandHeight(INT32 const gridno)
+{
+	return gpWorldLevelData[gridno].sHeight;
+}
+
+
 static void DisplayMercNameInOverhead(const SOLDIERTYPE* const pSoldier)
 {
 	INT16		sWorldScreenX, sX;
@@ -233,7 +239,7 @@ static void DisplayMercNameInOverhead(const SOLDIERTYPE* const pSoldier)
 	GetAbsoluteScreenXYFromMapPos(GETWORLDINDEXFROMWORLDCOORDS(pSoldier->sY, pSoldier->sX), &sWorldScreenX, &sWorldScreenY);
 
 	sWorldScreenX = gsStartRestrictedX + ( sWorldScreenX / 5 ) + 5;
-	sWorldScreenY = gsStartRestrictedY + ( sWorldScreenY / 5 ) + ( pSoldier->sHeightAdjustment / 5 ) + (gpWorldLevelData[ pSoldier->sGridNo ].sHeight/5) - 8;
+	sWorldScreenY = gsStartRestrictedY + ( sWorldScreenY / 5 ) + ( pSoldier->sHeightAdjustment / 5 ) + (GetOffsetLandHeight(pSoldier->sGridNo) / 5) - 8;
 
 	sWorldScreenY += ( gsRenderHeight / 5 );
 
@@ -457,22 +463,12 @@ void KillOverheadMap()
 }
 
 
-static INT16 GetOffsetLandHeight(INT32 sGridNo)
-{
-	INT16 sTileHeight;
-
-	sTileHeight = gpWorldLevelData[ sGridNo ].sHeight;
-
-	return( sTileHeight );
-}
-
-
 static INT16 GetModifiedOffsetLandHeight(INT32 sGridNo)
 {
 	INT16 sTileHeight;
 	INT16 sModifiedTileHeight;
 
-	sTileHeight = gpWorldLevelData[ sGridNo ].sHeight;
+	sTileHeight = GetOffsetLandHeight(sGridNo);
 
 	sModifiedTileHeight = ( ( ( sTileHeight / 80 ) - 1 ) * 80 );
 
@@ -886,9 +882,6 @@ static void GetOverheadScreenXYFromGridNo(INT16 const gridno, INT16* const psScr
 }
 
 
-static void GetOverheadScreenXYFromGridNo(INT16 sGridNo, INT16* psScreenX, INT16* psScreenY);
-
-
 static void RenderOverheadOverlays(void)
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
@@ -1035,7 +1028,7 @@ static GridNo InternalGetOverheadMouseGridNo(const INT dy)
 	const GridNo grid_no = GetMapPosFromAbsoluteScreenXY(sWorldScreenX, sWorldScreenY);
 
 	// Adjust for height.....
-	sWorldScreenY = sWorldScreenY + gpWorldLevelData[grid_no].sHeight;
+	sWorldScreenY += GetOffsetLandHeight(grid_no);
 
 	return GetMapPosFromAbsoluteScreenXY(sWorldScreenX, sWorldScreenY);
 }
