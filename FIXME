@@ -202,13 +202,7 @@ uiMouthDelay: always 120
 
 GROUP // TODO not finished
 ubOriginalSector: write-only, read to write-only
-ubFatigueLevel
-ubRestAtFatigueLevel
-ubRestToFatigueLevel
-fRestAtNight
-fWaypointsCancelled_UNUSED
 ubCreatedSectorID: write-only
-bPadding
 
 MERCPROFILESTRUCT
 ubFaceIndex: overwritten after load from data file

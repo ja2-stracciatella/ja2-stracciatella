@@ -127,8 +127,6 @@ GROUP* CreateNewPlayerGroupDepartingFromSector(UINT8 const ubSectorX, UINT8 cons
 	pNew->fPlayer = TRUE;
 	pNew->ubMoveType = ONE_WAY;
 	pNew->ubNextWaypointID = 0;
-	pNew->ubFatigueLevel = 100;
-	pNew->ubRestAtFatigueLevel = 0;
 	pNew->ubTransportationMask = FOOT;
 	pNew->fVehicle = FALSE;
 	pNew->ubCreatedSectorID = pNew->ubOriginalSector;
@@ -150,8 +148,6 @@ GROUP* CreateNewVehicleGroupDepartingFromSector(UINT8 const ubSectorX, UINT8 con
 	pNew->ubOriginalSector = (UINT8)SECTOR( ubSectorX, ubSectorY );
 	pNew->ubMoveType = ONE_WAY;
 	pNew->ubNextWaypointID = 0;
-	pNew->ubFatigueLevel = 100;
-	pNew->ubRestAtFatigueLevel = 0;
 	pNew->fVehicle = TRUE;
 	pNew->fPlayer = TRUE;
 	pNew->pPlayerList = NULL;
@@ -533,8 +529,6 @@ GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmin
 	pNew->fPlayer = FALSE;
 	pNew->ubMoveType = CIRCULAR;
 	pNew->ubNextWaypointID = 0;
-	pNew->ubFatigueLevel = 100;
-	pNew->ubRestAtFatigueLevel = 0;
 	pNew->pEnemyGroup->ubNumAdmins = ubNumAdmins;
 	pNew->pEnemyGroup->ubNumTroops = ubNumTroops;
 	pNew->pEnemyGroup->ubNumElites = ubNumElites;
@@ -2705,13 +2699,10 @@ void SaveStrategicMovementGroupsToSaveGameFile(HWFILE const f)
 		INJ_BOOL(d, g->fBetweenSectors)
 		INJ_U8(d, g->ubMoveType)
 		INJ_U8(d, g->ubNextWaypointID)
-		INJ_U8(d, g->ubFatigueLevel)
-		INJ_U8(d, g->ubRestAtFatigueLevel)
-		INJ_U8(d, g->ubRestToFatigueLevel)
+		INJ_SKIP(d, 3)
 		INJ_U32(d, g->uiArrivalTime)
 		INJ_U32(d, g->uiTraverseTime)
-		INJ_BOOL(d, g->fRestAtNight)
-		INJ_SKIP(d, 7)
+		INJ_SKIP(d, 8)
 		INJ_U8(d, g->ubTransportationMask)
 		INJ_SKIP(d, 3)
 		INJ_U32(d, g->uiFlags)
@@ -2781,13 +2772,10 @@ void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE const f)
 		EXTR_BOOL(d, g->fBetweenSectors)
 		EXTR_U8(d, g->ubMoveType)
 		EXTR_U8(d, g->ubNextWaypointID)
-		EXTR_U8(d, g->ubFatigueLevel)
-		EXTR_U8(d, g->ubRestAtFatigueLevel)
-		EXTR_U8(d, g->ubRestToFatigueLevel)
+		EXTR_SKIP(d, 3)
 		EXTR_U32(d, g->uiArrivalTime)
 		EXTR_U32(d, g->uiTraverseTime)
-		EXTR_BOOL(d, g->fRestAtNight)
-		EXTR_SKIP(d, 7)
+		EXTR_SKIP(d, 8)
 		EXTR_U8(d, g->ubTransportationMask)
 		EXTR_SKIP(d, 3)
 		EXTR_U32(d, g->uiFlags)

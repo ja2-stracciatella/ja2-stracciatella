@@ -100,12 +100,8 @@ struct GROUP
 	BOOLEAN fBetweenSectors;			//set only if a group is between sector.
 	UINT8 ubMoveType;							//determines the type of movement (ONE_WAY, CIRCULAR, ENDTOEND, etc.)
 	UINT8 ubNextWaypointID;				//the ID of the next waypoint
-	UINT8 ubFatigueLevel;					//the fatigue level of the weakest member in group
-	UINT8 ubRestAtFatigueLevel;		//when the group's fatigue level <= this level, they will rest upon arrival at next sector.
-	UINT8 ubRestToFatigueLevel;		//when resting, the group will rest until the fatigue level reaches this level.
 	UINT32 uiArrivalTime;					//the arrival time in world minutes that the group will arrive at the next sector.
 	UINT32 uiTraverseTime;				//the total traversal time from the previous sector to the next sector.
-	BOOLEAN fRestAtNight;					//set when the group is permitted to rest between 2200 and 0600 when moving
 	WAYPOINT *pWaypoints;					//a list of all of the waypoints in the groups movement.
 	UINT8 ubTransportationMask;		//the mask combining all of the groups transportation methods.
 	UINT32 uiFlags;								//various conditions that apply to the group
