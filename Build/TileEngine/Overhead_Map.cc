@@ -869,6 +869,23 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 }
 
 
+static void GetOverheadScreenXYFromGridNo(INT16 const gridno, INT16* const psScreenX, INT16* const psScreenY)
+{
+	GetAbsoluteScreenXYFromMapPos(gridno, psScreenX, psScreenY);
+	INT16 x = *psScreenX / 5;
+	INT16 y = *psScreenY / 5;
+
+	x += gsStartRestrictedX + 5;
+	y += gsStartRestrictedY + 5;
+
+	y -= GetOffsetLandHeight(gridno) / 5;
+	y += gsRenderHeight / 5;
+
+	*psScreenX = x;
+	*psScreenY = y;
+}
+
+
 static void GetOverheadScreenXYFromGridNo(INT16 sGridNo, INT16* psScreenX, INT16* psScreenY);
 
 
@@ -904,9 +921,7 @@ static void RenderOverheadOverlays(void)
 		sX += 2;
 		sY -= 5;
 
-		sY -= GetOffsetLandHeight(s->sGridNo) / 5;
 		sY -= s->sHeightAdjustment / 5; // Adjust for height
-		sY += gsRenderHeight / 5;
 
 		UINT32 const shade =
 			s == sel             ? 2 :
@@ -950,8 +965,6 @@ static void RenderOverheadOverlays(void)
 
 			//adjust for position.
 			sY += 6;
-			sY -= GetOffsetLandHeight(wi->sGridNo) / 5;
-			sY += gsRenderHeight / 5;
 
 			UINT32 col;
 			if (gsOveritemPoolGridNo == wi->sGridNo)
@@ -1007,20 +1020,6 @@ static void ClickOverheadRegionCallback(MOUSE_REGION* reg, INT32 reason)
 	{
 		KillOverheadMap();
 	}
-}
-
-
-static void GetOverheadScreenXYFromGridNo(INT16 sGridNo, INT16* psScreenX, INT16* psScreenY)
-{
-	GetAbsoluteScreenXYFromMapPos(sGridNo, psScreenX, psScreenY);
-	*psScreenX /= 5;
-	*psScreenY /= 5;
-
-	*psScreenX += gsStartRestrictedX + 5;
-	*psScreenY += gsStartRestrictedY + 5;
-
-	//Subtract the height....
-  //*psScreenY -= gpWorldLevelData[ sGridNo ].sHeight / 5;
 }
 
 
