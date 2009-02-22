@@ -472,21 +472,11 @@ void KillOverheadMap()
 }
 
 
-static INT16 GetModifiedOffsetLandHeight(INT32 sGridNo)
+static INT16 GetModifiedOffsetLandHeight(INT32 const gridno)
 {
-	INT16 sTileHeight;
-	INT16 sModifiedTileHeight;
-
-	sTileHeight = GetOffsetLandHeight(sGridNo);
-
-	sModifiedTileHeight = ( ( ( sTileHeight / 80 ) - 1 ) * 80 );
-
-	if ( sModifiedTileHeight < 0 )
-	{
-		sModifiedTileHeight = 0;
-	}
-
-	return( sModifiedTileHeight );
+	INT16 const h     = GetOffsetLandHeight(gridno);
+	INT16 const mod_h = (h / 80 - 1) * 80;
+	return mod_h < 0 ? 0 : mod_h;
 }
 
 
