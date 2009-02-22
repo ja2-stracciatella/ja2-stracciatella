@@ -214,8 +214,8 @@ UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
 // Is this player group in motion?
 BOOLEAN PlayerGroupInMotion(GROUP const*);
 
-// is the player greoup with this id in motion
-BOOLEAN PlayerIDGroupInMotion( UINT8 ubID );
+// Is the player greoup with this id in motion
+bool PlayerIDGroupInMotion(UINT8 id);
 
 // get number of mercs between sectors
 BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnter, INT32 *iCountExit, BOOLEAN *fAboutToArriveEnter );

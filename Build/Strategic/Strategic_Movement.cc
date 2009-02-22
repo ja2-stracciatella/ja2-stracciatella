@@ -2465,23 +2465,10 @@ UINT8 PlayerGroupsInSector(UINT8 const x, UINT8 const y, UINT8 const z)
 
 
 // is the player group with this id in motion?
-BOOLEAN PlayerIDGroupInMotion( UINT8 ubID )
+bool PlayerIDGroupInMotion(UINT8 const id)
 {
-	GROUP *pGroup;
-
-	// get the group
-	pGroup = GetGroup( ubID );
-
-	// make sure it is valid
-
-	// no group
-	if( pGroup == NULL )
-	{
-		return ( FALSE );
-	}
-
-
-	return( PlayerGroupInMotion( pGroup ) );
+	GROUP* const g = GetGroup(id);
+	return g && PlayerGroupInMotion(g);
 }
 
 
