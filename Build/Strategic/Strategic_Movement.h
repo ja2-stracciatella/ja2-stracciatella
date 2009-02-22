@@ -187,9 +187,6 @@ BOOLEAN AddWaypointIDToPGroup( GROUP *pGroup, UINT8 ubSectorID );
 //Same, but uses a strategic sectorID
 BOOLEAN AddWaypointStrategicIDToPGroup( GROUP *pGroup, UINT32 uiSectorID );
 
-//Allows you to change any group's orders based on movement type, and when to rest
-BOOLEAN SetGroupPatrolParameters( UINT8 ubGroupID, UINT8 ubRestAtFL, UINT8 ubRestToFL, BOOLEAN fRestAtNight );
-
 //Enemy grouping functions -- private use by the strategic AI.
 //............................................................
 GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites );
