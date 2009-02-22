@@ -2470,15 +2470,9 @@ void SaveBackupNPCInfoToSaveGameFile(HWFILE const f)
 
 void LoadBackupNPCInfoFromSavedGameFile(HWFILE const f)
 {
-	UINT32		cnt;
-	UINT32		uiNumberOfProfilesToLoad=0;
-
-	uiNumberOfProfilesToLoad = NUM_PROFILES;
-
-	//Loop through all the NPC quotes
-	for( cnt=0; cnt<uiNumberOfProfilesToLoad; cnt++ )
+	for (NPCQuoteInfo** i = gpBackupNPCQuoteInfoArray; i != endof(gpBackupNPCQuoteInfoArray); ++i)
 	{
-		ConditionalExtractNPCQuoteInfoArrayFromFile(f, gpBackupNPCQuoteInfoArray[cnt]);
+		ConditionalExtractNPCQuoteInfoArrayFromFile(f, *i);
 	}
 }
 
