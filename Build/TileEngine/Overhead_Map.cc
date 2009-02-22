@@ -230,21 +230,30 @@ static INT16 GetOffsetLandHeight(INT32 const gridno)
 }
 
 
+static void GetOverheadScreenXYFromGridNo(INT16 const gridno, INT16* const out_x, INT16* const out_y)
+{
+	GetAbsoluteScreenXYFromMapPos(gridno, out_x, out_y);
+	INT16 x = *out_x / 5;
+	INT16 y = *out_y / 5;
+
+	x += gsStartRestrictedX + 5;
+	y += gsStartRestrictedY + 5;
+
+	y -= GetOffsetLandHeight(gridno) / 5;
+	y += gsRenderHeight / 5;
+
+	*out_x = x;
+	*out_y = y;
+}
+
+
 static void DisplayMercNameInOverhead(SOLDIERTYPE const& s)
 {
 	// Get Screen position of guy
-	INT16 sWorldScreenX;
-	INT16 sWorldScreenY;
-	GetAbsoluteScreenXYFromMapPos(s.sGridNo, &sWorldScreenX, &sWorldScreenY);
-	INT16 x = sWorldScreenX / 5;
-	INT16 y = sWorldScreenY / 5;
-
-	x += gsStartRestrictedX + 5;
-	y += gsStartRestrictedY - 8;
-
-	y += s.sHeightAdjustment / 5;
-	y -= GetOffsetLandHeight(s.sGridNo) / 5;
-	y += gsRenderHeight / 5;
+	INT16 x;
+	INT16 y;
+	GetOverheadScreenXYFromGridNo(s.sGridNo, &x, &y);
+	y += s.sHeightAdjustment / 5 - 13;
 
 	INT16 sX;
 	INT16 sY;
@@ -862,23 +871,6 @@ void RenderOverheadMap( INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sStart
 
 	// Update the save buffer
 	BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
-}
-
-
-static void GetOverheadScreenXYFromGridNo(INT16 const gridno, INT16* const psScreenX, INT16* const psScreenY)
-{
-	GetAbsoluteScreenXYFromMapPos(gridno, psScreenX, psScreenY);
-	INT16 x = *psScreenX / 5;
-	INT16 y = *psScreenY / 5;
-
-	x += gsStartRestrictedX + 5;
-	y += gsStartRestrictedY + 5;
-
-	y -= GetOffsetLandHeight(gridno) / 5;
-	y += gsRenderHeight / 5;
-
-	*psScreenX = x;
-	*psScreenY = y;
 }
 
 
