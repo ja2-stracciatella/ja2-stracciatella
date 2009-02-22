@@ -1,3 +1,4 @@
+(r5416) Fix a vanilla glitch: In the overhead map for sectors with elevated land (e.g. D13) the mouse cursors did not align with the displayed soldier and item markers.
 (r5277) Fix a vanilla bug: When trying to hire a merc while the team is full, the option to buy his equipment is lost.
 (r5275) Fix a vanilla bug: When closing the laptop via the ESC key while visiting the IMP site the "X" button for closing was not removed.
 (r5258) Allow all printable chars in text input fields. E.g. umlauts and cyrillic letters are allowed in savegame descriptions now.

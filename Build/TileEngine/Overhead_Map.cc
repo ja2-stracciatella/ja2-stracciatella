@@ -1029,6 +1029,7 @@ static GridNo InternalGetOverheadMouseGridNo(const INT dy)
 
 	// Adjust for height.....
 	sWorldScreenY += GetOffsetLandHeight(grid_no);
+	sWorldScreenY -= gsRenderHeight;
 
 	return GetMapPosFromAbsoluteScreenXY(sWorldScreenX, sWorldScreenY);
 }
