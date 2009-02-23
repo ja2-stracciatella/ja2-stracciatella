@@ -4769,92 +4769,65 @@ static void AttributeMenuMvtCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void SquadMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, INT32 const reason)
 {
 	// btn callback handler for assignment region
-	INT32 iValue = -1;
-	SOLDIERTYPE * pSoldier = NULL;
-	CHAR16 sString[ 128 ];
-
-	pSoldier = GetSelectedAssignSoldier( FALSE );
-
-	iValue = MSYS_GetRegionUserData( pRegion, 0 );
-
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if( iValue == SQUAD_MENU_CANCEL )
-		{
-			// stop displaying, leave
-			fShowSquadMenu = FALSE;
+		INT32 const value = MSYS_GetRegionUserData(pRegion, 0);
 
-			// unhighlight the assignment box
-			UnHighLightBox( ghAssignmentBox );
-
-			// dirty region
-			fTeamPanelDirty = TRUE;
-			fMapScreenBottomDirty = TRUE;
+		if (value == SQUAD_MENU_CANCEL)
+		{ // Stop displaying, leave
+			UnHighLightBox(ghAssignmentBox);
+			fShowSquadMenu           = FALSE;
+			fTeamPanelDirty          = TRUE;
+			fMapScreenBottomDirty    = TRUE;
 			fCharacterInfoPanelDirty = TRUE;
-			gfRenderPBInterface = TRUE;
-
+			gfRenderPBInterface      = TRUE;
 			return;
 		}
 
-		JoinSquadResult const bCanJoinSquad = CanCharacterSquad( pSoldier, ( INT8 )iValue );
-		// can the character join this squad?  (If already in it, accept that as a legal choice and exit menu)
-		if (bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD ||
-				bCanJoinSquad == CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT)
+		/* Can the character join this squad?  If already in it, accept that as a
+		 * legal choice and exit menu */
+		SOLDIERTYPE* const s = GetSelectedAssignSoldier(FALSE);
+		switch (CanCharacterSquad(s, value))
 		{
-			if ( bCanJoinSquad == CHARACTER_CAN_JOIN_SQUAD )
-			{
-				// able to add, do it
-				PreChangeAssignment(pSoldier);
-				AddCharacterToSquad( pSoldier, ( INT8 )iValue );
-				MakeSoldiersTacticalAnimationReflectAssignment( pSoldier );
-			}
+			case CHARACTER_CAN_JOIN_SQUAD: // able to add, do it
+				PreChangeAssignment(s);
+				AddCharacterToSquad(s, value);
+				MakeSoldiersTacticalAnimationReflectAssignment(s);
+				/* FALLTHROUGH */
+			case CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT:
+				// Stop displaying, leave
+				fShowAssignmentMenu      = FALSE;
+				giAssignHighLine         = -1;
+				fTeamPanelDirty          = TRUE;
+				fMapScreenBottomDirty    = TRUE;
+				fCharacterInfoPanelDirty = TRUE;
+				gfRenderPBInterface      = TRUE;
+				break;
 
-			// stop displaying, leave
-			fShowAssignmentMenu = FALSE;
-			giAssignHighLine = -1;
-
-			// dirty region
-			fTeamPanelDirty = TRUE;
-			fMapScreenBottomDirty = TRUE;
-			fCharacterInfoPanelDirty = TRUE;
-			gfRenderPBInterface = TRUE;
-		}
-		else
-		{
-			BOOLEAN fDisplayError = TRUE;
-
-			switch( bCanJoinSquad )
-			{
-				case CHARACTER_CANT_JOIN_SQUAD_SQUAD_MOVING:
-					swprintf( sString, lengthof(sString), pMapErrorString[ 36 ], pSoldier->name, pLongAssignmentStrings[ iValue ] );
-					break;
-				case CHARACTER_CANT_JOIN_SQUAD_VEHICLE:
-					swprintf( sString, lengthof(sString), pMapErrorString[ 37 ], pSoldier->name );
-					break;
-				case CHARACTER_CANT_JOIN_SQUAD_TOO_FAR:
-					swprintf( sString, lengthof(sString), pMapErrorString[ 20 ], pSoldier->name, pLongAssignmentStrings[ iValue ] );
-					break;
-				case CHARACTER_CANT_JOIN_SQUAD_FULL:
-					swprintf( sString, lengthof(sString), pMapErrorString[ 19 ], pSoldier->name, pLongAssignmentStrings[ iValue ] );
-					break;
-				default:
-					// generic "you can't join this squad" msg
-					swprintf( sString, lengthof(sString), pMapErrorString[ 38 ], pSoldier->name, pLongAssignmentStrings[ iValue ] );
-					break;
-			}
-
-			if ( fDisplayError )
-			{
-				DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL);
-			}
-
+				wchar_t buf[128];
+			case CHARACTER_CANT_JOIN_SQUAD_SQUAD_MOVING:
+				swprintf(buf, lengthof(buf), pMapErrorString[36], s->name, pLongAssignmentStrings[value]);
+				goto show_error;
+			case CHARACTER_CANT_JOIN_SQUAD_VEHICLE:
+				swprintf(buf, lengthof(buf), pMapErrorString[37], s->name);
+				goto show_error;
+			case CHARACTER_CANT_JOIN_SQUAD_TOO_FAR:
+				swprintf(buf, lengthof(buf), pMapErrorString[20], s->name, pLongAssignmentStrings[value]);
+				goto show_error;
+			case CHARACTER_CANT_JOIN_SQUAD_FULL:
+				swprintf(buf, lengthof(buf), pMapErrorString[19], s->name, pLongAssignmentStrings[value]);
+				goto show_error;
+			default: // generic "you can't join this squad" msg
+				swprintf(buf, lengthof(buf), pMapErrorString[38], s->name, pLongAssignmentStrings[value]);
+show_error:
+				DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, NULL);
+				break;
 		}
 
-		// set this assignment for the list too
-		SetAssignmentForList( ( INT8 ) iValue, 0 );
+		SetAssignmentForList(value, 0);
 	}
 }
 
