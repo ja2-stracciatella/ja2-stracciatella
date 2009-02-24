@@ -1,3 +1,4 @@
+(r5429) Fix a bug in r3369, which caused that the first merc leaving the helicopter was not placed in the center of the map.
 (r5422) Improve the overhead map a bit: Print the name of the soldier the mouse is over last, so it is not covered by markers or the name of the selected soldier.
 (r5421) Fix a vanilla glitch: In the overhead map the name of soldiers on a roof was not properly printed over their markers.
 (r5418) Fix a vanilla glitch: In the overhead map for sectors with elevated land (e.g. D13) the name of soldiers was not properly printed over their markers.

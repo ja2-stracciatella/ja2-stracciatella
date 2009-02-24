@@ -1,5 +1,5 @@
 HACK0010
-TODO001C
+TODO001D
 
 - HACK0001 put the process properly to sleep during idle phases instead of SDL_Delay(1)
 - HACK0007 Stop PreRandom always returning 0 or 1 without ensuring an equal distribution, which would be a rather complex task with pregenerated randoms
@@ -36,3 +36,4 @@ TODO001C
 - TODO001A investigate, if these ScreenIDs are sensible
 - TODO001B OBJECT_NO_OVERWRITE flag handling, when deciding which items an enemy should drop, is strange
 - TODO001C Buffer overflow when plotting long (> 256 tiles) paths
+- TODO001D When a merc leaves the helicopter, he is placed in the center of the map. But for the first merc (who creates a new squad) PlaceGroupInSector() is called, which moves him to an edge. The later call to SetSoldierExitHelicopterInsertionData() corrects this. Investigate if this can be simplified (maybe removing the PlaceGroupInSector() is possible)

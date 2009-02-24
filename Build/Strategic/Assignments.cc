@@ -4793,10 +4793,16 @@ static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, INT32 const reason
 		switch (CanCharacterSquad(s, value))
 		{
 			case CHARACTER_CAN_JOIN_SQUAD: // able to add, do it
+			{
+				bool const exiting_helicopter =
+					s->bAssignment == VEHICLE &&
+					s->iVehicleId  == iHelicopterVehicleId;
 				PreChangeAssignment(s);
 				AddCharacterToSquad(s, value);
+				if (exiting_helicopter) SetSoldierExitHelicopterInsertionData(s); // XXX TODO001D
 				MakeSoldiersTacticalAnimationReflectAssignment(s);
 				/* FALLTHROUGH */
+			}
 			case CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT:
 				// Stop displaying, leave
 				fShowAssignmentMenu      = FALSE;
