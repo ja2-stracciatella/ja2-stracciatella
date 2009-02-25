@@ -485,53 +485,41 @@ void ClearAllSchedules()
 #endif
 
 
-void SaveSchedules(HWFILE const hFile)
+void SaveSchedules(HWFILE const f)
 {
-	SCHEDULENODE *curr;
-	UINT8 ubNum, ubNumFucker;
-	INT32 iNum;
-	//Now, count the number of schedules in the list
-	iNum = 0;
-	curr = gpScheduleList;
-	while( curr )
+	// Count the number of schedules in the list
+	INT32 n_schedules = 0;
+	for (SCHEDULENODE const* i = gpScheduleList; i; i = i->next)
 	{
-		// skip all default schedules
-		if ( !(curr->usFlags & SCHEDULE_FLAGS_TEMPORARY) )
-		{
-			iNum++;
-		}
-		curr = curr->next;
+		// Skip all default schedules
+		if (i->usFlags & SCHEDULE_FLAGS_TEMPORARY) continue;
+		++n_schedules;
 	}
-	ubNum = (UINT8)(( iNum >= 32 ) ? 32 : iNum);
 
-	FileWrite(hFile, &ubNum, sizeof(UINT8));
-	//Now, save each schedule
-	curr = gpScheduleList;
-	ubNumFucker = 0;
-	while( curr )
+	UINT8 n_to_save = MIN(n_schedules, 32);
+	FileWrite(f, &n_to_save, sizeof(UINT8));
+
+	// Save each schedule
+	for (SCHEDULENODE const* i = gpScheduleList; i; i = i->next)
 	{
-		// skip all default schedules
-		if ( !(curr->usFlags & SCHEDULE_FLAGS_TEMPORARY) )
-		{
+		// Skip all default schedules
+		if (i->usFlags & SCHEDULE_FLAGS_TEMPORARY) continue;
 
-			ubNumFucker++;
-			if (ubNumFucker > ubNum) return;
+		if (n_to_save-- == 0) return;
 
-			BYTE data[36];
-			BYTE* d = data;
-			INJ_PTR(    d, curr->next)
-			INJ_U16A(   d, curr->usTime,   lengthof(curr->usTime))
-			INJ_U16A(   d, curr->usData1,  lengthof(curr->usData1))
-			INJ_U16A(   d, curr->usData2,  lengthof(curr->usData2))
-			INJ_U8A(    d, curr->ubAction, lengthof(curr->ubAction))
-			INJ_U8(     d, curr->ubScheduleID)
-			INJ_SOLDIER(d, curr->soldier)
-			INJ_U16(    d, curr->usFlags)
-			Assert(d == endof(data));
+		BYTE data[36];
+		BYTE* d = data;
+		INJ_SKIP(   d, 4)
+		INJ_U16A(   d, i->usTime,   lengthof(i->usTime))
+		INJ_U16A(   d, i->usData1,  lengthof(i->usData1))
+		INJ_U16A(   d, i->usData2,  lengthof(i->usData2))
+		INJ_U8A(    d, i->ubAction, lengthof(i->ubAction))
+		INJ_U8(     d, i->ubScheduleID)
+		INJ_SOLDIER(d, i->soldier)
+		INJ_U16(    d, i->usFlags)
+		Assert(d == endof(data));
 
-			FileWrite(hFile, data, sizeof(data));
-		}
-		curr = curr->next;
+		FileWrite(f, data, sizeof(data));
 	}
 }
 
