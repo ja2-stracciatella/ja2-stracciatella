@@ -13,18 +13,7 @@ enum
 };
 
 
-struct CONTRACT_NEWAL_LIST_NODE
-{
-	UINT8 ubProfileID;
-	UINT8	ubFiller[ 3 ];
-};
-CASSERT(sizeof(CONTRACT_NEWAL_LIST_NODE) == 4)
-
-
-extern CONTRACT_NEWAL_LIST_NODE	ContractRenewalList[ 20 ];
-extern UINT8										ubNumContractRenewals;
 extern BOOLEAN									gfContractRenewalSquenceOn;
-extern UINT8										ubCurrentContractRenewal;
 extern BOOLEAN									gfInContractMenuFromRenewSequence;
 
 

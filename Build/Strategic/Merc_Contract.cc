@@ -36,6 +36,14 @@
 #include "FileMan.h"
 
 
+struct CONTRACT_NEWAL_LIST_NODE
+{
+	UINT8 ubProfileID;
+	UINT8 ubFiller[3];
+};
+CASSERT(sizeof(CONTRACT_NEWAL_LIST_NODE) == 4)
+
+
 static SOLDIERTYPE* pLeaveSoldier = NULL;
 
 BOOLEAN	fEnterMapDueToContract = FALSE;
@@ -44,15 +52,15 @@ extern BOOLEAN fPausedTimeDuringQuote;
 
 SOLDIERTYPE *pContractReHireSoldier = NULL;
 
-static UINT8 gubContractLength = 0; // Used when extending a mercs insurance contract
-SOLDIERTYPE *gpInsuranceSoldier=NULL;
+static UINT8        gubContractLength  = 0; // Used when extending a mercs insurance contract
+static SOLDIERTYPE* gpInsuranceSoldier = 0;
 
 // The values need to be saved!
-CONTRACT_NEWAL_LIST_NODE	ContractRenewalList[ 20 ];
-UINT8											ubNumContractRenewals = 0;
+static CONTRACT_NEWAL_LIST_NODE ContractRenewalList[20];
+static UINT8                    ubNumContractRenewals              = 0;
 // end
-UINT8											ubCurrentContractRenewal = 0;
-UINT8											ubCurrentContractRenewalInProgress = FALSE;
+static UINT8                    ubCurrentContractRenewal           = 0;
+static UINT8                    ubCurrentContractRenewalInProgress = FALSE;
 BOOLEAN										gfContractRenewalSquenceOn = FALSE;
 BOOLEAN										gfInContractMenuFromRenewSequence = FALSE;
 
