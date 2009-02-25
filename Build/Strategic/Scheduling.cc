@@ -386,28 +386,26 @@ void LoadSchedules(INT8** const hBuffer)
 extern BOOLEAN gfSchedulesHosed;
 
 
-void LoadSchedulesFromSave(HWFILE const hFile)
+void LoadSchedulesFromSave(HWFILE const f)
 {
-	SCHEDULENODE *pSchedule = NULL;
-	UINT8 ubNum;
-	UINT32 ubRealNum;
+	UINT8 n_schedules_saved;
+	FileRead(f, &n_schedules_saved, sizeof(n_schedules_saved));
 
-	//LOADDATA( &ubNum, *hBuffer, sizeof( UINT8 ) );
-	FileRead(hFile, &ubNum, sizeof(ubNum));
-
-	//Hack problem with schedules getting misaligned.
-	ubRealNum = gfSchedulesHosed ? ubNum + 256 : ubNum;
+	// Hack problem with schedules getting misaligned.
+	UINT32 n_schedules = n_schedules_saved;
+	if (gfSchedulesHosed) n_schedules += 256;
 
 	gubScheduleID = 1;
-	while( ubRealNum )
+	SCHEDULENODE** anchor = &gpScheduleList;
+	for (; n_schedules != 0; --n_schedules)
 	{
 		BYTE data[36];
-		FileRead(hFile, data, sizeof(data));
+		FileRead(f, data, sizeof(data));
 
-		SCHEDULENODE* const node = MALLOC(SCHEDULENODE);
+		SCHEDULENODE* const node = MALLOCZ(SCHEDULENODE);
 
-		const BYTE* s = data;
-		EXTR_PTR(    s, node->next)
+		BYTE const* s = data;
+		EXTR_SKIP(   s, 4)
 		EXTR_U16A(   s, node->usTime,   lengthof(node->usTime))
 		EXTR_U16A(   s, node->usData1,  lengthof(node->usData1))
 		EXTR_U16A(   s, node->usData2,  lengthof(node->usData2))
@@ -417,22 +415,13 @@ void LoadSchedulesFromSave(HWFILE const hFile)
 		EXTR_U16(    s, node->usFlags)
 		Assert(s == endof(data));
 
-		if (pSchedule != NULL)
-		{
-			Assert(pSchedule->next == NULL);
-			pSchedule->next = node;
-		}
-		else
-		{
-			Assert(gpScheduleList == NULL);
-			gpScheduleList = node;
-		}
-		pSchedule = node;
+		// Add node to the list
+		*anchor = node;
+		anchor  = &node->next;
 
-		gubScheduleID++;
-		ubRealNum--;
+		++gubScheduleID;
 	}
-	//Schedules are posted when the soldier is added...
+	// Schedules are posted when the soldier is added
 }
 
 
