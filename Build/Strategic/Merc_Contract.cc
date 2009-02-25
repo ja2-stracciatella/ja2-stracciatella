@@ -36,8 +36,6 @@
 #include "FileMan.h"
 
 
-UINT32 uiContractTimeMode = 0;
-
 static SOLDIERTYPE* pLeaveSoldier = NULL;
 
 BOOLEAN	fEnterMapDueToContract = FALSE;
@@ -961,13 +959,11 @@ static void HandleExtendMercsContract(SOLDIERTYPE* pSoldier)
 		fEnterMapDueToContract = TRUE;
 		pContractReHireSoldier = pSoldier;
 		LeaveTacticalScreen( MAP_SCREEN );
-		uiContractTimeMode = TIME_COMPRESS_5MINS;
 	}
 	else
 	{
 		FindAndSetThisContractSoldier( pSoldier );
 		pContractReHireSoldier = pSoldier;
-		uiContractTimeMode = giTimeCompressMode;
 	}
 
 	fTeamPanelDirty = TRUE;
