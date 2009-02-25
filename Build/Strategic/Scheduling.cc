@@ -344,54 +344,42 @@ void PrepareSchedulesForEditorExit()
 	PostSchedules();
 }
 
-void LoadSchedules( INT8 **hBuffer )
+
+void LoadSchedules(INT8** const hBuffer)
 {
-	SCHEDULENODE *pSchedule = NULL;
-	UINT8 ubNum;
+	/* Delete all the schedules we might have loaded (though we shouldn't have any
+	 * loaded!) */
+	if (gpScheduleList) DestroyAllSchedules();
 
-	// delete all the schedules we might have loaded (though we shouldn't have any loaded!!)
-	if ( gpScheduleList )
-	{
-		DestroyAllSchedules();
-	}
+	UINT8 n_schedules;
+	LOADDATA(&n_schedules, *hBuffer, sizeof(UINT8));
 
-	LOADDATA( &ubNum, *hBuffer, sizeof( UINT8 ) );
 	gubScheduleID = 1;
-	while( ubNum )
+	SCHEDULENODE** anchor = &gpScheduleList;
+	for (UINT8 n = n_schedules; n != 0; --n)
 	{
 		BYTE data[36];
 		LOADDATA(data, *hBuffer, sizeof(data));
 
-		SCHEDULENODE* const node = MALLOC(SCHEDULENODE);
+		SCHEDULENODE* const node = MALLOCZ(SCHEDULENODE);
 
-		const BYTE* s = data;
-		EXTR_PTR( s, node->next)
-		EXTR_U16A(s, node->usTime,   lengthof(node->usTime))
-		EXTR_U16A(s, node->usData1,  lengthof(node->usData1))
-		EXTR_U16A(s, node->usData2,  lengthof(node->usData2))
-		EXTR_U8A( s, node->ubAction, lengthof(node->ubAction))
-		EXTR_SKIP(s, 2) // skip schedule ID and soldier ID, they get overwritten
-		EXTR_U16( s, node->usFlags)
-		Assert(s == endof(data));
+		BYTE const* d = data;
+		EXTR_SKIP(d, 4)
+		EXTR_U16A(d, node->usTime,   lengthof(node->usTime))
+		EXTR_U16A(d, node->usData1,  lengthof(node->usData1))
+		EXTR_U16A(d, node->usData2,  lengthof(node->usData2))
+		EXTR_U8A( d, node->ubAction, lengthof(node->ubAction))
+		EXTR_SKIP(d, 2) // skip schedule ID and soldier ID, they get overwritten
+		EXTR_U16( d, node->usFlags)
+		Assert(d == endof(data));
 
 		node->ubScheduleID = gubScheduleID++;
-		node->soldier      = NULL;
 
-		if (pSchedule != NULL)
-		{
-			Assert(pSchedule->next == NULL);
-			pSchedule->next = node;
-		}
-		else
-		{
-			Assert(gpScheduleList == NULL);
-			gpScheduleList = node;
-		}
-		pSchedule = node;
-
-		ubNum--;
+		// Add node to the list
+		*anchor = node;
+		anchor  = &node->next;
 	}
-	//Schedules are posted when the soldier is added...
+	// Schedules are posted when the soldier is added
 }
 
 
