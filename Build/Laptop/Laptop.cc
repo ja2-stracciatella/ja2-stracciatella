@@ -3543,8 +3543,7 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 	INJ_U32(  d, l.uiFlowerOrderNumber)
 	INJ_U32(  d, l.uiTotalMoneyPaidToSpeck)
 	INJ_U8(   d, l.ubLastMercAvailableId)
-	INJ_U8A(  d, l.bPadding, lengthof(l.bPadding))
-	INJ_SKIP( d, 1)
+	INJ_SKIP( d, 87)
 	Assert(d == endof(data));
 
 	FileWrite(f, data, sizeof(data));
@@ -3641,8 +3640,7 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	EXTR_U32(  d, l.uiFlowerOrderNumber)
 	EXTR_U32(  d, l.uiTotalMoneyPaidToSpeck)
 	EXTR_U8(   d, l.ubLastMercAvailableId)
-	EXTR_U8A(  d, l.bPadding, lengthof(l.bPadding))
-	EXTR_SKIP( d, 1)
+	EXTR_SKIP( d, 87)
 	Assert(d == endof(data));
 
 	if (l.usNumberOfBobbyRayOrderUsed != 0)

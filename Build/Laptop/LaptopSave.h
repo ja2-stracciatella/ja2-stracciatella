@@ -151,7 +151,6 @@ struct LaptopSaveInfoStruct
 	UINT32							uiTotalMoneyPaidToSpeck;
 
 	UINT8								ubLastMercAvailableId;
-	UINT8 bPadding[ 86 ];
 };
 
 
