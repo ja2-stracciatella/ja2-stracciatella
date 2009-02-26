@@ -1,3 +1,4 @@
+#include "LoadSaveData.h"
 #include "Types.h"
 #include "Arms_Dealer_Init.h"
 #include "Debug.h"
@@ -175,8 +176,28 @@ void ShutDownArmsDealers()
 
 void SaveArmsDealerInventoryToSaveGameFile(HWFILE const f)
 {
-	FileWrite(f, gArmsDealerStatus,     sizeof(gArmsDealerStatus));
-	FileWrite(f, gArmsDealersInventory, sizeof(gArmsDealersInventory));
+	FileWrite(f, gArmsDealerStatus, sizeof(gArmsDealerStatus));
+
+	for (DEALER_ITEM_HEADER const (*dealer)[MAXITEMS] = gArmsDealersInventory; dealer != endof(gArmsDealersInventory); ++dealer)
+	{
+		for (DEALER_ITEM_HEADER const* item = *dealer; item != endof(*dealer); ++item)
+		{
+			BYTE  data[16];
+			BYTE* d = data;
+			INJ_U8(  d, item->ubTotalItems)
+			INJ_U8(  d, item->ubPerfectItems)
+			INJ_U8(  d, item->ubStrayAmmo)
+			INJ_U8(  d, item->ubElementsAlloced)
+			INJ_SKIP(d, 4)
+			INJ_U32( d, item->uiOrderArrivalTime)
+			INJ_U8(  d, item->ubQtyOnOrder)
+			INJ_BOOL(d, item->fPreviouslyEligible)
+			INJ_SKIP(d, 2)
+			Assert(d == endof(data));
+
+			FileWrite(f, data, sizeof(data));
+		}
+	}
 
 	// Save special items
 	for (ArmsDealerID dealer = ARMS_DEALER_FIRST; dealer != NUM_ARMS_DEALERS; ++dealer)
@@ -206,8 +227,28 @@ void LoadArmsDealerInventoryFromSavedGameFile(HWFILE const f, UINT32 const saveg
 		savegame_version < 55 ? NUM_ARMS_DEALERS - 1 : // without Manny
 		NUM_ARMS_DEALERS;
 
-	FileRead(f, gArmsDealerStatus,     n_dealers_saved * sizeof(ARMS_DEALER_STATUS));
-	FileRead(f, gArmsDealersInventory, n_dealers_saved * sizeof(DEALER_ITEM_HEADER) * MAXITEMS);
+	FileRead(f, gArmsDealerStatus, n_dealers_saved * sizeof(*gArmsDealerStatus));
+
+	for (DEALER_ITEM_HEADER (*dealer)[MAXITEMS] = gArmsDealersInventory; dealer != gArmsDealersInventory + n_dealers_saved; ++dealer)
+	{
+		for (DEALER_ITEM_HEADER* item = *dealer; item != endof(*dealer); ++item)
+		{
+			BYTE data[16];
+			FileRead(f, data, sizeof(data));
+
+			BYTE const* d = data;
+			EXTR_U8(  d, item->ubTotalItems)
+			EXTR_U8(  d, item->ubPerfectItems)
+			EXTR_U8(  d, item->ubStrayAmmo)
+			EXTR_U8(  d, item->ubElementsAlloced)
+			EXTR_SKIP(d, 4)
+			EXTR_U32( d, item->uiOrderArrivalTime)
+			EXTR_U8(  d, item->ubQtyOnOrder)
+			EXTR_BOOL(d, item->fPreviouslyEligible)
+			EXTR_SKIP(d, 2)
+			Assert(d == endof(data));
+		}
+	}
 
 	if (savegame_version < 54) InitializeOneArmsDealer(ARMS_DEALER_ELGIN);
 	if (savegame_version < 55) InitializeOneArmsDealer(ARMS_DEALER_MANNY);

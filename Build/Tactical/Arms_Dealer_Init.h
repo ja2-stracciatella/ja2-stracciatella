@@ -181,10 +181,7 @@ struct DEALER_ITEM_HEADER
 	UINT32  uiOrderArrivalTime;		// Day the items ordered will arrive on.  It's UINT32 in case we change this to minutes.
 	UINT8		ubQtyOnOrder;					// The number of items currently on order
 	BOOLEAN	fPreviouslyEligible;	// whether or not dealer has been eligible to sell this item in days prior to today
-
-	UINT8		ubPadding[2];					// filler
 };
-CASSERT(sizeof(DEALER_ITEM_HEADER) == 16)
 
 
 extern const ARMS_DEALER_INFO ArmsDealerInfo[NUM_ARMS_DEALERS];
