@@ -3449,30 +3449,23 @@ void ClearOutTempLaptopFiles(void)
 }
 
 
-void SaveLaptopInfoToSavedGame(HWFILE const hFile)
+void SaveLaptopInfoToSavedGame(HWFILE const f)
 {
-	// Save The laptop information
-	FileWrite(hFile, &LaptopSaveInfo, sizeof(LaptopSaveInfoStruct));
+	LaptopSaveInfoStruct const& l = LaptopSaveInfo;
 
-	//If there is anything in the Bobby Ray Orders on Delivery
-	if (LaptopSaveInfo.usNumberOfBobbyRayOrderUsed)
-	{
-		//Allocate memory for the information
-		const UINT32 uiSize = sizeof(BobbyRayOrderStruct) * LaptopSaveInfo.usNumberOfBobbyRayOrderItems;
+	// Save the laptop information
+	FileWrite(f, &l, sizeof(l));
 
-		// Load The laptop information
-		FileWrite(hFile, LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, uiSize);
+	if (l.usNumberOfBobbyRayOrderUsed != 0)
+	{ // There is anything in the Bobby Ray Orders on delivery
+		UINT32 const size = sizeof(*l.BobbyRayOrdersOnDeliveryArray) * l.usNumberOfBobbyRayOrderItems;
+		FileWrite(f, l.BobbyRayOrdersOnDeliveryArray, size);
 	}
 
-
-	//If there is any Insurance Payouts in progress
-	if (LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed)
-	{
-		//Allocate memory for the information
-		const UINT32 uiSize = sizeof(LIFE_INSURANCE_PAYOUT) * LaptopSaveInfo.ubNumberLifeInsurancePayouts;
-
-		// Load The laptop information
-		FileWrite(hFile, LaptopSaveInfo.pLifeInsurancePayouts, uiSize);
+	if (l.ubNumberLifeInsurancePayoutUsed != 0)
+	{ // There are any insurance payouts in progress
+		UINT32 const size = sizeof(*l.pLifeInsurancePayouts) * l.ubNumberLifeInsurancePayouts;
+		FileWrite(f, l.pLifeInsurancePayouts, size);
 	}
 }
 
