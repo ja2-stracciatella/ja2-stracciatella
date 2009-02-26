@@ -1,6 +1,8 @@
 #include "FileMan.h"
 #include "Font.h"
 #include "HImage.h"
+#include "LoadSaveData.h"
+#include "LoadSaveObjectType.h"
 #include "Map_Screen_Interface.h"
 #include "Map_Screen_Interface_Map.h"
 #include "Render_Dirty.h"
@@ -237,7 +239,6 @@ struct MERC_LEAVE_ITEM
 	OBJECTTYPE o;
 	MERC_LEAVE_ITEM* pNext;
 };
-CASSERT(sizeof(MERC_LEAVE_ITEM) == 40)
 
 // the leave item list
 static MERC_LEAVE_ITEM* gpLeaveListHead[NUM_LEAVE_LIST_SLOTS];
@@ -4577,7 +4578,13 @@ void SaveLeaveItemList(HWFILE const f)
 
 			for (MERC_LEAVE_ITEM const* i = head; i; i = i->pNext)
 			{
-				FileWrite(f, i, sizeof(MERC_LEAVE_ITEM));
+				BYTE  data[40];
+				BYTE* d = data;
+				d = InjectObject(d, &i->o);
+				INJ_SKIP(d, 4)
+				Assert(d == endof(data));
+
+				FileWrite(f, data, sizeof(data));
 			}
 		}
 		else
@@ -4617,8 +4624,13 @@ void LoadLeaveItemList(HWFILE const f)
 		{
 			MERC_LEAVE_ITEM* const li = MALLOCZ(MERC_LEAVE_ITEM);
 
-			FileRead(f, li, sizeof(MERC_LEAVE_ITEM));
-			li->pNext = NULL;
+			BYTE  data[40];
+			FileRead(f, data, sizeof(data));
+
+			BYTE const* d = data;
+			d = ExtractObject(d, &li->o);
+			EXTR_SKIP(d, 4)
+			Assert(d == endof(data));
 
 			// Append node to list
 			*anchor = li;
