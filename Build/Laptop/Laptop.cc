@@ -3458,8 +3458,7 @@ static BYTE* InjectStoreInvetory(BYTE* const data, STORE_INVENTORY const& i)
 	INJ_U8(  d, i.ubQtyOnOrder)
 	INJ_U8(  d, i.ubItemQuality)
 	INJ_BOOL(d, i.fPreviouslyEligible)
-	INJ_U8(  d, i.filler)
-	INJ_SKIP(d, 1)
+	INJ_SKIP(d, 2)
 	Assert(d == data + 8);
 	return d;
 }
@@ -3473,8 +3472,7 @@ static BYTE const* ExtractStoreInvetory(BYTE const* const data, STORE_INVENTORY&
 	EXTR_U8(  d, i.ubQtyOnOrder)
 	EXTR_U8(  d, i.ubItemQuality)
 	EXTR_BOOL(d, i.fPreviouslyEligible)
-	EXTR_U8(  d, i.filler)
-	EXTR_SKIP(d, 1)
+	EXTR_SKIP(d, 2)
 	Assert(d == data + 8);
 	return d;
 }
