@@ -173,28 +173,19 @@ void ShutDownArmsDealers()
 }
 
 
-void SaveArmsDealerInventoryToSaveGameFile(HWFILE const hFile)
+void SaveArmsDealerInventoryToSaveGameFile(HWFILE const f)
 {
-	UINT16	usItemIndex;
+	FileWrite(f, gArmsDealerStatus,     sizeof(gArmsDealerStatus));
+	FileWrite(f, gArmsDealersInventory, sizeof(gArmsDealersInventory));
 
-
-	//Save the arms dealers status
-	FileWrite(hFile, gArmsDealerStatus, sizeof(gArmsDealerStatus));
-
-	//save the dealers inventory item headers (all at once)
-	FileWrite(hFile, gArmsDealersInventory, sizeof(gArmsDealersInventory));
-
-	//loop through all the dealers inventories
-	for (ArmsDealerID ubArmsDealer = ARMS_DEALER_FIRST; ubArmsDealer < NUM_ARMS_DEALERS; ++ubArmsDealer)
+	// Save special items
+	for (ArmsDealerID dealer = ARMS_DEALER_FIRST; dealer != NUM_ARMS_DEALERS; ++dealer)
 	{
-		//loop through this dealer's individual items
-		for(usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
+		for (UINT16 item_idx = 1; item_idx != MAXITEMS; ++item_idx)
 		{
-			//if there are any special item elements allocated for this item, save them
-			if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced > 0 )
-			{
-				FileWrite(hFile, &gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[0], sizeof(DEALER_SPECIAL_ITEM) * gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced);
-			}
+			DEALER_ITEM_HEADER const& di = gArmsDealersInventory[dealer][item_idx];
+			if (di.ubElementsAlloced == 0) continue;
+			FileWrite(f, di.SpecialItem, sizeof(DEALER_SPECIAL_ITEM) * di.ubElementsAlloced);
 		}
 	}
 }
@@ -204,43 +195,32 @@ static void AllocMemsetSpecialItemArray(DEALER_ITEM_HEADER*, UINT8 ubElementsNee
 static void LoadIncompleteArmsDealersStatus(HWFILE, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny);
 
 
-void LoadArmsDealerInventoryFromSavedGameFile(HWFILE const hFile, BOOLEAN const fIncludesElgin, BOOLEAN const fIncludesManny)
+void LoadArmsDealerInventoryFromSavedGameFile(HWFILE const f, BOOLEAN const fIncludesElgin, BOOLEAN const fIncludesManny)
 {
-	UINT16	usItemIndex;
-
-	//Free all the dealers special inventory arrays
+	// Free all the dealers special inventory arrays
 	ShutDownArmsDealers();
 
 	// Elgin was added to the dealers list in Game Version #54, enlarging these 2 tables...
 	// Manny was added to the dealers list in Game Version #55, enlarging these 2 tables...
-	if ( fIncludesElgin && fIncludesManny )
-	{
-		// info for all dealers is in the save file
-
-		//Load the arms dealers status
-		FileRead(hFile, gArmsDealerStatus, sizeof(gArmsDealerStatus));
-
-		//load the dealers inventory item headers (all at once)
-		FileRead(hFile, gArmsDealersInventory, sizeof(gArmsDealersInventory));
+	if (fIncludesElgin && fIncludesManny)
+	{ // Info for all dealers is in the save file
+		FileRead(f, gArmsDealerStatus,     sizeof(gArmsDealerStatus));
+		FileRead(f, gArmsDealersInventory, sizeof(gArmsDealersInventory));
 	}
 	else
 	{
-		LoadIncompleteArmsDealersStatus(hFile, fIncludesElgin, fIncludesManny);
+		LoadIncompleteArmsDealersStatus(f, fIncludesElgin, fIncludesManny);
 	}
 
-	//loop through all the dealers inventories
-	for (ArmsDealerID ubArmsDealer = ARMS_DEALER_FIRST; ubArmsDealer<NUM_ARMS_DEALERS; ++ubArmsDealer)
+	// Load special items
+	for (ArmsDealerID dealer = ARMS_DEALER_FIRST; dealer != NUM_ARMS_DEALERS; ++dealer)
 	{
-		//loop through this dealer's individual items
-		for(usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
+		for (UINT16 item_idx = 1; item_idx != MAXITEMS; ++item_idx)
 		{
-			//if there are any elements allocated for this item, load them
-			if( gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced > 0 )
-			{
-				//Allocate memory for the inventory
-				AllocMemsetSpecialItemArray(&gArmsDealersInventory[ubArmsDealer][usItemIndex], gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced);
-				FileRead(hFile, &gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[0], sizeof(DEALER_SPECIAL_ITEM) * gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced);
-			}
+			DEALER_ITEM_HEADER& di = gArmsDealersInventory[dealer][item_idx];
+			if (di.ubElementsAlloced == 0) continue;
+			AllocMemsetSpecialItemArray(&di, di.ubElementsAlloced);
+			FileRead(f, di.SpecialItem, sizeof(DEALER_SPECIAL_ITEM) * di.ubElementsAlloced);
 		}
 	}
 }
