@@ -603,52 +603,35 @@ BOOLEAN DeleteStrategicEvent( UINT8 ubCallbackID, UINT32 uiParam )
 }
 
 
-
 //part of the game.sav files (not map files)
-void SaveStrategicEventsToSavedGame(HWFILE const hFile)
+void SaveStrategicEventsToSavedGame(HWFILE const f)
 {
-	STRATEGICEVENT sGameEvent;
-
-	UINT32	uiNumGameEvents=0;
-	STRATEGICEVENT *pTempEvent = gpEventList;
-
-	//Go through the list and determine the number of events
-	while( pTempEvent )
+	// Determine the number of events
+	UINT32 n_game_events = 0;
+	for (STRATEGICEVENT* i = gpEventList; i; i = i->next)
 	{
-		pTempEvent = pTempEvent->next;
-		uiNumGameEvents++;
+		++n_game_events;
 	}
+	FileWrite(f, &n_game_events, sizeof(UINT32));
 
-
-	//write the number of strategic events
-	FileWrite(hFile, &uiNumGameEvents, sizeof(UINT32));
-
-	//loop through all the events and save them.
-	pTempEvent = gpEventList;
-	while( pTempEvent )
+	for (STRATEGICEVENT* i = gpEventList; i; i = i->next)
 	{
-		//save the current structure
-		sGameEvent = *pTempEvent;
-
-		//write the current strategic event
-		FileWrite(hFile, &sGameEvent, sizeof(STRATEGICEVENT));
-
-		pTempEvent = pTempEvent->next;
+		FileWrite(f, i, sizeof(*i));
 	}
 }
 
 
 void LoadStrategicEventsFromSavedGame(HWFILE const f)
 {
-	//erase the old Game Event queue
+	// Erase the old Game Event queue
 	DeleteAllStrategicEvents();
 
-	//Read the number of strategic events
-	UINT32 uiNumGameEvents;
-	FileRead(f, &uiNumGameEvents, sizeof(UINT32));
+	// Read the number of strategic events
+	UINT32 n_game_events;
+	FileRead(f, &n_game_events, sizeof(UINT32));
 
 	STRATEGICEVENT** anchor = &gpEventList;
-	for (size_t n = uiNumGameEvents; n != 0; --n)
+	for (size_t n = n_game_events; n != 0; --n)
 	{
 		STRATEGICEVENT* const sev = MALLOC(STRATEGICEVENT);
 		FileRead(f, sev, sizeof(*sev));
