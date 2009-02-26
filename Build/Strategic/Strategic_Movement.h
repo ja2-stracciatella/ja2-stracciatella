@@ -42,7 +42,6 @@ struct WAYPOINT
 	UINT8 y;											//sector y position of waypoint
 	WAYPOINT* next; //next waypoint in list
 };
-CASSERT(sizeof(WAYPOINT) == 8)
 
 
 struct PLAYERGROUP

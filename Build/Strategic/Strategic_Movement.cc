@@ -2837,7 +2837,14 @@ static void SaveWayPointList(HWFILE const f, GROUP const* const g)
 
 	for (const WAYPOINT* w = g->pWaypoints; w != NULL; w = w->next)
 	{
-		FileWrite(f, w, sizeof(WAYPOINT));
+		BYTE  data[8];
+		BYTE* d = data;
+		INJ_U8(  d, w->x)
+		INJ_U8(  d, w->y)
+		INJ_SKIP(d, 6)
+		Assert(d == endof(data));
+
+		FileWrite(f, data, sizeof(data));
 	}
 }
 
@@ -2852,8 +2859,15 @@ static void LoadWayPointList(HWFILE const f, GROUP* const g)
 	for (UINT32 i = uiNumberOfWayPoints; i != 0; --i)
 	{
 		WAYPOINT* const w = MALLOCZ(WAYPOINT);
-		FileRead(f, w, sizeof(WAYPOINT));
-		w->next = NULL;
+
+		BYTE data[8];
+		FileRead(f, data, sizeof(data));
+
+		BYTE const* d = data;
+		EXTR_U8(  d, w->x)
+		EXTR_U8(  d, w->y)
+		EXTR_SKIP(d, 6)
+		Assert(d == endof(data));
 
 		// Add the node to the list
 		*anchor = w;
