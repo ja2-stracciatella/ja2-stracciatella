@@ -33,7 +33,6 @@ struct LAST_HIRED_MERC_STRUCT
 	INT32		iIdOfMerc;
 	UINT32	uiArrivalTime;
 };
-CASSERT(sizeof(LAST_HIRED_MERC_STRUCT) == 12)
 
 
 struct BobbyRayPurchaseStruct
@@ -154,7 +153,6 @@ struct LaptopSaveInfoStruct
 	UINT8								ubLastMercAvailableId;
 	UINT8 bPadding[ 86 ];
 };
-CASSERT(sizeof(LaptopSaveInfoStruct) == 7440)
 
 
 extern	LaptopSaveInfoStruct LaptopSaveInfo;

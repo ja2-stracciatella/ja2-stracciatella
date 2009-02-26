@@ -3,6 +3,7 @@
 #include "Font_Control.h"
 #include "Input.h"
 #include "Interface.h"
+#include "LoadSaveData.h"
 #include "Local.h"
 #include "Timer.h"
 #include "Timer_Control.h"
@@ -3449,12 +3450,106 @@ void ClearOutTempLaptopFiles(void)
 }
 
 
+static BYTE* InjectStoreInvetory(BYTE* const data, STORE_INVENTORY const& i)
+{
+	BYTE* d = data;
+	INJ_U16( d, i.usItemIndex)
+	INJ_U8(  d, i.ubQtyOnHand)
+	INJ_U8(  d, i.ubQtyOnOrder)
+	INJ_U8(  d, i.ubItemQuality)
+	INJ_BOOL(d, i.fPreviouslyEligible)
+	INJ_U8(  d, i.filler)
+	INJ_SKIP(d, 1)
+	Assert(d == data + 8);
+	return d;
+}
+
+
+static BYTE const* ExtractStoreInvetory(BYTE const* const data, STORE_INVENTORY& i)
+{
+	BYTE const* d = data;
+	EXTR_U16( d, i.usItemIndex)
+	EXTR_U8(  d, i.ubQtyOnHand)
+	EXTR_U8(  d, i.ubQtyOnOrder)
+	EXTR_U8(  d, i.ubItemQuality)
+	EXTR_BOOL(d, i.fPreviouslyEligible)
+	EXTR_U8(  d, i.filler)
+	EXTR_SKIP(d, 1)
+	Assert(d == data + 8);
+	return d;
+}
+
+
 void SaveLaptopInfoToSavedGame(HWFILE const f)
 {
 	LaptopSaveInfoStruct const& l = LaptopSaveInfo;
 
-	// Save the laptop information
-	FileWrite(f, &l, sizeof(l));
+	BYTE  data[7440];
+	BYTE* d = data;
+	INJ_BOOL( d, l.gfNewGameLaptop)
+	INJ_BOOLA(d, l.fVisitedBookmarkAlready, lengthof(l.fVisitedBookmarkAlready))
+	INJ_SKIP( d, 3)
+	INJ_I32A( d, l.iBookMarkList, lengthof(l.iBookMarkList))
+	INJ_I32(  d, l.iCurrentBalance)
+	INJ_BOOL( d, l.fIMPCompletedFlag)
+	INJ_BOOL( d, l.fSentImpWarningAlready)
+	INJ_I16A( d, l.ubDeadCharactersList, lengthof(l.ubDeadCharactersList))
+	INJ_I16A( d, l.ubLeftCharactersList, lengthof(l.ubLeftCharactersList))
+	INJ_I16A( d, l.ubOtherCharactersList, lengthof(l.ubOtherCharactersList))
+	INJ_U8(   d, l.gubPlayersMercAccountStatus)
+	INJ_SKIP( d, 1)
+	INJ_U32(  d, l.guiPlayersMercAccountNumber)
+	INJ_U8(   d, l.gubLastMercIndex)
+	INJ_SKIP( d, 1)
+	for (STORE_INVENTORY const* i = l.BobbyRayInventory; i != endof(l.BobbyRayInventory); ++i)
+	{
+		d = InjectStoreInvetory(d, *i);
+	}
+	for (STORE_INVENTORY const* i = l.BobbyRayUsedInventory; i != endof(l.BobbyRayUsedInventory); ++i)
+	{
+		d = InjectStoreInvetory(d, *i);
+	}
+	INJ_SKIP( d, 6)
+	INJ_U8(   d, l.usNumberOfBobbyRayOrderItems)
+	INJ_U8(   d, l.usNumberOfBobbyRayOrderUsed)
+	INJ_SKIP( d, 6)
+	INJ_U8(   d, l.ubNumberLifeInsurancePayouts)
+	INJ_U8(   d, l.ubNumberLifeInsurancePayoutUsed)
+	INJ_BOOL( d, l.fBobbyRSiteCanBeAccessed)
+	INJ_U8(   d, l.ubPlayerBeenToMercSiteStatus)
+	INJ_BOOL( d, l.fFirstVisitSinceServerWentDown)
+	INJ_BOOL( d, l.fNewMercsAvailableAtMercSite)
+	INJ_BOOL( d, l.fSaidGenericOpeningInMercSite)
+	INJ_BOOL( d, l.fSpeckSaidFloMarriedCousinQuote)
+	INJ_BOOL( d, l.fHasAMercDiedAtMercSite)
+	INJ_I8(   d, l.gbNumDaysTillFirstMercArrives)
+	INJ_I8(   d, l.gbNumDaysTillSecondMercArrives)
+	INJ_I8(   d, l.gbNumDaysTillThirdMercArrives)
+	INJ_I8(   d, l.gbNumDaysTillFourthMercArrives)
+	INJ_SKIP( d, 3)
+	INJ_U32(  d, l.guiNumberOfMercPaymentsInDays)
+	INJ_U16A( d, l.usInventoryListLength, lengthof(l.usInventoryListLength))
+	INJ_I32(  d, l.iVoiceId)
+	INJ_U8(   d, l.ubHaveBeenToBobbyRaysAtLeastOnceWhileUnderConstruction)
+	INJ_BOOL( d, l.fMercSiteHasGoneDownYet)
+	INJ_U8(   d, l.ubSpeckCanSayPlayersLostQuote)
+	INJ_SKIP( d, 1)
+	INJ_BOOL( d, l.sLastHiredMerc.fHaveDisplayedPopUpInLaptop)
+	INJ_SKIP( d, 3)
+	INJ_I32(  d, l.sLastHiredMerc.iIdOfMerc)
+	INJ_U32(  d, l.sLastHiredMerc.uiArrivalTime)
+	INJ_I32(  d, l.iCurrentHistoryPage)
+	INJ_I32(  d, l.iCurrentFinancesPage)
+	INJ_I32(  d, l.iCurrentEmailPage)
+	INJ_U32(  d, l.uiSpeckQuoteFlags)
+	INJ_U32(  d, l.uiFlowerOrderNumber)
+	INJ_U32(  d, l.uiTotalMoneyPaidToSpeck)
+	INJ_U8(   d, l.ubLastMercAvailableId)
+	INJ_U8A(  d, l.bPadding, lengthof(l.bPadding))
+	INJ_SKIP( d, 1)
+	Assert(d == endof(data));
+
+	FileWrite(f, data, sizeof(data));
 
 	if (l.usNumberOfBobbyRayOrderUsed != 0)
 	{ // There is anything in the Bobby Ray Orders on delivery
@@ -3485,8 +3580,72 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 		FreeNull(l.pLifeInsurancePayouts);
 	}
 
-	// Load the laptop information
-	FileRead(f, &l, sizeof(LaptopSaveInfoStruct));
+	BYTE data[7440];
+	FileRead(f, data, sizeof(data));
+
+	BYTE const* d = data;
+	EXTR_BOOL( d, l.gfNewGameLaptop)
+	EXTR_BOOLA(d, l.fVisitedBookmarkAlready, lengthof(l.fVisitedBookmarkAlready))
+	EXTR_SKIP( d, 3)
+	EXTR_I32A( d, l.iBookMarkList, lengthof(l.iBookMarkList))
+	EXTR_I32(  d, l.iCurrentBalance)
+	EXTR_BOOL( d, l.fIMPCompletedFlag)
+	EXTR_BOOL( d, l.fSentImpWarningAlready)
+	EXTR_I16A( d, l.ubDeadCharactersList, lengthof(l.ubDeadCharactersList))
+	EXTR_I16A( d, l.ubLeftCharactersList, lengthof(l.ubLeftCharactersList))
+	EXTR_I16A( d, l.ubOtherCharactersList, lengthof(l.ubOtherCharactersList))
+	EXTR_U8(   d, l.gubPlayersMercAccountStatus)
+	EXTR_SKIP( d, 1)
+	EXTR_U32(  d, l.guiPlayersMercAccountNumber)
+	EXTR_U8(   d, l.gubLastMercIndex)
+	EXTR_SKIP( d, 1)
+	for (STORE_INVENTORY* i = l.BobbyRayInventory; i != endof(l.BobbyRayInventory); ++i)
+	{
+		d = ExtractStoreInvetory(d, *i);
+	}
+	for (STORE_INVENTORY* i = l.BobbyRayUsedInventory; i != endof(l.BobbyRayUsedInventory); ++i)
+	{
+		d = ExtractStoreInvetory(d, *i);
+	}
+	EXTR_SKIP( d, 6)
+	EXTR_U8(   d, l.usNumberOfBobbyRayOrderItems)
+	EXTR_U8(   d, l.usNumberOfBobbyRayOrderUsed)
+	EXTR_SKIP( d, 6)
+	EXTR_U8(   d, l.ubNumberLifeInsurancePayouts)
+	EXTR_U8(   d, l.ubNumberLifeInsurancePayoutUsed)
+	EXTR_BOOL( d, l.fBobbyRSiteCanBeAccessed)
+	EXTR_U8(   d, l.ubPlayerBeenToMercSiteStatus)
+	EXTR_BOOL( d, l.fFirstVisitSinceServerWentDown)
+	EXTR_BOOL( d, l.fNewMercsAvailableAtMercSite)
+	EXTR_BOOL( d, l.fSaidGenericOpeningInMercSite)
+	EXTR_BOOL( d, l.fSpeckSaidFloMarriedCousinQuote)
+	EXTR_BOOL( d, l.fHasAMercDiedAtMercSite)
+	EXTR_I8(   d, l.gbNumDaysTillFirstMercArrives)
+	EXTR_I8(   d, l.gbNumDaysTillSecondMercArrives)
+	EXTR_I8(   d, l.gbNumDaysTillThirdMercArrives)
+	EXTR_I8(   d, l.gbNumDaysTillFourthMercArrives)
+	EXTR_SKIP( d, 3)
+	EXTR_U32(  d, l.guiNumberOfMercPaymentsInDays)
+	EXTR_U16A( d, l.usInventoryListLength, lengthof(l.usInventoryListLength))
+	EXTR_I32(  d, l.iVoiceId)
+	EXTR_U8(   d, l.ubHaveBeenToBobbyRaysAtLeastOnceWhileUnderConstruction)
+	EXTR_BOOL( d, l.fMercSiteHasGoneDownYet)
+	EXTR_U8(   d, l.ubSpeckCanSayPlayersLostQuote)
+	EXTR_SKIP( d, 1)
+	EXTR_BOOL( d, l.sLastHiredMerc.fHaveDisplayedPopUpInLaptop)
+	EXTR_SKIP( d, 3)
+	EXTR_I32(  d, l.sLastHiredMerc.iIdOfMerc)
+	EXTR_U32(  d, l.sLastHiredMerc.uiArrivalTime)
+	EXTR_I32(  d, l.iCurrentHistoryPage)
+	EXTR_I32(  d, l.iCurrentFinancesPage)
+	EXTR_I32(  d, l.iCurrentEmailPage)
+	EXTR_U32(  d, l.uiSpeckQuoteFlags)
+	EXTR_U32(  d, l.uiFlowerOrderNumber)
+	EXTR_U32(  d, l.uiTotalMoneyPaidToSpeck)
+	EXTR_U8(   d, l.ubLastMercAvailableId)
+	EXTR_U8A(  d, l.bPadding, lengthof(l.bPadding))
+	EXTR_SKIP( d, 1)
+	Assert(d == endof(data));
 
 	if (l.usNumberOfBobbyRayOrderUsed != 0)
 	{ // There is anything in the Bobby Ray Orders on Delivery
