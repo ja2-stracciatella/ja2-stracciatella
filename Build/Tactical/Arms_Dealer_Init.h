@@ -212,7 +212,7 @@ BOOLEAN      IsMercADealer( UINT8 ubMercID );
 ArmsDealerID GetArmsDealerIDFromMercID(UINT8 ubMercID);
 
 void SaveArmsDealerInventoryToSaveGameFile(HWFILE);
-void LoadArmsDealerInventoryFromSavedGameFile(HWFILE, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny);
+void LoadArmsDealerInventoryFromSavedGameFile(HWFILE, UINT32 savegame_version);
 
 void DailyUpdateOfArmsDealersInventory(void);
 

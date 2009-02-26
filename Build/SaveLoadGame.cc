@@ -1106,7 +1106,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		RenderProgressBar(0, 100);
 		uiRelStartPerc = uiRelEndPerc;
 
-		LoadArmsDealerInventoryFromSavedGameFile(f, version >= 54, version >= 55);
+		LoadArmsDealerInventoryFromSavedGameFile(f, version);
 		LoadGameFilePosition(save_slot_id, f, "Arms Dealers Inventory");
 
 		uiRelEndPerc += 0;

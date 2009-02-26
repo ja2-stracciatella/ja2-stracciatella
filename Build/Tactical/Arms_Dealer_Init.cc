@@ -192,25 +192,25 @@ void SaveArmsDealerInventoryToSaveGameFile(HWFILE const f)
 
 
 static void AllocMemsetSpecialItemArray(DEALER_ITEM_HEADER*, UINT8 ubElementsNeeded);
-static void LoadIncompleteArmsDealersStatus(HWFILE, BOOLEAN fIncludesElgin, BOOLEAN fIncludesManny);
 
 
-void LoadArmsDealerInventoryFromSavedGameFile(HWFILE const f, BOOLEAN const fIncludesElgin, BOOLEAN const fIncludesManny)
+void LoadArmsDealerInventoryFromSavedGameFile(HWFILE const f, UINT32 const savegame_version)
 {
 	// Free all the dealers special inventory arrays
 	ShutDownArmsDealers();
 
-	// Elgin was added to the dealers list in Game Version #54, enlarging these 2 tables...
-	// Manny was added to the dealers list in Game Version #55, enlarging these 2 tables...
-	if (fIncludesElgin && fIncludesManny)
-	{ // Info for all dealers is in the save file
-		FileRead(f, gArmsDealerStatus,     sizeof(gArmsDealerStatus));
-		FileRead(f, gArmsDealersInventory, sizeof(gArmsDealersInventory));
-	}
-	else
-	{
-		LoadIncompleteArmsDealersStatus(f, fIncludesElgin, fIncludesManny);
-	}
+	// Elgin was added to the dealers list in Game Version #54, enlarging these 2 tables
+	// Manny was added to the dealers list in Game Version #55, enlarging these 2 tables
+	UINT32 const n_dealers_saved =
+		savegame_version < 54 ? NUM_ARMS_DEALERS - 2 : // without Elgin and Manny
+		savegame_version < 55 ? NUM_ARMS_DEALERS - 1 : // without Manny
+		NUM_ARMS_DEALERS;
+
+	FileRead(f, gArmsDealerStatus,     n_dealers_saved * sizeof(ARMS_DEALER_STATUS));
+	FileRead(f, gArmsDealersInventory, n_dealers_saved * sizeof(DEALER_ITEM_HEADER) * MAXITEMS);
+
+	if (savegame_version < 54) InitializeOneArmsDealer(ARMS_DEALER_ELGIN);
+	if (savegame_version < 55) InitializeOneArmsDealer(ARMS_DEALER_MANNY);
 
 	// Load special items
 	for (ArmsDealerID dealer = ARMS_DEALER_FIRST; dealer != NUM_ARMS_DEALERS; ++dealer)
@@ -2344,45 +2344,6 @@ UINT16 CalcValueOfItemToDealer(ArmsDealerID const ubArmsDealer, UINT16 const usI
 	}
 
 	return( usValueToThisDealer );
-}
-
-
-// this only exists to support saves made with game versions < 54 or 55!
-static void LoadIncompleteArmsDealersStatus(HWFILE const hFile, BOOLEAN const fIncludesElgin, BOOLEAN const fIncludesManny)
-{
-	UINT32  uiDealersSaved;
-
-	Assert( !fIncludesElgin || !fIncludesManny );
-
-	if ( !fIncludesElgin )
-	{
-		// read 2 fewer element without Elgin or Manny in there...
-		uiDealersSaved = NUM_ARMS_DEALERS - 2;
-	}
-	else
-	{
-		// read one fewer element without Elgin in there...
-		uiDealersSaved = NUM_ARMS_DEALERS - 1;
-	}
-
-
-	// read in all other dealer's status
-	FileRead(hFile, gArmsDealerStatus, uiDealersSaved * sizeof(ARMS_DEALER_STATUS));
-
-	// read in all other dealer's inventory
-	FileRead(hFile, gArmsDealersInventory, uiDealersSaved * sizeof(DEALER_ITEM_HEADER) * MAXITEMS);
-
-	if ( !fIncludesElgin )
-	{
-		// initialize Elgin now...
-		InitializeOneArmsDealer( ARMS_DEALER_ELGIN );
-	}
-
-	if ( !fIncludesManny )
-	{
-		// initialize Manny now...
-		InitializeOneArmsDealer( ARMS_DEALER_MANNY );
-	}
 }
 
 
