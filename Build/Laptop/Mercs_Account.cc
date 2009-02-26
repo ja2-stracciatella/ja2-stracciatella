@@ -287,9 +287,6 @@ static void SettleMercAccounts(void)
 			//if the player can afford to pay this merc
 			if( LaptopSaveInfo.iCurrentBalance >= iPartialPayment + iContractCharge )
 			{
-				//Increment the counter that keeps track of the of the number of days the player has paid for merc services
-				LaptopSaveInfo.guiNumberOfMercPaymentsInDays += gMercProfiles[ ubMercID ].iMercMercContractLength;
-
 				//Then reset the merc contract counter
 				gMercProfiles[ ubMercID ].iMercMercContractLength = 0;
 
@@ -366,9 +363,6 @@ static void SettleMercAccounts(void)
 				if( LaptopSaveInfo.iCurrentBalance > iContractCharge )
 				{
 					pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
-
-					LaptopSaveInfo.guiNumberOfMercPaymentsInDays += pSoldier->iTotalContractLength;
-
 					pSoldier->iTotalContractLength = 0;
 
 					iPartialPayment += iContractCharge;
@@ -406,9 +400,6 @@ static void SettleMercAccounts(void)
 		if( IsMercOnTeam( ubMercID ) )
 		{
 			pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
-
-			LaptopSaveInfo.guiNumberOfMercPaymentsInDays += pSoldier->iTotalContractLength;
-
 			pSoldier->iTotalContractLength = 0;
 		}
 	}

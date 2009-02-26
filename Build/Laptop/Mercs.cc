@@ -105,16 +105,6 @@
 #define		MERC_LAST_MERC									BUBBA
 
 
-//number of payment days ( # of merc days paid ) to get next set of mercs
-#define		MERC_NUM_DAYS_TILL_FIRST_MERC_AVAILABLE				10
-#define		MERC_NUM_DAYS_TILL_SECOND_MERC_AVAILABLE			16
-#define		MERC_NUM_DAYS_TILL_THIRD_MERC_AVAILABLE				24
-#define		MERC_NUM_DAYS_TILL_FOURTH_MERC_AVAILABLE			30
-
-#define		MERC__AMOUNT_OF_MONEY_FOR_BUBBA								6000
-#define		MERC__DAY_WHEN_BUBBA_CAN_BECOME_AVAILABLE			10
-
-
 enum
 {
 	MERC_ARRIVES_BUBBA,
@@ -283,8 +273,6 @@ void GameInitMercs()
 
 	gubCurrentMercVideoMode = MERC_VIDEO_NO_VIDEO_MODE;
 	gfMercVideoIsBeingDisplayed = FALSE;
-
-	LaptopSaveInfo.guiNumberOfMercPaymentsInDays = 0;
 
 	gusMercVideoSpeckSpeech = 0;
 
@@ -664,130 +652,6 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 
 	//Check and act if any new Merc Mercs should become available
 	ShouldAnyNewMercMercBecomeAvailable();
-
-/*
-	BOOLEAN fAlreadySentEmailToPlayerThisTurn = FALSE;
-	//If we should advacne the number of days that the good mercs arrive
-//	if( LaptopSaveInfo.guiNumberOfMercPaymentsInDays > 4 )
-	{
-		UINT8 ubNumDays;
-
-//		ubNumDays = (UINT8) LaptopSaveInfo.guiNumberOfMercPaymentsInDays / 4;
-		ubNumDays = (UINT8) LaptopSaveInfo.guiNumberOfMercPaymentsInDays;
-
-//		LaptopSaveInfo.guiNumberOfMercPaymentsInDays = LaptopSaveInfo.guiNumberOfMercPaymentsInDays % 4;
-		LaptopSaveInfo.guiNumberOfMercPaymentsInDays = 0;
-
-		//for the first merc
-		//if the merc is not already here
-		if( LaptopSaveInfo.gbNumDaysTillFirstMercArrives != -1 )
-		{
-			//We advance the day the merc arrives on
-			if( LaptopSaveInfo.gbNumDaysTillFirstMercArrives > ubNumDays )
-			{
-				LaptopSaveInfo.gbNumDaysTillFirstMercArrives -= ubNumDays;
-			}
-			else
-			{
-				//its time to add the new mercs
-				LaptopSaveInfo.gubLastMercIndex = NUMBER_MERCS_AFTER_FIRST_MERC_ARRIVES;
-
-				//Set the fact that there are new mercs available
-				LaptopSaveInfo.fNewMercsAvailableAtMercSite = TRUE;
-
-				//if we havent already sent an email this turn
-				if( !fAlreadySentEmailToPlayerThisTurn )
-				{
-					AddEmail( NEW_MERCS_AT_MERC, NEW_MERCS_AT_MERC_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin());
-					fAlreadySentEmailToPlayerThisTurn = TRUE;
-				}
-				LaptopSaveInfo.gbNumDaysTillFirstMercArrives = -1;
-			}
-		}
-
-
-		//for the Second merc
-		//if the merc is not already here
-		if( LaptopSaveInfo.gbNumDaysTillSecondMercArrives != -1 )
-		{
-			//We advance the day the merc arrives on
-			if( LaptopSaveInfo.gbNumDaysTillSecondMercArrives > ubNumDays )
-			{
-				LaptopSaveInfo.gbNumDaysTillSecondMercArrives -= ubNumDays;
-			}
-			else
-			{
-				//its time to add the new mercs
-				LaptopSaveInfo.gubLastMercIndex = NUMBER_MERCS_AFTER_SECOND_MERC_ARRIVES;
-
-				//Set the fact that there are new mercs available
-				LaptopSaveInfo.fNewMercsAvailableAtMercSite = TRUE;
-
-				//if we havent already sent an email this turn
-				if( !fAlreadySentEmailToPlayerThisTurn )
-				{
-					AddEmail( NEW_MERCS_AT_MERC, NEW_MERCS_AT_MERC_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin());
-					fAlreadySentEmailToPlayerThisTurn = TRUE;
-				}
-				LaptopSaveInfo.gbNumDaysTillSecondMercArrives = -1;
-			}
-		}
-
-		//for the Third merc
-		//if the merc is not already here
-		if( LaptopSaveInfo.gbNumDaysTillThirdMercArrives != -1 )
-		{
-			//We advance the day the merc arrives on
-			if( LaptopSaveInfo.gbNumDaysTillThirdMercArrives > ubNumDays )
-			{
-				LaptopSaveInfo.gbNumDaysTillThirdMercArrives -= ubNumDays;
-			}
-			else
-			{
-				//its time to add the new mercs
-				LaptopSaveInfo.gubLastMercIndex = NUMBER_MERCS_AFTER_THIRD_MERC_ARRIVES;
-
-				//Set the fact that there are new mercs available
-				LaptopSaveInfo.fNewMercsAvailableAtMercSite = TRUE;
-
-				//if we havent already sent an email this turn
-				if( !fAlreadySentEmailToPlayerThisTurn )
-				{
-					AddEmail( NEW_MERCS_AT_MERC, NEW_MERCS_AT_MERC_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin());
-					fAlreadySentEmailToPlayerThisTurn = TRUE;
-				}
-				LaptopSaveInfo.gbNumDaysTillThirdMercArrives = -1;
-			}
-		}
-
-		//for the Fourth merc
-		//if the merc is not already here
-		if( LaptopSaveInfo.gbNumDaysTillFourthMercArrives != -1 )
-		{
-			//We advance the day the merc arrives on
-			if( LaptopSaveInfo.gbNumDaysTillFourthMercArrives > ubNumDays )
-			{
-				LaptopSaveInfo.gbNumDaysTillFourthMercArrives -= ubNumDays;
-			}
-			else
-			{
-				//its time to add the new mercs
-				LaptopSaveInfo.gubLastMercIndex = NUMBER_MERCS_AFTER_FOURTH_MERC_ARRIVES;
-
-				//Set the fact that there are new mercs available
-				LaptopSaveInfo.fNewMercsAvailableAtMercSite = TRUE;
-
-				//if we havent already sent an email this turn
-				if( !fAlreadySentEmailToPlayerThisTurn )
-				{
-					AddEmail( NEW_MERCS_AT_MERC, NEW_MERCS_AT_MERC_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin());
-					fAlreadySentEmailToPlayerThisTurn = TRUE;
-				}
-				LaptopSaveInfo.gbNumDaysTillFourthMercArrives = -1;
-			}
-		}
-	}
-*/
 
 	// If the merc site has never gone down, the number of MERC payment days is above 'X',
 	// and the players account status is ok ( cant have the merc site going down when the player owes him money, player may lose account that way )
@@ -1375,15 +1239,7 @@ void DisplayTextForSpeckVideoPopUp(const wchar_t* const pString)
 
 void CheatToGetAll5Merc()
 {
-	LaptopSaveInfo.guiNumberOfMercPaymentsInDays += 20;
-
-/*
-	LaptopSaveInfo.gbNumDaysTillFirstMercArrives = 1;
-	LaptopSaveInfo.gbNumDaysTillSecondMercArrives = 1;
-	LaptopSaveInfo.gbNumDaysTillThirdMercArrives = 1;
-	LaptopSaveInfo.gbNumDaysTillFourthMercArrives = 1;
-*/
-	LaptopSaveInfo.gubLastMercIndex = NUMBER_MERCS_AFTER_FOURTH_MERC_ARRIVES;
+	LaptopSaveInfo.gubLastMercIndex = LAST_MERC_ID;
 }
 
 #endif
@@ -1502,7 +1358,6 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 			}
 
 			//or if still trying to recruit ( the last recruit hasnt arrived and the player has paid for some of his mercs )
-//			else if( ubRandom < 80 && LaptopSaveInfo.gbNumDaysTillFourthMercArrives != -1 && LaptopSaveInfo.gbNumDaysTillFirstMercArrives < MERC_NUM_DAYS_TILL_FIRST_MERC_AVAILABLE )
 			else if( ubRandom < 80 && gConditionsForMercAvailability[ LaptopSaveInfo.ubLastMercAvailableId ].usMoneyPaid <= LaptopSaveInfo.uiTotalMoneyPaidToSpeck && CanMercBeAvailableYet( LaptopSaveInfo.ubLastMercAvailableId ) )
 			{
 				StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_4_TRYING_TO_RECRUIT );
@@ -2046,7 +1901,6 @@ static BOOLEAN ShouldTheMercSiteServerGoDown(void)
 
 	// If the merc site has never gone down, the first new merc has shown ( which shows the player is using the site ),
 	// and the players account status is ok ( cant have the merc site going down when the player owes him money, player may lose account that way )
-//	if( !LaptopSaveInfo.fMercSiteHasGoneDownYet  && LaptopSaveInfo.gbNumDaysTillThirdMercArrives <= 6 && LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_ACCOUNT_VALID )
 	if( !LaptopSaveInfo.fMercSiteHasGoneDownYet  && LaptopSaveInfo.ubLastMercAvailableId >= 1 && LaptopSaveInfo.gubPlayersMercAccountStatus == MERC_ACCOUNT_VALID )
 	{
 		if( Random( 100 ) < ( uiDay * 2 + 10 ) )
@@ -2149,17 +2003,6 @@ static BOOLEAN CanMercQuoteBeSaid(UINT32 uiQuoteID)
 
 
 	return( fRetVal );
-}
-
-
-void InitializeNumDaysMercArrive()
-{
-/*
-	LaptopSaveInfo.gbNumDaysTillFirstMercArrives = MERC_NUM_DAYS_TILL_FIRST_MERC_AVAILABLE;
-	LaptopSaveInfo.gbNumDaysTillSecondMercArrives = MERC_NUM_DAYS_TILL_SECOND_MERC_AVAILABLE;
-	LaptopSaveInfo.gbNumDaysTillThirdMercArrives = MERC_NUM_DAYS_TILL_THIRD_MERC_AVAILABLE;
-	LaptopSaveInfo.gbNumDaysTillFourthMercArrives = MERC_NUM_DAYS_TILL_FOURTH_MERC_AVAILABLE;
-*/
 }
 
 

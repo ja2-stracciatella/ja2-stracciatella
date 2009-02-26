@@ -366,8 +366,6 @@ void LaptopScreenInit(void)
 
 	LaptopSaveInfo.gfNewGameLaptop = TRUE;
 
-	InitializeNumDaysMercArrive();
-
 	//reset the id of the last hired merc
 	LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = -1;
 
@@ -3520,12 +3518,7 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 	INJ_BOOL( d, l.fSaidGenericOpeningInMercSite)
 	INJ_BOOL( d, l.fSpeckSaidFloMarriedCousinQuote)
 	INJ_BOOL( d, l.fHasAMercDiedAtMercSite)
-	INJ_I8(   d, l.gbNumDaysTillFirstMercArrives)
-	INJ_I8(   d, l.gbNumDaysTillSecondMercArrives)
-	INJ_I8(   d, l.gbNumDaysTillThirdMercArrives)
-	INJ_I8(   d, l.gbNumDaysTillFourthMercArrives)
-	INJ_SKIP( d, 3)
-	INJ_U32(  d, l.guiNumberOfMercPaymentsInDays)
+	INJ_SKIP( d, 11)
 	INJ_U16A( d, l.usInventoryListLength, lengthof(l.usInventoryListLength))
 	INJ_I32(  d, l.iVoiceId)
 	INJ_U8(   d, l.ubHaveBeenToBobbyRaysAtLeastOnceWhileUnderConstruction)
@@ -3617,12 +3610,7 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	EXTR_BOOL( d, l.fSaidGenericOpeningInMercSite)
 	EXTR_BOOL( d, l.fSpeckSaidFloMarriedCousinQuote)
 	EXTR_BOOL( d, l.fHasAMercDiedAtMercSite)
-	EXTR_I8(   d, l.gbNumDaysTillFirstMercArrives)
-	EXTR_I8(   d, l.gbNumDaysTillSecondMercArrives)
-	EXTR_I8(   d, l.gbNumDaysTillThirdMercArrives)
-	EXTR_I8(   d, l.gbNumDaysTillFourthMercArrives)
-	EXTR_SKIP( d, 3)
-	EXTR_U32(  d, l.guiNumberOfMercPaymentsInDays)
+	EXTR_SKIP( d, 11)
 	EXTR_U16A( d, l.usInventoryListLength, lengthof(l.usInventoryListLength))
 	EXTR_I32(  d, l.iVoiceId)
 	EXTR_U8(   d, l.ubHaveBeenToBobbyRaysAtLeastOnceWhileUnderConstruction)

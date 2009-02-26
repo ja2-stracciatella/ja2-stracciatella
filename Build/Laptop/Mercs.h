@@ -8,10 +8,6 @@
 #define		NUMBER_OF_MERCS																11
 #define		LAST_MERC_ID																	10
 #define		NUMBER_OF_BAD_MERCS														5
-#define		NUMBER_MERCS_AFTER_FIRST_MERC_ARRIVES					6
-#define		NUMBER_MERCS_AFTER_SECOND_MERC_ARRIVES				8
-#define		NUMBER_MERCS_AFTER_THIRD_MERC_ARRIVES					9
-#define		NUMBER_MERCS_AFTER_FOURTH_MERC_ARRIVES				10
 
 #define		MERC_NUM_DAYS_TILL_FIRST_WARNING							7
 #define		MERC_NUM_DAYS_TILL_ACCOUNT_SUSPENDED					9
@@ -77,14 +73,8 @@ extern	UINT8			gubArrivedFromMercSubSite;
 
 extern	UINT8			gubMercArray[ NUMBER_OF_MERCS ];
 extern	UINT8			gubCurMercIndex;
-//extern	UINT8			gubLastMercIndex;
-
-//extern	UINT32		guiNumberOfMercPaymentsInDays;
-//extern	UINT8			gubNumDaysTillFirstMercArrives;
 
 extern	BOOLEAN		gfJustHiredAMercMerc;
-
-void InitializeNumDaysMercArrive(void);
 
 void NewMercsAvailableAtMercSiteCallBack(void);
 

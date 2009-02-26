@@ -121,13 +121,6 @@ struct LaptopSaveInfoStruct
 	BOOLEAN							fSpeckSaidFloMarriedCousinQuote;
 	BOOLEAN							fHasAMercDiedAtMercSite;
 
-	INT8								gbNumDaysTillFirstMercArrives;
-	INT8								gbNumDaysTillSecondMercArrives;
-	INT8								gbNumDaysTillThirdMercArrives;
-	INT8								gbNumDaysTillFourthMercArrives;
-
-	UINT32							guiNumberOfMercPaymentsInDays;				// Keeps track of each day of payment the MERC site gets
-
 	UINT16							usInventoryListLength[BOBBY_RAY_LISTS];
 
 	INT32								iVoiceId;
