@@ -15,9 +15,7 @@ struct STRATEGICEVENT
 	UINT8										ubEventType;
 	UINT8										ubCallbackID;
 	UINT8										ubFlags;
-	INT8										bPadding[6];
 };
-CASSERT(sizeof(STRATEGICEVENT) == 28)
 
 
 enum

@@ -1,3 +1,5 @@
+#include "Debug.h"
+#include "LoadSaveData.h"
 #include "Types.h"
 #include "Game_Events.h"
 #include "Game_Clock.h"
@@ -616,7 +618,19 @@ void SaveStrategicEventsToSavedGame(HWFILE const f)
 
 	for (STRATEGICEVENT* i = gpEventList; i; i = i->next)
 	{
-		FileWrite(f, i, sizeof(*i));
+		BYTE  data[28];
+		BYTE* d = data;
+		INJ_SKIP(d, 4)
+		INJ_U32( d, i->uiTimeStamp)
+		INJ_U32( d, i->uiParam)
+		INJ_U32( d, i->uiTimeOffset)
+		INJ_U8(  d, i->ubEventType)
+		INJ_U8(  d, i->ubCallbackID)
+		INJ_U8(  d, i->ubFlags)
+		INJ_SKIP(d, 9)
+		Assert(d == endof(data));
+
+		FileWrite(f, data, sizeof(data));
 	}
 }
 
@@ -633,9 +647,20 @@ void LoadStrategicEventsFromSavedGame(HWFILE const f)
 	STRATEGICEVENT** anchor = &gpEventList;
 	for (size_t n = n_game_events; n != 0; --n)
 	{
-		STRATEGICEVENT* const sev = MALLOC(STRATEGICEVENT);
-		FileRead(f, sev, sizeof(*sev));
-		sev->next = 0;
+		BYTE data[28];
+		FileRead(f, data, sizeof(data));
+
+		STRATEGICEVENT* const sev = MALLOCZ(STRATEGICEVENT);
+		BYTE const*           d   = data;
+		EXTR_SKIP(d, 4)
+		EXTR_U32( d, sev->uiTimeStamp)
+		EXTR_U32( d, sev->uiParam)
+		EXTR_U32( d, sev->uiTimeOffset)
+		EXTR_U8(  d, sev->ubEventType)
+		EXTR_U8(  d, sev->ubCallbackID)
+		EXTR_U8(  d, sev->ubFlags)
+		EXTR_SKIP(d, 9)
+		Assert(d == endof(data));
 
 		*anchor = sev;
 		anchor  = &sev->next;
