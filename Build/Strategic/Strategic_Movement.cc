@@ -440,7 +440,7 @@ BOOLEAN AddWaypointToPGroup(GROUP* const g, UINT8 const x, UINT8 const y) // Sam
 
 	WAYPOINT* const new_wp = MALLOC(WAYPOINT);
 	new_wp->x    = x;
-	new_wp->x    = y;
+	new_wp->y    = y;
 	new_wp->next = 0;
 
 	if (wp)
