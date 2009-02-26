@@ -3470,65 +3470,46 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 }
 
 
-void LoadLaptopInfoFromSavedGame(HWFILE const hFile)
+void LoadLaptopInfoFromSavedGame(HWFILE const f)
 {
-	//if there is memory allocated for the BobbyR orders
-	if (LaptopSaveInfo.usNumberOfBobbyRayOrderItems)
-	{
-		//Free the memory
-		if (LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray)
-		{
-			MemFree(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray);
-		}
-		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = NULL;
+	LaptopSaveInfoStruct& l = LaptopSaveInfo;
+
+	if (l.usNumberOfBobbyRayOrderItems)
+	{ // There is memory allocated for the BobbyR orders
+		FreeNull(l.BobbyRayOrdersOnDeliveryArray);
 	}
 
-	//if there is memory allocated for life insurance payouts
-	if (LaptopSaveInfo.ubNumberLifeInsurancePayouts)
-	{
-		Assert(LaptopSaveInfo.pLifeInsurancePayouts != NULL); //Should never happen
-
-		//Free the memory
-		MemFree(LaptopSaveInfo.pLifeInsurancePayouts);
-		LaptopSaveInfo.pLifeInsurancePayouts = NULL;
+	if (l.ubNumberLifeInsurancePayouts)
+	{ // There is memory allocated for life insurance payouts
+		Assert(l.pLifeInsurancePayouts);
+		FreeNull(l.pLifeInsurancePayouts);
 	}
 
+	// Load the laptop information
+	FileRead(f, &l, sizeof(LaptopSaveInfoStruct));
 
-	// Load The laptop information
-	FileRead(hFile, &LaptopSaveInfo, sizeof(LaptopSaveInfoStruct));
-
-
-	//If there is anything in the Bobby Ray Orders on Delivery
-	if (LaptopSaveInfo.usNumberOfBobbyRayOrderUsed)
-	{
-		//Allocate memory for the information
-		const UINT32 uiSize = sizeof(BobbyRayOrderStruct) * LaptopSaveInfo.usNumberOfBobbyRayOrderItems;
-		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = MALLOCN(BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
-
-		// Load The laptop information
-		FileRead(hFile, LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, uiSize);
+	if (l.usNumberOfBobbyRayOrderUsed != 0)
+	{ // There is anything in the Bobby Ray Orders on Delivery
+		UINT32 const size = sizeof(*l.BobbyRayOrdersOnDeliveryArray) * l.usNumberOfBobbyRayOrderItems;
+		l.BobbyRayOrdersOnDeliveryArray = MALLOCN(BobbyRayOrderStruct, l.usNumberOfBobbyRayOrderItems);
+		FileRead(f, l.BobbyRayOrdersOnDeliveryArray, size);
 	}
 	else
 	{
-		LaptopSaveInfo.usNumberOfBobbyRayOrderItems  = 0;
-		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = NULL;
+		l.usNumberOfBobbyRayOrderItems  = 0;
+		l.BobbyRayOrdersOnDeliveryArray = 0;
 	}
 
-
-	//If there is any Insurance Payouts in progress
-	if (LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed)
-	{
-		//Allocate memory for the information
-		const UINT32 uiSize = sizeof(LIFE_INSURANCE_PAYOUT) * LaptopSaveInfo.ubNumberLifeInsurancePayouts;
-		LaptopSaveInfo.pLifeInsurancePayouts = MALLOCN(LIFE_INSURANCE_PAYOUT, LaptopSaveInfo.ubNumberLifeInsurancePayouts);
-
-		// Load The laptop information
-		FileRead(hFile, LaptopSaveInfo.pLifeInsurancePayouts, uiSize);
+	if (l.ubNumberLifeInsurancePayoutUsed != 0)
+	{ // There are any Insurance Payouts in progress
+		UINT32 const size = sizeof(*l.pLifeInsurancePayouts) * l.ubNumberLifeInsurancePayouts;
+		l.pLifeInsurancePayouts = MALLOCN(LIFE_INSURANCE_PAYOUT, l.ubNumberLifeInsurancePayouts);
+		FileRead(f, l.pLifeInsurancePayouts, size);
 	}
 	else
 	{
-		LaptopSaveInfo.ubNumberLifeInsurancePayouts = 0;
-		LaptopSaveInfo.pLifeInsurancePayouts        = NULL;
+		l.ubNumberLifeInsurancePayouts = 0;
+		l.pLifeInsurancePayouts        = 0;
 	}
 }
 
