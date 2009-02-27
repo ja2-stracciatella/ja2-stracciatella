@@ -1146,7 +1146,7 @@ static void CalculatePopupTextPosition(INT16 sWidth, INT16 sHeight)
 
 void TalkingMenuGiveItem(UINT8 const ubNPC, OBJECTTYPE* const pObject, INT8 const bInvPos)
 {
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GIVE_ITEM, ubNPC, reinterpret_cast<UINT32>(pObject), bInvPos, gTalkPanel.face, DIALOGUE_NPC_UI);
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GIVE_ITEM, ubNPC, reinterpret_cast<UINT32>(pObject), bInvPos, gTalkPanel.face, DIALOGUE_NPC_UI); // XXX TODO0004
 }
 
 

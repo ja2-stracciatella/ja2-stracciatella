@@ -1329,14 +1329,11 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 
 static void ReturnItemToPlayerIfNecessary(UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData, NPCQuoteInfo* pQuotePtr)
 {
-	OBJECTTYPE  *		pObj;
-
 	// if the approach was changed, always return the item
 	// otherwise check to see if the record in question specified refusal
 	if ( bApproach != APPROACH_GIVINGITEM || (pQuotePtr == NULL ) || (pQuotePtr->sActionData == NPC_ACTION_DONT_ACCEPT_ITEM ) )
 	{
-		pObj = (OBJECTTYPE *) uiApproachData;
-
+		OBJECTTYPE*  const pObj     = reinterpret_cast<OBJECTTYPE*>(uiApproachData); // XXX TODO0004
 		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubMerc);
 
 		// Try to auto place object and then if it fails, put into cursor
@@ -1550,7 +1547,7 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 					}
 
 					// If we are approaching because we want to give an item, do something different
-					pObj = (OBJECTTYPE *) uiApproachData;
+					pObj = reinterpret_cast<OBJECTTYPE*>(uiApproachData); // XXX TODO0004
 					NPCConsiderReceivingItemFromMerc( ubNPC, ubMerc, pObj, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum );
 					break;
 				case TRIGGER_NPC:

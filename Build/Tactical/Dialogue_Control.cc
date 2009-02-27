@@ -518,7 +518,7 @@ void HandleDialogue()
 		if (gpCurrentTalkingFace->uiFlags & FACE_TRIGGER_PREBATTLE_INT)
 		{
 			UnLockPauseState();
-			InitPreBattleInterface((GROUP*)gpCurrentTalkingFace->uiUserData1, TRUE);
+			InitPreBattleInterface(reinterpret_cast<GROUP*>(gpCurrentTalkingFace->uiUserData1), TRUE); // XXX TODO0004
 			//Reset flag!
 			gpCurrentTalkingFace->uiFlags &= ~FACE_TRIGGER_PREBATTLE_INT;
 		}
@@ -886,7 +886,7 @@ void HandleDialogue()
 		{
 			if (d->bUIHandlerID == DIALOGUE_NPC_UI)
 			{
-				HandleNPCItemGiven((UINT8)d->uiSpecialEventData, (OBJECTTYPE*)d->uiSpecialEventData2, (INT8)d->uiSpecialEventData3);
+				HandleNPCItemGiven((UINT8)d->uiSpecialEventData, reinterpret_cast<OBJECTTYPE*>(d->uiSpecialEventData2), (INT8)d->uiSpecialEventData3); // XXX TODO0004
 			}
 		}
 		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC)
