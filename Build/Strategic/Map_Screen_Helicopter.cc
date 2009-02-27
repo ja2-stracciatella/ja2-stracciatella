@@ -669,11 +669,17 @@ void SetUpHelicopterForMovement( void )
 }
 
 
+static void SkyriderDialogue(UINT16 const quote)
+{
+	CharacterDialogue(SKYRIDER, quote, uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE);
+}
+
+
 static void HeliCharacterDialogue(UINT16 const usQuoteNum)
 {
 	// ARM: we could just return, but since various flags are often being set it's safer to honk so it gets fixed right!
 	Assert(iHelicopterVehicleId != -1);
-	CharacterDialogue(SKYRIDER, usQuoteNum, uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE);
+	SkyriderDialogue(usQuoteNum);
 }
 
 
@@ -848,7 +854,7 @@ static void HandleSkyRiderMonologueAboutEstoniRefuel(UINT32 const uiSpecialCode)
 			UINT32    const flag    = DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT;
 			CharacterDialogueWithSpecialEvent(SKYRIDER, quote, face, handler, FALSE, FALSE, flag, SKYRIDER_MONOLOGUE_EVENT_ESTONI_REFUEL, 1);
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
-			CharacterDialogue(                SKYRIDER, quote, face, handler, FALSE, FALSE);
+			SkyriderDialogue(quote);
 			CharacterDialogueWithSpecialEvent(SKYRIDER, quote, face, handler, FALSE, FALSE, flag, SKYRIDER_MONOLOGUE_EVENT_ESTONI_REFUEL, 2);
 			break;
 		}
@@ -875,16 +881,16 @@ static void HandleSkyRiderMonologueAboutDrassenSAMSite(UINT32 const uiSpecialCod
 			UINT8     const handler = DIALOGUE_EXTERNAL_NPC_UI;
 			UINT32    const flag    = DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT;
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
-			CharacterDialogue(                SKYRIDER, quote, face, handler, FALSE, FALSE );
+			SkyriderDialogue(quote);
 			CharacterDialogueWithSpecialEvent(SKYRIDER, quote, face, handler, FALSE, TRUE, flag, SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 1);
 
 			if (!SAMSitesUnderPlayerControl(SAM_2_X, SAM_2_Y))
 			{
-				CharacterDialogue(SKYRIDER, SECOND_HALF_OF_MENTION_DRASSEN_SAM_SITE, face, handler, FALSE, FALSE);
+				SkyriderDialogue(SECOND_HALF_OF_MENTION_DRASSEN_SAM_SITE);
 			}
 			else if (CheckFact(FACT_SKYRIDER_USED_IN_MAPSCREEN, SKYRIDER))
 			{ // Ian says don't use the SAM site quote unless player has tried flying already
-				CharacterDialogue(SKYRIDER, SAM_SITE_TAKEN, face, handler, FALSE, FALSE);
+				SkyriderDialogue(SAM_SITE_TAKEN);
 				gfSkyriderSaidCongratsOnTakingSAM = TRUE;
 			}
 
@@ -914,7 +920,7 @@ static void HandleSkyRiderMonologueAboutCambriaHospital(UINT32 const uiSpecialCo
 			FACETYPE* const face    = uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE];
 			UINT8     const handler = DIALOGUE_EXTERNAL_NPC_UI;
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
-			CharacterDialogue(                SKYRIDER, quote, face, handler, FALSE, FALSE);
+			SkyriderDialogue(quote);
 			CharacterDialogueWithSpecialEvent(SKYRIDER, quote, face, handler, FALSE, TRUE, DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT, SKYRIDER_MONOLOGUE_EVENT_CAMBRIA_HOSPITAL, 1);
 
 			// Highlight Cambria hospital sector
@@ -946,11 +952,11 @@ static void HandleSkyRiderMonologueAboutOtherSAMSites(UINT32 const uiSpecialCode
 			gubCurrentTalkingID  = SKYRIDER;
 
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
-			CharacterDialogue(                SKYRIDER, quote,                                      face, handler, FALSE, FALSE );
-			CharacterDialogueWithSpecialEvent(SKYRIDER, quote,                                      face, handler, FALSE, FALSE, flag, SKYRIDER_MONOLOGUE_EVENT_OTHER_SAM_SITES, 1);
+			SkyriderDialogue(quote);
+			CharacterDialogueWithSpecialEvent(SKYRIDER, quote, face, handler, FALSE, FALSE, flag, SKYRIDER_MONOLOGUE_EVENT_OTHER_SAM_SITES, 1);
 
-			CharacterDialogue(                SKYRIDER, SECOND_HALF_OF_SPIEL_ABOUT_OTHER_SAM_SITES, face, handler, FALSE, FALSE );
-			CharacterDialogueWithSpecialEvent(SKYRIDER, quote,                                      face, handler, FALSE, FALSE, flag, SKYRIDER_MONOLOGUE_EVENT_OTHER_SAM_SITES, 2);
+			SkyriderDialogue(SECOND_HALF_OF_SPIEL_ABOUT_OTHER_SAM_SITES);
+			CharacterDialogueWithSpecialEvent(SKYRIDER, quote, face, handler, FALSE, FALSE, flag, SKYRIDER_MONOLOGUE_EVENT_OTHER_SAM_SITES, 2);
 			break;
 		}
 
