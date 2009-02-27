@@ -1173,28 +1173,23 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 
 void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, UINT8 const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, UINT32 const uiFlag, UINT32 const uiData1, UINT32 const uiData2)
 {
-	// Allocate new item
-	DIALOGUE_Q_STRUCT* QItem = MALLOCZ(DIALOGUE_Q_STRUCT);
+	DIALOGUE_Q_STRUCT* const d = MALLOCZ(DIALOGUE_Q_STRUCT);
+	d->ubCharacterNum      = ubCharacterNum;
+	d->usQuoteNum          = usQuoteNum;
+	d->face                = face;
+	d->bUIHandlerID        = bUIHandlerID;
+	d->iTimeStamp          = GetJA2Clock();
+	d->fFromSoldier        = fFromSoldier;
+	d->fDelayed            = fDelayed;
+	d->uiSpecialEventFlag  = uiFlag;
+	d->uiSpecialEventData  = uiData1;
+	d->uiSpecialEventData2 = uiData2;
 
-	QItem->ubCharacterNum = ubCharacterNum;
-	QItem->usQuoteNum			= usQuoteNum;
-	QItem->face           = face;
-	QItem->bUIHandlerID		= bUIHandlerID;
-	QItem->iTimeStamp			= GetJA2Clock( );
-	QItem->fFromSoldier		= fFromSoldier;
-	QItem->fDelayed				= fDelayed;
+	ghDialogueQ->Add(d);
 
-	// Set flag for special event
-	QItem->uiSpecialEventFlag		= uiFlag;
-	QItem->uiSpecialEventData		= uiData1;
-	QItem->uiSpecialEventData2	= uiData2;
-
-	ghDialogueQ->Add(QItem);
-
-	if ( uiFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC )
-	{
-		// Increment refrence count...
-		giNPCReferenceCount++;
+	if (uiFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC)
+	{ // Increment reference count
+		++giNPCReferenceCount;
 	}
 }
 
@@ -1202,97 +1197,83 @@ void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16 const 
 // Do special event as well as dialogue!
 static void CharacterDialogueWithSpecialEventEx(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, UINT8 const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, UINT32 const uiFlag, UINT32 const uiData1, UINT32 const uiData2, UINT32 const uiData3)
 {
-	// Allocate new item
-	DIALOGUE_Q_STRUCT* QItem = MALLOCZ(DIALOGUE_Q_STRUCT);
+	DIALOGUE_Q_STRUCT* const d = MALLOCZ(DIALOGUE_Q_STRUCT);
+	d->ubCharacterNum       = ubCharacterNum;
+	d->usQuoteNum           = usQuoteNum;
+	d->face                 = face;
+	d->bUIHandlerID         = bUIHandlerID;
+	d->iTimeStamp           = GetJA2Clock( );
+	d->fFromSoldier         = fFromSoldier;
+	d->fDelayed             = fDelayed;
+	d->uiSpecialEventFlag   = uiFlag;
+	d->uiSpecialEventData   = uiData1;
+	d->uiSpecialEventData2  = uiData2;
+	d->uiSpecialEventData3  = uiData3;
 
-	QItem->ubCharacterNum = ubCharacterNum;
-	QItem->usQuoteNum			= usQuoteNum;
-	QItem->face           = face;
-	QItem->bUIHandlerID		= bUIHandlerID;
-	QItem->iTimeStamp			= GetJA2Clock( );
-	QItem->fFromSoldier		= fFromSoldier;
-	QItem->fDelayed				= fDelayed;
+	ghDialogueQ->Add(d);
 
-	// Set flag for special event
-	QItem->uiSpecialEventFlag		= uiFlag;
-	QItem->uiSpecialEventData		= uiData1;
-	QItem->uiSpecialEventData2	= uiData2;
-	QItem->uiSpecialEventData3	= uiData3;
-
-	ghDialogueQ->Add(QItem);
-
-	if ( uiFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC )
-	{
-		// Increment refrence count...
-		giNPCReferenceCount++;
+	if (uiFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC)
+	{ // Increment refrence count
+		++giNPCReferenceCount;
 	}
 }
 
 
 void CharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, UINT8 const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed)
 {
-	// Allocate new item
-	DIALOGUE_Q_STRUCT* QItem = MALLOCZ(DIALOGUE_Q_STRUCT);
+	DIALOGUE_Q_STRUCT* const d = MALLOCZ(DIALOGUE_Q_STRUCT);
+	d->ubCharacterNum = ubCharacterNum;
+	d->usQuoteNum     = usQuoteNum;
+	d->face           = face;
+	d->bUIHandlerID   = bUIHandlerID;
+	d->iTimeStamp     = GetJA2Clock();
+	d->fFromSoldier   = fFromSoldier;
+	d->fDelayed       = fDelayed;
 
-	QItem->ubCharacterNum = ubCharacterNum;
-	QItem->usQuoteNum			= usQuoteNum;
-	QItem->face           = face;
-	QItem->bUIHandlerID		= bUIHandlerID;
-	QItem->iTimeStamp			= GetJA2Clock( );
-	QItem->fFromSoldier		= fFromSoldier;
-	QItem->fDelayed				= fDelayed;
-
-	// check if pause already locked, if so, then don't mess with it
-	if (!gfLockPauseState) QItem->fPauseTime = fPausedTimeDuringQuote;
-
+	// Check if pause already locked, if so, then don't mess with it
+	if (!gfLockPauseState) d->fPauseTime = fPausedTimeDuringQuote;
 	fPausedTimeDuringQuote = FALSE;
 
-	ghDialogueQ->Add(QItem);
+	ghDialogueQ->Add(d);
 }
 
 
 void SpecialCharacterDialogueEvent(UINT32 const uiSpecialEventFlag, UINT32 const uiSpecialEventData1, UINT32 const uiSpecialEventData2, UINT32 const uiSpecialEventData3, FACETYPE* const face, UINT8 const bUIHandlerID)
 {
-	// Allocate new item
-	DIALOGUE_Q_STRUCT* QItem = MALLOCZ(DIALOGUE_Q_STRUCT);
+	DIALOGUE_Q_STRUCT* const d = MALLOCZ(DIALOGUE_Q_STRUCT);
+	d->uiSpecialEventFlag  = uiSpecialEventFlag;
+	d->uiSpecialEventData  = uiSpecialEventData1;
+	d->uiSpecialEventData2 = uiSpecialEventData2;
+	d->uiSpecialEventData3 = uiSpecialEventData3;
+	d->face                = face;
+	d->bUIHandlerID        = bUIHandlerID;
+	d->iTimeStamp          = GetJA2Clock();
 
-	QItem->uiSpecialEventFlag		= uiSpecialEventFlag;
-	QItem->uiSpecialEventData		= uiSpecialEventData1;
-	QItem->uiSpecialEventData2	= uiSpecialEventData2;
-	QItem->uiSpecialEventData3	= uiSpecialEventData3;
-	QItem->face                = face;
-	QItem->bUIHandlerID		= bUIHandlerID;
-	QItem->iTimeStamp			= GetJA2Clock( );
-
-	// if paused state not already locked
-	if (!gfLockPauseState) QItem->fPauseTime = fPausedTimeDuringQuote;
-
+	// If paused state not already locked
+	if (!gfLockPauseState) d->fPauseTime = fPausedTimeDuringQuote;
 	fPausedTimeDuringQuote = FALSE;
 
-	ghDialogueQ->Add(QItem);
+	ghDialogueQ->Add(d);
 }
 
 
 void SpecialCharacterDialogueEventWithExtraParam(UINT32 const uiSpecialEventFlag, UINT32 const uiSpecialEventData1, UINT32 const uiSpecialEventData2, UINT32 const uiSpecialEventData3, UINT32 const uiSpecialEventData4, FACETYPE* const face, UINT8 const bUIHandlerID)
 {
-	// Allocate new item
-	DIALOGUE_Q_STRUCT* QItem = MALLOCZ(DIALOGUE_Q_STRUCT);
+	DIALOGUE_Q_STRUCT* const d = MALLOCZ(DIALOGUE_Q_STRUCT);
+	d->uiSpecialEventFlag  = uiSpecialEventFlag;
+	d->uiSpecialEventData  = uiSpecialEventData1;
+	d->uiSpecialEventData2 = uiSpecialEventData2;
+	d->uiSpecialEventData3 = uiSpecialEventData3;
+	d->uiSpecialEventData4 = uiSpecialEventData4;
+	d->face                = face;
+	d->bUIHandlerID        = bUIHandlerID;
+	d->iTimeStamp          = GetJA2Clock();
 
-	QItem->uiSpecialEventFlag		= uiSpecialEventFlag;
-	QItem->uiSpecialEventData		= uiSpecialEventData1;
-	QItem->uiSpecialEventData2	= uiSpecialEventData2;
-	QItem->uiSpecialEventData3	= uiSpecialEventData3;
-	QItem->uiSpecialEventData4	= uiSpecialEventData4;
-	QItem->face                = face;
-	QItem->bUIHandlerID		= bUIHandlerID;
-	QItem->iTimeStamp			= GetJA2Clock( );
-
-	// if paused state not already locked
-	if (!gfLockPauseState) QItem->fPauseTime = fPausedTimeDuringQuote;
-
+	// If paused state not already locked
+	if (!gfLockPauseState) d->fPauseTime = fPausedTimeDuringQuote;
 	fPausedTimeDuringQuote = FALSE;
 
-	ghDialogueQ->Add(QItem);
+	ghDialogueQ->Add(d);
 }
 
 
