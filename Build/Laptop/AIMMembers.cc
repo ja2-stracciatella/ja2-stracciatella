@@ -1667,12 +1667,8 @@ static void InitVideoFace(UINT8 ubMercID)
 // InitVideoFaceTalking() is called to start a merc speaking a particular message
 static BOOLEAN InitVideoFaceTalking(UINT8 ubMercID, UINT16 usQuoteNum)
 {
-
 	//Starts the merc talking
-	if(!CharacterDialogue( ubMercID, usQuoteNum, giMercFaceIndex, DIALOGUE_CONTACTPAGE_UI, FALSE , FALSE) )
-	{
-		return(FALSE);
-	}
+	CharacterDialogue(ubMercID, usQuoteNum, giMercFaceIndex, DIALOGUE_CONTACTPAGE_UI, FALSE, FALSE);
 
 	//Enables it so if a player clicks, he will shutup the merc
 	gSelectedShutUpMercRegion.Enable();

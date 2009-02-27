@@ -255,7 +255,7 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum );
 
 // A more general purpose function for processing quotes
-BOOLEAN CharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed);
+void CharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed);
 
 // A special event can be setup which can be queued with other speech
 void SpecialCharacterDialogueEvent(UINT32 uiSpecialEventFlag, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, FACETYPE* face, UINT8 bUIHandlerID);

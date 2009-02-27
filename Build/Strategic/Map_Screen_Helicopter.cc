@@ -200,7 +200,7 @@ static BOOLEAN DoesSkyriderNoticeEnemiesInSector(UINT8 ubNumEnemies);
 static BOOLEAN EndOfHelicoptersPath(void);
 static INT32 GetCostOfPassageForHelicopter(INT16 sX, INT16 sY);
 static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSectorY);
-static BOOLEAN HeliCharacterDialogue(SOLDIERTYPE* pSoldier, UINT16 usQuoteNum);
+static void HeliCharacterDialogue(SOLDIERTYPE* pSoldier, UINT16 usQuoteNum);
 static void PaySkyriderBill(void);
 static void ReFuelHelicopter(void);
 static void StartHoverTime(void);
@@ -677,11 +677,11 @@ void SetUpHelicopterForMovement( void )
 }
 
 
-static BOOLEAN HeliCharacterDialogue(SOLDIERTYPE* pSoldier, UINT16 usQuoteNum)
+static void HeliCharacterDialogue(SOLDIERTYPE* const pSoldier, UINT16 const usQuoteNum)
 {
 	// ARM: we could just return, but since various flags are often being set it's safer to honk so it gets fixed right!
 	Assert(iHelicopterVehicleId != -1);
-	return( CharacterDialogue( SKYRIDER, usQuoteNum, uiExternalStaticNPCFaces[ SKYRIDER_EXTERNAL_FACE ], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE ) );
+	CharacterDialogue(SKYRIDER, usQuoteNum, uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE);
 }
 
 

@@ -1017,7 +1017,8 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 		return( FALSE );
 	}
 
-	return CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, TRUE);
+	CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, TRUE);
+	return TRUE;
 }
 
 
@@ -1151,7 +1152,8 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 		}
 	}
 
-	return CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE);
+	CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE);
+	return TRUE;
 }
 
 // This function takes a profile num, quote num, faceindex and a UI hander ID.
@@ -1227,7 +1229,7 @@ static void CharacterDialogueWithSpecialEventEx(UINT8 const ubCharacterNum, UINT
 }
 
 
-BOOLEAN CharacterDialogue(const UINT8 ubCharacterNum, const UINT16 usQuoteNum, FACETYPE* const face, const UINT8 bUIHandlerID, const BOOLEAN fFromSoldier, const BOOLEAN fDelayed)
+void CharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, UINT8 const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed)
 {
 	// Allocate new item
 	DIALOGUE_Q_STRUCT* QItem = MALLOCZ(DIALOGUE_Q_STRUCT);
@@ -1246,7 +1248,6 @@ BOOLEAN CharacterDialogue(const UINT8 ubCharacterNum, const UINT16 usQuoteNum, F
 	fPausedTimeDuringQuote = FALSE;
 
 	ghDialogueQ->Add(QItem);
-	return( TRUE );
 }
 
 

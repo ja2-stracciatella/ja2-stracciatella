@@ -929,7 +929,7 @@ BOOLEAN TalkingMenuDialogue( UINT16 usQuoteNum )
 	gTalkPanel.fOnName		= FALSE;
 	//gTalkPanel.fHandled		= FALSE;
 
-	CHECKF(CharacterDialogue(gTalkPanel.ubCharNum, usQuoteNum, gTalkPanel.face, DIALOGUE_NPC_UI, FALSE, FALSE));
+	CharacterDialogue(gTalkPanel.ubCharNum, usQuoteNum, gTalkPanel.face, DIALOGUE_NPC_UI, FALSE, FALSE);
 	return( TRUE );
 }
 

@@ -4105,8 +4105,6 @@ static void HandleShopKeeperDialog(UINT8 ubInit)
 
 static BOOLEAN StartShopKeeperTalking(UINT16 usQuoteNum)
 {
-	BOOLEAN fSuccess;
-
 	// if already in the process of leaving, don't start any additional quotes
 	if ( gfSKIScreenExit || gfRemindedPlayerToPickUpHisStuff || gfUserHasRequestedToLeave )
 	{
@@ -4117,15 +4115,10 @@ static BOOLEAN StartShopKeeperTalking(UINT16 usQuoteNum)
 	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 3, usQuoteNum, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI );
 
 	// post quote dialogue
-	fSuccess = CharacterDialogue( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubShopKeeperID, usQuoteNum, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI, FALSE, FALSE );
+	CharacterDialogue(ArmsDealerInfo[gbSelectedArmsDealerID].ubShopKeeperID, usQuoteNum, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI, FALSE, FALSE);
 
 	// post event to mark shopkeeper dialogue as ended
 	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 4, usQuoteNum, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI );
-
-	if ( !fSuccess )
-	{
-		return( FALSE );
-	}
 
 	gfResetShopKeepIdleQuote = TRUE;
 	return( TRUE );
