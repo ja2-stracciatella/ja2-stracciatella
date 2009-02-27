@@ -50,7 +50,7 @@ extern NPC_DIALOGUE_TYPE gTalkPanel;
 BOOLEAN InitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pSrcSoldier, INT8 bApproach, UINT32 uiApproachData );
 
 // Begins quote of NPC Dialogue
-BOOLEAN TalkingMenuDialogue( UINT16 usQuoteNum );
+void TalkingMenuDialogue(UINT16 usQuoteNum);
 
 
 // Removes memory allocated for structure, removes face...

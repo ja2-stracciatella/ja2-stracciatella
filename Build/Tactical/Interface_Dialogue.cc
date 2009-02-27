@@ -922,7 +922,7 @@ BOOLEAN HandleTalkingMenu( )
 }
 
 
-BOOLEAN TalkingMenuDialogue( UINT16 usQuoteNum )
+void TalkingMenuDialogue(UINT16 const usQuoteNum)
 {
 	// Set back current select....
 	gTalkPanel.bCurSelect	= -1;
@@ -930,7 +930,6 @@ BOOLEAN TalkingMenuDialogue( UINT16 usQuoteNum )
 	//gTalkPanel.fHandled		= FALSE;
 
 	CharacterDialogue(gTalkPanel.ubCharNum, usQuoteNum, gTalkPanel.face, DIALOGUE_NPC_UI, FALSE, FALSE);
-	return( TRUE );
 }
 
 
