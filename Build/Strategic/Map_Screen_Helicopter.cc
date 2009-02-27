@@ -200,7 +200,7 @@ static BOOLEAN DoesSkyriderNoticeEnemiesInSector(UINT8 ubNumEnemies);
 static BOOLEAN EndOfHelicoptersPath(void);
 static INT32 GetCostOfPassageForHelicopter(INT16 sX, INT16 sY);
 static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSectorY);
-static void HeliCharacterDialogue(SOLDIERTYPE* pSoldier, UINT16 usQuoteNum);
+static void HeliCharacterDialogue(UINT16 usQuoteNum);
 static void PaySkyriderBill(void);
 static void ReFuelHelicopter(void);
 static void StartHoverTime(void);
@@ -239,11 +239,11 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 
 					if( Random( 2 ) )
 					{
-						HeliCharacterDialogue( pSkyRider, ENEMIES_SPOTTED_EN_ROUTE_IN_FRIENDLY_SECTOR_A );
+						HeliCharacterDialogue(ENEMIES_SPOTTED_EN_ROUTE_IN_FRIENDLY_SECTOR_A);
 					}
 					else
 					{
-						HeliCharacterDialogue( pSkyRider, ENEMIES_SPOTTED_EN_ROUTE_IN_FRIENDLY_SECTOR_B );
+						HeliCharacterDialogue(ENEMIES_SPOTTED_EN_ROUTE_IN_FRIENDLY_SECTOR_B);
 					}
 				}
 
@@ -275,7 +275,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 			if ( ( GetNumberOfPassengersInHelicopter() > 0 ) || !fHeliReturnStraightToBase )
 			{
 				// arrived at destination
-				HeliCharacterDialogue( pSkyRider, ARRIVED_IN_NON_HOSTILE_SECTOR );
+				HeliCharacterDialogue(ARRIVED_IN_NON_HOSTILE_SECTOR);
 				StopTimeCompression();
 			}
 
@@ -285,7 +285,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 		else
 		{
 			// Say quote: "Gonna have to abort.  Enemies below"
-			HeliCharacterDialogue( pSkyRider, ARRIVED_IN_HOSTILE_SECTOR );
+			HeliCharacterDialogue(ARRIVED_IN_HOSTILE_SECTOR);
 			StopTimeCompression();
 		}
 
@@ -533,7 +533,7 @@ void HandleHeliHoverLong( void )
 		AddStrategicEvent( EVENT_HELICOPTER_HOVER_WAY_TOO_LONG, uiStartHoverTime + TIME_DELAY_FOR_HOVER_WAIT_TOO_LONG, 0 );
 
 		// inform player
-		HeliCharacterDialogue( pSkyRider, HOVERING_A_WHILE );
+		HeliCharacterDialogue(HOVERING_A_WHILE);
 
 		// stop time compression if it's on
 		StopTimeCompression( );
@@ -557,7 +557,7 @@ void HandleHeliHoverTooLong( void )
 	if (!fHoveringHelicopter) return;
 
 	// hovered too long, inform player heli is returning to base
-	HeliCharacterDialogue( pSkyRider, RETURN_TO_BASE );
+	HeliCharacterDialogue(RETURN_TO_BASE);
 
 	const VEHICLETYPE* const v = GetHelicopter();
 	// If the sector is safe
@@ -677,7 +677,7 @@ void SetUpHelicopterForMovement( void )
 }
 
 
-static void HeliCharacterDialogue(SOLDIERTYPE* const pSoldier, UINT16 const usQuoteNum)
+static void HeliCharacterDialogue(UINT16 const usQuoteNum)
 {
 	// ARM: we could just return, but since various flags are often being set it's safer to honk so it gets fixed right!
 	Assert(iHelicopterVehicleId != -1);
@@ -806,7 +806,7 @@ void MoveAllInHelicopterToFootMovementGroup(void)
 void SkyRiderTalk( UINT16 usQuoteNum )
 {
 	// have skyrider talk to player
-	HeliCharacterDialogue( pSkyRider, usQuoteNum );
+	HeliCharacterDialogue(usQuoteNum);
 
 	fTeamPanelDirty = TRUE;
 }
@@ -1381,20 +1381,20 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSe
 		// first hit?
 		if ( gubHelicopterHitsTaken == 1 )
 		{
-			HeliCharacterDialogue( pSkyRider, HELI_TOOK_MINOR_DAMAGE );
+			HeliCharacterDialogue(HELI_TOOK_MINOR_DAMAGE);
 		}
 		// second hit?
 		else if ( gubHelicopterHitsTaken == 2 )
 		{
 			// going back to base (no choice, dialogue says so)
-			HeliCharacterDialogue( pSkyRider, HELI_TOOK_MAJOR_DAMAGE );
+			HeliCharacterDialogue(HELI_TOOK_MAJOR_DAMAGE);
 			MakeHeliReturnToBase();
 		}
 		// third hit!
 		else
 		{
 			// Important: Skyrider must still be alive when he talks, so must do this before heli is destroyed!
-			HeliCharacterDialogue( pSkyRider, HELI_GOING_DOWN );
+			HeliCharacterDialogue(HELI_GOING_DOWN);
 
 			// everyone die die die
 			// play sound
@@ -1705,7 +1705,7 @@ static void PaySkyriderBill(void)
 				gMercProfiles[ SKYRIDER ].iBalance = - iTotalAccumulatedCostByPlayer;
 			}
 
-			HeliCharacterDialogue( pSkyRider, OWED_MONEY_TO_SKYRIDER );
+			HeliCharacterDialogue(OWED_MONEY_TO_SKYRIDER);
 			ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, pSkyriderText[ 1 ], -gMercProfiles[ SKYRIDER ].iBalance );
 
 			// kick everyone out! (we know we're in a safe sector if we're paying)
@@ -1746,7 +1746,7 @@ void PayOffSkyriderDebtIfAny( )
 		if ( iAmountOwed > 0 )
 		{
 			ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, pSkyriderText[ 1 ], iAmountOwed );
-			HeliCharacterDialogue( pSkyRider, OWED_MONEY_TO_SKYRIDER );
+			HeliCharacterDialogue(OWED_MONEY_TO_SKYRIDER);
 		}
 	}
 }
