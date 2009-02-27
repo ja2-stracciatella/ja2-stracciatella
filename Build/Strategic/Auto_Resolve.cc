@@ -1194,7 +1194,7 @@ static void AutoBandageMercs(void)
 
 	// Do we have any doctors?  If so, bandage selves first.
 	UINT32       max_points_used = 0; // XXX write-only, should probably be assigned to parallel_points_used
-	SOLDIERTYPE* best            = 0;
+	SOLDIERTYPE* best            = gpMercs[0].pSoldier;
 	FOR_ALL_AR_MERCS(i)
 	{
 		SOLDIERTYPE& s = *i->pSoldier;
