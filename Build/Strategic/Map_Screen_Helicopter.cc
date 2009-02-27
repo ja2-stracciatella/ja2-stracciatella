@@ -121,11 +121,6 @@ UINT8 gubHelicopterHitsTaken = 0;
 BOOLEAN gfSkyriderSaidCongratsOnTakingSAM = FALSE;
 UINT8 gubPlayerProgressSkyriderLastCommentedOn = 0;
 
-// skyrider placeholder
-SOLDIERTYPE SoldierSkyRider;
-
-SOLDIERTYPE *pSkyRider;
-
 
 void InitializeHelicopter( void )
 {
@@ -133,8 +128,6 @@ void InitializeHelicopter( void )
 	iHelicopterVehicleId = -1;
 
 	fSkyRiderSetUp = FALSE;
-	pSkyRider = NULL;
-	memset ( &SoldierSkyRider, 0, sizeof( SoldierSkyRider ) );
 
 	fHelicopterIsAirBorne = FALSE;
 	fHeliReturnStraightToBase = FALSE;
@@ -413,7 +406,6 @@ static void SkyriderDestroyed(void)
 	KillAllInVehicle(v);
 
 	// kill skyrider
-	SoldierSkyRider.bLife = 0;
 	gMercProfiles[ SKYRIDER ].bLife = 0;
 
 	// destroy helicopter
@@ -738,12 +730,6 @@ void SetUpHelicopterForPlayer( INT16 sX, INT16 sY )
 	if (!fSkyRiderSetUp)
 	{
 		iHelicopterVehicleId = AddVehicleToList( sX, sY, 0, HELICOPTER );
-
-		memset( &SoldierSkyRider, 0, sizeof( SOLDIERTYPE ) );
-		SoldierSkyRider.ubProfile = SKYRIDER;
-		SoldierSkyRider.bLife = 80;
-
-		pSkyRider = &( SoldierSkyRider );
 
 		// set up for movement
 		SetUpHelicopterForMovement( );
