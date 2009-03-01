@@ -3409,17 +3409,15 @@ void DrawItemTileCursor( )
 }
 
 
-static BOOLEAN IsValidAmmoToReloadRobot(const SOLDIERTYPE* s, const OBJECTTYPE* pObject)
+static bool IsValidAmmoToReloadRobot(SOLDIERTYPE const& s, OBJECTTYPE const& ammo)
 {
-	if (!CompatibleAmmoForGun(pObject, &s->inv[HANDPOS]))
+	OBJECTTYPE const& weapon = s.inv[HANDPOS];
+	if (!CompatibleAmmoForGun(&ammo, &weapon))
 	{
-		// Build string...
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ROBOT_NEEDS_GIVEN_CALIBER_STR], AmmoCaliber[Weapon[s->inv[HANDPOS].usItem].ubCalibre]);
-
-		return( FALSE );
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ROBOT_NEEDS_GIVEN_CALIBER_STR], AmmoCaliber[Weapon[weapon.usItem].ubCalibre]);
+		return false;
 	}
-
-	return( TRUE );
+	return true;
 }
 
 
@@ -3548,7 +3546,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 			if (tgt->uiStatusFlags & SOLDIER_ROBOT)
 			{
 				// Check if we can reload robot....
-				if (IsValidAmmoToReloadRobot(tgt, &TempObject))
+				if (IsValidAmmoToReloadRobot(*tgt, TempObject))
 				{
 					 INT16	sActionGridNo;
 					 UINT8	ubDirection;
