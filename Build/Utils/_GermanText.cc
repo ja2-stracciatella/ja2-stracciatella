@@ -221,7 +221,7 @@ const wchar_t* const Message[] =
 
 	// The first %s is a merc name and the second %s is an item name
 
-	L"Zweite Waffe hat keine Ammo!",
+	L"Zweite Waffe hat keine Munition!",
 	L"%ls hat %ls gestohlen.",
 
 	// The %s is a merc name
@@ -236,7 +236,7 @@ const wchar_t* const Message[] =
 	L"Sie können %ls mit %ls nicht zusammenfügen",
 
 	L"Keine",
-	L"Ammo entfernen",
+	L"Munition entfernen",
 	L"Modifikationen",
 
 	//You cannot use "item(s)" and your "other item" at the same time.
@@ -1107,7 +1107,7 @@ const wchar_t* const TacticalStr[] =
 	// These messages are displayed during play to alert the player to a particular situation
 
 	L"KLEMMT",					//weapon is jammed.
-	L"Roboter braucht %ls Kaliber Ammo.",		//Robot is out of ammo
+	L"Roboter braucht %ls Munition.",		//Robot is out of ammo
 	L"Dorthin werfen? Unmöglich.",		//Merc can't throw to the destination he selected
 
 	// These are different buttons that the player can turn on and off.

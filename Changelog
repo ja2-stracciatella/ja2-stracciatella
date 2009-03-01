@@ -13,7 +13,7 @@
 (r5161) Fix a vanilla bug: Only consume one regeneration booster at a time, even when multiple are selected (only the effects of one are applied).
 (r5149) Plug a vanilla memory leak.
 (r5143) Fix a vanilla graphics glitch: The battle sector locator on the strategic map was not fully drawn.
-(r5142) Slightly improve German translation.
+(r5142, r5460) Improve German translation.
 (r5138) Fix a vanilla bug: In turnbased mode it was not possible for a merc to place an explosive on the tile he is currently at.
 (r5082) Fix a vanilla glitch: In the Russian (Agoniya Vlasti) version the plaque on Bobby Ray's page was missing, because the image file is named different than for other languages.
 (r5081) Fix a vanilla bug, which allowed recruiting AIM mercs for two weeks at the price for one day.
