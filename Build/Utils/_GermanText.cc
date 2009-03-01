@@ -466,20 +466,6 @@ const wchar_t *pPOWStrings[] =
 	L"??",
 };
 
-const wchar_t *pLongAttributeStrings[] =
-{
-	L"KRAFT", //The merc's strength attribute. Others below represent the other attributes.
-	L"GESCHICKLICHKEIT",
-	L"BEWEGLICHKEIT",
-	L"WEISHEIT",
-	L"TREFFSICHERHEIT",
-	L"MEDIZIN",
-	L"TECHNIK",
-	L"FÜHRUNGSQUALITÄT",
-	L"SPRENGSTOFFE",
-	L"ERFAHRUNGSSTUFE",
-};
-
 const wchar_t *pInvPanelTitleStrings[] =
 {
 	L"Rüstung", // the armor rating of the merc

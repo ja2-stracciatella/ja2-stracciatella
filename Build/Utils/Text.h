@@ -19,7 +19,6 @@ extern const wchar_t *pTrainingMenuStrings[];
 extern const wchar_t *pAttributeMenuStrings[];
 extern const wchar_t *pVehicleStrings[];
 extern const wchar_t *pShortAttributeStrings[];
-extern const wchar_t *pLongAttributeStrings[];
 extern const wchar_t *pContractStrings[];
 extern const wchar_t *pAssignmentStrings[];
 extern const wchar_t *pConditionStrings[];

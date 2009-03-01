@@ -481,20 +481,6 @@ const wchar_t* pPOWStrings[] =
 	L"??",
 };
 
-const wchar_t* pLongAttributeStrings[] =
-{
-  L"FORZA",
-	L"DESTREZZA",
-	L"AGILITÀ",
-	L"SAGGEZZA",
-	L"MIRA",
-	L"PRONTO SOCC.",
-	L"MECCANICA",
-	L"COMANDO",
-	L"ESPLOSIVI",
-	L"LIVELLO",
-};
-
 const wchar_t* pInvPanelTitleStrings[] =
 {
 	L"Giubb. A-P", // the armor rating of the merc
@@ -3668,7 +3654,7 @@ const wchar_t str_stat_dexterity[]    = L"Destrezza";
 const wchar_t str_stat_strength[]     = L"Forza";
 const wchar_t str_stat_leadership[]   = L"Comando";
 const wchar_t str_stat_wisdom[]       = L"Saggezza";
-const wchar_t str_stat_exp_level[]    = L"Esperienza"; // Liv. esperienza
+const wchar_t str_stat_exp_level[]    = L"Esperienza"; // Livello esperienza
 const wchar_t str_stat_marksmanship[] = L"Mira";
 const wchar_t str_stat_mechanical[]   = L"Meccanica";
 const wchar_t str_stat_explosive[]    = L"Esplosivi";

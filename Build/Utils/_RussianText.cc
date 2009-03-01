@@ -481,20 +481,6 @@ const wchar_t* pPOWStrings[] =
 	L"??",
 };
 
-const wchar_t* pLongAttributeStrings[] =
-{
-	L"СИЛА",
-	L"ЛОВКОСТЬ",
-	L"ПРОВОРНОСТЬ",
-	L"МУДРОСТЬ",
-	L"МЕТКОСТЬ",
-	L"МЕДИЦИНА",
-	L"МЕХАНИКА",
-	L"ЛИДЕРСТВО",
-	L"ВЗРЫВНИК",
-	L"ОПЫТ",
-};
-
 const wchar_t* pInvPanelTitleStrings[] =
 {
 	L"Броня", // the armor rating of the merc

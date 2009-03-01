@@ -481,20 +481,6 @@ const wchar_t* pPOWStrings[] =
 	L"??",
 };
 
-const wchar_t* pLongAttributeStrings[] =
-{
-	L"SIŁA", //The merc's strength attribute. Others below represent the other attributes.
-	L"ZRĘCZNOŚĆ",
-	L"ZWINNOŚĆ",
-	L"INTELIGENCJA",
-	L"UMIEJĘTNOŚCI STRZELECKIE",
-	L"WIEDZA MEDYCZNA",
-	L"ZNAJOMOŚĆ MECHANIKI",
-	L"UMIEJĘTNOŚĆ DOWODZENIA",
-	L"ZNAJOMOŚĆ MATERIAŁÓW WYBUCHOWYCH",
-	L"POZIOM DOŚWIADCZENIA",
-};
-
 const wchar_t* pInvPanelTitleStrings[] =
 {
 	L"Osłona", // the armor rating of the merc
@@ -3662,12 +3648,12 @@ const wchar_t str_stat_health[]       = L"Zdrowie";
 const wchar_t str_stat_agility[]      = L"Zwinność";
 const wchar_t str_stat_dexterity[]    = L"Sprawność";
 const wchar_t str_stat_strength[]     = L"Siła";
-const wchar_t str_stat_leadership[]   = L"Um. dowodzenia";
+const wchar_t str_stat_leadership[]   = L"Um. dowodzenia";  // Umiejętność dowodzenia
 const wchar_t str_stat_wisdom[]       = L"Inteligencja";
-const wchar_t str_stat_exp_level[]    = L"Poziom dośw."; // Poziom doświadczenia
-const wchar_t str_stat_marksmanship[] = L"Um. strzeleckie";
-const wchar_t str_stat_mechanical[]   = L"Zn. mechaniki";
-const wchar_t str_stat_explosive[]    = L"Zn. mat. wyb."; // Zn. materiałów wybuchowych
+const wchar_t str_stat_exp_level[]    = L"Poziom dośw.";    // Poziom doświadczenia
+const wchar_t str_stat_marksmanship[] = L"Um. strzeleckie"; // Umiejętności strzeleckie
+const wchar_t str_stat_mechanical[]   = L"Zn. mechaniki";   // Znajomość mechaniki
+const wchar_t str_stat_explosive[]    = L"Zn. mat. wyb.";   // Znajomość materiałów wybuchowych
 const wchar_t str_stat_medical[]      = L"Wiedza medyczna";
 
 #endif
