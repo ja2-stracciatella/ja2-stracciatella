@@ -716,27 +716,36 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 }
 
 
-static size_t GetWidthOfString(const wchar_t* pStringA)
+static size_t GetWidthOfString(wchar_t const* const str)
 {
-	Font const font = FONT10ARIAL;
-	size_t MaxWidth = 0;
-	size_t Width = 0;
-	for (const wchar_t* i = pStringA;; i++)
+	Font const bold_font   = FONT10ARIALBOLD;
+	Font const normal_font = FONT10ARIAL;
+	size_t     max_w       = 0;
+	size_t     w           = 0;
+	for (wchar_t const* i = str;; ++i)
 	{
-		switch (*i)
+		wchar_t c = *i;
+		Font    font;
+		switch (c)
 		{
 			case L'\0':
-				return MAX(Width, MaxWidth);
+				return MAX(w, max_w);
 
 			case L'\n':
-				MaxWidth = MAX(Width, MaxWidth);
-				Width = 0;
+				max_w = MAX(w, max_w);
+				w     = 0;
+				continue;
+
+			case L'|':
+				c    = *++i;
+				font = bold_font;
 				break;
 
 			default:
-				Width += GetCharWidth(font, *i);
+				font = normal_font;
 				break;
 		}
+		w += GetCharWidth(font, c);
 	}
 }
 
