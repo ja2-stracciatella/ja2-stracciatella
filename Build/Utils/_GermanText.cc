@@ -619,7 +619,7 @@ const wchar_t *pTacticalPopupButtonStrings[] =
 	L"Schauen (|L)",
 	L"Action",
 	L"Reden",
-	L"Untersuchen (|C|t|r|l)",
+	L"Untersuchen (|S|t|r|g)",
 
 	//Pop up door menu
 	L"Manuell öffnen",
@@ -842,7 +842,7 @@ const wchar_t *gpStrategicString[] =
 	L"Söldner räumen ihre Positionen und\nkönnen manuell neu plaziert werden. (|C)",
 	L"Söldner |schwärmen in alle Richtungen\naus wenn der Button gedrückt wird.",
 	L"Mit diesem Button können Sie wählen, wo die Söldner |gruppiert werden sollen.",
-	L"Klicken Sie auf diesen Button, wenn Sie die\nPositionen der Söldner gewählt haben. (|E|n|t|e|r)",
+	L"Klicken Sie auf diesen Button, wenn Sie die\nPositionen der Söldner gewählt haben. (|E|i|n|g|a|b|e)",
 	L"Sie müssen alle Söldner positionieren\nbevor die Schlacht beginnt.",
 
 	//Various strings (translate word for word)
@@ -1103,13 +1103,13 @@ const wchar_t* const TacticalStr[] =
 	L"Spielzug been|den",
 	L"Sprechen",
 	L"Stumm",
-	L"Aufrichten (|P|g|U|p)",
-	L"Cursor Level (|T|a|b)",
+	L"Aufrichten (|B|i|l|d |h|o|c|h)",
+	L"Cursor Level (|T|a|b|u|l|a|t|o|r)",
 	L"Klettern / Springen",
-	L"Ducken (|P|g|D|n)",
-	L"Untersuchen (|C|t|r|l)",
+	L"Ducken (|B|i|l|d |r|u|n|t|e|r)",
+	L"Untersuchen (|S|t|r|g)",
 	L"Voriger Söldner",
-	L"Nächster Söldner (|S|p|a|c|e)",
+	L"Nächster Söldner (|L|e|e|r|t|a|s|t|e)",
 	L"|Optionen",
 	L"Feuerstoß (|B)",
 	L"B|lickrichtung",
@@ -1425,9 +1425,9 @@ const wchar_t *pMapScreenBottomFastHelp[] =
 	L"|Optionen",
 	L"Zeitraffer (|+)", 	// time compress more
 	L"Zeitraffer (|-)", 	// time compress less
-	L"Vorige Nachricht (|U|p)\nSeite zurück (|P|g|U|p)", 	// previous message in scrollable list
-	L"Nächste Nachricht (|D|o|w|n)\nNächste Seite (|P|g|D|n)", 	// next message in the scrollable list
-	L"Zeit Start/Stop (|S|p|a|c|e)",	// start/stop time compression
+	L"Vorige Nachricht (|P|f|e|i|l |h|o|c|h)\nSeite zurück (|B|i|l|d |h|o|c|h)", 	// previous message in scrollable list
+	L"Nächste Nachricht (|P|f|e|i|l |r|u|n|t|e|r)\nNächste Seite (|B|i|l|d |r|u|n|t|e|r)", 	// next message in the scrollable list
+	L"Zeit Start/Stop (|L|e|e|r|t|a|s|t|e)",	// start/stop time compression
 };
 
 const wchar_t pMapScreenBottomText[] = L"Kontostand"; // current balance in player bank account
@@ -1617,8 +1617,8 @@ const wchar_t *pMapScreenStatusStrings[] =
 
 const wchar_t *pMapScreenPrevNextCharButtonHelpText[] =
 {
-	L"Voriger Söldner (|L|e|f|t)", 			// previous merc in the list
-	L"Nächster Söldner (|R|i|g|h|t)", 				// next merc in the list
+	L"Voriger Söldner (|P|f|e|i|l |l|i|n|k|s)", 			// previous merc in the list
+	L"Nächster Söldner (|P|f|e|i|l |r|e|c|h|t|s)", 				// next merc in the list
 };
 
 const wchar_t pEtaString[] = L"Ank.:"; // eta is an acronym for Estimated Time of Arrival
@@ -1718,9 +1718,9 @@ const wchar_t *pBullseyeStrings[] =
 // help text for mouse regions
 const wchar_t *pMiscMapScreenMouseRegionHelpText[] =
 {
-	L"Ins Inventar gehen (|E|n|t|e|r)",
+	L"Ins Inventar gehen (|E|i|n|g|a|b|e)",
 	L"Gegenstand wegwerfen",
-	L"Inventar verlassen (|E|n|t|e|r)",
+	L"Inventar verlassen (|E|i|n|g|a|b|e)",
 };
 
 const wchar_t str_he_leaves_where_drop_equipment[]  = L"Soll %ls seine Ausrüstung hier lassen (%ls) oder in %ls, bevor er Arulco verlässt?";
@@ -3420,7 +3420,7 @@ const wchar_t *gzLateLocalizedString[] =
 	L"Der Fahrzeugtank ist jetzt voll.",
 
 	//51-52 Fast help text in mapscreen.
-	L"Zeitraffer fortsetzen (|S|p|a|c|e)",
+	L"Zeitraffer fortsetzen (|L|e|e|r|t|a|s|t|e)",
 	L"Zeitraffer anhalten (|E|s|c)",
 
 	//53-54 "Magic has unjammed the Glock 18" or "Magic has unjammed Raven's H&K G11"
