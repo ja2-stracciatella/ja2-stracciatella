@@ -404,185 +404,123 @@ void HandleInterfaceBackgrounds( )
 static void BtnMovementCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-static void MakeButtonMove(UINT idx, UINT gfx, INT16 x, INT16 y, UI_EVENT* event, const wchar_t* help)
-try
+static void MakeButtonMove(UINT const idx, UINT const gfx, INT16 const x, INT16 const y, UI_EVENT* const event, wchar_t const* const help, bool const disabled)
 {
 	GUIButtonRef const btn = QuickCreateButton(iIconImages[gfx], x, y, MSYS_PRIORITY_HIGHEST - 1, BtnMovementCallback);
 	iActionIcons[idx] = btn;
 	btn->User.Ptr = event;
 	btn->SetFastHelpText(help);
-}
-catch (...)
-{
-	DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "Cannot create Interface button");
-	throw;
+	if (disabled) DisableButton(btn);
 }
 
 
 static void MovementMenuBackregionCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-void PopupMovementMenu( UI_EVENT *pUIEvent )
+void PopupMovementMenu(UI_EVENT* const ev)
 {
-	INT32								iMenuAnchorX, iMenuAnchorY;
-	UINT32							uiActionImages;
-	BOOLEAN							fDisableAction = FALSE;
-
-	// Erase other menus....
-	EraseInterfaceMenus( TRUE );
-
-	giMenuAnchorX = gusMouseXPos - 18;
-	giMenuAnchorY = gusMouseYPos - 18;
-
-	// ATE: OK loser, let's check if we're going off the screen!
-	if ( giMenuAnchorX < 0 )
-	{
-		giMenuAnchorX = 0;
-	}
-
-	if ( giMenuAnchorY < 0 )
-	{
-		giMenuAnchorY = 0;
-	}
-
+	EraseInterfaceMenus(TRUE);
 
 	// Create mouse region over all area to facilitate clicking to end
 	MSYS_DefineRegion(&gMenuOverlayRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 1, CURSOR_NORMAL, MSYS_NO_CALLBACK, MovementMenuBackregionCallback);
 
+	giMenuAnchorX = gusMouseXPos - 18;
+	giMenuAnchorY = gusMouseYPos - 18;
 
-	// OK, CHECK FOR BOUNDARIES!
-	if (giMenuAnchorX + BUTTON_PANEL_WIDTH > SCREEN_WIDTH)
+	// ATE: Check if we're going off the screen
+	if (giMenuAnchorX < 0) giMenuAnchorX = 0;
+	if (giMenuAnchorY < 0) giMenuAnchorY = 0;
+
+	// Check for boundaries
+	if (giMenuAnchorX > SCREEN_WIDTH - BUTTON_PANEL_WIDTH)
 	{
 		giMenuAnchorX = SCREEN_WIDTH - BUTTON_PANEL_WIDTH;
 	}
-	if ( ( giMenuAnchorY + BUTTON_PANEL_HEIGHT ) > gsVIEWPORT_WINDOW_END_Y )
+	if (giMenuAnchorY > gsVIEWPORT_WINDOW_END_Y - BUTTON_PANEL_HEIGHT)
 	{
-		giMenuAnchorY = ( gsVIEWPORT_WINDOW_END_Y - BUTTON_PANEL_HEIGHT );
+		giMenuAnchorY = gsVIEWPORT_WINDOW_END_Y - BUTTON_PANEL_HEIGHT;
 	}
 
-	const SOLDIERTYPE* const s = GetSelectedMan();
+	INT32              const x                     = giMenuAnchorX + 9;
+	INT32              const y                     = giMenuAnchorY + 8;
+	SOLDIERTYPE const* const s                     = GetSelectedMan();
+	bool               const is_epc                = AM_AN_EPC(s);
+	bool               const is_vehicle            = s->uiStatusFlags & SOLDIER_VEHICLE;
+	bool               const is_robot              = s->uiStatusFlags & SOLDIER_ROBOT;
+	bool               const is_uncontrolled_robot = is_robot && !CanRobotBeControlled(s);
 
-	iMenuAnchorX = giMenuAnchorX + 9;
-	iMenuAnchorY = giMenuAnchorY + 8;
+	MakeButtonMove(LOOK_ICON, LOOK_IMAGES, x,      y, ev, TacticalStr[LOOK_CURSOR_POPUPTEXT],    is_vehicle || is_uncontrolled_robot);
+	MakeButtonMove(RUN_ICON,  RUN_IMAGES,  x + 20, y, ev, pTacticalPopupButtonStrings[RUN_ICON], is_vehicle || is_robot || MercInWater(s));
+	wchar_t const* const help = is_vehicle ? TacticalStr[DRIVE_POPUPTEXT] : pTacticalPopupButtonStrings[WALK_ICON];
+	MakeButtonMove(WALK_ICON, WALK_IMAGES, x + 40, y, ev, help,                                  is_uncontrolled_robot);
 
-	MakeButtonMove(RUN_ICON, RUN_IMAGES, iMenuAnchorX + 20, iMenuAnchorY, pUIEvent, pTacticalPopupButtonStrings[RUN_ICON]);
-	if (MercInWater(s) || s->uiStatusFlags & SOLDIER_VEHICLE || s->uiStatusFlags & SOLDIER_ROBOT)
+	UINT32         action_image;
+	wchar_t const* action_text;
+	bool           disable_action = false;
+	if (is_vehicle)
 	{
-		DisableButton(iActionIcons[RUN_ICON]);
-	}
-
-	const wchar_t* const help = (s->uiStatusFlags & SOLDIER_VEHICLE ? TacticalStr[DRIVE_POPUPTEXT] : pTacticalPopupButtonStrings[WALK_ICON]);
-	MakeButtonMove(WALK_ICON, WALK_IMAGES, iMenuAnchorX + 40, iMenuAnchorY, pUIEvent, help);
-	if (s->uiStatusFlags & SOLDIER_ROBOT && !CanRobotBeControlled(s))
-	{
-		DisableButton(iActionIcons[WALK_ICON]);
-	}
-
-	MakeButtonMove(SNEAK_ICON, SNEAK_IMAGES, iMenuAnchorX + 40, iMenuAnchorY + 20, pUIEvent, pTacticalPopupButtonStrings[SNEAK_ICON]);
-	if (!IsValidStance(s, ANIM_CROUCH))
-	{
-		DisableButton(iActionIcons[SNEAK_ICON]);
-	}
-
-	MakeButtonMove(CRAWL_ICON, CRAWL_IMAGES, iMenuAnchorX + 40, iMenuAnchorY + 40, pUIEvent, pTacticalPopupButtonStrings[CRAWL_ICON]);
-	if (!IsValidStance(s, ANIM_PRONE))
-	{
-		DisableButton(iActionIcons[CRAWL_ICON]);
-	}
-
-	MakeButtonMove(LOOK_ICON, LOOK_IMAGES, iMenuAnchorX, iMenuAnchorY, pUIEvent, TacticalStr[LOOK_CURSOR_POPUPTEXT]);
-	if (s->uiStatusFlags & SOLDIER_VEHICLE ||
-			s->uiStatusFlags & SOLDIER_ROBOT && !CanRobotBeControlled(s))
-	{
-		DisableButton(iActionIcons[LOOK_ICON]);
-	}
-
-	const wchar_t* Action;
-	if (s->uiStatusFlags & SOLDIER_VEHICLE)
-	{
-		// Until we get mounted weapons...
-		uiActionImages = CANCEL_IMAGES;
-		Action = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
-		fDisableAction = TRUE;
+		// Until we get mounted weapons
+		action_image   = CANCEL_IMAGES;
+		action_text    = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
+		disable_action = true;
 	}
 	else
-	{
-		const UINT16 item = s->inv[HANDPOS].usItem;
+	{ // Create button based on what is in our hands at the moment!
+		UINT16 const item = s->inv[HANDPOS].usItem;
 		if (item == TOOLKIT)
 		{
-			uiActionImages = TOOLKITACTIONC_IMAGES;
-			Action = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
+			action_image = TOOLKITACTIONC_IMAGES;
+			action_text  = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
 		}
 		else if (item == WIRECUTTERS)
 		{
-			uiActionImages = WIRECUTACTIONC_IMAGES;
-			Action = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
+			action_image = WIRECUTACTIONC_IMAGES;
+			action_text  = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
 		}
-		else
+		else switch (Item[item].usItemClass)
 		{
-			// Create button based on what is in our hands at the moment!
-			switch (Item[item].usItemClass)
-			{
-				case IC_PUNCH:
-					uiActionImages = PUNCHACTIONC_IMAGES;
-					Action = TacticalStr[USE_HANDTOHAND_POPUPTEXT];
-					break;
+			case IC_PUNCH:
+				action_image = PUNCHACTIONC_IMAGES;
+				action_text  = TacticalStr[USE_HANDTOHAND_POPUPTEXT];
+				break;
 
-				case IC_GUN:
-					uiActionImages = TARGETACTIONC_IMAGES;
-					Action = TacticalStr[USE_FIREARM_POPUPTEXT];
-					break;
+			case IC_GUN:
+				action_image = TARGETACTIONC_IMAGES;
+				action_text  = TacticalStr[USE_FIREARM_POPUPTEXT];
+				break;
 
-				case IC_BLADE:
-					uiActionImages = KNIFEACTIONC_IMAGES;
-					Action = TacticalStr[USE_BLADE_POPUPTEXT];
-					break;
+			case IC_BLADE:
+				action_image = KNIFEACTIONC_IMAGES;
+				action_text  = TacticalStr[USE_BLADE_POPUPTEXT];
+				break;
 
-				case IC_GRENADE:
-				case IC_BOMB:
-					uiActionImages = BOMBACTIONC_IMAGES;
-					Action = TacticalStr[USE_EXPLOSIVE_POPUPTEXT];
-					break;
+			case IC_GRENADE:
+			case IC_BOMB:
+				action_image = BOMBACTIONC_IMAGES;
+				action_text  = TacticalStr[USE_EXPLOSIVE_POPUPTEXT];
+				break;
 
-				case IC_MEDKIT:
-					uiActionImages = AIDACTIONC_IMAGES;
-					Action = TacticalStr[USE_MEDKIT_POPUPTEXT];
-					break;
+			case IC_MEDKIT:
+				action_image = AIDACTIONC_IMAGES;
+				action_text  = TacticalStr[USE_MEDKIT_POPUPTEXT];
+				break;
 
-				default:
-					uiActionImages = CANCEL_IMAGES;
-					Action = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
-					fDisableAction = TRUE;
-					break;
-			}
+			default:
+				action_image   = CANCEL_IMAGES;
+				action_text    = TacticalStr[NOT_APPLICABLE_POPUPTEXT];
+				disable_action = true;
+				break;
 		}
 	}
 
-	if (AM_AN_EPC(s)) fDisableAction = TRUE;
+	MakeButtonMove(ACTIONC_ICON, action_image,  x,      y + 20, ev, action_text,                              is_epc || disable_action);
+	MakeButtonMove(CANCEL_ICON,  CANCEL_IMAGES, x + 20, y + 20, ev, pTacticalPopupButtonStrings[CANCEL_ICON], false);
+	MakeButtonMove(SNEAK_ICON,   SNEAK_IMAGES,  x + 40, y + 20, ev, pTacticalPopupButtonStrings[SNEAK_ICON],  !IsValidStance(s, ANIM_CROUCH));
+	MakeButtonMove(TALK_ICON,    TALK_IMAGES,   x,      y + 40, ev, pTacticalPopupButtonStrings[TALK_ICON],   is_epc || is_vehicle);
+	MakeButtonMove(HAND_ICON,    HAND_IMAGES,   x + 20, y + 40, ev, pTacticalPopupButtonStrings[HAND_ICON],   is_epc || is_vehicle);
+	MakeButtonMove(CRAWL_ICON,   CRAWL_IMAGES,  x + 40, y + 40, ev, pTacticalPopupButtonStrings[CRAWL_ICON],  !IsValidStance(s, ANIM_PRONE));
 
-	MakeButtonMove(ACTIONC_ICON, uiActionImages, iMenuAnchorX, iMenuAnchorY + 20, pUIEvent, Action);
-	if (fDisableAction)
-	{
-		DisableButton(iActionIcons[ACTIONC_ICON]);
-	}
-
-	MakeButtonMove(TALK_ICON, TALK_IMAGES, iMenuAnchorX, iMenuAnchorY + 40, pUIEvent, pTacticalPopupButtonStrings[TALK_ICON]);
-	if (AM_AN_EPC(s) || s->uiStatusFlags & SOLDIER_VEHICLE)
-	{
-		DisableButton(iActionIcons[TALK_ICON]);
-	}
-
-	MakeButtonMove(HAND_ICON, HAND_IMAGES, iMenuAnchorX + 20, iMenuAnchorY + 40, pUIEvent, pTacticalPopupButtonStrings[HAND_ICON]);
-	if (AM_AN_EPC(s) || s->uiStatusFlags & SOLDIER_VEHICLE)
-	{
-		DisableButton(iActionIcons[HAND_ICON]);
-	}
-
-	MakeButtonMove(CANCEL_ICON, CANCEL_IMAGES, iMenuAnchorX + 20, iMenuAnchorY + 20, pUIEvent, pTacticalPopupButtonStrings[CANCEL_ICON]);
-
-	gfInMovementMenu = TRUE;
-
-	// Ignore scrolling
+	gfInMovementMenu  = TRUE;
 	gfIgnoreScrolling = TRUE;
 }
 
