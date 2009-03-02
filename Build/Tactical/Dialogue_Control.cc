@@ -743,7 +743,7 @@ void HandleDialogue()
 		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_TRIGGERPREBATTLEINTERFACE)
 		{
 			UnLockPauseState();
-			InitPreBattleInterface((GROUP*)d->uiSpecialEventData, TRUE);
+			InitPreBattleInterface(reinterpret_cast<GROUP*>(d->uiSpecialEventData), TRUE); // XXX TODO0004
 		}
 
 		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX)
