@@ -3477,19 +3477,19 @@ INT32 GetNumberOfMercsInUpdateList(void)
 
 void AddSoldierToWaitingListQueue(const SOLDIERTYPE* const s)
 {
-	SpecialCharacterDialogueEvent(DIALOGUE_ADD_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_ADDSOLDIER, s->ubID, 0, 0, 0);
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_ADDSOLDIER, s->ubID, 0, 0, 0);
 }
 
 
 void AddReasonToWaitingListQueue( INT32 iReason )
 {
- 	SpecialCharacterDialogueEvent( DIALOGUE_ADD_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_SET_REASON, iReason, 0, 0, 0 );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_SET_REASON, iReason, 0, 0, 0);
 }
 
 
 void AddDisplayBoxToWaitingQueue( void )
 {
-	SpecialCharacterDialogueEvent( DIALOGUE_ADD_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_SHOW_BOX, 0, 0, 0, 0 );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_SHOW_BOX, 0, 0, 0, 0);
 }
 
 

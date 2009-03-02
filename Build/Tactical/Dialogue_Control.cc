@@ -746,7 +746,7 @@ void HandleDialogue()
 			InitPreBattleInterface((GROUP*)d->uiSpecialEventData, TRUE);
 		}
 
-		if (d->uiSpecialEventFlag & DIALOGUE_ADD_EVENT_FOR_SOLDIER_UPDATE_BOX)
+		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX)
 		{
 			INT32 const iReason = d->uiSpecialEventData;
 			switch (iReason)
