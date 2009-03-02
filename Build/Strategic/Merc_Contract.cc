@@ -129,7 +129,7 @@ void BeginContractRenewalSequence( )
 			InterruptTime( );
 
 			// Go into mapscreen if not already...
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN,0,0,0,0,0 );
+			SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN, 0, 0, 0, 0, DIALOGUE_NO_UI);
 		}
 	}
 }
@@ -178,7 +178,7 @@ void HandleContractRenewalSequence( )
 					HandleImportantMercQuote( pSoldier, QUOTE_MERC_LEAVING_ALSUCO_SOON );
 
 					// Do special dialogue event...
-					SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_CONTRACT_NOGO_TO_RENEW , pSoldier->ubID,0 ,0 ,0 ,0 );
+					SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_CONTRACT_NOGO_TO_RENEW, pSoldier->ubID, 0, 0, 0, DIALOGUE_NO_UI);
 				}
 				else
 				{
@@ -195,7 +195,7 @@ void HandleContractRenewalSequence( )
 					}
 
 					// Do special dialogue event...
-					SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_CONTRACT_WANTS_TO_RENEW , pSoldier->ubID,0 ,0 ,0 ,0 );
+					SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_CONTRACT_WANTS_TO_RENEW, pSoldier->ubID, 0, 0, 0, DIALOGUE_NO_UI);
 				}
 			}
 			else
@@ -227,7 +227,7 @@ void HandleMercIsWillingToRenew( UINT8 ubID )
 	SOLDIERTYPE* const pSoldier = GetMan(ubID);
 
 	// We wish to lock interface
-	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1,MAP_SCREEN,0,0,0 );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, 0, DIALOGUE_NO_UI);
 
 	CheckIfSalaryIncreasedAndSayQuote( pSoldier, FALSE );
 
@@ -238,7 +238,7 @@ void HandleMercIsWillingToRenew( UINT8 ubID )
 	TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU, 0,0 );
 
 	// Unlock now
-	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, 0, DIALOGUE_NO_UI);
 }
 
 
@@ -247,7 +247,7 @@ void HandleMercIsNotWillingToRenew( UINT8 ubID )
 	SOLDIERTYPE* const pSoldier = GetMan(ubID);
 
 	// We wish to lock interface
-	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1,MAP_SCREEN,0,0,0 );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, 0, DIALOGUE_NO_UI);
 
 	// Setup variable for this....
 	gfInContractMenuFromRenewSequence = TRUE;
@@ -256,7 +256,7 @@ void HandleMercIsNotWillingToRenew( UINT8 ubID )
 	TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU, 0,0 );
 
 	// Unlock now
-	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, 0, DIALOGUE_NO_UI);
 }
 
 
@@ -335,7 +335,7 @@ BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction )
 
 	fPausedTimeDuringQuote = TRUE;
 
-	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,1 ,MAP_SCREEN ,0 ,0 ,0 );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, 0, DIALOGUE_NO_UI);
 
 	//
 	// These calcs need to be done before Getting/Calculating the insurance costs
@@ -386,7 +386,7 @@ BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction )
 
 	}
 
-	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE,0 ,MAP_SCREEN ,0 ,0 ,0 );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, 0, DIALOGUE_NO_UI);
 
 
   // ATE: Setup when they can be signed again!
@@ -977,11 +977,11 @@ static void HandleExtendMercsContract(SOLDIERTYPE* pSoldier)
 	fTeamPanelDirty = TRUE;
 	fCharacterInfoPanelDirty = TRUE;
 
-	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, 0, 0 );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, 0, DIALOGUE_NO_UI);
 
 	CheckIfSalaryIncreasedAndSayQuote( pSoldier, TRUE );
 
-	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0 ,MAP_SCREEN, 0, 0, 0 );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, 0, DIALOGUE_NO_UI);
 }
 
 

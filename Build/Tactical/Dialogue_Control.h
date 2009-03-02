@@ -161,12 +161,16 @@ enum DialogQuoteIDs
 #define			DEFAULT_EXTERN_PANEL_Y_POS      40
 
 
-#define			DIALOGUE_TACTICAL_UI						1
-#define			DIALOGUE_CONTACTPAGE_UI					2
-#define			DIALOGUE_NPC_UI									3
-#define			DIALOGUE_SPECK_CONTACT_PAGE_UI	4
-#define     DIALOGUE_EXTERNAL_NPC_UI				5
-#define			DIALOGUE_SHOPKEEPER_UI					6
+enum DialogueHandler
+{
+	DIALOGUE_NO_UI                 = 0,
+	DIALOGUE_TACTICAL_UI           = 1,
+	DIALOGUE_CONTACTPAGE_UI        = 2,
+	DIALOGUE_NPC_UI                = 3,
+	DIALOGUE_SPECK_CONTACT_PAGE_UI = 4,
+	DIALOGUE_EXTERNAL_NPC_UI       = 5,
+	DIALOGUE_SHOPKEEPER_UI         = 6
+};
 
 
 enum DialogueSpecialEvent
@@ -244,7 +248,7 @@ void HandleImportantMercQuoteLocked(SOLDIERTYPE*, UINT16 quote);
 const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile);
 
 // Do special event as well as dialogue!
-void CharacterDialogueWithSpecialEvent(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, DialogueSpecialEvent, UINT32 uiData1, UINT32 uiData2);
+void CharacterDialogueWithSpecialEvent(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier, BOOLEAN fDelayed, DialogueSpecialEvent, UINT32 uiData1, UINT32 uiData2);
 
 // A higher level function used for tactical quotes
 BOOLEAN TacticalCharacterDialogueWithSpecialEvent(SOLDIERTYPE const* pSoldier, UINT16 usQuoteNum, DialogueSpecialEvent, UINT32 uiData1, UINT32 uiData2);
@@ -259,13 +263,13 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum );
 
 // A more general purpose function for processing quotes
-void CharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed);
+void CharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier, BOOLEAN fDelayed);
 
 // A special event can be setup which can be queued with other speech
-void SpecialCharacterDialogueEvent(DialogueSpecialEvent, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, FACETYPE* face, UINT8 bUIHandlerID);
+void SpecialCharacterDialogueEvent(DialogueSpecialEvent, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, FACETYPE* face, DialogueHandler);
 
 // Same as above, for triggers, with extra param to hold approach value
-void SpecialCharacterDialogueEventWithExtraParam(DialogueSpecialEvent, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, UINT32 uiSpecialEventData4, FACETYPE* face, UINT8 bUIHandlerID);
+void SpecialCharacterDialogueEventWithExtraParam(DialogueSpecialEvent, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, UINT32 uiSpecialEventData4, FACETYPE* face, DialogueHandler);
 
 // Called when a face stops talking...
 void HandleDialogueEnd( FACETYPE *pFace );

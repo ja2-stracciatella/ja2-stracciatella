@@ -926,7 +926,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 static void TriggerPrebattleInterface(MessageBoxReturnValue const ubResult)
 {
 	StopTimeCompression();
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_TRIGGERPREBATTLEINTERFACE, reinterpret_cast<UINT32>(gpInitPrebattleGroup), 0, 0, 0, 0); // XXX TODO0004
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_TRIGGERPREBATTLEINTERFACE, reinterpret_cast<UINT32>(gpInitPrebattleGroup), 0, 0, 0, DIALOGUE_NO_UI); // XXX TODO0004
 	gpInitPrebattleGroup = NULL;
 }
 

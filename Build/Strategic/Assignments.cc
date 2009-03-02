@@ -7309,7 +7309,7 @@ static void InternalUnescortEPC(SOLDIERTYPE* const s)
 		TacticalCharacterDialogue(s, quote_num);
 		SetFactTrue(fact_to_set_to_true);
 	}
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, profile, 0, 0, 0, 0);
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_REMOVE_EPC, profile, 0, 0, 0, DIALOGUE_NO_UI);
 }
 
 

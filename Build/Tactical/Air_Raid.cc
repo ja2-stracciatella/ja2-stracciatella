@@ -240,7 +240,7 @@ BOOLEAN BeginAirRaid( )
 			gubAirRaidMode = AIR_RAID_TRYING_TO_START;
 			gfQuoteSaid = TRUE;
 			SayQuoteFromAnyBodyInThisSector( gAirRaidDef.sSectorX, gAirRaidDef.sSectorY, ( INT8 )gAirRaidDef.sSectorZ, QUOTE_AIR_RAID );
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_EXIT_MAP_SCREEN, gAirRaidDef.sSectorX, gAirRaidDef.sSectorY, gAirRaidDef.sSectorZ, 0,0 );
+			SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_EXIT_MAP_SCREEN, gAirRaidDef.sSectorX, gAirRaidDef.sSectorY, gAirRaidDef.sSectorZ, 0, DIALOGUE_NO_UI);
 		}
 		else
 		{

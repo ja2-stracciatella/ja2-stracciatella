@@ -3477,19 +3477,19 @@ INT32 GetNumberOfMercsInUpdateList(void)
 
 void AddSoldierToWaitingListQueue(const SOLDIERTYPE* const s)
 {
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_ADDSOLDIER, s->ubID, 0, 0, 0);
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_ADDSOLDIER, s->ubID, 0, 0, DIALOGUE_NO_UI);
 }
 
 
 void AddReasonToWaitingListQueue( INT32 iReason )
 {
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_SET_REASON, iReason, 0, 0, 0);
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_SET_REASON, iReason, 0, 0, DIALOGUE_NO_UI);
 }
 
 
 void AddDisplayBoxToWaitingQueue( void )
 {
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_SHOW_BOX, 0, 0, 0, 0);
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_SHOW_BOX, 0, 0, 0, DIALOGUE_NO_UI);
 }
 
 
@@ -4788,7 +4788,7 @@ BOOLEAN CheckIfSalaryIncreasedAndSayQuote( SOLDIERTYPE *pSoldier, BOOLEAN fTrigg
 		if ( fTriggerContractMenu )
 		{
 			// have him say so first - post the dialogue event with the contract menu event
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN,0,0,0,0,0 );
+			SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN, 0, 0, 0, 0, DIALOGUE_NO_UI);
 			HandleImportantMercQuote( pSoldier, QUOTE_MERC_GONE_UP_IN_PRICE );
 			TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU, 0,0 );
 		}

@@ -848,7 +848,7 @@ void HandleContinueOfTownTraining( void )
 		if( pSoldier->bActive )
 		{
 			fContinueEventPosted = TRUE;
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_CONTINUE_TRAINING_MILITIA, pSoldier->ubProfile, 0, 0, 0, 0 );
+			SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_CONTINUE_TRAINING_MILITIA, pSoldier->ubProfile, 0, 0, 0, DIALOGUE_NO_UI);
 
 			// now set all of these peoples assignment done too
 			//HandleInterfaceMessageForContinuingTrainingMilitia( pSoldier );
