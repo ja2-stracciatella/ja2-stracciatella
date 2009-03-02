@@ -2558,7 +2558,7 @@ static void DoneFadeOutExitGridSector(void)
 	{
 		if( gTacticalStatus.fEnemyInSector )
 		{
-			TacticalCharacterDialogueWithSpecialEvent( gpTacticalTraversalChosenSoldier, QUOTE_ENEMY_PRESENCE, 0, 0, 0 );
+			TacticalCharacterDialogueWithSpecialEvent(gpTacticalTraversalChosenSoldier, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_NONE, 0, 0);
 		}
 	}
 	gfTacticalTraversal = FALSE;
@@ -2581,7 +2581,7 @@ static void DoneFadeOutAdjacentSector(void)
 	{
 		if( gTacticalStatus.fEnemyInSector )
 		{
-			TacticalCharacterDialogueWithSpecialEvent( gpTacticalTraversalChosenSoldier, QUOTE_ENEMY_PRESENCE, 0, 0, 0 );
+			TacticalCharacterDialogueWithSpecialEvent(gpTacticalTraversalChosenSoldier, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_NONE, 0, 0);
 		}
 	}
 	gfTacticalTraversal = FALSE;

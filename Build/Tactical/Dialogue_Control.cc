@@ -85,19 +85,19 @@
 
 struct DIALOGUE_Q_STRUCT
 {
-	UINT16    usQuoteNum;
-	UINT8     ubCharacterNum;
-	INT8      bUIHandlerID;
-	FACETYPE* face;
-	INT32     iTimeStamp;
-	UINT32    uiSpecialEventFlag;
-	UINT32    uiSpecialEventData;
-	UINT32    uiSpecialEventData2;
-	UINT32    uiSpecialEventData3;
-	UINT32    uiSpecialEventData4;
-	BOOLEAN   fFromSoldier;
-	BOOLEAN   fDelayed;
-	BOOLEAN   fPauseTime;
+	UINT16               usQuoteNum;
+	UINT8                ubCharacterNum;
+	INT8                 bUIHandlerID;
+	FACETYPE*            face;
+	INT32                iTimeStamp;
+	DialogueSpecialEvent uiSpecialEventFlag;
+	UINT32               uiSpecialEventData;
+	UINT32               uiSpecialEventData2;
+	UINT32               uiSpecialEventData3;
+	UINT32               uiSpecialEventData4;
+	BOOLEAN              fFromSoldier;
+	BOOLEAN              fDelayed;
+	BOOLEAN              fPauseTime;
 };
 
 typedef SGP::Queue<DIALOGUE_Q_STRUCT*> DialogueQueue;
@@ -1022,7 +1022,7 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 }
 
 
-BOOLEAN TacticalCharacterDialogueWithSpecialEvent(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2)
+BOOLEAN TacticalCharacterDialogueWithSpecialEvent(SOLDIERTYPE const* const pSoldier, UINT16 const usQuoteNum, DialogueSpecialEvent const uiFlag, UINT32 const uiData1, UINT32 const uiData2)
 {
 	if ( pSoldier->ubProfile == NO_PROFILE )
 	{
@@ -1044,10 +1044,10 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEvent(const SOLDIERTYPE* pSoldier, U
 }
 
 
-static void CharacterDialogueWithSpecialEventEx(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3);
+static void CharacterDialogueWithSpecialEventEx(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, UINT8 bUIHandlerID, BOOLEAN fFromSoldier, BOOLEAN fDelayed, DialogueSpecialEvent, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3);
 
 
-BOOLEAN TacticalCharacterDialogueWithSpecialEventEx( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum, UINT32 uiFlag, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3 )
+BOOLEAN TacticalCharacterDialogueWithSpecialEventEx(SOLDIERTYPE const* const pSoldier, UINT16 const usQuoteNum, DialogueSpecialEvent const uiFlag, UINT32 const uiData1, UINT32 const uiData2, UINT32 const uiData3)
 {
 	if ( pSoldier->ubProfile == NO_PROFILE )
 	{
@@ -1171,7 +1171,7 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 // NB;				The queued system is not yet implemented, but will be transpatent to the caller....
 
 
-void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, UINT8 const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, UINT32 const uiFlag, UINT32 const uiData1, UINT32 const uiData2)
+void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, UINT8 const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, DialogueSpecialEvent const uiFlag, UINT32 const uiData1, UINT32 const uiData2)
 {
 	DIALOGUE_Q_STRUCT* const d = MALLOCZ(DIALOGUE_Q_STRUCT);
 	d->ubCharacterNum      = ubCharacterNum;
@@ -1195,7 +1195,7 @@ void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16 const 
 
 
 // Do special event as well as dialogue!
-static void CharacterDialogueWithSpecialEventEx(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, UINT8 const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, UINT32 const uiFlag, UINT32 const uiData1, UINT32 const uiData2, UINT32 const uiData3)
+static void CharacterDialogueWithSpecialEventEx(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, UINT8 const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, DialogueSpecialEvent const uiFlag, UINT32 const uiData1, UINT32 const uiData2, UINT32 const uiData3)
 {
 	DIALOGUE_Q_STRUCT* const d = MALLOCZ(DIALOGUE_Q_STRUCT);
 	d->ubCharacterNum       = ubCharacterNum;
@@ -1238,7 +1238,7 @@ void CharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACE
 }
 
 
-void SpecialCharacterDialogueEvent(UINT32 const uiSpecialEventFlag, UINT32 const uiSpecialEventData1, UINT32 const uiSpecialEventData2, UINT32 const uiSpecialEventData3, FACETYPE* const face, UINT8 const bUIHandlerID)
+void SpecialCharacterDialogueEvent(DialogueSpecialEvent const uiSpecialEventFlag, UINT32 const uiSpecialEventData1, UINT32 const uiSpecialEventData2, UINT32 const uiSpecialEventData3, FACETYPE* const face, UINT8 const bUIHandlerID)
 {
 	DIALOGUE_Q_STRUCT* const d = MALLOCZ(DIALOGUE_Q_STRUCT);
 	d->uiSpecialEventFlag  = uiSpecialEventFlag;
@@ -1257,7 +1257,7 @@ void SpecialCharacterDialogueEvent(UINT32 const uiSpecialEventFlag, UINT32 const
 }
 
 
-void SpecialCharacterDialogueEventWithExtraParam(UINT32 const uiSpecialEventFlag, UINT32 const uiSpecialEventData1, UINT32 const uiSpecialEventData2, UINT32 const uiSpecialEventData3, UINT32 const uiSpecialEventData4, FACETYPE* const face, UINT8 const bUIHandlerID)
+void SpecialCharacterDialogueEventWithExtraParam(DialogueSpecialEvent const uiSpecialEventFlag, UINT32 const uiSpecialEventData1, UINT32 const uiSpecialEventData2, UINT32 const uiSpecialEventData3, UINT32 const uiSpecialEventData4, FACETYPE* const face, UINT8 const bUIHandlerID)
 {
 	DIALOGUE_Q_STRUCT* const d = MALLOCZ(DIALOGUE_Q_STRUCT);
 	d->uiSpecialEventFlag  = uiSpecialEventFlag;
