@@ -5998,7 +5998,6 @@ static void HandleRestFatigueAndSleepStatus(void)
 
 	if( fBoxSetUp )
 	{
-		UnPauseGameDuringNextQuote( );
 		AddDisplayBoxToWaitingQueue( );
 		fBoxSetUp = FALSE;
 	}
@@ -6059,7 +6058,6 @@ static void HandleRestFatigueAndSleepStatus(void)
 
 	if( fBoxSetUp )
 	{
-		UnPauseGameDuringNextQuote( );
 		AddDisplayBoxToWaitingQueue( );
 		fBoxSetUp = FALSE;
 	}

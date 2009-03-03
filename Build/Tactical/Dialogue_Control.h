@@ -285,7 +285,6 @@ BOOLEAN DialogueQueueIsEmptyOrSomebodyTalkingNow(void);
 void HandleDialogueUIAdjustments(void);
 
 void PauseTimeDuringNextQuote(void);
-void UnPauseGameDuringNextQuote(void);
 
 
 // set up and shutdown static external NPC faces

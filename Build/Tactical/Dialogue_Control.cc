@@ -186,12 +186,6 @@ static BOOLEAN fTextBoxMouseRegionCreated  = FALSE;
 static BOOLEAN fExternFaceBoxRegionCreated = FALSE;
 
 
-void UnPauseGameDuringNextQuote( void )
-{
-	fPausedTimeDuringQuote = FALSE;
-}
-
-
 void PauseTimeDuringNextQuote(void)
 {
 	fPausedTimeDuringQuote = TRUE;
