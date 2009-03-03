@@ -954,92 +954,58 @@ static void HandleExtendMercsContract(SOLDIERTYPE* pSoldier)
 static BOOLEAN ContractIsGoingToExpireSoon(SOLDIERTYPE* pSoldier);
 
 
-void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void )
+void FindOutIfAnyMercAboutToLeaveIsGonnaRenew(void)
 {
-	// find out is something was said
-	UINT8				ubNumMercs = 0;
-
-	// run through list of grunts whoose contract are up in the next 2 hours
-	// ATE: AND - build list THEN choose one!
-	// What we will do here is make a list of mercs that will want
-	// to stay if offered. Durning that process, also check if there
-	// is any merc that does not want to stay and only display that quote
-	// if they are the only one here....
-	SOLDIERTYPE* pSoldierWhoWillQuit = NULL;
+	/* Run through list of grunts whoose contract are up in the next 2 hours
+	 * ATE: AND - build list THEN choose one!
+	 * Make a list of mercs that will want to stay if offered. During that
+	 * process, also check if there is any merc that does not want to stay and
+	 * only display that quote if they are the only one here */
+	SOLDIERTYPE* soldier_who_will_quit = 0;
+	UINT8        n_mercs               = 0;
 	SOLDIERTYPE* potential_mercs[20];
-	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		// valid soldier?
-		if (pSoldier->bLife == 0 || pSoldier->bAssignment == IN_TRANSIT || pSoldier->bAssignment == ASSIGNMENT_POW)
+		if (s->bLife               == 0)                   continue;
+		if (s->bAssignment         == IN_TRANSIT)          continue;
+		if (s->bAssignment         == ASSIGNMENT_POW)      continue;
+		if (s->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) continue;
+
+		// If the user hasn't renewed yet, and is still leaving today
+		if (!ContractIsGoingToExpireSoon(s)) continue;
+
+		// default value for quote said
+		s->ubContractRenewalQuoteCode = SOLDIER_CONTRACT_RENEW_QUOTE_NOT_USED;
+
+		// Add this guy to the renewal list
+		ContractRenewalList[ubNumContractRenewals++].ubProfileID = s->ubProfile;
+
+		if (WillMercRenew(s, FALSE))
 		{
-			// no
-			continue;
-		}
-
-		if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC )
-		{
-			//if the user hasnt renewed yet, and is still leaving today
-			if ( ContractIsGoingToExpireSoon( pSoldier ) )
-			{
-				// OK, default value for quote said
-				pSoldier->ubContractRenewalQuoteCode = SOLDIER_CONTRACT_RENEW_QUOTE_NOT_USED;
-
-				// Add this guy to the renewal list
-				ContractRenewalList[ ubNumContractRenewals ].ubProfileID = pSoldier->ubProfile;
-				ubNumContractRenewals++;
-
-				if( WillMercRenew( pSoldier, FALSE ) )
-				{
-					potential_mercs[ubNumMercs++] = pSoldier;
-				}
-				else
-				{
-					pSoldierWhoWillQuit = pSoldier;
-				}
-
-				// Add to list!
-				AddSoldierToWaitingListQueue( pSoldier );
-
-			}
+			potential_mercs[n_mercs++] = s;
 		}
 		else
 		{
-			if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC )
-			{
-				// Do nothing here for now...
-			}
+			soldier_who_will_quit = s;
 		}
+
+		AddSoldierToWaitingListQueue(s);
 	}
 
-
-
-	// OK, check if we should display line for the guy who does not want
-	// to stay
-	if ( ubNumMercs == 0 && pSoldierWhoWillQuit != NULL )
+	if (n_mercs != 0)
 	{
-		// OK, he does not want to renew.......
-		HandleImportantMercQuote( pSoldierWhoWillQuit, QUOTE_MERC_LEAVING_ALSUCO_SOON );
-
-		AddReasonToWaitingListQueue( CONTRACT_EXPIRE_WARNING_REASON );
-		TacticalCharacterDialogueWithSpecialEvent( pSoldierWhoWillQuit, 0, DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU, 0,0 );
-
-		pSoldierWhoWillQuit->ubContractRenewalQuoteCode = SOLDIER_CONTRACT_RENEW_QUOTE_115_USED;
-
+		SOLDIERTYPE* const chosen = potential_mercs[Random(n_mercs)];
+		HandleImportantMercQuoteLocked(chosen, QUOTE_CONTRACTS_OVER);
+		AddReasonToWaitingListQueue(CONTRACT_EXPIRE_WARNING_REASON);
+		TacticalCharacterDialogueWithSpecialEvent(chosen, 0, DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU, 0, 0);
+		chosen->ubContractRenewalQuoteCode = SOLDIER_CONTRACT_RENEW_QUOTE_89_USED;
 	}
-	else
+	else if (soldier_who_will_quit) // Check if we should display line for the guy who does not want to stay
 	{
-		// OK, pick one....
-		if ( ubNumMercs > 0 )
-		{
-			SOLDIERTYPE* const chosen = potential_mercs[Random(ubNumMercs)];
-
-			HandleImportantMercQuoteLocked(chosen, QUOTE_CONTRACTS_OVER);
-
-			AddReasonToWaitingListQueue( CONTRACT_EXPIRE_WARNING_REASON );
-			TacticalCharacterDialogueWithSpecialEvent(chosen, 0, DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU, 0, 0);
-
-			chosen->ubContractRenewalQuoteCode = SOLDIER_CONTRACT_RENEW_QUOTE_89_USED;
-		}
+		HandleImportantMercQuote(soldier_who_will_quit, QUOTE_MERC_LEAVING_ALSUCO_SOON);
+		AddReasonToWaitingListQueue(CONTRACT_EXPIRE_WARNING_REASON);
+		TacticalCharacterDialogueWithSpecialEvent(soldier_who_will_quit, 0, DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU, 0, 0);
+		soldier_who_will_quit->ubContractRenewalQuoteCode = SOLDIER_CONTRACT_RENEW_QUOTE_115_USED;
 	}
 }
 
