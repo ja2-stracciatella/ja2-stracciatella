@@ -175,8 +175,8 @@ MercPopUpBox* g_dialogue_box;
 
 
 // the next said quote will pause time
-BOOLEAN fPausedTimeDuringQuote = FALSE;
-BOOLEAN fWasPausedDuringDialogue = FALSE;
+static BOOLEAN fPausedTimeDuringQuote   = FALSE;
+static BOOLEAN fWasPausedDuringDialogue = FALSE;
 
 INT8	gubLogForMeTooBleeds = FALSE;
 
@@ -192,10 +192,11 @@ void UnPauseGameDuringNextQuote( void )
 }
 
 
-static void PauseTimeDuringNextQuote(void)
+void PauseTimeDuringNextQuote(void)
 {
 	fPausedTimeDuringQuote = TRUE;
 }
+
 
 BOOLEAN DialogueActive( )
 {

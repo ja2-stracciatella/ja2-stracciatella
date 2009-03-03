@@ -284,7 +284,8 @@ BOOLEAN DialogueQueueIsEmptyOrSomebodyTalkingNow(void);
 // Adjust the face, etc when switching from panel to extern panel...
 void HandleDialogueUIAdjustments(void);
 
-void UnPauseGameDuringNextQuote( void );
+void PauseTimeDuringNextQuote(void);
+void UnPauseGameDuringNextQuote(void);
 
 
 // set up and shutdown static external NPC faces

@@ -47,7 +47,6 @@ CASSERT(sizeof(CONTRACT_NEWAL_LIST_NODE) == 4)
 static SOLDIERTYPE* pLeaveSoldier = NULL;
 
 BOOLEAN	fEnterMapDueToContract = FALSE;
-extern BOOLEAN fPausedTimeDuringQuote;
 
 
 SOLDIERTYPE *pContractReHireSoldier = NULL;
@@ -332,9 +331,7 @@ BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction )
 		return(FALSE);
 	}
 
-
-	fPausedTimeDuringQuote = TRUE;
-
+	PauseTimeDuringNextQuote();
 	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, 0, DIALOGUE_NO_UI);
 
 	//
