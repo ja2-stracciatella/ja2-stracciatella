@@ -264,150 +264,119 @@ static void HandleNotifyPlayerCantAffordInsurance(void);
 
 
 // This is used only to EXTEND the contract of an AIM merc already on the team
-BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction )
+BOOLEAN MercContractHandling(SOLDIERTYPE* const s, UINT8 const ubDesiredAction)
 {
-	INT32	iContractCharge=0;
-	INT32	iContractLength=0;
-	UINT8	ubHistoryContractType=0;
-	UINT8	ubFinancesContractType=0;
-	INT32 iCostOfInsurance = 0;
+	/* Determine what kind of merc the contract is being extended for (only AIM
+	 * mercs can extend contract) */
+	if (s->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) return FALSE;
 
-
-	//determins what kind of merc the contract is being extended for (only aim mercs can extend contract)
-	if( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
-		return(FALSE);
-
-	switch( ubDesiredAction )
+	// Set the contract length and the charge
+	INT32 contract_charge;
+	INT32 contract_length;
+	UINT8 history_contract_type;
+	UINT8 finances_contract_type;
+	MERCPROFILESTRUCT const& p = *GetProfile(s->ubProfile);
+	switch (ubDesiredAction)
 	{
 		case CONTRACT_EXTEND_1_DAY:
-			//check to see if the merc has enough money
-			iContractCharge = gMercProfiles[ pSoldier->ubProfile ].sSalary;
-
-			//set the contract length and the charge
-			iContractLength = 1;
-
-			ubHistoryContractType = HISTORY_EXTENDED_CONTRACT_1_DAY;
-			ubFinancesContractType = EXTENDED_CONTRACT_BY_1_DAY;
+			contract_charge        = p.sSalary;
+			contract_length        = 1;
+			history_contract_type  = HISTORY_EXTENDED_CONTRACT_1_DAY;
+			finances_contract_type = EXTENDED_CONTRACT_BY_1_DAY;
 			break;
-
 
 		case CONTRACT_EXTEND_1_WEEK:
-			iContractCharge = gMercProfiles[ pSoldier->ubProfile ].uiWeeklySalary;
-
-			//set the contract length and the charge
-			iContractLength = 7;
-
-			ubHistoryContractType = HISTORY_EXTENDED_CONTRACT_1_WEEK;
-			ubFinancesContractType = EXTENDED_CONTRACT_BY_1_WEEK;
+			contract_charge        = p.uiWeeklySalary;
+			contract_length        = 7;
+			history_contract_type  = HISTORY_EXTENDED_CONTRACT_1_WEEK;
+			finances_contract_type = EXTENDED_CONTRACT_BY_1_WEEK;
 			break;
 
-
 		case CONTRACT_EXTEND_2_WEEK:
-			iContractCharge = gMercProfiles[ pSoldier->ubProfile ].uiBiWeeklySalary;
-
-			//set the contract length and the charge
-			iContractLength = 14;
-
-			ubHistoryContractType = HISTORY_EXTENDED_CONTRACT_2_WEEK;
-			ubFinancesContractType = EXTENDED_CONTRACT_BY_2_WEEKS;
+			contract_charge        = p.uiBiWeeklySalary;
+			contract_length        = 14;
+			history_contract_type  = HISTORY_EXTENDED_CONTRACT_2_WEEK;
+			finances_contract_type = EXTENDED_CONTRACT_BY_2_WEEKS;
 			break;
 
 		default:
-			return(FALSE);
+			return FALSE;
 	}
 
-	//check to see if the merc has enough money
-	if( LaptopSaveInfo.iCurrentBalance < iContractCharge )
-		return(FALSE);
+	// Check if the merc has enough money
+	if (LaptopSaveInfo.iCurrentBalance < contract_charge) return FALSE;
 
-	//Check to see if merc will renew
-	if( !WillMercRenew( pSoldier, TRUE ) )
+	if (!WillMercRenew(s, TRUE))
 	{
-		// Remove soldier.... ( if this is setup because normal contract ending dequence... )
-		if ( ContractIsExpiring( pSoldier ) )
+		// Remove soldier (if this is setup because normal contract ending sequence)
+		if (ContractIsExpiring(s))
 		{
-			TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 1,0 );
+			TacticalCharacterDialogueWithSpecialEvent(s, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 1, 0);
 		}
-		return(FALSE);
+		return FALSE;
 	}
 
 	PauseTimeDuringNextQuote();
 	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, 0, DIALOGUE_NO_UI);
 
-	//
 	// These calcs need to be done before Getting/Calculating the insurance costs
-	//
 
-	//set the contract length and the charge
-	pSoldier->iTotalContractLength += iContractLength;
-	pSoldier->bTypeOfLastContract = ubDesiredAction;
+	// Set the contract length and the charge
+	s->iTotalContractLength += contract_length;
+	s->bTypeOfLastContract   = ubDesiredAction;
 
-	//determine the end of the contract
-	pSoldier->iEndofContractTime += ( iContractLength * 1440 );
+	// Determine the end of the contract
+	s->iEndofContractTime += contract_length * 1440;
 
-	if( ( pSoldier->usLifeInsurance ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )	//  DEF:  Removed cause they can extend a 1 day contract && ( iContractLength > 1 )
+	if (s->usLifeInsurance && s->bAssignment != ASSIGNMENT_POW)
 	{
-		// check if player can afford insurance, if not, tell them
-		iCostOfInsurance = CalculateInsuranceContractCost( iContractLength, pSoldier->ubProfile );
+		// Check if player can afford insurance, if not, tell them
+		INT32 const iCostOfInsurance = CalculateInsuranceContractCost(contract_length, s->ubProfile);
 
-		HandleImportantMercQuote( pSoldier, QUOTE_ACCEPT_CONTRACT_RENEWAL );
+		HandleImportantMercQuote(s, QUOTE_ACCEPT_CONTRACT_RENEWAL);
 
-		if( iCostOfInsurance > LaptopSaveInfo.iCurrentBalance )
+		if (iCostOfInsurance > LaptopSaveInfo.iCurrentBalance)
 		{
-			// no can afford
-			HandleNotifyPlayerCantAffordInsurance( );
+			HandleNotifyPlayerCantAffordInsurance();
 
-			// OK, handle ending of renew session
-			if ( gfInContractMenuFromRenewSequence )
+			// Handle ending of renew session
+			if (gfInContractMenuFromRenewSequence)
 			{
-				EndCurrentContractRenewal( );
+				EndCurrentContractRenewal();
 			}
-
 		}
 		else
-		{
-			// can afford ask if they want it
-			HandleNotifyPlayerCanAffordInsurance( pSoldier, ( UINT8 )( iContractLength ), iCostOfInsurance );
+		{ // Can afford, ask if they want it
+			HandleNotifyPlayerCanAffordInsurance(s, contract_length, iCostOfInsurance);
 		}
 	}
 	else
-	{
-		// no need to query for life insurance
-		HandleImportantMercQuote( pSoldier, QUOTE_ACCEPT_CONTRACT_RENEWAL );
+	{ // No need to query for life insurance
+		HandleImportantMercQuote(s, QUOTE_ACCEPT_CONTRACT_RENEWAL);
 
-		// OK, handle ending of renew session
-		if ( gfInContractMenuFromRenewSequence )
+		// handle ending of renew session
+		if (gfInContractMenuFromRenewSequence)
 		{
-			EndCurrentContractRenewal( );
+			EndCurrentContractRenewal();
 		}
-
 	}
 
 	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, 0, DIALOGUE_NO_UI);
 
+	/* ATE: Setup when they can be signed again! If they are 2-weeks this can be
+	 * extended otherwise don't change from current */
+	if (ubDesiredAction == CONTRACT_EXTEND_2_WEEK)
+	{
+		s->iTimeCanSignElsewhere = s->iEndofContractTime;
+	}
 
-  // ATE: Setup when they can be signed again!
-  // If they are 2-weeks this can be extended
-  // otherwise don't change from current
-  if ( pSoldier->bTypeOfLastContract == CONTRACT_EXTEND_2_WEEK )
-  {
-    pSoldier->iTimeCanSignElsewhere = pSoldier->iEndofContractTime;
-  }
+	/* Add entries in the finacial and history pages for the extending of the
+	 * merc's contract */
+	UINT32 const now = GetWorldTotalMin();
+	AddTransactionToPlayersBook(finances_contract_type, s->ubProfile, now, -contract_charge);
+	AddHistoryToPlayersLog(history_contract_type, s->ubProfile, now, s->sSectorX, s->sSectorY);
 
-// ARM: Do not reset because of renewal!  The quote is for early dismissal from *initial* time of hiring
-//	pSoldier->uiTimeOfLastContractUpdate = GetWorldTotalMin();
-
-// ARM: Do not reset because of renewal!  The deposit in the profile goes up when merc levels, but the one in the soldier
-// structure must always reflect the deposit actually paid (which does NOT change when a merc levels).
-//	pSoldier->usMedicalDeposit = gMercProfiles[ pSoldier->ubProfile ].sMedicalDepositAmount;
-
-	//add an entry in the finacial page for the extending  of the mercs contract
-	AddTransactionToPlayersBook( ubFinancesContractType, pSoldier->ubProfile, GetWorldTotalMin(), -iContractCharge );
-
-	//add an entry in the history page for the extending of the merc contract
-	AddHistoryToPlayersLog( ubHistoryContractType, pSoldier->ubProfile, GetWorldTotalMin(), pSoldier->sSectorX, pSoldier->sSectorY );
-
-	return( TRUE );
+	return TRUE;
 }
 
 
