@@ -354,7 +354,7 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 
 	InterruptTime();
 	PauseGame();
-	LockPauseState( 21 );
+	LockPauseState(LOCK_PAUSE_21);
 }
 
 

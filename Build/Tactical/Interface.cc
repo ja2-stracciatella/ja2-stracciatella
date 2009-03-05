@@ -1345,7 +1345,7 @@ void InitDoorOpenMenu(SOLDIERTYPE* const pSoldier, BOOLEAN const fClosingDoor)
 
 	InterruptTime();
 	PauseGame();
-	LockPauseState( 19 );
+	LockPauseState(LOCK_PAUSE_19);
 	// Pause timers as well....
 	PauseTime( TRUE );
 

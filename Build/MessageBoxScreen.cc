@@ -269,7 +269,7 @@ void DoMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString,
 
 	InterruptTime();
 	PauseGame();
-	LockPauseState(1);
+	LockPauseState(LOCK_PAUSE_01);
 	// Pause timers as well....
 	PauseTime(TRUE);
 

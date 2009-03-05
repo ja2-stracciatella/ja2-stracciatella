@@ -570,7 +570,7 @@ static void SetGameSecondsPerSecond(UINT32 uiGameSecondsPerSecond)
 
 // call this to prevent player from changing the time compression state via the interface
 
-void LockPauseState( UINT32 uiUniqueReasonId )
+void LockPauseState(LockPauseReason const uiUniqueReasonId)
 {
 	gfLockPauseState = TRUE;
 

@@ -22,12 +22,36 @@
 //such a mode, and UnPauseGame() when finished.  Everything will be restored just the way you left it.  This
 //is much simpler to handle in the overall scheme of things.
 
+enum LockPauseReason
+{
+	LOCK_PAUSE_01 =  1,
+	LOCK_PAUSE_02 =  2,
+	LOCK_PAUSE_04 =  4,
+	LOCK_PAUSE_05 =  5,
+	LOCK_PAUSE_06 =  6,
+	LOCK_PAUSE_07 =  7,
+	LOCK_PAUSE_08 =  8,
+	LOCK_PAUSE_09 =  9,
+	LOCK_PAUSE_10 = 10,
+	LOCK_PAUSE_11 = 11,
+	LOCK_PAUSE_12 = 12,
+	LOCK_PAUSE_13 = 13,
+	LOCK_PAUSE_14 = 14,
+	LOCK_PAUSE_15 = 15,
+	LOCK_PAUSE_16 = 16,
+	LOCK_PAUSE_17 = 17,
+	LOCK_PAUSE_18 = 18,
+	LOCK_PAUSE_19 = 19,
+	LOCK_PAUSE_20 = 20,
+	LOCK_PAUSE_21 = 21
+};
+
 //PAUSE FEATURES
 //Pauses and unpauses the game.  It sets and clears a flag which preserves the time rate.
 void PauseGame(void);
 void UnPauseGame(void);
 BOOLEAN GamePaused(void);
-extern void LockPauseState( UINT32 uiUniqueReasonId );
+void LockPauseState(LockPauseReason);
 void UnLockPauseState(void);
 BOOLEAN PauseStateLocked(void);
 

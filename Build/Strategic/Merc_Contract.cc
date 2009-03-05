@@ -124,7 +124,7 @@ void BeginContractRenewalSequence( )
 			ubCurrentContractRenewalInProgress = 0;
 
 			PauseGame( );
-			LockPauseState( 7 );
+			LockPauseState(LOCK_PAUSE_07);
 			InterruptTime( );
 
 			// Go into mapscreen if not already...
@@ -632,7 +632,7 @@ void BeginStrategicRemoveMerc(SOLDIERTYPE* pSoldier, BOOLEAN fAddRehireButton)
 {
 	InterruptTime( );
 	PauseGame();
-	LockPauseState( 8 );
+	LockPauseState(LOCK_PAUSE_08);
 
 	//if the soldier may have some special action when he/she leaves the party, handle it
 	HandleUniqueEventWhenPlayerLeavesTeam( pSoldier );

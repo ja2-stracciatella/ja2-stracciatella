@@ -4057,8 +4057,7 @@ static ScreenID UIHandleLUIBeginLock(UI_EVENT* pUIEvent)
 
 		// UnPause time!
 		PauseGame();
-		LockPauseState( 16 );
-
+		LockPauseState(LOCK_PAUSE_16);
 	}
 
 	return( GAME_SCREEN );
@@ -4501,7 +4500,7 @@ static ScreenID UIHandleLABeginLockOurTurn(UI_EVENT* pUIEvent)
 
 		// Pause time!
 		PauseGame();
-		LockPauseState( 17 );
+		LockPauseState(LOCK_PAUSE_17);
 	}
 
 	return( GAME_SCREEN );

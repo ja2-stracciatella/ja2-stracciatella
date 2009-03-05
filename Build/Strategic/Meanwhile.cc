@@ -227,7 +227,7 @@ void BeginMeanwhile(UINT8 ubMeanwhileID)
 	gfMeanwhileTryingToStart = TRUE;
 	PauseGame();
 	// prevent anyone from messing with the pause!
-	LockPauseState( 6 );
+	LockPauseState(LOCK_PAUSE_06);
 
 	// Set NO_PROFILE info....
 	for ( cnt = 0; cnt < MAX_MEANWHILE_PROFILES; cnt++ )

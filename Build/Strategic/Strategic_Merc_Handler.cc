@@ -408,7 +408,7 @@ void MercsContractIsFinished(SOLDIERTYPE* const pSoldier)
 
 			InterruptTime( );
 			PauseGame();
-			LockPauseState( 9 );
+			LockPauseState(LOCK_PAUSE_09);
 
 			// Say quote for wishing to leave
 			TacticalCharacterDialogue( pSoldier, QUOTE_NOT_GETTING_PAID );
@@ -422,7 +422,7 @@ void MercsContractIsFinished(SOLDIERTYPE* const pSoldier)
 	{
 		InterruptTime( );
 		PauseGame();
-		LockPauseState( 10 );
+		LockPauseState(LOCK_PAUSE_10);
 
 		TacticalCharacterDialogue( pSoldier, QUOTE_AIM_SEEN_MIKE );
 
