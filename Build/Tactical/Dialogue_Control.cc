@@ -68,17 +68,6 @@
 #define DIALOGUESIZE 240
 #define   QUOTE_MESSAGE_SIZE		520
 
-#define		TALK_PANEL_FACE_X				6
-#define		TALK_PANEL_FACE_Y				9
-#define		TALK_PANEL_NAME_X				5
-#define		TALK_PANEL_NAME_Y				114
-#define		TALK_PANEL_NAME_WIDTH		92
-#define		TALK_PANEL_NAME_HEIGHT	15
-#define		TALK_PANEL_MENU_STARTY	8
-#define		TALK_PANEL_MENU_HEIGHT	24
-#define		TALK_MENU_WIDTH					96
-#define		TALK_MENU_HEIGHT				16
-
 #define		DIALOGUE_DEFAULT_SUBTITLE_WIDTH		200
 #define		TEXT_DELAY_MODIFIER			60
 
@@ -152,22 +141,22 @@ static DialogueHandler gbUIHandlerID;
 
 INT32				giNPCReferenceCount = 0;
 
-INT16       gsExternPanelXPosition     = DEFAULT_EXTERN_PANEL_X_POS;
-INT16       gsExternPanelYPosition     = DEFAULT_EXTERN_PANEL_Y_POS;
+static INT16 gsExternPanelXPosition = DEFAULT_EXTERN_PANEL_X_POS;
+static INT16 gsExternPanelYPosition = DEFAULT_EXTERN_PANEL_Y_POS;
 
-BOOLEAN			gfDialogueQueuePaused = FALSE;
-static UINT16 gusSubtitleBoxWidth;
-UINT16			gusSubtitleBoxHeight;
+static BOOLEAN        gfDialogueQueuePaused = FALSE;
+static UINT16         gusSubtitleBoxWidth;
+static UINT16         gusSubtitleBoxHeight;
 static VIDEO_OVERLAY* g_text_box_overlay = NULL;
 BOOLEAN			gfFacePanelActive = FALSE;
-UINT32			guiScreenIDUsedWhenUICreated;
-wchar_t				gzQuoteStr[ QUOTE_MESSAGE_SIZE ];
-MOUSE_REGION	gTextBoxMouseRegion;
-MOUSE_REGION	gFacePopupMouseRegion;
-BOOLEAN				gfUseAlternateDialogueFile = FALSE;
+static UINT32         guiScreenIDUsedWhenUICreated;
+static wchar_t        gzQuoteStr[QUOTE_MESSAGE_SIZE];
+static MOUSE_REGION   gTextBoxMouseRegion;
+static MOUSE_REGION   gFacePopupMouseRegion;
+static BOOLEAN        gfUseAlternateDialogueFile = FALSE;
 
 // set the top position value for merc dialogue pop up boxes
-INT16 gsTopPosition = 20;
+static INT16 gsTopPosition = 20;
 
 
 MercPopUpBox* g_dialogue_box;
@@ -177,7 +166,7 @@ MercPopUpBox* g_dialogue_box;
 static BOOLEAN fPausedTimeDuringQuote   = FALSE;
 static BOOLEAN fWasPausedDuringDialogue = FALSE;
 
-INT8	gubLogForMeTooBleeds = FALSE;
+static INT8 gubLogForMeTooBleeds = FALSE;
 
 
 // has the text region been created?
