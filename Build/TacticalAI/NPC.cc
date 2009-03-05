@@ -1768,6 +1768,8 @@ void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData 
 				{
 					switch ( pQuotePtr->usGiftItem )
 					{
+						static INT32 giNPCSpecialReferenceCount = 0;
+
 						case TURN_UI_OFF:
 							if ( !(gTacticalStatus.uiFlags & INCOMBAT) )
 							{

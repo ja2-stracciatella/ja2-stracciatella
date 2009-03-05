@@ -308,7 +308,6 @@ void SetStopTimeQuoteCallback( MODAL_HOOK pCallBack );
 BOOLEAN DialogueActive(void);
 
 extern INT32 giNPCReferenceCount;
-extern INT32 giNPCSpecialReferenceCount;
 
 
 BOOLEAN GetMercPrecedentQuoteBitStatus(const MERCPROFILESTRUCT*, UINT8 ubQuoteBit);

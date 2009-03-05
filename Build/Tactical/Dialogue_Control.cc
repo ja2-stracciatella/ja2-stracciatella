@@ -151,7 +151,6 @@ UINT8			gubCurrentTalkingID   = NO_PROFILE;
 static DialogueHandler gbUIHandlerID;
 
 INT32				giNPCReferenceCount = 0;
-INT32				giNPCSpecialReferenceCount = 0;
 
 INT16       gsExternPanelXPosition     = DEFAULT_EXTERN_PANEL_X_POS;
 INT16       gsExternPanelYPosition     = DEFAULT_EXTERN_PANEL_Y_POS;
