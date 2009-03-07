@@ -1020,7 +1020,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							pSoldier->uiStatusFlags &= (~SOLDIER_NPC_DOING_PUNCH );
 
 							// Trigger approach...
-							TriggerNPCWithGivenApproach(pSoldier->ubProfile, (UINT8)pSoldier->uiPendingActionData4);
+							TriggerNPCWithGivenApproach(pSoldier->ubProfile, static_cast<Approach>(pSoldier->uiPendingActionData4));
 						}
 
 

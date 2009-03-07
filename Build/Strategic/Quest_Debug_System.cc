@@ -2756,7 +2756,7 @@ static void BtnQDPgDownButtonButtonCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT8 ubApproach )
+void NpcRecordLoggingInit(UINT8 const ubNpcID, UINT8 const ubMercID, UINT8 const ubQuoteNum, Approach const ubApproach)
 {
 	static BOOLEAN	fFirstTimeIn = TRUE;
 
@@ -2814,7 +2814,7 @@ void NpcRecordLoggingInit( UINT8 ubNpcID, UINT8 ubMercID, UINT8 ubQuoteNum, UINT
 }
 
 
-void NpcRecordLogging(UINT8 ubApproach, const char *pStringA, ...)
+void NpcRecordLogging(Approach const ubApproach, char const* const pStringA, ...)
 {
 //	static UINT32		uiLineNumber = 1;
 //	static UINT32		uiRecordNumber = 1;

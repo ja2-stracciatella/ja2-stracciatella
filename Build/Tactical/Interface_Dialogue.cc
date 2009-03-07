@@ -127,7 +127,7 @@ static const INT16 sBasementExitGridNos[] = { 8047, 8207, 8208, 8048, 7888, 7728
 #define CHANCE_FOR_DOCTOR_TO_SAY_RANDOM_QUOTE 20
 
 
-static const UINT8 ubTalkMenuApproachIDs[] =
+static Approach const ubTalkMenuApproachIDs[] =
 {
 	APPROACH_REPEAT,
 	APPROACH_FRIENDLY,
@@ -149,7 +149,7 @@ static UINT8 gubNastyNPCProfile = NO_PROFILE;
 
 static UINT8        gubTargetNPC;
 static UINT8        gubTargetRecord;
-static UINT8        gubTargetApproach;
+static Approach     gubTargetApproach;
 static BOOLEAN      gfShowDialogueMenu;
 BOOLEAN							gfWaitingForTriggerTimer;
 static UINT32       guiWaitingForTriggerTime;
@@ -158,7 +158,7 @@ static UINT8        ubRecordThatTriggeredLiePrompt;
 static BOOLEAN      gfConversationPending = FALSE;
 static SOLDIERTYPE* gpPendingDestSoldier;
 static SOLDIERTYPE* gpPendingSrcSoldier;
-static INT8         gbPendingApproach;
+static Approach     gbPendingApproach;
 static UINT32       guiPendingApproachData;
 
 INT32 giHospitalTempBalance; // stores amount of money for current doctoring
@@ -176,10 +176,10 @@ enum
 };
 
 
-static void InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTYPE* pSrcSoldier, INT8 bApproach, UINT32 uiApproachData);
+static void InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTYPE* pSrcSoldier, Approach, UINT32 uiApproachData);
 
 
-BOOLEAN InitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pSrcSoldier, INT8 bApproach, UINT32 uiApproachData )
+BOOLEAN InitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIERTYPE* const pSrcSoldier, Approach const bApproach, UINT32 const uiApproachData)
 try
 {
 	// ATE: OK, let's check the status of the Q
@@ -232,7 +232,7 @@ void HandlePendingInitConv( )
 static void InitTalkingMenu(UINT8 ubCharacterNum, INT16 sGridNo);
 
 
-static void InternalInitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIERTYPE* const pSrcSoldier, INT8 const bApproach, UINT32 const uiApproachData)
+static void InternalInitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIERTYPE* const pSrcSoldier, Approach const bApproach, UINT32 const uiApproachData)
 {
 	// OK, init talking menu
 	BOOLEAN	fFromPending;
@@ -839,7 +839,7 @@ static void TalkPanelClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				if ( fDoConverse )
 				{
 					//Speak
-					Converse( gTalkPanel.ubCharNum, gubSrcSoldierProfile, (INT8)ubTalkMenuApproachIDs[ uiItemPos ], 0 );
+					Converse(gTalkPanel.ubCharNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[uiItemPos], 0);
 				}
 			}
 		}
@@ -1149,7 +1149,7 @@ void TalkingMenuGiveItem(UINT8 const ubNPC, OBJECTTYPE* const pObject, INT8 cons
 }
 
 
-void NPCTriggerNPC(UINT8 const ubTargetNPC, UINT8 const ubTargetRecord, UINT8 const ubTargetApproach, BOOLEAN const fShowDialogueMenu)
+void NPCTriggerNPC(UINT8 const ubTargetNPC, UINT8 const ubTargetRecord, Approach const ubTargetApproach, BOOLEAN const fShowDialogueMenu)
 {
 	//CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, gTalkPanel.face, DIALOGUE_NPC_UI));
 	SpecialCharacterDialogueEventWithExtraParam(DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, ubTargetApproach, gTalkPanel.face, DIALOGUE_NPC_UI);
@@ -1246,7 +1246,7 @@ void HandleNPCItemGiven( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos )
 static void HandleNPCTrigger(void);
 
 
-void HandleNPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShowDialogueMenu, UINT8 ubTargetApproach )
+void HandleNPCTriggerNPC(UINT8 const ubTargetNPC, UINT8 const ubTargetRecord, BOOLEAN const fShowDialogueMenu, Approach const ubTargetApproach)
 {
 	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 	if ( pSoldier == NULL )
@@ -2959,45 +2959,36 @@ unlock:
 				break;
 			}
 
-			case NPC_ACTION_PUNCH_PC_SLOT_0:
-			case NPC_ACTION_PUNCH_PC_SLOT_1:
-			case NPC_ACTION_PUNCH_PC_SLOT_2:
 			{
+				INT16    sGridNo;
+				Approach approach;
+
+			case NPC_ACTION_PUNCH_PC_SLOT_0:
+				sGridNo  = gsInterrogationGridNo[0];
+				approach = APPROACH_DONE_PUNCH_0;
+				goto action_punch_pc;
+
+			case NPC_ACTION_PUNCH_PC_SLOT_1:
+				sGridNo  = gsInterrogationGridNo[1];
+				approach = APPROACH_DONE_PUNCH_1;
+				goto action_punch_pc;
+
+			case NPC_ACTION_PUNCH_PC_SLOT_2:
+				sGridNo  = gsInterrogationGridNo[2];
+				approach = APPROACH_DONE_PUNCH_2;
+				goto action_punch_pc;
+
+action_punch_pc:
 				DeleteTalkingMenu( );
 				// OK, LET'S FIND THE QUEEN AND MAKE HER DO SLAP ANIMATION
 				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 				if (pSoldier)
 				{
 					// Target a different merc....
-					INT16 sGridNo;
-					if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_0 )
-					{
-						sGridNo = gsInterrogationGridNo[ 0 ];
-					}
-					else if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_1 )
-					{
-						sGridNo = gsInterrogationGridNo[ 1 ];
-					}
-					else //if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_2 )
-					{
-						sGridNo = gsInterrogationGridNo[ 2 ];
-					}
-
 					const SOLDIERTYPE* const pTarget = WhoIsThere2(sGridNo, 0);
 
 					// Use a different approach....
-					if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_0 )
-					{
-						pSoldier->uiPendingActionData4 = APPROACH_DONE_PUNCH_0;
-					}
-					else if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_1 )
-					{
-						pSoldier->uiPendingActionData4 = APPROACH_DONE_PUNCH_1;
-					}
-					else if ( usActionCode == NPC_ACTION_PUNCH_PC_SLOT_2 )
-					{
-						pSoldier->uiPendingActionData4 = APPROACH_DONE_PUNCH_2;
-					}
+					pSoldier->uiPendingActionData4 = approach;
 
 					if ( pTarget && pTarget->bActive && pTarget->bInSector && pTarget->bLife != 0 )
 					{
@@ -3018,7 +3009,7 @@ unlock:
 					}
 					else
 					{
-						TriggerNPCWithGivenApproach(pSoldier->ubProfile, (UINT8)pSoldier->uiPendingActionData4);
+						TriggerNPCWithGivenApproach(pSoldier->ubProfile, approach);
 					}
 				}
 				break;
@@ -3117,7 +3108,7 @@ unlock:
 					if ( cnt == 3 )
 					{
 						// If here, nobody was found...
-						TriggerNPCWithGivenApproach(pSoldier->ubProfile, (UINT8)pSoldier->uiPendingActionData4);
+						TriggerNPCWithGivenApproach(pSoldier->ubProfile, APPROACH_DONE_PUNCH_1);
 					}
 				}
 				break;

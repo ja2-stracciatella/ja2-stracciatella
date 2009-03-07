@@ -73,8 +73,10 @@ struct NPCQuoteInfo
 };																									// 32 bytes
 
 
-enum Approaches
+enum Approach
 {
+	APPROACH_NONE = 0,
+
 	APPROACH_FRIENDLY = 1,
 	APPROACH_DIRECT,
 	APPROACH_THREATEN,
@@ -135,8 +137,8 @@ extern void ShutdownNPCQuotes( void );
 extern void SetQuoteRecordAsUsed( UINT8 ubNPC, UINT8 ubRecord );
 
 // uiApproachData is used for approach things like giving items, etc.
-extern UINT8 CalcDesireToTalk( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach );
-extern void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData );
+UINT8 CalcDesireToTalk(UINT8 ubNPC, UINT8 ubMerc, Approach);
+void  Converse(UINT8 ubNPC, UINT8 ubMerc, Approach, UINT32 uiApproachData);
 
 extern void NPCReachedDestination( SOLDIERTYPE * pNPC, BOOLEAN fAlreadyThere );
 extern void PCsNearNPC( UINT8 ubNPC );
@@ -146,7 +148,7 @@ extern BOOLEAN TriggerNPCWithIHateYouQuote( UINT8 ubTriggerNPC );
 
 extern void TriggerNPCRecordImmediately( UINT8 ubTriggerNPC, UINT8 ubTriggerNPCRec );
 
-BOOLEAN TriggerNPCWithGivenApproach(UINT8 ubTriggerNPC, UINT8 ubApproach);
+BOOLEAN TriggerNPCWithGivenApproach(UINT8 ubTriggerNPC, Approach);
 
 
 bool ReloadQuoteFile(UINT8 ubNPC);
@@ -171,7 +173,7 @@ void HandleVictoryInNPCSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
 // check if this shopkeep has been shutdown, if so do soething and return the fact
 BOOLEAN HandleShopKeepHasBeenShutDown( UINT8 ubCharNum );
 
-BOOLEAN NPCHasUnusedRecordWithGivenApproach( UINT8 ubNPC, UINT8 ubApproach );
+BOOLEAN NPCHasUnusedRecordWithGivenApproach(UINT8 ubNPC, Approach);
 BOOLEAN NPCWillingToAcceptItem( UINT8 ubNPC, UINT8 ubMerc, OBJECTTYPE * pObj );
 
 void SaveBackupNPCInfoToSaveGameFile(HWFILE);
@@ -195,7 +197,7 @@ void ResetOncePerConvoRecordsForNPC( UINT8 ubNPC );
 
 void HandleNPCChangesForTacticalTraversal(const SOLDIERTYPE* s);
 
-BOOLEAN NPCHasUnusedHostileRecord( UINT8 ubNPC, UINT8 ubApproach );
+BOOLEAN NPCHasUnusedHostileRecord(UINT8 ubNPC, Approach);
 
 void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void );
 

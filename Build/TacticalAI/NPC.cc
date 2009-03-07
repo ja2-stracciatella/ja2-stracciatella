@@ -480,7 +480,7 @@ static INT32 CalcThreateningEffectiveness(UINT8 const ubMerc)
 }
 
 
-UINT8 CalcDesireToTalk( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach )
+UINT8 CalcDesireToTalk(UINT8 const ubNPC, UINT8 const ubMerc, Approach const bApproach)
 {
 	INT32 iWillingness;
 	INT32	iPersonalVal, iTownVal, iApproachVal;
@@ -533,7 +533,7 @@ UINT8 CalcDesireToTalk( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach )
 }
 
 
-static void ApproachedForFirstTime(MERCPROFILESTRUCT* pNPCProfile, INT8 bApproach)
+static void ApproachedForFirstTime(MERCPROFILESTRUCT* const pNPCProfile, Approach const bApproach)
 {
 	UINT8		ubLoop;
 	UINT32	uiTemp;
@@ -551,10 +551,10 @@ static void ApproachedForFirstTime(MERCPROFILESTRUCT* pNPCProfile, INT8 bApproac
 }
 
 
-static UINT8 NPCConsiderQuote(UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8 ubQuoteNum, UINT8 ubTalkDesire, NPCQuoteInfo* pNPCQuoteInfoArray);
+static UINT8 NPCConsiderQuote(UINT8 ubNPC, UINT8 ubMerc, Approach, UINT8 ubQuoteNum, UINT8 ubTalkDesire, NPCQuoteInfo* pNPCQuoteInfoArray);
 
 
-static UINT8 NPCConsiderTalking(UINT8 const ubNPC, UINT8 const ubMerc, INT8 const approach, UINT8 const record, NPCQuoteInfo* const pNPCQuoteInfoArray, NPCQuoteInfo** const ppResultQuoteInfo, UINT8* const pubQuoteNum)
+static UINT8 NPCConsiderTalking(UINT8 const ubNPC, UINT8 const ubMerc, Approach const approach, UINT8 const record, NPCQuoteInfo* const pNPCQuoteInfoArray, NPCQuoteInfo** const ppResultQuoteInfo, UINT8* const pubQuoteNum)
 {
 	// This function returns the opinion level required of the "most difficult" quote
 	// that the NPC is willing to say to the merc.  It can also provide the quote #.
@@ -1062,7 +1062,7 @@ static UINT8 HandleNPCBeingGivenMoneyByPlayer(UINT8 const ubNPC, UINT32 const ui
 }
 
 
-static UINT8 NPCConsiderQuote(UINT8 ubNPC, UINT8 ubMerc, UINT8 ubApproach, UINT8 ubQuoteNum, UINT8 ubTalkDesire, NPCQuoteInfo* pNPCQuoteInfoArray)
+static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach const ubApproach, UINT8 const ubQuoteNum, UINT8 const ubTalkDesire, NPCQuoteInfo* const pNPCQuoteInfoArray)
 {
 	//This function looks at a quote and determines if conditions for it have been met.
 	// Returns 0 if none , 1 if one is found
@@ -1327,7 +1327,7 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 }
 
 
-static void ReturnItemToPlayerIfNecessary(UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData, NPCQuoteInfo* pQuotePtr)
+static void ReturnItemToPlayerIfNecessary(UINT8 const ubMerc, Approach const bApproach, UINT32 const uiApproachData, NPCQuoteInfo* const pQuotePtr)
 {
 	// if the approach was changed, always return the item
 	// otherwise check to see if the record in question specified refusal
@@ -1349,7 +1349,7 @@ static void ReturnItemToPlayerIfNecessary(UINT8 ubMerc, INT8 bApproach, UINT32 u
 static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr);
 
 
-void Converse( UINT8 ubNPC, UINT8 ubMerc, INT8 bApproach, UINT32 uiApproachData )
+void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 const uiApproachData)
 {
 	NPCQuoteInfo					QuoteInfo;
 	NPCQuoteInfo *				pQuotePtr = &(QuoteInfo);
@@ -2255,7 +2255,7 @@ BOOLEAN TriggerNPCWithIHateYouQuote( UINT8 ubTriggerNPC )
 }
 
 
-BOOLEAN NPCHasUnusedRecordWithGivenApproach(UINT8 const ubNPC, UINT8 const approach)
+BOOLEAN NPCHasUnusedRecordWithGivenApproach(UINT8 const ubNPC, Approach const approach)
 {
 	// Check if we have a quote that could be used
 
@@ -2271,7 +2271,7 @@ BOOLEAN NPCHasUnusedRecordWithGivenApproach(UINT8 const ubNPC, UINT8 const appro
 }
 
 
-BOOLEAN NPCHasUnusedHostileRecord(UINT8 const ubNPC, UINT8 const approach)
+BOOLEAN NPCHasUnusedHostileRecord(UINT8 const ubNPC, Approach const approach)
 {
 	/* this is just like the standard check BUT we must skip any records using
 	 * fact 289 and print debug msg for any records which can't be marked as used
@@ -2329,7 +2329,7 @@ BOOLEAN GetInfoForAbandoningEPC(UINT8 const ubNPC, UINT16* const pusQuoteNum, Fa
 }
 
 
-BOOLEAN TriggerNPCWithGivenApproach(UINT8 const ubTriggerNPC, UINT8 const approach)
+BOOLEAN TriggerNPCWithGivenApproach(UINT8 const ubTriggerNPC, Approach const approach)
 {
 	// Check if we have a quote to trigger...
 
@@ -2699,7 +2699,7 @@ INT8 ConsiderCivilianQuotes(INT16 const x, INT16 const y, INT16 const z, BOOLEAN
 
 	for (INT8 i = 0; i != NUM_NPC_QUOTE_RECORDS; ++i)
 	{
-		if (!NPCConsiderQuote(NO_PROFILE, NO_PROFILE, 0, i, 0, quotes)) continue;
+		if (!NPCConsiderQuote(NO_PROFILE, NO_PROFILE, APPROACH_NONE, i, 0, quotes)) continue;
 		NPCQuoteInfo& q = quotes[i];
 
 		if (set_as_used)

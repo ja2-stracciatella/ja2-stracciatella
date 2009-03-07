@@ -47,7 +47,7 @@ struct NPC_DIALOGUE_TYPE
 extern NPC_DIALOGUE_TYPE gTalkPanel;
 
 
-BOOLEAN InitiateConversation( SOLDIERTYPE *pDestSoldier, SOLDIERTYPE *pSrcSoldier, INT8 bApproach, UINT32 uiApproachData );
+BOOLEAN InitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTYPE* pSrcSoldier, Approach, UINT32 uiApproachData);
 
 // Begins quote of NPC Dialogue
 void TalkingMenuDialogue(UINT16 usQuoteNum);
@@ -65,7 +65,7 @@ BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey );
 // Gices an item to buddy
 void TalkingMenuGiveItem(UINT8 ubNPC, OBJECTTYPE* pObject, INT8 bInvPos);
 // Triggers an NPC record
-void NPCTriggerNPC(UINT8 ubTargetNPC, UINT8 ubTargetRecord, UINT8 ubTargetApproach, BOOLEAN fShowDialogueMenu);
+void NPCTriggerNPC(UINT8 ubTargetNPC, UINT8 ubTargetRecord, Approach ubTargetApproach, BOOLEAN fShowDialogueMenu);
 // NPC goto gridno
 void NPCGotoGridNo(UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum);
 // NPC Do action
@@ -78,7 +78,7 @@ void HandleWaitTimerForNPCTrigger(void);
 
 void HandleNPCClosePanel(void);
 void HandleNPCItemGiven( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos );
-void HandleNPCTriggerNPC( UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShowDialogueMenu, UINT8 ubTargetApproach );
+void HandleNPCTriggerNPC(UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShowDialogueMenu, Approach ubTargetApproach);
 void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubRecordNum );
 void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum );
 

@@ -857,7 +857,7 @@ void HandleDialogue()
 		{
 			if (d->bUIHandlerID == DIALOGUE_NPC_UI)
 			{
-				HandleNPCTriggerNPC((UINT8)d->uiSpecialEventData, (UINT8)d->uiSpecialEventData2, (BOOLEAN)d->uiSpecialEventData3, (UINT8)d->uiSpecialEventData4);
+				HandleNPCTriggerNPC((UINT8)d->uiSpecialEventData, (UINT8)d->uiSpecialEventData2, (BOOLEAN)d->uiSpecialEventData3, static_cast<Approach>(d->uiSpecialEventData4));
 			}
 		}
 		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO)
