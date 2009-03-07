@@ -1327,22 +1327,21 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 }
 
 
-static void ReturnItemToPlayerIfNecessary(UINT8 const ubMerc, Approach const bApproach, UINT32 const uiApproachData, NPCQuoteInfo* const pQuotePtr)
+static void ReturnItemToPlayerIfNecessary(ProfileID const merc, Approach const approach, UINT32 const approach_data, NPCQuoteInfo* const quote)
 {
-	// if the approach was changed, always return the item
-	// otherwise check to see if the record in question specified refusal
-	if ( bApproach != APPROACH_GIVINGITEM || (pQuotePtr == NULL ) || (pQuotePtr->sActionData == NPC_ACTION_DONT_ACCEPT_ITEM ) )
-	{
-		OBJECTTYPE*  const pObj     = reinterpret_cast<OBJECTTYPE*>(uiApproachData); // XXX TODO0004
-		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubMerc);
+	/* If the approach was changed, always return the item. Otherwise check to see
+	 * if the record in question specified refusal */
+	if (approach == APPROACH_GIVINGITEM && quote && quote->sActionData != NPC_ACTION_DONT_ACCEPT_ITEM) return;
 
-		// Try to auto place object and then if it fails, put into cursor
-		if ( !AutoPlaceObject( pSoldier, pObj, FALSE ) )
-		{
-			InternalBeginItemPointer( pSoldier, pObj, NO_SLOT );
-		}
-		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
+	OBJECTTYPE*  const o = reinterpret_cast<OBJECTTYPE*>(approach_data); // XXX TODO0004
+	SOLDIERTYPE* const s = FindSoldierByProfileID(merc);
+
+	// Try to auto place object and then if it fails, put into cursor
+	if (!AutoPlaceObject(s, o, FALSE))
+	{
+		InternalBeginItemPointer(s, o, NO_SLOT);
 	}
+	DirtyMercPanelInterface(s, DIRTYLEVEL2);
 }
 
 
