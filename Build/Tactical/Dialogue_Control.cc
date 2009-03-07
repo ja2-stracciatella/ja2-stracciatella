@@ -623,10 +623,6 @@ void HandleDialogue()
 		gTacticalStatus.ubLastQuoteSaid       = d->usQuoteNum;
 		gTacticalStatus.ubLastQuoteProfileNUm = d->ubCharacterNum;
 
-		// Setup face pointer
-		gpCurrentTalkingFace = d->face;
-		gubCurrentTalkingID  = d->ubCharacterNum;
-
 		ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
 	}
 	else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SKIP_A_FRAME)
@@ -661,10 +657,6 @@ void HandleDialogue()
 		{
 			gfUseAlternateDialogueFile = TRUE;
 
-			// Setup face pointer
-			gpCurrentTalkingFace = d->face;
-			gubCurrentTalkingID   = d->ubCharacterNum;
-
 			ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
 
 			gfUseAlternateDialogueFile = FALSE;
@@ -672,10 +664,6 @@ void HandleDialogue()
 		// We could have a special flag, but dialogue as well
 		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC)
 		{
-			// Setup face pointer
-			gpCurrentTalkingFace = d->face;
-			gubCurrentTalkingID  = d->ubCharacterNum;
-
 			ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
 
 			// Setup face with data!
@@ -710,9 +698,6 @@ void HandleDialogue()
 			gTacticalStatus.fLockItemLocators = FALSE;
 
 			SlideToLocation((UINT16)d->uiSpecialEventData);
-
-			gpCurrentTalkingFace = d->face;
-			gubCurrentTalkingID  = d->ubCharacterNum;
 
 			ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
 		}
@@ -753,10 +738,6 @@ void HandleDialogue()
 
 		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_BEGINPREBATTLEINTERFACE)
 		{
-			// Setup face pointer
-			gpCurrentTalkingFace = d->face;
-			gubCurrentTalkingID  = d->ubCharacterNum;
-
 			ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
 
 			// Setup face with data!
@@ -1266,6 +1247,9 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
 // execute specific character dialogue
 static BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier)
 {
+	gpCurrentTalkingFace = face;
+	gubCurrentTalkingID  = ubCharacterNum;
+
 	CHAR8		zSoundString[ 164 ];
 
 	// Check if we are dead now or not....( if from a soldier... )
