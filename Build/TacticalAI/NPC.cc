@@ -1327,12 +1327,9 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 }
 
 
-static void ReturnItemToPlayerIfNecessary(ProfileID const merc, Approach const approach, OBJECTTYPE* const o, NPCQuoteInfo* const quote)
+static void ReturnItemToPlayer(ProfileID const merc, OBJECTTYPE* const o)
 {
 	if (!o) return;
-	/* If the approach was changed, always return the item. Otherwise check to see
-	 * if the record in question specified refusal */
-	if (approach == APPROACH_GIVINGITEM && quote && quote->sActionData != NPC_ACTION_DONT_ACCEPT_ITEM) return;
 
 	SOLDIERTYPE* const s = FindSoldierByProfileID(merc);
 
@@ -1386,7 +1383,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 	NPCQuoteInfo* const pNPCQuoteInfoArray = EnsureQuoteFileLoaded(ubNPC);
 	if (!pNPCQuoteInfoArray)
 	{ // error!!!
-		ReturnItemToPlayerIfNecessary(ubMerc, bApproach, o, 0);
+		ReturnItemToPlayer(ubMerc, o);
 		return;
 	}
 
@@ -1422,7 +1419,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 					if (pQuotePtr != NULL)
 					{
 						// converse using this approach instead!
-						ReturnItemToPlayerIfNecessary(ubMerc, bApproach, o, 0);
+						ReturnItemToPlayer(ubMerc, o);
 						Converse( ubNPC, ubMerc, APPROACH_SPECIAL_INITIAL_QUOTE, 0 );
 						return;
 					}
@@ -1432,7 +1429,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 				else
 				{
 					// say nothing!
-					ReturnItemToPlayerIfNecessary(ubMerc, bApproach, o, 0);
+					ReturnItemToPlayer(ubMerc, o);
 					return;
 				}
 			}
@@ -1443,7 +1440,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 				if (pQuotePtr != NULL)
 				{
 					// converse using this approach instead!
-					ReturnItemToPlayerIfNecessary(ubMerc, bApproach, o, 0);
+					ReturnItemToPlayer(ubMerc, o);
 					Converse( ubNPC, ubMerc, APPROACH_SPECIAL_INITIAL_QUOTE, 0 );
 					return;
 				}
@@ -1452,7 +1449,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 				if (pQuotePtr != NULL)
 				{
 					// converse using this approach instead!
-					ReturnItemToPlayerIfNecessary(ubMerc, bApproach, o, 0);
+					ReturnItemToPlayer(ubMerc, o);
 					Converse( ubNPC, ubMerc, APPROACH_INITIAL_QUOTE, 0 );
 					return;
 				}
@@ -1512,7 +1509,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 								if ( ubNPC == DARREN )
 								{
 									// then we have to make this give attempt fail
-									ReturnItemToPlayerIfNecessary(ubMerc, bApproach, o, 0);
+									ReturnItemToPlayer(ubMerc, o);
 									return;
 								}
 							}
@@ -1931,7 +1928,12 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 			break;
 	}
 
-	ReturnItemToPlayerIfNecessary(ubMerc, bApproach, o, pQuotePtr);
+	/* If the approach was changed, always return the item. Otherwise check to see
+	 * if the record in question specified refusal */
+	if (bApproach != APPROACH_GIVINGITEM || !pQuotePtr || pQuotePtr->sActionData == NPC_ACTION_DONT_ACCEPT_ITEM)
+	{
+		ReturnItemToPlayer(ubMerc, o);
+	}
 }
 
 
