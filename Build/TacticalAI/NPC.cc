@@ -1327,13 +1327,13 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 }
 
 
-static void ReturnItemToPlayerIfNecessary(ProfileID const merc, Approach const approach, UINT32 const approach_data, NPCQuoteInfo* const quote)
+static void ReturnItemToPlayerIfNecessary(ProfileID const merc, Approach const approach, OBJECTTYPE* const o, NPCQuoteInfo* const quote)
 {
+	if (!o) return;
 	/* If the approach was changed, always return the item. Otherwise check to see
 	 * if the record in question specified refusal */
 	if (approach == APPROACH_GIVINGITEM && quote && quote->sActionData != NPC_ACTION_DONT_ACCEPT_ITEM) return;
 
-	OBJECTTYPE*  const o = reinterpret_cast<OBJECTTYPE*>(approach_data); // XXX TODO0004
 	SOLDIERTYPE* const s = FindSoldierByProfileID(merc);
 
 	// Try to auto place object and then if it fails, put into cursor
@@ -1355,13 +1355,11 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 	MERCPROFILESTRUCT *		pProfile=NULL;
 	UINT8									ubLoop, ubQuoteNum, ubRecordNum;
 	UINT32								uiDay;
-	OBJECTTYPE *					pObj=NULL;
-	BOOLEAN								fAttemptingToGiveItem;
 
 	// we have to record whether an item is being given in order to determine whether,
 	// in the case where the approach is overridden, we need to return the item to the
 	// player
-	fAttemptingToGiveItem = (bApproach == APPROACH_GIVINGITEM);
+	OBJECTTYPE* const o = bApproach == APPROACH_GIVINGITEM ? reinterpret_cast<OBJECTTYPE*>(uiApproachData) : 0; // XXX TODO0004
 
 	SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubNPC);
 	if ( pNPC )
@@ -1388,10 +1386,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 	NPCQuoteInfo* const pNPCQuoteInfoArray = EnsureQuoteFileLoaded(ubNPC);
 	if (!pNPCQuoteInfoArray)
 	{ // error!!!
-		if ( fAttemptingToGiveItem )
-		{
-			ReturnItemToPlayerIfNecessary( ubMerc, bApproach, uiApproachData, NULL );
-		}
+		ReturnItemToPlayerIfNecessary(ubMerc, bApproach, o, 0);
 		return;
 	}
 
@@ -1427,10 +1422,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 					if (pQuotePtr != NULL)
 					{
 						// converse using this approach instead!
-						if ( fAttemptingToGiveItem )
-						{
-							ReturnItemToPlayerIfNecessary( ubMerc, bApproach, uiApproachData, NULL );
-						}
+						ReturnItemToPlayerIfNecessary(ubMerc, bApproach, o, 0);
 						Converse( ubNPC, ubMerc, APPROACH_SPECIAL_INITIAL_QUOTE, 0 );
 						return;
 					}
@@ -1440,10 +1432,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 				else
 				{
 					// say nothing!
-					if ( fAttemptingToGiveItem )
-					{
-						ReturnItemToPlayerIfNecessary( ubMerc, bApproach, uiApproachData, NULL );
-					}
+					ReturnItemToPlayerIfNecessary(ubMerc, bApproach, o, 0);
 					return;
 				}
 			}
@@ -1454,10 +1443,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 				if (pQuotePtr != NULL)
 				{
 					// converse using this approach instead!
-					if ( fAttemptingToGiveItem )
-					{
-						ReturnItemToPlayerIfNecessary( ubMerc, bApproach, uiApproachData, NULL );
-					}
+					ReturnItemToPlayerIfNecessary(ubMerc, bApproach, o, 0);
 					Converse( ubNPC, ubMerc, APPROACH_SPECIAL_INITIAL_QUOTE, 0 );
 					return;
 				}
@@ -1466,10 +1452,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 				if (pQuotePtr != NULL)
 				{
 					// converse using this approach instead!
-					if ( fAttemptingToGiveItem )
-					{
-						ReturnItemToPlayerIfNecessary( ubMerc, bApproach, uiApproachData, NULL );
-					}
+					ReturnItemToPlayerIfNecessary(ubMerc, bApproach, o, 0);
 					Converse( ubNPC, ubMerc, APPROACH_INITIAL_QUOTE, 0 );
 					return;
 				}
@@ -1529,7 +1512,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 								if ( ubNPC == DARREN )
 								{
 									// then we have to make this give attempt fail
-									ReturnItemToPlayerIfNecessary( ubMerc, bApproach, uiApproachData, NULL );
+									ReturnItemToPlayerIfNecessary(ubMerc, bApproach, o, 0);
 									return;
 								}
 							}
@@ -1546,8 +1529,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 					}
 
 					// If we are approaching because we want to give an item, do something different
-					pObj = reinterpret_cast<OBJECTTYPE*>(uiApproachData); // XXX TODO0004
-					NPCConsiderReceivingItemFromMerc( ubNPC, ubMerc, pObj, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum );
+					NPCConsiderReceivingItemFromMerc(ubNPC, ubMerc, o, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum);
 					break;
 				case TRIGGER_NPC:
 					// if triggering, pass in the approach data as the record to consider
@@ -1702,7 +1684,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 				{
 					if ( pQuotePtr->sActionData != NPC_ACTION_DONT_ACCEPT_ITEM )
 					{
-						PlaceObjectInSoldierProfile( ubNPC, pObj );
+						PlaceObjectInSoldierProfile(ubNPC, o);
 
 						// Find the GIVER....
 						SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubMerc);
@@ -1710,18 +1692,16 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 						// Is this one of us?
 						if ( pSoldier->bTeam == gbPlayerNum )
 						{
-							INT8 bSlot;
-
-							bSlot = FindExactObj( pSoldier, pObj );
+							INT8 const bSlot = FindExactObj(pSoldier, o);
 							if (bSlot != NO_SLOT)
 							{
-								RemoveObjs( &(pSoldier->inv[bSlot]), pObj->ubNumberOfObjects );
+								RemoveObjs(&pSoldier->inv[bSlot], o->ubNumberOfObjects);
 								DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 							}
 						}
 						else
 						{
-							RemoveObjectFromSoldierProfile( ubMerc, pObj->usItem );
+							RemoveObjectFromSoldierProfile(ubMerc, o->usItem);
 						}
 					}
 					// CC: now handled below
@@ -1733,9 +1713,9 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 							SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubMerc);
 
 							// Try to auto place object and then if it fails, put into cursor
-							if ( !AutoPlaceObject( pSoldier, pObj, FALSE ) )
+							if (!AutoPlaceObject(pSoldier, o, FALSE))
 							{
-								InternalBeginItemPointer( pSoldier, pObj, NO_SLOT );
+								InternalBeginItemPointer(pSoldier, o, NO_SLOT);
 							}
 							DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 
@@ -1951,11 +1931,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 			break;
 	}
 
-	// return item?
-	if ( fAttemptingToGiveItem )
-	{
-		ReturnItemToPlayerIfNecessary( ubMerc, bApproach, uiApproachData, pQuotePtr );
-	}
+	ReturnItemToPlayerIfNecessary(ubMerc, bApproach, o, pQuotePtr);
 }
 
 
