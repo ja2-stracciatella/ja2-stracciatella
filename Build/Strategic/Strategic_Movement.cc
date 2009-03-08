@@ -610,19 +610,13 @@ GROUP* GetGroup( UINT8 ubGroupID )
 }
 
 
-static void HandleImportantPBIQuote(SOLDIERTYPE* pSoldier, GROUP* pInitiatingBattleGroup)
+static void HandleImportantPBIQuote(SOLDIERTYPE* const s, GROUP* const initiating_battle_group)
 {
-	// wake merc up for THIS quote
-	if( pSoldier->fMercAsleep )
-	{
-		TacticalCharacterDialogueWithSpecialEvent( pSoldier, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_SLEEP, 0,0 );
-		TacticalCharacterDialogueWithSpecialEvent(pSoldier, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_BEGINPREBATTLEINTERFACE, reinterpret_cast<UINT32>(pInitiatingBattleGroup), 0); // XXX TODO0004
-		TacticalCharacterDialogueWithSpecialEvent( pSoldier, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_SLEEP, 1,0 );
-	}
-	else
-	{
-		TacticalCharacterDialogueWithSpecialEvent(pSoldier, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_BEGINPREBATTLEINTERFACE, reinterpret_cast<UINT32>(pInitiatingBattleGroup), 0); // XXX TODO0004
-	}
+	// Wake merc up for THIS quote
+	bool const asleep = s->fMercAsleep;
+	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_SLEEP, 0, 0);
+	TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_BEGINPREBATTLEINTERFACE, reinterpret_cast<UINT32>(initiating_battle_group), 0); // XXX TODO0004
+	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_SLEEP, 1, 0);
 }
 
 
