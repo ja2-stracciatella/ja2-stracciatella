@@ -90,6 +90,8 @@ struct DIALOGUE_Q_STRUCT
 		fPauseTime()
 	{}
 
+	bool Execute();
+
 	UINT16               usQuoteNum;
 	UINT8                ubCharacterNum;
 	DialogueHandler      bUIHandlerID;
@@ -588,33 +590,44 @@ void HandleDialogue()
 		return;
 	}
 
+	if (d->Execute())
+	{
+		ghDialogueQ->Add(d);
+	}
+	else
+	{
+		delete d;
+	}
+}
+
+
+bool DIALOGUE_Q_STRUCT::Execute()
+{
 	// ATE: OK: If a battle sound, and delay value was given, set time stamp
 	// now...
-	if (d->uiSpecialEventFlag == DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND &&
-			d->uiSpecialEventData2 != 0                                   &&
-			GetJA2Clock() - d->iTimeStamp < d->uiSpecialEventData2)
+	if (uiSpecialEventFlag == DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND &&
+			uiSpecialEventData2 != 0                                   &&
+			GetJA2Clock() - iTimeStamp < uiSpecialEventData2)
 	{
 		//Place back in!
-		ghDialogueQ->Add(d);
-		return;
+		return true;
 	}
 
 	// Try to find soldier...
-	SOLDIERTYPE* s = FindSoldierByProfileIDOnPlayerTeam(d->ubCharacterNum);
+	SOLDIERTYPE* s = FindSoldierByProfileIDOnPlayerTeam(ubCharacterNum);
 	if (s != NULL && SoundIsPlaying(s->uiBattleSoundID))
 	{
 		//Place back in!
-		ghDialogueQ->Add(d);
-		return;
+		return true;
 	}
 
 	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN &&
-			d->uiSpecialEventFlag == 0)
+			uiSpecialEventFlag == 0)
 	{
-		d->fPauseTime = TRUE;
+		fPauseTime = TRUE;
 	}
 
-	if (d->fPauseTime && !GamePaused())
+	if (fPauseTime && !GamePaused())
 	{
 		PauseGame();
 		LockPauseState(LOCK_PAUSE_15);
@@ -623,7 +636,7 @@ void HandleDialogue()
 
 	// Now play first item in queue
 	// If it's not a 'special' dialogue event, continue
-	if (d->uiSpecialEventFlag == 0)
+	if (uiSpecialEventFlag == 0)
 	{
 		if (s && s->fMercAsleep) // wake grunt up to say
 		{
@@ -634,62 +647,62 @@ void HandleDialogue()
 			fTeamPanelDirty = TRUE;
 
 			// allow them to go back to sleep
-			TacticalCharacterDialogueWithSpecialEvent(s, d->usQuoteNum, DIALOGUE_SPECIAL_EVENT_SLEEP, 1, 0);
+			TacticalCharacterDialogueWithSpecialEvent(s, usQuoteNum, DIALOGUE_SPECIAL_EVENT_SLEEP, 1, 0);
 		}
 
-		gTacticalStatus.ubLastQuoteSaid       = d->usQuoteNum;
-		gTacticalStatus.ubLastQuoteProfileNUm = d->ubCharacterNum;
+		gTacticalStatus.ubLastQuoteSaid       = usQuoteNum;
+		gTacticalStatus.ubLastQuoteProfileNUm = ubCharacterNum;
 
-		ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
+		ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
 	}
-	else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SKIP_A_FRAME)
+	else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SKIP_A_FRAME)
 	{
 
 	}
-	else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE)
+	else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE)
 	{
-		BOOLEAN const lock = d->uiSpecialEventData != 0;
-		switch (d->uiSpecialEventData2)
+		BOOLEAN const lock = uiSpecialEventData != 0;
+		switch (uiSpecialEventData2)
 		{
 			case MAP_SCREEN: fLockOutMapScreenInterface = lock; break;
 		}
 	}
-	else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_REMOVE_EPC)
+	else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_REMOVE_EPC)
 	{
-		gMercProfiles[(UINT8)d->uiSpecialEventData].ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;
-		UnRecruitEPC((UINT8)d->uiSpecialEventData);
+		gMercProfiles[(UINT8)uiSpecialEventData].ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;
+		UnRecruitEPC((UINT8)uiSpecialEventData);
 		ReBuildCharactersList();
 	}
-	else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_WANTS_TO_RENEW)
+	else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_WANTS_TO_RENEW)
 	{
-		HandleMercIsWillingToRenew((UINT8)d->uiSpecialEventData);
+		HandleMercIsWillingToRenew((UINT8)uiSpecialEventData);
 	}
-	else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_NOGO_TO_RENEW)
+	else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_NOGO_TO_RENEW)
 	{
-		HandleMercIsNotWillingToRenew((UINT8)d->uiSpecialEventData);
+		HandleMercIsNotWillingToRenew((UINT8)uiSpecialEventData);
 	}
 	else
 	{
-		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES)
 		{
 			gfUseAlternateDialogueFile = TRUE;
 
-			ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
+			ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
 
 			gfUseAlternateDialogueFile = FALSE;
 		}
 		// We could have a special flag, but dialogue as well
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC)
 		{
-			ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
+			ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
 
 			// Setup face with data!
 			FACETYPE& f = *gpCurrentTalkingFace;
 			f.uiFlags          |= FACE_PCTRIGGER_NPC;
-			f.u.trigger.npc     = d->uiSpecialEventData;
-			f.u.trigger.record  = d->uiSpecialEventData2;
+			f.u.trigger.npc     = uiSpecialEventData;
+			f.u.trigger.record  = uiSpecialEventData2;
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU)
 		{
 			// Setup face pointer
 			// ATE: THis is working with MARK'S STUFF :(
@@ -700,51 +713,51 @@ void HandleDialogue()
 			RebuildContractBoxForMerc(s);
 			bSelectedContractChar = bSelectedInfoChar;
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND)
 		{
-			s = FindSoldierByProfileID(d->ubCharacterNum);
+			s = FindSoldierByProfileID(ubCharacterNum);
 			if (s)
 			{
-				InternalDoMercBattleSound(s, static_cast<BattleSound>(d->uiSpecialEventData), 0);
+				InternalDoMercBattleSound(s, static_cast<BattleSound>(uiSpecialEventData), 0);
 			}
 		}
 
-		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START)
 		{
 			// Turn off item lock for locators...
 			gTacticalStatus.fLockItemLocators = FALSE;
 
-			SlideToLocation((UINT16)d->uiSpecialEventData);
+			SlideToLocation((UINT16)uiSpecialEventData);
 
-			ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
+			ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
 		}
 
-		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_ENABLE_AI)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_ENABLE_AI)
 		{
 			//OK, allow AI to work now....
 			UnPauseAI();
 		}
 
-		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_TRIGGERPREBATTLEINTERFACE)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_TRIGGERPREBATTLEINTERFACE)
 		{
 			UnLockPauseState();
-			InitPreBattleInterface(reinterpret_cast<GROUP*>(d->uiSpecialEventData), TRUE); // XXX TODO0004
+			InitPreBattleInterface(reinterpret_cast<GROUP*>(uiSpecialEventData), TRUE); // XXX TODO0004
 		}
 
-		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX)
 		{
-			INT32 const iReason = d->uiSpecialEventData;
+			INT32 const iReason = uiSpecialEventData;
 			switch (iReason)
 			{
 				case UPDATE_BOX_REASON_ADDSOLDIER:
 				{
-					SOLDIERTYPE* const pUpdateSoldier = GetMan(d->uiSpecialEventData2);
+					SOLDIERTYPE* const pUpdateSoldier = GetMan(uiSpecialEventData2);
 					if (pUpdateSoldier->bActive) AddSoldierToUpdateBox(pUpdateSoldier);
 					break;
 				}
 
 				case UPDATE_BOX_REASON_SET_REASON:
-					SetSoldierUpdateBoxReason(d->uiSpecialEventData2);
+					SetSoldierUpdateBoxReason(uiSpecialEventData2);
 					break;
 
 				case UPDATE_BOX_REASON_SHOW_BOX:
@@ -753,26 +766,26 @@ void HandleDialogue()
 			}
 		}
 
-		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_BEGINPREBATTLEINTERFACE)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_BEGINPREBATTLEINTERFACE)
 		{
-			ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
+			ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
 
 			// Setup face with data!
 			FACETYPE& f = *gpCurrentTalkingFace;
 			f.uiFlags                   |= FACE_TRIGGER_PREBATTLE_INT;
-			f.u.initiating_battle.group  = reinterpret_cast<GROUP*>(d->uiSpecialEventData); // XXX TODO0004
+			f.u.initiating_battle.group  = reinterpret_cast<GROUP*>(uiSpecialEventData); // XXX TODO0004
 		}
 
-		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOPKEEPER)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOPKEEPER)
 		{
-			switch (d->uiSpecialEventData)
+			switch (uiSpecialEventData)
 			{
 				wchar_t zMoney[128];
 				wchar_t zText[512];
 
 				case 0:
 					//popup a message stating the player doesnt have enough money
-					SPrintMoney(zMoney, d->uiSpecialEventData2);
+					SPrintMoney(zMoney, uiSpecialEventData2);
 					swprintf(zText, lengthof(zText), SkiMessageBoxText[SKI_SHORT_FUNDS_TEXT], zMoney);
 					DoSkiMessageBox(zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack);
 					break;
@@ -780,7 +793,7 @@ void HandleDialogue()
 				case 1:
 					/* if the player is trading items, ask them if we should deduct money
 					 * out the players account to cover the difference */
-					SPrintMoney(zMoney, d->uiSpecialEventData2);
+					SPrintMoney(zMoney, uiSpecialEventData2);
 					swprintf(zText, lengthof(zText), SkiMessageBoxText[SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_DIFFERENCE], zMoney);
 					DoSkiMessageBox(zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack);
 					break;
@@ -788,13 +801,13 @@ void HandleDialogue()
 				case 2:
 					/* ask them if we should deduct money out the players account to cover
 					 * the difference */
-					SPrintMoney(zMoney, d->uiSpecialEventData2);
+					SPrintMoney(zMoney, uiSpecialEventData2);
 					swprintf(zText, lengthof(zText), SkiMessageBoxText[SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_COST], zMoney);
 					DoSkiMessageBox(zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack);
 					break;
 
 				case 3: // this means a dialogue event is in progress
-					giShopKeepDialogueEventinProgress = d->uiSpecialEventData2;
+					giShopKeepDialogueEventinProgress = uiSpecialEventData2;
 					break;
 
 				case 4: // this means a dialogue event has ended
@@ -821,96 +834,96 @@ void HandleDialogue()
 			}
 		}
 
-		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_EXIT_MAP_SCREEN)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_EXIT_MAP_SCREEN)
 		{
 			// select sector
-			ChangeSelectedMapSector((INT16)d->uiSpecialEventData, (INT16)d->uiSpecialEventData2, (INT8)d->uiSpecialEventData3);
+			ChangeSelectedMapSector((INT16)uiSpecialEventData, (INT16)uiSpecialEventData2, (INT8)uiSpecialEventData3);
 			RequestTriggerExitFromMapscreen(MAP_EXIT_TO_TACTICAL);
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DISPLAY_STAT_CHANGE)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DISPLAY_STAT_CHANGE)
 		{
-			s = FindSoldierByProfileID(d->ubCharacterNum);
+			s = FindSoldierByProfileID(ubCharacterNum);
 			if (s)
 			{
 				// tell player about stat increase
 				wchar_t wTempString[128];
-				BuildStatChangeString(wTempString, lengthof(wTempString), s->name, (BOOLEAN)d->uiSpecialEventData, (INT16)d->uiSpecialEventData2, (UINT8)d->uiSpecialEventData3);
+				BuildStatChangeString(wTempString, lengthof(wTempString), s->name, (BOOLEAN)uiSpecialEventData, (INT16)uiSpecialEventData2, (UINT8)uiSpecialEventData3);
 				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, wTempString);
 			}
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_UNSET_ARRIVES_FLAG)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_UNSET_ARRIVES_FLAG)
 		{
 			gTacticalStatus.bMercArrivingQuoteBeingUsed = FALSE;
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT)
 		{
 			// Setup face pointer
-			gpCurrentTalkingFace = d->face;
-			gubCurrentTalkingID  = d->ubCharacterNum;
+			gpCurrentTalkingFace = face;
+			gubCurrentTalkingID  = ubCharacterNum;
 
 			// handle the monologue event
-			HandleSkyRiderMonologueEvent(d->uiSpecialEventData, d->uiSpecialEventData2);
+			HandleSkyRiderMonologueEvent(uiSpecialEventData, uiSpecialEventData2);
 		}
 
-		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT)
 		{
 			// Setup face pointer
-			gpCurrentTalkingFace = d->face;
-			gubCurrentTalkingID  = d->ubCharacterNum;
+			gpCurrentTalkingFace = face;
+			gubCurrentTalkingID  = ubCharacterNum;
 
 			// set up the mine highlgith events
-			SetUpAnimationOfMineSectors(d->uiSpecialEventData);
+			SetUpAnimationOfMineSectors(uiSpecialEventData);
 		}
 
 		//Switch on our special events
-		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_GIVE_ITEM)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_GIVE_ITEM)
 		{
-			if (d->bUIHandlerID == DIALOGUE_NPC_UI)
+			if (bUIHandlerID == DIALOGUE_NPC_UI)
 			{
-				HandleNPCItemGiven((UINT8)d->uiSpecialEventData, reinterpret_cast<OBJECTTYPE*>(d->uiSpecialEventData2), (INT8)d->uiSpecialEventData3); // XXX TODO0004
+				HandleNPCItemGiven((UINT8)uiSpecialEventData, reinterpret_cast<OBJECTTYPE*>(uiSpecialEventData2), (INT8)uiSpecialEventData3); // XXX TODO0004
 			}
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC)
 		{
-			if (d->bUIHandlerID == DIALOGUE_NPC_UI)
+			if (bUIHandlerID == DIALOGUE_NPC_UI)
 			{
-				HandleNPCTriggerNPC((UINT8)d->uiSpecialEventData, (UINT8)d->uiSpecialEventData2, (BOOLEAN)d->uiSpecialEventData3, static_cast<Approach>(d->uiSpecialEventData4));
+				HandleNPCTriggerNPC((UINT8)uiSpecialEventData, (UINT8)uiSpecialEventData2, (BOOLEAN)uiSpecialEventData3, static_cast<Approach>(uiSpecialEventData4));
 			}
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO)
 		{
-			if (d->bUIHandlerID == DIALOGUE_NPC_UI)
+			if (bUIHandlerID == DIALOGUE_NPC_UI)
 			{
-				HandleNPCGotoGridNo((UINT8)d->uiSpecialEventData, (UINT16)d->uiSpecialEventData2, (UINT8)d->uiSpecialEventData3);
+				HandleNPCGotoGridNo((UINT8)uiSpecialEventData, (UINT16)uiSpecialEventData2, (UINT8)uiSpecialEventData3);
 			}
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_ACTION)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_ACTION)
 		{
-			if (d->bUIHandlerID == DIALOGUE_NPC_UI)
+			if (bUIHandlerID == DIALOGUE_NPC_UI)
 			{
-				HandleNPCDoAction((UINT8)d->uiSpecialEventData, (UINT16)d->uiSpecialEventData2, (UINT8)d->uiSpecialEventData3);
+				HandleNPCDoAction((UINT8)uiSpecialEventData, (UINT16)uiSpecialEventData2, (UINT8)uiSpecialEventData3);
 			}
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CLOSE_PANEL)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CLOSE_PANEL)
 		{
-			if (d->bUIHandlerID == DIALOGUE_NPC_UI)
+			if (bUIHandlerID == DIALOGUE_NPC_UI)
 			{
 				HandleNPCClosePanel();
 			}
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU)
 		{
 			SetUpdateBoxFlag(TRUE);
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTINUE_TRAINING_MILITIA)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTINUE_TRAINING_MILITIA)
 		{
-			s = FindSoldierByProfileID((UINT8)d->uiSpecialEventData);
+			s = FindSoldierByProfileID((UINT8)uiSpecialEventData);
 			if (s != NULL)
 			{
 				HandleInterfaceMessageForContinuingTrainingMilitia(s);
 			}
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN)
 		{
 			if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
 			{
@@ -918,41 +931,41 @@ void HandleDialogue()
 				fEnterMapDueToContract = TRUE;
 			}
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING)
 		{
-			s = FindSoldierByProfileID(d->ubCharacterNum);
+			s = FindSoldierByProfileID(ubCharacterNum);
 			if (s != NULL)
 			{
 				// .. remove the fired soldier again
-				BeginStrategicRemoveMerc(s, (UINT8)d->uiSpecialEventData);
+				BeginStrategicRemoveMerc(s, (UINT8)uiSpecialEventData);
 			}
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP)
 		{
-			s = FindSoldierByProfileID(d->ubCharacterNum);
+			s = FindSoldierByProfileID(ubCharacterNum);
 			if (s != NULL)
 			{
 				// .. remove the fired soldier again
 				StrategicRemoveMerc(s);
 			}
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_MULTIPURPOSE)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_MULTIPURPOSE)
 		{
-			if (d->uiSpecialEventData & MULTIPURPOSE_SPECIAL_EVENT_DONE_KILLING_DEIDRANNA)
+			if (uiSpecialEventData & MULTIPURPOSE_SPECIAL_EVENT_DONE_KILLING_DEIDRANNA)
 			{
 				HandleDoneLastKilledQueenQuote();
 			}
-			else if (d->uiSpecialEventData & MULTIPURPOSE_SPECIAL_EVENT_TEAM_MEMBERS_DONE_TALKING)
+			else if (uiSpecialEventData & MULTIPURPOSE_SPECIAL_EVENT_TEAM_MEMBERS_DONE_TALKING)
 			{
 				HandleDoneLastEndGameQuote();
 			}
 		}
-		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SLEEP)
+		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SLEEP)
 		{
-			if (s == NULL) return;
+			if (!s) return false;
 
 			// wake merc up or put them back down?
-			s->fMercAsleep = (d->uiSpecialEventData != 0);
+			s->fMercAsleep = uiSpecialEventData != 0;
 
 			// refresh map screen
 			fCharacterInfoPanelDirty = TRUE;
@@ -960,15 +973,15 @@ void HandleDialogue()
 		}
 	}
 
-	s = FindSoldierByProfileID(d->ubCharacterNum);
+	s = FindSoldierByProfileID(ubCharacterNum);
 	if (s && s->bTeam == gbPlayerNum)
 	{
-		CheckForStopTimeQuotes(d->usQuoteNum);
+		CheckForStopTimeQuotes(usQuoteNum);
 	}
 
-	if (d->fPauseTime) fWasPausedDuringDialogue = TRUE;
+	if (fPauseTime) fWasPausedDuringDialogue = TRUE;
 
-	delete d;
+	return false;
 }
 
 
