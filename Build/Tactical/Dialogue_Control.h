@@ -181,7 +181,6 @@ enum DialogueSpecialEvent
 	DIALOGUE_SPECIAL_EVENT_DO_ACTION                    = 0x00000008,
 	DIALOGUE_SPECIAL_EVENT_CLOSE_PANEL                  = 0x00000010,
 	DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC                 = 0x00000020,
-	DIALOGUE_SPECIAL_EVENT_BEGINPREBATTLEINTERFACE      = 0x00000040,
 	DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT       = 0x00000080,
 	DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU           = 0x00000100,
 	DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT              = 0x00000200,
@@ -269,6 +268,8 @@ void SpecialCharacterDialogueEvent(DialogueSpecialEvent, UINT32 uiSpecialEventDa
 // Same as above, for triggers, with extra param to hold approach value
 void SpecialCharacterDialogueEventWithExtraParam(DialogueSpecialEvent, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, UINT32 uiSpecialEventData4, FACETYPE* face, DialogueHandler);
 
+BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier);
+
 // Called when a face stops talking...
 void HandleDialogueEnd( FACETYPE *pFace );
 
@@ -346,6 +347,17 @@ struct DialogueEvent
 
 	BOOLEAN fDelayed;
 	BOOLEAN fPauseTime;
+};
+
+class CharacterDialogueEvent : public DialogueEvent
+{
+	public:
+		CharacterDialogueEvent(SOLDIERTYPE& soldier) : soldier_(soldier) {}
+
+		bool MayExecute() const;
+
+	protected:
+		SOLDIERTYPE& soldier_;
 };
 
 #endif

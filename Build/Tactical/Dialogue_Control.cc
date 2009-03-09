@@ -331,7 +331,6 @@ void HandleDialogueUIAdjustments( )
 
 
 static void CheckForStopTimeQuotes(UINT16 usQuoteNum);
-static BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier);
 static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, FACETYPE* face);
 
 
@@ -580,6 +579,12 @@ void DialogueEvent::Add(DialogueEvent* const d)
 }
 
 
+bool CharacterDialogueEvent::MayExecute() const
+{
+	return !SoundIsPlaying(soldier_.uiBattleSoundID);
+}
+
+
 struct DIALOGUE_Q_STRUCT : public DialogueEvent
 {
 	DIALOGUE_Q_STRUCT(FACETYPE* const face_, DialogueHandler const dialogue_handler_) :
@@ -769,16 +774,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 					ShowUpdateBox();
 					break;
 			}
-		}
-
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_BEGINPREBATTLEINTERFACE)
-		{
-			ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
-
-			// Setup face with data!
-			FACETYPE& f = *gpCurrentTalkingFace;
-			f.uiFlags                   |= FACE_TRIGGER_PREBATTLE_INT;
-			f.u.initiating_battle.group  = reinterpret_cast<GROUP*>(uiSpecialEventData); // XXX TODO0004
 		}
 
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOPKEEPER)
@@ -1258,7 +1253,7 @@ static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iData
 
 
 // execute specific character dialogue
-static BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier)
+BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier)
 {
 	gpCurrentTalkingFace = face;
 	gubCurrentTalkingID  = ubCharacterNum;

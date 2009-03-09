@@ -610,12 +610,40 @@ GROUP* GetGroup( UINT8 ubGroupID )
 }
 
 
+class CharacterDialogueEventBeginPrebattleInterface : public CharacterDialogueEvent
+{
+	public:
+		CharacterDialogueEventBeginPrebattleInterface(SOLDIERTYPE& soldier, GROUP* const initiating_battle_group) :
+			CharacterDialogueEvent(soldier),
+			initiating_battle_group_(initiating_battle_group)
+		{}
+
+		bool Execute()
+		{
+			if (MayExecute()) return true;
+
+			SOLDIERTYPE const& s = soldier_;
+			ExecuteCharacterDialogue(s.ubProfile, QUOTE_ENEMY_PRESENCE, s.face, DIALOGUE_TACTICAL_UI, TRUE);
+
+			// Setup face with data!
+			FACETYPE& f = *gpCurrentTalkingFace;
+			f.uiFlags                   |= FACE_TRIGGER_PREBATTLE_INT;
+			f.u.initiating_battle.group  = initiating_battle_group_;
+
+			return false;
+		}
+
+	private:
+		GROUP* const initiating_battle_group_;
+};
+
+
 static void HandleImportantPBIQuote(SOLDIERTYPE* const s, GROUP* const initiating_battle_group)
 {
 	// Wake merc up for THIS quote
 	bool const asleep = s->fMercAsleep;
 	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_SLEEP, 0, 0);
-	TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_BEGINPREBATTLEINTERFACE, reinterpret_cast<UINT32>(initiating_battle_group), 0); // XXX TODO0004
+	DialogueEvent::Add(new CharacterDialogueEventBeginPrebattleInterface(*s, initiating_battle_group));
 	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_SLEEP, 1, 0);
 }
 
