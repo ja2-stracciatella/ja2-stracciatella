@@ -881,14 +881,7 @@ bool DIALOGUE_Q_STRUCT::Execute()
 		}
 
 		//Switch on our special events
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_GIVE_ITEM)
-		{
-			if (bUIHandlerID == DIALOGUE_NPC_UI)
-			{
-				HandleNPCItemGiven((UINT8)uiSpecialEventData, reinterpret_cast<OBJECTTYPE*>(uiSpecialEventData2), (INT8)uiSpecialEventData3); // XXX TODO0004
-			}
-		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC)
 		{
 			if (bUIHandlerID == DIALOGUE_NPC_UI)
 			{

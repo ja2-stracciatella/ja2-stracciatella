@@ -176,7 +176,6 @@ enum DialogueHandler
 enum DialogueSpecialEvent
 {
 	DIALOGUE_SPECIAL_EVENT_NONE                         = 0x00000000,
-	DIALOGUE_SPECIAL_EVENT_GIVE_ITEM                    = 0x00000001,
 	DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC                  = 0x00000002,
 	DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO                  = 0x00000004,
 	DIALOGUE_SPECIAL_EVENT_DO_ACTION                    = 0x00000008,

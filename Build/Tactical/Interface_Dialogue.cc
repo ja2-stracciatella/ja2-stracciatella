@@ -1143,9 +1143,31 @@ static void CalculatePopupTextPosition(INT16 sWidth, INT16 sHeight)
 }
 
 
+class DialogueEventGiveItem : public DialogueEvent
+{
+	public:
+		DialogueEventGiveItem(ProfileID const npc, OBJECTTYPE* const object, INT8 const inv_pos) :
+			object_(object),
+			npc_(npc),
+			inv_pos_(inv_pos)
+		{}
+
+		bool Execute()
+		{
+			HandleNPCItemGiven(npc_, object_, inv_pos_);
+			return false;
+		}
+
+	private:
+		OBJECTTYPE* const object_;
+		ProfileID   const npc_;
+		INT8        const inv_pos_;
+};
+
+
 void TalkingMenuGiveItem(UINT8 const ubNPC, OBJECTTYPE* const pObject, INT8 const bInvPos)
 {
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GIVE_ITEM, ubNPC, reinterpret_cast<UINT32>(pObject), bInvPos, gTalkPanel.face, DIALOGUE_NPC_UI); // XXX TODO0004
+	DialogueEvent::Add(new DialogueEventGiveItem(ubNPC, pObject, bInvPos));
 }
 
 
