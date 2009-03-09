@@ -377,6 +377,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	if (GetWorldTotalMin() > timestamp + 300)
 	{ // The file has aged.  Use the regular method for adding soldiers.
+		f.Deallocate(); // Close the file before deleting it
 		RemoveTempFile(x, y, z, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS);
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
 		return;
