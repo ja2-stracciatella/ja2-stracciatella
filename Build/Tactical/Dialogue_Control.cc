@@ -72,42 +72,7 @@
 #define		TEXT_DELAY_MODIFIER			60
 
 
-struct DIALOGUE_Q_STRUCT
-{
-	DIALOGUE_Q_STRUCT(FACETYPE* const face_, DialogueHandler const dialogue_handler_) :
-		usQuoteNum(),
-		ubCharacterNum(),
-		bUIHandlerID(dialogue_handler_),
-		face(face_),
-		iTimeStamp(GetJA2Clock()),
-		uiSpecialEventFlag(),
-		uiSpecialEventData(),
-		uiSpecialEventData2(),
-		uiSpecialEventData3(),
-		uiSpecialEventData4(),
-		fFromSoldier(),
-		fDelayed(),
-		fPauseTime()
-	{}
-
-	bool Execute();
-
-	UINT16               usQuoteNum;
-	UINT8                ubCharacterNum;
-	DialogueHandler      bUIHandlerID;
-	FACETYPE*            face;
-	INT32                iTimeStamp;
-	DialogueSpecialEvent uiSpecialEventFlag;
-	UINT32               uiSpecialEventData;
-	UINT32               uiSpecialEventData2;
-	UINT32               uiSpecialEventData3;
-	UINT32               uiSpecialEventData4;
-	BOOLEAN              fFromSoldier;
-	BOOLEAN              fDelayed;
-	BOOLEAN              fPauseTime;
-};
-
-typedef SGP::Queue<DIALOGUE_Q_STRUCT*> DialogueQueue;
+typedef SGP::Queue<DialogueEvent*> DialogueQueue;
 
 
 BOOLEAN fExternFacesLoaded = FALSE;
@@ -563,7 +528,7 @@ void HandleDialogue()
 	}
 
 	// If here, pick current one from queue and play
-	DIALOGUE_Q_STRUCT* const d = ghDialogueQ->Remove();
+	DialogueEvent* const d = ghDialogueQ->Remove();
 
 	// If we are in auto bandage, ignore any quotes!
 	if (gTacticalStatus.fAutoBandageMode)
@@ -599,6 +564,38 @@ void HandleDialogue()
 		delete d;
 	}
 }
+
+
+struct DIALOGUE_Q_STRUCT : public DialogueEvent
+{
+	DIALOGUE_Q_STRUCT(FACETYPE* const face_, DialogueHandler const dialogue_handler_) :
+		usQuoteNum(),
+		ubCharacterNum(),
+		bUIHandlerID(dialogue_handler_),
+		face(face_),
+		iTimeStamp(GetJA2Clock()),
+		uiSpecialEventFlag(),
+		uiSpecialEventData(),
+		uiSpecialEventData2(),
+		uiSpecialEventData3(),
+		uiSpecialEventData4(),
+		fFromSoldier()
+	{}
+
+	bool Execute();
+
+	UINT16               usQuoteNum;
+	UINT8                ubCharacterNum;
+	DialogueHandler      bUIHandlerID;
+	FACETYPE*            face;
+	INT32                iTimeStamp;
+	DialogueSpecialEvent uiSpecialEventFlag;
+	UINT32               uiSpecialEventData;
+	UINT32               uiSpecialEventData2;
+	UINT32               uiSpecialEventData3;
+	UINT32               uiSpecialEventData4;
+	BOOLEAN              fFromSoldier;
+};
 
 
 bool DIALOGUE_Q_STRUCT::Execute()

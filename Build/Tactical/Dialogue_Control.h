@@ -332,4 +332,20 @@ extern UINT8     gubCurrentTalkingID;
 
 extern MercPopUpBox* g_dialogue_box;
 
+
+struct DialogueEvent
+{
+	DialogueEvent(BOOLEAN const delayed = FALSE, BOOLEAN const pause_time = FALSE) :
+		fDelayed(delayed),
+		fPauseTime(pause_time)
+	{}
+
+	virtual ~DialogueEvent() {}
+
+	virtual bool Execute() = 0;
+
+	BOOLEAN fDelayed;
+	BOOLEAN fPauseTime;
+};
+
 #endif
