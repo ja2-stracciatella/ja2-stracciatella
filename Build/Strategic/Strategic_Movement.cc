@@ -620,7 +620,7 @@ class CharacterDialogueEventBeginPrebattleInterface : public CharacterDialogueEv
 
 		bool Execute()
 		{
-			if (MayExecute()) return true;
+			if (!MayExecute()) return true;
 
 			SOLDIERTYPE const& s = soldier_;
 			ExecuteCharacterDialogue(s.ubProfile, QUOTE_ENEMY_PRESENCE, s.face, DIALOGUE_TACTICAL_UI, TRUE);
