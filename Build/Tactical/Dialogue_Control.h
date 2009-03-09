@@ -344,6 +344,8 @@ struct DialogueEvent
 
 	virtual bool Execute() = 0;
 
+	static void Add(DialogueEvent*);
+
 	BOOLEAN fDelayed;
 	BOOLEAN fPauseTime;
 };

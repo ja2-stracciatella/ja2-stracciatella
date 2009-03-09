@@ -566,6 +566,20 @@ void HandleDialogue()
 }
 
 
+void DialogueEvent::Add(DialogueEvent* const d)
+{
+	try
+	{
+		ghDialogueQ->Add(d);
+	}
+	catch (...)
+	{
+		delete d;
+		throw;
+	}
+}
+
+
 struct DIALOGUE_Q_STRUCT : public DialogueEvent
 {
 	DIALOGUE_Q_STRUCT(FACETYPE* const face_, DialogueHandler const dialogue_handler_) :
@@ -1173,7 +1187,7 @@ void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16 const 
 	d->uiSpecialEventData  = uiData1;
 	d->uiSpecialEventData2 = uiData2;
 
-	ghDialogueQ->Add(d);
+	DialogueEvent::Add(d);
 
 	if (uiFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC)
 	{ // Increment reference count
@@ -1195,7 +1209,7 @@ static void CharacterDialogueWithSpecialEventEx(UINT8 const ubCharacterNum, UINT
 	d->uiSpecialEventData2  = uiData2;
 	d->uiSpecialEventData3  = uiData3;
 
-	ghDialogueQ->Add(d);
+	DialogueEvent::Add(d);
 
 	if (uiFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC)
 	{ // Increment refrence count
@@ -1216,7 +1230,7 @@ void CharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACE
 	if (!gfLockPauseState) d->fPauseTime = fPausedTimeDuringQuote;
 	fPausedTimeDuringQuote = FALSE;
 
-	ghDialogueQ->Add(d);
+	DialogueEvent::Add(d);
 }
 
 
@@ -1232,7 +1246,7 @@ void SpecialCharacterDialogueEvent(DialogueSpecialEvent const uiSpecialEventFlag
 	if (!gfLockPauseState) d->fPauseTime = fPausedTimeDuringQuote;
 	fPausedTimeDuringQuote = FALSE;
 
-	ghDialogueQ->Add(d);
+	DialogueEvent::Add(d);
 }
 
 
@@ -1249,7 +1263,7 @@ void SpecialCharacterDialogueEventWithExtraParam(DialogueSpecialEvent const uiSp
 	if (!gfLockPauseState) d->fPauseTime = fPausedTimeDuringQuote;
 	fPausedTimeDuringQuote = FALSE;
 
-	ghDialogueQ->Add(d);
+	DialogueEvent::Add(d);
 }
 
 
