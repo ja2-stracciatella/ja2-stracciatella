@@ -122,15 +122,25 @@ struct FACETYPE
 
   SGPVObject* uiVideoObject;
 
-	UINT32		uiUserData1;
-	UINT32		uiUserData2;
-
 	BOOLEAN		fCompatibleItems;
 	BOOLEAN		fOldCompatibleItems;
 	BOOLEAN		bOldStealthMode;
 	INT8			bOldOppCnt;
 
 	AudioGapList		GapList;
+
+	union // XXX TODO001E ugly
+	{
+		struct // Used for FACE_PCTRIGGER_NPC
+		{
+			ProfileID npc;
+			UINT8     record;
+		} trigger;
+		struct // Used for FACE_TRIGGER_PREBATTLE_INT
+		{
+			GROUP* group;
+		} initiating_battle;
+	} u;
 };
 
 // FACE HANDLING

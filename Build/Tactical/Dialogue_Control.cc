@@ -486,7 +486,8 @@ void HandleDialogue()
 			 // Decrement refrence count...
 			 giNPCReferenceCount--;
 
-			 TriggerNPCRecord((UINT8)gpCurrentTalkingFace->uiUserData1, (UINT8)gpCurrentTalkingFace->uiUserData2);
+			 FACETYPE& f = *gpCurrentTalkingFace;
+			 TriggerNPCRecord(f.u.trigger.npc, f.u.trigger.record);
 			 //Reset flag!
 			 gpCurrentTalkingFace->uiFlags &= ~FACE_PCTRIGGER_NPC;
 		}
@@ -501,7 +502,7 @@ void HandleDialogue()
 		if (gpCurrentTalkingFace->uiFlags & FACE_TRIGGER_PREBATTLE_INT)
 		{
 			UnLockPauseState();
-			InitPreBattleInterface(reinterpret_cast<GROUP*>(gpCurrentTalkingFace->uiUserData1), TRUE); // XXX TODO0004
+			InitPreBattleInterface(gpCurrentTalkingFace->u.initiating_battle.group, TRUE);
 			//Reset flag!
 			gpCurrentTalkingFace->uiFlags &= ~FACE_TRIGGER_PREBATTLE_INT;
 		}
@@ -667,10 +668,10 @@ void HandleDialogue()
 			ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
 
 			// Setup face with data!
-			gpCurrentTalkingFace->uiFlags     |= FACE_PCTRIGGER_NPC;
-			gpCurrentTalkingFace->uiUserData1  = d->uiSpecialEventData;
-			gpCurrentTalkingFace->uiUserData2  = d->uiSpecialEventData2;
-
+			FACETYPE& f = *gpCurrentTalkingFace;
+			f.uiFlags          |= FACE_PCTRIGGER_NPC;
+			f.u.trigger.npc     = d->uiSpecialEventData;
+			f.u.trigger.record  = d->uiSpecialEventData2;
 		}
 		else if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU)
 		{
@@ -741,9 +742,9 @@ void HandleDialogue()
 			ExecuteCharacterDialogue(d->ubCharacterNum, d->usQuoteNum, d->face, d->bUIHandlerID, d->fFromSoldier);
 
 			// Setup face with data!
-			gpCurrentTalkingFace->uiFlags     |= FACE_TRIGGER_PREBATTLE_INT;
-			gpCurrentTalkingFace->uiUserData1  = d->uiSpecialEventData;
-			gpCurrentTalkingFace->uiUserData2  = d->uiSpecialEventData2;
+			FACETYPE& f = *gpCurrentTalkingFace;
+			f.uiFlags                   |= FACE_TRIGGER_PREBATTLE_INT;
+			f.u.initiating_battle.group  = reinterpret_cast<GROUP*>(d->uiSpecialEventData); // XXX TODO0004
 		}
 
 		if (d->uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOPKEEPER)
