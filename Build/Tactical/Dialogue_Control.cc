@@ -74,6 +74,22 @@
 
 struct DIALOGUE_Q_STRUCT
 {
+	DIALOGUE_Q_STRUCT(FACETYPE* const face_, DialogueHandler const dialogue_handler_) :
+		usQuoteNum(),
+		ubCharacterNum(),
+		bUIHandlerID(dialogue_handler_),
+		face(face_),
+		iTimeStamp(GetJA2Clock()),
+		uiSpecialEventFlag(),
+		uiSpecialEventData(),
+		uiSpecialEventData2(),
+		uiSpecialEventData3(),
+		uiSpecialEventData4(),
+		fFromSoldier(),
+		fDelayed(),
+		fPauseTime()
+	{}
+
 	UINT16               usQuoteNum;
 	UINT8                ubCharacterNum;
 	DialogueHandler      bUIHandlerID;
@@ -556,7 +572,7 @@ void HandleDialogue()
 			UnPauseGame();
 		}
 
-		MemFree(d);
+		delete d;
 		return;
 	}
 
@@ -952,7 +968,7 @@ void HandleDialogue()
 
 	if (d->fPauseTime) fWasPausedDuringDialogue = TRUE;
 
-	MemFree(d);
+	delete d;
 }
 
 
@@ -1138,12 +1154,9 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 
 void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, DialogueSpecialEvent const uiFlag, UINT32 const uiData1, UINT32 const uiData2)
 {
-	DIALOGUE_Q_STRUCT* const d = MALLOCZ(DIALOGUE_Q_STRUCT);
+	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(face, bUIHandlerID);
 	d->ubCharacterNum      = ubCharacterNum;
 	d->usQuoteNum          = usQuoteNum;
-	d->face                = face;
-	d->bUIHandlerID        = bUIHandlerID;
-	d->iTimeStamp          = GetJA2Clock();
 	d->fFromSoldier        = fFromSoldier;
 	d->fDelayed            = fDelayed;
 	d->uiSpecialEventFlag  = uiFlag;
@@ -1162,12 +1175,9 @@ void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16 const 
 // Do special event as well as dialogue!
 static void CharacterDialogueWithSpecialEventEx(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, DialogueSpecialEvent const uiFlag, UINT32 const uiData1, UINT32 const uiData2, UINT32 const uiData3)
 {
-	DIALOGUE_Q_STRUCT* const d = MALLOCZ(DIALOGUE_Q_STRUCT);
+	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(face, bUIHandlerID);
 	d->ubCharacterNum       = ubCharacterNum;
 	d->usQuoteNum           = usQuoteNum;
-	d->face                 = face;
-	d->bUIHandlerID         = bUIHandlerID;
-	d->iTimeStamp           = GetJA2Clock( );
 	d->fFromSoldier         = fFromSoldier;
 	d->fDelayed             = fDelayed;
 	d->uiSpecialEventFlag   = uiFlag;
@@ -1186,12 +1196,9 @@ static void CharacterDialogueWithSpecialEventEx(UINT8 const ubCharacterNum, UINT
 
 void CharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed)
 {
-	DIALOGUE_Q_STRUCT* const d = MALLOCZ(DIALOGUE_Q_STRUCT);
+	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(face, bUIHandlerID);
 	d->ubCharacterNum = ubCharacterNum;
 	d->usQuoteNum     = usQuoteNum;
-	d->face           = face;
-	d->bUIHandlerID   = bUIHandlerID;
-	d->iTimeStamp     = GetJA2Clock();
 	d->fFromSoldier   = fFromSoldier;
 	d->fDelayed       = fDelayed;
 
@@ -1205,14 +1212,11 @@ void CharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACE
 
 void SpecialCharacterDialogueEvent(DialogueSpecialEvent const uiSpecialEventFlag, UINT32 const uiSpecialEventData1, UINT32 const uiSpecialEventData2, UINT32 const uiSpecialEventData3, FACETYPE* const face, DialogueHandler const bUIHandlerID)
 {
-	DIALOGUE_Q_STRUCT* const d = MALLOCZ(DIALOGUE_Q_STRUCT);
+	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(face, bUIHandlerID);
 	d->uiSpecialEventFlag  = uiSpecialEventFlag;
 	d->uiSpecialEventData  = uiSpecialEventData1;
 	d->uiSpecialEventData2 = uiSpecialEventData2;
 	d->uiSpecialEventData3 = uiSpecialEventData3;
-	d->face                = face;
-	d->bUIHandlerID        = bUIHandlerID;
-	d->iTimeStamp          = GetJA2Clock();
 
 	// If paused state not already locked
 	if (!gfLockPauseState) d->fPauseTime = fPausedTimeDuringQuote;
@@ -1224,15 +1228,12 @@ void SpecialCharacterDialogueEvent(DialogueSpecialEvent const uiSpecialEventFlag
 
 void SpecialCharacterDialogueEventWithExtraParam(DialogueSpecialEvent const uiSpecialEventFlag, UINT32 const uiSpecialEventData1, UINT32 const uiSpecialEventData2, UINT32 const uiSpecialEventData3, UINT32 const uiSpecialEventData4, FACETYPE* const face, DialogueHandler const bUIHandlerID)
 {
-	DIALOGUE_Q_STRUCT* const d = MALLOCZ(DIALOGUE_Q_STRUCT);
+	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(face, bUIHandlerID);
 	d->uiSpecialEventFlag  = uiSpecialEventFlag;
 	d->uiSpecialEventData  = uiSpecialEventData1;
 	d->uiSpecialEventData2 = uiSpecialEventData2;
 	d->uiSpecialEventData3 = uiSpecialEventData3;
 	d->uiSpecialEventData4 = uiSpecialEventData4;
-	d->face                = face;
-	d->bUIHandlerID        = bUIHandlerID;
-	d->iTimeStamp          = GetJA2Clock();
 
 	// If paused state not already locked
 	if (!gfLockPauseState) d->fPauseTime = fPausedTimeDuringQuote;
