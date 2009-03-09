@@ -917,10 +917,29 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 }
 
 
+class DialogueEventTriggerPrebattleInterface : public DialogueEvent
+{
+	public:
+		DialogueEventTriggerPrebattleInterface(GROUP* const init_prebattle_group) :
+			init_prebattle_group_(init_prebattle_group)
+		{}
+
+		bool Execute()
+		{
+			UnLockPauseState();
+			InitPreBattleInterface(init_prebattle_group_, TRUE);
+			return false;
+		}
+
+	private:
+		GROUP* const init_prebattle_group_;
+};
+
+
 static void TriggerPrebattleInterface(MessageBoxReturnValue const ubResult)
 {
 	StopTimeCompression();
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_TRIGGERPREBATTLEINTERFACE, reinterpret_cast<UINT32>(gpInitPrebattleGroup), 0, 0, 0, DIALOGUE_NO_UI); // XXX TODO0004
+	DialogueEvent::Add(new DialogueEventTriggerPrebattleInterface(gpInitPrebattleGroup));
 	gpInitPrebattleGroup = NULL;
 }
 

@@ -749,12 +749,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 			UnPauseAI();
 		}
 
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_TRIGGERPREBATTLEINTERFACE)
-		{
-			UnLockPauseState();
-			InitPreBattleInterface(reinterpret_cast<GROUP*>(uiSpecialEventData), TRUE); // XXX TODO0004
-		}
-
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX)
 		{
 			INT32 const iReason = uiSpecialEventData;
