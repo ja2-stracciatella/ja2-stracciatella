@@ -63,8 +63,6 @@ void RenderTalkingMenu(void);
 
 BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey );
 
-// Gices an item to buddy
-void TalkingMenuGiveItem(UINT8 ubNPC, OBJECTTYPE* pObject, INT8 bInvPos);
 // NPC goto gridno
 void NPCGotoGridNo(UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum);
 // NPC Do action

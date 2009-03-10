@@ -1327,6 +1327,33 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 }
 
 
+static void TalkingMenuGiveItem(ProfileID const npc, OBJECTTYPE* const object, INT8 const inv_pos)
+{
+	class DialogueEventGiveItem : public DialogueEvent
+	{
+		public:
+			DialogueEventGiveItem(ProfileID const npc, OBJECTTYPE* const object, INT8 const inv_pos) :
+				object_(object),
+				npc_(npc),
+				inv_pos_(inv_pos)
+			{}
+
+			bool Execute()
+			{
+				HandleNPCItemGiven(npc_, object_, inv_pos_);
+				return false;
+			}
+
+		private:
+			OBJECTTYPE* const object_;
+			ProfileID   const npc_;
+			INT8        const inv_pos_;
+	};
+
+	DialogueEvent::Add(new DialogueEventGiveItem(npc, object, inv_pos));
+}
+
+
 static void ReturnItemToPlayer(ProfileID const merc, OBJECTTYPE* const o)
 {
 	if (!o) return;
