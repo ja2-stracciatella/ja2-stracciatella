@@ -171,30 +171,11 @@ void HandleContractRenewalSequence( )
 				// Handle start here...
 
 				// Determine what quote to use....
-				if( !WillMercRenew( pSoldier, FALSE ) )
+				bool const wants_to_renew = WillMercRenew(pSoldier, FALSE);
+				if (!wants_to_renew)
 				{
 					// OK, he does not want to renew.......
 					HandleImportantMercQuote( pSoldier, QUOTE_MERC_LEAVING_ALSUCO_SOON );
-
-					class DialogueEventContractNogoToRenew : public CharacterDialogueEvent
-					{
-						public:
-							DialogueEventContractNogoToRenew(SOLDIERTYPE& soldier) :
-								CharacterDialogueEvent(soldier)
-							{}
-
-							bool Execute()
-							{
-								SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, DIALOGUE_NO_UI);
-								gfInContractMenuFromRenewSequence = TRUE;
-								TacticalCharacterDialogueWithSpecialEvent(&soldier_, 0, DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU, 0, 0);
-								SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, DIALOGUE_NO_UI);
-								return false;
-							}
-					};
-
-					// Do special dialogue event...
-					DialogueEvent::Add(new DialogueEventContractNogoToRenew(*pSoldier));
 				}
 				else
 				{
@@ -209,29 +190,32 @@ void HandleContractRenewalSequence( )
 					{
 						HandleImportantMercQuoteLocked(pSoldier, QUOTE_MERC_LEAVING_ALSUCO_SOON);
 					}
-
-					class DialogueEventContractWantsToRenew : public CharacterDialogueEvent
-					{
-						public:
-							DialogueEventContractWantsToRenew(SOLDIERTYPE& soldier) :
-								CharacterDialogueEvent(soldier)
-							{}
-
-							bool Execute()
-							{
-								SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, DIALOGUE_NO_UI);
-								SOLDIERTYPE& s = soldier_;
-								CheckIfSalaryIncreasedAndSayQuote(&s, FALSE);
-								gfInContractMenuFromRenewSequence = TRUE;
-								TacticalCharacterDialogueWithSpecialEvent(&s, 0, DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU, 0, 0);
-								SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, DIALOGUE_NO_UI);
-								return false;
-							}
-					};
-
-					// Do special dialogue event...
-					DialogueEvent::Add(new DialogueEventContractWantsToRenew(*pSoldier));
 				}
+
+				class DialogueEventContract : public CharacterDialogueEvent
+				{
+					public:
+						DialogueEventContract(SOLDIERTYPE& soldier, bool const wants_to_renew) :
+							CharacterDialogueEvent(soldier),
+							wants_to_renew_(wants_to_renew)
+					{}
+
+						bool Execute()
+						{
+							SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, DIALOGUE_NO_UI);
+							SOLDIERTYPE& s = soldier_;
+							if (wants_to_renew_) CheckIfSalaryIncreasedAndSayQuote(&s, FALSE);
+							gfInContractMenuFromRenewSequence = TRUE;
+							TacticalCharacterDialogueWithSpecialEvent(&s, 0, DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU, 0, 0);
+							SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, DIALOGUE_NO_UI);
+							return false;
+						}
+
+					private:
+						bool const wants_to_renew_;
+				};
+
+				DialogueEvent::Add(new DialogueEventContract(*pSoldier, wants_to_renew));
 			}
 			else
 			{
