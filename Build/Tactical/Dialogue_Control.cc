@@ -676,10 +676,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 
 		ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
 	}
-	else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SKIP_A_FRAME)
-	{
-
-	}
 	else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE)
 	{
 		BOOLEAN const lock = uiSpecialEventData != 0;

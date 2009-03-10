@@ -3172,6 +3172,13 @@ static UINT32 CalculateTotalPlayersValue(void)
 }
 
 
+class DialogueEventSkipAFrame : public DialogueEvent
+{
+	public:
+		bool Execute() { return false; }
+};
+
+
 static UINT32 CalculateHowMuchMoneyIsInPlayersOfferArea(void);
 static UINT8 CountNumberOfItemsInTheArmsDealersOfferArea(void);
 static UINT8 CountNumberOfValuelessItemsInThePlayersOfferArea(void);
@@ -3245,14 +3252,14 @@ static void PerformTransaction(UINT32 uiMoneyFromPlayersAccount)
 			{
 				// tell player he can't possibly afford this
 				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 6, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
-				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SKIP_A_FRAME, 0, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
+				DialogueEvent::Add(new DialogueEventSkipAFrame());
 				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 0, uiArmsDealersItemsCost - (LaptopSaveInfo.iCurrentBalance + uiPlayersTotalMoneyValue), giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
 			}
 			else
 			{
 				// player doesn't have enough on the table, but can pay for it from his balance
 				/// ask player if wants to subtract the shortfall directly from his balance
-				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SKIP_A_FRAME, 0, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
+				DialogueEvent::Add(new DialogueEventSkipAFrame());
 				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 6, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
 
 				if( uiPlayersTotalMoneyValue )
