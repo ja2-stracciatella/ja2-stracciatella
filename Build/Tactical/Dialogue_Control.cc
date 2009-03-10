@@ -991,9 +991,6 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEvent(SOLDIERTYPE const* const pSold
 }
 
 
-static void CharacterDialogueWithSpecialEventEx(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier, BOOLEAN fDelayed, DialogueSpecialEvent, UINT32 uiData1, UINT32 uiData2);
-
-
 BOOLEAN TacticalCharacterDialogueWithSpecialEventEx(SOLDIERTYPE const* const pSoldier, UINT16 const usQuoteNum, DialogueSpecialEvent const uiFlag, UINT32 const uiData1, UINT32 const uiData2)
 {
 	if ( pSoldier->ubProfile == NO_PROFILE )
@@ -1024,7 +1021,7 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEventEx(SOLDIERTYPE const* const pSo
 
 	}
 
-	CharacterDialogueWithSpecialEventEx(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1, uiData2);
+	CharacterDialogueWithSpecialEvent(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1, uiData2);
 	return TRUE;
 }
 
@@ -1133,27 +1130,6 @@ void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16 const 
 
 	if (uiFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC)
 	{ // Increment reference count
-		++giNPCReferenceCount;
-	}
-}
-
-
-// Do special event as well as dialogue!
-static void CharacterDialogueWithSpecialEventEx(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, DialogueSpecialEvent const uiFlag, UINT32 const uiData1, UINT32 const uiData2)
-{
-	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(face, bUIHandlerID);
-	d->ubCharacterNum       = ubCharacterNum;
-	d->usQuoteNum           = usQuoteNum;
-	d->fFromSoldier         = fFromSoldier;
-	d->fDelayed             = fDelayed;
-	d->uiSpecialEventFlag   = uiFlag;
-	d->uiSpecialEventData   = uiData1;
-	d->uiSpecialEventData2  = uiData2;
-
-	DialogueEvent::Add(d);
-
-	if (uiFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC)
-	{ // Increment refrence count
 		++giNPCReferenceCount;
 	}
 }
