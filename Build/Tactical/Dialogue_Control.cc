@@ -688,10 +688,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 	{
 		HandleMercIsWillingToRenew((UINT8)uiSpecialEventData);
 	}
-	else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_NOGO_TO_RENEW)
-	{
-		HandleMercIsNotWillingToRenew((UINT8)uiSpecialEventData);
-	}
 	else
 	{
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES)
