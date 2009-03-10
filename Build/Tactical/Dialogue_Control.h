@@ -332,6 +332,16 @@ struct DialogueEvent
 	BOOLEAN fPauseTime;
 };
 
+template<void (&callback)()> class DialogueEventCallback : public DialogueEvent
+{
+	public:
+		bool Execute()
+		{
+			callback();
+			return false;
+		}
+};
+
 class CharacterDialogueEvent : public DialogueEvent
 {
 	public:

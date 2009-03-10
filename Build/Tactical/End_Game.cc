@@ -185,18 +185,8 @@ static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 
 
 	ExecuteStrategicAIAction( STRATEGIC_AI_ACTION_QUEEN_DEAD, 0, 0 );
 
-	class DialogueEventDoneKillingDeidranna : public DialogueEvent
-	{
-		public:
-			bool Execute()
-			{
-				HandleDoneLastKilledQueenQuote();
-				return false;
-			}
-	};
-
 	// AFTER LAST ONE IS DONE - PUT SPECIAL EVENT ON QUEUE TO BEGIN FADE< ETC
-	DialogueEvent::Add(new DialogueEventDoneKillingDeidranna());
+	DialogueEvent::Add(new DialogueEventCallback<HandleDoneLastKilledQueenQuote>());
 }
 
 
@@ -317,18 +307,8 @@ void EndQueenDeathEndgameBeginEndCimenatic( )
 		}
 	}
 
-	class DialogueEventTeamMembersDoneTalking : public DialogueEvent
-	{
-		public:
-			bool Execute()
-			{
-				HandleDoneLastEndGameQuote();
-				return false;
-			}
-	};
-
 	// Add queue event to proceed w/ smacker cimimatic
-	DialogueEvent::Add(new DialogueEventTeamMembersDoneTalking());
+	DialogueEvent::Add(new DialogueEventCallback<HandleDoneLastEndGameQuote>());
 }
 
 

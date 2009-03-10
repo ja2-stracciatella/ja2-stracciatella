@@ -776,16 +776,6 @@ static void HandleFirstHeliDropOfGame(void)
 
 	}
 
-	class DialogueEventEnableAI : public DialogueEvent
-	{
-		public:
-			bool Execute()
-			{
-				UnPauseAI();
-				return false;
-			}
-	};
-
 	// Send message to turn on ai again....
-	DialogueEvent::Add(new DialogueEventEnableAI());
+	DialogueEvent::Add(new DialogueEventCallback<UnPauseAI>());
 }
