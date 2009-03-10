@@ -584,6 +584,16 @@ bool CharacterDialogueEvent::MayExecute() const
 }
 
 
+bool CharacterDialogueEvent::CanTalk(SOLDIERTYPE const& s)
+{
+	return
+		s.bLife >= OKLIFE                   &&
+		!(s.uiStatusFlags & SOLDIER_GASSED) &&
+		!AM_A_ROBOT(&s)                     &&
+		s.bAssignment != ASSIGNMENT_POW;
+}
+
+
 struct DIALOGUE_Q_STRUCT : public DialogueEvent
 {
 	DIALOGUE_Q_STRUCT(FACETYPE* const face_, DialogueHandler const dialogue_handler_) :
@@ -833,18 +843,7 @@ bool DIALOGUE_Q_STRUCT::Execute()
 			}
 		}
 
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DISPLAY_STAT_CHANGE)
-		{
-			s = FindSoldierByProfileID(ubCharacterNum);
-			if (s)
-			{
-				// tell player about stat increase
-				wchar_t wTempString[128];
-				BuildStatChangeString(wTempString, lengthof(wTempString), s->name, (BOOLEAN)uiSpecialEventData, (INT16)uiSpecialEventData2, (UINT8)uiSpecialEventData3);
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, wTempString);
-			}
-		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_UNSET_ARRIVES_FLAG)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_UNSET_ARRIVES_FLAG)
 		{
 			gTacticalStatus.bMercArrivingQuoteBeingUsed = FALSE;
 		}

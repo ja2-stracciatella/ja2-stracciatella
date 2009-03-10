@@ -612,7 +612,35 @@ static void ChangeStat(MERCPROFILESTRUCT* pProfile, SOLDIERTYPE* pSoldier, UINT8
 			//if ( (ubStat != EXPERAMT) && (ubStat != HEALTHAMT) && ( Random( 100 ) < 25 ) )
 			{
 				// Pipe up with "I'm getting better at this!"
-				TacticalCharacterDialogueWithSpecialEventEx( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_DISPLAY_STAT_CHANGE, fChangeTypeIncrease, sPtsChanged, ubStat );
+				class CharacterDialogueEventDisplayStatChange : public CharacterDialogueEvent
+				{
+					public:
+						CharacterDialogueEventDisplayStatChange(SOLDIERTYPE& soldier, BOOLEAN const change_type_increase, UINT16 const pts_changed, UINT8 const stat) :
+							CharacterDialogueEvent(soldier),
+							change_type_increase_(change_type_increase),
+							pts_changed_(pts_changed),
+							stat_(stat)
+						{}
+
+						bool Execute()
+						{
+							if (!MayExecute()) return true;
+
+							// Tell player about stat increase
+							wchar_t buf[128];
+							BuildStatChangeString(buf, lengthof(buf), soldier_.name, change_type_increase_, pts_changed_, stat_);
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, buf);
+							return false;
+						}
+
+					private:
+						BOOLEAN const change_type_increase_;
+						UINT16  const pts_changed_;
+						UINT8   const stat_;
+				};
+
+				if (CharacterDialogueEvent::CanTalk(*pSoldier))
+					DialogueEvent::Add(new CharacterDialogueEventDisplayStatChange(*pSoldier, fChangeTypeIncrease, sPtsChanged, ubStat));
 				TacticalCharacterDialogue( pSoldier, QUOTE_EXPERIENCE_GAIN );
 			}
 			else

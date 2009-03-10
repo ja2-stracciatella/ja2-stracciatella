@@ -191,7 +191,6 @@ enum DialogueSpecialEvent
 	DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START    = 0x00040000,
 	DIALOGUE_SPECIAL_EVENT_SHOPKEEPER                   = 0x00080000,
 	DIALOGUE_SPECIAL_EVENT_SKIP_A_FRAME                 = 0x00100000,
-	DIALOGUE_SPECIAL_EVENT_DISPLAY_STAT_CHANGE          = 0x00400000,
 	DIALOGUE_SPECIAL_EVENT_UNSET_ARRIVES_FLAG           = 0x00800000,
 	DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX       = 0x02000000,
 	DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN              = 0x04000000,
@@ -347,6 +346,8 @@ class CharacterDialogueEvent : public DialogueEvent
 		CharacterDialogueEvent(SOLDIERTYPE& soldier) : soldier_(soldier) {}
 
 		bool MayExecute() const;
+
+		static bool CanTalk(SOLDIERTYPE const&);
 
 	protected:
 		SOLDIERTYPE& soldier_;
