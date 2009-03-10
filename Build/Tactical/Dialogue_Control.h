@@ -245,7 +245,7 @@ void CharacterDialogueWithSpecialEvent(UINT8 ubCharacterNum, UINT16 usQuoteNum, 
 BOOLEAN TacticalCharacterDialogueWithSpecialEvent(SOLDIERTYPE const* pSoldier, UINT16 usQuoteNum, DialogueSpecialEvent, UINT32 uiData1, UINT32 uiData2);
 
 // A higher level function used for tactical quotes
-BOOLEAN TacticalCharacterDialogueWithSpecialEventEx(SOLDIERTYPE const* pSoldier, UINT16 usQuoteNum, DialogueSpecialEvent, UINT32 uiData1, UINT32 uiData2, UINT32 uiData3);
+BOOLEAN TacticalCharacterDialogueWithSpecialEventEx(SOLDIERTYPE const* pSoldier, UINT16 usQuoteNum, DialogueSpecialEvent, UINT32 uiData1, UINT32 uiData2);
 
 // A higher level function used for tactical quotes
 BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum);
@@ -257,7 +257,7 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 void CharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier, BOOLEAN fDelayed);
 
 // A special event can be setup which can be queued with other speech
-void SpecialCharacterDialogueEvent(DialogueSpecialEvent, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, FACETYPE* face, DialogueHandler);
+void SpecialCharacterDialogueEvent(DialogueSpecialEvent, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, FACETYPE* face, DialogueHandler);
 
 BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier);
 

@@ -3244,24 +3244,24 @@ static void PerformTransaction(UINT32 uiMoneyFromPlayersAccount)
 			if( uiArmsDealersItemsCost > uiPlayersTotalMoneyValue + LaptopSaveInfo.iCurrentBalance )
 			{
 				// tell player he can't possibly afford this
-				SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 6,0, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI );
-				SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_SKIP_A_FRAME, 0,0, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI );
-				SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 0, ( uiArmsDealersItemsCost - ( LaptopSaveInfo.iCurrentBalance + uiPlayersTotalMoneyValue ) ), 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI );
+				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 6, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
+				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SKIP_A_FRAME, 0, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
+				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 0, uiArmsDealersItemsCost - (LaptopSaveInfo.iCurrentBalance + uiPlayersTotalMoneyValue), giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
 			}
 			else
 			{
 				// player doesn't have enough on the table, but can pay for it from his balance
 				/// ask player if wants to subtract the shortfall directly from his balance
-				SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_SKIP_A_FRAME, 0,0, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI );
-				SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 6,0, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI );
+				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SKIP_A_FRAME, 0, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
+				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 6, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
 
 				if( uiPlayersTotalMoneyValue )
-					SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 1, ( uiArmsDealersItemsCost - uiPlayersTotalMoneyValue ), 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI );
+					SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 1, uiArmsDealersItemsCost - uiPlayersTotalMoneyValue, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
 				else
-					SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 2, ( uiArmsDealersItemsCost - uiPlayersTotalMoneyValue ), 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI );
+					SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 2, uiArmsDealersItemsCost - uiPlayersTotalMoneyValue, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
 			}
 
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 7,0, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI );
+			SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 7, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
 
 			gfResetShopKeepIdleQuote = TRUE;
 
@@ -4031,7 +4031,7 @@ static void HandleShopKeeperDialog(UINT8 ubInit)
 		// to see if the player has finished talking
 		if(!giShopKeeperFaceIndex->fTalking)
 		{
-			SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 5, 0, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI );
+			SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 5, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
 		}
 
 		DealWithItemsStillOnTheTable();
@@ -4112,13 +4112,13 @@ static BOOLEAN StartShopKeeperTalking(UINT16 usQuoteNum)
 	}
 
 	// post event to mark shopkeeper dialogue in progress
-	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 3, usQuoteNum, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 3, usQuoteNum, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
 
 	// post quote dialogue
 	CharacterDialogue(ArmsDealerInfo[gbSelectedArmsDealerID].ubShopKeeperID, usQuoteNum, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI, FALSE, FALSE);
 
 	// post event to mark shopkeeper dialogue as ended
-	SpecialCharacterDialogueEvent( DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 4, usQuoteNum, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI );
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 4, usQuoteNum, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
 
 	gfResetShopKeepIdleQuote = TRUE;
 	return( TRUE );

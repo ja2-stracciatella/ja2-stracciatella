@@ -396,7 +396,7 @@ void MercsContractIsFinished(SOLDIERTYPE* const pSoldier)
 	}
 
 	// go to mapscreen
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN, 0, 0, 0, 0, DIALOGUE_NO_UI);
+	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN, 0, 0, 0, DIALOGUE_NO_UI);
 
 
 	if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC )
