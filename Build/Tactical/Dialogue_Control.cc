@@ -902,17 +902,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 				StrategicRemoveMerc(s);
 			}
 		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_MULTIPURPOSE)
-		{
-			if (uiSpecialEventData & MULTIPURPOSE_SPECIAL_EVENT_DONE_KILLING_DEIDRANNA)
-			{
-				HandleDoneLastKilledQueenQuote();
-			}
-			else if (uiSpecialEventData & MULTIPURPOSE_SPECIAL_EVENT_TEAM_MEMBERS_DONE_TALKING)
-			{
-				HandleDoneLastEndGameQuote();
-			}
-		}
 		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SLEEP)
 		{
 			if (!s) return false;
