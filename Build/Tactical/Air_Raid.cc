@@ -3,6 +3,7 @@
 #include "Game_Event_Hook.h"
 #include "Game_Clock.h"
 #include "Auto_Bandage.h"
+#include "Map_Screen_Interface_Bottom.h"
 #include "StrategicMap.h"
 #include "PreBattle_Interface.h"
 #include "ScreenIDs.h"
@@ -240,7 +241,30 @@ BOOLEAN BeginAirRaid( )
 			gubAirRaidMode = AIR_RAID_TRYING_TO_START;
 			gfQuoteSaid = TRUE;
 			SayQuoteFromAnyBodyInThisSector( gAirRaidDef.sSectorX, gAirRaidDef.sSectorY, ( INT8 )gAirRaidDef.sSectorZ, QUOTE_AIR_RAID );
-			SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_EXIT_MAP_SCREEN, gAirRaidDef.sSectorX, gAirRaidDef.sSectorY, gAirRaidDef.sSectorZ, 0, DIALOGUE_NO_UI);
+
+			class DialogueEventExitMapScreen : public DialogueEvent
+			{
+				public:
+					DialogueEventExitMapScreen(INT16 const x, INT16 const y, INT16 const z) :
+						x_(x),
+						y_(y),
+						z_(z)
+					{}
+
+					bool Execute()
+					{
+						ChangeSelectedMapSector(x_, y_, z_);
+						RequestTriggerExitFromMapscreen(MAP_EXIT_TO_TACTICAL);
+						return false;
+					}
+
+				private:
+					INT16 const x_;
+					INT16 const y_;
+					INT16 const z_;
+			};
+
+			DialogueEvent::Add(new DialogueEventExitMapScreen(gAirRaidDef.sSectorX, gAirRaidDef.sSectorY, gAirRaidDef.sSectorZ));
 		}
 		else
 		{

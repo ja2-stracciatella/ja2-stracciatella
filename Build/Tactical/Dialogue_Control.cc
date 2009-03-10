@@ -52,7 +52,6 @@
 #include "OppList.h"
 #include "AI.h"
 #include "WorldMan.h"
-#include "Map_Screen_Interface_Bottom.h"
 #include "Campaign.h"
 #include "End_Game.h"
 #include "LOS.h"
@@ -834,13 +833,7 @@ bool DIALOGUE_Q_STRUCT::Execute()
 			}
 		}
 
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_EXIT_MAP_SCREEN)
-		{
-			// select sector
-			ChangeSelectedMapSector((INT16)uiSpecialEventData, (INT16)uiSpecialEventData2, (INT8)uiSpecialEventData3);
-			RequestTriggerExitFromMapscreen(MAP_EXIT_TO_TACTICAL);
-		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DISPLAY_STAT_CHANGE)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DISPLAY_STAT_CHANGE)
 		{
 			s = FindSoldierByProfileID(ubCharacterNum);
 			if (s)
