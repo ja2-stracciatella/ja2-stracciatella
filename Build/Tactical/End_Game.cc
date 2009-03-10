@@ -150,6 +150,9 @@ void BeginHandleDeidrannaDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8
 }
 
 
+static void DoneFadeOutKilledQueen(void);
+
+
 static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 sGridNo, const INT8 bLevel)
 {
 	// Start victory music here...
@@ -185,8 +188,19 @@ static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 
 
 	ExecuteStrategicAIAction( STRATEGIC_AI_ACTION_QUEEN_DEAD, 0, 0 );
 
+	class DialogueEventDoneKillingDeidranna : public DialogueEvent
+	{
+		public:
+			bool Execute()
+			{ // Called after all player quotes are done
+				gFadeOutDoneCallback = DoneFadeOutKilledQueen;
+				FadeOutGameScreen();
+				return false;
+			}
+	};
+
 	// AFTER LAST ONE IS DONE - PUT SPECIAL EVENT ON QUEUE TO BEGIN FADE< ETC
-	DialogueEvent::Add(new DialogueEventCallback<HandleDoneLastKilledQueenQuote>());
+	DialogueEvent::Add(new DialogueEventDoneKillingDeidranna());
 }
 
 
@@ -282,14 +296,6 @@ static void DoneFadeOutKilledQueen(void)
 	gFadeInDoneCallback = DoneFadeInKilledQueen;
 
 	FadeInGameScreen( );
-}
-
-// Called after all player quotes are done....
-void HandleDoneLastKilledQueenQuote( )
-{
-	gFadeOutDoneCallback = DoneFadeOutKilledQueen;
-
-	FadeOutGameScreen( );
 }
 
 
