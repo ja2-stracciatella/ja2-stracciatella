@@ -1936,7 +1936,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 
 void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach const bApproach)
 {
-	return ConverseFull(ubNPC, ubMerc, bApproach, 0, 0);
+	ConverseFull(ubNPC, ubMerc, bApproach, 0, 0);
 }
 
 
