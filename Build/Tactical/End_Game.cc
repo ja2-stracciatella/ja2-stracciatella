@@ -299,6 +299,9 @@ static void DoneFadeOutKilledQueen(void)
 }
 
 
+static void DoneFadeOutEndCinematic(void);
+
+
 void EndQueenDeathEndgameBeginEndCimenatic( )
 {
 	// Start end cimimatic....
@@ -313,8 +316,20 @@ void EndQueenDeathEndgameBeginEndCimenatic( )
 		}
 	}
 
+	class DialogueEventTeamMembersDoneTalking : public DialogueEvent
+	{
+		public:
+			bool Execute()
+			{ // End death UI - fade to smaker
+				EndQueenDeathEndgame();
+				gFadeOutDoneCallback = DoneFadeOutEndCinematic;
+				FadeOutGameScreen();
+				return false;
+			}
+	};
+
 	// Add queue event to proceed w/ smacker cimimatic
-	DialogueEvent::Add(new DialogueEventCallback<HandleDoneLastEndGameQuote>());
+	DialogueEvent::Add(new DialogueEventTeamMembersDoneTalking());
 }
 
 
@@ -344,16 +359,6 @@ static void DoneFadeOutEndCinematic(void)
 
 
 	SetIntroType( INTRO_ENDING );
-}
-
-// OK, end death UI - fade to smaker....
-void HandleDoneLastEndGameQuote( )
-{
-	EndQueenDeathEndgame( );
-
-	gFadeOutDoneCallback = DoneFadeOutEndCinematic;
-
-	FadeOutGameScreen( );
 }
 
 

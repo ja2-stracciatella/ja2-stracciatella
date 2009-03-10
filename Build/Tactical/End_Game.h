@@ -12,7 +12,4 @@ void EndQueenDeathEndgame(void);
 
 void BeginHandleQueenBitchDeath( SOLDIERTYPE *pKillerSoldier, INT16 sGridNo, INT8 bLevel );
 
-void HandleDoneLastEndGameQuote(void);
-
-
 #endif
