@@ -876,14 +876,7 @@ bool DIALOGUE_Q_STRUCT::Execute()
 		}
 
 		//Switch on our special events
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO)
-		{
-			if (bUIHandlerID == DIALOGUE_NPC_UI)
-			{
-				HandleNPCGotoGridNo((UINT8)uiSpecialEventData, (UINT16)uiSpecialEventData2, (UINT8)uiSpecialEventData3);
-			}
-		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_ACTION)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_ACTION)
 		{
 			if (bUIHandlerID == DIALOGUE_NPC_UI)
 			{

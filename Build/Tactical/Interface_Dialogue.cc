@@ -1151,9 +1151,33 @@ static void CalculatePopupTextPosition(INT16 sWidth, INT16 sHeight)
 }
 
 
-void NPCGotoGridNo(UINT8 const ubTargetNPC, UINT16 const usGridNo, UINT8 const ubRecordNum)
+static void HandleNPCGotoGridNo(UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum);
+
+
+void NPCGotoGridNo(ProfileID const ubTargetNPC, UINT16 const usGridNo, UINT8 const ubRecordNum)
 {
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO, ubTargetNPC, usGridNo, ubRecordNum, gTalkPanel.face, DIALOGUE_NPC_UI);
+	class DialogueEventGotoGridno : public DialogueEvent
+	{
+		public:
+			DialogueEventGotoGridno(ProfileID const npc, GridNo const gridno, UINT8 const record) :
+				gridno_(gridno),
+				npc_(npc),
+				record_(record)
+			{}
+
+			bool Execute()
+			{
+				HandleNPCGotoGridNo(npc_, gridno_, record_);
+				return false;
+			}
+
+		private:
+			GridNo    const gridno_;
+			ProfileID const npc_;
+			UINT8     const record_;
+	};
+
+	DialogueEvent::Add(new DialogueEventGotoGridno(ubTargetNPC, usGridNo, ubRecordNum));
 }
 
 
@@ -1406,8 +1430,7 @@ void HandleWaitTimerForNPCTrigger( )
 }
 
 
-
-void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum )
+static void HandleNPCGotoGridNo(UINT8 const ubTargetNPC, UINT16 const usGridNo, UINT8 const ubQuoteNum)
 {
 	// OK, Move to gridNo!
 

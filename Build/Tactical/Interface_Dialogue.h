@@ -64,7 +64,7 @@ void RenderTalkingMenu(void);
 BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey );
 
 // NPC goto gridno
-void NPCGotoGridNo(UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum);
+void NPCGotoGridNo(ProfileID ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum);
 // NPC Do action
 void NPCDoAction(UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum);
 
@@ -75,7 +75,6 @@ void HandleWaitTimerForNPCTrigger(void);
 
 void HandleNPCItemGiven( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos );
 void HandleNPCTriggerNPC(UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShowDialogueMenu, Approach ubTargetApproach);
-void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubRecordNum );
 void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum );
 
 bool ProfileCurrentlyTalkingInDialoguePanel(UINT8 ubProfile);
