@@ -73,7 +73,6 @@ void NPCClosePanel(void);
 void HandleWaitTimerForNPCTrigger(void);
 
 
-void HandleNPCClosePanel(void);
 void HandleNPCItemGiven( UINT8 ubNPC, OBJECTTYPE *pObject, INT8 bInvPos );
 void HandleNPCTriggerNPC(UINT8 ubTargetNPC, UINT8 ubTargetRecord, BOOLEAN fShowDialogueMenu, Approach ubTargetApproach);
 void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubRecordNum );

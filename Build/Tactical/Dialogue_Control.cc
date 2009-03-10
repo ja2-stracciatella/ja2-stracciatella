@@ -890,13 +890,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 				HandleNPCDoAction((UINT8)uiSpecialEventData, (UINT16)uiSpecialEventData2, (UINT8)uiSpecialEventData3);
 			}
 		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CLOSE_PANEL)
-		{
-			if (bUIHandlerID == DIALOGUE_NPC_UI)
-			{
-				HandleNPCClosePanel();
-			}
-		}
 		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU)
 		{
 			SetUpdateBoxFlag(TRUE);

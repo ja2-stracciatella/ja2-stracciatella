@@ -1165,7 +1165,17 @@ void NPCDoAction(UINT8 const ubTargetNPC, UINT16 const usActionCode, UINT8 const
 
 void NPCClosePanel()
 {
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_CLOSE_PANEL, 0, 0, 0, 0, DIALOGUE_NPC_UI);
+	class DialogueEventClosePanel : public DialogueEvent
+	{
+		public:
+			bool Execute()
+			{
+				DeleteTalkingMenu();
+				return false;
+			}
+	};
+
+	DialogueEvent::Add(new DialogueEventClosePanel());
 }
 
 
@@ -1448,12 +1458,6 @@ void HandleNPCGotoGridNo( UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum )
 
 	// handle this guy's AI right away so that we can get him moving
 	pSoldier->fAIFlags |= AI_HANDLE_EVERY_FRAME;
-}
-
-void HandleNPCClosePanel(  )
-{
-	// Remove dialogue!
-	DeleteTalkingMenu( );
 }
 
 
