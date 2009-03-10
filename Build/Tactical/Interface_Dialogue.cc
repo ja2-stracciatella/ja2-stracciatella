@@ -1208,22 +1208,6 @@ void NPCDoAction(UINT8 const ubTargetNPC, UINT16 const usActionCode, UINT8 const
 }
 
 
-void NPCClosePanel()
-{
-	class DialogueEventClosePanel : public DialogueEvent
-	{
-		public:
-			bool Execute()
-			{
-				DeleteTalkingMenu();
-				return false;
-			}
-	};
-
-	DialogueEvent::Add(new DialogueEventClosePanel());
-}
-
-
 static BOOLEAN SourceSoldierPointerIsValidAndReachableForGive(SOLDIERTYPE* pGiver)
 {
 	INT16		sAdjGridNo;

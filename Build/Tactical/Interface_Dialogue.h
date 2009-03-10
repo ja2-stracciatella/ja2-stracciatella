@@ -68,8 +68,6 @@ void NPCGotoGridNo(ProfileID ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum);
 // NPC Do action
 void NPCDoAction(ProfileID ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum);
 
-void NPCClosePanel(void);
-
 void HandleWaitTimerForNPCTrigger(void);
 
 

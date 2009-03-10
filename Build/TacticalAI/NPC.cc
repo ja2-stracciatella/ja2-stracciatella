@@ -1327,6 +1327,22 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 }
 
 
+static void NPCClosePanel()
+{
+	class DialogueEventClosePanel : public DialogueEvent
+	{
+		public:
+			bool Execute()
+			{
+				DeleteTalkingMenu();
+				return false;
+			}
+	};
+
+	DialogueEvent::Add(new DialogueEventClosePanel());
+}
+
+
 static void TalkingMenuGiveItem(ProfileID const npc, OBJECTTYPE* const object, INT8 const inv_pos)
 {
 	class DialogueEventGiveItem : public DialogueEvent
