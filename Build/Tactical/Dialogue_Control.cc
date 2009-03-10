@@ -860,7 +860,7 @@ bool DIALOGUE_Q_STRUCT::Execute()
 			gubCurrentTalkingID  = ubCharacterNum;
 
 			// set up the mine highlgith events
-			SetUpAnimationOfMineSectors(uiSpecialEventData);
+			SetUpAnimationOfMineSectors(static_cast<SectorLocatorEvent>(uiSpecialEventData));
 		}
 
 		//Switch on our special events

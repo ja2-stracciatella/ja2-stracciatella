@@ -1822,7 +1822,7 @@ void HandleMinerEvent( UINT8 bMinerNumber, INT16 sSectorX, INT16 sSectorY, INT16
 }
 
 
-void SetUpAnimationOfMineSectors( INT32 iEvent )
+void SetUpAnimationOfMineSectors(SectorLocatorEvent const iEvent)
 {
 	// set up the animation of mine sectors
 	switch( iEvent )

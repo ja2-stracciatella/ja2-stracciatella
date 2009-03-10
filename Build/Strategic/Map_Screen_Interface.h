@@ -139,7 +139,8 @@ enum{
 };
 
 
-enum{
+enum SectorLocatorEvent
+{
 	START_RED_SECTOR_LOCATOR = 0,
 	STOP_RED_SECTOR_LOCATOR,
 	START_YELLOW_SECTOR_LOCATOR,
@@ -373,7 +374,7 @@ void GoToNextCharacterInList( void );
 void HandleMinerEvent( UINT8 bMinerNumber, INT16 sSectorX, INT16 sSectorY, INT16 sQuoteNumber, BOOLEAN fForceMapscreen );
 
 // set up the event of animating a mine sector
-void SetUpAnimationOfMineSectors( INT32 iEvent );
+void SetUpAnimationOfMineSectors(SectorLocatorEvent);
 
 void TurnOnSectorLocator( UINT8 ubProfileID );
 void TurnOffSectorLocator(void);
