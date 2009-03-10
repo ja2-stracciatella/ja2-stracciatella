@@ -675,17 +675,26 @@ static void SkyriderDialogue(UINT16 const quote)
 }
 
 
-static void HandleSkyRiderMonologueEvent(UINT32 uiEventCode, UINT32 uiSpecialCode);
+enum SkyriderMonologueEvent
+{
+	SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE = 0,
+	SKYRIDER_MONOLOGUE_EVENT_OTHER_SAM_SITES,
+	SKYRIDER_MONOLOGUE_EVENT_ESTONI_REFUEL,
+	SKYRIDER_MONOLOGUE_EVENT_CAMBRIA_HOSPITAL
+};
 
 
-static void SkyriderDialogueWithSpecialEvent(BOOLEAN const delayed, UINT32 const event_code, UINT32 const special_code)
+static void HandleSkyRiderMonologueEvent(SkyriderMonologueEvent, UINT32 uiSpecialCode);
+
+
+static void SkyriderDialogueWithSpecialEvent(BOOLEAN const delayed, SkyriderMonologueEvent const event, UINT32 const special_code)
 {
 	class DialogueEventSkyriderMapScreenEvent : public DialogueEvent
 	{
 		public:
-			DialogueEventSkyriderMapScreenEvent(BOOLEAN const delayed, UINT32 const event_code, UINT32 const special_code) :
+			DialogueEventSkyriderMapScreenEvent(BOOLEAN const delayed, SkyriderMonologueEvent const event, UINT32 const special_code) :
 				DialogueEvent(FALSE, delayed),
-				event_code_(event_code),
+				event_(event),
 				special_code_(special_code)
 			{}
 
@@ -694,19 +703,16 @@ static void SkyriderDialogueWithSpecialEvent(BOOLEAN const delayed, UINT32 const
 				// Setup face pointer
 				gpCurrentTalkingFace = uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE];
 				gubCurrentTalkingID  = SKYRIDER;
-
-				// handle the monologue event
-				HandleSkyRiderMonologueEvent(event_code_, special_code_);
-
+				HandleSkyRiderMonologueEvent(event_, special_code_);
 				return false;
 			}
 
 		private:
-			UINT32 const event_code_;
-			UINT32 const special_code_;
+			SkyriderMonologueEvent const event_;
+			UINT32                 const special_code_;
 	};
 
-	DialogueEvent::Add(new DialogueEventSkyriderMapScreenEvent(delayed, event_code, special_code));
+	DialogueEvent::Add(new DialogueEventSkyriderMapScreenEvent(delayed, event, special_code));
 }
 
 
@@ -846,7 +852,7 @@ static void HandleSkyRiderMonologueAboutOtherSAMSites(UINT32 uiSpecialCode);
 
 
 // Skyrider monlogue events for mapscreen
-static void HandleSkyRiderMonologueEvent(UINT32 const uiEventCode, UINT32 const uiSpecialCode)
+static void HandleSkyRiderMonologueEvent(SkyriderMonologueEvent const uiEventCode, UINT32 const uiSpecialCode)
 {
 	// will handle the skyrider monologue about where the SAM sites are and what not
 
