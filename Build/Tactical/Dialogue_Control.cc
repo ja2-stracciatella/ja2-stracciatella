@@ -991,41 +991,6 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEvent(SOLDIERTYPE const* const pSold
 }
 
 
-BOOLEAN TacticalCharacterDialogueWithSpecialEventEx(SOLDIERTYPE const* const pSoldier, UINT16 const usQuoteNum, DialogueSpecialEvent const uiFlag, UINT32 const uiData1, UINT32 const uiData2)
-{
-	if ( pSoldier->ubProfile == NO_PROFILE )
-	{
-		return( FALSE );
-	}
-
-	if ( uiFlag != DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND && uiData1 != BATTLE_SOUND_DIE1 )
-	{
-		if (pSoldier->bLife < CONSCIOUSNESS )
-		 return( FALSE );
-
-		if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
-			return( FALSE );
-
-		if ( (AM_A_ROBOT( pSoldier )) )
-		{
-			return( FALSE );
-		}
-
-		if (pSoldier->bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
-		 return( FALSE );
-
-		if( pSoldier->bAssignment == ASSIGNMENT_POW )
-		{
-			return( FALSE );
-		}
-
-	}
-
-	CharacterDialogueWithSpecialEvent(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1, uiData2);
-	return TRUE;
-}
-
-
 BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum)
 {
 	if ( pSoldier->ubProfile == NO_PROFILE )

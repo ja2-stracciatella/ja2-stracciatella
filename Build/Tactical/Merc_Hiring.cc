@@ -319,7 +319,7 @@ void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
 			TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT, START_YELLOW_SECTOR_LOCATOR, 0);
 			TacticalCharacterDialogue( pSoldier, QUOTE_MERC_REACHED_DESTINATION );
 			TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT, STOP_SECTOR_LOCATOR, 0);
-			TacticalCharacterDialogueWithSpecialEventEx(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_UNSET_ARRIVES_FLAG, 0, 0);
+			TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_UNSET_ARRIVES_FLAG, 0, 0);
 		}
 	}
 #endif
