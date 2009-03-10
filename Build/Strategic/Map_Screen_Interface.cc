@@ -1812,7 +1812,7 @@ void HandleMinerEvent( UINT8 bMinerNumber, INT16 sSectorX, INT16 sSectorY, INT16
 		FACETYPE* const face    = uiExternalStaticNPCFaces[bMinerNumber];
 		CharacterDialogueWithSpecialEvent(profile, sQuoteNumber, NULL, DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE, DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT, START_RED_SECTOR_LOCATOR, 1);
 		CharacterDialogue(                profile, sQuoteNumber, face, DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE);
-		CharacterDialogueWithSpecialEvent(profile, sQuoteNumber, NULL, DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE, DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT, STOP_RED_SECTOR_LOCATOR,  1);
+		CharacterDialogueWithSpecialEvent(profile, sQuoteNumber, NULL, DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE, DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT, STOP_SECTOR_LOCATOR,  1);
 	}
 	else	// stay in tactical
 	{
@@ -1835,8 +1835,7 @@ void SetUpAnimationOfMineSectors(SectorLocatorEvent const iEvent)
 			gubBlitSectorLocatorCode = LOCATOR_COLOR_YELLOW;
 			break;
 
-		case STOP_RED_SECTOR_LOCATOR:
-		case STOP_YELLOW_SECTOR_LOCATOR:
+		case STOP_SECTOR_LOCATOR:
 			TurnOffSectorLocator();
 			break;
 	}
