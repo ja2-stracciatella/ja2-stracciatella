@@ -684,12 +684,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 			case MAP_SCREEN: fLockOutMapScreenInterface = lock; break;
 		}
 	}
-	else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_REMOVE_EPC)
-	{
-		gMercProfiles[(UINT8)uiSpecialEventData].ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;
-		UnRecruitEPC((UINT8)uiSpecialEventData);
-		ReBuildCharactersList();
-	}
 	else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_WANTS_TO_RENEW)
 	{
 		HandleMercIsWillingToRenew((UINT8)uiSpecialEventData);
