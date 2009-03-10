@@ -776,7 +776,16 @@ static void HandleFirstHeliDropOfGame(void)
 
 	}
 
-	// Send message to turn on ai again....
-	CharacterDialogueWithSpecialEvent( 0, 0,   0 , DIALOGUE_TACTICAL_UI , FALSE , FALSE , DIALOGUE_SPECIAL_EVENT_ENABLE_AI ,0, 0 );
+	class DialogueEventEnableAI : public DialogueEvent
+	{
+		public:
+			bool Execute()
+			{
+				UnPauseAI();
+				return false;
+			}
+	};
 
+	// Send message to turn on ai again....
+	DialogueEvent::Add(new DialogueEventEnableAI());
 }

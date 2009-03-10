@@ -753,12 +753,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 			ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
 		}
 
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_ENABLE_AI)
-		{
-			//OK, allow AI to work now....
-			UnPauseAI();
-		}
-
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX)
 		{
 			INT32 const iReason = uiSpecialEventData;
