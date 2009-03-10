@@ -684,10 +684,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 			case MAP_SCREEN: fLockOutMapScreenInterface = lock; break;
 		}
 	}
-	else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_WANTS_TO_RENEW)
-	{
-		HandleMercIsWillingToRenew((UINT8)uiSpecialEventData);
-	}
 	else
 	{
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES)

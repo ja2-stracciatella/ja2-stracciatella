@@ -52,7 +52,6 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void );
 
 void BeginContractRenewalSequence(void);
 void HandleContractRenewalSequence(void);
-void HandleMercIsWillingToRenew( UINT8 ubID );
 
 UINT32 GetHourWhenContractDone( SOLDIERTYPE *pSoldier );
 
