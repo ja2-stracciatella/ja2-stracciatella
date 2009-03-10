@@ -289,7 +289,7 @@ static void InternalInitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIE
     SelectSoldier(pSrcSoldier, SELSOLDIER_NONE);
 	}
 
-	Converse( gTalkPanel.ubCharNum, gubSrcSoldierProfile, bApproach, uiApproachData );
+	ConverseFull(gTalkPanel.ubCharNum, gubSrcSoldierProfile, bApproach, uiApproachData);
 
 	// If not from pedning...
 	if ( !fFromPending )
@@ -839,7 +839,7 @@ static void TalkPanelClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				if ( fDoConverse )
 				{
 					//Speak
-					Converse(gTalkPanel.ubCharNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[uiItemPos], 0);
+					Converse(gTalkPanel.ubCharNum, gubSrcSoldierProfile, ubTalkMenuApproachIDs[uiItemPos]);
 				}
 			}
 		}
@@ -882,7 +882,7 @@ static void TalkPanelNameRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReaso
 		if (!gTalkPanel.face->fTalking)
 		{
 			// Say who are you?
-			Converse( gTalkPanel.ubCharNum, gubSrcSoldierProfile, NPC_WHOAREYOU, 0 );
+			Converse(gTalkPanel.ubCharNum, gubSrcSoldierProfile, NPC_WHOAREYOU);
 		}
 	}
 }
@@ -1355,7 +1355,7 @@ static void HandleNPCTrigger(void)
 			if ( gfShowDialogueMenu )
 			{
 				// Converse another way!
-				Converse( gubTargetNPC, NO_PROFILE, gubTargetApproach, gubTargetRecord );
+				ConverseFull(gubTargetNPC, NO_PROFILE, gubTargetApproach, gubTargetRecord);
 			}
 			else if (gpSrcSoldier != NULL) // if we can, reinitialize menu
 			{
@@ -1364,7 +1364,7 @@ static void HandleNPCTrigger(void)
 		}
 		else
 		{
-			Converse( gubTargetNPC, NO_PROFILE, gubTargetApproach, gubTargetRecord );
+			ConverseFull(gubTargetNPC, NO_PROFILE, gubTargetApproach, gubTargetRecord);
 		}
 	}
 	else
@@ -1396,7 +1396,7 @@ static void HandleNPCTrigger(void)
 		else
 		{
 			// Converse another way!
-			Converse( gubTargetNPC, NO_PROFILE, gubTargetApproach, gubTargetRecord );
+			ConverseFull(gubTargetNPC, NO_PROFILE, gubTargetApproach, gubTargetRecord);
 		}
 	}
 

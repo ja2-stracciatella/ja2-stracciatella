@@ -8923,7 +8923,6 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 	if ( pTSoldier->ubProfile != NO_PROFILE && pTSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 	{
 		return( InitiateConversation( pTSoldier, pSoldier, APPROACH_EPC_WHO_IS_RECRUITED, 0 ) );
-			//Converse( pTSoldier->ubProfile, pSoldier->ubProfile, APPROACH_EPC_WHO_IS_RECRUITED, 0 );
 	}
 	else if (pTSoldier->bNeutral)
 	{

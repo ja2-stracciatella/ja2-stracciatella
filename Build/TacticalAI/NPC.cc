@@ -1345,7 +1345,7 @@ static void ReturnItemToPlayer(ProfileID const merc, OBJECTTYPE* const o)
 static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr);
 
 
-void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 const uiApproachData)
+void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 const uiApproachData)
 {
 	NPCQuoteInfo					QuoteInfo;
 	NPCQuoteInfo *				pQuotePtr = &(QuoteInfo);
@@ -1420,7 +1420,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 					{
 						// converse using this approach instead!
 						ReturnItemToPlayer(ubMerc, o);
-						Converse( ubNPC, ubMerc, APPROACH_SPECIAL_INITIAL_QUOTE, 0 );
+						Converse(ubNPC, ubMerc, APPROACH_SPECIAL_INITIAL_QUOTE);
 						return;
 					}
 					// subsequent times approached intro
@@ -1441,7 +1441,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 				{
 					// converse using this approach instead!
 					ReturnItemToPlayer(ubMerc, o);
-					Converse( ubNPC, ubMerc, APPROACH_SPECIAL_INITIAL_QUOTE, 0 );
+					Converse(ubNPC, ubMerc, APPROACH_SPECIAL_INITIAL_QUOTE);
 					return;
 				}
 
@@ -1450,7 +1450,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 				{
 					// converse using this approach instead!
 					ReturnItemToPlayer(ubMerc, o);
-					Converse( ubNPC, ubMerc, APPROACH_INITIAL_QUOTE, 0 );
+					Converse(ubNPC, ubMerc, APPROACH_INITIAL_QUOTE);
 					return;
 				}
 
@@ -1504,7 +1504,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 							if (pQuotePtr != NULL)
 							{
 								// converse using this approach instead!
-								Converse( ubNPC, ubMerc, APPROACH_SPECIAL_INITIAL_QUOTE, 0 );
+								Converse(ubNPC, ubMerc, APPROACH_SPECIAL_INITIAL_QUOTE);
 
 								if ( ubNPC == DARREN )
 								{
@@ -1521,7 +1521,7 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 						if (pQuotePtr != NULL)
 						{
 							// converse using this approach instead!
-							Converse( ubNPC, ubMerc, APPROACH_INITIAL_QUOTE, 0 );
+							Converse(ubNPC, ubMerc, APPROACH_INITIAL_QUOTE);
 						}
 					}
 
@@ -1934,6 +1934,12 @@ void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 
 	{
 		ReturnItemToPlayer(ubMerc, o);
 	}
+}
+
+
+void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach const bApproach)
+{
+	return ConverseFull(ubNPC, ubMerc, bApproach, 0);
 }
 
 
