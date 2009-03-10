@@ -15,7 +15,6 @@ TODO001E
 - TODO0000 remove RestrictMouseCursor() et al.
 - TODO0001 implement blitters and related functions
 - TODO0003 Implement sound streaming
-- TODO0004 Make it 64bit clean
 - TODO0005 Make it endian agnostic
 - TODO0006 The IMP personality quiz evaluation seems to have some bugs
 - TODO0007 Deduct AIM_PENALTY_SMG when firing a SMG even when second hand is free?

@@ -1,3 +1,4 @@
+(r5494) Now the game runs on (little-endian) 64bit architectures (AMD64), too.
 (r5482) Fix a bug in r3969, which prevented reentering a sector after fleeing from a battle there in the Windows version.
 (r5463) Fix a vanilla glitch: The width of tooltip boxes with hotkey highlights in the text did not properly fit the width of the text.
 (r5429) Fix a bug in r3369, which caused that the first merc leaving the helicopter was not placed in the center of the map.

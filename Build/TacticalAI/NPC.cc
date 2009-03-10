@@ -1345,7 +1345,7 @@ static void ReturnItemToPlayer(ProfileID const merc, OBJECTTYPE* const o)
 static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr);
 
 
-void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT32 const uiApproachData)
+void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UINT8 const approach_record, OBJECTTYPE* const o)
 {
 	NPCQuoteInfo					QuoteInfo;
 	NPCQuoteInfo *				pQuotePtr = &(QuoteInfo);
@@ -1353,10 +1353,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 	UINT8									ubLoop, ubQuoteNum, ubRecordNum;
 	UINT32								uiDay;
 
-	// we have to record whether an item is being given in order to determine whether,
-	// in the case where the approach is overridden, we need to return the item to the
-	// player
-	OBJECTTYPE* const o = bApproach == APPROACH_GIVINGITEM ? reinterpret_cast<OBJECTTYPE*>(uiApproachData) : 0; // XXX TODO0004
+	Assert((bApproach == APPROACH_GIVINGITEM) == (o != 0));
 
 	SOLDIERTYPE* const pNPC = FindSoldierByProfileID(ubNPC);
 	if ( pNPC )
@@ -1530,8 +1527,8 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 					break;
 				case TRIGGER_NPC:
 					// if triggering, pass in the approach data as the record to consider
-					DebugMsg( TOPIC_JA2, DBG_LEVEL_0, String( "Handling trigger %ls/%d at %ld", gMercProfiles[ ubNPC ].zNickname, (UINT8)uiApproachData, GetJA2Clock() ) );
-					NPCConsiderTalking( ubNPC, ubMerc, bApproach, (UINT8)uiApproachData, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum );
+					DebugMsg(TOPIC_JA2, DBG_LEVEL_0, String("Handling trigger %ls/%d at %ld", gMercProfiles[ubNPC].zNickname, approach_record, GetJA2Clock()));
+					NPCConsiderTalking(ubNPC, ubMerc, bApproach, approach_record, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum);
 					break;
 				default:
 					NPCConsiderTalking( ubNPC, ubMerc, bApproach, 0, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum );
@@ -1939,7 +1936,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 
 void Converse(UINT8 const ubNPC, UINT8 const ubMerc, Approach const bApproach)
 {
-	return ConverseFull(ubNPC, ubMerc, bApproach, 0);
+	return ConverseFull(ubNPC, ubMerc, bApproach, 0, 0);
 }
 
 

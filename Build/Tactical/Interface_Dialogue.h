@@ -47,7 +47,7 @@ struct NPC_DIALOGUE_TYPE
 extern NPC_DIALOGUE_TYPE gTalkPanel;
 
 
-BOOLEAN InitiateConversationFull(SOLDIERTYPE* pDestSoldier, SOLDIERTYPE* pSrcSoldier, Approach bApproach, UINT32 uiApproachData);
+BOOLEAN InitiateConversationFull(SOLDIERTYPE* pDestSoldier, SOLDIERTYPE* pSrcSoldier, Approach bApproach, UINT8 approach_record, OBJECTTYPE* approach_object);
 BOOLEAN InitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTYPE* pSrcSoldier, Approach);
 
 // Begins quote of NPC Dialogue

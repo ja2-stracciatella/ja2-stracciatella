@@ -2503,7 +2503,7 @@ Changed because if the player gave 1 item from a pile, the rest of the items in 
 			}
 
 			// Now intiate conv
-			InitiateConversationFull(pTSoldier, pSoldier, APPROACH_GIVINGITEM, reinterpret_cast<UINT32>(&TempObject));
+			InitiateConversationFull(pTSoldier, pSoldier, APPROACH_GIVINGITEM, 0, &TempObject);
 		}
 	}
 

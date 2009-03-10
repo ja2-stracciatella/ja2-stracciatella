@@ -159,7 +159,8 @@ static BOOLEAN      gfConversationPending = FALSE;
 static SOLDIERTYPE* gpPendingDestSoldier;
 static SOLDIERTYPE* gpPendingSrcSoldier;
 static Approach     gbPendingApproach;
-static UINT32       guiPendingApproachData;
+static UINT8        g_pending_approach_record;
+static OBJECTTYPE*  g_pending_approach_object;
 
 INT32 giHospitalTempBalance; // stores amount of money for current doctoring
 INT32 giHospitalRefund; // stores amount of money given to hospital for doctoring that wasn't used
@@ -176,10 +177,10 @@ enum
 };
 
 
-static void InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTYPE* pSrcSoldier, Approach, UINT32 uiApproachData);
+static void InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTYPE* pSrcSoldier, Approach, UINT8 approach_record, OBJECTTYPE* approach_object);
 
 
-BOOLEAN InitiateConversationFull(SOLDIERTYPE* const pDestSoldier, SOLDIERTYPE* const pSrcSoldier, Approach const bApproach, UINT32 const uiApproachData)
+BOOLEAN InitiateConversationFull(SOLDIERTYPE* const pDestSoldier, SOLDIERTYPE* const pSrcSoldier, Approach const bApproach, UINT8 const approach_record, OBJECTTYPE* const approach_object)
 try
 {
 	// ATE: OK, let's check the status of the Q
@@ -189,7 +190,7 @@ try
 		gfConversationPending = FALSE;
 
 		// Initiate directly....
-		InternalInitiateConversation(pDestSoldier, pSrcSoldier, bApproach, uiApproachData);
+		InternalInitiateConversation(pDestSoldier, pSrcSoldier, bApproach, approach_record, approach_object);
 		return TRUE;
 	}
 	else
@@ -197,10 +198,11 @@ try
 		// Wait.....
 		gfConversationPending = TRUE;
 
-		gpPendingDestSoldier	= pDestSoldier;
-		gpPendingSrcSoldier		= pSrcSoldier;
-		gbPendingApproach			= bApproach;
-		guiPendingApproachData= uiApproachData;
+		gpPendingDestSoldier      = pDestSoldier;
+		gpPendingSrcSoldier       = pSrcSoldier;
+		gbPendingApproach         = bApproach;
+		g_pending_approach_record = approach_record;
+		g_pending_approach_object = approach_object;
 
 		//Engaged on conv...
 		gTacticalStatus.uiFlags |= ENGAGED_IN_CONV;
@@ -221,7 +223,7 @@ catch (...) { return FALSE; /* XXX fishy, exception should probably propagate */
 
 BOOLEAN InitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIERTYPE* const pSrcSoldier, Approach const bApproach)
 {
-	return InitiateConversationFull(pDestSoldier, pSrcSoldier, bApproach, 0);
+	return InitiateConversationFull(pDestSoldier, pSrcSoldier, bApproach, 0, 0);
 }
 
 
@@ -230,7 +232,7 @@ void HandlePendingInitConv( )
 	if ( gfConversationPending )
 	{
 		// OK, if pending, remove and now call........
-		InternalInitiateConversation( gpPendingDestSoldier, gpPendingSrcSoldier, gbPendingApproach, guiPendingApproachData );
+		InternalInitiateConversation(gpPendingDestSoldier, gpPendingSrcSoldier, gbPendingApproach, g_pending_approach_record, g_pending_approach_object);
 	}
 }
 
@@ -238,7 +240,7 @@ void HandlePendingInitConv( )
 static void InitTalkingMenu(UINT8 ubCharacterNum, INT16 sGridNo);
 
 
-static void InternalInitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIERTYPE* const pSrcSoldier, Approach const bApproach, UINT32 const uiApproachData)
+static void InternalInitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIERTYPE* const pSrcSoldier, Approach const bApproach, UINT8 const approach_record, OBJECTTYPE* const approach_object)
 {
 	// OK, init talking menu
 	BOOLEAN	fFromPending;
@@ -295,7 +297,7 @@ static void InternalInitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIE
     SelectSoldier(pSrcSoldier, SELSOLDIER_NONE);
 	}
 
-	ConverseFull(gTalkPanel.ubCharNum, gubSrcSoldierProfile, bApproach, uiApproachData);
+	ConverseFull(gTalkPanel.ubCharNum, gubSrcSoldierProfile, bApproach, approach_record, approach_object);
 
 	// If not from pedning...
 	if ( !fFromPending )
@@ -1361,16 +1363,16 @@ static void HandleNPCTrigger(void)
 			if ( gfShowDialogueMenu )
 			{
 				// Converse another way!
-				ConverseFull(gubTargetNPC, NO_PROFILE, gubTargetApproach, gubTargetRecord);
+				ConverseFull(gubTargetNPC, NO_PROFILE, gubTargetApproach, gubTargetRecord, 0);
 			}
 			else if (gpSrcSoldier != NULL) // if we can, reinitialize menu
 			{
-				InitiateConversationFull(gpDestSoldier, gpSrcSoldier, gubTargetApproach, gubTargetRecord);
+				InitiateConversationFull(gpDestSoldier, gpSrcSoldier, gubTargetApproach, gubTargetRecord, 0);
 			}
 		}
 		else
 		{
-			ConverseFull(gubTargetNPC, NO_PROFILE, gubTargetApproach, gubTargetRecord);
+			ConverseFull(gubTargetNPC, NO_PROFILE, gubTargetApproach, gubTargetRecord, 0);
 		}
 	}
 	else
@@ -1380,7 +1382,7 @@ static void HandleNPCTrigger(void)
 		{
 			if ( SourceSoldierPointerIsValidAndReachableForGive( pSoldier ) )
 			{
-					InitiateConversationFull(pSoldier, gpSrcSoldier, gubTargetApproach, gubTargetRecord);
+				InitiateConversationFull(pSoldier, gpSrcSoldier, gubTargetApproach, gubTargetRecord, 0);
 					return;
 			}
 			else
@@ -1391,18 +1393,18 @@ static void HandleNPCTrigger(void)
 					SOLDIERTYPE* const player = WhoIsThere2(sPlayerGridNo, 0);
 					if (player != NULL)
 					{
-						InitiateConversationFull(pSoldier, player, gubTargetApproach, gubTargetRecord);
+						InitiateConversationFull(pSoldier, player, gubTargetApproach, gubTargetRecord, 0);
 						return;
 					}
 				}
 			}
 			// else
-			InitiateConversationFull(pSoldier, pSoldier, gubTargetApproach, gubTargetRecord);
+			InitiateConversationFull(pSoldier, pSoldier, gubTargetApproach, gubTargetRecord, 0);
 		}
 		else
 		{
 			// Converse another way!
-			ConverseFull(gubTargetNPC, NO_PROFILE, gubTargetApproach, gubTargetRecord);
+			ConverseFull(gubTargetNPC, NO_PROFILE, gubTargetApproach, gubTargetRecord, 0);
 		}
 	}
 
