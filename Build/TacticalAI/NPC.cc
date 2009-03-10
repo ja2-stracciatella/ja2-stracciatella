@@ -2062,6 +2062,36 @@ void NPCReachedDestination( SOLDIERTYPE * pNPC, BOOLEAN fAlreadyThere )
 }
 
 
+// Trigger an NPC record
+static void NPCTriggerNPC(UINT8 const npc, UINT8 const record, Approach const approach, bool const show_dialogue_menu)
+{
+	class DialogueEventTriggerNPC : public DialogueEvent
+	{
+		public:
+			DialogueEventTriggerNPC(ProfileID const npc, UINT8 const record, Approach const approach, bool const show_dialogue_menu) :
+				npc_(npc),
+				record_(record),
+				show_dialogue_menu_(show_dialogue_menu),
+				approach_(approach)
+			{}
+
+			bool Execute()
+			{
+				HandleNPCTriggerNPC(npc_, record_, show_dialogue_menu_, approach_);
+				return false;
+			}
+
+		private:
+			ProfileID const npc_;
+			UINT8     const record_;
+			bool      const show_dialogue_menu_;
+			Approach  const approach_;
+	};
+
+	DialogueEvent::Add(new DialogueEventTriggerNPC(npc, record, approach, show_dialogue_menu));
+}
+
+
 void TriggerNPCRecord(UINT8 const ubTriggerNPC, UINT8 const record)
 {
 	// Check if we have a quote to trigger...
@@ -2225,7 +2255,7 @@ BOOLEAN TriggerNPCWithIHateYouQuote( UINT8 ubTriggerNPC )
 			// trigger this quote!
 			// reset approach required value so that we can trigger it
 			//pQuotePtr->ubApproachRequired = TRIGGER_NPC;
-			NPCTriggerNPC( ubTriggerNPC, ubLoop, APPROACH_DECLARATION_OF_HOSTILITY, TRUE );
+			NPCTriggerNPC(ubTriggerNPC, ubLoop, APPROACH_DECLARATION_OF_HOSTILITY, true);
 			gMercProfiles[ ubTriggerNPC ].ubMiscFlags |= PROFILE_MISC_FLAG_SAID_HOSTILE_QUOTE;
 			return( TRUE );
 		}

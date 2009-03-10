@@ -1179,13 +1179,6 @@ void TalkingMenuGiveItem(UINT8 const ubNPC, OBJECTTYPE* const pObject, INT8 cons
 }
 
 
-void NPCTriggerNPC(UINT8 const ubTargetNPC, UINT8 const ubTargetRecord, Approach const ubTargetApproach, BOOLEAN const fShowDialogueMenu)
-{
-	//CHECKF(SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, gTalkPanel.face, DIALOGUE_NPC_UI));
-	SpecialCharacterDialogueEventWithExtraParam(DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC, ubTargetNPC, ubTargetRecord, fShowDialogueMenu, ubTargetApproach, gTalkPanel.face, DIALOGUE_NPC_UI);
-}
-
-
 void NPCGotoGridNo(UINT8 const ubTargetNPC, UINT16 const usGridNo, UINT8 const ubRecordNum)
 {
 	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO, ubTargetNPC, usGridNo, ubRecordNum, gTalkPanel.face, DIALOGUE_NPC_UI);

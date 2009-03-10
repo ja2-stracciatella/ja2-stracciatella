@@ -876,14 +876,7 @@ bool DIALOGUE_Q_STRUCT::Execute()
 		}
 
 		//Switch on our special events
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC)
-		{
-			if (bUIHandlerID == DIALOGUE_NPC_UI)
-			{
-				HandleNPCTriggerNPC((UINT8)uiSpecialEventData, (UINT8)uiSpecialEventData2, (BOOLEAN)uiSpecialEventData3, static_cast<Approach>(uiSpecialEventData4));
-			}
-		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO)
 		{
 			if (bUIHandlerID == DIALOGUE_NPC_UI)
 			{
@@ -1223,23 +1216,6 @@ void SpecialCharacterDialogueEvent(DialogueSpecialEvent const uiSpecialEventFlag
 	d->uiSpecialEventData  = uiSpecialEventData1;
 	d->uiSpecialEventData2 = uiSpecialEventData2;
 	d->uiSpecialEventData3 = uiSpecialEventData3;
-
-	// If paused state not already locked
-	if (!gfLockPauseState) d->fPauseTime = fPausedTimeDuringQuote;
-	fPausedTimeDuringQuote = FALSE;
-
-	DialogueEvent::Add(d);
-}
-
-
-void SpecialCharacterDialogueEventWithExtraParam(DialogueSpecialEvent const uiSpecialEventFlag, UINT32 const uiSpecialEventData1, UINT32 const uiSpecialEventData2, UINT32 const uiSpecialEventData3, UINT32 const uiSpecialEventData4, FACETYPE* const face, DialogueHandler const bUIHandlerID)
-{
-	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(face, bUIHandlerID);
-	d->uiSpecialEventFlag  = uiSpecialEventFlag;
-	d->uiSpecialEventData  = uiSpecialEventData1;
-	d->uiSpecialEventData2 = uiSpecialEventData2;
-	d->uiSpecialEventData3 = uiSpecialEventData3;
-	d->uiSpecialEventData4 = uiSpecialEventData4;
 
 	// If paused state not already locked
 	if (!gfLockPauseState) d->fPauseTime = fPausedTimeDuringQuote;

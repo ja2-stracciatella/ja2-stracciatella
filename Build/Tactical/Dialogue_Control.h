@@ -176,7 +176,6 @@ enum DialogueHandler
 enum DialogueSpecialEvent
 {
 	DIALOGUE_SPECIAL_EVENT_NONE                         = 0x00000000,
-	DIALOGUE_SPECIAL_EVENT_TRIGGER_NPC                  = 0x00000002,
 	DIALOGUE_SPECIAL_EVENT_GOTO_GRIDNO                  = 0x00000004,
 	DIALOGUE_SPECIAL_EVENT_DO_ACTION                    = 0x00000008,
 	DIALOGUE_SPECIAL_EVENT_CLOSE_PANEL                  = 0x00000010,
@@ -264,9 +263,6 @@ void CharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, 
 
 // A special event can be setup which can be queued with other speech
 void SpecialCharacterDialogueEvent(DialogueSpecialEvent, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, FACETYPE* face, DialogueHandler);
-
-// Same as above, for triggers, with extra param to hold approach value
-void SpecialCharacterDialogueEventWithExtraParam(DialogueSpecialEvent, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, UINT32 uiSpecialEventData3, UINT32 uiSpecialEventData4, FACETYPE* face, DialogueHandler);
 
 BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier);
 

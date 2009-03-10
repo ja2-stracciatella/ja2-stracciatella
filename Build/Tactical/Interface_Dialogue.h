@@ -65,8 +65,6 @@ BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey );
 
 // Gices an item to buddy
 void TalkingMenuGiveItem(UINT8 ubNPC, OBJECTTYPE* pObject, INT8 bInvPos);
-// Triggers an NPC record
-void NPCTriggerNPC(UINT8 ubTargetNPC, UINT8 ubTargetRecord, Approach ubTargetApproach, BOOLEAN fShowDialogueMenu);
 // NPC goto gridno
 void NPCGotoGridNo(UINT8 ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum);
 // NPC Do action
