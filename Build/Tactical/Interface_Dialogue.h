@@ -66,7 +66,7 @@ BOOLEAN HandleTalkingMenuEscape( BOOLEAN fCanDelete , BOOLEAN fFromEscKey );
 // NPC goto gridno
 void NPCGotoGridNo(ProfileID ubTargetNPC, UINT16 usGridNo, UINT8 ubQuoteNum);
 // NPC Do action
-void NPCDoAction(UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum);
+void NPCDoAction(ProfileID ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum);
 
 void NPCClosePanel(void);
 

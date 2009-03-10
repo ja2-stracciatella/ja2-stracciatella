@@ -1183,7 +1183,28 @@ void NPCGotoGridNo(ProfileID const ubTargetNPC, UINT16 const usGridNo, UINT8 con
 
 void NPCDoAction(UINT8 const ubTargetNPC, UINT16 const usActionCode, UINT8 const ubQuoteNum)
 {
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_DO_ACTION, ubTargetNPC, usActionCode, ubQuoteNum, gTalkPanel.face, DIALOGUE_NPC_UI);
+	class DialogueEventDoAction : public DialogueEvent
+	{
+		public:
+			DialogueEventDoAction(ProfileID npc, UINT16 const action, UINT8 const quote) :
+				action_(action),
+				npc_(npc),
+				quote_(quote)
+			{}
+
+			bool Execute()
+			{
+				HandleNPCDoAction(npc_, action_, quote_);
+				return false;
+			}
+
+		private:
+			UINT16    const action_;
+			ProfileID const npc_;
+			UINT8     const quote_;
+	};
+
+	DialogueEvent::Add(new DialogueEventDoAction(ubTargetNPC, usActionCode, ubQuoteNum));
 }
 
 
