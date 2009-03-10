@@ -199,10 +199,7 @@ static void DoneFadeInKilledQueen(void)
 		return;
 	}
 
-	// Converse!
-	//InitiateConversation( pNPCSoldier, pSoldier, 0, 1 );
 	TriggerNPCRecordImmediately( pNPCSoldier->ubProfile, 6 );
-
 }
 
 

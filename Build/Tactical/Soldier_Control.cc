@@ -8922,7 +8922,7 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 	// Are we an EPC that is being escorted?
 	if ( pTSoldier->ubProfile != NO_PROFILE && pTSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
 	{
-		return( InitiateConversation( pTSoldier, pSoldier, APPROACH_EPC_WHO_IS_RECRUITED, 0 ) );
+		return InitiateConversation(pTSoldier, pSoldier, APPROACH_EPC_WHO_IS_RECRUITED);
 	}
 	else if (pTSoldier->bNeutral)
 	{
@@ -8941,13 +8941,13 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 				break;
 			default:
 				// Start talking!
-				return( InitiateConversation( pTSoldier, pSoldier, NPC_INITIAL_QUOTE, 0 ) );
+				return InitiateConversation(pTSoldier, pSoldier, NPC_INITIAL_QUOTE);
 		}
 	}
 	else
 	{
 		// Start talking with hostile NPC
-		return( InitiateConversation( pTSoldier, pSoldier, APPROACH_ENEMY_NPC_QUOTE, 0 ) );
+		return InitiateConversation(pTSoldier, pSoldier, APPROACH_ENEMY_NPC_QUOTE);
 	}
 
 	return( TRUE );

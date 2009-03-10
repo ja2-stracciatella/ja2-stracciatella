@@ -1784,7 +1784,7 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 						case MIKE:
 							if ( gfPlayerTeamSawMike && !( gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags2 & PROFILE_MISC_FLAG2_SAID_FIRSTSEEN_QUOTE ) )
 							{
-								InitiateConversation( pSoldier, pOpponent, NPC_INITIAL_QUOTE, 0 );
+								InitiateConversation(pSoldier, pOpponent, NPC_INITIAL_QUOTE);
 								gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags2 |= PROFILE_MISC_FLAG2_SAID_FIRSTSEEN_QUOTE;
 							}
 							break;

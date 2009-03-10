@@ -514,7 +514,7 @@ void HandleDialogue()
 					SOLDIERTYPE* const player = WhoIsThere2(sPlayerGridNo, 0);
 					if (player != NULL)
 					{
-						InitiateConversation(pMike, player, NPC_INITIAL_QUOTE, 0);
+						InitiateConversation(pMike, player, NPC_INITIAL_QUOTE);
 						gMercProfiles[pMike->ubProfile].ubMiscFlags2 |= PROFILE_MISC_FLAG2_SAID_FIRSTSEEN_QUOTE;
 						// JA2Gold: special hack value of 2 to prevent dialogue from coming up more than once
 						gfMikeShouldSayHi = 2;

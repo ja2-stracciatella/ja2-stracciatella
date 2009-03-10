@@ -179,7 +179,7 @@ enum
 static void InternalInitiateConversation(SOLDIERTYPE* pDestSoldier, SOLDIERTYPE* pSrcSoldier, Approach, UINT32 uiApproachData);
 
 
-BOOLEAN InitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIERTYPE* const pSrcSoldier, Approach const bApproach, UINT32 const uiApproachData)
+BOOLEAN InitiateConversationFull(SOLDIERTYPE* const pDestSoldier, SOLDIERTYPE* const pSrcSoldier, Approach const bApproach, UINT32 const uiApproachData)
 try
 {
 	// ATE: OK, let's check the status of the Q
@@ -217,6 +217,12 @@ try
 	}
 }
 catch (...) { return FALSE; /* XXX fishy, exception should probably propagate */ }
+
+
+BOOLEAN InitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIERTYPE* const pSrcSoldier, Approach const bApproach)
+{
+	return InitiateConversationFull(pDestSoldier, pSrcSoldier, bApproach, 0);
+}
 
 
 void HandlePendingInitConv( )
@@ -1359,7 +1365,7 @@ static void HandleNPCTrigger(void)
 			}
 			else if (gpSrcSoldier != NULL) // if we can, reinitialize menu
 			{
-				InitiateConversation( gpDestSoldier, gpSrcSoldier, gubTargetApproach, gubTargetRecord );
+				InitiateConversationFull(gpDestSoldier, gpSrcSoldier, gubTargetApproach, gubTargetRecord);
 			}
 		}
 		else
@@ -1374,7 +1380,7 @@ static void HandleNPCTrigger(void)
 		{
 			if ( SourceSoldierPointerIsValidAndReachableForGive( pSoldier ) )
 			{
-					InitiateConversation( pSoldier, gpSrcSoldier, gubTargetApproach, gubTargetRecord );
+					InitiateConversationFull(pSoldier, gpSrcSoldier, gubTargetApproach, gubTargetRecord);
 					return;
 			}
 			else
@@ -1385,13 +1391,13 @@ static void HandleNPCTrigger(void)
 					SOLDIERTYPE* const player = WhoIsThere2(sPlayerGridNo, 0);
 					if (player != NULL)
 					{
-						InitiateConversation(pSoldier, player, gubTargetApproach, gubTargetRecord);
+						InitiateConversationFull(pSoldier, player, gubTargetApproach, gubTargetRecord);
 						return;
 					}
 				}
 			}
 			// else
-			InitiateConversation( pSoldier, pSoldier, gubTargetApproach, gubTargetRecord );
+			InitiateConversationFull(pSoldier, pSoldier, gubTargetApproach, gubTargetRecord);
 		}
 		else
 		{
@@ -3517,7 +3523,7 @@ action_punch_pc:
 
 						if ( pSoldier2 )
 						{
-							InitiateConversation( pSoldier, pSoldier2, NPC_INITIAL_QUOTE, 0 );
+							InitiateConversation(pSoldier, pSoldier2, NPC_INITIAL_QUOTE);
 						}
 					}
 				}
@@ -4484,8 +4490,6 @@ static void DoneFadeInActionBasement(void)
 		return;
 	}
 
-	// Converse!
-	//InitiateConversation(pNPCSoldier, s, 0, 1);
 	TriggerNPCRecordImmediately( pNPCSoldier->ubProfile, 1 );
 }
 
