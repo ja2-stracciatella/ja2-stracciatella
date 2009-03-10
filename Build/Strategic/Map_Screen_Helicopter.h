@@ -179,9 +179,6 @@ INT32 GetNumberOfPassengersInHelicopter( void );
 // skyrider talking to player
 void SkyRiderTalk( UINT16 usQuoteNum );
 
-// sky rider monlogue events for mapscreen
-void HandleSkyRiderMonologueEvent( UINT32 uiEventCode, UINT32 uiSpecialCode );
-
 // handle animation of sectors for mapscreen
 void HandleAnimationOfSectors( void );
 

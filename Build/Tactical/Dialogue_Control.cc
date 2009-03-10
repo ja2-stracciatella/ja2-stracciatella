@@ -35,7 +35,6 @@
 #include "Cursors.h"
 #include "GameScreen.h"
 #include "Random.h"
-#include "Map_Screen_Helicopter.h"
 #include "GameSettings.h"
 #include "ShopKeeper_Interface.h"
 #include "Map_Screen_Interface.h"
@@ -817,15 +816,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_UNSET_ARRIVES_FLAG)
 		{
 			gTacticalStatus.bMercArrivingQuoteBeingUsed = FALSE;
-		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SKYRIDERMAPSCREENEVENT)
-		{
-			// Setup face pointer
-			gpCurrentTalkingFace = face;
-			gubCurrentTalkingID  = ubCharacterNum;
-
-			// handle the monologue event
-			HandleSkyRiderMonologueEvent(uiSpecialEventData, uiSpecialEventData2);
 		}
 
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT)
