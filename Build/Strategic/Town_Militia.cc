@@ -40,7 +40,7 @@ INT32 giTotalCostOfTraining = 0;
 
 
 //the completed list of sector soldiers for training militia
-static const SOLDIERTYPE* g_list_of_merc_in_sectors_completed_militia_training[SIZE_OF_MILITIA_COMPLETED_TRAINING_LIST];
+static SOLDIERTYPE* g_list_of_merc_in_sectors_completed_militia_training[SIZE_OF_MILITIA_COMPLETED_TRAINING_LIST];
 SOLDIERTYPE *pMilitiaTrainerSoldier = NULL;
 
 // note that these sector values are STRATEGIC INDEXES, not 0-255!
@@ -528,7 +528,9 @@ static void DoContinueMilitiaTrainingMessageBox(INT16 const sSectorX, INT16 cons
 	}
 }
 
-void HandleInterfaceMessageForContinuingTrainingMilitia( SOLDIERTYPE *pSoldier )
+
+// continue training?
+static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* const pSoldier)
 {
 	CHAR16 sString[ 128 ];
 	INT16 sSectorX = 0, sSectorY = 0;
@@ -843,15 +845,24 @@ void HandleContinueOfTownTraining( void )
 	while (g_list_of_merc_in_sectors_completed_militia_training[iCounter] != NULL)
 	{
 		// get the soldier
-		const SOLDIERTYPE* const pSoldier = g_list_of_merc_in_sectors_completed_militia_training[iCounter];
-
-		if( pSoldier->bActive )
+		SOLDIERTYPE& s = *g_list_of_merc_in_sectors_completed_militia_training[iCounter];
+		if (s.bActive)
 		{
 			fContinueEventPosted = TRUE;
-			SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_CONTINUE_TRAINING_MILITIA, pSoldier->ubProfile, 0, 0, DIALOGUE_NO_UI);
 
-			// now set all of these peoples assignment done too
-			//HandleInterfaceMessageForContinuingTrainingMilitia( pSoldier );
+			class DialogueEventContinueTrainingMilitia : public CharacterDialogueEvent
+			{
+				public:
+					DialogueEventContinueTrainingMilitia(SOLDIERTYPE& soldier) : CharacterDialogueEvent(soldier) {}
+
+					bool Execute()
+					{
+						HandleInterfaceMessageForContinuingTrainingMilitia(&soldier_);
+						return false;
+					}
+			};
+
+			DialogueEvent::Add(new DialogueEventContinueTrainingMilitia(s));
 		}
 
 		// next entry

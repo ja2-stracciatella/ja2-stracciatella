@@ -43,9 +43,6 @@ BOOLEAN SectorOursAndPeaceful( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
 // tell player how much it will cost
 void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier );
 
-// continue training?
-void HandleInterfaceMessageForContinuingTrainingMilitia( SOLDIERTYPE *pSoldier );
-
 // call this when the sector changes...
 void HandleMilitiaStatusInCurrentMapBeforeLoadingNewMap( void );
 

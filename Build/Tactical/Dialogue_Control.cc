@@ -42,7 +42,6 @@
 #include "Text.h"
 #include "Merc_Contract.h"
 #include "History.h"
-#include "Town_Militia.h"
 #include "Meanwhile.h"
 #include "SkillCheck.h"
 #include "Interface_Control.h"
@@ -843,14 +842,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU)
 		{
 			SetUpdateBoxFlag(TRUE);
-		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTINUE_TRAINING_MILITIA)
-		{
-			s = FindSoldierByProfileID((UINT8)uiSpecialEventData);
-			if (s != NULL)
-			{
-				HandleInterfaceMessageForContinuingTrainingMilitia(s);
-			}
 		}
 		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN)
 		{
