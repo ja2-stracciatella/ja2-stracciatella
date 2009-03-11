@@ -3,6 +3,7 @@
 #include "HImage.h"
 #include "Handle_Items.h"
 #include "Isometric_Utils.h"
+#include "JAScreens.h"
 #include "Local.h"
 #include "Timer_Control.h"
 #include "Types.h"
@@ -224,7 +225,7 @@ static SGPVObject* guiMainTradeScreenImage;
 static SGPVSurface* guiCornerWhereTacticalIsStillSeenImage; // This image is for where the corner of tactical is still seen through the shop keeper interface
 
 static BOOLEAN gfSKIScreenEntry = TRUE;
-BOOLEAN		gfSKIScreenExit	= FALSE;
+static BOOLEAN gfSKIScreenExit  = FALSE;
 static BOOLEAN gfUserHasRequestedToLeave = FALSE;
 
 static BOOLEAN gfRenderScreenOnNextLoop = FALSE;
@@ -234,7 +235,7 @@ UINT8			gubSkiDirtyLevel = SKI_DIRTY_LEVEL0;
 ArmsDealerID gbSelectedArmsDealerID = ARMS_DEALER_INVALID; //Contains the enum value for the currently selected arms dealer
 
 //the quote that is in progress, in certain circumstances, we don't want queuing of related but different quotes
-INT32			giShopKeepDialogueEventinProgress = - 1;
+static INT32 giShopKeepDialogueEventinProgress = -1;
 
 INVENTORY_IN_SLOT		gMoveingItem;
 
@@ -345,7 +346,7 @@ static GUIButtonRef guiSKI_InvPageDownButton;
 //Transaction buttons
 static void BtnSKI_TransactionButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static BUTTON_PICS* guiSKI_TransactionButtonImage;
-GUIButtonRef guiSKI_TransactionButton;
+static GUIButtonRef guiSKI_TransactionButton;
 
 //Done buttons
 static void BtnSKI_DoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
@@ -3179,6 +3180,56 @@ class DialogueEventSkipAFrame : public DialogueEvent
 };
 
 
+class DialogueEventShopkeeperLockTransactionButton : public DialogueEvent
+{
+	public:
+		DialogueEventShopkeeperLockTransactionButton(bool const lock) : lock_(lock) {}
+
+		bool Execute()
+		{
+			if (guiCurrentScreen == SHOPKEEPER_SCREEN)
+			{
+				if (lock_)
+					DisableButton(guiSKI_TransactionButton);
+				else
+					EnableButton(guiSKI_TransactionButton);
+			}
+			return false;
+		}
+
+	private:
+		bool const lock_;
+};
+
+
+class DialogueEventShopkeeperMoney : public DialogueEvent
+{
+	public:
+		DialogueEventShopkeeperMoney(wchar_t const* const message, UINT32 const money_amount, MessageBoxFlags const flags, MSGBOX_CALLBACK callback) :
+			message_(message),
+			money_amount_(money_amount),
+			flags_(flags),
+			callback_(callback)
+		{}
+
+		bool Execute()
+		{
+			wchar_t zMoney[128];
+			SPrintMoney(zMoney, money_amount_);
+			wchar_t zText[512];
+			swprintf(zText, lengthof(zText), message_, zMoney);
+			DoSkiMessageBox(zText, SHOPKEEPER_SCREEN, flags_, callback_);
+			return false;
+		}
+
+	private:
+		wchar_t const*  const message_;
+		UINT32          const money_amount_;
+		MessageBoxFlags const flags_;
+		MSGBOX_CALLBACK const callback_;
+};
+
+
 static UINT32 CalculateHowMuchMoneyIsInPlayersOfferArea(void);
 static UINT8 CountNumberOfItemsInTheArmsDealersOfferArea(void);
 static UINT8 CountNumberOfValuelessItemsInThePlayersOfferArea(void);
@@ -3251,24 +3302,26 @@ static void PerformTransaction(UINT32 uiMoneyFromPlayersAccount)
 			if( uiArmsDealersItemsCost > uiPlayersTotalMoneyValue + LaptopSaveInfo.iCurrentBalance )
 			{
 				// tell player he can't possibly afford this
-				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 6, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
+				DialogueEvent::Add(new DialogueEventShopkeeperLockTransactionButton(true));
 				DialogueEvent::Add(new DialogueEventSkipAFrame());
-				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 0, uiArmsDealersItemsCost - (LaptopSaveInfo.iCurrentBalance + uiPlayersTotalMoneyValue), giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
+				UINT32 const amount = uiArmsDealersItemsCost - (LaptopSaveInfo.iCurrentBalance + uiPlayersTotalMoneyValue);
+				DialogueEvent::Add(new DialogueEventShopkeeperMoney(SkiMessageBoxText[SKI_SHORT_FUNDS_TEXT], amount, MSG_BOX_FLAG_OK, ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack));
 			}
 			else
 			{
 				// player doesn't have enough on the table, but can pay for it from his balance
 				/// ask player if wants to subtract the shortfall directly from his balance
 				DialogueEvent::Add(new DialogueEventSkipAFrame());
-				SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 6, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
+				DialogueEvent::Add(new DialogueEventShopkeeperLockTransactionButton(true));
 
-				if( uiPlayersTotalMoneyValue )
-					SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 1, uiArmsDealersItemsCost - uiPlayersTotalMoneyValue, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
-				else
-					SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 2, uiArmsDealersItemsCost - uiPlayersTotalMoneyValue, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
+				wchar_t const* const message =
+					uiPlayersTotalMoneyValue != 0 ? SkiMessageBoxText[SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_DIFFERENCE] :
+					SkiMessageBoxText[SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_COST];
+				UINT32 const amount = uiArmsDealersItemsCost - uiPlayersTotalMoneyValue;
+				DialogueEvent::Add(new DialogueEventShopkeeperMoney(message, amount, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack));
 			}
 
-			SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 7, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
+			DialogueEvent::Add(new DialogueEventShopkeeperLockTransactionButton(false));
 
 			gfResetShopKeepIdleQuote = TRUE;
 
@@ -4038,7 +4091,17 @@ static void HandleShopKeeperDialog(UINT8 ubInit)
 		// to see if the player has finished talking
 		if(!giShopKeeperFaceIndex->fTalking)
 		{
-			SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 5, 0, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
+			class DialogueEventShopkeeperExit : public DialogueEvent
+			{
+				public:
+					bool Execute()
+					{
+						gfSKIScreenExit = TRUE;
+						return false;
+					}
+			};
+
+			DialogueEvent::Add(new DialogueEventShopkeeperExit());
 		}
 
 		DealWithItemsStillOnTheTable();
@@ -4118,14 +4181,29 @@ static BOOLEAN StartShopKeeperTalking(UINT16 usQuoteNum)
 		return( FALSE );
 	}
 
+	class DialogueEventShopkeeperSetQuote : public DialogueEvent
+	{
+		public:
+			DialogueEventShopkeeperSetQuote(INT32 const quote) : quote_(quote) {}
+
+			bool Execute()
+			{
+				giShopKeepDialogueEventinProgress = quote_;
+				return false;
+			}
+
+		private:
+			INT32 const quote_;
+	};
+
 	// post event to mark shopkeeper dialogue in progress
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 3, usQuoteNum, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
+	DialogueEvent::Add(new DialogueEventShopkeeperSetQuote(usQuoteNum));
 
 	// post quote dialogue
 	CharacterDialogue(ArmsDealerInfo[gbSelectedArmsDealerID].ubShopKeeperID, usQuoteNum, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI, FALSE, FALSE);
 
 	// post event to mark shopkeeper dialogue as ended
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_SHOPKEEPER, 4, usQuoteNum, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI);
+	DialogueEvent::Add(new DialogueEventShopkeeperSetQuote(-1));
 
 	gfResetShopKeepIdleQuote = TRUE;
 	return( TRUE );

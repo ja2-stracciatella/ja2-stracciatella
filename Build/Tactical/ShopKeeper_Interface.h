@@ -45,9 +45,6 @@ struct INVENTORY_IN_SLOT
 };
 
 
-extern INT32	giShopKeepDialogueEventinProgress;
-
-
 enum
 {
 	SKI_DIRTY_LEVEL0,	// no redraw
@@ -101,8 +98,6 @@ void RestrictSkiMouseCursor(void);
 void DoSkiMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 void StartSKIDescriptionBox(void);
 
-extern BOOLEAN      gfSKIScreenExit;
-extern GUIButtonRef guiSKI_TransactionButton;
 extern ArmsDealerID gbSelectedArmsDealerID;
 
 #endif

@@ -717,64 +717,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 			ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
 		}
 
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOPKEEPER)
-		{
-			switch (uiSpecialEventData)
-			{
-				wchar_t zMoney[128];
-				wchar_t zText[512];
-
-				case 0:
-					//popup a message stating the player doesnt have enough money
-					SPrintMoney(zMoney, uiSpecialEventData2);
-					swprintf(zText, lengthof(zText), SkiMessageBoxText[SKI_SHORT_FUNDS_TEXT], zMoney);
-					DoSkiMessageBox(zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack);
-					break;
-
-				case 1:
-					/* if the player is trading items, ask them if we should deduct money
-					 * out the players account to cover the difference */
-					SPrintMoney(zMoney, uiSpecialEventData2);
-					swprintf(zText, lengthof(zText), SkiMessageBoxText[SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_DIFFERENCE], zMoney);
-					DoSkiMessageBox(zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack);
-					break;
-
-				case 2:
-					/* ask them if we should deduct money out the players account to cover
-					 * the difference */
-					SPrintMoney(zMoney, uiSpecialEventData2);
-					swprintf(zText, lengthof(zText), SkiMessageBoxText[SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_COST], zMoney);
-					DoSkiMessageBox(zText, SHOPKEEPER_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack);
-					break;
-
-				case 3: // this means a dialogue event is in progress
-					giShopKeepDialogueEventinProgress = uiSpecialEventData2;
-					break;
-
-				case 4: // this means a dialogue event has ended
-					giShopKeepDialogueEventinProgress = -1;
-					break;
-
-				case 5: // this means a dialogue event has ended
-					gfSKIScreenExit = TRUE;
-					break;
-
-				case 6:
-					if (guiCurrentScreen == SHOPKEEPER_SCREEN)
-					{
-						DisableButton(guiSKI_TransactionButton);
-					}
-					break;
-
-				case 7:
-					if (guiCurrentScreen == SHOPKEEPER_SCREEN)
-					{
-						EnableButton(guiSKI_TransactionButton);
-					}
-					break;
-			}
-		}
-
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_UNSET_ARRIVES_FLAG)
 		{
 			gTacticalStatus.bMercArrivingQuoteBeingUsed = FALSE;
