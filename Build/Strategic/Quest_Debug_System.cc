@@ -3134,7 +3134,7 @@ static void HandleQDSTalkingMerc(void)
 				else if (gfRpcToSaySectorDesc && MIGUEL <= gTalkingMercSoldier->ubProfile && gTalkingMercSoldier->ubProfile <= DIMITRI)
 				{
 					//ATE: Trigger the sector desc here
-					CharacterDialogueWithSpecialEvent(gTalkingMercSoldier->ubProfile, giSelectedMercCurrentQuote, gTalkPanel.face, DIALOGUE_NPC_UI, TRUE, FALSE, DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES, FALSE, FALSE);
+					CharacterDialogueUsingAlternateFile(*gTalkingMercSoldier, giSelectedMercCurrentQuote, DIALOGUE_NPC_UI);
 				}
 				else
 				{

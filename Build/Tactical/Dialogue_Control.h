@@ -179,7 +179,6 @@ enum DialogueSpecialEvent
 	DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC                 = 0x00000020,
 	DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU           = 0x00000100,
 	DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU             = 0x00000400,
-	DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES          = 0x00001000,
 	DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING              = 0x00004000,
 	DIALOGUE_SPECIAL_EVENT_SLEEP                        = 0x00010000,
 	DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND                = 0x00020000,
@@ -239,6 +238,8 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 
 // A more general purpose function for processing quotes
 void CharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier, BOOLEAN fDelayed);
+
+void CharacterDialogueUsingAlternateFile(SOLDIERTYPE&, UINT16 quote, DialogueHandler);
 
 // A special event can be setup which can be queued with other speech
 void SpecialCharacterDialogueEvent(DialogueSpecialEvent, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, FACETYPE* face, DialogueHandler);

@@ -102,8 +102,8 @@ void HandleRPCDescription(  )
 		// If we are > 0
 		if ( ubNumMercs > 0 )
 		{
-			SOLDIERTYPE* const chosen = mercs_in_sector[Random(ubNumMercs)];
-			TacticalCharacterDialogueWithSpecialEvent(chosen, gTacticalStatus.ubGuideDescriptionToUse, DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES, 0, 0);
+			SOLDIERTYPE& chosen = *mercs_in_sector[Random(ubNumMercs)];
+			CharacterDialogueUsingAlternateFile(chosen, gTacticalStatus.ubGuideDescriptionToUse, DIALOGUE_TACTICAL_UI);
 		}
 	}
 }

@@ -676,16 +676,8 @@ bool DIALOGUE_Q_STRUCT::Execute()
 	}
 	else
 	{
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES)
-		{
-			gfUseAlternateDialogueFile = TRUE;
-
-			ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
-
-			gfUseAlternateDialogueFile = FALSE;
-		}
 		// We could have a special flag, but dialogue as well
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC)
 		{
 			ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
 
@@ -1041,6 +1033,37 @@ void CharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACE
 	fPausedTimeDuringQuote = FALSE;
 
 	DialogueEvent::Add(d);
+}
+
+
+void CharacterDialogueUsingAlternateFile(SOLDIERTYPE& s, UINT16 const quote, DialogueHandler const handler)
+{
+	class CharacterDialogueEventUsingAlternateFile : public CharacterDialogueEvent
+	{
+		public:
+			CharacterDialogueEventUsingAlternateFile(SOLDIERTYPE& soldier, UINT16 const quote, DialogueHandler const handler) :
+				CharacterDialogueEvent(soldier),
+				quote_(quote),
+				handler_(handler)
+			{}
+
+			bool Execute()
+			{
+				if (!MayExecute()) return true;
+
+				gfUseAlternateDialogueFile = TRUE;
+				SOLDIERTYPE const& s = soldier_;
+				ExecuteCharacterDialogue(s.ubProfile, quote_, s.face, handler_, TRUE);
+				gfUseAlternateDialogueFile = FALSE;
+				return false;
+			}
+
+		private:
+			UINT16          const quote_;
+			DialogueHandler const handler_;
+	};
+
+	DialogueEvent::Add(new CharacterDialogueEventUsingAlternateFile(s, gTacticalStatus.ubGuideDescriptionToUse, handler));
 }
 
 
