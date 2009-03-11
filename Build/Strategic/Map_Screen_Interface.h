@@ -179,8 +179,6 @@ extern BOOLEAN fShowAttributeMenu;
 extern BOOLEAN fShowSquadMenu ;
 extern BOOLEAN fShowContractMenu ;
 
-extern BOOLEAN fLockOutMapScreenInterface;
-
 // The character data structure
 struct MapScreenCharacterSt
 {

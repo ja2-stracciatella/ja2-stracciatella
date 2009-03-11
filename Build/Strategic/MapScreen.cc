@@ -450,6 +450,9 @@ static MOUSE_REGION gTeamListContractRegion[MAX_CHARACTER_COUNT];
 static PathSt* g_prev_path;
 
 
+static bool fLockOutMapScreenInterface = false;
+
+
 // GLOBAL VARIABLES (EXTERNAL)
 
 
@@ -9130,6 +9133,27 @@ static void MapscreenMarkButtonsDirty(void)
 			UnMarkButtonDirty( giMapBorderButtons[ MAP_BORDER_TOWN_BTN ] );
 		}
 	}
+}
+
+
+void LockMapScreenInterface(bool const lock)
+{
+	class DialogueEventLockMapScreenInterface : public DialogueEvent
+	{
+		public:
+			DialogueEventLockMapScreenInterface(bool const lock) : lock_(lock) {}
+
+			bool Execute()
+			{
+				fLockOutMapScreenInterface = lock_;
+				return false;
+			}
+
+		private:
+			bool const lock_;
+	};
+
+	DialogueEvent::Add(new DialogueEventLockMapScreenInterface(lock));
 }
 
 

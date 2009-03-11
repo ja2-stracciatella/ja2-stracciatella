@@ -202,12 +202,12 @@ void HandleContractRenewalSequence( )
 
 						bool Execute()
 						{
-							SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, DIALOGUE_NO_UI);
+							LockMapScreenInterface(true);
 							SOLDIERTYPE& s = soldier_;
 							if (wants_to_renew_) CheckIfSalaryIncreasedAndSayQuote(&s, FALSE);
 							gfInContractMenuFromRenewSequence = TRUE;
 							TacticalCharacterDialogueWithSpecialEvent(&s, 0, DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU, 0, 0);
-							SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, DIALOGUE_NO_UI);
+							LockMapScreenInterface(false);
 							return false;
 						}
 
@@ -300,7 +300,7 @@ BOOLEAN MercContractHandling(SOLDIERTYPE* const s, UINT8 const ubDesiredAction)
 	}
 
 	PauseTimeDuringNextQuote();
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, DIALOGUE_NO_UI);
+	LockMapScreenInterface(true);
 
 	// These calcs need to be done before Getting/Calculating the insurance costs
 
@@ -344,7 +344,7 @@ BOOLEAN MercContractHandling(SOLDIERTYPE* const s, UINT8 const ubDesiredAction)
 		}
 	}
 
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, DIALOGUE_NO_UI);
+	LockMapScreenInterface(false);
 
 	/* ATE: Setup when they can be signed again! If they are 2-weeks this can be
 	 * extended otherwise don't change from current */
@@ -926,11 +926,9 @@ static void HandleExtendMercsContract(SOLDIERTYPE* pSoldier)
 	fTeamPanelDirty = TRUE;
 	fCharacterInfoPanelDirty = TRUE;
 
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, DIALOGUE_NO_UI);
-
+	LockMapScreenInterface(true);
 	CheckIfSalaryIncreasedAndSayQuote( pSoldier, TRUE );
-
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, DIALOGUE_NO_UI);
+	LockMapScreenInterface(false);
 }
 
 

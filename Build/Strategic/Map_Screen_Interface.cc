@@ -130,7 +130,6 @@ static MOUSE_REGION gMoveMenuRegion[MAX_POPUP_BOX_STRING_COUNT];
 MOUSE_REGION gMapScreenHelpTextMask;
 
 BOOLEAN fScreenMaskForMoveCreated = FALSE;
-BOOLEAN fLockOutMapScreenInterface = FALSE;
 
 CHAR16 gsCustomErrorString[ 128 ];
 

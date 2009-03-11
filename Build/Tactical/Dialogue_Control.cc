@@ -674,14 +674,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 
 		ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
 	}
-	else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE)
-	{
-		BOOLEAN const lock = uiSpecialEventData != 0;
-		switch (uiSpecialEventData2)
-		{
-			case MAP_SCREEN: fLockOutMapScreenInterface = lock; break;
-		}
-	}
 	else
 	{
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_USE_ALTERNATE_FILES)
@@ -2068,9 +2060,9 @@ void HandleImportantMercQuote( SOLDIERTYPE * pSoldier, UINT16 usQuoteNumber )
 
 void HandleImportantMercQuoteLocked(SOLDIERTYPE* const s, UINT16 const quote)
 {
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 1, MAP_SCREEN, 0, DIALOGUE_NO_UI);
+	LockMapScreenInterface(true);
 	HandleImportantMercQuote(s, quote);
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_LOCK_INTERFACE, 0, MAP_SCREEN, 0, DIALOGUE_NO_UI);
+	LockMapScreenInterface(false);
 }
 
 
