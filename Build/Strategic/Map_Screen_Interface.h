@@ -146,6 +146,8 @@ enum SectorLocatorEvent
 	STOP_SECTOR_LOCATOR
 };
 
+void MakeSectorLocatorEvent(SectorLocatorEvent);
+
 
 // dimensions and offset for merc update box
 #define UPDATE_MERC_FACE_X_WIDTH 50
@@ -369,9 +371,6 @@ void GoToNextCharacterInList( void );
 
 // this does the whole miner giving player info speil
 void HandleMinerEvent( UINT8 bMinerNumber, INT16 sSectorX, INT16 sSectorY, INT16 sQuoteNumber, BOOLEAN fForceMapscreen );
-
-// set up the event of animating a mine sector
-void SetUpAnimationOfMineSectors(SectorLocatorEvent);
 
 void TurnOnSectorLocator( UINT8 ubProfileID );
 void TurnOffSectorLocator(void);

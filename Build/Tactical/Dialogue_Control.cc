@@ -810,16 +810,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 			gTacticalStatus.bMercArrivingQuoteBeingUsed = FALSE;
 		}
 
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_MINESECTOREVENT)
-		{
-			// Setup face pointer
-			gpCurrentTalkingFace = face;
-			gubCurrentTalkingID  = ubCharacterNum;
-
-			// set up the mine highlgith events
-			SetUpAnimationOfMineSectors(static_cast<SectorLocatorEvent>(uiSpecialEventData));
-		}
-
 		//Switch on our special events
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU)
 		{
