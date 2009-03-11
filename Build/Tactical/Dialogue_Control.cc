@@ -2042,19 +2042,13 @@ void HandleShutDownOfMapScreenWhileExternfaceIsTalking( void )
 }
 
 
-void HandleImportantMercQuote( SOLDIERTYPE * pSoldier, UINT16 usQuoteNumber )
+void HandleImportantMercQuote(SOLDIERTYPE* const s, UINT16 const usQuoteNumber)
 {
-	// wake merc up for THIS quote
-	if( pSoldier->fMercAsleep )
-	{
-		TacticalCharacterDialogueWithSpecialEvent( pSoldier, usQuoteNumber, DIALOGUE_SPECIAL_EVENT_SLEEP, 0,0 );
-		TacticalCharacterDialogue( pSoldier, usQuoteNumber );
-		TacticalCharacterDialogueWithSpecialEvent( pSoldier, usQuoteNumber, DIALOGUE_SPECIAL_EVENT_SLEEP, 1,0 );
-	}
-	else
-	{
-		TacticalCharacterDialogue( pSoldier, usQuoteNumber );
-	}
+	// Wake merc up for THIS quote
+	bool const asleep = s->fMercAsleep;
+	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, usQuoteNumber, DIALOGUE_SPECIAL_EVENT_SLEEP, 0, 0);
+	TacticalCharacterDialogue(s, usQuoteNumber);
+	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, usQuoteNumber, DIALOGUE_SPECIAL_EVENT_SLEEP, 1, 0);
 }
 
 
