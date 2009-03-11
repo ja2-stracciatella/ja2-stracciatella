@@ -970,7 +970,7 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew(void)
 			soldier_who_will_quit = s;
 		}
 
-		AddSoldierToWaitingListQueue(s);
+		AddSoldierToWaitingListQueue(*s);
 	}
 
 	if (n_mercs != 0)

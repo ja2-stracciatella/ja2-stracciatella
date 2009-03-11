@@ -3476,32 +3476,65 @@ INT32 GetNumberOfMercsInUpdateList(void)
 }
 
 
-void AddSoldierToWaitingListQueue(const SOLDIERTYPE* const s)
+static void AddSoldierToUpdateBox(SOLDIERTYPE*);
+
+
+void AddSoldierToWaitingListQueue(SOLDIERTYPE& s)
 {
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_ADDSOLDIER, s->ubID, 0, DIALOGUE_NO_UI);
+	class DialogueEventUpdateBoxAddSoldier : public CharacterDialogueEvent
+	{
+		public:
+			DialogueEventUpdateBoxAddSoldier(SOLDIERTYPE& s) : CharacterDialogueEvent(s) {}
+
+			bool Execute()
+			{
+				AddSoldierToUpdateBox(&soldier_);
+				return false;
+			}
+	};
+
+	DialogueEvent::Add(new DialogueEventUpdateBoxAddSoldier(s));
 }
 
 
-void AddReasonToWaitingListQueue( INT32 iReason )
+void AddReasonToWaitingListQueue(INT32 const reason)
 {
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_SET_REASON, iReason, 0, DIALOGUE_NO_UI);
+	class DialogueEventUpdateBoxSetReason : public DialogueEvent
+	{
+		public:
+			DialogueEventUpdateBoxSetReason(INT32 const reason) : reason_(reason) {}
+
+			bool Execute()
+			{
+				iReasonForSoldierUpDate = reason_;
+				return false;
+			}
+
+		private:
+			INT32 const reason_;
+	};
+
+	DialogueEvent::Add(new DialogueEventUpdateBoxSetReason(reason));
 }
 
 
-void AddDisplayBoxToWaitingQueue( void )
+void AddDisplayBoxToWaitingQueue(void)
 {
-	SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX, UPDATE_BOX_REASON_SHOW_BOX, 0, 0, DIALOGUE_NO_UI);
+	class DialogueEventUpdateBoxShow : public DialogueEvent
+	{
+		public:
+			bool Execute()
+			{
+				fShowUpdateBox = TRUE;
+				return false;
+			}
+	};
+
+	DialogueEvent::Add(new DialogueEventUpdateBoxShow());
 }
 
 
-void ShowUpdateBox( void )
-{
-	// we want to show the box
-	fShowUpdateBox = TRUE;
-}
-
-
-void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
+static void AddSoldierToUpdateBox(SOLDIERTYPE* const pSoldier)
 {
 	INT32 iCounter = 0;
 
@@ -3536,13 +3569,6 @@ void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier )
 			return;
 		}
 	}
-}
-
-
-void SetSoldierUpdateBoxReason( INT32 iReason )
-{
-	//set the reason for the update
-	iReasonForSoldierUpDate = iReason;
 }
 
 

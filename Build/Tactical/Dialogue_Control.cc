@@ -717,28 +717,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 			ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
 		}
 
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_FOR_SOLDIER_UPDATE_BOX)
-		{
-			INT32 const iReason = uiSpecialEventData;
-			switch (iReason)
-			{
-				case UPDATE_BOX_REASON_ADDSOLDIER:
-				{
-					SOLDIERTYPE* const pUpdateSoldier = GetMan(uiSpecialEventData2);
-					if (pUpdateSoldier->bActive) AddSoldierToUpdateBox(pUpdateSoldier);
-					break;
-				}
-
-				case UPDATE_BOX_REASON_SET_REASON:
-					SetSoldierUpdateBoxReason(uiSpecialEventData2);
-					break;
-
-				case UPDATE_BOX_REASON_SHOW_BOX:
-					ShowUpdateBox();
-					break;
-			}
-		}
-
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOPKEEPER)
 		{
 			switch (uiSpecialEventData)

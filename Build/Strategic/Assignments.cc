@@ -2883,7 +2883,7 @@ void AssignmentDone( SOLDIERTYPE *pSoldier, BOOLEAN fSayQuote, BOOLEAN fMeToo )
 
 
 		AddReasonToWaitingListQueue( ASSIGNMENT_FINISHED_FOR_UPDATE );
-		AddSoldierToWaitingListQueue( pSoldier );
+		AddSoldierToWaitingListQueue(*pSoldier);
 
 		// trigger a single call AddDisplayBoxToWaitingQueue for assignments done
 		gfAddDisplayBoxToWaitingQueue = TRUE;
@@ -5968,7 +5968,7 @@ static void HandleRestFatigueAndSleepStatus(void)
 								fReasonAdded = TRUE;
 							}
 
-							AddSoldierToWaitingListQueue(pSoldier);
+							AddSoldierToWaitingListQueue(*pSoldier);
 							fBoxSetUp = TRUE;
 						}
 					}
@@ -6047,7 +6047,7 @@ static void HandleRestFatigueAndSleepStatus(void)
 								fReasonAdded = TRUE;
 							}
 
-							AddSoldierToWaitingListQueue(pSoldier);
+							AddSoldierToWaitingListQueue(*pSoldier);
 							fBoxSetUp = TRUE;
 						}
 					}

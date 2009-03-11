@@ -420,8 +420,6 @@ BOOLEAN IsCharacterSelectedForSleep( INT16 sCharNumber );
 
 // the update box
 void CreateDestroyTheUpdateBox( void );
-void SetSoldierUpdateBoxReason( INT32 iReason );
-void AddSoldierToUpdateBox( SOLDIERTYPE *pSoldier );
 void DisplaySoldierUpdateBox(void);
 
 
@@ -461,11 +459,8 @@ void NotifyPlayerOfInvasionByEnemyForces( INT16 sSectorX, INT16 sSectorY, INT8 b
 
 void ShutDownUserDefineHelpTextRegions( void );
 
-// shwo the update box
-void ShowUpdateBox( void );
-
 // add special events
-void AddSoldierToWaitingListQueue(const SOLDIERTYPE* s);
+void AddSoldierToWaitingListQueue(SOLDIERTYPE&);
 void AddReasonToWaitingListQueue( INT32 iReason );
 void AddDisplayBoxToWaitingQueue( void );
 

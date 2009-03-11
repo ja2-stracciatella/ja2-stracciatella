@@ -187,9 +187,9 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 
 		case EVENT_ADDSOLDIER_TO_UPDATE_BOX:
 		{
-			const SOLDIERTYPE* const s = GetMan(pEvent->uiParam);
+			SOLDIERTYPE* const s = GetMan(pEvent->uiParam);
 			// if the grunt is currently active, add to update box
-			if (s->bActive) AddSoldierToWaitingListQueue(s);
+			if (s->bActive) AddSoldierToWaitingListQueue(*s);
 			break;
 		}
 
