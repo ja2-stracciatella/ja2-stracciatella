@@ -194,7 +194,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		}
 
 		case EVENT_SET_MENU_REASON:
-			AddReasonToWaitingListQueue( (UINT8) pEvent->uiParam );
+			AddReasonToWaitingListQueue(static_cast<UpdateBoxReason>(pEvent->uiParam));
 			break;
 		//Whenever any group (player or enemy) arrives in a new sector during movement.
 		case EVENT_GROUP_ARRIVAL:

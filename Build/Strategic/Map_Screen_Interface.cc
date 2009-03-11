@@ -185,7 +185,7 @@ MOUSE_REGION	gMapStatusBarsRegion;
 
 SGPPoint MovePosition={450, 100 };
 
-static INT32 iReasonForSoldierUpDate = NO_REASON_FOR_UPDATE;
+static UpdateBoxReason iReasonForSoldierUpDate = NO_REASON_FOR_UPDATE;
 
 #ifndef JA2DEMO
 // sam and mine icons
@@ -3497,12 +3497,12 @@ void AddSoldierToWaitingListQueue(SOLDIERTYPE& s)
 }
 
 
-void AddReasonToWaitingListQueue(INT32 const reason)
+void AddReasonToWaitingListQueue(UpdateBoxReason const reason)
 {
 	class DialogueEventUpdateBoxSetReason : public DialogueEvent
 	{
 		public:
-			DialogueEventUpdateBoxSetReason(INT32 const reason) : reason_(reason) {}
+			DialogueEventUpdateBoxSetReason(UpdateBoxReason const reason) : reason_(reason) {}
 
 			bool Execute()
 			{
@@ -3511,7 +3511,7 @@ void AddReasonToWaitingListQueue(INT32 const reason)
 			}
 
 		private:
-			INT32 const reason_;
+			UpdateBoxReason const reason_;
 	};
 
 	DialogueEvent::Add(new DialogueEventUpdateBoxSetReason(reason));

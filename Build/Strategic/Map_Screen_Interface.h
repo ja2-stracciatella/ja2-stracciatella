@@ -129,7 +129,8 @@ enum{
 };
 
 
-enum{
+enum UpdateBoxReason
+{
 	NO_REASON_FOR_UPDATE = 0,
 	CONTRACT_FINISHED_FOR_UPDATE,
 	ASSIGNMENT_FINISHED_FOR_UPDATE,
@@ -461,7 +462,7 @@ void ShutDownUserDefineHelpTextRegions( void );
 
 // add special events
 void AddSoldierToWaitingListQueue(SOLDIERTYPE&);
-void AddReasonToWaitingListQueue( INT32 iReason );
+void AddReasonToWaitingListQueue(UpdateBoxReason);
 void AddDisplayBoxToWaitingQueue( void );
 
 enum MoveError
