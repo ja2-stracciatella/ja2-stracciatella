@@ -5963,8 +5963,6 @@ static void HandleRestFatigueAndSleepStatus(void)
 							{
 								// tell player about it
 								AddReasonToWaitingListQueue(ASLEEP_GOING_AUTO_FOR_UPDATE);
-								AddDisplayBoxToWaitingQueue();
-
 								fReasonAdded = TRUE;
 							}
 
