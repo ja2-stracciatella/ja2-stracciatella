@@ -214,9 +214,6 @@ void HandleImportantMercQuoteLocked(SOLDIERTYPE*, UINT16 quote);
 
 const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile);
 
-// Do special event as well as dialogue!
-void CharacterDialogueWithSpecialEvent(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier, BOOLEAN fDelayed, DialogueSpecialEvent, UINT32 uiData1, UINT32 uiData2);
-
 // A higher level function used for tactical quotes
 BOOLEAN TacticalCharacterDialogueWithSpecialEvent(SOLDIERTYPE const* pSoldier, UINT16 usQuoteNum, DialogueSpecialEvent, UINT32 uiData1, UINT32 uiData2);
 
