@@ -5,7 +5,6 @@
 #include "PCX.h"
 #include "MemMan.h"
 #include "FileMan.h"
-#include "PODObj.h"
 
 
 struct PcxHeader
