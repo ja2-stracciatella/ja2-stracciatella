@@ -707,11 +707,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 			ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
 		}
 
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_UNSET_ARRIVES_FLAG)
-		{
-			gTacticalStatus.bMercArrivingQuoteBeingUsed = FALSE;
-		}
-
 		//Switch on our special events
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING)
 		{

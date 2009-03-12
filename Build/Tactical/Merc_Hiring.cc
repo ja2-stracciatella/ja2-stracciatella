@@ -319,7 +319,18 @@ void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
 			MakeSectorLocatorEvent(START_YELLOW_SECTOR_LOCATOR);
 			TacticalCharacterDialogue( pSoldier, QUOTE_MERC_REACHED_DESTINATION );
 			MakeSectorLocatorEvent(STOP_SECTOR_LOCATOR);
-			TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_UNSET_ARRIVES_FLAG, 0, 0);
+
+			class DialogueEventUnsetArrivesFlag : public DialogueEvent
+			{
+				public:
+					bool Execute()
+					{
+						gTacticalStatus.bMercArrivingQuoteBeingUsed = FALSE;
+						return false;
+					}
+			};
+
+			DialogueEvent::Add(new DialogueEventUnsetArrivesFlag());
 		}
 	}
 #endif
