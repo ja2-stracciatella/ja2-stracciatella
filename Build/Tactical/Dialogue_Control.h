@@ -227,9 +227,6 @@ void CharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, 
 
 void CharacterDialogueUsingAlternateFile(SOLDIERTYPE&, UINT16 quote, DialogueHandler);
 
-// A special event can be setup which can be queued with other speech
-void SpecialCharacterDialogueEvent(DialogueSpecialEvent, UINT32 uiSpecialEventData1, UINT32 uiSpecialEventData2, FACETYPE* face, DialogueHandler);
-
 BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier);
 
 // Called when a face stops talking...

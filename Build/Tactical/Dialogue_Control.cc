@@ -979,21 +979,6 @@ void CharacterDialogueUsingAlternateFile(SOLDIERTYPE& s, UINT16 const quote, Dia
 }
 
 
-void SpecialCharacterDialogueEvent(DialogueSpecialEvent const uiSpecialEventFlag, UINT32 const uiSpecialEventData1, UINT32 const uiSpecialEventData2, FACETYPE* const face, DialogueHandler const bUIHandlerID)
-{
-	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(face, bUIHandlerID);
-	d->uiSpecialEventFlag  = uiSpecialEventFlag;
-	d->uiSpecialEventData  = uiSpecialEventData1;
-	d->uiSpecialEventData2 = uiSpecialEventData2;
-
-	// If paused state not already locked
-	if (!gfLockPauseState) d->fPauseTime = fPausedTimeDuringQuote;
-	fPausedTimeDuringQuote = FALSE;
-
-	DialogueEvent::Add(d);
-}
-
-
 static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString);
 
 
