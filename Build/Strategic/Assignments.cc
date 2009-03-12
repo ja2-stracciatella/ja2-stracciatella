@@ -5963,7 +5963,7 @@ static void HandleRestFatigueAndSleepStatus(void)
 							{
 								// tell player about it
 								AddReasonToWaitingListQueue(ASLEEP_GOING_AUTO_FOR_UPDATE);
-								TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU, 0, 0);
+								AddDisplayBoxToWaitingQueue();
 
 								fReasonAdded = TRUE;
 							}

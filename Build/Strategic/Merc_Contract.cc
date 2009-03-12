@@ -978,14 +978,14 @@ void FindOutIfAnyMercAboutToLeaveIsGonnaRenew(void)
 		SOLDIERTYPE* const chosen = potential_mercs[Random(n_mercs)];
 		HandleImportantMercQuoteLocked(chosen, QUOTE_CONTRACTS_OVER);
 		AddReasonToWaitingListQueue(CONTRACT_EXPIRE_WARNING_REASON);
-		TacticalCharacterDialogueWithSpecialEvent(chosen, 0, DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU, 0, 0);
+		AddDisplayBoxToWaitingQueue();
 		chosen->ubContractRenewalQuoteCode = SOLDIER_CONTRACT_RENEW_QUOTE_89_USED;
 	}
 	else if (soldier_who_will_quit) // Check if we should display line for the guy who does not want to stay
 	{
 		HandleImportantMercQuote(soldier_who_will_quit, QUOTE_MERC_LEAVING_ALSUCO_SOON);
 		AddReasonToWaitingListQueue(CONTRACT_EXPIRE_WARNING_REASON);
-		TacticalCharacterDialogueWithSpecialEvent(soldier_who_will_quit, 0, DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU, 0, 0);
+		AddDisplayBoxToWaitingQueue();
 		soldier_who_will_quit->ubContractRenewalQuoteCode = SOLDIER_CONTRACT_RENEW_QUOTE_115_USED;
 	}
 }

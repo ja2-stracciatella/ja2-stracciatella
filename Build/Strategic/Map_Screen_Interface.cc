@@ -3963,14 +3963,6 @@ void EndUpdateBox( BOOLEAN fContinueTimeCompression )
 }
 
 
-
-void SetUpdateBoxFlag( BOOLEAN fFlag )
-{
-	// set the flag
-	fShowUpdateBox = fFlag;
-}
-
-
 void SetTixaAsFound( void )
 {
 	// set the town of Tixa as found by the player

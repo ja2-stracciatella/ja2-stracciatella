@@ -723,11 +723,7 @@ bool DIALOGUE_Q_STRUCT::Execute()
 		}
 
 		//Switch on our special events
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_UPDATE_MENU)
-		{
-			SetUpdateBoxFlag(TRUE);
-		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN)
 		{
 			if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
 			{

@@ -424,9 +424,6 @@ void CreateDestroyTheUpdateBox( void );
 void DisplaySoldierUpdateBox(void);
 
 
-void SetUpdateBoxFlag( BOOLEAN fFlag );
-
-
 /// set the town of Tixa as found by the player
 void SetTixaAsFound( void );
 
