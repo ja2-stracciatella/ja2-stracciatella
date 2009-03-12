@@ -677,18 +677,7 @@ bool DIALOGUE_Q_STRUCT::Execute()
 	else
 	{
 		// We could have a special flag, but dialogue as well
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU)
-		{
-			// Setup face pointer
-			// ATE: THis is working with MARK'S STUFF :(
-			// Need this stuff so that bSelectedInfoChar is set...
-			SetInfoChar(s);
-
-			fShowContractMenu = TRUE;
-			RebuildContractBoxForMerc(s);
-			bSelectedContractChar = bSelectedInfoChar;
-		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND)
 		{
 			s = FindSoldierByProfileID(ubCharacterNum);
 			if (s)
