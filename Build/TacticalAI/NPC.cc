@@ -2261,7 +2261,30 @@ static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 		// If 64, do something special
 		if ( pQuotePtr->ubTriggerNPCRec == QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO )
 		{
-			TacticalCharacterDialogueWithSpecialEvent(chosen, pQuotePtr->ubTriggerNPCRec, DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC, MIGUEL, 6);
+			class CharacterDialogueEventPCTriggerNPC : public CharacterDialogueEvent
+			{
+				public:
+					CharacterDialogueEventPCTriggerNPC(SOLDIERTYPE& s) : CharacterDialogueEvent(s) {}
+
+					bool Execute()
+					{
+						if (!MayExecute()) return true;
+
+						SOLDIERTYPE const& s = soldier_;
+						ExecuteCharacterDialogue(s.ubProfile, QUOTE_RESPONSE_TO_MIGUEL_SLASH_QUOTE_MERC_OR_RPC_LETGO, s.face, DIALOGUE_TACTICAL_UI, TRUE);
+
+						// Setup face with data!
+						FACETYPE& f = *gpCurrentTalkingFace;
+						f.uiFlags          |= FACE_PCTRIGGER_NPC;
+						f.u.trigger.npc     = MIGUEL;
+						f.u.trigger.record  = 6;
+
+						return false;
+					}
+			};
+
+			DialogueEvent::Add(new CharacterDialogueEventPCTriggerNPC(*chosen));
+			++giNPCReferenceCount;
 		}
 		else
 		{

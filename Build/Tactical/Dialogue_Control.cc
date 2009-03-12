@@ -677,17 +677,7 @@ bool DIALOGUE_Q_STRUCT::Execute()
 	else
 	{
 		// We could have a special flag, but dialogue as well
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC)
-		{
-			ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
-
-			// Setup face with data!
-			FACETYPE& f = *gpCurrentTalkingFace;
-			f.uiFlags          |= FACE_PCTRIGGER_NPC;
-			f.u.trigger.npc     = uiSpecialEventData;
-			f.u.trigger.record  = uiSpecialEventData2;
-		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU)
 		{
 			// Setup face pointer
 			// ATE: THis is working with MARK'S STUFF :(
@@ -924,11 +914,6 @@ static void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16
 	d->uiSpecialEventData2 = uiData2;
 
 	DialogueEvent::Add(d);
-
-	if (uiFlag & DIALOGUE_SPECIAL_EVENT_PCTRIGGERNPC)
-	{ // Increment reference count
-		++giNPCReferenceCount;
-	}
 }
 
 
