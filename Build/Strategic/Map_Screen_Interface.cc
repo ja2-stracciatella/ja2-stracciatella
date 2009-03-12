@@ -4796,6 +4796,32 @@ void HandleBlitOfSectorLocatorIcon( INT16 sSectorX, INT16 sSectorY, INT16 sSecto
 }
 
 
+void MakeDialogueEventShowContractMenu(SOLDIERTYPE& s)
+{
+	class CharacterDialogueEventShowContractMenu : public CharacterDialogueEvent
+	{
+		public:
+			CharacterDialogueEventShowContractMenu(SOLDIERTYPE& s) : CharacterDialogueEvent(s) {}
+
+			bool Execute()
+			{
+				if (!MayExecute()) return true;
+
+				// ATE: THis is working with MARK'S STUFF :(
+				// Need this stuff so that bSelectedInfoChar is set...
+				SOLDIERTYPE const& s = soldier_;
+				SetInfoChar(&s);
+				fShowContractMenu = TRUE;
+				RebuildContractBoxForMerc(&s);
+				bSelectedContractChar = bSelectedInfoChar;
+
+				return false;
+			}
+	};
+
+	DialogueEvent::Add(new CharacterDialogueEventShowContractMenu(s));
+}
+
 
 BOOLEAN CheckIfSalaryIncreasedAndSayQuote( SOLDIERTYPE *pSoldier, BOOLEAN fTriggerContractMenu )
 {
@@ -4809,7 +4835,7 @@ BOOLEAN CheckIfSalaryIncreasedAndSayQuote( SOLDIERTYPE *pSoldier, BOOLEAN fTrigg
 			// have him say so first - post the dialogue event with the contract menu event
 			MakeDialogueEventEnterMapScreen();
 			HandleImportantMercQuote( pSoldier, QUOTE_MERC_GONE_UP_IN_PRICE );
-			TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU, 0,0 );
+			MakeDialogueEventShowContractMenu(*pSoldier);
 		}
 		else
 		{

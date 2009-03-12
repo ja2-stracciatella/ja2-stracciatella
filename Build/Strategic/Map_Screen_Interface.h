@@ -507,4 +507,6 @@ extern MOUSE_REGION gMapStatusBarsRegion;
 
 void RandomMercInGroupSaysQuote(GROUP*, UINT16 usQuoteNum);
 
+void MakeDialogueEventShowContractMenu(SOLDIERTYPE&);
+
 #endif

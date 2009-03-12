@@ -206,7 +206,7 @@ void HandleContractRenewalSequence( )
 							SOLDIERTYPE& s = soldier_;
 							if (wants_to_renew_) CheckIfSalaryIncreasedAndSayQuote(&s, FALSE);
 							gfInContractMenuFromRenewSequence = TRUE;
-							TacticalCharacterDialogueWithSpecialEvent(&s, 0, DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU, 0, 0);
+							MakeDialogueEventShowContractMenu(s);
 							LockMapScreenInterface(false);
 							return false;
 						}
