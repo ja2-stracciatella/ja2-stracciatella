@@ -128,7 +128,7 @@ void BeginContractRenewalSequence( )
 			InterruptTime( );
 
 			// Go into mapscreen if not already...
-			SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN, 0, 0, 0, DIALOGUE_NO_UI);
+			MakeDialogueEventEnterMapScreen();
 		}
 	}
 }

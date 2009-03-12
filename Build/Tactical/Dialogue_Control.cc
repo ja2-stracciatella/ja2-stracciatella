@@ -723,15 +723,7 @@ bool DIALOGUE_Q_STRUCT::Execute()
 		}
 
 		//Switch on our special events
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN)
-		{
-			if (!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
-			{
-				gfEnteringMapScreen    = TRUE;
-				fEnterMapDueToContract = TRUE;
-			}
-		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING)
 		{
 			s = FindSoldierByProfileID(ubCharacterNum);
 			if (s != NULL)

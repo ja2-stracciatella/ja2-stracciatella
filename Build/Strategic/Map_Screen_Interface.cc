@@ -4807,7 +4807,7 @@ BOOLEAN CheckIfSalaryIncreasedAndSayQuote( SOLDIERTYPE *pSoldier, BOOLEAN fTrigg
 		if ( fTriggerContractMenu )
 		{
 			// have him say so first - post the dialogue event with the contract menu event
-			SpecialCharacterDialogueEvent(DIALOGUE_SPECIAL_EVENT_ENTER_MAPSCREEN, 0, 0, 0, DIALOGUE_NO_UI);
+			MakeDialogueEventEnterMapScreen();
 			HandleImportantMercQuote( pSoldier, QUOTE_MERC_GONE_UP_IN_PRICE );
 			TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_SHOW_CONTRACT_MENU, 0,0 );
 		}

@@ -125,6 +125,7 @@ ScreenID MapScreenHandle(void);
 void     MapScreenShutdown(void);
 
 void LockMapScreenInterface(bool lock);
+void MakeDialogueEventEnterMapScreen();
 
 #ifdef JA2TESTVERSION
 void DumpSectorDifficultyInfo(void);
