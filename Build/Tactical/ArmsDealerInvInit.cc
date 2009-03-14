@@ -1008,42 +1008,6 @@ int ArmsDealerItemQsortCompare(const void *pArg1, const void *pArg2)
 }
 
 
-
-int RepairmanItemQsortCompare(const void *pArg1, const void *pArg2)
-{
-	INVENTORY_IN_SLOT* pInvSlot1;
-	INVENTORY_IN_SLOT* pInvSlot2;
-	UINT32	uiRepairTime1;
-	UINT32	uiRepairTime2;
-
-
-	pInvSlot1 = ( INVENTORY_IN_SLOT * ) pArg1;
-	pInvSlot2 = ( INVENTORY_IN_SLOT * ) pArg2;
-
-	Assert( pInvSlot1->sSpecialItemElement != -1);
-	Assert( pInvSlot2->sSpecialItemElement != -1);
-
-	uiRepairTime1 = gArmsDealersInventory[ gbSelectedArmsDealerID ][ pInvSlot1->sItemIndex ].SpecialItem[ pInvSlot1->sSpecialItemElement ].uiRepairDoneTime;
-	uiRepairTime2 = gArmsDealersInventory[ gbSelectedArmsDealerID ][ pInvSlot2->sItemIndex ].SpecialItem[ pInvSlot2->sSpecialItemElement ].uiRepairDoneTime;
-
-
-	// lower reapir time first
-  if ( uiRepairTime1 < uiRepairTime2 )
-  {
-    return( -1 );
-  }
-  else
-  if ( uiRepairTime1 > uiRepairTime2 )
-  {
-    return( 1 );
-  }
-  else
-  {
-    return( 0 );
-	}
-}
-
-
 static UINT8 GetDealerItemCategoryNumber(UINT16 usItemIndex);
 
 

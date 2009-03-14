@@ -97,6 +97,4 @@ void RestrictSkiMouseCursor(void);
 void DoSkiMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 void StartSKIDescriptionBox(void);
 
-extern ArmsDealerID gbSelectedArmsDealerID;
-
 #endif

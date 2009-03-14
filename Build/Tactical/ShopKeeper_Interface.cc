@@ -232,7 +232,7 @@ static BOOLEAN gfRenderScreenOnNextLoop = FALSE;
 
 UINT8			gubSkiDirtyLevel = SKI_DIRTY_LEVEL0;
 
-ArmsDealerID gbSelectedArmsDealerID = ARMS_DEALER_INVALID; //Contains the enum value for the currently selected arms dealer
+static ArmsDealerID gbSelectedArmsDealerID = ARMS_DEALER_INVALID; //Contains the enum value for the currently selected arms dealer
 
 //the quote that is in progress, in certain circumstances, we don't want queuing of related but different quotes
 static INT32 giShopKeepDialogueEventinProgress = -1;
@@ -2242,6 +2242,26 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	InvalidateRegion( usPosX, usPosY, usPosX+SKI_INV_SLOT_WIDTH, usPosY+SKI_INV_SLOT_HEIGHT );
 
 	return( uiItemCost );
+}
+
+
+static int RepairmanItemQsortCompare(void const* pArg1, void const* pArg2)
+{
+	INVENTORY_IN_SLOT const& inv_slot1 = *static_cast<INVENTORY_IN_SLOT const*>(pArg1);
+	INVENTORY_IN_SLOT const& inv_slot2 = *static_cast<INVENTORY_IN_SLOT const*>(pArg2);
+
+	Assert(inv_slot1.sSpecialItemElement != -1);
+	Assert(inv_slot2.sSpecialItemElement != -1);
+
+	DEALER_ITEM_HEADER const (& dih)[MAXITEMS] = gArmsDealersInventory[gbSelectedArmsDealerID];
+	UINT32             const repair_time1      = dih[inv_slot1.sItemIndex].SpecialItem[inv_slot1.sSpecialItemElement].uiRepairDoneTime;
+	UINT32             const repair_time2      = dih[inv_slot2.sItemIndex].SpecialItem[inv_slot2.sSpecialItemElement].uiRepairDoneTime;
+
+	// lower reapir time first
+	return
+		repair_time1 < repair_time2 ? -1 :
+		repair_time1 > repair_time2 ?  1 :
+		0;
 }
 
 
