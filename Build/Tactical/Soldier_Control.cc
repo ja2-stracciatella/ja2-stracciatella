@@ -6258,6 +6258,39 @@ file_exists:;
 }
 
 
+void MakeCharacterDialogueEventDoBattleSound(SOLDIERTYPE& s, BattleSound const sound, UINT32 const delay)
+{
+	class CharacterDialogueEventDoBattleSound : public CharacterDialogueEvent
+	{
+		public:
+			CharacterDialogueEventDoBattleSound(SOLDIERTYPE& s, BattleSound const sound, UINT32 const delay) :
+				CharacterDialogueEvent(s),
+				sound_(sound),
+				time_stamp_(GetJA2Clock()),
+				delay_(delay)
+			{}
+
+			bool Execute()
+			{
+				// ATE: If a battle sound, and delay value was given, set time stamp now
+				if (delay_ != 0 && GetJA2Clock() - time_stamp_ < delay_) return true;
+
+				if (!MayExecute()) return true;
+
+				InternalDoMercBattleSound(&soldier_, sound_, 0);
+				return false;
+			}
+
+		private:
+			BattleSound const sound_;
+			UINT32      const time_stamp_;
+			UINT32      const delay_;
+	};
+
+	DialogueEvent::Add(new CharacterDialogueEventDoBattleSound(s, sound, delay));
+}
+
+
 BOOLEAN DoMercBattleSound(SOLDIERTYPE* const s, BattleSound const battle_snd_id)
 {
 	// We WANT to play some RIGHT AWAY or merc is not saying anything right now
@@ -6270,7 +6303,7 @@ BOOLEAN DoMercBattleSound(SOLDIERTYPE* const s, BattleSound const battle_snd_id)
 	}
 
 	// OK, queue it up otherwise!
-	TacticalCharacterDialogueWithSpecialEvent(s, 0, DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND, battle_snd_id, 0);
+	MakeCharacterDialogueEventDoBattleSound(*s, battle_snd_id, 0);
 	return TRUE;
 }
 

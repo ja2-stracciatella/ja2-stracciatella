@@ -599,7 +599,6 @@ struct DIALOGUE_Q_STRUCT : public DialogueEvent
 		ubCharacterNum(),
 		bUIHandlerID(dialogue_handler_),
 		face(face_),
-		iTimeStamp(GetJA2Clock()),
 		uiSpecialEventFlag(),
 		uiSpecialEventData(),
 		uiSpecialEventData2(),
@@ -612,7 +611,6 @@ struct DIALOGUE_Q_STRUCT : public DialogueEvent
 	UINT8                ubCharacterNum;
 	DialogueHandler      bUIHandlerID;
 	FACETYPE*            face;
-	INT32                iTimeStamp;
 	DialogueSpecialEvent uiSpecialEventFlag;
 	UINT32               uiSpecialEventData;
 	UINT32               uiSpecialEventData2;
@@ -622,16 +620,6 @@ struct DIALOGUE_Q_STRUCT : public DialogueEvent
 
 bool DIALOGUE_Q_STRUCT::Execute()
 {
-	// ATE: OK: If a battle sound, and delay value was given, set time stamp
-	// now...
-	if (uiSpecialEventFlag == DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND &&
-			uiSpecialEventData2 != 0                                   &&
-			GetJA2Clock() - iTimeStamp < uiSpecialEventData2)
-	{
-		//Place back in!
-		return true;
-	}
-
 	// Try to find soldier...
 	SOLDIERTYPE* s = FindSoldierByProfileIDOnPlayerTeam(ubCharacterNum);
 	if (s != NULL && SoundIsPlaying(s->uiBattleSoundID))
@@ -676,16 +664,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 	}
 	else
 	{
-		// We could have a special flag, but dialogue as well
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND)
-		{
-			s = FindSoldierByProfileID(ubCharacterNum);
-			if (s)
-			{
-				InternalDoMercBattleSound(s, static_cast<BattleSound>(uiSpecialEventData), 0);
-			}
-		}
-
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START)
 		{
 			// Turn off item lock for locators...
@@ -781,15 +759,11 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEvent(SOLDIERTYPE const* const pSold
 		return( FALSE );
 	}
 
-	if ( uiFlag != DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND && uiData1 != BATTLE_SOUND_DIE1 )
-	{
-		if (pSoldier->bLife < CONSCIOUSNESS )
-		 return( FALSE );
+	if (pSoldier->bLife < CONSCIOUSNESS )
+		return( FALSE );
 
-		if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
-			return( FALSE );
-
-	}
+	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
+		return( FALSE );
 
 	CharacterDialogueWithSpecialEvent(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1, uiData2);
 	return TRUE;

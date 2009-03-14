@@ -248,7 +248,7 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 				if (GetWorldItem(pItemPool->iItemIndex)->o.usItem == OWNERSHIP)
 				{
 					fDoHumm			= FALSE;
-					TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND, BATTLE_SOUND_NOTHING , 500 );
+					MakeCharacterDialogueEventDoBattleSound(*pSoldier, BATTLE_SOUND_NOTHING, 500);
 				}
 
 				// If now open, set visible...
@@ -265,15 +265,13 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 					  if ( pItemPool->pNext->pNext != NULL )
 					  {
 						  fDoHumm = FALSE;
-
-						  TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND, BATTLE_SOUND_COOL1 , 500 );
-
+							MakeCharacterDialogueEventDoBattleSound(*pSoldier, BATTLE_SOUND_COOL1, 500);
 					  }
 				  }
 
 				  if ( fDoHumm )
 				  {
-					  TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND, BATTLE_SOUND_HUMM , 500 );
+						MakeCharacterDialogueEventDoBattleSound(*pSoldier, BATTLE_SOUND_HUMM, 500);
 				  }
         }
 			}
@@ -286,7 +284,7 @@ void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 		{
 			if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )
 			{
-				TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_DO_BATTLE_SND, BATTLE_SOUND_NOTHING , 500 );
+				MakeCharacterDialogueEventDoBattleSound(*pSoldier, BATTLE_SOUND_NOTHING, 500);
 			}
 		}
 	}

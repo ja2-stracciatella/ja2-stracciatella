@@ -952,6 +952,7 @@ void SoldierGotoStationaryStance( SOLDIERTYPE *pSoldier );
 void ReCreateSoldierLight(SOLDIERTYPE*);
 
 
+void    MakeCharacterDialogueEventDoBattleSound(SOLDIERTYPE& s, BattleSound, UINT32 delay);
 BOOLEAN DoMercBattleSound(SOLDIERTYPE*, BattleSound);
 BOOLEAN InternalDoMercBattleSound(SOLDIERTYPE*, BattleSound, INT8 bSpecialCode);
 
