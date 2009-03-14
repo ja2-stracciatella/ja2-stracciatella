@@ -638,13 +638,13 @@ class CharacterDialogueEventBeginPrebattleInterface : public CharacterDialogueEv
 };
 
 
-static void HandleImportantPBIQuote(SOLDIERTYPE* const s, GROUP* const initiating_battle_group)
+static void HandleImportantPBIQuote(SOLDIERTYPE& s, GROUP* const initiating_battle_group)
 {
 	// Wake merc up for THIS quote
-	bool const asleep = s->fMercAsleep;
-	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_SLEEP, 0);
-	DialogueEvent::Add(new CharacterDialogueEventBeginPrebattleInterface(*s, initiating_battle_group));
-	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_SLEEP, 1);
+	bool const asleep = s.fMercAsleep;
+	if (asleep) MakeCharacterDialogueEventSleep(s, false);
+	DialogueEvent::Add(new CharacterDialogueEventBeginPrebattleInterface(s, initiating_battle_group));
+	if (asleep) MakeCharacterDialogueEventSleep(s, true);
 }
 
 
@@ -701,7 +701,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 
 			if( !gfTacticalTraversal )
 			{
-				HandleImportantPBIQuote(chosen, pInitiatingBattleGroup);
+				HandleImportantPBIQuote(*chosen, pInitiatingBattleGroup);
 			}
 
 			InterruptTime();
@@ -724,7 +724,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 		}
 
 		SOLDIERTYPE* const chosen = mercs_in_group[Random(ubNumMercs)];
-		HandleImportantPBIQuote(chosen, pInitiatingBattleGroup);
+		HandleImportantPBIQuote(*chosen, pInitiatingBattleGroup);
 		InterruptTime();
 		PauseGame();
 		LockPauseState(LOCK_PAUSE_12);

@@ -5939,7 +5939,7 @@ static void HandleRestFatigueAndSleepStatus(void)
 					{
 						// on a squad/vehicle, complain, then drop
 						TacticalCharacterDialogue(pSoldier, QUOTE_NEED_SLEEP);
-						TacticalCharacterDialogueWithSpecialEvent(pSoldier, QUOTE_NEED_SLEEP, DIALOGUE_SPECIAL_EVENT_SLEEP, 1);
+						MakeCharacterDialogueEventSleep(*pSoldier, true);
 						fMeToo = TRUE;
 					}
 

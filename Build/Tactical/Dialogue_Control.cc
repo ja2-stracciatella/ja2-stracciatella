@@ -582,6 +582,34 @@ bool CharacterDialogueEvent::CanTalk(SOLDIERTYPE const& s)
 }
 
 
+void MakeCharacterDialogueEventSleep(SOLDIERTYPE& s, bool const sleep)
+{
+	class CharacterDialogueEventSleep : public CharacterDialogueEvent
+	{
+		public:
+			CharacterDialogueEventSleep(SOLDIERTYPE& soldier, bool const sleep) :
+				CharacterDialogueEvent(soldier),
+				sleep_(sleep)
+			{}
+
+			bool Execute()
+			{
+				if (!MayExecute()) return true;
+
+				soldier_.fMercAsleep     = sleep_; // wake merc up or put them back down?
+				fCharacterInfoPanelDirty = TRUE;
+				fTeamPanelDirty          = TRUE;
+				return false;
+			}
+
+		private:
+			bool const sleep_;
+	};
+
+	DialogueEvent::Add(new CharacterDialogueEventSleep(s, sleep));
+}
+
+
 struct DIALOGUE_Q_STRUCT : public DialogueEvent
 {
 	DIALOGUE_Q_STRUCT(ProfileID const character, UINT16 const quote, FACETYPE* const face_, DialogueHandler const dialogue_handler_, BOOLEAN const from_soldier, BOOLEAN const delayed, DialogueSpecialEvent const event = DIALOGUE_SPECIAL_EVENT_NONE, UINT32 data = 0) :
@@ -643,7 +671,7 @@ bool DIALOGUE_Q_STRUCT::Execute()
 			fTeamPanelDirty = TRUE;
 
 			// allow them to go back to sleep
-			TacticalCharacterDialogueWithSpecialEvent(s, usQuoteNum, DIALOGUE_SPECIAL_EVENT_SLEEP, 1);
+			MakeCharacterDialogueEventSleep(*s, true);
 		}
 
 		gTacticalStatus.ubLastQuoteSaid       = usQuoteNum;
@@ -672,17 +700,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 				// .. remove the fired soldier again
 				StrategicRemoveMerc(s);
 			}
-		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SLEEP)
-		{
-			if (!s) return false;
-
-			// wake merc up or put them back down?
-			s->fMercAsleep = uiSpecialEventData != 0;
-
-			// refresh map screen
-			fCharacterInfoPanelDirty = TRUE;
-			fTeamPanelDirty          = TRUE;
 		}
 	}
 
@@ -1867,9 +1884,9 @@ void HandleImportantMercQuote(SOLDIERTYPE* const s, UINT16 const usQuoteNumber)
 {
 	// Wake merc up for THIS quote
 	bool const asleep = s->fMercAsleep;
-	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, usQuoteNumber, DIALOGUE_SPECIAL_EVENT_SLEEP, 0);
+	if (asleep) MakeCharacterDialogueEventSleep(*s, false);
 	TacticalCharacterDialogue(s, usQuoteNumber);
-	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, usQuoteNumber, DIALOGUE_SPECIAL_EVENT_SLEEP, 1);
+	if (asleep) MakeCharacterDialogueEventSleep(*s, true);
 }
 
 
