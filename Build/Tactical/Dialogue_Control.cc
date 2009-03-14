@@ -594,25 +594,26 @@ bool CharacterDialogueEvent::CanTalk(SOLDIERTYPE const& s)
 
 struct DIALOGUE_Q_STRUCT : public DialogueEvent
 {
-	DIALOGUE_Q_STRUCT(FACETYPE* const face_, DialogueHandler const dialogue_handler_) :
-		usQuoteNum(),
-		ubCharacterNum(),
+	DIALOGUE_Q_STRUCT(ProfileID const character, UINT16 const quote, FACETYPE* const face_, DialogueHandler const dialogue_handler_, BOOLEAN const from_soldier, BOOLEAN const delayed, DialogueSpecialEvent const event = DIALOGUE_SPECIAL_EVENT_NONE, UINT32 data = 0) :
+		DialogueEvent(delayed),
+		usQuoteNum(quote),
+		ubCharacterNum(character),
 		bUIHandlerID(dialogue_handler_),
 		face(face_),
-		uiSpecialEventFlag(),
-		uiSpecialEventData(),
-		fFromSoldier()
+		uiSpecialEventFlag(event),
+		uiSpecialEventData(data),
+		fFromSoldier(from_soldier)
 	{}
 
 	bool Execute();
 
-	UINT16               usQuoteNum;
-	UINT8                ubCharacterNum;
-	DialogueHandler      bUIHandlerID;
-	FACETYPE*            face;
-	DialogueSpecialEvent uiSpecialEventFlag;
-	UINT32               uiSpecialEventData;
-	BOOLEAN              fFromSoldier;
+	UINT16               const usQuoteNum;
+	UINT8                const ubCharacterNum;
+	DialogueHandler      const bUIHandlerID;
+	FACETYPE*            const face;
+	DialogueSpecialEvent const uiSpecialEventFlag;
+	UINT32               const uiSpecialEventData;
+	BOOLEAN              const fFromSoldier;
 };
 
 
@@ -860,25 +861,14 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 // Do special event as well as dialogue!
 static void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, DialogueSpecialEvent const uiFlag, UINT32 const uiData1)
 {
-	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(face, bUIHandlerID);
-	d->ubCharacterNum      = ubCharacterNum;
-	d->usQuoteNum          = usQuoteNum;
-	d->fFromSoldier        = fFromSoldier;
-	d->fDelayed            = fDelayed;
-	d->uiSpecialEventFlag  = uiFlag;
-	d->uiSpecialEventData  = uiData1;
-
+	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier, fDelayed, uiFlag, uiData1);
 	DialogueEvent::Add(d);
 }
 
 
 void CharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed)
 {
-	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(face, bUIHandlerID);
-	d->ubCharacterNum = ubCharacterNum;
-	d->usQuoteNum     = usQuoteNum;
-	d->fFromSoldier   = fFromSoldier;
-	d->fDelayed       = fDelayed;
+	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier, fDelayed);
 
 	// Check if pause already locked, if so, then don't mess with it
 	if (!gfLockPauseState) d->fPauseTime = fPausedTimeDuringQuote;
