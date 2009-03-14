@@ -709,7 +709,7 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 											// Display quote!
 											if ( !AM_AN_EPC( pSoldier ) )
 											{
-												TacticalCharacterDialogueWithSpecialEvent( pSoldier, (UINT16)( QUOTE_SPOTTED_SOMETHING_ONE + Random( 2 ) ), DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START, (INT16)(marker), 0 );
+												TacticalCharacterDialogueWithSpecialEvent(pSoldier, (UINT16)(QUOTE_SPOTTED_SOMETHING_ONE + Random(2)), DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START, (INT16)marker);
 											}
 											else
 											{

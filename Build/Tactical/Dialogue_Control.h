@@ -210,7 +210,7 @@ void HandleImportantMercQuoteLocked(SOLDIERTYPE*, UINT16 quote);
 const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile);
 
 // A higher level function used for tactical quotes
-BOOLEAN TacticalCharacterDialogueWithSpecialEvent(SOLDIERTYPE const* pSoldier, UINT16 usQuoteNum, DialogueSpecialEvent, UINT32 uiData1, UINT32 uiData2);
+BOOLEAN TacticalCharacterDialogueWithSpecialEvent(SOLDIERTYPE const* pSoldier, UINT16 usQuoteNum, DialogueSpecialEvent, UINT32 uiData1);
 
 // A higher level function used for tactical quotes
 BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum);

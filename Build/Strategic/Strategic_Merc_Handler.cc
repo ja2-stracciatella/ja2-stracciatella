@@ -412,7 +412,7 @@ void MercsContractIsFinished(SOLDIERTYPE* const pSoldier)
 			// Say quote for wishing to leave
 			TacticalCharacterDialogue( pSoldier, QUOTE_NOT_GETTING_PAID );
 
-			TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP, 0, 0 );
+			TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP, 0);
 
 			pSoldier->ubLeaveHistoryCode = HISTORY_MERC_QUIT;
 		}
@@ -425,7 +425,7 @@ void MercsContractIsFinished(SOLDIERTYPE* const pSoldier)
 
 		TacticalCharacterDialogue( pSoldier, QUOTE_AIM_SEEN_MIKE );
 
-		TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP, 0, 0 );
+		TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP, 0);
 
 		pSoldier->ubLeaveHistoryCode = HISTORY_MERC_QUIT;
 
@@ -651,7 +651,7 @@ void UpdateBuddyAndHatedCounters( void )
 												}
 
 												// Leave now! ( handle equipment too )....
-												TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 0,0 );
+												TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 0);
 
 												pSoldier->ubLeaveHistoryCode = HISTORY_MERC_QUIT;
 											}
@@ -729,7 +729,7 @@ void UpdateBuddyAndHatedCounters( void )
 											{
 												// Leave now! ( handle equipment too )....
 												TacticalCharacterDialogue( pSoldier, QUOTE_MERC_QUIT_LEARN_TO_HATE );
-												TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 0,0 );
+												TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 0);
 												pSoldier->ubLeaveHistoryCode = HISTORY_MERC_QUIT;
 
 											}

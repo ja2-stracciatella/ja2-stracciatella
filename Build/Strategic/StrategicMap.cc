@@ -2558,7 +2558,7 @@ static void DoneFadeOutExitGridSector(void)
 	{
 		if( gTacticalStatus.fEnemyInSector )
 		{
-			TacticalCharacterDialogueWithSpecialEvent(gpTacticalTraversalChosenSoldier, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_NONE, 0, 0);
+			TacticalCharacterDialogueWithSpecialEvent(gpTacticalTraversalChosenSoldier, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_NONE, 0);
 		}
 	}
 	gfTacticalTraversal = FALSE;
@@ -2581,7 +2581,7 @@ static void DoneFadeOutAdjacentSector(void)
 	{
 		if( gTacticalStatus.fEnemyInSector )
 		{
-			TacticalCharacterDialogueWithSpecialEvent(gpTacticalTraversalChosenSoldier, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_NONE, 0, 0);
+			TacticalCharacterDialogueWithSpecialEvent(gpTacticalTraversalChosenSoldier, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_NONE, 0);
 		}
 	}
 	gfTacticalTraversal = FALSE;
@@ -3992,7 +3992,7 @@ void HandleSlayDailyEvent( void )
 	if( ( pSoldier->iEndofContractTime /1440 ) <= (INT32)GetWorldDay( ) )
 	{
 		pSoldier->ubLeaveHistoryCode = HISTORY_SLAY_MYSTERIOUSLY_LEFT;
-		TacticalCharacterDialogueWithSpecialEvent( pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP, 0, 0 );
+		TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP, 0);
 	}
 }
 

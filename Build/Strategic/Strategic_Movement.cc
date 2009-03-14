@@ -642,9 +642,9 @@ static void HandleImportantPBIQuote(SOLDIERTYPE* const s, GROUP* const initiatin
 {
 	// Wake merc up for THIS quote
 	bool const asleep = s->fMercAsleep;
-	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_SLEEP, 0, 0);
+	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_SLEEP, 0);
 	DialogueEvent::Add(new CharacterDialogueEventBeginPrebattleInterface(*s, initiating_battle_group));
-	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_SLEEP, 1, 0);
+	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_SLEEP, 1);
 }
 
 

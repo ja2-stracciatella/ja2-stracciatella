@@ -4589,7 +4589,7 @@ static void BeginRemoveMercFromContract(SOLDIERTYPE* const s)
 			}
 			break;
 	}
-	TacticalCharacterDialogueWithSpecialEvent(s, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 1, 0);
+	TacticalCharacterDialogueWithSpecialEvent(s, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 1);
 
 	if (GetWorldTotalMin() - s->uiTimeOfLastContractUpdate < 60 * 3)
 	{
@@ -5939,7 +5939,7 @@ static void HandleRestFatigueAndSleepStatus(void)
 					{
 						// on a squad/vehicle, complain, then drop
 						TacticalCharacterDialogue(pSoldier, QUOTE_NEED_SLEEP);
-						TacticalCharacterDialogueWithSpecialEvent(pSoldier, QUOTE_NEED_SLEEP, DIALOGUE_SPECIAL_EVENT_SLEEP, 1, 0);
+						TacticalCharacterDialogueWithSpecialEvent(pSoldier, QUOTE_NEED_SLEEP, DIALOGUE_SPECIAL_EVENT_SLEEP, 1);
 						fMeToo = TRUE;
 					}
 

@@ -601,7 +601,6 @@ struct DIALOGUE_Q_STRUCT : public DialogueEvent
 		face(face_),
 		uiSpecialEventFlag(),
 		uiSpecialEventData(),
-		uiSpecialEventData2(),
 		fFromSoldier()
 	{}
 
@@ -613,7 +612,6 @@ struct DIALOGUE_Q_STRUCT : public DialogueEvent
 	FACETYPE*            face;
 	DialogueSpecialEvent uiSpecialEventFlag;
 	UINT32               uiSpecialEventData;
-	UINT32               uiSpecialEventData2;
 	BOOLEAN              fFromSoldier;
 };
 
@@ -654,7 +652,7 @@ bool DIALOGUE_Q_STRUCT::Execute()
 			fTeamPanelDirty = TRUE;
 
 			// allow them to go back to sleep
-			TacticalCharacterDialogueWithSpecialEvent(s, usQuoteNum, DIALOGUE_SPECIAL_EVENT_SLEEP, 1, 0);
+			TacticalCharacterDialogueWithSpecialEvent(s, usQuoteNum, DIALOGUE_SPECIAL_EVENT_SLEEP, 1);
 		}
 
 		gTacticalStatus.ubLastQuoteSaid       = usQuoteNum;
@@ -749,10 +747,10 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 }
 
 
-static void CharacterDialogueWithSpecialEvent(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier, BOOLEAN fDelayed, DialogueSpecialEvent, UINT32 uiData1, UINT32 uiData2);
+static void CharacterDialogueWithSpecialEvent(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier, BOOLEAN fDelayed, DialogueSpecialEvent, UINT32 uiData1);
 
 
-BOOLEAN TacticalCharacterDialogueWithSpecialEvent(SOLDIERTYPE const* const pSoldier, UINT16 const usQuoteNum, DialogueSpecialEvent const uiFlag, UINT32 const uiData1, UINT32 const uiData2)
+BOOLEAN TacticalCharacterDialogueWithSpecialEvent(SOLDIERTYPE const* const pSoldier, UINT16 const usQuoteNum, DialogueSpecialEvent const uiFlag, UINT32 const uiData1)
 {
 	if ( pSoldier->ubProfile == NO_PROFILE )
 	{
@@ -765,7 +763,7 @@ BOOLEAN TacticalCharacterDialogueWithSpecialEvent(SOLDIERTYPE const* const pSold
 	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
 		return( FALSE );
 
-	CharacterDialogueWithSpecialEvent(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1, uiData2);
+	CharacterDialogueWithSpecialEvent(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag, uiData1);
 	return TRUE;
 }
 
@@ -860,7 +858,7 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 
 
 // Do special event as well as dialogue!
-static void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, DialogueSpecialEvent const uiFlag, UINT32 const uiData1, UINT32 const uiData2)
+static void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, DialogueSpecialEvent const uiFlag, UINT32 const uiData1)
 {
 	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(face, bUIHandlerID);
 	d->ubCharacterNum      = ubCharacterNum;
@@ -869,7 +867,6 @@ static void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16
 	d->fDelayed            = fDelayed;
 	d->uiSpecialEventFlag  = uiFlag;
 	d->uiSpecialEventData  = uiData1;
-	d->uiSpecialEventData2 = uiData2;
 
 	DialogueEvent::Add(d);
 }
@@ -1899,9 +1896,9 @@ void HandleImportantMercQuote(SOLDIERTYPE* const s, UINT16 const usQuoteNumber)
 {
 	// Wake merc up for THIS quote
 	bool const asleep = s->fMercAsleep;
-	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, usQuoteNumber, DIALOGUE_SPECIAL_EVENT_SLEEP, 0, 0);
+	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, usQuoteNumber, DIALOGUE_SPECIAL_EVENT_SLEEP, 0);
 	TacticalCharacterDialogue(s, usQuoteNumber);
-	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, usQuoteNumber, DIALOGUE_SPECIAL_EVENT_SLEEP, 1, 0);
+	if (asleep) TacticalCharacterDialogueWithSpecialEvent(s, usQuoteNumber, DIALOGUE_SPECIAL_EVENT_SLEEP, 1);
 }
 
 

@@ -294,7 +294,7 @@ BOOLEAN MercContractHandling(SOLDIERTYPE* const s, UINT8 const ubDesiredAction)
 		// Remove soldier (if this is setup because normal contract ending sequence)
 		if (ContractIsExpiring(s))
 		{
-			TacticalCharacterDialogueWithSpecialEvent(s, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 1, 0);
+			TacticalCharacterDialogueWithSpecialEvent(s, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 1);
 		}
 		return FALSE;
 	}
