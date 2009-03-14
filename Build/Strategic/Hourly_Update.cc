@@ -1,6 +1,7 @@
 #include "Assignments.h"
 #include "Hourly_Update.h"
 #include "Map_Screen_Helicopter.h"
+#include "Merc_Contract.h"
 #include "Soldier_Profile.h"
 #include "Strategic_Town_Loyalty.h"
 #include "Strategic_Merc_Handler.h"
@@ -329,7 +330,7 @@ static void HourlyCheckIfSlayAloneSoHeCanLeave(void)
 		if( Chance( 15 ) )
 		{
 			pSoldier->ubLeaveHistoryCode = HISTORY_SLAY_MYSTERIOUSLY_LEFT;
-			TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP);
+			MakeCharacterDialogueEventContractEndingNoAskEquip(*pSoldier);
 		}
 	}
 }

@@ -44,6 +44,7 @@ BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction );
 
 void StrategicRemoveMerc(SOLDIERTYPE* pSoldier);
 void MakeCharacterDialogueEventContractEnding(SOLDIERTYPE&, bool add_rehire_button);
+void MakeCharacterDialogueEventContractEndingNoAskEquip(SOLDIERTYPE&);
 
 
 BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote );

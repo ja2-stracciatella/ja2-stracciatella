@@ -36,7 +36,6 @@
 #include "GameSettings.h"
 #include "ShopKeeper_Interface.h"
 #include "Map_Screen_Interface.h"
-#include "Merc_Contract.h"
 #include "Meanwhile.h"
 #include "SkillCheck.h"
 #include "Interface_Control.h"
@@ -676,19 +675,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 		gTacticalStatus.ubLastQuoteProfileNUm = ubCharacterNum;
 
 		ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
-	}
-	else
-	{
-		//Switch on our special events
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP)
-		{
-			s = FindSoldierByProfileID(ubCharacterNum);
-			if (s != NULL)
-			{
-				// .. remove the fired soldier again
-				StrategicRemoveMerc(s);
-			}
-		}
 	}
 
 	s = FindSoldierByProfileID(ubCharacterNum);

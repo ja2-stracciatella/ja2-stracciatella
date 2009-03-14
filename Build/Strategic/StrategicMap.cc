@@ -4,6 +4,7 @@
 #include "LoadSaveSectorInfo.h"
 #include "LoadSaveStrategicMapElement.h"
 #include "Local.h"
+#include "Merc_Contract.h"
 #include "Merc_Hiring.h"
 #include "StrategicMap.h"
 #include "Strategic.h"
@@ -3992,7 +3993,7 @@ void HandleSlayDailyEvent( void )
 	if( ( pSoldier->iEndofContractTime /1440 ) <= (INT32)GetWorldDay( ) )
 	{
 		pSoldier->ubLeaveHistoryCode = HISTORY_SLAY_MYSTERIOUSLY_LEFT;
-		TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP);
+		MakeCharacterDialogueEventContractEndingNoAskEquip(*pSoldier);
 	}
 }
 

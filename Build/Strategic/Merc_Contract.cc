@@ -652,6 +652,26 @@ void MakeCharacterDialogueEventContractEnding(SOLDIERTYPE& s, bool const add_reh
 }
 
 
+void MakeCharacterDialogueEventContractEndingNoAskEquip(SOLDIERTYPE& s)
+{
+	class CharacterDialogueEventContractEndingNoAskEquip: public CharacterDialogueEvent
+	{
+		public:
+			CharacterDialogueEventContractEndingNoAskEquip(SOLDIERTYPE& s) : CharacterDialogueEvent(s) {}
+
+			bool Execute()
+			{
+				if (!MayExecute()) return true;
+
+				StrategicRemoveMerc(&soldier_);
+				return false;
+			}
+	};
+
+	DialogueEvent::Add(new CharacterDialogueEventContractEndingNoAskEquip(s));
+}
+
+
 static void CalculateMedicalDepositRefund(SOLDIERTYPE* pSoldier);
 
 
