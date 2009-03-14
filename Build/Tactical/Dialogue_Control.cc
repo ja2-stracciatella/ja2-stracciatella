@@ -681,16 +681,6 @@ bool DIALOGUE_Q_STRUCT::Execute()
 	}
 	else
 	{
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START)
-		{
-			// Turn off item lock for locators...
-			gTacticalStatus.fLockItemLocators = FALSE;
-
-			SlideToLocation((UINT16)uiSpecialEventData);
-
-			ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
-		}
-
 		//Switch on our special events
 		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP)
 		{

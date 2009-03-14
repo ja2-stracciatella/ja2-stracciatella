@@ -6053,7 +6053,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		SOLDIERTYPE* const s = gTacticalStatus.items_seen_on_attack_soldier;
 		if (!AM_AN_EPC(s))
 		{
-			TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_SPOTTED_SOMETHING_ONE + Random(2), DIALOGUE_SPECIAL_EVENT_SIGNAL_ITEM_LOCATOR_START, gTacticalStatus.usItemsSeenOnAttackGridNo);
+			MakeCharacterDialogueEventSignalItemLocatorStart(*s, gTacticalStatus.usItemsSeenOnAttackGridNo);
 		}
 		else
 		{
@@ -6528,4 +6528,37 @@ static void DoCreatureTensionQuote(SOLDIERTYPE* s)
 	if (s->usQuoteSaidFlags & quote_flag) return;
 	s->usQuoteSaidFlags |= quote_flag;
 	TacticalCharacterDialogue(s, quote);
+}
+
+
+void MakeCharacterDialogueEventSignalItemLocatorStart(SOLDIERTYPE& s, GridNo const location)
+{
+	class CharacterDialogueEventSignalItemLocatorStart : public CharacterDialogueEvent
+	{
+		public:
+			CharacterDialogueEventSignalItemLocatorStart(SOLDIERTYPE& s, GridNo const location) :
+				CharacterDialogueEvent(s),
+				location_(location)
+			{}
+
+			bool Execute()
+			{
+				if (!MayExecute()) return true;
+
+				// Turn off item lock for locators
+				gTacticalStatus.fLockItemLocators = FALSE;
+
+				SlideToLocation(location_);
+
+				SOLDIERTYPE& s = soldier_;
+				ExecuteCharacterDialogue(s.ubProfile, QUOTE_SPOTTED_SOMETHING_ONE + Random(2), s.face, DIALOGUE_TACTICAL_UI, TRUE);
+
+				return false;
+			}
+
+		private:
+			GridNo const location_;
+	};
+
+	DialogueEvent::Add(new CharacterDialogueEventSignalItemLocatorStart(s, location));
 }

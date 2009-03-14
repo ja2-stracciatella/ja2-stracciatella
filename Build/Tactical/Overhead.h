@@ -379,4 +379,6 @@ UINT NumberOfMercsOnPlayerTeam(void);
 
 void InitializeTacticalStatusAtBattleStart(void);
 
+void MakeCharacterDialogueEventSignalItemLocatorStart(SOLDIERTYPE&, GridNo location);
+
 #endif
