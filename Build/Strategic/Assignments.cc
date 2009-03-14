@@ -4589,7 +4589,7 @@ static void BeginRemoveMercFromContract(SOLDIERTYPE* const s)
 			}
 			break;
 	}
-	TacticalCharacterDialogueWithSpecialEvent(s, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 1);
+	MakeCharacterDialogueEventContractEnding(*s, true);
 
 	if (GetWorldTotalMin() - s->uiTimeOfLastContractUpdate < 60 * 3)
 	{

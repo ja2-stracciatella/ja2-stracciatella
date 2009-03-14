@@ -43,7 +43,7 @@ enum
 BOOLEAN	MercContractHandling( SOLDIERTYPE	*pSoldier, UINT8 ubDesiredAction );
 
 void StrategicRemoveMerc(SOLDIERTYPE* pSoldier);
-void BeginStrategicRemoveMerc(SOLDIERTYPE* pSoldier, BOOLEAN fAddRehireButton);
+void MakeCharacterDialogueEventContractEnding(SOLDIERTYPE&, bool add_rehire_button);
 
 
 BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote );

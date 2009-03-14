@@ -294,7 +294,7 @@ BOOLEAN MercContractHandling(SOLDIERTYPE* const s, UINT8 const ubDesiredAction)
 		// Remove soldier (if this is setup because normal contract ending sequence)
 		if (ContractIsExpiring(s))
 		{
-			TacticalCharacterDialogueWithSpecialEvent(s, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 1);
+			MakeCharacterDialogueEventContractEnding(*s, true);
 		}
 		return FALSE;
 	}
@@ -610,25 +610,45 @@ static void HandleUniqueEventWhenPlayerLeavesTeam(SOLDIERTYPE* pSoldier);
 static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* pSoldier, BOOLEAN fAddRehireButton);
 
 
-//for ubRemoveType pass in the enum from the .h, 	( MERC_QUIT, MERC_FIRED  )
-void BeginStrategicRemoveMerc(SOLDIERTYPE* pSoldier, BOOLEAN fAddRehireButton)
+void MakeCharacterDialogueEventContractEnding(SOLDIERTYPE& s, bool const add_rehire_button)
 {
-	InterruptTime( );
-	PauseGame();
-	LockPauseState(LOCK_PAUSE_08);
+	class CharacterDialogueEventContractEnding : public CharacterDialogueEvent
+	{
+		public:
+			CharacterDialogueEventContractEnding(SOLDIERTYPE& s, bool const add_rehire_button) :
+				CharacterDialogueEvent(s),
+				add_rehire_button_(add_rehire_button)
+			{}
 
-	//if the soldier may have some special action when he/she leaves the party, handle it
-	HandleUniqueEventWhenPlayerLeavesTeam( pSoldier );
+			bool Execute()
+			{
+				if (!MayExecute()) return true;
 
-  // IF the soldier is an EPC, don't ask about equipment
-  if ( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
-  {
-    UnEscortEPC( pSoldier );
-  }
-  else
-  {
-	  NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement( pSoldier, fAddRehireButton );
-  }
+				InterruptTime();
+				PauseGame();
+				LockPauseState(LOCK_PAUSE_08);
+
+				SOLDIERTYPE& s = soldier_;
+				// If the soldier may have some special action when he/she leaves the party, handle it
+				HandleUniqueEventWhenPlayerLeavesTeam(&s);
+
+				// If the soldier is an EPC, don't ask about equipment
+				if (s.ubWhatKindOfMercAmI == MERC_TYPE__EPC)
+				{
+					UnEscortEPC(&s);
+				}
+				else
+				{
+					NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(&s, add_rehire_button_);
+				}
+				return false;
+			}
+
+		private:
+			bool const add_rehire_button_;
+	};
+
+	DialogueEvent::Add(new CharacterDialogueEventContractEnding(s, add_rehire_button));
 }
 
 

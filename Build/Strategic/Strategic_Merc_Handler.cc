@@ -651,7 +651,7 @@ void UpdateBuddyAndHatedCounters( void )
 												}
 
 												// Leave now! ( handle equipment too )....
-												TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 0);
+												MakeCharacterDialogueEventContractEnding(*pSoldier, false);
 
 												pSoldier->ubLeaveHistoryCode = HISTORY_MERC_QUIT;
 											}
@@ -729,7 +729,7 @@ void UpdateBuddyAndHatedCounters( void )
 											{
 												// Leave now! ( handle equipment too )....
 												TacticalCharacterDialogue( pSoldier, QUOTE_MERC_QUIT_LEARN_TO_HATE );
-												TacticalCharacterDialogueWithSpecialEvent(pSoldier, 0, DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING, 0);
+												MakeCharacterDialogueEventContractEnding(*pSoldier, false);
 												pSoldier->ubLeaveHistoryCode = HISTORY_MERC_QUIT;
 
 											}

@@ -664,16 +664,7 @@ bool DIALOGUE_Q_STRUCT::Execute()
 		}
 
 		//Switch on our special events
-		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING)
-		{
-			s = FindSoldierByProfileID(ubCharacterNum);
-			if (s != NULL)
-			{
-				// .. remove the fired soldier again
-				BeginStrategicRemoveMerc(s, (UINT8)uiSpecialEventData);
-			}
-		}
-		else if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP)
+		if (uiSpecialEventFlag & DIALOGUE_SPECIAL_EVENT_CONTRACT_ENDING_NO_ASK_EQUIP)
 		{
 			s = FindSoldierByProfileID(ubCharacterNum);
 			if (s != NULL)
