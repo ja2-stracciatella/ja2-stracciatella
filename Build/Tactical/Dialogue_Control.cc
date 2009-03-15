@@ -752,12 +752,8 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 					return true;
 				}
 
-				if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
-				{
-					fPauseTime = TRUE;
-				}
-
-				if (fPauseTime && !GamePaused())
+				bool const pause = fPauseTime || guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN;
+				if (pause && !GamePaused())
 				{
 					PauseGame();
 					LockPauseState(LOCK_PAUSE_15);
@@ -787,7 +783,7 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 					CheckForStopTimeQuotes(quote_);
 				}
 
-				if (fPauseTime) fWasPausedDuringDialogue = TRUE;
+				if (pause) fWasPausedDuringDialogue = TRUE;
 
 				return false;
 			}

@@ -288,7 +288,7 @@ struct DialogueEvent
 	static void Add(DialogueEvent*);
 
 	BOOLEAN const fDelayed;
-	BOOLEAN       fPauseTime;
+	BOOLEAN const fPauseTime;
 };
 
 template<void (&callback)()> class DialogueEventCallback : public DialogueEvent
