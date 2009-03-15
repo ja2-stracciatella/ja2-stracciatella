@@ -609,78 +609,6 @@ void MakeCharacterDialogueEventSleep(SOLDIERTYPE& s, bool const sleep)
 }
 
 
-struct DIALOGUE_Q_STRUCT : public DialogueEvent
-{
-	DIALOGUE_Q_STRUCT(ProfileID const character, UINT16 const quote, FACETYPE* const face_, DialogueHandler const dialogue_handler_, BOOLEAN const from_soldier, BOOLEAN const delayed) :
-		DialogueEvent(delayed),
-		usQuoteNum(quote),
-		ubCharacterNum(character),
-		bUIHandlerID(dialogue_handler_),
-		face(face_),
-		fFromSoldier(from_soldier)
-	{}
-
-	bool Execute();
-
-	UINT16          const usQuoteNum;
-	UINT8           const ubCharacterNum;
-	DialogueHandler const bUIHandlerID;
-	FACETYPE*       const face;
-	BOOLEAN         const fFromSoldier;
-};
-
-
-bool DIALOGUE_Q_STRUCT::Execute()
-{
-	// Try to find soldier...
-	SOLDIERTYPE* s = FindSoldierByProfileIDOnPlayerTeam(ubCharacterNum);
-	if (s != NULL && SoundIsPlaying(s->uiBattleSoundID))
-	{
-		//Place back in!
-		return true;
-	}
-
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
-	{
-		fPauseTime = TRUE;
-	}
-
-	if (fPauseTime && !GamePaused())
-	{
-		PauseGame();
-		LockPauseState(LOCK_PAUSE_15);
-		fWasPausedDuringDialogue = TRUE;
-	}
-
-	if (s && s->fMercAsleep) // wake grunt up to say
-	{
-		s->fMercAsleep = FALSE;
-
-		// refresh map screen
-		fCharacterInfoPanelDirty = TRUE;
-		fTeamPanelDirty = TRUE;
-
-		// allow them to go back to sleep
-		MakeCharacterDialogueEventSleep(*s, true);
-	}
-
-	gTacticalStatus.ubLastQuoteSaid       = usQuoteNum;
-	gTacticalStatus.ubLastQuoteProfileNUm = ubCharacterNum;
-
-	ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
-
-	s = FindSoldierByProfileID(ubCharacterNum);
-	if (s && s->bTeam == gbPlayerNum)
-	{
-		CheckForStopTimeQuotes(usQuoteNum);
-	}
-
-	if (fPauseTime) fWasPausedDuringDialogue = TRUE;
-
-	return false;
-}
-
-
 BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 {
 	if ( pSoldier->ubProfile == NO_PROFILE )
@@ -801,15 +729,81 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 // NB;				The queued system is not yet implemented, but will be transpatent to the caller....
 
 
-void CharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed)
+void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* const face, DialogueHandler const dialogue_handler, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed)
 {
-	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier, fDelayed);
+	class DialogueEventQuote : public DialogueEvent
+	{
+		public:
+			DialogueEventQuote(ProfileID const character, UINT16 const quote, FACETYPE* const face_, DialogueHandler const dialogue_handler, bool const from_soldier, bool const delayed, bool const pause_time) :
+				DialogueEvent(delayed, pause_time),
+				quote_(quote),
+				character_(character),
+				dialogue_handler_(dialogue_handler),
+				face(face_),
+				from_soldier_(from_soldier)
+			{}
+
+			bool Execute()
+			{
+				// Try to find soldier...
+				SOLDIERTYPE* s = FindSoldierByProfileIDOnPlayerTeam(character_);
+				if (s && SoundIsPlaying(s->uiBattleSoundID))
+				{ // Place back in!
+					return true;
+				}
+
+				if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
+				{
+					fPauseTime = TRUE;
+				}
+
+				if (fPauseTime && !GamePaused())
+				{
+					PauseGame();
+					LockPauseState(LOCK_PAUSE_15);
+					fWasPausedDuringDialogue = TRUE;
+				}
+
+				if (s && s->fMercAsleep) // wake grunt up to say
+				{
+					s->fMercAsleep = FALSE;
+
+					// refresh map screen
+					fCharacterInfoPanelDirty = TRUE;
+					fTeamPanelDirty = TRUE;
+
+					// allow them to go back to sleep
+					MakeCharacterDialogueEventSleep(*s, true);
+				}
+
+				gTacticalStatus.ubLastQuoteSaid       = quote_;
+				gTacticalStatus.ubLastQuoteProfileNUm = character_;
+
+				ExecuteCharacterDialogue(character_, quote_, face, dialogue_handler_, from_soldier_);
+
+				s = FindSoldierByProfileID(character_);
+				if (s && s->bTeam == gbPlayerNum)
+				{
+					CheckForStopTimeQuotes(quote_);
+				}
+
+				if (fPauseTime) fWasPausedDuringDialogue = TRUE;
+
+				return false;
+			}
+
+		private:
+			UINT16          const quote_;
+			UINT8           const character_;
+			DialogueHandler const dialogue_handler_;
+			FACETYPE*       const face;
+			bool            const from_soldier_;
+	};
 
 	// Check if pause already locked, if so, then don't mess with it
-	if (!gfLockPauseState) d->fPauseTime = fPausedTimeDuringQuote;
+	bool const pause_time = !gfLockPauseState && fPausedTimeDuringQuote;
 	fPausedTimeDuringQuote = FALSE;
-
-	DialogueEvent::Add(d);
+	DialogueEvent::Add(new DialogueEventQuote(character, quote, face, dialogue_handler, fFromSoldier, fDelayed, pause_time));
 }
 
 
