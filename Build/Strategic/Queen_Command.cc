@@ -1170,7 +1170,7 @@ static void NotifyPlayersOfNewEnemies(void)
 					// ATE: This is to allow special handling of initial heli drop
 					if ( !DidGameJustStart() )
 					{
-						TacticalCharacterDialogueWithSpecialEvent(s, QUOTE_ENEMY_PRESENCE, DIALOGUE_SPECIAL_EVENT_NONE);
+						TacticalCharacterDialogue(s, QUOTE_ENEMY_PRESENCE);
 					}
 					return;
 				}

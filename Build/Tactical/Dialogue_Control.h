@@ -173,12 +173,6 @@ enum DialogueHandler
 };
 
 
-enum DialogueSpecialEvent
-{
-	DIALOGUE_SPECIAL_EVENT_NONE = 0x00000000
-};
-
-
 enum{
 	SKYRIDER_EXTERNAL_FACE =0,
 	MINER_FRED_EXTERNAL_FACE,
@@ -204,9 +198,6 @@ void HandleImportantMercQuoteLocked(SOLDIERTYPE*, UINT16 quote);
 
 
 const char* GetDialogueDataFilename(UINT8 ubCharacterNum, UINT16 usQuoteNum, BOOLEAN fWavFile);
-
-// A higher level function used for tactical quotes
-BOOLEAN TacticalCharacterDialogueWithSpecialEvent(SOLDIERTYPE const* pSoldier, UINT16 usQuoteNum, DialogueSpecialEvent);
 
 // A higher level function used for tactical quotes
 BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum);

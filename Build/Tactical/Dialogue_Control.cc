@@ -611,24 +611,22 @@ void MakeCharacterDialogueEventSleep(SOLDIERTYPE& s, bool const sleep)
 
 struct DIALOGUE_Q_STRUCT : public DialogueEvent
 {
-	DIALOGUE_Q_STRUCT(ProfileID const character, UINT16 const quote, FACETYPE* const face_, DialogueHandler const dialogue_handler_, BOOLEAN const from_soldier, BOOLEAN const delayed, DialogueSpecialEvent const event = DIALOGUE_SPECIAL_EVENT_NONE) :
+	DIALOGUE_Q_STRUCT(ProfileID const character, UINT16 const quote, FACETYPE* const face_, DialogueHandler const dialogue_handler_, BOOLEAN const from_soldier, BOOLEAN const delayed) :
 		DialogueEvent(delayed),
 		usQuoteNum(quote),
 		ubCharacterNum(character),
 		bUIHandlerID(dialogue_handler_),
 		face(face_),
-		uiSpecialEventFlag(event),
 		fFromSoldier(from_soldier)
 	{}
 
 	bool Execute();
 
-	UINT16               const usQuoteNum;
-	UINT8                const ubCharacterNum;
-	DialogueHandler      const bUIHandlerID;
-	FACETYPE*            const face;
-	DialogueSpecialEvent const uiSpecialEventFlag;
-	BOOLEAN              const fFromSoldier;
+	UINT16          const usQuoteNum;
+	UINT8           const ubCharacterNum;
+	DialogueHandler const bUIHandlerID;
+	FACETYPE*       const face;
+	BOOLEAN         const fFromSoldier;
 };
 
 
@@ -642,8 +640,7 @@ bool DIALOGUE_Q_STRUCT::Execute()
 		return true;
 	}
 
-	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN &&
-			uiSpecialEventFlag == 0)
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
 	{
 		fPauseTime = TRUE;
 	}
@@ -655,27 +652,22 @@ bool DIALOGUE_Q_STRUCT::Execute()
 		fWasPausedDuringDialogue = TRUE;
 	}
 
-	// Now play first item in queue
-	// If it's not a 'special' dialogue event, continue
-	if (uiSpecialEventFlag == 0)
+	if (s && s->fMercAsleep) // wake grunt up to say
 	{
-		if (s && s->fMercAsleep) // wake grunt up to say
-		{
-			s->fMercAsleep = FALSE;
+		s->fMercAsleep = FALSE;
 
-			// refresh map screen
-			fCharacterInfoPanelDirty = TRUE;
-			fTeamPanelDirty = TRUE;
+		// refresh map screen
+		fCharacterInfoPanelDirty = TRUE;
+		fTeamPanelDirty = TRUE;
 
-			// allow them to go back to sleep
-			MakeCharacterDialogueEventSleep(*s, true);
-		}
-
-		gTacticalStatus.ubLastQuoteSaid       = usQuoteNum;
-		gTacticalStatus.ubLastQuoteProfileNUm = ubCharacterNum;
-
-		ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
+		// allow them to go back to sleep
+		MakeCharacterDialogueEventSleep(*s, true);
 	}
+
+	gTacticalStatus.ubLastQuoteSaid       = usQuoteNum;
+	gTacticalStatus.ubLastQuoteProfileNUm = ubCharacterNum;
+
+	ExecuteCharacterDialogue(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier);
 
 	s = FindSoldierByProfileID(ubCharacterNum);
 	if (s && s->bTeam == gbPlayerNum)
@@ -716,27 +708,6 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 	}
 
 	CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, TRUE);
-	return TRUE;
-}
-
-
-static void CharacterDialogueWithSpecialEvent(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier, BOOLEAN fDelayed, DialogueSpecialEvent);
-
-
-BOOLEAN TacticalCharacterDialogueWithSpecialEvent(SOLDIERTYPE const* const pSoldier, UINT16 const usQuoteNum, DialogueSpecialEvent const uiFlag)
-{
-	if ( pSoldier->ubProfile == NO_PROFILE )
-	{
-		return( FALSE );
-	}
-
-	if (pSoldier->bLife < CONSCIOUSNESS )
-		return( FALSE );
-
-	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
-		return( FALSE );
-
-	CharacterDialogueWithSpecialEvent(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE, uiFlag);
 	return TRUE;
 }
 
@@ -828,14 +799,6 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 //						that may not be the place where in the AIM contract screen uses.....
 
 // NB;				The queued system is not yet implemented, but will be transpatent to the caller....
-
-
-// Do special event as well as dialogue!
-static void CharacterDialogueWithSpecialEvent(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed, DialogueSpecialEvent const uiFlag)
-{
-	DIALOGUE_Q_STRUCT* const d = new DIALOGUE_Q_STRUCT(ubCharacterNum, usQuoteNum, face, bUIHandlerID, fFromSoldier, fDelayed, uiFlag);
-	DialogueEvent::Add(d);
-}
 
 
 void CharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuoteNum, FACETYPE* const face, DialogueHandler const bUIHandlerID, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed)
