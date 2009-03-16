@@ -124,7 +124,7 @@ void     MapScreenInit(void);
 ScreenID MapScreenHandle(void);
 void     MapScreenShutdown(void);
 
-void LockMapScreenInterface(bool lock);
+void LockMapScreenInterface(bool lock, bool pause = false);
 void MakeDialogueEventEnterMapScreen();
 
 #ifdef JA2TESTVERSION

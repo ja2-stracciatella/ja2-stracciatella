@@ -143,12 +143,6 @@ static BOOLEAN fTextBoxMouseRegionCreated  = FALSE;
 static BOOLEAN fExternFaceBoxRegionCreated = FALSE;
 
 
-void PauseTimeDuringNextQuote(void)
-{
-	fPausedTimeDuringQuote = TRUE;
-}
-
-
 BOOLEAN DialogueActive( )
 {
 	if ( gpCurrentTalkingFace != NULL )
