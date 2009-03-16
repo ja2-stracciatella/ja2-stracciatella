@@ -756,7 +756,7 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 					return true;
 				}
 
-				bool const pause = fPauseTime || guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN;
+				bool const pause = guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN;
 				if (pause) Pause();
 
 				if (s && s->fMercAsleep) // wake grunt up to say
