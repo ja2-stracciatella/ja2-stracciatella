@@ -131,8 +131,6 @@ static INT16 gsTopPosition = 20;
 MercPopUpBox* g_dialogue_box;
 
 
-// the next said quote will pause time
-static BOOLEAN fPausedTimeDuringQuote   = FALSE;
 static BOOLEAN fWasPausedDuringDialogue = FALSE;
 
 static INT8 gubLogForMeTooBleeds = FALSE;
@@ -738,8 +736,8 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 	class DialogueEventQuote : public DialogueEvent
 	{
 		public:
-			DialogueEventQuote(ProfileID const character, UINT16 const quote, FACETYPE* const face_, DialogueHandler const dialogue_handler, bool const from_soldier, bool const delayed, bool const pause_time) :
-				DialogueEvent(delayed, pause_time),
+			DialogueEventQuote(ProfileID const character, UINT16 const quote, FACETYPE* const face_, DialogueHandler const dialogue_handler, bool const from_soldier, bool const delayed) :
+				DialogueEvent(delayed),
 				quote_(quote),
 				character_(character),
 				dialogue_handler_(dialogue_handler),
@@ -792,10 +790,7 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 			bool            const from_soldier_;
 	};
 
-	// Check if pause already locked, if so, then don't mess with it
-	bool const pause_time = !gfLockPauseState && fPausedTimeDuringQuote;
-	fPausedTimeDuringQuote = FALSE;
-	DialogueEvent::Add(new DialogueEventQuote(character, quote, face, dialogue_handler, fFromSoldier, fDelayed, pause_time));
+	DialogueEvent::Add(new DialogueEventQuote(character, quote, face, dialogue_handler, fFromSoldier, fDelayed));
 }
 
 
