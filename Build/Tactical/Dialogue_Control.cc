@@ -565,6 +565,16 @@ void DialogueEvent::Add(DialogueEvent* const d)
 }
 
 
+void DialogueEvent::Pause()
+{
+	if (GamePaused()) return;
+
+	PauseGame();
+	LockPauseState(LOCK_PAUSE_15);
+	fWasPausedDuringDialogue = TRUE;
+}
+
+
 bool CharacterDialogueEvent::MayExecute() const
 {
 	return !SoundIsPlaying(soldier_.uiBattleSoundID);
@@ -753,12 +763,7 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 				}
 
 				bool const pause = fPauseTime || guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN;
-				if (pause && !GamePaused())
-				{
-					PauseGame();
-					LockPauseState(LOCK_PAUSE_15);
-					fWasPausedDuringDialogue = TRUE;
-				}
+				if (pause) Pause();
 
 				if (s && s->fMercAsleep) // wake grunt up to say
 				{

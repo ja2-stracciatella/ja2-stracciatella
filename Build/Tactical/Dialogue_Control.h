@@ -287,6 +287,8 @@ struct DialogueEvent
 
 	static void Add(DialogueEvent*);
 
+	static void Pause();
+
 	BOOLEAN const fDelayed;
 	BOOLEAN const fPauseTime;
 };
