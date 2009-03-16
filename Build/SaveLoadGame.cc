@@ -1473,7 +1473,8 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 	if (guiScreenToGotoAfterLoadingSavedGame == GAME_SCREEN)
 	{ //Initialize the current panel
 		InitializeCurrentPanel();
-		SelectSoldier(GetSelectedMan(), SELSOLDIER_FORCE_RESELECT);
+		SOLDIERTYPE* const sel = GetSelectedMan();
+		if (sel) SelectSoldier(sel, SELSOLDIER_FORCE_RESELECT);
 	}
 
 	uiRelEndPerc += 1;
