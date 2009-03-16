@@ -1747,7 +1747,7 @@ static bool IsStopTimeQuote(UINT16 const quote_id)
 
 static void CheckForStopTimeQuotes(UINT16 const usQuoteNum)
 {
-	if (!IsStopTimeQuote(usQuoteNum)) return; return;
+	if (!IsStopTimeQuote(usQuoteNum)) return;
 	// Stop Time, game
 	EnterModalTactical(TACTICAL_MODAL_NOMOUSE);
 	gpCurrentTalkingFace->uiFlags |= FACE_MODAL;
