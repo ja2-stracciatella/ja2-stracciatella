@@ -601,32 +601,21 @@ void MakeCharacterDialogueEventSleep(SOLDIERTYPE& s, bool const sleep)
 }
 
 
+static bool CanSayQuote(SOLDIERTYPE const& s, UINT16 const quote)
+{
+	if (s.ubProfile == NO_PROFILE)        return false;
+	INT8 const min_life = quote == QUOTE_SERIOUSLY_WOUNDED ? CONSCIOUSNESS : OKLIFE;
+	if (s.bLife < min_life)               return false;
+	if (AM_A_ROBOT(&s))                   return false;
+	if (s.uiStatusFlags & SOLDIER_GASSED) return false;
+	if (s.bAssignment == ASSIGNMENT_POW)  return false;
+	return true;
+}
+
+
 BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 {
-	if ( pSoldier->ubProfile == NO_PROFILE )
-	{
-		return( FALSE );
-	}
-
-  if (pSoldier->bLife < CONSCIOUSNESS )
-   return( FALSE );
-
-	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
-		return( FALSE );
-
-	if ( (AM_A_ROBOT( pSoldier )) )
-	{
-		return( FALSE );
-	}
-
-  if (pSoldier->bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
-   return( FALSE );
-
-	if( pSoldier->bAssignment == ASSIGNMENT_POW )
-	{
-		return( FALSE );
-	}
-
+	if (!CanSayQuote(*pSoldier, usQuoteNum)) return FALSE;
 	CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, TRUE);
 	return TRUE;
 }
@@ -634,31 +623,9 @@ BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteN
 
 BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum)
 {
-	if ( pSoldier->ubProfile == NO_PROFILE )
-	{
-		return( FALSE );
-	}
+	if (!CanSayQuote(*pSoldier, usQuoteNum)) return FALSE;
 
 	if ( AreInMeanwhile( ) )
-	{
-		return( FALSE );
-	}
-
-  if (pSoldier->bLife < CONSCIOUSNESS )
-   return( FALSE );
-
-  if (pSoldier->bLife < OKLIFE && usQuoteNum != QUOTE_SERIOUSLY_WOUNDED )
-   return( FALSE );
-
-	if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
-		return( FALSE );
-
-	if ( (AM_A_ROBOT( pSoldier )) )
-	{
-		return( FALSE );
-	}
-
-	if( pSoldier->bAssignment == ASSIGNMENT_POW )
 	{
 		return( FALSE );
 	}
