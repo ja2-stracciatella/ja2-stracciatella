@@ -1542,7 +1542,7 @@ void SayQuoteFromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuo
 				!s->fMercAsleep &&
 				SoldierTo3DLocationLineOfSightTest(s, sGridNo, 0, 0, MaxDistanceVisible(), TRUE))
 		{
-			if (usQuoteNum == 66 && Random(100) > EffectiveWisdom(s))
+			if (usQuoteNum == QUOTE_STUFF_MISSING_DRASSEN && Random(100) > EffectiveWisdom(s))
 			{
 				continue;
 			}
@@ -1553,7 +1553,7 @@ void SayQuoteFromNearbyMercInSector( INT16 sGridNo, INT8 bDistance, UINT16 usQuo
 	if ( ubNumMercs > 0 )
 	{
 		SOLDIERTYPE* const chosen = mercs_in_sector[Random(ubNumMercs)];
-		if (usQuoteNum == 66)
+		if (usQuoteNum == QUOTE_STUFF_MISSING_DRASSEN)
 		{
 			SetFactTrue( FACT_PLAYER_FOUND_ITEMS_MISSING );
 		}
