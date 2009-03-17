@@ -9142,7 +9142,7 @@ void LockMapScreenInterface(bool const lock, bool const pause)
 	{
 		public:
 			DialogueEventLockMapScreenInterface(bool const lock, bool const pause) :
-				DialogueEvent(false, pause),
+				DialogueEvent(pause),
 				lock_(lock)
 			{}
 

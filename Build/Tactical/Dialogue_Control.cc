@@ -520,18 +520,6 @@ void HandleDialogue()
 		return;
 	}
 
-	// Check time delay
-
-	// Alrighty, check if this one is to be delayed until we gain control.
-	// If so, place it back in!
-	if (d->fDelayed &&
-			gTacticalStatus.ubCurrentTeam != gbPlayerNum) // Are we not in our turn and not interrupted
-	{
-		//Place back in!
-		ghDialogueQ->Add(d);
-		return;
-	}
-
 	if (d->Execute())
 	{
 		ghDialogueQ->Add(d);
@@ -694,16 +682,19 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 	{
 		public:
 			DialogueEventQuote(ProfileID const character, UINT16 const quote, FACETYPE* const face_, DialogueHandler const dialogue_handler, bool const from_soldier, bool const delayed) :
-				DialogueEvent(delayed),
 				quote_(quote),
 				character_(character),
 				dialogue_handler_(dialogue_handler),
 				face(face_),
-				from_soldier_(from_soldier)
+				from_soldier_(from_soldier),
+				delayed_(delayed)
 			{}
 
 			bool Execute()
 			{
+				// Check if this one is to be delayed until we gain control.
+				if (delayed_ && gTacticalStatus.ubCurrentTeam != gbPlayerNum) return true;
+
 				// Try to find soldier...
 				SOLDIERTYPE* s = FindSoldierByProfileIDOnPlayerTeam(character_);
 				if (s && SoundIsPlaying(s->uiBattleSoundID))
@@ -745,6 +736,7 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 			DialogueHandler const dialogue_handler_;
 			FACETYPE*       const face;
 			bool            const from_soldier_;
+			bool            const delayed_;
 	};
 
 	DialogueEvent::Add(new DialogueEventQuote(character, quote, face, dialogue_handler, fFromSoldier, fDelayed));

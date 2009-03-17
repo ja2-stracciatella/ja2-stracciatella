@@ -274,10 +274,7 @@ extern MercPopUpBox* g_dialogue_box;
 
 struct DialogueEvent
 {
-	DialogueEvent(BOOLEAN const delayed = FALSE, BOOLEAN const pause_time = FALSE) :
-		fDelayed(delayed),
-		fPauseTime(pause_time)
-	{}
+	DialogueEvent(BOOLEAN const pause_time = FALSE) : fPauseTime(pause_time) {}
 
 	virtual ~DialogueEvent() {}
 
@@ -287,7 +284,6 @@ struct DialogueEvent
 
 	static void Pause();
 
-	BOOLEAN const fDelayed;
 	BOOLEAN const fPauseTime;
 };
 
