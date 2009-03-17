@@ -693,7 +693,7 @@ static void SkyriderDialogueWithSpecialEvent(BOOLEAN const delayed, SkyriderMono
 	{
 		public:
 			DialogueEventSkyriderMapScreenEvent(BOOLEAN const delayed, SkyriderMonologueEvent const event, UINT32 const special_code) :
-				DialogueEvent(FALSE, delayed),
+				DialogueEvent(delayed),
 				event_(event),
 				special_code_(special_code)
 			{}
