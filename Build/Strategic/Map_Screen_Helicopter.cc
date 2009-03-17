@@ -687,13 +687,12 @@ enum SkyriderMonologueEvent
 static void HandleSkyRiderMonologueEvent(SkyriderMonologueEvent, UINT32 uiSpecialCode);
 
 
-static void SkyriderDialogueWithSpecialEvent(BOOLEAN const delayed, SkyriderMonologueEvent const event, UINT32 const special_code)
+static void SkyriderDialogueWithSpecialEvent(SkyriderMonologueEvent const event, UINT32 const special_code)
 {
 	class DialogueEventSkyriderMapScreenEvent : public DialogueEvent
 	{
 		public:
-			DialogueEventSkyriderMapScreenEvent(BOOLEAN const delayed, SkyriderMonologueEvent const event, UINT32 const special_code) :
-				DialogueEvent(delayed),
+			DialogueEventSkyriderMapScreenEvent(SkyriderMonologueEvent const event, UINT32 const special_code) :
 				event_(event),
 				special_code_(special_code)
 			{}
@@ -712,7 +711,7 @@ static void SkyriderDialogueWithSpecialEvent(BOOLEAN const delayed, SkyriderMono
 			UINT32                 const special_code_;
 	};
 
-	DialogueEvent::Add(new DialogueEventSkyriderMapScreenEvent(delayed, event, special_code));
+	DialogueEvent::Add(new DialogueEventSkyriderMapScreenEvent(event, special_code));
 }
 
 
@@ -890,10 +889,10 @@ static void HandleSkyRiderMonologueAboutEstoniRefuel(UINT32 const uiSpecialCode)
 	{
 		case 0:
 		{
-			SkyriderDialogueWithSpecialEvent(FALSE, SKYRIDER_MONOLOGUE_EVENT_ESTONI_REFUEL, 1);
+			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_ESTONI_REFUEL, 1);
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
 			SkyriderDialogue(SPIEL_ABOUT_ESTONI_AIRSPACE);
-			SkyriderDialogueWithSpecialEvent(FALSE, SKYRIDER_MONOLOGUE_EVENT_ESTONI_REFUEL, 2);
+			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_ESTONI_REFUEL, 2);
 			break;
 		}
 
@@ -916,7 +915,7 @@ static void HandleSkyRiderMonologueAboutDrassenSAMSite(UINT32 const uiSpecialCod
 		{
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
 			SkyriderDialogue(MENTION_DRASSEN_SAM_SITE);
-			SkyriderDialogueWithSpecialEvent(TRUE, SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 1);
+			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 1);
 
 			if (!SAMSitesUnderPlayerControl(SAM_2_X, SAM_2_Y))
 			{
@@ -928,7 +927,7 @@ static void HandleSkyRiderMonologueAboutDrassenSAMSite(UINT32 const uiSpecialCod
 				gfSkyriderSaidCongratsOnTakingSAM = TRUE;
 			}
 
-			SkyriderDialogueWithSpecialEvent(TRUE, SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 2);
+			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 2);
 			break;
 		}
 
@@ -952,7 +951,7 @@ static void HandleSkyRiderMonologueAboutCambriaHospital(UINT32 const uiSpecialCo
 		{
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
 			SkyriderDialogue(MENTION_HOSPITAL_IN_CAMBRIA);
-			SkyriderDialogueWithSpecialEvent(TRUE, SKYRIDER_MONOLOGUE_EVENT_CAMBRIA_HOSPITAL, 1);
+			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_CAMBRIA_HOSPITAL, 1);
 
 			// Highlight Cambria hospital sector
 			fShowCambriaHospitalHighLight = TRUE;
@@ -980,10 +979,10 @@ static void HandleSkyRiderMonologueAboutOtherSAMSites(UINT32 const uiSpecialCode
 
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
 			SkyriderDialogue(SPIEL_ABOUT_OTHER_SAM_SITES);
-			SkyriderDialogueWithSpecialEvent(FALSE, SKYRIDER_MONOLOGUE_EVENT_OTHER_SAM_SITES, 1);
+			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_OTHER_SAM_SITES, 1);
 
 			SkyriderDialogue(SECOND_HALF_OF_SPIEL_ABOUT_OTHER_SAM_SITES);
-			SkyriderDialogueWithSpecialEvent(FALSE, SKYRIDER_MONOLOGUE_EVENT_OTHER_SAM_SITES, 2);
+			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_OTHER_SAM_SITES, 2);
 			break;
 		}
 
