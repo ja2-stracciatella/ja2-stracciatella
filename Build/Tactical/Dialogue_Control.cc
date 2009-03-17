@@ -573,16 +573,6 @@ bool CharacterDialogueEvent::MayExecute() const
 }
 
 
-bool CharacterDialogueEvent::CanTalk(SOLDIERTYPE const& s)
-{
-	return
-		s.bLife >= OKLIFE                   &&
-		!(s.uiStatusFlags & SOLDIER_GASSED) &&
-		!AM_A_ROBOT(&s)                     &&
-		s.bAssignment != ASSIGNMENT_POW;
-}
-
-
 void MakeCharacterDialogueEventSleep(SOLDIERTYPE& s, bool const sleep)
 {
 	class CharacterDialogueEventSleep : public CharacterDialogueEvent

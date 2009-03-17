@@ -639,8 +639,7 @@ static void ChangeStat(MERCPROFILESTRUCT* pProfile, SOLDIERTYPE* pSoldier, UINT8
 						UINT8   const stat_;
 				};
 
-				if (CharacterDialogueEvent::CanTalk(*pSoldier))
-					DialogueEvent::Add(new CharacterDialogueEventDisplayStatChange(*pSoldier, fChangeTypeIncrease, sPtsChanged, ubStat));
+				DialogueEvent::Add(new CharacterDialogueEventDisplayStatChange(*pSoldier, fChangeTypeIncrease, sPtsChanged, ubStat));
 				TacticalCharacterDialogue( pSoldier, QUOTE_EXPERIENCE_GAIN );
 			}
 			else

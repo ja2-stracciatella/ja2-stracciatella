@@ -308,8 +308,6 @@ class CharacterDialogueEvent : public DialogueEvent
 
 		bool MayExecute() const;
 
-		static bool CanTalk(SOLDIERTYPE const&);
-
 	protected:
 		SOLDIERTYPE& soldier_;
 };
