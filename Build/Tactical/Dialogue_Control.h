@@ -277,8 +277,6 @@ class DialogueEvent
 		virtual bool Execute() = 0;
 
 		static void Add(DialogueEvent*);
-
-		static void Pause();
 };
 
 template<void (&callback)()> class DialogueEventCallback : public DialogueEvent
