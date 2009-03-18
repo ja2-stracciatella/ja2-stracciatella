@@ -459,19 +459,7 @@ void HandleDialogue()
 	DialogueEvent* const d = ghDialogueQ->Remove();
 
 	// If we are in auto bandage, ignore any quotes!
-	if (gTacticalStatus.fAutoBandageMode)
-	{
-		if (d->fPauseTime)
-		{
-			UnLockPauseState();
-			UnPauseGame();
-		}
-
-		delete d;
-		return;
-	}
-
-	if (d->Execute())
+	if (!gTacticalStatus.fAutoBandageMode && d->Execute())
 	{
 		ghDialogueQ->Add(d);
 	}

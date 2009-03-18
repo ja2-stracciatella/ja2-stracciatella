@@ -269,19 +269,16 @@ extern UINT8     gubCurrentTalkingID;
 extern MercPopUpBox* g_dialogue_box;
 
 
-struct DialogueEvent
+class DialogueEvent
 {
-	DialogueEvent(BOOLEAN const pause_time = FALSE) : fPauseTime(pause_time) {}
+	public:
+		virtual ~DialogueEvent() {}
 
-	virtual ~DialogueEvent() {}
+		virtual bool Execute() = 0;
 
-	virtual bool Execute() = 0;
+		static void Add(DialogueEvent*);
 
-	static void Add(DialogueEvent*);
-
-	static void Pause();
-
-	BOOLEAN const fPauseTime;
+		static void Pause();
 };
 
 template<void (&callback)()> class DialogueEventCallback : public DialogueEvent

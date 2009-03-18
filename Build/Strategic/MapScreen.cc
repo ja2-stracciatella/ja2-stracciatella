@@ -9136,19 +9136,15 @@ static void MapscreenMarkButtonsDirty(void)
 }
 
 
-void LockMapScreenInterface(bool const lock, bool const pause)
+void LockMapScreenInterface(bool const lock)
 {
 	class DialogueEventLockMapScreenInterface : public DialogueEvent
 	{
 		public:
-			DialogueEventLockMapScreenInterface(bool const lock, bool const pause) :
-				DialogueEvent(pause),
-				lock_(lock)
-			{}
+			DialogueEventLockMapScreenInterface(bool const lock) : lock_(lock) {}
 
 			bool Execute()
 			{
-				if (fPauseTime) Pause();
 				fLockOutMapScreenInterface = lock_;
 				return false;
 			}
@@ -9157,7 +9153,7 @@ void LockMapScreenInterface(bool const lock, bool const pause)
 			bool const lock_;
 	};
 
-	DialogueEvent::Add(new DialogueEventLockMapScreenInterface(lock, pause));
+	DialogueEvent::Add(new DialogueEventLockMapScreenInterface(lock));
 }
 
 

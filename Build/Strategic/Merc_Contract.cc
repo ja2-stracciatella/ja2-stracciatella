@@ -299,7 +299,7 @@ BOOLEAN MercContractHandling(SOLDIERTYPE* const s, UINT8 const ubDesiredAction)
 		return FALSE;
 	}
 
-	LockMapScreenInterface(true, true);
+	LockMapScreenInterface(true);
 
 	// These calcs need to be done before Getting/Calculating the insurance costs
 
