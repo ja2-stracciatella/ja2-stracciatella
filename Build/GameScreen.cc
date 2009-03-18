@@ -535,10 +535,6 @@ ScreenID MainGameScreenHandle(void)
 			// Handle Interface
 			ScreenID const uiNewScreen = HandleTacticalUI();
 
-			// called to handle things like face panels changeing due to team panel, squad changes, etc
-			// To be done AFTER HandleUI and before ExecuteOverlays( )
-			HandleDialogueUIAdjustments( );
-
 			HandleTalkingAutoFaces( );
 
 			if (uiNewScreen != GAME_SCREEN) return uiNewScreen;

@@ -119,7 +119,6 @@ static UINT16         gusSubtitleBoxHeight;
 static VIDEO_OVERLAY* g_text_box_overlay = NULL;
 BOOLEAN			gfFacePanelActive = FALSE;
 static UINT32         guiScreenIDUsedWhenUICreated;
-static wchar_t        gzQuoteStr[QUOTE_MESSAGE_SIZE];
 static MOUSE_REGION   gTextBoxMouseRegion;
 static MOUSE_REGION   gFacePopupMouseRegion;
 static BOOLEAN        gfUseAlternateDialogueFile = FALSE;
@@ -256,54 +255,6 @@ void StopAnyCurrentlyTalkingSpeech( )
 	if ( gpCurrentTalkingFace != NULL )
 	{
 		InternalShutupaYoFace(gpCurrentTalkingFace, TRUE);
-	}
-}
-
-
-static void CreateTalkingUI(DialogueHandler, FACETYPE* face, UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
-
-
-// ATE: Handle changes like when face goes from
-// 'external' to on the team panel...
-void HandleDialogueUIAdjustments( )
-{
-	// OK, check if we are still taking
-	if ( gpCurrentTalkingFace != NULL )
-	{
-		if ( gpCurrentTalkingFace->fTalking )
-		{
-			// ATE: Check for change in state for the guy currently talking on 'external' panel....
-			if ( gfFacePanelActive )
-			{
-				const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(gubCurrentTalkingID);
-				if ( pSoldier )
-				{
-					if ( 0 )
-					{
-						// A change in plans here...
-						// We now talk through the interface panel...
-						if (gpCurrentTalkingFace->video_overlay != NULL)
-						{
-							RemoveVideoOverlay(gpCurrentTalkingFace->video_overlay);
-							gpCurrentTalkingFace->video_overlay = NULL;
-						}
-						gfFacePanelActive = FALSE;
-
-						RemoveVideoOverlay(g_text_box_overlay);
-						g_text_box_overlay = NULL;
-
-						if ( fTextBoxMouseRegionCreated )
-						{
-							MSYS_RemoveRegion( &gTextBoxMouseRegion );
-							fTextBoxMouseRegionCreated = FALSE;
-						}
-
-						// Setup UI again!
-						CreateTalkingUI(gbUIHandlerID, pSoldier->face, pSoldier->ubProfile, gzQuoteStr);
-					}
-				}
-			}
-		}
 	}
 }
 
@@ -774,6 +725,7 @@ void CharacterDialogueUsingAlternateFile(SOLDIERTYPE& s, UINT16 const quote, Dia
 }
 
 
+static void    CreateTalkingUI(DialogueHandler, FACETYPE* face, UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
 static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString);
 
 
@@ -879,6 +831,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 	// Check face index
 	CHECKF(face != NULL);
 
+	wchar_t gzQuoteStr[QUOTE_MESSAGE_SIZE];
   if (!GetDialogue(ubCharacterNum, usQuoteNum, DIALOGUESIZE, gzQuoteStr, lengthof(gzQuoteStr), zSoundString))
   {
     return( FALSE );
