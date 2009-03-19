@@ -178,7 +178,7 @@ void HandleMercsFiles()
 
 
 static void DisplayMercFace(ProfileID);
-static void DisplayMercsStats(UINT8 ubMercID);
+static void DisplayMercsStats(MERCPROFILESTRUCT const&);
 static void EnableDisableMercFilesNextPreviousButton(void);
 static void LoadAndDisplayMercBio(UINT8 ubMercID);
 
@@ -191,35 +191,44 @@ void RenderMercsFiles()
 	BltVideoObject(FRAME_BUFFER, guiStatsBox,    0, MERC_FILES_STATS_BOX_X,    MERC_FILES_STATS_BOX_Y);
 	BltVideoObject(FRAME_BUFFER, guiBioBox,      0, MERC_FILES_BIO_BOX_X + 1,  MERC_FILES_BIO_BOX_Y);
 
+	ProfileID         const  pid = GetMercIDFromMERCArray(gubCurMercIndex);
+	MERCPROFILESTRUCT const& p   = GetProfile(pid);
+
 	//Display the mercs face
-	DisplayMercFace( GetMercIDFromMERCArray( gubCurMercIndex ) );
+	DisplayMercFace(pid);
 
 	//Display Mercs Name
-	DrawTextToScreen(gMercProfiles[GetMercIDFromMERCArray(gubCurMercIndex)].zName, MERC_NAME_X, MERC_NAME_Y, 0, MERC_NAME_FONT, MERC_NAME_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(p.zName, MERC_NAME_X, MERC_NAME_Y, 0, MERC_NAME_FONT, MERC_NAME_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Load and display the mercs bio
-	LoadAndDisplayMercBio( (UINT8)(GetMercIDFromMERCArray( gubCurMercIndex ) - BIFF ) );
+	LoadAndDisplayMercBio((UINT8)(pid - BIFF));
 
 	//Display the mercs statistic
-	DisplayMercsStats( GetMercIDFromMERCArray( gubCurMercIndex ) );
+	DisplayMercsStats(p);
 
 	//check to see if the merc is dead if so disable the contact button
-	if( IsMercDead( GetMercIDFromMERCArray( gubCurMercIndex ) ) )
-		DisableButton( guiHireButton );
-	else if( ( LaptopSaveInfo.gubPlayersMercAccountStatus != MERC_ACCOUNT_VALID ) && ( LaptopSaveInfo.gubPlayersMercAccountStatus != MERC_ACCOUNT_SUSPENDED ) && ( LaptopSaveInfo.gubPlayersMercAccountStatus != MERC_ACCOUNT_VALID_FIRST_WARNING ) )
+	if (IsMercDead(pid))
+	{
+		DisableButton(guiHireButton);
+	}
+	else if (LaptopSaveInfo.gubPlayersMercAccountStatus != MERC_ACCOUNT_VALID &&
+			LaptopSaveInfo.gubPlayersMercAccountStatus != MERC_ACCOUNT_SUSPENDED &&
+			LaptopSaveInfo.gubPlayersMercAccountStatus != MERC_ACCOUNT_VALID_FIRST_WARNING)
 	{
 		//if the players account is suspended, disable the button
-		DisableButton( guiHireButton );
+		DisableButton(guiHireButton);
 	}
 	else
-		EnableButton( guiHireButton );
+	{
+		EnableButton(guiHireButton);
+	}
 
 	//Enable or disable the buttons
-	EnableDisableMercFilesNextPreviousButton( );
+	EnableDisableMercFilesNextPreviousButton();
 
-  MarkButtonsDirty( );
-	RenderWWWProgramTitleBar( );
-  InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
+	MarkButtonsDirty();
+	RenderWWWProgramTitleBar();
+	InvalidateRegion(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_WEB_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_WEB_LR_Y);
 }
 
 
@@ -379,10 +388,8 @@ static void DrawStat(const UINT16 x, const UINT16 y, const wchar_t* const stat, 
 }
 
 
-static void DisplayMercsStats(UINT8 ubMercID)
+static void DisplayMercsStats(MERCPROFILESTRUCT const& p)
 {
-	MERCPROFILESTRUCT const& p = GetProfile(ubMercID);
-
 	const UINT16 x1     = MERC_STATS_FIRST_COL_X;
 	const UINT16 x1_val = MERC_STATS_FIRST_NUM_COL_X;
 	UINT16       y1     = MERC_HEALTH_Y;
