@@ -105,7 +105,7 @@ static UINT16 const gusStopTimeQuoteList[] =
 #define		INITIAL_Q_SIZE				10
 static DialogueQueue* ghDialogueQ;
 FACETYPE	*gpCurrentTalkingFace	= NULL;
-UINT8			gubCurrentTalkingID   = NO_PROFILE;
+static ProfileID       gubCurrentTalkingID = NO_PROFILE;
 static DialogueHandler gbUIHandlerID;
 
 INT32				giNPCReferenceCount = 0;

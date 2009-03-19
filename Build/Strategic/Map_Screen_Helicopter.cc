@@ -699,9 +699,6 @@ static void SkyriderDialogueWithSpecialEvent(SkyriderMonologueEvent const event,
 
 			bool Execute()
 			{
-				// Setup face pointer
-				gpCurrentTalkingFace = uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE];
-				gubCurrentTalkingID  = SKYRIDER;
 				HandleSkyRiderMonologueEvent(event_, special_code_);
 				return false;
 			}
@@ -973,10 +970,6 @@ static void HandleSkyRiderMonologueAboutOtherSAMSites(UINT32 const uiSpecialCode
 	{
 		case 0:
 		{
-			// do quote 21
-			gpCurrentTalkingFace = uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE];
-			gubCurrentTalkingID  = SKYRIDER;
-
 			// if special event data 2 is true, then do dialogue, else this is just a trigger for an event
 			SkyriderDialogue(SPIEL_ABOUT_OTHER_SAM_SITES);
 			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_OTHER_SAM_SITES, 1);
