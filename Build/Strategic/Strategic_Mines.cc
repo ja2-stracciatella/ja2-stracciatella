@@ -219,8 +219,6 @@ void HourlyMinesUpdate(void)
 {
 	UINT8 ubMineIndex;
 	MINE_STATUS_TYPE *pMineStatus;
-	UINT8 ubQuoteType;
-
 
 	// check every non-empty mine
 	for( ubMineIndex = 0; ubMineIndex < MAX_NUMBER_OF_MINES; ubMineIndex++ )
@@ -266,6 +264,7 @@ void HourlyMinesUpdate(void)
 				if (PlayerControlsMine( ubMineIndex ))
 				{
 					// 2 different quotes, depends whether or not it's the first time this has happened
+					HeadMinerQuote ubQuoteType;
 					if (pMineStatus->fPrevInvadedByMonsters)
 					{
 						ubQuoteType = HEAD_MINER_STRATEGIC_QUOTE_CREATURES_AGAIN;
@@ -854,73 +853,54 @@ static UINT16 GetHeadMinerProfileIdForMine(INT8 bMineIndex)
 }
 
 
-void IssueHeadMinerQuote( INT8 bMineIndex, UINT8 ubQuoteType )
+void IssueHeadMinerQuote(INT8 const mine_idx, HeadMinerQuote const quote_type)
 {
-	UINT8 ubHeadMinerIndex = 0;
-	UINT16 usHeadMinerProfileId = 0;
-	INT8 bQuoteNum = 0;
-	BOOLEAN fForceMapscreen = FALSE;
-	INT16 sXPos, sYPos;
+	Assert(0 <= mine_idx && mine_idx < MAX_NUMBER_OF_MINES);
+	Assert(quote_type < NUM_HEAD_MINER_STRATEGIC_QUOTES);
+	Assert(CheckFact(FACT_MINERS_PLACED, 0));
 
+	HEAD_MINER_TYPE const& miner_data = gHeadMinerData[GetHeadMinerIndexForMine(mine_idx)];
 
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < MAX_NUMBER_OF_MINES ) );
-	Assert( ubQuoteType < NUM_HEAD_MINER_STRATEGIC_QUOTES );
-	Assert( CheckFact( FACT_MINERS_PLACED, 0 ) );
-
-	ubHeadMinerIndex = GetHeadMinerIndexForMine( bMineIndex );
-	usHeadMinerProfileId = gHeadMinerData[ ubHeadMinerIndex ].usProfileId;
-
-	// make sure the miner ain't dead
-	if (gMercProfiles[ usHeadMinerProfileId ].bLife < OKLIFE)
+	// Make sure the miner isn't dead
+	MERCPROFILESTRUCT const& p = *GetProfile(miner_data.usProfileId);
+	if (p.bLife < OKLIFE)
 	{
-		// debug message
-		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"Head Miner #%ls can't talk (quote #%d)", gMercProfiles[usHeadMinerProfileId].zNickname, ubQuoteType);
+		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"Head Miner #%ls can't talk (quote #%d)", p.zNickname, quote_type);
 		return;
 	}
 
-	bQuoteNum = gHeadMinerData[ ubHeadMinerIndex ].bQuoteNum[ ubQuoteType ];
-	Assert( bQuoteNum != -1 );
+	INT8 const bQuoteNum = miner_data.bQuoteNum[quote_type];
+	Assert(bQuoteNum != -1);
 
-	// transition to mapscreen is not necessary for "creatures gone" quote - player is IN that mine, so he'll know
-	if ( ubQuoteType != HEAD_MINER_STRATEGIC_QUOTE_CREATURES_GONE )
+	/* Transition to mapscreen is not necessary for "creatures gone" quote -
+	 * player is IN that mine, so he'll know */
+	bool const force_mapscreen = quote_type != HEAD_MINER_STRATEGIC_QUOTE_CREATURES_GONE;
+
+	/* Decide where the miner's face and text box should be positioned in order to
+	 * not obscure the mine he's in as it flashes */
+	INT16 const x = DEFAULT_EXTERN_PANEL_X_POS;
+	INT16       y = DEFAULT_EXTERN_PANEL_Y_POS;
+	switch (mine_idx)
 	{
-		fForceMapscreen = TRUE;
-	}
+		case MINE_GRUMM:    break;
+		case MINE_CAMBRIA:  break;
+		case MINE_ALMA:     break;
+		case MINE_DRASSEN:  y = 135; break;
+		case MINE_CHITZENA: y = 117; break;
 
-
-	// decide where the miner's face and text box should be positioned in order to not obscure the mine he's in as it flashes
-	switch ( bMineIndex )
-	{
-		case MINE_GRUMM:
-			sXPos = DEFAULT_EXTERN_PANEL_X_POS, sYPos = DEFAULT_EXTERN_PANEL_Y_POS;
-			break;
-		case MINE_CAMBRIA:
-			sXPos = DEFAULT_EXTERN_PANEL_X_POS, sYPos = DEFAULT_EXTERN_PANEL_Y_POS;
-			break;
-		case MINE_ALMA:
-			sXPos = DEFAULT_EXTERN_PANEL_X_POS, sYPos = DEFAULT_EXTERN_PANEL_Y_POS;
-			break;
-		case MINE_DRASSEN:
-			sXPos = DEFAULT_EXTERN_PANEL_X_POS, sYPos = 135;
-			break;
-		case MINE_CHITZENA:
-			sXPos = DEFAULT_EXTERN_PANEL_X_POS, sYPos = 117;
-			break;
-
-		// there's no head miner in San Mona, this is an error!
-		case MINE_SAN_MONA:
+		case MINE_SAN_MONA: // There's no head miner in San Mona, this is an error!
 		default:
-			Assert( FALSE );
-			sXPos = DEFAULT_EXTERN_PANEL_X_POS, sYPos = DEFAULT_EXTERN_PANEL_Y_POS;
+			Assert(FALSE);
 			break;
 	}
+	SetExternMapscreenSpeechPanelXY(x, y);
 
-	SetExternMapscreenSpeechPanelXY( sXPos, sYPos );
+	/* Cause this quote to come up for this profile id and an indicator to flash
+	 * over the mine sector */
+	MINE_LOCATION_TYPE const& loc = gMineLocation[mine_idx];
+	HandleMinerEvent(miner_data.ubExternalFace, loc.sSectorX, loc.sSectorY, bQuoteNum, force_mapscreen);
 
-	// cause this quote to come up for this profile id and an indicator to flash over the mine sector
-	HandleMinerEvent( gHeadMinerData[ ubHeadMinerIndex ].ubExternalFace, gMineLocation[ bMineIndex ].sSectorX, gMineLocation[ bMineIndex ].sSectorY, (INT16) bQuoteNum, fForceMapscreen );
-
-	// stop time compression with any miner quote - these are important events.
+	// Stop time compression with any miner quote - these are important events.
 	StopTimeCompression();
 }
 

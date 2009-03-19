@@ -3470,7 +3470,7 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 						// initialize miners if not already done so (fakes entering Drassen mine first)
 						HandleQuestCodeOnSectorEntry(13, 4, 0);
 						// test miner quote system
-						IssueHeadMinerQuote((INT8)(1 + Random(MAX_NUMBER_OF_MINES - 1)), (UINT8)(1 + Random(2)));
+						IssueHeadMinerQuote(1 + Random(MAX_NUMBER_OF_MINES - 1), static_cast<HeadMinerQuote>(1 + Random(2)));
 					}
 					break;
 #endif

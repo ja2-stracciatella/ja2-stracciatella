@@ -46,7 +46,8 @@ enum{
 };
 
 // head miner quote types
-enum{
+enum HeadMinerQuote
+{
 	HEAD_MINER_STRATEGIC_QUOTE_RUNNING_OUT = 0,
 	HEAD_MINER_STRATEGIC_QUOTE_CREATURES_ATTACK,
 	HEAD_MINER_STRATEGIC_QUOTE_CREATURES_GONE,
@@ -148,7 +149,7 @@ BOOLEAN IsMineShutDown( INT8 bMineIndex );
 // Find the sector location of a mine
 void GetMineSector(UINT8 ubMineIndex, UINT16* psX, UINT16* psY);
 
-void IssueHeadMinerQuote( INT8 bMineIndex, UINT8 ubQuoteType );
+void IssueHeadMinerQuote(INT8 bMineIndex, HeadMinerQuote);
 
 UINT8 GetHeadMinersMineIndex(UINT8 ubMinerProfileId);
 
