@@ -1002,9 +1002,9 @@ static void SaveTempNpcQuoteInfoForNPCToTempFile(UINT8 const ubNpcId)
 }
 
 
-void ChangeNpcToDifferentSector(MERCPROFILESTRUCT* const p, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+void ChangeNpcToDifferentSector(MERCPROFILESTRUCT& p, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
-	if (p->ubMiscFlags2 & PROFILE_MISC_FLAG2_LEFT_COUNTRY)
+	if (p.ubMiscFlags2 & PROFILE_MISC_FLAG2_LEFT_COUNTRY)
 	{
 		// override location, this person is OUTTA here
 		sSectorX = 0;
@@ -1013,10 +1013,10 @@ void ChangeNpcToDifferentSector(MERCPROFILESTRUCT* const p, INT16 sSectorX, INT1
 	}
 	// Carmen no longer traverses out, he is temporarily removed instead
 
-	p->sSectorX = sSectorX;
-	p->sSectorY = sSectorY;
-	p->bSectorZ = bSectorZ;
-	p->fUseProfileInsertionInfo = FALSE;
+	p.sSectorX = sSectorX;
+	p.sSectorY = sSectorY;
+	p.bSectorZ = bSectorZ;
+	p.fUseProfileInsertionInfo = FALSE;
 }
 
 
@@ -1290,28 +1290,28 @@ UINT32 MercChecksum(SOLDIERTYPE const* const pSoldier)
 }
 
 
-UINT32 ProfileChecksum(MERCPROFILESTRUCT const* const pProfile)
+UINT32 ProfileChecksum(MERCPROFILESTRUCT const& p)
 {
 	UINT32	uiChecksum = 1;
 	UINT32	uiLoop;
 
-	uiChecksum += (pProfile->bLife + 1);
-	uiChecksum *= (pProfile->bLifeMax + 1);
-	uiChecksum += (pProfile->bAgility + 1);
-	uiChecksum *= (pProfile->bDexterity + 1);
-	uiChecksum += (pProfile->bStrength + 1);
-	uiChecksum *= (pProfile->bMarksmanship + 1);
-	uiChecksum += (pProfile->bMedical + 1);
-	uiChecksum *= (pProfile->bMechanical + 1);
-	uiChecksum += (pProfile->bExplosive + 1);
+	uiChecksum += (p.bLife + 1);
+	uiChecksum *= (p.bLifeMax + 1);
+	uiChecksum += (p.bAgility + 1);
+	uiChecksum *= (p.bDexterity + 1);
+	uiChecksum += (p.bStrength + 1);
+	uiChecksum *= (p.bMarksmanship + 1);
+	uiChecksum += (p.bMedical + 1);
+	uiChecksum *= (p.bMechanical + 1);
+	uiChecksum += (p.bExplosive + 1);
 
 	// put in some multipliers too!
-	uiChecksum *= (pProfile->bExpLevel + 1);
+	uiChecksum *= (p.bExpLevel + 1);
 
 	for ( uiLoop = 0; uiLoop < NUM_INV_SLOTS; uiLoop++ )
 	{
-		uiChecksum += pProfile->inv[ uiLoop ];
-		uiChecksum += pProfile->bInvNumber[ uiLoop ];
+		uiChecksum += p.inv[ uiLoop ];
+		uiChecksum += p.bInvNumber[ uiLoop ];
 	}
 
 	return( uiChecksum );

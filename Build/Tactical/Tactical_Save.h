@@ -41,7 +41,7 @@ void InitTacticalSave(BOOLEAN fCreateTempDir);
 
 
 //Call this function to set the new sector a NPC will travel to
-void ChangeNpcToDifferentSector(MERCPROFILESTRUCT* npc, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+void ChangeNpcToDifferentSector(MERCPROFILESTRUCT&, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 
 // Adds a rotting corpse definition to the end of a sectors rotting corpse temp file
@@ -76,7 +76,7 @@ void LoadTempNpcQuoteArrayToSaveGameFile(HWFILE);
 void SaveTempNpcQuoteArrayToSaveGameFile(HWFILE);
 
 UINT32 MercChecksum(SOLDIERTYPE const*);
-UINT32 ProfileChecksum(MERCPROFILESTRUCT const*);
+UINT32 ProfileChecksum(MERCPROFILESTRUCT const&);
 
 void JA2EncryptedFileRead( HWFILE, BYTE*       data, UINT32 uiBytesToRead);
 void JA2EncryptedFileWrite(HWFILE, BYTE const* data, UINT32 uiBytesToWrite);

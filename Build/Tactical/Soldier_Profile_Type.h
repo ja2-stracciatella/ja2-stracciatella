@@ -340,9 +340,9 @@ struct MERCPROFILESTRUCT
 };
 
 
-static inline bool HasSkillTrait(MERCPROFILESTRUCT const* const p, SkillTrait const skill)
+static inline bool HasSkillTrait(MERCPROFILESTRUCT const& p, SkillTrait const skill)
 {
-	return p->bSkillTrait == skill || p->bSkillTrait2 == skill;
+	return p.bSkillTrait == skill || p.bSkillTrait2 == skill;
 }
 
 

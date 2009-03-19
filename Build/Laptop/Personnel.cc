@@ -465,11 +465,11 @@ static void RenderPersonnelStats(const SOLDIERTYPE* const s)
 }
 
 
-static void RenderPersonnelFace(const MERCPROFILESTRUCT* const p, const BOOLEAN alive)
+static void RenderPersonnelFace(MERCPROFILESTRUCT const& p, BOOLEAN const alive)
 try
 {
 	{ char sTemp[100];
-		sprintf(sTemp, FACES_DIR "%02d.sti", p->ubFaceIndex);
+		sprintf(sTemp, FACES_DIR "%02d.sti", p.ubFaceIndex);
 		AutoSGPVObject guiFACE(AddVideoObjectFromFile(sTemp));
 		if (!alive)
 		{
@@ -481,7 +481,7 @@ try
 	}
 
 	// Display the merc's name on the portrait
-	const wchar_t* name = p->zName;
+	const wchar_t* name = p.zName;
 
 	const UINT16 x = IMAGE_BOX_X;
 	const UINT16 y = IMAGE_BOX_Y + IMAGE_FULL_NAME_OFFSET_Y;
@@ -1092,8 +1092,8 @@ struct PastMercInfo
 
 
 static void DisplayAmountOnChar(const SOLDIERTYPE*);
-static void DisplayDepartedCharName(const MERCPROFILESTRUCT*, INT32 iState);
-static void DisplayDepartedCharStats(const MERCPROFILESTRUCT*, INT32 iState);
+static void DisplayDepartedCharName(MERCPROFILESTRUCT const&, INT32 iState);
+static void DisplayDepartedCharStats(MERCPROFILESTRUCT const&, INT32 iState);
 static void DisplayHighLightBox(INT32 sel_id);
 static PastMercInfo GetSelectedPastMercInfo(void);
 
@@ -1110,7 +1110,7 @@ static void DisplayFaceOfDisplayedMerc(void)
 	if (fCurrentTeamMode)
 	{
 		const SOLDIERTYPE* const s = GetSoldierOfCurrentSlot();
-		RenderPersonnelFace(&GetProfile(s->ubProfile), s->bLife > 0);
+		RenderPersonnelFace(GetProfile(s->ubProfile), s->bLife > 0);
 		DisplayCharName(s);
 		RenderPersonnelStats(s);
 		DisplayAmountOnChar(s);
@@ -1120,9 +1120,9 @@ static void DisplayFaceOfDisplayedMerc(void)
 		const PastMercInfo info = GetSelectedPastMercInfo();
 		const MERCPROFILESTRUCT* const p = info.profile;
 		if (p == NULL) return;
-		RenderPersonnelFace(     p, info.state != DEPARTED_DEAD);
-		DisplayDepartedCharName( p, info.state);
-		DisplayDepartedCharStats(p, info.state);
+		RenderPersonnelFace(     *p, info.state != DEPARTED_DEAD);
+		DisplayDepartedCharName( *p, info.state);
+		DisplayDepartedCharStats(*p, info.state);
 	}
 }
 
@@ -1979,7 +1979,7 @@ try
 catch (...) { /* XXX ignore */ }
 
 
-static void DisplayDepartedCharStats(const MERCPROFILESTRUCT* const p, const INT32 iState)
+static void DisplayDepartedCharStats(MERCPROFILESTRUCT const& p, INT32 const iState)
 {
 	wchar_t sString[50];
 	INT16 sX;
@@ -1987,37 +1987,37 @@ static void DisplayDepartedCharStats(const MERCPROFILESTRUCT* const p, const INT
 
 	SetFontAttributes(FONT10ARIAL, PERS_TEXT_FONT_COLOR);
 
-	const INT8 life = p->bLife;
-	const INT8 cur  = (iState == DEPARTED_DEAD ? 0 : life);
+	INT8 const life = p.bLife;
+	INT8 const cur  = (iState == DEPARTED_DEAD ? 0 : life);
 	swprintf(sString, lengthof(sString), L"%d/%d", cur, life);
 	mprintf(pers_stat_x, pers_stat_y[0], L"%ls:", str_stat_health);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 	MPrint(sX, pers_stat_y[0], sString);
 
-	PrintStat(p->bAgility,     pers_stat_y[ 1], str_stat_agility);
-	PrintStat(p->bDexterity,   pers_stat_y[ 2], str_stat_dexterity);
-	PrintStat(p->bStrength,    pers_stat_y[ 3], str_stat_strength);
-	PrintStat(p->bLeadership,  pers_stat_y[ 4], str_stat_leadership);
-	PrintStat(p->bWisdom,      pers_stat_y[ 5], str_stat_wisdom);
-	PrintStat(p->bExpLevel,    pers_stat_y[ 6], str_stat_exp_level);
-	PrintStat(p->bMarksmanship,pers_stat_y[ 7], str_stat_marksmanship);
-	PrintStat(p->bMechanical,  pers_stat_y[ 8], str_stat_mechanical);
-	PrintStat(p->bExplosive,   pers_stat_y[ 9], str_stat_explosive);
-	PrintStat(p->bMedical,     pers_stat_y[10], str_stat_medical);
-	PrintStat(p->usKills,      pers_stat_y[21], pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
-	PrintStat(p->usAssists,    pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
+	PrintStat(p.bAgility,     pers_stat_y[ 1], str_stat_agility);
+	PrintStat(p.bDexterity,   pers_stat_y[ 2], str_stat_dexterity);
+	PrintStat(p.bStrength,    pers_stat_y[ 3], str_stat_strength);
+	PrintStat(p.bLeadership,  pers_stat_y[ 4], str_stat_leadership);
+	PrintStat(p.bWisdom,      pers_stat_y[ 5], str_stat_wisdom);
+	PrintStat(p.bExpLevel,    pers_stat_y[ 6], str_stat_exp_level);
+	PrintStat(p.bMarksmanship,pers_stat_y[ 7], str_stat_marksmanship);
+	PrintStat(p.bMechanical,  pers_stat_y[ 8], str_stat_mechanical);
+	PrintStat(p.bExplosive,   pers_stat_y[ 9], str_stat_explosive);
+	PrintStat(p.bMedical,     pers_stat_y[10], str_stat_medical);
+	PrintStat(p.usKills,      pers_stat_y[21], pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
+	PrintStat(p.usAssists,    pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
 
 	// Shots/hits
 	MPrint(pers_stat_x, pers_stat_y[23], pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
 	// check we have shot at least once
-	const UINT32 fired = p->usShotsFired;
-	const UINT32 hits  = (fired > 0 ? 100 * p->usShotsHit / fired : 0);
+	UINT32 const fired = p.usShotsFired;
+	UINT32 const hits  = (fired > 0 ? 100 * p.usShotsHit / fired : 0);
 	swprintf(sString, lengthof(sString), L"%d %%", hits);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 	MPrint(sX, pers_stat_y[23], sString);
 
-	PrintStat(p->usBattlesFought, pers_stat_y[24], pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
-	PrintStat(p->usTimesWounded,  pers_stat_y[25], pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
+	PrintStat(p.usBattlesFought, pers_stat_y[24], pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
+	PrintStat(p.usTimesWounded,  pers_stat_y[25], pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
 }
 
 
@@ -2047,14 +2047,14 @@ static void EnableDisableDeparturesButtons(void)
 }
 
 
-static void DisplayDepartedCharName(const MERCPROFILESTRUCT* const p, const INT32 iState)
+static void DisplayDepartedCharName(MERCPROFILESTRUCT const& p, const INT32 iState)
 {
 	// get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
 
 	SetFontAttributes(CHAR_NAME_FONT, PERS_TEXT_FONT_COLOR);
 
-	const wchar_t* name = p->zNickname;
+	wchar_t const* const name = p.zNickname;
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, name, CHAR_NAME_FONT, &sX, &sY);
 	MPrint(sX, CHAR_NAME_Y, name);
 

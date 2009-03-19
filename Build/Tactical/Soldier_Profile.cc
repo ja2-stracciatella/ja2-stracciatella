@@ -175,7 +175,7 @@ INT8 gbAssassinTown[NUM_ASSASSINS][NUM_ASSASSIN_POSSIBLE_TOWNS] =
 };
 
 
-static INT16 CalcMedicalDeposit(MERCPROFILESTRUCT* pProfile);
+static INT16 CalcMedicalDeposit(MERCPROFILESTRUCT const&);
 static void DecideActiveTerrorists(void);
 static void StartSomeMercsOnAssignment(void);
 
@@ -198,12 +198,12 @@ BOOLEAN LoadMercProfiles(void)
 #endif
 
 			MERCPROFILESTRUCT& p = GetProfile(uiLoop);
-			ExtractMercProfileUTF16(data, &p);
+			ExtractMercProfileUTF16(data, p);
 
 			// If the dialogue exists for the merc, allow the merc to be hired
 			p.bMercStatus = (FileExists(GetDialogueDataFilename(uiLoop, 0, FALSE)) ? 0 : MERC_HAS_NO_TEXT_FILE);
 
-			p.sMedicalDepositAmount = (p.bMedicalDeposit ? CalcMedicalDeposit(&p) : 0);
+			p.sMedicalDepositAmount = (p.bMedicalDeposit ? CalcMedicalDeposit(p) : 0);
 
 			// ATE: New, face display independent of ID num now
 			// Setup face index value
@@ -635,7 +635,7 @@ void SetProfileFaceData( UINT8 ubCharNum, UINT8 ubFaceIndex, UINT16 usEyesX, UIN
 }
 
 
-static UINT16 CalcCompetence(MERCPROFILESTRUCT* pProfile)
+static UINT16 CalcCompetence(MERCPROFILESTRUCT const& p)
 {
 	UINT32 uiStats, uiSkills, uiActionPoints, uiSpecialSkills;
 	UINT16 usCompetence;
@@ -643,37 +643,37 @@ static UINT16 CalcCompetence(MERCPROFILESTRUCT* pProfile)
 
 	// count life twice 'cause it's also hit points
 	// mental skills are halved 'cause they're actually not that important within the game
-	uiStats = ((2 * pProfile->bLifeMax) + pProfile->bStrength + pProfile->bAgility + pProfile->bDexterity + ((pProfile->bLeadership + pProfile->bWisdom) / 2)) / 3;
+	uiStats = ((2 * p.bLifeMax) + p.bStrength + p.bAgility + p.bDexterity + ((p.bLeadership + p.bWisdom) / 2)) / 3;
 
 	// marksmanship is very important, count it double
-	uiSkills = (UINT32) ((2   * (pow(pProfile->bMarksmanship, 3) / 10000)) +
-												1.5 *	(pow(pProfile->bMedical, 3) / 10000) +
-															(pow(pProfile->bMechanical, 3) / 10000) +
-															(pow(pProfile->bExplosive, 3) / 10000));
+	uiSkills = (UINT32) ((2   * (pow(p.bMarksmanship, 3) / 10000)) +
+												1.5 *	(pow(p.bMedical, 3) / 10000) +
+															(pow(p.bMechanical, 3) / 10000) +
+															(pow(p.bExplosive, 3) / 10000));
 
 	// action points
-	uiActionPoints = 5 + (((10 * pProfile->bExpLevel +
-													 3 * pProfile->bAgility  +
-													 2 * pProfile->bLifeMax  +
-													 2 * pProfile->bDexterity) + 20) / 40);
+	uiActionPoints = 5 + (((10 * p.bExpLevel +
+													 3 * p.bAgility  +
+													 2 * p.bLifeMax  +
+													 2 * p.bDexterity) + 20) / 40);
 
 
 	// count how many he has, don't care what they are
-	uiSpecialSkills = ((pProfile->bSkillTrait != 0) ? 1 : 0) + ((pProfile->bSkillTrait2 != 0) ? 1 : 0);
+	uiSpecialSkills = ((p.bSkillTrait != 0) ? 1 : 0) + ((p.bSkillTrait2 != 0) ? 1 : 0);
 
-	usCompetence = (UINT16) ((pow(pProfile->bExpLevel, 0.2) * uiStats * uiSkills * (uiActionPoints - 6) * (1 + (0.05 * (FLOAT)uiSpecialSkills))) / 1000);
+	usCompetence = (UINT16) ((pow(p.bExpLevel, 0.2) * uiStats * uiSkills * (uiActionPoints - 6) * (1 + (0.05 * (FLOAT)uiSpecialSkills))) / 1000);
 
 	// this currently varies from about 10 (Flo) to 1200 (Gus)
 	return(usCompetence);
 }
 
 
-static INT16 CalcMedicalDeposit(MERCPROFILESTRUCT* pProfile)
+static INT16 CalcMedicalDeposit(MERCPROFILESTRUCT const& p)
 {
 	UINT16 usDeposit;
 
 	// this rounds off to the nearest hundred
-	usDeposit = (((5 * CalcCompetence(pProfile)) + 50) / 100) * 100;
+	usDeposit = (5 * CalcCompetence(p) + 50) / 100 * 100;
 
 	return(usDeposit);
 }
@@ -1023,11 +1023,11 @@ INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated )
 }
 
 
-INT8 GetFirstBuddyOnTeam(MERCPROFILESTRUCT const* const p)
+INT8 GetFirstBuddyOnTeam(MERCPROFILESTRUCT const& p)
 {
 	for (INT i = 0; i != 3; ++i)
 	{
-		INT8 const buddy = p->bBuddy[i];
+		INT8 const buddy = p.bBuddy[i];
 		if (buddy < 0 || !IsMercOnTeam(buddy) || IsMercDead(buddy)) continue;
 		return buddy;
 	}

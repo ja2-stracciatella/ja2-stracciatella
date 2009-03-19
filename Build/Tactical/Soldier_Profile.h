@@ -205,7 +205,7 @@ BOOLEAN UnRecruitEPC(ProfileID);
 INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy );
 INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated );
 
-INT8 GetFirstBuddyOnTeam(MERCPROFILESTRUCT const*);
+INT8 GetFirstBuddyOnTeam(MERCPROFILESTRUCT const&);
 
 SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam );
 

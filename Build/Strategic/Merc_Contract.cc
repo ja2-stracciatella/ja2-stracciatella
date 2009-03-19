@@ -414,7 +414,7 @@ static UINT16 FindRefusalReason(SOLDIERTYPE const* const s)
 		}
 	}
 
-	if (MercThinksDeathRateTooHigh(&p)) return QUOTE_DEATH_RATE_RENEWAL;
+	if (MercThinksDeathRateTooHigh(p))  return QUOTE_DEATH_RATE_RENEWAL;
 	if (MercThinksHisMoraleIsTooLow(s)) return QUOTE_REFUSAL_RENEW_DUE_TO_MORALE;
 	return QUOTE_NONE;
 }
@@ -442,7 +442,7 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 
 	// find out if the merc has a buddy working for the player
 	UINT16 buddy_quote;
-	switch (GetFirstBuddyOnTeam(&p))
+	switch (GetFirstBuddyOnTeam(p))
 	{
 		case 0:  buddy_quote = QUOTE_RENEWING_CAUSE_BUDDY_1_ON_TEAM;               break;
 		case 1:  buddy_quote = QUOTE_RENEWING_CAUSE_BUDDY_2_ON_TEAM;               break;

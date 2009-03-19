@@ -312,7 +312,7 @@ static void SetNPCMeanwhile(const ProfileID pid, const INT16 sector_x, const INT
 	si->sGridNo   = p.sGridNo;
 
 	ReloadQuoteFile(pid);
-	ChangeNpcToDifferentSector(&p, sector_x, sector_y, 0);
+	ChangeNpcToDifferentSector(p, sector_x, sector_y, 0);
 }
 
 

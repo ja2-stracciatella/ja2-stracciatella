@@ -533,20 +533,20 @@ UINT8 CalcDesireToTalk(UINT8 const ubNPC, UINT8 const ubMerc, Approach const bAp
 }
 
 
-static void ApproachedForFirstTime(MERCPROFILESTRUCT* const pNPCProfile, Approach const bApproach)
+static void ApproachedForFirstTime(MERCPROFILESTRUCT& pNPCProfile, Approach const bApproach)
 {
 	UINT8		ubLoop;
 	UINT32	uiTemp;
 
-	pNPCProfile->bApproached |= gbFirstApproachFlags[bApproach - 1];
+	pNPCProfile.bApproached |= gbFirstApproachFlags[bApproach - 1];
 	for (ubLoop = 1; ubLoop <= NUM_REAL_APPROACHES; ubLoop++)
 	{
-		uiTemp = (UINT32) pNPCProfile->ubApproachVal[ubLoop - 1] * (UINT32) pNPCProfile->ubApproachMod[bApproach - 1][ubLoop - 1] / 100;
+		uiTemp = (UINT32) pNPCProfile.ubApproachVal[ubLoop - 1] * (UINT32) pNPCProfile.ubApproachMod[bApproach - 1][ubLoop - 1] / 100;
 		if (uiTemp > 255)
 		{
 			uiTemp = 255;
 		}
-		pNPCProfile->ubApproachVal[ubLoop-1] = (UINT8) uiTemp;
+		pNPCProfile.ubApproachVal[ubLoop-1] = (UINT8) uiTemp;
 	}
 }
 
@@ -572,7 +572,7 @@ static UINT8 NPCConsiderTalking(UINT8 const ubNPC, UINT8 const ubMerc, Approach 
 		talk_desire = CalcDesireToTalk(ubNPC, ubMerc, approach);
 		if (approach < NUM_REAL_APPROACHES && !(p.bApproached & gbFirstApproachFlags[approach - 1]))
 		{
-			ApproachedForFirstTime(&p, approach);
+			ApproachedForFirstTime(p, approach);
 		}
 	}
 	else if (ubNPC == PABLO && approach == APPROACH_SECTOR_NOT_SAFE) // for Pablo, consider as threaten
@@ -582,7 +582,7 @@ static UINT8 NPCConsiderTalking(UINT8 const ubNPC, UINT8 const ubMerc, Approach 
 		talk_desire = CalcDesireToTalk(ubNPC, ubMerc, APPROACH_THREATEN);
 		if (p.bApproached & gbFirstApproachFlags[APPROACH_THREATEN - 1])
 		{
-			ApproachedForFirstTime(&p, APPROACH_THREATEN);
+			ApproachedForFirstTime(p, APPROACH_THREATEN);
 		}
 	}
 
@@ -2628,7 +2628,7 @@ void HandleNPCChangesForTacticalTraversal(const SOLDIERTYPE* s)
 	}
 
 	// Call to change the NPC's Sector Location
-	ChangeNpcToDifferentSector(&p, p.sSectorX, p.sSectorY, p.bSectorZ);
+	ChangeNpcToDifferentSector(p, p.sSectorX, p.sSectorY, p.bSectorZ);
 }
 
 

@@ -4,11 +4,11 @@
 #include "Soldier_Profile_Type.h"
 
 
-void ExtractMercProfileUTF16(const BYTE* Src, MERCPROFILESTRUCT* Merc);
-void ExtractMercProfile(const BYTE* Src, MERCPROFILESTRUCT* Merc);
-void ExtractMercProfileFromFile(HWFILE, MERCPROFILESTRUCT*);
+void ExtractMercProfileUTF16(BYTE const* Src, MERCPROFILESTRUCT&);
+void ExtractMercProfile(BYTE const* Src, MERCPROFILESTRUCT&);
+void ExtractMercProfileFromFile(HWFILE, MERCPROFILESTRUCT&);
 
-void InjectMercProfile(BYTE* Dst, const MERCPROFILESTRUCT* Merc);
-void InjectMercProfileIntoFile(HWFILE, MERCPROFILESTRUCT const*);
+void InjectMercProfile(BYTE* Dst, MERCPROFILESTRUCT const&);
+void InjectMercProfileIntoFile(HWFILE, MERCPROFILESTRUCT const&);
 
 #endif

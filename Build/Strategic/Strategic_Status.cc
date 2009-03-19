@@ -69,9 +69,9 @@ void ModifyPlayerReputation(INT8 bRepChange)
 }
 
 
-BOOLEAN MercThinksDeathRateTooHigh(MERCPROFILESTRUCT const* const p)
+BOOLEAN MercThinksDeathRateTooHigh(MERCPROFILESTRUCT const& p)
 {
-	INT8 const bDeathRateTolerance = p->bDeathRate;
+	INT8 const bDeathRateTolerance = p.bDeathRate;
 
 	// if he couldn't care less what it is
 	if (bDeathRateTolerance == 101)
@@ -93,9 +93,9 @@ BOOLEAN MercThinksDeathRateTooHigh(MERCPROFILESTRUCT const* const p)
 }
 
 
-BOOLEAN MercThinksBadReputationTooHigh(MERCPROFILESTRUCT const* const p)
+BOOLEAN MercThinksBadReputationTooHigh(MERCPROFILESTRUCT const& p)
 {
-	INT8 const bRepTolerance = p->bReputationTolerance;
+	INT8 const bRepTolerance = p.bReputationTolerance;
 
 	// if he couldn't care less what it is
 	if (bRepTolerance == 101)

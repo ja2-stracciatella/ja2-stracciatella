@@ -908,7 +908,7 @@ void DailyMoraleUpdate(SOLDIERTYPE *pSoldier)
 */
 
 	// check death rate vs. merc's tolerance once/day (ignores buddies!)
-	if (MercThinksDeathRateTooHigh(&GetProfile(pSoldier->ubProfile)))
+	if (MercThinksDeathRateTooHigh(GetProfile(pSoldier->ubProfile)))
 	{
 		// too high, morale takes a hit
 		HandleMoraleEvent( pSoldier, MORALE_HIGH_DEATHRATE, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );

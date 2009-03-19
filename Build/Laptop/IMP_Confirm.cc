@@ -259,131 +259,123 @@ static void BtnIMPConfirmNo(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT* pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
-static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT* pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
+static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT&, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
+static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT&, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany);
 
 
 static void GiveItemsToPC(UINT8 ubProfileId)
 {
-	MERCPROFILESTRUCT *pProfile;
-
-
   // gives starting items to merc
 	// NOTE: Any guns should probably be from those available in regular gun set
 
-	pProfile = &(gMercProfiles[ubProfileId]);
-
+	MERCPROFILESTRUCT& p = GetProfile(ubProfileId);
 
 	// STANDARD EQUIPMENT
 
 
 
 	// kevlar vest, leggings, & helmet
-	MakeProfileInvItemThisSlot(pProfile, VESTPOS, FLAK_JACKET, 100, 1);
-	if ( PreRandom( 100 ) < (UINT32) pProfile->bWisdom )
+	MakeProfileInvItemThisSlot(p, VESTPOS, FLAK_JACKET, 100, 1);
+	if ( PreRandom( 100 ) < (UINT32) p.bWisdom )
 	{
-		MakeProfileInvItemThisSlot(pProfile, HELMETPOS, STEEL_HELMET, 100, 1);
+		MakeProfileInvItemThisSlot(p, HELMETPOS, STEEL_HELMET, 100, 1);
 	}
 
 	// canteen
-	MakeProfileInvItemThisSlot(pProfile, SMALLPOCK4POS, CANTEEN, 100, 1);
+	MakeProfileInvItemThisSlot(p, SMALLPOCK4POS, CANTEEN, 100, 1);
 
 
-	if (pProfile->bMarksmanship >= 80)
+	if (p.bMarksmanship >= 80)
 	{
 		// good shooters get a better & matching ammo
-		MakeProfileInvItemThisSlot( pProfile, HANDPOS, MP5K, 100, 1);
-		MakeProfileInvItemThisSlot( pProfile, SMALLPOCK1POS, CLIP9_30, 100, 2);
+		MakeProfileInvItemThisSlot(p, HANDPOS, MP5K, 100, 1);
+		MakeProfileInvItemThisSlot(p, SMALLPOCK1POS, CLIP9_30, 100, 2);
 	}
 	else
 	{
 		// Automatic pistol, with matching ammo
-		MakeProfileInvItemThisSlot( pProfile, HANDPOS, BERETTA_93R, 100, 1 );
-		MakeProfileInvItemThisSlot( pProfile, SMALLPOCK1POS, CLIP9_15, 100, 3 );
+		MakeProfileInvItemThisSlot(p, HANDPOS, BERETTA_93R, 100, 1);
+		MakeProfileInvItemThisSlot(p, SMALLPOCK1POS, CLIP9_15, 100, 3);
 	}
 
 
 	// OPTIONAL EQUIPMENT: depends on skills & special skills
 
-	if (pProfile->bMedical >= 60)
+	if (p.bMedical >= 60)
 	{
 		// strong medics get full medic kit
-		MakeProfileInvItemAnySlot(pProfile, MEDICKIT, 100, 1);
+		MakeProfileInvItemAnySlot(p, MEDICKIT, 100, 1);
 	}
 	else
-	if (pProfile->bMedical >= 30)
+	if (p.bMedical >= 30)
 	{
 		// passable medics get first aid kit
-		MakeProfileInvItemAnySlot(pProfile, FIRSTAIDKIT, 100, 1);
+		MakeProfileInvItemAnySlot(p, FIRSTAIDKIT, 100, 1);
 	}
 
-	if (pProfile->bMechanical >= 50)
+	if (p.bMechanical >= 50)
 	{
 		// mechanics get toolkit
-		MakeProfileInvItemAnySlot(pProfile, TOOLKIT, 100, 1);
+		MakeProfileInvItemAnySlot(p, TOOLKIT, 100, 1);
 	}
 
-	if (pProfile->bExplosive >= 50)
+	if (p.bExplosive >= 50)
 	{
 		// loonies get TNT & Detonator
-		MakeProfileInvItemAnySlot(pProfile, TNT, 100, 1);
-		MakeProfileInvItemAnySlot(pProfile, DETONATOR, 100, 1);
+		MakeProfileInvItemAnySlot(p, TNT, 100, 1);
+		MakeProfileInvItemAnySlot(p, DETONATOR, 100, 1);
 	}
 
 
 	// check for special skills
-	if (HasSkillTrait(pProfile, LOCKPICKING) && iMechanical)
+	if (HasSkillTrait(p, LOCKPICKING) && iMechanical)
 	{
-		MakeProfileInvItemAnySlot(pProfile, LOCKSMITHKIT, 100, 1);
+		MakeProfileInvItemAnySlot(p, LOCKSMITHKIT, 100, 1);
 	}
 
-	if (HasSkillTrait(pProfile, HANDTOHAND))
+	if (HasSkillTrait(p, HANDTOHAND))
 	{
-		MakeProfileInvItemAnySlot(pProfile, BRASS_KNUCKLES, 100, 1);
+		MakeProfileInvItemAnySlot(p, BRASS_KNUCKLES, 100, 1);
 	}
 
-	if (HasSkillTrait(pProfile, ELECTRONICS) && iMechanical)
+	if (HasSkillTrait(p, ELECTRONICS) && iMechanical)
 	{
-		MakeProfileInvItemAnySlot(pProfile, METALDETECTOR, 100, 1);
+		MakeProfileInvItemAnySlot(p, METALDETECTOR, 100, 1);
 	}
 
-	if (HasSkillTrait(pProfile, NIGHTOPS))
+	if (HasSkillTrait(p, NIGHTOPS))
 	{
-		MakeProfileInvItemAnySlot(pProfile, BREAK_LIGHT, 100, 2);
+		MakeProfileInvItemAnySlot(p, BREAK_LIGHT, 100, 2);
 	}
 
-	if (HasSkillTrait(pProfile, THROWING))
+	if (HasSkillTrait(p, THROWING))
 	{
-		MakeProfileInvItemAnySlot(pProfile, THROWING_KNIFE, 100, 1);
+		MakeProfileInvItemAnySlot(p, THROWING_KNIFE, 100, 1);
 	}
 
-	if (HasSkillTrait(pProfile, STEALTHY))
+	if (HasSkillTrait(p, STEALTHY))
 	{
-		MakeProfileInvItemAnySlot(pProfile, SILENCER, 100, 1);
+		MakeProfileInvItemAnySlot(p, SILENCER, 100, 1);
 	}
 
-	if (HasSkillTrait(pProfile, KNIFING))
+	if (HasSkillTrait(p, KNIFING))
 	{
-		MakeProfileInvItemAnySlot(pProfile, COMBAT_KNIFE, 100, 1);
+		MakeProfileInvItemAnySlot(p, COMBAT_KNIFE, 100, 1);
 	}
 
-	if (HasSkillTrait(pProfile, CAMOUFLAGED))
+	if (HasSkillTrait(p, CAMOUFLAGED))
 	{
-		MakeProfileInvItemAnySlot(pProfile, CAMOUFLAGEKIT, 100, 1);
+		MakeProfileInvItemAnySlot(p, CAMOUFLAGEKIT, 100, 1);
 	}
-
 }
 
 
-static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT* pProfile, UINT16 usItem);
+static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const&, UINT16 usItem);
 
 
-static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT* pProfile, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
+static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT& p, UINT16 const usItem, UINT8 const ubStatus, UINT8 const ubHowMany)
 {
-	INT32 iSlot;
-
-	iSlot = FirstFreeBigEnoughPocket(pProfile, usItem);
-
+	INT32 const iSlot = FirstFreeBigEnoughPocket(p, usItem);
 	if (iSlot == -1)
 	{
 		// no room, item not received
@@ -391,19 +383,19 @@ static void MakeProfileInvItemAnySlot(MERCPROFILESTRUCT* pProfile, UINT16 usItem
 	}
 
 	// put the item into that slot
-	MakeProfileInvItemThisSlot(pProfile, iSlot, usItem, ubStatus, ubHowMany);
+	MakeProfileInvItemThisSlot(p, iSlot, usItem, ubStatus, ubHowMany);
 }
 
 
-static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT* pProfile, UINT32 uiPos, UINT16 usItem, UINT8 ubStatus, UINT8 ubHowMany)
+static void MakeProfileInvItemThisSlot(MERCPROFILESTRUCT& p, UINT32 const uiPos, UINT16 const usItem, UINT8 const ubStatus, UINT8 const ubHowMany)
 {
-  pProfile->inv[uiPos]				= usItem;
-  pProfile->bInvStatus[uiPos] = ubStatus;
-  pProfile->bInvNumber[uiPos] = ubHowMany;
+  p.inv[uiPos]				= usItem;
+  p.bInvStatus[uiPos] = ubStatus;
+  p.bInvNumber[uiPos] = ubHowMany;
 }
 
 
-static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT* pProfile, UINT16 usItem)
+static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const& p, UINT16 const usItem)
 {
 	UINT32 uiPos;
 
@@ -414,7 +406,7 @@ static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT* pProfile, UINT16 usItem
 		// check small pockets first
 		for (uiPos = SMALLPOCK1POS; uiPos <= SMALLPOCK8POS; uiPos++)
 		{
-			if (pProfile->inv[uiPos] == NONE)
+			if (p.inv[uiPos] == NONE)
 			{
 				return(uiPos);
 			}
@@ -424,7 +416,7 @@ static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT* pProfile, UINT16 usItem
 	// check large pockets
 	for (uiPos = BIGPOCK1POS; uiPos <= BIGPOCK4POS; uiPos++)
 	{
-		if (pProfile->inv[uiPos] == NONE)
+		if (p.inv[uiPos] == NONE)
 		{
 			return(uiPos);
 		}
@@ -443,7 +435,7 @@ static void WriteOutCurrentImpCharacter(INT32 iProfileId)
 	// Write the profile id, portrait id and the profile itself. Abort on error
 	FileWrite(hFile, &iProfileId,      sizeof(INT32));
 	FileWrite(hFile, &iPortraitNumber, sizeof(INT32));
-	InjectMercProfileIntoFile(hFile, &gMercProfiles[iProfileId]);
+	InjectMercProfileIntoFile(hFile, gMercProfiles[iProfileId]);
 }
 
 
@@ -461,7 +453,7 @@ static void LoadInCurrentImpCharacter(void)
 		FileRead(hFile, &iPortraitNumber, sizeof(INT32));
 
 		// read in the profile
-		ExtractMercProfileFromFile(hFile, &gMercProfiles[iProfileId]);
+		ExtractMercProfileFromFile(hFile, gMercProfiles[iProfileId]);
 	}
 
 	if( LaptopSaveInfo.iCurrentBalance < COST_OF_PROFILE )

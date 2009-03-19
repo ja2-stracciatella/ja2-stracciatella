@@ -1611,7 +1611,7 @@ static void SaveMercProfiles(HWFILE const f)
 #else
 		BYTE data[796];
 #endif
-		InjectMercProfile(data, i);
+		InjectMercProfile(data, *i);
 		writer(f, data, sizeof(data));
 	}
 }
@@ -1630,7 +1630,7 @@ static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version)
 		BYTE data[796];
 #endif
 		reader(f, data, sizeof(data));
-		ExtractMercProfile(data, i);
+		ExtractMercProfile(data, *i);
 	}
 }
 

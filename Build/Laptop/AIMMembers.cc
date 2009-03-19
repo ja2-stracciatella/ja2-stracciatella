@@ -1812,7 +1812,7 @@ static BOOLEAN CanMercBeHired(void)
 		return FALSE;
 	}
 
-	INT const buddy = GetFirstBuddyOnTeam(&p);
+	INT const buddy = GetFirstBuddyOnTeam(p);
 
 	// loop through the list of people the merc hates
 	UINT16 join_quote = QUOTE_NONE;
@@ -1871,7 +1871,7 @@ join_buddy:
 	if (buddy >= 0) return TRUE;
 
 	// Check the players Death rate
-	if (MercThinksDeathRateTooHigh(&p))
+	if (MercThinksDeathRateTooHigh(p))
 	{
 		WaitForMercToFinishTalkingOrUserToClick();
 		InitVideoFaceTalking(pid, QUOTE_DEATH_RATE_REFUSAL);
@@ -1879,7 +1879,7 @@ join_buddy:
 	}
 
 	// Check the players Reputation
-	if (MercThinksBadReputationTooHigh(&p))
+	if (MercThinksBadReputationTooHigh(p))
 	{
 		WaitForMercToFinishTalkingOrUserToClick();
 		InitVideoFaceTalking(pid, QUOTE_REPUTATION_REFUSAL);
