@@ -3320,7 +3320,7 @@ void DebugSoldierPage3()
 		if (sel != NULL &&
 				sel->ubProfile < FIRST_NPC && s->ubProfile != NO_PROFILE)
 		{
-			GPrintStat(150, y += h, L"NPC Opinion:", GetProfile(s->ubProfile)->bMercOpinion[sel->ubProfile]);
+			GPrintStat(150, y += h, L"NPC Opinion:", GetProfile(s->ubProfile).bMercOpinion[sel->ubProfile]);
 		}
 	}
 	else

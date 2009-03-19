@@ -1626,7 +1626,7 @@ static void CreateAutoResolveInterface(void)
 	{
 		//Load the face
 		SGPFILENAME ImageFile;
-		sprintf(ImageFile, "Faces/65Face/%02d.sti", GetProfile(cell->pSoldier->ubProfile)->ubFaceIndex);
+		sprintf(ImageFile, "Faces/65Face/%02d.sti", GetProfile(cell->pSoldier->ubProfile).ubFaceIndex);
 		SGPVObject* face;
 		try
 		{

@@ -862,7 +862,7 @@ void IssueHeadMinerQuote(INT8 const mine_idx, HeadMinerQuote const quote_type)
 	HEAD_MINER_TYPE const& miner_data = gHeadMinerData[GetHeadMinerIndexForMine(mine_idx)];
 
 	// Make sure the miner isn't dead
-	MERCPROFILESTRUCT const& p = *GetProfile(miner_data.usProfileId);
+	MERCPROFILESTRUCT const& p = GetProfile(miner_data.usProfileId);
 	if (p.bLife < OKLIFE)
 	{
 		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"Head Miner #%ls can't talk (quote #%d)", p.zNickname, quote_type);

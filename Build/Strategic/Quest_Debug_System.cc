@@ -833,7 +833,7 @@ static void EnterQuestDebugSystem(void)
 	{
 		const ProfileID pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[giHaveSelectedNPC] : giHaveSelectedNPC);
 		wchar_t	zItemDesc[SIZE_ITEM_INFO];
-		swprintf(zItemDesc, lengthof(zItemDesc), L"%d - %ls", pid, GetProfile(pid)->zNickname);
+		swprintf(zItemDesc, lengthof(zItemDesc), L"%d - %ls", pid, GetProfile(pid).zNickname);
 		guiQuestDebugCurNPCButton->SpecifyText(zItemDesc);
 
 		gNpcListBox.sCurSelectedItem = (INT16)giHaveSelectedNPC;
@@ -1677,11 +1677,11 @@ static void DisplaySelectedNPC(void)
 	// display the names of the NPC's
 	for( i=gpActiveListBox->usItemDisplayedOnTopOfList; i< gpActiveListBox->usItemDisplayedOnTopOfList+gpActiveListBox->usNumDisplayedItems; i++)
 	{
-		const ProfileID                pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[i] : i);
-		const MERCPROFILESTRUCT* const p   = GetProfile(pid);
-		DrawTextToScreen(p->zNickname, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		ProfileID         const  pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[i] : i);
+		MERCPROFILESTRUCT const& p   = GetProfile(pid);
+		DrawTextToScreen(p.zNickname, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		GetDebugLocationString(pid, sTempString, lengthof(sTempString));
-		//GetShortSectorString(p->sSectorX, p->sSectorY, sTempString);
+		//GetShortSectorString(p.sSectorX, p.sSectorY, sTempString);
 
 		FindFontRightCoordinates( gpActiveListBox->usScrollPosX, usPosY, gpActiveListBox->usScrollWidth, 0, sTempString, QUEST_DBS_FONT_LISTBOX_TEXT, &usLocationX, &usLocationY );
 
@@ -1704,11 +1704,11 @@ static void DisplaySelectedNPC(void)
 
 		SetFontShadow(NO_SHADOW);
 
-		const ProfileID                pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[gpActiveListBox->sCurSelectedItem] : gpActiveListBox->sCurSelectedItem);
-		const MERCPROFILESTRUCT* const p   = GetProfile(pid);
+		ProfileID         const  pid = (gfUseLocalNPCs ? gubCurrentNpcInSector[gpActiveListBox->sCurSelectedItem] : gpActiveListBox->sCurSelectedItem);
+		MERCPROFILESTRUCT const& p   = GetProfile(pid);
 
 		// the highlighted name
-		DrawTextToScreen(p->zNickname, gpActiveListBox->usScrollPosX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(p.zNickname, gpActiveListBox->usScrollPosX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		GetDebugLocationString(pid, sTempString, lengthof(sTempString));
 		//GetShortSectorString(pid->sSectorX, pid->sSectorY, sTempString);
 
@@ -1719,7 +1719,7 @@ static void DisplaySelectedNPC(void)
 
 		SetFontShadow(DEFAULT_SHADOW);
 
-		swprintf(zButtonName, lengthof(zButtonName), L"%d - %ls", pid, p->zNickname);
+		swprintf(zButtonName, lengthof(zButtonName), L"%d - %ls", pid, p.zNickname);
 
 		SpecifyButtonText( guiQuestDebugCurNPCButton, zButtonName );
 	}
@@ -2593,7 +2593,7 @@ static void CreateDestroyDisplayNPCInventoryPopup(UINT8 ubAction)
 				DrawTextToScreen(QuestDebugText[QUEST_DBS_NPC_INVENTORY], QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y+5, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_TITLE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 				//Dispaly the current npc name
-				DrawTextToScreen(GetProfile(pid)->zNickname, QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y + 20, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+				DrawTextToScreen(GetProfile(pid).zNickname, QUEST_DBS_NPC_INV_POPUP_X, QUEST_DBS_NPC_INV_POPUP_Y + 20, QUEST_DBS_NPC_INV_POPUP_WIDTH, QUEST_DBS_FONT_TITLE, QUEST_DBS_COLOR_SUBTITLE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 				usPosY = QUEST_DBS_NPC_INV_POPUP_Y + 40;
 				for( i=0; i<NUM_INV_SLOTS; i++)
@@ -3318,7 +3318,7 @@ static INT32 GetMaxNumberOfQuotesToPlay(void)
 		// If it is the RPCs and they are to say the sector descs
 		iNumberOfQuotes = 34;
 	}
-	else if (GetProfile(pid)->ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED &&
+	else if (GetProfile(pid).ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED &&
 			MIGUEL <= pid && pid <= MADDOG)
 	{
 		// It is a RPC who is on our team

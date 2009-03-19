@@ -197,18 +197,18 @@ BOOLEAN LoadMercProfiles(void)
 			JA2EncryptedFileRead(fptr, data, sizeof(data));
 #endif
 
-			MERCPROFILESTRUCT* const p = GetProfile(uiLoop);
-			ExtractMercProfileUTF16(data, p);
+			MERCPROFILESTRUCT& p = GetProfile(uiLoop);
+			ExtractMercProfileUTF16(data, &p);
 
 			// If the dialogue exists for the merc, allow the merc to be hired
-			p->bMercStatus = (FileExists(GetDialogueDataFilename(uiLoop, 0, FALSE)) ? 0 : MERC_HAS_NO_TEXT_FILE);
+			p.bMercStatus = (FileExists(GetDialogueDataFilename(uiLoop, 0, FALSE)) ? 0 : MERC_HAS_NO_TEXT_FILE);
 
-			p->sMedicalDepositAmount = (p->bMedicalDeposit ? CalcMedicalDeposit(p) : 0);
+			p.sMedicalDepositAmount = (p.bMedicalDeposit ? CalcMedicalDeposit(&p) : 0);
 
 			// ATE: New, face display independent of ID num now
 			// Setup face index value
 			// Default is the ubCharNum
-			p->ubFaceIndex = (UINT8)uiLoop;
+			p.ubFaceIndex = (UINT8)uiLoop;
 
 #ifndef JA2DEMO
 			if (!gGameOptions.fGunNut)
@@ -216,25 +216,25 @@ BOOLEAN LoadMercProfiles(void)
 				// CJC: replace guns in profile if they aren't available
 				for (UINT32 uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; ++uiLoop2)
 				{
-					const UINT16 usItem = p->inv[uiLoop2];
+					const UINT16 usItem = p.inv[uiLoop2];
 					if (!(Item[usItem].usItemClass & IC_GUN) || !ExtendedGunListGun(usItem)) continue;
 
 					const UINT16 usNewGun = StandardGunListReplacement(usItem);
 					if (usNewGun == NOTHING) continue;
 
-					p->inv[uiLoop2] = usNewGun;
+					p.inv[uiLoop2] = usNewGun;
 
 					// must search through inventory and replace ammo accordingly
 					for (UINT32 uiLoop3 = 0; uiLoop3 < NUM_INV_SLOTS; ++uiLoop3)
 					{
-						const UINT16 usAmmo = p->inv[uiLoop3];
+						const UINT16 usAmmo = p.inv[uiLoop3];
 						if (!(Item[usAmmo].usItemClass & IC_AMMO)) continue;
 
 						const UINT16 usNewAmmo = FindReplacementMagazineIfNecessary(usItem, usAmmo, usNewGun);
 						if (usNewAmmo == NOTHING) continue;
 
 						// found a new magazine, replace...
-						p->inv[uiLoop3] = usNewAmmo;
+						p.inv[uiLoop3] = usNewAmmo;
 					}
 				}
 			}
@@ -242,30 +242,30 @@ BOOLEAN LoadMercProfiles(void)
 
 			/* Calculate inital attractiveness for the merc's initial gun and armour.
 			 * Calculate the optional gear cost. */
-			p->bMainGunAttractiveness = -1;
-			p->bArmourAttractiveness  = -1;
-			p->usOptionalGearCost     =  0;
+			p.bMainGunAttractiveness = -1;
+			p.bArmourAttractiveness  = -1;
+			p.usOptionalGearCost     =  0;
 			for (UINT32 uiLoop2 = 0; uiLoop2 < NUM_INV_SLOTS; ++uiLoop2)
 			{
-				const UINT16 usItem = p->inv[uiLoop2];
+				const UINT16 usItem = p.inv[uiLoop2];
 				if (usItem == NOTHING) continue;
 				const INVTYPE* const item = &Item[usItem];
 
-				if (item->usItemClass & IC_GUN)    p->bMainGunAttractiveness = Weapon[usItem].ubDeadliness;
-				if (item->usItemClass & IC_ARMOUR) p->bArmourAttractiveness  = Armour[item->ubClassIndex].ubProtection;
+				if (item->usItemClass & IC_GUN)    p.bMainGunAttractiveness = Weapon[usItem].ubDeadliness;
+				if (item->usItemClass & IC_ARMOUR) p.bArmourAttractiveness  = Armour[item->ubClassIndex].ubProtection;
 
-				p->usOptionalGearCost += item->usPrice;
+				p.usOptionalGearCost += item->usPrice;
 			}
 
 			//These variables to get loaded in
-			p->fUseProfileInsertionInfo = FALSE;
-			p->sGridNo                  = 0;
+			p.fUseProfileInsertionInfo = FALSE;
+			p.sGridNo                  = 0;
 
 			// ARM: this is also being done inside the profile editor, but put it here too, so this project's code makes sense
-			p->bHatedCount[0]    = p->bHatedTime[0];
-			p->bHatedCount[1]    = p->bHatedTime[1];
-			p->bLearnToHateCount = p->bLearnToHateTime;
-			p->bLearnToLikeCount = p->bLearnToLikeTime;
+			p.bHatedCount[0]    = p.bHatedTime[0];
+			p.bHatedCount[1]    = p.bHatedTime[1];
+			p.bLearnToHateCount = p.bLearnToHateTime;
+			p.bLearnToLikeCount = p.bLearnToLikeTime;
 		}
 	}
 	catch (...)
@@ -392,7 +392,7 @@ static void DecideActiveTerrorists(void)
 	}
 
 	// set total terrorists outstanding in Carmen's info byte
-	GetProfile(CARMEN)->bNPCData = 1 + ubNumAdditionalTerrorists;
+	GetProfile(CARMEN).bNPCData = 1 + ubNumAdditionalTerrorists;
 
 	// store total terrorists
 	gubNumTerrorists = 1 + ubNumAdditionalTerrorists;
@@ -405,7 +405,7 @@ void MakeRemainingTerroristsTougher()
 	for (UINT8 i = 0; i != NUM_TERRORISTS; ++i)
 	{
 		ProfileID         const  pid = gubTerrorists[i];
-		MERCPROFILESTRUCT const& p   = *GetProfile(pid);
+		MERCPROFILESTRUCT const& p   = GetProfile(pid);
 		if (p.bMercStatus == MERC_IS_DEAD || p.sSectorX == 0 || p.sSectorY == 0) continue;
 		// Slay on player's team, doesn't count towards remaining terrorists
 		if (pid == SLAY && FindSoldierByProfileIDOnPlayerTeam(SLAY)) continue;
@@ -461,7 +461,7 @@ void MakeRemainingTerroristsTougher()
 	for (UINT8 i = 0; i != NUM_TERRORISTS; ++i)
 	{
 		ProfileID         const  pid = gubTerrorists[i];
-		MERCPROFILESTRUCT const& p   = *GetProfile(pid);
+		MERCPROFILESTRUCT const& p   = GetProfile(pid);
 		if (p.bMercStatus == MERC_IS_DEAD || p.sSectorX == 0 || p.sSectorY == 0) continue;
 		// Slay on player's team, doesn't count towards remaining terrorists
 		if (pid == SLAY && FindSoldierByProfileIDOnPlayerTeam(SLAY)) continue;
@@ -954,10 +954,10 @@ BOOLEAN UnRecruitEPC(ProfileID const pid)
 
 	if (s->bAssignment < ON_DUTY) ResetDeadSquadMemberList(s->bAssignment);
 
-	MERCPROFILESTRUCT* const p = GetProfile(pid);
+	MERCPROFILESTRUCT& p = GetProfile(pid);
 
 	// OK, UN set recruit flag..
-	p->ubMiscFlags &= ~PROFILE_MISC_FLAG_EPCACTIVE;
+	p.ubMiscFlags &= ~PROFILE_MISC_FLAG_EPCACTIVE;
 
 	// update sector values to current
 
@@ -967,20 +967,20 @@ BOOLEAN UnRecruitEPC(ProfileID const pid)
 			s->sSectorY == MAP_ROW_B     &&
 			s->bSectorZ == 0)
 	{
-		p->sSectorX = 0;
-		p->sSectorY = 0;
-		p->bSectorZ = 0;
+		p.sSectorX = 0;
+		p.sSectorY = 0;
+		p.bSectorZ = 0;
 	}
 	else
 	{
-		p->sSectorX = s->sSectorX;
-		p->sSectorY = s->sSectorY;
-		p->bSectorZ = s->bSectorZ;
+		p.sSectorX = s->sSectorX;
+		p.sSectorY = s->sSectorY;
+		p.bSectorZ = s->bSectorZ;
 	}
 
 	// how do we decide whether or not to set this?
-	p->fUseProfileInsertionInfo  = TRUE;
-	p->ubMiscFlags3             |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
+	p.fUseProfileInsertionInfo  = TRUE;
+	p.ubMiscFlags3             |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
 
 	ChangeSoldierTeam(s, CIV_TEAM);
 	UpdateTeamPanelAssignments();
@@ -1140,81 +1140,81 @@ SOLDIERTYPE* SwapLarrysProfiles(SOLDIERTYPE* const s)
 		default:           return s; // I don't think so!
 	}
 
-	const MERCPROFILESTRUCT* const src = GetProfile(src_id);
-	MERCPROFILESTRUCT*       const dst = GetProfile(dst_id);
+	MERCPROFILESTRUCT const& src = GetProfile(src_id);
+	MERCPROFILESTRUCT&       dst = GetProfile(dst_id);
 
-	dst->ubMiscFlags2                = src->ubMiscFlags2;
-	dst->ubMiscFlags                 = src->ubMiscFlags;
-	dst->sSectorX                    = src->sSectorX;
-	dst->sSectorY                    = src->sSectorY;
-	dst->uiDayBecomesAvailable       = src->uiDayBecomesAvailable;
-	dst->usKills                     = src->usKills;
-	dst->usAssists                   = src->usAssists;
-	dst->usShotsFired                = src->usShotsFired;
-	dst->usShotsHit                  = src->usShotsHit;
-	dst->usBattlesFought             = src->usBattlesFought;
-	dst->usTimesWounded              = src->usTimesWounded;
-	dst->usTotalDaysServed           = src->usTotalDaysServed;
-	dst->fUseProfileInsertionInfo    = src->fUseProfileInsertionInfo;
-	dst->sGridNo                     = src->sGridNo;
-	dst->ubQuoteActionID             = src->ubQuoteActionID;
-	dst->ubLastQuoteSaid             = src->ubLastQuoteSaid;
-	dst->ubStrategicInsertionCode    = src->ubStrategicInsertionCode;
-	dst->bMercStatus                 = src->bMercStatus;
-	dst->bSectorZ                    = src->bSectorZ;
-	dst->usStrategicInsertionData    = src->usStrategicInsertionData;
-	dst->sTrueSalary                 = src->sTrueSalary;
-	dst->ubMiscFlags3                = src->ubMiscFlags3;
-	dst->ubDaysOfMoraleHangover      = src->ubDaysOfMoraleHangover;
-	dst->ubNumTimesDrugUseInLifetime = src->ubNumTimesDrugUseInLifetime;
-	dst->uiPrecedentQuoteSaid        = src->uiPrecedentQuoteSaid;
-	dst->sPreCombatGridNo            = src->sPreCombatGridNo;
+	dst.ubMiscFlags2                = src.ubMiscFlags2;
+	dst.ubMiscFlags                 = src.ubMiscFlags;
+	dst.sSectorX                    = src.sSectorX;
+	dst.sSectorY                    = src.sSectorY;
+	dst.uiDayBecomesAvailable       = src.uiDayBecomesAvailable;
+	dst.usKills                     = src.usKills;
+	dst.usAssists                   = src.usAssists;
+	dst.usShotsFired                = src.usShotsFired;
+	dst.usShotsHit                  = src.usShotsHit;
+	dst.usBattlesFought             = src.usBattlesFought;
+	dst.usTimesWounded              = src.usTimesWounded;
+	dst.usTotalDaysServed           = src.usTotalDaysServed;
+	dst.fUseProfileInsertionInfo    = src.fUseProfileInsertionInfo;
+	dst.sGridNo                     = src.sGridNo;
+	dst.ubQuoteActionID             = src.ubQuoteActionID;
+	dst.ubLastQuoteSaid             = src.ubLastQuoteSaid;
+	dst.ubStrategicInsertionCode    = src.ubStrategicInsertionCode;
+	dst.bMercStatus                 = src.bMercStatus;
+	dst.bSectorZ                    = src.bSectorZ;
+	dst.usStrategicInsertionData    = src.usStrategicInsertionData;
+	dst.sTrueSalary                 = src.sTrueSalary;
+	dst.ubMiscFlags3                = src.ubMiscFlags3;
+	dst.ubDaysOfMoraleHangover      = src.ubDaysOfMoraleHangover;
+	dst.ubNumTimesDrugUseInLifetime = src.ubNumTimesDrugUseInLifetime;
+	dst.uiPrecedentQuoteSaid        = src.uiPrecedentQuoteSaid;
+	dst.sPreCombatGridNo            = src.sPreCombatGridNo;
 
 // CJC: this is causing problems so just skip the transfer of exp...
 /*
-	dst->sLifeGain         = src->sLifeGain;
-	dst->sAgilityGain      = src->sAgilityGain;
-	dst->sDexterityGain    = src->sDexterityGain;
-	dst->sStrengthGain     = src->sStrengthGain;
-	dst->sLeadershipGain   = src->sLeadershipGain;
-	dst->sWisdomGain       = src->sWisdomGain;
-	dst->sExpLevelGain     = src->sExpLevelGain;
-	dst->sMarksmanshipGain = src->sMarksmanshipGain;
-	dst->sMedicalGain      = src->sMedicalGain;
-	dst->sMechanicGain     = src->sMechanicGain;
-	dst->sExplosivesGain   = src->sExplosivesGain;
+	dst.sLifeGain         = src.sLifeGain;
+	dst.sAgilityGain      = src.sAgilityGain;
+	dst.sDexterityGain    = src.sDexterityGain;
+	dst.sStrengthGain     = src.sStrengthGain;
+	dst.sLeadershipGain   = src.sLeadershipGain;
+	dst.sWisdomGain       = src.sWisdomGain;
+	dst.sExpLevelGain     = src.sExpLevelGain;
+	dst.sMarksmanshipGain = src.sMarksmanshipGain;
+	dst.sMedicalGain      = src.sMedicalGain;
+	dst.sMechanicGain     = src.sMechanicGain;
+	dst.sExplosivesGain   = src.sExplosivesGain;
 
-	dst->bLifeDelta         = src->bLifeDelta;
-	dst->bAgilityDelta      = src->bAgilityDelta;
-	dst->bDexterityDelta    = src->bDexterityDelta;
-	dst->bStrengthDelta     = src->bStrengthDelta;
-	dst->bLeadershipDelta   = src->bLeadershipDelta;
-	dst->bWisdomDelta       = src->bWisdomDelta;
-	dst->bExpLevelDelta     = src->bExpLevelDelta;
-	dst->bMarksmanshipDelta = src->bMarksmanshipDelta;
-	dst->bMedicalDelta      = src->bMedicalDelta;
-	dst->bMechanicDelta     = src->bMechanicDelta;
-	dst->bExplosivesDelta   = src->bExplosivesDelta;
+	dst.bLifeDelta         = src.bLifeDelta;
+	dst.bAgilityDelta      = src.bAgilityDelta;
+	dst.bDexterityDelta    = src.bDexterityDelta;
+	dst.bStrengthDelta     = src.bStrengthDelta;
+	dst.bLeadershipDelta   = src.bLeadershipDelta;
+	dst.bWisdomDelta       = src.bWisdomDelta;
+	dst.bExpLevelDelta     = src.bExpLevelDelta;
+	dst.bMarksmanshipDelta = src.bMarksmanshipDelta;
+	dst.bMedicalDelta      = src.bMedicalDelta;
+	dst.bMechanicDelta     = src.bMechanicDelta;
+	dst.bExplosivesDelta   = src.bExplosivesDelta;
 */
 
-	memcpy(dst->bInvStatus, src->bInvStatus, sizeof(dst->bInvStatus));
-	memcpy(dst->bInvNumber, src->bInvStatus, sizeof(dst->bInvNumber));
-	memcpy(dst->inv,        src->inv,        sizeof(dst->inv));
+	memcpy(dst.bInvStatus, src.bInvStatus, sizeof(dst.bInvStatus));
+	memcpy(dst.bInvNumber, src.bInvStatus, sizeof(dst.bInvNumber));
+	memcpy(dst.inv,        src.inv,        sizeof(dst.inv));
 
 	DeleteSoldierFace(s);
 	s->ubProfile = dst_id;
 	InitSoldierFace(s);
 
-	s->bStrength     = dst->bStrength     + dst->bStrengthDelta;
-	s->bDexterity    = dst->bDexterity    + dst->bDexterityDelta;
-	s->bAgility      = dst->bAgility      + dst->bAgilityDelta;
-	s->bWisdom       = dst->bWisdom       + dst->bWisdomDelta;
-	s->bExpLevel     = dst->bExpLevel     + dst->bExpLevelDelta;
-	s->bLeadership   = dst->bLeadership   + dst->bLeadershipDelta;
-	s->bMarksmanship = dst->bMarksmanship + dst->bMarksmanshipDelta;
-	s->bMechanical   = dst->bMechanical   + dst->bMechanicDelta;
-	s->bMedical      = dst->bMedical      + dst->bMedicalDelta;
-	s->bExplosive    = dst->bExplosive    + dst->bExplosivesDelta;
+	s->bStrength     = dst.bStrength     + dst.bStrengthDelta;
+	s->bDexterity    = dst.bDexterity    + dst.bDexterityDelta;
+	s->bAgility      = dst.bAgility      + dst.bAgilityDelta;
+	s->bWisdom       = dst.bWisdom       + dst.bWisdomDelta;
+	s->bExpLevel     = dst.bExpLevel     + dst.bExpLevelDelta;
+	s->bLeadership   = dst.bLeadership   + dst.bLeadershipDelta;
+	s->bMarksmanship = dst.bMarksmanship + dst.bMarksmanshipDelta;
+	s->bMechanical   = dst.bMechanical   + dst.bMechanicDelta;
+	s->bMedical      = dst.bMedical      + dst.bMedicalDelta;
+	s->bExplosive    = dst.bExplosive    + dst.bExplosivesDelta;
 
 	if (s->ubProfile == LARRY_DRUNK)
 	{

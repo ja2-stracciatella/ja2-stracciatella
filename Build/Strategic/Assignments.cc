@@ -5512,7 +5512,7 @@ void CreateContractBox(const SOLDIERTYPE* const s)
 	{
 		MERCPROFILESTRUCT const* const p =
 			s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ?
-				GetProfile(s->ubProfile) : 0;
+				&GetProfile(s->ubProfile) : 0;
 		for (UINT32 i = 0; i < MAX_CONTRACT_MENU_STRING_COUNT; ++i)
 		{
 			INT32 salary;
@@ -7313,7 +7313,7 @@ static void InternalUnescortEPC(SOLDIERTYPE* const s)
 
 			bool Execute()
 			{
-				GetProfile(epc_)->ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;
+				GetProfile(epc_).ubMiscFlags &= ~PROFILE_MISC_FLAG_FORCENPCQUOTE;
 				UnRecruitEPC(epc_);
 				ReBuildCharactersList();
 				return false;

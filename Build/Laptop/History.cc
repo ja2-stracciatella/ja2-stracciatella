@@ -603,14 +603,14 @@ static void ProcessHistoryTransactionString(wchar_t* const pString, const size_t
 #endif
 				break;
 			}
-			swprintf(pString, Length, pHistoryStrings[code], GetProfile(h->ubSecondCode)->zName);
+			swprintf(pString, Length, pHistoryStrings[code], GetProfile(h->ubSecondCode).zName);
 			break;
 
 		case HISTORY_HIRED_MERC_FROM_AIM:
 		case HISTORY_HIRED_MERC_FROM_MERC:
 		case HISTORY_MERC_CONTRACT_EXPIRED:
 		case HISTORY_RPC_JOINED_TEAM:
-			swprintf(pString, Length, pHistoryStrings[code], GetProfile(h->ubSecondCode)->zName);
+			swprintf(pString, Length, pHistoryStrings[code], GetProfile(h->ubSecondCode).zName);
 			break;
 
 		case HISTORY_CANCELLED_INSURANCE:
@@ -627,7 +627,7 @@ static void ProcessHistoryTransactionString(wchar_t* const pString, const size_t
 		case HISTORY_NPC_KILLED:
 		case HISTORY_PURCHASED_INSURANCE:
 		case HISTORY_WON_BOXING:
-			swprintf(pString, Length, pHistoryStrings[code], GetProfile(h->ubSecondCode)->zNickname);
+			swprintf(pString, Length, pHistoryStrings[code], GetProfile(h->ubSecondCode).zNickname);
 			break;
 
 		// all simple history log msgs, no params

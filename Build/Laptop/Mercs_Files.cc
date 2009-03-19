@@ -284,8 +284,8 @@ try
 {
 	BltVideoObject(FRAME_BUFFER, guiPortraitBox, 0, MERC_FILES_PORTRAIT_BOX_X, MERC_FILES_PORTRAIT_BOX_Y);
 
-	const MERCPROFILESTRUCT* const p = GetProfile(pid);
-	const SOLDIERTYPE*       const s = FindSoldierByProfileIDOnPlayerTeam(pid);
+	MERCPROFILESTRUCT const&       p = GetProfile(pid);
+	SOLDIERTYPE       const* const s = FindSoldierByProfileIDOnPlayerTeam(pid);
 
 	// Load the face graphic
 	char sTemp[100];
@@ -307,13 +307,13 @@ try
 		shaded = TRUE;
 		text   = pPersonnelDepartedStateStrings[2];
 	}
-	else if (p->bMercStatus == MERC_FIRED_AS_A_POW || (s && s->bAssignment == ASSIGNMENT_POW))
+	else if (p.bMercStatus == MERC_FIRED_AS_A_POW || (s && s->bAssignment == ASSIGNMENT_POW))
 	{
 		// The merc is currently a POW or the merc was fired as a pow
 		shaded = TRUE;
 		text   = pPOWStrings[0];
 	}
-	else if (p->bMercStatus == MERC_HIRED_BUT_NOT_ARRIVED_YET || p->bMercStatus > 0)
+	else if (p.bMercStatus == MERC_HIRED_BUT_NOT_ARRIVED_YET || p.bMercStatus > 0)
 	{
 		// The merc is hired already
 		shaded = TRUE;
@@ -381,27 +381,27 @@ static void DrawStat(const UINT16 x, const UINT16 y, const wchar_t* const stat, 
 
 static void DisplayMercsStats(UINT8 ubMercID)
 {
-	const MERCPROFILESTRUCT* const p = GetProfile(ubMercID);
+	MERCPROFILESTRUCT const& p = GetProfile(ubMercID);
 
 	const UINT16 x1     = MERC_STATS_FIRST_COL_X;
 	const UINT16 x1_val = MERC_STATS_FIRST_NUM_COL_X;
 	UINT16       y1     = MERC_HEALTH_Y;
 	const UINT16 dy     = MERC_SPACE_BN_LINES;
-	DrawStat(x1, y1,       str_stat_health,     x1_val, p->bLife);
-	DrawStat(x1, y1 += dy, str_stat_agility,    x1_val, p->bAgility);
-	DrawStat(x1, y1 += dy, str_stat_dexterity,  x1_val, p->bDexterity);
-	DrawStat(x1, y1 += dy, str_stat_strength,   x1_val, p->bStrength);
-	DrawStat(x1, y1 += dy, str_stat_leadership, x1_val, p->bLeadership);
-	DrawStat(x1, y1 += dy, str_stat_wisdom,     x1_val, p->bWisdom);
+	DrawStat(x1, y1,       str_stat_health,     x1_val, p.bLife);
+	DrawStat(x1, y1 += dy, str_stat_agility,    x1_val, p.bAgility);
+	DrawStat(x1, y1 += dy, str_stat_dexterity,  x1_val, p.bDexterity);
+	DrawStat(x1, y1 += dy, str_stat_strength,   x1_val, p.bStrength);
+	DrawStat(x1, y1 += dy, str_stat_leadership, x1_val, p.bLeadership);
+	DrawStat(x1, y1 += dy, str_stat_wisdom,     x1_val, p.bWisdom);
 
 	const UINT16 x2     = MERC_STATS_SECOND_COL_X;
 	const UINT16 x2_val = MERC_STATS_SECOND_NUM_COL_X;
 	UINT16       y2     = MERC_HEALTH_Y;
-	DrawStat(x2, y2,       str_stat_exp_level,    x2_val, p->bExpLevel);
-	DrawStat(x2, y2 += dy, str_stat_marksmanship, x2_val, p->bMarksmanship);
-	DrawStat(x2, y2 += dy, str_stat_mechanical,   x2_val, p->bMechanical);
-	DrawStat(x2, y2 += dy, str_stat_explosive,    x2_val, p->bExplosive);
-	DrawStat(x2, y2 += dy, str_stat_medical,      x2_val, p->bMedical);
+	DrawStat(x2, y2,       str_stat_exp_level,    x2_val, p.bExpLevel);
+	DrawStat(x2, y2 += dy, str_stat_marksmanship, x2_val, p.bMarksmanship);
+	DrawStat(x2, y2 += dy, str_stat_mechanical,   x2_val, p.bMechanical);
+	DrawStat(x2, y2 += dy, str_stat_explosive,    x2_val, p.bExplosive);
+	DrawStat(x2, y2 += dy, str_stat_medical,      x2_val, p.bMedical);
 
 	//Daily Salary
 	y2 += dy;
@@ -410,7 +410,7 @@ static void DisplayMercsStats(UINT8 ubMercID)
 
 	const UINT16 x = MERC_STATS_SECOND_COL_X + StringPixLength(salary, MERC_NAME_FONT) + 1;
 	wchar_t sString[128];
-	swprintf(sString, lengthof(sString), L"%d %ls", p->sSalary, MercInfo[MERC_FILES_PER_DAY]);
+	swprintf(sString, lengthof(sString), L"%d %ls", p.sSalary, MercInfo[MERC_FILES_PER_DAY]);
 	DrawTextToScreen(sString, x, y2, 95, MERC_NAME_FONT, MERC_DYNAMIC_STATS_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 }
 

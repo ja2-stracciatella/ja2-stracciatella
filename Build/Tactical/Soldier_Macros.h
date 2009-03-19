@@ -10,19 +10,19 @@
 static inline bool RPC_RECRUITED(SOLDIERTYPE const* const s)
 {
 	UINT8 const pid = s->ubProfile;
-	return pid != NO_PROFILE && GetProfile(pid)->ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED;
+	return pid != NO_PROFILE && GetProfile(pid).ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED;
 }
 
 static inline bool AM_AN_EPC(SOLDIERTYPE const* const s)
 {
 	UINT8 const pid = s->ubProfile;
-	return pid != NO_PROFILE && GetProfile(pid)->ubMiscFlags & PROFILE_MISC_FLAG_EPCACTIVE;
+	return pid != NO_PROFILE && GetProfile(pid).ubMiscFlags & PROFILE_MISC_FLAG_EPCACTIVE;
 }
 
 static inline bool AM_A_ROBOT(SOLDIERTYPE const* const s)
 {
 	UINT8 const pid = s->ubProfile;
-	return pid != NO_PROFILE && GetProfile(pid)->ubBodyType == ROBOTNOWEAPON;
+	return pid != NO_PROFILE && GetProfile(pid).ubBodyType == ROBOTNOWEAPON;
 }
 
 static inline bool OK_ENEMY_MERC(SOLDIERTYPE const* const s)

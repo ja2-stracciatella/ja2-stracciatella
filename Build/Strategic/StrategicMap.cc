@@ -1213,11 +1213,11 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 				if (ubThisMine != MINE_ALMA)
 				{
 					// Fred Morris is always in the first mine sector we enter, unless that's Alma (then he's randomized, too)
-					MERCPROFILESTRUCT* const fred = GetProfile(FRED);
-					fred->sSectorX = sNewSectorX;
-					fred->sSectorY = sNewSectorY;
-					fred->bSectorZ = 0;
-					fred->bTown    = gMineLocation[ubThisMine].bAssociatedTown;
+					MERCPROFILESTRUCT& fred = GetProfile(FRED);
+					fred.sSectorX = sNewSectorX;
+					fred.sSectorY = sNewSectorY;
+					fred.bSectorZ = 0;
+					fred.bTown    = gMineLocation[ubThisMine].bAssociatedTown;
 
 					// mark miner as placed
 					ubRandomMiner[ 0 ] = 0;
@@ -4266,10 +4266,10 @@ catch (...) { return FALSE; }
 void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* const s)
 {
 	if (s->ubProfile == NO_PROFILE) return;
-	MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
+	MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
 
 	// can't be changed?
-	if (p->ubMiscFlags3 & PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE) return;
+	if (p.ubMiscFlags3 & PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE) return;
 
 	if (gfWorldLoaded && s->bActive && s->bInSector)
 	{
@@ -4286,36 +4286,36 @@ void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* const s)
 			{
 				// Handle traversal.  This NPC's sector will NOT already be set correctly, so we have to call for that too
 				HandleNPCChangesForTacticalTraversal(s);
-				p->fUseProfileInsertionInfo = FALSE;
+				p.fUseProfileInsertionInfo = FALSE;
 				if (s->ubProfile != NO_PROFILE && NPCHasUnusedRecordWithGivenApproach(s->ubProfile, APPROACH_DONE_TRAVERSAL))
 				{
-					p->ubMiscFlags3 |= PROFILE_MISC_FLAG3_HANDLE_DONE_TRAVERSAL;
+					p.ubMiscFlags3 |= PROFILE_MISC_FLAG3_HANDLE_DONE_TRAVERSAL;
 				}
 			}
 			else
 			{
 				if (s->sFinalDestination == s->sGridNo)
 				{
-					p->usStrategicInsertionData = s->sGridNo;
+					p.usStrategicInsertionData = s->sGridNo;
 				}
 				else if (s->sAbsoluteFinalDestination != NOWHERE)
 				{
-					p->usStrategicInsertionData = s->sAbsoluteFinalDestination;
+					p.usStrategicInsertionData = s->sAbsoluteFinalDestination;
 				}
 				else
 				{
-					p->usStrategicInsertionData = s->sFinalDestination;
+					p.usStrategicInsertionData = s->sFinalDestination;
 				}
 
-				p->fUseProfileInsertionInfo = TRUE;
-				p->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-				p->ubQuoteActionID          = s->ubQuoteActionID;
-				p->ubQuoteRecord            = s->ubQuoteActionID;
+				p.fUseProfileInsertionInfo = TRUE;
+				p.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+				p.ubQuoteActionID          = s->ubQuoteActionID;
+				p.ubQuoteRecord            = s->ubQuoteActionID;
 			}
 		}
 		else
 		{
-			p->fUseProfileInsertionInfo = FALSE;
+			p.fUseProfileInsertionInfo = FALSE;
 		}
 	}
 	else
@@ -4324,11 +4324,11 @@ void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* const s)
 		/* It appears to set the soldier's strategic insertion code everytime a
 		 * group arrives in a new sector.  The insertion data isn't needed for these
 		 * cases as the code is a direction only. */
-		p->ubStrategicInsertionCode = s->ubStrategicInsertionCode;
-		p->usStrategicInsertionData = 0;
+		p.ubStrategicInsertionCode = s->ubStrategicInsertionCode;
+		p.usStrategicInsertionData = 0;
 
 		//Strategic system should now work.
-		p->fUseProfileInsertionInfo = TRUE;
+		p.fUseProfileInsertionInfo = TRUE;
 	}
 }
 

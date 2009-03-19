@@ -443,10 +443,10 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 void AddSecondAirportAttendant( void )
 {
 	// add the second airport attendant to the Drassen airport...
-	MERCPROFILESTRUCT* const sal = GetProfile(SAL);
-	sal->sSectorX = BOBBYR_SHIPPING_DEST_SECTOR_X;
-	sal->sSectorY = BOBBYR_SHIPPING_DEST_SECTOR_Y;
-	sal->bSectorZ = BOBBYR_SHIPPING_DEST_SECTOR_Z;
+	MERCPROFILESTRUCT& sal = GetProfile(SAL);
+	sal.sSectorX = BOBBYR_SHIPPING_DEST_SECTOR_X;
+	sal.sSectorY = BOBBYR_SHIPPING_DEST_SECTOR_Y;
+	sal.bSectorZ = BOBBYR_SHIPPING_DEST_SECTOR_Z;
 }
 
 

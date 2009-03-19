@@ -489,12 +489,12 @@ static void LoadInCurrentImpCharacter(void)
 void ResetIMPCharactersEyesAndMouthOffsets(const UINT8 ubMercProfileID)
 {
   // ATE: Check boundary conditions!
-	MERCPROFILESTRUCT* const p = GetProfile(ubMercProfileID);
-	if (p->ubFaceIndex - 200 > 16 || ubMercProfileID >= PROF_HUMMER) return;
+	MERCPROFILESTRUCT& p = GetProfile(ubMercProfileID);
+	if (p.ubFaceIndex - 200 > 16 || ubMercProfileID >= PROF_HUMMER) return;
 
-	const FacePosInfo* const fi = &g_face_info[p->ubFaceIndex - 200];
-	p->usEyesX  = fi->eye_x;
-	p->usEyesY  = fi->eye_y;
-	p->usMouthX = fi->mouth_x;
-	p->usMouthY = fi->mouth_y;
+	const FacePosInfo* const fi = &g_face_info[p.ubFaceIndex - 200];
+	p.usEyesX  = fi->eye_x;
+	p.usEyesY  = fi->eye_y;
+	p.usMouthX = fi->mouth_x;
+	p.usMouthY = fi->mouth_y;
 }

@@ -942,7 +942,7 @@ void StartInsuranceInvestigation( UINT8	ubPayoutID )
 		AddEmailWithSpecialData(INSUR_SUSPIC_2, INSUR_SUSPIC_2_LENGTH, INSURANCE_COMPANY, GetWorldTotalMin(), lip->iPayOutPrice, lip->ubMercID);
 	}
 
-	if (GetProfile(lip->ubMercID)->ubSuspiciousDeath == VERY_SUSPICIOUS_DEATH)
+	if (GetProfile(lip->ubMercID).ubSuspiciousDeath == VERY_SUSPICIOUS_DEATH)
 	{
 		// the fact that you tried to cheat them gets realized very quickly. :-)
 		ubDays = 1;
@@ -965,7 +965,7 @@ void EndInsuranceInvestigation( UINT8	ubPayoutID )
 {
 	const LIFE_INSURANCE_PAYOUT* const lip = &LaptopSaveInfo.pLifeInsurancePayouts[ubPayoutID];
 	// send an email telling player the investigation is over
-	if (GetProfile(lip->ubMercID)->ubSuspiciousDeath == VERY_SUSPICIOUS_DEATH)
+	if (GetProfile(lip->ubMercID).ubSuspiciousDeath == VERY_SUSPICIOUS_DEATH)
 	{
 		// fraud, no payout!
 		AddEmailWithSpecialData(INSUR_1HOUR_FRAUD, INSUR_1HOUR_FRAUD_LENGTH, INSURANCE_COMPANY, GetWorldTotalMin(), lip->iPayOutPrice, lip->ubMercID);
@@ -999,7 +999,7 @@ void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8 ubPayoutID )
 	AddHistoryToPlayersLog(HISTORY_INSURANCE_CLAIM_PAYOUT, lip->ubMercID, GetWorldTotalMin(), -1, -1);
 
 	//if there WASNT an investigation
-	if (GetProfile(lip->ubMercID)->ubSuspiciousDeath == 0)
+	if (GetProfile(lip->ubMercID).ubSuspiciousDeath == 0)
 	{
 		//Add an email telling the user that he received an insurance payment
 		AddEmailWithSpecialData(INSUR_PAYMENT, INSUR_PAYMENT_LENGTH, INSURANCE_COMPANY, GetWorldTotalMin(), lip->iPayOutPrice, lip->ubMercID);

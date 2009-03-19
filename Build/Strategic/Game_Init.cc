@@ -560,15 +560,15 @@ static void QuickStartGame(void)
 }
 
 
-static void GiveItemN(MERCPROFILESTRUCT* const p, const UINT pos, const UINT16 item_id, const UINT8 status, const UINT8 count)
+static void GiveItemN(MERCPROFILESTRUCT& p, const UINT pos, const UINT16 item_id, const UINT8 status, const UINT8 count)
 {
-	p->inv[pos]        = item_id;
-	p->bInvStatus[pos] = status;
-	p->bInvNumber[pos] = count;
+	p.inv[pos]        = item_id;
+	p.bInvStatus[pos] = status;
+	p.bInvNumber[pos] = count;
 }
 
 
-static void GiveItem(MERCPROFILESTRUCT* const p, const UINT pos, const UINT16 item_id)
+static void GiveItem(MERCPROFILESTRUCT& p, const UINT pos, const UINT16 item_id)
 {
 	GiveItemN(p, pos, item_id, 100, 1);
 }
@@ -577,12 +577,12 @@ static void GiveItem(MERCPROFILESTRUCT* const p, const UINT pos, const UINT16 it
 // TEMP FUNCTION!
 static void QuickSetupOfMercProfileItems(const UINT32 uiCount, const UINT8 ubProfileIndex)
 {
-	MERCPROFILESTRUCT* const p = GetProfile(ubProfileIndex);
+	MERCPROFILESTRUCT& p = GetProfile(ubProfileIndex);
 	// Quickly give some guys we hire some items
 	switch (uiCount)
 	{
 		case 0:
-			p->bSkillTrait = MARTIALARTS;
+			p.bSkillTrait = MARTIALARTS;
 
 			//GiveItemN(p, HANDPOS, HAND_GRENADE, 100, 3);
 			GiveItem(p, HANDPOS,       C7);
@@ -594,7 +594,7 @@ static void QuickSetupOfMercProfileItems(const UINT32 uiCount, const UINT8 ubPro
 
 			// TEMP!
 			// make carman's opinion of us high!
-			GetProfile(CARMEN)->bMercOpinion[ubProfileIndex] = 25;
+			GetProfile(CARMEN).bMercOpinion[ubProfileIndex] = 25;
 			break;
 
 		case 1:
@@ -613,8 +613,8 @@ static void QuickSetupOfMercProfileItems(const UINT32 uiCount, const UINT8 ubPro
 			break;
 
 		default:
-			p->inv[HANDPOS]        = Random(30);
-			p->bInvNumber[HANDPOS] = 1;
+			p.inv[HANDPOS]        = Random(30);
+			p.bInvNumber[HANDPOS] = 1;
 			break;
 	}
 

@@ -853,7 +853,7 @@ static void ProcessTransactionString(wchar_t pString[], const size_t Length, con
 		case REDUCED_INSURANCE:
 		case TRANSFER_FUNDS_FROM_MERC:
 		case TRANSFER_FUNDS_TO_MERC:
-			swprintf(pString, Length, pTransactionText[code], GetProfile(f->ubSecondCode)->zNickname);
+			swprintf(pString, Length, pTransactionText[code], GetProfile(f->ubSecondCode).zNickname);
 			break;
 
 		case TRAIN_TOWN_MILITIA:

@@ -607,13 +607,13 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 
 		const ProfileID pid = GetMercIDFromMERCArray((UINT8)i);
 		if (!IsMercOnTeam(pid)) continue;
-		MERCPROFILESTRUCT* const p = GetProfile(pid);
+		MERCPROFILESTRUCT& p = GetProfile(pid);
 
 		//if the merc is dead, dont advance the contract length
-		if (!IsMercDead(pid)) p->iMercMercContractLength += 1;
+		if (!IsMercDead(pid)) p.iMercMercContractLength += 1;
 
 		//Get the longest time
-		if (p->iMercMercContractLength > iNumDays) iNumDays = p->iMercMercContractLength;
+		if (p.iMercMercContractLength > iNumDays) iNumDays = p.iMercMercContractLength;
 	}
 
 	//if the players hasnt paid for a while, get email him to tell him to pay

@@ -1073,27 +1073,27 @@ static void DrawStat(const UINT16 x, const UINT16 y, const wchar_t* const stat, 
 
 static void DisplayMercStats(void)
 {
-	const MERCPROFILESTRUCT* const p = GetProfile(gbCurrentSoldier);
+	MERCPROFILESTRUCT const& p = GetProfile(gbCurrentSoldier);
 
 	//Name
-	DrawTextToScreen(p->zName, NAME_X, NAME_Y, 0, FONT14ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(p.zName, NAME_X, NAME_Y, 0, FONT14ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//First column in stats box.  Health, Agility, dexterity, strength, leadership, wisdom
 	const UINT16 x1 = STATS_FIRST_COL;
-	DrawStat(x1, HEALTH_Y,     str_stat_health,     p->bLife      );
-	DrawStat(x1, AGILITY_Y,    str_stat_agility,    p->bAgility   );
-	DrawStat(x1, DEXTERITY_Y,  str_stat_dexterity,  p->bDexterity );
-	DrawStat(x1, STRENGTH_Y,   str_stat_strength,   p->bStrength  );
-	DrawStat(x1, LEADERSHIP_Y, str_stat_leadership, p->bLeadership);
-	DrawStat(x1, WISDOM_Y,     str_stat_wisdom,     p->bWisdom    );
+	DrawStat(x1, HEALTH_Y,     str_stat_health,     p.bLife      );
+	DrawStat(x1, AGILITY_Y,    str_stat_agility,    p.bAgility   );
+	DrawStat(x1, DEXTERITY_Y,  str_stat_dexterity,  p.bDexterity );
+	DrawStat(x1, STRENGTH_Y,   str_stat_strength,   p.bStrength  );
+	DrawStat(x1, LEADERSHIP_Y, str_stat_leadership, p.bLeadership);
+	DrawStat(x1, WISDOM_Y,     str_stat_wisdom,     p.bWisdom    );
 
 	//Second column in stats box.  Exp.Level, Markmanship, mechanical, explosive, medical
 	const UINT16 x2 = STATS_SECOND_COL;
-	DrawStatColoured(x2, EXPLEVEL_Y,    str_stat_exp_level,    p->bExpLevel, FONT_MCOLOR_WHITE);
-	DrawStat(        x2, MARKSMAN_Y,    str_stat_marksmanship, p->bMarksmanship);
-	DrawStat(        x2, MECHANAICAL_Y, str_stat_mechanical,   p->bMechanical  );
-	DrawStat(        x2, EXPLOSIVE_Y,   str_stat_explosive,    p->bExplosive   );
-	DrawStat(        x2, MEDICAL_Y,     str_stat_medical,      p->bMedical     );
+	DrawStatColoured(x2, EXPLEVEL_Y,    str_stat_exp_level,    p.bExpLevel, FONT_MCOLOR_WHITE);
+	DrawStat(        x2, MARKSMAN_Y,    str_stat_marksmanship, p.bMarksmanship);
+	DrawStat(        x2, MECHANAICAL_Y, str_stat_mechanical,   p.bMechanical  );
+	DrawStat(        x2, EXPLOSIVE_Y,   str_stat_explosive,    p.bExplosive   );
+	DrawStat(        x2, MEDICAL_Y,     str_stat_medical,      p.bMedical     );
 }
 
 
@@ -1265,7 +1265,7 @@ static INT8 AimMemberHireMerc(void)
 		if (!s) return FALSE;
 		s->bTypeOfLastContract = contract_type;
 
-		MERCPROFILESTRUCT& p = *GetProfile(pid);
+		MERCPROFILESTRUCT& p = GetProfile(pid);
 		if (gfBuyEquipment) p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
 
 		// Add an entry in the finacial page for the hiring of the merc
@@ -1406,7 +1406,7 @@ static void DisplayMercChargeAmount(void)
 	// Display the 'black hole' for the contract charge  in the video conference terminal
 	BltVideoObject(FRAME_BUFFER, guiVideoContractCharge, 0, AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_X, AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_Y);
 
-	const MERCPROFILESTRUCT* const p = GetProfile(gbCurrentSoldier);
+	MERCPROFILESTRUCT const& p = GetProfile(gbCurrentSoldier);
 
 	if (FindSoldierByProfileIDOnPlayerTeam(gbCurrentSoldier) == NULL)
 	{
@@ -1416,17 +1416,17 @@ static void DisplayMercChargeAmount(void)
 		// Get the salary rate
 		switch (gubContractLength)
 		{
-			case AIM_CONTRACT_LENGTH_ONE_DAY:   amount = p->sSalary;          break;
-			case AIM_CONTRACT_LENGTH_ONE_WEEK:  amount = p->uiWeeklySalary;   break;
-			case AIM_CONTRACT_LENGTH_TWO_WEEKS: amount = p->uiBiWeeklySalary; break;
-			default:                            amount = 0;                   break;
+			case AIM_CONTRACT_LENGTH_ONE_DAY:   amount = p.sSalary;          break;
+			case AIM_CONTRACT_LENGTH_ONE_WEEK:  amount = p.uiWeeklySalary;   break;
+			case AIM_CONTRACT_LENGTH_TWO_WEEKS: amount = p.uiBiWeeklySalary; break;
+			default:                            amount = 0;                  break;
 		}
 
 		// If there is a medical deposit, add it in
-		if (p->bMedicalDeposit) amount += p->sMedicalDepositAmount;
+		if (p.bMedicalDeposit) amount += p.sMedicalDepositAmount;
 
 		// If hired with the equipment, add it in aswell
-		if (gfBuyEquipment) amount += p->usOptionalGearCost;
+		if (gfBuyEquipment) amount += p.usOptionalGearCost;
 
 		giContractAmount = amount;
 	}
@@ -1435,7 +1435,7 @@ static void DisplayMercChargeAmount(void)
 	SPrintMoney(wDollarTemp, giContractAmount);
 
 	wchar_t wTemp[50];
-	if (p->bMedicalDeposit)
+	if (p.bMedicalDeposit)
 	{
 		swprintf(wTemp, lengthof(wTemp), L"%ls %ls", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL]);
 	}
@@ -1785,8 +1785,8 @@ static AIMVideoMode WillMercAcceptCall(void)
 {
 	/* If merc has hung up on the player twice within a period of time
 	 * (MERC_ANNOYED_WONT_CONTACT_TIME_MINUTES), the merc cant ber hired */
-	const MERCPROFILESTRUCT* const p = GetProfile(gbCurrentSoldier);
-	if (p->bMercStatus == MERC_ANNOYED_WONT_CONTACT) return AIM_VIDEO_MERC_UNAVAILABLE_MODE;
+	MERCPROFILESTRUCT const& p = GetProfile(gbCurrentSoldier);
+	if (p.bMercStatus == MERC_ANNOYED_WONT_CONTACT) return AIM_VIDEO_MERC_UNAVAILABLE_MODE;
 
 	/* If the merc is at home, or if the merc is only slightly annoyed at the
 	 * player, he will greet the player */
@@ -1800,11 +1800,11 @@ static BOOLEAN CanMercBeHired(void)
 {
 	StopMercTalking();
 
-	ProfileID                const pid = gbCurrentSoldier;
-	MERCPROFILESTRUCT const* const p   = GetProfile(pid);
+	ProfileID         const  pid = gbCurrentSoldier;
+	MERCPROFILESTRUCT const& p   = GetProfile(pid);
 
 	// if the merc recently came back with poor morale, and hasn't gotten over it yet
-	if (p->ubDaysOfMoraleHangover > 0)
+	if (p.ubDaysOfMoraleHangover > 0)
 	{
 		// then he refuses with a lame excuse.  Buddy or no buddy.
 		WaitForMercToFinishTalkingOrUserToClick();
@@ -1812,14 +1812,14 @@ static BOOLEAN CanMercBeHired(void)
 		return FALSE;
 	}
 
-	INT const buddy = GetFirstBuddyOnTeam(p);
+	INT const buddy = GetFirstBuddyOnTeam(&p);
 
 	// loop through the list of people the merc hates
 	UINT16 join_quote = QUOTE_NONE;
 	for (UINT8 i = 0; i < NUMBER_HATED_MERCS_ONTEAM; ++i)
 	{
 		//see if someone the merc hates is on the team
-		INT8 const bMercID = p->bHated[i];
+		INT8 const bMercID = p.bHated[i];
 		if (bMercID < 0) continue;
 
 		if (!IsMercOnTeamAndInOmertaAlreadyAndAlive(bMercID)) continue;
@@ -1842,7 +1842,7 @@ join_buddy:
 		switch (i)
 		{
 			case 0:
-				if (p->bHatedTime[i] >= 24)
+				if (p.bHatedTime[i] >= 24)
 				{
 					join_quote = QUOTE_PERSONALITY_BIAS_WITH_MERC_1;
 					continue;
@@ -1851,7 +1851,7 @@ join_buddy:
 				break;
 
 			case 1:
-				if (p->bHatedTime[i] >= 24)
+				if (p.bHatedTime[i] >= 24)
 				{
 					join_quote = QUOTE_PERSONALITY_BIAS_WITH_MERC_2;
 					continue;
@@ -1871,7 +1871,7 @@ join_buddy:
 	if (buddy >= 0) return TRUE;
 
 	// Check the players Death rate
-	if (MercThinksDeathRateTooHigh(p))
+	if (MercThinksDeathRateTooHigh(&p))
 	{
 		WaitForMercToFinishTalkingOrUserToClick();
 		InitVideoFaceTalking(pid, QUOTE_DEATH_RATE_REFUSAL);
@@ -1879,7 +1879,7 @@ join_buddy:
 	}
 
 	// Check the players Reputation
-	if (MercThinksBadReputationTooHigh(p))
+	if (MercThinksBadReputationTooHigh(&p))
 	{
 		WaitForMercToFinishTalkingOrUserToClick();
 		InitVideoFaceTalking(pid, QUOTE_REPUTATION_REFUSAL);
@@ -2404,7 +2404,7 @@ static void InitDeleteVideoConferencePopUp(void)
 			gubVideoConferencingPreviousMode = gubVideoConferencingMode;
 			gubMercAttitudeLevel  = 0;
 			gubContractLength     = AIM_CONTRACT_LENGTH_ONE_WEEK;
-			gfBuyEquipment        = (GetProfile(gbCurrentSoldier)->usOptionalGearCost != 0);
+			gfBuyEquipment        = GetProfile(gbCurrentSoldier).usOptionalGearCost != 0;
 			gfMercIsTalking       = FALSE;
 			gfVideoFaceActive     = FALSE;
 			guiLastHandleMercTime = 0;
@@ -2477,7 +2477,7 @@ static void InitDeleteVideoConferencePopUp(void)
 					usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
 				}
 			}
-			if (GetProfile(gbCurrentSoldier)->usOptionalGearCost == 0)
+			if (GetProfile(gbCurrentSoldier).usOptionalGearCost == 0)
 			{
 				DisableButton(giBuyEquipmentButton[1]);
 			}
@@ -2514,7 +2514,7 @@ static void InitDeleteVideoConferencePopUp(void)
 			MSYS_SetBtnUserData(giAnsweringMachineButton[0], 0);
 
 			//if the user has already left a message, disable the button
-			if (GetProfile(gbCurrentSoldier)->ubMiscFlags3 & PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM)
+			if (GetProfile(gbCurrentSoldier).ubMiscFlags3 & PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM)
 			{
 				DisableButton(giAnsweringMachineButton[0]);
 			}
@@ -2749,7 +2749,7 @@ void ResetMercAnnoyanceAtPlayer(ProfileID ubMercID)
 	{
 		if (!CheckFact(FACT_LARRY_CHANGED, 0)) ubMercID = LARRY_NORMAL;
 	}
-	INT8& status = GetProfile(ubMercID)->bMercStatus;
+	INT8& status = GetProfile(ubMercID).bMercStatus;
 	if (status == MERC_ANNOYED_WONT_CONTACT ||
 			status == MERC_ANNOYED_BUT_CAN_STILL_CONTACT)
 	{
@@ -2869,9 +2869,9 @@ void TempHiringOfMercs(UINT8 ubNumberOfMercs, BOOLEAN const fReset)
 			continue;
 		}
 
-		MERCPROFILESTRUCT* const p = GetProfile(pid);
-		p->ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
-		p->bMercStatus  = 0; // since this is only a testing function, make the merc available
+		MERCPROFILESTRUCT& p = GetProfile(pid);
+		p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
+		p.bMercStatus  = 0; // since this is only a testing function, make the merc available
 
 		MERC_HIRE_STRUCT hire;
 		memset(&hire, 0, sizeof(hire));
@@ -2889,12 +2889,12 @@ void TempHiringOfMercs(UINT8 ubNumberOfMercs, BOOLEAN const fReset)
 		HireMerc(&hire);
 
 		// add an entry in the finacial page for the hiring of the merc
-		AddTransactionToPlayersBook(HIRED_MERC, pid, GetWorldTotalMin(), -(INT32)p->sSalary);
+		AddTransactionToPlayersBook(HIRED_MERC, pid, GetWorldTotalMin(), -(INT32)p.sSalary);
 
-		if (p->bMedicalDeposit)
+		if (p.bMedicalDeposit)
 		{
 			// add an entry in the finacial page for the medical deposit
-			AddTransactionToPlayersBook(MEDICAL_DEPOSIT, pid, GetWorldTotalMin(), -p->sMedicalDepositAmount);
+			AddTransactionToPlayersBook(MEDICAL_DEPOSIT, pid, GetWorldTotalMin(), -p.sMedicalDepositAmount);
 		}
 
 		//add an entry in the history page for the hiring of the merc
@@ -2986,7 +2986,7 @@ static void QuickHireMerc(void)
 	SetFlagToForceHireMerc(FALSE);
 	if (ret == MERC_HIRE_OK)
 	{
-		MERCPROFILESTRUCT& p = *GetProfile(pid);
+		MERCPROFILESTRUCT& p = GetProfile(pid);
 		p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
 
 		UINT32 const now = GetWorldTotalMin();

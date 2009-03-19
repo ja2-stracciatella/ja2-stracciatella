@@ -84,7 +84,7 @@ static BOOLEAN CheckNPCWounded(UINT8 const ubProfileID, BOOLEAN const fByPlayerO
 		s->bLife < s->bLifeMax && // is the NPC is wounded at all?
 		(
 			!fByPlayerOnly ||
-			GetProfile(ubProfileID)->ubMiscFlags & PROFILE_MISC_FLAG_WOUNDEDBYPLAYER
+			GetProfile(ubProfileID).ubMiscFlags & PROFILE_MISC_FLAG_WOUNDEDBYPLAYER
 		);
 }
 
@@ -369,10 +369,10 @@ static INT8 NumMalesPresent(UINT8 ubProfileID)
 	FOR_ALL_MERCS(i)
 	{
 		const SOLDIERTYPE* const s = *i;
-		if (s->bTeam     == gbPlayerNum            &&
-				s->bLife     >= OKLIFE                 &&
-				s->ubProfile != NO_PROFILE             &&
-				GetProfile(s->ubProfile)->bSex == MALE &&
+		if (s->bTeam     == gbPlayerNum           &&
+				s->bLife     >= OKLIFE                &&
+				s->ubProfile != NO_PROFILE            &&
+				GetProfile(s->ubProfile).bSex == MALE &&
 				PythSpacesAway(sGridNo, s->sGridNo) <= 8)
 		{
 			++bNumber;
@@ -397,10 +397,10 @@ static BOOLEAN FemalePresent(UINT8 ubProfileID)
 	FOR_ALL_MERCS(i)
 	{
 		const SOLDIERTYPE* const s = *i;
-		if (s->bTeam     == gbPlayerNum              &&
-				s->bLife     >= OKLIFE                   &&
-				s->ubProfile != NO_PROFILE               &&
-				GetProfile(s->ubProfile)->bSex == FEMALE &&
+		if (s->bTeam     == gbPlayerNum             &&
+				s->bLife     >= OKLIFE                  &&
+				s->ubProfile != NO_PROFILE              &&
+				GetProfile(s->ubProfile).bSex == FEMALE &&
 				PythSpacesAway(sGridNo, s->sGridNo) <= 10)
 		{
 			return TRUE;
@@ -640,7 +640,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 
 		case FACT_BRENDA_IN_STORE_AND_ALIVE:
 			// ensure alive
-			if (GetProfile(BRENDA)->bMercStatus == MERC_IS_DEAD)
+			if (GetProfile(BRENDA).bMercStatus == MERC_IS_DEAD)
 			{
 				gubFact[FACT_BRENDA_IN_STORE_AND_ALIVE] = FALSE;
 			}
@@ -655,7 +655,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			}
 			break;
 		case FACT_BRENDA_DEAD:
-			gubFact[FACT_BRENDA_DEAD] = (GetProfile(BRENDA)->bMercStatus == MERC_IS_DEAD);
+			gubFact[FACT_BRENDA_DEAD] = (GetProfile(BRENDA).bMercStatus == MERC_IS_DEAD);
 			break;
 		case FACT_NPC_IS_ENEMY:
 			gubFact[FACT_NPC_IS_ENEMY] = CheckNPCIsEnemy( ubProfileID ) || gMercProfiles[ ubProfileID ].ubMiscFlags2 & PROFILE_MISC_FLAG2_NEEDS_TO_SAY_HOSTILE_QUOTE;
@@ -735,7 +735,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			gubFact[usFact] = ( gWorldSectorX == 13 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0 );
 			break;
 		case FACT_CARMEN_HAS_TEN_THOUSAND:
-			gubFact[usFact] = (GetProfile(CARMEN)->uiMoney >= 10000);
+			gubFact[usFact] = (GetProfile(CARMEN).uiMoney >= 10000);
 			break;
 		case FACT_SLAY_IN_SECTOR:
 			gubFact[usFact] = (gMercProfiles[ SLAY ].sSectorX == gWorldSectorX && gMercProfiles[ SLAY ].sSectorY == gWorldSectorY && gMercProfiles[ SLAY ].bSectorZ == gbWorldSectorZ );

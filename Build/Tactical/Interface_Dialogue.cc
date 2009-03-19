@@ -624,7 +624,7 @@ void RenderTalkingMenu()
 
 	// Render name
 	SetFontAttributes(MILITARYFONT1, tp->fOnName ? FONT_WHITE : 33);
-	wchar_t const* const name = GetProfile(pid)->zNickname;
+	wchar_t const* const name = GetProfile(pid).zNickname;
 	INT16                sFontX;
 	INT16                sFontY;
 	FindFontCenterCoordinates(tp->sX + TALK_PANEL_NAME_X, tp->sY + TALK_PANEL_NAME_Y, TALK_PANEL_NAME_WIDTH, TALK_PANEL_NAME_HEIGHT, name, MILITARYFONT1, &sFontX, &sFontY);
@@ -1623,8 +1623,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 
 				// MOVE NPCS!
-				ChangeNpcToDifferentSector(GetProfile(FATIMA),  10, 1, 1);
-				ChangeNpcToDifferentSector(GetProfile(DIMITRI), 10, 1, 1);
+				ChangeNpcToDifferentSector(&GetProfile(FATIMA),  10, 1, 1);
+				ChangeNpcToDifferentSector(&GetProfile(DIMITRI), 10, 1, 1);
 
 				gFadeOutDoneCallback = DoneFadeOutActionBasement;
 
@@ -2235,7 +2235,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_MARK_KINGPIN_QUOTE_0_USED:
 				// set Kingpin's quote 0 as used so he doesn't introduce himself
-				GetProfile(KINGPIN)->ubLastDateSpokenTo = GetWorldDay();
+				GetProfile(KINGPIN).ubLastDateSpokenTo = GetWorldDay();
 				break;
 
 			case NPC_ACTION_TRIGGER_LAYLA_13_14_OR_15:
@@ -2641,14 +2641,14 @@ unlock:
 				AddFilesAboutTerrorists();
 
 				// Carmen has received 0 terrorist heads recently
-				GetProfile(CARMEN)->bNPCData2 = 0;
+				GetProfile(CARMEN).bNPCData2 = 0;
 				break;
 
 			case NPC_ACTION_CHECK_LAST_TERRORIST_HEAD:
 			{
-				MERCPROFILESTRUCT* const carmen = GetProfile(CARMEN);
-				--carmen->bNPCData;  // decrement head count
-				++carmen->bNPCData2; // increment number of heads on hand
+				MERCPROFILESTRUCT& carmen = GetProfile(CARMEN);
+				--carmen.bNPCData;  // decrement head count
+				++carmen.bNPCData2; // increment number of heads on hand
 
 				if (gWorldSectorX == 13 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0)
 				{

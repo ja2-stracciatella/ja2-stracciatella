@@ -304,15 +304,15 @@ static void SetNPCMeanwhile(const ProfileID pid, const INT16 sector_x, const INT
 	NPC_SAVE_INFO* const si = GetFreeNPCSave();
 	if (si == NULL) return;
 
-	MERCPROFILESTRUCT* const p  = GetProfile(pid);
+	MERCPROFILESTRUCT& p = GetProfile(pid);
 	si->ubProfile = pid;
-	si->sX        = p->sSectorX;
-	si->sY        = p->sSectorY;
-	si->sZ        = p->bSectorZ;
-	si->sGridNo   = p->sGridNo;
+	si->sX        = p.sSectorX;
+	si->sY        = p.sSectorY;
+	si->sZ        = p.bSectorZ;
+	si->sGridNo   = p.sGridNo;
 
 	ReloadQuoteFile(pid);
-	ChangeNpcToDifferentSector(p, sector_x, sector_y, 0);
+	ChangeNpcToDifferentSector(&p, sector_x, sector_y, 0);
 }
 
 
@@ -574,11 +574,11 @@ static void RestoreNPCMeanwhile(void)
 		const ProfileID pid = si->ubProfile;
 		if (pid == NO_PROFILE) continue;
 
-		MERCPROFILESTRUCT* const p = GetProfile(pid);
-		p->sSectorX = si->sX;
-		p->sSectorY = si->sY;
-		p->bSectorZ = (INT8)si->sZ;
-		p->sGridNo  = (INT8)si->sGridNo;
+		MERCPROFILESTRUCT& p = GetProfile(pid);
+		p.sSectorX = si->sX;
+		p.sSectorY = si->sY;
+		p.bSectorZ = (INT8)si->sZ;
+		p.sGridNo  = (INT8)si->sGridNo;
 
 		// Ensure NPC files loaded...
 		ReloadQuoteFile(pid);

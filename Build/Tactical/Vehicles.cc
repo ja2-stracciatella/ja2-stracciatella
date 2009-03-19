@@ -855,9 +855,9 @@ void SetVehicleSectorValues(VEHICLETYPE* const v, const UINT8 ubSectorX, const U
 	v->sSectorX = ubSectorX;
 	v->sSectorY = ubSectorY;
 
-	MERCPROFILESTRUCT* const p = GetProfile(g_vehicle_type_info[v->ubVehicleType].profile);
-	p->sSectorX = ubSectorX;
-	p->sSectorY = ubSectorY;
+	MERCPROFILESTRUCT& p = GetProfile(g_vehicle_type_info[v->ubVehicleType].profile);
+	p.sSectorX = ubSectorX;
+	p.sSectorY = ubSectorY;
 }
 
 

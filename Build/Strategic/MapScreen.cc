@@ -863,7 +863,7 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 
 	const ProfileID pid = s->ubProfile;
 	if (pid == NO_PROFILE) return;
-	const MERCPROFILESTRUCT* const p = GetProfile(pid);
+	MERCPROFILESTRUCT const& p = GetProfile(pid);
 
 	// draw particular info about a character that are neither attributes nor skills
 
@@ -879,8 +879,8 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 	}
 	else
 	{
-		nickname = p->zNickname;
-		name     = p->zName;
+		nickname = p.zNickname;
+		name     = p.zName;
 	}
 	DrawStringCentered(nickname, PIC_NAME_X,  PIC_NAME_Y,  PIC_NAME_WID,  PIC_NAME_HEI,  CHAR_FONT);
 	DrawStringCentered(name,     CHAR_NAME_X, CHAR_NAME_Y, CHAR_NAME_WID, CHAR_NAME_HEI, CHAR_FONT);
@@ -1009,7 +1009,7 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 	else if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
 	{
 		const INT32 iBeenHiredFor = GetWorldTotalMin() / NUM_MIN_IN_DAY - s->iStartContractTime;
-		swprintf(sString, lengthof(sString), L"%d%ls/%d%ls", p->iMercMercContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION], iBeenHiredFor, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
+		swprintf(sString, lengthof(sString), L"%d%ls/%d%ls", p.iMercMercContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION], iBeenHiredFor, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 	}
 	else
 	{
@@ -1026,22 +1026,22 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 		// daily rate
 		switch (s->bTypeOfLastContract)
 		{
-			case CONTRACT_EXTEND_2_WEEK: iDailyCost = p->uiBiWeeklySalary / 14; break;
-			case CONTRACT_EXTEND_1_WEEK: iDailyCost = p->uiWeeklySalary   /  7; break;
-			default:                     iDailyCost = p->sSalary;               break;
+			case CONTRACT_EXTEND_2_WEEK: iDailyCost = p.uiBiWeeklySalary / 14; break;
+			case CONTRACT_EXTEND_1_WEEK: iDailyCost = p.uiWeeklySalary   /  7; break;
+			default:                     iDailyCost = p.sSalary;               break;
 		}
 	}
 	else
 	{
-		iDailyCost = p->sSalary;
+		iDailyCost = p.sSalary;
 	}
 	SPrintMoney(sString, iDailyCost);
 	DrawStringRight(sString, CHAR_SALARY_X, CHAR_SALARY_Y, CHAR_SALARY_WID, CHAR_SALARY_HEI, CHAR_FONT);
 
 	// medical deposit
-	if (p->sMedicalDepositAmount > 0)
+	if (p.sMedicalDepositAmount > 0)
 	{
-		SPrintMoney(sString, p->sMedicalDepositAmount);
+		SPrintMoney(sString, p.sMedicalDepositAmount);
 		DrawStringRight(sString, CHAR_MEDICAL_X, CHAR_MEDICAL_Y, CHAR_MEDICAL_WID, CHAR_MEDICAL_HEI, CHAR_FONT);
 	}
 
@@ -6019,11 +6019,11 @@ static void HandleShadingOfLinesForContractMenu(void)
 	// is guy in AIM? and well enough to talk and make such decisions?
 	if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC && s->bLife >= OKLIFE)
 	{
-		MERCPROFILESTRUCT const* const p       = GetProfile(s->ubProfile);
-		INT32                    const balance = LaptopSaveInfo.iCurrentBalance;
-		ShadeStringInBox(box, CONTRACT_MENU_DAY,              p->sSalary          > balance);
-		ShadeStringInBox(box, CONTRACT_MENU_WEEK,      (INT32)p->uiWeeklySalary   > balance);
-		ShadeStringInBox(box, CONTRACT_MENU_TWO_WEEKS, (INT32)p->uiBiWeeklySalary > balance);
+		MERCPROFILESTRUCT const& p       = GetProfile(s->ubProfile);
+		INT32             const  balance = LaptopSaveInfo.iCurrentBalance;
+		ShadeStringInBox(box, CONTRACT_MENU_DAY,              p.sSalary          > balance);
+		ShadeStringInBox(box, CONTRACT_MENU_WEEK,      (INT32)p.uiWeeklySalary   > balance);
+		ShadeStringInBox(box, CONTRACT_MENU_TWO_WEEKS, (INT32)p.uiBiWeeklySalary > balance);
 	}
 	else
 	{

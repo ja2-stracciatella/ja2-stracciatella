@@ -13,10 +13,10 @@ extern BOOLEAN	gfPotentialTeamChangeDuringDeath;
 
 extern MERCPROFILESTRUCT gMercProfiles[NUM_PROFILES];
 
-static inline MERCPROFILESTRUCT* GetProfile(ProfileID id)
+static inline MERCPROFILESTRUCT& GetProfile(ProfileID const id)
 {
 	Assert(id < lengthof(gMercProfiles));
-	return &gMercProfiles[id];
+	return gMercProfiles[id];
 }
 
 #define AIM_AND_MERC_MERCS		51		// A.I.M. is 0-39, M.E.R.C.s are 40-50

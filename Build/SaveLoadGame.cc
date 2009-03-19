@@ -1522,7 +1522,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 			case 3: x = 16; y = MAP_ROW_C; break;
 			default: abort(); // HACK000E
 		}
-		MERCPROFILESTRUCT& p = *GetProfile(SKYRIDER);
+		MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
 		p.sSectorX = x;
 		p.sSectorY = y;
 		p.bSectorZ = 0;
@@ -1725,14 +1725,14 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version)
 		// If the saved game version is before x, calculate the amount of money paid to mercs
 		if (savegame_version < 83 && s->ubProfile != NO_PROFILE)
 		{
-			MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
+			MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
 			if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
 			{
-				p->uiTotalCostToDate = p->sSalary * p->iMercMercContractLength;
+				p.uiTotalCostToDate = p.sSalary * p.iMercMercContractLength;
 			}
 			else
 			{
-				p->uiTotalCostToDate = p->sSalary * s->iTotalContractLength;
+				p.uiTotalCostToDate = p.sSalary * s->iTotalContractLength;
 			}
 		}
 
@@ -1757,14 +1757,14 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version)
 	// Fix robot
 	if (savegame_version <= 87)
 	{
-		MERCPROFILESTRUCT* const robot_p = GetProfile(ROBOT);
-		if (robot_p->inv[VESTPOS] == SPECTRA_VEST)
+		MERCPROFILESTRUCT& robot_p = GetProfile(ROBOT);
+		if (robot_p.inv[VESTPOS] == SPECTRA_VEST)
 		{
 			// update this
-			robot_p->inv[VESTPOS]   = SPECTRA_VEST_18;
-			robot_p->inv[HELMETPOS] = SPECTRA_HELMET_18;
-			robot_p->inv[LEGPOS]    = SPECTRA_LEGGINGS_18;
-			robot_p->bAgility = 50;
+			robot_p.inv[VESTPOS]   = SPECTRA_VEST_18;
+			robot_p.inv[HELMETPOS] = SPECTRA_HELMET_18;
+			robot_p.inv[LEGPOS]    = SPECTRA_LEGGINGS_18;
+			robot_p.bAgility = 50;
 			SOLDIERTYPE* const robot_s = FindSoldierByProfileID(ROBOT);
 			if (robot_s)
 			{

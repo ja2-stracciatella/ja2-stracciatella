@@ -172,8 +172,8 @@ void LoadMapTempFilesFromSavedGameFile(HWFILE const f, UINT32 const savegame_ver
 	// HACK FOR GABBY
 	if (savegame_version < 81)
 	{
-		MERCPROFILESTRUCT* const gabby = GetProfile(GABBY);
-		if (gabby->bMercStatus != MERC_IS_DEAD)
+		MERCPROFILESTRUCT& gabby = GetProfile(GABBY);
+		if (gabby.bMercStatus != MERC_IS_DEAD)
 		{
 			// turn off alternate flags for the sectors he could be in
 			// randomly place him in one of the two possible sectors
@@ -193,8 +193,8 @@ void LoadMapTempFilesFromSavedGameFile(HWFILE const f, UINT32 const savegame_ver
 				y = MAP_ROW_I;
 			}
 			SectorInfo[SECTOR(x, y)].uiFlags |= SF_USE_ALTERNATE_MAP;
-			gabby->sSectorX = x;
-			gabby->sSectorY = y;
+			gabby.sSectorX = x;
+			gabby.sSectorY = y;
 		}
 	}
 
@@ -919,18 +919,18 @@ static void SaveNPCInformationToProfileStruct(void)
 
 		SaveTempNpcQuoteInfoForNPCToTempFile(s->ubProfile);
 
-		MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
+		MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
 
-		p->ubQuoteActionID = s->ubQuoteActionID;
-		p->ubQuoteRecord   = s->ubQuoteRecord;
+		p.ubQuoteActionID = s->ubQuoteActionID;
+		p.ubQuoteRecord   = s->ubQuoteRecord;
 
 		// if the merc is NOT added due to flag set, return
-		if (p->ubMiscFlags2 & PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR)       continue;
-		if (p->ubMiscFlags3 & PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE) continue;
+		if (p.ubMiscFlags2 & PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR)       continue;
+		if (p.ubMiscFlags3 & PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE) continue;
 
-		p->fUseProfileInsertionInfo = TRUE;
-		p->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-		p->usStrategicInsertionData = s->sGridNo;
+		p.fUseProfileInsertionInfo = TRUE;
+		p.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+		p.usStrategicInsertionData = s->sGridNo;
 	}
 }
 

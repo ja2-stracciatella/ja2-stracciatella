@@ -273,7 +273,7 @@ static NPCQuoteInfo* EnsureQuoteFileLoaded(UINT8 const ubNPC)
 
 	if (FIRST_RPC <= ubNPC && ubNPC < FIRST_NPC)
 	{
-		if (GetProfile(ubNPC)->ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)
+		if (GetProfile(ubNPC).ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)
 		{ // recruited
 			if (!gpBackupNPCQuoteInfoArray[ubNPC])
 			{
@@ -344,7 +344,7 @@ static void RefreshNPCScriptRecord(UINT8 const ubNPC, UINT8 const record)
 		}
 		for (UINT8 i = FIRST_RPC; i != FIRST_NPC; ++i)
 		{
-			if (!(GetProfile(ubNPC)->ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)) continue;
+			if (!(GetProfile(ubNPC).ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)) continue;
 			if (!gpBackupNPCQuoteInfoArray[ubNPC]) continue;
 			RefreshNPCScriptRecord(i, record);
 		}
@@ -567,22 +567,22 @@ static UINT8 NPCConsiderTalking(UINT8 const ubNPC, UINT8 const ubMerc, Approach 
 	UINT8 talk_desire = 0;
 	if (approach <= NUM_REAL_APPROACHES)
 	{
-		MERCPROFILESTRUCT* const p = GetProfile(ubNPC);
+		MERCPROFILESTRUCT& p = GetProfile(ubNPC);
 		// What's our willingness to divulge?
 		talk_desire = CalcDesireToTalk(ubNPC, ubMerc, approach);
-		if (approach < NUM_REAL_APPROACHES && !(p->bApproached & gbFirstApproachFlags[approach - 1]))
+		if (approach < NUM_REAL_APPROACHES && !(p.bApproached & gbFirstApproachFlags[approach - 1]))
 		{
-			ApproachedForFirstTime(p, approach);
+			ApproachedForFirstTime(&p, approach);
 		}
 	}
 	else if (ubNPC == PABLO && approach == APPROACH_SECTOR_NOT_SAFE) // for Pablo, consider as threaten
 	{
-		MERCPROFILESTRUCT* const p = GetProfile(ubNPC);
+		MERCPROFILESTRUCT& p = GetProfile(ubNPC);
 		// What's our willingness to divulge?
 		talk_desire = CalcDesireToTalk(ubNPC, ubMerc, APPROACH_THREATEN);
-		if (p->bApproached & gbFirstApproachFlags[APPROACH_THREATEN - 1])
+		if (p.bApproached & gbFirstApproachFlags[APPROACH_THREATEN - 1])
 		{
-			ApproachedForFirstTime(p, APPROACH_THREATEN);
+			ApproachedForFirstTime(&p, APPROACH_THREATEN);
 		}
 	}
 
@@ -815,7 +815,7 @@ static UINT8 NPCConsiderReceivingItemFromMerc(UINT8 const ubNPC, UINT8 const ubM
 			case MADAME:
 				if (item_to_consider == MONEY)
 				{
-					if (GetProfile(ubMerc)->bSex == FEMALE)
+					if (GetProfile(ubMerc).bSex == FEMALE)
 					{
 						// say quote about not catering to women!
 						return UseQuote(pNPCQuoteInfoArray, ppResultQuoteInfo, pubQuoteNum, 5);
@@ -887,7 +887,7 @@ check_give_money:
 								gMercProfiles[ubNPC].iBalance < 0             &&
 								q.sActionData != NPC_ACTION_DONT_ACCEPT_ITEM)
 						{
-							MERCPROFILESTRUCT& p = *GetProfile(ubNPC);
+							MERCPROFILESTRUCT& p = GetProfile(ubNPC);
 							// increment balance
 							p.iBalance          += (INT32)o->uiMoneyAmount;
 							p.uiTotalCostToDate += o->uiMoneyAmount;
@@ -935,7 +935,7 @@ check_give_money:
 			default:
 				if (item_to_consider == MONEY && (ubNPC == SKYRIDER || (FIRST_RPC <= ubNPC && ubNPC < FIRST_NPC)))
 				{
-					MERCPROFILESTRUCT& p = *GetProfile(ubNPC);
+					MERCPROFILESTRUCT& p = GetProfile(ubNPC);
 					if (p.iBalance < 0 && q.sActionData != NPC_ACTION_DONT_ACCEPT_ITEM)
 					{
 						// increment balance
@@ -2617,18 +2617,18 @@ void HandleNPCChangesForTacticalTraversal(const SOLDIERTYPE* s)
 		return;
 	}
 
-	MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
+	MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
 	switch (s->ubQuoteActionID)
 	{
-		case QUOTE_ACTION_ID_TRAVERSE_EAST:  p->sSectorX++; break;
-		case QUOTE_ACTION_ID_TRAVERSE_SOUTH: p->sSectorY++; break;
-		case QUOTE_ACTION_ID_TRAVERSE_WEST:  p->sSectorX--; break;
-		case QUOTE_ACTION_ID_TRAVERSE_NORTH: p->sSectorY--; break;
+		case QUOTE_ACTION_ID_TRAVERSE_EAST:  p.sSectorX++; break;
+		case QUOTE_ACTION_ID_TRAVERSE_SOUTH: p.sSectorY++; break;
+		case QUOTE_ACTION_ID_TRAVERSE_WEST:  p.sSectorX--; break;
+		case QUOTE_ACTION_ID_TRAVERSE_NORTH: p.sSectorY--; break;
 		default: return;
 	}
 
 	// Call to change the NPC's Sector Location
-	ChangeNpcToDifferentSector(p, p->sSectorX, p->sSectorY, p->bSectorZ);
+	ChangeNpcToDifferentSector(&p, p.sSectorX, p.sSectorY, p.bSectorZ);
 }
 
 

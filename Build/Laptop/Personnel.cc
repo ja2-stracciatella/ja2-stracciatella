@@ -1110,7 +1110,7 @@ static void DisplayFaceOfDisplayedMerc(void)
 	if (fCurrentTeamMode)
 	{
 		const SOLDIERTYPE* const s = GetSoldierOfCurrentSlot();
-		RenderPersonnelFace(GetProfile(s->ubProfile), s->bLife > 0);
+		RenderPersonnelFace(&GetProfile(s->ubProfile), s->bLife > 0);
 		DisplayCharName(s);
 		RenderPersonnelStats(s);
 		DisplayAmountOnChar(s);
@@ -1928,19 +1928,19 @@ static PastMercInfo GetSelectedPastMercInfo(void)
 	for (const INT16* i = l->ubDeadCharactersList; i != endof(l->ubDeadCharactersList); ++i)
 	{
 		if (*i == -1 || slot-- != 0) continue;
-		return (PastMercInfo){ GetProfile(*i), DEPARTED_DEAD };
+		return (PastMercInfo){ &GetProfile(*i), DEPARTED_DEAD };
 	}
 	for (const INT16* i = l->ubLeftCharactersList; i != endof(l->ubLeftCharactersList); ++i)
 	{
 		if (*i == -1 || slot-- != 0) continue;
-		return (PastMercInfo){ GetProfile(*i), DEPARTED_FIRED };
+		return (PastMercInfo){ &GetProfile(*i), DEPARTED_FIRED };
 	}
 	for (const INT16* i = l->ubOtherCharactersList; i != endof(l->ubOtherCharactersList); ++i)
 	{
 		if (*i == -1 || slot-- != 0) continue;
-		MERCPROFILESTRUCT* const p = GetProfile(*i);
+		MERCPROFILESTRUCT& p = GetProfile(*i);
 		INT state;
-		if (p->ubMiscFlags2 & PROFILE_MISC_FLAG2_MARRIED_TO_HICKS)
+		if (p.ubMiscFlags2 & PROFILE_MISC_FLAG2_MARRIED_TO_HICKS)
 		{
 			state = DEPARTED_MARRIED;
 		}
@@ -1952,7 +1952,7 @@ static PastMercInfo GetSelectedPastMercInfo(void)
 		{
 			state = DEPARTED_QUIT;
 		}
-		return (PastMercInfo){ p, state };
+		return (PastMercInfo){ &p, state };
 	}
 	return (PastMercInfo){ NULL, -1 };
 }

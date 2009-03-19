@@ -388,19 +388,19 @@ static void SortMercArray(void)
 
 static INT32 QsortCompare(const void* pNum1, const void* pNum2)
 {
-	const MERCPROFILESTRUCT* const p1 = GetProfile(*(UINT8*)pNum1);
-	const MERCPROFILESTRUCT* const p2 = GetProfile(*(UINT8*)pNum2);
+	MERCPROFILESTRUCT const& p1 = GetProfile(*(UINT8*)pNum1);
+	MERCPROFILESTRUCT const& p2 = GetProfile(*(UINT8*)pNum2);
 
 	INT32 v1;
 	INT32 v2;
 	switch (gubCurrentSortMode)
 	{
-		/* Price        */ case 0: v1 = p1->uiWeeklySalary; v2 = p2->uiWeeklySalary; break;
-		/* Experience   */ case 1: v1 = p1->bExpLevel;      v2 = p2->bExpLevel;      break;
-		/* Marksmanship */ case 2: v1 = p1->bMarksmanship;  v2 = p2->bMarksmanship;  break;
-		/* Medical      */ case 3: v1 = p1->bMedical;       v2 = p2->bMedical;       break;
-		/* Explosives   */ case 4: v1 = p1->bExplosive;     v2 = p2->bExplosive;     break;
-		/* Mechanical   */ case 5: v1 = p1->bMechanical;    v2 = p2->bMechanical;    break;
+		/* Price        */ case 0: v1 = p1.uiWeeklySalary; v2 = p2.uiWeeklySalary; break;
+		/* Experience   */ case 1: v1 = p1.bExpLevel;      v2 = p2.bExpLevel;      break;
+		/* Marksmanship */ case 2: v1 = p1.bMarksmanship;  v2 = p2.bMarksmanship;  break;
+		/* Medical      */ case 3: v1 = p1.bMedical;       v2 = p2.bMedical;       break;
+		/* Explosives   */ case 4: v1 = p1.bExplosive;     v2 = p2.bExplosive;     break;
+		/* Mechanical   */ case 5: v1 = p1.bMechanical;    v2 = p2.bMechanical;    break;
 
 		default: Assert(0); return 0;
 	}

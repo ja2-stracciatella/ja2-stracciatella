@@ -147,7 +147,7 @@ try
 		// ATE: If we are a vehicle, and a player, start at a different slot (2 - max)
 		if (team_id == gbPlayerNum)
 		{
-			switch (profile != NO_PROFILE ? GetProfile(profile)->ubBodyType : c.bBodyType)
+			switch (profile != NO_PROFILE ? GetProfile(profile).ubBodyType : c.bBodyType)
 			{
 				case ELDORADO:
 				case HUMVEE:
@@ -481,7 +481,7 @@ SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE* const existing
 static void TacticalCopySoldierFromProfile(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT const& c)
 {
 	ProfileID         const  pid = c.ubProfile;
-	MERCPROFILESTRUCT const& p   = *GetProfile(pid);
+	MERCPROFILESTRUCT const& p   = GetProfile(pid);
 
 	SET_PALETTEREP_ID(s.HeadPal,  p.HAIR);
 	SET_PALETTEREP_ID(s.VestPal,  p.VEST);
@@ -2014,7 +2014,7 @@ static BOOLEAN TryToAttach(SOLDIERTYPE* const s, OBJECTTYPE* const o)
 
 static void CopyProfileItems(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT const& c)
 {
-	MERCPROFILESTRUCT& p = *GetProfile(c.ubProfile);
+	MERCPROFILESTRUCT& p = GetProfile(c.ubProfile);
 	if (s.bTeam != OUR_TEAM)
 	{
 		for (UINT32 i = 0; i != NUM_INV_SLOTS; ++i)

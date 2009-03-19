@@ -183,10 +183,10 @@ void MercDailyUpdate()
       // ATE: Decrement tolerance value...
       if (--s->bCorpseQuoteTolerance < 0) s->bCorpseQuoteTolerance = 0;
 
-			MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
+			MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
 
 			// CJC: For some personalities, reset personality quote said flag
-			switch (p->bPersonalityTrait)
+			switch (p.bPersonalityTrait)
 			{
 				case HEAT_INTOLERANT:
 				case CLAUSTROPHOBIC:
@@ -207,10 +207,10 @@ void MercDailyUpdate()
 			}
 
 			// increment days served by this grunt
-			++p->usTotalDaysServed;
+			++p.usTotalDaysServed;
 
 			// player has hired him, so he'll eligible to get killed off on another job
-			p->ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
+			p.ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
 
 			//if the character is an RPC
 			if (FIRST_RPC <= s->ubProfile && s->ubProfile < FIRST_NPC)
@@ -219,11 +219,11 @@ void MercDailyUpdate()
 				++s->iTotalContractLength;
 
 				// The player owes the salary
-				INT16	const sSalary          = p->sSalary;
+				INT16	const sSalary          = p.sSalary;
 				INT32	      iMoneyOwedToMerc = sSalary;
 
 				//if the player owes the npc money, the balance field will be negative
-				if (p->iBalance < 0) iMoneyOwedToMerc += -p->iBalance;
+				if (p.iBalance < 0) iMoneyOwedToMerc += -p.iBalance;
 
 				//if the player owes money
 				if (iMoneyOwedToMerc != 0)
@@ -235,18 +235,18 @@ void MercDailyUpdate()
 						AddTransactionToPlayersBook(PAYMENT_TO_NPC, s->ubProfile, GetWorldTotalMin(), -iMoneyOwedToMerc);
 
 						// reset the amount, if the player owed money to the npc
-						if (p->iBalance < 0) p->iBalance = 0;
+						if (p.iBalance < 0) p.iBalance = 0;
 					}
 					else
 					{
 						// Display a screen msg indicating that the npc was NOT paid
 						wchar_t zMoney[128];
 						SPrintMoney(zMoney, sSalary);
-						ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, pMessageStrings[MSG_CANT_AFFORD_TO_PAY_NPC_DAILY_SALARY_MSG], p->zNickname, zMoney);
+						ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, pMessageStrings[MSG_CANT_AFFORD_TO_PAY_NPC_DAILY_SALARY_MSG], p.zNickname, zMoney);
 
 						/* if the merc hasnt been paid for NUM_DAYS_TILL_UNPAID_RPC_QUITS
 						 * days, the merc will quit */
-						if (p->iBalance - sSalary <= -(sSalary * NUM_DAYS_TILL_UNPAID_RPC_QUITS))
+						if (p.iBalance - sSalary <= -(sSalary * NUM_DAYS_TILL_UNPAID_RPC_QUITS))
 						{
 							// Set it up so the merc quits
 							MercsContractIsFinished(s);
@@ -254,7 +254,7 @@ void MercDailyUpdate()
 						else
 						{
 							//set how much money the player owes the merc
-							p->iBalance -= sSalary;
+							p.iBalance -= sSalary;
 
 							// Add even for displaying a dialogue telling the player this....
 							AddSameDayStrategicEvent(EVENT_RPC_WHINE_ABOUT_PAY, MERC_ARRIVE_TIME_SLOT_1, s->ubID);
@@ -295,24 +295,24 @@ void MercDailyUpdate()
 
 	for (INT32 cnt = 0; cnt < NUM_PROFILES; ++cnt)
 	{
-		MERCPROFILESTRUCT* const p = GetProfile(cnt);
+		MERCPROFILESTRUCT& p = GetProfile(cnt);
 
 		// dead guys don't do nuthin' !
-		if (p->bMercStatus == MERC_IS_DEAD) continue;
+		if (p.bMercStatus == MERC_IS_DEAD) continue;
 
 		//Every day reset this variable
-		p->uiPrecedentQuoteSaid = 0;
+		p.uiPrecedentQuoteSaid = 0;
 
 		// skip anyone currently on the player's team
 		if (IsMercOnTeam(cnt)) continue;
 
-		if (cnt < AIM_AND_MERC_MERCS && p->bMercStatus != MERC_RETURNING_HOME)
+		if (cnt < AIM_AND_MERC_MERCS && p.bMercStatus != MERC_RETURNING_HOME)
 		{
 			// check if any of his stats improve through working or training
-			HandleUnhiredMercImprovement(p);
+			HandleUnhiredMercImprovement(&p);
 
 			// if he's working on another job
-			if (p->bMercStatus == MERC_WORKING_ELSEWHERE)
+			if (p.bMercStatus == MERC_WORKING_ELSEWHERE)
 			{
 				// check if he's killed
 				HandleUnhiredMercDeaths(cnt);
@@ -320,18 +320,18 @@ void MercDailyUpdate()
 		}
 
 		// if merc is currently unavailable
-		if (p->uiDayBecomesAvailable > 0)
+		if (p.uiDayBecomesAvailable > 0)
 		{
-			if (--p->uiDayBecomesAvailable == 0 &&    // Check to see if the merc has become available
-					p->bMercStatus != MERC_FIRED_AS_A_POW) // if the merc CAN become ready
+			if (--p.uiDayBecomesAvailable == 0 &&    // Check to see if the merc has become available
+					p.bMercStatus != MERC_FIRED_AS_A_POW) // if the merc CAN become ready
 			{
-				p->bMercStatus = MERC_OK;
+				p.bMercStatus = MERC_OK;
 
 				// if the player has left a message for this merc
-				if (p->ubMiscFlags3 & PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM)
+				if (p.ubMiscFlags3 & PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM)
 				{
 					//remove the Flag, so if the merc goes on another assignment, the player can leave an email.
-					p->ubMiscFlags3 &= ~PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM;
+					p.ubMiscFlags3 &= ~PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM;
 
 					// TO DO: send E-mail to player telling him the merc has returned from an assignment
 					AddEmail(AIM_REPLY_BARRY + cnt * AIM_REPLY_LENGTH_BARRY, AIM_REPLY_LENGTH_BARRY, 6 + cnt, GetWorldTotalMin());
@@ -346,33 +346,33 @@ void MercDailyUpdate()
 				UINT32 uiChance;
 				if (cnt < MAX_NUMBER_MERCS)
 				{ // A.I.M. merc
-					uiChance = 2 * p->bExpLevel;
+					uiChance = 2 * p.bExpLevel;
 
 					// player has now had a chance to hire him, so he'll eligible to get killed off on another job
-					p->ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
+					p.ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
 				}
 				else
 				{ // M.E.R.C. merc - very rarely get other work
-					uiChance = 1 * p->bExpLevel;
+					uiChance = 1 * p.bExpLevel;
 
 					// player doesn't have a chance to hire any M.E.R.C's until after Speck's E-mail is sent
 					if (GetWorldDay() > DAYS_TIL_M_E_R_C_AVAIL)
 					{
 						// player has now had a chance to hire him, so he'll eligible to get killed off on another job
-						p->ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
+						p.ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
 					}
 				}
 
 				if (Random(100) < uiChance)
 				{
-					p->bMercStatus = MERC_WORKING_ELSEWHERE;
-					p->uiDayBecomesAvailable = 1 + Random(6 + (p->bExpLevel / 2)); // 1-(6 to 11) days
+					p.bMercStatus = MERC_WORKING_ELSEWHERE;
+					p.uiDayBecomesAvailable = 1 + Random(6 + (p.bExpLevel / 2)); // 1-(6 to 11) days
 				}
 			}
 		}
 
 		// Decrement morale hangover (merc appears hirable, he just gives lame refusals during this time, though)
-		if (p->ubDaysOfMoraleHangover > 0) --p->ubDaysOfMoraleHangover;
+		if (p.ubDaysOfMoraleHangover > 0) --p.ubDaysOfMoraleHangover;
 	}
 
 	HandleSlayDailyEvent();

@@ -158,7 +158,7 @@ void DecayTacticalMoraleModifiers(void)
 		// only let morale mod decay if it is positive while merc is a POW
 		if (s->bAssignment == ASSIGNMENT_POW && s->bTacticalMoraleMod < 0) continue;
 
-		switch (GetProfile(s->ubProfile)->bPersonalityTrait)
+		switch (GetProfile(s->ubProfile).bPersonalityTrait)
 		{
 			case CLAUSTROPHOBIC:
 				if (s->bSectorZ > 0)
@@ -908,7 +908,7 @@ void DailyMoraleUpdate(SOLDIERTYPE *pSoldier)
 */
 
 	// check death rate vs. merc's tolerance once/day (ignores buddies!)
-	if (MercThinksDeathRateTooHigh(GetProfile(pSoldier->ubProfile)))
+	if (MercThinksDeathRateTooHigh(&GetProfile(pSoldier->ubProfile)))
 	{
 		// too high, morale takes a hit
 		HandleMoraleEvent( pSoldier, MORALE_HIGH_DEATHRATE, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );

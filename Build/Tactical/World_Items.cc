@@ -414,9 +414,9 @@ static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 			// if owner is a terrorist
 			if (!IsProfileATerrorist(pid)) continue;
 
-			const MERCPROFILESTRUCT* const p = GetProfile(pid);
+			MERCPROFILESTRUCT const& p = GetProfile(pid);
 			// and they were not set in the current sector
-			if (p->sSectorX == gWorldSectorX && p->sSectorY == gWorldSectorY) continue;
+			if (p.sSectorX == gWorldSectorX && p.sSectorY == gWorldSectorY) continue;
 
 			// then all items in this location should be deleted
 			const INT16 sGridNo = wi->sGridNo;
@@ -436,11 +436,11 @@ static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 
 static void DeleteWorldItemsBelongingToQueenIfThere(void)
 {
-	MERCPROFILESTRUCT* const q = GetProfile(QUEEN);
+	MERCPROFILESTRUCT& q = GetProfile(QUEEN);
 
-	if (q->sSectorX != gWorldSectorX ||
-			q->sSectorY != gWorldSectorY ||
-			q->bSectorZ != gbWorldSectorZ)
+	if (q.sSectorX != gWorldSectorX ||
+			q.sSectorY != gWorldSectorY ||
+			q.bSectorZ != gbWorldSectorZ)
 	{
 		return;
 	}
@@ -466,13 +466,13 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 				{
 					// Give her auto rifle
 					const INT8 bSlot = FindObjectInSoldierProfile(QUEEN, ROCKET_RIFLE);
-					if (bSlot != NO_SLOT) q->inv[bSlot] = AUTO_ROCKET_RIFLE;
+					if (bSlot != NO_SLOT) q.inv[bSlot] = AUTO_ROCKET_RIFLE;
 					break;
 				}
 
-				case SPECTRA_HELMET_18:   q->inv[HELMETPOS] = SPECTRA_HELMET_18;   break;
-				case SPECTRA_VEST_18:     q->inv[VESTPOS]   = SPECTRA_VEST_18;     break;
-				case SPECTRA_LEGGINGS_18: q->inv[LEGPOS]    = SPECTRA_LEGGINGS_18; break;
+				case SPECTRA_HELMET_18:   q.inv[HELMETPOS] = SPECTRA_HELMET_18;   break;
+				case SPECTRA_VEST_18:     q.inv[VESTPOS]   = SPECTRA_VEST_18;     break;
+				case SPECTRA_LEGGINGS_18: q.inv[LEGPOS]    = SPECTRA_LEGGINGS_18; break;
 
 				default: break;
 			}

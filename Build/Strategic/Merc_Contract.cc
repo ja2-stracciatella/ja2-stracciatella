@@ -258,7 +258,7 @@ BOOLEAN MercContractHandling(SOLDIERTYPE* const s, UINT8 const ubDesiredAction)
 	INT32 contract_length;
 	UINT8 history_contract_type;
 	UINT8 finances_contract_type;
-	MERCPROFILESTRUCT const& p = *GetProfile(s->ubProfile);
+	MERCPROFILESTRUCT const& p = GetProfile(s->ubProfile);
 	switch (ubDesiredAction)
 	{
 		case CONTRACT_EXTEND_1_DAY:
@@ -366,7 +366,7 @@ static UINT16 FindRefusalReason(SOLDIERTYPE const* const s)
 {
 	/* Check for sources of unhappiness in order of importance, which is:
 	 * 1) Hated Mercs (Highest), 2) Death Rate, 3) Morale (lowest) */
-	MERCPROFILESTRUCT const& p = *GetProfile(s->ubProfile);
+	MERCPROFILESTRUCT const& p = GetProfile(s->ubProfile);
 
 	// see if someone the merc hates is on the team
 	for (UINT8 i = 0; i < 2; ++i)
@@ -438,11 +438,11 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 	UINT16 const reason_quote = FindRefusalReason(s);
 	// happy? no problem
 	if (reason_quote == QUOTE_NONE) return TRUE;
-	MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
+	MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
 
 	// find out if the merc has a buddy working for the player
 	UINT16 buddy_quote;
-	switch (GetFirstBuddyOnTeam(p))
+	switch (GetFirstBuddyOnTeam(&p))
 	{
 		case 0:  buddy_quote = QUOTE_RENEWING_CAUSE_BUDDY_1_ON_TEAM;               break;
 		case 1:  buddy_quote = QUOTE_RENEWING_CAUSE_BUDDY_2_ON_TEAM;               break;
@@ -462,13 +462,13 @@ BOOLEAN WillMercRenew(SOLDIERTYPE* const s, BOOLEAN const say_quote)
 
 		// check if we say the precedent for merc
 		UINT8 const quote_bit = GetQuoteBitNumberFromQuoteID(quote);
-		if (GetMercPrecedentQuoteBitStatus(p, quote_bit))
+		if (GetMercPrecedentQuoteBitStatus(&p, quote_bit))
 		{
 			HandleImportantMercQuoteLocked(s, QUOTE_PRECEDENT_TO_REPEATING_ONESELF_RENEW);
 		}
 		else
 		{
-			SetMercPrecedentQuoteBitStatus(p, quote_bit);
+			SetMercPrecedentQuoteBitStatus(&p, quote_bit);
 		}
 
 		HandleImportantMercQuoteLocked(s, quote);
@@ -720,15 +720,15 @@ void StrategicRemoveMerc(SOLDIERTYPE* const s)
 		}
 	}
 
-	MERCPROFILESTRUCT* const p = GetProfile(s->ubProfile);
+	MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
 	// if the merc is not dead
-	if (p->bMercStatus != MERC_IS_DEAD)
+	if (p.bMercStatus != MERC_IS_DEAD)
 	{
 		// Set the status to returning home (delay the merc for rehire)
-		p->bMercStatus = MERC_RETURNING_HOME;
+		p.bMercStatus = MERC_RETURNING_HOME;
 
 		// specify how long the merc will continue to be unavailable
-		p->uiDayBecomesAvailable = 1 + Random(2); // 1-2 days
+		p.uiDayBecomesAvailable = 1 + Random(2); // 1-2 days
 
 		HandleSoldierLeavingWithLowMorale(s);
 		HandleSoldierLeavingForAnotherContract(s);
@@ -744,7 +744,7 @@ void StrategicRemoveMerc(SOLDIERTYPE* const s)
 	//if the merc was a POW, remember it becuase the merc cant show up in AIM or MERC anymore
 	if (s->bAssignment == ASSIGNMENT_POW)
 	{
-		p->bMercStatus = MERC_FIRED_AS_A_POW;
+		p.bMercStatus = MERC_FIRED_AS_A_POW;
 	}
 	else //else the merc CAN get his medical deposit back
 	{

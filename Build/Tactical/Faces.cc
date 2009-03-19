@@ -141,7 +141,7 @@ void InitSoldierFace(SOLDIERTYPE* const s)
 FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInitFlags)
 {
 	if (id == NO_PROFILE) throw std::logic_error("Tried to load face for invalid profile");
-	const MERCPROFILESTRUCT* const p = GetProfile(id);
+	MERCPROFILESTRUCT const& p = GetProfile(id);
 
 	FACETYPE* const face = GetFreeFace();
 
@@ -151,13 +151,13 @@ FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 	{
 		face_file = "FACES/b%02d.sti";
     // ATE: Check for profile - if elliot, use special face :)
-		if (id == ELLIOT && p->bNPCData > 3)
+		if (id == ELLIOT && p.bNPCData > 3)
 		{
-			if      (p->bNPCData <   7) face_file = "FACES/b%02da.sti";
-			else if (p->bNPCData <  10) face_file = "FACES/b%02db.sti";
-			else if (p->bNPCData <  13) face_file = "FACES/b%02dc.sti";
-			else if (p->bNPCData <  16) face_file = "FACES/b%02dd.sti";
-			else if (p->bNPCData == 17) face_file = "FACES/b%02de.sti";
+			if      (p.bNPCData <   7) face_file = "FACES/b%02da.sti";
+			else if (p.bNPCData <  10) face_file = "FACES/b%02db.sti";
+			else if (p.bNPCData <  13) face_file = "FACES/b%02dc.sti";
+			else if (p.bNPCData <  16) face_file = "FACES/b%02dd.sti";
+			else if (p.bNPCData == 17) face_file = "FACES/b%02de.sti";
 		}
 	}
 	else
@@ -166,7 +166,7 @@ FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 	}
 
 	// HERVE, PETER, ALBERTO and CARLO all use HERVE's portrait
-	const INT32 face_id = (HERVE <= id && id <= CARLO ? HERVE : p->ubFaceIndex);
+	INT32 const face_id = HERVE <= id && id <= CARLO ? HERVE : p.ubFaceIndex;
 
 	SGPFILENAME ImageFile;
 	sprintf(ImageFile, face_file, face_id);
@@ -192,11 +192,11 @@ FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 	face->sEyeFrame             = 0;
 	face->uiEyeDelay            = 50 + Random(30);
 
-	UINT32 blink_freq = p->uiBlinkFrequency;
+	UINT32 blink_freq = p.uiBlinkFrequency;
 	blink_freq = (Random(2) ? blink_freq + Random(2000) : blink_freq - Random(2000));
 	face->uiBlinkFrequency      = blink_freq;
 
-	face->uiExpressionFrequency = p->uiExpressionFrequency;
+	face->uiExpressionFrequency = p.uiExpressionFrequency;
 	face->sMouthFrame           = 0;
 	face->uiMouthDelay          = 120;
 	face->uiVideoObject         = vo;
@@ -301,13 +301,13 @@ void SetAutoFaceActiveFromSoldier(SGPVSurface* const display, SGPVSurface* const
 
 static void GetFaceRelativeCoordinates(const FACETYPE* const f, UINT16* const pusEyesX, UINT16* const pusEyesY, UINT16* const pusMouthX, UINT16* const pusMouthY)
 {
-	const ProfileID                pid = f->ubCharacterNum;
-	const MERCPROFILESTRUCT* const p   = GetProfile(pid);
+	ProfileID         const  pid = f->ubCharacterNum;
+	MERCPROFILESTRUCT const& p   = GetProfile(pid);
 
 	// Take eyes x,y from profile unless we are an RPC and we are small faced
 	// Are we a recruited merc or small?
 	if (f->uiFlags & FACE_FORCE_SMALL ||
-			(!(f->uiFlags & FACE_BIGFACE) && p->ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE)))
+			(!(f->uiFlags & FACE_BIGFACE) && p.ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE)))
 	{
 		// Loop through all values of available profiles to find ours
 		for (const RPC_SMALL_FACE_VALUES* i = gRPCSmallFaceValues; i != endof(gRPCSmallFaceValues); ++i)
@@ -321,10 +321,10 @@ static void GetFaceRelativeCoordinates(const FACETYPE* const f, UINT16* const pu
 		}
 	}
 
-	*pusEyesX  = p->usEyesX;
-	*pusEyesY  = p->usEyesY;
-	*pusMouthX = p->usMouthX;
-	*pusMouthY = p->usMouthY;
+	*pusEyesX  = p.usEyesX;
+	*pusEyesY  = p.usEyesY;
+	*pusMouthX = p.usMouthX;
+	*pusMouthY = p.usMouthY;
 }
 
 

@@ -61,15 +61,15 @@ INT16	gsMercArriveSectorY = 1;
 
 INT8 HireMerc(MERC_HIRE_STRUCT* const h)
 {
-	const ProfileID          pid = h->ubProfileID;
-	MERCPROFILESTRUCT* const p   = GetProfile(pid);
+	ProfileID  const   pid = h->ubProfileID;
+	MERCPROFILESTRUCT& p   = GetProfile(pid);
 
 	// If we are to disregard the status of the merc
 #ifdef JA2TESTVERSION
 	if (!gForceHireMerc)
 #endif
 	{
-		switch (p->bMercStatus)
+		switch (p.bMercStatus)
 		{
 			case 0:
 			case MERC_ANNOYED_BUT_CAN_STILL_CONTACT:
@@ -130,7 +130,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT* const h)
 #endif
 
 	// Record how long the merc will be gone for
-	p->bMercStatus = (UINT8)h->iTotalContractLength;
+	p.bMercStatus = (UINT8)h->iTotalContractLength;
 
 	// Copy over insertion data
 	s->ubStrategicInsertionCode = h->ubInsertionCode;
@@ -175,7 +175,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT* const h)
 	{
 		AddStrategicEvent(EVENT_DELAYED_HIRING_OF_MERC, h->uiTimeTillMercArrives, s->ubID);
 		// Specify that the merc is hired but has not arrived yet
-		p->bMercStatus = MERC_HIRED_BUT_NOT_ARRIVED_YET;
+		p.bMercStatus = MERC_HIRED_BUT_NOT_ARRIVED_YET;
 	}
 
 	// Set the type of merc
@@ -204,13 +204,13 @@ INT8 HireMerc(MERC_HIRE_STRUCT* const h)
 		}
 
 		// remember the medical deposit we PAID.  The one in his profile can increase when he levels!
-		s->usMedicalDeposit = p->sMedicalDepositAmount;
+		s->usMedicalDeposit = p.sMedicalDepositAmount;
 	}
 	else if (pid <= BUBBA)
 	{
 		s->ubWhatKindOfMercAmI = MERC_TYPE__MERC;
 
-		p->iMercMercContractLength = 1;
+		p.iMercMercContractLength = 1;
 
 		// Set starting conditions for the merc
 		s->iStartContractTime = GetWorldDay();
@@ -374,18 +374,18 @@ void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
 
 BOOLEAN IsMercHireable(const ProfileID pid)
 {
-	const MERCPROFILESTRUCT* const p = GetProfile(pid);
+	MERCPROFILESTRUCT const& p = GetProfile(pid);
 	/* If the merc has an .EDT file, is not away on assignment, and isn't already
 	 * hired (but not arrived yet), he is not dead and he isn't returning home */
 	return
-		p->bMercStatus <= 0                              &&
-		p->bMercStatus != MERC_HAS_NO_TEXT_FILE          &&
-		p->bMercStatus != MERC_HIRED_BUT_NOT_ARRIVED_YET &&
-		p->bMercStatus != MERC_IS_DEAD                   &&
-		p->bMercStatus != MERC_RETURNING_HOME            &&
-		p->bMercStatus != MERC_WORKING_ELSEWHERE         &&
-		p->bMercStatus != MERC_FIRED_AS_A_POW            &&
-		p->uiDayBecomesAvailable == 0;
+		p.bMercStatus <= 0                              &&
+		p.bMercStatus != MERC_HAS_NO_TEXT_FILE          &&
+		p.bMercStatus != MERC_HIRED_BUT_NOT_ARRIVED_YET &&
+		p.bMercStatus != MERC_IS_DEAD                   &&
+		p.bMercStatus != MERC_RETURNING_HOME            &&
+		p.bMercStatus != MERC_WORKING_ELSEWHERE         &&
+		p.bMercStatus != MERC_FIRED_AS_A_POW            &&
+		p.uiDayBecomesAvailable == 0;
 }
 
 
