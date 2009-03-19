@@ -1593,38 +1593,37 @@ void UpdateSoldierWithStaticDetailedInformation( SOLDIERTYPE *s, SOLDIERCREATE_S
 static void UpdateStaticDetailedPlacementWithProfileInformation(SOLDIERCREATE_STRUCT* spp, UINT8 ubProfile)
 {
 	UINT32					cnt;
-	MERCPROFILESTRUCT * pProfile;
 
 	spp->ubProfile = ubProfile;
 
-	pProfile = &(gMercProfiles[ ubProfile ]);
+	MERCPROFILESTRUCT& p = GetProfile(ubProfile);
 
-	SET_PALETTEREP_ID ( spp->HeadPal,		pProfile->HAIR );
-	SET_PALETTEREP_ID ( spp->VestPal,		pProfile->VEST );
-	SET_PALETTEREP_ID ( spp->SkinPal,		pProfile->SKIN );
-	SET_PALETTEREP_ID ( spp->PantsPal,  pProfile->PANTS );
+	SET_PALETTEREP_ID(spp->HeadPal,  p.HAIR);
+	SET_PALETTEREP_ID(spp->VestPal,  p.VEST);
+	SET_PALETTEREP_ID(spp->SkinPal,  p.SKIN);
+	SET_PALETTEREP_ID(spp->PantsPal, p.PANTS);
 
-	wcscpy( spp->name, pProfile->zNickname );
+	wcscpy(spp->name, p.zNickname);
 
-	spp->bLife										= pProfile->bLife;
-	spp->bLifeMax									= pProfile->bLifeMax;
-	spp->bAgility									= pProfile->bAgility;
-	spp->bLeadership							= pProfile->bLeadership;
-	spp->bDexterity								= pProfile->bDexterity;
-	spp->bStrength								= pProfile->bStrength;
-	spp->bWisdom									= pProfile->bWisdom;
-	spp->bExpLevel								= pProfile->bExpLevel;
-	spp->bMarksmanship						= pProfile->bMarksmanship;
-	spp->bMedical									= pProfile->bMedical;
-	spp->bMechanical							= pProfile->bMechanical;
-	spp->bExplosive								= pProfile->bExplosive;
+  spp->bLife         = p.bLife;
+  spp->bLifeMax      = p.bLifeMax;
+  spp->bAgility      = p.bAgility;
+  spp->bLeadership   = p.bLeadership;
+  spp->bDexterity    = p.bDexterity;
+  spp->bStrength     = p.bStrength;
+  spp->bWisdom       = p.bWisdom;
+  spp->bExpLevel     = p.bExpLevel;
+  spp->bMarksmanship = p.bMarksmanship;
+  spp->bMedical      = p.bMedical;
+  spp->bMechanical   = p.bMechanical;
+	spp->bExplosive    = p.bExplosive;
 
-	spp->bBodyType								= pProfile->ubBodyType;
+	spp->bBodyType     = p.ubBodyType;
 
 	// Copy over inv if we want to
 	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 	{
-		CreateItems( pProfile->inv[ cnt ], pProfile->bInvStatus[ cnt ], pProfile->bInvNumber[ cnt ], &(spp->Inv[ cnt ]) );
+		CreateItems(p.inv[cnt], p.bInvStatus[cnt], p.bInvNumber[cnt], &spp->Inv[cnt]);
 	}
 }
 

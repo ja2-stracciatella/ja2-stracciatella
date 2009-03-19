@@ -597,30 +597,29 @@ void MakeRemainingAssassinsTougher( void )
 static void StartSomeMercsOnAssignment(void)
 {
 	UINT32 uiCnt;
-	MERCPROFILESTRUCT *pProfile;
 	UINT32 uiChance;
 
 	// some randomly picked A.I.M. mercs will start off "on assignment" at the beginning of each new game
 	for( uiCnt = 0; uiCnt < AIM_AND_MERC_MERCS; uiCnt++)
 	{
-		pProfile = &(gMercProfiles[ uiCnt ]);
+		MERCPROFILESTRUCT& p = GetProfile(uiCnt);
 
 		// calc chance to start on assignment
-		uiChance = 5 * pProfile->bExpLevel;
+		uiChance = 5 * p.bExpLevel;
 
 		if (Random(100) < uiChance)
 		{
-			pProfile->bMercStatus = MERC_WORKING_ELSEWHERE;
-			pProfile->uiDayBecomesAvailable = 1 + Random(6 + (pProfile->bExpLevel / 2) );		// 1-(6 to 11) days
+			p.bMercStatus = MERC_WORKING_ELSEWHERE;
+			p.uiDayBecomesAvailable = 1 + Random(6 + p.bExpLevel / 2); // 1-(6 to 11) days
 		}
 		else
 		{
-			pProfile->bMercStatus = MERC_OK;
-			pProfile->uiDayBecomesAvailable = 0;
+			p.bMercStatus           = MERC_OK;
+			p.uiDayBecomesAvailable = 0;
 		}
 
-		pProfile->uiPrecedentQuoteSaid = 0;
-		pProfile->ubDaysOfMoraleHangover = 0;
+		p.uiPrecedentQuoteSaid   = 0;
+		p.ubDaysOfMoraleHangover = 0;
 	}
 }
 
@@ -990,14 +989,13 @@ BOOLEAN UnRecruitEPC(ProfileID const pid)
 
 INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy )
 {
-	MERCPROFILESTRUCT *	pProfile;
 	INT8								bLoop;
 
-	pProfile = &( gMercProfiles[ ubCharNum ] );
+	MERCPROFILESTRUCT const& p = GetProfile(ubCharNum);
 
 	for (bLoop = 0; bLoop < 3; bLoop++)
 	{
-		if ( pProfile->bBuddy[bLoop] == ubBuddy )
+		if (p.bBuddy[bLoop] == ubBuddy)
 		{
 			return( bLoop );
 		}
@@ -1007,14 +1005,13 @@ INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy )
 
 INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated )
 {
-	MERCPROFILESTRUCT *	pProfile;
 	INT8								bLoop;
 
-	pProfile = &( gMercProfiles[ ubCharNum ] );
+	MERCPROFILESTRUCT const& p = GetProfile(ubCharNum);
 
 	for (bLoop = 0; bLoop < 3; bLoop++)
 	{
-		if ( pProfile->bHated[bLoop] == ubHated )
+		if (p.bHated[bLoop] == ubHated)
 		{
 			return( bLoop );
 		}
@@ -1066,7 +1063,6 @@ BOOLEAN IsProfileAHeadMiner(UINT8 ubProfile)
 
 void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs )
 {
-	MERCPROFILESTRUCT * pProfile;
 	BOOLEAN				fDoCopy = FALSE;
 
 	FOR_ALL_MERCS(i)
@@ -1094,22 +1090,20 @@ void UpdateSoldierPointerDataIntoProfile( BOOLEAN fPlayerMercs )
 
 			if ( fDoCopy )
 			{
-				// get profile...
-				pProfile = &( gMercProfiles[ pSoldier->ubProfile ] );
-
 				// Copy....
-				pProfile->bLife 										= pSoldier->bLife;
-				pProfile->bLifeMax									= pSoldier->bLifeMax;
-				pProfile->bAgility									= pSoldier->bAgility;
-				pProfile->bLeadership								= pSoldier->bLeadership;
-				pProfile->bDexterity								= pSoldier->bDexterity;
-				pProfile->bStrength									= pSoldier->bStrength;
-				pProfile->bWisdom										= pSoldier->bWisdom;
-				pProfile->bExpLevel									= pSoldier->bExpLevel;
-				pProfile->bMarksmanship							= pSoldier->bMarksmanship;
-				pProfile->bMedical									= pSoldier->bMedical;
-				pProfile->bMechanical								= pSoldier->bMechanical;
-				pProfile->bExplosive								= pSoldier->bExplosive;
+				MERCPROFILESTRUCT& p = GetProfile(pSoldier->ubProfile);
+				p.bLife         = pSoldier->bLife;
+				p.bLifeMax      = pSoldier->bLifeMax;
+				p.bAgility      = pSoldier->bAgility;
+				p.bLeadership   = pSoldier->bLeadership;
+				p.bDexterity    = pSoldier->bDexterity;
+				p.bStrength     = pSoldier->bStrength;
+				p.bWisdom       = pSoldier->bWisdom;
+				p.bExpLevel     = pSoldier->bExpLevel;
+				p.bMarksmanship = pSoldier->bMarksmanship;
+				p.bMedical      = pSoldier->bMedical;
+				p.bMechanical   = pSoldier->bMechanical;
+				p.bExplosive    = pSoldier->bExplosive;
 			}
 		}
 	}

@@ -64,39 +64,38 @@ UINT8			gubScreenCount=0;
 
 static void InitNPCs(void)
 {
-	MERCPROFILESTRUCT * pProfile;
+	{ // add the pilot at a random location!
+		MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
+		switch (Random(4))
+		{
+			case 0:
+				p.sSectorX = 15;
+				p.sSectorY = MAP_ROW_B;
+				p.bSectorZ = 0;
+				break;
+			case 1:
+				p.sSectorX = 14;
+				p.sSectorY = MAP_ROW_E;
+				p.bSectorZ = 0;
+				break;
+			case 2:
+				p.sSectorX = 12;
+				p.sSectorY = MAP_ROW_D;
+				p.bSectorZ = 0;
+				break;
+			case 3:
+				p.sSectorX = 16;
+				p.sSectorY = MAP_ROW_C;
+				p.bSectorZ = 0;
+				break;
+		}
 
-	// add the pilot at a random location!
-	pProfile = &(gMercProfiles[ SKYRIDER ]);
-	switch( Random( 4 ) )
-	{
-		case 0:
-			pProfile->sSectorX = 15;
-			pProfile->sSectorY = MAP_ROW_B;
-			pProfile->bSectorZ = 0;
-			break;
-		case 1:
-			pProfile->sSectorX = 14;
-			pProfile->sSectorY = MAP_ROW_E;
-			pProfile->bSectorZ = 0;
-			break;
-		case 2:
-			pProfile->sSectorX = 12;
-			pProfile->sSectorY = MAP_ROW_D;
-			pProfile->bSectorZ = 0;
-			break;
-		case 3:
-			pProfile->sSectorX = 16;
-			pProfile->sSectorY = MAP_ROW_C;
-			pProfile->bSectorZ = 0;
-			break;
+#ifdef JA2TESTVERSION
+		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"Skyrider in %c %d", 'A' + p.sSectorY - 1, p.sSectorX);
+#endif
+		// use alternate map, with Skyrider's shack, in this sector
+		SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;
 	}
-
-	#ifdef JA2TESTVERSION
-		ScreenMsg( MSG_FONT_RED, MSG_DEBUG, L"Skyrider in %c %d", 'A' + pProfile->sSectorY - 1, pProfile->sSectorX );
-	#endif
-	// use alternate map, with Skyrider's shack, in this sector
-	SectorInfo[ SECTOR( pProfile->sSectorX, pProfile->sSectorY ) ].uiFlags |= SF_USE_ALTERNATE_MAP;
 
 
 	// set up Madlab's secret lab (he'll be added when the meanwhile scene occurs)
@@ -118,79 +117,81 @@ static void InitNPCs(void)
 			break;
 	}
 
-	// add Micky in random location
-
-	pProfile = &(gMercProfiles[MICKY]);
-	switch( Random( 5 ) )
-	{
-		case 0:
-			pProfile->sSectorX = 9;
-			pProfile->sSectorY = MAP_ROW_G;
-			pProfile->bSectorZ = 0;
-			break;
-		case 1:
-			pProfile->sSectorX = 13;
-			pProfile->sSectorY = MAP_ROW_D;
-			pProfile->bSectorZ = 0;
-			break;
-		case 2:
-			pProfile->sSectorX = 5;
-			pProfile->sSectorY = MAP_ROW_C;
-			pProfile->bSectorZ = 0;
-			break;
-		case 3:
-			pProfile->sSectorX = 2;
-			pProfile->sSectorY = MAP_ROW_H;
-			pProfile->bSectorZ = 0;
-			break;
-		case 4:
-			pProfile->sSectorX = 6;
-			pProfile->sSectorY = MAP_ROW_C;
-			pProfile->bSectorZ = 0;
-			break;
-	}
+	{ // add Micky in random location
+		MERCPROFILESTRUCT& p = GetProfile(MICKY);
+		switch (Random(5))
+		{
+			case 0:
+				p.sSectorX = 9;
+				p.sSectorY = MAP_ROW_G;
+				p.bSectorZ = 0;
+				break;
+			case 1:
+				p.sSectorX = 13;
+				p.sSectorY = MAP_ROW_D;
+				p.bSectorZ = 0;
+				break;
+			case 2:
+				p.sSectorX = 5;
+				p.sSectorY = MAP_ROW_C;
+				p.bSectorZ = 0;
+				break;
+			case 3:
+				p.sSectorX = 2;
+				p.sSectorY = MAP_ROW_H;
+				p.bSectorZ = 0;
+				break;
+			case 4:
+				p.sSectorX = 6;
+				p.sSectorY = MAP_ROW_C;
+				p.bSectorZ = 0;
+				break;
+		}
 
 #ifdef JA2TESTVERSION
-	ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls in %c %d", pProfile->zNickname, 'A' + pProfile->sSectorY - 1, pProfile->sSectorX);
+		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls in %c %d", p.zNickname, 'A' + p.sSectorY - 1, p.sSectorX);
 #endif
 
-	// use alternate map in this sector
-	//SectorInfo[ SECTOR( pProfile->sSectorX, pProfile->sSectorY ) ].uiFlags |= SF_USE_ALTERNATE_MAP;
+		// use alternate map in this sector
+		//SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;
+	}
 
   gfPlayerTeamSawJoey = FALSE;
 
 
 	if ( gGameOptions.fSciFi )
 	{
-		// add Bob
-		pProfile = &(gMercProfiles[BOB]);
-		pProfile->sSectorX = 8;
-		pProfile->sSectorY = MAP_ROW_F;
-		pProfile->bSectorZ = 0;
-
-#ifndef JA2DEMO
-		// add Gabby in random location
-		pProfile = &(gMercProfiles[GABBY]);
-		switch( Random( 2 ) )
-		{
-			case 0:
-				pProfile->sSectorX = 11;
-				pProfile->sSectorY = MAP_ROW_H;
-				pProfile->bSectorZ = 0;
-				break;
-			case 1:
-				pProfile->sSectorX = 4;
-				pProfile->sSectorY = MAP_ROW_I;
-				pProfile->bSectorZ = 0;
-				break;
+		{ // add Bob
+			MERCPROFILESTRUCT& p = GetProfile(BOB);
+			p.sSectorX = 8;
+			p.sSectorY = MAP_ROW_F;
+			p.bSectorZ = 0;
 		}
 
+#ifndef JA2DEMO
+		{ // add Gabby in random location
+			MERCPROFILESTRUCT& p = gMercProfiles[GABBY];
+			switch( Random( 2 ) )
+			{
+				case 0:
+					p.sSectorX = 11;
+					p.sSectorY = MAP_ROW_H;
+					p.bSectorZ = 0;
+					break;
+				case 1:
+					p.sSectorX = 4;
+					p.sSectorY = MAP_ROW_I;
+					p.bSectorZ = 0;
+					break;
+			}
+
 #ifdef JA2TESTVERSION
-		ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls in %c %d", pProfile->zNickname, 'A' + pProfile->sSectorY - 1, pProfile->sSectorX);
+			ScreenMsg(MSG_FONT_RED, MSG_DEBUG, L"%ls in %c %d", p.zNickname, 'A' + p.sSectorY - 1, p.sSectorX);
 #endif
 
-		// use alternate map in this sector
-		SectorInfo[ SECTOR( pProfile->sSectorX, pProfile->sSectorY ) ].uiFlags |= SF_USE_ALTERNATE_MAP;
+			// use alternate map in this sector
+			SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;
+		}
 #endif
 	}
 	else

@@ -716,7 +716,6 @@ static FLOAT DiffFromNormRatio(INT16 sThisValue, INT16 sNormalValue);
 
 INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID )
 {
-	MERCPROFILESTRUCT * pProfile;
 	INT16	sTotalSkill=0;
 	FLOAT flSkillFactor, flFitnessFactor, flExpFactor, flSurvivalFactor;
 	FLOAT flRiskFactor;
@@ -746,17 +745,17 @@ INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID )
 	}
 	*/
 
-	pProfile = &gMercProfiles[ ubMercID ];
+	MERCPROFILESTRUCT const& p = GetProfile(ubMercID);
 
 	// calculate the degree of training
-	sTotalSkill = (pProfile->bMarksmanship + pProfile->bMedical + pProfile->bMechanical + pProfile->bExplosive + pProfile->bLeadership) / 5;
+	sTotalSkill = (p.bMarksmanship + p.bMedical + p.bMechanical + p.bExplosive + p.bLeadership) / 5;
 	flSkillFactor = DiffFromNormRatio( sTotalSkill, INS_CTRCT_SKILL_BASE );
 
 	// calc relative fitness level
-	flFitnessFactor = DiffFromNormRatio( pProfile->bLife, INS_CTRCT_FITNESS_BASE );
+	flFitnessFactor = DiffFromNormRatio(p.bLife, INS_CTRCT_FITNESS_BASE);
 
 	// calc relative experience
-	flExpFactor = DiffFromNormRatio( pProfile->bExpLevel, INS_CTRCT_EXP_LEVEL_BASE );
+	flExpFactor = DiffFromNormRatio(p.bExpLevel, INS_CTRCT_EXP_LEVEL_BASE);
 
 	// calc player's survival rate (death rate subtracted from 100)
 	flSurvivalFactor = DiffFromNormRatio( (INT16) (100 - CalcDeathRate()), INS_CTRCT_SURVIVAL_BASE );
@@ -776,7 +775,7 @@ INT32	CalculateInsuranceContractCost( INT32 iLength, UINT8 ubMercID )
 	}
 
 	// premium depend on merc's salary, the base insurance rate, and the individual's risk factor at this time
-	uiDailyInsurancePremium = (UINT32) (((pProfile->sSalary * INSURANCE_PREMIUM_RATE * flRiskFactor) / 100) + 0.5);
+	uiDailyInsurancePremium = (UINT32)(p.sSalary * INSURANCE_PREMIUM_RATE * flRiskFactor / 100 + 0.5);
 	// multiply by the insurance contract length
 	uiTotalInsurancePremium = uiDailyInsurancePremium * iLength;
 
@@ -846,7 +845,6 @@ void AddLifeInsurancePayout(SOLDIERTYPE* const pSoldier)
 {
 	UINT8	ubPayoutID;
 	UINT32 uiTimeInMinutes;
-	MERCPROFILESTRUCT *pProfile;
 	UINT32 uiCostPerDay;
 	UINT32 uiDaysToPay;
 
@@ -854,7 +852,7 @@ void AddLifeInsurancePayout(SOLDIERTYPE* const pSoldier)
 	Assert(pSoldier != NULL);
 	Assert(pSoldier->ubProfile != NO_PROFILE);
 
-	pProfile = &(gMercProfiles[ pSoldier->ubProfile ]);
+	MERCPROFILESTRUCT const& p = GetProfile(pSoldier->ubProfile);
 
 	//if we need to add more array elements
 	if( LaptopSaveInfo.ubNumberLifeInsurancePayouts <= LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed )
@@ -886,18 +884,18 @@ void AddLifeInsurancePayout(SOLDIERTYPE* const pSoldier)
 	// avoid getting back more than the merc cost if he was on a 2-week contract!
 
 	// start with the daily salary
-	uiCostPerDay = pProfile->sSalary;
+	uiCostPerDay = p.sSalary;
 
 	// consider weekly salary / day
-	if ((pProfile->uiWeeklySalary / 7) < uiCostPerDay)
+	if (p.uiWeeklySalary / 7 < uiCostPerDay)
 	{
-		uiCostPerDay = (pProfile->uiWeeklySalary / 7);
+		uiCostPerDay = p.uiWeeklySalary / 7;
 	}
 
 	// consider biweekly salary / day
-	if ((pProfile->uiBiWeeklySalary / 14) < uiCostPerDay)
+	if (p.uiBiWeeklySalary / 14 < uiCostPerDay)
 	{
-		uiCostPerDay = (pProfile->uiBiWeeklySalary / 14);
+		uiCostPerDay = p.uiBiWeeklySalary / 14;
 	}
 
 	// calculate how many full, insured days of work the merc is going to miss
@@ -910,7 +908,7 @@ void AddLifeInsurancePayout(SOLDIERTYPE* const pSoldier)
 	uiTimeInMinutes = GetMidnightOfFutureDayInMinutes( 1 ) + 16 * 60;
 
 	// if the death was suspicious, or he's already been investigated twice or more
-	if (pProfile->ubSuspiciousDeath || (gStrategicStatus.ubInsuranceInvestigationsCnt >= 2))
+	if (p.ubSuspiciousDeath || (gStrategicStatus.ubInsuranceInvestigationsCnt >= 2))
 	{
 		// fraud suspected, claim will be investigated first
 		AddStrategicEvent( EVENT_INSURANCE_INVESTIGATION_STARTED, uiTimeInMinutes, ubPayoutID );

@@ -1299,10 +1299,10 @@ static INT32 SetUpDropItemListForMerc(SOLDIERTYPE* const s)
 	DropKeysInKeyRing(s, NOWHERE, 0, VISIBILITY_0, TRUE, iSlotIndex, FALSE);
 
 	// zero out profiles
-	MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
-	memset(p->bInvStatus, 0, sizeof(*p->bInvStatus) * 19);
-	memset(p->bInvNumber, 0, sizeof(*p->bInvNumber) * 19);
-	memset(p->inv,        0, sizeof(*p->inv)        * 19);
+	MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
+	memset(p.bInvStatus, 0, sizeof(*p.bInvStatus) * 19);
+	memset(p.bInvNumber, 0, sizeof(*p.bInvNumber) * 19);
+	memset(p.inv,        0, sizeof(*p.inv)        * 19);
 
 	return( iSlotIndex );
 }

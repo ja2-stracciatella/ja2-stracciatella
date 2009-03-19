@@ -239,7 +239,6 @@ static void CheckForValidArrivalSector(void);
 
 void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
 {
-	MERCPROFILESTRUCT				*pMerc;
 	UINT32									uiTimeOfPost;
 
 	if( !DidGameJustStart() && gsMercArriveSectorX == 9 && gsMercArriveSectorY == 1 )
@@ -258,7 +257,7 @@ void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
 	// stop time compression until player restarts it
 	StopTimeCompression();
 
-	pMerc = &gMercProfiles[ pSoldier->ubProfile ];
+	MERCPROFILESTRUCT& p = GetProfile(pSoldier->ubProfile);
 
 	// add the guy to a squad
 	AddCharacterToAnySquad( pSoldier );
@@ -336,7 +335,7 @@ void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
 #endif
 
 	//record how long the merc will be gone for
-	pMerc->bMercStatus = (UINT8)pSoldier->iTotalContractLength;
+	p.bMercStatus = (UINT8)pSoldier->iTotalContractLength;
 
 	// remember when excatly he ARRIVED in Arulco, in case he gets fired early
 	pSoldier->uiTimeOfLastContractUpdate = GetWorldTotalMin();

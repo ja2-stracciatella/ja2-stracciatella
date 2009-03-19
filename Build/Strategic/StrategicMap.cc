@@ -1240,10 +1240,10 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 					}
 					while( ubRandomMiner[ ubMiner ] == 0 );
 
-					GetMineSector( ubMine, &(gMercProfiles[ ubRandomMiner[ ubMiner ] ].sSectorX),
-																 &(gMercProfiles[ ubRandomMiner[ ubMiner ] ].sSectorY) );
-					gMercProfiles[ ubRandomMiner[ ubMiner ] ].bSectorZ = 0;
-					gMercProfiles[ ubRandomMiner[ ubMiner ] ].bTown = gMineLocation[ ubMine ].bAssociatedTown;
+					MERCPROFILESTRUCT& p = GetProfile(ubRandomMiner[ubMiner]);
+					GetMineSector(ubMine, &p.sSectorX, &p.sSectorY);
+					p.bSectorZ = 0;
+					p.bTown = gMineLocation[ ubMine ].bAssociatedTown;
 
 					// mark miner as placed
 					ubRandomMiner[ ubMiner ] = 0;

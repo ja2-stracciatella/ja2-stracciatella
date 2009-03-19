@@ -281,7 +281,6 @@ void RefreshSoldierMorale( SOLDIERTYPE * pSoldier )
 
 static void UpdateSoldierMorale(SOLDIERTYPE* pSoldier, UINT8 ubType, INT8 bMoraleMod)
 {
-	MERCPROFILESTRUCT *		pProfile;
 	INT32									iMoraleModTotal;
 
 	if ( !pSoldier->bActive || ( pSoldier->bLife < CONSCIOUSNESS ) ||
@@ -303,11 +302,11 @@ static void UpdateSoldierMorale(SOLDIERTYPE* pSoldier, UINT8 ubType, INT8 bMoral
 		return;
 	}
 
-	pProfile = &(gMercProfiles[ pSoldier->ubProfile ]);
+	MERCPROFILESTRUCT const& p = GetProfile(pSoldier->ubProfile);
 
 	if (bMoraleMod > 0)
 	{
-		switch( pProfile->bAttitude )
+		switch (p.bAttitude)
 		{
 			case ATT_OPTIMIST:
 			case ATT_AGGRESSIVE:
@@ -327,7 +326,7 @@ static void UpdateSoldierMorale(SOLDIERTYPE* pSoldier, UINT8 ubType, INT8 bMoral
 	}
 	else
 	{
-		switch( pProfile->bAttitude )
+		switch (p.bAttitude)
 		{
 			case ATT_OPTIMIST:
 				bMoraleMod += 1;
@@ -416,8 +415,6 @@ static void HandleMoraleEventForSoldier(SOLDIERTYPE* pSoldier, INT8 bMoraleEvent
 
 void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
-	MERCPROFILESTRUCT *		pProfile;
-
 	gfSomeoneSaidMoraleQuote = FALSE;
 
 	// NOTE: Many morale events are NOT attached to a specific player soldier at all!
@@ -563,9 +560,9 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 			{
 				if (pTeamSoldier->ubProfile != NO_PROFILE)
 				{
-					pProfile = &(gMercProfiles[ pTeamSoldier->ubProfile ]);
+					MERCPROFILESTRUCT const& p = GetProfile(pTeamSoldier->ubProfile);
 
-					if (HATED_MERC( pProfile, pSoldier->ubProfile ))
+					if (HATED_MERC(p, pSoldier->ubProfile))
 					{
 						// yesss!
 						HandleMoraleEventForSoldier( pTeamSoldier, MORALE_HATED_DIED );
@@ -581,7 +578,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 						// this is handled for everyone even if in sector, as it's a strategic morale mod
 						HandleMoraleEventForSoldier( pTeamSoldier, MORALE_TEAMMATE_DIED );
 
-						if (BUDDY_MERC( pProfile, pSoldier->ubProfile ))
+						if (BUDDY_MERC(p, pSoldier->ubProfile))
 						{
 							// oh no!  buddy died!
 							HandleMoraleEventForSoldier( pTeamSoldier, MORALE_BUDDY_DIED );
@@ -704,7 +701,6 @@ void HourlyMoraleUpdate( void )
 	INT32									iTotalOpinions;
 	INT8									bNumTeamMembers;
 	INT8									bHighestTeamLeadership = 0;
-	MERCPROFILESTRUCT *		pProfile;
 	BOOLEAN								fSameGroupOnly;
 	static INT8						bStrategicMoraleUpdateCounter = 0;
 	BOOLEAN								fFoundHated = FALSE;
@@ -721,7 +717,7 @@ void HourlyMoraleUpdate( void )
 				pSoldier->bAssignment != ASSIGNMENT_POW)
 		{
 			// calculate the guy's opinion of the people he is with
-			pProfile = &(gMercProfiles[ pSoldier->ubProfile ]);
+			MERCPROFILESTRUCT const& p = GetProfile(pSoldier->ubProfile);
 
 			// if we're moving
 			if (pSoldier->ubGroupID != 0 && PlayerIDGroupInMotion( pSoldier->ubGroupID ))
@@ -777,7 +773,7 @@ void HourlyMoraleUpdate( void )
 							continue;
 						}
 					}
-					bOpinion = pProfile->bMercOpinion[ pOtherSoldier->ubProfile ];
+					bOpinion = p.bMercOpinion[pOtherSoldier->ubProfile];
 					if (bOpinion == HATED_OPINION)
 					{
 
@@ -792,12 +788,12 @@ void HourlyMoraleUpdate( void )
 						{
 							// scale according to how close to we are to snapping
 							//KM : Divide by 0 error found.  Wrapped into an if statement.
-							if( pProfile->bHatedTime[ bHated ] )
+							if (p.bHatedTime[bHated])
 							{
-								bOpinion = ((INT32) bOpinion) * (pProfile->bHatedTime[ bHated ] - pProfile->bHatedCount[ bHated ]) / pProfile->bHatedTime[ bHated ];
+								bOpinion = (INT32)bOpinion * (p.bHatedTime[bHated] - p.bHatedCount[bHated]) / p.bHatedTime[bHated];
 							}
 
-							if ( pProfile->bHatedCount[ bHated ] <= pProfile->bHatedTime[ bHated ] / 2 )
+							if (p.bHatedCount[bHated] <= p.bHatedTime[bHated] / 2)
 							{
 								// Augh, we're teamed with someone we hate!  We HATE this!!  Ignore everyone else!
 								fFoundHated = TRUE;

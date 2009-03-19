@@ -72,34 +72,34 @@ static void SelectMercFace(void);
 
 void CreateACharacterFromPlayerEnteredStats(void)
 {
-	MERCPROFILESTRUCT* Merc = &gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
+	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
 
-	wcscpy(Merc->zName,     pFullName);
-	wcscpy(Merc->zNickname, pNickName);
+	wcscpy(p.zName,     pFullName);
+	wcscpy(p.zNickname, pNickName);
 
-	Merc->bSex = fCharacterIsMale ? MALE : FEMALE;
+	p.bSex = fCharacterIsMale ? MALE : FEMALE;
 
-	Merc->bLifeMax    = iHealth;
-	Merc->bLife       = iHealth;
-	Merc->bAgility    = iAgility;
-	Merc->bStrength   = iStrength;
-	Merc->bDexterity  = iDexterity;
-	Merc->bWisdom     = iWisdom;
-	Merc->bLeadership = iLeadership;
+	p.bLifeMax    = iHealth;
+	p.bLife       = iHealth;
+	p.bAgility    = iAgility;
+	p.bStrength   = iStrength;
+	p.bDexterity  = iDexterity;
+	p.bWisdom     = iWisdom;
+	p.bLeadership = iLeadership;
 
-	Merc->bMarksmanship = iMarksmanship;
-	Merc->bMedical      = iMedical;
-	Merc->bMechanical   = iMechanical;
-	Merc->bExplosive    = iExplosives;
+	p.bMarksmanship = iMarksmanship;
+	p.bMedical      = iMedical;
+	p.bMechanical   = iMechanical;
+	p.bExplosive    = iExplosives;
 
-	Merc->bPersonalityTrait = iPersonality;
+	p.bPersonalityTrait = iPersonality;
 
-	Merc->bAttitude = iAttitude;
+	p.bAttitude = iAttitude;
 
-	Merc->bExpLevel = 1;
+	p.bExpLevel = 1;
 
 	// set time away
-	Merc->bMercStatus = 0;
+	p.bMercStatus = 0;
 
 	SelectMercFace();
 }
@@ -245,25 +245,25 @@ static void ValidateSkillsList(void)
 {
 	// remove from the generated traits list any traits that don't match
 	// the character's skills
-	MERCPROFILESTRUCT* pProfile = &gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
+	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
 
-	if (pProfile->bMechanical == 0)
+	if (p.bMechanical == 0)
 	{
 		// without mechanical, electronics is useless
 		RemoveSkillFromSkillsList(ELECTRONICS);
 	}
 
 	// special check for lockpicking
-	INT32 iValue = pProfile->bMechanical;
-	iValue = iValue * pProfile->bWisdom    / 100;
-	iValue = iValue * pProfile->bDexterity / 100;
+	INT32 iValue = p.bMechanical;
+	iValue = iValue * p.bWisdom    / 100;
+	iValue = iValue * p.bDexterity / 100;
 	if (iValue + gbSkillTraitBonus[LOCKPICKING] < 50)
 	{
 		// not good enough for lockpicking!
 		RemoveSkillFromSkillsList(LOCKPICKING);
 	}
 
-	if (pProfile->bMarksmanship == 0)
+	if (p.bMarksmanship == 0)
 	{
 		// without marksmanship, the following traits are useless:
 		RemoveSkillFromSkillsList(AUTO_WEAPS);
@@ -383,18 +383,18 @@ static void SetMercSkinAndHairColors(void);
 static void SelectMercFace(void)
 {
 	// this procedure will select the approriate face for the merc and save offsets
-	MERCPROFILESTRUCT* Merc = &gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
+	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
 
 	// now the offsets
-  Merc->ubFaceIndex = 200 + iPortraitNumber;
+  p.ubFaceIndex = 200 + iPortraitNumber;
 
 	// eyes
-	Merc->usEyesX = 0;
-	Merc->usEyesY = 0;
+	p.usEyesX = 0;
+	p.usEyesY = 0;
 
 	// mouth
-	Merc->usMouthX = 0;
-	Merc->usMouthY = 0;
+	p.usMouthX = 0;
+	p.usMouthY = 0;
 
 	// set merc skins and hair color
 	SetMercSkinAndHairColors();
@@ -439,9 +439,9 @@ static void SetMercSkinAndHairColors(void)
 	};
 
 	Assert(iPortraitNumber < lengthof(Colors));
-	MERCPROFILESTRUCT* Merc = &gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
-	strcpy(Merc->HAIR, Colors[iPortraitNumber].Hair);
-	strcpy(Merc->SKIN, Colors[iPortraitNumber].Skin);
+	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+	strcpy(p.HAIR, Colors[iPortraitNumber].Hair);
+	strcpy(p.SKIN, Colors[iPortraitNumber].Skin);
 }
 
 
@@ -454,32 +454,32 @@ void HandleMercStatsForChangesInFace(void)
 
 	CreatePlayerSkills();
 
-	MERCPROFILESTRUCT* Merc = &gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
+	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
 
 	// body type
 	if (fCharacterIsMale)
 	{
 		if (ShouldThisMercHaveABigBody())
 		{
-			Merc->ubBodyType = BIGMALE;
+			p.ubBodyType = BIGMALE;
 			if (iSkillA == MARTIALARTS) iSkillA = HANDTOHAND;
 			if (iSkillB == MARTIALARTS) iSkillB = HANDTOHAND;
 		}
 		else
 		{
-			Merc->ubBodyType = REGMALE;
+			p.ubBodyType = REGMALE;
     }
 	}
 	else
 	{
-		Merc->ubBodyType = REGFEMALE;
+		p.ubBodyType = REGFEMALE;
 		if (iSkillA == MARTIALARTS) iSkillA = HANDTOHAND;
 		if (iSkillB == MARTIALARTS) iSkillB = HANDTOHAND;
 	}
 
 	// skill trait
-	Merc->bSkillTrait  = iSkillA;
-	Merc->bSkillTrait2 = iSkillB;
+	p.bSkillTrait  = iSkillA;
+	p.bSkillTrait2 = iSkillB;
 }
 
 

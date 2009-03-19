@@ -309,7 +309,7 @@ void MercDailyUpdate()
 		if (cnt < AIM_AND_MERC_MERCS && p.bMercStatus != MERC_RETURNING_HOME)
 		{
 			// check if any of his stats improve through working or training
-			HandleUnhiredMercImprovement(&p);
+			HandleUnhiredMercImprovement(p);
 
 			// if he's working on another job
 			if (p.bMercStatus == MERC_WORKING_ELSEWHERE)
@@ -551,7 +551,6 @@ void UpdateBuddyAndHatedCounters( void )
 {
 	INT32									iLoop;
 	UINT8									ubOtherProfileID;
-	MERCPROFILESTRUCT			*pProfile;
 	BOOLEAN								fSameGroupOnly;
 
 	BOOLEAN								fUpdatedTimeTillNextHatedComplaint = FALSE;
@@ -563,7 +562,7 @@ void UpdateBuddyAndHatedCounters( void )
 		//if the merc is active and on a combat assignment
 		if (pSoldier->bAssignment < ON_DUTY)
 		{
-			pProfile = &(gMercProfiles[ pSoldier->ubProfile ]);
+			MERCPROFILESTRUCT& p = GetProfile(pSoldier->ubProfile);
 
 			// if we're moving, we only check vs other people in our squad
 			if (pSoldier->ubGroupID != 0 && PlayerIDGroupInMotion( pSoldier->ubGroupID ))
@@ -611,18 +610,23 @@ void UpdateBuddyAndHatedCounters( void )
 						{
 							case 0:
 							case 1:
-								if (pProfile->bHated[iLoop] == ubOtherProfileID)
+								if (p.bHated[iLoop] == ubOtherProfileID)
 								{
 									// arrgs, we're on assignment with the person we loathe!
-									if ( pProfile->bHatedCount[iLoop] > 0 )
+									if (p.bHatedCount[iLoop] > 0)
 									{
-										pProfile->bHatedCount[iLoop]--;
-										if ( pProfile->bHatedCount[iLoop] == 0 && pSoldier->bInSector && gTacticalStatus.fEnemyInSector )
+										p.bHatedCount[iLoop]--;
+										if (--p.bHatedCount[iLoop] == 0 && pSoldier->bInSector && gTacticalStatus.fEnemyInSector)
 										{
 											// just reduced count to 0 but we have enemy in sector...
-											pProfile->bHatedCount[iLoop] = 1;
+											p.bHatedCount[iLoop] = 1;
 										}
-										else if (pProfile->bHatedCount[iLoop] > 0 && (pProfile->bHatedCount[iLoop] == pProfile->bHatedTime[iLoop] / 2 || ( pProfile->bHatedCount[iLoop] < pProfile->bHatedTime[iLoop] / 2 && pProfile->bHatedCount[iLoop] % TIME_BETWEEN_HATED_COMPLAINTS == 0 ) ) )
+										else if (p.bHatedCount[iLoop] > 0 && (
+												p.bHatedCount[iLoop] == p.bHatedTime[iLoop] / 2 ||
+												(
+													p.bHatedCount[iLoop] < p.bHatedTime[iLoop] / 2 &&
+													p.bHatedCount[iLoop] % TIME_BETWEEN_HATED_COMPLAINTS == 0
+												)))
 										{
 											// complain!
 											if (iLoop == 0)
@@ -635,7 +639,7 @@ void UpdateBuddyAndHatedCounters( void )
 											}
 											StopTimeCompression();
 										}
-										else if ( pProfile->bHatedCount[iLoop] == 0 )
+										else if (p.bHatedCount[iLoop] == 0)
 										{
 											// zero count!
 											if (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC || pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC )
@@ -666,7 +670,7 @@ void UpdateBuddyAndHatedCounters( void )
 												{
 													TacticalCharacterDialogue( pSoldier, QUOTE_HATED_MERC_TWO );
 												}
-												pProfile->ubTimeTillNextHatedComplaint = TIME_BETWEEN_HATED_COMPLAINTS - 1;
+												p.ubTimeTillNextHatedComplaint = TIME_BETWEEN_HATED_COMPLAINTS - 1;
 											}
 										}
 									}
@@ -676,18 +680,18 @@ void UpdateBuddyAndHatedCounters( void )
 										// if it's 0, gripe.
 										if ( !fUpdatedTimeTillNextHatedComplaint )
 										{
-											if ( pProfile->ubTimeTillNextHatedComplaint == 0 )
+											if (p.ubTimeTillNextHatedComplaint == 0)
 											{
-												pProfile->ubTimeTillNextHatedComplaint = TIME_BETWEEN_HATED_COMPLAINTS - 1;
+												p.ubTimeTillNextHatedComplaint = TIME_BETWEEN_HATED_COMPLAINTS - 1;
 											}
 											else
 											{
-												pProfile->ubTimeTillNextHatedComplaint--;
+												p.ubTimeTillNextHatedComplaint--;
 											}
 											fUpdatedTimeTillNextHatedComplaint = TRUE;
 										}
 
-										if ( pProfile->ubTimeTillNextHatedComplaint == 0 )
+										if (p.ubTimeTillNextHatedComplaint == 0)
 										{
 											// complain!
 											if (iLoop == 0)
@@ -703,27 +707,32 @@ void UpdateBuddyAndHatedCounters( void )
 								}
 								break;
 							case 2:
-								if (pProfile->bLearnToHate == ubOtherProfileID)
+								if (p.bLearnToHate == ubOtherProfileID)
 								{
-									if ( pProfile->bLearnToHateCount > 0 )
+									if (p.bLearnToHateCount > 0)
 									{
-										pProfile->bLearnToHateCount--;
-										if ( pProfile->bLearnToHateCount == 0 && pSoldier->bInSector && gTacticalStatus.fEnemyInSector )
+										p.bLearnToHateCount--;
+										if (p.bLearnToHateCount == 0 && pSoldier->bInSector && gTacticalStatus.fEnemyInSector)
 										{
 											// just reduced count to 0 but we have enemy in sector...
-											pProfile->bLearnToHateCount = 1;
+											p.bLearnToHateCount = 1;
 										}
-										else if (pProfile->bLearnToHateCount > 0 && (pProfile->bLearnToHateCount == pProfile->bLearnToHateTime / 2 || pProfile->bLearnToHateCount < pProfile->bLearnToHateTime / 2 && pProfile->bLearnToHateCount % TIME_BETWEEN_HATED_COMPLAINTS == 0 ) )
+										else if (p.bLearnToHateCount > 0 && (
+												p.bLearnToHateCount == p.bLearnToHateTime / 2 ||
+												(
+													p.bLearnToHateCount < p.bLearnToHateTime / 2 &&
+													p.bLearnToHateCount % TIME_BETWEEN_HATED_COMPLAINTS == 0
+												)))
 										{
 											// complain!
 											TacticalCharacterDialogue( pSoldier, QUOTE_LEARNED_TO_HATE_MERC );
 											StopTimeCompression();
 										}
-										else if (pProfile->bLearnToHateCount == 0)
+										else if (p.bLearnToHateCount == 0)
 										{
 											// set as bHated[2];
-											pProfile->bHated[2] = pProfile->bLearnToHate;
-											pProfile->bMercOpinion[ubOtherProfileID] = HATED_OPINION;
+											p.bHated[2] = p.bLearnToHate;
+											p.bMercOpinion[ubOtherProfileID] = HATED_OPINION;
 
 											if (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC || (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC && (pSoldier->ubProfile == DEVIN || pSoldier->ubProfile == SLAY || pSoldier->ubProfile == IGGY || pSoldier->ubProfile == CONRAD ) ) )
 											{
@@ -740,28 +749,28 @@ void UpdateBuddyAndHatedCounters( void )
 											}
 
 										}
-										if (pProfile->bLearnToHateCount < pProfile->bLearnToHateTime / 2)
+										if (p.bLearnToHateCount < p.bLearnToHateTime / 2)
 										{
 											// gradual opinion drop
-											pProfile->bMercOpinion[ubOtherProfileID] += (HATED_OPINION - pProfile->bMercOpinion[ubOtherProfileID]) / (pProfile->bLearnToHateCount + 1);
+											p.bMercOpinion[ubOtherProfileID] += (HATED_OPINION - p.bMercOpinion[ubOtherProfileID]) / (p.bLearnToHateCount + 1);
 										}
 									}
 									else
 									{
 										if ( !fUpdatedTimeTillNextHatedComplaint )
 										{
-											if ( pProfile->ubTimeTillNextHatedComplaint == 0 )
+											if (p.ubTimeTillNextHatedComplaint == 0)
 											{
-												pProfile->ubTimeTillNextHatedComplaint = TIME_BETWEEN_HATED_COMPLAINTS - 1;
+												p.ubTimeTillNextHatedComplaint = TIME_BETWEEN_HATED_COMPLAINTS - 1;
 											}
 											else
 											{
-												pProfile->ubTimeTillNextHatedComplaint--;
+												p.ubTimeTillNextHatedComplaint--;
 											}
 											fUpdatedTimeTillNextHatedComplaint = TRUE;
 										}
 
-										if ( pProfile->ubTimeTillNextHatedComplaint == 0 )
+										if (p.ubTimeTillNextHatedComplaint == 0)
 										{
 											// complain!
 											TacticalCharacterDialogue( pSoldier, QUOTE_LEARNED_TO_HATE_MERC );
@@ -770,19 +779,19 @@ void UpdateBuddyAndHatedCounters( void )
 								}
 								break;
 							case 3:
-								if (pProfile->bLearnToLikeCount > 0	&& pProfile->bLearnToLike == ubOtherProfileID)
+								if (p.bLearnToLikeCount > 0	&& p.bLearnToLike == ubOtherProfileID)
 								{
-									pProfile->bLearnToLikeCount--;
-									if (pProfile->bLearnToLikeCount == 0)
+									p.bLearnToLikeCount--;
+									if (p.bLearnToLikeCount == 0)
 									{
 										// add to liked!
-										pProfile->bBuddy[2] = pProfile->bLearnToLike;
-										pProfile->bMercOpinion[ubOtherProfileID] = BUDDY_OPINION;
+										p.bBuddy[2] = p.bLearnToLike;
+										p.bMercOpinion[ubOtherProfileID] = BUDDY_OPINION;
 									}
-									else if (pProfile->bLearnToLikeCount < pProfile->bLearnToLikeTime / 2)
+									else if (p.bLearnToLikeCount < p.bLearnToLikeTime / 2)
 									{
 										// increase opinion of them!
-										pProfile->bMercOpinion[ubOtherProfileID] += (BUDDY_OPINION - pProfile->bMercOpinion[ubOtherProfileID]) / (pProfile->bLearnToLikeCount + 1);
+										p.bMercOpinion[ubOtherProfileID] += (BUDDY_OPINION - p.bMercOpinion[ubOtherProfileID]) / (p.bLearnToLikeCount + 1);
 										break;
 									}
 								}

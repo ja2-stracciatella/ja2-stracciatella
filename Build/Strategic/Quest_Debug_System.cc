@@ -3013,11 +3013,11 @@ static void RefreshAllNPCInventory(void)
 				//null out the items in the npc inventory
 				memset(&s->inv[usItemCnt], 0, sizeof(s->inv[usItemCnt]));
 
-				const MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
-				if (p->inv[usItemCnt] != NOTHING)
+				MERCPROFILESTRUCT const& p = GetProfile(s->ubProfile);
+				if (p.inv[usItemCnt] != NOTHING)
 				{
 					//get the item
-					usItem = p->inv[usItemCnt];
+					usItem = p.inv[usItemCnt];
 
 					//Create the object
 					CreateItem( usItem, 100, &TempObject );

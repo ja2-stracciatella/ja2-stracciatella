@@ -60,7 +60,7 @@ enum
 
 void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason);
 
-void HandleUnhiredMercImprovement( MERCPROFILESTRUCT *pProfile );
+void HandleUnhiredMercImprovement(MERCPROFILESTRUCT&);
 void HandleUnhiredMercDeaths( INT32 iProfileID );
 
 UINT8 CurrentPlayerProgressPercentage(void);

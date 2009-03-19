@@ -154,8 +154,8 @@ enum CharacterEvolution
 	DEVOLVE,
 };
 
-#define BUDDY_MERC( prof, bud ) ((prof)->bBuddy[0] == (bud) || (prof)->bBuddy[1] == (bud) || (prof)->bBuddy[2] == (bud) )
-#define HATED_MERC( prof, hat ) ((prof)->bHated[0] == (hat) || (prof)->bHated[1] == (hat) || (prof)->bHated[2] == (hat) )
+#define BUDDY_MERC(prof, bud) ((prof).bBuddy[0] == (bud) || (prof).bBuddy[1] == (bud) || (prof).bBuddy[2] == (bud))
+#define HATED_MERC(prof, hat) ((prof).bHated[0] == (hat) || (prof).bHated[1] == (hat) || (prof).bHated[2] == (hat))
 
 #define BUDDY_OPINION +25
 #define HATED_OPINION -25

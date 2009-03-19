@@ -3876,19 +3876,16 @@ static BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP* pGroup
 static BOOLEAN WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
 	UINT8									ubProfile;
-	MERCPROFILESTRUCT *		pProfile;
 	BOOLEAN fFoundSomebody = FALSE;
 
 
 	for ( ubProfile = FIRST_RPC; ubProfile < NUM_PROFILES; ubProfile++ )
 	{
-		pProfile = &gMercProfiles[ ubProfile ];
+		MERCPROFILESTRUCT const& p = GetProfile(ubProfile);
 
 		// skip stiffs
-		if ( ( pProfile->bMercStatus == MERC_IS_DEAD ) || ( pProfile->bLife <= 0 ) )
-		{
-			continue;
-		}
+		if (p.bMercStatus == MERC_IS_DEAD) continue;
+		if (p.bLife <= 0)                  continue;
 
  		// skip vehicles
 		if ( ubProfile >= PROF_HUMMER && ubProfile <= PROF_HELICOPTER )
@@ -3897,11 +3894,11 @@ static BOOLEAN WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 sSectorX, 
 		}
 
 		// in this sector?
-		if ( pProfile->sSectorX == sSectorX && pProfile->sSectorY == sSectorY && pProfile->bSectorZ == bSectorZ )
+		if (p.sSectorX == sSectorX && p.sSectorY == sSectorY && p.bSectorZ == bSectorZ)
 		{
 			// if we haven't talked to him yet, and he's not currently recruired/escorted by player (!)
-			if ( ( pProfile->ubLastDateSpokenTo == 0 ) &&
-					!(pProfile->ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE) ) )
+			if (p.ubLastDateSpokenTo == 0 &&
+					!(p.ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE)))
 			{
 				// then this is a guy we need to stop for...
 				fFoundSomebody = TRUE;

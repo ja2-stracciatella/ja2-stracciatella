@@ -485,18 +485,16 @@ UINT8 CalcDesireToTalk(UINT8 const ubNPC, UINT8 const ubMerc, Approach const bAp
 	INT32 iWillingness;
 	INT32	iPersonalVal, iTownVal, iApproachVal;
 	INT32 iEffectiveLeadership;
-	MERCPROFILESTRUCT * pNPCProfile;
-	MERCPROFILESTRUCT * pMercProfile;
 
-	pNPCProfile = &(gMercProfiles[ubNPC]);
-	pMercProfile = &(gMercProfiles[ubMerc]);
+	MERCPROFILESTRUCT const& pNPCProfile  = GetProfile(ubNPC);
+	MERCPROFILESTRUCT const& pMercProfile = GetProfile(ubMerc);
 
-	iPersonalVal = 50 + pNPCProfile->bMercOpinion[ubMerc];
+	iPersonalVal = 50 + pNPCProfile.bMercOpinion[ubMerc];
 
 	// ARM: NOTE - for towns which don't use loyalty (San Mona, Estoni, Tixa, Orta )
 	// loyalty will always remain 0 (this was OKed by Ian)
-	iTownVal = gTownLoyalty[ pNPCProfile->bTown ].ubRating;
-	iTownVal = iTownVal * pNPCProfile->bTownAttachment / 100;
+	iTownVal = gTownLoyalty[pNPCProfile.bTown].ubRating;
+	iTownVal = iTownVal * pNPCProfile.bTownAttachment / 100;
 
 	if (bApproach == NPC_INITIATING_CONV || bApproach == APPROACH_GIVINGITEM )
 	{
@@ -504,18 +502,18 @@ UINT8 CalcDesireToTalk(UINT8 const ubNPC, UINT8 const ubMerc, Approach const bAp
 	}
 	else if ( bApproach == APPROACH_THREATEN )
 	{
-		iEffectiveLeadership = CalcThreateningEffectiveness( ubMerc ) * pMercProfile->usApproachFactor[bApproach - 1] / 100;
-		iApproachVal = pNPCProfile->ubApproachVal[bApproach - 1] * iEffectiveLeadership / 50;
+		iEffectiveLeadership = CalcThreateningEffectiveness(ubMerc) * pMercProfile.usApproachFactor[bApproach - 1] / 100;
+		iApproachVal = pNPCProfile.ubApproachVal[bApproach - 1] * iEffectiveLeadership / 50;
 	}
 	else
 	{
-		iEffectiveLeadership = ((INT32) pMercProfile->bLeadership) * pMercProfile->usApproachFactor[bApproach - 1] / 100;
-		iApproachVal = pNPCProfile->ubApproachVal[bApproach - 1] * iEffectiveLeadership / 50;
+		iEffectiveLeadership = (INT32)pMercProfile.bLeadership * pMercProfile.usApproachFactor[bApproach - 1] / 100;
+		iApproachVal = pNPCProfile.ubApproachVal[bApproach - 1] * iEffectiveLeadership / 50;
 	}
 	// NB if town attachment is less than 100% then we should make personal value proportionately more important!
-	if ( pNPCProfile->bTownAttachment < 100 )
+	if (pNPCProfile.bTownAttachment < 100)
 	{
-		iPersonalVal = iPersonalVal * (100 + (100 - pNPCProfile->bTownAttachment) ) / 100;
+		iPersonalVal = iPersonalVal * (100 + (100 - pNPCProfile.bTownAttachment) ) / 100;
 	}
 	iWillingness = (iPersonalVal / 2 + iTownVal / 2) * iApproachVal	/ 100;
 
@@ -1066,19 +1064,11 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 {
 	//This function looks at a quote and determines if conditions for it have been met.
 	// Returns 0 if none , 1 if one is found
-	MERCPROFILESTRUCT *		pNPCProfile;
 	NPCQuoteInfo *				pNPCQuoteInfo;
 	UINT32								uiDay;
 	BOOLEAN								fTrue;
 
-	if ( ubNPC == NO_PROFILE )
-	{
-		pNPCProfile = NULL;
-	}
-	else
-	{
-		pNPCProfile = &(gMercProfiles[ubNPC]);
-	}
+	MERCPROFILESTRUCT const* const pNPCProfile = ubNPC != NO_PROFILE ? &GetProfile(ubNPC) : 0;
 
 	// How much do we want to talk with this merc?
 	uiDay = GetWorldDay();
@@ -1382,7 +1372,6 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 {
 	NPCQuoteInfo					QuoteInfo;
 	NPCQuoteInfo *				pQuotePtr = &(QuoteInfo);
-	MERCPROFILESTRUCT *		pProfile=NULL;
 	UINT8									ubLoop, ubQuoteNum, ubRecordNum;
 	UINT32								uiDay;
 
@@ -1417,7 +1406,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 		return;
 	}
 
-	pProfile = &(gMercProfiles[ubNPC]);
+	MERCPROFILESTRUCT& p = GetProfile(ubNPC);
 	switch( bApproach )
 	{
 		case NPC_INITIAL_QUOTE:
@@ -1436,13 +1425,13 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 			// this '1' value is a dummy....
 			NPCDoAction( ubNPC, NPC_ACTION_TURN_TO_FACE_NEAREST_MERC, 1 );
 
-			if (pProfile->ubLastDateSpokenTo > 0)
+			if (p.ubLastDateSpokenTo > 0)
 			{
 				uiDay = GetWorldDay();
 #ifdef JA2DEMO
-				if (pProfile->ubLastDateSpokenTo == 199)
+				if (p.ubLastDateSpokenTo == 199)
 #else
-				if (uiDay > pProfile->ubLastDateSpokenTo)
+				if (uiDay > p.ubLastDateSpokenTo)
 #endif
 				{
 					NPCConsiderTalking( ubNPC, ubMerc, APPROACH_SPECIAL_INITIAL_QUOTE, 0, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum );
@@ -1488,8 +1477,8 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 				ubQuoteNum = QUOTE_INTRO;
 			}
 			TalkingMenuDialogue( ubQuoteNum );
-			pProfile->ubLastQuoteSaid = ubQuoteNum;
-			pProfile->bLastQuoteSaidWasSpecial = FALSE;
+			p.ubLastQuoteSaid          = ubQuoteNum;
+			p.bLastQuoteSaidWasSpecial = FALSE;
 			break;
 		case NPC_WHOAREYOU:
 			ubQuoteNum = QUOTE_INTRO;
@@ -1497,16 +1486,16 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 			// For now, DO NOT remember for 'Come again?'
 			break;
 		case APPROACH_REPEAT:
-			if (pProfile->ubLastQuoteSaid == NO_QUOTE)
+			if (p.ubLastQuoteSaid == NO_QUOTE)
 			{
 				// this should never occur now!
 				TalkingMenuDialogue( QUOTE_INTRO );
 			}
 			else
 			{
-				if (pProfile->bLastQuoteSaidWasSpecial)
+				if (p.bLastQuoteSaidWasSpecial)
 				{
-					pQuotePtr = &(pNPCQuoteInfoArray[pProfile->ubLastQuoteSaid]);
+					pQuotePtr = &(pNPCQuoteInfoArray[p.ubLastQuoteSaid]);
 					// say quote and following consecutive quotes
 					for (ubLoop = 0; ubLoop < pQuotePtr->ubNumQuotes; ubLoop++)
 					{
@@ -1516,7 +1505,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 				}
 				else
 				{
-					TalkingMenuDialogue( pProfile->ubLastQuoteSaid );
+					TalkingMenuDialogue(p.ubLastQuoteSaid);
 				}
 			}
 			break;
@@ -1525,10 +1514,10 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 			{
 				case APPROACH_GIVINGITEM:
 					// first start by triggering any introduction quote if there is one...
-					if ( pProfile->ubLastDateSpokenTo > 0)
+					if (p.ubLastDateSpokenTo > 0)
 					{
 						uiDay = GetWorldDay();
-						if (uiDay > pProfile->ubLastDateSpokenTo)
+						if (uiDay > p.ubLastDateSpokenTo)
 						{
 							NPCConsiderTalking( ubNPC, ubMerc, APPROACH_SPECIAL_INITIAL_QUOTE, 0, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum );
 							if (pQuotePtr != NULL)
@@ -1574,47 +1563,47 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 				switch( bApproach )
 				{
 					case APPROACH_FRIENDLY:
-						if (pProfile->bFriendlyOrDirectDefaultResponseUsedRecently)
+						if (p.bFriendlyOrDirectDefaultResponseUsedRecently)
 						{
 							ubQuoteNum = QUOTE_GETLOST;
 						}
 						else
 						{
 							ubQuoteNum = QUOTE_FRIENDLY_DEFAULT1 + (UINT8) Random( 2 );
-							pProfile->bFriendlyOrDirectDefaultResponseUsedRecently = TRUE;
+							p.bFriendlyOrDirectDefaultResponseUsedRecently = TRUE;
 						}
 						break;
 					case APPROACH_DIRECT:
-						if (pProfile->bFriendlyOrDirectDefaultResponseUsedRecently)
+						if (p.bFriendlyOrDirectDefaultResponseUsedRecently)
 						{
 							ubQuoteNum = QUOTE_GETLOST;
 						}
 						else
 						{
 							ubQuoteNum = QUOTE_DIRECT_DEFAULT;
-							pProfile->bFriendlyOrDirectDefaultResponseUsedRecently = TRUE;
+							p.bFriendlyOrDirectDefaultResponseUsedRecently = TRUE;
 						}
 						break;
 					case APPROACH_THREATEN:
-						if (pProfile->bThreatenDefaultResponseUsedRecently)
+						if (p.bThreatenDefaultResponseUsedRecently)
 						{
 							ubQuoteNum = QUOTE_GETLOST;
 						}
 						else
 						{
 							ubQuoteNum = QUOTE_THREATEN_DEFAULT;
-							pProfile->bThreatenDefaultResponseUsedRecently = TRUE;
+							p.bThreatenDefaultResponseUsedRecently = TRUE;
 						}
 						break;
 					case APPROACH_RECRUIT:
-						if (pProfile->bRecruitDefaultResponseUsedRecently)
+						if (p.bRecruitDefaultResponseUsedRecently)
 						{
 							ubQuoteNum = QUOTE_GETLOST;
 						}
 						else
 						{
 							ubQuoteNum = QUOTE_RECRUIT_NO;
-							pProfile->bRecruitDefaultResponseUsedRecently = TRUE;
+							p.bRecruitDefaultResponseUsedRecently = TRUE;
 						}
 						break;
 					case APPROACH_GIVINGITEM:
@@ -1632,8 +1621,8 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 						break;
 				}
 				TalkingMenuDialogue( ubQuoteNum );
-				pProfile->ubLastQuoteSaid = ubQuoteNum;
-				pProfile->bLastQuoteSaidWasSpecial = FALSE;
+				p.ubLastQuoteSaid          = ubQuoteNum;
+				p.bLastQuoteSaidWasSpecial = FALSE;
 				if (ubQuoteNum == QUOTE_GETLOST)
 				{
 					if (ubNPC == 70 || ubNPC == 120)
@@ -1695,8 +1684,8 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 					{
 						TalkingMenuDialogue( (UINT8)( pQuotePtr->ubQuoteNum + ubLoop  ) );
 					}
-					pProfile->ubLastQuoteSaid = ubRecordNum;
-					pProfile->bLastQuoteSaidWasSpecial = TRUE;
+					p.ubLastQuoteSaid          = ubRecordNum;
+					p.bLastQuoteSaidWasSpecial = TRUE;
 				}
 				// set to "said" if we should do so
 				if (pQuotePtr->fFlags & QUOTE_FLAG_ERASE_ONCE_SAID || pQuotePtr->fFlags & QUOTE_FLAG_SAY_ONCE_PER_CONVO)
@@ -1952,7 +1941,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 		case APPROACH_DECLARATION_OF_HOSTILITY:
 		case APPROACH_INITIAL_QUOTE:
 		case APPROACH_GIVINGITEM:
-			pProfile->ubLastDateSpokenTo = (UINT8) GetWorldDay();
+			p.ubLastDateSpokenTo = (UINT8)GetWorldDay();
 			break;
 		default:
 			break;

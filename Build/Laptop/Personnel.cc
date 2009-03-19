@@ -726,15 +726,15 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 	INT16 sX;
 	INT16 sY;
 
-	const MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
-	const BOOLEAN fAmIaRobot = AM_A_ROBOT(s);
+	MERCPROFILESTRUCT const& p          = GetProfile(s->ubProfile);
+	BOOLEAN           const  fAmIaRobot = AM_A_ROBOT(s);
 
 	// Health
 	if (s->bAssignment != ASSIGNMENT_POW)
 	{
-		if (p->bLifeDelta > 0)
+		if (p.bLifeDelta > 0)
 		{
-			swprintf(sString, lengthof(sString), L"( %+d )", p->bLifeDelta);
+			swprintf(sString, lengthof(sString), L"( %+d )", p.bLifeDelta);
 			FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
 			MPrint(sX, pers_stat_y[0], sString);
 		}
@@ -761,32 +761,32 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 	}
 	else
 	{
-		PrintStatWithDelta( 1, p->bAgility,      p->bAgilityDelta);
-		PrintStatWithDelta( 2, p->bDexterity,    p->bDexterityDelta);
-		PrintStatWithDelta( 3, p->bStrength,     p->bStrengthDelta);
-		PrintStatWithDelta( 4, p->bLeadership,   p->bLeadershipDelta);
-		PrintStatWithDelta( 5, p->bWisdom,       p->bWisdomDelta);
-		PrintStatWithDelta( 6, p->bExpLevel,     p->bExpLevelDelta);
-		PrintStatWithDelta( 7, p->bMarksmanship, p->bMarksmanshipDelta);
-		PrintStatWithDelta( 8, p->bMechanical,   p->bMechanicDelta);
-		PrintStatWithDelta( 9, p->bExplosive,    p->bExplosivesDelta);
-		PrintStatWithDelta(10, p->bMedical,      p->bMedicalDelta);
+		PrintStatWithDelta( 1, p.bAgility,      p.bAgilityDelta);
+		PrintStatWithDelta( 2, p.bDexterity,    p.bDexterityDelta);
+		PrintStatWithDelta( 3, p.bStrength,     p.bStrengthDelta);
+		PrintStatWithDelta( 4, p.bLeadership,   p.bLeadershipDelta);
+		PrintStatWithDelta( 5, p.bWisdom,       p.bWisdomDelta);
+		PrintStatWithDelta( 6, p.bExpLevel,     p.bExpLevelDelta);
+		PrintStatWithDelta( 7, p.bMarksmanship, p.bMarksmanshipDelta);
+		PrintStatWithDelta( 8, p.bMechanical,   p.bMechanicDelta);
+		PrintStatWithDelta( 9, p.bExplosive,    p.bExplosivesDelta);
+		PrintStatWithDelta(10, p.bMedical,      p.bMedicalDelta);
 	}
 
-	PrintStat(p->usKills,   pers_stat_y[21], pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
-	PrintStat(p->usAssists, pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
+	PrintStat(p.usKills,   pers_stat_y[21], pPersonnelScreenStrings[PRSNL_TXT_KILLS]);
+	PrintStat(p.usAssists, pers_stat_y[22], pPersonnelScreenStrings[PRSNL_TXT_ASSISTS]);
 
 	// Shots/hits
 	MPrint(pers_stat_x, pers_stat_y[23], pPersonnelScreenStrings[PRSNL_TXT_HIT_PERCENTAGE]);
 	// check we have shot at least once
-	const UINT32 fired = p->usShotsFired;
-	const UINT32 hits  = (fired > 0 ? 100 * p->usShotsHit / fired : 0);
+	const UINT32 fired = p.usShotsFired;
+	const UINT32 hits  = (fired > 0 ? 100 * p.usShotsHit / fired : 0);
 	swprintf(sString, lengthof(sString), L"%d %%", hits);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 	MPrint(sX, pers_stat_y[23], sString);
 
-	PrintStat(p->usBattlesFought, pers_stat_y[24], pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
-	PrintStat(p->usTimesWounded,  pers_stat_y[25], pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
+	PrintStat(p.usBattlesFought, pers_stat_y[24], pPersonnelScreenStrings[PRSNL_TXT_BATTLES]);
+	PrintStat(p.usTimesWounded,  pers_stat_y[25], pPersonnelScreenStrings[PRSNL_TXT_TIMES_WOUNDED]);
 
 	//Display the 'Skills' text
 	MPrint(pers_stat_x, pers_stat_y[19], pPersonnelScreenStrings[PRSNL_TXT_SKILLS]);
@@ -802,8 +802,8 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 
 	if (!fAmIaRobot)
 	{
-		INT8 bSkill1 = p->bSkillTrait;
-		INT8 bSkill2 = p->bSkillTrait2;
+		INT8 bSkill1 = p.bSkillTrait;
+		INT8 bSkill2 = p.bSkillTrait2;
 
 		if (bSkill1 == NO_SKILLTRAIT)
 		{
@@ -1415,19 +1415,19 @@ static void DisplayCostOfCurrentTeam(void)
 
 		// valid soldier, get cost
 		INT32 cost;
-		const MERCPROFILESTRUCT* const p = &gMercProfiles[s->ubProfile];
+		MERCPROFILESTRUCT const& p = GetProfile(s->ubProfile);
 		switch (s->ubWhatKindOfMercAmI)
 		{
 			case MERC_TYPE__AIM_MERC:
 				switch (s->bTypeOfLastContract)
 				{
-					case CONTRACT_EXTEND_2_WEEK: cost = p->uiBiWeeklySalary / 14; break;
-					case CONTRACT_EXTEND_1_WEEK: cost = p->uiWeeklySalary   /  7; break;
-					default:                     cost = p->sSalary;               break;
+					case CONTRACT_EXTEND_2_WEEK: cost = p.uiBiWeeklySalary / 14; break;
+					case CONTRACT_EXTEND_1_WEEK: cost = p.uiWeeklySalary   /  7; break;
+					default:                     cost = p.sSalary;               break;
 				}
 				break;
 
-			default: cost = p->sSalary; break;
+			default: cost = p.sSalary; break;
 		}
 
 		if (cost > max_cost) max_cost = cost;
@@ -1552,31 +1552,31 @@ static void DisplayTeamStats(void)
 					if (id == -1) continue;
 
 					INT32 val; // XXX HACK000E
-					const MERCPROFILESTRUCT* const p = &gMercProfiles[id];
+					MERCPROFILESTRUCT const& p = GetProfile(id);
 					switch (stat)
 					{
-						case  0: val = p->bLifeMax;      break;
-						case  1: val = p->bAgility;      break;
-						case  2: val = p->bDexterity;    break;
-						case  3: val = p->bStrength;     break;
-						case  4: val = p->bLeadership;   break;
-						case  5: val = p->bWisdom;       break;
-						case  6: val = p->bExpLevel;     break;
-						case  7: val = p->bMarksmanship; break;
-						case  8: val = p->bMechanical;   break;
-						case  9: val = p->bExplosive;    break;
-						case 10: val = p->bMedical;      break;
+						case  0: val = p.bLifeMax;      break;
+						case  1: val = p.bAgility;      break;
+						case  2: val = p.bDexterity;    break;
+						case  3: val = p.bStrength;     break;
+						case  4: val = p.bLeadership;   break;
+						case  5: val = p.bWisdom;       break;
+						case  6: val = p.bExpLevel;     break;
+						case  7: val = p.bMarksmanship; break;
+						case  8: val = p.bMechanical;   break;
+						case  9: val = p.bExplosive;    break;
+						case 10: val = p.bMedical;      break;
 
 						default: abort(); // HACK000E
 					}
 					if (min_val >= val)
 					{
-						min_name = p->zNickname;
+						min_name = p.zNickname;
 						min_val  = val;
 					}
 					if (max_val <= val)
 					{
-						max_name = p->zNickname;
+						max_name = p.zNickname;
 						max_val = val;
 					}
 					sum_val += val;
@@ -2471,7 +2471,7 @@ static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 	wchar_t sStringA[50];
 	INT16 sX, sY;
 
-	const MERCPROFILESTRUCT* p = &gMercProfiles[s->ubProfile];
+	MERCPROFILESTRUCT const& p = GetProfile(s->ubProfile);
 
 	// display the stats for a char
 	for (INT32 i = 0; i < MAX_STATS; i++)
@@ -2526,14 +2526,14 @@ static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 			case 1: // total contract time served
 				MPrint(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_TOTAL_SERVICE]);
 				//./DEF 2/4/99: total service days used to be calced as 'days -1'
-				swprintf(sString, lengthof(sString), L"%d %ls", p->usTotalDaysServed, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
+				swprintf(sString, lengthof(sString), L"%d %ls", p.usTotalDaysServed, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 				FindFontRightCoordinates(pers_stat_data_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 				MPrint(sX, pers_stat_y[i], sString);
 				break;
 
 			case 3: // cost (PRSNL_TXT_TOTAL_COST)
 			{
-				SPrintMoney(sString, p->uiTotalCostToDate);
+				SPrintMoney(sString, p.uiTotalCostToDate);
 				FindFontRightCoordinates(pers_stat_data_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 				MPrint(pers_stat_x, pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_TOTAL_COST]);
 
@@ -2546,13 +2546,13 @@ static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 					case MERC_TYPE__AIM_MERC:
 						switch (s->bTypeOfLastContract)
 						{
-							case CONTRACT_EXTEND_2_WEEK: salary = p->uiBiWeeklySalary / 14; break;
-							case CONTRACT_EXTEND_1_WEEK: salary = p->uiWeeklySalary   /  7; break;
-							default:                     salary = p->sSalary;               break;
+							case CONTRACT_EXTEND_2_WEEK: salary = p.uiBiWeeklySalary / 14; break;
+							case CONTRACT_EXTEND_1_WEEK: salary = p.uiWeeklySalary   /  7; break;
+							default:                     salary = p.sSalary;               break;
 						}
 						break;
 
-					default: salary = p->sSalary; break;
+					default: salary = p.sSalary; break;
 				}
 
 				SPrintMoney(sStringA, salary);
@@ -2571,12 +2571,12 @@ static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 				if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
 				{
 					MPrint(pers_stat_x, pers_stat_y[i - 1], pPersonnelScreenStrings[PRSNL_TXT_UNPAID_AMOUNT]);
-					SPrintMoney(sString, p->sSalary * p->iMercMercContractLength);
+					SPrintMoney(sString, p.sSalary * p.iMercMercContractLength);
 				}
 				else
 				{
 					MPrint(pers_stat_x, pers_stat_y[i - 1], pPersonnelScreenStrings[PRSNL_TXT_MED_DEPOSIT]);
-					SPrintMoney(sString, p->sMedicalDepositAmount);
+					SPrintMoney(sString, p.sMedicalDepositAmount);
 				}
 				FindFontRightCoordinates(pers_stat_data_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 				MPrint(sX, pers_stat_y[i - 1], sString);
