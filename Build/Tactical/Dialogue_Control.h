@@ -267,6 +267,8 @@ extern FACETYPE* gpCurrentTalkingFace;
 
 extern MercPopUpBox* g_dialogue_box;
 
+extern BOOLEAN gfFacePanelActive;
+
 
 class DialogueEvent
 {

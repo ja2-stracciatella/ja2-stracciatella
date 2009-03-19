@@ -70,8 +70,6 @@ BOOLEAN fDisableJustForIan = FALSE;
 static BOOLEAN fScrollMessagesHidden = FALSE;
 static UINT32  uiStartOfPauseTime = 0;
 
-extern BOOLEAN gfFacePanelActive;
-
 
 static ScrollStringSt* AddString(const wchar_t* pString, UINT16 usColor, BOOLEAN fStartOfNewString)
 {

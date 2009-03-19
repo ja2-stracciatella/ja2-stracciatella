@@ -1698,23 +1698,7 @@ try
 
 		if( gpCurrentTalkingFace != NULL )
 		{
-			// GO FROM GAMESCREEN TO MAPSCREEN
-			// REMOVE OLD UI
-			// Set face inactive!
-			//gpCurrentTalkingFace->fCanHandleInactiveNow = TRUE;
-			//SetAutoFaceInActive( gpCurrentTalkingFace->iID );
-			//gfFacePanelActive = FALSE;
-
-
-			// make him continue talking
 			ContinueDialogue(gpCurrentTalkingFace->soldier, FALSE);
-
-			// reset diabled flag
-			//gpCurrentTalkingFace->fDisabled = FALSE;
-
-			// Continue his talking!
-
-
 		}
 
 		fOneFrame = FALSE;

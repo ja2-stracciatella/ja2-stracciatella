@@ -428,7 +428,6 @@ static INT32 giHaveSelectedNPC  = -1; // If it is not the first time in, dont re
 static INT32        giSelectedMercCurrentQuote = -1;
 static SOLDIERTYPE* gTalkingMercSoldier        = NULL;
 static BOOLEAN      gfPauseTalkingMercPopup    = FALSE;
-extern BOOLEAN gfFacePanelActive;
 static BOOLEAN gfAddNpcToTeam                 = FALSE;
 static BOOLEAN gfRpcToSaySectorDesc           = FALSE;
 static BOOLEAN gfNpcPanelIsUsedForTalkingMerc = FALSE;
@@ -3155,17 +3154,6 @@ static void HandleQDSTalkingMerc(void)
 
 		//Redraw the screen
 		gfRedrawQuestDebugSystem = TRUE;
-	}
-	else
-	{
-/*
-		//as soon as the panel is no longer active, refresh the screen
-		if (!gfFacePanelActive)
-		{
-			//Redraw the screen
-			gfRedrawQuestDebugSystem = TRUE;
-		}
-*/
 	}
 }
 
