@@ -546,257 +546,209 @@ void MercComplainAboutEquipment( UINT8 ubProfile )
 }
 
 
-
-void UpdateBuddyAndHatedCounters( void )
+void UpdateBuddyAndHatedCounters(void)
 {
-	INT32									iLoop;
-	UINT8									ubOtherProfileID;
-	BOOLEAN								fSameGroupOnly;
-
-	BOOLEAN								fUpdatedTimeTillNextHatedComplaint = FALSE;
-
-	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		fSameGroupOnly = FALSE;
+		// If the merc is active and on a combat assignment
+		if (s->bAssignment >= ON_DUTY) continue;
 
-		//if the merc is active and on a combat assignment
-		if (pSoldier->bAssignment < ON_DUTY)
+		MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
+
+		// If we're moving, we only check vs other people in our squad
+		bool const same_group_only =
+			s->ubGroupID != 0 && PlayerIDGroupInMotion(s->ubGroupID);
+
+		bool fUpdatedTimeTillNextHatedComplaint = false;
+
+		CFOR_ALL_IN_TEAM(other, gbPlayerNum)
 		{
-			MERCPROFILESTRUCT& p = GetProfile(pSoldier->ubProfile);
-
-			// if we're moving, we only check vs other people in our squad
-			if (pSoldier->ubGroupID != 0 && PlayerIDGroupInMotion( pSoldier->ubGroupID ))
+			// Is this guy in the same sector and on active duty (or in the same moving group)
+			if (other != s && other->bAssignment < ON_DUTY)
 			{
-				fSameGroupOnly = TRUE;
-			}
+				if (same_group_only)
+				{ // All we have to check is the group ID
+					if (s->ubGroupID != other->ubGroupID) continue;
+				}
+				else
+				{ // Check to see if the location is the same
+					if (other->sSectorX != s->sSectorX) continue;
+					if (other->sSectorY != s->sSectorY) continue;
+					if (other->bSectorZ != s->bSectorZ) continue;
 
-			fUpdatedTimeTillNextHatedComplaint = FALSE;
+					// if the OTHER soldier is in motion then we don't do anything!
+					if (other->ubGroupID != 0 && PlayerIDGroupInMotion(other->ubGroupID))
+					{
+						continue;
+					}
+				}
 
-			CFOR_ALL_IN_TEAM(pOtherSoldier, gbPlayerNum)
-			{
-				// is this guy in the same sector and on active duty (or in the same moving group)
-				if (pOtherSoldier != pSoldier && pOtherSoldier->bAssignment < ON_DUTY)
+				ProfileID const ubOtherProfileID = other->ubProfile;
+
+				for (INT32 i = 0; i < 4; ++i)
 				{
-					if (fSameGroupOnly)
+					switch (i)
 					{
-						// all we have to check is the group ID
-						if (pSoldier->ubGroupID != pOtherSoldier->ubGroupID)
-						{
-							continue;
-						}
-					}
-					else
-					{
-						// check to see if the location is the same
-						if (pOtherSoldier->sSectorX != pSoldier->sSectorX ||
-							  pOtherSoldier->sSectorY != pSoldier->sSectorY ||
-								pOtherSoldier->bSectorZ != pSoldier->bSectorZ)
-						{
-							continue;
-						}
-
-						// if the OTHER soldier is in motion then we don't do anything!
-						if (pOtherSoldier->ubGroupID != 0 && PlayerIDGroupInMotion( pOtherSoldier->ubGroupID ))
-						{
-							continue;
-						}
-					}
-
-					ubOtherProfileID = pOtherSoldier->ubProfile;
-
-					for ( iLoop = 0; iLoop < 4; iLoop++ )
-					{
-						switch( iLoop )
-						{
-							case 0:
-							case 1:
-								if (p.bHated[iLoop] == ubOtherProfileID)
+						case 0:
+						case 1:
+							if (p.bHated[i] == ubOtherProfileID)
+							{
+								// arrgs, we're on assignment with the person we loathe!
+								INT8& hated_count = p.bHatedCount[i];
+								if (hated_count > 0)
 								{
-									// arrgs, we're on assignment with the person we loathe!
-									if (p.bHatedCount[iLoop] > 0)
-									{
-										p.bHatedCount[iLoop]--;
-										if (--p.bHatedCount[iLoop] == 0 && pSoldier->bInSector && gTacticalStatus.fEnemyInSector)
-										{
-											// just reduced count to 0 but we have enemy in sector...
-											p.bHatedCount[iLoop] = 1;
-										}
-										else if (p.bHatedCount[iLoop] > 0 && (
-												p.bHatedCount[iLoop] == p.bHatedTime[iLoop] / 2 ||
-												(
-													p.bHatedCount[iLoop] < p.bHatedTime[iLoop] / 2 &&
-													p.bHatedCount[iLoop] % TIME_BETWEEN_HATED_COMPLAINTS == 0
-												)))
-										{
-											// complain!
-											if (iLoop == 0)
-											{
-												TacticalCharacterDialogue( pSoldier, QUOTE_HATED_MERC_ONE );
-											}
-											else
-											{
-												TacticalCharacterDialogue( pSoldier, QUOTE_HATED_MERC_TWO );
-											}
-											StopTimeCompression();
-										}
-										else if (p.bHatedCount[iLoop] == 0)
-										{
-											// zero count!
-											if (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC || pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC )
-											{
-												// MERC mercs leave now!
-												if (iLoop == 0)
-												{
-													TacticalCharacterDialogue( pSoldier, QUOTE_MERC_QUIT_HATED1 );
-												}
-												else
-												{
-													TacticalCharacterDialogue( pSoldier, QUOTE_MERC_QUIT_HATED2 );
-												}
+									hated_count--;
+									if (hated_count == 0 && s->bInSector && gTacticalStatus.fEnemyInSector)
+									{ // Just reduced count to 0 but we have enemy in sector
+										hated_count = 1;
+									}
+									else if (hated_count > 0 && (
+											hated_count == p.bHatedTime[i] / 2 || (
+												hated_count < p.bHatedTime[i] / 2 &&
+												hated_count % TIME_BETWEEN_HATED_COMPLAINTS == 0
+											)))
+									{ // Complain!
+										UINT16 const quote = i == 0 ?
+											QUOTE_HATED_MERC_ONE : QUOTE_HATED_MERC_TWO;
+										TacticalCharacterDialogue(s, quote);
+										StopTimeCompression();
+									}
+									else if (hated_count == 0)
+									{ // Zero count!
+										if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC || s->ubWhatKindOfMercAmI == MERC_TYPE__NPC)
+										{ // MERC mercs leave now!
+											UINT16 const quote = i == 0 ?
+												QUOTE_MERC_QUIT_HATED1 : QUOTE_MERC_QUIT_HATED2;
+											TacticalCharacterDialogue(s, quote);
 
-												// Leave now! ( handle equipment too )....
-												MakeCharacterDialogueEventContractEnding(*pSoldier, false);
+											// Leave now! (handle equipment too)
+											MakeCharacterDialogueEventContractEnding(*s, false);
 
-												pSoldier->ubLeaveHistoryCode = HISTORY_MERC_QUIT;
-											}
-											else
-											{
-												// complain!
-												if (iLoop == 0)
-												{
-													TacticalCharacterDialogue( pSoldier, QUOTE_HATED_MERC_ONE );
-												}
-												else
-												{
-													TacticalCharacterDialogue( pSoldier, QUOTE_HATED_MERC_TWO );
-												}
-												p.ubTimeTillNextHatedComplaint = TIME_BETWEEN_HATED_COMPLAINTS - 1;
-											}
+											s->ubLeaveHistoryCode = HISTORY_MERC_QUIT;
+										}
+										else
+										{ // Complain!
+											UINT16 const quote = i == 0 ?
+												QUOTE_HATED_MERC_ONE : QUOTE_HATED_MERC_TWO;
+											TacticalCharacterDialogue(s, quote);
+											p.ubTimeTillNextHatedComplaint = TIME_BETWEEN_HATED_COMPLAINTS - 1;
 										}
 									}
-									else
+								}
+								else
+								{
+									// if we haven't updated the time till our next complaint, do so
+									// if it's 0, gripe.
+									if (!fUpdatedTimeTillNextHatedComplaint)
 									{
-										// if we haven't updated the time till our next complaint, do so
-										// if it's 0, gripe.
-										if ( !fUpdatedTimeTillNextHatedComplaint )
-										{
-											if (p.ubTimeTillNextHatedComplaint == 0)
-											{
-												p.ubTimeTillNextHatedComplaint = TIME_BETWEEN_HATED_COMPLAINTS - 1;
-											}
-											else
-											{
-												p.ubTimeTillNextHatedComplaint--;
-											}
-											fUpdatedTimeTillNextHatedComplaint = TRUE;
-										}
-
 										if (p.ubTimeTillNextHatedComplaint == 0)
 										{
-											// complain!
-											if (iLoop == 0)
-											{
-												TacticalCharacterDialogue( pSoldier, QUOTE_HATED_MERC_ONE );
-											}
-											else
-											{
-												TacticalCharacterDialogue( pSoldier, QUOTE_HATED_MERC_TWO );
-											}
+											p.ubTimeTillNextHatedComplaint = TIME_BETWEEN_HATED_COMPLAINTS - 1;
 										}
+										else
+										{
+											p.ubTimeTillNextHatedComplaint--;
+										}
+										fUpdatedTimeTillNextHatedComplaint = true;
+									}
+
+									if (p.ubTimeTillNextHatedComplaint == 0)
+									{ // Complain!
+										UINT16 const quote = i == 0 ?
+											QUOTE_HATED_MERC_ONE : QUOTE_HATED_MERC_TWO;
+										TacticalCharacterDialogue(s, quote);
 									}
 								}
-								break;
-							case 2:
-								if (p.bLearnToHate == ubOtherProfileID)
+							}
+							break;
+
+						case 2:
+							if (p.bLearnToHate == ubOtherProfileID)
+							{
+								if (p.bLearnToHateCount > 0)
 								{
-									if (p.bLearnToHateCount > 0)
-									{
-										p.bLearnToHateCount--;
-										if (p.bLearnToHateCount == 0 && pSoldier->bInSector && gTacticalStatus.fEnemyInSector)
-										{
-											// just reduced count to 0 but we have enemy in sector...
-											p.bLearnToHateCount = 1;
-										}
-										else if (p.bLearnToHateCount > 0 && (
-												p.bLearnToHateCount == p.bLearnToHateTime / 2 ||
-												(
-													p.bLearnToHateCount < p.bLearnToHateTime / 2 &&
-													p.bLearnToHateCount % TIME_BETWEEN_HATED_COMPLAINTS == 0
+									p.bLearnToHateCount--;
+									if (p.bLearnToHateCount == 0 && s->bInSector && gTacticalStatus.fEnemyInSector)
+									{ // Just reduced count to 0 but we have enemy in sector...
+										p.bLearnToHateCount = 1;
+									}
+									else if (p.bLearnToHateCount > 0 && (
+											p.bLearnToHateCount == p.bLearnToHateTime / 2 ||
+											(
+												p.bLearnToHateCount < p.bLearnToHateTime / 2 &&
+												p.bLearnToHateCount % TIME_BETWEEN_HATED_COMPLAINTS == 0
+											)))
+									{ // Complain!
+										TacticalCharacterDialogue(s, QUOTE_LEARNED_TO_HATE_MERC);
+										StopTimeCompression();
+									}
+									else if (p.bLearnToHateCount == 0)
+									{ // Set as bHated[2];
+										p.bHated[2] = p.bLearnToHate;
+										p.bMercOpinion[ubOtherProfileID] = HATED_OPINION;
+
+										if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC || (
+												s->ubWhatKindOfMercAmI == MERC_TYPE__NPC && (
+													s->ubProfile == DEVIN ||
+													s->ubProfile == SLAY  ||
+													s->ubProfile == IGGY  ||
+													s->ubProfile == CONRAD
 												)))
-										{
-											// complain!
-											TacticalCharacterDialogue( pSoldier, QUOTE_LEARNED_TO_HATE_MERC );
-											StopTimeCompression();
-										}
-										else if (p.bLearnToHateCount == 0)
-										{
-											// set as bHated[2];
-											p.bHated[2] = p.bLearnToHate;
-											p.bMercOpinion[ubOtherProfileID] = HATED_OPINION;
-
-											if (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__MERC || (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC && (pSoldier->ubProfile == DEVIN || pSoldier->ubProfile == SLAY || pSoldier->ubProfile == IGGY || pSoldier->ubProfile == CONRAD ) ) )
-											{
-												// Leave now! ( handle equipment too )....
-												TacticalCharacterDialogue( pSoldier, QUOTE_MERC_QUIT_LEARN_TO_HATE );
-												MakeCharacterDialogueEventContractEnding(*pSoldier, false);
-												pSoldier->ubLeaveHistoryCode = HISTORY_MERC_QUIT;
-
-											}
-											else if (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC)
-											{
-												// whine again
-												TacticalCharacterDialogue( pSoldier, QUOTE_LEARNED_TO_HATE_MERC );
-											}
+										{ // Leave now! (handle equipment too)
+											TacticalCharacterDialogue(s, QUOTE_MERC_QUIT_LEARN_TO_HATE);
+											MakeCharacterDialogueEventContractEnding(*s, false);
+											s->ubLeaveHistoryCode = HISTORY_MERC_QUIT;
 
 										}
-										if (p.bLearnToHateCount < p.bLearnToHateTime / 2)
-										{
-											// gradual opinion drop
-											p.bMercOpinion[ubOtherProfileID] += (HATED_OPINION - p.bMercOpinion[ubOtherProfileID]) / (p.bLearnToHateCount + 1);
+										else if (s->ubWhatKindOfMercAmI == MERC_TYPE__NPC)
+										{ // Whine again
+											TacticalCharacterDialogue(s, QUOTE_LEARNED_TO_HATE_MERC);
 										}
 									}
-									else
+									if (p.bLearnToHateCount < p.bLearnToHateTime / 2)
+									{ // Gradual opinion drop
+										p.bMercOpinion[ubOtherProfileID] += (HATED_OPINION - p.bMercOpinion[ubOtherProfileID]) / (p.bLearnToHateCount + 1);
+									}
+								}
+								else
+								{
+									if (!fUpdatedTimeTillNextHatedComplaint)
 									{
-										if ( !fUpdatedTimeTillNextHatedComplaint )
-										{
-											if (p.ubTimeTillNextHatedComplaint == 0)
-											{
-												p.ubTimeTillNextHatedComplaint = TIME_BETWEEN_HATED_COMPLAINTS - 1;
-											}
-											else
-											{
-												p.ubTimeTillNextHatedComplaint--;
-											}
-											fUpdatedTimeTillNextHatedComplaint = TRUE;
-										}
-
 										if (p.ubTimeTillNextHatedComplaint == 0)
 										{
-											// complain!
-											TacticalCharacterDialogue( pSoldier, QUOTE_LEARNED_TO_HATE_MERC );
+											p.ubTimeTillNextHatedComplaint = TIME_BETWEEN_HATED_COMPLAINTS - 1;
 										}
+										else
+										{
+											p.ubTimeTillNextHatedComplaint--;
+										}
+										fUpdatedTimeTillNextHatedComplaint = true;
+									}
+
+									if (p.ubTimeTillNextHatedComplaint == 0)
+									{ // Complain!
+										TacticalCharacterDialogue(s, QUOTE_LEARNED_TO_HATE_MERC);
 									}
 								}
-								break;
-							case 3:
-								if (p.bLearnToLikeCount > 0	&& p.bLearnToLike == ubOtherProfileID)
-								{
-									p.bLearnToLikeCount--;
-									if (p.bLearnToLikeCount == 0)
-									{
-										// add to liked!
-										p.bBuddy[2] = p.bLearnToLike;
-										p.bMercOpinion[ubOtherProfileID] = BUDDY_OPINION;
-									}
-									else if (p.bLearnToLikeCount < p.bLearnToLikeTime / 2)
-									{
-										// increase opinion of them!
-										p.bMercOpinion[ubOtherProfileID] += (BUDDY_OPINION - p.bMercOpinion[ubOtherProfileID]) / (p.bLearnToLikeCount + 1);
-										break;
-									}
+							}
+							break;
+
+						case 3:
+							if (p.bLearnToLikeCount > 0	&& p.bLearnToLike == ubOtherProfileID)
+							{
+								p.bLearnToLikeCount--;
+								if (p.bLearnToLikeCount == 0)
+								{ // Add to liked!
+									p.bBuddy[2] = p.bLearnToLike;
+									p.bMercOpinion[ubOtherProfileID] = BUDDY_OPINION;
 								}
-								break;
-						}
+								else if (p.bLearnToLikeCount < p.bLearnToLikeTime / 2)
+								{ // Increase opinion of them!
+									p.bMercOpinion[ubOtherProfileID] += (BUDDY_OPINION - p.bMercOpinion[ubOtherProfileID]) / (p.bLearnToLikeCount + 1);
+									break;
+								}
+							}
+							break;
 					}
 				}
 			}
