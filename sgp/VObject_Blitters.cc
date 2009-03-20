@@ -410,6 +410,7 @@ UINT32 uiLineFlag;
 
 #if 1 // XXX TODO
 	(void)SrcPtr;
+	(void)usHeight;
 	UNIMPLEMENTED
 #else
 	__asm {
@@ -1634,6 +1635,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadow(UINT16* pBuffer, UINT32 uiDestPitchB
 
 #if 1 // XXX TODO
 	(void)SrcPtr;
+	(void)usHeight;
 	UNIMPLEMENTED
 #else
 	__asm {
@@ -1745,6 +1747,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferTransShadowZ(UINT16* pBuffer, UINT32 uiDestPitch
 
 #if 1 // XXX TODO
 	(void)SrcPtr;
+	(void)usHeight;
 	UNIMPLEMENTED
 #else
 	__asm {
@@ -9104,6 +9107,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZ( UINT16 *pBuffer, UINT32 uiDestPitchB
 
 #if 1 // XXX TODO
 	(void)SrcPtr;
+	(void)usHeight;
 	UNIMPLEMENTED
 #else
 	__asm {
@@ -9465,6 +9469,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensityZNB( UINT16 *pBuffer, UINT32 uiDestPitc
 
 #if 1 // XXX TODO
 	(void)SrcPtr;
+	(void)usHeight;
 	UNIMPLEMENTED
 #else
 	__asm {
@@ -9851,6 +9856,7 @@ BOOLEAN Blt8BPPDataTo16BPPBufferIntensity( UINT16 *pBuffer, UINT32 uiDestPitchBY
 
 #if 1 // XXX TODO
 	(void)SrcPtr;
+	(void)usHeight;
 	UNIMPLEMENTED
 #else
 	__asm {
