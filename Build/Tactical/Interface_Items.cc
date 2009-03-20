@@ -3116,7 +3116,6 @@ static BOOLEAN SoldierCanSeeCatchComing(const SOLDIERTYPE* pSoldier, INT16 sSrcG
 
 void DrawItemTileCursor( )
 {
-	UINT16						usIndex;
 	INT16							sAPCost;
 	BOOLEAN						fRecalc;
 	UINT32						uiCursorFlags;
@@ -3377,7 +3376,7 @@ void DrawItemTileCursor( )
 		//gViewportRegion.ChangeCursor(VIDEO_NO_CURSOR);
 
 		// Get tile graphic fro item
-		usIndex = GetTileGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
+		UINT16 const usIndex = GetTileGraphicForItem(Item[gpItemPointer->usItem]);
 
 		// ONly load if different....
 		if ( usIndex != gusItemPointer || uiOldCursorId != uiCursorId )
@@ -4244,17 +4243,17 @@ SGPVObject const& GetInterfaceGraphicForItem(INVTYPE const& item)
 }
 
 
-UINT16 GetTileGraphicForItem(const INVTYPE* pItem)
+UINT16 GetTileGraphicForItem(INVTYPE const& item)
 {
 	UINT32 Type;
-	switch (pItem->ubGraphicType)
+	switch (item.ubGraphicType)
 	{
 		case 0:  Type = GUNS;    break;
 		case 1:  Type = P1ITEMS; break;
 		case 2:  Type = P2ITEMS; break;
 		default: Type = P3ITEMS; break;
 	}
-	return GetTileIndexFromTypeSubIndex(Type, pItem->ubGraphicNum + 1);
+	return GetTileIndexFromTypeSubIndex(Type, item.ubGraphicNum + 1);
 }
 
 
@@ -4887,14 +4886,14 @@ void RenderItemPickupMenu()
 		UINT16 const outline_col = Get16BPPColor(FROMRGB(255, 255, 0));
 		for (INT32 cnt = 0; cnt < menu.bNumSlotsPerPage; ++cnt)
 		{
-			INT32 const item = menu.items[cnt];
-			if (item == -1) continue;
+			INT32 const world_item = menu.items[cnt];
+			if (world_item == -1) continue;
 
 			// Get item to render
-			OBJECTTYPE const* const pObject = &GetWorldItem(item)->o;
-			INVTYPE    const* const pItem   = &Item[pObject->usItem];
+			OBJECTTYPE const* const pObject = &GetWorldItem(world_item)->o;
+			INVTYPE    const&       item    = Item[pObject->usItem];
 
-			UINT16              const usItemTileIndex = GetTileGraphicForItem(pItem);
+			UINT16              const usItemTileIndex = GetTileGraphicForItem(item);
 			TILE_ELEMENT const* const te              = &gTileDatabase[usItemTileIndex];
 
 			// ATE: Adjust to basic shade.....

@@ -1423,12 +1423,11 @@ void HandleSoldierPickupItem(SOLDIERTYPE* const s, INT32 const item_idx, INT16 c
 }
 
 
-static LEVELNODE* AddItemGraphicToWorld(const INVTYPE* const pItem, const INT16 sGridNo, const UINT8 ubLevel)
+static LEVELNODE* AddItemGraphicToWorld(INVTYPE const& item, INT16 const sGridNo, UINT8 const ubLevel)
 {
-	UINT16			usTileIndex;
 	LEVELNODE		*pNode;
 
-	usTileIndex = GetTileGraphicForItem( pItem );
+	UINT16 const usTileIndex = GetTileGraphicForItem(item);
 
 	// OK, Do stuff differently base on level!
 	if ( ubLevel == 0 )
@@ -1645,7 +1644,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, Vi
 
 	ITEM_POOL* item_pool = GetItemPool(sNewGridNo, ubLevel);
 
-	LEVELNODE* const pNode = AddItemGraphicToWorld(&Item[pObject->usItem], sNewGridNo, ubLevel);
+	LEVELNODE* const pNode = AddItemGraphicToWorld(Item[pObject->usItem], sNewGridNo, ubLevel);
 	new_item->pLevelNode = pNode;
 
 	if (item_pool != NULL)

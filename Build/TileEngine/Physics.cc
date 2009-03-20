@@ -1088,7 +1088,7 @@ static BOOLEAN CheckForCatchObject(REAL_OBJECT* pObject);
 static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 {
 	LEVELNODE *pNode;
-	INT16			sNewGridNo, sTileIndex;
+	INT16			sNewGridNo;
 
 	//Determine new gridno
 	sNewGridNo = MAPROWCOLTOPOS( ( (INT16)pObject->Position.y / CELL_Y_SIZE ), ( (INT16)pObject->Position.x / CELL_X_SIZE ) );
@@ -1155,7 +1155,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 				  }
 
 				  // Now get graphic index
-				  sTileIndex = GetTileGraphicForItem( &(Item[ pObject->Obj.usItem ] ) );
+				  INT16 const sTileIndex = GetTileGraphicForItem(Item[pObject->Obj.usItem]);
 				  //sTileIndex = BULLETTILE1;
 
 				  // Set new gridno, add
