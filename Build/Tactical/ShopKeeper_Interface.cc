@@ -3825,10 +3825,7 @@ void SetSkiCursor( UINT16	usCursor )
 			ReevaluateItemHatches( gpSMCurrentMerc, FALSE );
 		}
 
-		// Set mouse
-		guiExternVo = GetInterfaceGraphicForItem( &(Item[ gMoveingItem.sItemIndex ]) );
-		gusExternVoSubIndex = Item[ gMoveingItem.sItemIndex ].ubGraphicNum;
-		SetCurrentCursorFromDatabase( EXTERN_CURSOR );
+		SetMouseCursorFromItem(gMoveingItem.sItemIndex);
 
 		gSMPanelRegion.ChangeCursor(usCursor);
 		gSKI_EntireScreenMouseRegions.ChangeCursor(usCursor);

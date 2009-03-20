@@ -2130,12 +2130,8 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
 
 				btn->SpecifyText(L"0");
 
-				// Set mouse
-				guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
-				gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
-
+				SetMouseCursorFromCurrentItem();
 				gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
-				MSYS_SetCurrentCursor( EXTERN_CURSOR );
 				fMapInventoryItem=TRUE;
 				fTeamPanelDirty=TRUE;
 			}
@@ -2283,12 +2279,8 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	//				if( guiCurrentScreen == MAP_SCREEN )
 					if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 					{
-						// Set mouse
-						guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
-						gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
-
+						SetMouseCursorFromCurrentItem();
 						gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
-						MSYS_SetCurrentCursor( EXTERN_CURSOR );
 						fMapInventoryItem=TRUE;
 						fTeamPanelDirty=TRUE;
 					}
@@ -3033,12 +3025,9 @@ void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition )
 
 		if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 		{
-			guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
-			gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
-
+			SetMouseCursorFromCurrentItem();
 			fMapInventoryItem=TRUE;
 			gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
-			MSYS_SetCurrentCursor( EXTERN_CURSOR );
 		}
 	}
 	else
@@ -3079,12 +3068,8 @@ void EndItemPointer( )
 
 void DrawItemFreeCursor( )
 {
-	// Get usIndex and then graphic for item
-	guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
-	gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
-
+	SetMouseCursorFromCurrentItem();
 	gSMPanelRegion.ChangeCursor(EXTERN_CURSOR);
-	MSYS_SetCurrentCursor( EXTERN_CURSOR );
 }
 
 
@@ -5360,12 +5345,8 @@ static void RemoveMoney(void)
 
 			if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 			{
-				// Set mouse
-				guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
-				gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
-
+				SetMouseCursorFromCurrentItem();
 				gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
-				MSYS_SetCurrentCursor( EXTERN_CURSOR );
 				fMapInventoryItem=TRUE;
 				fTeamPanelDirty=TRUE;
 			}
@@ -5560,4 +5541,19 @@ void UpdateItemHatches(void)
 	{
 		ReevaluateItemHatches(pSoldier, FALSE);
 	}
+}
+
+
+void SetMouseCursorFromItem(UINT16 const item_idx)
+{
+	INVTYPE    const& item = Item[item_idx];
+	SGPVObject const& vo   = *GetInterfaceGraphicForItem(&item);
+	SetExternMouseCursor(vo, item.ubGraphicNum);
+	SetCurrentCursorFromDatabase(EXTERN_CURSOR);
+}
+
+
+void SetMouseCursorFromCurrentItem()
+{
+	SetMouseCursorFromItem(gpItemPointer->usItem);
 }

@@ -4494,12 +4494,8 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				}
 				else	// items swapped
 				{
-					// Update mouse cursor
-					guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
-					gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
-
+					SetMouseCursorFromCurrentItem();
 					gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
-					MSYS_SetCurrentCursor( EXTERN_CURSOR );
 					fMapInventoryItem=TRUE;
 					fTeamPanelDirty=TRUE;
 
@@ -4585,12 +4581,8 @@ void InternalMAPBeginItemPointer(SOLDIERTYPE* pSoldier)
 	gpItemPointer = &gItemPointer;
 	gpItemPointerSoldier = pSoldier;
 
-	// Set mouse
-	guiExternVo = GetInterfaceGraphicForItem( &(Item[ gpItemPointer->usItem ]) );
-	gusExternVoSubIndex = Item[ gpItemPointer->usItem ].ubGraphicNum;
-
+	SetMouseCursorFromCurrentItem();
 	gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
-	MSYS_SetCurrentCursor( EXTERN_CURSOR );
 	fMapInventoryItem=TRUE;
 	fTeamPanelDirty=TRUE;
 

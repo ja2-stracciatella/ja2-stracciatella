@@ -21,8 +21,8 @@ INT16  gsGlobalCursorYOffset = 0;
 UINT16 gsCurMouseHeight = 0;
 UINT16 gsCurMouseWidth = 0;
 static UINT16 gusNumDataFiles = 0;
-const SGPVObject* guiExternVo;
-UINT16 gusExternVoSubIndex;
+static SGPVObject const* guiExternVo;
+static UINT16            gusExternVoSubIndex;
 static UINT32 guiOldSetCursor = 0;
 static UINT32 guiDelayTimer = 0;
 
@@ -355,4 +355,11 @@ void SetExternVOData(UINT32 uiCursorIndex, HVOBJECT hVObject, UINT16 usSubIndex)
 			LoadCursorData(uiCursorIndex);
 		}
 	}
+}
+
+
+void SetExternMouseCursor(SGPVObject const& vo, UINT16 const region_idx)
+{
+	guiExternVo         = &vo;
+	gusExternVoSubIndex = region_idx;
 }
