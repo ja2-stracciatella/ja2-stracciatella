@@ -2097,7 +2097,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 
 static void ReloadItemDesc(void)
 {
-	guiItemGraphic = LoadTileGraphicForItem(&Item[gpItemDescObject->usItem]);
+	guiItemGraphic = LoadTileGraphicForItem(Item[gpItemDescObject->usItem]);
 
 	//
 	// Load name, desc
@@ -4258,10 +4258,10 @@ UINT16 GetTileGraphicForItem(const INVTYPE* pItem)
 }
 
 
-SGPVObject* LoadTileGraphicForItem(const INVTYPE* const pItem)
+SGPVObject* LoadTileGraphicForItem(const INVTYPE& item)
 {
 	const char* Prefix;
-	switch (pItem->ubGraphicType)
+	switch (item.ubGraphicType)
 	{
 		case 0:  Prefix = "gun";    break;
 		case 1:  Prefix = "p1item"; break;
@@ -4271,7 +4271,7 @@ SGPVObject* LoadTileGraphicForItem(const INVTYPE* const pItem)
 
 	//Load item
 	SGPFILENAME ImageFile;
-	sprintf(ImageFile, "BIGITEMS/%s%02d.sti", Prefix, pItem->ubGraphicNum);
+	sprintf(ImageFile, "BIGITEMS/%s%02d.sti", Prefix, item.ubGraphicNum);
 	return AddVideoObjectFromFile(ImageFile);
 }
 

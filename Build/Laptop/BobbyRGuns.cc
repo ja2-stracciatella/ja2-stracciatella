@@ -706,7 +706,7 @@ static void DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
 {
 	INT16 PosX = BOBBYR_GRID_PIC_X;
 
-	AutoSGPVObject uiImage(LoadTileGraphicForItem(item));
+	AutoSGPVObject uiImage(LoadTileGraphicForItem(*item));
 
 	//center picture in frame
 	ETRLEObject const& pTrav   = uiImage->SubregionProperties(0);
