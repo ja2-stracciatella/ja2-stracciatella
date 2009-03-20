@@ -689,7 +689,7 @@ void RenderAIMMembersTopLevel()
 static void DisplayAimMemberClickOnFaceHelpText(void);
 static void DisplayMercStats(void);
 static void DisplayMercsFace(void);
-static void DisplayMercsInventory(UINT8 ubMercID);
+static void DisplayMercsInventory(MERCPROFILESTRUCT const&);
 static BOOLEAN DisplayVideoConferencingDisplay(void);
 static void UpdateMercInfo(void);
 
@@ -728,13 +728,14 @@ void RenderAIMMembers()
 	//Display Option Gear Cost text
 	DrawTextToScreen(CharacterInfo[AIM_MEMBER_OPTIONAL_GEAR], AIM_MEMBER_OPTIONAL_GEAR_X, AIM_MEMBER_OPTIONAL_GEAR_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-	SPrintMoney(wTemp, gMercProfiles[gbCurrentSoldier].usOptionalGearCost);
+	MERCPROFILESTRUCT const& p = GetProfile(gbCurrentSoldier);
+	SPrintMoney(wTemp, p.usOptionalGearCost);
 	uiPosX = AIM_MEMBER_OPTIONAL_GEAR_X + StringPixLength( CharacterInfo[AIM_MEMBER_OPTIONAL_GEAR], AIM_M_FONT_STATIC_TEXT) + 5;
 	DrawTextToScreen(wTemp, uiPosX, AIM_MEMBER_OPTIONAL_GEAR_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	DisableAimButton();
 
-	DisplayMercsInventory(gbCurrentSoldier);
+	DisplayMercsInventory(p);
 
 
 	DisplayMercsFace();
@@ -879,61 +880,58 @@ static void LoadMercBioInfo(UINT8 const ubIndex, wchar_t* const pInfoString, wch
 }
 
 
-static void DisplayMercsInventory(UINT8 ubMercID)
+static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 {
-	UINT8				ubItemCount=0;
+	// If the merc's inventory has already been purchased, don't display the inventory
+	if (p.ubMiscFlags & PROFILE_MISC_FLAG_ALREADY_USED_ITEMS) return;
 
-	//if the mercs inventory has already been purchased, dont display the inventory
-	if (gMercProfiles[ubMercID].ubMiscFlags & PROFILE_MISC_FLAG_ALREADY_USED_ITEMS) return;
-
-	INT16 PosY = WEAPONBOX_Y;
-	INT16 PosX = WEAPONBOX_X + 3; // + 3 (1 to take care of the shadow, +2 to get past the weapon box border)
-	for (UINT8 i = 0; i < NUM_INV_SLOTS; i++)
+	INT16       x       = WEAPONBOX_X + 3; // + 3 (1 to take care of the shadow, +2 to get past the weapon box border)
+	INT16 const y       = WEAPONBOX_Y;
+	UINT8       n_items = 0;
+	for (UINT8 i = 0; i < NUM_INV_SLOTS; ++i)
 	{
-		UINT16 usItem = gMercProfiles[ubMercID].inv[i];
+		UINT16 const usItem = p.inv[i];
+		if (usItem == NOTHING) continue;
 
-		//if its a valid item AND we are only displaying less then 8 items
-		if( usItem && ubItemCount < WEAPONBOX_NUMBER )
+		INVTYPE     const& item     = Item[usItem];
+		SGPVObject  const& item_vo  = GetInterfaceGraphicForItem(item);
+		ETRLEObject const& e        = item_vo.SubregionProperties(item.ubGraphicNum);
+		INT16       const  sCenX    = x + abs(WEAPONBOX_SIZE_X - 3 - e.usWidth)  / 2 - e.sOffsetX;
+		INT16       const  sCenY    = y + abs(WEAPONBOX_SIZE_Y     - e.usHeight) / 2 - e.sOffsetY;
+
+		// Blt the shadow of the item
+		BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX - 2, sCenY + 2);
+		// Blt the item
+		BltVideoObjectOutline(      FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX,     sCenY, TRANSPARENT);
+
+		/* If there are more then 1 piece of equipment in the current slot, display
+		 * how many there are */
+		if (p.bInvNumber[i] > 1)
 		{
-			//increase the item count
-			ubItemCount++;
-
-			INVTYPE     const& item     = Item[usItem];
-			SGPVObject  const& item_vo  = GetInterfaceGraphicForItem(item);
-			ETRLEObject const& pTrav    = item_vo.SubregionProperties(item.ubGraphicNum);
-			UINT32      const  usHeight = pTrav.usHeight;
-			UINT32      const  usWidth  = pTrav.usWidth;
-			INT16       const  sCenX    = PosX + abs(WEAPONBOX_SIZE_X - 3 - usWidth)  / 2 - pTrav.sOffsetX;
-			INT16       const  sCenY    = PosY + abs(WEAPONBOX_SIZE_Y     - usHeight) / 2 - pTrav.sOffsetY;
-
-			//blt the shadow of the item
-			BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX - 2, sCenY + 2);
-			//blt the item
-			BltVideoObjectOutline(      FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX,     sCenY, TRANSPARENT);
-
-			//if there are more then 1 piece of equipment in the current slot, display how many there are
-			if( gMercProfiles[ubMercID].bInvNumber[ i ] > 1 )
-			{
-				wchar_t zTempStr[ 32 ];
-//				UINT16	usWidthOfNumber;
-
-				swprintf( zTempStr, lengthof(zTempStr), L"x%d", gMercProfiles[ ubMercID ].bInvNumber[ i ] );
-
-				DrawTextToScreen(zTempStr, PosX - 1, PosY + 20, AIM_MEMBER_WEAPON_NAME_WIDTH, AIM_M_FONT_DYNAMIC_TEXT, AIM_M_WEAPON_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
-			}
-			else
-			{
-			}
-
-			const wchar_t* ItemName = ShortItemNames[usItem];
-			//if this will only be a single line, center it in the box
-			if (DisplayWrappedString(PosX - 1, AIM_MEMBER_WEAPON_NAME_Y, AIM_MEMBER_WEAPON_NAME_WIDTH, 2, AIM_M_WEAPON_TEXT_FONT, AIM_M_WEAPON_TEXT_COLOR, ItemName, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT) / GetFontHeight(AIM_M_WEAPON_TEXT_FONT) == 1)
-				DisplayWrappedString(PosX - 1, AIM_MEMBER_WEAPON_NAME_Y + GetFontHeight(AIM_M_WEAPON_TEXT_FONT) / 2, AIM_MEMBER_WEAPON_NAME_WIDTH, 2, AIM_M_WEAPON_TEXT_FONT, AIM_M_WEAPON_TEXT_COLOR, ItemName, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-			else
-				DisplayWrappedString(PosX - 1, AIM_MEMBER_WEAPON_NAME_Y, AIM_MEMBER_WEAPON_NAME_WIDTH, 2, AIM_M_WEAPON_TEXT_FONT, AIM_M_WEAPON_TEXT_COLOR, ItemName, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-
-			PosX += WEAPONBOX_SIZE_X;
+			wchar_t buf[32];
+			swprintf(buf, lengthof(buf), L"x%d", p.bInvNumber[i]);
+			DrawTextToScreen(buf, x - 1, y + 20, AIM_MEMBER_WEAPON_NAME_WIDTH, AIM_M_FONT_DYNAMIC_TEXT, AIM_M_WEAPON_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 		}
+
+		// If this will only be a single line, center it in the box
+		wchar_t const* const item_name = ShortItemNames[usItem];
+		UINT16  const        tx        = x - 1;
+		UINT16  const        ty        = AIM_MEMBER_WEAPON_NAME_Y;
+		UINT16  const        tw        = AIM_MEMBER_WEAPON_NAME_WIDTH;
+		Font    const        tf        = AIM_M_WEAPON_TEXT_FONT;
+		UINT8   const        tc        = AIM_M_WEAPON_TEXT_COLOR;
+		UINT8   const        tb        = FONT_MCOLOR_BLACK;
+		if (DisplayWrappedString(tx, ty, tw, 2, tf, tc, item_name, tb, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT) / GetFontHeight(tf) == 1)
+		{
+			DisplayWrappedString(tx, ty + GetFontHeight(tf) / 2, tw, 2, tf, tc, item_name, tb, CENTER_JUSTIFIED);
+		}
+		else
+		{
+			DisplayWrappedString(tx, ty, tw, 2, tf, tc, item_name, tb, CENTER_JUSTIFIED);
+		}
+
+		if (++n_items >= WEAPONBOX_NUMBER) break;
+		x += WEAPONBOX_SIZE_X;
 	}
 }
 
