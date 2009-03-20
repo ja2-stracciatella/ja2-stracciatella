@@ -104,7 +104,7 @@ void DrawItemFreeCursor(void);
 void DrawItemTileCursor(void);
 void InitItemInterface(void);
 BOOLEAN	 HandleItemPointerClick( UINT16 usMapPos );
-const SGPVObject* GetInterfaceGraphicForItem(const INVTYPE* pItem);
+SGPVObject const& GetInterfaceGraphicForItem(INVTYPE const&);
 UINT16 GetTileGraphicForItem(const INVTYPE* pItem);
 SGPVObject* LoadTileGraphicForItem(const INVTYPE* pItem);
 

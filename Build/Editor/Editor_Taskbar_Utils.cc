@@ -702,7 +702,7 @@ static void RenderSelectedItemBlownUp(void)
 	INT16             y;
 
 	// Display the enlarged item graphic
-	SGPVObject  const& vo = *GetInterfaceGraphicForItem(&item);
+	SGPVObject  const& vo = GetInterfaceGraphicForItem(item);
 	ETRLEObject const& e  = *vo.SubregionProperties(item.ubGraphicNum);
 	x = screen_x - e.sOffsetX + (40 - e.usWidth)  / 2;
 	y = screen_y - e.sOffsetY + (20 - e.usHeight) / 2;

@@ -1166,14 +1166,14 @@ static void DisplayCharInventory(const SOLDIERTYPE* const s)
 		const INT16 PosX = 397 + 3;
 		const INT16 PosY = 200 + 8 + item_count * 29;
 
-		const UINT16   item_idx = o->usItem;
-		const INVTYPE* item     = &Item[item_idx];
+		UINT16  const  item_idx = o->usItem;
+		INVTYPE const& item     = Item[item_idx];
 
-		const SGPVObject*  const gfx   = GetInterfaceGraphicForItem(item);
-		ETRLEObject const* const pTrav = gfx->SubregionProperties(item->ubGraphicNum);
+		SGPVObject  const&       gfx   = GetInterfaceGraphicForItem(item);
+		ETRLEObject const* const pTrav = gfx.SubregionProperties(item.ubGraphicNum);
 		const INT16              cen_x = PosX + abs(57 - pTrav->usWidth)  / 2 - pTrav->sOffsetX;
 		const INT16              cen_y = PosY + abs(22 - pTrav->usHeight) / 2 - pTrav->sOffsetY;
-		BltVideoObjectOutline(FRAME_BUFFER, gfx, item->ubGraphicNum, cen_x, cen_y, TRANSPARENT);
+		BltVideoObjectOutline(FRAME_BUFFER, &gfx, item.ubGraphicNum, cen_x, cen_y, TRANSPARENT);
 
 		SetFontDestBuffer(FRAME_BUFFER);
 
@@ -1182,11 +1182,11 @@ static void DisplayCharInventory(const SOLDIERTYPE* const s)
 		MPrint(PosX + 65, PosY + 3, sString);
 
 		// condition
-		if (item->usItemClass & IC_AMMO)
+		if (item.usItemClass & IC_AMMO)
 		{
 			INT32 total_ammo = 0;
 			for (INT32 i = 0; i < o_count; ++i) total_ammo += o->ubShotsLeft[i];
-			swprintf(sString, lengthof(sString), L"%d/%d", total_ammo, o_count * Magazine[item->ubClassIndex].ubMagSize);
+			swprintf(sString, lengthof(sString), L"%d/%d", total_ammo, o_count * Magazine[item.ubClassIndex].ubMagSize);
 		}
 		else
 		{
@@ -1196,9 +1196,9 @@ static void DisplayCharInventory(const SOLDIERTYPE* const s)
 		FindFontRightCoordinates(PosX + 65, PosY + 15, 171 - 75, GetFontHeight(FONT10ARIAL), sString, FONT10ARIAL, &sX, &sY);
 		MPrint(sX, sY, sString);
 
-		if (item->usItemClass & IC_GUN)
+		if (item.usItemClass & IC_GUN)
 		{
-			wcslcpy(sString, AmmoCaliber[Weapon[item->ubClassIndex].ubCalibre], lengthof(sString));
+			wcslcpy(sString, AmmoCaliber[Weapon[item.ubClassIndex].ubCalibre], lengthof(sString));
 			ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);
 			MPrint(PosX + 65, PosY + 15, sString);
 		}

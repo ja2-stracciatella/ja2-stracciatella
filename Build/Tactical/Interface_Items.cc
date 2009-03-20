@@ -1674,22 +1674,22 @@ void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const 
 	if (o->usItem   == NOTHING)     return;
 	if (fDirtyLevel == DIRTYLEVEL0) return;
 
-	const INVTYPE* const item =
+	INVTYPE const& item =
 		ubStatusIndex < RENDER_ITEM_ATTACHMENT1 ?
-			&Item[o->usItem] :
-			&Item[o->usAttachItem[ubStatusIndex - RENDER_ITEM_ATTACHMENT1]];
+			Item[o->usItem] :
+			Item[o->usAttachItem[ubStatusIndex - RENDER_ITEM_ATTACHMENT1]];
 
 	if (fDirtyLevel == DIRTYLEVEL2)
 	{
 		// Center the object in the slot
-		const SGPVObject*  const item_vo = GetInterfaceGraphicForItem(item);
-		UINT8              const gfx_idx = item->ubGraphicNum;
-		ETRLEObject const* const e       = item_vo->SubregionProperties(gfx_idx);
+		SGPVObject  const&       item_vo = GetInterfaceGraphicForItem(item);
+		UINT8              const gfx_idx = item.ubGraphicNum;
+		ETRLEObject const* const e       = item_vo.SubregionProperties(gfx_idx);
 		INT16              const cx      = sX + (sWidth  - e->usWidth)  / 2 - e->sOffsetX;
 		INT16              const cy      = sY + (sHeight - e->usHeight) / 2 - e->sOffsetY;
 
-		BltVideoObjectOutlineShadow(buffer, item_vo, gfx_idx, cx - 2, cy + 2);
-		BltVideoObjectOutline(      buffer, item_vo, gfx_idx, cx,     cy, outline_colour);
+		BltVideoObjectOutlineShadow(buffer, &item_vo, gfx_idx, cx - 2, cy + 2);
+		BltVideoObjectOutline(      buffer, &item_vo, gfx_idx, cx,     cy, outline_colour);
 
 		if (buffer == FRAME_BUFFER)
 		{
@@ -1706,7 +1706,7 @@ void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const 
 		SetFont(ITEM_FONT);
 		SetFontBackground(FONT_MCOLOR_BLACK);
 
-		if (item->usItemClass == IC_GUN && o->usItem != ROCKET_LAUNCHER)
+		if (item.usItemClass == IC_GUN && o->usItem != ROCKET_LAUNCHER)
 		{
 			// Display free rounds remianing
 			UINT8 colour;
@@ -4232,15 +4232,15 @@ void DeleteKeyRingPopup(void)
 }
 
 
-const SGPVObject* GetInterfaceGraphicForItem(const INVTYPE* pItem)
+SGPVObject const& GetInterfaceGraphicForItem(INVTYPE const& item)
 {
 	// CHECK SUBCLASS
-	switch (pItem->ubGraphicType)
+	switch (item.ubGraphicType)
 	{
-		case 0:  return guiGUNSM;
-		case 1:  return guiP1ITEMS;
-		case 2:  return guiP2ITEMS;
-		default: return guiP3ITEMS;
+		case 0:  return *guiGUNSM;
+		case 1:  return *guiP1ITEMS;
+		case 2:  return *guiP2ITEMS;
+		default: return *guiP3ITEMS;
 	}
 }
 
@@ -5547,7 +5547,7 @@ void UpdateItemHatches(void)
 void SetMouseCursorFromItem(UINT16 const item_idx)
 {
 	INVTYPE    const& item = Item[item_idx];
-	SGPVObject const& vo   = *GetInterfaceGraphicForItem(&item);
+	SGPVObject const& vo   = GetInterfaceGraphicForItem(item);
 	SetExternMouseCursor(vo, item.ubGraphicNum);
 	SetCurrentCursorFromDatabase(EXTERN_CURSOR);
 }

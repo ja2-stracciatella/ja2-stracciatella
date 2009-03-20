@@ -2086,9 +2086,9 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	}
 
 	//Display the item graphic, and price
-	const INVTYPE* pItem = &Item[usItemIndex];
-	const SGPVObject* const ItemVOIdx = GetInterfaceGraphicForItem(pItem);
-	ETRLEObject const* const pTrav = ItemVOIdx->SubregionProperties(pItem->ubGraphicNum);
+	INVTYPE     const&       item      = Item[usItemIndex];
+	SGPVObject  const&       ItemVOIdx = GetInterfaceGraphicForItem(item);
+	ETRLEObject const* const pTrav     = ItemVOIdx.SubregionProperties(item.ubGraphicNum);
 
 	UINT32 usHeight = pTrav->usHeight;
 	UINT32 usWidth  = pTrav->usWidth;
@@ -2100,8 +2100,8 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	//Restore the background region
 	RestoreExternBackgroundRect( usPosX, usPosY, SKI_INV_SLOT_WIDTH, SKI_INV_HEIGHT );
 
-	BltVideoObjectOutlineShadow(FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX - 2, sCenY + 2);
-	BltVideoObjectOutline(      FRAME_BUFFER, ItemVOIdx, pItem->ubGraphicNum, sCenX,     sCenY, outline);
+	BltVideoObjectOutlineShadow(FRAME_BUFFER, &ItemVOIdx, item.ubGraphicNum, sCenX - 2, sCenY + 2);
+	BltVideoObjectOutline(      FRAME_BUFFER, &ItemVOIdx, item.ubGraphicNum, sCenX,     sCenY, outline);
 
 	//Display the status of the item
 	DrawItemUIBarEx(pItemObject, 0, usPosX + 2, usPosY + 21, 20, Get16BPPColor(FROMRGB(140, 136, 119)), Get16BPPColor(FROMRGB(140, 136, 119)), FRAME_BUFFER);

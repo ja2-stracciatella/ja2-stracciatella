@@ -898,9 +898,9 @@ static void DisplayMercsInventory(UINT8 ubMercID)
 			//increase the item count
 			ubItemCount++;
 
-			const INVTYPE* pItem = &Item[usItem];
-			const SGPVObject* const item_vo = GetInterfaceGraphicForItem(pItem);
-			ETRLEObject const* const pTrav = item_vo->SubregionProperties(pItem->ubGraphicNum);
+			INVTYPE     const&       item    = Item[usItem];
+			SGPVObject  const&       item_vo = GetInterfaceGraphicForItem(item);
+			ETRLEObject const* const pTrav   = item_vo.SubregionProperties(item.ubGraphicNum);
 
 			UINT32 usHeight = pTrav->usHeight;
 			UINT32 usWidth  = pTrav->usWidth;
@@ -909,9 +909,9 @@ static void DisplayMercsInventory(UINT8 ubMercID)
 			INT16 sCenY = PosY + abs(WEAPONBOX_SIZE_Y     - usHeight) / 2 - pTrav->sOffsetY;
 
 			//blt the shadow of the item
-			BltVideoObjectOutlineShadow(FRAME_BUFFER, item_vo, pItem->ubGraphicNum, sCenX - 2, sCenY + 2);
+			BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX - 2, sCenY + 2);
 			//blt the item
-			BltVideoObjectOutline(      FRAME_BUFFER, item_vo, pItem->ubGraphicNum, sCenX,     sCenY, TRANSPARENT);
+			BltVideoObjectOutline(      FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX,     sCenY, TRANSPARENT);
 
 			//if there are more then 1 piece of equipment in the current slot, display how many there are
 			if( gMercProfiles[ubMercID].bInvNumber[ i ] > 1 )
