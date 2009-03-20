@@ -703,7 +703,7 @@ static void RenderSelectedItemBlownUp(void)
 
 	// Display the enlarged item graphic
 	SGPVObject  const& vo = GetInterfaceGraphicForItem(item);
-	ETRLEObject const& e  = *vo.SubregionProperties(item.ubGraphicNum);
+	ETRLEObject const& e  = vo.SubregionProperties(item.ubGraphicNum);
 	x = screen_x - e.sOffsetX + (40 - e.usWidth)  / 2;
 	y = screen_y - e.sOffsetY + (20 - e.usHeight) / 2;
 	BltVideoObjectOutline(FRAME_BUFFER, &vo, item.ubGraphicNum, x, y, Get16BPPColor(FROMRGB(0, 140, 170)));

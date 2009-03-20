@@ -119,19 +119,19 @@ void SGPVObject::CurrentShade(size_t const idx)
 }
 
 
-ETRLEObject const* SGPVObject::SubregionProperties(size_t const idx) const
+ETRLEObject const& SGPVObject::SubregionProperties(size_t const idx) const
 {
 	if (idx >= SubregionCount())
 	{
 		throw std::logic_error("Tried to access invalid subregion in video object");
 	}
-	return &etrle_object_[idx];
+	return etrle_object_[idx];
 }
 
 
-UINT8 const* SGPVObject::PixData(ETRLEObject const* const e) const
+UINT8 const* SGPVObject::PixData(ETRLEObject const& e) const
 {
-	return &pix_data_[e->uiDataOffset];
+	return &pix_data_[e.uiDataOffset];
 }
 
 
@@ -141,9 +141,9 @@ UINT8 const* SGPVObject::PixData(ETRLEObject const* const e) const
 
 UINT8 SGPVObject::GetETRLEPixelValue(UINT16 const usETRLEIndex, UINT16 const usX, UINT16 const usY) const
 {
-	ETRLEObject const* const pETRLEObject = SubregionProperties(usETRLEIndex);
+	ETRLEObject const& pETRLEObject = SubregionProperties(usETRLEIndex);
 
-	if (usX >= pETRLEObject->usWidth || usY >= pETRLEObject->usHeight)
+	if (usX >= pETRLEObject.usWidth || usY >= pETRLEObject.usHeight)
 	{
 		throw std::logic_error("Tried to get pixel from invalid coordinate");
 	}

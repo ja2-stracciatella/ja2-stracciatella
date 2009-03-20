@@ -399,7 +399,7 @@ static void GetLevelNodeScreenRect(LEVELNODE const* const pNode, SGPRect* const 
 		ETRLEObject const* pTrav;
 		if ( pNode->uiFlags & LEVELNODE_CACHEDANITILE )
 		{
-			pTrav = gpTileCache[pNode->pAniTile->sCachedTileID].pImagery->vo->SubregionProperties(pNode->pAniTile->sCurrentFrame);
+			pTrav = &gpTileCache[pNode->pAniTile->sCachedTileID].pImagery->vo->SubregionProperties(pNode->pAniTile->sCurrentFrame);
 		}
 		else
 		{
@@ -420,7 +420,7 @@ static void GetLevelNodeScreenRect(LEVELNODE const* const pNode, SGPRect* const 
 				}
 			}
 
-			pTrav = TileElem->hTileSurface->SubregionProperties(TileElem->usRegionIndex);
+			pTrav = &TileElem->hTileSurface->SubregionProperties(TileElem->usRegionIndex);
 		}
 
 		sScreenX = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)sTempX_S;
@@ -781,8 +781,6 @@ static BOOLEAN RefinePointCollisionOnStruct(INT16 const sGridNo, INT16 const sTe
 // will return true if data found, else false
 BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTestX, INT32 iTestY)
 {
-	UINT32 uiOffset;
-	UINT32 usHeight, usWidth;
 	BOOLEAN	fDataFound = FALSE;
 	INT32	 iTestPos, iStartPos;
 
@@ -790,11 +788,9 @@ BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIn
 	Assert( hSrcVObject != NULL );
 
 	// Get Offsets from Index into structure
-	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(usIndex);
-	usHeight				= (UINT32)pTrav->usHeight;
-	usWidth					= (UINT32)pTrav->usWidth;
-	uiOffset				= pTrav->uiDataOffset;
-
+	ETRLEObject const& pTrav    = hSrcVObject->SubregionProperties(usIndex);
+	UINT32             usHeight = pTrav.usHeight;
+	UINT32      const  usWidth  = pTrav.usWidth;
 
 	// Calculate test position we are looking for!
 	// Calculate from 0, 0 at top left!

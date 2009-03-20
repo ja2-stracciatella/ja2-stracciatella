@@ -103,8 +103,8 @@ void UnloadFont(Font const font)
 static UINT32 GetWidth(HVOBJECT const hSrcVObject, GlyphIdx const ssIndex)
 {
 	// Get Offsets from Index into structure
-	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(ssIndex);
-	return pTrav->usWidth + pTrav->sOffsetX;
+	ETRLEObject const& pTrav = hSrcVObject->SubregionProperties(ssIndex);
+	return pTrav.usWidth + pTrav.sOffsetX;
 }
 
 
@@ -150,8 +150,8 @@ void RestoreFontSettings(void)
 static UINT32 GetHeight(HVOBJECT hSrcVObject, INT16 ssIndex)
 {
 	// Get Offsets from Index into structure
-	ETRLEObject const* const pTrav = hSrcVObject->SubregionProperties(ssIndex);
-	return pTrav->usHeight + pTrav->sOffsetY;
+	ETRLEObject const& pTrav = hSrcVObject->SubregionProperties(ssIndex);
+	return pTrav.usHeight + pTrav.sOffsetY;
 }
 
 

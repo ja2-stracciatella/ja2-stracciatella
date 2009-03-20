@@ -527,13 +527,13 @@ ScreenID SexScreenHandle(void)
 	}
 
 	// Calculate smily face positions...
-	ETRLEObject const* const pTrav = guiSMILY->SubregionProperties(0);
-	INT16 sX = (SCREEN_WIDTH  - pTrav->usWidth)  / 2;
-	INT16 sY = (SCREEN_HEIGHT - pTrav->usHeight) / 2;
+	ETRLEObject const& pTrav = guiSMILY->SubregionProperties(0);
+	INT16       const  sX    = (SCREEN_WIDTH  - pTrav.usWidth)  / 2;
+	INT16       const  sY    = (SCREEN_HEIGHT - pTrav.usHeight) / 2;
 
 	BltVideoObject(FRAME_BUFFER, guiSMILY, bCurFrame < 24 ? 0 : bCurFrame % 8, sX, sY);
 
-	InvalidateRegion( sX, sY, (INT16)( sX + pTrav->usWidth ), (INT16)( sY + pTrav->usHeight ) );
+	InvalidateRegion(sX, sY, sX + pTrav.usWidth, sY + pTrav.usHeight);
 
 	return( SEX_SCREEN );
 }

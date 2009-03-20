@@ -574,8 +574,8 @@ static void AddInventoryButtonForMapPopUpBox(const PopUpBox* const box)
 	AutoSGPVObject uiObject(AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti"));
 
 	// Calculate smily face positions...
-	ETRLEObject const* const pTrav = uiObject->SubregionProperties(0);
-	INT16 sWidthA = pTrav->usWidth;
+	ETRLEObject const& pTrav   = uiObject->SubregionProperties(0);
+	INT16       const  sWidthA = pTrav.usWidth;
 
 	const SGPBox* const area = GetBoxArea(box);
 	INT16         const dx   = (area->w - sTotalButtonWidth) / 3;
@@ -644,7 +644,7 @@ static void MinWidthOfTownMineInfoBox(void)
 	AutoSGPVObject uiObject(AddVideoObjectFromFile("INTERFACE/mapinvbtns.sti"));
 
 	// Calculate smily face positions...
-	INT16 const sWidthA = uiObject->SubregionProperties(0)->usWidth;
-	INT16 const sWidthB = uiObject->SubregionProperties(1)->usWidth;
+	INT16 const sWidthA = uiObject->SubregionProperties(0).usWidth;
+	INT16 const sWidthB = uiObject->SubregionProperties(1).usWidth;
 	sTotalButtonWidth = sWidthA + sWidthB;
 }

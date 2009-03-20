@@ -3591,9 +3591,9 @@ static void DrawSite(const INT16 sector_x, const INT16 sector_y, const SGPVObjec
 		vo_idx = 1;
 	}
 
-	ETRLEObject const* const ETRLEProps = icon->SubregionProperties(vo_idx);
-	const UINT16 w = ETRLEProps->usWidth;
-	const UINT16 h = ETRLEProps->usHeight;
+	ETRLEObject const& ETRLEProps = icon->SubregionProperties(vo_idx);
+	UINT16      const  w          = ETRLEProps.usWidth;
+	UINT16      const  h          = ETRLEProps.usHeight;
 	x += (max_w - w) / 2;
 	/* If the icon is higher than a map cell, align with the bottom of the cell */
 	y += (h > max_h ? max_h - h : (max_h - h) / 2);
@@ -4012,8 +4012,8 @@ BOOLEAN DrawMilitiaPopUpBox( void )
 	// draw the highlight last
 	ShowHighLightedSectorOnMilitiaMap( );
 
-	ETRLEObject const* const pTrav = guiMilitia->SubregionProperties(0);
-	InvalidateRegion( MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y, MAP_MILITIA_BOX_POS_X + pTrav->usWidth, MAP_MILITIA_BOX_POS_Y + pTrav->usHeight );
+	ETRLEObject const& pTrav = guiMilitia->SubregionProperties(0);
+	InvalidateRegion(MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y, MAP_MILITIA_BOX_POS_X + pTrav.usWidth, MAP_MILITIA_BOX_POS_Y + pTrav.usHeight);
 
 	// set the text for the militia map sector info buttons
 	SetMilitiaMapButtonsText( );

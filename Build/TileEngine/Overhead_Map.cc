@@ -801,7 +801,7 @@ static void RenderOverheadOverlays(void)
 				s == gpTacticalPlacementHilightedSoldier && s->uiStatusFlags ? 8        :
 				s->bTeam;
 			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, region);
-			ETRLEObject const& e = *marker->SubregionProperties(region);
+			ETRLEObject const& e = marker->SubregionProperties(region);
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX + e.sOffsetX, sY + e.sOffsetY, e.usWidth, e.usHeight);
 		}
 	}

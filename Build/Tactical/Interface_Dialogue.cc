@@ -374,9 +374,9 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 
 	gTalkPanel.uiPanelVO = AddVideoObjectFromFile("INTERFACE/talkbox1.sti");
 
-	ETRLEObject const* const ETRLEProps = gTalkPanel.uiPanelVO->SubregionProperties(0);
-	gTalkPanel.usWidth  = ETRLEProps->usWidth;
-	gTalkPanel.usHeight	= ETRLEProps->usHeight;
+	ETRLEObject const& ETRLEProps = gTalkPanel.uiPanelVO->SubregionProperties(0);
+	gTalkPanel.usWidth  = ETRLEProps.usWidth;
+	gTalkPanel.usHeight	= ETRLEProps.usHeight;
 
 	// Check coords
 	{

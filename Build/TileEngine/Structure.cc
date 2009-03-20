@@ -1657,10 +1657,10 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 					UINT8 ubNumDecreasing = 0;
 
 					// time to do our calculations!
-					ETRLEObject const* const e        = hVObject->SubregionProperties(uiLoop);
-					INT16                    sOffsetX = e->sOffsetX;
-					INT16                    sOffsetY = e->sOffsetY;
-					UINT16             const usWidth  = e->usWidth;
+					ETRLEObject const& e        = hVObject->SubregionProperties(uiLoop);
+					INT16              sOffsetX = e.sOffsetX;
+					INT16              sOffsetY = e.sOffsetY;
+					UINT16      const  usWidth  = e.usWidth;
 					if (pDBStructure->fFlags & (STRUCTURE_MOBILE | STRUCTURE_CORPSE))
 					{
 						// adjust for the difference between the animation and structure base tile

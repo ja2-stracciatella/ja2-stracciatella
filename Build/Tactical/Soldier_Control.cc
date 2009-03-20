@@ -8077,15 +8077,15 @@ void SelectMoveAnimationFromStance( SOLDIERTYPE *pSoldier )
 }
 
 
-static ETRLEObject const* GetActualSoldierAnimDims(SOLDIERTYPE const* const s)
+static ETRLEObject const& GetActualSoldierAnimDims(SOLDIERTYPE const* const s)
 {
 	static ETRLEObject const fallback = { 0, 0, 0, 0, 5, 5 };
 
 	UINT16 const anim_surface = GetSoldierAnimationSurface(s);
-	if (anim_surface == INVALID_ANIMATION_SURFACE) return &fallback;
+	if (anim_surface == INVALID_ANIMATION_SURFACE) return fallback;
 
 	SGPVObject const* vo = gAnimSurfaceDatabase[anim_surface].hVideoObject;
-	if (!vo) return &fallback;
+	if (!vo) return fallback;
 
 	// XXX comment seems wrong
 	/* OK, noodle here on what we should do... If we take each frame, it will be
@@ -8099,11 +8099,11 @@ static ETRLEObject const* GetActualSoldierAnimDims(SOLDIERTYPE const* const s)
 static void SetSoldierLocatorOffsets(SOLDIERTYPE* const s)
 {
 	// OK, from our animation, get height, width
-	ETRLEObject const* const dims = GetActualSoldierAnimDims(s);
-	s->sBoundingBoxWidth   = dims->usWidth;
-	s->sBoundingBoxHeight  = dims->usHeight;
-	s->sBoundingBoxOffsetX = dims->sOffsetX;
-	s->sBoundingBoxOffsetY = dims->sOffsetY;
+	ETRLEObject const& dims = GetActualSoldierAnimDims(s);
+	s->sBoundingBoxWidth   = dims.usWidth;
+	s->sBoundingBoxHeight  = dims.usHeight;
+	s->sBoundingBoxOffsetX = dims.sOffsetX;
+	s->sBoundingBoxOffsetY = dims.sOffsetY;
 }
 
 

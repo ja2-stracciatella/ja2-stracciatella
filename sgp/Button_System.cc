@@ -151,9 +151,9 @@ static BUTTON_PICS* FindFreeButtonSlot(void)
 static void SetMaxSize(BUTTON_PICS* const pics, const INT32 img_idx)
 {
 	if (img_idx == BUTTON_NO_IMAGE) return;
-	ETRLEObject const* const e = pics->vobj->SubregionProperties(img_idx);
-	const UINT32             w = e->sOffsetX + e->usWidth;
-	const UINT32             h = e->sOffsetY + e->usHeight;
+	ETRLEObject const& e = pics->vobj->SubregionProperties(img_idx);
+	UINT32      const  w = e.sOffsetX + e.usWidth;
+	UINT32      const  h = e.sOffsetY + e.usHeight;
 	if (pics->max.w < w) pics->max.w = w;
 	if (pics->max.h < h) pics->max.h = h;
 }
@@ -1297,8 +1297,8 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 	if (NewClip.iRight <= NewClip.iLeft || NewClip.iBottom <= NewClip.iTop) return;
 
 	// Get the width and height of the icon itself
-	const SGPVObject*  const hvObject = b->icon;
-	ETRLEObject const* const pTrav    = hvObject->SubregionProperties(b->usIconIndex);
+	SGPVObject  const* const hvObject = b->icon;
+	ETRLEObject const&       pTrav    = hvObject->SubregionProperties(b->usIconIndex);
 
 	/* Compute coordinates for centering the icon on the button or use the offset
 	 * system.
@@ -1306,7 +1306,7 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 	INT32 xp;
 	if (b->bIconXOffset == -1)
 	{
-		const INT32 IconW = pTrav->usWidth  + pTrav->sOffsetX;
+		const INT32 IconW = pTrav.usWidth  + pTrav.sOffsetX;
 		xp = IconX + (width - 6 - IconW) / 2;
 	}
 	else
@@ -1317,7 +1317,7 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 	INT32 yp;
 	if (b->bIconYOffset == -1)
 	{
-		const INT32 IconH = pTrav->usHeight + pTrav->sOffsetY;
+		const INT32 IconH = pTrav.usHeight + pTrav.sOffsetY;
 		yp = IconY + (height - 4 - IconH) / 2;
 	}
 	else
@@ -1582,9 +1582,9 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 	/* DB - Added this to support more flexible sizing of border images.  The 3x2
 	 * size was a bit limiting. JA2 should default to the original size, unchanged
 	 */
-	ETRLEObject const* const pTrav = &BPic->SubregionProperties(0);
-	const INT32 iBorderHeight = pTrav->usHeight;
-	const INT32 iBorderWidth  = pTrav->usWidth;
+	ETRLEObject const& pTrav         = &BPic->SubregionProperties(0);
+	INT32       const  iBorderHeight = pTrav.usHeight;
+	INT32       const  iBorderWidth  = pTrav.usWidth;
 #endif
 
 	// Compute the number of button "chunks" needed to be blitted

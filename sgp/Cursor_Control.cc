@@ -44,9 +44,9 @@ static BOOLEAN BltToMouseCursorFromVObject(HVOBJECT hVObject, UINT16 usVideoObje
 static BOOLEAN BltToMouseCursorFromVObjectWithOutline(HVOBJECT hVObject, UINT16 usVideoObjectSubIndex, UINT16 usXPos, UINT16 usYPos)
 {
 	// Center and adjust for offsets
-	ETRLEObject const* const pTrav = hVObject->SubregionProperties(usVideoObjectSubIndex);
-	INT16 sXPos = (gsCurMouseWidth  - pTrav->usWidth)  / 2 - pTrav->sOffsetX;
-	INT16 sYPos = (gsCurMouseHeight - pTrav->usHeight) / 2 - pTrav->sOffsetY;
+	ETRLEObject const& pTrav = hVObject->SubregionProperties(usVideoObjectSubIndex);
+	INT16       const  sXPos = (gsCurMouseWidth  - pTrav.usWidth)  / 2 - pTrav.sOffsetX;
+	INT16       const  sYPos = (gsCurMouseHeight - pTrav.usHeight) / 2 - pTrav.sOffsetY;
 	return BltVideoObjectOutline(MOUSE_BUFFER, hVObject, usVideoObjectSubIndex, sXPos, sYPos, Get16BPPColor(FROMRGB(0, 255, 0)));
 }
 
@@ -102,10 +102,10 @@ static void LoadCursorData(UINT32 uiCursorIndex)
 		}
 
 		// Get ETRLE Data for this video object
-		ETRLEObject const* const pTrav = CFData->hVObject->SubregionProperties(pCurImage->uiSubIndex);
+		ETRLEObject const& pTrav = CFData->hVObject->SubregionProperties(pCurImage->uiSubIndex);
 
-		if (pTrav->usHeight > sMaxHeight) sMaxHeight = pTrav->usHeight;
-		if (pTrav->usWidth  > sMaxWidth)  sMaxWidth  = pTrav->usWidth;
+		if (pTrav.usHeight > sMaxHeight) sMaxHeight = pTrav.usHeight;
+		if (pTrav.usWidth  > sMaxWidth)  sMaxWidth  = pTrav.usWidth;
 	}
 
 
@@ -136,16 +136,16 @@ static void LoadCursorData(UINT32 uiCursorIndex)
 		CursorImage* pCurImage = &pCurData->Composites[cnt];
 
 		// Get ETRLE Data for this video object
-		ETRLEObject const* const pTrav = gpCursorFileDatabase[pCurImage->uiFileIndex].hVObject->SubregionProperties(pCurImage->uiSubIndex);
+		ETRLEObject const& pTrav = gpCursorFileDatabase[pCurImage->uiFileIndex].hVObject->SubregionProperties(pCurImage->uiSubIndex);
 
 		if (pCurImage->usPosX == CENTER_SUBCURSOR)
 		{
-			pCurImage->usPosX = pCurData->sOffsetX - pTrav->usWidth / 2;
+			pCurImage->usPosX = pCurData->sOffsetX - pTrav.usWidth / 2;
 		}
 
 		if (pCurImage->usPosY == CENTER_SUBCURSOR)
 		{
-			pCurImage->usPosY = pCurData->sOffsetY - pTrav->usHeight / 2;
+			pCurImage->usPosY = pCurData->sOffsetY - pTrav.usHeight / 2;
 		}
 	}
 }
@@ -202,9 +202,9 @@ BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 			// Erase old cursor
 			EraseMouseCursor();
 
-			ETRLEObject const* const pTrav = guiExternVo->SubregionProperties(gusExternVoSubIndex);
-			const UINT16 usEffHeight = pTrav->usHeight + pTrav->sOffsetY;
-			const UINT16 usEffWidth  = pTrav->usWidth  + pTrav->sOffsetX;
+			ETRLEObject const& pTrav       = guiExternVo->SubregionProperties(gusExternVoSubIndex);
+			UINT16      const  usEffHeight = pTrav.usHeight + pTrav.sOffsetY;
+			UINT16      const  usEffWidth  = pTrav.usWidth  + pTrav.sOffsetX;
 
 			BltVideoObjectOutline(MOUSE_BUFFER, guiExternVo, gusExternVoSubIndex, 0, 0, TRANSPARENT);
 

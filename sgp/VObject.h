@@ -44,9 +44,9 @@ class SGPVObject
 
 		size_t SubregionCount() const { return subregion_count_; }
 
-		ETRLEObject const* SubregionProperties(size_t idx) const;
+		ETRLEObject const& SubregionProperties(size_t idx) const;
 
-		UINT8 const* PixData(ETRLEObject const*) const;
+		UINT8 const* PixData(ETRLEObject const&) const;
 
 		/* Given a ETRLE image index, retrieves the value of the pixel located at
 		 * the given image coordinates. The value returned is an 8-bit palette index

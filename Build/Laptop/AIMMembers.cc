@@ -898,15 +898,13 @@ static void DisplayMercsInventory(UINT8 ubMercID)
 			//increase the item count
 			ubItemCount++;
 
-			INVTYPE     const&       item    = Item[usItem];
-			SGPVObject  const&       item_vo = GetInterfaceGraphicForItem(item);
-			ETRLEObject const* const pTrav   = item_vo.SubregionProperties(item.ubGraphicNum);
-
-			UINT32 usHeight = pTrav->usHeight;
-			UINT32 usWidth  = pTrav->usWidth;
-
-			INT16 sCenX = PosX + abs(WEAPONBOX_SIZE_X - 3 - usWidth)  / 2 - pTrav->sOffsetX;
-			INT16 sCenY = PosY + abs(WEAPONBOX_SIZE_Y     - usHeight) / 2 - pTrav->sOffsetY;
+			INVTYPE     const& item     = Item[usItem];
+			SGPVObject  const& item_vo  = GetInterfaceGraphicForItem(item);
+			ETRLEObject const& pTrav    = item_vo.SubregionProperties(item.ubGraphicNum);
+			UINT32      const  usHeight = pTrav.usHeight;
+			UINT32      const  usWidth  = pTrav.usWidth;
+			INT16       const  sCenX    = PosX + abs(WEAPONBOX_SIZE_X - 3 - usWidth)  / 2 - pTrav.sOffsetX;
+			INT16       const  sCenY    = PosY + abs(WEAPONBOX_SIZE_Y     - usHeight) / 2 - pTrav.sOffsetY;
 
 			//blt the shadow of the item
 			BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item.ubGraphicNum, sCenX - 2, sCenY + 2);
@@ -1344,11 +1342,11 @@ static BOOLEAN DisplayVideoConferencingDisplay(void)
 
 static void DisplayMercsVideoFace(void)
 {
-	ETRLEObject const* const e = guiVideoConfTerminal->SubregionProperties(0);
-	const INT32 x = AIM_MEMBER_VIDEO_CONF_TERMINAL_X;
-	const INT32 y = AIM_MEMBER_VIDEO_CONF_TERMINAL_Y;
-	const INT32 w = e->usWidth;
-	const INT32 h = e->usHeight;
+	ETRLEObject const& e = guiVideoConfTerminal->SubregionProperties(0);
+	INT32       const  x = AIM_MEMBER_VIDEO_CONF_TERMINAL_X;
+	INT32       const  y = AIM_MEMBER_VIDEO_CONF_TERMINAL_Y;
+	INT32       const  w = e.usWidth;
+	INT32       const  h = e.usHeight;
 
 	// Draw a drop shadow
 	FRAME_BUFFER->ShadowRect(x + 3, y + h, x + w,     y + h + 3); // Horizontal

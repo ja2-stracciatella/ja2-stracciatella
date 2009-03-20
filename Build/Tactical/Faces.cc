@@ -227,22 +227,22 @@ FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 	vo->pShades[FLASH_PORTRAIT_GRAYSHADE] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
 
 	// Get FACE height, width
-	ETRLEObject const* const face_gfx = vo->SubregionProperties(0);
-	face->usFaceWidth  = face_gfx->usWidth;
-	face->usFaceHeight = face_gfx->usHeight;
+	ETRLEObject const& face_gfx = vo->SubregionProperties(0);
+	face->usFaceWidth  = face_gfx.usWidth;
+	face->usFaceHeight = face_gfx.usHeight;
 
 	// OK, check # of items
 	if (vo->SubregionCount() == 8)
 	{
 		// Get EYE height, width
-		ETRLEObject const* const eyes_gfx = vo->SubregionProperties(1);
-		face->usEyesWidth  = eyes_gfx->usWidth;
-		face->usEyesHeight = eyes_gfx->usHeight;
+		ETRLEObject const& eyes_gfx = vo->SubregionProperties(1);
+		face->usEyesWidth  = eyes_gfx.usWidth;
+		face->usEyesHeight = eyes_gfx.usHeight;
 
 		// Get Mouth height, width
-		ETRLEObject const* const mouth_gfx = vo->SubregionProperties(5);
-		face->usMouthWidth  = mouth_gfx->usWidth;
-		face->usMouthHeight = mouth_gfx->usHeight;
+		ETRLEObject const& mouth_gfx = vo->SubregionProperties(5);
+		face->usMouthWidth  = mouth_gfx.usWidth;
+		face->usMouthHeight = mouth_gfx.usHeight;
 
 		face->fInvalidAnim = FALSE;
 	}
@@ -764,9 +764,9 @@ BOOLEAN RenderAutoFaceFromSoldier(const SOLDIERTYPE* s)
 static void GetXYForIconPlacement(const FACETYPE* pFace, UINT16 ubIndex, INT16 sFaceX, INT16 sFaceY, INT16* psX, INT16* psY)
 {
 	// Get height, width of icon...
-	ETRLEObject const* const pTrav = guiPORTRAITICONS->SubregionProperties(ubIndex);
-	UINT16 usHeight = pTrav->usHeight;
-	UINT16 usWidth  = pTrav->usWidth;
+	ETRLEObject const& pTrav    = guiPORTRAITICONS->SubregionProperties(ubIndex);
+	UINT16      const  usHeight = pTrav.usHeight;
+	UINT16      const  usWidth  = pTrav.usWidth;
 
 	INT16 sX = sFaceX + pFace->usFaceWidth  - usWidth  - 1;
 	INT16 sY = sFaceY + pFace->usFaceHeight - usHeight - 1;
@@ -779,9 +779,9 @@ static void GetXYForIconPlacement(const FACETYPE* pFace, UINT16 ubIndex, INT16 s
 static void GetXYForRightIconPlacement(const FACETYPE* pFace, UINT16 ubIndex, INT16 sFaceX, INT16 sFaceY, INT16* psX, INT16* psY, INT8 bNumIcons)
 {
 	// Get height, width of icon...
-	ETRLEObject const* const pTrav = guiPORTRAITICONS->SubregionProperties(ubIndex);
-	UINT16 usHeight = pTrav->usHeight;
-	UINT16 usWidth  = pTrav->usWidth;
+	ETRLEObject const& pTrav    = guiPORTRAITICONS->SubregionProperties(ubIndex);
+	UINT16      const  usHeight = pTrav.usHeight;
+	UINT16      const  usWidth  = pTrav.usWidth;
 
 	INT16 sX = sFaceX + usWidth * bNumIcons + 1;
 	INT16 sY = sFaceY + pFace->usFaceHeight - usHeight - 1;

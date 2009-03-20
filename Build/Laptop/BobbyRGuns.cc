@@ -709,10 +709,10 @@ static void DisplayBigItemImage(const INVTYPE* const item, const UINT16 PosY)
 	AutoSGPVObject uiImage(LoadTileGraphicForItem(item));
 
 	//center picture in frame
-	ETRLEObject const* const pTrav = uiImage->SubregionProperties(0);
-	UINT32 usWidth = pTrav->usWidth;
-	INT16  sCenX   = PosX + abs(BOBBYR_GRID_PIC_WIDTH - usWidth) / 2 - pTrav->sOffsetX;
-	INT16  sCenY   = PosY + 8;
+	ETRLEObject const& pTrav   = uiImage->SubregionProperties(0);
+	UINT32      const  usWidth = pTrav.usWidth;
+	INT16       const  sCenX   = PosX + abs(BOBBYR_GRID_PIC_WIDTH - usWidth) / 2 - pTrav.sOffsetX;
+	INT16       const  sCenY   = PosY + 8;
 
 	//blt the shadow of the item
 	BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage, 0, sCenX - 2, sCenY + 2);

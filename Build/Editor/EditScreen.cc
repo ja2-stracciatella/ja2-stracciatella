@@ -917,12 +917,12 @@ void ShowCurrentDrawingMode( void )
 	// If we actually have something to draw, draw it
 	if ( (usUseIndex != 0xffff) && (usObjIndex != 0xffff) )
 	{
-		HVOBJECT           const ts = TileElemFromTileType(usObjIndex)->hTileSurface;
-		ETRLEObject const* const e  = ts->SubregionProperties(usUseIndex);
+		HVOBJECT    const  ts = TileElemFromTileType(usObjIndex)->hTileSurface;
+		ETRLEObject const& e  = ts->SubregionProperties(usUseIndex);
 
 		// Center the picture in the display window.
-		INT32 const iStartX = (w - e->usWidth)  / 2 - e->sOffsetX;
-		INT32 const iStartY = (h - e->usHeight) / 2 - e->sOffsetY;
+		INT32 const iStartX = (w - e.usWidth)  / 2 - e.sOffsetX;
+		INT32 const iStartY = (h - e.usHeight) / 2 - e.sOffsetY;
 
 		ts->CurrentShade(DEFAULT_SHADE_LEVEL);
 		BltVideoObject(FRAME_BUFFER, ts, usUseIndex, x + iStartX, y + iStartY);

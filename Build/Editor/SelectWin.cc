@@ -1210,9 +1210,9 @@ try
 
 		for (UINT16 usETRLELoop = usETRLEStart; usETRLELoop <= usETRLEEnd; ++usETRLELoop)
 		{
-			ETRLEObject const* const e = vo->SubregionProperties(usETRLELoop);
+			ETRLEObject const& e = vo->SubregionProperties(usETRLELoop);
 
-			if (x + e->usWidth > area->x + area->w || flags & ONE_COLUMN)
+			if (x + e.usWidth > area->x + area->w || flags & ONE_COLUMN)
 			{
 				if (flags & ONE_ROW) break;
 				x  = area->x;
@@ -1225,17 +1225,17 @@ try
 			n->uiIndex   = usETRLELoop;
 			n->iX        = x;
 			n->iY        = y;
-			n->iWidth    = e->usWidth;
-			n->iHeight   = e->usHeight;
+			n->iWidth    = e.usWidth;
+			n->iHeight   = e.usHeight;
 			n->pNext     = *pDisplayList;
 			n->uiObjIndx = ds->uiObjIndx;
 			n->fChosen   = IsInSelectionList(n);
 
 			*pDisplayList = n;
 
-			if (max_h < e->usHeight) max_h = e->usHeight;
+			if (max_h < e.usHeight) max_h = e.usHeight;
 
-			x += e->usWidth + pSpacing->iX;
+			x += e.usWidth + pSpacing->iX;
 		}
 	}
 
@@ -1286,10 +1286,10 @@ static BOOLEAN DisplayWindowFunc(DisplayList* const pNode, INT16 const iTopCutOf
 		if (pNode->fChosen)
 			sCount = pSelList[ FindInSelectionList( pNode ) ].sCount;
 
-		SGPVObject*        const vo = pNode->hObj;
-		ETRLEObject const* const e  = vo->SubregionProperties(pNode->uiIndex);
+		SGPVObject* const  vo = pNode->hObj;
+		ETRLEObject const& e  = vo->SubregionProperties(pNode->uiIndex);
 		vo->CurrentShade(DEFAULT_SHADE_LEVEL);
-		fReturnVal = BltVideoObject(FRAME_BUFFER, vo, pNode->uiIndex, pNode->iX - e->sOffsetX, iCurrY - e->sOffsetY);
+		fReturnVal = BltVideoObject(FRAME_BUFFER, vo, pNode->uiIndex, pNode->iX - e.sOffsetX, iCurrY - e.sOffsetY);
 
 		if ( sCount != 0)
 		{

@@ -2206,13 +2206,13 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 	BltVideoObjectOutline(uiSrcID, &vo, item.ubGraphicNum, 0, 0, TRANSPARENT);
 
 	//crop the source image
-	ETRLEObject const* const pObject = vo.SubregionProperties(item.ubGraphicNum);
-	INT32 iSrcWidth  = pObject->usWidth;
-	INT32 iSrcHeight = pObject->usHeight;
-	SGPBox const src_rect =
+	ETRLEObject const& pObject    = vo.SubregionProperties(item.ubGraphicNum);
+	INT32       const  iSrcWidth  = pObject.usWidth;
+	INT32       const  iSrcHeight = pObject.usHeight;
+	SGPBox      const  src_rect   =
 	{
-		SrcRect.iLeft +	pObject->sOffsetX,
-		SrcRect.iTop  +	pObject->sOffsetY,
+		SrcRect.iLeft +	pObject.sOffsetX,
+		SrcRect.iTop  +	pObject.sOffsetY,
 		iSrcWidth,
 		iSrcHeight
 	};

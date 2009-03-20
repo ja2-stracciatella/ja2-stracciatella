@@ -1169,10 +1169,10 @@ static void DisplayCharInventory(const SOLDIERTYPE* const s)
 		UINT16  const  item_idx = o->usItem;
 		INVTYPE const& item     = Item[item_idx];
 
-		SGPVObject  const&       gfx   = GetInterfaceGraphicForItem(item);
-		ETRLEObject const* const pTrav = gfx.SubregionProperties(item.ubGraphicNum);
-		const INT16              cen_x = PosX + abs(57 - pTrav->usWidth)  / 2 - pTrav->sOffsetX;
-		const INT16              cen_y = PosY + abs(22 - pTrav->usHeight) / 2 - pTrav->sOffsetY;
+		SGPVObject  const& gfx   = GetInterfaceGraphicForItem(item);
+		ETRLEObject const& pTrav = gfx.SubregionProperties(item.ubGraphicNum);
+		INT16       const  cen_x = PosX + abs(57 - pTrav.usWidth)  / 2 - pTrav.sOffsetX;
+		INT16       const  cen_y = PosY + abs(22 - pTrav.usHeight) / 2 - pTrav.sOffsetY;
 		BltVideoObjectOutline(FRAME_BUFFER, &gfx, item.ubGraphicNum, cen_x, cen_y, TRANSPARENT);
 
 		SetFontDestBuffer(FRAME_BUFFER);
