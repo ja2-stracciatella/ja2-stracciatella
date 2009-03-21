@@ -203,9 +203,6 @@ extern INT8 bSelectedContractChar;
 // has temp path for character path or helicopter been already drawn
 extern BOOLEAN  fTempPathAlreadyDrawn;
 
-// the map border eta pop up
-extern SGPVObject* guiMapBorderEtaPopUp;
-
 // the currently selected town militia
 extern INT16 sSelectedMilitiaTown;
 

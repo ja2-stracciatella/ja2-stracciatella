@@ -424,7 +424,6 @@ static SGPVObject* guiULICONS;
 #ifndef JA2DEMO
 static SGPVObject* guiNewMailIcons;
 #endif
-SGPVObject* guiLEVELMARKER; // the white rectangle highlighting the current level on the map border
 
 
 // misc mouse regions
@@ -6973,8 +6972,6 @@ void HandlePreloadOfMapGraphics(void)
 
 	HandleLoadOfMapBottomGraphics( );
 
-	guiLEVELMARKER              = AddVideoObjectFromFile("INTERFACE/GreenArr.sti");
-	guiMapBorderEtaPopUp        = AddVideoObjectFromFile("INTERFACE/eta_pop_up.sti");
 	guiSelectedCharArrow        = AddVideoObjectFromFile("INTERFACE/selectedchararrow.sti");
 	guiSectorLocatorGraphicID   = AddVideoObjectFromFile("INTERFACE/hilite.sti");
 
@@ -7006,8 +7003,6 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 	DeleteVideoObject(guiMapInvSecondHandBlockout);
 #endif
 	DeleteVideoObject(guiULICONS);
-	DeleteVideoObject(guiLEVELMARKER);
-	DeleteVideoObject(guiMapBorderEtaPopUp);
 	DeleteVideoObject(guiSelectedCharArrow);
 	DeleteVideoObject(guiSectorLocatorGraphicID);
 

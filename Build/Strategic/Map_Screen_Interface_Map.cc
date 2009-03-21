@@ -369,9 +369,6 @@ static UINT16* pMapLTGreenPalette;
 static UINT16* pMapDKGreenPalette;
 
 
-// the map border eta pop up
-SGPVObject* guiMapBorderEtaPopUp;
-
 // heli pop up
 static SGPVObject* guiMapBorderHeliSectors;
 

@@ -230,9 +230,6 @@ extern INT32 giBoxY;
 extern SGPVSurface* guiPOPUPTEX;
 extern SGPVObject* guiPOPUPBORDERS;
 
-// the level-changing markers on the map border
-extern SGPVObject* guiLEVELMARKER;
-
 // the currently selected character arrow
 extern SGPVObject* guiSelectedCharArrow;
 

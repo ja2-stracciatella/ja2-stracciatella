@@ -60,7 +60,9 @@
 MOUSE_REGION LevelMouseRegions[ 4 ];
 
 // graphics
+static SGPVObject* guiLEVELMARKER; // the white rectangle highlighting the current level on the map border
 static SGPVObject* guiMapBorder;
+static SGPVObject* guiMapBorderEtaPopUp; // the map border eta pop up
 //static SGPVObject* guiMapBorderCorner;
 
 
@@ -117,7 +119,9 @@ void BtnRaiseLevelBtnCallback(GUI_BUTTON *btn,INT32 reason);
 void LoadMapBorderGraphics(void)
 {
   // this procedure will load the graphics needed for the map border
-	guiMapBorder = AddVideoObjectFromFile(MAP_BORDER_FILE);
+	guiLEVELMARKER       = AddVideoObjectFromFile("INTERFACE/GreenArr.sti");
+	guiMapBorder         = AddVideoObjectFromFile(MAP_BORDER_FILE);
+	guiMapBorderEtaPopUp = AddVideoObjectFromFile("INTERFACE/eta_pop_up.sti");
 
 /* corner was removed along with the Zoom feature
 	// will load map border corner
@@ -131,7 +135,9 @@ void LoadMapBorderGraphics(void)
 void DeleteMapBorderGraphics( void )
 {
 	// procedure will delete graphics loaded for map border
+	DeleteVideoObject(guiLEVELMARKER);
 	DeleteVideoObject(guiMapBorder);
+	DeleteVideoObject(guiMapBorderEtaPopUp);
 //	DeleteVideoObject(guiMapBorderCorner);
 }
 
