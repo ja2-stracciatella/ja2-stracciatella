@@ -311,13 +311,7 @@ void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
 		{
 			gTacticalStatus.bMercArrivingQuoteBeingUsed = TRUE;
 
-			//Setup the highlight sector value (note this isn't for mines but using same system)
-			gsSectorLocatorX = pSoldier->sSectorX;
-			gsSectorLocatorY = pSoldier->sSectorY;
-
-			MakeSectorLocatorEvent(START_YELLOW_SECTOR_LOCATOR);
 			TacticalCharacterDialogue( pSoldier, QUOTE_MERC_REACHED_DESTINATION );
-			MakeSectorLocatorEvent(STOP_SECTOR_LOCATOR);
 
 			class DialogueEventUnsetArrivesFlag : public DialogueEvent
 			{

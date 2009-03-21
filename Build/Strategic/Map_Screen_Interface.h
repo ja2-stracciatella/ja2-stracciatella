@@ -140,16 +140,6 @@ enum UpdateBoxReason
 };
 
 
-enum SectorLocatorEvent
-{
-	START_RED_SECTOR_LOCATOR = 0,
-	START_YELLOW_SECTOR_LOCATOR,
-	STOP_SECTOR_LOCATOR
-};
-
-void MakeSectorLocatorEvent(SectorLocatorEvent);
-
-
 // dimensions and offset for merc update box
 #define UPDATE_MERC_FACE_X_WIDTH 50
 #define UPDATE_MERC_FACE_X_HEIGHT 50

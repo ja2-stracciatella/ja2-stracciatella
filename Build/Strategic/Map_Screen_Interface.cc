@@ -1770,32 +1770,6 @@ void GoToPrevCharacterInList( void )
 }
 
 
-void MakeSectorLocatorEvent(SectorLocatorEvent const event)
-{
-	class DialogueEventSectorLocator : public DialogueEvent
-	{
-		public:
-			DialogueEventSectorLocator(SectorLocatorEvent const event) : event_(event) {}
-
-			bool Execute()
-			{
-				switch (event_)
-				{
-					case START_RED_SECTOR_LOCATOR:    gubBlitSectorLocatorCode = LOCATOR_COLOR_RED;    break;
-					case START_YELLOW_SECTOR_LOCATOR: gubBlitSectorLocatorCode = LOCATOR_COLOR_YELLOW; break;
-					case STOP_SECTOR_LOCATOR:         TurnOffSectorLocator();                          break;
-				}
-				return false;
-			}
-
-		private:
-			SectorLocatorEvent const event_;
-	};
-
-	DialogueEvent::Add(new DialogueEventSectorLocator(event));
-}
-
-
 void HandleMinerEvent( UINT8 bMinerNumber, INT16 sSectorX, INT16 sSectorY, INT16 sQuoteNumber, BOOLEAN fForceMapscreen )
 {
 	BOOLEAN fFromMapscreen = FALSE;
@@ -1825,22 +1799,10 @@ void HandleMinerEvent( UINT8 bMinerNumber, INT16 sSectorX, INT16 sSectorY, INT16
 			ChangeSelectedMapSector( sSelMapX, sSelMapY, 0 );
 		}
 
-		// set up the mine sector flasher
-		gsSectorLocatorX = sSectorX;
-		gsSectorLocatorY = sSectorY;
-
 		fMapPanelDirty = TRUE;
+	}
 
-		// post dialogue events for miners to say this quote and flash the sector where his mine is
-		MakeSectorLocatorEvent(START_RED_SECTOR_LOCATOR);
-		CharacterDialogue(g_external_face_profile_ids[bMinerNumber], sQuoteNumber, uiExternalStaticNPCFaces[bMinerNumber], DIALOGUE_EXTERNAL_NPC_UI, FALSE);
-		MakeSectorLocatorEvent(STOP_SECTOR_LOCATOR);
-	}
-	else	// stay in tactical
-	{
-		// no need to to highlight mine sector
-		CharacterDialogue(g_external_face_profile_ids[bMinerNumber], sQuoteNumber, uiExternalStaticNPCFaces[bMinerNumber], DIALOGUE_EXTERNAL_NPC_UI, FALSE);
-	}
+	CharacterDialogue(g_external_face_profile_ids[bMinerNumber], sQuoteNumber, uiExternalStaticNPCFaces[bMinerNumber], DIALOGUE_EXTERNAL_NPC_UI, FALSE);
 }
 
 
