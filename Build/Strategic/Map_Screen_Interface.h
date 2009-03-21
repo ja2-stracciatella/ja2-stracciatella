@@ -230,9 +230,6 @@ extern INT32 giBoxY;
 extern SGPVSurface* guiPOPUPTEX;
 extern SGPVObject* guiPOPUPBORDERS;
 
-// the currently selected character arrow
-extern SGPVObject* guiSelectedCharArrow;
-
 extern BOOLEAN fShowMapScreenMovementList;
 
 // do we need to rebuild the mapscreen characterlist?
@@ -369,7 +366,6 @@ enum
 	LOCATOR_COLOR_YELLOW
 };
 
-extern SGPVObject* guiSectorLocatorGraphicID;
 void HandleBlitOfSectorLocatorIcon( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubLocatorID );
 
 
@@ -490,5 +486,8 @@ extern MOUSE_REGION gMapStatusBarsRegion;
 void RandomMercInGroupSaysQuote(GROUP*, UINT16 usQuoteNum);
 
 void MakeDialogueEventShowContractMenu(SOLDIERTYPE&);
+
+void LoadMapScreenInterfaceGraphics();
+void DeleteMapScreenInterfaceGraphics();
 
 #endif

@@ -142,7 +142,7 @@ INT32 giSizeOfInterfaceFastHelpTextList = 0;
 INT16 gsSectorLocatorX;
 INT16 gsSectorLocatorY;
 UINT8 gubBlitSectorLocatorCode; //color
-SGPVObject* guiSectorLocatorGraphicID;
+static SGPVObject* guiSectorLocatorGraphicID;
 // the animate time per frame in milliseconds
 #define ANIMATED_BATTLEICON_FRAME_TIME 80
 #define MAX_FRAME_COUNT_FOR_ANIMATED_BATTLE_ICON 12
@@ -221,7 +221,7 @@ SGPVSurface* guiPOPUPTEX;
 SGPVObject* guiPOPUPBORDERS;
 
 // the currently selected character arrow
-SGPVObject* guiSelectedCharArrow;
+static SGPVObject* guiSelectedCharArrow;
 
 GUIButtonRef guiUpdatePanelButtons[2];
 
@@ -4810,4 +4810,18 @@ BOOLEAN CheckIfSalaryIncreasedAndSayQuote( SOLDIERTYPE *pSoldier, BOOLEAN fTrigg
 		// nope, nothing to do
 		return( FALSE );
 	}
+}
+
+
+void LoadMapScreenInterfaceGraphics()
+{
+	guiSectorLocatorGraphicID = AddVideoObjectFromFile("INTERFACE/hilite.sti");
+	guiSelectedCharArrow      = AddVideoObjectFromFile("INTERFACE/selectedchararrow.sti");
+}
+
+
+void DeleteMapScreenInterfaceGraphics()
+{
+	DeleteVideoObject(guiSectorLocatorGraphicID);
+	DeleteVideoObject(guiSelectedCharArrow);
 }

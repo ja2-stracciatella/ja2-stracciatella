@@ -6972,9 +6972,6 @@ void HandlePreloadOfMapGraphics(void)
 
 	HandleLoadOfMapBottomGraphics( );
 
-	guiSelectedCharArrow        = AddVideoObjectFromFile("INTERFACE/selectedchararrow.sti");
-	guiSectorLocatorGraphicID   = AddVideoObjectFromFile("INTERFACE/hilite.sti");
-
 #ifndef JA2DEMO
 	//Kris:  Added this because I need to blink the icons button.
 	guiNewMailIcons             = AddVideoObjectFromFile("INTERFACE/newemail.sti");
@@ -6986,6 +6983,7 @@ void HandlePreloadOfMapGraphics(void)
 	// load border graphics
 	LoadMapBorderGraphics( );
 
+	LoadMapScreenInterfaceGraphics();
 	LoadMapScreenInterfaceMapGraphics();
 }
 
@@ -7003,8 +7001,6 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 	DeleteVideoObject(guiMapInvSecondHandBlockout);
 #endif
 	DeleteVideoObject(guiULICONS);
-	DeleteVideoObject(guiSelectedCharArrow);
-	DeleteVideoObject(guiSectorLocatorGraphicID);
 
 #ifndef JA2DEMO
 	//Kris:  Remove the email icons.
@@ -7017,6 +7013,7 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 	// get rid of border stuff
 	DeleteMapBorderGraphics();
 
+	DeleteMapScreenInterfaceGraphics();
 	DeleteMapScreenInterfaceMapGraphics();
 }
 
