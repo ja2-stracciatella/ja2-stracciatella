@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "LoadSaveData.h"
 #include "Strategic_Town_Loyalty.h"
 #include "StrategicMap.h"
 #include "Overhead.h"
@@ -1087,17 +1088,45 @@ void BuildListOfTownSectors( void )
 }
 
 
-void SaveStrategicTownLoyaltyToSaveGameFile(HWFILE const hFile)
+void SaveStrategicTownLoyaltyToSaveGameFile(HWFILE const f)
 {
 	//Save the Town Loyalty
-	FileWrite(hFile, gTownLoyalty, sizeof(TOWN_LOYALTY) * NUM_TOWNS);
+	for (TOWN_LOYALTY const* i = gTownLoyalty; i != endof(gTownLoyalty); ++i)
+	{
+		BYTE  data[26];
+		BYTE* d = data;
+		INJ_U8(  d, i->ubRating)
+		INJ_SKIP(d, 1)
+		INJ_I16( d, i->sChange)
+		INJ_BOOL(d, i->fStarted)
+		INJ_SKIP(d, 1)
+		INJ_BOOL(d, i->fLiberatedAlready)
+		INJ_SKIP(d, 19)
+		Assert(d == endof(data));
+
+		FileWrite(f, data, sizeof(data));
+	}
 }
 
 
-void LoadStrategicTownLoyaltyFromSavedGameFile(HWFILE const hFile)
+void LoadStrategicTownLoyaltyFromSavedGameFile(HWFILE const f)
 {
 	//Restore the Town Loyalty
-	FileRead(hFile, gTownLoyalty, sizeof(TOWN_LOYALTY) * NUM_TOWNS);
+	for (TOWN_LOYALTY* i = gTownLoyalty; i != endof(gTownLoyalty); ++i)
+	{
+		BYTE data[26];
+		FileRead(f, data, sizeof(data));
+
+		BYTE const* d = data;
+		EXTR_U8(  d, i->ubRating)
+		EXTR_SKIP(d, 1)
+		EXTR_I16( d, i->sChange)
+		EXTR_BOOL(d, i->fStarted)
+		EXTR_SKIP(d, 1)
+		EXTR_BOOL(d, i->fLiberatedAlready)
+		EXTR_SKIP(d, 19)
+		Assert(d == endof(data));
+	}
 }
 
 

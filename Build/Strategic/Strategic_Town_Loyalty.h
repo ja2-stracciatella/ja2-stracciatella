@@ -68,11 +68,8 @@ struct TOWN_LOYALTY
 	UINT8			ubRating;
 	INT16			sChange;
 	BOOLEAN		fStarted;		// starting loyalty of each town is initialized only when player first enters that town
-	UINT8			UNUSEDubRebelSentiment;		// current rebel sentiment.  Events could change the starting value...
 	BOOLEAN		fLiberatedAlready;
-	BYTE			filler[19];					// reserved for expansion
 };
-CASSERT(sizeof(TOWN_LOYALTY) == 26)
 
 
 // the loyalty variables for each town
