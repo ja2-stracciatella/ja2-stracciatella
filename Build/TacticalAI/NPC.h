@@ -2,7 +2,7 @@
 #define NPC_H
 
 #include "Facts.h"
-#include "MapScreen.h"
+#include "JA2Types.h"
 
 
 #define NUM_NPC_QUOTE_RECORDS 50

@@ -4,6 +4,7 @@
 #include "Handle_UI.h"
 #include "Interface.h"
 #include "Isometric_Utils.h"
+#include "MapScreen.h"
 #include "MessageBoxScreen.h"
 #include "Soldier_Control.h"
 #include "Encrypted_File.h"

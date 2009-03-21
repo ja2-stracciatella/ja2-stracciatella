@@ -10,6 +10,7 @@
 #include "LoadSaveSoldierType.h"
 #include "LoadSaveTacticalStatusType.h"
 #include "Local.h"
+#include "MapScreen.h"
 #include "Timer_Control.h"
 #include "Types.h"
 #include "Soldier_Profile.h"

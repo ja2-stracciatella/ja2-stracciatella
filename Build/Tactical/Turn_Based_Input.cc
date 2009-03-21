@@ -92,6 +92,9 @@
 
 #ifdef JA2TESTVERSION
 #	include "Ambient_Control.h"
+#	ifndef JA2DEMO
+#		include "MapScreen.h"
+#	endif
 #endif
 
 #ifdef JA2BETAVERSION

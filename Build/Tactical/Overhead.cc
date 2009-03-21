@@ -1,4 +1,5 @@
 #include "Handle_Items.h"
+#include "MapScreen.h"
 #include "Soldier_Find.h"
 #include "TileDef.h"
 #include "VObject.h"

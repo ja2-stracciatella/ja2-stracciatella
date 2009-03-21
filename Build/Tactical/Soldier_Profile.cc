@@ -1,6 +1,7 @@
 #include "Interface_Control.h"
 #include "Interface_Panels.h"
 #include "LoadSaveMercProfile.h"
+#include "MapScreen.h"
 #include "Merc_Hiring.h"
 #include "Debug.h"
 #include "math.h"

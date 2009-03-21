@@ -11,6 +11,7 @@
 #include "Laptop.h"
 #include "LoadScreen.h"
 #include "MainMenuScreen.h"
+#include "MapScreen.h"
 #include "MapUtility.h"
 #include "MessageBoxScreen.h"
 #include "Options_Screen.h"

@@ -1,5 +1,6 @@
 #include "Font_Control.h"
 #include "Handle_Items.h"
+#include "MapScreen.h"
 #include "Merc_Hiring.h"
 #include "Overhead.h"
 #include "Soldier_Find.h"

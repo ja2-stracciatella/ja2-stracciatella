@@ -3,6 +3,7 @@
 #include "Action_Items.h"
 #include "Handle_Items.h"
 #include "Local.h"
+#include "MapScreen.h"
 #include "Overhead.h"
 #include "Soldier_Find.h"
 #include "Structure.h"

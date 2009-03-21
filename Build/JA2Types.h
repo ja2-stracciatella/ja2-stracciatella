@@ -21,6 +21,7 @@ struct LEVELNODE;
 struct LIGHT_SPRITE;
 struct MERCPROFILESTRUCT;
 struct MercPopUpBox;
+struct OBJECTTYPE;
 struct PathSt;
 struct PopUpBox;
 struct REAL_OBJECT;
