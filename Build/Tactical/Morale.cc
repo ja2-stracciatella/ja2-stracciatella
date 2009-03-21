@@ -3,7 +3,6 @@
 #include "Overhead.h"
 #include "Soldier_Profile.h"
 #include "Dialogue_Control.h"
-#include "Map_Screen_Interface.h"
 #include "Message.h"
 #include "Assignments.h"
 #include "Strategic_Movement.h"

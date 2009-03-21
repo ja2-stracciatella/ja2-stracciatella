@@ -37,7 +37,6 @@
 #include "Campaign.h"
 #include "Tactical_Save.h"
 #include "Strategic_Status.h"
-#include "Map_Screen_Interface.h"
 #include "Text.h"
 #include "WordWrap.h"
 #include "Random.h"
