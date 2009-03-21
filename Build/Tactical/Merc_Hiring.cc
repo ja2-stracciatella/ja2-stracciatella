@@ -371,9 +371,8 @@ void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
 }
 
 
-BOOLEAN IsMercHireable(const ProfileID pid)
+bool IsMercHireable(MERCPROFILESTRUCT const& p)
 {
-	MERCPROFILESTRUCT const& p = GetProfile(pid);
 	/* If the merc has an .EDT file, is not away on assignment, and isn't already
 	 * hired (but not arrived yet), he is not dead and he isn't returning home */
 	return

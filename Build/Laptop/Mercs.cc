@@ -1688,7 +1688,7 @@ static BOOLEAN IsMercMercAvailable(UINT8 ubMercID)
 		if( GetMercIDFromMERCArray( cnt ) == ubMercID )
 		{
 			//if the merc is available, and Not dead
-			if( IsMercHireable( ubMercID ) )
+			if (IsMercHireable(GetProfile(ubMercID)))
 				return( TRUE );
 		}
 	}
@@ -2078,17 +2078,18 @@ static void ShouldAnyNewMercMercBecomeAvailable(void)
 
 static BOOLEAN CanMercBeAvailableYet(UINT8 ubMercToCheck)
 {
+	CONTITION_FOR_MERC_AVAILABLE const& c = gConditionsForMercAvailability[ubMercToCheck];
 	//if the merc is already available
-	if( gConditionsForMercAvailability[ ubMercToCheck ].ubMercArrayID <= LaptopSaveInfo.gubLastMercIndex )
+	if (c.ubMercArrayID <= LaptopSaveInfo.gubLastMercIndex)
 		return( FALSE );
 
 	//if the merc is already hired
-	if( !IsMercHireable( GetMercIDFromMERCArray( gConditionsForMercAvailability[ ubMercToCheck ].ubMercArrayID ) ) )
+	if (!IsMercHireable(GetProfile(GetMercIDFromMERCArray(c.ubMercArrayID))))
 		return( FALSE );
 
 	//if player has paid enough money for the merc to be available, and the it is after the current day
-	if( gConditionsForMercAvailability[ ubMercToCheck ].usMoneyPaid <= LaptopSaveInfo.uiTotalMoneyPaidToSpeck &&
-			gConditionsForMercAvailability[ ubMercToCheck ].usDay <= GetWorldDay() )
+	if (c.usMoneyPaid <= LaptopSaveInfo.uiTotalMoneyPaidToSpeck &&
+			c.usDay <= GetWorldDay())
 	{
 		return( TRUE );
 	}

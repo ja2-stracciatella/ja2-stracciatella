@@ -272,7 +272,7 @@ static void DrawMercsFaceToScreen(const UINT8 ubMercID, const UINT16 usPosX, con
 		shaded = TRUE;
 		text   = MercInfo[MERC_FILES_ALREADY_HIRED];
 	}
-	else if (!IsMercHireable(id))
+	else if (!IsMercHireable(p))
 	{
 		// the merc is away, shadow his/her face and blit 'away' over top
 		shaded = TRUE;

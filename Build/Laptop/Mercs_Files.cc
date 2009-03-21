@@ -328,7 +328,7 @@ try
 		shaded = TRUE;
 		text   = MercInfo[MERC_FILES_ALREADY_HIRED];
 	}
-	else if (!IsMercHireable(pid))
+	else if (!IsMercHireable(p))
 	{
 		// The merc is away on another assignemnt, say the merc is unavailable
 		shaded = TRUE;
@@ -428,19 +428,20 @@ static BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 	INT8	bReturnCode;
 
 	memset(&HireMercStruct, 0, sizeof(MERC_HIRE_STRUCT));
+	MERCPROFILESTRUCT& p = GetProfile(ubMercID);
 
 	//if the ALT key is down
 	if( gfKeyState[ ALT ] && CHEATER_CHEAT_LEVEL( ) )
 	{
 		//set the merc to be hireable
-		gMercProfiles[ ubMercID ].bMercStatus = MERC_OK;
-		gMercProfiles[ ubMercID ].uiDayBecomesAvailable = 0;
+		p.bMercStatus           = MERC_OK;
+		p.uiDayBecomesAvailable = 0;
 	}
 
 	//if the merc is away, dont hire
-	if( !IsMercHireable( ubMercID ) )
+	if (!IsMercHireable(p))
 	{
-		if( gMercProfiles[ ubMercID ].bMercStatus != MERC_IS_DEAD )
+		if (p.bMercStatus != MERC_IS_DEAD)
 		{
 			guiCurrentLaptopMode = LAPTOP_MODE_MERC;
 			gusMercVideoSpeckSpeech = SPECK_QUOTE_PLAYER_TRIES_TO_HIRE_ALREADY_HIRED_MERC;

@@ -1023,7 +1023,7 @@ try
 		shaded = TRUE;
 		text   = MercInfo[MERC_FILES_ALREADY_HIRED];
 	}
-	else if (!IsMercHireable(id))
+	else if (!IsMercHireable(p))
 	{
 		// the merc has a text file and the merc is not away
 		shaded = TRUE;
@@ -1787,7 +1787,7 @@ static AIMVideoMode WillMercAcceptCall(void)
 
 	/* If the merc is at home, or if the merc is only slightly annoyed at the
 	 * player, he will greet the player */
-	if (IsMercHireable(gbCurrentSoldier)) return AIM_VIDEO_FIRST_CONTACT_MERC_MODE;
+	if (IsMercHireable(p)) return AIM_VIDEO_FIRST_CONTACT_MERC_MODE;
 
 	return AIM_VIDEO_MERC_ANSWERING_MACHINE_MODE;
 }
@@ -2859,14 +2859,14 @@ void TempHiringOfMercs(UINT8 ubNumberOfMercs, BOOLEAN const fReset)
 
 	for (INT16 i = 0; i < ubNumberOfMercs; ++i)
 	{
-		ProfileID const pid = MercID[i];
-		if (!IsMercHireable(pid))
+		ProfileID const    pid = MercID[i];
+		MERCPROFILESTRUCT& p   = GetProfile(pid);
+		if (!IsMercHireable(p))
 		{
 			++ubNumberOfMercs;
 			continue;
 		}
 
-		MERCPROFILESTRUCT& p = GetProfile(pid);
 		p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
 		p.bMercStatus  = 0; // since this is only a testing function, make the merc available
 
