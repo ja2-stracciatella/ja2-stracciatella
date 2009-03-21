@@ -1025,7 +1025,9 @@ INT8 GetFirstBuddyOnTeam(MERCPROFILESTRUCT const& p)
 	for (INT i = 0; i != 3; ++i)
 	{
 		INT8 const buddy = p.bBuddy[i];
-		if (buddy < 0 || !IsMercOnTeam(buddy) || IsMercDead(buddy)) continue;
+		if (buddy < 0)                     continue;
+		if (!IsMercOnTeam(buddy))          continue;
+		if (IsMercDead(GetProfile(buddy))) continue;
 		return buddy;
 	}
 	return -1;

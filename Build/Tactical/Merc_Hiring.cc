@@ -388,13 +388,11 @@ BOOLEAN IsMercHireable(const ProfileID pid)
 }
 
 
-BOOLEAN IsMercDead( UINT8 ubMercID )
+bool IsMercDead(MERCPROFILESTRUCT const& p)
 {
-	if( gMercProfiles[ ubMercID ].bMercStatus == MERC_IS_DEAD )
-		return(TRUE);
-	else
-		return(FALSE);
+	return p.bMercStatus == MERC_IS_DEAD;
 }
+
 
 BOOLEAN IsTheSoldierAliveAndConcious( SOLDIERTYPE		*pSoldier )
 {

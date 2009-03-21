@@ -384,7 +384,6 @@ static UINT32 GetTimeRemainingOnSoldiersInsuranceContract(const SOLDIERTYPE* pSo
 static BOOLEAN DisplayOrderGrid(const UINT8 ubGridNumber, SOLDIERTYPE* const pSoldier)
 try
 {
-	const ProfileID ubMercID = pSoldier->ubProfile;
 	INT32		iCostOfContract=0;
 	wchar_t		sText[800];
 	BOOLEAN		fDisplayMercContractStateTextColorInRed = FALSE;
@@ -398,14 +397,17 @@ try
 
 	BltVideoObject(FRAME_BUFFER, guiInsOrderGridImage, 0, dx, dy);
 
+	ProfileID         const  pid     = pSoldier->ubProfile;
+	MERCPROFILESTRUCT const& p       = GetProfile(pid);
+	bool              const  is_dead = IsMercDead(p);
 	{
 		// load the mercs face graphic and add it
 		char sTemp[100];
-		sprintf(sTemp, "FACES/%02d.sti", ubMercID);
+		sprintf(sTemp, "FACES/%02d.sti", pid);
 		AutoSGPVObject uiInsMercFaceImage(AddVideoObjectFromFile(sTemp));
 
 		//if the merc is dead, shade the face red
-		if( IsMercDead( ubMercID ) )
+		if (is_dead)
 		{
 			//if the merc is dead
 			//shade the face red, (to signify that he is dead)
@@ -420,10 +422,10 @@ try
 	}
 
 	//display the mercs nickname
-	DrawTextToScreen(gMercProfiles[ubMercID].zNickname, dx + INS_CTRCT_OG_NICK_NAME_OFFSET_X, dy + INS_CTRCT_OG_NICK_NAME_OFFSET_Y, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(p.zNickname, dx + INS_CTRCT_OG_NICK_NAME_OFFSET_X, dy + INS_CTRCT_OG_NICK_NAME_OFFSET_Y, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Get the text to display the mercs current insurance contract status
-	if( IsMercDead( pSoldier->ubProfile ) )
+	if (is_dead)
 	{
 		//if the merc has a contract
 		if( pSoldier->usLifeInsurance )
@@ -488,7 +490,7 @@ try
 
 
 	//display the amount of time the merc has left on their Regular contract
-	if( IsMercDead( ubMercID ) )
+	if (is_dead)
 		wcslcpy(sText, pMessageStrings[MSG_LOWERCASE_NA], lengthof(sText));
 	else
 		swprintf( sText, lengthof(sText), L"%d", GetTimeRemainingOnSoldiersContract( pSoldier ) );
@@ -513,7 +515,7 @@ try
 	//
 
 	//if the soldier has insurance, disply the length of time the merc has left
-	if( IsMercDead( ubMercID ) )
+	if (is_dead)
 		wcslcpy(sText, pMessageStrings[MSG_LOWERCASE_NA], lengthof(sText));
 	else if( pSoldier->usLifeInsurance != 0 )
 		swprintf( sText, lengthof(sText), L"%d", GetTimeRemainingOnSoldiersInsuranceContract( pSoldier ) );
@@ -555,7 +557,7 @@ try
 	}
 
 
-	if( IsMercDead( ubMercID ) )
+	if (is_dead)
 	{
 		wcslcpy(sText, L"$0", lengthof(sText));
 	}
@@ -694,7 +696,7 @@ void DailyUpdateOfInsuredMercs()
 				if (GetTimeRemainingOnSoldiersInsuranceContract(s) <= 0)
 				{
 					//if the soldier isn't dead
-					if (!IsMercDead(s->ubProfile))
+					if (!IsMercDead(GetProfile(s->ubProfile)))
 					{
 						s->usLifeInsurance = 0;
 						s->iTotalLengthOfInsuranceContract = 0;
@@ -1189,11 +1191,7 @@ static INT32 CalculateSoldiersInsuranceContractLength(const SOLDIERTYPE* pSoldie
 	INT32 iInsuranceContractLength=0;
 	UINT32 uiTimeRemainingOnSoldiersContract = GetTimeRemainingOnSoldiersContract( pSoldier );
 
-
-	//if the merc is dead
-	if( IsMercDead( pSoldier->ubProfile ) )
-		return( 0 );
-
+	if (IsMercDead(GetProfile(pSoldier->ubProfile))) return 0;
 
 	// only mercs with at least 2 days to go on their employment contract are insurable
 	// def: 2/5/99.  However if they already have insurance is SHOULD be ok

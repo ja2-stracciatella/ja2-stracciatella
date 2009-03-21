@@ -43,7 +43,7 @@ extern INT16	gsMercArriveSectorY;
 INT8		HireMerc( MERC_HIRE_STRUCT *pHireMerc);
 void    MercArrivesCallback(SOLDIERTYPE* s);
 BOOLEAN IsMercHireable(ProfileID);
-BOOLEAN IsMercDead( UINT8 ubMercID );
+bool IsMercDead(MERCPROFILESTRUCT const&);
 BOOLEAN IsTheSoldierAliveAndConcious( 	SOLDIERTYPE		*pSoldier );
 void		HandleMercArrivesQuotes( SOLDIERTYPE *pSoldier );
 void UpdateAnyInTransitMercsWithGlobalArrivalSector(void);

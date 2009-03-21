@@ -610,7 +610,7 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 		MERCPROFILESTRUCT& p = GetProfile(pid);
 
 		//if the merc is dead, dont advance the contract length
-		if (!IsMercDead(pid)) p.iMercMercContractLength += 1;
+		if (!IsMercDead(p)) p.iMercMercContractLength += 1;
 
 		//Get the longest time
 		if (p.iMercMercContractLength > iNumDays) iNumDays = p.iMercMercContractLength;
@@ -1438,58 +1438,55 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 		//loop through all the mercs and see if any are dead and the quote is not said
 		for(ubCnt=MERC_FIRST_MERC ; ubCnt<MERC_LAST_MERC; ubCnt++ )
 		{
-			//if the merc is dead
-			if( IsMercDead( ubCnt ) )
+			MERCPROFILESTRUCT& p = GetProfile(ubCnt);
+			if (!IsMercDead(p)) continue;
+
+			//if the quote has not been said
+			if (p.ubMiscFlags3 & PROFILE_MISC_FLAG3_MERC_MERC_IS_DEAD_AND_QUOTE_SAID) continue;
+			//set the flag
+			p.ubMiscFlags3 |= PROFILE_MISC_FLAG3_MERC_MERC_IS_DEAD_AND_QUOTE_SAID;
+
+			switch( ubCnt )
 			{
-				//if the quote has not been said
-				if( !( gMercProfiles[ ubCnt ].ubMiscFlags3 & PROFILE_MISC_FLAG3_MERC_MERC_IS_DEAD_AND_QUOTE_SAID ) )
-				{
-					//set the flag
-					gMercProfiles[ ubCnt ].ubMiscFlags3 |= PROFILE_MISC_FLAG3_MERC_MERC_IS_DEAD_AND_QUOTE_SAID;
-
-					switch( ubCnt )
+				case BIFF:
+					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_BIFF_IS_DEAD );
+					break;
+				case HAYWIRE:
+					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_HAYWIRE_IS_DEAD );
+					break;
+				case GASKET:
+					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_GASKET_IS_DEAD );
+					break;
+				case RAZOR:
+					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_RAZOR_IS_DEAD );
+					break;
+				case FLO:
+					//if biff is dead
+					if (IsMercDead(GetProfile(BIFF)))
+						StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_FLO_IS_DEAD_BIFF_IS_DEAD );
+					else
 					{
-						case BIFF:
-							StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_BIFF_IS_DEAD );
-							break;
-						case HAYWIRE:
-							StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_HAYWIRE_IS_DEAD );
-							break;
-						case GASKET:
-							StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_GASKET_IS_DEAD );
-							break;
-						case RAZOR:
-							StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_RAZOR_IS_DEAD );
-							break;
-						case FLO:
-							//if biff is dead
-							if( IsMercDead( BIFF ) )
-								StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_FLO_IS_DEAD_BIFF_IS_DEAD );
-							else
-							{
-								StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_FLO_IS_DEAD_BIFF_ALIVE );
-								MakeBiffAwayForCoupleOfDays();
-							}
-							break;
-
-						case GUMPY:
-							StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_GUMPY_IS_DEAD );
-							break;
-						case LARRY_NORMAL:
-						case LARRY_DRUNK:
-							StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_LARRY_IS_DEAD );
-							break;
-						case COUGAR:
-							StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_COUGER_IS_DEAD );
-							break;
-						case NUMB:
-							StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_NUMB_IS_DEAD );
-							break;
-						case BUBBA:
-							StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_BUBBA_IS_DEAD );
-							break;
+						StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_FLO_IS_DEAD_BIFF_ALIVE );
+						MakeBiffAwayForCoupleOfDays();
 					}
-				}
+					break;
+
+				case GUMPY:
+					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_GUMPY_IS_DEAD );
+					break;
+				case LARRY_NORMAL:
+				case LARRY_DRUNK:
+					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_LARRY_IS_DEAD );
+					break;
+				case COUGAR:
+					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_COUGER_IS_DEAD );
+					break;
+				case NUMB:
+					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_NUMB_IS_DEAD );
+					break;
+				case BUBBA:
+					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_BUBBA_IS_DEAD );
+					break;
 			}
 		}
 	}
@@ -1499,7 +1496,7 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 	if( gubFact[ FACT_PC_MARRYING_DARYL_IS_FLO ] )
 	{
 		//if speck hasnt said the quote before, and Biff is NOT dead
-		if( !LaptopSaveInfo.fSpeckSaidFloMarriedCousinQuote && !IsMercDead( BIFF ) )
+		if (!LaptopSaveInfo.fSpeckSaidFloMarriedCousinQuote && !IsMercDead(GetProfile(BIFF)))
 		{
 			StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_FLO_MARRIED_A_COUSIN_BIFF_IS_ALIVE );
 			LaptopSaveInfo.fSpeckSaidFloMarriedCousinQuote = TRUE;
@@ -1691,7 +1688,6 @@ static BOOLEAN IsMercMercAvailable(UINT8 ubMercID)
 		if( GetMercIDFromMERCArray( cnt ) == ubMercID )
 		{
 			//if the merc is available, and Not dead
-//			if( gMercProfiles[ ubMercID ].bMercStatus == 0 && !IsMercDead( ubMercID ) )
 			if( IsMercHireable( ubMercID ) )
 				return( TRUE );
 		}

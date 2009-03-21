@@ -207,7 +207,7 @@ void RenderMercsFiles()
 	DisplayMercsStats(p);
 
 	//check to see if the merc is dead if so disable the contact button
-	if (IsMercDead(pid))
+	if (IsMercDead(p))
 	{
 		DisableButton(guiHireButton);
 	}
@@ -303,7 +303,7 @@ try
 
 	BOOLEAN        shaded;
 	const wchar_t* text;
-	if (IsMercDead(pid))
+	if (IsMercDead(p))
 	{
 		// The merc is dead, shade the face red and put text over top saying the merc is dead
 		face->pShades[0] = Create16BPPPaletteShaded(face->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);

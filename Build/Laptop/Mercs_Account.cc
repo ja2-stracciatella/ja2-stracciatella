@@ -212,7 +212,7 @@ static void DisplayHiredMercs(void)
 	UINT16	usPosY;
 	UINT32	uiContractCharge;
 	wchar_t	sTemp[20];
-	UINT8	i, usMercID;
+	UINT8	i;
 	UINT8	ubFontColor;
 
 	giMercTotalContractCharge = 0;
@@ -224,13 +224,14 @@ static void DisplayHiredMercs(void)
 		if( i == MERC_LARRY_ROACHBURN )
 			continue;
 
-		usMercID = GetMercIDFromMERCArray( i );
+		ProfileID         const  pid = GetMercIDFromMERCArray(i);
+		MERCPROFILESTRUCT const& p   = GetProfile(pid);
 
 		//is the merc on the team, or is owed money
-		if( IsMercOnTeam( (UINT8)usMercID )  || gMercProfiles[ usMercID ].iMercMercContractLength != 0 )
+		if (IsMercOnTeam(pid) || p.iMercMercContractLength != 0)
 		{
 			//if the merc is dead, make the color red, else white
-			if( IsMercDead( usMercID ) )
+			if (IsMercDead(p))
 				ubFontColor = MERC_ACCOUNT_DEAD_TEXT_COLOR;
 			else
 				ubFontColor = MERC_ACCOUNT_DYNAMIC_TEXT_COLOR;
@@ -238,19 +239,19 @@ static void DisplayHiredMercs(void)
 			uiContractCharge = 0;
 
 			//Display Mercs Name
-			DrawTextToScreen(gMercProfiles[usMercID].zName, MERC_AC_FIRST_COLUMN_X + 5, usPosY, MERC_AC_FIRST_COLUMN_WIDTH, MERC_ACCOUNT_DYNAMIC_TEXT_FONT, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DrawTextToScreen(p.zName, MERC_AC_FIRST_COLUMN_X + 5, usPosY, MERC_AC_FIRST_COLUMN_WIDTH, MERC_ACCOUNT_DYNAMIC_TEXT_FONT, ubFontColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//Display The # of days the merc has worked since last paid
 
-			swprintf(sTemp, lengthof(sTemp), L"%d", gMercProfiles[ usMercID ].iMercMercContractLength );
+			swprintf(sTemp, lengthof(sTemp), L"%d", p.iMercMercContractLength );
 			DrawTextToScreen(sTemp, MERC_AC_SECOND_COLUMN_X, usPosY, MERC_AC_SECOND_COLUMN_WIDTH, MERC_ACCOUNT_DYNAMIC_TEXT_FONT, ubFontColor, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 			//Display the mercs rate
-			swprintf(sTemp, lengthof(sTemp), L"$%6d",gMercProfiles[ usMercID ].sSalary );
+			swprintf(sTemp, lengthof(sTemp), L"$%6d", p.sSalary);
 			DrawTextToScreen(sTemp, MERC_AC_THIRD_COLUMN_X, usPosY, MERC_AC_THIRD_COLUMN_WIDTH, MERC_ACCOUNT_DYNAMIC_TEXT_FONT, ubFontColor, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 			//Display the total charge
-			uiContractCharge = gMercProfiles[ usMercID ].sSalary * gMercProfiles[ usMercID ].iMercMercContractLength;
+			uiContractCharge = p.sSalary * p.iMercMercContractLength;
 			swprintf(sTemp, lengthof(sTemp), L"$%6d", uiContractCharge );
 			DrawTextToScreen(sTemp, MERC_AC_FOURTH_COLUMN_X, usPosY, MERC_AC_FOURTH_COLUMN_WIDTH, MERC_ACCOUNT_DYNAMIC_TEXT_FONT, ubFontColor, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 

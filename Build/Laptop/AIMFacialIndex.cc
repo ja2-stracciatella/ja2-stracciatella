@@ -249,9 +249,10 @@ static void DrawMercsFaceToScreen(const UINT8 ubMercID, const UINT16 usPosX, con
 
 	SGPVObject* const face = guiAimFiFace[ubMercID];
 
-	BOOLEAN        shaded;
-	const wchar_t* text;
-	if (IsMercDead(id))
+	BOOLEAN                  shaded;
+	wchar_t           const* text;
+	MERCPROFILESTRUCT const& p = GetProfile(id);
+	if (IsMercDead(p))
 	{
 		// the merc is dead, so shade the face red
 		face->pShades[0] = Create16BPPPaletteShaded(face->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
@@ -259,7 +260,7 @@ static void DrawMercsFaceToScreen(const UINT8 ubMercID, const UINT16 usPosX, con
 		shaded = FALSE;
 		text   = AimFiText[AIM_FI_DEAD];
 	}
-	else if (gMercProfiles[id].bMercStatus == MERC_FIRED_AS_A_POW || (s && s->bAssignment == ASSIGNMENT_POW))
+	else if (p.bMercStatus == MERC_FIRED_AS_A_POW || (s && s->bAssignment == ASSIGNMENT_POW))
 	{
 		// the merc is currently a POW or, the merc was fired as a pow
 		shaded = TRUE;
