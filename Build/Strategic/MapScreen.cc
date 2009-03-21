@@ -416,7 +416,6 @@ INT32 giPotCharPathBaseTime = 0;
 static SGPVObject* guiCHARLIST;
 static SGPVObject* guiCHARINFO;
 static SGPVObject* guiSleepIcon;
-static SGPVObject* guiCROSS;
 static SGPVObject* guiMAPINV;
 #ifndef JA2DEMO
 SGPVObject* guiMapInvSecondHandBlockout;
@@ -6976,7 +6975,6 @@ void HandlePreloadOfMapGraphics(void)
 	guiSubLevel2                   = AddVideoObjectFromFile("INTERFACE/Mine_2.sti");
 	guiSubLevel3                   = AddVideoObjectFromFile("INTERFACE/Mine_3.sti");
 	guiCHARICONS                   = AddVideoObjectFromFile("INTERFACE/boxes.sti");
-	guiCROSS                       = AddVideoObjectFromFile("INTERFACE/incross.sti");
 	guiMAPINV                      = AddVideoObjectFromFile("INTERFACE/mapinv.sti");
 #ifndef JA2DEMO
 	guiMapInvSecondHandBlockout    = AddVideoObjectFromFile("INTERFACE/map_inv_2nd_gun_cover.sti");
@@ -7027,7 +7025,6 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 	DeleteVideoObject(guiCHARLIST);
 	DeleteVideoObject(guiCHARINFO);
 	DeleteVideoObject(guiCHARICONS);
-	DeleteVideoObject(guiCROSS);
 #ifndef JA2DEMO
 	DeleteVideoSurface(guiBIGMAP);
 #endif
