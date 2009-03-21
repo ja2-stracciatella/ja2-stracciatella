@@ -282,13 +282,10 @@ void MercDailyUpdate()
 	{
 		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			if (s->bAssignment == ASSIGNMENT_POW) continue;
-			if (s->bAssignment == IN_TRANSIT)     continue;
-
+			if (s->bAssignment         == ASSIGNMENT_POW)  continue;
+			if (s->bAssignment         == IN_TRANSIT)      continue;
 			if (s->ubWhatKindOfMercAmI != MERC_TYPE__MERC) continue;
-
-			if (!IsTheSoldierAliveAndConcious(s)) continue;
-
+			if (s->bLife               <  CONSCIOUSNESS)   continue;
 			MercsContractIsFinished(s);
 		}
 	}

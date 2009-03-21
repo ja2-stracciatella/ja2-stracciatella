@@ -393,15 +393,6 @@ bool IsMercDead(MERCPROFILESTRUCT const& p)
 }
 
 
-BOOLEAN IsTheSoldierAliveAndConcious( SOLDIERTYPE		*pSoldier )
-{
-	if( pSoldier->bLife >= CONSCIOUSNESS )
-		return(TRUE);
-	else
-		return(FALSE);
-}
-
-
 void HandleMercArrivesQuotes(SOLDIERTYPE* const s)
 {
 	// If we are approaching with helicopter, don't say any ( yet )
