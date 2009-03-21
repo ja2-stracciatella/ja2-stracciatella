@@ -64,9 +64,6 @@ BOOLEAN fPlotForHelicopter = FALSE;
 // helicopter vehicle id
 INT32 iHelicopterVehicleId = -1;
 
-// helicopter icon
-SGPVObject* guiHelicopterIcon;
-
 // total owed to player
 INT32 iTotalAccumulatedCostByPlayer = 0;
 

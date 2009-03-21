@@ -79,9 +79,6 @@ static inline VEHICLETYPE* GetHelicopter(void)
 // heli is hovering
 extern BOOLEAN fHoveringHelicopter;
 
-// helicopter icon
-extern SGPVObject* guiHelicopterIcon;
-
 // helicopter destroyed
 extern BOOLEAN fHelicopterDestroyed;
 

@@ -187,11 +187,6 @@ SGPPoint MovePosition={450, 100 };
 
 static UpdateBoxReason iReasonForSoldierUpDate = NO_REASON_FOR_UPDATE;
 
-#ifndef JA2DEMO
-// sam and mine icons
-SGPVObject* guiSAMICON;
-#endif
-
 
 // disable team info panels due to battle roster
 BOOLEAN   fDisableDueToBattleRoster = FALSE;

@@ -268,19 +268,19 @@ enum{
 	MAP_SHADE_DK_RED,
 };
 // the big map .pcx
-SGPVSurface* guiBIGMAP;
+static SGPVSurface* guiBIGMAP;
 #endif
 
 // orta .sti icon
-SGPVObject* guiORTAICON;
-SGPVObject* guiTIXAICON;
+static SGPVObject* guiORTAICON;
+static SGPVObject* guiTIXAICON;
 
 // boxes for characters on the map
-SGPVObject* guiCHARICONS;
+static SGPVObject* guiCHARICONS;
 
 #ifndef JA2DEMO
 // the merc arrival sector landing zone icon
-SGPVObject* guiBULLSEYE;
+static SGPVObject* guiBULLSEYE;
 #endif
 
 
@@ -340,13 +340,13 @@ INT16 sSelectedMilitiaTown = 0;
 
 
 // sublevel graphics
-SGPVObject* guiSubLevel1;
-SGPVObject* guiSubLevel2;
-SGPVObject* guiSubLevel3;
+static SGPVObject* guiSubLevel1;
+static SGPVObject* guiSubLevel2;
+static SGPVObject* guiSubLevel3;
 
 // the between sector icons
-SGPVObject* guiCHARBETWEENSECTORICONS;
-SGPVObject* guiCHARBETWEENSECTORICONSCLOSE;
+static SGPVObject* guiCHARBETWEENSECTORICONS;
+static SGPVObject* guiCHARBETWEENSECTORICONSCLOSE;
 
 // tixa found
 BOOLEAN fFoundTixa = FALSE;
@@ -373,7 +373,7 @@ static UINT16* pMapDKGreenPalette;
 SGPVObject* guiMapBorderEtaPopUp;
 
 // heli pop up
-SGPVObject* guiMapBorderHeliSectors;
+static SGPVObject* guiMapBorderHeliSectors;
 
 // list of map sectors that player isn't allowed to even highlight
 BOOLEAN sBadSectorsList[ WORLD_MAP_X ][ WORLD_MAP_X ];
@@ -437,7 +437,7 @@ PathSt* pTempCharacterPath = NULL;
 BOOLEAN fDrawTempHeliPath = FALSE;
 
 // the map arrows graphics
-SGPVObject* guiMAPCURSORS;
+static SGPVObject* guiMAPCURSORS;
 
 // destination plotting character
 INT8 bSelectedDestChar = -1;
@@ -456,7 +456,7 @@ BOOLEAN   fTempPathAlreadyDrawn = FALSE;
 MOUSE_REGION gMapScreenMilitiaBoxRegions[ 9 ];
 
 // the mine icon
-SGPVObject* guiMINEICON;
+static SGPVObject* guiMINEICON;
 
 // militia graphics
 static SGPVObject* guiMilitia;
@@ -479,6 +479,14 @@ BOOLEAN gfMilitiaPopupCreated = FALSE;
 
 INT32 giAnimateRouteBaseTime = 0;
 INT32 giPotHeliPathBaseTime = 0;
+
+#ifndef JA2DEMO
+// sam and mine icons
+static SGPVObject* guiSAMICON;
+#endif
+
+// helicopter icon
+static SGPVObject* guiHelicopterIcon;
 
 
 void DrawMapIndexBigMap(BOOLEAN fSelectedCursorIsYellow)
@@ -3941,23 +3949,55 @@ static BOOLEAN DropAPersonInASector(UINT8 ubType, INT16 sX, INT16 sY)
 }
 
 
-void LoadMilitiaPopUpBox(void)
+void LoadMapScreenInterfaceMapGraphics()
 {
-	// load the militia pop up box
-	guiMilitia                = AddVideoObjectFromFile("INTERFACE/Militia.sti");
-	guiMilitiaMaps            = AddVideoObjectFromFile("INTERFACE/Militiamaps.sti");
-	guiMilitiaSectorHighLight = AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline2.sti");
-	guiMilitiaSectorOutline   = AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline.sti");
+#ifndef JA2DEMO
+	guiBIGMAP                      = AddVideoSurfaceFromFile("INTERFACE/b_map.pcx");
+	guiBULLSEYE                    = AddVideoObjectFromFile("INTERFACE/BullsEye.sti");
+	guiSAMICON                     = AddVideoObjectFromFile("INTERFACE/SAM.sti");
+#endif
+	guiCHARBETWEENSECTORICONS      = AddVideoObjectFromFile("INTERFACE/merc_between_sector_icons.sti");
+	guiCHARBETWEENSECTORICONSCLOSE = AddVideoObjectFromFile("INTERFACE/merc_mvt_green_arrows.sti");
+	guiCHARICONS                   = AddVideoObjectFromFile("INTERFACE/boxes.sti");
+	guiHelicopterIcon              = AddVideoObjectFromFile("INTERFACE/Helicop.sti");
+	guiMAPCURSORS                  = AddVideoObjectFromFile("INTERFACE/mapcursr.sti");
+	guiMINEICON                    = AddVideoObjectFromFile("INTERFACE/mine.sti");
+	guiMapBorderHeliSectors        = AddVideoObjectFromFile("INTERFACE/pos2.sti");
+	guiMilitia                     = AddVideoObjectFromFile("INTERFACE/Militia.sti");
+	guiMilitiaMaps                 = AddVideoObjectFromFile("INTERFACE/Militiamaps.sti");
+	guiMilitiaSectorHighLight      = AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline2.sti");
+	guiMilitiaSectorOutline        = AddVideoObjectFromFile("INTERFACE/MilitiamapsectorOutline.sti");
+	guiORTAICON                    = AddVideoObjectFromFile("INTERFACE/map_item.sti");
+	guiSubLevel1                   = AddVideoObjectFromFile("INTERFACE/Mine_1.sti");
+	guiSubLevel2                   = AddVideoObjectFromFile("INTERFACE/Mine_2.sti");
+	guiSubLevel3                   = AddVideoObjectFromFile("INTERFACE/Mine_3.sti");
+	guiTIXAICON                    = AddVideoObjectFromFile("INTERFACE/prison.sti");
 }
 
 
-void RemoveMilitiaPopUpBox( void )
+void DeleteMapScreenInterfaceMapGraphics()
 {
-	// delete the militia pop up box graphic
+#ifndef JA2DEMO
+	DeleteVideoSurface(guiBIGMAP);
+	DeleteVideoObject(guiBULLSEYE);
+	DeleteVideoObject(guiSAMICON);
+#endif
+	DeleteVideoObject(guiCHARBETWEENSECTORICONS);
+	DeleteVideoObject(guiCHARBETWEENSECTORICONSCLOSE);
+	DeleteVideoObject(guiCHARICONS);
+	DeleteVideoObject(guiHelicopterIcon);
+	DeleteVideoObject(guiMAPCURSORS);
+	DeleteVideoObject(guiMINEICON);
+	DeleteVideoObject(guiMapBorderHeliSectors);
 	DeleteVideoObject(guiMilitia);
 	DeleteVideoObject(guiMilitiaMaps);
 	DeleteVideoObject(guiMilitiaSectorHighLight);
 	DeleteVideoObject(guiMilitiaSectorOutline);
+	DeleteVideoObject(guiORTAICON);
+	DeleteVideoObject(guiSubLevel1);
+	DeleteVideoObject(guiSubLevel2);
+	DeleteVideoObject(guiSubLevel3);
+	DeleteVideoObject(guiTIXAICON);
 }
 
 

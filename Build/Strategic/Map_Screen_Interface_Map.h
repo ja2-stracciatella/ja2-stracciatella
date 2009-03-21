@@ -81,9 +81,8 @@ void DisplayPositionOfHelicopter( void );
 // check for click
 BOOLEAN CheckForClickOverHelicopterIcon( INT16 sX, INT16 sY );
 
-// load and delete the graphics for the map screen map militia
-void LoadMilitiaPopUpBox(void);
-void RemoveMilitiaPopUpBox( void );
+void LoadMapScreenInterfaceMapGraphics();
+void DeleteMapScreenInterfaceMapGraphics();
 
 
 // grab the total number of militia in sector
@@ -186,28 +185,6 @@ extern INT16 sElitesOnCursor;
 extern INT16 gsHighlightSectorX;
 extern INT16 gsHighlightSectorY;
 
-#ifndef JA2DEMO
-// the big map
-extern SGPVSurface* guiBIGMAP;
-#endif
-
-// the orta icon
-extern SGPVObject* guiORTAICON;
-
-extern SGPVObject* guiTIXAICON;
-
-// the character icons
-extern SGPVObject* guiCHARICONS;
-
-#ifndef JA2DEMO
-// the merc arrival sector landing zone icon
-extern SGPVObject* guiBULLSEYE;
-#endif
-
-// character between sector icons
-extern SGPVObject* guiCHARBETWEENSECTORICONS;
-extern SGPVObject* guiCHARBETWEENSECTORICONSCLOSE;
-
 // the viewable map bound region
 extern SGPRect MapScreenRect;
 
@@ -223,17 +200,11 @@ extern INT8 bSelectedAssignChar;
 // the contract char
 extern INT8 bSelectedContractChar;
 
-// map arrows graphical index value
-extern SGPVObject* guiMAPCURSORS;
-
 // has temp path for character path or helicopter been already drawn
 extern BOOLEAN  fTempPathAlreadyDrawn;
 
 // the map border eta pop up
 extern SGPVObject* guiMapBorderEtaPopUp;
-
-// heli pop up
-extern SGPVObject* guiMapBorderHeliSectors;
 
 // the currently selected town militia
 extern INT16 sSelectedMilitiaTown;
@@ -245,13 +216,7 @@ extern UINT16	sSelMapY;
 
 extern BOOLEAN fFoundTixa;
 
-extern SGPVObject* guiSubLevel1;
-extern SGPVObject* guiSubLevel2;
-extern SGPVObject* guiSubLevel3;
-
 void    CreateDestroyMilitiaSectorButtons(void);
 BOOLEAN CanRedistributeMilitiaInSector(INT16 sClickedSectorX, INT16 sClickedSectorY, INT8 bClickedTownId);
-
-extern SGPVObject* guiMINEICON;
 
 #endif

@@ -6959,50 +6959,28 @@ static BOOLEAN AnyMercsLeavingRealSoon(void)
 
 void HandlePreloadOfMapGraphics(void)
 {
-#ifndef JA2DEMO
-	guiBIGMAP                      = AddVideoSurfaceFromFile("INTERFACE/b_map.pcx");
-#endif
-	guiMAPCURSORS                  = AddVideoObjectFromFile("INTERFACE/mapcursr.sti");
-#ifndef JA2DEMO
-	guiSAMICON                     = AddVideoObjectFromFile("INTERFACE/SAM.sti");
-#endif
-	guiSleepIcon                   = AddVideoObjectFromFile("INTERFACE/sleepicon.sti");
-	guiCHARINFO                    = AddVideoObjectFromFile("INTERFACE/charinfo.sti");
-	guiCHARLIST                    = AddVideoObjectFromFile("INTERFACE/newgoldpiece3.sti");
+	guiSleepIcon                = AddVideoObjectFromFile("INTERFACE/sleepicon.sti");
+	guiCHARINFO                 = AddVideoObjectFromFile("INTERFACE/charinfo.sti");
+	guiCHARLIST                 = AddVideoObjectFromFile("INTERFACE/newgoldpiece3.sti");
 
-	// the sublevels
-	guiSubLevel1                   = AddVideoObjectFromFile("INTERFACE/Mine_1.sti");
-	guiSubLevel2                   = AddVideoObjectFromFile("INTERFACE/Mine_2.sti");
-	guiSubLevel3                   = AddVideoObjectFromFile("INTERFACE/Mine_3.sti");
-	guiCHARICONS                   = AddVideoObjectFromFile("INTERFACE/boxes.sti");
-	guiMAPINV                      = AddVideoObjectFromFile("INTERFACE/mapinv.sti");
+	guiMAPINV                   = AddVideoObjectFromFile("INTERFACE/mapinv.sti");
 #ifndef JA2DEMO
-	guiMapInvSecondHandBlockout    = AddVideoObjectFromFile("INTERFACE/map_inv_2nd_gun_cover.sti");
+	guiMapInvSecondHandBlockout = AddVideoObjectFromFile("INTERFACE/map_inv_2nd_gun_cover.sti");
 #endif
 
 	// the upper left corner piece icons
-	guiULICONS                     = AddVideoObjectFromFile("INTERFACE/top_left_corner_icons.sti");
-	guiTIXAICON                    = AddVideoObjectFromFile("INTERFACE/prison.sti");
+	guiULICONS                  = AddVideoObjectFromFile("INTERFACE/top_left_corner_icons.sti");
 
 	HandleLoadOfMapBottomGraphics( );
 
-	guiORTAICON                    = AddVideoObjectFromFile("INTERFACE/map_item.sti");
-	guiCHARBETWEENSECTORICONS      = AddVideoObjectFromFile("INTERFACE/merc_between_sector_icons.sti");
-	guiCHARBETWEENSECTORICONSCLOSE = AddVideoObjectFromFile("INTERFACE/merc_mvt_green_arrows.sti");
-
-	guiLEVELMARKER                 = AddVideoObjectFromFile("INTERFACE/GreenArr.sti");
-	guiHelicopterIcon              = AddVideoObjectFromFile("INTERFACE/Helicop.sti");
-	guiMapBorderEtaPopUp           = AddVideoObjectFromFile("INTERFACE/eta_pop_up.sti");
-	guiMapBorderHeliSectors        = AddVideoObjectFromFile("INTERFACE/pos2.sti");
-	guiSelectedCharArrow           = AddVideoObjectFromFile("INTERFACE/selectedchararrow.sti");
-	guiMINEICON                    = AddVideoObjectFromFile("INTERFACE/mine.sti");
-	guiSectorLocatorGraphicID      = AddVideoObjectFromFile("INTERFACE/hilite.sti");
+	guiLEVELMARKER              = AddVideoObjectFromFile("INTERFACE/GreenArr.sti");
+	guiMapBorderEtaPopUp        = AddVideoObjectFromFile("INTERFACE/eta_pop_up.sti");
+	guiSelectedCharArrow        = AddVideoObjectFromFile("INTERFACE/selectedchararrow.sti");
+	guiSectorLocatorGraphicID   = AddVideoObjectFromFile("INTERFACE/hilite.sti");
 
 #ifndef JA2DEMO
 	//Kris:  Added this because I need to blink the icons button.
-	guiNewMailIcons                = AddVideoObjectFromFile("INTERFACE/newemail.sti");
-
-	guiBULLSEYE                    = AddVideoObjectFromFile("INTERFACE/BullsEye.sti");
+	guiNewMailIcons             = AddVideoObjectFromFile("INTERFACE/newemail.sti");
 #endif
 
 	// graphic for pool inventory
@@ -7011,62 +6989,40 @@ void HandlePreloadOfMapGraphics(void)
 	// load border graphics
 	LoadMapBorderGraphics( );
 
-	// load the pop up for the militia pop up box
-	LoadMilitiaPopUpBox( );
+	LoadMapScreenInterfaceMapGraphics();
 }
 
 
 void HandleRemovalOfPreLoadedMapGraphics( void )
 {
 	DeleteMapBottomGraphics();
-	DeleteVideoObject(guiMAPCURSORS);
 	DeleteVideoObject(guiSleepIcon);
 
 	DeleteVideoObject(guiCHARLIST);
 	DeleteVideoObject(guiCHARINFO);
-	DeleteVideoObject(guiCHARICONS);
-#ifndef JA2DEMO
-	DeleteVideoSurface(guiBIGMAP);
-#endif
-	DeleteVideoObject(guiSubLevel1);
-	DeleteVideoObject(guiSubLevel2);
-	DeleteVideoObject(guiSubLevel3);
 
-#ifndef JA2DEMO
-	DeleteVideoObject(guiSAMICON);
-#endif
 	DeleteVideoObject(guiMAPINV);
 #ifndef JA2DEMO
 	DeleteVideoObject(guiMapInvSecondHandBlockout);
 #endif
 	DeleteVideoObject(guiULICONS);
-	DeleteVideoObject(guiORTAICON);
-	DeleteVideoObject(guiTIXAICON);
-	DeleteVideoObject(guiCHARBETWEENSECTORICONS);
-	DeleteVideoObject(guiCHARBETWEENSECTORICONSCLOSE);
 	DeleteVideoObject(guiLEVELMARKER);
 	DeleteVideoObject(guiMapBorderEtaPopUp);
 	DeleteVideoObject(guiSelectedCharArrow);
-	DeleteVideoObject(guiMapBorderHeliSectors);
-	DeleteVideoObject(guiHelicopterIcon);
-	DeleteVideoObject(guiMINEICON);
 	DeleteVideoObject(guiSectorLocatorGraphicID);
 
 #ifndef JA2DEMO
 	//Kris:  Remove the email icons.
 	DeleteVideoObject(guiNewMailIcons);
-
-	DeleteVideoObject(guiBULLSEYE);
 #endif
-
-	// remove the graphic for the militia pop up box
-	RemoveMilitiaPopUpBox();
 
 	// remove inventory pool graphic
 	RemoveInventoryPoolGraphic();
 
 	// get rid of border stuff
 	DeleteMapBorderGraphics();
+
+	DeleteMapScreenInterfaceMapGraphics();
 }
 
 
