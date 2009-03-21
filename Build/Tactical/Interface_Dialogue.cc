@@ -937,7 +937,7 @@ void TalkingMenuDialogue(UINT16 const usQuoteNum)
 	gTalkPanel.fOnName		= FALSE;
 	//gTalkPanel.fHandled		= FALSE;
 
-	CharacterDialogue(gTalkPanel.ubCharNum, usQuoteNum, gTalkPanel.face, DIALOGUE_NPC_UI, FALSE, FALSE);
+	CharacterDialogue(gTalkPanel.ubCharNum, usQuoteNum, gTalkPanel.face, DIALOGUE_NPC_UI, FALSE);
 }
 
 

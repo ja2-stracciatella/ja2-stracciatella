@@ -533,7 +533,7 @@ static bool CanSayQuote(SOLDIERTYPE const& s, UINT16 const quote)
 BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum )
 {
 	if (!CanSayQuote(*pSoldier, usQuoteNum)) return FALSE;
-	CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, TRUE);
+	CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, true);
 	return TRUE;
 }
 
@@ -586,7 +586,7 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 		}
 	}
 
-	CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE, FALSE);
+	CharacterDialogue(pSoldier->ubProfile, usQuoteNum, pSoldier->face, DIALOGUE_TACTICAL_UI, TRUE);
 	return TRUE;
 }
 
@@ -605,7 +605,7 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 // NB;				The queued system is not yet implemented, but will be transpatent to the caller....
 
 
-void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* const face, DialogueHandler const dialogue_handler, BOOLEAN const fFromSoldier, BOOLEAN const fDelayed)
+void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* const face, DialogueHandler const dialogue_handler, BOOLEAN const fFromSoldier, bool const delayed)
 {
 	class DialogueEventQuote : public DialogueEvent
 	{
@@ -673,7 +673,7 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 			bool            const delayed_;
 	};
 
-	DialogueEvent::Add(new DialogueEventQuote(character, quote, face, dialogue_handler, fFromSoldier, fDelayed));
+	DialogueEvent::Add(new DialogueEventQuote(character, quote, face, dialogue_handler, fFromSoldier, delayed));
 }
 
 

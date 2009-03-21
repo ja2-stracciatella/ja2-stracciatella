@@ -3137,7 +3137,7 @@ static void HandleQDSTalkingMerc(void)
 				}
 				else
 				{
-					CharacterDialogue(gTalkingMercSoldier->ubProfile, giSelectedMercCurrentQuote, gTalkPanel.face, DIALOGUE_NPC_UI, FALSE, FALSE);
+					CharacterDialogue(gTalkingMercSoldier->ubProfile, giSelectedMercCurrentQuote, gTalkPanel.face, DIALOGUE_NPC_UI, FALSE);
 				}
 
 				//Incremenet the current quote number

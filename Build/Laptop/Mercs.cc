@@ -743,7 +743,7 @@ static BOOLEAN StartSpeckTalking(UINT16 usQuoteNum)
 	HandleSpeckIdleConversation( TRUE );
 
 	//Start Speck talking
-	CharacterDialogue(SPECK, usQuoteNum, g_video_speck_face, DIALOGUE_SPECK_CONTACT_PAGE_UI, FALSE, FALSE);
+	CharacterDialogue(SPECK, usQuoteNum, g_video_speck_face, DIALOGUE_SPECK_CONTACT_PAGE_UI, FALSE);
 
 	gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 

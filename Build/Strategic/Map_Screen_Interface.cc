@@ -1833,13 +1833,13 @@ void HandleMinerEvent( UINT8 bMinerNumber, INT16 sSectorX, INT16 sSectorY, INT16
 
 		// post dialogue events for miners to say this quote and flash the sector where his mine is
 		MakeSectorLocatorEvent(START_RED_SECTOR_LOCATOR);
-		CharacterDialogue(g_external_face_profile_ids[bMinerNumber], sQuoteNumber, uiExternalStaticNPCFaces[bMinerNumber], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE);
+		CharacterDialogue(g_external_face_profile_ids[bMinerNumber], sQuoteNumber, uiExternalStaticNPCFaces[bMinerNumber], DIALOGUE_EXTERNAL_NPC_UI, FALSE);
 		MakeSectorLocatorEvent(STOP_SECTOR_LOCATOR);
 	}
 	else	// stay in tactical
 	{
 		// no need to to highlight mine sector
-		CharacterDialogue(g_external_face_profile_ids[bMinerNumber], sQuoteNumber, uiExternalStaticNPCFaces[bMinerNumber], DIALOGUE_EXTERNAL_NPC_UI, FALSE, FALSE);
+		CharacterDialogue(g_external_face_profile_ids[bMinerNumber], sQuoteNumber, uiExternalStaticNPCFaces[bMinerNumber], DIALOGUE_EXTERNAL_NPC_UI, FALSE);
 	}
 }
 

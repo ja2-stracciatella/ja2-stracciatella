@@ -206,7 +206,7 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
 BOOLEAN DelayedTacticalCharacterDialogue( SOLDIERTYPE *pSoldier, UINT16 usQuoteNum );
 
 // A more general purpose function for processing quotes
-void CharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier, BOOLEAN fDelayed);
+void CharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier, bool delayed = false);
 
 void CharacterDialogueUsingAlternateFile(SOLDIERTYPE&, UINT16 quote, DialogueHandler);
 

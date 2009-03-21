@@ -4215,7 +4215,7 @@ static BOOLEAN StartShopKeeperTalking(UINT16 usQuoteNum)
 	DialogueEvent::Add(new DialogueEventShopkeeperSetQuote(usQuoteNum));
 
 	// post quote dialogue
-	CharacterDialogue(ArmsDealerInfo[gbSelectedArmsDealerID].ubShopKeeperID, usQuoteNum, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI, FALSE, FALSE);
+	CharacterDialogue(ArmsDealerInfo[gbSelectedArmsDealerID].ubShopKeeperID, usQuoteNum, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI, FALSE);
 
 	// post event to mark shopkeeper dialogue as ended
 	DialogueEvent::Add(new DialogueEventShopkeeperSetQuote(-1));
