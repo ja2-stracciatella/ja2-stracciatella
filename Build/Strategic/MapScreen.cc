@@ -494,7 +494,7 @@ static void DisplayExitToTacticalGlowDuringDemo(void);
 
 
 // the tries to select a mapscreen character by his soldier ID
-BOOLEAN SetInfoChar(const SOLDIERTYPE* const s)
+void SetInfoChar(SOLDIERTYPE const* const s)
 {
 	INT8 bCounter;
 
@@ -504,11 +504,9 @@ BOOLEAN SetInfoChar(const SOLDIERTYPE* const s)
 		if (gCharactersList[bCounter].merc == s)
 		{
 			ChangeSelectedInfoChar(bCounter, TRUE);
-			return TRUE;
+			break;
 		}
 	}
-
-	return ( FALSE );
 }
 
 
