@@ -13,7 +13,6 @@
 #include "Personnel.h"
 #include "LaptopSave.h"
 #include "Map_Screen_Interface.h"
-#include "Strategic.h"
 #include "StrategicMap.h"
 #include "Quests.h"
 #include "WorldDef.h"

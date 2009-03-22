@@ -19,7 +19,6 @@
 #include "Input.h"
 #include "Line.h"
 #include "Text.h"
-#include "Strategic.h"
 #include "Campaign_Types.h"
 #include "Multi_Language_Graphic_Utils.h"
 #include "StrategicMap.h"

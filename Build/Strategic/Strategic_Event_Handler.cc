@@ -21,7 +21,6 @@
 #include "Soldier_Add.h"
 #include "OppList.h"
 #include "EMail.h"
-#include "Strategic.h"
 #include "Structure_Wrap.h"
 #include "History.h"
 #include "BobbyRMailOrder.h"

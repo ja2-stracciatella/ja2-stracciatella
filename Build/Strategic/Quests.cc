@@ -25,7 +25,6 @@
 #include "Assignments.h"
 #include "Tactical_Save.h"
 #include "Town_Militia.h"
-#include "Strategic.h"
 #include "Strategic_Event_Handler.h"
 #include "FileMan.h"
 #include "Items.h"

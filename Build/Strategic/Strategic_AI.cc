@@ -14,7 +14,6 @@
 #include "Message.h"
 #include "StrategicMap.h"
 #include "Game_Clock.h"
-#include "Strategic.h"
 #include "Explosion_Control.h"
 #include "Town_Militia.h"
 #include "Overhead.h"

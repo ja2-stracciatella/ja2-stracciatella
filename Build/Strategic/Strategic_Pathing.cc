@@ -1,7 +1,6 @@
 #include "Strategic_Movement_Costs.h"
 #include "Types.h"
 #include "WorldDef.h"
-#include "Strategic.h"
 #include "MapScreen.h"
 #include "Overhead.h"
 #include "StrategicMap.h"

@@ -3,7 +3,6 @@
 #include "Player_Command.h"
 #include "Queen_Command.h"
 #include "Campaign_Types.h"
-#include "Strategic.h"
 #include "Strategic_Town_Loyalty.h"
 #include "Strategic_Mines.h"
 #include "Text.h"

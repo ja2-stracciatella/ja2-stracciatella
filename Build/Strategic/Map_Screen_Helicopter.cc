@@ -7,7 +7,6 @@
 #include "Finances.h"
 #include "Quests.h"
 #include "Game_Clock.h"
-#include "Strategic.h"
 #include "Queen_Command.h"
 #include "Strategic_Pathing.h"
 #include "Random.h"

@@ -4,7 +4,6 @@
 #include "Town_Militia.h"
 #include "Militia_Control.h"
 #include "Campaign_Types.h"
-#include "Strategic.h"
 #include "StrategicMap.h"
 #include "Overhead.h"
 #include "Strategic_Town_Loyalty.h"

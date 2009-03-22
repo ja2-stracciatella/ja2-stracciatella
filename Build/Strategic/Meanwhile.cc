@@ -14,7 +14,6 @@
 #include "Overhead.h"
 #include "Dialogue_Control.h"
 #include "Assignments.h"
-#include "Strategic.h"
 #include "Text.h"
 #include "GameSettings.h"
 #include "Interface_Control.h"

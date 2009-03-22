@@ -8,7 +8,6 @@
 #include "PreBattle_Interface.h"
 #include "Soldier_Control.h"
 #include "Item_Types.h"
-#include "Strategic.h"
 #include "Items.h"
 #include "Overhead.h"
 #include "Game_Clock.h"

@@ -17,7 +17,6 @@
 #include "Strategic_Mines.h"
 #include "Finances.h"
 #include "Map_Screen_Interface_Map_Inventory.h"
-#include "Strategic.h"
 #include "Town_Militia.h"
 #include "HelpScreen.h"
 #include "Map_Screen_Helicopter.h"

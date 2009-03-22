@@ -5,7 +5,6 @@
 #include "StrategicMap.h"
 #include "Overhead.h"
 #include "Assignments.h"
-#include "Strategic.h"
 #include "Queen_Command.h"
 #include "Animation_Data.h"
 #include "Quests.h"

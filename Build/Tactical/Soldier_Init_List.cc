@@ -23,7 +23,6 @@
 #include "Meanwhile.h"
 #include "Strategic_AI.h"
 #include "Map_Screen_Interface_Map.h"
-#include "Strategic.h"
 #include "Debug_Control.h"
 #include "Inventory_Choosing.h"
 #include "Campaign_Types.h"

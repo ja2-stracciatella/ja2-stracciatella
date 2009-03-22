@@ -11,7 +11,6 @@
 #include "Overhead.h"
 #include "Render_Dirty.h"
 #include "SysUtil.h"
-#include "Strategic.h"
 #include "StrategicMap.h"
 #include "Strategic_Pathing.h"
 #include "Text.h"

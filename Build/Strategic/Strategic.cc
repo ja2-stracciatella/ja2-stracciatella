@@ -1,5 +1,4 @@
 #include "MapScreen.h"
-#include "Strategic.h"
 #include "Types.h"
 #include "Squads.h"
 #include "Assignments.h"

@@ -39,7 +39,6 @@
 #include "Items.h"
 #include "Cursor_Control.h"
 #include "Text.h"
-#include "Strategic.h"
 #include "StrategicMap.h"
 #include "Strategic_Pathing.h"
 #include "Map_Screen_Interface_Bottom.h"

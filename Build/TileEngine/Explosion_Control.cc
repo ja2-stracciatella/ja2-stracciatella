@@ -34,7 +34,6 @@
 #include "Pits.h"
 #include "Campaign_Types.h"
 #include "StrategicMap.h"
-#include "Strategic.h"
 #include "Action_Items.h"
 #include "Soldier_Profile.h"
 #include "Quests.h"

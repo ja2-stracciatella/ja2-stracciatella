@@ -23,7 +23,6 @@
 #include "Quests.h"
 #include "Soldier_Macros.h"
 #include "Squads.h"
-#include "Strategic.h"
 #include "StrategicMap.h"
 #include "Town_Militia.h"
 #include "EMail.h"

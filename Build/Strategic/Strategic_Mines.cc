@@ -3,7 +3,6 @@
 #include "Strategic_Mines.h"
 #include "Finances.h"
 #include "Strategic_Town_Loyalty.h"
-#include "Strategic.h"
 #include "Game_Clock.h"
 #include "StrategicMap.h"
 #include "Random.h"
