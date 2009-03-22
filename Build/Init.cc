@@ -20,7 +20,6 @@
 #include "Cursor_Control.h"
 #include "Music_Control.h"
 #include "Video.h"
-#include "MapScreen.h"
 #include "Interface_Items.h"
 #include "Dialogue_Control.h"
 #include "Text.h"

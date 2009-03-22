@@ -7,7 +7,6 @@
 #include "PathAI.h"
 #include "Points.h"
 #include "Smell.h"
-#include "MapScreen.h"
 #include "Strategic_Pathing.h"
 #include "Soldier_Control.h"
 #include "Soldier_Macros.h"

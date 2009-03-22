@@ -20,7 +20,6 @@
 #include "WorldDef.h"
 #include "Tile_Animation.h"
 #include "Isometric_Utils.h"
-#include "MapScreen.h"
 #include "Interface.h"
 #include "Random.h"
 #include "Text.h"
