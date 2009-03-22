@@ -496,16 +496,11 @@ static void DisplayExitToTacticalGlowDuringDemo(void);
 // the tries to select a mapscreen character by his soldier ID
 void SetInfoChar(SOLDIERTYPE const* const s)
 {
-	INT8 bCounter;
-
-	for ( bCounter = 0; bCounter < MAX_CHARACTER_COUNT; bCounter++)
+	for (INT8 i = 0; i != MAX_CHARACTER_COUNT; ++i)
 	{
-		// skip invalid characters
-		if (gCharactersList[bCounter].merc == s)
-		{
-			ChangeSelectedInfoChar(bCounter, TRUE);
-			break;
-		}
+		if (gCharactersList[i].merc != s) continue;
+		ChangeSelectedInfoChar(i, TRUE);
+		break;
 	}
 }
 
