@@ -1630,7 +1630,6 @@ static void ConfirmSavedGameMessageBoxCallBack(MessageBoxReturnValue const bExit
 {
 	Assert( gbSelectedSaveLocation != -1 );
 
-	// yes, load the game
   if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		SaveGameToSlotNum();

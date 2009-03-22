@@ -1904,7 +1904,6 @@ void AddJohnsGunShipment()
 
 static void ConfirmBobbyRPurchaseMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
-	// yes, load the game
   if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		PurchaseBobbyOrder();

@@ -7215,7 +7215,6 @@ void TellPlayerWhyHeCantCompressTime( void )
 
 void MapScreenDefaultOkBoxCallback(MessageBoxReturnValue const bExitValue)
 {
-	// yes, load the game
   if( bExitValue == MSG_BOX_RETURN_OK )
 	{
 		fMapPanelDirty = TRUE;
