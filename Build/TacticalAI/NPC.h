@@ -54,23 +54,22 @@ struct NPCQuoteInfo
 	UINT8		ubFirstDay;					// first day quote can be said
 	UINT8		ubLastDay;					// last day quote can be said
 	UINT8		ubApproachRequired;	// must use this approach to generate quote
-	UINT8		ubOpinionRequired;	// opinion needed for this quote     13 bytes
+	UINT8		ubOpinionRequired;	// opinion needed for this quote
 
 	// quote to say (if any)
 	UINT8		ubQuoteNum;					// this is the quote to say
-	UINT8		ubNumQuotes;				// total # of quotes to say          15 bytes
+	UINT8		ubNumQuotes;				// total # of quotes to say
 
 	// actions
 	UINT8		ubStartQuest;
 	UINT8		ubEndQuest;
 	UINT8		ubTriggerNPC;
 	UINT8		ubTriggerNPCRec;
-	UINT8		ubFiller;				//                                       20 bytes
 	UINT16	usSetFactTrue;
 	UINT16	usGiftItem;			// item NPC gives to merc after saying quote
 	UINT16	usGoToGridno;
 	INT16		sActionData;		// special action value
-};																									// 32 bytes
+};
 
 
 enum Approach
