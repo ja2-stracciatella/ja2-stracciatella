@@ -328,12 +328,12 @@ static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text
 static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason);
 static void ClearSelectedSaveSlot(void);
-static void ConfirmLoadSavedGameMessageBoxCallBack(UINT8 bExitValue);
 static void InitSaveGameArray(void);
 static BOOLEAN LoadSavedGameHeader(INT8 bEntry, SAVED_GAME_HEADER* pSaveGameHeader);
 static void SelectedSLSEntireRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
+static void StartFadeOutForSaveLoadScreen(void);
 
 
 static void EnterSaveLoadScreen(void)
@@ -369,7 +369,7 @@ static void EnterSaveLoadScreen(void)
 			 gbSelectedSaveLocation = gGameSettings.bLastSavedGameSlot;
 
 			//load the saved game
-			ConfirmLoadSavedGameMessageBoxCallBack( MSG_BOX_RETURN_YES );
+			StartFadeOutForSaveLoadScreen();
 		}
 		else
 		{ //else the save isnt valid, so dont load it
@@ -615,7 +615,6 @@ static void DisplayOnScreenNumber(BOOLEAN display);
 static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID);
 static void MoveSelectionUpOrDown(BOOLEAN fUp);
 static void SetSelection(UINT8 ubNewSelection);
-static void StartFadeOutForSaveLoadScreen(void);
 
 
 static void GetSaveLoadScreenUserInput(void)
@@ -1633,19 +1632,6 @@ static void ConfirmSavedGameMessageBoxCallBack(MessageBoxReturnValue const bExit
   if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		SaveGameToSlotNum();
-	}
-}
-
-
-static void ConfirmLoadSavedGameMessageBoxCallBack(UINT8 bExitValue)
-{
-	Assert( gbSelectedSaveLocation != -1 );
-
-	// yes, load the game
-  if( bExitValue == MSG_BOX_RETURN_YES )
-	{
-		//Setup up the fade routines
-		StartFadeOutForSaveLoadScreen();
 	}
 }
 
