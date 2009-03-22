@@ -1,3 +1,4 @@
+#include "MapScreen.h"
 #include "Meanwhile.h"
 #include "PreBattle_Interface.h"
 #include "MessageBoxScreen.h"

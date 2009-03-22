@@ -4,6 +4,7 @@
 #include "LoadSaveSectorInfo.h"
 #include "LoadSaveStrategicMapElement.h"
 #include "Local.h"
+#include "MapScreen.h"
 #include "Merc_Contract.h"
 #include "Merc_Hiring.h"
 #include "StrategicMap.h"
@@ -284,6 +285,9 @@ const char *pHortStrings[]={
 
 
 extern BOOLEAN gfOverrideSector;
+
+
+StrategicMapElement StrategicMap[MAP_WORLD_X * MAP_WORLD_Y];
 
 
 //temp timer stuff -- to measure the time it takes to load a map.

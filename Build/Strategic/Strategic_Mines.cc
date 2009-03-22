@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "MapScreen.h"
 #include "Strategic_Mines.h"
 #include "Finances.h"
 #include "Strategic_Town_Loyalty.h"

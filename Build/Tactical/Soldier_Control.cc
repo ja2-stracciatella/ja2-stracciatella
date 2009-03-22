@@ -3,6 +3,7 @@
 #include "Font_Control.h"
 #include "HImage.h"
 #include "Handle_Items.h"
+#include "MapScreen.h"
 #include "Overhead.h"
 #include "Soldier_Find.h"
 #include "Structure.h"

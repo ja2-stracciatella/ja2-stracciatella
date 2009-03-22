@@ -8,6 +8,7 @@
 #include "Interface.h"
 #include "Isometric_Utils.h"
 #include "Local.h"
+#include "MapScreen.h"
 #include "Structure.h"
 #include "TileDat.h"
 #include "Timer_Control.h"

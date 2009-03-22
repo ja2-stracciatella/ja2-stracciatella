@@ -1,4 +1,5 @@
 #include "HImage.h"
+#include "MapScreen.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "Map_Screen_Interface_TownMine_Info.h"
 #include "StrategicMap.h"

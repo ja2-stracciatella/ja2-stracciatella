@@ -1,5 +1,6 @@
 #include "Font_Control.h"
 #include "LoadSaveData.h"
+#include "MapScreen.h"
 #include "Strategic_Town_Loyalty.h"
 #include "StrategicMap.h"
 #include "Overhead.h"

@@ -1,3 +1,4 @@
+#include "MapScreen.h"
 #include "Strategic.h"
 #include "Types.h"
 #include "Squads.h"
@@ -11,9 +12,6 @@
 #include "Isometric_Utils.h"
 #include "Vehicles.h"
 #include "Game_Clock.h"
-
-
-StrategicMapElement StrategicMap[MAP_WORLD_X*MAP_WORLD_Y];
 
 
 static void HandleSoldierDeadComments(SOLDIERTYPE const*);

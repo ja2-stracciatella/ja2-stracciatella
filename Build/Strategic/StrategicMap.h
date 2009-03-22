@@ -60,6 +60,9 @@ extern	BOOLEAN		gfUseAlternateMap;
 #define			CHECK_DIR_X_DELTA							( WORLD_TILE_X * 4 )
 #define			CHECK_DIR_Y_DELTA							( WORLD_TILE_Y * 10 )
 
+#define MAP_WORLD_X 18
+#define MAP_WORLD_Y 18
+
 // get index into aray
 #define		CALCULATE_STRATEGIC_INDEX( x, y )			( x + ( y * MAP_WORLD_X ) )
 #define   GET_X_FROM_STRATEGIC_INDEX( i )				( i % MAP_WORLD_X )
@@ -170,5 +173,15 @@ extern INT8 gbRegToElitePromotions;
 extern INT8 gbMilitiaPromotions;
 
 extern BOOLEAN gfGettingNameFromSaveLoadScreen;
+
+struct StrategicMapElement
+{
+	INT8    bNameId;
+	BOOLEAN fEnemyControlled;   // enemy controlled or not
+	BOOLEAN fEnemyAirControlled;
+	INT8    bSAMCondition; // SAM Condition .. 0 - 100, just like an item's status
+};
+
+extern StrategicMapElement StrategicMap[MAP_WORLD_X * MAP_WORLD_Y];
 
 #endif

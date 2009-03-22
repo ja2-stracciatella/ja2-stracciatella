@@ -1,6 +1,7 @@
 #include "Buffer.h"
 #include "Font_Control.h"
 #include "LoadSaveRottingCorpse.h"
+#include "MapScreen.h"
 #include "Soldier_Init_List.h"
 #include "Types.h"
 #include "MemMan.h"

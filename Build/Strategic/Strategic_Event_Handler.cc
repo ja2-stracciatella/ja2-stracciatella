@@ -1,3 +1,4 @@
+#include "MapScreen.h"
 #include "Strategic_Event_Handler.h"
 #include "MemMan.h"
 #include "Item_Types.h"
