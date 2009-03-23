@@ -41,7 +41,6 @@ enum StrategicEventKind
 	EVENT_BEGIN_AIR_RAID                                 = 42,
 	EVENT_MEANWHILE                                      = 44,
 	EVENT_CREATURE_SPREAD                                = 46,
-	EVENT_DECAY_CREATURES                                = 47,
 	EVENT_CREATURE_NIGHT_PLANNING                        = 48,
 	EVENT_CREATURE_ATTACK                                = 49,
 	EVENT_EVALUATE_QUEEN_SITUATION                       = 50,

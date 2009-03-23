@@ -268,9 +268,6 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		case EVENT_CREATURE_SPREAD:
 			SpreadCreatures();
 			break;
-		case EVENT_DECAY_CREATURES:
-			DecayCreatures();
-			break;
 		case EVENT_CREATURE_NIGHT_PLANNING:
 			CreatureNightPlanning();
 			break;
