@@ -6214,43 +6214,36 @@ static BOOLEAN RepairmanFixingAnyItemsThatShouldBeDoneNow(UINT32* puiHoursSinceO
 
 static void HandlePossibleRepairDelays(void)
 {
-	UINT32 uiHoursSinceAnyItemsShouldHaveBeenRepaired = 0;
-
-
 	// assume there won't be a delay
 	gfStartWithRepairsDelayedQuote = FALSE;
 
-	// if it's Fredo or Perko
-	if ( ( gbSelectedArmsDealerID == ARMS_DEALER_FREDO ) || ( gbSelectedArmsDealerID == ARMS_DEALER_PERKO ) )
-	{
-		// because the quotes are so specific, we'll only use them once per game per repairman
-		if( !gArmsDealerStatus[ gbSelectedArmsDealerID ].fRepairDelayBeenUsed )
-		{
-			// and it's been a while since the player last dealt with this repairman (within SKI that is)
-			// this serves 2 purposes:
-			// a) reduces delays being much more likely if player checks time remaining very frequently, AND
-			// b) gives time for the events described in the text of the dealers' excuses to happen (e.g. scouting trip)
-			if ( ( GetWorldTotalMin() - gArmsDealerStatus[ gbSelectedArmsDealerID ].uiTimePlayerLastInSKI ) >= ( 3 * 60 ) )
-			{
-				// if he should have been finished, but it's only been a few hours since then (not days!)
-				if ( RepairmanFixingAnyItemsThatShouldBeDoneNow( &uiHoursSinceAnyItemsShouldHaveBeenRepaired ) &&
-						 ( uiHoursSinceAnyItemsShouldHaveBeenRepaired < REPAIR_DELAY_IN_HOURS ) )
-				{
-					// then there's a fair chance he'll be delayed.  Use pre-chance to hopefully preserve across reloads
-					if ( PreChance( 50 ) )
-					{
-						DelayRepairsInProgressBy( ( REPAIR_DELAY_IN_HOURS + Random( REPAIR_DELAY_IN_HOURS ) ) * 60 );
+	if (gbSelectedArmsDealerID != ARMS_DEALER_FREDO && gbSelectedArmsDealerID != ARMS_DEALER_PERKO) return;
 
-						// this triggers a different opening quote
-						gfStartWithRepairsDelayedQuote = TRUE;
+	ARMS_DEALER_STATUS& status = gArmsDealerStatus[gbSelectedArmsDealerID];
+	// because the quotes are so specific, we'll only use them once per game per repairman
+	if (status.fRepairDelayBeenUsed) return;
 
-						// set flag so it doesn't happen again
-						gArmsDealerStatus[ gbSelectedArmsDealerID ].fRepairDelayBeenUsed = TRUE;
-					}
-				}
-			}
-		}
-	}
+	// and it's been a while since the player last dealt with this repairman (within SKI that is)
+	// this serves 2 purposes:
+	// a) reduces delays being much more likely if player checks time remaining very frequently, AND
+	// b) gives time for the events described in the text of the dealers' excuses to happen (e.g. scouting trip)
+	if (GetWorldTotalMin() - status.uiTimePlayerLastInSKI < 3 * 60) return;
+
+	// if he should have been finished, but it's only been a few hours since then (not days!)
+	UINT32 uiHoursSinceAnyItemsShouldHaveBeenRepaired = 0;
+	if (!RepairmanFixingAnyItemsThatShouldBeDoneNow(&uiHoursSinceAnyItemsShouldHaveBeenRepaired)) return;
+	if (uiHoursSinceAnyItemsShouldHaveBeenRepaired >= REPAIR_DELAY_IN_HOURS) return;
+
+	// then there's a fair chance he'll be delayed.  Use pre-chance to hopefully preserve across reloads
+	if (!PreChance(50)) return;
+
+	DelayRepairsInProgressBy((REPAIR_DELAY_IN_HOURS + Random(REPAIR_DELAY_IN_HOURS)) * 60);
+
+	// this triggers a different opening quote
+	gfStartWithRepairsDelayedQuote = TRUE;
+
+	// set flag so it doesn't happen again
+	status.fRepairDelayBeenUsed = TRUE;
 }
 
 
