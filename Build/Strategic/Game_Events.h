@@ -36,8 +36,6 @@ STRATEGICEVENT* AddAdvancedStrategicEvent(StrategicEventFrequency, StrategicEven
 
 BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent );
 
-extern BOOLEAN gfEventDeletionPending;
-
 extern STRATEGICEVENT *gpEventList;
 
 /* Determines if there are any events that will be processed between the current

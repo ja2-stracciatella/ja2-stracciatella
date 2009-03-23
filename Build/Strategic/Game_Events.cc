@@ -102,7 +102,7 @@ STRATEGICEVENT									*gpEventList = NULL;
 
 extern UINT32 guiGameClock;
 BOOLEAN gfPreventDeletionOfAnyEvent = FALSE;
-BOOLEAN gfEventDeletionPending = FALSE;
+static BOOLEAN gfEventDeletionPending = FALSE;
 
 static BOOLEAN gfProcessingGameEvents = FALSE;
 UINT32	guiTimeStampOfCurrentlyExecutingEvent = 0;
