@@ -52,7 +52,7 @@ static BOOLEAN DelayEventIfBattleInProgress(STRATEGICEVENT* pEvent)
 	STRATEGICEVENT *pNewEvent;
 	if( gTacticalStatus.fEnemyInSector )
 	{
-		pNewEvent = AddAdvancedStrategicEvent(pEvent->ubEventType, static_cast<StrategicEventKind>(pEvent->ubCallbackID), pEvent->uiTimeStamp + 180 + Random(121), pEvent->uiParam);
+		pNewEvent = AddAdvancedStrategicEvent(static_cast<StrategicEventFrequency>(pEvent->ubEventType), static_cast<StrategicEventKind>(pEvent->ubCallbackID), pEvent->uiTimeStamp + 180 + Random(121), pEvent->uiParam);
 		Assert( pNewEvent );
 		pNewEvent->uiTimeOffset = pEvent->uiTimeOffset;
 		return TRUE;

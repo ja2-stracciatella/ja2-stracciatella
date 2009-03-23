@@ -309,7 +309,7 @@ static BOOLEAN AddFutureDayStrategicEventUsingSeconds(StrategicEventKind const u
 	return( AddStrategicEventUsingSeconds( ubCallbackID, uiSecondStamp + GetFutureDayInMinutes( uiDay + uiNumDaysFromPresent ) * 60, uiParam ) );
 }
 
-STRATEGICEVENT* AddAdvancedStrategicEvent(UINT8 const ubEventType, StrategicEventKind const ubCallbackID, UINT32 const uiTimeStamp, UINT32 const uiParam)
+STRATEGICEVENT* AddAdvancedStrategicEvent(StrategicEventFrequency const ubEventType, StrategicEventKind const ubCallbackID, UINT32 const uiTimeStamp, UINT32 const uiParam)
 {
 	STRATEGICEVENT		*pNode, *pPrevNode;
 

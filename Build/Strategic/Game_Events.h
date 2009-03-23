@@ -18,7 +18,7 @@ struct STRATEGICEVENT
 };
 
 
-enum
+enum StrategicEventFrequency
 {
 	ONETIME_EVENT,
 	RANGED_EVENT,
@@ -32,7 +32,7 @@ enum
 void SaveStrategicEventsToSavedGame(HWFILE);
 void LoadStrategicEventsFromSavedGame(HWFILE);
 
-STRATEGICEVENT* AddAdvancedStrategicEvent(UINT8 ubEventType, StrategicEventKind, UINT32 uiTimeStamp, UINT32 uiParam);
+STRATEGICEVENT* AddAdvancedStrategicEvent(StrategicEventFrequency, StrategicEventKind, UINT32 uiTimeStamp, UINT32 uiParam);
 
 BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent );
 
