@@ -3,7 +3,7 @@
 
 #include "Types.h"
 
-enum
+enum StrategicEventKind
 {
 	EVENT_CHANGELIGHTVAL = 1,
 	EVENT_WEATHERSTART,
@@ -109,11 +109,11 @@ enum
 //once, and deleted.  The first prototype requires the actual world time in minutes
 //included the current day, and the additional ones are wrappers which calculate the
 //actual world time for you.
-BOOLEAN AddStrategicEvent( UINT8 ubCallbackID, UINT32 uiMinStamp, UINT32 uiParam );
-BOOLEAN AddSameDayStrategicEvent( UINT8 ubCallbackID, UINT32 uiMinStamp, UINT32 uiParam );
-BOOLEAN AddFutureDayStrategicEvent( UINT8 ubCallbackID, UINT32 uiMinStamp, UINT32 uiParam, UINT32 uiNumDaysFromPresent );
+BOOLEAN AddStrategicEvent(StrategicEventKind, UINT32 uiMinStamp, UINT32 uiParam);
+BOOLEAN AddSameDayStrategicEvent(StrategicEventKind, UINT32 uiMinStamp, UINT32 uiParam);
+BOOLEAN AddFutureDayStrategicEvent(StrategicEventKind, UINT32 uiMinStamp, UINT32 uiParam, UINT32 uiNumDaysFromPresent);
 //Same but uses seconds instead of minutes.
-BOOLEAN AddStrategicEventUsingSeconds( UINT8 ubCallbackID, UINT32 uiSecondStamp, UINT32 uiParam );
+BOOLEAN AddStrategicEventUsingSeconds(StrategicEventKind, UINT32 uiSecondStamp, UINT32 uiParam);
 
 //Ranged Events
 //In certain cases, you may wish to create an event that has a start time and an end
@@ -123,27 +123,27 @@ BOOLEAN AddStrategicEventUsingSeconds( UINT8 ubCallbackID, UINT32 uiSecondStamp,
 //separately.  An example use of ranged events would be for ambient sounds.  The
 //start time would be called to define the sounds for use within the game.  The end
 //time would be used to remove the sound from the system.
-BOOLEAN AddSameDayRangedStrategicEvent( UINT8 ubCallbackID, UINT32 uiStartMin, UINT32 uiLengthMin, UINT32 uiParam);
+BOOLEAN AddSameDayRangedStrategicEvent(StrategicEventKind, UINT32 uiStartMin, UINT32 uiLengthMin, UINT32 uiParam);
 
 //EveryDay Events
 //A second special case event, this event will get processed automatically at the
 //same time every day.  Time of day lighting is a perfect example.  Other events
 //such as checking for quests, can also be automated using this system.  NOTE:
 //Only specify the time of day in minutes (don't add the actual day to this value)
-BOOLEAN AddEveryDayStrategicEvent( UINT8 ubCallbackID, UINT32 uiStartMin, UINT32 uiParam );
+BOOLEAN AddEveryDayStrategicEvent(StrategicEventKind, UINT32 uiStartMin, UINT32 uiParam);
 
 //Periodic Events
 //Event will get processed automatically once every X minutes.  The period is added to the current time for
 //the time stamp.
-BOOLEAN AddPeriodStrategicEvent( UINT8 ubCallbackID, UINT32 uiOnceEveryXMinutes, UINT32 uiParam );
+BOOLEAN AddPeriodStrategicEvent(StrategicEventKind, UINT32 uiOnceEveryXMinutes, UINT32 uiParam);
 //Hybrids that aren't based from the current time.  They are offsetted from the current time first.
-BOOLEAN AddPeriodStrategicEventWithOffset( UINT8 ubCallbackID, UINT32 uiOnceEveryXMinutes, UINT32 uiOffsetFromCurrent, UINT32 uiParam );
+BOOLEAN AddPeriodStrategicEventWithOffset(StrategicEventKind, UINT32 uiOnceEveryXMinutes, UINT32 uiOffsetFromCurrent, UINT32 uiParam);
 
 //Searches for and removes the first event matching the supplied information.  There may very well be a need
 //for more specific event removal, so let me know (Kris), of any support needs.  Function returns FALSE if
 //no events were found.
-BOOLEAN DeleteStrategicEvent( UINT8 ubCallbackID, UINT32 uiParam );
-void DeleteAllStrategicEventsOfType( UINT8 ubCallbackID );
+BOOLEAN DeleteStrategicEvent(StrategicEventKind, UINT32 uiParam);
+void DeleteAllStrategicEventsOfType(StrategicEventKind);
 void DeleteAllStrategicEvents(void);
 
 #endif
