@@ -12,7 +12,8 @@
 
 #ifdef JA2TESTVERSION
 
-static const wchar_t *gEventName[NUMBER_OF_EVENT_TYPES_PLUS_ONE]={
+static wchar_t const* const gEventName[] =
+{
 	L"Null",
 	L"ChangeLightValue",
 	L"WeatherStart",
@@ -93,6 +94,7 @@ static const wchar_t *gEventName[NUMBER_OF_EVENT_TYPES_PLUS_ONE]={
 	L"MERC Merc went up level email delay",
 	L".",
 };
+CASSERT(lengthof(gEventName) == NUMBER_OF_EVENT_TYPES);
 
 #endif
 

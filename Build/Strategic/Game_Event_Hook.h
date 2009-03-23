@@ -66,20 +66,9 @@ enum StrategicEventKind
 	EVENT_MERC_MERC_WENT_UP_LEVEL_EMAIL_DELAY            = 77,
 	EVENT_MERC_SITE_NEW_MERC_AVAILABLE                   = 78,
 
-	/*
-	HEY, YOU GUYS AREN'T DOING THIS!!!!!!  (see below)
-
-
-
-	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	!! IMPORTANT NOTE                                                                         !!
-	!! FOR ALL NEW EVENTS:  For text debug support, make sure you add the text version of the !!
-	!! new event into the gEventName[] at the top of Game Events.c.                           !!
-	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	*/
-
-	NUMBER_OF_EVENT_TYPES_PLUS_ONE,
-	NUMBER_OF_EVENT_TYPES						= NUMBER_OF_EVENT_TYPES_PLUS_ONE - 1
+	/* Note: For text debug support, make sure you add the text version of a new
+	 * event to gEventName[] */
+	NUMBER_OF_EVENT_TYPES
 };
 
 // This value is added to the param value for NPC-system-created events which are based on an
