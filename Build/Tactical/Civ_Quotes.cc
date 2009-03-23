@@ -38,17 +38,7 @@
 #define			CIV_QUOTE_HINT							99
 
 
-struct CIV_QUOTE
-{
-	UINT8	ubNumEntries;
-	UINT8	ubUnusedCurrentEntry;
-};
-CASSERT(sizeof(CIV_QUOTE) == 2)
-
-
-CIV_QUOTE	gCivQuotes[ NUM_CIV_QUOTES ];
-
-UINT8	gubNumEntries[ NUM_CIV_QUOTES ] =
+static UINT8 const gubNumEntries[NUM_CIV_QUOTES] =
 {
 	15,
 	15,
@@ -123,18 +113,6 @@ static QUOTE_SYSTEM_STRUCT gCivQuoteData;
 
 UINT16	gusCivQuoteBoxWidth;
 UINT16	gusCivQuoteBoxHeight;
-
-
-static void CopyNumEntriesIntoQuoteStruct(void)
-{
-	INT32	cnt;
-
-	for ( cnt = 0; cnt < NUM_CIV_QUOTES; cnt++ )
-	{
-		gCivQuotes[ cnt ].ubNumEntries = gubNumEntries[ cnt ];
-	}
-
-}
 
 
 static BOOLEAN GetCivQuoteText(UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t* zQuote)
@@ -743,7 +721,7 @@ void StartCivQuote( SOLDIERTYPE *pCiv )
 		if ( pCiv->bCurrentCivQuote == -1 )
 		{
 			// Pick random one
-			pCiv->bCurrentCivQuote = (INT8)Random( gCivQuotes[ ubCivQuoteID ].ubNumEntries - 2 );
+			pCiv->bCurrentCivQuote      = (INT8)Random(gubNumEntries[ubCivQuoteID] - 2);
 			pCiv->bCurrentCivQuoteDelta = 0;
 		}
 
@@ -783,9 +761,6 @@ void StartCivQuote( SOLDIERTYPE *pCiv )
 
 void InitCivQuoteSystem( )
 {
-	memset( &gCivQuotes, 0, sizeof( gCivQuotes ) );
-	CopyNumEntriesIntoQuoteStruct( );
-
 	memset( &gCivQuoteData, 0, sizeof( gCivQuoteData ) );
 	gCivQuoteData.bActive				= FALSE;
 	gCivQuoteData.video_overlay = NULL;
@@ -793,14 +768,13 @@ void InitCivQuoteSystem( )
 }
 
 
-void SaveCivQuotesToSaveGameFile(HWFILE const hFile)
+void SaveCivQuotesToSaveGameFile(HWFILE const f)
 {
-	FileWrite(hFile, &gCivQuotes, sizeof(gCivQuotes));
+	FileSeek(f, NUM_CIV_QUOTES * 2, FILE_SEEK_FROM_CURRENT);
 }
 
 
-void LoadCivQuotesFromLoadGameFile(HWFILE const hFile)
+void LoadCivQuotesFromLoadGameFile(HWFILE const f)
 {
-	FileRead(hFile, &gCivQuotes, sizeof(gCivQuotes));
-	CopyNumEntriesIntoQuoteStruct( );
+	FileSeek(f, NUM_CIV_QUOTES * 2, FILE_SEEK_FROM_CURRENT);
 }
