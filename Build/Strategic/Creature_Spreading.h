@@ -6,7 +6,6 @@
 
 void InitCreatureQuest(void);
 void SpreadCreatures(void);
-void DecayCreatures(void);
 void ClearCreatureQuest(void);
 void DeleteCreatureDirectives(void);
 

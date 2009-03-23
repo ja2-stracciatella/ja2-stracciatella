@@ -550,11 +550,7 @@ void SpreadCreatures()
 {
 	UINT16 usNewCreatures=0;
 
-	if( giLairID == -1 )
-	{
-		DecayCreatures();
-		return;
-	}
+	if (giLairID == -1) return;
 
 	//queen just produced a litter of creature larvae.  Let's do some spreading now.
 	switch( gGameOptions.ubDifficultyLevel )
@@ -577,11 +573,6 @@ void SpreadCreatures()
 		//be bad.
 		PlaceNewCreature( lair, 0 );
 	}
-}
-
-void DecayCreatures()
-{ //when the queen dies, we need to kill off the creatures over a period of time.
-
 }
 
 

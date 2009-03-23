@@ -20,7 +20,6 @@ Create16BPPPaletteShaded(): callers
 CreateEnemyGlow16BPPPalette(), CreateEnemyGreyGlow16BPPPalette(): ?
 DONT_DISPLAY_TEXT: what is this good for?
 DeathTimerCallback(): complicated
-DecayCreatures(), EVENT_DECAY_CREATURES: empty/unused
 DecideActionBlack(): bCanAttack != TRUE && bCanAttack != FALSE strange
 DisplayAllDealersCash(): MARK_DIRTY necessary?
 DisplayEmploymentinformation(): code duplication
