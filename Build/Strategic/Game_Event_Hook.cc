@@ -39,8 +39,6 @@
 #ifdef JA2BETAVERSION
 #	include "JAScreens.h"
 #	include "ScreenIDs.h"
-
-extern BOOLEAN gfMercsNeverQuit;
 #endif
 
 extern UINT32	guiTimeStampOfCurrentlyExecutingEvent;
@@ -86,17 +84,6 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 					pEvent->ubCallbackID != EVENT_GROUP_ARRIVAL	&&
 					pEvent->ubCallbackID != EVENT_EVALUATE_QUEEN_SITUATION &&
 					pEvent->ubCallbackID != EVENT_CHECK_ENEMY_CONTROLLED_SECTOR	)
-			{
-				gfPreventDeletionOfAnyEvent = fOrigPreventFlag;
-				return FALSE;
-			}
-		}
-	#endif
-	#ifdef JA2BETAVERSION
-		if( gfMercsNeverQuit )
-		{
-			if( pEvent->ubCallbackID == EVENT_MERC_ABOUT_TO_LEAVE_COMMENT ||
-				  pEvent->ubCallbackID == EVENT_MERC_CONTRACT_OVER )
 			{
 				gfPreventDeletionOfAnyEvent = fOrigPreventFlag;
 				return FALSE;
@@ -170,15 +157,8 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		case EVENT_MERC_DAILY_UPDATE:
 			MercDailyUpdate();
 			break;
-		//gets when a merc is about to leave.
-		case EVENT_MERC_ABOUT_TO_LEAVE_COMMENT:
-			break;
 		case EVENT_MERC_ABOUT_TO_LEAVE:
 			FindOutIfAnyMercAboutToLeaveIsGonnaRenew( );
-			break;
-		//When a merc is supposed to leave
-		case EVENT_MERC_CONTRACT_OVER:
-			MercsContractIsFinished(GetMan(pEvent->uiParam));
 			break;
 		//Whenever any group (player or enemy) arrives in a new sector during movement.
 		case EVENT_GROUP_ARRIVAL:

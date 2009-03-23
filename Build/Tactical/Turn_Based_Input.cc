@@ -3752,26 +3752,6 @@ static void ToggleMapEdgepoints(void)
 }
 #endif
 
-#ifdef JA2BETAVERSION
-
-BOOLEAN gfMercsNeverQuit = FALSE;
-
-
-static void ToggleMercsNeverQuit(void)
-{
-	if( gfMercsNeverQuit )
-	{
-		gfMercsNeverQuit = FALSE;
-		ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Merc contract expiring enabled." );
-	}
-	else
-	{
-		gfMercsNeverQuit ^= TRUE;
-		ScreenMsg( FONT_RED, MSG_BETAVERSION, L"Merc contract expiring disabled." );
-	}
-}
-#endif
-
 
 void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 {

@@ -18,8 +18,6 @@ enum StrategicEventKind
 	EVENT_HANDLE_INSURED_MERCS                           = 13,
 	EVENT_PAY_LIFE_INSURANCE_FOR_DEAD_MERC               = 14,
 	EVENT_MERC_DAILY_UPDATE                              = 15,
-	EVENT_MERC_ABOUT_TO_LEAVE_COMMENT                    = 16,
-	EVENT_MERC_CONTRACT_OVER                             = 17,
 	EVENT_GROUP_ARRIVAL                                  = 18,
 	EVENT_DAY2_ADD_EMAIL_FROM_IMP                        = 19,
 	EVENT_MERC_COMPLAIN_EQUIPMENT                        = 20,
