@@ -111,8 +111,8 @@ struct QUOTE_SYSTEM_STRUCT
 
 static QUOTE_SYSTEM_STRUCT gCivQuoteData;
 
-UINT16	gusCivQuoteBoxWidth;
-UINT16	gusCivQuoteBoxHeight;
+static UINT16 gusCivQuoteBoxWidth;
+static UINT16 gusCivQuoteBoxHeight;
 
 
 static BOOLEAN GetCivQuoteText(UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t* zQuote)
