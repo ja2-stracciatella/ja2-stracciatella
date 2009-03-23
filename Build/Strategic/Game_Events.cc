@@ -118,46 +118,26 @@ BOOLEAN GameEventsPending(const UINT32 uiAdjustment)
 }
 
 
-//returns TRUE if any events were deleted
-static BOOLEAN DeleteEventsWithDeletionPending(void)
+static void DeleteEventsWithDeletionPending(void)
 {
-	STRATEGICEVENT *curr, *prev, *temp;
-	BOOLEAN fEventDeleted = FALSE;
-	//ValidateGameEvents();
-	curr = gpEventList;
-	prev = NULL;
-	while( curr )
-	{
-		//ValidateGameEvents();
-		if( curr->ubFlags & SEF_DELETION_PENDING )
-		{
-			if( prev )
-			{ //deleting node in middle
-				prev->next = curr->next;
-				temp = curr;
-				curr = curr->next;
-				MemFree( temp );
-				fEventDeleted = TRUE;
-				//ValidateGameEvents();
-				continue;
-			}
-			else
-			{ //deleting head
-				gpEventList = gpEventList->next;
-				temp = curr;
-				prev = NULL;
-				curr = curr->next;
-				MemFree( temp );
-				fEventDeleted = TRUE;
-				//ValidateGameEvents();
-				continue;
-			}
-		}
-		prev = curr;
-		curr = curr->next;
-	}
+	if (!gfEventDeletionPending) return;
 	gfEventDeletionPending = FALSE;
-	return fEventDeleted;
+
+	STRATEGICEVENT** anchor = &gpEventList;
+	for (STRATEGICEVENT* curr = gpEventList; curr;)
+	{
+		STRATEGICEVENT* const next = curr->next;
+		if (curr->ubFlags & SEF_DELETION_PENDING)
+		{
+			*anchor = next;
+			MemFree(curr);
+		}
+		else
+		{
+			anchor = &curr->next;
+		}
+		curr = next;
+	}
 }
 
 
@@ -275,10 +255,7 @@ void ProcessPendingGameEvents(UINT32 uiAdjustment, const UINT8 ubWarpCode)
 
 	gfProcessingGameEvents = FALSE;
 
-	if( gfEventDeletionPending )
-	{
-		DeleteEventsWithDeletionPending();
-	}
+	DeleteEventsWithDeletionPending();
 
 	if( uiAdjustment && !gfTimeInterrupt )
 		guiGameClock += uiAdjustment;
