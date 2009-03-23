@@ -5456,6 +5456,7 @@ struct ITEM_CURSOR_SAVE_INFO
 	BOOLEAN			fCursorActive;
 	INT8				bPadding[5];
 };
+CASSERT(sizeof(ITEM_CURSOR_SAVE_INFO) == 44);
 
 
 void LoadItemCursorFromSavedGame(HWFILE const hFile)
