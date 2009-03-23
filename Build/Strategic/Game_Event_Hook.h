@@ -50,7 +50,6 @@ enum StrategicEventKind
 	EVENT_TURN_ON_PRIME_LIGHTS                           = 54,
 	EVENT_TURN_OFF_PRIME_LIGHTS                          = 55,
 	EVENT_MERC_ABOUT_TO_LEAVE                            = 56,
-	EVENT_INTERRUPT_TIME                                 = 57,
 	EVENT_ENRICO_MAIL                                    = 58,
 	EVENT_INSURANCE_INVESTIGATION_STARTED                = 59,
 	EVENT_INSURANCE_INVESTIGATION_OVER                   = 60,

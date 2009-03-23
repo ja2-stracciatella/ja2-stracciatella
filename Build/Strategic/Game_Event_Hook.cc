@@ -292,9 +292,6 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		case EVENT_TURN_OFF_PRIME_LIGHTS:
 			TurnOffPrimeLights();
 			break;
-		case EVENT_INTERRUPT_TIME:
-			InterruptTime( );
-			break;
 		case EVENT_ENRICO_MAIL:
 			HandleEnricoEmail();
 			break;
