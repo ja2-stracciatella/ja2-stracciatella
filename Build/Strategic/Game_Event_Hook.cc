@@ -173,28 +173,12 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 		//gets when a merc is about to leave.
 		case EVENT_MERC_ABOUT_TO_LEAVE_COMMENT:
 			break;
-		// show the update menu
-		case( EVENT_SHOW_UPDATE_MENU ):
-			AddDisplayBoxToWaitingQueue( );
-			break;
 		case EVENT_MERC_ABOUT_TO_LEAVE:
 			FindOutIfAnyMercAboutToLeaveIsGonnaRenew( );
 			break;
 		//When a merc is supposed to leave
 		case EVENT_MERC_CONTRACT_OVER:
 			MercsContractIsFinished(GetMan(pEvent->uiParam));
-			break;
-
-		case EVENT_ADDSOLDIER_TO_UPDATE_BOX:
-		{
-			SOLDIERTYPE* const s = GetMan(pEvent->uiParam);
-			// if the grunt is currently active, add to update box
-			if (s->bActive) AddSoldierToWaitingListQueue(*s);
-			break;
-		}
-
-		case EVENT_SET_MENU_REASON:
-			AddReasonToWaitingListQueue(static_cast<UpdateBoxReason>(pEvent->uiParam));
 			break;
 		//Whenever any group (player or enemy) arrives in a new sector during movement.
 		case EVENT_GROUP_ARRIVAL:
