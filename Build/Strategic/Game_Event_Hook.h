@@ -6,8 +6,6 @@
 enum StrategicEventKind
 {
 	EVENT_CHANGELIGHTVAL                                 =  1,
-	EVENT_WEATHERSTART                                   =  2,
-	EVENT_WEATHEREND                                     =  3,
 	EVENT_CHECKFORQUESTS                                 =  4,
 	EVENT_AMBIENT                                        =  5,
 	EVENT_AIM_RESET_MERC_ANNOYANCE                       =  6,
@@ -28,14 +26,10 @@ enum StrategicEventKind
 	EVENT_HOURLY_UPDATE                                  = 21,
 	EVENT_HANDLE_MINE_INCOME                             = 22,
 	EVENT_SETUP_MINE_INCOME                              = 23,
-	EVENT_QUEUED_BATTLE                                  = 24,
-	EVENT_LEAVING_MERC_ARRIVE_IN_DRASSEN                 = 25,	// unused
-	EVENT_LEAVING_MERC_ARRIVE_IN_OMERTA                  = 26,	// unused
 	EVENT_SET_BY_NPC_SYSTEM                              = 27,
 	EVENT_SECOND_AIRPORT_ATTENDANT_ARRIVED               = 28,
 	EVENT_HELICOPTER_HOVER_TOO_LONG                      = 29,
 	EVENT_HELICOPTER_HOVER_WAY_TOO_LONG                  = 30,
-	EVENT_HELICOPTER_DONE_REFUELING                      = 31,
 	EVENT_MERC_LEAVE_EQUIP_IN_OMERTA                     = 32,
 	EVENT_MERC_LEAVE_EQUIP_IN_DRASSEN                    = 33,
 	EVENT_DAILY_EARLY_MORNING_EVENTS                     = 34,
@@ -43,13 +37,9 @@ enum StrategicEventKind
 	EVENT_PROCESS_TACTICAL_SCHEDULE                      = 36,
 	EVENT_BEGINRAINSTORM                                 = 37,
 	EVENT_ENDRAINSTORM                                   = 38,
-	EVENT_HANDLE_TOWN_OPINION                            = 39, // XXX HACK000B unused
-	EVENT_SETUP_TOWN_OPINION                             = 40, // XXX HACK000B unused
 	EVENT_MAKE_CIV_GROUP_HOSTILE_ON_NEXT_SECTOR_ENTRANCE = 41,
 	EVENT_BEGIN_AIR_RAID                                 = 42,
-	EVENT_TOWN_LOYALTY_UPDATE                            = 43, // XXX HACK000B unused
 	EVENT_MEANWHILE                                      = 44,
-	EVENT_BEGIN_CREATURE_QUEST                           = 45, // XXX HACK000B unused
 	EVENT_CREATURE_SPREAD                                = 46,
 	EVENT_DECAY_CREATURES                                = 47,
 	EVENT_CREATURE_NIGHT_PLANNING                        = 48,
@@ -69,7 +59,6 @@ enum StrategicEventKind
 	EVENT_TEMPERATURE_UPDATE                             = 62,
 	EVENT_KEITH_GOING_OUT_OF_BUSINESS                    = 63,
 	EVENT_MERC_SITE_BACK_ONLINE                          = 64,
-	EVENT_INVESTIGATE_SECTOR                             = 65, // XXX HACK000B unused
 	EVENT_CHECK_IF_MINE_CLEARED                          = 66,
 	EVENT_REMOVE_ASSASSIN                                = 67,
 	EVENT_BANDAGE_BLEEDING_MERCS                         = 68,
