@@ -296,7 +296,6 @@ void InitPreBattleInterface( GROUP *pBattleGroup, BOOLEAN fPersistantPBI )
 		}
 
 		// reset the help text for mouse regions
-		gCharInfoHandRegion.SetFastHelpText(L"");
 		gMapStatusBarsRegion.SetFastHelpText(L"");
 
 		gfDisplayPotentialRetreatPaths = FALSE;

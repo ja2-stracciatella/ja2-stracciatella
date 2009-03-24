@@ -1397,11 +1397,6 @@ void UpdateCharRegionHelpText(void)
 	{
 		DisableButton(giMapContractButton);
 	}
-
-	wchar_t const* const inventory =
-		fShowInventoryFlag ? pMiscMapScreenMouseRegionHelpText[2] :
-		pMiscMapScreenMouseRegionHelpText[0];
-	gCharInfoHandRegion.SetFastHelpText(inventory);
 }
 
 

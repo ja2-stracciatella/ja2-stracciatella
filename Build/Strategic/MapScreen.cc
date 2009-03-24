@@ -427,7 +427,7 @@ static SGPVObject* guiNewMailIcons;
 
 // misc mouse regions
 static MOUSE_REGION gCharInfoFaceRegion;
-MOUSE_REGION gCharInfoHandRegion;
+static MOUSE_REGION gCharInfoHandRegion;
 MOUSE_REGION gMPanelRegion;
 static MOUSE_REGION gMapViewRegion;
 static MOUSE_REGION gMapScreenMaskRegion;
@@ -2060,12 +2060,7 @@ try
 		else
 		{
 			fShowInventoryFlag = FALSE;
-			// set help text for item glow region
-			gCharInfoHandRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[0]);
 		}
-
-
-
 
 		fTeamPanelDirty = TRUE;
 		fEndShowInventoryFlag = FALSE;
@@ -6062,8 +6057,6 @@ void ReBuildCharactersList( void )
 
 	// exit inventory mode
 	fShowInventoryFlag = FALSE;
-	// switch hand region help text to "Enter Inventory"
-	gCharInfoHandRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[0]);
 }
 
 
@@ -7659,7 +7652,6 @@ static void CheckForInventoryModeCancellation(void)
 			if ( fShowInventoryFlag )
 			{
 				fShowInventoryFlag = FALSE;
-				gCharInfoHandRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[0]);
 				fTeamPanelDirty = TRUE;
 			}
 
@@ -8958,12 +8950,6 @@ static void RequestToggleMercInventoryPanel(void)
 	{
 		// toggle inventory mode
 		fShowInventoryFlag = !fShowInventoryFlag;
-
-		// set help text for item glow region
-		wchar_t const* const help = fShowInventoryFlag ?
-			pMiscMapScreenMouseRegionHelpText[2] :
-			pMiscMapScreenMouseRegionHelpText[0];
-		gCharInfoHandRegion.SetFastHelpText(help);
 	}
 
 	fTeamPanelDirty = TRUE;

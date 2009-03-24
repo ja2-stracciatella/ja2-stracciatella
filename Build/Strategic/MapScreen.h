@@ -108,7 +108,6 @@ extern BOOLEAN      fShowInventoryFlag;
 extern BOOLEAN      fShowDescriptionFlag;
 extern GUIButtonRef giMapContractButton;
 extern GUIButtonRef giCharInfoButton[2];
-extern MOUSE_REGION gCharInfoHandRegion;
 extern BOOLEAN      fDrawCharacterList;
 
 // create/destroy inventory button as needed
