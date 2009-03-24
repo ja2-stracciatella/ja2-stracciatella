@@ -8981,7 +8981,7 @@ static void RequestContractMenu(void)
 	ChangeSelectedInfoChar( bSelectedInfoChar, TRUE );
 
 	SOLDIERTYPE* const s = GetSelectedInfoChar();
-	if (CanExtendContractForSoldier(s))
+	if (s && CanExtendContractForSoldier(s))
 	{
 		// create
 		RebuildContractBoxForMerc(s);
