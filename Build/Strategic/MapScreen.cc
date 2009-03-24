@@ -1654,6 +1654,7 @@ try
 
 		giMapContractButton = QuickCreateButtonImg("INTERFACE/contractbutton.sti", -1, 0, -1, 1, -1, CONTRACT_X + 5, CONTRACT_Y - 1, MSYS_PRIORITY_HIGHEST - 5, ContractButtonCallback);
 		giMapContractButton->SpecifyGeneralTextAttributes(pContractButtonString, MAP_SCREEN_FONT, CHAR_TEXT_FONT_COLOR, FONT_BLACK);
+		giMapContractButton->SetFastHelpText(pMapScreenMouseRegionHelpText[3]);
 
 		CreateMouseRegionForPauseOfClock();
 

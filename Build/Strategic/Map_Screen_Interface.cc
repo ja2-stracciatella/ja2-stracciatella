@@ -1389,18 +1389,14 @@ void UpdateCharRegionHelpText(void)
 	gMapStatusBarsRegion.SetFastHelpText(status);
 
 	// update contract button help text
-	wchar_t const* contract;
 	if (s && CanExtendContractForSoldier(s))
 	{
 		EnableButton(giMapContractButton);
-		contract = pMapScreenMouseRegionHelpText[3];
 	}
 	else
 	{
 		DisableButton(giMapContractButton);
-		contract = L"";
 	}
-	SetButtonFastHelpText(giMapContractButton, contract);
 
 	wchar_t const* const inventory =
 		!s || !CanToggleSelectedCharInventory() ? L"" :
