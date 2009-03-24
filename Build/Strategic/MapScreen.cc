@@ -6569,6 +6569,9 @@ static void ItemRegionBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
+static bool CanToggleSelectedCharInventory();
+
+
 static void ItemRegionMvtCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	if ( !CanToggleSelectedCharInventory() )
@@ -7590,8 +7593,7 @@ static void CheckForAndRenderNewMailOverlay(void)
 }
 
 
-
-BOOLEAN CanToggleSelectedCharInventory( void )
+static bool CanToggleSelectedCharInventory()
 {
 	if (gfPreBattleInterfaceActive) return FALSE;
 

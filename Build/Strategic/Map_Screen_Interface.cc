@@ -1399,9 +1399,8 @@ void UpdateCharRegionHelpText(void)
 	}
 
 	wchar_t const* const inventory =
-		!s || !CanToggleSelectedCharInventory() ? L"" :
-		fShowInventoryFlag                      ? pMiscMapScreenMouseRegionHelpText[2] :
-																							pMiscMapScreenMouseRegionHelpText[0];
+		fShowInventoryFlag ? pMiscMapScreenMouseRegionHelpText[2] :
+		pMiscMapScreenMouseRegionHelpText[0];
 	gCharInfoHandRegion.SetFastHelpText(inventory);
 }
 
