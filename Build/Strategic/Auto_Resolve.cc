@@ -266,10 +266,10 @@ INT16 gsCiviliansEatenByMonsters = -1;
 
 //Dynamic globals -- to conserve memory, all global variables are allocated upon entry
 //and deleted before we leave.
-AUTORESOLVE_STRUCT *gpAR = NULL;
-SOLDIERCELL *gpMercs = NULL;
-SOLDIERCELL *gpCivs = NULL;
-SOLDIERCELL *gpEnemies = NULL;
+static AUTORESOLVE_STRUCT* gpAR;
+static SOLDIERCELL*        gpMercs;
+static SOLDIERCELL*        gpCivs;
+static SOLDIERCELL*        gpEnemies;
 
 
 #define FOR_ALL_AR_MERCS(iter) \
