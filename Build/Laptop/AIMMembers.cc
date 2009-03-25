@@ -687,10 +687,10 @@ void RenderAIMMembersTopLevel()
 
 
 static void DisplayAimMemberClickOnFaceHelpText(void);
-static void DisplayMercStats(void);
+static void DisplayMercStats(MERCPROFILESTRUCT const&);
 static void DisplayMercsFace(void);
 static void DisplayMercsInventory(MERCPROFILESTRUCT const&);
-static BOOLEAN DisplayVideoConferencingDisplay(void);
+static BOOLEAN DisplayVideoConferencingDisplay(MERCPROFILESTRUCT const&);
 static void UpdateMercInfo(void);
 
 
@@ -740,11 +740,11 @@ void RenderAIMMembers()
 
 	DisplayMercsFace();
 
-	DisplayMercStats();
+	DisplayMercStats(p);
 
 	if( gubVideoConferencingMode)
 	{
-		DisplayVideoConferencingDisplay();
+		DisplayVideoConferencingDisplay(p);
 	}
 	else
 	{
@@ -1068,10 +1068,8 @@ static void DrawStat(const UINT16 x, const UINT16 y, const wchar_t* const stat, 
 }
 
 
-static void DisplayMercStats(void)
+static void DisplayMercStats(MERCPROFILESTRUCT const& p)
 {
-	MERCPROFILESTRUCT const& p = GetProfile(gbCurrentSoldier);
-
 	//Name
 	DrawTextToScreen(p.zName, NAME_X, NAME_Y, 0, FONT14ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
@@ -1289,7 +1287,7 @@ static INT8 AimMemberHireMerc(void)
 static void DisplayMercsVideoFace(void);
 
 
-static BOOLEAN DisplayVideoConferencingDisplay(void)
+static BOOLEAN DisplayVideoConferencingDisplay(MERCPROFILESTRUCT const& p)
 {
 	wchar_t		sMercName[128];
 
@@ -1306,7 +1304,7 @@ static BOOLEAN DisplayVideoConferencingDisplay(void)
 	}
 	else
 	{
-		swprintf( sMercName, lengthof(sMercName), L"%ls %ls",  VideoConfercingText[AIM_MEMBER_VIDEO_CONF_WITH], gMercProfiles[gbCurrentSoldier].zName);
+		swprintf(sMercName, lengthof(sMercName), L"%ls %ls", VideoConfercingText[AIM_MEMBER_VIDEO_CONF_WITH], p.zName);
 		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
