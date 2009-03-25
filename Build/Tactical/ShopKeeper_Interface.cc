@@ -3617,6 +3617,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			return;
 
 		case ARMS_DEALER_OFFER_AREA:
+		{
 			//Get the item from the slot.
 			gMoveingItem = ArmsDealerOfferArea[bSlotNum];
 			IfMercOwnedRemoveItemFromMercInv( &gMoveingItem );
@@ -3631,27 +3632,18 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			Rect.iRight = SKI_ITEM_MOVEMENT_AREA_X + SKI_ITEM_MOVEMENT_AREA_WIDTH;
 			Rect.iBottom = SKI_ITEM_MOVEMENT_AREA_Y + SKI_ITEM_MOVEMENT_AREA_HEIGHT;
 
-			gpItemPointer = &gMoveingItem.ItemObject;
-
-			//if there is an owner of the item
-			#if 0 /* XXX -1 */
-			if( gMoveingItem.ubIdOfMercWhoOwnsTheItem != -1 )
-			#else
-			if (gMoveingItem.ubIdOfMercWhoOwnsTheItem != (UINT8)-1)
-			#endif
-			{
-				gpItemPointerSoldier = FindSoldierByProfileIDOnPlayerTeam(gMoveingItem.ubIdOfMercWhoOwnsTheItem);
-				//make sure the soldier is not null
-				if( gpItemPointerSoldier == NULL )
-				{
-					gpItemPointerSoldier = gpSMCurrentMerc;
-				}
-			}
-			else
-				gpItemPointerSoldier = gpSMCurrentMerc;
-
+			ProfileID    const owner_pid = gMoveingItem.ubIdOfMercWhoOwnsTheItem;
+			SOLDIERTYPE* const owner     =
+#if 0 /* XXX -1 */
+				owner_pid == -1                               ? gpSMCurrentMerc :
+#else
+				owner_pid == (UINT8)-1                        ? gpSMCurrentMerc :
+#endif
+				FindSoldierByProfileIDOnPlayerTeam(owner_pid) ?:
+				gpSMCurrentMerc;
+			SetItemPointer(&gMoveingItem.ItemObject, owner);
 			break;
-
+		}
 
 		case PLAYERS_OFFER_AREA:
 		{
@@ -3684,24 +3676,16 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			Rect.iRight = SKI_ITEM_MOVEMENT_AREA_X + SKI_ITEM_MOVEMENT_AREA_WIDTH;
 			Rect.iBottom = SKI_ITEM_MOVEMENT_AREA_Y + SKI_ITEM_MOVEMENT_AREA_HEIGHT;
 
-			gpItemPointer = &gMoveingItem.ItemObject;
-
-			//if there is an owner of the item
-			#if 0 /* XXX -1 */
-			if( gMoveingItem.ubIdOfMercWhoOwnsTheItem != -1 )
-			#else
-			if (gMoveingItem.ubIdOfMercWhoOwnsTheItem != (UINT8)-1)
-			#endif
-			{
-				gpItemPointerSoldier = FindSoldierByProfileIDOnPlayerTeam(gMoveingItem.ubIdOfMercWhoOwnsTheItem);
-				//make sure the soldier is not null
-				if( gpItemPointerSoldier == NULL )
-				{
-					gpItemPointerSoldier = gpSMCurrentMerc;
-				}
-			}
-			else
-				gpItemPointerSoldier = gpSMCurrentMerc;
+			ProfileID    const owner_pid = gMoveingItem.ubIdOfMercWhoOwnsTheItem;
+			SOLDIERTYPE* const owner     =
+#if 0 /* XXX -1 */
+				owner_pid == -1                               ? gpSMCurrentMerc :
+#else
+				owner_pid == (UINT8)-1                        ? gpSMCurrentMerc :
+#endif
+				FindSoldierByProfileIDOnPlayerTeam(owner_pid) ?:
+				gpSMCurrentMerc;
+			SetItemPointer(&gMoveingItem.ItemObject, owner);
 			break;
 		}
 
@@ -3755,8 +3739,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 				Rect.iRight = SKI_ITEM_MOVEMENT_AREA_X + SKI_ITEM_MOVEMENT_AREA_WIDTH;
 				Rect.iBottom = SKI_ITEM_MOVEMENT_AREA_Y + SKI_ITEM_MOVEMENT_AREA_HEIGHT;
 
-				gpItemPointer = &gMoveingItem.ItemObject;
-				gpItemPointerSoldier = gpSMCurrentMerc;
+				SetItemPointer(&gMoveingItem.ItemObject, gpSMCurrentMerc);
 			}
 
 			break;

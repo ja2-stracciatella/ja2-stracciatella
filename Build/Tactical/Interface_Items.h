@@ -142,4 +142,6 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 void SetMouseCursorFromItem(UINT16 item_idx);
 void SetMouseCursorFromCurrentItem();
 
+void SetItemPointer(OBJECTTYPE*, SOLDIERTYPE*);
+
 #endif

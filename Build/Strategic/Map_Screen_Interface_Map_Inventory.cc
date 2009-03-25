@@ -846,10 +846,7 @@ static void BeginInventoryPoolPtr(OBJECTTYPE* pInventorySlot)
 	{
 		// Dirty interface
 		fMapPanelDirty = TRUE;
-		gpItemPointer = &gItemPointer;
-
-		gpItemPointerSoldier = NULL;
-
+		SetItemPointer(&gItemPointer, 0);
 		SetMapCursorItem();
 
 		if (fShowInventoryFlag)

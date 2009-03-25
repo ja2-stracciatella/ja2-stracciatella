@@ -2125,8 +2125,7 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
 				// OK, END the description box
 				//fItemDescDelete = TRUE;
 				fInterfacePanelDirty = DIRTYLEVEL2;
-				gpItemPointer = &gItemPointer;
-				gpItemPointerSoldier = gpItemDescSoldier;
+				SetItemPointer(&gItemPointer, gpItemDescSoldier);
 
 				btn->SpecifyText(L"0");
 
@@ -2139,8 +2138,7 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
 			// Set pointer to item
 			if ( gpItemPointer == NULL && EmptyWeaponMagazine( gpItemDescObject, &gItemPointer ) )
 			{
-				gpItemPointer = &gItemPointer;
-				gpItemPointerSoldier = gpItemDescSoldier;
+				SetItemPointer(&gItemPointer, gpItemDescSoldier);
 
 				// if in SKI, load item into SKI's item pointer
 				if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
@@ -2271,8 +2269,7 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				// The follwing function will handle if no attachment is here
 				if ( RemoveAttachment( gpItemDescObject, (UINT8)uiItemPos, &gItemPointer ) )
 				{
-					gpItemPointer = &gItemPointer;
-					gpItemPointerSoldier = gpItemDescSoldier;
+					SetItemPointer(&gItemPointer, gpItemDescSoldier);
 
 	//				if( guiCurrentScreen == MAP_SCREEN )
 					if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
@@ -2948,8 +2945,7 @@ void InternalBeginItemPointer( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject, INT8 
 
 	// Dirty interface
 	fInterfacePanelDirty = DIRTYLEVEL2;
-	gpItemPointer = &gItemPointer;
-	gpItemPointerSoldier = pSoldier;
+	SetItemPointer(&gItemPointer, pSoldier);
 	gbItemPointerSrcSlot = bHandPos;
 	gbItemPointerLocateGood = TRUE;
 
@@ -3015,8 +3011,7 @@ void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition )
 
 		// Dirty interface
 		fInterfacePanelDirty = DIRTYLEVEL2;
-		gpItemPointer = &gItemPointer;
-		gpItemPointerSoldier = pSoldier;
+		SetItemPointer(&gItemPointer, pSoldier);
 		gbItemPointerSrcSlot = ubKeyRingPosition;
 
 		if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
@@ -4388,8 +4383,7 @@ static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
         }
         else
         {
-				  gpItemPointer = &gItemPointer;
-				  gpItemPointerSoldier = gpItemPopupSoldier;
+					SetItemPointer(&gItemPointer, gpItemPopupSoldier);
         }
 
 				//if we are in the shop keeper interface
@@ -5305,8 +5299,7 @@ static void RemoveMoney(void)
 			gMoveingItem = InvSlot;
 
 			gItemPointer = InvSlot.ItemObject;
-			gpItemPointer = &gItemPointer;
-			gpItemPointerSoldier = gpSMCurrentMerc;
+			SetItemPointer(&gItemPointer, gpSMCurrentMerc);
 
 			// Set mouse
 			SetSkiCursor( EXTERN_CURSOR );
@@ -5317,9 +5310,7 @@ static void RemoveMoney(void)
 		else
 		{
 			CreateMoney( gRemoveMoney.uiMoneyRemoving, &gItemPointer );
-			gpItemPointer = &gItemPointer;
-			//Asign the soldier to be the currently selected soldier
-			gpItemPointerSoldier = gpItemDescSoldier;
+			SetItemPointer(&gItemPointer, gpItemDescSoldier);
 
 			//Remove the money from the money in the pocket
 			//if we are removing money from the players account
@@ -5464,21 +5455,19 @@ void LoadItemCursorFromSavedGame(HWFILE const hFile)
 	// Copy object
 	gItemPointer = SaveStruct.ItemPointerInfo;
 
-	// Copy soldier ID
-	gpItemPointerSoldier = ID2Soldier(SaveStruct.ubSoldierID);
-
 	// Inv slot
 	gbItemPointerSrcSlot = SaveStruct.ubInvSlot;
 
 	// Boolean
 	if ( SaveStruct.fCursorActive )
 	{
-		gpItemPointer = &( gItemPointer );
+		SetItemPointer(&gItemPointer, ID2Soldier(SaveStruct.ubSoldierID));
 		ReEvaluateDisabledINVPanelButtons( );
 	}
 	else
 	{
 		gpItemPointer = NULL;
+		gpItemPointerSoldier = 0;
 	}
 }
 
@@ -5547,4 +5536,11 @@ void SetMouseCursorFromItem(UINT16 const item_idx)
 void SetMouseCursorFromCurrentItem()
 {
 	SetMouseCursorFromItem(gpItemPointer->usItem);
+}
+
+
+void SetItemPointer(OBJECTTYPE* const o, SOLDIERTYPE* const s)
+{
+	gpItemPointer        = o;
+	gpItemPointerSoldier = s;
 }

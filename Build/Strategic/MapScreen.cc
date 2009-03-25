@@ -4561,10 +4561,7 @@ void InternalMAPBeginItemPointer(SOLDIERTYPE* pSoldier)
 		return;
 	}
 
-	// Set global indicator
-	gpItemPointer = &gItemPointer;
-	gpItemPointerSoldier = pSoldier;
-
+	SetItemPointer(&gItemPointer, pSoldier);
 	SetMapCursorItem();
 	fTeamPanelDirty=TRUE;
 
