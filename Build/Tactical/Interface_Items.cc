@@ -2114,47 +2114,32 @@ static void ReloadItemDesc(void)
 }
 
 
-static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
+static void ItemDescAmmoCallback(GUI_BUTTON*  const btn, INT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
+		if (gpItemPointer) return;
+		if (!EmptyWeaponMagazine(gpItemDescObject, &gItemPointer)) return;
+
+		SetItemPointer(&gItemPointer, gpItemDescSoldier);
+		fInterfacePanelDirty = DIRTYLEVEL2;
+
+		btn->SpecifyText(L"0");
+
+		if (guiCurrentItemDescriptionScreen == MAP_SCREEN)
 		{
-			if ( gpItemPointer == NULL && EmptyWeaponMagazine( gpItemDescObject, &gItemPointer ) )
-			{
-				// OK, END the description box
-				//fItemDescDelete = TRUE;
-				fInterfacePanelDirty = DIRTYLEVEL2;
-				SetItemPointer(&gItemPointer, gpItemDescSoldier);
-
-				btn->SpecifyText(L"0");
-
-				SetMapCursorItem();
-				fTeamPanelDirty=TRUE;
-			}
+			SetMapCursorItem();
+			fTeamPanelDirty = TRUE;
 		}
 		else
 		{
-			// Set pointer to item
-			if ( gpItemPointer == NULL && EmptyWeaponMagazine( gpItemDescObject, &gItemPointer ) )
+			// if in SKI, load item into SKI's item pointer
+			if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE)
 			{
-				SetItemPointer(&gItemPointer, gpItemDescSoldier);
-
-				// if in SKI, load item into SKI's item pointer
-				if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-				{
-					// pick up bullets from weapon into cursor (don't try to sell)
-					BeginSkiItemPointer( PLAYERS_INVENTORY, -1, FALSE );
-				}
-
-				// OK, END the description box
-				//fItemDescDelete = TRUE;
-				fInterfacePanelDirty = DIRTYLEVEL2;
-
-				btn->SpecifyText(L"0");
-
-				fItemDescDelete = TRUE;
+				// pick up bullets from weapon into cursor (don't try to sell)
+				BeginSkiItemPointer(PLAYERS_INVENTORY, -1, FALSE);
 			}
+			fItemDescDelete = TRUE;
 		}
 	}
 }
