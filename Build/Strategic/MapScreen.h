@@ -120,6 +120,8 @@ void     MapScreenShutdown(void);
 void LockMapScreenInterface(bool lock);
 void MakeDialogueEventEnterMapScreen();
 
+void SetMapCursorItem();
+
 #ifdef JA2TESTVERSION
 void DumpSectorDifficultyInfo(void);
 #endif

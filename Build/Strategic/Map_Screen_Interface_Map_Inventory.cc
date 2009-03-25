@@ -635,9 +635,7 @@ static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 				}
 				else
 				{
-					SetMouseCursorFromCurrentItem();
-					fMapInventoryItem = TRUE;
-					gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
+					SetMapCursorItem();
 				}
 			}
 		}
@@ -852,9 +850,7 @@ static void BeginInventoryPoolPtr(OBJECTTYPE* pInventorySlot)
 
 		gpItemPointerSoldier = NULL;
 
-		SetMouseCursorFromCurrentItem();
-		fMapInventoryItem = TRUE;
-		gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
+		SetMapCursorItem();
 
 		if (fShowInventoryFlag)
 		{

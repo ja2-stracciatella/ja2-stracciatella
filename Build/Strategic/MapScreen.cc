@@ -4480,9 +4480,7 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				}
 				else	// items swapped
 				{
-					SetMouseCursorFromCurrentItem();
-					gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
-					fMapInventoryItem=TRUE;
+					SetMapCursorItem();
 					fTeamPanelDirty=TRUE;
 
 					// remember which gridno the object came from
@@ -4567,9 +4565,7 @@ void InternalMAPBeginItemPointer(SOLDIERTYPE* pSoldier)
 	gpItemPointer = &gItemPointer;
 	gpItemPointerSoldier = pSoldier;
 
-	SetMouseCursorFromCurrentItem();
-	gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
-	fMapInventoryItem=TRUE;
+	SetMapCursorItem();
 	fTeamPanelDirty=TRUE;
 
 	// hatch out incompatible inventory slots
@@ -9075,6 +9071,14 @@ void MakeDialogueEventEnterMapScreen()
 	};
 
 	DialogueEvent::Add(new DialogueEventEnterMapScreen());
+}
+
+
+void SetMapCursorItem()
+{
+	SetMouseCursorFromCurrentItem();
+	gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
+	fMapInventoryItem = TRUE;
 }
 
 

@@ -2130,9 +2130,7 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  btn, INT32 reason)
 
 				btn->SpecifyText(L"0");
 
-				SetMouseCursorFromCurrentItem();
-				gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
-				fMapInventoryItem=TRUE;
+				SetMapCursorItem();
 				fTeamPanelDirty=TRUE;
 			}
 		}
@@ -2279,9 +2277,7 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	//				if( guiCurrentScreen == MAP_SCREEN )
 					if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 					{
-						SetMouseCursorFromCurrentItem();
-						gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
-						fMapInventoryItem=TRUE;
+						SetMapCursorItem();
 						fTeamPanelDirty=TRUE;
 					}
 
@@ -3025,9 +3021,7 @@ void BeginKeyRingItemPointer( SOLDIERTYPE *pSoldier, UINT8 ubKeyRingPosition )
 
 		if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
 		{
-			SetMouseCursorFromCurrentItem();
-			fMapInventoryItem=TRUE;
-			gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
+			SetMapCursorItem();
 		}
 	}
 	else
@@ -5343,9 +5337,7 @@ static void RemoveMoney(void)
 
 			if( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 			{
-				SetMouseCursorFromCurrentItem();
-				gMPanelRegion.ChangeCursor(EXTERN_CURSOR);
-				fMapInventoryItem=TRUE;
+				SetMapCursorItem();
 				fTeamPanelDirty=TRUE;
 			}
 
