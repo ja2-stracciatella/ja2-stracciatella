@@ -118,26 +118,24 @@ static INT32 giFilesPage = 0;
 // strings
 
 #define SLAY_LENGTH 12
-#define ENRICO_LENGTH 0
 
 
 struct FileInfo
 {
 	UINT16 profile_id;
 	UINT16 file_offset;
-	UINT8  record_length;
 };
 
 
-static const FileInfo g_file_info[] =
+static FileInfo const g_file_info[] =
 {
-	{ NO_PROFILE, 0,                               ENRICO_LENGTH },
-	{ SLAY,       ENRICO_LENGTH,                   SLAY_LENGTH   }, // Slay
-	{ ANNIE,      ENRICO_LENGTH + SLAY_LENGTH * 1, SLAY_LENGTH   }, // MOM
-	{ CHRIS,      ENRICO_LENGTH + SLAY_LENGTH * 2, SLAY_LENGTH   }, // Imposter
-	{ TIFFANY,    ENRICO_LENGTH + SLAY_LENGTH * 3, SLAY_LENGTH   }, // Tiff
-	{ T_REX,      ENRICO_LENGTH + SLAY_LENGTH * 4, SLAY_LENGTH   }, // T-Rex
-	{ DRUGGIST,   ENRICO_LENGTH + SLAY_LENGTH * 5, SLAY_LENGTH   }  // Elgin
+	{ NO_PROFILE, 0               },
+	{ SLAY,       0               }, // Slay
+	{ ANNIE,      SLAY_LENGTH * 1 }, // MOM
+	{ CHRIS,      SLAY_LENGTH * 2 }, // Imposter
+	{ TIFFANY,    SLAY_LENGTH * 3 }, // Tiff
+	{ T_REX,      SLAY_LENGTH * 4 }, // T-Rex
+	{ DRUGGIST,   SLAY_LENGTH * 5 }  // Elgin
 };
 
 
@@ -986,7 +984,7 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 
 	FileRecordWidth*  const width_list = CreateWidthRecordsForTerroristFile();
 	FileInfo   const&       info       = g_file_info[file_idx];
-	AutoStringList    const head(LoadStringsIntoFileList("BINARYDATA/files.EDT", info.file_offset, info.record_length));
+	AutoStringList    const head(LoadStringsIntoFileList("BINARYDATA/files.EDT", info.file_offset, SLAY_LENGTH));
 	FileString const* const start      = GetFirstStringOnThisPage(head, FILES_TEXT_FONT, 350, FILE_GAP, giFilesPage, MAX_FILE_MESSAGE_PAGE_SIZE, width_list);
 	ClearOutWidthRecordsList(width_list);
 
