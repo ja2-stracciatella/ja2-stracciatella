@@ -428,7 +428,7 @@ static SGPVObject* guiNewMailIcons;
 // misc mouse regions
 static MOUSE_REGION gCharInfoFaceRegion;
 static MOUSE_REGION gCharInfoHandRegion;
-MOUSE_REGION gMPanelRegion;
+static MOUSE_REGION gMPanelRegion;
 static MOUSE_REGION gMapViewRegion;
 static MOUSE_REGION gMapScreenMaskRegion;
 static MOUSE_REGION gTrashCanRegion;
@@ -1055,9 +1055,7 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 // this character is in transit has an item picked up
 static bool CharacterIsInTransitAndHasItemPickedUp(SOLDIERTYPE const* const s)
 {
-	return
-		s->bAssignment       == IN_TRANSIT &&
-		gMPanelRegion.Cursor == EXTERN_CURSOR; // item picked up?
+	return s->bAssignment == IN_TRANSIT && fMapInventoryItem;
 }
 
 
@@ -2873,7 +2871,7 @@ static bool HandleKeyESC()
 	}
 	else if (fShowInventoryFlag)
 	{
-		if (gMPanelRegion.Cursor != EXTERN_CURSOR && !InItemStackPopup())
+		if (!fMapInventoryItem && !InItemStackPopup())
 		{
 			fEndShowInventoryFlag = TRUE;
 		}
@@ -6688,7 +6686,7 @@ static void TrashCanMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	if (iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		if( gMPanelRegion.Cursor == EXTERN_CURSOR )
+		if (fMapInventoryItem)
 		{
 			fShowTrashCanHighLight = TRUE;
 		}
@@ -6795,7 +6793,7 @@ static void DoneInventoryMapBtnCallback(GUI_BUTTON* btn, INT32 reason)
 	// prevent inventory from being closed while stack popup up!
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (gMPanelRegion.Cursor != EXTERN_CURSOR && !InItemStackPopup())
+		if (!fMapInventoryItem && !InItemStackPopup())
 		{
 			fEndShowInventoryFlag = TRUE;
 		}
@@ -7018,11 +7016,7 @@ static BOOLEAN CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed(c
 	}
 
 	// picked something up?
-	if( gMPanelRegion.Cursor != EXTERN_CURSOR )
-	{
-		// nope
-		return( FALSE );
-	}
+	if (!fMapInventoryItem) return FALSE; // no
 
 	// only disallow when enemies in sector
 	if ( !gTacticalStatus.fEnemyInSector )
@@ -7584,7 +7578,7 @@ static bool CanToggleSelectedCharInventory()
 	if (gfPreBattleInterfaceActive) return FALSE;
 
 	// already in inventory and an item picked up?
-	if( fShowInventoryFlag && ( gMPanelRegion.Cursor == EXTERN_CURSOR ) )
+	if (fShowInventoryFlag && fMapInventoryItem)
 	{
 		return(FALSE);
 	}
@@ -7598,7 +7592,7 @@ static bool CanToggleSelectedCharInventory()
 
 	// if not in inventory, and holding an item from sector inventory
 	if( !fShowInventoryFlag &&
-			( ( gMPanelRegion.Cursor == EXTERN_CURSOR ) || gpItemPointer || fMapInventoryItem ) &&
+			(gpItemPointer || fMapInventoryItem) &&
 			( gpItemPointerSoldier == NULL ) )
 	{
 		// make sure he's in that sector
@@ -7634,10 +7628,7 @@ static void CheckForInventoryModeCancellation(void)
 	if ( fShowInventoryFlag || fShowDescriptionFlag )
 	{
 		// can't bail while player has an item in hand...
-		if( gMPanelRegion.Cursor == EXTERN_CURSOR )
-		{
-			return;
-		}
+		if (fMapInventoryItem) return;
 
 		if ( !CanToggleSelectedCharInventory( ) )
 		{
@@ -7932,7 +7923,7 @@ void ChangeSelectedInfoChar( INT8 bCharNumber, BOOLEAN fResetSelectedList )
 	}
 
 	// if holding an item
-	if ( ( gMPanelRegion.Cursor == EXTERN_CURSOR ) || gpItemPointer || fMapInventoryItem )
+	if (gpItemPointer || fMapInventoryItem)
 	{
 		// make sure we can give it to this guy, otherwise don't allow the change
 		if (s == NULL || !MapscreenCanPassItemToChar(s))

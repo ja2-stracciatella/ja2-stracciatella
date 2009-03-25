@@ -805,7 +805,7 @@ static void EnableDisableBottomButtonsAndRegions(void)
 	if( fShowInventoryFlag )
 	{
 		// and an item is in the cursor
-		if (gMPanelRegion.Cursor == EXTERN_CURSOR || InKeyRingPopup() || InItemStackPopup())
+		if (fMapInventoryItem || InKeyRingPopup() || InItemStackPopup())
 		{
 			DisableButton( giMapInvDoneButton );
 		}
@@ -1200,10 +1200,7 @@ BOOLEAN AllowedToExitFromMapscreenTo(ExitToWhere const bExitToWhere)
 	}
 
 	// if holding an inventory item
-	if ( fMapInventoryItem || ( gMPanelRegion.Cursor == EXTERN_CURSOR ) )
-	{
-		return( FALSE );
-	}
+	if (fMapInventoryItem) return FALSE;
 
 	if( fShowUpdateBox || fShowTownInfo || ( sSelectedMilitiaTown != 0 ) )
 	{

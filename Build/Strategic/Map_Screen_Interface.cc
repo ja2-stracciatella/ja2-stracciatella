@@ -1553,7 +1553,7 @@ static BOOLEAN ValidSelectableCharForNextOrPrev(const SOLDIERTYPE* const s)
 	BOOLEAN fHoldingItem = FALSE;
 
 	// if holding an item
-	if ( ( gMPanelRegion.Cursor == EXTERN_CURSOR ) || gpItemPointer || fMapInventoryItem )
+	if (gpItemPointer || fMapInventoryItem)
 	{
 		fHoldingItem = TRUE;
 	}
@@ -1578,8 +1578,7 @@ BOOLEAN MapscreenCanPassItemToChar(const SOLDIERTYPE* const pNewSoldier)
 	SOLDIERTYPE *pOldSoldier;
 
 	// assumes we're holding an item
-	Assert( ( gMPanelRegion.Cursor == EXTERN_CURSOR ) || gpItemPointer || fMapInventoryItem );
-
+	Assert(gpItemPointer || fMapInventoryItem);
 
 	// if in a hostile sector, disallow
 	if ( gTacticalStatus.fEnemyInSector )

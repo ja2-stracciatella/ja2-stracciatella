@@ -1240,7 +1240,7 @@ void HandleButtonStatesWhileMapInventoryActive( void )
 	}
 
 	// item picked up ..disable button
-	if( gMPanelRegion.Cursor == EXTERN_CURSOR )
+	if (fMapInventoryItem)
 	{
 		DisableButton( guiMapInvenButton[ 2 ] );
 	}

@@ -5,7 +5,6 @@
 #include "Item_Types.h"
 #include "JA2Types.h"
 #include "MessageBoxScreen.h"
-#include "MouseSystem.h"
 #include "ScreenIDs.h"
 
 
@@ -97,7 +96,6 @@ void    MapScreenDefaultOkBoxCallback(MessageBoxReturnValue);
 void    SetUpCursorForStrategicMap(void);
 void    DrawFace(void);
 
-extern MOUSE_REGION gMPanelRegion;
 #ifndef JA2DEMO
 extern SGPVObject*  guiMapInvSecondHandBlockout;
 #endif
