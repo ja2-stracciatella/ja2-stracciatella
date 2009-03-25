@@ -690,7 +690,7 @@ static void DisplayAimMemberClickOnFaceHelpText(void);
 static void DisplayMercStats(MERCPROFILESTRUCT const&);
 static void DisplayMercsFace(void);
 static void DisplayMercsInventory(MERCPROFILESTRUCT const&);
-static BOOLEAN DisplayVideoConferencingDisplay(MERCPROFILESTRUCT const&);
+static void DisplayVideoConferencingDisplay(MERCPROFILESTRUCT const&);
 static void UpdateMercInfo(void);
 
 
@@ -1287,12 +1287,12 @@ static INT8 AimMemberHireMerc(void)
 static void DisplayMercsVideoFace(void);
 
 
-static BOOLEAN DisplayVideoConferencingDisplay(MERCPROFILESTRUCT const& p)
+static void DisplayVideoConferencingDisplay(MERCPROFILESTRUCT const& p)
 {
 	wchar_t		sMercName[128];
 
-	if( ( gubVideoConferencingMode == AIM_VIDEO_NOT_DISPLAYED_MODE ) || ( gubVideoConferencingMode == AIM_VIDEO_POPUP_MODE ) )
-		return(FALSE);
+	if (gubVideoConferencingMode == AIM_VIDEO_NOT_DISPLAYED_MODE) return;
+	if (gubVideoConferencingMode == AIM_VIDEO_POPUP_MODE)         return;
 
 	DisplayMercsVideoFace();
 
@@ -1332,8 +1332,6 @@ static BOOLEAN DisplayVideoConferencingDisplay(MERCPROFILESTRUCT const& p)
 	}
 
   InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
-
-	return(TRUE);
 }
 
 
