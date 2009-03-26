@@ -125,6 +125,5 @@ extern UINT16       gusNewItemIndex;
 extern BOOLEAN      gfDeductPoints;
 extern BOOLEAN      gfSMDisableForItems;
 extern SOLDIERTYPE* gNewPanelSoldier;
-extern SGPVObject*  guiBrownBackgroundForTeamPanel; // backgrounds for breath max background
 
 #endif

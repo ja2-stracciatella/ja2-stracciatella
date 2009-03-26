@@ -291,8 +291,6 @@ INT8		gbCheckForMouseOverItemPos = 0;
 SOLDIERTYPE* gSelectSMPanelToMerc = NULL;
 static BOOLEAN gfReEvaluateDisabledINVPanelButtons = FALSE;
 
-SGPVObject* guiBrownBackgroundForTeamPanel;
-
 
 UINT8 gubHandPos;
 UINT16 gusOldItemIndex;
@@ -947,10 +945,9 @@ static void SelectedMercEnemyIndicatorCallback(MOUSE_REGION* pRegion, INT32 iRea
 
 void InitializeSMPanel(void)
 {
-	guiSMPanel                     = AddVideoObjectFromFile("INTERFACE/inventory_bottom_panel.STI");
-	guiSMObjects                   = AddVideoObjectFromFile("INTERFACE/inventory_gold_front.sti");
-	guiSMObjects2                  = AddVideoObjectFromFile("INTERFACE/inv_frn.sti");
-	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
+	guiSMPanel    = AddVideoObjectFromFile("INTERFACE/inventory_bottom_panel.STI");
+	guiSMObjects  = AddVideoObjectFromFile("INTERFACE/inventory_gold_front.sti");
+	guiSMObjects2 = AddVideoObjectFromFile("INTERFACE/inv_frn.sti");
 
 	// INit viewport region
 	// Set global mouse regions
@@ -1147,7 +1144,6 @@ void ShutdownSMPanel(void)
 	DeleteVideoObject(guiSMPanel);
 	DeleteVideoObject(guiSMObjects);
 	DeleteVideoObject(guiSMObjects2);
-	DeleteVideoObject(guiBrownBackgroundForTeamPanel);
 
 	gSelectSMPanelToMerc = NULL;
 
@@ -2348,9 +2344,8 @@ void InitializeTEAMPanel(void)
 	// Define region for viewport
 	MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-	guiTEAMPanel                   = AddVideoObjectFromFile("INTERFACE/bottom_bar.sti");
-	guiTEAMObjects                 = AddVideoObjectFromFile("INTERFACE/gold_front.sti");
-	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
+	guiTEAMPanel   = AddVideoObjectFromFile("INTERFACE/bottom_bar.sti");
+	guiTEAMObjects = AddVideoObjectFromFile("INTERFACE/gold_front.sti");
 
 	// Create buttons
 	CreateTEAMPanelButtons();
@@ -2395,7 +2390,6 @@ void ShutdownTEAMPanel(void)
 	// We may want to delete them at the interm as well, to free up room for other panels
 	DeleteVideoObject(guiTEAMPanel);
 	DeleteVideoObject(guiTEAMObjects);
-	DeleteVideoObject(guiBrownBackgroundForTeamPanel);
 
 	MSYS_RemoveRegion(&gTEAM_PanelRegion);
 	MSYS_RemoveRegion(&gViewportRegion);

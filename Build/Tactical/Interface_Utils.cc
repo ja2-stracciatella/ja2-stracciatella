@@ -1,4 +1,3 @@
-#include "Interface_Panels.h"
 #include "Local.h"
 #include "HImage.h"
 #include "VObject.h"
@@ -50,6 +49,8 @@ enum
 
 // the ids for the car portraits
 static SGPVObject* giCarPortraits[NUMBER_CAR_PORTRAITS];
+
+static SGPVObject* guiBrownBackgroundForTeamPanel; // backgrounds for breath max background
 
 
 // Load in the portraits for the car faces that will be use in mapscreen
@@ -268,4 +269,16 @@ void RenderSoldierFace(const SOLDIERTYPE* const s, const INT16 sFaceX, const INT
 		SetAutoFaceActiveFromSoldier(FRAME_BUFFER, guiSAVEBUFFER, s, sFaceX, sFaceY);
 		RenderAutoFaceFromSoldier(s);
 	}
+}
+
+
+void LoadInterfaceUtilsGraphics()
+{
+	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
+}
+
+
+void DeleteInterfaceUtilsGraphics()
+{
+	DeleteVideoObject(guiBrownBackgroundForTeamPanel);
 }

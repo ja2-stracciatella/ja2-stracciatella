@@ -22,5 +22,7 @@ void LoadCarPortraitValues(void);
 // get rid of the loaded portraits for cars
 void UnLoadCarPortraits( void );
 
+void LoadInterfaceUtilsGraphics();
+void DeleteInterfaceUtilsGraphics();
 
 #endif

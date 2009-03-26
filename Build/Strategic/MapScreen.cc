@@ -1590,8 +1590,6 @@ try
 			}
 		}
 
-		guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
-
 		// we are in fact in the map, do not repeat this sequence
 		fInMapMode = TRUE;
 
@@ -3714,8 +3712,6 @@ void EndMapScreen( BOOLEAN fDuringFade )
   {
     MSYS_SetCurrentCursor(SCREEN_CURSOR);
   }
-
-	DeleteVideoObject(guiBrownBackgroundForTeamPanel);
 
 	RemoveMapStatusBarsRegion( );
 
@@ -6958,6 +6954,7 @@ void HandlePreloadOfMapGraphics(void)
 	LoadMapBorderGraphics( );
 
 	LoadInterfaceItemsGraphics();
+	LoadInterfaceUtilsGraphics();
 	LoadMapScreenInterfaceGraphics();
 	LoadMapScreenInterfaceMapGraphics();
 }
@@ -6986,6 +6983,7 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 	DeleteMapBorderGraphics();
 
 	DeleteInterfaceItemsGraphics();
+	DeleteInterfaceUtilsGraphics();
 	DeleteMapScreenInterfaceGraphics();
 	DeleteMapScreenInterfaceMapGraphics();
 }

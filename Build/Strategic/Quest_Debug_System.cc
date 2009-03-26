@@ -1,6 +1,5 @@
 #include "Font.h"
 #include "HImage.h"
-#include "Interface_Panels.h"
 #include "Local.h"
 #include "Types.h"
 #include "Quest_Debug_System.h"
@@ -806,8 +805,7 @@ static void EnterQuestDebugSystem(void)
 	}
 
 	// load Scroll Horizontal Arrow graphic and add it
-	guiQdScrollArrowImage          = AddVideoObjectFromFile("INTERFACE/Qd_ScrollArrows.sti");
-	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
+	guiQdScrollArrowImage = AddVideoObjectFromFile("INTERFACE/Qd_ScrollArrows.sti");
 
 	gfRedrawQuestDebugSystem = TRUE;
 
@@ -892,8 +890,6 @@ static void ExitQuestDebugSystem(void)
 	RemoveButton( guiQDPgDownButtonButton );
 
 	DeleteVideoObject(guiQdScrollArrowImage);
-
-//	DeleteVideoObject(guiBrownBackgroundForTeamPanel);
 
 	gpActiveListBox->ubCurScrollBoxAction = QD_DROP_DOWN_DESTROY;
 	CreateDestroyDisplaySelectNpcDropDownBox();
