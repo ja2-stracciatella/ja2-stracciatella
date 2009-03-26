@@ -15,7 +15,6 @@
 #include "Sound_Control.h"
 #include "SoundMan.h"
 #include "Soldier_Add.h"
-#include "Interface_Panels.h"
 #include "Strategic.h"
 #include "WorldDef.h"
 #include "Tile_Animation.h"
