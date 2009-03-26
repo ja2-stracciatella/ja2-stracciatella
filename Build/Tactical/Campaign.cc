@@ -752,7 +752,6 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* pSoldier, UINT8 ubStat
 					p.sSalary								= (INT16) CalcNewSalary(p.sSalary,								fChangeTypeIncrease, MAX_DAILY_SALARY);
 					p.uiWeeklySalary				=					CalcNewSalary(p.uiWeeklySalary,					fChangeTypeIncrease, MAX_LARGE_SALARY);
 					p.uiBiWeeklySalary			=					CalcNewSalary(p.uiBiWeeklySalary,				fChangeTypeIncrease, MAX_LARGE_SALARY);
-					p.sTrueSalary						= (INT16) CalcNewSalary(p.sTrueSalary,						fChangeTypeIncrease, MAX_DAILY_SALARY);
 					p.sMedicalDepositAmount = (INT16) CalcNewSalary(p.sMedicalDepositAmount,	fChangeTypeIncrease, MAX_DAILY_SALARY);
 
 					//if (pSoldier != NULL)

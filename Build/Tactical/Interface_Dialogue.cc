@@ -1812,7 +1812,6 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_RECRUIT:
 				// gonna work for free!
-				gMercProfiles[ ubTargetNPC ].sTrueSalary = gMercProfiles[ ubTargetNPC ].sSalary;
 				gMercProfiles[ ubTargetNPC ].sSalary = 0;
 				// and fall through
 

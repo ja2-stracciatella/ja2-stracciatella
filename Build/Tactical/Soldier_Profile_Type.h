@@ -317,7 +317,6 @@ struct MERCPROFILESTRUCT
 	INT8 bThreatenDefaultResponseUsedRecently;
 	INT8 bNPCData;			// NPC specific
 	INT32	iBalance;
-	INT16 sTrueSalary; // for use when the person is working for us for free but has a positive salary value
 	UINT8	ubCivilianGroup;
 	UINT8	ubNeedForSleep;
 	UINT32	uiMoney;

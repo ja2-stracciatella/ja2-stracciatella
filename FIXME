@@ -173,7 +173,6 @@ gubAnimSurfaceCorpseID: static if possible
 gubCurrentNpcInSector[giHaveSelectedNPC]: complicated
 gubWorldRoomHidden: static?
 guiMemTotal: remove
-guiPOPUPTEX: load probably unnecessary in MapScreen.c
 gzFilename: wchar_t[] -> char[]?
 pMapErrorString[4]: unused
 pMapInventoryErrorString[0]: probably unused
@@ -220,7 +219,6 @@ bHatedNationalityCareLevel
 bRacist
 sMedicalDepositAmount: overwritten after load from data file
 usOptionalGearCost: overwritten after load from data file
-sTrueSalary: write-only/read-to-init-self
 
 BASIC_SOLDIERCREATE_STRUCT
 PADDINGSLOTS[14]

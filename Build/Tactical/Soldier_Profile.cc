@@ -1160,7 +1160,6 @@ SOLDIERTYPE* SwapLarrysProfiles(SOLDIERTYPE* const s)
 	dst.bMercStatus                 = src.bMercStatus;
 	dst.bSectorZ                    = src.bSectorZ;
 	dst.usStrategicInsertionData    = src.usStrategicInsertionData;
-	dst.sTrueSalary                 = src.sTrueSalary;
 	dst.ubMiscFlags3                = src.ubMiscFlags3;
 	dst.ubDaysOfMoraleHangover      = src.ubDaysOfMoraleHangover;
 	dst.ubNumTimesDrugUseInLifetime = src.ubNumTimesDrugUseInLifetime;
