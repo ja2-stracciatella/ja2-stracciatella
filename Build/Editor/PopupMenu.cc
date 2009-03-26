@@ -46,22 +46,22 @@
  * menu */
 struct CurrentPopupMenuInformation
 {
-	UINT8   ubPopupMenuID;
-	UINT8   ubSelectedIndex; // current popup menu index hilited.
-	UINT8   ubNumEntries;
-	UINT8   ubColumns;
-	UINT8   ubMaxEntriesPerColumn;
-	UINT8   ubColumnWidth[MAX_COLUMNS];
-	UINT8   ubActiveType;
-	Font    usFont;
-	BOOLEAN fActive;
-	BOOLEAN fUseKeyboardInfoUntilMouseMoves;
-	UINT16  usLeft; // popup region coords.
-	UINT16  usTop;
-	UINT16  usRight;
-	UINT16  usBottom;
-	UINT16  usLastMouseX;
-	UINT16  usLastMouseY;
+	PopupMenuID ubPopupMenuID;
+	UINT8       ubSelectedIndex; // current popup menu index hilited.
+	UINT8       ubNumEntries;
+	UINT8       ubColumns;
+	UINT8       ubMaxEntriesPerColumn;
+	UINT8       ubColumnWidth[MAX_COLUMNS];
+	UINT8       ubActiveType;
+	Font        usFont;
+	BOOLEAN     fActive;
+	BOOLEAN     fUseKeyboardInfoUntilMouseMoves;
+	UINT16      usLeft; // popup region coords.
+	UINT16      usTop;
+	UINT16      usRight;
+	UINT16      usBottom;
+	UINT16      usLastMouseX;
+	UINT16      usLastMouseY;
 };
 
 static CurrentPopupMenuInformation gPopup;
@@ -118,7 +118,7 @@ on a popup menu activation button.
 Returns 0 if nothing in menu was selected, else
 returns the menu entry number starting from 1.
 */
-void InitPopupMenu(GUIButtonRef const button, UINT8 const ubPopupMenuID, UINT8 const ubDirection)
+void InitPopupMenu(GUIButtonRef const button, PopupMenuID const ubPopupMenuID, UINT8 const ubDirection)
 {
 	UINT16 usX, usY; // HACK000E
 	UINT16 usMenuHeight;
@@ -154,7 +154,7 @@ void InitPopupMenu(GUIButtonRef const button, UINT8 const ubPopupMenuID, UINT8 c
 		default: abort(); // HACK000E
 	}
 
-	//Decipher the popupMenuID
+	//Decipher the PopupMenuID
 	switch( ubPopupMenuID )
 	{
 		case CHANGETSET_POPUP:	//change tileset

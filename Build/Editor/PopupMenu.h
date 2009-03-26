@@ -37,7 +37,7 @@ will choose a selection in one of three ways:
 */
 
 
-enum popupMenuIDs
+enum PopupMenuID
 {
 	CHANGETSET_POPUP,
 	CHANGECIVGROUP_POPUP,
@@ -59,7 +59,7 @@ enum popupMenuIDs
 #define DIR_DOWNLEFT	(DNMASK + LTMASK)
 
 //These are the two main functions that outside users would call.
-void InitPopupMenu(GUIButtonRef, UINT8 ubPopupMenuID, UINT8 ubDirection);
+void InitPopupMenu(GUIButtonRef, PopupMenuID, UINT8 ubDirection);
 BOOLEAN ProcessPopupMenuIfActive(void);
 
 #endif
