@@ -415,6 +415,12 @@ static SGPVObject* guiGoldKeyVO;
 INT8						gbCompatibleApplyItem = FALSE;
 
 
+#ifndef JA2DEMO
+static SGPVObject* guiMapInvSecondHandBlockout;
+#endif
+static SGPVObject* guiSecItemHiddenVO;
+
+
 static BOOLEAN AttemptToAddSubstring(wchar_t* const zDest, const wchar_t* const zTemp, UINT32* const puiStringLength, const UINT32 uiPixLimit)
 {
 	UINT32 uiRequiredStringLength, uiTempStringLength;
@@ -5528,4 +5534,22 @@ void SetItemPointer(OBJECTTYPE* const o, SOLDIERTYPE* const s)
 {
 	gpItemPointer        = o;
 	gpItemPointerSoldier = s;
+}
+
+
+void LoadInterfaceItemsGraphics()
+{
+#ifndef JA2DEMO
+	guiMapInvSecondHandBlockout = AddVideoObjectFromFile("INTERFACE/map_inv_2nd_gun_cover.sti");
+#endif
+	guiSecItemHiddenVO          = AddVideoObjectFromFile("INTERFACE/secondary_gun_hidden.sti");
+}
+
+
+void DeleteInterfaceItemsGraphics()
+{
+#ifndef JA2DEMO
+	DeleteVideoObject(guiMapInvSecondHandBlockout);
+#endif
+	DeleteVideoObject(guiSecItemHiddenVO);
 }

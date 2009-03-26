@@ -84,8 +84,6 @@ void EndRadioLocator(SOLDIERTYPE* s);
 extern MOUSE_REGION gSMPanelRegion;
 
 
-extern SGPVObject* guiSecItemHiddenVO;
-
 extern BOOLEAN gfDisableTacticalPanelButtons;
 
 

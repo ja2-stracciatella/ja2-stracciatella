@@ -96,9 +96,6 @@ void    MapScreenDefaultOkBoxCallback(MessageBoxReturnValue);
 void    SetUpCursorForStrategicMap(void);
 void    DrawFace(void);
 
-#ifndef JA2DEMO
-extern SGPVObject*  guiMapInvSecondHandBlockout;
-#endif
 extern GUIButtonRef giMapInvDoneButton;
 extern BOOLEAN      fInMapMode;
 extern BOOLEAN      fReDrawFace;

@@ -416,9 +416,6 @@ static SGPVObject* guiCHARLIST;
 static SGPVObject* guiCHARINFO;
 static SGPVObject* guiSleepIcon;
 static SGPVObject* guiMAPINV;
-#ifndef JA2DEMO
-SGPVObject* guiMapInvSecondHandBlockout;
-#endif
 static SGPVObject* guiULICONS;
 #ifndef JA2DEMO
 static SGPVObject* guiNewMailIcons;
@@ -6943,9 +6940,6 @@ void HandlePreloadOfMapGraphics(void)
 	guiCHARLIST                 = AddVideoObjectFromFile("INTERFACE/newgoldpiece3.sti");
 
 	guiMAPINV                   = AddVideoObjectFromFile("INTERFACE/mapinv.sti");
-#ifndef JA2DEMO
-	guiMapInvSecondHandBlockout = AddVideoObjectFromFile("INTERFACE/map_inv_2nd_gun_cover.sti");
-#endif
 
 	// the upper left corner piece icons
 	guiULICONS                  = AddVideoObjectFromFile("INTERFACE/top_left_corner_icons.sti");
@@ -6963,6 +6957,7 @@ void HandlePreloadOfMapGraphics(void)
 	// load border graphics
 	LoadMapBorderGraphics( );
 
+	LoadInterfaceItemsGraphics();
 	LoadMapScreenInterfaceGraphics();
 	LoadMapScreenInterfaceMapGraphics();
 }
@@ -6977,9 +6972,6 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 	DeleteVideoObject(guiCHARINFO);
 
 	DeleteVideoObject(guiMAPINV);
-#ifndef JA2DEMO
-	DeleteVideoObject(guiMapInvSecondHandBlockout);
-#endif
 	DeleteVideoObject(guiULICONS);
 
 #ifndef JA2DEMO
@@ -6993,6 +6985,7 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 	// get rid of border stuff
 	DeleteMapBorderGraphics();
 
+	DeleteInterfaceItemsGraphics();
 	DeleteMapScreenInterfaceGraphics();
 	DeleteMapScreenInterfaceMapGraphics();
 }

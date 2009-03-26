@@ -337,7 +337,6 @@ GUIButtonRef iTEAMPanelButtons[NUM_TEAM_BUTTONS];
 static SGPVObject* guiSMPanel;
 static SGPVObject* guiSMObjects;
 static SGPVObject* guiSMObjects2;
-SGPVObject* guiSecItemHiddenVO;
 
 static SGPVObject* guiTEAMPanel;
 static SGPVObject* guiTEAMObjects;
@@ -951,7 +950,6 @@ void InitializeSMPanel(void)
 	guiSMPanel                     = AddVideoObjectFromFile("INTERFACE/inventory_bottom_panel.STI");
 	guiSMObjects                   = AddVideoObjectFromFile("INTERFACE/inventory_gold_front.sti");
 	guiSMObjects2                  = AddVideoObjectFromFile("INTERFACE/inv_frn.sti");
-	guiSecItemHiddenVO             = AddVideoObjectFromFile("INTERFACE/secondary_gun_hidden.sti");
 	guiBrownBackgroundForTeamPanel = AddVideoObjectFromFile("INTERFACE/Bars.sti");
 
 	// INit viewport region
@@ -1149,7 +1147,6 @@ void ShutdownSMPanel(void)
 	DeleteVideoObject(guiSMPanel);
 	DeleteVideoObject(guiSMObjects);
 	DeleteVideoObject(guiSMObjects2);
-	DeleteVideoObject(guiSecItemHiddenVO);
 	DeleteVideoObject(guiBrownBackgroundForTeamPanel);
 
 	gSelectSMPanelToMerc = NULL;

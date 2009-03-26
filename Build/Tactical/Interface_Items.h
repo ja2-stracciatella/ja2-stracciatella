@@ -144,4 +144,7 @@ void SetMouseCursorFromCurrentItem();
 
 void SetItemPointer(OBJECTTYPE*, SOLDIERTYPE*);
 
+void LoadInterfaceItemsGraphics();
+void DeleteInterfaceItemsGraphics();
+
 #endif
