@@ -558,12 +558,12 @@ void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 }
 
 
-static void SetButtonState(UINT idx, BOOLEAN clicked)
+static void SetButtonState(UINT const idx, bool const clicked)
 {
-	GUIButtonRef const b = iSMPanelButtons[idx];
-	if (b->ubToggleButtonActivated) return;
-	b->uiFlags &= ~BUTTON_CLICKED_ON;
-	b->uiFlags |= (clicked ? BUTTON_CLICKED_ON : 0);
+	GUI_BUTTON& b = *iSMPanelButtons[idx];
+	if (b.ubToggleButtonActivated) return;
+	b.uiFlags &= ~BUTTON_CLICKED_ON;
+	b.uiFlags |= clicked ? BUTTON_CLICKED_ON : 0;
 }
 
 
