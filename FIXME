@@ -239,7 +239,6 @@ OneOverMass: always 1/60.f
 SOLDIERCREATESTRUCT
 fStatic: strange
 fCopyProfileItemsOver: strange
-fKillSlotIfOwnerDies
 fUseGivenVehicle: strange
 fHasKeys: strange
 

@@ -61,8 +61,7 @@ Version 7 -- Kris -- obsolete April 14, 1998
 					current detailed placements will also have priority existance.
 Version 8 -- Kris -- obsolete April 16, 1998
 	MAJOR CONFLICT RESULTING IN A MAJOR VERSION UPDATE 2.00!
-	Bug 10) Padding on detailed placements is uninitialized.  Clear all data starting at
-					fKillSlotIfOwnerDies.
+	Bug 10) Padding on detailed placements is uninitialized.  Clear it.
 Version 9 -- Kris -- obsolete April 26, 1998
 	This version requires no auto updating, but external code has adjusted the size of the mapedgepoint
 	arraysize from UINT8 to UINT16.  See Map Edgepoints.c.
@@ -364,16 +363,15 @@ static void UpdateOldVersionMap(void)
 	if( gMapInformation.ubMapVersion == 8 )
 	{
 		gMapInformation.ubMapVersion++;
-		//Bug 10) Padding on detailed placements is uninitialized.  Clear all data starting at
-		//				fKillSlotIfOwnerDies.
+		//Bug 10) Padding on detailed placements is uninitialized.  Clear it.
 		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
-			if( curr->pDetailedPlacement )
-			{
-				//The size 120 was hand calculated.  The remaining padding was 118 bytes
-				//and there were two one byte fields cleared, fKillSlotIfOwnerDies and ubScheduleID
-				memset( &curr->pDetailedPlacement->fKillSlotIfOwnerDies, 0, 120 );
-			}
+			if (!curr->pDetailedPlacement) continue;
+			SOLDIERCREATE_STRUCT& dp = *curr->pDetailedPlacement;
+			dp.ubScheduleID       = 0;
+			dp.fUseGivenVehicle   = 0;
+			dp.bUseGivenVehicleID = 0;
+			dp.fHasKeys           = 0;
 		}
 	}
 	//Version 9 -- Kris -- obsolete April 27, 1998
@@ -400,8 +398,6 @@ static void UpdateOldVersionMap(void)
 		INT32 i, cnt;
 		OBJECTTYPE *pItem;
 		gMapInformation.ubMapVersion++;
-		//Bug 10) Padding on detailed placements is uninitialized.  Clear all data starting at
-		//				fKillSlotIfOwnerDies.
 		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
 			if( curr->pDetailedPlacement )

@@ -114,7 +114,6 @@ struct SOLDIERCREATE_STRUCT
 
 	UINT8							ubCivilianGroup;
 
-	BOOLEAN						fKillSlotIfOwnerDies;
 	UINT8							ubScheduleID;
 
 	BOOLEAN						fUseGivenVehicle;
