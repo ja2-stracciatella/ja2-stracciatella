@@ -6676,13 +6676,14 @@ void SendSoldierSetDesiredDirectionEvent(const SOLDIERTYPE* pSoldier, UINT16 usD
 
 }
 
-void SendGetNewSoldierPathEvent( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim )
+
+void SendGetNewSoldierPathEvent(SOLDIERTYPE* const pSoldier, UINT16 const sDestGridNo)
 {
 	EV_S_GETNEWPATH	SGetNewPath;
 
 	SGetNewPath.usSoldierID				= pSoldier->ubID;
 	SGetNewPath.sDestGridNo				= sDestGridNo;
-	SGetNewPath.usMovementAnim		= usMovementAnim;
+	SGetNewPath.usMovementAnim		= pSoldier->usUIMovementMode;
 	SGetNewPath.uiUniqueId = pSoldier -> uiUniqueSoldierIdValue;
 
 	AddGameEvent( S_GETNEWPATH, 0, &SGetNewPath );
@@ -8881,7 +8882,7 @@ void MercStealFromMerc(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTa
 			if ( pSoldier->sGridNo != sActionGridNo )
 			{
 				// WALK UP TO DEST FIRST
-				SendGetNewSoldierPathEvent( pSoldier, sActionGridNo, pSoldier->usUIMovementMode );
+				SendGetNewSoldierPathEvent(pSoldier, sActionGridNo);
 			}
 			else
 			{

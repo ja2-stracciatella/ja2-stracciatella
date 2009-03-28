@@ -964,7 +964,7 @@ void InternalGivingSoldierCancelServices( SOLDIERTYPE *pSoldier, BOOLEAN fPlayEn
 
 
 // WRAPPERS FOR SOLDIER EVENTS
-void SendGetNewSoldierPathEvent( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim );
+void SendGetNewSoldierPathEvent(SOLDIERTYPE*, UINT16 sDestGridNo);
 void SendSoldierSetDesiredDirectionEvent(const SOLDIERTYPE* pSoldier, UINT16 usDesiredDirection);
 void SendBeginFireWeaponEvent( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo );
 

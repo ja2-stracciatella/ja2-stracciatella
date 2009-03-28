@@ -873,7 +873,7 @@ void HandleCrowFlyAway( SOLDIERTYPE *pSoldier )
 	// Change to fly animation
 	const INT16 sGridNo = FindRandomGridNoFromSweetSpot(pSoldier, pSoldier->sGridNo, 5);
 	pSoldier->usUIMovementMode = CROW_FLY;
-	SendGetNewSoldierPathEvent( pSoldier, sGridNo, pSoldier->usUIMovementMode );
+	SendGetNewSoldierPathEvent(pSoldier, sGridNo);
 }
 
 
