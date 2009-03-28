@@ -3067,11 +3067,11 @@ static void ShowPeopleInMotion(INT16 sX, INT16 sY)
 		{
 			sDest += NORTH_MOVE;
 		}
-		else if( ( iCounter == 1 ) && ( sX < MAP_WORLD_X - 1 ) )
+		else if (iCounter == 1 && sX < MAP_WORLD_X - 2)
 		{
 			sDest += EAST_MOVE;
 		}
-		else if( ( iCounter == 2 ) && ( sY < MAP_WORLD_Y - 1 ) )
+		else if (iCounter == 2 && sY < MAP_WORLD_Y - 2)
 		{
 			sDest += SOUTH_MOVE;
 		}
