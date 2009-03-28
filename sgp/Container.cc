@@ -336,11 +336,6 @@ HLIST AddtoList(HLIST hList, void const* pdata, UINT32 const uiPos)
 		UINT32 uiNew_size = uiMax_size + (uiMax_size - sizeof(ListHeader));
 		pTemp_cont->uiMax_size = uiNew_size;
 		hList = (HLIST)MemRealloc(hList, uiNew_size);
-		if (hList == NULL)
-		{
-			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not resize list container memory");
-			return NULL;
-		}
 		pTemp_cont = hList;
 		do_copy(hList, sizeof(ListHeader), uiMax_size, uiHead - sizeof(ListHeader));
 		pTemp_cont->uiTail = uiMax_size + (uiHead-sizeof(ListHeader));
