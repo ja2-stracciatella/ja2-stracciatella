@@ -372,75 +372,54 @@ HLIST AddtoList(HLIST hList, void const* pdata, UINT32 const uiPos)
 // Parameter List : HLIST - handle to list container
 //									data - data to remove from list
 //									position - position after which data is to added
-BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
+void RemfromList(HLIST const l, void* const data, UINT32 const pos)
 {
-	// check for invalid handle = 0
-	if (hList == NULL)
+	if (pos >= l->uiTotal_items)
 	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid handle to the list");
-		return FALSE;
+		throw std::logic_error("Tried to remove non-existent element from list");
 	}
 
-	// check for data = NULL
-	if (pdata == NULL)
-	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Data to be pushed onto list is NULL");
-		return FALSE;
-	}
-
-	ListHeader* pTemp_cont = hList;
-
-	if (uiPos >= pTemp_cont->uiTotal_items)
-	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Cannot delete at the specified position");
-		return FALSE;
-	}
-
-	UINT32 uiSize_of_each = pTemp_cont->uiSiz_of_elem;
-	UINT32 uiMax_size     = pTemp_cont->uiMax_size;
-	UINT32 uiHead         = pTemp_cont->uiHead;
-	UINT32 uiTail         = pTemp_cont->uiTail;
+	UINT32 const uiSize_of_each = l->uiSiz_of_elem;
+	UINT32 const uiMax_size     = l->uiMax_size;
+	UINT32 const uiHead         = l->uiHead;
+	UINT32 const uiTail         = l->uiTail;
 
 	// copy appropriate blocks
-	if ((uiTail > uiHead) || ((uiTail == uiHead) && (uiHead == sizeof(ListHeader))))
+	if (uiTail > uiHead || (uiTail == uiHead && uiHead == sizeof(ListHeader)))
 	{
-		UINT32 uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
-		UINT32 uiOffsetDst = uiOffsetSrc + pTemp_cont->uiSiz_of_elem;
-		do_copy_data(hList, pdata, uiOffsetSrc, uiSize_of_each);
-		do_copy(hList, uiOffsetDst, uiOffsetSrc, uiTail - uiOffsetSrc);
-		pTemp_cont->uiTail -= uiSize_of_each;
-		pTemp_cont->uiTotal_items--;
+		UINT32 const uiOffsetSrc = l->uiHead + (pos * l->uiSiz_of_elem);
+		UINT32 const uiOffsetDst = uiOffsetSrc + l->uiSiz_of_elem;
+		do_copy_data(l, data, uiOffsetSrc, uiSize_of_each);
+		do_copy(l, uiOffsetDst, uiOffsetSrc, uiTail - uiOffsetSrc);
+		l->uiTail -= uiSize_of_each;
+		l->uiTotal_items--;
 	}
 
-
-	if ((uiTail < uiHead) || ((uiTail == uiHead) && (uiHead <= (sizeof(ListHeader)+uiSize_of_each))))
+	if (uiTail < uiHead || (uiTail == uiHead && uiHead <= sizeof(ListHeader) + uiSize_of_each))
 	{
-		UINT32 uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
-
+		UINT32 uiOffsetSrc = l->uiHead + (pos * l->uiSiz_of_elem);
 		if (uiOffsetSrc >= uiMax_size)
 		{
 			uiOffsetSrc = sizeof(ListHeader) + (uiOffsetSrc - uiMax_size);
 			UINT32 uiOffsetDst = uiOffsetSrc + uiSize_of_each;
-			do_copy_data(hList, pdata, uiOffsetSrc, uiSize_of_each);
-			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
+			do_copy_data(l, data, uiOffsetSrc, uiSize_of_each);
+			do_copy(l, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
 		}
 		else
 		{
 			UINT32 uiOffsetSrc = sizeof(ListHeader);
 			UINT32 uiOffsetDst = uiOffsetSrc + uiSize_of_each;
-			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
+			do_copy(l, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
 
 			uiOffsetSrc = uiMax_size - uiSize_of_each;
 			uiOffsetDst = sizeof(ListHeader);
-			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiSize_of_each);
-			uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
+			do_copy(l, uiOffsetSrc, uiOffsetDst, uiSize_of_each);
+			uiOffsetSrc = l->uiHead + (pos * l->uiSiz_of_elem);
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
-			do_copy_data(hList, pdata, uiOffsetSrc, uiSize_of_each);
-			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiMax_size - uiSize_of_each - uiOffsetSrc);
+			do_copy_data(l, data, uiOffsetSrc, uiSize_of_each);
+			do_copy(l, uiOffsetSrc, uiOffsetDst, uiMax_size - uiSize_of_each - uiOffsetSrc);
 		}
-		pTemp_cont->uiTail -= uiSize_of_each;
-		pTemp_cont->uiTotal_items--;
+		l->uiTail -= uiSize_of_each;
+		l->uiTotal_items--;
 	}
-
-	return TRUE;
 }

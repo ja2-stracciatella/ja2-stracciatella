@@ -73,7 +73,7 @@ namespace SGP
 
 extern HLIST   CreateList(UINT32 num_of_elem, UINT32 siz_of_each);
 extern HLIST   AddtoList(HLIST hList, void const* data, UINT32 position);
-extern BOOLEAN RemfromList(HLIST hList,void *data, UINT32 position);
+void RemfromList(HLIST, void* data, UINT32 pos);
 void PeekList(HLIST, void* data, UINT32 pos);
 extern UINT32  ListSize(HLIST hList);
 extern BOOLEAN DeleteList(HLIST hList);
@@ -103,10 +103,7 @@ namespace SGP
 			T Remove(size_t const pos)
 			{
 				T data;
-				if (!RemfromList(list_, &data, pos))
-				{
-					throw std::logic_error("Tried to remove non-existent element from list");
-				}
+				RemfromList(list_, &data, pos);
 				return data;
 			}
 
