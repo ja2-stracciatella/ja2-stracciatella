@@ -116,45 +116,19 @@ BOOLEAN DeleteList(HLIST hList)
 //
 // Parameter List : hList - pointer to list container
 //									data - data where list element is stored
-BOOLEAN PeekList(HLIST hList, void *pdata, UINT32 uiPos)
+void PeekList(HLIST const l, void* const data, UINT32 const pos)
 {
-	// cannot check for invalid handle , only 0
-	if (hList == NULL)
+	if (pos >= l->uiTotal_items)
 	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid pointer to the list");
-		return FALSE;
-	}
-	if (pdata == NULL)
-	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Memory fo Data to be removed from list is NULL");
-		return FALSE;
+		throw std::logic_error("Tried to peek at non-existent element in list");
 	}
 
-	ListHeader* pTemp_cont = hList;
+	UINT32 uiOffsetSrc = l->uiHead + pos * l->uiSiz_of_elem;
+	if (uiOffsetSrc >= l->uiMax_size)
+		uiOffsetSrc = sizeof(ListHeader) + (uiOffsetSrc - l->uiMax_size);
 
-	// if theres no elements to peek return error
-	if (pTemp_cont->uiTotal_items == 0)
-	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There is nothing in the list");
-		return FALSE;
-	}
-	if (uiPos >= pTemp_cont->uiTotal_items)
-	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There is no item at this position");
-		return FALSE;
-	}
-
-	//copy the element pointed to by uiHead
-	UINT32 uiOffsetSrc = pTemp_cont->uiHead + uiPos * pTemp_cont->uiSiz_of_elem;
-	if (uiOffsetSrc >= pTemp_cont->uiMax_size)
-		uiOffsetSrc = sizeof(ListHeader) + (uiOffsetSrc - pTemp_cont->uiMax_size);
-
-	BYTE* pbyte = (BYTE*)hList;
-	pbyte += uiOffsetSrc;
-	void* pvoid = pbyte;
-	memmove(pdata, pvoid, pTemp_cont->uiSiz_of_elem);
-
-	return TRUE;
+	BYTE const* const pbyte = (BYTE*)l + uiOffsetSrc;
+	memmove(data, pbyte, l->uiSiz_of_elem);
 }
 
 

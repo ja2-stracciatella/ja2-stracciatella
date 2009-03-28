@@ -74,7 +74,7 @@ namespace SGP
 extern HLIST   CreateList(UINT32 num_of_elem, UINT32 siz_of_each);
 extern HLIST   AddtoList(HLIST hList, void const* data, UINT32 position);
 extern BOOLEAN RemfromList(HLIST hList,void *data, UINT32 position);
-extern BOOLEAN PeekList(HLIST hList, void *data, UINT32 position);
+void PeekList(HLIST, void* data, UINT32 pos);
 extern UINT32  ListSize(HLIST hList);
 extern BOOLEAN DeleteList(HLIST hList);
 
@@ -113,10 +113,7 @@ namespace SGP
 			T Peek(size_t const pos)
 			{
 				T data;
-				if (!PeekList(list_, &data, pos))
-				{
-					throw std::logic_error("Tried to peek at non-existent element in list");
-				}
+				PeekList(list_, &data, pos);
 				return data;
 			}
 
