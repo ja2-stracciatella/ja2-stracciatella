@@ -210,16 +210,10 @@ static void do_copy(void* const pmem_void, UINT32 const uiSourceOfst, UINT32 con
 }
 
 
-static BOOLEAN do_copy_data(void* pmem_void, void* data, UINT32 uiSrcOfst, UINT32 uiSize)
+static void do_copy_data(void* const pmem_void, void* const data, UINT32 const uiSrcOfst, UINT32 const uiSize)
 {
-	if (pmem_void == NULL)
-	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Invalid pointer passed to do_copy_data");
-		return FALSE;
-	}
 	BYTE* pOffsetSrc = (BYTE*)pmem_void + uiSrcOfst;
 	memmove(data, pOffsetSrc, uiSize);
-	return TRUE;
 }
 
 
@@ -412,11 +406,7 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 	{
 		UINT32 uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
 		UINT32 uiOffsetDst = uiOffsetSrc + pTemp_cont->uiSiz_of_elem;
-		if (!do_copy_data(hList, pdata, uiOffsetSrc, uiSize_of_each))
-		{
-			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy the data from list");
-			return FALSE;
-		}
+		do_copy_data(hList, pdata, uiOffsetSrc, uiSize_of_each);
 		do_copy(hList, uiOffsetDst, uiOffsetSrc, uiTail - uiOffsetSrc);
 		pTemp_cont->uiTail -= uiSize_of_each;
 		pTemp_cont->uiTotal_items--;
@@ -431,11 +421,7 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 		{
 			uiOffsetSrc = sizeof(ListHeader) + (uiOffsetSrc - uiMax_size);
 			UINT32 uiOffsetDst = uiOffsetSrc + uiSize_of_each;
-			if (!do_copy_data(hList, pdata, uiOffsetSrc, uiSize_of_each))
-			{
-				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy the data from list");
-				return FALSE;
-			}
+			do_copy_data(hList, pdata, uiOffsetSrc, uiSize_of_each);
 			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
 		}
 		else
@@ -449,11 +435,7 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiSize_of_each);
 			uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
-			if (!do_copy_data(hList, pdata, uiOffsetSrc, uiSize_of_each))
-			{
-				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy the data from list");
-				return FALSE;
-			}
+			do_copy_data(hList, pdata, uiOffsetSrc, uiSize_of_each);
 			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiMax_size - uiSize_of_each - uiOffsetSrc);
 		}
 		pTemp_cont->uiTail -= uiSize_of_each;
