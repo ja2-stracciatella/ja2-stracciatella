@@ -2579,6 +2579,13 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 		 * If NOT showing retreat paths, ignore groups not between sectors. */
 		if (gfDisplayPotentialRetreatPaths ? sec_battle != sec_src : !curr->fBetweenSectors) continue;
 
+		UINT8 n_mercs = curr->ubGroupSize;
+		if (n_mercs == 0) // Skip empty persistent groups
+		{
+			Assert(curr->fPersistant);
+			continue;
+		}
+
 		INT16 const sec_prev = SECTOR(curr->ubPrevX,   curr->ubPrevY);
 		INT16 const sec_cur  = SECTOR(curr->ubSectorX, curr->ubSectorY);
 		INT16 const sec_next = SECTOR(curr->ubNextX,   curr->ubNextY);
@@ -2589,15 +2596,11 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 		bool const retreating_from_battle =
 			sec_battle == sec_dst && sec_cur == sec_dst && sec_prev == sec_src;
 
-		UINT8 n_mercs = curr->ubGroupSize;
 		if (may_retreat_from_battle || (sec_cur == sec_src && sec_next == sec_dst))
 		{
 			// If it's a valid vehicle, but not the helicopter (which can fly empty)
 			if (curr->fVehicle && !is_heli_group)
-			{
-				// make sure empty vehicles (besides helicopter) aren't in motion!
-				Assert(n_mercs > 0);
-				// subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
+			{ // subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
 				n_mercs--;
 			}
 
@@ -2613,10 +2616,7 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 		{
 			// If it's a valid vehicle, but not the helicopter (which can fly empty)
 			if (curr->fVehicle && !is_heli_group)
-			{
-				// make sure empty vehicles (besides helicopter) aren't in motion!
-				Assert(n_mercs > 0);
-				// subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
+			{ // subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
 				n_mercs--;
 			}
 
