@@ -202,17 +202,11 @@ HQUEUE AddtoQueue(HQUEUE q, void const* const pdata)
 }
 
 
-static BOOLEAN do_copy(void* pmem_void, UINT32 uiSourceOfst, UINT32 uiDestOfst, UINT32 uiSize)
+static void do_copy(void* const pmem_void, UINT32 const uiSourceOfst, UINT32 const uiDestOfst, UINT32 const uiSize)
 {
-	if (pmem_void == NULL)
-	{
-		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Invalid pointer passed to do_copy");
-		return FALSE;
-	}
 	BYTE* pOffsetSrc = (BYTE*)pmem_void + uiSourceOfst;
 	BYTE* pOffsetDst = (BYTE*)pmem_void + uiDestOfst;
 	memmove(pOffsetDst, pOffsetSrc, uiSize);
-	return TRUE;
 }
 
 
@@ -303,11 +297,7 @@ HLIST AddtoList(HLIST hList, void const* pdata, UINT32 const uiPos)
 		uiOffsetDst = uiOffsetSrc + pTemp_cont->uiSiz_of_elem;
 		if (!fTail_check)
 		{
-			if (!do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc))
-			{
-				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-				return NULL;
-			}
+			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
 		}
 		if (!fTail_check)
 			pTemp_cont->uiTail += uiSize_of_each;
@@ -324,37 +314,21 @@ HLIST AddtoList(HLIST hList, void const* pdata, UINT32 const uiPos)
 		{
 			uiOffsetSrc = sizeof(ListHeader) + (uiOffsetSrc - uiMax_size);
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
-			if (!do_copy(hList, uiOffsetDst, uiOffsetSrc, uiTail - uiOffsetSrc))
-			{
-				 DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-				 return NULL;
-			}
+			do_copy(hList, uiOffsetDst, uiOffsetSrc, uiTail - uiOffsetSrc);
 			uiFinalLoc = uiOffsetSrc;
 		}
 		else
 		{
 			uiOffsetSrc = sizeof(ListHeader);
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
-			if (!do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc))
-			{
-				 DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-				 return NULL;
-			}
+			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
 
 			uiOffsetSrc = uiMax_size - uiSize_of_each;
 			uiOffsetDst = sizeof(ListHeader);
-			if (!do_copy(hList, uiOffsetSrc, uiOffsetDst, uiSize_of_each))
-			{
-				 DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-				 return NULL;
-			}
+			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiSize_of_each);
 			uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
-			if (!do_copy(hList, uiOffsetSrc, uiOffsetDst, uiMax_size - uiSize_of_each - uiOffsetSrc))
-			{
-				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-				return NULL;
-			}
+			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiMax_size - uiSize_of_each - uiOffsetSrc);
 		}
 		pTemp_cont->uiTail += uiSize_of_each;
 		uiFinalLoc = uiOffsetSrc;
@@ -374,21 +348,13 @@ HLIST AddtoList(HLIST hList, void const* pdata, UINT32 const uiPos)
 			return NULL;
 		}
 		pTemp_cont = hList;
-		if (!do_copy(hList, sizeof(ListHeader), uiMax_size, uiHead - sizeof(ListHeader)))
-		{
-			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy list container memory");
-			return NULL;
-		}
+		do_copy(hList, sizeof(ListHeader), uiMax_size, uiHead - sizeof(ListHeader));
 		pTemp_cont->uiTail = uiMax_size + (uiHead-sizeof(ListHeader));
 
 		// now make place for the actual element
 		uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
 		uiOffsetDst = uiOffsetSrc + pTemp_cont->uiSiz_of_elem;
-		if (!do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc))
-		{
-			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-			return NULL;
-		}
+		do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
 		pTemp_cont->uiTail += uiSize_of_each;
 		uiFinalLoc = uiOffsetSrc;
 	}
@@ -451,11 +417,7 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy the data from list");
 			return FALSE;
 		}
-		if (!do_copy(hList, uiOffsetDst, uiOffsetSrc, uiTail - uiOffsetSrc))
-		{
-			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not remove the data the list");
-			return FALSE;
-		}
+		do_copy(hList, uiOffsetDst, uiOffsetSrc, uiTail - uiOffsetSrc);
 		pTemp_cont->uiTail -= uiSize_of_each;
 		pTemp_cont->uiTotal_items--;
 	}
@@ -474,29 +436,17 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy the data from list");
 				return FALSE;
 			}
-			if (!do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc))
-			{
-				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-				return FALSE;
-			}
+			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
 		}
 		else
 		{
 			UINT32 uiOffsetSrc = sizeof(ListHeader);
 			UINT32 uiOffsetDst = uiOffsetSrc + uiSize_of_each;
-			if (!do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc))
-			{
-				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-				return FALSE;
-			}
+			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
 
 			uiOffsetSrc = uiMax_size - uiSize_of_each;
 			uiOffsetDst = sizeof(ListHeader);
-			if (!do_copy(hList, uiOffsetSrc, uiOffsetDst, uiSize_of_each))
-			{
-				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-				return FALSE;
-			}
+			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiSize_of_each);
 			uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
 			if (!do_copy_data(hList, pdata, uiOffsetSrc, uiSize_of_each))
@@ -504,11 +454,7 @@ BOOLEAN RemfromList(HLIST hList, void *pdata, UINT32 uiPos)
 				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not copy the data from list");
 				return FALSE;
 			}
-			if (!do_copy(hList, uiOffsetSrc, uiOffsetDst, uiMax_size - uiSize_of_each - uiOffsetSrc))
-			{
-				DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "Could not store the data in list");
-				return FALSE;
-			}
+			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiMax_size - uiSize_of_each - uiOffsetSrc);
 		}
 		pTemp_cont->uiTail -= uiSize_of_each;
 		pTemp_cont->uiTotal_items--;
