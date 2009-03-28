@@ -3021,216 +3021,160 @@ void RestoreClipRegionToFullScreenForRectangle( UINT32 uiDestPitchBYTES )
 
 
 // show the icons for people in motion
-static void ShowPeopleInMotion(INT16 sX, INT16 sY)
+static void ShowPeopleInMotion(INT16 const sX, INT16 const sY)
 {
-	INT32 sExiting = 0;
-	INT32 sEntering = 0;
-	INT16 sDest = 0;
-	INT16 sSource = 0;
-	INT16 sOffsetX = 0, sOffsetY = 0;
-	INT16 iX = sX, iY = sY;
-	INT16 sXPosition = 0, sYPosition = 0;
-	INT32 iCounter = 0;
-	BOOLEAN fAboutToEnter = FALSE;
-	CHAR16 sString[ 32 ];
-	INT16 sTextXOffset = 0;
-	INT16 sTextYOffset = 0;
-	INT16 usX, usY;
-	INT32 iWidth = 0, iHeight = 0;
-	INT32 iDeltaXForError = 0, iDeltaYForError = 0;
-
-
-	if( iCurrentMapSectorZ != 0 )
-	{
-		return;
-	}
-
+	if (iCurrentMapSectorZ != 0) return;
 
 	// show the icons for people in motion from this sector to the next guy over
-	for( iCounter = 0; iCounter < 4; iCounter++ )
-	{
-		// find how many people are coming and going in this sector
-		sExiting = 0;
-		sEntering = 0;
-		sSource = CALCULATE_STRATEGIC_INDEX( sX, sY );
-		sOffsetX = 0;
-		sOffsetY = 0;
-		iX = sX;
-		iY = sY;
+	INT16 const sSource = CALCULATE_STRATEGIC_INDEX(sX, sY);
+	for (INT32 dir = 0; dir != 4; ++dir)
+	{ // find how many people are coming and going in this sector
+		INT16 sDest = sSource;
+		switch (dir)
+		{
+			case 0: if (sY <= 1)               continue; sDest += NORTH_MOVE; break;
+			case 1: if (sX >= MAP_WORLD_X - 2) continue; sDest += EAST_MOVE;  break;
+			case 2: if (sY >= MAP_WORLD_Y - 2) continue; sDest += SOUTH_MOVE; break;
+			case 3: if (sX <= 1)               continue; sDest += WEST_MOVE;  break;
 
-		// reset fact about to enter
-		fAboutToEnter = FALSE;
-
-		sDest = sSource;
-
-		if( ( iCounter == 0 ) && sY > 1 )
-		{
-			sDest += NORTH_MOVE;
-		}
-		else if (iCounter == 1 && sX < MAP_WORLD_X - 2)
-		{
-			sDest += EAST_MOVE;
-		}
-		else if (iCounter == 2 && sY < MAP_WORLD_Y - 2)
-		{
-			sDest += SOUTH_MOVE;
-		}
-		else if( ( iCounter == 3 ) && ( sX > 1 ) )
-		{
-			sDest += WEST_MOVE;
+			default: abort();
 		}
 
-		// if not at edge of map
-		if ( sDest != sSource )
-		{
-			if( PlayersBetweenTheseSectors( ( INT16 ) SECTOR( sSource % MAP_WORLD_X, sSource / MAP_WORLD_X ) , ( INT16 ) SECTOR( sDest % MAP_WORLD_X, sDest / MAP_WORLD_X ), &sExiting, &sEntering, &fAboutToEnter ) )
-			{
-				// someone is leaving
+		INT32       sExiting;
+		INT32       sEntering;
+		BOOLEAN     fAboutToEnter;
+		INT16 const sec_src = SECTOR(sSource % MAP_WORLD_X, sSource / MAP_WORLD_X);
+		INT16 const sec_dst = SECTOR(sDest   % MAP_WORLD_X, sDest   / MAP_WORLD_X);
+		if (!PlayersBetweenTheseSectors(sec_src, sec_dst, &sExiting, &sEntering, &fAboutToEnter)) continue;
+		// someone is leaving
 
-				// now find position
-				if( !( iCounter % 2 ) )
-				{
-					// guys going north or south
-					if( sEntering > 0 )
-					{
-						// more than one coming in, offset from middle
-						sOffsetX = ( !iCounter ? ( !fZoomFlag ? NORTH_X_MVT_OFFSET: NORTH_X_MVT_OFFSET_ZOOM ) : ( !fZoomFlag ? SOUTH_X_MVT_OFFSET: SOUTH_X_MVT_OFFSET_ZOOM )  );
-					}
-					else
-					{
-						sOffsetX = ( !fZoomFlag ?  NORTH_SOUTH_CENTER_OFFSET : NORTH_SOUTH_CENTER_OFFSET_ZOOM );
-					}
-
-					if( !iCounter )
-					{
-						// going north
-						sOffsetY = ( !fZoomFlag ? NORTH_Y_MVT_OFFSET : NORTH_Y_MVT_OFFSET_ZOOM );
-					}
-					else
-					{
-						// going south
-						sOffsetY = ( !fZoomFlag ? SOUTH_Y_MVT_OFFSET : SOUTH_Y_MVT_OFFSET_ZOOM );
-					}
-				}
-				else
-				{
-					// going east/west
-
-					if( sEntering > 0 )
-					{
-						// people also entering, offset from middle
-						sOffsetY = ( iCounter == 1? ( !fZoomFlag ? EAST_Y_MVT_OFFSET: EAST_Y_MVT_OFFSET_ZOOM ) : ( !fZoomFlag ? WEST_Y_MVT_OFFSET: WEST_Y_MVT_OFFSET_ZOOM )  );
-					}
-					else
-					{
-						sOffsetY = ( !fZoomFlag ?  EAST_WEST_CENTER_OFFSET : EAST_WEST_CENTER_OFFSET_ZOOM );
-					}
-
-					if( iCounter == 1 )
-					{
-						// going east
-						sOffsetX = ( !fZoomFlag ? EAST_X_MVT_OFFSET : EAST_X_MVT_OFFSET_ZOOM );
-					}
-					else
-					{
-						// going west
-						sOffsetX = ( !fZoomFlag ? WEST_X_MVT_OFFSET : WEST_X_MVT_OFFSET_ZOOM );
-					}
-				}
-
-				switch( iCounter )
-				{
-					case 0:
-						sTextXOffset = NORTH_TEXT_X_OFFSET;
-						sTextYOffset = NORTH_TEXT_Y_OFFSET;
-						break;
-					case 1:
-						sTextXOffset = EAST_TEXT_X_OFFSET;
-						sTextYOffset = EAST_TEXT_Y_OFFSET;
-						break;
-					case 2:
-						sTextXOffset = SOUTH_TEXT_X_OFFSET;
-						sTextYOffset = SOUTH_TEXT_Y_OFFSET;
-						break;
-					case 3:
-						sTextXOffset = WEST_TEXT_X_OFFSET;
-						sTextYOffset = WEST_TEXT_Y_OFFSET;
-						break;
-				}
-
-
-				// blit the text
-				UINT8 const foreground = fAboutToEnter ? FONT_BLACK : FONT_WHITE;
-				SetFontAttributes(MAP_MVT_ICON_FONT, foreground);
-
-				swprintf( sString, lengthof(sString), L"%d", sExiting );
-
-				// if about to enter, draw yellow arrows, blue otherwise
-				const SGPVObject* const hIconHandle = (fAboutToEnter ? guiCHARBETWEENSECTORICONSCLOSE : guiCHARBETWEENSECTORICONS);
-
-				// zoomed in or not?
-				if(!fZoomFlag)
-				{
-					iX = MAP_VIEW_START_X+( iX * MAP_GRID_X ) + sOffsetX;
-					iY = MAP_Y_ICON_OFFSET + MAP_VIEW_START_Y + ( iY * MAP_GRID_Y ) + sOffsetY;
-
-					BltVideoObject(guiSAVEBUFFER, hIconHandle, ( UINT16 )iCounter , ( INT16 ) iX, ( INT16 ) iY);
-				}
-				else
-				{
-					GetScreenXYFromMapXYStationary( ((UINT16)(iX)),((UINT16)(iY)) , &sXPosition, &sYPosition );
-
-					iY=sYPosition-MAP_GRID_Y + sOffsetY;
-					iX=sXPosition-MAP_GRID_X + sOffsetX;
-
-					// clip blits to mapscreen region
-					ClipBlitsToMapViewRegion( );
-
-					BltVideoObject(guiSAVEBUFFER, hIconHandle,( UINT16 )iCounter , iX   , iY);
-
-					// restore clip blits
-					RestoreClipRegionToFullScreen( );
-				}
-
-				FindFontCenterCoordinates(iX + sTextXOffset, 0, ICON_WIDTH, 0, sString, MAP_FONT, &usX, &usY);
-				SetFontDestBuffer(guiSAVEBUFFER);
-				MPrint(usX, iY + sTextYOffset, sString);
-
-				switch( iCounter % 2 )
-				{
-					case 0 :
-						// north south
-						iWidth = 10;
-						iHeight = 12;
-					break;
-					case 1 :
-						// east west
-						iWidth = 12;
-						iHeight = 7;
-					break;
-
-				}
-
-				// error correction for scrolling with people on the move
-				if( iX < 0 )
-				{
-					iDeltaXForError = 0 - iX;
-					iWidth -= iDeltaXForError;
-					iX = 0;
-				}
-
-				if( iY < 0 )
-				{
-					iDeltaYForError = 0 - iY;
-					iHeight -= iDeltaYForError;
-					iY = 0;
-				}
-
-				if( ( iWidth > 0 )&&( iHeight > 0 ) )
-				{
-					RestoreExternBackgroundRect( iX, iY, ( INT16 )iWidth, ( INT16 )iHeight );
-				}
+		// now find position
+		INT16 sOffsetX;
+		INT16 sOffsetY;
+		if (dir % 2 == 0)
+		{ // guys going north or south
+			if (sEntering > 0)
+			{ // more than one coming in, offset from middle
+				sOffsetX = dir == 0 ?
+					(!fZoomFlag ? NORTH_X_MVT_OFFSET : NORTH_X_MVT_OFFSET_ZOOM) :
+					(!fZoomFlag ? SOUTH_X_MVT_OFFSET : SOUTH_X_MVT_OFFSET_ZOOM);
 			}
+			else
+			{
+				sOffsetX = !fZoomFlag ? NORTH_SOUTH_CENTER_OFFSET : NORTH_SOUTH_CENTER_OFFSET_ZOOM;
+			}
+
+			if (dir == 0)
+			{ // going north
+				sOffsetY = !fZoomFlag ? NORTH_Y_MVT_OFFSET : NORTH_Y_MVT_OFFSET_ZOOM;
+			}
+			else
+			{ // going south
+				sOffsetY = !fZoomFlag ? SOUTH_Y_MVT_OFFSET : SOUTH_Y_MVT_OFFSET_ZOOM;
+			}
+		}
+		else
+		{ // going east/west
+			if (sEntering > 0)
+			{ // people also entering, offset from middle
+				sOffsetY = dir == 1 ?
+					(!fZoomFlag ? EAST_Y_MVT_OFFSET: EAST_Y_MVT_OFFSET_ZOOM) :
+					(!fZoomFlag ? WEST_Y_MVT_OFFSET: WEST_Y_MVT_OFFSET_ZOOM);
+			}
+			else
+			{
+				sOffsetY = !fZoomFlag ? EAST_WEST_CENTER_OFFSET : EAST_WEST_CENTER_OFFSET_ZOOM;
+			}
+
+			if (dir == 1)
+			{ // going east
+				sOffsetX = !fZoomFlag ? EAST_X_MVT_OFFSET : EAST_X_MVT_OFFSET_ZOOM;
+			}
+			else
+			{ // going west
+				sOffsetX = !fZoomFlag ? WEST_X_MVT_OFFSET : WEST_X_MVT_OFFSET_ZOOM;
+			}
+		}
+
+		INT16 sTextXOffset;
+		INT16 sTextYOffset;
+		switch (dir)
+		{
+			case 0: sTextXOffset = NORTH_TEXT_X_OFFSET; sTextYOffset = NORTH_TEXT_Y_OFFSET; break;
+			case 1: sTextXOffset =  EAST_TEXT_X_OFFSET; sTextYOffset =  EAST_TEXT_Y_OFFSET; break;
+			case 2: sTextXOffset = SOUTH_TEXT_X_OFFSET; sTextYOffset = SOUTH_TEXT_Y_OFFSET; break;
+			case 3: sTextXOffset =  WEST_TEXT_X_OFFSET; sTextYOffset =  WEST_TEXT_Y_OFFSET; break;
+
+			default: abort();
+		}
+
+		// if about to enter, draw yellow arrows, blue otherwise
+		SGPVObject const* const hIconHandle = fAboutToEnter ? guiCHARBETWEENSECTORICONSCLOSE : guiCHARBETWEENSECTORICONS;
+
+		INT16 iX;
+		INT16 iY;
+		// zoomed in or not?
+		if (!fZoomFlag)
+		{
+			iX = MAP_VIEW_START_X                     + sX * MAP_GRID_X + sOffsetX;
+			iY = MAP_Y_ICON_OFFSET + MAP_VIEW_START_Y + sY * MAP_GRID_Y + sOffsetY;
+			BltVideoObject(guiSAVEBUFFER, hIconHandle, dir, iX, iY);
+		}
+		else
+		{
+			INT16 sXPosition;
+			INT16 sYPosition;
+			GetScreenXYFromMapXYStationary(sX, sY, &sXPosition, &sYPosition);
+			iY = sYPosition - MAP_GRID_Y + sOffsetY;
+			iX = sXPosition - MAP_GRID_X + sOffsetX;
+
+			ClipBlitsToMapViewRegion();
+			BltVideoObject(guiSAVEBUFFER, hIconHandle, dir, iX, iY);
+			RestoreClipRegionToFullScreen();
+		}
+
+		// blit the text
+		UINT8 const foreground = fAboutToEnter ? FONT_BLACK : FONT_WHITE;
+		SetFontAttributes(MAP_MVT_ICON_FONT, foreground);
+		SetFontDestBuffer(guiSAVEBUFFER);
+
+		wchar_t buf[32];
+		swprintf(buf, lengthof(buf), L"%d", sExiting);
+
+		INT16 usX;
+		INT16 usY;
+		FindFontCenterCoordinates(iX + sTextXOffset, 0, ICON_WIDTH, 0, buf, MAP_FONT, &usX, &usY);
+		MPrint(usX, iY + sTextYOffset, buf);
+
+		INT32 iWidth;
+		INT32 iHeight;
+		if (dir % 2 == 0)
+		{ // north south
+			iWidth  = 10;
+			iHeight = 12;
+		}
+		else
+		{ // east west
+			iWidth  = 12;
+			iHeight =  7;
+		}
+
+		// error correction for scrolling with people on the move
+		if (iX < 0)
+		{
+			iWidth += iX;
+			iX      = 0;
+		}
+
+		if (iY < 0)
+		{
+			iHeight += iY;
+			iY       = 0;
+		}
+
+		if (iWidth > 0 && iHeight > 0)
+		{
+			RestoreExternBackgroundRect(iX, iY, (INT16)iWidth, (INT16)iHeight);
 		}
 	}
 
