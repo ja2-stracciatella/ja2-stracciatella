@@ -248,14 +248,13 @@ UINT32 ListSize(HLIST hList)
 // Parameter List : HCONTAINER - handle to list container
 //									data - data to add to queue
 //									position - position after which data is to added
-HLIST AddtoList(HLIST hList, void const* pdata, UINT32 const uiPos)
+HLIST AddtoList(HLIST l, void const* pdata, UINT32 const uiPos)
 {
 	UINT32 uiOffsetDst;
 	UINT32 uiFinalLoc = 0;
-	BOOLEAN fTail_check = FALSE;
 
 	// check for invalid handle = 0
-	if (hList == NULL)
+	if (!l)
 	{
 		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "This is not a valid handle to the list");
 		return NULL;
@@ -268,86 +267,79 @@ HLIST AddtoList(HLIST hList, void const* pdata, UINT32 const uiPos)
 		return NULL;
 	}
 
-	ListHeader* pTemp_cont = hList;
-	if (uiPos > pTemp_cont->uiTotal_items)
+	if (uiPos > l->uiTotal_items)
 	{
-			DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There are not enough elements in the list");
+		DebugMsg(TOPIC_LIST_CONTAINERS, DBG_LEVEL_0, "There are not enough elements in the list");
 		return NULL;
 	}
-	UINT32 uiSize_of_each = pTemp_cont->uiSiz_of_elem;
-	UINT32 uiMax_size = pTemp_cont->uiMax_size;
-	UINT32 uiHead = pTemp_cont->uiHead;
-	UINT32 uiTail = pTemp_cont->uiTail;
-	UINT32 uiOffsetSrc = pTemp_cont->uiHead + uiPos * pTemp_cont->uiSiz_of_elem;
+
+	UINT32 const uiSize_of_each = l->uiSiz_of_elem;
+	UINT32 const uiMax_size     = l->uiMax_size;
+	UINT32 const uiHead         = l->uiHead;
+	UINT32 const uiTail         = l->uiTail;
+	UINT32       uiOffsetSrc    = l->uiHead + uiPos * uiSize_of_each;
 	if (uiOffsetSrc >= uiMax_size)
 		uiOffsetSrc = sizeof(ListHeader) + (uiOffsetSrc - uiMax_size);
-	if (uiTail == uiOffsetSrc)
-		fTail_check = TRUE;
+	bool const fTail_check = uiTail == uiOffsetSrc;
 	// copy appropriate blocks
-	if (((uiTail + uiSize_of_each) <= uiMax_size) &&
-		((uiTail > uiHead) || ((uiTail == uiHead) && (uiHead == sizeof(ListHeader)))))
+	if (uiTail + uiSize_of_each <= uiMax_size &&
+			(uiTail > uiHead || (uiTail == uiHead && uiHead == sizeof(ListHeader))))
 	{
-		uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
-		uiOffsetDst = uiOffsetSrc + pTemp_cont->uiSiz_of_elem;
+		uiOffsetSrc = l->uiHead + uiPos * uiSize_of_each;
+		uiOffsetDst = uiOffsetSrc + uiSize_of_each;
 		if (!fTail_check)
 		{
-			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
+			do_copy(l, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
+			l->uiTail += uiSize_of_each;
 		}
-		if (!fTail_check)
-			pTemp_cont->uiTail += uiSize_of_each;
 		uiFinalLoc = uiOffsetSrc;
 	}
 
-
-	if ((((uiTail + uiSize_of_each) <= uiMax_size) && (uiTail < uiHead)) ||
-			(((uiTail + uiSize_of_each) > uiMax_size) && (uiHead >= (sizeof(ListHeader) + uiSize_of_each))))
+	if ((uiTail + uiSize_of_each <= uiMax_size && uiTail < uiHead) ||
+			(uiTail + uiSize_of_each > uiMax_size && uiHead >= sizeof(ListHeader) + uiSize_of_each))
 	{
-		uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
+		uiOffsetSrc = l->uiHead + uiPos * uiSize_of_each;
 
 		if (uiOffsetSrc >= uiMax_size)
 		{
 			uiOffsetSrc = sizeof(ListHeader) + (uiOffsetSrc - uiMax_size);
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
-			do_copy(hList, uiOffsetDst, uiOffsetSrc, uiTail - uiOffsetSrc);
-			uiFinalLoc = uiOffsetSrc;
+			do_copy(l, uiOffsetDst, uiOffsetSrc, uiTail - uiOffsetSrc);
 		}
 		else
 		{
 			uiOffsetSrc = sizeof(ListHeader);
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
-			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
+			do_copy(l, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
 
 			uiOffsetSrc = uiMax_size - uiSize_of_each;
 			uiOffsetDst = sizeof(ListHeader);
-			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiSize_of_each);
-			uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
+			do_copy(l, uiOffsetSrc, uiOffsetDst, uiSize_of_each);
+			uiOffsetSrc = l->uiHead + uiPos * uiSize_of_each;
 			uiOffsetDst = uiOffsetSrc + uiSize_of_each;
-			do_copy(hList, uiOffsetSrc, uiOffsetDst, uiMax_size - uiSize_of_each - uiOffsetSrc);
+			do_copy(l, uiOffsetSrc, uiOffsetDst, uiMax_size - uiSize_of_each - uiOffsetSrc);
 		}
-		pTemp_cont->uiTail += uiSize_of_each;
+		l->uiTail += uiSize_of_each;
 		uiFinalLoc = uiOffsetSrc;
 	}
 
-
-	if ((((uiTail + uiSize_of_each) <= uiMax_size) && (uiTail == uiHead) && (uiHead >= (sizeof(ListHeader) + uiSize_of_each))) ||
-			(((uiTail + uiSize_of_each) > uiMax_size) && (uiHead == sizeof(ListHeader))))
+	if ((uiTail + uiSize_of_each <= uiMax_size && uiTail == uiHead && uiHead >= sizeof(ListHeader) + uiSize_of_each) ||
+			(uiTail + uiSize_of_each > uiMax_size && uiHead == sizeof(ListHeader)))
 	{
 		// need to resize the container
-		UINT32 uiNew_size = uiMax_size + (uiMax_size - sizeof(ListHeader));
-		pTemp_cont->uiMax_size = uiNew_size;
-		hList = (HLIST)MemRealloc(hList, uiNew_size);
-		pTemp_cont = hList;
-		do_copy(hList, sizeof(ListHeader), uiMax_size, uiHead - sizeof(ListHeader));
-		pTemp_cont->uiTail = uiMax_size + (uiHead-sizeof(ListHeader));
+		UINT32 const uiNew_size = uiMax_size + (uiMax_size - sizeof(ListHeader));
+		l->uiMax_size = uiNew_size;
+		l = (HLIST)MemRealloc(l, uiNew_size);
+		do_copy(l, sizeof(ListHeader), uiMax_size, uiHead - sizeof(ListHeader));
+		l->uiTail = uiMax_size + (uiHead-sizeof(ListHeader));
 
 		// now make place for the actual element
-		uiOffsetSrc = pTemp_cont->uiHead + (uiPos*pTemp_cont->uiSiz_of_elem);
-		uiOffsetDst = uiOffsetSrc + pTemp_cont->uiSiz_of_elem;
-		do_copy(hList, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
-		pTemp_cont->uiTail += uiSize_of_each;
+		uiOffsetSrc = l->uiHead + uiPos * uiSize_of_each;
+		uiOffsetDst = uiOffsetSrc + uiSize_of_each;
+		do_copy(l, uiOffsetSrc, uiOffsetDst, uiTail - uiOffsetSrc);
+		l->uiTail += uiSize_of_each;
 		uiFinalLoc = uiOffsetSrc;
 	}
-
 
 	// finally insert data at position uiFinalLoc
 	if (uiFinalLoc == 0)
@@ -356,11 +348,11 @@ HLIST AddtoList(HLIST hList, void const* pdata, UINT32 const uiPos)
 		return NULL;
 	}
 
-	BYTE* pbyte = (BYTE*)hList + uiFinalLoc;
-	memmove(pbyte, pdata, pTemp_cont->uiSiz_of_elem);
-	pTemp_cont->uiTotal_items++;
-	if (fTail_check) pTemp_cont->uiTail += pTemp_cont->uiSiz_of_elem;
-	return hList;
+	BYTE* const pbyte = (BYTE*)l + uiFinalLoc;
+	memmove(pbyte, pdata, uiSize_of_each);
+	l->uiTotal_items++;
+	if (fTail_check) l->uiTail += uiSize_of_each;
+	return l;
 }
 
 
