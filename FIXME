@@ -21,6 +21,7 @@ CreateEnemyGlow16BPPPalette(), CreateEnemyGreyGlow16BPPPalette(): ?
 DONT_DISPLAY_TEXT: what is this good for?
 DeathTimerCallback(): complicated
 DecideActionBlack(): bCanAttack != TRUE && bCanAttack != FALSE strange
+DecideActionRed(): bInDeepWater is not just deep water (Water())
 DisplayAllDealersCash(): MARK_DIRTY necessary?
 DisplayEmploymentinformation(): code duplication
 DisplayEmploymentinformation(): pointless loop
@@ -90,6 +91,7 @@ MergeMessageBoxCallBack(): users
 MinAPsToThrow(): usInHand is INT16, but used as %s
 MoveBullet(): RemoveBullet() before BulletMissed() (twice) and CorpseHit() seems wrong
 MoveGroupFromSectorToSectorButAvoidLastSector(): caller
+MovementNoise(): DeepWater() after Water() is pointless, 20% stealth penalty for deep water does not work
 NPC.h: RUSSIAN quirk
 NPCQuoteInfo: weird preprocessor magic
 NewOKDestination(): boolean parameter with three (four?) values

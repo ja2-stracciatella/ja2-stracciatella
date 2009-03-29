@@ -1833,57 +1833,33 @@ SOLDIERTYPE* WhoIsThere2(INT16 const gridno, INT8 const level)
 }
 
 
-UINT8	GetTerrainType(INT16 sGridNo)
+UINT8	GetTerrainType(GridNo const grid_no)
 {
-	return gpWorldLevelData[sGridNo].ubTerrainID;
-/*
-	LEVELNODE	*pNode;
-
-
-	// Check if we have anything in object layer which has a terrain modifier
-	pNode = gpWorldLevelData[ sGridNo ].pObjectHead;
-
-	if ( pNode != NULL )
-	{
-		if ( gTileDatabase[ pNode->usIndex ].ubTerrainID != NO_TERRAIN )
-		{
-			return( gTileDatabase[ pNode->usIndex ].ubTerrainID );
-		}
-	}
-
-	// Now try terrain!
-	pNode = gpWorldLevelData[ sGridNo ].pLandHead;
-
-	return( gTileDatabase[ pNode->usIndex ].ubTerrainID );
-*/
+	return gpWorldLevelData[grid_no].ubTerrainID;
 }
 
 
-BOOLEAN Water(INT16 sGridNo)
+bool Water(GridNo const grid_no)
 {
-  if (sGridNo == NOWHERE)
-  {
-    return FALSE;
-  }
+  if (grid_no == NOWHERE) return false;
 
-	const MAP_ELEMENT* pMapElement = &gpWorldLevelData[sGridNo];
+	UINT8 const terrain = GetTerrainType(grid_no);
 	return
-		pMapElement->ubTerrainID == LOW_WATER ||
-		pMapElement->ubTerrainID == MED_WATER ||
-		pMapElement->ubTerrainID == DEEP_WATER;
+		terrain == LOW_WATER ||
+		terrain == MED_WATER ||
+		terrain == DEEP_WATER;
 }
 
 
-BOOLEAN DeepWater( INT16 sGridNo )
+bool DeepWater(GridNo const grid_no)
 {
-	const MAP_ELEMENT* pMapElement = &gpWorldLevelData[sGridNo];
-	return pMapElement->ubTerrainID == DEEP_WATER;
+	return GetTerrainType(grid_no) == DEEP_WATER;
 }
 
 
-BOOLEAN WaterTooDeepForAttacks(INT16 sGridNo)
+bool WaterTooDeepForAttacks(GridNo const grid_no)
 {
-	return DeepWater(sGridNo);
+	return DeepWater(grid_no);
 }
 
 

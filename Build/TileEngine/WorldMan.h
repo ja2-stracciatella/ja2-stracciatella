@@ -66,10 +66,10 @@ void InsertLandIndexAtLevel(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel);
 void RemoveHigherLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT32** puiHigherTypes, UINT8* pubNumHigherTypes);
 #endif
 
-UINT8	GetTerrainType( INT16 sGridNo );
-BOOLEAN Water( INT16 sGridNo );
-BOOLEAN DeepWater( INT16 sGridNo );
-BOOLEAN WaterTooDeepForAttacks( INT16 sGridNo );
+UINT8 GetTerrainType(GridNo);
+bool  Water(GridNo);
+bool  DeepWater(GridNo);
+bool  WaterTooDeepForAttacks(GridNo);
 
 // Structure manipulation routines
 BOOLEAN RemoveStruct( UINT32 iMapIndex, UINT16 usIndex );
