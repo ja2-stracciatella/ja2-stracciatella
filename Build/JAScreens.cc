@@ -997,17 +997,22 @@ ScreenID DemoExitScreenHandle(void)
 		yp = MAX( yp, -400 );
 		for( i = 2; i < 40; i++ )
 		{
-			switch( i )
+			Font  font;
+			UINT8 fg;
+			if (i < 38)
 			{
-				case 38:
-				case 39: SetFontForeground(FONT_LTKHAKI); break;
-				default: SetFontForeground(FONT_GRAY2);   break;
+				font = FONT14ARIAL;
+				fg   = FONT_GRAY2;
 			}
-			wchar_t const* const String = gpDemoString[i];
-			Font           const font = (i < 36 ? FONT14ARIAL : FONT14HUMANIST);
-			width = StringPixLength(String, font);
+			else
+			{
+				font = FONT14HUMANIST;
+				fg   = FONT_LTKHAKI;
+			}
 			SetFont(font);
-
+			SetFontForeground(fg);
+			wchar_t const* const String = gpDemoString[i];
+			width = StringPixLength(String, font);
 			MPrint((SCREEN_WIDTH - width) / 2, yp + i * 17, String);
 		}
 		if( !fSetMusicToFade && iPercentage > 43000 )
