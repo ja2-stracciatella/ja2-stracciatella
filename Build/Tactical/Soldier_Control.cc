@@ -949,7 +949,7 @@ static bool IsRifle(UINT16 const item_id)
 }
 
 
-static void HandleAnimationProfile(SOLDIERTYPE* pSoldier, UINT16 usAnimState, BOOLEAN fRemove);
+static void HandleAnimationProfile(SOLDIERTYPE*, UINT16 usAnimState, BOOLEAN fRemove);
 static void SetSoldierLocatorOffsets(SOLDIERTYPE* pSoldier);
 
 
@@ -6790,67 +6790,37 @@ void ReviveSoldier( SOLDIERTYPE *pSoldier )
 }
 
 
-static void HandleAnimationProfile(SOLDIERTYPE* pSoldier, UINT16 usAnimState, BOOLEAN fRemove)
+static void HandleAnimationProfile(SOLDIERTYPE* const s, UINT16 const usAnimState, BOOLEAN const fRemove)
 {
-//#if 0
-	ANIM_PROF					*pProfile;
-	ANIM_PROF_DIR			*pProfileDir;
-	ANIM_PROF_TILE		*pProfileTile;
-	INT8							bProfileID;
-	UINT32						iTileCount;
-	INT16							sGridNo;
-	UINT16						usAnimSurface;
+	UINT16 const anim_surface = DetermineSoldierAnimationSurface(s, usAnimState);
+	CHECKV(anim_surface != INVALID_ANIMATION_SURFACE);
 
-	// ATE
+	INT8 const profile_id = gAnimSurfaceDatabase[anim_surface].bProfile;
+	if (profile_id == -1) return;
 
-	// Get Surface Index
-	usAnimSurface = DetermineSoldierAnimationSurface( pSoldier, usAnimState );
+	ANIM_PROF     const& profile     = gpAnimProfiles[profile_id];
+	ANIM_PROF_DIR const& profile_dir = profile.Dirs[s->bDirection];
 
-	CHECKV( usAnimSurface != INVALID_ANIMATION_SURFACE );
-
-	bProfileID = gAnimSurfaceDatabase[ usAnimSurface ].bProfile;
-
-	// Determine if this animation has a profile
-	if ( bProfileID != -1 )
+	// Loop tiles and set accordingly into world
+	for (UINT32 tile_count = 0; tile_count != profile_dir.ubNumTiles; ++tile_count)
 	{
-		// Getprofile
-		pProfile = &(gpAnimProfiles[ bProfileID ] );
+		ANIM_PROF_TILE const& profile_tile = profile_dir.pTiles[tile_count];
+		GridNo         const  grid_no      = s->sGridNo + WORLD_COLS * profile_tile.bTileY + profile_tile.bTileX;
 
-		// Get direction
-		pProfileDir = &( pProfile->Dirs[ pSoldier->bDirection ] );
+		// Check if in bounds
+		if (OutOfBounds(s->sGridNo, grid_no)) continue;
 
-		// Loop tiles and set accordingly into world
-		for( iTileCount = 0; iTileCount < pProfileDir->ubNumTiles; iTileCount++ )
-		{
-			pProfileTile = &( pProfileDir->pTiles[ iTileCount ] );
-
-			sGridNo = pSoldier->sGridNo + ( ( WORLD_COLS * pProfileTile->bTileY ) + pProfileTile->bTileX );
-
-			// Check if in bounds
-			if ( !OutOfBounds( pSoldier->sGridNo, sGridNo ) )
-			{
-				if ( fRemove )
-				{
-					// Remove from world
-					RemoveMerc( sGridNo, pSoldier, TRUE );
-				}
-				else
-				{
-					// PLace into world
-					LEVELNODE* const n = AddMercToHead(sGridNo, pSoldier, FALSE);
-					//if ( pProfileTile->bTileY != 0 || pProfileTile->bTileX != 0 )
-					{
-						n->uiFlags                |= LEVELNODE_MERCPLACEHOLDER;
-						n->uiAnimHitLocationFlags  = pProfileTile->usTileFlags;
-					}
-				}
-			}
-
+		if (fRemove)
+		{ // Remove from world
+			RemoveMerc(grid_no, s, TRUE);
+		}
+		else
+		{ // Place into world
+			LEVELNODE* const n = AddMercToHead(grid_no, s, FALSE);
+			n->uiFlags                |= LEVELNODE_MERCPLACEHOLDER;
+			n->uiAnimHitLocationFlags  = profile_tile.usTileFlags;
 		}
 	}
-
-//#endif
-
 }
 
 
