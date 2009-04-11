@@ -109,12 +109,7 @@ enum{
 };
 static INT8 gbCurrentFileIOStatus; // 1 init saving message, 2 save, 3 init loading message, 4 load, 0 none
 
-
-void LoadSaveScreenInit(void)
-{
-	gfUpdateSummaryInfo = TRUE;
-	fEnteringLoadSaveScreen = TRUE;
-}
+static bool gfUpdateSummaryInfo = true;
 
 
 static void CreateFileDialog(const wchar_t* zTitle);
@@ -482,7 +477,7 @@ static void CreateFileDialog(const wchar_t* zTitle)
 static void UpdateWorldInfoCallback(GUI_BUTTON* b, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-		gfUpdateSummaryInfo = b->uiFlags & BUTTON_CLICKED_ON ? TRUE : FALSE;
+		gfUpdateSummaryInfo = b->uiFlags & BUTTON_CLICKED_ON;
 }
 
 

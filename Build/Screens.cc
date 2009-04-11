@@ -39,7 +39,7 @@ Screens const GameScreens[] =
 	{ MapScreenInit,        MapScreenHandle,             MapScreenShutdown         },
 	{ LaptopScreenInit,     LaptopScreenHandle,          LaptopScreenShutdown      },
 #ifdef JA2EDITOR
-	{ LoadSaveScreenInit,   LoadSaveScreenHandle,        NULL                      },
+	{ NULL,                 LoadSaveScreenHandle,        NULL                      },
 	{ NULL,                 MapUtilScreenHandle,         NULL                      },
 #else
 	{ NULL,                 NULL,                        NULL                      },

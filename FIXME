@@ -75,7 +75,7 @@ LackOfProgressTolerance(): callers
 LightIlluminateWall(): empty
 LoadCivQuoteFile(): string copy necessary?
 LoadEnemySoldiersFromTempFile(): ubStrategicCreatures > ubNumCreatures
-LoadSaveScreenHandle(), LoadSaveScreenInit(): Investigate if the duplication can be removed
+LoadSaveScreenHandle(): Investigate if the duplication can be removed
 LoadSavedGameHeader(): invalid use of strlen()
 LoadSavedGameWarningMessageBoxCallBack(): users
 LoadShadeTablesFromTextFile(): *scanf()

@@ -147,8 +147,6 @@ UINT16 gusNEnemyItemsSummaryArraySize = 0;
 
 BOOLEAN gfSetupItemDetailsMode = TRUE;
 
-BOOLEAN gfUpdateSummaryInfo;
-
 UINT16 usNumSummaryFilesOutOfDate;
 
 BOOLEAN gfMapFileDirty;
