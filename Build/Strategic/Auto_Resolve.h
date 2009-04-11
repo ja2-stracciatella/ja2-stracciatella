@@ -28,6 +28,5 @@ UINT32 VirtualSoldierDressWound(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVictim, OBJ
 BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(INT16* psSectorX, INT16* psSectorY, INT16* psSectorZ);
 
 ScreenID AutoResolveScreenHandle(void);
-void     AutoResolveScreenShutdown(void);
 
 #endif

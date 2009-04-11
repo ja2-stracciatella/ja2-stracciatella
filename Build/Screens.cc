@@ -24,46 +24,46 @@
 Screens const GameScreens[] =
 {
 #ifdef JA2EDITOR
-	{ EditScreenInit,       EditScreenHandle,            EditScreenShutdown        },
+	{ EditScreenInit,       EditScreenHandle,            EditScreenShutdown       },
 #else
-	{ NULL,                 NULL,                        NULL                      },
+	{ NULL,                 NULL,                        NULL                     },
 #endif
-	{ NULL,                 NULL,                        NULL                      },
-	{ NULL,                 NULL,                        NULL                      },
-	{ NULL,                 ErrorScreenHandle,           NULL                      }, // Title Screen
-	{ NULL,                 InitScreenHandle,            NULL                      }, // Title Screen
-	{ MainGameScreenInit,   MainGameScreenHandle,        MainGameScreenShutdown    },
-	{ NULL,                 AniEditScreenHandle,         NULL                      },
-	{ NULL,                 PalEditScreenHandle,         NULL                      },
-	{ NULL,                 DebugScreenHandle,           NULL                      },
-	{ MapScreenInit,        MapScreenHandle,             MapScreenShutdown         },
-	{ LaptopScreenInit,     LaptopScreenHandle,          LaptopScreenShutdown      },
+	{ NULL,                 NULL,                        NULL                     },
+	{ NULL,                 NULL,                        NULL                     },
+	{ NULL,                 ErrorScreenHandle,           NULL                     }, // Title Screen
+	{ NULL,                 InitScreenHandle,            NULL                     }, // Title Screen
+	{ MainGameScreenInit,   MainGameScreenHandle,        MainGameScreenShutdown   },
+	{ NULL,                 AniEditScreenHandle,         NULL                     },
+	{ NULL,                 PalEditScreenHandle,         NULL                     },
+	{ NULL,                 DebugScreenHandle,           NULL                     },
+	{ MapScreenInit,        MapScreenHandle,             MapScreenShutdown        },
+	{ LaptopScreenInit,     LaptopScreenHandle,          LaptopScreenShutdown     },
 #ifdef JA2EDITOR
-	{ NULL,                 LoadSaveScreenHandle,        NULL                      },
-	{ NULL,                 MapUtilScreenHandle,         NULL                      },
+	{ NULL,                 LoadSaveScreenHandle,        NULL                     },
+	{ NULL,                 MapUtilScreenHandle,         NULL                     },
 #else
-	{ NULL,                 NULL,                        NULL                      },
-	{ NULL,                 NULL,                        NULL                      },
+	{ NULL,                 NULL,                        NULL                     },
+	{ NULL,                 NULL,                        NULL                     },
 #endif
-	{ NULL,                 FadeScreenHandle,            NULL                      },
-	{ NULL,                 MessageBoxScreenHandle,      MessageBoxScreenShutdown  },
-	{ NULL,                 MainMenuScreenHandle,        NULL                      },
-	{ NULL,                 AutoResolveScreenHandle,     AutoResolveScreenShutdown },
-	{ NULL,                 SaveLoadScreenHandle,        NULL                      },
-	{ NULL,                 OptionsScreenHandle,         NULL                      },
-	{ ShopKeeperScreenInit, ShopKeeperScreenHandle,      ShopKeeperScreenShutdown  },
-	{ NULL,                 SexScreenHandle,             NULL                      },
-	{ NULL,                 GameInitOptionsScreenHandle, NULL                      },
+	{ NULL,                 FadeScreenHandle,            NULL                     },
+	{ NULL,                 MessageBoxScreenHandle,      MessageBoxScreenShutdown },
+	{ NULL,                 MainMenuScreenHandle,        NULL                     },
+	{ NULL,                 AutoResolveScreenHandle,     NULL                     },
+	{ NULL,                 SaveLoadScreenHandle,        NULL                     },
+	{ NULL,                 OptionsScreenHandle,         NULL                     },
+	{ ShopKeeperScreenInit, ShopKeeperScreenHandle,      ShopKeeperScreenShutdown },
+	{ NULL,                 SexScreenHandle,             NULL                     },
+	{ NULL,                 GameInitOptionsScreenHandle, NULL                     },
 #ifdef JA2DEMOADS
-	{ NULL,                 DemoExitScreenHandle,        NULL                      },
+	{ NULL,                 DemoExitScreenHandle,        NULL                     },
 #else
-	{ NULL,                 NULL,                        NULL                      },
+	{ NULL,                 NULL,                        NULL                     },
 #endif
-	{ NULL,                 IntroScreenHandle,           NULL                      },
-	{ NULL,                 CreditScreenHandle,          NULL                      },
+	{ NULL,                 IntroScreenHandle,           NULL                     },
+	{ NULL,                 CreditScreenHandle,          NULL                     },
 #ifdef JA2BETAVERSION
-	{ AIViewerScreenInit,   AIViewerScreenHandle,        NULL                      },
+	{ AIViewerScreenInit,   AIViewerScreenHandle,        NULL                     },
 #endif
-	{ QuestDebugScreenInit, QuestDebugScreenHandle,      NULL                      }
+	{ QuestDebugScreenInit, QuestDebugScreenHandle,      NULL                     }
 };
 CASSERT(lengthof(GameScreens) == MAX_SCREENS)

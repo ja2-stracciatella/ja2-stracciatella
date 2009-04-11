@@ -540,12 +540,6 @@ void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY )
 }
 
 
-void AutoResolveScreenShutdown(void)
-{
-	gpBattleGroup = NULL;
-}
-
-
 static void CalculateAttackValues(void);
 static void CalculateAutoResolveInfo(void);
 static void CalculateSoldierCells(BOOLEAN fReset);
