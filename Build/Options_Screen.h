@@ -14,7 +14,6 @@
 extern ScreenID guiPreviousOptionScreen;
 
 
-void     OptionsScreenInit(void);
 ScreenID OptionsScreenHandle(void);
 
 #endif

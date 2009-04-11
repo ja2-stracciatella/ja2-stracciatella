@@ -122,11 +122,11 @@ static SLIDER* guiSoundEffectsSlider;
 static SLIDER* guiSpeechSlider;
 static SLIDER* guiMusicSlider;
 
-BOOLEAN		gfOptionsScreenEntry = TRUE;
-BOOLEAN		gfOptionsScreenExit	= FALSE;
-BOOLEAN		gfRedrawOptionsScreen = TRUE;
+static BOOLEAN gfOptionsScreenEntry  = TRUE;
+static BOOLEAN gfOptionsScreenExit   = FALSE;
+static BOOLEAN gfRedrawOptionsScreen = TRUE;
 
-BOOLEAN		gfEnteredFromMapScreen=FALSE;
+static BOOLEAN gfEnteredFromMapScreen = FALSE;
 
 static ScreenID guiOptionsScreen        = OPTIONS_SCREEN;
 ScreenID        guiPreviousOptionScreen = OPTIONS_SCREEN;
@@ -163,13 +163,6 @@ MOUSE_REGION    gSelectedOptionTextRegion[ NUM_GAME_OPTIONS ];
 
 //Mouse regions for the area around the toggle boxs
 MOUSE_REGION    gSelectedToggleBoxAreaRegion;
-
-
-void OptionsScreenInit()
-{
-	//Set so next time we come in, we can set up
-	gfOptionsScreenEntry = TRUE;
-}
 
 
 static void EnterOptionsScreen(void);
