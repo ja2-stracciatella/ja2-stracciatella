@@ -611,7 +611,7 @@ void ExitLaptop(void)
 	//Deallocate, save data -- leaving laptop.
 	SetRenderFlags(RENDER_FLAG_FULL);
 
-	if (!fExitDuringLoad) ExitLaptopMode(guiCurrentLaptopMode);
+	ExitLaptopMode(fExitDuringLoad ? guiPreviousLaptopMode : guiCurrentLaptopMode);
 
 	fExitDuringLoad  = FALSE;
 	fLoadPendingFlag = FALSE;
@@ -684,7 +684,7 @@ static void RenderLaptop(void)
 	}
 
 	UINT32 uiTempMode = 0;
-	if (fLoadPendingFlag)
+	if (fLoadPendingFlag || fExitDuringLoad)
 	{
 		uiTempMode           = guiCurrentLaptopMode;
 		guiCurrentLaptopMode = guiPreviousLaptopMode;

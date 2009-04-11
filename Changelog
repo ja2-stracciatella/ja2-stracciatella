@@ -1,3 +1,4 @@
+(r5651) Fix a vanilla bug: Closing the laptop, while a page in the browser is loading, caused artifacts (not deleted GUI elements, accessing not loaded graphics).
 (r5621, r5623) Always make the tooltips of the contract button and the inventory toggle region available, even if they are deactivated.
 (r5553) Fix a bug in r1791 which caused a null-pointer access when loading a savegame which starts in tactical mode and all mercs are busy.
 (r5494) Now the game runs on (little-endian) 64bit architectures (AMD64), too.
