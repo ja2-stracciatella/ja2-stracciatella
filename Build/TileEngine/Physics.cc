@@ -92,18 +92,15 @@ real						Kdl	= (float)( 0.1 * TIME_MULTI );					// LINEAR DAMPENING ( WIND RESI
 
 
 /// OBJECT POOL FUNCTIONS
-static INT32 GetFreeObjectSlot(void)
+static REAL_OBJECT* GetFreeObjectSlot(void)
 {
-	UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumObjectSlots; uiCount++)
+	REAL_OBJECT*             i   = ObjectSlots;
+	REAL_OBJECT const* const end = i + guiNumObjectSlots;
+	for (; i != end; ++i)
 	{
-		if (!ObjectSlots[uiCount].fAllocated) return (INT32)uiCount;
+		if (!i->fAllocated) return i;
 	}
-
-	if(guiNumObjectSlots < NUM_OBJECT_SLOTS )
-		return((INT32)guiNumObjectSlots++);
-
+	if (i != endof(ObjectSlots)) return i;
 	throw std::runtime_error("Out of physics object slots");
 }
 
@@ -125,73 +122,54 @@ static void RecountObjectSlots(void)
 }
 
 
-REAL_OBJECT* CreatePhysicalObject(const OBJECTTYPE* const pGameObj, const real dLifeLength, const real xPos, const real yPos, const real zPos, const real xForce, const real yForce, const real zForce, SOLDIERTYPE* const owner, const UINT8 ubActionCode, SOLDIERTYPE* const target)
+REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, real const dLifeLength, real const xPos, real const yPos, real const zPos, real const xForce, real const yForce, real const zForce, SOLDIERTYPE* const owner, UINT8 const ubActionCode, SOLDIERTYPE* const target)
 {
-	FLOAT			mass;
+	REAL_OBJECT* const o = GetFreeObjectSlot();
+	memset(o, 0, sizeof(*o));
 
-	REAL_OBJECT* const pObject = &ObjectSlots[GetFreeObjectSlot()];
-	memset( pObject, 0, sizeof( REAL_OBJECT ) );
+	o->Obj = *pGameObj;
 
-	// OK, GET OBJECT DATA AND COPY
-	pObject->Obj = *pGameObj;
-
-	// Get mass
-	mass =  CALCULATE_OBJECT_MASS( Item[pGameObj->usItem ].ubWeight );
-
-	// If mass is z, make it something!
-	if ( mass == 0 )
-	{
-		mass = 10;
-	}
+	FLOAT mass = CALCULATE_OBJECT_MASS(Item[pGameObj->usItem].ubWeight);
+	if (mass == 0) mass = 10;
 
 	// OK, mass determines the smoothness of the physics integration
 	// For gameplay, we will use mass for maybe max throw distance
 	mass = 60;
 
-	// Set lifelength
-	pObject->dLifeLength = dLifeLength;
+	o->dLifeLength             = dLifeLength;
+	o->fAllocated              = TRUE;
+	o->fAlive                  = TRUE;
+	o->fApplyFriction          = FALSE;
+	o->iSoundID                = NO_SAMPLE;
+	o->OneOverMass             = 1 / mass;
+	o->Position.x              = xPos;
+	o->Position.y              = yPos;
+	o->Position.z              = zPos;
+	o->fVisible                = TRUE;
+	o->owner                   = owner;
+	o->ubActionCode            = ubActionCode;
+	o->target                  = target;
+	o->fDropItem               = TRUE;
+	o->ubLastTargetTakenDamage = NOBODY;
+	o->fFirstTimeMoved         = TRUE;
+	o->InitialForce.x          = SCALE_VERT_VAL_TO_HORZ(xForce);
+	o->InitialForce.y          = SCALE_VERT_VAL_TO_HORZ(yForce);
+	o->InitialForce.z          = zForce;
+	o->InitialForce            = VMultScalar(&o->InitialForce, 1.5 / TIME_MULTI);
+	o->sGridNo                 = MAPROWCOLTOPOS(((INT16)yPos / CELL_Y_SIZE), ((INT16)xPos / CELL_X_SIZE));
+	o->pNode                   = 0;
+	o->pShadow                 = 0;
 
-	pObject->fAllocated		= TRUE;
-	pObject->fAlive					= TRUE;
-	pObject->fApplyFriction  = FALSE;
-  pObject->iSoundID        = NO_SAMPLE;
-
-	// Set values
-	pObject->OneOverMass = 1 / mass;
-	pObject->Position.x	= xPos;
-	pObject->Position.y	= yPos;
-	pObject->Position.z	= zPos;
-	pObject->fVisible		= TRUE;
-	pObject->owner      = owner;
-	pObject->ubActionCode = ubActionCode;
-	pObject->target = target;
-	pObject->fDropItem		= TRUE;
-  pObject->ubLastTargetTakenDamage = NOBODY;
-
-	pObject->fFirstTimeMoved = TRUE;
-
-	pObject->InitialForce.x	= SCALE_VERT_VAL_TO_HORZ( xForce );
-	pObject->InitialForce.y	= SCALE_VERT_VAL_TO_HORZ( yForce );
-	pObject->InitialForce.z	= zForce ;
-
-	pObject->InitialForce = VMultScalar(&pObject->InitialForce, 1.5 / TIME_MULTI);
-
-
-	// Calculate gridNo
-	pObject->sGridNo = MAPROWCOLTOPOS( ( (INT16)yPos / CELL_Y_SIZE ), ( (INT16)xPos / CELL_X_SIZE ) );
-	pObject->pNode = NULL;
-	pObject->pShadow = NULL;
-
-	// If gridno not equal to NOWHERE, use sHeight of alnd....
-	if ( pObject->sGridNo != NOWHERE )
+	// If gridno not equal to NOWHERE, use sHeight of land
+	if (o->sGridNo != NOWHERE)
 	{
-		pObject->Position.z += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[ pObject->sGridNo ].sHeight );
-		pObject->EndedWithCollisionPosition.z += CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[ pObject->sGridNo ].sHeight );
+		float const h = CONVERT_PIXELS_TO_HEIGHTUNITS(gpWorldLevelData[o->sGridNo].sHeight);
+		o->Position.z                   += h;
+		o->EndedWithCollisionPosition.z += h;
 	}
 
 	PhysicsDebugMsg("NewPhysics Object");
-
-	return pObject;
+	return o;
 }
 
 
