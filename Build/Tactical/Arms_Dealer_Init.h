@@ -121,11 +121,11 @@ struct ARMS_DEALER_STATUS
 	UINT8		ubSpecificDealerFlags;	// Misc state flags for specific dealers
 	BOOLEAN fOutOfBusiness;					// Set when a dealer has been killed, etc.
 	BOOLEAN fRepairDelayBeenUsed;		// Set when a repairman has missed his repair time estimate & given his excuse for it
-	BOOLEAN	fUnusedKnowsPlayer;			// Set if the shopkeeper has met with the player before [UNUSED]
+	BOOLEAN	fUnusedKnowsPlayer;			// Set if the shopkeeper has met with the player before [UNUSED] // XXX HACK000B
 
 	UINT32	uiTimePlayerLastInSKI;	// game time (in total world minutes) when player last talked to this dealer in SKI
 
-	UINT8		ubPadding[ 8 ];
+	UINT8		ubPadding[ 8 ]; // XXX HACK000B
 };
 CASSERT(sizeof(ARMS_DEALER_STATUS) == 20)
 
@@ -142,7 +142,7 @@ struct SPECIAL_ITEM_INFO
 
 	INT8		bAttachmentStatus[MAX_ATTACHMENTS];	// status of any attachments on the item
 
-	UINT8		ubPadding[2];					// filler
+	UINT8		ubPadding[2];					// filler // XXX HACK000B
 };
 CASSERT(sizeof(SPECIAL_ITEM_INFO) == 16)
 
@@ -160,7 +160,7 @@ struct DEALER_SPECIAL_ITEM
 
 	UINT8		ubOwnerProfileId;			// stores which merc previously owned an item being repaired
 
-	UINT8		ubPadding[6];					// filler
+	UINT8		ubPadding[6];					// filler // XXX HACK000B
 };
 CASSERT(sizeof(DEALER_SPECIAL_ITEM) == 28)
 

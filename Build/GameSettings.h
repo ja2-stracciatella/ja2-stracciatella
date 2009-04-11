@@ -100,7 +100,7 @@ struct GAME_OPTIONS
 	BOOLEAN	fTurnTimeLimit;
 	BOOLEAN	fIronManMode;
 
-	UINT8		ubFiller[7];
+	UINT8		ubFiller[7]; // XXX HACK000B
 };
 CASSERT(sizeof(GAME_OPTIONS) == 12)
 

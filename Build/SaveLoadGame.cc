@@ -186,10 +186,10 @@ struct GENERAL_SAVE_INFO
 	BOOLEAN fSkyRiderAvailable;
 
 	// skyrider engaging in a monologue
-	BOOLEAN UNUSEDfSkyriderMonologue;
+	BOOLEAN UNUSEDfSkyriderMonologue; // XXX HACK000B
 
 	// list of sector locations
-	INT16 UNUSED[ 2 ][ 2 ];
+	INT16 UNUSED[ 2 ][ 2 ]; // XXX HACK000B
 
 	// is the heli in the air?
 	BOOLEAN fHelicopterIsAirBorne;
@@ -292,7 +292,7 @@ struct GENERAL_SAVE_INFO
 
 	BOOLEAN	fLastBoxingMatchWonByPlayer;
 
-	UINT32	uiUNUSED;
+	UINT32	uiUNUSED; // XXX HACK000B
 
 	BOOLEAN fSamSiteFound[ NUMBER_OF_SAMS ];
 
@@ -331,13 +331,13 @@ struct GENERAL_SAVE_INFO
 	UINT8 ubPBSectorZ;
 	BOOLEAN fCantRetreatInPBI;
 	BOOLEAN fExplosionQueueActive;
-	UINT8	ubUnused[1];
+	UINT8	ubUnused[1]; // XXX HACK000B
 
 	UINT32	uiMeanWhileFlags;
 
 	INT8 bSelectedInfoChar;
 	INT8 bHospitalPriceModifier;
-	INT8 bUnused2[ 2 ];
+	INT8 bUnused2[ 2 ]; // XXX HACK000B
 
 	INT32 iHospitalTempBalance;
 	INT32 iHospitalRefund;
@@ -345,7 +345,7 @@ struct GENERAL_SAVE_INFO
   INT8  fPlayerTeamSawJoey;
 	INT8	fMikeShouldSayHi;
 
-	UINT8		ubFiller[550];		//This structure should be 1024 bytes
+	UINT8		ubFiller[550];		//This structure should be 1024 bytes // XXX HACK000B
 };
 CASSERT(sizeof(GENERAL_SAVE_INFO) == 1024)
 
