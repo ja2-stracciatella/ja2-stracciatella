@@ -90,14 +90,9 @@ extern				BOOLEAN		gfFirstHeliRun;
 extern				BOOLEAN		gfRenderFullThisFrame;
 
 
-
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
 // tasks which will run the game
-RENDER_HOOK				gRenderOverride = NULL;
-
-#define	NOINPUT_DELAY								60000
-#define	DEMOPLAY_DELAY							40000
-#define	RESTART_DELAY								6000
+static RENDER_HOOK gRenderOverride = 0;
 
 
 static ScreenID guiTacticalLeaveScreenID = ERROR_SCREEN; // XXX TODO001A had no explicit initialisation
