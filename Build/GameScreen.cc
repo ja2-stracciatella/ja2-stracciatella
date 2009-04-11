@@ -83,10 +83,10 @@ BOOLEAN	gfGameScreenLocateToSoldier = FALSE;
 BOOLEAN	gfEnteringMapScreen					= FALSE;
 SOLDIERTYPE* gPreferredInitialSelectedGuy = NULL;
 
-BOOLEAN				gfTacticalIsModal = FALSE;
-MOUSE_REGION	gTacticalDisableRegion;
-BOOLEAN				gfTacticalDisableRegionActive = FALSE;
-INT8					gbTacticalDisableMode	= FALSE;
+static BOOLEAN      gfTacticalIsModal             = FALSE;
+static MOUSE_REGION gTacticalDisableRegion;
+static BOOLEAN      gfTacticalDisableRegionActive = FALSE;
+static INT8         gbTacticalDisableMode         = FALSE;
 MODAL_HOOK		gModalDoneCallback;
 BOOLEAN				gfBeginEndTurn = FALSE;
 extern				BOOLEAN		gfFirstHeliRun;
@@ -104,7 +104,7 @@ RENDER_HOOK				gRenderOverride = NULL;
 
 
 static ScreenID guiTacticalLeaveScreenID = ERROR_SCREEN; // XXX TODO001A had no explicit initialisation
-BOOLEAN	guiTacticalLeaveScreen		= FALSE;
+static BOOLEAN  guiTacticalLeaveScreen   = FALSE;
 
 
 static void BlitMFont(VIDEO_OVERLAY* const ovr)
