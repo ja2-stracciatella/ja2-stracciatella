@@ -4,7 +4,6 @@
 #include "ScreenIDs.h"
 
 
-void     IntroScreenInit(void);
 ScreenID IntroScreenHandle(void);
 
 

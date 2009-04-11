@@ -25,8 +25,8 @@
 #endif
 
 
-BOOLEAN		gfIntroScreenEntry;
-BOOLEAN		gfIntroScreenExit;
+static BOOLEAN gfIntroScreenEntry = TRUE;
+static BOOLEAN gfIntroScreenExit;
 
 static ScreenID guiIntroExitScreen = INTRO_SCREEN;
 
@@ -87,13 +87,6 @@ const char *gpzSmackerFileNames[] =
 
 //enums used for when the intro screen can come up, either begining game intro, or end game cinematic
 INT8	gbIntroScreenMode=-1;
-
-
-void IntroScreenInit(void)
-{
-	//Set so next time we come in, we can set up
-	gfIntroScreenEntry = TRUE;
-}
 
 
 static void EnterIntroScreen(void);

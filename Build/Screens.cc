@@ -59,7 +59,7 @@ Screens const GameScreens[] =
 #else
 	{ NULL,                 NULL,                        NULL                      },
 #endif
-	{ IntroScreenInit,      IntroScreenHandle,           NULL                      },
+	{ NULL,                 IntroScreenHandle,           NULL                      },
 	{ NULL,                 CreditScreenHandle,          NULL                      },
 #ifdef JA2BETAVERSION
 	{ AIViewerScreenInit,   AIViewerScreenHandle,        NULL                      },
