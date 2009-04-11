@@ -5,8 +5,8 @@
 #include "Types.h"
 
 #ifdef _WIN32
-#	include <windef.h>
-#	include <winbase.h>
+#	define WIN32_LEAN_AND_MEAN
+#	include <windows.h>
 #else
 #	include <glob.h>
 #endif

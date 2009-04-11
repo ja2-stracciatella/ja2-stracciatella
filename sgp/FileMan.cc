@@ -13,12 +13,9 @@
 #include "PODObj.h"
 
 #ifdef _WIN32
-#	include <direct.h>
 #	include <shlobj.h>
-#	include <winerror.h>
 
 #	define mkdir(path, mode) _mkdir(path)
-
 #else
 #	include <pwd.h>
 
