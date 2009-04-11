@@ -84,7 +84,6 @@ SOLDIERTYPE* gPreferredInitialSelectedGuy = NULL;
 static BOOLEAN      gfTacticalIsModal             = FALSE;
 static MOUSE_REGION gTacticalDisableRegion;
 static BOOLEAN      gfTacticalDisableRegionActive = FALSE;
-static INT8         gbTacticalDisableMode         = FALSE;
 MODAL_HOOK		gModalDoneCallback;
 BOOLEAN				gfBeginEndTurn = FALSE;
 extern				BOOLEAN		gfFirstHeliRun;
@@ -775,10 +774,9 @@ void UpdateTeamPanelAssignments( )
 
 void EnterModalTactical( INT8 bMode )
 {
-	gbTacticalDisableMode = bMode;
-	gfTacticalIsModal			= TRUE;
+	gfTacticalIsModal = TRUE;
 
-	if ( gbTacticalDisableMode == TACTICAL_MODAL_NOMOUSE )
+	if (bMode == TACTICAL_MODAL_NOMOUSE)
 	{
 		if ( !gfTacticalDisableRegionActive )
 		{
