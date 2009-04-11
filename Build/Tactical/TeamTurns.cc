@@ -1,3 +1,4 @@
+#include "LoadSaveData.h"
 #include "Timer_Control.h"
 #include "Types.h"
 #include "FileMan.h"
@@ -58,20 +59,6 @@ BOOLEAN gfHiddenInterrupt = FALSE;
 static SOLDIERTYPE* gLastInterruptedGuy = NULL;
 
 extern UINT8 gubSightFlags;
-
-struct TEAM_TURN_SAVE_STRUCT
-{
-	UINT8		ubOutOfTurnPersons;
-
-	INT16   InterruptOnlyGuynum_UNUSED; // XXX HACK000B
-	INT16		sWhoThrewRock;
-	BOOLEAN InterruptsAllowed_UNUSED; // XXX HACK000B
-	BOOLEAN fHiddenInterrupt;
-	UINT8		ubLastInterruptedGuy;
-
-	UINT8	ubFiller[16];
-};
-CASSERT(sizeof(TEAM_TURN_SAVE_STRUCT) == 26)
 
 
 #define MIN_APS_TO_INTERRUPT 4
@@ -1728,51 +1715,46 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 }
 
 
-void SaveTeamTurnsToTheSaveGameFile(HWFILE const hFile)
+void SaveTeamTurnsToTheSaveGameFile(HWFILE const f)
 {
-	TEAM_TURN_SAVE_STRUCT TeamTurnStruct;
-
-	//Save the gubTurn Order Array
-	UINT8 ooto_ids[lengthof(gOutOfTurnOrder)];
-	for (UINT i = 0; i < lengthof(gOutOfTurnOrder); ++i)
+	BYTE  data[174];
+	BYTE* d = data;
+	for (size_t i = 0; i != lengthof(gOutOfTurnOrder); ++i)
 	{
-		ooto_ids[i] = Soldier2ID(gOutOfTurnOrder[i]);
+		INJ_SOLDIER(d, gOutOfTurnOrder[i])
 	}
-	FileWrite(hFile, ooto_ids, sizeof(ooto_ids));
+	INJ_U8(     d, gubOutOfTurnPersons)
+	INJ_SKIP(   d, 3)
+	INJ_SOLDIER(d, gWhoThrewRock)
+	INJ_SKIP(   d, 2)
+	INJ_BOOL(   d, gfHiddenInterrupt)
+	INJ_SOLDIER(d, gLastInterruptedGuy)
+	INJ_SKIP(   d, 17)
+	Assert(d == endof(data));
 
-	TeamTurnStruct.ubOutOfTurnPersons = gubOutOfTurnPersons;
-
-	TeamTurnStruct.InterruptOnlyGuynum_UNUSED = NOBODY;
-	TeamTurnStruct.sWhoThrewRock = Soldier2ID(gWhoThrewRock); // XXX attention: saved value is a INT16
-	TeamTurnStruct.InterruptsAllowed_UNUSED = TRUE;
-	TeamTurnStruct.fHiddenInterrupt = gfHiddenInterrupt;
-	TeamTurnStruct.ubLastInterruptedGuy = Soldier2ID(gLastInterruptedGuy);
-
-	//Save the Team turn save structure
-	FileWrite(hFile, &TeamTurnStruct, sizeof(TEAM_TURN_SAVE_STRUCT));
+	FileWrite(f, data, sizeof(data));
 }
 
 
-void LoadTeamTurnsFromTheSavedGameFile(HWFILE const hFile)
+void LoadTeamTurnsFromTheSavedGameFile(HWFILE const f)
 {
-	TEAM_TURN_SAVE_STRUCT TeamTurnStruct;
+	BYTE data[174];
+	FileRead(f, data, sizeof(data));
 
-	//Load the gubTurn Order Array
-	UINT8 ooto_ids[lengthof(gOutOfTurnOrder)];
-	FileRead(hFile, ooto_ids, sizeof(ooto_ids));
-	for (UINT i = 1; i < lengthof(gOutOfTurnOrder); ++i)
+	BYTE const* d = data;
+	EXTR_SKIP(d, 1)
+	for (size_t i = 1; i != lengthof(gOutOfTurnOrder); ++i)
 	{
-		gOutOfTurnOrder[i] = ID2Soldier(ooto_ids[i]);
+		EXTR_SOLDIER(d, gOutOfTurnOrder[i])
 	}
-
-	//Load the Team turn save structure
-	FileRead(hFile, &TeamTurnStruct, sizeof(TEAM_TURN_SAVE_STRUCT));
-
-	gubOutOfTurnPersons = TeamTurnStruct.ubOutOfTurnPersons;
-
-	gWhoThrewRock = ID2Soldier(TeamTurnStruct.sWhoThrewRock); // XXX attention: saved value is a INT16
-	gfHiddenInterrupt = TeamTurnStruct.fHiddenInterrupt;
-	gLastInterruptedGuy = ID2Soldier(TeamTurnStruct.ubLastInterruptedGuy);
+	EXTR_U8(     d, gubOutOfTurnPersons)
+	EXTR_SKIP(   d, 3)
+	EXTR_SOLDIER(d, gWhoThrewRock)
+	EXTR_SKIP(   d, 2)
+	EXTR_BOOL(   d, gfHiddenInterrupt)
+	EXTR_SOLDIER(d, gLastInterruptedGuy)
+	EXTR_SKIP(   d, 17)
+	Assert(d == endof(data));
 }
 
 
