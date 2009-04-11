@@ -54,7 +54,6 @@
 #include "PreBattle_Interface.h"
 #include "Sound_Control.h"
 #include "Text.h"
-#include "GameSettings.h"
 #include "Debug.h"
 #include "Video.h"
 #include "JAScreens.h"
@@ -71,7 +70,6 @@
 #define		ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
 
 BOOLEAN		gfTacticalDoHeliRun = FALSE;
-BOOLEAN		gfPlayAttnAfterMapLoad = FALSE;
 
 
 // VIDEO OVERLAYS
@@ -660,17 +658,6 @@ ScreenID MainGameScreenHandle(void)
 	// Handle dialogue queue system
 	if ( !ARE_IN_FADE_IN( ) )
 	{
-		if ( gfPlayAttnAfterMapLoad )
-		{
-			gfPlayAttnAfterMapLoad = FALSE;
-
-			SOLDIERTYPE* const sel = GetSelectedMan();
-			if (sel != NULL && !gGameSettings.fOptions[TOPTION_MUTE_CONFIRMATIONS])
-			{
-				DoMercBattleSound(sel, BATTLE_SOUND_ATTN1);
-			}
-		}
-
 		HandleDialogue( );
 	}
 
