@@ -136,46 +136,39 @@ void SaveGameSettings(void)
 
 static void InitGameSettings(void)
 {
-	GAME_SETTINGS* const g = &gGameSettings;
-	memset(g, 0, sizeof(*g));
-
-	// Init the Game Settings
-	g->bLastSavedGameSlot   = -1;
-
 	SetSoundEffectsVolume(63);
 	SetSpeechVolume(63);
 	MusicSetVolume(63);
 
-	g->fOptions[TOPTION_SUBTITLES]                 = TRUE;
-	g->fOptions[TOPTION_SPEECH]                    = TRUE;
-	g->fOptions[TOPTION_KEY_ADVANCE_SPEECH]        = FALSE;
-	g->fOptions[TOPTION_RTCONFIRM]                 = FALSE;
-	g->fOptions[TOPTION_HIDE_BULLETS]              = FALSE;
-	g->fOptions[TOPTION_TRACKING_MODE]             = TRUE;
-	g->fOptions[TOPTION_MUTE_CONFIRMATIONS]        = FALSE;
-	g->fOptions[TOPTION_ANIMATE_SMOKE]             = TRUE;
-	g->fOptions[TOPTION_BLOOD_N_GORE]              = TRUE;
-	g->fOptions[TOPTION_DONT_MOVE_MOUSE]           = FALSE;
-	g->fOptions[TOPTION_OLD_SELECTION_METHOD]      = FALSE;
-	g->fOptions[TOPTION_ALWAYS_SHOW_MOVEMENT_PATH] = FALSE;
-
-	g->fOptions[TOPTION_SLEEPWAKE_NOTIFICATION]    = TRUE;
-
-	g->fOptions[TOPTION_USE_METRIC_SYSTEM]         = FALSE;
-
-	g->fOptions[TOPTION_MERC_ALWAYS_LIGHT_UP]      = FALSE;
-	g->fOptions[TOPTION_SMART_CURSOR]              = FALSE;
-
-	g->fOptions[TOPTION_SNAP_CURSOR_TO_DOOR]       = TRUE;
-	g->fOptions[TOPTION_GLOW_ITEMS]                = TRUE;
-	g->fOptions[TOPTION_TOGGLE_TREE_TOPS]          = TRUE;
-	g->fOptions[TOPTION_TOGGLE_WIREFRAME]          = TRUE;
-	g->fOptions[TOPTION_3D_CURSOR]                 = FALSE;
-	// JA2Gold
-	g->fOptions[TOPTION_MERC_CASTS_LIGHT]          = TRUE;
-
-	g->ubSizeOfDisplayCover = 4;
-	g->ubSizeOfLOS          = 4;
+	GAME_SETTINGS& g = gGameSettings;
+	g.bLastSavedGameSlot                          = -1;
+	g.fOptions[TOPTION_SPEECH]                    = TRUE;
+	g.fOptions[TOPTION_MUTE_CONFIRMATIONS]        = FALSE;
+	g.fOptions[TOPTION_SUBTITLES]                 = TRUE;
+	g.fOptions[TOPTION_KEY_ADVANCE_SPEECH]        = FALSE;
+	g.fOptions[TOPTION_ANIMATE_SMOKE]             = TRUE;
+	g.fOptions[TOPTION_BLOOD_N_GORE]              = TRUE;
+	g.fOptions[TOPTION_DONT_MOVE_MOUSE]           = FALSE;
+	g.fOptions[TOPTION_OLD_SELECTION_METHOD]      = FALSE;
+	g.fOptions[TOPTION_ALWAYS_SHOW_MOVEMENT_PATH] = FALSE;
+	g.fOptions[TOPTION_SHOW_MISSES]               = FALSE;
+	g.fOptions[TOPTION_RTCONFIRM]                 = FALSE;
+	g.fOptions[TOPTION_SLEEPWAKE_NOTIFICATION]    = TRUE;
+	g.fOptions[TOPTION_USE_METRIC_SYSTEM]         = FALSE;
+	g.fOptions[TOPTION_MERC_ALWAYS_LIGHT_UP]      = FALSE;
+	g.fOptions[TOPTION_SMART_CURSOR]              = FALSE;
+	g.fOptions[TOPTION_SNAP_CURSOR_TO_DOOR]       = TRUE;
+	g.fOptions[TOPTION_GLOW_ITEMS]                = TRUE;
+	g.fOptions[TOPTION_TOGGLE_TREE_TOPS]          = TRUE;
+	g.fOptions[TOPTION_TOGGLE_WIREFRAME]          = TRUE;
+	g.fOptions[TOPTION_3D_CURSOR]                 = FALSE;
+	g.fOptions[TOPTION_MERC_CASTS_LIGHT]          = TRUE;
+	g.fOptions[TOPTION_HIDE_BULLETS]              = FALSE;
+	g.fOptions[TOPTION_TRACKING_MODE]             = TRUE;
+	g.uiMeanwhileScenesSeenFlags                  = 0;
+	g.fHideHelpInAllScreens                       = FALSE;
+	g.ubSizeOfDisplayCover                        = 4;
+	g.ubSizeOfLOS                                 = 4;
 
 	// Since we just set the settings, save them
 	SaveGameSettings();
