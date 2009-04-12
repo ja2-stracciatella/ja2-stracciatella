@@ -18,7 +18,6 @@
 #include "Sound_Control.h"
 #include "Lighting.h"
 #include "Cursor_Control.h"
-#include "Music_Control.h"
 #include "Video.h"
 #include "Interface_Items.h"
 #include "Dialogue_Control.h"
@@ -98,9 +97,6 @@ try
 	InitTileCache( );
 
 	InitMercPopupBox( );
-
-	// Set global volume
-	MusicSetVolume( gGameSettings.ubMusicVolumeSetting );
 
 #ifdef JA2BETAVERSION
 	#ifdef JA2EDITOR

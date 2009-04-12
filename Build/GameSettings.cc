@@ -47,12 +47,15 @@ void LoadGameSettings(void)
 		if (FileGetSize(f) != sizeof(data)) goto fail;
 		FileRead(f, data, sizeof(data));
 
+		UINT8          music_volume;
+		UINT8          sound_volume;
+		UINT8          speech_volume;
 		GAME_SETTINGS& g = gGameSettings;
 		BYTE const*    d = data;
 		EXTR_I8(  d, g.bLastSavedGameSlot)
-		EXTR_U8(  d, g.ubMusicVolumeSetting)
-		EXTR_U8(  d, g.ubSoundEffectsVolume)
-		EXTR_U8(  d, g.ubSpeechVolume)
+		EXTR_U8(  d, music_volume)
+		EXTR_U8(  d, sound_volume)
+		EXTR_U8(  d, speech_volume)
 		EXTR_U8A( d, g.fOptions,       lengthof(g.fOptions))
 		EXTR_STR( d, g.zVersionNumber, lengthof(g.zVersionNumber))
 		EXTR_SKIP(d, 1)
@@ -69,9 +72,6 @@ void LoadGameSettings(void)
 
 		// Do checking to make sure the settings are valid
 		if (g.bLastSavedGameSlot < 0 || NUM_SAVE_GAMES <= g.bLastSavedGameSlot) g.bLastSavedGameSlot = -1;
-		if (g.ubMusicVolumeSetting > HIGHVOLUME) g.ubMusicVolumeSetting = MIDVOLUME;
-		if (g.ubSoundEffectsVolume > HIGHVOLUME) g.ubSoundEffectsVolume = MIDVOLUME;
-		if (g.ubSpeechVolume       > HIGHVOLUME) g.ubSpeechVolume       = MIDVOLUME;
 
 		// Make sure that at least subtitles or speech is enabled
 		if (!g.fOptions[TOPTION_SUBTITLES] && !g.fOptions[TOPTION_SPEECH])
@@ -80,10 +80,9 @@ void LoadGameSettings(void)
 			g.fOptions[TOPTION_SPEECH   ] = TRUE;
 		}
 
-		// Set the settings
-		SetSoundEffectsVolume(g.ubSoundEffectsVolume);
-		SetSpeechVolume(g.ubSpeechVolume);
-		MusicSetVolume(g.ubMusicVolumeSetting);
+		SetSoundEffectsVolume(sound_volume  <= HIGHVOLUME ? sound_volume  : MIDVOLUME);
+		SetSpeechVolume(      speech_volume <= HIGHVOLUME ? speech_volume : MIDVOLUME);
+		MusicSetVolume(       music_volume  <= HIGHVOLUME ? music_volume  : MIDVOLUME);
 
 		// If the user doesn't want the help screens present
 		if (g.fHideHelpInAllScreens)
@@ -108,18 +107,18 @@ void SaveGameSettings(void)
 {
 	// Record the current settings into the game settins structure
 	GAME_SETTINGS& g = gGameSettings;
-	g.ubSoundEffectsVolume    = GetSoundEffectsVolume();
-	g.ubSpeechVolume          = GetSpeechVolume();
-	g.ubMusicVolumeSetting    = MusicGetVolume();
 	strcpy(g.zVersionNumber, g_version_number);
 	g.uiSettingsVersionNumber = GAME_SETTING_CURRENT_VERSION;
 
 	BYTE  data[76];
 	BYTE* d = data;
 	INJ_I8(  d, g.bLastSavedGameSlot)
-	INJ_U8(  d, g.ubMusicVolumeSetting)
-	INJ_U8(  d, g.ubSoundEffectsVolume)
-	INJ_U8(  d, g.ubSpeechVolume)
+	UINT8 const music_volume  = MusicGetVolume();
+	INJ_U8(  d, music_volume)
+	UINT8 const sound_volume  = GetSoundEffectsVolume();
+	INJ_U8(  d, sound_volume)
+	UINT8 const speech_volume = GetSpeechVolume();
+	INJ_U8(  d, speech_volume)
 	INJ_U8A( d, g.fOptions,       lengthof(g.fOptions))
 	INJ_STR( d, g.zVersionNumber, lengthof(g.zVersionNumber))
 	INJ_SKIP(d, 1)
@@ -144,14 +143,10 @@ static void InitGameSettings(void)
 
 	// Init the Game Settings
 	g->bLastSavedGameSlot   = -1;
-	g->ubMusicVolumeSetting = 63;
-	g->ubSoundEffectsVolume = 63;
-	g->ubSpeechVolume       = 63;
 
-	// Set the settings
-	SetSoundEffectsVolume(g->ubSoundEffectsVolume);
-	SetSpeechVolume(g->ubSpeechVolume);
-	MusicSetVolume(g->ubMusicVolumeSetting);
+	SetSoundEffectsVolume(63);
+	SetSpeechVolume(63);
+	MusicSetVolume(63);
 
 	g->fOptions[TOPTION_SUBTITLES]                 = TRUE;
 	g->fOptions[TOPTION_SPEECH]                    = TRUE;

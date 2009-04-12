@@ -58,10 +58,6 @@ struct GAME_SETTINGS
 {
 	INT8				bLastSavedGameSlot;							// The last saved game number goes in here
 
-	UINT8				ubMusicVolumeSetting;
-	UINT8				ubSoundEffectsVolume;
-	UINT8				ubSpeechVolume;
-
 	//The following are set from the status of the toggle boxes in the Options Screen
 	UINT8				fOptions[ NUM_ALL_GAME_OPTIONS ];
 
