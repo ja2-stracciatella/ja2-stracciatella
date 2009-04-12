@@ -1114,7 +1114,7 @@ void HandleAnimationOfSectors( void )
 }
 
 
-static void AddHelicopterToMaps(BOOLEAN fAdd, UINT8 ubSite);
+static void AddHelicopterToMaps(bool add, RefuelSite const&);
 static BOOLEAN IsHelicopterOnGroundAtRefuelingSite(UINT8 ubRefuelingSite);
 
 
@@ -1130,14 +1130,15 @@ void HandleHelicopterOnGroundGraphic( void )
 
 	for( ubSite = 0; ubSite < NUMBER_OF_REFUEL_SITES; ubSite++ )
 	{
+		RefuelSite const& r = g_refuel_site[ubSite];
 		// is this refueling site sector the loaded sector ?
-		if (CALCULATE_STRATEGIC_INDEX(gWorldSectorX, gWorldSectorY) == g_refuel_site[ubSite].sector)
+		if (CALCULATE_STRATEGIC_INDEX(gWorldSectorX, gWorldSectorY) == r.sector)
 		{
 			// YES, so find out if the chopper is landed here
 			if ( IsHelicopterOnGroundAtRefuelingSite( ubSite ) )
 			{
 				// Add....
-				AddHelicopterToMaps( TRUE, ubSite );
+				AddHelicopterToMaps(true, r);
 				// ATE: Add skyridder too
 				// ATE: only if hired......
 				if (iHelicopterVehicleId != -1)
@@ -1148,7 +1149,7 @@ void HandleHelicopterOnGroundGraphic( void )
 			}
 			else
 			{
-				AddHelicopterToMaps( FALSE, ubSite );
+				AddHelicopterToMaps(false, r);
 				// ATE: Remove skyridder....
 				if (iHelicopterVehicleId != -1)
 				{
@@ -1459,44 +1460,43 @@ static void AddHeliPiece(INT16 const sGridNo, UINT16 const sOStruct)
 }
 
 
-static void AddHelicopterToMaps(BOOLEAN const fAdd, UINT8 const ubSite)
+static void AddHelicopterToMaps(bool const add, RefuelSite const& r)
 {
- 	RefuelSite const& r        = g_refuel_site[ubSite];
- 	GridNo     const  sGridNo  = r.grid_no;
- 	INT16      const  sOStruct = r.heli_ostruct;
+	GridNo const grid_no = r.grid_no;
+	INT16  const ostruct = r.heli_ostruct;
 
 	// are we adding or taking away
-	if (fAdd)
+	if (add)
 	{
-		AddHeliPiece(sGridNo,       sOStruct    );
-		AddHeliPiece(sGridNo,       sOStruct + 1);
-		AddHeliPiece(sGridNo - 800, sOStruct + 2);
-		AddHeliPiece(sGridNo,       sOStruct + 3);
-		AddHeliPiece(sGridNo,       sOStruct + 4);
-		AddHeliPiece(sGridNo - 800, sOStruct + 5);
+		AddHeliPiece(grid_no,       ostruct    );
+		AddHeliPiece(grid_no,       ostruct + 1);
+		AddHeliPiece(grid_no - 800, ostruct + 2);
+		AddHeliPiece(grid_no,       ostruct + 3);
+		AddHeliPiece(grid_no,       ostruct + 4);
+		AddHeliPiece(grid_no - 800, ostruct + 5);
 
-    // ATE: If any mercs here, bump them off!
+		// ATE: If any mercs here, bump them off!
 		INT16	sCentreGridX;
 		INT16 sCentreGridY;
-  	ConvertGridNoToXY(sGridNo, &sCentreGridX, &sCentreGridY);
+		ConvertGridNoToXY(grid_no, &sCentreGridX, &sCentreGridY);
 
-	  for (INT16 y = sCentreGridY - 5; y < sCentreGridY + 5; ++y)
-	  {
-		  for (INT16 x = sCentreGridX - 5; x < sCentreGridX + 5; ++x)
-		  {
-		    BumpAnyExistingMerc(MAPROWCOLTOPOS(y, x));
-      }
-    }
+		for (INT16 y = sCentreGridY - 5; y < sCentreGridY + 5; ++y)
+		{
+			for (INT16 x = sCentreGridX - 5; x < sCentreGridX + 5; ++x)
+			{
+				BumpAnyExistingMerc(MAPROWCOLTOPOS(y, x));
+			}
+		}
 	}
 	else
 	{
 		// remove from the world
-		RemoveStruct(sGridNo,       sOStruct    );
-		RemoveStruct(sGridNo,       sOStruct + 1);
-		RemoveStruct(sGridNo - 800, sOStruct + 2);
-		RemoveStruct(sGridNo,       sOStruct + 3);
-		RemoveStruct(sGridNo,       sOStruct + 4);
-		RemoveStruct(sGridNo - 800, sOStruct + 5);
+		RemoveStruct(grid_no,       ostruct    );
+		RemoveStruct(grid_no,       ostruct + 1);
+		RemoveStruct(grid_no - 800, ostruct + 2);
+		RemoveStruct(grid_no,       ostruct + 3);
+		RemoveStruct(grid_no,       ostruct + 4);
+		RemoveStruct(grid_no - 800, ostruct + 5);
 	}
 
 	InvalidateWorldRedundency();
