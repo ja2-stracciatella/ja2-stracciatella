@@ -42,31 +42,31 @@ void LoadGameSettings(void)
 	{
 		AutoSGPFile f(FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_READ));
 
-		GAME_SETTINGS* const g = &gGameSettings;
-		if (FileGetSize(f) != sizeof(*g))                              goto fail;
-		FileRead(f, g, sizeof(*g));
-		if (g->uiSettingsVersionNumber < GAME_SETTING_CURRENT_VERSION) goto fail;
+		GAME_SETTINGS& g = gGameSettings;
+		if (FileGetSize(f) != sizeof(g)) goto fail;
+		FileRead(f, &g, sizeof(g));
+		if (g.uiSettingsVersionNumber < GAME_SETTING_CURRENT_VERSION) goto fail;
 
 		// Do checking to make sure the settings are valid
-		if (g->bLastSavedGameSlot < 0 || NUM_SAVE_GAMES <= g->bLastSavedGameSlot) g->bLastSavedGameSlot = -1;
-		if (g->ubMusicVolumeSetting > HIGHVOLUME) g->ubMusicVolumeSetting = MIDVOLUME;
-		if (g->ubSoundEffectsVolume > HIGHVOLUME) g->ubSoundEffectsVolume = MIDVOLUME;
-		if (g->ubSpeechVolume       > HIGHVOLUME) g->ubSpeechVolume       = MIDVOLUME;
+		if (g.bLastSavedGameSlot < 0 || NUM_SAVE_GAMES <= g.bLastSavedGameSlot) g.bLastSavedGameSlot = -1;
+		if (g.ubMusicVolumeSetting > HIGHVOLUME) g.ubMusicVolumeSetting = MIDVOLUME;
+		if (g.ubSoundEffectsVolume > HIGHVOLUME) g.ubSoundEffectsVolume = MIDVOLUME;
+		if (g.ubSpeechVolume       > HIGHVOLUME) g.ubSpeechVolume       = MIDVOLUME;
 
 		// Make sure that at least subtitles or speech is enabled
-		if (!g->fOptions[TOPTION_SUBTITLES] && !g->fOptions[TOPTION_SPEECH])
+		if (!g.fOptions[TOPTION_SUBTITLES] && !g.fOptions[TOPTION_SPEECH])
 		{
-			g->fOptions[TOPTION_SUBTITLES] = TRUE;
-			g->fOptions[TOPTION_SPEECH   ] = TRUE;
+			g.fOptions[TOPTION_SUBTITLES] = TRUE;
+			g.fOptions[TOPTION_SPEECH   ] = TRUE;
 		}
 
 		// Set the settings
-		SetSoundEffectsVolume(g->ubSoundEffectsVolume);
-		SetSpeechVolume(g->ubSpeechVolume);
-		MusicSetVolume(g->ubMusicVolumeSetting);
+		SetSoundEffectsVolume(g.ubSoundEffectsVolume);
+		SetSpeechVolume(g.ubSpeechVolume);
+		MusicSetVolume(g.ubMusicVolumeSetting);
 
 		// If the user doesn't want the help screens present
-		if (g->fHideHelpInAllScreens)
+		if (g.fHideHelpInAllScreens)
 		{
 			gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen = 0;
 		}
@@ -89,15 +89,15 @@ void SaveGameSettings(void)
 	AutoSGPFile f(FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 
 	// Record the current settings into the game settins structure
-	GAME_SETTINGS* const g = &gGameSettings;
-	g->ubSoundEffectsVolume    = GetSoundEffectsVolume();
-	g->ubSpeechVolume          = GetSpeechVolume();
-	g->ubMusicVolumeSetting    = MusicGetVolume();
-	strcpy(g->zVersionNumber, g_version_number);
-	g->uiSettingsVersionNumber = GAME_SETTING_CURRENT_VERSION;
+	GAME_SETTINGS& g = gGameSettings;
+	g.ubSoundEffectsVolume    = GetSoundEffectsVolume();
+	g.ubSpeechVolume          = GetSpeechVolume();
+	g.ubMusicVolumeSetting    = MusicGetVolume();
+	strcpy(g.zVersionNumber, g_version_number);
+	g.uiSettingsVersionNumber = GAME_SETTING_CURRENT_VERSION;
 
 	// Write the game settings to disk
-	FileWrite(f, g, sizeof(*g));
+	FileWrite(f, &g, sizeof(g));
 }
 
 
