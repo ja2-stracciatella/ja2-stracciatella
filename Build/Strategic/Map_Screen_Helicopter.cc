@@ -725,19 +725,13 @@ INT32 GetNumberOfPassengersInHelicopter( void )
 }
 
 
-BOOLEAN IsRefuelSiteInSector( INT16 sMapX, INT16 sMapY )
+bool IsRefuelSiteInSector(INT16 const sector)
 {
-	INT32 iCounter = 0;
-
-	for( iCounter = 0; iCounter < NUMBER_OF_REFUEL_SITES; iCounter++ )
+	for (INT32 i = 0; i != NUMBER_OF_REFUEL_SITES; ++i)
 	{
-		if (CALCULATE_STRATEGIC_INDEX(sMapX, sMapY) == g_refuel_site[iCounter].sector)
-		{
-			return(TRUE);
-		}
+		if (g_refuel_site[i].sector == sector) return true;
 	}
-
-	return(FALSE);
+	return false;
 }
 
 

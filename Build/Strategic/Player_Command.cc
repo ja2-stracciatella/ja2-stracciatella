@@ -223,7 +223,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 			}
 
 			// if it's a helicopter refueling site sector
-			if( IsRefuelSiteInSector( sMapX, sMapY) )
+			if (IsRefuelSiteInSector(usMapSector))
 			{
 				UpdateRefuelSiteAvailability( );
 			}
@@ -335,7 +335,7 @@ BOOLEAN SetThisSectorAsEnemyControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BO
 			}
 
 			// if it's a helicopter refueling site sector
-			if( IsRefuelSiteInSector( sMapX, sMapY) )
+			if (IsRefuelSiteInSector(usMapSector))
 			{
 				UpdateRefuelSiteAvailability( );
 			}

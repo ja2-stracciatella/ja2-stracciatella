@@ -133,7 +133,7 @@ BOOLEAN IsHelicopterPilotAvailable( void );
 void TakeOffHelicopter( void );
 
 // test whether or not a sector contains a fuel site
-BOOLEAN IsRefuelSiteInSector( INT16 sMapX, INT16 sMapY );
+bool IsRefuelSiteInSector(INT16 sector);
 
 // update which refueling sites are controlled by player & therefore available
 void UpdateRefuelSiteAvailability( void );
