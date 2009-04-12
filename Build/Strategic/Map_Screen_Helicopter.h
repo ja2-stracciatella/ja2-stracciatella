@@ -68,11 +68,11 @@ extern	UINT8 ubRefuelList[ NUMBER_OF_REFUEL_SITES ][ 2 ];
 // helicopter vehicle id value
 extern INT32 iHelicopterVehicleId;
 
-static inline VEHICLETYPE* GetHelicopter(void)
+static inline VEHICLETYPE& GetHelicopter(void)
 {
 	Assert(0 <= iHelicopterVehicleId && iHelicopterVehicleId < ubNumberOfVehicles);
-	VEHICLETYPE* const v = &pVehicleList[iHelicopterVehicleId];
-	Assert(v->fValid);
+	VEHICLETYPE& v = pVehicleList[iHelicopterVehicleId];
+	Assert(v.fValid);
 	return v;
 }
 

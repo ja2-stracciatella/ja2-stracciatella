@@ -1427,10 +1427,10 @@ void DisplayHelicopterPath( void )
 	// clip to map
   ClipBlitsToMapViewRegion( );
 
-	const VEHICLETYPE* const v = GetHelicopter();
+	VEHICLETYPE const& v = GetHelicopter();
 	// trace both lists..temp is conditional if cursor has sat in same sector grid long enough
-	TracePathRoute(v->pMercPath);
-	AnimateRoute(v->pMercPath);
+	TracePathRoute(v.pMercPath);
+	AnimateRoute(v.pMercPath);
 
 	// restore
 	RestoreClipRegionToFullScreen( );
@@ -1457,10 +1457,10 @@ void PlotPathForHelicopter(const INT16 sX, const INT16 sY)
 	// set up mvt group for helicopter
 	SetUpHelicopterForMovement();
 
-	VEHICLETYPE* const v = GetHelicopter();
+	VEHICLETYPE& v = GetHelicopter();
 	// will plot a path from current position to sX, sY
 	// get last sector in helicopters list, build new path, remove tail section, move to beginning of list, and append onto old list
-	v->pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), (INT16)(sX + sY * MAP_WORLD_X), GetGroup(v->ubMovementGroup), FALSE), v->pMercPath);
+	v.pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), (INT16)(sX + sY * MAP_WORLD_X), GetGroup(v.ubMovementGroup), FALSE), v.pMercPath);
 
 	fMapPanelDirty = TRUE;
 }
@@ -1478,7 +1478,7 @@ void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY )
 	}
 
 	// build path
-	pTempHelicopterPath = BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sX + sY * MAP_WORLD_X, GetGroup(GetHelicopter()->ubMovementGroup), FALSE);
+	pTempHelicopterPath = BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sX + sY * MAP_WORLD_X, GetGroup(GetHelicopter().ubMovementGroup), FALSE);
 }
 
 
@@ -1494,9 +1494,9 @@ UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY )
 		return( ABORT_PLOTTING );
 	}
 
-	VEHICLETYPE* const pVehicle = GetHelicopter();
+	VEHICLETYPE& v = GetHelicopter();
 
-	iOrigLength = GetLengthOfPath( pVehicle->pMercPath );
+	iOrigLength = GetLengthOfPath(v.pMercPath);
 	if( !iOrigLength )
 	{
 		// no previous path, nothing to do, and we didn't shorten it
@@ -1505,21 +1505,21 @@ UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY )
 
 
 	// are we clearing everything beyond the helicopter's CURRENT sector?
-	if ( ( sX == pVehicle->sSectorX ) && ( sY == pVehicle->sSectorY ) )
+	if (sX == v.sSectorX && sY == v.sSectorY)
 	{
 		// if we're in confirm map move mode, cancel that (before new UI messages are issued)
 		EndConfirmMapMoveMode( );
 
-		CancelPathForVehicle( pVehicle, FALSE );
+		CancelPathForVehicle(&v, FALSE);
 		return( PATH_CLEARED );
 	}
 	else	// click not in the current sector
 	{
 		// if the clicked sector is along current route, this will repath only as far as it.  If not, the entire path will
 		// be canceled.
-		pVehicle->pMercPath = ClearStrategicPathListAfterThisSector( pVehicle->pMercPath, sX, sY, pVehicle->ubMovementGroup );
+		v.pMercPath = ClearStrategicPathListAfterThisSector(v.pMercPath, sX, sY, v.ubMovementGroup);
 
-		if( GetLengthOfPath( pVehicle->pMercPath ) < iOrigLength )
+		if (GetLengthOfPath(v.pMercPath) < iOrigLength)
 		{
 			// really shortened!
 			return( PATH_SHORTENED );
@@ -1536,10 +1536,10 @@ UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY )
 
 INT16 GetLastSectorOfHelicoptersPath( void )
 {
-	const VEHICLETYPE* const v = GetHelicopter();
+	VEHICLETYPE const& v = GetHelicopter();
 	// will return the last sector of the helicopter's current path
-	INT16 sLastSector = v->sSectorX + v->sSectorY * MAP_WORLD_X;
-	PathSt* pNode = v->pMercPath;
+	INT16 sLastSector = v.sSectorX + v.sSectorY * MAP_WORLD_X;
+	PathSt* pNode = v.pMercPath;
 
 	while( pNode )
 	{
@@ -3246,7 +3246,7 @@ void DisplayDistancesForHelicopter()
 	// get travel time for the last path segment
 	INT32 iTime = GetPathTravelTimeDuringPlotting(pTempHelicopterPath);
 	// add travel time for any prior path segments (stored in the helicopter's mercpath, but waypoints aren't built)
-	iTime += GetPathTravelTimeDuringPlotting(GetHelicopter()->pMercPath);
+	iTime += GetPathTravelTimeDuringPlotting(GetHelicopter().pMercPath);
 	swprintf(sString, lengthof(sString), L"%d%ls %d%ls", iTime / 60, gsTimeStrings[0], iTime % 60, gsTimeStrings[1]);
 	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
 	MPrint(sX, y, sString);
@@ -3290,11 +3290,11 @@ void DisplayPositionOfHelicopter( void )
 		// draw the destination icon first, so when they overlap, the real one is on top!
 		DisplayDestinationOfHelicopter( );
 
-		const VEHICLETYPE* const v = GetHelicopter();
+		VEHICLETYPE const& v = GetHelicopter();
 		// check if mvt group
-		if (v->ubMovementGroup != 0)
+		if (v.ubMovementGroup != 0)
 		{
-			const GROUP* const pGroup = GetGroup(v->ubMovementGroup);
+			const GROUP* const pGroup = GetGroup(v.ubMovementGroup);
 
 			// this came up in one bug report!
 			Assert( pGroup->uiTraverseTime != -1 );
@@ -3416,7 +3416,7 @@ static void DisplayDestinationOfHelicopter(void)
 	}
 
 	// if helicopter is going somewhere
-	if (GetLengthOfPath(GetHelicopter()->pMercPath) > 1)
+	if (GetLengthOfPath(GetHelicopter().pMercPath) > 1)
 	{
 		// get destination
 		const INT16 sSector = GetLastSectorOfHelicoptersPath();
@@ -3462,11 +3462,11 @@ BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSe
 		return( FALSE );
 	}
 
-	const VEHICLETYPE* const v = GetHelicopter();
+	VEHICLETYPE const& v = GetHelicopter();
 
 	// figure out over which sector the helicopter APPEARS to be to the player (because we slide it smoothly across the
 	// map, unlike groups travelling on the ground, it can appear over its next sector while it's not there yet.
-	const GROUP* const pGroup = GetGroup(v->ubMovementGroup);
+	GROUP const* const pGroup = GetGroup(v.ubMovementGroup);
 	Assert( pGroup );
 
 	if ( pGroup->fBetweenSectors )
@@ -3496,8 +3496,8 @@ BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSe
 	else
 	{
 		// use current sector's coordinates
-		sSectorX = v->sSectorX;
-		sSectorY = v->sSectorY;
+		sSectorX = v.sSectorX;
+		sSectorY = v.sSectorY;
 	}
 
 	// check if helicopter appears where he clicked

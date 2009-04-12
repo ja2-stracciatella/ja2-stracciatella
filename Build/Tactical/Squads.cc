@@ -167,7 +167,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 			if (fNewSquad)
 			{
 				// set mvt group for
-				const GROUP* const pGroup = GetGroup(GetHelicopter()->ubMovementGroup);
+				GROUP const* const pGroup = GetGroup(GetHelicopter().ubMovementGroup);
 				Assert(pGroup);
 				if (pGroup)
 				{

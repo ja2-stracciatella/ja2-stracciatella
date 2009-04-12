@@ -4631,9 +4631,9 @@ void TurnOnSectorLocator( UINT8 ubProfileID )
 			if ( !fShowAircraftFlag )
 			{
 				// can't use his profile, he's where his chopper is
-				const VEHICLETYPE* const v = GetHelicopter();
-				gsSectorLocatorX = v->sSectorX;
-				gsSectorLocatorY = v->sSectorY;
+				VEHICLETYPE const& v = GetHelicopter();
+				gsSectorLocatorX = v.sSectorX;
+				gsSectorLocatorY = v.sSectorY;
 			}
 			else
 			{

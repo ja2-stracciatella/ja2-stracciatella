@@ -1141,7 +1141,7 @@ INT32 GetPathTravelTimeDuringPlotting(PathSt* pPath)
 	}
 	else
 	{
-		ubGroupId = GetHelicopter()->ubMovementGroup;
+		ubGroupId = GetHelicopter().ubMovementGroup;
 		pGroup = GetGroup( ubGroupId );
 	}
 
@@ -6306,9 +6306,9 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 			TakeOffHelicopter( );
 
 			// rebuild waypoints - helicopter
-			VEHICLETYPE* const v = GetHelicopter();
-			ppMovePath = &v->pMercPath;
-			RebuildWayPointsForGroupPath(*ppMovePath, GetGroup(v->ubMovementGroup));
+			VEHICLETYPE& v = GetHelicopter();
+			ppMovePath     = &v.pMercPath;
+			RebuildWayPointsForGroupPath(*ppMovePath, GetGroup(v.ubMovementGroup));
 
 			fLastSectorInPath = TRUE;
 		}
@@ -8204,7 +8204,7 @@ static BOOLEAN RequestGiveSkyriderNewDestination(void)
 
 		// remember the helicopter's current path so we can restore it if need be
 		ClearStrategicPathList(g_prev_path, 0);
-		g_prev_path = CopyPaths(GetHelicopter()->pMercPath);
+		g_prev_path = CopyPaths(GetHelicopter().pMercPath);
 
 		// affects Skyrider's dialogue
 		SetFactTrue( FACT_SKYRIDER_USED_IN_MAPSCREEN );
@@ -8259,7 +8259,7 @@ static void ExplainWhySkyriderCantFly(void)
 
 static UINT8 PlayerMercsInHelicopterSector(void)
 {
-	GROUP* const pGroup = GetGroup(GetHelicopter()->ubMovementGroup);
+	GROUP* const pGroup = GetGroup(GetHelicopter().ubMovementGroup);
 
 	if ( pGroup->fBetweenSectors )
 	{
@@ -8774,10 +8774,10 @@ static void RestorePreviousPaths(void)
 
 	if (fPlotForHelicopter)
 	{
-		VEHICLETYPE* const v    = GetHelicopter();
-		PathSt**     const path = &v->pMercPath;
+		VEHICLETYPE&   v    = GetHelicopter();
+		PathSt** const path = &v.pMercPath;
 
-		if (RestorePath(*path, v->ubMovementGroup))
+		if (RestorePath(*path, v.ubMovementGroup))
 		{
 			CopyPathToAllSelectedCharacters(*path);
 		}
