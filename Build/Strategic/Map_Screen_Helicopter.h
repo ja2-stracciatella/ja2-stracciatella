@@ -61,9 +61,6 @@ enum{
 	NUMBER_OF_SAM_SITES,
 };
 
-// list of refueling site's sector locations
-extern	UINT8 ubRefuelList[ NUMBER_OF_REFUEL_SITES ][ 2 ];
-
 
 // helicopter vehicle id value
 extern INT32 iHelicopterVehicleId;
