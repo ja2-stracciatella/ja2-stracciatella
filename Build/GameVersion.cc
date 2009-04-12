@@ -14,8 +14,8 @@ const char g_version_label[] =
 	"Release v0.11 - Liquorice";
 #endif
 
-const char g_version_number[] = "Build 04.12.02";
-CASSERT(lengthof(g_version_number) <= 16);
+char const g_version_number[16] = "Build 04.12.02";
+CASSERT(lengthof(g_version_number) == 16);
 
 
 //

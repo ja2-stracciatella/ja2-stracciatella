@@ -61,8 +61,6 @@ struct GAME_SETTINGS
 	//The following are set from the status of the toggle boxes in the Options Screen
 	UINT8				fOptions[ NUM_ALL_GAME_OPTIONS ];
 
-	char zVersionNumber[16];
-
 	UINT32			uiMeanwhileScenesSeenFlags;
 
 	BOOLEAN			fHideHelpInAllScreens;

@@ -9,7 +9,7 @@
 //
 
 extern const char g_version_label[];
-extern const char g_version_number[];
+extern const char g_version_number[16];
 
 
 //

@@ -57,9 +57,8 @@ void LoadGameSettings(void)
 		EXTR_U8(  d, music_volume)
 		EXTR_U8(  d, sound_volume)
 		EXTR_U8(  d, speech_volume)
-		EXTR_U8A( d, g.fOptions,       lengthof(g.fOptions))
-		EXTR_STR( d, g.zVersionNumber, lengthof(g.zVersionNumber))
-		EXTR_SKIP(d, 1)
+		EXTR_U8A( d, g.fOptions, lengthof(g.fOptions))
+		EXTR_SKIP(d, lengthof(g_version_number) + 1)
 		EXTR_U32( d, settings_version)
 		EXTR_U32( d, g.uiMeanwhileScenesSeenFlags)
 		EXTR_BOOL(d, g.fHideHelpInAllScreens)
@@ -108,7 +107,6 @@ void SaveGameSettings(void)
 {
 	// Record the current settings into the game settins structure
 	GAME_SETTINGS& g = gGameSettings;
-	strcpy(g.zVersionNumber, g_version_number);
 
 	BYTE  data[76];
 	BYTE* d = data;
@@ -120,7 +118,7 @@ void SaveGameSettings(void)
 	UINT8 const speech_volume = GetSpeechVolume();
 	INJ_U8(  d, speech_volume)
 	INJ_U8A( d, g.fOptions,       lengthof(g.fOptions))
-	INJ_STR( d, g.zVersionNumber, lengthof(g.zVersionNumber))
+	INJ_STR( d, g_version_number, lengthof(g_version_number))
 	INJ_SKIP(d, 1)
 	INJ_U32( d, GAME_SETTING_CURRENT_VERSION)
 	INJ_U32( d, g.uiMeanwhileScenesSeenFlags)
