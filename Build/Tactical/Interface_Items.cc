@@ -2,6 +2,8 @@
 #include "Font.h"
 #include "Handle_Items.h"
 #include "Isometric_Utils.h"
+#include "LoadSaveData.h"
+#include "LoadSaveObjectType.h"
 #include "Local.h"
 #include "HImage.h"
 #include "Map_Screen_Interface_Bottom.h"
@@ -5422,76 +5424,46 @@ void CancelItemPointer( )
 }
 
 
-struct ITEM_CURSOR_SAVE_INFO
+void LoadItemCursorFromSavedGame(HWFILE const f)
 {
-	OBJECTTYPE	ItemPointerInfo;
-	UINT8				ubSoldierID;
-	UINT8				ubInvSlot;
-	BOOLEAN			fCursorActive;
-	INT8				bPadding[5]; // XXX HACK000B
-};
-CASSERT(sizeof(ITEM_CURSOR_SAVE_INFO) == 44);
+	BYTE data[44];
+	FileRead(f, data, sizeof(data));
 
+	BOOLEAN      active;
+	SOLDIERTYPE* soldier;
+	BYTE const* d = data;
+	d = ExtractObject(d, &gItemPointer);
+	EXTR_SOLDIER(d, soldier)
+	EXTR_U8(     d, gbItemPointerSrcSlot)
+	EXTR_BOOL(   d, active)
+	EXTR_SKIP(   d, 5)
+	Assert(d == endof(data));
 
-void LoadItemCursorFromSavedGame(HWFILE const hFile)
-{
-	UINT32	uiLoadSize=0;
-	ITEM_CURSOR_SAVE_INFO		SaveStruct;
-
-	// Load structure
-	uiLoadSize = sizeof( ITEM_CURSOR_SAVE_INFO );
-	FileRead(hFile, &SaveStruct, uiLoadSize);
-
-	// Now set things up.....
-	// Copy object
-	gItemPointer = SaveStruct.ItemPointerInfo;
-
-	// Inv slot
-	gbItemPointerSrcSlot = SaveStruct.ubInvSlot;
-
-	// Boolean
-	if ( SaveStruct.fCursorActive )
+	if (active)
 	{
-		SetItemPointer(&gItemPointer, ID2Soldier(SaveStruct.ubSoldierID));
-		ReEvaluateDisabledINVPanelButtons( );
+		SetItemPointer(&gItemPointer, soldier);
+		ReEvaluateDisabledINVPanelButtons();
 	}
 	else
 	{
-		gpItemPointer = NULL;
+		gpItemPointer        = 0;
 		gpItemPointerSoldier = 0;
 	}
 }
 
 
-void SaveItemCursorToSavedGame(HWFILE const hFile)
+void SaveItemCursorToSavedGame(HWFILE const f)
 {
-	UINT32	uiSaveSize=0;
+	BYTE  data[44];
+	BYTE* d = data;
+	d = InjectObject(d, &gItemPointer);
+	INJ_SOLDIER(d, gpItemPointerSoldier)
+	INJ_U8(     d, gbItemPointerSrcSlot)
+	INJ_BOOL(   d, gpItemPointer != 0)
+	INJ_SKIP(   d, 5)
+	Assert(d == endof(data));
 
-	ITEM_CURSOR_SAVE_INFO		SaveStruct;
-
-	// Setup structure;
-	memset( &SaveStruct, 0, sizeof( ITEM_CURSOR_SAVE_INFO ) );
-	SaveStruct.ItemPointerInfo = gItemPointer;
-
-	// Soldier
-	SaveStruct.ubSoldierID = Soldier2ID(gpItemPointerSoldier);
-
-	// INv slot
-	SaveStruct.ubInvSlot = gbItemPointerSrcSlot;
-
-	// Boolean
-	if ( gpItemPointer != NULL )
-	{
-		SaveStruct.fCursorActive = TRUE;
-	}
-	else
-	{
-		SaveStruct.fCursorActive = FALSE;
-	}
-
-	// save locations of watched points
-	uiSaveSize = sizeof( ITEM_CURSOR_SAVE_INFO );
-	FileWrite(hFile, &SaveStruct, uiSaveSize);
+	FileWrite(f, data, sizeof(data));
 }
 
 
