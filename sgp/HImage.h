@@ -39,11 +39,11 @@ struct AuxObjectData
 	UINT8		ubWallOrientation;
 	UINT8		ubNumberOfTiles;
 	UINT16	usTileLocIndex;
-	UINT8		ubUnused1[3];
+	UINT8		ubUnused1[3]; // XXX HACK000B
 	UINT8		ubCurrentFrame;
 	UINT8		ubNumberOfFrames;
 	UINT8		fFlags;
-	UINT8		ubUnused[6];
+	UINT8		ubUnused[6]; // XXX HACK000B
 };
 CASSERT(sizeof(AuxObjectData) == 16);
 

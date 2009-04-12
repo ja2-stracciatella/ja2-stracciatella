@@ -15,7 +15,7 @@ struct AIR_RAID_DEFINITION
 	INT8		bIntensity;
 	UINT32	uiFlags;
 	UINT8		ubNumMinsFromCurrentTime;
-	UINT8		ubFiller[8];
+	UINT8		ubFiller[8]; // XXX HACK000B
 };
 CASSERT(sizeof(AIR_RAID_DEFINITION) == 24);
 

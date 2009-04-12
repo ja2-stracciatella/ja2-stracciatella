@@ -22,7 +22,7 @@ struct SAVED_GAME_HEADER
 
 	CHAR16	sSavedGameDesc[ SIZE_OF_SAVE_GAME_DESC ];
 
-	UINT32	uiFlags;
+	UINT32	uiFlags; // XXX HACK000B
 
 	//The following will be used to quickly access info to display in the save/load screen
 	UINT32	uiDay;
@@ -46,7 +46,7 @@ struct SAVED_GAME_HEADER
 
 	UINT32	uiRandom;
 
-	UINT8		ubFiller[110];
+	UINT8		ubFiller[110]; // XXX HACK000B
 };
 CASSERT(sizeof(SAVED_GAME_HEADER) == 688)
 

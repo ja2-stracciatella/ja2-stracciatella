@@ -68,7 +68,7 @@ struct MINE_LOCATION_TYPE
 struct MINE_STATUS_TYPE
 {
 	UINT8    ubMineType;								// type of mine (silver or gold)
-	BYTE		 filler1[3];
+	BYTE		 filler1[3]; // XXX HACK000B
 	UINT32   uiMaxRemovalRate;					// fastest rate we can move ore from this mine in period
 
 	UINT32   uiRemainingOreSupply;			// the total value left to this mine (-1 means unlimited)
@@ -88,7 +88,7 @@ struct MINE_STATUS_TYPE
 	UINT16	 usValidDayCreaturesCanInfest; //Creatures will be permitted to spread if the game day is greater than this value.
 	UINT32   uiTimePlayerProductionStarted;		// time in minutes when 'fMineHasProducedForPlayer' was first set
 
-	BYTE     filler[11];					// reserved for expansion
+	BYTE     filler[11];					// reserved for expansion // XXX HACK000B
 };
 CASSERT(sizeof(MINE_STATUS_TYPE) == 44)
 

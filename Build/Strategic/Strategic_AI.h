@@ -101,7 +101,7 @@ struct ARMY_COMPOSITION
 	INT8 bAdminPercentage;
 	INT8 bDesiredPopulation;
 	INT8 bStartPopulation;
-	INT8 bPadding[10];
+	INT8 bPadding[10]; // XXX HACK000B
 };
 CASSERT(sizeof(ARMY_COMPOSITION) == 20)
 
@@ -115,7 +115,7 @@ struct PATROL_GROUP
 	UINT8 ubGroupID;
 	INT8	bWeight;
 	UINT8 ubPendingGroupID;
-	INT8  bPadding[10];
+	INT8  bPadding[10]; // XXX HACK000B
 };
 CASSERT(sizeof(PATROL_GROUP) == 20)
 
@@ -127,7 +127,7 @@ struct GARRISON_GROUP
 	UINT8	ubComposition;
 	INT8 bWeight;
 	UINT8 ubPendingGroupID;
-	INT8 bPadding[10];
+	INT8 bPadding[10]; // XXX HACK000B
 };
 CASSERT(sizeof(GARRISON_GROUP) == 14)
 

@@ -89,7 +89,7 @@ struct SUMMARYFILE
 																		//	236
 
 
-	UINT8 ubPadding[164];							//	164
+	UINT8 ubPadding[164];							//	164 // XXX HACK000B
 	//																//-----
 	//																		400 total bytes
 };

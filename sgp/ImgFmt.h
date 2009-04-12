@@ -57,12 +57,12 @@ struct STCIHeader
 			UINT8		ubRedDepth;
 			UINT8		ubGreenDepth;
 			UINT8		ubBlueDepth;
-			UINT8		cIndexedUnused[11];
+			UINT8		cIndexedUnused[11]; // XXX HACK000B
 		} Indexed;
 	};
 	UINT8		ubDepth;	// size in bits of one pixel as stored in the file
 	UINT32	uiAppDataSize;
-	UINT8		cUnused[12];
+	UINT8		cUnused[12]; // XXX HACK000B
 };
 CASSERT(sizeof(STCIHeader) == 64)
 

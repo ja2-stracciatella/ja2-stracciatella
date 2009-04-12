@@ -71,7 +71,7 @@ struct OBJECTTYPE
 			UINT8		ubGunShotsLeft;	// duh, amount of ammo left
 			UINT16	usGunAmmoItem;	// the item # for the item table
 			INT8		bGunAmmoStatus; // only for "attached ammo" - grenades, mortar shells
-			UINT8		ubGunUnused[MAX_OBJECTS_PER_SLOT - 6];
+			UINT8		ubGunUnused[MAX_OBJECTS_PER_SLOT - 6]; // XXX HACK000B
 		};
 		struct
 		{
@@ -85,7 +85,7 @@ struct OBJECTTYPE
 		{
 			INT8		bMoneyStatus;
 			UINT32	uiMoneyAmount;
-			UINT8		ubMoneyUnused[MAX_OBJECTS_PER_SLOT - 5];
+			UINT8		ubMoneyUnused[MAX_OBJECTS_PER_SLOT - 5]; // XXX HACK000B
 		};
 		struct
 		{ // this is used by placed bombs, switches, and the action item
@@ -111,13 +111,13 @@ struct OBJECTTYPE
 		{
 			INT8 bKeyStatus[ 6 ];
 			UINT8 ubKeyID;
-			UINT8 ubKeyUnused[1];
+			UINT8 ubKeyUnused[1]; // XXX HACK000B
 		};
 		struct
 		{
 			UINT8 ubOwnerProfile;
 			UINT8 ubOwnerCivGroup;
-			UINT8 ubOwnershipUnused[6];
+			UINT8 ubOwnershipUnused[6]; // XXX HACK000B
 		};
 	};
   // attached objects

@@ -93,7 +93,7 @@ UINT32			guiLockPauseStateLastReasonId = 0;
 //***When adding new saved time variables, make sure you remove the appropriate amount from the paddingbytes and
 //   more IMPORTANTLY, add appropriate code in Save/LoadGameClock()!
 #define			TIME_PADDINGBYTES		20
-UINT8				gubUnusedTimePadding[TIME_PADDINGBYTES];
+UINT8				gubUnusedTimePadding[TIME_PADDINGBYTES]; // XXX HACK000B
 
 
 

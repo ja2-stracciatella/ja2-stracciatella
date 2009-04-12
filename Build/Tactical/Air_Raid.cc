@@ -119,7 +119,7 @@ struct AIR_RAID_SAVE_STRUCT
 	INT16					sGridNo;
 
 
-	UINT8					ubFiller[ 32 ];
+	UINT8					ubFiller[ 32 ]; // XXX HACK000B
 };
 CASSERT(sizeof(AIR_RAID_SAVE_STRUCT) == 132)
 

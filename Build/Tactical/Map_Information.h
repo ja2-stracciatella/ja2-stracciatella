@@ -33,7 +33,7 @@ struct MAPCREATE_STRUCT
 	UINT8 ubEditorSmoothingType;  //normal, basement, or caves
 	INT16 sCenterGridNo;
 	INT16 sIsolatedGridNo;
-	INT8 bPadding[83];	//I'm sure lots of map info will be added
+	INT8 bPadding[83];	//I'm sure lots of map info will be added // XXX HACK000B
 }; //99 bytes
 CASSERT(sizeof(MAPCREATE_STRUCT) == 100)
 

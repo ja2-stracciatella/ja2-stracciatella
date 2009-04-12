@@ -256,7 +256,7 @@ struct STRUCTURE_FILE_HEADER
 	UINT16 usNumberOfStructuresStored;
 	UINT16 usStructureDataSize;
 	UINT8  fFlags;
-	UINT8  bUnused[3];
+	UINT8  bUnused[3]; // XXX HACK000B
 	UINT16 usNumberOfImageTileLocsStored;
 };
 CASSERT(sizeof(STRUCTURE_FILE_HEADER) == 16)

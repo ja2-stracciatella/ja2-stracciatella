@@ -62,7 +62,7 @@ struct ENEMYGROUP
 	UINT8 ubIntention;						//the type of group this is:  patrol, assault, spies, etc.
 	UINT8 ubTroopsInBattle;				//number of soldiers currently in battle.
 	UINT8 ubElitesInBattle;				//number of elite soldiers currently in battle.
-	INT8  bPadding[20];
+	INT8  bPadding[20]; // XXX HACK000B
 };
 CASSERT(sizeof(ENEMYGROUP) == 29)
 

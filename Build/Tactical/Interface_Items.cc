@@ -5428,7 +5428,7 @@ struct ITEM_CURSOR_SAVE_INFO
 	UINT8				ubSoldierID;
 	UINT8				ubInvSlot;
 	BOOLEAN			fCursorActive;
-	INT8				bPadding[5];
+	INT8				bPadding[5]; // XXX HACK000B
 };
 CASSERT(sizeof(ITEM_CURSOR_SAVE_INFO) == 44);
 

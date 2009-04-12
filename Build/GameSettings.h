@@ -72,11 +72,11 @@ struct GAME_SETTINGS
 
 	BOOLEAN			fHideHelpInAllScreens;
 
-	BOOLEAN				fUNUSEDPlayerFinishedTheGame; // JA2Gold: for UB compatibility
+	BOOLEAN				fUNUSEDPlayerFinishedTheGame; // JA2Gold: for UB compatibility // XXX HACK000B
 	UINT8				ubSizeOfDisplayCover;
 	UINT8				ubSizeOfLOS;
 
-	UINT8		ubFiller[17];
+	UINT8		ubFiller[17]; // XXX HACK000B
 };
 CASSERT(sizeof(GAME_SETTINGS) == 76)
 

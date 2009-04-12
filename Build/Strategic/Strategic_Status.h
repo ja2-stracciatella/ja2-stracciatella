@@ -99,7 +99,7 @@ struct STRATEGIC_STATUS
 	UINT8			ubNumNewSectorsVisitedToday;
 	UINT8			ubNumberOfDaysOfInactivity;
 
-	INT8 bPadding[70];
+	INT8 bPadding[70]; // XXX HACK000B
 };
 CASSERT(sizeof(STRATEGIC_STATUS) == 192)
 

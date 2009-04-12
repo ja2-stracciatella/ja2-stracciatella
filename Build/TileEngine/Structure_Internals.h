@@ -126,7 +126,7 @@ struct DB_STRUCTURE_TILE
 	PROFILE		Shape;					// 25 bytes
 	UINT8			fFlags;
 	UINT8			ubVehicleHitLocation;
-	BYTE			bUnused[1];
+	BYTE			bUnused[1]; // XXX HACK000B
 }; // 32 bytes
 
 #define BASE_TILE 0
@@ -146,7 +146,7 @@ struct DB_STRUCTURE
 	INT8								bPartnerDelta; // opened/closed version, etc... 0 for unused
 	INT8								bZTileOffsetX;
 	INT8								bZTileOffsetY;
-	BYTE								bUnused[1];
+	BYTE								bUnused[1]; // XXX HACK000B
 }; // 16 bytes
 
 struct DB_STRUCTURE_REF
@@ -180,7 +180,7 @@ struct STRUCTURE
 	UINT8													ubWallOrientation;
 	UINT8													ubVehicleHitLocation;
 	UINT8													ubStructureHeight; // if 0, then unset; otherwise stores height of structure when last calculated
-	UINT8													ubUnused[1];
+	UINT8													ubUnused[1]; // XXX HACK000B
 }; // 32 bytes
 
 struct STRUCTURE_FILE_REF

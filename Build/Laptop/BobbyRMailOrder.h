@@ -59,7 +59,7 @@ struct NewBobbyRayOrderStruct
 
 	BOOLEAN	fDisplayedInShipmentPage;
 
-	UINT8		ubFiller[7];
+	UINT8		ubFiller[7]; // XXX HACK000B
 };
 CASSERT(sizeof(NewBobbyRayOrderStruct) == 104)
 

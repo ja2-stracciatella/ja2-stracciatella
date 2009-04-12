@@ -35,7 +35,7 @@ struct LOCK
 	UINT8		ubLockType;													// regular, padlock, electronic, etc
 	UINT8		ubPickDifficulty;										// difficulty to pick such a lock
 	UINT8		ubSmashDifficulty;										// difficulty to smash such a lock
-	UINT8		ubFiller;
+	UINT8		ubFiller; // XXX HACK000B
 };
 CASSERT(sizeof(LOCK) == 46)
 
@@ -60,7 +60,7 @@ struct DOOR
 																	// the door, etc
 	INT8			bPerceivedTrapped;		// See above, but with respect to traps rather than locked status
 	INT8			bLockDamage;					// Damage to the lock
-	INT8			bPadding[4];					// extra bytes
+	INT8			bPadding[4];					// extra bytes // XXX HACK000B
 };
 CASSERT(sizeof(DOOR) == 14)
 

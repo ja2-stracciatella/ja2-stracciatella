@@ -154,7 +154,7 @@ of the group.  If the priority of the group is high, they
 BOOLEAN gfAutoAIAware = FALSE;
 
 //Saved vars
-INT8		gbPadding2[3]						= {0, 0, 0};	//NOT USED
+INT8		gbPadding2[3]						= {0, 0, 0};	//NOT USED // XXX HACK000B
 BOOLEAN gfExtraElites						= 0;	//Set when queen compositions are augmented with bonus elites.
 static INT32 giGarrisonArraySize = 0;
 INT32		giPatrolArraySize				= 0;
@@ -189,7 +189,7 @@ BOOLEAN gfUseAlternateQueenPosition = FALSE;
 
 //padding for generic globals
 #define SAI_PADDING_BYTES				97
-INT8		gbPadding[SAI_PADDING_BYTES];
+INT8		gbPadding[SAI_PADDING_BYTES]; // XXX HACK000B
 //patrol group info plus padding
 #define SAVED_PATROL_GROUPS			50
 static PATROL_GROUP* gPatrolGroup;
