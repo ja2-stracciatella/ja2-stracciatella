@@ -16,7 +16,7 @@ BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier );
 
 BOOLEAN CalcInteractiveObjectAPs(INT16 sGridNo, const STRUCTURE* pStructure, INT16* psAPCost, INT16* psBPCost);
 
-void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo );
+void HandleStructChangeFromGridNo(SOLDIERTYPE*, GridNo);
 
 
 void BeginCurInteractiveTileCheck(void);

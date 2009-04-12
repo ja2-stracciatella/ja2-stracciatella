@@ -189,127 +189,110 @@ BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier )
   return( HandleOpenableStruct( pSoldier, sGridNo, pStructure ) );
 }
 
-void HandleStructChangeFromGridNo( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+
+void HandleStructChangeFromGridNo(SOLDIERTYPE* const s, GridNo const grid_no)
 {
-	STRUCTURE			*pStructure, *pNewStructure;
-  BOOLEAN       fDidMissingQuote = FALSE;
-
-	pStructure = FindStructure( sGridNo, STRUCTURE_OPENABLE );
-
-	if ( pStructure == NULL )
+	STRUCTURE* const structure = FindStructure(grid_no, STRUCTURE_OPENABLE);
+	if (!structure)
 	{
 #ifdef JA2TESTVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"ERROR: Told to handle struct that does not exist at %d.", sGridNo );
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"ERROR: Told to handle struct that does not exist at %d.", grid_no);
 #endif
 		return;
 	}
 
 	// Do sound...
-	const BOOLEAN closing = (pStructure->fFlags & STRUCTURE_OPEN) != 0;
-	PlayLocationJA2Sample(sGridNo, GetStructureOpenSound(pStructure, closing), HIGHVOLUME, 1);
+	bool const closing = structure->fFlags & STRUCTURE_OPEN;
+	PlayLocationJA2Sample(grid_no, GetStructureOpenSound(structure, closing), HIGHVOLUME, 1);
 
+  bool did_missing_quote = false;
 	// ATE: Don't handle switches!
-	if ( !( pStructure->fFlags & STRUCTURE_SWITCH ) )
+	if (!(structure->fFlags & STRUCTURE_SWITCH))
 	{
-		if ( pSoldier->bTeam == gbPlayerNum )
+		if (s->bTeam == gbPlayerNum)
 		{
-			if ( sGridNo == BOBBYR_SHIPPING_DEST_GRIDNO && gWorldSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X && gWorldSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y && gbWorldSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z && CheckFact( FACT_PABLOS_STOLE_FROM_LATEST_SHIPMENT, 0 ) && !(CheckFact( FACT_PLAYER_FOUND_ITEMS_MISSING, 0) ) )
+			if (grid_no        == BOBBYR_SHIPPING_DEST_GRIDNO        &&
+					gWorldSectorX  == BOBBYR_SHIPPING_DEST_SECTOR_X      &&
+					gWorldSectorY  == BOBBYR_SHIPPING_DEST_SECTOR_Y      &&
+					gbWorldSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z      &&
+					CheckFact(FACT_PABLOS_STOLE_FROM_LATEST_SHIPMENT, 0) &&
+					!CheckFact(FACT_PLAYER_FOUND_ITEMS_MISSING, 0))
 			{
-				SayQuoteFromNearbyMercInSector( BOBBYR_SHIPPING_DEST_GRIDNO, 3, QUOTE_STUFF_MISSING_DRASSEN );
-        fDidMissingQuote = TRUE;
+				SayQuoteFromNearbyMercInSector(BOBBYR_SHIPPING_DEST_GRIDNO, 3, QUOTE_STUFF_MISSING_DRASSEN);
+        did_missing_quote = true;
 			}
 		}
-		else if ( pSoldier->bTeam == CIV_TEAM )
+		else if (s->bTeam == CIV_TEAM)
 		{
-			if ( pSoldier->ubProfile != NO_PROFILE )
+			if (s->ubProfile != NO_PROFILE)
 			{
-				TriggerNPCWithGivenApproach(pSoldier->ubProfile, APPROACH_DONE_OPEN_STRUCTURE);
+				TriggerNPCWithGivenApproach(s->ubProfile, APPROACH_DONE_OPEN_STRUCTURE);
 			}
 		}
 
-
-		// LOOK for item pool here...
-		ITEM_POOL* pItemPool = GetItemPool((INT16)sGridNo, pSoldier->bLevel);
-		if (pItemPool != NULL)
+		ITEM_POOL* const item_pool = GetItemPool(grid_no, s->bLevel);
+		if (item_pool)
 		{
-			// Update visiblity....
-			if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )
+			// Update visiblity
+			if (!closing)
 			{
-				BOOLEAN fDoHumm			= TRUE;
-				BOOLEAN	fDoLocators = TRUE;
+				bool do_humm     = true;
+				bool do_locators = true;
 
-				if ( pSoldier->bTeam != gbPlayerNum )
+				if (s->bTeam != gbPlayerNum)
 				{
-					fDoHumm			= FALSE;
-					fDoLocators = FALSE;
+					do_humm     = false;
+					do_locators = false;
 				}
 
-				// Look for ownership here....
-				if (GetWorldItem(pItemPool->iItemIndex)->o.usItem == OWNERSHIP)
+				// Look for ownership here
+				if (GetWorldItem(item_pool->iItemIndex)->o.usItem == OWNERSHIP)
 				{
-					fDoHumm			= FALSE;
-					MakeCharacterDialogueEventDoBattleSound(*pSoldier, BATTLE_SOUND_NOTHING, 500);
+					do_humm = false;
+					MakeCharacterDialogueEventDoBattleSound(*s, BATTLE_SOUND_NOTHING, 500);
 				}
 
-				// If now open, set visible...
-				SetItemsVisibilityOn(sGridNo, pSoldier->bLevel, ANY_VISIBILITY_VALUE, fDoLocators);
+				// If now open, set visible
+				SetItemsVisibilityOn(grid_no, s->bLevel, ANY_VISIBILITY_VALUE, do_locators);
 
-				// Display quote!
-				//TacticalCharacterDialogue( pSoldier, (UINT16)( QUOTE_SPOTTED_SOMETHING_ONE + Random( 2 ) ) );
-
-				// ATE: Check now many things in pool.....
-        if ( !fDidMissingQuote )
+				// ATE: Check now many things in pool
+        if (!did_missing_quote)
         {
-				  if ( pItemPool->pNext != NULL )
+				  if (item_pool->pNext && item_pool->pNext->pNext)
+					{
+						MakeCharacterDialogueEventDoBattleSound(*s, BATTLE_SOUND_COOL1, 500);
+					}
+				  else if (do_humm)
 				  {
-					  if ( pItemPool->pNext->pNext != NULL )
-					  {
-						  fDoHumm = FALSE;
-							MakeCharacterDialogueEventDoBattleSound(*pSoldier, BATTLE_SOUND_COOL1, 500);
-					  }
-				  }
-
-				  if ( fDoHumm )
-				  {
-						MakeCharacterDialogueEventDoBattleSound(*pSoldier, BATTLE_SOUND_HUMM, 500);
+						MakeCharacterDialogueEventDoBattleSound(*s, BATTLE_SOUND_HUMM, 500);
 				  }
         }
 			}
 			else
 			{
-				SetItemsVisibilityHidden(sGridNo, pSoldier->bLevel);
+				SetItemsVisibilityHidden(grid_no, s->bLevel);
 			}
 		}
 		else
 		{
-			if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )
+			if (!closing)
 			{
-				MakeCharacterDialogueEventDoBattleSound(*pSoldier, BATTLE_SOUND_NOTHING, 500);
+				MakeCharacterDialogueEventDoBattleSound(*s, BATTLE_SOUND_NOTHING, 500);
 			}
 		}
 	}
 
-	// Deduct points!
-	//INT16 sAPCost = 0;
-	//INT16 sBPCost = 0;
-	// CalcInteractiveObjectAPs( sGridNo, pStructure, &sAPCost, &sBPCost );
-	// DeductPoints( pSoldier, sAPCost, sBPCost );
-
-
-
-	pNewStructure = SwapStructureForPartner( sGridNo, pStructure );
-	if ( pNewStructure != NULL)
+	STRUCTURE* const new_structure = SwapStructureForPartner(grid_no, structure);
+	if (new_structure)
 	{
-		RecompileLocalMovementCosts( sGridNo );
-		SetRenderFlags( RENDER_FLAG_FULL );
-		if ( pNewStructure->fFlags & STRUCTURE_SWITCH )
-		{
-			// just turned a switch on!
-			ActivateSwitchInGridNo(pSoldier, sGridNo);
+		RecompileLocalMovementCosts(grid_no);
+		SetRenderFlags(RENDER_FLAG_FULL);
+		if (new_structure->fFlags & STRUCTURE_SWITCH)
+		{ // Just turned a switch on!
+			ActivateSwitchInGridNo(s, grid_no);
 		}
 	}
 }
-
 
 
 UINT32 GetInteractiveTileCursor( UINT32 uiOldCursor, BOOLEAN fConfirm )
