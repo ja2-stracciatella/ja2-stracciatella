@@ -292,64 +292,54 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 }
 
 
-static INT32 FindLocationOfClosestRefuelSite(BOOLEAN fMustBeAvailable);
+static RefuelSite const* FindClosestRefuelSite(bool must_be_available);
 
 
-static INT32 LocationOfNearestRefuelPoint(BOOLEAN fNotifyPlayerIfNoSafeLZ)
+static RefuelSite const& NearestRefuelPoint(bool const fNotifyPlayerIfNoSafeLZ)
 {
-	INT32 iClosestLocation = -1;
+	// Try to find one, any one under the players control
+	RefuelSite const* closest_site = FindClosestRefuelSite(TRUE);
+	if (closest_site) return *closest_site;
 
-	// try to find one, any one under the players control
-	iClosestLocation = FindLocationOfClosestRefuelSite( TRUE );
-
-	// no go?...then find
-	if( iClosestLocation == -1 )
-	{
-		if( fNotifyPlayerIfNoSafeLZ )
-		{
-			// no refueling sites available, might wanna warn player about this
-			ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, pHelicopterEtaStrings[ 5 ] );
-		}
-
-		// find the closest location regardless
-		iClosestLocation = FindLocationOfClosestRefuelSite( FALSE );
+	if (fNotifyPlayerIfNoSafeLZ)
+	{ // No refueling sites available, might wanna warn player about this
+		ScreenMsg(FONT_MCOLOR_DKRED, MSG_INTERFACE, pHelicopterEtaStrings[5]);
 	}
 
-	// always returns a valid refuel point, picking a hostile one if unavoidable
-	Assert( iClosestLocation != -1 );
+	// Find the closest location regardless
+	closest_site = FindClosestRefuelSite(FALSE);
 
-	return( iClosestLocation );
+	// Always returns a valid refuel point, picking a hostile one if unavoidable
+	Assert(closest_site);
+	return *closest_site;
 }
 
 
 // find the location sector of closest refuel point for heli..and the criteria if the sector must be under the players control
-static INT32 FindLocationOfClosestRefuelSite(BOOLEAN fMustBeAvailable)
+static RefuelSite const* FindClosestRefuelSite(bool const must_be_available)
 {
-	INT32 iShortestDistance = 9999;
-	INT32 iCounter = 0;
-	INT32 iClosestLocation = -1;
+	INT32             shortest_distance = 9999;
+	RefuelSite const* closest_site      = 0;
 
 	// find shortest distance to refuel site
-	for( iCounter = 0; iCounter < NUMBER_OF_REFUEL_SITES; iCounter++ )
+	for (INT32 i = 0; i < NUMBER_OF_REFUEL_SITES; ++i)
 	{
 		// if this refuelling site is available
-		if (fRefuelingSiteAvailable[iCounter] || !fMustBeAvailable)
-		{
-			// find if sector is under control, find distance from heli to it
-			VEHICLETYPE const& v         = GetHelicopter();
-			INT16       const  dest      = g_refuel_site[iCounter].sector;
-			INT32       const  iDistance = FindStratPath(CALCULATE_STRATEGIC_INDEX(v.sSectorX , v.sSectorY), dest, GetGroup(v.ubMovementGroup), FALSE);
-			if( iDistance < iShortestDistance )
-			{
-				// shorter, copy over
-				iShortestDistance = iDistance;
-				iClosestLocation = iCounter;
-			}
-		}
+		if (!fRefuelingSiteAvailable[i] && must_be_available) continue;
+
+		// find if sector is under control, find distance from heli to it
+		VEHICLETYPE const& v        = GetHelicopter();
+		RefuelSite  const& r        = g_refuel_site[i];
+		INT16       const  dest     = r.sector;
+		INT32       const  distance = FindStratPath(CALCULATE_STRATEGIC_INDEX(v.sSectorX , v.sSectorY), dest, GetGroup(v.ubMovementGroup), FALSE);
+		if (distance >= shortest_distance) continue;
+
+		// shorter, copy over
+		shortest_distance = distance;
+		closest_site      = &r;
 	}
 
-	// return the location
-	return( iClosestLocation );
+	return closest_site;
 }
 
 
@@ -357,10 +347,9 @@ static INT32 FindLocationOfClosestRefuelSite(BOOLEAN fMustBeAvailable)
 static INT32 DistanceToNearestRefuelPoint(VEHICLETYPE const& heli)
 {
 	// Don't notify player during these checks!
-	INT32      const closest_location = LocationOfNearestRefuelPoint(FALSE);
-	INT16      const start            = CALCULATE_STRATEGIC_INDEX(heli.sSectorX, heli.sSectorY);
-	INT16      const dest             = g_refuel_site[closest_location].sector;
-	INT32      const distance         = FindStratPath(start, dest, GetGroup(heli.ubMovementGroup), FALSE);
+	INT16 const start    = CALCULATE_STRATEGIC_INDEX(heli.sSectorX, heli.sSectorY);
+	INT16 const dest     = NearestRefuelPoint(false).sector;
+	INT32 const distance = FindStratPath(start, dest, GetGroup(heli.ubMovementGroup), FALSE);
 	return distance;
 }
 
@@ -1764,12 +1753,12 @@ static void MakeHeliReturnToBase(void)
 	else
 	{
 		// choose destination (closest refueling sector)
-		const INT32 iLocation = LocationOfNearestRefuelPoint(TRUE);
+		RefuelSite const& refuel_site = NearestRefuelPoint(true);
 
 		VEHICLETYPE& v = GetHelicopter();
 		ClearStrategicPathList(v.pMercPath, v.ubMovementGroup);
 		GROUP* const g = GetGroup(v.ubMovementGroup);
-		v.pMercPath = BuildAStrategicPath(CALCULATE_STRATEGIC_INDEX(v.sSectorX , v.sSectorY), g_refuel_site[iLocation].sector, g, FALSE);
+		v.pMercPath = BuildAStrategicPath(CALCULATE_STRATEGIC_INDEX(v.sSectorX , v.sSectorY), refuel_site.sector, g, FALSE);
 		RebuildWayPointsForGroupPath(v.pMercPath, g);
 
 		fHeliReturnStraightToBase = TRUE;
