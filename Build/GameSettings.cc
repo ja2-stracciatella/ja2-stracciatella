@@ -50,6 +50,7 @@ void LoadGameSettings(void)
 		UINT8          music_volume;
 		UINT8          sound_volume;
 		UINT8          speech_volume;
+		UINT32         settings_version;
 		GAME_SETTINGS& g = gGameSettings;
 		BYTE const*    d = data;
 		EXTR_I8(  d, g.bLastSavedGameSlot)
@@ -59,7 +60,7 @@ void LoadGameSettings(void)
 		EXTR_U8A( d, g.fOptions,       lengthof(g.fOptions))
 		EXTR_STR( d, g.zVersionNumber, lengthof(g.zVersionNumber))
 		EXTR_SKIP(d, 1)
-		EXTR_U32( d, g.uiSettingsVersionNumber)
+		EXTR_U32( d, settings_version)
 		EXTR_U32( d, g.uiMeanwhileScenesSeenFlags)
 		EXTR_BOOL(d, g.fHideHelpInAllScreens)
 		EXTR_SKIP(d, 1)
@@ -68,7 +69,7 @@ void LoadGameSettings(void)
 		EXTR_SKIP(d, 20)
 		Assert(d == endof(data));
 
-		if (g.uiSettingsVersionNumber < GAME_SETTING_CURRENT_VERSION) goto fail;
+		if (settings_version < GAME_SETTING_CURRENT_VERSION) goto fail;
 
 		// Do checking to make sure the settings are valid
 		if (g.bLastSavedGameSlot < 0 || NUM_SAVE_GAMES <= g.bLastSavedGameSlot) g.bLastSavedGameSlot = -1;
@@ -108,7 +109,6 @@ void SaveGameSettings(void)
 	// Record the current settings into the game settins structure
 	GAME_SETTINGS& g = gGameSettings;
 	strcpy(g.zVersionNumber, g_version_number);
-	g.uiSettingsVersionNumber = GAME_SETTING_CURRENT_VERSION;
 
 	BYTE  data[76];
 	BYTE* d = data;
@@ -122,7 +122,7 @@ void SaveGameSettings(void)
 	INJ_U8A( d, g.fOptions,       lengthof(g.fOptions))
 	INJ_STR( d, g.zVersionNumber, lengthof(g.zVersionNumber))
 	INJ_SKIP(d, 1)
-	INJ_U32( d, g.uiSettingsVersionNumber)
+	INJ_U32( d, GAME_SETTING_CURRENT_VERSION)
 	INJ_U32( d, g.uiMeanwhileScenesSeenFlags)
 	INJ_BOOL(d, g.fHideHelpInAllScreens)
 	INJ_SKIP(d, 1)

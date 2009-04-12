@@ -63,7 +63,6 @@ struct GAME_SETTINGS
 
 	char zVersionNumber[16];
 
-	UINT32			uiSettingsVersionNumber;
 	UINT32			uiMeanwhileScenesSeenFlags;
 
 	BOOLEAN			fHideHelpInAllScreens;
