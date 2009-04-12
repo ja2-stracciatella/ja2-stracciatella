@@ -205,10 +205,10 @@ void HandleStructChangeFromGridNo(SOLDIERTYPE* const s, GridNo const grid_no)
 	bool const closing = structure->fFlags & STRUCTURE_OPEN;
 	PlayLocationJA2Sample(grid_no, GetStructureOpenSound(structure, closing), HIGHVOLUME, 1);
 
-  bool did_missing_quote = false;
 	// ATE: Don't handle switches!
 	if (!(structure->fFlags & STRUCTURE_SWITCH))
 	{
+		bool did_missing_quote = false;
 		if (s->bTeam == gbPlayerNum)
 		{
 			if (grid_no        == BOBBYR_SHIPPING_DEST_GRIDNO        &&
