@@ -1104,7 +1104,7 @@ void HandleAnimationOfSectors( void )
 
 
 static void AddHelicopterToMaps(bool add, RefuelSite const&);
-static BOOLEAN IsHelicopterOnGroundAtRefuelingSite(UINT8 ubRefuelingSite);
+static bool IsHelicopterOnGroundAtRefuelingSite(RefuelSite const&);
 
 
 void HandleHelicopterOnGroundGraphic( void )
@@ -1124,7 +1124,7 @@ void HandleHelicopterOnGroundGraphic( void )
 		if (CALCULATE_STRATEGIC_INDEX(gWorldSectorX, gWorldSectorY) == r.sector)
 		{
 			// YES, so find out if the chopper is landed here
-			if ( IsHelicopterOnGroundAtRefuelingSite( ubSite ) )
+			if (IsHelicopterOnGroundAtRefuelingSite(r))
 			{
 				// Add....
 				AddHelicopterToMaps(true, r);
@@ -1178,11 +1178,12 @@ void HandleHelicopterOnGroundSkyriderProfile( void )
 
 	for( ubSite = 0; ubSite < NUMBER_OF_REFUEL_SITES; ubSite++ )
 	{
+		RefuelSite const& r = g_refuel_site[ubSite];
 		// is this refueling site sector the loaded sector ?
-		if (CALCULATE_STRATEGIC_INDEX(gWorldSectorX, gWorldSectorY) == g_refuel_site[ubSite].sector)
+		if (CALCULATE_STRATEGIC_INDEX(gWorldSectorX, gWorldSectorY) == r.sector)
 		{
 			// YES, so find out if the chopper is landed here
-			if ( IsHelicopterOnGroundAtRefuelingSite( ubSite ) )
+			if (IsHelicopterOnGroundAtRefuelingSite(r))
 			{
 				// ATE: Add skyridder too
 				// ATE: only if hired......
@@ -1218,41 +1219,20 @@ void HandleHelicopterOnGroundSkyriderProfile( void )
 }
 
 
-static BOOLEAN IsHelicopterOnGroundAtRefuelingSite(UINT8 ubRefuelingSite)
+static bool IsHelicopterOnGroundAtRefuelingSite(RefuelSite const& r)
 {
-	if ( fHelicopterDestroyed )
-	{
-		return(FALSE);
-	}
-
-	if ( fHelicopterIsAirBorne )
-	{
-		return(FALSE);
-	}
+	if (fHelicopterDestroyed)  return false;
+	if (fHelicopterIsAirBorne) return false;
 
 	// if we haven't even met SkyRider
-	if ( !fSkyRiderSetUp )
-	{
-		// then it's always at Drassen
-		if ( ubRefuelingSite == DRASSEN_REFUELING_SITE )
-		{
-			return(TRUE);
-		}
-		else
-		{
-			return(FALSE);
-		}
+	if (!fSkyRiderSetUp)
+	{ // Then it's always at Drassen
+		return &r == &g_refuel_site[DRASSEN_REFUELING_SITE];
 	}
 
-	VEHICLETYPE const& v = GetHelicopter();
 	// on the ground, but is it at this site or at another one?
-	if (CALCULATE_STRATEGIC_INDEX(v.sSectorX, v.sSectorY) == g_refuel_site[ubRefuelingSite].sector)
-	{
-		return(TRUE);
-	}
-
-	// not here
-	return(FALSE);
+	VEHICLETYPE const& v = GetHelicopter();
+	return CALCULATE_STRATEGIC_INDEX(v.sSectorX, v.sSectorY) == r.sector;
 }
 
 
