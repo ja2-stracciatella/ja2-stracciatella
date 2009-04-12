@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "LoadSaveData.h"
 #include "Types.h"
 #include "GameSettings.h"
 #include "FileMan.h"
@@ -42,9 +43,28 @@ void LoadGameSettings(void)
 	{
 		AutoSGPFile f(FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_READ));
 
+		BYTE data[76];
+		if (FileGetSize(f) != sizeof(data)) goto fail;
+		FileRead(f, data, sizeof(data));
+
 		GAME_SETTINGS& g = gGameSettings;
-		if (FileGetSize(f) != sizeof(g)) goto fail;
-		FileRead(f, &g, sizeof(g));
+		BYTE const*    d = data;
+		EXTR_I8(  d, g.bLastSavedGameSlot)
+		EXTR_U8(  d, g.ubMusicVolumeSetting)
+		EXTR_U8(  d, g.ubSoundEffectsVolume)
+		EXTR_U8(  d, g.ubSpeechVolume)
+		EXTR_U8A( d, g.fOptions,       lengthof(g.fOptions))
+		EXTR_STR( d, g.zVersionNumber, lengthof(g.zVersionNumber))
+		EXTR_SKIP(d, 1)
+		EXTR_U32( d, g.uiSettingsVersionNumber)
+		EXTR_U32( d, g.uiMeanwhileScenesSeenFlags)
+		EXTR_BOOL(d, g.fHideHelpInAllScreens)
+		EXTR_SKIP(d, 1)
+		EXTR_U8(  d, g.ubSizeOfDisplayCover)
+		EXTR_U8(  d, g.ubSizeOfLOS)
+		EXTR_SKIP(d, 20)
+		Assert(d == endof(data));
+
 		if (g.uiSettingsVersionNumber < GAME_SETTING_CURRENT_VERSION) goto fail;
 
 		// Do checking to make sure the settings are valid
@@ -86,8 +106,6 @@ fail:
 
 void SaveGameSettings(void)
 {
-	AutoSGPFile f(FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-
 	// Record the current settings into the game settins structure
 	GAME_SETTINGS& g = gGameSettings;
 	g.ubSoundEffectsVolume    = GetSoundEffectsVolume();
@@ -96,8 +114,26 @@ void SaveGameSettings(void)
 	strcpy(g.zVersionNumber, g_version_number);
 	g.uiSettingsVersionNumber = GAME_SETTING_CURRENT_VERSION;
 
-	// Write the game settings to disk
-	FileWrite(f, &g, sizeof(g));
+	BYTE  data[76];
+	BYTE* d = data;
+	INJ_I8(  d, g.bLastSavedGameSlot)
+	INJ_U8(  d, g.ubMusicVolumeSetting)
+	INJ_U8(  d, g.ubSoundEffectsVolume)
+	INJ_U8(  d, g.ubSpeechVolume)
+	INJ_U8A( d, g.fOptions,       lengthof(g.fOptions))
+	INJ_STR( d, g.zVersionNumber, lengthof(g.zVersionNumber))
+	INJ_SKIP(d, 1)
+	INJ_U32( d, g.uiSettingsVersionNumber)
+	INJ_U32( d, g.uiMeanwhileScenesSeenFlags)
+	INJ_BOOL(d, g.fHideHelpInAllScreens)
+	INJ_SKIP(d, 1)
+	INJ_U8(  d, g.ubSizeOfDisplayCover)
+	INJ_U8(  d, g.ubSizeOfLOS)
+	INJ_SKIP(d, 20)
+	Assert(d == endof(data));
+
+	AutoSGPFile f(FileOpen(GAME_SETTINGS_FILE, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	FileWrite(f, data, sizeof(data));
 }
 
 
