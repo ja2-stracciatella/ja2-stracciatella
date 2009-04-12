@@ -77,8 +77,7 @@ BOOLEAN fHelicopterDestroyed = FALSE;
 
 struct RefuelSite
 {
-	UINT8  x;
-	UINT8  y;
+	INT16  sector;
 	GridNo grid_no;
 	INT16  heli_ostruct;
 };
@@ -86,8 +85,8 @@ struct RefuelSite
 // list of sector locations where SkyRider can be refueled
 static RefuelSite const g_refuel_site[] =
 {
-	{ 13, 2,  9001, FIRSTOSTRUCT1  }, // Drassen airport
-	{  6, 9, 13067, FOURTHOSTRUCT1 }  // Estoni
+	{ CALCULATE_STRATEGIC_INDEX(13, 2),  9001, FIRSTOSTRUCT1  }, // Drassen airport
+	{ CALCULATE_STRATEGIC_INDEX(6,  9), 13067, FOURTHOSTRUCT1 }  // Estoni
 };
 
 
@@ -338,8 +337,8 @@ static INT32 FindLocationOfClosestRefuelSite(BOOLEAN fMustBeAvailable)
 		{
 			// find if sector is under control, find distance from heli to it
 			VEHICLETYPE const& v         = GetHelicopter();
-			RefuelSite  const& r         = g_refuel_site[iCounter];
-			INT32       const  iDistance = FindStratPath(CALCULATE_STRATEGIC_INDEX(v.sSectorX , v.sSectorY), CALCULATE_STRATEGIC_INDEX(r.x, r.y), GetGroup(v.ubMovementGroup), FALSE);
+			INT16       const  dest      = g_refuel_site[iCounter].sector;
+			INT32       const  iDistance = FindStratPath(CALCULATE_STRATEGIC_INDEX(v.sSectorX , v.sSectorY), dest, GetGroup(v.ubMovementGroup), FALSE);
 			if( iDistance < iShortestDistance )
 			{
 				// shorter, copy over
@@ -360,8 +359,7 @@ static INT32 DistanceToNearestRefuelPoint(VEHICLETYPE const& heli)
 	// Don't notify player during these checks!
 	INT32      const closest_location = LocationOfNearestRefuelPoint(FALSE);
 	INT16      const start            = CALCULATE_STRATEGIC_INDEX(heli.sSectorX, heli.sSectorY);
-	RefuelSite const& r               = g_refuel_site[closest_location];
-	INT16      const dest             = CALCULATE_STRATEGIC_INDEX(r.x, r.y);
+	INT16      const dest             = g_refuel_site[closest_location].sector;
 	INT32      const distance         = FindStratPath(start, dest, GetGroup(heli.ubMovementGroup), FALSE);
 	return distance;
 }
@@ -733,8 +731,7 @@ BOOLEAN IsRefuelSiteInSector( INT16 sMapX, INT16 sMapY )
 
 	for( iCounter = 0; iCounter < NUMBER_OF_REFUEL_SITES; iCounter++ )
 	{
-		RefuelSite const& r = g_refuel_site[iCounter];
-		if (r.x == sMapX && r.y == sMapY)
+		if (CALCULATE_STRATEGIC_INDEX(sMapX, sMapY) == g_refuel_site[iCounter].sector)
 		{
 			return(TRUE);
 		}
@@ -754,8 +751,7 @@ void UpdateRefuelSiteAvailability( void )
 	for( iCounter = 0; iCounter < NUMBER_OF_REFUEL_SITES; iCounter++ )
 	{
 		// if enemy controlled sector (ground OR air, don't want to fly into enemy air territory)
-		RefuelSite          const& r = g_refuel_site[iCounter];
-		StrategicMapElement const& m = StrategicMap[CALCULATE_STRATEGIC_INDEX(r.x, r.y)];
+		StrategicMapElement const& m = StrategicMap[g_refuel_site[iCounter].sector];
 		if (m.fEnemyControlled    ||
 				m.fEnemyAirControlled ||
 				(iCounter == ESTONI_REFUELING_SITE && !CheckFact(FACT_ESTONI_REFUELLING_POSSIBLE, 0)))
@@ -1097,8 +1093,8 @@ void HandleAnimationOfSectors( void )
 	if( fShowEstoniRefuelHighLight )
 	{
 		fOldShowEstoniRefuelHighLight = TRUE;
-		RefuelSite const& r = g_refuel_site[ESTONI_REFUELING_SITE];
-		HandleBlitOfSectorLocatorIcon(r.x, r.y, 0, LOCATOR_COLOR_RED);
+		INT16 const sec = g_refuel_site[ESTONI_REFUELING_SITE].sector;
+		HandleBlitOfSectorLocatorIcon(GET_X_FROM_STRATEGIC_INDEX(sec), GET_Y_FROM_STRATEGIC_INDEX(sec), 0, LOCATOR_COLOR_RED);
 		fSkipSpeakersLocator = TRUE;
 	}
 	else if( fOldShowEstoniRefuelHighLight )
@@ -1141,8 +1137,7 @@ void HandleHelicopterOnGroundGraphic( void )
 	for( ubSite = 0; ubSite < NUMBER_OF_REFUEL_SITES; ubSite++ )
 	{
 		// is this refueling site sector the loaded sector ?
-		RefuelSite const& r = g_refuel_site[ubSite];
-		if (r.x == gWorldSectorX && r.y == gWorldSectorY)
+		if (CALCULATE_STRATEGIC_INDEX(gWorldSectorX, gWorldSectorY) == g_refuel_site[ubSite].sector)
 		{
 			// YES, so find out if the chopper is landed here
 			if ( IsHelicopterOnGroundAtRefuelingSite( ubSite ) )
@@ -1200,8 +1195,7 @@ void HandleHelicopterOnGroundSkyriderProfile( void )
 	for( ubSite = 0; ubSite < NUMBER_OF_REFUEL_SITES; ubSite++ )
 	{
 		// is this refueling site sector the loaded sector ?
-		RefuelSite const& r = g_refuel_site[ubSite];
-		if (r.x == gWorldSectorX && r.y == gWorldSectorY)
+		if (CALCULATE_STRATEGIC_INDEX(gWorldSectorX, gWorldSectorY) == g_refuel_site[ubSite].sector)
 		{
 			// YES, so find out if the chopper is landed here
 			if ( IsHelicopterOnGroundAtRefuelingSite( ubSite ) )
@@ -1267,9 +1261,8 @@ static BOOLEAN IsHelicopterOnGroundAtRefuelingSite(UINT8 ubRefuelingSite)
 	}
 
 	VEHICLETYPE const& v = GetHelicopter();
-	RefuelSite  const& r = g_refuel_site[ubRefuelingSite];
 	// on the ground, but is it at this site or at another one?
-	if (r.x == v.sSectorX && r.y == v.sSectorY)
+	if (CALCULATE_STRATEGIC_INDEX(v.sSectorX, v.sSectorY) == g_refuel_site[ubRefuelingSite].sector)
 	{
 		return(TRUE);
 	}
@@ -1779,11 +1772,10 @@ static void MakeHeliReturnToBase(void)
 		// choose destination (closest refueling sector)
 		const INT32 iLocation = LocationOfNearestRefuelPoint(TRUE);
 
-		VEHICLETYPE&        v = GetHelicopter();
+		VEHICLETYPE& v = GetHelicopter();
 		ClearStrategicPathList(v.pMercPath, v.ubMovementGroup);
-		GROUP*       const  g = GetGroup(v.ubMovementGroup);
-		RefuelSite   const& r = g_refuel_site[iLocation];
-		v.pMercPath = BuildAStrategicPath(CALCULATE_STRATEGIC_INDEX(v.sSectorX , v.sSectorY), CALCULATE_STRATEGIC_INDEX(r.x, r.y), g, FALSE);
+		GROUP* const g = GetGroup(v.ubMovementGroup);
+		v.pMercPath = BuildAStrategicPath(CALCULATE_STRATEGIC_INDEX(v.sSectorX , v.sSectorY), g_refuel_site[iLocation].sector, g, FALSE);
 		RebuildWayPointsForGroupPath(v.pMercPath, g);
 
 		fHeliReturnStraightToBase = TRUE;
