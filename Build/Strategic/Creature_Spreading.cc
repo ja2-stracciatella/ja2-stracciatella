@@ -1444,98 +1444,86 @@ BOOLEAN PlayerGroupIsInACreatureInfestedMine()
 	return FALSE;
 }
 
-//Returns TRUE if valid and creature quest over, FALSE if creature quest active or not yet started
-BOOLEAN GetWarpOutOfMineCodes( INT16 *psSectorX, INT16 *psSectorY, INT8 *pbSectorZ, INT16 *psInsertionGridNo )
+
+bool GetWarpOutOfMineCodes(INT16* const sector_x, INT16* const sector_y, INT8* const sector_z, INT16* const insertion_grid_no)
 {
-  INT32 iSwitchValue;
+	if (!gfWorldLoaded)      return false;
+	if (gbWorldSectorZ == 0) return false;
 
-	if( !gfWorldLoaded )
+	INT32 lair_id = giLairID;
+	if (lair_id == -1) lair_id = giDestroyedLairID;
+
+	//:Now make sure the mercs are in the previously infested mine
+	INT16 const x = gWorldSectorX;
+	INT16 const y = gWorldSectorY;
+	INT8  const z = gbWorldSectorZ;
+	switch (lair_id)
 	{
-		return FALSE;
-	}
-
-  if ( gbWorldSectorZ == 0 )
-  {
-    return( FALSE );
-  }
-
-  iSwitchValue = giLairID;
-
-	if( iSwitchValue == -1 )
-	{
-		iSwitchValue = giDestroyedLairID;
-	}
-
-	if( !iSwitchValue )
-	{
-		return FALSE;
-	}
-
-	//Now make sure the mercs are in the previously infested mine
-	switch( iSwitchValue )
-	{
-		case 1: //Drassen
-			if( gWorldSectorX == 13 && gWorldSectorY == 6 && gbWorldSectorZ == 3 ||
-					gWorldSectorX == 13 && gWorldSectorY == 7 && gbWorldSectorZ == 3 ||
-					gWorldSectorX == 13 && gWorldSectorY == 7 && gbWorldSectorZ == 2 ||
-					gWorldSectorX == 13 && gWorldSectorY == 6 && gbWorldSectorZ == 2 ||
-					gWorldSectorX == 13 && gWorldSectorY == 5 && gbWorldSectorZ == 2 ||
-					gWorldSectorX == 13 && gWorldSectorY == 5 && gbWorldSectorZ == 1 ||
-					gWorldSectorX == 13 && gWorldSectorY == 4 && gbWorldSectorZ == 1 )
+		case 1: // Drassen
+			if (x == 13 && y == 6 && z == 3 ||
+					x == 13 && y == 7 && z == 3 ||
+					x == 13 && y == 7 && z == 2 ||
+					x == 13 && y == 6 && z == 2 ||
+					x == 13 && y == 5 && z == 2 ||
+					x == 13 && y == 5 && z == 1 ||
+					x == 13 && y == 4 && z == 1)
 			{
-				*psSectorX = 13;
-				*psSectorY = 4;
-				*pbSectorZ = 0;
-				*psInsertionGridNo = 20700;
-				return TRUE;
+				*sector_x          = 13;
+				*sector_y          = 4;
+				*sector_z          = 0;
+				*insertion_grid_no = 20700;
+				return true;
 			}
 			break;
-		case 3: //Cambria
-			if( gWorldSectorX == 8 && gWorldSectorY == 9 && gbWorldSectorZ == 3 ||
-					gWorldSectorX == 8 && gWorldSectorY == 8 && gbWorldSectorZ == 3 ||
-					gWorldSectorX == 8 && gWorldSectorY == 8 && gbWorldSectorZ == 2 ||
-					gWorldSectorX == 9 && gWorldSectorY == 8 && gbWorldSectorZ == 2 ||
-					gWorldSectorX == 9 && gWorldSectorY == 8 && gbWorldSectorZ == 1 ||
-					gWorldSectorX == 8 && gWorldSectorY == 8 && gbWorldSectorZ == 1 )
+
+		case 3: // Cambria
+			if (x == 8 && y == 9 && z == 3 ||
+					x == 8 && y == 8 && z == 3 ||
+					x == 8 && y == 8 && z == 2 ||
+					x == 9 && y == 8 && z == 2 ||
+					x == 9 && y == 8 && z == 1 ||
+					x == 8 && y == 8 && z == 1)
 			{
-				*psSectorX = 8;
-				*psSectorY = 8;
-				*pbSectorZ = 0;
-				*psInsertionGridNo = 13002;
-				return TRUE;
+				*sector_x          = 8;
+				*sector_y          = 8;
+				*sector_z          = 0;
+				*insertion_grid_no = 13002;
+				return true;
 			}
 			break;
-		case 2: //Alma
-			if( gWorldSectorX == 13 && gWorldSectorY == 11 && gbWorldSectorZ == 3 ||
-					gWorldSectorX == 13 && gWorldSectorY == 10 && gbWorldSectorZ == 3 ||
-					gWorldSectorX == 13 && gWorldSectorY == 10 && gbWorldSectorZ == 2 ||
-					gWorldSectorX == 14 && gWorldSectorY == 10 && gbWorldSectorZ == 2 ||
-					gWorldSectorX == 14 && gWorldSectorY == 10 && gbWorldSectorZ == 1 ||
-					gWorldSectorX == 14 && gWorldSectorY == 9 && gbWorldSectorZ == 1 )
+
+		case 2: // Alma
+			if (x == 13 && y == 11 && z == 3 ||
+					x == 13 && y == 10 && z == 3 ||
+					x == 13 && y == 10 && z == 2 ||
+					x == 14 && y == 10 && z == 2 ||
+					x == 14 && y == 10 && z == 1 ||
+					x == 14 && y ==  9 && z == 1)
 			{
-				*psSectorX = 14;
-				*psSectorY = 9;
-				*pbSectorZ = 0;
-				*psInsertionGridNo = 9085;
-				return TRUE;
+				*sector_x          = 14;
+				*sector_y          = 9;
+				*sector_z          = 0;
+				*insertion_grid_no = 9085;
+				return true;
 			}
 			break;
-		case 4: //Grumm
-			if( gWorldSectorX == 4 && gWorldSectorY == 7 && gbWorldSectorZ == 3 ||
-					gWorldSectorX == 4 && gWorldSectorY == 8 && gbWorldSectorZ == 3 ||
-					gWorldSectorX == 3 && gWorldSectorY == 8 && gbWorldSectorZ == 2 ||
-					gWorldSectorX == 3 && gWorldSectorY == 8 && gbWorldSectorZ == 2 ||
-					gWorldSectorX == 3 && gWorldSectorY == 9 && gbWorldSectorZ == 2 ||
-					gWorldSectorX == 3 && gWorldSectorY == 9 && gbWorldSectorZ == 1 ||
-					gWorldSectorX == 3 && gWorldSectorY == 8 && gbWorldSectorZ == 1 )
+
+		case 4: // Grumm
+			if (x == 4 && y == 7 && z == 3 ||
+					x == 4 && y == 8 && z == 3 ||
+					x == 3 && y == 8 && z == 2 ||
+					x == 3 && y == 8 && z == 2 ||
+					x == 3 && y == 9 && z == 2 ||
+					x == 3 && y == 9 && z == 1 ||
+					x == 3 && y == 8 && z == 1)
 			{
-				*psSectorX = 3;
-				*psSectorY = 8;
-				*pbSectorZ = 0;
-				*psInsertionGridNo = 9822;
-				return TRUE;
+				*sector_x          = 3;
+				*sector_y          = 8;
+				*sector_z          = 0;
+				*insertion_grid_no = 9822;
+				return true;
 			}
 			break;
 	}
-	return( FALSE );
+	return false;
 }
