@@ -111,10 +111,8 @@ ScreenID MapUtilScreenHandle()
 	strcpy(zFilename, FListNode->filename);
 
 	// OK, load maps and do overhead shrinkage of them...
-	if ( !LoadWorld( zFilename ) )
-	{
-		return( ERROR_SCREEN );
-	}
+	try         { LoadWorld(zFilename); }
+	catch (...) { return ERROR_SCREEN;  }
 
 	// Render small map
 	InitNewOverheadDB(giCurrentTilesetID);

@@ -919,7 +919,11 @@ static ScreenID ProcessFileIO(void)
 
 			RemoveMercsInSector( );
 
-			if( !LoadWorld( ubNewFilename ) )
+			try
+			{
+				LoadWorld(ubNewFilename);
+			}
+			catch (...)
 			{ //Want to override crash, so user can do something else.
 				EnableUndo();
 				SetPendingNewScreen( LOADSAVE_SCREEN );

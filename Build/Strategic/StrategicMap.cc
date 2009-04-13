@@ -1337,7 +1337,7 @@ static void EnterSector(INT16 const x, INT16 const y, INT8 const z)
 
 	char filename[50];
 	GetMapFileName(x, y, z, filename, TRUE, TRUE);
-	if (!LoadWorld(filename)) throw std::runtime_error("Failed to load world");
+	LoadWorld(filename);
 
 	/* ATE: Moved this form above, so that we can have the benefit of changing the
 	 * world BEFORE adding guys to it. */

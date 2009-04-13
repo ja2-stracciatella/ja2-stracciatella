@@ -244,7 +244,7 @@ void NewWorld(void);
 BOOLEAN SaveWorld(const char *puiFilename);
 #endif
 
-BOOLEAN LoadWorld(const char *puiFilename);
+void LoadWorld(char const* filename);
 void CompileWorldMovementCosts(void);
 void RecompileLocalMovementCosts( INT16 sCentreGridNo );
 void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius );

@@ -1764,7 +1764,7 @@ try
 
 	if (gfMajorUpdate)
 	{
-		if (!LoadWorld(filename)) return FALSE; // error
+		LoadWorld(filename);
 		FileClearAttributes(szDirFilename);
 		SaveWorld(filename);
 	}
@@ -2121,7 +2121,7 @@ catch (...) { return FALSE; }
 static void LoadMapLights(INT8** hBuffer);
 
 
-BOOLEAN LoadWorld(const char *puiFilename)
+void LoadWorld(const char *puiFilename)
 try
 {
 	FLOAT						dMajorMapVersion;
@@ -2185,10 +2185,7 @@ try
 	LOADDATA( &dMajorMapVersion, pBuffer, sizeof( FLOAT ) );
 
 #if defined RUSSIAN
-	if (dMajorMapVersion != 6.00)
-	{
-		return FALSE;
-	}
+	if (dMajorMapVersion != 6.00) throw std::runtime_error("Incompatible major map version");
 #endif
 
 	UINT8 ubMinorMapVersion;
@@ -2200,15 +2197,6 @@ try
 	{
 		ubMinorMapVersion = 0;
 	}
-
-	// CHECK FOR NON-COMPATIBLE VERSIONS!
-	// CHECK FOR MAJOR MAP VERSION INCOMPATIBLITIES
-	//if ( dMajorMapVersion < gdMajorMapVersion )
-	//{
-		//AssertMsg( 0, "Major version conflict.  Should have force updated this map already!!!" );
-		//SET_ERROR(  "Incompatible JA2 map version: %f, map version is now at %f", gdLoadedMapVersion, gdMapVersion );
-		//return( FALSE );
-	//}
 
 	// Read FLAGS FOR WORLD
 	LOADDATA( &uiFlags, pBuffer, sizeof( INT32 ) );
@@ -2684,14 +2672,11 @@ try
 
 
 	DequeueAllKeyBoardEvents();
-
-
-	return( TRUE );
 }
 catch (...)
 {
 	SET_ERROR("Could not load map file %s", puiFilename);
-	return FALSE;
+	throw;
 }
 
 
