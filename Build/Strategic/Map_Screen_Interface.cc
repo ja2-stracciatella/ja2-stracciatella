@@ -4007,9 +4007,13 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 	ChangeSelectedMapSector( 9, 1, 0 );
 
 	// load starting sector
-	if ( !SetCurrentWorldSector( 9, 1, 0 ) )
+	try
 	{
-		return( FALSE );
+		SetCurrentWorldSector(9, 1, 0);
+	}
+	catch (...) /* XXX exception should probably propagate; caller ignores return value */
+	{
+		return FALSE;
 	}
 
 	//Setup variables in the PBI for this first battle.  We need to support the

@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Font.h"
 #include "HImage.h"
 #include "Interface.h"
@@ -805,7 +807,7 @@ enum
 static void HandleDefiniteUnloadingOfWorld(UINT8 ubUnloadCode);
 
 
-bool SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
+void SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 {
 	SyncStrategicTurnTimes();
 
@@ -847,7 +849,7 @@ bool SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 
 		ResetMilitia();
 		AllTeamsLookForAll(TRUE);
-		return true;
+		return;
 	}
 
 	if (gWorldSectorX != 0 && gWorldSectorY != 0 && gbWorldSectorZ != -1)
@@ -885,7 +887,7 @@ bool SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 	  HandleHelicopterOnGroundSkyriderProfile();
 	}
 
-	if (!EnterSector(x, y, z)) return false;
+	if (!EnterSector(x, y, z)) throw std::runtime_error("Failed to enter sector");
 
 	if (!loading_savegame)
 	{
@@ -943,8 +945,6 @@ bool SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 
 		gTacticalStatus.ubNumCrowsPossible = 5 + Random(5);
 	}
-
-	return true;
 }
 
 

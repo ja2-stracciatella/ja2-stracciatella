@@ -388,12 +388,7 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 		AddTransactionToPlayersBook( ANONYMOUS_DEPOSIT, 0, GetWorldTotalMin(), 1075 );
 	#endif
 
-
-	if ( !SetCurrentWorldSector( 1, 16, 0 ) )
-	{
-
-	}
-
+	SetCurrentWorldSector(1, 16, 0);
 
 	SetLaptopExitScreen( MAP_SCREEN );
 	FadeInGameScreen( );
@@ -475,11 +470,7 @@ BOOLEAN InitNewGame( BOOLEAN fReset )
 /*
 	if ( gubScreenCount == 2 )
 	{
-
-		if ( !SetCurrentWorldSector( 9, 1, 0 ) )
-		{
-
-		}
+		SetCurrentWorldSector(9, 1, 0);
 
 		SetLaptopExitScreen( MAP_SCREEN );
 
