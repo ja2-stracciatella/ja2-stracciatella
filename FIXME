@@ -114,6 +114,7 @@ RenderShopKeeperInterface(): MARK_DIRTY necessary?
 RenderTiles(): SetFontDestBuffer() + mprintf_buffer() strange
 SAIMOVECODE: use enum
 SAVED_GAME_HEADER: gets saved/loaded, but contains wchar_t
+SF_HAS_ENTERED_TACTICAL: never tested
 SHOW_AP_LEFT: never set
 SLOW_ANIMATION: never set or cleared
 SOLDIERCREATE_STRUCT: gets saved/loaded, but contains wchar_t

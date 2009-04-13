@@ -77,7 +77,7 @@ extern	BOOLEAN		gfUseAlternateMap;
 UINT8 GetTownIdForSector( INT16 sMapX, INT16 sMapY );
 
 void GetCurrentWorldSector( INT16 *psMapX, INT16 *psMapY );
-BOOLEAN	SetCurrentWorldSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
+bool SetCurrentWorldSector(INT16 x, INT16 y, INT8 z);
 
 void UpdateMercsInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
