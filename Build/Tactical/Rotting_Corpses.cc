@@ -883,13 +883,6 @@ void HandleRottingCorpses( )
 	INT8							bNumCrows = 0;
   UINT32            uiChosenCorpseID;
 
-
-	// Don't allow crows here if flags not set
-	if ( !gTacticalStatus.fGoodToAllowCrows )
-	{
-		return;
-	}
-
 	// ATE: If it's too late, don't!
 	if( NightTime() )
 	{

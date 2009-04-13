@@ -941,7 +941,6 @@ bool SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 			gTacticalStatus.uiFlags &= ~IN_CREATURE_LAIR;
 		}
 
-		gTacticalStatus.fGoodToAllowCrows  = TRUE;
 		gTacticalStatus.ubNumCrowsPossible = 5 + Random(5);
 	}
 

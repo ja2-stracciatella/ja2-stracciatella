@@ -94,7 +94,6 @@ struct TacticalStatusType
 	SOLDIERTYPE*     cant_get_through;
 	BOOLEAN          fDidGameJustStart;
 	UINT8            ubLastRequesterTargetID;
-	BOOLEAN          fGoodToAllowCrows;
 	UINT8            ubNumCrowsPossible;
 	BOOLEAN          fUnLockUIAfterHiddenInterrupt;
 	INT8             bNumFoughtInBattle[ MAXTEAMS ];
