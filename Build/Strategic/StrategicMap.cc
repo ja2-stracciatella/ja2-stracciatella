@@ -798,7 +798,7 @@ static void HandleRPCDescriptionOfSector(INT16 sSectorX, INT16 sSectorY, INT16 s
 }
 
 
-static BOOLEAN EnterSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+static void EnterSector(INT16 x, INT16 y, INT8 z);
 enum
 {
 	ABOUT_TO_LOAD_NEW_MAP,
@@ -887,7 +887,7 @@ void SetCurrentWorldSector(INT16 const x, INT16 const y, INT8 const z)
 	  HandleHelicopterOnGroundSkyriderProfile();
 	}
 
-	if (!EnterSector(x, y, z)) throw std::runtime_error("Failed to enter sector");
+	EnterSector(x, y, z);
 
 	if (!loading_savegame)
 	{
@@ -1300,7 +1300,7 @@ static void SetupProfileInsertionDataForCivilians(void)
 }
 
 
-static BOOLEAN EnterSector(INT16 const x, INT16 const y, INT8 const z)
+static void EnterSector(INT16 const x, INT16 const y, INT8 const z)
 {
 	PauseGame();
 	// Stop time for this frame
@@ -1337,7 +1337,7 @@ static BOOLEAN EnterSector(INT16 const x, INT16 const y, INT8 const z)
 
 	char filename[50];
 	GetMapFileName(x, y, z, filename, TRUE, TRUE);
-	if (!LoadWorld(filename)) return FALSE;
+	if (!LoadWorld(filename)) throw std::runtime_error("Failed to load world");
 
 	/* ATE: Moved this form above, so that we can have the benefit of changing the
 	 * world BEFORE adding guys to it. */
@@ -1351,7 +1351,7 @@ static BOOLEAN EnterSector(INT16 const x, INT16 const y, INT8 const z)
 		{ /* The integrity of the temp files have been compromised.  Boot out of the
 			 * game after warning message. */
 			InitExitGameDialogBecauseFileHackDetected();
-			return TRUE;
+			return;
 		}
 	}
 
@@ -1371,8 +1371,6 @@ static BOOLEAN EnterSector(INT16 const x, INT16 const y, INT8 const z)
 	/* This function will either hide or display the tree tops, depending on the
 	 * game setting */
 	SetTreeTopStateForMap();
-
-	return TRUE;
 }
 
 
