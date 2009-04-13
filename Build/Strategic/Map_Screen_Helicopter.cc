@@ -1154,55 +1154,46 @@ void HandleHelicopterOnGroundGraphic(void)
 }
 
 
-void HandleHelicopterOnGroundSkyriderProfile( void )
+void HandleHelicopterOnGroundSkyriderProfile(void)
 {
-	UINT8					ubSite = 0;
+	// No worries if underground
+	if (gbWorldSectorZ != 0) return;
 
-	// no worries if underground
-	if (gbWorldSectorZ != 0 )
+	for (UINT8 site = 0; site != NUMBER_OF_REFUEL_SITES; ++site)
 	{
-		return;
-	}
+		RefuelSite const& r = g_refuel_site[site];
+		// is this refueling site sector the loaded sector?
+		if (CALCULATE_STRATEGIC_INDEX(gWorldSectorX, gWorldSectorY) != r.sector) continue;
 
-	for( ubSite = 0; ubSite < NUMBER_OF_REFUEL_SITES; ubSite++ )
-	{
-		RefuelSite const& r = g_refuel_site[ubSite];
-		// is this refueling site sector the loaded sector ?
-		if (CALCULATE_STRATEGIC_INDEX(gWorldSectorX, gWorldSectorY) == r.sector)
+		// YES, so find out if the chopper is landed here
+		if (IsHelicopterOnGroundAtRefuelingSite(r))
 		{
-			// YES, so find out if the chopper is landed here
-			if (IsHelicopterOnGroundAtRefuelingSite(r))
+			// ATE: Add Skyrider too
+			// ATE: only if hired
+			if (iHelicopterVehicleId != -1)
 			{
-				// ATE: Add skyridder too
-				// ATE: only if hired......
-				if (iHelicopterVehicleId != -1)
-				{
-					gMercProfiles[ SKYRIDER ].sSectorX = gWorldSectorX;
-					gMercProfiles[ SKYRIDER ].sSectorY = gWorldSectorY;
-				}
+				MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
+				p.sSectorX = gWorldSectorX;
+				p.sSectorY = gWorldSectorY;
 			}
-			else
-			{
-				// ATE: Remove skyridder....
-				if (iHelicopterVehicleId != -1)
-				{
-					gMercProfiles[ SKYRIDER ].sSectorX = 0;
-					gMercProfiles[ SKYRIDER ].sSectorY = 0;
-
-					// see if we can find him and remove him if so....
-					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(SKYRIDER);
-
-          // ATE: Don't do this if buddy is on our team!
-					if ( pSoldier != NULL && pSoldier->bTeam != gbPlayerNum )
-					{
-						TacticalRemoveSoldier(pSoldier);
-					}
-				}
-			}
-
-			// can't be 2 places at once!
-			break;
 		}
+		else
+		{
+			// ATE: Remove Skyrider
+			if (iHelicopterVehicleId != -1)
+			{
+				MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
+				p.sSectorX = 0;
+				p.sSectorY = 0;
+
+				// See if we can find him and remove him if so
+				// ATE: Don't do this if buddy is on our team!
+				SOLDIERTYPE* const s = FindSoldierByProfileID(SKYRIDER);
+				if (s && s->bTeam != gbPlayerNum) TacticalRemoveSoldier(s);
+			}
+		}
+
+		break;
 	}
 }
 
