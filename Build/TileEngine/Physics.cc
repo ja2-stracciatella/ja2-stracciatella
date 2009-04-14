@@ -100,7 +100,11 @@ static REAL_OBJECT* GetFreeObjectSlot(void)
 	{
 		if (!i->fAllocated) return i;
 	}
-	if (i != endof(ObjectSlots)) return i;
+	if (i != endof(ObjectSlots))
+	{
+		++guiNumObjectSlots;
+		return i;
+	}
 	throw std::runtime_error("Out of physics object slots");
 }
 
