@@ -2121,68 +2121,49 @@ catch (...) { return FALSE; }
 static void LoadMapLights(INT8** hBuffer);
 
 
-void LoadWorld(const char *puiFilename)
+void LoadWorld(char const* const filename)
 try
 {
-	FLOAT						dMajorMapVersion;
-	UINT32					uiFlags;
-	UINT32					uiSoldierSize;
-	UINT32					uiFileSize;
-	UINT32					fp, offset;
 #ifdef JA2TESTVERSION
-	UINT32					uiStartTime;
-	UINT32					uiLoadWorldStartTime;
-#endif
-	INT32						cnt, cnt2;
-	INT32						iTilesetID;
-	UINT16					usTypeSubIndex;
-	UINT8						ubType;
-	UINT8						ubSubIndex;
-	CHAR8						aFilename[ 50 ];
-	UINT8						ubCombine;
-	UINT8							bCounts[ WORLD_MAX ][8];
-	BOOLEAN					fGenerateEdgePoints = FALSE;
-#ifdef JA2TESTVERSION
-	uiLoadWorldStartTime = GetJA2Clock();
+	UINT32       uiStartTime;
+	UINT32 const uiLoadWorldStartTime = GetJA2Clock();
 #endif
 
 	LoadShadeTablesFromTextFile();
 
-	// Append exension to filename!
-	sprintf(aFilename, "MAPS/%s", puiFilename);
-
-	// RESET FLAGS FOR OUTDOORS/INDOORS
+	// Reset flags for outdoors/indoors
 	gfBasement = FALSE;
-	gfCaves = FALSE;
+	gfCaves    = FALSE;
 
 	SGP::Buffer<INT8> pBufferHead;
 	{
-		AutoSGPFile hfile(FileOpen(aFilename, FILE_ACCESS_READ));
+		char full_filename[50];
+		sprintf(full_filename, "MAPS/%s", filename);
+		AutoSGPFile f(FileOpen(full_filename, FILE_ACCESS_READ));
 
-		SetRelativeStartAndEndPercentage( 0, 0, 1, L"Trashing world..." );
+		SetRelativeStartAndEndPercentage(0, 0, 1, L"Trashing world...");
 #ifdef JA2TESTVERSION
 		uiStartTime = GetJA2Clock();
 #endif
-
 		TrashWorld();
-
 #ifdef JA2TESTVERSION
 		uiTrashWorldTime = GetJA2Clock() - uiStartTime;
 #endif
 
 		LightReset();
 
-		//Get the file size and alloc one huge buffer for it.
-		//We will use this buffer to transfer all of the data from.
-		uiFileSize = FileGetSize( hfile );
-		pBufferHead.Allocate(uiFileSize);
-		FileRead(hfile, pBufferHead, uiFileSize);
+		/* Get the file size and alloc one huge buffer for it. We will use this
+		 * buffer to transfer all of the data from. */
+		UINT32 const file_size = FileGetSize(f);
+		pBufferHead.Allocate(file_size);
+		FileRead(f, pBufferHead, file_size);
 	}
 
 	INT8* pBuffer = pBufferHead;
 
 	// Read JA2 Version ID
-	LOADDATA( &dMajorMapVersion, pBuffer, sizeof( FLOAT ) );
+	FLOAT dMajorMapVersion;
+	LOADDATA(&dMajorMapVersion, pBuffer, sizeof(FLOAT));
 
 #if defined RUSSIAN
 	if (dMajorMapVersion != 6.00) throw std::runtime_error("Incompatible major map version");
@@ -2198,10 +2179,12 @@ try
 		ubMinorMapVersion = 0;
 	}
 
-	// Read FLAGS FOR WORLD
-	LOADDATA( &uiFlags, pBuffer, sizeof( INT32 ) );
+	// Read flags for world
+	UINT32 uiFlags;
+	LOADDATA(&uiFlags, pBuffer, sizeof(INT32));
 
-	LOADDATA( &iTilesetID, pBuffer, sizeof( INT32 ) );
+	INT32 iTilesetID;
+	LOADDATA(&iTilesetID, pBuffer, sizeof(INT32));
 
 #ifdef JA2TESTVERSION
 	uiStartTime = GetJA2Clock();
@@ -2212,165 +2195,116 @@ try
 #endif
 
 	// Load soldier size
-	LOADDATA( &uiSoldierSize, pBuffer, sizeof( INT32 ) );
-
-	//FP 0x000010
+	UINT32 uiSoldierSize;
+	LOADDATA(&uiSoldierSize, pBuffer, sizeof(INT32));
 
 	FOR_ALL_WORLD_TILES(i)
-  {
-		// Read height values
+  { // Read height values
 		i->sHeight = *pBuffer++;
 		++pBuffer; // Skip filler byte
 	}
 
-	//FP 0x00c810
-
-	SetRelativeStartAndEndPercentage( 0, 35, 40, L"Counting layers..." );
-	RenderProgressBar( 0, 100 );
+	SetRelativeStartAndEndPercentage(0, 35, 40, L"Counting layers...");
+	RenderProgressBar(0, 100);
 
 	// Read layer counts
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	UINT8 bCounts[WORLD_MAX][8];
+	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
   {
-		// Read combination of land/world flags
-		LOADDATA( &ubCombine, pBuffer, sizeof( UINT8 ) );
+		UINT8 ubCombine;
 
-		// split
-		bCounts[ cnt ][0] = (UINT8)(ubCombine&0xf);
-		gpWorldLevelData[ cnt ].uiFlags |= (UINT8)((ubCombine&0xf0)>>4);
+		// Read combination of land/world flags
+		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
+		bCounts[cnt][0]                =  ubCombine & 0x0F;
+		gpWorldLevelData[cnt].uiFlags |= (ubCombine & 0xF0) >> 4;
 
 		// Read #objects, structs
-		LOADDATA( &ubCombine, pBuffer, sizeof( UINT8 ) );
-
-		// split
-		bCounts[ cnt ][1] = (UINT8)(ubCombine&0xf);
-		bCounts[ cnt ][2] = (UINT8)((ubCombine&0xf0)>>4);
+		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
+		bCounts[cnt][1] =  ubCombine & 0x0F;
+		bCounts[cnt][2] = (ubCombine & 0xF0) >> 4;
 
 		// Read shadows, roof
-		LOADDATA( &ubCombine, pBuffer, sizeof( UINT8 ) );
-
-		// split
-		bCounts[ cnt ][3] = (UINT8)(ubCombine&0xf);
-		bCounts[ cnt ][4] = (UINT8)((ubCombine&0xf0)>>4);
+		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
+		bCounts[cnt][3] =  ubCombine & 0x0F;
+		bCounts[cnt][4] = (ubCombine & 0xF0) >> 4;
 
    	// Read OnRoof, nothing
-		LOADDATA( &ubCombine, pBuffer, sizeof( UINT8 ) );
-
-		// split
-		bCounts[ cnt ][5] = (UINT8)(ubCombine&0xf);
+		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
+		bCounts[cnt][5] = ubCombine & 0x0F;
 	}
 
-	//FP 0x025810
-	fp = 0x025810;
-	offset = 0;
+	SetRelativeStartAndEndPercentage(0, 40, 43, L"Loading land layers...");
+	RenderProgressBar(0, 100);
 
-	SetRelativeStartAndEndPercentage( 0, 40, 43, L"Loading land layers...");
-	RenderProgressBar( 0, 100 );
-
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 	{
- 		// Read new values
-		if( bCounts[ cnt ][ 0 ] > 10 )
+		for (INT32 cnt2 = 0; cnt2 != bCounts[cnt][0]; ++cnt2)
 		{
-			cnt = cnt;
-		}
-		for( cnt2 = 0; cnt2 < bCounts[ cnt ][ 0 ]; cnt2++ )
-		{
-			LOADDATA( &ubType, pBuffer, sizeof( UINT8 ) );
-			LOADDATA( &ubSubIndex, pBuffer, sizeof( UINT8 ) );
-
-			// Get tile index
-			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
-
-			// Add layer
-			AddLandToHead( cnt, usTileIndex );
-
-			offset += 2;
+			UINT8 ubType;
+			UINT8 ubSubIndex;
+			LOADDATA(&ubType,     pBuffer, sizeof(UINT8));
+			LOADDATA(&ubSubIndex, pBuffer, sizeof(UINT8));
+			UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
+			AddLandToHead(cnt, usTileIndex);
 		}
 	}
 
-	fp += offset;
-	offset = 0;
-
-	SetRelativeStartAndEndPercentage( 0, 43, 46, L"Loading object layer...");
-	RenderProgressBar( 0, 100 );
+	SetRelativeStartAndEndPercentage(0, 43, 46, L"Loading object layer...");
+	RenderProgressBar(0, 100);
 
 	if (ubMinorMapVersion < 15)
-	{ //Old loads
-		for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	{ // Old loads
+		for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 		{
-			// Set objects
-			for( cnt2 = 0; cnt2 < bCounts[ cnt ][ 1 ]; cnt2++ )
+			for (INT32 cnt2 = 0; cnt2 != bCounts[cnt][1]; ++cnt2)
 			{
-
-				LOADDATA( &ubType, pBuffer, sizeof( UINT8 ) );
-				LOADDATA( &ubSubIndex, pBuffer, sizeof( UINT8 ) );
-				if ( ubType >= FIRSTPOINTERS )
-				{
-					continue;
-				}
-				// Get tile index
-				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
-				// Add layer
-				AddObjectToTail( cnt, usTileIndex );
+				UINT8 ubType;
+				UINT8 ubSubIndex;
+				LOADDATA(&ubType,     pBuffer, sizeof(UINT8));
+				LOADDATA(&ubSubIndex, pBuffer, sizeof(UINT8));
+				if (ubType >= FIRSTPOINTERS) continue;
+				UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
+				AddObjectToTail(cnt, usTileIndex);
 			}
 		}
 	}
 	else
-	{ //New load require UINT16 for the type subindex due to the fact that ROADPIECES
-		//contain over 300 type subindices.
-		for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	{ /* New load: Require UINT16 for the type subindex due to the fact that
+		 * ROADPIECES contains over 300 type subindices. */
+		for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 		{
-			// Set objects
-			if( bCounts[ cnt ][ 1 ] > 10 )
+			for (INT32 cnt2 = 0; cnt2 != bCounts[cnt][1]; ++cnt2)
 			{
-				cnt = cnt;
-			}
-			for( cnt2 = 0; cnt2 < bCounts[ cnt ][ 1 ]; cnt2++ )
-			{
-
-				LOADDATA( &ubType, pBuffer, sizeof( UINT8 ) );
-				LOADDATA( &usTypeSubIndex, pBuffer, sizeof( UINT16 ) );
-				if ( ubType >= FIRSTPOINTERS )
-				{
-					continue;
-				}
-				// Get tile index
-				UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, usTypeSubIndex);
-				// Add layer
-				AddObjectToTail( cnt, usTileIndex );
-
-				offset += 3;
+				UINT8  ubType;
+				UINT16 usTypeSubIndex;
+				LOADDATA(&ubType,         pBuffer, sizeof(UINT8));
+				LOADDATA(&usTypeSubIndex, pBuffer, sizeof(UINT16));
+				if (ubType >= FIRSTPOINTERS) continue;
+				UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, usTypeSubIndex);
+				AddObjectToTail(cnt, usTileIndex);
 			}
 		}
 	}
 
-	fp += offset;
-	offset = 0;
+	SetRelativeStartAndEndPercentage(0, 46, 49, L"Loading struct layer...");
+	RenderProgressBar(0, 100);
 
-	SetRelativeStartAndEndPercentage( 0, 46, 49, L"Loading struct layer..." );
-	RenderProgressBar( 0, 100 );
-
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
-	{
-		// Set structs
-		if( bCounts[ cnt ][ 2 ] > 10 )
+	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
+	{ // Set structs
+		for (INT32 cnt2 = 0; cnt2 != bCounts[cnt][2]; ++cnt2)
 		{
-			cnt = cnt;
-		}
-		for( cnt2 = 0; cnt2 < bCounts[ cnt ][ 2 ]; cnt2++ )
-		{
-			LOADDATA( &ubType, pBuffer, sizeof( UINT8 ) );
-			LOADDATA( &ubSubIndex, pBuffer, sizeof( UINT8 ) );
+			UINT8 ubType;
+			UINT8 ubSubIndex;
+			LOADDATA(&ubType,     pBuffer, sizeof(UINT8));
+			LOADDATA(&ubSubIndex, pBuffer, sizeof(UINT8));
 
-			// Get tile index
 			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 
-      if ( ubMinorMapVersion <= 25 )
+      if (ubMinorMapVersion <= 25)
       {
-        // Check patching for phantom menace struct data...
-        if ( gTileDatabase[ usTileIndex ].uiFlags & UNDERFLOW_FILLER )
-        {
-        	/* HACK000F Workaround: Skip underflow fillers, when there is more
+        // Check patching for phantom menace struct data
+        if (gTileDatabase[usTileIndex].uiFlags & UNDERFLOW_FILLER)
+        { /* HACK000F Workaround: Skip underflow fillers, when there is more
         	 * than one struct on this tile, otherwise adding the underflow
         	 * replacement struct will fail */
 					if (bCounts[cnt][2] > 1) continue;
@@ -2379,164 +2313,111 @@ try
         }
       }
 
-			// Add layer
 			try
 			{
 				AddStructToTail(cnt, usTileIndex);
 			}
 			catch (FailedToAddNode const&)
-			{
-				/* HACK0010 Workaround: ignore, because there are defective maps with
+			{ /* HACK0010 Workaround: Ignore, because there are defective maps with
 				 * overlapping objects */
 			}
-
-			offset += 2;
 		}
 	}
 
-	fp += offset;
-	offset = 0;
+	SetRelativeStartAndEndPercentage(0, 49, 52, L"Loading shadow layer...");
+	RenderProgressBar(0, 100);
 
-	SetRelativeStartAndEndPercentage( 0, 49, 52, L"Loading shadow layer..." );
-	RenderProgressBar( 0, 100 );
-
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 	{
-		if( bCounts[ cnt ][ 3 ] > 10 )
+		for (INT32 cnt2 = 0; cnt2 != bCounts[cnt][3]; ++cnt2)
 		{
-			cnt = cnt;
-		}
-		for( cnt2 = 0; cnt2 < bCounts[ cnt ][ 3 ]; cnt2++ )
-		{
-			LOADDATA( &ubType, pBuffer, sizeof( UINT8 ) );
-			LOADDATA( &ubSubIndex, pBuffer, sizeof( UINT8 ) );
-
-			// Get tile index
-			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
-
-			// Add layer
-			AddShadowToTail( cnt, usTileIndex );
-
-			offset += 2;
+			UINT8 ubType;
+			UINT8 ubSubIndex;
+			LOADDATA(&ubType,     pBuffer, sizeof(UINT8));
+			LOADDATA(&ubSubIndex, pBuffer, sizeof(UINT8));
+			UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
+			AddShadowToTail(cnt, usTileIndex);
 		}
 	}
 
-	fp += offset;
-	offset = 0;
+	SetRelativeStartAndEndPercentage(0, 52, 55, L"Loading roof layer...");
+	RenderProgressBar(0, 100);
 
-	SetRelativeStartAndEndPercentage( 0, 52, 55, L"Loading roof layer..." );
-	RenderProgressBar( 0, 100 );
-
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 	{
-		if( bCounts[ cnt ][ 4 ] > 10 )
+		for (INT32 cnt2 = 0; cnt2 != bCounts[cnt][4]; ++cnt2)
 		{
-			cnt = cnt;
-		}
-		for( cnt2 = 0; cnt2 < bCounts[ cnt ][ 4 ]; cnt2++ )
-		{
-			LOADDATA( &ubType, pBuffer, sizeof( UINT8 ) );
-			LOADDATA( &ubSubIndex, pBuffer, sizeof( UINT8 ) );
-
-			// Get tile index
-			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
-
-			// Add layer
-			AddRoofToTail( cnt, usTileIndex );
-
-			offset += 2;
+			UINT8 ubType;
+			UINT8 ubSubIndex;
+			LOADDATA(&ubType,     pBuffer, sizeof(UINT8));
+			LOADDATA(&ubSubIndex, pBuffer, sizeof(UINT8));
+			UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
+			AddRoofToTail(cnt, usTileIndex);
 		}
 	}
 
-	fp += offset;
-	offset = 0;
+	SetRelativeStartAndEndPercentage(0, 55, 58, L"Loading on roof layer...");
+	RenderProgressBar(0, 100);
 
-	SetRelativeStartAndEndPercentage( 0, 55, 58, L"Loading on roof layer..." );
-	RenderProgressBar( 0, 100 );
-
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 	{
-		if( bCounts[ cnt ][ 5 ] > 10 )
+		for (INT32 cnt2 = 0; cnt2 != bCounts[cnt][5]; ++cnt2)
 		{
-			cnt = cnt;
-		}
-		for( cnt2 = 0; cnt2 < bCounts[ cnt ][ 5 ]; cnt2++ )
-		{
-			LOADDATA( &ubType, pBuffer, sizeof( UINT8 ) );
-			LOADDATA( &ubSubIndex, pBuffer, sizeof( UINT8 ) );
-
-			// Get tile index
-			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
-
-			// Add layer
-			AddOnRoofToTail( cnt, usTileIndex );
-
-			offset += 2;
+			UINT8 ubType;
+			UINT8 ubSubIndex;
+			LOADDATA(&ubType,     pBuffer, sizeof(UINT8));
+			LOADDATA(&ubSubIndex, pBuffer, sizeof(UINT8));
+			UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
+			AddOnRoofToTail(cnt, usTileIndex);
 		}
 	}
-
-	fp += offset;
-	offset = 0;
 
 #if defined RUSSIAN
-	{
-		UINT32 uiNums[37];
-		LOADDATA( uiNums, pBuffer, 37 * sizeof( INT32 ) );
-	}
+	pBuffer += 148;
 #endif
 
-	SetRelativeStartAndEndPercentage( 0, 58, 59, L"Loading room information..." );
-	RenderProgressBar( 0, 100 );
+	SetRelativeStartAndEndPercentage(0, 58, 59, L"Loading room information...");
+	RenderProgressBar(0, 100);
 
-	#ifdef JA2EDITOR
-		gubMaxRoomNumber = 0;
-		for( cnt = 0; cnt < WORLD_MAX; cnt++ )
-		{
-			// Read room information
-			LOADDATA( &gubWorldRoomInfo[ cnt ], pBuffer, sizeof( INT8 ) );
-				//Got to set the max room number
-				if( gubWorldRoomInfo[ cnt ] > gubMaxRoomNumber )
-					gubMaxRoomNumber = gubWorldRoomInfo[ cnt ];
-		}
-		if( gubMaxRoomNumber < 255 )
-			gubMaxRoomNumber++;
-	#else
-		LOADDATA( gubWorldRoomInfo, pBuffer, sizeof( INT8 ) * WORLD_MAX );
-	#endif
-
-	// ATE; Memset this array!
-	if( 0 )
-	{ //for debugging purposes
-		memset( gubWorldRoomInfo, 0, sizeof( gubWorldRoomInfo ) );
+	LOADDATA(gubWorldRoomInfo, pBuffer, sizeof(INT8) * WORLD_MAX);
+#ifdef JA2EDITOR
+	UINT8 max_room_no = 0;
+	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
+	{
+		if (max_room_no < gubWorldRoomInfo[cnt])
+			max_room_no = gubWorldRoomInfo[cnt];
 	}
+	if (max_room_no < 255) ++max_room_no;
+	gubMaxRoomNumber = max_room_no;
+#endif
 
-	memset( gubWorldRoomHidden, TRUE, sizeof( gubWorldRoomHidden ) );
+	memset(gubWorldRoomHidden, TRUE, sizeof(gubWorldRoomHidden));
 
-	SetRelativeStartAndEndPercentage( 0, 59, 61, L"Loading items..." );
-	RenderProgressBar( 0, 100 );
+	SetRelativeStartAndEndPercentage(0, 59, 61, L"Loading items...");
+	RenderProgressBar(0, 100);
 
-	if( uiFlags & MAP_WORLDITEMS_SAVED )
+	if (uiFlags & MAP_WORLDITEMS_SAVED)
 	{
 		// Load out item information
 		gfLoadPitsWithoutArming = TRUE;
-		LoadWorldItemsFromMap( &pBuffer );
+		LoadWorldItemsFromMap(&pBuffer);
 		gfLoadPitsWithoutArming = FALSE;
 	}
 
-	SetRelativeStartAndEndPercentage( 0, 62, 85, L"Loading lights..." );
-	RenderProgressBar( 0, 0 );
+	SetRelativeStartAndEndPercentage(0, 62, 85, L"Loading lights...");
+	RenderProgressBar(0, 0);
 
-	if( uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED )
-	{ //Ambient light levels are only saved in underground levels
-		LOADDATA( &gfBasement, pBuffer, 1 );
-		LOADDATA( &gfCaves, pBuffer, 1 );
-		LOADDATA( &ubAmbientLightLevel, pBuffer, 1 );
+	if (uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED)
+	{ // Ambient light levels are only saved in underground levels
+		LOADDATA(&gfBasement,          pBuffer, 1);
+		LOADDATA(&gfCaves,             pBuffer, 1);
+		LOADDATA(&ubAmbientLightLevel, pBuffer, 1);
 	}
 	else
-	{ //We are above ground.
+	{ // We are above ground.
 		gfBasement = FALSE;
-		gfCaves = FALSE;
-		if( !gfEditMode && guiCurrentScreen != MAPUTILITY_SCREEN )
+		gfCaves    = FALSE;
+		if (!gfEditMode && guiCurrentScreen != MAPUTILITY_SCREEN)
 		{
 			ubAmbientLightLevel = GetTimeOfDayAmbientLightLevel();
 		}
@@ -2548,134 +2429,118 @@ try
 #ifdef JA2TESTVERSION
 	uiStartTime = GetJA2Clock();
 #endif
-	if( uiFlags & MAP_WORLDLIGHTS_SAVED )
+	if (uiFlags & MAP_WORLDLIGHTS_SAVED)
 	{
-		LoadMapLights( &pBuffer );
+		LoadMapLights(&pBuffer);
 	}
 	else
-	{
-		// Set some default value for lighting
-		SetDefaultWorldLightingColors( );
+	{ // Set some default value for lighting
+		SetDefaultWorldLightingColors();
 	}
-	LightSetBaseLevel( ubAmbientLightLevel );
+	LightSetBaseLevel(ubAmbientLightLevel);
 #ifdef JA2TESTVERSION
 	uiLoadMapLightsTime = GetJA2Clock() - uiStartTime;
 #endif
 
 
-	SetRelativeStartAndEndPercentage( 0, 85, 86, L"Loading map information..." );
-	RenderProgressBar( 0, 0 );
+	SetRelativeStartAndEndPercentage(0, 85, 86, L"Loading map information...");
+	RenderProgressBar(0, 0);
 
-	LoadMapInformation( &pBuffer );
+	LoadMapInformation(&pBuffer);
 
-	if( uiFlags & MAP_FULLSOLDIER_SAVED )
+	if (uiFlags & MAP_FULLSOLDIER_SAVED)
 	{
-		SetRelativeStartAndEndPercentage( 0, 86, 87, L"Loading placements..." );
-		RenderProgressBar( 0, 0 );
-		LoadSoldiersFromMap( &pBuffer );
+		SetRelativeStartAndEndPercentage(0, 86, 87, L"Loading placements...");
+		RenderProgressBar(0, 0);
+		LoadSoldiersFromMap(&pBuffer);
 	}
-	if( uiFlags & MAP_EXITGRIDS_SAVED )
+	if (uiFlags & MAP_EXITGRIDS_SAVED)
 	{
-		SetRelativeStartAndEndPercentage( 0, 87, 88, L"Loading exit grids..." );
-		RenderProgressBar( 0, 0 );
-		LoadExitGrids( &pBuffer );
+		SetRelativeStartAndEndPercentage(0, 87, 88, L"Loading exit grids...");
+		RenderProgressBar(0, 0);
+		LoadExitGrids(&pBuffer);
 	}
-	if( uiFlags & MAP_DOORTABLE_SAVED )
+	if (uiFlags & MAP_DOORTABLE_SAVED)
 	{
-		SetRelativeStartAndEndPercentage( 0, 89, 90, L"Loading door tables..." );
-		RenderProgressBar( 0, 0 );
-		LoadDoorTableFromMap( &pBuffer );
+		SetRelativeStartAndEndPercentage(0, 89, 90, L"Loading door tables...");
+		RenderProgressBar(0, 0);
+		LoadDoorTableFromMap(&pBuffer);
 	}
-	if( uiFlags & MAP_EDGEPOINTS_SAVED )
+	bool generate_edge_points;
+	if (uiFlags & MAP_EDGEPOINTS_SAVED)
 	{
-		SetRelativeStartAndEndPercentage( 0, 90, 91, L"Loading edgepoints..." );
-		RenderProgressBar( 0, 0 );
-		if( !LoadMapEdgepoints( &pBuffer ) )
-			fGenerateEdgePoints = TRUE; //only if the map had the older edgepoint system
+		SetRelativeStartAndEndPercentage(0, 90, 91, L"Loading edgepoints...");
+		RenderProgressBar(0, 0);
+		// Only if the map had the older edgepoint system
+		generate_edge_points = !LoadMapEdgepoints(&pBuffer);
 	}
 	else
 	{
-		fGenerateEdgePoints = TRUE;
+		generate_edge_points = true;
 	}
-	if( uiFlags & MAP_NPCSCHEDULES_SAVED )
+	if (uiFlags & MAP_NPCSCHEDULES_SAVED)
 	{
-		SetRelativeStartAndEndPercentage( 0, 91, 92, L"Loading NPC schedules..." );
-		RenderProgressBar( 0, 0 );
-		LoadSchedules( &pBuffer );
+		SetRelativeStartAndEndPercentage(0, 91, 92, L"Loading NPC schedules...");
+		RenderProgressBar(0, 0);
+		LoadSchedules(&pBuffer);
 	}
 
 	ValidateAndUpdateMapVersionIfNecessary();
 
-	//if we arent loading a saved game
-//	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
-	{
-		SetRelativeStartAndEndPercentage( 0, 93, 94, L"Init Loaded World..." );
-		RenderProgressBar( 0, 0 );
-		InitLoadedWorld( );
-	}
+	SetRelativeStartAndEndPercentage(0, 93, 94, L"Init Loaded World...");
+	RenderProgressBar(0, 0);
+	InitLoadedWorld();
 
-	if( fGenerateEdgePoints )
+	if (generate_edge_points)
 	{
-		SetRelativeStartAndEndPercentage( 0, 94, 95, L"Generating map edgepoints..." );
-		RenderProgressBar( 0, 0 );
+		SetRelativeStartAndEndPercentage(0, 94, 95, L"Generating map edgepoints...");
+		RenderProgressBar(0, 0);
 		CompileWorldMovementCosts();
 		GenerateMapEdgepoints();
 	}
 
-	RenderProgressBar( 0, 20 );
+	RenderProgressBar(0, 20);
 
-	SetRelativeStartAndEndPercentage( 0, 95, 100, L"General initialization..." );
-	// RESET AI!
+	SetRelativeStartAndEndPercentage(0, 95, 100, L"General initialization...");
+	// Reset AI!
 	InitOpponentKnowledgeSystem();
 
-	RenderProgressBar( 0, 30 );
+	RenderProgressBar(0, 30);
+	RenderProgressBar(0, 40);
 
-	//AllTeamsLookForAll(NO_INTERRUPTS);
-
-	RenderProgressBar( 0, 40 );
-
-	// CHECK IF OUR SELECTED GUY IS GONE!
-	if (g_selected_man != NULL && !g_selected_man->bActive)
+	// Check if our selected guy is gone!
+	if (g_selected_man && !g_selected_man->bActive)
 	{
-		SetSelectedMan(NULL);
+		SetSelectedMan(0);
 	}
 
-	RenderProgressBar( 0, 60 );
+	RenderProgressBar(0, 60);
 
-	InvalidateWorldRedundency( );
+	InvalidateWorldRedundency();
 
-	LoadRadarScreenBitmap( puiFilename );
+	LoadRadarScreenBitmap(filename);
 
-	RenderProgressBar( 0, 80 );
+	RenderProgressBar(0, 80);
 
 	gfWorldLoaded = TRUE;
 
 #ifdef JA2EDITOR
-	strlcpy(g_filename, puiFilename, lengthof(g_filename));
+	strlcpy(g_filename, filename, lengthof(g_filename));
 #endif
 
 #ifdef JA2TESTVERSION
 	uiLoadWorldTime = GetJA2Clock() - uiLoadWorldStartTime;
-#endif
-
-#ifdef JA2TESTVERSION
 
   // ATE: Not while updating maps!
-  if ( guiCurrentScreen != MAPUTILITY_SCREEN )
-  {
-  	GenerateBuildings();
-  }
-
+  if (guiCurrentScreen != MAPUTILITY_SCREEN) GenerateBuildings();
 #endif
 
-	RenderProgressBar( 0, 100 );
-
-
+	RenderProgressBar(0, 100);
 	DequeueAllKeyBoardEvents();
 }
 catch (...)
 {
-	SET_ERROR("Could not load map file %s", puiFilename);
+	SET_ERROR("Could not load map file %s", filename);
 	throw;
 }
 
