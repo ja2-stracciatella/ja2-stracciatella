@@ -361,7 +361,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer )
 					}
 				}
 			}
-			if( dummyItem.o.usItem == ACTION_ITEM && gfLoadPitsWithoutArming )
+			if (dummyItem.o.usItem == ACTION_ITEM)
 			{ //if we are loading a pit, they are typically loaded without being armed.
 				if( dummyItem.o.bActionValue == ACTION_ITEM_SMALL_PIT || dummyItem.o.bActionValue == ACTION_ITEM_LARGE_PIT )
 				{

@@ -2397,11 +2397,8 @@ try
 	RenderProgressBar(0, 100);
 
 	if (uiFlags & MAP_WORLDITEMS_SAVED)
-	{
-		// Load out item information
-		gfLoadPitsWithoutArming = TRUE;
+	{ // Load out item information
 		LoadWorldItemsFromMap(&pBuffer);
-		gfLoadPitsWithoutArming = FALSE;
 	}
 
 	SetRelativeStartAndEndPercentage(0, 62, 85, L"Loading lights...");

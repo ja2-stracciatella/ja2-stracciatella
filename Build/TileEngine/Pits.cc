@@ -20,7 +20,6 @@
 //used by editor
 BOOLEAN gfShowPits = FALSE;
 
-BOOLEAN gfLoadPitsWithoutArming = FALSE;
 
 void Add3X3Pit( INT32 iMapIndex )
 {

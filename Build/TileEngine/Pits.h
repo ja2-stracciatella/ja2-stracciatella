@@ -15,7 +15,6 @@ void AddAllPits(void);
 void RemoveAllPits(void);
 
 extern BOOLEAN gfShowPits;
-extern BOOLEAN gfLoadPitsWithoutArming;
 
 void HandleFallIntoPitFromAnimation(SOLDIERTYPE* s);
 
