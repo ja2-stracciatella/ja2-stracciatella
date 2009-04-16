@@ -46,7 +46,6 @@
 #include "Structure_Wrap.h"
 #include "Scheduling.h"
 #include "EditorMapInfo.h"
-#include "Pits.h"
 #include "Game_Clock.h"
 #include "Buildings.h"
 #include "StrategicMap.h"

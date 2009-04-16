@@ -17,7 +17,6 @@
 #include "Campaign_Types.h"
 #include "Random.h"
 #include "Action_Items.h"
-#include "Pits.h"
 #include "GameSettings.h"
 #include "Quests.h"
 #include "Soldier_Profile.h"
