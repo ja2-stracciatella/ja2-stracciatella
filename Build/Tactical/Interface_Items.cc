@@ -484,7 +484,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 		}
 	}
 
-	if (GunRange(&o) >= EXCEPTIONAL_RANGE)
+	if (GunRange(o) >= EXCEPTIONAL_RANGE)
 	{
 		zTemp = Message[STR_LONG_RANGE];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
@@ -583,7 +583,7 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 		}
 	}
 
-	if (GunRange(&o) <= BAD_RANGE)
+	if (GunRange(o) <= BAD_RANGE)
 	{
 		zTemp = Message[STR_SHORT_RANGE];
 		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
@@ -2573,7 +2573,7 @@ void RenderItemDescriptionBox(void)
 		if (item->usItemClass & (IC_GUN | IC_LAUNCHER))
 		{
 			//Range
-			const UINT16 range = GunRange(obj);
+			UINT16 const range = GunRange(*obj);
 			HighlightIf(range >= EXCEPTIONAL_RANGE);
 			swprintf(pStr, lengthof(pStr), L"%2d", range / 10);
 			FindFontRightCoordinates(dx + ids[2].sX + ids[2].sValDx, dy + ids[2].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);

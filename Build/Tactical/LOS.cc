@@ -3448,7 +3448,7 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 
 		pBullet->iImpact = ubImpact;
 
-		pBullet->iRange = GunRange( &(pFirer->inv[pFirer->ubAttackingHand]) );
+		pBullet->iRange = GunRange(pFirer->inv[pFirer->ubAttackingHand]);
 		pBullet->sTargetGridNo = ((INT32)dEndX) / CELL_X_SIZE + ((INT32)dEndY) / CELL_Y_SIZE * WORLD_COLS;
 
 		pBullet->bStartCubesAboveLevelZ = (INT8) CONVERT_HEIGHTUNITS_TO_INDEX( (INT32)dStartZ - CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[ pFirer->sGridNo ].sHeight ) );

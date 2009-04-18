@@ -364,16 +364,16 @@ static const char* const gzBurstSndStrings[] =
 static const UINT8 BodyImpactReduction[4] = { 0, 15, 30, 23 };
 
 
-UINT16 GunRange(OBJECTTYPE const* const o)
+UINT16 GunRange(OBJECTTYPE const& o)
 {
 	// return a minimal value of 1 tile
-	if (!(Item[o->usItem].usItemClass & IC_WEAPON)) return CELL_X_SIZE;
+	if (!(Item[o.usItem].usItemClass & IC_WEAPON)) return CELL_X_SIZE;
 
-	INT8   const attach_pos = FindAttachment(o, GUN_BARREL_EXTENDER);
-	UINT16       range      = Weapon[o->usItem].usRange;
+	INT8   const attach_pos = FindAttachment(&o, GUN_BARREL_EXTENDER);
+	UINT16       range      = Weapon[o.usItem].usRange;
 	if (attach_pos != ITEM_NOT_FOUND)
 	{
-		range += GUN_BARREL_RANGE_BONUS * WEAPON_STATUS_MOD(o->bAttachStatus[attach_pos]) / 100;
+		range += GUN_BARREL_RANGE_BONUS * WEAPON_STATUS_MOD(o.bAttachStatus[attach_pos]) / 100;
 	}
 	return range;
 }
@@ -2248,7 +2248,7 @@ BOOLEAN InRange(const SOLDIERTYPE* pSoldier, INT16 sGridNo)
 		 else
 		 {
 			 // For given weapon, check range
-			 if ( sRange <= GunRange( &(pSoldier->inv[HANDPOS]) ) )
+			 if (sRange <= GunRange(pSoldier->inv[HANDPOS]))
 			 {
 					return( TRUE );
 			 }
@@ -2507,7 +2507,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 			}
 		}
 
-		iMaxRange = GunRange( pInHand );
+		iMaxRange = GunRange(*pInHand);
 	}
 	else
 	{

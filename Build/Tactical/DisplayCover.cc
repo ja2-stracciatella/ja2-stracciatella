@@ -305,7 +305,7 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE const* const p
 		}
 
 		INT32  const iGetThrough       = SoldierToLocationChanceToGetThrough(pOpponent, sTargetGridNo, pSoldier->bLevel, bStance, NULL);
-		UINT16 const usMaxRange        = WeaponInHand(pOpponent) ? GunRange(&pOpponent->inv[HANDPOS]) : Weapon[GLOCK_18].usRange;
+		UINT16 const usMaxRange        = WeaponInHand(pOpponent) ? GunRange(pOpponent->inv[HANDPOS]) : Weapon[GLOCK_18].usRange;
 		INT32  const iBulletGetThrough = __min(__max((INT32)(((usMaxRange - usRange) / (FLOAT)usMaxRange + .3) * 100), 0), 100);
 		if (iBulletGetThrough > 5 && iGetThrough > 0)
 		{
