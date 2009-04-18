@@ -774,27 +774,17 @@ void SetPositionSndGridNo( INT32 iPositionSndIndex, INT16 sGridNo )
 
 void SetPositionSndsActive(void)
 {
-  UINT32 cnt;
-	POSITIONSND *pPositionSnd;
+	gfPositionSoundsActive = TRUE;
+	for (UINT32 i = 0; i != guiNumPositionSnds; ++i)
+	{
+		POSITIONSND& p = gPositionSndData[i];
+		if (!p.fAllocated) continue;
+		if (!p.fInActive)  continue;
 
-  gfPositionSoundsActive = TRUE;
-
-  for ( cnt = 0; cnt < guiNumPositionSnds; cnt++ )
-  {
-  	pPositionSnd = &gPositionSndData[ cnt ];
-
-    if ( pPositionSnd->fAllocated )
-    {
-      if ( pPositionSnd->fInActive )
-      {
-        pPositionSnd->fInActive = FALSE;
-
-        // Begin sound effect
-        // Volume 0
-        pPositionSnd->iSoundSampleID = PlayJA2Sample(pPositionSnd->iSoundToPlay, 0, 0, MIDDLEPAN);
-      }
-    }
-  }
+		p.fInActive      = FALSE;
+		// Begin sound effect, Volume 0
+		p.iSoundSampleID = PlayJA2Sample(p.iSoundToPlay, 0, 0, MIDDLEPAN);
+	}
 }
 
 
