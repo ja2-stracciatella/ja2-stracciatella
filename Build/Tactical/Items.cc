@@ -1941,7 +1941,6 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 {
 	OBJECTTYPE	OldAmmo;
 	UINT8				ubBulletsToMove;
-	UINT16			usReloadSound;
 	BOOLEAN			fSameAmmoType;
 	BOOLEAN			fSameMagazineSize;
 	BOOLEAN			fReloadingWithStack;
@@ -2145,9 +2144,8 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	if ( pSoldier->bVisible != -1 )
 	{
 		// Play some effects!
-		usReloadSound	= Weapon[ pGun->usItem ].sReloadSound;
-
-		if ( usReloadSound != 0 && !IsAutoResolveActive() )
+		SoundID const usReloadSound = Weapon[pGun->usItem].sReloadSound;
+		if (usReloadSound != NO_SOUND && !IsAutoResolveActive())
 		{
 			PlayJA2Sample(usReloadSound, HIGHVOLUME, 1, MIDDLEPAN);
 		}
@@ -2173,8 +2171,6 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 
 BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 {
-	UINT16 usReloadSound;
-
 	CHECKF( pAmmo != NULL );
 
 	if ( pWeapon->ubGunShotsLeft > 0 )
@@ -2191,9 +2187,8 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 		//pWeapon->usGunAmmoItem		= 0; // leaving the ammo item the same for auto-reloading purposes
 
 		// Play some effects!
-		usReloadSound	= Weapon[ pWeapon->usItem ].sReloadSound;
-
-		if ( usReloadSound != 0 )
+		SoundID const usReloadSound = Weapon[pWeapon->usItem].sReloadSound;
+		if (usReloadSound != NO_SOUND)
 		{
 			PlayJA2Sample(usReloadSound, HIGHVOLUME, 1, MIDDLEPAN);
 		}

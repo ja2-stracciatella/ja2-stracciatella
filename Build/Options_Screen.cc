@@ -692,7 +692,7 @@ static void HandleOptionToggle(UINT8 ubButton, BOOLEAN fState, BOOLEAN fDown, BO
 
 	if (fPlaySound)
 	{
-		const UINT32 sound = (fDown ? BIG_SWITCH3_IN : BIG_SWITCH3_OUT);
+		SoundID const sound = fDown ? BIG_SWITCH3_IN : BIG_SWITCH3_OUT;
 		PlayJA2Sample(sound, BTNVOLUME, 1, MIDDLEPAN);
 	}
 }

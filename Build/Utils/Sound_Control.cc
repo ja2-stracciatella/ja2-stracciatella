@@ -400,14 +400,14 @@ void ShutdownJA2Sound(void)
 }
 
 
-UINT32 PlayJA2Sample( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
+UINT32 PlayJA2Sample(SoundID const usNum, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan)
 {
 	const UINT32 vol = CalculateSoundEffectsVolume(ubVolume);
 	return SoundPlay(szSoundEffects[usNum], vol, uiPan, ubLoops, NULL, NULL);
 }
 
 
-UINT32 PlayJA2StreamingSample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
+UINT32 PlayJA2StreamingSample(SoundID const usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
 {
 	const UINT32 vol = CalculateSoundEffectsVolume(ubVolume);
 	return SoundPlayStreamedFile(szSoundEffects[usNum], vol, uiPan, ubLoops, NULL, NULL);
@@ -453,7 +453,7 @@ UINT32 PlayLocationJA2SampleFromFile(const UINT16 grid_no, const char* const fil
 }
 
 
-UINT32 PlayLocationJA2Sample(const UINT16 grid_no, const UINT32 idx, const UINT32 base_vol, const UINT32 loops)
+UINT32 PlayLocationJA2Sample(UINT16 const grid_no, SoundID const idx, UINT32 const base_vol, UINT32 const loops)
 {
 	const UINT32 vol = SoundVolume(base_vol, grid_no);
 	const UINT32 pan = SoundDir(grid_no);
@@ -461,7 +461,7 @@ UINT32 PlayLocationJA2Sample(const UINT16 grid_no, const UINT32 idx, const UINT3
 }
 
 
-UINT32 PlayLocationJA2StreamingSample(const UINT16 grid_no, const UINT32 idx, const UINT32 base_vol, const UINT32 loops)
+UINT32 PlayLocationJA2StreamingSample(UINT16 const grid_no, SoundID const idx, UINT32 const base_vol, UINT32 const loops)
 {
 	const UINT32 vol = SoundVolume(base_vol, grid_no);
 	const UINT32 pan = SoundDir(grid_no);
@@ -469,7 +469,7 @@ UINT32 PlayLocationJA2StreamingSample(const UINT16 grid_no, const UINT32 idx, co
 }
 
 
-UINT32 PlaySoldierJA2Sample(const SOLDIERTYPE* const s, const UINT32 usNum, const UINT32 base_vol, const UINT32 ubLoops, const BOOLEAN fCheck)
+UINT32 PlaySoldierJA2Sample(SOLDIERTYPE const* const s, SoundID const usNum, UINT32 const base_vol, UINT32 const ubLoops, BOOLEAN const fCheck)
 {
 	if( !( gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
   {
@@ -659,7 +659,7 @@ struct POSITIONSND
   UINT32        uiFlags;
   INT16         sGridNo;
   INT32         iSoundSampleID;
-  INT32         iSoundToPlay;
+  SoundID       iSoundToPlay;
   const SOLDIERTYPE* SoundSource;
   BOOLEAN       fAllocated;
   BOOLEAN       fInActive;
@@ -704,7 +704,7 @@ static void RecountPositionSnds(void)
 }
 
 
-INT32 NewPositionSnd(INT16 sGridNo, UINT32 uiFlags, const SOLDIERTYPE* SoundSource, UINT32 iSoundToPlay)
+INT32 NewPositionSnd(INT16 const sGridNo, UINT32 const uiFlags, SOLDIERTYPE const* const SoundSource, SoundID const iSoundToPlay)
 {
 	POSITIONSND *pPositionSnd;
 	INT32				iPositionSndIndex;

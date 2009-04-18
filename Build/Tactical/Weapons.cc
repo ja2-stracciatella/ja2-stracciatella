@@ -1,7 +1,6 @@
 #include "Font_Control.h"
 #include "Handle_Items.h"
 #include "Overhead_Types.h"
-#include "Sound_Control.h"
 #include "Soldier_Control.h"
 #include "Overhead.h"
 #include "Event_Pump.h"
@@ -62,7 +61,7 @@
 #define LASERSCOPE_BONUS				20
 
 #define MANDATORY_WEAPON_DELAY		1200
-#define NO_WEAPON_SOUND						0
+#define NO_WEAPON_SOUND        NO_SOUND
 
 #define HEAD_DAMAGE_ADJUSTMENT( x ) ((x * 3) / 2)
 #define LEGS_DAMAGE_ADJUSTMENT( x ) (x / 2)
@@ -939,8 +938,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			// Switch on silencer...
 			if( FindAttachment( &( pSoldier->inv[ pSoldier->ubAttackingHand ] ), SILENCER ) != NO_SLOT )
 			{
-				INT32 uiSound;
-
+				SoundID uiSound;
 				if ( Weapon[ usItemNum ].ubCalibre == AMMO9 || Weapon[ usItemNum ].ubCalibre == AMMO38 || Weapon[ usItemNum ].ubCalibre == AMMO57 )
 				{
 					uiSound = S_SILENCER_1;
@@ -2032,7 +2030,7 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 				}
 				else
 				{
-					PlayJA2Sample(MISS_1 + Random(8), uiMissVolume, 1, SoundDir(sGridNo));
+					PlayJA2Sample(SoundRange<MISS_1, MISS_8>(), uiMissVolume, 1, SoundDir(sGridNo));
 				}
 
 				// Default hit is the ground
@@ -2220,8 +2218,7 @@ void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 
 	pNode = CreateAnimationTile( &AniParams );
 
-	PlayJA2Sample(GLASS_SHATTER1 + Random(2), MIDVOLUME, 1, SoundDir(sGridNo));
-
+	PlayJA2Sample(SoundRange<GLASS_SHATTER1, GLASS_SHATTER2>(), MIDVOLUME, 1, SoundDir(sGridNo));
 }
 
 
@@ -3460,7 +3457,7 @@ void ShotMiss(const BULLET* const b)
 			// RANDOMIZE SOUND SYSTEM
 			if (!DoSpecialEffectAmmoMiss(pAttacker, NOWHERE, 0, 0, 0, TRUE, TRUE, NULL))
 			{
-				PlayJA2Sample(MISS_1 + Random(8), HIGHVOLUME, 1, MIDDLEPAN);
+				PlayJA2Sample(SoundRange<MISS_1, MISS_8>(), HIGHVOLUME, 1, MIDDLEPAN);
 			}
 
 			// ATE: Show misses...( if our team )

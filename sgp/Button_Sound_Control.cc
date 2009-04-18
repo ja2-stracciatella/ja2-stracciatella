@@ -54,7 +54,7 @@ void SpecifyButtonSoundScheme(GUIButtonRef const b, ButtonSoundScheme scheme)
 void PlayButtonSound(GUI_BUTTON const* const btn, ButtonSound const sound_type)
 {
 #ifdef JA2
-	UINT32 sample;
+	SoundID sample;
 	switch (sound_type)
 	{
 		case BUTTON_SOUND_CLICKED_ON:

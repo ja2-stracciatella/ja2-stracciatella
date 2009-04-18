@@ -2,6 +2,7 @@
 #define SOUND_CONTROL_H
 
 #include "JA2Types.h"
+#include "Random.h"
 
 
 #define FARLEFT         0
@@ -22,8 +23,9 @@
 
 
 // SOUNDS ENUMERATION
-enum SoundDefines
+enum SoundID
 {
+	NO_SOUND = -1,
 	MISS_1 = 0,
 	MISS_2,
 	MISS_3,
@@ -365,6 +367,20 @@ enum SoundDefines
 	NUM_SAMPLES
 };
 
+
+template<SoundID, SoundID, bool> struct SoundRangeHelper;
+template<SoundID first, SoundID last> struct SoundRangeHelper<first, last, true>
+{
+	operator SoundID() { return static_cast<SoundID>(first + Random(last - first + 1)); }
+};
+
+
+template<SoundID first, SoundID last> static inline SoundID SoundRange()
+{
+	return SoundRangeHelper<first, last, first < last>();
+}
+
+
 enum AmbientDefines
 {
 	LIGHTNING_1 = 0,
@@ -389,8 +405,8 @@ typedef void (*SOUND_STOP_CALLBACK)( void *pData );
 
 
 void   ShutdownJA2Sound(void);
-UINT32 PlayJA2Sample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
-UINT32 PlayJA2StreamingSample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
+UINT32 PlayJA2Sample(SoundID, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
+UINT32 PlayJA2StreamingSample(SoundID, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
 
 UINT32 PlayJA2SampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
 UINT32 PlayJA2StreamingSampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback);
@@ -399,9 +415,9 @@ UINT32	PlayJA2Ambient( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops);
 
 UINT32 PlayLocationJA2SampleFromFile(UINT16 grid_no, const char* filename, UINT32 base_vol, UINT32 loops);
 
-UINT32 PlayLocationJA2Sample(UINT16 grid_no, UINT32 idx, UINT32 base_vol, UINT32 loops);
-UINT32 PlayLocationJA2StreamingSample(UINT16 grid_no, UINT32 idx, UINT32 base_vol, UINT32 loops);
-UINT32 PlaySoldierJA2Sample(const SOLDIERTYPE* s, UINT32 usNum, UINT32 base_vol, UINT32 ubLoops, BOOLEAN fCheck);
+UINT32 PlayLocationJA2Sample(UINT16 grid_no, SoundID, UINT32 base_vol, UINT32 loops);
+UINT32 PlayLocationJA2StreamingSample(UINT16 grid_no, SoundID, UINT32 base_vol, UINT32 loops);
+UINT32 PlaySoldierJA2Sample(SOLDIERTYPE const* s, SoundID, UINT32 base_vol, UINT32 ubLoops, BOOLEAN fCheck);
 
 
 UINT32 GetSoundEffectsVolume(void);
@@ -424,16 +440,11 @@ INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo );
 
 #define POSITION_SOUND_FROM_SOLDIER   0x00000001
 
-INT32 NewPositionSnd(INT16 sGridNo, UINT32 uiFlags, const SOLDIERTYPE* SoundSource, UINT32 iSoundToPlay);
+INT32 NewPositionSnd(INT16 sGridNo, UINT32 uiFlags, SOLDIERTYPE const* SoundSource, SoundID);
 void DeletePositionSnd( INT32 iPositionSndIndex );
 void SetPositionSndsActive(void);
 void SetPositionSndsInActive(void);
 void SetPositionSndsVolumeAndPanning(void);
 void SetPositionSndGridNo( INT32 iPositionSndIndex, INT16 sGridNo );
-
-
-
-
-
 
 #endif

@@ -850,7 +850,6 @@ try
 	BOOLEAN					fOpenedGraphic = FALSE;
 	BOOLEAN					fDoAnimation = TRUE;
 	STRUCTURE *	pBaseStructure;
-	UINT32			uiSoundID;
 
 	pBaseStructure = FindBaseStructure( pStructure );
 	if (!pBaseStructure)
@@ -983,7 +982,7 @@ try
 		if ( fDoAnimation && pSoldier && pSoldier->ubDoorOpeningNoise)
 		{
 			// ATE; Default to normal door...
-			uiSoundID = ( DROPEN_1 + Random( 3 ) );
+			SoundID uiSoundID = SoundRange<DROPEN_1, DROPEN_3>();
 
 			// OK, check if this door is sliding and is multi-tiled...
 			if ( pStructure->fFlags & STRUCTURE_SLIDINGDOOR )
@@ -1052,7 +1051,7 @@ try
 			ModifyDoorStatus( sGridNo, DONTSETDOORSTATUS, FALSE );
 
 			// ATE; Default to normal door...
-			uiSoundID = ( DRCLOSE_1 + Random( 2 ) );
+			SoundID uiSoundID = SoundRange<DRCLOSE_1, DRCLOSE_2>();
 
 			// OK, check if this door is sliding and is multi-tiled...
 			if ( pStructure->fFlags & STRUCTURE_SLIDINGDOOR )

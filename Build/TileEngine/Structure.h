@@ -5,6 +5,7 @@
 #include "JA2Types.h"
 #include "Structure_Internals.h"
 #include "Overhead_Types.h"
+#include "Sound_Control.h"
 
 #define NOTHING_BLOCKING							0
 #define BLOCKING_REDUCE_RANGE					1
@@ -122,7 +123,7 @@ enum
 STRUCTURE		*FindStructureBySavedInfo( INT16 sGridNo, UINT8 ubType, UINT8 ubWallOrientation, INT8 bLevel );
 UINT8				StructureFlagToType( UINT32 uiFlag );
 
-UINT32 GetStructureOpenSound( STRUCTURE *pStructure, BOOLEAN fClose );
+SoundID GetStructureOpenSound(STRUCTURE*, BOOLEAN fClose);
 
 extern const UINT8 gubMaterialArmour[];
 

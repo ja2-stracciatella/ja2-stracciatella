@@ -11,7 +11,6 @@
 #include "RenderWorld.h"
 #include "Overhead.h"
 #include "AI.h"
-#include "Sound_Control.h"
 #include "Isometric_Utils.h"
 #include "Tile_Animation.h"
 #include "Tile_Cache.h"

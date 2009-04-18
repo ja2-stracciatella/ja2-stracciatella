@@ -64,7 +64,7 @@ extern INT8	 gbSAMGraphicList[ NUMBER_OF_SAMS ];
 struct ExplosionInfo
 {
 	const char* blast_anim;
-	UINT32      sound;
+	SoundID     sound;
 	UINT8       blast_speed;
 	UINT8       transparent_key_frame;
 	UINT8       damage_key_frame;
@@ -248,7 +248,7 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 		}
 	}
 
-	UINT32 uiSoundID = inf->sound;
+	SoundID uiSoundID = inf->sound;
   if ( uiSoundID == EXPLOSION_1 )
   {
       // Randomize

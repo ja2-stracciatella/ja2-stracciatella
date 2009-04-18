@@ -56,8 +56,8 @@ UINT8 ubNumberOfVehicles = 0;
 
 struct VehicleTypeInfo
 {
-	INT32     enter_sound;
-	INT32     move_sound;
+	SoundID   enter_sound;
+	SoundID   move_sound;
 	ProfileID profile;
 	UINT8     movement_type;
 	UINT16    armour_type;

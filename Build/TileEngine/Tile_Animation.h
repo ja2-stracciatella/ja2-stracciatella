@@ -2,6 +2,7 @@
 #define _TILE_ANIMATION_H
 
 #include "JA2Types.h"
+#include "Sound_Control.h"
 #include "WorldDef.h"
 
 
@@ -51,7 +52,7 @@ union AniUserData
 	EXPLOSIONTYPE*     explosion;
 	BULLET*            bullet;
 	const REAL_OBJECT* object;
-	UINT32             sound;
+	SoundID            sound;
 };
 
 

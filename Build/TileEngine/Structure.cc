@@ -27,7 +27,6 @@
 #	include "Editor_Undo.h" //for access to AddToUndoList( iMapIndex )
 #endif
 #include "Explosion_Control.h"
-#include "Sound_Control.h"
 #include "Buildings.h"
 #include "Random.h"
 #include "Tile_Animation.h"
@@ -59,31 +58,31 @@ static UINT16 gusNextAvailableStructureID = FIRST_AVAILABLE_STRUCTURE_ID;
 static STRUCTURE_FILE_REF* gpStructureFileRefs;
 
 
-static const INT32 guiMaterialHitSound[NUM_MATERIAL_TYPES] =
+static SoundID const guiMaterialHitSound[NUM_MATERIAL_TYPES] =
 {
-	-1,
+	NO_SOUND,
 	S_WOOD_IMPACT1,
 	S_WOOD_IMPACT2,
 	S_WOOD_IMPACT3,
 	S_VEG_IMPACT1,
-	-1,
+	NO_SOUND,
 	S_PORCELAIN_IMPACT1,
-	-1,
-	-1,
-	-1,
+	NO_SOUND,
+	NO_SOUND,
+	NO_SOUND,
 
-	-1,
+	NO_SOUND,
 	S_STONE_IMPACT1,
 	S_STONE_IMPACT1,
 	S_STONE_IMPACT1,
 	S_STONE_IMPACT1,
 	S_RUBBER_IMPACT1,
-	-1,
-	-1,
-	-1,
-	-1,
+	NO_SOUND,
+	NO_SOUND,
+	NO_SOUND,
+	NO_SOUND,
 
-	-1,
+	NO_SOUND,
 	S_METAL_IMPACT1,
 	S_METAL_IMPACT2,
 	S_METAL_IMPACT3,
@@ -1344,8 +1343,8 @@ BOOLEAN DamageStructure(STRUCTURE* const pStructure, UINT8 ubDamage, const UINT8
     }
     else
     {
-			const INT32 snd = guiMaterialHitSound[pStructure->pDBStructureRef->pDBStructure->ubArmour];
-			if (snd != -1) PlayLocationJA2Sample(sGridNo, snd, HIGHVOLUME, 1);
+			SoundID const snd = guiMaterialHitSound[pStructure->pDBStructureRef->pDBStructure->ubArmour];
+			if (snd != NO_SOUND) PlayLocationJA2Sample(sGridNo, snd, HIGHVOLUME, 1);
     }
 		// Don't update damage HPs....
 		return( TRUE );
@@ -2021,10 +2020,9 @@ STRUCTURE * FindStructureBySavedInfo( INT16 sGridNo, UINT8 ubType, UINT8 ubWallO
 }
 
 
-UINT32 GetStructureOpenSound( STRUCTURE * pStructure, BOOLEAN fClose )
+SoundID GetStructureOpenSound(STRUCTURE* const pStructure, BOOLEAN const fClose)
 {
-  UINT32 uiSoundID;
-
+  SoundID uiSoundID;
   switch( pStructure->pDBStructureRef->pDBStructure->ubArmour )
   {
     case MATERIAL_LIGHT_METAL:
@@ -2046,7 +2044,7 @@ UINT32 GetStructureOpenSound( STRUCTURE * pStructure, BOOLEAN fClose )
 
   if ( fClose )
   {
-    uiSoundID++;
+    uiSoundID = static_cast<SoundID>(uiSoundID + 1);
   }
 
   return( uiSoundID );

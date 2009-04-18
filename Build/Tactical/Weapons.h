@@ -3,6 +3,7 @@
 
 #include "Item_Types.h"
 #include "JA2Types.h"
+#include "Sound_Control.h"
 
 
 #define MAXCHANCETOHIT 99
@@ -176,25 +177,25 @@ enum
 
 struct WEAPONTYPE
 {
- UINT8	ubWeaponClass;             // handgun/shotgun/rifle/knife
- UINT8	ubWeaponType;							 // exact type (for display purposes)
- UINT8	ubCalibre;	               // type of ammunition needed
- UINT8	ubReadyTime;               // APs to ready/unready weapon
- UINT8	ubShotsPer4Turns;          // maximum (mechanical) firing rate
- UINT8	ubShotsPerBurst;
- UINT8	ubBurstPenalty;						 // % penalty per shot after first
- UINT8	ubBulletSpeed;             // bullet's travelling speed
- UINT8	ubImpact;		               // weapon's max damage impact (size & speed)
- UINT8	ubDeadliness;							 // comparative ratings of guns
- UINT8	ubMagSize;
- UINT16	usRange;
- UINT16	usReloadDelay;
- UINT8	ubAttackVolume;
- UINT8	ubHitVolume;
- UINT16	sSound;
- UINT16	sBurstSound;
- UINT16	sReloadSound;
- UINT16	sLocknLoadSound;
+ UINT8   ubWeaponClass;    // handgun/shotgun/rifle/knife
+ UINT8   ubWeaponType;     // exact type (for display purposes)
+ UINT8   ubCalibre;        // type of ammunition needed
+ UINT8   ubReadyTime;      // APs to ready/unready weapon
+ UINT8   ubShotsPer4Turns; // maximum (mechanical) firing rate
+ UINT8   ubShotsPerBurst;
+ UINT8   ubBurstPenalty;   // % penalty per shot after first
+ UINT8   ubBulletSpeed;    // bullet's travelling speed
+ UINT8   ubImpact;         // weapon's max damage impact (size & speed)
+ UINT8   ubDeadliness;     // comparative ratings of guns
+ UINT8   ubMagSize;
+ UINT16  usRange;
+ UINT16  usReloadDelay;
+ UINT8   ubAttackVolume;
+ UINT8   ubHitVolume;
+ SoundID sSound;
+ SoundID sBurstSound;
+ SoundID sReloadSound;
+ SoundID sLocknLoadSound;
 };
 
 struct MAGTYPE

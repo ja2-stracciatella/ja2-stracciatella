@@ -3007,7 +3007,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
   }
   else
   {
-	  PlayLocationJA2Sample(pSoldier->sGridNo, BULLET_IMPACT_1 + Random(3), MIDVOLUME, 1);
+	  PlayLocationJA2Sample(pSoldier->sGridNo, SoundRange<BULLET_IMPACT_1, BULLET_IMPACT_3>(), MIDVOLUME, 1);
   }
 
 	// PLAY RANDOM GETTING HIT SOUND
@@ -6071,23 +6071,23 @@ BOOLEAN InternalDoMercBattleSound(SOLDIERTYPE* s, BattleSound battle_snd_id, INT
 	if (s->uiStatusFlags & SOLDIER_MUTE) return FALSE;
 
 	// If we are a creature, etc, pick a better sound...
-	INT32 sub_snd = 0;
+	SoundID sub_snd;
 	switch (battle_snd_id)
 	{
 		case BATTLE_SOUND_HIT1:
 		case BATTLE_SOUND_HIT2:
 			switch (s->ubBodyType)
 			{
-				case COW:                sub_snd = COW_HIT_SND;                                break;
+				case COW:                sub_snd = COW_HIT_SND;                                    break;
 				case YAF_MONSTER:
 				case YAM_MONSTER:
 				case ADULTFEMALEMONSTER:
-				case AM_MONSTER:         sub_snd = Random(2) == 0 ? ACR_DIE_PART1 : ACR_LUNGE; break;
-				case INFANT_MONSTER:     sub_snd = BCR_SHRIEK;                                 break;
-				case QUEENMONSTER:       sub_snd = LQ_SHRIEK;                                  break;
-				case LARVAE_MONSTER:     sub_snd = BCR_SHRIEK;                                 break;
-				case BLOODCAT:           sub_snd = BLOODCAT_HIT_1;                             break;
-				case ROBOTNOWEAPON:      sub_snd = S_METAL_IMPACT1 + Random(2);                break;
+				case AM_MONSTER:         sub_snd = Random(2) == 0 ? ACR_DIE_PART1 : ACR_LUNGE;     break;
+				case INFANT_MONSTER:     sub_snd = BCR_SHRIEK;                                     break;
+				case QUEENMONSTER:       sub_snd = LQ_SHRIEK;                                      break;
+				case LARVAE_MONSTER:     sub_snd = BCR_SHRIEK;                                     break;
+				case BLOODCAT:           sub_snd = BLOODCAT_HIT_1;                                 break;
+				case ROBOTNOWEAPON:      sub_snd = SoundRange<S_METAL_IMPACT1, S_METAL_IMPACT2>(); break;
 
 				default: goto no_sub;
 			}
@@ -9177,13 +9177,14 @@ static void InternalPlaySoldierFootstepSound(SOLDIERTYPE* pSoldier)
 {
 	UINT8					ubRandomSnd;
 	INT8					bVolume = MIDVOLUME;
-	// Assume outside
-	UINT32					ubSoundBase = WALK_LEFT_OUT;
 	UINT8					ubRandomMax = 4;
 
 	// Determine if we are on the floor
 	if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
 	{
+		// Assume outside
+		SoundID ubSoundBase = WALK_LEFT_OUT;
+
 		if ( pSoldier->usAnimState == HOPFENCE )
 		{
 			bVolume = HIGHVOLUME;
@@ -9240,7 +9241,7 @@ static void InternalPlaySoldierFootstepSound(SOLDIERTYPE* pSoldier)
 				bVolume = LOWVOLUME;
 			}
 
-			PlaySoldierJA2Sample(pSoldier, ubSoundBase + pSoldier->ubLastFootPrintSound, bVolume, 1, TRUE);
+			PlaySoldierJA2Sample(pSoldier, static_cast<SoundID>(ubSoundBase + pSoldier->ubLastFootPrintSound), bVolume, 1, TRUE);
 		}
 	}
 }

@@ -283,7 +283,7 @@ static SOLDIERCELL*        gpEnemies;
 
 
 //Simple wrappers for autoresolve sounds that are played.
-static void PlayAutoResolveSample(UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
+static void PlayAutoResolveSample(SoundID const usNum, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan)
 {
 	if( gpAR->fSound )
 	{
@@ -3229,7 +3229,7 @@ static BOOLEAN FireAShot(SOLDIERCELL* pAttacker)
 			if( !pItem->ubGunShotsLeft )
 			{
 				AutoReload( pSoldier );
-				if ( pItem->ubGunShotsLeft && Weapon[ pItem->usItem ].sLocknLoadSound )
+				if (pItem->ubGunShotsLeft && Weapon[pItem->usItem].sLocknLoadSound != NO_SOUND)
 				{
 					PlayAutoResolveSample(Weapon[pItem->usItem].sLocknLoadSound, 50, 1, MIDDLEPAN);
 				}
@@ -3377,7 +3377,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 					}
 				}
 				else
-					PlayAutoResolveSample(SWOOSH_1 + PreRandom(6), 50, 1, MIDDLEPAN);
+					PlayAutoResolveSample(SoundRange<SWOOSH_1, SWOOSH_6>(), 50, 1, MIDDLEPAN);
 				if( pTarget->uiFlags & CELL_MERC )
 					// AGILITY GAIN: Target "dodged" an attack
 					StatChange( pTarget->pSoldier, AGILAMT, 5, FALSE );
@@ -3413,7 +3413,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 	else
 	{
 		OBJECTTYPE *pItem;
-		PlayAutoResolveSample(BULLET_IMPACT_1 + PreRandom(3), 50, 1, MIDDLEPAN);
+		PlayAutoResolveSample(SoundRange<BULLET_IMPACT_1, BULLET_IMPACT_3>(), 50, 1, MIDDLEPAN);
 		if( !pTarget->pSoldier->bLife )
 		{ //Soldier already dead (can't kill him again!)
 			return;
@@ -3559,7 +3559,7 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 		if( pTarget->uiFlags & CELL_MERC )
 			// AGILITY GAIN: Target "dodged" an attack
 			StatChange( pTarget->pSoldier, AGILAMT, 5, FALSE );
-		PlayAutoResolveSample(MISS_1 + PreRandom(8), 50, 1, MIDDLEPAN);
+		PlayAutoResolveSample(SoundRange<MISS_1, MISS_8>(), 50, 1, MIDDLEPAN);
 		return;
 	}
 
@@ -3577,7 +3577,7 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 	}
 
 	//bullet hit -- play an impact sound and a merc hit sound
-	PlayAutoResolveSample(BULLET_IMPACT_1 + PreRandom(3), 50, 1, MIDDLEPAN);
+	PlayAutoResolveSample(SoundRange<BULLET_IMPACT_1, BULLET_IMPACT_3>(), 50, 1, MIDDLEPAN);
 
 	if( pTarget->pSoldier->bLife >= CONSCIOUSNESS )
 	{
@@ -4151,7 +4151,7 @@ static void ProcessBattleFrame(void)
 				{
 					pTarget = ChooseTarget( pAttacker );
 					if( pAttacker->uiFlags & CELL_CREATURE && PreRandom( 100 ) < 7 )
-						PlayAutoResolveSample(ACR_SMELL_THREAT + PreRandom(2), 50, 1, MIDDLEPAN);
+						PlayAutoResolveSample(SoundRange<ACR_SMELL_THREAT, ACR_SMEEL_PREY>(), 50, 1, MIDDLEPAN);
 					else
 						AttackTarget( pAttacker, pTarget );
 					ResetNextAttackCounter( pAttacker );

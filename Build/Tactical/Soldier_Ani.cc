@@ -1962,7 +1962,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 			{
 				case 702:
 					// Play fall to knees sound
-					PlaySoldierJA2Sample(pSoldier, FALL_1 + Random(2), HIGHVOLUME, 1, FALSE);
+					PlaySoldierJA2Sample(pSoldier, SoundRange<FALL_1, FALL_2>(), HIGHVOLUME, 1, FALSE);
 					break;
 
 				case 703:
@@ -1993,15 +1993,13 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// Get LNL sound for current gun
 					{
 						UINT16	usItem;
-						UINT16	usSoundID;
 
 						usItem = pSoldier->inv[ HANDPOS ].usItem;
 
 						if ( usItem != NOTHING )
 						{
-							usSoundID = Weapon[ usItem ].sLocknLoadSound;
-
-							if ( usSoundID != 0 )
+							SoundID const usSoundID = Weapon[usItem].sLocknLoadSound;
+							if (usSoundID != NO_SOUND)
 							{
 								PlayLocationJA2Sample(pSoldier->sGridNo, usSoundID, HIGHVOLUME, 1);
 							}
@@ -2069,7 +2067,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 				case 717: // Battle cry
 				{
-					INT32 snd;
+					SoundID snd;
 					if (pSoldier->ubBodyType == QUEENMONSTER)
 					{
 						switch (pSoldier->usActionData)
@@ -2119,7 +2117,7 @@ no_cry:
 
 				case 721:
 					// Play fall from knees to ground...
-					PlaySoldierJA2Sample(pSoldier, FALL_TO_GROUND_1 + Random(3), HIGHVOLUME, 1, FALSE);
+					PlaySoldierJA2Sample(pSoldier, SoundRange<FALL_TO_GROUND_1, FALL_TO_GROUND_3>(), HIGHVOLUME, 1, FALSE);
 					if ( pSoldier->usAnimState == FALLFORWARD_FROMHIT_STAND )
 					{
 						CheckEquipmentForFragileItemDamage( pSoldier, 20 );
@@ -2162,7 +2160,7 @@ no_cry:
 				case 727:
 
 					// Swoosh
-					PlaySoldierJA2Sample(pSoldier, SWOOSH_1 + Random(6), HIGHVOLUME, 1, TRUE);
+					PlaySoldierJA2Sample(pSoldier, SoundRange<SWOOSH_1, SWOOSH_6>(), HIGHVOLUME, 1, TRUE);
 					break;
 
 				case 728:
@@ -2186,7 +2184,7 @@ no_cry:
 				case 731:
 
 					// Stop climb roof..
-					PlaySoldierJA2Sample(pSoldier, FALL_TO_GROUND_1 + Random(3), HIGHVOLUME, 1, TRUE);
+					PlaySoldierJA2Sample(pSoldier, SoundRange<FALL_TO_GROUND_1, FALL_TO_GROUND_3>(), HIGHVOLUME, 1, TRUE);
 					break;
 
 				case 732:
