@@ -415,7 +415,7 @@ static UINT8 ubLevel=0, ubLastLevel=0;
 		if(uiCount == uiFrameNext)
 		{
 			//EnvStopCrickets();
-			PlayJA2Ambient(LIGHTNING_1+Random(2), HIGHVOLUME, 1);
+			PlayJA2Ambient(Random(2) == 0 ? LIGHTNING_1 : LIGHTNING_2, HIGHVOLUME, 1);
 		}
 
 		while(uiCount > ((UINT32)ubLightningTable[uiStrike][uiIndex][0] + uiFrameNext))

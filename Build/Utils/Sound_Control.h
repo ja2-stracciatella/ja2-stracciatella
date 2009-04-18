@@ -381,7 +381,7 @@ template<SoundID first, SoundID last> static inline SoundID SoundRange()
 }
 
 
-enum AmbientDefines
+enum AmbientSoundID
 {
 	LIGHTNING_1 = 0,
 	LIGHTNING_2,
@@ -411,7 +411,7 @@ UINT32 PlayJA2StreamingSample(SoundID, UINT32 ubVolume, UINT32 ubLoops, UINT32 u
 UINT32 PlayJA2SampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
 UINT32 PlayJA2StreamingSampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback);
 
-UINT32	PlayJA2Ambient( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops);
+UINT32 PlayJA2Ambient(AmbientSoundID, UINT32 ubVolume, UINT32 ubLoops);
 
 UINT32 PlayLocationJA2SampleFromFile(UINT16 grid_no, const char* filename, UINT32 base_vol, UINT32 loops);
 

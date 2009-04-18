@@ -430,14 +430,14 @@ UINT32 PlayJA2StreamingSampleFromFile(const char* szFileName, UINT32 ubVolume, U
 }
 
 
-UINT32 PlayJA2Ambient( UINT32 usNum, UINT32 ubVolume, UINT32 ubLoops)
+UINT32 PlayJA2Ambient(AmbientSoundID const usNum, UINT32 const ubVolume, UINT32 const ubLoops)
 {
 	const UINT32 vol = CalculateSoundEffectsVolume(ubVolume);
 	return SoundPlay(szAmbientEffects[usNum], vol, MIDDLEPAN, ubLoops, NULL, NULL);
 }
 
 
-static UINT32 PlayJA2AmbientRandom(UINT32 usNum, UINT32 uiTimeMin, UINT32 uiTimeMax)
+static UINT32 PlayJA2AmbientRandom(AmbientSoundID const usNum, UINT32 const uiTimeMin, UINT32 const uiTimeMax)
 {
 	const char* const filename = szAmbientEffects[usNum];
 	const UINT32      vol      = AmbientVols[usNum];
