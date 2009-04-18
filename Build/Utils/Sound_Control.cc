@@ -651,7 +651,6 @@ INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 
 struct POSITIONSND
 {
-  UINT32        uiFlags;
   INT16         sGridNo;
   INT32         iSoundSampleID;
   SoundID       iSoundToPlay;
@@ -696,7 +695,7 @@ static void RecountPositionSnds(void)
 }
 
 
-INT32 NewPositionSnd(INT16 const sGridNo, UINT32 const uiFlags, SOLDIERTYPE const* const SoundSource, SoundID const iSoundToPlay)
+INT32 NewPositionSnd(INT16 const sGridNo, SOLDIERTYPE const* const SoundSource, SoundID const iSoundToPlay)
 {
 	INT32 const idx = GetFreePositionSnd();
 	if (idx == -1) return -1;
@@ -706,7 +705,6 @@ INT32 NewPositionSnd(INT16 const sGridNo, UINT32 const uiFlags, SOLDIERTYPE cons
 	p.fInActive      = !gfPositionSoundsActive;
 	p.sGridNo        = sGridNo;
 	p.SoundSource    = SoundSource;
-	p.uiFlags        = uiFlags;
 	p.fAllocated     = TRUE;
 	p.iSoundToPlay   = iSoundToPlay;
 	p.iSoundSampleID = NO_SAMPLE;
@@ -893,8 +891,7 @@ void SetPositionSndsVolumeAndPanning(void)
 		if (p.iSoundSampleID == NO_SAMPLE) continue;
 
 		INT8 volume = PositionSoundVolume(15, p.sGridNo);
-		if (p.uiFlags & POSITION_SOUND_FROM_SOLDIER &&
-				p.SoundSource->bVisible == -1)
+		if (p.SoundSource && p.SoundSource->bVisible == -1)
 		{ // Limit volume
 			if (volume > 10) volume = 10;
 		}

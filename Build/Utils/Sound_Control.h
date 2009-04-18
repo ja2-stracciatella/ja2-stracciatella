@@ -438,9 +438,7 @@ INT8	 SoundDir( INT16 sGridNo );
 INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo );
 
 
-#define POSITION_SOUND_FROM_SOLDIER   0x00000001
-
-INT32 NewPositionSnd(INT16 sGridNo, UINT32 uiFlags, SOLDIERTYPE const* SoundSource, SoundID);
+INT32 NewPositionSnd(INT16 sGridNo, SOLDIERTYPE const* SoundSource, SoundID);
 void DeletePositionSnd( INT32 iPositionSndIndex );
 void SetPositionSndsActive(void);
 void SetPositionSndsInActive(void);

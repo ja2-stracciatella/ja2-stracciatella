@@ -630,7 +630,7 @@ try
 
   if (s->ubBodyType == QUEENMONSTER)
   {
-    s->iPositionSndID = NewPositionSnd(NOWHERE, POSITION_SOUND_FROM_SOLDIER, s, QUEEN_AMBIENT_NOISE);
+    s->iPositionSndID = NewPositionSnd(NOWHERE, s, QUEEN_AMBIENT_NOISE);
   }
 
 	// ANYTHING AFTER HERE CAN FAIL
