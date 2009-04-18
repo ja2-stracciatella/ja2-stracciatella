@@ -10,16 +10,10 @@
 
 #define		SOUND_FAR_VOLUME_MOD		25
 
-/*
-UINT32 LOWVOLUME								START_LOWVOLUME;
-UINT32 MIDVOLUME								START_MIDVOLUME;
-UINT32 HIGHVOLUME								START_HIGHVOLUME;
-*/
-
 static UINT32 guiSpeechVolume       = MIDVOLUME;
 static UINT32 guiSoundEffectsVolume = MIDVOLUME;
 
-static const char* szSoundEffects[NUM_SAMPLES] =
+static char const* const szSoundEffects[NUM_SAMPLES] =
 {
 		"SOUNDS/RICOCHET 01.WAV",
 		"SOUNDS/RICOCHET 02.WAV",
@@ -358,7 +352,7 @@ static const char* szSoundEffects[NUM_SAMPLES] =
     "SOUNDS/fence open.wav",
 };
 
-static const char* szAmbientEffects[NUM_AMBIENTS] =
+static char const* const szAmbientEffects[NUM_AMBIENTS] =
 {
 		"SOUNDS/storm1.wav",
 		"SOUNDS/storm2.wav",
@@ -376,7 +370,8 @@ static const char* szAmbientEffects[NUM_AMBIENTS] =
 		"SOUNDS/night_bird3.wav"
 };
 
-static const UINT8 AmbientVols[NUM_AMBIENTS] = {
+static UINT8 const AmbientVols[NUM_AMBIENTS] =
+{
 	25,		// lightning 1
 	25,		// lightning 2
 	10,		// rain 1
@@ -402,69 +397,69 @@ void ShutdownJA2Sound(void)
 
 UINT32 PlayJA2Sample(SoundID const usNum, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan)
 {
-	const UINT32 vol = CalculateSoundEffectsVolume(ubVolume);
+	UINT32 const vol = CalculateSoundEffectsVolume(ubVolume);
 	return SoundPlay(szSoundEffects[usNum], vol, uiPan, ubLoops, NULL, NULL);
 }
 
 
-UINT32 PlayJA2StreamingSample(SoundID const usNum, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
+UINT32 PlayJA2StreamingSample(SoundID const usNum, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan)
 {
-	const UINT32 vol = CalculateSoundEffectsVolume(ubVolume);
+	UINT32 const vol = CalculateSoundEffectsVolume(ubVolume);
 	return SoundPlayStreamedFile(szSoundEffects[usNum], vol, uiPan, ubLoops, NULL, NULL);
 }
 
 
-UINT32 PlayJA2SampleFromFile(const char *szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan)
+UINT32 PlayJA2SampleFromFile(char const* const szFileName, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan)
 {
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array
-	const UINT32 vol = CalculateSoundEffectsVolume(ubVolume);
+	UINT32 const vol = CalculateSoundEffectsVolume(ubVolume);
 	return SoundPlay(szFileName, vol, uiPan, ubLoops, NULL, NULL);
 }
 
 
-UINT32 PlayJA2StreamingSampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan, SOUND_STOP_CALLBACK EndsCallback)
+UINT32 PlayJA2StreamingSampleFromFile(char const* const szFileName, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan, SOUND_STOP_CALLBACK const EndsCallback)
 {
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array
-	const UINT32 vol = CalculateSoundEffectsVolume(ubVolume);
+	UINT32 const vol = CalculateSoundEffectsVolume(ubVolume);
 	return SoundPlayStreamedFile(szFileName, vol, uiPan, ubLoops, EndsCallback, NULL);
 }
 
 
 UINT32 PlayJA2Ambient(AmbientSoundID const usNum, UINT32 const ubVolume, UINT32 const ubLoops)
 {
-	const UINT32 vol = CalculateSoundEffectsVolume(ubVolume);
+	UINT32 const vol = CalculateSoundEffectsVolume(ubVolume);
 	return SoundPlay(szAmbientEffects[usNum], vol, MIDDLEPAN, ubLoops, NULL, NULL);
 }
 
 
 static UINT32 PlayJA2AmbientRandom(AmbientSoundID const usNum, UINT32 const uiTimeMin, UINT32 const uiTimeMax)
 {
-	const char* const filename = szAmbientEffects[usNum];
-	const UINT32      vol      = AmbientVols[usNum];
+	char const* const filename = szAmbientEffects[usNum];
+	UINT32      const vol      = AmbientVols[usNum];
 	return SoundPlayRandom(filename, uiTimeMin, uiTimeMax, vol, vol, MIDDLEPAN, MIDDLEPAN, 1);
 }
 
 
-UINT32 PlayLocationJA2SampleFromFile(const UINT16 grid_no, const char* const filename, const UINT32 base_vol, const UINT32 loops)
+UINT32 PlayLocationJA2SampleFromFile(UINT16 const grid_no, char const* const filename, UINT32 const base_vol, UINT32 const loops)
 {
-	const UINT32 vol = SoundVolume(base_vol, grid_no);
-	const UINT32 pan = SoundDir(grid_no);
+	UINT32 const vol = SoundVolume(base_vol, grid_no);
+	UINT32 const pan = SoundDir(grid_no);
 	return PlayJA2SampleFromFile(filename, vol, loops, pan);
 }
 
 
 UINT32 PlayLocationJA2Sample(UINT16 const grid_no, SoundID const idx, UINT32 const base_vol, UINT32 const loops)
 {
-	const UINT32 vol = SoundVolume(base_vol, grid_no);
-	const UINT32 pan = SoundDir(grid_no);
+	UINT32 const vol = SoundVolume(base_vol, grid_no);
+	UINT32 const pan = SoundDir(grid_no);
 	return PlayJA2Sample(idx, vol, loops, pan);
 }
 
 
 UINT32 PlayLocationJA2StreamingSample(UINT16 const grid_no, SoundID const idx, UINT32 const base_vol, UINT32 const loops)
 {
-	const UINT32 vol = SoundVolume(base_vol, grid_no);
-	const UINT32 pan = SoundDir(grid_no);
+	UINT32 const vol = SoundVolume(base_vol, grid_no);
+	UINT32 const pan = SoundDir(grid_no);
 	return PlayJA2StreamingSample(idx, vol, loops, pan);
 }
 
@@ -476,8 +471,8 @@ UINT32 PlaySoldierJA2Sample(SOLDIERTYPE const* const s, SoundID const usNum, UIN
 	  // CHECK IF GUY IS ON SCREEN BEFORE PLAYING!
 		if (s->bVisible != -1 || !fCheck)
 	  {
-		  const UINT32 vol = SoundVolume(base_vol, s->sGridNo);
-		  const UINT32 pan = SoundDir(s->sGridNo);
+		  UINT32 const vol = SoundVolume(base_vol, s->sGridNo);
+		  UINT32 const pan = SoundDir(s->sGridNo);
 		  return PlayJA2Sample(usNum, CalculateSoundEffectsVolume(vol), ubLoops, pan);
 	  }
   }
