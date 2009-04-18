@@ -781,27 +781,24 @@ static INT16 GetBreathPerAP(SOLDIERTYPE* pSoldier, UINT16 usAnimState)
 }
 
 
-UINT8 CalcAPsToBurst(const INT8 bBaseActionPoints, const OBJECTTYPE* const pObj)
+UINT8 CalcAPsToBurst(INT8 const bBaseActionPoints, OBJECTTYPE const& o)
 {
 	// base APs is what you'd get from CalcActionPoints();
-	if (pObj->usItem == G11)
+	if (o.usItem == G11)
 	{
 		return( 1 );
 	}
 	else
 	{
 		// NB round UP, so 21-25 APs pay full
-
-		INT8 bAttachPos;
-
-		bAttachPos = FindAttachment( pObj, SPRING_AND_BOLT_UPGRADE );
+		INT8 const bAttachPos = FindAttachment(&o, SPRING_AND_BOLT_UPGRADE );
 		if ( bAttachPos != -1 )
 		{
-			return( (__max( 3, (AP_BURST * bBaseActionPoints + (AP_MAXIMUM - 1) ) / AP_MAXIMUM ) * 100) / (100 + pObj->bAttachStatus[ bAttachPos ] / 5) );
+			return (__max(3, (AP_BURST * bBaseActionPoints + (AP_MAXIMUM - 1)) / AP_MAXIMUM) * 100) / (100 + o.bAttachStatus[bAttachPos] / 5);
 		}
 		else
 		{
-			return( __max( 3, (AP_BURST * bBaseActionPoints + (AP_MAXIMUM - 1) ) / AP_MAXIMUM ) );
+			return __max(3, (AP_BURST * bBaseActionPoints + (AP_MAXIMUM - 1)) / AP_MAXIMUM);
 		}
 	}
 }
@@ -825,7 +822,7 @@ UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTur
 
 		if ( pSoldier->bDoBurst )
 		{
-			sAPCost += CalcAPsToBurst( CalcActionPoints( pSoldier ), &(pSoldier->inv[HANDPOS]) );
+			sAPCost += CalcAPsToBurst(CalcActionPoints(pSoldier), pSoldier->inv[HANDPOS]);
 		}
 		else
 		{

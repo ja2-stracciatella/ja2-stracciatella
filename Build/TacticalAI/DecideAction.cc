@@ -2634,7 +2634,6 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
  UINT8	ubStanceCost;
  BOOLEAN fChangeStanceFirst; // before firing
  BOOLEAN fClimb;
- UINT8	ubBurstAPs;
  UINT8	ubOpponentDir;
  INT16	sCheckGridNo;
 
@@ -3434,9 +3433,7 @@ bCanAttack = FALSE;
 					pSoldier->inv[BestAttack.bWeaponIn].ubGunShotsLeft > 1 &&
 					pSoldier->bTeam != gbPlayerNum)
 			{
-
-				ubBurstAPs = CalcAPsToBurst( CalcActionPoints( pSoldier ), &(pSoldier->inv[BestAttack.bWeaponIn]) );
-
+				UINT8 const ubBurstAPs = CalcAPsToBurst(CalcActionPoints(pSoldier), pSoldier->inv[BestAttack.bWeaponIn]);
 				if (pSoldier->bActionPoints - (BestAttack.ubAPCost - BestAttack.ubAimTime) >= ubBurstAPs )
 				{
 					// Base chance of bursting is 25% if best shot was +0 aim, down to 8% at +4
@@ -3472,7 +3469,7 @@ bCanAttack = FALSE;
 					if ( (INT32) PreRandom( 100 ) < iChance)
 					{
 						BestAttack.ubAimTime = BURSTING;
-						BestAttack.ubAPCost = BestAttack.ubAPCost - BestAttack.ubAimTime + CalcAPsToBurst( CalcActionPoints( pSoldier ), &(pSoldier->inv[HANDPOS]) );
+						BestAttack.ubAPCost = BestAttack.ubAPCost - BestAttack.ubAimTime + CalcAPsToBurst(CalcActionPoints(pSoldier), pSoldier->inv[HANDPOS]);
 						// check for spread burst possibilities
 						if (pSoldier->bAttitude != ATTACKSLAYONLY)
 						{

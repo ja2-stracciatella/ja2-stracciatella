@@ -112,13 +112,12 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
  INT32 iEstDamage;
  UINT8 ubRawAPCost,ubMinAPcost,ubMaxPossibleAimTime,ubAimTime,ubBestAimTime;
  UINT8 ubChanceToHit,ubChanceToGetThrough,ubChanceToReallyHit,ubBestChanceToHit = 0;
- UINT8 ubBurstAPs;
 
  ubBestChanceToHit = ubBestAimTime = ubChanceToHit = 0;
 
  pSoldier->usAttackingWeapon = pSoldier->inv[HANDPOS].usItem;
 
- ubBurstAPs = CalcAPsToBurst( CalcActionPoints( pSoldier ), &(pSoldier->inv[HANDPOS]) );
+ UINT8 const ubBurstAPs = CalcAPsToBurst(CalcActionPoints(pSoldier), pSoldier->inv[HANDPOS]);
 
  InitAttackType(pBestShot);      // set all structure fields to defaults
 

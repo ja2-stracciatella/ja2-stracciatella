@@ -294,7 +294,7 @@ void DeductAmmo( SOLDIERTYPE *pSoldier, INT8 bInvPos );
 
 UINT16 GetAPsToPickupItem( SOLDIERTYPE *pSoldier, UINT16 usMapPos );
 UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost, INT8 bAimTime );
-UINT8 CalcAPsToBurst(INT8 bBaseActionPoints, const OBJECTTYPE* pObj);
+UINT8 CalcAPsToBurst(INT8 bBaseActionPoints, OBJECTTYPE const&);
 UINT16 GetAPsToChangeStance(const SOLDIERTYPE* pSoldier, INT8 bDesiredHeight);
 
 UINT16 GetAPsToLook(const SOLDIERTYPE* pSoldier);

@@ -2600,7 +2600,7 @@ void RenderItemDescriptionBox(void)
 		if (w->ubShotsPerBurst > 0)
 		{
 			HighlightIf(w->ubShotsPerBurst >= EXCEPTIONAL_BURST_SIZE || obj->usItem == G11);
-			swprintf(pStr, lengthof(pStr), L"%2d", ubAttackAPs + CalcAPsToBurst(DEFAULT_APS, obj));
+			swprintf(pStr, lengthof(pStr), L"%2d", ubAttackAPs + CalcAPsToBurst(DEFAULT_APS, *obj));
 			FindFontRightCoordinates(dx + ids[5].sX + ids[5].sValDx, dy + ids[5].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
