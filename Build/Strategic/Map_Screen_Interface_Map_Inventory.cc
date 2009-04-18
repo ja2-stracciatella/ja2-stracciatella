@@ -258,7 +258,7 @@ static void UpdateHelpTextForInvnentoryStashSlots(void)
 		OBJECTTYPE const* const o    = &pInventoryPoolList[iCounter + iFirstSlotOnPage].o;
 		if  (o->ubNumberOfObjects > 0)
 		{
-			GetHelpTextForItem(pStr, lengthof(pStr), o);
+			GetHelpTextForItem(pStr, lengthof(pStr), *o);
 			help = pStr;
 		}
 		MapInventoryPoolSlots[iCounter].SetFastHelpText(help);

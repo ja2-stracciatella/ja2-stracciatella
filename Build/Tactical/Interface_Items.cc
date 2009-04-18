@@ -819,7 +819,7 @@ void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel)
 			if ( fDirtyLevel == DIRTYLEVEL2 )
 			{
 				wchar_t pStr[150];
-				GetHelpTextForItem(pStr, lengthof(pStr), &pSoldier->inv[cnt]);
+				GetHelpTextForItem(pStr, lengthof(pStr), pSoldier->inv[cnt]);
 				gSMInvRegion[cnt].SetFastHelpText(pStr);
 			}
 
@@ -5333,17 +5333,17 @@ static void RemoveMoney(void)
 }
 
 
-void GetHelpTextForItem(wchar_t* const dst, const size_t Length, const OBJECTTYPE* const obj)
+void GetHelpTextForItem(wchar_t* const dst, size_t const Length, OBJECTTYPE const& obj)
 {
-	const UINT16 usItem = obj->usItem;
+	UINT16 const usItem = obj.usItem;
 	if (usItem == MONEY)
 	{
-		SPrintMoney(dst, obj->uiMoneyAmount);
+		SPrintMoney(dst, obj.uiMoneyAmount);
 	}
 	else if (Item[usItem].usItemClass == IC_MONEY)
 	{ // alternate money like silver or gold
 		wchar_t pStr2[20];
-		SPrintMoney(pStr2, obj->uiMoneyAmount);
+		SPrintMoney(pStr2, obj.uiMoneyAmount);
 		swprintf(dst, Length, L"%ls (%ls)", ItemNames[usItem], pStr2);
 	}
 	else if (usItem == NOTHING)
@@ -5362,17 +5362,17 @@ void GetHelpTextForItem(wchar_t* const dst, const size_t Length, const OBJECTTYP
 			wcslcpy(pStr, ItemNames[usItem], lengthof(pStr));
 		}
 
-		if ((usItem == ROCKET_RIFLE || usItem == AUTO_ROCKET_RIFLE) && obj->ubImprintID < NO_PROFILE)
+		if ((usItem == ROCKET_RIFLE || usItem == AUTO_ROCKET_RIFLE) && obj.ubImprintID < NO_PROFILE)
 		{
 			wchar_t pStr2[20];
-			swprintf(pStr2, lengthof(pStr2), L" [%ls]", gMercProfiles[obj->ubImprintID].zNickname);
+			swprintf(pStr2, lengthof(pStr2), L" [%ls]", GetProfile(obj.ubImprintID).zNickname);
 			wcscat(pStr, pStr2);
 		}
 
 		// Add attachment string....
 		const wchar_t* const first_prefix = L" ( ";
 		const wchar_t*       prefix       = first_prefix;
-		for (const UINT16* i = obj->usAttachItem; i != endof(obj->usAttachItem); ++i)
+		for (UINT16 const* i = obj.usAttachItem; i != endof(obj.usAttachItem); ++i)
 		{
 			const UINT16 attachment = *i;
 			if (attachment == NOTHING) continue;

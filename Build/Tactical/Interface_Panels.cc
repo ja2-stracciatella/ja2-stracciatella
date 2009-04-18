@@ -2478,7 +2478,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				}
 				else
 				{
-					GetHelpTextForItem(help_buf, lengthof(help_buf), &s->inv[HANDPOS]);
+					GetHelpTextForItem(help_buf, lengthof(help_buf), s->inv[HANDPOS]);
 					help = help_buf;
 				}
 				i->first_hand.SetFastHelpText(help);
@@ -2494,7 +2494,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				}
 				else
 				{
-					GetHelpTextForItem(help_buf, lengthof(help_buf), &s->inv[SECONDHANDPOS]);
+					GetHelpTextForItem(help_buf, lengthof(help_buf), s->inv[SECONDHANDPOS]);
 					help = help_buf;
 				}
 				i->second_hand.SetFastHelpText(help);
