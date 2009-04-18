@@ -1256,7 +1256,7 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 			WORLDITEM&        wi = GetWorldItem(i->iItemIndex);
 			OBJECTTYPE* const o  = &wi.o;
 
-			if (ItemIsCool(o)) fShouldSayCoolQuote = TRUE;
+			if (ItemIsCool(*o)) fShouldSayCoolQuote = TRUE;
 
 			if (o->usItem == SWITCH)
 			{
@@ -1303,7 +1303,7 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 			WORLDITEM&        wi = GetWorldItem(iItemIndex);
 			OBJECTTYPE* const o  = &wi.o;
 
-			if (ItemIsCool(o)) fShouldSayCoolQuote = TRUE;
+			if (ItemIsCool(*o)) fShouldSayCoolQuote = TRUE;
 
 			if (o->usItem == SWITCH)
 			{

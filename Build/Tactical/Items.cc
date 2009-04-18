@@ -4634,28 +4634,20 @@ BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodA
 }
 
 
-BOOLEAN ItemIsCool(const OBJECTTYPE* pObj)
+bool ItemIsCool(OBJECTTYPE const& o)
 {
-	if (pObj->bStatus[0] < 60)
+	if (o.bStatus[0] < 60) return false;
+	INVTYPE const& item = Item[o.usItem];
+	if (item.usItemClass & IC_WEAPON)
 	{
-		return( FALSE );
+		if (Weapon[o.usItem].ubDeadliness >= 30) return true;
 	}
-	if ( Item[ pObj->usItem ].usItemClass & IC_WEAPON )
+	else if (item.usItemClass & IC_ARMOUR)
 	{
-		if ( Weapon[ pObj->usItem ].ubDeadliness >= 30 )
-		{
-			return( TRUE );
-		}
-	}
-	else if ( Item[ pObj->usItem ].usItemClass & IC_ARMOUR )
-	{
-		if ( Armour[ Item[ pObj->usItem ].ubClassIndex ].ubProtection >= 20 )
-		{
-			return( TRUE );
-		}
+		if (Armour[item.ubClassIndex].ubProtection >= 20) return true;
 	}
 
-	return( FALSE );
+	return false;
 }
 
 void ActivateXRayDevice( SOLDIERTYPE * pSoldier )
