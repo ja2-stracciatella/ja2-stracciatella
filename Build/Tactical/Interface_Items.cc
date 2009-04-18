@@ -451,11 +451,11 @@ static BOOLEAN AttemptToAddSubstring(wchar_t* const zDest, const wchar_t* const 
 }
 
 
-static void GenerateProsString(wchar_t* const zItemPros, const OBJECTTYPE* const pObject, const UINT32 uiPixLimit)
+static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UINT32 const uiPixLimit)
 {
 	UINT32			uiStringLength = 0;
 	const wchar_t *zTemp;
-	UINT16			usItem = pObject->usItem;
+	UINT16			usItem = o.usItem;
 	UINT8				ubWeight;
 
 	zItemPros[0] = 0;
@@ -463,7 +463,7 @@ static void GenerateProsString(wchar_t* const zItemPros, const OBJECTTYPE* const
 	ubWeight = Item[ usItem ].ubWeight;
 	if (Item[ usItem ].usItemClass == IC_GUN)
 	{
-		ubWeight += Item[ pObject->usGunAmmoItem ].ubWeight;
+		ubWeight += Item[o.usGunAmmoItem].ubWeight;
 	}
 
 	if (Item[usItem].ubWeight <= EXCEPTIONAL_WEIGHT)
@@ -484,7 +484,7 @@ static void GenerateProsString(wchar_t* const zItemPros, const OBJECTTYPE* const
 		}
 	}
 
-	if ( GunRange( pObject ) >= EXCEPTIONAL_RANGE )
+	if (GunRange(&o) >= EXCEPTIONAL_RANGE)
 	{
 		zTemp = Message[STR_LONG_RANGE];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
@@ -558,12 +558,12 @@ static void GenerateProsString(wchar_t* const zItemPros, const OBJECTTYPE* const
 }
 
 
-static void GenerateConsString(wchar_t* const zItemCons, const OBJECTTYPE* const pObject, const UINT32 uiPixLimit)
+static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UINT32 const uiPixLimit)
 {
 	UINT32			uiStringLength = 0;
 	const wchar_t *zTemp;
 	UINT8				ubWeight;
-	UINT16			usItem = pObject->usItem;
+	UINT16			usItem = o.usItem;
 
 	zItemCons[0] = 0;
 
@@ -571,7 +571,7 @@ static void GenerateConsString(wchar_t* const zItemCons, const OBJECTTYPE* const
 	ubWeight = Item[ usItem ].ubWeight;
 	if (Item[ usItem ].usItemClass == IC_GUN)
 	{
-		ubWeight += Item[ pObject->usGunAmmoItem ].ubWeight;
+		ubWeight += Item[o.usGunAmmoItem].ubWeight;
 	}
 
 	if (ubWeight >= BAD_WEIGHT)
@@ -583,7 +583,7 @@ static void GenerateConsString(wchar_t* const zItemCons, const OBJECTTYPE* const
 		}
 	}
 
-	if ( GunRange( pObject ) <= BAD_RANGE)
+	if (GunRange(&o) <= BAD_RANGE)
 	{
 		zTemp = Message[STR_SHORT_RANGE];
 		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
@@ -969,7 +969,7 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 		// Add item status bar
 		INT16 const sBarX = sX - INV_BAR_DX;
 		INT16 const sBarY = sY + INV_BAR_DY;
-		DrawItemUIBarEx(pObject, 0, sBarX, sBarY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
+		DrawItemUIBarEx(*pObject, 0, sBarX, sBarY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
 	}
 }
 
@@ -1990,12 +1990,12 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 			if (i == 0)
 			{
 				label = gzProsLabel;
-				GenerateProsString(FullItemTemp, o, 1000);
+				GenerateProsString(FullItemTemp, *o, 1000);
 			}
 			else
 			{
 				label = gzConsLabel;
-				GenerateConsString(FullItemTemp, o, 1000);
+				GenerateConsString(FullItemTemp, *o, 1000);
 			}
 			wchar_t text[SIZE_ITEM_PROS];
 			swprintf(text, lengthof(text), L"%ls %ls", label, FullItemTemp);
@@ -2375,7 +2375,7 @@ void RenderItemDescriptionBox(void)
 		INT16         const x   = box->x + dx;
 		INT16         const y   = box->y + dy;
 		INT16         const h   = box->h;
-		DrawItemUIBarEx(obj, gubItemDescStatusIndex, x, y, h, Get16BPPColor(DESC_STATUS_BAR), Get16BPPColor(DESC_STATUS_BAR_SHADOW), guiSAVEBUFFER);
+		DrawItemUIBarEx(*obj, gubItemDescStatusIndex, x, y, h, Get16BPPColor(DESC_STATUS_BAR), Get16BPPColor(DESC_STATUS_BAR_SHADOW), guiSAVEBUFFER);
 	}
 
 	BOOLEAN fHatchOutAttachments = gfItemDescObjectIsAttachment; // if examining attachment, always hatch out attachment slots
@@ -2412,7 +2412,7 @@ void RenderItemDescriptionBox(void)
 				const INT16 bar_x = agi->bar_box.x + x;
 				const INT16 bar_h = agi->bar_box.h;
 				const INT16 bar_y = agi->bar_box.y + y + bar_h - 1;
-				DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + i, bar_x, bar_y, bar_h, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
+				DrawItemUIBarEx(*obj, DRAW_ITEM_STATUS_ATTACHMENT1 + i, bar_x, bar_y, bar_h, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
 			}
 
 			if (fHatchOutAttachments)
@@ -2513,10 +2513,10 @@ void RenderItemDescriptionBox(void)
 			x += pros_cons_indent;
 			w -= pros_cons_indent + StringPixLength(DOTDOTDOT, ITEMDESC_FONT);
 
-			GenerateProsString(gzItemPros, obj, w);
+			GenerateProsString(gzItemPros, *obj, w);
 			MPrint(x, y, gzItemPros);
 
-			GenerateConsString(gzItemCons, obj, w);
+			GenerateConsString(gzItemCons, *obj, w);
 			MPrint(x, y + h, gzItemCons);
 		}
 	}
@@ -4003,7 +4003,7 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 			// Do status bar here...
 			INT16 sNewX = gsItemPopupX + cnt * usWidth + 7;
 			INT16 sNewY = gsItemPopupY + INV_BAR_DY + 3;
-			DrawItemUIBarEx(gpItemPopupObject, cnt, sNewX, sNewY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
+			DrawItemUIBarEx(*gpItemPopupObject, cnt, sNewX, sNewY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
 		}
 	}
 
@@ -4176,7 +4176,7 @@ void RenderKeyRingPopup(const BOOLEAN fFullRender)
 		o.ubNumberOfObjects = key->ubNumber;
 		o.usItem            = FIRST_KEY + LockTable[key->ubKeyID].usKeyItem;
 
-		DrawItemUIBarEx(&o, 0, x + 7, y + 24, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
+		DrawItemUIBarEx(o, 0, x + 7, y + 24, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
 		INVRenderItem(FRAME_BUFFER, NULL, o, x + 8, y, box_w - 8, box_h - 2, DIRTYLEVEL2, 0, TRANSPARENT);
 	}
 

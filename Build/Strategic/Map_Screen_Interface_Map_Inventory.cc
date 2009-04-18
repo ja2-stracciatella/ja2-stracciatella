@@ -211,7 +211,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	const UINT16 col0 = Get16BPPColor(DESC_STATUS_BAR);
 	const UINT16 col1 = Get16BPPColor(DESC_STATUS_BAR_SHADOW);
 	const SGPBox* const bar_box = &g_sector_inv_bar_box;
-	DrawItemUIBarEx(&item->o, 0, dx + bar_box->x, dy + bar_box->y + bar_box->h - 1, bar_box->h, col0, col1, guiSAVEBUFFER);
+	DrawItemUIBarEx(item->o, 0, dx + bar_box->x, dy + bar_box->y + bar_box->h - 1, bar_box->h, col0, col1, guiSAVEBUFFER);
 
 	// if the item is not reachable, or if the selected merc is not in the current sector
 	const SOLDIERTYPE* const s = GetSelectedInfoChar();

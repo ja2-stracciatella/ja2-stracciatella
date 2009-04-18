@@ -201,27 +201,27 @@ void DrawSoldierUIBars(const SOLDIERTYPE* const pSoldier, const INT16 sXPos, con
 }
 
 
-void DrawItemUIBarEx(const OBJECTTYPE* const o, const UINT8 ubStatus, const INT16 x, const INT16 y, INT16 max_h, const INT16 sColor1, const INT16 sColor2, SGPVSurface* const uiBuffer)
+void DrawItemUIBarEx(OBJECTTYPE const& o, const UINT8 ubStatus, const INT16 x, const INT16 y, INT16 max_h, const INT16 sColor1, const INT16 sColor2, SGPVSurface* const uiBuffer)
 {
 	INT16 value;
 	// Adjust for ammo, other things
-	const INVTYPE* const item = &Item[o->usItem];
+	INVTYPE const& item = Item[o.usItem];
 	if (ubStatus >= DRAW_ITEM_STATUS_ATTACHMENT1)
 	{
-		value = o->bAttachStatus[ubStatus - DRAW_ITEM_STATUS_ATTACHMENT1];
+		value = o.bAttachStatus[ubStatus - DRAW_ITEM_STATUS_ATTACHMENT1];
 	}
-	else if (item->usItemClass & IC_AMMO)
+	else if (item.usItemClass & IC_AMMO)
 	{
-		value = 100 * o->ubShotsLeft[ubStatus] / Magazine[item->ubClassIndex].ubMagSize;
+		value = 100 * o.ubShotsLeft[ubStatus] / Magazine[item.ubClassIndex].ubMagSize;
 		if (value > 100) value = 100;
 	}
-	else if (item->usItemClass & IC_KEY)
+	else if (item.usItemClass & IC_KEY)
 	{
 		value = 100;
 	}
 	else
 	{
-		value = o->bStatus[ubStatus];
+		value = o.bStatus[ubStatus];
 	}
 
 	{ SGPVSurface::Lock l(uiBuffer);

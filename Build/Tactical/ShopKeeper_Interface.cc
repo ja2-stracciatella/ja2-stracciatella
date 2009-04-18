@@ -2102,7 +2102,7 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	BltVideoObjectOutline(      FRAME_BUFFER, &ItemVOIdx, item.ubGraphicNum, sCenX,     sCenY, outline);
 
 	//Display the status of the item
-	DrawItemUIBarEx(pItemObject, 0, usPosX + 2, usPosY + 21, 20, Get16BPPColor(FROMRGB(140, 136, 119)), Get16BPPColor(FROMRGB(140, 136, 119)), FRAME_BUFFER);
+	DrawItemUIBarEx(*pItemObject, 0, usPosX + 2, usPosY + 21, 20, Get16BPPColor(FROMRGB(140, 136, 119)), Get16BPPColor(FROMRGB(140, 136, 119)), FRAME_BUFFER);
 
 	//Display the Items Cost
 	if( ubItemArea == PLAYERS_OFFER_AREA )
