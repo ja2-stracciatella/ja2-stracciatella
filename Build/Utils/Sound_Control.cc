@@ -922,41 +922,22 @@ static INT8 PositionSoundVolume(INT8 bInitialVolume, INT16 sGridNo)
 
 void SetPositionSndsVolumeAndPanning(void)
 {
-  UINT32 cnt;
-	POSITIONSND *pPositionSnd;
-  INT8        bVolume, bPan;
+	for (UINT32 i = 0; i != guiNumPositionSnds; ++i)
+	{
+		POSITIONSND const& p = gPositionSndData[i];
+		if (!p.fAllocated)                 continue;
+		if (p.fInActive)                   continue;
+		if (p.iSoundSampleID == NO_SAMPLE) continue;
 
-  for ( cnt = 0; cnt < guiNumPositionSnds; cnt++ )
-  {
-  	pPositionSnd = &gPositionSndData[ cnt ];
+		INT8 volume = PositionSoundVolume(15, p.sGridNo);
+		if (p.uiFlags & POSITION_SOUND_FROM_SOLDIER &&
+				p.SoundSource->bVisible == -1)
+		{ // Limit volume
+			if (volume > 10) volume = 10;
+		}
+		SoundSetVolume(p.iSoundSampleID, volume);
 
-    if ( pPositionSnd->fAllocated )
-    {
-      if ( !pPositionSnd->fInActive )
-      {
-         if ( pPositionSnd->iSoundSampleID != NO_SAMPLE )
-         {
-            bVolume = PositionSoundVolume( 15, pPositionSnd->sGridNo );
-
-            if ( pPositionSnd->uiFlags & POSITION_SOUND_FROM_SOLDIER )
-            {
-               if (pPositionSnd->SoundSource->bVisible == -1)
-               {
-                  // Limit volume,,,
-                  if ( bVolume > 10 )
-                  {
-                    bVolume = 10;
-                  }
-               }
-            }
-
-            SoundSetVolume( pPositionSnd->iSoundSampleID, bVolume );
-
-            bPan = PositionSoundDir( pPositionSnd->sGridNo );
-
-            SoundSetPan( pPositionSnd->iSoundSampleID, bPan );
-         }
-      }
-    }
-  }
+		INT8 const pan = PositionSoundDir(p.sGridNo);
+		SoundSetPan(p.iSoundSampleID, pan);
+	}
 }
