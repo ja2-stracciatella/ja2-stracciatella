@@ -790,27 +790,20 @@ void SetPositionSndsActive(void)
 
 void SetPositionSndsInActive(void)
 {
-  UINT32 cnt;
-	POSITIONSND *pPositionSnd;
+	gfPositionSoundsActive = FALSE;
+	for (UINT32 i = 0; i != guiNumPositionSnds; ++i)
+	{
+		POSITIONSND& p = gPositionSndData[i];
+		if (!p.fAllocated) continue;
 
-  gfPositionSoundsActive = FALSE;
+		p.fInActive = TRUE;
 
-  for ( cnt = 0; cnt < guiNumPositionSnds; cnt++ )
-  {
-  	pPositionSnd = &gPositionSndData[ cnt ];
+		if (p.iSoundSampleID == NO_SAMPLE) continue;
 
-    if ( pPositionSnd->fAllocated )
-    {
-      pPositionSnd->fInActive = TRUE;
-
-      // End sound...
-      if ( pPositionSnd->iSoundSampleID != NO_SAMPLE )
-      {
-         SoundStop( pPositionSnd->iSoundSampleID );
-         pPositionSnd->iSoundSampleID = NO_SAMPLE;
-      }
-    }
-  }
+		// End sound
+		SoundStop(p.iSoundSampleID);
+		p.iSoundSampleID = NO_SAMPLE;
+	}
 }
 
 
