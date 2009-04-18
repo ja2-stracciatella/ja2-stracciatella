@@ -1347,11 +1347,11 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 			{
 				const ITEM_POOL* pItemPoolNext = pItemPool->pNext;
 
-				WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
-				if (DamageItemOnGround(&wi->o, sGridNo, bLevel, sWoundAmt * 2, owner))
+				WORLDITEM& wi = GetWorldItem(pItemPool->iItemIndex);
+				if (DamageItemOnGround(&wi.o, sGridNo, bLevel, sWoundAmt * 2, owner))
 				{
 					// item was destroyed
-					RemoveItemFromPool(wi);
+					RemoveItemFromPool(&wi);
 				}
 				pItemPool = pItemPoolNext;
 			}
@@ -1993,7 +1993,7 @@ static void ToggleActionItemsByFrequency(INT8 bFrequency)
 	// Go through all the bombs in the world, and look for remote ones
 	CFOR_ALL_WORLD_BOMBS(wb)
 	{
-		OBJECTTYPE* const pObj = &GetWorldItem(wb->iItemIndex)->o;
+		OBJECTTYPE* const pObj = &GetWorldItem(wb->iItemIndex).o;
 		if ( pObj->bDetonatorType == BOMB_REMOTE )
 		{
 			// Found a remote bomb, so check to see if it has the same frequency
@@ -2019,10 +2019,10 @@ static void TogglePressureActionItemsInGridNo(INT16 sGridNo)
 	// Go through all the bombs in the world, and look for remote ones
 	CFOR_ALL_WORLD_BOMBS(wb)
 	{
-		WORLDITEM* const wi = GetWorldItem(wb->iItemIndex);
-		if (wi->sGridNo != sGridNo) continue;
+		WORLDITEM& wi = GetWorldItem(wb->iItemIndex);
+		if (wi.sGridNo != sGridNo) continue;
 
-		OBJECTTYPE* const pObj = &wi->o;
+		OBJECTTYPE* const pObj = &wi.o;
 		if ( pObj->bDetonatorType == BOMB_PRESSURE )
 		{
 			// Found a pressure item
@@ -2505,10 +2505,10 @@ void HandleExplosionQueue(void)
 
 			// Preliminary assignments:
 			uiWorldBombIndex = gExplosionQueue[ uiIndex ].uiWorldBombIndex;
-			WORLDITEM*  const wi      = GetWorldItem(gWorldBombs[uiWorldBombIndex].iItemIndex);
-			OBJECTTYPE* const pObj    = &wi->o;
-			INT16       const sGridNo = wi->sGridNo;
-			UINT8       const ubLevel = wi->ubLevel;
+			WORLDITEM&        wi      = GetWorldItem(gWorldBombs[uiWorldBombIndex].iItemIndex);
+			OBJECTTYPE* const pObj    = &wi.o;
+			INT16       const sGridNo = wi.sGridNo;
+			UINT8       const ubLevel = wi.ubLevel;
 
 			if (pObj->usItem == ACTION_ITEM && pObj->bActionValue != ACTION_ITEM_BLOW_UP)
 			{
@@ -2518,12 +2518,12 @@ void HandleExplosionQueue(void)
 			{
 				PlayLocationJA2Sample(sGridNo, KLAXON_ALARM, MIDVOLUME, 5);
 				CallAvailableEnemiesTo( sGridNo );
-				//RemoveItemFromPool(wi);
+				//RemoveItemFromPool(&wi);
 			}
 			else if ( pObj->usBombItem == TRIP_FLARE )
 			{
 				NewLightEffect( sGridNo, LIGHT_FLARE_MARK_1 );
-				RemoveItemFromPool(wi);
+				RemoveItemFromPool(&wi);
 			}
 			else
 			{
@@ -2531,7 +2531,7 @@ void HandleExplosionQueue(void)
 
 				// We have to remove the item first to prevent the explosion from detonating it
 				// a second time :-)
-				RemoveItemFromPool(wi);
+				RemoveItemFromPool(&wi);
 
 				// make sure no one thinks there is a bomb here any more!
 				if ( gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_PLAYER_MINE_PRESENT )
@@ -2611,7 +2611,7 @@ void DecayBombTimers( void )
 	{
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
-			OBJECTTYPE* const pObj = &GetWorldItem(gWorldBombs[uiWorldBombIndex].iItemIndex)->o;
+			OBJECTTYPE* const pObj = &GetWorldItem(gWorldBombs[uiWorldBombIndex].iItemIndex).o;
 			if ( pObj->bDetonatorType == BOMB_TIMED && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
 			{
 				// Found a timed bomb, so decay its delay value and see if it goes off
@@ -2653,7 +2653,7 @@ void SetOffBombsByFrequency(SOLDIERTYPE* const s, const INT8 bFrequency)
 	{
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
-			const OBJECTTYPE* const pObj = &GetWorldItem(gWorldBombs[uiWorldBombIndex].iItemIndex)->o;
+			OBJECTTYPE const* const pObj = &GetWorldItem(gWorldBombs[uiWorldBombIndex].iItemIndex).o;
 			if ( pObj->bDetonatorType == BOMB_REMOTE && !(pObj->fFlags & OBJECT_DISABLED_BOMB) )
 			{
 				// Found a remote bomb, so check to see if it has the same frequency
@@ -2721,10 +2721,10 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOO
 	{
 		if (!gWorldBombs[uiWorldBombIndex].fExists) continue;
 
-		const WORLDITEM* const wi = GetWorldItem(gWorldBombs[uiWorldBombIndex].iItemIndex);
-		if (wi->sGridNo != sGridNo || wi->ubLevel != bLevel) continue;
+		WORLDITEM const& wi = GetWorldItem(gWorldBombs[uiWorldBombIndex].iItemIndex);
+		if (wi.sGridNo != sGridNo || wi.ubLevel != bLevel) continue;
 
-		const OBJECTTYPE* const pObj = &wi->o;
+		OBJECTTYPE const* const pObj = &wi.o;
 		if (!(pObj->fFlags & OBJECT_DISABLED_BOMB))
 		{
 			if (fAllBombs || pObj->bDetonatorType == BOMB_PRESSURE)
@@ -2781,10 +2781,10 @@ void ActivateSwitchInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo)
 	// Go through all the bombs in the world, and look for mines at this location
 	CFOR_ALL_WORLD_BOMBS(wb)
 	{
-		const WORLDITEM* const wi = GetWorldItem(wb->iItemIndex);
-		if (wi->sGridNo != sGridNo) continue;
+		WORLDITEM const& wi = GetWorldItem(wb->iItemIndex);
+		if (wi.sGridNo != sGridNo) continue;
 
-		const OBJECTTYPE* const pObj = &wi->o;
+		OBJECTTYPE const* const pObj = &wi.o;
 		if ( pObj->usItem == SWITCH && ( !(pObj->fFlags & OBJECT_DISABLED_BOMB) ) && pObj->bDetonatorType == BOMB_SWITCH)
 		{
 			// send out a signal to detonate other bombs, rather than this which
@@ -3041,7 +3041,7 @@ static INT32 FindActiveTimedBomb(void)
 	// Go through all the bombs in the world, and look for timed ones
 	FOR_ALL_WORLD_BOMBS(wb)
 	{
-		const OBJECTTYPE* const pObj = &GetWorldItem(wb->iItemIndex)->o;
+		OBJECTTYPE const* const pObj = &GetWorldItem(wb->iItemIndex).o;
 		if (pObj->bDetonatorType != BOMB_TIMED || pObj->fFlags & OBJECT_DISABLED_BOMB) continue;
 
 		return wb->iItemIndex;

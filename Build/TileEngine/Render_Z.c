@@ -63,10 +63,10 @@ static inline INT16 GetMapXYWorldY(INT32 WorldCellX, INT32 WorldCellY)
 	}                                                                                      \
 	else if ( uiLevelNodeFlags & LEVELNODE_ITEM )                                          \
 	{                                                                                      \
-		const WORLDITEM* const wi = GetWorldItem(pNode->pItemPool->iItemIndex);              \
-		if (wi->bRenderZHeightAboveLevel > 0)                                                \
+		WORLDITEM const& wi = GetWorldItem(pNode->pItemPool->iItemIndex);                    \
+		if (wi.bRenderZHeightAboveLevel > 0)                                                 \
 		{                                                                                    \
-			sZLevel  = STRUCT_Z_LEVEL + wi->bRenderZHeightAboveLevel;                          \
+			sZLevel  = STRUCT_Z_LEVEL + wi.bRenderZHeightAboveLevel;                           \
 		}                                                                                    \
 		else                                                                                 \
 		{                                                                                    \

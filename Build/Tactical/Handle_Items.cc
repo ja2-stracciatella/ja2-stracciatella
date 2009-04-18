@@ -1253,8 +1253,8 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 				break; // boobytrap found... stop picking up things!
 			}
 
-			WORLDITEM*  const wi = GetWorldItem(i->iItemIndex);
-			OBJECTTYPE* const o  = &wi->o;
+			WORLDITEM&        wi = GetWorldItem(i->iItemIndex);
+			OBJECTTYPE* const o  = &wi.o;
 
 			if (ItemIsCool(o)) fShouldSayCoolQuote = TRUE;
 
@@ -1282,16 +1282,16 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 				continue; // try to place any others
 			}
 
-			RemoveItemFromPool(wi);
+			RemoveItemFromPool(&wi);
 		}
 
 		// ATE; If here, and we failed to add any more stuff, put failed one in our cursor...
 		if (pItemPoolToDelete != NULL)
 		{
 			gfDontChargeAPsToPickup = TRUE;
-			WORLDITEM* const wi = GetWorldItem(pItemPoolToDelete->iItemIndex);
-			HandleAutoPlaceFail(s, &wi->o, sGridNo);
-			RemoveItemFromPool(wi);
+			WORLDITEM& wi = GetWorldItem(pItemPoolToDelete->iItemIndex);
+			HandleAutoPlaceFail(s, &wi.o, sGridNo);
+			RemoveItemFromPool(&wi);
 		}
 	}
 	else
@@ -1300,8 +1300,8 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 		if (ItemExistsAtLocation(sGridNo, iItemIndex, s->bLevel) &&
 				ContinuePastBoobyTrap(s, sGridNo, iItemIndex, &fSaidBoobyTrapQuote))
 		{
-			WORLDITEM*  const wi = GetWorldItem(iItemIndex);
-			OBJECTTYPE* const o  = &wi->o;
+			WORLDITEM&        wi = GetWorldItem(iItemIndex);
+			OBJECTTYPE* const o  = &wi.o;
 
 			if (ItemIsCool(o)) fShouldSayCoolQuote = TRUE;
 
@@ -1314,7 +1314,7 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 			}
 			else
 			{
-				RemoveItemFromPool(wi);
+				RemoveItemFromPool(&wi);
 
 				if (!AutoPlaceObject(s, o, TRUE))
 				{
@@ -1384,7 +1384,7 @@ void HandleSoldierPickupItem(SOLDIERTYPE* const s, INT32 const item_idx, INT16 c
 		gsBoobyTrapGridNo     = gridno;
 		gbBoobyTrapLevel      = s->bLevel;
 		gfDisarmingBuriedBomb = TRUE;
-		gbTrapDifficulty      = GetWorldItem(trap_item_idx)->o.bTrap;
+		gbTrapDifficulty      = GetWorldItem(trap_item_idx).o.bTrap;
 		DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[DISARM_TRAP_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, BoobyTrapMessageBoxCallBack, 0);
 		return;
 	}
@@ -1393,7 +1393,7 @@ void HandleSoldierPickupItem(SOLDIERTYPE* const s, INT32 const item_idx, INT16 c
 	bool             all_hidden = true;
 	for (ITEM_POOL* i = item_pool; i; i = i->pNext)
 	{
-		if (GetWorldItem(i->iItemIndex)->bVisible == HIDDEN_ITEM) continue;
+		if (GetWorldItem(i->iItemIndex).bVisible == HIDDEN_ITEM) continue;
 		all_hidden = false;
 		if (!ItemPoolOKForDisplay(i, z_level)) continue;
 		if (first)
@@ -1698,7 +1698,7 @@ BOOLEAN ItemTypeExistsAtLocation(INT16 const sGridNo, UINT16 const usItem, UINT8
 {
 	for (ITEM_POOL const* i = GetItemPool(sGridNo, ubLevel); i; i = i->pNext)
 	{
-		if (GetWorldItem(i->iItemIndex)->o.usItem != usItem) continue;
+		if (GetWorldItem(i->iItemIndex).o.usItem != usItem) continue;
 		if (piItemIndex) *piItemIndex = i->iItemIndex;
 		return TRUE;
 	}
@@ -1711,7 +1711,7 @@ BOOLEAN DoesItemPoolContainAnyHiddenItems(const ITEM_POOL* pItemPool)
 	// LOOP THROUGH LIST TO FIND NODE WE WANT
 	while( pItemPool != NULL )
 	{
-		if (GetWorldItem(pItemPool->iItemIndex)->bVisible == HIDDEN_ITEM)
+		if (GetWorldItem(pItemPool->iItemIndex).bVisible == HIDDEN_ITEM)
 		{
 			return( TRUE );
 		}
@@ -1728,10 +1728,10 @@ static BOOLEAN LookForHiddenItems(INT16 const sGridNo, INT8 const ubLevel)
 	BOOLEAN found = FALSE;
 	for (ITEM_POOL* i = GetItemPool(sGridNo, ubLevel); i; i = i->pNext)
 	{
-		WORLDITEM* const wi = GetWorldItem(i->iItemIndex);
-		if (wi->o.usItem == OWNERSHIP)   continue;
-		if (wi->bVisible != HIDDEN_ITEM) continue;
-		wi->bVisible = INVISIBLE;
+		WORLDITEM& wi = GetWorldItem(i->iItemIndex);
+		if (wi.o.usItem == OWNERSHIP)   continue;
+		if (wi.bVisible != HIDDEN_ITEM) continue;
+		wi.bVisible = INVISIBLE;
 		found        = TRUE;
 	}
 
@@ -1753,9 +1753,9 @@ INT8 GetLargestZLevelOfItemPool(ITEM_POOL const* ip)
 	// Loop through pool and get any height != 0
 	for (; ip; ip = ip->pNext)
 	{
-		WORLDITEM const* const wi = GetWorldItem(ip->iItemIndex);
-		if (wi->bRenderZHeightAboveLevel <= 0) continue;
-		return wi->bRenderZHeightAboveLevel;
+		WORLDITEM const& wi = GetWorldItem(ip->iItemIndex);
+		if (wi.bRenderZHeightAboveLevel <= 0) continue;
+		return wi.bRenderZHeightAboveLevel;
 	}
 	return 0;
 }
@@ -1768,7 +1768,7 @@ static void RemoveItemPool(INT16 sGridNo, UINT8 ubLevel)
 	// Check for and existing pool on the object layer
 	while ((pItemPool = GetItemPool(sGridNo, ubLevel)) != NULL)
 	{
-		RemoveItemFromPool(GetWorldItem(pItemPool->iItemIndex));
+		RemoveItemFromPool(&GetWorldItem(pItemPool->iItemIndex));
 	}
 }
 
@@ -1778,14 +1778,14 @@ void RemoveAllUnburiedItems( INT16 sGridNo, UINT8 ubLevel )
 	const ITEM_POOL* pItemPool = GetItemPool(sGridNo, ubLevel);
 	while( pItemPool )
 	{
-		WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
-		if (wi->bVisible == BURIED)
+		WORLDITEM& wi = GetWorldItem(pItemPool->iItemIndex);
+		if (wi.bVisible == BURIED)
 		{
 			pItemPool = pItemPool->pNext;
 		}
 		else
 		{
-			RemoveItemFromPool(wi);
+			RemoveItemFromPool(&wi);
 			// get new start pointer
 			pItemPool = GetItemPool(sGridNo, ubLevel);
 		}
@@ -1832,17 +1832,17 @@ BOOLEAN SetItemsVisibilityOn(GridNo const grid_no, UINT8 const level, Visibility
 	BOOLEAN fAtLeastModified = FALSE;
 	for (ITEM_POOL* i = ip; i; i = i->pNext)
 	{
-		WORLDITEM* const wi = GetWorldItem(i->iItemIndex);
+		WORLDITEM& wi = GetWorldItem(i->iItemIndex);
 
 		/* Skip if already visible or should not get modified */
-		if (wi->bVisible == VISIBLE || wi->bVisible < bAllGreaterThan) continue;
+		if (wi.bVisible == VISIBLE || wi.bVisible < bAllGreaterThan) continue;
 
 		/* Never make these visible */
-		if (wi->o.usItem == ACTION_ITEM) continue;
-		if (wi->o.usItem == OWNERSHIP)   continue;
+		if (wi.o.usItem == ACTION_ITEM) continue;
+		if (wi.o.usItem == OWNERSHIP)   continue;
 
 		// Update the world value
-		wi->bVisible     = VISIBLE;
+		wi.bVisible      = VISIBLE;
 		fAtLeastModified = TRUE;
 	}
 
@@ -1850,8 +1850,8 @@ BOOLEAN SetItemsVisibilityOn(GridNo const grid_no, UINT8 const level, Visibility
 	if (!fAtLeastModified) return FALSE;
 
 	// Handle obscured flag...
-	WORLDITEM const* const wi = GetWorldItem(ip->iItemIndex);
-	HandleItemObscuredFlag(wi->sGridNo, wi->ubLevel);
+	WORLDITEM const& wi = GetWorldItem(ip->iItemIndex);
+	HandleItemObscuredFlag(wi.sGridNo, wi.ubLevel);
 
 	if (fSetLocator) SetItemPoolLocator(ip, 0);
 	return TRUE;
@@ -1863,7 +1863,7 @@ void SetItemsVisibilityHidden(GridNo const grid_no, UINT8 const level)
 	for (ITEM_POOL* i = GetItemPool(grid_no, level); i; i = i->pNext)
 	{
 		// Update the world value
-		GetWorldItem(i->iItemIndex)->bVisible = HIDDEN_IN_OBJECT;
+		GetWorldItem(i->iItemIndex).bVisible = HIDDEN_IN_OBJECT;
 	}
 }
 
@@ -1876,7 +1876,7 @@ void RemoveItemFromPool(WORLDITEM* const wi)
 	{
 		// Could not find item? Maybe somebody got it before we got there!
 		if (item == NULL) return;
-		if (GetWorldItem(item->iItemIndex) == wi) break;
+		if (&GetWorldItem(item->iItemIndex) == wi) break;
 	}
 
 	RemoveItemGraphicFromWorld(wi->sGridNo, wi->ubLevel, item->pLevelNode);
@@ -1930,9 +1930,9 @@ void MoveItemPools(INT16 const sStartPos, INT16 const sEndPos)
 	const ITEM_POOL* pItemPool;
 	while ((pItemPool = GetItemPool(sStartPos, 0)) != NULL)
 	{
-		WORLDITEM* const wi            = GetWorldItem(pItemPool->iItemIndex);
-		WORLDITEM        TempWorldItem = *wi;
-		RemoveItemFromPool(wi);
+		WORLDITEM& wi            = GetWorldItem(pItemPool->iItemIndex);
+		WORLDITEM  TempWorldItem = wi;
+		RemoveItemFromPool(&wi);
 		AddItemToPool(sEndPos, &TempWorldItem.o, INVISIBLE, TempWorldItem.ubLevel, TempWorldItem.usFlags, TempWorldItem.bRenderZHeightAboveLevel);
 	}
 }
@@ -1971,8 +1971,8 @@ BOOLEAN AnyItemsVisibleOnLevel(const ITEM_POOL* pItemPool, INT8 bZLevel)
 	//Determine total #
 	while( pItemPool != NULL )
 	{
-		const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
-		if (wi->bRenderZHeightAboveLevel == bZLevel && wi->bVisible == VISIBLE)
+		WORLDITEM const& wi = GetWorldItem(pItemPool->iItemIndex);
+		if (wi.bRenderZHeightAboveLevel == bZLevel && wi.bVisible == VISIBLE)
 		{
 			return( TRUE );
 		}
@@ -1992,15 +1992,15 @@ BOOLEAN ItemPoolOKForDisplay(const ITEM_POOL* pItemPool, INT8 bZLevel)
 		return( TRUE );
 	}
 
-	const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+	WORLDITEM const& wi = GetWorldItem(pItemPool->iItemIndex);
 	// Setup some conditions!
-	if (wi->bVisible != VISIBLE)
+	if (wi.bVisible != VISIBLE)
 	{
 		return( FALSE );
 	}
 
 	// If -1, it means find all
-	if (wi->bRenderZHeightAboveLevel != bZLevel && bZLevel != -1)
+	if (wi.bRenderZHeightAboveLevel != bZLevel && bZLevel != -1)
 		{
 		return( FALSE );
 	}
@@ -2016,18 +2016,18 @@ static BOOLEAN ItemPoolOKForPickup(SOLDIERTYPE* pSoldier, const ITEM_POOL* pItem
 		return( TRUE );
 	}
 
-	const WORLDITEM* const wi = GetWorldItem(pItemPool->iItemIndex);
+	WORLDITEM const& wi = GetWorldItem(pItemPool->iItemIndex);
 	if ( pSoldier->bTeam == gbPlayerNum )
 	{
 		// Setup some conditions!
-		if (wi->bVisible != VISIBLE)
+		if (wi.bVisible != VISIBLE)
 		{
 			return( FALSE );
 		}
 	}
 
 	// If -1, it means find all
-	if (wi->bRenderZHeightAboveLevel != bZLevel && bZLevel != -1)
+	if (wi.bRenderZHeightAboveLevel != bZLevel && bZLevel != -1)
 		{
 		return( FALSE );
 	}
@@ -2042,8 +2042,8 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT8 bZLevel, cons
 	{
 		if (!ItemPoolOKForDisplay(i, bZLevel)) continue;
 
-		const WORLDITEM* const wi = GetWorldItem(i->iItemIndex);
-		HandleAnyMercInSquadHasCompatibleStuff(&wi->o);
+		WORLDITEM const& wi = GetWorldItem(i->iItemIndex);
+		HandleAnyMercInSquadHasCompatibleStuff(&wi.o);
 	}
 
 	// Calculate maximum with of the item names and count the items to display
@@ -2060,12 +2060,12 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT8 bZLevel, cons
 			break;
 		}
 
-		const WORLDITEM* const wi  = GetWorldItem(i->iItemIndex);
-		const wchar_t*         txt = ShortItemNames[wi->o.usItem];
+		WORLDITEM const& wi  = GetWorldItem(i->iItemIndex);
+		wchar_t   const* txt = ShortItemNames[wi.o.usItem];
 		wchar_t                buf[100];
-		if (wi->o.ubNumberOfObjects > 1)
+		if (wi.o.ubNumberOfObjects > 1)
 		{
-			swprintf(buf, lengthof(buf), L"%ls (%d)", txt, wi->o.ubNumberOfObjects);
+			swprintf(buf, lengthof(buf), L"%ls (%d)", txt, wi.o.ubNumberOfObjects);
 			txt = buf;
 		}
 
@@ -2109,11 +2109,11 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT8 bZLevel, cons
 			break;
 		}
 
-		WORLDITEM const* const wi  = GetWorldItem(i->iItemIndex);
-		wchar_t   const* const txt = ShortItemNames[wi->o.usItem];
-		if (wi->o.ubNumberOfObjects > 1)
+		WORLDITEM const&       wi  = GetWorldItem(i->iItemIndex);
+		wchar_t   const* const txt = ShortItemNames[wi.o.usItem];
+		if (wi.o.ubNumberOfObjects > 1)
 		{
-			GDirtyPrintF(x, y, L"%ls (%d)", txt, wi->o.ubNumberOfObjects);
+			GDirtyPrintF(x, y, L"%ls (%d)", txt, wi.o.ubNumberOfObjects);
 		}
 		else
 		{
@@ -2230,12 +2230,12 @@ void RenderTopmostFlashingItems(void)
 
 		if (l->ubFlags & ITEM_LOCATOR_LOCKED) continue;
 
-		const WORLDITEM* const wi = GetWorldItem(ip->iItemIndex);
+		WORLDITEM const& wi = GetWorldItem(ip->iItemIndex);
 
 		// Update radio locator
 		INT16 sX;
 		INT16 sY;
-		ConvertGridNoToCenterCellXY(wi->sGridNo, &sX, &sY);
+		ConvertGridNoToCenterCellXY(wi.sGridNo, &sX, &sY);
 
 		const FLOAT dOffsetX = sX - gsRenderCenterX;
 		const FLOAT dOffsetY = sY - gsRenderCenterY;
@@ -2246,18 +2246,18 @@ void RenderTopmostFlashingItems(void)
 		FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
 
 		INT16 sXPos = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + (INT16)dTempX_S;
-		INT16 sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S - gpWorldLevelData[wi->sGridNo].sHeight;
+		INT16 sYPos = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + (INT16)dTempY_S - gpWorldLevelData[wi.sGridNo].sHeight;
 
 		// Adjust for offset position on screen
 		sXPos -= gsRenderWorldOffsetX;
 		sYPos -= gsRenderWorldOffsetY;
-		sYPos -= wi->bRenderZHeightAboveLevel;
+		sYPos -= wi.bRenderZHeightAboveLevel;
 
 		// Adjust for render height
 		sYPos += gsRenderHeight;
 
 		// Adjust for level height
-		if (wi->ubLevel) sYPos -= ROOF_LEVEL_HEIGHT;
+		if (wi.ubLevel) sYPos -= ROOF_LEVEL_HEIGHT;
 
 		// Center circle!
 		sXPos -= 20;
@@ -2267,7 +2267,7 @@ void RenderTopmostFlashingItems(void)
 
 		BltVideoObject(FRAME_BUFFER, guiRADIO, l->bRadioFrame, sXPos, sYPos);
 
-		DrawItemPoolList(ip, wi->bRenderZHeightAboveLevel, sXPos, sYPos);
+		DrawItemPoolList(ip, wi.bRenderZHeightAboveLevel, sXPos, sYPos);
 	}
 }
 
@@ -2768,10 +2768,10 @@ static void SetOffBoobyTrapInMapScreen(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObjec
 
 static void SetOffBoobyTrap()
 {
-	WORLDITEM* const wi = GetWorldItem(g_booby_trap_item);
+	WORLDITEM& wi = GetWorldItem(g_booby_trap_item);
 	g_booby_trap_item = -1;
-	IgniteExplosion(0, gpWorldLevelData[wi->sGridNo].sHeight + wi->bRenderZHeightAboveLevel, wi->sGridNo, MINI_GRENADE, 0);
-	RemoveItemFromPool(wi);
+	IgniteExplosion(0, gpWorldLevelData[wi.sGridNo].sHeight + wi.bRenderZHeightAboveLevel, wi.sGridNo, MINI_GRENADE, 0);
+	RemoveItemFromPool(&wi);
 }
 
 
@@ -2783,7 +2783,7 @@ static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* const pSoldier, const INT16 sG
 	BOOLEAN					fBoobyTrapKnowledge;
 	INT8						bTrapDifficulty, bTrapDetectLevel;
 
-	OBJECTTYPE* const pObj = &GetWorldItem(iItemIndex)->o;
+	OBJECTTYPE* const pObj = &GetWorldItem(iItemIndex).o;
 
   (*pfSaidQuote) = FALSE;
 
@@ -2891,10 +2891,10 @@ static void BoobyTrapMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 
 		if (iCheckResult >= 0)
 		{
-			WORLDITEM* const wi = GetWorldItem(g_booby_trap_item);
+			WORLDITEM& wi = GetWorldItem(g_booby_trap_item);
 
 			// get the item
-			OBJECTTYPE Object = wi->o;
+			OBJECTTYPE Object = wi.o;
 
 			// NB owner grossness... bombs 'owned' by the enemy are stored with side value 1 in
 			// the map. So if we want to detect a bomb placed by the player, owner is > 1, and
@@ -2942,19 +2942,19 @@ static void BoobyTrapMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 			if ( AutoPlaceObject( gpBoobyTrapSoldier, &Object, TRUE ) )
 			{
 				// remove it from the ground
-				RemoveItemFromPool(wi);
+				RemoveItemFromPool(&wi);
 			}
 			else
 			{
 				// make sure the item in the world is untrapped
-				OBJECTTYPE* const o = &wi->o;
+				OBJECTTYPE* const o = &wi.o;
 				o->bTrap   = 0;
 				o->fFlags &= ~OBJECT_KNOWN_TO_BE_TRAPPED;
 
 				// ATE; If we failed to add to inventory, put failed one in our cursor...
 				gfDontChargeAPsToPickup = TRUE;
 				HandleAutoPlaceFail(gpBoobyTrapSoldier, o, gsBoobyTrapGridNo);
-				RemoveItemFromPool(wi);
+				RemoveItemFromPool(&wi);
 			}
 		}
 		else
@@ -3142,10 +3142,10 @@ BOOLEAN NearbyGroundSeemsWrong(SOLDIERTYPE* const s, const INT16 sGridNo, const 
 		// check for boobytraps
 		CFOR_ALL_WORLD_BOMBS(wb)
 		{
-			WORLDITEM* const wi = GetWorldItem(wb->iItemIndex);
-			if (wi->sGridNo != sNextGridNo) continue;
+			WORLDITEM& wi = GetWorldItem(wb->iItemIndex);
+			if (wi.sGridNo != sNextGridNo) continue;
 
-			OBJECTTYPE* const o = &wi->o;
+			OBJECTTYPE* const o = &wi.o;
 			if (o->bDetonatorType != BOMB_PRESSURE)     continue;
 			if (o->fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) continue;
 			if (o->fFlags & OBJECT_DISABLED_BOMB)       continue;
@@ -3313,7 +3313,7 @@ static void CheckForPickedOwnership(void)
 {
 	for (ITEM_POOL const* i = GetItemPool(gsTempGridno, gpTempSoldier->bLevel); i; i = i->pNext)
 	{
-		OBJECTTYPE const& o = GetWorldItem(i->iItemIndex)->o;
+		OBJECTTYPE const& o = GetWorldItem(i->iItemIndex).o;
 		if (o.usItem != OWNERSHIP) continue;
 
 		if (o.ubOwnerProfile != NO_PROFILE)
@@ -3563,7 +3563,7 @@ bool IsItemPoolVisible(ITEM_POOL const* const ip)
 	if (!ip) return false;
 	for (ITEM_POOL const* i = ip; i; i = i->pNext)
 	{
-		if (GetWorldItem(i->iItemIndex)->bVisible >= VISIBLE) return true;
+		if (GetWorldItem(i->iItemIndex).bVisible >= VISIBLE) return true;
 	}
 
 	if (gTacticalStatus.uiFlags & SHOW_ALL_ITEMS) return true;

@@ -39,10 +39,10 @@ extern WORLDITEM		*gWorldItems;
 // number of items in currently loaded sector
 extern UINT32 guiNumWorldItems;
 
-static inline WORLDITEM* GetWorldItem(const size_t idx)
+static inline WORLDITEM& GetWorldItem(size_t const idx)
 {
 	Assert(idx < guiNumWorldItems);
-	return &gWorldItems[idx];
+	return gWorldItems[idx];
 }
 
 #define BASE_FOR_ALL_WORLD_ITEMS(type, iter)                     \

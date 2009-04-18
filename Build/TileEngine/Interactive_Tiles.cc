@@ -246,7 +246,7 @@ void HandleStructChangeFromGridNo(SOLDIERTYPE* const s, GridNo const grid_no)
 				}
 
 				// Look for ownership here
-				if (GetWorldItem(item_pool->iItemIndex)->o.usItem == OWNERSHIP)
+				if (GetWorldItem(item_pool->iItemIndex).o.usItem == OWNERSHIP)
 				{
 					do_humm = false;
 					MakeCharacterDialogueEventDoBattleSound(*s, BATTLE_SOUND_NOTHING, 500);

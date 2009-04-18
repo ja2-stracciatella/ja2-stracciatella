@@ -749,7 +749,7 @@ static void RenderSelectedItemBlownUp(void)
 	mprintf(screen_x, screen_y + 10, L"%d", n);
 
 	// If the item is hidden, render a blinking H (just like DG)
-	WORLDITEM const& wi = *GetWorldItem(gpItemPool->iItemIndex);
+	WORLDITEM const& wi = GetWorldItem(gpItemPool->iItemIndex);
 	if (wi.bVisible == HIDDEN_ITEM || wi.bVisible == BURIED)
 	{
 		SetFont(FONT10ARIALBOLD);

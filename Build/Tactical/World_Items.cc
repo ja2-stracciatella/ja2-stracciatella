@@ -94,8 +94,8 @@ INT32 FindWorldItemForBombInGridNo(const INT16 sGridNo, const INT8 bLevel)
 {
 	CFOR_ALL_WORLD_BOMBS(wb)
 	{
-		WORLDITEM* const wi = GetWorldItem(wb->iItemIndex);
-		if (wi->sGridNo != sGridNo || wi->ubLevel != bLevel) continue;
+		WORLDITEM const& wi = GetWorldItem(wb->iItemIndex);
+		if (wi.sGridNo != sGridNo || wi.ubLevel != bLevel) continue;
 
 		return wb->iItemIndex;
 	}
@@ -108,8 +108,8 @@ void FindPanicBombsAndTriggers(void)
 	// This function searches the bomb table to find panic-trigger-tuned bombs and triggers
 	CFOR_ALL_WORLD_BOMBS(wb)
 	{
-		const WORLDITEM*  const wi = GetWorldItem(wb->iItemIndex);
-		const OBJECTTYPE* const o  = &wi->o;
+		WORLDITEM  const&       wi = GetWorldItem(wb->iItemIndex);
+		OBJECTTYPE const* const o  = &wi.o;
 
 		INT8 bPanicIndex;
 		switch (o->bFrequency)
@@ -122,7 +122,7 @@ void FindPanicBombsAndTriggers(void)
 
 		if (o->usItem == SWITCH)
 		{
-			INT16                  sGridNo = wi->sGridNo;
+			INT16                  sGridNo = wi.sGridNo;
 			const STRUCTURE* const switch_ = FindStructure(sGridNo, STRUCTURE_SWITCH);
 			if (switch_)
 			{
@@ -201,16 +201,16 @@ INT32 AddItemToWorld(INT16 sGridNo, const OBJECTTYPE* const pObject, const UINT8
 	}
 
 	const UINT32 iItemIndex = GetFreeWorldItemIndex();
-	WORLDITEM* const wi = GetWorldItem(iItemIndex);
+	WORLDITEM& wi = GetWorldItem(iItemIndex);
 
 	//Add the new world item to the table.
-	wi->fExists                  = TRUE;
-	wi->sGridNo                  = sGridNo;
-	wi->ubLevel                  = ubLevel;
-	wi->usFlags                  = usFlags;
-	wi->bVisible                 = bVisible;
-	wi->bRenderZHeightAboveLevel = bRenderZHeightAboveLevel;
-	wi->o                        = *pObject;
+	wi.fExists                  = TRUE;
+	wi.sGridNo                  = sGridNo;
+	wi.ubLevel                  = ubLevel;
+	wi.usFlags                  = usFlags;
+	wi.bVisible                 = bVisible;
+	wi.bRenderZHeightAboveLevel = bRenderZHeightAboveLevel;
+	wi.o                        = *pObject;
 
 	// Add a bomb reference if needed
 	if (usFlags & WORLD_ITEM_ARMED_BOMB)
@@ -224,15 +224,15 @@ INT32 AddItemToWorld(INT16 sGridNo, const OBJECTTYPE* const pObject, const UINT8
 
 void RemoveItemFromWorld(const INT32 iItemIndex)
 {
-	WORLDITEM* const wi = GetWorldItem(iItemIndex);
-	if (!wi->fExists) return;
+	WORLDITEM& wi = GetWorldItem(iItemIndex);
+	if (!wi.fExists) return;
 
 	// If it's a bomb, remove the appropriate entry from the bomb table
-	if (wi->usFlags & WORLD_ITEM_ARMED_BOMB)
+	if (wi.usFlags & WORLD_ITEM_ARMED_BOMB)
 	{
 		RemoveBombFromWorldByItemIndex(iItemIndex);
 	}
-	wi->fExists = FALSE;
+	wi.fExists = FALSE;
 }
 
 
@@ -384,7 +384,7 @@ void LoadWorldItemsFromMap( INT8 **hBuffer )
 				dummyItem.bVisible = BURIED;
 			}
 			INT32 const iItemIndex = AddItemToPool(dummyItem.sGridNo, &dummyItem.o, static_cast<Visibility>(dummyItem.bVisible), dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel);
-			GetWorldItem(iItemIndex)->ubNonExistChance = dummyItem.ubNonExistChance;
+			GetWorldItem(iItemIndex).ubNonExistChance = dummyItem.ubNonExistChance;
 		}
 	}
 

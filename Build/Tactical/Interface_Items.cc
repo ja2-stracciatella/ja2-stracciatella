@@ -4742,7 +4742,7 @@ static void SetupPickupPage(INT8 bPage)
 			INT32 const item = pTempItemPool->iItemIndex;
 			gItemPickupMenu.items[cnt - iStart] = item;
 
-			const OBJECTTYPE* const pObject = &GetWorldItem(item)->o;
+			OBJECTTYPE const* const pObject = &GetWorldItem(item).o;
 
 		  sValue = pObject->bStatus[ 0 ];
 
@@ -4871,7 +4871,7 @@ void RenderItemPickupMenu()
 			if (world_item == -1) continue;
 
 			// Get item to render
-			OBJECTTYPE const* const pObject = &GetWorldItem(world_item)->o;
+			OBJECTTYPE const* const pObject = &GetWorldItem(world_item).o;
 			INVTYPE    const&       item    = Item[pObject->usItem];
 
 			UINT16              const usItemTileIndex = GetTileGraphicForItem(item);
@@ -5107,7 +5107,7 @@ static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* const pRegion, INT32 con
 
 		// Show compatible ammo
 		INT32             const item = gItemPickupMenu.items[uiItemPos];
-		OBJECTTYPE const* const o    = &GetWorldItem(item)->o;
+		OBJECTTYPE const* const o    = &GetWorldItem(item).o;
 
 		gItemPickupMenu.CompAmmoObject = *o;
 

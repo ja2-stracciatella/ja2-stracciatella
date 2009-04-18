@@ -1727,7 +1727,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 						// we are looking for ammo to match the gun in usItem
 						while( pItemPool )
 						{
-							const OBJECTTYPE* const pObj = &GetWorldItem(pItemPool->iItemIndex)->o;
+							OBJECTTYPE const* const pObj = &GetWorldItem(pItemPool->iItemIndex).o;
 							const INVTYPE* const pItem = &Item[pObj->usItem];
 							if ( pItem->usItemClass == IC_GUN && pObj->bStatus[0] >= MINIMUM_REQUIRED_STATUS )
 							{
@@ -1760,7 +1760,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 					case SEARCH_WEAPONS:
 						while( pItemPool )
 						{
-							const OBJECTTYPE* const pObj = &GetWorldItem(pItemPool->iItemIndex)->o;
+							OBJECTTYPE const* const pObj = &GetWorldItem(pItemPool->iItemIndex).o;
 							const INVTYPE* const pItem = &Item[pObj->usItem];
 							if (pItem->usItemClass & IC_WEAPON && pObj->bStatus[0] >= MINIMUM_REQUIRED_STATUS )
 							{
@@ -1800,7 +1800,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 					default:
 						while( pItemPool )
 						{
-							const OBJECTTYPE* const pObj = &GetWorldItem(pItemPool->iItemIndex)->o;
+							OBJECTTYPE const* const pObj = &GetWorldItem(pItemPool->iItemIndex).o;
 							const INVTYPE* const pItem = &Item[pObj->usItem];
 							if ( pItem->usItemClass & IC_WEAPON && pObj->bStatus[0] >= MINIMUM_REQUIRED_STATUS )
 							{
@@ -1902,7 +1902,7 @@ INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
 
 	if (sBestSpot != NOWHERE)
 	{
-		const OBJECTTYPE* const o = &GetWorldItem(iBestItemIndex)->o;
+		OBJECTTYPE const* const o = &GetWorldItem(iBestItemIndex).o;
 		DebugAI(String("%d decides to pick up %ls", pSoldier->ubID, ItemNames[o->usItem]));
 		if (Item[o->usItem].usItemClass == IC_GUN)
 		{
