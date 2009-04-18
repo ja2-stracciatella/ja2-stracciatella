@@ -69,7 +69,6 @@ IsDoorPerceivedOpen(): sGridNo is INT16, but used as %s
 IsItRaining(): complicated
 IsMapScreenWorldItemVisibleInMapInventory(): complicated
 IsTownUnderCompleteControlByEnemy(): complicated
-ItemHasAttachments(): complicated
 KeyRingSlotInvClickCallback: one caller
 LackOfProgressTolerance(): callers
 LightIlluminateWall(): empty

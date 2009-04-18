@@ -2212,7 +2212,7 @@ static UINT32 DisplayInvSlot(UINT8 ubSlotNum, UINT16 usItemIndex, UINT16 usPosX,
 	}
 
 	//if the item has attachments
-	if( ItemHasAttachments( pItemObject ) )
+	if (ItemHasAttachments(*pItemObject))
 	{
 		//Display the '*' in the bottom right corner of the square
 		DrawTextToScreen(L"*", usPosX + SKI_ATTACHMENT_SYMBOL_X_OFFSET, usPosY + SKI_ATTACHMENT_SYMBOL_Y_OFFSET, 0, TINYFONT1, FONT_GREEN, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);

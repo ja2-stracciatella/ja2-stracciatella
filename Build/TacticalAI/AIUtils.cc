@@ -86,7 +86,6 @@ INT8 OKToAttack(SOLDIERTYPE * pSoldier, int target)
 		{
 			// look for another tank shell ELSEWHERE IN INVENTORY
 			if ( FindLaunchable( pSoldier, TANK_CANNON ) == NO_SLOT )
-			//if ( !ItemHasAttachments( &(pSoldier->inv[HANDPOS]) ) )
 			{
 				return(NOSHOOT_NOLOAD);
 			}
@@ -99,7 +98,6 @@ INT8 OKToAttack(SOLDIERTYPE * pSoldier, int target)
 	else if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass == IC_LAUNCHER)
 	{
 		if ( FindLaunchable( pSoldier, pSoldier->inv[HANDPOS].usItem ) == NO_SLOT )
-		//if ( !ItemHasAttachments( &(pSoldier->inv[HANDPOS]) ) )
 		{
 			return(NOSHOOT_NOLOAD);
 		}

@@ -1773,7 +1773,7 @@ void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const 
 			GPrintInvalidate(sNewX, sNewY, pStr);
 		}
 
-		if (ItemHasAttachments(o))
+		if (ItemHasAttachments(*o))
 		{
 			SetFontForeground(FindAttachment(o, UNDER_GLAUNCHER) == NO_SLOT ? FONT_GREEN : FONT_YELLOW);
 
@@ -4896,7 +4896,7 @@ void RenderItemPickupMenu()
 				SetFont(ITEMDESC_FONT);
 			}
 
-			if (ItemHasAttachments(pObject))
+			if (ItemHasAttachments(*pObject))
 			{ // Render attachment symbols
 				SetFontForeground(FONT_GREEN);
 				SetFontShadow(DEFAULT_SHADOW);

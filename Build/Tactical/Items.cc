@@ -1325,14 +1325,13 @@ INT8 FindLaunchableAttachment(const OBJECTTYPE* const pObj, const UINT16 usWeapo
 }
 
 
-//Simple check to see if the item has any attachments
-BOOLEAN ItemHasAttachments(const OBJECTTYPE* pObj)
+bool ItemHasAttachments(OBJECTTYPE const& o)
 {
-	if ((pObj->usAttachItem[0] == NOTHING) && (pObj->usAttachItem[1] == NOTHING) && (pObj->usAttachItem[2] == NOTHING) && (pObj->usAttachItem[3] == NOTHING))
-	{
-		return( FALSE );
-	}
-	return( TRUE );
+	return
+		o.usAttachItem[0] != NOTHING ||
+		o.usAttachItem[1] != NOTHING ||
+		o.usAttachItem[2] != NOTHING ||
+		o.usAttachItem[3] != NOTHING;
 }
 
 

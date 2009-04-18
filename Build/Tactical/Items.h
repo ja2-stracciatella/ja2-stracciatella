@@ -99,7 +99,7 @@ UINT8 AddKeysToSlot( SOLDIERTYPE * pSoldier, INT8 bKeyRingPosition, OBJECTTYPE *
 //so feel free to correct me...
 
 //Simple check to see if the item has any attachments
-BOOLEAN ItemHasAttachments(const OBJECTTYPE* pObj);
+bool ItemHasAttachments(OBJECTTYPE const&);
 
 //Determine if this item can receive this attachment.  This is different, in that it may
 //be possible to have this attachment on this item, but may already have an attachment on

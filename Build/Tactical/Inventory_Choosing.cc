@@ -1866,7 +1866,7 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 				pp->Inv[ uiLoop ].fFlags = OldObj.fFlags;
 
 				// copy any valid attachments; for others, just drop them...
-				if ( ItemHasAttachments( &OldObj ) )
+				if (ItemHasAttachments(OldObj))
 				{
 					// we're going to copy into the first attachment position first :-)
 					uiAttachDestIndex = 0;
