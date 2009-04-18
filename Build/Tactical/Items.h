@@ -34,7 +34,7 @@ extern void RemoveObjFrom( OBJECTTYPE * pObj, UINT8 ubRemoveIndex );
 extern BOOLEAN PlaceObjectAtObjectIndex( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj, UINT8 ubIndex );
 extern void GetObjFrom( OBJECTTYPE * pObj, UINT8 ubGetIndex, OBJECTTYPE * pDest );
 
-extern BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYPE * pAttachment );
+bool AttachObject(SOLDIERTYPE*, OBJECTTYPE* pTargetObj, OBJECTTYPE* pAttachment);
 extern BOOLEAN RemoveAttachment( OBJECTTYPE * pObj, INT8 bAttachPos, OBJECTTYPE * pNewObj );
 
 UINT8	CalculateObjectWeight(const OBJECTTYPE* pObject);

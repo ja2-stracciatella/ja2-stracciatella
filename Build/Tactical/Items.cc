@@ -2438,258 +2438,218 @@ static void PerformAttachmentComboMerge(OBJECTTYPE* pObj, INT8 bAttachmentComboM
 	pObj->bStatus[ 0 ] = (INT8) (uiStatusTotal / bNumStatusContributors );
 }
 
-BOOLEAN AttachObject( SOLDIERTYPE * pSoldier, OBJECTTYPE * pTargetObj, OBJECTTYPE * pAttachment )
+
+bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE* const pAttachment)
 {
-	INT8		bAttachPos, bSecondAttachPos;//, bAbility, bSuccess;
-	UINT16	usResult;
-	INT8		bLoop;
-	UINT8		ubType, ubLimit;
-	INT32		iCheckResult;
-	BOOLEAN	fValidLaunchable = FALSE;
-
-	fValidLaunchable = ValidLaunchable( pAttachment->usItem, pTargetObj->usItem );
-
-	if ( fValidLaunchable || ValidItemAttachment( pTargetObj, pAttachment->usItem, TRUE ) )
+	OBJECTTYPE& target     = *pTargetObj;
+	OBJECTTYPE& attachment = *pAttachment;
+	bool const valid_launchable = ValidLaunchable(attachment.usItem, target.usItem);
+	if (valid_launchable || ValidItemAttachment(&target, attachment.usItem, TRUE))
 	{
-		OBJECTTYPE	TempObj = {0};
-
 		// find an attachment position...
 		// second half of this 'if' is for attaching GL grenades to a gun
-		if ( fValidLaunchable || pAttachment->usItem >= GL_HE_GRENADE && pAttachment->usItem <= GL_SMOKE_GRENADE )
+		INT8 attach_pos;
+		if (valid_launchable || (GL_HE_GRENADE <= attachment.usItem && attachment.usItem <= GL_SMOKE_GRENADE))
 		{
 			// try replacing if possible
-			bAttachPos = FindAttachmentByClass( pTargetObj, Item[ pAttachment->usItem ].usItemClass );
-			if ( bAttachPos != NO_SLOT )
-			{
-				// we can only do a swap if there is only 1 grenade being attached
-				if ( pAttachment->ubNumberOfObjects > 1 )
-				{
-					return( FALSE );
-				}
-			}
-			else
-			{
-				bAttachPos = FindAttachment( pTargetObj, NOTHING );
+			attach_pos = FindAttachmentByClass(&target, Item[attachment.usItem].usItemClass);
+			if (attach_pos != NO_SLOT && attachment.ubNumberOfObjects > 1)
+			{ // we can only do a swap if there is only 1 grenade being attached
+				return false;
 			}
 		}
 		else
 		{
 			// try replacing if possible
-			bAttachPos = FindAttachment( pTargetObj, pAttachment->usItem );
-			if ( bAttachPos == NO_SLOT )
+			attach_pos = FindAttachment(&target, attachment.usItem);
+		}
+
+		if (attach_pos == NO_SLOT)
+		{
+			attach_pos = FindAttachment(&target, NOTHING);
+			if (attach_pos == NO_SLOT) return false;
+		}
+
+		AttachmentInfoStruct const* attach_info = 0;
+		if (s)
+		{
+			attach_info = GetAttachmentInfo(attachment.usItem);
+			// in-game (not behind the scenes) attachment
+			if (attach_info && attach_info->bAttachmentSkillCheck != NO_CHECK)
 			{
-				bAttachPos = FindAttachment( pTargetObj, NOTHING );
+				INT32 const iCheckResult = SkillCheck(s, attach_info->bAttachmentSkillCheck, attach_info->bAttachmentSkillCheckMod);
+				if (iCheckResult < 0)
+				{
+					// the attach failure damages both items
+					DamageObj(&target,     (INT8)-iCheckResult);
+					DamageObj(&attachment, (INT8)-iCheckResult);
+					// there should be a quote here!
+					DoMercBattleSound(s, BATTLE_SOUND_CURSE1);
+					if (gfInItemDescBox) DeleteItemDescriptionBox();
+					return false;
+				}
+			}
+
+			if (ValidItemAttachment(&target, attachment.usItem, TRUE)) // not launchable
+			{ // Attachment sounds
+				INVTYPE const& tgt_item = Item[target.usItem];
+				SoundID const  sound    =
+					tgt_item.usItemClass & IC_WEAPON ? ATTACH_TO_GUN         :
+					tgt_item.usItemClass & IC_ARMOUR ? ATTACH_CERAMIC_PLATES :
+					tgt_item.usItemClass & IC_BOMB   ? ATTACH_DETONATOR      :
+					NO_SOUND;
+				if (sound != NO_SOUND) PlayLocationJA2Sample(s->sGridNo, sound, MIDVOLUME, 1);
 			}
 		}
 
-		if (bAttachPos == ITEM_NOT_FOUND)
+		UINT16 const temp_item   = target.usAttachItem[attach_pos];
+		UINT16 const temp_status = target.bAttachStatus[attach_pos];
+
+		target.usAttachItem[attach_pos]  = attachment.usItem;
+		target.bAttachStatus[attach_pos] = attachment.bStatus[0];
+
+		// Transfer any attachment (max 1) from the grenade launcher to the gun
+		if (attachment.usItem          == UNDER_GLAUNCHER &&
+				attachment.usAttachItem[0] != NOTHING)
 		{
-			return( FALSE );
-		}
-		else
-		{
-			const AttachmentInfoStruct* attach_info = NULL;
-			if ( pSoldier )
-			{
-				attach_info = GetAttachmentInfo(pAttachment->usItem);
-				// in-game (not behind the scenes) attachment
-				if (attach_info != NULL && attach_info->bAttachmentSkillCheck != NO_CHECK)
-				{
-					iCheckResult = SkillCheck(pSoldier, attach_info->bAttachmentSkillCheck, attach_info->bAttachmentSkillCheckMod);
-					if (iCheckResult < 0)
-					{
-						// the attach failure damages both items
-						DamageObj( pTargetObj, (INT8) -iCheckResult );
-						DamageObj( pAttachment, (INT8) -iCheckResult );
-						// there should be a quote here!
-						DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
-						if ( gfInItemDescBox )
-						{
-							DeleteItemDescriptionBox();
-						}
-						return( FALSE );
-					}
-				}
-
-				if ( ValidItemAttachment( pTargetObj, pAttachment->usItem, TRUE ) ) // not launchable
-				{
-					// attachment sounds
-					if ( Item[ pTargetObj->usItem ].usItemClass & IC_WEAPON )
-					{
-						PlayLocationJA2Sample(pSoldier->sGridNo, ATTACH_TO_GUN, MIDVOLUME, 1);
-					}
-					else if ( Item[ pTargetObj->usItem ].usItemClass & IC_ARMOUR )
-					{
-						PlayLocationJA2Sample(pSoldier->sGridNo, ATTACH_CERAMIC_PLATES, MIDVOLUME, 1);
-					}
-					else if ( Item[ pTargetObj->usItem ].usItemClass & IC_BOMB )
-					{
-						PlayLocationJA2Sample(pSoldier->sGridNo, ATTACH_DETONATOR, MIDVOLUME, 1);
-					}
-				}
-			}
-
-			if ( pTargetObj->usAttachItem[ bAttachPos ] != NOTHING )
-			{
-				CreateItem( pTargetObj->usAttachItem[bAttachPos], pTargetObj->bAttachStatus[bAttachPos], &TempObj );
-			}
-
-			pTargetObj->usAttachItem[bAttachPos] = pAttachment->usItem;
-			pTargetObj->bAttachStatus[bAttachPos] = pAttachment->bStatus[0];
-
-			if (pAttachment->usItem == UNDER_GLAUNCHER)
-			{
-				// transfer any attachment (max 1) from the grenade launcher to the gun
-				if (pAttachment->usAttachItem[0] != NOTHING)
-				{
-					bSecondAttachPos = FindAttachment( pTargetObj, NOTHING );
-					if (bSecondAttachPos == ITEM_NOT_FOUND)
-					{
-						// not enough room for all attachments - cancel!!
-						pTargetObj->usAttachItem[bAttachPos] = NOTHING;
-						pTargetObj->bAttachStatus[bAttachPos] = 0;
-						return( FALSE );
-					}
-					else
-					{
-						pTargetObj->usAttachItem[bSecondAttachPos] = pAttachment->usAttachItem[0];
-						pTargetObj->bAttachStatus[bSecondAttachPos] = pAttachment->bAttachStatus[0];
-						pAttachment->usAttachItem[0] = NOTHING;
-						pAttachment->bAttachStatus[0] = 0;
-					}
-				}
-			}
-
-			if ( TempObj.usItem != NOTHING )
-			{
-				// overwrite/swap!
-				*pAttachment = TempObj;
+			INT8 const second_attach_pos = FindAttachment(&target, NOTHING);
+			if (second_attach_pos == ITEM_NOT_FOUND)
+			{ // Not enough room for all attachments - cancel!
+				target.usAttachItem[attach_pos]  = NOTHING;
+				target.bAttachStatus[attach_pos] = 0;
+				return false;
 			}
 			else
 			{
-				RemoveObjs( pAttachment, 1 );
+				target.usAttachItem[second_attach_pos]  = attachment.usAttachItem[0];
+				target.bAttachStatus[second_attach_pos] = attachment.bAttachStatus[0];
+				attachment.usAttachItem[0]  = NOTHING;
+				attachment.bAttachStatus[0] = 0;
 			}
-
-			// Check for attachment merge combos here
-			const INT8 bAttachComboMerge = GetAttachmentComboMerge(pTargetObj);
-			if ( bAttachComboMerge != -1 )
-			{
-				PerformAttachmentComboMerge( pTargetObj, bAttachComboMerge );
-				if (attach_info != NULL && attach_info->bAttachmentSkillCheckMod < 20)
-				{
-					StatChange(pSoldier, MECHANAMT, 20 - attach_info->bAttachmentSkillCheckMod, FALSE);
-				}
-			}
-
-			pTargetObj->ubWeight = CalculateObjectWeight( pTargetObj );
-
-			return( TRUE );
 		}
+
+		if (temp_item != NOTHING)
+		{ // overwrite/swap!
+			CreateItem(temp_item, temp_status, &attachment);
+		}
+		else
+		{
+			RemoveObjs(&attachment, 1);
+		}
+
+		// Check for attachment merge combos here
+		INT8 const bAttachComboMerge = GetAttachmentComboMerge(&target);
+		if (bAttachComboMerge != -1)
+		{
+			PerformAttachmentComboMerge(&target, bAttachComboMerge);
+			if (attach_info && attach_info->bAttachmentSkillCheckMod < 20)
+			{
+				StatChange(s, MECHANAMT, 20 - attach_info->bAttachmentSkillCheckMod, FALSE);
+			}
+		}
+
+		target.ubWeight = CalculateObjectWeight(&target);
+		return true;
 	}
+
 	// check for merges
-	else if (EvaluateValidMerge( pAttachment->usItem, pTargetObj->usItem, &usResult, &ubType ))
+	UINT16 merge_result;
+	UINT8  merge_kind;
+	if (!EvaluateValidMerge(attachment.usItem, target.usItem, &merge_result, &merge_kind)) return false;
+
+	if (merge_kind != COMBINE_POINTS)
 	{
-		if ( ubType != COMBINE_POINTS )
+		if (!EnoughPoints(s, AP_MERGE, 0, TRUE)) return false;
+		DeductPoints(s, AP_MERGE, 0);
+	}
+
+	switch (merge_kind)
+	{
+		case COMBINE_POINTS:
 		{
-			if ( !EnoughPoints( pSoldier, AP_MERGE, 0, TRUE ) )
+			// transfer points...
+			INVTYPE const& tgt_item = Item[target.usItem];
+			UINT8   const  limit    =
+				tgt_item.usItemClass == IC_AMMO ? Magazine[tgt_item.ubClassIndex].ubMagSize :
+				100;
+
+			// count down through # of attaching items and add to status of item in position 0
+			for (INT8 bLoop = attachment.ubNumberOfObjects - 1; bLoop >= 0; --bLoop)
 			{
-				return( FALSE );
-			}
-
-			DeductPoints( pSoldier, AP_MERGE, 0 );
-		}
-
-		switch( ubType )
-		{
-			case COMBINE_POINTS:
-				// transfer points...
-				if ( Item[ pTargetObj->usItem ].usItemClass == IC_AMMO )
-				{
-					ubLimit = Magazine[ Item[ pTargetObj->usItem ].ubClassIndex ].ubMagSize;
+				if (target.bStatus[0] + attachment.bStatus[bLoop] <= limit)
+				{ // Consume this one totally and continue
+					target.bStatus[0] += attachment.bStatus[bLoop];
+					RemoveObjFrom(&attachment, bLoop);
+					// reset loop limit
+					bLoop = attachment.ubNumberOfObjects; // add 1 to counteract the -1 from the loop
 				}
 				else
-				{
-					ubLimit = 100;
+				{ // Add part of this one and then we're done
+					attachment.bStatus[bLoop] -= limit - target.bStatus[0];
+					target.bStatus[0]          = limit;
+					break;
 				}
-
-				// count down through # of attaching items and add to status of item in position 0
-				for (bLoop = pAttachment->ubNumberOfObjects - 1; bLoop >= 0; bLoop--)
-				{
-					if (pTargetObj->bStatus[0] + pAttachment->bStatus[bLoop] <= ubLimit)
-					{
-						// consume this one totally and continue
-						pTargetObj->bStatus[0] += pAttachment->bStatus[bLoop];
-						RemoveObjFrom( pAttachment, bLoop );
-						// reset loop limit
-						bLoop = pAttachment->ubNumberOfObjects; // add 1 to counteract the -1 from the loop
-					}
-					else
-					{
-						// add part of this one and then we're done
-						pAttachment->bStatus[bLoop] -= (ubLimit - pTargetObj->bStatus[0]);
-						pTargetObj->bStatus[0] = ubLimit;
-						break;
-					}
-				}
-				break;
-			case DESTRUCTION:
-				// the merge destroyed both items!
-				DeleteObj( pTargetObj );
-				DeleteObj( pAttachment );
-				DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
-				break;
-			case ELECTRONIC_MERGE:
-				if ( pSoldier )
-				{
-					iCheckResult = SkillCheck( pSoldier, ATTACHING_SPECIAL_ELECTRONIC_ITEM_CHECK, -30 );
-					if ( iCheckResult < 0 )
-					{
-						DamageObj( pTargetObj, (INT8) -iCheckResult );
-						DamageObj( pAttachment, (INT8) -iCheckResult );
-						DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
-						return( FALSE );
-					}
-					// grant experience!
-				}
-				// fall through
-			case EXPLOSIVE:
-				if ( ubType == EXPLOSIVE ) /// coulda fallen through
-				{
-					if (pSoldier)
-					{
-						// requires a skill check, and gives experience
-						iCheckResult = SkillCheck( pSoldier, ATTACHING_DETONATOR_CHECK, -30 );
-						if (iCheckResult < 0)
-						{
-							// could have a chance of detonation
-							// for now, damage both objects
-							DamageObj( pTargetObj, (INT8) -iCheckResult );
-							DamageObj( pAttachment, (INT8) -iCheckResult );
-							DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
-							return( FALSE );
-						}
-						StatChange( pSoldier, EXPLODEAMT, 25, FALSE );
-					}
-				}
-				// fall through
-			default:
-				// the merge will combine the two items
-				pTargetObj->usItem = usResult;
-				if ( ubType != TREAT_ARMOUR )
-				{
-					pTargetObj->bStatus[0] = (pTargetObj->bStatus[0] + pAttachment->bStatus[0]) / 2;
-				}
-				DeleteObj( pAttachment );
-				pTargetObj->ubWeight = CalculateObjectWeight( pTargetObj );
-				if (pSoldier && pSoldier->bTeam == gbPlayerNum)
-				{
-					DoMercBattleSound( pSoldier, BATTLE_SOUND_COOL1 );
-				}
-				break;
 			}
-			return( TRUE );
+			break;
+		}
+
+		case DESTRUCTION:
+			// The merge destroyed both items!
+			DeleteObj(&target);
+			DeleteObj(&attachment);
+			DoMercBattleSound(s, BATTLE_SOUND_CURSE1);
+			break;
+
+		case ELECTRONIC_MERGE:
+			if (s)
+			{
+				INT32 const iCheckResult = SkillCheck(s, ATTACHING_SPECIAL_ELECTRONIC_ITEM_CHECK, -30);
+				if (iCheckResult < 0)
+				{
+					DamageObj(&target,     (INT8)-iCheckResult);
+					DamageObj(&attachment, (INT8)-iCheckResult);
+					DoMercBattleSound(s, BATTLE_SOUND_CURSE1);
+					return false;
+				}
+				// grant experience!
+			}
+			goto default_merge;
+
+		case EXPLOSIVE:
+			if (s)
+			{
+				// requires a skill check, and gives experience
+				INT32 const iCheckResult = SkillCheck(s, ATTACHING_DETONATOR_CHECK, -30);
+				if (iCheckResult < 0)
+				{
+					// could have a chance of detonation
+					// for now, damage both objects
+					DamageObj(&target,     (INT8)-iCheckResult);
+					DamageObj(&attachment, (INT8)-iCheckResult);
+					DoMercBattleSound(s, BATTLE_SOUND_CURSE1);
+					return false;
+				}
+				StatChange(s, EXPLODEAMT, 25, FALSE);
+			}
+			goto default_merge;
+
+		default:
+default_merge:
+			// the merge will combine the two items
+			target.usItem = merge_result;
+			if (merge_kind != TREAT_ARMOUR)
+			{
+				target.bStatus[0] = (target.bStatus[0] + attachment.bStatus[0]) / 2;
+			}
+			DeleteObj(&attachment);
+			target.ubWeight = CalculateObjectWeight(&target);
+			if (s && s->bTeam == gbPlayerNum)
+			{
+				DoMercBattleSound(s, BATTLE_SOUND_COOL1);
+			}
+			break;
 	}
-	return( FALSE );
+	return true;
 }
 
 
