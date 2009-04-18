@@ -448,8 +448,8 @@ static void UpdateOldVersionMap(void)
 		gMapInformation.ubMapVersion = 18;
 		FOR_ALL_WORLD_ITEMS(wi)
 		{
-			OBJECTTYPE* const o = &wi->o;
-			if (o->usItem == JAR_ELIXIR) o->usItem = CROWBAR;
+			OBJECTTYPE& o = wi->o;
+			if (o.usItem == JAR_ELIXIR) o.usItem = CROWBAR;
 		}
 	}
 	if( gMapInformation.ubMapVersion < 19 )

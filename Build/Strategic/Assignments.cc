@@ -462,15 +462,15 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const* const pSoldi
 	// now check for items to repair
 	for( bPocket = HELMETPOS; bPocket <= SMALLPOCK8POS; bPocket++ )
 	{
-		OBJECTTYPE const* const pObj = &pSoldier->inv[bPocket];
+		OBJECTTYPE const& o = pSoldier->inv[bPocket];
 
-		ubItemsInPocket = pObj->ubNumberOfObjects;
+		ubItemsInPocket = o.ubNumberOfObjects;
 
 		// run through pocket
 		for( ubObjectInPocketCounter = 0; ubObjectInPocketCounter < ubItemsInPocket; ubObjectInPocketCounter++ )
 		{
 			// if it's repairable and NEEDS repairing
-			if ( IsItemRepairable( pObj->usItem, pObj->bStatus[ubObjectInPocketCounter] ) )
+			if (IsItemRepairable(o.usItem, o.bStatus[ubObjectInPocketCounter]))
 			{
 				return( TRUE );
 			}
@@ -479,10 +479,10 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const* const pSoldi
 		// have to check for attachments...
 		for (INT8 bLoop = 0; bLoop < MAX_ATTACHMENTS; ++bLoop)
 		{
-			if ( pObj->usAttachItem[ bLoop ] != NOTHING )
+			if (o.usAttachItem[bLoop] != NOTHING)
 			{
 				// if it's repairable and NEEDS repairing
-				if ( IsItemRepairable( pObj->usAttachItem[ bLoop ], pObj->bAttachStatus[ bLoop ] ) )
+				if (IsItemRepairable(o.usAttachItem[bLoop], o.bAttachStatus[bLoop]))
 				{
 					return( TRUE );
 				}
@@ -1785,10 +1785,10 @@ static INT8 FindRepairableItemOnOtherSoldier(const SOLDIERTYPE* const pSoldier, 
 		bSlotToCheck = pPassList->bSlot[ bLoop ];
 		Assert( bSlotToCheck != -1 );
 
-		const OBJECTTYPE* const pObj = &pSoldier->inv[bSlotToCheck];
+		OBJECTTYPE const& o = pSoldier->inv[bSlotToCheck];
 		for ( bLoop2 = 0; bLoop2 < pSoldier->inv[ bSlotToCheck ].ubNumberOfObjects; bLoop2++ )
 		{
-			if ( IsItemRepairable( pObj->usItem, pObj->bStatus[bLoop2] ) )
+			if (IsItemRepairable(o.usItem, o.bStatus[bLoop2]))
 			{
 				return( bSlotToCheck );
 			}
@@ -1797,9 +1797,9 @@ static INT8 FindRepairableItemOnOtherSoldier(const SOLDIERTYPE* const pSoldier, 
 		// have to check for attachments...
 		for ( bLoop2 = 0; bLoop2 < MAX_ATTACHMENTS; bLoop2++ )
 		{
-			if ( pObj->usAttachItem[ bLoop2 ] != NOTHING )
+			if (o.usAttachItem[bLoop2] != NOTHING)
 			{
-				if ( IsItemRepairable( pObj->usAttachItem[ bLoop2 ], pObj->bAttachStatus[ bLoop2 ] ) )
+				if (IsItemRepairable(o.usAttachItem[bLoop2], o.bAttachStatus[bLoop2]))
 				{
 					return( bSlotToCheck );
 				}

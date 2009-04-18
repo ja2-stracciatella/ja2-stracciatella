@@ -1149,8 +1149,8 @@ static void DisplayCharInventory(const SOLDIERTYPE* const s)
 		//if the character is a robot, only display the inv for the hand pos
 		if (s->ubProfile == ROBOT && pos != HANDPOS) continue; // XXX can this ever be true? before is if (AM_A_ROBOT()) return;
 
-		const OBJECTTYPE* const o       = &s->inv[pos];
-		const INT32             o_count = o->ubNumberOfObjects;
+		OBJECTTYPE const& o       = s->inv[pos];
+		INT32      const  o_count = o.ubNumberOfObjects;
 		if (o_count == 0) continue;
 
 		if (item_count < 0)
@@ -1166,7 +1166,7 @@ static void DisplayCharInventory(const SOLDIERTYPE* const s)
 		const INT16 PosX = 397 + 3;
 		const INT16 PosY = 200 + 8 + item_count * 29;
 
-		UINT16  const  item_idx = o->usItem;
+		UINT16  const  item_idx = o.usItem;
 		INVTYPE const& item     = Item[item_idx];
 
 		SGPVObject  const& gfx   = GetInterfaceGraphicForItem(item);
@@ -1185,12 +1185,12 @@ static void DisplayCharInventory(const SOLDIERTYPE* const s)
 		if (item.usItemClass & IC_AMMO)
 		{
 			INT32 total_ammo = 0;
-			for (INT32 i = 0; i < o_count; ++i) total_ammo += o->ubShotsLeft[i];
+			for (INT32 i = 0; i < o_count; ++i) total_ammo += o.ubShotsLeft[i];
 			swprintf(sString, lengthof(sString), L"%d/%d", total_ammo, o_count * Magazine[item.ubClassIndex].ubMagSize);
 		}
 		else
 		{
-			swprintf(sString, lengthof(sString), L"%2d%%", o->bStatus[0]);
+			swprintf(sString, lengthof(sString), L"%2d%%", o.bStatus[0]);
 		}
 
 		FindFontRightCoordinates(PosX + 65, PosY + 15, 171 - 75, GetFontHeight(FONT10ARIAL), sString, FONT10ARIAL, &sX, &sY);
@@ -1304,8 +1304,8 @@ static INT32 GetNumberOfInventoryItemsOnCurrentMerc(void)
 	UINT32 ubCount = 0;
 	for (UINT32 ubCounter = 0; ubCounter < NUM_INV_SLOTS; ubCounter++)
 	{
-		const OBJECTTYPE* o = &Inv[ubCounter];
-		if (o->ubNumberOfObjects != 0 && o->usItem != NOTHING) ubCount++;
+		OBJECTTYPE const& o = Inv[ubCounter];
+		if (o.ubNumberOfObjects != 0 && o.usItem != NOTHING) ubCount++;
 	}
 
 	return ubCount;

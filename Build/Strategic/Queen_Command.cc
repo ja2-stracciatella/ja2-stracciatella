@@ -1457,11 +1457,11 @@ static void CaptureSoldier(SOLDIERTYPE* const s, INT16 const x, INT16 const y, G
 	// Drop all items
 	for (INT32 i = 0; i < NUM_INV_SLOTS; ++i)
 	{
-		OBJECTTYPE* const o = &s->inv[i];
-		if (o->usItem == NOTHING)
+		OBJECTTYPE& o = s->inv[i];
+		if (o.usItem == NOTHING)
 
-		AddItemsToUnLoadedSector(x, y, 0, item_pos, 1, o, 0, 0, 0, VISIBILITY_0);
-		DeleteObj(o);
+		AddItemsToUnLoadedSector(x, y, 0, item_pos, 1, &o, 0, 0, 0, VISIBILITY_0);
+		DeleteObj(&o);
 	}
 }
 

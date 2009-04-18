@@ -4041,10 +4041,10 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 
 static BOOLEAN HasLauncher(const SOLDIERTYPE* const s)
 {
-	const OBJECTTYPE* const o = &s->inv[HANDPOS];
+	OBJECTTYPE const& o = s->inv[HANDPOS];
 	return
-		FindAttachment(          o, UNDER_GLAUNCHER) != ITEM_NOT_FOUND &&
-		FindLaunchableAttachment(o, UNDER_GLAUNCHER) != ITEM_NOT_FOUND;
+		FindAttachment(          &o, UNDER_GLAUNCHER) != ITEM_NOT_FOUND &&
+		FindLaunchableAttachment(&o, UNDER_GLAUNCHER) != ITEM_NOT_FOUND;
 }
 
 

@@ -2000,10 +2000,10 @@ static BOOLEAN TryToAttach(SOLDIERTYPE* const s, OBJECTTYPE* const o)
 	// try to find the appropriate item to attach to!
 	for (UINT32 i = 0; i < NUM_INV_SLOTS; ++i)
 	{
-		OBJECTTYPE* const tgt_o = &s->inv[i];
-		if (tgt_o->usItem != NOTHING && ValidAttachment(o->usItem, tgt_o->usItem))
+		OBJECTTYPE& tgt_o = s->inv[i];
+		if (tgt_o.usItem != NOTHING && ValidAttachment(o->usItem, tgt_o.usItem))
 		{
-			AttachObject(NULL, tgt_o, o);
+			AttachObject(NULL, &tgt_o, o);
 			return TRUE;
 		}
 	}

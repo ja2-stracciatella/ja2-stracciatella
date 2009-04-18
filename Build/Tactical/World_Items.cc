@@ -108,11 +108,11 @@ void FindPanicBombsAndTriggers(void)
 	// This function searches the bomb table to find panic-trigger-tuned bombs and triggers
 	CFOR_ALL_WORLD_BOMBS(wb)
 	{
-		WORLDITEM  const&       wi = GetWorldItem(wb->iItemIndex);
-		OBJECTTYPE const* const o  = &wi.o;
+		WORLDITEM  const& wi = GetWorldItem(wb->iItemIndex);
+		OBJECTTYPE const& o  = wi.o;
 
 		INT8 bPanicIndex;
-		switch (o->bFrequency)
+		switch (o.bFrequency)
 		{
 			case PANIC_FREQUENCY:   bPanicIndex = 0; break;
 			case PANIC_FREQUENCY_2: bPanicIndex = 1; break;
@@ -120,7 +120,7 @@ void FindPanicBombsAndTriggers(void)
 			default:                continue;
 		}
 
-		if (o->usItem == SWITCH)
+		if (o.usItem == SWITCH)
 		{
 			INT16                  sGridNo = wi.sGridNo;
 			const STRUCTURE* const switch_ = FindStructure(sGridNo, STRUCTURE_SWITCH);
@@ -139,8 +139,8 @@ void FindPanicBombsAndTriggers(void)
 
 			gTacticalStatus.fPanicFlags                      |= PANIC_TRIGGERS_HERE;
 			gTacticalStatus.sPanicTriggerGridNo[bPanicIndex]  = sGridNo;
-			gTacticalStatus.ubPanicTolerance[bPanicIndex]     = o->ubTolerance;
-			if (o->fFlags & OBJECT_ALARM_TRIGGER)
+			gTacticalStatus.ubPanicTolerance[bPanicIndex]     = o.ubTolerance;
+			if (o.fFlags & OBJECT_ALARM_TRIGGER)
 			{
 				gTacticalStatus.bPanicTriggerIsAlarm[bPanicIndex] = TRUE;
 			}

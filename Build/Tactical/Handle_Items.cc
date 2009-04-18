@@ -274,15 +274,15 @@ INT32 HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLevel, const 
 			// check imprint ID
 			// NB not-imprinted value is NO_PROFILE
 			// imprinted value is profile for mercs & NPCs and NO_PROFILE + 1 for generic dudes
-			OBJECTTYPE* const wpn = &s->inv[s->ubAttackingHand];
+			OBJECTTYPE& wpn = s->inv[s->ubAttackingHand];
 			if (s->ubProfile != NO_PROFILE)
 			{
-				if (wpn->ubImprintID != s->ubProfile)
+				if (wpn.ubImprintID != s->ubProfile)
 				{
-					if (wpn->ubImprintID == NO_PROFILE)
+					if (wpn.ubImprintID == NO_PROFILE)
 					{
 						// first shot using "virgin" gun... set imprint ID
-						wpn->ubImprintID = s->ubProfile;
+						wpn.ubImprintID = s->ubProfile;
 
 						// this could be an NPC (Krott)
 						if (s->bTeam == gbPlayerNum)
@@ -306,10 +306,10 @@ INT32 HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLevel, const 
 			else
 			{
 				// guaranteed not to be controlled by the player, so no feedback required
-				if (wpn->ubImprintID != NO_PROFILE + 1)
+				if (wpn.ubImprintID != NO_PROFILE + 1)
 				{
-					if (wpn->ubImprintID != NO_PROFILE) return ITEM_HANDLE_BROKEN;
-					wpn->ubImprintID = NO_PROFILE + 1;
+					if (wpn.ubImprintID != NO_PROFILE) return ITEM_HANDLE_BROKEN;
+					wpn.ubImprintID = NO_PROFILE + 1;
 				}
 			}
 		}
@@ -967,8 +967,8 @@ INT32 HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLevel, const 
 	if (item->ubCursor == INVALIDCURS)
 	{
 		// Found detonator...
-		OBJECTTYPE* const obj =  &s->inv[usHandItem];
-		if ( FindAttachment(obj, DETONATOR) != ITEM_NOT_FOUND || FindAttachment(obj, REMDETONATOR))
+		OBJECTTYPE& obj = s->inv[usHandItem];
+		if (FindAttachment(&obj, DETONATOR) != ITEM_NOT_FOUND || FindAttachment(&obj, REMDETONATOR))
 		{
 			StartBombMessageBox(s, usGridNo);
 			if (fFromUI) guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
@@ -1253,29 +1253,29 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 				break; // boobytrap found... stop picking up things!
 			}
 
-			WORLDITEM&        wi = GetWorldItem(i->iItemIndex);
-			OBJECTTYPE* const o  = &wi.o;
+			WORLDITEM&  wi = GetWorldItem(i->iItemIndex);
+			OBJECTTYPE& o  = wi.o;
 
-			if (ItemIsCool(*o)) fShouldSayCoolQuote = TRUE;
+			if (ItemIsCool(o)) fShouldSayCoolQuote = TRUE;
 
-			if (o->usItem == SWITCH)
+			if (o.usItem == SWITCH)
 			{
 				// ask about activating the switch!
-				bTempFrequency = o->bFrequency;
+				bTempFrequency = o.bFrequency;
 				gpTempSoldier = s;
 				DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[ACTIVATE_SWITCH_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, SwitchMessageBoxCallBack, NULL);
 				continue;
 			}
 
 			// Make copy of item
-			OBJECTTYPE Object = *o;
+			OBJECTTYPE Object = o;
 			if (!AutoPlaceObject(s, &Object, TRUE))
 			{
 				// check to see if the object has been swapped with one in inventory
-				if (Object.usItem != o->usItem || Object.ubNumberOfObjects != o->ubNumberOfObjects)
+				if (Object.usItem != o.usItem || Object.ubNumberOfObjects != o.ubNumberOfObjects)
 				{
 					// copy back because item changed, and we must make sure the item pool reflects this.
-					*o = Object;
+					o = Object;
 				}
 
 				pItemPoolToDelete = i;
@@ -1300,15 +1300,15 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 		if (ItemExistsAtLocation(sGridNo, iItemIndex, s->bLevel) &&
 				ContinuePastBoobyTrap(s, sGridNo, iItemIndex, &fSaidBoobyTrapQuote))
 		{
-			WORLDITEM&        wi = GetWorldItem(iItemIndex);
-			OBJECTTYPE* const o  = &wi.o;
+			WORLDITEM&  wi = GetWorldItem(iItemIndex);
+			OBJECTTYPE& o  = wi.o;
 
-			if (ItemIsCool(*o)) fShouldSayCoolQuote = TRUE;
+			if (ItemIsCool(o)) fShouldSayCoolQuote = TRUE;
 
-			if (o->usItem == SWITCH)
+			if (o.usItem == SWITCH)
 			{
 				// handle switch
-				bTempFrequency = o->bFrequency;
+				bTempFrequency = o.bFrequency;
 				gpTempSoldier  = s;
 				DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[ACTIVATE_SWITCH_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, SwitchMessageBoxCallBack, NULL);
 			}
@@ -1316,10 +1316,10 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 			{
 				RemoveItemFromPool(&wi);
 
-				if (!AutoPlaceObject(s, o, TRUE))
+				if (!AutoPlaceObject(s, &o, TRUE))
 				{
 					gfDontChargeAPsToPickup = TRUE;
-					HandleAutoPlaceFail(s, o, sGridNo);
+					HandleAutoPlaceFail(s, &o, sGridNo);
 				}
 			}
 		}
@@ -2783,27 +2783,27 @@ static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* const pSoldier, const INT16 sG
 	BOOLEAN					fBoobyTrapKnowledge;
 	INT8						bTrapDifficulty, bTrapDetectLevel;
 
-	OBJECTTYPE* const pObj = &GetWorldItem(iItemIndex).o;
+	OBJECTTYPE& o = GetWorldItem(iItemIndex).o;
 
   (*pfSaidQuote) = FALSE;
 
-	if (pObj->bTrap > 0)
+	if (o.bTrap > 0)
 	{
 		if (pSoldier->bTeam == gbPlayerNum)
 		{
 			// does the player know about this item?
-			fBoobyTrapKnowledge = ((pObj->fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) > 0);
+			fBoobyTrapKnowledge = (o.fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) > 0;
 
 			// blue flag stuff?
 
 			if (!fBoobyTrapKnowledge)
 			{
-				bTrapDifficulty = pObj->bTrap;
+				bTrapDifficulty = o.bTrap;
 				bTrapDetectLevel = CalcTrapDetectLevel( pSoldier, FALSE );
 				if (bTrapDetectLevel >= bTrapDifficulty)
 				{
 					// spotted the trap!
-					pObj->fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
+					o.fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
 					fBoobyTrapKnowledge = TRUE;
 
 					// Make him warn us:
@@ -2834,7 +2834,7 @@ static BOOLEAN ContinuePastBoobyTrap(SOLDIERTYPE* const pSoldier, const INT16 sG
 				gsBoobyTrapGridNo = sGridNo;
 				gbBoobyTrapLevel  = pSoldier->bLevel;
 				gfDisarmingBuriedBomb = FALSE;
-				gbTrapDifficulty = pObj->bTrap;
+				gbTrapDifficulty = o.bTrap;
 
 				DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[DISARM_BOOBYTRAP_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, BoobyTrapMessageBoxCallBack, NULL);
 			}
@@ -2947,13 +2947,13 @@ static void BoobyTrapMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 			else
 			{
 				// make sure the item in the world is untrapped
-				OBJECTTYPE* const o = &wi.o;
-				o->bTrap   = 0;
-				o->fFlags &= ~OBJECT_KNOWN_TO_BE_TRAPPED;
+				OBJECTTYPE& o = wi.o;
+				o.bTrap   = 0;
+				o.fFlags &= ~OBJECT_KNOWN_TO_BE_TRAPPED;
 
 				// ATE; If we failed to add to inventory, put failed one in our cursor...
 				gfDontChargeAPsToPickup = TRUE;
-				HandleAutoPlaceFail(gpBoobyTrapSoldier, o, gsBoobyTrapGridNo);
+				HandleAutoPlaceFail(gpBoobyTrapSoldier, &o, gsBoobyTrapGridNo);
 				RemoveItemFromPool(&wi);
 			}
 		}
@@ -3145,27 +3145,27 @@ BOOLEAN NearbyGroundSeemsWrong(SOLDIERTYPE* const s, const INT16 sGridNo, const 
 			WORLDITEM& wi = GetWorldItem(wb->iItemIndex);
 			if (wi.sGridNo != sNextGridNo) continue;
 
-			OBJECTTYPE* const o = &wi.o;
-			if (o->bDetonatorType != BOMB_PRESSURE)     continue;
-			if (o->fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) continue;
-			if (o->fFlags & OBJECT_DISABLED_BOMB)       continue;
+			OBJECTTYPE& o = wi.o;
+			if (o.bDetonatorType != BOMB_PRESSURE)     continue;
+			if (o.fFlags & OBJECT_KNOWN_TO_BE_TRAPPED) continue;
+			if (o.fFlags & OBJECT_DISABLED_BOMB)       continue;
 
-			if (fMining && o->bTrap <= 10)
+			if (fMining && o.bTrap <= 10)
 			{
 				// add blue flag
 				AddBlueFlag(sNextGridNo, s->bLevel);
 				*psProblemGridNo = NOWHERE;
 				return TRUE;
 			}
-			else if (ubDetectLevel >= o->bTrap)
+			else if (ubDetectLevel >= o.bTrap)
 			{
 				if (s->uiStatusFlags & SOLDIER_PC)
 				{
 					// detected explosives buried nearby...
-					StatChange(s, EXPLODEAMT, (UINT16)o->bTrap, FALSE);
+					StatChange(s, EXPLODEAMT, (UINT16)o.bTrap, FALSE);
 
 					// set item as known
-					o->fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
+					o.fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
 				}
 
 				*psProblemGridNo = sNextGridNo;
@@ -3532,15 +3532,15 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 
 BOOLEAN CanPlayerUseRocketRifle(SOLDIERTYPE* const s, const BOOLEAN fDisplay)
 {
-	const OBJECTTYPE* const wpn = &s->inv[s->ubAttackingHand];
-	if (wpn->usItem == ROCKET_RIFLE || wpn->usItem == AUTO_ROCKET_RIFLE)
+	OBJECTTYPE const& wpn = s->inv[s->ubAttackingHand];
+	if (wpn.usItem == ROCKET_RIFLE || wpn.usItem == AUTO_ROCKET_RIFLE)
   {
     // check imprint ID
     // NB not-imprinted value is NO_PROFILE
     // imprinted value is profile for mercs & NPCs and NO_PROFILE + 1 for generic dudes
-    if (s->ubProfile     != NO_PROFILE   &&
-				wpn->ubImprintID != s->ubProfile &&
-				wpn->ubImprintID != NO_PROFILE) // NOT a virgin gun...
+    if (s->ubProfile    != NO_PROFILE   &&
+				wpn.ubImprintID != s->ubProfile &&
+				wpn.ubImprintID != NO_PROFILE) // NOT a virgin gun...
 		{
 			// access denied!
 			if (s->bTeam == gbPlayerNum)

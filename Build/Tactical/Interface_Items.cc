@@ -860,7 +860,7 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 	//Assign the screen
 	guiCurrentItemDescriptionScreen = guiCurrentScreen;
 
-	const OBJECTTYPE* pObject = &pSoldier->inv[sPocket];
+	OBJECTTYPE const& o = pSoldier->inv[sPocket];
 
 	sX = gSMInvData[ sPocket ].sX;
 	sY = gSMInvData[ sPocket ].sY;
@@ -873,10 +873,10 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 /*	OLD VERSION OF GUN/AMMO MATCH HIGHLIGHTING
 		UINT16	usLineColor;
 
-		if ( ( Item [ pSoldier->inv[ HANDPOS ].usItem ].usItemClass & IC_GUN )  && ( Item[ pObject->usItem ].usItemClass & IC_AMMO ) )
+		if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass & IC_GUN && Item[o.usItem].usItemClass & IC_AMMO)
 		{
 			// CHECK
-			if (Weapon[pSoldier->inv[ HANDPOS ].usItem].ubCalibre == Magazine[Item[pObject->usItem].ubClassIndex].ubCalibre )
+			if (Weapon[pSoldier->inv[HANDPOS].usItem].ubCalibre == Magazine[Item[o.usItem].ubClassIndex].ubCalibre)
 			{
 				// IT's an OK calibre ammo, do something!
 				// Render Item with specific color
@@ -934,7 +934,7 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 	}
 
 	//Now render as normal
-	INVRenderItem(guiSAVEBUFFER, pSoldier, *pObject, sX, sY, gSMInvData[sPocket].sWidth, gSMInvData[sPocket].sHeight, fRenderDirtyLevel, 0, outline);
+	INVRenderItem(guiSAVEBUFFER, pSoldier, o, sX, sY, gSMInvData[sPocket].sWidth, gSMInvData[sPocket].sHeight, fRenderDirtyLevel, 0, outline);
 
 	if ( gbInvalidPlacementSlot[ sPocket ] )
 	{
@@ -964,12 +964,12 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 	}
 
 	// if there's an item in there
-	if ( pObject->usItem != NOTHING )
+	if (o.usItem != NOTHING)
 	{
 		// Add item status bar
 		INT16 const sBarX = sX - INV_BAR_DX;
 		INT16 const sBarY = sY + INV_BAR_DY;
-		DrawItemUIBarEx(*pObject, 0, sBarX, sBarY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
+		DrawItemUIBarEx(o, 0, sBarX, sBarY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
 	}
 }
 
@@ -1103,8 +1103,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 	{
 		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 		{
-			const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
-			if ( CompatibleItemForApplyingOnMerc( pObject ) )
+			if (CompatibleItemForApplyingOnMerc(&pSoldier->inv[cnt]))
 			{
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
 				{
@@ -1151,18 +1150,20 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 		// First test attachments, which almost any type of item can have....
 		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 		{
-			const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
+			OBJECTTYPE const& o = pSoldier->inv[cnt];
 
-			if ( Item[ pObject->usItem ].fFlags & ITEM_HIDDEN_ADDON )
+			if (Item[o.usItem].fFlags & ITEM_HIDDEN_ADDON)
 			{
 				// don't consider for UI purposes
 				continue;
 			}
 
-			if ( ValidAttachment( pObject->usItem, pTestObject->usItem ) ||
-					 ValidAttachment( pTestObject->usItem, pObject->usItem ) ||
-					 ValidLaunchable( pTestObject->usItem, pObject->usItem ) ||
-					 ValidLaunchable( pObject->usItem, pTestObject->usItem ) )
+			UINT16 const a = o.usItem;
+			UINT16 const b = pTestObject->usItem;
+			if (ValidAttachment(a, b) ||
+					ValidAttachment(b, a) ||
+					ValidLaunchable(b, a) ||
+					ValidLaunchable(a, b))
 			{
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
 				{
@@ -1181,8 +1182,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 	{
 		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 		{
-			const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
-			if ( CompatibleAmmoForGun( pObject, pTestObject ) )
+			if (CompatibleAmmoForGun(&pSoldier->inv[cnt], pTestObject))
 			{
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
 				{
@@ -1199,8 +1199,7 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 	{
 		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 		{
-			const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
-			if ( CompatibleGunForAmmo( pObject, pTestObject ) )
+			if (CompatibleGunForAmmo(&pSoldier->inv[cnt], pTestObject))
 			{
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
 				{
@@ -1327,8 +1326,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 	{
 		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 		{
-			const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
-			if ( CompatibleItemForApplyingOnMerc( pObject ) )
+			if ( CompatibleItemForApplyingOnMerc(&pSoldier->inv[cnt]))
 			{
 				if ( fOn != gbCompatibleAmmo[ cnt ] )
 				{
@@ -1373,18 +1371,20 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 	// First test attachments, which almost any type of item can have....
 	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 	{
-		const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
+		OBJECTTYPE const& o = pSoldier->inv[cnt];
 
-		if ( Item[ pObject->usItem ].fFlags & ITEM_HIDDEN_ADDON )
+		if (Item[o.usItem].fFlags & ITEM_HIDDEN_ADDON)
 		{
 			// don't consider for UI purposes
 			continue;
 		}
 
-		if ( ValidAttachment( pObject->usItem, pTestObject->usItem ) ||
-				 ValidAttachment( pTestObject->usItem, pObject->usItem ) ||
-				 ValidLaunchable( pTestObject->usItem, pObject->usItem ) ||
-				 ValidLaunchable( pObject->usItem, pTestObject->usItem ) )
+		UINT16 const a = o.usItem;
+		UINT16 const b = pTestObject->usItem;
+		if (ValidAttachment(a, b) ||
+				ValidAttachment(b, a) ||
+				ValidLaunchable(b, a) ||
+				ValidLaunchable(a, b) )
 		{
 			fFoundAttachment = TRUE;
 
@@ -1405,8 +1405,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 		{
 			for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 			{
-				const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
-				if ( CompatibleAmmoForGun( pObject, pTestObject ) )
+				if (CompatibleAmmoForGun(&pSoldier->inv[cnt], pTestObject))
 				{
 					if ( fOn != gbCompatibleAmmo[ cnt ] )
 					{
@@ -1424,8 +1423,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 		{
 			for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
 			{
-				const OBJECTTYPE* pObject = &pSoldier->inv[cnt];
-				if ( CompatibleGunForAmmo( pObject, pTestObject ) )
+				if (CompatibleGunForAmmo(&pSoldier->inv[cnt], pTestObject))
 				{
 					if ( fOn != gbCompatibleAmmo[ cnt ] )
 					{
@@ -2340,16 +2338,16 @@ void RenderItemDescriptionBox(void)
 	INT16   usX;
 	INT16   usY;
 
-	const OBJECTTYPE* const obj    = gpItemDescObject;
-	const BOOLEAN           in_map = (guiCurrentItemDescriptionScreen == MAP_SCREEN);
-	const INT16             dx     = gsInvDescX;
-	const INT16             dy     = gsInvDescY;
+	OBJECTTYPE const& obj    = *gpItemDescObject;
+	BOOLEAN    const  in_map = guiCurrentItemDescriptionScreen == MAP_SCREEN;
+	INT16      const  dx     = gsInvDescX;
+	INT16      const  dy     = gsInvDescY;
 
 	const SGPVObject* const box_gfx = (in_map ? guiMapItemDescBox : guiItemDescBox);
 	BltVideoObject(guiSAVEBUFFER, box_gfx, 0, dx, dy);
 
 	//Display the money 'seperating' border
-	if (obj->usItem == MONEY)
+	if (obj.usItem == MONEY)
 	{
 		//Render the money Boxes
 		const MoneyLoc* const xy = (in_map ? &gMapMoneyButtonLoc : &gMoneyButtonLoc);
@@ -2375,7 +2373,7 @@ void RenderItemDescriptionBox(void)
 		INT16         const x   = box->x + dx;
 		INT16         const y   = box->y + dy;
 		INT16         const h   = box->h;
-		DrawItemUIBarEx(*obj, gubItemDescStatusIndex, x, y, h, Get16BPPColor(DESC_STATUS_BAR), Get16BPPColor(DESC_STATUS_BAR_SHADOW), guiSAVEBUFFER);
+		DrawItemUIBarEx(obj, gubItemDescStatusIndex, x, y, h, Get16BPPColor(DESC_STATUS_BAR), Get16BPPColor(DESC_STATUS_BAR_SHADOW), guiSAVEBUFFER);
 	}
 
 	BOOLEAN fHatchOutAttachments = gfItemDescObjectIsAttachment; // if examining attachment, always hatch out attachment slots
@@ -2383,9 +2381,9 @@ void RenderItemDescriptionBox(void)
 	{
 		if (Item[gpItemPointer->usItem].fFlags & ITEM_HIDDEN_ADDON ||
 				(
-					!ValidItemAttachment(obj, gpItemPointer->usItem, FALSE) &&
-					!ValidMerge(gpItemPointer->usItem, obj->usItem) &&
-					!ValidLaunchable(gpItemPointer->usItem, obj->usItem)
+					!ValidItemAttachment(&obj, gpItemPointer->usItem, FALSE) &&
+					!ValidMerge(gpItemPointer->usItem, obj.usItem)           &&
+					!ValidLaunchable(gpItemPointer->usItem, obj.usItem)
 				))
 		{
 			// hatch out the attachment panels
@@ -2401,18 +2399,18 @@ void RenderItemDescriptionBox(void)
 			const INT16 x = dx + agi->slot[i].iX;
 			const INT16 y = dy + agi->slot[i].iY;
 
-			if (obj->usAttachItem[i] != NOTHING)
+			if (obj.usAttachItem[i] != NOTHING)
 			{
 				const INT16 item_x = agi->item_box.x + x;
 				const INT16 item_y = agi->item_box.y + y;
 				const INT16 item_w = agi->item_box.w;
 				const INT16 item_h = agi->item_box.h;
-				INVRenderItem(guiSAVEBUFFER, NULL, *obj, item_x, item_y, item_w, item_h, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + i, TRANSPARENT);
+				INVRenderItem(guiSAVEBUFFER, NULL, obj, item_x, item_y, item_w, item_h, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + i, TRANSPARENT);
 
 				const INT16 bar_x = agi->bar_box.x + x;
 				const INT16 bar_h = agi->bar_box.h;
 				const INT16 bar_y = agi->bar_box.y + y + bar_h - 1;
-				DrawItemUIBarEx(*obj, DRAW_ITEM_STATUS_ATTACHMENT1 + i, bar_x, bar_y, bar_h, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
+				DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + i, bar_x, bar_y, bar_h, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
 			}
 
 			if (fHatchOutAttachments)
@@ -2424,7 +2422,7 @@ void RenderItemDescriptionBox(void)
 		}
 	}
 
-	const INVTYPE* const item = &Item[obj->usItem];
+	INVTYPE const* const item = &Item[obj.usItem];
 
 	if (item->usItemClass & IC_GUN)
 	{
@@ -2435,7 +2433,7 @@ void RenderItemDescriptionBox(void)
 			BltVideoObject(guiSAVEBUFFER, guiBullet, 0, x, y);
 		}
 
-		const WEAPONTYPE* const w = &Weapon[obj->usItem];
+		WEAPONTYPE const* const w = &Weapon[obj.usItem];
 		if (w->ubShotsPerBurst > 0)
 		{
 			INT32       x = (in_map ? MAP_BULLET_BURST_X : BULLET_BURST_X);
@@ -2461,7 +2459,7 @@ void RenderItemDescriptionBox(void)
 		// Render name
 		const SGPBox* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
 #ifdef JA2TESTVERSION
-		mprintf(dx + xy->x, dy + xy->y, L"%ls (%d)", gzItemName, obj->usItem);
+		mprintf(dx + xy->x, dy + xy->y, L"%ls (%d)", gzItemName, obj.usItem);
 #else
 		MPrint(dx + xy->x, dy + xy->y, gzItemName);
 #endif
@@ -2474,14 +2472,14 @@ void RenderItemDescriptionBox(void)
 		DisplayWrappedString(dx + box->x, dy + box->y, box->w, 2, ITEMDESC_FONT, FONT_BLACK, gzItemDesc, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
-	if (ITEM_PROS_AND_CONS(obj->usItem))
+	if (ITEM_PROS_AND_CONS(obj.usItem))
 	{
-		const WEAPONTYPE* const w = &Weapon[obj->usItem];
-		if ((obj->usItem == ROCKET_RIFLE || obj->usItem == AUTO_ROCKET_RIFLE) &&
-				obj->ubImprintID < NO_PROFILE)
+		WEAPONTYPE const* const w = &Weapon[obj.usItem];
+		if ((obj.usItem == ROCKET_RIFLE || obj.usItem == AUTO_ROCKET_RIFLE) &&
+				obj.ubImprintID < NO_PROFILE)
 		{
 			// add name noting imprint
-			swprintf(pStr, lengthof(pStr), L"%ls %ls (%ls)", AmmoCaliber[w->ubCalibre], WeaponType[w->ubWeaponType], gMercProfiles[obj->ubImprintID].zNickname);
+			swprintf(pStr, lengthof(pStr), L"%ls %ls (%ls)", AmmoCaliber[w->ubCalibre], WeaponType[w->ubWeaponType], gMercProfiles[obj.ubImprintID].zNickname);
 		}
 		else
 		{
@@ -2513,16 +2511,16 @@ void RenderItemDescriptionBox(void)
 			x += pros_cons_indent;
 			w -= pros_cons_indent + StringPixLength(DOTDOTDOT, ITEMDESC_FONT);
 
-			GenerateProsString(gzItemPros, *obj, w);
+			GenerateProsString(gzItemPros, obj, w);
 			MPrint(x, y, gzItemPros);
 
-			GenerateConsString(gzItemCons, *obj, w);
+			GenerateConsString(gzItemCons, obj, w);
 			MPrint(x, y + h, gzItemCons);
 		}
 	}
 
 	// Calculate total weight of item and attachments
-	float fWeight = CalculateObjectWeight(obj) / 10.f;
+	float fWeight = CalculateObjectWeight(&obj) / 10.f;
 	if (!gGameSettings.fOptions[TOPTION_USE_METRIC_SYSTEM]) fWeight *= 2.2f;
 	if (fWeight < 0.1) fWeight = 0.1f;
 
@@ -2541,7 +2539,7 @@ void RenderItemDescriptionBox(void)
 		{
 			MPrint(dx + ids[2].sX, dy + ids[2].sY, gWeaponStatsDesc[3]); // range
 		}
-		if (!(item->usItemClass & IC_LAUNCHER) && obj->usItem != ROCKET_LAUNCHER)
+		if (!(item->usItemClass & IC_LAUNCHER) && obj.usItem != ROCKET_LAUNCHER)
 		{
 			MPrint(dx + ids[3].sX, dy + ids[3].sY, gWeaponStatsDesc[4]); // damage
 		}
@@ -2552,15 +2550,15 @@ void RenderItemDescriptionBox(void)
 		}
 		MPrint(dx + ids[1].sX, dy + ids[1].sY, gWeaponStatsDesc[1]); // status
 
-		const WEAPONTYPE* const w = &Weapon[obj->usItem];
-		if (w->ubShotsPerBurst > 0)
+		WEAPONTYPE const& w = Weapon[obj.usItem];
+		if (w.ubShotsPerBurst > 0)
 		{
 			MPrint(dx + ids[7].sX, dy + ids[7].sY, gWeaponStatsDesc[6]); // = (sic)
 		}
 
 		//Status
 		SetFontForeground(5);
-		swprintf(pStr, lengthof(pStr), L"%2d%%", obj->bGunStatus);
+		swprintf(pStr, lengthof(pStr), L"%2d%%", obj.bGunStatus);
 		FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
@@ -2573,23 +2571,23 @@ void RenderItemDescriptionBox(void)
 		if (item->usItemClass & (IC_GUN | IC_LAUNCHER))
 		{
 			//Range
-			UINT16 const range = GunRange(*obj);
+			UINT16 const range = GunRange(obj);
 			HighlightIf(range >= EXCEPTIONAL_RANGE);
 			swprintf(pStr, lengthof(pStr), L"%2d", range / 10);
 			FindFontRightCoordinates(dx + ids[2].sX + ids[2].sValDx, dy + ids[2].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 
-		if (!(item->usItemClass & IC_LAUNCHER) && obj->usItem != ROCKET_LAUNCHER)
+		if (!(item->usItemClass & IC_LAUNCHER) && obj.usItem != ROCKET_LAUNCHER)
 		{
 			//Damage
-			HighlightIf(w->ubImpact >= EXCEPTIONAL_DAMAGE);
-			swprintf(pStr, lengthof(pStr), L"%2d", w->ubImpact);
+			HighlightIf(w.ubImpact >= EXCEPTIONAL_DAMAGE);
+			swprintf(pStr, lengthof(pStr), L"%2d", w.ubImpact);
 			FindFontRightCoordinates(dx + ids[3].sX + ids[3].sValDx, dy + ids[3].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 
-		UINT8 const ubAttackAPs = BaseAPsToShootOrStab(DEFAULT_APS, DEFAULT_AIMSKILL, *obj);
+		UINT8 const ubAttackAPs = BaseAPsToShootOrStab(DEFAULT_APS, DEFAULT_AIMSKILL, obj);
 
 		//APs
 		HighlightIf(ubAttackAPs <= EXCEPTIONAL_AP_COST);
@@ -2597,15 +2595,15 @@ void RenderItemDescriptionBox(void)
 		FindFontRightCoordinates(dx + ids[4].sX + ids[4].sValDx, dy + ids[4].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
-		if (w->ubShotsPerBurst > 0)
+		if (w.ubShotsPerBurst > 0)
 		{
-			HighlightIf(w->ubShotsPerBurst >= EXCEPTIONAL_BURST_SIZE || obj->usItem == G11);
-			swprintf(pStr, lengthof(pStr), L"%2d", ubAttackAPs + CalcAPsToBurst(DEFAULT_APS, *obj));
+			HighlightIf(w.ubShotsPerBurst >= EXCEPTIONAL_BURST_SIZE || obj.usItem == G11);
+			swprintf(pStr, lengthof(pStr), L"%2d", ubAttackAPs + CalcAPsToBurst(DEFAULT_APS, obj));
 			FindFontRightCoordinates(dx + ids[5].sX + ids[5].sValDx, dy + ids[5].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 	}
-	else if (obj->usItem == MONEY)
+	else if (obj.usItem == MONEY)
 	{
 		SetFontForeground(FONT_WHITE);
 
@@ -2680,7 +2678,7 @@ void RenderItemDescriptionBox(void)
 	else if (item->usItemClass == IC_MONEY)
 	{
 		SetFontForeground(FONT_FCOLOR_WHITE);
-		SPrintMoney(pStr, obj->uiMoneyAmount);
+		SPrintMoney(pStr, obj.uiMoneyAmount);
 		const SGPBox* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
 		FindFontRightCoordinates(dx + xy->x, dy + xy->y, xy->w, xy->h, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
@@ -2705,14 +2703,14 @@ void RenderItemDescriptionBox(void)
 		if (item->usItemClass & IC_AMMO)
 		{
 			// Ammo - print amount
-			swprintf(pStr, lengthof(pStr), L"%d/%d", obj->ubShotsLeft[0], Magazine[item->ubClassIndex].ubMagSize);
+			swprintf(pStr, lengthof(pStr), L"%d/%d", obj.ubShotsLeft[0], Magazine[item->ubClassIndex].ubMagSize);
 			FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 		else
 		{
 			//Status
-			swprintf(pStr, lengthof(pStr), L"%2d%%", obj->bStatus[gubItemDescStatusIndex]);
+			swprintf(pStr, lengthof(pStr), L"%2d%%", obj.bStatus[gubItemDescStatusIndex]);
 			FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
@@ -2734,15 +2732,15 @@ void RenderItemDescriptionBox(void)
 			MPrint(x, y0, sKeyDescriptionStrings[0]);
 			MPrint(x, y1, sKeyDescriptionStrings[1]);
 
-			const KEY* const key = &KeyTable[obj->ubKeyID];
+			KEY const& key = KeyTable[obj.ubKeyID];
 
 			SetFontForeground(5);
 			wchar_t sTempString[128];
-			GetShortSectorString(SECTORX(key->usSectorFound), SECTORY(key->usSectorFound), sTempString, lengthof(sTempString));
+			GetShortSectorString(SECTORX(key.usSectorFound), SECTORY(key.usSectorFound), sTempString, lengthof(sTempString));
 			FindFontRightCoordinates(x, y0, 110, ITEM_STATS_HEIGHT, sTempString, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, sTempString);
 
-			swprintf(pStr, lengthof(pStr), L"%d", key->usDateFound);
+			swprintf(pStr, lengthof(pStr), L"%d", key.usDateFound);
 			FindFontRightCoordinates(x, y1, 110, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
@@ -4741,13 +4739,13 @@ static void SetupPickupPage(INT8 bPage)
 			INT32 const item = pTempItemPool->iItemIndex;
 			gItemPickupMenu.items[cnt - iStart] = item;
 
-			OBJECTTYPE const* const pObject = &GetWorldItem(item).o;
+			OBJECTTYPE const& o = GetWorldItem(item).o;
 
-		  sValue = pObject->bStatus[ 0 ];
+		  sValue = o.bStatus[0];
 
 	    // Adjust for ammo, other thingys..
 			wchar_t pStr[200];
-	    if( Item[ pObject->usItem ].usItemClass & IC_AMMO || Item[ pObject->usItem ].usItemClass & IC_KEY )
+	    if (Item[o.usItem].usItemClass & IC_AMMO || Item[o.usItem].usItemClass & IC_KEY)
 	    {
         swprintf( pStr, lengthof(pStr), L"" );
 	    }
@@ -4870,8 +4868,8 @@ void RenderItemPickupMenu()
 			if (world_item == -1) continue;
 
 			// Get item to render
-			OBJECTTYPE const* const pObject = &GetWorldItem(world_item).o;
-			INVTYPE    const&       item    = Item[pObject->usItem];
+			OBJECTTYPE const& o    = GetWorldItem(world_item).o;
+			INVTYPE    const& item = Item[o.usItem];
 
 			UINT16              const usItemTileIndex = GetTileGraphicForItem(item);
 			TILE_ELEMENT const* const te              = &gTileDatabase[usItemTileIndex];
@@ -4882,11 +4880,11 @@ void RenderItemPickupMenu()
 			UINT16 const outline = (menu.pfSelectedArray[cnt + menu.ubScrollAnchor] ? outline_col : TRANSPARENT);
 			Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sX, sY, te->usRegionIndex, outline);
 
-			if (pObject->ubNumberOfObjects > 1)
+			if (o.ubNumberOfObjects > 1)
 			{
 				SetFontAttributes(ITEM_FONT, FONT_GRAY4);
 
-				swprintf(pStr, lengthof(pStr), L"%d", pObject->ubNumberOfObjects);
+				swprintf(pStr, lengthof(pStr), L"%d", o.ubNumberOfObjects);
 
 				INT16 sFontX;
 				INT16 sFontY;
@@ -4895,7 +4893,7 @@ void RenderItemPickupMenu()
 				SetFont(ITEMDESC_FONT);
 			}
 
-			if (ItemHasAttachments(*pObject))
+			if (ItemHasAttachments(o))
 			{ // Render attachment symbols
 				SetFontForeground(FONT_GREEN);
 				SetFontShadow(DEFAULT_SHADOW);
@@ -4918,15 +4916,15 @@ void RenderItemPickupMenu()
 			}
 
 			// Render name
-			if (Item[pObject->usItem].usItemClass == IC_MONEY)
+			if (item.usItemClass == IC_MONEY)
 			{
 				wchar_t pStr2[20];
-				SPrintMoney(pStr2, pObject->uiMoneyAmount);
-				swprintf(pStr, lengthof(pStr), L"%ls (%ls)", ItemNames[pObject->usItem], pStr2);
+				SPrintMoney(pStr2, o.uiMoneyAmount);
+				swprintf(pStr, lengthof(pStr), L"%ls (%ls)", ItemNames[o.usItem], pStr2);
 			}
 			else
 			{
-				wcslcpy(pStr, ShortItemNames[pObject->usItem], lengthof(pStr));
+				wcslcpy(pStr, ShortItemNames[o.usItem], lengthof(pStr));
 			}
 			INT16 sFontX;
 			INT16 sFontY;
@@ -5105,14 +5103,14 @@ static void ItemPickMenuMouseMoveCallback(MOUSE_REGION* const pRegion, INT32 con
 		if (bChecked) return;
 
 		// Show compatible ammo
-		INT32             const item = gItemPickupMenu.items[uiItemPos];
-		OBJECTTYPE const* const o    = &GetWorldItem(item).o;
+		INT32      const  item = gItemPickupMenu.items[uiItemPos];
+		OBJECTTYPE const& o    = GetWorldItem(item).o;
 
-		gItemPickupMenu.CompAmmoObject = *o;
+		gItemPickupMenu.CompAmmoObject = o;
 
 		HandleAnyMercInSquadHasCompatibleStuff(0); // Turn off first
 		InternalHandleCompatibleAmmoUI(gpSMCurrentMerc, &gItemPickupMenu.CompAmmoObject, TRUE);
-		HandleAnyMercInSquadHasCompatibleStuff(o);
+		HandleAnyMercInSquadHasCompatibleStuff(&o);
 
 		SetItemPickupMenuDirty(DIRTYLEVEL2);
 

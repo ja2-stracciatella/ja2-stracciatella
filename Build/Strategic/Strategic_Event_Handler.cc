@@ -489,8 +489,8 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 	// money in D5b1 must be less than 30k
 	CFOR_ALL_WORLD_ITEMS(wi)
 	{
-		const OBJECTTYPE* const o = &wi->o;
-		if (o->usItem == MONEY) uiTotalCash += o->uiMoneyAmount;
+		OBJECTTYPE const& o = wi->o;
+		if (o.usItem == MONEY) uiTotalCash += o.uiMoneyAmount;
 	}
 
 	// This function should be called every time sector D5/B1 is unloaded!
@@ -971,10 +971,10 @@ void CheckForMissingHospitalSupplies( void )
 		const ITEM_POOL* pItemPool = GetItemPool(wi->sGridNo, 0);
 		while( pItemPool )
 		{
-			const OBJECTTYPE* const pObj = &GetWorldItem(pItemPool->iItemIndex).o;
-			if ( pObj->bStatus[ 0 ] > 60 )
+			OBJECTTYPE const& o = GetWorldItem(pItemPool->iItemIndex).o;
+			if (o.bStatus[0] > 60)
 			{
-				if ( pObj->usItem == FIRSTAIDKIT || pObj->usItem == MEDICKIT || pObj->usItem == REGEN_BOOSTER || pObj->usItem == ADRENALINE_BOOSTER )
+				if (o.usItem == FIRSTAIDKIT || o.usItem == MEDICKIT || o.usItem == REGEN_BOOSTER || o.usItem == ADRENALINE_BOOSTER)
 				{
 					ubMedicalObjects++;
 				}
