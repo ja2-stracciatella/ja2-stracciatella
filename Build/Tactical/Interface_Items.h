@@ -59,7 +59,7 @@ BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEA
 //							if == DIRTYLEVEL1 will render bullets and status only
 //
 //  Last parameter used mainly for when mouse is over item
-void INVRenderItem(SGPVSurface* uiBuffer, const SOLDIERTYPE* pSoldier, const OBJECTTYPE* pObject, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 ubStatusIndex, INT16 sOutlineColor);
+void INVRenderItem(SGPVSurface* uiBuffer, const SOLDIERTYPE* pSoldier, OBJECTTYPE const&, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, UINT8 fDirtyLevel, UINT8 ubStatusIndex, INT16 sOutlineColor);
 
 
 extern BOOLEAN gfInItemDescBox;

@@ -717,7 +717,7 @@ static void RenderHandPosItem(void)
 		return;
 	}
 
-	INVRenderItem(guiSAVEBUFFER, pSoldier, &pSoldier->inv[HANDPOS], SOLDIER_HAND_X, SOLDIER_HAND_Y,	58, 23, DIRTYLEVEL2, 0, TRANSPARENT);
+	INVRenderItem(guiSAVEBUFFER, pSoldier, pSoldier->inv[HANDPOS], SOLDIER_HAND_X, SOLDIER_HAND_Y, 58, 23, DIRTYLEVEL2, 0, TRANSPARENT);
 }
 
 

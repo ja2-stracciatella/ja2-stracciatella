@@ -934,7 +934,7 @@ static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UI
 	}
 
 	//Now render as normal
-	INVRenderItem(guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[sPocket].sWidth, gSMInvData[sPocket].sHeight, fRenderDirtyLevel, 0, outline);
+	INVRenderItem(guiSAVEBUFFER, pSoldier, *pObject, sX, sY, gSMInvData[sPocket].sWidth, gSMInvData[sPocket].sHeight, fRenderDirtyLevel, 0, outline);
 
 	if ( gbInvalidPlacementSlot[ sPocket ] )
 	{
@@ -1601,7 +1601,7 @@ void HandleNewlyAddedItems( SOLDIERTYPE *pSoldier, BOOLEAN *fDirtyLevel )
 				continue;
 			}
 
-			INVRenderItem(guiSAVEBUFFER, pSoldier, pObject, sX, sY, gSMInvData[cnt].sWidth, gSMInvData[cnt].sHeight, DIRTYLEVEL2, 0, us16BPPItemCyclePlacedItemColors[pSoldier->bNewItemCycleCount[cnt]]);
+			INVRenderItem(guiSAVEBUFFER, pSoldier, *pObject, sX, sY, gSMInvData[cnt].sWidth, gSMInvData[cnt].sHeight, DIRTYLEVEL2, 0, us16BPPItemCyclePlacedItemColors[pSoldier->bNewItemCycleCount[cnt]]);
 		}
 	}
 }
@@ -1677,15 +1677,14 @@ void InitItemInterface( )
 }
 
 
-void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const OBJECTTYPE* const o, const INT16 sX, const INT16 sY, const INT16 sWidth, const INT16 sHeight, const UINT8 fDirtyLevel, const UINT8 ubStatusIndex, const INT16 outline_colour)
+void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, OBJECTTYPE const& o, const INT16 sX, const INT16 sY, const INT16 sWidth, const INT16 sHeight, const UINT8 fDirtyLevel, const UINT8 ubStatusIndex, const INT16 outline_colour)
 {
-	if (o->usItem   == NOTHING)     return;
+	if (o.usItem    == NOTHING)     return;
 	if (fDirtyLevel == DIRTYLEVEL0) return;
 
 	INVTYPE const& item =
-		ubStatusIndex < RENDER_ITEM_ATTACHMENT1 ?
-			Item[o->usItem] :
-			Item[o->usAttachItem[ubStatusIndex - RENDER_ITEM_ATTACHMENT1]];
+		ubStatusIndex < RENDER_ITEM_ATTACHMENT1 ? Item[o.usItem] :
+		Item[o.usAttachItem[ubStatusIndex - RENDER_ITEM_ATTACHMENT1]];
 
 	if (fDirtyLevel == DIRTYLEVEL2)
 	{
@@ -1714,11 +1713,11 @@ void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const 
 		SetFont(ITEM_FONT);
 		SetFontBackground(FONT_MCOLOR_BLACK);
 
-		if (item.usItemClass == IC_GUN && o->usItem != ROCKET_LAUNCHER)
+		if (item.usItemClass == IC_GUN && o.usItem != ROCKET_LAUNCHER)
 		{
 			// Display free rounds remianing
 			UINT8 colour;
-			switch (o->ubGunAmmoType)
+			switch (o.ubGunAmmoType)
 			{
 				case AMMO_AP:
 				case AMMO_SUPER_AP: colour = ITEMDESC_FONTAPFORE;   break;
@@ -1736,10 +1735,10 @@ void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const 
 			{
 				RestoreExternBackgroundRect(sNewX, sNewY, 20, 15);
 			}
-			GPrintInvalidateF(sNewX, sNewY, L"%d", o->ubGunShotsLeft);
+			GPrintInvalidateF(sNewX, sNewY, L"%d", o.ubGunShotsLeft);
 
 			// Display 'JAMMED' if we are jammed
-			if (o->bGunAmmoStatus < 0)
+			if (o.bGunAmmoStatus < 0)
 			{
 				SetFontForeground(FONT_MCOLOR_RED);
 
@@ -1754,13 +1753,13 @@ void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const 
 				GPrintInvalidate(cx, cy, jammed);
 			}
 		}
-		else if (ubStatusIndex != RENDER_ITEM_NOSTATUS && o->ubNumberOfObjects > 1)
+		else if (ubStatusIndex != RENDER_ITEM_NOSTATUS && o.ubNumberOfObjects > 1)
 		{
 			// Display # of items
 			SetFontForeground(FONT_GRAY4);
 
 			wchar_t pStr[16];
-			swprintf(pStr, lengthof(pStr), L"%d", o->ubNumberOfObjects);
+			swprintf(pStr, lengthof(pStr), L"%d", o.ubNumberOfObjects);
 
 			const UINT16 uiStringLength = StringPixLength(pStr, ITEM_FONT);
 			const INT16  sNewX          = sX + sWidth - uiStringLength - 4;
@@ -1773,9 +1772,9 @@ void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const 
 			GPrintInvalidate(sNewX, sNewY, pStr);
 		}
 
-		if (ItemHasAttachments(*o))
+		if (ItemHasAttachments(o))
 		{
-			SetFontForeground(FindAttachment(o, UNDER_GLAUNCHER) == NO_SLOT ? FONT_GREEN : FONT_YELLOW);
+			SetFontForeground(FindAttachment(&o, UNDER_GLAUNCHER) == NO_SLOT ? FONT_GREEN : FONT_YELLOW);
 
 			const wchar_t* const attach_marker  = L"*";
 			UINT16         const uiStringLength = StringPixLength(attach_marker, ITEM_FONT);
@@ -1789,7 +1788,7 @@ void INVRenderItem(SGPVSurface* const buffer, const SOLDIERTYPE* const s, const 
 			GPrintInvalidate(sNewX, sNewY, attach_marker);
 		}
 
-		if (s && o == &s->inv[HANDPOS] && Item[o->usItem].usItemClass == IC_GUN && s->bWeaponMode != WM_NORMAL)
+		if (s && &o == &s->inv[HANDPOS] && Item[o.usItem].usItemClass == IC_GUN && s->bWeaponMode != WM_NORMAL)
 		{
 			SetFontForeground(FONT_DKRED);
 
@@ -2408,7 +2407,7 @@ void RenderItemDescriptionBox(void)
 				const INT16 item_y = agi->item_box.y + y;
 				const INT16 item_w = agi->item_box.w;
 				const INT16 item_h = agi->item_box.h;
-				INVRenderItem(guiSAVEBUFFER, NULL, obj, item_x, item_y, item_w, item_h, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + i, TRANSPARENT);
+				INVRenderItem(guiSAVEBUFFER, NULL, *obj, item_x, item_y, item_w, item_h, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + i, TRANSPARENT);
 
 				const INT16 bar_x = agi->bar_box.x + x;
 				const INT16 bar_h = agi->bar_box.h;
@@ -3999,7 +3998,7 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 			INT16 sX = gsItemPopupX + cnt * usWidth + 11;
 			INT16 sY = gsItemPopupY + 3;
 
-			INVRenderItem(FRAME_BUFFER, NULL, gpItemPopupObject, sX, sY, 29, 23, DIRTYLEVEL2, RENDER_ITEM_NOSTATUS, TRANSPARENT);
+			INVRenderItem(FRAME_BUFFER, NULL, *gpItemPopupObject, sX, sY, 29, 23, DIRTYLEVEL2, RENDER_ITEM_NOSTATUS, TRANSPARENT);
 
 			// Do status bar here...
 			INT16 sNewX = gsItemPopupX + cnt * usWidth + 7;
@@ -4178,7 +4177,7 @@ void RenderKeyRingPopup(const BOOLEAN fFullRender)
 		o.usItem            = FIRST_KEY + LockTable[key->ubKeyID].usKeyItem;
 
 		DrawItemUIBarEx(&o, 0, x + 7, y + 24, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
-		INVRenderItem(FRAME_BUFFER, NULL, &o, x + 8, y, box_w - 8, box_h - 2, DIRTYLEVEL2, 0, TRANSPARENT);
+		INVRenderItem(FRAME_BUFFER, NULL, o, x + 8, y, box_w - 8, box_h - 2, DIRTYLEVEL2, 0, TRANSPARENT);
 	}
 
 	InvalidateRegion(dx, dy, dx + gsKeyRingPopupInvWidth, dy + gsKeyRingPopupInvHeight);
