@@ -669,18 +669,15 @@ static BOOLEAN     gfPositionSoundsActive = FALSE;
 
 static INT32 GetFreePositionSnd(void)
 {
-	UINT32 uiCount;
-
-	for(uiCount=0; uiCount < guiNumPositionSnds; uiCount++)
+	for (UINT32 i = 0; i != guiNumPositionSnds; ++i)
 	{
-		if(( gPositionSndData[uiCount].fAllocated==FALSE ) )
-			return( (INT32)uiCount );
+		if (!gPositionSndData[i].fAllocated) return (INT32)i;
 	}
 
-	if( guiNumPositionSnds < NUM_POSITION_SOUND_EFFECT_SLOTS )
-		return( (INT32) guiNumPositionSnds++ );
+	if (guiNumPositionSnds < NUM_POSITION_SOUND_EFFECT_SLOTS)
+		return (INT32)guiNumPositionSnds++;
 
-	return( -1 );
+	return -1;
 }
 
 
@@ -701,37 +698,20 @@ static void RecountPositionSnds(void)
 
 INT32 NewPositionSnd(INT16 const sGridNo, UINT32 const uiFlags, SOLDIERTYPE const* const SoundSource, SoundID const iSoundToPlay)
 {
-	POSITIONSND *pPositionSnd;
-	INT32				iPositionSndIndex;
+	INT32 const idx = GetFreePositionSnd();
+	if (idx == -1) return -1;
 
-	if( ( iPositionSndIndex = GetFreePositionSnd() )==(-1) )
-		return(-1);
+	POSITIONSND& p = gPositionSndData[idx];
+	memset(&p, 0, sizeof(p));
+	p.fInActive      = !gfPositionSoundsActive;
+	p.sGridNo        = sGridNo;
+	p.SoundSource    = SoundSource;
+	p.uiFlags        = uiFlags;
+	p.fAllocated     = TRUE;
+	p.iSoundToPlay   = iSoundToPlay;
+	p.iSoundSampleID = NO_SAMPLE;
 
-	memset( &gPositionSndData[ iPositionSndIndex ], 0, sizeof( POSITIONSND ) );
-
-	pPositionSnd = &gPositionSndData[ iPositionSndIndex ];
-
-
-  // Default to inactive
-
-  if ( gfPositionSoundsActive )
-  {
-    pPositionSnd->fInActive   = FALSE;
-  }
-  else
-  {
-    pPositionSnd->fInActive   = TRUE;
-  }
-
-  pPositionSnd->sGridNo     = sGridNo;
-  pPositionSnd->SoundSource = SoundSource;
-  pPositionSnd->uiFlags     = uiFlags;
-  pPositionSnd->fAllocated  = TRUE;
-  pPositionSnd->iSoundToPlay = iSoundToPlay;
-
-  pPositionSnd->iSoundSampleID = NO_SAMPLE;
-
-  return( iPositionSndIndex );
+	return idx;
 }
 
 void DeletePositionSnd( INT32 iPositionSndIndex )
