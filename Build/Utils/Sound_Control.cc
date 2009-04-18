@@ -834,50 +834,33 @@ static INT8 PositionSoundDir(INT16 sGridNo)
 }
 
 
-static INT8 PositionSoundVolume(INT8 bInitialVolume, INT16 sGridNo)
+static INT8 PositionSoundVolume(INT8 const initial_volume, GridNo const grid_no)
 {
-	INT16 sScreenX, sScreenY;
-	INT16	sMiddleX, sMiddleY;
-	INT16	sDifX, sAbsDifX;
-	INT16	sDifY, sAbsDifY;
-  INT16 sMaxDistX, sMaxDistY;
-  double sMaxSoundDist, sSoundDist;
+  if (grid_no == NOWHERE) return initial_volume;
 
-  if ( sGridNo == NOWHERE )
-  {
-    return( bInitialVolume );
-  }
+	INT16 sScreenX;
+	INT16 sScreenY;
+	GetAbsoluteScreenXYFromMapPos(grid_no, &sScreenX, &sScreenY);
 
-	GetAbsoluteScreenXYFromMapPos(sGridNo, &sScreenX, &sScreenY);
+	// Get middle of where we are now
+	INT16 const sMiddleX = gsTopLeftWorldX + (gsBottomRightWorldX - gsTopLeftWorldX) / 2;
+	INT16 const sMiddleY = gsTopLeftWorldY + (gsBottomRightWorldY - gsTopLeftWorldY) / 2;
 
-	// Get middle of where we are now....
-	sMiddleX = gsTopLeftWorldX + ( gsBottomRightWorldX - gsTopLeftWorldX ) / 2;
-	sMiddleY = gsTopLeftWorldY + ( gsBottomRightWorldY - gsTopLeftWorldY ) / 2;
+	INT16 const sDifX = sMiddleX - sScreenX;
+	INT16 const sDifY = sMiddleY - sScreenY;
 
-	sDifX = sMiddleX - sScreenX;
-	sDifY = sMiddleY - sScreenY;
+  INT16 const sMaxDistX = (gsBottomRightWorldX - gsTopLeftWorldX) * 3 / 2;
+  INT16 const sMaxDistY = (gsBottomRightWorldY - gsTopLeftWorldY) * 3 / 2;
 
-	sAbsDifX = abs( sDifX );
-	sAbsDifY = abs( sDifY );
+  double const sMaxSoundDist = sqrt((double)(sMaxDistX * sMaxDistX) + (sMaxDistY * sMaxDistY));
+  double       sSoundDist    = sqrt((double)(sDifX * sDifX)  + (sDifY * sDifY));
 
-  sMaxDistX = (INT16)( ( gsBottomRightWorldX - gsTopLeftWorldX ) * 1.5 );
-  sMaxDistY = (INT16)( ( gsBottomRightWorldY - gsTopLeftWorldY ) * 1.5 );
+  if (sSoundDist == 0) return initial_volume;
 
-  sMaxSoundDist = sqrt( (double) ( sMaxDistX * sMaxDistX ) + ( sMaxDistY * sMaxDistY ) );
-  sSoundDist    = sqrt( (double)( sAbsDifX * sAbsDifX ) + ( sAbsDifY * sAbsDifY ) );
-
-  if ( sSoundDist == 0 )
-  {
-    return( bInitialVolume );
-  }
-
-  if ( sSoundDist > sMaxSoundDist )
-  {
-    sSoundDist = sMaxSoundDist;
-  }
+  if (sSoundDist > sMaxSoundDist) sSoundDist = sMaxSoundDist;
 
   // Scale
-  return( (INT8)( bInitialVolume * ( ( sMaxSoundDist - sSoundDist ) / sMaxSoundDist ) ) );
+  return  (INT8)(initial_volume * ((sMaxSoundDist - sSoundDist) / sMaxSoundDist));
 }
 
 
