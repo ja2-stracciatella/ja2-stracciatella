@@ -1006,10 +1006,9 @@ static INT8 CalcAimSkill(const SOLDIERTYPE* pSoldier, UINT16 usWeapon)
 }
 
 
-UINT8 BaseAPsToShootOrStab(const INT8 bAPs, const INT8 bAimSkill, const OBJECTTYPE* const pObj)
+UINT8 BaseAPsToShootOrStab(INT8 const bAPs, INT8 const bAimSkill, OBJECTTYPE const& o)
 {
 	INT16	sTop, sBottom;
-	INT8	bAttachPos;
 
 	// Calculate default top & bottom of the magic "aiming" formula!
 
@@ -1020,12 +1019,12 @@ UINT8 BaseAPsToShootOrStab(const INT8 bAPs, const INT8 bAimSkill, const OBJECTTY
 	// Shots per turn rating is for max. aimSkill(100), drops down to 1/2 at = 0
 	// DIVIDE BY 4 AT THE END HERE BECAUSE THE SHOTS PER TURN IS NOW QUADRUPLED!
 	// NB need to define shots per turn for ALL Weapons then.
-	sBottom = ( ( 50 + (bAimSkill / 2) ) * Weapon[ pObj->usItem ].ubShotsPer4Turns ) / 4;
+	sBottom = ( ( 50 + (bAimSkill / 2) ) * Weapon[o.usItem ].ubShotsPer4Turns ) / 4;
 
-	bAttachPos = FindAttachment( pObj, SPRING_AND_BOLT_UPGRADE );
+	INT8 const bAttachPos = FindAttachment(&o, SPRING_AND_BOLT_UPGRADE);
 	if ( bAttachPos != -1 )
 	{
-		sBottom = (sBottom * (100 + pObj->bAttachStatus[ bAttachPos ] / 5) ) / 100;
+		sBottom = sBottom * (100 + o.bAttachStatus[bAttachPos] / 5) / 100;
 	}
 
 	// add minimum aiming time to the overall minimum AP_cost
@@ -1190,19 +1189,18 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE* const pSoldier, INT16 sGridNo, const UINT
 			CreateItem( UNDER_GLAUNCHER, 100, &GrenadeLauncher );
 		}
 
-	  bAPCost += BaseAPsToShootOrStab( bFullAPs, bAimSkill, &GrenadeLauncher );
-
+	  bAPCost += BaseAPsToShootOrStab(bFullAPs, bAimSkill, GrenadeLauncher);
 	}
 	else if ( IsValidSecondHandShot( pSoldier ) )
   {
 	  // charge the maximum of the two
 	  bAPCost += __max(
-			 BaseAPsToShootOrStab( bFullAPs, bAimSkill, &(pSoldier->inv[HANDPOS]) ),
-			 BaseAPsToShootOrStab( bFullAPs, bAimSkill, &(pSoldier->inv[SECONDHANDPOS]) ) );
+			 BaseAPsToShootOrStab(bFullAPs, bAimSkill, pSoldier->inv[HANDPOS]),
+			 BaseAPsToShootOrStab(bFullAPs, bAimSkill, pSoldier->inv[SECONDHANDPOS]));
   }
   else
   {
-	  bAPCost += BaseAPsToShootOrStab( bFullAPs, bAimSkill, &(pSoldier->inv[HANDPOS]) );
+	  bAPCost += BaseAPsToShootOrStab(bFullAPs, bAimSkill, pSoldier->inv[HANDPOS]);
   }
 
  // the minimum AP cost of ANY shot can NEVER be more than merc's maximum APs!

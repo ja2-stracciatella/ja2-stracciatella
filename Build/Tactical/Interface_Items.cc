@@ -502,7 +502,7 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 		}
 	}
 
-	if (BaseAPsToShootOrStab( DEFAULT_APS, DEFAULT_AIMSKILL, gpItemDescObject ) <= EXCEPTIONAL_AP_COST)
+	if (BaseAPsToShootOrStab(DEFAULT_APS, DEFAULT_AIMSKILL, *gpItemDescObject) <= EXCEPTIONAL_AP_COST)
 	{
 		zTemp = Message[STR_QUICK_FIRING];
 		if ( ! AttemptToAddSubstring( zItemPros, zTemp, &uiStringLength, uiPixLimit ) )
@@ -601,7 +601,7 @@ static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UI
 		}
 	}
 
-	if (BaseAPsToShootOrStab( DEFAULT_APS, DEFAULT_AIMSKILL, gpItemDescObject ) >= BAD_AP_COST)
+	if (BaseAPsToShootOrStab(DEFAULT_APS, DEFAULT_AIMSKILL, *gpItemDescObject) >= BAD_AP_COST)
 	{
 		zTemp = Message[STR_SLOW_FIRING];
 		if ( ! AttemptToAddSubstring( zItemCons, zTemp, &uiStringLength, uiPixLimit ) )
@@ -2589,7 +2589,7 @@ void RenderItemDescriptionBox(void)
 			MPrint(usX, usY, pStr);
 		}
 
-		const UINT8 ubAttackAPs = BaseAPsToShootOrStab(DEFAULT_APS, DEFAULT_AIMSKILL, obj);
+		UINT8 const ubAttackAPs = BaseAPsToShootOrStab(DEFAULT_APS, DEFAULT_AIMSKILL, *obj);
 
 		//APs
 		HighlightIf(ubAttackAPs <= EXCEPTIONAL_AP_COST);

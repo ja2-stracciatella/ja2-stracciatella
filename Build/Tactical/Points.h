@@ -273,7 +273,7 @@
 #define DEFAULT_APS 20
 #define DEFAULT_AIMSKILL 80
 
-UINT8 BaseAPsToShootOrStab(INT8 bAPs, INT8 bAimSkill, const OBJECTTYPE* pObj);
+UINT8 BaseAPsToShootOrStab(INT8 bAPs, INT8 bAimSkill, OBJECTTYPE const&);
 
 INT16 TerrainActionPoints(const SOLDIERTYPE* s, INT16 sGridno, INT8 bDir, INT8 bLevel);
 INT16 ActionPointCost(const SOLDIERTYPE* s, INT16 sGridNo, INT8 bDir, UINT16 usMovementMode);
