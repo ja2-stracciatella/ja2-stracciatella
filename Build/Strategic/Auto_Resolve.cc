@@ -4151,7 +4151,7 @@ static void ProcessBattleFrame(void)
 				{
 					pTarget = ChooseTarget( pAttacker );
 					if( pAttacker->uiFlags & CELL_CREATURE && PreRandom( 100 ) < 7 )
-						PlayAutoResolveSample(SoundRange<ACR_SMELL_THREAT, ACR_SMEEL_PREY>(), 50, 1, MIDDLEPAN);
+						PlayAutoResolveSample(SoundRange<ACR_SMELL_THREAT, ACR_SMELL_PREY>(), 50, 1, MIDDLEPAN);
 					else
 						AttackTarget( pAttacker, pTarget );
 					ResetNextAttackCounter( pAttacker );

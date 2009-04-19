@@ -2084,7 +2084,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					{
 						switch (pSoldier->usActionData)
 						{
-							case CALL_1_PREY:        snd = ACR_SMEEL_PREY;   break;
+							case CALL_1_PREY:        snd = ACR_SMELL_PREY;   break;
 							case CALL_MULTIPLE_PREY:
 							case CALL_ATTACKED:      snd = ACR_SMELL_THREAT; break;
 							case CALL_CRIPPLED:      snd = ACR_CRIPPLED;     break;
