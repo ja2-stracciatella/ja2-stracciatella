@@ -1845,7 +1845,7 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 									break;
 
 								default:
-									break;
+									continue;
 							}
 						}
 						else

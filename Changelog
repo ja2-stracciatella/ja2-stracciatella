@@ -1,3 +1,4 @@
+(r5719) Fix a vanilla bug: When an enemy soldier is looking for items and finds a non-helmet/vest/leggings piece of armour it was incorrectly considered for pickup.
 (r5673) Adjust the char-to-glyph translation table for the French version, so "i" with circumflex is displayed correctly.
 (r5651) Fix a vanilla bug: Closing the laptop, while a page in the browser is loading, caused artifacts (not deleted GUI elements, accessing not loaded graphics).
 (r5621, r5623) Always make the tooltips of the contract button and the inventory toggle region available, even if they are deactivated.
