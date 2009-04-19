@@ -1601,363 +1601,307 @@ INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 	return(sClosestSpot);
 }
 
+
 #define MINIMUM_REQUIRED_STATUS 70
 
-INT8 SearchForItems( SOLDIERTYPE * pSoldier, INT8 bReason, UINT16 usItem )
+INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 const usItem)
 {
-	INT32					iSearchRange;
-	INT16					sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
-	INT16					sGridNo;
-	INT16					sBestSpot = NOWHERE;
-	INT32					iTempValue, iValue, iBestValue = 0;
-	INT32					iItemIndex, iBestItemIndex;
+	if (s->bActionPoints < AP_PICKUP_ITEM) return AI_ACTION_NONE;
 
-	iTempValue = -1;
-	iItemIndex = iBestItemIndex = -1;
+	if (!IS_MERC_BODY_TYPE(s)) return AI_ACTION_NONE;
 
-	if (pSoldier->bActionPoints < AP_PICKUP_ITEM)
+	INT32 search_range = gbDiff[DIFF_MAX_COVER_RANGE][SoldierDifficultyLevel(s)];
+
+	switch (s->bAttitude)
 	{
-		return( AI_ACTION_NONE );
+		case DEFENSIVE:   search_range -= 1; break;
+		case BRAVESOLO:   search_range += 2; break;
+		case BRAVEAID:    search_range += 2; break;
+		case CUNNINGSOLO: search_range -= 2; break;
+		case CUNNINGAID:  search_range -= 2; break;
+		case AGGRESSIVE:  search_range += 1; break;
 	}
 
-	if ( !IS_MERC_BODY_TYPE( pSoldier ) )
+	// Maximum search range is 1 tile / 10 pts of wisdom
+	if (search_range > s->bWisdom / 10)
 	{
-		return( AI_ACTION_NONE );
-	}
-
-	iSearchRange = gbDiff[DIFF_MAX_COVER_RANGE][ SoldierDifficultyLevel( pSoldier ) ];
-
-	switch (pSoldier->bAttitude)
-	{
-		case DEFENSIVE:		iSearchRange --;   break;
-		case BRAVESOLO:		iSearchRange += 2; break;
-		case BRAVEAID:		iSearchRange += 2; break;
-		case CUNNINGSOLO:	iSearchRange -= 2; break;
-		case CUNNINGAID:	iSearchRange -= 2; break;
-		case AGGRESSIVE:	iSearchRange ++;   break;
-	}
-
-	// maximum search range is 1 tile / 10 pts of wisdom
-	if (iSearchRange > (pSoldier->bWisdom / 10))
-	{
-		iSearchRange = (pSoldier->bWisdom / 10);
+		search_range = s->bWisdom / 10;
 	}
 
 	if (!gfTurnBasedAI)
-	{
-		// don't search so far in realtime
-		iSearchRange /= 2;
+	{ // Don't search so far in realtime
+		search_range /= 2;
 	}
 
-	// don't search so far for items
-	iSearchRange /= 2;
+	// Don't search so far for items
+	search_range /= 2;
 
 	// determine maximum horizontal limits
-	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	//NumMessage("sMaxLeft = ",sMaxLeft);
-	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
-	//NumMessage("sMaxRight = ",sMaxRight);
+	INT16 const max_left  = MIN(search_range, s->sGridNo % MAXCOL);
+	INT16 const max_right = MIN(search_range, MAXCOL - ((s->sGridNo % MAXCOL) + 1));
 
 	// determine maximum vertical limits
-	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	//NumMessage("sMaxUp = ",sMaxUp);
-	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
-	//NumMessage("sMaxDown = ",sMaxDown);
+	INT16 const max_up   = MIN(search_range, s->sGridNo / MAXROW);
+	INT16 const max_down = MIN(search_range, MAXROW - ((s->sGridNo / MAXROW) + 1));
 
 	// Call FindBestPath to set flags in all locations that we can
 	// walk into within range.  We have to set some things up first...
 
 	// set the distance limit of the square region
-	gubNPCDistLimit = (UINT8) iSearchRange;
+	gubNPCDistLimit = search_range;
 
 	// set an AP limit too, to our APs less the cost of picking up an item
 	// and less the cost of dropping an item since we might need to do that
-	gubNPCAPBudget = pSoldier->bActionPoints - AP_PICKUP_ITEM;
+	gubNPCAPBudget = s->bActionPoints - AP_PICKUP_ITEM;
 
 	// reset the "reachable" flags in the region we're looking at
-	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
+	for (INT16 dy = -max_up; dy <= max_down; ++dy)
 	{
-		for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++)
+		for (INT16 dx = -max_left; dx <= max_right; ++dx)
 		{
-			sGridNo = pSoldier->sGridNo + sXOffset + (MAXCOL * sYOffset);
-			if ( !(sGridNo >=0 && sGridNo < WORLD_MAX) )
-			{
-				continue;
-			}
-
-			gpWorldLevelData[sGridNo].uiFlags &= ~(MAPELEMENT_REACHABLE);
+			GridNo const grid_no = s->sGridNo + dx + MAXCOL * dy;
+			if (grid_no < 0 || WORLD_MAX <= grid_no) continue;
+			gpWorldLevelData[grid_no].uiFlags &= ~MAPELEMENT_REACHABLE;
 		}
 	}
 
-	FindBestPath( pSoldier, NOWHERE, pSoldier->bLevel, DetermineMovementMode( pSoldier, AI_ACTION_PICKUP_ITEM ), COPYREACHABLE, 0 );
+	FindBestPath(s, NOWHERE, s->bLevel, DetermineMovementMode(s, AI_ACTION_PICKUP_ITEM), COPYREACHABLE, 0);
 
-	// SET UP DOUBLE-LOOP TO STEP THROUGH POTENTIAL GRID #s
-	for (sYOffset = -sMaxUp; sYOffset <= sMaxDown; sYOffset++)
+	GridNo best_spot     = NOWHERE;
+	INT32  best_value    =  0;
+	INT32  item_idx      = -1;
+	INT32  best_item_idx = -1;
+	for (INT16 dy = -max_up; dy <= max_down; ++dy)
 	{
-		for (sXOffset = -sMaxLeft; sXOffset <= sMaxRight; sXOffset++)
+		for (INT16 dx = -max_left; dx <= max_right; ++dx)
 		{
 			// calculate the next potential gridno
-			sGridNo = pSoldier->sGridNo + sXOffset + (MAXCOL * sYOffset);
-			if ( !(sGridNo >=0 && sGridNo < WORLD_MAX) )
-			{
-				continue;
-			}
+			INT16 const grid_no = s->sGridNo + dx + (MAXCOL * dy);
+			if (grid_no < 0 || WORLD_MAX <= grid_no) continue;
 
 			// exclude locations with tear/mustard gas (at this point, smoke is cool!)
-			if ( InGasOrSmoke( pSoldier, sGridNo ) )
+			if (InGasOrSmoke(s, grid_no)) continue;
+
+			if (!(gpWorldLevelData[grid_no].uiFlags & MAPELEMENT_ITEMPOOL_PRESENT)) continue;
+			if (!(gpWorldLevelData[grid_no].uiFlags & MAPELEMENT_REACHABLE))        continue;
+
+			// ignore blacklisted spot
+			if (grid_no == s->sBlackList) continue;
+
+			INT32 value = 0;
+			for (ITEM_POOL const* pItemPool = GetItemPool(grid_no, s->bLevel); pItemPool; pItemPool = pItemPool->pNext)
 			{
-				continue;
-			}
-
-			if ( (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_ITEMPOOL_PRESENT)
-					&& (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REACHABLE) )
-			{
-
-				// ignore blacklisted spot
-				if ( sGridNo == pSoldier->sBlackList )
-				{
-					continue;
-				}
-
-				iValue = 0;
-				const ITEM_POOL* pItemPool = GetItemPool(sGridNo, pSoldier->bLevel);
-				switch( bReason )
+				OBJECTTYPE const& o    = GetWorldItem(pItemPool->iItemIndex).o;
+				INVTYPE    const& item = Item[o.usItem];
+				INT32             temp_value;
+				switch (reason)
 				{
 					case SEARCH_AMMO:
-						// we are looking for ammo to match the gun in usItem
-						while( pItemPool )
-						{
-							OBJECTTYPE const& o    = GetWorldItem(pItemPool->iItemIndex).o;
-							INVTYPE    const& item = Item[o.usItem];
-							if (item.usItemClass == IC_GUN && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
+						// We are looking for ammo to match the gun in usItem
+						if (item.usItemClass == IC_GUN && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
+						{ // Maybe this gun has ammo (adjust for whether it is better than ours!)
+							if (o.bGunAmmoStatus <  0 ||
+									o.ubGunShotsLeft == 0 ||
+									(o.usItem == ROCKET_RIFLE && o.ubImprintID != NOBODY && o.ubImprintID != s->ubID))
 							{
-								// maybe this gun has ammo (adjust for whether it is better than ours!)
-								if (o.bGunAmmoStatus < 0  ||
-										o.ubGunShotsLeft == 0 ||
-										(o.usItem == ROCKET_RIFLE && o.ubImprintID != NOBODY && o.ubImprintID != pSoldier->ubID))
-								{
-									iTempValue = 0;
-								}
-								else
-								{
-									iTempValue = o.ubGunShotsLeft * Weapon[o.usItem].ubDeadliness / Weapon[usItem].ubDeadliness;
-								}
-							}
-							else if (ValidAmmoType(usItem, o.usItem))
-							{
-								iTempValue = TotalPoints(&o);
+								temp_value = 0;
 							}
 							else
 							{
-								iTempValue = 0;
+								temp_value = o.ubGunShotsLeft * Weapon[o.usItem].ubDeadliness / Weapon[usItem].ubDeadliness;
 							}
-							if (iTempValue > iValue )
-							{
-								iValue = iTempValue;
-								iItemIndex = pItemPool->iItemIndex;
-							}
-							pItemPool = pItemPool->pNext;
+						}
+						else if (ValidAmmoType(usItem, o.usItem))
+						{
+							temp_value = TotalPoints(&o);
+						}
+						else
+						{
+							temp_value = 0;
 						}
 						break;
+
 					case SEARCH_WEAPONS:
-						while( pItemPool )
+						if (item.usItemClass & IC_WEAPON && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
 						{
-							OBJECTTYPE const& o    = GetWorldItem(pItemPool->iItemIndex).o;
-							INVTYPE    const& item = Item[o.usItem];
-							if (item.usItemClass & IC_WEAPON && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
-							{
-								if (item.usItemClass & IC_GUN &&
+							if (item.usItemClass & IC_GUN &&
+									(
+										o.bGunAmmoStatus <  0 ||
+										o.ubGunShotsLeft == 0 ||
 										(
-											o.bGunAmmoStatus <  0 ||
-											o.ubGunShotsLeft == 0 ||
-											(
-												(o.usItem == ROCKET_RIFLE || o.usItem == AUTO_ROCKET_RIFLE) &&
-												o.ubImprintID != NOBODY &&
-												o.ubImprintID != pSoldier->ubID
-											)
-										))
+											(o.usItem == ROCKET_RIFLE || o.usItem == AUTO_ROCKET_RIFLE) &&
+											o.ubImprintID != NOBODY &&
+											o.ubImprintID != s->ubID
+										)
+									))
+							{ // Jammed or out of ammo, skip it!
+								temp_value = 0;
+							}
+							else if (Item[s->inv[HANDPOS].usItem].usItemClass & IC_WEAPON)
+							{
+								WEAPONTYPE const& new_wpn = Weapon[o.usItem];
+								WEAPONTYPE const& cur_wpn = Weapon[s->inv[HANDPOS].usItem];
+								if (new_wpn.ubDeadliness > cur_wpn.ubDeadliness)
 								{
-									// jammed or out of ammo, skip it!
-									iTempValue = 0;
-								}
-								else if ( Item[pSoldier->inv[HANDPOS].usItem].usItemClass & IC_WEAPON )
-								{
-									if (Weapon[o.usItem].ubDeadliness > Weapon[pSoldier->inv[HANDPOS].usItem].ubDeadliness)
-									{
-										iTempValue = 100 * Weapon[o.usItem].ubDeadliness / Weapon[pSoldier->inv[HANDPOS].usItem].ubDeadliness;
-									}
-									else
-									{
-										iTempValue = 0;
-									}
+									temp_value = 100 * new_wpn.ubDeadliness / cur_wpn.ubDeadliness;
 								}
 								else
 								{
-									iTempValue = 200 + Weapon[o.usItem].ubDeadliness;
+									temp_value = 0;
 								}
 							}
 							else
 							{
-								iTempValue = 0;
+								temp_value = 200 + Weapon[o.usItem].ubDeadliness;
 							}
-							if (iTempValue > iValue )
-							{
-								iValue = iTempValue;
-								iItemIndex = pItemPool->iItemIndex;
-							}
-							pItemPool = pItemPool->pNext;
+						}
+						else
+						{
+							temp_value = 0;
 						}
 						break;
+
 					default:
-						while( pItemPool )
+						if (item.usItemClass & IC_WEAPON && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
 						{
-							OBJECTTYPE const& o    = GetWorldItem(pItemPool->iItemIndex).o;
-							INVTYPE    const& item = Item[o.usItem];
-							if (item.usItemClass & IC_WEAPON && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
-							{
-								if (item.usItemClass & IC_GUN &&
+							if (item.usItemClass & IC_GUN &&
+									(
+										o.bGunAmmoStatus <  0 ||
+										o.ubGunShotsLeft == 0 ||
 										(
-											o.bGunAmmoStatus <  0 ||
-											o.ubGunShotsLeft == 0 ||
-											(
-												(o.usItem == ROCKET_RIFLE || o.usItem == AUTO_ROCKET_RIFLE) &&
-												o.ubImprintID != NOBODY &&
-												o.ubImprintID != pSoldier->ubID
-											)
-										))
+											(o.usItem == ROCKET_RIFLE || o.usItem == AUTO_ROCKET_RIFLE) &&
+											o.ubImprintID != NOBODY &&
+											o.ubImprintID != s->ubID
+										)
+									))
+							{ // Jammed or out of ammo, skip it!
+								temp_value = 0;
+							}
+							else if (Item[s->inv[HANDPOS].usItem].usItemClass & IC_WEAPON)
+							{
+								WEAPONTYPE const& new_wpn = Weapon[o.usItem];
+								WEAPONTYPE const& cur_wpn = Weapon[s->inv[HANDPOS].usItem];
+								if (new_wpn.ubDeadliness > cur_wpn.ubDeadliness)
 								{
-									// jammed or out of ammo, skip it!
-									iTempValue = 0;
-								}
-								else if ( (Item[pSoldier->inv[HANDPOS].usItem].usItemClass & IC_WEAPON)  )
-								{
-									if (Weapon[o.usItem].ubDeadliness > Weapon[pSoldier->inv[HANDPOS].usItem].ubDeadliness)
-									{
-										iTempValue = 100 * Weapon[o.usItem].ubDeadliness / Weapon[pSoldier->inv[HANDPOS].usItem].ubDeadliness;
-									}
-									else
-									{
-										iTempValue = 0;
-									}
+									temp_value = 100 * new_wpn.ubDeadliness / cur_wpn.ubDeadliness;
 								}
 								else
 								{
-									iTempValue = 200 + Weapon[o.usItem].ubDeadliness;
-								}
-							}
-							else if	(item.usItemClass == IC_ARMOUR && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS )
-							{
-								switch (Armour[item.ubClassIndex].ubArmourClass)
-								{
-									case ARMOURCLASS_HELMET:
-										if (pSoldier->inv[HELMETPOS].usItem == NOTHING)
-										{
-											iTempValue = 200 + EffectiveArmour(&o);
-										}
-										else if (EffectiveArmour(&pSoldier->inv[HELMETPOS]) > EffectiveArmour(&o))
-										{
-											iTempValue = 100 * EffectiveArmour(&o) / EffectiveArmour(&pSoldier->inv[HELMETPOS]);
-										}
-										else
-										{
-											iTempValue = 0;
-										}
-										break;
-									case ARMOURCLASS_VEST:
-										if (pSoldier->inv[VESTPOS].usItem == NOTHING)
-										{
-											iTempValue = 200 + EffectiveArmour(&o);
-										}
-										else if (EffectiveArmour(&pSoldier->inv[HELMETPOS]) > EffectiveArmour(&o))
-										{
-											iTempValue = 100 * EffectiveArmour(&o) / EffectiveArmour(&pSoldier->inv[VESTPOS]);
-										}
-										else
-										{
-											iTempValue = 0;
-										}
-										break;
-									case ARMOURCLASS_LEGGINGS:
-										if (pSoldier->inv[LEGPOS].usItem == NOTHING)
-										{
-											iTempValue = 200 + EffectiveArmour(&o);
-										}
-										else if (EffectiveArmour(&pSoldier->inv[HELMETPOS]) > EffectiveArmour(&o))
-										{
-											iTempValue = 100 * EffectiveArmour(&o) / EffectiveArmour(&pSoldier->inv[LEGPOS]);
-										}
-										else
-										{
-											iTempValue = 0;
-										}
-										break;
-									default:
-										break;
+									temp_value = 0;
 								}
 							}
 							else
 							{
-								iTempValue = 0;
+								temp_value = 200 + Weapon[o.usItem].ubDeadliness;
 							}
-
-							if (iTempValue > iValue )
+						}
+						else if	(item.usItemClass == IC_ARMOUR && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
+						{
+							switch (Armour[item.ubClassIndex].ubArmourClass)
 							{
-								iValue = iTempValue;
-								iItemIndex = pItemPool->iItemIndex;
+								case ARMOURCLASS_HELMET:
+									if (s->inv[HELMETPOS].usItem == NOTHING)
+									{
+										temp_value = 200 + EffectiveArmour(&o);
+									}
+									else if (EffectiveArmour(&s->inv[HELMETPOS]) > EffectiveArmour(&o))
+									{
+										temp_value = 100 * EffectiveArmour(&o) / EffectiveArmour(&s->inv[HELMETPOS]);
+									}
+									else
+									{
+										temp_value = 0;
+									}
+									break;
+
+								case ARMOURCLASS_VEST:
+									if (s->inv[VESTPOS].usItem == NOTHING)
+									{
+										temp_value = 200 + EffectiveArmour(&o);
+									}
+									else if (EffectiveArmour(&s->inv[HELMETPOS]) > EffectiveArmour(&o))
+									{
+										temp_value = 100 * EffectiveArmour(&o) / EffectiveArmour(&s->inv[VESTPOS]);
+									}
+									else
+									{
+										temp_value = 0;
+									}
+									break;
+
+								case ARMOURCLASS_LEGGINGS:
+									if (s->inv[LEGPOS].usItem == NOTHING)
+									{
+										temp_value = 200 + EffectiveArmour(&o);
+									}
+									else if (EffectiveArmour(&s->inv[HELMETPOS]) > EffectiveArmour(&o))
+									{
+										temp_value = 100 * EffectiveArmour(&o) / EffectiveArmour(&s->inv[LEGPOS]);
+									}
+									else
+									{
+										temp_value = 0;
+									}
+									break;
+
+								default:
+									break;
 							}
-							pItemPool = pItemPool->pNext;
+						}
+						else
+						{
+							temp_value = 0;
 						}
 						break;
 				}
-				iValue = (3 * iValue) / (3 + PythSpacesAway( sGridNo, pSoldier->sGridNo ));
-				if (iValue > iBestValue )
+
+				if (value < temp_value)
 				{
-					sBestSpot = sGridNo;
-					iBestValue = iValue;
-					iBestItemIndex = iItemIndex;
+					value    = temp_value;
+					item_idx = pItemPool->iItemIndex;
 				}
 			}
-		}
-	}
-
-	if (sBestSpot != NOWHERE)
-	{
-		OBJECTTYPE const& o = GetWorldItem(iBestItemIndex).o;
-		DebugAI(String("%d decides to pick up %ls", pSoldier->ubID, ItemNames[o.usItem]));
-		if (Item[o.usItem].usItemClass == IC_GUN)
-		{
-			if (!FindBetterSpotForItem(pSoldier, HANDPOS))
+			value = 3 * value / (3 + PythSpacesAway(grid_no, s->sGridNo));
+			if (best_value < value)
 			{
-				if (pSoldier->bActionPoints < AP_PICKUP_ITEM + AP_PICKUP_ITEM)
-				{
-					return( AI_ACTION_NONE );
-				}
-				if (pSoldier->inv[HANDPOS].fFlags & OBJECT_UNDROPPABLE)
-				{
-					// destroy this item!
-					DebugAI( String( "%d decides he must drop %ls first so destroys it", pSoldier->ubID, ItemNames[ pSoldier->inv[HANDPOS].usItem ] ) );
-					DeleteObj( &(pSoldier->inv[HANDPOS]) );
-					DeductPoints( pSoldier, AP_PICKUP_ITEM, 0 );
-				}
-				else
-				{
-					// we want to drop this item!
-					DebugAI( String( "%d decides he must drop %ls first", pSoldier->ubID, ItemNames[ pSoldier->inv[HANDPOS].usItem ] ) );
-
-					pSoldier->bNextAction = AI_ACTION_PICKUP_ITEM;
-					pSoldier->usNextActionData = sBestSpot;
-					pSoldier->iNextActionSpecialData = iBestItemIndex;
-					return( AI_ACTION_DROP_ITEM );
-				}
+				best_value    = value;
+				best_spot     = grid_no;
+				best_item_idx = item_idx;
 			}
 		}
-		pSoldier->uiPendingActionData1 = iBestItemIndex;
-		pSoldier->usActionData = sBestSpot;
-		return( AI_ACTION_PICKUP_ITEM );
 	}
 
-	return( AI_ACTION_NONE );
+	if (best_spot == NOWHERE) return AI_ACTION_NONE;
+
+	OBJECTTYPE const& o = GetWorldItem(best_item_idx).o;
+	DebugAI(String("%d decides to pick up %ls", s->ubID, ItemNames[o.usItem]));
+	if (Item[o.usItem].usItemClass == IC_GUN &&
+			!FindBetterSpotForItem(s, HANDPOS))
+	{
+		if (s->bActionPoints < AP_PICKUP_ITEM + AP_PICKUP_ITEM)
+		{
+			return AI_ACTION_NONE;
+		}
+		if (s->inv[HANDPOS].fFlags & OBJECT_UNDROPPABLE)
+		{ // Destroy this item
+			DebugAI(String("%d decides he must drop %ls first so destroys it", s->ubID, ItemNames[s->inv[HANDPOS].usItem]));
+			DeleteObj(&s->inv[HANDPOS]);
+			DeductPoints(s, AP_PICKUP_ITEM, 0);
+		}
+		else
+		{ // We want to drop this item
+			DebugAI(String("%d decides he must drop %ls first", s->ubID, ItemNames[s->inv[HANDPOS].usItem]));
+			s->bNextAction            = AI_ACTION_PICKUP_ITEM;
+			s->usNextActionData       = best_spot;
+			s->iNextActionSpecialData = best_item_idx;
+			return AI_ACTION_DROP_ITEM;
+		}
+	}
+	s->uiPendingActionData1 = best_item_idx;
+	s->usActionData         = best_spot;
+	return AI_ACTION_PICKUP_ITEM;
 }
+
 
 INT16 FindClosestDoor( SOLDIERTYPE * pSoldier )
 {
