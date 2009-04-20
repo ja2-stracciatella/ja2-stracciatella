@@ -1602,6 +1602,20 @@ INT16 FindNearbyDarkerSpot( SOLDIERTYPE *pSoldier )
 }
 
 
+static bool IsGunUsable(OBJECTTYPE const& o, SOLDIERTYPE const& s)
+{
+	Assert(Item[o.usItem].usItemClass & IC_GUN);
+	return
+		o.bGunAmmoStatus >  0 &&
+		o.ubGunShotsLeft != 0 &&
+		(
+			(o.usItem != ROCKET_RIFLE && o.usItem != AUTO_ROCKET_RIFLE) ||
+			o.ubImprintID == NOBODY ||
+			o.ubImprintID == s.ubID // XXX wrong: should compare profile
+		);
+}
+
+
 #define MINIMUM_REQUIRED_STATUS 70
 
 INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 const usItem)
@@ -1700,9 +1714,7 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 						// We are looking for ammo to match the gun in usItem
 						if (item.usItemClass == IC_GUN && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
 						{ // Maybe this gun has ammo (adjust for whether it is better than ours!)
-							if (o.bGunAmmoStatus <  0 ||
-									o.ubGunShotsLeft == 0 ||
-									(o.usItem == ROCKET_RIFLE && o.ubImprintID != NOBODY && o.ubImprintID != s->ubID))
+							if (!IsGunUsable(o, *s))
 							{
 								temp_value = 0;
 							}
@@ -1724,16 +1736,7 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 					case SEARCH_WEAPONS:
 						if (item.usItemClass & IC_WEAPON && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
 						{
-							if (item.usItemClass & IC_GUN &&
-									(
-										o.bGunAmmoStatus <  0 ||
-										o.ubGunShotsLeft == 0 ||
-										(
-											(o.usItem == ROCKET_RIFLE || o.usItem == AUTO_ROCKET_RIFLE) &&
-											o.ubImprintID != NOBODY &&
-											o.ubImprintID != s->ubID
-										)
-									))
+							if (item.usItemClass & IC_GUN && !IsGunUsable(o, *s))
 							{ // Jammed or out of ammo, skip it!
 								temp_value = 0;
 							}
@@ -1764,16 +1767,7 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 					default:
 						if (item.usItemClass & IC_WEAPON && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
 						{
-							if (item.usItemClass & IC_GUN &&
-									(
-										o.bGunAmmoStatus <  0 ||
-										o.ubGunShotsLeft == 0 ||
-										(
-											(o.usItem == ROCKET_RIFLE || o.usItem == AUTO_ROCKET_RIFLE) &&
-											o.ubImprintID != NOBODY &&
-											o.ubImprintID != s->ubID
-										)
-									))
+							if (item.usItemClass & IC_GUN && !IsGunUsable(o, *s))
 							{ // Jammed or out of ammo, skip it!
 								temp_value = 0;
 							}
