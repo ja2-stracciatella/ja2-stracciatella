@@ -219,7 +219,8 @@ struct PathSt
 };
 
 
-enum {
+enum InvSlotPos
+{
 	HELMETPOS = 0,
 	VESTPOS,
 	LEGPOS,

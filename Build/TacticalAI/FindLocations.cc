@@ -1797,55 +1797,30 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 						}
 						else if	(item.usItemClass == IC_ARMOUR && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
 						{
+							InvSlotPos pos;
 							switch (Armour[item.ubClassIndex].ubArmourClass)
 							{
-								case ARMOURCLASS_HELMET:
-									if (s->inv[HELMETPOS].usItem == NOTHING)
-									{
-										temp_value = 200 + EffectiveArmour(&o);
-									}
-									else if (EffectiveArmour(&s->inv[HELMETPOS]) > EffectiveArmour(&o))
-									{
-										temp_value = 100 * EffectiveArmour(&o) / EffectiveArmour(&s->inv[HELMETPOS]);
-									}
-									else
-									{
-										temp_value = 0;
-									}
-									break;
-
-								case ARMOURCLASS_VEST:
-									if (s->inv[VESTPOS].usItem == NOTHING)
-									{
-										temp_value = 200 + EffectiveArmour(&o);
-									}
-									else if (EffectiveArmour(&s->inv[HELMETPOS]) > EffectiveArmour(&o))
-									{
-										temp_value = 100 * EffectiveArmour(&o) / EffectiveArmour(&s->inv[VESTPOS]);
-									}
-									else
-									{
-										temp_value = 0;
-									}
-									break;
-
-								case ARMOURCLASS_LEGGINGS:
-									if (s->inv[LEGPOS].usItem == NOTHING)
-									{
-										temp_value = 200 + EffectiveArmour(&o);
-									}
-									else if (EffectiveArmour(&s->inv[HELMETPOS]) > EffectiveArmour(&o))
-									{
-										temp_value = 100 * EffectiveArmour(&o) / EffectiveArmour(&s->inv[LEGPOS]);
-									}
-									else
-									{
-										temp_value = 0;
-									}
-									break;
-
-								default:
-									continue;
+								case ARMOURCLASS_HELMET:   pos = HELMETPOS; break;
+								case ARMOURCLASS_VEST:     pos = VESTPOS;   break;
+								case ARMOURCLASS_LEGGINGS: pos = LEGPOS;    break;
+								default: continue;
+							}
+							OBJECTTYPE const& cur_armour = s->inv[pos];
+							if (cur_armour.usItem == NOTHING)
+							{
+								temp_value = 200 + EffectiveArmour(&o);
+							}
+							else
+							{
+								INT8 const new_rating = EffectiveArmour(&o);
+								if (EffectiveArmour(&s->inv[HELMETPOS]) > new_rating) // XXX makes no sense: always compare with helmet and only consider when worse
+								{
+									temp_value = 100 * new_rating / EffectiveArmour(&cur_armour);
+								}
+								else
+								{
+									temp_value = 0;
+								}
 							}
 						}
 						else
