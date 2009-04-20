@@ -1714,82 +1714,18 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 						// We are looking for ammo to match the gun in usItem
 						if (item.usItemClass == IC_GUN && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
 						{ // Maybe this gun has ammo (adjust for whether it is better than ours!)
-							if (!IsGunUsable(o, *s))
-							{
-								temp_value = 0;
-							}
-							else
-							{
-								temp_value = o.ubGunShotsLeft * Weapon[o.usItem].ubDeadliness / Weapon[usItem].ubDeadliness;
-							}
+							if (!IsGunUsable(o, *s)) continue;
+							temp_value = o.ubGunShotsLeft * Weapon[o.usItem].ubDeadliness / Weapon[usItem].ubDeadliness;
 						}
-						else if (ValidAmmoType(usItem, o.usItem))
+						else
 						{
+							if (!ValidAmmoType(usItem, o.usItem)) continue;
 							temp_value = TotalPoints(&o);
-						}
-						else
-						{
-							temp_value = 0;
-						}
-						break;
-
-					case SEARCH_WEAPONS:
-						if (item.usItemClass & IC_WEAPON && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
-						{
-							if (item.usItemClass & IC_GUN && !IsGunUsable(o, *s))
-							{ // Jammed or out of ammo, skip it!
-								temp_value = 0;
-							}
-							else if (Item[s->inv[HANDPOS].usItem].usItemClass & IC_WEAPON)
-							{
-								WEAPONTYPE const& new_wpn = Weapon[o.usItem];
-								WEAPONTYPE const& cur_wpn = Weapon[s->inv[HANDPOS].usItem];
-								if (new_wpn.ubDeadliness > cur_wpn.ubDeadliness)
-								{
-									temp_value = 100 * new_wpn.ubDeadliness / cur_wpn.ubDeadliness;
-								}
-								else
-								{
-									temp_value = 0;
-								}
-							}
-							else
-							{
-								temp_value = 200 + Weapon[o.usItem].ubDeadliness;
-							}
-						}
-						else
-						{
-							temp_value = 0;
 						}
 						break;
 
 					default:
-						if (item.usItemClass & IC_WEAPON && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
-						{
-							if (item.usItemClass & IC_GUN && !IsGunUsable(o, *s))
-							{ // Jammed or out of ammo, skip it!
-								temp_value = 0;
-							}
-							else if (Item[s->inv[HANDPOS].usItem].usItemClass & IC_WEAPON)
-							{
-								WEAPONTYPE const& new_wpn = Weapon[o.usItem];
-								WEAPONTYPE const& cur_wpn = Weapon[s->inv[HANDPOS].usItem];
-								if (new_wpn.ubDeadliness > cur_wpn.ubDeadliness)
-								{
-									temp_value = 100 * new_wpn.ubDeadliness / cur_wpn.ubDeadliness;
-								}
-								else
-								{
-									temp_value = 0;
-								}
-							}
-							else
-							{
-								temp_value = 200 + Weapon[o.usItem].ubDeadliness;
-							}
-						}
-						else if	(item.usItemClass == IC_ARMOUR && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
+						if (item.usItemClass == IC_ARMOUR && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
 						{
 							InvSlotPos pos;
 							switch (Armour[item.ubClassIndex].ubArmourClass)
@@ -1807,21 +1743,31 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 							else
 							{
 								INT8 const new_rating = EffectiveArmour(&o);
-								if (EffectiveArmour(&s->inv[HELMETPOS]) > new_rating) // XXX makes no sense: always compare with helmet and only consider when worse
-								{
-									temp_value = 100 * new_rating / EffectiveArmour(&cur_armour);
-								}
-								else
-								{
-									temp_value = 0;
-								}
+								if (EffectiveArmour(&s->inv[HELMETPOS]) <= new_rating) continue; // XXX makes no sense: always compare with helmet and only consider when worse
+								temp_value = 100 * new_rating / EffectiveArmour(&cur_armour);
 							}
+						}
+						/* FALLTHROUGH */
+
+					case SEARCH_WEAPONS:
+					{
+						if (!(item.usItemClass & IC_WEAPON))                  continue;
+						if (o.bStatus[0] < MINIMUM_REQUIRED_STATUS)           continue;
+						if (item.usItemClass & IC_GUN && !IsGunUsable(o, *s)) continue;
+						WEAPONTYPE const& new_wpn = Weapon[o.usItem];
+						OBJECTTYPE const& in_hand = s->inv[HANDPOS];
+						if (Item[in_hand.usItem].usItemClass & IC_WEAPON)
+						{
+							WEAPONTYPE const& cur_wpn = Weapon[in_hand.usItem];
+							if (new_wpn.ubDeadliness <= cur_wpn.ubDeadliness) continue;
+							temp_value = 100 * new_wpn.ubDeadliness / cur_wpn.ubDeadliness;
 						}
 						else
 						{
-							temp_value = 0;
+							temp_value = 200 + new_wpn.ubDeadliness;
 						}
 						break;
+					}
 				}
 
 				if (value < temp_value)
