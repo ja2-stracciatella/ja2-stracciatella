@@ -8959,39 +8959,31 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 }
 
 
-BOOLEAN IsValidSecondHandShot(const SOLDIERTYPE* const pSoldier)
+bool IsValidSecondHandShot(SOLDIERTYPE const* const s)
 {
-	if ( Item[ pSoldier->inv[ SECONDHANDPOS ].usItem ].usItemClass == IC_GUN &&
-			 !(Item[ pSoldier->inv[SECONDHANDPOS ].usItem ].fFlags & ITEM_TWO_HANDED) &&
-			 !pSoldier->bDoBurst &&
-			 pSoldier->inv[ HANDPOS ].usItem != GLAUNCHER &&
-			 Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass == IC_GUN &&
-			 pSoldier->inv[SECONDHANDPOS].bGunStatus >= USABLE &&
-			 pSoldier->inv[SECONDHANDPOS].ubGunShotsLeft > 0 )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
+	OBJECTTYPE const& o = s->inv[SECONDHANDPOS];
+	return
+		Item[o.usItem].usItemClass == IC_GUN               &&
+		!(Item[o.usItem].fFlags & ITEM_TWO_HANDED)         &&
+		!s->bDoBurst                                       &&
+		s->inv[HANDPOS].usItem != GLAUNCHER                &&
+		Item[s->inv[HANDPOS].usItem].usItemClass == IC_GUN &&
+		o.bGunStatus >= USABLE                             &&
+		o.ubGunShotsLeft > 0;
 }
 
-BOOLEAN IsValidSecondHandShotForReloadingPurposes( SOLDIERTYPE *pSoldier )
-{
-	// should be maintained as same as function above with line
-	// about ammo taken out!
-	if ( Item[ pSoldier->inv[ SECONDHANDPOS ].usItem ].usItemClass == IC_GUN &&
-			 !pSoldier->bDoBurst &&
-			 pSoldier->inv[ HANDPOS ].usItem != GLAUNCHER &&
-			 Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass == IC_GUN &&
-			 pSoldier->inv[SECONDHANDPOS].bGunStatus >= USABLE //&&
-//			 pSoldier->inv[SECONDHANDPOS].ubGunShotsLeft > 0 &&
-//			 gAnimControl[ pSoldier->usAnimState ].ubEndHeight != ANIM_PRONE )
-			)
-	{
-		return( TRUE );
-	}
 
-	return( FALSE );
+bool IsValidSecondHandShotForReloadingPurposes(SOLDIERTYPE const* const s)
+{
+	/* Should be maintained as same as function above with line about ammo taken
+	 * out! */
+	OBJECTTYPE const& o = s->inv[SECONDHANDPOS];
+	return
+		Item[o.usItem].usItemClass == IC_GUN               &&
+		!s->bDoBurst                                       &&
+		s->inv[HANDPOS].usItem != GLAUNCHER                &&
+		Item[s->inv[HANDPOS].usItem].usItemClass == IC_GUN &&
+		o.bGunStatus >= USABLE;
 }
 
 

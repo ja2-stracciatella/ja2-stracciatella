@@ -1029,8 +1029,8 @@ void EVENT_SoldierBeginAttachCan( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ub
 
 void PickDropItemAnimation( SOLDIERTYPE *pSoldier );
 
-BOOLEAN IsValidSecondHandShot(const SOLDIERTYPE*);
-BOOLEAN IsValidSecondHandShotForReloadingPurposes( SOLDIERTYPE *pSoldier );
+bool IsValidSecondHandShot(SOLDIERTYPE const*);
+bool IsValidSecondHandShotForReloadingPurposes(SOLDIERTYPE const*);
 
 void CrowsFlyAway( UINT8 ubTeam );
 
