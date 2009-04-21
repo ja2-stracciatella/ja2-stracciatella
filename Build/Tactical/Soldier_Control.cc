@@ -8966,7 +8966,6 @@ bool IsValidSecondHandShot(SOLDIERTYPE const* const s)
 		Item[o.usItem].usItemClass == IC_GUN               &&
 		!(Item[o.usItem].fFlags & ITEM_TWO_HANDED)         &&
 		!s->bDoBurst                                       &&
-		s->inv[HANDPOS].usItem != GLAUNCHER                &&
 		Item[s->inv[HANDPOS].usItem].usItemClass == IC_GUN &&
 		o.bGunStatus >= USABLE                             &&
 		o.ubGunShotsLeft > 0;
@@ -8981,7 +8980,6 @@ bool IsValidSecondHandShotForReloadingPurposes(SOLDIERTYPE const* const s)
 	return
 		Item[o.usItem].usItemClass == IC_GUN               &&
 		!s->bDoBurst                                       &&
-		s->inv[HANDPOS].usItem != GLAUNCHER                &&
 		Item[s->inv[HANDPOS].usItem].usItemClass == IC_GUN &&
 		o.bGunStatus >= USABLE;
 }
