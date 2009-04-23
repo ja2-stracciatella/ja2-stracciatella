@@ -860,7 +860,7 @@ static UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_CALIBRE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	// ammo or gun?
-	const UINT8 calibre = (item->usItemClass == IC_AMMO ? Magazine[item->ubClassIndex].ubCalibre : Weapon[item->ubClassIndex].ubCalibre);
+	AmmoKind const calibre = item->usItemClass == IC_AMMO ? Magazine[item->ubClassIndex].ubCalibre : Weapon[item->ubClassIndex].ubCalibre;
 	wcslcpy(zTemp, BobbyRayAmmoCaliber[calibre], lengthof(zTemp));
 
 	ReduceStringLength(zTemp, lengthof(zTemp), BOBBYR_GRID_PIC_WIDTH, BOBBYR_ITEM_NAME_TEXT_FONT);
@@ -1403,8 +1403,8 @@ static void CalcFirstIndexForPage(STORE_INVENTORY* const pInv, UINT32 const item
 
 static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(INVTYPE const* const ammo)
 {
-	UINT8	      n_items = 0;
-	UINT8 const calibre = Magazine[ammo->ubClassIndex].ubCalibre;
+	UINT8	         n_items = 0;
+	AmmoKind const calibre = Magazine[ammo->ubClassIndex].ubCalibre;
 	CFOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
 		// Loop through all the pockets on the merc

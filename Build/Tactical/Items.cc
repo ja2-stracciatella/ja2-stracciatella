@@ -2247,7 +2247,8 @@ BOOLEAN ReloadLauncher( OBJECTTYPE * pLauncher, OBJECTTYPE * pAmmo )
 }
 */
 
-INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT8 ubMagSize, INT8 bExcludeSlot )
+
+INT8 FindAmmo(SOLDIERTYPE const* const pSoldier, AmmoKind const ubCalibre, UINT8 const ubMagSize, INT8 const bExcludeSlot)
 {
 	INT8				bLoop;
 
@@ -3483,7 +3484,7 @@ UINT16 DefaultMagazine( UINT16 usItem )
 }
 
 
-static UINT16 FindReplacementMagazine(UINT8 ubCalibre, UINT8 ubMagSize, UINT8 ubAmmoType)
+static UINT16 FindReplacementMagazine(AmmoKind const ubCalibre, UINT8 const ubMagSize, UINT8 const ubAmmoType)
 {
 	UINT8 ubLoop;
 	UINT16 usDefault;

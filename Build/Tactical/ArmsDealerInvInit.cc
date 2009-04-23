@@ -1026,8 +1026,8 @@ int CompareItemsForSorting(UINT16 const item_index1, UINT16 const item_index2, U
 	if (item1.usItemClass == IC_AMMO && item2.usItemClass == IC_AMMO)
 	{
 		// AMMO is sorted by caliber first
-		UINT8 const calibre1 = Magazine[item1.ubClassIndex].ubCalibre;
-		UINT8 const calibre2 = Magazine[item2.ubClassIndex].ubCalibre;
+		AmmoKind const calibre1 = Magazine[item1.ubClassIndex].ubCalibre;
+		AmmoKind const calibre2 = Magazine[item2.ubClassIndex].ubCalibre;
 		if (calibre1 > calibre2) return -1;
 		if (calibre1 < calibre2) return  1;
 

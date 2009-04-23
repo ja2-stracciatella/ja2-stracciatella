@@ -3,6 +3,7 @@
 
 #include "Item_Types.h"
 #include "JA2Types.h"
+#include "Weapons.h"
 
 
 void DamageObj(OBJECTTYPE* pObj, INT8 bAmount);
@@ -12,7 +13,7 @@ extern UINT8 SlotToPocket[7];
 BOOLEAN WeaponInHand(const SOLDIERTYPE* pSoldier);
 
 INT8 FindObj(const SOLDIERTYPE* pSoldier, UINT16 usItem);
-INT8 FindAmmo( SOLDIERTYPE * pSoldier, UINT8 ubCalibre, UINT8 ubMagSize, INT8 bExcludeSlot );
+INT8 FindAmmo(SOLDIERTYPE const*, AmmoKind, UINT8 ubMagSize, INT8 bExcludeSlot);
 
 INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem);
 INT8 FindObjClass(const SOLDIERTYPE* s, UINT32 usItemClass);

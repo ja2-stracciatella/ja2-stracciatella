@@ -78,7 +78,7 @@ enum
 
 // Warning: There is a table in weapons.c that indexes using these enumberations...
 // BurstSndStrings[]....
-enum
+enum AmmoKind
 {
 	NOAMMO = 0,
 	AMMO38,
@@ -177,32 +177,32 @@ enum
 
 struct WEAPONTYPE
 {
- UINT8   ubWeaponClass;    // handgun/shotgun/rifle/knife
- UINT8   ubWeaponType;     // exact type (for display purposes)
- UINT8   ubCalibre;        // type of ammunition needed
- UINT8   ubReadyTime;      // APs to ready/unready weapon
- UINT8   ubShotsPer4Turns; // maximum (mechanical) firing rate
- UINT8   ubShotsPerBurst;
- UINT8   ubBurstPenalty;   // % penalty per shot after first
- UINT8   ubBulletSpeed;    // bullet's travelling speed
- UINT8   ubImpact;         // weapon's max damage impact (size & speed)
- UINT8   ubDeadliness;     // comparative ratings of guns
- UINT8   ubMagSize;
- UINT16  usRange;
- UINT16  usReloadDelay;
- UINT8   ubAttackVolume;
- UINT8   ubHitVolume;
- SoundID sSound;
- SoundID sBurstSound;
- SoundID sReloadSound;
- SoundID sLocknLoadSound;
+	UINT8    ubWeaponClass;    // handgun/shotgun/rifle/knife
+	UINT8    ubWeaponType;     // exact type (for display purposes)
+	AmmoKind ubCalibre;        // type of ammunition needed
+	UINT8    ubReadyTime;      // APs to ready/unready weapon
+	UINT8    ubShotsPer4Turns; // maximum (mechanical) firing rate
+	UINT8    ubShotsPerBurst;
+	UINT8    ubBurstPenalty;   // % penalty per shot after first
+	UINT8    ubBulletSpeed;    // bullet's travelling speed
+	UINT8    ubImpact;         // weapon's max damage impact (size & speed)
+	UINT8    ubDeadliness;     // comparative ratings of guns
+	UINT8    ubMagSize;
+	UINT16   usRange;
+	UINT16   usReloadDelay;
+	UINT8    ubAttackVolume;
+	UINT8    ubHitVolume;
+	SoundID  sSound;
+	SoundID  sBurstSound;
+	SoundID  sReloadSound;
+	SoundID  sLocknLoadSound;
 };
 
 struct MAGTYPE
 {
-	UINT8	ubCalibre;
-	UINT8 ubMagSize;
-	UINT8	ubAmmoType;
+	AmmoKind ubCalibre;
+	UINT8    ubMagSize;
+	UINT8    ubAmmoType;
 };
 
 struct ARMOURTYPE
