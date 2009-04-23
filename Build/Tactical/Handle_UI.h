@@ -239,7 +239,7 @@ void UIHandleSoldierStanceChange(SOLDIERTYPE* s, INT8 bNewStance);
 UINT32 GetCursorMovementFlags(void);
 
 BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* pSoldier, UINT32 uiCursorFlags, UINT16 usMapPos, UINT32 uiFlags);
-BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier );
+bool UIMouseOnValidAttackLocation(SOLDIERTYPE*);
 
 BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 

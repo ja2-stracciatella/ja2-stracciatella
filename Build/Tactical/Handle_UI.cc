@@ -3453,154 +3453,82 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 ui
 }
 
 
-BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
+bool UIMouseOnValidAttackLocation(SOLDIERTYPE* const s)
 {
-  UINT16 usInHand;
-	BOOLEAN						fGuyHere = FALSE;
+	GridNo map_pos = GetMouseMapPos();
+	if (map_pos == NOWHERE) return false;
 
-	GridNo usMapPos = GetMouseMapPos();
-	if (usMapPos == NOWHERE) return FALSE;
+	OBJECTTYPE const& o           = s->inv[HANDPOS];
+	INVTYPE    const& item        = Item[o.usItem];
+	ItemCursor const  item_cursor = GetActionModeCursor(s);
 
-	// LOOK IN GUY'S HAND TO CHECK LOCATION
-  usInHand = pSoldier->inv[HANDPOS].usItem;
+	if (item_cursor == INVALIDCURS) return false;
 
-	// Get cursor value
-	ItemCursor const ubItemCursor = GetActionModeCursor(pSoldier);
-
-	if ( ubItemCursor == INVALIDCURS )
+	if (item_cursor == WIRECUTCURS)
 	{
-		return( FALSE );
+		return s->bLevel == 0 && IsCuttableWireFenceAtGridNo(map_pos);
 	}
 
-
-	if ( ubItemCursor == WIRECUTCURS )
+	SOLDIERTYPE const* const tgt = gUIFullTarget;
+	if (item_cursor == REPAIRCURS)
 	{
-		if ( IsCuttableWireFenceAtGridNo( usMapPos ) && pSoldier->bLevel == 0 )
-		{
-			return( TRUE );
-		}
-		else
-		{
-			return( FALSE );
-		}
+		if (tgt) map_pos = tgt->sGridNo;
+		return s->bLevel == 0 && IsRepairableStructAtGridNo(map_pos, 0);
 	}
 
-	if ( ubItemCursor == REPAIRCURS )
+	if (item_cursor == REFUELCURS)
 	{
-		if (gUIFullTarget != NULL) usMapPos = gUIFullTarget->sGridNo;
-
-		if ( IsRepairableStructAtGridNo( usMapPos, NULL ) && pSoldier->bLevel == 0 )
-		{
-			return( TRUE );
-		}
-		else
-		{
-			return( FALSE );
-		}
+		if (tgt) map_pos = tgt->sGridNo;
+		return s->bLevel == 0 && GetRefuelableStructAtGridNo(map_pos);
 	}
 
-	if ( ubItemCursor == REFUELCURS )
+	if (item_cursor == BOMBCURS)
 	{
-		if (gUIFullTarget != NULL) usMapPos = gUIFullTarget->sGridNo;
-		return
-			pSoldier->bLevel == 0 &&
-			GetRefuelableStructAtGridNo(usMapPos) != NULL;
+		if (map_pos == s->sGridNo) return true;
+		if (!NewOKDestination(s, map_pos, TRUE, s->bLevel)) return false;
 	}
 
-	if ( ubItemCursor == BOMBCURS )
-	{
-		if ( usMapPos == pSoldier->sGridNo )
-		{
-			return( TRUE );
-		}
+	if (tgt == s && item.usItemClass != IC_MEDKIT) return false;
 
-		if ( !NewOKDestination( pSoldier, usMapPos, TRUE, pSoldier->bLevel ) )
-		{
-			return( FALSE );
-		}
-	}
-
-	// SEE IF THERE IS SOMEBODY HERE
-	if (gUIFullTarget != NULL && ubItemCursor != KNIFECURS)
-	{
-		fGuyHere = TRUE;
-
-		if ( guiUIFullTargetFlags & SELECTED_MERC && Item[ usInHand ].usItemClass != IC_MEDKIT )
-		{
-			return( FALSE );
-		}
-	}
-
-	OBJECTTYPE const& o = pSoldier->inv[HANDPOS];
-	if (HasObjectImprint(o) && pSoldier->ubProfile != o.ubImprintID)
+	if (HasObjectImprint(o) && s->ubProfile != o.ubImprintID)
 	{ // Access denied
 		PlayJA2Sample(RG_ID_INVALID, HIGHVOLUME, 1, MIDDLE);
 		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"\"%ls\"", TacticalStr[GUN_NOGOOD_FINGERPRINT]);
-		return FALSE;
+		return false;
 	}
 
-	//if ( Item[ usInHand ].usItemClass == IC_BLADE && usInHand != THROWING_KNIFE )
-	//{
-	//	if ( !fGuyHere )
-	//	{
-		//	return( FALSE );
-	//	}
-	//}
+	if (item.usItemClass == IC_PUNCH) return tgt;
 
-	if ( Item[ usInHand ].usItemClass == IC_PUNCH )
-	{
-		if ( !fGuyHere )
-		{
-			return( FALSE );
-		}
-	}
+	if (item.usItemClass == IC_MEDKIT)
+	{ // If a guy's here, check if he needs medical help!
+		if (!tgt) return false;
 
-	//if ( Item[ usInHand ].usItemClass == IC_BLADE )
-	//{
-	//	if ( !fGuyHere )
-	//	{
-	//		return( FALSE );
-	//	}
-	//}
-
-	if ( Item[ usInHand ].usItemClass == IC_MEDKIT )
-	{
-		if ( !fGuyHere )
-		{
-			return( FALSE );
-		}
-
-		// IF a guy's here, chack if they need medical help!
-		const SOLDIERTYPE* const tgt = gUIFullTarget;
-
-		// If we are a vehicle...
 		if (tgt->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_ROBOT))
 		{
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[CANNOT_DO_FIRST_AID_STR], tgt->name);
-			return( FALSE );
+			return false;
 		}
 
-		if ( pSoldier->bMedical == 0 )
+		if (s->bMedical == 0)
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, pMessageStrings[ MSG_MERC_HAS_NO_MEDSKILL ], pSoldier->name );
-			return( FALSE );
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, pMessageStrings[MSG_MERC_HAS_NO_MEDSKILL], s->name);
+			return false;
 		}
 
     if (tgt->bBleeding == 0 && tgt->bLife != tgt->bLifeMax)
     {
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[19], tgt->name);
-			return( FALSE );
+			return false;
     }
 
 		if (tgt->bBleeding == 0 && tgt->bLife >= OKLIFE)
 		{
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[CANNOT_NO_NEED_FIRST_AID_STR], tgt->name);
-			return( FALSE );
+			return false;
 		}
-
 	}
 
-	return( TRUE );
+	return true;
 }
 
 
