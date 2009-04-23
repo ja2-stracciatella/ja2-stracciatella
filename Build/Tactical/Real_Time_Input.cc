@@ -1136,7 +1136,7 @@ void GetRTMousePositionInput(UINT32* puiNewEvent)
 				if (sel != NULL)
 				{
 						 // get cursor for item
-					const UINT8 ubItemCursor = GetActionModeCursor(sel);
+					ItemCursor const ubItemCursor = GetActionModeCursor(sel);
 
 					if (IsValidJumpLocation(sel, usMapPos, TRUE))
 						 {

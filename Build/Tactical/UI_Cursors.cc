@@ -118,7 +118,6 @@ UINT8 GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, BOOLEAN 
 	BOOLEAN						fRecalc = FALSE;
 	INT16							sTargetGridNo = usMapPos;
 	UINT8							ubCursorID=0;
-	UINT8							ubItemCursor;
 
 	fRecalc = GetMouseRecalcAndShowAPFlags( &uiCursorFlags, &fShowAPs );
 
@@ -133,8 +132,7 @@ UINT8 GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, BOOLEAN 
 	// Calculate target gridno!
 	sTargetGridNo = (gUIFullTarget != NULL ? gUIFullTarget->sGridNo : usMapPos);
 
-	ubItemCursor  =  GetActionModeCursor( pSoldier );
-
+	ItemCursor const ubItemCursor = GetActionModeCursor(pSoldier);
 	switch( ubItemCursor )
 	{
 		case PUNCHCURS:
@@ -1510,9 +1508,7 @@ static UINT8 HandleBombCursor(SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fAc
 
 void HandleLeftClickCursor( SOLDIERTYPE *pSoldier )
 {
-	UINT8					ubItemCursor;
-
-	ubItemCursor  =  GetActionModeCursor( pSoldier );
+	ItemCursor const ubItemCursor = GetActionModeCursor(pSoldier);
 
 	// OK, if we are i realtime.. goto directly to shoot
 	if ( ( ( gTacticalStatus.uiFlags & TURNBASED ) && !( gTacticalStatus.uiFlags & INCOMBAT ) ) && ubItemCursor != TOSSCURS && ubItemCursor != TRAJECTORYCURS )
@@ -1592,11 +1588,10 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 {
 	INT16					sAPCosts;
 	INT8					bFutureAim;
-	UINT8					ubCursor;
 	INT16					sGridNo;
 	INT8					bTargetLevel;
 
-	ubCursor =  GetActionModeCursor( pSoldier );
+	ItemCursor const ubCursor = GetActionModeCursor(pSoldier);
 
 	// 'snap' cursor to target tile....
 	if (gUIFullTarget != NULL) usMapPos = gUIFullTarget->sGridNo;
@@ -1779,9 +1774,8 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 }
 
 
-UINT8 GetActionModeCursor(const SOLDIERTYPE* pSoldier)
+ItemCursor GetActionModeCursor(SOLDIERTYPE const* const pSoldier)
 {
-	UINT8					ubCursor;
   UINT16				usInHand;
 
 	// If we are an EPC, do nothing....
@@ -1822,7 +1816,7 @@ UINT8 GetActionModeCursor(const SOLDIERTYPE* pSoldier)
 	usInHand = pSoldier->inv[HANDPOS].usItem;
 
 	// Start off with what is in our hand
-	ubCursor = Item[ usInHand ].ubCursor;
+	ItemCursor ubCursor = Item[ usInHand ].ubCursor;
 
 	// OK, check if what is in our hands has a detonator attachment...
 	// Detonators can only be on invalidcurs things...
@@ -1856,10 +1850,7 @@ UINT8 GetActionModeCursor(const SOLDIERTYPE* pSoldier)
 // Switch on item, display appropriate feedback cursor for a click....
 void HandleUICursorRTFeedback( SOLDIERTYPE *pSoldier )
 {
-	UINT8 ubItemCursor;
-
-	ubItemCursor  =  GetActionModeCursor( pSoldier );
-
+	ItemCursor const ubItemCursor = GetActionModeCursor(pSoldier);
 	switch( ubItemCursor )
 	{
 		case TARGETCURS:

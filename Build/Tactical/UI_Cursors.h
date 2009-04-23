@@ -14,7 +14,7 @@ UINT8 GetProperItemCursor(SOLDIERTYPE* s, UINT16 usMapPos, BOOLEAN fActivated);
 void HandleLeftClickCursor( SOLDIERTYPE *pSoldier );
 void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos );
 
-UINT8 GetActionModeCursor(const SOLDIERTYPE* pSoldier);
+ItemCursor GetActionModeCursor(SOLDIERTYPE const*);
 
 void HandleUICursorRTFeedback( SOLDIERTYPE *pSoldier );
 

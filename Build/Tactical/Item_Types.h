@@ -3,29 +3,32 @@
 
 #include "Types.h"
 
-#define INVALIDCURS 0
-#define QUESTCURS 1
-#define PUNCHCURS 2
-#define TARGETCURS 3
-#define KNIFECURS 4
-#define AIDCURS 5
-#define TOSSCURS 6
-#define MINECURS 8
-#define LPICKCURS 9
-#define MDETECTCURS 10
-#define CROWBARCURS 11
-#define SURVCAMCURS 12
-#define CAMERACURS 13
-#define KEYCURS 14
-#define SAWCURS 15
-#define WIRECUTCURS	16
-#define	REMOTECURS	17
-#define BOMBCURS		18 // ( only calculated, not set item table )
-#define	REPAIRCURS	19
-#define TRAJECTORYCURS	20
-#define	JARCURS			21
-#define	TINCANCURS	22
-#define REFUELCURS  23
+enum ItemCursor
+{
+	INVALIDCURS    =  0,
+	QUESTCURS      =  1,
+	PUNCHCURS      =  2,
+	TARGETCURS     =  3,
+	KNIFECURS      =  4,
+	AIDCURS        =  5,
+	TOSSCURS       =  6,
+	MINECURS       =  8,
+	LPICKCURS      =  9,
+	MDETECTCURS    = 10,
+	CROWBARCURS    = 11,
+	SURVCAMCURS    = 12,
+	CAMERACURS     = 13,
+	KEYCURS        = 14,
+	SAWCURS        = 15,
+	WIRECUTCURS    = 16,
+	REMOTECURS     = 17,
+	BOMBCURS       = 18, // (only calculated, not set item table)
+	REPAIRCURS     = 19,
+	TRAJECTORYCURS = 20,
+	JARCURS        = 21,
+	TINCANCURS     = 22,
+	REFUELCURS     = 23
+};
 
 #define ITEM_NOT_FOUND -1
 
@@ -243,18 +246,18 @@ struct INVTYPE
 
 struct INVTYPE
 {
-	UINT32		usItemClass;
-	UINT8			ubClassIndex;
-	UINT8			ubCursor;
-	UINT8			ubGraphicType;
-	UINT8			ubGraphicNum;
-	UINT8			ubWeight; //2 units per kilogram; roughly 1 unit per pound
-	UINT8			ubPerPocket;
-	UINT16		usPrice;
-	UINT8			ubCoolness;
-	INT8			bReliability;
-	INT8			bRepairEase;
-	UINT16		fFlags;
+	UINT32     usItemClass;
+	UINT8      ubClassIndex;
+	ItemCursor ubCursor;
+	UINT8      ubGraphicType;
+	UINT8      ubGraphicNum;
+	UINT8      ubWeight; //2 units per kilogram; roughly 1 unit per pound
+	UINT8      ubPerPocket;
+	UINT16     usPrice;
+	UINT8      ubCoolness;
+	INT8       bReliability;
+	INT8       bRepairEase;
+	UINT16     fFlags;
 };
 
 #define FIRST_WEAPON 1

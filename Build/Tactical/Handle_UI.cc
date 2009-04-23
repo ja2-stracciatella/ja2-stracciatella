@@ -2082,10 +2082,9 @@ static void UIHandleMercAttack(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pTargetSoldie
 	LEVELNODE					*pIntNode;
 	STRUCTURE					*pStructure;
 	INT16							sGridNo, sNewGridNo;
-  UINT8             ubItemCursor;
 
   // get cursor
-  ubItemCursor  =  GetActionModeCursor( pSoldier );
+	ItemCursor const ubItemCursor = GetActionModeCursor(pSoldier);
 
 	if ( !(gTacticalStatus.uiFlags & INCOMBAT) && pTargetSoldier && Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass & IC_WEAPON )
 	{
@@ -2417,7 +2416,7 @@ BOOLEAN SelectedMercCanAffordAttack( )
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 	// Get cursor value
-	const UINT8 ubItemCursor = GetActionModeCursor(sel);
+	ItemCursor const ubItemCursor = GetActionModeCursor(sel);
 	switch (ubItemCursor)
 	{
 		case INVALIDCURS: return FALSE;
@@ -3458,7 +3457,6 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 {
   UINT16 usInHand;
 	BOOLEAN						fGuyHere = FALSE;
-	UINT8							ubItemCursor;
 
 	GridNo usMapPos = GetMouseMapPos();
 	if (usMapPos == NOWHERE) return FALSE;
@@ -3467,7 +3465,7 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
   usInHand = pSoldier->inv[HANDPOS].usItem;
 
 	// Get cursor value
-	ubItemCursor  =  GetActionModeCursor( pSoldier );
+	ItemCursor const ubItemCursor = GetActionModeCursor(pSoldier);
 
 	if ( ubItemCursor == INVALIDCURS )
 	{
