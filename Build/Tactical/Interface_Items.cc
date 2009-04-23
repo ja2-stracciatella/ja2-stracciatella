@@ -2343,102 +2343,97 @@ void RenderItemDescriptionBox(void)
 	INT16      const  dx     = gsInvDescX;
 	INT16      const  dy     = gsInvDescY;
 
-	const SGPVObject* const box_gfx = (in_map ? guiMapItemDescBox : guiItemDescBox);
+	SGPVObject const* const box_gfx = in_map ? guiMapItemDescBox : guiItemDescBox;
 	BltVideoObject(guiSAVEBUFFER, box_gfx, 0, dx, dy);
 
-	//Display the money 'seperating' border
+	// Display the money 'separating' border
 	if (obj.usItem == MONEY)
-	{
-		//Render the money Boxes
-		const MoneyLoc* const xy = (in_map ? &gMapMoneyButtonLoc : &gMoneyButtonLoc);
-		const INT32           x  = xy->x + gMoneyButtonOffsets[0].x - 1;
-		const INT32           y  = xy->y + gMoneyButtonOffsets[0].y;
+	{ // Render the money Boxes
+		MoneyLoc const& xy = in_map ? gMapMoneyButtonLoc : gMoneyButtonLoc;
+		INT32    const  x  = xy.x + gMoneyButtonOffsets[0].x - 1;
+		INT32    const  y  = xy.y + gMoneyButtonOffsets[0].y;
 		BltVideoObject(guiSAVEBUFFER, guiMoneyGraphicsForDescBox, 0, x, y);
 	}
 
-	/* display item */
-	{
+	{ // Display item
 		// center in slot, remove offsets
-		ETRLEObject const& pTrav = guiItemGraphic->SubregionProperties(0);
-		SGPBox      const& xy    = in_map ? g_desc_item_box_map: g_desc_item_box;
-		INT32       const  x     = dx + xy.x + (xy.w - pTrav.usWidth)  / 2 - pTrav.sOffsetX;
-		INT32       const  y     = dy + xy.y + (xy.h - pTrav.usHeight) / 2 - pTrav.sOffsetY;
+		ETRLEObject const& e  = guiItemGraphic->SubregionProperties(0);
+		SGPBox      const& xy = in_map ? g_desc_item_box_map: g_desc_item_box;
+		INT32       const  x  = dx + xy.x + (xy.w - e.usWidth)  / 2 - e.sOffsetX;
+		INT32       const  y  = dy + xy.y + (xy.h - e.usHeight) / 2 - e.sOffsetY;
 		BltVideoObjectOutlineShadow(guiSAVEBUFFER, guiItemGraphic, 0, x - 2, y + 2);
 		BltVideoObject(             guiSAVEBUFFER, guiItemGraphic, 0, x,     y);
 	}
 
-	// Display status
-	{
-		const SGPBox* const box = (in_map ? &g_map_itemdesc_item_status_box : &g_itemdesc_item_status_box);
-		INT16         const x   = box->x + dx;
-		INT16         const y   = box->y + dy;
-		INT16         const h   = box->h;
+	{ // Display status
+		SGPBox const& box = in_map ? g_map_itemdesc_item_status_box : g_itemdesc_item_status_box;
+		INT16  const  x   = box.x + dx;
+		INT16  const  y   = box.y + dy;
+		INT16  const  h   = box.h;
 		DrawItemUIBarEx(obj, gubItemDescStatusIndex, x, y, h, Get16BPPColor(DESC_STATUS_BAR), Get16BPPColor(DESC_STATUS_BAR_SHADOW), guiSAVEBUFFER);
 	}
 
-	BOOLEAN fHatchOutAttachments = gfItemDescObjectIsAttachment; // if examining attachment, always hatch out attachment slots
-	if (gpItemPointer)
+	bool hatch_out_attachments = gfItemDescObjectIsAttachment; // if examining attachment, always hatch out attachment slots
+	if (OBJECTTYPE const* const ptr_obj = gpItemPointer)
 	{
-		if (Item[gpItemPointer->usItem].fFlags & ITEM_HIDDEN_ADDON ||
+		if (Item[ptr_obj->usItem].fFlags & ITEM_HIDDEN_ADDON ||
 				(
-					!ValidItemAttachment(&obj, gpItemPointer->usItem, FALSE) &&
-					!ValidMerge(gpItemPointer->usItem, obj.usItem)           &&
-					!ValidLaunchable(gpItemPointer->usItem, obj.usItem)
+					!ValidItemAttachment(&obj, ptr_obj->usItem, FALSE) &&
+					!ValidMerge(ptr_obj->usItem, obj.usItem)           &&
+					!ValidLaunchable(ptr_obj->usItem, obj.usItem)
 				))
 		{
-			// hatch out the attachment panels
-			fHatchOutAttachments = TRUE;
+			hatch_out_attachments = TRUE;
 		}
 	}
 
-	// Display attachments
-	{
-		const AttachmentGfxInfo* const agi = (in_map ? &g_map_attachment_info : &g_attachment_info);
+	{ // Display attachments
+		AttachmentGfxInfo const& agi = in_map ? g_map_attachment_info : g_attachment_info;
 		for (INT32 i = 0; i < MAX_ATTACHMENTS; ++i)
 		{
-			const INT16 x = dx + agi->slot[i].iX;
-			const INT16 y = dy + agi->slot[i].iY;
+			INT16 const x = dx + agi.slot[i].iX;
+			INT16 const y = dy + agi.slot[i].iY;
 
 			if (obj.usAttachItem[i] != NOTHING)
 			{
-				const INT16 item_x = agi->item_box.x + x;
-				const INT16 item_y = agi->item_box.y + y;
-				const INT16 item_w = agi->item_box.w;
-				const INT16 item_h = agi->item_box.h;
+				INT16 const item_x = agi.item_box.x + x;
+				INT16 const item_y = agi.item_box.y + y;
+				INT16 const item_w = agi.item_box.w;
+				INT16 const item_h = agi.item_box.h;
 				INVRenderItem(guiSAVEBUFFER, NULL, obj, item_x, item_y, item_w, item_h, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + i, TRANSPARENT);
 
-				const INT16 bar_x = agi->bar_box.x + x;
-				const INT16 bar_h = agi->bar_box.h;
-				const INT16 bar_y = agi->bar_box.y + y + bar_h - 1;
+				INT16 const bar_x = agi.bar_box.x + x;
+				INT16 const bar_h = agi.bar_box.h;
+				INT16 const bar_y = agi.bar_box.y + y + bar_h - 1;
 				DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + i, bar_x, bar_y, bar_h, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
 			}
 
-			if (fHatchOutAttachments)
+			if (hatch_out_attachments)
 			{
-				const UINT16 hatch_w = agi->item_box.x + agi->item_box.w;
-				const UINT16 hatch_h = agi->item_box.y + agi->item_box.h;
+				UINT16 const hatch_w = agi.item_box.x + agi.item_box.w;
+				UINT16 const hatch_h = agi.item_box.y + agi.item_box.h;
 				DrawHatchOnInventory(guiSAVEBUFFER, x, y, hatch_w, hatch_h);
 			}
 		}
 	}
 
-	INVTYPE const* const item = &Item[obj.usItem];
+	INVTYPE const& item = Item[obj.usItem];
 
-	if (item->usItemClass & IC_GUN)
+	if (item.usItemClass & IC_GUN)
 	{
 		// display bullets for ROF
 		{
-			const INT32 x = (in_map ? MAP_BULLET_SING_X : BULLET_SING_X);
-			const INT32 y = (in_map ? MAP_BULLET_SING_Y : BULLET_SING_Y);
+			INT32 const x = in_map ? MAP_BULLET_SING_X : BULLET_SING_X;
+			INT32 const y = in_map ? MAP_BULLET_SING_Y : BULLET_SING_Y;
 			BltVideoObject(guiSAVEBUFFER, guiBullet, 0, x, y);
 		}
 
-		WEAPONTYPE const* const w = &Weapon[obj.usItem];
-		if (w->ubShotsPerBurst > 0)
+		WEAPONTYPE const& w = Weapon[obj.usItem];
+		if (w.ubShotsPerBurst > 0)
 		{
-			INT32       x = (in_map ? MAP_BULLET_BURST_X : BULLET_BURST_X);
-			const INT32 y = (in_map ? MAP_BULLET_BURST_Y : BULLET_BURST_Y);
-			for (INT32 i = w->ubShotsPerBurst; i != 0; --i)
+			INT32       x = in_map ? MAP_BULLET_BURST_X : BULLET_BURST_X;
+			INT32 const y = in_map ? MAP_BULLET_BURST_Y : BULLET_BURST_Y;
+			for (INT32 i = w.ubShotsPerBurst; i != 0; --i)
 			{
 				BltVideoObject(guiSAVEBUFFER, guiBullet, 0, x, y);
 				x += BULLET_WIDTH + 1;
@@ -2447,56 +2442,52 @@ void RenderItemDescriptionBox(void)
 	}
 
 	{
-		const INT16 w = (in_map ? MAP_ITEMDESC_WIDTH  : ITEMDESC_WIDTH);
-		const INT16 h = (in_map ? MAP_ITEMDESC_HEIGHT : ITEMDESC_HEIGHT);
+		INT16 const w = in_map ? MAP_ITEMDESC_WIDTH  : ITEMDESC_WIDTH;
+		INT16 const h = in_map ? MAP_ITEMDESC_HEIGHT : ITEMDESC_HEIGHT;
 		RestoreExternBackgroundRect(dx, dy, w, h);
 	}
 
 	// Render font desc
 	SetFontAttributes(ITEMDESC_FONT, FONT_FCOLOR_WHITE);
 
-	{
-		// Render name
-		const SGPBox* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
+	{ // Render name
+		SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
 #ifdef JA2TESTVERSION
-		mprintf(dx + xy->x, dy + xy->y, L"%ls (%d)", gzItemName, obj.usItem);
+		mprintf(dx + xy.x, dy + xy.y, L"%ls (%d)", gzItemName, obj.usItem);
 #else
-		MPrint(dx + xy->x, dy + xy->y, gzItemName);
+		MPrint(dx + xy.x, dy + xy.y, gzItemName);
 #endif
 	}
 
 	SetFontShadow(ITEMDESC_FONTSHADOW2);
 
 	{
-		const SGPBox* const box = (in_map ? &g_map_itemdesc_desc_box : &g_itemdesc_desc_box);
-		DisplayWrappedString(dx + box->x, dy + box->y, box->w, 2, ITEMDESC_FONT, FONT_BLACK, gzItemDesc, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		SGPBox const& box = in_map ? g_map_itemdesc_desc_box : g_itemdesc_desc_box;
+		DisplayWrappedString(dx + box.x, dy + box.y, box.w, 2, ITEMDESC_FONT, FONT_BLACK, gzItemDesc, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
 	if (ITEM_PROS_AND_CONS(obj.usItem))
 	{
-		WEAPONTYPE const* const w = &Weapon[obj.usItem];
-		if (HasObjectImprint(obj))
 		{
-			// add name noting imprint
-			swprintf(pStr, lengthof(pStr), L"%ls %ls (%ls)", AmmoCaliber[w->ubCalibre], WeaponType[w->ubWeaponType], gMercProfiles[obj.ubImprintID].zNickname);
-		}
-		else
-		{
-			swprintf(pStr, lengthof(pStr), L"%ls %ls", AmmoCaliber[w->ubCalibre], WeaponType[w->ubWeaponType]);
-		}
+			WEAPONTYPE const& w = Weapon[obj.usItem];
+			size_t            n = 0;
+			n += swprintf(pStr, lengthof(pStr), L"%ls %ls", AmmoCaliber[w.ubCalibre], WeaponType[w.ubWeaponType]);
+			if (HasObjectImprint(obj))
+			{ // Add name noting imprint
+				swprintf(pStr + n, lengthof(pStr) - n, L" (%ls)", GetProfile(obj.ubImprintID).zNickname);
+			}
 
-		{
-			const SGPBox* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
-			FindFontRightCoordinates(dx + xy->x, dy + xy->y, xy->w, xy->h, pStr, ITEMDESC_FONT, &usX, &usY);
+			SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
+			FindFontRightCoordinates(dx + xy.x, dy + xy.y, xy.w, xy.h, pStr, ITEMDESC_FONT, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 
 		{
-			const SGPBox* const box = (in_map ? &g_map_itemdesc_pros_cons_box : &g_itemdesc_pros_cons_box);
-			INT32               x   = box->x + dx;
-			INT32         const y   = box->y + dy;
-			INT32               w   = box->w;
-			INT32         const h   = box->h;
+			SGPBox const& box = in_map ? g_map_itemdesc_pros_cons_box : g_itemdesc_pros_cons_box;
+			INT32         x   = box.x + dx;
+			INT32  const  y   = box.y + dy;
+			INT32         w   = box.w;
+			INT32  const  h   = box.h;
 
 			SetFontForeground(FONT_MCOLOR_DKWHITE2);
 			SetFontShadow(DEFAULT_SHADOW);
@@ -2506,7 +2497,7 @@ void RenderItemDescriptionBox(void)
 			SetFontForeground(FONT_BLACK);
 			SetFontShadow(ITEMDESC_FONTSHADOW2);
 
-			const INT16 pros_cons_indent = __max(StringPixLength(gzProsLabel, ITEMDESC_FONT), StringPixLength(gzConsLabel, ITEMDESC_FONT)) + 10;
+			INT16 const pros_cons_indent = __max(StringPixLength(gzProsLabel, ITEMDESC_FONT), StringPixLength(gzConsLabel, ITEMDESC_FONT)) + 10;
 			x += pros_cons_indent;
 			w -= pros_cons_indent + StringPixLength(DOTDOTDOT, ITEMDESC_FONT);
 
@@ -2526,24 +2517,24 @@ void RenderItemDescriptionBox(void)
 	SetFontShadow(DEFAULT_SHADOW);
 
 	// Render, stat  name
-	if (item->usItemClass & IC_WEAPON)
+	if (item.usItemClass & IC_WEAPON)
 	{
 		SetFontForeground(6);
 
-		const INV_DESC_STATS* const ids = (in_map ? gMapWeaponStats : gWeaponStats);
+		INV_DESC_STATS const* const ids = in_map ? gMapWeaponStats : gWeaponStats;
 
 		//LABELS
 		mprintf(dx + ids[0].sX, dy + ids[0].sY, gWeaponStatsDesc[0], GetWeightUnitString()); // mass
-		if (item->usItemClass & (IC_GUN | IC_LAUNCHER))
+		if (item.usItemClass & (IC_GUN | IC_LAUNCHER))
 		{
 			MPrint(dx + ids[2].sX, dy + ids[2].sY, gWeaponStatsDesc[3]); // range
 		}
-		if (!(item->usItemClass & IC_LAUNCHER) && obj.usItem != ROCKET_LAUNCHER)
+		if (!(item.usItemClass & IC_LAUNCHER) && obj.usItem != ROCKET_LAUNCHER)
 		{
 			MPrint(dx + ids[3].sX, dy + ids[3].sY, gWeaponStatsDesc[4]); // damage
 		}
 		MPrint(dx + ids[4].sX, dy + ids[4].sY, gWeaponStatsDesc[5]); // APs
-		if (item->usItemClass & IC_GUN)
+		if (item.usItemClass & IC_GUN)
 		{
 			MPrint(dx + ids[6].sX, dy + ids[6].sY, gWeaponStatsDesc[6]); // = (sic)
 		}
@@ -2567,9 +2558,8 @@ void RenderItemDescriptionBox(void)
 		FindFontRightCoordinates(dx + ids[0].sX + ids[0].sValDx, dy + ids[0].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
-		if (item->usItemClass & (IC_GUN | IC_LAUNCHER))
-		{
-			//Range
+		if (item.usItemClass & (IC_GUN | IC_LAUNCHER))
+		{ // Range
 			UINT16 const range = GunRange(obj);
 			HighlightIf(range >= EXCEPTIONAL_RANGE);
 			swprintf(pStr, lengthof(pStr), L"%2d", range / 10);
@@ -2577,9 +2567,8 @@ void RenderItemDescriptionBox(void)
 			MPrint(usX, usY, pStr);
 		}
 
-		if (!(item->usItemClass & IC_LAUNCHER) && obj.usItem != ROCKET_LAUNCHER)
-		{
-			//Damage
+		if (!(item.usItemClass & IC_LAUNCHER) && obj.usItem != ROCKET_LAUNCHER)
+		{ // Damage
 			HighlightIf(w.ubImpact >= EXCEPTIONAL_DAMAGE);
 			swprintf(pStr, lengthof(pStr), L"%2d", w.ubImpact);
 			FindFontRightCoordinates(dx + ids[3].sX + ids[3].sValDx, dy + ids[3].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
@@ -2606,25 +2595,23 @@ void RenderItemDescriptionBox(void)
 	{
 		SetFontForeground(FONT_WHITE);
 
-		// Display the total amount of money
-		{
+		{ // Display the total amount of money
 			SPrintMoney(pStr, in_map && gfAddingMoneyToMercFromPlayersAccount ? LaptopSaveInfo.iCurrentBalance : gRemoveMoney.uiTotalAmount);
-			const SGPBox* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
-			FindFontRightCoordinates(dx + xy->x, dy + xy->y, xy->w, xy->h, pStr, BLOCKFONT2, &usX, &usY);
+			SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
+			FindFontRightCoordinates(dx + xy.x, dy + xy.y, xy.w, xy.h, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 
-		//Display the 'Seperate' text
-		{
+		{ // Display the 'Separate' text
 			SetFontForeground(in_map ? 5 : 6);
-			const MoneyLoc* const xy    = (in_map ? &gMapMoneyButtonLoc : &gMoneyButtonLoc);
-			const wchar_t*  const label = (!in_map && gfAddingMoneyToMercFromPlayersAccount ? gzMoneyAmounts[5] : gzMoneyAmounts[4]);
-			MPrint(xy->x + gMoneyButtonOffsets[4].x, xy->y + gMoneyButtonOffsets[4].y, label);
+			MoneyLoc const&       xy    = in_map ? gMapMoneyButtonLoc : gMoneyButtonLoc;
+			wchar_t  const* const label = !in_map && gfAddingMoneyToMercFromPlayersAccount ? gzMoneyAmounts[5] : gzMoneyAmounts[4];
+			MPrint(xy.x + gMoneyButtonOffsets[4].x, xy.y + gMoneyButtonOffsets[4].y, label);
 		}
 
 		SetFontForeground(6);
 
-		const INV_DESC_STATS* const xy = (in_map ? gMapMoneyStats : gMoneyStats);
+		INV_DESC_STATS const* const xy = in_map ? gMapMoneyStats : gMoneyStats;
 
 		if (!in_map && gfAddingMoneyToMercFromPlayersAccount)
 		{
@@ -2644,14 +2631,14 @@ void RenderItemDescriptionBox(void)
 		SetFontForeground(5);
 
 		// Get length of string
-		const UINT16 uiRightLength = 35;
+		UINT16 const uiRightLength = 35;
 
 		//Display the total amount of money remaining
 		SPrintMoney(pStr, gRemoveMoney.uiMoneyRemaining);
 		if (in_map)
 		{
-			const UINT16 uiStringLength = StringPixLength(pStr, ITEMDESC_FONT);
-			const INT16  sStrX          = dx + xy[1].sX + xy[1].sValDx + (uiRightLength - uiStringLength);
+			UINT16 const uiStringLength = StringPixLength(pStr, ITEMDESC_FONT);
+			INT16  const sStrX          = dx + xy[1].sX + xy[1].sValDx + (uiRightLength - uiStringLength);
 			MPrint(sStrX, dy + xy[1].sY, pStr);
 		}
 		else
@@ -2664,8 +2651,8 @@ void RenderItemDescriptionBox(void)
 		SPrintMoney(pStr, gRemoveMoney.uiMoneyRemoving);
 		if (in_map)
 		{
-			const UINT16 uiStringLength = StringPixLength(pStr, ITEMDESC_FONT);
-			const INT16  sStrX          = dx + xy[3].sX + xy[3].sValDx + (uiRightLength - uiStringLength);
+			UINT16 const uiStringLength = StringPixLength(pStr, ITEMDESC_FONT);
+			INT16  const sStrX          = dx + xy[3].sX + xy[3].sValDx + (uiRightLength - uiStringLength);
 			MPrint(sStrX, dy + xy[3].sY, pStr);
 		}
 		else
@@ -2674,12 +2661,12 @@ void RenderItemDescriptionBox(void)
 			MPrint(usX, usY, pStr);
 		}
 	}
-	else if (item->usItemClass == IC_MONEY)
+	else if (item.usItemClass == IC_MONEY)
 	{
 		SetFontForeground(FONT_FCOLOR_WHITE);
 		SPrintMoney(pStr, obj.uiMoneyAmount);
-		const SGPBox* const xy = (in_map ? &gMapDescNameBox : &gDescNameBox);
-		FindFontRightCoordinates(dx + xy->x, dy + xy->y, xy->w, xy->h, pStr, BLOCKFONT2, &usX, &usY);
+		SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
+		FindFontRightCoordinates(dx + xy.x, dy + xy.y, xy.w, xy.h, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 	}
 	else
@@ -2687,10 +2674,10 @@ void RenderItemDescriptionBox(void)
 		//Labels
 		SetFontForeground(6);
 
-		const INV_DESC_STATS* const ids = (in_map ? gMapWeaponStats : gWeaponStats);
+		INV_DESC_STATS const* const ids = in_map ? gMapWeaponStats : gWeaponStats;
 
 		/* amount for ammunition, status otherwise */
-		const wchar_t* const label = (Item[gpItemDescObject->usItem].usItemClass & IC_AMMO ? gWeaponStatsDesc[2] : gWeaponStatsDesc[1]);
+		wchar_t const* const label = Item[gpItemDescObject->usItem].usItemClass & IC_AMMO ? gWeaponStatsDesc[2] : gWeaponStatsDesc[1];
 		MPrint(dx + ids[1].sX, dy + ids[1].sY, label);
 
 		//Weight
@@ -2699,16 +2686,14 @@ void RenderItemDescriptionBox(void)
 		// Values
 		SetFontForeground(5);
 
-		if (item->usItemClass & IC_AMMO)
-		{
-			// Ammo - print amount
-			swprintf(pStr, lengthof(pStr), L"%d/%d", obj.ubShotsLeft[0], Magazine[item->ubClassIndex].ubMagSize);
+		if (item.usItemClass & IC_AMMO)
+		{ // Ammo - print amount
+			swprintf(pStr, lengthof(pStr), L"%d/%d", obj.ubShotsLeft[0], Magazine[item.ubClassIndex].ubMagSize);
 			FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 		else
-		{
-			//Status
+		{ // Status
 			swprintf(pStr, lengthof(pStr), L"%2d%%", obj.bStatus[gubItemDescStatusIndex]);
 			FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
@@ -2719,13 +2704,13 @@ void RenderItemDescriptionBox(void)
 		FindFontRightCoordinates(dx + ids[0].sX + ids[0].sValDx, dy + ids[0].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
-		if (InKeyRingPopup() || item->usItemClass & IC_KEY)
+		if (InKeyRingPopup() || item.usItemClass & IC_KEY)
 		{
 			SetFontForeground(6);
 
-			const INT32 x  = dx + ids[3].sX;
-			const INT32 y0 = dy + ids[3].sY;
-			const INT32 y1 = y0 + GetFontHeight(BLOCKFONT) + 2;
+			INT32 const x  = dx + ids[3].sX;
+			INT32 const y0 = dy + ids[3].sY;
+			INT32 const y1 = y0 + GetFontHeight(BLOCKFONT) + 2;
 
 			// build description for keys .. the sector found
 			MPrint(x, y0, sKeyDescriptionStrings[0]);
