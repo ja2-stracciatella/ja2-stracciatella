@@ -1,5 +1,6 @@
 #include "FileMan.h"
 #include "Font_Control.h"
+#include "Items.h"
 #include "Local.h"
 #include "Merc_Hiring.h"
 #include "Real_Time_Input.h"
@@ -3532,10 +3533,13 @@ BOOLEAN UIMouseOnValidAttackLocation( SOLDIERTYPE *pSoldier )
 		}
 	}
 
-  if ( !CanPlayerUseRocketRifle( pSoldier, TRUE ) )
-  {
-    return( FALSE );
-  }
+	OBJECTTYPE const& o = pSoldier->inv[HANDPOS];
+	if (HasObjectImprint(o) && pSoldier->ubProfile != o.ubImprintID)
+	{ // Access denied
+		PlayJA2Sample(RG_ID_INVALID, HIGHVOLUME, 1, MIDDLE);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"\"%ls\"", TacticalStr[GUN_NOGOOD_FINGERPRINT]);
+		return FALSE;
+	}
 
 	//if ( Item[ usInHand ].usItemClass == IC_BLADE && usInHand != THROWING_KNIFE )
 	//{

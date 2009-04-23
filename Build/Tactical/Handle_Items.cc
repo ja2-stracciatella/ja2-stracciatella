@@ -3530,32 +3530,6 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 }
 
 
-BOOLEAN CanPlayerUseRocketRifle(SOLDIERTYPE* const s, const BOOLEAN fDisplay)
-{
-	OBJECTTYPE const& wpn = s->inv[s->ubAttackingHand];
-	if (!HasObjectImprint(wpn)) return TRUE;
-
-	// check imprint ID
-	// NB not-imprinted value is NO_PROFILE
-	// imprinted value is profile for mercs & NPCs and NO_PROFILE + 1 for generic dudes
-	if (s->ubProfile    != NO_PROFILE   &&
-			wpn.ubImprintID != s->ubProfile) // NOT a virgin gun
-	{
-		// access denied!
-		if (s->bTeam == gbPlayerNum)
-		{
-			PlayJA2Sample(RG_ID_INVALID, HIGHVOLUME, 1, MIDDLE);
-			if (fDisplay)
-			{
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"\"%ls\"", TacticalStr[GUN_NOGOOD_FINGERPRINT]);
-			}
-		}
-		return FALSE;
-	}
-  return TRUE;
-}
-
-
 bool IsItemPoolVisible(ITEM_POOL const* const ip)
 {
 	if (!ip) return false;
