@@ -2471,10 +2471,14 @@ void RenderItemDescriptionBox(void)
 		{
 			WEAPONTYPE const& w = Weapon[obj.usItem];
 			size_t            n = 0;
-			n += swprintf(pStr, lengthof(pStr), L"%ls %ls", AmmoCaliber[w.ubCalibre], WeaponType[w.ubWeaponType]);
+			if (w.ubCalibre != NOAMMO)
+			{
+				n += swprintf(pStr, lengthof(pStr), L"%ls ", AmmoCaliber[w.ubCalibre]);
+			}
+			n += swprintf(pStr + n, lengthof(pStr) - n, L"%ls", WeaponType[w.ubWeaponType]);
 			if (HasObjectImprint(obj))
 			{ // Add name noting imprint
-				swprintf(pStr + n, lengthof(pStr) - n, L" (%ls)", GetProfile(obj.ubImprintID).zNickname);
+				n += swprintf(pStr + n, lengthof(pStr) - n, L" (%ls)", GetProfile(obj.ubImprintID).zNickname);
 			}
 
 			SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
