@@ -2475,8 +2475,7 @@ void RenderItemDescriptionBox(void)
 	if (ITEM_PROS_AND_CONS(obj.usItem))
 	{
 		WEAPONTYPE const* const w = &Weapon[obj.usItem];
-		if ((obj.usItem == ROCKET_RIFLE || obj.usItem == AUTO_ROCKET_RIFLE) &&
-				obj.ubImprintID < NO_PROFILE)
+		if (HasObjectImprint(obj))
 		{
 			// add name noting imprint
 			swprintf(pStr, lengthof(pStr), L"%ls %ls (%ls)", AmmoCaliber[w->ubCalibre], WeaponType[w->ubWeaponType], gMercProfiles[obj.ubImprintID].zNickname);
@@ -5359,7 +5358,7 @@ void GetHelpTextForItem(wchar_t* const dst, size_t const Length, OBJECTTYPE cons
 			wcslcpy(pStr, ItemNames[usItem], lengthof(pStr));
 		}
 
-		if ((usItem == ROCKET_RIFLE || usItem == AUTO_ROCKET_RIFLE) && obj.ubImprintID < NO_PROFILE)
+		if (HasObjectImprint(obj))
 		{
 			wchar_t pStr2[20];
 			swprintf(pStr2, lengthof(pStr2), L" [%ls]", GetProfile(obj.ubImprintID).zNickname);

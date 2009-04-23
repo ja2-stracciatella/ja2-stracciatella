@@ -1608,11 +1608,7 @@ static bool IsGunUsable(OBJECTTYPE const& o, SOLDIERTYPE const& s)
 	return
 		o.bGunAmmoStatus >  0 &&
 		o.ubGunShotsLeft != 0 &&
-		(
-			(o.usItem != ROCKET_RIFLE && o.usItem != AUTO_ROCKET_RIFLE) ||
-			o.ubImprintID == NOBODY ||
-			o.ubImprintID == s.ubID // XXX wrong: should compare profile
-		);
+		(!HasObjectImprint(o) || o.ubImprintID == s.ubID); // XXX wrong: should compare profile
 }
 
 

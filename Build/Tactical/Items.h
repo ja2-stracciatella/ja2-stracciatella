@@ -170,6 +170,8 @@ bool ItemIsCool(OBJECTTYPE const&);
 
 UINT16 StandardGunListAmmoReplacement(UINT16 usAmmo);
 
+bool HasObjectImprint(OBJECTTYPE const&);
+
 #ifdef JA2TESTVERSION
 void DumpItemsList(void);
 #endif

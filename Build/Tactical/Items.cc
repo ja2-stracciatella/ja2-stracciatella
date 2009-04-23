@@ -954,23 +954,21 @@ BOOLEAN WeaponInHand(const SOLDIERTYPE* const pSoldier)
 {
 	if ( Item[pSoldier->inv[HANDPOS].usItem].usItemClass & (IC_WEAPON | IC_THROWN) )
 	{
-		if (pSoldier->inv[HANDPOS].usItem == ROCKET_RIFLE || pSoldier->inv[HANDPOS].usItem == AUTO_ROCKET_RIFLE )
+		OBJECTTYPE const& o = pSoldier->inv[HANDPOS];
+		if (HasObjectImprint(o))
 		{
-			if (pSoldier->inv[HANDPOS].ubImprintID != NO_PROFILE)
+			if (pSoldier->ubProfile != NO_PROFILE)
 			{
-				if (pSoldier->ubProfile != NO_PROFILE)
+				if (pSoldier->inv[HANDPOS].ubImprintID != pSoldier->ubProfile)
 				{
-					if (pSoldier->inv[HANDPOS].ubImprintID != pSoldier->ubProfile)
-					{
-						return( FALSE );
-					}
+					return( FALSE );
 				}
-				else
+			}
+			else
+			{
+				if (pSoldier->inv[HANDPOS].ubImprintID != (NO_PROFILE + 1) )
 				{
-					if (pSoldier->inv[HANDPOS].ubImprintID != (NO_PROFILE + 1) )
-					{
-						return( FALSE );
-					}
+					return( FALSE );
 				}
 			}
 		}
@@ -4674,6 +4672,13 @@ void TurnOffXRayEffects( SOLDIERTYPE * pSoldier )
 	pSoldier->uiXRayActivatedTime = 0;
 }
 
+
+bool HasObjectImprint(OBJECTTYPE const& o)
+{
+	return
+		(o.usItem == ROCKET_RIFLE || o.usItem == AUTO_ROCKET_RIFLE) &&
+		o.ubImprintID != NO_PROFILE;
+}
 
 
 #ifdef JA2TESTVERSION
