@@ -1,4 +1,5 @@
-(r5729) Fix a vanilla display glitch: Do not print "0" in the item description box, when a gun uses no ammunition (e.g. LAW).
+(r5732) Fix a vanilla display glitch: The item tooltip for the auto rocket rifle should not show "(rocket)", just like for the rocket rifle.
+(r5730) Fix a vanilla display glitch: Do not print "0" in the item description box, when a gun uses no ammunition (e.g. LAW).
 (r5721) Fix a vanilla bug: When an enemy soldier is looking for items in one case not all weapons, which have a fingerprint ID, were considered correctly.
 (r5719) Fix a vanilla bug: When an enemy soldier is looking for items and finds a non-helmet/vest/leggings piece of armour it was incorrectly considered for pickup.
 (r5673) Adjust the char-to-glyph translation table for the French version, so "i" with circumflex is displayed correctly.

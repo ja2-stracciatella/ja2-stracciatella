@@ -5338,12 +5338,15 @@ void GetHelpTextForItem(wchar_t* const dst, size_t const Length, OBJECTTYPE cons
 	else
 	{
 		wchar_t pStr[250];
-		if (!gGameOptions.fGunNut && Item[usItem].usItemClass == IC_GUN && usItem != ROCKET_LAUNCHER && usItem != ROCKET_RIFLE)
+		if (!gGameOptions.fGunNut && Item[usItem].usItemClass == IC_GUN)
 		{
-			swprintf(pStr, lengthof(pStr), L"%ls (%ls)", ItemNames[usItem], AmmoCaliber[Weapon[usItem].ubCalibre]);
+			AmmoKind const calibre = Weapon[usItem].ubCalibre;
+			if (calibre == NOAMMO || calibre == AMMOROCKET) goto only_item_name;
+			swprintf(pStr, lengthof(pStr), L"%ls (%ls)", ItemNames[usItem], AmmoCaliber[calibre]);
 		}
 		else
 		{
+only_item_name:
 			wcslcpy(pStr, ItemNames[usItem], lengthof(pStr));
 		}
 
