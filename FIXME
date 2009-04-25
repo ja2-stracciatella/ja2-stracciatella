@@ -44,7 +44,6 @@ GetCostOfPassageForHelicopter(): callers
 GetDialogueDataFilename(): checking for MANNY does nothing
 GetLoadedSectorString(): gbWorldSectorZ <-> !gbWorldSectorZ
 GetNumberOfPastMercsOnPlayersTeam(): callers
-GetSectorFacilitiesFlags(): complicated
 GetSectorIDString(): complicated
 GetTimeRemainingOnSoldiersContract(): callers
 GetTimeRemainingOnSoldiersInsuranceContract(): callers

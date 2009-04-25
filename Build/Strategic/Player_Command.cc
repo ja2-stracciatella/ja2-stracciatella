@@ -23,78 +23,25 @@
 #include "Tactical_Save.h"
 
 
-void GetSectorFacilitiesFlags(const INT16 sMapX, const INT16 sMapY, wchar_t* const sFacilitiesString, const size_t Length)
+void GetSectorFacilitiesFlags(INT16 const x, INT16 const y, wchar_t* const buf, size_t const length)
 {
-	// will build a string stating current facilities present in sector
-
-	if( SectorInfo[ SECTOR( sMapX, sMapY ) ].uiFacilitiesFlags == 0 )
+	// Build a string stating current facilities present in sector
+	UINT32 const facilities = SectorInfo[SECTOR(x, y)].uiFacilitiesFlags;
+	if (facilities == 0)
 	{
-		// none
-	  wcslcpy(sFacilitiesString, sFacilitiesStrings[0], Length);
+	  wcslcpy(buf, sFacilitiesStrings[0], length);
 		return;
 	}
 
-
-	// hospital
-	if( SectorInfo[ SECTOR( sMapX, sMapY ) ].uiFacilitiesFlags & SFCF_HOSPITAL )
+	wchar_t const* fmt = L"%ls";
+	size_t         n   = 0;
+	for (size_t i = 0;; ++i)
 	{
-		wcslcpy(sFacilitiesString, sFacilitiesStrings[1], Length);
-	}
-
-	// industry
-	if( SectorInfo[ SECTOR( sMapX, sMapY ) ].uiFacilitiesFlags & SFCF_INDUSTRY )
-	{
-		if( wcslen( sFacilitiesString ) == 0 )
-		{
-		  wcslcpy(sFacilitiesString, sFacilitiesStrings[2], Length);
-		}
-		else
-		{
-			wcscat( sFacilitiesString, L",");
-			wcscat( sFacilitiesString, sFacilitiesStrings[ 2 ]);
-		}
-	}
-
-	// prison
-	if( SectorInfo[ SECTOR( sMapX, sMapY ) ].uiFacilitiesFlags & SFCF_PRISON )
-	{
-		if( wcslen( sFacilitiesString ) == 0 )
-		{
-		  wcslcpy(sFacilitiesString, sFacilitiesStrings[3], Length);
-		}
-		else
-		{
-			wcscat( sFacilitiesString, L",");
-			wcscat( sFacilitiesString, sFacilitiesStrings[ 3 ]);
-		}
-	}
-
-	// airport
-	if( SectorInfo[ SECTOR( sMapX, sMapY ) ].uiFacilitiesFlags & SFCF_AIRPORT )
-	{
-		if( wcslen( sFacilitiesString ) == 0 )
-		{
-		  wcslcpy(sFacilitiesString, sFacilitiesStrings[5], Length);
-		}
-		else
-		{
-			wcscat( sFacilitiesString, L",");
-			wcscat( sFacilitiesString, sFacilitiesStrings[ 5 ]);
-		}
-	}
-
-	// gun range
-	if( SectorInfo[ SECTOR( sMapX, sMapY ) ].uiFacilitiesFlags & SFCF_GUN_RANGE )
-	{
-		if( wcslen( sFacilitiesString ) == 0 )
-		{
-		  wcslcpy(sFacilitiesString, sFacilitiesStrings[6], Length);
-		}
-		else
-		{
-			wcscat( sFacilitiesString, L",");
-			wcscat( sFacilitiesString, sFacilitiesStrings[ 6 ]);
-		}
+		UINT32 const bit = 1 << i;
+		if (!(facilities & bit)) continue;
+		n  += swprintf(buf + n, length - n, fmt, sFacilitiesStrings[i + 1]);
+		fmt = L",%ls";
+		if ((facilities & ~(bit - 1)) == bit) break;
 	}
 }
 

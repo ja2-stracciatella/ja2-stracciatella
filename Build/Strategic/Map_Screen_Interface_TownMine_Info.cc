@@ -210,7 +210,6 @@ static void AddTextToTownBox(PopUpBox* const box)
 	// main facilities
 	swprintf( wString, lengthof(wString), L"%ls:", pwTownInfoStrings[ 8 ] );
 	AddMonoString(box, wString);
-	wcscpy(wString, L"");
 	GetSectorFacilitiesFlags( bCurrentTownMineSectorX, bCurrentTownMineSectorY, wString, lengthof(wString));
 	AddSecondColumnMonoString(box, wString);
 
