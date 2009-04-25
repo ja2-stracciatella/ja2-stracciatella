@@ -5318,7 +5318,7 @@ static void RemoveMoney(void)
 }
 
 
-void GetHelpTextForItem(wchar_t* const dst, size_t const Length, OBJECTTYPE const& obj)
+void GetHelpTextForItem(wchar_t* const dst, size_t const length, OBJECTTYPE const& obj)
 {
 	UINT16 const usItem = obj.usItem;
 	if (usItem == MONEY)
@@ -5329,52 +5329,44 @@ void GetHelpTextForItem(wchar_t* const dst, size_t const Length, OBJECTTYPE cons
 	{ // alternate money like silver or gold
 		wchar_t pStr2[20];
 		SPrintMoney(pStr2, obj.uiMoneyAmount);
-		swprintf(dst, Length, L"%ls (%ls)", ItemNames[usItem], pStr2);
+		swprintf(dst, length, L"%ls (%ls)", ItemNames[usItem], pStr2);
 	}
 	else if (usItem == NOTHING)
 	{
-		wcslcpy(dst, L"", Length);
+		wcslcpy(dst, L"", length);
 	}
 	else
 	{
-		wchar_t pStr[250];
+		size_t n = swprintf(dst, length, L"%ls", ItemNames[usItem]);
 		if (!gGameOptions.fGunNut && Item[usItem].usItemClass == IC_GUN)
 		{
 			AmmoKind const calibre = Weapon[usItem].ubCalibre;
-			if (calibre == NOAMMO || calibre == AMMOROCKET) goto only_item_name;
-			swprintf(pStr, lengthof(pStr), L"%ls (%ls)", ItemNames[usItem], AmmoCaliber[calibre]);
-		}
-		else
-		{
-only_item_name:
-			wcslcpy(pStr, ItemNames[usItem], lengthof(pStr));
+			if (calibre != NOAMMO && calibre != AMMOROCKET)
+			{
+				n += swprintf(dst + n, length - n, L" (%ls)", AmmoCaliber[calibre]);
+			}
 		}
 
 		if (HasObjectImprint(obj))
 		{
-			wchar_t pStr2[20];
-			swprintf(pStr2, lengthof(pStr2), L" [%ls]", GetProfile(obj.ubImprintID).zNickname);
-			wcscat(pStr, pStr2);
+			n += swprintf(dst + n, length - n, L" [%ls]", GetProfile(obj.ubImprintID).zNickname);
 		}
 
 		// Add attachment string....
-		const wchar_t* const first_prefix = L" ( ";
-		const wchar_t*       prefix       = first_prefix;
+		wchar_t const* const first_prefix = L" ( ";
+		wchar_t const*       prefix       = first_prefix;
 		for (UINT16 const* i = obj.usAttachItem; i != endof(obj.usAttachItem); ++i)
 		{
-			const UINT16 attachment = *i;
+			UINT16 const attachment = *i;
 			if (attachment == NOTHING) continue;
 
-			wcscat(pStr, prefix);
-			wcscat(pStr, ItemNames[attachment]);
+			n += swprintf(dst + n, length - n, L"%ls%ls", prefix, ItemNames[attachment]);
 			prefix = L", \n";
 		}
 		if (prefix != first_prefix)
 		{
-			wcscat(pStr, pMessageStrings[MSG_END_ATTACHMENT_LIST]);
+			n += swprintf(dst + n, length - n, L"%ls", pMessageStrings[MSG_END_ATTACHMENT_LIST]);
 		}
-
-		wcslcpy(dst, pStr, Length);
 	}
 }
 
