@@ -3240,7 +3240,7 @@ const wchar_t* pMessageStrings[] =
 	L"Brak wolnego miejsca, by przekazać %ls do - %ls.", //pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
-	L" dołączono )",
+	L" dołączono)",
 
 	//Cheat modes
 	L"Pierwszy poziom lamerskich zagrywek osiągnięty",

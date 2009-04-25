@@ -3255,7 +3255,7 @@ const wchar_t* pMessageStrings[] =
 	L"Geen plaats om %ls aan %ls te geven.",	//pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
-	L" eraan vastgemaakt )",
+	L" eraan vastgemaakt)",
 
 	//Cheat modes
 	L"Vals spel niveau EEN",

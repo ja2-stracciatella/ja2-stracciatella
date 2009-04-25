@@ -3240,7 +3240,7 @@ const wchar_t* pMessageStrings[] =
 	L"Nessun spazio per passare %ls a %ls.", //pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest (Ceramic Plate 'Attached)'
-	L" Compreso )",
+	L" Compreso)",
 
 	//Cheat modes
 	L"Raggiunto il livello Cheat UNO",

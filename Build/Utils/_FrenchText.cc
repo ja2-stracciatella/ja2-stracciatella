@@ -3240,7 +3240,7 @@ const wchar_t* pMessageStrings[] =
 	L"Impossible de donner %ls à %ls.", //pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
-	L" combiné )",
+	L" combiné)",
 
 	//Cheat modes
 	L"Triche niveau 1",

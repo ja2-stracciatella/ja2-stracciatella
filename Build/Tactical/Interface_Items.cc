@@ -5353,7 +5353,7 @@ void GetHelpTextForItem(wchar_t* const dst, size_t const length, OBJECTTYPE cons
 		}
 
 		// Add attachment string....
-		wchar_t const* const first_prefix = L" ( ";
+		wchar_t const* const first_prefix = L" (";
 		wchar_t const*       prefix       = first_prefix;
 		for (UINT16 const* i = obj.usAttachItem; i != endof(obj.usAttachItem); ++i)
 		{
@@ -5361,7 +5361,7 @@ void GetHelpTextForItem(wchar_t* const dst, size_t const length, OBJECTTYPE cons
 			if (attachment == NOTHING) continue;
 
 			n += swprintf(dst + n, length - n, L"%ls%ls", prefix, ItemNames[attachment]);
-			prefix = L", \n";
+			prefix = L",\n";
 		}
 		if (prefix != first_prefix)
 		{

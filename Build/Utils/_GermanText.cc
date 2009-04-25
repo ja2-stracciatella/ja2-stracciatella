@@ -3067,7 +3067,7 @@ const wchar_t *pMessageStrings[] =
 	L"Kein Platz, um %ls an %ls weiterzugeben.", //pass "item" to "merc". Same instructions as above.
 
 	//A list of attachments appear after the items. Ex: Kevlar vest ( Ceramic Plate 'Attached )'
-	L" angebracht )",
+	L" angebracht)",
 
 	//Cheat modes
 	L"Cheat-Level EINS erreicht",
