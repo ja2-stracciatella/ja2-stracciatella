@@ -1698,167 +1698,112 @@ static void InitializeStrategicMapSectorTownNames(void)
 }
 
 
-// Get sector ID string makes a string like 'A9 - OMERTA', or just J11 if no town....
-void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *zString, size_t Length, BOOLEAN fDetailed )
+void GetSectorIDString(INT16 const x, INT16 const y, INT8 const z, wchar_t* const buf, size_t const length, BOOLEAN const detailed)
 {
 #ifdef JA2DEMO
-	wcslcpy(zString, L"Demoville", Length);
+	wcslcpy(buf, L"Demoville", length);
 #else
-	SECTORINFO *pSector = NULL;
-	UNDERGROUND_SECTORINFO *pUnderground;
-	INT8		bTownNameID;
-	INT8		bMineIndex;
-	UINT8 ubSectorID = 0;
-	UINT8 ubLandType = 0;
-
-	if( sSectorX <= 0 || sSectorY <= 0 || bSectorZ < 0 ) /* Empty? */
+	if (x <= 0 || y <= 0 || z < 0) /* Empty? */
 	{
-		//swprintf(zString, L"%ls", pErrorStrings);
+		//swprintf(buf, L"%ls", pErrorStrings);
+		return;
 	}
-	else if( bSectorZ != 0 )
+
+	INT8    const  mine_index = GetIdOfMineForSector(x, y, z);
+	wchar_t const* add;
+	if (z != 0)
 	{
-		pUnderground = FindUnderGroundSector( sSectorX, sSectorY, bSectorZ );
-		if (pUnderground && (pUnderground->uiFlags & SF_ALREADY_VISITED || gfGettingNameFromSaveLoadScreen))
-		{
-			bMineIndex = GetIdOfMineForSector( sSectorX, sSectorY, bSectorZ );
-			if( bMineIndex != -1 )
-			{
-				swprintf( zString, Length, L"%c%d: %ls %ls", 'A' + sSectorY - 1, sSectorX, pTownNames[ GetTownAssociatedWithMine( bMineIndex ) ], pwMineStrings[ 0 ] );
-			}
-			else switch( SECTOR( sSectorX, sSectorY ) )
-			{
-				case SEC_A10:
-					swprintf( zString, Length, L"A10: %ls", pLandTypeStrings[ REBEL_HIDEOUT ] );
-					break;
-				case SEC_J9:
-					swprintf( zString, Length, L"J9: %ls", pLandTypeStrings[ TIXA_DUNGEON ] );
-					break;
-				case SEC_K4:
-					swprintf( zString, Length, L"K4: %ls", pLandTypeStrings[ ORTA_BASEMENT ] );
-					break;
-				case SEC_O3:
-					swprintf( zString, Length, L"O3: %ls", pLandTypeStrings[ TUNNEL ] );
-					break;
-				case SEC_P3:
-					swprintf( zString, Length, L"P3: %ls", pLandTypeStrings[ SHELTER ] );
-					break;
-				default:
-					swprintf( zString, Length, L"%c%d: %ls", 'A' + sSectorY - 1, sSectorX, pLandTypeStrings[ CREATURE_LAIR ] );
-					break;
-			}
+		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(x, y, z);
+		if (!u || (!(u->uiFlags & SF_ALREADY_VISITED) && !gfGettingNameFromSaveLoadScreen))
+		{ // Display nothing
+			buf[0] = L'\0';
+			return;
 		}
-		else
-		{ //Display nothing
-			wcscpy( zString, L"" );
+
+		if (mine_index != -1)
+		{
+			add = pTownNames[GetTownAssociatedWithMine(mine_index)];
+		}
+		else switch (SECTOR(x, y))
+		{
+			case SEC_A10: add = pLandTypeStrings[REBEL_HIDEOUT]; break;
+			case SEC_J9:  add = pLandTypeStrings[TIXA_DUNGEON];  break;
+			case SEC_K4:  add = pLandTypeStrings[ORTA_BASEMENT]; break;
+			case SEC_O3:  add = pLandTypeStrings[TUNNEL];        break;
+			case SEC_P3:  add = pLandTypeStrings[SHELTER];       break;
+			default:      add = pLandTypeStrings[CREATURE_LAIR]; break;
 		}
 	}
 	else
 	{
-		bTownNameID = StrategicMap[ CALCULATE_STRATEGIC_INDEX( sSectorX, sSectorY ) ].bNameId;
-		ubSectorID = (UINT8)SECTOR( sSectorX, sSectorY );
-		pSector = &SectorInfo[ ubSectorID ];
-		ubLandType = pSector->ubTraversability[ 4 ];
-		swprintf( zString, Length, L"%c%d: ", 'A' + sSectorY - 1, sSectorX );
+		UINT8 const sector_id = SECTOR(x, y);
+		switch (sector_id)
+		{
+			case SEC_B13:
+				if (!detailed) goto plain_sector;
+				add = pLandTypeStrings[DRASSEN_AIRPORT_SITE];
+				break;
 
-		if ( bTownNameID == BLANK_SECTOR )
-		{
-			// OK, build string id like J11
-			// are we dealing with the unfound towns?
-			switch( ubSectorID )
-			{
-				case SEC_D2: //Chitzena SAM
-					if( !fSamSiteFound[ SAM_SITE_ONE ] )
-						wcscat( zString, pLandTypeStrings[ TROPICS ] );
-					else if( fDetailed )
-						wcscat( zString, pLandTypeStrings[ TROPICS_SAM_SITE ] );
-					else
-						wcscat( zString, pLandTypeStrings[ SAM_SITE ] );
-					break;
-				case SEC_D15: //Drassen SAM
-					if( !fSamSiteFound[ SAM_SITE_TWO ] )
-						wcscat( zString, pLandTypeStrings[ SPARSE ] );
-					else if( fDetailed )
-						wcscat( zString, pLandTypeStrings[ SPARSE_SAM_SITE ] );
-					else
-						wcscat( zString, pLandTypeStrings[ SAM_SITE ] );
-					break;
-				case SEC_I8: //Cambria SAM
-					if( !fSamSiteFound[ SAM_SITE_THREE ] )
-						wcscat( zString, pLandTypeStrings[ SAND ] );
-					else if( fDetailed )
-						wcscat( zString, pLandTypeStrings[ SAND_SAM_SITE ] );
-					else
-						wcscat( zString, pLandTypeStrings[ SAM_SITE ] );
-					break;
-				default:
-					wcscat( zString, pLandTypeStrings[ ubLandType ] );
-					break;
-			}
+			case SEC_D2: // Chitzena SAM
+				add =
+					!fSamSiteFound[SAM_SITE_ONE] ? pLandTypeStrings[TROPICS]          :
+					detailed                     ? pLandTypeStrings[TROPICS_SAM_SITE] :
+					pLandTypeStrings[SAM_SITE];
+				break;
+
+			case SEC_D15: // Drassen SAM
+				add =
+					!fSamSiteFound[SAM_SITE_TWO] ? pLandTypeStrings[SPARSE]          :
+					detailed                     ? pLandTypeStrings[SPARSE_SAM_SITE] :
+					pLandTypeStrings[SAM_SITE];
+				break;
+
+			case SEC_F8:
+				if (!detailed) goto plain_sector;
+				add = pLandTypeStrings[CAMBRIA_HOSPITAL_SITE];
+				break;
+
+			case SEC_I8: // Cambria SAM
+				add =
+					!fSamSiteFound[SAM_SITE_THREE] ? pLandTypeStrings[SAND]          :
+					detailed                       ? pLandTypeStrings[SAND_SAM_SITE] :
+					pLandTypeStrings[SAM_SITE];
+				break;
+
+			case SEC_J9: // Tixa
+				add = fFoundTixa ? pTownNames[TIXA] : pLandTypeStrings[SAND];
+				break;
+
+			case SEC_K4: // Orta
+				add = fFoundOrta ? pTownNames[ORTA] : pLandTypeStrings[SWAMP];
+				break;
+
+			case SEC_N3:
+				if (!detailed) goto plain_sector;
+				add = pLandTypeStrings[MEDUNA_AIRPORT_SITE];
+				break;
+
+			case SEC_N4: // Meduna's SAM site
+				if (!fSamSiteFound[SAM_SITE_FOUR]) goto plain_sector;
+				add =
+					detailed ? pLandTypeStrings[MEDUNA_SAM_SITE] :
+					pLandTypeStrings[SAM_SITE];
+				break;
+
+			default: // All other towns that are known since beginning of the game.
+plain_sector:;
+				INT8 const town_name_id = StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId;
+				add =
+					town_name_id != BLANK_SECTOR ? pTownNames[town_name_id] :
+					pLandTypeStrings[SectorInfo[sector_id].ubTraversability[4]];
+				break;
 		}
-		else
-		{
-			switch( ubSectorID )
-			{
-				case SEC_B13:
-					if( fDetailed )
-						wcscat( zString, pLandTypeStrings[ DRASSEN_AIRPORT_SITE ] );
-					else
-						wcscat( zString, pTownNames[ DRASSEN ] );
-					break;
-				case SEC_F8:
-					if( fDetailed )
-						wcscat( zString, pLandTypeStrings[ CAMBRIA_HOSPITAL_SITE ] );
-					else
-						wcscat( zString, pTownNames[ CAMBRIA ] );
-					break;
-				case SEC_J9: //Tixa
-					if( !fFoundTixa )
-						wcscat( zString, pLandTypeStrings[ SAND ] );
-					else
-						wcscat( zString, pTownNames[ TIXA ] );
-					break;
-				case SEC_K4: //Orta
-					if( !fFoundOrta )
-						wcscat( zString, pLandTypeStrings[ SWAMP ] );
-					else
-						wcscat( zString, pTownNames[ ORTA ] );
-					break;
-				case SEC_N3:
-					if( fDetailed )
-						wcscat( zString, pLandTypeStrings[ MEDUNA_AIRPORT_SITE ] );
-					else
-						wcscat( zString, pTownNames[ MEDUNA ] );
-					break;
-				default:
-					if( ubSectorID == SEC_N4 && fSamSiteFound[ SAM_SITE_FOUR ] )
-					{	//Meduna's SAM site
-						if( fDetailed )
-							wcscat( zString, pLandTypeStrings[ MEDUNA_SAM_SITE ] );
-						else
-							wcscat( zString, pLandTypeStrings[ SAM_SITE ] );
-					}
-					else
-					{	//All other towns that are known since beginning of the game.
-						wcscat( zString, pTownNames[ bTownNameID ] );
-						if( fDetailed )
-						{
-							switch( ubSectorID )
-							{ //Append the word, "mine" for town sectors containing a mine.
-								case SEC_B2:
-								case SEC_D4:
-								case SEC_D13:
-								case SEC_H3:
-								case SEC_H8:
-								case SEC_I14:
-									wcscat( zString, L" " ); //space
-									wcscat( zString, pwMineStrings[ 0 ] ); //then "Mine"
-									break;
-							}
-						}
-					}
-					break;
-			}
-		}
+	}
+
+	size_t const n = swprintf(buf, length, L"%c%d: %ls", 'A' + y - 1, x, add);
+	if (detailed && mine_index != -1)
+	{ // Append "Mine"
+		swprintf(buf + n, length - n, L" %ls", pwMineStrings[0]);
 	}
 #endif
 }

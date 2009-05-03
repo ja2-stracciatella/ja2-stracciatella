@@ -85,8 +85,8 @@ void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, 
 // get short sector name without town name
 void GetShortSectorString(INT16 sMapX, INT16 sMapY, wchar_t* sString, size_t Length);
 
-// This will get an ID string like A9- OMERTA...
-void GetSectorIDString( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ , CHAR16 *zString, size_t Length, BOOLEAN fDetailed );
+// Return a string like 'A9: Omerta'
+void GetSectorIDString(INT16 x, INT16 y, INT8 z, wchar_t* buf, size_t length, BOOLEAN detailed);
 
 void GetMapFileName(INT16 sMapX, INT16 sMapY, INT8 bSectorZ, char* bString, BOOLEAN fUsePlaceholder, BOOLEAN fAddAlternateMapLetter);
 
