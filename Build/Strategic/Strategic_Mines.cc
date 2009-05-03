@@ -1,4 +1,5 @@
 #include "Font_Control.h"
+#include "LoadSaveData.h"
 #include "MapScreen.h"
 #include "Strategic_Mines.h"
 #include "Finances.h"
@@ -733,17 +734,65 @@ BOOLEAN PlayerControlsMine(INT8 bMineIndex)
 }
 
 
-void SaveMineStatusToSaveGameFile(HWFILE const hFile)
+void SaveMineStatusToSaveGameFile(HWFILE const f)
 {
-	//Save the MineStatus
-	FileWrite(hFile, gMineStatus, sizeof(MINE_STATUS_TYPE) * MAX_NUMBER_OF_MINES);
+	for (MINE_STATUS_TYPE const* i = gMineStatus; i != endof(gMineStatus); ++i)
+	{
+		BYTE  data[44];
+		BYTE* d = data;
+		INJ_U8(  d, i->ubMineType)
+		INJ_SKIP(d, 3)
+		INJ_U32( d, i->uiMaxRemovalRate)
+		INJ_U32( d, i->uiRemainingOreSupply)
+		INJ_U32( d, i->uiOreRunningOutPoint)
+		INJ_BOOL(d, i->fEmpty)
+		INJ_BOOL(d, i->fRunningOut)
+		INJ_BOOL(d, i->fWarnedOfRunningOut)
+		INJ_BOOL(d, i->fShutDownIsPermanent)
+		INJ_BOOL(d, i->fShutDown)
+		INJ_BOOL(d, i->fPrevInvadedByMonsters)
+		INJ_BOOL(d, i->fSpokeToHeadMiner)
+		INJ_BOOL(d, i->fMineHasProducedForPlayer)
+		INJ_BOOL(d, i->fQueenRetookProducingMine)
+		INJ_BOOL(d, i->fAttackedHeadMiner)
+		INJ_U16( d, i->usValidDayCreaturesCanInfest)
+		INJ_U32( d, i->uiTimePlayerProductionStarted)
+		INJ_SKIP(d, 12)
+		Assert(d == endof(data));
+
+		FileWrite(f, data, sizeof(data));
+	}
 }
 
 
-void LoadMineStatusFromSavedGameFile(HWFILE const hFile)
+void LoadMineStatusFromSavedGameFile(HWFILE const f)
 {
-	//Load the MineStatus
-	FileRead(hFile, gMineStatus, sizeof(MINE_STATUS_TYPE) * MAX_NUMBER_OF_MINES);
+	for (MINE_STATUS_TYPE* i = gMineStatus; i != endof(gMineStatus); ++i)
+	{
+		BYTE  data[44];
+		FileRead(f, data, sizeof(data));
+
+		BYTE const* d = data;
+		EXTR_U8(  d, i->ubMineType)
+		EXTR_SKIP(d, 3)
+		EXTR_U32( d, i->uiMaxRemovalRate)
+		EXTR_U32( d, i->uiRemainingOreSupply)
+		EXTR_U32( d, i->uiOreRunningOutPoint)
+		EXTR_BOOL(d, i->fEmpty)
+		EXTR_BOOL(d, i->fRunningOut)
+		EXTR_BOOL(d, i->fWarnedOfRunningOut)
+		EXTR_BOOL(d, i->fShutDownIsPermanent)
+		EXTR_BOOL(d, i->fShutDown)
+		EXTR_BOOL(d, i->fPrevInvadedByMonsters)
+		EXTR_BOOL(d, i->fSpokeToHeadMiner)
+		EXTR_BOOL(d, i->fMineHasProducedForPlayer)
+		EXTR_BOOL(d, i->fQueenRetookProducingMine)
+		EXTR_BOOL(d, i->fAttackedHeadMiner)
+		EXTR_U16( d, i->usValidDayCreaturesCanInfest)
+		EXTR_U32( d, i->uiTimePlayerProductionStarted)
+		EXTR_SKIP(d, 12)
+		Assert(d == endof(data));
+	}
 }
 
 
