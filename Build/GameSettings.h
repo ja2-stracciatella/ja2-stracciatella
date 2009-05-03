@@ -108,9 +108,8 @@ void InitGameOptions(void);
 
 void DisplayGameSettings(void);
 
-BOOLEAN MeanwhileSceneSeen( UINT8 ubMeanwhile );
-
-BOOLEAN SetMeanwhileSceneSeen( UINT8 ubMeanwhile );
+bool MeanwhileSceneSeen(UINT8 meanwhile_id);
+void SetMeanwhileSceneSeen(UINT8 meanwhile_id);
 
 BOOLEAN CanGameBeSaved(void);
 

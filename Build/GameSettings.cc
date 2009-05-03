@@ -234,40 +234,21 @@ void DisplayGameSettings( )
 	}
 }
 
-BOOLEAN MeanwhileSceneSeen( UINT8 ubMeanwhile )
+
+bool MeanwhileSceneSeen(UINT8 const meanwhile_id)
 {
-	UINT32	uiCheckFlag;
-
-	if ( ubMeanwhile > 32 || ubMeanwhile > NUM_MEANWHILES )
-	{
-		return( FALSE );
-	}
-
-	uiCheckFlag = 0x1 << ubMeanwhile;
-
-	if ( gGameSettings.uiMeanwhileScenesSeenFlags & uiCheckFlag )
-	{
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
+	return
+		meanwhile_id < NUM_MEANWHILES && // XXX assertion/exception?
+		gGameSettings.uiMeanwhileScenesSeenFlags & (1U << meanwhile_id);
 }
 
-BOOLEAN SetMeanwhileSceneSeen( UINT8 ubMeanwhile )
-{
-	UINT32	uiCheckFlag;
 
-	if ( ubMeanwhile > 32 || ubMeanwhile > NUM_MEANWHILES )
-	{
-		// can't set such a flag!
-		return( FALSE );
-	}
-	uiCheckFlag = 0x1 << ubMeanwhile;
-	gGameSettings.uiMeanwhileScenesSeenFlags |= uiCheckFlag;
-	return( TRUE );
+void SetMeanwhileSceneSeen(UINT8 const meanwhile_id)
+{
+	if (meanwhile_id >= NUM_MEANWHILES) return; // XXX assertion/exception?
+	gGameSettings.uiMeanwhileScenesSeenFlags |= 1U << meanwhile_id;
 }
+
 
 BOOLEAN	CanGameBeSaved()
 {
