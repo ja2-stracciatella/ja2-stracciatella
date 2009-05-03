@@ -243,8 +243,8 @@ const wchar_t* const Message[] =
 	//Ex: You cannot use sun goggles and you gas mask at the same time.
 	L"Sie können %ls nicht zusammen mit %ls benutzen.",	//
 
-	L"Der Gegenstand in Ihrem Cursor kann mit anderen Gegenständen verbunden werden, indem Sie ihn in einem der vier Slots plazieren",
-	L"Der Gegenstand in Ihrem Cursor kann mit anderen Gegenständen verbunden werden, indem Sie ihn in einem der vier Attachment-Slots plazieren. (Aber in diesem Fall sind die Gegenstände nicht kompatibel.)",
+	L"Der Gegenstand in Ihrem Cursor kann mit anderen Gegenständen verbunden werden, indem Sie ihn in einem der vier Slots platzieren",
+	L"Der Gegenstand in Ihrem Cursor kann mit anderen Gegenständen verbunden werden, indem Sie ihn in einem der vier Attachment-Slots platzieren. (Aber in diesem Fall sind die Gegenstände nicht kompatibel.)",
 	L"Es sind noch Feinde im Sektor!",
 	L"Geben Sie %ls %ls",
 	L"%ls am Kopf getroffen!",
@@ -639,7 +639,7 @@ const wchar_t *pTacticalPopupButtonStrings[] =
 const wchar_t *pDoorTrapStrings[] =
 {
 	L"keine Falle",
-	L"eine Sprengstoffalle",
+	L"eine Sprengstofffalle",
 	L"eine elektrische Falle",
 	L"eine Falle mit Sirene",
 	L"eine Falle mit stummem Alarm",
@@ -756,7 +756,7 @@ const wchar_t *gpStrategicString[] =
 	//Dialog strings for enemies.
 
 	L"Feind bietet die Chance zum Aufgeben an.",			//STR_ENEMY_SURRENDER_OFFER
-	L"Feind hat restliche bewusstlose Söldner gefangengenommen.",	//STR_ENEMY_CAPTURED
+	L"Feind hat restliche bewusstlose Söldner gefangen genommen.",	//STR_ENEMY_CAPTURED
 
 	//The text that goes on the autoresolve buttons
 
@@ -839,7 +839,7 @@ const wchar_t *gpStrategicString[] =
 
 	//The help text for the four buttons. Use \n to denote new line (just like enter).
 
-	L"Söldner räumen ihre Positionen und\nkönnen manuell neu plaziert werden. (|C)",
+	L"Söldner räumen ihre Positionen und\nkönnen manuell neu platziert werden. (|C)",
 	L"Söldner |schwärmen in alle Richtungen\naus wenn der Button gedrückt wird.",
 	L"Mit diesem Button können Sie wählen, wo die Söldner |gruppiert werden sollen.",
 	L"Klicken Sie auf diesen Button, wenn Sie die\nPositionen der Söldner gewählt haben. (|E|i|n|g|a|b|e)",
@@ -853,7 +853,7 @@ const wchar_t *gpStrategicString[] =
 	//Strings used for various popup message boxes. Can be as long as desired.
 
 	L"Das sieht nicht gut aus. Gelände ist unzugänglich. Versuchen Sie es an einer anderen Stelle.",
-	L"Plazieren Sie Ihre Söldner in den markierten Sektor auf der Karte.",
+	L"Platzieren Sie Ihre Söldner in den markierten Sektor auf der Karte.",
 
 	//These entries are for button popup help text for the prebattle interface. All popup help
 	//text supports the use of \n to denote new line. Do not use spaces before or after the \n.
@@ -1202,7 +1202,7 @@ const wchar_t *pExitingSectorHelpText[] =
 	L"Sie kommen sofort zum Kartenbildschirm, wenn Sie das Kästchen aktivieren\nweil die Reise Zeit braucht.",
 
 	//If you attempt to leave a sector when you have multiple squads in a hostile sector.
-	L"Der Sektor ist von Feinden besetzt. Sie können keine Söldner hierlassen.\nRegeln Sie das, bevor Sie neue Sektoren laden.",
+	L"Der Sektor ist von Feinden besetzt. Sie können keine Söldner hier lassen.\nRegeln Sie das, bevor Sie neue Sektoren laden.",
 
 	//Because you only have one squad in the sector, and the "move all" option is checked, the "go to sector" option is locked to on.
 	//The helptext explains why it is locked.
@@ -1222,7 +1222,7 @@ const wchar_t *pExitingSectorHelpText[] =
 
 	//If one or more of your mercs in the selected squad aren't in range of the traversal area, then the "move all" option is disabled,
 	//and this helptext explains why.
-	L"Alle Söldner müssen in der Nähe sein\ndamit der Trupp weiterreisen kann.",
+	L"Alle Söldner müssen in der Nähe sein,\ndamit der Trupp weiterreisen kann.",
 
 	//Standard helptext for single movement. Explains what will happen (splitting the squad)
 	L"Bei aktiviertem Kästchen reist %ls alleine und\nbildet automatisch wieder einen Trupp.",
@@ -1640,8 +1640,8 @@ const wchar_t *pMapErrorString[] =
 	L"Sie haben noch keine Teammitglieder.", 		// you have no members, can't do anything
 	L"Söldner kann nicht gehorchen.",			 		// merc can't comply with your order
 //6-10
-	L"%ls braucht eine Eskorte. Plazieren Sie ihn in einem Trupp mit Eskorte.", // merc can't move unescorted .. for a male
-	L"%ls braucht eine Eskorte. Plazieren Sie sie in einem Trupp mit Eskorte.", // for a female
+	L"%ls braucht eine Eskorte. Platzieren Sie ihn in einem Trupp mit Eskorte.", // merc can't move unescorted .. for a male
+	L"%ls braucht eine Eskorte. Platzieren Sie sie in einem Trupp mit Eskorte.", // for a female
 	L"Söldner ist noch nicht in Arulco!",
 	L"Erst mal Vertrag aushandeln!",
 	L"",
@@ -1691,7 +1691,7 @@ const wchar_t *pMapErrorString[] =
 	L"Ein oder mehrere Söldner des ANDEREN Trupps kann sich gerade nicht bewegen.",
 	L"Fahrzeug zu stark beschädigt!",
 	L"Nur zwei Söldner pro Sektor können Milizen trainieren.",
-	L"Roboter muss von jemandem bedient werden. Beide im selben Trupp plazieren.",
+	L"Roboter muss von jemandem bedient werden. Beide im selben Trupp platzieren.",
 
 };
 
@@ -1815,7 +1815,7 @@ const wchar_t *pHistoryStrings[] =
 {
 	L"",																						// leave this line blank
 	//1-5
-	L"%ls von A.I.M angeheuert.", 										// merc was hired from the aim site
+	L"%ls von A.I.M. angeheuert.", 										// merc was hired from the aim site
 	L"%ls von M.E.R.C. angeheuert.", 									// merc was hired from the aim site
 	L"%ls ist tot.", 															// merc was killed
 	L"Rechnung an M.E.R.C. bezahlt",								// paid outstanding bills at MERC
@@ -2127,8 +2127,8 @@ const wchar_t* const LargeTacticalStr[] =
 {
 	L"Sie sind in diesem Sektor geschlagen worden!",
 	L"Der Feind hat kein Erbarmen mit den Seelen Ihrer Teammitglieder und verschlingt jeden einzelnen.",
-	L"Ihre bewusstlosen Teammitglieder wurden gefangengenommen!",
-	L"Ihre Teammitglieder wurden vom Feind gefangengenommen.",
+	L"Ihre bewusstlosen Teammitglieder wurden gefangen genommen!",
+	L"Ihre Teammitglieder wurden vom Feind gefangen genommen.",
 };
 
 //Insurance Contract.c
@@ -2240,7 +2240,7 @@ const wchar_t *sFloristText[] =
 	// detail of the florist page
 
 	L"Wir arbeiten schnell und effizient",
-	L"Lieferung am darauffolgenden Tag, in fast jedes Land der Welt. Ausnahmen sind möglich. ",
+	L"Lieferung am darauf folgenden Tag, in fast jedes Land der Welt. Ausnahmen sind möglich.",
 	L"Wir haben die garantiert niedrigsten Preise weltweit!",
 	L"Wenn Sie anderswo einen niedrigeren Preis für irgend ein Arrangement sehen, bekommen Sie von uns ein Dutzend Rosen umsonst!",
 	L"Fliegende Flora, Fauna & Blumen seit 1981.",
@@ -2905,7 +2905,7 @@ const wchar_t *zOptionsScreenHelpText[] =
 	L"Schalten Sie diese Option ab, wenn animierter Rauch Ihre Bildwiederholrate verlangsamt.",
 
 	//Blood n Gore
-	L"Diese Option abschalten, wenn Sie kein Blut sehen können. ",
+	L"Diese Option abschalten, wenn Sie kein Blut sehen können.",
 
 	//Never move my mouse
 	L"Wenn Sie diese Option abstellen, wird der Mauszeiger nicht mehr von den Popup-Fenstern verdeckt.",
@@ -2938,7 +2938,7 @@ const wchar_t *zOptionsScreenHelpText[] =
 	L"Wenn diese Funktion aktiviert ist, springt der Cursor automatisch auf eine Tür, sobald eine in der Nähe ist.",
 
 	//glow items
-	L"Angeschaltet bekommen Gegenstände einen pulsierenden Rahmen(|I)",
+	L"Angeschaltet, bekommen Gegenstände einen pulsierenden Rahmen (|I).",
 
 	//toggle tree tops
 	L"ANgeschaltet, werden die Baumkronen gezeigt (|T).",
@@ -2946,7 +2946,7 @@ const wchar_t *zOptionsScreenHelpText[] =
 	//toggle wireframe
 	L"ANgeschaltet, werden Drahtgitter für verborgene Wände gezeigt (|W).",
 
-	L"ANgeschaltet, wird der Bewegungs-Cursor in 3D angezeigt. (|P|o|s|1)",
+	L"ANgeschaltet, wird der Bewegungs-Cursor in 3D angezeigt (|P|o|s|1).",
 
 };
 
@@ -3362,7 +3362,7 @@ const wchar_t *gzLateLocalizedString[] =
 	//22-24 plural versions
 	L"%d grüne Milizen wurden zu Elitemilizen befördert.",
 	L"%d grüne Milizen wurden zu regulären Milizen befördert.",
-	L"%d reguläre Milizen wurde zu Elitemilizen befördert.",
+	L"%d reguläre Milizen wurden zu Elitemilizen befördert.",
 
 	//25
 	L"Schalter",
@@ -3402,7 +3402,7 @@ const wchar_t *gzLateLocalizedString[] =
 	//40-43
 	//%s is the name of merc.
 	L"%ls hat keinen Erste-Hilfe-Kasten mehr!",
-	L"%ls hat nicht das geringste Talent jemanden zu verarzten!",
+	L"%ls hat nicht das geringste Talent, jemanden zu verarzten!",
 	L"%ls hat keinen Werkzeugkasten mehr!",
 	L"%ls ist absolut unfähig dazu, irgend etwas zu reparieren!",
 
@@ -3428,7 +3428,7 @@ const wchar_t *gzLateLocalizedString[] =
 	L"%ls hat die Ladehemmung von %lss %ls behoben",
 
 	//55
-	L"Die Zeit kann nicht komprimiert werden während das Sektorinventar eingesehen wird.",
+	L"Die Zeit kann nicht komprimiert werden, während das Sektorinventar eingesehen wird.",
 
 	//L"Im Sektor sind Feinde entdeckt worden",		//STR_DETECTED_SIMULTANEOUS_ARRIVAL
 
