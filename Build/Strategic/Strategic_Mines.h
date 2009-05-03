@@ -84,7 +84,6 @@ struct MINE_STATUS_TYPE
 
 	BOOLEAN  fQueenRetookProducingMine;	// whether or not queen ever retook a mine after a player had produced from it
 	BOOLEAN  fAttackedHeadMiner;				// player has attacked the head miner, shutting down mine & decreasing loyalty
-	UINT16	 usValidDayCreaturesCanInfest; //Creatures will be permitted to spread if the game day is greater than this value.
 	UINT32   uiTimePlayerProductionStarted;		// time in minutes when 'fMineHasProducedForPlayer' was first set
 };
 

@@ -244,10 +244,6 @@ void HourlyMinesUpdate(void)
 					IssueHeadMinerQuote( ubMineIndex, HEAD_MINER_STRATEGIC_QUOTE_CREATURES_GONE );
 				}
 
-				//Force the creatures to avoid the mine for a period of time.  This gives the
-				//player a chance to rest and decide how to deal with the problem.
-				ForceCreaturesToAvoidMineTemporarily( ubMineIndex );
-
 				// put mine back in service
 				RestartMineProduction( ubMineIndex );
 			}
@@ -755,7 +751,7 @@ void SaveMineStatusToSaveGameFile(HWFILE const f)
 		INJ_BOOL(d, i->fMineHasProducedForPlayer)
 		INJ_BOOL(d, i->fQueenRetookProducingMine)
 		INJ_BOOL(d, i->fAttackedHeadMiner)
-		INJ_U16( d, i->usValidDayCreaturesCanInfest)
+		INJ_SKIP(d, 2)
 		INJ_U32( d, i->uiTimePlayerProductionStarted)
 		INJ_SKIP(d, 12)
 		Assert(d == endof(data));
@@ -788,7 +784,7 @@ void LoadMineStatusFromSavedGameFile(HWFILE const f)
 		EXTR_BOOL(d, i->fMineHasProducedForPlayer)
 		EXTR_BOOL(d, i->fQueenRetookProducingMine)
 		EXTR_BOOL(d, i->fAttackedHeadMiner)
-		EXTR_U16( d, i->usValidDayCreaturesCanInfest)
+		EXTR_SKIP(d, 2)
 		EXTR_U32( d, i->uiTimePlayerProductionStarted)
 		EXTR_SKIP(d, 12)
 		Assert(d == endof(data));

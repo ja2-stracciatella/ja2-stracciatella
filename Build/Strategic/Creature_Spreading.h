@@ -19,8 +19,6 @@ void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest );
 
 void CheckConditionsForTriggeringCreatureQuest( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
-void ForceCreaturesToAvoidMineTemporarily( UINT8 ubMineIndex );
-
 extern BOOLEAN gfUseCreatureMusic;
 
 BOOLEAN MineClearOfMonsters( UINT8 ubMineIndex );

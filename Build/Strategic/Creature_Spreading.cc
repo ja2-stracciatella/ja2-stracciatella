@@ -1401,11 +1401,6 @@ void LoadCreatureDirectives(HWFILE const hFile, UINT32 const uiSavedGameVersion)
 }
 
 
-void ForceCreaturesToAvoidMineTemporarily( UINT8 ubMineIndex )
-{
-	gMineStatus[ MINE_GRUMM ].usValidDayCreaturesCanInfest = (UINT16)(GetWorldDay() + 2);
-}
-
 BOOLEAN PlayerGroupIsInACreatureInfestedMine()
 {
 	CREATURE_DIRECTIVE *curr;
