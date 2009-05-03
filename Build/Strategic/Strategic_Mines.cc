@@ -680,22 +680,14 @@ INT32 CalcMaxPlayerIncomeFromMines( void )
 }
 
 
-// get index of this mine, return -1 if no mine found
-INT8 GetMineIndexForSector( INT16 sX, INT16 sY )
+INT8 GetMineIndexForSector(INT16 const sX, INT16 const sY)
 {
-	UINT8 ubMineIndex = 0;
-
-
-	for( ubMineIndex = 0; ubMineIndex < MAX_NUMBER_OF_MINES; ubMineIndex++ )
+	for (UINT8 i = 0; i != lengthof(gMineLocation); ++i)
 	{
-		if( ( gMineLocation[ ubMineIndex ].sSectorX == sX ) && ( gMineLocation[ ubMineIndex ].sSectorY == sY ) )
-		{
-			// yep mine here
-			return( ubMineIndex );
-		}
+		MINE_LOCATION_TYPE const& m = gMineLocation[i];
+		if (m.sSectorX == sX && m.sSectorY == sY) return i;
 	}
-
-	return( -1 );
+	return -1;
 }
 
 
