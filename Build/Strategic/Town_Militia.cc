@@ -1095,70 +1095,39 @@ BOOLEAN MilitiaTrainingAllowedInTown( INT8 bTownId )
 	}
 }
 
-void BuildMilitiaPromotionsString( wchar_t *str, size_t Length)
+
+static size_t PromoteMilitia(wchar_t* const str, size_t const length, size_t n, INT8 const count, wchar_t const* const singular, wchar_t const* const plural)
 {
-	wchar_t pStr[256];
-	BOOLEAN fAddSpace = FALSE;
-	swprintf( str, Length, L"" );
-
-	if( !gbMilitiaPromotions )
+	if (count > 0)
 	{
-		return;
-	}
-	if( gbGreenToElitePromotions > 1 )
-	{
-		swprintf( pStr, lengthof(pStr), gzLateLocalizedString[22], gbGreenToElitePromotions );
-		wcscat( str, pStr );
-		fAddSpace = TRUE;
-	}
-	else if( gbGreenToElitePromotions == 1 )
-	{
-		wcscat( str, gzLateLocalizedString[29] );
-		fAddSpace = TRUE;
-	}
-
-	if( gbGreenToRegPromotions > 1 )
-	{
-		if( fAddSpace )
+		if (n != 0) n += swprintf(str + n, length - n, L" ");
+		if (count == 1)
 		{
-			wcscat( str, L" " );
+			n += swprintf(str + n, length - n, singular);
 		}
-		swprintf( pStr, lengthof(pStr), gzLateLocalizedString[23], gbGreenToRegPromotions );
-		wcscat( str, pStr );
-		fAddSpace = TRUE;
-	}
-	else if( gbGreenToRegPromotions == 1 )
-	{
-		if( fAddSpace )
+		else
 		{
-			wcscat( str, L" " );
+			n += swprintf(str + n, length - n, plural, count);
 		}
-		wcscat( str, gzLateLocalizedString[30] );
-		fAddSpace = TRUE;
 	}
+	return n;
+}
 
-	if( gbRegToElitePromotions > 1 )
-	{
-		if( fAddSpace )
-		{
-			wcscat( str, L" " );
-		}
-		swprintf( pStr, lengthof(pStr), gzLateLocalizedString[24], gbRegToElitePromotions );
-		wcscat( str, pStr );
-	}
-	else if( gbRegToElitePromotions == 1 )
-	{
-		if( fAddSpace )
-		{
-			wcscat( str, L" " );
-		}
-		wcscat( str, gzLateLocalizedString[31] );
-		fAddSpace = TRUE;
-	}
 
-	//Clear the fields
+void BuildMilitiaPromotionsString(wchar_t* const str, size_t const length)
+{
+	str[0] = L'\0';
+
+	if (gbMilitiaPromotions == 0) return;
+
+	size_t n = 0;
+	n = PromoteMilitia(str, length, n, gbGreenToElitePromotions, gzLateLocalizedString[29], gzLateLocalizedString[22]);
+	n = PromoteMilitia(str, length, n, gbGreenToRegPromotions,   gzLateLocalizedString[30], gzLateLocalizedString[23]);
+	n = PromoteMilitia(str, length, n, gbRegToElitePromotions,   gzLateLocalizedString[31], gzLateLocalizedString[24]);
+
+	// Clear the fields
 	gbGreenToElitePromotions = 0;
-	gbGreenToRegPromotions = 0;
-	gbRegToElitePromotions = 0;
-	gbMilitiaPromotions = 0;
+	gbGreenToRegPromotions   = 0;
+	gbRegToElitePromotions   = 0;
+	gbMilitiaPromotions      = 0;
 }
