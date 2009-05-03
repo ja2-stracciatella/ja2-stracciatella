@@ -1086,8 +1086,13 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 struct PastMercInfo
 {
-	MERCPROFILESTRUCT* profile;
-	INT8               state;
+	PastMercInfo(MERCPROFILESTRUCT const* const profile_, INT8 const state_) :
+		profile(profile_),
+		state(state_)
+	{}
+
+	MERCPROFILESTRUCT const* profile;
+	INT8                     state;
 };
 
 
@@ -1928,33 +1933,24 @@ static PastMercInfo GetSelectedPastMercInfo(void)
 	for (const INT16* i = l->ubDeadCharactersList; i != endof(l->ubDeadCharactersList); ++i)
 	{
 		if (*i == -1 || slot-- != 0) continue;
-		return (PastMercInfo){ &GetProfile(*i), DEPARTED_DEAD };
+		return PastMercInfo(&GetProfile(*i), DEPARTED_DEAD);
 	}
 	for (const INT16* i = l->ubLeftCharactersList; i != endof(l->ubLeftCharactersList); ++i)
 	{
 		if (*i == -1 || slot-- != 0) continue;
-		return (PastMercInfo){ &GetProfile(*i), DEPARTED_FIRED };
+		return PastMercInfo(&GetProfile(*i), DEPARTED_FIRED);
 	}
 	for (const INT16* i = l->ubOtherCharactersList; i != endof(l->ubOtherCharactersList); ++i)
 	{
 		if (*i == -1 || slot-- != 0) continue;
-		MERCPROFILESTRUCT& p = GetProfile(*i);
-		INT state;
-		if (p.ubMiscFlags2 & PROFILE_MISC_FLAG2_MARRIED_TO_HICKS)
-		{
-			state = DEPARTED_MARRIED;
-		}
-		else if (*i < BIFF)
-		{
-			state = DEPARTED_CONTRACT_EXPIRED;
-		}
-		else
-		{
-			state = DEPARTED_QUIT;
-		}
-		return (PastMercInfo){ &p, state };
+		MERCPROFILESTRUCT& p     = GetProfile(*i);
+		INT const          state =
+			p.ubMiscFlags2 & PROFILE_MISC_FLAG2_MARRIED_TO_HICKS ? DEPARTED_MARRIED          :
+			*i < BIFF                                            ? DEPARTED_CONTRACT_EXPIRED :
+			DEPARTED_QUIT;
+		return PastMercInfo(&p, state);
 	}
-	return (PastMercInfo){ NULL, -1 };
+	return PastMercInfo(0, -1);
 }
 
 
