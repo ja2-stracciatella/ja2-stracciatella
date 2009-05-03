@@ -3596,7 +3596,7 @@ static void BlitMineText(INT16 sMapX, INT16 sMapY)
 	wchar_t     buf[32];
 
 	// display associated town name, followed by "mine"
-	swprintf(buf, lengthof(buf), L"%ls %ls", pTownNames[GetTownAssociatedWithMine(GetMineIndexForSector(sMapX, sMapY))],  pwMineStrings[0]);
+	swprintf(buf, lengthof(buf), L"%ls %ls", pTownNames[GetTownAssociatedWithMine(mine_idx)], pwMineStrings[0]);
 	PrintStringCenteredBoxed(x, y, buf);
 	y += h;
 
