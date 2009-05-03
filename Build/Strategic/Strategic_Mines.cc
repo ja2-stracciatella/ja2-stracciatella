@@ -680,12 +680,12 @@ INT32 CalcMaxPlayerIncomeFromMines( void )
 }
 
 
-INT8 GetMineIndexForSector(INT16 const sX, INT16 const sY)
+INT8 GetMineIndexForSector(INT16 const x, INT16 const y)
 {
-	for (UINT8 i = 0; i != lengthof(gMineLocation); ++i)
+	for (size_t i = 0; i != lengthof(gMineLocation); ++i)
 	{
 		MINE_LOCATION_TYPE const& m = gMineLocation[i];
-		if (m.sSectorX == sX && m.sSectorY == sY) return i;
+		if (m.sSectorX == x && m.sSectorY == y) return i;
 	}
 	return -1;
 }
@@ -701,23 +701,15 @@ void GetMineSector(const UINT8 ubMineIndex, UINT16* const psX, UINT16* const psY
 
 
 // get the sector value for the mine associated with this town
-INT16 GetMineSectorForTown( INT8 bTownId )
+INT16 GetMineSectorForTown(INT8 const town_id)
 {
-	INT8 ubMineIndex;
-	INT16 sMineSector = -1;
-
-	// given town id, send sector value of mine, a 0 means no mine for this town
-	for( ubMineIndex = 0; ubMineIndex < MAX_NUMBER_OF_MINES; ubMineIndex++ )
+	for (size_t i = 0; i != lengthof(gMineLocation); ++i)
 	{
-		if( gMineLocation[ ubMineIndex ].bAssociatedTown == bTownId )
-		{
-			sMineSector = gMineLocation[ ubMineIndex ].sSectorX + ( gMineLocation[ ubMineIndex ].sSectorY * MAP_WORLD_X );
-			break;
-		}
+		MINE_LOCATION_TYPE const& m = gMineLocation[i];
+		if (m.bAssociatedTown != town_id) continue;
+		return CALCULATE_STRATEGIC_INDEX(m.sSectorX, m.sSectorY);
 	}
-
-	// -1 returned if the town doesn't have a mine
-	return( sMineSector );
+	return -1;
 }
 
 
