@@ -29,7 +29,11 @@ void SetFontForeground(UINT8 ubForeground);
 void SetFontBackground(UINT8 ubBackground);
 void SetFontShadow(UINT8 ubBackground);
 
-extern UINT32		 gprintf(INT32 x, INT32 y, const wchar_t *pFontString, ...);
+/* Print to the currently selected destination buffer, at the X/Y coordinates
+ * specified, using the currently selected font. Other than the X/Y coordinates,
+ * the parameters are identical to printf. The resulting string may be no longer
+ * than 512 word-characters. */
+void gprintf(INT32 x, INT32 y, wchar_t const* fmt, ...);
 
 UINT32 MPrintChar(INT32 x, INT32 y, wchar_t);
 void   MPrintBuffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, wchar_t const* str);

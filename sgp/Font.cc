@@ -254,34 +254,24 @@ void FindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHei
 }
 
 
-/* Prints to the currently selected destination buffer, at the X/Y coordinates
- * specified, using the currently selected font. Other than the X/Y coordinates,
- * the parameters are identical to printf. The resulting string may be no longer
- * than 512 word-characters. */
-UINT32 gprintf(INT32 x, INT32 y, const wchar_t* pFontString, ...)
+void gprintf(INT32 x, INT32 const y, wchar_t const* fmt, ...)
 {
-	va_list argptr;
-	va_start(argptr, pFontString);
+	va_list ap;
+	va_start(ap, fmt);
 	wchar_t	string[512];
-	vswprintf(string, lengthof(string), pFontString, argptr);
-	va_end(argptr);
-
-	INT32 destx = x;
-	INT32 desty = y;
+	vswprintf(string, lengthof(string), fmt, ap);
+	va_end(ap);
 
 	SGPVSurface::Lock l(FontDestBuffer);
-	UINT16* const pDestBuf         = l.Buffer<UINT16>();
-	UINT32  const uiDestPitchBYTES = l.Pitch();
-
-	Font const font = FontDefault;
-	for (const wchar_t* curletter = string; *curletter != L'\0'; curletter++)
+	UINT16* const buf   = l.Buffer<UINT16>();
+	UINT32  const pitch = l.Pitch();
+	Font    const font  = FontDefault;
+	for (wchar_t const* i = string; *i != L'\0'; ++i)
 	{
-		GlyphIdx const glyph = GetGlyphIndex(*curletter);
-		Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, font, destx, desty, glyph, &FontDestRegion);
-		destx += GetWidth(font, glyph);
+		GlyphIdx const glyph = GetGlyphIndex(*i);
+		Blt8BPPDataTo16BPPBufferTransparentClip(buf, pitch, font, x, y, glyph, &FontDestRegion);
+		x += GetWidth(font, glyph);
 	}
-
-	return 0;
 }
 
 
