@@ -171,8 +171,8 @@ void PlayerAttackedHeadMiner( UINT8 ubMinerProfileId );
 
 BOOLEAN HasHisMineBeenProducingForPlayerForSomeTime( UINT8 ubMinerProfileId );
 
-// given sector value, get mine id value
-INT8 GetIdOfMineForSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
+// Get the id of the mine for this sector x,y,z; -1 is invalid
+INT8 GetIdOfMineForSector(INT16 x, INT16 y, INT8 z);
 
 // use this to determine whether or not to place miners into a underground mine level
 BOOLEAN AreThereMinersInsideThisMine( UINT8 ubMineIndex );

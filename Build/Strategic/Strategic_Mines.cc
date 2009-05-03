@@ -1094,78 +1094,40 @@ BOOLEAN HasHisMineBeenProducingForPlayerForSomeTime( UINT8 ubMinerProfileId )
 	return( FALSE );
 }
 
-// gte the id of the mine for this sector x,y,z...-1 is invalid
-INT8 GetIdOfMineForSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+
+INT8 GetIdOfMineForSector(INT16 const x, INT16 const y, INT8 const z)
 {
-	INT8 bMineIndex = -1;
-	INT16 sSectorValue;
-
-
-	// are we even on the right level?
-	if( ( bSectorZ < 0 ) && ( bSectorZ > 2 ) )
+	switch (z)
 	{
-		// nope
-		return( -1 );
-	}
+		case 0:
+			return GetMineIndexForSector(x, y);
 
-	// now get the sectorvalue
-	sSectorValue = SECTOR( sSectorX, sSectorY );
+		case 1:
+			switch (SECTOR(x, y))
+			{
+				case SEC_H3:
+				case SEC_I3:  return MINE_GRUMM;
+				case SEC_H8:
+				case SEC_H9:  return MINE_CAMBRIA;
+				case SEC_I14:
+				case SEC_J14: return MINE_ALMA;
+				case SEC_D13:
+				case SEC_E13: return MINE_DRASSEN;
+				case SEC_B2:  return MINE_CHITZENA;
+				case SEC_D4:
+				case SEC_D5:  return MINE_SAN_MONA;
+			}
+			break;
 
-	// support surface
-	if( bSectorZ == 0 )
-	{
-		bMineIndex = GetMineIndexForSector( sSectorX, sSectorY );
+		case 2:
+			switch (SECTOR(x, y))
+			{
+				case SEC_I3:
+				case SEC_H3:
+				case SEC_H4: return MINE_GRUMM;
+			}
 	}
-	// handle for first level
-	else if( bSectorZ == 1 )
-	{
-		switch( sSectorValue )
-		{
-			// grumm
-			case( SEC_H3 ):
-			case( SEC_I3 ):
-				bMineIndex = MINE_GRUMM;
-			break;
-			// cambria
-			case( SEC_H8 ):
-			case( SEC_H9 ):
-				bMineIndex = MINE_CAMBRIA;
-			break;
-			// alma
-			case( SEC_I14 ):
-			case( SEC_J14 ):
-				bMineIndex = MINE_ALMA;
-			break;
-			// drassen
-			case( SEC_D13 ):
-			case( SEC_E13 ):
-				bMineIndex = MINE_DRASSEN;
-			break;
-			// chitzena
-			case( SEC_B2 ):
-				bMineIndex = MINE_CHITZENA;
-			break;
-			// san mona
-			case( SEC_D4 ):
-			case( SEC_D5 ):
-				bMineIndex = MINE_SAN_MONA;
-			break;
-		}
-	}
-	else
-	{
-		// level 2
-		switch( sSectorValue )
-		{
-			case( SEC_I3 ):
-			case( SEC_H3 ):
-			case( SEC_H4 ):
-				bMineIndex = MINE_GRUMM;
-			break;
-		}
-	}
-
-	return( bMineIndex );
+	return -1;
 }
 
 
