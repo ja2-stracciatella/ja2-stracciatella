@@ -2712,7 +2712,7 @@ const wchar_t* AimFiText[] =
 {
 	// displays the way in which the mercs were sorted
 
-	L"Prezzo ",
+	L"Prezzo",
 	L"Esperienza",
 	L"Mira",
 	L"Pronto socc.",
