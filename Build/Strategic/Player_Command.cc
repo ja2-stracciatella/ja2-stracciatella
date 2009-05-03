@@ -127,13 +127,11 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 			}
 
 			// if it's a mine that's still worth something
-			if ( IsThereAMineInThisSector( sMapX, sMapY ) )
+			INT8 const mine_id = GetMineIndexForSector(sMapX, sMapY);
+			if (mine_id != -1 && GetTotalLeftInMine(mine_id) > 0)
 			{
-				if ( GetTotalLeftInMine( GetMineIndexForSector( sMapX, sMapY ) ) > 0)
-				{
-					HandleMoraleEvent( NULL, MORALE_MINE_LIBERATED, sMapX, sMapY, bMapZ );
-					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_GAIN_MINE, sMapX, sMapY, bMapZ );
-				}
+				HandleMoraleEvent(NULL, MORALE_MINE_LIBERATED, sMapX, sMapY, bMapZ);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_MINE, sMapX, sMapY, bMapZ);
 			}
 
 			// if it's a SAM site sector
@@ -263,15 +261,12 @@ BOOLEAN SetThisSectorAsEnemyControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BO
 			}
 
 			// if the sector has a mine which is still worth something
-			if ( IsThereAMineInThisSector( sMapX, sMapY ) )
+			INT8 const mine_id = GetMineIndexForSector(sMapX, sMapY);
+			if (mine_id != -1 && GetTotalLeftInMine(mine_id) > 0)
 			{
-				// if it isn't empty
-				if ( GetTotalLeftInMine( GetMineIndexForSector( sMapX, sMapY ) ) > 0)
-				{
-					QueenHasRegainedMineSector(GetMineIndexForSector (sMapX, sMapY));
-					HandleMoraleEvent( NULL, MORALE_MINE_LOST, sMapX, sMapY, bMapZ );
-					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_LOSE_MINE, sMapX, sMapY, bMapZ );
-				}
+				QueenHasRegainedMineSector(mine_id);
+				HandleMoraleEvent(NULL, MORALE_MINE_LOST, sMapX, sMapY, bMapZ);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_MINE, sMapX, sMapY, bMapZ);
 			}
 
 			// if it's a SAM site sector

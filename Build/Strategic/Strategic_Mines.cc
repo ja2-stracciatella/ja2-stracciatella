@@ -713,22 +713,6 @@ INT16 GetMineSectorForTown(INT8 const town_id)
 }
 
 
-BOOLEAN IsThereAMineInThisSector( INT16 sX, INT16 sY )
-{
-	UINT8 ubMineIndex;
-
-	// run through the list...if a mine here, great
-	for( ubMineIndex = 0; ubMineIndex < MAX_NUMBER_OF_MINES; ubMineIndex++ )
-	{
-		if( ( gMineLocation[ ubMineIndex ].sSectorX == sX ) && ( gMineLocation[ ubMineIndex ].sSectorY == sY ) )
-		{
-			return( TRUE );
-		}
-	}
-	return( FALSE );
-}
-
-
 BOOLEAN PlayerControlsMine(INT8 bMineIndex)
 {
 	// a value of TRUE is from the enemy's point of view

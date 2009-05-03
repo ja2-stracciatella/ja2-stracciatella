@@ -95,7 +95,7 @@ void CreateDestroyTownInfoBox(void)
 		if (bCurrentTownMineSectorZ == 0)
 		{
 			// only show the mine info when mines button is selected, otherwise we need to see the sector's regular town info
-			if (fShowMineFlag && IsThereAMineInThisSector(bCurrentTownMineSectorX, bCurrentTownMineSectorY))
+			if (fShowMineFlag && GetMineIndexForSector(bCurrentTownMineSectorX, bCurrentTownMineSectorY) != -1)
 			{
 				AddTextToMineBox(box);
 			}

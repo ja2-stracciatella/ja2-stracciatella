@@ -4044,8 +4044,6 @@ BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector( INT16 sSectorX, INT1
 	INT32 iValue = 0;
 	INT8 bTownId = 0;
 	INT16 sSector = 0;
-	INT8 bMineIndex;
-
 
 	// are we below ground?
 	if( bSectorZ != 0 )
@@ -4071,10 +4069,9 @@ BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector( INT16 sSectorX, INT1
 
 
 	// check if a mine is here
-	if( IsThereAMineInThisSector( sSectorX, sSectorY ) )
+	INT8 const bMineIndex = GetMineIndexForSector( sSectorX, sSectorY );
+	if (bMineIndex != -1)
 	{
-		bMineIndex = GetMineIndexForSector( sSectorX, sSectorY );
-
 		// if it was producing for us
 		if ( ( GetMaxDailyRemovalFromMine( bMineIndex ) > 0 ) && SpokenToHeadMiner( bMineIndex ) )
 		{

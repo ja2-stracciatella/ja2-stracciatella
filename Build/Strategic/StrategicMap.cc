@@ -1111,7 +1111,7 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 {
 	UINT8		ubRandomMiner[RANDOM_HEAD_MINERS] = { 106, 156, 157, 158 };
 	UINT8		ubMiner, ubMinersPlaced;
-	UINT8		ubMine, ubThisMine;
+	UINT8		ubMine;
 
 	if ( CheckFact( FACT_ALL_TERRORISTS_KILLED, 0 ) )
 	{
@@ -1124,14 +1124,12 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 	}
 
 	// are we in a mine sector, on the surface?
-	if ( IsThereAMineInThisSector( sNewSectorX, sNewSectorY ) && ( bNewSectorZ == 0 ))
+	if (bNewSectorZ == 0)
 	{
-		if (!CheckFact(FACT_MINERS_PLACED, 0))
+		INT8 const ubThisMine = GetMineIndexForSector(sNewSectorX, sNewSectorY);
+		if (ubThisMine != -1 && !CheckFact(FACT_MINERS_PLACED, 0))
 		{
 			// SET HEAD MINER LOCATIONS
-
-			ubThisMine = GetMineIndexForSector( sNewSectorX, sNewSectorY );
-
 			if (ubThisMine != MINE_SAN_MONA) // San Mona is abandoned
 			{
 				ubMinersPlaced = 0;

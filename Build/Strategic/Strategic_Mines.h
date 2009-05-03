@@ -129,9 +129,6 @@ INT8 GetMineIndexForSector(INT16 x, INT16 y);
 // get the sector value for the mine associated with this town
 INT16 GetMineSectorForTown(INT8 town_id);
 
-// is there a mine here?
-BOOLEAN IsThereAMineInThisSector( INT16 sX, INT16 sY );
-
 //Save the mine status to the save game file
 void SaveMineStatusToSaveGameFile(HWFILE);
 
