@@ -17,7 +17,7 @@ struct AIR_RAID_DEFINITION
 	UINT8		ubNumMinsFromCurrentTime;
 	UINT8		ubFiller[8]; // XXX HACK000B
 };
-CASSERT(sizeof(AIR_RAID_DEFINITION) == 24);
+CASSERT(sizeof(AIR_RAID_DEFINITION) == 24)
 
 
 extern BOOLEAN gfInAirRaid;

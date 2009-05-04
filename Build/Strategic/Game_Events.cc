@@ -94,7 +94,7 @@ static wchar_t const* const gEventName[] =
 	L"MERC Merc went up level email delay",
 	L".",
 };
-CASSERT(lengthof(gEventName) == NUMBER_OF_EVENT_TYPES);
+CASSERT(lengthof(gEventName) == NUMBER_OF_EVENT_TYPES)
 
 #endif
 

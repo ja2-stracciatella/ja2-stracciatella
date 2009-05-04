@@ -15,7 +15,7 @@ const char g_version_label[] =
 #endif
 
 char const g_version_number[16] = "Build 04.12.02";
-CASSERT(lengthof(g_version_number) == 16);
+CASSERT(lengthof(g_version_number) == 16)
 
 
 //

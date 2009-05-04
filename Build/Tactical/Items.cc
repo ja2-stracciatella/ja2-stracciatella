@@ -450,7 +450,7 @@ const INVTYPE Item[] =
 	{	IC_NONE,				0,			INVALIDCURS,	0,		0,		0,	0,		   0,	0,		/* nothing! */				0,		0,			0},
 	{	IC_NONE,				0,			INVALIDCURS,	0,		0,		0,	0,		   0,	0,		/* nothing! */				0,		0,			0},
 };
-CASSERT(lengthof(Item) == MAXITEMS);
+CASSERT(lengthof(Item) == MAXITEMS)
 
 
 struct AttachmentInfoStruct
