@@ -873,7 +873,7 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 	BOOLEAN								fExplodeDamageReturn = FALSE;
 
 	DB_STRUCTURE_TILE** ppTile          = NULL;    // XXX HACK000E
-	INT16               sBaseGridNo     = NO_TILE; // XXX HACK000E
+	GridNo              sBaseGridNo     = NOWHERE; // XXX HACK000E
 	UINT8               ubNumberOfTiles = 0;       // XXX HACK000E
 
 	// Based on distance away, damage any struct at this gridno

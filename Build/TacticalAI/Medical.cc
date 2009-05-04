@@ -208,8 +208,8 @@ static INT8 FindBestPatient(SOLDIERTYPE* pSoldier, BOOLEAN* pfDoClimb)
 	INT16						sClimbGridNo, sBestClimbGridNo = NOWHERE, sShortestClimbPath = 1000;
 	BOOLEAN					fClimbingNecessary;
 
-	INT16 sBestAdjGridNo     = NO_TILE; // XXX HACK000E
-	INT16 sBestPatientGridNo = NO_TILE; // XXX HACK000E
+	GridNo sBestAdjGridNo     = NOWHERE; // XXX HACK000E
+	GridNo sBestPatientGridNo = NOWHERE; // XXX HACK000E
 
 	gubGlobalPathFlags = PATH_THROUGH_PEOPLE;
 
