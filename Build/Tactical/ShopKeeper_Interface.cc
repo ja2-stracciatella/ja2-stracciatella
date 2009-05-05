@@ -3592,6 +3592,19 @@ static void MovePlayerOfferedItemsOfValueToArmsDealersInventory(void)
 }
 
 
+static SOLDIERTYPE* GetMovingItemOwner()
+{
+	ProfileID const owner_pid = gMoveingItem.ubIdOfMercWhoOwnsTheItem;
+#if 0 /* XXX -1 */
+	if (owner_pid == -1) return gpSMCurrentMerc;
+#else
+	if (owner_pid == (UINT8)-1) return gpSMCurrentMerc;
+#endif
+	SOLDIERTYPE* const owner = FindSoldierByProfileIDOnPlayerTeam(owner_pid);
+	return owner ? owner : gpSMCurrentMerc;
+}
+
+
 static void DisableAllDealersInventorySlots(void);
 static void DisableAllDealersOfferSlots(void);
 
@@ -3632,15 +3645,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			Rect.iRight = SKI_ITEM_MOVEMENT_AREA_X + SKI_ITEM_MOVEMENT_AREA_WIDTH;
 			Rect.iBottom = SKI_ITEM_MOVEMENT_AREA_Y + SKI_ITEM_MOVEMENT_AREA_HEIGHT;
 
-			ProfileID    const owner_pid = gMoveingItem.ubIdOfMercWhoOwnsTheItem;
-			SOLDIERTYPE* const owner     =
-#if 0 /* XXX -1 */
-				owner_pid == -1                               ? gpSMCurrentMerc :
-#else
-				owner_pid == (UINT8)-1                        ? gpSMCurrentMerc :
-#endif
-				FindSoldierByProfileIDOnPlayerTeam(owner_pid) ?:
-				gpSMCurrentMerc;
+			SOLDIERTYPE* const owner = GetMovingItemOwner();
 			SetItemPointer(&gMoveingItem.ItemObject, owner);
 			break;
 		}
@@ -3676,15 +3681,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			Rect.iRight = SKI_ITEM_MOVEMENT_AREA_X + SKI_ITEM_MOVEMENT_AREA_WIDTH;
 			Rect.iBottom = SKI_ITEM_MOVEMENT_AREA_Y + SKI_ITEM_MOVEMENT_AREA_HEIGHT;
 
-			ProfileID    const owner_pid = gMoveingItem.ubIdOfMercWhoOwnsTheItem;
-			SOLDIERTYPE* const owner     =
-#if 0 /* XXX -1 */
-				owner_pid == -1                               ? gpSMCurrentMerc :
-#else
-				owner_pid == (UINT8)-1                        ? gpSMCurrentMerc :
-#endif
-				FindSoldierByProfileIDOnPlayerTeam(owner_pid) ?:
-				gpSMCurrentMerc;
+			SOLDIERTYPE* const owner = GetMovingItemOwner();
 			SetItemPointer(&gMoveingItem.ItemObject, owner);
 			break;
 		}
