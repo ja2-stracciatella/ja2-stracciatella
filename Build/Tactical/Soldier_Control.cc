@@ -1031,15 +1031,11 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 				}
 				else
 				{
-					// ONLY DO FOR EVERYONE BUT PLANNING GUYS
-					if ( pSoldier->ubID < MAX_NUM_SOLDIERS )
-					{
-						// Set our next moving animation to be pending, after
-						pSoldier->usPendingAnimation = usNewState;
-						// Set new state to be animation to move to new stance
-						ChangeSoldierStance(pSoldier, gAnimControl[usNewState].ubHeight);
-						return( TRUE );
-					}
+					// Set our next moving animation to be pending, after
+					pSoldier->usPendingAnimation = usNewState;
+					// Set new state to be animation to move to new stance
+					ChangeSoldierStance(pSoldier, gAnimControl[usNewState].ubHeight);
+					return( TRUE );
 				}
 			}
 		}
@@ -1439,277 +1435,272 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 		pSoldier->bReverse = FALSE;
 	}
 
-	// ONLY DO FOR EVERYONE BUT PLANNING GUYS
-	if ( pSoldier->ubID < MAX_NUM_SOLDIERS )
+	// Do special things based on new state
+	switch( usNewState )
 	{
+		case STANDING:
 
-		// Do special things based on new state
-		switch( usNewState )
-		{
-			case STANDING:
+			// Update desired height
+			pSoldier->ubDesiredHeight		 = ANIM_STAND;
+			break;
 
-				// Update desired height
-				pSoldier->ubDesiredHeight		 = ANIM_STAND;
-				break;
+		case CROUCHING:
 
-			case CROUCHING:
+			// Update desired height
+			pSoldier->ubDesiredHeight		 = ANIM_CROUCH;
+			break;
 
-				// Update desired height
-				pSoldier->ubDesiredHeight		 = ANIM_CROUCH;
-				break;
+		case PRONE:
 
-			case PRONE:
+			// Update desired height
+			pSoldier->ubDesiredHeight		 = ANIM_PRONE;
+			break;
 
-				// Update desired height
-				pSoldier->ubDesiredHeight		 = ANIM_PRONE;
-				break;
+		case READY_RIFLE_STAND:
+		case READY_RIFLE_PRONE:
+		case READY_RIFLE_CROUCH:
+		case READY_DUAL_STAND:
+		case READY_DUAL_CROUCH:
+		case READY_DUAL_PRONE:
 
-			case READY_RIFLE_STAND:
-			case READY_RIFLE_PRONE:
-			case READY_RIFLE_CROUCH:
-			case READY_DUAL_STAND:
-			case READY_DUAL_CROUCH:
-			case READY_DUAL_PRONE:
+			// OK, get points to ready weapon....
+			if ( !pSoldier->fDontChargeReadyAPs )
+			{
+				sAPCost = GetAPsToReadyWeapon( pSoldier, usNewState );
+				DeductPoints( pSoldier, sAPCost, sBPCost );
+			}
+			else
+			{
+				pSoldier->fDontChargeReadyAPs = FALSE;
+			}
+			break;
 
-				// OK, get points to ready weapon....
-				if ( !pSoldier->fDontChargeReadyAPs )
+		case WALKING:
+
+			pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
+			pSoldier->ubPendingActionAnimCount = 0;
+			break;
+
+		case SWATTING:
+
+			pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
+			pSoldier->ubPendingActionAnimCount = 0;
+			break;
+
+		case CRAWLING:
+
+			// Turn off flag...
+			pSoldier->fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
+			pSoldier->ubPendingActionAnimCount = 0;
+			pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
+			break;
+
+		case RUNNING:
+
+			// Only if our previous is not running
+			if ( pSoldier->usAnimState != RUNNING )
+			{
+				sAPCost = AP_START_RUN_COST;
+				DeductPoints( pSoldier, sAPCost, sBPCost );
+			}
+			// Set pending action count to 0
+			pSoldier->ubPendingActionAnimCount = 0;
+			pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
+			break;
+
+		case ADULTMONSTER_WALKING:
+			pSoldier->ubPendingActionAnimCount = 0;
+			break;
+
+		case ROBOT_WALK:
+			pSoldier->ubPendingActionAnimCount = 0;
+			break;
+
+		case KNEEL_UP:
+		case KNEEL_DOWN:
+		case BIGMERC_CROUCH_TRANS_INTO:
+		case BIGMERC_CROUCH_TRANS_OUTOF:
+
+			if ( !pSoldier->fDontChargeAPsForStanceChange )
+			{
+				DeductPoints( pSoldier, AP_CROUCH, BP_CROUCH );
+			}
+			pSoldier->fDontChargeAPsForStanceChange = FALSE;
+			break;
+
+		case PRONE_UP:
+		case PRONE_DOWN:
+
+			// ATE: If we are NOT waiting for prone down...
+			if ( pSoldier->fTurningFromPronePosition < TURNING_FROM_PRONE_START_UP_FROM_MOVE && !pSoldier->fDontChargeAPsForStanceChange )
+			{
+				// ATE: Don't do this if we are still 'moving'....
+				if ( pSoldier->sGridNo == pSoldier->sFinalDestination || pSoldier->usPathIndex == 0 )
 				{
-					sAPCost = GetAPsToReadyWeapon( pSoldier, usNewState );
-					DeductPoints( pSoldier, sAPCost, sBPCost );
+					DeductPoints( pSoldier, AP_PRONE, BP_PRONE );
 				}
-				else
-				{
-					pSoldier->fDontChargeReadyAPs = FALSE;
-				}
-				break;
+			}
+			pSoldier->fDontChargeAPsForStanceChange = FALSE;
+			break;
 
-			case WALKING:
+			//Deduct points for stance change
+			//sAPCost = GetAPsToChangeStance( pSoldier, gAnimControl[ usNewState ].ubEndHeight );
+			//DeductPoints( pSoldier, sAPCost, 0 );
+			//break;
 
-				pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-				pSoldier->ubPendingActionAnimCount = 0;
-				break;
+		case START_AID:
 
-			case SWATTING:
+			DeductPoints( pSoldier, AP_START_FIRST_AID, BP_START_FIRST_AID );
+			break;
 
-				pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-				pSoldier->ubPendingActionAnimCount = 0;
-				break;
+		case CUTTING_FENCE:
+			DeductPoints( pSoldier, AP_USEWIRECUTTERS, BP_USEWIRECUTTERS );
+			break;
 
-			case CRAWLING:
+		case PLANT_BOMB:
 
-				// Turn off flag...
-				pSoldier->fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
-				pSoldier->ubPendingActionAnimCount = 0;
-				pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-				break;
+			DeductPoints( pSoldier, AP_DROP_BOMB, 0 );
+			break;
 
-			case RUNNING:
+		case STEAL_ITEM:
 
-				// Only if our previous is not running
-				if ( pSoldier->usAnimState != RUNNING )
-				{
-					sAPCost = AP_START_RUN_COST;
-					DeductPoints( pSoldier, sAPCost, sBPCost );
-				}
-				// Set pending action count to 0
-				pSoldier->ubPendingActionAnimCount = 0;
-				pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-				break;
+			DeductPoints( pSoldier, AP_STEAL_ITEM, 0 );
+			break;
 
-			case ADULTMONSTER_WALKING:
-				pSoldier->ubPendingActionAnimCount = 0;
-				break;
+		case CROW_DIE:
 
-			case ROBOT_WALK:
-				pSoldier->ubPendingActionAnimCount = 0;
-				break;
+			// Delete shadow of crow....
+			if ( pSoldier->pAniTile != NULL )
+			{
+				DeleteAniTile( pSoldier->pAniTile );
+				pSoldier->pAniTile = NULL;
+			}
+			break;
 
-			case KNEEL_UP:
-			case KNEEL_DOWN:
-			case BIGMERC_CROUCH_TRANS_INTO:
-			case BIGMERC_CROUCH_TRANS_OUTOF:
+		case CROW_FLY:
 
-				if ( !pSoldier->fDontChargeAPsForStanceChange )
-				{
-					DeductPoints( pSoldier, AP_CROUCH, BP_CROUCH );
-				}
-				pSoldier->fDontChargeAPsForStanceChange = FALSE;
-				break;
+			// Ate: startup a shadow ( if gridno is set )
+			HandleCrowShadowNewGridNo( pSoldier );
+			break;
 
-			case PRONE_UP:
-			case PRONE_DOWN:
+		case CROW_EAT:
 
-				// ATE: If we are NOT waiting for prone down...
-				if ( pSoldier->fTurningFromPronePosition < TURNING_FROM_PRONE_START_UP_FROM_MOVE && !pSoldier->fDontChargeAPsForStanceChange )
-				{
-					// ATE: Don't do this if we are still 'moving'....
-					if ( pSoldier->sGridNo == pSoldier->sFinalDestination || pSoldier->usPathIndex == 0 )
-					{
-						DeductPoints( pSoldier, AP_PRONE, BP_PRONE );
-					}
-				}
-				pSoldier->fDontChargeAPsForStanceChange = FALSE;
-				break;
+			// ATE: Make sure height level is 0....
+			SetSoldierHeight( pSoldier, (FLOAT)(0) );
+			HandleCrowShadowRemoveGridNo( pSoldier );
+			break;
 
-				//Deduct points for stance change
-				//sAPCost = GetAPsToChangeStance( pSoldier, gAnimControl[ usNewState ].ubEndHeight );
-				//DeductPoints( pSoldier, sAPCost, 0 );
-				//break;
+		case USE_REMOTE:
 
-			case START_AID:
+			DeductPoints( pSoldier, AP_USE_REMOTE, 0 );
+			break;
 
-				DeductPoints( pSoldier, AP_START_FIRST_AID, BP_START_FIRST_AID );
-				break;
+		//case PUNCH:
 
-			case CUTTING_FENCE:
-				DeductPoints( pSoldier, AP_USEWIRECUTTERS, BP_USEWIRECUTTERS );
-				break;
+			//Deduct points for punching
+			//sAPCost = MinAPsToAttack( pSoldier, pSoldier->sGridNo, FALSE );
+			//DeductPoints( pSoldier, sAPCost, 0 );
+			//break;
 
-			case PLANT_BOMB:
+		case HOPFENCE:
 
-				DeductPoints( pSoldier, AP_DROP_BOMB, 0 );
-				break;
+			DeductPoints( pSoldier, AP_JUMPFENCE, BP_JUMPFENCE );
+			break;
 
-			case STEAL_ITEM:
+		// Deduct aps for falling down....
+		case FALLBACK_HIT_STAND:
+		case FALLFORWARD_FROMHIT_STAND:
 
-				DeductPoints( pSoldier, AP_STEAL_ITEM, 0 );
-				break;
+			DeductPoints( pSoldier, AP_FALL_DOWN, BP_FALL_DOWN );
+			break;
 
-      case CROW_DIE:
+		case FALLFORWARD_FROMHIT_CROUCH:
 
-        // Delete shadow of crow....
-			  if ( pSoldier->pAniTile != NULL )
-			  {
-				  DeleteAniTile( pSoldier->pAniTile );
-				  pSoldier->pAniTile = NULL;
-			  }
-        break;
+			DeductPoints( pSoldier, (AP_FALL_DOWN/2), (BP_FALL_DOWN/2) );
+			break;
 
-			case CROW_FLY:
+		case QUEEN_SWIPE:
 
-				// Ate: startup a shadow ( if gridno is set )
-				HandleCrowShadowNewGridNo( pSoldier );
-				break;
+			// ATE: set damage counter...
+			pSoldier->uiPendingActionData1 = 0;
+			break;
 
-			case CROW_EAT:
+		case CLIMBDOWNROOF:
 
-				// ATE: Make sure height level is 0....
-				SetSoldierHeight( pSoldier, (FLOAT)(0) );
-				HandleCrowShadowRemoveGridNo( pSoldier );
-				break;
+			// disable sight
+			gTacticalStatus.uiFlags |= DISALLOW_SIGHT;
 
-			case USE_REMOTE:
+			DeductPoints( pSoldier, AP_CLIMBOFFROOF, BP_CLIMBOFFROOF );
+			break;
 
-				DeductPoints( pSoldier, AP_USE_REMOTE, 0 );
-				break;
+		case CLIMBUPROOF:
 
-			//case PUNCH:
+			// disable sight
+			gTacticalStatus.uiFlags |= DISALLOW_SIGHT;
 
-				//Deduct points for punching
-				//sAPCost = MinAPsToAttack( pSoldier, pSoldier->sGridNo, FALSE );
-				//DeductPoints( pSoldier, sAPCost, 0 );
-				//break;
+			DeductPoints( pSoldier, AP_CLIMBROOF, BP_CLIMBROOF );
+			break;
 
-			case HOPFENCE:
+		case JUMP_OVER_BLOCKING_PERSON:
 
-				DeductPoints( pSoldier, AP_JUMPFENCE, BP_JUMPFENCE );
-				break;
+			// Set path....
+			{
+				UINT16 usNewGridNo;
 
-			// Deduct aps for falling down....
-			case FALLBACK_HIT_STAND:
-			case FALLFORWARD_FROMHIT_STAND:
+				DeductPoints( pSoldier, AP_JUMP_OVER, BP_JUMP_OVER );
 
-				DeductPoints( pSoldier, AP_FALL_DOWN, BP_FALL_DOWN );
-				break;
+				usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
+				usNewGridNo = NewGridNo( (UINT16)usNewGridNo, DirectionInc( pSoldier->bDirection ) );
 
-			case FALLFORWARD_FROMHIT_CROUCH:
-
-				DeductPoints( pSoldier, (AP_FALL_DOWN/2), (BP_FALL_DOWN/2) );
-				break;
-
-			case QUEEN_SWIPE:
-
-				// ATE: set damage counter...
-				pSoldier->uiPendingActionData1 = 0;
-				break;
-
-			case CLIMBDOWNROOF:
-
-		    // disable sight
-		    gTacticalStatus.uiFlags |= DISALLOW_SIGHT;
-
-				DeductPoints( pSoldier, AP_CLIMBOFFROOF, BP_CLIMBOFFROOF );
-				break;
-
-			case CLIMBUPROOF:
-
-		    // disable sight
-		    gTacticalStatus.uiFlags |= DISALLOW_SIGHT;
-
-				DeductPoints( pSoldier, AP_CLIMBROOF, BP_CLIMBROOF );
-				break;
-
-			case JUMP_OVER_BLOCKING_PERSON:
-
-				// Set path....
-				{
-					UINT16 usNewGridNo;
-
-					DeductPoints( pSoldier, AP_JUMP_OVER, BP_JUMP_OVER );
-
-					usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->bDirection ) );
-					usNewGridNo = NewGridNo( (UINT16)usNewGridNo, DirectionInc( pSoldier->bDirection ) );
-
-					pSoldier->usPathDataSize = 0;
-					pSoldier->usPathIndex    = 0;
-					pSoldier->usPathingData[ pSoldier->usPathDataSize ] = pSoldier->bDirection;
-					pSoldier->usPathDataSize++;
-					pSoldier->usPathingData[ pSoldier->usPathDataSize ] = pSoldier->bDirection;
-					pSoldier->usPathDataSize++;
-					pSoldier->sFinalDestination = usNewGridNo;
-					// Set direction
-					EVENT_InternalSetSoldierDestination( pSoldier, pSoldier->usPathingData[ pSoldier->usPathIndex ], FALSE, JUMP_OVER_BLOCKING_PERSON );
-				}
-				break;
+				pSoldier->usPathDataSize = 0;
+				pSoldier->usPathIndex    = 0;
+				pSoldier->usPathingData[ pSoldier->usPathDataSize ] = pSoldier->bDirection;
+				pSoldier->usPathDataSize++;
+				pSoldier->usPathingData[ pSoldier->usPathDataSize ] = pSoldier->bDirection;
+				pSoldier->usPathDataSize++;
+				pSoldier->sFinalDestination = usNewGridNo;
+				// Set direction
+				EVENT_InternalSetSoldierDestination( pSoldier, pSoldier->usPathingData[ pSoldier->usPathIndex ], FALSE, JUMP_OVER_BLOCKING_PERSON );
+			}
+			break;
 
 
-			case GENERIC_HIT_STAND:
-			case GENERIC_HIT_CROUCH:
-			case STANDING_BURST_HIT:
-			case ADULTMONSTER_HIT:
-			case ADULTMONSTER_DYING:
-			case COW_HIT:
-			case COW_DYING:
-			case BLOODCAT_HIT:
-			case BLOODCAT_DYING:
-			case WATER_HIT:
-			case WATER_DIE:
-			case DEEP_WATER_HIT:
-			case DEEP_WATER_DIE:
-			case RIFLE_STAND_HIT:
-			case LARVAE_HIT:
-			case LARVAE_DIE:
-			case QUEEN_HIT:
-			case QUEEN_DIE:
-			case INFANT_HIT:
-			case INFANT_DIE:
-			case CRIPPLE_HIT:
-			case CRIPPLE_DIE:
-			case CRIPPLE_DIE_FLYBACK:
-			case ROBOTNW_HIT:
-			case ROBOTNW_DIE:
+		case GENERIC_HIT_STAND:
+		case GENERIC_HIT_CROUCH:
+		case STANDING_BURST_HIT:
+		case ADULTMONSTER_HIT:
+		case ADULTMONSTER_DYING:
+		case COW_HIT:
+		case COW_DYING:
+		case BLOODCAT_HIT:
+		case BLOODCAT_DYING:
+		case WATER_HIT:
+		case WATER_DIE:
+		case DEEP_WATER_HIT:
+		case DEEP_WATER_DIE:
+		case RIFLE_STAND_HIT:
+		case LARVAE_HIT:
+		case LARVAE_DIE:
+		case QUEEN_HIT:
+		case QUEEN_DIE:
+		case INFANT_HIT:
+		case INFANT_DIE:
+		case CRIPPLE_HIT:
+		case CRIPPLE_DIE:
+		case CRIPPLE_DIE_FLYBACK:
+		case ROBOTNW_HIT:
+		case ROBOTNW_DIE:
 
-				// Set getting hit flag to TRUE
-				pSoldier->fGettingHit = TRUE;
-				break;
+			// Set getting hit flag to TRUE
+			pSoldier->fGettingHit = TRUE;
+			break;
 
-			case CHARIOTS_OF_FIRE:
-			case BODYEXPLODING:
+		case CHARIOTS_OF_FIRE:
+		case BODYEXPLODING:
 
-				// Merc on fire!
-				pSoldier->uiPendingActionData1 = PlaySoldierJA2Sample(pSoldier, FIRE_ON_MERC, HIGHVOLUME, 5, TRUE);
-				break;
-		}
+			// Merc on fire!
+			pSoldier->uiPendingActionData1 = PlaySoldierJA2Sample(pSoldier, FIRE_ON_MERC, HIGHVOLUME, 5, TRUE);
+			break;
 	}
 
 	// Remove old animation profile

@@ -2945,7 +2945,10 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* pSoldier, UINT32 uiCursorFlags, UINT
 	 }
 
 	 // Check if we're stationary
-	 if ( ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) || ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_STATIONARY ) || pSoldier->fNoAPToFinishMove ) || pSoldier->ubID >= MAX_NUM_SOLDIERS )
+	if ((gTacticalStatus.uiFlags & REALTIME) ||
+			!(gTacticalStatus.uiFlags & INCOMBAT) ||
+			(gAnimControl[pSoldier->usAnimState].uiFlags & ANIM_STATIONARY) ||
+			pSoldier->fNoAPToFinishMove)
 	 {
 		  // If we are targeting a merc for some reason, don't go thorugh normal channels if we are on someone now
 			if ( uiFlags == MOVEUI_TARGET_MERCS || uiFlags == MOVEUI_TARGET_MERCSFORAID )
