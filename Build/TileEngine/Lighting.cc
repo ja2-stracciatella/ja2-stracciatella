@@ -1887,102 +1887,6 @@ static BOOLEAN CalcTranslucentWalls(INT16 iX, INT16 iY)
 }
 
 
-static BOOLEAN LightGreenTile(INT16 sX, INT16 sY, INT16 sSrcX, INT16 sSrcY)
-{
-LEVELNODE *pStruct, *pLand;
-UINT32 uiTile;
-BOOLEAN fRerender=FALSE, fHitWall=FALSE;
-TILE_ELEMENT *TileElem;
-
-	Assert(gpWorldLevelData!=NULL);
-
-	uiTile=MAPROWCOLTOPOS(sY, sX);
-	pStruct=gpWorldLevelData[uiTile].pStructHead;
-
-	while(pStruct!=NULL)
-	{
-		TileElem = &(gTileDatabase[pStruct->usIndex]);
-		switch(TileElem->usWallOrientation)
-		{
-			case NO_ORIENTATION:
-				break;
-
-			case INSIDE_TOP_RIGHT:
-			case OUTSIDE_TOP_RIGHT:
-				fHitWall=TRUE;
-				if(sX >= sSrcX)
-				{
-					pStruct->uiFlags|=LEVELNODE_REVEAL;
-					fRerender=TRUE;
-				}
-				break;
-
-			case INSIDE_TOP_LEFT:
-			case OUTSIDE_TOP_LEFT:
-				fHitWall=TRUE;
-				if(sY >= sSrcY)
-				{
-					pStruct->uiFlags|=LEVELNODE_REVEAL;
-					fRerender=TRUE;
-				}
-				break;
-		}
-		pStruct=pStruct->pNext;
-	}
-
-	//if(fRerender)
-	//{
-		pLand=gpWorldLevelData[uiTile].pLandHead;
-		while(pLand!=NULL)
-		{
-			pLand->ubShadeLevel=0;
-			pLand=pLand->pNext;
-		}
-
-		gpWorldLevelData[uiTile].uiFlags|=MAPELEMENT_REDRAW;
-		SetRenderFlags(RENDER_FLAG_MARKED);
-	//}
-
-	return(fHitWall);
-}
-
-/****************************************************************************************
-	LightShowRays
-
-		Draws a template by making the ground tiles green. Must be polled once for
-each tile drawn to facilitate animating the drawing process for debugging.
-
-***************************************************************************************/
-BOOLEAN LightShowRays(INT16 iX, INT16 iY, BOOLEAN fReset)
-{
-	static UINT16 uiCount = 0;
-
-	if (fReset) uiCount = 0;
-
-	LightTemplate* const t = &g_light_templates[0];
-	if (t->lights == NULL) return FALSE;
-
-	if (uiCount < t->n_rays)
-	{
-		const UINT16 usNodeIndex = t->rays[uiCount];
-		if (!(usNodeIndex & LIGHT_NEW_RAY))
-		{
-			const LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
-			if(LightGreenTile((INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY), iX, iY))
-			{
-				uiCount = LightFindNextRay(t, uiCount);
-				SetRenderFlags(RENDER_FLAG_MARKED);
-			}
-		}
-
-		uiCount++;
-		return(TRUE);
-	}
-	else
-		return(FALSE);
-}
-
-
 // Removes the green from the tiles that was drawn to show the path of the rays.
 static BOOLEAN LightHideGreen(INT16 sX, INT16 sY, INT16 sSrcX, INT16 sSrcY)
 {
@@ -2043,33 +1947,6 @@ TILE_ELEMENT *TileElem;
 	return(fHitWall);
 }
 
-/****************************************************************************************
-	LightHideRays
-
-		Hides walls that were revealed by CalcTranslucentWalls.
-
-***************************************************************************************/
-BOOLEAN LightHideRays(INT16 iX, INT16 iY)
-{
-	const LightTemplate* const t = &g_light_templates[0];
-	if (t->lights == NULL) return FALSE;
-
-	for (UINT16 uiCount = 0; uiCount < t->n_rays; ++uiCount)
-	{
-		const UINT16 usNodeIndex = t->rays[uiCount];
-		if (!(usNodeIndex & LIGHT_NEW_RAY))
-		{
-			const LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
-			if(LightHideWall((INT16)(iX+pLight->iDX), (INT16)(iY+pLight->iDY), iX, iY))
-			{
-				uiCount = LightFindNextRay(t, uiCount);
-				SetRenderFlags(RENDER_FLAG_MARKED);
-			}
-		}
-	}
-
-	return(TRUE);
-}
 
 /****************************************************************************************
 	ApplyTranslucencyToWalls

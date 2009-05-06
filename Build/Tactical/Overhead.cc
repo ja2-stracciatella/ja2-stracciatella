@@ -574,12 +574,6 @@ void ExecuteOverhead(void)
 
 	BOOLEAN fKeepMoving;
 
-	const SOLDIERTYPE* const sel = GetSelectedMan();
-	if (sel != NULL && sel->uiStatusFlags & SOLDIER_GREEN_RAY)
-	{
-		LightShowRays(sel->dXPos / CELL_X_SIZE, sel->dYPos / CELL_Y_SIZE, FALSE);
-	}
-
 	if (COUNTERDONE(TOVERHEAD))
 	{
 		RESETCOUNTER(TOVERHEAD);
@@ -2269,12 +2263,6 @@ void SelectSoldier(SOLDIERTYPE* const s, const SelSoldierFlags flags)
 		//	ApplyTranslucencyToWalls((INT16)(old_sel->dXPos / CELL_X_SIZE), (INT16)(old_sel->dYPos / CELL_Y_SIZE));
 		}
 		//DeleteSoldierLight(old_sel);
-
-		if (old_sel->uiStatusFlags & SOLDIER_GREEN_RAY)
-		{
-			LightHideRays((INT16)(old_sel->dXPos / CELL_X_SIZE), (INT16)(old_sel->dYPos / CELL_Y_SIZE));
-			old_sel->uiStatusFlags &= ~SOLDIER_GREEN_RAY;
-		}
 
 		UpdateForContOverPortrait(old_sel, FALSE);
 	}

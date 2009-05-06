@@ -123,8 +123,6 @@ void LightSpritePower(LIGHT_SPRITE* l, BOOLEAN fOn);
 BOOLEAN LightSpriteRoofStatus(LIGHT_SPRITE* l, BOOLEAN fOnRoof);
 
 BOOLEAN		ApplyTranslucencyToWalls(INT16 iX, INT16 iY);
-BOOLEAN		LightShowRays(INT16 iX, INT16 iY, BOOLEAN fReset);
-BOOLEAN		LightHideRays(INT16 iX, INT16 iY);
 
 
 // makes the 16-bit palettes
