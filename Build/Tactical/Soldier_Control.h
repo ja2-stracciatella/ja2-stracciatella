@@ -625,7 +625,7 @@ struct SOLDIERTYPE
 	UINT8												bAimShotLocation;
 	UINT8												ubHitLocation;
 
-	UINT16											*pEffectShades[ NUM_SOLDIER_EFFECTSHADES ]; // Shading tables for effects
+	UINT16*                     effect_shade; // Shading table for effects
 
 	INT16											  sSpreadLocations[ 6 ];
 	BOOLEAN											fDoSpread;

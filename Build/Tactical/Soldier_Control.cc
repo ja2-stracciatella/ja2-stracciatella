@@ -717,11 +717,10 @@ void DeleteSoldier(SOLDIERTYPE* const s)
 		*i = NULL;
 	}
 
-	for (UINT16** i = s->pEffectShades; i != endof(s->pEffectShades); ++i)
+	if (s->effect_shade)
 	{
-		if (*i == NULL) continue;
-		MemFree(*i);
-		*i = NULL;
+		MemFree(s->effect_shade);
+		s->effect_shade = 0;
 	}
 
 	for (UINT16** i = s->pGlowShades; i != endof(s->pGlowShades); ++i)
@@ -4877,13 +4876,10 @@ void CreateSoldierPalettes(SOLDIERTYPE* const s)
 		}
 	}
 
-	for (INT32 i = 0; i < NUM_SOLDIER_EFFECTSHADES; ++i)
+	if (s->effect_shade)
 	{
-		if (s->pEffectShades[i] != NULL)
-		{
-			MemFree(s->pEffectShades[i]);
-			s->pEffectShades[i] = NULL;
-		}
+		MemFree(s->effect_shade);
+		s->effect_shade = 0;
 	}
 
 	for (INT32 i = 0; i < 20; ++i)
@@ -4898,8 +4894,7 @@ void CreateSoldierPalettes(SOLDIERTYPE* const s)
 
 	CreateBiasedShadedPalettes(s->pShades, pal);
 
-	s->pEffectShades[0] = Create16BPPPaletteShaded(pal, 100, 100, 100, TRUE);
-	s->pEffectShades[1] = Create16BPPPaletteShaded(pal, 100, 150, 100, TRUE);
+	s->effect_shade = Create16BPPPaletteShaded(pal, 100, 100, 100, TRUE);
 
 	// Build shades for glowing visible bad guy
 

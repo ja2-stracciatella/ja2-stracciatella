@@ -1029,7 +1029,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 													// Are we dealing with a not-so visible merc?
 													if (bGlowShadeOffset == 10)
 													{
-														pShadeTable = pSoldier->pEffectShades[0];
+														pShadeTable = pSoldier->effect_shade;
 													}
 												}
 											}
@@ -1070,13 +1070,6 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 									if (!(uiFlags & TILES_DIRTY) && pSoldier->fForceShade)
 									{
 										pShadeTable = pSoldier->pForcedShade;
-									}
-
-									// check if we are a merc duplicate, if so, only do minimal stuff!
-									if (pSoldier->ubID >= MAX_NUM_SOLDIERS)
-									{
-										// Shade gray
-										pShadeTable = pSoldier->pEffectShades[1];
 									}
 
 									hVObject = gAnimSurfaceDatabase[usAnimSurface].hVideoObject;
