@@ -6307,7 +6307,7 @@ void InitializeTacticalStatusAtBattleStart(void)
 	}
 
 	// loop through everyone; clear misc flags
-	FOR_ALL_NON_PLANNING_SOLDIERS(s)
+	FOR_ALL_SOLDIERS(s)
 	{
 		s->ubMiscSoldierFlags = 0;
 	}

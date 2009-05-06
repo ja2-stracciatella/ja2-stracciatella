@@ -2475,7 +2475,7 @@ void InitSoldierOppList(SOLDIERTYPE *pSoldier)
 void BetweenTurnsVisibilityAdjustments(void)
 {
   // make all soldiers on other teams that are no longer seen not visible
-	FOR_ALL_NON_PLANNING_SOLDIERS(pSoldier)
+	FOR_ALL_SOLDIERS(pSoldier)
 	{
 		if (pSoldier->bInSector && pSoldier->bLife)
 		{

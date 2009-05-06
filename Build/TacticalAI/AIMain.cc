@@ -681,7 +681,7 @@ void EndAIDeadlock(void)
 	// ESCAPE ENEMY'S TURN
 
 	// find enemy with problem and free him up...
-	FOR_ALL_NON_PLANNING_SOLDIERS(pSoldier)
+	FOR_ALL_SOLDIERS(pSoldier)
 	{
 		if (pSoldier->bInSector)
 		{

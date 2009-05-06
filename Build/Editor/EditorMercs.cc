@@ -572,7 +572,7 @@ void EraseMercWaypoint()
  * returns it, otherwise it returns NULL. */
 static SOLDIERTYPE* IsMercHere(INT32 iMapIndex)
 {
-	FOR_ALL_NON_PLANNING_SOLDIERS(s)
+	FOR_ALL_SOLDIERS(s)
 	{
 		if (s->sGridNo == iMapIndex) return s;
 	}

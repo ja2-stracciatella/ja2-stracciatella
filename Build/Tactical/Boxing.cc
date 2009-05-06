@@ -45,7 +45,7 @@ void ExitBoxing(void)
 	for (UINT8 ubPass = 0; ubPass < 2; ++ubPass)
 	{
 		// because boxer could die, loop through all soldier ptrs
-		FOR_ALL_NON_PLANNING_SOLDIERS(s)
+		FOR_ALL_SOLDIERS(s)
 		{
 			if (!(s->uiStatusFlags & SOLDIER_BOXER)) continue;
 			if (GetRoom(s->sGridNo) != BOXING_RING)  continue;

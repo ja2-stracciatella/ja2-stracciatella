@@ -2120,7 +2120,7 @@ void OkayToUpgradeEliteToSpecialProfiledEnemy( SOLDIERCREATE_STRUCT *pp )
 
 void TrashAllSoldiers( )
 {
-	FOR_ALL_NON_PLANNING_SOLDIERS(s) TacticalRemoveSoldier(s);
+	FOR_ALL_SOLDIERS(s) TacticalRemoveSoldier(s);
 }
 
 

@@ -1532,7 +1532,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 	if (version < 68)
 	{
 		// correct bVehicleUnderRepairID for all mercs
-		FOR_ALL_NON_PLANNING_SOLDIERS(s) s->bVehicleUnderRepairID = -1;
+		FOR_ALL_SOLDIERS(s) s->bVehicleUnderRepairID = -1;
 	}
 
 	if (version < 73 && LaptopSaveInfo.fMercSiteHasGoneDownYet)
