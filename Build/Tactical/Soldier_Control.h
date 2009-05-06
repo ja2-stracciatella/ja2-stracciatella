@@ -889,7 +889,6 @@ void EVENT_SetSoldierPosition(SOLDIERTYPE* s, GridNo gridno, SetSoldierPosFlags 
 void EVENT_SetSoldierPositionNoCenter(SOLDIERTYPE* s, GridNo gridno, SetSoldierPosFlags flags);
 void EVENT_SetSoldierPositionXY(SOLDIERTYPE* s, FLOAT dNewXPos, FLOAT dNewYPos, SetSoldierPosFlags flags);
 
-void EVENT_SetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDirection );
 void EVENT_GetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim );
 BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGridNo, UINT16 usMovementAnim, BOOLEAN fFromUI, BOOLEAN fForceRestart );
 

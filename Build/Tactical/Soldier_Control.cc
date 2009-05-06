@@ -3904,11 +3904,6 @@ void EVENT_InternalSetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDir
 	}
 }
 
-void EVENT_SetSoldierDestination( SOLDIERTYPE *pSoldier, UINT16	usNewDirection )
-{
-	EVENT_InternalSetSoldierDestination( pSoldier, usNewDirection, FALSE, pSoldier->usAnimState );
-}
-
 
 // function to determine which direction a creature can turn in
 static INT8 MultiTiledTurnDirection(SOLDIERTYPE* pSoldier, INT8 bStartDirection, INT8 bDesiredDirection)
