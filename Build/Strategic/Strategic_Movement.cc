@@ -1728,85 +1728,54 @@ static void PrepareGroupsForSimultaneousArrival(void)
 static void PlanSimultaneousGroupArrivalCallback(MessageBoxReturnValue);
 
 
-//See if there are other groups OTW.  If so, and if we haven't asked the user yet to plan
-//a simultaneous attack, do so now, and readjust the groups accordingly.  If it is possible
-//to do so, then we will set up the gui, and postpone the prebattle interface.
-static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* pFirstGroup)
+/* See if there are other groups OTW.  If so, and if we haven't asked the user
+ * yet to plan a simultaneous attack, do so now, and readjust the groups
+ * accordingly.  If it is possible to do so, then we will set up the gui, and
+ * postpone the prebattle interface. */
+static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* const first_group)
 {
-	UINT8 ubNumNearbyGroups = 0;
+	// If the user has already been asked, then don't ask the question again!
+	if (first_group->uiFlags & (GROUPFLAG_SIMULTANEOUSARRIVAL_APPROVED | GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED)) return FALSE;
+	if (IsGroupTheHelicopterGroup(first_group)) return FALSE;
 
-	//If the user has already been asked, then don't ask the question again!
-	if( pFirstGroup->uiFlags & (GROUPFLAG_SIMULTANEOUSARRIVAL_APPROVED | GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED) ||
-		IsGroupTheHelicopterGroup( pFirstGroup ) )
+	/* Count the number of groups that are scheduled to arrive in the same sector
+	 * and are currently adjacent to the sector in question. */
+	UINT8 n_nearby_groups = 0;
+	FOR_ALL_PLAYER_GROUPS(g)
 	{
-		return FALSE;
+		if (g == first_group)                                   continue;
+		if (!g->fBetweenSectors)                                continue;
+		if (g->ubNextX != first_group->ubSectorX)               continue;
+		if (g->ubNextY != first_group->ubSectorY)               continue;
+		if (g->uiFlags & GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED) continue;
+		if (IsGroupTheHelicopterGroup(g))                       continue;
+		g->uiFlags |= GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED;
+		++n_nearby_groups;
 	}
 
-	//We can't coordinate simultaneous attacks on a sector without any stationary forces!  Otherwise, it
-	//is possible that they will be gone when you finally arrive.
-	//if( !NumStationaryEnemiesInSector( pFirstGroup->ubSectorX, pFirstGroup->ubSectorY ) )
-	//	return FALSE;
+	if (n_nearby_groups == 0) return FALSE;
 
-	//Count the number of groups that are scheduled to arrive in the same sector and are currently
-	//adjacent to the sector in question.
-	FOR_ALL_PLAYER_GROUPS(pGroup)
-	{
-		if (pGroup != pFirstGroup   &&
-				pGroup->fBetweenSectors &&
-			  pGroup->ubNextX == pFirstGroup->ubSectorX && pGroup->ubNextY == pFirstGroup->ubSectorY &&
-				!(pGroup->uiFlags & GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED) &&
-				!IsGroupTheHelicopterGroup( pGroup ) )
-		{
-			pGroup->uiFlags |= GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED;
-			ubNumNearbyGroups++;
-		}
-	}
+	// Postpone the battle until the user answers the dialog.
+	InterruptTime();
+	PauseGame();
+	LockPauseState(LOCK_PAUSE_13);
+	gpPendingSimultaneousGroup = first_group;
 
-	if( ubNumNearbyGroups )
-	{ //postpone the battle until the user answers the dialog.
-		wchar_t str[255];
-		const wchar_t *pStr;
-		const wchar_t *pEnemyType;
-		InterruptTime();
-		PauseGame();
-		LockPauseState(LOCK_PAUSE_13);
-		gpPendingSimultaneousGroup = pFirstGroup;
-		//Build the string
-		if( ubNumNearbyGroups == 1 )
-		{
-			pStr = gpStrategicString[ STR_DETECTED_SINGULAR ];
-		}
-		else
-		{
-			pStr = gpStrategicString[ STR_DETECTED_PLURAL ];
-		}
-		if( gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE )
-		{
-			pEnemyType = gpStrategicString[ STR_PB_BLOODCATS ];
-		}
-		else
-		{
-			pEnemyType = gpStrategicString[ STR_PB_ENEMIES ];
-		}
-		//header, sector, singular/plural str, confirmation string.
-		//Ex:  Enemies have been detected in sector J9 and another squad is
-		//     about to arrive.  Do you wish to coordinate a simultaneous arrival?
-		swprintf( str, lengthof(str), pStr,
-			pEnemyType, //Enemy type (Enemies or bloodcats)
-			'A' + gpPendingSimultaneousGroup->ubSectorY - 1, gpPendingSimultaneousGroup->ubSectorX ); //Sector location
-		wcscat( str, L"  " );
-		wcscat( str, gpStrategicString[ STR_COORDINATE ] );
-		//Setup the dialog
-
-		//Kris August 03, 1999 Bug fix:  Changed 1st line to 2nd line to fix game breaking if this dialog came up while in tactical.
-		//                               It would kick you to mapscreen, where things would break...
-		//DoMapMessageBox( MSG_BOX_BASIC_STYLE, str, MAP_SCREEN, MSG_BOX_FLAG_YESNO, PlanSimultaneousGroupArrivalCallback );
-		DoMapMessageBox( MSG_BOX_BASIC_STYLE, str, guiCurrentScreen, MSG_BOX_FLAG_YESNO, PlanSimultaneousGroupArrivalCallback );
-
-		gfWaitingForInput = TRUE;
-		return TRUE;
-	}
-	return FALSE;
+	wchar_t const* const pStr =
+		n_nearby_groups == 1 ? gpStrategicString[STR_DETECTED_SINGULAR] :
+		gpStrategicString[STR_DETECTED_PLURAL];
+	wchar_t const* const enemy_type =
+		gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE ? gpStrategicString[STR_PB_BLOODCATS] :
+		gpStrategicString[STR_PB_ENEMIES];
+	/* header, sector, singular/plural str, confirmation string.
+	 * Ex:  Enemies have been detected in sector J9 and another squad is about to
+	 *      arrive.  Do you wish to coordinate a simultaneous arrival? */
+	wchar_t str[255];
+	size_t const n = swprintf(str, lengthof(str), pStr, enemy_type, 'A' + first_group->ubSectorY - 1, first_group->ubSectorX);
+	swprintf(str + n, lengthof(str) - n, L" %ls", gpStrategicString[STR_COORDINATE]);
+	DoMapMessageBox(MSG_BOX_BASIC_STYLE, str, guiCurrentScreen, MSG_BOX_FLAG_YESNO, PlanSimultaneousGroupArrivalCallback);
+	gfWaitingForInput = TRUE;
+	return TRUE;
 }
 
 
