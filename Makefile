@@ -289,7 +289,6 @@ SRCS += Build/Tactical/Gap.cc
 SRCS += Build/Tactical/Handle_Doors.cc
 SRCS += Build/Tactical/Handle_Items.cc
 SRCS += Build/Tactical/Handle_UI.cc
-SRCS += Build/Tactical/Handle_UI_Plan.cc
 SRCS += Build/Tactical/Interface.cc
 SRCS += Build/Tactical/Interface_Control.cc
 SRCS += Build/Tactical/Interface_Cursors.cc

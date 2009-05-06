@@ -27,7 +27,6 @@
 #include "PathAI.h"
 #include "VObject_Blitters.h"
 #include "Faces.h"
-#include "Handle_UI_Plan.h"
 #include "Interface_Control.h"
 #include "Interface_Items.h"
 #include "Interface_Dialogue.h"
@@ -41,7 +40,6 @@
 #include "Line.h"
 #include "Map_Screen_Interface.h"
 #include "Civ_Quotes.h"
-#include "Video.h"
 
 
 SGPRect				gOldClippingRect, gOldDirtyClippingRect;
@@ -398,8 +396,6 @@ static void StartViewportOverlays(void);
 
 void RenderTopmostTacticalInterface()
 {
-	static SGPVObject* uiBogTarget = 0;
-
 	if (gfRerenderInterfaceFromHelpText)
 	{
 		fInterfacePanelDirty = DIRTYLEVEL2;
@@ -428,45 +424,6 @@ void RenderTopmostTacticalInterface()
 	if (gfInMovementMenu)
 	{
 		RenderMovementMenu();
-	}
-
-	// if IN PLAN MODE AND WE HAVE TARGETS, draw black targets!
-	if (InUIPlanMode())
-	{
-		// Zero out any planned soldiers
-		CFOR_ALL_PLANNING_SOLDIERS(s)
-		{
-			if (s->sPlannedTargetX == -1) continue;
-
-			if (!GridNoOnScreen(MAPROWCOLTOPOS(s->sPlannedTargetY / CELL_Y_SIZE, s->sPlannedTargetX / CELL_X_SIZE))) continue;
-
-			// GET SCREEN COORDINATES
-			INT16 const sOffsetX = (s->sPlannedTargetX - gsRenderCenterX);
-			INT16 const sOffsetY = (s->sPlannedTargetY - gsRenderCenterY);
-
-			INT16 sTempX_S;
-			INT16 sTempY_S;
-			FromCellToScreenCoordinates(sOffsetX, sOffsetY, &sTempX_S, &sTempY_S);
-
-			INT16 sX = (gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2 + sTempX_S;
-			INT16 sY = (gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2 + sTempY_S;
-
-			// Adjust for offset position on screen
-			sX -= gsRenderWorldOffsetX;
-			sY -= gsRenderWorldOffsetY;
-
-			sX -= 10;
-			sY -= 10;
-
-			// Blit bogus target
-			if (!uiBogTarget)
-			{
-				uiBogTarget = AddVideoObjectFromFile("CURSORS/targblak.sti");
-			}
-
-			BltVideoObject(FRAME_BUFFER, uiBogTarget, 0, sX, sY);
-			InvalidateRegion(sX, sY, sX + 20, sY + 20);
-		}
 	}
 
 #ifdef JA2TESTVERSION

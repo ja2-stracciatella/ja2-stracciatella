@@ -29,7 +29,6 @@
 #include "Interface_Panels.h"
 #include "PathAI.h"
 #include "Faces.h"
-#include "Handle_UI_Plan.h"
 #include "Interface_Control.h"
 #include "Interface_Items.h"
 #include "Soldier_Profile.h"

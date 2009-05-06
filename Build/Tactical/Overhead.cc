@@ -35,7 +35,6 @@
 #include "Interface_Cursors.h"
 #include "Weapons.h"
 #include "Rotting_Corpses.h"
-#include "Handle_UI_Plan.h"
 #include "Structure.h"
 #include "Interface_Panels.h"
 #include "Message.h"
@@ -2247,9 +2246,6 @@ void SelectSoldier(SOLDIERTYPE* const s, const SelSoldierFlags flags)
 
 	SOLDIERTYPE* const old_sel = GetSelectedMan();
 	if (s == old_sel && !(flags & SELSOLDIER_FORCE_RESELECT)) return;
-
-	// CANCEL FROM PLANNING MODE!
-	if (InUIPlanMode()) EndUIPlan();
 
 	// Unselect old selected guy
 	if (old_sel != NULL)

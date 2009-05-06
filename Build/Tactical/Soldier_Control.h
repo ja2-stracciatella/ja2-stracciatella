@@ -627,10 +627,6 @@ struct SOLDIERTYPE
 
 	UINT16											*pEffectShades[ NUM_SOLDIER_EFFECTSHADES ]; // Shading tables for effects
 
-	UINT8												ubPlannedUIAPCost;
-	INT16												sPlannedTargetX;
-	INT16												sPlannedTargetY;
-
 	INT16											  sSpreadLocations[ 6 ];
 	BOOLEAN											fDoSpread;
 	INT16												sStartGridNo;

@@ -32,7 +32,6 @@
 #include "Structure.h"
 #include "Handle_Items.h"
 #include "UI_Cursors.h"
-#include "Handle_UI_Plan.h"
 #include "Message.h"
 #include "Render_Fun.h"
 #include "Interface_Items.h"
@@ -1017,12 +1016,6 @@ static ScreenID UIHandleEnterEditMode(UI_EVENT* pUIEvent)
 
 ScreenID UIHandleEndTurn(UI_EVENT* pUIEvent)
 {
-	// CANCEL FROM PLANNING MODE!
-	if ( InUIPlanMode( ) )
-	{
-		EndUIPlan( );
-	}
-
 	// ATE: If we have an item pointer end it!
 	CancelItemPointer( );
 

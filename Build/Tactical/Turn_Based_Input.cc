@@ -28,7 +28,6 @@
 #include "AI.h"
 #include "Font_Control.h"
 #include "WorldMan.h"
-#include "Handle_UI_Plan.h"
 #include "Message.h"
 #include "Overhead_Map.h"
 #include "World_Items.h"
@@ -198,68 +197,60 @@ static void QueryTBLeftButton(UINT32* puiNewEvent)
 									}
 									else
 									{
-										if ( InUIPlanMode( ) )
+										// We're on terrain in which we can walk, walk
+										// If we're on terrain,
+										const SOLDIERTYPE* const sel = GetSelectedMan();
+										if (sel != NULL)
 										{
-											AddUIPlan( usMapPos, UIPLAN_ACTION_MOVETO );
-										}
-										else
-										{
-											// We're on terrain in which we can walk, walk
-											// If we're on terrain,
-											const SOLDIERTYPE* const sel = GetSelectedMan();
-											if (sel != NULL)
+											INT8 const bReturnVal = HandleMoveModeInteractiveClick(usMapPos);
+											// All's OK for interactive tile?
+											if ( bReturnVal == -2 )
 											{
-												INT8 const bReturnVal = HandleMoveModeInteractiveClick(usMapPos);
-												// All's OK for interactive tile?
-												if ( bReturnVal == -2 )
+												// Confirm!
+												if ( SelectedMercCanAffordMove(  )  )
 												{
-													// Confirm!
-													if ( SelectedMercCanAffordMove(  )  )
-													{
-														*puiNewEvent = C_WAIT_FOR_CONFIRM;
-													}
+													*puiNewEvent = C_WAIT_FOR_CONFIRM;
 												}
-												else if ( bReturnVal == 0 )
-												{
-													if ( gfUIAllMoveOn )
-													{
-														 *puiNewEvent = C_WAIT_FOR_CONFIRM;
-													}
-													else
-													{
-														if ( gsCurrentActionPoints == 0 )
-														{
-															ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
-														}
-														else if ( SelectedMercCanAffordMove(  )  )
-														{
-															const BOOLEAN fResult = UIOKMoveDestination(sel, usMapPos);
-															if (fResult == 1)
-															{
-																// ATE: CHECK IF WE CAN GET TO POSITION
-																// Check if we are not in combat
-																if ( gsCurrentActionPoints == 0 )
-																{
-																	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
-																}
-																else
-																{
-																	*puiNewEvent = C_WAIT_FOR_CONFIRM;
-																}
-															}
-															else if (fResult == 2)
-															{
-																ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NOBODY_USING_REMOTE_STR]);
-															}
-														}
-													}
-												}
-												// OK, our first right-click is an all-cycle
-												gfUICanBeginAllMoveCycle = FALSE;
 											}
-											fClickHoldIntercepted = TRUE;
-
+											else if ( bReturnVal == 0 )
+											{
+												if ( gfUIAllMoveOn )
+												{
+													 *puiNewEvent = C_WAIT_FOR_CONFIRM;
+												}
+												else
+												{
+													if ( gsCurrentActionPoints == 0 )
+													{
+														ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
+													}
+													else if ( SelectedMercCanAffordMove(  )  )
+													{
+														const BOOLEAN fResult = UIOKMoveDestination(sel, usMapPos);
+														if (fResult == 1)
+														{
+															// ATE: CHECK IF WE CAN GET TO POSITION
+															// Check if we are not in combat
+															if ( gsCurrentActionPoints == 0 )
+															{
+																ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
+															}
+															else
+															{
+																*puiNewEvent = C_WAIT_FOR_CONFIRM;
+															}
+														}
+														else if (fResult == 2)
+														{
+															ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NOBODY_USING_REMOTE_STR]);
+														}
+													}
+												}
+											}
+											// OK, our first right-click is an all-cycle
+											gfUICanBeginAllMoveCycle = FALSE;
 										}
+										fClickHoldIntercepted = TRUE;
 									}
 								}
 								else
@@ -450,32 +441,26 @@ static void QueryTBLeftButton(UINT32* puiNewEvent)
 												}
 
 												case ACTION_MODE:
+												{
+													SOLDIERTYPE* const sel = GetSelectedMan();
+													if (sel != NULL && !HandleUIReloading(sel))
+													{
+														// ATE: Reset refine aim..
+														sel->bShownAimTime = 0;
 
-													if ( InUIPlanMode( ) )
-													{
-														AddUIPlan( usMapPos, UIPLAN_ACTION_FIRE );
-													}
-													else
-													{
-														SOLDIERTYPE* const sel = GetSelectedMan();
-														if (sel != NULL && !HandleUIReloading(sel))
+														if (gsCurrentActionPoints == 0)
 														{
-															// ATE: Reset refine aim..
-															sel->bShownAimTime = 0;
-
-															if (gsCurrentActionPoints == 0)
-															{
-																ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NO_PATH]);
-															}
-															// Determine if we have enough action points!
-															else if (UIMouseOnValidAttackLocation(sel) && SelectedMercCanAffordAttack())
-															{
-																*puiNewEvent      = A_CHANGE_TO_CONFIM_ACTION;
-																sel->sStartGridNo = usMapPos;
-															}
+															ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NO_PATH]);
+														}
+														// Determine if we have enough action points!
+														else if (UIMouseOnValidAttackLocation(sel) && SelectedMercCanAffordAttack())
+														{
+															*puiNewEvent      = A_CHANGE_TO_CONFIM_ACTION;
+															sel->sStartGridNo = usMapPos;
 														}
 													}
 													break;
+												}
 
 												case CONFIRM_ACTION_MODE:
 
@@ -1414,12 +1399,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			// Befone anything, delete popup box!
 			EndUIMessage( );
-
-			// CANCEL FROM PLANNING MODE!
-			if ( InUIPlanMode( ) )
-			{
-				EndUIPlan( );
-			}
 
 			if ( InItemDescriptionBox( ) )
 			{
@@ -3159,39 +3138,6 @@ static void ToggleZBuffer(void)
 	UINT32& flags = gTacticalStatus.uiFlags;
 	flags ^= SHOW_Z_BUFFER;
 	if (!(flags & SHOW_Z_BUFFER)) SetRenderFlags(SHOW_Z_BUFFER);
-}
-
-
-static void TogglePlanningMode(void)
-{
-	// DO ONLY IN TURNED BASED!
-	if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
-	{
-		// CANCEL FROM PLANNING MODE!
-		if ( InUIPlanMode( ) )
-		{
-			EndUIPlan( );
-		}
-		else
-		{
-			const GridNo usMapPos = GetMouseMapPos();
-			if (usMapPos == NOWHERE) return;
-
-			SOLDIERTYPE* const sel = GetSelectedMan();
-			if (sel == NULL) return;
-
-			UINT8 plan;
-			switch (gCurrentUIMode)
-			{
-				case MOVE_MODE:   plan = UIPLAN_ACTION_MOVETO; break;
-				case ACTION_MODE: plan = UIPLAN_ACTION_FIRE;   break;
-				default:          return;
-			}
-
-			BeginUIPlan(sel);
-			AddUIPlan(usMapPos, plan);
-		}
-	}
 }
 
 

@@ -1533,20 +1533,6 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 										}
 									}
 								}
-
-								// RENDR APS ONTOP OF PLANNED MERC GUY
-								if (!(uiFlags & TILES_DIRTY) && fMerc && pSoldier != NULL && pSoldier->ubID >= MAX_NUM_SOLDIERS)
-								{
-									SetFont(TINYFONT1);
-									SetFontDestBuffer(guiSAVEBUFFER, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y);
-									wchar_t buf[16];
-									swprintf(buf, lengthof(buf), L"%d", pSoldier->ubPlannedUIAPCost);
-									INT16 sX;
-									INT16 sY;
-									FindFontCenterCoordinates(sXPos, sYPos, 1, 1, buf, TINYFONT1, &sX, &sY);
-									MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY, buf);
-									SetFontDestBuffer(FRAME_BUFFER);
-								}
 							}
 
 next_node:
