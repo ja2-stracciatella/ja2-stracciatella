@@ -3735,7 +3735,7 @@ void StopSoldier( SOLDIERTYPE *pSoldier )
 	if ( !( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_STATIONARY ) )
 	{
 		//SoldierGotoStationaryStance( pSoldier );
-		EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+		EVENT_StopMerc(pSoldier);
 	}
 
 	// Set desination
@@ -6950,7 +6950,7 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 						if ( !( pTSoldier->uiStatusFlags & ( SOLDIER_MONSTER | SOLDIER_ANIMAL | SOLDIER_VEHICLE ) ) )
 						{
 							// OK, stop merc....
-							EVENT_StopMerc( pTSoldier, pTSoldier->sGridNo, pTSoldier->bDirection );
+							EVENT_StopMerc(pTSoldier);
 
 							if ( pTSoldier->bTeam != gbPlayerNum )
 							{
@@ -7076,7 +7076,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 					if ( !( pTSoldier->uiStatusFlags & ( SOLDIER_MONSTER | SOLDIER_ANIMAL | SOLDIER_VEHICLE ) ) )
 					{
 						// OK, stop merc....
-						EVENT_StopMerc( pTSoldier, pTSoldier->sGridNo, pTSoldier->bDirection );
+						EVENT_StopMerc(pTSoldier);
 
 						if ( pTSoldier->bTeam != gbPlayerNum )
 						{
@@ -7586,7 +7586,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 
 	if ( !( gTacticalStatus.uiFlags & INCOMBAT ) )
 	{
-		EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+		EVENT_StopMerc(pSoldier);
 	}
 	else
 	{
@@ -7638,6 +7638,12 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 	pSoldier->bTurningFromUI = FALSE;
 
 	UnSetEngagedInConvFromPCAction( pSoldier );
+}
+
+
+void EVENT_StopMerc(SOLDIERTYPE* const s)
+{
+	EVENT_StopMerc(s, s->sGridNo, s->bDirection);
 }
 
 
@@ -8895,7 +8901,7 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 	SendSoldierSetDesiredDirectionEvent(pTSoldier, OppositeDirection(sFacingDir));
 
 	// Stop our guys...
-	EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+	EVENT_StopMerc(pSoldier);
 
 	// ATE; Check for normal civs...
 	if ( GetCivType( pTSoldier ) != CIV_TYPE_NA )

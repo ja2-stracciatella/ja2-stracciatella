@@ -2374,7 +2374,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 							{
 
 								// stop the merc...
-								EVENT_StopMerc(tgt, tgt->sGridNo, tgt->bDirection);
+								EVENT_StopMerc(tgt);
 
 								switch( sGridNo )
 								{

@@ -130,8 +130,7 @@ static void SetFinalTile(SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fGivenUp)
 		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name );
   }
 
-	EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
-
+	EVENT_StopMerc(pSoldier);
 }
 
 
@@ -382,7 +381,7 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 							OutputDebugInfoForTurnBasedNextTileWaiting( pSoldier );
 						}
 					#endif
-					EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+					EVENT_StopMerc(pSoldier);
 					// Restore...
 					pSoldier->sFinalDestination = sOldFinalDest;
 
@@ -404,7 +403,7 @@ BOOLEAN HandleNextTile( SOLDIERTYPE *pSoldier, INT8 bDirection, INT16 sGridNo, I
 							OutputDebugInfoForTurnBasedNextTileWaiting( pSoldier );
 						}
 					#endif
-					EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+					EVENT_StopMerc(pSoldier);
 					// Restore...
 					pSoldier->sFinalDestination = sOldFinalDest;
 

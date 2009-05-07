@@ -1753,7 +1753,7 @@ static void ManSeesMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, INT16 sOpp
 								{
 									CancelAIAction(pSoldier);
 									pSoldier->sAbsoluteFinalDestination = NOWHERE;
-									EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+									EVENT_StopMerc(pSoldier);
 									TriggerNPCRecord( ANGEL, 20 );
 									// trigger Angel to walk off afterwards
 									//TriggerNPCRecord( ANGEL, 24 );

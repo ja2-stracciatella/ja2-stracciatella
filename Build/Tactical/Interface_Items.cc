@@ -3696,7 +3696,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 						  ubFacingDirection = (UINT8)GetDirectionFromGridNo( gpItemPointerSoldier->sGridNo, pSoldier );
 
 						  // Stop merc first....
-						  EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+						  EVENT_StopMerc(pSoldier);
 
 						  // If we are standing only...
 						  if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_STAND && !MercInWater( pSoldier ) )

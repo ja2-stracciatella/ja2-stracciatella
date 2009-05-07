@@ -3110,13 +3110,13 @@ static void TeleportSelectedSoldier(void)
 	{
 		SetSoldierHeight(sel, 0);
 		TeleportSoldier(sel, usMapPos, FALSE);
-		EVENT_StopMerc(sel, sel->sGridNo, sel->bDirection);
+		EVENT_StopMerc(sel);
 	}
 	else if (FindStructure(usMapPos, STRUCTURE_ROOF) != NULL) // Is there a roof?
 	{
 		SetSoldierHeight(sel, 50.0);
 		TeleportSoldier(sel, usMapPos, TRUE);
-		EVENT_StopMerc(sel, sel->sGridNo, sel->bDirection);
+		EVENT_StopMerc(sel);
 	}
 }
 

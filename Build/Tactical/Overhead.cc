@@ -1418,7 +1418,7 @@ static void CheckIfNearbyGroundSeemsWrong(SOLDIERTYPE* const s, UINT16 const gri
 		 * place a locator or say anything */
 		if (gTacticalStatus.uiFlags & INCOMBAT)
 		{
-			EVENT_StopMerc(s, s->sGridNo, s->bDirection);
+			EVENT_StopMerc(s);
 		}
 		else
 		{ // Not in combat, stop them all
@@ -1426,7 +1426,7 @@ static void CheckIfNearbyGroundSeemsWrong(SOLDIERTYPE* const s, UINT16 const gri
 			{
 				SOLDIERTYPE* const s2 = GetMan(i);
 				if (!s2->bActive) continue;
-				EVENT_StopMerc(s2, s2->sGridNo, s2->bDirection);
+				EVENT_StopMerc(s2);
 			}
 		}
 
@@ -1445,7 +1445,7 @@ static void CheckIfNearbyGroundSeemsWrong(SOLDIERTYPE* const s, UINT16 const gri
 	{
 		if (mine_gridno == NOWHERE) return;
 
-		EVENT_StopMerc(s, s->sGridNo, s->bDirection);
+		EVENT_StopMerc(s);
 		*keep_moving = FALSE;
 
 		gpWorldLevelData[mine_gridno].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
@@ -1699,7 +1699,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 				}
 				if (pExplosive)
 				{
-					EVENT_StopMerc(pSoldier, pSoldier->sGridNo, pSoldier->bDirection);
+					EVENT_StopMerc(pSoldier);
 					fDontContinue = TRUE;
 					DishOutGasDamage(pSoldier, pExplosive, TRUE, FALSE, pExplosive->ubDamage + PreRandom(pExplosive->ubDamage), 100 * (pExplosive->ubStunDamage + PreRandom(pExplosive->ubStunDamage / 2)), NULL);
 				}
@@ -1775,7 +1775,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 						pSoldier->ubNumTilesMovesSinceLastForget = 0;
 
 						TacticalCharacterDialogue(pSoldier, QUOTE_PERSONALITY_TRAIT);
-						EVENT_StopMerc(pSoldier, pSoldier->sGridNo, pSoldier->bDirection);
+						EVENT_StopMerc(pSoldier);
 						if (pSoldier->bActionPoints > 0)
 						{
 							pSoldier->bActionPoints -= (INT8)(Random(pSoldier->bActionPoints) + 1);
@@ -1885,7 +1885,7 @@ static void HandleMaryArrival(SOLDIERTYPE* pSoldier)
 
 		// Mary has arrived
 		SetFactTrue(FACT_MARY_OR_JOHN_ARRIVED);
-		EVENT_StopMerc(pSoldier, pSoldier->sGridNo, pSoldier->bDirection);
+		EVENT_StopMerc(pSoldier);
 		TriggerNPCRecord(MARY, 13);
 	}
 }
@@ -1924,12 +1924,12 @@ static void HandleJohnArrival(SOLDIERTYPE* pSoldier)
 
 		SetFactTrue(FACT_MARY_OR_JOHN_ARRIVED);
 
-		EVENT_StopMerc(pSoldier, pSoldier->sGridNo, pSoldier->bDirection);
+		EVENT_StopMerc(pSoldier);
 
 		// if Mary is alive/dead
 		if (pSoldier2)
 		{
-			EVENT_StopMerc(pSoldier2, pSoldier2->sGridNo, pSoldier2->bDirection);
+			EVENT_StopMerc(pSoldier2);
 			TriggerNPCRecord(JOHN, 13);
 		}
 		else
@@ -2017,7 +2017,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 	if (SetOffBombsInGridNo(pSoldier, pSoldier->sGridNo, FALSE, pSoldier->bLevel))
 	{
 		*pfKeepMoving = FALSE;
-		EVENT_StopMerc(pSoldier, pSoldier->sGridNo, pSoldier->bDirection);
+		EVENT_StopMerc(pSoldier);
 		return FALSE;
 	}
 
@@ -2109,7 +2109,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 						if (PythSpacesAway(pSoldier->sGridNo, 8842) < 11)
 						{
 							// Skyrider has arrived!
-							EVENT_StopMerc(pSoldier, pSoldier->sGridNo, pSoldier->bDirection);
+							EVENT_StopMerc(pSoldier);
 							SetFactTrue(FACT_SKYRIDER_CLOSE_TO_CHOPPER);
 							TriggerNPCRecord(SKYRIDER, 15);
 							SetUpHelicopterForPlayer(13, MAP_ROW_B);
@@ -2141,7 +2141,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 				// if Joey walks near Martha then trigger Martha record 7
 				if (CheckFact(FACT_JOEY_NEAR_MARTHA, 0))
 				{
-					EVENT_StopMerc(pSoldier, pSoldier->sGridNo, pSoldier->bDirection);
+					EVENT_StopMerc(pSoldier);
 					TriggerNPCRecord(JOEY, 9);
 				}
 			}
@@ -4131,7 +4131,7 @@ void CommonEnterCombatModeCode( )
 			pSoldier->usQuoteSaidFlags &= (~SOLDIER_QUOTE_SAID_MULTIPLE_CREATURES);
 
 			// Hault!
-			EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+			EVENT_StopMerc(pSoldier);
 
 			// END AI actions
 			CancelAIAction(pSoldier);
@@ -6174,7 +6174,7 @@ void CencelAllActionsForTimeCompression( void )
 		if (!s->bInSector) continue;
 
 		// Hault!
-		EVENT_StopMerc(s, s->sGridNo, s->bDirection);
+		EVENT_StopMerc(s);
 
 		// END AI actions
 		CancelAIAction(s);

@@ -523,7 +523,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					if (SetOffBombsInGridNo(pSoldier, pSoldier->sGridNo, FALSE, pSoldier->bLevel))
 					{
-						EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+						EVENT_StopMerc(pSoldier);
 						return( TRUE );
 					}
 
@@ -1534,7 +1534,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 									if ( gAnimControl[ pTSoldier->usAnimState ].ubHeight == ANIM_STAND )
 									{
 										// OK, stop merc....
-										EVENT_StopMerc( pTSoldier, pTSoldier->sGridNo, pTSoldier->bDirection );
+										EVENT_StopMerc(pTSoldier);
 
 										if ( pTSoldier->bTeam != gbPlayerNum )
 										{

@@ -293,7 +293,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 			EVENT_SetSoldierPositionXY(s, vs->dXPos, vs->dYPos, SSP_NONE);
 
 			// Stop from any movement.....
-			EVENT_StopMerc(s, s->sGridNo, s->bDirection);
+			EVENT_StopMerc(s);
 
 			// can't call SetCurrentSquad OR SelectSoldier in mapscreen, that will initialize interface panels!!!
 			if (guiCurrentScreen == GAME_SCREEN)

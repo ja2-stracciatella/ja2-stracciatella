@@ -966,7 +966,7 @@ void ActionDone(SOLDIERTYPE *pSoldier)
 
     if ( !pSoldier->fNoAPToFinishMove )
     {
-		  EVENT_StopMerc( pSoldier, pSoldier->sGridNo, pSoldier->bDirection );
+		  EVENT_StopMerc(pSoldier);
 		  AdjustNoAPToFinishMove( pSoldier, FALSE );
     }
 

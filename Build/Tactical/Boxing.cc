@@ -115,7 +115,7 @@ void BoxingPlayerDisqualified( SOLDIERTYPE * pOffender, INT8 bReason )
 {
 	if (bReason == BOXER_OUT_OF_RING || bReason == NON_BOXER_IN_RING)
 	{
-		EVENT_StopMerc( pOffender, pOffender->sGridNo, pOffender->bDirection );
+		EVENT_StopMerc(pOffender);
 	}
 	SetBoxingState( DISQUALIFIED );
 	TriggerNPCRecord( DARREN, 21 );
