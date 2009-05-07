@@ -43,7 +43,6 @@
 #define			SHOW_AP_LEFT												0x000000020
 #define			SHOW_ALL_MERCS											0x000000040
 #define			GODMODE															0x000000100
-#define			PLAYER_TEAM_DEAD										0x000000400
 #define			DISALLOW_SIGHT											0x000001000
 #define			CHECK_SIGHT_AT_END_OF_ATTACK				0x000002000
 #define     IN_CREATURE_LAIR                    0x000004000

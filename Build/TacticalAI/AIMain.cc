@@ -604,12 +604,6 @@ void EndAIGuysTurn( SOLDIERTYPE *pSoldier )
 {
 	if (gfTurnBasedAI)
 	{
-		if (gTacticalStatus.uiFlags & PLAYER_TEAM_DEAD)
-		{
-			EndAITurn();
-			return;
-		}
-
 		if (gTacticalStatus.fSomeoneHit)
 		{
 			gTacticalStatus.fSomeoneHit = FALSE;
