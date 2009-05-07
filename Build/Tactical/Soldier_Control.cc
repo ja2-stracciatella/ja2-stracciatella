@@ -1820,7 +1820,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 
 static void InternalRemoveSoldierFromGridNo(SOLDIERTYPE* const s, BOOLEAN const force)
 {
-	if (s->sGridNo == NO_MAP_POS) return;
+	if (s->sGridNo == NOWHERE) return;
 
 	if (!s->bInSector && !force) return;
 
@@ -1841,7 +1841,7 @@ static void InternalRemoveSoldierFromGridNo(SOLDIERTYPE* const s, BOOLEAN const 
 
 	UnMarkMovementReserved(s);
 	HandleCrowShadowRemoveGridNo(s);
-	s->sGridNo = NO_MAP_POS;
+	s->sGridNo = NOWHERE;
 }
 
 

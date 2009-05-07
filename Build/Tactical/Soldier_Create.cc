@@ -914,7 +914,7 @@ static void InitSoldierStruct(SOLDIERTYPE& s)
 	s.ubDesiredHeight           = NO_DESIRED_HEIGHT;
 	s.bViewRange                = NORMAL_VIEW_RANGE;
 	s.bInSector                 = FALSE;
-	s.sGridNo                   = NO_MAP_POS;
+	s.sGridNo                   = NOWHERE;
 	s.muzzle_flash              = 0;
 	s.usPendingAnimation        = NO_PENDING_ANIMATION;
 	s.ubPendingStanceChange     = NO_PENDING_STANCE;
