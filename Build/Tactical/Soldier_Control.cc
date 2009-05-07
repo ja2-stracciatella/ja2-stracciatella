@@ -1955,297 +1955,223 @@ void SetSoldierHeight(SOLDIERTYPE* const pSoldier, const FLOAT dNewHeight)
 }
 
 
-static void SetSoldierGridNo(SOLDIERTYPE* pSoldier, INT16 sNewGridNo, BOOLEAN fForceRemove)
+static void SetSoldierGridNo(SOLDIERTYPE* const s, GridNo new_grid_no, BOOLEAN const fForceRemove)
 {
-	BOOLEAN	fInWaterValue;
-	INT8		bDir;
-
 	// Not if we're dead!
-	if ( ( pSoldier->uiStatusFlags & SOLDIER_DEAD ) )
+	if (s->uiStatusFlags & SOLDIER_DEAD) return;
+
+	if (new_grid_no == s->sGridNo && s->pLevelNode) return;
+
+	// Check if we are moving AND this is our next dest gridno....
+	if (gAnimControl[s->usAnimState].uiFlags & (ANIM_MOVING | ANIM_SPECIALMOVE))
 	{
-		return;
+		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
+		{
+			if (new_grid_no != s->sDestination)
+			{ // This must be our new one, make it so
+				new_grid_no = s->sDestination;
+			}
+
+			// Now check this baby
+			if (new_grid_no == s->sGridNo) return;
+		}
 	}
 
-	if ( sNewGridNo != pSoldier->sGridNo || pSoldier->pLevelNode == NULL )
+	s->sOldGridNo = s->sGridNo;
+
+	if (s->ubBodyType == QUEENMONSTER)
 	{
-		// Check if we are moving AND this is our next dest gridno....
-		if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ( ANIM_MOVING  | ANIM_SPECIALMOVE ) )
-		{
-			if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
-			{
-				if ( sNewGridNo != pSoldier->sDestination )
-				{
-					// THIS MUST be our new one......MAKE IT SO
-					sNewGridNo = pSoldier->sDestination;
-				}
+		SetPositionSndGridNo(s->iPositionSndID, new_grid_no);
+	}
 
-				// Now check this baby....
-				if ( sNewGridNo == pSoldier->sGridNo )
-				{
-					return;
-				}
+	bool const in_vehicle = s->uiStatusFlags & (SOLDIER_DRIVER | SOLDIER_PASSENGER);
+	if (!in_vehicle)
+	{
+		InternalRemoveSoldierFromGridNo(s, fForceRemove);
+	}
+
+	s->sGridNo = new_grid_no;
+
+	// Check if our new gridno is valid, if not do not set!
+	if (!GridNoOnVisibleWorldTile(new_grid_no)) return;
+
+	// Alrighty, update UI for this guy, if he's the selected guy
+	if (GetSelectedMan() == s && guiCurrentEvent == C_WAIT_FOR_CONFIRM)
+	{ // Update path!
+		gfPlotNewMovement = TRUE;
+	}
+
+	// Reset some flags for optimizations
+	s->sWalkToAttackGridNo = NOWHERE;
+
+	// check for special code to close door
+	if (s->bEndDoorOpenCode == 2)
+	{
+		s->bEndDoorOpenCode = 0;
+		HandleDoorChangeFromGridNo(s, s->sEndDoorOpenCodeData, FALSE);
+	}
+
+	// Update buddy's strategic insertion code
+	s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+	s->usStrategicInsertionData = new_grid_no;
+
+	// Remove this gridno as a reserved place!
+	if (!in_vehicle) UnMarkMovementReserved(s);
+
+	if (s->sInitialGridNo == 0)
+	{
+		s->sInitialGridNo  = new_grid_no;
+		s->usPatrolGrid[0] = new_grid_no;
+	}
+
+	// Add records of this guy being adjacent
+	for (INT8 dir = 0; dir < NUM_WORLD_DIRECTIONS; ++dir)
+	{
+		++gpWorldLevelData[new_grid_no + DirIncrementer[dir]].ubAdjacentSoldierCnt;
+	}
+
+	if (!in_vehicle) DropSmell(s);
+
+	// Handle any special rendering situations
+	s->sZLevelOverride = -1;
+
+	// If we are over a fence (hopping), make us higher!
+	if (IsJumpableFencePresentAtGridno(new_grid_no))
+	{
+		s->sZLevelOverride = TOPMOST_Z_LEVEL;
+	}
+
+	// Add merc at new pos
+	if (!in_vehicle)
+	{
+		LEVELNODE* const n = AddMercToHead(new_grid_no, s, TRUE);
+
+		// If we are in the middle of climbing the roof!
+		if (s->usAnimState == CLIMBUPROOF)
+		{
+			if (s->light) LightSpriteRoofStatus(s->light, TRUE);
+		}
+		else if (s->usAnimState == CLIMBDOWNROOF)
+		{
+			if (s->light) LightSpriteRoofStatus(s->light, FALSE);
+		}
+
+		//JA2Gold: If the player wants the merc to cast the fake light AND it is night
+		if (s->bTeam != OUR_TEAM || gGameSettings.fOptions[TOPTION_MERC_CASTS_LIGHT] && NightTime())
+		{
+			MAP_ELEMENT const& m     = gpWorldLevelData[new_grid_no];
+			LEVELNODE   const& other = s->bLevel > 0 && m.pRoofHead ? *m.pRoofHead : *m.pLandHead;
+			n->ubShadeLevel        = other.ubShadeLevel;
+			n->ubSumLights         = other.ubSumLights;
+			n->ubMaxLights         = other.ubMaxLights;
+			n->ubNaturalShadeLevel = other.ubNaturalShadeLevel;
+		}
+
+		HandleAnimationProfile(s, s->usAnimState, FALSE);
+		HandleCrowShadowNewGridNo(s);
+	}
+
+	INT8 const old_over_terrain_type = s->bOverTerrainType;
+	s->bOverTerrainType = GetTerrainType(new_grid_no);
+
+	// Check that our animation is up to date!
+	if (!in_vehicle)
+	{
+		BOOLEAN const in_water = MercInWater(s);
+
+		// ATE: If ever in water make sure we walk afterwoods!
+		if (in_water) s->usUIMovementMode = WALKING;
+
+		if (in_water != s->fPrevInWater)
+		{
+			// Update Animation data
+			SetSoldierAnimationSurface(s, s->usAnimState);
+
+			s->fPrevInWater = in_water;
+
+			// Update sound
+			if (in_water)
+			{
+				PlaySoldierJA2Sample(s, ENTER_WATER_1, MIDVOLUME, 1, TRUE);
+			}
+			else
+			{ /* ATE: Check if we are going from water to land - if so, resume with
+				 * regular movement mode */
+				EVENT_InitNewSoldierAnim(s, s->usUIMovementMode, 0, FALSE);
 			}
 		}
 
-		pSoldier->sOldGridNo = pSoldier->sGridNo;
-
-    if ( pSoldier->ubBodyType == QUEENMONSTER )
-    {
-      SetPositionSndGridNo( pSoldier->iPositionSndID, sNewGridNo );
-    }
-
-		if ( !( pSoldier->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) ) )
+		// OK, If we were not in deep water but we are now, handle deep animations!
+		if (s->bOverTerrainType == DEEP_WATER && old_over_terrain_type != DEEP_WATER)
 		{
-			InternalRemoveSoldierFromGridNo( pSoldier, fForceRemove );
-		}
-
-		// CHECK IF OUR NEW GIRDNO IS VALID,IF NOT DONOT SET!
-		if ( !GridNoOnVisibleWorldTile( sNewGridNo ) )
-		{
-			pSoldier->sGridNo = sNewGridNo;
-			return;
-		}
-
-		// Alrighty, update UI for this guy, if he's the selected guy...
-		if (GetSelectedMan() == pSoldier)
-		{
-			if ( guiCurrentEvent == C_WAIT_FOR_CONFIRM )
+			// Based on our current animation, change!
+			switch (s->usAnimState)
 			{
-				// Update path!
-				gfPlotNewMovement = TRUE;
-			}
-		}
-
-
-		// Reset some flags for optimizations..
-		pSoldier->sWalkToAttackGridNo = NOWHERE;
-
-		// ATE: Make sure!
-		// RemoveMerc( pSoldier->sGridNo, pSoldier, FALSE );
-
-		pSoldier->sGridNo = sNewGridNo;
-
-		// OK, check for special code to close door...
-		if ( pSoldier->bEndDoorOpenCode == 2 )
-		{
-			pSoldier->bEndDoorOpenCode = 0;
-
-			HandleDoorChangeFromGridNo( pSoldier, pSoldier->sEndDoorOpenCodeData, FALSE );
-		}
-
-		// OK, Update buddy's strategic insertion code....
-		pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-		pSoldier->usStrategicInsertionData = sNewGridNo;
-
-
-		// Remove this gridno as a reserved place!
-		if ( !( pSoldier->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) ) )
-		{
-			UnMarkMovementReserved( pSoldier );
-		}
-
-		if ( pSoldier->sInitialGridNo == 0 )
-		{
-			pSoldier->sInitialGridNo = sNewGridNo;
-			pSoldier->usPatrolGrid[0] = sNewGridNo;
-		}
-
-		// Add records of this guy being adjacent
-		for (bDir = 0; bDir < NUM_WORLD_DIRECTIONS; bDir++)
-		{
-			gpWorldLevelData[ pSoldier->sGridNo + DirIncrementer[ bDir ] ].ubAdjacentSoldierCnt++;
-		}
-
-		if ( !( pSoldier->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) ) )
-		{
-			DropSmell( pSoldier );
-		}
-
-		// HANDLE ANY SPECIAL RENDERING SITUATIONS
-		pSoldier->sZLevelOverride = -1;
-		// If we are over a fence ( hopping ), make us higher!
-
-		if ( IsJumpableFencePresentAtGridno( sNewGridNo ) )
-		{
-			 pSoldier->sZLevelOverride = TOPMOST_Z_LEVEL;
-		}
-
-		// Add merc at new pos
-		if ( !( pSoldier->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) ) )
-		{
-			LEVELNODE* const n = AddMercToHead(pSoldier->sGridNo, pSoldier, TRUE);
-
-			// If we are in the middle of climbing the roof!
-			if ( pSoldier->usAnimState == CLIMBUPROOF )
-			{
-				if (pSoldier->light != NULL)
-				{
-					LightSpriteRoofStatus(pSoldier->light, TRUE);
-				}
-			}
-			else if ( pSoldier->usAnimState == CLIMBDOWNROOF )
-			{
-				if (pSoldier->light != NULL)
-				{
-					LightSpriteRoofStatus(pSoldier->light, FALSE);
-				}
-			}
-
-			//JA2Gold:
-			//if the player wants the merc to cast the fake light AND it is night
-			if( pSoldier->bTeam != OUR_TEAM || gGameSettings.fOptions[ TOPTION_MERC_CASTS_LIGHT ] && NightTime() )
-			{
-				LEVELNODE* other;
-				if ( pSoldier->bLevel > 0 && gpWorldLevelData[pSoldier->sGridNo].pRoofHead != NULL )
-				{
-					other = gpWorldLevelData[pSoldier->sGridNo].pRoofHead;
-				}
-				else
-				{
-					other = gpWorldLevelData[pSoldier->sGridNo].pLandHead;
-				}
-				n->ubShadeLevel        = other->ubShadeLevel;
-				n->ubSumLights         = other->ubSumLights;
-				n->ubMaxLights         = other->ubMaxLights;
-				n->ubNaturalShadeLevel = other->ubNaturalShadeLevel;
-			}
-
-			///HandlePlacingRoofMarker( pSoldier, pSoldier->sGridNo, TRUE, FALSE );
-
-			HandleAnimationProfile( pSoldier, pSoldier->usAnimState, FALSE );
-
-			HandleCrowShadowNewGridNo( pSoldier );
-		}
-
-		INT8 const old_over_terrain_type = pSoldier->bOverTerrainType;
-		pSoldier->bOverTerrainType = GetTerrainType( pSoldier->sGridNo );
-
-		// OK, check that our animation is up to date!
-		// Check our water value
-
-		if ( !( pSoldier->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) ) )
-		{
-			fInWaterValue = MercInWater( pSoldier );
-
-      // ATE: If ever in water MAKE SURE WE WALK AFTERWOODS!
-      if ( fInWaterValue )
-      {
-        pSoldier->usUIMovementMode = WALKING;
-      }
-
-			if ( fInWaterValue != pSoldier->fPrevInWater )
-			{
-				//Update Animation data
- 				SetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );
-
-				// Update flag
-				pSoldier->fPrevInWater = fInWaterValue;
-
-				// Update sound...
-				if ( fInWaterValue )
-				{
-					PlaySoldierJA2Sample(pSoldier, ENTER_WATER_1, MIDVOLUME, 1, TRUE);
-				}
-				else
-				{
-					// ATE: Check if we are going from water to land - if so, resume
-					// with regular movement mode...
-					EVENT_InitNewSoldierAnim( pSoldier, pSoldier->usUIMovementMode, 0 , FALSE );
-				}
-
-			}
-
-
-			// OK, If we were not in deep water but we are now, handle deep animations!
-			if (pSoldier->bOverTerrainType == DEEP_WATER && old_over_terrain_type != DEEP_WATER)
-			{
-				// Based on our current animation, change!
-				switch( pSoldier->usAnimState )
-				{
-					case WALKING:
-					case RUNNING:
-
-					// IN deep water, swim!
-
+				case WALKING:
+				case RUNNING:
+					// In deep water, swim!
 					// Make transition from low to deep
-					EVENT_InitNewSoldierAnim( pSoldier, LOW_TO_DEEP_WATER, 0 , FALSE );
-					pSoldier->usPendingAnimation = DEEP_WATER_SWIM;
-
-					PlayLocationJA2Sample(pSoldier->sGridNo, ENTER_DEEP_WATER_1, MIDVOLUME, 1);
-				}
-			}
-
-			// Damage water if in deep water....
-			if ( pSoldier->bOverTerrainType == MED_WATER || pSoldier->bOverTerrainType == DEEP_WATER )
-			{
-				WaterDamage( pSoldier );
-			}
-
-			// OK, If we were in deep water but we are NOT now, handle mid animations!
-			if (pSoldier->bOverTerrainType != DEEP_WATER && old_over_terrain_type == DEEP_WATER)
-			{
-				// Make transition from low to deep
-				EVENT_InitNewSoldierAnim( pSoldier, DEEP_TO_LOW_WATER, 0 , FALSE );
-				pSoldier->usPendingAnimation = pSoldier->usUIMovementMode;
+					EVENT_InitNewSoldierAnim(s, LOW_TO_DEEP_WATER, 0, FALSE);
+					s->usPendingAnimation = DEEP_WATER_SWIM;
+					PlayLocationJA2Sample(new_grid_no, ENTER_DEEP_WATER_1, MIDVOLUME, 1);
 			}
 		}
 
-    // are we now standing in tear gas without a decently working gas mask?
-    if (GetSmokeEffectOnTile(sNewGridNo, pSoldier->bLevel) != NO_SMOKE_EFFECT)
+		// Damage water if in deep water
+		if (s->bOverTerrainType == MED_WATER || s->bOverTerrainType == DEEP_WATER)
 		{
-			BOOLEAN fSetGassed = TRUE;
-
-			// If we have a functioning gas mask...
-      if ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK && pSoldier->inv[ HEAD1POS ].bStatus[ 0 ] >= GASMASK_MIN_STATUS )
-			{
-				fSetGassed = FALSE;
-			}
-      if ( pSoldier->inv[ HEAD2POS ].usItem == GASMASK && pSoldier->inv[ HEAD2POS ].bStatus[ 0 ] >= GASMASK_MIN_STATUS )
-			{
-				fSetGassed = FALSE;
-			}
-
-			if ( fSetGassed )
-			{
-				pSoldier->uiStatusFlags |= SOLDIER_GASSED;
-			}
+			WaterDamage(s);
 		}
 
-    if ( pSoldier->bTeam == gbPlayerNum && pSoldier->bStealthMode )
-    {
-			// Merc got to a new tile by "sneaking". Did we theoretically sneak
-			// past an enemy?
-
-      if ( pSoldier->bOppCnt > 0 )		// opponents in sight
-			{
-				// check each possible enemy
-				CFOR_ALL_SOLDIERS(pEnemy)
-				{
-					// if this guy is here and alive enough to be looking for us
-					if (pEnemy->bInSector && pEnemy->bLife >= OKLIFE)
-					{
-						// no points for sneaking by the neutrals & friendlies!!!
-				    if ( !pEnemy->bNeutral && ( pSoldier->bSide != pEnemy->bSide ) && (pEnemy->ubBodyType != COW && pEnemy->ubBodyType != CROW) )
-						{
-							// if we SEE this particular oppponent, and he DOESN'T see us... and he COULD see us...
-							if (pSoldier->bOppList[pEnemy->ubID] == SEEN_CURRENTLY &&
-								 pEnemy->bOppList[ pSoldier->ubID ] != SEEN_CURRENTLY &&
-								 PythSpacesAway( pSoldier->sGridNo, pEnemy->sGridNo ) < DistanceVisible( pEnemy, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, pSoldier->sGridNo, pSoldier->bLevel ) )
-							{
-									// AGILITY (5):  Soldier snuck 1 square past unaware enemy
-									StatChange( pSoldier, AGILAMT, 5, FALSE );
-									// Keep looping, we'll give'em 1 point for EACH such enemy!
-							}
-						}
-					}
-				}
-			}
+		// OK, If we were in deep water but we are NOT now, handle mid animations!
+		if (s->bOverTerrainType != DEEP_WATER && old_over_terrain_type == DEEP_WATER)
+		{
+			// Make transition from low to deep
+			EVENT_InitNewSoldierAnim(s, DEEP_TO_LOW_WATER, 0, FALSE);
+			s->usPendingAnimation = s->usUIMovementMode;
 		}
-
-		// Adjust speed based on terrain, etc
-		SetSoldierAniSpeed( pSoldier );
-
 	}
+
+	// Are we now standing in tear gas without a decently working gas mask?
+	if (GetSmokeEffectOnTile(new_grid_no, s->bLevel) != NO_SMOKE_EFFECT                          &&
+			(s->inv[HEAD1POS].usItem != GASMASK || s->inv[HEAD1POS].bStatus[0] < GASMASK_MIN_STATUS) &&
+			(s->inv[HEAD2POS].usItem != GASMASK || s->inv[HEAD2POS].bStatus[0] < GASMASK_MIN_STATUS))
+	{
+		s->uiStatusFlags |= SOLDIER_GASSED;
+	}
+
+	// Merc got to a new tile by "sneaking". Did we theoretically sneak past an enemy?
+	if (s->bTeam == gbPlayerNum &&
+			s->bStealthMode         &&
+			s->bOppCnt > 0) // opponents in sight
+	{
+		// Check each possible enemy
+		CFOR_ALL_SOLDIERS(enemy)
+		{
+			// If this guy is here and alive enough to be looking for us
+			if (!enemy->bInSector)     continue;
+			if (enemy->bLife < OKLIFE) continue;
+
+			// No points for sneaking by the neutrals & friendlies
+			if (enemy->bNeutral)           continue;
+			if (s->bSide == enemy->bSide)  continue;
+			if (enemy->ubBodyType == COW)  continue;
+			if (enemy->ubBodyType == CROW) continue;
+
+			/* if we SEE this particular oppponent, and he DOESN'T see us and he COULD
+			 * see us */
+			if (s->bOppList[enemy->ubID] != SEEN_CURRENTLY) continue;
+			if (enemy->bOppList[s->ubID] == SEEN_CURRENTLY) continue;
+			if (PythSpacesAway(new_grid_no, enemy->sGridNo) >= DistanceVisible(enemy, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, new_grid_no, s->bLevel)) continue;
+
+			// AGILITY (5):  Soldier snuck 1 square past unaware enemy
+			StatChange(s, AGILAMT, 5, FALSE);
+			// Keep looping, we'll give'em 1 point for EACH such enemy!
+		}
+	}
+
+	// Adjust speed based on terrain, etc
+	SetSoldierAniSpeed(s);
 }
 
 
