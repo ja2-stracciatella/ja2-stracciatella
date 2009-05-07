@@ -16,9 +16,6 @@
 #define MAPLENGTH			(MAPHEIGHT*MAPWIDTH)
 
 
-#define	ADJUST_Y_FOR_HEIGHT( pos, y )				( y -= gpWorldLevelData[ pos ].sHeight )
-
-
 static inline UINT8 OppositeDirection(UINT dir) { return (dir + 4) % NUM_WORLD_DIRECTIONS; }
 static inline UINT8 TwoCCDirection(UINT dir)    { return (dir + 6) % NUM_WORLD_DIRECTIONS; }
 static inline UINT8 TwoCDirection(UINT dir)     { return (dir + 2) % NUM_WORLD_DIRECTIONS; }
