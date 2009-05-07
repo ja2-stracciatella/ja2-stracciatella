@@ -7647,60 +7647,51 @@ void EVENT_StopMerc(SOLDIERTYPE* const s)
 }
 
 
-// HUALT EVENT IS USED TO STOP A MERC - NETWORKING SHOULD CHECK / ADJUST TO GRIDNO?
-void EVENT_StopMerc( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDirection )
+// Halt event is used to stop a merc - networking should check / adjust to gridno?
+void EVENT_StopMerc(SOLDIERTYPE* const s, GridNo const grid_no, INT8 const direction)
 {
-	// MOVE GUY TO GRIDNO--- SHOULD BE THE SAME UNLESS IN MULTIPLAYER
-
-	//Cancel pending events
-	if ( !pSoldier->fDelayedMovement )
-	{
-		pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
-		pSoldier->ubPendingDirection = NO_PENDING_DIRECTION;
-		pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
+	if (!s->fDelayedMovement)
+	{ // Cancel pending events
+		s->usPendingAnimation = NO_PENDING_ANIMATION;
+		s->ubPendingDirection = NO_PENDING_DIRECTION;
+		s->ubPendingAction    = NO_PENDING_ACTION;
 	}
 
-	pSoldier->bEndDoorOpenCode				 = 0;
-	pSoldier->fTurningFromPronePosition	= 0;
+	s->bEndDoorOpenCode          = 0;
+	s->fTurningFromPronePosition = 0;
+	s->usPathIndex               = 0;     // Cancel path data!
+	s->usPathDataSize            = 0;
+	s->fDelayedMovement          = FALSE; // Set ext tile waiting flag off
+	s->bReverse                  = FALSE; // Turn off reverse
 
-	// Cancel path data!
-	pSoldier->usPathIndex = pSoldier->usPathDataSize = 0;
+	// Move guy to gridno - should be the same unless in multiplayer
+	EVENT_SetSoldierPosition(s, grid_no, SSP_NONE);
+	s->sDestXPos = (INT16)s->dXPos;
+	s->sDestYPos = (INT16)s->dYPos;
+	EVENT_SetSoldierDirection(s, direction);
 
-	// Set ext tile waiting flag off!
-	pSoldier->fDelayedMovement = FALSE;
-
-	// Turn off reverse...
-	pSoldier->bReverse = FALSE;
-
-	EVENT_SetSoldierPosition(pSoldier, sGridNo, SSP_NONE);
-	pSoldier->sDestXPos = (INT16)pSoldier->dXPos;
-	pSoldier->sDestYPos = (INT16)pSoldier->dYPos;
-	EVENT_SetSoldierDirection(pSoldier, bDirection);
-
-	if ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_MOVING )
+	if (gAnimControl[s->usAnimState].uiFlags & ANIM_MOVING)
 	{
-		SoldierGotoStationaryStance( pSoldier );
+		SoldierGotoStationaryStance(s);
 	}
 
-	// ATE; IF turning to shoot, stop!
-	if ( pSoldier->fTurningToShoot )
+	// ATE: If turning to shoot, stop!
+	if (s->fTurningToShoot)
 	{
-		pSoldier->fTurningToShoot = FALSE;
+		s->fTurningToShoot = FALSE;
 		// Release attacker
 		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., ending fire because saw something");
-		ReduceAttackBusyCount(pSoldier, FALSE);
+		ReduceAttackBusyCount(s, FALSE);
 	}
 
-	// Turn off multi-move speed override....
-	if ( pSoldier->sGridNo == pSoldier->sFinalDestination )
+	// Turn off multi-move speed override
+	if (s->sGridNo == s->sFinalDestination)
 	{
-		pSoldier->fUseMoverrideMoveSpeed = FALSE;
+		s->fUseMoverrideMoveSpeed = FALSE;
 	}
 
-	// Unset UI!
-	UnSetUIBusy(pSoldier);
-
-	UnMarkMovementReserved( pSoldier );
+	UnSetUIBusy(s);
+	UnMarkMovementReserved(s);
 }
 
 

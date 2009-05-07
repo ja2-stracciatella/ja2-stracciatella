@@ -901,7 +901,7 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
 void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
 void EVENT_StopMerc(SOLDIERTYPE*);
-void EVENT_StopMerc( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDirection );
+void EVENT_StopMerc(SOLDIERTYPE*, GridNo, INT8 direction);
 void EVENT_SoldierBeginCutFence( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
 void EVENT_SoldierBeginRepair( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
 void EVENT_SoldierBeginRefuel( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDirection );
