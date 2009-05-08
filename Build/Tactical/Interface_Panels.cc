@@ -2011,7 +2011,7 @@ static void HandleMouseOverSoldierFaceForContMove(SOLDIERTYPE* pSoldier, BOOLEAN
 		pFace->fDisplayTextOver = FACE_ERASE_TEXT_OVER;
 
 		// Erase path!
-		ErasePath( TRUE );
+		ErasePath();
 	}
 
 	fInterfacePanelDirty = DIRTYLEVEL2;
@@ -2063,7 +2063,7 @@ static void SelectedMercButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				{
 					// Continue
 					ContinueMercMovement( gpSMCurrentMerc );
-					ErasePath( TRUE );
+					ErasePath();
 				}
 				else
 				{
@@ -2782,7 +2782,7 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					{
 						// Continue
 						ContinueMercMovement(s);
-						ErasePath(TRUE);
+						ErasePath();
 					}
 					else
 					{

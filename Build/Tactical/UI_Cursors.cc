@@ -1767,7 +1767,7 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 		default:
 
-			ErasePath( TRUE );
+			ErasePath();
 
 	}
 

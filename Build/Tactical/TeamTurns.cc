@@ -121,7 +121,7 @@ void StartPlayerTeamTurn( BOOLEAN fDoBattleSnd, BOOLEAN fEnteringCombatMode )
 						gTacticalStatus.uiFlags |= SHOW_ALL_ROOFS;
 						InvalidateWorldRedundency( );
 						SetRenderFlags(RENDER_FLAG_FULL);
-						ErasePath(FALSE);
+						ErasePath();
 					}
 				}
 			}
@@ -156,7 +156,7 @@ static void FreezeInterfaceForEnemyTurn(void)
 	gfPlotNewMovement = TRUE;
 
 	// Erase path
-	ErasePath( TRUE );
+	ErasePath();
 
 	// Setup locked UI
 	guiPendingOverrideEvent = LU_BEGINUILOCK;
@@ -387,7 +387,7 @@ void DisplayHiddenInterrupt( SOLDIERTYPE * pSoldier )
 	fInterfacePanelDirty = DIRTYLEVEL2;
 
 	// Erase path!
-	ErasePath( TRUE );
+	ErasePath();
 
 	// Reset flags
 	gfPlotNewMovement = TRUE;
@@ -816,7 +816,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 						gTacticalStatus.uiFlags |= SHOW_ALL_ROOFS;
 						InvalidateWorldRedundency( );
 						SetRenderFlags(RENDER_FLAG_FULL);
-						ErasePath(FALSE);
+						ErasePath();
 					}
 				}
 				// 2 indicates that we're ending an interrupt and going back to
@@ -835,7 +835,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 			fInterfacePanelDirty = DIRTYLEVEL2;
 
 			// Erase path!
-			ErasePath( TRUE );
+			ErasePath();
 
 			// Reset flags
 			gfPlotNewMovement = TRUE;

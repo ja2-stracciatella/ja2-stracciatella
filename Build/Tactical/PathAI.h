@@ -18,7 +18,7 @@ INT16 PlotPath(        SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, I
 INT16 UIPlotPath(      SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, UINT16 usMovementMode, INT16 sAPBudget);
 INT16 EstimatePlotPath(SOLDIERTYPE* pSold, INT16 sDestGridno, INT8 bCopyRoute, INT8 bPlot, UINT16 usMovementMode, INT16 sAPBudget);
 
-void ErasePath(char bEraseOldOne);
+void ErasePath();
 INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMovementMode, INT8 bCopy, UINT8 fFlags);
 void GlobalReachableTest( INT16 sStartGridNo );
 void GlobalItemsReachableTest( INT16 sStartGridNo1, INT16 sStartGridNo2 );

@@ -942,7 +942,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 					gfUIAllMoveOn = FALSE;
 
 					// ERASE PATH
-					ErasePath( TRUE );
+					ErasePath();
 				}
 				break;
 
@@ -1047,7 +1047,7 @@ void GetPolledKeyboardInput( UINT32 *puiNewEvent )
 				{
 					if (!fCtrlDown)
 					{
-						ErasePath( TRUE );
+						ErasePath();
 						gfPlotNewMovement = TRUE;
 					}
 					fCtrlDown = TRUE;
@@ -1076,7 +1076,7 @@ void GetPolledKeyboardInput( UINT32 *puiNewEvent )
 						if (GetSelectedMan() != NULL)
 						{
 							gUIUseReverse = TRUE;
-							ErasePath( TRUE );
+							ErasePath();
 							gfPlotNewMovement = TRUE;
 						}
 					}
@@ -1088,7 +1088,7 @@ void GetPolledKeyboardInput( UINT32 *puiNewEvent )
 					if (GetSelectedMan() != NULL)
 					{
 						gUIUseReverse = FALSE;
-						ErasePath( TRUE );
+						ErasePath();
 						gfPlotNewMovement = TRUE;
 					}
 
@@ -2144,7 +2144,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						// Continue
 						ContinueMercMovement(sel);
-						ErasePath(TRUE);
+						ErasePath();
 					}
 					break;
 				}
@@ -3626,7 +3626,7 @@ static void HandleSelectMercSlot(UINT8 ubPanelSlot, INT8 bCode)
 	if (s != NULL)
 	{
 		HandleLocateSelectMerc(s, bCode);
-		ErasePath(TRUE);
+		ErasePath();
 		gfPlotNewMovement = TRUE;
 	}
 }

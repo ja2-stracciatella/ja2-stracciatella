@@ -1271,7 +1271,7 @@ void ClearInterface( )
 	ResetPhysicsTrajectoryUI( );
 
 	// Remove any paths, cursors
-	ErasePath( FALSE );
+	ErasePath();
 
 	//gfPlotNewMovement = TRUE;
 

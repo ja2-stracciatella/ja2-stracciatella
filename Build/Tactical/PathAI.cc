@@ -2039,7 +2039,8 @@ void RoofReachableTest( INT16 sStartGridNo, UINT8 ubBuildingID )
 	gubBuildingInfoToSet = 0;
 }
 
-void ErasePath(char bEraseOldOne)
+
+void ErasePath()
 {
 	INT16 iCnt;
 
@@ -2115,7 +2116,7 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 
  if ( bPlot && gusPathShown )
  {
-    ErasePath(FALSE);
+    ErasePath();
  }
 
  gusAPtsToMove	 = 0;

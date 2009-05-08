@@ -548,7 +548,7 @@ ScreenID HandleTacticalUI(void)
 			switch( gCurrentUIMode )
 			{
 				case ACTION_MODE:
-					ErasePath( TRUE );
+					ErasePath();
 					break;
 			}
 
@@ -632,7 +632,7 @@ static void SetUIMouseCursor(void)
 		if ( gfUIShowExitEast )
 		{
 			gfUIDisplayActionPoints = FALSE;
-			ErasePath( TRUE );
+			ErasePath();
 
 			if ( OKForSectorExit( EAST_STRATEGIC_MOVE, 0, &uiTraverseTimeInMinutes ) )
 			{
@@ -659,7 +659,7 @@ static void SetUIMouseCursor(void)
 		if ( gfUIShowExitWest )
 		{
 			gfUIDisplayActionPoints = FALSE;
-			ErasePath( TRUE );
+			ErasePath();
 
 			if ( OKForSectorExit( WEST_STRATEGIC_MOVE, 0, &uiTraverseTimeInMinutes ) )
 			{
@@ -686,7 +686,7 @@ static void SetUIMouseCursor(void)
 		if ( gfUIShowExitNorth )
 		{
 			gfUIDisplayActionPoints = FALSE;
-			ErasePath( TRUE );
+			ErasePath();
 
 			if ( OKForSectorExit( NORTH_STRATEGIC_MOVE, 0, &uiTraverseTimeInMinutes ) )
 			{
@@ -714,7 +714,7 @@ static void SetUIMouseCursor(void)
 		if ( gfUIShowExitSouth )
 		{
 			gfUIDisplayActionPoints = FALSE;
-			ErasePath( TRUE );
+			ErasePath();
 
 			if ( OKForSectorExit( SOUTH_STRATEGIC_MOVE, 0, &uiTraverseTimeInMinutes ) )
 			{
@@ -790,7 +790,7 @@ static void SetUIMouseCursor(void)
 		if ( gfUIShowExitExitGrid )
 		{
 			gfUIDisplayActionPoints = FALSE;
-			ErasePath( TRUE );
+			ErasePath();
 
 			const GridNo usMapPos = GetMouseMapPos();
 			if (usMapPos != NOWHERE)
@@ -1103,7 +1103,7 @@ void ChangeInterfaceLevel( INT16 sLevel )
 	// Remove any interactive tiles we could be over!
 	BeginCurInteractiveTileCheck();
 	gfPlotNewMovement = TRUE;
-  ErasePath(FALSE);
+  ErasePath();
 }
 
 
@@ -1232,7 +1232,7 @@ static ScreenID UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 			if (gpWorldLevelData[usMapPos].sHeight != gpWorldLevelData[sel->sGridNo].sHeight)
 			 {
 					// ERASE PATH
-					ErasePath( TRUE );
+					ErasePath();
 
 					guiNewUICursor = FLOATING_X_UICURSOR;
 
@@ -1262,7 +1262,7 @@ static ScreenID UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 			else if (UIOKMoveDestination(sel, usMapPos) != 1 && pIntNode == NULL)
 			{
 				// ERASE PATH
-				ErasePath( TRUE );
+				ErasePath();
 
 				guiNewUICursor = CANNOT_MOVE_UICURSOR;
 
@@ -1285,7 +1285,7 @@ static ScreenID UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 						// If so, draw path, etc
 						fSetCursor =  HandleUIMovementCursor(sel, uiCursorFlags, usMapPos, MOVEUI_TARGET_NONE);
 
-						//ErasePath( TRUE );
+						//ErasePath();
 					}
 
 				}
@@ -1484,7 +1484,7 @@ static ScreenID UIHandleMChangeToAction(UI_EVENT* pUIEvent)
 
 static ScreenID UIHandleMChangeToHandMode(UI_EVENT* pUIEvent)
 {
-	ErasePath( FALSE );
+	ErasePath();
 
 	return( GAME_SCREEN );
 }
@@ -1590,7 +1590,7 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 		if (usMapPos == NOWHERE) return GAME_SCREEN;
 
 		// ERASE PATH
-		ErasePath( TRUE );
+		ErasePath();
 
 		if ( fAllMove )
 		{
@@ -2493,7 +2493,7 @@ void GetMercClimbDirection(const SOLDIERTYPE* const s, BOOLEAN* const pfGoDown, 
 static void RemoveTacticalCursor(void)
 {
 	guiNewUICursor = NO_UICURSOR;
-	ErasePath( TRUE );
+	ErasePath();
 }
 
 
@@ -2622,7 +2622,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 				if ( fMovementMode )
 				{
 					// ERASE PATH
-					ErasePath( TRUE );
+					ErasePath();
 
 					// Show cursor with highlight on selected merc
 					guiNewUICursor							= NO_UICURSOR;
@@ -2666,7 +2666,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 				if ( fMovementMode )
 				{
 					// ERASE PATH
-					ErasePath( TRUE );
+					ErasePath();
 
 					// Show cursor with highlight on selected merc
 					guiNewUICursor									= NO_UICURSOR;
@@ -2702,7 +2702,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 					else
 					{
 						// ERASE PATH
-						ErasePath( TRUE );
+						ErasePath();
 
 						// Show cursor with highlight on selected merc
 						guiNewUICursor							= NO_UICURSOR;
@@ -2958,7 +2958,7 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* const pSoldier, UINT32 const uiCurso
 					gfResetUIMovementOptimization = FALSE;
 
 					// ERASE PATH
-					ErasePath( TRUE );
+					ErasePath();
 
 					// Try and get a path right away
 					DrawUIMovementPath( pSoldier, usMapPos,  uiFlags );
@@ -2990,7 +2990,7 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* const pSoldier, UINT32 const uiCurso
 				if (  ( ( uiCursorFlags & MOUSE_MOVING_NEW_TILE ) && !fTargetFoundAndLookingForOne ) || gfUINewStateForIntTile )
 				{
 					// ERASE PATH
-					ErasePath( TRUE );
+					ErasePath();
 
 					// Reset counter
 					RESETCOUNTER( PATHFINDCOUNTER );
@@ -3092,7 +3092,7 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* const pSoldier, UINT32 const uiCurso
 		{
 			// THE MERC IS MOVING
 			// We're moving, erase path, change cursor
-			ErasePath( TRUE );
+			ErasePath();
 
 			fSetCursor = TRUE;
 
@@ -3125,7 +3125,7 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, Mov
 	sActionGridNo = usMapPos;
 	sAPCost				= 0;
 
-	ErasePath( FALSE );
+	ErasePath();
 
 	// IF WE ARE OVER AN INTERACTIVE TILE, GIVE GRIDNO OF POSITION
 	if ( uiFlags == MOVEUI_TARGET_INTTILES )
@@ -3789,7 +3789,7 @@ static ScreenID UIHandleLCOnTerrain(UI_EVENT* pUIEvent)
 
 static ScreenID UIHandleLCChangeToLook(UI_EVENT* pUIEvent)
 {
-	ErasePath( TRUE );
+	ErasePath();
 
 	return( GAME_SCREEN );
 }
@@ -3949,7 +3949,7 @@ static ScreenID UIHandleTOnTerrain(UI_EVENT* pUIEvent)
 
 static ScreenID UIHandleTChangeToTalking(UI_EVENT* pUIEvent)
 {
-	ErasePath( TRUE );
+	ErasePath();
 
 	return( GAME_SCREEN );
 }
@@ -4422,7 +4422,7 @@ static ScreenID UIHandleLABeginLockOurTurn(UI_EVENT* pUIEvent)
 
 		//guiPendingOverrideEvent = LOCKOURTURN_UI_MODE;
 
-		ErasePath( TRUE );
+		ErasePath();
 
 		// Pause time!
 		PauseGame();
@@ -4881,7 +4881,7 @@ static bool UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* const pSoldie
 
 	if (fOverEnemy)
 	{
-		ErasePath(TRUE);
+		ErasePath();
 		fOverEnemy        = FALSE;
 		gfPlotNewMovement = TRUE;
 	}
@@ -4949,7 +4949,7 @@ static bool UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* const pSoldie
 	{
 		if (fOverPool)
 		{
-			ErasePath(TRUE);
+			ErasePath();
 			fOverPool         = FALSE;
 			gfPlotNewMovement = TRUE;
 		}
@@ -4989,7 +4989,7 @@ void	HandleTacticalUILoseCursorFromOtherScreen( )
 
 	gfTacticalForceNoCursor = TRUE;
 
-	ErasePath( TRUE );
+	ErasePath();
 
 	(*(GameScreens[GAME_SCREEN].HandleScreen))();
 
@@ -5131,7 +5131,7 @@ void SetInterfaceHeightLevel( )
 		}
 
 		SetRenderFlags(RENDER_FLAG_FULL);
-		ErasePath(FALSE);
+		ErasePath();
 
 		sOldHeight = sHeight;
 	}
