@@ -184,8 +184,6 @@ ubMineType: unused?
 ubTravelRating: write-only
 wcscat(): check for overkill
 {Head,Pants,Skin,Vest}Pal: buffer necessary? pointer instead?
-{Load,Save}ShadeTable(): code duplication
-{Load,Save}ShadeTable(): filename generation ugly
 {Lock,Unlock}{Back,Frame,Mouse}Buffer(): SDL_LockSurface()?
 
 
