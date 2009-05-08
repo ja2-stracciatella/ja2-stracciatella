@@ -20,17 +20,21 @@
 #define MOUSE_MOVING_NEW_TILE			0x00000004
 #define MOUSE_STATIONARY					0x00000008
 
-#define	MOVEUI_TARGET_INTTILES		1
-#define	MOVEUI_TARGET_ITEMS				2
-#define	MOVEUI_TARGET_MERCS				3
-#define	MOVEUI_TARGET_MERCSFORAID	5
-#define	MOVEUI_TARGET_WIREFENCE		6
-#define	MOVEUI_TARGET_BOMB				7
-#define	MOVEUI_TARGET_STEAL				8
-#define	MOVEUI_TARGET_REPAIR			9
-#define	MOVEUI_TARGET_JAR					10
-#define	MOVEUI_TARGET_CAN					11
-#define MOVEUI_TARGET_REFUEL      12
+enum MoveUITarget
+{
+	MOVEUI_TARGET_NONE        =  0,
+	MOVEUI_TARGET_INTTILES    =  1,
+	MOVEUI_TARGET_ITEMS       =  2,
+	MOVEUI_TARGET_MERCS       =  3,
+	MOVEUI_TARGET_MERCSFORAID =  5,
+	MOVEUI_TARGET_WIREFENCE   =  6,
+	MOVEUI_TARGET_BOMB        =  7,
+	MOVEUI_TARGET_STEAL       =  8,
+	MOVEUI_TARGET_REPAIR      =  9,
+	MOVEUI_TARGET_JAR         = 10,
+	MOVEUI_TARGET_CAN         = 11,
+	MOVEUI_TARGET_REFUEL      = 12
+};
 
 #define	MOVEUI_RETURN_ON_TARGET_MERC		1
 
@@ -238,7 +242,7 @@ void ToggleLookCursorMode( UINT32 *puiNewEvent );
 void UIHandleSoldierStanceChange(SOLDIERTYPE* s, INT8 bNewStance);
 UINT32 GetCursorMovementFlags(void);
 
-BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* pSoldier, UINT32 uiCursorFlags, UINT16 usMapPos, UINT32 uiFlags);
+BOOLEAN HandleUIMovementCursor(SOLDIERTYPE*, UINT32 uiCursorFlags, UINT16 usMapPos, MoveUITarget);
 bool UIMouseOnValidAttackLocation(SOLDIERTYPE*);
 
 BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT16 sGridNo );

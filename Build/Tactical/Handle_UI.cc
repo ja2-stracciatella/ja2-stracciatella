@@ -1275,7 +1275,7 @@ static ScreenID UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 					if ( (gTacticalStatus.uiFlags & INCOMBAT ) && ( gTacticalStatus.uiFlags & TURNBASED ) )
 					{
 						// If so, draw path, etc
-						fSetCursor = HandleUIMovementCursor(sel, uiCursorFlags, usMapPos, 0);
+						fSetCursor = HandleUIMovementCursor(sel, uiCursorFlags, usMapPos, MOVEUI_TARGET_NONE);
 					}
 					else
 					{
@@ -1283,7 +1283,7 @@ static ScreenID UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 						fSetCursor = TRUE;
 
 						// If so, draw path, etc
-						fSetCursor =  HandleUIMovementCursor(sel, uiCursorFlags, usMapPos, 0);
+						fSetCursor =  HandleUIMovementCursor(sel, uiCursorFlags, usMapPos, MOVEUI_TARGET_NONE);
 
 						//ErasePath( TRUE );
 					}
@@ -1556,7 +1556,7 @@ static ScreenID UIHandleCWait(UI_EVENT* pUIEvent)
 			// If we are not in combat, draw path here!
 			if ( (gTacticalStatus.uiFlags & REALTIME ) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
 			{
-				fSetCursor = HandleUIMovementCursor(sel, uiCursorFlags, usMapPos, 0);
+				fSetCursor = HandleUIMovementCursor(sel, uiCursorFlags, usMapPos, MOVEUI_TARGET_NONE);
 			}
 	}
 
@@ -2928,10 +2928,10 @@ UINT32 GetCursorMovementFlags(void)
 }
 
 
-static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 uiFlags);
+static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, MoveUITarget);
 
 
-BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* pSoldier, UINT32 uiCursorFlags, UINT16 usMapPos, UINT32 uiFlags)
+BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* const pSoldier, UINT32 const uiCursorFlags, UINT16 const usMapPos, MoveUITarget const uiFlags)
 {
 	static const SOLDIERTYPE* target = NULL;
 
@@ -3102,7 +3102,7 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* pSoldier, UINT32 uiCursorFlags, UINT
 }
 
 
-static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 uiFlags)
+static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, MoveUITarget const uiFlags)
 {
 	INT16							sAPCost, sBPCost;
 	INT16							sActionGridNo;
