@@ -31,7 +31,7 @@
 static UICursorID HandleActivatedTargetCursor(   SOLDIERTYPE*, GridNo map_pos, BOOLEAN recalc);
 static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE*, GridNo map_pos, BOOLEAN show_APs, BOOLEAN fRecalc, MouseMoveState);
 static UICursorID HandleKnifeCursor(             SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN activated, MouseMoveState);
-static UICursorID HandlePunchCursor(             SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN activated, MouseMoveState);
+static UICursorID HandlePunchCursor(             SOLDIERTYPE*, GridNo map_pos, BOOLEAN activated, MouseMoveState);
 static UICursorID HandleAidCursor(               SOLDIERTYPE*, GridNo map_pos, BOOLEAN activated, MouseMoveState);
 static UICursorID HandleActivatedTossCursor();
 static UICursorID HandleNonActivatedTossCursor(  SOLDIERTYPE*, UINT16 usMapPos, BOOLEAN fRecalc, MouseMoveState, UINT8 ubCursor);
@@ -718,104 +718,73 @@ static UICursorID HandleKnifeCursor(SOLDIERTYPE* const pSoldier, UINT16 const sG
 }
 
 
-static UICursorID HandlePunchCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fActivated, MouseMoveState const uiCursorFlags)
+static UICursorID HandlePunchCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLEAN const activated, MouseMoveState const uiCursorFlags)
 {
-	INT16							sAPCosts;
-	INT8							bFutureAim;
-	BOOLEAN						fEnoughPoints = TRUE;
+	HandleUIMovementCursor(s, uiCursorFlags, map_pos, MOVEUI_TARGET_MERCS);
 
-	// DRAW PATH TO GUY
-	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_MERCS );
-
-	if ( fActivated )
+	if (activated)
 	{
-		DetermineCursorBodyLocation(pSoldier, TRUE, TRUE);
+		DetermineCursorBodyLocation(s, TRUE, TRUE);
 
-		if ( gfUIHandleShowMoveGrid )
-		{
-			gfUIHandleShowMoveGrid = 2;
-		}
+		if (gfUIHandleShowMoveGrid) gfUIHandleShowMoveGrid = 2;
 
 		// Calculate action points
+		bool enough_points = true;
 		if ( gTacticalStatus.uiFlags & TURNBASED )
 		{
-			gsCurrentActionPoints = CalcTotalAPsToAttack( pSoldier, sGridNo, TRUE, (INT8)(pSoldier->bShownAimTime / 2) );
+			gsCurrentActionPoints = CalcTotalAPsToAttack( s, map_pos, TRUE, (INT8)(s->bShownAimTime / 2) );
 			gfUIDisplayActionPoints = TRUE;
 			gfUIDisplayActionPointsCenter = TRUE;
 
 			// If we don't have any points and we are at the first refine, do nothing but warn!
-			if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0 , FALSE ) )
+			if ( !EnoughPoints( s, gsCurrentActionPoints, 0 , FALSE ) )
 			{
 				gfUIDisplayActionPointsInvalid = TRUE;
 
-				if ( pSoldier->bShownAimTime == REFINE_PUNCH_1 )
+				if ( s->bShownAimTime == REFINE_PUNCH_1 )
 				{
 					return( ACTION_PUNCH_RED );
 				}
 			}
 
-			bFutureAim = (INT8)( REFINE_PUNCH_2 );
+			INT8  const future_aim = REFINE_PUNCH_2;
+			INT16 const ap_costs   = CalcTotalAPsToAttack(s, map_pos, TRUE, future_aim / 2);
 
-			sAPCosts = CalcTotalAPsToAttack( pSoldier, sGridNo, TRUE, (INT8)(bFutureAim / 2) );
-
-			// Determine if we can afford!
-			if ( !EnoughPoints( pSoldier, (INT16)sAPCosts, 0 , FALSE ) )
+			if (!EnoughPoints(s, ap_costs, 0, FALSE))
 			{
-				fEnoughPoints = FALSE;
+				enough_points = false;
 			}
-
 		}
 
-		if ( ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
+		if ((gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT)) &&
+				COUNTERDONE(NONGUNTARGETREFINE))
 		{
-			if (COUNTERDONE(NONGUNTARGETREFINE))
+			RESETCOUNTER(NONGUNTARGETREFINE);
+
+			if (s->bShownAimTime == REFINE_PUNCH_1)
 			{
-				// Reset counter
-				RESETCOUNTER(NONGUNTARGETREFINE);
-
-				if (pSoldier->bShownAimTime == REFINE_PUNCH_1)
-				{
-					PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);
-				}
-
-				pSoldier->bShownAimTime = REFINE_PUNCH_2;
+				PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);
 			}
+
+			s->bShownAimTime = REFINE_PUNCH_2;
 		}
 
-		switch( pSoldier->bShownAimTime )
+		switch (s->bShownAimTime)
 		{
 			case REFINE_PUNCH_1:
-
-				if ( gfDisplayFullCountRing )
-				{
-					return( ACTION_PUNCH_YELLOW_AIM1_UICURSOR );
-				}
-				else if ( fEnoughPoints )
-				{
-					return( ACTION_PUNCH_RED_AIM1_UICURSOR );
-				}
-				else
-				{
-					return( ACTION_PUNCH_NOGO_AIM1_UICURSOR );
-				}
+				return
+					gfDisplayFullCountRing ? ACTION_PUNCH_YELLOW_AIM1_UICURSOR :
+					enough_points          ? ACTION_PUNCH_RED_AIM1_UICURSOR    :
+					ACTION_PUNCH_NOGO_AIM1_UICURSOR;
 
 			case REFINE_PUNCH_2:
-
-				if ( gfDisplayFullCountRing )
-				{
-					return( ACTION_PUNCH_YELLOW_AIM2_UICURSOR );
-				}
-				else if ( fEnoughPoints )
-				{
-					return( ACTION_PUNCH_RED_AIM2_UICURSOR );
-				}
-				else
-				{
-					return( ACTION_PUNCH_NOGO_AIM2_UICURSOR );
-				}
+				return
+					gfDisplayFullCountRing ? ACTION_PUNCH_YELLOW_AIM2_UICURSOR :
+					enough_points          ? ACTION_PUNCH_RED_AIM2_UICURSOR    :
+					ACTION_PUNCH_NOGO_AIM2_UICURSOR;
 
 			default:
-				Assert( FALSE );
+				Assert(FALSE);
 				// no return value!
 				return NO_UICURSOR;
 		}
@@ -824,15 +793,15 @@ static UICursorID HandlePunchCursor(SOLDIERTYPE* const pSoldier, UINT16 const sG
 	{
 		gfUIDisplayActionPointsCenter = TRUE;
 
-		// CHECK IF WE ARE ON A GUY ( THAT'S NOT SELECTED )!
-		if (gUIFullTarget != NULL && !(guiUIFullTargetFlags & SELECTED_MERC))
+		// Check if we are on a guy (who's not selected)!
+		if (gUIFullTarget && !(guiUIFullTargetFlags & SELECTED_MERC))
 		{
-			DetermineCursorBodyLocation(pSoldier, TRUE, TRUE);
-			return( ACTION_PUNCH_RED );
+			DetermineCursorBodyLocation(s, TRUE, TRUE);
+			return ACTION_PUNCH_RED;
 		}
 		else
 		{
-			return( ACTION_PUNCH_GRAY );
+			return ACTION_PUNCH_GRAY;
 		}
 	}
 }
