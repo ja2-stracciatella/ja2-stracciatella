@@ -29,20 +29,20 @@
 
 
 // FUNCTIONS FOR ITEM CURSOR HANDLING
-static UINT8 HandleActivatedTargetCursor(   SOLDIERTYPE* pSoldier, UINT16 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags);
-static UINT8 HandleNonActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags);
-static UINT8 HandleKnifeCursor(             SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags);
-static UINT8 HandlePunchCursor(             SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlagsl);
-static UINT8 HandleAidCursor(               SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags);
-static UINT8 HandleActivatedTossCursor(     SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT8 ubCursor);
-static UINT8 HandleNonActivatedTossCursor(  SOLDIERTYPE* pSoldier, UINT16 usMapPos, BOOLEAN fRecalc, UINT32 uiCursorFlags, UINT8 ubCursor);
-static UINT8 HandleWirecutterCursor(        SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags);
-static UINT8 HandleRepairCursor(            SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags);
-static UINT8 HandleRefuelCursor(            SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags);
-static UINT8 HandleRemoteCursor(            SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags);
-static UINT8 HandleBombCursor(              SOLDIERTYPE* pSoldier, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags);
-static UINT8 HandleJarCursor(               SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags);
-static UINT8 HandleTinCanCursor(            SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT32 uiCursorFlags);
+static UINT8 HandleActivatedTargetCursor(   SOLDIERTYPE*, GridNo map_pos, BOOLEAN recalc);
+static UINT8 HandleNonActivatedTargetCursor(SOLDIERTYPE*, UINT16 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags);
+static UINT8 HandleKnifeCursor(             SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags);
+static UINT8 HandlePunchCursor(             SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlagsl);
+static UINT8 HandleAidCursor(               SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags);
+static UINT8 HandleActivatedTossCursor(     SOLDIERTYPE*, UINT16 usMapPos, UINT8 ubCursor);
+static UINT8 HandleNonActivatedTossCursor(  SOLDIERTYPE*, UINT16 usMapPos, BOOLEAN fRecalc, UINT32 uiCursorFlags, UINT8 ubCursor);
+static UINT8 HandleWirecutterCursor(        SOLDIERTYPE*, UINT16 usMapPos, UINT32 uiCursorFlags);
+static UINT8 HandleRepairCursor(            SOLDIERTYPE*, UINT16 usMapPos, UINT32 uiCursorFlags);
+static UINT8 HandleRefuelCursor(            SOLDIERTYPE*, UINT16 usMapPos, UINT32 uiCursorFlags);
+static UINT8 HandleRemoteCursor(            SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags);
+static UINT8 HandleBombCursor(              SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags);
+static UINT8 HandleJarCursor(               SOLDIERTYPE*, UINT16 usMapPos, UINT32 uiCursorFlags);
+static UINT8 HandleTinCanCursor(            SOLDIERTYPE*, UINT16 usMapPos, UINT32 uiCursorFlags);
 
 
 static BOOLEAN gfCannotGetThrough = FALSE;
@@ -154,7 +154,7 @@ UINT8 GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, BOOLEAN 
 		case TARGETCURS:
 			if ( fActivated )
 			{
-				ubCursorID = HandleActivatedTargetCursor( pSoldier, sTargetGridNo, fShowAPs, fRecalc, uiCursorFlags );
+				ubCursorID = HandleActivatedTargetCursor(pSoldier, sTargetGridNo, fRecalc);
 			}
 			else
 			{
@@ -251,408 +251,220 @@ UINT8 GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, BOOLEAN 
 static void DetermineCursorBodyLocation(SOLDIERTYPE* s, BOOLEAN fDisplay, BOOLEAN fRecalc);
 
 
-static UINT8 HandleActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags)
+static UINT8 HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLEAN const recalc)
 {
-	 UINT8							switchVal;
-	 BOOLEAN						fEnoughPoints = TRUE;
-	 UINT8							bFutureAim;
-	 INT16							sAPCosts;
-	 UINT16							usCursor=0;
-	 BOOLEAN						fMaxPointLimitHit = FALSE;
-	 UINT16				usInHand;
-
-
-		usInHand = pSoldier->inv[ HANDPOS ].usItem;
-
-		if ( Item[ usInHand ].usItemClass != IC_THROWING_KNIFE )
+	bool const is_throwing_knife = Item[s->inv[HANDPOS].usItem].usItemClass == IC_THROWING_KNIFE;
+	if (is_throwing_knife)
+	{
+		// If we are in realtime, follow!
+		if (!(gTacticalStatus.uiFlags & INCOMBAT)                  &&
+				gAnimControl[s->usAnimState].uiFlags & ANIM_STATIONARY &&
+				gUITargetShotWaiting)
 		{
-			// If we are in realtime, follow!
-			if ( ( !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
-			{
-				if (gAnimControl[GetSelectedMan()->usAnimState].uiFlags & ANIM_STATIONARY)
-				{
-					if ( gUITargetShotWaiting )
-					{
-						guiPendingOverrideEvent = CA_MERC_SHOOT;
-					}
-				}
-
-				//SoldierFollowGridNo( pSoldier, usMapPos );
-			}
-
-			// Check if we are reloading
-			if ( ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
-			{
-				if (pSoldier->fReloading)
-				{
-					return( ACTION_TARGET_RELOADING );
-				}
-
-			}
+			guiPendingOverrideEvent = CA_MERC_SHOOT;
 		}
 
-
-		// Determine where we are shooting / aiming
-		//if ( fRecalc )
+		// Check if we are reloading
+		if ((gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT)) &&
+				s->fReloading)
 		{
-			DetermineCursorBodyLocation(GetSelectedMan(), TRUE, TRUE);
+			return ACTION_TARGET_RELOADING;
 		}
+	}
 
-		if ( gTacticalStatus.uiFlags & TURNBASED && ( gTacticalStatus.uiFlags & INCOMBAT ) )
+	// Determine where we are shooting/aiming
+	DetermineCursorBodyLocation(s, TRUE, TRUE);
+
+	bool enough_points       = true;
+	bool max_point_limit_hit = false;
+	if (gTacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT)
+	{
+		gsCurrentActionPoints         = CalcTotalAPsToAttack(s, map_pos, TRUE, s->bShownAimTime / 2);
+		gfUIDisplayActionPoints       = TRUE;
+		gfUIDisplayActionPointsCenter = TRUE;
+
+		// If we don't have any points and we are at the first refine, do nothing but warn!
+		if (!EnoughPoints(s, gsCurrentActionPoints, 0 , FALSE))
 		{
-
-			gsCurrentActionPoints = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, (INT8)(pSoldier->bShownAimTime / 2) );
-			gfUIDisplayActionPoints = TRUE;
-			gfUIDisplayActionPointsCenter = TRUE;
-
-			// If we don't have any points and we are at the first refine, do nothing but warn!
-			if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0 , FALSE ) )
-			{
-				gfUIDisplayActionPointsInvalid = TRUE;
-
-				fMaxPointLimitHit = TRUE;
-			}
-			else
-			{
-				bFutureAim = (INT8)( pSoldier->bShownAimTime + 2 );
-
-				if ( bFutureAim <= REFINE_AIM_5 )
-				{
-					sAPCosts = MinAPsToAttack( pSoldier, usMapPos, TRUE ) + ( bFutureAim / 2 );
-
-					// Determine if we can afford!
-					if ( !EnoughPoints( pSoldier, (INT16)sAPCosts, 0 , FALSE ) )
-					{
-						fEnoughPoints = FALSE;
-					}
-
-				}
-			}
-		}
-
-		if ( ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
-		{
-			if (COUNTERDONE(TARGETREFINE))
-			{
-				// Reset counter
-				RESETCOUNTER(TARGETREFINE);
-
-				if (pSoldier->bDoBurst)
-				{
-					pSoldier->bShownAimTime = REFINE_AIM_BURST;
-				}
-				else
-				{
-					pSoldier->bShownAimTime++;
-
-					if (pSoldier->bShownAimTime > REFINE_AIM_5)
-					{
-						pSoldier->bShownAimTime = REFINE_AIM_5;
-					}
-					else
-					{
-						if (pSoldier->bShownAimTime % 2)
-						{
-							PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);
-						}
-					}
-				}
-			}
-		}
-
-
-		if ( fRecalc )
-		{
-			const SOLDIERTYPE* const tgt = gUIFullTarget;
-			if (tgt != NULL)
-			{
-				if (SoldierToSoldierBodyPartChanceToGetThrough(pSoldier, tgt, pSoldier->bAimShotLocation) < OK_CHANCE_TO_GET_THROUGH)
-				{
-					gfCannotGetThrough = TRUE;
-				}
-				else
-				{
-					gfCannotGetThrough = FALSE;
-				}
-			}
-			else
-			{
-				if (SoldierToLocationChanceToGetThrough(pSoldier, usMapPos, gsInterfaceLevel, pSoldier->bTargetCubeLevel, NULL) < OK_CHANCE_TO_GET_THROUGH)
-				{
-					gfCannotGetThrough = TRUE;
-				}
-				else
-				{
-					gfCannotGetThrough = FALSE;
-				}
-			}
-		}
-
-		// OK, if we begin to move, reset the cursor...
-		if ( uiCursorFlags & MOUSE_MOVING )
-		{
-			//gfCannotGetThrough = FALSE;
-		}
-
-		if ( fMaxPointLimitHit )
-		{
-			// Check if we're in burst mode!
-			if ( pSoldier->bDoBurst )
-			{
-				usCursor = ACTION_TARGETREDBURST_UICURSOR;
-			}
-			else if ( Item[ usInHand ].usItemClass == IC_THROWING_KNIFE )
-			{
-				usCursor = RED_THROW_UICURSOR;
-			}
-			else
-			{
-				usCursor = ACTION_TARGETRED_UICURSOR;
-			}
-		}
-		else if ( pSoldier->bDoBurst )
-		{
-			if ( pSoldier->fDoSpread )
-			{
-				usCursor = ACTION_TARGETREDBURST_UICURSOR;
-			}
-			else
-			{
-				usCursor = ACTION_TARGETCONFIRMBURST_UICURSOR;
-			}
+			gfUIDisplayActionPointsInvalid = TRUE;
+			max_point_limit_hit            = true;
 		}
 		else
 		{
-
-			// IF we are in turnbased, half the shown time values
-			if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
+			UINT8 const future_aim = s->bShownAimTime + 2;
+			if (future_aim <= REFINE_AIM_5)
 			{
-				switchVal = pSoldier->bShownAimTime;
-			}
-			else
-			{
-				switchVal = pSoldier->bShownAimTime;
-			}
-
-
-			switch( switchVal )
-			{
-				case REFINE_AIM_1:
-
-					if ( Item[ usInHand ].usItemClass == IC_THROWING_KNIFE )
-					{
-						if ( gfDisplayFullCountRing )
-						{
-							usCursor = ACTION_THROWAIMYELLOW1_UICURSOR;
-						}
-						else if ( fEnoughPoints )
-						{
-							usCursor = ACTION_THROWAIM1_UICURSOR;
-						}
-						else
-						{
-							usCursor = ACTION_THROWAIMCANT1_UICURSOR;
-						}
-					}
-					else
-					{
-						if ( gfDisplayFullCountRing )
-						{
-							usCursor = ACTION_TARGETAIMYELLOW1_UICURSOR;
-						}
-						else if ( fEnoughPoints )
-						{
-							usCursor = ACTION_TARGETAIM1_UICURSOR;
-						}
-						else
-						{
-							usCursor = ACTION_TARGETAIMCANT1_UICURSOR;
-						}
-					}
-					break;
-
-				case REFINE_AIM_2:
-
-					if ( Item[ usInHand ].usItemClass == IC_THROWING_KNIFE )
-					{
-						if ( gfDisplayFullCountRing )
-						{
-							usCursor = ACTION_THROWAIMYELLOW2_UICURSOR;
-						}
-						else if ( fEnoughPoints )
-						{
-								usCursor =  ACTION_THROWAIM3_UICURSOR;
-						}
-						else
-						{
-								usCursor = ACTION_THROWAIMCANT2_UICURSOR;
-						}
-					}
-					else
-					{
-						if ( gfDisplayFullCountRing )
-						{
-							usCursor = ACTION_TARGETAIMYELLOW2_UICURSOR;
-						}
-						else if ( fEnoughPoints )
-						{
-								usCursor =  ACTION_TARGETAIM3_UICURSOR;
-						}
-						else
-						{
-								usCursor = ACTION_TARGETAIMCANT2_UICURSOR;
-						}
-					}
-					break;
-
-				case REFINE_AIM_3:
-
-					if ( Item[ usInHand ].usItemClass == IC_THROWING_KNIFE )
-					{
-						if ( gfDisplayFullCountRing )
-						{
-							usCursor = ACTION_THROWAIMYELLOW3_UICURSOR;
-						}
-						else if ( fEnoughPoints )
-						{
-							usCursor = ACTION_THROWAIM5_UICURSOR;
-						}
-						else
-						{
-							usCursor = ACTION_THROWAIMCANT3_UICURSOR;
-						}
-					}
-					else
-					{
-						if ( gfDisplayFullCountRing )
-						{
-							usCursor = ACTION_TARGETAIMYELLOW3_UICURSOR;
-						}
-						else if ( fEnoughPoints )
-						{
-							usCursor = ACTION_TARGETAIM5_UICURSOR;
-						}
-						else
-						{
-							usCursor = ACTION_TARGETAIMCANT3_UICURSOR;
-						}
-					}
-					break;
-
-				case REFINE_AIM_4:
-
-					if ( Item[ usInHand ].usItemClass == IC_THROWING_KNIFE )
-					{
-						if ( gfDisplayFullCountRing )
-						{
-							usCursor = ACTION_THROWAIMYELLOW4_UICURSOR;
-						}
-						else if ( fEnoughPoints )
-						{
-							usCursor = ACTION_THROWAIM7_UICURSOR;
-						}
-						else
-						{
-							usCursor = ACTION_THROWAIMCANT4_UICURSOR;
-						}
-					}
-					else
-					{
-						if ( gfDisplayFullCountRing )
-						{
-							usCursor = ACTION_TARGETAIMYELLOW4_UICURSOR;
-						}
-						else if ( fEnoughPoints )
-						{
-							usCursor = ACTION_TARGETAIM7_UICURSOR;
-						}
-						else
-						{
-							usCursor = ACTION_TARGETAIMCANT4_UICURSOR;
-						}
-					}
-					break;
-
-				case REFINE_AIM_5:
-
-					if ( Item[ usInHand ].usItemClass == IC_THROWING_KNIFE )
-					{
-						if ( gfDisplayFullCountRing )
-						{
-							usCursor = ACTION_THROWAIMFULL_UICURSOR;
-						}
-						else if ( fEnoughPoints )
-						{
-							usCursor =  ACTION_THROWAIM9_UICURSOR;
-						}
-						else
-						{
-							usCursor =  ACTION_THROWAIMCANT5_UICURSOR;
-						}
-					}
-					else
-					{
-						if ( gfDisplayFullCountRing )
-						{
-							usCursor = ACTION_TARGETAIMFULL_UICURSOR;
-						}
-						else if ( fEnoughPoints )
-						{
-							usCursor =  ACTION_TARGETAIM9_UICURSOR;
-						}
-						else
-						{
-							usCursor =  ACTION_TARGETAIMCANT5_UICURSOR;
-						}
-					}
-					break;
-
-				case REFINE_AIM_MID1:
-
-					usCursor =  ACTION_TARGETAIM2_UICURSOR;
-					break;
-
-				case REFINE_AIM_MID2:
-
-					usCursor = ACTION_TARGETAIM4_UICURSOR;
-					break;
-
-				case REFINE_AIM_MID3:
-
-					usCursor = ACTION_TARGETAIM6_UICURSOR;
-					break;
-
-				case REFINE_AIM_MID4:
-					usCursor =  ACTION_TARGETAIM8_UICURSOR;
-					break;
+				INT16 const AP_costs = MinAPsToAttack(s, map_pos, TRUE) + future_aim / 2;
+				if (!EnoughPoints(s, AP_costs, 0, FALSE))
+				{
+					enough_points = false;
+				}
 			}
 		}
+	}
 
-		if ( !fMaxPointLimitHit )
+	if ((gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT)) &&
+			COUNTERDONE(TARGETREFINE))
+	{
+		RESETCOUNTER(TARGETREFINE);
+
+		if (s->bDoBurst)
 		{
-			// Remove flash flag!
-			RemoveCursorFlags( gUICursors[ usCursor ].usFreeCursorName, CURSOR_TO_FLASH );
-			RemoveCursorFlags( gUICursors[ usCursor ].usFreeCursorName, CURSOR_TO_PLAY_SOUND );
-
-			if ( gfCannotGetThrough  )
+			s->bShownAimTime = REFINE_AIM_BURST;
+		}
+		else
+		{
+			++s->bShownAimTime;
+			if (s->bShownAimTime > REFINE_AIM_5)
 			{
-				SetCursorSpecialFrame( gUICursors[ usCursor ].usFreeCursorName, 1 );
+				s->bShownAimTime = REFINE_AIM_5;
 			}
-			else
+			else if (s->bShownAimTime % 2 != 0)
 			{
-				if ( !InRange( pSoldier, usMapPos ) )
+				PlayJA2Sample(TARG_REFINE_BEEP, MIDVOLUME, 1, MIDDLEPAN);
+			}
+		}
+	}
+
+	if (recalc)
+	{
+		SOLDIERTYPE const* const tgt    = gUIFullTarget;
+		UINT8              const chance =
+			tgt ? SoldierToSoldierBodyPartChanceToGetThrough(s, tgt, s->bAimShotLocation) :
+			SoldierToLocationChanceToGetThrough(s, map_pos, gsInterfaceLevel, s->bTargetCubeLevel, 0);
+		gfCannotGetThrough = chance < OK_CHANCE_TO_GET_THROUGH;
+	}
+
+	UINT16 cursor = 0;
+	if (max_point_limit_hit)
+	{
+		// Check if we're in burst mode!
+		cursor =
+			s->bDoBurst       ? ACTION_TARGETREDBURST_UICURSOR :
+			is_throwing_knife ? RED_THROW_UICURSOR             :
+			ACTION_TARGETRED_UICURSOR;
+	}
+	else if (s->bDoBurst)
+	{
+		cursor =
+			s->fDoSpread ? ACTION_TARGETREDBURST_UICURSOR :
+			ACTION_TARGETCONFIRMBURST_UICURSOR;
+	}
+	else
+	{
+		switch (s->bShownAimTime)
+		{
+			case REFINE_AIM_1:
+				if (is_throwing_knife)
 				{
-					// OK, make buddy flash!
-					SetCursorFlags( gUICursors[ usCursor ].usFreeCursorName, CURSOR_TO_FLASH );
-					SetCursorFlags( gUICursors[ usCursor ].usFreeCursorName, CURSOR_TO_PLAY_SOUND );
+					cursor =
+						gfDisplayFullCountRing ? ACTION_THROWAIMYELLOW1_UICURSOR :
+						enough_points          ? ACTION_THROWAIM1_UICURSOR       :
+						ACTION_THROWAIMCANT1_UICURSOR;
 				}
 				else
 				{
-					SetCursorSpecialFrame( gUICursors[ usCursor ].usFreeCursorName, 0 );
+					cursor =
+						gfDisplayFullCountRing ? ACTION_TARGETAIMYELLOW1_UICURSOR :
+						enough_points          ? ACTION_TARGETAIM1_UICURSOR       :
+						ACTION_TARGETAIMCANT1_UICURSOR;
 				}
-			}
+				break;
+
+			case REFINE_AIM_2:
+				if (is_throwing_knife)
+				{
+					cursor =
+						gfDisplayFullCountRing ? ACTION_THROWAIMYELLOW2_UICURSOR :
+						enough_points          ? ACTION_THROWAIM3_UICURSOR       :
+						ACTION_THROWAIMCANT2_UICURSOR;
+				}
+				else
+				{
+					cursor =
+						gfDisplayFullCountRing ? ACTION_TARGETAIMYELLOW2_UICURSOR :
+						enough_points          ? ACTION_TARGETAIM3_UICURSOR       :
+						ACTION_TARGETAIMCANT2_UICURSOR;
+				}
+				break;
+
+			case REFINE_AIM_3:
+				if (is_throwing_knife)
+				{
+					cursor =
+						gfDisplayFullCountRing ? ACTION_THROWAIMYELLOW3_UICURSOR :
+						enough_points          ? ACTION_THROWAIM5_UICURSOR       :
+						ACTION_THROWAIMCANT3_UICURSOR;
+				}
+				else
+				{
+					cursor =
+						gfDisplayFullCountRing ? ACTION_TARGETAIMYELLOW3_UICURSOR :
+						enough_points          ? ACTION_TARGETAIM5_UICURSOR       :
+						ACTION_TARGETAIMCANT3_UICURSOR;
+				}
+				break;
+
+			case REFINE_AIM_4:
+				if (is_throwing_knife)
+				{
+					cursor =
+						gfDisplayFullCountRing ? ACTION_THROWAIMYELLOW4_UICURSOR :
+						enough_points          ? ACTION_THROWAIM7_UICURSOR       :
+						ACTION_THROWAIMCANT4_UICURSOR;
+				}
+				else
+				{
+					cursor =
+						gfDisplayFullCountRing ? ACTION_TARGETAIMYELLOW4_UICURSOR :
+						enough_points          ? ACTION_TARGETAIM7_UICURSOR       :
+						ACTION_TARGETAIMCANT4_UICURSOR;
+				}
+				break;
+
+			case REFINE_AIM_5:
+				if (is_throwing_knife)
+				{
+					cursor =
+						gfDisplayFullCountRing ? ACTION_THROWAIMFULL_UICURSOR :
+						enough_points          ? ACTION_THROWAIM9_UICURSOR    :
+						ACTION_THROWAIMCANT5_UICURSOR;
+				}
+				else
+				{
+					cursor =
+						gfDisplayFullCountRing ? ACTION_TARGETAIMFULL_UICURSOR :
+						enough_points          ? ACTION_TARGETAIM9_UICURSOR    :
+						ACTION_TARGETAIMCANT5_UICURSOR;
+				}
+				break;
+
+			case REFINE_AIM_MID1: cursor = ACTION_TARGETAIM2_UICURSOR; break;
+			case REFINE_AIM_MID2: cursor = ACTION_TARGETAIM4_UICURSOR; break;
+			case REFINE_AIM_MID3: cursor = ACTION_TARGETAIM6_UICURSOR; break;
+			case REFINE_AIM_MID4: cursor = ACTION_TARGETAIM8_UICURSOR; break;
 		}
-		return( (UINT8)usCursor );
+	}
+
+	if (!max_point_limit_hit)
+	{
+		UINT16 const free_cursor_name = gUICursors[cursor].usFreeCursorName;
+		RemoveCursorFlags(free_cursor_name, CURSOR_TO_FLASH | CURSOR_TO_PLAY_SOUND);
+		if (gfCannotGetThrough)
+		{
+			SetCursorSpecialFrame(free_cursor_name, 1);
+		}
+		else if (!InRange(s, map_pos))
+		{ // OK, make buddy flash!
+			SetCursorFlags(free_cursor_name, CURSOR_TO_FLASH | CURSOR_TO_PLAY_SOUND);
+		}
+		else
+		{
+			SetCursorSpecialFrame(free_cursor_name, 0);
+		}
+	}
+
+	return cursor;
 }
 
 
