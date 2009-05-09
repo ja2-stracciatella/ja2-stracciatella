@@ -2,6 +2,7 @@
 #define _HANDLE_UI_
 
 #include "Input.h"
+#include "Interface_Cursors.h"
 #include "JA2Types.h"
 #include "MouseSystem.h"
 #include "ScreenIDs.h"
@@ -159,7 +160,7 @@ typedef BOOLEAN (*UIKEYBOARD_HOOK)( InputAtom *pInputEvent );
 // GLOBAL STATUS VARS
 extern UI_MODE gCurrentUIMode;
 extern UINT32  guiCurrentEvent;
-extern UINT32  guiCurrentUICursor;
+extern UICursorID guiCurrentUICursor;
 extern INT16   gsSelectedLevel;
 extern BOOLEAN gfPlotNewMovement;
 extern UINT32  guiPendingOverrideEvent;
@@ -259,7 +260,7 @@ void UnSetUIBusy(const SOLDIERTYPE* s);
 
 ScreenID UIHandleLUIEndLock(UI_EVENT*);
 
-void BeginDisplayTimedCursor( UINT32 uiCursorID, UINT32 uiDelay );
+void BeginDisplayTimedCursor(UICursorID, UINT32 uiDelay);
 
 void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent );
 

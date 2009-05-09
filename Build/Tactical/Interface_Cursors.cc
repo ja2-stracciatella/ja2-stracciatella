@@ -200,7 +200,7 @@ UINT16				gusTargetDropPos;
 BOOLEAN				gfTargetDropPos = FALSE;
 
 
-void SetUICursor(UINT32 const uiNewCursor)
+void SetUICursor(UICursorID const uiNewCursor)
 {
 	guiCurUICursor = uiNewCursor;
 }

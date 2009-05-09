@@ -11,7 +11,6 @@
 #include "Sound_Control.h"
 #include "WorldDef.h"
 #include "Interactive_Tiles.h"
-#include "Interface_Cursors.h"
 #include "WorldMan.h"
 #include "Structure.h"
 #include "Animation_Control.h"
@@ -295,7 +294,7 @@ void HandleStructChangeFromGridNo(SOLDIERTYPE* const s, GridNo const grid_no)
 }
 
 
-UINT32 GetInteractiveTileCursor( UINT32 uiOldCursor, BOOLEAN fConfirm )
+UICursorID GetInteractiveTileCursor(UICursorID const uiOldCursor, BOOLEAN const fConfirm)
 {
 	LEVELNODE	 *pIntNode;
 	STRUCTURE	 *pStructure;

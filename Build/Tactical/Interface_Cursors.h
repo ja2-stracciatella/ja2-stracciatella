@@ -11,7 +11,7 @@
 #define UICURSOR_DONTSHOW2NDLEVEL				0x00000100
 
 
-enum UICursorDefines
+enum UICursorID
 {
 	NO_UICURSOR,
 	NORMAL_FREEUICURSOR,
@@ -200,7 +200,7 @@ struct UICursor
 extern const UICursor gUICursors[NUM_UI_CURSORS];
 
 
-void SetUICursor(UINT32 uiNewCursor);
+void SetUICursor(UICursorID);
 void DrawUICursor(void);
 void HideUICursor(void);
 

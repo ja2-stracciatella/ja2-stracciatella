@@ -1,6 +1,7 @@
 #ifndef __INTERACTIVE_TILES_H
 #define __INTERACTIVE_TILES_H
 
+#include "Interface_Cursors.h"
 #include "JA2Types.h"
 #include "WorldDef.h"
 
@@ -10,7 +11,7 @@
 
 BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE *pSoldier, UINT8 ubDirection );
 BOOLEAN StartInteractiveObjectFromMouse( SOLDIERTYPE *pSoldier, UINT8 ubDirection );
-UINT32  GetInteractiveTileCursor( UINT32 uiOldCursor, BOOLEAN fConfirm );
+UICursorID GetInteractiveTileCursor(UICursorID old_cursor, BOOLEAN fConfirm);
 BOOLEAN InteractWithInteractiveObject( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection );
 BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier );
 

@@ -24,7 +24,6 @@
 #include "Cursor_Control.h"
 #include "Points.h"
 #include "Interactive_Tiles.h"
-#include "Interface_Cursors.h"
 #include "OppList.h"
 #include "WorldMan.h"
 #include "Weapons.h"
@@ -264,11 +263,11 @@ static UI_EVENT gEvents[NUM_UI_EVENTS] =
 
 
 UI_MODE									gCurrentUIMode					= IDLE_MODE;
-static UI_MODE gOldUIMode = IDLE_MODE;
+static UI_MODE gOldUIMode            = IDLE_MODE;
 UINT32									guiCurrentEvent					= I_DO_NOTHING;
 UINT32									guiOldEvent							= I_DO_NOTHING;
-UINT32									guiCurrentUICursor			= NO_UICURSOR;
-UINT32									guiNewUICursor					= NORMAL_SNAPUICURSOR;
+UICursorID        guiCurrentUICursor = NO_UICURSOR;
+static UICursorID guiNewUICursor     = NORMAL_SNAPUICURSOR;
 UINT32									guiPendingOverrideEvent	= I_DO_NOTHING;
 UINT16									gusSavedMouseX;
 UINT16									gusSavedMouseY;
@@ -276,7 +275,7 @@ UIKEYBOARD_HOOK					gUIKeyboardHook			= NULL;
 BOOLEAN									gUIActionModeChangeDueToMouseOver = FALSE;
 
 BOOLEAN									gfDisplayTimerCursor = FALSE;
-UINT32									guiTimerCursorID = 0;
+static UICursorID guiTimerCursorID   = NO_UICURSOR;
 UINT32									guiTimerLastUpdate = 0;
 UINT32									guiTimerCursorDelay = 0;
 
@@ -4799,7 +4798,7 @@ void UnSetUIBusy(const SOLDIERTYPE* const s)
 }
 
 
-void BeginDisplayTimedCursor( UINT32 uiCursorID, UINT32 uiDelay )
+void BeginDisplayTimedCursor(UICursorID const uiCursorID, UINT32 const uiDelay)
 {
 	gfDisplayTimerCursor = TRUE;
 	guiTimerCursorID		 = uiCursorID;
@@ -4985,7 +4984,7 @@ static bool UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* const pSoldie
 
 void	HandleTacticalUILoseCursorFromOtherScreen( )
 {
-	SetUICursor( 0 );
+	SetUICursor(NO_UICURSOR);
 
 	gfTacticalForceNoCursor = TRUE;
 
