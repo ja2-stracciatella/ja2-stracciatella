@@ -109,141 +109,69 @@ BOOLEAN GetMouseRecalcAndShowAPFlags( UINT32 *puiCursorFlags, BOOLEAN *pfShowAPs
 }
 
 
-// FUNCTIONS FOR CURSOR DETERMINATION!
-UICursorID GetProperItemCursor(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, BOOLEAN fActivated)
+// Functions for cursor determination
+UICursorID GetProperItemCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLEAN const activated)
 {
-	UINT32						uiCursorFlags;
-	BOOLEAN						fShowAPs = FALSE;
-	BOOLEAN						fRecalc = FALSE;
-	INT16							sTargetGridNo = usMapPos;
-	UICursorID ubCursorID = NO_UICURSOR;
+	UINT32        cursor_flags;
+	BOOLEAN       show_APs;
+	BOOLEAN const recalc = GetMouseRecalcAndShowAPFlags(&cursor_flags, &show_APs);
 
-	fRecalc = GetMouseRecalcAndShowAPFlags( &uiCursorFlags, &fShowAPs );
-
-	// ATE: Update attacking weapon!
-	// CC has added this attackingWeapon stuff and I need to update it constantly for
-	// CTGH algorithms
-	if ( gTacticalStatus.ubAttackBusyCount == 0 && Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass & IC_WEAPON )
+	/* ATE: Update attacking weapon!
+	 * CC has added this attackingWeapon stuff and I need to update it constantly
+	 * for CTGH algorithms */
+	if (gTacticalStatus.ubAttackBusyCount == 0)
 	{
-		pSoldier->usAttackingWeapon = pSoldier->inv[HANDPOS].usItem;
+		UINT16 const in_hand = s->inv[HANDPOS].usItem;
+		if (Item[in_hand].usItemClass & IC_WEAPON) s->usAttackingWeapon = in_hand;
 	}
 
-	// Calculate target gridno!
-	sTargetGridNo = (gUIFullTarget != NULL ? gUIFullTarget->sGridNo : usMapPos);
-
-	ItemCursor const ubItemCursor = GetActionModeCursor(pSoldier);
-	switch( ubItemCursor )
+	UICursorID               cursor      = NO_UICURSOR;
+	SOLDIERTYPE const* const tgt         = gUIFullTarget;
+	GridNo             const tgt_grid_no = tgt ? tgt->sGridNo : map_pos;
+	ItemCursor         const item_cursor = GetActionModeCursor(s);
+	switch (item_cursor)
 	{
-		case PUNCHCURS:
-
-			// Determine whether gray or red!
-			ubCursorID = HandlePunchCursor( pSoldier, sTargetGridNo, fActivated, uiCursorFlags );
-			break;
-
-		case KNIFECURS:
-
-			ubCursorID = HandleKnifeCursor( pSoldier, sTargetGridNo, fActivated, uiCursorFlags );
-			break;
-
-		case AIDCURS:
-
-			ubCursorID =  HandleAidCursor( pSoldier, usMapPos, fActivated, uiCursorFlags );
-			break;
-
 		case TARGETCURS:
-			if ( fActivated )
-			{
-				ubCursorID = HandleActivatedTargetCursor(pSoldier, sTargetGridNo, fRecalc);
-			}
-			else
-			{
-				ubCursorID = HandleNonActivatedTargetCursor( pSoldier, sTargetGridNo, fShowAPs, fRecalc, uiCursorFlags );
-			}
+			cursor =
+				activated ? HandleActivatedTargetCursor(s, tgt_grid_no, recalc) :
+				HandleNonActivatedTargetCursor(s, tgt_grid_no, show_APs, recalc, cursor_flags);
 
-
-			// ATE: Only do this if we are in combat!
-			if ( gCurrentUIMode == ACTION_MODE && ( gTacticalStatus.uiFlags & INCOMBAT ) )
+			if (gCurrentUIMode == ACTION_MODE       &&
+					gTacticalStatus.uiFlags & INCOMBAT  &&
+					recalc                              &&
+					tgt                                 &&
+					IsValidTargetMerc(tgt)              &&
+					EnoughAmmo(s, FALSE, HANDPOS)       && // ATE: Check for ammo
+					guiUIFullTargetFlags & ENEMY_MERC   && // IF it's an ememy, goto confirm action mode
+					guiUIFullTargetFlags & VISIBLE_MERC &&
+					!(guiUIFullTargetFlags & DEAD_MERC) &&
+					!gfCannotGetThrough)
 			{
-				// Alrighty, let's change the cursor!
-				const SOLDIERTYPE* const tgt = gUIFullTarget;
-				if (fRecalc &&
-						tgt != NULL &&
-						IsValidTargetMerc(tgt) &&
-						EnoughAmmo(pSoldier, FALSE, HANDPOS) && // ATE: Check for ammo
-						guiUIFullTargetFlags & ENEMY_MERC && // IF it's an ememy, goto confirm action mode
-						guiUIFullTargetFlags & VISIBLE_MERC &&
-						!(guiUIFullTargetFlags & DEAD_MERC) &&
-						!gfCannotGetThrough)
-				{
-					guiPendingOverrideEvent = A_CHANGE_TO_CONFIM_ACTION;
-				}
+				guiPendingOverrideEvent = A_CHANGE_TO_CONFIM_ACTION;
 			}
 			break;
 
 		case TOSSCURS:
 		case TRAJECTORYCURS:
-
-			if ( fActivated )
-			{
-        if ( !gfUIHandlePhysicsTrajectory )
-        {
-				  ubCursorID =  HandleNonActivatedTossCursor( pSoldier, sTargetGridNo, fRecalc, uiCursorFlags, ubItemCursor );
-        }
-        else
-        {
-				  ubCursorID = HandleActivatedTossCursor( pSoldier, sTargetGridNo, ubItemCursor );
-        }
-			}
-			else
-			{
-				ubCursorID =  HandleNonActivatedTossCursor( pSoldier, sTargetGridNo, fRecalc, uiCursorFlags, ubItemCursor );
-			}
+			cursor =
+				activated && gfUIHandlePhysicsTrajectory ? HandleActivatedTossCursor(s, tgt_grid_no, item_cursor) :
+				HandleNonActivatedTossCursor(s, tgt_grid_no, recalc, cursor_flags, item_cursor);
 			break;
 
-		case BOMBCURS:
-
-			ubCursorID = HandleBombCursor( pSoldier, sTargetGridNo, fActivated, uiCursorFlags );
-			break;
-
-		case REMOTECURS:
-
-			ubCursorID = HandleRemoteCursor( pSoldier, sTargetGridNo, fActivated, uiCursorFlags );
-			break;
-
-		case WIRECUTCURS:
-
-			ubCursorID = HandleWirecutterCursor( pSoldier, sTargetGridNo, uiCursorFlags );
-			break;
-
-
-		case REPAIRCURS:
-
-			ubCursorID = HandleRepairCursor( pSoldier, sTargetGridNo, uiCursorFlags );
-			break;
-
-		case JARCURS:
-
-			ubCursorID = HandleJarCursor( pSoldier, sTargetGridNo, uiCursorFlags );
-			break;
-
-		case TINCANCURS:
-
-			ubCursorID = HandleTinCanCursor( pSoldier, sTargetGridNo, uiCursorFlags );
-			break;
-
-		case REFUELCURS:
-
-			ubCursorID = HandleRefuelCursor( pSoldier, sTargetGridNo, uiCursorFlags );
-			break;
-
-		case INVALIDCURS:
-
-			ubCursorID =  INVALID_ACTION_UICURSOR;
-			break;
-
+		case PUNCHCURS:   cursor = HandlePunchCursor(     s, tgt_grid_no, activated, cursor_flags); break;
+		case KNIFECURS:   cursor = HandleKnifeCursor(     s, tgt_grid_no, activated, cursor_flags); break;
+		case AIDCURS:     cursor = HandleAidCursor(       s, map_pos,     activated, cursor_flags); break;
+		case BOMBCURS:    cursor = HandleBombCursor(      s, tgt_grid_no, activated, cursor_flags); break;
+		case REMOTECURS:  cursor = HandleRemoteCursor(    s, tgt_grid_no, activated, cursor_flags); break;
+		case WIRECUTCURS: cursor = HandleWirecutterCursor(s, tgt_grid_no,            cursor_flags); break;
+		case REPAIRCURS:  cursor = HandleRepairCursor(    s, tgt_grid_no,            cursor_flags); break;
+		case JARCURS:     cursor = HandleJarCursor(       s, tgt_grid_no,            cursor_flags); break;
+		case TINCANCURS:  cursor = HandleTinCanCursor(    s, tgt_grid_no,            cursor_flags); break;
+		case REFUELCURS:  cursor = HandleRefuelCursor(    s, tgt_grid_no,            cursor_flags); break;
+		case INVALIDCURS: cursor = INVALID_ACTION_UICURSOR; break;
 	}
 
-	return( ubCursorID );
+	return cursor;
 }
 
 
