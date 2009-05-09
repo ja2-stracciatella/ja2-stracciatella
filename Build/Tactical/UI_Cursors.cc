@@ -29,7 +29,7 @@
 
 // FUNCTIONS FOR ITEM CURSOR HANDLING
 static UICursorID HandleActivatedTargetCursor(   SOLDIERTYPE*, GridNo map_pos, BOOLEAN recalc);
-static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE*, UINT16 usMapPos, BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags);
+static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE*, GridNo map_pos, BOOLEAN show_APs, BOOLEAN fRecalc, UINT32 uiCursorFlags);
 static UICursorID HandleKnifeCursor(             SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags);
 static UICursorID HandlePunchCursor(             SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlagsl);
 static UICursorID HandleAidCursor(               SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, UINT32 uiCursorFlags);
@@ -467,147 +467,76 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 }
 
 
-static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE* pSoldier, UINT16 usMapPos , BOOLEAN fShowAPs, BOOLEAN fRecalc, UINT32 uiCursorFlags)
+static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLEAN const show_APs, BOOLEAN const fRecalc, UINT32 const uiCursorFlags)
 {
-  UINT16				usInHand;
-
-	usInHand = pSoldier->inv[ HANDPOS ].usItem;
-
-	if ( Item[ usInHand ].usItemClass != IC_THROWING_KNIFE )
+	bool const is_throwing_knife = Item[s->inv[HANDPOS].usItem].usItemClass == IC_THROWING_KNIFE;
+	if (!is_throwing_knife)
 	{
-		if (( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
+		if (gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT))
 		{
-			//DetermineCursorBodyLocation(GetSelectedMan(), FALSE, fRecalc);
-			DetermineCursorBodyLocation(GetSelectedMan(), fShowAPs, fRecalc);
-
-			if (pSoldier->fReloading) return ACTION_TARGET_RELOADING;
+			DetermineCursorBodyLocation(GetSelectedMan(), show_APs, fRecalc);
+			if (s->fReloading) return ACTION_TARGET_RELOADING;
 		}
 
-		// Check for enough ammo...
-		if ( !EnoughAmmo( pSoldier, FALSE, HANDPOS ) )
+		if (!EnoughAmmo(s, FALSE, HANDPOS))
 		{
-			// Check if ANY ammo exists.....
-			if ( FindAmmoToReload( pSoldier, HANDPOS, NO_SLOT ) == NO_SLOT )
-			{
-				// OK, use BAD reload cursor.....
-				return( BAD_RELOAD_UICURSOR );
-			}
-			else
-			{
-				// Check APs to reload...
-				gsCurrentActionPoints = GetAPsToAutoReload( pSoldier );
+			// Check if ANY ammo exists
+			if (FindAmmoToReload(s, HANDPOS, NO_SLOT) == NO_SLOT) return BAD_RELOAD_UICURSOR;
 
-				gfUIDisplayActionPoints = TRUE;
-				//gUIDisplayActionPointsOffX = 14;
-				//gUIDisplayActionPointsOffY = 7;
-
-				// OK, use GOOD reload cursor.....
-				return( GOOD_RELOAD_UICURSOR );
-			}
+			gsCurrentActionPoints   = GetAPsToAutoReload(s);
+			gfUIDisplayActionPoints = TRUE;
+			return GOOD_RELOAD_UICURSOR;
 		}
 	}
 
-	if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (gTacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT)
 	{
-		DetermineCursorBodyLocation(GetSelectedMan(), fShowAPs, fRecalc);
+		DetermineCursorBodyLocation(GetSelectedMan(), show_APs, fRecalc);
 
-		gsCurrentActionPoints = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, (INT8)(pSoldier->bShownAimTime / 2) );
+		gsCurrentActionPoints = CalcTotalAPsToAttack(s, map_pos, TRUE, s->bShownAimTime / 2);
 
-		gfUIDisplayActionPoints = TRUE;
+		gfUIDisplayActionPoints       = TRUE;
 		gfUIDisplayActionPointsCenter = TRUE;
 
-		if ( fShowAPs )
+		if (!show_APs)
 		{
-			if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0 , FALSE ) )
-			{
-				gfUIDisplayActionPointsInvalid = TRUE;
-			}
-		}
-		else
-		{
-			//gfUIDisplayActionPointsBlack = TRUE;
 			gfUIDisplayActionPoints = FALSE;
 		}
-
-	}
-
-	//if ( gTacticalStatus.uiFlags & TURNBASED && !(gTacticalStatus.uiFlags & INCOMBAT ) )
-	{
-		if ( fRecalc )
+		else if (!EnoughPoints(s, gsCurrentActionPoints, 0 , FALSE))
 		{
-			if (SoldierToLocationChanceToGetThrough(pSoldier, usMapPos, gsInterfaceLevel, pSoldier->bTargetCubeLevel, NULL) < OK_CHANCE_TO_GET_THROUGH)
-			{
-				gfCannotGetThrough = TRUE;
-			}
-			else
-			{
-				gfCannotGetThrough = FALSE;
-			}
-		}
-
-		// OK, if we begin to move, reset the cursor...
-		if ( uiCursorFlags & MOUSE_MOVING )
-		{
-			gfCannotGetThrough = FALSE;
-		}
-
-		if ( gfCannotGetThrough )
-		{
-			if ( pSoldier->bDoBurst )
-			{
-				return(  ACTION_NOCHANCE_BURST_UICURSOR );
-			}
-			else if ( Item[ usInHand ].usItemClass == IC_THROWING_KNIFE )
-			{
-				return(  BAD_THROW_UICURSOR );
-			}
-			else
-			{
-				return(  ACTION_NOCHANCE_SHOOT_UICURSOR );
-			}
+			gfUIDisplayActionPointsInvalid = TRUE;
 		}
 	}
 
-	// Determine if good range
-	if ( !InRange( pSoldier, usMapPos ) )
+	if (fRecalc)
 	{
-		// Flash cursor!
-		// Check if we're in burst mode!
-		if ( Item[ usInHand ].usItemClass == IC_THROWING_KNIFE )
-		{
-			return(  FLASH_THROW_UICURSOR );
-		}
-		else if ( pSoldier->bDoBurst )
-		{
-			//return( ACTION_FIRSTAID_RED );
-			return(  ACTION_FLASH_BURST_UICURSOR );
-		}
-		else
-		{
-			//return( ACTION_FIRSTAID_RED );
-			return( ACTION_FLASH_SHOOT_UICURSOR );
-		}
+		gfCannotGetThrough = SoldierToLocationChanceToGetThrough(s, map_pos, gsInterfaceLevel, s->bTargetCubeLevel, 0) < OK_CHANCE_TO_GET_THROUGH;
+	}
+
+	// If we begin to move, reset the cursor
+	if (uiCursorFlags & MOUSE_MOVING) gfCannotGetThrough = FALSE;
+
+	if (gfCannotGetThrough)
+	{
+		return
+			s->bDoBurst       ? ACTION_NOCHANCE_BURST_UICURSOR :
+			is_throwing_knife ? BAD_THROW_UICURSOR             :
+			ACTION_NOCHANCE_SHOOT_UICURSOR;
+	}
+	else if (!InRange(s, map_pos))
+	{ // Flash cursor!
+		return
+			s->bDoBurst       ? ACTION_FLASH_BURST_UICURSOR :
+			is_throwing_knife ? FLASH_THROW_UICURSOR        :
+			ACTION_FLASH_SHOOT_UICURSOR;
 	}
 	else
 	{
-		// Check if we're in burst mode!
-		if ( Item[ usInHand ].usItemClass == IC_THROWING_KNIFE )
-		{
-			return(  GOOD_THROW_UICURSOR );
-		}
-		else if ( pSoldier->bDoBurst )
-		{
-			//return( ACTION_FIRSTAID_RED );
-			return( ACTION_TARGETBURST_UICURSOR );
-		}
-		else
-		{
-			//return( ACTION_FIRSTAID_RED );
-			return( ACTION_SHOOT_UICURSOR );
-		}
-
+		return
+			s->bDoBurst       ? ACTION_TARGETBURST_UICURSOR :
+			is_throwing_knife ? GOOD_THROW_UICURSOR         :
+			ACTION_SHOOT_UICURSOR;
 	}
-
 }
 
 
