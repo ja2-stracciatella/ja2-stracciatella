@@ -30,18 +30,18 @@
 // FUNCTIONS FOR ITEM CURSOR HANDLING
 static UICursorID HandleActivatedTargetCursor(   SOLDIERTYPE*, GridNo map_pos, BOOLEAN recalc);
 static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE*, GridNo map_pos, BOOLEAN show_APs, BOOLEAN fRecalc, MouseMoveState);
-static UICursorID HandleKnifeCursor(             SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveState);
-static UICursorID HandlePunchCursor(             SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveState);
-static UICursorID HandleAidCursor(               SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveState);
-static UICursorID HandleActivatedTossCursor(     SOLDIERTYPE*, UINT16 usMapPos, UINT8 ubCursor);
+static UICursorID HandleKnifeCursor(             SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN activated, MouseMoveState);
+static UICursorID HandlePunchCursor(             SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN activated, MouseMoveState);
+static UICursorID HandleAidCursor(               SOLDIERTYPE*, GridNo map_pos, BOOLEAN activated, MouseMoveState);
+static UICursorID HandleActivatedTossCursor();
 static UICursorID HandleNonActivatedTossCursor(  SOLDIERTYPE*, UINT16 usMapPos, BOOLEAN fRecalc, MouseMoveState, UINT8 ubCursor);
-static UICursorID HandleWirecutterCursor(        SOLDIERTYPE*, UINT16 usMapPos, MouseMoveState);
-static UICursorID HandleRepairCursor(            SOLDIERTYPE*, UINT16 usMapPos, MouseMoveState);
-static UICursorID HandleRefuelCursor(            SOLDIERTYPE*, UINT16 usMapPos, MouseMoveState);
-static UICursorID HandleRemoteCursor(            SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveState);
-static UICursorID HandleBombCursor(              SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveState);
-static UICursorID HandleJarCursor(               SOLDIERTYPE*, UINT16 usMapPos, MouseMoveState);
-static UICursorID HandleTinCanCursor(            SOLDIERTYPE*, UINT16 usMapPos, MouseMoveState);
+static UICursorID HandleWirecutterCursor(        SOLDIERTYPE*, GridNo map_pos, MouseMoveState);
+static UICursorID HandleRepairCursor(            SOLDIERTYPE*, GridNo map_pos, MouseMoveState);
+static UICursorID HandleRefuelCursor(            SOLDIERTYPE*, GridNo map_pos, MouseMoveState);
+static UICursorID HandleRemoteCursor(            SOLDIERTYPE*, BOOLEAN activated, MouseMoveState);
+static UICursorID HandleBombCursor(              SOLDIERTYPE*, GridNo map_pos, BOOLEAN activated, MouseMoveState);
+static UICursorID HandleJarCursor(               SOLDIERTYPE*, GridNo map_pos, MouseMoveState);
+static UICursorID HandleTinCanCursor(            SOLDIERTYPE*, GridNo map_pos, MouseMoveState);
 
 
 static BOOLEAN gfCannotGetThrough = FALSE;
@@ -134,7 +134,7 @@ UICursorID GetProperItemCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLE
 		case TOSSCURS:
 		case TRAJECTORYCURS:
 			cursor =
-				activated && gfUIHandlePhysicsTrajectory ? HandleActivatedTossCursor(s, tgt_grid_no, item_cursor) :
+				activated && gfUIHandlePhysicsTrajectory ? HandleActivatedTossCursor() :
 				HandleNonActivatedTossCursor(s, tgt_grid_no, recalc, cursor_flags, item_cursor);
 			break;
 
@@ -142,7 +142,7 @@ UICursorID GetProperItemCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLE
 		case KNIFECURS:   cursor = HandleKnifeCursor(     s, tgt_grid_no, activated, cursor_flags); break;
 		case AIDCURS:     cursor = HandleAidCursor(       s, map_pos,     activated, cursor_flags); break;
 		case BOMBCURS:    cursor = HandleBombCursor(      s, tgt_grid_no, activated, cursor_flags); break;
-		case REMOTECURS:  cursor = HandleRemoteCursor(    s, tgt_grid_no, activated, cursor_flags); break;
+		case REMOTECURS:  cursor = HandleRemoteCursor(    s,              activated, cursor_flags); break;
 		case WIRECUTCURS: cursor = HandleWirecutterCursor(s, tgt_grid_no,            cursor_flags); break;
 		case REPAIRCURS:  cursor = HandleRepairCursor(    s, tgt_grid_no,            cursor_flags); break;
 		case JARCURS:     cursor = HandleJarCursor(       s, tgt_grid_no,            cursor_flags); break;
@@ -838,33 +838,16 @@ static UICursorID HandlePunchCursor(SOLDIERTYPE* const pSoldier, UINT16 const sG
 }
 
 
-static UICursorID HandleAidCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fActivated, MouseMoveState const uiCursorFlags)
+static UICursorID HandleAidCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLEAN const activated, MouseMoveState const uiCursorFlags)
 {
-	// DRAW PATH TO GUY
-	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_MERCSFORAID );
-
-	if ( fActivated )
-	{
-		return( ACTION_FIRSTAID_RED );
-	}
-	else
-	{
-		// CHECK IF WE ARE ON A GUY
-		if (gUIFullTarget != NULL)
-		{
-			return( ACTION_FIRSTAID_RED );
-		}
-		else
-		{
-			return( ACTION_FIRSTAID_GRAY );
-		}
-	}
+	HandleUIMovementCursor(s, uiCursorFlags, map_pos, MOVEUI_TARGET_MERCSFORAID);
+	return activated || gUIFullTarget ? ACTION_FIRSTAID_RED : ACTION_FIRSTAID_GRAY;
 }
 
 
-static UICursorID HandleActivatedTossCursor(SOLDIERTYPE* pSoldier, UINT16 usMapPos, UINT8 ubCursor)
+static UICursorID HandleActivatedTossCursor()
 {
-	return( ACTION_TOSS_UICURSOR );
+	return ACTION_TOSS_UICURSOR;
 }
 
 
@@ -1011,146 +994,93 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const pSoldier, UINT
 }
 
 
-static UICursorID HandleWirecutterCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveState const uiCursorFlags)
+static UICursorID HandleWirecutterCursor(SOLDIERTYPE* const s, GridNo const map_pos, MouseMoveState const uiCursorFlags)
 {
-	// DRAW PATH TO GUY
-	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_WIREFENCE );
-
-	// Are we over a cuttable fence?
-	if ( IsCuttableWireFenceAtGridNo( sGridNo ) && pSoldier->bLevel == 0 )
-	{
-		return( GOOD_WIRECUTTER_UICURSOR );
-	}
-
-	return( BAD_WIRECUTTER_UICURSOR );
+	HandleUIMovementCursor(s, uiCursorFlags, map_pos, MOVEUI_TARGET_WIREFENCE);
+	return
+		s->bLevel == 0 && IsCuttableWireFenceAtGridNo(map_pos) ? GOOD_WIRECUTTER_UICURSOR :
+		BAD_WIRECUTTER_UICURSOR;
 }
 
 
-static UICursorID HandleRepairCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveState const uiCursorFlags)
+static UICursorID HandleRepairCursor(SOLDIERTYPE* const s, GridNo const map_pos, MouseMoveState const uiCursorFlags)
 {
-	// DRAW PATH TO GUY
-	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_REPAIR );
-
-	// Are we over a cuttable fence?
-	if ( IsRepairableStructAtGridNo( sGridNo, NULL ) && pSoldier->bLevel == 0 )
-	{
-		return( GOOD_REPAIR_UICURSOR );
-	}
-
-	return( BAD_REPAIR_UICURSOR );
+	HandleUIMovementCursor(s, uiCursorFlags, map_pos, MOVEUI_TARGET_REPAIR);
+	return
+		s->bLevel == 0 && IsRepairableStructAtGridNo(map_pos, 0) ? GOOD_REPAIR_UICURSOR :
+		BAD_REPAIR_UICURSOR;
 }
 
 
-static UICursorID HandleRefuelCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveState const uiCursorFlags)
+static UICursorID HandleRefuelCursor(SOLDIERTYPE* const s, GridNo const map_pos, MouseMoveState const uiCursorFlags)
 {
-	// DRAW PATH TO GUY
-	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_REFUEL );
-
-	// Are we over a refuelable vehicle?
-	if (pSoldier->bLevel == 0 && GetRefuelableStructAtGridNo(sGridNo) != NULL)
-	{
-		return( REFUEL_RED_UICURSOR );
-	}
-
-	return( REFUEL_GREY_UICURSOR );
+	HandleUIMovementCursor(s, uiCursorFlags, map_pos, MOVEUI_TARGET_REFUEL);
+	return
+		s->bLevel == 0 && GetRefuelableStructAtGridNo(map_pos) ? REFUEL_RED_UICURSOR :
+		REFUEL_GREY_UICURSOR;
 }
 
 
-static UICursorID HandleJarCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveState const uiCursorFlags)
+static UICursorID HandleJarCursor(SOLDIERTYPE* const s, GridNo const map_pos, MouseMoveState const uiCursorFlags)
 {
-	// DRAW PATH TO GUY
-	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_JAR );
-
-	// Are we over a cuttable fence?
-	if ( IsCorpseAtGridNo( sGridNo, pSoldier->bLevel ) )
-	{
-		return( GOOD_JAR_UICURSOR );
-	}
-
-	return( BAD_JAR_UICURSOR );
+	HandleUIMovementCursor(s, uiCursorFlags, map_pos, MOVEUI_TARGET_JAR);
+	return
+		IsCorpseAtGridNo(map_pos, s->bLevel) ? GOOD_JAR_UICURSOR :
+		BAD_JAR_UICURSOR;
 }
 
 
-static UICursorID HandleTinCanCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveState const uiCursorFlags)
+static UICursorID HandleTinCanCursor(SOLDIERTYPE* const s, GridNo const map_pos, MouseMoveState const uiCursorFlags)
 {
-	STRUCTURE					*pStructure;
-  INT16							sIntTileGridNo;
-	LEVELNODE					*pIntTile;
+	HandleUIMovementCursor(s, uiCursorFlags, map_pos, MOVEUI_TARGET_CAN);
 
-
-	// DRAW PATH TO GUY
-	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_CAN );
-
-	// Check if a door exists here.....
-	pIntTile = GetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo, &pStructure );
-
-	// We should not have null here if we are given this flag...
-	if ( pIntTile != NULL )
-	{
-		if (pStructure->fFlags & STRUCTURE_ANYDOOR)
-		{
-			return( PLACE_TINCAN_GREY_UICURSOR );
-		}
-	}
-
-	return( PLACE_TINCAN_RED_UICURSOR );
+	// Check if a door exists here
+	STRUCTURE*       structure;
+  INT16            int_tile_grid_no;
+	LEVELNODE* const int_tile = GetCurInteractiveTileGridNoAndStructure(&int_tile_grid_no, &structure);
+	return
+		int_tile && structure->fFlags & STRUCTURE_ANYDOOR ? PLACE_TINCAN_GREY_UICURSOR :
+		PLACE_TINCAN_RED_UICURSOR;
 }
 
 
-static UICursorID HandleRemoteCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fActivated, MouseMoveState const uiCursorFlags)
+static UICursorID HandleRemoteCursor(SOLDIERTYPE* const s, BOOLEAN const activated, MouseMoveState const uiCursorFlags)
 {
-	// Calculate action points
-	if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
+	if (gTacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT)
 	{
-		gsCurrentActionPoints = GetAPsToUseRemote( pSoldier );
-		gfUIDisplayActionPoints = TRUE;
+		gsCurrentActionPoints         = GetAPsToUseRemote(s);
+		gfUIDisplayActionPoints       = TRUE;
 		gfUIDisplayActionPointsCenter = TRUE;
 
 		// If we don't have any points and we are at the first refine, do nothing but warn!
-		if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0 , FALSE ) )
+		if (!EnoughPoints(s, gsCurrentActionPoints, 0, FALSE))
 		{
 			gfUIDisplayActionPointsInvalid = TRUE;
 		}
 	}
 
-	if ( fActivated )
-	{
-		return( PLACE_REMOTE_RED_UICURSOR );
-	}
-	else
-	{
-		return( PLACE_REMOTE_GREY_UICURSOR );
-	}
+	return activated ? PLACE_REMOTE_RED_UICURSOR : PLACE_REMOTE_GREY_UICURSOR;
 }
 
 
-static UICursorID HandleBombCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fActivated, MouseMoveState const uiCursorFlags)
+static UICursorID HandleBombCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLEAN const activated, MouseMoveState const uiCursorFlags)
 {
-	// DRAW PATH TO GUY
-	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_BOMB );
+	HandleUIMovementCursor(s, uiCursorFlags, map_pos, MOVEUI_TARGET_BOMB);
 
-	// Calculate action points
-	if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
+	if (gTacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT)
 	{
-		gsCurrentActionPoints = GetTotalAPsToDropBomb( pSoldier, sGridNo );
-		gfUIDisplayActionPoints = TRUE;
+		gsCurrentActionPoints         = GetTotalAPsToDropBomb(s, map_pos);
+		gfUIDisplayActionPoints       = TRUE;
 		gfUIDisplayActionPointsCenter = TRUE;
 
 		// If we don't have any points and we are at the first refine, do nothing but warn!
-		if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0 , FALSE ) )
-			{
+		if (!EnoughPoints(s, gsCurrentActionPoints, 0, FALSE))
+		{
 			gfUIDisplayActionPointsInvalid = TRUE;
 		}
 	}
 
-	if ( fActivated )
-	{
-		return( PLACE_BOMB_RED_UICURSOR );
-	}
-	else
-	{
-		return( PLACE_BOMB_GREY_UICURSOR );
-	}
+	return activated ? PLACE_BOMB_RED_UICURSOR : PLACE_BOMB_GREY_UICURSOR;
 }
 
 
