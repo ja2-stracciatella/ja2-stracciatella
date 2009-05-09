@@ -29,31 +29,31 @@
 
 // FUNCTIONS FOR ITEM CURSOR HANDLING
 static UICursorID HandleActivatedTargetCursor(   SOLDIERTYPE*, GridNo map_pos, BOOLEAN recalc);
-static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE*, GridNo map_pos, BOOLEAN show_APs, BOOLEAN fRecalc, MouseMoveFlags);
-static UICursorID HandleKnifeCursor(             SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveFlags);
-static UICursorID HandlePunchCursor(             SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveFlags);
-static UICursorID HandleAidCursor(               SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveFlags);
+static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE*, GridNo map_pos, BOOLEAN show_APs, BOOLEAN fRecalc, MouseMoveState);
+static UICursorID HandleKnifeCursor(             SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveState);
+static UICursorID HandlePunchCursor(             SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveState);
+static UICursorID HandleAidCursor(               SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveState);
 static UICursorID HandleActivatedTossCursor(     SOLDIERTYPE*, UINT16 usMapPos, UINT8 ubCursor);
-static UICursorID HandleNonActivatedTossCursor(  SOLDIERTYPE*, UINT16 usMapPos, BOOLEAN fRecalc, MouseMoveFlags, UINT8 ubCursor);
-static UICursorID HandleWirecutterCursor(        SOLDIERTYPE*, UINT16 usMapPos, MouseMoveFlags);
-static UICursorID HandleRepairCursor(            SOLDIERTYPE*, UINT16 usMapPos, MouseMoveFlags);
-static UICursorID HandleRefuelCursor(            SOLDIERTYPE*, UINT16 usMapPos, MouseMoveFlags);
-static UICursorID HandleRemoteCursor(            SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveFlags);
-static UICursorID HandleBombCursor(              SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveFlags);
-static UICursorID HandleJarCursor(               SOLDIERTYPE*, UINT16 usMapPos, MouseMoveFlags);
-static UICursorID HandleTinCanCursor(            SOLDIERTYPE*, UINT16 usMapPos, MouseMoveFlags);
+static UICursorID HandleNonActivatedTossCursor(  SOLDIERTYPE*, UINT16 usMapPos, BOOLEAN fRecalc, MouseMoveState, UINT8 ubCursor);
+static UICursorID HandleWirecutterCursor(        SOLDIERTYPE*, UINT16 usMapPos, MouseMoveState);
+static UICursorID HandleRepairCursor(            SOLDIERTYPE*, UINT16 usMapPos, MouseMoveState);
+static UICursorID HandleRefuelCursor(            SOLDIERTYPE*, UINT16 usMapPos, MouseMoveState);
+static UICursorID HandleRemoteCursor(            SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveState);
+static UICursorID HandleBombCursor(              SOLDIERTYPE*, UINT16 sGridNo, BOOLEAN fActivated, MouseMoveState);
+static UICursorID HandleJarCursor(               SOLDIERTYPE*, UINT16 usMapPos, MouseMoveState);
+static UICursorID HandleTinCanCursor(            SOLDIERTYPE*, UINT16 usMapPos, MouseMoveState);
 
 
 static BOOLEAN gfCannotGetThrough = FALSE;
 static BOOLEAN gfDisplayFullCountRing = FALSE;
 
 
-BOOLEAN GetMouseRecalcAndShowAPFlags(MouseMoveFlags* const puiCursorFlags, BOOLEAN* const pfShowAPs)
+BOOLEAN GetMouseRecalcAndShowAPFlags(MouseMoveState* const puiCursorFlags, BOOLEAN* const pfShowAPs)
 {
 	static bool do_new_tile = false;
 
 	// Set flags for certain mouse movements
-	MouseMoveFlags const cursor_flags = GetCursorMovementFlags();
+	MouseMoveState const cursor_flags = GetCursorMovementFlags();
 	bool                 recalc       = false;
 
 	// Force if we are currently cycling guys
@@ -64,16 +64,14 @@ BOOLEAN GetMouseRecalcAndShowAPFlags(MouseMoveFlags* const puiCursorFlags, BOOLE
 		gfUIForceReExamineCursorData = FALSE;
 	}
 
-	if (cursor_flags & MOUSE_MOVING)
+	bool show_APs = false;
+	if (cursor_flags != MOUSE_STATIONARY)
 	{ /* If cursor was previously stationary, make the additional check of grid
 		 * pos change */
 		RESETCOUNTER(PATHFINDCOUNTER);
 		do_new_tile = true;
 	}
-
-	bool show_APs = false;
-	if (cursor_flags & MOUSE_STATIONARY &&
-			COUNTERDONE(PATHFINDCOUNTER)) // Only dipslay aps after a delay
+	else if (COUNTERDONE(PATHFINDCOUNTER)) // Only dipslay aps after a delay
 	{
 		// Don't reset counter: One when we move again do we do this!
 		show_APs = true;
@@ -94,7 +92,7 @@ BOOLEAN GetMouseRecalcAndShowAPFlags(MouseMoveFlags* const puiCursorFlags, BOOLE
 // Functions for cursor determination
 UICursorID GetProperItemCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLEAN const activated)
 {
-	MouseMoveFlags cursor_flags;
+	MouseMoveState cursor_flags;
 	BOOLEAN        show_APs;
 	BOOLEAN const  recalc = GetMouseRecalcAndShowAPFlags(&cursor_flags, &show_APs);
 
@@ -377,7 +375,7 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 }
 
 
-static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLEAN const show_APs, BOOLEAN const fRecalc, MouseMoveFlags const uiCursorFlags)
+static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLEAN const show_APs, BOOLEAN const fRecalc, MouseMoveState const uiCursorFlags)
 {
 	bool const is_throwing_knife = Item[s->inv[HANDPOS].usItem].usItemClass == IC_THROWING_KNIFE;
 	if (!is_throwing_knife)
@@ -424,7 +422,7 @@ static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE* const s, GridNo co
 	}
 
 	// If we begin to move, reset the cursor
-	if (uiCursorFlags & MOUSE_MOVING) gfCannotGetThrough = FALSE;
+	if (uiCursorFlags != MOUSE_STATIONARY) gfCannotGetThrough = FALSE;
 
 	if (gfCannotGetThrough)
 	{
@@ -599,7 +597,7 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const pSoldier, const BOOLE
 }
 
 
-static UICursorID HandleKnifeCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fActivated, MouseMoveFlags const uiCursorFlags)
+static UICursorID HandleKnifeCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fActivated, MouseMoveState const uiCursorFlags)
 {
 	INT16							sAPCosts;
 	INT8							bFutureAim;
@@ -720,7 +718,7 @@ static UICursorID HandleKnifeCursor(SOLDIERTYPE* const pSoldier, UINT16 const sG
 }
 
 
-static UICursorID HandlePunchCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fActivated, MouseMoveFlags const uiCursorFlags)
+static UICursorID HandlePunchCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fActivated, MouseMoveState const uiCursorFlags)
 {
 	INT16							sAPCosts;
 	INT8							bFutureAim;
@@ -840,7 +838,7 @@ static UICursorID HandlePunchCursor(SOLDIERTYPE* const pSoldier, UINT16 const sG
 }
 
 
-static UICursorID HandleAidCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fActivated, MouseMoveFlags const uiCursorFlags)
+static UICursorID HandleAidCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fActivated, MouseMoveState const uiCursorFlags)
 {
 	// DRAW PATH TO GUY
 	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_MERCSFORAID );
@@ -870,7 +868,7 @@ static UICursorID HandleActivatedTossCursor(SOLDIERTYPE* pSoldier, UINT16 usMapP
 }
 
 
-static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fRecalc, MouseMoveFlags const uiCursorFlags, UINT8 const ubItemCursor)
+static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fRecalc, MouseMoveState const uiCursorFlags, UINT8 const ubItemCursor)
 {
 	INT16 sFinalGridNo;
 	static BOOLEAN fBadCTGH = FALSE;
@@ -934,7 +932,7 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const pSoldier, UINT
 
 
 	// OK, if we begin to move, reset the cursor...
-	if ( uiCursorFlags & MOUSE_MOVING )
+	if (uiCursorFlags != MOUSE_STATIONARY)
 	{
 		EndPhysicsTrajectoryUI( );
 	}
@@ -1013,7 +1011,7 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const pSoldier, UINT
 }
 
 
-static UICursorID HandleWirecutterCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveFlags const uiCursorFlags)
+static UICursorID HandleWirecutterCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveState const uiCursorFlags)
 {
 	// DRAW PATH TO GUY
 	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_WIREFENCE );
@@ -1028,7 +1026,7 @@ static UICursorID HandleWirecutterCursor(SOLDIERTYPE* const pSoldier, UINT16 con
 }
 
 
-static UICursorID HandleRepairCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveFlags const uiCursorFlags)
+static UICursorID HandleRepairCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveState const uiCursorFlags)
 {
 	// DRAW PATH TO GUY
 	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_REPAIR );
@@ -1043,7 +1041,7 @@ static UICursorID HandleRepairCursor(SOLDIERTYPE* const pSoldier, UINT16 const s
 }
 
 
-static UICursorID HandleRefuelCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveFlags const uiCursorFlags)
+static UICursorID HandleRefuelCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveState const uiCursorFlags)
 {
 	// DRAW PATH TO GUY
 	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_REFUEL );
@@ -1058,7 +1056,7 @@ static UICursorID HandleRefuelCursor(SOLDIERTYPE* const pSoldier, UINT16 const s
 }
 
 
-static UICursorID HandleJarCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveFlags const uiCursorFlags)
+static UICursorID HandleJarCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveState const uiCursorFlags)
 {
 	// DRAW PATH TO GUY
 	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_JAR );
@@ -1073,7 +1071,7 @@ static UICursorID HandleJarCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGri
 }
 
 
-static UICursorID HandleTinCanCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveFlags const uiCursorFlags)
+static UICursorID HandleTinCanCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, MouseMoveState const uiCursorFlags)
 {
 	STRUCTURE					*pStructure;
   INT16							sIntTileGridNo;
@@ -1099,7 +1097,7 @@ static UICursorID HandleTinCanCursor(SOLDIERTYPE* const pSoldier, UINT16 const s
 }
 
 
-static UICursorID HandleRemoteCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fActivated, MouseMoveFlags const uiCursorFlags)
+static UICursorID HandleRemoteCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fActivated, MouseMoveState const uiCursorFlags)
 {
 	// Calculate action points
 	if ( gTacticalStatus.uiFlags & TURNBASED && (gTacticalStatus.uiFlags & INCOMBAT) )
@@ -1126,7 +1124,7 @@ static UICursorID HandleRemoteCursor(SOLDIERTYPE* const pSoldier, UINT16 const s
 }
 
 
-static UICursorID HandleBombCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fActivated, MouseMoveFlags const uiCursorFlags)
+static UICursorID HandleBombCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fActivated, MouseMoveState const uiCursorFlags)
 {
 	// DRAW PATH TO GUY
 	HandleUIMovementCursor( pSoldier, uiCursorFlags, sGridNo, MOVEUI_TARGET_BOMB );

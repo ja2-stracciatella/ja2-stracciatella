@@ -16,15 +16,12 @@
 #define   NONSELECTED_GUY_SELECTION					2
 #define   ENEMY_GUY_SELECTION								3
 
-enum MouseMoveFlags
+enum MouseMoveState
 {
-	MOUSE_MOVE_NONE       = 0,
-	MOUSE_MOVING_IN_TILE  = 1U << 0,
-	MOUSE_MOVING          = 1U << 1,
-	MOUSE_MOVING_NEW_TILE = 1U << 2,
-	MOUSE_STATIONARY      = 1U << 3
+	MOUSE_STATIONARY,
+	MOUSE_MOVING_IN_TILE,
+	MOUSE_MOVING_NEW_TILE
 };
-ENUM_BITSET(MouseMoveFlags)
 
 enum MoveUITarget
 {
@@ -246,9 +243,9 @@ void ToggleTalkCursorMode( UINT32 *puiNewEvent );
 void ToggleLookCursorMode( UINT32 *puiNewEvent );
 
 void UIHandleSoldierStanceChange(SOLDIERTYPE* s, INT8 bNewStance);
-MouseMoveFlags GetCursorMovementFlags();
+MouseMoveState GetCursorMovementFlags();
 
-BOOLEAN HandleUIMovementCursor(SOLDIERTYPE*, MouseMoveFlags, UINT16 usMapPos, MoveUITarget);
+BOOLEAN HandleUIMovementCursor(SOLDIERTYPE*, MouseMoveState, UINT16 usMapPos, MoveUITarget);
 bool UIMouseOnValidAttackLocation(SOLDIERTYPE*);
 
 BOOLEAN UIOkForItemPickup( SOLDIERTYPE *pSoldier, INT16 sGridNo );

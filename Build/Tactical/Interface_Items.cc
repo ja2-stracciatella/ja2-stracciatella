@@ -3129,11 +3129,11 @@ void DrawItemTileCursor( )
 
 
 		// Get recalc and cursor flags
-		MouseMoveFlags uiCursorFlags;
+		MouseMoveState uiCursorFlags;
 		fRecalc = GetMouseRecalcAndShowAPFlags( &uiCursorFlags, NULL );
 
 		// OK, if we begin to move, reset the cursor...
-		if ( uiCursorFlags & MOUSE_MOVING )
+		if (uiCursorFlags != MOUSE_STATIONARY)
 		{
 			EndPhysicsTrajectoryUI( );
 		}
@@ -3220,7 +3220,7 @@ void DrawItemTileCursor( )
 					gfUIMouseOnValidCatcher = 3;
 				}
 
-				if ( !( uiCursorFlags & MOUSE_MOVING ) )
+				if (uiCursorFlags == MOUSE_STATIONARY)
 				{
 					// Find adjacent gridno...
 					sActionGridNo = FindAdjacentGridEx(gpItemPointerSoldier, gusCurMousePos, NULL, NULL, FALSE, FALSE);

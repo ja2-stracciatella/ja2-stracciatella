@@ -20,6 +20,6 @@ ItemCursor GetActionModeCursor(SOLDIERTYPE const*);
 
 void HandleUICursorRTFeedback( SOLDIERTYPE *pSoldier );
 
-BOOLEAN GetMouseRecalcAndShowAPFlags(MouseMoveFlags*, BOOLEAN* pfShowAPs);
+BOOLEAN GetMouseRecalcAndShowAPFlags(MouseMoveState*, BOOLEAN* pfShowAPs);
 
 #endif

@@ -621,7 +621,7 @@ static void SetUIMouseCursor(void)
 	{
 		if ( gfUIConfirmExitArrows )
 		{
-			if (GetCursorMovementFlags() & MOUSE_MOVING)
+			if (GetCursorMovementFlags() != MOUSE_STATIONARY)
 			{
 				gfUIConfirmExitArrows = FALSE;
 			}
@@ -1240,7 +1240,7 @@ static ScreenID UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 		 }
 
 		 // DO SOME CURSOR POSITION FLAGS SETTING
-		MouseMoveFlags const uiCursorFlags = GetCursorMovementFlags();
+		MouseMoveState const uiCursorFlags = GetCursorMovementFlags();
 
 		if (sel != NULL)
 		 {
@@ -1522,7 +1522,7 @@ static ScreenID UIHandleCWait(UI_EVENT* pUIEvent)
 				return( GAME_SCREEN );
 			}
 
-			MouseMoveFlags const uiCursorFlags = GetCursorMovementFlags();
+			MouseMoveState const uiCursorFlags = GetCursorMovementFlags();
 
 			if ( pInvTile != NULL )
 			{
@@ -2876,14 +2876,14 @@ static ScreenID UIHandleIETEndTurn(UI_EVENT* pUIEvent)
 }
 
 
-MouseMoveFlags GetCursorMovementFlags()
+MouseMoveState GetCursorMovementFlags()
 {
 	static  BOOLEAN fStationary = FALSE;
 	static	UINT16	usOldMouseXPos  = 32000;
 	static	UINT16	usOldMouseYPos  = 32000;
 	static	UINT16  usOldMapPos		  = 32000;
 
-	static MouseMoveFlags uiSameFrameCursorFlags = MOUSE_MOVE_NONE;
+	static MouseMoveState uiSameFrameCursorFlags = MOUSE_STATIONARY;
 	static  UINT32	uiOldFrameNumber = 99999;
 
 	// Check if this is the same frame as before, return already calculated value if so!
@@ -2894,27 +2894,20 @@ MouseMoveFlags GetCursorMovementFlags()
 
 	const GridNo usMapPos = GetMouseMapPos();
 
-	MouseMoveFlags cursor_flags = MOUSE_MOVE_NONE;
-	if ( gusMouseXPos != usOldMouseXPos || gusMouseYPos != usOldMouseYPos )
+	MouseMoveState cursor_flags;
+	if (gusMouseXPos == usOldMouseXPos && gusMouseYPos == usOldMouseYPos)
 	{
-		cursor_flags |= MOUSE_MOVING;
-
-		// IF CURSOR WAS PREVIOUSLY STATIONARY, MAKE THE ADDITIONAL CHECK OF GRID POS CHANGE
-		if ( fStationary && usOldMapPos == usMapPos )
-		{
-			cursor_flags |= MOUSE_MOVING_IN_TILE;
-		}
-		else
-		{
-			fStationary = FALSE;
-			cursor_flags |= MOUSE_MOVING_NEW_TILE;
-		}
-
+		fStationary  = TRUE;
+		cursor_flags = MOUSE_STATIONARY;
+	}
+	else if (fStationary && usOldMapPos == usMapPos) // If cursor was previously stationary, make the additional check of grid pos change
+	{
+		cursor_flags = MOUSE_MOVING_IN_TILE;
 	}
 	else
 	{
-		cursor_flags |= MOUSE_STATIONARY;
-		fStationary = TRUE;
+		fStationary  = FALSE;
+		cursor_flags = MOUSE_MOVING_NEW_TILE;
 	}
 
 	usOldMapPos = usMapPos;
@@ -2930,7 +2923,7 @@ MouseMoveFlags GetCursorMovementFlags()
 static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, MoveUITarget);
 
 
-BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* const pSoldier, MouseMoveFlags const uiCursorFlags, UINT16 const usMapPos, MoveUITarget const uiFlags)
+BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* const pSoldier, MouseMoveState const uiCursorFlags, UINT16 const usMapPos, MoveUITarget const uiFlags)
 {
 	static const SOLDIERTYPE* target = NULL;
 
@@ -2980,13 +2973,13 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* const pSoldier, MouseMoveFlags const
 			}
 
 			// IF CURSOR IS MOVING
-			if ( ( uiCursorFlags & MOUSE_MOVING ) || gfUINewStateForIntTile )
+			if (uiCursorFlags != MOUSE_STATIONARY || gfUINewStateForIntTile)
 			{
 				// SHOW CURSOR
 				fSetCursor = TRUE;
 
 				// IF CURSOR WAS PREVIOUSLY STATIONARY, MAKE THE ADDITIONAL CHECK OF GRID POS CHANGE
-				if (  ( ( uiCursorFlags & MOUSE_MOVING_NEW_TILE ) && !fTargetFoundAndLookingForOne ) || gfUINewStateForIntTile )
+				if ((uiCursorFlags == MOUSE_MOVING_NEW_TILE && !fTargetFoundAndLookingForOne) || gfUINewStateForIntTile)
 				{
 					// ERASE PATH
 					ErasePath();
@@ -2998,14 +2991,14 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* const pSoldier, MouseMoveFlags const
 
 				}
 
-				if ( uiCursorFlags & MOUSE_MOVING_IN_TILE )
+				if (uiCursorFlags == MOUSE_MOVING_IN_TILE)
 				{
 					gfUIDisplayActionPoints = TRUE;
 				}
 
 			 }
 
-			 if ( uiCursorFlags & MOUSE_STATIONARY )
+			 if (uiCursorFlags == MOUSE_STATIONARY)
 			 {
 					// CURSOR IS STATIONARY
 					if ( _KeyDown( SHIFT ) && !gfPlotNewMovementNOCOST )
@@ -4812,7 +4805,7 @@ static bool UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* const pSoldie
 	static BOOLEAN fOverPool  = FALSE;
 	static BOOLEAN fOverEnemy = FALSE;
 
-	MouseMoveFlags const uiCursorFlags = GetCursorMovementFlags();
+	MouseMoveState const uiCursorFlags = GetCursorMovementFlags();
 
 	// Default gridno to mouse pos
 	INT16 sActionGridNo = usMapPos;
