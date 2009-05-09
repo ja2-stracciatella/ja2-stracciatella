@@ -48,64 +48,46 @@ static BOOLEAN gfCannotGetThrough = FALSE;
 static BOOLEAN gfDisplayFullCountRing = FALSE;
 
 
-BOOLEAN GetMouseRecalcAndShowAPFlags( UINT32 *puiCursorFlags, BOOLEAN *pfShowAPs )
+BOOLEAN GetMouseRecalcAndShowAPFlags(UINT32* const puiCursorFlags, BOOLEAN* const pfShowAPs)
 {
-	static					BOOLEAN						fDoNewTile = FALSE;
-	BOOLEAN						fRecalc = FALSE;
-	BOOLEAN						fShowAPs = FALSE;
+	static bool do_new_tile = false;
 
-	// SET FLAGS FOR CERTAIN MOUSE MOVEMENTS
-	const UINT32 uiCursorFlags = GetCursorMovementFlags();
+	// Set flags for certain mouse movements
+	UINT32 const cursor_flags = GetCursorMovementFlags();
+	bool         recalc       = false;
 
-	// Force if we are currently cycling guys...
-	if ( gfUIForceReExamineCursorData )
-  {
-		fDoNewTile = TRUE;
-		fRecalc    = TRUE;
-		gfUIForceReExamineCursorData = FALSE;
-  }
-
-	// IF CURSOR IS MOVING
-	if ( uiCursorFlags & MOUSE_MOVING )
+	// Force if we are currently cycling guys
+	if (gfUIForceReExamineCursorData)
 	{
-			// IF CURSOR WAS PREVIOUSLY STATIONARY, MAKE THE ADDITIONAL CHECK OF GRID POS CHANGE
-			//if ( uiCursorFlags & MOUSE_MOVING_NEW_TILE )
-			{
-				// Reset counter
-				RESETCOUNTER( PATHFINDCOUNTER );
-				fDoNewTile = TRUE;
-			}
-	 }
+		do_new_tile                  = true;
+		recalc                       = true;
+		gfUIForceReExamineCursorData = FALSE;
+	}
 
-	 if ( uiCursorFlags & MOUSE_STATIONARY )
-	 {
-			// ONLY DIPSLAY APS AFTER A DELAY
-			if ( COUNTERDONE( PATHFINDCOUNTER ) )
-			{
-				// Don't reset counter: One when we move again do we do this!
-				fShowAPs = TRUE;
+	if (cursor_flags & MOUSE_MOVING)
+	{ /* If cursor was previously stationary, make the additional check of grid
+		 * pos change */
+		RESETCOUNTER(PATHFINDCOUNTER);
+		do_new_tile = true;
+	}
 
-				if ( fDoNewTile )
-				{
-					fDoNewTile = FALSE;
-					fRecalc    = TRUE;
-				}
+	bool show_APs = false;
+	if (cursor_flags & MOUSE_STATIONARY &&
+			COUNTERDONE(PATHFINDCOUNTER)) // Only dipslay aps after a delay
+	{
+		// Don't reset counter: One when we move again do we do this!
+		show_APs = true;
 
-			}
+		if (do_new_tile)
+		{
+			do_new_tile = false;
+			recalc      = true;
+		}
+	}
 
-	 }
-
-	 if ( puiCursorFlags )
-	 {
-			(*puiCursorFlags) = uiCursorFlags;
-	 }
-
-	 if ( pfShowAPs )
-	 {
-			(*pfShowAPs) = fShowAPs;
-	 }
-
-	 return( fRecalc );
+	if (puiCursorFlags) *puiCursorFlags = cursor_flags;
+	if (pfShowAPs)      *pfShowAPs      = show_APs;
+	return recalc;
 }
 
 
