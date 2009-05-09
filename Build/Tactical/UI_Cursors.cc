@@ -34,7 +34,7 @@ static UICursorID HandleKnifeCursor(             SOLDIERTYPE*, GridNo map_pos, B
 static UICursorID HandlePunchCursor(             SOLDIERTYPE*, GridNo map_pos, BOOLEAN activated, MouseMoveState);
 static UICursorID HandleAidCursor(               SOLDIERTYPE*, GridNo map_pos, BOOLEAN activated, MouseMoveState);
 static UICursorID HandleActivatedTossCursor();
-static UICursorID HandleNonActivatedTossCursor(  SOLDIERTYPE*, UINT16 usMapPos, BOOLEAN fRecalc, MouseMoveState, UINT8 ubCursor);
+static UICursorID HandleNonActivatedTossCursor(  SOLDIERTYPE*, GridNo map_pos, BOOLEAN recalc, MouseMoveState, ItemCursor);
 static UICursorID HandleWirecutterCursor(        SOLDIERTYPE*, GridNo map_pos, MouseMoveState);
 static UICursorID HandleRepairCursor(            SOLDIERTYPE*, GridNo map_pos, MouseMoveState);
 static UICursorID HandleRefuelCursor(            SOLDIERTYPE*, GridNo map_pos, MouseMoveState);
@@ -772,146 +772,90 @@ static UICursorID HandleActivatedTossCursor()
 }
 
 
-static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const pSoldier, UINT16 const sGridNo, BOOLEAN const fRecalc, MouseMoveState const uiCursorFlags, UINT8 const ubItemCursor)
+static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLEAN const recalc, MouseMoveState const uiCursorFlags, ItemCursor const ubItemCursor)
 {
-	INT16 sFinalGridNo;
-	static BOOLEAN fBadCTGH = FALSE;
-	BOOLEAN fArmed = FALSE;
-	INT8		bLevel;
-	OBJECTTYPE	TempObject;
-	INT8		bSlot;
-	OBJECTTYPE * pObj;
-	INT8				bAttachPos;
+	static bool bad_ctgh = false;
 
-
-	// Check for enough ammo...
-	if ( ubItemCursor == TRAJECTORYCURS )
+	// Check for enough ammo
+	BOOLEAN armed = FALSE;
+	if (ubItemCursor == TRAJECTORYCURS)
 	{
-		fArmed = TRUE;
-
-		if ( !EnoughAmmo( pSoldier, FALSE, HANDPOS ) )
+		if (!EnoughAmmo(s, FALSE, HANDPOS))
 		{
-			// Check if ANY ammo exists.....
-			if ( FindAmmoToReload( pSoldier, HANDPOS, NO_SLOT ) == NO_SLOT )
-			{
-				// OK, use BAD reload cursor.....
-				return( BAD_RELOAD_UICURSOR );
-			}
-			else
-			{
-				// Check APs to reload...
-				gsCurrentActionPoints = GetAPsToAutoReload( pSoldier );
+			// Check if ANY ammo exists
+			if (FindAmmoToReload(s, HANDPOS, NO_SLOT) == NO_SLOT) return BAD_RELOAD_UICURSOR;
 
-				gfUIDisplayActionPoints = TRUE;
-				//gUIDisplayActionPointsOffX = 14;
-				//gUIDisplayActionPointsOffY = 7;
-
-				// OK, use GOOD reload cursor.....
-				return( GOOD_RELOAD_UICURSOR );
-			}
+			gsCurrentActionPoints   = GetAPsToAutoReload(s);
+			gfUIDisplayActionPoints = TRUE;
+			return GOOD_RELOAD_UICURSOR;
 		}
+
+		armed = TRUE;
 	}
 
-	// Add APs....
-	if ( gTacticalStatus.uiFlags & TURNBASED && ( gTacticalStatus.uiFlags & INCOMBAT ) )
+	// Add APs
+	if (gTacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT)
 	{
-		if ( ubItemCursor == TRAJECTORYCURS )
-		{
-		  gsCurrentActionPoints = CalcTotalAPsToAttack( pSoldier, sGridNo, TRUE, (INT8)(pSoldier->bShownAimTime / 2) );
-		}
-		else
-		{
-			gsCurrentActionPoints = MinAPsToThrow( pSoldier, sGridNo, TRUE );
-		}
+		gsCurrentActionPoints =
+			ubItemCursor == TRAJECTORYCURS ? CalcTotalAPsToAttack(s, map_pos, TRUE, s->bShownAimTime / 2) :
+			MinAPsToThrow(s, map_pos, TRUE);
 
-		gfUIDisplayActionPoints = TRUE;
+		gfUIDisplayActionPoints       = TRUE;
 		gfUIDisplayActionPointsCenter = TRUE;
 
-		// If we don't have any points and we are at the first refine, do nothing but warn!
-		if ( !EnoughPoints( pSoldier, gsCurrentActionPoints, 0 , FALSE ) )
+		/* If we don't have any points and we are at the first refine, do nothing
+		 * but warn! */
+		if (!EnoughPoints(s, gsCurrentActionPoints, 0, FALSE))
 		{
 			gfUIDisplayActionPointsInvalid = TRUE;
 		}
 	}
 
-
-	// OK, if we begin to move, reset the cursor...
-	if (uiCursorFlags != MOUSE_STATIONARY)
-	{
-		EndPhysicsTrajectoryUI( );
-	}
+	// If we begin to move, reset the cursor
+	if (uiCursorFlags != MOUSE_STATIONARY) EndPhysicsTrajectoryUI();
 
 	gfUIHandlePhysicsTrajectory = TRUE;
 
-	if ( fRecalc )
+	if (recalc)
 	{
-		// Calculate chance to throw here.....
-		if ( sGridNo == pSoldier->sGridNo )
+		// Calculate chance to throw here
+		if (map_pos == s->sGridNo)
 		{
-			fBadCTGH = FALSE;
+			bad_ctgh = false;
 		}
 		else
 		{
-      // ATE: Find the object to use...
-      TempObject = pSoldier->inv[HANDPOS];
+	    OBJECTTYPE const& o = s->inv[HANDPOS];
+      // ATE: Find the object to use
+      OBJECTTYPE TempObject = o;
 
-      // Do we have a launcable?
-	    pObj = &(pSoldier->inv[HANDPOS]);
-	    for (bAttachPos = 0; bAttachPos < MAX_ATTACHMENTS; bAttachPos++)
+      // Do we have a launchable?
+	    for (INT8 i = 0; i != MAX_ATTACHMENTS; ++i)
 	    {
-		    if (pObj->usAttachItem[ bAttachPos ] != NOTHING)
-		    {
-			    if ( Item[ pObj->usAttachItem[ bAttachPos ] ].usItemClass & IC_EXPLOSV )
-			    {
-				    break;
-			    }
-		    }
-	    }
-	    if (bAttachPos != MAX_ATTACHMENTS)
-	    {
-        CreateItem( pObj->usAttachItem[ bAttachPos ],	pObj->bAttachStatus[ bAttachPos ], &TempObject );
+		    UINT16 const attach_item = o.usAttachItem[i];
+		    if (attach_item == NOTHING)                        continue;
+				if (!(Item[attach_item].usItemClass & IC_EXPLOSV)) continue;
+				CreateItem(attach_item, o.bAttachStatus[i], &TempObject);
+				break;
 	    }
 
-
-			if (pSoldier->bWeaponMode == WM_ATTACHED && FindAttachment( &(pSoldier->inv[HANDPOS]), UNDER_GLAUNCHER ) != NO_SLOT )
+			if (s->bWeaponMode == WM_ATTACHED)
 			{
-				bSlot = FindAttachment( &(pSoldier->inv[HANDPOS]), UNDER_GLAUNCHER );
-
-				if ( bSlot != NO_SLOT )
+				INT8 const slot = FindAttachment(&o, UNDER_GLAUNCHER);
+				if (slot != NO_SLOT)
 				{
-					CreateItem( UNDER_GLAUNCHER, pSoldier->inv[HANDPOS].bAttachStatus[ bSlot ], &TempObject );
-
-					if ( !CalculateLaunchItemChanceToGetThrough( pSoldier, &TempObject, sGridNo, (INT8)gsInterfaceLevel, (INT16)( gsInterfaceLevel * 256 ), &sFinalGridNo, fArmed, &bLevel, TRUE ) )
-					{
-						fBadCTGH = TRUE;
-					}
-					else
-					{
-						fBadCTGH = FALSE;
-					}
-    			BeginPhysicsTrajectoryUI( sFinalGridNo, bLevel, fBadCTGH );
+					CreateItem(UNDER_GLAUNCHER, o.bAttachStatus[slot], &TempObject);
 				}
 			}
-			else
-			{
-				if ( !CalculateLaunchItemChanceToGetThrough( pSoldier, &TempObject, sGridNo, (INT8)gsInterfaceLevel, (INT16)( gsInterfaceLevel * 256 ), &sFinalGridNo, fArmed, &bLevel, TRUE ) )
-				{
-					fBadCTGH = TRUE;
-				}
-				else
-				{
-					fBadCTGH = FALSE;
-				}
-    		BeginPhysicsTrajectoryUI( sFinalGridNo, bLevel, fBadCTGH );
-			}
+
+			INT16 final_grid_no;
+			INT8  level;
+			bad_ctgh = !CalculateLaunchItemChanceToGetThrough(s, &TempObject, map_pos, gsInterfaceLevel, gsInterfaceLevel * 256, &final_grid_no, armed, &level, TRUE);
+			BeginPhysicsTrajectoryUI(final_grid_no, level, bad_ctgh);
 		}
 	}
 
-	if ( fBadCTGH )
-	{
-		return( BAD_THROW_UICURSOR );
-	}
-	return( GOOD_THROW_UICURSOR );
+	return bad_ctgh ? BAD_THROW_UICURSOR : GOOD_THROW_UICURSOR;
 }
 
 
