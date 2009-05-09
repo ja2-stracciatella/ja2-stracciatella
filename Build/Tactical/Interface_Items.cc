@@ -3085,7 +3085,6 @@ void DrawItemTileCursor( )
 {
 	INT16							sAPCost;
 	BOOLEAN						fRecalc;
-	UINT32						uiCursorFlags;
 	INT16							sFinalGridNo;
 	UINT32						uiCursorId = CURSOR_ITEM_GOOD_THROW;
 	BOOLEAN						fGiveItem = FALSE;
@@ -3130,6 +3129,7 @@ void DrawItemTileCursor( )
 
 
 		// Get recalc and cursor flags
+		MouseMoveFlags uiCursorFlags;
 		fRecalc = GetMouseRecalcAndShowAPFlags( &uiCursorFlags, NULL );
 
 		// OK, if we begin to move, reset the cursor...

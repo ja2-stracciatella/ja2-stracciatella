@@ -1240,7 +1240,7 @@ static ScreenID UIHandleMOnTerrain(UI_EVENT* pUIEvent)
 		 }
 
 		 // DO SOME CURSOR POSITION FLAGS SETTING
-		const UINT32 uiCursorFlags = GetCursorMovementFlags();
+		MouseMoveFlags const uiCursorFlags = GetCursorMovementFlags();
 
 		if (sel != NULL)
 		 {
@@ -1522,7 +1522,7 @@ static ScreenID UIHandleCWait(UI_EVENT* pUIEvent)
 				return( GAME_SCREEN );
 			}
 
-			const UINT32 uiCursorFlags = GetCursorMovementFlags();
+			MouseMoveFlags const uiCursorFlags = GetCursorMovementFlags();
 
 			if ( pInvTile != NULL )
 			{
@@ -2876,14 +2876,14 @@ static ScreenID UIHandleIETEndTurn(UI_EVENT* pUIEvent)
 }
 
 
-UINT32 GetCursorMovementFlags(void)
+MouseMoveFlags GetCursorMovementFlags()
 {
 	static  BOOLEAN fStationary = FALSE;
 	static	UINT16	usOldMouseXPos  = 32000;
 	static	UINT16	usOldMouseYPos  = 32000;
 	static	UINT16  usOldMapPos		  = 32000;
 
-	static	UINT32  uiSameFrameCursorFlags;
+	static MouseMoveFlags uiSameFrameCursorFlags = MOUSE_MOVE_NONE;
 	static  UINT32	uiOldFrameNumber = 99999;
 
 	// Check if this is the same frame as before, return already calculated value if so!
@@ -2894,7 +2894,7 @@ UINT32 GetCursorMovementFlags(void)
 
 	const GridNo usMapPos = GetMouseMapPos();
 
-	UINT32 cursor_flags = 0;
+	MouseMoveFlags cursor_flags = MOUSE_MOVE_NONE;
 	if ( gusMouseXPos != usOldMouseXPos || gusMouseYPos != usOldMouseYPos )
 	{
 		cursor_flags |= MOUSE_MOVING;
@@ -2930,7 +2930,7 @@ UINT32 GetCursorMovementFlags(void)
 static INT8 DrawUIMovementPath(SOLDIERTYPE* pSoldier, UINT16 usMapPos, MoveUITarget);
 
 
-BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* const pSoldier, UINT32 const uiCursorFlags, UINT16 const usMapPos, MoveUITarget const uiFlags)
+BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* const pSoldier, MouseMoveFlags const uiCursorFlags, UINT16 const usMapPos, MoveUITarget const uiFlags)
 {
 	static const SOLDIERTYPE* target = NULL;
 
@@ -4812,7 +4812,7 @@ static bool UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* const pSoldie
 	static BOOLEAN fOverPool  = FALSE;
 	static BOOLEAN fOverEnemy = FALSE;
 
-	UINT32 const uiCursorFlags = GetCursorMovementFlags();
+	MouseMoveFlags const uiCursorFlags = GetCursorMovementFlags();
 
 	// Default gridno to mouse pos
 	INT16 sActionGridNo = usMapPos;
