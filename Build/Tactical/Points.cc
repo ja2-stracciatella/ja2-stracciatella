@@ -1024,139 +1024,101 @@ void GetAPChargeForShootOrStabWRTGunRaises(const SOLDIERTYPE* const pSoldier, IN
 }
 
 
-UINT8 MinAPsToShootOrStab(SOLDIERTYPE* const pSoldier, INT16 sGridNo, const UINT8 ubAddTurningCost)
+UINT8 MinAPsToShootOrStab(SOLDIERTYPE* const s, INT16 grid_no, UINT8 const add_turning_cost)
 {
- INT8	bFullAPs;
- INT8 bAimSkill;
- UINT8	bAPCost = AP_MIN_AIM_ATTACK;
- BOOLEAN	fAddingTurningCost = FALSE;
- BOOLEAN	fAddingRaiseGunCost = FALSE;
- UINT16 usItem;
+	OBJECTTYPE const& in_hand = s->inv[HANDPOS];
+	UINT16     const  item =
+		s->bWeaponMode == WM_ATTACHED ? UNDER_GLAUNCHER :
+		in_hand.usItem;
 
-	if ( pSoldier->bWeaponMode == WM_ATTACHED )
-	{
-		usItem = UNDER_GLAUNCHER;
+	BOOLEAN	adding_turning_cost;
+	BOOLEAN	adding_raise_gun_cost;
+	GetAPChargeForShootOrStabWRTGunRaises(s, grid_no, add_turning_cost, &adding_turning_cost, &adding_raise_gun_cost);
+
+	UINT8	ap_cost = AP_MIN_AIM_ATTACK;
+
+	if (Item[item].usItemClass == IC_THROWING_KNIFE ||
+			item                   == ROCKET_LAUNCHER)
+	{ // Do we need to stand up?
+		ap_cost += GetAPsToChangeStance(s, ANIM_STAND);
+	}
+
+	// ATE: Look at stance
+	if (gAnimControl[s->usAnimState].ubHeight == ANIM_STAND)
+	{ // Don't charge turning if gun-ready
+		if (adding_raise_gun_cost) adding_turning_cost = FALSE;
 	}
 	else
-	{
-		usItem = pSoldier->inv[ HANDPOS ].usItem;
+	{ // Just charge turning costs
+		if (adding_turning_cost) adding_raise_gun_cost = FALSE;
 	}
 
+	if (AM_A_ROBOT(s)) adding_raise_gun_cost = FALSE;
 
- GetAPChargeForShootOrStabWRTGunRaises( pSoldier, sGridNo, ubAddTurningCost, &fAddingTurningCost, &fAddingRaiseGunCost );
-
-
- if ( Item[ usItem ].usItemClass == IC_THROWING_KNIFE )
- {
-	 // Do we need to stand up?
-	 bAPCost += GetAPsToChangeStance( pSoldier, ANIM_STAND );
- }
-
- // ATE: Look at stance...
- if ( gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_STAND )
- {
-		// Don't charge turning if gun-ready...
-		if ( fAddingRaiseGunCost )
+	if (adding_turning_cost)
+	{
+		if (Item[item].usItemClass == IC_THROWING_KNIFE)
 		{
-			fAddingTurningCost = FALSE;
-		}
- }
- else
- {
-	 // Just charge turning costs...
-	 if ( fAddingTurningCost )
-	 {
-	 	 fAddingRaiseGunCost = FALSE;
-	 }
- }
-
- if ( AM_A_ROBOT( pSoldier ) )
- {
-	fAddingRaiseGunCost = FALSE;
- }
-
-	if ( fAddingTurningCost )
-	{
-    if ( Item[ usItem ].usItemClass == IC_THROWING_KNIFE )
-    {
-      bAPCost += 1;
-    }
-    else
-    {
-		  bAPCost += GetAPsToLook( pSoldier );
-    }
-	}
-
-	if ( fAddingRaiseGunCost )
-	{
-		bAPCost += GetAPsToReadyWeapon( pSoldier, pSoldier->usAnimState );
-    pSoldier->fDontChargeReadyAPs = FALSE;
-	}
-
-	if ( sGridNo != NOWHERE )
-	{
-		 // Given a gridno here, check if we are on a guy - if so - get his gridno
-		const SOLDIERTYPE* const tgt = FindSoldier(sGridNo, FIND_SOLDIER_GRIDNO);
-		if (tgt != NULL) sGridNo = tgt->sGridNo;
-	}
-
-  // if attacking a new target (or if the specific target is uncertain)
-  if ( ( sGridNo != pSoldier->sLastTarget ) && usItem != ROCKET_LAUNCHER )
-  {
-    bAPCost += AP_CHANGE_TARGET;
-  }
-
-  bFullAPs = CalcActionPoints( pSoldier );
-  // aim skill is the same whether we are using 1 or 2 guns
-  bAimSkill = CalcAimSkill( pSoldier, usItem );
-
-	if ( pSoldier->bWeaponMode == WM_ATTACHED )
-	{
-		INT8 bAttachSlot;
-		OBJECTTYPE  GrenadeLauncher;
-
-		// look for an attached grenade launcher
-		bAttachSlot = FindAttachment( &(pSoldier->inv[ HANDPOS ]), UNDER_GLAUNCHER );
-
-		// create temporary grenade launcher and use that
-		if ( bAttachSlot != NO_SLOT )
-		{
-			CreateItem( UNDER_GLAUNCHER, pSoldier->inv[ HANDPOS ].bAttachStatus[ bAttachSlot ], &GrenadeLauncher );
+			ap_cost += AP_LOOK_STANDING;
 		}
 		else
 		{
-			// fake it, use a 100 status...
-			CreateItem( UNDER_GLAUNCHER, 100, &GrenadeLauncher );
+			ap_cost += GetAPsToLook(s);
 		}
-
-	  bAPCost += BaseAPsToShootOrStab(bFullAPs, bAimSkill, GrenadeLauncher);
 	}
-	else if ( IsValidSecondHandShot( pSoldier ) )
-  {
-	  // charge the maximum of the two
-	  bAPCost += __max(
-			 BaseAPsToShootOrStab(bFullAPs, bAimSkill, pSoldier->inv[HANDPOS]),
-			 BaseAPsToShootOrStab(bFullAPs, bAimSkill, pSoldier->inv[SECONDHANDPOS]));
-  }
-  else
-  {
-	  bAPCost += BaseAPsToShootOrStab(bFullAPs, bAimSkill, pSoldier->inv[HANDPOS]);
-  }
 
- // the minimum AP cost of ANY shot can NEVER be more than merc's maximum APs!
- if ( bAPCost > bFullAPs )
-   bAPCost = bFullAPs;
+	if (adding_raise_gun_cost)
+	{
+		ap_cost += GetAPsToReadyWeapon(s, s->usAnimState);
+		s->fDontChargeReadyAPs = FALSE;
+	}
 
- // this SHOULD be impossible, but nevertheless...
- if ( bAPCost < 1 )
-   bAPCost = 1;
+	if (grid_no != NOWHERE)
+	{ // Given a gridno here, check if we are on a guy - if so - get his gridno
+		SOLDIERTYPE const* const tgt = FindSoldier(grid_no, FIND_SOLDIER_GRIDNO);
+		if (tgt) grid_no = tgt->sGridNo;
+	}
 
- if ( pSoldier->inv[HANDPOS].usItem == ROCKET_LAUNCHER )
- {
-	bAPCost += GetAPsToChangeStance( pSoldier, ANIM_STAND );
- }
+	// if attacking a new target (or if the specific target is uncertain)
+	if (grid_no != s->sLastTarget && item != ROCKET_LAUNCHER)
+	{
+		ap_cost += AP_CHANGE_TARGET;
+	}
 
- return ( bAPCost );
+	INT8 const full_aps  = CalcActionPoints(s);
+	// Aim skill is the same whether we are using 1 or 2 guns
+	INT8 const aim_skill = CalcAimSkill(s, item);
+
+	if (s->bWeaponMode == WM_ATTACHED)
+	{
+		// Create temporary grenade launcher and use that
+		INT8 const attach_slot = FindAttachment(&in_hand, UNDER_GLAUNCHER);
+		INT8 const status      =
+			attach_slot != NO_SLOT ? in_hand.bAttachStatus[attach_slot] :
+			100; // Fake it, use a 100 status
+		OBJECTTYPE grenade_launcher;
+		CreateItem(UNDER_GLAUNCHER, status, &grenade_launcher);
+
+		ap_cost += BaseAPsToShootOrStab(full_aps, aim_skill, grenade_launcher);
+	}
+	else if (IsValidSecondHandShot(s))
+	{ // Charge the maximum of the two
+		UINT8 const ap_1st = BaseAPsToShootOrStab(full_aps, aim_skill, in_hand);
+		UINT8 const ap_2nd = BaseAPsToShootOrStab(full_aps, aim_skill, s->inv[SECONDHANDPOS]);
+		ap_cost += __max(ap_1st, ap_2nd);
+	}
+	else
+	{
+		ap_cost += BaseAPsToShootOrStab(full_aps, aim_skill, in_hand);
+	}
+
+	// The minimum AP cost of ANY shot can NEVER be more than merc's maximum APs
+	if (ap_cost > full_aps) ap_cost = full_aps;
+
+	// this SHOULD be impossible, but nevertheless
+	if (ap_cost < 1) ap_cost = 1;
+
+	return ap_cost;
 }
 
 
