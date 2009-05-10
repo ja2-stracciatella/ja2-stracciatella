@@ -973,54 +973,33 @@ UINT8 BaseAPsToShootOrStab(INT8 const bAPs, INT8 const bAimSkill, OBJECTTYPE con
 	return( ( ( ( 100 * sTop ) / sBottom ) + 1) / 2);
 }
 
-void GetAPChargeForShootOrStabWRTGunRaises(const SOLDIERTYPE* const pSoldier, INT16 sGridNo, const UINT8 ubAddTurningCost, BOOLEAN* const pfChargeTurning, BOOLEAN* const pfChargeRaise)
+
+void GetAPChargeForShootOrStabWRTGunRaises(SOLDIERTYPE const* const s, GridNo grid_no, UINT8 const ubAddTurningCost, BOOLEAN* const charge_turning, BOOLEAN* const charge_raise)
 {
-	 UINT8 ubDirection;
-   BOOLEAN	fAddingTurningCost = FALSE;
-   BOOLEAN	fAddingRaiseGunCost = FALSE;
+	bool adding_turning_cost = FALSE;
+	if (ubAddTurningCost)
+	{
+		if (grid_no != NOWHERE)
+		{ // Get direction and see if we need to turn
+			// Given a gridno here, check if we are on a guy - if so - get his gridno
+			SOLDIERTYPE const* const tgt = FindSoldier(grid_no, FIND_SOLDIER_GRIDNO);
+			if (tgt) grid_no = tgt->sGridNo;
 
-	 if ( sGridNo != NOWHERE )
-	 {
-		 // OK, get a direction and see if we need to turn...
-		 if (ubAddTurningCost)
-		 {
-			 // Given a gridno here, check if we are on a guy - if so - get his gridno
-			const SOLDIERTYPE* const tgt = FindSoldier(sGridNo, FIND_SOLDIER_GRIDNO);
-			if (tgt != NULL) sGridNo = tgt->sGridNo;
+			// Is it the same as he's facing?
+			UINT8 const direction = GetDirectionFromGridNo(grid_no, s);
+			adding_turning_cost = direction != s->bDirection;
+		}
+		else
+		{ // Assume we need to add cost!
+			adding_turning_cost = true;
+		}
+	}
+	*charge_turning = adding_turning_cost;
 
-			 ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
-
-			 // Is it the same as he's facing?
-			 if ( ubDirection != pSoldier->bDirection )
-			 {
-					fAddingTurningCost = TRUE;
-			 }
-		 }
-	 }
-	 else
-	 {
-		 if (ubAddTurningCost)
-		 {
-				// Assume we need to add cost!
-				fAddingTurningCost = TRUE;
-		 }
-	 }
-
-
-	 if ( Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_THROWING_KNIFE )
-	 {
-	 }
-	 else
-	 {
-		 // Do we need to ready weapon?
-		 if ( !( gAnimControl[ pSoldier->usAnimState ].uiFlags &( ANIM_FIREREADY | ANIM_FIRE ) ) )
-		 {
-			 fAddingRaiseGunCost = TRUE;
-		 }
-	 }
-
-	(*pfChargeTurning) = fAddingTurningCost;
-	(*pfChargeRaise )  = fAddingRaiseGunCost;
+	// Do we need to ready weapon?
+	*charge_raise =
+		Item[s->inv[HANDPOS].usItem].usItemClass != IC_THROWING_KNIFE &&
+		!(gAnimControl[s->usAnimState].uiFlags & (ANIM_FIREREADY | ANIM_FIRE));
 }
 
 

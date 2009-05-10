@@ -327,7 +327,7 @@ INT8 GetBPsTouseJar( SOLDIERTYPE *pSoldier );
 
 INT8 GetAPsToJumpOver(const SOLDIERTYPE* pSoldier);
 
-void GetAPChargeForShootOrStabWRTGunRaises(const SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost, BOOLEAN* pfChargeTurning, BOOLEAN* pfChargeRaise);
+void GetAPChargeForShootOrStabWRTGunRaises(SOLDIERTYPE const*, GridNo, UINT8 ubAddTurningCost, BOOLEAN* charge_turning, BOOLEAN* charge_raise);
 
 UINT16 GetAPsToReloadRobot(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* pRobot);
 INT8 GetAPsToReloadGunWithAmmo( OBJECTTYPE * pGun, OBJECTTYPE * pAmmo );
