@@ -237,11 +237,18 @@ void AdjustNoAPToFinishMove( SOLDIERTYPE *pSoldier, BOOLEAN fSet )
 }
 
 
+static bool IsCrowWithShadow(SOLDIERTYPE const& s)
+{
+	return
+		s.ubBodyType  == CROW     &&
+		s.usAnimState == CROW_FLY &&
+		s.pAniTile;
+}
+
+
 void HandleCrowShadowVisibility(SOLDIERTYPE* const s)
 {
-	if (s->ubBodyType  != CROW)     return;
-	if (s->usAnimState != CROW_FLY) return;
-	if (!s->pAniTile)               return;
+	if (!IsCrowWithShadow(*s)) return;
 	HideAniTile(s->pAniTile, s->bLastRenderVisibleValue == -1);
 }
 
@@ -277,50 +284,26 @@ static void HandleCrowShadowNewGridNo(SOLDIERTYPE* const s)
 }
 
 
-static void HandleCrowShadowRemoveGridNo(SOLDIERTYPE* pSoldier)
+static void HandleCrowShadowRemoveGridNo(SOLDIERTYPE* const s)
 {
-	if ( pSoldier->ubBodyType == CROW )
-	{
-		if ( pSoldier->usAnimState == CROW_FLY )
-		{
-			if ( pSoldier->pAniTile != NULL )
-			{
-				DeleteAniTile( pSoldier->pAniTile );
-				pSoldier->pAniTile = NULL;
-			}
-		}
-	}
+	if (!IsCrowWithShadow(*s)) return;
+	DeleteAniTile(s->pAniTile);
+	s->pAniTile = 0;
 }
 
 
-static void HandleCrowShadowNewDirection(SOLDIERTYPE* pSoldier)
+static void HandleCrowShadowNewDirection(SOLDIERTYPE* const s)
 {
-	if ( pSoldier->ubBodyType == CROW )
-	{
-		if ( pSoldier->usAnimState == CROW_FLY )
-		{
-			if ( pSoldier->pAniTile != NULL )
-			{
-				pSoldier->pAniTile->v.user.uiData3 = pSoldier->bDirection;
-			}
-		}
-	}
+	if (!IsCrowWithShadow(*s)) return;
+	s->pAniTile->v.user.uiData3 = s->bDirection;
 }
 
 
-static void HandleCrowShadowNewPosition(SOLDIERTYPE* pSoldier)
+static void HandleCrowShadowNewPosition(SOLDIERTYPE* const s)
 {
-	if ( pSoldier->ubBodyType == CROW )
-	{
-		if ( pSoldier->usAnimState == CROW_FLY )
-		{
-			if ( pSoldier->pAniTile != NULL )
-			{
-				pSoldier->pAniTile->sRelativeX	= pSoldier->sX;
-				pSoldier->pAniTile->sRelativeY	= pSoldier->sY;
-			}
-		}
-	}
+	if (!IsCrowWithShadow(*s)) return;
+	s->pAniTile->sRelativeX = s->sX;
+	s->pAniTile->sRelativeY = s->sY;
 }
 
 
