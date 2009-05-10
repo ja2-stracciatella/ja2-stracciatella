@@ -246,42 +246,34 @@ void HandleCrowShadowVisibility(SOLDIERTYPE* const s)
 }
 
 
-static void HandleCrowShadowNewGridNo(SOLDIERTYPE* pSoldier)
+static void HandleCrowShadowNewGridNo(SOLDIERTYPE* const s)
 {
-	ANITILE_PARAMS	AniParams;
+	if (s->ubBodyType != CROW) return;
 
-	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
-
-	if ( pSoldier->ubBodyType == CROW )
+	if (s->pAniTile)
 	{
-		if ( pSoldier->pAniTile != NULL )
-		{
-			DeleteAniTile( pSoldier->pAniTile );
-			pSoldier->pAniTile = NULL;
-		}
-
-		if ( pSoldier->sGridNo != NOWHERE )
-		{
-			if ( pSoldier->usAnimState == CROW_FLY )
-			{
-				AniParams.sGridNo							= (INT16)pSoldier->sGridNo;
-				AniParams.ubLevelID						= ANI_SHADOW_LEVEL;
-				AniParams.sDelay							= pSoldier->sAniDelay;
-				AniParams.sStartFrame					= 0;
-				AniParams.uiFlags             = ANITILE_FORWARD | ANITILE_LOOPING | ANITILE_USE_DIRECTION_FOR_START_FRAME;
-				AniParams.sX									= pSoldier->sX;
-				AniParams.sY									= pSoldier->sY;
-				AniParams.sZ									= 0;
-				AniParams.zCachedFile = "TILECACHE/fly_shdw.sti";
-
-				AniParams.v.user.uiData3 = pSoldier->bDirection;
-
-				pSoldier->pAniTile = CreateAnimationTile( &AniParams );
-
-				HandleCrowShadowVisibility( pSoldier );
-			}
-		}
+		DeleteAniTile(s->pAniTile);
+		s->pAniTile = 0;
 	}
+
+	if (s->sGridNo     == NOWHERE)  return;
+	if (s->usAnimState != CROW_FLY) return;
+
+	ANITILE_PARAMS a;
+	memset(&a, 0, sizeof(a));
+	a.sGridNo        = s->sGridNo;
+	a.ubLevelID      = ANI_SHADOW_LEVEL;
+	a.sDelay         = s->sAniDelay;
+	a.sStartFrame    = 0;
+	a.uiFlags        = ANITILE_FORWARD | ANITILE_LOOPING | ANITILE_USE_DIRECTION_FOR_START_FRAME;
+	a.sX             = s->sX;
+	a.sY             = s->sY;
+	a.sZ             = 0;
+	a.zCachedFile    = "TILECACHE/fly_shdw.sti";
+	a.v.user.uiData3 = s->bDirection;
+	s->pAniTile = CreateAnimationTile(&a);
+
+	HandleCrowShadowVisibility(s);
 }
 
 
