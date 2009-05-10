@@ -464,26 +464,26 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 		GridNo const map_pos = GetMouseMapPos();
 		if (map_pos == NOWHERE) return;
 
-		bool   on_guy = false;
-		UINT16 usFlags;
+		SOLDIERTYPE* tgt = 0;
+		UINT16       flags;
 
 		// Determine which body part it's on
-		SOLDIERTYPE* pTargetSoldier;
-		for (LEVELNODE* n = 0;;)
+		for (LEVELNODE* n = gpWorldLevelData[map_pos].pMercHead; n; n = n->pNext)
 		{
-			n = GetAnimProfileFlags(map_pos, &usFlags, &pTargetSoldier, n);
-			if (!n) break;
+			if (!(n->uiFlags & LEVELNODE_MERCPLACEHOLDER)) continue;
 
-			if (!pTargetSoldier) continue;
+			SOLDIERTYPE* const potential_tgt = n->pSoldier;
+			if (!potential_tgt) continue;
 
 			// ATE: Check their stance - if prone - return!
-			if (gAnimControl[pTargetSoldier->usAnimState].ubHeight == ANIM_PRONE)
+			if (gAnimControl[potential_tgt->usAnimState].ubHeight == ANIM_PRONE)
 			{
 				return;
 			}
 
 			// Check if we have a half tile profile
-			if (usFlags & (TILE_FLAG_NORTH_HALF | TILE_FLAG_SOUTH_HALF | TILE_FLAG_WEST_HALF | TILE_FLAG_EAST_HALF | TILE_FLAG_TOP_HALF | TILE_FLAG_BOTTOM_HALF))
+			flags = n->uiAnimHitLocationFlags;
+			if (flags & (TILE_FLAG_NORTH_HALF | TILE_FLAG_SOUTH_HALF | TILE_FLAG_WEST_HALF | TILE_FLAG_EAST_HALF | TILE_FLAG_TOP_HALF | TILE_FLAG_BOTTOM_HALF))
 			{
 				INT16 sCellX;
 				INT16 sCellY;
@@ -492,12 +492,12 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 				sCellX %= CELL_X_SIZE;
 				sCellY %= CELL_Y_SIZE;
 
-				if (usFlags & TILE_FLAG_NORTH_HALF && sCellY >  CELL_Y_SIZE / 2) continue;
-				if (usFlags & TILE_FLAG_SOUTH_HALF && sCellY <= CELL_Y_SIZE / 2) continue;
-				if (usFlags & TILE_FLAG_WEST_HALF  && sCellX >  CELL_X_SIZE / 2) continue;
-				if (usFlags & TILE_FLAG_EAST_HALF  && sCellX <= CELL_X_SIZE / 2) continue;
+				if (flags & TILE_FLAG_NORTH_HALF && sCellY >  CELL_Y_SIZE / 2) continue;
+				if (flags & TILE_FLAG_SOUTH_HALF && sCellY <= CELL_Y_SIZE / 2) continue;
+				if (flags & TILE_FLAG_WEST_HALF  && sCellX >  CELL_X_SIZE / 2) continue;
+				if (flags & TILE_FLAG_EAST_HALF  && sCellX <= CELL_X_SIZE / 2) continue;
 
-				if (usFlags & TILE_FLAG_TOP_HALF)
+				if (flags & TILE_FLAG_TOP_HALF)
 				{
 					INT16 sScreenX;
 					INT16 sScreenY;
@@ -507,7 +507,7 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 					if (sScreenX > WORLD_TILE_Y / 2) continue;
 				}
 
-				if (usFlags & TILE_FLAG_BOTTOM_HALF)
+				if (flags & TILE_FLAG_BOTTOM_HALF)
 				{
 					INT16 sScreenX;
 					INT16 sScreenY;
@@ -519,31 +519,30 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 			}
 
 			// Check if mouse is in bounding box of soldier
-			if (!IsPointInSoldierBoundingBox(pTargetSoldier, gusMouseXPos, gusMouseYPos))
+			if (!IsPointInSoldierBoundingBox(potential_tgt, gusMouseXPos, gusMouseYPos))
 			{
 				continue;
 			}
 
-			on_guy = true;
+			tgt = potential_tgt;
 			break;
 		}
 
-		if (!on_guy)
+		if (!tgt)
 		{ // Check if we can find a soldier here
-			SOLDIERTYPE* const tgt = gUIFullTarget;
-			if (tgt)
+			SOLDIERTYPE* const potential_tgt = gUIFullTarget;
+			if (potential_tgt)
 			{
-				pTargetSoldier = tgt;
-				usFlags = FindRelativeSoldierPosition(tgt, gusMouseXPos, gusMouseYPos);
-				if (usFlags != 0) on_guy = true;
+				flags = FindRelativeSoldierPosition(potential_tgt, gusMouseXPos, gusMouseYPos);
+				if (flags != 0) tgt = potential_tgt;
 			}
 		}
 
-		if (on_guy && IsValidTargetMerc(pTargetSoldier))
+		if (tgt && IsValidTargetMerc(tgt))
 		{
-			if (usFlags & TILE_FLAG_FEET) s->bAimShotLocation = AIM_SHOT_LEGS;
-			if (usFlags & TILE_FLAG_MID)  s->bAimShotLocation = AIM_SHOT_TORSO;
-			if (usFlags & TILE_FLAG_HEAD) s->bAimShotLocation = AIM_SHOT_HEAD;
+			if (flags & TILE_FLAG_FEET) s->bAimShotLocation = AIM_SHOT_LEGS;
+			if (flags & TILE_FLAG_MID)  s->bAimShotLocation = AIM_SHOT_TORSO;
+			if (flags & TILE_FLAG_HEAD) s->bAimShotLocation = AIM_SHOT_HEAD;
 		}
 	}
 
@@ -551,7 +550,7 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 	if (s->bDoBurst) return;
 
 	SOLDIERTYPE* const tgt = gUIFullTarget;
-	if (!tgt)
+	if (!tgt) return;
 
 	wchar_t const* hit_location;
 	if (tgt->ubBodyType == CROW)

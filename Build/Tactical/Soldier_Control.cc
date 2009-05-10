@@ -6731,39 +6731,6 @@ static void HandleAnimationProfile(SOLDIERTYPE* const s, UINT16 const usAnimStat
 }
 
 
-LEVELNODE *GetAnimProfileFlags( UINT16 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode )
-{
-	LEVELNODE				*pNode;
-
-	(*ppTargSoldier) = NULL;
-	(*usFlags )			 = 0;
-
-	if ( pGivenNode == NULL )
-	{
-		pNode = gpWorldLevelData[sGridNo].pMercHead;
-	}
-	else
-	{
-		pNode = pGivenNode->pNext;
-	}
-
-//#if 0
-
-	if ( pNode != NULL )
-	{
-		if ( pNode->uiFlags & LEVELNODE_MERCPLACEHOLDER )
-		{
-			(*usFlags) = (UINT16)pNode->uiAnimHitLocationFlags;
-			(*ppTargSoldier) = pNode->pSoldier;
-		}
-	}
-
-//#endif
-
-	return( pNode );
-}
-
-
 void EVENT_SoldierBeginGiveItem( SOLDIERTYPE *pSoldier )
 {
 	if (VerifyGiveItem(pSoldier) != NULL)

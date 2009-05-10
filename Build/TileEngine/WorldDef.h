@@ -255,8 +255,6 @@ void LoadMapTileset(TileSetID);
 void CalculateWorldWireFrameTiles( BOOLEAN fForce );
 
 
-LEVELNODE *GetAnimProfileFlags( UINT16 sGridNo, UINT16 *usFlags, SOLDIERTYPE **ppTargSoldier, LEVELNODE *pGivenNode );
-
 #ifdef JA2EDITOR
 void ReloadTileset(TileSetID);
 #endif
