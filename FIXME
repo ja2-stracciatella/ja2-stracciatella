@@ -33,6 +33,7 @@ DoneFadeInWarp(): pointless?
 DoorToggleLockedCallback(): pointless?
 DrawBreathUIBar(): overdraw
 ET_ENDENEMYS_TURN: unused
+EVENT_SoldierGotHit(): arguments for parameter ubHitLocation inconsistent
 EnoughTimeOnAssignment(): complicated
 EnvBeginRainStorm(), EnvEndRainStorm(): TODO
 EvaluateWorld(): complicated
@@ -191,6 +192,17 @@ STRUCTS: unused attributes
 
 BULLET
 ubTilesPerUpdate: always 1
+
+EV_S_WEAPONHIT
+usWeaponIndex: determine from ubAttackerID
+sBreathLoss: read-only (0)
+usDirection: determine from ubAttackerID and usSoldierID
+sXPos: determine from usSoldierID
+sYPos: determine from usSoldierID
+sZPos: always 20
+sRange: always 1
+ubSpecial: always FIRE_WEAPON_NO_SPECIAL
+ubLocation: read-only (AIM_SHOT_RANDOM)
 
 FACETYPE
 uiMouthDelay: always 120
