@@ -872,7 +872,7 @@ void CreateSoldierCommon(SOLDIERTYPE*);
 
 
 // Soldier Management functions, called by Event Pump.c
-BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce );
+void EVENT_InitNewSoldierAnim(SOLDIERTYPE*, UINT16 new_state, UINT16 starting_ani_code, BOOLEAN force);
 
 void ChangeSoldierState(SOLDIERTYPE* pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce);
 

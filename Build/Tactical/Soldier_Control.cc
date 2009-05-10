@@ -952,7 +952,7 @@ static void HandleAnimationProfile(SOLDIERTYPE*, UINT16 usAnimState, BOOLEAN fRe
 static void SetSoldierLocatorOffsets(SOLDIERTYPE* pSoldier);
 
 
-BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce )
+void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UINT16 const usStartingAniCode, BOOLEAN const fForce)
 {
 	INT16		sAPCost = 0;
 	INT16		sBPCost = 0;
@@ -960,7 +960,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 	UINT32  uiNewAnimFlags;
 	BOOLEAN	fTryingToRestart = FALSE;
 
-	CHECKF( usNewState < NUMANIMATIONSTATES );
+	CHECKV(usNewState < NUMANIMATIONSTATES);
 
 
 	///////////////////////////////////////////////////////////////////////
@@ -973,14 +973,14 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 		// CHECK IF WE ARE TRYING TO INTURRUPT A SCRIPT WHICH WE DO NOT WANT INTERRUPTED!
 		if ( pSoldier->fInNonintAnim )
 		{
-			return( FALSE );
+			return;
 		}
 
 		if ( pSoldier->fRTInNonintAnim )
 		{
       if ( !(gTacticalStatus.uiFlags & INCOMBAT) )
       {
-			  return( FALSE );
+			  return;
       }
       else
       {
@@ -1014,7 +1014,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 					pSoldier->fTurningUntilDone = TRUE;
 					pSoldier->ubPendingStanceChange = gAnimControl[ usNewState ].ubEndHeight;
 					pSoldier->usPendingAnimation		= usNewState;
-					return( TRUE );
+					return;
 				}
 				// Check if we are in realtime and we are going from stand to crouch
 				else if ( gAnimControl[ usNewState ].ubEndHeight == ANIM_CROUCH && gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_STAND && ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_MOVING ) && ( ( gTacticalStatus.uiFlags & REALTIME ) || !( gTacticalStatus.uiFlags & INCOMBAT ) ) )
@@ -1034,7 +1034,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 					pSoldier->usPendingAnimation = usNewState;
 					// Set new state to be animation to move to new stance
 					ChangeSoldierStance(pSoldier, gAnimControl[usNewState].ubHeight);
-					return( TRUE );
+					return;
 				}
 			}
 		}
@@ -1048,7 +1048,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 				pSoldier->usPendingAnimation = ADJACENT_GET_ITEM;
 				pSoldier->fTurningUntilDone	 = TRUE;
 				SoldierGotoStationaryStance( pSoldier );
-				return( TRUE );
+				return;
 			}
 		}
 
@@ -1062,7 +1062,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 				pSoldier->usPendingAnimation = CLIMBUPROOF;
 				pSoldier->fTurningUntilDone	 = TRUE;
 				SoldierGotoStationaryStance( pSoldier );
-				return( TRUE );
+				return;
 			}
 		}
 
@@ -1076,7 +1076,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 				pSoldier->fTurningFromPronePosition = FALSE;
 				pSoldier->fTurningUntilDone	 = TRUE;
 				SoldierGotoStationaryStance( pSoldier );
-				return( TRUE );
+				return;
 			}
 		}
 
@@ -1163,7 +1163,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 		// by if he sees us or not.
 		if ( ReevaluateEnemyStance( pSoldier, usNewState ) )
 		{
-			return( TRUE );
+			return;
 		}
 
 		// Alrighty, check if we should free buddy up!
@@ -1178,7 +1178,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 		// CHECK IF WE CAN DO THIS ANIMATION!
 		if (!IsAnimationValidForBodyType(pSoldier, usNewState))
 		{
-			return( FALSE );
+			return;
 		}
 
 		// OK, make guy transition if a big merc...
@@ -1238,7 +1238,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 
 				pSoldier->bBreathCollapsed = FALSE;
 
-  			return( FALSE );
+  			return;
 
 		  }
     }
@@ -1303,7 +1303,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 					  {
 						  if ( !fKeepMoving )
 						  {
-							  return( FALSE );
+							  return;
 						  }
 
 						  // Make sure desy = zeroed out...
@@ -1320,7 +1320,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 
 					      pSoldier->bBreathCollapsed = FALSE;
 		          }
-						  return( FALSE );
+						  return;
 					  }
           }
           else
@@ -1368,7 +1368,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 
 		if ( fTryingToRestart )
 		{
-			return( FALSE );
+			return;
 		}
 
 	}
@@ -1709,7 +1709,7 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 	// From animation control, set surface
 	if (!SetSoldierAnimationSurface(pSoldier, usNewState))
 	{
-		return( FALSE );
+		return;
 	}
 
 
@@ -1813,8 +1813,6 @@ BOOLEAN EVENT_InitNewSoldierAnim( SOLDIERTYPE *pSoldier, UINT16 usNewState, UINT
 	FreeUpNPCFromStanceChange( pSoldier );
 
 	CheckForFreeupFromHit(pSoldier, uiOldAnimFlags, uiNewAnimFlags, pSoldier->usOldAniState, usNewState);
-
-	return( TRUE );
 }
 
 
