@@ -283,7 +283,7 @@ BOOLEAN EnoughPoints(const SOLDIERTYPE* pSoldier, INT16 sAPCost, INT16 sBPCost, 
 void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost );
 void UnusedAPsToBreath(SOLDIERTYPE *pSold);
 INT16 TerrainBreathPoints(SOLDIERTYPE * pSoldier, INT16 sGridno,INT8 bDir, UINT16 usMovementMode);
-UINT8 MinAPsToAttack(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubAddTurningCost);
+UINT8 MinAPsToAttack(SOLDIERTYPE*, GridNo, UINT8 add_turning_cost);
 INT8  MinPtsToMove(const SOLDIERTYPE* pSoldier);
 INT8 MinAPsToStartMovement(const SOLDIERTYPE* pSoldier, UINT16 usMovementMode);
 INT8 PtsToMoveDirection(const SOLDIERTYPE* pSoldier, INT8 bDirection);

@@ -900,48 +900,28 @@ UINT8 CalcTotalAPsToAttack(SOLDIERTYPE* const s, INT16 const grid_no, UINT8 cons
 static UINT8 MinAPsToPunch(const SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost);
 
 
-UINT8 MinAPsToAttack(SOLDIERTYPE* const pSoldier, const INT16 sGridno, const UINT8 ubAddTurningCost)
+UINT8 MinAPsToAttack(SOLDIERTYPE* const s, GridNo const grid_no, UINT8 const add_turning_cost)
 {
-	UINT16						sAPCost = 0;
-	UINT32						uiItemClass;
-
-	if ( pSoldier->bWeaponMode == WM_ATTACHED )
-	{
-		INT8 bAttachSlot;
-		// look for an attached grenade launcher
-
-		bAttachSlot = FindAttachment( &(pSoldier->inv[ HANDPOS ]), UNDER_GLAUNCHER );
-		if ( bAttachSlot == NO_SLOT )
-		{
-			// default to hand
-			// LOOK IN BUDDY'S HAND TO DETERMINE WHAT TO DO HERE
-			uiItemClass = Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass;
-		}
-		else
-		{
-			uiItemClass = Item[ UNDER_GLAUNCHER ].usItemClass;
-		}
-	}
-	else
-	{
-		// LOOK IN BUDDY'S HAND TO DETERMINE WHAT TO DO HERE
-		uiItemClass = Item[ pSoldier->inv[HANDPOS].usItem ].usItemClass;
+	OBJECTTYPE const& in_hand = s->inv[HANDPOS];
+	UINT16            item    = in_hand.usItem;
+	if (s->bWeaponMode == WM_ATTACHED)
+	{ // Look for an attached grenade launcher
+		INT8 const attach_slot = FindAttachment(&in_hand, UNDER_GLAUNCHER);
+		if (attach_slot != NO_SLOT) item = UNDER_GLAUNCHER;
 	}
 
-	if ( uiItemClass == IC_BLADE || uiItemClass == IC_GUN || uiItemClass == IC_LAUNCHER || uiItemClass == IC_TENTACLES || uiItemClass == IC_THROWING_KNIFE )
+	switch (Item[item].usItemClass)
 	{
-		sAPCost = MinAPsToShootOrStab( pSoldier, sGridno, ubAddTurningCost );
+		case IC_BLADE:
+		case IC_GUN:
+		case IC_LAUNCHER:
+		case IC_TENTACLES:
+		case IC_THROWING_KNIFE: return MinAPsToShootOrStab(s, grid_no, add_turning_cost);
+		case IC_GRENADE:
+		case IC_THROWN:         return MinAPsToThrow(s, grid_no, add_turning_cost);
+		case IC_PUNCH:          return MinAPsToPunch(s, grid_no, add_turning_cost);
+		default:                return 0;
 	}
-	else if ( uiItemClass & ( IC_GRENADE | IC_THROWN ) )
-	{
-		sAPCost = MinAPsToThrow( pSoldier, sGridno, ubAddTurningCost );
-	}
-	else if ( uiItemClass == IC_PUNCH )
-	{
-		sAPCost = MinAPsToPunch( pSoldier, sGridno, ubAddTurningCost );
-	}
-
-	return( (UINT8)sAPCost );
 }
 
 
