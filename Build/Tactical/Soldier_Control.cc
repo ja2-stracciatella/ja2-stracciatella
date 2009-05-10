@@ -236,25 +236,13 @@ void AdjustNoAPToFinishMove( SOLDIERTYPE *pSoldier, BOOLEAN fSet )
 	}
 }
 
-void HandleCrowShadowVisibility( SOLDIERTYPE *pSoldier )
+
+void HandleCrowShadowVisibility(SOLDIERTYPE* const s)
 {
-	if ( pSoldier->ubBodyType == CROW )
-	{
-		if ( pSoldier->usAnimState == CROW_FLY )
-		{
-			if ( pSoldier->pAniTile != NULL )
-			{
-				if ( pSoldier->bLastRenderVisibleValue != -1 )
-				{
-					HideAniTile( pSoldier->pAniTile, FALSE );
-				}
-				else
-				{
-					HideAniTile( pSoldier->pAniTile, TRUE );
-				}
-			}
-		}
-	}
+	if (s->ubBodyType  != CROW)     return;
+	if (s->usAnimState != CROW_FLY) return;
+	if (!s->pAniTile)               return;
+	HideAniTile(s->pAniTile, s->bLastRenderVisibleValue == -1);
 }
 
 
