@@ -7036,7 +7036,6 @@ void EVENT_SoldierBeginKnifeThrowAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
 
 	// SET TARGET GRIDNO
 	pSoldier->sTargetGridNo = sGridNo;
-	pSoldier->sLastTarget		= sGridNo;
 	pSoldier->fTurningFromPronePosition	= 0;
 	// NB target level must be set by functions outside of here... but I think it
 	// is already set in HandleItem or in the AI code - CJC
