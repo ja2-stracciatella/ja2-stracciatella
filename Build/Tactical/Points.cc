@@ -804,133 +804,96 @@ UINT8 CalcAPsToBurst(INT8 const bBaseActionPoints, OBJECTTYPE const& o)
 }
 
 
-UINT8 CalcTotalAPsToAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost, INT8 bAimTime )
+UINT8 CalcTotalAPsToAttack(SOLDIERTYPE* const s, INT16 const grid_no, UINT8 const ubAddTurningCost, INT8 const aim_time)
 {
-	UINT16						sAPCost = 0;
-	UINT16						usItemNum;
-	INT16							sActionGridNo;
-	INT16							sAdjustedGridNo;
-	UINT32						uiItemClass;
-
-	// LOOK IN BUDDY'S HAND TO DETERMINE WHAT TO DO HERE
-	usItemNum = pSoldier->inv[HANDPOS].usItem;
-	uiItemClass = Item[ usItemNum ].usItemClass;
-
-	if ( uiItemClass == IC_GUN || uiItemClass == IC_LAUNCHER || uiItemClass == IC_TENTACLES || uiItemClass == IC_THROWING_KNIFE )
+	UINT16            ap_cost = 0;
+	OBJECTTYPE const& in_hand = s->inv[HANDPOS];
+	switch (Item[in_hand.usItem].usItemClass)
 	{
-		sAPCost = MinAPsToAttack( pSoldier, sGridNo, ubAddTurningCost );
+		case IC_GUN:
+		case IC_LAUNCHER:
+		case IC_TENTACLES:
+		case IC_THROWING_KNIFE:
+			ap_cost  = MinAPsToAttack(s, grid_no, ubAddTurningCost);
+			ap_cost +=
+				s->bDoBurst ? CalcAPsToBurst(CalcActionPoints(s), in_hand) :
+				aim_time;
+			break;
 
-		if ( pSoldier->bDoBurst )
-		{
-			sAPCost += CalcAPsToBurst(CalcActionPoints(pSoldier), pSoldier->inv[HANDPOS]);
-		}
-		else
-		{
-   		sAPCost += bAimTime;
-		}
-	}
+		case IC_GRENADE:
+		case IC_BOMB:
+#if 0 // XXX always was this way
+			ap_cost = MinAPsToAttack(s, grid_no, ubAddTurningCost);
+#else
+			ap_cost = 5;
+#endif
+			break;
 
-	//ATE: HERE, need to calculate APs!
-	if ( uiItemClass & IC_EXPLOSV )
-	{
-		 sAPCost = MinAPsToAttack( pSoldier, sGridNo, ubAddTurningCost );
-
-		 sAPCost = 5;
-	}
-
-	if ( uiItemClass == IC_PUNCH || ( uiItemClass == IC_BLADE && uiItemClass != IC_THROWING_KNIFE ) )
-	{
-		// IF we are at this gridno, calc min APs but if not, calc cost to goto this lication
-		if ( pSoldier->sGridNo != sGridNo )
-		{
-			// OK, in order to avoid path calculations here all the time... save and check if it's changed!
-			if ( pSoldier->sWalkToAttackGridNo == sGridNo )
+		case IC_PUNCH:
+		case IC_BLADE:
+			/* If we are at this gridno, calc min APs but if not, calc cost to goto this
+			 * location */
+			INT16 adjusted_grid_no;
+			if (s->sGridNo == grid_no)
 			{
-				sAdjustedGridNo = sGridNo;
-				sAPCost += (UINT8)( pSoldier->sWalkToAttackWalkToCost );
+				adjusted_grid_no = grid_no;
 			}
 			else
 			{
-				//INT32		cnt;
-				//INT16		sSpot;
-				INT16		sGotLocation = NOWHERE;
-				BOOLEAN	fGotAdjacent = FALSE;
-
-				const SOLDIERTYPE* const pTarget = WhoIsThere2(sGridNo, pSoldier->bLevel);
-				if (pTarget != NULL)
-				{
-					if ( pSoldier->ubBodyType == BLOODCAT )
-					{
-						sGotLocation = FindNextToAdjacentGridEx(pSoldier, sGridNo, NULL, &sAdjustedGridNo, TRUE, FALSE);
-						if ( sGotLocation == -1 )
-						{
-							sGotLocation = NOWHERE;
-						}
-					}
-					else
-					{
-						sGotLocation = FindAdjacentPunchTarget(pSoldier, pTarget, &sAdjustedGridNo);
-					}
-				}
-
-				if ( sGotLocation == NOWHERE && pSoldier->ubBodyType != BLOODCAT )
-				{
-					sActionGridNo = FindAdjacentGridEx(pSoldier, sGridNo, NULL, &sAdjustedGridNo, TRUE, FALSE);
-
-					if ( sActionGridNo == -1 )
-					{
-						sGotLocation = NOWHERE;
-					}
-					else
-					{
-						sGotLocation = sActionGridNo;
-					}
-					fGotAdjacent = TRUE;
-				}
-
-				if ( sGotLocation != NOWHERE )
-				{
-					if (pSoldier->sGridNo == sGotLocation || !fGotAdjacent )
-					{
-						pSoldier->sWalkToAttackWalkToCost = 0;
-					}
-					else
-					{
-						// Save for next time...
-						pSoldier->sWalkToAttackWalkToCost = PlotPath(pSoldier, sGotLocation, NO_COPYROUTE, NO_PLOT, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
-
-						if (pSoldier->sWalkToAttackWalkToCost == 0)
-						{
-							return( 99 );
-						}
-					}
+				if (s->sWalkToAttackGridNo == grid_no)
+				{ /* In order to avoid path calculations here all the time, save and check
+					 * if it's changed! */
+					adjusted_grid_no = grid_no;
 				}
 				else
 				{
-					return( 0 );
+					GridNo got_location = NOWHERE;
+
+					if (SOLDIERTYPE const* const tgt = WhoIsThere2(grid_no, s->bLevel))
+					{
+						if (s->ubBodyType == BLOODCAT)
+						{
+							got_location = FindNextToAdjacentGridEx(s, grid_no, 0, &adjusted_grid_no, TRUE, FALSE);
+							if (got_location == -1) got_location = NOWHERE;
+						}
+						else
+						{
+							got_location = FindAdjacentPunchTarget(s, tgt, &adjusted_grid_no);
+						}
+					}
+
+					bool got_adjacent = false;
+					if (got_location == NOWHERE && s->ubBodyType != BLOODCAT)
+					{
+						got_location = FindAdjacentGridEx(s, grid_no, 0, &adjusted_grid_no, TRUE, FALSE);
+						if (got_location == -1) got_location = NOWHERE;
+						got_adjacent = true;
+					}
+
+					if (got_location == NOWHERE) return 0;
+
+					if (s->sGridNo == got_location || !got_adjacent)
+					{
+						s->sWalkToAttackWalkToCost = 0;
+					}
+					else
+					{
+						// Save for next time
+						s->sWalkToAttackWalkToCost = PlotPath(s, got_location, NO_COPYROUTE, NO_PLOT, s->usUIMovementMode, s->bActionPoints);
+						if (s->sWalkToAttackWalkToCost == 0) return 99;
+					}
+
+					// Save old location!
+					s->sWalkToAttackGridNo = grid_no;
 				}
-				sAPCost += pSoldier->sWalkToAttackWalkToCost;
+				ap_cost += s->sWalkToAttackWalkToCost;
 			}
-
-			// Save old location!
-			pSoldier->sWalkToAttackGridNo = sGridNo;
-
-			// Add points to attack
-			sAPCost += MinAPsToAttack( pSoldier, sAdjustedGridNo, ubAddTurningCost );
-		}
-		else
-		{
-			// Add points to attack
-			// Use our gridno
-			sAPCost += MinAPsToAttack( pSoldier, sGridNo, ubAddTurningCost );
-		}
-
-		// Add aim time...
-    sAPCost += bAimTime;
-
+			ap_cost += MinAPsToAttack(s, adjusted_grid_no, ubAddTurningCost);
+			ap_cost += aim_time;
+			break;
 	}
 
-	return( (INT8)sAPCost );
+	return ap_cost;
 }
 
 
