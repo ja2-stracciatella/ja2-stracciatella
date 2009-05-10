@@ -9262,21 +9262,13 @@ static void EnableDisableSoldierLightEffects(BOOLEAN fEnableLights)
 }
 
 
-static void SetSoldierPersonalLightLevel(SOLDIERTYPE* pSoldier)
+static void SetSoldierPersonalLightLevel(SOLDIERTYPE* const s)
 {
-	if( pSoldier == NULL )
-	{
-		return;
-	}
-
-	if( pSoldier->sGridNo == NOWHERE )
-	{
-		return;
-	}
-
-	//THe light level for the soldier
-	gpWorldLevelData[pSoldier->sGridNo].pMercHead->ubShadeLevel = 3;
-	gpWorldLevelData[pSoldier->sGridNo].pMercHead->ubSumLights = 5;
-	gpWorldLevelData[pSoldier->sGridNo].pMercHead->ubMaxLights = 5;
-	gpWorldLevelData[pSoldier->sGridNo].pMercHead->ubNaturalShadeLevel = 5;
+	if (!s || s->sGridNo == NOWHERE) return;
+	// The light level for the soldier
+	LEVELNODE& n = *gpWorldLevelData[s->sGridNo].pMercHead;
+	n.ubShadeLevel        = 3;
+	n.ubSumLights         = 5;
+	n.ubMaxLights         = 5;
+	n.ubNaturalShadeLevel = 5;
 }
