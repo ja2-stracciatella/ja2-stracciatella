@@ -155,7 +155,7 @@ UICursorID GetProperItemCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLE
 }
 
 
-static void DetermineCursorBodyLocation(SOLDIERTYPE* s, BOOLEAN fDisplay, BOOLEAN fRecalc);
+static void DetermineCursorBodyLocation(SOLDIERTYPE*, BOOLEAN fDisplay, BOOLEAN fRecalc);
 
 
 static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLEAN const recalc)
@@ -448,35 +448,33 @@ static UICursorID HandleNonActivatedTargetCursor(SOLDIERTYPE* const s, GridNo co
 }
 
 
-static void DetermineCursorBodyLocation(SOLDIERTYPE* const pSoldier, const BOOLEAN fDisplay, const BOOLEAN fRecalc)
+static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const display, BOOLEAN const recalc)
 {
-	SOLDIERTYPE* pTargetSoldier = NULL;
-
-	if ( gTacticalStatus.ubAttackBusyCount > 0 )
-	{
-		// ATE: Return if attacker busy count > 0, this
-		// helps in RT with re-setting the flag to random...
+	if (gTacticalStatus.ubAttackBusyCount > 0)
+	{ /* ATE: Return if attacker busy count > 0, this helps in RT with re-setting
+		 * the flag to random */
 		return;
 	}
 
-	if (fRecalc)
+	if (recalc)
 	{
-		// ALWAYS SET AIM LOCATION TO NOTHING
-		pSoldier->bAimShotLocation = AIM_SHOT_RANDOM;
+		// Always set aim location to nothing
+		s->bAimShotLocation = AIM_SHOT_RANDOM;
 
-		const GridNo usMapPos = GetMouseMapPos();
-		if (usMapPos == NOWHERE) return;
+		GridNo const map_pos = GetMouseMapPos();
+		if (map_pos == NOWHERE) return;
 
-		BOOLEAN	fOnGuy = FALSE;
-		UINT16  usFlags;
+		bool   on_guy = false;
+		UINT16 usFlags;
 
 		// Determine which body part it's on
-		for (LEVELNODE* pNode = NULL;;)
+		SOLDIERTYPE* pTargetSoldier;
+		for (LEVELNODE* n = 0;;)
 		{
-			pNode = GetAnimProfileFlags(usMapPos, &usFlags, &pTargetSoldier, pNode);
-			if (pNode == NULL) break;
+			n = GetAnimProfileFlags(map_pos, &usFlags, &pTargetSoldier, n);
+			if (!n) break;
 
-			if (pTargetSoldier == NULL) continue;
+			if (!pTargetSoldier) continue;
 
 			// ATE: Check their stance - if prone - return!
 			if (gAnimControl[pTargetSoldier->usAnimState].ubHeight == ANIM_PRONE)
@@ -505,7 +503,7 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const pSoldier, const BOOLE
 					INT16 sScreenY;
 					FromCellToScreenCoordinates(sCellX, sCellY, &sScreenX, &sScreenY);
 
-					// Check for Below...
+					// Check for Below
 					if (sScreenX > WORLD_TILE_Y / 2) continue;
 				}
 
@@ -515,7 +513,7 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const pSoldier, const BOOLE
 					INT16 sScreenY;
 					FromCellToScreenCoordinates(sCellX, sCellY, &sScreenX, &sScreenY);
 
-					// Check for Below...
+					// Check for Below
 					if (sScreenX <= WORLD_TILE_Y / 2) continue;
 				}
 			}
@@ -526,74 +524,61 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const pSoldier, const BOOLE
 				continue;
 			}
 
-			fOnGuy = TRUE;
+			on_guy = true;
 			break;
 		}
 
-		if (!fOnGuy)
-		{
-			// Check if we can find a soldier here
+		if (!on_guy)
+		{ // Check if we can find a soldier here
 			SOLDIERTYPE* const tgt = gUIFullTarget;
-			if (tgt != NULL)
+			if (tgt)
 			{
 				pTargetSoldier = tgt;
 				usFlags = FindRelativeSoldierPosition(tgt, gusMouseXPos, gusMouseYPos);
-				if (usFlags != 0) fOnGuy = TRUE;
+				if (usFlags != 0) on_guy = true;
 			}
 		}
 
-		if (fOnGuy && IsValidTargetMerc(pTargetSoldier))
+		if (on_guy && IsValidTargetMerc(pTargetSoldier))
 		{
-			if (usFlags & TILE_FLAG_FEET) pSoldier->bAimShotLocation = AIM_SHOT_LEGS;
-			if (usFlags & TILE_FLAG_MID)  pSoldier->bAimShotLocation = AIM_SHOT_TORSO;
-			if (usFlags & TILE_FLAG_HEAD) pSoldier->bAimShotLocation = AIM_SHOT_HEAD;
+			if (usFlags & TILE_FLAG_FEET) s->bAimShotLocation = AIM_SHOT_LEGS;
+			if (usFlags & TILE_FLAG_MID)  s->bAimShotLocation = AIM_SHOT_TORSO;
+			if (usFlags & TILE_FLAG_HEAD) s->bAimShotLocation = AIM_SHOT_HEAD;
 		}
 	}
 
-	if ( fDisplay && ( !pSoldier->bDoBurst ) )
+	if (!display)    return;
+	if (s->bDoBurst) return;
+
+	SOLDIERTYPE* const tgt = gUIFullTarget;
+	if (!tgt)
+
+	wchar_t const* hit_location;
+	if (tgt->ubBodyType == CROW)
 	{
-		SOLDIERTYPE* const tgt = gUIFullTarget;
-		if (tgt != NULL)
+		s->bAimShotLocation = AIM_SHOT_LEGS;
+		hit_location = TacticalStr[CROW_HIT_LOCATION_STR];
+	}
+	else
+	{
+		if (!IS_MERC_BODY_TYPE(tgt)) return;
+
+		switch (s->bAimShotLocation)
 		{
-			pTargetSoldier = tgt;
+			case AIM_SHOT_HEAD:
+				hit_location = // If we have a knife in hand, change string
+					Item[s->inv[HANDPOS].usItem].usItemClass == IC_BLADE ?
+					TacticalStr[NECK_HIT_LOCATION_STR] :
+					TacticalStr[HEAD_HIT_LOCATION_STR];
+				break;
 
-				if ( pTargetSoldier->ubBodyType == CROW )
-				{
-					pSoldier->bAimShotLocation = AIM_SHOT_LEGS;
-					SetHitLocationText(TacticalStr[CROW_HIT_LOCATION_STR]);
-					return;
-				}
+			case AIM_SHOT_TORSO: hit_location = TacticalStr[TORSO_HIT_LOCATION_STR]; break;
+			case AIM_SHOT_LEGS:  hit_location = TacticalStr[LEGS_HIT_LOCATION_STR];  break;
 
-				if ( !IS_MERC_BODY_TYPE( pTargetSoldier ) )
-				{
-					return;
-				}
-
-				switch( pSoldier->bAimShotLocation )
-				{
-					case AIM_SHOT_HEAD:
-
-						// If we have a knife in hand, change string
-						if ( Item[ pSoldier->inv[ HANDPOS ].usItem ].usItemClass == IC_BLADE )
-						{
-							SetHitLocationText(TacticalStr[NECK_HIT_LOCATION_STR]);
-						}
-						else
-						{
-							SetHitLocationText(TacticalStr[HEAD_HIT_LOCATION_STR]);
-						}
-						break;
-
-					case AIM_SHOT_TORSO:
-						SetHitLocationText(TacticalStr[TORSO_HIT_LOCATION_STR]);
-						break;
-
-					case AIM_SHOT_LEGS:
-						SetHitLocationText(TacticalStr[LEGS_HIT_LOCATION_STR]);
-						break;
-				}
+			default: return;
 		}
 	}
+	SetHitLocationText(hit_location);
 }
 
 
