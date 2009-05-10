@@ -9233,30 +9233,25 @@ void HandlePlayerTogglingLightEffects( BOOLEAN fToggleValue )
 }
 
 
-static void SetSoldierPersonalLightLevel(SOLDIERTYPE* pSoldier);
+static void SetSoldierPersonalLightLevel(SOLDIERTYPE*);
 
 
-static void EnableDisableSoldierLightEffects(BOOLEAN fEnableLights)
+static void EnableDisableSoldierLightEffects(BOOLEAN const enable_lights)
 {
-	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
+	FOR_ALL_IN_TEAM(s, OUR_TEAM)
 	{
-		//if the soldier is in the sector
-		if (pSoldier->bInSector && pSoldier->bLife >= OKLIFE)
-		{
-			//if we are to enable the lights
-			if( fEnableLights )
-			{
-				//Add the light around the merc
-				PositionSoldierLight( pSoldier );
-			}
-			else
-			{
-				//Delete the fake light the merc casts
-				DeleteSoldierLight( pSoldier );
+		if (!s->bInSector)     continue;
+		if (s->bLife < OKLIFE) continue;
 
-				//Light up the merc though
-				SetSoldierPersonalLightLevel( pSoldier );
-			}
+		if (enable_lights)
+		{ // Add the light around the merc
+			PositionSoldierLight(s);
+		}
+		else
+		{ // Delete the fake light the merc casts
+			DeleteSoldierLight(s);
+			// Light up the merc though
+			SetSoldierPersonalLightLevel(s);
 		}
 	}
 }
