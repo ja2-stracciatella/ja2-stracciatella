@@ -8994,77 +8994,56 @@ void HandleSystemNewAISituation(SOLDIERTYPE* pSoldier, BOOLEAN fResetABC)
 }
 
 
-static void InternalPlaySoldierFootstepSound(SOLDIERTYPE* pSoldier)
+static void InternalPlaySoldierFootstepSound(SOLDIERTYPE* const s)
 {
-	UINT8					ubRandomSnd;
-	INT8					bVolume = MIDVOLUME;
-	UINT8					ubRandomMax = 4;
-
 	// Determine if we are on the floor
-	if ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) )
+	if (s->uiStatusFlags & SOLDIER_VEHICLE) return;
+
+	INT8 volume = MIDVOLUME;
+	if (s->usAnimState == HOPFENCE) volume = HIGHVOLUME;
+
+	if (s->uiStatusFlags & SOLDIER_ROBOT)
 	{
-		// Assume outside
-		SoundID ubSoundBase = WALK_LEFT_OUT;
-
-		if ( pSoldier->usAnimState == HOPFENCE )
-		{
-			bVolume = HIGHVOLUME;
-		}
-
-	  if ( pSoldier->uiStatusFlags & SOLDIER_ROBOT )
-	  {
-			PlaySoldierJA2Sample(pSoldier, ROBOT_BEEP, bVolume, 1, TRUE);
-      return;
-    }
-
-		//if (SoldierOnScreen(pSoldier))
-		{
-			if ( pSoldier->usAnimState == CRAWLING )
-			{
-				ubSoundBase = CRAWL_1;
-			}
-			else
-			{
-				// Pick base based on terrain over....
-				if ( pSoldier->bOverTerrainType == FLAT_FLOOR )
-				{
-					ubSoundBase = WALK_LEFT_IN;
-				}
-				else if ( pSoldier->bOverTerrainType == DIRT_ROAD || pSoldier->bOverTerrainType == PAVED_ROAD )
-				{
-					ubSoundBase = WALK_LEFT_ROAD;
-				}
-				else if ( pSoldier->bOverTerrainType == LOW_WATER || pSoldier->bOverTerrainType == MED_WATER )
-				{
-					ubSoundBase = WATER_WALK1_IN;
-					ubRandomMax = 2;
-				}
-				else if ( pSoldier->bOverTerrainType == DEEP_WATER )
-				{
-					ubSoundBase = SWIM_1;
-					ubRandomMax = 2;
-				}
-			}
-
-			// Pick a random sound...
-			do
-			{
-				ubRandomSnd = (UINT8)Random( ubRandomMax );
-
-			} while ( ubRandomSnd == pSoldier->ubLastFootPrintSound );
-
-			pSoldier->ubLastFootPrintSound = ubRandomSnd;
-
-			// OK, if in realtime, don't play at full volume, because too many people walking around
-			// sounds don't sound good - ( unless we are the selected guy, then always play at reg volume )
-			if (!(gTacticalStatus.uiFlags & INCOMBAT) && pSoldier != GetSelectedMan())
-			{
-				bVolume = LOWVOLUME;
-			}
-
-			PlaySoldierJA2Sample(pSoldier, static_cast<SoundID>(ubSoundBase + pSoldier->ubLastFootPrintSound), bVolume, 1, TRUE);
-		}
+		PlaySoldierJA2Sample(s, ROBOT_BEEP, volume, 1, TRUE);
+		return;
 	}
+
+	// Assume outside
+	SoundID sound_base = WALK_LEFT_OUT;
+	UINT8   random_max = 4;
+	if (s->usAnimState == CRAWLING)
+	{
+		sound_base = CRAWL_1;
+	}
+	else switch (s->bOverTerrainType) // Pick base based on terrain over
+	{
+		case FLAT_FLOOR: sound_base = WALK_LEFT_IN; break;
+		case DIRT_ROAD:
+		case PAVED_ROAD: sound_base = WALK_LEFT_ROAD; break;
+		case LOW_WATER:
+		case MED_WATER:  sound_base = WATER_WALK1_IN; random_max = 2; break;
+		case DEEP_WATER: sound_base = SWIM_1;         random_max = 2; break;
+	}
+
+	// Pick a random sound
+	UINT8 random_snd;
+	do
+	{
+		random_snd = Random(random_max);
+	}
+	while (random_snd == s->ubLastFootPrintSound);
+
+	s->ubLastFootPrintSound = random_snd;
+
+	/* If in realtime, don't play at full volume, because too many people walking
+	 * around sounds don't sound good (unless we are the selected guy, then always
+	 * play at reg volume) */
+	if (!(gTacticalStatus.uiFlags & INCOMBAT) && s != GetSelectedMan())
+	{
+		volume = LOWVOLUME;
+	}
+
+	PlaySoldierJA2Sample(s, static_cast<SoundID>(sound_base + random_snd), volume, 1, TRUE);
 }
 
 
