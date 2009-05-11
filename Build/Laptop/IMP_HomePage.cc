@@ -331,29 +331,22 @@ static void HandleTextEvent(const InputAtom* Inp)
 
 static void ProcessPlayerInputActivationString(void)
 {
-  // prcess string to see if it matches activation string
-	if ((wcscmp(pPlayerActivationString, L"XEP624") == 0 || wcscmp(pPlayerActivationString, L"xep624") == 0) &&
-			!LaptopSaveInfo.fIMPCompletedFlag)
+	wchar_t const* msg;
+	if (wcscmp(pPlayerActivationString, L"XEP624") != 0 &&
+			wcscmp(pPlayerActivationString, L"xep624") != 0)
+	{
+		msg = pImpPopUpStrings[0];
+	}
+	else if (LaptopSaveInfo.fIMPCompletedFlag)
+	{
+		msg = pImpPopUpStrings[6];
+	}
+	else
 	{
 	  iCurrentImpPage = IMP_MAIN_PAGE;
+	  return;
 	}
-/*
-	else if (wcscmp(pPlayerActivationString, L"90210") == 0 && !LaptopSaveInfo.fIMPCompletedFlag)
-	{
-		LoadInCurrentImpCharacter( );
-	}
-*/
-	else
-  {
-		if( ( ( wcscmp(pPlayerActivationString, L"XEP624") != 0 ) && ( wcscmp(pPlayerActivationString, L"xep624") != 0 ) ) )
-		{
-			DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 0 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-		}
-		else if (LaptopSaveInfo.fIMPCompletedFlag)
-		{
-		   DoLapTopMessageBox( MSG_BOX_IMP_STYLE, pImpPopUpStrings[ 6 ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-		}
-	}
+	DoLapTopMessageBox(MSG_BOX_IMP_STYLE, msg, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, 0);
 }
 
 

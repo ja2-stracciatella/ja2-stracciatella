@@ -98,7 +98,6 @@ OBJECT_ARMED_BOMB: never gets tested
 OBJECT_MODIFIED: unused
 PayMilitiaTrainingYesNoBoxCallback(): users
 PlayerGroupInMotion(): overkill
-ProcessPlayerInputActivationString(): complicated
 ProcessUpdateStats(): pbSoldierStatPtr write-only
 ReadRLEColMapImage(), ReadRLERGBImage(): empty
 RemoveAllOnRoofsOfTypeRange(): O(n^2)
