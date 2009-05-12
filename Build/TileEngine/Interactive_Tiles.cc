@@ -294,53 +294,24 @@ void HandleStructChangeFromGridNo(SOLDIERTYPE* const s, GridNo const grid_no)
 }
 
 
-UICursorID GetInteractiveTileCursor(UICursorID const uiOldCursor, BOOLEAN const fConfirm)
+UICursorID GetInteractiveTileCursor(UICursorID const old_cursor, BOOLEAN const confirm)
 {
-	LEVELNODE	 *pIntNode;
-	STRUCTURE	 *pStructure;
-	INT16			 sGridNo;
+	GridNo                 grid_no;
+	STRUCTURE*             structure;
+	LEVELNODE const* const int_node = GetCurInteractiveTileGridNoAndStructure(&grid_no, &structure);
+	if (!int_node || !structure) return old_cursor;
 
-	// OK, first see if we have an in tile...
-	pIntNode = GetCurInteractiveTileGridNoAndStructure( &sGridNo, &pStructure );
-
-	if ( pIntNode != NULL && pStructure != NULL )
+	if (structure->fFlags & STRUCTURE_ANYDOOR)
 	{
-		if( pStructure->fFlags & STRUCTURE_ANYDOOR )
-		{
-			SetDoorString( sGridNo );
-
-			if ( fConfirm )
-			{
-				return( OKHANDCURSOR_UICURSOR );
-			}
-			else
-			{
-				return( NORMALHANDCURSOR_UICURSOR );
-			}
-
-		}
-		else
-		{
-		  if( pStructure->fFlags & STRUCTURE_SWITCH )
-		  {
-			  SetIntTileLocationText(gzLateLocalizedString[25]);
-      }
-
-
-			if ( fConfirm )
-			{
-				return( OKHANDCURSOR_UICURSOR );
-			}
-			else
-			{
-				return( NORMALHANDCURSOR_UICURSOR );
-			}
-		}
-
+		SetDoorString(grid_no);
 	}
-
-	return( uiOldCursor );
+	else if (structure->fFlags & STRUCTURE_SWITCH)
+	{
+		SetIntTileLocationText(gzLateLocalizedString[25]);
+	}
+	return confirm ? OKHANDCURSOR_UICURSOR : NORMALHANDCURSOR_UICURSOR;
 }
+
 
 void SetActionModeDoorCursorText( )
 {
