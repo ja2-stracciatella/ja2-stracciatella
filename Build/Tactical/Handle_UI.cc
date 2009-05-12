@@ -1502,64 +1502,52 @@ static ScreenID UIHandleAChangeToMove(UI_EVENT* pUIEvent)
 static void SetConfirmMovementModeCursor(SOLDIERTYPE* pSoldier, BOOLEAN fFromMove);
 
 
-static ScreenID UIHandleCWait(UI_EVENT* pUIEvent)
+static ScreenID UIHandleCWait(UI_EVENT*)
 {
-	BOOLEAN						fSetCursor;
-	LEVELNODE					*pInvTile;
-
-	const GridNo usMapPos = GetMouseMapPos();
-	if (usMapPos == NOWHERE) return GAME_SCREEN;
+	GridNo const map_pos = GetMouseMapPos();
+	if (map_pos == NOWHERE) return GAME_SCREEN;
 
 	SOLDIERTYPE* const sel = GetSelectedMan();
-	if (sel != NULL)
-	{
-			pInvTile = GetCurInteractiveTile( );
+	if (!sel) return GAME_SCREEN;
 
-			if ( pInvTile && gpInvTileThatCausedMoveConfirm != pInvTile )
-			{
-				// Get out og this mode...
-				guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-				return( GAME_SCREEN );
-			}
+	LEVELNODE const* const int_tile = GetCurInteractiveTile();
 
-			MouseMoveState const uiCursorFlags = GetCursorMovementFlags();
-
-			if ( pInvTile != NULL )
-			{
-				fSetCursor =  HandleUIMovementCursor(sel, uiCursorFlags, usMapPos, MOVEUI_TARGET_INTTILES);
-
-				//Set UI CURSOR
-				guiNewUICursor = GetInteractiveTileCursor( guiNewUICursor, TRUE  );
-
-				// Make red tile under spot... if we've previously found one...
-				if ( gfUIHandleShowMoveGrid )
-				{
-					gfUIHandleShowMoveGrid = 2;
-				}
-
-
-				return( GAME_SCREEN );
-			}
-
-		  // Display action points
-		  gfUIDisplayActionPoints = TRUE;
-
-		  // Determine if we can afford!
-			if (!EnoughPoints(sel, gsCurrentActionPoints, 0, FALSE))
-			{
-			  gfUIDisplayActionPointsInvalid = TRUE;
-			}
-
-			SetConfirmMovementModeCursor(sel, FALSE);
-
-			// If we are not in combat, draw path here!
-			if ( (gTacticalStatus.uiFlags & REALTIME ) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
-			{
-				fSetCursor = HandleUIMovementCursor(sel, uiCursorFlags, usMapPos, MOVEUI_TARGET_NONE);
-			}
+	if (int_tile && gpInvTileThatCausedMoveConfirm != int_tile)
+	{ // Get out og this mode
+		guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+		return GAME_SCREEN;
 	}
 
-	return( GAME_SCREEN );
+	MouseMoveState const cursor_state = GetCursorMovementFlags();
+
+	if (int_tile)
+	{
+		HandleUIMovementCursor(sel, cursor_state, map_pos, MOVEUI_TARGET_INTTILES);
+
+		guiNewUICursor = GetInteractiveTileCursor(guiNewUICursor, TRUE);
+
+		// Make red tile under spot, if we've previously found one
+		if (gfUIHandleShowMoveGrid) gfUIHandleShowMoveGrid = 2;
+
+		return GAME_SCREEN;
+	}
+
+	gfUIDisplayActionPoints = TRUE;
+
+	if (!EnoughPoints(sel, gsCurrentActionPoints, 0, FALSE))
+	{
+		gfUIDisplayActionPointsInvalid = TRUE;
+	}
+
+	SetConfirmMovementModeCursor(sel, FALSE);
+
+	// If we are not in combat, draw path here!
+	if (gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT))
+	{
+		HandleUIMovementCursor(sel, cursor_state, map_pos, MOVEUI_TARGET_NONE);
+	}
+
+	return GAME_SCREEN;
 }
 
 
