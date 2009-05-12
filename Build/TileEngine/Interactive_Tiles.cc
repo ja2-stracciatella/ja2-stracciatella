@@ -313,25 +313,17 @@ UICursorID GetInteractiveTileCursor(UICursorID const old_cursor, BOOLEAN const c
 }
 
 
-void SetActionModeDoorCursorText( )
+void SetActionModeDoorCursorText()
 {
-	LEVELNODE	 *pIntNode;
-	STRUCTURE	 *pStructure;
-	INT16			 sGridNo;
-
   // If we are over a merc, don't
-	if (gUIFullTarget != NULL) return;
+	if (gUIFullTarget) return;
 
-	// OK, first see if we have an in tile...
-	pIntNode = GetCurInteractiveTileGridNoAndStructure( &sGridNo, &pStructure );
-
-	if ( pIntNode != NULL && pStructure != NULL )
-	{
-		if( pStructure->fFlags & STRUCTURE_ANYDOOR )
-		{
-			SetDoorString( sGridNo );
-		}
-	}
+	GridNo     grid_no;
+	STRUCTURE* structure;
+	LEVELNODE const* const int_node = GetCurInteractiveTileGridNoAndStructure(&grid_no, &structure);
+	if (!int_node || !structure)                  return;
+	if (!(structure->fFlags & STRUCTURE_ANYDOOR)) return;
+	SetDoorString(grid_no);
 }
 
 
