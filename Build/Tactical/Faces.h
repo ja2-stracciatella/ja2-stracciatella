@@ -209,7 +209,7 @@ void    InitSoldierFace(SOLDIERTYPE* s);
 void		DeleteSoldierFace( SOLDIERTYPE *pSoldier );
 void    SetAutoFaceActiveFromSoldier(SGPVSurface* display, SGPVSurface* restore, const SOLDIERTYPE* s, UINT16 usFaceX, UINT16 usFaceY);
 void    SetAutoFaceInActiveFromSoldier(const SOLDIERTYPE* s);
-BOOLEAN RenderAutoFaceFromSoldier(const SOLDIERTYPE* s);
+void    RenderAutoFaceFromSoldier(SOLDIERTYPE const*);
 BOOLEAN ExternRenderFaceFromSoldier(SGPVSurface* buffer, const SOLDIERTYPE* s, INT16 sX, INT16 sY);
 
 #endif

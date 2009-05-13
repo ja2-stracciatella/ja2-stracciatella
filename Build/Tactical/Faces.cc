@@ -753,11 +753,11 @@ static void SetFaceShade(FACETYPE* const f, const BOOLEAN fExternBlit)
 }
 
 
-BOOLEAN RenderAutoFaceFromSoldier(const SOLDIERTYPE* s)
+void RenderAutoFaceFromSoldier(SOLDIERTYPE const* const s)
 {
 	// Check for valid soldier
-	CHECKF(s != NULL);
-	return RenderAutoFace(s->face);
+	CHECKV(s);
+	RenderAutoFace(s->face);
 }
 
 
