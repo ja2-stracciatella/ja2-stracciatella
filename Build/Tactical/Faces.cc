@@ -1046,15 +1046,15 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 }
 
 
-BOOLEAN RenderAutoFace(FACETYPE* const pFace)
+void RenderAutoFace(FACETYPE* const pFace)
 {
-	CHECKF(pFace != NULL);
+	CHECKV(pFace);
 
 	// Check for a valid slot!
-	CHECKF(pFace->fAllocated);
+	CHECKV(pFace->fAllocated);
 
 	// Check for disabled guy!
-	CHECKF(!pFace->fDisabled);
+	CHECKV(!pFace->fDisabled);
 
 	SetFaceShade(pFace, FALSE);
 
@@ -1079,8 +1079,6 @@ BOOLEAN RenderAutoFace(FACETYPE* const pFace)
 	{
 		FaceRestoreSavedBackgroundRect(pFace, pFace->usFaceX, pFace->usFaceY, 0, 0, pFace->usFaceWidth, pFace->usFaceHeight);
 	}
-
-	return( TRUE );
 }
 
 

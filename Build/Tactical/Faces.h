@@ -166,7 +166,7 @@ void SetAutoFaceActive(SGPVSurface* display, SGPVSurface* restore, FACETYPE*, UI
 
 
 // To begin rendering of the face sprite, call this function once:
-BOOLEAN RenderAutoFace(FACETYPE*);
+void RenderAutoFace(FACETYPE*);
 // This will draw the face into it's saved buffer and then display it on the display buffer. If the display
 // buffer given is FRAME_BUFFER, the regions will automatically be dirtied, so no calls to InvalidateRegion()
 // should be nessesary.
