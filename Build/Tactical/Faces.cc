@@ -1046,39 +1046,30 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 }
 
 
-void RenderAutoFace(FACETYPE* const pFace)
+void RenderAutoFace(FACETYPE* const f)
 {
-	CHECKV(pFace);
+	CHECKV(f);
+	CHECKV(f->fAllocated);
+	CHECKV(!f->fDisabled);
 
-	// Check for a valid slot!
-	CHECKV(pFace->fAllocated);
+	SetFaceShade(f, FALSE);
 
-	// Check for disabled guy!
-	CHECKV(!pFace->fDisabled);
-
-	SetFaceShade(pFace, FALSE);
-
-	// Blit face to save buffer!
-	if (pFace->uiAutoRestoreBuffer == guiSAVEBUFFER)
+	INT32 x;
+	INT32 y;
+	if (f->uiAutoRestoreBuffer == guiSAVEBUFFER)
 	{
-		BltVideoObject(pFace->uiAutoRestoreBuffer, pFace->uiVideoObject, 0, pFace->usFaceX, pFace->usFaceY);
+		x = f->usFaceX;
+		y = f->usFaceY;
 	}
 	else
 	{
-		BltVideoObject(pFace->uiAutoRestoreBuffer, pFace->uiVideoObject, 0, 0, 0);
+		x = 0;
+		y = 0;
 	}
 
-	HandleRenderFaceAdjustments(pFace, FALSE, 0, pFace->usFaceX, pFace->usFaceY, pFace->usEyesX, pFace->usEyesY);
-
-	// Restore extern rect
-	if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
-	{
-		FaceRestoreSavedBackgroundRect(pFace, pFace->usFaceX, pFace->usFaceY, pFace->usFaceX, pFace->usFaceY, pFace->usFaceWidth, pFace->usFaceHeight);
-	}
-	else
-	{
-		FaceRestoreSavedBackgroundRect(pFace, pFace->usFaceX, pFace->usFaceY, 0, 0, pFace->usFaceWidth, pFace->usFaceHeight);
-	}
+	BltVideoObject(f->uiAutoRestoreBuffer, f->uiVideoObject, 0, x, y);
+	HandleRenderFaceAdjustments(f, FALSE, 0, f->usFaceX, f->usFaceY, f->usEyesX, f->usEyesY);
+	FaceRestoreSavedBackgroundRect(f, f->usFaceX, f->usFaceY, x, y, f->usFaceWidth, f->usFaceHeight);
 }
 
 
