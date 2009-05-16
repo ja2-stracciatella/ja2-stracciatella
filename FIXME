@@ -61,6 +61,7 @@ HandleMoraleEventForSoldier(): callers
 HandleOpinionOfTownsAboutSoldier(): empty
 HandleSummaryInput(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?
 HeliCharacterDialogue(): callers
+HourlyMoraleUpdate(): strategic_morale_update_counter not loaded/saved
 IMPVideoObjects.h: many needlessly called functions?
 I_CHANGELEVEL: unused
 InitializeLibrary(): invalid use of strlen()

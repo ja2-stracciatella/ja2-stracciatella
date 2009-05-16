@@ -692,193 +692,145 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 }
 
 
-void HourlyMoraleUpdate( void )
+void HourlyMoraleUpdate()
 {
-	INT8									bActualTeamOpinion;
-	INT8									bTeamMoraleModChange, bTeamMoraleModDiff;
-	INT8									bOpinion=-1;
-	INT32									iTotalOpinions;
-	INT8									bNumTeamMembers;
-	INT8									bHighestTeamLeadership = 0;
-	BOOLEAN								fSameGroupOnly;
-	static INT8						bStrategicMoraleUpdateCounter = 0;
-	BOOLEAN								fFoundHated = FALSE;
-	INT8									bHated;
+	static INT8 strategic_morale_update_counter = 0;
 
 	// loop through all mercs to calculate their morale
-	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
 		//if the merc is active, in Arulco, and conscious, not POW
-		if (pSoldier->ubProfile   != NO_PROFILE      &&
-				!pSoldier->fMercAsleep                   &&
-				pSoldier->bAssignment != IN_TRANSIT      &&
-				pSoldier->bAssignment != ASSIGNMENT_DEAD &&
-				pSoldier->bAssignment != ASSIGNMENT_POW)
-		{
-			// calculate the guy's opinion of the people he is with
-			MERCPROFILESTRUCT const& p = GetProfile(pSoldier->ubProfile);
+		if (s->ubProfile   == NO_PROFILE)      continue;
+		if (s->fMercAsleep)                    continue;
+		if (s->bAssignment == IN_TRANSIT)      continue;
+		if (s->bAssignment == ASSIGNMENT_DEAD) continue;
+		if (s->bAssignment == ASSIGNMENT_POW)  continue;
 
-			// if we're moving
-			if (pSoldier->ubGroupID != 0 && PlayerIDGroupInMotion( pSoldier->ubGroupID ))
-			{
-				// we only check our opinions of people in our squad
-				fSameGroupOnly = TRUE;
+		// calculate the guy's opinion of the people he is with
+		MERCPROFILESTRUCT const& p = GetProfile(s->ubProfile);
+
+		// If we're moving, we only check our opinions of people in our squad
+		bool const same_group_only = s->ubGroupID != 0 && PlayerIDGroupInMotion(s->ubGroupID);
+		bool       found_hated     = false;
+
+		// Counts to calculate average opinion
+		INT32 sum_opinions   = 0;
+		INT8  n_team_members = 0;
+
+		// Let people with high leadership affect their own morale
+		INT8 highest_team_leadership = EffectiveLeadership(s);
+
+		// loop through all other mercs
+		CFOR_ALL_IN_TEAM(other, gbPlayerNum)
+		{
+			// skip past ourselves and all inactive mercs
+			if (other              == s)               continue;
+			if (other->ubProfile   == NO_PROFILE)      continue;
+			if (other->fMercAsleep)                    continue;
+			if (other->bAssignment == IN_TRANSIT)      continue;
+			if (other->bAssignment == ASSIGNMENT_DEAD) continue;
+			if (other->bAssignment == ASSIGNMENT_POW)  continue;
+
+			if (same_group_only)
+			{ // All we have to check is the group ID
+				if (s->ubGroupID != other->ubGroupID) continue;
 			}
 			else
 			{
-				fSameGroupOnly = FALSE;
+				// Check to see if the location is the same
+				if (other->sSectorX != s->sSectorX) continue;
+				if (other->sSectorY != s->sSectorY) continue;
+				if (other->bSectorZ != s->bSectorZ) continue;
+
+				// If the OTHER soldier is in motion then we don't do anything!
+				if (other->ubGroupID != 0 && PlayerIDGroupInMotion(other->ubGroupID)) continue;
 			}
-			fFoundHated = FALSE;
 
-			// reset counts to calculate average opinion
-			iTotalOpinions = 0;
-			bNumTeamMembers = 0;
-
-			// let people with high leadership affect their own morale
-			bHighestTeamLeadership = EffectiveLeadership( pSoldier );
-
-			// loop through all other mercs
-			CFOR_ALL_IN_TEAM(pOtherSoldier, gbPlayerNum)
+			INT8 opinion = p.bMercOpinion[other->ubProfile];
+			if (opinion == HATED_OPINION)
 			{
-				// skip past ourselves and all inactive mercs
-				if (pOtherSoldier              != pSoldier        &&
-						pOtherSoldier->ubProfile   != NO_PROFILE      &&
-						!pOtherSoldier->fMercAsleep                   &&
-						pOtherSoldier->bAssignment != IN_TRANSIT      &&
-						pOtherSoldier->bAssignment != ASSIGNMENT_DEAD &&
-						pOtherSoldier->bAssignment != ASSIGNMENT_POW)
+				INT8 const hated = WhichHated(s->ubProfile, other->ubProfile);
+				if (hated >= 2 || // Learn to hate which has become full-blown hatred, full strength
+						p.bHatedCount[hated] <= p.bHatedTime[hated] / 2)
+				{ // We're teamed with someone we hate! We HATE this! Ignore everyone else!
+					found_hated = true;
+					break;
+				}
+				// Otherwise just mix this opinion in with everyone else
+
+				// Scale according to how close to we are to snapping
+				//KM : Divide by 0 error found.  Wrapped into an if statement.
+				INT8 const hated_time = p.bHatedTime[hated];
+				if (hated_time != 0)
 				{
-					if (fSameGroupOnly)
-					{
-						// all we have to check is the group ID
-						if (pSoldier->ubGroupID != pOtherSoldier->ubGroupID)
-						{
-							continue;
-						}
-					}
-					else
-					{
-						// check to see if the location is the same
-						if (pOtherSoldier->sSectorX != pSoldier->sSectorX ||
-							  pOtherSoldier->sSectorY != pSoldier->sSectorY ||
-								pOtherSoldier->bSectorZ != pSoldier->bSectorZ)
-						{
-							continue;
-						}
-
-						// if the OTHER soldier is in motion then we don't do anything!
-						if (pOtherSoldier->ubGroupID != 0 && PlayerIDGroupInMotion( pOtherSoldier->ubGroupID ))
-						{
-							continue;
-						}
-					}
-					bOpinion = p.bMercOpinion[pOtherSoldier->ubProfile];
-					if (bOpinion == HATED_OPINION)
-					{
-
-						bHated = WhichHated( pSoldier->ubProfile, pOtherSoldier->ubProfile );
-						if ( bHated >= 2 )
-						{
-							// learn to hate which has become full-blown hatred, full strength
-							fFoundHated = TRUE;
-							break;
-						}
-						else
-						{
-							// scale according to how close to we are to snapping
-							//KM : Divide by 0 error found.  Wrapped into an if statement.
-							if (p.bHatedTime[bHated])
-							{
-								bOpinion = (INT32)bOpinion * (p.bHatedTime[bHated] - p.bHatedCount[bHated]) / p.bHatedTime[bHated];
-							}
-
-							if (p.bHatedCount[bHated] <= p.bHatedTime[bHated] / 2)
-							{
-								// Augh, we're teamed with someone we hate!  We HATE this!!  Ignore everyone else!
-								fFoundHated = TRUE;
-								break;
-							}
-							// otherwise just mix this opinion in with everyone else...
-						}
-					}
-					iTotalOpinions += bOpinion;
-					bNumTeamMembers++;
-					if ( EffectiveLeadership( pOtherSoldier ) > bHighestTeamLeadership)
-					{
-						bHighestTeamLeadership = EffectiveLeadership( pOtherSoldier );
-					}
+					opinion = (INT32)opinion * (hated_time - p.bHatedCount[hated]) / hated_time;
 				}
 			}
-
-			if (fFoundHated)
-			{
-				// If teamed with someone we hated, team opinion is automatically minimum
-				bActualTeamOpinion = HATED_OPINION;
-			}
-			else if (bNumTeamMembers > 0)
-			{
-				bActualTeamOpinion = (INT8) (iTotalOpinions / bNumTeamMembers);
-				// give bonus/penalty for highest leadership value on team
-				bActualTeamOpinion += (bHighestTeamLeadership - 50) / 10;
-			}
-			else // alone
-			{
-				bActualTeamOpinion = 0;
-			}
-
-			// reduce to a range of HATED through BUDDY
-			if (bActualTeamOpinion > BUDDY_OPINION)
-			{
-				bActualTeamOpinion = BUDDY_OPINION;
-			}
-			else if (bActualTeamOpinion < HATED_OPINION)
-			{
-				bActualTeamOpinion = HATED_OPINION;
-			}
-
-			// shift morale from team by ~10%
-
-			// this should range between -75 and +75
-			bTeamMoraleModDiff = bActualTeamOpinion - pSoldier->bTeamMoraleMod;
-			if (bTeamMoraleModDiff > 0)
-			{
-				bTeamMoraleModChange = 1 + bTeamMoraleModDiff / 10;
-			}
-			else if (bTeamMoraleModDiff < 0)
-			{
-				bTeamMoraleModChange = -1 + bTeamMoraleModDiff / 10;
-			}
-			else
-			{
-				bTeamMoraleModChange = 0;
-			}
-			pSoldier->bTeamMoraleMod += bTeamMoraleModChange;
-			pSoldier->bTeamMoraleMod = __min( pSoldier->bTeamMoraleMod, MORALE_MOD_MAX );
-			pSoldier->bTeamMoraleMod = __max( pSoldier->bTeamMoraleMod, -MORALE_MOD_MAX );
-
-			// New, December 3rd, 1998, by CJC --
-			// If delayed strategic modifier exists then incorporate it in strategic mod
-			if ( pSoldier->bDelayedStrategicMoraleMod )
-			{
-				pSoldier->bStrategicMoraleMod += pSoldier->bDelayedStrategicMoraleMod;
-				pSoldier->bDelayedStrategicMoraleMod = 0;
-				pSoldier->bStrategicMoraleMod = __min( pSoldier->bStrategicMoraleMod, MORALE_MOD_MAX );
-				pSoldier->bStrategicMoraleMod = __max( pSoldier->bStrategicMoraleMod, -MORALE_MOD_MAX );
-			}
-
-			// refresh the morale value for the soldier based on the recalculated team modifier
-			RefreshSoldierMorale( pSoldier );
+			sum_opinions += opinion;
+			++n_team_members;
+			INT8 const other_leadership = EffectiveLeadership(other);
+			if (highest_team_leadership < other_leadership) highest_team_leadership = other_leadership;
 		}
+
+		INT8 actual_team_opinion;
+		if (found_hated)
+		{
+			// If teamed with someone we hated, team opinion is automatically minimum
+			actual_team_opinion = HATED_OPINION;
+		}
+		else if (n_team_members > 0)
+		{
+			actual_team_opinion = sum_opinions / n_team_members;
+			// give bonus/penalty for highest leadership value on team
+			actual_team_opinion += (highest_team_leadership - 50) / 10;
+		}
+		else // alone
+		{
+			actual_team_opinion = 0;
+		}
+
+		// reduce to a range of HATED through BUDDY
+		if (actual_team_opinion > BUDDY_OPINION)
+		{
+			actual_team_opinion = BUDDY_OPINION;
+		}
+		else if (actual_team_opinion < HATED_OPINION)
+		{
+			actual_team_opinion = HATED_OPINION;
+		}
+
+		// Shift morale from team by ~10%
+
+		// This should range between -75 and +75
+		INT8 const team_morale_mod_diff   = actual_team_opinion - s->bTeamMoraleMod;
+		INT8 const team_morale_mod_change =
+			team_morale_mod_diff > 0 ?  1 + team_morale_mod_diff / 10 :
+			team_morale_mod_diff < 0 ? -1 + team_morale_mod_diff / 10 :
+			0;
+		s->bTeamMoraleMod += team_morale_mod_change;
+		s->bTeamMoraleMod = __min(s->bTeamMoraleMod,  MORALE_MOD_MAX);
+		s->bTeamMoraleMod = __max(s->bTeamMoraleMod, -MORALE_MOD_MAX);
+
+		// New, December 3rd, 1998, by CJC --
+		// If delayed strategic modifier exists then incorporate it in strategic mod
+		if (s->bDelayedStrategicMoraleMod != 0)
+		{
+			s->bStrategicMoraleMod       += s->bDelayedStrategicMoraleMod;
+			s->bStrategicMoraleMod        = __min(s->bStrategicMoraleMod,  MORALE_MOD_MAX);
+			s->bStrategicMoraleMod        = __max(s->bStrategicMoraleMod, -MORALE_MOD_MAX);
+			s->bDelayedStrategicMoraleMod = 0;
+		}
+
+		/* Refresh the morale value for the soldier based on the recalculated team
+		 * modifier */
+		RefreshSoldierMorale(s);
 	}
 
-	bStrategicMoraleUpdateCounter++;
-
-	if ( bStrategicMoraleUpdateCounter == HOURS_BETWEEN_STRATEGIC_DECAY )
+	if (++strategic_morale_update_counter == HOURS_BETWEEN_STRATEGIC_DECAY)
 	{
+		strategic_morale_update_counter = 0;
 		DecayStrategicMoraleModifiers();
-		bStrategicMoraleUpdateCounter = 0;
 	}
-
 }
 
 
