@@ -149,8 +149,6 @@ void InitializeVideoManager(void)
 	);
 	SDL_SetColorKey(MouseCursor, SDL_SRCCOLORKEY, 0);
 
-	memset(gpFrameData, 0, sizeof(gpFrameData));
-
 	SDL_ShowCursor(SDL_DISABLE);
 
 	// Initialize state variables
