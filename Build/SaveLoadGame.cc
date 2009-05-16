@@ -131,7 +131,7 @@ extern		BOOLEAN				gfCreatureMeanwhileScenePlayed;
 	extern		UINT8					gubReportMapscreenLock;
 #endif
 
-static BOOLEAN gMusicModeToPlay = FALSE;
+static UINT8 gMusicModeToPlay;
 
 BOOLEAN	gfUseConsecutiveQuickSaveSlots = FALSE;
 #ifdef JA2BETAVERSION
@@ -140,214 +140,6 @@ static UINT32 guiCurrentQuickSaveNumber = 0;
 UINT32	guiLastSaveGameNum;
 
 UINT32	guiJA2EncryptionSet = 0;
-
-struct GENERAL_SAVE_INFO
-{
-	//The screen that the gaem was saved from
-	UINT32	uiCurrentScreen;
-
-	UINT32	uiCurrentUniqueSoldierId;
-
-	//The music that was playing when the game was saved
-	UINT8		ubMusicMode;
-
-	//Flag indicating that we have purchased something from Tony
-	BOOLEAN	fHavePurchasedItemsFromTony_UNUSED; // XXX HACK000B
-
-	//The selected soldier in tactical
-	UINT16	usSelectedSoldier;
-
-	// The x and y scroll position
-	INT16		sRenderCenterX;
-	INT16		sRenderCenterY;
-
-	BOOLEAN	fAtLeastOneMercWasHired;
-
-	//General Map screen state flags
-	BOOLEAN	fShowItemsFlag;
-	BOOLEAN	fShowTownFlag;
-	BOOLEAN	fShowTeamFlag;
-	BOOLEAN	fShowMineFlag;
-	BOOLEAN	fShowAircraftFlag;
-
-	// is the helicopter available to player?
-	BOOLEAN fHelicopterAvailable;
-
-	// helicopter vehicle id
-	INT32 iHelicopterVehicleId;
-
-	// total distance travelled
-	INT32 UNUSEDiTotalHeliDistanceSinceRefuel; // XXX HACK000B
-
-	// total owed to player
-	INT32 iTotalAccumulatedCostByPlayer;
-
-	// whether or not skyrider is alive and well? and on our side yet?
-	BOOLEAN fSkyRiderAvailable;
-
-	// skyrider engaging in a monologue
-	BOOLEAN UNUSEDfSkyriderMonologue; // XXX HACK000B
-
-	// list of sector locations
-	INT16 UNUSED[ 2 ][ 2 ]; // XXX HACK000B
-
-	// is the heli in the air?
-	BOOLEAN fHelicopterIsAirBorne;
-
-	// is the pilot returning straight to base?
-	BOOLEAN fHeliReturnStraightToBase;
-
-	// heli hovering
-	BOOLEAN fHoveringHelicopter;
-
-	// time started hovering
-	UINT32 uiStartHoverTime;
-
-	// what state is skyrider's dialogue in in?
-	UINT32 uiHelicopterSkyriderTalkState;
-
-	// the flags for skyrider events
-	BOOLEAN fShowEstoniRefuelHighLight;
-	BOOLEAN fShowOtherSAMHighLight;
-	BOOLEAN fShowDrassenSAMHighLight;
-
-	UINT32	uiEnvWeather;
-
-	UINT8		ubDefaultButton;
-
-
-
-
-	BOOLEAN	fSkyriderEmptyHelpGiven;
-	BOOLEAN	fEnterMapDueToContract;
-	UINT8		ubHelicopterHitsTaken;
-	UINT8		ubQuitType; // XXX HACK000B
-	BOOLEAN fSkyriderSaidCongratsOnTakingSAM;
-	INT16		sContractRehireSoldierID;
-
-
-	GAME_OPTIONS	GameOptions;
-
-	UINT32	uiSeedNumber;
-
-	//The GetJA2Clock() value
-	UINT32	uiBaseJA2Clock;
-
-	INT16		sCurInterfacePanel;
-
-	UINT8		ubSMCurrentMercID;
-
-	BOOLEAN	fFirstTimeInMapScreen; // XXX HACK000B
-
-	BOOLEAN	fDisableDueToBattleRoster;
-
-	BOOLEAN fDisableMapInterfaceDueToBattle;
-
-	INT16		sBoxerGridNo[ NUM_BOXERS ];
-	UINT8		ubBoxerID[ NUM_BOXERS ];
-	BOOLEAN	fBoxerFought[ NUM_BOXERS ];
-
-	BOOLEAN	fHelicopterDestroyed;								//if the chopper is destroyed
-	BOOLEAN	fShowMapScreenHelpText; // If true, displays help in mapscreen // XXX HACK000B
-
-	INT32		iSortStateForMapScreenList;
-	BOOLEAN	fFoundTixa;
-
-	UINT32	uiTimeOfLastSkyriderMonologue;
-	BOOLEAN fShowCambriaHospitalHighLight;
-	BOOLEAN fSkyRiderSetUp;
-	BOOLEAN fRefuelingSiteAvailable[ NUMBER_OF_REFUEL_SITES ];
-
-
-	//Meanwhile stuff
-	MEANWHILE_DEFINITION	gCurrentMeanwhileDef;
-
-	BOOLEAN ubPlayerProgressSkyriderLastCommentedOn;
-
-	BOOLEAN								gfMeanwhileTryingToStart;
-	BOOLEAN								gfInMeanwhile;
-
-	// list of dead guys for squads...in id values -> -1 means no one home
-	INT16 sDeadMercs[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
-
-	// levels of publicly known noises
-	INT8	gbPublicNoiseLevel[MAXTEAMS];
-
-	UINT8		gubScreenCount;
-
-	UINT16	usOldMeanWhileFlags;
-
-	INT32		iPortraitNumber;
-
-	INT16		sWorldSectorLocationOfFirstBattle;
-
-	BOOLEAN	fUnReadMailFlag;
-	BOOLEAN fNewMailFlag;
-	BOOLEAN	fOldUnReadFlag; // XXX HACK000B
-	BOOLEAN	fOldNewMailFlag;
-
-	BOOLEAN	fShowMilitia;
-
-	BOOLEAN	fNewFilesInFileViewer;
-
-	BOOLEAN	fLastBoxingMatchWonByPlayer;
-
-	UINT32	uiUNUSED; // XXX HACK000B
-
-	BOOLEAN fSamSiteFound[ NUMBER_OF_SAMS ];
-
-	UINT8		ubNumTerrorists;
-	UINT8		ubCambriaMedicalObjects;
-
-	BOOLEAN	fDisableTacticalPanelButtons;
-
-	INT16		sSelMapX;
-	INT16		sSelMapY;
-	INT32		iCurrentMapSectorZ;
-
-	UINT16	usHasPlayerSeenHelpScreenInCurrentScreen;
-	BOOLEAN	fHideHelpInAllScreens;
-	UINT8		ubBoxingMatchesWon;
-
-	UINT8		ubBoxersRests;
-	BOOLEAN	fBoxersResting;
-	UINT8		ubDesertTemperature;
-	UINT8		ubGlobalTemperature;
-
-	INT16		sMercArriveSectorX;
-	INT16		sMercArriveSectorY;
-
-	BOOLEAN fCreatureMeanwhileScenePlayed;
-	UINT8		ubPlayerNum;
-	//New stuff for the Prebattle interface / autoresolve
-	BOOLEAN fPersistantPBI;
-	UINT8 ubEnemyEncounterCode;
-
-	BOOLEAN ubExplicitEnemyEncounterCode;
-	BOOLEAN fBlitBattleSectorLocator;
-	UINT8 ubPBSectorX;
-	UINT8 ubPBSectorY;
-
-	UINT8 ubPBSectorZ;
-	BOOLEAN fCantRetreatInPBI;
-	BOOLEAN fExplosionQueueActive;
-	UINT8	ubUnused[1]; // XXX HACK000B
-
-	UINT32	uiMeanWhileFlags;
-
-	INT8 bSelectedInfoChar;
-	INT8 bHospitalPriceModifier;
-	INT8 bUnused2[ 2 ]; // XXX HACK000B
-
-	INT32 iHospitalTempBalance;
-	INT32 iHospitalRefund;
-
-  INT8  fPlayerTeamSawJoey;
-	INT8	fMikeShouldSayHi;
-
-	UINT8		ubFiller[550];		//This structure should be 1024 bytes // XXX HACK000B
-};
-CASSERT(sizeof(GENERAL_SAVE_INFO) == 1024)
 
 
 ScreenID guiScreenToGotoAfterLoadingSavedGame = ERROR_SCREEN; // XXX TODO001A was not properly initialised (0)
@@ -2146,434 +1938,333 @@ static void LoadGameFilePosition(UINT8 const slot, const HWFILE load, const char
 #endif
 
 
-static void SaveGeneralInfo(HWFILE const hFile)
+static BYTE* InjectMeanwhileDefinition(BYTE* const data, MEANWHILE_DEFINITION const& m)
 {
-	GENERAL_SAVE_INFO sGeneralInfo;
-	memset( &sGeneralInfo, 0, sizeof( GENERAL_SAVE_INFO ) );
-
-	sGeneralInfo.ubMusicMode = gubMusicMode;
-	sGeneralInfo.uiCurrentUniqueSoldierId = guiCurrentUniqueSoldierId;
-	sGeneralInfo.uiCurrentScreen = guiPreviousOptionScreen;
-
-	sGeneralInfo.usSelectedSoldier = Soldier2ID(GetSelectedMan());
-	sGeneralInfo.sRenderCenterX = gsRenderCenterX;
-	sGeneralInfo.sRenderCenterY = gsRenderCenterY;
-	sGeneralInfo.fAtLeastOneMercWasHired = gfAtLeastOneMercWasHired;
-	sGeneralInfo.fHavePurchasedItemsFromTony_UNUSED = FALSE;
-
-	sGeneralInfo.fShowItemsFlag			= fShowItemsFlag;
-	sGeneralInfo.fShowTownFlag			= fShowTownFlag;
-	sGeneralInfo.fShowMineFlag			= fShowMineFlag;
-	sGeneralInfo.fShowAircraftFlag	= fShowAircraftFlag;
-	sGeneralInfo.fShowTeamFlag			= fShowTeamFlag;
-
-	sGeneralInfo.fHelicopterAvailable = iHelicopterVehicleId != -1; // XXX HACK000B
-
-	// helicopter vehicle id
-	sGeneralInfo.iHelicopterVehicleId = iHelicopterVehicleId;
-
-	// total owed by player
-	sGeneralInfo.iTotalAccumulatedCostByPlayer = iTotalAccumulatedCostByPlayer;
-
-	// whether or not skyrider is alive and well? and on our side yet?
-	sGeneralInfo.fSkyRiderAvailable = iHelicopterVehicleId != -1; // XXX HACK000B
-
-	// is the heli in the air?
-	sGeneralInfo.fHelicopterIsAirBorne = fHelicopterIsAirBorne;
-
-	// is the pilot returning straight to base?
-	sGeneralInfo.fHeliReturnStraightToBase = fHeliReturnStraightToBase;
-
-	// heli hovering
-	sGeneralInfo.fHoveringHelicopter = fHoveringHelicopter;
-
-	// time started hovering
-	sGeneralInfo.uiStartHoverTime = uiStartHoverTime;
-
-	// what state is skyrider's dialogue in in?
-	sGeneralInfo.uiHelicopterSkyriderTalkState = guiHelicopterSkyriderTalkState;
-
-	// the flags for skyrider events
-	sGeneralInfo.fShowEstoniRefuelHighLight = fShowEstoniRefuelHighLight;
-	sGeneralInfo.fShowOtherSAMHighLight = fShowOtherSAMHighLight;
-	sGeneralInfo.fShowDrassenSAMHighLight = fShowDrassenSAMHighLight;
-	sGeneralInfo.fShowCambriaHospitalHighLight = fShowCambriaHospitalHighLight;
-
-	//The current state of the weather
-	sGeneralInfo.uiEnvWeather = guiEnvWeather;
-
-	sGeneralInfo.ubDefaultButton = gubDefaultButton;
-
-	sGeneralInfo.fSkyriderEmptyHelpGiven = gfSkyriderEmptyHelpGiven;
-	sGeneralInfo.ubHelicopterHitsTaken = gubHelicopterHitsTaken;
-	sGeneralInfo.fSkyriderSaidCongratsOnTakingSAM = gfSkyriderSaidCongratsOnTakingSAM;
-	sGeneralInfo.ubPlayerProgressSkyriderLastCommentedOn = gubPlayerProgressSkyriderLastCommentedOn;
-
-	sGeneralInfo.fEnterMapDueToContract = fEnterMapDueToContract;
-	sGeneralInfo.ubQuitType = 0;
-
-	if( pContractReHireSoldier != NULL )
-		sGeneralInfo.sContractRehireSoldierID = pContractReHireSoldier->ubID;
-	else
-		sGeneralInfo.sContractRehireSoldierID = -1;
-
-	sGeneralInfo.GameOptions = gGameOptions;
-
-
-	#ifdef JA2BETAVERSION
-	//Everytime we save get, and set a seed value, when reload, seed again
-	sGeneralInfo.uiSeedNumber = GetJA2Clock();
-	srand( sGeneralInfo.uiSeedNumber );
-	#endif
-
-	//Save the Ja2Clock()
-	sGeneralInfo.uiBaseJA2Clock = guiBaseJA2Clock;
-
-	// Save the current tactical panel mode
-	sGeneralInfo.sCurInterfacePanel = gsCurInterfacePanel;
-
-	// Save the selected merc
-	if( gpSMCurrentMerc )
-		sGeneralInfo.ubSMCurrentMercID = gpSMCurrentMerc->ubID;
-	else
-		sGeneralInfo.ubSMCurrentMercID = 255;
-
-	//save map screen disabling buttons
-	sGeneralInfo.fDisableDueToBattleRoster = fDisableDueToBattleRoster;
-	sGeneralInfo.fDisableMapInterfaceDueToBattle = fDisableMapInterfaceDueToBattle;
-
-	// Save boxing info
-	memcpy( &sGeneralInfo.sBoxerGridNo, &gsBoxerGridNo, NUM_BOXERS * sizeof( INT16 ) );
-	for (UINT i = 0; i < lengthof(gBoxer); ++i)
-	{
-		sGeneralInfo.ubBoxerID[i] = Soldier2ID(gBoxer[i]);
-	}
-	memcpy( &sGeneralInfo.fBoxerFought, &gfBoxerFought, NUM_BOXERS * sizeof( BOOLEAN ) );
-
-	//Save the helicopter status
-	sGeneralInfo.fHelicopterDestroyed = fHelicopterDestroyed;
-
-	sGeneralInfo.iSortStateForMapScreenList = giSortStateForMapScreenList;
-	sGeneralInfo.fFoundTixa = fFoundTixa;
-
-	sGeneralInfo.uiTimeOfLastSkyriderMonologue = guiTimeOfLastSkyriderMonologue;
-	sGeneralInfo.fSkyRiderSetUp = fSkyRiderSetUp;
-
-	memcpy( &sGeneralInfo.fRefuelingSiteAvailable, &fRefuelingSiteAvailable, NUMBER_OF_REFUEL_SITES * sizeof( BOOLEAN ) );
-
-
-	//Meanwhile stuff
-	sGeneralInfo.gCurrentMeanwhileDef = gCurrentMeanwhileDef;
-	sGeneralInfo.gfMeanwhileTryingToStart = gfMeanwhileTryingToStart;
-	sGeneralInfo.gfInMeanwhile = gfInMeanwhile;
-
-
-	// list of dead guys for squads...in id values -> -1 means no one home
-	memcpy( &sGeneralInfo.sDeadMercs, &sDeadMercs, sizeof( INT16 ) * NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD );
-
-	// level of public noises
-	memcpy( &sGeneralInfo.gbPublicNoiseLevel, &gbPublicNoiseLevel, sizeof( INT8 ) * MAXTEAMS );
-
-	//The screen count for the initscreen
-	sGeneralInfo.gubScreenCount = gubScreenCount;
-
-
-	//used for the mean while screen
-	sGeneralInfo.uiMeanWhileFlags = uiMeanWhileFlags;
-
-	//Imp portrait number
-	sGeneralInfo.iPortraitNumber = iPortraitNumber;
-
-	// location of first enocunter with enemy
-	sGeneralInfo.sWorldSectorLocationOfFirstBattle = sWorldSectorLocationOfFirstBattle;
-
-
-	//State of email flags
-	sGeneralInfo.fUnReadMailFlag = fUnReadMailFlag;
-	sGeneralInfo.fNewMailFlag = fNewMailFlag;
-	sGeneralInfo.fOldUnReadFlag = FALSE; // XXX HACK000B
-	sGeneralInfo.fOldNewMailFlag = fOldNewMailFlag;
-
-	sGeneralInfo.fShowMilitia	= fShowMilitia;
-
-	sGeneralInfo.fNewFilesInFileViewer = fNewFilesInFileViewer;
-
-	sGeneralInfo.fLastBoxingMatchWonByPlayer = gfLastBoxingMatchWonByPlayer;
-
-	memcpy( &sGeneralInfo.fSamSiteFound, &fSamSiteFound, NUMBER_OF_SAMS * sizeof( BOOLEAN ) );
-
-	sGeneralInfo.ubNumTerrorists = gubNumTerrorists;
-	sGeneralInfo.ubCambriaMedicalObjects = gubCambriaMedicalObjects;
-
-	sGeneralInfo.fDisableTacticalPanelButtons = gfDisableTacticalPanelButtons;
-
-	sGeneralInfo.sSelMapX						= sSelMapX;
-	sGeneralInfo.sSelMapY						= sSelMapY;
-	sGeneralInfo.iCurrentMapSectorZ	= iCurrentMapSectorZ;
-
-	//Save the current status of the help screens flag that say wether or not the user has been there before
-	sGeneralInfo.usHasPlayerSeenHelpScreenInCurrentScreen = gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen;
-
-	sGeneralInfo.ubBoxingMatchesWon = gubBoxingMatchesWon;
-	sGeneralInfo.ubBoxersRests = gubBoxersRests;
-	sGeneralInfo.fBoxersResting = gfBoxersResting;
-
-	sGeneralInfo.ubDesertTemperature = gubDesertTemperature;
-	sGeneralInfo.ubGlobalTemperature = gubGlobalTemperature;
-
-	sGeneralInfo.sMercArriveSectorX	 = gsMercArriveSectorX;
-	sGeneralInfo.sMercArriveSectorY	 = gsMercArriveSectorY;
-
-	sGeneralInfo.fCreatureMeanwhileScenePlayed = gfCreatureMeanwhileScenePlayed;
-
-	//save the global player num
-	sGeneralInfo.ubPlayerNum = gbPlayerNum;
-
-	//New stuff for the Prebattle interface / autoresolve
-	sGeneralInfo.fPersistantPBI									= gfPersistantPBI;
-	sGeneralInfo.ubEnemyEncounterCode						= gubEnemyEncounterCode;
-	sGeneralInfo.ubExplicitEnemyEncounterCode		= gubExplicitEnemyEncounterCode;
-	sGeneralInfo.fBlitBattleSectorLocator				= gfBlitBattleSectorLocator;
-	sGeneralInfo.ubPBSectorX										= gubPBSectorX;
-	sGeneralInfo.ubPBSectorY										= gubPBSectorY;
-	sGeneralInfo.ubPBSectorZ										= gubPBSectorZ;
-	sGeneralInfo.fCantRetreatInPBI							= gfCantRetreatInPBI;
-	sGeneralInfo.fExplosionQueueActive					= gfExplosionQueueActive;
-
-	sGeneralInfo.bSelectedInfoChar							= bSelectedInfoChar;
-
-	sGeneralInfo.iHospitalTempBalance						= giHospitalTempBalance;
-	sGeneralInfo.iHospitalRefund								= giHospitalRefund;
-	sGeneralInfo.bHospitalPriceModifier					= gbHospitalPriceModifier;
-  sGeneralInfo.fPlayerTeamSawJoey             = gfPlayerTeamSawJoey;
-	sGeneralInfo.fMikeShouldSayHi								= gfMikeShouldSayHi;
-
-	FileWrite(hFile, &sGeneralInfo, sizeof(GENERAL_SAVE_INFO));
+	BYTE* d = data;
+	INJ_I16(d, m.sSectorX)
+	INJ_I16(d, m.sSectorY)
+	INJ_U16(d, m.usTriggerEvent)
+	INJ_U8( d, m.ubMeanwhileID)
+	INJ_U8( d, m.ubNPCNumber)
+	Assert(d == data + 8);
+	return d;
 }
 
 
-static void LoadGeneralInfo(HWFILE const hFile, UINT32 const savegame_version)
+static BYTE const* ExtractMeanwhileDefinition(BYTE const* const data, MEANWHILE_DEFINITION& m)
 {
-	GENERAL_SAVE_INFO sGeneralInfo;
-	memset( &sGeneralInfo, 0, sizeof( GENERAL_SAVE_INFO ) );
+	BYTE const* d = data;
+	EXTR_I16(d, m.sSectorX)
+	EXTR_I16(d, m.sSectorY)
+	EXTR_U16(d, m.usTriggerEvent)
+	EXTR_U8( d, m.ubMeanwhileID)
+	EXTR_U8( d, m.ubNPCNumber)
+	Assert(d == data + 8);
+	return d;
+}
 
 
-	//Load the current music mode
-	FileRead(hFile, &sGeneralInfo, sizeof(GENERAL_SAVE_INFO));
+static void SaveGeneralInfo(HWFILE const f)
+{
+	BYTE  data[1024];
+	BYTE* d = data;
+	INJ_U32(  d, guiPreviousOptionScreen)
+	INJ_U32(  d, guiCurrentUniqueSoldierId)
+	INJ_U8(   d, gubMusicMode)
+	INJ_SKIP( d, 1)
+	INJ_U16(  d, Soldier2ID(GetSelectedMan()))
+	INJ_I16(  d, gsRenderCenterX)
+	INJ_I16(  d, gsRenderCenterY)
+	INJ_BOOL( d, gfAtLeastOneMercWasHired)
+	INJ_BOOL( d, fShowItemsFlag)
+	INJ_BOOL( d, fShowTownFlag)
+	INJ_BOOL( d, fShowTeamFlag)
+	INJ_BOOL( d, fShowMineFlag)
+	INJ_BOOL( d, fShowAircraftFlag)
+	INJ_BOOL( d, iHelicopterVehicleId != -1) // XXX HACK000B
+	INJ_SKIP( d, 1)
+	INJ_I32(  d, iHelicopterVehicleId)
+	INJ_SKIP( d, 4)
+	INJ_I32(  d, iTotalAccumulatedCostByPlayer)
+	INJ_BOOL( d, iHelicopterVehicleId != -1) // XXX HACK000B
+	INJ_SKIP( d, 9)
+	INJ_BOOL( d, fHelicopterIsAirBorne)
+	INJ_BOOL( d, fHeliReturnStraightToBase)
+	INJ_BOOL( d, fHoveringHelicopter)
+	INJ_SKIP( d, 3)
+	INJ_U32(  d, uiStartHoverTime)
+	INJ_U32(  d, guiHelicopterSkyriderTalkState)
+	INJ_BOOL( d, fShowEstoniRefuelHighLight)
+	INJ_BOOL( d, fShowOtherSAMHighLight)
+	INJ_BOOL( d, fShowDrassenSAMHighLight)
+	INJ_SKIP( d, 1)
+	INJ_U32(  d, guiEnvWeather)
+	INJ_U8(   d, gubDefaultButton)
+	INJ_BOOL( d, gfSkyriderEmptyHelpGiven)
+	INJ_BOOL( d, fEnterMapDueToContract)
+	INJ_U8(   d, gubHelicopterHitsTaken)
+	INJ_SKIP( d, 1)
+	INJ_BOOL( d, gfSkyriderSaidCongratsOnTakingSAM)
+	INJ_I16(  d, pContractReHireSoldier ? pContractReHireSoldier->ubID : -1)
+	GAME_OPTIONS const& g = gGameOptions;
+	INJ_BOOL( d, g.fGunNut)
+	INJ_BOOL( d, g.fSciFi)
+	INJ_U8(   d, g.ubDifficultyLevel)
+	INJ_BOOL( d, g.fTurnTimeLimit)
+	INJ_BOOL( d, g.fIronManMode)
+	INJ_SKIP( d, 7)
+#ifdef JA2BETAVERSION
+	// Everytime we save get, and set a seed value, when reload, seed again
+	UINT32 const seed = GetJA2Clock();
+	INJ_U32(  d, seed)
+	srand(seed);
+#else
+	INJ_SKIP( d, 4)
+#endif
+	INJ_U32(  d, guiBaseJA2Clock)
+	INJ_I16(  d, gsCurInterfacePanel)
+	INJ_U8(   d, gpSMCurrentMerc ? gpSMCurrentMerc->ubID : 255)
+	INJ_SKIP( d, 1)
+	INJ_BOOL( d, fDisableDueToBattleRoster)
+	INJ_BOOL( d, fDisableMapInterfaceDueToBattle)
+	INJ_I16A( d, gsBoxerGridNo, lengthof(gsBoxerGridNo))
+	for (SOLDIERTYPE* const* i = gBoxer; i != endof(gBoxer); ++i)
+	{
+		INJ_SOLDIER(d, *i)
+	}
+	INJ_BOOLA(d, gfBoxerFought, lengthof(gfBoxerFought))
+	INJ_BOOL( d, fHelicopterDestroyed)
+	INJ_SKIP( d, 1)
+	INJ_I32(  d, giSortStateForMapScreenList)
+	INJ_BOOL( d, fFoundTixa)
+	INJ_SKIP( d, 3)
+	INJ_U32(  d, guiTimeOfLastSkyriderMonologue)
+	INJ_BOOL( d, fShowCambriaHospitalHighLight)
+	INJ_BOOL( d, fSkyRiderSetUp)
+	INJ_BOOLA(d, fRefuelingSiteAvailable, lengthof(fRefuelingSiteAvailable))
+	d = InjectMeanwhileDefinition(d, gCurrentMeanwhileDef);
+	INJ_BOOL( d, gubPlayerProgressSkyriderLastCommentedOn)
+	INJ_BOOL( d, gfMeanwhileTryingToStart)
+	INJ_BOOL( d, gfInMeanwhile)
+	INJ_SKIP( d, 1)
+	for (INT16 (* i)[NUMBER_OF_SOLDIERS_PER_SQUAD] = sDeadMercs; i != endof(sDeadMercs); ++i)
+	{
+		INJ_I16A(d, *i, lengthof(*i))
+	}
+	INJ_I8A(  d, gbPublicNoiseLevel, lengthof(gbPublicNoiseLevel))
+	INJ_U8(   d, gubScreenCount)
+	INJ_SKIP( d, 5)
+	INJ_I32(  d, iPortraitNumber)
+	INJ_I16(  d, sWorldSectorLocationOfFirstBattle)
+	INJ_BOOL( d, fUnReadMailFlag)
+	INJ_BOOL( d, fNewMailFlag)
+	INJ_BOOL( d, FALSE) // XXX HACK000B
+	INJ_BOOL( d, fOldNewMailFlag)
+	INJ_BOOL( d, fShowMilitia)
+	INJ_BOOL( d, fNewFilesInFileViewer)
+	INJ_BOOL( d, gfLastBoxingMatchWonByPlayer)
+	INJ_SKIP( d, 7)
+	INJ_BOOLA(d, fSamSiteFound, lengthof(fSamSiteFound))
+	INJ_U8(   d, gubNumTerrorists)
+	INJ_U8(   d, gubCambriaMedicalObjects)
+	INJ_BOOL( d, gfDisableTacticalPanelButtons)
+	INJ_SKIP( d, 1)
+	INJ_I16(  d, sSelMapX)
+	INJ_I16(  d, sSelMapY)
+	INJ_I32(  d, iCurrentMapSectorZ)
+	INJ_U16(  d, gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen)
+	INJ_SKIP( d, 1)
+	INJ_U8(   d, gubBoxingMatchesWon)
+	INJ_U8(   d, gubBoxersRests)
+	INJ_BOOL( d, gfBoxersResting)
+	INJ_U8(   d, gubDesertTemperature)
+	INJ_U8(   d, gubGlobalTemperature)
+	INJ_I16(  d, gsMercArriveSectorX)
+	INJ_I16(  d, gsMercArriveSectorY)
+	INJ_BOOL( d, gfCreatureMeanwhileScenePlayed)
+	INJ_U8(   d, gbPlayerNum)
+	INJ_BOOL( d, gfPersistantPBI)
+	INJ_U8(   d, gubEnemyEncounterCode)
+	INJ_BOOL( d, gubExplicitEnemyEncounterCode)
+	INJ_BOOL( d, gfBlitBattleSectorLocator)
+	INJ_U8(   d, gubPBSectorX)
+	INJ_U8(   d, gubPBSectorY)
+	INJ_U8(   d, gubPBSectorZ)
+	INJ_BOOL( d, gfCantRetreatInPBI)
+	INJ_BOOL( d, gfExplosionQueueActive)
+	INJ_SKIP( d, 1)
+	INJ_U32(  d, uiMeanWhileFlags)
+	INJ_I8(   d, bSelectedInfoChar)
+	INJ_I8(   d, gbHospitalPriceModifier)
+	INJ_SKIP( d, 2)
+	INJ_I32(  d, giHospitalTempBalance)
+	INJ_I32(  d, giHospitalRefund)
+	INJ_I8(   d, gfPlayerTeamSawJoey)
+	INJ_I8(   d, gfMikeShouldSayHi)
+	INJ_SKIP( d, 550)
+	Assert(d == endof(data));
 
-	gMusicModeToPlay = sGeneralInfo.ubMusicMode;
-
-	guiCurrentUniqueSoldierId = sGeneralInfo.uiCurrentUniqueSoldierId;
-
-	guiScreenToGotoAfterLoadingSavedGame = static_cast<ScreenID>(sGeneralInfo.uiCurrentScreen); // XXX TODO001A unchecked conversion
-
-	SetSelectedMan(ID2Soldier(sGeneralInfo.usSelectedSoldier));
-
-	gsRenderCenterX = sGeneralInfo.sRenderCenterX;
-	gsRenderCenterY = sGeneralInfo.sRenderCenterY;
-
-	gfAtLeastOneMercWasHired = sGeneralInfo.fAtLeastOneMercWasHired;
+	FileWrite(f, data, sizeof(data));
+}
 
 
-	fShowItemsFlag		= sGeneralInfo.fShowItemsFlag;
-	fShowTownFlag			= sGeneralInfo.fShowTownFlag;
-	fShowMineFlag			= sGeneralInfo.fShowMineFlag;
-	fShowAircraftFlag	= sGeneralInfo.fShowAircraftFlag;
-	fShowTeamFlag			= sGeneralInfo.fShowTeamFlag;
+static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
+{
+	BYTE data[1024];
+	FileRead(f, data, sizeof(data));
 
-	// helicopter vehicle id
-	iHelicopterVehicleId = sGeneralInfo.iHelicopterVehicleId;
-
-	// total owed to player
-	iTotalAccumulatedCostByPlayer = sGeneralInfo.iTotalAccumulatedCostByPlayer;
-
-	// is the heli in the air?
-	fHelicopterIsAirBorne = sGeneralInfo.fHelicopterIsAirBorne;
-
-	// is the pilot returning straight to base?
-	fHeliReturnStraightToBase = sGeneralInfo.fHeliReturnStraightToBase;
-
-	// heli hovering
-	fHoveringHelicopter = sGeneralInfo.fHoveringHelicopter;
-
-	// time started hovering
-	uiStartHoverTime = sGeneralInfo.uiStartHoverTime;
-
-	// what state is skyrider's dialogue in in?
-	guiHelicopterSkyriderTalkState = sGeneralInfo.uiHelicopterSkyriderTalkState;
-
-	// the flags for skyrider events
-	fShowEstoniRefuelHighLight = sGeneralInfo.fShowEstoniRefuelHighLight;
-	fShowOtherSAMHighLight = sGeneralInfo.fShowOtherSAMHighLight;
-	fShowDrassenSAMHighLight = sGeneralInfo.fShowDrassenSAMHighLight;
-	fShowCambriaHospitalHighLight = sGeneralInfo.fShowCambriaHospitalHighLight;
-
-	//The current state of the weather
-	guiEnvWeather = sGeneralInfo.uiEnvWeather;
-
-	gubDefaultButton = sGeneralInfo.ubDefaultButton;
-
-	gfSkyriderEmptyHelpGiven = sGeneralInfo.fSkyriderEmptyHelpGiven;
-	gubHelicopterHitsTaken = sGeneralInfo.ubHelicopterHitsTaken;
-	gfSkyriderSaidCongratsOnTakingSAM = sGeneralInfo.fSkyriderSaidCongratsOnTakingSAM;
-	gubPlayerProgressSkyriderLastCommentedOn = sGeneralInfo.ubPlayerProgressSkyriderLastCommentedOn;
-
-	fEnterMapDueToContract = sGeneralInfo.fEnterMapDueToContract;
-
-	//if the soldier id is valid
-	if( sGeneralInfo.sContractRehireSoldierID == -1 )
-		pContractReHireSoldier = NULL;
-	else
-		pContractReHireSoldier = GetMan(sGeneralInfo.sContractRehireSoldierID);
-
-	gGameOptions = sGeneralInfo.GameOptions;
-
-	#ifdef JA2BETAVERSION
-	//Reset the random 'seed' number
-	srand( sGeneralInfo.uiSeedNumber );
-	#endif
-
-	//Restore the JA2 Clock
-	guiBaseJA2Clock = sGeneralInfo.uiBaseJA2Clock;
-
+	BYTE const* d = data;
+	UINT32 screen_after_loading;
+	EXTR_U32(  d, screen_after_loading)
+	guiScreenToGotoAfterLoadingSavedGame = static_cast<ScreenID>(screen_after_loading); // XXX TODO001A unchecked conversion
+	EXTR_U32(  d, guiCurrentUniqueSoldierId)
+	EXTR_U8(   d, gMusicModeToPlay)
+	EXTR_SKIP( d, 1)
+	UINT16 sel;
+	EXTR_U16(  d, sel)
+	SetSelectedMan(ID2Soldier(sel));
+	EXTR_I16(  d, gsRenderCenterX)
+	EXTR_I16(  d, gsRenderCenterY)
+	EXTR_BOOL( d, gfAtLeastOneMercWasHired)
+	EXTR_BOOL( d, fShowItemsFlag)
+	EXTR_BOOL( d, fShowTownFlag)
+	EXTR_BOOL( d, fShowTeamFlag)
+	EXTR_BOOL( d, fShowMineFlag)
+	EXTR_BOOL( d, fShowAircraftFlag)
+	EXTR_SKIP( d, 2)
+	EXTR_I32(  d, iHelicopterVehicleId)
+	EXTR_SKIP( d, 4)
+	EXTR_I32(  d, iTotalAccumulatedCostByPlayer)
+	EXTR_SKIP( d, 10)
+	EXTR_BOOL( d, fHelicopterIsAirBorne)
+	EXTR_BOOL( d, fHeliReturnStraightToBase)
+	EXTR_BOOL( d, fHoveringHelicopter)
+	EXTR_SKIP( d, 3)
+	EXTR_U32(  d, uiStartHoverTime)
+	EXTR_U32(  d, guiHelicopterSkyriderTalkState)
+	EXTR_BOOL( d, fShowEstoniRefuelHighLight)
+	EXTR_BOOL( d, fShowOtherSAMHighLight)
+	EXTR_BOOL( d, fShowDrassenSAMHighLight)
+	EXTR_SKIP( d, 1)
+	EXTR_U32(  d, guiEnvWeather)
+	EXTR_U8(   d, gubDefaultButton)
+	EXTR_BOOL( d, gfSkyriderEmptyHelpGiven)
+	EXTR_BOOL( d, fEnterMapDueToContract)
+	EXTR_U8(   d, gubHelicopterHitsTaken)
+	EXTR_SKIP( d, 1)
+	EXTR_BOOL( d, gfSkyriderSaidCongratsOnTakingSAM)
+	INT16 contract_rehire_soldier;
+	EXTR_I16(  d, contract_rehire_soldier)
+	pContractReHireSoldier = contract_rehire_soldier != -1 ? GetMan(contract_rehire_soldier) : 0;
+	GAME_OPTIONS& g = gGameOptions;
+	EXTR_BOOL( d, g.fGunNut)
+	EXTR_BOOL( d, g.fSciFi)
+	EXTR_U8(   d, g.ubDifficultyLevel)
+	EXTR_BOOL( d, g.fTurnTimeLimit)
+	EXTR_BOOL( d, g.fIronManMode)
+	EXTR_SKIP( d, 7)
+#ifdef JA2BETAVERSION
+	// Everytime we save get, and set a seed value, when reload, seed again
+	UINT32 seed;
+	EXTR_U32(  d, seed)
+	srand(seed);
+#else
+	EXTR_SKIP( d, 4)
+#endif
+	EXTR_U32(  d, guiBaseJA2Clock)
 	ResetJA2ClockGlobalTimers();
-
-
-	// Restore the selected merc
-	if( sGeneralInfo.ubSMCurrentMercID == 255 )
-		gpSMCurrentMerc = NULL;
-	else
-		gpSMCurrentMerc = GetMan(sGeneralInfo.ubSMCurrentMercID);
-
-	//Set the interface panel to the team panel
-	ShutdownCurrentPanel( );
-
-	//Restore the current tactical panel mode
-	gsCurInterfacePanel = static_cast<InterfacePanelKind>(sGeneralInfo.sCurInterfacePanel);
-
-	/*
-	//moved to last stage in the LoadSaveGame() function
-	//if we are in tactical
-	if( guiScreenToGotoAfterLoadingSavedGame == GAME_SCREEN )
+	INT16 cur_interface_panel;
+	EXTR_I16(  d, cur_interface_panel)
+	UINT8 sm_current_merc;
+	EXTR_U8(   d, sm_current_merc)
+	gpSMCurrentMerc = sm_current_merc != 255 ? GetMan(sm_current_merc) : 0;
+	// Set the interface panel to the team panel
+	ShutdownCurrentPanel();
+	gsCurInterfacePanel = static_cast<InterfacePanelKind>(cur_interface_panel); // XXX TODO001A unchecked conversion
+	EXTR_SKIP( d, 1)
+	EXTR_BOOL( d, fDisableDueToBattleRoster)
+	EXTR_BOOL( d, fDisableMapInterfaceDueToBattle)
+	EXTR_I16A( d, gsBoxerGridNo, lengthof(gsBoxerGridNo))
+	for (SOLDIERTYPE** i = gBoxer; i != endof(gBoxer); ++i)
 	{
-		//Initialize the current panel
-		InitializeCurrentPanel( );
-
-		SelectSoldier(GetSelectedMan(), SELSOLDIER_FORCE_RESELECT);
+		EXTR_SOLDIER(d, *i)
 	}
-	*/
-
-	//Load map screen disabling buttons
-	fDisableDueToBattleRoster = sGeneralInfo.fDisableDueToBattleRoster;
-	fDisableMapInterfaceDueToBattle = sGeneralInfo.fDisableMapInterfaceDueToBattle;
-
-	memcpy( &gsBoxerGridNo, &sGeneralInfo.sBoxerGridNo, NUM_BOXERS * sizeof( INT16 ) );
-	for (UINT i = 0; i < lengthof(gBoxer); ++i)
+	EXTR_BOOLA(d, gfBoxerFought, lengthof(gfBoxerFought))
+	EXTR_BOOL( d, fHelicopterDestroyed)
+	EXTR_SKIP( d, 1)
+	EXTR_I32(  d, giSortStateForMapScreenList)
+	EXTR_BOOL( d, fFoundTixa)
+	EXTR_SKIP( d, 3)
+	EXTR_U32(  d, guiTimeOfLastSkyriderMonologue)
+	EXTR_BOOL( d, fShowCambriaHospitalHighLight)
+	EXTR_BOOL( d, fSkyRiderSetUp)
+	EXTR_BOOLA(d, fRefuelingSiteAvailable, lengthof(fRefuelingSiteAvailable))
+	d = ExtractMeanwhileDefinition(d, gCurrentMeanwhileDef);
+	EXTR_BOOL( d, gubPlayerProgressSkyriderLastCommentedOn)
+	EXTR_BOOL( d, gfMeanwhileTryingToStart)
+	EXTR_BOOL( d, gfInMeanwhile)
+	EXTR_SKIP( d, 1)
+	for (INT16 (* i)[NUMBER_OF_SOLDIERS_PER_SQUAD] = sDeadMercs; i != endof(sDeadMercs); ++i)
 	{
-		gBoxer[i] = ID2Soldier(sGeneralInfo.ubBoxerID[i]);
+		EXTR_I16A(d, *i, lengthof(*i))
 	}
-	memcpy( &gfBoxerFought, &sGeneralInfo.fBoxerFought, NUM_BOXERS * sizeof( BOOLEAN ) );
-
-	//Load the helicopter status
-	fHelicopterDestroyed = sGeneralInfo.fHelicopterDestroyed;
-
-	giSortStateForMapScreenList = sGeneralInfo.iSortStateForMapScreenList;
-	fFoundTixa = sGeneralInfo.fFoundTixa;
-
-	guiTimeOfLastSkyriderMonologue = sGeneralInfo.uiTimeOfLastSkyriderMonologue;
-	fSkyRiderSetUp = sGeneralInfo.fSkyRiderSetUp;
-
-	memcpy( &fRefuelingSiteAvailable, &sGeneralInfo.fRefuelingSiteAvailable, NUMBER_OF_REFUEL_SITES * sizeof( BOOLEAN ) );
-
-
-	//Meanwhile stuff
-	gCurrentMeanwhileDef = sGeneralInfo.gCurrentMeanwhileDef;
-	gfMeanwhileTryingToStart = sGeneralInfo.gfMeanwhileTryingToStart;
-	gfInMeanwhile = sGeneralInfo.gfInMeanwhile;
-
-	// list of dead guys for squads...in id values -> -1 means no one home
-	memcpy( &sDeadMercs, &sGeneralInfo.sDeadMercs, sizeof( INT16 ) * NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD );
-
-	// level of public noises
-	memcpy( &gbPublicNoiseLevel, &sGeneralInfo.gbPublicNoiseLevel, sizeof( INT8 ) * MAXTEAMS );
-
-	//the screen count for the init screen
-	gubScreenCount = sGeneralInfo.gubScreenCount;
-
-	//used for the mean while screen
-	if (savegame_version < 71)
-	{
-		uiMeanWhileFlags = sGeneralInfo.usOldMeanWhileFlags;
-	}
-	else
-	{
-		uiMeanWhileFlags = sGeneralInfo.uiMeanWhileFlags;
-	}
-
-	//Imp portrait number
-	iPortraitNumber = sGeneralInfo.iPortraitNumber;
-
-	// location of first enocunter with enemy
-	sWorldSectorLocationOfFirstBattle = sGeneralInfo.sWorldSectorLocationOfFirstBattle;
-
-	fShowMilitia	= sGeneralInfo.fShowMilitia;
-
-	fNewFilesInFileViewer = sGeneralInfo.fNewFilesInFileViewer;
-
-	gfLastBoxingMatchWonByPlayer = sGeneralInfo.fLastBoxingMatchWonByPlayer;
-
-	memcpy( &fSamSiteFound, &sGeneralInfo.fSamSiteFound, NUMBER_OF_SAMS * sizeof( BOOLEAN ) );
-
-	gubNumTerrorists = sGeneralInfo.ubNumTerrorists;
-	gubCambriaMedicalObjects = sGeneralInfo.ubCambriaMedicalObjects;
-
-	gfDisableTacticalPanelButtons = sGeneralInfo.fDisableTacticalPanelButtons;
-
-	sSelMapX						= sGeneralInfo.sSelMapX;
-	sSelMapY						= sGeneralInfo.sSelMapY;
-	iCurrentMapSectorZ	= sGeneralInfo.iCurrentMapSectorZ;
-
-	//State of email flags
-	fUnReadMailFlag = sGeneralInfo.fUnReadMailFlag;
-	fNewMailFlag = sGeneralInfo.fNewMailFlag;
-	fOldNewMailFlag = sGeneralInfo.fOldNewMailFlag;
-
-	//Save the current status of the help screens flag that say wether or not the user has been there before
-	gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen = sGeneralInfo.usHasPlayerSeenHelpScreenInCurrentScreen;
-
-	gubBoxingMatchesWon = sGeneralInfo.ubBoxingMatchesWon;
-	gubBoxersRests = sGeneralInfo.ubBoxersRests;
-	gfBoxersResting = sGeneralInfo.fBoxersResting;
-
-	gubDesertTemperature = sGeneralInfo.ubDesertTemperature;
-	gubGlobalTemperature = sGeneralInfo.ubGlobalTemperature;
-
-	gsMercArriveSectorX = sGeneralInfo.sMercArriveSectorX;
-	gsMercArriveSectorY = sGeneralInfo.sMercArriveSectorY;
-
-	gfCreatureMeanwhileScenePlayed = sGeneralInfo.fCreatureMeanwhileScenePlayed;
-
-	//load the global player num
-	gbPlayerNum = sGeneralInfo.ubPlayerNum;
-
-	//New stuff for the Prebattle interface / autoresolve
-	gfPersistantPBI									= sGeneralInfo.fPersistantPBI;
-	gubEnemyEncounterCode						= sGeneralInfo.ubEnemyEncounterCode;
-	gubExplicitEnemyEncounterCode		= sGeneralInfo.ubExplicitEnemyEncounterCode;
-	gfBlitBattleSectorLocator				= sGeneralInfo.fBlitBattleSectorLocator;
-	gubPBSectorX										= sGeneralInfo.ubPBSectorX;
-	gubPBSectorY										= sGeneralInfo.ubPBSectorY;
-	gubPBSectorZ										= sGeneralInfo.ubPBSectorZ;
-	gfCantRetreatInPBI							= sGeneralInfo.fCantRetreatInPBI;
-	gfExplosionQueueActive					= sGeneralInfo.fExplosionQueueActive;
-
-	bSelectedInfoChar	= sGeneralInfo.bSelectedInfoChar;
-
-	giHospitalTempBalance		= sGeneralInfo.iHospitalTempBalance;
-	giHospitalRefund				= sGeneralInfo.iHospitalRefund;
-	gbHospitalPriceModifier = sGeneralInfo.bHospitalPriceModifier;
-  gfPlayerTeamSawJoey     = sGeneralInfo.fPlayerTeamSawJoey;
-	gfMikeShouldSayHi				= sGeneralInfo.fMikeShouldSayHi;
+	EXTR_I8A(  d, gbPublicNoiseLevel, lengthof(gbPublicNoiseLevel))
+	EXTR_U8(   d, gubScreenCount)
+	EXTR_SKIP(d, 1)
+	UINT16 old_meanwhile_flags;
+	EXTR_U16(d, old_meanwhile_flags)
+	EXTR_SKIP(d, 2)
+	EXTR_I32(  d, iPortraitNumber)
+	EXTR_I16(  d, sWorldSectorLocationOfFirstBattle)
+	EXTR_BOOL( d, fUnReadMailFlag)
+	EXTR_BOOL( d, fNewMailFlag)
+	EXTR_SKIP( d, 1)
+	EXTR_BOOL( d, fOldNewMailFlag)
+	EXTR_BOOL( d, fShowMilitia)
+	EXTR_BOOL( d, fNewFilesInFileViewer)
+	EXTR_BOOL( d, gfLastBoxingMatchWonByPlayer)
+	EXTR_SKIP( d, 7)
+	EXTR_BOOLA(d, fSamSiteFound, lengthof(fSamSiteFound))
+	EXTR_U8(   d, gubNumTerrorists)
+	EXTR_U8(   d, gubCambriaMedicalObjects)
+	EXTR_BOOL( d, gfDisableTacticalPanelButtons)
+	EXTR_SKIP( d, 1)
+	EXTR_I16(  d, sSelMapX)
+	EXTR_I16(  d, sSelMapY)
+	EXTR_I32(  d, iCurrentMapSectorZ)
+	EXTR_U16(  d, gHelpScreen.usHasPlayerSeenHelpScreenInCurrentScreen)
+	EXTR_SKIP( d, 1)
+	EXTR_U8(   d, gubBoxingMatchesWon)
+	EXTR_U8(   d, gubBoxersRests)
+	EXTR_BOOL( d, gfBoxersResting)
+	EXTR_U8(   d, gubDesertTemperature)
+	EXTR_U8(   d, gubGlobalTemperature)
+	EXTR_I16(  d, gsMercArriveSectorX)
+	EXTR_I16(  d, gsMercArriveSectorY)
+	EXTR_BOOL( d, gfCreatureMeanwhileScenePlayed)
+	EXTR_U8(   d, gbPlayerNum)
+	EXTR_BOOL( d, gfPersistantPBI)
+	EXTR_U8(   d, gubEnemyEncounterCode)
+	EXTR_BOOL( d, gubExplicitEnemyEncounterCode)
+	EXTR_BOOL( d, gfBlitBattleSectorLocator)
+	EXTR_U8(   d, gubPBSectorX)
+	EXTR_U8(   d, gubPBSectorY)
+	EXTR_U8(   d, gubPBSectorZ)
+	EXTR_BOOL( d, gfCantRetreatInPBI)
+	EXTR_BOOL( d, gfExplosionQueueActive)
+	EXTR_SKIP( d, 1)
+	UINT32 meanwhile_flags;
+	EXTR_U32(  d, meanwhile_flags)
+	uiMeanWhileFlags = savegame_version < 71 ? old_meanwhile_flags : meanwhile_flags;
+	EXTR_I8(   d, bSelectedInfoChar)
+	EXTR_I8(   d, gbHospitalPriceModifier)
+	EXTR_SKIP( d, 2)
+	EXTR_I32(  d, giHospitalTempBalance)
+	EXTR_I32(  d, giHospitalRefund)
+	EXTR_I8(   d, gfPlayerTeamSawJoey)
+	EXTR_I8(   d, gfMikeShouldSayHi)
+	EXTR_SKIP( d, 550)
+	Assert(d == endof(data));
 }
 
 
@@ -2597,18 +2288,6 @@ static void LoadPreRandomNumbersFromSaveGameFile(HWFILE const hFile)
 }
 
 
-static void ExtractMeanwhileDefinition(BYTE const* const data, MEANWHILE_DEFINITION& m)
-{
-	BYTE const* d = data;
-	EXTR_I16(d, m.sSectorX)
-	EXTR_I16(d, m.sSectorY)
-	EXTR_U16(d, m.usTriggerEvent)
-	EXTR_U8( d, m.ubMeanwhileID)
-	EXTR_U8( d, m.ubNPCNumber)
-	Assert(d == data + 8);
-}
-
-
 static void LoadMeanwhileDefsFromSaveGameFile(HWFILE const f, UINT32 const savegame_version)
 {
 	MEANWHILE_DEFINITION const* end;
@@ -2627,18 +2306,6 @@ static void LoadMeanwhileDefsFromSaveGameFile(HWFILE const f, UINT32 const saveg
 		FileRead(f, data, sizeof(data));
 		ExtractMeanwhileDefinition(data, *i);
 	}
-}
-
-
-static void InjectMeanwhileDefinition(BYTE* const data, MEANWHILE_DEFINITION const& m)
-{
-	BYTE* d = data;
-	INJ_I16(d, m.sSectorX)
-	INJ_I16(d, m.sSectorY)
-	INJ_U16(d, m.usTriggerEvent)
-	INJ_U8( d, m.ubMeanwhileID)
-	INJ_U8( d, m.ubNPCNumber)
-	Assert(d == data + 8);
 }
 
 
