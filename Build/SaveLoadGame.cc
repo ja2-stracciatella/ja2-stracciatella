@@ -2597,27 +2597,59 @@ static void LoadPreRandomNumbersFromSaveGameFile(HWFILE const hFile)
 }
 
 
-static void LoadMeanwhileDefsFromSaveGameFile(HWFILE const hFile, UINT32 const savegame_version)
+static void ExtractMeanwhileDefinition(BYTE const* const data, MEANWHILE_DEFINITION& m)
 {
+	BYTE const* d = data;
+	EXTR_I16(d, m.sSectorX)
+	EXTR_I16(d, m.sSectorY)
+	EXTR_U16(d, m.usTriggerEvent)
+	EXTR_U8( d, m.ubMeanwhileID)
+	EXTR_U8( d, m.ubNPCNumber)
+	Assert(d == data + 8);
+}
+
+
+static void LoadMeanwhileDefsFromSaveGameFile(HWFILE const f, UINT32 const savegame_version)
+{
+	MEANWHILE_DEFINITION const* end;
 	if (savegame_version < 72)
 	{
-		//Load the array of meanwhile defs
-		FileRead(hFile, gMeanwhileDef, sizeof(MEANWHILE_DEFINITION) * (NUM_MEANWHILES - 1));
-		// and set the last one
-		memset( &(gMeanwhileDef[ NUM_MEANWHILES - 1]), 0, sizeof( MEANWHILE_DEFINITION ) );
+		memset(&gMeanwhileDef[NUM_MEANWHILES - 1], 0, sizeof(gMeanwhileDef[NUM_MEANWHILES - 1]));
+		end = gMeanwhileDef + NUM_MEANWHILES - 1;
 	}
 	else
 	{
-		//Load the array of meanwhile defs
-		FileRead(hFile, gMeanwhileDef, sizeof(MEANWHILE_DEFINITION) * NUM_MEANWHILES);
+		end = endof(gMeanwhileDef);
+	}
+	for (MEANWHILE_DEFINITION* i = gMeanwhileDef; i != end; ++i)
+	{
+		BYTE data[8];
+		FileRead(f, data, sizeof(data));
+		ExtractMeanwhileDefinition(data, *i);
 	}
 }
 
 
-static void SaveMeanwhileDefsFromSaveGameFile(HWFILE const hFile)
+static void InjectMeanwhileDefinition(BYTE* const data, MEANWHILE_DEFINITION const& m)
 {
-	//Save the array of meanwhile defs
-	FileWrite(hFile, &gMeanwhileDef, sizeof(MEANWHILE_DEFINITION) * NUM_MEANWHILES);
+	BYTE* d = data;
+	INJ_I16(d, m.sSectorX)
+	INJ_I16(d, m.sSectorY)
+	INJ_U16(d, m.usTriggerEvent)
+	INJ_U8( d, m.ubMeanwhileID)
+	INJ_U8( d, m.ubNPCNumber)
+	Assert(d == data + 8);
+}
+
+
+static void SaveMeanwhileDefsFromSaveGameFile(HWFILE const f)
+{
+	for (MEANWHILE_DEFINITION* i = gMeanwhileDef; i != endof(gMeanwhileDef); ++i)
+	{
+		BYTE data[8];
+		InjectMeanwhileDefinition(data, *i);
+		FileWrite(f, data, sizeof(data));
+	}
 }
 
 
