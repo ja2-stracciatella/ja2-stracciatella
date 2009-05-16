@@ -100,26 +100,24 @@ void VideoToggleFullScreen(void)
 	}
 
 	// Fallback to manual toggling
-	const SDL_PixelFormat* const fmt = scr->format;
-	int                    const w   = scr->w;
-	int                    const h   = scr->h;
-	Uint8                  const bpp = fmt->BitsPerPixel;
+	SDL_PixelFormat const& fmt = *scr->format;
+	int             const  w   = scr->w;
+	int             const  h   = scr->h;
+	Uint8           const  bpp = fmt.BitsPerPixel;
 
-	SDL_Surface* const tmp = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, bpp, fmt->Rmask, fmt->Gmask, fmt->Bmask, fmt->Amask);
-	if (tmp == NULL) return;
+	SGP::AutoObj<SDL_Surface, SDL_FreeSurface> tmp(SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, bpp, fmt.Rmask, fmt.Gmask, fmt.Bmask, fmt.Amask));
+	if (!tmp) return;
 
-	SDL_BlitSurface(scr, NULL, tmp, NULL);
+	SDL_BlitSurface(scr, 0, tmp, 0);
 
 	Uint32       const new_vflags = g_video_flags ^ SDL_FULLSCREEN;
 	SDL_Surface* const new_scr    = SDL_SetVideoMode(w, h, bpp, new_vflags);
-	if (new_scr != NULL)
-	{
-		g_video_flags = new_vflags;
-		ScreenBuffer  = new_scr;
-		SDL_BlitSurface(tmp, NULL, new_scr, NULL);
-		SDL_UpdateRect(new_scr, 0, 0, 0, 0);
-	}
-	SDL_FreeSurface(tmp);
+	if (!new_scr) return;
+
+	g_video_flags = new_vflags;
+	ScreenBuffer  = new_scr;
+	SDL_BlitSurface(tmp, 0, new_scr, 0);
+	SDL_UpdateRect(new_scr, 0, 0, 0, 0);
 }
 
 
