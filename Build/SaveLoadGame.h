@@ -22,8 +22,6 @@ struct SAVED_GAME_HEADER
 
 	CHAR16	sSavedGameDesc[ SIZE_OF_SAVE_GAME_DESC ];
 
-	UINT32	uiFlags_UNUSED; // XXX HACK000B
-
 	//The following will be used to quickly access info to display in the save/load screen
 	UINT32	uiDay;
 	UINT8		ubHour;
@@ -45,10 +43,9 @@ struct SAVED_GAME_HEADER
 	GAME_OPTIONS	sInitialGameOptions;	//need these in the header so we can get the info from it on the save load screen.
 
 	UINT32	uiRandom;
-
-	UINT8		ubFiller[110]; // XXX HACK000B
 };
-CASSERT(sizeof(SAVED_GAME_HEADER) == 688)
+
+void ExtractSavedGameHeaderFromFile(HWFILE, SAVED_GAME_HEADER&);
 
 
 extern ScreenID guiScreenToGotoAfterLoadingSavedGame;

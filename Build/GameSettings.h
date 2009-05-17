@@ -88,10 +88,7 @@ struct GAME_OPTIONS
 	UINT8		ubDifficultyLevel;
 	BOOLEAN	fTurnTimeLimit;
 	BOOLEAN	fIronManMode;
-
-	UINT8		ubFiller[7]; // XXX HACK000B
 };
-CASSERT(sizeof(GAME_OPTIONS) == 12)
 
 //This structure will contain general Ja2 settings  NOT individual game settings.
 extern GAME_SETTINGS gGameSettings;

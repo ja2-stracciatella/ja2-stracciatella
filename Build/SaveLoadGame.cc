@@ -147,6 +147,34 @@ ScreenID guiScreenToGotoAfterLoadingSavedGame = ERROR_SCREEN; // XXX TODO001A wa
 extern		UINT32		guiCurrentUniqueSoldierId;
 
 
+static BYTE const* ExtractGameOptions(BYTE const* const data, GAME_OPTIONS& g)
+{
+	BYTE const* d = data;
+	EXTR_BOOL( d, g.fGunNut)
+	EXTR_BOOL( d, g.fSciFi)
+	EXTR_U8(   d, g.ubDifficultyLevel)
+	EXTR_BOOL( d, g.fTurnTimeLimit)
+	EXTR_BOOL( d, g.fIronManMode)
+	EXTR_SKIP( d, 7)
+	Assert(d == data + 12);
+	return d;
+}
+
+
+static BYTE* InjectGameOptions(BYTE* const data, GAME_OPTIONS const& g)
+{
+	BYTE* d = data;
+	INJ_BOOL( d, g.fGunNut)
+	INJ_BOOL( d, g.fSciFi)
+	INJ_U8(   d, g.ubDifficultyLevel)
+	INJ_BOOL( d, g.fTurnTimeLimit)
+	INJ_BOOL( d, g.fIronManMode)
+	INJ_SKIP( d, 7)
+	Assert(d == data + 12);
+	return d;
+}
+
+
 static UINT32 CalcJA2EncryptionSet(SAVED_GAME_HEADER* pSaveGameHeader);
 static void PauseBeforeSaveGame(void);
 static void UnPauseAfterSaveGame(void);
@@ -319,7 +347,36 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 		//
 		// Save the Save Game header file
 		//
-		FileWrite(f, &SaveGameHeader, sizeof(SAVED_GAME_HEADER));
+		BYTE                     data[688];
+		BYTE*                    d = data;
+		SAVED_GAME_HEADER const& h = SaveGameHeader;
+		INJ_U32(   d, h.uiSavedGameVersion)
+		INJ_STR(   d, h.zGameVersionNumber, lengthof(h.zGameVersionNumber))
+	#ifdef _WIN32 // XXX HACK000A
+		INJ_WSTR16(d, h.sSavedGameDesc, lengthof(h.sSavedGameDesc))
+	#else
+		INJ_WSTR32(d, h.sSavedGameDesc, lengthof(h.sSavedGameDesc))
+	#endif
+		INJ_SKIP(  d, 4)
+		INJ_U32(   d, h.uiDay)
+		INJ_U8(    d, h.ubHour)
+		INJ_U8(    d, h.ubMin)
+		INJ_I16(   d, h.sSectorX)
+		INJ_I16(   d, h.sSectorY)
+		INJ_I8(    d, h.bSectorZ)
+		INJ_U8(    d, h.ubNumOfMercsOnPlayersTeam)
+		INJ_I32(   d, h.iCurrentBalance)
+		INJ_U32(   d, h.uiCurrentScreen)
+		INJ_BOOL(  d, h.fAlternateSector)
+		INJ_BOOL(  d, h.fWorldLoaded)
+		INJ_U8(    d, h.ubLoadScreenID)
+		d = InjectGameOptions(d, h.sInitialGameOptions);
+		INJ_SKIP(  d, 1)
+		INJ_U32(   d, h.uiRandom)
+		INJ_SKIP(  d, 112)
+		Assert(d == endof(data));
+
+		FileWrite(f, data, sizeof(data));
 		SaveGameFilePosition(ubSaveGameID, f, "Save Game Header");
 
 		guiJA2EncryptionSet = CalcJA2EncryptionSet( &SaveGameHeader );
@@ -551,6 +608,40 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 }
 
 
+void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h)
+{
+	BYTE data[688];
+	FileRead(f, data, sizeof(data));
+
+	BYTE const* d = data;
+	EXTR_U32(   d, h.uiSavedGameVersion)
+	EXTR_STR(   d, h.zGameVersionNumber, lengthof(h.zGameVersionNumber))
+#ifdef _WIN32 // XXX HACK000A
+	EXTR_WSTR16(d, h.sSavedGameDesc, lengthof(h.sSavedGameDesc))
+#else
+	EXTR_WSTR32(d, h.sSavedGameDesc, lengthof(h.sSavedGameDesc))
+#endif
+	EXTR_SKIP(  d, 4)
+	EXTR_U32(   d, h.uiDay)
+	EXTR_U8(    d, h.ubHour)
+	EXTR_U8(    d, h.ubMin)
+	EXTR_I16(   d, h.sSectorX)
+	EXTR_I16(   d, h.sSectorY)
+	EXTR_I8(    d, h.bSectorZ)
+	EXTR_U8(    d, h.ubNumOfMercsOnPlayersTeam)
+	EXTR_I32(   d, h.iCurrentBalance)
+	EXTR_U32(   d, h.uiCurrentScreen)
+	EXTR_BOOL(  d, h.fAlternateSector)
+	EXTR_BOOL(  d, h.fWorldLoaded)
+	EXTR_U8(    d, h.ubLoadScreenID)
+	d = ExtractGameOptions(d, h.sInitialGameOptions);
+	EXTR_SKIP(  d, 1)
+	EXTR_U32(   d, h.uiRandom)
+	EXTR_SKIP(  d, 112)
+	Assert(d == endof(data));
+}
+
+
 UINT32 guiBrokenSaveGameVersion = 0;
 
 
@@ -626,8 +717,7 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		AutoSGPFile f(FileOpen(zSaveGameName, FILE_ACCESS_READ));
 		LoadGameFilePosition(save_slot_id, f, "Just Opened File");
 
-		//Load the Save Game header file
-		FileRead(f, &SaveGameHeader, sizeof(SAVED_GAME_HEADER));
+		ExtractSavedGameHeaderFromFile(f, SaveGameHeader);
 		LoadGameFilePosition(save_slot_id, f, "Save Game Header");
 
 		guiJA2EncryptionSet = CalcJA2EncryptionSet(&SaveGameHeader);
@@ -2004,13 +2094,7 @@ static void SaveGeneralInfo(HWFILE const f)
 	INJ_SKIP( d, 1)
 	INJ_BOOL( d, gfSkyriderSaidCongratsOnTakingSAM)
 	INJ_I16(  d, pContractReHireSoldier ? pContractReHireSoldier->ubID : -1)
-	GAME_OPTIONS const& g = gGameOptions;
-	INJ_BOOL( d, g.fGunNut)
-	INJ_BOOL( d, g.fSciFi)
-	INJ_U8(   d, g.ubDifficultyLevel)
-	INJ_BOOL( d, g.fTurnTimeLimit)
-	INJ_BOOL( d, g.fIronManMode)
-	INJ_SKIP( d, 7)
+	d = InjectGameOptions(d, gGameOptions);
 #ifdef JA2BETAVERSION
 	// Everytime we save get, and set a seed value, when reload, seed again
 	UINT32 const seed = GetJA2Clock();
@@ -2154,13 +2238,7 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	INT16 contract_rehire_soldier;
 	EXTR_I16(  d, contract_rehire_soldier)
 	pContractReHireSoldier = contract_rehire_soldier != -1 ? GetMan(contract_rehire_soldier) : 0;
-	GAME_OPTIONS& g = gGameOptions;
-	EXTR_BOOL( d, g.fGunNut)
-	EXTR_BOOL( d, g.fSciFi)
-	EXTR_U8(   d, g.ubDifficultyLevel)
-	EXTR_BOOL( d, g.fTurnTimeLimit)
-	EXTR_BOOL( d, g.fIronManMode)
-	EXTR_SKIP( d, 7)
+	d = ExtractGameOptions(d, gGameOptions);
 #ifdef JA2BETAVERSION
 	// Everytime we save get, and set a seed value, when reload, seed again
 	UINT32 seed;
