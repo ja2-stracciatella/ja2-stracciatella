@@ -1721,41 +1721,35 @@ void LoadFilesFromSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 }
 
 
-static void SaveTacticalStatusToSavedGame(HWFILE const hFile)
+static void SaveTacticalStatusToSavedGame(HWFILE const f)
 {
-	InjectTacticalStatusTypeIntoFile(hFile);
+	InjectTacticalStatusTypeIntoFile(f);
 
-	//
-	//Save the current sector location to the saved game file
-	//
+	// Save the current sector location
+	BYTE  data[5];
+	BYTE* d = data;
+	INJ_I16(d, gWorldSectorX)
+	INJ_I16(d, gWorldSectorY)
+	INJ_I8( d, gbWorldSectorZ)
+	Assert(d == endof(data));
 
-	// save gWorldSectorX
-	FileWrite(hFile, &gWorldSectorX, sizeof(gWorldSectorX));
-
-	// save gWorldSectorY
-	FileWrite(hFile, &gWorldSectorY, sizeof(gWorldSectorY));
-
-	// save gbWorldSectorZ
-	FileWrite(hFile, &gbWorldSectorZ, sizeof(gbWorldSectorZ));
+	FileWrite(f, data, sizeof(data));
 }
 
 
-static void LoadTacticalStatusFromSavedGame(HWFILE const hFile)
+static void LoadTacticalStatusFromSavedGame(HWFILE const f)
 {
-	ExtractTacticalStatusTypeFromFile(hFile);
+	ExtractTacticalStatusTypeFromFile(f);
 
-	//
-	//Load the current sector location to the saved game file
-	//
+	// Load the current sector location
+	BYTE data[5];
+	FileRead(f, data, sizeof(data));
 
-	// Load gWorldSectorX
-	FileRead(hFile, &gWorldSectorX, sizeof(gWorldSectorX));
-
-	// Load gWorldSectorY
-	FileRead(hFile, &gWorldSectorY, sizeof(gWorldSectorY));
-
-	// Load gbWorldSectorZ
-	FileRead(hFile, &gbWorldSectorZ, sizeof(gbWorldSectorZ));
+	BYTE const* d = data;
+	EXTR_I16(d, gWorldSectorX)
+	EXTR_I16(d, gWorldSectorY)
+	EXTR_I8( d, gbWorldSectorZ)
+	Assert(d == endof(data));
 }
 
 
