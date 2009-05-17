@@ -284,8 +284,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 		SaveGameHeader.uiSavedGameVersion = guiSavedGameVersion;
 		strcpy(SaveGameHeader.zGameVersionNumber, g_version_number);
 
-		SaveGameHeader.uiFlags;
-
 		//The following will be used to quickly access info to display in the save/load screen
 		SaveGameHeader.uiDay = GetWorldDay();
 		SaveGameHeader.ubHour = (UINT8)GetWorldHour();
@@ -2745,9 +2743,7 @@ static UINT32 CalcJA2EncryptionSet(SAVED_GAME_HEADER* pSaveGameHeader)
 {
 	UINT32	uiEncryptionSet = 0;
 
-	uiEncryptionSet = pSaveGameHeader->uiSavedGameVersion;
-	uiEncryptionSet *= pSaveGameHeader->uiFlags;
-	uiEncryptionSet += pSaveGameHeader->iCurrentBalance;
+	uiEncryptionSet  = pSaveGameHeader->iCurrentBalance;
 	uiEncryptionSet *= (pSaveGameHeader->ubNumOfMercsOnPlayersTeam + 1);
 	uiEncryptionSet += pSaveGameHeader->bSectorZ * 3;
 	uiEncryptionSet += pSaveGameHeader->ubLoadScreenID;
