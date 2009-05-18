@@ -20,9 +20,9 @@ size_t strlcpy(char* dst, const char* src, size_t size);
 #include <stdarg.h>
 
 
-void WINsnprintf(char* s, size_t n, const char* format, ...);
-void WINswprintf(wchar_t* s, size_t n, const wchar_t* format, ...);
-void WINvswprintf(wchar_t* s, size_t n, const wchar_t* format, va_list arg);
+int WINsnprintf(char* s, size_t n, const char* fmt, ...);
+int WINswprintf(wchar_t* s, size_t n, const wchar_t* fmt, ...);
+int WINvswprintf(wchar_t* s, size_t n, const wchar_t* fmt, va_list arg);
 
 #define snprintf  WINsnprintf
 #define swprintf  WINswprintf

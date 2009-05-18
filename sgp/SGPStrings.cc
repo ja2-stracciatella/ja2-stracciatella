@@ -121,29 +121,32 @@ strlcpy(char *dst, const char *src, size_t siz)
 
 #ifdef _WIN32
 
-void WINsnprintf(char* s, size_t n, const char* format, ...)
+int WINsnprintf(char* const s, size_t const n, const char* const fmt, ...)
 {
 	va_list arg;
-	va_start(arg, format);
-	_vsnprintf(s, n, format, arg);
+	va_start(arg, fmt);
+	int const ret = _vsnprintf(s, n, fmt, arg);
 	va_end(arg);
-	if (n != 0) s[n - 1] = '\0'; // _snprintf() does not guarantee NUL termination
+	if (n != 0) s[n - 1] = '\0'; // _vsnprintf() does not guarantee NUL termination
+	return ret;
 }
 
 
-void WINswprintf(wchar_t* s, size_t n, const wchar_t* format, ...)
+int WINswprintf(wchar_t* const s, size_t const n, const wchar_t* const fmt, ...)
 {
 	va_list arg;
-	va_start(arg, format);
-	WINvswprintf(s, n, format, arg);
+	va_start(arg, fmt);
+	int const ret = WINvswprintf(s, n, fmt, arg);
 	va_end(arg);
+	return ret;
 }
 
 
-void WINvswprintf(wchar_t* s, size_t n, const wchar_t* format, va_list arg)
+int WINvswprintf(wchar_t* const s, size_t const n, const wchar_t* const fmt, va_list const arg)
 {
-	_vsnwprintf(s, n, format, arg);
+	int const ret = _vsnwprintf(s, n, fmt, arg);
 	if (n != 0) s[n - 1] = L'\0'; // _vsnwprintf() does not guarantee NUL termination
+	return ret;
 }
 
 #endif
