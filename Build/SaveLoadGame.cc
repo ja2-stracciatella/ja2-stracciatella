@@ -642,9 +642,6 @@ void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h)
 }
 
 
-UINT32 guiBrokenSaveGameVersion = 0;
-
-
 static void HandleOldBobbyRMailOrders(void);
 static void LoadGeneralInfo(HWFILE, UINT32 savegame_version);
 static void LoadMeanwhileDefsFromSaveGameFile(HWFILE, UINT32 savegame_version);
@@ -723,7 +720,6 @@ BOOLEAN LoadSavedGame(UINT8 const save_slot_id)
 		guiJA2EncryptionSet = CalcJA2EncryptionSet(&SaveGameHeader);
 
 		version = SaveGameHeader.uiSavedGameVersion;
-		guiBrokenSaveGameVersion = version;
 
 		/* If the player is loading up an older version of the game and the person
 		 * DOESN'T have the cheats on. */

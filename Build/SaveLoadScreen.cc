@@ -45,9 +45,6 @@
 #endif
 
 
-BOOLEAN gfSchedulesHosed = FALSE;
-
-
 #define		SAVE_LOAD_TITLE_FONT								FONT14ARIAL
 #define		SAVE_LOAD_TITLE_COLOR								FONT_MCOLOR_WHITE
 
@@ -1535,19 +1532,11 @@ static void DoneFadeOutForSaveLoadScreen(void)
 
 	if (!LoadSavedGame(gbSelectedSaveLocation))
 	{
-		if (guiBrokenSaveGameVersion < 95 && !gfSchedulesHosed)
-		{ // Hack problem with schedules getting misaligned.
-			gfSchedulesHosed = TRUE;
-			bool const success = LoadSavedGame(gbSelectedSaveLocation);
-			gfSchedulesHosed = FALSE;
-			if (success) goto SUCCESSFULLY_CORRECTED_SAVE;
-		}
 		DoSaveLoadMessageBox(zSaveLoadText[SLG_LOAD_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack);
 		NextLoopCheckForEnoughFreeHardDriveSpace();
 	}
 	else
 	{
-SUCCESSFULLY_CORRECTED_SAVE:
 #ifdef JA2BETAVERSION
 		ValidateSoldierInitLinks(1);
 #endif

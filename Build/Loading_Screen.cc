@@ -202,7 +202,6 @@ LoadingScreenID GetLoadScreenID(INT16 const sSectorX, INT16 const sSectorY, INT8
 	}
 }
 
-extern BOOLEAN gfSchedulesHosed;
 
 //sets up the loadscreen with specified ID, and draws it to the FRAME_BUFFER,
 //and refreshing the screen with it.
@@ -267,13 +266,7 @@ void DisplayLoadScreenWithID(LoadingScreenID const ubLoadScreenID)
 #endif
 	}
 
-	if( gfSchedulesHosed )
-	{
-		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
-		FRAME_BUFFER->Fill(0);
-		MPrint(5, 5, L"Error loading save, attempting to patch save to version 1.02...");
-	}
-	else try // Blit the background image
+	try // Blit the background image
 	{
 		BltVideoSurfaceOnce(FRAME_BUFFER, ImageFile, 0, 0);
 	}

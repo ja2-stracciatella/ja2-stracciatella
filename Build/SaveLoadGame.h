@@ -70,7 +70,6 @@ extern UINT32 guiLastSaveGameNum;
 INT8		GetNumberForAutoSave( BOOLEAN fLatestAutoSave );
 
 extern UINT32 guiJA2EncryptionSet;
-extern UINT32 guiBrokenSaveGameVersion;
 
 extern BOOLEAN gfUseConsecutiveQuickSaveSlots;
 

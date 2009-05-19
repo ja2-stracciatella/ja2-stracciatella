@@ -383,9 +383,6 @@ void LoadSchedules(INT8** const hBuffer)
 }
 
 
-extern BOOLEAN gfSchedulesHosed;
-
-
 void LoadSchedulesFromSave(HWFILE const f)
 {
 	UINT8 n_schedules_saved;
@@ -393,7 +390,6 @@ void LoadSchedulesFromSave(HWFILE const f)
 
 	// Hack problem with schedules getting misaligned.
 	UINT32 n_schedules = n_schedules_saved;
-	if (gfSchedulesHosed) n_schedules += 256;
 
 	gubScheduleID = 1;
 	SCHEDULENODE** anchor = &gpScheduleList;
