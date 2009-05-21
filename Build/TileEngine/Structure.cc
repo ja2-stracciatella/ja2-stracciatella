@@ -208,17 +208,14 @@ void FreeStructureFileRef(STRUCTURE_FILE_REF* pFileRef)
 
 }
 
-void FreeAllStructureFiles( void )
-{ // Frees all of the structure database!
-	STRUCTURE_FILE_REF *	pFileRef;
-	STRUCTURE_FILE_REF *	pNextRef;
 
-	pFileRef = gpStructureFileRefs;
-	while( pFileRef != NULL )
+void FreeAllStructureFiles()
+{ // Free all of the structure database
+	STRUCTURE_FILE_REF* next;
+	for (STRUCTURE_FILE_REF* i = gpStructureFileRefs; i; i = next)
 	{
-		pNextRef = pFileRef->pNext;
-		FreeStructureFileRef( pFileRef );
-		pFileRef = pNextRef;
+		next = i->pNext;
+		FreeStructureFileRef(i);
 	}
 }
 
