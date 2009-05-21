@@ -201,19 +201,14 @@ void RemoveCachedTile(INT32 const cached_tile)
 }
 
 
-static STRUCTURE_FILE_REF* GetCachedTileStructureRef(INT32 iIndex)
+static STRUCTURE_FILE_REF* GetCachedTileStructureRef(INT32 const idx)
 {
-	if ( iIndex == -1 )
-	{
-		return( NULL );
-	}
+	if (idx == -1) return 0;
 
-	if ( gpTileCache[ iIndex ].sStructRefID == -1 )
-	{
-		return( NULL );
-	}
+	INT16 const struct_ref_id = gpTileCache[idx].sStructRefID;
+	if (struct_ref_id == -1) return 0;
 
-	return( gpTileCacheStructInfo[ gpTileCache[ iIndex ].sStructRefID ].pStructureFileRef );
+	return gpTileCacheStructInfo[struct_ref_id].pStructureFileRef;
 }
 
 
