@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "HImage.h"
 #include "Structure.h"
 #include "TileDef.h"
@@ -180,33 +182,22 @@ INT32 GetCachedTile(const char* const filename)
 }
 
 
-BOOLEAN RemoveCachedTile( INT32 iCachedTile )
+void RemoveCachedTile(INT32 const cached_tile)
 {
-	UINT32			cnt;
-
-	// Find tile
-	for ( cnt = 0; cnt < guiCurTileCacheSize; cnt++ )
+	if ((UINT32)cached_tile < guiCurTileCacheSize)
 	{
-		if ( gpTileCache[ cnt ].pImagery != NULL )
+		TILE_CACHE_ELEMENT& e = gpTileCache[cached_tile];
+		if (e.pImagery)
 		{
-			if ( cnt == (UINT32)iCachedTile )
-			{
-				 // Found surface, decrement hits
-				 gpTileCache[ cnt ].sHits--;
+			if (--e.sHits != 0) return;
 
-				 // Are we at zero?
-				 if ( gpTileCache[ cnt ].sHits == 0 )
-				 {
-						DeleteTileSurface( gpTileCache[ cnt ].pImagery );
-						gpTileCache[ cnt ].pImagery = NULL;
-						gpTileCache[ cnt ].sStructRefID = -1;
-						return TRUE;
-				 }
-			}
+			DeleteTileSurface(e.pImagery);
+			e.pImagery     =  0;
+			e.sStructRefID = -1;
+			return;
 		}
 	}
-
-	return( FALSE );
+	throw std::logic_error("Trying to remove invalid cached tile");
 }
 
 

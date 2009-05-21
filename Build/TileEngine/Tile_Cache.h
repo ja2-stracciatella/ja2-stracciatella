@@ -23,7 +23,7 @@ void InitTileCache(void);
 void DeleteTileCache(void);
 
 INT32 GetCachedTile(const char* cFilename);
-BOOLEAN RemoveCachedTile( INT32 iCachedTile );
+void  RemoveCachedTile(INT32 cached_tile);
 
 STRUCTURE_FILE_REF* GetCachedTileStructureRefFromFilename(const char* cFilename);
 
