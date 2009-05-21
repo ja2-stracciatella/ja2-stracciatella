@@ -212,19 +212,13 @@ static STRUCTURE_FILE_REF* GetCachedTileStructureRef(INT32 const idx)
 }
 
 
-STRUCTURE_FILE_REF* GetCachedTileStructureRefFromFilename(const char* cFilename)
+STRUCTURE_FILE_REF* GetCachedTileStructureRefFromFilename(char const* const filename)
 {
-	INT16 sStructDataIndex;
-
 	// Given filename, look for index
-	sStructDataIndex = FindCacheStructDataIndex( cFilename );
+	INT16 const struct_data_idx = FindCacheStructDataIndex(filename);
+	if (struct_data_idx == -1) return 0;
 
-	if ( sStructDataIndex == -1 )
-	{
-		return( NULL );
-	}
-
-	return( gpTileCacheStructInfo[ sStructDataIndex ].pStructureFileRef );
+	return gpTileCacheStructInfo[struct_data_idx].pStructureFileRef;
 }
 
 
