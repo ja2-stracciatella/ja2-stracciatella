@@ -3158,6 +3158,34 @@ SOLDIERTYPE* FindNextActiveSquad(SOLDIERTYPE* s)
 }
 
 
+static bool IsDestinationBlocked(GridNo const grid_no, INT8 const level, SOLDIERTYPE const& s)
+{
+	/* ATE: If we are trying to get a path to an exit grid, still allow this */
+	if (gfPlotPathToExitGrid) return false;
+
+	// Check obstruction in future
+	INT16 const desired_level = level == 0 ? STRUCTURE_ON_GROUND : STRUCTURE_ON_ROOF;
+	for (STRUCTURE* i = FindStructure(grid_no, STRUCTURE_BLOCKSMOVES); i; i = FindNextStructure(i, STRUCTURE_BLOCKSMOVES))
+	{
+		if (i->fFlags & STRUCTURE_PASSABLE) continue;
+
+		// Check if this is a multi-tile and check IDs with soldier's ID
+		if (i->fFlags & STRUCTURE_MOBILE        &&
+				s.uiStatusFlags & SOLDIER_MULTITILE &&
+				s.pLevelNode                        &&
+				s.pLevelNode->pStructureData        &&
+				s.pLevelNode->pStructureData->usStructureID == i->usStructureID)
+		{
+			continue;
+		}
+
+		if (i->sCubeOffset == desired_level) return true;
+	}
+
+	return false;
+}
+
+
 // NB if making changes don't forget to update NewOKDestinationAndDirection
 INT16 NewOKDestination(const SOLDIERTYPE* pCurrSoldier, INT16 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel)
 {
@@ -3217,49 +3245,9 @@ INT16 NewOKDestination(const SOLDIERTYPE* pCurrSoldier, INT16 sGridNo, BOOLEAN f
 		}
 		return FALSE;
 	}
-	else
-	{
-		// quick test
-		if (gpWorldLevelData[sGridNo].pStructureHead != NULL)
-		{
-			// Something is here, check obstruction in future
-			const INT16 sDesiredLevel = (bLevel == 0 ? STRUCTURE_ON_GROUND : STRUCTURE_ON_ROOF);
 
-			STRUCTURE* pStructure = FindStructure(sGridNo, STRUCTURE_BLOCKSMOVES);
+	if (IsDestinationBlocked(sGridNo, bLevel, *pCurrSoldier)) return FALSE;
 
-			/* ATE: If we are trying to get a path to an exit grid AND we are a
-			 * cave....still allow this.. */
-			//if ( pStructure && gfPlotPathToExitGrid && pStructure->fFlags & STRUCTURE_CAVEWALL )
-			if (pStructure && gfPlotPathToExitGrid)
-			{
-				pStructure = NULL;
-			}
-
-			while (pStructure != NULL)
-			{
-				if (!(pStructure->fFlags & STRUCTURE_PASSABLE))
-				{
-					// Check if this is a multi-tile and check IDs with soldier's ID
-					BOOLEAN fOKCheckStruct = TRUE;
-					if (pStructure->fFlags & STRUCTURE_MOBILE &&
-							pCurrSoldier->uiStatusFlags & SOLDIER_MULTITILE &&
-							pCurrSoldier->pLevelNode != NULL &&
-							pCurrSoldier->pLevelNode->pStructureData != NULL &&
-							pCurrSoldier->pLevelNode->pStructureData->usStructureID == pStructure->usStructureID)
-					{
-						fOKCheckStruct = FALSE;
-					}
-
-					if (fOKCheckStruct && pStructure->sCubeOffset == sDesiredLevel)
-					{
-						return FALSE;
-					}
-				}
-
-				pStructure = FindNextStructure(pStructure, STRUCTURE_BLOCKSMOVES);
-			}
-		}
-	}
 	return TRUE;
 }
 
@@ -3313,49 +3301,9 @@ static INT16 NewOKDestinationAndDirection(const SOLDIERTYPE* pCurrSoldier, INT16
 		}
 		return FALSE;
 	}
-	else
-	{
-		// quick test
-		if (gpWorldLevelData[sGridNo].pStructureHead != NULL)
-		{
-			// Something is here, check obstruction in future
-			const INT16 sDesiredLevel = (bLevel == 0 ? STRUCTURE_ON_GROUND : STRUCTURE_ON_ROOF);
 
-			STRUCTURE* pStructure = FindStructure(sGridNo, STRUCTURE_BLOCKSMOVES);
+	if (IsDestinationBlocked(sGridNo, bLevel, *pCurrSoldier)) return FALSE;
 
-			/* ATE: If we are trying to get a path to an exit grid AND we are a
-			 * cave....still allow this.. */
-			//if ( pStructure && gfPlotPathToExitGrid && pStructure->fFlags & STRUCTURE_CAVEWALL )
-			if (pStructure && gfPlotPathToExitGrid)
-			{
-				pStructure = NULL;
-			}
-
-			while (pStructure != NULL)
-			{
-				if (!(pStructure->fFlags & STRUCTURE_PASSABLE) )
-				{
-					// Check if this is a multi-tile and check IDs with soldier's ID
-					BOOLEAN fOKCheckStruct = TRUE;
-					if (pStructure->fFlags & STRUCTURE_MOBILE &&
-							pCurrSoldier->uiStatusFlags & SOLDIER_MULTITILE &&
-							pCurrSoldier->pLevelNode != NULL &&
-							pCurrSoldier->pLevelNode->pStructureData != NULL &&
-							pCurrSoldier->pLevelNode->pStructureData->usStructureID == pStructure->usStructureID)
-					{
-						fOKCheckStruct = FALSE;
-					}
-
-					if (fOKCheckStruct && pStructure->sCubeOffset == sDesiredLevel)
-					{
-						return FALSE;
-					}
-				}
-
-				pStructure = FindNextStructure(pStructure, STRUCTURE_BLOCKSMOVES);
-			}
-		}
-	}
 	return TRUE;
 }
 
