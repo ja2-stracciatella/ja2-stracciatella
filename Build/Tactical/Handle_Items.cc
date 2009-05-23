@@ -2514,46 +2514,29 @@ Changed because if the player gave 1 item from a pile, the rest of the items in 
 }
 
 
-
-INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+GridNo AdjustGridNoForItemPlacement(SOLDIERTYPE* const s, GridNo const grid_no)
 {
-	INT16				sDesiredLevel;
-	INT16				sActionGridNo;
-	BOOLEAN			fStructFound = FALSE;
-	INT16				sAdjustedGridNo;
-
-	sActionGridNo = sGridNo;
-
-	// Check structure database
-	// Something is here, check obstruction in future
-	sDesiredLevel = pSoldier->bLevel ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
-	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_BLOCKSMOVES)
+	// Check if destination is blocked
+	bool        struct_found  = false;
+	INT16 const desired_level = s->bLevel != 0 ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
+	FOR_ALL_STRUCTURES(i, grid_no, STRUCTURE_BLOCKSMOVES)
 	{
-		if( !(pStructure->fFlags & STRUCTURE_PASSABLE) && pStructure->sCubeOffset == sDesiredLevel )
-		{
-			// Check for openable flag....
-			//if ( pStructure->fFlags & ( STRUCTURE_OPENABLE | STRUCTURE_HASITEMONTOP ) )
-			{
-				fStructFound = TRUE;
-				break;
-			}
-		}
+		if (i->fFlags & STRUCTURE_PASSABLE)  continue;
+		if (i->sCubeOffset != desired_level) continue;
+		struct_found = true;
+		break;
 	}
 
-	// ATE: IF a person is found, use adjacent gridno for it!
-	const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, pSoldier->bLevel);
-	if (fStructFound || (tgt != NULL && tgt != pSoldier))
+	if (!struct_found)
 	{
-		// GET ADJACENT GRIDNO
-		sActionGridNo = FindAdjacentGridEx(pSoldier, sGridNo, NULL, &sAdjustedGridNo, FALSE, FALSE);
-
-		if ( sActionGridNo == -1 )
-		{
-			sActionGridNo = sAdjustedGridNo;
-		}
+		SOLDIERTYPE const* const tgt = WhoIsThere2(grid_no, s->bLevel);
+		if (!tgt || tgt == s) return grid_no;
 	}
 
-	return( sActionGridNo );
+	// If destination is blocked, use adjacent gridno
+	GridNo       adjusted_grid_no;
+	GridNo const action_grid_no = FindAdjacentGridEx(s, grid_no, 0, &adjusted_grid_no, FALSE, FALSE);
+	return action_grid_no != -1 ? action_grid_no : adjusted_grid_no;
 }
 
 

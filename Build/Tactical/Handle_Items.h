@@ -72,7 +72,7 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* pSoldier, INT32 iItemIndex, INT16 sGri
 INT32 AddItemToPool(INT16 sGridNo, OBJECTTYPE *pObject, Visibility, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel);
 INT32 InternalAddItemToPool(INT16* psGridNo, OBJECTTYPE* pObject, Visibility, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel);
 
-INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo );
+GridNo     AdjustGridNoForItemPlacement(SOLDIERTYPE*, GridNo);
 ITEM_POOL* GetItemPool(UINT16 usMapPos, UINT8 ubLevel);
 void       DrawItemPoolList(const ITEM_POOL* pItemPool, INT8 bZLevel, INT16 sXPos, INT16 sYPos);
 void       RemoveItemFromPool(WORLDITEM*);
