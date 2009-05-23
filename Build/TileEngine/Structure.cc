@@ -172,40 +172,27 @@ static UINT8 FilledTilePositions(DB_STRUCTURE_TILE* pTile)
 //
 namespace
 {
-
-void FreeStructureFileRef(STRUCTURE_FILE_REF* pFileRef)
-{ // Frees all of the memory associated with a file reference, including
-  // the file reference structure itself
-
-	UINT16										usLoop;
-
-	Assert( pFileRef != NULL );
-	if (pFileRef->pDBStructureRef != NULL)
+	/* Free all of the memory associated with a file reference, including the file
+	 * reference structure itself */
+	void FreeStructureFileRef(STRUCTURE_FILE_REF* const f)
 	{
-		for (usLoop = 0; usLoop < pFileRef->usNumberOfStructures; usLoop++)
+		if (DB_STRUCTURE_REF* const sr = f->pDBStructureRef)
 		{
-			if (pFileRef->pDBStructureRef[usLoop].ppTile)
+			DB_STRUCTURE_REF const* const end = sr + f->usNumberOfStructures;
+			for (DB_STRUCTURE_REF* i = sr; i != end; ++i)
 			{
-				MemFree( pFileRef->pDBStructureRef[usLoop].ppTile );
+				if (i->ppTile) MemFree(i->ppTile);
 			}
+			MemFree(sr);
 		}
-		MemFree( pFileRef->pDBStructureRef );
-	}
-	if (pFileRef->pubStructureData != NULL)
-	{
-		MemFree( pFileRef->pubStructureData );
-	}
-	if (pFileRef->pAuxData != NULL)
-	{
-		MemFree( pFileRef->pAuxData );
-		if (pFileRef->pTileLocData != NULL)
+		if (f->pubStructureData) MemFree(f->pubStructureData);
+		if (f->pAuxData)
 		{
-			MemFree( pFileRef->pTileLocData );
+			MemFree(f->pAuxData);
+			if (f->pTileLocData) MemFree(f->pTileLocData);
 		}
+		MemFree(f);
 	}
-	MemFree( pFileRef );
-}
-
 }
 
 
