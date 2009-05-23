@@ -338,18 +338,14 @@ static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32
 }
 
 
-STRUCTURE_FILE_REF* LoadStructureFile(const char* szFileName)
+STRUCTURE_FILE_REF* LoadStructureFile(char const* const filename)
 { // NB should be passed in expected number of structures so we can check equality
-	UINT32								uiDataSize = 0;
-
 	SGP::AutoObj<STRUCTURE_FILE_REF, FreeStructureFileRef> sfr(MALLOCZ(STRUCTURE_FILE_REF));
-	LoadStructureData(szFileName, sfr, &uiDataSize);
-	if (sfr->pubStructureData) CreateFileStructureArrays(sfr, uiDataSize);
+	UINT32 data_size = 0;
+	LoadStructureData(filename, sfr, &data_size);
+	if (sfr->pubStructureData) CreateFileStructureArrays(sfr, data_size);
 	// Add the file reference to the master list, at the head for convenience
-	if (gpStructureFileRefs != NULL)
-	{
-		gpStructureFileRefs->pPrev = sfr;
-	}
+	if (gpStructureFileRefs) gpStructureFileRefs->pPrev = sfr;
 	sfr->pNext = gpStructureFileRefs;
 	gpStructureFileRefs = sfr;
 	return sfr.Release();
