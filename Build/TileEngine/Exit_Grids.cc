@@ -87,35 +87,26 @@ BOOLEAN	ExitGridAtGridNo( UINT16 usMapIndex )
 }
 
 
-void AddExitGridToWorld( INT32 iMapIndex, EXITGRID *pExitGrid )
+void AddExitGridToWorld(INT32 const map_idx, EXITGRID* const xg)
 {
-	LEVELNODE *pShadow;
-	pShadow = gpWorldLevelData[ iMapIndex ].pShadowHead;
-
-	//Search through object layer for an exitgrid
-	while( pShadow )
+	// Search through object layer for an exitgrid
+	for (LEVELNODE* i = gpWorldLevelData[map_idx].pShadowHead; i; i = i->pNext)
 	{
-		if( pShadow->uiFlags & LEVELNODE_EXITGRID )
-		{ //we have found an existing exitgrid in this node, so replace it with the new information.
-			pShadow->iExitGridInfo = ConvertExitGridToINT32( pExitGrid );
-			return;
-		}
-		pShadow = pShadow->pNext;
+		if (!(i->uiFlags & LEVELNODE_EXITGRID)) continue;
+		// We have found an existing exitgrid in this node, so replace it with the new information.
+		i->iExitGridInfo = ConvertExitGridToINT32(xg);
+		return;
 	}
 
-	// Add levelnode
-	AddShadowToHead( iMapIndex, MOCKFLOOR1 );
-	// Get new node
-	pShadow = gpWorldLevelData[ iMapIndex ].pShadowHead;
+	LEVELNODE* const n = AddShadowToHead(map_idx, MOCKFLOOR1);
+	// Fill in the information for the new exitgrid levelnode.
+	n->iExitGridInfo  = ConvertExitGridToINT32(xg);
+	n->uiFlags       |= LEVELNODE_EXITGRID | LEVELNODE_HIDDEN;
 
-	//fill in the information for the new exitgrid levelnode.
-	pShadow->iExitGridInfo = ConvertExitGridToINT32( pExitGrid );
-	pShadow->uiFlags |= ( LEVELNODE_EXITGRID | LEVELNODE_HIDDEN );
-
-	//Add the exit grid to the sector, only if we call ApplyMapChangesToMapTempFile() first.
-	if( !gfEditMode && !gfLoadingExitGrids )
+	// Add the exit grid to the sector, only if we call ApplyMapChangesToMapTempFile() first.
+	if (!gfEditMode && !gfLoadingExitGrids)
 	{
-		AddExitGridToMapTempFile( (UINT16)iMapIndex, pExitGrid, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+		AddExitGridToMapTempFile(map_idx, xg, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 	}
 }
 
