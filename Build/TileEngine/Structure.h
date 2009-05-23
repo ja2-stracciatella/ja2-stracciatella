@@ -47,9 +47,9 @@ BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure );
 //
 
 // Finds a structure that matches any of the given flags
-STRUCTURE* FindStructure(INT16 sGridNo, UINT32 flags);
+STRUCTURE* FindStructure(INT16 sGridNo, StructureFlags);
 
-STRUCTURE* FindNextStructure(const STRUCTURE* s, UINT32 flags);
+STRUCTURE* FindNextStructure(const STRUCTURE* s, StructureFlags);
 STRUCTURE* FindStructureByID(INT16 sGridNo, UINT16 structure_id);
 
 #define FOR_ALL_STRUCTURES(iter, grid_no, flags) \
