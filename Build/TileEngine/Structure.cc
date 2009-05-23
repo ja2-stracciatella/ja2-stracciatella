@@ -2,6 +2,7 @@
 
 #include "Buffer.h"
 #include "HImage.h"
+#include "LoadSaveData.h"
 #include "Soldier_Control.h"
 #include "Types.h"
 #include "VObject.h"
@@ -222,21 +223,6 @@ void FreeStructureFile(STRUCTURE_FILE_REF* const sfr)
  * any structures that are not defined.
  * For image information, however, an array is stored with every entry filled
  * regardless of whether there is non-zero data defined for that graphic! */
-struct STRUCTURE_FILE_HEADER
-{
-	char szId[4];
-	union
-	{
-		UINT16 usNumberOfStructures;
-		UINT16 usNumberOfImages;
-	};
-	UINT16 usNumberOfStructuresStored;
-	UINT16 usStructureDataSize;
-	UINT8  fFlags;
-	UINT8  bUnused[3]; // XXX HACK000B
-	UINT16 usNumberOfImageTileLocsStored;
-};
-CASSERT(sizeof(STRUCTURE_FILE_HEADER) == 16)
 
 // "J2SD" = Jagged 2 Structure Data
 #define STRUCTURE_FILE_ID "J2SD"
@@ -244,40 +230,55 @@ CASSERT(sizeof(STRUCTURE_FILE_HEADER) == 16)
 
 
 // Loads a structure file's data as a honking chunk o' memory
-static void LoadStructureData(const char* const filename, STRUCTURE_FILE_REF* const sfr, UINT32* const structure_data_size)
+static void LoadStructureData(char const* const filename, STRUCTURE_FILE_REF* const sfr, UINT32* const structure_data_size)
 {
 	AutoSGPFile f(FileOpen(filename, FILE_ACCESS_READ));
 
-	STRUCTURE_FILE_HEADER header;
-	FileRead(f, &header, sizeof(STRUCTURE_FILE_HEADER));
-	if (strncmp(header.szId, STRUCTURE_FILE_ID, STRUCTURE_FILE_ID_LEN) != 0 ||
-			header.usNumberOfStructures == 0)
+	BYTE data[16];
+	FileRead(f, data, sizeof(data));
+
+	char   id[4];
+	UINT16 n_structures;
+	UINT16 n_structures_stored;
+	UINT16 data_size;
+	UINT8  flags;
+	UINT16 n_tile_locs_stored;
+
+	BYTE const* d = data;
+	EXTR_STR(d, id, lengthof(id))
+	EXTR_U16(d, n_structures);
+	EXTR_U16( d, n_structures_stored)
+	EXTR_U16( d, data_size)
+	EXTR_U8(  d, flags)
+	EXTR_SKIP(d, 3)
+	EXTR_U16( d, n_tile_locs_stored)
+	Assert(d == endof(data));
+
+	if (strncmp(id, STRUCTURE_FILE_ID, STRUCTURE_FILE_ID_LEN) != 0 ||
+			n_structures == 0)
 	{
 		throw std::runtime_error("Failed to load structure file, because header is invalid");
 	}
 
 	SGP::Buffer<AuxObjectData> aux_data;
 	SGP::Buffer<RelTileLoc>    tile_loc_data;
-	sfr->usNumberOfStructures = header.usNumberOfStructures;
-	if (header.fFlags & STRUCTURE_FILE_CONTAINS_AUXIMAGEDATA)
+	sfr->usNumberOfStructures = n_structures;
+	if (flags & STRUCTURE_FILE_CONTAINS_AUXIMAGEDATA)
 	{
-		const UINT16 n_images = header.usNumberOfImages;
-		aux_data.Allocate(n_images);
-		FileRead(f, aux_data, sizeof(*aux_data) * n_images);
+		aux_data.Allocate(n_structures);
+		FileRead(f, aux_data, sizeof(*aux_data) * n_structures);
 
-		const UINT16 n_tile_locs = header.usNumberOfImageTileLocsStored;
-		if (n_tile_locs > 0)
+		if (n_tile_locs_stored > 0)
 		{
-			tile_loc_data.Allocate(n_tile_locs);
-			FileRead(f, tile_loc_data, sizeof(*tile_loc_data) * n_tile_locs);
+			tile_loc_data.Allocate(n_tile_locs_stored);
+			FileRead(f, tile_loc_data, sizeof(*tile_loc_data) * n_tile_locs_stored);
 		}
 	}
 
 	SGP::Buffer<UINT8> structure_data;
-	if (header.fFlags & STRUCTURE_FILE_CONTAINS_STRUCTUREDATA)
+	if (flags & STRUCTURE_FILE_CONTAINS_STRUCTUREDATA)
 	{
-		sfr->usNumberOfStructuresStored = header.usNumberOfStructuresStored;
-		const UINT16 data_size = header.usStructureDataSize;
+		sfr->usNumberOfStructuresStored = n_structures_stored;
 		structure_data.Allocate(data_size);
 		FileRead(f, structure_data, data_size);
 
