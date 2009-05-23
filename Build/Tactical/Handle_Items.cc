@@ -1535,7 +1535,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, Vi
 	{
 		// Something is here, check obstruction in future
 		const INT16 sDesiredLevel = ubLevel ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
-		for (STRUCTURE* pStructure = FindStructure(sNewGridNo, STRUCTURE_BLOCKSMOVES); pStructure; pStructure = FindNextStructure(pStructure, STRUCTURE_BLOCKSMOVES))
+		FOR_ALL_STRUCTURES(pStructure, sNewGridNo, STRUCTURE_BLOCKSMOVES)
 		{
 			if (pStructure->fFlags & (STRUCTURE_PERSON | STRUCTURE_CORPSE)) continue;
 			if (pStructure->sCubeOffset != sDesiredLevel) continue;
@@ -2517,7 +2517,6 @@ Changed because if the player gave 1 item from a pile, the rest of the items in 
 
 INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
-	STRUCTURE		*pStructure;
 	INT16				sDesiredLevel;
 	INT16				sActionGridNo;
 	BOOLEAN			fStructFound = FALSE;
@@ -2526,23 +2525,18 @@ INT16 AdjustGridNoForItemPlacement( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	sActionGridNo = sGridNo;
 
 	// Check structure database
-	if( gpWorldLevelData[ sGridNo ].pStructureHead )
+	// Something is here, check obstruction in future
+	sDesiredLevel = pSoldier->bLevel ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
+	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_BLOCKSMOVES)
 	{
-		// Something is here, check obstruction in future
-		sDesiredLevel = pSoldier->bLevel ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
-		pStructure = FindStructure( (INT16)sGridNo, STRUCTURE_BLOCKSMOVES );
-		while( pStructure )
+		if( !(pStructure->fFlags & STRUCTURE_PASSABLE) && pStructure->sCubeOffset == sDesiredLevel )
 		{
-			if( !(pStructure->fFlags & STRUCTURE_PASSABLE) && pStructure->sCubeOffset == sDesiredLevel )
+			// Check for openable flag....
+			//if ( pStructure->fFlags & ( STRUCTURE_OPENABLE | STRUCTURE_HASITEMONTOP ) )
 			{
-				// Check for openable flag....
-				//if ( pStructure->fFlags & ( STRUCTURE_OPENABLE | STRUCTURE_HASITEMONTOP ) )
-				{
-					fStructFound = TRUE;
-					break;
-				}
+				fStructFound = TRUE;
+				break;
 			}
-			pStructure = FindNextStructure( pStructure, STRUCTURE_BLOCKSMOVES );
 		}
 	}
 

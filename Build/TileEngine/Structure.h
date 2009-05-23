@@ -52,6 +52,9 @@ STRUCTURE* FindStructure(INT16 sGridNo, UINT32 flags);
 STRUCTURE* FindNextStructure(const STRUCTURE* s, UINT32 flags);
 STRUCTURE* FindStructureByID(INT16 sGridNo, UINT16 structure_id);
 
+#define FOR_ALL_STRUCTURES(iter, grid_no, flags) \
+	for (STRUCTURE* iter = FindStructure((grid_no), (flags)); iter; iter = FindNextStructure(iter, (flags)))
+
 // Finds the base structure for any structure
 STRUCTURE* FindBaseStructure(STRUCTURE* s);
 

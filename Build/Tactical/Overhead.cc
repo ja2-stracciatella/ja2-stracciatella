@@ -3165,7 +3165,7 @@ static bool IsDestinationBlocked(GridNo const grid_no, INT8 const level, SOLDIER
 
 	// Check obstruction in future
 	INT16 const desired_level = level == 0 ? STRUCTURE_ON_GROUND : STRUCTURE_ON_ROOF;
-	for (STRUCTURE* i = FindStructure(grid_no, STRUCTURE_BLOCKSMOVES); i; i = FindNextStructure(i, STRUCTURE_BLOCKSMOVES))
+	FOR_ALL_STRUCTURES(i, grid_no, STRUCTURE_BLOCKSMOVES)
 	{
 		if (i->fFlags & STRUCTURE_PASSABLE) continue;
 
@@ -3333,7 +3333,6 @@ BOOLEAN FlatRoofAboveGridNo(INT32 iMapIndex)
  * and I don't expect it to perform perfectly in all situations. */
 BOOLEAN IsLocationSittable( INT32 iMapIndex, BOOLEAN fOnRoof )
 {
-	STRUCTURE *pStructure;
 	INT16 sDesiredLevel;
 	if (WhoIsThere2(iMapIndex, 0) != NULL) return FALSE;
 	//Locations on roofs without a roof is not possible, so
@@ -3345,12 +3344,10 @@ BOOLEAN IsLocationSittable( INT32 iMapIndex, BOOLEAN fOnRoof )
 	{
 		// Something is here, check obstruction in future
 		sDesiredLevel = fOnRoof ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
-		pStructure = FindStructure( (INT16)iMapIndex, STRUCTURE_BLOCKSMOVES );
-		while( pStructure )
+		FOR_ALL_STRUCTURES(pStructure, (INT16)iMapIndex, STRUCTURE_BLOCKSMOVES)
 		{
 			if( !(pStructure->fFlags & STRUCTURE_PASSABLE) && pStructure->sCubeOffset == sDesiredLevel )
 				return FALSE;
-			pStructure = FindNextStructure( pStructure, STRUCTURE_BLOCKSMOVES );
 		}
 	}
 	return TRUE;
@@ -3359,7 +3356,6 @@ BOOLEAN IsLocationSittable( INT32 iMapIndex, BOOLEAN fOnRoof )
 
 BOOLEAN IsLocationSittableExcludingPeople( INT32 iMapIndex, BOOLEAN fOnRoof )
 {
-	STRUCTURE *pStructure;
 	INT16 sDesiredLevel;
 
 	//Locations on roofs without a roof is not possible, so
@@ -3371,12 +3367,10 @@ BOOLEAN IsLocationSittableExcludingPeople( INT32 iMapIndex, BOOLEAN fOnRoof )
 	{
 		// Something is here, check obstruction in future
 		sDesiredLevel = fOnRoof ? STRUCTURE_ON_ROOF : STRUCTURE_ON_GROUND;
-		pStructure = FindStructure( (INT16)iMapIndex, STRUCTURE_BLOCKSMOVES );
-		while( pStructure )
+		FOR_ALL_STRUCTURES(pStructure, (INT16)iMapIndex, STRUCTURE_BLOCKSMOVES)
 		{
 			if( !(pStructure->fFlags & STRUCTURE_PASSABLE) && pStructure->sCubeOffset == sDesiredLevel )
 				return FALSE;
-			pStructure = FindNextStructure( pStructure, STRUCTURE_BLOCKSMOVES );
 		}
 	}
 	return TRUE;

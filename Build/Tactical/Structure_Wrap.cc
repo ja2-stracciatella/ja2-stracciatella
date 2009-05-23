@@ -84,13 +84,11 @@ static LEVELNODE* IsWallPresentAtGridno(INT16 sGridNo)
 LEVELNODE	*GetWallLevelNodeAndStructOfSameOrientationAtGridno( INT16 sGridNo, INT8 ubOrientation, STRUCTURE **ppStructure )
 {
 	LEVELNODE *pNode = NULL;
-	STRUCTURE * pStructure, * pBaseStructure;
+	STRUCTURE* pBaseStructure;
 
 	(*ppStructure) = NULL;
 
-	pStructure = FindStructure( sGridNo, STRUCTURE_WALLSTUFF );
-
-	while ( pStructure != NULL )
+	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_WALLSTUFF)
 	{
 		// Check orientation
 		if ( pStructure->ubWallOrientation == ubOrientation )
@@ -103,7 +101,6 @@ LEVELNODE	*GetWallLevelNodeAndStructOfSameOrientationAtGridno( INT16 sGridNo, IN
 				return( pNode );
 			}
 		}
-		pStructure = FindNextStructure( pStructure, STRUCTURE_WALLSTUFF );
 	}
 
 	return( NULL );
@@ -170,20 +167,13 @@ BOOLEAN IsDoorVisibleAtGridNo( INT16 sGridNo )
 BOOLEAN	WallExistsOfTopLeftOrientation( INT16 sGridNo )
 {
 	// CJC: changing to search only for normal walls, July 16, 1998
-	STRUCTURE * pStructure;
-
-	pStructure = FindStructure( sGridNo, STRUCTURE_WALL );
-
-	while ( pStructure != NULL )
+	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_WALL)
 	{
 		// Check orientation
 		if ( pStructure->ubWallOrientation == INSIDE_TOP_LEFT || pStructure->ubWallOrientation == OUTSIDE_TOP_LEFT )
 		{
 			return( TRUE );
 		}
-
-		pStructure = FindNextStructure( pStructure, STRUCTURE_WALL );
-
 	}
 
 	return( FALSE );
@@ -192,20 +182,13 @@ BOOLEAN	WallExistsOfTopLeftOrientation( INT16 sGridNo )
 BOOLEAN	WallExistsOfTopRightOrientation( INT16 sGridNo )
 {
 	// CJC: changing to search only for normal walls, July 16, 1998
-	STRUCTURE * pStructure;
-
-	pStructure = FindStructure( sGridNo, STRUCTURE_WALL );
-
-	while ( pStructure != NULL )
+	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_WALL)
 	{
 		// Check orientation
 		if ( pStructure->ubWallOrientation == INSIDE_TOP_RIGHT || pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT )
 		{
 			return( TRUE );
 		}
-
-		pStructure = FindNextStructure( pStructure, STRUCTURE_WALL );
-
 	}
 
 	return( FALSE );
@@ -213,11 +196,7 @@ BOOLEAN	WallExistsOfTopRightOrientation( INT16 sGridNo )
 
 BOOLEAN WallOrClosedDoorExistsOfTopLeftOrientation( INT16 sGridNo )
 {
-	STRUCTURE * pStructure;
-
-	pStructure = FindStructure( sGridNo, STRUCTURE_WALLSTUFF );
-
-	while ( pStructure != NULL )
+	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_WALLSTUFF)
 	{
 		// skip it if it's an open door
 		if ( ! ( ( pStructure->fFlags & STRUCTURE_ANYDOOR ) && ( pStructure->fFlags & STRUCTURE_OPEN ) ) )
@@ -228,9 +207,6 @@ BOOLEAN WallOrClosedDoorExistsOfTopLeftOrientation( INT16 sGridNo )
 				return( TRUE );
 			}
 		}
-
-		pStructure = FindNextStructure( pStructure, STRUCTURE_WALLSTUFF );
-
 	}
 
 	return( FALSE );
@@ -238,11 +214,7 @@ BOOLEAN WallOrClosedDoorExistsOfTopLeftOrientation( INT16 sGridNo )
 
 BOOLEAN WallOrClosedDoorExistsOfTopRightOrientation( INT16 sGridNo )
 {
-	STRUCTURE * pStructure;
-
-	pStructure = FindStructure( sGridNo, STRUCTURE_WALLSTUFF );
-
-	while ( pStructure != NULL )
+	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_WALLSTUFF)
 	{
 		// skip it if it's an open door
 		if ( ! ( ( pStructure->fFlags & STRUCTURE_ANYDOOR ) && ( pStructure->fFlags & STRUCTURE_OPEN ) ) )
@@ -253,9 +225,6 @@ BOOLEAN WallOrClosedDoorExistsOfTopRightOrientation( INT16 sGridNo )
 				return( TRUE );
 			}
 		}
-
-		pStructure = FindNextStructure( pStructure, STRUCTURE_WALLSTUFF );
-
 	}
 
 	return( FALSE );
@@ -263,12 +232,9 @@ BOOLEAN WallOrClosedDoorExistsOfTopRightOrientation( INT16 sGridNo )
 
 BOOLEAN OpenRightOrientedDoorWithDoorOnRightOfEdgeExists( INT16 sGridNo )
 {
-	STRUCTURE * pStructure;
-
-	pStructure = FindStructure( sGridNo, STRUCTURE_ANYDOOR );
-
-	while ( pStructure != NULL && (pStructure->fFlags & STRUCTURE_OPEN) )
+	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_ANYDOOR)
 	{
+		if (!(pStructure->fFlags & STRUCTURE_OPEN)) break;
 		// Check orientation
 		if ( pStructure->ubWallOrientation == INSIDE_TOP_RIGHT || pStructure->ubWallOrientation == OUTSIDE_TOP_RIGHT )
 		{
@@ -277,9 +243,6 @@ BOOLEAN OpenRightOrientedDoorWithDoorOnRightOfEdgeExists( INT16 sGridNo )
 				return( TRUE );
 			}
 		}
-
-		pStructure = FindNextStructure( pStructure, STRUCTURE_ANYDOOR );
-
 	}
 
 	return( FALSE );
@@ -287,12 +250,9 @@ BOOLEAN OpenRightOrientedDoorWithDoorOnRightOfEdgeExists( INT16 sGridNo )
 
 BOOLEAN OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists( INT16 sGridNo )
 {
-	STRUCTURE * pStructure;
-
-	pStructure = FindStructure( sGridNo, STRUCTURE_ANYDOOR );
-
-	while ( pStructure != NULL && (pStructure->fFlags & STRUCTURE_OPEN) )
+	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_ANYDOOR)
 	{
+		if (!(pStructure->fFlags & STRUCTURE_OPEN)) break;
 		// Check orientation
 		if ( pStructure->ubWallOrientation == INSIDE_TOP_LEFT || pStructure->ubWallOrientation == OUTSIDE_TOP_LEFT )
 		{
@@ -301,9 +261,6 @@ BOOLEAN OpenLeftOrientedDoorWithDoorOnLeftOfEdgeExists( INT16 sGridNo )
 				return( TRUE );
 			}
 		}
-
-		pStructure = FindNextStructure( pStructure, STRUCTURE_ANYDOOR );
-
 	}
 
 	return( FALSE );

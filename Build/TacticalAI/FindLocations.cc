@@ -2124,7 +2124,6 @@ INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo )
 
 	INT16		sGridNo, sClosestSpot = NOWHERE;
 	INT32		iDistance, iClosestDistance = 9999;
-	STRUCTURE * pStructure;
 
 	// set the distance limit of the square region
 	iSearchRange = 7;
@@ -2146,24 +2145,19 @@ INT16 FindNearestOpenableNonDoor( INT16 sStartGridNo )
 		{
 			// calculate the next potential gridno
 			sGridNo = sStartGridNo + sXOffset + (MAXCOL * sYOffset);
-			pStructure = FindStructure( sGridNo, STRUCTURE_OPENABLE );
-			if (pStructure)
+			FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_OPENABLE)
 			{
 				// skip any doors
-				while ( pStructure && ( pStructure->fFlags & STRUCTURE_ANYDOOR ) )
+				if (pStructure->fFlags & STRUCTURE_ANYDOOR) continue;
+
+				// we have found a valid non-door openable structure
+				iDistance = CardinalSpacesAway( sGridNo, sStartGridNo );
+				if ( iDistance < iClosestDistance )
 				{
-					pStructure = FindNextStructure( pStructure, STRUCTURE_OPENABLE );
+					sClosestSpot = sGridNo;
+					iClosestDistance = iDistance;
 				}
-				// if we still have a pointer, then we have found a valid non-door openable structure
-				if ( pStructure )
-				{
-					iDistance = CardinalSpacesAway( sGridNo, sStartGridNo );
-					if ( iDistance < iClosestDistance )
-					{
-						sClosestSpot = sGridNo;
-						iClosestDistance = iDistance;
-					}
-				}
+				break;
 			}
 		}
 	}
