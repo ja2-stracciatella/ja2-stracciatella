@@ -143,28 +143,22 @@ const UINT8 gubMaterialArmour[] =
 
 
 // Function operating on a structure tile
-static UINT8 FilledTilePositions(DB_STRUCTURE_TILE* pTile)
+static UINT8 FilledTilePositions(DB_STRUCTURE_TILE const* const t)
 {
-	UINT8				ubFilled = 0, ubShapeValue;
-	INT8				bLoopX, bLoopY, bLoopZ;
-
-	// Loop through all parts of a structure and add up the number of
-	// filled spots
-	for (bLoopX = 0; bLoopX < PROFILE_X_SIZE; bLoopX++)
+	// Loop through all parts of a structure and add up the number of filled spots
+	UINT8 filled = 0;
+	for (INT8 x = 0; x != PROFILE_X_SIZE; ++x)
 	{
-		for (bLoopY = 0; bLoopY < PROFILE_Y_SIZE; bLoopY++)
+		for (INT8 y = 0; y != PROFILE_Y_SIZE; ++y)
 		{
-			ubShapeValue = pTile->Shape[bLoopX][bLoopY];
-			for (bLoopZ = 0; bLoopZ < PROFILE_Z_SIZE; bLoopZ++)
+			UINT8 const shape_value = t->Shape[x][y];
+			for (INT8 z = 0; z != PROFILE_Z_SIZE; ++z)
 			{
-				if (ubShapeValue & AtHeight[bLoopZ])
-				{
-					ubFilled++;
-				}
+				if (shape_value & AtHeight[z]) ++filled;
 			}
 		}
 	}
-	return( ubFilled );
+	return filled;
 }
 
 //
