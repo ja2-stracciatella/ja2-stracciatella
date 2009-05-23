@@ -123,7 +123,7 @@ enum
 STRUCTURE		*FindStructureBySavedInfo( INT16 sGridNo, UINT8 ubType, UINT8 ubWallOrientation, INT8 bLevel );
 UINT8				StructureFlagToType( UINT32 uiFlag );
 
-SoundID GetStructureOpenSound(STRUCTURE*, BOOLEAN fClose);
+SoundID GetStructureOpenSound(STRUCTURE const*, bool closing);
 
 extern const UINT8 gubMaterialArmour[];
 

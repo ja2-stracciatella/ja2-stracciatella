@@ -1995,32 +1995,20 @@ STRUCTURE * FindStructureBySavedInfo( INT16 sGridNo, UINT8 ubType, UINT8 ubWallO
 }
 
 
-SoundID GetStructureOpenSound(STRUCTURE* const pStructure, BOOLEAN const fClose)
+SoundID GetStructureOpenSound(STRUCTURE const* const s, bool const closing)
 {
-  SoundID uiSoundID;
-  switch( pStructure->pDBStructureRef->pDBStructure->ubArmour )
+  SoundID sound_id;
+  switch (s->pDBStructureRef->pDBStructure->ubArmour)
   {
     case MATERIAL_LIGHT_METAL:
-    case MATERIAL_THICKER_METAL:
-
-      uiSoundID = OPEN_LOCKER;
-      break;
-
+    case MATERIAL_THICKER_METAL: sound_id = OPEN_LOCKER;           break;
     case MATERIAL_WOOD_WALL:
     case MATERIAL_PLYWOOD_WALL:
-    case MATERIAL_FURNITURE:
-
-      uiSoundID = OPEN_WOODEN_BOX;
-      break;
-
-    default:
-      uiSoundID = OPEN_DEFAULT_OPENABLE;
+    case MATERIAL_FURNITURE:     sound_id = OPEN_WOODEN_BOX;       break;
+    default:                     sound_id = OPEN_DEFAULT_OPENABLE; break;
   }
 
-  if ( fClose )
-  {
-    uiSoundID = static_cast<SoundID>(uiSoundID + 1);
-  }
+  if (closing) sound_id = static_cast<SoundID>(sound_id + 1);
 
-  return( uiSoundID );
+  return sound_id;
 }
