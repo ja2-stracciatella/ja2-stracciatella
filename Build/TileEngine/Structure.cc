@@ -1966,32 +1966,16 @@ UINT8 StructureFlagToType( UINT32 uiFlag )
 }
 
 
-static UINT32 StructureTypeToFlag(UINT8 ubType)
+STRUCTURE* FindStructureBySavedInfo(INT16 const grid_no, UINT8 const type, UINT8 const wall_orientation, INT8 const level)
 {
-	UINT32		uiFlag = 0x1;
-
-	uiFlag = uiFlag << ubType;
-	return( uiFlag );
-}
-
-STRUCTURE * FindStructureBySavedInfo( INT16 sGridNo, UINT8 ubType, UINT8 ubWallOrientation, INT8 bLevel )
-{
-	STRUCTURE *	pCurrent;
-	UINT32		uiTypeFlag;
-
-	uiTypeFlag = StructureTypeToFlag( ubType );
-
-	pCurrent =  gpWorldLevelData[sGridNo].pStructureHead;
-	while (pCurrent != NULL)
+	for (STRUCTURE* i = gpWorldLevelData[grid_no].pStructureHead; i; i = i->pNext)
 	{
-		if (pCurrent->fFlags & uiTypeFlag && pCurrent->ubWallOrientation == ubWallOrientation &&
-			( (bLevel == 0 && pCurrent->sCubeOffset == 0) || (bLevel > 0 && pCurrent->sCubeOffset > 0) ) )
-		{
-			return( pCurrent );
-		}
-		pCurrent = pCurrent->pNext;
+		if (!(i->fFlags & 1U << type))                continue;
+		if (i->ubWallOrientation != wall_orientation) continue;
+		if ((i->sCubeOffset == 0) != (level == 0))    continue;
+		return i;
 	}
-	return( NULL );
+	return 0;
 }
 
 

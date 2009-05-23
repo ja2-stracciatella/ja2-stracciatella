@@ -120,7 +120,7 @@ enum
 	NUM_MATERIAL_TYPES
 };
 
-STRUCTURE		*FindStructureBySavedInfo( INT16 sGridNo, UINT8 ubType, UINT8 ubWallOrientation, INT8 bLevel );
+STRUCTURE* FindStructureBySavedInfo(GridNo, UINT8 type, UINT8 wall_orientation, INT8 level);
 UINT8				StructureFlagToType( UINT32 uiFlag );
 
 SoundID GetStructureOpenSound(STRUCTURE const*, bool closing);
