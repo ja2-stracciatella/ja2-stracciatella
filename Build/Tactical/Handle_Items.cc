@@ -3208,32 +3208,32 @@ static void AddBlueFlag(INT16 sGridNo, INT8 bLevel)
 {
 	LEVELNODE *pNode;
 
-	ApplyMapChangesToMapTempFile( TRUE );
 	gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_PLAYER_MINE_PRESENT;
 
-  pNode = AddStructToTail( sGridNo, BLUEFLAG_GRAPHIC );
-	pNode->uiFlags |= LEVELNODE_SHOW_THROUGH;
+	{ ApplyMapChangesToMapTempFile app;
+		pNode = AddStructToTail( sGridNo, BLUEFLAG_GRAPHIC );
+		pNode->uiFlags |= LEVELNODE_SHOW_THROUGH;
+	}
 
-	ApplyMapChangesToMapTempFile( FALSE );
 	RecompileLocalMovementCostsFromRadius( sGridNo, bLevel );
 	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
 void RemoveBlueFlag( INT16 sGridNo, INT8 bLevel )
 {
-	ApplyMapChangesToMapTempFile( TRUE );
 	gpWorldLevelData[sGridNo].uiFlags &= ~(MAPELEMENT_PLAYER_MINE_PRESENT);
 
-  if ( bLevel == 0 )
-  {
-	  RemoveStruct( sGridNo, BLUEFLAG_GRAPHIC );
-  }
-  else
-  {
-    RemoveOnRoof( sGridNo, BLUEFLAG_GRAPHIC );
-  }
+	{ ApplyMapChangesToMapTempFile app;
+		if ( bLevel == 0 )
+		{
+			RemoveStruct( sGridNo, BLUEFLAG_GRAPHIC );
+		}
+		else
+		{
+			RemoveOnRoof( sGridNo, BLUEFLAG_GRAPHIC );
+		}
+	}
 
-	ApplyMapChangesToMapTempFile( FALSE );
 	RecompileLocalMovementCostsFromRadius( sGridNo, bLevel );
 	SetRenderFlags(RENDER_FLAG_FULL);
 }

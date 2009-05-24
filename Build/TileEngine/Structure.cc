@@ -922,19 +922,16 @@ try
 	{ // swap the graphics
 
 		// store removal of previous if necessary
-		if ( fStoreInMap )
+		if (fStoreInMap)
 		{
-			ApplyMapChangesToMapTempFile( TRUE );
-			RemoveStructFromMapTempFile( sGridNo, pLevelNode->usIndex );
+			ApplyMapChangesToMapTempFile app;
+			RemoveStructFromMapTempFile(sGridNo, pLevelNode->usIndex);
+			pLevelNode->usIndex += bDelta;
+			AddStructToMapTempFile(sGridNo, pLevelNode->usIndex);
 		}
-
-		pLevelNode->usIndex += bDelta;
-
-		// store removal of new one if necessary
-		if ( fStoreInMap )
+		else
 		{
-			AddStructToMapTempFile( sGridNo, pLevelNode->usIndex );
-			ApplyMapChangesToMapTempFile( FALSE );
+			pLevelNode->usIndex += bDelta;
 		}
 
 		if (pShadowNode != NULL)
@@ -1296,13 +1293,6 @@ BOOLEAN DamageStructure(STRUCTURE* const pStructure, UINT8 ubDamage, const UINT8
 
 			// Get LEVELNODE for struct and remove!
 			// pNode = FindLevelNodeBasedOnStructure( pBase->sGridNo, pBase );
-
-
-			//Set a flag indicating that the following changes are to go the the maps temp file
-			// ApplyMapChangesToMapTempFile( TRUE );
-			// Remove!
-			// RemoveStructFromLevelNode( pBase->sGridNo, pNode );
-			// ApplyMapChangesToMapTempFile( FALSE );
 
 			// Generate an explosion here!
 			IgniteExplosionXY(owner, sX, sY, 0, sGridNo, STRUCTURE_IGNITE, 0);

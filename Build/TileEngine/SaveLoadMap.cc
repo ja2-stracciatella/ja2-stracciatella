@@ -26,17 +26,13 @@
 
 extern BOOLEAN gfLoadingExitGrids;
 
-BOOLEAN			gfApplyChangesToTempFile = FALSE;
+
+bool ApplyMapChangesToMapTempFile::active_ = false;
+
 
 //  There are 3200 bytes, and each bit represents the revelaed status.
 //	3200 bytes * 8 bits = 25600 map elements
 UINT8				*gpRevealedMap;
-
-
-void	ApplyMapChangesToMapTempFile( BOOLEAN fAddToMap )
-{
-	gfApplyChangesToTempFile = fAddToMap;
-}
 
 
 static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
@@ -238,7 +234,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 
 static void AddToMapTempFile(UINT32 const uiMapIndex, UINT16 const usIndex, UINT8 const type)
 {
-	if (!gfApplyChangesToTempFile) return;
+	if (!ApplyMapChangesToMapTempFile::IsActive())    return;
 	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) return;
 
 	UINT32 const uiType     = GetTileType(usIndex);
@@ -583,9 +579,9 @@ void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, INT16 sSect
 {
 	MODIFY_MAP Map;
 
-	if( !gfApplyChangesToTempFile )
+	if (!ApplyMapChangesToMapTempFile::IsActive())
 	{
-		ScreenMsg( FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Called AddExitGridToMapTempFile() without calling ApplyMapChangesToMapTempFile()" );
+		ScreenMsg(FONT_MCOLOR_WHITE, MSG_BETAVERSION, L"Called AddExitGridToMapTempFile() without holding ApplyMapChangesToMapTempFile");
 		return;
 	}
 

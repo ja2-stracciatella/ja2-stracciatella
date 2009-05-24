@@ -23,9 +23,8 @@ BOOLEAN gfShowPits = FALSE;
 
 void Add3X3Pit( INT32 iMapIndex )
 {
+	ApplyMapChangesToMapTempFile app(!gfEditMode);
 	EXITGRID ExitGrid;
-	if( !gfEditMode )
-		ApplyMapChangesToMapTempFile( TRUE );
 	AddObjectToTail( iMapIndex + 159, REGWATERTEXTURE1 );
 	AddObjectToTail( iMapIndex -   1,	REGWATERTEXTURE2 );
 	AddObjectToTail( iMapIndex - 161, REGWATERTEXTURE3 );
@@ -54,15 +53,13 @@ void Add3X3Pit( INT32 iMapIndex )
 	}
 
 	MarkWorldDirty();
-	if( !gfEditMode )
-		ApplyMapChangesToMapTempFile( FALSE );
 }
+
 
 void Add5X5Pit( INT32 iMapIndex )
 {
+	ApplyMapChangesToMapTempFile app(!gfEditMode);
 	EXITGRID ExitGrid;
-	if( !gfEditMode )
-		ApplyMapChangesToMapTempFile( TRUE );
 	AddObjectToTail( iMapIndex + 318, REGWATERTEXTURE10 );
 	AddObjectToTail( iMapIndex + 158, REGWATERTEXTURE11 );
 	AddObjectToTail( iMapIndex -   2, REGWATERTEXTURE12 );
@@ -122,8 +119,6 @@ void Add5X5Pit( INT32 iMapIndex )
 		RecompileLocalMovementCostsFromRadius( (INT16)iMapIndex, 3 );
 	}
 	MarkWorldDirty();
-	if( !gfEditMode )
-		ApplyMapChangesToMapTempFile( FALSE );
 }
 
 void Remove3X3Pit( INT32 iMapIndex )

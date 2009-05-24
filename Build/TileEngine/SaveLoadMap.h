@@ -57,8 +57,22 @@ struct MODIFY_MAP
 };
 
 
-// Call this function, to set whether the map changes will be added to the  map temp file
-void	ApplyMapChangesToMapTempFile( BOOLEAN fAddToMap );
+// Use this as sentry, so map changes are added to the map temp file
+class ApplyMapChangesToMapTempFile
+{
+	public:
+		ApplyMapChangesToMapTempFile(bool const active = true)
+		{
+			active_ = active;
+		}
+
+		~ApplyMapChangesToMapTempFile() { active_ = false; }
+
+		static bool IsActive() { return active_; }
+
+	private:
+		static bool active_;
+};
 
 
 //Applies a change TO THE MAP TEMP file

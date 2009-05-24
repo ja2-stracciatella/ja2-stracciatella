@@ -308,16 +308,11 @@ static void HandleFencePartnerCheck(INT16 sStructGridNo)
 			// Get new index
 			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(uiFenceType, bFenceDestructionPartner);
 
-			//Set a flag indicating that the following changes are to go the the maps, temp file
-			ApplyMapChangesToMapTempFile( TRUE );
-
+			ApplyMapChangesToMapTempFile app;
 			// Remove it!
 			RemoveStructFromLevelNode( pFenceBaseStructure->sGridNo, pFenceNode );
-
 			// Add it!
 			AddStructToHead( pFenceBaseStructure->sGridNo, (UINT16)( usTileIndex ) );
-
-			ApplyMapChangesToMapTempFile( FALSE );
 		}
 	}
 }
@@ -465,12 +460,8 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 
 							if (TypeRangeExistsInObjectLayer(sStructGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
 							{
-								//Set a flag indicating that the following changes are to go the the maps, temp file
-								ApplyMapChangesToMapTempFile( TRUE );
-
+								ApplyMapChangesToMapTempFile app;
 								AddObjectToHead( sStructGridNo, (UINT16)(usTileIndex + Random( 3 ) ) );
-
-								ApplyMapChangesToMapTempFile( FALSE );
 							}
 						}
 					}
@@ -486,12 +477,8 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 									sStructGridNo = NewGridNo( pBase->sGridNo, DirectionInc( SOUTH ) );
 									if (TypeRangeExistsInObjectLayer(sStructGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
 									{
-										//Set a flag indicating that the following changes are to go the the maps, temp file
-										ApplyMapChangesToMapTempFile( TRUE );
-
+										ApplyMapChangesToMapTempFile app;
 										AddObjectToHead( sStructGridNo, (UINT16)(usTileIndex + Random( 3 ) ) );
-
-										ApplyMapChangesToMapTempFile( FALSE );
 									}
 									break;
 
@@ -501,12 +488,8 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 									sStructGridNo = NewGridNo( pBase->sGridNo, DirectionInc( EAST ) );
 									if (TypeRangeExistsInObjectLayer(sStructGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
 									{
-										//Set a flag indicating that the following changes are to go the the maps, temp file
-										ApplyMapChangesToMapTempFile( TRUE );
-
+										ApplyMapChangesToMapTempFile app;
 										AddObjectToHead( sStructGridNo, (UINT16)(usTileIndex + Random( 3 ) ) );
-
-										ApplyMapChangesToMapTempFile( FALSE );
 									}
 									break;
 						}
@@ -570,14 +553,9 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 									// Replace!
 									UINT16 sNewIndex = GetTileIndexFromTypeSubIndex(gTileDatabase[pNewNode->usIndex].fType, sSubIndex);
 
-									//Set a flag indicating that the following changes are to go the the maps temp file
-									ApplyMapChangesToMapTempFile( TRUE );
-
+									ApplyMapChangesToMapTempFile app;
 									RemoveStructFromLevelNode( sNewGridNo, pNewNode );
 									AddWallToStructLayer( sNewGridNo, sNewIndex, TRUE );
-
-									ApplyMapChangesToMapTempFile( FALSE );
-
 								}
 							}
 
@@ -594,13 +572,9 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 									// Replace!
 									UINT16 sNewIndex = GetTileIndexFromTypeSubIndex(gTileDatabase[pNewNode->usIndex].fType, sSubIndex);
 
-									//Set a flag indicating that the following changes are to go the the maps, temp file
-									ApplyMapChangesToMapTempFile( TRUE );
-
+									ApplyMapChangesToMapTempFile app;
 									RemoveStructFromLevelNode( sNewGridNo, pNewNode );
 									AddWallToStructLayer( sNewGridNo, sNewIndex, TRUE );
-
-									ApplyMapChangesToMapTempFile( FALSE );
 								}
 							}
 
@@ -621,9 +595,8 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 				          }
 
 									pAttachedNode = FindLevelNodeBasedOnStructure( pAttachedBase->sGridNo, pAttachedBase );
-									ApplyMapChangesToMapTempFile(TRUE);
+									ApplyMapChangesToMapTempFile app;
 									RemoveStructFromLevelNode(pAttachedBase->sGridNo, pAttachedNode);
-									ApplyMapChangesToMapTempFile(FALSE);
 								}
 								else
 								{
@@ -646,9 +619,8 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 								if (pAttachedBase)
 								{
 									pAttachedNode = FindLevelNodeBasedOnStructure( pAttachedBase->sGridNo, pAttachedBase );
-									ApplyMapChangesToMapTempFile(TRUE);
+									ApplyMapChangesToMapTempFile app;
 									RemoveStructFromLevelNode(pAttachedBase->sGridNo, pAttachedNode);
-									ApplyMapChangesToMapTempFile(FALSE);
 								}
 								else
 								{
@@ -679,13 +651,9 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 									// Replace!
 									UINT16 sNewIndex = GetTileIndexFromTypeSubIndex(gTileDatabase[pNewNode->usIndex].fType, sSubIndex);
 
-									//Set a flag indicating that the following changes are to go the the maps, temp file
-									ApplyMapChangesToMapTempFile( TRUE );
-
+									ApplyMapChangesToMapTempFile app;
 									RemoveStructFromLevelNode( sNewGridNo, pNewNode );
 									AddWallToStructLayer( sNewGridNo, sNewIndex, TRUE );
-
-									ApplyMapChangesToMapTempFile( FALSE );
 								}
 							}
 
@@ -702,13 +670,9 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 									// Replace!
 									UINT16 sNewIndex = GetTileIndexFromTypeSubIndex(gTileDatabase[pNewNode->usIndex].fType, sSubIndex);
 
-									//Set a flag indicating that the following changes are to go the the maps, temp file
-									ApplyMapChangesToMapTempFile( TRUE );
-
+									ApplyMapChangesToMapTempFile app;
 									RemoveStructFromLevelNode( sNewGridNo, pNewNode );
 									AddWallToStructLayer( sNewGridNo, sNewIndex, TRUE );
-
-									ApplyMapChangesToMapTempFile( FALSE );
 								}
 							}
 
@@ -721,9 +685,8 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 								if (pAttachedBase)
 								{
 									pAttachedNode = FindLevelNodeBasedOnStructure( pAttachedBase->sGridNo, pAttachedBase );
-									ApplyMapChangesToMapTempFile(TRUE);
+									ApplyMapChangesToMapTempFile app;
 									RemoveStructFromLevelNode(pAttachedBase->sGridNo, pAttachedNode);
-									ApplyMapChangesToMapTempFile(FALSE);
 								}
 								else
 								{
@@ -746,9 +709,8 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 								if (pAttachedBase)
 								{
 									pAttachedNode = FindLevelNodeBasedOnStructure(pAttachedBase->sGridNo, pAttachedBase);
-									ApplyMapChangesToMapTempFile(TRUE);
+									ApplyMapChangesToMapTempFile app;
 									RemoveStructFromLevelNode(pAttachedBase->sGridNo, pAttachedNode);
-									ApplyMapChangesToMapTempFile(FALSE);
 								}
 								else
 								{
@@ -788,7 +750,7 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 				{
 					// Yes we are!
 					// Remove water....
-					ApplyMapChangesToMapTempFile( TRUE );
+					ApplyMapChangesToMapTempFile app;
 					UINT16 sNewIndex;
 					sNewIndex = GetTileIndexFromTypeSubIndex(uiTileType, 1);
 					RemoveStruct( sBaseGridNo, sNewIndex );
@@ -799,7 +761,6 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 					sNewIndex = GetTileIndexFromTypeSubIndex(uiTileType, 3);
 					RemoveStruct( sBaseGridNo, sNewIndex );
 					RemoveStruct( sBaseGridNo, sNewIndex );
-					ApplyMapChangesToMapTempFile( FALSE );
 				}
 
 
@@ -812,10 +773,9 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 				}
 
 				// Remove!
-				//Set a flag indicating that the following changes are to go the the maps, temp file
-				ApplyMapChangesToMapTempFile( TRUE );
-				RemoveStructFromLevelNode( pBase->sGridNo, pNode );
-				ApplyMapChangesToMapTempFile( FALSE );
+				{ ApplyMapChangesToMapTempFile app;
+					RemoveStructFromLevelNode( pBase->sGridNo, pNode );
+				}
 
 				// OK, if we are to swap structures, do it now...
 				if ( fContinue == 2 )
@@ -823,9 +783,8 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 					// We have a levelnode...
 					// Get new index for new grpahic....
 					UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(uiTileType, bDestructionPartner);
-					ApplyMapChangesToMapTempFile( TRUE );
+					ApplyMapChangesToMapTempFile app;
 					AddStructToHead( sBaseGridNo, usTileIndex );
-					ApplyMapChangesToMapTempFile( FALSE );
 				}
 
 				// Rerender world!
@@ -2984,12 +2943,9 @@ void UpdateSAMDoneRepair( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ  )
 			{
 				// Update graphic.....
 				// Remove old!
-				ApplyMapChangesToMapTempFile( TRUE );
-
+				ApplyMapChangesToMapTempFile app;
 				RemoveStruct( pSamGridNoAList[ cnt ], usDamagedGraphic );
 				AddStructToHead( pSamGridNoAList[ cnt ], usGoodGraphic );
-
-				ApplyMapChangesToMapTempFile( FALSE );
 			}
 			else
 			{

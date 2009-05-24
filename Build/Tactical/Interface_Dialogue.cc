@@ -1590,9 +1590,9 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				ExitGrid.ubGotoSectorZ = 1;
 				ExitGrid.usGridNo = 12722;
 
-				ApplyMapChangesToMapTempFile( TRUE );
-				AddExitGridToWorld( 7887, &ExitGrid );
-				ApplyMapChangesToMapTempFile( FALSE );
+				{ ApplyMapChangesToMapTempFile app;
+					AddExitGridToWorld( 7887, &ExitGrid );
+				}
 
 				// For one, loop through our current squad and move them over
 				//ATE:Alrighty, instead of being a dufuss here, let's actually use the current

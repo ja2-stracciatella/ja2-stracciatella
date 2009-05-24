@@ -515,14 +515,7 @@ void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel )
 			UINT16 const usIndex = TypeRangeExistsInObjectLayer(sGridNo, HUMANBLOOD, CREATUREBLOOD);
 			if (usIndex != NO_TILE)
 			{
-				//This has been removed and it is handled by the ubBloodInfo level when restoring a saved game.
-				//Set a flag indicating that the following changes are to go the the maps temp file
-				//ApplyMapChangesToMapTempFile( TRUE );
-
-				// Remove
 				RemoveObject( sGridNo, usIndex );
-
-				//ApplyMapChangesToMapTempFile( FALSE );
 			}
 
 			// OK, pick new one. based on strength and randomness
@@ -541,15 +534,7 @@ void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel )
 					usNewIndex = GetTileIndexFromTypeSubIndex(CREATUREBLOOD, usIndex + 1);
 				}
 
-				//This has been removed and it is handled by the ubBloodInfo level when restoring a saved game.
-				//Set a flag indicating that the following changes are to go the the maps temp file
-				//ApplyMapChangesToMapTempFile( TRUE );
-
-				// Add!
 				AddObjectToHead( sGridNo, usNewIndex );
-
-				//ApplyMapChangesToMapTempFile( FALSE );
-
 
 				// Update rendering!
 				pMapElement->uiFlags|=MAPELEMENT_REDRAW;

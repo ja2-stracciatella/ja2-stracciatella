@@ -103,7 +103,7 @@ void AddExitGridToWorld(INT32 const map_idx, EXITGRID* const xg)
 	n->iExitGridInfo  = ConvertExitGridToINT32(xg);
 	n->uiFlags       |= LEVELNODE_EXITGRID | LEVELNODE_HIDDEN;
 
-	// Add the exit grid to the sector, only if we call ApplyMapChangesToMapTempFile() first.
+	// Add the exit grid to the sector, only if ApplyMapChangesToMapTempFile is held.
 	if (!gfEditMode && !gfLoadingExitGrids)
 	{
 		AddExitGridToMapTempFile(map_idx, xg, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
