@@ -179,7 +179,7 @@ static UINT32 CalcJA2EncryptionSet(SAVED_GAME_HEADER* pSaveGameHeader);
 static void PauseBeforeSaveGame(void);
 static void UnPauseAfterSaveGame(void);
 static void SaveGeneralInfo(HWFILE);
-static void SaveMeanwhileDefsFromSaveGameFile(HWFILE);
+static void SaveMeanwhileDefsToSaveGameFile(HWFILE);
 static void SaveMercProfiles(HWFILE);
 static void SaveOppListInfoToSavedGame(HWFILE);
 static void SavePreRandomNumbersToSaveGameFile(HWFILE);
@@ -198,250 +198,209 @@ static void SaveGameFilePosition(UINT8 slot, const HWFILE save, const char* pMsg
 #endif
 
 
-BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
+BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 {
-	CHAR8		zSaveGameName[ 512 ];
-	BOOLEAN	fPausedStateBeforeSaving = gfGamePaused;
+	if (ubSaveGameID >= NUM_SAVE_GAMES  &&
+			ubSaveGameID != SAVE__ERROR_NUM &&
+			ubSaveGameID != SAVE__END_TURN_NUM)
+	{
+		return FALSE;
+	}
+
+	BOOLEAN	fPausedStateBeforeSaving    = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
-	UINT16	usPosX, usActualWidth, usActualHeight;
-	BOOLEAN fWePausedIt = FALSE;
 
-	if( ubSaveGameID >= NUM_SAVE_GAMES && ubSaveGameID != SAVE__ERROR_NUM && ubSaveGameID != SAVE__END_TURN_NUM )
-		return( FALSE );
-
-	if ( !GamePaused() )
+	bool fWePausedIt = false;
+	if (!GamePaused())
 	{
 		PauseBeforeSaveGame();
-		fWePausedIt = TRUE;
+		fWePausedIt = true;
 	}
 
 	InitShutDownMapTempFileTest(TRUE, "SaveMapTempFile", ubSaveGameID);
 
-	//Place a message on the screen telling the user that we are saving the game
-	{ AutoMercPopUpBox const save_load_game_message_box(PrepareMercPopupBox(0, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, zSaveLoadText[SLG_SAVING_GAME_MESSAGE], 300, 0, 0, 0, &usActualWidth, &usActualHeight));
-		usPosX = (SCREEN_WIDTH - usActualWidth) / 2;
-		RenderMercPopUpBox(save_load_game_message_box, usPosX, 160, FRAME_BUFFER);
+	// Place a message on the screen telling the user that we are saving the game
+	{ UINT16 actual_w;
+		UINT16 actual_h;
+		AutoMercPopUpBox const save_load_game_message_box(PrepareMercPopupBox(0, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, zSaveLoadText[SLG_SAVING_GAME_MESSAGE], 300, 0, 0, 0, &actual_w, &actual_h));
+		UINT16 const x = (SCREEN_WIDTH - usActualWidth) / 2;
+		RenderMercPopUpBox(save_load_game_message_box, x, 160, FRAME_BUFFER);
 	}
 
 	InvalidateScreen();
-
-	ExecuteBaseDirtyRectQueue( );
+	ExecuteBaseDirtyRectQueue();
 	RefreshScreen();
 
-	//
-	// make sure we redraw the screen when we are done
-	//
-
-	//if we are in the game screen
-	if( guiCurrentScreen == GAME_SCREEN )
+	// Make sure we redraw the screen when we are done
+	switch (guiCurrentScreen)
 	{
-		SetRenderFlags( RENDER_FLAG_FULL );
-	}
+		case GAME_SCREEN:
+			SetRenderFlags(RENDER_FLAG_FULL);
+			break;
 
-	else if( guiCurrentScreen == MAP_SCREEN )
-	{
-		fMapPanelDirty = TRUE;
-		fTeamPanelDirty = TRUE;
-		fCharacterInfoPanelDirty = TRUE;
-	}
+		case MAP_SCREEN:
+			fMapPanelDirty           = TRUE;
+			fTeamPanelDirty          = TRUE;
+			fCharacterInfoPanelDirty = TRUE;
+			break;
 
-	else if( guiCurrentScreen == SAVE_LOAD_SCREEN )
-	{
-		gfRedrawSaveLoadScreen = TRUE;
+		case SAVE_LOAD_SCREEN:
+			gfRedrawSaveLoadScreen = TRUE;
+			break;
 	}
 
 	InitSaveGameFilePosition(ubSaveGameID);
 
-	//Set the fact that we are saving a game
+	// Set the fact that we are saving a game
 	gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
-
 
 	try
 	{
 		//Save the current sectors open temp files to the disk
 		SaveCurrentSectorsInformationToTempItemFile();
 
-		SAVED_GAME_HEADER SaveGameHeader;
-		memset(&SaveGameHeader, 0, sizeof(SaveGameHeader));
+		SAVED_GAME_HEADER header;
+		memset(&header, 0, sizeof(header));
 
-		//if we are saving the quick save,
+		wchar_t (& desc)[lengthof(header.sSavedGameDesc)] = header.sSavedGameDesc;
 		if (ubSaveGameID == 0)
-		{
+		{ // We are saving the quick save
 #ifdef JA2BETAVERSION
-			//Increment the quicksave counter
-			guiCurrentQuickSaveNumber++;
+			// Increment the quicksave counter
+			++guiCurrentQuickSaveNumber;
 
 			if (gfUseConsecutiveQuickSaveSlots)
-				swprintf(SaveGameHeader.sSavedGameDesc, lengthof(SaveGameHeader.sSavedGameDesc), L"%hs%03d", g_quicksave_name, guiCurrentQuickSaveNumber);
+				swprintf(desc, lengthof(desc), L"%hs%03d", g_quicksave_name, guiCurrentQuickSaveNumber);
 			else
 #endif
-				swprintf(SaveGameHeader.sSavedGameDesc, lengthof(SaveGameHeader.sSavedGameDesc), L"%hs", g_quicksave_name);
+				swprintf(desc, lengthof(desc), L"%hs", g_quicksave_name);
 		}
 		else
 		{
 			if (GameDesc[0] == L'\0') GameDesc = pMessageStrings[MSG_NODESC];
-			wcslcpy(SaveGameHeader.sSavedGameDesc, GameDesc, lengthof(SaveGameHeader.sSavedGameDesc));
+			wcslcpy(desc, GameDesc, lengthof(desc));
 		}
 
 		MakeFileManDirectory(g_savegame_dir);
 
-		//Create the name of the file
-		CreateSavedGameFileNameFromNumber(ubSaveGameID, zSaveGameName);
-
-		// create the save game file
-		AutoSGPFile f(FileOpen(zSaveGameName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+		// Create the save game file
+		char savegame_name[512];
+		CreateSavedGameFileNameFromNumber(ubSaveGameID, savegame_name);
+		AutoSGPFile f(FileOpen(savegame_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 		SaveGameFilePosition(ubSaveGameID, f, "Just Opened File");
 
-		//
-		// If there are no enemy or civilians to save, we have to check BEFORE savinf the sector info struct because
-		// the NewWayOfSavingEnemyAndCivliansToTempFile will RESET the civ or enemy flag AFTER they have been saved.
-		//
-		NewWayOfSavingEnemyAndCivliansToTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE, TRUE );
-		NewWayOfSavingEnemyAndCivliansToTempFile( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, FALSE, TRUE );
+		/* If there are no enemy or civilians to save, we have to check BEFORE
+		 * saving the sector info struct because the
+		 * NewWayOfSavingEnemyAndCivliansToTempFile() will RESET the civ or enemy
+		 * flag AFTER they have been saved. */
+		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE,  TRUE);
+		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, FALSE, TRUE);
 
-
-
-
-
-
-
-		//
 		// Setup the save game header
-		//
+		header.uiSavedGameVersion = guiSavedGameVersion;
+		strcpy(header.zGameVersionNumber, g_version_number);
 
-		SaveGameHeader.uiSavedGameVersion = guiSavedGameVersion;
-		strcpy(SaveGameHeader.zGameVersionNumber, g_version_number);
+		// The following will be used to quickly access info to display in the save/load screen
+		header.uiDay                     = GetWorldDay();
+		header.ubHour                    = (UINT8)GetWorldHour();
+		header.ubMin                     = (UINT8)guiMin;
+		header.sInitialGameOptions       = gGameOptions;
+		GetBestPossibleSectorXYZValues(&header.sSectorX, &header.sSectorY, &header.bSectorZ);
+		header.ubNumOfMercsOnPlayersTeam = NumberOfMercsOnPlayerTeam();
+		header.iCurrentBalance           = LaptopSaveInfo.iCurrentBalance;
+		header.uiCurrentScreen           = guiPreviousOptionScreen;
+		header.fAlternateSector          = GetSectorFlagStatus(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_USE_ALTERNATE_MAP);
 
-		//The following will be used to quickly access info to display in the save/load screen
-		SaveGameHeader.uiDay = GetWorldDay();
-		SaveGameHeader.ubHour = (UINT8)GetWorldHour();
-		SaveGameHeader.ubMin = (UINT8)guiMin;
-
-		//copy over the initial game options
-		SaveGameHeader.sInitialGameOptions = gGameOptions;
-
-		//Get the sector value to save.
-		GetBestPossibleSectorXYZValues(&SaveGameHeader.sSectorX, &SaveGameHeader.sSectorY, &SaveGameHeader.bSectorZ);
-
-		SaveGameHeader.ubNumOfMercsOnPlayersTeam = NumberOfMercsOnPlayerTeam();
-		SaveGameHeader.iCurrentBalance = LaptopSaveInfo.iCurrentBalance;
-
-
-		SaveGameHeader.uiCurrentScreen = guiPreviousOptionScreen;
-
-		SaveGameHeader.fAlternateSector = GetSectorFlagStatus( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_USE_ALTERNATE_MAP );
-
-		if( gfWorldLoaded )
+		if (gfWorldLoaded)
 		{
-			SaveGameHeader.fWorldLoaded = TRUE;
-			SaveGameHeader.ubLoadScreenID = GetLoadScreenID( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+			header.fWorldLoaded   = TRUE;
+			header.ubLoadScreenID = GetLoadScreenID(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 		}
 		else
 		{
-			SaveGameHeader.fWorldLoaded = FALSE;
-			SaveGameHeader.ubLoadScreenID = 0;
+			header.fWorldLoaded   = FALSE;
+			header.ubLoadScreenID = 0;
 		}
 
-		SaveGameHeader.uiRandom = Random( RAND_MAX );
+		header.uiRandom = Random(RAND_MAX);
 
-		//
-		// Save the Save Game header file
-		//
-		BYTE                     data[688];
-		BYTE*                    d = data;
-		SAVED_GAME_HEADER const& h = SaveGameHeader;
-		INJ_U32(   d, h.uiSavedGameVersion)
-		INJ_STR(   d, h.zGameVersionNumber, lengthof(h.zGameVersionNumber))
-	#ifdef _WIN32 // XXX HACK000A
-		INJ_WSTR16(d, h.sSavedGameDesc, lengthof(h.sSavedGameDesc))
-	#else
-		INJ_WSTR32(d, h.sSavedGameDesc, lengthof(h.sSavedGameDesc))
-	#endif
+		// Save the savegame header
+		BYTE  data[688];
+		BYTE* d = data;
+		INJ_U32(   d, header.uiSavedGameVersion)
+		INJ_STR(   d, header.zGameVersionNumber, lengthof(header.zGameVersionNumber))
+#ifdef _WIN32 // XXX HACK000A
+		INJ_WSTR16(d, header.sSavedGameDesc, lengthof(header.sSavedGameDesc))
+#else
+		INJ_WSTR32(d, header.sSavedGameDesc, lengthof(header.sSavedGameDesc))
+#endif
 		INJ_SKIP(  d, 4)
-		INJ_U32(   d, h.uiDay)
-		INJ_U8(    d, h.ubHour)
-		INJ_U8(    d, h.ubMin)
-		INJ_I16(   d, h.sSectorX)
-		INJ_I16(   d, h.sSectorY)
-		INJ_I8(    d, h.bSectorZ)
-		INJ_U8(    d, h.ubNumOfMercsOnPlayersTeam)
-		INJ_I32(   d, h.iCurrentBalance)
-		INJ_U32(   d, h.uiCurrentScreen)
-		INJ_BOOL(  d, h.fAlternateSector)
-		INJ_BOOL(  d, h.fWorldLoaded)
-		INJ_U8(    d, h.ubLoadScreenID)
-		d = InjectGameOptions(d, h.sInitialGameOptions);
+		INJ_U32(   d, header.uiDay)
+		INJ_U8(    d, header.ubHour)
+		INJ_U8(    d, header.ubMin)
+		INJ_I16(   d, header.sSectorX)
+		INJ_I16(   d, header.sSectorY)
+		INJ_I8(    d, header.bSectorZ)
+		INJ_U8(    d, header.ubNumOfMercsOnPlayersTeam)
+		INJ_I32(   d, header.iCurrentBalance)
+		INJ_U32(   d, header.uiCurrentScreen)
+		INJ_BOOL(  d, header.fAlternateSector)
+		INJ_BOOL(  d, header.fWorldLoaded)
+		INJ_U8(    d, header.ubLoadScreenID)
+		d = InjectGameOptions(d, header.sInitialGameOptions);
 		INJ_SKIP(  d, 1)
-		INJ_U32(   d, h.uiRandom)
+		INJ_U32(   d, header.uiRandom)
 		INJ_SKIP(  d, 112)
 		Assert(d == endof(data));
 
 		FileWrite(f, data, sizeof(data));
 		SaveGameFilePosition(ubSaveGameID, f, "Save Game Header");
 
-		guiJA2EncryptionSet = CalcJA2EncryptionSet( &SaveGameHeader );
+		guiJA2EncryptionSet = CalcJA2EncryptionSet(&header);
 
-		//
-		//Save the gTactical Status array, plus the curent secotr location
-		//
+		// Save the gTactical Status array, plus the curent sector location
 		SaveTacticalStatusToSavedGame(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Tactical Status");
 
-		// save the game clock info
 		SaveGameClock(f, fPausedStateBeforeSaving, fLockPauseStateBeforeSaving);
 		SaveGameFilePosition(ubSaveGameID, f, "Game Clock");
 
-		// save the strategic events
 		SaveStrategicEventsToSavedGame(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Strategic Events");
 
 		SaveLaptopInfoToSavedGame(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Laptop Info");
 
-		//
-		// Save the merc profiles
-		//
 		SaveMercProfiles(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Merc Profiles");
 
-		//
-		// Save the soldier structure
-		//
 		SaveSoldierStructure(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Soldier Structure");
 
-		//Save the Finaces Data file
 		SaveFilesToSavedGame(FINANCES_DATA_FILE, f);
 		SaveGameFilePosition(ubSaveGameID, f, "Finances Data File");
 
-		//Save the history file
 		SaveFilesToSavedGame(HISTORY_DATA_FILE, f);
 		SaveGameFilePosition(ubSaveGameID, f, "History file");
 
-		//Save the Laptop File file
 		SaveFilesToSavedGame(FILES_DAT_FILE, f);
 		SaveGameFilePosition(ubSaveGameID, f, "The Laptop FILES file");
 
-		//Save email stuff to save file
 		SaveEmailToSavedGame(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Email");
 
-		//Save the strategic information
 		SaveStrategicInfoToSavedFile(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Strategic Information");
 
-		//save the underground information
 		SaveUnderGroundSectorInfoToSaveGame(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Underground Information");
 
-		//save the squad info
 		SaveSquadInfoToSavedGameFile(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Squad Info");
 
 		SaveStrategicMovementGroupsToSaveGameFile(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Strategic Movement Groups");
 
-		//Save all the map temp files from the maps\temp directory into the saved game file
 		SaveMapTempFilesToSavedGameFile(f);
 		SaveGameFilePosition(ubSaveGameID, f, "All the Map Temp files");
 
@@ -517,27 +476,21 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 		SaveBackupNPCInfoToSaveGameFile(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Backed up NPC Info");
 
-		SaveMeanwhileDefsFromSaveGameFile(f);
+		SaveMeanwhileDefsToSaveGameFile(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Meanwhile Definitions");
-
-		// save meanwhiledefs
 
 		SaveSchedules(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Schedules");
 
-		// Save extra vehicle info
 		NewSaveVehicleMovementInfoToSavedGameFile(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Vehicle Movement Stuff");
 
-		// Save contract renewal sequence stuff
 		SaveContractRenewalDataToSaveGameFile(f);
 		SaveGameFilePosition(ubSaveGameID, f, "Contract Renewal Data");
 
-		// Save leave list stuff
 		SaveLeaveItemList(f);
 		SaveGameFilePosition(ubSaveGameID, f, "leave list");
 
-		//do the new way of saving bobbyr mail order items
 		NewWayOfSavingBobbyRMailOrdersToSaveGameFile(f);
 		SaveGameFilePosition(ubSaveGameID, f, "New way of saving Bobby R mailorders");
 	}
@@ -545,7 +498,7 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	{
 		if (fWePausedIt) UnPauseAfterSaveGame();
 
-		//Delete the failed attempt at saving
+		// Delete the failed attempt at saving
 		DeleteSaveGameNumber(ubSaveGameID);
 
 		//Put out an error message
@@ -553,7 +506,6 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 
 		InitShutDownMapTempFileTest(FALSE, "SaveMapTempFile", ubSaveGameID);
 
-		//Check for enough free hard drive space
 		NextLoopCheckForEnoughFreeHardDriveSpace();
 
 #ifdef JA2BETAVERSION
@@ -566,13 +518,12 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 		return FALSE;
 	}
 
-	//if we succesfully saved the game, mark this entry as the last saved game file
-	if( ubSaveGameID != SAVE__ERROR_NUM && ubSaveGameID != SAVE__END_TURN_NUM )
+	// If we succesfully saved the game, mark this entry as the last saved game file
+	if (ubSaveGameID != SAVE__ERROR_NUM && ubSaveGameID != SAVE__END_TURN_NUM)
 	{
 		gGameSettings.bLastSavedGameSlot = ubSaveGameID;
 	}
 
-	//Save the save game settings
 	SaveGameSettings();
 
 	// Display a screen message that the save was succesful
@@ -580,31 +531,23 @@ BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *GameDesc)
 	{
 		ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, pMessageStrings[MSG_SAVESUCCESS]);
 	}
-//#ifdef JA2BETAVERSION
-	else
-	{
-//		ScreenMsg( FONT_MCOLOR_WHITE, MSG_INTERFACE, pMessageStrings[ MSG_END_TURN_AUTO_SAVE ] );
-	}
-//#endif
 
-	//restore the music mode
-	SetMusicMode( gubMusicMode );
+	// Restore the music mode
+	SetMusicMode(gubMusicMode);
 
-	//Unset the fact that we are saving a game
+	// Unset the fact that we are saving a game
 	gTacticalStatus.uiFlags &= ~LOADING_SAVED_GAME;
 
 	UnPauseAfterSaveGame();
 
 	InitShutDownMapTempFileTest(FALSE, "SaveMapTempFile", ubSaveGameID);
 
-	#ifdef JA2BETAVERSION
-		ValidateSoldierInitLinks( 2 );
-	#endif
+#ifdef JA2BETAVERSION
+	ValidateSoldierInitLinks(2);
+#endif
 
-	//Check for enough free hard drive space
 	NextLoopCheckForEnoughFreeHardDriveSpace();
-
-	return( TRUE );
+	return TRUE;
 }
 
 
@@ -2175,7 +2118,7 @@ static void LoadMeanwhileDefsFromSaveGameFile(HWFILE const f, UINT32 const saveg
 }
 
 
-static void SaveMeanwhileDefsFromSaveGameFile(HWFILE const f)
+static void SaveMeanwhileDefsToSaveGameFile(HWFILE const f)
 {
 	for (MEANWHILE_DEFINITION* i = gMeanwhileDef; i != endof(gMeanwhileDef); ++i)
 	{
