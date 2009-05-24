@@ -796,326 +796,180 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	UINT32 uiRelStartPerc = 0;
 	UINT32 uiRelEndPerc   = 0;
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Strategic Events...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
+#define BAR(delta, text)                                                     \
+	(uiRelEndPerc += (delta),                                                  \
+	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, (text)), \
+	RenderProgressBar(0, 100),                                                 \
+	uiRelStartPerc = uiRelEndPerc)                                             \
 
-	//load the game events
+	BAR(1, L"Strategic Events...");
 	LoadStrategicEventsFromSavedGame(f);
 	LoadGameFilePosition(save_slot_id, f, "Strategic Events");
 
-	uiRelEndPerc += 0;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Laptop Info");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
-
+	BAR(0, L"Laptop Info");
 	LoadLaptopInfoFromSavedGame(f);
 	LoadGameFilePosition(save_slot_id, f, "Laptop Info");
 
-	uiRelEndPerc += 0;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Merc Profiles...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
-	// Load all the saved Merc profiles
+	BAR(0, L"Merc Profiles...");
 	LoadSavedMercProfiles(f, version);
 	LoadGameFilePosition(save_slot_id, f, "Merc Profiles");
 
-	uiRelEndPerc += 30;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Soldier Structure...");
-	uiRelStartPerc = uiRelEndPerc;
-
-	// Load the soldier structure info
+	BAR(30, L"Soldier Structure...");
 	LoadSoldierStructure(f, version);
 	LoadGameFilePosition(save_slot_id, f, "Soldier Structure");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Finances Data File...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
-	// Load the Finances Data and write it to a new file
+	BAR(1, L"Finances Data File...");
 	LoadFilesFromSavedGame(FINANCES_DATA_FILE, f);
 	LoadGameFilePosition(save_slot_id, f, "Finances Data File");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"History File...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
-	// Load the History Data and write it to a new file
+	BAR(1, L"History File...");
 	LoadFilesFromSavedGame(HISTORY_DATA_FILE, f);
 	LoadGameFilePosition(save_slot_id, f, "History File");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"The Laptop FILES file...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
-	// Load the Files Data and write it to a new file
+	BAR(1, L"The Laptop FILES file...");
 	LoadFilesFromSavedGame(FILES_DAT_FILE, f);
 	LoadGameFilePosition(save_slot_id, f, "The Laptop FILES file");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Email...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
-	// Load the data for the emails
+	BAR(1, L"Email...");
 	LoadEmailFromSavedGame(f);
 	LoadGameFilePosition(save_slot_id, f, "Email");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Strategic Information...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
-	// Load the strategic Information
+	BAR(1, L"Strategic Information...");
 	LoadStrategicInfoFromSavedFile(f);
 	LoadGameFilePosition(save_slot_id, f, "Strategic Information");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"UnderGround Information...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
-	// Load the underground information
+	BAR(1, L"UnderGround Information...");
 	LoadUnderGroundSectorInfoFromSavedGame(f);
 	LoadGameFilePosition(save_slot_id, f, "UnderGround Information");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Squad Info...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
-	// Load all the squad info from the saved game file
+	BAR(1, L"Squad Info...");
 	LoadSquadInfoFromSavedGameFile(f);
 	LoadGameFilePosition(save_slot_id, f, "Squad Info");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Strategic Movement Groups...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
-	// Load the group linked list
+	BAR(1, L"Strategic Movement Groups...");
 	LoadStrategicMovementGroupsFromSavedGameFile(f);
 	LoadGameFilePosition(save_slot_id, f, "Strategic Movement Groups");
 
-	uiRelEndPerc += 30;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"All the Map Temp files...");
-	uiRelStartPerc = uiRelEndPerc;
-
-	// Load all the map temp files from the saved game file into the maps/temp directory
+	BAR(30, L"All the Map Temp files...");
 	LoadMapTempFilesFromSavedGameFile(f, version);
 	LoadGameFilePosition(save_slot_id, f, "All the Map Temp files");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Quest Info...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Quest Info...");
 	LoadQuestInfoFromSavedGameFile(f);
 	LoadGameFilePosition(save_slot_id, f, "Quest Info");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"OppList Info...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"OppList Info...");
 	LoadOppListInfoFromSavedGame(f);
 	LoadGameFilePosition(save_slot_id, f, "OppList Info");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"MapScreen Messages...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"MapScreen Messages...");
 	LoadMapScreenMessagesFromSaveGameFile(f);
 	LoadGameFilePosition(save_slot_id, f, "MapScreen Messages");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"NPC Info...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"NPC Info...");
 	LoadNPCInfoFromSavedGameFile(f, version);
 	LoadGameFilePosition(save_slot_id, f, "NPC Info");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"KeyTable...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"KeyTable...");
 	LoadKeyTableFromSaveedGameFile(f);
 	LoadGameFilePosition(save_slot_id, f, "KeyTable");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Npc Temp Quote File...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Npc Temp Quote File...");
 	LoadTempNpcQuoteArrayToSaveGameFile(f);
 	LoadGameFilePosition(save_slot_id, f, "Npc Temp Quote File");
 
-	uiRelEndPerc += 0;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"PreGenerated Random Files...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(0, L"PreGenerated Random Files...");
 	LoadPreRandomNumbersFromSaveGameFile(f);
 	LoadGameFilePosition(save_slot_id, f, "PreGenerated Random Files");
 
-	uiRelEndPerc += 0;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Smoke Effect Structures...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(0, L"Smoke Effect Structures...");
 	// No longer need to load smoke effects.  They are now in temp files
 	if (version < 75) LoadSmokeEffectsFromLoadGameFile(f, version);
 	LoadGameFilePosition(save_slot_id, f, "Smoke Effect Structures");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Arms Dealers Inventory...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Arms Dealers Inventory...");
 	LoadArmsDealerInventoryFromSavedGameFile(f, version);
 	LoadGameFilePosition(save_slot_id, f, "Arms Dealers Inventory");
 
-	uiRelEndPerc += 0;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Misc info...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(0, L"Misc info...");
 	LoadGeneralInfo(f, version);
 	LoadGameFilePosition(save_slot_id, f, "Misc info");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Mine Status...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Mine Status...");
 	LoadMineStatusFromSavedGameFile(f);
 	LoadGameFilePosition(save_slot_id, f, "Mine Status");
 
-	uiRelEndPerc += 0;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Town Loyalty...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(0, L"Town Loyalty...");
 	if (version	>= 21)
 	{
 		LoadStrategicTownLoyaltyFromSavedGameFile(f);
 		LoadGameFilePosition(save_slot_id, f, "Town Loyalty");
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Vehicle Information...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Vehicle Information...");
 	if (version	>= 22)
 	{
 		LoadVehicleInformationFromSavedGameFile(f, version);
 		LoadGameFilePosition(save_slot_id, f, "Vehicle Information");
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Bullet Information...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Bullet Information...");
 	if (version	>= 24)
 	{
 		LoadBulletStructureFromSavedGameFile(f);
 		LoadGameFilePosition(save_slot_id, f, "Bullet Information");
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Physics table...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Physics table...");
 	if (version	>= 24)
 	{
 		LoadPhysicsTableFromSavedGameFile(f);
 		LoadGameFilePosition(save_slot_id, f, "Physics table");
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Air Raid Info...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Air Raid Info...");
 	if (version	>= 24)
 	{
 		LoadAirRaidInfoFromSaveGameFile(f);
 		LoadGameFilePosition(save_slot_id, f, "Air Raid Info");
 	}
 
-	uiRelEndPerc += 0;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Team Turn Info...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(0, L"Team Turn Info...");
 	if (version	>= 24)
 	{
 		LoadTeamTurnsFromTheSavedGameFile(f);
 		LoadGameFilePosition(save_slot_id, f, "Team Turn Info");
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Explosion Table...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Explosion Table...");
 	if (version	>= 25)
 	{
 		LoadExplosionTableFromSavedGameFile(f);
 		LoadGameFilePosition(save_slot_id, f, "Explosion Table");
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Creature Spreading...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Creature Spreading...");
 	if (version	>= 27)
 	{
 		LoadCreatureDirectives(f, version);
 		LoadGameFilePosition(save_slot_id, f, "Creature Spreading");
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Strategic Status...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
-
+	BAR(1, L"Strategic Status...");
 	if (version	>= 28)
 	{
 		LoadStrategicStatusFromSaveGameFile(f);
 		LoadGameFilePosition(save_slot_id, f, "Strategic Status");
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Strategic AI...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Strategic AI...");
 	if (version	>= 31)
 	{
 		LoadStrategicAI(f);
 		LoadGameFilePosition(save_slot_id, f, "Strategic AI");
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Lighting Effects...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Lighting Effects...");
 	// No longer need to load Light effects.  They are now in temp files
 	if (37 <= version && version < 76)
 	{
@@ -1123,55 +977,35 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		LoadGameFilePosition(save_slot_id, f, "Lighting Effects");
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Watched Locs Info...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Watched Locs Info...");
 	if (version	>= 38)
 	{
 		LoadWatchedLocsFromSavedGame(f);
 	}
 	LoadGameFilePosition(save_slot_id, f, "Watched Locs Info");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Item cursor Info...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Item cursor Info...");
 	if (version	>= 39)
 	{
 		LoadItemCursorFromSavedGame(f);
 	}
 	LoadGameFilePosition(save_slot_id, f, "Item cursor Info");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Civ Quote System...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Civ Quote System...");
 	if (version >= 51)
 	{
 		LoadCivQuotesFromLoadGameFile(f);
 	}
 	LoadGameFilePosition(save_slot_id, f, "Civ Quote System");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Backed up NPC Info...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Backed up NPC Info...");
 	if (version >= 53)
 	{
 		LoadBackupNPCInfoFromSavedGameFile(f);
 	}
 	LoadGameFilePosition(save_slot_id, f, "Backed up NPC Info");
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Meanwhile definitions...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Meanwhile definitions...");
 	if (version >= 58)
 	{
 		LoadMeanwhileDefsFromSaveGameFile(f, version);
@@ -1182,11 +1016,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		gMeanwhileDef[gCurrentMeanwhileDef.ubMeanwhileID] = gCurrentMeanwhileDef;
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Schedules...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Schedules...");
 	if (version >= 59)
 	{
 		// trash schedules loaded from map
@@ -1195,11 +1025,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		LoadGameFilePosition(save_slot_id, f, "Schedules");
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Extra Vehicle Info...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Extra Vehicle Info...");
 	if (version >= 61)
 	{
 		if (version < 84)
@@ -1213,11 +1039,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		LoadGameFilePosition(save_slot_id, f, "Extra Vehicle Info");
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Contract renweal sequence stuff...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
-
+	BAR(1, L"Contract renweal sequence stuff...");
 	if (version < 62)
 	{ // The older games had a bug where this flag was never being set
 		gfResetAllPlayerKnowsEnemiesFlags = TRUE;
@@ -1252,10 +1074,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		HandleOldBobbyRMailOrders();
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Final Checks...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
+	BAR(1, L"Final Checks...");
 
 	// ATE: Patch? Patch up groups (will only do for old saves)
 	UpdatePersistantGroupsFromOldSave(version);
@@ -1283,10 +1102,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		}
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Final Checks...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
+	BAR(1, L"Final Checks...");
 
 	InitAI();
 
@@ -1295,10 +1111,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	PostSchedules();
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Final Checks...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
+	BAR(1, L"Final Checks...");
 
 	// Reset the lighting level if we are outside
 	if (gbWorldSectorZ == 0)
@@ -1317,10 +1130,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	 */
 //	ResetMilitia();
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Final Checks...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
+	BAR(1, L"Final Checks...");
 
 	// if the UI was locked in the saved game file
 	if (gTacticalStatus.ubAttackBusyCount > 1)
@@ -1334,10 +1144,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	//Save the save game settings
 	SaveGameSettings();
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Final Checks...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
+	BAR(1, L"Final Checks...");
 
 	// Reset the AI Timer clock
 	giRTAILastUpdateTime = 0;
@@ -1350,10 +1157,9 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		if (sel) SelectSoldier(sel, SELSOLDIER_FORCE_RESELECT);
 	}
 
-	uiRelEndPerc += 1;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Final Checks...");
-	RenderProgressBar(0, 100);
-	uiRelStartPerc = uiRelEndPerc;
+	BAR(1, L"Final Checks...");
+
+#undef BAR
 
 	InitalizeStaticExternalNPCFaces();
 	LoadCarPortraitValues();
