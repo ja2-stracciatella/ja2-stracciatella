@@ -1,5 +1,4 @@
 (r5787) Fix a vanilla bug: Throwing a knife costed one point less than it should.
-(r5748) Improve German translation.
 (r5732) Fix a vanilla display glitch: The item tooltip for the auto rocket rifle should not show "(rocket)", just like for the rocket rifle.
 (r5730) Fix a vanilla display glitch: Do not print "0" in the item description box, when a gun uses no ammunition (e.g. LAW).
 (r5721) Fix a vanilla bug: When an enemy soldier is looking for items in one case not all weapons, which have a fingerprint ID, were considered correctly.
@@ -26,7 +25,7 @@
 (r5161) Fix a vanilla bug: Only consume one regeneration booster at a time, even when multiple are selected (only the effects of one are applied).
 (r5149) Plug a vanilla memory leak.
 (r5143) Fix a vanilla graphics glitch: The battle sector locator on the strategic map was not fully drawn.
-(r5142, r5460, r5464) Improve German translation.
+(r5142, r5460, r5464, r5748) Improve German translation.
 (r5138) Fix a vanilla bug: In turnbased mode it was not possible for a merc to place an explosive on the tile he is currently at.
 (r5082) Fix a vanilla glitch: In the Russian (Agoniya Vlasti) version the plaque on Bobby Ray's page was missing, because the image file is named different than for other languages.
 (r5081) Fix a vanilla bug, which allowed recruiting AIM mercs for two weeks at the price for one day.
