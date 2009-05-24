@@ -736,65 +736,49 @@ void ForceRemoveStructFromTail(UINT32 const iMapIndex)
 #endif
 
 
-static BOOLEAN InternalRemoveStruct(UINT32 MapIndex, LEVELNODE* Pred, LEVELNODE* Removee, UINT16 Index)
+static void InternalRemoveStruct(UINT32 const map_idx, LEVELNODE** const anchor)
 {
-	if (Pred == NULL)
-	{
-		gpWorldLevelData[MapIndex].pStructHead = Removee->pNext;
-	}
-	else
-	{
-		Pred->pNext = Removee->pNext;
-	}
+	LEVELNODE* const removee = *anchor;
+	*anchor = removee->pNext;
 
 	// Delete memory assosiated with item
-	DeleteStructureFromWorld(Removee->pStructureData);
+	DeleteStructureFromWorld(removee->pStructureData);
 
-	//If we have to, make sure to remove this node when we reload the map from a saved game
-	RemoveStructFromMapTempFile(MapIndex, Index);
+	UINT16 const idx = removee->usIndex;
 
-	RemoveShadowBuddy(MapIndex, Index);
-	MemFree(Removee);
+	// If we have to, make sure to remove this node when we reload the map from a saved game
+	RemoveStructFromMapTempFile(map_idx, idx);
 
-	return TRUE;
+	RemoveShadowBuddy(map_idx, idx);
+	MemFree(removee);
 }
 
 
-BOOLEAN RemoveStruct(UINT32 iMapIndex, UINT16 usIndex)
+void RemoveStruct(UINT32 const map_idx, UINT16 const idx)
 {
-	LEVELNODE* pOldStruct = NULL;
-
 	// Look through all structs and remove index if found
-	for (LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pStructHead; pStruct != NULL; pStruct = pStruct->pNext)
+	for (LEVELNODE** anchor = &gpWorldLevelData[map_idx].pStructHead;; anchor = &(*anchor)->pNext)
 	{
-		if (pStruct->usIndex == usIndex)
-		{
-			return InternalRemoveStruct(iMapIndex, pOldStruct, pStruct, usIndex);
-		}
-
-		pOldStruct = pStruct;
+		LEVELNODE* const i = *anchor;
+		if (!i) return; // XXX exception?
+		if (i->usIndex != idx) continue;
+		InternalRemoveStruct(map_idx, anchor);
+		return;
 	}
-
-	return FALSE;
 }
 
 
-BOOLEAN RemoveStructFromLevelNode(UINT32 iMapIndex, LEVELNODE* pNode)
+void RemoveStructFromLevelNode(UINT32 const map_idx, LEVELNODE* const n)
 {
-	LEVELNODE* pOldStruct = NULL;
-
 	// Look through all structs and remove index if found
-	for (LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pStructHead; pStruct != NULL; pStruct = pStruct->pNext)
+	for (LEVELNODE** anchor = &gpWorldLevelData[map_idx].pStructHead;; anchor = &(*anchor)->pNext)
 	{
-		if (pStruct == pNode)
-		{
-			return InternalRemoveStruct(iMapIndex, pOldStruct, pStruct, pNode->usIndex);
-		}
-
-		pOldStruct = pStruct;
+		LEVELNODE* const i = *anchor;
+		if (!i) return; // XXX exception?
+		if (i != n) continue;
+		InternalRemoveStruct(map_idx, anchor);
+		return;
 	}
-
-	return FALSE;
 }
 
 

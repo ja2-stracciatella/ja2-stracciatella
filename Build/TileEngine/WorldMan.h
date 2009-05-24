@@ -72,7 +72,7 @@ bool  DeepWater(GridNo);
 bool  WaterTooDeepForAttacks(GridNo);
 
 // Structure manipulation routines
-BOOLEAN RemoveStruct( UINT32 iMapIndex, UINT16 usIndex );
+void       RemoveStruct(UINT32 map_idx, UINT16 usIndex);
 LEVELNODE *AddStructToTail( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE *ForceStructToTail( UINT32 iMapIndex, UINT16 usIndex );
 
@@ -82,7 +82,7 @@ BOOLEAN AddWallToStructLayer( INT32 iMapIndex, UINT16 usIndex, BOOLEAN fReplace 
 BOOLEAN ReplaceStructIndex( UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex );
 void    HideStructOfGivenType(UINT32 iMapIndex, UINT32 fType, BOOLEAN fHide);
 void SetStructAframeFlags( UINT32 iMapIndex, UINT32 uiFlags  );
-BOOLEAN RemoveStructFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
+void    RemoveStructFromLevelNode(UINT32 map_idx, LEVELNODE*);
 BOOLEAN IndexExistsInStructLayer(GridNo, UINT16 tile_index);
 
 #ifdef JA2EDITOR
