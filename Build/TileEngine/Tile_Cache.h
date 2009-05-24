@@ -8,11 +8,11 @@
 
 struct TILE_CACHE_ELEMENT
 {
-	CHAR8					zName[ 128 ];			// Name of tile ( filename and directory here )
-	TILE_IMAGERY	*pImagery;				// Tile imagery
-	INT16					sHits;
-	UINT8					ubNumFrames;
-	INT16					sStructRefID;
+	char                zName[128]; // Name of tile (filename and directory here)
+	TILE_IMAGERY*       pImagery;   // Tile imagery
+	INT16               sHits;
+	UINT8               ubNumFrames;
+	STRUCTURE_FILE_REF* struct_file_ref;
 };
 
 

@@ -37,8 +37,8 @@ void InitTileCache(void)
 	// Zero entries
 	for (UINT32 i = 0; i < guiMaxTileCacheSize; ++i)
 	{
-		gpTileCache[i].pImagery     = NULL;
-		gpTileCache[i].sStructRefID = -1;
+		gpTileCache[i].pImagery        = 0;
+		gpTileCache[i].struct_file_ref = 0;
 	}
 
 	// Look for JSD files in the tile cache directory and load any we find
@@ -94,21 +94,6 @@ void DeleteTileCache( )
 }
 
 
-static INT16 FindCacheStructDataIndex(const char* cFilename)
-{
-	size_t const n = gpTileCacheStructInfo.Size();
-	for (size_t i = 0; i != n; ++i)
-	{
-		if (strcasecmp(gpTileCacheStructInfo[i].zRootName, cFilename) == 0)
-		{
-			return (INT16)i;
-		}
-	}
-
-	return( -1 );
-}
-
-
 INT32 GetCachedTile(const char* const filename)
 {
 	INT32 idx = -1;
@@ -154,9 +139,9 @@ INT32 GetCachedTile(const char* const filename)
 			// Bump off lowest index
 			TILE_CACHE_ELEMENT* const del = &gpTileCache[idx];
 			DeleteTileSurface(del->pImagery);
-			del->sHits        = 0;
-			del->pImagery     = NULL;
-			del->sStructRefID = -1;
+			del->sHits           = 0;
+			del->pImagery        = 0;
+			del->struct_file_ref = 0;
 		}
 	}
 
@@ -169,11 +154,9 @@ INT32 GetCachedTile(const char* const filename)
 
 	char root_name[30];
 	GetRootName(root_name, filename);
-	tce->sStructRefID = FindCacheStructDataIndex(root_name);
-	if (tce->sStructRefID != -1) // ATE: Add z-strip info
-	{
-		AddZStripInfoToVObject(tce->pImagery->vo, gpTileCacheStructInfo[tce->sStructRefID].pStructureFileRef, TRUE, 0);
-	}
+	STRUCTURE_FILE_REF* const sfr = GetCachedTileStructureRefFromFilename(root_name);
+	tce->struct_file_ref = sfr;
+	if (sfr) AddZStripInfoToVObject(tce->pImagery->vo, sfr, TRUE, 0);
 
 	const AuxObjectData* const aux = tce->pImagery->pAuxData;
 	tce->ubNumFrames = (aux != NULL ? aux->ubNumberOfFrames : 1);
@@ -192,8 +175,8 @@ void RemoveCachedTile(INT32 const cached_tile)
 			if (--e.sHits != 0) return;
 
 			DeleteTileSurface(e.pImagery);
-			e.pImagery     =  0;
-			e.sStructRefID = -1;
+			e.pImagery        = 0;
+			e.struct_file_ref = 0;
 			return;
 		}
 	}
@@ -203,22 +186,19 @@ void RemoveCachedTile(INT32 const cached_tile)
 
 static STRUCTURE_FILE_REF* GetCachedTileStructureRef(INT32 const idx)
 {
-	if (idx == -1) return 0;
-
-	INT16 const struct_ref_id = gpTileCache[idx].sStructRefID;
-	if (struct_ref_id == -1) return 0;
-
-	return gpTileCacheStructInfo[struct_ref_id].pStructureFileRef;
+	return idx != -1 ? gpTileCache[idx].struct_file_ref : 0;
 }
 
 
 STRUCTURE_FILE_REF* GetCachedTileStructureRefFromFilename(char const* const filename)
 {
-	// Given filename, look for index
-	INT16 const struct_data_idx = FindCacheStructDataIndex(filename);
-	if (struct_data_idx == -1) return 0;
-
-	return gpTileCacheStructInfo[struct_data_idx].pStructureFileRef;
+	size_t const n = gpTileCacheStructInfo.Size();
+	for (size_t i = 0; i != n; ++i)
+	{
+		TILE_CACHE_STRUCT& t = gpTileCacheStructInfo[i];
+		if (strcasecmp(t.zRootName, filename) == 0) return t.pStructureFileRef;
+	}
+	return 0;
 }
 
 
