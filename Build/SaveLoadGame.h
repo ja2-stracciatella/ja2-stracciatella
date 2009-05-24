@@ -54,7 +54,7 @@ void CreateSavedGameFileNameFromNumber(UINT8 ubSaveGameID, char* pzNewFileName);
 
 
 BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *pGameDesc );
-BOOLEAN LoadSavedGame( UINT8 ubSavedGameID );
+void    LoadSavedGame(UINT8 save_slot_id);
 
 void SaveFilesToSavedGame(char const* pSrcFileName, HWFILE);
 void LoadFilesFromSavedGame(char const* pSrcFileName, HWFILE);

@@ -2864,7 +2864,7 @@ const wchar_t* zSaveLoadText[] =
 	L"Enregistrement réussi",
 	L"ERREUR lors de la sauvegarde !",
 	L"Chargement réussi",
-	L"ERREUR lors du chargement !",
+	L"ERREUR lors du chargement: \"%hs\"",
 
 	L"La version de la sauvegarde est différente de celle du jeu. Désirez-vous continuer ?",
 	L"Les fichiers de sauvegarde sont peut-être altérés. Voulez-vous les effacer ?",

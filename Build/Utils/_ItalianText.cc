@@ -2864,7 +2864,7 @@ const wchar_t* zSaveLoadText[] =
 	L"Partita salvata con successo",
 	L"ERRORE durante il salvataggio!",
 	L"Partita caricata con successo",
-	L"ERRORE durante il caricamento!",
+	L"ERRORE durante il caricamento: \"%hs\"",
 
 	L"La versione del gioco nel file della partita salvata è diverso dalla versione attuale. È abbastanza sicuro proseguire. Continuate?",
 	L"I file della partita salvata potrebbero essere annullati. Volete cancellarli tutti?",

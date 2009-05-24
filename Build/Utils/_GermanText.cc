@@ -2690,7 +2690,7 @@ const wchar_t *zSaveLoadText[] =
 	L"Spiel erfolgreich gespeichert",
 	L"FEHLER beim Speichern des Spiels!",
 	L"Spiel erfolgreich geladen",
-	L"FEHLER beim Laden des Spiels!",
+	L"FEHLER beim Laden des Spiels: \"%hs\"",
 
 
 	L"Der gespeicherte Spielstand unterscheidet sich vom aktuellen Spielstand. Es kann wahrscheinlich nichts passieren. Weiter?",

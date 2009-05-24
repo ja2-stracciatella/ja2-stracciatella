@@ -1,3 +1,5 @@
+#include <exception>
+
 #include "Font.h"
 #include "GameLoop.h"
 #include "HImage.h"
@@ -1530,13 +1532,10 @@ static void DoneFadeOutForSaveLoadScreen(void)
 	// Make sure we DON'T reset the levels if we are loading a game
 	gfHadToMakeBasementLevels = FALSE;
 
-	if (!LoadSavedGame(gbSelectedSaveLocation))
+	try
 	{
-		DoSaveLoadMessageBox(zSaveLoadText[SLG_LOAD_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack);
-		NextLoopCheckForEnoughFreeHardDriveSpace();
-	}
-	else
-	{
+		LoadSavedGame(gbSelectedSaveLocation);
+
 #ifdef JA2BETAVERSION
 		ValidateSoldierInitLinks(1);
 #endif
@@ -1553,6 +1552,13 @@ static void DoneFadeOutForSaveLoadScreen(void)
 			PauseTime(FALSE);
 			FadeInGameScreen();
 		}
+	}
+	catch (std::exception const& e)
+	{
+		wchar_t msg[512];
+		swprintf(msg, lengthof(msg), zSaveLoadText[SLG_LOAD_GAME_ERROR], e.what());
+		DoSaveLoadMessageBox(msg, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack);
+		NextLoopCheckForEnoughFreeHardDriveSpace();
 	}
 	gfStartedFadingOut = FALSE;
 }

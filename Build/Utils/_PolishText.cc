@@ -2864,7 +2864,7 @@ const wchar_t* zSaveLoadText[] =
 	L"Gra została pomyślnie zapisana",
 	L"BŁĄD podczas zapisu gry!",
 	L"Gra została pomyślnie odczytana",
-	L"BŁĄD podczas odczytu gry!",
+	L"BŁĄD podczas odczytu gry: \"%hs\"",
 
 	L"Wersja gry w zapisanym pliku różni się od bieżącej. Prawdopodobnie można bezpiecznie kontynuować. Kontynuować?",
 	L"Zapisane pliki gier mogą być uszkodzone. Czy chcesz je usunąć?",

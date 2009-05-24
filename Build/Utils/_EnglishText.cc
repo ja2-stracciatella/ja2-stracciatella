@@ -2865,7 +2865,7 @@ const wchar_t *zSaveLoadText[] =
 	L"Saved the game successfully",
 	L"ERROR saving the game!",
 	L"Loaded the game successfully",
-	L"ERROR loading the game!",
+	L"ERROR loading the game: \"%hs\"",
 
 	L"The game version in the saved game file is different then the current version.  It is most likely safe to continue.  Continue?",
 	L"The saved game files may be invalidated.  Do you want them all deleted?",

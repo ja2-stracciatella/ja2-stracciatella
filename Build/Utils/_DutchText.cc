@@ -2879,7 +2879,7 @@ const wchar_t* 		zSaveLoadText[] =
 	L"Spel Bewaren voltooid",
 	L"FOUT bij bewaren spel!",
 	L"Spel laden succesvol",
-	L"FOUT bij laden spel!",
+	L"FOUT bij laden spel: \"%hs\"",
 
 	L"De spelversie van het bewaarde spel verschilt van de huidige versie. Waarschijnlijk is het veilig om door te gaan. Doorgaan?",
 	L"De bewaarde spelen zijn waarschijnlijk ongeldig. Deze verwijderen?",
