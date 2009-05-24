@@ -52,7 +52,7 @@ BOOLEAN RemoveOnRoofFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );
 
 // Land manipulation functions
 #ifdef JA2EDITOR
-BOOLEAN RemoveLand( UINT32 iMapIndex, UINT16 usIndex );
+void       RemoveLand(UINT32 map_idx, UINT16 idx);
 LEVELNODE *AddLandToTail( UINT32 iMapIndex, UINT16 usIndex );
 #endif
 void AddLandToHead(UINT32 iMapIndex, UINT16 usIndex);

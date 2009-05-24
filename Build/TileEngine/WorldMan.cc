@@ -288,11 +288,10 @@ static BOOLEAN AdjustForFullTile(UINT32 iMapIndex);
 static void RemoveLandEx(UINT32 iMapIndex, UINT16 usIndex);
 
 
-BOOLEAN RemoveLand(UINT32 iMapIndex, UINT16 usIndex)
+void RemoveLand(UINT32 const map_idx, UINT16 const idx)
 {
-	RemoveLandEx(iMapIndex, usIndex);
-	AdjustForFullTile(iMapIndex);
-	return FALSE;
+	RemoveLandEx(map_idx, idx);
+	AdjustForFullTile(map_idx);
 }
 
 
