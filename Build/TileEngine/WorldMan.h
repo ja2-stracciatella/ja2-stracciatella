@@ -78,7 +78,7 @@ LEVELNODE *ForceStructToTail( UINT32 iMapIndex, UINT16 usIndex );
 
 void    AddStructToHead(UINT32 iMapIndex, UINT16 usIndex);
 BOOLEAN RemoveAllStructsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
-BOOLEAN AddWallToStructLayer( INT32 iMapIndex, UINT16 usIndex, BOOLEAN fReplace );
+bool    AddWallToStructLayer(INT32 map_idx, UINT16 idx, bool replace);
 BOOLEAN ReplaceStructIndex( UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex );
 void    HideStructOfGivenType(UINT32 iMapIndex, UINT32 fType, BOOLEAN fHide);
 void SetStructAframeFlags( UINT32 iMapIndex, UINT32 uiFlags  );

@@ -847,97 +847,69 @@ BOOLEAN ReplaceStructIndex(UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewInde
 
 // When adding, put in order such that it's drawn before any walls of a
 // lesser orientation value
-BOOLEAN AddWallToStructLayer(INT32 iMapIndex, UINT16 usIndex, BOOLEAN fReplace)
+bool AddWallToStructLayer(INT32 const map_idx, UINT16 const idx, bool const replace)
 {
-	LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pStructHead;
-	BOOLEAN				fInsertFound = FALSE;
-	BOOLEAN				fRoofFound = FALSE;
-	UINT8					ubRoofLevel=0;
-	UINT8					ubLevel = 0;
-
 	// Get orientation of piece we want to add
-	UINT16 usWallOrientation = GetWallOrientation(usIndex);
+	UINT16 const wall_orientation = GetWallOrientation(idx);
 
 	// Look through all objects and Search for orientation
-	while (pStruct != NULL)
+	bool  insert_found = false;
+	bool  roof_found   = false;
+	UINT8 roof_level   = 0;
+	UINT8 level        = 0;
+	for (LEVELNODE* i = gpWorldLevelData[map_idx].pStructHead; i; ++level, i = i->pNext)
 	{
-		UINT16 usCheckWallOrient = GetWallOrientation(pStruct->usIndex);
-		//OLD CASE
-		//if ( usCheckWallOrient > usWallOrientation )
-		//Kris:
-		//New case -- If placing a new wall which is at right angles to the current wall, then
-		//we insert it.
-		if (usCheckWallOrient > usWallOrientation)
+		UINT16 const check_wall_orient = GetWallOrientation(i->usIndex);
+
+		/* Kris: If placing a new wall which is at right angles to the current wall,
+		 * then we insert it. */
+		if (check_wall_orient > wall_orientation)
 		{
-			if ((usWallOrientation == INSIDE_TOP_RIGHT || usWallOrientation == OUTSIDE_TOP_RIGHT) &&
-					(usCheckWallOrient == INSIDE_TOP_LEFT  || usCheckWallOrient == OUTSIDE_TOP_LEFT) ||
-					(usWallOrientation == INSIDE_TOP_LEFT  || usWallOrientation == OUTSIDE_TOP_LEFT) &&
-					(usCheckWallOrient == INSIDE_TOP_RIGHT || usCheckWallOrient == OUTSIDE_TOP_RIGHT))
+			if ((wall_orientation  == INSIDE_TOP_RIGHT || wall_orientation  == OUTSIDE_TOP_RIGHT) &&
+					(check_wall_orient == INSIDE_TOP_LEFT  || check_wall_orient == OUTSIDE_TOP_LEFT) ||
+					(wall_orientation  == INSIDE_TOP_LEFT  || wall_orientation  == OUTSIDE_TOP_LEFT) &&
+					(check_wall_orient == INSIDE_TOP_RIGHT || check_wall_orient == OUTSIDE_TOP_RIGHT))
 			{
-				fInsertFound = TRUE;
+				insert_found = true;
 			}
 		}
 
-		const UINT32 uiCheckType = GetTileType(pStruct->usIndex);
-
-//		if (uiCheckType >= FIRSTFLOOR && uiCheckType <= LASTFLOOR)
-		if (uiCheckType >= FIRSTROOF && uiCheckType <= LASTROOF)
+		UINT32 const check_type = GetTileType(i->usIndex);
+		if (FIRSTROOF <= check_type && check_type <= LASTROOF)
 		{
-			fRoofFound = TRUE;
-			ubRoofLevel = ubLevel;
+			roof_found = true;
+			roof_level = level;
 		}
 
-		//OLD CHECK
-		// Check if it's the same orientation
-		//if ( usCheckWallOrient == usWallOrientation )
-		//Kris:
-		//New check -- we want to check for walls being parallel to each other.  If so, then
-		//we we want to replace it.  This is because of an existing problem with say, INSIDE_TOP_LEFT
-		//and OUTSIDE_TOP_LEFT walls coexisting.
-		if ((usWallOrientation == INSIDE_TOP_RIGHT || usWallOrientation == OUTSIDE_TOP_RIGHT) &&
-			  (usCheckWallOrient == INSIDE_TOP_RIGHT || usCheckWallOrient == OUTSIDE_TOP_RIGHT) ||
-				(usWallOrientation == INSIDE_TOP_LEFT  || usWallOrientation == OUTSIDE_TOP_LEFT) &&
-			  (usCheckWallOrient == INSIDE_TOP_LEFT  || usCheckWallOrient == OUTSIDE_TOP_LEFT))
+		/* Kris: We want to check for walls being parallel to each other.  If so,
+		 * then we we want to replace it.  This is because of an existing problem
+		 * with say, INSIDE_TOP_LEFT and OUTSIDE_TOP_LEFT walls coexisting. */
+		if ((wall_orientation  == INSIDE_TOP_RIGHT || wall_orientation  == OUTSIDE_TOP_RIGHT) &&
+			  (check_wall_orient == INSIDE_TOP_RIGHT || check_wall_orient == OUTSIDE_TOP_RIGHT) ||
+				(wall_orientation  == INSIDE_TOP_LEFT  || wall_orientation  == OUTSIDE_TOP_LEFT) &&
+			  (check_wall_orient == INSIDE_TOP_LEFT  || check_wall_orient == OUTSIDE_TOP_LEFT))
 		{
 			// Same, if replace, replace here
-			if (fReplace)
-			{
-				return ReplaceStructIndex(iMapIndex, pStruct->usIndex, usIndex);
-			}
-			else
-			{
-				return FALSE;
-			}
+			return replace ? ReplaceStructIndex(map_idx, i->usIndex, idx) : false;
 		}
-
-		// Advance to next
-		pStruct = pStruct->pNext;
-
-		ubLevel++;
 	}
 
 	// Check if we found an insert position, otherwise set to head
-	if (fInsertFound)
+	if (insert_found)
 	{
-		// Insert struct at head
-		AddStructToHead(iMapIndex, usIndex);
+		AddStructToHead(map_idx, idx);
+	}
+	else if (roof_found) // Make sure it's ALWAYS after the roof (if any)
+	{
+		InsertStructIndex(map_idx, idx, roof_level);
 	}
 	else
 	{
-		// Make sure it's ALWAYS after the roof ( if any )
-		if (fRoofFound)
-		{
-			InsertStructIndex(iMapIndex, usIndex, ubRoofLevel);
-		}
-		else
-		{
-			AddStructToTail(iMapIndex, usIndex);
-		}
+		AddStructToTail(map_idx, idx);
 	}
 
 	ResetSpecificLayerOptimizing(TILES_DYNAMIC_STRUCTURES);
-	// Could not find it, return FALSE
-	return TRUE; // XXX code and comment disagree
+	return true;
 }
 
 
