@@ -364,7 +364,7 @@ static BOOLEAN AnyLowerLand(UINT32 iMapIndex, UINT32 uiSrcType, UINT8* pubLastLe
 
 UINT16 GetWallOrientation(UINT16 usIndex)
 {
-	Assert(usIndex != NO_TILE);
+	Assert(usIndex < lengthof(gTileDatabase));
 	return gTileDatabase[usIndex].usWallOrientation;
 }
 
