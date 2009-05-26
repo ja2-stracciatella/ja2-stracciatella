@@ -855,74 +855,53 @@ BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure )
 }
 
 
-static STRUCTURE* InternalSwapStructureForPartner(STRUCTURE* const pStructure, BOOLEAN const fStoreInMap)
+static STRUCTURE* InternalSwapStructureForPartner(STRUCTURE* const s, bool const store_in_map)
 try
-{ // switch structure
-	LEVELNODE *				pLevelNode;
-	LEVELNODE *				pShadowNode;
-	STRUCTURE *				pBaseStructure;
-	STRUCTURE *				pNewBaseStructure;
-	BOOLEAN						fDoor;
+{
+	if (!s) return 0;
 
-	INT8							bDelta;
-	UINT8							ubHitPoints;
-	INT16							sCubeOffset;
+	STRUCTURE* const base = FindBaseStructure(s);
+	CHECKN(base);
 
-	if (pStructure == NULL)
-	{
-		return( NULL );
-	}
-	pBaseStructure = FindBaseStructure( pStructure );
-	CHECKF( pBaseStructure );
-	if ((pBaseStructure->pDBStructureRef->pDBStructure)->bPartnerDelta == NO_PARTNER_STRUCTURE)
-	{
-		return( NULL );
-	}
-	fDoor = ((pBaseStructure->fFlags & STRUCTURE_ANYDOOR) > 0);
-	pLevelNode = FindLevelNodeBasedOnStructure( pBaseStructure->sGridNo, pBaseStructure );
-	pShadowNode = FindShadow( pBaseStructure->sGridNo, pLevelNode->usIndex );
+	INT8 const delta = base->pDBStructureRef->pDBStructure->bPartnerDelta;
+	if (delta == NO_PARTNER_STRUCTURE) return 0;
 
-	// record values
-	bDelta = pBaseStructure->pDBStructureRef->pDBStructure->bPartnerDelta;
-	const DB_STRUCTURE_REF* const pPartnerDBStructure = pBaseStructure->pDBStructureRef + bDelta;
-	GridNo                  const sGridNo             = pBaseStructure->sGridNo;
-	ubHitPoints = pBaseStructure->ubHitPoints;
-	sCubeOffset = pBaseStructure->sCubeOffset;
-	// delete the old structure and add the new one
-	if (!DeleteStructureFromWorld(pBaseStructure))
-	{
-		return( NULL );
-	}
-	pNewBaseStructure = AddStructureToWorld(sGridNo, (INT8)(sCubeOffset / PROFILE_Z_SIZE), pPartnerDBStructure, pLevelNode);
-	if (pNewBaseStructure == NULL)
-	{
-		return( NULL );
-	}
-	// set values in the new structure
-	pNewBaseStructure->ubHitPoints = ubHitPoints;
-	if (!fDoor)
-	{ // swap the graphics
+	// Record values, base is deleted
+	GridNo                  const grid_no     = base->sGridNo;
+	LEVELNODE*              const node        = FindLevelNodeBasedOnStructure(grid_no, base);
+	LEVELNODE*              const shadow      = FindShadow(grid_no, node->usIndex);
+	bool                    const is_door     = base->fFlags & STRUCTURE_ANYDOOR;
+	DB_STRUCTURE_REF const* const partner     = base->pDBStructureRef + delta;
+	UINT8                   const hit_points  = base->ubHitPoints;
+	INT16                   const cube_offset = base->sCubeOffset;
 
-		// store removal of previous if necessary
-		if (fStoreInMap)
+	// Delete the old structure and add the new one
+	if (!DeleteStructureFromWorld(base)) return 0;
+
+	STRUCTURE* const new_base = AddStructureToWorld(grid_no, (INT8)(cube_offset / PROFILE_Z_SIZE), partner, node);
+	if (!new_base) return 0;
+
+	// Set values in the new structure
+	new_base->ubHitPoints = hit_points;
+
+	if (!is_door)
+	{ // Swap the graphics
+		if (store_in_map) // Store removal of previous if necessary
 		{
 			ApplyMapChangesToMapTempFile app;
-			RemoveStructFromMapTempFile(sGridNo, pLevelNode->usIndex);
-			pLevelNode->usIndex += bDelta;
-			AddStructToMapTempFile(sGridNo, pLevelNode->usIndex);
+			RemoveStructFromMapTempFile(grid_no, node->usIndex);
+			node->usIndex += delta;
+			AddStructToMapTempFile(grid_no, node->usIndex);
 		}
 		else
 		{
-			pLevelNode->usIndex += bDelta;
+			node->usIndex += delta;
 		}
 
-		if (pShadowNode != NULL)
-		{
-			pShadowNode->usIndex += bDelta;
-		}
+		if (shadow) shadow->usIndex += delta;
 	}
 
-	return( pNewBaseStructure );
+	return new_base;
 }
 catch (...) { return 0; }
 
