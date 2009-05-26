@@ -616,26 +616,14 @@ BOOLEAN OkayToAddStructureToWorld(const INT16 sBaseGridNo, const INT8 bLevel, co
 }
 
 
-static void AddStructureToTile(MAP_ELEMENT* const pMapElement, STRUCTURE* const pStructure, UINT16 const usStructureID)
-{ // adds a STRUCTURE to a MAP_ELEMENT (adds part of a structure to a location on the map)
-	STRUCTURE *		pStructureTail;
-
-	pStructureTail = pMapElement->pStructureTail;
-	if (pStructureTail == NULL)
-	{ // set the head and tail to the new structure
-		pMapElement->pStructureHead = pStructure;
-	}
-	else
-	{ // add to the end of the list
-		pStructure->pPrev = pStructureTail;
-		pStructureTail->pNext = pStructure;
-	}
-	pMapElement->pStructureTail = pStructure;
-	pStructure->usStructureID = usStructureID;
-	if (pStructure->fFlags & STRUCTURE_OPENABLE)
-	{
-		pMapElement->uiFlags |= MAPELEMENT_INTERACTIVETILE;
-	}
+static void AddStructureToTile(MAP_ELEMENT* const me, STRUCTURE* const s, UINT16 const structure_id)
+{ // Add a STRUCTURE to a MAP_ELEMENT (Add part of a structure to a location on the map)
+	STRUCTURE* const tail = me->pStructureTail;
+	s->usStructureID = structure_id;
+	s->pPrev         = tail;
+	*(tail ? &tail->pNext : &me->pStructureHead) = s;
+	me->pStructureTail = s;
+	if (s->fFlags & STRUCTURE_OPENABLE) me->uiFlags |= MAPELEMENT_INTERACTIVETILE;
 }
 
 
