@@ -855,7 +855,7 @@ BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure )
 }
 
 
-static STRUCTURE* InternalSwapStructureForPartner(INT16 sGridNo, STRUCTURE* pStructure, BOOLEAN fFlipSwitches, BOOLEAN fStoreInMap)
+static STRUCTURE* InternalSwapStructureForPartner(INT16 sGridNo, STRUCTURE* const pStructure, BOOLEAN const fStoreInMap)
 try
 { // switch structure
 	LEVELNODE *				pLevelNode;
@@ -922,15 +922,6 @@ try
 		}
 	}
 
-	//if ( (pNewBaseStructure->fFlags & STRUCTURE_SWITCH) && (pNewBaseStructure->fFlags & STRUCTURE_OPEN) )
-	if ( 0 /*fFlipSwitches*/ )
-	{
-		if ( pNewBaseStructure->fFlags & STRUCTURE_SWITCH )
-		{
-			// just turned a switch on!
-			ActivateSwitchInGridNo(NULL, sGridNo);
-		}
-	}
 	return( pNewBaseStructure );
 }
 catch (...) { return 0; }
@@ -938,17 +929,13 @@ catch (...) { return 0; }
 
 STRUCTURE * SwapStructureForPartner( INT16 sGridNo, STRUCTURE * pStructure )
 {
-	return( InternalSwapStructureForPartner( sGridNo, pStructure, TRUE, FALSE ) );
+	return InternalSwapStructureForPartner( sGridNo, pStructure, FALSE);
 }
 
-STRUCTURE * SwapStructureForPartnerWithoutTriggeringSwitches( INT16 sGridNo, STRUCTURE * pStructure )
-{
-	return( InternalSwapStructureForPartner( sGridNo, pStructure, FALSE, FALSE ) );
-}
 
 STRUCTURE * SwapStructureForPartnerAndStoreChangeInMap( INT16 sGridNo, STRUCTURE * pStructure )
 {
-	return( InternalSwapStructureForPartner( sGridNo, pStructure, TRUE, TRUE ) );
+	return InternalSwapStructureForPartner(sGridNo, pStructure, TRUE);
 }
 
 

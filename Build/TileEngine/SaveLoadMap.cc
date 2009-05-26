@@ -724,7 +724,7 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 		  sBaseGridNo = pBase->sGridNo;
     }
 
-		if(SwapStructureForPartnerWithoutTriggeringSwitches( (UINT16)uiMapIndex, pStructure ) == NULL )
+		if (!SwapStructureForPartner((UINT16)uiMapIndex, pStructure))
 		{
 			//an error occured
 		}
