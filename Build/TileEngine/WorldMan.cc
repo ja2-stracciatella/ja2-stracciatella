@@ -1835,42 +1835,32 @@ void SetStructAframeFlags(UINT32 iMapIndex, UINT32 uiFlags)
 }
 
 
-LEVELNODE* FindLevelNodeBasedOnStructure(INT16 sGridNo, STRUCTURE* pStructure)
+LEVELNODE* FindLevelNodeBasedOnStructure(INT16 const grid_no, STRUCTURE* const s)
 {
-	//ATE: First look on the struct layer.....
-	for (LEVELNODE* pLevelNode = gpWorldLevelData[sGridNo].pStructHead; pLevelNode != NULL; pLevelNode = pLevelNode->pNext)
+	MAP_ELEMENT const& me = gpWorldLevelData[grid_no];
+
+	// ATE: First look on the struct layer
+	for (LEVELNODE* i = me.pStructHead; i; i = i->pNext)
 	{
-		if (pLevelNode->pStructureData == pStructure)
-		{
-			return pLevelNode;
-		}
+		if (i->pStructureData == s) return i;
 	}
 
-	// Next the roof layer....
-	for (LEVELNODE* pLevelNode = gpWorldLevelData[sGridNo].pRoofHead; pLevelNode != NULL; pLevelNode = pLevelNode->pNext)
+	// Next the roof layer
+	for (LEVELNODE* i = me.pRoofHead; i; i = i->pNext)
 	{
-		if (pLevelNode->pStructureData == pStructure)
-		{
-			return pLevelNode;
-		}
+		if (i->pStructureData == s) return i;
 	}
 
-	// Then the object layer....
-	for (LEVELNODE* pLevelNode = gpWorldLevelData[sGridNo].pObjectHead; pLevelNode != NULL; pLevelNode = pLevelNode->pNext)
+	// Then the object layer
+	for (LEVELNODE* i = me.pObjectHead; i; i = i->pNext)
 	{
-		if (pLevelNode->pStructureData == pStructure)
-		{
-			return pLevelNode;
-		}
+		if (i->pStructureData == s) return i;
 	}
 
-	// Finally the onroof layer....
-	for (LEVELNODE* pLevelNode = gpWorldLevelData[sGridNo].pOnRoofHead; pLevelNode != NULL; pLevelNode = pLevelNode->pNext)
+	// Finally the onroof layer
+	for (LEVELNODE* i = me.pOnRoofHead; i; i = i->pNext)
 	{
-		if (pLevelNode->pStructureData == pStructure)
-		{
-			return pLevelNode;
-		}
+		if (i->pStructureData == s) return i;
 	}
 
 	throw std::logic_error("FindLevelNodeBasedOnStruct failed");
