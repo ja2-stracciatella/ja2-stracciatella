@@ -51,7 +51,7 @@ static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, INT
 static void AddBloodOrSmellFromMapTempFileToMap(MODIFY_MAP* pMap);
 static void AddObjectFromMapTempFileToMap(UINT32 uiMapIndex, UINT16 usIndex);
 static void DamageStructsFromMapTempFile(MODIFY_MAP* pMap);
-static BOOLEAN ModifyWindowStatus(UINT32 uiMapIndex);
+static bool ModifyWindowStatus(GridNo);
 static void RemoveSavedStructFromMap(UINT32 uiMapIndex, UINT16 usIndex);
 static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fOpened);
 
@@ -681,18 +681,12 @@ void AddWindowHitToMapTempFile( UINT32 uiMapIndex )
 }
 
 
-static BOOLEAN ModifyWindowStatus(UINT32 uiMapIndex)
+static bool ModifyWindowStatus(GridNo const grid_no)
 {
-	STRUCTURE *		pStructure;
-
-	pStructure = FindStructure( (INT16) uiMapIndex, STRUCTURE_WALLNWINDOW );
-	if (pStructure)
-	{
-		SwapStructureForPartner(pStructure);
-		return( TRUE );
-	}
-	// else forget it, window could be destroyed
-	return( FALSE );
+	STRUCTURE* const s = FindStructure(grid_no, STRUCTURE_WALLNWINDOW);
+	if (!s) return false; // Forget it, window could be destroyed
+	SwapStructureForPartner(s);
+	return true;
 }
 
 
