@@ -286,7 +286,7 @@ BOOLEAN CutWireFence( INT16 sGridNo )
 	pStructure = FindCuttableWireFenceAtGridNo( sGridNo );
 	if (pStructure)
 	{
-		pStructure = SwapStructureForPartnerAndStoreChangeInMap( sGridNo, pStructure );
+		pStructure = SwapStructureForPartnerAndStoreChangeInMap(pStructure);
 		if (pStructure)
 		{
 			RecompileLocalMovementCosts( sGridNo );
@@ -406,7 +406,7 @@ BOOLEAN SetOpenableStructureToClosed( INT16 sGridNo, UINT8 ubLevel )
 
 	if ( pStructure->fFlags & STRUCTURE_OPEN )
 	{
-		pNewStructure = SwapStructureForPartner( sGridNo, pStructure );
+		pNewStructure = SwapStructureForPartner(pStructure);
 		if ( pNewStructure != NULL)
 		{
 			RecompileLocalMovementCosts( sGridNo );

@@ -2123,7 +2123,7 @@ void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 		return;
 	}
 
-	pWallAndWindow = SwapStructureForPartner( sGridNo, pWallAndWindow);
+	pWallAndWindow = SwapStructureForPartner(pWallAndWindow);
 	if (pWallAndWindow == NULL)
 	{
 		return;
@@ -2139,7 +2139,7 @@ void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 		// Force to destruction animation!
 		if (pWallAndWindowInDB->bPartnerDelta != NO_PARTNER_STRUCTURE  )
 		{
-			pWallAndWindow = SwapStructureForPartner( sGridNo, pWallAndWindow);
+			pWallAndWindow = SwapStructureForPartner(pWallAndWindow);
 			if ( pWallAndWindow )
 			{
 				// record 2nd window smash

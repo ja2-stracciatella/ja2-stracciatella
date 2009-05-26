@@ -1236,7 +1236,7 @@ static void SyncronizeDoorStatusToStructureData(DOOR_STATUS* pDoorStatus)
 		if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )
 		{
 			// Swap!
-			SwapStructureForPartner( sBaseGridNo, pBaseStructure );
+			SwapStructureForPartner(pBaseStructure);
 			RecompileLocalMovementCosts( sBaseGridNo );
 		}
 	}
@@ -1245,7 +1245,7 @@ static void SyncronizeDoorStatusToStructureData(DOOR_STATUS* pDoorStatus)
 		if ( ( pStructure->fFlags & STRUCTURE_OPEN ) )
 		{
 			// Swap!
-			SwapStructureForPartner( sBaseGridNo, pBaseStructure );
+			SwapStructureForPartner(pBaseStructure);
 			RecompileLocalMovementCosts( sBaseGridNo );
 		}
 	}
@@ -1380,7 +1380,7 @@ static void InternalUpdateDoorGraphicFromStatus(const DOOR_STATUS* d, BOOLEAN fD
 		return;
 	}
 
-	SwapStructureForPartner(sBaseGridNo, pBaseStructure);
+	SwapStructureForPartner(pBaseStructure);
 	RecompileLocalMovementCosts(sBaseGridNo);
 
 dirty_end:

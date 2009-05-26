@@ -688,7 +688,7 @@ static BOOLEAN ModifyWindowStatus(UINT32 uiMapIndex)
 	pStructure = FindStructure( (INT16) uiMapIndex, STRUCTURE_WALLNWINDOW );
 	if (pStructure)
 	{
-		SwapStructureForPartner( (INT16) uiMapIndex, pStructure );
+		SwapStructureForPartner(pStructure);
 		return( TRUE );
 	}
 	// else forget it, window could be destroyed
@@ -724,7 +724,7 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 		  sBaseGridNo = pBase->sGridNo;
     }
 
-		if (!SwapStructureForPartner((UINT16)uiMapIndex, pStructure))
+		if (!SwapStructureForPartner(pStructure))
 		{
 			//an error occured
 		}

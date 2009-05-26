@@ -855,7 +855,7 @@ BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure )
 }
 
 
-static STRUCTURE* InternalSwapStructureForPartner(INT16 sGridNo, STRUCTURE* const pStructure, BOOLEAN const fStoreInMap)
+static STRUCTURE* InternalSwapStructureForPartner(STRUCTURE* const pStructure, BOOLEAN const fStoreInMap)
 try
 { // switch structure
 	LEVELNODE *				pLevelNode;
@@ -885,7 +885,7 @@ try
 	// record values
 	bDelta = pBaseStructure->pDBStructureRef->pDBStructure->bPartnerDelta;
 	const DB_STRUCTURE_REF* const pPartnerDBStructure = pBaseStructure->pDBStructureRef + bDelta;
-	sGridNo = pBaseStructure->sGridNo;
+	GridNo                  const sGridNo             = pBaseStructure->sGridNo;
 	ubHitPoints = pBaseStructure->ubHitPoints;
 	sCubeOffset = pBaseStructure->sCubeOffset;
 	// delete the old structure and add the new one
@@ -927,15 +927,15 @@ try
 catch (...) { return 0; }
 
 
-STRUCTURE * SwapStructureForPartner( INT16 sGridNo, STRUCTURE * pStructure )
+STRUCTURE* SwapStructureForPartner(STRUCTURE* const s)
 {
-	return InternalSwapStructureForPartner( sGridNo, pStructure, FALSE);
+	return InternalSwapStructureForPartner(s, false);
 }
 
 
-STRUCTURE * SwapStructureForPartnerAndStoreChangeInMap( INT16 sGridNo, STRUCTURE * pStructure )
+STRUCTURE* SwapStructureForPartnerAndStoreChangeInMap(STRUCTURE* const s)
 {
-	return InternalSwapStructureForPartner(sGridNo, pStructure, TRUE);
+	return InternalSwapStructureForPartner(s, true);
 }
 
 

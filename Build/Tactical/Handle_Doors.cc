@@ -47,7 +47,7 @@ void HandleDoorChangeFromGridNo(SOLDIERTYPE* const s, INT16 const grid_no, BOOLE
 	}
 
 	BOOLEAN const door_animated = HandleDoorsOpenClose(s, grid_no, structure, no_animation);
-	if (SwapStructureForPartner(grid_no, structure))
+	if (SwapStructureForPartner(structure))
 	{
 		RecompileLocalMovementCosts(grid_no);
 	}

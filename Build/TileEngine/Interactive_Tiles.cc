@@ -281,7 +281,7 @@ void HandleStructChangeFromGridNo(SOLDIERTYPE* const s, GridNo const grid_no)
 		}
 	}
 
-	STRUCTURE* const new_structure = SwapStructureForPartner(grid_no, structure);
+	STRUCTURE* const new_structure = SwapStructureForPartner(structure);
 	if (new_structure)
 	{
 		RecompileLocalMovementCosts(grid_no);

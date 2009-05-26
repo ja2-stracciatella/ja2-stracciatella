@@ -61,8 +61,8 @@ STRUCTURE* FindBaseStructure(STRUCTURE* s);
 //
 // functions related to interactive tiles
 //
-STRUCTURE * SwapStructureForPartner( INT16 sGridNo, STRUCTURE * pStructure );
-STRUCTURE * SwapStructureForPartnerAndStoreChangeInMap( INT16 sGridNo, STRUCTURE * pStructure );
+STRUCTURE* SwapStructureForPartner(STRUCTURE*);
+STRUCTURE* SwapStructureForPartnerAndStoreChangeInMap(STRUCTURE*);
 //
 // functions useful for AI that return info about heights
 //
