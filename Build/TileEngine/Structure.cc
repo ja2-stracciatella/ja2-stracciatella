@@ -630,7 +630,7 @@ static void AddStructureToTile(MAP_ELEMENT* const me, STRUCTURE* const s, UINT16
 static void DeleteStructureFromTile(MAP_ELEMENT* pMapElement, STRUCTURE* pStructure);
 
 
-static STRUCTURE* InternalAddStructureToWorld(INT16 const sBaseGridNo, INT8 const bLevel, DB_STRUCTURE_REF const* const pDBStructureRef, LEVELNODE* const pLevelNode)
+STRUCTURE* AddStructureToWorld(INT16 const sBaseGridNo, INT8 const bLevel, DB_STRUCTURE_REF const* const pDBStructureRef, LEVELNODE* const pLevelNode)
 try
 { // Adds a complete structure to the world at a location plus all other locations covered by the structure
 	CHECKN(pDBStructureRef);
@@ -765,12 +765,6 @@ try
 }
 catch (...) { return 0; }
 
-
-BOOLEAN AddStructureToWorld(const INT16 sBaseGridNo, const INT8 bLevel, const DB_STRUCTURE_REF* const pDBStructureRef, LEVELNODE* const pLevelN)
-{
-	return InternalAddStructureToWorld(sBaseGridNo, bLevel, pDBStructureRef, pLevelN) != NULL;
-}
-
 //
 // Structure deletion functions
 //
@@ -899,7 +893,7 @@ try
 	{
 		return( NULL );
 	}
-	pNewBaseStructure = InternalAddStructureToWorld( sGridNo, (INT8) (sCubeOffset / PROFILE_Z_SIZE), pPartnerDBStructure, pLevelNode );
+	pNewBaseStructure = AddStructureToWorld(sGridNo, (INT8)(sCubeOffset / PROFILE_Z_SIZE), pPartnerDBStructure, pLevelNode);
 	if (pNewBaseStructure == NULL)
 	{
 		return( NULL );
