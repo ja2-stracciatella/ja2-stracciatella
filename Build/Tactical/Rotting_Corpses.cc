@@ -956,28 +956,14 @@ void HandleRottingCorpses( )
 }
 
 
-static ROTTING_CORPSE* FindCorpseBasedOnStructure(INT16 sGridNo, STRUCTURE* pStructure)
+static ROTTING_CORPSE* FindCorpseBasedOnStructure(GridNo const grid_no, STRUCTURE* const structure)
 {
-	LEVELNODE					*pLevelNode;
-	ROTTING_CORPSE		*pCorpse = NULL;
-
-	pLevelNode = gpWorldLevelData[ sGridNo ].pStructHead;
-	while( pLevelNode != NULL )
+	for (LEVELNODE const* i = gpWorldLevelData[grid_no].pStructHead; i; i = i->pNext)
 	{
-		if (pLevelNode->pStructureData == pStructure )
-		{
-			break;
-		}
-		pLevelNode = pLevelNode->pNext;
+		if (i->pStructureData != structure) continue;
+		return ID2CORPSE(i->pAniTile->v.user.uiData);
 	}
-
-	if ( pLevelNode != NULL )
-	{
-		// Get our corpse....
-		pCorpse = ID2CORPSE(pLevelNode->pAniTile->v.user.uiData);
-	}
-
-	return( pCorpse );
+	return 0;
 }
 
 
