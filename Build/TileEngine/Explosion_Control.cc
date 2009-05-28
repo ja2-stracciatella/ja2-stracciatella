@@ -318,7 +318,7 @@ static void HandleFencePartnerCheck(INT16 sStructGridNo)
 }
 
 
-static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTURE** const ppNextCurrent, const INT16 sGridNo, const INT16 sWoundAmt, const UINT32 uiDist, BOOLEAN* const pfRecompileMovementCosts, const BOOLEAN fOnlyWalls, const BOOLEAN fSubSequentMultiTilesTransitionDamage, SOLDIERTYPE* const owner, const INT8 bLevel)
+static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTURE** const ppNextCurrent, INT16 const sGridNo, INT16 const sWoundAmt, UINT32 const uiDist, BOOLEAN* const pfRecompileMovementCosts, BOOLEAN const fOnlyWalls, SOLDIERTYPE* const owner, INT8 const bLevel)
 {
 	INT16 sX, sY;
 	STRUCTURE		*pBase, *pWallStruct, *pAttached, *pAttachedBase;
@@ -877,7 +877,7 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 		// Check level!
 		if (pCurrent->sCubeOffset == sDesiredLevel )
 		{
-			fExplodeDamageReturn = ExplosiveDamageStructureAtGridNo(pCurrent, &pNextCurrent, sGridNo, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, 0, owner, bLevel);
+			fExplodeDamageReturn = ExplosiveDamageStructureAtGridNo(pCurrent, &pNextCurrent, sGridNo, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, owner, bLevel);
 
 			// Are we overwritting damage due to multi-tile...?
 			if ( fExplodeDamageReturn )
