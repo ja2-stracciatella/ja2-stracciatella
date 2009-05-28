@@ -1115,26 +1115,21 @@ void AddBuildingSectionToWorld( SGPRect *pSelectRegion )
 	}
 }
 
+
 void AnalyseCaveMapForStructureInfo()
 {
 	FOR_ALL_WORLD_TILES(i)
 	{
-		LEVELNODE* pStruct = i->pStructHead;
-		while( pStruct )
+		for (LEVELNODE* k = i->pStructHead; k; k = k->pNext)
 		{
-			if ( pStruct->usIndex != NO_TILE )
-			{
-				const UINT32 uiTileType = GetTileType(pStruct->usIndex);
-				if( uiTileType == FIRSTWALL )
-				{
-					const UINT16 usSubIndex = GetSubIndexFromTileIndex(pStruct->usIndex);
-					if( usSubIndex >= 60 && usSubIndex <= 65 )
-					{
-						pStruct->uiFlags |= LEVELNODE_CAVE;
-					}
-				}
-			}
-			pStruct = pStruct->pNext;
+			if (k->usIndex == NO_TILE) continue;
+
+			if (GetTileType(k->usIndex) != FIRSTWALL) continue;
+
+			UINT16 const sub_idx = GetSubIndexFromTileIndex(k->usIndex);
+			if (sub_idx < 60 || 65 < sub_idx) continue;
+
+			k->uiFlags |= LEVELNODE_CAVE;
 		}
 	}
 }
