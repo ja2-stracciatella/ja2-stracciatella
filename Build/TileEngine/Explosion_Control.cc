@@ -809,17 +809,14 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 					return( FALSE );
 				}
 			}
-
-			// 2 is NO DAMAGE
-			return( 2 );
 		}
 	}
 
-	return( 1 );
+	return TRUE;
 }
 
 
-static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, const UINT32 uiDist, BOOLEAN* const pfRecompileMovementCosts, const BOOLEAN fOnlyWalls, INT8 bMultiStructSpecialFlag, const BOOLEAN fSubSequentMultiTilesTransitionDamage, SOLDIERTYPE* const owner, const INT8 bLevel)
+static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, const UINT32 uiDist, BOOLEAN* const pfRecompileMovementCosts, const BOOLEAN fOnlyWalls, INT8 bMultiStructSpecialFlag, SOLDIERTYPE* const owner, const INT8 bLevel)
 {
 	STRUCTURE							* pCurrent, *pNextCurrent, *pStructure;
 	STRUCTURE *						pBaseStructure;
@@ -879,19 +876,6 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 		{
 			fExplodeDamageReturn = ExplosiveDamageStructureAtGridNo(pCurrent, &pNextCurrent, sGridNo, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, owner, bLevel);
 
-			// Are we overwritting damage due to multi-tile...?
-			if ( fExplodeDamageReturn )
-			{
-				if ( fSubSequentMultiTilesTransitionDamage == 2)
-				{
-					fExplodeDamageReturn = 2;
-				}
-				else
-				{
-					fExplodeDamageReturn = 1;
-				}
-			}
-
 			if ( !fExplodeDamageReturn )
 			{
 				fToBreak = TRUE;
@@ -932,8 +916,7 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 								if ( ( bMultiStructSpecialFlag == fMultiStructSpecialFlag ) )
 								{
 									// If we just damaged it, use same damage value....
-									const BOOLEAN subsequent_damage = (fMultiStructSpecialFlag ? 1 : 2);
-									ExplosiveDamageGridNo(sNewGridNo2, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, bMultiStructSpecialFlag, subsequent_damage, owner, bLevel);
+									ExplosiveDamageGridNo(sNewGridNo2, sWoundAmt, uiDist, pfRecompileMovementCosts, fOnlyWalls, bMultiStructSpecialFlag, owner, bLevel);
 
 									InternalIgniteExplosion(owner, CenterX(sNewGridNo2), CenterY(sNewGridNo2), 0, sNewGridNo2, RDX, FALSE, bLevel);
 
@@ -1267,14 +1250,14 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 				sStructDmgAmt = sWoundAmt;
 			}
 
-			ExplosiveDamageGridNo(sGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, FALSE, -1, 0, owner, bLevel);
+			ExplosiveDamageGridNo(sGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, FALSE, -1, owner, bLevel);
 
 			// ATE: Look for damage to walls ONLY for next two gridnos
 			sNewGridNo = NewGridNo( sGridNo, DirectionInc( NORTH ) );
 
 			if ( GridNoOnVisibleWorldTile( sNewGridNo ) )
 			{
-				ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, 0, owner, bLevel);
+				ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, owner, bLevel);
 			}
 
 			// ATE: Look for damage to walls ONLY for next two gridnos
@@ -1282,7 +1265,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 
 			if ( GridNoOnVisibleWorldTile( sNewGridNo ) )
 			{
-				ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, 0, owner, bLevel);
+				ExplosiveDamageGridNo(sNewGridNo, sStructDmgAmt, uiDist, &fRecompileMovementCosts, TRUE, -1, owner, bLevel);
 			}
 		}
 
