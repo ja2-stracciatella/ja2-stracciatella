@@ -16,25 +16,18 @@
 #include "Debug.h"
 
 
-static BOOLEAN CaveAtGridNo(INT32 iMapIndex)
+static bool CaveAtGridNo(INT32 const map_idx)
 {
-	LEVELNODE* pLevel;
-	if( iMapIndex < 0 || iMapIndex >= NOWHERE )
-		return TRUE;
+	if (map_idx < 0 || NOWHERE <= map_idx) return true;
 
-	if (FindStructure(iMapIndex, STRUCTURE_CAVEWALL) != NULL) return TRUE;
+	if (FindStructure(map_idx, STRUCTURE_CAVEWALL)) return true;
 
-	//may not have structure information, so check if there is a levelnode flag.
-	pLevel = gpWorldLevelData[ iMapIndex ].pStructHead;
-	while( pLevel )
+	// May not have structure information, so check if there is a levelnode flag
+	for (LEVELNODE const* i = gpWorldLevelData[map_idx].pStructHead; i; i = i->pNext)
 	{
-		if( pLevel->uiFlags & LEVELNODE_CAVE )
-		{
-			return TRUE;
-		}
-		pLevel = pLevel->pNext;
+		if (i->uiFlags & LEVELNODE_CAVE) return true;
 	}
-	return FALSE;
+	return false;
 }
 
 
