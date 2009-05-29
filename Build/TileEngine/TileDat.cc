@@ -647,11 +647,6 @@ void SetSpecificDatabaseValues(UINT16 const type, UINT16 const database_elem, TI
 		te.uiFlags |= DYNAMIC_TILE;
 	}
 
-	if (type == FIRSTROAD)
-	{
-		te.uiFlags |= ROAD_TILE;
-	}
-
 	// Set flags for objects pieces which use proper z
 	if (use_raised_object_type)
 	{
