@@ -1695,15 +1695,11 @@ static void SetBlueFlagFlags(void)
 {
 	FOR_ALL_WORLD_TILES(i)
 	{
-		LEVELNODE* pNode = i->pStructHead;
-		while ( pNode )
+		for (LEVELNODE const* k = i->pStructHead; k; k = k->pNext)
 		{
-			if ( pNode->usIndex == BLUEFLAG_GRAPHIC)
-			{
-				i->uiFlags |= MAPELEMENT_PLAYER_MINE_PRESENT;
-				break;
-			}
-			pNode = pNode->pNext;
+			if (k->usIndex != BLUEFLAG_GRAPHIC) continue;
+			i->uiFlags |= MAPELEMENT_PLAYER_MINE_PRESENT;
+			break;
 		}
 	}
 }
