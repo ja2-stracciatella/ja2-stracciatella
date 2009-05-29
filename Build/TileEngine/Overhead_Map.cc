@@ -612,7 +612,7 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 
 							SMALL_TILE_DB const& pTile = gSmTileDB[n->usIndex];
 							INT16         const  sX    = sTempPosX_S;
-							INT16                sY    = sTempPosY_S - gTileDatabase[n->usIndex].sOffsetHeight / 5;
+							INT16                sY    = sTempPosY_S;
 
 							if (gTileDatabase[n->usIndex].uiFlags & IGNORE_WORLD_HEIGHT)
 							{
@@ -679,7 +679,7 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 
 							SMALL_TILE_DB const& pTile = gSmTileDB[n->usIndex];
 							INT16         const  sX    = sTempPosX_S;
-							INT16                sY    = sTempPosY_S - gTileDatabase[n->usIndex].sOffsetHeight / 5 - sHeight;
+							INT16                sY    = sTempPosY_S - sHeight;
 
 							sY -= WALL_HEIGHT / 5;
 							sY += gsRenderHeight / 5;

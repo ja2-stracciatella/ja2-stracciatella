@@ -655,9 +655,6 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 										hVObject     = TileElem->hTileSurface;
 										usImageIndex = TileElem->usRegionIndex;
 
-										// ADJUST FOR WORLD MAPELEM HIEGHT
-										sYPos -= TileElem->sOffsetHeight;
-
 										if (TileElem->uiFlags & IGNORE_WORLD_HEIGHT)
 										{
 											sYPos -= sModifiedTileHeight;

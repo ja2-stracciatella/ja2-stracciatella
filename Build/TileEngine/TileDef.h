@@ -97,7 +97,6 @@ struct TILE_ELEMENT
 		// Land and overlay type
 		struct
 		{
-			 INT16					sOffsetHeight;
 			 UINT16					usWallOrientation;
 			 UINT8					ubFullTile;
 
