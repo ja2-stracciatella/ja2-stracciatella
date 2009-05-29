@@ -10,21 +10,25 @@
 #define REQUIRES_SMOOTHING_TILE	19
 #define NUM_WALL_ORIENTATIONS		40
 
-#define	WALL_TILE								0x00000001
-#define ANIMATED_TILE						0x00000002
-#define DYNAMIC_TILE						0x00000004
-#define IGNORE_WORLD_HEIGHT			0x00000008
-#define ROAD_TILE								0x00000010
-#define FULL3D_TILE							0x00000020
-#define MULTI_Z_TILE						0x00000080
-#define OBJECTLAYER_USEZHEIGHT	0x00000100
-#define	ROOFSHADOW_TILE					0x00000200
-#define	ROOF_TILE								0x00000400
-#define	TRANSLUCENT_TILE				0x00000800
-#define HAS_SHADOW_BUDDY				0x00001000
-#define AFRAME_TILE							0x00002000
-#define CLIFFHANG_TILE					0x00008000
-#define UNDERFLOW_FILLER        0x00010000
+enum TileElementFlags
+{
+	WALL_TILE              = 0x00000001,
+	ANIMATED_TILE          = 0x00000002,
+	DYNAMIC_TILE           = 0x00000004,
+	IGNORE_WORLD_HEIGHT    = 0x00000008,
+	ROAD_TILE              = 0x00000010,
+	FULL3D_TILE            = 0x00000020,
+	MULTI_Z_TILE           = 0x00000080,
+	OBJECTLAYER_USEZHEIGHT = 0x00000100,
+	ROOFSHADOW_TILE        = 0x00000200,
+	ROOF_TILE              = 0x00000400,
+	TRANSLUCENT_TILE       = 0x00000800,
+	HAS_SHADOW_BUDDY       = 0x00001000,
+	AFRAME_TILE            = 0x00002000,
+	CLIFFHANG_TILE         = 0x00008000,
+	UNDERFLOW_FILLER       = 0x00010000
+};
+ENUM_BITSET(TileElementFlags)
 
 
 #define MAX_ANIMATED_TILES			200
@@ -84,7 +88,7 @@ struct TILE_ELEMENT
 	UINT16							fType;
 	HVOBJECT						hTileSurface;
 	DB_STRUCTURE_REF *	pDBStructureRef;
-	UINT32							uiFlags;
+	TileElementFlags    uiFlags;
 	RelTileLoc *				pTileLocData;
 	UINT16							usRegionIndex;
 	INT16								sBuddyNum;
