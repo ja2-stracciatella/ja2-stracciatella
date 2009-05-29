@@ -91,92 +91,55 @@ static INT16 const gClosedDoorShadowList[] =
 };
 
 
-// Reverse buddies from shadow back to struct
-static INT16 const gReverseShadowBuddys[][3] =
+struct ShadowBuddies
 {
-	{ FIRSTCLIFFSHADOW,           FIRSTCLIFFSHADOW1,           FIRSTCLIFF1           },
-
-	{ FIRSTSHADOW,                FIRSTSHADOW1,                FIRSTOSTRUCT1         },
-	{ SECONDSHADOW,               SECONDSHADOW1,               SECONDOSTRUCT1        },
-	{ THIRDSHADOW,                THIRDSHADOW1,                THIRDOSTRUCT1         },
-	{ FOURTHSHADOW,               FOURTHSHADOW1,               FOURTHOSTRUCT1        },
-	{ FIFTHSHADOW,                FIFTHSHADOW1,                FIFTHOSTRUCT1         },
-	{ SIXTHSHADOW,                SIXTHSHADOW1,                SIXTHOSTRUCT1         },
-	{ SEVENTHSHADOW,              SEVENTHSHADOW1,              SEVENTHOSTRUCT1       },
-	{ EIGHTSHADOW,                EIGHTSHADOW1,                EIGHTOSTRUCT1         },
-
-	{ FIRSTFULLSHADOW,            FIRSTFULLSHADOW1,            FIRSTFULLSTRUCT1      },
-	{ SECONDFULLSHADOW,           SECONDFULLSHADOW1,           SECONDFULLSTRUCT1     },
-	{ THIRDFULLSHADOW,            THIRDFULLSHADOW1,            THIRDFULLSTRUCT1      },
-	{ FOURTHFULLSHADOW,           FOURTHFULLSHADOW1,           FOURTHFULLSTRUCT1     },
-
-	{ FIRSTDOORSHADOW,            FIRSTDOORSH1,                FIRSTDOOR1            },
-	{ SECONDDOORSHADOW,           SECONDDOORSH1,               SECONDDOOR1           },
-	{ THIRDDOORSHADOW,            THIRDDOORSH1,                THIRDDOOR1            },
-	{ FOURTHDOORSHADOW,           FOURTHDOORSH1,               FOURTHDOOR1           },
-
-	// Fence
-	{ FENCESHADOW,                FENCESHADOW1,                FENCESTRUCT1          },
-
-	// Vehicles
-	{ FIRSTVEHICLESHADOW,         FIRSTVEHICLESHADOW1,         FIRSTVEHICLE1         },
-	{ SECONDVEHICLESHADOW,        SECONDVEHICLESHADOW1,        SECONDVEHICLE1        },
-
-	// DebrisSTRUCT
-	{ FIRSTDEBRISSTRUCTSHADOW,    FIRSTDEBRISSTRUCTSHADOW1,    FIRSTDEBRISSTRUCT1    },
-	{ SECONDDEBRISSTRUCTSHADOW,   SECONDDEBRISSTRUCTSHADOW1,   SECONDDEBRISSTRUCT1   },
-
-	{ NINTHOSTRUCTSHADOW,         NINTHOSTRUCTSHADOW1,         NINTHOSTRUCT1         },
-	{ TENTHOSTRUCTSHADOW,         TENTHOSTRUCTSHADOW1,         TENTHOSTRUCT1         },
-
-	{ FIRSTLARGEEXPDEBRISSHADOW,  FIRSTLARGEEXPDEBRISSHADOW1,  FIRSTLARGEEXPDEBRIS1  },
-	{ SECONDLARGEEXPDEBRISSHADOW, SECONDLARGEEXPDEBRISSHADOW1, SECONDLARGEEXPDEBRIS1 },
-
-	{ -1, -1, -1 }
+	INT16 structure;
+	INT16 shadow;
+	INT16 first_structure;
+	INT16 first_shadow;
 };
 
 
-// Shadow buddies from struct forward to shadow
-static INT16 const gForwardShadowBuddys[][3] =
+// Bidirectional mapping between structs and shadows
+static ShadowBuddies const g_shadow_buddies[] =
 {
-	{ FIRSTCLIFF,           FIRSTCLIFF1,           FIRSTCLIFFSHADOW1           },
+	{ FIRSTCLIFF,           FIRSTCLIFFSHADOW,           FIRSTCLIFF1,           FIRSTCLIFFSHADOW1           },
 
-	{ FIRSTOSTRUCT,         FIRSTOSTRUCT1,         FIRSTSHADOW1                },
-	{ SECONDOSTRUCT,        SECONDOSTRUCT1,        SECONDSHADOW1               },
-	{ THIRDOSTRUCT,         THIRDOSTRUCT1,         THIRDSHADOW1                },
-	{ FOURTHOSTRUCT,        FOURTHOSTRUCT1,        FOURTHSHADOW1               },
-	{ FIFTHOSTRUCT,         FIFTHOSTRUCT1,         FIFTHSHADOW1                },
-	{ SIXTHOSTRUCT,         SIXTHOSTRUCT1,         SIXTHSHADOW1                },
-	{ SEVENTHOSTRUCT,       SEVENTHOSTRUCT1,       SEVENTHSHADOW1              },
-	{ EIGHTOSTRUCT,         EIGHTOSTRUCT1,         EIGHTSHADOW1                },
+	{ FIRSTOSTRUCT,         FIRSTSHADOW,                FIRSTOSTRUCT1,         FIRSTSHADOW1                },
+	{ SECONDOSTRUCT,        SECONDSHADOW,               SECONDOSTRUCT1,        SECONDSHADOW1               },
+	{ THIRDOSTRUCT,         THIRDSHADOW,                THIRDOSTRUCT1,         THIRDSHADOW1                },
+	{ FOURTHOSTRUCT,        FOURTHSHADOW,               FOURTHOSTRUCT1,        FOURTHSHADOW1               },
+	{ FIFTHOSTRUCT,         FIFTHSHADOW,                FIFTHOSTRUCT1,         FIFTHSHADOW1                },
+	{ SIXTHOSTRUCT,         SIXTHSHADOW,                SIXTHOSTRUCT1,         SIXTHSHADOW1                },
+	{ SEVENTHOSTRUCT,       SEVENTHSHADOW,              SEVENTHOSTRUCT1,       SEVENTHSHADOW1              },
+	{ EIGHTOSTRUCT,         EIGHTSHADOW,                EIGHTOSTRUCT1,         EIGHTSHADOW1                },
 
-	{ FIRSTFULLSTRUCT,      FIRSTFULLSTRUCT1,      FIRSTFULLSHADOW1            },
-	{ SECONDFULLSTRUCT,     SECONDFULLSTRUCT1,     SECONDFULLSHADOW1           },
-	{ THIRDFULLSTRUCT,      THIRDFULLSTRUCT1,      THIRDFULLSHADOW1            },
-	{ FOURTHFULLSTRUCT,     FOURTHFULLSTRUCT1,     FOURTHFULLSHADOW1           },
+	{ FIRSTFULLSTRUCT,      FIRSTFULLSHADOW,            FIRSTFULLSTRUCT1,      FIRSTFULLSHADOW1            },
+	{ SECONDFULLSTRUCT,     SECONDFULLSHADOW,           SECONDFULLSTRUCT1,     SECONDFULLSHADOW1           },
+	{ THIRDFULLSTRUCT,      THIRDFULLSHADOW,            THIRDFULLSTRUCT1,      THIRDFULLSHADOW1            },
+	{ FOURTHFULLSTRUCT,     FOURTHFULLSHADOW,           FOURTHFULLSTRUCT1,     FOURTHFULLSHADOW1           },
 
-	{ FIRSTDOOR,            FIRSTDOOR1,            FIRSTDOORSH1                },
-	{ SECONDDOOR,           SECONDDOOR1,           SECONDDOORSH1               },
-	{ THIRDDOOR,            THIRDDOOR1,            THIRDDOORSH1                },
-	{ FOURTHDOOR,           FOURTHDOOR1,           FOURTHDOORSH1               },
+	{ FIRSTDOOR,            FIRSTDOORSHADOW,            FIRSTDOOR1,            FIRSTDOORSH1                },
+	{ SECONDDOOR,           SECONDDOORSHADOW,           SECONDDOOR1,           SECONDDOORSH1               },
+	{ THIRDDOOR,            THIRDDOORSHADOW,            THIRDDOOR1,            THIRDDOORSH1                },
+	{ FOURTHDOOR,           FOURTHDOORSHADOW,           FOURTHDOOR1,           FOURTHDOORSH1               },
 
 	// Fence
-	{ FENCESTRUCT,          FENCESTRUCT1,          FENCESHADOW1                },
+	{ FENCESTRUCT,          FENCESHADOW,                FENCESTRUCT1,          FENCESHADOW1                },
 
-	// Vehicle
-	{ FIRSTVEHICLE,         FIRSTVEHICLE1,         FIRSTVEHICLESHADOW1         },
-	{ SECONDVEHICLE,        SECONDVEHICLE1,        SECONDVEHICLESHADOW1        },
+	// Vehicles
+	{ FIRSTVEHICLE,         FIRSTVEHICLESHADOW,         FIRSTVEHICLE1,         FIRSTVEHICLESHADOW1         },
+	{ SECONDVEHICLE,        SECONDVEHICLESHADOW,        SECONDVEHICLE1,        SECONDVEHICLESHADOW1        },
 
-	{ FIRSTDEBRISSTRUCT,    FIRSTDEBRISSTRUCT1,    FIRSTDEBRISSTRUCTSHADOW1    },
-	{ SECONDDEBRISSTRUCT,   SECONDDEBRISSTRUCT1,   SECONDDEBRISSTRUCTSHADOW1   },
+	// DebrisSTRUCT
+	{ FIRSTDEBRISSTRUCT,    FIRSTDEBRISSTRUCTSHADOW,    FIRSTDEBRISSTRUCT1,    FIRSTDEBRISSTRUCTSHADOW1    },
+	{ SECONDDEBRISSTRUCT,   SECONDDEBRISSTRUCTSHADOW,   SECONDDEBRISSTRUCT1,   SECONDDEBRISSTRUCTSHADOW1   },
 
-	{ NINTHOSTRUCT,         NINTHOSTRUCT1,         NINTHOSTRUCTSHADOW1         },
-	{ TENTHOSTRUCT,         TENTHOSTRUCT1,         TENTHOSTRUCTSHADOW1         },
+	{ NINTHOSTRUCT,         NINTHOSTRUCTSHADOW,         NINTHOSTRUCT1,         NINTHOSTRUCTSHADOW1         },
+	{ TENTHOSTRUCT,         TENTHOSTRUCTSHADOW,         TENTHOSTRUCT1,         TENTHOSTRUCTSHADOW1         },
 
-	{ FIRSTLARGEEXPDEBRIS,  FIRSTLARGEEXPDEBRIS1,  FIRSTLARGEEXPDEBRISSHADOW1  },
-	{ SECONDLARGEEXPDEBRIS, SECONDLARGEEXPDEBRIS1, SECONDLARGEEXPDEBRISSHADOW1 },
-
-	{ -1, -1, -1 }
+	{ FIRSTLARGEEXPDEBRIS,  FIRSTLARGEEXPDEBRISSHADOW,  FIRSTLARGEEXPDEBRIS1,  FIRSTLARGEEXPDEBRISSHADOW1  },
+	{ SECONDLARGEEXPDEBRIS, SECONDLARGEEXPDEBRISSHADOW, SECONDLARGEEXPDEBRIS1, SECONDLARGEEXPDEBRISSHADOW1 },
 };
 
 
@@ -628,26 +591,23 @@ static void SetAnimDataIfInList(INT16 const* const list, UINT16 const database_e
 
 void SetSpecificDatabaseValues(UINT16 const type, UINT16 const database_elem, TILE_ELEMENT& te, bool const use_raised_object_type)
 {
-	// Setup buddys for shadows
-	for (INT16 const (*i)[3] = gReverseShadowBuddys; (*i)[0] != -1; ++i)
+	// Setup buddies for structures and shadows
+	for (ShadowBuddies const* i = g_shadow_buddies; i != endof(g_shadow_buddies); ++i)
 	{
-		// If we are a shadow type
-		if (type != (*i)[0]) continue;
-
-		te.sBuddyNum = (*i)[2] + (database_elem - (*i)[1]);
-		// Check flags and made the same, take from buddy's
-		te.uiFlags |= gTileDatabase[te.sBuddyNum].uiFlags;
-	}
-
-	// Setup buddys that go from struct to shadow
-	for (INT16 const (*i)[3] = gForwardShadowBuddys; (*i)[0] != -1; ++i)
-	{
-		// If we are a shadow type
-		if (type != (*i)[0]) continue;
-
-		te.sBuddyNum = (*i)[2] + (database_elem - (*i)[1]);
-		// Set flag indicating such
-		te.uiFlags |= HAS_SHADOW_BUDDY;
+		if (type == i->shadow)
+		{
+			te.sBuddyNum = database_elem - i->first_shadow + i->first_structure;
+			// Check flags and made the same, take from buddy's
+			te.uiFlags |= gTileDatabase[te.sBuddyNum].uiFlags;
+			break;
+		}
+		else if (type == i->structure)
+		{
+			te.sBuddyNum = database_elem - i->first_structure + i->first_shadow;
+			// Set flag indicating such
+			te.uiFlags |= HAS_SHADOW_BUDDY;
+			break;
+		}
 	}
 
 	if (FIRSTDOOR1 <= database_elem && database_elem <= FOURTHDOORSH20)
