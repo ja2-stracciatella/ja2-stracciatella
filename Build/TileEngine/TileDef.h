@@ -12,19 +12,19 @@
 
 enum TileElementFlags
 {
-	WALL_TILE              = 0x00000001,
-	ANIMATED_TILE          = 0x00000002,
-	DYNAMIC_TILE           = 0x00000004,
-	IGNORE_WORLD_HEIGHT    = 0x00000008,
-	FULL3D_TILE            = 0x00000020,
-	MULTI_Z_TILE           = 0x00000080,
-	OBJECTLAYER_USEZHEIGHT = 0x00000100,
-	ROOFSHADOW_TILE        = 0x00000200,
-	ROOF_TILE              = 0x00000400,
-	HAS_SHADOW_BUDDY       = 0x00001000,
-	AFRAME_TILE            = 0x00002000,
-	CLIFFHANG_TILE         = 0x00008000,
-	UNDERFLOW_FILLER       = 0x00010000
+	WALL_TILE              = 1U <<  0,
+	ANIMATED_TILE          = 1U <<  1,
+	DYNAMIC_TILE           = 1U <<  2,
+	IGNORE_WORLD_HEIGHT    = 1U <<  3,
+	FULL3D_TILE            = 1U <<  4,
+	MULTI_Z_TILE           = 1U <<  5,
+	OBJECTLAYER_USEZHEIGHT = 1U <<  6,
+	ROOFSHADOW_TILE        = 1U <<  7,
+	ROOF_TILE              = 1U <<  8,
+	HAS_SHADOW_BUDDY       = 1U <<  9,
+	AFRAME_TILE            = 1U << 10,
+	CLIFFHANG_TILE         = 1U << 11,
+	UNDERFLOW_FILLER       = 1U << 12
 };
 ENUM_BITSET(TileElementFlags)
 
