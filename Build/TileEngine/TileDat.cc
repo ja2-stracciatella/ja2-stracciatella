@@ -3,7 +3,7 @@
 #include "WorldDef.h"
 
 
-const INT16 gOpenDoorList[] =
+INT16 const gOpenDoorList[] =
 {
 	FIRSTDOOR1,
 	SECONDDOOR1,
@@ -25,7 +25,7 @@ const INT16 gOpenDoorList[] =
 };
 
 
-static const INT16 gOpenDoorShadowList[] =
+static INT16 const gOpenDoorShadowList[] =
 {
 	FIRSTDOORSH1,
 	SECONDDOORSH1,
@@ -47,7 +47,7 @@ static const INT16 gOpenDoorShadowList[] =
 };
 
 
-const INT16 gClosedDoorList[] =
+INT16 const gClosedDoorList[] =
 {
 	FIRSTDOOR5,
 	SECONDDOOR5,
@@ -69,7 +69,7 @@ const INT16 gClosedDoorList[] =
 };
 
 
-static const INT16 gClosedDoorShadowList[] =
+static INT16 const gClosedDoorShadowList[] =
 {
 	FIRSTDOORSH5,
 	SECONDDOORSH5,
@@ -91,97 +91,97 @@ static const INT16 gClosedDoorShadowList[] =
 };
 
 
-// REVERSE BUDDIES FROM SHADOW BACK TO STRUCT
-static const INT16 gReverseShadowBuddys[] =
+// Reverse buddies from shadow back to struct
+static INT16 const gReverseShadowBuddys[][3] =
 {
-	FIRSTCLIFFSHADOW,			FIRSTCLIFFSHADOW1,			FIRSTCLIFF1,
+	{ FIRSTCLIFFSHADOW,           FIRSTCLIFFSHADOW1,           FIRSTCLIFF1           },
 
-	FIRSTSHADOW,					FIRSTSHADOW1,						FIRSTOSTRUCT1,
-	SECONDSHADOW,					SECONDSHADOW1,					SECONDOSTRUCT1,
-	THIRDSHADOW,					THIRDSHADOW1,						THIRDOSTRUCT1,
-	FOURTHSHADOW,					FOURTHSHADOW1,					FOURTHOSTRUCT1,
-	FIFTHSHADOW,					FIFTHSHADOW1,						FIFTHOSTRUCT1,
-	SIXTHSHADOW,					SIXTHSHADOW1,						SIXTHOSTRUCT1,
-	SEVENTHSHADOW,				SEVENTHSHADOW1,					SEVENTHOSTRUCT1,
-	EIGHTSHADOW,					EIGHTSHADOW1,						EIGHTOSTRUCT1,
+	{ FIRSTSHADOW,                FIRSTSHADOW1,                FIRSTOSTRUCT1         },
+	{ SECONDSHADOW,               SECONDSHADOW1,               SECONDOSTRUCT1        },
+	{ THIRDSHADOW,                THIRDSHADOW1,                THIRDOSTRUCT1         },
+	{ FOURTHSHADOW,               FOURTHSHADOW1,               FOURTHOSTRUCT1        },
+	{ FIFTHSHADOW,                FIFTHSHADOW1,                FIFTHOSTRUCT1         },
+	{ SIXTHSHADOW,                SIXTHSHADOW1,                SIXTHOSTRUCT1         },
+	{ SEVENTHSHADOW,              SEVENTHSHADOW1,              SEVENTHOSTRUCT1       },
+	{ EIGHTSHADOW,                EIGHTSHADOW1,                EIGHTOSTRUCT1         },
 
-	FIRSTFULLSHADOW,			FIRSTFULLSHADOW1,				FIRSTFULLSTRUCT1,
-	SECONDFULLSHADOW,			SECONDFULLSHADOW1,			SECONDFULLSTRUCT1,
-	THIRDFULLSHADOW,			THIRDFULLSHADOW1,				THIRDFULLSTRUCT1,
-	FOURTHFULLSHADOW,			FOURTHFULLSHADOW1,			FOURTHFULLSTRUCT1,
+	{ FIRSTFULLSHADOW,            FIRSTFULLSHADOW1,            FIRSTFULLSTRUCT1      },
+	{ SECONDFULLSHADOW,           SECONDFULLSHADOW1,           SECONDFULLSTRUCT1     },
+	{ THIRDFULLSHADOW,            THIRDFULLSHADOW1,            THIRDFULLSTRUCT1      },
+	{ FOURTHFULLSHADOW,           FOURTHFULLSHADOW1,           FOURTHFULLSTRUCT1     },
 
-	FIRSTDOORSHADOW,			FIRSTDOORSH1,						FIRSTDOOR1,
-	SECONDDOORSHADOW,			SECONDDOORSH1,					SECONDDOOR1,
-	THIRDDOORSHADOW,			THIRDDOORSH1,						THIRDDOOR1,
-	FOURTHDOORSHADOW,			FOURTHDOORSH1,					FOURTHDOOR1,
+	{ FIRSTDOORSHADOW,            FIRSTDOORSH1,                FIRSTDOOR1            },
+	{ SECONDDOORSHADOW,           SECONDDOORSH1,               SECONDDOOR1           },
+	{ THIRDDOORSHADOW,            THIRDDOORSH1,                THIRDDOOR1            },
+	{ FOURTHDOORSHADOW,           FOURTHDOORSH1,               FOURTHDOOR1           },
 
-	//FENCE
-	FENCESHADOW,					FENCESHADOW1,						FENCESTRUCT1,
+	// Fence
+	{ FENCESHADOW,                FENCESHADOW1,                FENCESTRUCT1          },
 
-	// VEHICLES
-	FIRSTVEHICLESHADOW,		FIRSTVEHICLESHADOW1,		FIRSTVEHICLE1,
-	SECONDVEHICLESHADOW,	SECONDVEHICLESHADOW1,		SECONDVEHICLE1,
+	// Vehicles
+	{ FIRSTVEHICLESHADOW,         FIRSTVEHICLESHADOW1,         FIRSTVEHICLE1         },
+	{ SECONDVEHICLESHADOW,        SECONDVEHICLESHADOW1,        SECONDVEHICLE1        },
 
-	//DebrisSTRUCT
-	FIRSTDEBRISSTRUCTSHADOW,		FIRSTDEBRISSTRUCTSHADOW1,				FIRSTDEBRISSTRUCT1,
-	SECONDDEBRISSTRUCTSHADOW,		SECONDDEBRISSTRUCTSHADOW1,			SECONDDEBRISSTRUCT1,
+	// DebrisSTRUCT
+	{ FIRSTDEBRISSTRUCTSHADOW,    FIRSTDEBRISSTRUCTSHADOW1,    FIRSTDEBRISSTRUCT1    },
+	{ SECONDDEBRISSTRUCTSHADOW,   SECONDDEBRISSTRUCTSHADOW1,   SECONDDEBRISSTRUCT1   },
 
-	NINTHOSTRUCTSHADOW,					NINTHOSTRUCTSHADOW1,						NINTHOSTRUCT1,
-	TENTHOSTRUCTSHADOW,					TENTHOSTRUCTSHADOW1,						TENTHOSTRUCT1,
+	{ NINTHOSTRUCTSHADOW,         NINTHOSTRUCTSHADOW1,         NINTHOSTRUCT1         },
+	{ TENTHOSTRUCTSHADOW,         TENTHOSTRUCTSHADOW1,         TENTHOSTRUCT1         },
 
-	FIRSTLARGEEXPDEBRISSHADOW,	FIRSTLARGEEXPDEBRISSHADOW1,			FIRSTLARGEEXPDEBRIS1,
-	SECONDLARGEEXPDEBRISSHADOW,	SECONDLARGEEXPDEBRISSHADOW1,			SECONDLARGEEXPDEBRIS1,
+	{ FIRSTLARGEEXPDEBRISSHADOW,  FIRSTLARGEEXPDEBRISSHADOW1,  FIRSTLARGEEXPDEBRIS1  },
+	{ SECONDLARGEEXPDEBRISSHADOW, SECONDLARGEEXPDEBRISSHADOW1, SECONDLARGEEXPDEBRIS1 },
 
-	-1
+	{ -1, -1, -1 }
 };
 
 
-// SHADOW BUDDIES FROM STRUCT FORWARD TO SHADOW
-static const INT16 gForwardShadowBuddys[] =
+// Shadow buddies from struct forward to shadow
+static INT16 const gForwardShadowBuddys[][3] =
 {
-	FIRSTCLIFF,						FIRSTCLIFF1,							FIRSTCLIFFSHADOW1,
+	{ FIRSTCLIFF,           FIRSTCLIFF1,           FIRSTCLIFFSHADOW1           },
 
-	FIRSTOSTRUCT,					FIRSTOSTRUCT1,						FIRSTSHADOW1,
-	SECONDOSTRUCT,				SECONDOSTRUCT1,						SECONDSHADOW1,
-	THIRDOSTRUCT,					THIRDOSTRUCT1,						THIRDSHADOW1,
-	FOURTHOSTRUCT,				FOURTHOSTRUCT1,						FOURTHSHADOW1,
-	FIFTHOSTRUCT,					FIFTHOSTRUCT1,						FIFTHSHADOW1,
-	SIXTHOSTRUCT,					SIXTHOSTRUCT1,						SIXTHSHADOW1,
-	SEVENTHOSTRUCT,				SEVENTHOSTRUCT1,					SEVENTHSHADOW1,
-	EIGHTOSTRUCT,					EIGHTOSTRUCT1,						EIGHTSHADOW1,
+	{ FIRSTOSTRUCT,         FIRSTOSTRUCT1,         FIRSTSHADOW1                },
+	{ SECONDOSTRUCT,        SECONDOSTRUCT1,        SECONDSHADOW1               },
+	{ THIRDOSTRUCT,         THIRDOSTRUCT1,         THIRDSHADOW1                },
+	{ FOURTHOSTRUCT,        FOURTHOSTRUCT1,        FOURTHSHADOW1               },
+	{ FIFTHOSTRUCT,         FIFTHOSTRUCT1,         FIFTHSHADOW1                },
+	{ SIXTHOSTRUCT,         SIXTHOSTRUCT1,         SIXTHSHADOW1                },
+	{ SEVENTHOSTRUCT,       SEVENTHOSTRUCT1,       SEVENTHSHADOW1              },
+	{ EIGHTOSTRUCT,         EIGHTOSTRUCT1,         EIGHTSHADOW1                },
 
-	FIRSTFULLSTRUCT,			FIRSTFULLSTRUCT1,				  FIRSTFULLSHADOW1,
-	SECONDFULLSTRUCT,			SECONDFULLSTRUCT1,			  SECONDFULLSHADOW1,
-	THIRDFULLSTRUCT,			THIRDFULLSTRUCT1,				  THIRDFULLSHADOW1,
-	FOURTHFULLSTRUCT,			FOURTHFULLSTRUCT1,			  FOURTHFULLSHADOW1,
+	{ FIRSTFULLSTRUCT,      FIRSTFULLSTRUCT1,      FIRSTFULLSHADOW1            },
+	{ SECONDFULLSTRUCT,     SECONDFULLSTRUCT1,     SECONDFULLSHADOW1           },
+	{ THIRDFULLSTRUCT,      THIRDFULLSTRUCT1,      THIRDFULLSHADOW1            },
+	{ FOURTHFULLSTRUCT,     FOURTHFULLSTRUCT1,     FOURTHFULLSHADOW1           },
 
-	FIRSTDOOR,						FIRSTDOOR1,								FIRSTDOORSH1,
-	SECONDDOOR,						SECONDDOOR1,							SECONDDOORSH1,
-	THIRDDOOR,						THIRDDOOR1,								THIRDDOORSH1,
-	FOURTHDOOR,						FOURTHDOOR1,							FOURTHDOORSH1,
+	{ FIRSTDOOR,            FIRSTDOOR1,            FIRSTDOORSH1                },
+	{ SECONDDOOR,           SECONDDOOR1,           SECONDDOORSH1               },
+	{ THIRDDOOR,            THIRDDOOR1,            THIRDDOORSH1                },
+	{ FOURTHDOOR,           FOURTHDOOR1,           FOURTHDOORSH1               },
 
-	//FENCE
-	FENCESTRUCT,					FENCESTRUCT1,							FENCESHADOW1,
+	// Fence
+	{ FENCESTRUCT,          FENCESTRUCT1,          FENCESHADOW1                },
 
-	// VEHICLE
-	FIRSTVEHICLE,					FIRSTVEHICLE1,						FIRSTVEHICLESHADOW1,
-	SECONDVEHICLE,				SECONDVEHICLE1,						SECONDVEHICLESHADOW1,
+	// Vehicle
+	{ FIRSTVEHICLE,         FIRSTVEHICLE1,         FIRSTVEHICLESHADOW1         },
+	{ SECONDVEHICLE,        SECONDVEHICLE1,        SECONDVEHICLESHADOW1        },
 
-	FIRSTDEBRISSTRUCT,		FIRSTDEBRISSTRUCT1,				FIRSTDEBRISSTRUCTSHADOW1,
-	SECONDDEBRISSTRUCT,		SECONDDEBRISSTRUCT1,			SECONDDEBRISSTRUCTSHADOW1,
+	{ FIRSTDEBRISSTRUCT,    FIRSTDEBRISSTRUCT1,    FIRSTDEBRISSTRUCTSHADOW1    },
+	{ SECONDDEBRISSTRUCT,   SECONDDEBRISSTRUCT1,   SECONDDEBRISSTRUCTSHADOW1   },
 
-	NINTHOSTRUCT,					NINTHOSTRUCT1,						NINTHOSTRUCTSHADOW1,
-	TENTHOSTRUCT,					TENTHOSTRUCT1,						TENTHOSTRUCTSHADOW1,
+	{ NINTHOSTRUCT,         NINTHOSTRUCT1,         NINTHOSTRUCTSHADOW1         },
+	{ TENTHOSTRUCT,         TENTHOSTRUCT1,         TENTHOSTRUCTSHADOW1         },
 
-	FIRSTLARGEEXPDEBRIS,	FIRSTLARGEEXPDEBRIS1,			FIRSTLARGEEXPDEBRISSHADOW1,
-	SECONDLARGEEXPDEBRIS,	SECONDLARGEEXPDEBRIS1,		SECONDLARGEEXPDEBRISSHADOW1,
+	{ FIRSTLARGEEXPDEBRIS,  FIRSTLARGEEXPDEBRIS1,  FIRSTLARGEEXPDEBRISSHADOW1  },
+	{ SECONDLARGEEXPDEBRIS, SECONDLARGEEXPDEBRIS1, SECONDLARGEEXPDEBRISSHADOW1 },
 
-	-1
+	{ -1, -1, -1 }
 };
 
 
 // Global variable used to initialize tile database with full tile spec
-static const UINT8 gFullBaseTileValues[] =
+static UINT8 const gFullBaseTileValues[] =
 {
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // First Texture
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -221,11 +221,10 @@ static const UINT8 gFullBaseTileValues[] =
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1 // Water2 Texture
-
 };
 
 
-const char* const gTileSurfaceName[NUMBEROFTILETYPES] =
+char const* const gTileSurfaceName[NUMBEROFTILETYPES] =
 {
 	"TEXTURE1",
 	"TEXTURE2",
@@ -401,7 +400,7 @@ const char* const gTileSurfaceName[NUMBEROFTILETYPES] =
 };
 
 
-const UINT16 gNumTilesPerType[NUMBEROFTILETYPES] =
+UINT16 const gNumTilesPerType[NUMBEROFTILETYPES] =
 {
 	FIRSTTEXTURE35     - FIRSTTEXTURE1 + 1,
 	SECONDTEXTURE35    - SECONDTEXTURE1 + 1,
@@ -603,337 +602,203 @@ UINT8 gTileTypeLogicalHeight[NUMBEROFTILETYPES] =
 };
 
 
-void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEMENT *TileElement, BOOLEAN fUseRaisedObjectType )
+static void SetAnimData(UINT16 const database_elem, TILE_ELEMENT& te, const bool minus_plus)
 {
-	UINT8						ubLoop;
-	INT16						sIndexDiff;
-	UINT32					cnt;
+	AllocateAnimTileData(&te, 5);
 
-	// SETUP BUDDYS FOR SHADOWS
-	cnt = 0;
-	while( gReverseShadowBuddys[ cnt ] != -1 )
+	TILE_ANIMATION_DATA& a = *te.pAnimData;
+	a.bCurrentFrame = 0;
+	for (UINT8 k = 0; k != a.ubNumFrames; ++k)
 	{
-		// IF WE ARE A SHADOW TYPE
-		if ( usType == gReverseShadowBuddys[ cnt ] )
-		{
-			TileElement->sBuddyNum = gReverseShadowBuddys[ cnt + 2 ] + ( uiDatabaseElem - gReverseShadowBuddys[ cnt + 1 ] );
+		a.pusFrames[k] = minus_plus ? database_elem + k : database_elem - k;
+	}
+}
 
-			// Check flags and made the same, take from buddy's
-			TileElement->uiFlags |= gTileDatabase[ TileElement->sBuddyNum ].uiFlags;
-		}
 
-		cnt+=3;
+static void SetAnimDataIfInList(INT16 const* const list, UINT16 const database_elem, TILE_ELEMENT& te, const bool minus_plus)
+{
+	for (INT16 const* i = list; *i != -1; ++i)
+	{
+		// If we are a shadow type
+		if (database_elem != *i) continue;
+		SetAnimData(database_elem, te, minus_plus);
+	}
+}
+
+
+void SetSpecificDatabaseValues(UINT16 const type, UINT16 const database_elem, TILE_ELEMENT& te, bool const use_raised_object_type)
+{
+	// Setup buddys for shadows
+	for (INT16 const (*i)[3] = gReverseShadowBuddys; (*i)[0] != -1; ++i)
+	{
+		// If we are a shadow type
+		if (type != (*i)[0]) continue;
+
+		te.sBuddyNum = (*i)[2] + (database_elem - (*i)[1]);
+		// Check flags and made the same, take from buddy's
+		te.uiFlags |= gTileDatabase[te.sBuddyNum].uiFlags;
 	}
 
-	// SETUP BUDDYS THAT GO FROM STRUCT TO SHADOW
-	cnt = 0;
-	while( gForwardShadowBuddys[ cnt ] != -1 )
+	// Setup buddys that go from struct to shadow
+	for (INT16 const (*i)[3] = gForwardShadowBuddys; (*i)[0] != -1; ++i)
 	{
-		// IF WE ARE A SHADOW TYPE
-		if ( usType == gForwardShadowBuddys[ cnt ] )
-		{
-			TileElement->sBuddyNum = gForwardShadowBuddys[ cnt + 2 ] + ( uiDatabaseElem - gForwardShadowBuddys[ cnt + 1 ] );
-			// Set flag indicating such
-			TileElement->uiFlags |= HAS_SHADOW_BUDDY;
-		}
-		cnt+=3;
+		// If we are a shadow type
+		if (type != (*i)[0]) continue;
+
+		te.sBuddyNum = (*i)[2] + (database_elem - (*i)[1]);
+		// Set flag indicating such
+		te.uiFlags |= HAS_SHADOW_BUDDY;
 	}
 
-	if ( uiDatabaseElem >= FIRSTDOOR1 &&
-			 uiDatabaseElem <= FOURTHDOORSH20 )
+	if (FIRSTDOOR1 <= database_elem && database_elem <= FOURTHDOORSH20)
 	{
 		// Door anims
-		// Open
-		cnt = 0;
-		while( gOpenDoorList[ cnt ] != -1 )
-		{
-			// IF WE ARE A SHADOW TYPE
-			if ( uiDatabaseElem == gOpenDoorList[ cnt ] )
-			{
-				// Allocate Animated tile data
-				AllocateAnimTileData( TileElement, 5 );
-
-				TileElement->pAnimData->bCurrentFrame = 0;
-				for (ubLoop = 0; ubLoop < TileElement->pAnimData->ubNumFrames; ubLoop++)
-				{
-					TileElement->pAnimData->pusFrames[ubLoop] = uiDatabaseElem + ubLoop;
-				}
-			}
-			cnt++;
-		}
-		// Open Shadow
-		cnt = 0;
-		while( gOpenDoorShadowList[ cnt ] != -1 )
-		{
-			// IF WE ARE A SHADOW TYPE
-			if ( uiDatabaseElem == gOpenDoorShadowList[ cnt ] )
-			{
-				// Allocate Animated tile data
-				AllocateAnimTileData( TileElement, 5 );
-
-				TileElement->pAnimData->bCurrentFrame = 0;
-				for (ubLoop = 0; ubLoop < TileElement->pAnimData->ubNumFrames; ubLoop++)
-				{
-					TileElement->pAnimData->pusFrames[ubLoop] = uiDatabaseElem + ubLoop;
-				}
-			}
-			cnt++;
-		}
-
-		// Closed
-		cnt = 0;
-		while( gClosedDoorList[ cnt ] != -1 )
-		{
-			// IF WE ARE A SHADOW TYPE
-			if ( uiDatabaseElem == gClosedDoorList[ cnt ] )
-			{
-				// Allocate Animated tile data
-				AllocateAnimTileData( TileElement, 5 );
-
-				TileElement->pAnimData->bCurrentFrame = 0;
-				for (ubLoop = 0; ubLoop < TileElement->pAnimData->ubNumFrames; ubLoop++)
-				{
-					TileElement->pAnimData->pusFrames[ubLoop] = uiDatabaseElem - ubLoop;
-				}
-			}
-			cnt++;
-		}
-		// Open Shadow
-		cnt = 0;
-		while( gClosedDoorShadowList[ cnt ] != -1 )
-		{
-			// IF WE ARE A SHADOW TYPE
-			if ( uiDatabaseElem == gClosedDoorShadowList[ cnt ] )
-			{
-				// Allocate Animated tile data
-				AllocateAnimTileData( TileElement, 5 );
-
-				TileElement->pAnimData->bCurrentFrame = 0;
-				for (ubLoop = 0; ubLoop < TileElement->pAnimData->ubNumFrames; ubLoop++)
-				{
-					TileElement->pAnimData->pusFrames[ubLoop] = uiDatabaseElem - ubLoop;
-				}
-			}
-			cnt++;
-		}
+		SetAnimDataIfInList(gOpenDoorList,         database_elem, te, true);  // Open
+		SetAnimDataIfInList(gOpenDoorShadowList,   database_elem, te, true);  // Open shadow
+		SetAnimDataIfInList(gClosedDoorList,       database_elem, te, false); // Closed
+		SetAnimDataIfInList(gClosedDoorShadowList, database_elem, te, false); // Closed shadow
 	}
 
-	if ( uiDatabaseElem == FIRSTMISS1 )
+	if (database_elem == FIRSTMISS1)
 	{
-		// Allocate Animated tile data
-		AllocateAnimTileData( TileElement, 5 );
-
-		TileElement->pAnimData->bCurrentFrame = 0;
-		for (ubLoop = 0; ubLoop < TileElement->pAnimData->ubNumFrames; ubLoop++)
-		{
-			TileElement->pAnimData->pusFrames[ubLoop] = uiDatabaseElem + ubLoop;
-		}
+		SetAnimData(database_elem, te, true);
 	}
 
-	if ( uiDatabaseElem >= FIRSTMISS1 &&
-			 uiDatabaseElem <= FIRSTMISS5 )
+	if (FIRSTMISS1 <= database_elem && database_elem <= FIRSTMISS5)
 	{
-		TileElement->uiFlags |= DYNAMIC_TILE;
+		te.uiFlags |= DYNAMIC_TILE;
 	}
 
-
-	if ( uiDatabaseElem == WINDOWSHATTER1 || uiDatabaseElem == WINDOWSHATTER6 || uiDatabaseElem == WINDOWSHATTER11 || uiDatabaseElem == WINDOWSHATTER16 )
+	if (database_elem == WINDOWSHATTER1  ||
+			database_elem == WINDOWSHATTER6  ||
+			database_elem == WINDOWSHATTER11 ||
+			database_elem == WINDOWSHATTER16 )
 	{
-		// Allocate Animated tile data
-		AllocateAnimTileData( TileElement, 5 );
-
-		TileElement->pAnimData->bCurrentFrame = 0;
-		for (ubLoop = 0; ubLoop < TileElement->pAnimData->ubNumFrames; ubLoop++)
-		{
-			TileElement->pAnimData->pusFrames[ubLoop] = uiDatabaseElem + ubLoop;
-		}
+		SetAnimData(database_elem, te, true);
 	}
 
-	if ( uiDatabaseElem >= WINDOWSHATTER1 &&
-			 uiDatabaseElem <= WINDOWSHATTER20 )
+	if (WINDOWSHATTER1 <= database_elem && database_elem <= WINDOWSHATTER20)
 	{
-		TileElement->uiFlags |= DYNAMIC_TILE;
+		te.uiFlags |= DYNAMIC_TILE;
 	}
 
-//	if ( usType == FIRSTEXPLOSION )
-//	{
-//		TileElement->uiFlags |= DYNAMIC_TILE;
-//	}
-
-	if ( usType == BODYEXPLOSION )
+	if (type == BODYEXPLOSION)
 	{
-		TileElement->uiFlags |= DYNAMIC_TILE;
+		te.uiFlags |= DYNAMIC_TILE;
 	}
 
-	if ( usType == FIRSTROAD )
+	if (type == FIRSTROAD)
 	{
-		TileElement->uiFlags |= ROAD_TILE;
+		te.uiFlags |= ROAD_TILE;
 	}
 
-	// SET FLAGS FOR OBJECTS PEICES WHICH USE PROPER Z
-	if ( fUseRaisedObjectType )
+	// Set flags for objects pieces which use proper z
+	if (use_raised_object_type)
 	{
-		TileElement->uiFlags |= OBJECTLAYER_USEZHEIGHT;
-	}
-
-
-	// OFFSET SLANTED ROOFS TO HEIGHT OF WALLS
-	if ( uiDatabaseElem >= FIRSTROOF1 &&
-			 uiDatabaseElem <= SECONDSLANTROOF20 )
-	{
-		//TileElement->sOffsetHeight = WALL_HEIGHT;
+		te.uiFlags |= OBJECTLAYER_USEZHEIGHT;
 	}
 
 	// Set flag for full 3d tiles, as well as the dynamic flag for the folliage
-	if ( uiDatabaseElem >= FIRSTFULLSTRUCT1 &&
-			 uiDatabaseElem <= SECONDFULLSTRUCT12 )
+	if (FIRSTFULLSTRUCT1 <= database_elem && database_elem <= SECONDFULLSTRUCT12)
 	{
-		//TileElement->uiFlags |= FULL3D_TILE;
-		sIndexDiff = uiDatabaseElem - gTileTypeStartIndex[ usType ];
-
-		// Every second set as dynamic
-		if ( ( ( sIndexDiff ) % 3 ) == 1 )
+		INT16 const idx_diff = database_elem - gTileTypeStartIndex[type];
+		switch (idx_diff % 3)
 		{
-			TileElement->uiFlags |= DYNAMIC_TILE;
+			case 0: te.uiFlags |= FULL3D_TILE;  break; // Set every first as full tile
+			case 1: te.uiFlags |= DYNAMIC_TILE; break; // Every second set as dynamic
 		}
-
-		// Set every first as full tile
-		if ( ( ( sIndexDiff ) % 3 ) == 0 )
-		{
-			TileElement->uiFlags |= FULL3D_TILE;
-		}
-
 	}
 
-	//Ignore height for cliffs ie: if we rasie the land, do not offset the cliff
-	if ( uiDatabaseElem >= FIRSTCLIFFHANG1 &&
-			 uiDatabaseElem <= FIRSTCLIFFSHADOW17 )
+	// Ignore height for cliffs ie: if we rasie the land, do not offset the cliff
+	if (FIRSTCLIFFHANG1 <= database_elem && database_elem <= FIRSTCLIFFSHADOW17)
 	{
-		if ( usType == FIRSTCLIFFHANG )
-		{
-			TileElement->uiFlags |= CLIFFHANG_TILE;
-		}
-		TileElement->uiFlags |= IGNORE_WORLD_HEIGHT;
-
+		if (type == FIRSTCLIFFHANG) te.uiFlags |= CLIFFHANG_TILE;
+		te.uiFlags |= IGNORE_WORLD_HEIGHT;
 	}
 
-	if ( uiDatabaseElem >= FIRSTWALL1 &&
-			 uiDatabaseElem <= FOURTHWALL65 )
+	if (FIRSTWALL1 <= database_elem && database_elem <= FOURTHWALL65)
 	{
-		TileElement->uiFlags |= WALL_TILE;
+		te.uiFlags |= WALL_TILE;
 	}
 
 	// Set a-frames heigher!
-	if ( uiDatabaseElem >= FIRSTWALL1 &&
-			 uiDatabaseElem <= FOURTHWALL47 )
-	{
-
-		// Set these ones higher ( for roof pieces )
-		if ( uiDatabaseElem  >= ( gTileTypeStartIndex[ usType ] + WALL_AFRAME_START ) &&
-				 uiDatabaseElem  <= ( gTileTypeStartIndex[ usType ] + WALL_AFRAME_END ) )
+	if (FIRSTWALL1 <= database_elem && database_elem <= FOURTHWALL47)
+	{ // Set these ones higher (for roof pieces)
+		UINT16 const start = gTileTypeStartIndex[type];
+		if (start + WALL_AFRAME_START <= database_elem && database_elem <= start + WALL_AFRAME_END)
 		{
-			//TileElement->sOffsetHeight = WALL_HEIGHT;
-			TileElement->uiFlags |= AFRAME_TILE;
+			te.uiFlags |= AFRAME_TILE;
 		}
-
-
 	}
 
 	// Set UI Elements to be dynamic
-	if ( uiDatabaseElem >= FOOTPRINTS1 &&
-			 uiDatabaseElem <= THIRDPOINTERS2 )
+	if (FOOTPRINTS1 <= database_elem && database_elem <= THIRDPOINTERS2)
 	{
-		TileElement->uiFlags |= DYNAMIC_TILE;
-		TileElement->uiFlags |= OBJECTLAYER_USEZHEIGHT;
+		te.uiFlags |= DYNAMIC_TILE | OBJECTLAYER_USEZHEIGHT;
 	}
 
 	// Set UI Elements to use object z level
-	if ( usType >= FOOTPRINTS &&
-			 usType <= LASTUIELEM )
+	if (FOOTPRINTS <= type && type <= LASTUIELEM)
 	{
-		TileElement->uiFlags |= OBJECTLAYER_USEZHEIGHT;
+		te.uiFlags |= OBJECTLAYER_USEZHEIGHT;
 	}
 
 	// Set UI Elements to use object z level
-	if ( usType >= HUMANBLOOD &&
-			 usType <= CREATUREBLOOD )
+	if (HUMANBLOOD <= type && type <= CREATUREBLOOD)
 	{
-		TileElement->uiFlags |= OBJECTLAYER_USEZHEIGHT;
+		te.uiFlags |= OBJECTLAYER_USEZHEIGHT;
 	}
-
 
 	// Set UI Elements to use object z level
-	if ( usType >= GUNS &&
-			 usType <= P2ITEMS )
+	if (GUNS <= type && type <= P2ITEMS)
 	{
-		TileElement->uiFlags |= OBJECTLAYER_USEZHEIGHT;
+		te.uiFlags |= OBJECTLAYER_USEZHEIGHT;
 	}
-	if ( usType == P3ITEMS )
+	if (type == P3ITEMS)
 	{
-		TileElement->uiFlags |= OBJECTLAYER_USEZHEIGHT;
-	}
-
-	if ( usType >= FIRSTEXPLDEBRIS && usType <= SECONDEXPLDEBRIS )
-	{
-		TileElement->uiFlags |= OBJECTLAYER_USEZHEIGHT;
+		te.uiFlags |= OBJECTLAYER_USEZHEIGHT;
 	}
 
-	if ( uiDatabaseElem >= FIRSTDOOR1 &&
-			 uiDatabaseElem <= FOURTHDOORSH20 )
+	if (FIRSTEXPLDEBRIS <= type && type <= SECONDEXPLDEBRIS)
 	{
-		//TileElement->uiFlags |= DYNAMIC_TILE;
+		te.uiFlags |= OBJECTLAYER_USEZHEIGHT;
 	}
 
 	// Set UI Elements to be dynamic
-	if ( uiDatabaseElem == MOCKFLOOR1 )
+	if (database_elem == MOCKFLOOR1)
 	{
-		TileElement->uiFlags |= DYNAMIC_TILE;
-
+		te.uiFlags |= DYNAMIC_TILE;
 	}
 
-
-	if ( usType == BULLETTILE )
+	if (type == BULLETTILE)
 	{
-		TileElement->uiFlags |= DYNAMIC_TILE;
-	}
-
-	if ( usType == WIREFRAMES )
-	{
-		//TileElement->uiFlags |= DYNAMIC_TILE;
+		te.uiFlags |= DYNAMIC_TILE;
 	}
 
 	// Set full tile flag for floors
-	if ( uiDatabaseElem >= FIRSTFLOOR1 &&
-			 uiDatabaseElem <= FOURTHFLOOR8 )
+	if (FIRSTFLOOR1 <= database_elem && database_elem <= FOURTHFLOOR8)
 	{
-		TileElement->ubFullTile = 1;
+		te.ubFullTile = 1;
 	}
 
-	#if 0 /* XXX */
-	if ( uiDatabaseElem >= FIRSTTEXTURE1 &&
-			 uiDatabaseElem <= DEEPWATERTEXTURE10 )
-	#else
-	if (uiDatabaseElem <= DEEPWATERTEXTURE10)
-	#endif
-	{
-		// Set tile 'fullness' attribute
-		TileElement->ubFullTile = gFullBaseTileValues[ uiDatabaseElem ];
+	if (/*FIRSTTEXTURE1 <= database_elem &&*/ database_elem <= DEEPWATERTEXTURE10)
+	{ // Set tile 'fullness' attribute
+		te.ubFullTile = gFullBaseTileValues[database_elem];
 	}
 
-	if ( usType >= FIRSTONROOF && usType <= SECONDONROOF )
+	if ((REGWATERTEXTURE18 <= database_elem && database_elem <= REGWATERTEXTURE50) ||
+			database_elem == REGWATERTEXTURE   ||
+			database_elem == REGWATERTEXTURE12 ||
+			database_elem == REGWATERTEXTURE14 ||
+			database_elem == REGWATERTEXTURE16)
 	{
-		// Set height!
-		//TileElement->sOffsetHeight = WALL_HEIGHT;
+		te.ubTerrainID = FLAT_GROUND;
 	}
 
-	if ( uiDatabaseElem >= REGWATERTEXTURE18 && uiDatabaseElem <= REGWATERTEXTURE50 || uiDatabaseElem == REGWATERTEXTURE ||
-			 uiDatabaseElem == REGWATERTEXTURE12 || uiDatabaseElem == REGWATERTEXTURE14 || uiDatabaseElem == REGWATERTEXTURE16 )
+	if ((FIRSTROOF <= type && type <= SECONDSLANTROOF) ||
+			type == FIRSTHIGHROOF ||
+			type == SECONDHIGHROOF)
 	{
-		TileElement->ubTerrainID			= FLAT_GROUND;
-	}
-
-	if ( ( usType >= FIRSTROOF && usType <= SECONDSLANTROOF ) || usType == FIRSTHIGHROOF || usType == SECONDHIGHROOF )
-	{
-		TileElement->uiFlags |= ROOF_TILE;
+		te.uiFlags |= ROOF_TILE;
 	}
 }

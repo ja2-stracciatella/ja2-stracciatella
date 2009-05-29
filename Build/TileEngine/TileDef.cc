@@ -117,7 +117,7 @@ void CreateTileDatabase()
 				}
 			}
 
-			SetSpecificDatabaseValues(cnt1, gTileDatabaseSize, &TileElement, TileSurf->bRaisedObjectType);
+			SetSpecificDatabaseValues(cnt1, gTileDatabaseSize, TileElement, TileSurf->bRaisedObjectType);
 
 			gTileDatabase[gTileDatabaseSize++] = TileElement;
 		}

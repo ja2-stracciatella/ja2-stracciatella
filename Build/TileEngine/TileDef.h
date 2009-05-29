@@ -156,7 +156,7 @@ UINT8 GetTileTypeLogicalHeight(UINT32 fType);
 BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel );
 UINT16 GetWallOrientation(UINT16 usIndex);
 
-void	SetSpecificDatabaseValues( UINT16 usType, UINT16 uiDatabaseElem, TILE_ELEMENT *TileElement, BOOLEAN fUseRaisedObjectType );
+void SetSpecificDatabaseValues(UINT16 type, UINT16 database_elem, TILE_ELEMENT&, bool use_raised_object_type);
 
 void AllocateAnimTileData(TILE_ELEMENT* pTileElem, UINT8 ubNumFrames);
 void DeallocateTileDatabase(void);
