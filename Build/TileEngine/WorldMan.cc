@@ -859,6 +859,7 @@ bool AddWallToStructLayer(INT32 const map_idx, UINT16 const idx, bool const repl
 	UINT8 level        = 0;
 	for (LEVELNODE* i = gpWorldLevelData[map_idx].pStructHead; i; ++level, i = i->pNext)
 	{
+		if (i->uiFlags & LEVELNODE_CACHEDANITILE) continue;
 		UINT16 const check_wall_orient = GetWallOrientation(i->usIndex);
 
 		/* Kris: If placing a new wall which is at right angles to the current wall,

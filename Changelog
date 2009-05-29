@@ -1,3 +1,4 @@
+(r5852) Fix a vanilla out of bounds array access when a wall gets damaged.
 (r5787) Fix a vanilla bug: Throwing a knife costed one point less than it should.
 (r5732) Fix a vanilla display glitch: The item tooltip for the auto rocket rifle should not show "(rocket)", just like for the rocket rifle.
 (r5730) Fix a vanilla display glitch: Do not print "0" in the item description box, when a gun uses no ammunition (e.g. LAW).
