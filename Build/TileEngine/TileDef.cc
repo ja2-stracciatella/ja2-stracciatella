@@ -130,7 +130,6 @@ void CreateTileDatabase()
 			TileElement.usRegionIndex  = 0;
 			TileElement.hTileSurface   = TileSurf->vo;
 			TileElement.fType          = (UINT16)TileSurf->fType;
-			TileElement.ubFullTile     = FALSE;
 			TileElement.sOffsetHeight  = 0;
 			TileElement.ubFullTile     = 0;
 			TileElement.uiFlags       |= UNDERFLOW_FILLER;
