@@ -83,30 +83,22 @@ struct TILE_ANIMATION_DATA
 // Tile data element
 struct TILE_ELEMENT
 {
-	UINT16							fType;
-	HVOBJECT						hTileSurface;
-	DB_STRUCTURE_REF *	pDBStructureRef;
-	TileElementFlags    uiFlags;
-	RelTileLoc *				pTileLocData;
-	UINT16							usRegionIndex;
-	INT16								sBuddyNum;
-	UINT8								ubTerrainID;
-	UINT8								ubNumberOfTiles;
+	HVOBJECT             hTileSurface;
+	DB_STRUCTURE_REF*    pDBStructureRef;
+	RelTileLoc*          pTileLocData;
+	TileElementFlags     uiFlags;
+	UINT16               fType;
+	UINT16               usRegionIndex;
+	INT16                sBuddyNum;
+	UINT8                ubTerrainID;
+	UINT8                ubNumberOfTiles;
 
-	// This union contains different data based on tile type
-	union
-	{
-		// Land and overlay type
-		struct
-		{
-			 UINT16					usWallOrientation;
-			 UINT8					ubFullTile;
+	// Land and overlay type
+	UINT16               usWallOrientation;
+	UINT8                ubFullTile;
 
-			 // For animated tiles
-			 TILE_ANIMATION_DATA	*pAnimData;
-		};
-
-	};
+	// For animated tiles
+	TILE_ANIMATION_DATA* pAnimData;
 };
 
 
