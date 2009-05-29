@@ -265,34 +265,27 @@ catch (...)
 }
 
 
-static void AddTileSurface(char const* const Filename, UINT32 const ubType, TileSetID const ubTilesetID)
+static void AddTileSurface(char const* const filename, UINT32 const type, TileSetID const tileset_id)
 {
+	TILE_IMAGERY*& slot = gTileSurfaceArray[type];
+
 	// Delete the surface first!
-	if ( gTileSurfaceArray[ ubType ] != NULL )
+	if (slot)
 	{
-		DeleteTileSurface( gTileSurfaceArray[ ubType ] );
-		gTileSurfaceArray[ ubType ] = NULL;
+		DeleteTileSurface(slot);
+		slot = 0;
 	}
 
-	TILE_IMAGERY* const TileSurf = LoadTileSurface(Filename);
+	TILE_IMAGERY* const t = LoadTileSurface(filename);
+	t->fType = type;
+	SetRaisedObjectFlag(filename, t);
 
-	TileSurf->fType							= ubType;
+	slot = t;
 
-	SetRaisedObjectFlag(Filename, TileSurf);
+	// OK, if we are the default tileset, set value indicating that!
+	gbDefaultSurfaceUsed[type] = tileset_id == GENERIC_1;
 
-	gTileSurfaceArray[ ubType ] = TileSurf;
-
-	// OK, if we were not the default tileset, set value indicating that!
-	if ( ubTilesetID != GENERIC_1 )
-	{
-		gbDefaultSurfaceUsed[ ubType ] = FALSE;
-	}
-	else
-	{
-		gbDefaultSurfaceUsed[ ubType ] = TRUE;
-	}
-
-	gbNewTileSurfaceLoaded[ ubType ] = TRUE;
+	gbNewTileSurfaceLoaded[type] = TRUE;
 }
 
 
