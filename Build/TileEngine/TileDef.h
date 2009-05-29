@@ -91,9 +91,6 @@ struct TILE_ELEMENT
 	UINT8								ubTerrainID;
 	UINT8								ubNumberOfTiles;
 
-	UINT8								bZOffsetX;
-	UINT8								bZOffsetY;
-
 	// This union contains different data based on tile type
 	union
 	{
@@ -109,9 +106,6 @@ struct TILE_ELEMENT
 		};
 
 	};
-
-	// Reserved for added room and 32-byte boundaries
-	BYTE													bReserved[ 3 ];
 };
 
 
