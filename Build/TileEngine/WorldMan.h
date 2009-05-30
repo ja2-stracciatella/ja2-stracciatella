@@ -113,7 +113,7 @@ BOOLEAN OKToAddMercToWorld( SOLDIERTYPE *pSoldier, INT8 bDirection );
 LEVELNODE  *AddTopmostToTail( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE* AddTopmostToHead(UINT32 iMapIndex, UINT16 usIndex);
 BOOLEAN RemoveTopmost( UINT32 iMapIndex, UINT16 usIndex );
-BOOLEAN TypeExistsInTopmostLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusTopmostIndex = 0);
+LEVELNODE* FindTypeInTopmostLayer(UINT32 map_idx, UINT32 type);
 BOOLEAN RemoveAllTopmostsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 LEVELNODE* AddUIElem(UINT32 iMapIndex, UINT16 usIndex, INT8 sRelativeX, INT8 sRelativeY);
 BOOLEAN RemoveTopmostFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode );

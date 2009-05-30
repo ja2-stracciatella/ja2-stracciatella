@@ -1682,10 +1682,9 @@ BOOLEAN RemoveAllTopmostsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32
 }
 
 
-BOOLEAN TypeExistsInTopmostLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusTopmostIndex)
+LEVELNODE* FindTypeInTopmostLayer(UINT32 const map_idx, UINT32 const type)
 {
-	LEVELNODE* pTopmost = gpWorldLevelData[iMapIndex].pTopmostHead;
-	return !!FindTypeInLayer(pTopmost, fType, pusTopmostIndex);
+	return FindTypeInLayer(gpWorldLevelData[map_idx].pTopmostHead, type);
 }
 
 
