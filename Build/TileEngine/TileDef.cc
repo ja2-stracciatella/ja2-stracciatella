@@ -187,32 +187,17 @@ void SetLandIndex(INT32 const iMapIndex, UINT16 const usIndex, UINT32 const uiNe
 #endif
 
 
-BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel )
+bool GetTypeLandLevel(UINT32 const map_idx, UINT32 const new_type, UINT8* const out_level)
 {
-	UINT8					level = 0;
-	LEVELNODE			*pLand;
-
-	pLand = gpWorldLevelData[ iMapIndex ].pLandHead;
-
-	while( pLand != NULL )
+	UINT8 level = 0;
+	for (LEVELNODE* i = gpWorldLevelData[map_idx].pLandHead; i; ++level, i = i->pNext)
 	{
-
-		if ( pLand->usIndex != NO_TILE )
-		{
-			const UINT32 fTileType = GetTileType(pLand->usIndex);
-			if ( fTileType == uiNewType )
-			{
-				*pubLevel = level;
-				return( TRUE );
-			}
-
-		}
-
-		level++;
-		pLand = pLand->pNext;
+		if (i->usIndex              == NO_TILE)  continue;
+		if (GetTileType(i->usIndex) != new_type) continue;
+		*out_level = level;
+		return true;
 	}
-
-	return( FALSE );
+	return false;
 }
 
 

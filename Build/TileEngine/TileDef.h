@@ -124,7 +124,7 @@ void CreateTileDatabase(void);
 void SetLandIndex(INT32 iMapIndex, UINT16 usIndex, UINT32 uiNewType);
 #endif
 
-BOOLEAN GetTypeLandLevel( UINT32 iMapIndex, UINT32 uiNewType, UINT8 *pubLevel );
+bool GetTypeLandLevel(UINT32 map_idx, UINT32 new_type, UINT8* out_level);
 
 
 // Database access functions
