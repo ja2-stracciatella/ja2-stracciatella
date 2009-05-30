@@ -271,44 +271,43 @@ static void AddTileSurface(char const* const filename, UINT32 const type, TileSe
 
 extern BOOLEAN gfLoadShadeTablesFromTextFile;
 
-void BuildTileShadeTables(  )
-{
-	UINT32					uiLoop;
 
+void BuildTileShadeTables()
+{
 #ifdef JA2TESTVERSION
-	UINT32 uiStartTime = GetJA2Clock();
+	UINT32 const start_time = GetJA2Clock();
 	uiNumImagesReloaded = 0;
 #endif
 
-	if( gfLoadShadeTablesFromTextFile )
-	{ //Because we're tweaking the RGB values in the text file, always force rebuild the shadetables
-		//so that the user can tweak them in the same exe session.
-		memset( gbNewTileSurfaceLoaded, 1, sizeof( gbNewTileSurfaceLoaded ) );
+	if (gfLoadShadeTablesFromTextFile)
+	{ /* Because we're tweaking the RGB values in the text file, always force
+		 * rebuild the shadetables so that the user can tweak them in the same exe
+		 * session. */
+		memset(gbNewTileSurfaceLoaded, 1, sizeof(gbNewTileSurfaceLoaded));
 	}
 
-	for (uiLoop = 0; uiLoop < NUMBEROFTILETYPES; uiLoop++)
+	for (UINT32 i = 0; i != NUMBEROFTILETYPES; ++i)
 	{
-		if ( gTileSurfaceArray[ uiLoop ] != NULL )
-		{
-			// Don't Create shade tables if default were already used once!
-			#ifdef JA2EDITOR
-				if( gbNewTileSurfaceLoaded[ uiLoop ] || gfEditorForceShadeTableRebuild )
-			#else
-				if( gbNewTileSurfaceLoaded[ uiLoop ]  )
-      #endif
-				{
-					#ifdef JA2TESTVERSION
-						uiNumImagesReloaded++;
-					#endif
-					RenderProgressBar( 0, uiLoop * 100 / NUMBEROFTILETYPES );
-					CreateTilePaletteTables(gTileSurfaceArray[uiLoop]->vo);
-        }
-		}
+		TILE_IMAGERY const* const t = gTileSurfaceArray[i];
+		if (!t) continue;
+
+		// Don't create shade tables if default were already used once!
+#ifdef JA2EDITOR
+		if (!gbNewTileSurfaceLoaded[i] && !gfEditorForceShadeTableRebuild) continue;
+#else
+		if (!gbNewTileSurfaceLoaded[i]) continue;
+#endif
+
+#ifdef JA2TESTVERSION
+		++uiNumImagesReloaded;
+#endif
+		RenderProgressBar(0, i * 100 / NUMBEROFTILETYPES);
+		CreateTilePaletteTables(t->vo);
 	}
 
-	#ifdef JA2TESTVERSION
-		uiBuildShadeTableTime = GetJA2Clock() - uiStartTime;
-	#endif
+#ifdef JA2TESTVERSION
+	uiBuildShadeTableTime = GetJA2Clock() - start_time;
+#endif
 }
 
 
