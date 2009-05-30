@@ -162,150 +162,83 @@ void DeleteAniTiles( )
 }
 
 
-void DeleteAniTile( ANITILE *pAniTile )
+void DeleteAniTile(ANITILE* const a)
 {
-	ANITILE				*pAniNode				= NULL;
-	ANITILE				*pOldAniNode		= NULL;
-	TILE_ELEMENT	*TileElem;
-
-	pAniNode = pAniTileHead;
-
-	while( pAniNode!= NULL )
+	for (ANITILE** anchor = &pAniTileHead;; anchor = &(*anchor)->pNext)
 	{
-		if ( pAniNode == pAniTile )
-		{
-			// OK, set links
-			// Check for head or tail
-			if ( pOldAniNode == NULL )
-			{
-				// It's the head
-				pAniTileHead = pAniTile->pNext;
-			}
-			else
-			{
-				pOldAniNode->pNext = pAniNode->pNext;
-			}
+		if (!*anchor)     return; // XXX exception?
+		if (*anchor != a) continue;
 
-			if ( !(pAniNode->uiFlags & ANITILE_EXISTINGTILE  ) )
-			{
-
-				// Delete memory assosiated with item
-				switch( pAniNode->ubLevelID )
-				{
-					case ANI_STRUCT_LEVEL:
-
-						RemoveStructFromLevelNode( pAniNode->sGridNo, pAniNode->pLevelNode );
-						break;
-
-					case ANI_SHADOW_LEVEL:
-
-						RemoveShadowFromLevelNode( pAniNode->sGridNo, pAniNode->pLevelNode );
-						break;
-
-					case ANI_OBJECT_LEVEL:
-
-						RemoveObject( pAniNode->sGridNo, pAniNode->usTileIndex );
-						break;
-
-					case ANI_ROOF_LEVEL:
-
-						RemoveRoof( pAniNode->sGridNo, pAniNode->usTileIndex );
-						break;
-
-					case ANI_ONROOF_LEVEL:
-
-						RemoveOnRoof( pAniNode->sGridNo, pAniNode->usTileIndex );
-						break;
-
-					case ANI_TOPMOST_LEVEL:
-
-						RemoveTopmostFromLevelNode( pAniNode->sGridNo, pAniNode->pLevelNode );
-						break;
-
-				}
-
-				if (pAniNode->sCachedTileID != -1)
-				{
-					RemoveCachedTile(pAniNode->sCachedTileID);
-				}
-
-				if ( pAniNode->uiFlags & ANITILE_EXPLOSION )
-				{
-					// Talk to the explosion data...
-					EXPLOSIONTYPE* const e     = pAniNode->v.explosion;
-					SOLDIERTYPE*   const owner = e->owner;
-					RemoveExplosionData(e);
-
-					if ( !gfExplosionQueueActive )
-					{
-						// turn on sighting again
-						// the explosion queue handles all this at the end of the queue
-						gTacticalStatus.uiFlags &= (~DISALLOW_SIGHT);
-					}
-
-          // Freeup attacker from explosion
-					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., EXPLOSION effect gone off");
-					ReduceAttackBusyCount(owner, FALSE);
-				}
-
-
-				if ( pAniNode->uiFlags & ANITILE_RELEASE_ATTACKER_WHEN_DONE )
-				{
-					BULLET*      const bullet   = pAniNode->v.bullet;
-					SOLDIERTYPE* const attacker = bullet->pFirer;
-					// First delete the bullet!
-					RemoveBullet(bullet);
-
-					DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - miss finished animation");
-					FreeUpAttacker(attacker);
-				}
-			}
-			else
-			{
-				TileElem = &( gTileDatabase[ pAniNode->usTileIndex ] );
-
-				// OK, update existing tile usIndex....
-				Assert( TileElem->pAnimData != NULL );
-				pAniNode->pLevelNode->usIndex = TileElem->pAnimData->pusFrames[ pAniNode->pLevelNode->sCurrentFrame ];
-
-				// OK, set our frame data back to zero....
-				pAniNode->pLevelNode->sCurrentFrame = 0;
-
-				// Set some flags to write to Z / update save buffer
-				// pAniNode->pLevelNode->uiFlags |=( LEVELNODE_LASTDYNAMIC | LEVELNODE_UPDATESAVEBUFFERONCE );
-				pAniNode->pLevelNode->uiFlags &= ~( LEVELNODE_DYNAMIC | LEVELNODE_USEZ | LEVELNODE_ANIMATION );
-
-				if (pAniNode->uiFlags & ANITILE_DOOR)
-				{
-					// unset door busy!
-					DOOR_STATUS * pDoorStatus;
-
-					pDoorStatus = GetDoorStatus( pAniNode->sGridNo );
-					if (pDoorStatus)
-					{
-						pDoorStatus->ubFlags &= ~(DOOR_BUSY);
-					}
-
-					if ( GridNoOnScreen( pAniNode->sGridNo ) )
-					{
-						SetRenderFlags(RENDER_FLAG_FULL);
-					}
-
-				}
-			}
-
-			MemFree( pAniNode );
-			return;
-		}
-
-		pOldAniNode = pAniNode;
-		pAniNode		= pAniNode->pNext;
-
+		// Remove node from list
+		*anchor = a->pNext;
+		break;
 	}
 
+	if (a->uiFlags & ANITILE_EXISTINGTILE)
+	{
+		// update existing tile usIndex
+		LEVELNODE& l = *a->pLevelNode;
+		l.usIndex        = gTileDatabase[a->usTileIndex].pAnimData->pusFrames[l.sCurrentFrame];
+		l.sCurrentFrame  = 0; // Set frame data back to zero
+		l.uiFlags       &= ~(LEVELNODE_DYNAMIC | LEVELNODE_USEZ | LEVELNODE_ANIMATION);
 
+		if (a->uiFlags & ANITILE_DOOR)
+		{
+			// Unset door busy
+			DOOR_STATUS* const d = GetDoorStatus(a->sGridNo);
+			if (d) d->ubFlags &= ~DOOR_BUSY;
+
+			if (GridNoOnScreen(a->sGridNo)) SetRenderFlags(RENDER_FLAG_FULL);
+		}
+	}
+	else
+	{
+		// Delete memory associated with item
+		switch (a->ubLevelID)
+		{
+			case ANI_STRUCT_LEVEL:  RemoveStructFromLevelNode( a->sGridNo, a->pLevelNode);  break;
+			case ANI_SHADOW_LEVEL:  RemoveShadowFromLevelNode( a->sGridNo, a->pLevelNode);  break;
+			case ANI_OBJECT_LEVEL:  RemoveObject(              a->sGridNo, a->usTileIndex); break;
+			case ANI_ROOF_LEVEL:    RemoveRoof(                a->sGridNo, a->usTileIndex); break;
+			case ANI_ONROOF_LEVEL:  RemoveOnRoof(              a->sGridNo, a->usTileIndex); break;
+			case ANI_TOPMOST_LEVEL: RemoveTopmostFromLevelNode(a->sGridNo, a->pLevelNode);  break;
+		}
+
+		if (a->sCachedTileID != -1) RemoveCachedTile(a->sCachedTileID);
+
+		if (a->uiFlags & ANITILE_EXPLOSION)
+		{
+			// Talk to the explosion data
+			EXPLOSIONTYPE* const e     = a->v.explosion;
+			SOLDIERTYPE*   const owner = e->owner;
+			RemoveExplosionData(e);
+
+			if (!gfExplosionQueueActive)
+			{ /* Turn on sighting again. The explosion queue handles all this at the
+				 * end of the queue */
+				gTacticalStatus.uiFlags &= ~DISALLOW_SIGHT;
+			}
+
+			// Freeup attacker from explosion
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Reducing attacker busy count..., EXPLOSION effect gone off");
+			ReduceAttackBusyCount(owner, FALSE);
+		}
+
+
+		if (a->uiFlags & ANITILE_RELEASE_ATTACKER_WHEN_DONE)
+		{
+			BULLET*      const bullet   = a->v.bullet;
+			SOLDIERTYPE* const attacker = bullet->pFirer;
+			// First delete the bullet!
+			RemoveBullet(bullet);
+
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, "@@@@@@@ Freeing up attacker - miss finished animation");
+			FreeUpAttacker(attacker);
+		}
+	}
+
+	MemFree(a);
 }
-
 
 
 void UpdateAniTiles( )
