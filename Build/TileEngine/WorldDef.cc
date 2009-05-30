@@ -333,15 +333,11 @@ void DestroyTileShadeTables(void)
 
 static void DestroyTileSurfaces(void)
 {
-	UINT32					uiLoop;
-
-	for (uiLoop = 0; uiLoop < NUMBEROFTILETYPES; uiLoop++)
+	for (TILE_IMAGERY** i = gTileSurfaceArray; i != endof(gTileSurfaceArray); ++i)
 	{
-		if ( gTileSurfaceArray[ uiLoop ] != NULL )
-		{
-			DeleteTileSurface( gTileSurfaceArray[ uiLoop ] );
-			gTileSurfaceArray[ uiLoop ] = NULL;
-		}
+		if (!*i) continue;
+		DeleteTileSurface(*i);
+		*i = 0;
 	}
 }
 
