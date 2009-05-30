@@ -91,24 +91,19 @@ void DebugLevelNodePage(void)
 }
 
 
-static BOOLEAN TypeExistsInLevel(const LEVELNODE* pStartNode, UINT32 fType, UINT16* pusIndex)
+static bool TypeExistsInLevel(LEVELNODE const* const start_node, UINT32 const type, UINT16* const out_idx)
 {
 	// Look through all objects and Search for type
-	for (; pStartNode != NULL; pStartNode = pStartNode->pNext)
+	for (LEVELNODE const* i = start_node; i; i = i->pNext)
 	{
-		if (pStartNode->usIndex != NO_TILE && pStartNode->usIndex < NUMBEROFTILES)
-		{
-			const UINT32 fTileType = GetTileType(pStartNode->usIndex);
-			if (fTileType == fType)
-			{
-				if (pusIndex) *pusIndex = pStartNode->usIndex;
-				return TRUE;
-			}
-		}
-	}
+		UINT16 const idx = i->usIndex;
+		if (idx == NO_TILE || idx >= NUMBEROFTILES) continue;
+		if (GetTileType(idx) != type) continue;
 
-	// Could not find it
-	return FALSE;
+		if (out_idx) *out_idx = idx;
+		return true;
+	}
+	return false;
 }
 
 
