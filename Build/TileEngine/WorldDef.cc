@@ -208,54 +208,34 @@ void DeinitializeWorld( )
 }
 
 
-static void AddTileSurface(char const* Filename, UINT32 ubType, TileSetID);
+static void AddTileSurface(char const* filename, UINT32 type, TileSetID);
 
 
-static void LoadTileSurfaces(char ppTileSurfaceFilenames[][32], TileSetID const ubTilesetID)
+static void LoadTileSurfaces(char const tile_surface_filenames[][32], TileSetID const tileset_id)
 try
 {
-	UINT32					uiLoop;
-
-	UINT32					uiPercentage;
-	//UINT32					uiLength;
-	//UINT16					uiFillColor;
-
-	//uiFillColor = Get16BPPColor(FROMRGB(223, 223, 223));
-	//ColorFillVideoSurfaceArea( FRAME_BUFFER, 20, 399, 622, 420, uiFillColor );
-	//ColorFillVideoSurfaceArea( FRAME_BUFFER, 21, 400, 621, 419, 0 );
-	//EndFrameBufferRender( );
-
-	//uiFillColor = Get16BPPColor(FROMRGB( 100, 0, 0 ));
-	// load the tile surfaces
-	SetRelativeStartAndEndPercentage( 0, 1, 35, L"Tile Surfaces" );
-  for (uiLoop = 0; uiLoop < NUMBEROFTILETYPES; uiLoop++)
+	SetRelativeStartAndEndPercentage(0, 1, 35, L"Tile Surfaces");
+  for (UINT32 i = 0; i != NUMBEROFTILETYPES; ++i)
 	{
+		UINT32 const percentage = i * 100 / (NUMBEROFTILETYPES - 1);
+		RenderProgressBar(0, percentage);
 
-		uiPercentage = (uiLoop * 100) / (NUMBEROFTILETYPES-1);
-		RenderProgressBar( 0, uiPercentage );
-
-		//uiFillColor = Get16BPPColor(FROMRGB( 100 + uiPercentage , 0, 0 ));
-		//ColorFillVideoSurfaceArea( FRAME_BUFFER, 22, 401, 22 + uiLength, 418, uiFillColor );
-		//InvalidateRegion(0, 399, SCREEN_WIDTH, 420);
-		//EndFrameBufferRender( );
-
-		const char* filename       = ppTileSurfaceFilenames[uiLoop];
-		TileSetID   tileset_to_add = ubTilesetID;
+		char const* filename       = tile_surface_filenames[i];
+		TileSetID   tileset_to_add = tileset_id;
 		if (filename[0] == '\0')
-		{
-			// USE FIRST TILESET VALUE!
+		{ // Use first tileset value!
 
-			// ATE: If here, don't load default surface if already loaded...
-			if (gbDefaultSurfaceUsed[uiLoop]) continue;
+			// ATE: If here, don't load default surface if already loaded
+			if (gbDefaultSurfaceUsed[i]) continue;
 
-			filename       = gTilesets[GENERIC_1].TileSurfaceFilenames[uiLoop];
+			filename       = gTilesets[GENERIC_1].TileSurfaceFilenames[i];
 			tileset_to_add = GENERIC_1;
 		}
 
 		// Adjust for tileset position
-		char AdjustedFilename[128];
-		sprintf(AdjustedFilename, "TILESETS/%d/%s", tileset_to_add, filename);
-		AddTileSurface(AdjustedFilename, uiLoop, tileset_to_add);
+		char adjusted_filename[128];
+		sprintf(adjusted_filename, "TILESETS/%d/%s", tileset_to_add, filename);
+		AddTileSurface(adjusted_filename, i, tileset_to_add);
 	}
 }
 catch (...)
