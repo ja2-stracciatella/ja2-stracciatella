@@ -1786,7 +1786,7 @@ static void InternalRemoveSoldierFromGridNo(SOLDIERTYPE* const s, BOOLEAN const 
 	if (!s->bInSector && !force) return;
 
 	// Remove from world (old pos)
-	RemoveMerc(s->sGridNo, s, FALSE);
+	RemoveMerc(s->sGridNo, s, false);
 	HandleAnimationProfile(s, s->usAnimState, TRUE);
 
 	// Remove records of this guy being adjacent
@@ -6680,7 +6680,7 @@ static void HandleAnimationProfile(SOLDIERTYPE* const s, UINT16 const usAnimStat
 
 		if (fRemove)
 		{ // Remove from world
-			RemoveMerc(grid_no, s, TRUE);
+			RemoveMerc(grid_no, s, true);
 		}
 		else
 		{ // Place into world

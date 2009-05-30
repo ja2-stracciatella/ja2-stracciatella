@@ -1222,68 +1222,30 @@ BOOLEAN UpdateMercStructureInfo(SOLDIERTYPE *pSoldier)
 }
 
 
-BOOLEAN RemoveMerc(UINT32 iMapIndex, SOLDIERTYPE* pSoldier, BOOLEAN fPlaceHolder)
+void RemoveMerc(UINT32 const map_idx, SOLDIERTYPE* const s, bool const placeholder)
 {
-	if (iMapIndex == NOWHERE)
-	{
-		return FALSE;
-	}
+	if (map_idx == NOWHERE) return; // XXX exception?
 
-	LEVELNODE* pOldMerc = NULL;
-	for (LEVELNODE* pMerc = gpWorldLevelData[iMapIndex].pMercHead; pMerc != NULL; pMerc = pMerc->pNext)
+	for (LEVELNODE** anchor = &gpWorldLevelData[map_idx].pMercHead;; anchor = &(*anchor)->pNext)
 	{
-		if (pMerc->pSoldier == pSoldier)
+		LEVELNODE* const merc = *anchor;
+		if (!merc) break;
+
+		if (merc->pSoldier != s) continue;
+		if (placeholder ^ ((merc->uiFlags & LEVELNODE_MERCPLACEHOLDER) != 0)) continue;
+
+		*anchor = merc->pNext;
+
+		if (!placeholder)
 		{
-			// If it's a placeholder, check!
-			BOOLEAN fMercFound = FALSE;
-			if (fPlaceHolder)
-			{
-				if (pMerc->uiFlags & LEVELNODE_MERCPLACEHOLDER)
-				{
-					fMercFound = TRUE;
-				}
-			}
-			else
-			{
-				if (!(pMerc->uiFlags & LEVELNODE_MERCPLACEHOLDER))
-				{
-					fMercFound = TRUE;
-				}
-			}
-
-			if (fMercFound)
-			{
-				// OK, set links
-				// Check for head or tail
-				if (pOldMerc == NULL)
-				{
-					// It's the head
-					gpWorldLevelData[iMapIndex].pMercHead = pMerc->pNext;
-				}
-				else
-				{
-					pOldMerc->pNext = pMerc->pNext;
-				}
-
-				if (!fPlaceHolder)
-				{
-					// Set level node to NULL
-					pSoldier->pLevelNode = NULL;
-
-					// Remove strucute info!
-					DeleteStructureFromWorld(pMerc->pStructureData);
-				}
-
-				MemFree(pMerc);
-				return TRUE;
-			}
+			s->pLevelNode = 0;
+			DeleteStructureFromWorld(merc->pStructureData);
 		}
 
-		pOldMerc = pMerc;
+		MemFree(merc);
+		break;
 	}
-
-	// Could not find it
-	return FALSE;
+	// XXX exception?
 }
 
 
