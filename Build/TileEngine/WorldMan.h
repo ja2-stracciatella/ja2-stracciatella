@@ -57,7 +57,7 @@ LEVELNODE *AddLandToTail( UINT32 iMapIndex, UINT16 usIndex );
 #endif
 void AddLandToHead(UINT32 iMapIndex, UINT16 usIndex);
 #ifdef JA2EDITOR
-BOOLEAN TypeExistsInLandLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusLandIndex = 0);
+LEVELNODE* FindTypeInLandLayer(UINT32 map_idx, UINT32 type);
 BOOLEAN RemoveAllLandsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType);
 void ReplaceLandIndex(UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex);

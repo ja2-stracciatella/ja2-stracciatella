@@ -107,14 +107,14 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	pSmoothStruct = gbSmoothStruct;
 
 	// Get land index value for given level and adjust according to type
-	UINT16 usTileIndex;
-	if (!TypeExistsInLandLayer(gridno, origType, &usTileIndex))
+	LEVELNODE const* const existing_land = FindTypeInLandLayer(gridno, origType);
+	if (!existing_land)
 	{
 		*piNewTile = NO_TILE;
 		return;
 	}
 
-	UINT16 const usOldIndex = GetTypeSubIndexFromTileIndex(origType, usTileIndex);
+	UINT16 const usOldIndex = GetTypeSubIndexFromTileIndex(origType, existing_land->usIndex);
 
 	// Check if we're dealing with a 'full' tile ( first ten )
 	// If so, do not smooth
@@ -131,7 +131,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	// is land height one tile above not the same type?
 	if ( (gridno- WORLD_COLS ) >= 0 )
 	{
-		if (!TypeExistsInLandLayer(gridno - WORLD_COLS, origType))
+		if (!FindTypeInLandLayer(gridno - WORLD_COLS, origType))
 		{
 			// no it's not
 			temp+=3;
@@ -141,7 +141,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	// (make sure there IS a tile to the right, i.e. check for border)
 	if ((gridno+1)% WORLD_COLS !=0)
 	{
-		if (!TypeExistsInLandLayer(gridno + 1, origType))
+		if (!FindTypeInLandLayer(gridno + 1, origType))
 		{
 			// no it's not
 			temp+=5;
@@ -151,7 +151,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	// is land height one tile down not the same type?
 	if ( (gridno + WORLD_COLS ) < ( WORLD_COLS * WORLD_ROWS ) )
 	{
-		if (!TypeExistsInLandLayer(gridno + WORLD_COLS, origType))
+		if (!FindTypeInLandLayer(gridno + WORLD_COLS, origType))
 		{
 			// no it's not
 			temp+=7;
@@ -161,7 +161,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 	// is land height one tile to left not the same type?
 	if (gridno % WORLD_COLS!=0)
 	{
-		if (!TypeExistsInLandLayer(gridno - 1, origType))
+		if (!FindTypeInLandLayer(gridno - 1, origType))
 		{
 			// no it's not
 			temp+=11;
@@ -234,7 +234,7 @@ void SmoothAllTerrainWorld( void )
 	{
 		for ( uiCheckType = FIRSTTEXTURE; uiCheckType <= SEVENTHTEXTURE; uiCheckType++ )
 		{
-			if (TypeExistsInLandLayer(cnt, uiCheckType))
+			if (FindTypeInLandLayer(cnt, uiCheckType))
 			{
 				SmoothTerrain( cnt, uiCheckType, &NewTile, TRUE );
 
@@ -273,7 +273,7 @@ void SmoothTerrainRadius( UINT32 iMapIndex, UINT32 uiCheckType, UINT8 ubRadius, 
 			if ( iNewIndex >=0 && iNewIndex < WORLD_MAX &&
 				   iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
 			{
-				if (TypeExistsInLandLayer(iNewIndex, uiCheckType))
+				if (FindTypeInLandLayer(iNewIndex, uiCheckType))
 				{
 						SmoothTerrain(  iNewIndex, uiCheckType, &NewTile, fForceSmooth );
 
@@ -313,7 +313,7 @@ void SmoothAllTerrainTypeRadius( UINT32 iMapIndex, UINT8 ubRadius, BOOLEAN fForc
 				if ( iNewIndex >=0 && iNewIndex < WORLD_MAX &&
 						 iNewIndex >= leftmost && iNewIndex < ( leftmost + WORLD_COLS ) )
 				{
-					if (TypeExistsInLandLayer(iNewIndex, cnt3))
+					if (FindTypeInLandLayer(iNewIndex, cnt3))
 					{
 						SmoothTerrain(  iNewIndex, cnt3, &NewTile, fForceSmooth );
 						if ( NewTile != NO_TILE )
@@ -344,14 +344,14 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 
 	pSmoothStruct = gbSmoothWaterStruct;
 	// Get land index value for given level and adjust according to type
-	UINT16 usTileIndex;
-	if (!TypeExistsInLandLayer(gridno, origType, &usTileIndex))
+	LEVELNODE const* const existing_land = FindTypeInLandLayer(gridno, origType);
+	if (!existing_land)
 	{
 		*piNewTile = NO_TILE;
 		return;
 	}
 
-	UINT16 const usOldIndex = GetTypeSubIndexFromTileIndex(origType, usTileIndex);
+	UINT16 const usOldIndex = GetTypeSubIndexFromTileIndex(origType, existing_land->usIndex);
 
 	// Check if we're dealing with a 'full' tile ( first ten )
 	// If so, do not smooth

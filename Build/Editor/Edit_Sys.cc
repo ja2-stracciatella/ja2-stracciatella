@@ -327,7 +327,6 @@ static void PasteSingleWallCommon(UINT32 iMapIndex)
 {
 	UINT16				usUseIndex;
 	UINT16				usUseObjIndex;
-	UINT16				usTempIndex;
 
 	if ( iMapIndex < 0x8000 )
 	{
@@ -393,8 +392,10 @@ static void PasteSingleWallCommon(UINT32 iMapIndex)
 		else if ( (usUseObjIndex >= FIRSTFLOOR) && (usUseObjIndex <= LASTFLOOR) )
 		{
 			// Drop a floor on this tile
-			if ( TypeExistsInLandLayer( iMapIndex, usUseObjIndex, &usTempIndex ) )
-				RemoveLand( iMapIndex, usTempIndex );
+			if (LEVELNODE const* const land = FindTypeInLandLayer(iMapIndex, usUseObjIndex))
+			{
+				RemoveLand(iMapIndex, land->usIndex);
+			}
 
 			AddLandToHead( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) );
 		}
@@ -611,7 +612,6 @@ static void PasteTextureEx(GridNo, UINT16 type);
 void PasteTextureCommon( UINT32 iMapIndex )
 {
 	 UINT8					ubLastHighLevel;
-	 UINT16					usTileIndex;
 	 //UINT16					Dummy;
 
 	 if ( CurrentPaste != NO_TILE && iMapIndex < 0x8000 )
@@ -623,17 +623,8 @@ void PasteTextureCommon( UINT32 iMapIndex )
 		 if ( CurrentPaste == DEEPWATERTEXTURE )
 		 {
 			 // IF WE ARE PASTING DEEP WATER AND WE ARE NOT OVER WATER, IGNORE!
-	 		 if ( TypeExistsInLandLayer( iMapIndex, REGWATERTEXTURE, &usTileIndex ) )
-			 {
-					if ( !gTileDatabase[ usTileIndex ].ubFullTile )
-					{
-						 return;
-					}
-			 }
-			 else
-			 {
-					return;
-			 }
+	 		 LEVELNODE const* const land = FindTypeInLandLayer(iMapIndex, REGWATERTEXTURE);
+	 		 if (!land || !gTileDatabase[land->usIndex].ubFullTile) return;
 		 }
 
 		 // Don't draw over floors
@@ -808,7 +799,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 				}
 				else
 				{
-					if (TypeExistsInLandLayer(iNewIndex, uiNewType))
+					if (FindTypeInLandLayer(iNewIndex, uiNewType))
 					{
 						fDoPaste = TRUE;
 					}
@@ -873,8 +864,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 static void PasteTextureEx(GridNo const grid_no, UINT16 const type)
 {
 	// Check if this texture exists
-	UINT16 usIndex;
-	if (TypeExistsInLandLayer(grid_no, type, &usIndex))
+	if (LEVELNODE const* const land = FindTypeInLandLayer(grid_no, type))
 	{
 		UINT8 type_level;
 		if (GetTypeLandLevel(grid_no, type, &type_level))
@@ -882,7 +872,7 @@ static void PasteTextureEx(GridNo const grid_no, UINT16 const type)
 			// If top-land, do not change
 			if (type_level != LANDHEAD)
 			{
-				PasteExistingTexture(grid_no, usIndex);
+				PasteExistingTexture(grid_no, land->usIndex);
 			}
 		}
 	}

@@ -169,11 +169,10 @@ void DeallocateTileDatabase( )
 
 void SetLandIndex(INT32 const iMapIndex, UINT16 const usIndex, UINT32 const uiNewType)
 {
-	UINT16 usTempIndex;
 	UINT8  ubLastHighLevel;
-	if (TypeExistsInLandLayer(iMapIndex, uiNewType, &usTempIndex))
+	if (LEVELNODE const* const land = FindTypeInLandLayer(iMapIndex, uiNewType))
 	{
-		ReplaceLandIndex(iMapIndex, usTempIndex, usIndex);
+		ReplaceLandIndex(iMapIndex, land->usIndex, usIndex);
 	}
 	else if (AnyHeigherLand(iMapIndex, uiNewType, &ubLastHighLevel))
 	{

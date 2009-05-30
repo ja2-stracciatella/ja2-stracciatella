@@ -91,7 +91,7 @@ void DebugLevelNodePage(void)
 }
 
 
-static LEVELNODE* FindTypeInLayer(LEVELNODE* const start_node, UINT32 const type, UINT16* const out_idx = 0)
+static LEVELNODE* FindTypeInLayer(LEVELNODE* const start_node, UINT32 const type)
 {
 	// Look through all objects and Search for type
 	for (LEVELNODE* i = start_node; i; i = i->pNext)
@@ -99,8 +99,6 @@ static LEVELNODE* FindTypeInLayer(LEVELNODE* const start_node, UINT32 const type
 		UINT16 const idx = i->usIndex;
 		if (idx == NO_TILE || idx >= NUMBEROFTILES) continue;
 		if (GetTileType(idx) != type) continue;
-
-		if (out_idx) *out_idx = idx;
 		return i;
 	}
 	return 0;
@@ -370,10 +368,9 @@ void ReplaceLandIndex(UINT32 const iMapIndex, UINT16 const usOldIndex, UINT16 co
 }
 
 
-BOOLEAN TypeExistsInLandLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusLandIndex)
+LEVELNODE* FindTypeInLandLayer(UINT32 const map_idx, UINT32 const type)
 {
-	LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead;
-	return !!FindTypeInLayer(pLand, fType, pusLandIndex);
+	return FindTypeInLayer(gpWorldLevelData[map_idx].pLandHead, type);
 }
 
 
