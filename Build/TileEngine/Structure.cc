@@ -787,71 +787,45 @@ static void DeleteStructureFromTile(MAP_ELEMENT* const me, STRUCTURE* const s)
 }
 
 
-BOOLEAN DeleteStructureFromWorld( STRUCTURE * pStructure )
+BOOLEAN DeleteStructureFromWorld(STRUCTURE* const structure)
 { // removes all of the STRUCTURE elements for a structure from the world
-	STRUCTURE *						pBaseStructure;
-	DB_STRUCTURE_TILE	**	ppTile;
-	STRUCTURE *						pCurrent;
-	UINT8									ubLoop, ubLoop2;
-	UINT8									ubNumberOfTiles;
-	INT16									sBaseGridNo, sGridNo;
-	UINT16								usStructureID;
-	BOOLEAN								fRecompileMPs;
-	BOOLEAN								fRecompileExtraRadius; // for doors... yuck
-	INT16									sCheckGridNo;
+	CHECKF(structure);
 
-	CHECKF( pStructure );
+	STRUCTURE* const base = FindBaseStructure(structure);
+	CHECKF(base);
 
-	pBaseStructure = FindBaseStructure( pStructure );
-	CHECKF( pBaseStructure );
-
-	usStructureID = pBaseStructure->usStructureID;
-	fRecompileMPs = ( ( gsRecompileAreaLeft != 0 ) && ! ( ( pBaseStructure->fFlags & STRUCTURE_MOBILE ) != 0 ) );
-	if (fRecompileMPs)
-	{
-		fRecompileExtraRadius = ( ( pBaseStructure->fFlags & STRUCTURE_WALLSTUFF ) != 0 );
-	}
-	else
-	{
-		fRecompileExtraRadius = FALSE;
-	}
-
-	ppTile = pBaseStructure->pDBStructureRef->ppTile;
-	sBaseGridNo = pBaseStructure->sGridNo;
-	ubNumberOfTiles = pBaseStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles;
+	UINT16              const structure_id           = base->usStructureID;
+	bool                const recompile_mps          = gsRecompileAreaLeft != 0 && !(base->fFlags & STRUCTURE_MOBILE);
+	bool                const recompile_extra_radius = recompile_mps && base->fFlags & STRUCTURE_WALLSTUFF; // For doors, yuck
+	GridNo              const base_grid_no           = base->sGridNo;
+	DB_STRUCTURE_TILE** const tile                   = base->pDBStructureRef->ppTile;
+	DB_STRUCTURE_TILE** const end_tile               = tile + base->pDBStructureRef->pDBStructure->ubNumberOfTiles;
 	// Free all the tiles
-	for (ubLoop = BASE_TILE; ubLoop < ubNumberOfTiles; ubLoop++)
+	for (DB_STRUCTURE_TILE* const* i = tile; i != end_tile; ++i)
 	{
-		sGridNo = sBaseGridNo + ppTile[ubLoop]->sPosRelToBase;
-		// there might be two structures in this tile, one on each level, but we just want to
-		// delete one on each pass
-		pCurrent = FindStructureByID( sGridNo, usStructureID );
-		if (pCurrent)
+		GridNo const grid_no = base_grid_no + (*i)->sPosRelToBase;
+		/* There might be two structures in this tile, one on each level, but we
+		 * just want to delete one on each pass */
+		if (STRUCTURE* const current = FindStructureByID(grid_no, structure_id))
 		{
-			DeleteStructureFromTile( &gpWorldLevelData[sGridNo], pCurrent );
+			DeleteStructureFromTile(&gpWorldLevelData[grid_no], current);
 		}
 
-		if ( !gfEditMode && ( fRecompileMPs ) )
+		if (gfEditMode || !recompile_mps) continue;
+
+		AddTileToRecompileArea(grid_no);
+
+		if (!recompile_extra_radius) continue;
+
+		// Add adjacent tiles too
+		for (UINT8 k = 0; k != NUM_WORLD_DIRECTIONS; ++k)
 		{
-			if ( fRecompileMPs )
-			{
-				AddTileToRecompileArea( sGridNo );
-				if ( fRecompileExtraRadius )
-				{
-					// add adjacent tiles too
-					for (ubLoop2 = 0; ubLoop2 < NUM_WORLD_DIRECTIONS; ubLoop2++)
-					{
-						sCheckGridNo = NewGridNo( sGridNo, DirectionInc( ubLoop2 ) );
-						if (sCheckGridNo != sGridNo)
-						{
-							AddTileToRecompileArea( sCheckGridNo );
-						}
-					}
-				}
-			}
+			GridNo const check_grid_no = NewGridNo(grid_no, DirectionInc(k));
+			if (check_grid_no == grid_no) continue;
+			AddTileToRecompileArea(check_grid_no);
 		}
 	}
-	return( TRUE );
+	return TRUE;
 }
 
 
