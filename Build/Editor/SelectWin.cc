@@ -839,57 +839,40 @@ static void SelWinClkCallback(GUI_BUTTON* button, INT32 reason)
 	}
 }
 
-//When a selection window is up, the file information of the picture will display
-//at the top of the screen.
+
+/* When a selection window is up, the file information of the picture is
+ * displayed at the top of the screen. */
 void DisplaySelectionWindowGraphicalInformation()
 {
-	DisplayList *pNode;
-	BOOLEAN fDone;
-	//UINT16 usObjIndex, usIndex;
-	UINT16 y;
-	//Determine if there is a valid picture at cursor position.
-	//iRelX = gusMouseXPos;
-	//iRelY = gusMouseYPos + iTopWinCutOff - (INT16)g_sel_win_box.y;
-
-	y = gusMouseYPos + iTopWinCutOff - (UINT16)g_sel_win_box.y;
-	pNode = pDispList;
-	fDone = FALSE;
-	while( (pNode != NULL) && !fDone )
+	UINT16      const  x = gusMouseXPos;
+	UINT16      const  y = gusMouseYPos + iTopWinCutOff - (UINT16)g_sel_win_box.y;
+	DisplayList const* i = pDispList;
+	for (; i; i = i->pNext)
 	{
-		if ( (gusMouseXPos >= pNode->iX) && (gusMouseXPos < (pNode->iX + pNode->iWidth)) &&
-				(y >= pNode->iY) && (y < (pNode->iY + pNode->iHeight)) )
-		{
-			fDone = TRUE;
-			//pNode->fChosen = TRUE;
-			//iXInc = (pNode->iX + pNode->iWidth) - iClickX;
-			//if ( iYInc < ((pNode->iY + pNode->iHeight) - iClickY) )
-			//	iYInc = (pNode->iY + pNode->iHeight) - iClickY;
-		}
-		else
-			pNode = pNode->pNext;
+		if (x < i->iX || i->iX + i->iWidth  <= x) continue;
+		if (y < i->iY || i->iY + i->iHeight <= y) continue;
+		break;
 	}
-	SetFont( FONT12POINT1 );
-	SetFontForeground( FONT_WHITE );
-	if( pNode )
+	SetFont(FONT12POINT1);
+	SetFontForeground(FONT_WHITE);
+	if (i)
 	{
-		//usObjIndex = (UINT16)pNode->uiObjIndx;
-		//usIndex = pNode->uiIndex;
-		if( !gTilesets[ giCurrentTilesetID].TileSurfaceFilenames[ pNode->uiObjIndx ][0] )
+		UINT32      const obj_idx  = i->uiObjIndx;
+		char const* const name     = gTileSurfaceName[obj_idx];
+		char const* const filename = gTilesets[giCurrentTilesetID].TileSurfaceFilenames[obj_idx];
+		if (filename[0] != '\0')
 		{
-			mprintf(2, 2, L"%hs[%d] is from default tileset %ls (%hs)",
-				gTilesets[0].TileSurfaceFilenames[ pNode->uiObjIndx ],
-				pNode->uiIndex, gTilesets[0].zName,
-				gTileSurfaceName[ pNode->uiObjIndx ] );
+			mprintf(2, 2, L"File:  %hs, subindex:  %d (%hs)", filename, i->uiIndex, name);
 		}
 		else
 		{
-			mprintf(2, 2, L"File:  %hs, subindex:  %d (%hs)",
-				gTilesets[ giCurrentTilesetID ].TileSurfaceFilenames[ pNode->uiObjIndx ],
-				pNode->uiIndex, gTileSurfaceName[ pNode->uiObjIndx ] );
+			TILESET const& generic = gTilesets[GENERIC_1];
+			mprintf(2, 2, L"%hs[%d] is from default tileset %ls (%hs)", generic.TileSurfaceFilenames[obj_idx], i->uiIndex, generic.zName, name);
 		}
 	}
 	mprintf(350, 2, L"Current Tileset:  %ls", gTilesets[giCurrentTilesetID].zName);
 }
+
 
 //----------------------------------------------------------------------------------------------
 //	AddToSelectionList
