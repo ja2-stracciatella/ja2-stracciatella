@@ -598,7 +598,7 @@ void PasteTexture( UINT32 iMapIndex )
 
 
 static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType);
-static void PasteTextureEx(INT16 sGridNo, UINT16 usType);
+static void PasteTextureEx(GridNo, UINT16 type);
 
 
 //---------------------------------------------------------------------------------------------------------------
@@ -870,30 +870,28 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 
 
 // ATE FIXES
-static void PasteTextureEx(INT16 sGridNo, UINT16 usType)
+static void PasteTextureEx(GridNo const grid_no, UINT16 const type)
 {
+	// Check if this texture exists
 	UINT16 usIndex;
-	UINT8	 ubTypeLevel;
-
-	// CHECK IF THIS TEXTURE EXISTS!
-  if ( TypeExistsInLandLayer( sGridNo, usType, &usIndex ) )
-  {
-			if ( GetTypeLandLevel( sGridNo, usType, &ubTypeLevel ) )
+	if (TypeExistsInLandLayer(grid_no, type, &usIndex))
+	{
+		UINT8 type_level;
+		if (GetTypeLandLevel(grid_no, type, &type_level))
+		{
+			// If top-land, do not change
+			if (type_level != LANDHEAD)
 			{
-				// If top-land , do not change
-				if ( ubTypeLevel != LANDHEAD )
-				{
-					PasteExistingTexture( sGridNo, usIndex );
-				}
+				PasteExistingTexture(grid_no, usIndex);
 			}
+		}
 	}
 	else
 	{
-		 // Fill with just first tile, smoothworld() will pick proper piece later
-		UINT16 NewTile = GetTileIndexFromTypeSubIndex(usType, REQUIRES_SMOOTHING_TILE);
-		 SetLandIndex(sGridNo, NewTile, usType);
+		// Fill with just first tile, smoothworld() will pick proper piece later
+		UINT16 const new_tile = GetTileIndexFromTypeSubIndex(type, REQUIRES_SMOOTHING_TILE);
+		SetLandIndex(grid_no, new_tile, type);
 	}
-
 }
 
 
