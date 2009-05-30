@@ -173,7 +173,7 @@ void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
 			if ( !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) && pNode->uiFlags & LEVELNODE_HIDDEN )
 			{
 				// Add graphic if one does not already exist....
-				if (!TypeExistsInRoofLayer(sGridNo, SLANTROOFCEILING))
+				if (!FindTypeInRoofLayer(sGridNo, SLANTROOFCEILING))
 				{
 					// Add
 					AddRoofToHead( sGridNo, SLANTROOFCEILING1 );
@@ -185,10 +185,9 @@ void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
 			if ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED )
 			{
 				///Remove any slant roof items if they exist
-				UINT16 usIndex;
-				if ( TypeExistsInRoofLayer( sGridNo, SLANTROOFCEILING, &usIndex ) )
+				if (LEVELNODE const* const roof = FindTypeInRoofLayer(sGridNo, SLANTROOFCEILING))
 				{
-					RemoveRoof( sGridNo, usIndex );
+					RemoveRoof(sGridNo, roof->usIndex);
 					fChanged = TRUE;
 				}
 			}

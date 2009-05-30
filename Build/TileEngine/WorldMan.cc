@@ -196,7 +196,7 @@ UINT16 TypeRangeExistsInObjectLayer(UINT32 const iMapIndex, UINT32 const fStartT
 }
 
 
-LEVELNODE* FindTypeInObjectLayer(UINT32 map_idx, UINT32 type)
+LEVELNODE* FindTypeInObjectLayer(UINT32 const map_idx, UINT32 const type)
 {
 	return FindTypeInLayer(gpWorldLevelData[map_idx].pObjectHead, type);
 }
@@ -1313,10 +1313,9 @@ BOOLEAN RemoveRoof(UINT32 iMapIndex, UINT16 usIndex)
 }
 
 
-BOOLEAN TypeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusRoofIndex )
+LEVELNODE* FindTypeInRoofLayer(UINT32 const map_idx, UINT32 const type)
 {
-	LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead;
-	return !!FindTypeInLayer(pRoof, fType, pusRoofIndex);
+	return FindTypeInLayer(gpWorldLevelData[map_idx].pRoofHead, type);
 }
 
 
