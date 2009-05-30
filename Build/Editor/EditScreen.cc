@@ -2478,7 +2478,7 @@ try
 		case NIGHTTIME_LIGHT: l->uiFlags |= LIGHT_NIGHTTIME; break;
 	}
 
-	if (!TypeExistsInObjectLayer(pos, GOODRING))
+	if (!FindTypeInObjectLayer(pos, GOODRING))
 	{
 		LEVELNODE* const n = AddObjectToHead(pos, GOODRING1);
 		n->ubShadeLevel = DEFAULT_SHADE_LEVEL;
@@ -2538,7 +2538,7 @@ void ShowLightPositionHandles(void)
 		if (IsSoldierLight(l)) continue;
 
 		INT32 const iMapIndex = (INT32)l->iY * WORLD_COLS + (INT32)l->iX;
-		if (TypeExistsInObjectLayer(iMapIndex, GOODRING)) continue;
+		if (FindTypeInObjectLayer(iMapIndex, GOODRING)) continue;
 
 		LEVELNODE* const n = AddObjectToHead(iMapIndex, GOODRING1);
 		n->ubShadeLevel = DEFAULT_SHADE_LEVEL;

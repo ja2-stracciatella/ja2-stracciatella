@@ -23,7 +23,7 @@ class FailedToAddNode : public std::exception
 BOOLEAN RemoveObject( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE *AddObjectToTail( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE* AddObjectToHead(UINT32 iMapIndex, UINT16 usIndex);
-BOOLEAN TypeExistsInObjectLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusObjectIndex = 0);
+LEVELNODE* FindTypeInObjectLayer(UINT32 map_idx, UINT32 type);
 BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 UINT16 TypeRangeExistsInObjectLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType);
 

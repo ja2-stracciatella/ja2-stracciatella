@@ -91,19 +91,19 @@ void DebugLevelNodePage(void)
 }
 
 
-static bool TypeExistsInLevel(LEVELNODE const* const start_node, UINT32 const type, UINT16* const out_idx)
+static LEVELNODE* FindTypeInLayer(LEVELNODE* const start_node, UINT32 const type, UINT16* const out_idx = 0)
 {
 	// Look through all objects and Search for type
-	for (LEVELNODE const* i = start_node; i; i = i->pNext)
+	for (LEVELNODE* i = start_node; i; i = i->pNext)
 	{
 		UINT16 const idx = i->usIndex;
 		if (idx == NO_TILE || idx >= NUMBEROFTILES) continue;
 		if (GetTileType(idx) != type) continue;
 
 		if (out_idx) *out_idx = idx;
-		return true;
+		return i;
 	}
-	return false;
+	return 0;
 }
 
 
@@ -196,10 +196,9 @@ UINT16 TypeRangeExistsInObjectLayer(UINT32 const iMapIndex, UINT32 const fStartT
 }
 
 
-BOOLEAN TypeExistsInObjectLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusObjectIndex)
+LEVELNODE* FindTypeInObjectLayer(UINT32 map_idx, UINT32 type)
 {
-	const LEVELNODE* pObject = gpWorldLevelData[iMapIndex].pObjectHead;
-	return TypeExistsInLevel(pObject, fType, pusObjectIndex);
+	return FindTypeInLayer(gpWorldLevelData[map_idx].pObjectHead, type);
 }
 
 
@@ -373,8 +372,8 @@ void ReplaceLandIndex(UINT32 const iMapIndex, UINT16 const usOldIndex, UINT16 co
 
 BOOLEAN TypeExistsInLandLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusLandIndex)
 {
-	const LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead;
-	return TypeExistsInLevel(pLand, fType, pusLandIndex);
+	LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead;
+	return !!FindTypeInLayer(pLand, fType, pusLandIndex);
 }
 
 
@@ -1316,8 +1315,8 @@ BOOLEAN RemoveRoof(UINT32 iMapIndex, UINT16 usIndex)
 
 BOOLEAN TypeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fType, UINT16 *pusRoofIndex )
 {
-	const LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead;
-	return TypeExistsInLevel(pRoof, fType, pusRoofIndex);
+	LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead;
+	return !!FindTypeInLayer(pRoof, fType, pusRoofIndex);
 }
 
 
@@ -1686,8 +1685,8 @@ BOOLEAN RemoveAllTopmostsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32
 
 BOOLEAN TypeExistsInTopmostLayer(UINT32 iMapIndex, UINT32 fType, UINT16* pusTopmostIndex)
 {
-	const LEVELNODE* pTopmost = gpWorldLevelData[iMapIndex].pTopmostHead;
-	return TypeExistsInLevel(pTopmost, fType, pusTopmostIndex);
+	LEVELNODE* pTopmost = gpWorldLevelData[iMapIndex].pTopmostHead;
+	return !!FindTypeInLayer(pTopmost, fType, pusTopmostIndex);
 }
 
 
