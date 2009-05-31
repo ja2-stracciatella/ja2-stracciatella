@@ -252,47 +252,30 @@ UINT8 GetTileTypeLogicalHeight(UINT32 fType)
 }
 
 
-BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel )
+bool AnyHeigherLand(UINT32 const map_idx, UINT32 const src_type, UINT8* const out_last_level)
 {
-	LEVELNODE		*pLand		 = NULL;
-	UINT8					level = 0;
-	UINT8					ubSrcTypeLevel=0;
-	BOOLEAN				fFound = FALSE;
-
-	pLand = gpWorldLevelData[ iMapIndex ].pLandHead;
-
-	UINT8 ubSrcLogHeight = GetTileTypeLogicalHeight(uiSrcType);
-
 	// Check that src type is not head
-	if ( GetTypeLandLevel( iMapIndex, uiSrcType, &ubSrcTypeLevel ) )
+	UINT8 src_type_level = 0;
+	if (GetTypeLandLevel(map_idx, src_type, &src_type_level) &&
+			src_type_level == LANDHEAD)
 	{
-		 if ( ubSrcTypeLevel == LANDHEAD )
-		 {
-				return( FALSE );
-		 }
+		return false;
 	}
 
-	// Look through all objects and Search for type
-
-	while( pLand != NULL )
+	UINT8 level          = 0;
+	bool  found          = false;
+	UINT8 src_log_height = GetTileTypeLogicalHeight(src_type);
+	for (LEVELNODE* i = gpWorldLevelData[map_idx].pLandHead; i; ++level, i = i->pNext)
 	{
 		// Get type and height
-		const UINT32 fTileType = GetTileType(pLand->usIndex);
-		if ( gTileTypeLogicalHeight[ fTileType ] > ubSrcLogHeight )
+		UINT32 const tile_type = GetTileType(i->usIndex);
+		if (GetTileTypeLogicalHeight(tile_type) > src_log_height)
 		{
-			*pubLastLevel = level;
-			fFound = TRUE;
+			*out_last_level = level;
+			found = TRUE;
 		}
-
-		// Advance to next
-		pLand = pLand->pNext;
-
-		level++;
-
 	}
-
-	// Could not find it, return FALSE
-	return( fFound );
+	return found;
 }
 
 

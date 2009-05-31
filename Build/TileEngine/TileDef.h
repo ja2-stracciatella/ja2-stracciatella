@@ -139,7 +139,7 @@ UINT32 GetTileType(UINT16 usIndex);
 UINT32 GetTileFlags(UINT16 usIndex);
 
 UINT8 GetTileTypeLogicalHeight(UINT32 fType);
-BOOLEAN AnyHeigherLand( UINT32 iMapIndex, UINT32 uiSrcType, UINT8 *pubLastLevel );
+bool  AnyHeigherLand(UINT32 map_idx, UINT32 src_type, UINT8* out_last_level);
 UINT16 GetWallOrientation(UINT16 usIndex);
 
 void SetSpecificDatabaseValues(UINT16 type, UINT16 database_elem, TILE_ELEMENT&, bool use_raised_object_type);
