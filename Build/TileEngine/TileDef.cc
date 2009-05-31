@@ -246,9 +246,10 @@ UINT32 GetTileFlags(const UINT16 usIndex)
 }
 
 
-UINT8 GetTileTypeLogicalHeight(UINT32 fType)
+UINT8 GetTileTypeLogicalHeight(UINT32 const type)
 {
-	return gTileTypeLogicalHeight[fType];
+	Assert(type < lengthof(gTileTypeLogicalHeight));
+	return gTileTypeLogicalHeight[type];
 }
 
 
@@ -298,7 +299,7 @@ static BOOLEAN AnyLowerLand(UINT32 iMapIndex, UINT32 uiSrcType, UINT8* pubLastLe
 		// Get type and height
 		const UINT32 fTileType = GetTileType(pLand->usIndex);
 
-		if ( gTileTypeLogicalHeight[ fTileType ] < ubSrcLogHeight )
+		if (GetTileTypeLogicalHeight(fTileType) < ubSrcLogHeight)
 		{
 			*pubLastLevel = level;
 			return( TRUE );

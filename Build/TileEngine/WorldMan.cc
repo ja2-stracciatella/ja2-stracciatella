@@ -509,7 +509,7 @@ void RemoveHigherLandLevels(UINT32 const iMapIndex, UINT32 const fSrcType, UINT3
 		pOldLand = pLand;
 		pLand = pLand->pPrevNode;
 
-		if (gTileTypeLogicalHeight[fTileType] > ubSrcLogHeight)
+		if (GetTileTypeLogicalHeight(fTileType) > ubSrcLogHeight)
 		{
 			RemoveLand(iMapIndex, pOldLand->usIndex);
 

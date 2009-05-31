@@ -138,7 +138,7 @@ UINT16 GetTileIndexFromTypeSubIndex(UINT32 uiCheckType, UINT16 usSubIndex);
 UINT32 GetTileType(UINT16 usIndex);
 UINT32 GetTileFlags(UINT16 usIndex);
 
-UINT8 GetTileTypeLogicalHeight(UINT32 fType);
+UINT8 GetTileTypeLogicalHeight(UINT32 type);
 bool  AnyHeigherLand(UINT32 map_idx, UINT32 src_type, UINT8* out_last_level);
 UINT16 GetWallOrientation(UINT16 usIndex);
 
