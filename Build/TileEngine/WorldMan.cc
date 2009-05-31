@@ -478,48 +478,35 @@ void InsertLandIndexAtLevel(const UINT32 iMapIndex, const UINT16 usIndex, const 
 }
 
 
-void RemoveHigherLandLevels(UINT32 const iMapIndex, UINT32 const fSrcType, UINT32** const puiHigherTypes, UINT8* const pubNumHigherTypes)
+void RemoveHigherLandLevels(UINT32 const map_idx, UINT32 const src_type, UINT32*& out_higher_types, UINT8& out_n_higher_types)
 {
-	LEVELNODE* pOldLand = NULL;
-
-	*pubNumHigherTypes = 0;
-	*puiHigherTypes = NULL;
-
-	// Start at tail and up
-	LEVELNODE* pLand = gpWorldLevelData[iMapIndex].pLandHead;
+	out_n_higher_types = 0;
+	out_higher_types   = 0;
 
 	// Get tail
-	while (pLand != NULL)
+	LEVELNODE* tail = 0;
+	for (LEVELNODE* i = gpWorldLevelData[map_idx].pLandHead; i; i = i->pNext)
 	{
-		pOldLand = pLand;
-		pLand = pLand->pNext;
+		tail = i;
 	}
 
-	pLand = pOldLand;
-
-	// Get src height
-	UINT8 ubSrcLogHeight = GetTileTypeLogicalHeight(fSrcType);
-
-	// Look through all objects and Search for height
-	while (pLand != NULL)
+	UINT8 const src_log_height = GetTileTypeLogicalHeight(src_type);
+	for (LEVELNODE* i = tail; i;)
 	{
-		const UINT32 fTileType = GetTileType(pLand->usIndex);
+		LEVELNODE const& l = *i;
+		i = i->pPrevNode;
 
-		// Advance to next
-		pOldLand = pLand;
-		pLand = pLand->pPrevNode;
+		UINT32 const tile_type = GetTileType(l.usIndex);
+		if (GetTileTypeLogicalHeight(tile_type) <= src_log_height) continue;
 
-		if (GetTileTypeLogicalHeight(fTileType) > ubSrcLogHeight)
-		{
-			RemoveLand(iMapIndex, pOldLand->usIndex);
+		RemoveLand(map_idx, l.usIndex);
 
-			++*pubNumHigherTypes;
-			*puiHigherTypes = REALLOC(*puiHigherTypes, UINT32, *pubNumHigherTypes);
-			(*puiHigherTypes)[*pubNumHigherTypes - 1] = fTileType;
-		}
+		out_higher_types = REALLOC(out_higher_types, UINT32, out_n_higher_types + 1);
+		out_higher_types[out_n_higher_types] = tile_type;
+		++out_n_higher_types;
 	}
 
-	AdjustForFullTile(iMapIndex);
+	AdjustForFullTile(map_idx);
 }
 
 #endif

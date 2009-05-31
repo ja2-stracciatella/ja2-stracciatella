@@ -672,7 +672,7 @@ static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 		 AddToUndoList( iMapIndex );
 
 		 // - For all heigher level, remove
-		 RemoveHigherLandLevels( iMapIndex, fNewType, &puiDeletedTypes, &ubNumTypes );
+		 RemoveHigherLandLevels(iMapIndex, fNewType, puiDeletedTypes, ubNumTypes);
 
 		 // Set with a radius of 1 and smooth according to height difference
 		 SetLowerLandIndexWithRadius( iMapIndex, fNewType, 1 , TRUE );

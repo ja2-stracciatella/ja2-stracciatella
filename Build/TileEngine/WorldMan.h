@@ -63,7 +63,7 @@ BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 void ReplaceLandIndex(UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex);
 void DeleteAllLandLayers(UINT32 iMapIndex);
 void InsertLandIndexAtLevel(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel);
-void RemoveHigherLandLevels(UINT32 iMapIndex, UINT32 fSrcType, UINT32** puiHigherTypes, UINT8* pubNumHigherTypes);
+void RemoveHigherLandLevels(UINT32 map_idx, UINT32 src_type, UINT32*& higher_types, UINT8& n_higher_types);
 #endif
 
 UINT8 GetTerrainType(GridNo);
