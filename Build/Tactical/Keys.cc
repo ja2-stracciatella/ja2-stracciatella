@@ -1126,7 +1126,7 @@ BOOLEAN AllMercsLookForDoor(INT16 sGridNo)
 
 
 static BOOLEAN InternalIsPerceivedDifferentThanReality(const DOOR_STATUS* d);
-static void InternalUpdateDoorGraphicFromStatus(const DOOR_STATUS* d, BOOLEAN fDirty);
+static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS const&, bool dirty);
 static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* d);
 
 
@@ -1161,7 +1161,7 @@ BOOLEAN MercLooksForDoors(const SOLDIERTYPE* s, BOOLEAN fUpdateValue)
 					InternalUpdateDoorsPerceivedValue(d);
 
 					// Update graphic....
-					InternalUpdateDoorGraphicFromStatus(d, TRUE);
+					InternalUpdateDoorGraphicFromStatus(*d, true);
 				}
 				return TRUE;
 			}
@@ -1184,7 +1184,7 @@ BOOLEAN MercLooksForDoors(const SOLDIERTYPE* s, BOOLEAN fUpdateValue)
 						InternalUpdateDoorsPerceivedValue(d);
 
 						// Update graphic....
-						InternalUpdateDoorGraphicFromStatus(d, TRUE);
+						InternalUpdateDoorGraphicFromStatus(*d, true);
 					}
 					return TRUE;
 				}
@@ -1225,75 +1225,57 @@ void UpdateDoorGraphicsFromStatus(void)
 		// ATE: Make sure door status flag and struct info are syncronized....
 		SyncronizeDoorStatusToStructureData(*pDoorStatus);
 
-		InternalUpdateDoorGraphicFromStatus(pDoorStatus, FALSE);
+		InternalUpdateDoorGraphicFromStatus(*pDoorStatus, false);
 	}
 }
 
 
-static void InternalUpdateDoorGraphicFromStatus(const DOOR_STATUS* d, BOOLEAN fDirty)
+static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS const& d, bool const dirty)
 {
 	// OK, look at perceived status and adjust graphic
 	// First look for a door structure here...
-	STRUCTURE* const pStructure = FindStructure(d->sGridNo, STRUCTURE_ANYDOOR);
+	STRUCTURE* const s = FindStructure(d.sGridNo, STRUCTURE_ANYDOOR);
+	if (!s) return;
 
-	STRUCTURE* pBaseStructure;
-	INT16      sBaseGridNo;
-	if (pStructure)
-	{
-		pBaseStructure = FindBaseStructure(pStructure);
-		sBaseGridNo    = pBaseStructure->sGridNo;
-	}
-	else
-	{
-		pBaseStructure = NULL;
-		sBaseGridNo    = NOWHERE;
-	}
+	STRUCTURE* const base         = FindBaseStructure(s);
+	GridNo     const base_grid_no = base->sGridNo;
+	LEVELNODE* const node         = FindLevelNodeBasedOnStructure(base_grid_no, base);
 
-	if (pBaseStructure == NULL)
-	{
-#if 0
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Door structure data at %d was not found", d->sGridNo);
-#endif
-		return;
-	}
-
-	LEVELNODE* const pNode = FindLevelNodeBasedOnStructure(sBaseGridNo, pBaseStructure);
-
-	// Get status we want to change to.....
-	const BOOLEAN fWantToBeOpen = (d->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
+	// Get status we want to change to
+	bool const want_to_be_open = d.ubFlags & DOOR_PERCEIVED_OPEN;
 
 	// First look for an opened door
-	// get what it is now...
-	BOOLEAN fOpenedGraphic = FALSE;
+	// get what it is now
+	bool openend_graphic = false;
 	INT32 cnt;
 	for (cnt = 0; gClosedDoorList[cnt] != -1; ++cnt)
 	{
 		// IF WE ARE A SHADOW TYPE
-		if (pNode->usIndex == gClosedDoorList[cnt])
+		if (node->usIndex == gClosedDoorList[cnt])
 		{
-			fOpenedGraphic = TRUE;
+			openend_graphic = true;
 			break;
 		}
 	}
 
-	/* OK, we either have an opened graphic, in which case we want to switch to
-	 * the closed, or a closed in which case we want to switch to opened...
+	/* We either have an opened graphic, in which case we want to switch to the
+	 * closed, or a closed in which case we want to switch to opened
 	 * adjust o' graphic */
 
-	/* OK, we now need to test these things against the true structure data we may
-	 * need to only adjust the graphic here... */
-	if (fWantToBeOpen && pStructure->fFlags & STRUCTURE_OPEN)
+	/* We now need to test these things against the true structure data we may
+	 * need to only adjust the graphic here */
+	if (want_to_be_open && s->fFlags & STRUCTURE_OPEN)
 	{
-		// Adjust graphic....
+		// Adjust graphic
 
-		// Loop through and and find opened graphic for the closed one....
+		// Loop through and and find opened graphic for the closed one
 		for (INT32 i = 0; gOpenDoorList[i] != -1; ++i)
 		{
 			// IF WE ARE A SHADOW TYPE
-			if (pNode->usIndex == gOpenDoorList[i])
+			if (node->usIndex == gOpenDoorList[i])
 			{
 				// OK, now use opened graphic.
-				pNode->usIndex = gClosedDoorList[i];
+				node->usIndex = gClosedDoorList[i];
 				goto dirty_end;
 			}
 		}
@@ -1301,55 +1283,55 @@ static void InternalUpdateDoorGraphicFromStatus(const DOOR_STATUS* d, BOOLEAN fD
 	}
 
 	// If we want to be closed but structure is closed
-	if (!fWantToBeOpen && !(pStructure->fFlags & STRUCTURE_OPEN))
+	if (!want_to_be_open && !(s->fFlags & STRUCTURE_OPEN))
 	{
-		// Adjust graphic....
+		// Adjust graphic
 
-		// Loop through and and find closed graphic for the opend one....
+		// Loop through and and find closed graphic for the opend one
 		for (INT32 i = 0; gClosedDoorList[i] != -1; ++i)
 		{
 			// IF WE ARE A SHADOW TYPE
-			if (pNode->usIndex == gClosedDoorList[i])
+			if (node->usIndex == gClosedDoorList[i])
 			{
-				pNode->usIndex = gOpenDoorList[i];
+				node->usIndex = gOpenDoorList[i];
 				goto dirty_end;
 			}
 		}
 		return;
 	}
 
-	if (fOpenedGraphic && !fWantToBeOpen)
+	if (openend_graphic && !want_to_be_open)
 	{
 		// Close the beast!
-		pNode->usIndex = gOpenDoorList[cnt];
+		node->usIndex = gOpenDoorList[cnt];
 	}
-	else if (!fOpenedGraphic && fWantToBeOpen)
+	else if (!openend_graphic && want_to_be_open)
 	{
-		BOOLEAN fDifferent = FALSE;
-		// Find the closed door graphic and adjust....
+		bool different = false;
+		// Find the closed door graphic and adjust
 		for (INT32 i = 0; gOpenDoorList[i] != -1; ++i)
 		{
 			// IF WE ARE A SHADOW TYPE
-			if (pNode->usIndex == gOpenDoorList[i])
+			if (node->usIndex == gOpenDoorList[i])
 			{
 				// Open the beast!
-				fDifferent = TRUE;
-				pNode->usIndex = gClosedDoorList[i];
+				different = true;
+				node->usIndex = gClosedDoorList[i];
 				break;
 			}
 		}
-		if (!fDifferent) return;
+		if (!different) return;
 	}
 	else
 	{
 		return;
 	}
 
-	SwapStructureForPartner(pBaseStructure);
-	RecompileLocalMovementCosts(sBaseGridNo);
+	SwapStructureForPartner(base);
+	RecompileLocalMovementCosts(base_grid_no);
 
 dirty_end:
-	if (fDirty)
+	if (dirty)
 	{
 		InvalidateWorldRedundency();
 		SetRenderFlags(RENDER_FLAG_FULL);
