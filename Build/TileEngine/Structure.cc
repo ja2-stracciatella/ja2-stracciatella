@@ -1153,7 +1153,7 @@ BOOLEAN StructureDensity( STRUCTURE * pStructure, UINT8 * pubLevel0, UINT8 * pub
 }
 
 
-BOOLEAN DamageStructure(STRUCTURE* const pStructure, UINT8 ubDamage, const UINT8 ubReason, const INT16 sGridNo, const INT16 sX, const INT16 sY, SOLDIERTYPE* const owner)
+BOOLEAN DamageStructure(STRUCTURE* const pStructure, UINT8 ubDamage, StructureDamageReason const ubReason, INT16 const sGridNo, INT16 const sX, INT16 const sY, SOLDIERTYPE* const owner)
 {	// do damage to a structure; returns TRUE if the structure should be removed
 
 	STRUCTURE			*pBase;
