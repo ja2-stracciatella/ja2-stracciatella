@@ -318,11 +318,37 @@ static void HandleFencePartnerCheck(INT16 sStructGridNo)
 }
 
 
+static STRUCTURE* RemoveOnWall(GridNo const grid_no, StructureFlags const flags, STRUCTURE* next)
+{
+	while (STRUCTURE* const attached = FindStructure(grid_no, flags))
+	{
+		STRUCTURE* const base = FindBaseStructure(attached);
+		if (!base)
+		{ // Error!
+#ifdef JA2BETAVERSION
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Problems removing structure attached to wall at %d", grid_no);
+#endif
+			break;
+		}
+
+		while (next && next->usStructureID == base->usStructureID)
+		{ // The next structure will also be deleted, so skip past it
+			next = next->pNext;
+		}
+
+		LEVELNODE* const node = FindLevelNodeBasedOnStructure(base->sGridNo, base);
+		ApplyMapChangesToMapTempFile app;
+		RemoveStructFromLevelNode(base->sGridNo, node);
+	}
+	return next;
+}
+
+
 static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTURE** const ppNextCurrent, INT16 const sGridNo, INT16 const sWoundAmt, UINT32 const uiDist, BOOLEAN* const pfRecompileMovementCosts, BOOLEAN const fOnlyWalls, SOLDIERTYPE* const owner, INT8 const bLevel)
 {
 	INT16 sX, sY;
-	STRUCTURE		*pBase, *pWallStruct, *pAttached, *pAttachedBase;
-	LEVELNODE *pNode = NULL, *pNewNode = NULL, *pAttachedNode;
+	STRUCTURE		*pBase, *pWallStruct;
+	LEVELNODE *pNode = NULL, *pNewNode = NULL;
 	INT16 sNewGridNo, sStructGridNo;
 	UINT8	 ubNumberOfTiles, ubLoop;
 	DB_STRUCTURE_TILE	**	ppTile;
@@ -579,60 +605,10 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 							}
 
 							// look for attached structures in same tile
-							sNewGridNo = pBase->sGridNo;
-							pAttached = FindStructure( sNewGridNo, STRUCTURE_ON_LEFT_WALL );
-							while (pAttached)
-							{
-								pAttachedBase = FindBaseStructure( pAttached );
-								if (pAttachedBase)
-								{
-				          // Remove the beast!
-				          while ( (*ppNextCurrent) != NULL && (*ppNextCurrent)->usStructureID == pAttachedBase->usStructureID )
-				          {
-					          // the next structure will also be deleted so we had better
-					          // skip past it!
-					          (*ppNextCurrent) = (*ppNextCurrent)->pNext;
-				          }
-
-									pAttachedNode = FindLevelNodeBasedOnStructure( pAttachedBase->sGridNo, pAttachedBase );
-									ApplyMapChangesToMapTempFile app;
-									RemoveStructFromLevelNode(pAttachedBase->sGridNo, pAttachedNode);
-								}
-								else
-								{
-									// error!
-									#ifdef JA2BETAVERSION
-										ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Problems removing structure attached to wall at %d", sNewGridNo );
-									#endif
-									break;
-								}
-								// search for another, from the start of the list
-								pAttached = FindStructure( sNewGridNo, STRUCTURE_ON_LEFT_WALL );
-							}
+  						*ppNextCurrent = RemoveOnWall(pBase->sGridNo, STRUCTURE_ON_LEFT_WALL, *ppNextCurrent);
 
 							// Move in SOUTH, looking for attached structures to remove
-							sNewGridNo = NewGridNo( pBase->sGridNo, DirectionInc( SOUTH ) );
-							pAttached = FindStructure( sNewGridNo, STRUCTURE_ON_LEFT_WALL );
-							while (pAttached)
-							{
-								pAttachedBase = FindBaseStructure( pAttached );
-								if (pAttachedBase)
-								{
-									pAttachedNode = FindLevelNodeBasedOnStructure( pAttachedBase->sGridNo, pAttachedBase );
-									ApplyMapChangesToMapTempFile app;
-									RemoveStructFromLevelNode(pAttachedBase->sGridNo, pAttachedNode);
-								}
-								else
-								{
-									// error!
-									#ifdef JA2BETAVERSION
-										ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Problems removing structure attached to wall at %d", sNewGridNo );
-									#endif
-									break;
-								}
-								// search for another, from the start of the list
-								pAttached = FindStructure( sNewGridNo, STRUCTURE_ON_LEFT_WALL );
-							}
+							RemoveOnWall(NewGridNo(pBase->sGridNo, DirectionInc(SOUTH)), STRUCTURE_ON_LEFT_WALL, 0);
 							break;
 
 						case OUTSIDE_TOP_RIGHT:
@@ -677,53 +653,10 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 							}
 
 							// looking for attached structures to remove in base tile
-							sNewGridNo = pBase->sGridNo;
-							pAttached = FindStructure( sNewGridNo, STRUCTURE_ON_RIGHT_WALL );
-							while (pAttached)
-							{
-								pAttachedBase = FindBaseStructure( pAttached );
-								if (pAttachedBase)
-								{
-									pAttachedNode = FindLevelNodeBasedOnStructure( pAttachedBase->sGridNo, pAttachedBase );
-									ApplyMapChangesToMapTempFile app;
-									RemoveStructFromLevelNode(pAttachedBase->sGridNo, pAttachedNode);
-								}
-								else
-								{
-									// error!
-									#ifdef JA2BETAVERSION
-										ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Problems removing structure attached to wall at %d", sNewGridNo );
-									#endif
-									break;
-								}
-								// search for another, from the start of the list
-								pAttached = FindStructure( sNewGridNo, STRUCTURE_ON_RIGHT_WALL );
-							}
+							RemoveOnWall(pBase->sGridNo, STRUCTURE_ON_RIGHT_WALL, 0); // XXX no next_current on base tile?
 
 							// Move in EAST, looking for attached structures to remove
-							sNewGridNo = NewGridNo( pBase->sGridNo, DirectionInc( EAST ) );
-							pAttached = FindStructure( sNewGridNo, STRUCTURE_ON_RIGHT_WALL );
-							while (pAttached)
-							{
-								pAttachedBase = FindBaseStructure( pAttached );
-								if (pAttachedBase)
-								{
-									pAttachedNode = FindLevelNodeBasedOnStructure(pAttachedBase->sGridNo, pAttachedBase);
-									ApplyMapChangesToMapTempFile app;
-									RemoveStructFromLevelNode(pAttachedBase->sGridNo, pAttachedNode);
-								}
-								else
-								{
-									// error!
-									#ifdef JA2BETAVERSION
-										ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Problems removing structure attached to wall at %d", sNewGridNo );
-									#endif
-									break;
-								}
-								// search for another, from the start of the list
-								pAttached = FindStructure( sNewGridNo, STRUCTURE_ON_RIGHT_WALL );
-							}
-
+							RemoveOnWall(NewGridNo(pBase->sGridNo, DirectionInc(EAST)), STRUCTURE_ON_RIGHT_WALL, 0);
 							break;
 					}
 
