@@ -1196,60 +1196,25 @@ BOOLEAN MercLooksForDoors(const SOLDIERTYPE* s, BOOLEAN fUpdateValue)
 }
 
 
-static void SyncronizeDoorStatusToStructureData(DOOR_STATUS* pDoorStatus)
+static void SyncronizeDoorStatusToStructureData(DOOR_STATUS const& d)
 {
-	STRUCTURE *pStructure, *pBaseStructure;
-	LEVELNODE * pNode;
-	INT16 sBaseGridNo				 = NOWHERE;
+	// First look for a door structure here
+	STRUCTURE* const s = FindStructure(d.sGridNo, STRUCTURE_ANYDOOR);
+	if (!s) return;
 
-	// First look for a door structure here...
-	pStructure = FindStructure( pDoorStatus->sGridNo, STRUCTURE_ANYDOOR );
+	/* ATE: One of the purposes of this function is to MAKE sure the door status
+	 * MATCHES the struct data value - if not - change (REGARDLESS of perceived
+	 * being used or not) */
+	bool const door_open   = d.ubFlags & DOOR_OPEN;
+	bool const struct_open = s->fFlags & STRUCTURE_OPEN;
+	if (door_open == struct_open) return;
 
-	if (pStructure)
-	{
-		pBaseStructure = FindBaseStructure( pStructure );
-		sBaseGridNo    = pBaseStructure->sGridNo;
-	}
-	else
-	{
-		pBaseStructure = NULL;
-	}
-
-	if ( pBaseStructure == NULL )
-	{
-#if 0
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Door structure data at %d was not found", pDoorStatus->sGridNo );
-#endif
-		return;
-	}
-
-	pNode = FindLevelNodeBasedOnStructure( sBaseGridNo, pBaseStructure );
-
-	// ATE: OK let me explain something here:
-	// One of the purposes of this function is to MAKE sure the door status MATCHES
-	// the struct data value - if not - change ( REGARDLESS of perceived being used or not... )
-	//
-	// Check for opened...
-	if ( pDoorStatus->ubFlags & DOOR_OPEN )
-	{
-		// IF closed.....
-		if ( !( pStructure->fFlags & STRUCTURE_OPEN ) )
-		{
-			// Swap!
-			SwapStructureForPartner(pBaseStructure);
-			RecompileLocalMovementCosts( sBaseGridNo );
-		}
-	}
-	else
-	{
-		if ( ( pStructure->fFlags & STRUCTURE_OPEN ) )
-		{
-			// Swap!
-			SwapStructureForPartner(pBaseStructure);
-			RecompileLocalMovementCosts( sBaseGridNo );
-		}
-	}
+	// Swap!
+	STRUCTURE* const base = FindBaseStructure(s);
+	SwapStructureForPartner(base);
+	RecompileLocalMovementCosts(base->sGridNo);
 }
+
 
 void UpdateDoorGraphicsFromStatus(void)
 {
@@ -1258,7 +1223,7 @@ void UpdateDoorGraphicsFromStatus(void)
 		DOOR_STATUS* pDoorStatus = &gpDoorStatus[cnt];
 
 		// ATE: Make sure door status flag and struct info are syncronized....
-		SyncronizeDoorStatusToStructureData(pDoorStatus);
+		SyncronizeDoorStatusToStructureData(*pDoorStatus);
 
 		InternalUpdateDoorGraphicFromStatus(pDoorStatus, FALSE);
 	}
