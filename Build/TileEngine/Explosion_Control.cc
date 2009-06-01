@@ -404,11 +404,12 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 		// Get LEVELNODE for struct and remove!
 		LEVELNODE* const node = FindLevelNodeBasedOnStructure(base_grid_no, base);
 
-		// ATE: if we have completely destroyed a structure,
-		// and this structure should have a in-between explosion partner,
-		// make damage code 2 - which means only damaged - the normal explosion
-		// spreading will cause it do use the proper peices..
-		if (bDamageReturnVal == 1 && base->pDBStructureRef->pDBStructure->bDestructionPartner < 0)
+		INT8 const orig_destruction_partner = base->pDBStructureRef->pDBStructure->bDestructionPartner;
+		/* ATE: if we have completely destroyed a structure, and this structure
+		 * should have a in-between explosion partner, make damage code 2 - which
+		 * means only damaged - the normal explosion spreading will cause it do use
+		 * the proper pieces */
+		if (bDamageReturnVal == 1 && orig_destruction_partner < 0)
 		{
 			bDamageReturnVal = 2;
 		}
@@ -422,11 +423,11 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 		// Check for a damaged looking graphic
 		else if (bDamageReturnVal == 2)
 		{
-			if (base->pDBStructureRef->pDBStructure->bDestructionPartner < 0)
+			if (orig_destruction_partner < 0)
 			{
 				// We swap to another graphic!
 				// It's -ve and 1-based, change to +ve, 1 based
-				destruction_partner = -base->pDBStructureRef->pDBStructure->bDestructionPartner;
+				destruction_partner = -orig_destruction_partner
 				fContinue           = 2;
 			}
 		}
@@ -441,7 +442,7 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 
 		// Replace with explosion debris if there are any....
 		// ( and there already sin;t explosion debris there.... )
-		if (base->pDBStructureRef->pDBStructure->bDestructionPartner > 0)
+		if (orig_destruction_partner > 0)
 		{
 			// Alrighty add!
 
@@ -449,7 +450,7 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 			UINT8                     const n_tiles = base->pDBStructureRef->pDBStructure->ubNumberOfTiles;
 			DB_STRUCTURE_TILE* const* const ppTile  = base->pDBStructureRef->ppTile;
 
-			destruction_partner = base->pDBStructureRef->pDBStructure->bDestructionPartner;
+			destruction_partner = orig_destruction_partner;
 
 			// OK, destrcution index is , as default, the partner, until we go over the first set of explsion
 			// debris...
