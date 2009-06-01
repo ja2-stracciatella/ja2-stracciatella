@@ -110,36 +110,36 @@ index 23, really heavy metal
 index 24, indestructable stone
 index 25, indestructable metal
 */
-const UINT8 gubMaterialArmour[] =
+UINT8 const gubMaterialArmour[] =
 { // note: must increase; r.c. should block *AP* 7.62mm rounds
-	 0,		// nothing
-	25,		// dry timber; wood wall +1/2
-	20,		// furniture wood (thin!) or plywood wall +1/2
-	30,		// wood (live); 1.5x timber
-	 3,		// light vegetation
-	10,		// upholstered furniture
-	47,		// porcelain
-	10,		// cactus, hay, bamboo
-		0,
-		0,
-		0,
-	55,		// stone masonry; 3x timber
-	63,		// non-reinforced concrete; 4x timber???
-  70,		// reinforced concrete; 6x timber
-  85,		// rock? - number invented
-	 9,		// rubber - tires
-	40,		// sand
-		1,	// cloth
-	40,		// sandbag
-		0,
-		0,
-	37,		// light metal (furniture; NB thin!)
-	57,		// thicker metal (dumpster)
-  85,		// heavy metal (vault doors) - block everything
+	  0, // nothing
+	 25, // dry timber; wood wall +1/2
+	 20, // furniture wood (thin!) or plywood wall +1/2
+	 30, // wood (live); 1.5x timber
+	  3, // light vegetation
+	 10, // upholstered furniture
+	 47, // porcelain
+	 10, // cactus, hay, bamboo
+	  0,
+	  0,
+	  0,
+	 55, // stone masonry; 3x timber
+	 63, // non-reinforced concrete; 4x timber???
+	 70, // reinforced concrete; 6x timber
+	 85, // rock? - number invented
+	  9, // rubber - tires
+	 40, // sand
+	  1, // cloth
+	 40, // sandbag
+	  0,
+	  0,
+	 37, // light metal (furniture; NB thin!)
+	 57, // thicker metal (dumpster)
+	 85, // heavy metal (vault doors) - block everything
 	// note that vehicle armour will probably end up in here
-	127,	// rock indestructable
-	127,	// indestructable
-	57,		// like 22 but with screen windows
+	127, // rock indestructable
+	127, // indestructable
+	 57, // like 22 but with screen windows
 };
 
 
@@ -1153,112 +1153,76 @@ BOOLEAN StructureDensity( STRUCTURE * pStructure, UINT8 * pubLevel0, UINT8 * pub
 }
 
 
-BOOLEAN DamageStructure(STRUCTURE* const pStructure, UINT8 ubDamage, StructureDamageReason const ubReason, INT16 const sGridNo, INT16 const sX, INT16 const sY, SOLDIERTYPE* const owner)
-{	// do damage to a structure; returns TRUE if the structure should be removed
+BOOLEAN DamageStructure(STRUCTURE* const s, UINT8 damage, StructureDamageReason const reason, GridNo const grid_no, INT16 const x, INT16 const y, SOLDIERTYPE* const owner)
+{	// Do damage to a structure; returns TRUE if the structure should be removed
+	CHECKF(s);
 
-	STRUCTURE			*pBase;
-	UINT8					ubArmour;
-	//LEVELNODE			*pNode;
-
-	CHECKF( pStructure );
-	if (pStructure->fFlags & STRUCTURE_PERSON || pStructure->fFlags & STRUCTURE_CORPSE)
-	{
-		// don't hurt this structure, it's used for hit detection only!
-		return( FALSE );
+	if (s->fFlags & (STRUCTURE_PERSON | STRUCTURE_CORPSE))
+	{ // Don't hurt this structure, it's used for hit detection only
+		return FALSE;
 	}
 
-	if ( (pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_INDESTRUCTABLE_METAL) || (pStructure->pDBStructureRef->pDBStructure->ubArmour == MATERIAL_INDESTRUCTABLE_STONE) )
-	{
-		return( FALSE );
-	}
+	UINT8 const armour_kind = s->pDBStructureRef->pDBStructure->ubArmour;
+	if (armour_kind == MATERIAL_INDESTRUCTABLE_METAL) return FALSE;
+	if (armour_kind == MATERIAL_INDESTRUCTABLE_STONE) return FALSE;
 
-	// Account for armour!
-	if (ubReason == STRUCTURE_DAMAGE_EXPLOSION)
+	if (reason == STRUCTURE_DAMAGE_EXPLOSION)
 	{
-		if ( pStructure->fFlags & STRUCTURE_EXPLOSIVE )
-		{
-			ubArmour = gubMaterialArmour[ pStructure->pDBStructureRef->pDBStructure->ubArmour ] / 3;
-		}
-		else
-		{
-			ubArmour = gubMaterialArmour[ pStructure->pDBStructureRef->pDBStructure->ubArmour ] / 2;
-		}
-
-		if (ubArmour > ubDamage)
-		{
-			// didn't even scratch the paint
-			return( FALSE );
-		}
-		else
-		{
-			// did some damage to the structure
-			ubDamage -= ubArmour;
-		}
+		// Account for armour!
+		UINT8 const base_armour = gubMaterialArmour[armour_kind];
+		UINT8 const armour      = s->fFlags & STRUCTURE_EXPLOSIVE ? base_armour / 3 : base_armour / 2;
+		if (damage < armour) return FALSE; // Didn't even scratch the paint
+		// Did some damage to the structure
+		damage -= armour;
 	}
-	else
-	{
-		ubDamage = 0;
-	}
-
-	// OK, Let's check our reason
-	if ( ubReason == STRUCTURE_DAMAGE_GUNFIRE )
+	else if (reason == STRUCTURE_DAMAGE_GUNFIRE)
 	{
 		// If here, we have penetrated, check flags
 		// Are we an explodable structure?
-		if ( (pStructure->fFlags & STRUCTURE_EXPLOSIVE) && Random( 2 ) )
-		{
-			// Remove struct!
-			pBase = FindBaseStructure( pStructure );
+		if (s->fFlags & STRUCTURE_EXPLOSIVE && Random(2))
+		{ // Remove struct
+			// ATE: Set hit points to zero
+			STRUCTURE* const base = FindBaseStructure(s);
+			base->ubHitPoints = 0;
 
-			// ATE: Set hit points to zero....
-			pBase->ubHitPoints = 0;
+			IgniteExplosionXY(owner, x, y, 0, grid_no, STRUCTURE_IGNITE, 0);
 
-			// Get LEVELNODE for struct and remove!
-			// pNode = FindLevelNodeBasedOnStructure( pBase->sGridNo, pBase );
-
-			// Generate an explosion here!
-			IgniteExplosionXY(owner, sX, sY, 0, sGridNo, STRUCTURE_IGNITE, 0);
-
-			// ATE: Return false here, as we are dealing with deleting the graphic here...
-			return( FALSE );
+			// ATE: Return false here, as we are dealing with deleting the graphic here
+			return FALSE;
 		}
 
-		// Make hit sound....
-    if ( pStructure->fFlags & STRUCTURE_CAVEWALL )
-    {
-			PlayLocationJA2Sample(sGridNo, S_VEG_IMPACT1, HIGHVOLUME, 1);
-    }
-    else
-    {
-			SoundID const snd = guiMaterialHitSound[pStructure->pDBStructureRef->pDBStructure->ubArmour];
-			if (snd != NO_SOUND) PlayLocationJA2Sample(sGridNo, snd, HIGHVOLUME, 1);
-    }
-		// Don't update damage HPs....
-		return( TRUE );
-	}
+		// Make hit sound
+    SoundID const snd =
+    	s->fFlags & STRUCTURE_CAVEWALL ? S_VEG_IMPACT1 :
+			guiMaterialHitSound[armour_kind];
+		if (snd != NO_SOUND) PlayLocationJA2Sample(grid_no, snd, HIGHVOLUME, 1);
 
-	// OK, LOOK FOR A SAM SITE, UPDATE....
-	UpdateAndDamageSAMIfFound( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, sGridNo, ubDamage );
-
-	// find the base so we can reduce the hit points!
-	pBase = FindBaseStructure( pStructure );
-	CHECKF( pBase );
-	if (pBase->ubHitPoints <= ubDamage)
-	{
-		// boom! structure destroyed!
-		return( TRUE );
+		// Don't update damage HPs
+		return TRUE;
 	}
 	else
 	{
-		pBase->ubHitPoints -= ubDamage;
-
-		//Since the structure is being damaged, set the map element that a structure is damaged
-		gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_STRUCTURE_DAMAGED;
-
-		// We are a little damaged....
-		return( 2 );
+		damage = 0;
 	}
+
+	// Look for a SAM site, update
+	UpdateAndDamageSAMIfFound(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, grid_no, damage);
+
+	// Find the base so we can reduce the hit points!
+	STRUCTURE* const base = FindBaseStructure(s);
+	CHECKF(base);
+
+	if (base->ubHitPoints <= damage) return TRUE; // boom! structure destroyed!
+	base->ubHitPoints -= damage;
+
+	/* Since the structure is being damaged, set the map element that a structure
+	 * is damaged */
+	gpWorldLevelData[grid_no].uiFlags |= MAPELEMENT_STRUCTURE_DAMAGED;
+
+	// We are a little damaged
+	return 2;
 }
+
 
 #define LINE_HEIGHT 20
 void DebugStructurePage1( void )

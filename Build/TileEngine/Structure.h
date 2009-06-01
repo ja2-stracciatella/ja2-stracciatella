@@ -88,7 +88,7 @@ void AddZStripInfoToVObject(HVOBJECT, STRUCTURE_FILE_REF const*, BOOLEAN fFromAn
 // FUNCTIONS FOR DETERMINING STUFF THAT BLOCKS VIEW FOR TILE_bASED LOS
 INT8 GetBlockingStructureInfo( INT16 sGridNo, INT8 bDir, INT8 bNextDir, INT8 bLevel, INT8 *pStructHeight, STRUCTURE ** ppTallestStructure, BOOLEAN fWallsBlock );
 
-BOOLEAN DamageStructure(STRUCTURE* pStructure, UINT8 ubDamage, StructureDamageReason, INT16 sGridNo, INT16 sX, INT16 sY, SOLDIERTYPE* owner);
+BOOLEAN DamageStructure(STRUCTURE*, UINT8 damage, StructureDamageReason, GridNo, INT16 x, INT16 y, SOLDIERTYPE* owner);
 
 // Material armour type enumeration
 enum
