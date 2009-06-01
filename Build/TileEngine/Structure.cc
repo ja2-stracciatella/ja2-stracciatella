@@ -1225,14 +1225,9 @@ BOOLEAN DamageStructure(STRUCTURE* const s, UINT8 damage, StructureDamageReason 
 
 
 #define LINE_HEIGHT 20
-void DebugStructurePage1( void )
+void DebugStructurePage1()
 {
-	STRUCTURE *		pStructure;
-	STRUCTURE *		pBase;
-	//LEVELNODE *		pLand;
-	INT8					bStructures;
-
-	static const wchar_t* const WallOrientationString[] =
+	static wchar_t const* const WallOrientationString[] =
 	{
 		L"None",
 		L"Inside left",
@@ -1241,163 +1236,152 @@ void DebugStructurePage1( void )
 		L"Outside right"
 	};
 
-	SetFont( LARGEFONT1 );
-	gprintf( 0, 0, L"DEBUG STRUCTURES PAGE 1 OF 1" );
+	SetFont(LARGEFONT1);
+	gprintf(0, 0, L"DEBUG STRUCTURES PAGE 1 OF 1");
 
-	const GridNo sGridNo = GetMouseMapPos();
-	if (sGridNo == NOWHERE) return;
+	GridNo const grid_no = GetMouseMapPos();
+	if (grid_no == NOWHERE) return;
 
-	const INT16 sDesiredLevel = (gsInterfaceLevel == I_GROUND_LEVEL ? STRUCTURE_ON_GROUND : STRUCTURE_ON_ROOF);
+	gprintf(320, 0, L"Building %d", gubBuildingInfo[grid_no]);
 
-	gprintf( 320, 0, L"Building %d", gubBuildingInfo[ sGridNo ] );
-	/*
-	pLand = gpWorldLevelData[sGridNo].pLandHead;
-	gprintf( 320, 0, L"Fake light %d", pLand->ubFakeShadeLevel );
-	gprintf( 320, LINE_HEIGHT, L"Real light: ground %d roof %d", LightTrueLevel( sGridNo, 0 ), LightTrueLevel( sGridNo, 1 ) );
-	*/
-
-	pStructure = gpWorldLevelData[sGridNo].pStructureHead;
-	while (pStructure != NULL)
+	INT16 const desired_level = gsInterfaceLevel == I_GROUND_LEVEL ? STRUCTURE_ON_GROUND : STRUCTURE_ON_ROOF;
+	for (STRUCTURE* s = gpWorldLevelData[grid_no].pStructureHead; s; s = s->pNext)
 	{
-		if (pStructure->sCubeOffset == sDesiredLevel)
-		{
-			break;
-		}
-		pStructure = pStructure->pNext;
-	}
+		if (s->sCubeOffset != desired_level) continue;
 
-	if (pStructure != NULL)
-	{
-		if (pStructure->fFlags & STRUCTURE_GENERIC)
+		if (s->fFlags & STRUCTURE_GENERIC)
 		{
-			gprintf( 0, LINE_HEIGHT * 1, L"Generic structure %x #%d", pStructure->fFlags, pStructure->pDBStructureRef->pDBStructure->usStructureNumber );
+			gprintf(0, LINE_HEIGHT * 1, L"Generic structure %x #%d", s->fFlags, s->pDBStructureRef->pDBStructure->usStructureNumber);
 		}
-		else if (pStructure->fFlags & STRUCTURE_TREE)
+		else if (s->fFlags & STRUCTURE_TREE)
 		{
-			gprintf( 0, LINE_HEIGHT * 1, L"Tree");
+			gprintf(0, LINE_HEIGHT * 1, L"Tree");
 		}
-		else if (pStructure->fFlags & STRUCTURE_WALL)
+		else if (s->fFlags & STRUCTURE_WALL)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"Wall with orientation %ls", WallOrientationString[pStructure->ubWallOrientation]);
+			gprintf(0, LINE_HEIGHT * 1, L"Wall with orientation %ls", WallOrientationString[s->ubWallOrientation]);
 		}
-		else if (pStructure->fFlags & STRUCTURE_WALLNWINDOW)
+		else if (s->fFlags & STRUCTURE_WALLNWINDOW)
 		{
-			gprintf( 0, LINE_HEIGHT * 1, L"Wall with window" );
+			gprintf(0, LINE_HEIGHT * 1, L"Wall with window");
 		}
-		else if (pStructure->fFlags & STRUCTURE_VEHICLE)
+		else if (s->fFlags & STRUCTURE_VEHICLE)
 		{
-			gprintf( 0, LINE_HEIGHT * 1, L"Vehicle %d", pStructure->pDBStructureRef->pDBStructure->usStructureNumber );
+			gprintf(0, LINE_HEIGHT * 1, L"Vehicle %d", s->pDBStructureRef->pDBStructure->usStructureNumber);
 		}
-		else if (pStructure->fFlags & STRUCTURE_NORMAL_ROOF)
+		else if (s->fFlags & STRUCTURE_NORMAL_ROOF)
 		{
-			gprintf( 0, LINE_HEIGHT * 1, L"Roof" );
+			gprintf(0, LINE_HEIGHT * 1, L"Roof");
 		}
-		else if (pStructure->fFlags & STRUCTURE_SLANTED_ROOF)
+		else if (s->fFlags & STRUCTURE_SLANTED_ROOF)
 		{
-			gprintf( 0, LINE_HEIGHT * 1, L"Slanted roof" );
+			gprintf(0, LINE_HEIGHT * 1, L"Slanted roof");
 		}
-		else if (pStructure->fFlags & STRUCTURE_DOOR)
+		else if (s->fFlags & STRUCTURE_DOOR)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"Door with orientation %ls", WallOrientationString[pStructure->ubWallOrientation]);
+			gprintf(0, LINE_HEIGHT * 1, L"Door with orientation %ls", WallOrientationString[s->ubWallOrientation]);
 		}
-		else if (pStructure->fFlags & STRUCTURE_SLIDINGDOOR)
+		else if (s->fFlags & STRUCTURE_SLIDINGDOOR)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"%ls sliding door with orientation %ls",
-				(pStructure->fFlags & STRUCTURE_OPEN) ? L"Open" : L"Closed",
-				WallOrientationString[pStructure->ubWallOrientation] );
+			wchar_t const* const state = s->fFlags & STRUCTURE_OPEN ? L"Open" : L"Closed";
+			gprintf(0, LINE_HEIGHT * 1, L"%ls sliding door with orientation %ls", state, WallOrientationString[s->ubWallOrientation]);
 		}
-		else if (pStructure->fFlags & STRUCTURE_DDOOR_LEFT)
+		else if (s->fFlags & STRUCTURE_DDOOR_LEFT)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"DDoorLft with orientation %ls", WallOrientationString[pStructure->ubWallOrientation]);
+			gprintf(0, LINE_HEIGHT * 1, L"DDoorLft with orientation %ls", WallOrientationString[s->ubWallOrientation]);
 		}
-		else if (pStructure->fFlags & STRUCTURE_DDOOR_RIGHT)
+		else if (s->fFlags & STRUCTURE_DDOOR_RIGHT)
 		{
-			gprintf(0, LINE_HEIGHT * 1, L"DDoorRt with orientation %ls", WallOrientationString[pStructure->ubWallOrientation]);
+			gprintf(0, LINE_HEIGHT * 1, L"DDoorRt with orientation %ls", WallOrientationString[s->ubWallOrientation]);
 		}
 		else
 		{
-			gprintf( 0, LINE_HEIGHT * 1, L"UNKNOWN STRUCTURE! (%x)", pStructure->fFlags );
-		}
-		const INT8 bHeight = StructureHeight(pStructure);
-		pBase = FindBaseStructure( pStructure );
-		gprintf( 0, LINE_HEIGHT * 2, L"Structure height %d, cube offset %d, armour %d, HP %d", bHeight, pStructure->sCubeOffset, gubMaterialArmour[pStructure->pDBStructureRef->pDBStructure->ubArmour], pBase->ubHitPoints );
-		UINT8 bDens0;
-		UINT8 bDens1;
-		UINT8 bDens2;
-		UINT8 bDens3;
-		if (StructureDensity(pStructure, &bDens0, &bDens1, &bDens2, &bDens3))
-		{
-			gprintf( 0, LINE_HEIGHT * 3, L"Structure fill %d%%/%d%%/%d%%/%d%% density %d", bDens0, bDens1, bDens2, bDens3,
-				pStructure->pDBStructureRef->pDBStructure->ubDensity );
+			gprintf(0, LINE_HEIGHT * 1, L"UNKNOWN STRUCTURE! (0x%X)", s->fFlags);
 		}
 
-		#ifndef LOS_DEBUG
-		gprintf( 0, LINE_HEIGHT * 4, L"Structure ID %d", pStructure->usStructureID );
-		#endif
+		INT8             const height = StructureHeight(s);
+		STRUCTURE const* const base   = FindBaseStructure(s);
+		UINT8            const armour = gubMaterialArmour[s->pDBStructureRef->pDBStructure->ubArmour];
+		gprintf(0, LINE_HEIGHT * 2, L"Structure height %d, cube offset %d, armour %d, HP %d", height, s->sCubeOffset, armour, base->ubHitPoints);
 
-		pStructure = gpWorldLevelData[sGridNo].pStructureHead;
-		for ( bStructures = 0; pStructure != NULL; pStructure = pStructure->pNext)
+		UINT8 dens0;
+		UINT8 dens1;
+		UINT8 dens2;
+		UINT8 dens3;
+		if (StructureDensity(s, &dens0, &dens1, &dens2, &dens3))
 		{
-			bStructures++;
+			gprintf(0, LINE_HEIGHT * 3, L"Structure fill %d%%/%d%%/%d%%/%d%% density %d", dens0, dens1, dens2, dens3, s->pDBStructureRef->pDBStructure->ubDensity);
 		}
-		gprintf( 0, LINE_HEIGHT * 12, L"Number of structures = %d", bStructures );
+
+#ifndef LOS_DEBUG
+		gprintf(0, LINE_HEIGHT * 4, L"Structure ID %d", s->usStructureID);
+#endif
+
+		INT8 n_structures = 0;
+		for (STRUCTURE const* i = gpWorldLevelData[grid_no].pStructureHead; i; i = i->pNext)
+		{
+			++n_structures;
+		}
+		gprintf(0, LINE_HEIGHT * 12, L"Number of structures = %d", n_structures);
+		break;
 	}
-	#ifdef LOS_DEBUG
-		if (gLOSTestResults.fLOSTestPerformed)
-		{
-			gprintf( 0, LINE_HEIGHT * 4, L"LOS from (%7d,%7d,%7d)", gLOSTestResults.iStartX, gLOSTestResults.iStartY, gLOSTestResults.iStartZ);
-			gprintf( 0, LINE_HEIGHT * 5, L"to (%7d,%7d,%7d)", gLOSTestResults.iEndX, gLOSTestResults.iEndY, gLOSTestResults.iEndZ);
-			if (gLOSTestResults.fOutOfRange)
-			{
-				gprintf( 0, LINE_HEIGHT * 6, L"is out of range" );
-			}
-			else if (gLOSTestResults.fLOSClear)
-			{
-				gprintf( 0, LINE_HEIGHT * 6, L"is clear!" );
-			}
-			else
-			{
-				gprintf( 0, LINE_HEIGHT * 6, L"is blocked at (%7d,%7d,%7d)!", gLOSTestResults.iStoppedX, gLOSTestResults.iStoppedY, gLOSTestResults.iStoppedZ );
-				gprintf( 0, LINE_HEIGHT * 10, L"Blocked at cube level %d", gLOSTestResults.iCurrCubesZ );
-			}
-			gprintf( 0, LINE_HEIGHT * 7, L"Passed through %d tree bits!", gLOSTestResults.ubTreeSpotsHit );
-			gprintf( 0, LINE_HEIGHT * 8, L"Maximum range was %7d", gLOSTestResults.iMaxDistance );
-			gprintf( 0, LINE_HEIGHT * 9, L"actual range was %7d", gLOSTestResults.iDistance );
-			if (gLOSTestResults.ubChanceToGetThrough <= 100)
-			{
-				gprintf( 0, LINE_HEIGHT * 11, L"Chance to get through was %d", gLOSTestResults.ubChanceToGetThrough );
-			}
-		}
-	#endif
-	gprintf( 0, LINE_HEIGHT * 13, L"N %d NE %d E %d SE %d",
-		gubWorldMovementCosts[ sGridNo ][ NORTH ][ gsInterfaceLevel ],
-		gubWorldMovementCosts[ sGridNo ][ NORTHEAST ][ gsInterfaceLevel ],
-		gubWorldMovementCosts[ sGridNo ][ EAST ][ gsInterfaceLevel ],
-		gubWorldMovementCosts[ sGridNo ][ SOUTHEAST ][ gsInterfaceLevel ] );
-	gprintf( 0, LINE_HEIGHT * 14, L"S %d SW %d W %d NW %d",
-		gubWorldMovementCosts[ sGridNo ][ SOUTH ][ gsInterfaceLevel ],
-		gubWorldMovementCosts[ sGridNo ][ SOUTHWEST ][ gsInterfaceLevel ],
-		gubWorldMovementCosts[ sGridNo ][ WEST ][ gsInterfaceLevel ],
-		gubWorldMovementCosts[ sGridNo ][ NORTHWEST ][ gsInterfaceLevel ] );
-	gprintf( 0, LINE_HEIGHT * 15, L"Ground smell %d strength %d",
-		SMELL_TYPE( gpWorldLevelData[ sGridNo ].ubSmellInfo ),
-		SMELL_STRENGTH( gpWorldLevelData[ sGridNo ].ubSmellInfo ) );
 
-	#ifdef COUNT_PATHS
+#ifdef LOS_DEBUG
+	LOSResults const& los = gLOSTestResults;
+	if (los.fLOSTestPerformed)
+	{
+		gprintf(0, LINE_HEIGHT * 4, L"LOS from (%7d,%7d,%7d)", los.iStartX, los.iStartY, los.iStartZ);
+		gprintf(0, LINE_HEIGHT * 5, L"to (%7d,%7d,%7d)", los.iEndX, los.iEndY, los.iEndZ);
+		if (los.fOutOfRange)
+		{
+			gprintf(0, LINE_HEIGHT * 6, L"is out of range");
+		}
+		else if (los.fLOSClear)
+		{
+			gprintf(0, LINE_HEIGHT * 6, L"is clear!");
+		}
+		else
+		{
+			gprintf(0, LINE_HEIGHT * 6, L"is blocked at (%7d,%7d,%7d)!", los.iStoppedX, los.iStoppedY, los.iStoppedZ);
+			gprintf(0, LINE_HEIGHT * 10, L"Blocked at cube level %d", los.iCurrCubesZ);
+		}
+		gprintf(0, LINE_HEIGHT * 7, L"Passed through %d tree bits!", los.ubTreeSpotsHit);
+		gprintf(0, LINE_HEIGHT * 8, L"Maximum range was %7d", los.iMaxDistance);
+		gprintf(0, LINE_HEIGHT * 9, L"actual range was %7d", los.iDistance);
+		if (los.ubChanceToGetThrough <= 100)
+		{
+			gprintf(0, LINE_HEIGHT * 11, L"Chance to get through was %d", los.ubChanceToGetThrough);
+		}
+	}
+#endif
+
+	gprintf(0, LINE_HEIGHT * 13, L"N %d NE %d E %d SE %d",
+			gubWorldMovementCosts[grid_no][NORTH    ][gsInterfaceLevel],
+			gubWorldMovementCosts[grid_no][NORTHEAST][gsInterfaceLevel],
+			gubWorldMovementCosts[grid_no][EAST     ][gsInterfaceLevel],
+			gubWorldMovementCosts[grid_no][SOUTHEAST][gsInterfaceLevel]);
+	gprintf(0, LINE_HEIGHT * 14, L"S %d SW %d W %d NW %d",
+			gubWorldMovementCosts[grid_no][SOUTH    ][gsInterfaceLevel],
+			gubWorldMovementCosts[grid_no][SOUTHWEST][gsInterfaceLevel],
+			gubWorldMovementCosts[grid_no][WEST     ][gsInterfaceLevel],
+			gubWorldMovementCosts[grid_no][NORTHWEST][gsInterfaceLevel]);
+	gprintf(0, LINE_HEIGHT * 15, L"Ground smell %d strength %d",
+			SMELL_TYPE(gpWorldLevelData[grid_no].ubSmellInfo),
+			SMELL_STRENGTH(gpWorldLevelData[grid_no].ubSmellInfo));
+
+#ifdef COUNT_PATHS
 	if (guiTotalPathChecks > 0)
 	{
-		gprintf( 0, LINE_HEIGHT * 16,
-			L"Total %ld, %%succ %3ld | %%failed %3ld | %%unsucc %3ld",
-			guiTotalPathChecks,
-			100 * guiSuccessfulPathChecks / guiTotalPathChecks,
-			100 * guiFailedPathChecks / guiTotalPathChecks,
-			100 * guiUnsuccessfulPathChecks / guiTotalPathChecks );
-
+		gprintf(0, LINE_HEIGHT * 16,
+				L"Total %ld, %%succ %3ld | %%failed %3ld | %%unsucc %3ld",
+				guiTotalPathChecks,
+				100 * guiSuccessfulPathChecks   / guiTotalPathChecks,
+				100 * guiFailedPathChecks       / guiTotalPathChecks,
+				100 * guiUnsuccessfulPathChecks / guiTotalPathChecks);
 	}
-	#else
-	gprintf( 0, LINE_HEIGHT * 16,
-		L"Adj soldiers %d", gpWorldLevelData[sGridNo].ubAdjacentSoldierCnt );
-	#endif
+#else
+	gprintf(0, LINE_HEIGHT * 16, L"Adj soldiers %d", gpWorldLevelData[grid_no].ubAdjacentSoldierCnt);
+#endif
 }
 
 

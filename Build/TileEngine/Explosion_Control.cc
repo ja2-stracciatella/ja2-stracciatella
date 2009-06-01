@@ -427,7 +427,7 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 			{
 				// We swap to another graphic!
 				// It's -ve and 1-based, change to +ve, 1 based
-				destruction_partner = -orig_destruction_partner
+				destruction_partner = -orig_destruction_partner;
 				fContinue           = 2;
 			}
 		}
