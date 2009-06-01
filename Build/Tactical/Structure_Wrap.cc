@@ -81,29 +81,18 @@ static LEVELNODE* IsWallPresentAtGridno(INT16 sGridNo)
 }
 
 
-LEVELNODE	*GetWallLevelNodeAndStructOfSameOrientationAtGridno( INT16 sGridNo, INT8 ubOrientation, STRUCTURE **ppStructure )
+STRUCTURE* GetWallStructOfSameOrientationAtGridno(GridNo const grid_no, INT8 const orientation)
 {
-	LEVELNODE *pNode = NULL;
-	STRUCTURE* pBaseStructure;
-
-	(*ppStructure) = NULL;
-
-	FOR_ALL_STRUCTURES(pStructure, sGridNo, STRUCTURE_WALLSTUFF)
+	FOR_ALL_STRUCTURES(pStructure, grid_no, STRUCTURE_WALLSTUFF)
 	{
-		// Check orientation
-		if ( pStructure->ubWallOrientation == ubOrientation )
-		{
-			pBaseStructure = FindBaseStructure( pStructure );
-			if (pBaseStructure)
-			{
-				pNode = FindLevelNodeBasedOnStructure( pBaseStructure->sGridNo, pBaseStructure );
-				(*ppStructure) = pBaseStructure;
-				return( pNode );
-			}
-		}
-	}
+		if (pStructure->ubWallOrientation != orientation) continue;
 
-	return( NULL );
+		STRUCTURE* const base = FindBaseStructure(pStructure);
+		if (!base) continue;
+
+		return base;
+	}
+	return 0;
 }
 
 

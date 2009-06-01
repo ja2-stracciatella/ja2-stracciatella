@@ -320,11 +320,11 @@ static void HandleFencePartnerCheck(INT16 sStructGridNo)
 
 static void ReplaceWall(GridNo const grid_no, UINT8 const orientation, INT16 const sub_idx)
 {
-	STRUCTURE*       wall_struct;
-	LEVELNODE* const node = GetWallLevelNodeAndStructOfSameOrientationAtGridno(grid_no, orientation, &wall_struct);
-	if (!node || !(wall_struct->fFlags & STRUCTURE_WALL)) return;
+	STRUCTURE* const wall_struct = GetWallStructOfSameOrientationAtGridno(grid_no, orientation);
+	if (!wall_struct || !(wall_struct->fFlags & STRUCTURE_WALL)) return;
 
-	UINT16 const new_idx = GetTileIndexFromTypeSubIndex(gTileDatabase[node->usIndex].fType, sub_idx);
+	LEVELNODE* const node    = FindLevelNodeBasedOnStructure(wall_struct->sGridNo, wall_struct);
+	UINT16     const new_idx = GetTileIndexFromTypeSubIndex(gTileDatabase[node->usIndex].fType, sub_idx);
 	ApplyMapChangesToMapTempFile app;
 	RemoveStructFromLevelNode(grid_no, node);
 	AddWallToStructLayer(grid_no, new_idx, TRUE);
