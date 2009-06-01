@@ -357,336 +357,280 @@ static STRUCTURE* RemoveOnWall(GridNo const grid_no, StructureFlags const flags,
 }
 
 
-static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTURE** const ppNextCurrent, INT16 const sGridNo, INT16 const sWoundAmt, UINT32 const uiDist, BOOLEAN* const pfRecompileMovementCosts, BOOLEAN const fOnlyWalls, SOLDIERTYPE* const owner, INT8 const bLevel)
+static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTURE** const ppNextCurrent, INT16 const grid_no, INT16 const wound_amt, UINT32 const uiDist, BOOLEAN* const pfRecompileMovementCosts, BOOLEAN const only_walls, SOLDIERTYPE* const owner, INT8 const level)
 {
-	INT16 sX, sY;
-	STRUCTURE		*pBase;
-	LEVELNODE *pNode = NULL;
-	INT16 sStructGridNo;
-	UINT8	 ubNumberOfTiles, ubLoop;
-	DB_STRUCTURE_TILE	**	ppTile;
-	INT8	bDestructionPartner=-1;
-	INT8		bDamageReturnVal;
-	BOOLEAN	fContinue;
-	INT16		sBaseGridNo;
-	BOOLEAN	fExplosive;
-
-	// ATE: Check for O3 statue for special damage..
-	// note we do this check every time explosion goes off in game, but it's
-	// an effiecnent check...
-	if ( DoesO3SectorStatueExistHere( sGridNo ) && uiDist <= 1 )
+	/* ATE: Check for O3 statue for special damage
+	 * Note, we do this check every time explosion goes off in game, but it's an
+	 * efficient check */
+	if (DoesO3SectorStatueExistHere(grid_no) && uiDist <= 1)
 	{
-		ChangeO3SectorStatue( TRUE );
-		return( TRUE );
+		ChangeO3SectorStatue(TRUE);
+		return true;
 	}
-
-	// Get xy
-	sX = CenterX( sGridNo );
-	sY = CenterY( sGridNo );
 
 	// ATE: Continue if we are only looking for walls
-	if ( fOnlyWalls && !( pCurrent->fFlags & STRUCTURE_WALLSTUFF ) )
-	{
-		return( TRUE );
-	}
+	if (only_walls && !(pCurrent->fFlags & STRUCTURE_WALLSTUFF)) return true;
 
-	if ( bLevel > 0 )
-	{
-		return( TRUE );
-	}
+	if (level > 0) return true;
 
 	// Is this a corpse?
-	if ( ( pCurrent->fFlags & STRUCTURE_CORPSE ) && gGameSettings.fOptions[ TOPTION_BLOOD_N_GORE ] && sWoundAmt > 10 )
+	if (pCurrent->fFlags & STRUCTURE_CORPSE && gGameSettings.fOptions[TOPTION_BLOOD_N_GORE] && wound_amt > 10)
 	{
-		// Spray corpse in a fine mist....
-		if ( uiDist <= 1 )
-		{
-			// Remove corpse...
-			VaporizeCorpse( sGridNo, pCurrent->usStructureID );
+		// Spray corpse in a fine mist
+		if (uiDist <= 1)
+		{ // Remove corpse
+			VaporizeCorpse(grid_no, pCurrent->usStructureID);
 		}
 	}
-	else if ( !( pCurrent->fFlags & STRUCTURE_PERSON ) )
+	else if (!(pCurrent->fFlags & STRUCTURE_PERSON))
 	{
 		// Damage structure!
-		bDamageReturnVal = DamageStructure(pCurrent, sWoundAmt, STRUCTURE_DAMAGE_EXPLOSION, sGridNo, sX, sY, NULL);
-		if (bDamageReturnVal != 0)
+		INT16 const sX = CenterX(grid_no);
+		INT16 const sY = CenterY(grid_no);
+		INT8 bDamageReturnVal = DamageStructure(pCurrent, wound_amt, STRUCTURE_DAMAGE_EXPLOSION, grid_no, sX, sY, NULL);
+		if (bDamageReturnVal == 0) return true;
+
+		STRUCTURE* const base         = FindBaseStructure(pCurrent);
+		GridNo     const base_grid_no = base->sGridNo;
+
+		// if the structure is openable, destroy all items there
+		if (base->fFlags & STRUCTURE_OPENABLE && !(base->fFlags & STRUCTURE_DOOR))
 		{
-			fContinue = FALSE;
+			RemoveAllUnburiedItems(base_grid_no, level);
+		}
 
-			pBase = FindBaseStructure( pCurrent );
+		bool const is_explosive = pCurrent->fFlags & STRUCTURE_EXPLOSIVE;
 
-			sBaseGridNo = pBase->sGridNo;
+		// Get LEVELNODE for struct and remove!
+		LEVELNODE* const node = FindLevelNodeBasedOnStructure(base_grid_no, base);
 
-			// if the structure is openable, destroy all items there
-			if ( pBase->fFlags & STRUCTURE_OPENABLE && !(pBase->fFlags & STRUCTURE_DOOR ) )
+		// ATE: if we have completely destroyed a structure,
+		// and this structure should have a in-between explosion partner,
+		// make damage code 2 - which means only damaged - the normal explosion
+		// spreading will cause it do use the proper peices..
+		if (bDamageReturnVal == 1 && base->pDBStructureRef->pDBStructure->bDestructionPartner < 0)
+		{
+			bDamageReturnVal = 2;
+		}
+
+		INT8    destruction_partner = -1;
+		BOOLEAN fContinue           = FALSE;
+		if (bDamageReturnVal == 1)
+		{
+			fContinue = TRUE;
+		}
+		// Check for a damaged looking graphic
+		else if (bDamageReturnVal == 2)
+		{
+			if (base->pDBStructureRef->pDBStructure->bDestructionPartner < 0)
 			{
-				RemoveAllUnburiedItems( pBase->sGridNo, bLevel );
+				// We swap to another graphic!
+				// It's -ve and 1-based, change to +ve, 1 based
+				destruction_partner = -base->pDBStructureRef->pDBStructure->bDestructionPartner;
+				fContinue           = 2;
+			}
+		}
+
+		if (fContinue == 0) return true;
+
+		// Remove the beast!
+		while (*ppNextCurrent && (*ppNextCurrent)->usStructureID == pCurrent->usStructureID)
+		{ // The next structure will also be deleted, so skip past it
+			*ppNextCurrent = (*ppNextCurrent)->pNext;
+		}
+
+		// Replace with explosion debris if there are any....
+		// ( and there already sin;t explosion debris there.... )
+		if (base->pDBStructureRef->pDBStructure->bDestructionPartner > 0)
+		{
+			// Alrighty add!
+
+			// Add to every gridno structure is in
+			UINT8                     const n_tiles = base->pDBStructureRef->pDBStructure->ubNumberOfTiles;
+			DB_STRUCTURE_TILE* const* const ppTile  = base->pDBStructureRef->ppTile;
+
+			destruction_partner = base->pDBStructureRef->pDBStructure->bDestructionPartner;
+
+			// OK, destrcution index is , as default, the partner, until we go over the first set of explsion
+			// debris...
+			UINT16 const tile_idx = destruction_partner >= 40 ?
+				GetTileIndexFromTypeSubIndex(SECONDEXPLDEBRIS, destruction_partner - 40) :
+				GetTileIndexFromTypeSubIndex(FIRSTEXPLDEBRIS,  destruction_partner);
+
+			// Free all the non-base tiles; the base tile is at pointer 0
+			for (UINT8 ubLoop = BASE_TILE; ubLoop != n_tiles; ++ubLoop)
+			{
+				if (ppTile[ubLoop]->fFlags & TILE_ON_ROOF) continue;
+
+				/* There might be two structures in this tile, one on each level, but
+				 * we just want to delete one on each pass */
+				GridNo const struct_grid_no = base_grid_no + ppTile[ubLoop]->sPosRelToBase;
+				if (TypeRangeExistsInObjectLayer(struct_grid_no, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) != NO_TILE) continue;
+
+				ApplyMapChangesToMapTempFile app;
+				AddObjectToHead(struct_grid_no, tile_idx + Random(3));
 			}
 
-			fExplosive = ( ( pCurrent->fFlags & STRUCTURE_EXPLOSIVE ) != 0 );
-
-			// Get LEVELNODE for struct and remove!
-			pNode = FindLevelNodeBasedOnStructure( pBase->sGridNo, pBase );
-
-      // ATE: if we have completely destroyed a structure,
-      // and this structure should have a in-between explosion partner,
-      // make damage code 2 - which means only damaged - the normal explosion
-      // spreading will cause it do use the proper peices..
-      if ( bDamageReturnVal == 1 && pBase->pDBStructureRef->pDBStructure->bDestructionPartner < 0 )
-      {
-        bDamageReturnVal = 2;
-      }
-
-			if ( bDamageReturnVal == 1 )
+			// If we are a wall, add debris for the other side
+			if (pCurrent->fFlags & STRUCTURE_WALLSTUFF)
 			{
-				fContinue = TRUE;
-			}
-			// Check for a damaged looking graphic...
-			else if ( bDamageReturnVal == 2 )
-			{
-				if ( pBase->pDBStructureRef->pDBStructure->bDestructionPartner < 0 )
+				switch (pCurrent->ubWallOrientation)
 				{
-					// We swap to another graphic!
-					// It's -ve and 1-based, change to +ve, 1 based
-					bDestructionPartner = ( -1 * pBase->pDBStructureRef->pDBStructure->bDestructionPartner );
-
-					fContinue = 2;
-				}
-			}
-
-			if ( fContinue )
-			{
-				// Remove the beast!
-				while ( (*ppNextCurrent) != NULL && (*ppNextCurrent)->usStructureID == pCurrent->usStructureID )
-				{
-					// the next structure will also be deleted so we had better
-					// skip past it!
-					(*ppNextCurrent) = (*ppNextCurrent)->pNext;
-				}
-
-				// Replace with explosion debris if there are any....
-				// ( and there already sin;t explosion debris there.... )
-				if ( pBase->pDBStructureRef->pDBStructure->bDestructionPartner > 0 )
-				{
-					// Alrighty add!
-
-					// Add to every gridno structure is in
-					ubNumberOfTiles = pBase->pDBStructureRef->pDBStructure->ubNumberOfTiles;
-					ppTile = pBase->pDBStructureRef->ppTile;
-
-					bDestructionPartner = pBase->pDBStructureRef->pDBStructure->bDestructionPartner;
-
-					// OK, destrcution index is , as default, the partner, until we go over the first set of explsion
-					// debris...
-					UINT16 usTileIndex;
-					if ( bDestructionPartner > 39 )
+					case OUTSIDE_TOP_LEFT:
+					case INSIDE_TOP_LEFT:
 					{
-						usTileIndex = GetTileIndexFromTypeSubIndex(SECONDEXPLDEBRIS, bDestructionPartner - 40);
-					}
-					else
-					{
-						usTileIndex = GetTileIndexFromTypeSubIndex(FIRSTEXPLDEBRIS, bDestructionPartner);
-					}
-
-					// Free all the non-base tiles; the base tile is at pointer 0
-					for (ubLoop = BASE_TILE; ubLoop < ubNumberOfTiles; ubLoop++)
-					{
-						if ( !(ppTile[ ubLoop ]->fFlags & TILE_ON_ROOF ) )
+						GridNo const struct_grid_no = NewGridNo(base_grid_no, DirectionInc(SOUTH));
+						if (TypeRangeExistsInObjectLayer(struct_grid_no, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
 						{
-							sStructGridNo = pBase->sGridNo + ppTile[ubLoop]->sPosRelToBase;
-							// there might be two structures in this tile, one on each level, but we just want to
-							// delete one on each pass
-
-							if (TypeRangeExistsInObjectLayer(sStructGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
-							{
-								ApplyMapChangesToMapTempFile app;
-								AddObjectToHead( sStructGridNo, (UINT16)(usTileIndex + Random( 3 ) ) );
-							}
+							ApplyMapChangesToMapTempFile app;
+							AddObjectToHead(struct_grid_no, tile_idx + Random(3));
 						}
+						break;
 					}
 
-					// IF we are a wall, add debris for the other side
-					if ( pCurrent->fFlags & STRUCTURE_WALLSTUFF )
+					case OUTSIDE_TOP_RIGHT:
+					case INSIDE_TOP_RIGHT:
 					{
-						switch( pCurrent->ubWallOrientation )
+						GridNo const struct_grid_no = NewGridNo(base_grid_no, DirectionInc(EAST));
+						if (TypeRangeExistsInObjectLayer(struct_grid_no, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
 						{
-							case OUTSIDE_TOP_LEFT:
-							case INSIDE_TOP_LEFT:
-
-									sStructGridNo = NewGridNo( pBase->sGridNo, DirectionInc( SOUTH ) );
-									if (TypeRangeExistsInObjectLayer(sStructGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
-									{
-										ApplyMapChangesToMapTempFile app;
-										AddObjectToHead( sStructGridNo, (UINT16)(usTileIndex + Random( 3 ) ) );
-									}
-									break;
-
-							case OUTSIDE_TOP_RIGHT:
-							case INSIDE_TOP_RIGHT:
-
-									sStructGridNo = NewGridNo( pBase->sGridNo, DirectionInc( EAST ) );
-									if (TypeRangeExistsInObjectLayer(sStructGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
-									{
-										ApplyMapChangesToMapTempFile app;
-										AddObjectToHead( sStructGridNo, (UINT16)(usTileIndex + Random( 3 ) ) );
-									}
-									break;
+							ApplyMapChangesToMapTempFile app;
+							AddObjectToHead(struct_grid_no, tile_idx + Random(3));
 						}
+						break;
 					}
-				}
-				// Else look for fences, walk along them to change to destroyed peices...
-				else if ( pCurrent->fFlags & STRUCTURE_FENCE )
-				{
-					// walk along based on orientation
-					switch( pCurrent->ubWallOrientation )
-					{
-						case OUTSIDE_TOP_RIGHT:
-						case INSIDE_TOP_RIGHT:
-
-								sStructGridNo		= NewGridNo( pBase->sGridNo, DirectionInc( SOUTH ) );
-								HandleFencePartnerCheck( sStructGridNo );
-								sStructGridNo		= NewGridNo( pBase->sGridNo, DirectionInc( NORTH ) );
-								HandleFencePartnerCheck( sStructGridNo );
-								break;
-
-						case OUTSIDE_TOP_LEFT:
-						case INSIDE_TOP_LEFT:
-
-								sStructGridNo = NewGridNo( pBase->sGridNo, DirectionInc( EAST ) );
-								HandleFencePartnerCheck( sStructGridNo );
-								sStructGridNo = NewGridNo( pBase->sGridNo, DirectionInc( WEST ) );
-								HandleFencePartnerCheck( sStructGridNo );
-								break;
-					}
-				}
-
-				// OK, Check if this is a wall, then search and change other walls based on this
-				if ( pCurrent->fFlags & STRUCTURE_WALLSTUFF )
-				{
-					// ATE
-					// Remove any decals in tile....
-					// Use tile database for this as apposed to stuct data
-					RemoveAllStructsOfTypeRange( pBase->sGridNo, FIRSTWALLDECAL, FOURTHWALLDECAL );
-					RemoveAllStructsOfTypeRange( pBase->sGridNo, FIFTHWALLDECAL, EIGTHWALLDECAL );
-
-					// Alrighty, now do this
-					// Get orientation
-					// based on orientation, go either x or y dir
-					// check for wall in both _ve and -ve directions
-					// if found, replace!
-					switch (UINT8 const orientation = pCurrent->ubWallOrientation)
-					{
-						case OUTSIDE_TOP_LEFT:
-						case INSIDE_TOP_LEFT:
-							ReplaceWall(NewGridNo(sBaseGridNo, DirectionInc(WEST)), orientation, orientation == OUTSIDE_TOP_LEFT ? 48 : 52);
-							ReplaceWall(NewGridNo(sBaseGridNo, DirectionInc(EAST)), orientation, orientation == OUTSIDE_TOP_LEFT ? 49 : 53);
-
-							// look for attached structures in same tile
-  						*ppNextCurrent = RemoveOnWall(pBase->sGridNo, STRUCTURE_ON_LEFT_WALL, *ppNextCurrent);
-
-							// Move in SOUTH, looking for attached structures to remove
-							RemoveOnWall(NewGridNo(pBase->sGridNo, DirectionInc(SOUTH)), STRUCTURE_ON_LEFT_WALL, 0);
-							break;
-
-						case OUTSIDE_TOP_RIGHT:
-						case INSIDE_TOP_RIGHT:
-							ReplaceWall(NewGridNo(sBaseGridNo, DirectionInc(NORTH)), orientation, orientation == OUTSIDE_TOP_RIGHT ? 51 : 55);
-							ReplaceWall(NewGridNo(sBaseGridNo, DirectionInc(SOUTH)), orientation, orientation == OUTSIDE_TOP_RIGHT ? 50 : 54);
-
-							// looking for attached structures to remove in base tile
-							RemoveOnWall(pBase->sGridNo, STRUCTURE_ON_RIGHT_WALL, 0); // XXX no next_current on base tile?
-
-							// Move in EAST, looking for attached structures to remove
-							RemoveOnWall(NewGridNo(pBase->sGridNo, DirectionInc(EAST)), STRUCTURE_ON_RIGHT_WALL, 0);
-							break;
-					}
-
-					// CJC, Sept 16: if we destroy any wall of the brothel, make Kingpin's men hostile!
-					if ( gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0 )
-					{
-						UINT8 room = GetRoom(sGridNo);
-						if (room == NO_ROOM) room = GetRoom(sGridNo + DirectionInc(SOUTH));
-						if (room == NO_ROOM) room = GetRoom(sGridNo + DirectionInc(EAST));
-						if (room != NO_ROOM && IN_BROTHEL(room))
-						{
-							CivilianGroupChangesSides( KINGPIN_CIV_GROUP );
-						}
-					}
-
-				}
-
-				// OK, we need to remove the water from the fountain
-				// Lots of HARD CODING HERE :(
-				// Get tile type
-				const UINT32 uiTileType = GetTileType(pNode->usIndex);
-				// Check if we are a fountain!
-				if (strcasecmp(gTilesets[giCurrentTilesetID].TileSurfaceFilenames[uiTileType], "fount1.sti") == 0)
-				{
-					// Yes we are!
-					// Remove water....
-					ApplyMapChangesToMapTempFile app;
-					UINT16 sNewIndex;
-					sNewIndex = GetTileIndexFromTypeSubIndex(uiTileType, 1);
-					RemoveStruct( sBaseGridNo, sNewIndex );
-					RemoveStruct( sBaseGridNo, sNewIndex );
-					sNewIndex = GetTileIndexFromTypeSubIndex(uiTileType, 2);
-					RemoveStruct( sBaseGridNo, sNewIndex );
-					RemoveStruct( sBaseGridNo, sNewIndex );
-					sNewIndex = GetTileIndexFromTypeSubIndex(uiTileType, 3);
-					RemoveStruct( sBaseGridNo, sNewIndex );
-					RemoveStruct( sBaseGridNo, sNewIndex );
-				}
-
-
-				// Remove any interactive tiles we could be over!
-				BeginCurInteractiveTileCheck();
-
-				if ( pCurrent->fFlags & STRUCTURE_WALLSTUFF )
-				{
-					RecompileLocalMovementCostsForWall( pBase->sGridNo, pBase->ubWallOrientation );
-				}
-
-				// Remove!
-				{ ApplyMapChangesToMapTempFile app;
-					RemoveStructFromLevelNode( pBase->sGridNo, pNode );
-				}
-
-				// OK, if we are to swap structures, do it now...
-				if ( fContinue == 2 )
-				{
-					// We have a levelnode...
-					// Get new index for new grpahic....
-					UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(uiTileType, bDestructionPartner);
-					ApplyMapChangesToMapTempFile app;
-					AddStructToHead( sBaseGridNo, usTileIndex );
-				}
-
-				// Rerender world!
-				// Reevaluate world movement costs, reduncency!
-				gTacticalStatus.uiFlags |= NOHIDE_REDUNDENCY;
-				// FOR THE NEXT RENDER LOOP, RE-EVALUATE REDUNDENT TILES
-				InvalidateWorldRedundency( );
-				SetRenderFlags(RENDER_FLAG_FULL);
-				// Movement costs!
-				( *pfRecompileMovementCosts ) = TRUE;
-
-				{
-					// Make secondary explosion if eplosive....
-					if ( fExplosive )
-					{
-						InternalIgniteExplosion(owner, CenterX(sBaseGridNo), CenterY(sBaseGridNo), 0, sBaseGridNo, STRUCTURE_EXPLOSION, FALSE, bLevel);
-					}
-				}
-
-				if ( fContinue == 2 )
-				{
-					return( FALSE );
 				}
 			}
 		}
+		// Else look for fences, walk along them to change to destroyed pieces
+		else if (pCurrent->fFlags & STRUCTURE_FENCE)
+		{
+			// walk along based on orientation
+			switch (pCurrent->ubWallOrientation)
+			{
+				case OUTSIDE_TOP_RIGHT:
+				case INSIDE_TOP_RIGHT:
+					HandleFencePartnerCheck(NewGridNo(base_grid_no, DirectionInc(SOUTH)));
+					HandleFencePartnerCheck(NewGridNo(base_grid_no, DirectionInc(NORTH)));
+					break;
+
+				case OUTSIDE_TOP_LEFT:
+				case INSIDE_TOP_LEFT:
+					HandleFencePartnerCheck(NewGridNo(base_grid_no, DirectionInc(EAST)));
+					HandleFencePartnerCheck(NewGridNo(base_grid_no, DirectionInc(WEST)));
+					break;
+			}
+		}
+
+		// OK, Check if this is a wall, then search and change other walls based on this
+		if (pCurrent->fFlags & STRUCTURE_WALLSTUFF)
+		{
+			/* ATE
+			 * Remove any decals in tile
+			 * Use tile database for this as apposed to stuct data */
+			RemoveAllStructsOfTypeRange(base_grid_no, FIRSTWALLDECAL, FOURTHWALLDECAL);
+			RemoveAllStructsOfTypeRange(base_grid_no, FIFTHWALLDECAL, EIGTHWALLDECAL);
+
+			/* Based on orientation, go either x or y dir, check for wall in both _ve
+			 * and -ve directions and if found, then replace */
+			switch (UINT8 const orientation = pCurrent->ubWallOrientation)
+			{
+				case OUTSIDE_TOP_LEFT:
+				case INSIDE_TOP_LEFT:
+					ReplaceWall(NewGridNo(base_grid_no, DirectionInc(WEST)), orientation, orientation == OUTSIDE_TOP_LEFT ? 48 : 52);
+					ReplaceWall(NewGridNo(base_grid_no, DirectionInc(EAST)), orientation, orientation == OUTSIDE_TOP_LEFT ? 49 : 53);
+
+					// look for attached structures in same tile
+					*ppNextCurrent = RemoveOnWall(base_grid_no, STRUCTURE_ON_LEFT_WALL, *ppNextCurrent);
+
+					// Move in SOUTH, looking for attached structures to remove
+					RemoveOnWall(NewGridNo(base_grid_no, DirectionInc(SOUTH)), STRUCTURE_ON_LEFT_WALL, 0);
+					break;
+
+				case OUTSIDE_TOP_RIGHT:
+				case INSIDE_TOP_RIGHT:
+					ReplaceWall(NewGridNo(base_grid_no, DirectionInc(NORTH)), orientation, orientation == OUTSIDE_TOP_RIGHT ? 51 : 55);
+					ReplaceWall(NewGridNo(base_grid_no, DirectionInc(SOUTH)), orientation, orientation == OUTSIDE_TOP_RIGHT ? 50 : 54);
+
+					// looking for attached structures to remove in base tile
+					RemoveOnWall(base_grid_no, STRUCTURE_ON_RIGHT_WALL, 0); // XXX no next_current on base tile?
+
+					// Move in EAST, looking for attached structures to remove
+					RemoveOnWall(NewGridNo(base_grid_no, DirectionInc(EAST)), STRUCTURE_ON_RIGHT_WALL, 0);
+					break;
+			}
+
+			// CJC, Sept 16: if we destroy any wall of the brothel, make Kingpin's men hostile!
+			if (gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0)
+			{
+				UINT8 room = GetRoom(grid_no);
+				if (room == NO_ROOM) room = GetRoom(grid_no + DirectionInc(SOUTH));
+				if (room == NO_ROOM) room = GetRoom(grid_no + DirectionInc(EAST));
+				if (room != NO_ROOM && IN_BROTHEL(room))
+				{
+					CivilianGroupChangesSides(KINGPIN_CIV_GROUP);
+				}
+			}
+		}
+
+		// We need to remove the water from the fountain
+		// Lots of HARD CODING HERE :(
+		UINT32 const tile_type = GetTileType(node->usIndex);
+		// Check if we are a fountain!
+		if (strcasecmp(gTilesets[giCurrentTilesetID].TileSurfaceFilenames[tile_type], "fount1.sti") == 0)
+		{ // Remove water
+			ApplyMapChangesToMapTempFile app;
+			UINT16 sNewIndex;
+			sNewIndex = GetTileIndexFromTypeSubIndex(tile_type, 1);
+			RemoveStruct(base_grid_no, sNewIndex);
+			RemoveStruct(base_grid_no, sNewIndex);
+			sNewIndex = GetTileIndexFromTypeSubIndex(tile_type, 2);
+			RemoveStruct(base_grid_no, sNewIndex);
+			RemoveStruct(base_grid_no, sNewIndex);
+			sNewIndex = GetTileIndexFromTypeSubIndex(tile_type, 3);
+			RemoveStruct(base_grid_no, sNewIndex);
+			RemoveStruct(base_grid_no, sNewIndex);
+		}
+
+		// Remove any interactive tiles we could be over
+		BeginCurInteractiveTileCheck();
+
+		if (pCurrent->fFlags & STRUCTURE_WALLSTUFF)
+		{
+			RecompileLocalMovementCostsForWall(base_grid_no, base->ubWallOrientation);
+		}
+
+		{ ApplyMapChangesToMapTempFile app;
+			RemoveStructFromLevelNode(base_grid_no, node);
+		}
+
+		// If we are to swap structures, do it now
+		if (fContinue == 2)
+		{ // We have a levelnode, get new index for new graphic
+			UINT16 const tile_idx = GetTileIndexFromTypeSubIndex(tile_type, destruction_partner);
+			ApplyMapChangesToMapTempFile app;
+			AddStructToHead(base_grid_no, tile_idx);
+		}
+
+		// Rerender world!
+		// Reevaluate world movement costs, redundancy!
+		gTacticalStatus.uiFlags |= NOHIDE_REDUNDENCY;
+		// For the next render loop, re-evaluate redundent tiles
+		InvalidateWorldRedundency();
+		SetRenderFlags(RENDER_FLAG_FULL);
+		// Movement costs!
+		*pfRecompileMovementCosts = TRUE;
+
+		// Make secondary explosion if eplosive....
+		if (is_explosive)
+		{
+			InternalIgniteExplosion(owner, CenterX(base_grid_no), CenterY(base_grid_no), 0, base_grid_no, STRUCTURE_EXPLOSION, FALSE, level);
+		}
+
+		if (fContinue == 2) return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 
