@@ -67,73 +67,54 @@ void SetRecalculateWireFrameFlagRadius(const GridNo pos, const INT16 sRadius)
 }
 
 
-void SetGridNoRevealedFlag( UINT16 sGridNo )
+void SetGridNoRevealedFlag(UINT16 const grid_no)
 {
-//	UINT32 cnt;
-//  ITEM_POOL					*pItemPool;
-//	INT16							sX, sY;
-	LEVELNODE					*pNode = NULL;
-	STRUCTURE					*pStructure, *pBase;
-
 	// Set hidden flag, for any roofs
-	SetRoofIndexFlagsFromTypeRange( sGridNo, FIRSTROOF, FOURTHROOF, LEVELNODE_HIDDEN  );
+	SetRoofIndexFlagsFromTypeRange(grid_no, FIRSTROOF, FOURTHROOF, LEVELNODE_HIDDEN);
 
-	// ATE: Do this only if we are in a room...
-	if ( gubWorldRoomInfo[ sGridNo ] != NO_ROOM )
+	// ATE: Do this only if we are in a room
+	if (gubWorldRoomInfo[grid_no] != NO_ROOM)
 	{
-		SetStructAframeFlags(  sGridNo, LEVELNODE_HIDDEN );
-		// Find gridno one east as well...
+		SetStructAframeFlags(grid_no, LEVELNODE_HIDDEN);
 
-		if ( ( sGridNo + WORLD_COLS ) < NOWHERE )
+		// Find gridno one east as well
+		if (grid_no + WORLD_COLS < NOWHERE)
 		{
-			SetStructAframeFlags(  sGridNo + WORLD_COLS, LEVELNODE_HIDDEN );
+			SetStructAframeFlags(grid_no + WORLD_COLS, LEVELNODE_HIDDEN);
 		}
 
-		if ( ( sGridNo + 1 ) < NOWHERE )
+		if (grid_no + 1 < NOWHERE)
 		{
-			SetStructAframeFlags(  sGridNo + 1, LEVELNODE_HIDDEN );
+			SetStructAframeFlags(grid_no + 1, LEVELNODE_HIDDEN);
 		}
 	}
 
 	// Set gridno as revealed
-	gpWorldLevelData[ sGridNo ].uiFlags |= MAPELEMENT_REVEALED;
-	if( gfCaves )
-	{
-		RemoveFogFromGridNo( sGridNo );
-	}
+	gpWorldLevelData[grid_no].uiFlags |= MAPELEMENT_REVEALED;
+	if (gfCaves) RemoveFogFromGridNo(grid_no);
 
 	// ATE: If there are any structs here, we can render them with the obscured flag!
 	// Look for anything but walls pn this gridno!
-	pStructure	=  gpWorldLevelData[ (INT16)sGridNo ].pStructureHead;
-
-	while ( pStructure != NULL )
+	for (STRUCTURE* i = gpWorldLevelData[grid_no].pStructureHead; i; i = i->pNext)
 	{
-		if ( pStructure->sCubeOffset == STRUCTURE_ON_GROUND || ( pStructure->fFlags & STRUCTURE_SLANTED_ROOF ) )
+		if (!(i->fFlags & STRUCTURE_SLANTED_ROOF))
 		{
-			if ( ( (pStructure->fFlags & STRUCTURE_OBSTACLE ) && !( pStructure->fFlags & ( STRUCTURE_PERSON | STRUCTURE_CORPSE ) ) ) || ( pStructure->fFlags & STRUCTURE_SLANTED_ROOF ) )
-			{
-				pBase = FindBaseStructure( pStructure );
-
-				// Get LEVELNODE for struct and remove!
-				pNode = FindLevelNodeBasedOnStructure( pBase->sGridNo, pBase );
-				pNode->uiFlags |= LEVELNODE_SHOW_THROUGH;
-
-				if ( pStructure->fFlags & STRUCTURE_SLANTED_ROOF )
-				{
-					AddSlantRoofFOVSlot( pBase->sGridNo );
-
-					// Set hidden...
-					pNode->uiFlags |= LEVELNODE_HIDDEN;
-
-				}
-			}
+			if (i->sCubeOffset != STRUCTURE_ON_GROUND) continue;
+			if (!(i->fFlags & STRUCTURE_OBSTACLE) || i->fFlags & (STRUCTURE_PERSON | STRUCTURE_CORPSE)) continue;
 		}
 
-		pStructure = pStructure->pNext;
+		STRUCTURE* const base = FindBaseStructure(i);
+		LEVELNODE* const node = FindLevelNodeBasedOnStructure(base->sGridNo, base);
+		node->uiFlags |= LEVELNODE_SHOW_THROUGH;
+
+		if (i->fFlags & STRUCTURE_SLANTED_ROOF)
+		{
+			AddSlantRoofFOVSlot(base->sGridNo);
+			node->uiFlags |= LEVELNODE_HIDDEN;
+		}
 	}
 
-	gubWorldRoomHidden[ gubWorldRoomInfo[ sGridNo ] ] = FALSE;
-
+	gubWorldRoomHidden[gubWorldRoomInfo[grid_no]] = FALSE;
 }
 
 
