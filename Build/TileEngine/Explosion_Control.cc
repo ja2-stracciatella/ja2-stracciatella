@@ -318,6 +318,19 @@ static void HandleFencePartnerCheck(INT16 sStructGridNo)
 }
 
 
+static void ReplaceWall(GridNo const grid_no, UINT8 const orientation, INT16 const sub_idx)
+{
+	STRUCTURE*       wall_struct;
+	LEVELNODE* const node = GetWallLevelNodeAndStructOfSameOrientationAtGridno(grid_no, orientation, &wall_struct);
+	if (!node || !(wall_struct->fFlags & STRUCTURE_WALL)) return;
+
+	UINT16 const new_idx = GetTileIndexFromTypeSubIndex(gTileDatabase[node->usIndex].fType, sub_idx);
+	ApplyMapChangesToMapTempFile app;
+	RemoveStructFromLevelNode(grid_no, node);
+	AddWallToStructLayer(grid_no, new_idx, TRUE);
+}
+
+
 static STRUCTURE* RemoveOnWall(GridNo const grid_no, StructureFlags const flags, STRUCTURE* next)
 {
 	while (STRUCTURE* const attached = FindStructure(grid_no, flags))
@@ -347,9 +360,9 @@ static STRUCTURE* RemoveOnWall(GridNo const grid_no, StructureFlags const flags,
 static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTURE** const ppNextCurrent, INT16 const sGridNo, INT16 const sWoundAmt, UINT32 const uiDist, BOOLEAN* const pfRecompileMovementCosts, BOOLEAN const fOnlyWalls, SOLDIERTYPE* const owner, INT8 const bLevel)
 {
 	INT16 sX, sY;
-	STRUCTURE		*pBase, *pWallStruct;
-	LEVELNODE *pNode = NULL, *pNewNode = NULL;
-	INT16 sNewGridNo, sStructGridNo;
+	STRUCTURE		*pBase;
+	LEVELNODE *pNode = NULL;
+	INT16 sStructGridNo;
 	UINT8	 ubNumberOfTiles, ubLoop;
 	DB_STRUCTURE_TILE	**	ppTile;
 	INT8	bDestructionPartner=-1;
@@ -561,48 +574,12 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 					// based on orientation, go either x or y dir
 					// check for wall in both _ve and -ve directions
 					// if found, replace!
-					switch( pCurrent->ubWallOrientation )
+					switch (UINT8 const orientation = pCurrent->ubWallOrientation)
 					{
 						case OUTSIDE_TOP_LEFT:
 						case INSIDE_TOP_LEFT:
-
-							// Move WEST
-							sNewGridNo = NewGridNo( pBase->sGridNo, DirectionInc( WEST ) );
-
-							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridno( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
-
-							if ( pNewNode != NULL )
-							{
-								if ( pWallStruct->fFlags & STRUCTURE_WALL )
-								{
-									INT16	sSubIndex = (pCurrent->ubWallOrientation == OUTSIDE_TOP_LEFT ? 48 : 52);
-									// Replace!
-									UINT16 sNewIndex = GetTileIndexFromTypeSubIndex(gTileDatabase[pNewNode->usIndex].fType, sSubIndex);
-
-									ApplyMapChangesToMapTempFile app;
-									RemoveStructFromLevelNode( sNewGridNo, pNewNode );
-									AddWallToStructLayer( sNewGridNo, sNewIndex, TRUE );
-								}
-							}
-
-							// Move in EAST
-							sNewGridNo = NewGridNo( pBase->sGridNo, DirectionInc( EAST ) );
-
-							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridno( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
-
-							if ( pNewNode != NULL )
-							{
-								if ( pWallStruct->fFlags & STRUCTURE_WALL )
-								{
-									INT16	sSubIndex = (pCurrent->ubWallOrientation == OUTSIDE_TOP_LEFT ? 49 : 53);
-									// Replace!
-									UINT16 sNewIndex = GetTileIndexFromTypeSubIndex(gTileDatabase[pNewNode->usIndex].fType, sSubIndex);
-
-									ApplyMapChangesToMapTempFile app;
-									RemoveStructFromLevelNode( sNewGridNo, pNewNode );
-									AddWallToStructLayer( sNewGridNo, sNewIndex, TRUE );
-								}
-							}
+							ReplaceWall(NewGridNo(sBaseGridNo, DirectionInc(WEST)), orientation, orientation == OUTSIDE_TOP_LEFT ? 48 : 52);
+							ReplaceWall(NewGridNo(sBaseGridNo, DirectionInc(EAST)), orientation, orientation == OUTSIDE_TOP_LEFT ? 49 : 53);
 
 							// look for attached structures in same tile
   						*ppNextCurrent = RemoveOnWall(pBase->sGridNo, STRUCTURE_ON_LEFT_WALL, *ppNextCurrent);
@@ -613,44 +590,8 @@ static BOOLEAN ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUC
 
 						case OUTSIDE_TOP_RIGHT:
 						case INSIDE_TOP_RIGHT:
-
-							// Move in NORTH
-							sNewGridNo = NewGridNo( pBase->sGridNo, DirectionInc( NORTH ) );
-
-							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridno( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
-
-							if ( pNewNode != NULL )
-							{
-								if ( pWallStruct->fFlags & STRUCTURE_WALL )
-								{
-									INT16	sSubIndex = (pCurrent->ubWallOrientation == OUTSIDE_TOP_RIGHT ? 51 : 55);
-									// Replace!
-									UINT16 sNewIndex = GetTileIndexFromTypeSubIndex(gTileDatabase[pNewNode->usIndex].fType, sSubIndex);
-
-									ApplyMapChangesToMapTempFile app;
-									RemoveStructFromLevelNode( sNewGridNo, pNewNode );
-									AddWallToStructLayer( sNewGridNo, sNewIndex, TRUE );
-								}
-							}
-
-							// Move in SOUTH
-							sNewGridNo = NewGridNo( pBase->sGridNo, DirectionInc( SOUTH ) );
-
-							pNewNode = GetWallLevelNodeAndStructOfSameOrientationAtGridno( sNewGridNo, pCurrent->ubWallOrientation, &pWallStruct );
-
-							if ( pNewNode != NULL )
-							{
-								if ( pWallStruct->fFlags & STRUCTURE_WALL )
-								{
-									INT16	sSubIndex = (pCurrent->ubWallOrientation == OUTSIDE_TOP_RIGHT ? 50 : 54);
-									// Replace!
-									UINT16 sNewIndex = GetTileIndexFromTypeSubIndex(gTileDatabase[pNewNode->usIndex].fType, sSubIndex);
-
-									ApplyMapChangesToMapTempFile app;
-									RemoveStructFromLevelNode( sNewGridNo, pNewNode );
-									AddWallToStructLayer( sNewGridNo, sNewIndex, TRUE );
-								}
-							}
+							ReplaceWall(NewGridNo(sBaseGridNo, DirectionInc(NORTH)), orientation, orientation == OUTSIDE_TOP_RIGHT ? 51 : 55);
+							ReplaceWall(NewGridNo(sBaseGridNo, DirectionInc(SOUTH)), orientation, orientation == OUTSIDE_TOP_RIGHT ? 50 : 54);
 
 							// looking for attached structures to remove in base tile
 							RemoveOnWall(pBase->sGridNo, STRUCTURE_ON_RIGHT_WALL, 0); // XXX no next_current on base tile?
