@@ -65,22 +65,6 @@ BOOLEAN	IsTreePresentAtGridno( INT16 sGridNo )
 }
 
 
-static LEVELNODE* IsWallPresentAtGridno(INT16 sGridNo)
-{
-	LEVELNODE *pNode = NULL;
-	STRUCTURE * pStructure;
-
-	pStructure = FindStructure( sGridNo, STRUCTURE_WALLSTUFF );
-
-	if ( pStructure != NULL )
-	{
-		pNode = FindLevelNodeBasedOnStructure( sGridNo, pStructure );
-	}
-
-	return( pNode );
-}
-
-
 STRUCTURE* GetWallStructOfSameOrientationAtGridno(GridNo const grid_no, INT8 const orientation)
 {
 	FOR_ALL_STRUCTURES(pStructure, grid_no, STRUCTURE_WALLSTUFF)
