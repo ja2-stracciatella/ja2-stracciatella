@@ -118,71 +118,49 @@ void SetGridNoRevealedFlag(UINT16 const grid_no)
 }
 
 
-void ExamineGridNoForSlantRoofExtraGraphic( UINT16 sCheckGridNo )
+void ExamineGridNoForSlantRoofExtraGraphic(GridNo const check_grid_no)
 {
-	LEVELNODE					*pNode = NULL;
-	STRUCTURE					*pStructure, *pBase;
-	UINT8							ubLoop;
-	DB_STRUCTURE_TILE	**	ppTile;
-	INT16							sGridNo;
-	BOOLEAN						fChanged = FALSE;
+	// Check for a slanted roof here
+	STRUCTURE* const s = FindStructure(check_grid_no, STRUCTURE_SLANTED_ROOF);
+	if (!s) return;
 
-	// CHECK FOR A SLANTED ROOF HERE....
-	pStructure = FindStructure( sCheckGridNo, STRUCTURE_SLANTED_ROOF );
-
-	if ( pStructure != NULL )
+	// We have a slanted roof here, find base and remove
+	bool                            changed      = false;
+	STRUCTURE*                const base         = FindBaseStructure(s);
+	LEVELNODE*                const node         = FindLevelNodeBasedOnStructure(base->sGridNo, base);
+	bool                      const hidden       = node->uiFlags & LEVELNODE_HIDDEN;
+	GridNo                          base_grid_no = base->sGridNo;
+	DB_STRUCTURE_TILE* const* const tile         = base->pDBStructureRef->ppTile;
+	DB_STRUCTURE_TILE* const* const end          = tile + base->pDBStructureRef->pDBStructure->ubNumberOfTiles;
+	// Loop through each gridno and see if revealed
+	for (DB_STRUCTURE_TILE* const* i = tile; i != end; ++i)
 	{
-		// We have a slanted roof here ... find base and remove...
-		pBase = FindBaseStructure( pStructure );
+		GridNo const grid_no = base_grid_no + (*i)->sPosRelToBase;
+		if (grid_no < 0 || WORLD_MAX < grid_no) continue;
 
-		// Get LEVELNODE for struct and remove!
-		pNode = FindLevelNodeBasedOnStructure( pBase->sGridNo, pBase );
-
-		// Loop through each gridno and see if revealed....
-		for ( ubLoop = 0; ubLoop < pBase->pDBStructureRef->pDBStructure->ubNumberOfTiles; ubLoop++ )
-		{
-			ppTile = pBase->pDBStructureRef->ppTile;
-			sGridNo = pBase->sGridNo + ppTile[ ubLoop ]->sPosRelToBase;
-
-			if (sGridNo < 0 || sGridNo > WORLD_MAX)
+		if (gpWorldLevelData[grid_no].uiFlags & MAPELEMENT_REVEALED)
+		{ // Remove any slant roof items if they exist
+			if (LEVELNODE const* const roof = FindTypeInRoofLayer(grid_no, SLANTROOFCEILING))
 			{
-				continue;
+				RemoveRoof(grid_no, roof->usIndex);
+				changed = true;
 			}
-
-			// Given gridno,
-			// IF NOT REVEALED AND HIDDEN....
-			if ( !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) && pNode->uiFlags & LEVELNODE_HIDDEN )
+		}
+		else
+		{ // Add graphic if one does not already exist
+			if (hidden && !FindTypeInRoofLayer(grid_no, SLANTROOFCEILING))
 			{
-				// Add graphic if one does not already exist....
-				if (!FindTypeInRoofLayer(sGridNo, SLANTROOFCEILING))
-				{
-					// Add
-					AddRoofToHead( sGridNo, SLANTROOFCEILING1 );
-					fChanged = TRUE;
-				}
+				AddRoofToHead(grid_no, SLANTROOFCEILING1);
+				changed = true;
 			}
-
-			// Revealed?
-			if ( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED )
-			{
-				///Remove any slant roof items if they exist
-				if (LEVELNODE const* const roof = FindTypeInRoofLayer(sGridNo, SLANTROOFCEILING))
-				{
-					RemoveRoof(sGridNo, roof->usIndex);
-					fChanged = TRUE;
-				}
-			}
-
 		}
 	}
 
-	if ( fChanged )
-	{
-		// DIRTY THE WORLD!
+	if (changed)
+	{ // Dirty the world
 		InvalidateWorldRedundency();
-		SetRenderFlags(RENDER_FLAG_FULL );
+		SetRenderFlags(RENDER_FLAG_FULL);
 	}
-
 }
 
 
