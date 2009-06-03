@@ -608,7 +608,6 @@ ScreenID HandleTacticalUI(void)
 
 static void SetUIMouseCursor(void)
 {
-	UINT32 uiTraverseTimeInMinutes;
 	BOOLEAN	fForceUpdateNewCursor = FALSE;
 	BOOLEAN	fUpdateNewCursor = TRUE;
 	static INT16 sOldExitGridNo = NOWHERE;
@@ -633,7 +632,7 @@ static void SetUIMouseCursor(void)
 			gfUIDisplayActionPoints = FALSE;
 			ErasePath();
 
-			if ( OKForSectorExit( EAST_STRATEGIC_MOVE, 0, &uiTraverseTimeInMinutes ) )
+			if (OKForSectorExit(EAST_STRATEGIC_MOVE, 0))
 			{
 				if ( gfUIConfirmExitArrows )
 				{
@@ -660,7 +659,7 @@ static void SetUIMouseCursor(void)
 			gfUIDisplayActionPoints = FALSE;
 			ErasePath();
 
-			if ( OKForSectorExit( WEST_STRATEGIC_MOVE, 0, &uiTraverseTimeInMinutes ) )
+			if (OKForSectorExit(WEST_STRATEGIC_MOVE, 0))
 			{
 				if ( gfUIConfirmExitArrows )
 				{
@@ -687,7 +686,7 @@ static void SetUIMouseCursor(void)
 			gfUIDisplayActionPoints = FALSE;
 			ErasePath();
 
-			if ( OKForSectorExit( NORTH_STRATEGIC_MOVE, 0, &uiTraverseTimeInMinutes ) )
+			if (OKForSectorExit(NORTH_STRATEGIC_MOVE, 0))
 			{
 				if ( gfUIConfirmExitArrows )
 				{
@@ -715,7 +714,7 @@ static void SetUIMouseCursor(void)
 			gfUIDisplayActionPoints = FALSE;
 			ErasePath();
 
-			if ( OKForSectorExit( SOUTH_STRATEGIC_MOVE, 0, &uiTraverseTimeInMinutes ) )
+			if (OKForSectorExit(SOUTH_STRATEGIC_MOVE, 0))
 			{
 				if ( gfUIConfirmExitArrows )
 				{
@@ -802,7 +801,7 @@ static void SetUIMouseCursor(void)
 					{
 						if ( sOldExitGridNo != usMapPos )
 						{
-							fOkForExit		 = OKForSectorExit( (INT8)-1, usMapPos, &uiTraverseTimeInMinutes );
+							fOkForExit		 = OKForSectorExit((INT8)-1, usMapPos);
 							sOldExitGridNo = usMapPos;
 						}
 

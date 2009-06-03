@@ -2692,16 +2692,18 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 					//Now, determine if this is a valid path.
 					pGroup = GetGroup( pValidSoldier->ubGroupID );
 					AssertMsg( pGroup, String( "%ls is not in a valid group (pSoldier->ubGroupID is %d)",pValidSoldier->name, pValidSoldier->ubGroupID) );
+					UINT32 traverse_time;
 					if( !gbWorldSectorZ )
 					{
-						*puiTraverseTimeInMinutes = GetSectorMvtTimeForGroup( (UINT8)SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ), bExitDirection, pGroup );
+						traverse_time = GetSectorMvtTimeForGroup((UINT8)SECTOR(pGroup->ubSectorX, pGroup->ubSectorY), bExitDirection, pGroup);
 					}
 					else if( gbWorldSectorZ > 1 )
 					{ //We are attempting to traverse in an underground environment.  We need to use a complete different
 						//method.  When underground, all sectors are instantly adjacent.
-						*puiTraverseTimeInMinutes = UndergroundTacticalTraversalTime( bExitDirection );
+						traverse_time = UndergroundTacticalTraversalTime(bExitDirection);
 					}
-					if( *puiTraverseTimeInMinutes == 0xffffffff )
+					if (puiTraverseTimeInMinutes) *puiTraverseTimeInMinutes = traverse_time;
+					if (traverse_time == 0xFFFFFFFF)
 					{
 						gfInvalidTraversal = TRUE;
 						return FALSE;
@@ -2709,7 +2711,8 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 				}
 				else
 				{
-					*puiTraverseTimeInMinutes = 0; //exit grid travel is instantaneous
+					// Exit grid travel is instantaneous
+					if (puiTraverseTimeInMinutes) *puiTraverseTimeInMinutes = 0;
 				}
 			}
 		}
@@ -2747,16 +2750,18 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 			//Now, determine if this is a valid path.
 			pGroup = GetGroup( pValidSoldier->ubGroupID );
 			AssertMsg( pGroup, String( "%ls is not in a valid group (pSoldier->ubGroupID is %d)",pValidSoldier->name, pValidSoldier->ubGroupID) );
+			UINT32 traverse_time;
 			if( !gbWorldSectorZ )
 			{
-				*puiTraverseTimeInMinutes = GetSectorMvtTimeForGroup( (UINT8)SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ), bExitDirection, pGroup );
+				traverse_time = GetSectorMvtTimeForGroup((UINT8)SECTOR(pGroup->ubSectorX, pGroup->ubSectorY), bExitDirection, pGroup);
 			}
 			else if( gbWorldSectorZ > 0 )
 			{ //We are attempting to traverse in an underground environment.  We need to use a complete different
 				//method.  When underground, all sectors are instantly adjacent.
-				*puiTraverseTimeInMinutes = UndergroundTacticalTraversalTime( bExitDirection );
+				traverse_time = UndergroundTacticalTraversalTime(bExitDirection);
 			}
-			if( *puiTraverseTimeInMinutes == 0xffffffff )
+			if (puiTraverseTimeInMinutes) *puiTraverseTimeInMinutes = traverse_time;
+			if (traverse_time == 0xFFFFFFFF)
 			{
 				gfInvalidTraversal = TRUE;
 				ubReturnVal = FALSE;
@@ -2769,7 +2774,8 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 		else
 		{
 			ubReturnVal = TRUE;
-			*puiTraverseTimeInMinutes = 0; //exit grid travel is instantaneous
+			// Exit grid travel is instantaneous
+			if (puiTraverseTimeInMinutes) *puiTraverseTimeInMinutes = 0;
 		}
 	}
 
