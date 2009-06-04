@@ -36,7 +36,7 @@ LEVELNODE* FindTypeInRoofLayer(UINT32 map_idx, UINT32 type);
 BOOLEAN RemoveAllRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
 void RemoveRoofIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, LevelnodeFlags);
 void SetRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, LevelnodeFlags);
-BOOLEAN TypeRangeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusRoofIndex );
+LEVELNODE* TypeRangeExistsInRoofLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType);
 void SetWallLevelnodeFlags(UINT16 sGridNo, LevelnodeFlags);
 void RemoveWallLevelnodeFlags(UINT16 sGridNo, LevelnodeFlags);
 BOOLEAN IndexExistsInRoofLayer( INT16 sGridNo, UINT16 usIndex );

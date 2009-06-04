@@ -1305,26 +1305,24 @@ LEVELNODE* FindTypeInRoofLayer(UINT32 const map_idx, UINT32 const type)
 }
 
 
-BOOLEAN TypeRangeExistsInRoofLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16* pusRoofIndex)
+LEVELNODE* TypeRangeExistsInRoofLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType)
 {
 	// Look through all objects and Search for type
-	for (const LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof != NULL;)
+	for (LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof;)
 	{
 		if (pRoof->usIndex != NO_TILE)
 		{
 			const UINT32 fTileType = GetTileType(pRoof->usIndex);
-
-			if (fTileType >= fStartType && fTileType <= fEndType)
+			if (fStartType <= fTileType && fTileType <= fEndType)
 			{
-				*pusRoofIndex = pRoof->usIndex;
-				return TRUE;
+				return pRoof;
 			}
 			pRoof = pRoof->pNext; // XXX TODO0009 if pRoof->usIndex == NO_TILE this is an endless loop
 		}
 	}
 
 	// Could not find it
-	return FALSE;
+	return 0;
 }
 
 
