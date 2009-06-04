@@ -34,11 +34,11 @@ LEVELNODE  *AddRoofToTail( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE* AddRoofToHead(UINT32 iMapIndex, UINT16 usIndex);
 LEVELNODE* FindTypeInRoofLayer(UINT32 map_idx, UINT32 type);
 BOOLEAN RemoveAllRoofsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
-void RemoveRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  );
-void SetRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags  );
+void RemoveRoofIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, LevelnodeFlags);
+void SetRoofIndexFlagsFromTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, LevelnodeFlags);
 BOOLEAN TypeRangeExistsInRoofLayer( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT16 *pusRoofIndex );
-void SetWallLevelnodeFlags( UINT16 sGridNo, UINT32 uiFlags );
-void RemoveWallLevelnodeFlags( UINT16 sGridNo, UINT32 uiFlags );
+void SetWallLevelnodeFlags(UINT16 sGridNo, LevelnodeFlags);
+void RemoveWallLevelnodeFlags(UINT16 sGridNo, LevelnodeFlags);
 BOOLEAN IndexExistsInRoofLayer( INT16 sGridNo, UINT16 usIndex );
 
 
@@ -81,7 +81,7 @@ BOOLEAN RemoveAllStructsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32
 bool    AddWallToStructLayer(INT32 map_idx, UINT16 idx, bool replace);
 BOOLEAN ReplaceStructIndex( UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex );
 void    HideStructOfGivenType(UINT32 iMapIndex, UINT32 fType, BOOLEAN fHide);
-void SetStructAframeFlags( UINT32 iMapIndex, UINT32 uiFlags  );
+void    SetStructAframeFlags(UINT32 iMapIndex, LevelnodeFlags);
 void    RemoveStructFromLevelNode(UINT32 map_idx, LEVELNODE*);
 BOOLEAN IndexExistsInStructLayer(GridNo, UINT16 tile_index);
 

@@ -1362,7 +1362,7 @@ BOOLEAN RemoveAllRoofsOfTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fE
 }
 
 
-void RemoveRoofIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags)
+void RemoveRoofIndexFlagsFromTypeRange(UINT32 const iMapIndex, UINT32 const fStartType, UINT32 const fEndType, LevelnodeFlags const uiFlags)
 {
 	// Look through all Roofs and Search for type
 	for (LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof != NULL;)
@@ -1380,7 +1380,7 @@ void RemoveRoofIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT
 }
 
 
-void SetRoofIndexFlagsFromTypeRange(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType, UINT32 uiFlags)
+void SetRoofIndexFlagsFromTypeRange(UINT32 const iMapIndex, UINT32 const fStartType, UINT32 const fEndType, LevelnodeFlags const uiFlags)
 {
 	// Look through all Roofs and Search for type
 	for (LEVELNODE* pRoof = gpWorldLevelData[iMapIndex].pRoofHead; pRoof != NULL;)
@@ -1759,7 +1759,7 @@ bool WaterTooDeepForAttacks(GridNo const grid_no)
 }
 
 
-void SetStructAframeFlags(UINT32 iMapIndex, UINT32 uiFlags)
+void SetStructAframeFlags(UINT32 const iMapIndex, LevelnodeFlags const uiFlags)
 {
 	// Look through all Roofs and Search for type
 	for (LEVELNODE* pStruct = gpWorldLevelData[iMapIndex].pRoofHead; pStruct != NULL;)
@@ -1864,7 +1864,7 @@ void WorldShowTrees(void)
 }
 
 
-void SetWallLevelnodeFlags( UINT16 sGridNo, UINT32 uiFlags )
+void SetWallLevelnodeFlags(UINT16 const sGridNo, LevelnodeFlags const uiFlags)
 {
 	for (LEVELNODE* pStruct = gpWorldLevelData[sGridNo].pStructHead; pStruct != NULL; pStruct = pStruct->pNext)
 	{
@@ -1877,7 +1877,7 @@ void SetWallLevelnodeFlags( UINT16 sGridNo, UINT32 uiFlags )
 }
 
 
-void RemoveWallLevelnodeFlags(UINT16 sGridNo, UINT32 uiFlags)
+void RemoveWallLevelnodeFlags(UINT16 const sGridNo, LevelnodeFlags const uiFlags)
 {
 	for (LEVELNODE* pStruct = gpWorldLevelData[sGridNo].pStructHead; pStruct != NULL; pStruct = pStruct->pNext)
 	{
