@@ -153,7 +153,7 @@ INT8 HeadForTheStairCase( SOLDIERTYPE * pSoldier );
 
 bool InGas(SOLDIERTYPE const*, GridNo);
 bool InGasOrSmoke(SOLDIERTYPE const*, GridNo);
-BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo );
+bool InWaterGasOrSmoke(SOLDIERTYPE const*, GridNo);
 
 void InitAttackType(ATTACKTYPE *pAttack);
 

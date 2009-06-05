@@ -1568,27 +1568,9 @@ static bool InSmoke(SOLDIERTYPE const* const s, GridNo const gridno)
 }
 
 
-BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+bool InWaterGasOrSmoke(SOLDIERTYPE const* const s, GridNo const gridno)
 {
-	if (WaterTooDeepForAttacks( sGridNo ))
-	{
-		return(TRUE);
-	}
-
-	// smoke
-	if (gpWorldLevelData[sGridNo].ubExtFlags[ pSoldier->bLevel ] & MAPELEMENT_EXT_SMOKE)
-	{
-		return( TRUE );
-	}
-
-	// tear/mustard gas
-	if ( (gpWorldLevelData[sGridNo].ubExtFlags[ pSoldier->bLevel ] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) &&
-				(pSoldier->inv[HEAD1POS].usItem != GASMASK && pSoldier->inv[HEAD2POS].usItem != GASMASK) )
-	{
-		return( TRUE );
-	}
-
-	return(FALSE);
+	return WaterTooDeepForAttacks(gridno) || InSmoke(s, gridno) || InGas(s, gridno);
 }
 
 
