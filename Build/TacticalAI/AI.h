@@ -219,7 +219,7 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno);
 
 BOOLEAN ValidCreatureTurn( SOLDIERTYPE * pCreature, INT8 bNewDirection );
 
-BOOLEAN WearGasMaskIfAvailable( SOLDIERTYPE * pSoldier );
+bool  WearGasMaskIfAvailable(SOLDIERTYPE*);
 INT16 WhatIKnowThatPublicDont(SOLDIERTYPE *pSoldier, UINT8 ubInSightOnly);
 
 #endif

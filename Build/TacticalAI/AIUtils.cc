@@ -1595,36 +1595,20 @@ bool InGas(SOLDIERTYPE const* const s, GridNo const grid_no)
 }
 
 
-BOOLEAN WearGasMaskIfAvailable( SOLDIERTYPE * pSoldier )
+bool WearGasMaskIfAvailable(SOLDIERTYPE* const s)
 {
-	INT8		bSlot, bNewSlot;
+	INT8 const slot = FindObj(s, GASMASK);
+	if (slot == NO_SLOT || slot == HEAD1POS || slot == HEAD2POS) return false;
 
-	bSlot = FindObj( pSoldier, GASMASK );
-	if ( bSlot == NO_SLOT )
-	{
-		return( FALSE );
-	}
-	if ( bSlot == HEAD1POS || bSlot == HEAD2POS )
-	{
-		return( FALSE );
-	}
-	if ( pSoldier->inv[ HEAD1POS ].usItem == NOTHING)
-	{
-		bNewSlot = HEAD1POS;
-	}
-	else if ( pSoldier->inv[ HEAD2POS ].usItem == NOTHING )
-	{
-		bNewSlot = HEAD2POS;
-	}
-	else
-	{
-		// screw it, going in position 1 anyhow
-		bNewSlot = HEAD1POS;
-	}
+	INT8 const new_slot =
+		s->inv[HEAD1POS].usItem == NOTHING ? HEAD1POS :
+		s->inv[HEAD2POS].usItem == NOTHING ? HEAD2POS :
+		HEAD1POS; // Screw it, going in position 1 anyhow
 
-	RearrangePocket( pSoldier, bSlot, bNewSlot, TRUE );
-	return( TRUE );
+	RearrangePocket(s, slot, new_slot, TRUE);
+	return true;
 }
+
 
 BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel )
 {
