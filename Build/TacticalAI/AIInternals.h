@@ -152,7 +152,7 @@ INT16 GoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, INT8 bActi
 INT8 HeadForTheStairCase( SOLDIERTYPE * pSoldier );
 
 bool InGas(SOLDIERTYPE const*, GridNo);
-BOOLEAN InGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo );
+bool InGasOrSmoke(SOLDIERTYPE const*, GridNo);
 BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 
 void InitAttackType(ATTACKTYPE *pAttack);

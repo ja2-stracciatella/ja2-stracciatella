@@ -1561,6 +1561,13 @@ INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 	return( sMinDist );
 }
 
+
+static bool InSmoke(SOLDIERTYPE const* const s, GridNo const gridno)
+{
+	return gpWorldLevelData[gridno].ubExtFlags[s->bLevel] & MAPELEMENT_EXT_SMOKE;
+}
+
+
 BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 {
 	if (WaterTooDeepForAttacks( sGridNo ))
@@ -1584,22 +1591,10 @@ BOOLEAN InWaterGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	return(FALSE);
 }
 
-BOOLEAN InGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo )
+
+bool InGasOrSmoke(SOLDIERTYPE const* const s, GridNo const gridno)
 {
-	// smoke
-	if (gpWorldLevelData[sGridNo].ubExtFlags[pSoldier->bLevel] & MAPELEMENT_EXT_SMOKE)
-	{
-		return( TRUE );
-	}
-
-	// tear/mustard gas
-	if ( (gpWorldLevelData[sGridNo].ubExtFlags[pSoldier->bLevel] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) &&
-				(pSoldier->inv[HEAD1POS].usItem != GASMASK && pSoldier->inv[HEAD2POS].usItem != GASMASK) )
-	{
-		return( TRUE );
-	}
-
-	return(FALSE);
+	return InSmoke(s, gridno) || InGas(s, gridno);
 }
 
 
