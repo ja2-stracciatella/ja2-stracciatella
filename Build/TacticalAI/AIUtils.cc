@@ -1603,21 +1603,9 @@ BOOLEAN InGasOrSmoke( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 }
 
 
-INT16 InWaterOrGas(SOLDIERTYPE *pSoldier, INT16 sGridNo)
+bool InWaterOrGas(SOLDIERTYPE const* const s, GridNo const grid_no)
 {
-	if (WaterTooDeepForAttacks( sGridNo ))
-	{
-		return(TRUE);
-	}
-
-	// tear/mustard gas
-	if ( (gpWorldLevelData[sGridNo].ubExtFlags[pSoldier->bLevel] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) &&
-				(pSoldier->inv[HEAD1POS].usItem != GASMASK && pSoldier->inv[HEAD2POS].usItem != GASMASK) )
-	{
-		return( TRUE );
-	}
-
-	return(FALSE);
+	return WaterTooDeepForAttacks(grid_no) || InGas(s, grid_no);
 }
 
 

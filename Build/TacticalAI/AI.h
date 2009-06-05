@@ -194,7 +194,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier );
 void HandleInitialRedAlert(INT8 bTeam);
 
 void InitPanicSystem(void);
-INT16 InWaterOrGas(SOLDIERTYPE *pSoldier, INT16 sGridno);
+bool InWaterOrGas(SOLDIERTYPE const*, GridNo);
 BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier);
 void InitAI(void);
 
