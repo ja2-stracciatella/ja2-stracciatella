@@ -845,7 +845,6 @@ static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCT
 try
 {
 	LEVELNODE	* pShadowNode;
-	LEVELNODE * pNode;
 	INT32				cnt;
 	BOOLEAN					fOpenedGraphic = FALSE;
 	BOOLEAN					fDoAnimation = TRUE;
@@ -857,7 +856,7 @@ try
 		return( FALSE );
 	}
 
-	pNode = FindLevelNodeBasedOnStructure( pBaseStructure->sGridNo, pBaseStructure );
+	LEVELNODE* const pNode = FindLevelNodeBasedOnStructure(pBaseStructure);
 
 	// ATE: if we are about to swap, but have an animation playing here..... stop the animation....
 	if ( ( pNode->uiFlags & LEVELNODE_ANIMATION ) )

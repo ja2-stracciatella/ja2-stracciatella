@@ -284,7 +284,6 @@ void RemoveExplosionData(EXPLOSIONTYPE* const e)
 static void HandleFencePartnerCheck(INT16 sStructGridNo)
 {
 	STRUCTURE *pFenceStructure, *pFenceBaseStructure;
-	LEVELNODE *pFenceNode;
 	INT8		bFenceDestructionPartner = -1;
 
 	pFenceStructure = FindStructure( sStructGridNo, STRUCTURE_FENCE );
@@ -298,7 +297,7 @@ static void HandleFencePartnerCheck(INT16 sStructGridNo)
 			pFenceBaseStructure = FindBaseStructure( pFenceStructure );
 
 			// Get LEVELNODE for struct and remove!
-			pFenceNode = FindLevelNodeBasedOnStructure( pFenceBaseStructure->sGridNo, pFenceBaseStructure );
+			LEVELNODE* const pFenceNode = FindLevelNodeBasedOnStructure(pFenceBaseStructure);
 
 			// Get type from index...
 			const UINT32 uiFenceType = GetTileType(pFenceNode->usIndex);
@@ -323,7 +322,7 @@ static void ReplaceWall(GridNo const grid_no, UINT8 const orientation, INT16 con
 	STRUCTURE* const wall_struct = GetWallStructOfSameOrientationAtGridno(grid_no, orientation);
 	if (!wall_struct || !(wall_struct->fFlags & STRUCTURE_WALL)) return;
 
-	LEVELNODE* const node    = FindLevelNodeBasedOnStructure(wall_struct->sGridNo, wall_struct);
+	LEVELNODE* const node    = FindLevelNodeBasedOnStructure(wall_struct);
 	UINT16     const new_idx = GetTileIndexFromTypeSubIndex(gTileDatabase[node->usIndex].fType, sub_idx);
 	ApplyMapChangesToMapTempFile app;
 	RemoveStructFromLevelNode(grid_no, node);
@@ -349,7 +348,7 @@ static STRUCTURE* RemoveOnWall(GridNo const grid_no, StructureFlags const flags,
 			next = next->pNext;
 		}
 
-		LEVELNODE* const node = FindLevelNodeBasedOnStructure(base->sGridNo, base);
+		LEVELNODE* const node = FindLevelNodeBasedOnStructure(base);
 		ApplyMapChangesToMapTempFile app;
 		RemoveStructFromLevelNode(base->sGridNo, node);
 	}
@@ -402,7 +401,7 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 		bool const is_explosive = pCurrent->fFlags & STRUCTURE_EXPLOSIVE;
 
 		// Get LEVELNODE for struct and remove!
-		LEVELNODE* const node = FindLevelNodeBasedOnStructure(base_grid_no, base);
+		LEVELNODE* const node = FindLevelNodeBasedOnStructure(base);
 
 		INT8 const orig_destruction_partner = base->pDBStructureRef->pDBStructure->bDestructionPartner;
 		/* ATE: if we have completely destroyed a structure, and this structure

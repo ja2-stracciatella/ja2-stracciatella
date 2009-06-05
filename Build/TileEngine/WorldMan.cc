@@ -1774,9 +1774,10 @@ void SetStructAframeFlags(UINT32 const iMapIndex, LevelnodeFlags const uiFlags)
 }
 
 
-LEVELNODE* FindLevelNodeBasedOnStructure(INT16 const grid_no, STRUCTURE* const s)
+LEVELNODE* FindLevelNodeBasedOnStructure(STRUCTURE const* const s)
 {
-	MAP_ELEMENT const& me = gpWorldLevelData[grid_no];
+	Assert(s->fFlags & STRUCTURE_BASE_TILE);
+	MAP_ELEMENT const& me = gpWorldLevelData[s->sGridNo];
 
 	// ATE: First look on the struct layer
 	for (LEVELNODE* i = me.pStructHead; i; i = i->pNext)

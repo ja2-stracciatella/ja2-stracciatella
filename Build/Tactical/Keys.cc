@@ -1237,9 +1237,8 @@ static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS const& d, bool const
 	STRUCTURE* const s = FindStructure(d.sGridNo, STRUCTURE_ANYDOOR);
 	if (!s) return;
 
-	STRUCTURE* const base         = FindBaseStructure(s);
-	GridNo     const base_grid_no = base->sGridNo;
-	LEVELNODE* const node         = FindLevelNodeBasedOnStructure(base_grid_no, base);
+	STRUCTURE* const base = FindBaseStructure(s);
+	LEVELNODE* const node = FindLevelNodeBasedOnStructure(base);
 
 	// Get status we want to change to
 	bool const want_to_be_open = d.ubFlags & DOOR_PERCEIVED_OPEN;
@@ -1327,8 +1326,10 @@ static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS const& d, bool const
 		return;
 	}
 
-	SwapStructureForPartner(base);
-	RecompileLocalMovementCosts(base_grid_no);
+	{ GridNo const base_grid_no = base->sGridNo;
+		SwapStructureForPartner(base);
+		RecompileLocalMovementCosts(base_grid_no);
+	}
 
 dirty_end:
 	if (dirty)

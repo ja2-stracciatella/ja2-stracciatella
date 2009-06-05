@@ -124,7 +124,7 @@ BOOLEAN IsRoofVisible( INT16 sMapPos );
 BOOLEAN IsRoofVisible2( INT16 sMapPos );
 
 
-LEVELNODE * FindLevelNodeBasedOnStructure( INT16 sGridNo, STRUCTURE * pStructure );
+LEVELNODE* FindLevelNodeBasedOnStructure(STRUCTURE const*);
 LEVELNODE * FindShadow( INT16 sGridNo, UINT16 usStructIndex );
 
 void WorldHideTrees(void);

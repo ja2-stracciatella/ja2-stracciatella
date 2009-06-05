@@ -842,7 +842,7 @@ try
 
 	// Record values, base is deleted
 	GridNo                  const grid_no     = base->sGridNo;
-	LEVELNODE*              const node        = FindLevelNodeBasedOnStructure(grid_no, base);
+	LEVELNODE*              const node        = FindLevelNodeBasedOnStructure(base);
 	LEVELNODE*              const shadow      = FindShadow(grid_no, node->usIndex);
 	bool                    const is_door     = base->fFlags & STRUCTURE_ANYDOOR;
 	DB_STRUCTURE_REF const* const partner     = base->pDBStructureRef + delta;

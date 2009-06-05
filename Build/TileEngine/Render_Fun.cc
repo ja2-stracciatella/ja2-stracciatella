@@ -104,7 +104,7 @@ void SetGridNoRevealedFlag(UINT16 const grid_no)
 		}
 
 		STRUCTURE* const base = FindBaseStructure(i);
-		LEVELNODE* const node = FindLevelNodeBasedOnStructure(base->sGridNo, base);
+		LEVELNODE* const node = FindLevelNodeBasedOnStructure(base);
 		node->uiFlags |= LEVELNODE_SHOW_THROUGH;
 
 		if (i->fFlags & STRUCTURE_SLANTED_ROOF)
@@ -127,9 +127,9 @@ void ExamineGridNoForSlantRoofExtraGraphic(GridNo const check_grid_no)
 	// We have a slanted roof here, find base and remove
 	bool                            changed      = false;
 	STRUCTURE*                const base         = FindBaseStructure(s);
-	LEVELNODE*                const node         = FindLevelNodeBasedOnStructure(base->sGridNo, base);
+	LEVELNODE*                const node         = FindLevelNodeBasedOnStructure(base);
 	bool                      const hidden       = node->uiFlags & LEVELNODE_HIDDEN;
-	GridNo                          base_grid_no = base->sGridNo;
+	GridNo                    const base_grid_no = base->sGridNo;
 	DB_STRUCTURE_TILE* const* const tile         = base->pDBStructureRef->ppTile;
 	DB_STRUCTURE_TILE* const* const end          = tile + base->pDBStructureRef->pDBStructure->ubNumberOfTiles;
 	// Loop through each gridno and see if revealed
