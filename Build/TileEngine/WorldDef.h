@@ -35,6 +35,7 @@
 // DEFINES FOR LEVELNODE FLAGS
 enum LevelnodeFlags
 {
+	LEVELNODE_NONE                 = 0,
 	LEVELNODE_SOLDIER              = 0x00000001,
 	LEVELNODE_MERCPLACEHOLDER      = 0x00000004,
 	LEVELNODE_SHOW_THROUGH         = 0x00000008,
@@ -61,6 +62,7 @@ enum LevelnodeFlags
 	LEVELNODE_EXITGRID             = 0x40000000,
 	LEVELNODE_CAVE                 = 0x80000000
 };
+ENUM_BITSET(LevelnodeFlags)
 
 
 // THE FIRST FEW ( 4 ) bits are flags which are saved in the world
@@ -100,7 +102,7 @@ enum LevelnodeFlags
 struct LEVELNODE
 {
 	LEVELNODE*                  pNext;
-	UINT32											uiFlags;							// flags struct
+	LevelnodeFlags              uiFlags;
 
 	UINT8												ubSumLights;					// LIGHTING INFO
 	UINT8												ubMaxLights;					// MAX LIGHTING INFO

@@ -106,7 +106,7 @@ ANITILE* CreateAnimationTile(const ANITILE_PARAMS* const parms)
 	}
 
 	// set flags for levelnode
-	UINT32 lflags = l->uiFlags | LEVELNODE_ANIMATION | LEVELNODE_USEZ;
+	LevelnodeFlags lflags = l->uiFlags | LEVELNODE_ANIMATION | LEVELNODE_USEZ;
 	lflags |= (flags & ANITILE_PAUSED ? LEVELNODE_LASTDYNAMIC | LEVELNODE_UPDATESAVEBUFFERONCE : LEVELNODE_DYNAMIC);
 	if (flags & ANITILE_NOZBLITTER)         lflags |= LEVELNODE_NOZBLITTER;
 	if (flags & ANITILE_ALWAYS_TRANSLUCENT) lflags |= LEVELNODE_REVEAL;

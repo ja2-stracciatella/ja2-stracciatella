@@ -3321,7 +3321,7 @@ static void LoopLevelNodeForItemGlowFlag(LEVELNODE* pNode, BOOLEAN fOn)
 		if (!(pNode->uiFlags & LEVELNODE_ITEM)) continue;
 
 		pNode->uiFlags &= ~LEVELNODE_DYNAMIC;
-		pNode->uiFlags |= (fOn ? LEVELNODE_DYNAMIC : 0);
+		pNode->uiFlags |= fOn ? LEVELNODE_DYNAMIC : LEVELNODE_NONE;
 	}
 }
 
