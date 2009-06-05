@@ -16,52 +16,32 @@ void CallAvailableEnemiesTo(GridNo grid_no)
 	// All enemy teams become aware of a very important "noise" coming from here!
 	for (INT32 team = 0; team != LAST_TEAM; ++team)
 	{
-		if (!IsTeamActive(team)) continue;
-
-		// if this team is computer-controlled, and isn't the CIVILIAN "team"
-		if (gTacticalStatus.Team[team].bHuman || team == CIV_TEAM) continue;
-
-		// make this team (publicly) aware of the "noise"
-		gsPublicNoiseGridno[team]  = grid_no;
-		gubPublicNoiseVolume[team] = MAX_MISC_NOISE_DURATION;
-
-		// New situation for everyone
-		FOR_ALL_IN_TEAM(s, team)
-		{
-			if (!s->bInSector || s->bLife < OKLIFE) continue;
-
-			SetNewSituation(s);
-			WearGasMaskIfAvailable(s);
-		}
+		CallAvailableTeamEnemiesTo(grid_no, team);
 	}
 }
 
 
-void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam )
+void CallAvailableTeamEnemiesTo(GridNo const grid_no, INT8 const team)
 {
-	// All enemy teams become aware of a very important "noise" coming from here!
-	// if this team is active
-	if (IsTeamActive(bTeam))
-	{
-		// if this team is computer-controlled, and isn't the CIVILIAN "team"
-		if (!(gTacticalStatus.Team[bTeam].bHuman) && (bTeam != CIV_TEAM))
-		{
-			// make this team (publicly) aware of the "noise"
-			gsPublicNoiseGridno[bTeam] = sGridno;
-			gubPublicNoiseVolume[bTeam] = MAX_MISC_NOISE_DURATION;
+	if (!IsTeamActive(team)) return;
 
-			// new situation for everyone;
-			FOR_ALL_IN_TEAM(s, bTeam)
-			{
-				if (s->bInSector && s->bLife >= OKLIFE)
-				{
-					SetNewSituation(s);
-					WearGasMaskIfAvailable(s);
-				}
-			}
-		}
+	// If this team is computer-controlled, and isn't the CIVILIAN "team"
+	if (gTacticalStatus.Team[team].bHuman || team == CIV_TEAM) return;
+
+	// Make this team (publicly) aware of the "noise"
+	gsPublicNoiseGridno[team]  = grid_no;
+	gubPublicNoiseVolume[team] = MAX_MISC_NOISE_DURATION;
+
+	// New situation for everyone
+	FOR_ALL_IN_TEAM(s, team)
+	{
+		if (!s->bInSector || s->bLife < OKLIFE) continue;
+
+		SetNewSituation(s);
+		WearGasMaskIfAvailable(s);
 	}
 }
+
 
 void CallAvailableKingpinMenTo( INT16 sGridNo )
 {

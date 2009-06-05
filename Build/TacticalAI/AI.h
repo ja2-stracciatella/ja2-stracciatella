@@ -135,7 +135,7 @@ INT16 ActionInProgress(SOLDIERTYPE *pSoldier);
 INT8 CalcMorale(SOLDIERTYPE *pSoldier);
 void CallAvailableEnemiesTo(GridNo);
 void CallAvailableKingpinMenTo( INT16 sGridNo );
-void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam );
+void CallAvailableTeamEnemiesTo(GridNo, INT8 team);
 void CallEldinTo( INT16 sGridNo );
 void CancelAIAction(SOLDIERTYPE* pSoldier);
 void CheckForChangingOrders(SOLDIERTYPE *pSoldier );
