@@ -1620,17 +1620,15 @@ INT16 InWaterOrGas(SOLDIERTYPE *pSoldier, INT16 sGridNo)
 	return(FALSE);
 }
 
-BOOLEAN InGas( SOLDIERTYPE *pSoldier, INT16 sGridNo )
-{
-	// tear/mustard gas
-	if ( (gpWorldLevelData[sGridNo].ubExtFlags[pSoldier->bLevel] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) &&
-				(pSoldier->inv[HEAD1POS].usItem != GASMASK && pSoldier->inv[HEAD2POS].usItem != GASMASK) )
-	{
-		return( TRUE );
-	}
 
-	return(FALSE);
+bool InGas(SOLDIERTYPE const* const s, GridNo const grid_no)
+{
+	return
+		gpWorldLevelData[grid_no].ubExtFlags[s->bLevel] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS) &&
+		s->inv[HEAD1POS].usItem != GASMASK &&
+		s->inv[HEAD2POS].usItem != GASMASK;
 }
+
 
 BOOLEAN WearGasMaskIfAvailable( SOLDIERTYPE * pSoldier )
 {
