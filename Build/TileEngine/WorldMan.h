@@ -25,7 +25,7 @@ LEVELNODE *AddObjectToTail( UINT32 iMapIndex, UINT16 usIndex );
 LEVELNODE* AddObjectToHead(UINT32 iMapIndex, UINT16 usIndex);
 LEVELNODE* FindTypeInObjectLayer(UINT32 map_idx, UINT32 type);
 BOOLEAN RemoveAllObjectsOfTypeRange( UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType );
-UINT16 TypeRangeExistsInObjectLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType);
+LEVELNODE* TypeRangeExistsInObjectLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 fEndType);
 
 
 // Roof manipulation functions

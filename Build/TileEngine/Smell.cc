@@ -512,10 +512,9 @@ void UpdateBloodGraphics( INT16 sGridNo, INT8 bLevel )
 			bValue = BLOOD_FLOOR_STRENGTH( pMapElement->ubBloodInfo );
 
 			// OK, remove tile graphic if one exists....
-			UINT16 const usIndex = TypeRangeExistsInObjectLayer(sGridNo, HUMANBLOOD, CREATUREBLOOD);
-			if (usIndex != NO_TILE)
+			if (LEVELNODE const* const n = TypeRangeExistsInObjectLayer(sGridNo, HUMANBLOOD, CREATUREBLOOD))
 			{
-				RemoveObject( sGridNo, usIndex );
+				RemoveObject(sGridNo, n->usIndex);
 			}
 
 			// OK, pick new one. based on strength and randomness

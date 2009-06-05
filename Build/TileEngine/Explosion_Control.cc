@@ -466,7 +466,7 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 				/* There might be two structures in this tile, one on each level, but
 				 * we just want to delete one on each pass */
 				GridNo const struct_grid_no = base_grid_no + ppTile[ubLoop]->sPosRelToBase;
-				if (TypeRangeExistsInObjectLayer(struct_grid_no, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) != NO_TILE) continue;
+				if (TypeRangeExistsInObjectLayer(struct_grid_no, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS)) continue;
 
 				ApplyMapChangesToMapTempFile app;
 				AddObjectToHead(struct_grid_no, tile_idx + Random(3));
@@ -481,7 +481,7 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 					case INSIDE_TOP_LEFT:
 					{
 						GridNo const struct_grid_no = NewGridNo(base_grid_no, DirectionInc(SOUTH));
-						if (TypeRangeExistsInObjectLayer(struct_grid_no, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
+						if (!TypeRangeExistsInObjectLayer(struct_grid_no, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS))
 						{
 							ApplyMapChangesToMapTempFile app;
 							AddObjectToHead(struct_grid_no, tile_idx + Random(3));
@@ -493,7 +493,7 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 					case INSIDE_TOP_RIGHT:
 					{
 						GridNo const struct_grid_no = NewGridNo(base_grid_no, DirectionInc(EAST));
-						if (TypeRangeExistsInObjectLayer(struct_grid_no, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
+						if (!TypeRangeExistsInObjectLayer(struct_grid_no, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS))
 						{
 							ApplyMapChangesToMapTempFile app;
 							AddObjectToHead(struct_grid_no, tile_idx + Random(3));
@@ -1091,7 +1091,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 		// Add burn marks to ground randomly....
 		if ( Random( 50 ) < 15 && uiDist == 1 )
 		{
-			//if (TypeRangeExistsInObjectLayer(sGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS) == NO_TILE)
+			//if (!TypeRangeExistsInObjectLayer(sGridNo, FIRSTEXPLDEBRIS, SECONDEXPLDEBRIS))
 			//{
 			//	UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(SECONDEXPLDEBRIS, Random(10) + 1);
 			//	AddObjectToHead( sGridNo, usTileIndex );
