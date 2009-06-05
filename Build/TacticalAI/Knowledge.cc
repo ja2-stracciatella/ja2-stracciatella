@@ -11,34 +11,31 @@
 #include "Timer_Control.h"
 
 
-void CallAvailableEnemiesTo( INT16 sGridNo )
+void CallAvailableEnemiesTo(GridNo grid_no)
 {
 	// All enemy teams become aware of a very important "noise" coming from here!
-	for (INT32 iLoop = 0; iLoop < LAST_TEAM; ++iLoop)
+	for (INT32 team = 0; team != LAST_TEAM; ++team)
 	{
-		// if this team is active
-		if (IsTeamActive(iLoop))
-		{
-			// if this team is computer-controlled, and isn't the CIVILIAN "team"
-			if (!(gTacticalStatus.Team[iLoop].bHuman) && (iLoop != CIV_TEAM))
-			{
-				// make this team (publicly) aware of the "noise"
-				gsPublicNoiseGridno[iLoop] = sGridNo;
-				gubPublicNoiseVolume[iLoop] = MAX_MISC_NOISE_DURATION;
+		if (!IsTeamActive(team)) continue;
 
-				// new situation for everyone;
-				FOR_ALL_IN_TEAM(s, iLoop)
-				{
-					if (s->bInSector && s->bLife >= OKLIFE)
-					{
-						SetNewSituation(s);
-						WearGasMaskIfAvailable(s);
-					}
-				}
-			}
+		// if this team is computer-controlled, and isn't the CIVILIAN "team"
+		if (gTacticalStatus.Team[team].bHuman || team == CIV_TEAM) continue;
+
+		// make this team (publicly) aware of the "noise"
+		gsPublicNoiseGridno[team]  = grid_no;
+		gubPublicNoiseVolume[team] = MAX_MISC_NOISE_DURATION;
+
+		// New situation for everyone
+		FOR_ALL_IN_TEAM(s, team)
+		{
+			if (!s->bInSector || s->bLife < OKLIFE) continue;
+
+			SetNewSituation(s);
+			WearGasMaskIfAvailable(s);
 		}
 	}
 }
+
 
 void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam )
 {

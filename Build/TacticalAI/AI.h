@@ -133,7 +133,7 @@ void ActionDone(SOLDIERTYPE *pSoldier);
 INT16 ActionInProgress(SOLDIERTYPE *pSoldier);
 
 INT8 CalcMorale(SOLDIERTYPE *pSoldier);
-void CallAvailableEnemiesTo(INT16 sGridno);
+void CallAvailableEnemiesTo(GridNo);
 void CallAvailableKingpinMenTo( INT16 sGridNo );
 void CallAvailableTeamEnemiesTo( INT16 sGridno, INT8 bTeam );
 void CallEldinTo( INT16 sGridNo );
