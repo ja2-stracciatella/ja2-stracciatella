@@ -263,7 +263,7 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce );
 void ReloadTileset(TileSetID);
 #endif
 
-BOOLEAN FloorAtGridNo( UINT32 iMapIndex );
+bool FloorAtGridNo(UINT32 map_idx);
 BOOLEAN DoorAtGridNo( UINT32 iMapIndex );
 BOOLEAN GridNoIndoors( UINT32 iMapIndex );
 

@@ -123,25 +123,19 @@ BOOLEAN OpenableAtGridNo(const UINT32 iMapIndex)
 }
 
 
-BOOLEAN FloorAtGridNo( UINT32 iMapIndex )
+bool FloorAtGridNo(UINT32 const map_idx)
 {
-	LEVELNODE	*pLand;
-	pLand = gpWorldLevelData[ iMapIndex ].pLandHead;
-	// Look through all objects and Search for type
-	while( pLand )
+	for (LEVELNODE const* i = gpWorldLevelData[map_idx].pLandHead; i;)
 	{
-		if ( pLand->usIndex != NO_TILE )
-		{
-			const UINT32 uiTileType = GetTileType(pLand->usIndex);
-			if ( uiTileType >= FIRSTFLOOR && uiTileType <= LASTFLOOR )
-			{
-				return TRUE;
-			}
-			pLand = pLand->pNext;
-		}
+		if (i->usIndex == NO_TILE) continue;
+
+		UINT32 const tile_type = GetTileType(i->usIndex);
+		if (FIRSTFLOOR <= tile_type && tile_type <= LASTFLOOR) return true;
+		i = i->pNext; // XXX TODO0009 if i->usIndex == NO_TILE this is an endless loop
 	}
-	return FALSE;
+	return false;
 }
+
 
 BOOLEAN GridNoIndoors( UINT32 iMapIndex )
 {
