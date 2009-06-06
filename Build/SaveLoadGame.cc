@@ -318,7 +318,11 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		header.uiRandom = Random(RAND_MAX);
 
 		// Save the savegame header
+#ifdef _WIN32 // XXX HACK000A
+		BYTE  data[432];
+#else
 		BYTE  data[688];
+#endif
 		BYTE* d = data;
 		INJ_U32(   d, header.uiSavedGameVersion)
 		INJ_STR(   d, header.zGameVersionNumber, lengthof(header.zGameVersionNumber))
@@ -546,7 +550,11 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 
 void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h)
 {
+#ifdef _WIN32 // XXX HACK000A
+	BYTE data[432];
+#else
 	BYTE data[688];
+#endif
 	FileRead(f, data, sizeof(data));
 
 	BYTE const* d = data;
