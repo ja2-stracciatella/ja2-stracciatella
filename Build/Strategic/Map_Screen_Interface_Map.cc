@@ -3641,10 +3641,10 @@ static void BlitMineText(INT16 sMapX, INT16 sMapY)
 static void BlitTownGridMarkers(void)
 {
 	SGPVSurface::Lock l(guiSAVEBUFFER);
-	UINT16* const pDestBuf         = l.Buffer<UINT16>();
-	UINT32  const uiDestPitchBYTES = l.Pitch();
+	UINT16* const buf   = l.Buffer<UINT16>();
+	UINT32  const pitch = l.Pitch();
 
-	ClipBlitsToMapViewRegionForRectangleAndABit(uiDestPitchBYTES);
+	ClipBlitsToMapViewRegionForRectangleAndABit(pitch);
 
 	// Go through list of towns and place on screen
 	UINT16 const color = Get16BPPColor(FROMRGB(100, 100, 100));
@@ -3658,48 +3658,48 @@ static void BlitTownGridMarkers(void)
 		}
 
 		INT32 const loc = pTownLocationsList[i];
-		INT16       sScreenX;
-		INT16       sScreenY;
-		INT16       sWidth;
-		INT16       sHeight;
+		INT16       x;
+		INT16       y;
+		INT16       w;
+		INT16       h;
 		if (fZoomFlag)
 		{
-			GetScreenXYFromMapXYStationary(loc % MAP_WORLD_X, loc / MAP_WORLD_X, &sScreenX, &sScreenY);
-			sScreenX -= MAP_GRID_X - 1;
-			sScreenY -= MAP_GRID_Y;
-			sWidth    = 2 * MAP_GRID_X;
-			sHeight   = 2 * MAP_GRID_Y;
+			GetScreenXYFromMapXYStationary(loc % MAP_WORLD_X, loc / MAP_WORLD_X, &x, &y);
+			x -= MAP_GRID_X - 1;
+			y -= MAP_GRID_Y;
+			w  = 2 * MAP_GRID_X;
+			h  = 2 * MAP_GRID_Y;
 		}
 		else
 		{ // Get location on screen
-			GetScreenXYFromMapXY(loc % MAP_WORLD_X, loc / MAP_WORLD_X, &sScreenX, &sScreenY);
-			sWidth    = MAP_GRID_X - 1;
-			sHeight   = MAP_GRID_Y;
-			sScreenX += 2;
+			GetScreenXYFromMapXY(loc % MAP_WORLD_X, loc / MAP_WORLD_X, &x, &y);
+			w  = MAP_GRID_X - 1;
+			h  = MAP_GRID_Y;
+			x += 2;
 		}
 
 		if (StrategicMap[loc - MAP_WORLD_X].bNameId == BLANK_SECTOR)
 		{
-			LineDraw(TRUE,  sScreenX - 1, sScreenY - 1, sScreenX + sWidth - 1, sScreenY - 1, color, pDestBuf);
+			LineDraw(TRUE, x - 1, y - 1, x + w - 1, y - 1, color, buf);
 		}
 
 		if (StrategicMap[loc + MAP_WORLD_X].bNameId == BLANK_SECTOR)
 		{
-			LineDraw(TRUE,  sScreenX - 1, sScreenY + sHeight - 1, sScreenX + sWidth - 1, sScreenY + sHeight - 1, color, pDestBuf);
+			LineDraw(TRUE, x - 1, y + h - 1, x + w - 1, y + h - 1, color, buf);
 		}
 
 		if (StrategicMap[loc - 1].bNameId == BLANK_SECTOR)
 		{
-			LineDraw(TRUE,  sScreenX - 2, sScreenY - 1, sScreenX - 2, sScreenY + sHeight - 1, color, pDestBuf);
+			LineDraw(TRUE, x - 2, y - 1, x - 2, y + h - 1, color, buf);
 		}
 
 		if (StrategicMap[loc + 1].bNameId == BLANK_SECTOR)
 		{
-			LineDraw(TRUE,  sScreenX + sWidth - 1, sScreenY - 1, sScreenX + sWidth - 1, sScreenY + sHeight - 1, color, pDestBuf);
+			LineDraw(TRUE, x + w - 1, y - 1, x + w - 1, y + h - 1, color, buf);
 		}
 	}
 
-	RestoreClipRegionToFullScreenForRectangle(uiDestPitchBYTES);
+	RestoreClipRegionToFullScreenForRectangle(pitch);
 }
 
 
