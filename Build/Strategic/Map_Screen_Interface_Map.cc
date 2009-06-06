@@ -3640,74 +3640,66 @@ static void BlitMineText(INT16 sMapX, INT16 sMapY)
 
 static void BlitTownGridMarkers(void)
 {
-	INT16 sScreenX = 0, sScreenY = 0;
-	UINT16 usColor = 0;
-	INT32 iCounter = 0;
-	INT16 sWidth = 0, sHeight = 0;
-
-	// get 16 bpp color
-	usColor = Get16BPPColor( FROMRGB( 100, 100, 100) );
-
-	// blit in the highlighted sector
 	SGPVSurface::Lock l(guiSAVEBUFFER);
 	UINT16* const pDestBuf         = l.Buffer<UINT16>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
-	// clip to view region
-	ClipBlitsToMapViewRegionForRectangleAndABit( uiDestPitchBYTES );
+	ClipBlitsToMapViewRegionForRectangleAndABit(uiDestPitchBYTES);
 
-
-	// go through list of towns and place on screen
-	while( pTownNamesList[ iCounter ] != 0 )
+	// Go through list of towns and place on screen
+	UINT16 const color = Get16BPPColor(FROMRGB(100, 100, 100));
+	for (INT32 i = 0; pTownNamesList[i] != BLANK_SECTOR; ++i)
 	{
 		// skip Orta/Tixa until found
-		if ((pTownNamesList[iCounter] != ORTA || fFoundOrta) && (pTownNamesList[iCounter] != TIXA || fFoundTixa))
+		switch (pTownNamesList[i])
 		{
-			if( fZoomFlag )
-			{
-				GetScreenXYFromMapXYStationary( ( INT16 )( pTownLocationsList[ iCounter ] % MAP_WORLD_X ), ( INT16 )( pTownLocationsList[ iCounter ] / MAP_WORLD_X ) , &sScreenX, &sScreenY );
-				sScreenX -= MAP_GRID_X - 1;
-				sScreenY -= MAP_GRID_Y;
-
-				sWidth = 2 * MAP_GRID_X;
-				sHeight= 2 * MAP_GRID_Y;
-			}
-			else
-			{
-				// get location on screen
-				GetScreenXYFromMapXY( ( INT16 )( pTownLocationsList[ iCounter ] % MAP_WORLD_X ), ( INT16 )( pTownLocationsList[ iCounter ] / MAP_WORLD_X ), &sScreenX, &sScreenY );
-				sWidth = MAP_GRID_X - 1;
-				sHeight= MAP_GRID_Y;
-
-				sScreenX += 2;
-			}
-
-			if( StrategicMap[ pTownLocationsList[ iCounter ] - MAP_WORLD_X ].bNameId == BLANK_SECTOR )
-			{
-				LineDraw( TRUE,  sScreenX - 1, sScreenY - 1, sScreenX + sWidth - 1, sScreenY - 1, usColor, pDestBuf );
-			}
-
-			if (StrategicMap[pTownLocationsList[iCounter] + MAP_WORLD_X].bNameId == BLANK_SECTOR)
-			{
-				LineDraw( TRUE,  sScreenX - 1, sScreenY + sHeight - 1, sScreenX + sWidth - 1, sScreenY + sHeight - 1, usColor, pDestBuf );
-			}
-
-			if( StrategicMap[ pTownLocationsList[ iCounter ] - 1 ].bNameId == BLANK_SECTOR )
-			{
-				LineDraw( TRUE,  sScreenX - 2, sScreenY - 1, sScreenX - 2, sScreenY + sHeight - 1, usColor, pDestBuf );
-			}
-
-			if( StrategicMap[ pTownLocationsList[ iCounter ] + 1 ].bNameId == BLANK_SECTOR )
-			{
-				LineDraw( TRUE,  sScreenX + sWidth - 1, sScreenY - 1, sScreenX + sWidth - 1, sScreenY + sHeight - 1, usColor, pDestBuf );
-			}
+			case ORTA: if (!fFoundOrta) continue; break;
+			case TIXA: if (!fFoundTixa) continue; break;
 		}
 
-		iCounter++;
+		INT32 const loc = pTownLocationsList[i];
+		INT16       sScreenX;
+		INT16       sScreenY;
+		INT16       sWidth;
+		INT16       sHeight;
+		if (fZoomFlag)
+		{
+			GetScreenXYFromMapXYStationary(loc % MAP_WORLD_X, loc / MAP_WORLD_X, &sScreenX, &sScreenY);
+			sScreenX -= MAP_GRID_X - 1;
+			sScreenY -= MAP_GRID_Y;
+			sWidth    = 2 * MAP_GRID_X;
+			sHeight   = 2 * MAP_GRID_Y;
+		}
+		else
+		{ // Get location on screen
+			GetScreenXYFromMapXY(loc % MAP_WORLD_X, loc / MAP_WORLD_X, &sScreenX, &sScreenY);
+			sWidth    = MAP_GRID_X - 1;
+			sHeight   = MAP_GRID_Y;
+			sScreenX += 2;
+		}
+
+		if (StrategicMap[loc - MAP_WORLD_X].bNameId == BLANK_SECTOR)
+		{
+			LineDraw(TRUE,  sScreenX - 1, sScreenY - 1, sScreenX + sWidth - 1, sScreenY - 1, color, pDestBuf);
+		}
+
+		if (StrategicMap[loc + MAP_WORLD_X].bNameId == BLANK_SECTOR)
+		{
+			LineDraw(TRUE,  sScreenX - 1, sScreenY + sHeight - 1, sScreenX + sWidth - 1, sScreenY + sHeight - 1, color, pDestBuf);
+		}
+
+		if (StrategicMap[loc - 1].bNameId == BLANK_SECTOR)
+		{
+			LineDraw(TRUE,  sScreenX - 2, sScreenY - 1, sScreenX - 2, sScreenY + sHeight - 1, color, pDestBuf);
+		}
+
+		if (StrategicMap[loc + 1].bNameId == BLANK_SECTOR)
+		{
+			LineDraw(TRUE,  sScreenX + sWidth - 1, sScreenY - 1, sScreenX + sWidth - 1, sScreenY + sHeight - 1, color, pDestBuf);
+		}
 	}
 
-	// restore clips
-	RestoreClipRegionToFullScreenForRectangle( uiDestPitchBYTES );
+	RestoreClipRegionToFullScreenForRectangle(uiDestPitchBYTES);
 }
 
 
