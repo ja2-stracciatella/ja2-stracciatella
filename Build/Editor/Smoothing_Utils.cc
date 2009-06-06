@@ -95,23 +95,19 @@ UINT16 SearchForRoofType(UINT32 const map_idx)
 }
 
 
-static BOOLEAN RoofAtGridNo(UINT32 iMapIndex)
+static bool RoofAtGridNo(UINT32 const map_idx)
 {
-	LEVELNODE	*pRoof;
-	pRoof = gpWorldLevelData[ iMapIndex ].pRoofHead;
-	// Look through all objects and Search for type
-	while( pRoof )
+	for (LEVELNODE const* i = gpWorldLevelData[map_idx].pRoofHead; i;)
 	{
-		if ( pRoof->usIndex != NO_TILE )
-		{
-			const UINT32 uiTileType = GetTileType(pRoof->usIndex);
-			if ( uiTileType >= FIRSTROOF && uiTileType <= SECONDSLANTROOF )
-				return TRUE;
-			pRoof = pRoof->pNext;
-		}
+		if (i->usIndex == NO_TILE) continue;
+
+		UINT32 const tile_type = GetTileType(i->usIndex);
+		if (FIRSTROOF <= tile_type && tile_type <= SECONDSLANTROOF) return true;
+		i = i->pNext; // XXX TODO0009 if i->usIndex == NO_TILE this is an endless loop
 	}
-	return FALSE;
+	return false;
 }
+
 
 BOOLEAN BuildingAtGridNo( UINT32 iMapIndex )
 {
