@@ -63,40 +63,35 @@ UINT16 SearchForWallType( UINT32 iMapIndex )
 	return 0xffff;
 }
 
-//This method isn't foolproof, but because erasing large areas of buildings could result in
-//multiple roof types for each building.  When processing the region, it is necessary to
-//calculate the roof type by searching for the nearest roof tile.
-UINT16 SearchForRoofType( UINT32 iMapIndex )
+
+/* This method isn't foolproof, because erasing large areas of buildings could
+ * result in multiple roof types for each building. When processing the region,
+ * it is necessary to calculate the roof type by searching for the nearest roof
+ * tile. */
+UINT16 SearchForRoofType(UINT32 const map_idx)
 {
-	LEVELNODE *pRoof;
-	INT16 x, y, sRadius = 0;
-	INT16 sOffset;
-	while( sRadius < 32 )
+	for (INT16 radius = 0; radius != 32; ++radius)
 	{
-		for( y = -sRadius; y <= sRadius; y++ ) for( x = -sRadius; x <= sRadius; x++ )
+		for (INT16 y = -radius; y <= radius; ++y)
 		{
-			if (abs(x) == sRadius || abs(y) == sRadius)
+			for (INT16 x = -radius; x <= radius; ++x)
 			{
-				sOffset = y * WORLD_COLS + x;
-				if( !GridNoOnVisibleWorldTile( (INT16)(iMapIndex + sOffset) ) )
+				if (abs(x) != radius && abs(y) != radius) continue;
+
+				GridNo const grid_no = map_idx + y * WORLD_COLS + x;
+				if (!GridNoOnVisibleWorldTile(grid_no)) continue;
+
+				for (LEVELNODE const* i = gpWorldLevelData[grid_no].pRoofHead; i; i = i->pNext)
 				{
-					continue;
-				}
-				pRoof = gpWorldLevelData[ iMapIndex + sOffset ].pRoofHead;
-				while( pRoof )
-				{
-					const UINT32 uiTileType = GetTileType(pRoof->usIndex);
-					if( uiTileType >= FIRSTROOF && uiTileType <= LASTROOF )
-					{	//found a roof, so return its type.
-						return (UINT16)uiTileType;
-					}
-					pRoof = pRoof->pNext;
+					UINT32 const tile_type = GetTileType(i->usIndex);
+					if (tile_type < FIRSTROOF && LASTROOF < tile_type) continue;
+					// found a roof, so return its type.
+					return tile_type;
 				}
 			}
 		}
-		sRadius++;
 	}
-	return 0xffff;
+	return 0xFFFF;
 }
 
 
