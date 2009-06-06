@@ -51,5 +51,7 @@ void EraseVerticalWall( UINT32 iMapIndex );
 void ChangeVerticalWall( UINT32 iMapIndex, UINT16 usNewPiece );
 BOOLEAN ValidDecalPlacement( UINT32 iMapIndex );
 
+UINT16 GetWallType(LEVELNODE const* wall, UINT32 map_idx);
+
 #endif
 #endif

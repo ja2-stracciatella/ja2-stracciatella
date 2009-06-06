@@ -166,27 +166,17 @@ LEVELNODE* GetHorizontalWall(UINT32 const map_idx)
 }
 
 
-UINT16 GetVerticalWallType(UINT32 const iMapIndex)
+UINT16 GetVerticalWallType(UINT32 const map_idx)
 {
-	LEVELNODE const* const pWall = GetVerticalWall(iMapIndex);
-	if (!pWall) return 0;
-
-	UINT32 const uiTileType = GetTileType(pWall->usIndex);
-	if (uiTileType < FIRSTDOOR || LASTDOOR < uiTileType) return uiTileType;
-
-	return SearchForWallType(iMapIndex);
+	LEVELNODE const* const wall = GetVerticalWall(map_idx);
+	return wall ? GetWallType(wall, map_idx) : 0;
 }
 
 
-UINT16 GetHorizontalWallType(UINT32 const iMapIndex)
+UINT16 GetHorizontalWallType(UINT32 const map_idx)
 {
-	LEVELNODE const* const pWall = GetHorizontalWall(iMapIndex);
-	if (!pWall) return 0;
-
-	UINT32 const uiTileType = GetTileType(pWall->usIndex);
-	if (uiTileType < FIRSTDOOR || LASTDOOR < uiTileType) return uiTileType;
-
-	return SearchForWallType(iMapIndex);
+	LEVELNODE const* const wall = GetHorizontalWall(map_idx);
+	return wall ? GetWallType(wall, map_idx) : 0;
 }
 
 
@@ -272,9 +262,11 @@ void ChangeVerticalWall(UINT32 const map_idx, UINT16 const new_piece)
 }
 
 
-static UINT16 GetWallType(LEVELNODE const* const wall, UINT32 const map_idx)
+UINT16 GetWallType(LEVELNODE const* const wall, UINT32 const map_idx)
 {
 	UINT32 const tile_type = GetTileType(wall->usIndex);
+	/* Doors do not contain the wall type, so search for the nearest wall to
+	 * extract it */
 	return
 		FIRSTDOOR <= tile_type && tile_type <= LASTDOOR ? SearchForWallType(map_idx) :
 		(UINT16)tile_type;
