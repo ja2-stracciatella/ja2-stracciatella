@@ -569,42 +569,40 @@ void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType )
 static void EraseRoof(UINT32 iMapIndex);
 
 
-void RebuildRoofUsingFloorInfo( INT32 iMapIndex, UINT16 usRoofType )
+void RebuildRoofUsingFloorInfo(INT32 const map_idx, UINT16 roof_type)
 {
-	BOOLEAN fTop = FALSE, fBottom = FALSE, fLeft = FALSE, fRight = FALSE;
-	if( !usRoofType )
-	{
-		usRoofType = SearchForRoofType( iMapIndex );
-	}
-	if( usRoofType == 0xffff )
-		return;  //no roof type around, so don't draw one.
-	//Analyse the mapindex for walls and set the flags.
-	//NOTE:  There is no support for more than 2 side on a roof, so if there is, draw TOPLEFT
-	AddToUndoList( iMapIndex );
-	EraseRoof( iMapIndex );
+	if (roof_type ==      0) roof_type = SearchForRoofType(map_idx);
+	if (roof_type == 0xFFFF) return; // No roof type around, so don't draw one.
 
-	fTop = FloorAtGridNo( iMapIndex - WORLD_COLS ) ? FALSE : TRUE;
-	fLeft = FloorAtGridNo( iMapIndex - 1 ) ? FALSE : TRUE;
-	fBottom = FloorAtGridNo( iMapIndex + WORLD_COLS ) ? FALSE : TRUE;
-	fRight = FloorAtGridNo( iMapIndex + 1 ) ? FALSE : TRUE;
-	UINT16 usRoofIndex;
-	if( fTop && fLeft )						usRoofIndex = TOPLEFT_ROOF_INDEX;
-	else if( fTop && fRight)			usRoofIndex = TOPRIGHT_ROOF_INDEX;
-	else if( fBottom && fLeft )		usRoofIndex = BOTTOMLEFT_ROOF_INDEX;
-	else if( fBottom && fRight )	usRoofIndex = BOTTOMRIGHT_ROOF_INDEX;
-	else if( fTop )								usRoofIndex = TOP_ROOF_INDEX;
-	else if( fBottom )						usRoofIndex = BOTTOM_ROOF_INDEX;
-	else if( fLeft )							usRoofIndex = LEFT_ROOF_INDEX;
-	else if( fRight )							usRoofIndex = RIGHT_ROOF_INDEX;
-	else													usRoofIndex = CENTER_ROOF_BASE_INDEX + ( rand() % CENTER_ROOF_VARIANTS );
-	UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, usRoofIndex);
-	AddRoofToHead( iMapIndex, usTileIndex );
-	//if the editor view roofs is off, then the new roofs need to be hidden.
-	if( !fBuildingShowRoofs )
+	AddToUndoList(map_idx);
+	EraseRoof(map_idx);
+
+	/* Analyse the neighbouring tiles for floors and set the flags.
+	 * NOTE: There is no support for less than 2 side on a roof, so if there is,
+	 * draw TOPLEFT */
+	bool   const top      = !FloorAtGridNo(map_idx - WORLD_COLS);
+	bool   const left     = !FloorAtGridNo(map_idx - 1);
+	bool   const bottom   = !FloorAtGridNo(map_idx + WORLD_COLS);
+	bool   const right    = !FloorAtGridNo(map_idx + 1);
+	UINT16 const roof_idx =
+		top    && left  ? TOPLEFT_ROOF_INDEX     :
+		top    && right ? TOPRIGHT_ROOF_INDEX    :
+		bottom && left  ? BOTTOMLEFT_ROOF_INDEX  :
+		bottom && right ? BOTTOMRIGHT_ROOF_INDEX :
+		top             ? TOP_ROOF_INDEX         :
+		bottom          ? BOTTOM_ROOF_INDEX      :
+		left            ? LEFT_ROOF_INDEX        :
+		right           ? RIGHT_ROOF_INDEX       :
+		CENTER_ROOF_BASE_INDEX + rand() % CENTER_ROOF_VARIANTS;
+	UINT16 const tile_idx = GetTileIndexFromTypeSubIndex(roof_type, roof_idx);
+	AddRoofToHead(map_idx, tile_idx);
+	// If the editor view roofs is off, then the new roofs need to be hidden.
+	if (!fBuildingShowRoofs)
 	{
-		HideStructOfGivenType( iMapIndex, usRoofType, TRUE );
+		HideStructOfGivenType(map_idx, roof_type, TRUE);
 	}
 }
+
 
 //Given a gridno, it will erase the current roof, and calculate the new roof piece based on the
 //wall orientions giving priority to the top and left walls before anything else.
