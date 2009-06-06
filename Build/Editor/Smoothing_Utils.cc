@@ -140,7 +140,7 @@ LEVELNODE* GetVerticalWall(UINT32 const map_idx)
 		{
 			UINT16 const wall_orientation = GetWallOrientation(i->usIndex);
 			if (wall_orientation != INSIDE_TOP_RIGHT && wall_orientation != OUTSIDE_TOP_RIGHT) continue;
-			return pStruct;
+			return i;
 		}
 	}
 	return 0;

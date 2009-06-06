@@ -1694,7 +1694,6 @@ static void InitializeStrategicMapSectorTownNames(void)
 	StrategicMap[4+11*MAP_WORLD_X].bNameId=ORTA;
 	StrategicMap[11+12*MAP_WORLD_X].bNameId= 	StrategicMap[12+12*MAP_WORLD_X].bNameId = BALIME;
 	StrategicMap[3+14*MAP_WORLD_X].bNameId=StrategicMap[4+14*MAP_WORLD_X].bNameId=StrategicMap[5+14*MAP_WORLD_X].bNameId=StrategicMap[3+15*MAP_WORLD_X].bNameId=StrategicMap[4+15*MAP_WORLD_X].bNameId= StrategicMap[3+16*MAP_WORLD_X].bNameId = MEDUNA;
-	//StrategicMap[3+16*MAP_WORLD_X].bNameId=PALACE;
 }
 
 

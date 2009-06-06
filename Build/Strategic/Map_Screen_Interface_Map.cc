@@ -3687,7 +3687,7 @@ static void BlitTownGridMarkers(void)
 				LineDraw( TRUE,  sScreenX - 1, sScreenY - 1, sScreenX + sWidth - 1, sScreenY - 1, usColor, pDestBuf );
 			}
 
-			if( ( StrategicMap[ pTownLocationsList[ iCounter ] + MAP_WORLD_X ].bNameId == BLANK_SECTOR ) /* || ( StrategicMap[ pTownLocationsList[ iCounter ] + MAP_WORLD_X ].bNameId == PALACE ) */ )
+			if (StrategicMap[pTownLocationsList[iCounter] + MAP_WORLD_X].bNameId == BLANK_SECTOR)
 			{
 				LineDraw( TRUE,  sScreenX - 1, sScreenY + sHeight - 1, sScreenX + sWidth - 1, sScreenY + sHeight - 1, usColor, pDestBuf );
 			}

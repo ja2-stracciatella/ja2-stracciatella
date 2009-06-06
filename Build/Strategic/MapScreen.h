@@ -28,7 +28,6 @@ enum Towns
 };
 
 #define FIRST_TOWN	OMERTA
-//#define PALACE			NUM_TOWNS
 
 
 extern BOOLEAN fCharacterInfoPanelDirty;
