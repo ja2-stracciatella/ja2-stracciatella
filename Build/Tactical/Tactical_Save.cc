@@ -392,10 +392,10 @@ void HandleAllReachAbleItemsInTheSector(INT16 const x, INT16 const y, INT8 const
 	AssertMsg(grid_no != -1, String("Map %c%d_b%d does not have any entry points!", 'A' + y - 1, x, z));
 	if (grid_no == -1) return;
 
-	GridNo grid_no2 = NOWHERE;
-	if (gMapInformation.sIsolatedGridNo != -1)
+	GridNo       grid_no2 = NOWHERE;
+	GridNo const isolated = gMapInformation.sIsolatedGridNo;
+	if (isolated != -1)
 	{
-		GridNo const isolated = gMapInformation.sIsolatedGridNo;
 		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
 			if (s->bLife <= 0) continue;
