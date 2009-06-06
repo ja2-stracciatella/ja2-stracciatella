@@ -3032,30 +3032,22 @@ static BOOLEAN DoIRenderASpecialMouseCursor(void)
 
 
 void ShowEntryPoints()
-{
-	//make entry points visible
-	if( gMapInformation.sNorthGridNo != -1 )
-	  AddTopmostToTail( gMapInformation.sNorthGridNo, FIRSTPOINTERS2 );
-	if( gMapInformation.sEastGridNo != -1 )
-	  AddTopmostToTail( gMapInformation.sEastGridNo, FIRSTPOINTERS2 );
-	if( gMapInformation.sSouthGridNo != -1 )
-	  AddTopmostToTail( gMapInformation.sSouthGridNo, FIRSTPOINTERS2 );
-	if( gMapInformation.sWestGridNo != -1 )
-	  AddTopmostToTail( gMapInformation.sWestGridNo, FIRSTPOINTERS2 );
+{ // Make entry points visible
+	MAPCREATE_STRUCT const& m = gMapInformation;
+	if (m.sNorthGridNo != -1) AddTopmostToTail(m.sNorthGridNo, FIRSTPOINTERS2);
+	if (m.sEastGridNo  != -1) AddTopmostToTail(m.sEastGridNo,  FIRSTPOINTERS2);
+	if (m.sSouthGridNo != -1) AddTopmostToTail(m.sSouthGridNo, FIRSTPOINTERS2);
+	if (m.sWestGridNo  != -1) AddTopmostToTail(m.sWestGridNo,  FIRSTPOINTERS2);
 }
 
 
-static void HideEntryPoints(void)
-{
-	//remove entry point indicators
-	if( gMapInformation.sNorthGridNo != -1 )
-		RemoveAllTopmostsOfTypeRange( gMapInformation.sNorthGridNo, FIRSTPOINTERS, FIRSTPOINTERS );
-	if( gMapInformation.sEastGridNo != -1 )
-		RemoveAllTopmostsOfTypeRange( gMapInformation.sEastGridNo, FIRSTPOINTERS, FIRSTPOINTERS );
-	if( gMapInformation.sSouthGridNo != -1 )
-		RemoveAllTopmostsOfTypeRange( gMapInformation.sSouthGridNo, FIRSTPOINTERS, FIRSTPOINTERS );
-	if( gMapInformation.sWestGridNo != -1 )
-		RemoveAllTopmostsOfTypeRange( gMapInformation.sWestGridNo, FIRSTPOINTERS, FIRSTPOINTERS );
+static void HideEntryPoints()
+{ // Remove entry point indicators
+	MAPCREATE_STRUCT const& m = gMapInformation;
+	if (m.sNorthGridNo != -1) RemoveAllTopmostsOfTypeRange(m.sNorthGridNo, FIRSTPOINTERS, FIRSTPOINTERS);
+	if (m.sEastGridNo  != -1) RemoveAllTopmostsOfTypeRange(m.sEastGridNo,  FIRSTPOINTERS, FIRSTPOINTERS);
+	if (m.sSouthGridNo != -1) RemoveAllTopmostsOfTypeRange(m.sSouthGridNo, FIRSTPOINTERS, FIRSTPOINTERS);
+	if (m.sWestGridNo  != -1) RemoveAllTopmostsOfTypeRange(m.sWestGridNo,  FIRSTPOINTERS, FIRSTPOINTERS);
 }
 
 void TaskOptionsCallback(GUI_BUTTON *btn,INT32 reason)
