@@ -3705,48 +3705,37 @@ static void BlitTownGridMarkers(void)
 
 static void BlitMineGridMarkers(void)
 {
-	INT16 sScreenX = 0, sScreenY = 0;
-	UINT16 usColor = 0;
-	INT32 iCounter = 0;
-	INT16 sWidth = 0, sHeight = 0;
-
-	// get 16 bpp color
-	usColor = Get16BPPColor( FROMRGB( 100, 100, 100) );
-
-
-	// blit in the highlighted sector
 	SGPVSurface::Lock l(guiSAVEBUFFER);
-	UINT32 const uiDestPitchBYTES = l.Pitch();
+	UINT32 const pitch = l.Pitch();
 
-	// clip to view region
-	ClipBlitsToMapViewRegionForRectangleAndABit( uiDestPitchBYTES );
+	ClipBlitsToMapViewRegionForRectangleAndABit(pitch);
 
-	for( iCounter = 0; iCounter < MAX_NUMBER_OF_MINES; iCounter++ )
+	UINT16 const color = Get16BPPColor(FROMRGB(100, 100, 100));
+	for (MINE_LOCATION_TYPE const* i = gMineLocation; i != endof(gMineLocation); ++i)
 	{
-		if( fZoomFlag )
+		INT16 x;
+		INT16 y;
+		INT16 w;
+		INT16 h;
+		if (fZoomFlag)
 		{
-			GetScreenXYFromMapXYStationary( ( INT16 )( gMineLocation[ iCounter ].sSectorX), ( INT16 )( gMineLocation[ iCounter ].sSectorY ) , &sScreenX, &sScreenY );
-			sScreenX -= MAP_GRID_X;
-			sScreenY -= MAP_GRID_Y;
-
-			sWidth = 2 * MAP_GRID_X;
-			sHeight= 2 * MAP_GRID_Y;
+			GetScreenXYFromMapXYStationary(i->sSectorX, i->sSectorY , &x, &y);
+			x -= MAP_GRID_X;
+			y -= MAP_GRID_Y;
+			w  = 2 * MAP_GRID_X;
+			h  = 2 * MAP_GRID_Y;
 		}
 		else
-		{
-			// get location on screen
-			GetScreenXYFromMapXY( ( INT16 )(  gMineLocation[ iCounter ].sSectorX ), ( INT16 )(  gMineLocation[ iCounter ].sSectorY ), &sScreenX, &sScreenY );
-			sWidth = MAP_GRID_X;
-			sHeight= MAP_GRID_Y;
-
+		{ // Get location on screen
+			GetScreenXYFromMapXY(i->sSectorX, i->sSectorY, &x, &y);
+			w = MAP_GRID_X;
+			h = MAP_GRID_Y;
 		}
 
-		// draw rectangle
-		RectangleDraw(TRUE, sScreenX, sScreenY - 1, sScreenX + sWidth, sScreenY + sHeight - 1, usColor, l.Buffer<UINT16>());
+		RectangleDraw(TRUE, x, y - 1, x + w, y + h - 1, color, l.Buffer<UINT16>());
 	}
 
-	// restore clips
-	RestoreClipRegionToFullScreenForRectangle( uiDestPitchBYTES );
+	RestoreClipRegionToFullScreenForRectangle(pitch);
 }
 
 
