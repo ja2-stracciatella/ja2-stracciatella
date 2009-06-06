@@ -127,53 +127,42 @@ BOOLEAN ValidDecalPlacement( UINT32 iMapIndex )
 	return FALSE;
 }
 
-LEVELNODE* GetVerticalWall( UINT32 iMapIndex )
+
+LEVELNODE* GetVerticalWall(UINT32 const map_idx)
 {
-	LEVELNODE *pStruct;
-	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
-	while( pStruct )
+	for (LEVELNODE* i = gpWorldLevelData[map_idx].pStructHead; i; i = i->pNext)
 	{
-		if ( pStruct->usIndex != NO_TILE )
+		if (i->usIndex == NO_TILE) continue;
+
+		UINT32 const tile_type = GetTileType(i->usIndex);
+		if (FIRSTWALL <= tile_type && tile_type <= LASTWALL ||
+				FIRSTDOOR <= tile_type && tile_type <= LASTDOOR)
 		{
-			const UINT32 uiTileType = GetTileType(pStruct->usIndex);
-			if ( uiTileType >= FIRSTWALL && uiTileType <= LASTWALL ||
-					 uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
-			{
-				UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
-				if( usWallOrientation == INSIDE_TOP_RIGHT || usWallOrientation == OUTSIDE_TOP_RIGHT )
-				{
-					return pStruct;
-				}
-			}
+			UINT16 const wall_orientation = GetWallOrientation(i->usIndex);
+			if (wall_orientation != INSIDE_TOP_RIGHT && wall_orientation != OUTSIDE_TOP_RIGHT) continue;
+			return pStruct;
 		}
-		pStruct = pStruct->pNext;
 	}
-	return NULL;
+	return 0;
 }
 
-LEVELNODE* GetHorizontalWall( UINT32 iMapIndex )
-{
-	LEVELNODE *pStruct;
 
-	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
-	while( pStruct )
+LEVELNODE* GetHorizontalWall(UINT32 const map_idx)
+{
+	for (LEVELNODE* i = gpWorldLevelData[ map_idx ].pStructHead; i; i = i->pNext)
 	{
-		if ( pStruct->usIndex != NO_TILE )
+		if (i->usIndex == NO_TILE) continue;
+
+		UINT32 const tile_type = GetTileType(i->usIndex);
+		if (FIRSTWALL <= tile_type && tile_type <= LASTWALL ||
+				FIRSTDOOR <= tile_type && tile_type <= LASTDOOR)
 		{
-			const UINT32 uiTileType = GetTileType(pStruct->usIndex);
-			if ( uiTileType >= FIRSTWALL && uiTileType <= LASTWALL ||
-					 uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
-			{
-				UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
-				if( usWallOrientation == INSIDE_TOP_LEFT || usWallOrientation == OUTSIDE_TOP_LEFT )
-				{
-					return pStruct;
-				}
-			}
+			UINT16 const wall_orientation = GetWallOrientation(i->usIndex);
+			if (wall_orientation != INSIDE_TOP_LEFT && wall_orientation != OUTSIDE_TOP_LEFT) continue;
+			return i;
 		}
-		pStruct = pStruct->pNext;
 	}
-	return NULL;
+	return 0;
 }
 
 
