@@ -334,68 +334,48 @@ static void SaveRottingCorpsesToTempCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bM
 
 void SaveCurrentSectorsInformationToTempItemFile()
 {
-	BOOLEAN fShouldBeInMeanwhile = FALSE;
-	if( gfWasInMeanwhile )
-	{ //Don't save a temp file for the meanwhile scene map.
+	if (gfWasInMeanwhile)
+	{ // Don't save a temp file for the meanwhile scene map.
 		gfWasInMeanwhile = FALSE;
 		return;
 	}
-	else if( AreInMeanwhile() )
+
+	bool should_be_in_meanwhile = false;
+	if (AreInMeanwhile())
 	{
-		gfInMeanwhile = FALSE;
-		fShouldBeInMeanwhile = TRUE;
+		gfInMeanwhile          = FALSE;
+		should_be_in_meanwhile = true;
 	}
 
-	//If we havent been to tactical yet
-	if (gWorldSectorX == 0 && gWorldSectorY == 0) return;
+	INT16 const x = gWorldSectorX;
+	INT16 const y = gWorldSectorY;
+	INT8  const z = gbWorldSectorZ;
 
-	//Save the Blood, smell and the revealed status for map elements
+	// If we haven't been to tactical yet
+	if (x == 0 && y == 0) return;
+
 	SaveBloodSmellAndRevealedStatesFromMapToTempFile();
 
 	// handle all reachable before save
-	HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+	HandleAllReachAbleItemsInTheSector(x, y, z);
 
+	SaveWorldItemsToTempItemFile(x, y, z, guiNumWorldItems, gWorldItems);
+	SaveRottingCorpsesToTempCorpseFile(x, y, z);
+	SaveDoorTableToDoorTableTempFile(x, y, z);
+	SaveRevealedStatusArrayToRevealedTempFile(x, y, z);
+	SaveDoorStatusArrayToDoorStatusTempFile(x, y, z);
+	NewWayOfSavingEnemyAndCivliansToTempFile(x, y, z, TRUE, FALSE);  // Save the enemies
+	NewWayOfSavingEnemyAndCivliansToTempFile(x, y, z, FALSE, FALSE); // Save the civilian info
+	SaveSmokeEffectsToMapTempFile(x, y, z);
+	SaveLightEffectsToMapTempFile(x, y, z);
 
-	//Save the Items to the the file
-	SaveWorldItemsToTempItemFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, guiNumWorldItems, gWorldItems);
+	// Save certain information from the NPC's soldier structure to the Merc structure
+	SaveNPCInformationToProfileStruct();
 
-	//Save the rotting corpse array to the temp rotting corpse file
-	SaveRottingCorpsesToTempCorpseFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-
-	//save the Doortable array to the temp door map file
-	SaveDoorTableToDoorTableTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-
-	//save the 'revealed'status of the tiles
-	SaveRevealedStatusArrayToRevealedTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-
-	//save the door open status to the saved game file
-	SaveDoorStatusArrayToDoorStatusTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-
-	//Save the enemies to the temp file
-	NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE, FALSE);
-
-	//Save the civilian info to the temp file
-	NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, FALSE, FALSE);
-
-	//Save the smoke effects info to the temp file
-	SaveSmokeEffectsToMapTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-
-	//Save the smoke effects info to the temp file
-	SaveLightEffectsToMapTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-
-	//Save any other info here
-
-	//Save certain information from the NPC's soldier structure to the Merc structure
-	SaveNPCInformationToProfileStruct( );
-
-	//Save the time the player was last in the sector
+	// Save the time the player was last in the sector
 	SetLastTimePlayerWasInSector();
 
-
-	if( fShouldBeInMeanwhile )
-	{
-		gfInMeanwhile = TRUE;
-	}
+	if (should_be_in_meanwhile) gfInMeanwhile = TRUE;
 }
 
 
