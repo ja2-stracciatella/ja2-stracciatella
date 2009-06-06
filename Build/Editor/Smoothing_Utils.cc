@@ -109,13 +109,9 @@ static bool RoofAtGridNo(UINT32 const map_idx)
 }
 
 
-BOOLEAN BuildingAtGridNo( UINT32 iMapIndex )
+bool BuildingAtGridNo(UINT32 const map_idx)
 {
-	if( RoofAtGridNo( iMapIndex ) )
-		return TRUE;
-	if( FloorAtGridNo( iMapIndex ) )
-		return TRUE;
-	return FALSE;
+	return RoofAtGridNo(map_idx) || FloorAtGridNo(map_idx);
 }
 
 

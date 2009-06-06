@@ -41,7 +41,7 @@ extern void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallTy
 void RestoreWalls( UINT32 iMapIndex );
 UINT16 SearchForRoofType( UINT32 iMapIndex );
 UINT16 SearchForWallType( UINT32 iMapIndex );
-BOOLEAN BuildingAtGridNo( UINT32 iMapIndex );
+bool       BuildingAtGridNo(UINT32 map_idx);
 LEVELNODE* GetHorizontalWall( UINT32 iMapIndex );
 LEVELNODE* GetVerticalWall( UINT32 iMapIndex );
 UINT16 GetHorizontalWallType( UINT32 iMapIndex );
