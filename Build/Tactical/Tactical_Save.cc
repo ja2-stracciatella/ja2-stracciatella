@@ -797,100 +797,75 @@ static void SaveRottingCorpsesToTempCorpseFile(INT16 const sMapX, INT16 const sM
 }
 
 
-static void LoadRottingCorpsesFromTempCorpseFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
+static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, INT8 const z)
 {
-	CHAR8		zMapName[ 128 ];
-	UINT32	uiNumberOfCorpses=0;
-	UINT32		cnt;
-  BOOLEAN                     fDontAddCorpse = FALSE;
-  INT8                        bTownId;
+	RemoveCorpses();
 
+	char map_name[128];
+	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, x, y, z);
 
-	//Delete the existing rotting corpse array
-	RemoveCorpses( );
+	// If the file doesn't exist, it's no problem.
+	if (!FileExists(map_name)) return;
 
-	GetMapTempFileName( SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
-
-	//If the file doesnt exists, its no problem.
-	if (!FileExists(zMapName)) return;
-
-	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
+	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_READ));
 
 	// Load the number of Rotting corpses
-	FileRead(hFile, &uiNumberOfCorpses, sizeof(UINT32));
+	UINT32 n_corpses;
+	FileRead(f, &n_corpses, sizeof(UINT32));
 
-  // Get town ID for use later....
-	bTownId = GetTownIdForSector( gWorldSectorX, gWorldSectorY );
-
-	for( cnt=0; cnt<uiNumberOfCorpses; cnt++ )
+	bool const maybe_dont_add =
+		!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) &&
+		z == 0 && GetTownIdForSector(x, y) != BLANK_SECTOR; // In town?
+	for (UINT32 n = n_corpses; n != 0; --n)
 	{
-    fDontAddCorpse = FALSE;
-
-		// Load the Rotting corpses info
 		ROTTING_CORPSE_DEFINITION def;
-		ExtractRottingCorpseFromFile(hFile, &def);
+		ExtractRottingCorpseFromFile(f, &def);
 
-		//Check the flags to see if we have to find a gridno to place the rotting corpses at
-		if( def.usFlags & ROTTING_CORPSE_FIND_SWEETSPOT_FROM_GRIDNO )
+		/* Check the flags to see if we have to find a gridno to place the rotting
+		 * corpses at */
+		if (def.usFlags & ROTTING_CORPSE_FIND_SWEETSPOT_FROM_GRIDNO)
 		{
-			def.sGridNo = FindNearestAvailableGridNoForCorpse( &def, 5 );
-			if( def.sGridNo == NOWHERE )
-				def.sGridNo = FindNearestAvailableGridNoForCorpse( &def, 15 );
-
-      // ATE: Here we still could have a bad location, but send in NOWHERE
-      // to corpse function anyway, 'cause it will iwth not drop it or use
-      // a map edgepoint....
+			def.sGridNo = FindNearestAvailableGridNoForCorpse(&def, 5);
+			if (def.sGridNo == NOWHERE)
+				def.sGridNo = FindNearestAvailableGridNoForCorpse(&def, 15);
+			/* ATE: Here we still could have a bad location, but send in NOWHERE to
+			 * corpse function anyway, 'cause it will iwth not drop it or use a map
+			 * edgepoint */
 		}
-		else if( def.usFlags & ROTTING_CORPSE_USE_NORTH_ENTRY_POINT )
+		else if (def.usFlags & ROTTING_CORPSE_USE_NORTH_ENTRY_POINT)
 		{
 			def.sGridNo = gMapInformation.sNorthGridNo;
 		}
-		else if( def.usFlags & ROTTING_CORPSE_USE_SOUTH_ENTRY_POINT )
+		else if (def.usFlags & ROTTING_CORPSE_USE_SOUTH_ENTRY_POINT)
 		{
 			def.sGridNo = gMapInformation.sSouthGridNo;
 		}
-		else if( def.usFlags & ROTTING_CORPSE_USE_EAST_ENTRY_POINT )
+		else if (def.usFlags & ROTTING_CORPSE_USE_EAST_ENTRY_POINT)
 		{
 			def.sGridNo = gMapInformation.sEastGridNo;
 		}
-		else if( def.usFlags & ROTTING_CORPSE_USE_WEST_ENTRY_POINT )
+		else if (def.usFlags & ROTTING_CORPSE_USE_WEST_ENTRY_POINT)
 		{
 			def.sGridNo = gMapInformation.sWestGridNo;
 		}
 
-    // If not from loading a save....
-	  if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
-    {
-      // ATE: Don't place corpses if
-      // a ) in a town and b) indoors
-      if ( gbWorldSectorZ == 0 )
-      {
-        if ( bTownId != BLANK_SECTOR )
-        {
-          // Are we indoors?
-          if( FloorAtGridNo( def.sGridNo ) )
-          {
-             // OK, finally, check TOC vs game time to see if at least some time has passed
-	           if ( ( GetWorldTotalMin( ) - def.uiTimeOfDeath ) >= 30 )
-             {
-                fDontAddCorpse = TRUE;
-             }
-          }
-        }
-      }
-    }
+		/* ATE: Don't place corpses if not loading a savegame, in town, indoors and
+		 * the corpse is too old */
+		if (maybe_dont_add &&
+				FloorAtGridNo(def.sGridNo) && // Are we indoors?
+				GetWorldTotalMin() - def.uiTimeOfDeath >= 30)
+		{
+			continue;
+		}
 
-    if ( !fDontAddCorpse )
-    {
-			if (AddRottingCorpse(&def) == NULL)
-		  {
-			  DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Failed to add a corpse to GridNo # %d", def.sGridNo ) );
-		  }
-    }
+		if (!AddRottingCorpse(&def))
+		{
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Failed to add a corpse to GridNo # %d", def.sGridNo));
+		}
 	}
 
-	//Check to see if we have to start decomposing the corpses
-	HandleRottingCorpses( );
+	// Check to see if we have to start decomposing the corpses
+	HandleRottingCorpses();
 }
 
 
