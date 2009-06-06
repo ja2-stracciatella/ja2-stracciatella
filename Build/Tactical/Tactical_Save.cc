@@ -379,129 +379,83 @@ void SaveCurrentSectorsInformationToTempItemFile()
 }
 
 
-void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
-{
-	// find out which items in the list are reachable
-	UINT8	ubDir, ubMovementCost;
-	BOOLEAN fReachable = FALSE;
-	INT16 sGridNo = NOWHERE, sGridNo2 = NOWHERE;
+void HandleAllReachAbleItemsInTheSector(INT16 const x, INT16 const y, INT8 const z)
+{ // Find out which items in the list are reachable
+	if (guiNumWorldItems == 0) return;
 
-	BOOLEAN	fSecondary = FALSE;
+	MAPCREATE_STRUCT const& m = gMapInformation;
+	GridNo grid_no = m.sCenterGridNo;
+	if (grid_no == -1) grid_no = m.sNorthGridNo;
+	if (grid_no == -1) grid_no = m.sEastGridNo;
+	if (grid_no == -1) grid_no = m.sSouthGridNo;
+	if (grid_no == -1) grid_no = m.sWestGridNo;
+	AssertMsg(grid_no != -1, String("Map %c%d_b%d does not have any entry points!", 'A' + y - 1, x, z));
+	if (grid_no == -1) return;
 
-	if ( guiNumWorldItems == 0 )
+	GridNo grid_no2 = NOWHERE;
+	if (gMapInformation.sIsolatedGridNo != -1)
 	{
-		return;
-	}
-
-	if ( gMapInformation.sCenterGridNo != -1 )
-	{
-		sGridNo = gMapInformation.sCenterGridNo;
-	}
-	else if ( gMapInformation.sNorthGridNo != -1 )
-	{
-		// use any!
-		sGridNo = gMapInformation.sNorthGridNo;
-	}
-	else if ( gMapInformation.sEastGridNo != -1 )
-	{
-		// use any!
-		sGridNo = gMapInformation.sEastGridNo;
-	}
-	else if ( gMapInformation.sSouthGridNo != -1 )
-	{
-		// use any!
-		sGridNo = gMapInformation.sSouthGridNo;
-	}
-	else if ( gMapInformation.sWestGridNo != -1 )
-	{
-		// use any!
-		sGridNo = gMapInformation.sWestGridNo;
-	}
-	else
-	{
-		AssertMsg( 0, String( "Map %c%d_b%d does not have any entry points!", 'A' + gWorldSectorY - 1, gWorldSectorX, gbWorldSectorZ ) );
-		return;
-	}
-
-	if ( gMapInformation.sIsolatedGridNo != -1 )
-	{
-		sGridNo2 = gMapInformation.sIsolatedGridNo;
-
+		GridNo const isolated = gMapInformation.sIsolatedGridNo;
 		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			if (s->bLife > 0 &&
-					s->sSectorX == sSectorX &&
-					s->sSectorY == sSectorY &&
-					s->bSectorZ == bSectorZ &&
-					FindBestPath(s, sGridNo2, s->bLevel, WALKING, NO_COPYROUTE, 0))
+			if (s->bLife <= 0) continue;
+			if (s->sSectorX != x) continue;
+			if (s->sSectorY != y) continue;
+			if (s->bSectorZ != z) continue;
+			if (!FindBestPath(s, isolated, s->bLevel, WALKING, NO_COPYROUTE, 0)) continue;
+			grid_no2 = isolated;
+			break;
+		}
+	}
+
+	GlobalItemsReachableTest(grid_no, grid_no2);
+
+	FOR_ALL_WORLD_ITEMS(wi)
+	{
+		bool reachable;
+		if (wi->o.bTrap > 0)
+		{ // If the item is trapped, then flag it as unreachable
+			reachable = false;
+		}
+		else if (ItemTypeExistsAtLocation(wi->sGridNo, OWNERSHIP, wi->ubLevel, 0))
+		{
+			reachable = false;
+		}
+		else if (wi->o.usItem == CHALICE)
+		{
+			reachable = false;
+		}
+		else if (gpWorldLevelData[wi->sGridNo].uiFlags & MAPELEMENT_REACHABLE)
+		{ // The gridno itself is reachable, so the item is reachable
+			reachable = true;
+		}
+		else if (wi->ubLevel > 0)
+		{ // Items on roofs are always reachable
+			reachable = true;
+		}
+		else
+		{ // Check the 4 grids around the item. If any is reachable, then the item is reachable
+			reachable = false;
+			for (UINT8 dir = 0; dir != NUM_WORLD_DIRECTIONS; dir += 2)
 			{
-				fSecondary = TRUE;
+				GridNo const new_loc = NewGridNo(wi->sGridNo, DirectionInc(dir));
+				if (new_loc == wi->sGridNo) continue;
+
+				// then it's a valid gridno, so test it
+				// requires non-wall movement cost from one location to the other!
+				if (!(gpWorldLevelData[new_loc].uiFlags & MAPELEMENT_REACHABLE)) continue;
+
+				UINT8 const movement_cost = gubWorldMovementCosts[wi->sGridNo][OppositeDirection(dir)][0];
+				// If we find a door movement cost, if the door is open the gridno should be accessible itself
+				if (movement_cost == TRAVELCOST_DOOR) continue;
+				if (movement_cost == TRAVELCOST_WALL) continue;
+
+				reachable = true;
 				break;
 			}
 		}
 
-		if ( !fSecondary )
-		{
-			sGridNo2 = NOWHERE;
-		}
-
-	}
-
-	GlobalItemsReachableTest( sGridNo, sGridNo2 );
-
-	FOR_ALL_WORLD_ITEMS(wi)
-	{
-		// reset reachablity
-		fReachable = FALSE;
-
-		// if the item is trapped then flag it as unreachable, period
-		if (wi->o.bTrap > 0 )
-		{
-			fReachable = FALSE;
-		}
-		else if (ItemTypeExistsAtLocation(wi->sGridNo, OWNERSHIP, wi->ubLevel, NULL))
-		{
-			fReachable = FALSE;
-		}
-		else if (wi->o.usItem == CHALICE)
-		{
-			fReachable = FALSE;
-		}
-		else if (gpWorldLevelData[wi->sGridNo].uiFlags & MAPELEMENT_REACHABLE)
-		{
-			// the gridno itself is reachable so the item is reachable
-			fReachable = TRUE;
-		}
-		else if (wi->ubLevel > 0)
-		{
-			// items on roofs are always reachable
-			fReachable = TRUE;
-		}
-		else
-		{
-			// check the 4 grids around the item, if any is reachable...then the item is reachable
-			for ( ubDir = 0; ubDir < NUM_WORLD_DIRECTIONS; ubDir += 2 )
-			{
-				const INT16 sNewLoc = NewGridNo(wi->sGridNo, DirectionInc(ubDir));
-				if (sNewLoc != wi->sGridNo)
-				{
-					// then it's a valid gridno, so test it
-					// requires non-wall movement cost from one location to the other!
-					if ( gpWorldLevelData[ sNewLoc ].uiFlags & MAPELEMENT_REACHABLE )
-					{
-						ubMovementCost = gubWorldMovementCosts[wi->sGridNo][OppositeDirection(ubDir)][0];
-						// if we find a door movement cost, if the door is open the gridno should be accessible itself
-						if ( ubMovementCost != TRAVELCOST_DOOR && ubMovementCost != TRAVELCOST_WALL )
-						{
-							fReachable = TRUE;
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		if( fReachable )
+		if (reachable)
 		{
 			wi->usFlags |= WORLD_ITEM_REACHABLE;
 		}

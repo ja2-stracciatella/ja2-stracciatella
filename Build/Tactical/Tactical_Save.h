@@ -88,7 +88,7 @@ void NewJA2EncryptedFileWrite(HWFILE, BYTE const* data, UINT32 uiBytesToWrite);
 //If hacker's mess with our save/temp files, this is our final line of defence.
 void InitExitGameDialogBecauseFileHackDetected(void);
 
-void HandleAllReachAbleItemsInTheSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
+void HandleAllReachAbleItemsInTheSector(INT16 x, INT16 y, INT8 z);
 
 void GetMapTempFileName(SectorFlags uiType, char* pMapName, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
