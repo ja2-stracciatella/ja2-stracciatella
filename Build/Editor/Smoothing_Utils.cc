@@ -115,8 +115,8 @@ bool BuildingAtGridNo(UINT32 const map_idx)
 }
 
 
-static LEVELNODE* GetHorizontalFence(UINT32 iMapIndex);
-static LEVELNODE* GetVerticalFence(UINT32 iMapIndex);
+static LEVELNODE* GetHorizontalFence(UINT32 map_idx);
+static LEVELNODE* GetVerticalFence(UINT32 map_idx);
 
 
 BOOLEAN ValidDecalPlacement( UINT32 iMapIndex )
@@ -190,54 +190,35 @@ UINT16 GetHorizontalWallType(UINT32 const iMapIndex)
 }
 
 
-static LEVELNODE* GetVerticalFence(UINT32 iMapIndex)
+static LEVELNODE* GetVerticalFence(UINT32 const map_idx)
 {
-	LEVELNODE *pStruct;
-
-	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
-	while( pStruct )
+	for (LEVELNODE* i = gpWorldLevelData[map_idx].pStructHead; i; i = i->pNext)
 	{
-		if ( pStruct->usIndex != NO_TILE )
-		{
-			const UINT32 uiTileType = GetTileType(pStruct->usIndex);
-			if ( uiTileType == FENCESTRUCT )
-			{
-				UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
-				if( usWallOrientation == INSIDE_TOP_RIGHT || usWallOrientation == OUTSIDE_TOP_RIGHT )
-				{
-					return pStruct;
-				}
-			}
-		}
-		pStruct = pStruct->pNext;
+		if (i->usIndex == NO_TILE)                  continue;
+		if (GetTileType(i->usIndex) != FENCESTRUCT) continue;
+
+		UINT16 const wall_orientation = GetWallOrientation(i->usIndex);
+		if (wall_orientation != INSIDE_TOP_RIGHT && wall_orientation != OUTSIDE_TOP_RIGHT) continue;
+		return i;
 	}
-	return NULL;
+	return 0;
 }
 
 
-static LEVELNODE* GetHorizontalFence(UINT32 iMapIndex)
+static LEVELNODE* GetHorizontalFence(UINT32 const map_idx)
 {
-	LEVELNODE *pStruct;
-
-	pStruct = gpWorldLevelData[ iMapIndex ].pStructHead;
-	while( pStruct )
+	for (LEVELNODE* i = gpWorldLevelData[map_idx].pStructHead; i; i = i->pNext)
 	{
-		if ( pStruct->usIndex != NO_TILE )
-		{
-			const UINT32 uiTileType = GetTileType(pStruct->usIndex);
-			if ( uiTileType == FENCESTRUCT )
-			{
-				UINT16 usWallOrientation = GetWallOrientation(pStruct->usIndex);
-				if( usWallOrientation == INSIDE_TOP_LEFT || usWallOrientation == OUTSIDE_TOP_LEFT )
-				{
-					return pStruct;
-				}
-			}
-		}
-		pStruct = pStruct->pNext;
+		if (i->usIndex == NO_TILE)                  continue;
+		if (GetTileType(i->usIndex) != FENCESTRUCT) continue;
+
+		UINT16 const wall_orientation = GetWallOrientation(i->usIndex);
+		if (wall_orientation != INSIDE_TOP_LEFT || wall_orientation != OUTSIDE_TOP_LEFT) continue;
+		return i;
 	}
-	return NULL;
+	return 0;
 }
+
 
 void EraseHorizontalWall( UINT32 iMapIndex )
 {
