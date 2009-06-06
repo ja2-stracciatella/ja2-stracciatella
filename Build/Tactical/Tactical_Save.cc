@@ -769,31 +769,24 @@ void InitTacticalSave(BOOLEAN const fCreateTempDir)
 }
 
 
-static void SaveRottingCorpsesToTempCorpseFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
+static void SaveRottingCorpsesToTempCorpseFile(INT16 const x, INT16 const y, INT8 const z)
 {
-	CHAR8		zMapName[ 128 ];
+	char map_name[128];
+	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, x, y, z);
+	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 
-	GetMapTempFileName( SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
+	// Save the number of the rotting corpses
+	UINT32 n_corpses = 0;
+	CFOR_ALL_ROTTING_CORPSES(c) ++n_corpses;
+	FileWrite(f, &n_corpses, sizeof(UINT32));
 
-	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-
-	//Determine how many rotting corpses there are
-	UINT32 uiNumberOfCorpses = 0;
-	CFOR_ALL_ROTTING_CORPSES(c) ++uiNumberOfCorpses;
-
-	//Save the number of the Rotting Corpses array table
-	FileWrite(hFile, &uiNumberOfCorpses, sizeof(UINT32));
-
-	//Loop through all the carcases in the array and save the active ones
+	// Loop through all the carcases in the array and save the active ones
 	CFOR_ALL_ROTTING_CORPSES(c)
 	{
-		//Save the RottingCorpse info array
-		InjectRottingCorpseIntoFile(hFile, &c->def);
+		InjectRottingCorpseIntoFile(f, &c->def);
 	}
 
-	// Set the flag indicating that there is a rotting corpse Temp File
-//	SectorInfo[ SECTOR( sMapX,sMapY) ].uiFlags |= SF_ROTTING_CORPSE_TEMP_FILE_EXISTS;
-	SetSectorFlag( sMapX, sMapY, bMapZ, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS );
+	SetSectorFlag(x, y, z, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS);
 }
 
 
