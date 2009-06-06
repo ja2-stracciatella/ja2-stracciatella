@@ -245,41 +245,32 @@ void EraseVerticalWall( UINT32 iMapIndex )
 }
 
 
-static void ChangeHorizontalWall(UINT32 iMapIndex, UINT16 usNewPiece)
+static void ChangeWall(LEVELNODE const* const wall, UINT32 const map_idx, UINT16 const new_piece)
 {
-	LEVELNODE *pWall;
-	INT16 sIndex;
-	pWall = GetHorizontalWall( iMapIndex );
-	if( pWall )
-	{
-		const UINT32 uiTileType = GetTileType(pWall->usIndex);
-		if( uiTileType >= FIRSTWALL && uiTileType <= LASTWALL )
-		{ //Okay, we have the wall, now change it's type.
-			sIndex = PickAWallPiece( usNewPiece );
-			AddToUndoList( iMapIndex );
-			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(uiTileType, sIndex);
-			ReplaceStructIndex( iMapIndex, pWall->usIndex, usTileIndex );
-		}
-	}
+	if (!wall) return;
+
+	UINT32 const tile_type = GetTileType(wall->usIndex);
+	if (tile_type < FIRSTWALL || LASTWALL < tile_type) return;
+
+	// We have the wall, now change its type
+	INT16 const idx = PickAWallPiece(new_piece);
+	AddToUndoList(map_idx);
+	UINT16 const tile_idx = GetTileIndexFromTypeSubIndex(tile_type, idx);
+	ReplaceStructIndex(map_idx, wall->usIndex, tile_idx);
 }
 
-void ChangeVerticalWall( UINT32 iMapIndex, UINT16 usNewPiece )
+
+static void ChangeHorizontalWall(UINT32 const map_idx, UINT16 const new_piece)
 {
-	LEVELNODE *pWall;
-	INT16 sIndex;
-	pWall = GetVerticalWall( iMapIndex );
-	if( pWall )
-	{
-		const UINT32 uiTileType = GetTileType(pWall->usIndex);
-		if( uiTileType >= FIRSTWALL && uiTileType <= LASTWALL )
-		{ //Okay, we have the wall, now change it's type.
-			sIndex = PickAWallPiece( usNewPiece );
-			AddToUndoList( iMapIndex );
-			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(uiTileType, sIndex);
-			ReplaceStructIndex( iMapIndex, pWall->usIndex, usTileIndex );
-		}
-	}
+	ChangeWall(GetHorizontalWall(map_idx), map_idx, new_piece);
 }
+
+
+void ChangeVerticalWall(UINT32 const map_idx, UINT16 const new_piece)
+{
+	ChangeWall(GetVerticalWall(map_idx), map_idx, new_piece);
+}
+
 
 void RestoreWalls( UINT32 iMapIndex )
 {
