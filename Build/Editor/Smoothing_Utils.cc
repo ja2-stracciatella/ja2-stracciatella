@@ -272,90 +272,69 @@ void ChangeVerticalWall(UINT32 const map_idx, UINT16 const new_piece)
 }
 
 
-void RestoreWalls( UINT32 iMapIndex )
+static UINT16 GetWallType(LEVELNODE const* const wall, UINT32 const map_idx)
 {
-	LEVELNODE *pWall = NULL;
-	UINT16 usWallType;
-	UINT8 ubSaveWallUIValue;
-	BOOLEAN fDone = FALSE;
+	UINT32 const tile_type = GetTileType(wall->usIndex);
+	return
+		FIRSTDOOR <= tile_type && tile_type <= LASTDOOR ? SearchForWallType(map_idx) :
+		(UINT16)tile_type;
+}
 
-	pWall = GetHorizontalWall( iMapIndex );
-	if( pWall )
+
+void RestoreWalls(UINT32 const map_idx)
+{
+	bool done = false;
+
+	if (LEVELNODE const* const wall = GetHorizontalWall(map_idx))
 	{
-		const UINT32 uiTileType = GetTileType(pWall->usIndex);
-		usWallType = (UINT16)uiTileType;
-		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
-			usWallType = SearchForWallType( iMapIndex );
-		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
-		AddToUndoList( iMapIndex );
-		RemoveStruct( iMapIndex, pWall->usIndex );
-		RemoveAllShadowsOfTypeRange( iMapIndex, FIRSTWALL, LASTWALL );
-		switch( usWallOrientation )
+		UINT16 const wall_type        = GetWallType(wall, map_idx);
+		UINT16 const wall_orientation = GetWallOrientation(wall->usIndex);
+		AddToUndoList(map_idx);
+		RemoveStruct(map_idx, wall->usIndex);
+		RemoveAllShadowsOfTypeRange(map_idx, FIRSTWALL, LASTWALL);
+		switch (wall_orientation)
 		{
-			case OUTSIDE_TOP_LEFT:
-				BuildWallPiece( iMapIndex, INTERIOR_BOTTOM, usWallType );
-				break;
-			case INSIDE_TOP_LEFT:
-				BuildWallPiece( iMapIndex, EXTERIOR_BOTTOM, usWallType );
-				break;
+			case OUTSIDE_TOP_LEFT: BuildWallPiece(map_idx, INTERIOR_BOTTOM, wall_type); break;
+			case INSIDE_TOP_LEFT:  BuildWallPiece(map_idx, EXTERIOR_BOTTOM, wall_type); break;
 		}
-		fDone = TRUE;
+		done = true;
 	}
-	pWall = GetVerticalWall( iMapIndex );
-	if( pWall )
+
+	if (LEVELNODE const* const wall = GetVerticalWall(map_idx))
 	{
-		const UINT32 uiTileType = GetTileType(pWall->usIndex);
-		usWallType = (UINT16)uiTileType;
-		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
-			usWallType = SearchForWallType( iMapIndex );
-		UINT16 usWallOrientation = GetWallOrientation(pWall->usIndex);
-		AddToUndoList( iMapIndex );
-		RemoveStruct( iMapIndex, pWall->usIndex );
-		RemoveAllShadowsOfTypeRange( iMapIndex, FIRSTWALL, LASTWALL );
-		switch( usWallOrientation )
+		UINT16 const wall_type        = GetWallType(wall, map_idx);
+		UINT16 const wall_orientation = GetWallOrientation(wall->usIndex);
+		AddToUndoList(map_idx);
+		RemoveStruct(map_idx, wall->usIndex);
+		RemoveAllShadowsOfTypeRange(map_idx, FIRSTWALL, LASTWALL);
+		switch (wall_orientation)
 		{
-			case OUTSIDE_TOP_RIGHT:
-				BuildWallPiece( iMapIndex, INTERIOR_RIGHT, usWallType );
-				break;
-			case INSIDE_TOP_RIGHT:
-				BuildWallPiece( iMapIndex, EXTERIOR_RIGHT, usWallType );
-				break;
+			case OUTSIDE_TOP_RIGHT: BuildWallPiece(map_idx, INTERIOR_RIGHT, wall_type); break;
+			case INSIDE_TOP_RIGHT:  BuildWallPiece(map_idx, EXTERIOR_RIGHT, wall_type); break;
 		}
-		fDone = TRUE;
+		done = true;
 	}
-	if( fDone )
-	{
-		return;
-	}
-	//we are in a special case here.  The user is attempting to restore a wall, though nothing
-	//is here.  We will hook into the smart wall method by tricking it into using the local wall
-	//type, but only if we have adjacent walls.
-	fDone = FALSE;
-	if( pWall = GetHorizontalWall( iMapIndex - 1 ) )
-	  fDone = TRUE;
-	if( !fDone && (pWall = GetHorizontalWall( iMapIndex + 1 )) )
-		fDone = TRUE;
-	if( !fDone && (pWall = GetVerticalWall( iMapIndex - WORLD_COLS )) )
-		fDone = TRUE;
-	if( !fDone && (pWall = GetVerticalWall( iMapIndex + WORLD_COLS )) )
-		fDone = TRUE;
-	if( !fDone )
-		return;
-	//found a wall.  Let's back up the current wall value, and restore it after pasting a smart wall.
-	if( pWall )
-	{
-		const UINT32 uiTileType = GetTileType(pWall->usIndex);
-		usWallType = (UINT16)uiTileType;
-		if( uiTileType >= FIRSTDOOR && uiTileType <= LASTDOOR )
-			usWallType = SearchForWallType( iMapIndex );
-		if( usWallType != 0xffff )
-		{
-			ubSaveWallUIValue = gubWallUIValue; //save the wall UI value.
-			gubWallUIValue = (UINT8)usWallType;	//trick the UI value
-			PasteSmartWall( iMapIndex );				//paste smart wall with fake UI value
-			gubWallUIValue = ubSaveWallUIValue;	//restore the real UI value.
-		}
-	}
+
+	if (done) return;
+
+	/* We are in a special case here. The user is attempting to restore a wall,
+	 * though nothing is here. We will hook into the smart wall method by tricking
+	 * it into using the local wall type, but only if we have adjacent walls. */
+	LEVELNODE* wall = GetHorizontalWall(map_idx - 1);
+	if (!wall) wall = GetHorizontalWall(map_idx + 1);
+	if (!wall) wall = GetVerticalWall(map_idx - WORLD_COLS);
+	if (!wall) wall = GetVerticalWall(map_idx + WORLD_COLS);
+	if (!wall) return;
+
+	/* Found a wall.  Let's back up the current wall value, and restore it after
+	 * pasting a smart wall. */
+	UINT16 const wall_type = GetWallType(wall, map_idx);
+	if (wall_type == 0xFFFF) return;
+
+	UINT8 const save_wall_ui_value = gubWallUIValue; // Save the wall UI value
+	gubWallUIValue = (UINT8)wall_type;               // Trick the UI value
+	PasteSmartWall(map_idx);                         // Paste smart wall with fake UI value
+	gubWallUIValue = save_wall_ui_value;             // Restore the real UI value
 }
 
 #endif

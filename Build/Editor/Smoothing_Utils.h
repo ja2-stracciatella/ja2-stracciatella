@@ -38,7 +38,7 @@ enum {
 extern void EraseWalls( UINT32 iMapIndex );
 extern void BuildWallPiece( UINT32 iMapIndex, UINT8 ubWallPiece, UINT16 usWallType );
 //in Smoothing Utils
-void RestoreWalls( UINT32 iMapIndex );
+void       RestoreWalls(UINT32 map_idx);
 UINT16 SearchForRoofType( UINT32 iMapIndex );
 UINT16 SearchForWallType( UINT32 iMapIndex );
 bool       BuildingAtGridNo(UINT32 map_idx);
