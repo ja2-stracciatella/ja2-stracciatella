@@ -1164,60 +1164,54 @@ void InitExitGameDialogBecauseFileHackDetected()
 }
 
 
-UINT32 MercChecksum(SOLDIERTYPE const* const pSoldier)
+UINT32 MercChecksum(SOLDIERTYPE const& s)
 {
-	UINT32	uiChecksum = 1;
-	UINT32	uiLoop;
+	UINT32 sum = 1;
 
-	uiChecksum += (pSoldier->bLife + 1);
-	uiChecksum *= (pSoldier->bLifeMax + 1);
-	uiChecksum += (pSoldier->bAgility + 1);
-	uiChecksum *= (pSoldier->bDexterity + 1);
-	uiChecksum += (pSoldier->bStrength + 1);
-	uiChecksum *= (pSoldier->bMarksmanship + 1);
-	uiChecksum += (pSoldier->bMedical + 1);
-	uiChecksum *= (pSoldier->bMechanical + 1);
-	uiChecksum += (pSoldier->bExplosive + 1);
+	sum += 1 + s.bLife;
+	sum *= 1 + s.bLifeMax;
+	sum += 1 + s.bAgility;
+	sum *= 1 + s.bDexterity;
+	sum += 1 + s.bStrength;
+	sum *= 1 + s.bMarksmanship;
+	sum += 1 + s.bMedical;
+	sum *= 1 + s.bMechanical;
+	sum += 1 + s.bExplosive;
+	sum *= 1 + s.bExpLevel;
+	sum += 1 + s.ubProfile;
 
-	// put in some multipliers too!
-	uiChecksum *= (pSoldier->bExpLevel + 1);
-	uiChecksum += (pSoldier->ubProfile + 1);
-
-	for ( uiLoop = 0; uiLoop < NUM_INV_SLOTS; uiLoop++ )
+	for (OBJECTTYPE const* i = s.inv; i != endof(s.inv); ++i)
 	{
-		uiChecksum += pSoldier->inv[ uiLoop ].usItem;
-		uiChecksum += pSoldier->inv[ uiLoop ].ubNumberOfObjects;
+		sum += i->usItem;
+		sum += i->ubNumberOfObjects;
 	}
 
-	return( uiChecksum );
+	return sum;
 }
 
 
 UINT32 ProfileChecksum(MERCPROFILESTRUCT const& p)
 {
-	UINT32	uiChecksum = 1;
-	UINT32	uiLoop;
+	UINT32 sum = 1;
 
-	uiChecksum += (p.bLife + 1);
-	uiChecksum *= (p.bLifeMax + 1);
-	uiChecksum += (p.bAgility + 1);
-	uiChecksum *= (p.bDexterity + 1);
-	uiChecksum += (p.bStrength + 1);
-	uiChecksum *= (p.bMarksmanship + 1);
-	uiChecksum += (p.bMedical + 1);
-	uiChecksum *= (p.bMechanical + 1);
-	uiChecksum += (p.bExplosive + 1);
+	sum += 1 + p.bLife;
+	sum *= 1 + p.bLifeMax;
+	sum += 1 + p.bAgility;
+	sum *= 1 + p.bDexterity;
+	sum += 1 + p.bStrength;
+	sum *= 1 + p.bMarksmanship;
+	sum += 1 + p.bMedical;
+	sum *= 1 + p.bMechanical;
+	sum += 1 + p.bExplosive;
+	sum *= 1 + p.bExpLevel;
 
-	// put in some multipliers too!
-	uiChecksum *= (p.bExpLevel + 1);
-
-	for ( uiLoop = 0; uiLoop < NUM_INV_SLOTS; uiLoop++ )
+	for (UINT32 i = 0; i != NUM_INV_SLOTS; ++i)
 	{
-		uiChecksum += p.inv[ uiLoop ];
-		uiChecksum += p.bInvNumber[ uiLoop ];
+		sum += p.inv[i];
+		sum += p.bInvNumber[i];
 	}
 
-	return( uiChecksum );
+	return sum;
 }
 
 

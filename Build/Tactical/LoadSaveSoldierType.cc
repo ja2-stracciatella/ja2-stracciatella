@@ -505,7 +505,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s)
 	Assert(d == data + 2352);
 #endif
 
-	if (checksum != MercChecksum(s))
+	if (checksum != MercChecksum(*s))
 	{
 		throw std::runtime_error("soldier checksum mismatch");
 	}
@@ -956,7 +956,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_BOOL(d, s->fMuzzleFlash)
 	INJ_SOLDIER(d, s->CTGTTarget)
 	INJ_I32(d, s->PanelAnimateCounter)
-	UINT32 const checksum = MercChecksum(s);
+	UINT32 const checksum = MercChecksum(*s);
 	INJ_U32(d, checksum)
 	INJ_I8(d, s->bCurrentCivQuote)
 	INJ_I8(d, s->bCurrentCivQuoteDelta)

@@ -75,7 +75,7 @@ void LoadTempNpcQuoteArrayToSaveGameFile(HWFILE);
 //Loads the NPC temp Quote file from the saved game file
 void SaveTempNpcQuoteArrayToSaveGameFile(HWFILE);
 
-UINT32 MercChecksum(SOLDIERTYPE const*);
+UINT32 MercChecksum(SOLDIERTYPE const&);
 UINT32 ProfileChecksum(MERCPROFILESTRUCT const&);
 
 void JA2EncryptedFileRead( HWFILE, BYTE*       data, UINT32 uiBytesToRead);
