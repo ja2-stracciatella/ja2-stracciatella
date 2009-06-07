@@ -1221,7 +1221,7 @@ UINT32 ProfileChecksum(MERCPROFILESTRUCT const& p)
 }
 
 
-static const UINT8* GetRotationArray(void);
+static UINT8 const* GetRotationArray();
 
 
 void NewJA2EncryptedFileRead(HWFILE const f, BYTE* const pDest, UINT32 const uiBytesToRead)
@@ -1425,7 +1425,7 @@ static UINT32 UpdateLoadedSectorsItemInventory(INT16 sMapX, INT16 sMapY, INT8 bM
 }
 
 
-static const UINT8 gubEncryptionArray1[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE] =
+static UINT8 const gubEncryptionArray1[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE] =
 {
 	{
 		11,129,18,136,163,80,128,
@@ -1999,7 +1999,7 @@ static const UINT8 gubEncryptionArray1[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_R
 };
 
 
-static const UINT8 gubEncryptionArray2[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE] =
+static UINT8 const gubEncryptionArray2[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE] =
 {
 	{
 		81,168,102,49,61,70,172,
@@ -2573,7 +2573,7 @@ static const UINT8 gubEncryptionArray2[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_R
 };
 
 
-static const UINT8 gubEncryptionArray3[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE] =
+static UINT8 const gubEncryptionArray3[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE] =
 {
 	{
 		250,224,3,197,156,209,110,
@@ -3147,7 +3147,7 @@ static const UINT8 gubEncryptionArray3[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_R
 };
 
 
-static const UINT8 gubEncryptionArray4[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE] =
+static UINT8 const gubEncryptionArray4[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE] =
 {
 	{
 		177,131,58,218,175,130,210,
@@ -3721,29 +3721,13 @@ static const UINT8 gubEncryptionArray4[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_R
 };
 
 
-static const UINT8* GetRotationArray(void)
+static UINT8 const* GetRotationArray()
 {
-	// based on guiJA2EncryptionSet
-	if ( guiJA2EncryptionSet < BASE_NUMBER_OF_ROTATION_ARRAYS * 6 )
-	{
-		if ( guiJA2EncryptionSet < BASE_NUMBER_OF_ROTATION_ARRAYS * 3 )
-		{
-			return( gubEncryptionArray1[ guiJA2EncryptionSet % (BASE_NUMBER_OF_ROTATION_ARRAYS * 3) ]);
-		}
-		else
-		{
-			return( gubEncryptionArray2[ guiJA2EncryptionSet % (BASE_NUMBER_OF_ROTATION_ARRAYS * 3) ]);
-		}
-	}
-	else
-	{
-		if ( guiJA2EncryptionSet < BASE_NUMBER_OF_ROTATION_ARRAYS * 9 )
-		{
-			return( gubEncryptionArray3[ guiJA2EncryptionSet % (BASE_NUMBER_OF_ROTATION_ARRAYS * 3) ]);
-		}
-		else
-		{
-			return( gubEncryptionArray4[ guiJA2EncryptionSet % (BASE_NUMBER_OF_ROTATION_ARRAYS * 3) ]);
-		}
-	}
+	UINT32 const set = guiJA2EncryptionSet;
+	UINT8  const (&a)[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE] =
+		set < BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ? gubEncryptionArray1 :
+		set < BASE_NUMBER_OF_ROTATION_ARRAYS * 6 ? gubEncryptionArray2 :
+		set < BASE_NUMBER_OF_ROTATION_ARRAYS * 9 ? gubEncryptionArray3 :
+		gubEncryptionArray4;
+	return a[set % lengthof(a)];
 }
