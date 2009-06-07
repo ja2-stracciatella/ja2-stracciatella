@@ -1312,29 +1312,20 @@ static void AddEnemiesToBattle(GROUP* pGroup, UINT8 ubStrategicInsertionCode, UI
 }
 
 
-void SaveUnderGroundSectorInfoToSaveGame(HWFILE const hFile)
+void SaveUnderGroundSectorInfoToSaveGame(HWFILE const f)
 {
-	UINT32	uiNumOfRecords=0;
-	UNDERGROUND_SECTORINFO *TempNode = gpUndergroundSectorInfoHead;
-
-	//Loop through all the nodes to count how many there are
-	while( TempNode )
+	// Save the number of nodes
+	UINT32 n_records = 0;
+	for (UNDERGROUND_SECTORINFO const* i = gpUndergroundSectorInfoHead; i; i = i->next)
 	{
-		uiNumOfRecords++;
-		TempNode = TempNode->next;
+		++n_records;
 	}
+	FileWrite(f, &n_records, sizeof(UINT32));
 
-
-	//Write how many nodes there are
-	FileWrite(hFile, &uiNumOfRecords, sizeof(UINT32));
-
-	TempNode = gpUndergroundSectorInfoHead;
-
-	//Go through each node and save it.
-	while( TempNode )
+	// Save the nodes
+	for (UNDERGROUND_SECTORINFO const* i = gpUndergroundSectorInfoHead; i; i = i->next)
 	{
-		InjectUndergroundSectorInfoIntoFile(hFile, TempNode);
-		TempNode = TempNode->next;
+		InjectUndergroundSectorInfoIntoFile(f, i);
 	}
 }
 
