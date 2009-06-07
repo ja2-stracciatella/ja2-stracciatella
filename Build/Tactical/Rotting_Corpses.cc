@@ -1339,27 +1339,20 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 }
 
 
-void ReduceAmmoDroppedByNonPlayerSoldiers(SOLDIERTYPE* pSoldier, INT32 iInvSlot)
+void ReduceAmmoDroppedByNonPlayerSoldiers(SOLDIERTYPE* const s, INT32 const slot)
 {
-	OBJECTTYPE *pObj;
+	Assert(s);
+	Assert(0 <= slot && slot < NUM_INV_SLOTS);
 
-	Assert( pSoldier );
-	Assert( ( iInvSlot >= 0 ) && ( iInvSlot < NUM_INV_SLOTS ) );
+	if (s->bTeam == gbPlayerNum) return;
 
-	pObj = &( pSoldier->inv[ iInvSlot ] );
+	OBJECTTYPE& o = s->inv[slot];
+	if (Item[o.usItem].usItemClass != IC_AMMO) return;
 
-	// if not a player soldier
-	if ( pSoldier->bTeam != gbPlayerNum )
-	{
-		// if it's ammo
-		if ( Item[ pObj->usItem ].usItemClass == IC_AMMO )
-		{
-			//don't drop all the clips, just a random # of them between 1 and how many there are
-			pObj->ubNumberOfObjects = ( UINT8 ) ( 1 + Random( pObj->ubNumberOfObjects ) );
-			// recalculate the weight
-			pObj->ubWeight = CalculateObjectWeight( pObj );
-		}
-	}
+	/* Don't drop all the clips, just a random # of them between 1 and how
+	 * many there are */
+	o.ubNumberOfObjects = 1 + Random(o.ubNumberOfObjects);
+	o.ubWeight          = CalculateObjectWeight(&o);
 }
 
 
