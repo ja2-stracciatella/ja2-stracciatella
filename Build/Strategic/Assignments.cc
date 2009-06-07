@@ -6753,7 +6753,7 @@ BOOLEAN AnyMercInGroupCantContinueMoving(GROUP const* const g)
 		 * moving! */
 		group_must_stop = TRUE;
 
-		HandleImportantMercQuote(s, QUOTE_NEED_SLEEP);
+		HandleImportantMercQuote(s, quote);
 		quote = QUOTE_ME_TOO;
 
 		PutMercInAsleepState(s);
