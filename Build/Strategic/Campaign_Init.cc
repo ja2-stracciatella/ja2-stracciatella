@@ -17,24 +17,18 @@
 UNDERGROUND_SECTORINFO* gpUndergroundSectorInfoTail = NULL;
 
 
-static UNDERGROUND_SECTORINFO* NewUndergroundNode(UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ)
+static UNDERGROUND_SECTORINFO* NewUndergroundNode(UINT8 const x, UINT8 const y, UINT8 const z)
 {
-	UNDERGROUND_SECTORINFO* const curr = MALLOCZ(UNDERGROUND_SECTORINFO);
-	curr->ubSectorX = ubSectorX;
-	curr->ubSectorY = ubSectorY;
-	curr->ubSectorZ = ubSectorZ;
+	UNDERGROUND_SECTORINFO* const u = MALLOCZ(UNDERGROUND_SECTORINFO);
+	u->ubSectorX = x;
+	u->ubSectorY = y;
+	u->ubSectorZ = z;
 
-	if( gpUndergroundSectorInfoTail )
-	{
-		gpUndergroundSectorInfoTail->next = curr;
-		gpUndergroundSectorInfoTail = gpUndergroundSectorInfoTail->next;
-	}
-	else
-	{
-		gpUndergroundSectorInfoHead = curr;
-		gpUndergroundSectorInfoTail = gpUndergroundSectorInfoHead;
-	}
-	return curr;
+	UNDERGROUND_SECTORINFO*& tail = gpUndergroundSectorInfoTail;
+	*(tail ? &tail->next : &gpUndergroundSectorInfoHead) = u;
+	tail = u;
+
+	return u;
 }
 
 
