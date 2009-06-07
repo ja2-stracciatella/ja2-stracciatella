@@ -602,9 +602,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
 {
 	ROTTING_CORPSE_DEFINITION		Corpse;
 	UINT8												ubType;
-	INT32												cnt;
 	UINT16											usItemFlags = 0; //WORLD_ITEM_DONTRENDER;
-	OBJECTTYPE									*pObj;
   UINT8                       ubNumGoo;
   INT16                       sNewGridNo;
   OBJECTTYPE                  ItemObject;
@@ -704,7 +702,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
 
     sNewGridNo = pSoldier->sGridNo + ( WORLD_COLS * 2 );
 
-    for ( cnt = 0; cnt < ubNumGoo; cnt++ )
+    for (INT32 cnt = 0; cnt < ubNumGoo; ++cnt)
     {
 			CreateItem( JAR_QUEEN_CREATURE_BLOOD, 100, &ItemObject );
 
@@ -714,10 +712,8 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
   else
   {
 	  // OK, Place what objects this guy was carrying on the ground!
-	  for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+	  FOR_ALL_SOLDIER_INV_SLOTS(pObj, *pSoldier)
 	  {
-		  pObj = &( pSoldier->inv[ cnt ] );
-
 		  if ( pObj->usItem != NOTHING )
 		  {
 			  // Check if it's supposed to be dropped
@@ -726,7 +722,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
 				  // and make sure that it really is a droppable item type
 				  if ( !(Item[ pObj->usItem ].fFlags & ITEM_DEFAULT_UNDROPPABLE) )
 				  {
-					  ReduceAmmoDroppedByNonPlayerSoldiers( pSoldier, cnt );
+					  ReduceAmmoDroppedByNonPlayerSoldiers(*pSoldier, *pObj);
 					  AddItemToPool( pSoldier->sGridNo, pObj, bVisible , pSoldier->bLevel, usItemFlags, -1 );
 				  }
 			  }
@@ -1339,14 +1335,9 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 }
 
 
-void ReduceAmmoDroppedByNonPlayerSoldiers(SOLDIERTYPE* const s, INT32 const slot)
+void ReduceAmmoDroppedByNonPlayerSoldiers(SOLDIERTYPE const& s, OBJECTTYPE& o)
 {
-	Assert(s);
-	Assert(0 <= slot && slot < NUM_INV_SLOTS);
-
-	if (s->bTeam == gbPlayerNum) return;
-
-	OBJECTTYPE& o = s->inv[slot];
+	if (s.bTeam == gbPlayerNum) return;
 	if (Item[o.usItem].usItemClass != IC_AMMO) return;
 
 	/* Don't drop all the clips, just a random # of them between 1 and how

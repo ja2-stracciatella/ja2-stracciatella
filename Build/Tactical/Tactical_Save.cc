@@ -1078,15 +1078,15 @@ void AddDeadSoldierToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, UINT8 
 	if( uiNumberOfItems )
 	{
 		//loop through all the soldiers items and add them to the world item array
-		for (UINT i = 0; i != NUM_INV_SLOTS; ++i)
+		FOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
 		{
-			if( pSoldier->inv[ i ].usItem != 0 )
+			if (i->usItem != NOTHING)
 			{
 				//if the item can be dropped
-				if( !(pSoldier->inv[ i ].fFlags & OBJECT_UNDROPPABLE) || pSoldier->bTeam == gbPlayerNum )
+				if (!(i->fFlags & OBJECT_UNDROPPABLE) || pSoldier->bTeam == gbPlayerNum)
 				{
-					ReduceAmmoDroppedByNonPlayerSoldiers( pSoldier, i );
-					AddItemsToUnLoadedSector(sMapX, sMapY, bMapZ, sGridNo, 1, &pSoldier->inv[i], pSoldier->bLevel, uiFlagsForWorldItems, 0, VISIBLE);
+					ReduceAmmoDroppedByNonPlayerSoldiers(*pSoldier, *i);
+					AddItemsToUnLoadedSector(sMapX, sMapY, bMapZ, sGridNo, 1, i, pSoldier->bLevel, uiFlagsForWorldItems, 0, VISIBLE);
 				}
 			}
 		}
