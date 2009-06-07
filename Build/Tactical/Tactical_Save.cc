@@ -1009,130 +1009,86 @@ BOOLEAN GetSectorFlagStatus(INT16 const x, INT16 const y, UINT8 const z, SectorF
 }
 
 
-void AddDeadSoldierToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, UINT8 const bMapZ, SOLDIERTYPE* const pSoldier, INT16  const sGridNo, UINT32 const uiFlags)
+void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z, SOLDIERTYPE* const s, INT16 const grid_no, UINT32 const flags)
 {
-	UINT32			uiNumberOfItems;
-	UINT16			uiFlagsForWorldItems=0;
-	UINT16			usFlagsForRottingCorpse=0;
-	ROTTING_CORPSE_DEFINITION		Corpse;
-	UINT32			uiDeathAnim;
-	UINT32			uiPossibleDeathAnims[] = {	GENERIC_HIT_DEATH,
-																					FALLBACK_HIT_DEATH,
-																					PRONE_HIT_DEATH,
-																					FLYBACK_HIT_DEATH };
-
-	//setup the flags for the items and the rotting corpses
-	if( uiFlags & ADD_DEAD_SOLDIER_USE_GRIDNO )
+	// Setup the flags for the items and the rotting corpses
+	UINT16 flags_for_world_items    = 0;
+	UINT16 flags_for_rotting_corpse = 0;
+	if (flags & ADD_DEAD_SOLDIER_USE_GRIDNO)
 	{
-		uiFlagsForWorldItems		= 0;
-		usFlagsForRottingCorpse	= 0;
+		flags_for_world_items    = 0;
+		flags_for_rotting_corpse = 0;
 	}
-
-	else if( uiFlags & ADD_DEAD_SOLDIER_TO_SWEETSPOT )
+	else if (flags & ADD_DEAD_SOLDIER_TO_SWEETSPOT)
 	{
-		uiFlagsForWorldItems		|= WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE;
-		usFlagsForRottingCorpse	|= ROTTING_CORPSE_FIND_SWEETSPOT_FROM_GRIDNO;
+		flags_for_world_items    = WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE;
+		flags_for_rotting_corpse = ROTTING_CORPSE_FIND_SWEETSPOT_FROM_GRIDNO;
 	}
 	else
-		AssertMsg( 0, "ERROR!!	Flag not is Switch statement");
+	{
+		AssertMsg(0, "ERROR!!	Flag not is Switch statement");
+	}
 
-
-
-	//
 	//Create an array of objects from the mercs inventory
-	//
 
-	//go through and and find out how many items there are
-	uiNumberOfItems = 0;
-	FOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
+	// Loop through all the soldier's items and add them to the world item array
+	if (!AM_A_ROBOT(s)) // If a robot, don't drop anything
 	{
-		if (i->usItem != NOTHING)
+		FOR_ALL_SOLDIER_INV_SLOTS(i, *s)
 		{
-			// if not a player soldier
-			if ( pSoldier->bTeam != gbPlayerNum )
+			OBJECTTYPE& o = *i;
+			if (o.usItem == NOTHING) continue;
+
+			if (s->bTeam != gbPlayerNum)
 			{
-				// this percent of the time, they don't drop stuff they would've dropped in tactical...
-				if ( Random( 100 ) < 75 )
+				/* This percent of the time, they don't drop stuff they would've dropped
+				 * in tactical */
+				if (Random(100) < 75)
 				{
-					// mark it undroppable...
-					i->fFlags |= OBJECT_UNDROPPABLE;
+					o.fFlags |= OBJECT_UNDROPPABLE;
+					continue;
 				}
+
+				if (o.fFlags & OBJECT_UNDROPPABLE) continue;
 			}
 
-			//if the item can be dropped
-			if (!(i->fFlags & OBJECT_UNDROPPABLE) || pSoldier->bTeam == gbPlayerNum)
-			{
-
-        uiNumberOfItems++;
-			}
+			ReduceAmmoDroppedByNonPlayerSoldiers(*s, o);
+			AddItemsToUnLoadedSector(x, y, z, grid_no, 1, &o, s->bLevel, flags_for_world_items, 0, VISIBLE);
 		}
 	}
 
-  // If a robot, don't drop anything...
-  if ( AM_A_ROBOT( pSoldier ) )
-  {
-    uiNumberOfItems = 0;
-  }
+	DropKeysInKeyRing(s, grid_no, s->bLevel, VISIBLE, FALSE, 0, TRUE);
 
-	//if there are items to add
-	if( uiNumberOfItems )
+	// Convert the soldier into a rotting corpse
+	ROTTING_CORPSE_DEFINITION c;
+	memset(&c, 0, sizeof(c));
+	c.ubBodyType        = s->ubBodyType;
+	c.sGridNo           = grid_no;
+	c.sHeightAdjustment = s->sHeightAdjustment;
+	c.bVisible          = TRUE;
+	SET_PALETTEREP_ID(c.HeadPal,  s->HeadPal);
+	SET_PALETTEREP_ID(c.VestPal,  s->VestPal);
+	SET_PALETTEREP_ID(c.SkinPal,  s->SkinPal);
+	SET_PALETTEREP_ID(c.PantsPal, s->PantsPal);
+	c.bDirection        = s->bDirection;
+	c.uiTimeOfDeath     = GetWorldTotalMin();
+	c.usFlags           = flags_for_rotting_corpse;
+
+	static UINT32 const possible_death_anims[] =
 	{
-		//loop through all the soldiers items and add them to the world item array
-		FOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
-		{
-			if (i->usItem != NOTHING)
-			{
-				//if the item can be dropped
-				if (!(i->fFlags & OBJECT_UNDROPPABLE) || pSoldier->bTeam == gbPlayerNum)
-				{
-					ReduceAmmoDroppedByNonPlayerSoldiers(*pSoldier, *i);
-					AddItemsToUnLoadedSector(sMapX, sMapY, bMapZ, sGridNo, 1, i, pSoldier->bLevel, uiFlagsForWorldItems, 0, VISIBLE);
-				}
-			}
-		}
-	}
+		GENERIC_HIT_DEATH,
+		FALLBACK_HIT_DEATH,
+		PRONE_HIT_DEATH,
+		FLYBACK_HIT_DEATH
+	};
+	/* If the dead body shot be the result of a JFK headshot, set it, else choose
+	 * a random death sequence */
+	UINT32 const death_anim =
+		flags & ADD_DEAD_SOLDIER__USE_JFK_HEADSHOT_CORPSE ? JFK_HITDEATH :
+		possible_death_anims[Random(lengthof(possible_death_anims))];
+	c.ubType = gubAnimSurfaceCorpseID[s->ubBodyType][death_anim];
 
-	DropKeysInKeyRing(pSoldier, sGridNo, pSoldier->bLevel, VISIBLE, FALSE, 0, TRUE);
-
-	//
-	//Convert the soldier into a rottng corpse
-	//
-
-	memset( &Corpse, 0, sizeof( ROTTING_CORPSE_DEFINITION ) );
-
-	// Setup some values!
-	Corpse.ubBodyType							= pSoldier->ubBodyType;
-	Corpse.sGridNo								= sGridNo;
-
-	Corpse.sHeightAdjustment			= pSoldier->sHeightAdjustment;
-	Corpse.bVisible								=	TRUE;
-
-	SET_PALETTEREP_ID ( Corpse.HeadPal,		pSoldier->HeadPal );
-	SET_PALETTEREP_ID ( Corpse.VestPal,		pSoldier->VestPal );
-	SET_PALETTEREP_ID ( Corpse.SkinPal,		pSoldier->SkinPal );
-	SET_PALETTEREP_ID ( Corpse.PantsPal,   pSoldier->PantsPal );
-
-	Corpse.bDirection	= pSoldier->bDirection;
-
-	// Set time of death
-	Corpse.uiTimeOfDeath = GetWorldTotalMin( );
-
-	//if the dead body shot be the result of a Jfk headshot, set it
-	if( uiFlags & ADD_DEAD_SOLDIER__USE_JFK_HEADSHOT_CORPSE )
-		uiDeathAnim = JFK_HITDEATH;
-
-	//else chose a random death sequence
-	else
-		uiDeathAnim = uiPossibleDeathAnims[ Random( 4 ) ];
-
-
-	// Set type
-	Corpse.ubType	= (UINT8)gubAnimSurfaceCorpseID[ pSoldier->ubBodyType][ uiDeathAnim ];
-
-	Corpse.usFlags |= usFlagsForRottingCorpse;
-
-	//Add the rotting corpse info to the sectors unloaded rotting corpse file
-	AddRottingCorpseToUnloadedSectorsRottingCorpseFile( sMapX, sMapY, bMapZ, &Corpse);
+	AddRottingCorpseToUnloadedSectorsRottingCorpseFile(x, y, z, &c);
 }
 
 
