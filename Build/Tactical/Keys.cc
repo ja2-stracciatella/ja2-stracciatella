@@ -196,13 +196,11 @@ BOOLEAN KeyExistsInKeyRing(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID, UINT8* pu
 
 static BOOLEAN KeyExistsInInventory(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID)
 {
-	UINT8				ubLoop;
-
-	for (ubLoop = 0; ubLoop < NUM_INV_SLOTS; ubLoop++)
+	CFOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
 	{
-		if (Item[pSoldier->inv[ubLoop].usItem].usItemClass == IC_KEY)
+		if (Item[i->usItem].usItemClass == IC_KEY)
 		{
-			if ( (pSoldier->inv[ubLoop].ubKeyID == ubKeyID) || (ubKeyID == ANYKEY) )
+			if (i->ubKeyID == ubKeyID || ubKeyID == ANYKEY)
 			{
 				// there's the key we want!
 				return( TRUE );

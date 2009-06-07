@@ -20,9 +20,9 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s)
 	EXTR_I8(d, s->bInitialActionPoints)
 	EXTR_SKIP(d, 3)
 	EXTR_U32(d, s->uiStatusFlags)
-	for (size_t i = 0; i < lengthof(s->inv); i++)
+	FOR_ALL_SOLDIER_INV_SLOTS(i, *s)
 	{
-		d = ExtractObject(d, &s->inv[i]);
+		d = ExtractObject(d, i);
 	}
 	EXTR_PTR(d, s->pTempObject)
 	EXTR_PTR(d, s->pKeyRing)
@@ -522,9 +522,9 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I8(d, s->bInitialActionPoints)
 	INJ_SKIP(d, 3)
 	INJ_U32(d, s->uiStatusFlags)
-	for (size_t i = 0; i < lengthof(s->inv); i++)
+	CFOR_ALL_SOLDIER_INV_SLOTS(i, *s)
 	{
-		d = InjectObject(d, &s->inv[i]);
+		d = InjectObject(d, i);
 	}
 	INJ_PTR(d, s->pTempObject)
 	INJ_PTR(d, s->pKeyRing)

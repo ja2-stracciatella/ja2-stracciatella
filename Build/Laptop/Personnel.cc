@@ -1304,12 +1304,11 @@ static INT32 GetNumberOfInventoryItemsOnCurrentMerc(void)
 	// in current team mode?..nope...move on
 	if (!fCurrentTeamMode) return 0;
 
-	const OBJECTTYPE* const Inv = GetSoldierOfCurrentSlot()->inv;
-
-	UINT32 ubCount = 0;
-	for (UINT32 ubCounter = 0; ubCounter < NUM_INV_SLOTS; ubCounter++)
+	UINT32             ubCount = 0;
+	SOLDIERTYPE const& s       = *GetSoldierOfCurrentSlot();
+	CFOR_ALL_SOLDIER_INV_SLOTS(i, s)
 	{
-		OBJECTTYPE const& o = Inv[ubCounter];
+		OBJECTTYPE const& o = *i;
 		if (o.ubNumberOfObjects != 0 && o.usItem != NOTHING) ubCount++;
 	}
 
@@ -2358,15 +2357,14 @@ static void EmployementInfoButtonCallback(GUI_BUTTON *btn, INT32 reason)
 static INT32 GetFundsOnMerc(const SOLDIERTYPE* pSoldier)
 {
 	INT32 iCurrentAmount = 0;
-	INT32 iCurrentPocket = 0;
 	// run through mercs pockets, if any money in them, add to total
 
 	// run through grunts pockets and count all the spare change
-	for (iCurrentPocket = 0; iCurrentPocket < NUM_INV_SLOTS; iCurrentPocket++)
+	CFOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
 	{
-		if (Item[pSoldier->inv[iCurrentPocket].usItem].usItemClass == IC_MONEY)
+		if (Item[i->usItem].usItemClass == IC_MONEY)
 		{
-			iCurrentAmount += pSoldier->inv[iCurrentPocket].uiMoneyAmount;
+			iCurrentAmount += i->uiMoneyAmount;
 		}
 	}
 

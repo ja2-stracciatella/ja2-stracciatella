@@ -439,20 +439,19 @@ static BOOLEAN IsItemRepairable(UINT16 item_id, INT8 status);
 
 static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const* const pSoldier, INT8 const bHighestPass)
 {
-	INT8	bPocket;
 	UINT8	ubItemsInPocket, ubObjectInPocketCounter;
 	UINT8 ubPassType;
 
 	// check for jams
-	for (bPocket = HELMETPOS; bPocket <= SMALLPOCK8POS; bPocket++)
+	CFOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
 	{
-		ubItemsInPocket = pSoldier -> inv[ bPocket ].ubNumberOfObjects;
+		ubItemsInPocket = i->ubNumberOfObjects;
 		// unjam any jammed weapons
 		// run through pocket and repair
 		for( ubObjectInPocketCounter = 0; ubObjectInPocketCounter < ubItemsInPocket; ubObjectInPocketCounter++ )
 		{
 			// jammed gun?
-			if ( ( Item[ pSoldier -> inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pSoldier -> inv[ bPocket ].bGunAmmoStatus < 0 ) )
+			if (Item[i->usItem].usItemClass == IC_GUN && i->bGunAmmoStatus < 0)
 			{
 				return( TRUE );
 			}
@@ -460,9 +459,9 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const* const pSoldi
 	}
 
 	// now check for items to repair
-	for( bPocket = HELMETPOS; bPocket <= SMALLPOCK8POS; bPocket++ )
+	CFOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
 	{
-		OBJECTTYPE const& o = pSoldier->inv[bPocket];
+		OBJECTTYPE const& o = *i;
 
 		ubItemsInPocket = o.ubNumberOfObjects;
 
@@ -501,7 +500,7 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const* const pSoldi
 			{
 				// okay, seems like a candidate!  Check if he has anything that needs unjamming or repairs
 
-				for ( bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; bPocket++ )
+				for (INT8 bPocket = HANDPOS; bPocket <= SMALLPOCK8POS; ++bPocket)
 				{
 					// the object a weapon? and jammed?
 					if ( ( Item[ pOtherSoldier->inv[ bPocket ].usItem ].usItemClass == IC_GUN ) && ( pOtherSoldier->inv[ bPocket ].bGunAmmoStatus < 0 ) )
@@ -513,7 +512,7 @@ static BOOLEAN DoesCharacterHaveAnyItemsToRepair(SOLDIERTYPE const* const pSoldi
 				// repair everyone's hands and armor slots first, then headgear, and pockets last
 				for ( ubPassType = REPAIR_HANDS_AND_ARMOR; ubPassType <= ( UINT8 ) bHighestPass; ubPassType++ )
 				{
-					bPocket = FindRepairableItemOnOtherSoldier( pOtherSoldier, ubPassType );
+					INT8 const bPocket = FindRepairableItemOnOtherSoldier(pOtherSoldier, ubPassType);
 					if ( bPocket != NO_SLOT )
 					{
 						return( TRUE );

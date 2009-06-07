@@ -3264,11 +3264,8 @@ static BOOLEAN AttackerHasKnife(SOLDIERCELL* const attacker)
 
 static BOOLEAN TargetHasLoadedGun(SOLDIERTYPE* pSoldier)
 {
-	INT32 i;
-	OBJECTTYPE *pItem;
-	for( i = 0; i < NUM_INV_SLOTS; i++ )
+	CFOR_ALL_SOLDIER_INV_SLOTS(pItem, *pSoldier)
 	{
-		pItem = &pSoldier->inv[ i ];
 		if( Item[ pItem->usItem ].usItemClass == IC_GUN )
 		{
 			if( gpAR->fUnlimitedAmmo )

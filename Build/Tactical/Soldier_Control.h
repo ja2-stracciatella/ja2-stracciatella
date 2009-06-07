@@ -806,6 +806,13 @@ struct SOLDIERTYPE
   INT32                       uiTimeSinceLastBleedGrunt;
 };
 
+#define BASE_FOR_ALL_SOLDIER_INV_SLOTS(type, iter, soldier) \
+	for (type* iter = (soldier).inv, * const iter##__end = endof((soldier).inv); iter != iter##__end; ++iter)
+#define FOR_ALL_SOLDIER_INV_SLOTS(iter, soldier) \
+	BASE_FOR_ALL_SOLDIER_INV_SLOTS(OBJECTTYPE,       iter, soldier)
+#define CFOR_ALL_SOLDIER_INV_SLOTS(iter, soldier) \
+	BASE_FOR_ALL_SOLDIER_INV_SLOTS(OBJECTTYPE const, iter, soldier)
+
 #define HEALTH_INCREASE			0x0001
 #define STRENGTH_INCREASE		0x0002
 #define	DEX_INCREASE				0x0004

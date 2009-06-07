@@ -1030,7 +1030,6 @@ const wchar_t* GetMoraleString(const SOLDIERTYPE* pSoldier)
 void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE* const s)
 {
 	// just drop the stuff in the current sector
-	INT32 iCounter = 0;
   INT16 sGridNo, sTempGridNo;
 
 	if (s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY || s->bSectorZ != gbWorldSectorZ)
@@ -1066,20 +1065,20 @@ void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE* const s)
     }
   }
 
-	for( iCounter = 0; iCounter < NUM_INV_SLOTS; iCounter++ )
+	FOR_ALL_SOLDIER_INV_SLOTS(i, *s)
 	{
 		// slot found,
 		// check if actual item
-		if (s->inv[iCounter].ubNumberOfObjects > 0)
+		if (i->ubNumberOfObjects > 0)
 		{
 	    if (s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY || s->bSectorZ != gbWorldSectorZ)
 	    {
         // Set flag for item...
-				AddItemsToUnLoadedSector(s->sSectorX, s->sSectorY, s->bSectorZ , sGridNo, 1, &s->inv[iCounter], s->bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, VISIBLE);
+				AddItemsToUnLoadedSector(s->sSectorX, s->sSectorY, s->bSectorZ , sGridNo, 1, i, s->bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, VISIBLE);
       }
 			else
 			{
-				AddItemToPool(sGridNo, &s->inv[iCounter], VISIBLE, s->bLevel, WORLD_ITEM_REACHABLE, 0);
+				AddItemToPool(sGridNo, i, VISIBLE, s->bLevel, WORLD_ITEM_REACHABLE, 0);
 			}
 		}
 	}
@@ -1267,7 +1266,6 @@ static INT32 SetUpDropItemListForMerc(SOLDIERTYPE* const s)
 {
 	// will set up a drop list for this grunt, remove items from inventory, and profile
 	INT32 iSlotIndex = -1;
-	INT32 iCounter = 0;
 
 	iSlotIndex = FindFreeSlotInLeaveList( );
 	if( iSlotIndex == -1 )
@@ -1275,14 +1273,14 @@ static INT32 SetUpDropItemListForMerc(SOLDIERTYPE* const s)
 		return( -1 );
 	}
 
-	for( iCounter = 0; iCounter < NUM_INV_SLOTS; iCounter++ )
+	CFOR_ALL_SOLDIER_INV_SLOTS(i, *s)
 	{
 		// slot found,
 		// check if actual item
-		if (s->inv[iCounter].ubNumberOfObjects > 0)
+		if (i->ubNumberOfObjects > 0)
 		{
 			// make a linked list of the items left behind, with the ptr to its head in this free slot
-			AddItemToLeaveIndex(&s->inv[iCounter], iSlotIndex);
+			AddItemToLeaveIndex(i, iSlotIndex);
 
 			// store owner's profile id for the items added to this leave slot index
 			SetUpMercAboutToLeaveEquipment(s->ubProfile, iSlotIndex);

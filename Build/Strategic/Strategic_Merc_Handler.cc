@@ -453,14 +453,13 @@ void RPCWhineAboutNoPay(SOLDIERTYPE* const pSoldier)
 // OK loop through and check!
 BOOLEAN SoldierHasWorseEquipmentThanUsedTo( SOLDIERTYPE *pSoldier )
 {
-	INT32		cnt;
 	UINT16	usItem;
 	INT8		bBestArmour = -1;
 	INT8		bBestGun = -1;
 
-	for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+	CFOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
 	{
-		usItem = pSoldier->inv[ cnt ].usItem;
+		usItem = i->usItem;
 
 		// Look for best gun/armour
 		if ( usItem != NOTHING )

@@ -1674,17 +1674,16 @@ UINT32 CalculateCarriedWeight(const SOLDIERTYPE* pSoldier)
 {
 	UINT32	uiTotalWeight = 0;
 	UINT32	uiPercent;
-	UINT8		ubLoop;
 	UINT16  usWeight;
 	UINT8		ubStrengthForCarrying;
 
-	for( ubLoop = 0; ubLoop < NUM_INV_SLOTS; ubLoop++)
+	CFOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
 	{
-		usWeight = pSoldier->inv[ubLoop].ubWeight;
-		if (Item[ pSoldier->inv[ubLoop].usItem ].ubPerPocket > 1)
+		usWeight = i->ubWeight;
+		if (Item[i->usItem].ubPerPocket > 1)
 		{
 			// account for # of items
-			usWeight *= pSoldier->inv[ubLoop].ubNumberOfObjects;
+			usWeight *= i->ubNumberOfObjects;
 		}
 		uiTotalWeight += usWeight;
 
@@ -4255,7 +4254,6 @@ static BOOLEAN DamageItem(OBJECTTYPE* pObject, INT32 iDamage, BOOLEAN fOnGround)
 
 void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 {
-	INT8				bSlot;
 	BOOLEAN			fBlowsUp;
 	UINT8				ubNumberOfObjects;
 
@@ -4264,22 +4262,22 @@ void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 		return;
 	}
 
-	for (bSlot = 0; bSlot < NUM_INV_SLOTS; bSlot++)
+	FOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
 	{
-		ubNumberOfObjects = pSoldier->inv[bSlot].ubNumberOfObjects;
-		fBlowsUp = DamageItem( &(pSoldier->inv[bSlot]), iDamage, FALSE );
+		ubNumberOfObjects = i->ubNumberOfObjects;
+		fBlowsUp = DamageItem(i, iDamage, FALSE);
 		if (fBlowsUp)
 		{
 			// blow it up!
 			SOLDIERTYPE* const owner = (gTacticalStatus.ubAttackBusyCount ? pSoldier->attacker : pSoldier);
-			IgniteExplosion(owner, 0, pSoldier->sGridNo, pSoldier->inv[bSlot].usItem, pSoldier->bLevel);
+			IgniteExplosion(owner, 0, pSoldier->sGridNo, i->usItem, pSoldier->bLevel);
 
 			// Remove item!
-			DeleteObj( &(pSoldier->inv[ bSlot ]) );
+			DeleteObj(i);
 
 			DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 		}
-		else if ( ubNumberOfObjects != pSoldier->inv[bSlot].ubNumberOfObjects )
+		else if (ubNumberOfObjects != i->ubNumberOfObjects)
 		{
 			DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 		}
@@ -4289,21 +4287,20 @@ void CheckEquipmentForDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage )
 {
 	// glass jars etc can be damaged by falling over
-	INT8				bSlot;
 	UINT8				ubNumberOfObjects;
 	BOOLEAN			fPlayedGlassBreak = FALSE;
 
-	for (bSlot = 0; bSlot < NUM_INV_SLOTS; bSlot++)
+	FOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
 	{
-		switch( pSoldier->inv[bSlot].usItem )
+		switch (i->usItem)
 		{
 			case JAR_CREATURE_BLOOD:
 			case JAR:
 			case JAR_HUMAN_BLOOD:
 			case JAR_ELIXIR:
-				ubNumberOfObjects = pSoldier->inv[bSlot].ubNumberOfObjects;
-				DamageItem( &(pSoldier->inv[bSlot]), iDamage, FALSE );
-				if ( !fPlayedGlassBreak && (ubNumberOfObjects != pSoldier->inv[bSlot].ubNumberOfObjects) )
+				ubNumberOfObjects = i->ubNumberOfObjects;
+				DamageItem(i, iDamage, FALSE);
+				if (!fPlayedGlassBreak && ubNumberOfObjects != i->ubNumberOfObjects)
 				{
 					PlayLocationJA2Sample(pSoldier->sGridNo, GLASS_CRACK, MIDVOLUME, 1);
 					fPlayedGlassBreak = TRUE;
@@ -4380,15 +4377,15 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 void WaterDamage( SOLDIERTYPE *pSoldier )
 {
 	// damage guy's equipment and camouflage due to water
-	INT8		bLoop, bDamage, bDieSize;
+	INT8		bDamage, bDieSize;
 	UINT32	uiRoll;
 
 	if ( pSoldier->bOverTerrainType == DEEP_WATER )
 	{
-		for ( bLoop = 0; bLoop < NUM_INV_SLOTS; bLoop++ )
+		FOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
 		{
 			// if there's an item here that can get water damaged...
-			if (pSoldier->inv[ bLoop ].usItem && Item[pSoldier->inv[ bLoop ].usItem].fFlags & ITEM_WATER_DAMAGES)
+			if (i->usItem && Item[i->usItem].fFlags & ITEM_WATER_DAMAGES)
 			{
 				// roll the 'ol 100-sided dice
 				uiRoll = PreRandom(100);
@@ -4400,10 +4397,10 @@ void WaterDamage( SOLDIERTYPE *pSoldier )
 					bDamage = (INT8) (10 - uiRoll);
 
 					// but don't let anything drop lower than 1%
-					pSoldier->inv[bLoop].bStatus[0] -= bDamage;
-					if (pSoldier->inv[bLoop].bStatus[0] < 1)
+					i->bStatus[0] -= bDamage;
+					if (i->bStatus[0] < 1)
 					{
-						pSoldier->inv[bLoop].bStatus[0] = 1;
+						i->bStatus[0] = 1;
 					}
 				}
 			}

@@ -1012,7 +1012,6 @@ BOOLEAN GetSectorFlagStatus(INT16 const x, INT16 const y, UINT8 const z, SectorF
 void AddDeadSoldierToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, UINT8 const bMapZ, SOLDIERTYPE* const pSoldier, INT16  const sGridNo, UINT32 const uiFlags)
 {
 	UINT32			uiNumberOfItems;
-	UINT				i;
 	UINT16			uiFlagsForWorldItems=0;
 	UINT16			usFlagsForRottingCorpse=0;
 	ROTTING_CORPSE_DEFINITION		Corpse;
@@ -1045,9 +1044,9 @@ void AddDeadSoldierToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, UINT8 
 
 	//go through and and find out how many items there are
 	uiNumberOfItems = 0;
-	for ( i = 0; i < NUM_INV_SLOTS; i++ )
+	FOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
 	{
-		if( pSoldier->inv[ i ].usItem != 0 )
+		if (i->usItem != NOTHING)
 		{
 			// if not a player soldier
 			if ( pSoldier->bTeam != gbPlayerNum )
@@ -1056,12 +1055,12 @@ void AddDeadSoldierToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, UINT8 
 				if ( Random( 100 ) < 75 )
 				{
 					// mark it undroppable...
-					pSoldier->inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
+					i->fFlags |= OBJECT_UNDROPPABLE;
 				}
 			}
 
 			//if the item can be dropped
-			if( !( pSoldier->inv[ i ].fFlags & OBJECT_UNDROPPABLE ) || pSoldier->bTeam == gbPlayerNum )
+			if (!(i->fFlags & OBJECT_UNDROPPABLE) || pSoldier->bTeam == gbPlayerNum)
 			{
 
         uiNumberOfItems++;
@@ -1079,7 +1078,7 @@ void AddDeadSoldierToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, UINT8 
 	if( uiNumberOfItems )
 	{
 		//loop through all the soldiers items and add them to the world item array
-		for ( i = 0; i < NUM_INV_SLOTS; i++ )
+		for (UINT i = 0; i != NUM_INV_SLOTS; ++i)
 		{
 			if( pSoldier->inv[ i ].usItem != 0 )
 			{
@@ -1180,7 +1179,7 @@ UINT32 MercChecksum(SOLDIERTYPE const& s)
 	sum *= 1 + s.bExpLevel;
 	sum += 1 + s.ubProfile;
 
-	for (OBJECTTYPE const* i = s.inv; i != endof(s.inv); ++i)
+	CFOR_ALL_SOLDIER_INV_SLOTS(i, s)
 	{
 		sum += i->usItem;
 		sum += i->ubNumberOfObjects;
