@@ -1339,50 +1339,33 @@ void SaveUnderGroundSectorInfoToSaveGame(HWFILE const hFile)
 }
 
 
-void LoadUnderGroundSectorInfoFromSavedGame(HWFILE const hFile)
+void LoadUnderGroundSectorInfoFromSavedGame(HWFILE const f)
 {
-	UINT32	uiNumOfRecords=0;
-	UINT32	cnt=0;
-	UNDERGROUND_SECTORINFO *TempSpot = NULL;
-
-	//Clear the current LL
 	TrashUndergroundSectorInfo();
 
-	//Read in the number of nodes stored
-	FileRead(hFile, &uiNumOfRecords, sizeof(UINT32));
-
-	for( cnt = 0; cnt< uiNumOfRecords; cnt ++)
-	{
-		UNDERGROUND_SECTORINFO* const TempNode = MALLOC(UNDERGROUND_SECTORINFO);
-		ExtractUndergroundSectorInfoFromFile(hFile, TempNode);
-
-		//If its the first time in, assign the node to the list
-		if( cnt == 0 )
-		{
-			gpUndergroundSectorInfoHead = TempNode;
-			TempSpot = gpUndergroundSectorInfoHead;
-			TempSpot->next = NULL;
-		}
-		else
-		{
-			//assign the new node to the LL
-			TempSpot->next = TempNode;
-
-			//advance to the next node
-			TempSpot = TempSpot->next;
-			TempSpot->next = NULL;
-			gpUndergroundSectorInfoTail = TempSpot;
-		}
-
-	}
+	// Read the number of nodes stored
+	UINT32 n_records;
+	FileRead(f, &n_records, sizeof(UINT32));
 
 #ifdef JA2BETAVERSION
-	if( !uiNumOfRecords )
+	if (n_records == 0)
 	{
 		BuildUndergroundSectorInfoList();
 		gfClearCreatureQuest = TRUE;
+		return;
 	}
 #endif
+
+	UNDERGROUND_SECTORINFO** anchor = &gpUndergroundSectorInfoHead;
+	for (UINT32 n = n_records; n != 0; --n)
+	{
+		UNDERGROUND_SECTORINFO* const u = MALLOC(UNDERGROUND_SECTORINFO);
+		ExtractUndergroundSectorInfoFromFile(f, u);
+
+		gpUndergroundSectorInfoTail = u;
+		*anchor = u;
+		anchor  = &u->next;
+	}
 }
 
 
