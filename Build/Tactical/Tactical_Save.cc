@@ -1319,7 +1319,7 @@ void GetMapTempFileName(SectorFlags const uiType, char* const pMapName, INT16 co
 }
 
 
-static UINT32 UpdateLoadedSectorsItemInventory(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems);
+static UINT32 UpdateLoadedSectorsItemInventory(INT16 x, INT16 y, INT8 z, UINT32 n_items);
 
 
 UINT32 GetNumberOfVisibleWorldItemsFromSectorStructureForSector(INT16 const x, INT16 const y, INT8 const z)
@@ -1395,33 +1395,22 @@ static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 cons
 }
 
 
-static UINT32 UpdateLoadedSectorsItemInventory(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems)
+static UINT32 UpdateLoadedSectorsItemInventory(INT16 const x, INT16 const y, INT8 const z, UINT32 const n_items)
 {
-	UINT32	uiItemCounter=0;
-
-	if( !gfWorldLoaded )
-		return( 0 );
-
-	//loop through all the world items
+	UINT32 n = 0;
 	CFOR_ALL_WORLD_ITEMS(wi)
 	{
-		//if the item CAN be visible in mapscreen sector inventory
-		if (IsMapScreenWorldItemVisibleInMapInventory(wi))
-		{
-			//increment
-			uiItemCounter += wi->o.ubNumberOfObjects;
-		}
+		if (!IsMapScreenWorldItemVisibleInMapInventory(wi)) continue;
+		n += wi->o.ubNumberOfObjects;
 	}
 
-	//if the item count is DIFFERENT
-	if( uiItemCounter != uiNumberOfItems )
+	// Update the value in the sector info struct, if the item count is different
+	if (n != n_items)
 	{
-		//Update the value in the sector info struct
-		SetNumberOfVisibleWorldItemsInSectorStructureForSector( sMapX, sMapY, bMapZ, uiItemCounter );
+		SetNumberOfVisibleWorldItemsInSectorStructureForSector(x, y, z, n);
 	}
 
-	//return the number of items
-	return( uiItemCounter );
+	return n;
 }
 
 
