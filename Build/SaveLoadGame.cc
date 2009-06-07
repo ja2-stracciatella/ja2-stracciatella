@@ -2593,5 +2593,6 @@ static void CalcJA2EncryptionSet(SAVED_GAME_HEADER const& h)
 		case DIF_LEVEL_HARD:   set += BASE_NUMBER_OF_ROTATION_ARRAYS * 2; break;
 	}
 
+	Assert(set < BASE_NUMBER_OF_ROTATION_ARRAYS * 12);
 	guiJA2EncryptionSet = set;
 }

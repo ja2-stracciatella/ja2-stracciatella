@@ -1425,7 +1425,7 @@ static UINT32 UpdateLoadedSectorsItemInventory(INT16 sMapX, INT16 sMapY, INT8 bM
 }
 
 
-static UINT8 const gubEncryptionArray1[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE] =
+static UINT8 const g_encryption_array[][NEW_ROTATION_ARRAY_SIZE] =
 {
 	{
 		11,129,18,136,163,80,128,
@@ -1995,12 +1995,8 @@ static UINT8 const gubEncryptionArray1[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_R
 		74,31,24,83,60,48,80,
 		186,116,113,179,144,90,220,
 		252,71,167,25,110,167,94
-	}
-};
+	},
 
-
-static UINT8 const gubEncryptionArray2[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE] =
-{
 	{
 		81,168,102,49,61,70,172,
 		127,7,148,115,179,10,117,
@@ -2569,12 +2565,8 @@ static UINT8 const gubEncryptionArray2[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_R
 		3,3,88,146,80,226,29,
 		5,25,66,196,226,87,125,
 		83,169,124,218,190,135,197
-	}
-};
+	},
 
-
-static UINT8 const gubEncryptionArray3[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE] =
-{
 	{
 		250,224,3,197,156,209,110,
 		159,75,119,221,42,212,180,
@@ -3143,12 +3135,8 @@ static UINT8 const gubEncryptionArray3[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_R
 		221,5,133,140,46,33,255,
 		187,212,29,98,102,47,125,
 		80,232,235,19,180,106,219
-	}
-};
+	},
 
-
-static UINT8 const gubEncryptionArray4[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE] =
-{
 	{
 		177,131,58,218,175,130,210,
 		59,25,190,170,189,227,245,
@@ -3719,15 +3707,11 @@ static UINT8 const gubEncryptionArray4[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_R
 		71,142,46,234,237,200,4
 	}
 };
+CASSERT(lengthof(g_encryption_array) == BASE_NUMBER_OF_ROTATION_ARRAYS * 12);
 
 
 static UINT8 const* GetRotationArray()
 {
-	UINT32 const set = guiJA2EncryptionSet;
-	UINT8  const (&a)[BASE_NUMBER_OF_ROTATION_ARRAYS * 3][NEW_ROTATION_ARRAY_SIZE] =
-		set < BASE_NUMBER_OF_ROTATION_ARRAYS * 3 ? gubEncryptionArray1 :
-		set < BASE_NUMBER_OF_ROTATION_ARRAYS * 6 ? gubEncryptionArray2 :
-		set < BASE_NUMBER_OF_ROTATION_ARRAYS * 9 ? gubEncryptionArray3 :
-		gubEncryptionArray4;
-	return a[set % lengthof(a)];
+	Assert(guiJA2EncryptionSet < lengthof(g_encryption_array));
+	return g_encryption_array[guiJA2EncryptionSet];
 }
