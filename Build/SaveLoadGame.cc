@@ -175,7 +175,7 @@ static BYTE* InjectGameOptions(BYTE* const data, GAME_OPTIONS const& g)
 }
 
 
-static UINT32 CalcJA2EncryptionSet(SAVED_GAME_HEADER* pSaveGameHeader);
+static void CalcJA2EncryptionSet(SAVED_GAME_HEADER const&);
 static void PauseBeforeSaveGame(void);
 static void UnPauseAfterSaveGame(void);
 static void SaveGeneralInfo(HWFILE);
@@ -353,7 +353,7 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		FileWrite(f, data, sizeof(data));
 		SaveGameFilePosition(ubSaveGameID, f, "Save Game Header");
 
-		guiJA2EncryptionSet = CalcJA2EncryptionSet(&header);
+		CalcJA2EncryptionSet(header);
 
 		// Save the gTactical Status array, plus the curent sector location
 		SaveTacticalStatusToSavedGame(f);
@@ -656,7 +656,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	ExtractSavedGameHeaderFromFile(f, SaveGameHeader);
 	LoadGameFilePosition(save_slot_id, f, "Save Game Header");
 
-	guiJA2EncryptionSet = CalcJA2EncryptionSet(&SaveGameHeader);
+	CalcJA2EncryptionSet(SaveGameHeader);
 
 	UINT32 const version = SaveGameHeader.uiSavedGameVersion;
 
@@ -2551,71 +2551,47 @@ static void HandleOldBobbyRMailOrders(void)
 }
 
 
-static UINT32 CalcJA2EncryptionSet(SAVED_GAME_HEADER* pSaveGameHeader)
+static void CalcJA2EncryptionSet(SAVED_GAME_HEADER const& h)
 {
-	UINT32	uiEncryptionSet = 0;
+	UINT32 set;
 
-	uiEncryptionSet  = pSaveGameHeader->iCurrentBalance;
-	uiEncryptionSet *= (pSaveGameHeader->ubNumOfMercsOnPlayersTeam + 1);
-	uiEncryptionSet += pSaveGameHeader->bSectorZ * 3;
-	uiEncryptionSet += pSaveGameHeader->ubLoadScreenID;
+	set  = h.iCurrentBalance;
+	set *= h.ubNumOfMercsOnPlayersTeam + 1;
+	set += h.bSectorZ * 3;
+	set += h.ubLoadScreenID;
 
-	if ( pSaveGameHeader->fAlternateSector )
+	if (h.fAlternateSector) set += 7;
+
+	UINT32 const r = h.uiRandom;
+	if (r % 2 == 0)
 	{
-		uiEncryptionSet += 7;
-	}
-
-	if ( pSaveGameHeader->uiRandom % 2 == 0 )
-	{
-		uiEncryptionSet++;
-
-		if ( pSaveGameHeader->uiRandom % 7 == 0)
+		set++;
+		if (r % 7 == 0)
 		{
-			uiEncryptionSet++;
-			if ( pSaveGameHeader->uiRandom % 23 == 0 )
-			{
-				uiEncryptionSet++;
-			}
-			if ( pSaveGameHeader->uiRandom % 79 == 0 )
-			{
-				uiEncryptionSet += 2;
-			}
+			set++;
+			if (r % 23 == 0) set++;
+			if (r % 79 == 0) set += 2;
 		}
 	}
 
-	#ifdef GERMAN
-		uiEncryptionSet *= 11;
-	#endif
+#ifdef GERMAN
+	set *= 11;
+#endif
 
-	uiEncryptionSet = uiEncryptionSet % 10;
-
-	uiEncryptionSet += pSaveGameHeader->uiDay / 10;
-
-	uiEncryptionSet = uiEncryptionSet % 19;
+	set %= 10;
+	set += h.uiDay / 10;
+	set %= BASE_NUMBER_OF_ROTATION_ARRAYS;
 
 	// now pick a different set of #s depending on what game options we've chosen
-	if ( pSaveGameHeader->sInitialGameOptions.fGunNut )
+	GAME_OPTIONS const& o = h.sInitialGameOptions;
+	if (o.fGunNut) set += BASE_NUMBER_OF_ROTATION_ARRAYS * 6;
+	if (o.fSciFi)  set += BASE_NUMBER_OF_ROTATION_ARRAYS * 3;
+	switch (o.ubDifficultyLevel)
 	{
-		uiEncryptionSet += BASE_NUMBER_OF_ROTATION_ARRAYS * 6;
+		case DIF_LEVEL_EASY:   set += 0;                                  break;
+		case DIF_LEVEL_MEDIUM: set += BASE_NUMBER_OF_ROTATION_ARRAYS;     break;
+		case DIF_LEVEL_HARD:   set += BASE_NUMBER_OF_ROTATION_ARRAYS * 2; break;
 	}
 
-	if ( pSaveGameHeader->sInitialGameOptions.fSciFi )
-	{
-		uiEncryptionSet += BASE_NUMBER_OF_ROTATION_ARRAYS * 3;
-	}
-
-	switch( pSaveGameHeader->sInitialGameOptions.ubDifficultyLevel )
-	{
-		case DIF_LEVEL_EASY:
-			uiEncryptionSet += 0;
-			break;
-		case DIF_LEVEL_MEDIUM:
-			uiEncryptionSet += BASE_NUMBER_OF_ROTATION_ARRAYS;
-			break;
-		case DIF_LEVEL_HARD:
-			uiEncryptionSet += BASE_NUMBER_OF_ROTATION_ARRAYS * 2;
-			break;
-	}
-
-	return( uiEncryptionSet );
+	guiJA2EncryptionSet = set;
 }
