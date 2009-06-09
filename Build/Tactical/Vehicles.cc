@@ -938,7 +938,7 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 	Assert( pGroup );
 
 	Assert( pGroup->uiTraverseTime != -1 );
-	Assert( ( pGroup->uiTraverseTime > 0 ) && ( pGroup->uiTraverseTime != 0xffffffff ) );
+	Assert(pGroup->uiTraverseTime > 0 && pGroup->uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE);
 
 	Assert( pGroup->uiArrivalTime >= GetWorldTotalMin() );
 	uiTimeToNextSector = pGroup->uiArrivalTime - GetWorldTotalMin();

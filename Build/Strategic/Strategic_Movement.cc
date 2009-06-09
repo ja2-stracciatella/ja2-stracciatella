@@ -1906,13 +1906,10 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 		pGroup->uiTraverseTime = 1;
 	}
 
-	if( pGroup->uiTraverseTime == 0xffffffff )
-	{
-		AssertMsg( 0, String("Group %d (%s) attempting illegal move from %c%d to %c%d (%s).",
+	AssertMsg(pGroup->uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE, String("Group %d (%s) attempting illegal move from %c%d to %c%d (%s).",
 				pGroup->ubGroupID, ( pGroup->fPlayer ) ? "Player" : "AI",
 				pGroup->ubSectorY+'A', pGroup->ubSectorX, pGroup->ubNextY+'A', pGroup->ubNextX,
 				gszTerrain[SectorInfo[ubSector].ubTraversability[ubDirection]] ) );
-	}
 
 	// add sleep, if any
 	pGroup->uiTraverseTime += uiSleepMinutes;
@@ -2265,13 +2262,10 @@ INT32 FindTravelTimeBetweenWaypoints(WAYPOINT const* const pSource, WAYPOINT con
 		// find diff between current and next
 		iThisCostInTime = GetSectorMvtTimeForGroup( ubCurrentSector, ubDirection, pGroup );
 
-		if( iThisCostInTime == 0xffffffff )
-		{
-			AssertMsg( 0, String("Group %d (%s) attempting illegal move from sector %d, dir %d (%s).",
+		AssertMsg(iThisCostInTime != TRAVERSE_TIME_IMPOSSIBLE, String("Group %d (%s) attempting illegal move from sector %d, dir %d (%s).",
 					pGroup->ubGroupID, ( pGroup->fPlayer ) ? "Player" : "AI",
 					ubCurrentSector, ubDirection,
 					gszTerrain[SectorInfo[ubCurrentSector].ubTraversability[ubDirection]] ) );
-		}
 
 		// accumulate it
 		iCurrentCostInTime += iThisCostInTime;
@@ -2297,7 +2291,7 @@ INT32 GetSectorMvtTimeForGroup(UINT8 const ubSector, UINT8 const direction, GROU
 	UINT8 const traverse_type      = SectorInfo[ubSector].ubTraversability[direction];
 	INT32       best_traverse_time = 1000000;
 
-	if (traverse_type == EDGEOFWORLD) return 0xFFFFFFFF; // Can't travel here!
+	if (traverse_type == EDGEOFWORLD) return TRAVERSE_TIME_IMPOSSIBLE;
 
 	/* ARM: Made air-only travel take its normal time per sector even through
 	 * towns.  Because Skyrider charges by the sector, not by flying time, it's
@@ -2324,7 +2318,7 @@ INT32 GetSectorMvtTimeForGroup(UINT8 const ubSector, UINT8 const direction, GROU
 			case HILLS:    traverse_mod =  50; break;
 			case NS_RIVER: traverse_mod =  25; break;
 			case EW_RIVER: traverse_mod =  25; break;
-			default:       return 0xFFFFFFFF; // Group can't traverse here.
+			default:       return TRAVERSE_TIME_IMPOSSIBLE;
 		}
 		INT32 const traverse_time = FOOT_TRAVEL_TIME * 100 / traverse_mod;
 		if (best_traverse_time > traverse_time)
@@ -2355,7 +2349,7 @@ INT32 GetSectorMvtTimeForGroup(UINT8 const ubSector, UINT8 const direction, GROU
 		switch (traverse_type)
 		{
 			case ROAD: traverse_mod = 100; break;
-			default:   return 0xFFFFFFFF; // Group can't traverse here.
+			default:   return TRAVERSE_TIME_IMPOSSIBLE;
 		}
 		INT32 const traverse_time = CAR_TRAVEL_TIME * 100 / traverse_mod;
 		if (best_traverse_time > traverse_time)
@@ -2371,7 +2365,7 @@ INT32 GetSectorMvtTimeForGroup(UINT8 const ubSector, UINT8 const direction, GROU
 			case PLAINS: traverse_mod =  75; break;
 			case SPARSE: traverse_mod =  60; break;
 			case HILLS:  traverse_mod =  50; break;
-			default:     return 0xFFFFFFFF; // Group can't traverse here.
+			default:     return TRAVERSE_TIME_IMPOSSIBLE;
 		}
 		INT32 const traverse_time = TRUCK_TRAVEL_TIME * 100 / traverse_mod;
 		if (best_traverse_time > traverse_time)
@@ -2391,7 +2385,7 @@ INT32 GetSectorMvtTimeForGroup(UINT8 const ubSector, UINT8 const direction, GROU
 			case NS_RIVER: traverse_mod =  20; break;
 			case EW_RIVER: traverse_mod =  20; break;
 			case WATER:    traverse_mod =  10; break;
-			default:       return 0xFFFFFFFF; // Group can't traverse here.
+			default:       return TRAVERSE_TIME_IMPOSSIBLE;
 		}
 		INT32 const traverse_time = TRACKED_TRAVEL_TIME * 100 / traverse_mod;
 		if (best_traverse_time > traverse_time)
@@ -2973,13 +2967,10 @@ void RetreatGroupToPreviousSector( GROUP *pGroup )
 	//Calc time to get to next waypoint...
 	ubSector = (UINT8)SECTOR( pGroup->ubSectorX, pGroup->ubSectorY );
 	pGroup->uiTraverseTime = GetSectorMvtTimeForGroup( ubSector, ubDirection, pGroup );
-	if( pGroup->uiTraverseTime == 0xffffffff )
-	{
-		AssertMsg( 0, String("Group %d (%s) attempting illegal move from %c%d to %c%d (%s).",
+	AssertMsg(pGroup->uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE, String("Group %d (%s) attempting illegal move from %c%d to %c%d (%s).",
 				pGroup->ubGroupID, ( pGroup->fPlayer ) ? "Player" : "AI",
 				pGroup->ubSectorY+'A', pGroup->ubSectorX, pGroup->ubNextY+'A', pGroup->ubNextX,
 				gszTerrain[SectorInfo[ubSector].ubTraversability[ubDirection]] ) );
-	}
 
 	if( !pGroup->uiTraverseTime )
 	{ //Because we are in the strategic layer, don't make the arrival instantaneous (towns).

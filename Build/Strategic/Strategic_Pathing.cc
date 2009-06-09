@@ -306,7 +306,7 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const* c
 
 			// are we plotting path or checking for existance of one?
 			nextCost = GetSectorMvtTimeForGroup(SECTOR(curLoc % MAP_WORLD_X, curLoc / MAP_WORLD_X), iCnt / 2, pGroup);
-			if (nextCost == 0xFFFFFFFF) continue;
+			if (nextCost == TRAVERSE_TIME_IMPOSSIBLE) continue;
 
 			if (pGroup == heli_group)
 			{

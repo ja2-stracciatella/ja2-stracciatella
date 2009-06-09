@@ -332,7 +332,7 @@ static UINT32 UndergroundTacticalTraversalTime(INT8 const exit_direction)
 		case WEST_STRATEGIC_MOVE:  gridno = gMapInformation.sWestGridNo;  break;
 		default: throw std::logic_error("invalid exit direction");
 	}
-	return gridno != -1 ? 0 : 0xFFFFFFFF;
+	return gridno != -1 ? 0 : TRAVERSE_TIME_IMPOSSIBLE;
 }
 
 
@@ -2012,7 +2012,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 			//method.  When underground, all sectors are instantly adjacent.
 			uiTraverseTime = UndergroundTacticalTraversalTime( ubDirection );
 		}
-		AssertMsg(uiTraverseTime != 0xFFFFFFFF, "Attempting to tactically traverse to adjacent sector, despite being unable to do so.");
+		AssertMsg(uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE, "Attempting to tactically traverse to adjacent sector, despite being unable to do so.");
 	}
 
 	// Alrighty, we want to do whatever our omnipotent player asked us to do
@@ -2693,7 +2693,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 						traverse_time = UndergroundTacticalTraversalTime(bExitDirection);
 					}
 					if (puiTraverseTimeInMinutes) *puiTraverseTimeInMinutes = traverse_time;
-					if (traverse_time == 0xFFFFFFFF)
+					if (traverse_time == TRAVERSE_TIME_IMPOSSIBLE)
 					{
 						gfInvalidTraversal = TRUE;
 						return FALSE;
@@ -2751,7 +2751,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 				traverse_time = UndergroundTacticalTraversalTime(bExitDirection);
 			}
 			if (puiTraverseTimeInMinutes) *puiTraverseTimeInMinutes = traverse_time;
-			if (traverse_time == 0xFFFFFFFF)
+			if (traverse_time == TRAVERSE_TIME_IMPOSSIBLE)
 			{
 				gfInvalidTraversal = TRUE;
 				ubReturnVal = FALSE;
