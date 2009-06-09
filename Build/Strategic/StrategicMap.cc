@@ -319,29 +319,20 @@ StrategicMapElement StrategicMap[MAP_WORLD_X * MAP_WORLD_Y];
 #endif
 
 
-static UINT32 UndergroundTacticalTraversalTime(INT8 bExitDirection)
-{ //We are attempting to traverse in an underground environment.  We need to use a complete different
-	//method.  When underground, all sectors are instantly adjacent.
-	switch( bExitDirection )
+static UINT32 UndergroundTacticalTraversalTime(INT8 const exit_direction)
+{ /* We are attempting to traverse in an underground environment. We need to use
+	 * a complete different method.  When underground, all sectors are instantly
+	 * adjacent. */
+	GridNo gridno;
+	switch (exit_direction)
 	{
-		case NORTH_STRATEGIC_MOVE:
-			if( gMapInformation.sNorthGridNo != -1 )
-				return 0;
-			break;
-		case EAST_STRATEGIC_MOVE:
-			if( gMapInformation.sEastGridNo != -1 )
-				return 0;
-			break;
-		case SOUTH_STRATEGIC_MOVE:
-			if( gMapInformation.sSouthGridNo != -1 )
-				return 0;
-			break;
-		case WEST_STRATEGIC_MOVE:
-			if( gMapInformation.sWestGridNo != -1 )
-				return 0;
-			break;
+		case NORTH_STRATEGIC_MOVE: gridno = gMapInformation.sNorthGridNo; break;
+		case EAST_STRATEGIC_MOVE:  gridno = gMapInformation.sEastGridNo;  break;
+		case SOUTH_STRATEGIC_MOVE: gridno = gMapInformation.sSouthGridNo; break;
+		case WEST_STRATEGIC_MOVE:  gridno = gMapInformation.sWestGridNo;  break;
+		default: throw std::logic_error("invalid exit direction");
 	}
-	return 0xffffffff;
+	return gridno != -1 ? 0 : 0xFFFFFFFF;
 }
 
 
