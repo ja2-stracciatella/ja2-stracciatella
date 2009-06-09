@@ -651,97 +651,65 @@ BOOLEAN HandleSectorExitMenu( )
 	return( FALSE ); //Why???
 }
 
-void RemoveSectorExitMenu( BOOLEAN fOk )
+
+void RemoveSectorExitMenu(BOOLEAN const fOk)
 {
-	wchar_t Str[ 50 ];
+	if (!gfInSectorExitMenu) return;
+	gfInSectorExitMenu = FALSE;
 
-	if ( gfInSectorExitMenu )
+	guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
+
+	EXIT_DIALOG_STRUCT& d = gExitDialog;
+	RemoveButton(d.uiLoadCheckButton);
+	RemoveButton(d.uiSingleMoveButton);
+	RemoveButton(d.uiAllMoveButton);
+	RemoveButton(d.uiOKButton);
+	RemoveButton(d.uiCancelButton);
+
+	UnloadButtonImage(d.iButtonImages);
+
+	MSYS_RemoveRegion(&d.BackRegion);
+	MSYS_RemoveRegion(&d.SingleRegion);
+	MSYS_RemoveRegion(&d.AllRegion);
+	MSYS_RemoveRegion(&d.LoadRegion);
+
+	RemoveMercPopupBox(d.box);
+	d.box = 0;
+
+	gfIgnoreScrolling = FALSE;
+
+	UnLockPauseState();
+	UnPauseGame();
+	EndModalTactical();
+
+	if (!fOk) return;
+
+	// If we are an EPC, don't allow this if nobody else on squad
+	SOLDIERTYPE const* const sel = GetSelectedMan();
+	if (AM_AN_EPC(sel) && d.ubNumPeopleOnSquad == 0)
 	{
-
-		guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-
-		RemoveButton( gExitDialog.uiLoadCheckButton );
-		RemoveButton( gExitDialog.uiSingleMoveButton );
-		RemoveButton( gExitDialog.uiAllMoveButton );
-		RemoveButton( gExitDialog.uiOKButton );
-		RemoveButton( gExitDialog.uiCancelButton );
-
-
-		UnloadButtonImage( gExitDialog.iButtonImages );
-
-		MSYS_RemoveRegion(&(gExitDialog.BackRegion) );
-		MSYS_RemoveRegion(&(gExitDialog.SingleRegion) );
-		MSYS_RemoveRegion(&(gExitDialog.AllRegion) );
-		MSYS_RemoveRegion(&(gExitDialog.LoadRegion) );
-
-		//Remove the popup box
-		RemoveMercPopupBox(gExitDialog.box);
-		gExitDialog.box = 0;
-
-		gfIgnoreScrolling = FALSE;
-
-		SetRenderFlags( RENDER_FLAG_FULL );
-
-		gfInSectorExitMenu = FALSE;
-
-		UnLockPauseState();
-		UnPauseGame();
-		EndModalTactical();
-		gfIgnoreScrolling = FALSE;
-
-		// if we are an EPC, don't allow this if nobody else on squad
-		if (fOk)
-		{
-			const SOLDIERTYPE* const sel = GetSelectedMan();
-			if (AM_AN_EPC(sel))
-			{
-				// Check if there are more than one in this squad
-				if ( gExitDialog.ubNumPeopleOnSquad == 0 )
-				{
-					swprintf(Str, lengthof(Str), pMessageStrings[MSG_EPC_CANT_TRAVERSE], sel->name);
-					DoMessageBox(MSG_BOX_BASIC_STYLE, Str, GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
-					return;
-				}
-			}
-		}
-
-		if ( fOk )
-		{
-			// Handle the effects here!
-			if ( gExitDialog.fAllMove && gExitDialog.fGotoSector && gExitDialog.fGotoSectorText )
-			{
-				JumpIntoAdjacentSector( gExitDialog.ubDirection, JUMP_ALL_LOAD_NEW, gExitDialog.sAdditionalData  );
-				return;
-			}
-
-			//KM : August 6, 1999 Patch fix
-			//     Added the !gExitDialog.fGotoSectorText to the conditions to prevent the player from LOADING an
-			//     adjacent sector (this only happens when instant traversal is overriden because of a battle in progress
-			//     in the previous sector
-			if ( gExitDialog.fAllMove && ( !gExitDialog.fGotoSector || !gExitDialog.fGotoSectorText ) )
-			{
-				// Here, move all men out of sector but don't load new one...
-				JumpIntoAdjacentSector( gExitDialog.ubDirection, JUMP_ALL_NO_LOAD, gExitDialog.sAdditionalData );
-			}
-
-			if ( gExitDialog.fSingleMove && gExitDialog.fGotoSector && gExitDialog.fGotoSectorText )
-			{
-				JumpIntoAdjacentSector( gExitDialog.ubDirection, JUMP_SINGLE_LOAD_NEW, gExitDialog.sAdditionalData );
-				return;
-			}
-
-			//KM : August 6, 1999 Patch fix
-			//     Added the !gExitDialog.fGotoSectorText to the conditions to prevent the player from LOADING an
-			//     adjacent sector (this only happens when instant traversal is overriden because of a battle in progress
-			//     in the previous sector
-			if ( gExitDialog.fSingleMove && ( !gExitDialog.fGotoSector || !gExitDialog.fGotoSectorText ) )
-			{
-				// Here, move all men out of sector but don't load new one...
-				JumpIntoAdjacentSector( gExitDialog.ubDirection, JUMP_SINGLE_NO_LOAD, gExitDialog.sAdditionalData );
-			}
-
-		}
+		wchar_t buf[50];
+		swprintf(buf, lengthof(buf), pMessageStrings[MSG_EPC_CANT_TRAVERSE], sel->name);
+		DoMessageBox(MSG_BOX_BASIC_STYLE, buf, GAME_SCREEN, MSG_BOX_FLAG_OK, 0, 0);
+		return;
 	}
+
+	UINT8      jump_code;
+	bool const do_load = d.fGotoSector && d.fGotoSectorText;
+	if (d.fAllMove)
+	{
+		jump_code = do_load ? JUMP_ALL_LOAD_NEW : JUMP_ALL_NO_LOAD;
+	}
+	else if (d.fSingleMove)
+	{
+		jump_code = do_load ? JUMP_SINGLE_LOAD_NEW : JUMP_SINGLE_NO_LOAD;
+	}
+	else
+	{
+		return;
+	}
+
+	JumpIntoAdjacentSector(d.ubDirection, jump_code, d.sAdditionalData);
 }
 
 
