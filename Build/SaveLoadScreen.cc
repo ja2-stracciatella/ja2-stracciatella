@@ -876,17 +876,9 @@ static void InitSaveGameArray(void)
 
 static void DisplaySaveGameList(void)
 {
-	INT8	bLoop1;
-//	UINT16 usPosX = SLG_FIRST_SAVED_SPOT_X;
-	UINT16 usPosY = SLG_FIRST_SAVED_SPOT_Y;
-
-
-	for( bLoop1=0; bLoop1<NUM_SAVE_GAMES; bLoop1++)
-	{
-		//display all the information from the header
-		DisplaySaveGameEntry( bLoop1 );//usPosY );
-
-		usPosY += SLG_GAP_BETWEEN_LOCATIONS;
+	for (INT8 i = 0; i != NUM_SAVE_GAMES; ++i)
+	{ // Display all the information from the header
+		DisplaySaveGameEntry(i);
 	}
 }
 
