@@ -1043,7 +1043,7 @@ void BeginTyingToFall( SOLDIERTYPE *pSoldier );
 void SetSoldierAsUnderAiControl( SOLDIERTYPE *pSoldier );
 void HandlePlayerTogglingLightEffects( BOOLEAN fToggleValue );
 
-void HandleSystemNewAISituation(SOLDIERTYPE* pSoldier, BOOLEAN fResetABC);
+void HandleSystemNewAISituation(SOLDIERTYPE*);
 void SetSoldierAniSpeed(SOLDIERTYPE* pSoldier);
 void PlaySoldierFootstepSound(SOLDIERTYPE* pSoldier);
 void PlayStealthySoldierFootstepSound(SOLDIERTYPE* pSoldier);

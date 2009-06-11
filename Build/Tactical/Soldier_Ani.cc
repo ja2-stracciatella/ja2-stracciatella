@@ -1619,7 +1619,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							  AllTeamsLookForAll( TRUE );
 
 							  // ATE: Now, check AI guy to cancel what he was going....
-							  HandleSystemNewAISituation( pSoldier, TRUE );
+							  HandleSystemNewAISituation(pSoldier);
               }
 
 							// EVENT HAS BEEN HANDLED
@@ -1826,7 +1826,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
               }
 
 							// ATE: Now, check AI guy to cancel what he was going....
-							HandleSystemNewAISituation( pSoldier, TRUE );
+							HandleSystemNewAISituation(pSoldier);
 						}
 
 						// Have we finished opening doors?

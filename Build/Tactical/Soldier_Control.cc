@@ -4297,7 +4297,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 		// Turn off!
 		pSoldier->uiStatusFlags &= (~SOLDIER_LOOK_NEXT_TURNSOLDIER );
 
-		HandleSystemNewAISituation( pSoldier, FALSE );
+		HandleSystemNewAISituation(pSoldier);
  }
 
 
@@ -8922,7 +8922,7 @@ static void HandleSoldierTakeDamageFeedback(SOLDIERTYPE* const s)
 }
 
 
-void HandleSystemNewAISituation(SOLDIERTYPE* pSoldier, BOOLEAN fResetABC)
+void HandleSystemNewAISituation(SOLDIERTYPE* const pSoldier)
 {
 	// Are we an AI guy?
 	if ( gTacticalStatus.ubCurrentTeam != gbPlayerNum && pSoldier->bTeam != gbPlayerNum )

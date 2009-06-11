@@ -2094,7 +2094,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 	// OK, check for other stuff like mines...
 	CheckIfNearbyGroundSeemsWrong(pSoldier, pSoldier->sGridNo, TRUE, pfKeepMoving);
 
-	HandleSystemNewAISituation(pSoldier, FALSE);
+	HandleSystemNewAISituation(pSoldier);
 
 	if (pSoldier->bTeam == gbPlayerNum)
 	{
