@@ -915,7 +915,7 @@ void EVENT_SoldierBeginRefuel( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubDir
 
 
 BOOLEAN SoldierReadyWeapon(SOLDIERTYPE* pSoldier, GridNo tgt_pos, BOOLEAN fEndReady);
-void SetSoldierHeight( SOLDIERTYPE *pSoldier, FLOAT dNewHeight );
+void SetSoldierHeight(SOLDIERTYPE*, FLOAT new_height);
 void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier );
 void BeginSoldierClimbDownRoof( SOLDIERTYPE *pSoldier );
 void BeginSoldierClimbFence( SOLDIERTYPE *pSoldier );

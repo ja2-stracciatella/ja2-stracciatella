@@ -1874,44 +1874,19 @@ void EVENT_SetSoldierPositionXY(SOLDIERTYPE* const s, const FLOAT x, const FLOAT
 }
 
 
-void SetSoldierHeight(SOLDIERTYPE* const pSoldier, const FLOAT dNewHeight)
+void SetSoldierHeight(SOLDIERTYPE* const s, FLOAT const new_height)
 {
-	INT8	bOldLevel = pSoldier->bLevel;
+	s->dHeightAdjustment = new_height;
+	s->sHeightAdjustment = (INT16)new_height;
 
-	pSoldier->dHeightAdjustment = dNewHeight;
-	pSoldier->sHeightAdjustment = (INT16)pSoldier->dHeightAdjustment;
-
-	if ( pSoldier->sHeightAdjustment > 0 )
+	if (s->sHeightAdjustment > 0)
 	{
-		pSoldier->bLevel = SECOND_LEVEL;
-
-		ApplyTranslucencyToWalls((INT16)(pSoldier->dXPos/CELL_X_SIZE), (INT16)(pSoldier->dYPos/CELL_Y_SIZE));
-
-		//pSoldier->pLevelNode->ubShadeLevel=gpWorldLevelData[pSoldier->sGridNo].pRoofHead->ubShadeLevel;
-		//pSoldier->pLevelNode->ubSumLights=gpWorldLevelData[pSoldier->sGridNo].pRoofHead->ubSumLights;
-		//pSoldier->pLevelNode->ubMaxLights=gpWorldLevelData[pSoldier->sGridNo].pRoofHead->ubMaxLights;
-		//pSoldier->pLevelNode->ubNaturalShadeLevel=gpWorldLevelData[pSoldier->sGridNo].pRoofHead->ubNaturalShadeLevel;
+		ApplyTranslucencyToWalls((INT16)(s->dXPos / CELL_X_SIZE), (INT16)(s->dYPos / CELL_Y_SIZE));
+		s->bLevel = SECOND_LEVEL;
 	}
 	else
 	{
-		pSoldier->bLevel = FIRST_LEVEL;
-
-		//pSoldier->pLevelNode->ubShadeLevel=gpWorldLevelData[pSoldier->sGridNo].pLandHead->ubShadeLevel;
-		//pSoldier->pLevelNode->ubSumLights=gpWorldLevelData[pSoldier->sGridNo].pLandHead->ubSumLights;
-		//pSoldier->pLevelNode->ubMaxLights=gpWorldLevelData[pSoldier->sGridNo].pLandHead->ubMaxLights;
-		//pSoldier->pLevelNode->ubNaturalShadeLevel=gpWorldLevelData[pSoldier->sGridNo].pLandHead->ubNaturalShadeLevel;
-
-
-	}
-
-	if ( bOldLevel == 0 && pSoldier->bLevel == 0 )
-	{
-
-	}
-	else
-	{
-		// Show room at new level
-		//HideRoom( pSoldier->sGridNo, pSoldier );
+		s->bLevel = FIRST_LEVEL;
 	}
 }
 
