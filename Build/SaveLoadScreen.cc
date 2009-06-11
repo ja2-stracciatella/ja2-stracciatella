@@ -318,6 +318,16 @@ static void SetSaveLoadExitScreen(ScreenID const uiScreen)
 }
 
 
+static void LeaveSaveLoadScreen()
+{
+	ScreenID const exit_screen =
+		gfCameDirectlyFromGame                     ? guiPreviousOptionScreen :
+		guiPreviousOptionScreen == MAINMENU_SCREEN ? MAINMENU_SCREEN         :
+		OPTIONS_SCREEN;
+	SetSaveLoadExitScreen(exit_screen);
+}
+
+
 static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click)
 {
 	return CreateIconAndTextButton(img, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, SLG_BTN_POS_Y, MSYS_PRIORITY_HIGH, click);
@@ -723,14 +733,7 @@ static void GetSaveLoadScreenUserInput(void)
 				case SDLK_ESCAPE:
 					if( gbSelectedSaveLocation == -1 )
 					{
-
-						if( 	gfCameDirectlyFromGame )
-							SetSaveLoadExitScreen( guiPreviousOptionScreen );
-
-						else if( guiPreviousOptionScreen == MAINMENU_SCREEN )
-							SetSaveLoadExitScreen( MAINMENU_SCREEN );
-						else
-							SetSaveLoadExitScreen( OPTIONS_SCREEN );
+						LeaveSaveLoadScreen();
 					}
 					else
 					{
@@ -1080,19 +1083,11 @@ static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const h
 }
 
 
-static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnSlgCancelCallback(GUI_BUTTON* const btn, INT32 const reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		//Exit back
-		if( gfCameDirectlyFromGame )
-			SetSaveLoadExitScreen( guiPreviousOptionScreen );
-
-		else if( guiPreviousOptionScreen == MAINMENU_SCREEN )
-			SetSaveLoadExitScreen( MAINMENU_SCREEN );
-
-		else
-			SetSaveLoadExitScreen( OPTIONS_SCREEN );
+		LeaveSaveLoadScreen();
 	}
 }
 
