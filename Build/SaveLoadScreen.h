@@ -23,9 +23,9 @@ void DoSaveLoadMessageBox(wchar_t const* zString, ScreenID uiExitScreen, Message
 void DoQuickSave(void);
 void DoQuickLoad(void);
 
-bool IsThereAnySavedGameFiles();
+bool AreThereAnySavedGameFiles();
 
-void			DeleteSaveGameNumber( UINT8 ubSaveGameSlotID );
+void DeleteSaveGameNumber(UINT8 save_slot_id);
 
 #if defined JA2BETAVERSION
 void ErrorDetectedInSaveCallback(MessageBoxReturnValue);

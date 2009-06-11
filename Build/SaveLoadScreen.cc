@@ -1488,15 +1488,12 @@ static void DeleteAllSaveGameFile(void)
 	InitSaveGameArray();
 }
 
-void DeleteSaveGameNumber( UINT8 ubSaveGameSlotID )
+
+void DeleteSaveGameNumber(UINT8 const save_slot_id)
 {
-	CHAR8		zSaveGameName[ 512 ];
-
-	//Create the name of the file
-	CreateSavedGameFileNameFromNumber( ubSaveGameSlotID, zSaveGameName );
-
-	//Delete the saved game file
-	FileDelete( zSaveGameName );
+	char filename[512];
+	CreateSavedGameFileNameFromNumber(save_slot_id, filename);
+	FileDelete(filename);
 }
 
 
