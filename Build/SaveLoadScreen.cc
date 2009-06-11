@@ -793,58 +793,44 @@ static void LoadSavedGameWarningMessageBoxCallBack(MessageBoxReturnValue);
 static void SaveGameToSlotNum(void);
 
 
-static void SaveLoadGameNumber(INT8 bSaveGameID)
+static void SaveLoadGameNumber(INT8 const save_slot_id)
 {
-//	CHAR16	zTemp[128];
-	UINT8		ubRetVal=0;
+	if (save_slot_id < 0 || NUM_SAVE_GAMES <= save_slot_id) return;
 
-	if( bSaveGameID >= NUM_SAVE_GAMES || bSaveGameID < 0 )
+	if (gfSaveGame)
 	{
-		return;
-	}
-
-	if( gfSaveGame )
-	{
-		INT8		bActiveTextField;
-
-		bActiveTextField = (INT8)GetActiveFieldID();
-		if( bActiveTextField && bActiveTextField != -1 )
+		INT8 const active_text_field = (INT8)GetActiveFieldID();
+		if (active_text_field != 0 && active_text_field != -1)
 		{
-			wcslcpy(gzGameDescTextField, GetStringFromField(bActiveTextField), lengthof(gzGameDescTextField));
+			wcslcpy(gzGameDescTextField, GetStringFromField(active_text_field), lengthof(gzGameDescTextField));
 		}
 
-		//if there is save game in the slot, ask for confirmation before overwriting
-		if( gbSaveGameArray[ bSaveGameID ] )
+		// If there is save game in the slot, ask for confirmation before overwriting
+		if (gbSaveGameArray[save_slot_id])
 		{
-			CHAR16	sText[512];
-
-			swprintf( sText, lengthof(sText), zSaveLoadText[SLG_CONFIRM_SAVE], bSaveGameID );
-
+			wchar_t sText[512];
+			swprintf(sText, lengthof(sText), zSaveLoadText[SLG_CONFIRM_SAVE], save_slot_id);
 			DoSaveLoadMessageBox(sText, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmSavedGameMessageBoxCallBack);
 		}
 		else
-		{
-			//else do NOT put up a confirmation
-
-			//Save the game
+		{ // else do NOT put up a confirmation
 			SaveGameToSlotNum();
 		}
 	}
 	else
 	{
-		//Check to see if the save game headers are the same
-		ubRetVal = CompareSaveGameVersion( bSaveGameID );
-		if( ubRetVal != SLS_HEADER_OK )
+		// Check to see if the save game headers are the same
+		UINT8 const ret = CompareSaveGameVersion(save_slot_id);
+		if (ret != SLS_HEADER_OK)
 		{
 			wchar_t const* const msg =
-				ubRetVal == SLS_GAME_VERSION_OUT_OF_DATE       ? zSaveLoadText[SLG_GAME_VERSION_DIF] :
-				ubRetVal == SLS_SAVED_GAME_VERSION_OUT_OF_DATE ? zSaveLoadText[SLG_SAVED_GAME_VERSION_DIF] :
+				ret == SLS_GAME_VERSION_OUT_OF_DATE       ? zSaveLoadText[SLG_GAME_VERSION_DIF] :
+				ret == SLS_SAVED_GAME_VERSION_OUT_OF_DATE ? zSaveLoadText[SLG_SAVED_GAME_VERSION_DIF] :
 				zSaveLoadText[SLG_BOTH_GAME_AND_SAVED_GAME_DIF];
 			DoSaveLoadMessageBox(msg, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, LoadSavedGameWarningMessageBoxCallBack);
 		}
 		else
 		{
-			//Setup up the fade routines
 			StartFadeOutForSaveLoadScreen();
 		}
 	}
