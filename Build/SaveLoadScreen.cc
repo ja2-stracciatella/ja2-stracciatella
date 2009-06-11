@@ -1624,24 +1624,23 @@ static void ConfirmSavedGameMessageBoxCallBack(MessageBoxReturnValue const bExit
 
 
 #ifdef JA2BETAVERSION
-void ErrorDetectedInSaveCallback(MessageBoxReturnValue const bValue)
+
+void ErrorDetectedInSaveCallback(MessageBoxReturnValue)
 {
-	//If we are to go to map screen after loading the game
-	if( guiScreenToGotoAfterLoadingSavedGame == MAP_SCREEN )
-	{
-		gFadeInDoneCallback = DoneFadeInForSaveLoadScreen;
-		SetSaveLoadExitScreen( guiScreenToGotoAfterLoadingSavedGame );
-		FadeInNextFrame( );
+	gFadeInDoneCallback = DoneFadeInForSaveLoadScreen;
+	ScreenID const screen = guiScreenToGotoAfterLoadingSavedGame;
+	SetSaveLoadExitScreen(screen);
+	if (screen == MAP_SCREEN)
+	{ // We are to go to map screen after loading the game
+		FadeInNextFrame();
 	}
 	else
-	{
-		//if we are to go to the Tactical screen after loading
-		gFadeInDoneCallback = DoneFadeInForSaveLoadScreen;
-		SetSaveLoadExitScreen( guiScreenToGotoAfterLoadingSavedGame );
-		FadeInGameScreen( );
+	{ // We are to go to the Tactical screen after loading
+		FadeInGameScreen();
 	}
 	gfStartedFadingOut = TRUE;
 }
+
 #endif
 
 
