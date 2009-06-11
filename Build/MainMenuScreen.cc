@@ -216,7 +216,7 @@ void InitMainMenu(void)
 #undef GFX_DIR
 
 	// If there are no saved games, disable the button
-	if (!IsThereAnySavedGameFiles()) DisableButton(iMenuButtons[LOAD_GAME]);
+	if (!AreThereAnySavedGameFiles()) DisableButton(iMenuButtons[LOAD_GAME]);
 
 #if defined JA2DEMO
 	DisableButton(iMenuButtons[CREDITS]);

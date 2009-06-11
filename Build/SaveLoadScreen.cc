@@ -1702,20 +1702,15 @@ void DoQuickLoad()
 }
 
 
-BOOLEAN IsThereAnySavedGameFiles()
+bool AreThereAnySavedGameFiles()
 {
-	INT8	cnt;
-	CHAR8		zSaveGameName[ 512 ];
-
-	for( cnt=0; cnt<NUM_SAVE_GAMES; cnt++)
+	for (INT8 i = 0; i != NUM_SAVE_GAMES; ++i)
 	{
-		CreateSavedGameFileNameFromNumber( cnt, zSaveGameName );
-
-		if( FileExists( zSaveGameName ) )
-			return( TRUE );
+		char filename[512];
+		CreateSavedGameFileNameFromNumber(i, filename);
+		if (FileExists(filename)) return true;
 	}
-
-	return( FALSE );
+	return false;
 }
 
 

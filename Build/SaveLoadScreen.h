@@ -23,7 +23,7 @@ void DoSaveLoadMessageBox(wchar_t const* zString, ScreenID uiExitScreen, Message
 void DoQuickSave(void);
 void DoQuickLoad(void);
 
-BOOLEAN IsThereAnySavedGameFiles(void);
+bool IsThereAnySavedGameFiles();
 
 void			DeleteSaveGameNumber( UINT8 ubSaveGameSlotID );
 
