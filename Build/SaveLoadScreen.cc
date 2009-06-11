@@ -191,7 +191,7 @@ static void EnterSaveLoadScreen(void);
 static void ExitSaveLoadScreen(void);
 static void GetSaveLoadScreenUserInput(void);
 static void RenderSaveLoadScreen(void);
-static void SaveLoadGameNumber(INT8 bSaveGameID);
+static void SaveLoadGameNumber();
 
 
 ScreenID SaveLoadScreenHandle()
@@ -240,7 +240,7 @@ ScreenID SaveLoadScreenHandle()
 		if( gubSaveGameNextPass == 5 )
 		{
 			gubSaveGameNextPass = 0;
-			SaveLoadGameNumber( gbSelectedSaveLocation );
+			SaveLoadGameNumber();
 		}
 	}
 
@@ -759,14 +759,14 @@ static void GetSaveLoadScreenUserInput(void)
 
 							DestroySaveLoadTextInputBoxes();
 
-							SaveLoadGameNumber( gbSelectedSaveLocation );
+							SaveLoadGameNumber();
 							return;
 						}
 						else
 						{
 							if( gbSelectedSaveLocation != -1 )
 							{
-								SaveLoadGameNumber( gbSelectedSaveLocation );
+								SaveLoadGameNumber();
 								return;
 							}
 						}
@@ -778,7 +778,7 @@ static void GetSaveLoadScreenUserInput(void)
 						gfRedrawSaveLoadScreen = TRUE;
 					}
 					else
-						SaveLoadGameNumber( gbSelectedSaveLocation );
+						SaveLoadGameNumber();
 
 					break;
 			}
@@ -793,8 +793,9 @@ static void LoadSavedGameWarningMessageBoxCallBack(MessageBoxReturnValue);
 static void SaveGameToSlotNum(void);
 
 
-static void SaveLoadGameNumber(INT8 const save_slot_id)
+static void SaveLoadGameNumber()
 {
+	INT8 const save_slot_id = gbSelectedSaveLocation;
 	if (save_slot_id < 0 || NUM_SAVE_GAMES <= save_slot_id) return;
 
 	if (gfSaveGame)
@@ -1074,7 +1075,7 @@ static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		SaveLoadGameNumber( gbSelectedSaveLocation );
+		SaveLoadGameNumber();
 	}
 }
 
@@ -1158,12 +1159,10 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 				//if the user is not currently editing the game desc
 				if( !gfUserInTextInputMode )
 				{
-//					SaveLoadGameNumber( gbSelectedSaveLocation );
-
 					if( ( uiCurTime - uiLastTime ) < SLG_DOUBLE_CLICK_DELAY )
 					{
 						//Load the saved game
-						SaveLoadGameNumber( gbSelectedSaveLocation );
+						SaveLoadGameNumber();
 					}
 					else
 					{
@@ -1209,7 +1208,7 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 				if( ( uiCurTime - uiLastTime ) < SLG_DOUBLE_CLICK_DELAY )
 				{
 					//Load the saved game
-					SaveLoadGameNumber( bSelected );
+					SaveLoadGameNumber();
 				}
 				else
 				{
