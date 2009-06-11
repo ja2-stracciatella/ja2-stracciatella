@@ -3054,67 +3054,54 @@ static void WaitForMercToFinishTalkingOrUserToClick(void)
 }
 
 
-#if defined ( JA2TESTVERSION ) || defined ( JA2DEMO )
+#if defined JA2TESTVERSION || defined JA2DEMO
 
-void DemoHiringOfMercs( )
+void DemoHiringOfMercs()
 {
 #ifdef GERMAN
-	const ProfileID MercID[] = { IVAN, SHADOW, VICKY, FOX, BUBBA };
+	ProfileID const MercID[] = { IVAN, SHADOW, VICKY, FOX, BUBBA };
 #else
-	const ProfileID MercID[] = { IVAN, SHADOW, VICKY, GASKET, DR_Q };
+	ProfileID const MercID[] = { IVAN, SHADOW, VICKY, GASKET, DR_Q };
 #endif
 
-	INT16	i;
-	MERC_HIRE_STRUCT HireMercStruct;
-	#ifndef JA2DEMO
-		static BOOLEAN	fHaveCalledBefore=FALSE;
+#ifndef JA2DEMO
+	static bool was_called_before = false;
+	if (was_called_before) return;
+	was_called_before = true;
 
-		if( fHaveCalledBefore )
-			return;
+	if (guiCurrentLaptopMode != LAPTOP_MODE_NONE) return;
+#endif
 
-		fHaveCalledBefore = TRUE;
-
-		if( guiCurrentLaptopMode != LAPTOP_MODE_NONE )
-			return;
-	#endif
-
-	for( i=0; i<5; i++)
+	for (ProfileID const* i = MercID; i != endof(MercID); ++i)
 	{
-		memset(&HireMercStruct, 0, sizeof(MERC_HIRE_STRUCT));
+		ProfileID const    pid = *i;
+		MERCPROFILESTRUCT& p   = GetProfile(pid);
 
-		HireMercStruct.ubProfileID = MercID[i];
+		p.ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
+		p.bMercStatus  = 0; // Since this is only a testing function, make the merc available
 
-		//DEF: temp
-		HireMercStruct.sSectorX = 1;
-		HireMercStruct.sSectorY = 16;
-		HireMercStruct.ubInsertionCode	= INSERTION_CODE_ARRIVING_GAME;
+		MERC_HIRE_STRUCT h;
+		memset(&h, 0, sizeof(h));
+		h.ubProfileID           = pid;
+		h.sSectorX              = 1;
+		h.sSectorY              = 16;
+		h.ubInsertionCode       = INSERTION_CODE_ARRIVING_GAME;
+		h.fCopyProfileItemsOver = TRUE;
+		h.iTotalContractLength  = 60;
+		h.uiTimeTillMercArrives = GetMercArrivalTimeOfDay();
+		HireMerc(&h);
 
-		HireMercStruct.fCopyProfileItemsOver = TRUE;
-		gMercProfiles[ MercID[i] ].ubMiscFlags |= PROFILE_MISC_FLAG_ALREADY_USED_ITEMS;
+		UINT32 const now = GetWorldTotalMin();
+		// Add an entry in the finacial page for the hiring of the merc
+		AddTransactionToPlayersBook(HIRED_MERC, pid, now, -(INT32)p.sSalary);
 
-
-		HireMercStruct.iTotalContractLength = 60;
-
-		//specify when the merc should arrive
-		HireMercStruct.uiTimeTillMercArrives = GetMercArrivalTimeOfDay( );// + MercID[i];
-
-		//since this is only a testing function, make the merc available
-		gMercProfiles[ MercID[i] ].bMercStatus = 0;
-
-		//if we succesfully hired the merc
-		HireMerc( &HireMercStruct );
-
-		//add an entry in the finacial page for the hiring of the merc
-		AddTransactionToPlayersBook(HIRED_MERC, MercID[i], GetWorldTotalMin(), -(INT32)( gMercProfiles[MercID[i]].sSalary ) );
-
-		if( gMercProfiles[ MercID[i] ].bMedicalDeposit )
-		{
-				//add an entry in the finacial page for the medical deposit
-			AddTransactionToPlayersBook(	MEDICAL_DEPOSIT, MercID[i], GetWorldTotalMin(), -(gMercProfiles[MercID[i]].sMedicalDepositAmount) );
+		if (p.bMedicalDeposit)
+		{ // Add an entry in the finacial page for the medical deposit
+			AddTransactionToPlayersBook(MEDICAL_DEPOSIT, pid, now, -p.sMedicalDepositAmount);
 		}
 
-		//add an entry in the history page for the hiring of the merc
-		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, MercID[i], GetWorldTotalMin(), -1, -1 );
+		// Add an entry in the history page for the hiring of the merc
+		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, pid, now, -1, -1);
 	}
 }
 
