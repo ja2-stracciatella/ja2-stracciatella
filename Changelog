@@ -1,3 +1,4 @@
+(r5970) Slightly improve the cursor key handling in the load/save screen.
 (r5852) Fix a vanilla out of bounds array access when a wall gets damaged.
 (r5787) Fix a vanilla bug: Throwing a knife costed one point less than it should.
 (r5732) Fix a vanilla display glitch: The item tooltip for the auto rocket rifle should not show "(rocket)", just like for the rocket rifle.
