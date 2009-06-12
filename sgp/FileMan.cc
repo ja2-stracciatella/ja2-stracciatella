@@ -228,14 +228,9 @@ void InitializeFileManager(void)
 static BOOLEAN FileExistsNoDB(const char* filename);
 
 
-BOOLEAN FileExists(const char* const filename)
+bool FileExists(char const* const filename)
 {
-	BOOLEAN fExists = FileExistsNoDB(filename);
-	if (!fExists)
-	{
-		fExists = CheckIfFileExistInLibrary(filename);
-	}
-	return fExists;
+	return FileExistsNoDB(filename) || CheckIfFileExistInLibrary(filename);
 }
 
 
