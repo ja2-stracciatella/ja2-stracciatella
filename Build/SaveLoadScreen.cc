@@ -187,7 +187,7 @@ static MOUSE_REGION gSelectedSaveRegion[NUM_SAVE_GAMES];
 static MOUSE_REGION gSLSEntireScreenRegion;
 
 
-static void EnterSaveLoadScreen(void);
+static void EnterSaveLoadScreen();
 static void ExitSaveLoadScreen(void);
 static void GetSaveLoadScreenUserInput(void);
 static void RenderSaveLoadScreen(void);
@@ -345,14 +345,10 @@ static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reas
 static void StartFadeOutForSaveLoadScreen(void);
 
 
-static void EnterSaveLoadScreen(void)
+static void EnterSaveLoadScreen()
 {
-	INT8	i;
-	UINT16 usPosX = SLG_FIRST_SAVED_SPOT_X;
-	UINT16 usPosY = SLG_FIRST_SAVED_SPOT_Y;
-
-	// This is a hack to get sector names , but... if the underground sector is NOT loaded
-	if( !gpUndergroundSectorInfoHead )
+	// This is a hack to get sector names, but if the underground sector is NOT loaded
+	if (!gpUndergroundSectorInfoHead)
 	{
 		BuildUndergroundSectorInfoList();
 		gfHadToMakeBasementLevels = TRUE;
@@ -363,179 +359,116 @@ static void EnterSaveLoadScreen(void)
 	}
 
 	guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
-	//init the list
 	InitSaveGameArray();
+	EmptyBackgroundRects();
 
-	//Clear out all the saved background rects
-	EmptyBackgroundRects( );
-
-	//if the user has asked to load the selected save
-	if( gfLoadGameUponEntry )
+	// If the user has asked to load the selected save
+	if (gfLoadGameUponEntry)
 	{
-		//make sure the save is valid
-		if( gGameSettings.bLastSavedGameSlot != -1 && gbSaveGameArray[ gGameSettings.bLastSavedGameSlot ] )
+		// Make sure the save is valid
+		INT8 const last_slot = gGameSettings.bLastSavedGameSlot;
+		if (last_slot != -1 && gbSaveGameArray[last_slot])
 		{
-			 gbSelectedSaveLocation = gGameSettings.bLastSavedGameSlot;
-
-			//load the saved game
+			gbSelectedSaveLocation = last_slot;
 			StartFadeOutForSaveLoadScreen();
 		}
 		else
-		{ //else the save isnt valid, so dont load it
+		{ // else the save is not valid, so do not load it
 			gfLoadGameUponEntry = FALSE;
 		}
 	}
 
-	// load Main background  graphic and add it
+	// Load main background and add ons graphic
 	guiSlgBackGroundImage = AddVideoObjectFromFile("INTERFACE/LoadScreen.sti");
+	guiBackGroundAddOns   = AddVideoObjectFromFile(GetMLGFilename(MLG_LOADSAVEHEADER));
 
-	// load Load Screen Add ons graphic and add it
-	const char* const ImageFile = GetMLGFilename(MLG_LOADSAVEHEADER);
-	guiBackGroundAddOns = AddVideoObjectFromFile(ImageFile);
+	guiSlgButtonImage = LoadButtonImage("INTERFACE/LoadScreenAddOns.sti", -1, 6, -1, 9, -1);
+	guiSlgCancelBtn   = MakeButton(guiSlgButtonImage, zSaveLoadText[SLG_CANCEL], SLG_LOAD_CANCEL_POS_X, BtnSlgCancelCallback);
 
-	guiSlgButtonImage = LoadButtonImage("INTERFACE/LoadScreenAddOns.sti", -1,6,-1,9,-1 );
-//	guiSlgButtonImage = UseLoadedButtonImage( guiBackGroundAddOns, -1,9,-1,6,-1 );
-
-
-	//Cancel button
-//	if( gfSaveGame )
-//		usPosX = SLG_SAVE_CANCEL_POS_X;
-//	else
-		usPosX = SLG_LOAD_CANCEL_POS_X;
-
-	guiSlgCancelBtn = MakeButton(guiSlgButtonImage, zSaveLoadText[SLG_CANCEL], usPosX, BtnSlgCancelCallback);
-
-	//Either the save or load button
-	const wchar_t* text;
-	if( gfSaveGame )
+	// Either the save or load button
+	INT32          gfx;
+	wchar_t const* text;
+	if (gfSaveGame)
 	{
-		//If we are saving, dont have the save game button
-		guiSaveLoadImage = UseLoadedButtonImage( guiSlgButtonImage, -1,5,-1,8,-1 );
+		gfx  = 5;
 		text = zSaveLoadText[SLG_SAVE_GAME];
 	}
 	else
 	{
-		guiSaveLoadImage = UseLoadedButtonImage( guiSlgButtonImage, -1,4,-1,7,-1 );
+		gfx  = 4;
 		text = zSaveLoadText[SLG_LOAD_GAME];
 	}
+	guiSaveLoadImage  = UseLoadedButtonImage(guiSlgButtonImage, -1, gfx, -1, gfx + 3, -1);
 	guiSlgSaveLoadBtn = MakeButton(guiSaveLoadImage, text, SLG_SAVE_LOAD_BTN_POS_X, BtnSlgSaveLoadCallback);
+	guiSlgSaveLoadBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 
-	//if we are loading, disable the load button
-//	if( !gfSaveGame )
+	UINT16 const x = SLG_FIRST_SAVED_SPOT_X;
+	UINT16       y = SLG_FIRST_SAVED_SPOT_Y;
+	for (INT8 i = 0; i != NUM_SAVE_GAMES; ++i)
 	{
-		guiSlgSaveLoadBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
-		DisableButton(guiSlgSaveLoadBtn);
+		MOUSE_REGION& r = gSelectedSaveRegion[i];
+		MSYS_DefineRegion(&r, x, y, x + SLG_SAVELOCATION_WIDTH, y + SLG_SAVELOCATION_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectedSaveRegionMovementCallBack, SelectedSaveRegionCallBack);
+		MSYS_SetRegionUserData(&r, 0, i);
+
+		// We cannot load a game that has not been saved
+		if (!gfSaveGame && !gbSaveGameArray[i]) r.Disable();
+
+		y += SLG_GAP_BETWEEN_LOCATIONS;
 	}
 
-
-	usPosX = SLG_FIRST_SAVED_SPOT_X;
-	usPosY = SLG_FIRST_SAVED_SPOT_Y;
-	for(i=0; i<NUM_SAVE_GAMES; i++)
-	{
-		MSYS_DefineRegion( &gSelectedSaveRegion[i], usPosX, usPosY, (UINT16)(usPosX+SLG_SAVELOCATION_WIDTH), (UINT16)(usPosY+SLG_SAVELOCATION_HEIGHT), MSYS_PRIORITY_HIGH,
-								 CURSOR_NORMAL, SelectedSaveRegionMovementCallBack, SelectedSaveRegionCallBack );
-		MSYS_SetRegionUserData( &gSelectedSaveRegion[ i ], 0, i);
-
-		//if we are to Load a game
-		if( !gfSaveGame )
-		{
-			//We cannot load a game that hasnt been saved
-			if( !gbSaveGameArray[ i ] )
-				gSelectedSaveRegion[i].Disable();
-		}
-
-		usPosY += SLG_GAP_BETWEEN_LOCATIONS;
-	}
-
-/*
-Removed so that the user can click on it and get displayed a message that the quick save slot is for the tactical screen
-	if( gfSaveGame )
-	{
-		gSelectedSaveRegion[0].Disable();
-	}
-*/
-
-	//Create the screen mask to enable ability to righ click to cancel the sace game
+	// Create the screen mask to enable ability to right click to cancel the save game
 	MSYS_DefineRegion(&gSLSEntireScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 10, CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectedSLSEntireRegionCallBack);
 
 	ClearSelectedSaveSlot();
 
+	RemoveMouseRegionForPauseOfClock();
 
-	//Remove the mouse region over the clock
-	RemoveMouseRegionForPauseOfClock(  );
-
-	//Draw the screen
-//	gfRedrawSaveLoadScreen = TRUE;	DEF:
-
-	//Reset the highlight
-	gbHighLightedLocation = -1;
-
+	gbHighLightedLocation  = -1;
 	gzGameDescTextField[0] = '\0';
 
-
-
-	//if we are loading
-//	if( !gfSaveGame )
+	// If the last saved game slot is ok, set the selected slot to the last saved slot
+	INT8 const last_slot = gGameSettings.bLastSavedGameSlot;
+	if (last_slot != -1            &&
+			gbSaveGameArray[last_slot] &&
+			(!gfSaveGame || last_slot != 0)) // If it is not the quicksave slot, and we are loading
 	{
-		guiSlgSaveLoadBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
-
-		//if the last saved game slot is ok, set the selected slot to the last saved slot]
-		if( gGameSettings.bLastSavedGameSlot != -1 )
+		SAVED_GAME_HEADER SaveGameHeader;
+		if (LoadSavedGameHeader(last_slot, &SaveGameHeader))
 		{
-			//if the slot is valid
-			if( gbSaveGameArray[ gGameSettings.bLastSavedGameSlot ] )
-			{
-				SAVED_GAME_HEADER SaveGameHeader;
-
-				memset( &SaveGameHeader, 0, sizeof( SAVED_GAME_HEADER ) );
-
-				//if it is not the Quick Save slot, and we are loading
-				if( !gfSaveGame || gfSaveGame && gGameSettings.bLastSavedGameSlot != 0 )
-				{
-					gbSelectedSaveLocation = gGameSettings.bLastSavedGameSlot;
-
-					//load the save gamed header string
-
-					//Get the heade for the saved game
-					if( !LoadSavedGameHeader( gbSelectedSaveLocation, &SaveGameHeader ) )
-					{
-						gbSaveGameArray[ gbSelectedSaveLocation ] = FALSE;
-						gbSelectedSaveLocation = gGameSettings.bLastSavedGameSlot = -1;
-					}
-
-					wcscpy( gzGameDescTextField, SaveGameHeader.sSavedGameDesc );
-				}
-			}
+			wcscpy(gzGameDescTextField, SaveGameHeader.sSavedGameDesc);
+			gbSelectedSaveLocation = last_slot;
 		}
-
-		//if we are loading and the there is no slot selected
-		if( gbSelectedSaveLocation == -1 )
-			DisableButton( guiSlgSaveLoadBtn );
 		else
-			EnableButton( guiSlgSaveLoadBtn );
+		{
+			gGameSettings.bLastSavedGameSlot = -1;
+		}
 	}
 
+	if (gbSelectedSaveLocation == -1)
+	{
+		DisableButton(guiSlgSaveLoadBtn);
+	}
+	else
+	{
+		EnableButton(guiSlgSaveLoadBtn);
+	}
 
 	RenderSaveLoadScreen();
 
 	// Save load buttons are created
 	gfSaveLoadScreenButtonsCreated = TRUE;
 
-	gfDoingQuickLoad = FALSE;
-
-	//reset
+	gfDoingQuickLoad   = FALSE;
 	gfStartedFadingOut = FALSE;
 
 	DisableScrollMessages();
 
 	gfLoadedGame = FALSE;
 
-	if( gfLoadGameUponEntry )
+	if (gfLoadGameUponEntry)
 	{
-		//unmark the 2 buttons from being dirty
 		guiSlgCancelBtn->uiFlags   |= BUTTON_FORCE_UNDIRTY;
 		guiSlgSaveLoadBtn->uiFlags |= BUTTON_FORCE_UNDIRTY;
-
 		FRAME_BUFFER->Fill(0);
 	}
 
