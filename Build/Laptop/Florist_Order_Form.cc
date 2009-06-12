@@ -736,6 +736,23 @@ static void SelectFlowerDropDownMovementCallBack(MOUSE_REGION* pRegion, INT32 re
 }
 
 
+static void GetInputText()
+{
+	// Get the current text from the text box
+	UINT8 const text_field_id = GetActiveFieldID();
+	if (text_field_id == 1)
+	{ // The personel sentiment field
+		wcslcpy(gsSentimentTextField, GetStringFromField(text_field_id), lengthof(gsSentimentTextField));
+	}
+	else if (text_field_id == 2)
+	{ // The name field
+		wcslcpy(gsNameTextField, GetStringFromField(text_field_id), lengthof(gsNameTextField));
+	}
+
+	SetActiveField(0);
+}
+
+
 static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 {
 	static UINT16 usHeight;
@@ -755,30 +772,13 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 			UINT16 usPosX, usPosY;
 			UINT16 usTemp;
 			UINT16 usFontHeight = GetFontHeight( FLOWER_ORDEER_DROP_DOWN_FONT );
-			UINT8 ubTextFieldID;
 
 			if( fMouseRegionsCreated )
 			{
 				return(FALSE);
 			}
 
-//Get the current text from the text box
-			ubTextFieldID = (UINT8) GetActiveFieldID();
-
-			//if its the personel sentiment field
-			if( ubTextFieldID == 1 )
-			{
-				wcslcpy(gsSentimentTextField, GetStringFromField(ubTextFieldID), lengthof(gsSentimentTextField));
-			}
-			else if( ubTextFieldID == 2 )
-			{
-				//else its the name field
-				wcslcpy(gsNameTextField, GetStringFromField(ubTextFieldID), lengthof(gsNameTextField));
-			}
-
-			SetActiveField(0);
-
-
+			GetInputText();
 
 			fMouseRegionsCreated = TRUE;
 
@@ -973,24 +973,10 @@ static void HandleFloristOrderKeyBoardInput(void)
 	{
 		if( !HandleTextInput( &InputEvent ) && InputEvent.usEvent == KEY_DOWN )
 		{
-			UINT8 ubTextFieldID;
 			switch (InputEvent.usParam)
 			{
 				case SDLK_RETURN:
-					ubTextFieldID = (UINT8) GetActiveFieldID();
-
-					//if its the personel sentiment field
-					if( ubTextFieldID == 1 )
-					{
-						wcslcpy(gsSentimentTextField, GetStringFromField(ubTextFieldID), lengthof(gsSentimentTextField));
-					}
-					else if( ubTextFieldID == 2 )
-					{
-						//else its the name field
-						wcslcpy(gsNameTextField, GetStringFromField(ubTextFieldID), lengthof(gsNameTextField));
-					}
-
-					SetActiveField(0);
+					GetInputText();
 					break;
 
 				case SDLK_ESCAPE: SetActiveField(0); break;
