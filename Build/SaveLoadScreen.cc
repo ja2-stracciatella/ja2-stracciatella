@@ -620,6 +620,16 @@ static void RenderSaveLoadScreen(void)
 }
 
 
+static bool GetGameDescription()
+{
+	INT8 const id = GetActiveFieldID();
+	if (id == 0 || id == -1) return false;
+
+	wcslcpy(gzGameDescTextField, GetStringFromField(id), lengthof(gzGameDescTextField));
+	return true;
+}
+
+
 static void DisplayOnScreenNumber(BOOLEAN display);
 static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID);
 static void MoveSelectionUpOrDown(BOOLEAN fUp);
@@ -629,7 +639,6 @@ static void SetSelection(UINT8 ubNewSelection);
 static void GetSaveLoadScreenUserInput(void)
 {
 	InputAtom Event;
-	INT8		bActiveTextField;
 	static BOOLEAN	fWasCtrlHeldDownLastFrame = FALSE;
 
 	SGPPoint MousePos;
@@ -751,14 +760,10 @@ static void GetSaveLoadScreenUserInput(void)
 				case SDLK_RETURN:
 					if( gfSaveGame )
 					{
-						bActiveTextField = (INT8)GetActiveFieldID();
-						if( bActiveTextField && bActiveTextField != -1 )
+						if (GetGameDescription())
 						{
-							wcslcpy(gzGameDescTextField, GetStringFromField(bActiveTextField), lengthof(gzGameDescTextField));
 							SetActiveField(0);
-
 							DestroySaveLoadTextInputBoxes();
-
 							SaveLoadGameNumber();
 							return;
 						}
@@ -800,11 +805,7 @@ static void SaveLoadGameNumber()
 
 	if (gfSaveGame)
 	{
-		INT8 const active_text_field = (INT8)GetActiveFieldID();
-		if (active_text_field != 0 && active_text_field != -1)
-		{
-			wcslcpy(gzGameDescTextField, GetStringFromField(active_text_field), lengthof(gzGameDescTextField));
-		}
+		GetGameDescription();
 
 		// If there is save game in the slot, ask for confirmation before overwriting
 		if (gbSaveGameArray[save_slot_id])
@@ -1087,8 +1088,6 @@ static void RedrawSaveLoadScreenAfterMessageBox(MessageBoxReturnValue);
 
 static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	INT8		bActiveTextField;
-
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		UINT8	bSelected = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
@@ -1176,10 +1175,8 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 				}
 				else
 				{
-					bActiveTextField = (INT8)GetActiveFieldID();
-					if( bActiveTextField && bActiveTextField != -1 )
+					if (GetGameDescription())
 					{
-						wcslcpy(gzGameDescTextField, GetStringFromField(bActiveTextField), lengthof(gzGameDescTextField));
 						SetActiveField(0);
 
 						DestroySaveLoadTextInputBoxes();
