@@ -572,99 +572,67 @@ static void SetSelection(UINT8 ubNewSelection);
 
 static void GetSaveLoadScreenUserInput(void)
 {
-	InputAtom Event;
-	static BOOLEAN	fWasCtrlHeldDownLastFrame = FALSE;
+	static BOOLEAN fWasCtrlHeldDownLastFrame = FALSE;
 
-	SGPPoint MousePos;
-	GetMousePos(&MousePos);
-
-	//if we are going to be instantly leaving the screen, dont draw the numbers
-	if( gfLoadGameUponEntry )
-	{
-		return;
-	}
+	// If we are going to be instantly leaving the screen, dont draw the numbers
+	if (gfLoadGameUponEntry) return;
 
 	DisplayOnScreenNumber(gfKeyState[ALT]);
 
-	if( gfKeyState[ CTRL ] || fWasCtrlHeldDownLastFrame )
+	if (gfKeyState[CTRL] || fWasCtrlHeldDownLastFrame)
 	{
-		DisplaySaveGameEntry( gbSelectedSaveLocation );
+		DisplaySaveGameEntry(gbSelectedSaveLocation);
 	}
+	fWasCtrlHeldDownLastFrame = gfKeyState[CTRL];
 
-	fWasCtrlHeldDownLastFrame = gfKeyState[ CTRL ];
+	SGPPoint mouse_pos;
+	GetMousePos(&mouse_pos);
 
-	while( DequeueEvent( &Event ) )
+	InputAtom e;
+	while (DequeueEvent(&e))
 	{
-		MouseSystemHook(Event.usEvent, MousePos.iX, MousePos.iY);
+		MouseSystemHook(e.usEvent, mouse_pos.iX, mouse_pos.iY);
+		if (HandleTextInput(&e)) continue;
 
-		if( !HandleTextInput( &Event ) && Event.usEvent == KEY_DOWN )
+		if (e.usEvent == KEY_DOWN)
 		{
-			switch( Event.usParam )
+			switch (e.usParam)
 			{
-				case '1':
-					SetSelection( 1 );
-					break;
-				case '2':
-					SetSelection( 2 );
-					break;
-				case '3':
-					SetSelection( 3 );
-					break;
-				case '4':
-					SetSelection( 4 );
-					break;
-				case '5':
-					SetSelection( 5 );
-					break;
-				case '6':
-					SetSelection( 6 );
-					break;
-				case '7':
-					SetSelection( 7 );
-					break;
-				case '8':
-					SetSelection( 8 );
-					break;
-				case '9':
-					SetSelection( 9 );
-					break;
-				case '0':
-					SetSelection( 10 );
-					break;
+				case '1': SetSelection( 1); break;
+				case '2': SetSelection( 2); break;
+				case '3': SetSelection( 3); break;
+				case '4': SetSelection( 4); break;
+				case '5': SetSelection( 5); break;
+				case '6': SetSelection( 6); break;
+				case '7': SetSelection( 7); break;
+				case '8': SetSelection( 8); break;
+				case '9': SetSelection( 9); break;
+				case '0': SetSelection(10); break;
 			}
 		}
-
-		if( Event.usEvent == KEY_UP )
+		else if (e.usEvent == KEY_UP)
 		{
-			switch( Event.usParam )
+			switch (e.usParam)
 			{
 				case 'a':
-					if( gfKeyState[ ALT ] && !gfSaveGame )
+					if (gfKeyState[ALT] && !gfSaveGame)
 					{
-						INT8 iFile = GetNumberForAutoSave( TRUE );
+						INT8 const slot = GetNumberForAutoSave(TRUE);
+						if (slot == -1) break;
 
-						if( iFile == -1 )
-							break;
-
-						guiLastSaveGameNum = iFile;
-
+						guiLastSaveGameNum     = slot;
 						gbSelectedSaveLocation = SAVE__END_TURN_NUM;
 						StartFadeOutForSaveLoadScreen();
 					}
 					break;
 
 				case 'b':
-					if( gfKeyState[ ALT ] && !gfSaveGame )
+					if (gfKeyState[ALT] && !gfSaveGame)
 					{
-						INT8 iFile = GetNumberForAutoSave( FALSE );
+						INT8 const slot = GetNumberForAutoSave(FALSE);
+						if (slot == -1) break;
 
-						if( iFile == -1 )
-							break;
-						else if( iFile == 0 )
-							guiLastSaveGameNum = 1;
-						else if( iFile == 1 )
-							guiLastSaveGameNum = 0;
-
+						guiLastSaveGameNum     = 1 - slot;
 						gbSelectedSaveLocation = SAVE__END_TURN_NUM;
 						StartFadeOutForSaveLoadScreen();
 					}
@@ -674,51 +642,38 @@ static void GetSaveLoadScreenUserInput(void)
 				case SDLK_DOWN: MoveSelectionDown(); break;
 
 				case SDLK_ESCAPE:
-					if( gbSelectedSaveLocation == -1 )
+					if (gbSelectedSaveLocation == -1)
 					{
 						LeaveSaveLoadScreen();
 					}
 					else
-					{
-						//reset selected slot
+					{ // Reset selected slot
 						gbSelectedSaveLocation = -1;
 						gfRedrawSaveLoadScreen = TRUE;
 						DestroySaveLoadTextInputBoxes();
-
-//						if( !gfSaveGame )
-							DisableButton( guiSlgSaveLoadBtn );
+						DisableButton(guiSlgSaveLoadBtn);
 					}
 					break;
 
-
 				case SDLK_RETURN:
-					if( gfSaveGame )
+					if (!gfSaveGame)
 					{
-						if (GetGameDescription())
-						{
-							SetActiveField(0);
-							DestroySaveLoadTextInputBoxes();
-							SaveLoadGameNumber();
-							return;
-						}
-						else
-						{
-							if( gbSelectedSaveLocation != -1 )
-							{
-								SaveLoadGameNumber();
-								return;
-							}
-						}
-						//Enable the save/load button
-						if( gbSelectedSaveLocation != -1 )
-							if( !gfSaveGame )
-								EnableButton( guiSlgSaveLoadBtn );
-
-						gfRedrawSaveLoadScreen = TRUE;
+						SaveLoadGameNumber();
+					}
+					else if (GetGameDescription())
+					{
+						SetActiveField(0);
+						DestroySaveLoadTextInputBoxes();
+						SaveLoadGameNumber();
+					}
+					else if (gbSelectedSaveLocation != -1)
+					{
+						SaveLoadGameNumber();
 					}
 					else
-						SaveLoadGameNumber();
-
+					{
+						gfRedrawSaveLoadScreen = TRUE;
+					}
 					break;
 			}
 		}
