@@ -122,9 +122,9 @@ enum
 };
 
 
-BOOLEAN		gfSaveLoadScreenEntry = TRUE;
-BOOLEAN		gfSaveLoadScreenExit	= FALSE;
-BOOLEAN		gfRedrawSaveLoadScreen = TRUE;
+static BOOLEAN gfSaveLoadScreenEntry = TRUE;
+static BOOLEAN gfSaveLoadScreenExit	= FALSE;
+BOOLEAN        gfRedrawSaveLoadScreen = TRUE;
 
 static ScreenID guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
 
@@ -132,17 +132,17 @@ static ScreenID guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
 //Contains the array of valid save game locations
 static BOOLEAN gbSaveGameArray[NUM_SAVE_GAMES];
 
-BOOLEAN		gfDoingQuickLoad = FALSE;
+static BOOLEAN gfDoingQuickLoad = FALSE;
 
 //This flag is used to diferentiate between loading a game and saveing a game.
 // gfSaveGame=TRUE		For saving a game
 // gfSaveGame=FALSE		For loading a game
 BOOLEAN		gfSaveGame=TRUE;
 
-BOOLEAN		gfSaveLoadScreenButtonsCreated = FALSE;
+static BOOLEAN gfSaveLoadScreenButtonsCreated = FALSE;
 
 static INT8 gbSelectedSaveLocation = -1;
-INT8			gbHighLightedLocation=-1;
+static INT8 gbHighLightedLocation  = -1;
 
 static SGPVObject* guiSlgBackGroundImage;
 static SGPVObject* guiBackGroundAddOns;
@@ -152,10 +152,10 @@ static SGPVObject* guiBackGroundAddOns;
 static wchar_t gzGameDescTextField[SIZE_OF_SAVE_GAME_DESC];
 
 
-BOOLEAN		gfUserInTextInputMode = FALSE;
-UINT8			gubSaveGameNextPass=0;
+static BOOLEAN gfUserInTextInputMode = FALSE;
+static UINT8   gubSaveGameNextPass   = 0;
 
-BOOLEAN		gfStartedFadingOut = FALSE;
+static BOOLEAN gfStartedFadingOut = FALSE;
 
 
 BOOLEAN		gfCameDirectlyFromGame = FALSE;
@@ -165,7 +165,7 @@ BOOLEAN		gfLoadedGame = FALSE;	//Used to know when a game has been loaded, the f
 
 BOOLEAN		gfLoadGameUponEntry = FALSE;
 
-BOOLEAN		gfHadToMakeBasementLevels = FALSE;
+static BOOLEAN gfHadToMakeBasementLevels = FALSE;
 
 
 //
@@ -175,7 +175,7 @@ static BUTTON_PICS* guiSlgButtonImage;
 
 
 // Cancel Button
-GUIButtonRef guiSlgCancelBtn;
+static GUIButtonRef guiSlgCancelBtn;
 
 // Save game Button
 static BUTTON_PICS* guiSaveLoadImage;
@@ -184,7 +184,7 @@ static GUIButtonRef guiSlgSaveLoadBtn;
 //Mouse regions for the currently selected save game
 static MOUSE_REGION gSelectedSaveRegion[NUM_SAVE_GAMES];
 
-MOUSE_REGION		gSLSEntireScreenRegion;
+static MOUSE_REGION gSLSEntireScreenRegion;
 
 
 static void EnterSaveLoadScreen(void);
