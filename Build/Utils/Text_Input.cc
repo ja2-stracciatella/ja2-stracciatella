@@ -1040,27 +1040,30 @@ void RenderInactiveTextField(UINT8 const id)
 }
 
 
-static void RenderInactiveTextFieldNode(TEXTINPUTNODE const* const pNode)
+static void RenderInactiveTextFieldNode(TEXTINPUTNODE const* const n)
 {
-	if( !pNode || !pNode->szString )
-		return;
+	if (!n || !n->szString) return;
+
 	SaveFontSettings();
-	if( !pNode->fEnabled && pColors->fUseDisabledAutoShade )
-	{ //use the color scheme specified by the user.
-		SetFontAttributes(pColors->usFont, pColors->ubDisabledForeColor, pColors->ubDisabledShadowColor);
+	TextInputColors const& clrs     = *pColors;
+	bool            const  disabled = !n->fEnabled && clrs.fUseDisabledAutoShade;
+	if (disabled)
+	{ // Use the color scheme specified by the user
+		SetFontAttributes(clrs.usFont, clrs.ubDisabledForeColor, clrs.ubDisabledShadowColor);
 	}
 	else
 	{
-		SetFontAttributes(pColors->usFont, pColors->ubForeColor, pColors->ubShadowColor);
+		SetFontAttributes(clrs.usFont, clrs.ubForeColor, clrs.ubShadowColor);
 	}
-	UINT16 usOffset = (pNode->region.RegionBottomRightY - pNode->region.RegionTopLeftY - GetFontHeight(pColors->usFont)) / 2;
-	RenderBackgroundField( pNode );
-	MPrint(pNode->region.RegionTopLeftX + 3, pNode->region.RegionTopLeftY + usOffset, pNode->szString);
+	RenderBackgroundField(n);
+	MOUSE_REGION const& r = n->region;
+	UINT16       const  y = r.RegionTopLeftY + (r.RegionBottomRightY - r.RegionTopLeftY - GetFontHeight(clrs.usFont)) / 2;
+	MPrint(r.RegionTopLeftX + 3, y, n->szString);
 	RestoreFontSettings();
-	if( !pNode->fEnabled && pColors->fUseDisabledAutoShade )
+
+	if (disabled)
 	{
-		const MOUSE_REGION* r = &pNode->region;
-		FRAME_BUFFER->ShadowRect(r->RegionTopLeftX, r->RegionTopLeftY, r->RegionBottomRightX, r->RegionBottomRightY);
+		FRAME_BUFFER->ShadowRect(r.RegionTopLeftX, r.RegionTopLeftY, r.RegionBottomRightX, r.RegionBottomRightY);
 	}
 }
 
