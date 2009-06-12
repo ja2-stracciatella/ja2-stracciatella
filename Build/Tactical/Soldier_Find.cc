@@ -199,7 +199,7 @@ SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 			sScreenX = gusMouseXPos;
 			sScreenY = gusMouseYPos;
 
-			if ( IsPointInScreenRect( sScreenX, sScreenY, &aRect ) )
+			if (IsPointInScreenRect(sScreenX, sScreenY, aRect))
 			{
 				fInScreenRect = TRUE;
 			}
@@ -590,12 +590,7 @@ BOOLEAN IsPointInSoldierBoundingBox( SOLDIERTYPE *pSoldier, INT16 sX, INT16 sY )
 	// Get Rect contained in the soldier
 	GetSoldierScreenRect( pSoldier, &aRect );
 
-	if ( IsPointInScreenRect( sX, sY, &aRect ) )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
+	return IsPointInScreenRect(sX, sY, aRect);
 }
 
 

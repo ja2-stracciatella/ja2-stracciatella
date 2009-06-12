@@ -69,7 +69,7 @@ void CellXYToScreenXY(INT16 sCellX, INT16 sCellY, INT16* sScreenX, INT16* sScree
 INT32 GetRangeFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 );
 INT32 GetRangeInCellCoordsFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 );
 
-BOOLEAN IsPointInScreenRect( INT16 sXPos, INT16 sYPos, SGPRect *pRect );
+bool IsPointInScreenRect(INT16 x, INT16 y, SGPRect const&);
 BOOLEAN IsPointInScreenRectWithRelative( INT16 sXPos, INT16 sYPos, SGPRect *pRect, INT16 *sXRel, INT16 *sRelY );
 
 

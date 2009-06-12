@@ -4279,7 +4279,7 @@ static ScreenID UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent)
 				sScreenY -= 50;
 			}
 
-			if ( IsPointInScreenRect( sScreenX, sScreenY, &aRect ) )
+			if (IsPointInScreenRect(sScreenX, sScreenY, aRect))
 			{
         fAtLeastOne = TRUE;
 			}
@@ -4311,7 +4311,7 @@ static ScreenID UIHandleRubberBandOnTerrain(UI_EVENT* pUIEvent)
 				sScreenY -= 50;
 			}
 
-			if ( IsPointInScreenRect( sScreenX, sScreenY, &aRect ) )
+			if (IsPointInScreenRect(sScreenX, sScreenY, aRect))
 			{
 				// Adjust this guy's flag...
 				s->uiStatusFlags |= SOLDIER_MULTI_SELECTED;

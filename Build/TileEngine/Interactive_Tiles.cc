@@ -432,7 +432,7 @@ void LogMouseOverInteractiveTile(INT16 const sGridNo)
 		GetLevelNodeScreenRect(n, &aRect, sXMapPos, sYMapPos, sGridNo);
 
 		// Make sure we are always on guy if we are on same gridno
-		if (!IsPointInScreenRect(sScreenX, sScreenY, &aRect)) continue;
+		if (!IsPointInScreenRect(sScreenX, sScreenY, aRect)) continue;
 
 		if (!RefinePointCollisionOnStruct(sGridNo, sScreenX, sScreenY, aRect.iLeft, aRect.iBottom, n)) continue;
 
