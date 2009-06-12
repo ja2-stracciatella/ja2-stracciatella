@@ -565,7 +565,8 @@ static bool GetGameDescription()
 
 static void DisplayOnScreenNumber(BOOLEAN display);
 static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID);
-static void MoveSelectionUpOrDown(BOOLEAN fUp);
+static void MoveSelectionDown();
+static void MoveSelectionUp();
 static void SetSelection(UINT8 ubNewSelection);
 
 
@@ -669,8 +670,8 @@ static void GetSaveLoadScreenUserInput(void)
 					}
 					break;
 
-				case SDLK_UP:   MoveSelectionUpOrDown(TRUE);  break;
-				case SDLK_DOWN: MoveSelectionUpOrDown(FALSE); break;
+				case SDLK_UP:   MoveSelectionUp();   break;
+				case SDLK_DOWN: MoveSelectionDown(); break;
 
 				case SDLK_ESCAPE:
 					if( gbSelectedSaveLocation == -1 )
@@ -1560,79 +1561,53 @@ static void RedrawSaveLoadScreenAfterMessageBox(MessageBoxReturnValue const bExi
 }
 
 
-static void MoveSelectionUpOrDown(BOOLEAN fUp)
+static void MoveSelectionDown()
 {
-	INT32	i;
-
-	//if we are saving, any slot otgher then the quick save slot is valid
-	if( gfSaveGame )
-	{
-		if( fUp )
+	INT8 const slot = gbSelectedSaveLocation;
+	if (gfSaveGame)
+	{ // We are saving, any slot other then the quick save slot is valid
+		if (slot == -1)
 		{
-			//if there is no selected slot, get out
-			if( gbSelectedSaveLocation == -1 )
-				return;
-
-			//if the selected slot is above the first slot
-			if( gbSelectedSaveLocation > 1 )
-			{
-				SetSelection( (UINT8)(gbSelectedSaveLocation-1) );
-			}
+			SetSelection(1);
 		}
-		else
+		else if (slot < NUM_SAVE_GAMES - 1)
 		{
-			//if the selected slot is invalid
-			if( gbSelectedSaveLocation == -1 )
-			{
-				SetSelection( 1 );
-			}
-			else
-			{
-				if( gbSelectedSaveLocation >= 1 && gbSelectedSaveLocation < NUM_SAVE_GAMES-1 )
-				{
-					SetSelection( (UINT8)(gbSelectedSaveLocation + 1) );
-				}
-			}
+			SetSelection(slot + 1);
 		}
 	}
-
 	else
 	{
-		if( fUp )
+		for (INT32 i = slot != -1 ? slot + 1 : 0; i != NUM_SAVE_GAMES; ++i)
 		{
-			for( i=gbSelectedSaveLocation-1; i>=0; i--)
-			{
-				if( gbSaveGameArray[i] )
-				{
-					ClearSelectedSaveSlot();
-
-					SetSelection( (UINT8)i );
-					break;
-				}
-			}
+			if (!gbSaveGameArray[i]) continue;
+			SetSelection(i);
+			break;
 		}
-		else
+	}
+}
+
+
+static void MoveSelectionUp()
+{
+	INT8 const slot = gbSelectedSaveLocation;
+	if (gfSaveGame)
+	{ // We are saving, any slot other then the quick save slot is valid
+		if (slot == -1)
 		{
-			//if there is no selected slot, move the selected slot to the first slot
-			if( gbSelectedSaveLocation == -1 )
-			{
-				ClearSelectedSaveSlot();
-
-				SetSelection( 0 );
-			}
-			else
-			{
-				for( i=gbSelectedSaveLocation+1; i<NUM_SAVE_GAMES; i++)
-				{
-					if( gbSaveGameArray[i] )
-					{
-						ClearSelectedSaveSlot();
-
-						SetSelection( (UINT8)i );
-						break;
-					}
-				}
-			}
+			SetSelection(NUM_SAVE_GAMES - 1);
+		}
+		else if (slot > 1)
+		{
+			SetSelection(slot - 1);
+		}
+	}
+	else
+	{
+		for (INT32 i = slot != -1 ? slot - 1 : NUM_SAVE_GAMES - 1; i >= 0; --i)
+		{
+			if (!gbSaveGameArray[i]) continue;
+			SetSelection(i);
+			break;
 		}
 	}
 }
