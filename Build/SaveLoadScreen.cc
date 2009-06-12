@@ -141,7 +141,7 @@ BOOLEAN		gfSaveGame=TRUE;
 
 BOOLEAN		gfSaveLoadScreenButtonsCreated = FALSE;
 
-INT8			gbSelectedSaveLocation=-1;
+static INT8 gbSelectedSaveLocation = -1;
 INT8			gbHighLightedLocation=-1;
 
 static SGPVObject* guiSlgBackGroundImage;
@@ -149,7 +149,7 @@ static SGPVObject* guiBackGroundAddOns;
 
 
 // The string that will contain the game desc text
-wchar_t		gzGameDescTextField[ SIZE_OF_SAVE_GAME_DESC ] = {0} ;
+static wchar_t gzGameDescTextField[SIZE_OF_SAVE_GAME_DESC];
 
 
 BOOLEAN		gfUserInTextInputMode = FALSE;
@@ -179,10 +179,10 @@ GUIButtonRef guiSlgCancelBtn;
 
 // Save game Button
 static BUTTON_PICS* guiSaveLoadImage;
-GUIButtonRef guiSlgSaveLoadBtn;
+static GUIButtonRef guiSlgSaveLoadBtn;
 
 //Mouse regions for the currently selected save game
-MOUSE_REGION    gSelectedSaveRegion[ NUM_SAVE_GAMES ];
+static MOUSE_REGION gSelectedSaveRegion[NUM_SAVE_GAMES];
 
 MOUSE_REGION		gSLSEntireScreenRegion;
 
@@ -1293,87 +1293,29 @@ static void DestroySaveLoadTextInputBoxes(void)
 }
 
 
-static void SetSelection(UINT8 ubNewSelection)
+static void SetSelection(UINT8 const new_selection)
 {
-//	CHAR16		zMouseHelpTextString[256];
-//	SAVED_GAME_HEADER SaveGameHeader;
-
-	//if we are loading and there is no entry, return
- 	if( !gfSaveGame )
-	{
-		if( !gbSaveGameArray[ubNewSelection] )
-			return;
-	}
-
-	if( gbSelectedSaveLocation != -1 )
-	{
-		//reset the slots help text
-		gSelectedSaveRegion[gbSelectedSaveLocation].SetFastHelpText(L"");
-	}
+	// If we are loading and there is no entry, return
+ 	if (!gfSaveGame && !gbSaveGameArray[new_selection]) return;
 
 	gfRedrawSaveLoadScreen = TRUE;
 	DestroySaveLoadTextInputBoxes();
 
-	//if we are loading,
-	if( !gfSaveGame )
+	INT8 const old_slot = gbSelectedSaveLocation;
+	gbSelectedSaveLocation = new_selection;
+
+	if (gfSaveGame && old_slot != new_selection)
 	{
-		//Enable the save/load button
-		EnableButton( guiSlgSaveLoadBtn );
+		DestroySaveLoadTextInputBoxes();
+
+		// Null out the current description
+		gzGameDescTextField[0] = '\0';
+
+		//Init the text field for the game desc
+		InitSaveLoadScreenTextInputBoxes();
 	}
 
-	//if we are to save
-	if( gfSaveGame )
-	{
-		if( gbSelectedSaveLocation != ubNewSelection )
-		{
-			//Destroy the previous region
-			DestroySaveLoadTextInputBoxes();
-
-			//reset selected slot
-			gbSelectedSaveLocation = ubNewSelection;
-
-			//Null out the currently selected save game
-			gzGameDescTextField[0] = '\0';
-
-			//Init the text field for the game desc
-			InitSaveLoadScreenTextInputBoxes();
-		}
-
-		//Enable the save/load button
-		EnableButton( guiSlgSaveLoadBtn );
-	}
-
-	//reset selected slot
-	gbSelectedSaveLocation = ubNewSelection;
-
-/*
-	//if we are saving AND it is the currently selected slot
-	if( gfSaveGame && gbSelectedSaveLocation == ubNewSelection )
-	{
-		//copy over the initial game options
-		SaveGameHeader.sInitialGameOptions = gGameOptions;
-	}
-	else
-	{
-		//Get the header for the specified saved game
-		LoadSavedGameHeader(ubNewSelection, &SaveGameHeader))
-	}
-
-	swprintf(zMouseHelpTextString, L"%ls: %ls\n%ls: %ls\n%ls: %ls\n%ls: %ls", gzGIOScreenText[ GIO_DIF_LEVEL_TEXT ],
-		gzGIOScreenText[ GIO_DIF_LEVEL_TEXT + SaveGameHeader.sInitialGameOptions.ubDifficultyLevel + 1 ],
-
-		gzGIOScreenText[ GIO_TIMED_TURN_TITLE_TEXT ],
-		gzGIOScreenText[ GIO_TIMED_TURN_TITLE_TEXT + SaveGameHeader.sInitialGameOptions.fTurnTimeLimit + 1],
-
-		gzGIOScreenText[ GIO_GUN_OPTIONS_TEXT ],
-		gzGIOScreenText[ GIO_GUN_OPTIONS_TEXT + 2 - SaveGameHeader.sInitialGameOptions.fGunNut ],
-
-		gzGIOScreenText[ GIO_GAME_STYLE_TEXT ],
-		gzGIOScreenText[ GIO_GAME_STYLE_TEXT + SaveGameHeader.sInitialGameOptions.fSciFi + 1 ] );
-
-	//set the slots help text
-	gSelectedSaveRegion[gbSelectedSaveLocation].SetFastHelpText(zMouseHelpTextString);
-	*/
+	EnableButton(guiSlgSaveLoadBtn);
 }
 
 
