@@ -1299,36 +1299,11 @@ void RestoreSavedTextInputMode()
 }
 
 
-void SetTextInputCursor( UINT16 usNewCursor )
+void SetTextInputCursor(UINT16 const new_cursor)
 {
-	STACKTEXTINPUTNODE *stackCurr;
-	TEXTINPUTNODE *curr;
-	if(	gusTextInputCursor == usNewCursor )
-	{
-		return;
-	}
-	gusTextInputCursor = usNewCursor;
-	//Render all of the other text input levels first,
-	//if they exist at all.
-	stackCurr = pInputStack;
-	while( stackCurr )
-	{
-		curr = stackCurr->head;
-		while( curr )
-		{
-			MSYS_SetCurrentCursor( usNewCursor );
-			curr = curr->next;
-		}
-		stackCurr = stackCurr->next;
-	}
-	//Render the current text input level
-	curr = gpTextInputHead;
-	while( curr )
-	{
-		MSYS_SetCurrentCursor( usNewCursor );
-		curr = curr->next;
-	}
+	gusTextInputCursor = new_cursor;
 }
+
 
 //Utility functions for the INPUTTYPE_24HOURCLOCK input type.
 UINT16 GetExclusive24HourTimeValueFromField( UINT8 ubField )
