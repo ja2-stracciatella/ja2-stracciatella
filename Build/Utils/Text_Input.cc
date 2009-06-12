@@ -1115,43 +1115,28 @@ void DisableTextField(UINT8 const id)
 	n->fEnabled = FALSE;
 }
 
-void EnableTextFields( UINT8 ubFirstID, UINT8 ubLastID )
+
+void EnableTextFields(UINT8 const first_id, UINT8 const last_id)
 {
-	TEXTINPUTNODE *curr;
-  curr = gpTextInputHead;
-	while( curr )
+	for (TEXTINPUTNODE* i = gpTextInputHead; i; i = i->next)
 	{
-		if( curr->ubID >= ubFirstID && curr->ubID <= ubLastID )
-		{
-			if( gpActive == curr )
-				SelectNextField();
-			if( !curr->fEnabled )
-			{
-				curr->region.Enable();
-				curr->fEnabled = TRUE;
-			}
-		}
-		curr = curr->next;
+		if (i->ubID < first_id || last_id < i->ubID) continue;
+		if (i->fEnabled) continue;
+		i->region.Enable();
+		i->fEnabled = TRUE;
 	}
 }
 
-void DisableTextFields( UINT8 ubFirstID, UINT8 ubLastID )
+
+void DisableTextFields(UINT8 const first_id, UINT8 const last_id)
 {
-	TEXTINPUTNODE *curr;
-  curr = gpTextInputHead;
-	while( curr )
+	for (TEXTINPUTNODE* i = gpTextInputHead; i; i = i->next)
 	{
-		if( curr->ubID >= ubFirstID && curr->ubID <= ubLastID )
-		{
-			if( gpActive == curr )
-				SelectNextField();
-			if( curr->fEnabled )
-			{
-				curr->region.Disable();
-				curr->fEnabled = FALSE;
-			}
-		}
-		curr = curr->next;
+		if (i->ubID < first_id || last_id < i->ubID) continue;
+		if (!i->fEnabled) continue;
+		if (gpActive == i) SelectNextField();
+		i->region.Disable();
+		i->fEnabled = FALSE;
 	}
 }
 
