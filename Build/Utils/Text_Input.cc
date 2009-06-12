@@ -452,7 +452,7 @@ void SetActiveField(UINT8 const id)
 }
 
 
-static void RenderInactiveTextFieldNode(TEXTINPUTNODE* pNode);
+static void RenderInactiveTextFieldNode(TEXTINPUTNODE const*);
 
 
 void SelectNextField()
@@ -1040,7 +1040,7 @@ void RenderInactiveTextField(UINT8 const id)
 }
 
 
-static void RenderInactiveTextFieldNode(TEXTINPUTNODE* pNode)
+static void RenderInactiveTextFieldNode(TEXTINPUTNODE const* const pNode)
 {
 	if( !pNode || !pNode->szString )
 		return;
@@ -1064,33 +1064,30 @@ static void RenderInactiveTextFieldNode(TEXTINPUTNODE* pNode)
 	}
 }
 
-//Use when you do a full interface update.
+
+// Use when you do a full interface update.
 void RenderAllTextFields()
 {
-	STACKTEXTINPUTNODE *stackCurr;
-	TEXTINPUTNODE *curr;
-	//Render all of the other text input levels first,
-	//if they exist at all.
-	stackCurr = pInputStack;
-	while( stackCurr )
+	// Render all of the other text input levels first
+	for (STACKTEXTINPUTNODE const* stack = pInputStack; stack; stack = stack->next)
 	{
-		curr = stackCurr->head;
-		while( curr )
+		for (TEXTINPUTNODE const* i = stack->head; i; i = i->next)
 		{
-			RenderInactiveTextFieldNode( curr );
-			curr = curr->next;
+			RenderInactiveTextFieldNode(i);
 		}
-		stackCurr = stackCurr->next;
 	}
-	//Render the current text input level
-	curr = gpTextInputHead;
-	while( curr )
+
+	// Render the current text input level
+	for (TEXTINPUTNODE const* i = gpTextInputHead; i; i = i->next)
 	{
-		if( curr != gpActive )
-			RenderInactiveTextFieldNode( curr );
+		if (i != gpActive)
+		{
+			RenderInactiveTextFieldNode(i);
+		}
 		else
+		{
 			RenderActiveTextField();
-		curr = curr->next;
+		}
 	}
 }
 
