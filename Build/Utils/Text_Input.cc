@@ -1155,38 +1155,30 @@ void DisableTextFields( UINT8 ubFirstID, UINT8 ubLastID )
 	}
 }
 
+
 void EnableAllTextFields()
 {
-	TEXTINPUTNODE *curr;
-  curr = gpTextInputHead;
-	while( curr )
+	for (TEXTINPUTNODE* i = gpTextInputHead; i; i = i->next)
 	{
-		if( !curr->fEnabled )
-		{
-			curr->region.Enable();
-			curr->fEnabled = TRUE;
-		}
-		curr = curr->next;
+		if (i->fEnabled) continue;
+		i->region.Enable();
+		i->fEnabled = TRUE;
 	}
-	if( !gpActive )
-		gpActive = gpTextInputHead;
+	if (!gpActive) gpActive = gpTextInputHead;
 }
+
 
 void DisableAllTextFields()
 {
-	TEXTINPUTNODE *curr;
-  curr = gpTextInputHead;
-	while( curr )
+	gpActive = 0;
+	for (TEXTINPUTNODE* i = gpTextInputHead; i; i = i->next)
 	{
-		if( curr->fEnabled )
-		{
-			curr->region.Disable();
-			curr->fEnabled = FALSE;
-		}
-		curr = curr->next;
+		if (!i->fEnabled) continue;
+		i->region.Disable();
+		i->fEnabled = FALSE;
 	}
-	gpActive = NULL;
 }
+
 
 BOOLEAN EditingText()
 {
