@@ -77,7 +77,7 @@ INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest);
 INT16 SpacesAway(INT16 sOrigin, INT16 sDest);
 INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest);
 bool FindHigherLevel(SOLDIERTYPE const*, INT8* out_direction);
-bool FindLowerLevel(SOLDIERTYPE const*, GridNo, INT8 starting_dir, INT8* out_direction);
+bool FindLowerLevel(SOLDIERTYPE const*, INT8* out_direction);
 
 INT16 QuickestDirection(INT16 origin, INT16 dest);
 INT16 ExtQuickestDirection(INT16 origin, INT16 dest);

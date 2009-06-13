@@ -540,10 +540,10 @@ bool FindHigherLevel(SOLDIERTYPE const* const s, INT8* const out_direction)
 	// If there is a roof over our heads, this is an ivalid
 	if (FindStructure(grid_no, STRUCTURE_ROOF)) return false;
 
-	bool         found         = false;
-	UINT8        min_turns     = 100;
-	INT8         min_direction = 0;
-	INT8   const starting_dir  = s->bDirection;
+	bool       found         = false;
+	UINT8      min_turns     = 100;
+	INT8       min_direction = 0;
+	INT8 const starting_dir  = s->bDirection;
 	for (INT32 cnt = 0; cnt != 8; cnt += 2)
 	{
 		GridNo const new_grid_no = NewGridNo(grid_no, DirectionInc(cnt));
@@ -568,11 +568,13 @@ bool FindHigherLevel(SOLDIERTYPE const* const s, INT8* const out_direction)
 }
 
 
-bool FindLowerLevel(SOLDIERTYPE const* const s, GridNo const grid_no, INT8 const starting_dir, INT8* const out_direction)
+bool FindLowerLevel(SOLDIERTYPE const* const s, INT8* const out_direction)
 {
-	bool  found         = false;
-	UINT8 min_turns     = 100;
-	INT8  min_direction = 0;
+	bool         found         = false;
+	UINT8        min_turns     = 100;
+	INT8         min_direction = 0;
+	GridNo const grid_no       = s->sGridNo;
+	INT8   const starting_dir  = s->bDirection;
 	for (INT32 dir = 0; dir != 8; dir += 2)
 	{
 		GridNo const new_grid_no = NewGridNo(grid_no, DirectionInc(dir));

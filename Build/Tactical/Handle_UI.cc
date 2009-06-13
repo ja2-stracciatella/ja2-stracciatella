@@ -1833,7 +1833,7 @@ static ScreenID UIHandleMAdjustStanceMode(UI_EVENT* pUIEvent)
 			// IF we are higher...
 			if (sel->bLevel > 0)
 			{
-				if (FindLowerLevel(sel, sel->sGridNo, sel->bDirection, &bNewDirection))
+				if (FindLowerLevel(sel, &bNewDirection))
 				{
 					ubNearLowerLevel = TRUE;
 				}
@@ -2468,7 +2468,7 @@ void GetMercClimbDirection(const SOLDIERTYPE* const s, BOOLEAN* const pfGoDown, 
 	// IF we are higher...
 	if (s->bLevel > 0)
 	{
-		if (FindLowerLevel(s, s->sGridNo, s->bDirection, &bNewDirection))
+		if (FindLowerLevel(s, &bNewDirection))
 		{
 			*pfGoDown = TRUE;
 		}
