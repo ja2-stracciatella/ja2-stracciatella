@@ -1535,6 +1535,64 @@ static void HandleModNone(UINT32 const key, UINT32* const new_event)
 }
 
 
+static void HandleModShift(UINT32 const key, UINT32* const new_event)
+{
+	switch (key)
+	{
+		case SDLK_SPACE:
+			// Nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
+			if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV)                                                    &&
+					(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[NEXTMERC_BUTTON]->uiFlags & BUTTON_ENABLED) &&
+					!InKeyRingPopup())
+			{
+				if (SOLDIERTYPE* const sel = GetSelectedMan())
+				{ // Only allow if nothing in hand and if in SM panel, the Change Squad button must be enabled
+					if (gsCurInterfacePanel != TEAM_PANEL ||
+							iTEAMPanelButtons[CHANGE_SQUAD_BUTTON]->uiFlags & BUTTON_ENABLED)
+					{ // Select next squad
+						INT32        const current_squad = CurrentSquad();
+						SOLDIERTYPE* const new_soldier   = FindNextActiveSquad(sel);
+						if (new_soldier->bAssignment != current_squad)
+						{
+							HandleLocateSelectMerc(new_soldier, LOCATEANDSELECT_MERC);
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[MSG_SQUAD_ACTIVE], CurrentSquad() + 1);
+							// Center to guy
+							LocateSoldier(GetSelectedMan(), SETLOCATOR);
+						}
+					}
+				}
+
+				*new_event = M_ON_TERRAIN;
+			}
+			break;
+
+#ifdef JA2BETAVERSION
+		case 'l':
+		{
+			gfDisplayStrategicAILogs ^= TRUE;
+			wchar_t const* const msg = gfDisplayStrategicAILogs ?
+				L"Strategic AI Log visually enabled." :
+				L"Strategic AI Log visually disabled.";
+			ScreenMsg(FONT_LTKHAKI, MSG_INTERFACE, msg);
+			break;
+		}
+#endif
+
+		case SDLK_F1:
+		case SDLK_F2:
+		case SDLK_F3:
+		case SDLK_F4:
+		case SDLK_F5:
+		case SDLK_F6:
+		{
+			UINT const idx = key - SDLK_F1;
+			HandleSelectMercSlot(idx, LOCATE_MERC_ONCE);
+			break;
+		}
+	}
+}
+
+
 void GetKeyboardInput( UINT32 *puiNewEvent )
 {
   InputAtom					InputEvent;
@@ -1852,7 +1910,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			switch (mod)
 			{
-				case 0: HandleModNone(key, puiNewEvent); continue;
+				case 0:          HandleModNone(key, puiNewEvent);  continue;
+				case SHIFT_DOWN: HandleModShift(key, puiNewEvent); continue;
 			}
 
 			BOOLEAN fAlt, fCtrl, fShift;
@@ -1885,52 +1944,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			switch( InputEvent.usParam )
 			{
-				case SDLK_SPACE:
-					// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
-					if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV )  &&
-							(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[NEXTMERC_BUTTON]->uiFlags & BUTTON_ENABLED))
-					{
-						if ( !InKeyRingPopup( ) )
-						{
-							SOLDIERTYPE* const sel = GetSelectedMan();
-							if (sel != NULL)
-							{
-								if (_KeyDown(SHIFT))
-								{
-									// only allow if nothing in hand and if in SM panel, the Change Squad button must be enabled
-									if (gsCurInterfacePanel != TEAM_PANEL ||
-											iTEAMPanelButtons[CHANGE_SQUAD_BUTTON]->uiFlags & BUTTON_ENABLED)
-									{
-										//Select next squad
-										const INT32        iCurrentSquad = CurrentSquad();
-										SOLDIERTYPE* const pNewSoldier   = FindNextActiveSquad(sel);
-										if ( pNewSoldier->bAssignment != iCurrentSquad )
-										{
-											HandleLocateSelectMerc(pNewSoldier, LOCATEANDSELECT_MERC);
-
-											ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_SQUAD_ACTIVE ], ( CurrentSquad( ) + 1 ) );
-
-											// Center to guy....
-											LocateSoldier(GetSelectedMan(), SETLOCATOR);
-										}
-									}
-								}
-								else
-								{
-									//Select next merc
-									SOLDIERTYPE* const next = FindNextMercInTeamPanel(sel);
-									HandleLocateSelectMerc(next, LOCATEANDSELECT_MERC);
-
-									// Center to guy....
-									LocateSoldier(GetSelectedMan(), SETLOCATOR);
-								}
-							}
-
-  						*puiNewEvent = M_ON_TERRAIN;
-						}
-					}
-					break;
-
+#if defined JA2TESTVERSION
 				case SDLK_F1:
 				case SDLK_F2:
 				case SDLK_F3:
@@ -1939,12 +1953,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				case SDLK_F6:
 				{
 					UINT const idx = InputEvent.usParam - SDLK_F1;
-					if (fShift)
-					{
-						HandleSelectMercSlot(idx, LOCATE_MERC_ONCE);
-					}
-#if defined JA2TESTVERSION
-					else if (fAlt)
+					if (fAlt)
 					{
 						TestMeanWhile(idx != 0 ? idx : 15);
 					}
@@ -1952,9 +1961,9 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						TestMeanWhile(10 + idx);
 					}
-#endif
 					break;
 				}
+#endif
 
 #ifdef JA2TESTVERSION
 				case SDLK_F7: if (fAlt) TestMeanWhile(16); break;
@@ -2296,43 +2305,30 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					break;
 
 				case SDLK_l:
-#ifdef JA2BETAVERSION
-					if (fShift)
+					if (fAlt)
 					{
-						gfDisplayStrategicAILogs ^= TRUE;
-						const wchar_t* Msg = gfDisplayStrategicAILogs ?
-							L"Strategic AI Log visually enabled." :
-							L"Strategic AI Log visually disabled.";
-						ScreenMsg(FONT_LTKHAKI, MSG_INTERFACE, Msg);
+						if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
+						{
+							LeaveTacticalScreen(GAME_SCREEN);
+							DoQuickLoad();
+						}
 					}
-					else
-#endif
+					else if (fCtrl)
 					{
-						if (fAlt)
+						if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
 						{
-							if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
-							{
-								LeaveTacticalScreen(GAME_SCREEN);
-								DoQuickLoad();
-							}
+							gfSaveGame = FALSE;
+							gfCameDirectlyFromGame = TRUE;
+							guiPreviousOptionScreen = GAME_SCREEN;
+							LeaveTacticalScreen(SAVE_LOAD_SCREEN);
 						}
-						else if (fCtrl)
-						{
-							if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
-							{
-								gfSaveGame = FALSE;
-								gfCameDirectlyFromGame = TRUE;
-								guiPreviousOptionScreen = GAME_SCREEN;
-								LeaveTacticalScreen(SAVE_LOAD_SCREEN);
-							}
 /*
-							if (INFORMATION_CHEAT_LEVEL())
-							{
-								*puiNewEvent = I_LEVELNODEDEBUG;
-								CountLevelNodes();
-							}
-*/
+						if (INFORMATION_CHEAT_LEVEL())
+						{
+							*puiNewEvent = I_LEVELNODEDEBUG;
+							CountLevelNodes();
 						}
+*/
 					}
 					break;
 
