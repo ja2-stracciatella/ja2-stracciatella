@@ -1740,6 +1740,22 @@ static void HandleModAlt(UINT32 const key, UINT32* const new_event)
 {
 	switch (key)
 	{
+#ifdef JA2TESTVERSION
+		case '+':
+		{
+			UINT32 const vol = MusicGetVolume();
+			MusicSetVolume(MIN(vol + 20, MAXVOLUME));
+			break;
+		}
+#endif
+
+		case '-':
+		{
+			UINT32 const vol = MusicGetVolume();
+			MusicSetVolume(vol > 20 ? vol - 20 : 0);
+			break;
+		}
+
 		case '2': if (CHEATER_CHEAT_LEVEL()) ChangeSoldiersBodyType(INFANT_MONSTER, TRUE);                      break;
 		case '3': if (CHEATER_CHEAT_LEVEL()) EVENT_InitNewSoldierAnim(GetSelectedMan(), KID_SKIPPING, 0, TRUE); break;
 		case '4': if (CHEATER_CHEAT_LEVEL()) ChangeSoldiersBodyType(CRIPPLECIV,     TRUE);                      break;
@@ -1860,14 +1876,14 @@ static void HandleModAlt(UINT32 const key, UINT32* const new_event)
 
 #ifdef JA2TESTVERSION
 		case 'v':
-			{
-				gfDisableTacticalPanelButtons ^= TRUE;
-				wchar_t const* const msg =
-					gfDoVideoScroll ? L"Video Scroll ON" :
-					L"Video Scroll OFF";
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
-			}
+		{
+			gfDoVideoScroll ^= TRUE;
+			wchar_t const* const msg =
+				gfDoVideoScroll ? L"Video Scroll ON" :
+				L"Video Scroll OFF";
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
 			break;
+		}
 #endif
 
 		case 'w':
@@ -1932,23 +1948,6 @@ static void HandleModAlt(UINT32 const key, UINT32* const new_event)
 			break;
 		}
 
-		case '-':
-		case '_':
-		{
-			UINT32 const vol = MusicGetVolume();
-			MusicSetVolume(vol > 20 ? vol - 20 : 0);
-			break;
-		}
-
-#ifdef JA2TESTVERSION
-		case '+':
-		{
-			UINT32 const vol = MusicGetVolume();
-			MusicSetVolume(MIN(vol + 20, MAXVOLUME));
-			break;
-		}
-#endif
-
 #if defined JA2TESTVERSION
 		case SDLK_F1:  TestMeanWhile(15); break;
 		case SDLK_F2:  TestMeanWhile( 1); break;
@@ -1962,7 +1961,7 @@ static void HandleModAlt(UINT32 const key, UINT32* const new_event)
 
 #ifdef JA2EDITOR
 		case SDLK_F9:
-			*new_event = I_ENTER_EDIT_MODE;
+			*new_event                 = I_ENTER_EDIT_MODE;
 			gfMercResetUponEditorEntry = FALSE;
 			break;
 #endif
