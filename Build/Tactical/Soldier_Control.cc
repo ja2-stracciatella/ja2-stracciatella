@@ -5247,21 +5247,19 @@ void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier )
 
 }
 
-void BeginSoldierClimbFence( SOLDIERTYPE *pSoldier )
+
+void BeginSoldierClimbFence(SOLDIERTYPE* const s)
 {
-	INT8							bDirection;
+	INT8 direction;
+	if (!FindFenceJumpDirection(s, &direction)) return;
 
-	if (FindFenceJumpDirection(pSoldier, &bDirection))
-	{
-		pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc(bDirection ) );
-		pSoldier->fDontChargeTurningAPs = TRUE;
-		EVENT_SetSoldierDesiredDirectionForward(pSoldier, bDirection);
-		pSoldier->fTurningUntilDone = TRUE;
-		// ATE: Reset flag to go back to prone...
-		pSoldier->fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
-		pSoldier->usPendingAnimation = HOPFENCE;
-	}
-
+	s->sTempNewGridNo            = NewGridNo(s->sGridNo, DirectionInc(direction));
+	s->fDontChargeTurningAPs     = TRUE;
+	EVENT_SetSoldierDesiredDirectionForward(s, direction);
+	s->fTurningUntilDone         = TRUE;
+	// ATE: Reset flag to go back to prone
+	s->fTurningFromPronePosition = TURNING_FROM_PRONE_OFF;
+	s->usPendingAnimation        = HOPFENCE;
 }
 
 

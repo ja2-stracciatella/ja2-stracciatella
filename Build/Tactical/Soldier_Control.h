@@ -918,7 +918,7 @@ BOOLEAN SoldierReadyWeapon(SOLDIERTYPE* pSoldier, GridNo tgt_pos, BOOLEAN fEndRe
 void SetSoldierHeight(SOLDIERTYPE*, FLOAT new_height);
 void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier );
 void BeginSoldierClimbDownRoof( SOLDIERTYPE *pSoldier );
-void BeginSoldierClimbFence( SOLDIERTYPE *pSoldier );
+void BeginSoldierClimbFence(SOLDIERTYPE*);
 
 BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier );
 void BeginSoldierGetup( SOLDIERTYPE *pSoldier );
