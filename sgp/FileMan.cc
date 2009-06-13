@@ -225,29 +225,19 @@ void InitializeFileManager(void)
 }
 
 
-static BOOLEAN FileExistsNoDB(const char* filename);
-
-
 bool FileExists(char const* const filename)
 {
-	return FileExistsNoDB(filename) || CheckIfFileExistInLibrary(filename);
-}
-
-
-/* Checks if a file exists, but doesn't check the database files. */
-static BOOLEAN FileExistsNoDB(const char* const filename)
-{
 	FILE* file = fopen(filename, "rb");
-	if (file == NULL)
+	if (!file)
 	{
-		char Path[512];
-		snprintf(Path, lengthof(Path), "%s/Data/%s", GetBinDataPath(), filename);
-		file = fopen(Path, "rb");
-		if (file == NULL) return FALSE;
+		char path[512];
+		snprintf(path, lengthof(path), "%s/Data/%s", GetBinDataPath(), filename);
+		file = fopen(path, "rb");
+		if (!file) return CheckIfFileExistInLibrary(filename);
 	}
 
 	fclose(file);
-	return TRUE;
+	return true;
 }
 
 
