@@ -1820,16 +1820,8 @@ static ScreenID UIHandleMAdjustStanceMode(UI_EVENT* pUIEvent)
 		const SOLDIERTYPE* const sel = GetSelectedMan();
 		if (sel != NULL)
 		{
-			// IF we are on a basic level...(temp)
-			if (sel->bLevel == 0)
-			{
-				if (FindHigherLevel(sel))
-				{
-					ubNearHeigherLevel = TRUE;
-				}
-			}
-
-			if (FindLowerLevel(sel)) ubNearLowerLevel = TRUE;
+			if (FindHigherLevel(sel)) ubNearHeigherLevel = TRUE;
+			if (FindLowerLevel(sel))  ubNearLowerLevel   = TRUE;
 
 			switch (gAnimControl[sel->usAnimState].ubEndHeight)
 			{
@@ -2437,12 +2429,6 @@ BOOLEAN SelectedMercCanAffordMove(  )
 	sel->bGoodContPath     = TRUE;
 
 	return( FALSE );
-}
-
-
-bool CanMercClimbUp(SOLDIERTYPE const* const s)
-{
-	return s->bLevel == 0 && FindHigherLevel(s);
 }
 
 
@@ -4984,7 +4970,7 @@ void GotoHeigherStance( SOLDIERTYPE *pSoldier )
 		case ANIM_STAND:
 			// Nowhere
 			// Try to climb
-			if (CanMercClimbUp(pSoldier)) BeginSoldierClimbUpRoof(pSoldier);
+			if (FindHigherLevel(pSoldier)) BeginSoldierClimbUpRoof(pSoldier);
 			break;
 
 		case ANIM_CROUCH:

@@ -684,7 +684,7 @@ static void UpdateSMPanel(void)
 			EnableButton(iSMPanelButtons[CLIMB_BUTTON]);
 		}
 	}
-	else if (CanMercClimbUp(s))
+	else if (FindHigherLevel(s))
 	{
 		if (EnoughPoints(s, GetAPsToClimbRoof(s, FALSE), 0, FALSE))
 		{
@@ -2155,7 +2155,7 @@ static void BtnClimbCallback(GUI_BUTTON* btn, INT32 reason)
 		{
 			BeginSoldierClimbDownRoof(s);
 		}
-		else if (CanMercClimbUp(s))
+		else if (FindHigherLevel(s))
 		{
 			BeginSoldierClimbUpRoof(s);
 		}

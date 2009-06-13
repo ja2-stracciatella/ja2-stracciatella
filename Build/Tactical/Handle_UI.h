@@ -236,7 +236,6 @@ void HandleKeyInputOnEnemyTurn(void);
 
 BOOLEAN SelectedMercCanAffordAttack(void);
 BOOLEAN SelectedMercCanAffordMove(void);
-bool CanMercClimbUp(SOLDIERTYPE const*);
 
 void ToggleHandCursorMode( UINT32 *puiNewEvent );
 void ToggleTalkCursorMode( UINT32 *puiNewEvent );
