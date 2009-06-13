@@ -1756,6 +1756,22 @@ static void HandleModAlt(UINT32 const key, UINT32* const new_event)
 			break;
 		}
 
+#ifdef JA2TESTVERSION
+		case '0':
+		{
+			INT32              const start   = GetJA2Clock();
+			SOLDIERTYPE const* const sel     = GetSelectedMan();
+			GridNo             const map_pos = GetMouseMapPos();
+			for (INT32 i = 0; i != 1000; ++i)
+			{
+				GridNo grid_no;
+				INT8   level;
+				CalculateLaunchItemChanceToGetThrough(sel, &sel->inv[HANDPOS], map_pos, 0, 0, &grid_no, TRUE, &level, TRUE);
+			}
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Physics 100 times: %d", GetJA2Clock() - start);
+		}
+#endif
+
 		case '2': if (CHEATER_CHEAT_LEVEL()) ChangeSoldiersBodyType(INFANT_MONSTER, TRUE);                      break;
 		case '3': if (CHEATER_CHEAT_LEVEL()) EVENT_InitNewSoldierAnim(GetSelectedMan(), KID_SKIPPING, 0, TRUE); break;
 		case '4': if (CHEATER_CHEAT_LEVEL()) ChangeSoldiersBodyType(CRIPPLECIV,     TRUE);                      break;
@@ -2001,8 +2017,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 	SGPPoint MousePos;
 	GetMousePos(&MousePos);
-
-	const GridNo usMapPos = GetMouseMapPos();
 
 	while (DequeueEvent(&InputEvent))
   {
@@ -2284,25 +2298,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 			}
 		}
-
-#ifdef JA2TESTVERSION
-    if ((InputEvent.usEvent == KEY_DOWN )&& ( InputEvent.usParam == '0') && ( InputEvent.usKeyState & ALT_DOWN ))
-    {
-			INT32 i = 0;
-			INT16	sGridNo;
-			INT32 iTime = GetJA2Clock( );
-
-			for ( i = 0; i < 1000; i++ )
-			{
-				const SOLDIERTYPE* const sel = GetSelectedMan();
-				INT8 ubLevel;
-				CalculateLaunchItemChanceToGetThrough(sel, &sel->inv[HANDPOS], usMapPos, 0, 0, &sGridNo, TRUE, &ubLevel, TRUE);
-			}
-
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Physics 100 times: %d", ( GetJA2Clock( ) - iTime )  );
-
-		}
-#endif
 
 		if( InputEvent.usEvent == KEY_DOWN )
 		{
