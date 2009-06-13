@@ -1200,6 +1200,351 @@ static void ToggleMapEdgepoints(void);
 #endif
 
 
+static void HandleModNone(UINT32 const key, UINT32* const new_event)
+{
+	switch (key)
+	{
+		case SDLK_TAB:
+			// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
+			if (!gpItemPointer &&
+					(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[UPDOWN_BUTTON]->uiFlags & BUTTON_ENABLED))
+			{
+				UIHandleChangeLevel(0);
+			}
+			break;
+
+		case SDLK_SPACE:
+			// Nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
+			if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV)                                                    &&
+					(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[NEXTMERC_BUTTON]->uiFlags & BUTTON_ENABLED) &&
+					!InKeyRingPopup())
+			{
+				SOLDIERTYPE* const sel = GetSelectedMan();
+				if (sel)
+				{
+					// Select next merc
+					SOLDIERTYPE* const next = FindNextMercInTeamPanel(sel);
+					HandleLocateSelectMerc(next, LOCATEANDSELECT_MERC);
+					// Center to guy
+					LocateSoldier(GetSelectedMan(), SETLOCATOR);
+				}
+
+				*new_event = M_ON_TERRAIN;
+			}
+			break;
+
+		case '*': gTacticalStatus.uiFlags ^= RED_ITEM_GLOW_ON; break;
+
+#ifdef JA2TESTVERSION
+		case '+':
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Using Higher Scroll Speed");
+			gubCurScrollSpeedID = 2;
+			break;
+#endif
+
+		case '-':
+			// If the display cover or line of sight is being displayed
+			if (_KeyDown(SDLK_END) || _KeyDown(SDLK_DELETE))
+			{
+				if (_KeyDown(SDLK_DELETE))
+					ChangeSizeOfDisplayCover(gGameSettings.ubSizeOfDisplayCover - 1);
+				if (_KeyDown(SDLK_END))
+					ChangeSizeOfLOS(gGameSettings.ubSizeOfLOS - 1);
+			}
+#ifdef JA2TESTVERSION
+			else
+			{
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Using Normal Scroll Speed");
+				gubCurScrollSpeedID = 1;
+			}
+#endif
+			break;
+
+		case '/':
+		{
+			SOLDIERTYPE* const sel = GetSelectedMan();
+			if (sel) LocateSoldier(sel, 10);
+			break;
+		}
+
+		case '0':
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			ChangeCurrentSquad(key == '0' ? 9 : key - '1');
+			break;
+
+		case '=':
+			//if the display cover or line of sight is being displayed
+			if (_KeyDown(SDLK_END) || _KeyDown(SDLK_DELETE))
+			{
+				if (_KeyDown(SDLK_DELETE))
+					ChangeSizeOfDisplayCover(gGameSettings.ubSizeOfDisplayCover + 1);
+				if (_KeyDown(SDLK_END))
+					ChangeSizeOfLOS(gGameSettings.ubSizeOfLOS + 1);
+			}
+			else
+			{
+				// ATE: This key will select everybody in the sector
+				if (!(gTacticalStatus.uiFlags & INCOMBAT))
+				{
+					FOR_ALL_IN_TEAM(s, gbPlayerNum)
+					{
+						if (!OkControllableMerc(s)) continue;
+						if (s->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER)) continue;
+						s->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
+					}
+					EndMultiSoldierSelection(TRUE);
+				}
+			}
+			break;
+
+		case '`': ToggleTacticalPanels(); break;
+
+		case 'a': BeginAutoBandage(); break;
+
+		case 'b':
+			// Nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
+			if (!gpItemPointer &&
+					(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[BURSTMODE_BUTTON]->uiFlags & BUTTON_ENABLED))
+			{
+				SetBurstMode();
+			}
+			break;
+
+		case 'c': HandleStanceChangeFromUIKeys(ANIM_CROUCH); break;
+
+		case 'd':
+			if (gTacticalStatus.uiFlags & TURNBASED &&
+					gTacticalStatus.uiFlags & INCOMBAT  &&
+					gTacticalStatus.ubCurrentTeam == gbPlayerNum)
+			{
+				// Nothing in hand and the Done button for whichever panel we're in must be enabled
+				if (!gpItemPointer                 &&
+						!gfDisableTacticalPanelButtons &&
+						(
+							(gsCurInterfacePanel == SM_PANEL   && iSMPanelButtons[SM_DONE_BUTTON]->uiFlags     & BUTTON_ENABLED) ||
+							(gsCurInterfacePanel == TEAM_PANEL && iTEAMPanelButtons[TEAM_DONE_BUTTON]->uiFlags & BUTTON_ENABLED)
+						))
+				{
+					*new_event = I_ENDTURN;
+				}
+			}
+			break;
+
+		case 'e':
+			if (SOLDIERTYPE* const sel = GetSelectedMan())
+			{
+				if (sel->bOppCnt > 0)
+				{
+					CycleVisibleEnemies(sel);
+				}
+				else
+				{
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NO_ENEMIES_IN_SIGHT_STR]);
+				}
+			}
+			break;
+
+		case 'f':
+			// If there is a selected soldier, and the cursor location is valid
+			if (SOLDIERTYPE const* const sel = GetSelectedMan())
+			{
+				GridNo const grid_no = gUIFullTarget ? gUIFullTarget->sGridNo : GetMouseMapPos();
+				DisplayRangeToTarget(sel, grid_no);
+			}
+			break;
+
+		case 'g': HandlePlayerTogglingLightEffects(TRUE);                      break;
+		case 'h': ShouldTheHelpScreenComeUp(HELP_SCREEN_TACTICAL, TRUE);       break;
+		case 'i': ToggleItemGlow(!gGameSettings.fOptions[TOPTION_GLOW_ITEMS]); break;
+		case 'k': BeginKeyPanelFromKeyShortcut();                              break;
+
+		case 'l':
+			// Nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
+			if (!gpItemPointer &&
+					(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[LOOK_BUTTON]->uiFlags & BUTTON_ENABLED))
+			{
+				*new_event = LC_CHANGE_TO_LOOK;
+			}
+			break;
+
+		case 'm':
+			// Nothing in hand and the Map Screen button for whichever panel we're in must be enabled
+			if (!gpItemPointer                               &&
+					!gfDisableTacticalPanelButtons               &&
+					!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV) &&
+					(
+						(gsCurInterfacePanel == SM_PANEL   && iSMPanelButtons[SM_MAP_SCREEN_BUTTON]->uiFlags     & BUTTON_ENABLED) ||
+						(gsCurInterfacePanel == TEAM_PANEL && iTEAMPanelButtons[TEAM_MAP_SCREEN_BUTTON]->uiFlags & BUTTON_ENABLED)
+					))
+			{
+				GoToMapScreenFromTactical();
+			}
+			break;
+
+		case 'n':
+		{
+			GridNo const map_pos = GetMouseMapPos();
+			if (!CycleSoldierFindStack(map_pos)) // Are we over a merc stack?
+				CycleIntTileFindStack(map_pos); // If not, now check if we are over a struct stack
+			break;
+		}
+
+		case 'o':
+			// nothing in hand and the Options Screen button for whichever panel we're in must be enabled
+			if (!gpItemPointer                   &&
+					!gfDisableTacticalPanelButtons   &&
+					!fDisableMapInterfaceDueToBattle &&
+					(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[OPTIONS_BUTTON]->uiFlags & BUTTON_ENABLED))
+			{
+				// Go to Options screen
+				guiPreviousOptionScreen = GAME_SCREEN;
+				LeaveTacticalScreen(OPTIONS_SCREEN);
+			}
+			break;
+
+		case 'p': HandleStanceChangeFromUIKeys(ANIM_PRONE); break;
+
+		case 'r':
+		{
+			SOLDIERTYPE* const sel = GetSelectedMan();
+			if (sel && !MercInWater(sel) && !(sel->uiStatusFlags & SOLDIER_ROBOT))
+			{ // Change selected merc to run
+				if (sel->usUIMovementMode != WALKING && sel->usUIMovementMode != RUNNING)
+				{
+					UIHandleSoldierStanceChange(sel, ANIM_STAND);
+				}
+				else
+				{
+					sel->usUIMovementMode = RUNNING;
+					gfPlotNewMovement     = TRUE;
+				}
+				sel->fUIMovementFast = 1;
+			}
+			break;
+		}
+
+		case 's':
+			if (GetSelectedMan())
+			{
+				gfPlotNewMovement = TRUE;
+				HandleStanceChangeFromUIKeys(ANIM_STAND);
+			}
+			break;
+
+		case 't': ToggleTreeTops(); break;
+
+		case 'u': if (GetSelectedMan()) *new_event = M_CHANGE_TO_ACTION; break;
+
+		case 'v': DisplayGameSettings(); break;
+
+		case 'w': ToggleWireFrame(); break;
+
+		case 'x':
+		{ // Exchange places
+			SOLDIERTYPE* const s1 = GetSelectedMan();
+			SOLDIERTYPE* const s2 = gUIFullTarget;
+			if (s1                                                                          &&
+					s2                                                                          &&
+					s1->bLife >= OKLIFE                                                         && // Check if both OK
+					s2->bLife >= OKLIFE                                                         &&
+					s2 != s1                                                                    &&
+					CanSoldierReachGridNoInGivenTileLimit(s1, s2->sGridNo, 1, gsInterfaceLevel) &&
+					(s2->bNeutral || (s2->bSide == gbPlayerNum))                                && // Exclude enemies
+					CanExchangePlaces(s1, s2, TRUE))
+			{
+				SwapMercPositions(s1, s2);
+				DeductPoints(s1, AP_EXCHANGE_PLACES, 0);
+				DeductPoints(s2, AP_EXCHANGE_PLACES, 0);
+			}
+			break;
+		}
+
+		case 'y': if (INFORMATION_CHEAT_LEVEL()) *new_event = I_LOSDEBUG; break;
+
+		case 'z': if (!gpItemPointer) HandleStealthChangeFromUIKeys(); break;
+
+		case SDLK_INSERT: GoIntoOverheadMap(); break;
+
+		case SDLK_HOME:
+		{
+			BOOLEAN& cursor3d = gGameSettings.fOptions[TOPTION_3D_CURSOR];
+			cursor3d = !cursor3d;
+			wchar_t const* const msg =
+				cursor3d ? pMessageStrings[MSG_3DCURSOR_ON] :
+				pMessageStrings[MSG_3DCURSOR_OFF];
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
+			break;
+		}
+
+		case SDLK_END:
+		{
+			SOLDIERTYPE* const sel = GetSelectedMan();
+			if (sel && CheckForMercContMove(sel))
+			{
+				ContinueMercMovement(sel);
+				ErasePath();
+			}
+			break;
+		}
+
+		case SDLK_PAGEUP:
+			if (guiCurrentScreen != DEBUG_SCREEN)
+			{
+				SOLDIERTYPE* const sel = GetSelectedMan();
+				if (sel && !gpItemPointer) GotoHigherStance(sel);
+			}
+			break;
+
+		case SDLK_PAGEDOWN:
+			if (guiCurrentScreen != DEBUG_SCREEN)
+			{
+				SOLDIERTYPE* const sel = GetSelectedMan();
+				if (sel && !gpItemPointer) GotoLowerStance(sel);
+			}
+			break;
+
+		case SDLK_F1:
+		case SDLK_F2:
+		case SDLK_F3:
+		case SDLK_F4:
+		case SDLK_F5:
+		case SDLK_F6:
+		{
+			UINT const idx = key - SDLK_F1;
+			HandleSelectMercSlot(idx, LOCATEANDSELECT_MERC);
+			break;
+		}
+
+#if defined JA2TESTVERSION && defined JA2EDITOR
+		case SDLK_F9:
+			*new_event                 = I_ENTER_EDIT_MODE;
+			gfMercResetUponEditorEntry = TRUE;
+			break;
+#endif
+
+		case SDLK_F11:
+			if (DEBUG_CHEAT_LEVEL())
+			{
+				gsQdsEnteringGridNo = GetMouseMapPos();
+				LeaveTacticalScreen(QUEST_DEBUG_SCREEN);
+			}
+			break;
+
+		case SDLK_F12:
+			ClearDisplayedListOfTacticalStrings();
+			break;
+	}
+}
+
+
 void GetKeyboardInput( UINT32 *puiNewEvent )
 {
   InputAtom					InputEvent;
@@ -1512,6 +1857,14 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 		if( InputEvent.usEvent == KEY_DOWN )
 		{
+			UINT16 const mod = InputEvent.usKeyState;
+			UINT32 const key = InputEvent.usParam;
+
+			switch (mod)
+			{
+				case 0: HandleModNone(key, puiNewEvent); continue;
+			}
+
 			BOOLEAN fAlt, fCtrl, fShift;
 			fAlt = InputEvent.usKeyState & ALT_DOWN ? TRUE : FALSE;
 			fCtrl = InputEvent.usKeyState & CTRL_DOWN ? TRUE : FALSE;
@@ -1588,15 +1941,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					}
 					break;
 
-				case SDLK_TAB:
-					// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
-					if ( ( gpItemPointer == NULL ) &&
-							(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[UPDOWN_BUTTON]->uiFlags & BUTTON_ENABLED))
-					{
-						UIHandleChangeLevel( NULL );
-					}
-					break;
-
 				case SDLK_F1:
 				case SDLK_F2:
 				case SDLK_F3:
@@ -1619,10 +1963,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						TestMeanWhile(10 + idx);
 					}
 #endif
-					else
-					{
-						HandleSelectMercSlot(idx, LOCATEANDSELECT_MERC);
-					}
 					break;
 				}
 
@@ -1635,12 +1975,12 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						TestMeanWhile( 8 );
 					}
-					else
+					else if (fAlt)
 					{
-						#ifdef JA2EDITOR
-							*puiNewEvent = I_ENTER_EDIT_MODE;
-							gfMercResetUponEditorEntry = !fAlt;
-						#endif
+#ifdef JA2EDITOR
+						*puiNewEvent = I_ENTER_EDIT_MODE;
+						gfMercResetUponEditorEntry = FALSE;
+#endif
 					}
 					break;
 
@@ -1671,15 +2011,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						}
 #endif
 					}
-
-					else
-					{
-						if( DEBUG_CHEAT_LEVEL( ) )
-						{
-							gsQdsEnteringGridNo = GetMouseMapPos();
-							LeaveTacticalScreen( QUEST_DEBUG_SCREEN );
-						}
-					}
 					break;
 
 				case SDLK_F12:
@@ -1698,10 +2029,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						ClearTacticalMessageQueue( );
 					}
-					else if ( !fAlt )
-					{
-						ClearDisplayedListOfTacticalStrings( );
-					}
 					break;
 
 				case '1':
@@ -1716,8 +2043,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							//EVENT_InitNewSoldierAnim(sel, CRIPPLE_BEG, 0 , TRUE);
 						}
 					}
-					else
-						ChangeCurrentSquad( 0 );
 					break;
 
 				case '2':
@@ -1729,8 +2054,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							ChangeSoldiersBodyType( INFANT_MONSTER, TRUE );
 						}
 					}
-					else
-						ChangeCurrentSquad( 1 );
 					break;
 
 				case '3':
@@ -1748,9 +2071,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							//EVENT_FireSoldierWeapon(s, usMapPos);
 						}
 					}
-					else
-						ChangeCurrentSquad( 2 );
-
 					break;
 
 				case '4':
@@ -1762,10 +2082,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							ChangeSoldiersBodyType( CRIPPLECIV, TRUE );
 						}
 					}
-					else
-						ChangeCurrentSquad( 3 );
-
-						//ChangeSoldiersBodyType( BLOODCAT, FALSE );
 					break;
 
 				case '5':
@@ -1777,92 +2093,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							ChangeSoldiersBodyType( YAM_MONSTER, TRUE );
 						}
 					}
-					else
-						ChangeCurrentSquad( 4 );
 						break;
-
-				case '6':
-						ChangeCurrentSquad( 5 );
-						break;
-
-				case '7':
-						ChangeCurrentSquad( 6 );
-						break;
-
-				case '8':
-						ChangeCurrentSquad( 7 );
-						break;
-
-				case '9':
-						ChangeCurrentSquad( 8 );
-						break;
-
-				case '0':
-						ChangeCurrentSquad( 9 );
-						break;
-
-				case 'x':
-
-					if ( !fCtrl && !fAlt )
-					{
-						// Exchange places...
-						//Check if we have a good selected guy
-						SOLDIERTYPE* const pSoldier1 = GetSelectedMan();
-						if (pSoldier1 != NULL)
-						{
-							SOLDIERTYPE* const pSoldier2 = gUIFullTarget;
-							if (pSoldier2 != NULL)
-							{
-								// Check if both OK....
-								if (pSoldier1->bLife >= OKLIFE && pSoldier2 != pSoldier1)
-								{
-									if ( pSoldier2->bLife >= OKLIFE )
-									{
-										if (CanSoldierReachGridNoInGivenTileLimit( pSoldier1, pSoldier2->sGridNo, 1, (INT8)gsInterfaceLevel ) )
-										{
-											// Exclude enemies....
-											if ( !pSoldier2->bNeutral && (pSoldier2->bSide != gbPlayerNum ) )
-											{
-
-											}
-											else
-											{
-												if ( CanExchangePlaces( pSoldier1, pSoldier2, TRUE ) )
-												{
-													// All's good!
-													SwapMercPositions( pSoldier1, pSoldier2 );
-
-													DeductPoints( pSoldier1, AP_EXCHANGE_PLACES, 0 );
-													DeductPoints( pSoldier2, AP_EXCHANGE_PLACES, 0 );
-												}
-											}
-										}
-									}
-								}
-							}
-
-						}
-					}
-					break;
-
-				case '/':
-				{
-					// Center to guy....
-					SOLDIERTYPE* const sel = GetSelectedMan();
-					if (sel != NULL) LocateSoldier(sel, 10);
-					break;
-				}
-
-				case 'a':
-
-					if ( fCtrl )
-					{
-					}
-					else
-					{
-						BeginAutoBandage( );
-					}
-					break;
 
 				case 'j':
 
@@ -1897,15 +2128,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						//gGameSettings.fOptions[ TOPTION_HIDE_BULLETS ] ^= TRUE;
 					}
-					else
-					{
-						// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
-						if ( ( gpItemPointer == NULL ) &&
-								(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[BURSTMODE_BUTTON]->uiFlags & BUTTON_ENABLED))
-						{
-							SetBurstMode();
-						}
-					}
 					break;
 				case 'c':
 
@@ -1922,10 +2144,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						{
 							ToggleCliffDebug();
 						}
-					}
-					else
-					{
-						HandleStanceChangeFromUIKeys( ANIM_CROUCH );
 					}
 					break;
 
@@ -1956,8 +2174,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 										}
 									}
 								}
-								else //End turn only if in combat and it is the player's turn
-									*puiNewEvent = I_ENDTURN;
 							}
 						}
 					}
@@ -1984,22 +2200,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						ToggleMapEdgepoints();
 					}
 #endif
-					else
-					{
-						SOLDIERTYPE* const sel = GetSelectedMan();
-            if (sel != NULL)
-            {
-							if (sel->bOppCnt > 0)
-			        {
-                // Cycle....
-								CycleVisibleEnemies(sel);
-			        }
-              else
-              {
-		            ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_ENEMIES_IN_SIGHT_STR ] );
-              }
-            }
-					}
 					break;
 
 				case 'f':
@@ -2029,18 +2229,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_TACKING_MODE_ON ] );
 						}
 					}
-					else
-					{
-						//if there is a selected soldier, and the cursor location is valid
-						const SOLDIERTYPE* const sel = GetSelectedMan();
-						if (sel != NULL)
-						{
-							GridNo sGridNo = GetMouseMapPos();
-							//if the cursor is over someone
-							if (gUIFullTarget != NULL) sGridNo = gUIFullTarget->sGridNo;
-							DisplayRangeToTarget(sel, sGridNo);
-						}
-					}
 					break;
 
 				case 'g':
@@ -2055,10 +2243,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						{
 							*puiNewEvent = I_NEW_MERC;
 						}
-					}
-					else
-					{
-						HandlePlayerTogglingLightEffects( TRUE );
 					}
 					break;
 
@@ -2077,10 +2261,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							*puiNewEvent = I_TESTHIT;
 						}
 					}
-					else
-					{
-						ShouldTheHelpScreenComeUp( HELP_SCREEN_TACTICAL, TRUE );
-					}
 					break;
 
 				case 'i':
@@ -2095,13 +2275,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					else if( fCtrl )
 					{
 					}
-					else
-					{
-						ToggleItemGlow(!gGameSettings.fOptions[TOPTION_GLOW_ITEMS]);
-					}
 					break;
-
-				case '$': break;
 
 				case 'k':
 					if( fAlt )
@@ -2129,40 +2303,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							GrenadeTest2();
 						}
 					}
-					else
-					{
-						BeginKeyPanelFromKeyShortcut( );
-					}
 					break;
-
-				case SDLK_INSERT: GoIntoOverheadMap(); break;
-
-				case SDLK_END:
-				{
-					SOLDIERTYPE* const sel = GetSelectedMan();
-					if (sel != NULL && CheckForMercContMove(sel))
-					{
-						// Continue
-						ContinueMercMovement(sel);
-						ErasePath();
-					}
-					break;
-				}
-
-				case SDLK_HOME:
-						if ( gGameSettings.fOptions[ TOPTION_3D_CURSOR ] )
-						{
-							gGameSettings.fOptions[ TOPTION_3D_CURSOR ] = FALSE;
-
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_3DCURSOR_OFF ] );
-						}
-						else
-						{
-							gGameSettings.fOptions[ TOPTION_3D_CURSOR ] = TRUE;
-
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_3DCURSOR_ON ] );
-						}
-						break;
 
 				case SDLK_l:
 #ifdef JA2BETAVERSION
@@ -2202,15 +2343,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							}
 */
 						}
-						else
-						{
-							// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
-							if (gpItemPointer == NULL &&
-									(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[LOOK_BUTTON]->uiFlags & BUTTON_ENABLED))
-							{
-								*puiNewEvent = LC_CHANGE_TO_LOOK;
-							}
-						}
 					}
 					break;
 
@@ -2223,22 +2355,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							CountLevelNodes();
 						}
 					}
-					else if (!fCtrl)
-					{
-						// nothing in hand and the Map Screen button for whichever panel we're in must be enabled
-						if ( ( gpItemPointer == NULL ) && !gfDisableTacticalPanelButtons &&
-								(
-									(gsCurInterfacePanel == SM_PANEL   && iSMPanelButtons[SM_MAP_SCREEN_BUTTON]->uiFlags     & BUTTON_ENABLED) ||
-									(gsCurInterfacePanel == TEAM_PANEL && iTEAMPanelButtons[TEAM_MAP_SCREEN_BUTTON]->uiFlags & BUTTON_ENABLED)
-								))
-						{
-							// go to Map screen
-	            if ( !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
-	            {
-  							GoToMapScreenFromTactical();
-              }
-						}
-					}
 					break;
 
 				case SDLK_PAGEDOWN:
@@ -2247,12 +2363,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						if( fCtrl )
 							AttemptToChangeFloorLevel( +1 ); //try to enter a lower underground level
 					}
-
-					if ( guiCurrentScreen != DEBUG_SCREEN )
-					{
-						SOLDIERTYPE* const sel = GetSelectedMan();
-						if (sel && !gpItemPointer) GotoLowerStance(sel);
-					}
 					break;
 
 				case SDLK_PAGEUP:
@@ -2260,25 +2370,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						if( fCtrl )
 							AttemptToChangeFloorLevel( -1 ); //try to go up towards ground level
-					}
-
-					if ( guiCurrentScreen != DEBUG_SCREEN )
-					{
-						SOLDIERTYPE* const sel = GetSelectedMan();
-						if (sel && !gpItemPointer) GotoHigherStance(sel);
-					}
-					break;
-
-
-				case '*':
-
-					if ( gTacticalStatus.uiFlags & RED_ITEM_GLOW_ON  )
-					{
-						gTacticalStatus.uiFlags &= (~RED_ITEM_GLOW_ON );
-					}
-					else
-					{
-						gTacticalStatus.uiFlags |= RED_ITEM_GLOW_ON;
 					}
 					break;
 
@@ -2300,9 +2391,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					else if( fCtrl )
 					{
 					}
-					else
-					if( !CycleSoldierFindStack( usMapPos ) )// Are we over a merc stack?
-						CycleIntTileFindStack( usMapPos ); // If not, now check if we are over a struct stack
 					break;
 
 				case 'o':
@@ -2322,20 +2410,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							CreatePlayerControlledMonster();
 						}
 					}
-					else
-					{
-						// nothing in hand and the Options Screen button for whichever panel we're in must be enabled
-						if ( ( gpItemPointer == NULL ) && !gfDisableTacticalPanelButtons &&
-								(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[OPTIONS_BUTTON]->uiFlags & BUTTON_ENABLED))
-						{
-							if( !fDisableMapInterfaceDueToBattle )
-							{
-								// go to Options screen
-								guiPreviousOptionScreen = GAME_SCREEN;
-								LeaveTacticalScreen( OPTIONS_SCREEN );
-							}
-						}
-					}
 					break;
 
 				case 'p':
@@ -2346,10 +2420,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							// CTRL-P: Display player's highest progress percentage
 							DumpSectorDifficultyInfo();
 						}
-						else
 	#endif
 #endif
-							HandleStanceChangeFromUIKeys( ANIM_PRONE );
 					break;
 
 				case 'r':
@@ -2363,23 +2435,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							{
 								ReloadWeapon(sel, sel->ubAttackingHand);
 							}
-						}
-						else
-						{
-							if (!MercInWater(sel) && !(sel->uiStatusFlags & SOLDIER_ROBOT))
-              {
-							  //change selected merc to run
-								if (sel->usUIMovementMode != WALKING && sel->usUIMovementMode != RUNNING)
-							  {
-									UIHandleSoldierStanceChange(sel, ANIM_STAND);
-							  }
-							  else
-							  {
-									sel->usUIMovementMode = RUNNING;
-									gfPlotNewMovement     = TRUE;
-							  }
-								sel->fUIMovementFast = 1;
-              }
 						}
 					}
 					break;
@@ -2426,11 +2481,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							}
 						}
 					}
-					else if (GetSelectedMan() != NULL)
-					{
-						gfPlotNewMovement = TRUE;
-						HandleStanceChangeFromUIKeys( ANIM_STAND );
-					}
 					break;
 
 				case 't':
@@ -2451,47 +2501,17 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							//EnterCombatMode( gbPlayerNum );
 						}
 					}
-					else
-						ToggleTreeTops();
 					break;
 
 
         case '=':
-					//if the display cover or line of sight is being displayed
-					if (_KeyDown(SDLK_END) || _KeyDown(SDLK_DELETE))
+#ifdef JA2TESTVERSION
+					if( fAlt )
 					{
-						if (_KeyDown(SDLK_DELETE))
-							ChangeSizeOfDisplayCover( gGameSettings.ubSizeOfDisplayCover + 1 );
-
-						if (_KeyDown(SDLK_END))
-							ChangeSizeOfLOS( gGameSettings.ubSizeOfLOS + 1 );
+						WarpGameTime( 60, TRUE );
+						break;
 					}
-					else
-					{
-
-						#ifdef JA2TESTVERSION
-							if( fAlt )
-							{
-								WarpGameTime( 60, TRUE );
-								break;
-							}
-						#endif
-
-						// ATE: This key will select everybody in the sector
-						if (!(gTacticalStatus.uiFlags & INCOMBAT))
-						{
-							FOR_ALL_IN_TEAM(s, gbPlayerNum)
-							{
-								// Check if this guy is OK to control....
-								if (OkControllableMerc(s) &&
-										!(s->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER)))
-								{
-									s->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
-								}
-							}
-							EndMultiSoldierSelection(TRUE);
-						}
-					}
+#endif
 					break;
 
 				case 'u':
@@ -2522,10 +2542,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							}
 						}
 					}
-					else if (GetSelectedMan() != NULL)
-					{
-						*puiNewEvent = M_CHANGE_TO_ACTION;
-					}
 					break;
 
 				case 'v':
@@ -2547,9 +2563,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							PerformVideoInfoDumpIntoFile( "SGPVideoDump.txt", TRUE );
 						#endif
 					}
-					else
-						DisplayGameSettings( );
-
 					break;
 
 				case SDLK_w:
@@ -2577,8 +2590,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							if (sel != NULL) CreateItem(FLAMETHROWER, 100, &sel->inv[HANDPOS]);
 						}
 					}
-					else
-						ToggleWireFrame();
 					break;
 
 				case 'y':
@@ -2600,14 +2611,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							AutoPlaceObject(robot, &Object, FALSE);
 						}
 					}
-					else
-					{
-						if ( INFORMATION_CHEAT_LEVEL( ) )
-						{
-							*puiNewEvent = I_LOSDEBUG;
-						}
-					}
 					break;
+
 				case 'z':
 					if( fCtrl )
 					{
@@ -2664,52 +2669,25 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							}
 						}
 					}
-					else
-					{
-						// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
-						if ( ( gpItemPointer == NULL ) )
-						{
-              HandleStealthChangeFromUIKeys( );
-						}
-					}
 					break;
 
 				case '-':
 				case '_':
-					//if the display cover or line of sight is being displayed
-					if (_KeyDown(SDLK_END) || _KeyDown(SDLK_DELETE))
+					if( fAlt )
 					{
-						if (_KeyDown(SDLK_DELETE))
-							ChangeSizeOfDisplayCover( gGameSettings.ubSizeOfDisplayCover - 1 );
-
-						if (_KeyDown(SDLK_END))
-							ChangeSizeOfLOS( gGameSettings.ubSizeOfLOS - 1 );
+						const UINT32 vol = MusicGetVolume();
+						MusicSetVolume(vol > 20 ? vol - 20 : 0);
 					}
-					else
+					else if( fCtrl )
 					{
-						if( fAlt )
-						{
-							const UINT32 vol = MusicGetVolume();
-							MusicSetVolume(vol > 20 ? vol - 20 : 0);
-						}
-						else if( fCtrl )
-						{
-	#ifdef JA2TESTVERSION
-							gTacticalStatus.bRealtimeSpeed = MAX( 1, gTacticalStatus.bRealtimeSpeed - 1 );
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Decreasing Realtime speed to %d", gTacticalStatus.bRealtimeSpeed );
-	#endif
-						}
-						else
-						{
-	#ifdef JA2TESTVERSION
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Using Normal Scroll Speed"  );
-							gubCurScrollSpeedID = 1;
-	#endif
-						}
+#ifdef JA2TESTVERSION
+						gTacticalStatus.bRealtimeSpeed = MAX( 1, gTacticalStatus.bRealtimeSpeed - 1 );
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Decreasing Realtime speed to %d", gTacticalStatus.bRealtimeSpeed );
+#endif
 					}
 					break;
-				case '+':
 
+				case '+':
 #ifdef JA2TESTVERSION
 					if( fAlt )
 					{
@@ -2721,27 +2699,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						gTacticalStatus.bRealtimeSpeed = MIN( MAX_REALTIME_SPEED_VAL, gTacticalStatus.bRealtimeSpeed+1 );
 						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Increasing Realtime speed to %d", gTacticalStatus.bRealtimeSpeed );
 					}
-					else
-					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Using Higher Scroll Speed"  );
-						gubCurScrollSpeedID = 2;
-					}
 #endif
 					break;
-				case '`':
-
-					// Switch panels...
-					{
-						ToggleTacticalPanels();
-
-						if ( CHEATER_CHEAT_LEVEL( ) )
-            {
-              //EnvBeginRainStorm( 1 );
-            }
-
-					}
-					break;
-
 			}
 		}
 	}
