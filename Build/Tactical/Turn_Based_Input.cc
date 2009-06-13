@@ -1289,19 +1289,15 @@ static void HandleModNone(UINT32 const key, UINT32* const new_event)
 				if (_KeyDown(SDLK_END))
 					ChangeSizeOfLOS(gGameSettings.ubSizeOfLOS + 1);
 			}
-			else
-			{
-				// ATE: This key will select everybody in the sector
-				if (!(gTacticalStatus.uiFlags & INCOMBAT))
+			else if (!(gTacticalStatus.uiFlags & INCOMBAT))
+			{ // ATE: This key will select everybody in the sector
+				FOR_ALL_IN_TEAM(s, gbPlayerNum)
 				{
-					FOR_ALL_IN_TEAM(s, gbPlayerNum)
-					{
-						if (!OkControllableMerc(s)) continue;
-						if (s->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER)) continue;
-						s->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
-					}
-					EndMultiSoldierSelection(TRUE);
+					if (!OkControllableMerc(s)) continue;
+					if (s->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_PASSENGER | SOLDIER_DRIVER)) continue;
+					s->uiStatusFlags |= SOLDIER_MULTI_SELECTED;
 				}
+				EndMultiSoldierSelection(TRUE);
 			}
 			break;
 
@@ -1321,20 +1317,19 @@ static void HandleModNone(UINT32 const key, UINT32* const new_event)
 		case 'c': HandleStanceChangeFromUIKeys(ANIM_CROUCH); break;
 
 		case 'd':
+			// End turn only if in combat and it is the player's turn
 			if (gTacticalStatus.uiFlags & TURNBASED &&
 					gTacticalStatus.uiFlags & INCOMBAT  &&
-					gTacticalStatus.ubCurrentTeam == gbPlayerNum)
+					gTacticalStatus.ubCurrentTeam == gbPlayerNum &&
+					/* Nothing in hand and the Done button for whichever panel we're in must be enabled */
+					!gpItemPointer                 &&
+					!gfDisableTacticalPanelButtons &&
+					(
+						(gsCurInterfacePanel == SM_PANEL   && iSMPanelButtons[SM_DONE_BUTTON]->uiFlags     & BUTTON_ENABLED) ||
+						(gsCurInterfacePanel == TEAM_PANEL && iTEAMPanelButtons[TEAM_DONE_BUTTON]->uiFlags & BUTTON_ENABLED)
+					))
 			{
-				// Nothing in hand and the Done button for whichever panel we're in must be enabled
-				if (!gpItemPointer                 &&
-						!gfDisableTacticalPanelButtons &&
-						(
-							(gsCurInterfacePanel == SM_PANEL   && iSMPanelButtons[SM_DONE_BUTTON]->uiFlags     & BUTTON_ENABLED) ||
-							(gsCurInterfacePanel == TEAM_PANEL && iTEAMPanelButtons[TEAM_DONE_BUTTON]->uiFlags & BUTTON_ENABLED)
-						))
-				{
-					*new_event = I_ENDTURN;
-				}
+				*new_event = I_ENDTURN;
 			}
 			break;
 
@@ -1393,7 +1388,9 @@ static void HandleModNone(UINT32 const key, UINT32* const new_event)
 		{
 			GridNo const map_pos = GetMouseMapPos();
 			if (!CycleSoldierFindStack(map_pos)) // Are we over a merc stack?
+			{
 				CycleIntTileFindStack(map_pos); // If not, now check if we are over a struct stack
+			}
 			break;
 		}
 
@@ -1403,8 +1400,7 @@ static void HandleModNone(UINT32 const key, UINT32* const new_event)
 					!gfDisableTacticalPanelButtons   &&
 					!fDisableMapInterfaceDueToBattle &&
 					(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[OPTIONS_BUTTON]->uiFlags & BUTTON_ENABLED))
-			{
-				// Go to Options screen
+			{ // Go to Options screen
 				guiPreviousOptionScreen = GAME_SCREEN;
 				LeaveTacticalScreen(OPTIONS_SCREEN);
 			}
@@ -1439,13 +1435,10 @@ static void HandleModNone(UINT32 const key, UINT32* const new_event)
 			}
 			break;
 
-		case 't': ToggleTreeTops(); break;
-
+		case 't': ToggleTreeTops();                                      break;
 		case 'u': if (GetSelectedMan()) *new_event = M_CHANGE_TO_ACTION; break;
-
-		case 'v': DisplayGameSettings(); break;
-
-		case 'w': ToggleWireFrame(); break;
+		case 'v': DisplayGameSettings();                                 break;
+		case 'w': ToggleWireFrame();                                     break;
 
 		case 'x':
 		{ // Exchange places
@@ -1453,11 +1446,11 @@ static void HandleModNone(UINT32 const key, UINT32* const new_event)
 			SOLDIERTYPE* const s2 = gUIFullTarget;
 			if (s1                                                                          &&
 					s2                                                                          &&
+					s2 != s1                                                                    &&
 					s1->bLife >= OKLIFE                                                         && // Check if both OK
 					s2->bLife >= OKLIFE                                                         &&
-					s2 != s1                                                                    &&
 					CanSoldierReachGridNoInGivenTileLimit(s1, s2->sGridNo, 1, gsInterfaceLevel) &&
-					(s2->bNeutral || (s2->bSide == gbPlayerNum))                                && // Exclude enemies
+					(s2->bNeutral || s2->bSide == gbPlayerNum)                                  && // Exclude enemies
 					CanExchangePlaces(s1, s2, TRUE))
 			{
 				SwapMercPositions(s1, s2);
@@ -1468,8 +1461,7 @@ static void HandleModNone(UINT32 const key, UINT32* const new_event)
 		}
 
 		case 'y': if (INFORMATION_CHEAT_LEVEL()) *new_event = I_LOSDEBUG; break;
-
-		case 'z': if (!gpItemPointer) HandleStealthChangeFromUIKeys(); break;
+		case 'z': if (!gpItemPointer) HandleStealthChangeFromUIKeys();    break;
 
 		case SDLK_INSERT: GoIntoOverheadMap(); break;
 
@@ -1538,9 +1530,7 @@ static void HandleModNone(UINT32 const key, UINT32* const new_event)
 			}
 			break;
 
-		case SDLK_F12:
-			ClearDisplayedListOfTacticalStrings();
-			break;
+		case SDLK_F12: ClearDisplayedListOfTacticalStrings(); break;
 	}
 }
 
