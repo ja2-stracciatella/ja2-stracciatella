@@ -5251,7 +5251,7 @@ void BeginSoldierClimbFence( SOLDIERTYPE *pSoldier )
 {
 	INT8							bDirection;
 
-	if ( FindFenceJumpDirection( pSoldier, pSoldier->sGridNo, pSoldier->bDirection, &bDirection ) )
+	if (FindFenceJumpDirection(pSoldier, &bDirection))
 	{
 		pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc(bDirection ) );
 		pSoldier->fDontChargeTurningAPs = TRUE;

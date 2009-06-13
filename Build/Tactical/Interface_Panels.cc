@@ -692,7 +692,7 @@ static void UpdateSMPanel(void)
 		}
 	}
 
-	if ( FindFenceJumpDirection( gpSMCurrentMerc, gpSMCurrentMerc->sGridNo, gpSMCurrentMerc->bDirection, &bDirection ) )
+	if (FindFenceJumpDirection(gpSMCurrentMerc, &bDirection))
 	{
 		EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
 	}
@@ -2161,7 +2161,7 @@ static void BtnClimbCallback(GUI_BUTTON* btn, INT32 reason)
 		}
 
 		INT8 bDirection;
-		if (FindFenceJumpDirection(gpSMCurrentMerc, gpSMCurrentMerc->sGridNo, gpSMCurrentMerc->bDirection, &bDirection))
+		if (FindFenceJumpDirection(gpSMCurrentMerc, &bDirection))
 		{
 			BeginSoldierClimbFence(gpSMCurrentMerc);
 		}
