@@ -278,7 +278,7 @@ void StopRubberBandedMercFromMoving(void);
 BOOLEAN SelectedGuyInBusyAnimation(void);
 
 void GotoLowerStance( SOLDIERTYPE *pSoldier );
-void GotoHeigherStance( SOLDIERTYPE *pSoldier );
+void GotoHigherStance(SOLDIERTYPE*);
 
 BOOLEAN IsValidJumpLocation(const SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fCheckForPath);
 

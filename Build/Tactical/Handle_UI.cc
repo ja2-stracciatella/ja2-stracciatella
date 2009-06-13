@@ -4963,25 +4963,14 @@ BOOLEAN SelectedGuyInBusyAnimation( )
 		sel->usAnimState == BEGIN_OPENSTRUCT;
 }
 
-void GotoHeigherStance( SOLDIERTYPE *pSoldier )
+
+void GotoHigherStance(SOLDIERTYPE* const s)
 {
-	switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
+	switch (gAnimControl[s->usAnimState].ubEndHeight)
 	{
-		case ANIM_STAND:
-			// Nowhere
-			// Try to climb
-			if (FindHigherLevel(pSoldier)) BeginSoldierClimbUpRoof(pSoldier);
-			break;
-
-		case ANIM_CROUCH:
-
-			HandleStanceChangeFromUIKeys( ANIM_STAND );
-			break;
-
-		case ANIM_PRONE:
-
-			HandleStanceChangeFromUIKeys( ANIM_CROUCH );
-			break;
+		case ANIM_STAND:  if (FindHigherLevel(s)) BeginSoldierClimbUpRoof(s); break;
+		case ANIM_CROUCH: HandleStanceChangeFromUIKeys(ANIM_STAND);           break;
+		case ANIM_PRONE:  HandleStanceChangeFromUIKeys(ANIM_CROUCH);          break;
 	}
 }
 
