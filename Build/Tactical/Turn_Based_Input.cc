@@ -1599,14 +1599,20 @@ static void HandleModCtrl(UINT32 const key, UINT32* const new_event)
 	{
 #ifdef JA2TESTVERSION
 		case '+':
-			gTacticalStatus.bRealtimeSpeed = MIN(gTacticalStatus.bRealtimeSpeed + 1, MAX_REALTIME_SPEED_VAL);
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Increasing Realtime speed to %d", gTacticalStatus.bRealtimeSpeed);
+		{
+			INT8& speed = gTacticalStatus.bRealtimeSpeed;
+			speed = MIN(speed + 1, MAX_REALTIME_SPEED_VAL);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Increasing Realtime speed to %d", speed);
 			break;
+		}
 
 		case '-':
-			gTacticalStatus.bRealtimeSpeed = MAX(1, gTacticalStatus.bRealtimeSpeed - 1);
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Decreasing Realtime speed to %d", gTacticalStatus.bRealtimeSpeed);
+		{
+			INT8& speed = gTacticalStatus.bRealtimeSpeed;
+			speed = MAX(1, speed - 1);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Decreasing Realtime speed to %d", speed);
 			break;
+		}
 #endif
 
 		case 'c': if (CHEATER_CHEAT_LEVEL()) ToggleCliffDebug(); break;
@@ -1705,14 +1711,14 @@ static void HandleModCtrl(UINT32 const key, UINT32* const new_event)
 
 		case 'z': if (INFORMATION_CHEAT_LEVEL()) ToggleZBuffer(); break;
 
-		case SDLK_PAGEDOWN:
-			// Try to enter a lower underground level
-			if (CHEATER_CHEAT_LEVEL()) AttemptToChangeFloorLevel(+1);
-			break;
-
 		case SDLK_PAGEUP:
 			// Try to go up towards ground level
 			if (CHEATER_CHEAT_LEVEL()) AttemptToChangeFloorLevel(-1);
+			break;
+
+		case SDLK_PAGEDOWN:
+			// Try to enter a lower underground level
+			if (CHEATER_CHEAT_LEVEL()) AttemptToChangeFloorLevel(+1);
 			break;
 
 #if defined JA2TESTVERSION
