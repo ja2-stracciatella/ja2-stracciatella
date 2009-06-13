@@ -1824,7 +1824,7 @@ static ScreenID UIHandleMAdjustStanceMode(UI_EVENT* pUIEvent)
 			// IF we are on a basic level...(temp)
 			if (sel->bLevel == 0)
 			{
-				if (FindHeigherLevel(sel, sel->sGridNo, sel->bDirection, &bNewDirection))
+				if (FindHigherLevel(sel, sel->sGridNo, sel->bDirection, &bNewDirection))
 				{
 					ubNearHeigherLevel = TRUE;
 				}
@@ -2459,7 +2459,7 @@ void GetMercClimbDirection(const SOLDIERTYPE* const s, BOOLEAN* const pfGoDown, 
 	if (s->bLevel == 0)
 	{
 		// See if we are not in a building!
-		if (FindHeigherLevel(s, s->sGridNo, s->bDirection, &bNewDirection))
+		if (FindHigherLevel(s, s->sGridNo, s->bDirection, &bNewDirection))
 		{
 			*pfGoUp = TRUE;
 		}

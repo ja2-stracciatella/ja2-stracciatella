@@ -5223,7 +5223,7 @@ void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier )
 {
 	INT8							bNewDirection;
 
-	if ( FindHeigherLevel( pSoldier, pSoldier->sGridNo, pSoldier->bDirection, &bNewDirection ) && ( pSoldier->bLevel == 0 ) )
+	if (FindHigherLevel(pSoldier, pSoldier->sGridNo, pSoldier->bDirection, &bNewDirection) && pSoldier->bLevel == 0)
 	{
 		if ( EnoughPoints( pSoldier, GetAPsToClimbRoof( pSoldier, FALSE ), 0, TRUE ) )
 		{

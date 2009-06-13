@@ -534,53 +534,35 @@ static INT8 FindNumTurnsBetweenDirs(INT8 sDir1, INT8 sDir2)
 }
 
 
-BOOLEAN FindHeigherLevel(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bStartingDir, INT8* pbDirection)
+bool FindHigherLevel(SOLDIERTYPE const* const s, GridNo const grid_no, INT8 const starting_dir, INT8* const out_direction)
 {
-	INT32			cnt;
-	INT16			sNewGridNo;
-	BOOLEAN		fFound = FALSE;
-	UINT8			bMinNumTurns = 100;
-	INT8			bNumTurns;
-	INT8			bMinDirection = 0;
+	// If there is a roof over our heads, this is an ivalid
+	if (FindStructure(grid_no, STRUCTURE_ROOF)) return false;
 
-	// IF there is a roof over our heads, this is an ivalid....
-	// return ( FALSE );l
-	if ( FindStructure( sGridNo, STRUCTURE_ROOF ) != NULL )
+	bool  found         = false;
+	UINT8 min_turns     = 100;
+	INT8  min_direction = 0;
+	for (INT32 cnt = 0; cnt != 8; cnt += 2)
 	{
-		return( FALSE );
+		GridNo const new_grid_no = NewGridNo(grid_no, DirectionInc(cnt));
+		if (!NewOKDestination(s, new_grid_no, TRUE, 1)) continue;
+
+		// Check if this tile has a higher level
+		if (!IsHeigherLevel(new_grid_no)) continue;
+
+		// FInd how many turns we should go to get here
+		INT8 const n_turns =  FindNumTurnsBetweenDirs(cnt, starting_dir);
+		if (min_turns <= n_turns) continue;
+
+		found         = true;
+		min_turns     = n_turns;
+		min_direction = cnt;
 	}
 
-	// LOOP THROUGH ALL 8 DIRECTIONS
-	for ( cnt = 0; cnt < 8; cnt+= 2 )
-	{
-		sNewGridNo = NewGridNo( (UINT16)sGridNo, (UINT16)DirectionInc( (UINT8)cnt ) );
+	if (!found) return false;
 
-		if ( NewOKDestination( pSoldier, sNewGridNo, TRUE, 1 ) )
-		{
-			// Check if this tile has a higher level
-			if ( IsHeigherLevel( sNewGridNo ) )
-			{
-				fFound = TRUE;
-
-				// FInd how many turns we should go to get here
-				bNumTurns =  FindNumTurnsBetweenDirs( (INT8)cnt, bStartingDir );
-
-				if ( bNumTurns < bMinNumTurns )
-				{
-					bMinNumTurns = bNumTurns;
-					bMinDirection = (INT8)cnt;
-				}
-			}
-		}
-	}
-
-	if ( fFound )
-	{
-		*pbDirection = bMinDirection;
-		return( TRUE );
-	}
-
-	return( FALSE );
+	*out_direction = min_direction;
+	return true;
 }
 
 
