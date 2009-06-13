@@ -1829,14 +1829,7 @@ static ScreenID UIHandleMAdjustStanceMode(UI_EVENT* pUIEvent)
 				}
 			}
 
-			// IF we are higher...
-			if (sel->bLevel > 0)
-			{
-				if (FindLowerLevel(sel))
-				{
-					ubNearLowerLevel = TRUE;
-				}
-			}
+			if (FindLowerLevel(sel)) ubNearLowerLevel = TRUE;
 
 			switch (gAnimControl[sel->usAnimState].ubEndHeight)
 			{
@@ -2444,12 +2437,6 @@ BOOLEAN SelectedMercCanAffordMove(  )
 	sel->bGoodContPath     = TRUE;
 
 	return( FALSE );
-}
-
-
-bool CanMercClimbDown(SOLDIERTYPE const* const s)
-{
-	return s->bLevel > 0 && FindLowerLevel(s);
 }
 
 
@@ -5030,7 +5017,7 @@ void GotoLowerStance( SOLDIERTYPE *pSoldier )
 		case ANIM_PRONE:
 			// Nowhere
 			// Try to climb
-			if (CanMercClimbDown(pSoldier)) BeginSoldierClimbDownRoof(pSoldier);
+			if (FindLowerLevel(pSoldier)) BeginSoldierClimbDownRoof(pSoldier);
 			break;
 	}
 }

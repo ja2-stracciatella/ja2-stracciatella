@@ -6166,7 +6166,7 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 		return( FALSE );
 	}
 
-	if (FindLowerLevel(pSoldier, &bNewDirection) && pSoldier->bLevel > 0)
+	if (FindLowerLevel(pSoldier, &bNewDirection))
 	{
 		// ONly if standing!
 		if ( gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_STAND )
@@ -6239,7 +6239,7 @@ void BeginSoldierClimbDownRoof( SOLDIERTYPE *pSoldier )
 {
 	INT8							bNewDirection;
 
-	if (FindLowerLevel(pSoldier, &bNewDirection) && pSoldier->bLevel > 0)
+	if (FindLowerLevel(pSoldier, &bNewDirection))
 	{
 		if ( EnoughPoints( pSoldier, GetAPsToClimbRoof( pSoldier, TRUE ), 0, TRUE ) )
 		{

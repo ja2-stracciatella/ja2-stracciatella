@@ -570,6 +570,8 @@ bool FindHigherLevel(SOLDIERTYPE const* const s, INT8* const out_direction)
 
 bool FindLowerLevel(SOLDIERTYPE const* const s, INT8* const out_direction)
 {
+	if (s->bLevel == 0) return false;
+
 	bool         found         = false;
 	UINT8        min_turns     = 100;
 	INT8         min_direction = 0;

@@ -677,7 +677,7 @@ static void UpdateSMPanel(void)
 	DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
 
 	SOLDIERTYPE* const s = gpSMCurrentMerc;
-	if (CanMercClimbDown(s))
+	if (FindLowerLevel(s))
 	{
 		if (EnoughPoints(s, GetAPsToClimbRoof(s, TRUE), 0, FALSE))
 		{
@@ -2151,7 +2151,7 @@ static void BtnClimbCallback(GUI_BUTTON* btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		SOLDIERTYPE* const s = gpSMCurrentMerc;
-		if (CanMercClimbDown(s))
+		if (FindLowerLevel(s))
 		{
 			BeginSoldierClimbDownRoof(s);
 		}
