@@ -2145,7 +2145,7 @@ void BtnUpdownCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void BtnClimbCallback(GUI_BUTTON* btn, INT32 reason)
+static void BtnClimbCallback(GUI_BUTTON* const btn, INT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -2158,10 +2158,9 @@ static void BtnClimbCallback(GUI_BUTTON* btn, INT32 reason)
 		{
 			BeginSoldierClimbUpRoof(s);
 		}
-
-		if (FindFenceJumpDirection(gpSMCurrentMerc))
+		else if (FindFenceJumpDirection(s))
 		{
-			BeginSoldierClimbFence(gpSMCurrentMerc);
+			BeginSoldierClimbFence(s);
 		}
 	}
 }
