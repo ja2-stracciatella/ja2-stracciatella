@@ -1796,7 +1796,6 @@ static ScreenID UIHandleMAdjustStanceMode(UI_EVENT* pUIEvent)
 	static BOOLEAN		ubNearLowerLevel;
 	static UINT8			ubUpHeight, ubDownDepth;
 	static UINT32			uiOldShowUPDownArrows;
-	INT8							bNewDirection;
 
   // Change cusror to normal
   guiNewUICursor = NO_UICURSOR;
@@ -1824,7 +1823,7 @@ static ScreenID UIHandleMAdjustStanceMode(UI_EVENT* pUIEvent)
 			// IF we are on a basic level...(temp)
 			if (sel->bLevel == 0)
 			{
-				if (FindHigherLevel(sel, &bNewDirection))
+				if (FindHigherLevel(sel))
 				{
 					ubNearHeigherLevel = TRUE;
 				}
@@ -1833,7 +1832,7 @@ static ScreenID UIHandleMAdjustStanceMode(UI_EVENT* pUIEvent)
 			// IF we are higher...
 			if (sel->bLevel > 0)
 			{
-				if (FindLowerLevel(sel, &bNewDirection))
+				if (FindLowerLevel(sel))
 				{
 					ubNearLowerLevel = TRUE;
 				}
@@ -2450,8 +2449,6 @@ BOOLEAN SelectedMercCanAffordMove(  )
 
 void GetMercClimbDirection(const SOLDIERTYPE* const s, BOOLEAN* const pfGoDown, BOOLEAN* const pfGoUp)
 {
-	INT8							bNewDirection;
-
 	*pfGoDown = FALSE;
 	*pfGoUp   = FALSE;
 
@@ -2459,7 +2456,7 @@ void GetMercClimbDirection(const SOLDIERTYPE* const s, BOOLEAN* const pfGoDown, 
 	if (s->bLevel == 0)
 	{
 		// See if we are not in a building!
-		if (FindHigherLevel(s, &bNewDirection))
+		if (FindHigherLevel(s))
 		{
 			*pfGoUp = TRUE;
 		}
@@ -2468,7 +2465,7 @@ void GetMercClimbDirection(const SOLDIERTYPE* const s, BOOLEAN* const pfGoDown, 
 	// IF we are higher...
 	if (s->bLevel > 0)
 	{
-		if (FindLowerLevel(s, &bNewDirection))
+		if (FindLowerLevel(s))
 		{
 			*pfGoDown = TRUE;
 		}

@@ -563,7 +563,7 @@ bool FindHigherLevel(SOLDIERTYPE const* const s, INT8* const out_direction)
 
 	if (!found) return false;
 
-	*out_direction = min_direction;
+	if (out_direction) *out_direction = min_direction;
 	return true;
 }
 
@@ -593,7 +593,7 @@ bool FindLowerLevel(SOLDIERTYPE const* const s, INT8* const out_direction)
 
 	if (!found) return false;
 
-	*out_direction = min_direction;
+	if (out_direction) *out_direction = min_direction;
 	return true;
 }
 
