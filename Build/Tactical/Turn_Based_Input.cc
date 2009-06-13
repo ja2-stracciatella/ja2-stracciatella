@@ -1593,6 +1593,143 @@ static void HandleModShift(UINT32 const key, UINT32* const new_event)
 }
 
 
+static void HandleModCtrl(UINT32 const key, UINT32* const new_event)
+{
+	switch (key)
+	{
+#ifdef JA2TESTVERSION
+		case '+':
+			gTacticalStatus.bRealtimeSpeed = MIN(gTacticalStatus.bRealtimeSpeed + 1, MAX_REALTIME_SPEED_VAL);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Increasing Realtime speed to %d", gTacticalStatus.bRealtimeSpeed);
+			break;
+
+		case '-':
+			gTacticalStatus.bRealtimeSpeed = MAX(1, gTacticalStatus.bRealtimeSpeed - 1);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Decreasing Realtime speed to %d", gTacticalStatus.bRealtimeSpeed);
+			break;
+#endif
+
+		case 'c': if (CHEATER_CHEAT_LEVEL()) ToggleCliffDebug(); break;
+
+#ifdef JA2TESTVERSION
+		case 'd': AdvanceToNextDay(); break;
+#endif
+
+#ifdef JA2BETAVERSION
+		case 'e': ToggleMapEdgepoints(); break;
+#endif
+
+		case 'f':
+			if (INFORMATION_CHEAT_LEVEL())
+			{ // Toggle frame rate display
+				gbFPSDisplay = !gbFPSDisplay;
+				EnableFPSOverlay(gbFPSDisplay);
+				if (!gbFPSDisplay) SetRenderFlags(RENDER_FLAG_FULL);
+			}
+			break;
+
+		case 'h': if (CHEATER_CHEAT_LEVEL()) *new_event = I_TESTHIT;   break;
+#ifdef JA2BETAVERSION
+		case 'j': if (CHEATER_CHEAT_LEVEL()) ToggleNPCRecordDisplay(); break;
+#endif
+		case 'k': if (CHEATER_CHEAT_LEVEL()) GrenadeTest2();           break;
+
+		case 'l':
+			if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
+			{
+				gfSaveGame              = FALSE;
+				gfCameDirectlyFromGame  = TRUE;
+				guiPreviousOptionScreen = GAME_SCREEN;
+				LeaveTacticalScreen(SAVE_LOAD_SCREEN);
+			}
+			break;
+
+		case 'o': if (CHEATER_CHEAT_LEVEL()) CreatePlayerControlledMonster(); break;
+
+#if defined JA2TESTVERSION && !defined JA2DEMO
+		// Display player's highest progress percentage
+		case 'p': DumpSectorDifficultyInfo(); break;
+#endif
+
+		case 's':
+			if (!fDisableMapInterfaceDueToBattle && !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
+			{
+				if (CanGameBeSaved())
+				{
+					gfSaveGame              = TRUE;
+					gfCameDirectlyFromGame  = TRUE;
+					guiPreviousOptionScreen = GAME_SCREEN;
+					LeaveTacticalScreen(SAVE_LOAD_SCREEN);
+				}
+				else
+				{ // Display a message saying the player cannot save now
+					DoMessageBox(MSG_BOX_BASIC_STYLE, zNewTacticalMessages[TCTL_MSG__IRON_MAN_CANT_SAVE_NOW], GAME_SCREEN, MSG_BOX_FLAG_OK, 0, 0);
+				}
+			}
+			break;
+
+		case 't': if (CHEATER_CHEAT_LEVEL()) TestCapture(); break;
+
+		case 'u':
+			if (CHEATER_CHEAT_LEVEL() && GetSelectedMan())
+			{
+				FOR_ALL_IN_TEAM(s, gbPlayerNum)
+				{
+					if (s->bLife <= 0) continue;
+
+					s->bBreath   = s->bBreathMax; // Get breath back
+					s->bLife     = s->bLifeMax;   // Get life back
+					s->bBleeding = 0;
+
+					fInterfacePanelDirty = DIRTYLEVEL2;
+				}
+			}
+			break;
+
+#ifdef SGP_VIDEO_DEBUGGING
+		case 'v':
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VObjects:  %d", guiVObjectSize);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VSurfaces:  %d", guiVSurfaceSize);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"SGPVideoDump.txt updated...");
+			PerformVideoInfoDumpIntoFile("SGPVideoDump.txt", TRUE);
+			break;
+#endif
+
+		case 'w':
+			if (CHEATER_CHEAT_LEVEL())
+			{
+				SOLDIERTYPE* const sel = GetSelectedMan();
+				if (sel) CreateItem(FLAMETHROWER, 100, &sel->inv[HANDPOS]);
+			}
+			break;
+
+		case 'z': if (INFORMATION_CHEAT_LEVEL()) ToggleZBuffer(); break;
+
+		case SDLK_PAGEDOWN:
+			// Try to enter a lower underground level
+			if (CHEATER_CHEAT_LEVEL()) AttemptToChangeFloorLevel(+1);
+			break;
+
+		case SDLK_PAGEUP:
+			// Try to go up towards ground level
+			if (CHEATER_CHEAT_LEVEL()) AttemptToChangeFloorLevel(-1);
+			break;
+
+#if defined JA2TESTVERSION
+		case SDLK_F1: TestMeanWhile(10); break;
+		case SDLK_F2: TestMeanWhile(11); break;
+		case SDLK_F3: TestMeanWhile(12); break;
+		case SDLK_F4: TestMeanWhile(13); break;
+		case SDLK_F5: TestMeanWhile(14); break;
+		case SDLK_F6: TestMeanWhile(15); break;
+		case SDLK_F9: TestMeanWhile( 8); break;
+#endif
+
+		case SDLK_F12: ClearTacticalMessageQueue(); break;
+	}
+}
+
+
 void GetKeyboardInput( UINT32 *puiNewEvent )
 {
   InputAtom					InputEvent;
@@ -1908,22 +2045,11 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			UINT16 const mod = InputEvent.usKeyState;
 			UINT32 const key = InputEvent.usParam;
 
-			switch (mod)
-			{
-				case 0:          HandleModNone(key, puiNewEvent);  continue;
-				case SHIFT_DOWN: HandleModShift(key, puiNewEvent); continue;
-			}
-
-			BOOLEAN fAlt, fCtrl, fShift;
-			fAlt = InputEvent.usKeyState & ALT_DOWN ? TRUE : FALSE;
-			fCtrl = InputEvent.usKeyState & CTRL_DOWN ? TRUE : FALSE;
-			fShift = InputEvent.usKeyState & SHIFT_DOWN ? TRUE : FALSE;
-
-			if (fCtrl && !fAlt)
+			if (mod == CTRL_DOWN)
 			{
 				if (gubCheatLevel < lengthof(cheat_code) - 1)
 				{
-					if (InputEvent.usParam == cheat_code[gubCheatLevel])
+					if (key == cheat_code[gubCheatLevel])
 					{
 						if (++gubCheatLevel == lengthof(cheat_code) - 1)
 						{
@@ -1933,7 +2059,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						continue;
 					}
 				}
-				else if (gubCheatLevel == lengthof(cheat_code) - 1 && InputEvent.usParam == 'b')
+				else if (gubCheatLevel == lengthof(cheat_code) - 1 && key == 'b')
 				{
 					++gubCheatLevel;
 					continue;
@@ -1941,6 +2067,17 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 			}
 
 			if (gubCheatLevel < lengthof(cheat_code) - 1) RESET_CHEAT_LEVEL();
+
+			switch (mod)
+			{
+				case 0:          HandleModNone( key, puiNewEvent); continue;
+				case SHIFT_DOWN: HandleModShift(key, puiNewEvent); continue;
+				case CTRL_DOWN:  HandleModCtrl( key, puiNewEvent); continue;
+			}
+
+			BOOLEAN fAlt, fCtrl;
+			fAlt = InputEvent.usKeyState & ALT_DOWN ? TRUE : FALSE;
+			fCtrl = InputEvent.usKeyState & CTRL_DOWN ? TRUE : FALSE;
 
 			switch( InputEvent.usParam )
 			{
@@ -1957,10 +2094,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						TestMeanWhile(idx != 0 ? idx : 15);
 					}
-					else if (fCtrl)
-					{
-						TestMeanWhile(10 + idx);
-					}
 					break;
 				}
 #endif
@@ -1970,11 +2103,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				case SDLK_F8: if (fAlt) TestMeanWhile( 7); break;
 
 				case SDLK_F9:
-					if( fCtrl )
-					{
-						TestMeanWhile( 8 );
-					}
-					else if (fAlt)
+					if (fAlt)
 					{
 #ifdef JA2EDITOR
 						*puiNewEvent = I_ENTER_EDIT_MODE;
@@ -2023,11 +2152,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						EnterShopKeeperInterfaceScreen( ubProfile );
 					}
 #endif
-					//clear tactical of messages
-					if( fCtrl )
-					{
-						ClearTacticalMessageQueue( );
-					}
 					break;
 
 				case '1':
@@ -2103,15 +2227,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							gfNextFireJam	= TRUE;
 						}
 					}
-					else if ( fCtrl )
-					{
-#ifdef JA2BETAVERSION
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							ToggleNPCRecordDisplay();
-						}
-#endif
-					}
 					break;
 
 				case 'b':
@@ -2123,11 +2238,8 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							*puiNewEvent = I_NEW_BADMERC;
 						}
 					}
-					else if( fCtrl )
-					{
-						//gGameSettings.fOptions[ TOPTION_HIDE_BULLETS ] ^= TRUE;
-					}
 					break;
+
 				case 'c':
 
 					if( fAlt )
@@ -2135,13 +2247,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						if ( CHEATER_CHEAT_LEVEL( ) )
 						{
 							CreateNextCivType();
-						}
-					}
-					else if( fCtrl )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							ToggleCliffDebug();
 						}
 					}
 					break;
@@ -2176,12 +2281,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							}
 						}
 					}
-#ifdef JA2TESTVERSION
-					else if( fCtrl )
-						AdvanceToNextDay();
-#endif
 					break;
-
 
 				case 'e':
 
@@ -2193,27 +2293,10 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							ToggleViewAllItems();
 						}
 					}
-#ifdef JA2BETAVERSION
-					else if( fCtrl )
-					{
-						ToggleMapEdgepoints();
-					}
-#endif
 					break;
 
 				case 'f':
-					if( fCtrl )
-					{
-						if ( INFORMATION_CHEAT_LEVEL( ) )
-						{
-							//Toggle Frame Rate Display
-							gbFPSDisplay = !gbFPSDisplay;
-							EnableFPSOverlay(gbFPSDisplay);
-							if( !gbFPSDisplay )
-								SetRenderFlags( RENDER_FLAG_FULL );
-						}
-					}
-					else if( fAlt )
+					if( fAlt )
 					{
 						if ( gGameSettings.fOptions[ TOPTION_TRACKING_MODE ] )
 						{
@@ -2231,11 +2314,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					break;
 
 				case 'g':
-
-					if( fCtrl )
-					{
-					}
-					else if ( fAlt )
+					if ( fAlt )
 					{
 
 						if ( CHEATER_CHEAT_LEVEL( ) )
@@ -2253,13 +2332,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							gfReportHitChances = !gfReportHitChances;
 						}
 					}
-					else if( fCtrl )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							*puiNewEvent = I_TESTHIT;
-						}
-					}
 					break;
 
 				case 'i':
@@ -2270,9 +2342,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						{
 							CreateRandomItem();
 						}
-					}
-					else if( fCtrl )
-					{
 					}
 					break;
 
@@ -2295,13 +2364,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							}
 						}
 					}
-					else if( fCtrl )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							GrenadeTest2();
-						}
-					}
 					break;
 
 				case SDLK_l:
@@ -2313,23 +2375,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							DoQuickLoad();
 						}
 					}
-					else if (fCtrl)
-					{
-						if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
-						{
-							gfSaveGame = FALSE;
-							gfCameDirectlyFromGame = TRUE;
-							guiPreviousOptionScreen = GAME_SCREEN;
-							LeaveTacticalScreen(SAVE_LOAD_SCREEN);
-						}
-/*
-						if (INFORMATION_CHEAT_LEVEL())
-						{
-							*puiNewEvent = I_LEVELNODEDEBUG;
-							CountLevelNodes();
-						}
-*/
-					}
 					break;
 
 				case 'm':
@@ -2340,22 +2385,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							*puiNewEvent = I_LEVELNODEDEBUG;
 							CountLevelNodes();
 						}
-					}
-					break;
-
-				case SDLK_PAGEDOWN:
-					if ( CHEATER_CHEAT_LEVEL( ) )
-					{
-						if( fCtrl )
-							AttemptToChangeFloorLevel( +1 ); //try to enter a lower underground level
-					}
-					break;
-
-				case SDLK_PAGEUP:
-					if ( CHEATER_CHEAT_LEVEL( ) )
-					{
-						if( fCtrl )
-							AttemptToChangeFloorLevel( -1 ); //try to go up towards ground level
 					}
 					break;
 
@@ -2374,9 +2403,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							}
 						}
 					}
-					else if( fCtrl )
-					{
-					}
 					break;
 
 				case 'o':
@@ -2389,25 +2415,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							ObliterateSector();
 						}
 					}
-					else if(fCtrl)
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							CreatePlayerControlledMonster();
-						}
-					}
-					break;
-
-				case 'p':
-#ifdef JA2TESTVERSION
-	#ifndef JA2DEMO
-						if( fCtrl )
-						{
-							// CTRL-P: Display player's highest progress percentage
-							DumpSectorDifficultyInfo();
-						}
-	#endif
-#endif
 					break;
 
 				case 'r':
@@ -2427,28 +2434,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 				}
 
 				case 's':
-
-					if( fCtrl )
-					{
-						if( !fDisableMapInterfaceDueToBattle && !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
-						{
-							//if the game CAN be saved
-							if( CanGameBeSaved() )
-							{
-								gfSaveGame = TRUE;
-								gfCameDirectlyFromGame = TRUE;
-
-								guiPreviousOptionScreen = GAME_SCREEN;
-								LeaveTacticalScreen( SAVE_LOAD_SCREEN );
-							}
-							else
-							{
-								//Display a message saying the player cant save now
-								DoMessageBox(MSG_BOX_BASIC_STYLE, zNewTacticalMessages[TCTL_MSG__IRON_MAN_CANT_SAVE_NOW], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
-							}
-						}
-					}
-					else
 					if( fAlt )
 					{
 						if( !fDisableMapInterfaceDueToBattle && !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
@@ -2478,17 +2463,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							TeleportSelectedSoldier();
 						}
 					}
-					else if( fCtrl )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							TestCapture( );
-
-							//EnterCombatMode( gbPlayerNum );
-						}
-					}
 					break;
-
 
         case '=':
 #ifdef JA2TESTVERSION
@@ -2509,25 +2484,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							RefreshSoldier();
 						}
 					}
-					else if( fCtrl )
-					{
-						if (CHEATER_CHEAT_LEVEL() && GetSelectedMan() != NULL)
-						{
-							FOR_ALL_IN_TEAM(s, gbPlayerNum)
-							{
-								if (s->bLife > 0)
-								{
-									// Get breath back
-									s->bBreath   = s->bBreathMax;
-									// Get life back
-									s->bLife     = s->bLifeMax;
-									s->bBleeding = 0;
-
-									fInterfacePanelDirty = DIRTYLEVEL2;
-								}
-							}
-						}
-					}
 					break;
 
 				case 'v':
@@ -2539,15 +2495,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						else
 							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Video Scroll OFF"  );
 #endif
-					}
-					else if( fCtrl )
-					{
-						#ifdef SGP_VIDEO_DEBUGGING
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VObjects:  %d", guiVObjectSize );
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VSurfaces:  %d", guiVSurfaceSize );
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"SGPVideoDump.txt updated..." );
-							PerformVideoInfoDumpIntoFile( "SGPVideoDump.txt", TRUE );
-						#endif
 					}
 					break;
 
@@ -2566,14 +2513,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 							{
 								CycleSelectedMercsItem();
 							}
-						}
-					}
-					else if( fCtrl )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							SOLDIERTYPE* const sel = GetSelectedMan();
-							if (sel != NULL) CreateItem(FLAMETHROWER, 100, &sel->inv[HANDPOS]);
 						}
 					}
 					break;
@@ -2600,14 +2539,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					break;
 
 				case 'z':
-					if( fCtrl )
-					{
-						if ( INFORMATION_CHEAT_LEVEL( ) )
-						{
-							ToggleZBuffer();
-						}
-					}
-					else if ( fAlt )
+					if ( fAlt )
 					{
 						// Toggle squad's stealth mode.....
 						// For each guy on squad...
@@ -2664,13 +2596,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 						const UINT32 vol = MusicGetVolume();
 						MusicSetVolume(vol > 20 ? vol - 20 : 0);
 					}
-					else if( fCtrl )
-					{
-#ifdef JA2TESTVERSION
-						gTacticalStatus.bRealtimeSpeed = MAX( 1, gTacticalStatus.bRealtimeSpeed - 1 );
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Decreasing Realtime speed to %d", gTacticalStatus.bRealtimeSpeed );
-#endif
-					}
 					break;
 
 				case '+':
@@ -2679,11 +2604,6 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					{
 						const UINT32 vol = MusicGetVolume();
   					MusicSetVolume(MIN(vol + 20, MAXVOLUME));
-					}
-					else if( fCtrl )
-					{
-						gTacticalStatus.bRealtimeSpeed = MIN( MAX_REALTIME_SPEED_VAL, gTacticalStatus.bRealtimeSpeed+1 );
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Increasing Realtime speed to %d", gTacticalStatus.bRealtimeSpeed );
 					}
 #endif
 					break;
