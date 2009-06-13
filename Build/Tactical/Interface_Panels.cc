@@ -467,7 +467,7 @@ void CheckForDisabledForGiveItem(void)
 }
 
 
-static void UpdateSMPanel(void);
+static void UpdateSMPanel();
 
 
 void SetSMPanelCurrentMerc(SOLDIERTYPE* s)
@@ -565,75 +565,62 @@ static void SetButtonState(UINT const idx, bool const clicked)
 }
 
 
+static void EnableDisableButton(GUIButtonRef const b, bool const enable)
+{
+	enable ? EnableButton(b) : DisableButton(b);
+}
+
+
 static void BtnStealthModeCallback(GUI_BUTTON* btn, INT32 reason);
 static void CheckForReEvaluateDisabledINVPanelButtons(void);
 
 
-static void UpdateSMPanel(void)
+static void UpdateSMPanel()
 {
-	UINT8							ubStanceState;
+	SOLDIERTYPE& s = *gpSMCurrentMerc;
+	if (s.sGridNo == NOWHERE) return;
 
-	if ( gpSMCurrentMerc->sGridNo == NOWHERE )
+	UINT8 stance_state = s.ubDesiredHeight;
+	if (stance_state == NO_DESIRED_HEIGHT)
 	{
-		return;
-	}
-
-	// Stance
-	ubStanceState = gpSMCurrentMerc->ubDesiredHeight;
-
-	if ( ubStanceState == NO_DESIRED_HEIGHT )
-	{
-		ubStanceState = gAnimControl[ gpSMCurrentMerc->usAnimState ].ubEndHeight;
+		stance_state = gAnimControl[s.usAnimState].ubEndHeight;
 	}
 
 	INT32 stance_gfx; // XXX HACK000E
-	switch( ubStanceState )
-	{
+	switch (stance_state)
+  {
 		case ANIM_STAND:
 			stance_gfx = 11;
-			DisableButton( iSMPanelButtons[ STANCEUP_BUTTON ] );
-			EnableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
-
-			// Disable if we cannot do this!
-			if ( !IsValidStance( gpSMCurrentMerc, ANIM_CROUCH ) )
-			{
-				DisableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
-			}
-			break;
-
-		case ANIM_PRONE:
-			stance_gfx = 17;
-			DisableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
-			EnableButton( iSMPanelButtons[ STANCEUP_BUTTON ] );
+			DisableButton(iSMPanelButtons[STANCEUP_BUTTON]);
+			EnableDisableButton(iSMPanelButtons[STANCEDOWN_BUTTON], IsValidStance(&s, ANIM_CROUCH));
 			break;
 
 		case ANIM_CROUCH:
 			stance_gfx = 5;
-			EnableButton( iSMPanelButtons[ STANCEUP_BUTTON ] );
-			EnableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
+			EnableButton(iSMPanelButtons[STANCEUP_BUTTON]);
+			EnableDisableButton(iSMPanelButtons[STANCEDOWN_BUTTON], IsValidStance(&s, ANIM_PRONE));
+			break;
 
-			// Disable if we cannot do this!
-			if ( !IsValidStance( gpSMCurrentMerc, ANIM_PRONE ) )
-			{
-				DisableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
-			}
+		case ANIM_PRONE:
+			stance_gfx = 17;
+			EnableButton(iSMPanelButtons[STANCEUP_BUTTON]);
+			DisableButton(iSMPanelButtons[STANCEDOWN_BUTTON]);
 			break;
 
 		default: abort(); // HACK000E
 	}
 
-	// Stance button done wether we're disabled or not...
-	if ( gfUIStanceDifferent )
+	// Stance button done whether we're disabled or not
+	if (gfUIStanceDifferent)
 	{
-		//Remove old
+		// Remove old
 		if (giSMStealthButton) RemoveButton(giSMStealthButton);
 		if (giSMStealthImages) UnloadButtonImage(giSMStealthImages);
 
 		// Make new
-		if (!gpSMCurrentMerc->bStealthMode) stance_gfx += 3;
+		if (!s.bStealthMode) stance_gfx += 3;
 		giSMStealthImages = UseLoadedButtonImage(iSMPanelImages[STANCE_IMAGES], stance_gfx + 2, stance_gfx, -1, stance_gfx + 1, -1);
-		const INT32 dy = INV_INTERFACE_START_Y;
-		giSMStealthButton = QuickCreateButton(giSMStealthImages, SM_STEALTHMODE_X, dy + SM_STEALTHMODE_Y, MSYS_PRIORITY_HIGH - 1, BtnStealthModeCallback);
+		giSMStealthButton = QuickCreateButton(giSMStealthImages, SM_STEALTHMODE_X, INV_INTERFACE_START_Y + SM_STEALTHMODE_Y, MSYS_PRIORITY_HIGH - 1, BtnStealthModeCallback);
 		giSMStealthButton->SetFastHelpText(TacticalStr[TOGGLE_STEALTH_MODE_POPUPTEXT]);
 
 		gfUIStanceDifferent = FALSE;
@@ -641,68 +628,40 @@ static void UpdateSMPanel(void)
 		if (gfAllDisabled) DisableButton(giSMStealthButton);
 	}
 
-	if ( gfAllDisabled )
-	{
-		return;
+	if (gfAllDisabled) return;
+
+	CheckForReEvaluateDisabledINVPanelButtons();
+
+	// Check for any newly added items we need
+	if (s.fCheckForNewlyAddedItems)
+	{ // Startup any newly added items
+		CheckForAnyNewlyAddedItems(&s);
+		s.fCheckForNewlyAddedItems = FALSE;
 	}
 
-
-	CheckForReEvaluateDisabledINVPanelButtons( );
-
-	// Check for any newly added items we need.....
-	if ( gpSMCurrentMerc->fCheckForNewlyAddedItems )
-	{
-		// Startup any newly added items....
-		CheckForAnyNewlyAddedItems( gpSMCurrentMerc );
-
-		gpSMCurrentMerc->fCheckForNewlyAddedItems = FALSE;
-	}
-
-	// Set Disable /Enable UI based on buddy's stats
+	// Set Disable/Enable UI based on buddy's stats
 	GUIButtonRef const burst = iSMPanelButtons[BURSTMODE_BUTTON];
-	if (burst->image != iBurstButtonImages[gpSMCurrentMerc->bWeaponMode])
+	if (burst->image != iBurstButtonImages[s.bWeaponMode])
 	{
-		burst->image    = iBurstButtonImages[gpSMCurrentMerc->bWeaponMode];
+		burst->image    = iBurstButtonImages[s.bWeaponMode];
 		burst->uiFlags |= BUTTON_DIRTY;
 	}
 
-	/*
-	SetButtonState(BURSTMODE_BUTTON, gpSMCurrentMerc->bDoBurst);
-	*/
+	SetButtonState(MUTE_BUTTON, s.uiStatusFlags & SOLDIER_MUTE);
 
-	// Toggle MUTE button...
-	SetButtonState(MUTE_BUTTON, (gpSMCurrentMerc->uiStatusFlags & SOLDIER_MUTE) != 0);
+	bool const enable_climb =
+		(FindLowerLevel(&s)  && EnoughPoints(&s, GetAPsToClimbRoof(&s, TRUE),  0, FALSE)) ||
+		(FindHigherLevel(&s) && EnoughPoints(&s, GetAPsToClimbRoof(&s, FALSE), 0, FALSE)) ||
+		FindFenceJumpDirection(&s);
+	EnableDisableButton(iSMPanelButtons[CLIMB_BUTTON], enable_climb);
 
-	DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
-
-	SOLDIERTYPE* const s = gpSMCurrentMerc;
-	if (FindLowerLevel(s))
+	if (gTacticalStatus.ubCurrentTeam != gbPlayerNum || gTacticalStatus.uiFlags & REALTIME || !(gTacticalStatus.uiFlags & INCOMBAT))
 	{
-		if (EnoughPoints(s, GetAPsToClimbRoof(s, TRUE), 0, FALSE))
-		{
-			EnableButton(iSMPanelButtons[CLIMB_BUTTON]);
-		}
+		DisableButton(iSMPanelButtons[SM_DONE_BUTTON]);
 	}
-	else if (FindHigherLevel(s))
+	else if (!gfAllDisabled)
 	{
-		if (EnoughPoints(s, GetAPsToClimbRoof(s, FALSE), 0, FALSE))
-		{
-			EnableButton(iSMPanelButtons[CLIMB_BUTTON]);
-		}
-	}
-
-	if (FindFenceJumpDirection(gpSMCurrentMerc))
-	{
-		EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
-	}
-
-	if ( (gTacticalStatus.ubCurrentTeam != gbPlayerNum) || (gTacticalStatus.uiFlags & REALTIME ) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
-	{
-		DisableButton( iSMPanelButtons[ SM_DONE_BUTTON ] );
-	}
-	else if ( !gfAllDisabled )
-	{
-		EnableButton( iSMPanelButtons[ SM_DONE_BUTTON ] );
+		EnableButton(iSMPanelButtons[SM_DONE_BUTTON]);
 	}
 
 	SetButtonState(UPDOWN_BUTTON, gsInterfaceLevel > 0);
@@ -711,48 +670,34 @@ static void UpdateSMPanel(void)
 	SetButtonState(TALK_BUTTON,       gCurrentUIMode == TALKCURSOR_MODE);
 	SetButtonState(LOOK_BUTTON,       gCurrentUIMode == LOOKCURSOR_MODE);
 
-	// If not selected ( or dead ), disable/gray some buttons
-	if (gpSMCurrentMerc               != GetSelectedMan() ||
-			gpSMCurrentMerc->bLife        <  OKLIFE           ||
+	// If not selected (or dead), disable/gray some buttons
+	if (&s                            != GetSelectedMan() ||
+			s.bLife                       <  OKLIFE           ||
 			gTacticalStatus.ubCurrentTeam != gbPlayerNum      ||
 			gfSMDisableForItems)
 	{
-		DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
-		DisableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );
-		DisableButton( iSMPanelButtons[ STANCEUP_BUTTON ] );
-		DisableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
-		DisableButton( iSMPanelButtons[ LOOK_BUTTON ] );
-		DisableButton( iSMPanelButtons[ UPDOWN_BUTTON ] );
-		DisableButton( iSMPanelButtons[ HANDCURSOR_BUTTON ] );
+		DisableButton(iSMPanelButtons[CLIMB_BUTTON]);
+		DisableButton(iSMPanelButtons[BURSTMODE_BUTTON]);
+		DisableButton(iSMPanelButtons[STANCEUP_BUTTON]);
+		DisableButton(iSMPanelButtons[STANCEDOWN_BUTTON]);
+		DisableButton(iSMPanelButtons[LOOK_BUTTON]);
+		DisableButton(iSMPanelButtons[UPDOWN_BUTTON]);
+		DisableButton(iSMPanelButtons[HANDCURSOR_BUTTON]);
 		if (giSMStealthButton) DisableButton(giSMStealthButton);
 	}
 	else
 	{
-		// Enable some buttons!
-		if (IsGunBurstCapable(gpSMCurrentMerc, HANDPOS) || FindAttachment(&gpSMCurrentMerc->inv[HANDPOS], UNDER_GLAUNCHER) != ITEM_NOT_FOUND)
-		{
-			EnableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );
-		}
-		else
-		{
-			DisableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );
-		}
-		EnableButton( iSMPanelButtons[ LOOK_BUTTON ] );
-		EnableButton( iSMPanelButtons[ UPDOWN_BUTTON ] );
-		EnableButton( iSMPanelButtons[ HANDCURSOR_BUTTON ] );
+		bool const enable_burst = IsGunBurstCapable(&s, HANDPOS) || FindAttachment(&s.inv[HANDPOS], UNDER_GLAUNCHER) != ITEM_NOT_FOUND;
+		EnableDisableButton(iSMPanelButtons[BURSTMODE_BUTTON], enable_burst);
+		EnableButton(iSMPanelButtons[LOOK_BUTTON]);
+		EnableButton(iSMPanelButtons[UPDOWN_BUTTON]);
+		EnableButton(iSMPanelButtons[HANDCURSOR_BUTTON]);
 
 		if (giSMStealthButton) EnableButton(giSMStealthButton);
 	}
 
 	// CJC Dec 4 2002: or if item pickup menu is up
-	if ( (gTacticalStatus.uiFlags & ENGAGED_IN_CONV) || gfInItemPickupMenu)
-	{
-		DisableButton( iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ] );
-	}
-	else
-	{
-		EnableButton( iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ] );
-	}
+	EnableDisableButton(iSMPanelButtons[SM_MAP_SCREEN_BUTTON], !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV) && !gfInItemPickupMenu);
 }
 
 
