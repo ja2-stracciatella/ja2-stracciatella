@@ -6233,34 +6233,23 @@ BOOLEAN CheckSoldierHitRoof( SOLDIERTYPE *pSoldier )
 	return( fReturnVal );
 }
 
-void BeginSoldierClimbDownRoof( SOLDIERTYPE *pSoldier )
+
+void BeginSoldierClimbDownRoof(SOLDIERTYPE* const s)
 {
-	INT8							bNewDirection;
+	INT8 direction;
+	if (!FindLowerLevel(s, &direction)) return;
 
-	if (FindLowerLevel(pSoldier, &bNewDirection))
-	{
-		if ( EnoughPoints( pSoldier, GetAPsToClimbRoof( pSoldier, TRUE ), 0, TRUE ) )
-		{
-			if (pSoldier->bTeam == gbPlayerNum)
-			{
-				// OK, SET INTERFACE FIRST
-				SetUIBusy(pSoldier);
-			}
+	if (!EnoughPoints(s, GetAPsToClimbRoof(s, TRUE), 0, TRUE)) return;
 
-			pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc(bNewDirection ) );
+	if (s->bTeam == gbPlayerNum) SetUIBusy(s);
 
-			bNewDirection = TwoCDirection(bNewDirection);
-
-			pSoldier->ubPendingDirection = bNewDirection;
-			EVENT_InitNewSoldierAnim( pSoldier, CLIMBDOWNROOF, 0 , FALSE );
-
-			InternalReceivingSoldierCancelServices( pSoldier, FALSE );
-			InternalGivingSoldierCancelServices( pSoldier, FALSE );
-
-		}
-	}
-
+	s->sTempNewGridNo     = NewGridNo(s->sGridNo, DirectionInc(direction));
+	s->ubPendingDirection = TwoCDirection(direction);
+	EVENT_InitNewSoldierAnim(s, CLIMBDOWNROOF, 0, FALSE);
+	InternalReceivingSoldierCancelServices(s, FALSE);
+	InternalGivingSoldierCancelServices(s, FALSE);
 }
+
 
 void MoveMerc( SOLDIERTYPE *pSoldier, FLOAT dMovementChange, FLOAT dAngle, BOOLEAN fCheckRange )
 {
