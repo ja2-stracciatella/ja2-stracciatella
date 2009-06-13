@@ -571,7 +571,6 @@ static void CheckForReEvaluateDisabledINVPanelButtons(void);
 
 static void UpdateSMPanel(void)
 {
-	INT8							bDirection;
 	UINT8							ubStanceState;
 
 	if ( gpSMCurrentMerc->sGridNo == NOWHERE )
@@ -692,7 +691,7 @@ static void UpdateSMPanel(void)
 		}
 	}
 
-	if (FindFenceJumpDirection(gpSMCurrentMerc, &bDirection))
+	if (FindFenceJumpDirection(gpSMCurrentMerc))
 	{
 		EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
 	}
@@ -2160,8 +2159,7 @@ static void BtnClimbCallback(GUI_BUTTON* btn, INT32 reason)
 			BeginSoldierClimbUpRoof(s);
 		}
 
-		INT8 bDirection;
-		if (FindFenceJumpDirection(gpSMCurrentMerc, &bDirection))
+		if (FindFenceJumpDirection(gpSMCurrentMerc))
 		{
 			BeginSoldierClimbFence(gpSMCurrentMerc);
 		}

@@ -722,7 +722,7 @@ BOOLEAN GridNoOnEdgeOfMap( INT16 sGridNo, INT8 * pbDirection )
 }
 
 
-BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, INT8* const pbDirection)
+BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, INT8* const out_direction)
 {
 	INT32			cnt;
 	INT16			sNewGridNo, sOtherSideOfFence;
@@ -770,7 +770,7 @@ BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const* const pSoldier, INT8* const pb
 
 	if ( fFound )
 	{
-		*pbDirection = bMinDirection;
+		if (out_direction) *out_direction = bMinDirection;
 		return( TRUE );
 	}
 

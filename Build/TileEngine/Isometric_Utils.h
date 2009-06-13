@@ -89,7 +89,7 @@ INT16 CenterX( INT16 sGridno );
 // Returns the (center ) cell coordinates in Y
 INT16 CenterY( INT16 sGridno );
 
-BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const*, INT8* pbDirection);
+BOOLEAN FindFenceJumpDirection(SOLDIERTYPE const*, INT8* out_direction = 0);
 
 //Simply chooses a random gridno within valid boundaries (for dropping things in unloaded sectors)
 INT16 RandomGridNo(void);
