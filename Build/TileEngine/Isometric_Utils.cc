@@ -534,14 +534,16 @@ static INT8 FindNumTurnsBetweenDirs(INT8 sDir1, INT8 sDir2)
 }
 
 
-bool FindHigherLevel(SOLDIERTYPE const* const s, GridNo const grid_no, INT8 const starting_dir, INT8* const out_direction)
+bool FindHigherLevel(SOLDIERTYPE const* const s, INT8* const out_direction)
 {
+	GridNo const grid_no = s->sGridNo;
 	// If there is a roof over our heads, this is an ivalid
 	if (FindStructure(grid_no, STRUCTURE_ROOF)) return false;
 
-	bool  found         = false;
-	UINT8 min_turns     = 100;
-	INT8  min_direction = 0;
+	bool         found         = false;
+	UINT8        min_turns     = 100;
+	INT8         min_direction = 0;
+	INT8   const starting_dir  = s->bDirection;
 	for (INT32 cnt = 0; cnt != 8; cnt += 2)
 	{
 		GridNo const new_grid_no = NewGridNo(grid_no, DirectionInc(cnt));
