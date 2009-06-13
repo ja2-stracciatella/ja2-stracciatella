@@ -1205,7 +1205,7 @@ static void HandleModNone(UINT32 const key, UINT32* const new_event)
 	switch (key)
 	{
 		case SDLK_TAB:
-			// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
+			// Nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
 			if (!gpItemPointer &&
 					(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[UPDOWN_BUTTON]->uiFlags & BUTTON_ENABLED))
 			{
@@ -1318,12 +1318,12 @@ static void HandleModNone(UINT32 const key, UINT32* const new_event)
 
 		case 'd':
 			// End turn only if in combat and it is the player's turn
-			if (gTacticalStatus.uiFlags & TURNBASED &&
-					gTacticalStatus.uiFlags & INCOMBAT  &&
+			if (gTacticalStatus.uiFlags & TURNBASED          &&
+					gTacticalStatus.uiFlags & INCOMBAT           &&
 					gTacticalStatus.ubCurrentTeam == gbPlayerNum &&
 					/* Nothing in hand and the Done button for whichever panel we're in must be enabled */
-					!gpItemPointer                 &&
-					!gfDisableTacticalPanelButtons &&
+					!gpItemPointer                               &&
+					!gfDisableTacticalPanelButtons               &&
 					(
 						(gsCurInterfacePanel == SM_PANEL   && iSMPanelButtons[SM_DONE_BUTTON]->uiFlags     & BUTTON_ENABLED) ||
 						(gsCurInterfacePanel == TEAM_PANEL && iTEAMPanelButtons[TEAM_DONE_BUTTON]->uiFlags & BUTTON_ENABLED)
