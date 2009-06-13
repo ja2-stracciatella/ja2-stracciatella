@@ -1736,6 +1736,265 @@ static void HandleModCtrl(UINT32 const key, UINT32* const new_event)
 }
 
 
+static void HandleModAlt(UINT32 const key, UINT32* const new_event)
+{
+	switch (key)
+	{
+		case '2': if (CHEATER_CHEAT_LEVEL()) ChangeSoldiersBodyType(INFANT_MONSTER, TRUE);                      break;
+		case '3': if (CHEATER_CHEAT_LEVEL()) EVENT_InitNewSoldierAnim(GetSelectedMan(), KID_SKIPPING, 0, TRUE); break;
+		case '4': if (CHEATER_CHEAT_LEVEL()) ChangeSoldiersBodyType(CRIPPLECIV,     TRUE);                      break;
+		case '5': if (CHEATER_CHEAT_LEVEL()) ChangeSoldiersBodyType(YAM_MONSTER,    TRUE);                      break;
+
+#ifdef JA2TESTVERSION
+		case '=': WarpGameTime(60, TRUE); break;
+#endif
+
+		case 'b': if (CHEATER_CHEAT_LEVEL()) *new_event = I_NEW_BADMERC; break;
+		case 'c': if (CHEATER_CHEAT_LEVEL()) CreateNextCivType();        break;
+
+		case 'd':
+			if (CHEATER_CHEAT_LEVEL()                        &&
+					gTacticalStatus.uiFlags & TURNBASED          &&
+					gTacticalStatus.uiFlags & INCOMBAT           &&
+					gTacticalStatus.ubCurrentTeam == gbPlayerNum &&
+					/* Nothing in hand and the Done button for whichever panel we're in must be enabled */
+					!gpItemPointer                               &&
+					!gfDisableTacticalPanelButtons               &&
+					(
+						(gsCurInterfacePanel == SM_PANEL   && iSMPanelButtons[SM_DONE_BUTTON]->uiFlags     & BUTTON_ENABLED) ||
+						(gsCurInterfacePanel == TEAM_PANEL && iTEAMPanelButtons[TEAM_DONE_BUTTON]->uiFlags & BUTTON_ENABLED)
+					))
+			{
+				FOR_ALL_IN_TEAM(s, gbPlayerNum)
+				{
+					if (s->bLife <= 0) continue;
+					// Get APs back
+					CalcNewActionPoints(s);
+					fInterfacePanelDirty = DIRTYLEVEL2;
+				}
+			}
+			break;
+
+		case 'e':
+			if (CHEATER_CHEAT_LEVEL())
+			{
+				ToggleViewAllMercs();
+				ToggleViewAllItems();
+			}
+			break;
+
+		case 'f':
+		{
+			BOOLEAN& tracking = gGameSettings.fOptions[TOPTION_TRACKING_MODE];
+			tracking = !tracking;
+			wchar_t const* const msg =
+				tracking ? pMessageStrings[MSG_TACKING_MODE_ON] :
+				pMessageStrings[MSG_TACKING_MODE_OFF];
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
+			break;
+		}
+
+		case 'g': if (CHEATER_CHEAT_LEVEL()) *new_event = I_NEW_MERC;                  break;
+		case 'h': if (CHEATER_CHEAT_LEVEL()) gfReportHitChances = !gfReportHitChances; break;
+		case 'i': if (CHEATER_CHEAT_LEVEL()) CreateRandomItem();                       break;
+		case 'j': if (CHEATER_CHEAT_LEVEL()) gfNextFireJam = TRUE;                     break;
+		case 'k': if (CHEATER_CHEAT_LEVEL()) GrenadeTest1();                           break;
+
+		case 'l':
+			if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
+			{
+				LeaveTacticalScreen(GAME_SCREEN);
+				DoQuickLoad();
+			}
+			break;
+
+		case 'm':
+			if (INFORMATION_CHEAT_LEVEL())
+			{
+				*new_event = I_LEVELNODEDEBUG;
+				CountLevelNodes();
+			}
+			break;
+
+		case 'n':
+			if (INFORMATION_CHEAT_LEVEL() && gUIFullTarget)
+			{
+				static UINT16 gQuoteNum = 0;
+				TacticalCharacterDialogue(gUIFullTarget, gQuoteNum++);
+			}
+			break;
+
+		case 'o':
+			if (CHEATER_CHEAT_LEVEL())
+			{
+				gStrategicStatus.usPlayerKills += NumEnemiesInAnySector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+				ObliterateSector();
+			}
+			break;
+
+		case 'r':
+			if (CHEATER_CHEAT_LEVEL())
+			{ // Reload selected merc's weapon
+				SOLDIERTYPE* const sel = GetSelectedMan();
+				if (sel) ReloadWeapon(sel, sel->ubAttackingHand);
+			}
+			break;
+
+		case 's':
+			if (!fDisableMapInterfaceDueToBattle && !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
+			{
+				if (CanGameBeSaved())
+				{
+					guiPreviousOptionScreen = GAME_SCREEN;
+					DoQuickSave();
+				}
+				else
+				{ // Display a message saying the player cannot save now
+					DoMessageBox(MSG_BOX_BASIC_STYLE, zNewTacticalMessages[TCTL_MSG__IRON_MAN_CANT_SAVE_NOW], GAME_SCREEN, MSG_BOX_FLAG_OK, 0, 0);
+				}
+			}
+			break;
+
+		case 't': if (CHEATER_CHEAT_LEVEL()) TeleportSelectedSoldier(); break;
+		case 'u': if (CHEATER_CHEAT_LEVEL()) RefreshSoldier();          break;
+
+#ifdef JA2TESTVERSION
+		case 'v':
+			{
+				gfDisableTacticalPanelButtons ^= TRUE;
+				wchar_t const* const msg =
+					gfDoVideoScroll ? L"Video Scroll ON" :
+					L"Video Scroll OFF";
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
+			}
+			break;
+#endif
+
+		case 'w':
+			if (CHEATER_CHEAT_LEVEL())
+			{
+				if (InItemDescriptionBox())
+				{ // Swap item in description panel
+					CycleItemDescriptionItem();
+				}
+				else
+				{
+					CycleSelectedMercsItem();
+				}
+			}
+			break;
+
+		case 'y':
+			if (CHEATER_CHEAT_LEVEL())
+			{
+				QuickCreateProfileMerc(CIV_TEAM, MARIA);
+				RecruitEPC(MARIA);
+			}
+
+			if (SOLDIERTYPE* const robot = FindSoldierByProfileID(ROBOT))
+			{
+				OBJECTTYPE o;
+				CreateItem(G41, 100, &o);
+				AutoPlaceObject(robot, &o, FALSE);
+			}
+			break;
+
+		case 'z': // Toggle squad's stealth mode
+		{
+			// Check if at least one guy is on stealth
+			bool stealth_on = true;
+			CFOR_ALL_IN_TEAM(s, gbPlayerNum)
+			{
+				if (!OkControllableMerc(s))           continue;
+				if (s->bAssignment != CurrentSquad()) continue;
+				if (!s->bStealthMode)                 continue;
+				stealth_on = false;
+				break;
+			}
+
+			FOR_ALL_IN_TEAM(s, gbPlayerNum)
+			{
+				if (!OkControllableMerc(s))           continue;
+				if (s->bAssignment != CurrentSquad()) continue;
+				if (AM_A_ROBOT(s))                    continue;
+
+				if (gpSMCurrentMerc == s) gfUIStanceDifferent = TRUE;
+				s->bStealthMode = stealth_on;
+			}
+
+			fInterfacePanelDirty = DIRTYLEVEL2;
+
+			// Display message
+			wchar_t const* const msg =
+				stealth_on ? pMessageStrings[MSG_SQUAD_ON_STEALTHMODE] :
+				pMessageStrings[MSG_SQUAD_OFF_STEALTHMODE];
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
+			break;
+		}
+
+		case '-':
+		case '_':
+		{
+			UINT32 const vol = MusicGetVolume();
+			MusicSetVolume(vol > 20 ? vol - 20 : 0);
+			break;
+		}
+
+#ifdef JA2TESTVERSION
+		case '+':
+		{
+			UINT32 const vol = MusicGetVolume();
+			MusicSetVolume(MIN(vol + 20, MAXVOLUME));
+			break;
+		}
+#endif
+
+#if defined JA2TESTVERSION
+		case SDLK_F1:  TestMeanWhile(15); break;
+		case SDLK_F2:  TestMeanWhile( 1); break;
+		case SDLK_F3:  TestMeanWhile( 2); break;
+		case SDLK_F4:  TestMeanWhile( 3); break;
+		case SDLK_F5:  TestMeanWhile( 4); break;
+		case SDLK_F6:  TestMeanWhile( 5); break;
+		case SDLK_F7:  TestMeanWhile(16); break;
+		case SDLK_F8:  TestMeanWhile( 7); break;
+		case SDLK_F10: TestMeanWhile( 9); break;
+
+#ifdef JA2EDITOR
+		case SDLK_F9:
+			*new_event = I_ENTER_EDIT_MODE;
+			gfMercResetUponEditorEntry = FALSE;
+			break;
+#endif
+
+		case SDLK_F11:
+			if (SOLDIERTYPE* const sel = GetSelectedMan())
+			{
+				if (sel->ubProfile == LARRY_NORMAL)
+				{ // Change guy to drunk larry
+					ForceSoldierProfileID(sel, LARRY_DRUNK);
+				}
+				else
+				{ // Change guy to normal larry
+					ForceSoldierProfileID(sel, LARRY_NORMAL);
+				}
+				DirtyMercPanelInterface(sel, DIRTYLEVEL2);
+			}
+			break;
+
+		case SDLK_F12:
+		{
+			ProfileID const pid = TONY;
+			gsQdsEnteringGridNo = GetMouseMapPos();
+			AddShopkeeperToGridNo(pid, gsQdsEnteringGridNo);
+			EnterShopKeeperInterfaceScreen(pid);
+			break;
+		}
+#endif
+	}
+}
+
+
 void GetKeyboardInput( UINT32 *puiNewEvent )
 {
   InputAtom					InputEvent;
@@ -2076,542 +2335,19 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 
 			switch (mod)
 			{
-				case 0:          HandleModNone( key, puiNewEvent); continue;
-				case SHIFT_DOWN: HandleModShift(key, puiNewEvent); continue;
-				case CTRL_DOWN:  HandleModCtrl( key, puiNewEvent); continue;
-			}
+				case 0:          HandleModNone( key, puiNewEvent); break;
+				case SHIFT_DOWN: HandleModShift(key, puiNewEvent); break;
+				case CTRL_DOWN:  HandleModCtrl( key, puiNewEvent); break;
+				case ALT_DOWN:   HandleModAlt(  key, puiNewEvent); break;
 
-			BOOLEAN fAlt, fCtrl;
-			fAlt = InputEvent.usKeyState & ALT_DOWN ? TRUE : FALSE;
-			fCtrl = InputEvent.usKeyState & CTRL_DOWN ? TRUE : FALSE;
-
-			switch( InputEvent.usParam )
-			{
-#if defined JA2TESTVERSION
-				case SDLK_F1:
-				case SDLK_F2:
-				case SDLK_F3:
-				case SDLK_F4:
-				case SDLK_F5:
-				case SDLK_F6:
-				{
-					UINT const idx = InputEvent.usParam - SDLK_F1;
-					if (fAlt)
+				case CTRL_DOWN | ALT_DOWN:
+					if (key == 'k')
 					{
-						TestMeanWhile(idx != 0 ? idx : 15);
-					}
-					break;
-				}
-#endif
-
-#ifdef JA2TESTVERSION
-				case SDLK_F7: if (fAlt) TestMeanWhile(16); break;
-				case SDLK_F8: if (fAlt) TestMeanWhile( 7); break;
-
-				case SDLK_F9:
-					if (fAlt)
-					{
-#ifdef JA2EDITOR
-						*puiNewEvent = I_ENTER_EDIT_MODE;
-						gfMercResetUponEditorEntry = FALSE;
-#endif
-					}
-					break;
-
-				case SDLK_F10: if (fAlt) TestMeanWhile(9); break;
-#endif
-
-				case SDLK_F11:
-					if( fAlt )
-					{
-#ifdef JA2TESTVERSION
-						// Get selected soldier
-						SOLDIERTYPE* const sel = GetSelectedMan();
-						if (sel != NULL)
-						{
-							if (sel->ubProfile == LARRY_NORMAL)
-							{
-								// Change guy to drunk larry
-								ForceSoldierProfileID(sel, LARRY_DRUNK);
-							}
-							else
-							{
-								// Change guy to normal larry
-								ForceSoldierProfileID(sel, LARRY_NORMAL);
-							}
-
-							// Dirty interface
-							DirtyMercPanelInterface(sel, DIRTYLEVEL2);
-						}
-#endif
-					}
-					break;
-
-				case SDLK_F12:
-#ifdef JA2TESTVERSION
-					if( fAlt )
-					{
-						UINT8 ubProfile = TONY;
-
-						gsQdsEnteringGridNo = GetMouseMapPos();
-						AddShopkeeperToGridNo( ubProfile, gsQdsEnteringGridNo );
-						EnterShopKeeperInterfaceScreen( ubProfile );
-					}
-#endif
-					break;
-
-				case '1':
-
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							//ChangeSoldiersBodyType( TANK_NW, TRUE );
-							//SOLDIERTYPE* const sel = GetSelectedMan();
-							//sel->uiStatusFlags |= SOLDIER_CREATURE;
-							//EVENT_InitNewSoldierAnim(sel, CRIPPLE_BEG, 0 , TRUE);
+						if (CHEATER_CHEAT_LEVEL())
+						{ // Next shot by anybody is auto kill
+							gfNextShotKills = !gfNextShotKills;
 						}
 					}
-					break;
-
-				case '2':
-
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							ChangeSoldiersBodyType( INFANT_MONSTER, TRUE );
-						}
-					}
-					break;
-
-				case '3':
-
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							EVENT_InitNewSoldierAnim(GetSelectedMan(), KID_SKIPPING, 0, TRUE);
-
-							//ChangeSoldiersBodyType( LARVAE_MONSTER, TRUE );
-							//SOLDIERTYPE* const s = GetSelectedMan();
-							//s->usAttackingWeapon = TANK_CANNON;
-							//LocateSoldier(s, FALSE );
-							//EVENT_FireSoldierWeapon(s, usMapPos);
-						}
-					}
-					break;
-
-				case '4':
-
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							ChangeSoldiersBodyType( CRIPPLECIV, TRUE );
-						}
-					}
-					break;
-
-				case '5':
-
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							ChangeSoldiersBodyType( YAM_MONSTER, TRUE );
-						}
-					}
-						break;
-
-				case 'j':
-
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							gfNextFireJam	= TRUE;
-						}
-					}
-					break;
-
-				case 'b':
-
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							*puiNewEvent = I_NEW_BADMERC;
-						}
-					}
-					break;
-
-				case 'c':
-
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							CreateNextCivType();
-						}
-					}
-					break;
-
-				case 'd':
-					if( gTacticalStatus.uiFlags & TURNBASED && gTacticalStatus.uiFlags & INCOMBAT )
-					{
-						if( gTacticalStatus.ubCurrentTeam == gbPlayerNum )
-						{
-							// nothing in hand and the Done button for whichever panel we're in must be enabled
-							if ( ( gpItemPointer == NULL ) && !gfDisableTacticalPanelButtons &&
-									(
-										(gsCurInterfacePanel == SM_PANEL   && iSMPanelButtons[SM_DONE_BUTTON]->uiFlags     & BUTTON_ENABLED) ||
-										(gsCurInterfacePanel == TEAM_PANEL && iTEAMPanelButtons[TEAM_DONE_BUTTON]->uiFlags & BUTTON_ENABLED)
-									))
-							{
-								if( fAlt )
-								{
-									if ( CHEATER_CHEAT_LEVEL( ) )
-									{
-										FOR_ALL_IN_TEAM(s, gbPlayerNum)
-										{
-											if (s->bLife > 0)
-											{
-												// Get APs back...
-												CalcNewActionPoints(s);
-												fInterfacePanelDirty = DIRTYLEVEL2;
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					break;
-
-				case 'e':
-
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							ToggleViewAllMercs();
-							ToggleViewAllItems();
-						}
-					}
-					break;
-
-				case 'f':
-					if( fAlt )
-					{
-						if ( gGameSettings.fOptions[ TOPTION_TRACKING_MODE ] )
-						{
-							gGameSettings.fOptions[ TOPTION_TRACKING_MODE ] = FALSE;
-
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_TACKING_MODE_OFF ] );
-						}
-						else
-						{
-							gGameSettings.fOptions[ TOPTION_TRACKING_MODE ] = TRUE;
-
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_TACKING_MODE_ON ] );
-						}
-					}
-					break;
-
-				case 'g':
-					if ( fAlt )
-					{
-
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							*puiNewEvent = I_NEW_MERC;
-						}
-					}
-					break;
-
-				case SDLK_h:
-					if ( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							gfReportHitChances = !gfReportHitChances;
-						}
-					}
-					break;
-
-				case 'i':
-
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							CreateRandomItem();
-						}
-					}
-					break;
-
-				case 'k':
-					if( fAlt )
-					{
-						if ( fCtrl )
-						{
-							if ( CHEATER_CHEAT_LEVEL( ) )
-							{
-								// next shot by anybody is auto kill
-								gfNextShotKills = !gfNextShotKills;
-							}
-						}
-						else
-						{
-							if ( CHEATER_CHEAT_LEVEL( ) )
-							{
-								GrenadeTest1();
-							}
-						}
-					}
-					break;
-
-				case SDLK_l:
-					if (fAlt)
-					{
-						if (!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
-						{
-							LeaveTacticalScreen(GAME_SCREEN);
-							DoQuickLoad();
-						}
-					}
-					break;
-
-				case 'm':
-					if( fAlt )
-					{
-						if ( INFORMATION_CHEAT_LEVEL( ) )
-						{
-							*puiNewEvent = I_LEVELNODEDEBUG;
-							CountLevelNodes();
-						}
-					}
-					break;
-
-				case 'n':
-
-					if( fAlt )
-					{
-						static UINT16 gQuoteNum = 0;
-
-						if ( INFORMATION_CHEAT_LEVEL( ) )
-						{
-							if (gUIFullTarget != NULL)
-							{
-								TacticalCharacterDialogue(gUIFullTarget, gQuoteNum);
-								gQuoteNum++;
-							}
-						}
-					}
-					break;
-
-				case 'o':
-
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							gStrategicStatus.usPlayerKills += NumEnemiesInAnySector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-							ObliterateSector();
-						}
-					}
-					break;
-
-				case 'r':
-				{
-					SOLDIERTYPE* const sel = GetSelectedMan();
-					if (sel != NULL)
-					{
-						if( fAlt ) //reload selected merc's weapon
-						{
-							if ( CHEATER_CHEAT_LEVEL( ) )
-							{
-								ReloadWeapon(sel, sel->ubAttackingHand);
-							}
-						}
-					}
-					break;
-				}
-
-				case 's':
-					if( fAlt )
-					{
-						if( !fDisableMapInterfaceDueToBattle && !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
-						{
-							//if the game CAN be saved
-							if( CanGameBeSaved() )
-							{
-								guiPreviousOptionScreen = GAME_SCREEN;
-								//guiPreviousOptionScreen = guiCurrentScreen;
-								DoQuickSave();
-							}
-							else
-							{
-								//Display a message saying the player cant save now
-								DoMessageBox(MSG_BOX_BASIC_STYLE, zNewTacticalMessages[TCTL_MSG__IRON_MAN_CANT_SAVE_NOW], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
-							}
-						}
-					}
-					break;
-
-				case 't':
-
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							TeleportSelectedSoldier();
-						}
-					}
-					break;
-
-        case '=':
-#ifdef JA2TESTVERSION
-					if( fAlt )
-					{
-						WarpGameTime( 60, TRUE );
-						break;
-					}
-#endif
-					break;
-
-				case 'u':
-
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							RefreshSoldier();
-						}
-					}
-					break;
-
-				case 'v':
-					if( fAlt )
-					{
-#ifdef JA2TESTVERSION
-						if( gfDoVideoScroll ^= TRUE )
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Video Scroll ON"  );
-						else
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Video Scroll OFF"  );
-#endif
-					}
-					break;
-
-				case SDLK_w:
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							if ( InItemDescriptionBox( ) )
-							{
-								// Swap item in description panel...
-								CycleItemDescriptionItem( );
-
-							}
-							else
-							{
-								CycleSelectedMercsItem();
-							}
-						}
-					}
-					break;
-
-				case 'y':
-					if( fAlt )
-					{
-						if ( CHEATER_CHEAT_LEVEL( ) )
-						{
-							QuickCreateProfileMerc( CIV_TEAM, MARIA ); //Ira
-
-							// Recruit!
-							RecruitEPC( MARIA );
-						}
-
-						SOLDIERTYPE* const robot = FindSoldierByProfileID(ROBOT);
-						if (robot != NULL)
-						{
-							OBJECTTYPE Object;
-							CreateItem(G41, 100, &Object);
-							AutoPlaceObject(robot, &Object, FALSE);
-						}
-					}
-					break;
-
-				case 'z':
-					if ( fAlt )
-					{
-						// Toggle squad's stealth mode.....
-						// For each guy on squad...
-						{
-							BOOLEAN						fStealthOn = FALSE;
-
-							// Check if at least one guy is on stealth....
-							CFOR_ALL_IN_TEAM(s, gbPlayerNum)
-							{
-								if (OkControllableMerc(s) &&
-										s->bAssignment == CurrentSquad() &&
-										s->bStealthMode)
-								{
-									fStealthOn = TRUE;
-								}
-							}
-
-							fStealthOn = !fStealthOn;
-
-							FOR_ALL_IN_TEAM(s, gbPlayerNum)
-							{
-								if (OkControllableMerc(s) &&
-										s->bAssignment == CurrentSquad() &&
-										!AM_A_ROBOT(s))
-								{
-									if (gpSMCurrentMerc == s)
-									{
-										gfUIStanceDifferent = TRUE;
-									}
-
-									s->bStealthMode = fStealthOn;
-								}
-							}
-
-							fInterfacePanelDirty = DIRTYLEVEL2;
-
-							// OK, display message
-							if ( fStealthOn )
-							{
-								ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_SQUAD_ON_STEALTHMODE ] );
-							}
-							else
-							{
-								ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_SQUAD_OFF_STEALTHMODE ] );
-							}
-						}
-					}
-					break;
-
-				case '-':
-				case '_':
-					if( fAlt )
-					{
-						const UINT32 vol = MusicGetVolume();
-						MusicSetVolume(vol > 20 ? vol - 20 : 0);
-					}
-					break;
-
-				case '+':
-#ifdef JA2TESTVERSION
-					if( fAlt )
-					{
-						const UINT32 vol = MusicGetVolume();
-  					MusicSetVolume(MIN(vol + 20, MAXVOLUME));
-					}
-#endif
 					break;
 			}
 		}
