@@ -5219,32 +5219,20 @@ void MoveMercFacingDirection( SOLDIERTYPE *pSoldier, BOOLEAN fReverse, FLOAT dMo
 static void InternalReceivingSoldierCancelServices(SOLDIERTYPE* pSoldier, BOOLEAN fPlayEndAnim);
 
 
-void BeginSoldierClimbUpRoof( SOLDIERTYPE *pSoldier )
+void BeginSoldierClimbUpRoof(SOLDIERTYPE* const s)
 {
-	INT8							bNewDirection;
+	INT8 direction;
+	if (!FindHigherLevel(s, &direction)) return;
 
-	if (FindHigherLevel(pSoldier, &bNewDirection))
-	{
-		if ( EnoughPoints( pSoldier, GetAPsToClimbRoof( pSoldier, FALSE ), 0, TRUE ) )
-		{
-			if (pSoldier->bTeam == gbPlayerNum)
-			{
-				// OK, SET INTERFACE FIRST
-				SetUIBusy(pSoldier);
-			}
+	if (!EnoughPoints(s, GetAPsToClimbRoof(s, FALSE), 0, TRUE)) return;
 
-			pSoldier->sTempNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, (UINT16)DirectionInc(bNewDirection ) );
+	if (s->bTeam == gbPlayerNum) SetUIBusy(s);
 
-			pSoldier->ubPendingDirection = bNewDirection;
-			//pSoldier->usPendingAnimation = CLIMBUPROOF;
-			EVENT_InitNewSoldierAnim( pSoldier, CLIMBUPROOF, 0 , FALSE );
-
-			InternalReceivingSoldierCancelServices( pSoldier, FALSE );
-			InternalGivingSoldierCancelServices( pSoldier, FALSE );
-
-		}
-	}
-
+	s->sTempNewGridNo     = NewGridNo(s->sGridNo, DirectionInc(direction));
+	s->ubPendingDirection = direction;
+	EVENT_InitNewSoldierAnim(s, CLIMBUPROOF, 0, FALSE);
+	InternalReceivingSoldierCancelServices(s, FALSE);
+	InternalGivingSoldierCancelServices(s, FALSE);
 }
 
 
