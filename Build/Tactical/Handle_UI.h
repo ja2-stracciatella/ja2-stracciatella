@@ -236,7 +236,8 @@ void HandleKeyInputOnEnemyTurn(void);
 
 BOOLEAN SelectedMercCanAffordAttack(void);
 BOOLEAN SelectedMercCanAffordMove(void);
-void GetMercClimbDirection(const SOLDIERTYPE* s, BOOLEAN* pfGoDown, BOOLEAN* pfGoUp);
+bool CanMercClimbDown(SOLDIERTYPE const*);
+bool CanMercClimbUp(SOLDIERTYPE const*);
 
 void ToggleHandCursorMode( UINT32 *puiNewEvent );
 void ToggleTalkCursorMode( UINT32 *puiNewEvent );

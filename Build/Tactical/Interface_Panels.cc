@@ -571,8 +571,6 @@ static void CheckForReEvaluateDisabledINVPanelButtons(void);
 
 static void UpdateSMPanel(void)
 {
-	BOOLEAN						fNearHeigherLevel;
-	BOOLEAN						fNearLowerLevel;
 	INT8							bDirection;
 	UINT8							ubStanceState;
 
@@ -678,24 +676,19 @@ static void UpdateSMPanel(void)
 
 	DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
 
-	GetMercClimbDirection(gpSMCurrentMerc, &fNearLowerLevel, &fNearHeigherLevel);
-
-	if ( fNearLowerLevel || fNearHeigherLevel )
+	SOLDIERTYPE* const s = gpSMCurrentMerc;
+	if (CanMercClimbDown(s))
 	{
-		if ( fNearLowerLevel )
+		if (EnoughPoints(s, GetAPsToClimbRoof(s, TRUE), 0, FALSE))
 		{
-			if ( EnoughPoints( gpSMCurrentMerc, GetAPsToClimbRoof( gpSMCurrentMerc, TRUE ), 0, FALSE ) )
-			{
-				EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
-			}
+			EnableButton(iSMPanelButtons[CLIMB_BUTTON]);
 		}
-
-		if ( fNearHeigherLevel )
+	}
+	else if (CanMercClimbUp(s))
+	{
+		if (EnoughPoints(s, GetAPsToClimbRoof(s, FALSE), 0, FALSE))
 		{
-			if ( EnoughPoints( gpSMCurrentMerc, GetAPsToClimbRoof( gpSMCurrentMerc, FALSE ), 0, FALSE ) )
-			{
-				EnableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
-			}
+			EnableButton(iSMPanelButtons[CLIMB_BUTTON]);
 		}
 	}
 
@@ -2157,11 +2150,15 @@ static void BtnClimbCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		BOOLEAN fNearHeigherLevel;
-		BOOLEAN fNearLowerLevel;
-		GetMercClimbDirection(gpSMCurrentMerc, &fNearLowerLevel, &fNearHeigherLevel);
-		if (fNearLowerLevel)   BeginSoldierClimbDownRoof(gpSMCurrentMerc);
-		if (fNearHeigherLevel) BeginSoldierClimbUpRoof(gpSMCurrentMerc);
+		SOLDIERTYPE* const s = gpSMCurrentMerc;
+		if (CanMercClimbDown(s))
+		{
+			BeginSoldierClimbDownRoof(s);
+		}
+		else if (CanMercClimbUp(s))
+		{
+			BeginSoldierClimbUpRoof(s);
+		}
 
 		INT8 bDirection;
 		if (FindFenceJumpDirection(gpSMCurrentMerc, gpSMCurrentMerc->sGridNo, gpSMCurrentMerc->bDirection, &bDirection))

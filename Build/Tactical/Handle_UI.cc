@@ -2447,10 +2447,15 @@ BOOLEAN SelectedMercCanAffordMove(  )
 }
 
 
-void GetMercClimbDirection(SOLDIERTYPE const* const s, BOOLEAN* const pfGoDown, BOOLEAN* const pfGoUp)
-{ // Check if we are close/can climb
-	*pfGoDown = s->bLevel == 0 && FindHigherLevel(s);
-	*pfGoUp   = s->bLevel >  0 && FindLowerLevel(s);
+bool CanMercClimbDown(SOLDIERTYPE const* const s)
+{
+	return s->bLevel > 0 && FindLowerLevel(s);
+}
+
+
+bool CanMercClimbUp(SOLDIERTYPE const* const s)
+{
+	return s->bLevel == 0 && FindHigherLevel(s);
 }
 
 
@@ -4987,19 +4992,12 @@ BOOLEAN SelectedGuyInBusyAnimation( )
 
 void GotoHeigherStance( SOLDIERTYPE *pSoldier )
 {
-	BOOLEAN						fNearHeigherLevel;
-	BOOLEAN						fNearLowerLevel;
-
 	switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
 	{
 		case ANIM_STAND:
 			// Nowhere
 			// Try to climb
-			GetMercClimbDirection(pSoldier, &fNearLowerLevel, &fNearHeigherLevel);
-			if ( fNearHeigherLevel )
-			{
-				BeginSoldierClimbUpRoof( pSoldier );
-			}
+			if (CanMercClimbUp(pSoldier)) BeginSoldierClimbUpRoof(pSoldier);
 			break;
 
 		case ANIM_CROUCH:
@@ -5017,10 +5015,6 @@ void GotoHeigherStance( SOLDIERTYPE *pSoldier )
 
 void GotoLowerStance( SOLDIERTYPE *pSoldier )
 {
-	BOOLEAN						fNearHeigherLevel;
-	BOOLEAN						fNearLowerLevel;
-
-
 	switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
 	{
 		case ANIM_STAND:
@@ -5036,11 +5030,7 @@ void GotoLowerStance( SOLDIERTYPE *pSoldier )
 		case ANIM_PRONE:
 			// Nowhere
 			// Try to climb
-			GetMercClimbDirection(pSoldier, &fNearLowerLevel, &fNearHeigherLevel);
-			if ( fNearLowerLevel )
-			{
-				BeginSoldierClimbDownRoof( pSoldier );
-			}
+			if (CanMercClimbDown(pSoldier)) BeginSoldierClimbDownRoof(pSoldier);
 			break;
 	}
 }
