@@ -2251,7 +2251,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 					if ( guiCurrentScreen != DEBUG_SCREEN )
 					{
 						SOLDIERTYPE* const sel = GetSelectedMan();
-						if (sel != NULL && gpItemPointer == NULL) GotoLowerStance(sel);
+						if (sel && !gpItemPointer) GotoLowerStance(sel);
 					}
 					break;
 

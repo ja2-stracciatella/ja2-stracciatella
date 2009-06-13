@@ -4975,25 +4975,13 @@ void GotoHigherStance(SOLDIERTYPE* const s)
 }
 
 
-void GotoLowerStance( SOLDIERTYPE *pSoldier )
+void GotoLowerStance(SOLDIERTYPE* const s)
 {
-	switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )
+	switch (gAnimControl[s->usAnimState].ubEndHeight)
 	{
-		case ANIM_STAND:
-
-			HandleStanceChangeFromUIKeys( ANIM_CROUCH );
-			break;
-
-		case ANIM_CROUCH:
-
-			HandleStanceChangeFromUIKeys( ANIM_PRONE );
-			break;
-
-		case ANIM_PRONE:
-			// Nowhere
-			// Try to climb
-			if (FindLowerLevel(pSoldier)) BeginSoldierClimbDownRoof(pSoldier);
-			break;
+		case ANIM_STAND:  HandleStanceChangeFromUIKeys(ANIM_CROUCH);           break;
+		case ANIM_CROUCH: HandleStanceChangeFromUIKeys(ANIM_PRONE);            break;
+		case ANIM_PRONE:  if (FindLowerLevel(s)) BeginSoldierClimbDownRoof(s); break;
 	}
 }
 
