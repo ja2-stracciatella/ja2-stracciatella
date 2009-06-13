@@ -2447,29 +2447,10 @@ BOOLEAN SelectedMercCanAffordMove(  )
 }
 
 
-void GetMercClimbDirection(const SOLDIERTYPE* const s, BOOLEAN* const pfGoDown, BOOLEAN* const pfGoUp)
-{
-	*pfGoDown = FALSE;
-	*pfGoUp   = FALSE;
-
-	// Check if we are close / can climb
-	if (s->bLevel == 0)
-	{
-		// See if we are not in a building!
-		if (FindHigherLevel(s))
-		{
-			*pfGoUp = TRUE;
-		}
-	}
-
-	// IF we are higher...
-	if (s->bLevel > 0)
-	{
-		if (FindLowerLevel(s))
-		{
-			*pfGoDown = TRUE;
-		}
-	}
+void GetMercClimbDirection(SOLDIERTYPE const* const s, BOOLEAN* const pfGoDown, BOOLEAN* const pfGoUp)
+{ // Check if we are close/can climb
+	*pfGoDown = s->bLevel == 0 && FindHigherLevel(s);
+	*pfGoUp   = s->bLevel >  0 && FindLowerLevel(s);
 }
 
 
