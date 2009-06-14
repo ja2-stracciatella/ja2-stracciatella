@@ -2571,7 +2571,8 @@ void SaveExplosionTableToSaveGameFile(HWFILE const hFile)
 
 
 	//Write the number of explosion queues
-	FileWrite(hFile, &gubElementsOnExplosionQueue, sizeof(UINT32));
+	FileWrite(hFile, &gubElementsOnExplosionQueue, sizeof(gubElementsOnExplosionQueue));
+	FileSeek(hFile, 3, FILE_SEEK_FROM_CURRENT);
 
 	//loop through and add all the explosions
 	for( uiCnt=0; uiCnt< MAX_BOMB_QUEUE; uiCnt++)
@@ -2619,7 +2620,8 @@ void LoadExplosionTableFromSavedGameFile(HWFILE const hFile)
 	memset( gExplosionQueue, 0, sizeof( ExplosionQueueElement ) * MAX_BOMB_QUEUE );
 
 	//Read the number of explosions queue's
-	FileRead(hFile, &gubElementsOnExplosionQueue, sizeof(UINT32));
+	FileRead(hFile, &gubElementsOnExplosionQueue, sizeof(gubElementsOnExplosionQueue));
+	FileSeek(hFile, 3, FILE_SEEK_FROM_CURRENT);
 
 	//loop through read all the active explosions fro the file
 	for (UINT32 uiCnt = 0; uiCnt < MAX_BOMB_QUEUE; ++uiCnt)
