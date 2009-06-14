@@ -17,6 +17,10 @@
 #include "MemMan.h"
 #include "FileMan.h"
 
+#ifdef JA2BETAVERSION
+#include "Message.h"
+#endif
+
 
 //dynamic arrays that contain the valid gridno's for each edge
 INT16 *gps1stNorthEdgepointArray					= NULL;
@@ -1601,114 +1605,57 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 	return INSERTION_CODE_SECONDARY_EDGEINDEX;
 }
 
+
 #ifdef JA2BETAVERSION
-#include "Message.h"
+
+static bool ShowMapEdgepoint(UINT16 const n, INT16 const* const array, UINT16 const idx)
+{
+	INT32              n_illegal = 0;
+	INT16 const* const end       = array + n;
+	for (INT16 const* i = array; i != end; ++i)
+	{
+		if (*i != -1)
+		{
+			AddTopmostToTail(*i, idx);
+		}
+		else
+		{
+			++n_illegal;
+		}
+	}
+	return n_illegal;
+}
+
+
 void ShowMapEdgepoints()
 {
-	INT32 i, usIllegal1 = 0, usIllegal2 = 0;
-	for( i = 0 ; i < gus1stNorthEdgepointArraySize; i++ )
-	{
-		if( gps1stNorthEdgepointArray[ i ] != -1 )
-		{
-			AddTopmostToTail( gps1stNorthEdgepointArray[ i ], FIRSTPOINTERS5 );
-		}
-		else
-		{
-			usIllegal1++;
-		}
-	}
-	for( i = 0 ; i < gus1stEastEdgepointArraySize; i++ )
-	{
-		if( gps1stEastEdgepointArray[ i ] != -1 )
-		{
-			AddTopmostToTail( gps1stEastEdgepointArray[ i ], FIRSTPOINTERS5 );
-		}
-		else
-		{
-			usIllegal1++;
-		}
-	}
-	for( i = 0 ; i < gus1stSouthEdgepointArraySize; i++ )
-	{
-		if( gps1stSouthEdgepointArray[ i ] != -1 )
-		{
-			AddTopmostToTail( gps1stSouthEdgepointArray[ i ], FIRSTPOINTERS5 );
-		}
-		else
-		{
-			usIllegal1++;
-		}
-	}
-	for( i = 0 ; i < gus1stWestEdgepointArraySize; i++ )
-	{
-		if( gps1stWestEdgepointArray[ i ] != -1 )
-		{
-			AddTopmostToTail( gps1stWestEdgepointArray[ i ], FIRSTPOINTERS5 );
-		}
-		else
-		{
-			usIllegal1++;
-		}
-	}
+	INT32 n_illegal1 = 0;
+	n_illegal1 += ShowMapEdgepoint(gus1stNorthEdgepointArraySize, gps1stNorthEdgepointArray, FIRSTPOINTERS5);
+	n_illegal1 += ShowMapEdgepoint(gus1stEastEdgepointArraySize,  gps1stEastEdgepointArray,  FIRSTPOINTERS5);
+	n_illegal1 += ShowMapEdgepoint(gus1stSouthEdgepointArraySize, gps1stSouthEdgepointArray, FIRSTPOINTERS5);
+	n_illegal1 += ShowMapEdgepoint(gus1stWestEdgepointArraySize,  gps1stWestEdgepointArray,  FIRSTPOINTERS5);
 
-	for( i = 0 ; i < gus2ndNorthEdgepointArraySize; i++ )
+	INT32 n_illegal2 = 0;
+	n_illegal2 += ShowMapEdgepoint(gus2ndNorthEdgepointArraySize, gps2ndNorthEdgepointArray, FIRSTPOINTERS6);
+	n_illegal2 += ShowMapEdgepoint(gus2ndEastEdgepointArraySize,  gps2ndEastEdgepointArray,  FIRSTPOINTERS6);
+	n_illegal2 += ShowMapEdgepoint(gus2ndSouthEdgepointArraySize, gps2ndSouthEdgepointArray, FIRSTPOINTERS6);
+	n_illegal2 += ShowMapEdgepoint(gus2ndWestEdgepointArraySize,  gps2ndWestEdgepointArray,  FIRSTPOINTERS6);
+
+	if (n_illegal1 == 0 && n_illegal2 == 0)
 	{
-		if( gps2ndNorthEdgepointArray[ i ] != -1 )
-		{
-			AddTopmostToTail( gps2ndNorthEdgepointArray[ i ], FIRSTPOINTERS6 );
-		}
-		else
-		{
-			usIllegal2++;
-		}
-	}
-	for( i = 0 ; i < gus2ndEastEdgepointArraySize; i++ )
-	{
-		if( gps2ndEastEdgepointArray[ i ] != -1 )
-		{
-			AddTopmostToTail( gps2ndEastEdgepointArray[ i ], FIRSTPOINTERS6 );
-		}
-		else
-		{
-			usIllegal2++;
-		}
-	}
-	for( i = 0 ; i < gus2ndSouthEdgepointArraySize; i++ )
-	{
-		if( gps2ndSouthEdgepointArray[ i ] != -1 )
-		{
-			AddTopmostToTail( gps2ndSouthEdgepointArray[ i ], FIRSTPOINTERS6 );
-		}
-		else
-		{
-			usIllegal2++;
-		}
-	}
-	for( i = 0 ; i < gus2ndWestEdgepointArraySize; i++ )
-	{
-		if( gps2ndWestEdgepointArray[ i ] != -1 )
-		{
-			AddTopmostToTail( gps2ndWestEdgepointArray[ i ], FIRSTPOINTERS6 );
-		}
-		else
-		{
-			usIllegal2++;
-		}
-	}
-	if( !usIllegal1 && !usIllegal2 )
-	{
-		ScreenMsg( 0, MSG_TESTVERSION, L"Showing display of map edgepoints" );
+		ScreenMsg(0, MSG_TESTVERSION, L"Showing display of map edgepoints");
 	}
 	else
 	{
-		ScreenMsg( 0, MSG_TESTVERSION, L"Showing display of map edgepoints (%d illegal primary, %d illegal secondary)" );
+		ScreenMsg(0, MSG_TESTVERSION, L"Showing display of map edgepoints (%d illegal primary, %d illegal secondary)", n_illegal1, n_illegal2);
 	}
-	ScreenMsg( 0, MSG_TESTVERSION, L"N:%d:%d E:%d:%d S:%d:%d W:%d:%d",
-		gus1stNorthEdgepointArraySize, gus2ndNorthEdgepointArraySize,
-		gus1stEastEdgepointArraySize,  gus2ndEastEdgepointArraySize,
-		gus1stSouthEdgepointArraySize, gus2ndSouthEdgepointArraySize,
-		gus1stWestEdgepointArraySize,	 gus2ndWestEdgepointArraySize );
+	ScreenMsg(0, MSG_TESTVERSION, L"N:%d:%d E:%d:%d S:%d:%d W:%d:%d",
+			gus1stNorthEdgepointArraySize, gus2ndNorthEdgepointArraySize,
+			gus1stEastEdgepointArraySize,  gus2ndEastEdgepointArraySize,
+			gus1stSouthEdgepointArraySize, gus2ndSouthEdgepointArraySize,
+			gus1stWestEdgepointArraySize,	 gus2ndWestEdgepointArraySize);
 }
+
 
 void HideMapEdgepoints()
 {
