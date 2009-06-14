@@ -118,174 +118,47 @@ void TrashMapEdgepoints()
 static BOOLEAN VerifyEdgepoint(SOLDIERTYPE* pSoldier, INT16 sEdgepoint);
 
 
-//This final step eliminates some edgepoints which actually don't path directly to the edge of the map.
-//Cases would include an area that is close to the edge, but a fence blocks it from direct access to the edge
-//of the map.
-static void ValidateEdgepoints(void)
+static void ValidateMapEdge(SOLDIERTYPE& s, UINT16& n, UINT16& middle_idx, INT16* const array)
 {
-	INT32 i;
-	UINT16 usValidEdgepoints;
-	SOLDIERTYPE Soldier;
-
-	memset( &Soldier, 0, sizeof( SOLDIERTYPE ) );
-	Soldier.bTeam = 1;
-
-	//north
-	usValidEdgepoints = 0;
-	for( i = 0; i < gus1stNorthEdgepointArraySize; i++ )
+	INT16*             dst     = array;
+	INT16 const*       middle  = array + middle_idx;
+	INT16 const* const end     = array + n;
+	for (INT16 const* i = array; i != end; ++i)
 	{
-		if( VerifyEdgepoint( &Soldier, gps1stNorthEdgepointArray[ i ] ) )
+		if (VerifyEdgepoint(&s, *i))
 		{
-			gps1stNorthEdgepointArray[ usValidEdgepoints ] = gps1stNorthEdgepointArray[ i ];
-			if( i == gus1stNorthEdgepointMiddleIndex )
-			{ //adjust the middle index to the new one.
-				gus1stNorthEdgepointMiddleIndex = usValidEdgepoints;
-			}
-			usValidEdgepoints++;
+			*dst = *i;
+			if (middle == i) middle = dst; // Adjust the middle index to the new one
+			++dst;
 		}
-		else if( i == gus1stNorthEdgepointMiddleIndex )
-		{ //increment the middle index because it's edgepoint is no longer valid.
-			gus1stNorthEdgepointMiddleIndex++;
+		else if (middle == i)
+		{ // Increment the middle index because its edgepoint is no longer valid
+			++middle;
 		}
 	}
-	gus1stNorthEdgepointArraySize = usValidEdgepoints;
-	//East
-	usValidEdgepoints = 0;
-	for( i = 0; i < gus1stEastEdgepointArraySize; i++ )
-	{
-		if( VerifyEdgepoint( &Soldier, gps1stEastEdgepointArray[ i ] ) )
-		{
-			gps1stEastEdgepointArray[ usValidEdgepoints ] = gps1stEastEdgepointArray[ i ];
-			if( i == gus1stEastEdgepointMiddleIndex )
-			{ //adjust the middle index to the new one.
-				gus1stEastEdgepointMiddleIndex = usValidEdgepoints;
-			}
-			usValidEdgepoints++;
-		}
-		else if( i == gus1stEastEdgepointMiddleIndex )
-		{ //increment the middle index because it's edgepoint is no longer valid.
-			gus1stEastEdgepointMiddleIndex++;
-		}
-	}
-	gus1stEastEdgepointArraySize = usValidEdgepoints;
-	//South
-	usValidEdgepoints = 0;
-	for( i = 0; i < gus1stSouthEdgepointArraySize; i++ )
-	{
-		if( VerifyEdgepoint( &Soldier, gps1stSouthEdgepointArray[ i ] ) )
-		{
-			gps1stSouthEdgepointArray[ usValidEdgepoints ] = gps1stSouthEdgepointArray[ i ];
-			if( i == gus1stSouthEdgepointMiddleIndex )
-			{ //adjust the middle index to the new one.
-				gus1stSouthEdgepointMiddleIndex = usValidEdgepoints;
-			}
-			usValidEdgepoints++;
-		}
-		else if( i == gus1stSouthEdgepointMiddleIndex )
-		{ //increment the middle index because it's edgepoint is no longer valid.
-			gus1stSouthEdgepointMiddleIndex++;
-		}
-	}
-	gus1stSouthEdgepointArraySize = usValidEdgepoints;
-	//West
-	usValidEdgepoints = 0;
-	for( i = 0; i < gus1stWestEdgepointArraySize; i++ )
-	{
-		if( VerifyEdgepoint( &Soldier, gps1stWestEdgepointArray[ i ] ) )
-		{
-			gps1stWestEdgepointArray[ usValidEdgepoints ] = gps1stWestEdgepointArray[ i ];
-			if( i == gus1stWestEdgepointMiddleIndex )
-			{ //adjust the middle index to the new one.
-				gus1stWestEdgepointMiddleIndex = usValidEdgepoints;
-			}
-			usValidEdgepoints++;
-		}
-		else if( i == gus1stWestEdgepointMiddleIndex )
-		{ //increment the middle index because it's edgepoint is no longer valid.
-			gus1stWestEdgepointMiddleIndex++;
-		}
-	}
-	gus1stWestEdgepointArraySize = usValidEdgepoints;
+	middle_idx = middle - array;
+	n          = dst    - array;
+}
 
 
+/* This final step eliminates some edgepoints which actually don't path directly
+ * to the edge of the map. Cases would include an area that is close to the
+ * edge, but a fence blocks it from direct access to the edge of the map. */
+static void ValidateEdgepoints()
+{
+	SOLDIERTYPE s;
+	memset(&s, 0, sizeof(s));
+	s.bTeam = ENEMY_TEAM;
 
-	//north
-	usValidEdgepoints = 0;
-	for( i = 0; i < gus2ndNorthEdgepointArraySize; i++ )
-	{
-		if( VerifyEdgepoint( &Soldier, gps2ndNorthEdgepointArray[ i ] ) )
-		{
-			gps2ndNorthEdgepointArray[ usValidEdgepoints ] = gps2ndNorthEdgepointArray[ i ];
-			if( i == gus2ndNorthEdgepointMiddleIndex )
-			{ //adjust the middle index to the new one.
-				gus2ndNorthEdgepointMiddleIndex = usValidEdgepoints;
-			}
-			usValidEdgepoints++;
-		}
-		else if( i == gus2ndNorthEdgepointMiddleIndex )
-		{ //increment the middle index because it's edgepoint is no longer valid.
-			gus2ndNorthEdgepointMiddleIndex++;
-		}
-	}
-	gus2ndNorthEdgepointArraySize = usValidEdgepoints;
-	//East
-	usValidEdgepoints = 0;
-	for( i = 0; i < gus2ndEastEdgepointArraySize; i++ )
-	{
-		if( VerifyEdgepoint( &Soldier, gps2ndEastEdgepointArray[ i ] ) )
-		{
-			gps2ndEastEdgepointArray[ usValidEdgepoints ] = gps2ndEastEdgepointArray[ i ];
-			if( i == gus2ndEastEdgepointMiddleIndex )
-			{ //adjust the middle index to the new one.
-				gus2ndEastEdgepointMiddleIndex = usValidEdgepoints;
-			}
-			usValidEdgepoints++;
-		}
-		else if( i == gus2ndEastEdgepointMiddleIndex )
-		{ //increment the middle index because it's edgepoint is no longer valid.
-			gus2ndEastEdgepointMiddleIndex++;
-		}
-	}
-	gus2ndEastEdgepointArraySize = usValidEdgepoints;
-	//South
-	usValidEdgepoints = 0;
-	for( i = 0; i < gus2ndSouthEdgepointArraySize; i++ )
-	{
-		if( VerifyEdgepoint( &Soldier, gps2ndSouthEdgepointArray[ i ] ) )
-		{
-			gps2ndSouthEdgepointArray[ usValidEdgepoints ] = gps2ndSouthEdgepointArray[ i ];
-			if( i == gus2ndSouthEdgepointMiddleIndex )
-			{ //adjust the middle index to the new one.
-				gus2ndSouthEdgepointMiddleIndex = usValidEdgepoints;
-			}
-			usValidEdgepoints++;
-		}
-		else if( i == gus2ndSouthEdgepointMiddleIndex )
-		{ //increment the middle index because it's edgepoint is no longer valid.
-			gus2ndSouthEdgepointMiddleIndex++;
-		}
-	}
-	gus2ndSouthEdgepointArraySize = usValidEdgepoints;
-	//West
-	usValidEdgepoints = 0;
-	for( i = 0; i < gus2ndWestEdgepointArraySize; i++ )
-	{
-		if( VerifyEdgepoint( &Soldier, gps2ndWestEdgepointArray[ i ] ) )
-		{
-			gps2ndWestEdgepointArray[ usValidEdgepoints ] = gps2ndWestEdgepointArray[ i ];
-			if( i == gus2ndWestEdgepointMiddleIndex )
-			{ //adjust the middle index to the new one.
-				gus2ndWestEdgepointMiddleIndex = usValidEdgepoints;
-			}
-			usValidEdgepoints++;
-		}
-		else if( i == gus2ndWestEdgepointMiddleIndex )
-		{ //increment the middle index because it's edgepoint is no longer valid.
-			gus2ndWestEdgepointMiddleIndex++;
-		}
-	}
-	gus2ndWestEdgepointArraySize = usValidEdgepoints;
+	ValidateMapEdge(s, gus1stNorthEdgepointArraySize, gus1stNorthEdgepointMiddleIndex, gps1stNorthEdgepointArray);
+	ValidateMapEdge(s, gus1stEastEdgepointArraySize,  gus1stEastEdgepointMiddleIndex,  gps1stEastEdgepointArray);
+	ValidateMapEdge(s, gus1stSouthEdgepointArraySize, gus1stSouthEdgepointMiddleIndex, gps1stSouthEdgepointArray);
+	ValidateMapEdge(s, gus1stWestEdgepointArraySize,  gus1stWestEdgepointMiddleIndex,  gps1stWestEdgepointArray);
 
+	ValidateMapEdge(s, gus2ndNorthEdgepointArraySize, gus2ndNorthEdgepointMiddleIndex, gps2ndNorthEdgepointArray);
+	ValidateMapEdge(s, gus2ndEastEdgepointArraySize,  gus2ndEastEdgepointMiddleIndex,  gps2ndEastEdgepointArray);
+	ValidateMapEdge(s, gus2ndSouthEdgepointArraySize, gus2ndSouthEdgepointMiddleIndex, gps2ndSouthEdgepointArray);
+	ValidateMapEdge(s, gus2ndWestEdgepointArraySize,  gus2ndWestEdgepointMiddleIndex,  gps2ndWestEdgepointArray);
 }
 
 
