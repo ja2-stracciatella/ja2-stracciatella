@@ -911,114 +911,49 @@ void SaveMapEdgepoints(HWFILE const f)
 #endif
 
 
-static void OldLoadMapEdgepoints(INT8** hBuffer)
+static void LoadMapEdgepoint(INT8*& buf, UINT16& n, UINT16& idx, INT16*& array)
 {
-	LOADDATA( &gus1stNorthEdgepointArraySize, *hBuffer, 2 );
-	LOADDATA( &gus1stNorthEdgepointMiddleIndex, *hBuffer, 2 );
-	if( gus1stNorthEdgepointArraySize )
+	LOADDATA(&n,   buf, sizeof(n));
+	LOADDATA(&idx, buf, sizeof(idx));
+	if (n != 0)
 	{
-		gps1stNorthEdgepointArray = MALLOCN(INT16, gus1stNorthEdgepointArraySize);
-		LOADDATA( gps1stNorthEdgepointArray, *hBuffer, gus1stNorthEdgepointArraySize * sizeof( INT16 ) );
-	}
-	LOADDATA( &gus1stEastEdgepointArraySize, *hBuffer, 2 );
-	LOADDATA( &gus1stEastEdgepointMiddleIndex, *hBuffer, 2 );
-	if( gus1stEastEdgepointArraySize )
-	{
-		gps1stEastEdgepointArray = MALLOCN(INT16, gus1stEastEdgepointArraySize);
-		LOADDATA( gps1stEastEdgepointArray, *hBuffer, gus1stEastEdgepointArraySize * sizeof( INT16 ) );
-	}
-	LOADDATA( &gus1stSouthEdgepointArraySize, *hBuffer, 2 );
-	LOADDATA( &gus1stSouthEdgepointMiddleIndex, *hBuffer, 2 );
-	if( gus1stSouthEdgepointArraySize )
-	{
-		gps1stSouthEdgepointArray = MALLOCN(INT16, gus1stSouthEdgepointArraySize);
-		LOADDATA( gps1stSouthEdgepointArray, *hBuffer, gus1stSouthEdgepointArraySize * sizeof( INT16 ) );
-	}
-	LOADDATA( &gus1stWestEdgepointArraySize, *hBuffer, 2 );
-	LOADDATA( &gus1stWestEdgepointMiddleIndex, *hBuffer, 2 );
-	if( gus1stWestEdgepointArraySize )
-	{
-		gps1stWestEdgepointArray = MALLOCN(INT16, gus1stWestEdgepointArraySize);
-		LOADDATA( gps1stWestEdgepointArray, *hBuffer, gus1stWestEdgepointArraySize * sizeof( INT16 ) );
+		array = MALLOCN(INT16, n);
+		LOADDATA(array, buf, sizeof(*array) * n);
 	}
 }
 
-BOOLEAN LoadMapEdgepoints( INT8 **hBuffer )
+
+bool LoadMapEdgepoints(INT8** const buf)
 {
 	TrashMapEdgepoints();
-	if( gMapInformation.ubMapVersion < 17 )
-	{	//To prevent invalidation of older maps, which only used one layer of edgepoints, and a UINT8 for
-		//containing the size, we will preserve that paradigm, then kill the loaded edgepoints and
-		//regenerate them.
-		OldLoadMapEdgepoints( hBuffer );
+
+	LoadMapEdgepoint(*buf, gus1stNorthEdgepointArraySize, gus1stNorthEdgepointMiddleIndex, gps1stNorthEdgepointArray);
+	LoadMapEdgepoint(*buf, gus1stEastEdgepointArraySize,  gus1stEastEdgepointMiddleIndex,  gps1stEastEdgepointArray);
+	LoadMapEdgepoint(*buf, gus1stSouthEdgepointArraySize, gus1stSouthEdgepointMiddleIndex, gps1stSouthEdgepointArray);
+	LoadMapEdgepoint(*buf, gus1stWestEdgepointArraySize,  gus1stWestEdgepointMiddleIndex,  gps1stWestEdgepointArray);
+
+	if (gMapInformation.ubMapVersion < 17)
+	{	/* To prevent invalidation of older maps, which only used one layer of
+		 * edgepoints, and a UINT8 for containing the size, we will preserve that
+		 * paradigm, then kill the loaded edgepoints and regenerate them. */
 		TrashMapEdgepoints();
-		return FALSE;
-	}
-	LOADDATA( &gus1stNorthEdgepointArraySize, *hBuffer, 2 );
-	LOADDATA( &gus1stNorthEdgepointMiddleIndex, *hBuffer, 2 );
-	if( gus1stNorthEdgepointArraySize )
-	{
-		gps1stNorthEdgepointArray = MALLOCN(INT16, gus1stNorthEdgepointArraySize);
-		LOADDATA( gps1stNorthEdgepointArray, *hBuffer, gus1stNorthEdgepointArraySize * sizeof( INT16 ) );
-	}
-	LOADDATA( &gus1stEastEdgepointArraySize, *hBuffer, 2 );
-	LOADDATA( &gus1stEastEdgepointMiddleIndex, *hBuffer, 2 );
-	if( gus1stEastEdgepointArraySize )
-	{
-		gps1stEastEdgepointArray = MALLOCN(INT16, gus1stEastEdgepointArraySize);
-		LOADDATA( gps1stEastEdgepointArray, *hBuffer, gus1stEastEdgepointArraySize * sizeof( INT16 ) );
-	}
-	LOADDATA( &gus1stSouthEdgepointArraySize, *hBuffer, 2 );
-	LOADDATA( &gus1stSouthEdgepointMiddleIndex, *hBuffer, 2 );
-	if( gus1stSouthEdgepointArraySize )
-	{
-		gps1stSouthEdgepointArray = MALLOCN(INT16, gus1stSouthEdgepointArraySize);
-		LOADDATA( gps1stSouthEdgepointArray, *hBuffer, gus1stSouthEdgepointArraySize * sizeof( INT16 ) );
-	}
-	LOADDATA( &gus1stWestEdgepointArraySize, *hBuffer, 2 );
-	LOADDATA( &gus1stWestEdgepointMiddleIndex, *hBuffer, 2 );
-	if( gus1stWestEdgepointArraySize )
-	{
-		gps1stWestEdgepointArray = MALLOCN(INT16, gus1stWestEdgepointArraySize);
-		LOADDATA( gps1stWestEdgepointArray, *hBuffer, gus1stWestEdgepointArraySize * sizeof( INT16 ) );
+		return false;
 	}
 
-	LOADDATA( &gus2ndNorthEdgepointArraySize, *hBuffer, 2 );
-	LOADDATA( &gus2ndNorthEdgepointMiddleIndex, *hBuffer, 2 );
-	if( gus2ndNorthEdgepointArraySize )
-	{
-		gps2ndNorthEdgepointArray = MALLOCN(INT16, gus2ndNorthEdgepointArraySize);
-		LOADDATA( gps2ndNorthEdgepointArray, *hBuffer, gus2ndNorthEdgepointArraySize * sizeof( INT16 ) );
-	}
-	LOADDATA( &gus2ndEastEdgepointArraySize, *hBuffer, 2 );
-	LOADDATA( &gus2ndEastEdgepointMiddleIndex, *hBuffer, 2 );
-	if( gus2ndEastEdgepointArraySize )
-	{
-		gps2ndEastEdgepointArray = MALLOCN(INT16, gus2ndEastEdgepointArraySize);
-		LOADDATA( gps2ndEastEdgepointArray, *hBuffer, gus2ndEastEdgepointArraySize * sizeof( INT16 ) );
-	}
-	LOADDATA( &gus2ndSouthEdgepointArraySize, *hBuffer, 2 );
-	LOADDATA( &gus2ndSouthEdgepointMiddleIndex, *hBuffer, 2 );
-	if( gus2ndSouthEdgepointArraySize )
-	{
-		gps2ndSouthEdgepointArray = MALLOCN(INT16, gus2ndSouthEdgepointArraySize);
-		LOADDATA( gps2ndSouthEdgepointArray, *hBuffer, gus2ndSouthEdgepointArraySize * sizeof( INT16 ) );
-	}
-	LOADDATA( &gus2ndWestEdgepointArraySize, *hBuffer, 2 );
-	LOADDATA( &gus2ndWestEdgepointMiddleIndex, *hBuffer, 2 );
-	if( gus2ndWestEdgepointArraySize )
-	{
-		gps2ndWestEdgepointArray = MALLOCN(INT16, gus2ndWestEdgepointArraySize);
-		LOADDATA( gps2ndWestEdgepointArray, *hBuffer, gus2ndWestEdgepointArraySize * sizeof( INT16 ) );
-	}
-	if( gMapInformation.ubMapVersion < 22 )
-	{	//regenerate them.
+	LoadMapEdgepoint(*buf, gus2ndNorthEdgepointArraySize, gus2ndNorthEdgepointMiddleIndex, gps2ndNorthEdgepointArray);
+	LoadMapEdgepoint(*buf, gus2ndEastEdgepointArraySize,  gus2ndEastEdgepointMiddleIndex,  gps2ndEastEdgepointArray);
+	LoadMapEdgepoint(*buf, gus2ndSouthEdgepointArraySize, gus2ndSouthEdgepointMiddleIndex, gps2ndSouthEdgepointArray);
+	LoadMapEdgepoint(*buf, gus2ndWestEdgepointArraySize,  gus2ndWestEdgepointMiddleIndex,  gps2ndWestEdgepointArray);
+
+	if (gMapInformation.ubMapVersion < 22)
+	{	// Regenerate them
 		TrashMapEdgepoints();
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
+
 
 UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
 {

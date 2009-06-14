@@ -15,10 +15,10 @@ void ChooseMapEdgepoints( MAPEDGEPOINTINFO *pMapEdgepointInfo, UINT8 ubStrategic
 void GenerateMapEdgepoints(void);
 
 #ifdef JA2EDITOR
-void SaveMapEdgepoints( HWFILE fp );
+void SaveMapEdgepoints(HWFILE);
 #endif
 
-BOOLEAN LoadMapEdgepoints( INT8 **hBuffer );
+bool LoadMapEdgepoints(INT8** buf);
 void TrashMapEdgepoints(void);
 
 //dynamic arrays that contain the valid gridno's for each edge
