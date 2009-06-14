@@ -1657,66 +1657,30 @@ void ShowMapEdgepoints()
 }
 
 
-void HideMapEdgepoints()
+static void HideMapEdgepoint(UINT16 const n, INT16 const* const array)
 {
-	INT32 i;
-	ScreenMsg( 0, MSG_TESTVERSION, L"Removing display of map edgepoints" );
-	for( i = 0 ; i < gus1stNorthEdgepointArraySize; i++ )
+	INT16 const* const end = array + n;
+	for (INT16 const* i = array; i != end; ++i)
 	{
-		if( gps1stNorthEdgepointArray[ i ] != -1 )
-		{
-			RemoveAllTopmostsOfTypeRange( gps1stNorthEdgepointArray[ i ], FIRSTPOINTERS, FIRSTPOINTERS );
-		}
-	}
-	for( i = 0 ; i < gus1stEastEdgepointArraySize; i++ )
-	{
-		if( gps1stEastEdgepointArray[ i ] != -1 )
-		{
-			RemoveAllTopmostsOfTypeRange( gps1stEastEdgepointArray[ i ], FIRSTPOINTERS, FIRSTPOINTERS );
-		}
-	}
-	for( i = 0 ; i < gus1stSouthEdgepointArraySize; i++ )
-	{
-		if( gps1stSouthEdgepointArray[ i ] != -1 )
-		{
-			RemoveAllTopmostsOfTypeRange( gps1stSouthEdgepointArray[ i ], FIRSTPOINTERS, FIRSTPOINTERS );
-		}
-	}
-	for( i = 0 ; i < gus1stWestEdgepointArraySize; i++ )
-	{
-		if( gps1stWestEdgepointArray[ i ] != -1 )
-		{
-			RemoveAllTopmostsOfTypeRange( gps1stWestEdgepointArray[ i ], FIRSTPOINTERS, FIRSTPOINTERS );
-		}
-	}
-
-	for( i = 0 ; i < gus2ndNorthEdgepointArraySize; i++ )
-	{
-		if( gps2ndNorthEdgepointArray[ i ] != -1 )
-		{
-			RemoveAllTopmostsOfTypeRange( gps2ndNorthEdgepointArray[ i ], FIRSTPOINTERS, FIRSTPOINTERS );
-		}
-	}
-	for( i = 0 ; i < gus2ndEastEdgepointArraySize; i++ )
-	{
-		if( gps2ndEastEdgepointArray[ i ] != -1 )
-		{
-			RemoveAllTopmostsOfTypeRange( gps2ndEastEdgepointArray[ i ], FIRSTPOINTERS, FIRSTPOINTERS );
-		}
-	}
-	for( i = 0 ; i < gus2ndSouthEdgepointArraySize; i++ )
-	{
-		if( gps2ndSouthEdgepointArray[ i ] != -1 )
-		{
-			RemoveAllTopmostsOfTypeRange( gps2ndSouthEdgepointArray[ i ], FIRSTPOINTERS, FIRSTPOINTERS );
-		}
-	}
-	for( i = 0 ; i < gus2ndWestEdgepointArraySize; i++ )
-	{
-		if( gps2ndWestEdgepointArray[ i ] != -1 )
-		{
-			RemoveAllTopmostsOfTypeRange( gps2ndWestEdgepointArray[ i ], FIRSTPOINTERS, FIRSTPOINTERS );
-		}
+		if (*i == -1) continue;
+		RemoveAllTopmostsOfTypeRange(*i, FIRSTPOINTERS, FIRSTPOINTERS);
 	}
 }
+
+
+void HideMapEdgepoints()
+{
+	ScreenMsg(0, MSG_TESTVERSION, L"Removing display of map edgepoints");
+
+	HideMapEdgepoint(gus1stNorthEdgepointArraySize, gps1stNorthEdgepointArray);
+	HideMapEdgepoint(gus1stEastEdgepointArraySize,  gps1stEastEdgepointArray);
+	HideMapEdgepoint(gus1stSouthEdgepointArraySize, gps1stSouthEdgepointArray);
+	HideMapEdgepoint(gus1stWestEdgepointArraySize,  gps1stWestEdgepointArray);
+
+	HideMapEdgepoint(gus2ndNorthEdgepointArraySize, gps2ndNorthEdgepointArray);
+	HideMapEdgepoint(gus2ndEastEdgepointArraySize,  gps2ndEastEdgepointArray);
+	HideMapEdgepoint(gus2ndSouthEdgepointArraySize, gps2ndSouthEdgepointArray);
+	HideMapEdgepoint(gus2ndWestEdgepointArraySize,  gps2ndWestEdgepointArray);
+}
+
 #endif
