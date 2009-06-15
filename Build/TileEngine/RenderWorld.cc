@@ -1161,35 +1161,21 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 								}
 								else if (uiLevelNodeFlags & LEVELNODE_ITEM)
 								{
-									UINT16 usOutlineColor;
+									UINT16     outline_colour;
+									bool const on_roof = uiRowFlags == TILES_STATIC_ONROOF || uiRowFlags == TILES_DYNAMIC_ONROOF;
 									if (gGameSettings.fOptions[TOPTION_GLOW_ITEMS])
 									{
-										if (uiRowFlags == TILES_STATIC_ONROOF || uiRowFlags == TILES_DYNAMIC_ONROOF)
-										{
-											usOutlineColor = us16BPPItemCycleYellowColors[gsCurrentItemGlowFrame];
-										}
-										else
-										{
-											if (gTacticalStatus.uiFlags & RED_ITEM_GLOW_ON)
-											{
-												usOutlineColor = us16BPPItemCycleRedColors[gsCurrentItemGlowFrame];
-											}
-											else
-											{
-												usOutlineColor = us16BPPItemCycleWhiteColors[gsCurrentItemGlowFrame];
-											}
-										}
+										UINT16 const (&palette)[NUM_ITEM_CYCLE_COLORS] =
+											on_roof                                    ? us16BPPItemCycleYellowColors :
+											gTacticalStatus.uiFlags & RED_ITEM_GLOW_ON ? us16BPPItemCycleRedColors    :
+											us16BPPItemCycleWhiteColors;
+										outline_colour = palette[gsCurrentItemGlowFrame];
 									}
 									else
 									{
-										if (uiRowFlags == TILES_STATIC_ONROOF || uiRowFlags == TILES_DYNAMIC_ONROOF)
-										{
-											usOutlineColor = gusYellowItemOutlineColor;
-										}
-										else
-										{
-											usOutlineColor = gusNormalItemOutlineColor;
-										}
+										outline_colour =
+											on_roof ? gusYellowItemOutlineColor :
+											gusNormalItemOutlineColor;
 									}
 
 									const BOOLEAN bBlitClipVal = BltIsClippedOrOffScreen(hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
@@ -1197,22 +1183,22 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 									{
 										if (fObscuredBlitter)
 										{
-											Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor);
+											Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, outline_colour);
 										}
 										else
 										{
-											Blt8BPPDataTo16BPPBufferOutlineZ(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor);
+											Blt8BPPDataTo16BPPBufferOutlineZ(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, outline_colour);
 										}
 									}
 									else if (bBlitClipVal == TRUE)
 									{
 										if (fObscuredBlitter)
 										{
-											Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, &gClippingRect);
+											Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, outline_colour, &gClippingRect);
 										}
 										else
 										{
-											Blt8BPPDataTo16BPPBufferOutlineZClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, usOutlineColor, &gClippingRect);
+											Blt8BPPDataTo16BPPBufferOutlineZClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, outline_colour, &gClippingRect);
 										}
 									}
 								}
