@@ -459,7 +459,6 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 							BOOLEAN fObscuredBlitter          = FALSE;
 							UINT32 uiAniTileFlags = 0;
 							INT16 gsForceSoldierZLevel = 0;
-							const SOLDIERTYPE* pSoldier = NULL;
 
 							const UINT32 uiLevelNodeFlags = pNode->uiFlags;
 
@@ -849,10 +848,11 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 								case TILES_DYNAMIC_MERCS:
 								case TILES_DYNAMIC_HIGHMERCS:
 								case TILES_DYNAMIC_STRUCT_MERCS:
+								{
 									// Set flag to set layer as used
 									uiAdditiveLayerUsedFlags |= uiRowFlags;
 
-									pSoldier = pNode->pSoldier;
+									SOLDIERTYPE const* const pSoldier = pNode->pSoldier;
 
 									if (uiRowFlags == TILES_DYNAMIC_MERCS)
 									{
@@ -941,20 +941,18 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 									}
 
 									// Shade guy always lighter than sceane default!
+									UINT8 ubShadeLevel;
+									if (pSoldier->fBeginFade)
 									{
-										UINT8 ubShadeLevel;
-										if (pSoldier->fBeginFade)
-										{
-											ubShadeLevel = pSoldier->ubFadeLevel;
-										}
-										else
-										{
-											ubShadeLevel  = pNode->ubShadeLevel & 0x0f;
-											ubShadeLevel  = __max(ubShadeLevel - 2, DEFAULT_SHADE_LEVEL);
-											ubShadeLevel |= pNode->ubShadeLevel & 0x30;
-										}
-										pShadeTable = pSoldier->pShades[ubShadeLevel];
+										ubShadeLevel = pSoldier->ubFadeLevel;
 									}
+									else
+									{
+										ubShadeLevel  = pNode->ubShadeLevel & 0x0f;
+										ubShadeLevel  = __max(ubShadeLevel - 2, DEFAULT_SHADE_LEVEL);
+										ubShadeLevel |= pNode->ubShadeLevel & 0x30;
+									}
+									pShadeTable = pSoldier->pShades[ubShadeLevel];
 
 									// Position guy based on guy's position
 									const float dOffsetX = pSoldier->dXPos - gsRenderCenterX;
@@ -1091,6 +1089,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 
 									uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
 									break;
+								}
 							}
 
 							// Adjust for interface level
