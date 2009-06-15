@@ -1124,7 +1124,25 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 										!gGameSettings.fOptions[TOPTION_TOGGLE_WIREFRAME])
 								{
 								}
-								else if (uiLevelNodeFlags & LEVELNODE_DISPLAY_AP && !(uiFlags & TILES_DIRTY))
+								else if (uiFlags & TILES_DIRTY)
+								{
+									if (!(uiLevelNodeFlags & LEVELNODE_LASTDYNAMIC))
+									{
+										ETRLEObject const& pTrav = hVObject->SubregionProperties(usImageIndex);
+										UINT32 const uiBrushHeight = pTrav.usHeight;
+										UINT32 const uiBrushWidth  = pTrav.usWidth;
+										sXPos += pTrav.sOffsetX;
+										sYPos += pTrav.sOffsetY;
+
+										INT16 const h = MIN(uiBrushHeight, gsVIEWPORT_WINDOW_END_Y - sYPos);
+										RegisterBackgroundRect(uiDirtyFlags, sXPos, sYPos, uiBrushWidth, h);
+										if (fSaveZ)
+										{
+											RegisterBackgroundRect(uiDirtyFlags | BGND_FLAG_SAVE_Z, sXPos, sYPos, uiBrushWidth, h);
+										}
+									}
+								}
+								else if (uiLevelNodeFlags & LEVELNODE_DISPLAY_AP)
 								{
 									ETRLEObject const& pTrav = hVObject->SubregionProperties(usImageIndex);
 									sXPos += pTrav.sOffsetX;
@@ -1141,7 +1159,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 									MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY, buf);
 									SetFontDestBuffer(FRAME_BUFFER);
 								}
-								else if (uiLevelNodeFlags & LEVELNODE_ITEM && !(uiFlags & TILES_DIRTY))
+								else if (uiLevelNodeFlags & LEVELNODE_ITEM)
 								{
 									UINT16 usOutlineColor;
 									if (gGameSettings.fOptions[TOPTION_GLOW_ITEMS])
@@ -1199,7 +1217,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 									}
 								}
 								// ATE: Check here for a lot of conditions!
-								else if (uiLevelNodeFlags & LEVELNODE_PHYSICSOBJECT && !(uiFlags & TILES_DIRTY))
+								else if (uiLevelNodeFlags & LEVELNODE_PHYSICSOBJECT)
 								{
 									const BOOLEAN bBlitClipVal = BltIsClippedOrOffScreen(hVObject, sXPos, sYPos, usImageIndex, &gClippingRect);
 
@@ -1223,24 +1241,6 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 										else if (bBlitClipVal == TRUE)
 										{
 											Blt8BPPDataTo16BPPBufferOutlineClip(pDestBuf, uiDestPitchBYTES, hVObject, sXPos, sYPos, usImageIndex, TRANSPARENT, &gClippingRect);
-										}
-									}
-								}
-								else if (uiFlags & TILES_DIRTY)
-								{
-									if (!(uiLevelNodeFlags & LEVELNODE_LASTDYNAMIC))
-									{
-										ETRLEObject const& pTrav = hVObject->SubregionProperties(usImageIndex);
-										UINT32 const uiBrushHeight = pTrav.usHeight;
-										UINT32 const uiBrushWidth  = pTrav.usWidth;
-										sXPos += pTrav.sOffsetX;
-										sYPos += pTrav.sOffsetY;
-
-										INT16 const h = MIN(uiBrushHeight, gsVIEWPORT_WINDOW_END_Y - sYPos);
-										RegisterBackgroundRect(uiDirtyFlags, sXPos, sYPos, uiBrushWidth, h);
-										if (fSaveZ)
-										{
-											RegisterBackgroundRect(uiDirtyFlags | BGND_FLAG_SAVE_Z, sXPos, sYPos, uiBrushWidth, h);
 										}
 									}
 								}
