@@ -1383,7 +1383,7 @@ static void DisplaySelectLights()
 	}
 
 	//draw the select light for the buy equipment buttons
-	for (UINT16 i = 0; i != 3; ++i)
+	for (UINT16 i = 0; i != 2; ++i)
 	{
 		DrawButtonSelection(giBuyEquipmentButton[i], gfBuyEquipment == i);
 	}
