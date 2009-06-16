@@ -1030,26 +1030,11 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 											}
 											else
 											{
-												// OK,not highlighted, but maybe we are in enemy's turn and they have the baton
-
-												// AI's turn?
-												if (gTacticalStatus.ubCurrentTeam != OUR_TEAM)
-												{
-													// Does he have baton?
-													if (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL)
-													{
-														pShadeTable = pShadeStart[gsGlowFrames[gsCurrentGlowFrame] + bGlowShadeOffset];
-
-														if (gsGlowFrames[gsCurrentGlowFrame] >= 7)
-														{
-															gsForceSoldierZLevel = TOPMOST_Z_LEVEL;
-														}
-													}
-												}
-												else
+												// Not highlighted, but maybe we are in enemy's turn and they have the baton
+												if (gTacticalStatus.ubCurrentTeam == OUR_TEAM ||
+														pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL) // Does he have baton?
 												{
 													pShadeTable = pShadeStart[gsGlowFrames[gsCurrentGlowFrame] + bGlowShadeOffset];
-
 													if (gsGlowFrames[gsCurrentGlowFrame] >= 7)
 													{
 														gsForceSoldierZLevel = TOPMOST_Z_LEVEL;
