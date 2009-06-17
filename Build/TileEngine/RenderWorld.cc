@@ -413,25 +413,26 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 
 				if (uiTileIndex < GRIDSIZE)
 				{
+					MAP_ELEMENT const& me = gpWorldLevelData[uiTileIndex];
+
 					/* OK, we're searching through this loop anyway, might as well check
 					 * for mouse position over objects...
 					 * Experimental! */
-					if (uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE)
+					if (uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE &&
+							fCheckForMouseDetections                  &&
+							me.pStructHead)
 					{
-						if (fCheckForMouseDetections && gpWorldLevelData[uiTileIndex].pStructHead != NULL)
-						{
-							LogMouseOverInteractiveTile(uiTileIndex);
-						}
+						LogMouseOverInteractiveTile(uiTileIndex);
 					}
 
 					LEVELNODE* pNode;
-					if (uiFlags & TILES_MARKED && !(gpWorldLevelData[uiTileIndex].uiFlags & MAPELEMENT_REDRAW))
+					if (uiFlags & TILES_MARKED && !(me.uiFlags & MAPELEMENT_REDRAW))
 					{
 						pNode = NULL;
 					}
 					else
 					{
-						pNode = gpWorldLevelData[uiTileIndex].pLevelNodes[ubLevelNodeStartIndex[cnt]];
+						pNode = me.pLevelNodes[ubLevelNodeStartIndex[cnt]];
 					}
 
 					INT8 bItemCount = 0;
@@ -462,9 +463,9 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 
 						const UINT32 uiLevelNodeFlags = pNode->uiFlags;
 
-						if (fCheckForRedundency &&
-								gpWorldLevelData[uiTileIndex].uiFlags & MAPELEMENT_REDUNDENT &&
-								!(gpWorldLevelData[uiTileIndex].uiFlags & MAPELEMENT_REEVALUATE_REDUNDENCY) && // IF WE DONOT WANT TO RE-EVALUATE FIRST
+						if (fCheckForRedundency                              &&
+								me.uiFlags & MAPELEMENT_REDUNDENT                &&
+								!(me.uiFlags & MAPELEMENT_REEVALUATE_REDUNDENCY) && // If we donot want to re-evaluate first
 								!(gTacticalStatus.uiFlags & NOHIDE_REDUNDENCY))
 						{
 							pNode = NULL;
@@ -475,7 +476,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 						if (uiFlags & TILES_MARKED) fZBlitter = TRUE;
 
 						//Looking up height every time here is alot better than doing it above!
-						const INT16 sTileHeight = gpWorldLevelData[uiTileIndex].sHeight;
+						INT16 const sTileHeight = me.sHeight;
 
 						INT16 sModifiedTileHeight = (sTileHeight / 80 - 1) * 80;
 						if (sModifiedTileHeight < 0) sModifiedTileHeight = 0;
@@ -522,7 +523,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 							{
 								TileElem =
 									uiLevelNodeFlags & LEVELNODE_REVEALTREES ? &gTileDatabase[pNode->usIndex + 2] :
-									TileElem = &gTileDatabase[pNode->usIndex];
+									&gTileDatabase[pNode->usIndex];
 
 								// Handle independent-per-tile animations (i.e.: doors, exploding things, etc.)
 								if (fDynamic && uiLevelNodeFlags & LEVELNODE_ANIMATION && pNode->sCurrentFrame != -1)
@@ -1052,7 +1053,7 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 								}
 
 								// ATE: If we are in a gridno that we should not use obscure blitter, set!
-								if (!(gpWorldLevelData[uiTileIndex].ubExtFlags[0] & MAPELEMENT_EXT_NOBURN_STRUCT))
+								if (!(me.ubExtFlags[0] & MAPELEMENT_EXT_NOBURN_STRUCT))
 								{
 									fObscuredBlitter = TRUE;
 								}
