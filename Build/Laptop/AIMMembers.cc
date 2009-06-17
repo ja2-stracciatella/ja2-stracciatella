@@ -3111,62 +3111,39 @@ void DemoHiringOfMercs()
 static void DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack(MessageBoxReturnValue);
 
 
-void DisplayPopUpBoxExplainingMercArrivalLocationAndTime(void)
+void DisplayPopUpBoxExplainingMercArrivalLocationAndTime()
 {
-	CHAR16	szLocAndTime[512];
-	CHAR16		zTimeString[128];
-	CHAR16		zSectorIDString[512];
-	UINT32		uiHour;
+	LAST_HIRED_MERC_STRUCT& h = LaptopSaveInfo.sLastHiredMerc;
 
-	//if the id of the merc is invalid, dont display the pop up
-	if( LaptopSaveInfo.sLastHiredMerc.iIdOfMerc == -1 )
-		return;
+	// if the id of the merc is invalid, dont display the pop up
+	if (h.iIdOfMerc == -1) return;
 
-	//if the pop up has already been displayed, dont display it again for this occurence of laptop
-	if( LaptopSaveInfo.sLastHiredMerc.fHaveDisplayedPopUpInLaptop )
-		return;
+	// If the pop up has already been displayed, do not display it again for this occurence of laptop
+	if (h.fHaveDisplayedPopUpInLaptop) return;
 
-	SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(LaptopSaveInfo.sLastHiredMerc.iIdOfMerc);
-	if( pSoldier == NULL )
-		return;
+	// Calculate the approximate hour the mercs will arrive at
+	wchar_t      time_string[16];
+	UINT32 const hour = h.uiArrivalTime % 1440 / 60;
+	swprintf(time_string, lengthof(time_string), L"%02d:00", hour);
 
-	//calc the approximate hour the mercs will arrive at
-	uiHour = ( ( LaptopSaveInfo.sLastHiredMerc.uiArrivalTime ) - ( ( ( LaptopSaveInfo.sLastHiredMerc.uiArrivalTime ) / 1440 ) * 1440 ) ) / 60;
+	wchar_t sector_string[512];
+	GetSectorIDString(gsMercArriveSectorX, gsMercArriveSectorY, 0, sector_string, lengthof(sector_string), FALSE);
 
-	//create the time string
-	swprintf( zTimeString, lengthof(zTimeString), L"%02d:%02d", uiHour, 0 );
-
-	//get the id string
-	GetSectorIDString( gsMercArriveSectorX, gsMercArriveSectorY, 0, zSectorIDString, lengthof(zSectorIDString), FALSE );
-
-	//create the string to display to the user, looks like....
-	//	L"%ls should arrive at the designated drop-off point ( sector %d:%d %s ) on day %d, at approximately %ls.",		//first %ls is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
-
+	wchar_t              msg[512];
+	wchar_t const* const nickname = GetProfile(h.iIdOfMerc).zNickname;
+	UINT32         const day      = h.uiArrivalTime / 1440;
 #ifdef GERMAN
-	//Germans version has a different argument order
-	swprintf( szLocAndTime, lengthof(szLocAndTime), pMessageStrings[ MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP ],
-							gMercProfiles[ pSoldier->ubProfile ].zNickname,
-							LaptopSaveInfo.sLastHiredMerc.uiArrivalTime / 1440,
-							zTimeString,
-							zSectorIDString );
+	// German version has a different argument order
+	swprintf(msg, lengthof(msg), pMessageStrings[MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP], nickname, day, time_string, sector_string);
 #else
-	swprintf( szLocAndTime, lengthof(szLocAndTime), pMessageStrings[ MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP ],
-							gMercProfiles[ pSoldier->ubProfile ].zNickname,
-							zSectorIDString,
-							LaptopSaveInfo.sLastHiredMerc.uiArrivalTime / 1440,
-							zTimeString );
+	swprintf(msg, lengthof(msg), pMessageStrings[MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP], nickname, sector_string, day, time_string);
 #endif
+	DoLapTopMessageBox(MSG_BOX_LAPTOP_DEFAULT, msg, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack);
 
-
-
-	//display the message box
-	DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, szLocAndTime, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack );
-
-	//reset the id of the last merc
-	LaptopSaveInfo.sLastHiredMerc.iIdOfMerc = -1;
-
-	//set the fact that the pop up has been displayed this time in laptop
-	LaptopSaveInfo.sLastHiredMerc.fHaveDisplayedPopUpInLaptop = TRUE;
+	// Reset the id of the last merc
+	h.iIdOfMerc = -1;
+	// Set the fact that the pop up has been displayed this time in laptop
+	h.fHaveDisplayedPopUpInLaptop = TRUE;
 }
 
 
