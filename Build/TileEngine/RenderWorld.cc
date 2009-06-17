@@ -504,25 +504,6 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 						// setup for any tile type except mercs
 						if (!fMerc)
 						{
-							if (!(uiLevelNodeFlags & (LEVELNODE_ROTTINGCORPSE | LEVELNODE_CACHEDANITILE)))
-							{
-								if (uiLevelNodeFlags & LEVELNODE_REVEALTREES)
-								{
-									TileElem = &gTileDatabase[pNode->usIndex + 2];
-								}
-								else
-								{
-									TileElem = &gTileDatabase[pNode->usIndex];
-								}
-
-								// HANDLE INDEPENDANT-PER-TILE ANIMATIONS (IE: DOORS, EXPLODING THINGS, ETC)
-								if (fDynamic && uiLevelNodeFlags & LEVELNODE_ANIMATION && pNode->sCurrentFrame != -1)
-								{
-									Assert(TileElem->pAnimData != NULL);
-									TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[pNode->sCurrentFrame]];
-								}
-							}
-
 							if (uiLevelNodeFlags & (LEVELNODE_ROTTINGCORPSE | LEVELNODE_CACHEDANITILE))
 							{
 								if (fDynamic)
@@ -539,6 +520,17 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 							}
 							else
 							{
+								TileElem =
+									uiLevelNodeFlags & LEVELNODE_REVEALTREES ? &gTileDatabase[pNode->usIndex + 2] :
+									TileElem = &gTileDatabase[pNode->usIndex];
+
+								// Handle independent-per-tile animations (i.e.: doors, exploding things, etc.)
+								if (fDynamic && uiLevelNodeFlags & LEVELNODE_ANIMATION && pNode->sCurrentFrame != -1)
+								{
+									Assert(TileElem->pAnimData);
+									TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[pNode->sCurrentFrame]];
+								}
+
 								// Set Tile elem flags here!
 								uiTileElemFlags = TileElem->uiFlags;
 								// Set valid tile elem!
