@@ -369,7 +369,7 @@ static UINT8 NumFreeEnemySlots(void)
 }
 
 
-static BOOLEAN PrepareEnemyForUndergroundBattle(void);
+static void PrepareEnemyForUndergroundBattle();
 
 
 //Called when entering a sector so the campaign AI can automatically insert the
@@ -614,25 +614,23 @@ void PrepareEnemyForSectorBattle()
 }
 
 
-static BOOLEAN PrepareEnemyForUndergroundBattle(void)
+static void PrepareEnemyForUndergroundBattle()
 {
 	// This is the sector we are going to be fighting in.
 	UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 	Assert(u);
-	if (!u) return FALSE;
+	if (!u) return;
 
-	if (u->ubNumAdmins != 0 || u->ubNumTroops != 0 || u->ubNumElites != 0)
-	{
-		UINT8 const ubTotalAdmins = u->ubNumAdmins - u->ubAdminsInBattle;
-		UINT8 const ubTotalTroops = u->ubNumTroops - u->ubTroopsInBattle;
-		UINT8 const ubTotalElites = u->ubNumElites - u->ubElitesInBattle;
-		u->ubAdminsInBattle += ubTotalAdmins;
-		u->ubTroopsInBattle += ubTotalTroops;
-		u->ubElitesInBattle += ubTotalElites;
-		AddSoldierInitListEnemyDefenceSoldiers(u->ubNumAdmins, u->ubNumTroops, u->ubNumElites);
-		ValidateEnemiesHaveWeapons();
-	}
-	return u->ubNumAdmins + u->ubNumTroops + u->ubNumElites > 0;
+	if (u->ubNumAdmins == 0 && u->ubNumTroops == 0 && u->ubNumElites == 0) return;
+
+	UINT8 const ubTotalAdmins = u->ubNumAdmins - u->ubAdminsInBattle;
+	UINT8 const ubTotalTroops = u->ubNumTroops - u->ubTroopsInBattle;
+	UINT8 const ubTotalElites = u->ubNumElites - u->ubElitesInBattle;
+	u->ubAdminsInBattle += ubTotalAdmins;
+	u->ubTroopsInBattle += ubTotalTroops;
+	u->ubElitesInBattle += ubTotalElites;
+	AddSoldierInitListEnemyDefenceSoldiers(u->ubNumAdmins, u->ubNumTroops, u->ubNumElites);
+	ValidateEnemiesHaveWeapons();
 }
 
 
