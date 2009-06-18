@@ -43,7 +43,6 @@ extern UINT8   gubCurScrollSpeedID;
 
 // highest bit value is rendered first!
 #define TILES_ALL_DYNAMICS              0x00000fff
-#define TILES_DYNAMIC_CHECKFOR_INT_TILE 0x00000400
 #define TILES_DYNAMIC_LAND              0x00000200
 #define TILES_DYNAMIC_OBJECTS           0x00000100
 #define TILES_DYNAMIC_SHADOWS           0x00000080
