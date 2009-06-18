@@ -1595,24 +1595,14 @@ void RenderWorld(void)
 		SetRenderFlags(RENDER_FLAG_FULL);
 	}
 
-	// FOR NOW< HERE, UPDATE ANIMATED TILES
+	// For now here, update animated tiles
 	if (COUNTERDONE(ANIMATETILES))
 	{
 		RESETCOUNTER(ANIMATETILES);
-
-		for (UINT32 i = 0; i < gusNumAnimatedTiles; ++i)
+		for (UINT32 i = 0; i != gusNumAnimatedTiles; ++i)
 		{
-			const TILE_ELEMENT* const  TileElem  = &gTileDatabase[gusAnimatedTiles[i]];
-			TILE_ANIMATION_DATA* const pAnimData = TileElem->pAnimData;
-
-			Assert(pAnimData != NULL);
-
-			pAnimData->bCurrentFrame++;
-
-			if (pAnimData->bCurrentFrame >= pAnimData->ubNumFrames)
-			{
-				pAnimData->bCurrentFrame = 0;
-			}
+			TILE_ANIMATION_DATA& a = *gTileDatabase[gusAnimatedTiles[i]].pAnimData;
+			if (++a.bCurrentFrame >= a.ubNumFrames) a.bCurrentFrame = 0;
 		}
 	}
 
