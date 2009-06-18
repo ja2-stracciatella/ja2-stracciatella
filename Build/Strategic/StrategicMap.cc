@@ -951,7 +951,6 @@ void RemoveMercsInSector( )
 
 void PrepareLoadedSector()
 {
-	BOOLEAN fEnemyPresenceInThisSector = FALSE;
 	BOOLEAN fAddCivs = TRUE;
 	INT8 bMineIndex = -1;
 
@@ -1030,30 +1029,16 @@ void PrepareLoadedSector()
 		// OK, set varibles for entring this new sector...
 		gTacticalStatus.fVirginSector = TRUE;
 
-		//Inserts the enemies into the newly loaded map based on the strategic information.
-		//Note, the flag will return TRUE only if enemies were added.  The game may wish to
-		//do something else in a case where no enemies are present.
-		if( !gfRestoringEnemySoldiersFromTempFile )
-		{
-			//AddSoldierInitListTeamToWorld( CIV_TEAM, 255 );
-//			fEnemyPresenceInThisSector = PrepareEnemyForSectorBattle();
-		}
 		AddProfilesNotUsingProfileInsertionData();
 
 		if( !AreInMeanwhile() || GetMeanwhileID() == INTERROGATION )
-		{
-			fEnemyPresenceInThisSector = PrepareEnemyForSectorBattle();
+		{ // Insert the enemies into the newly loaded map based on the strategic information.
+			PrepareEnemyForSectorBattle();
 		}
 
 
 		//Regardless whether or not this was set, clear it now.
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
-
-		//KM:  FEB 8, 99 -- This call is no longer required!  Done already when group arrives in sector.
-		//if (gbWorldSectorZ == 0 && !fEnemyPresenceInThisSector)
-		//{
-		//	SetThisSectorAsPlayerControlled( gWorldSectorX, gWorldSectorY, 0 );
-		//}
 
 		//@@@Evaluate
 		//Add profiles to world using strategic info, not editor placements.
