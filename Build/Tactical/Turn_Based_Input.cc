@@ -1177,7 +1177,7 @@ static void HandleSectorExitMenuKeys(InputAtom*, UIEventKind*);
 static void HandleSelectMercSlot(UINT8 ubPanelSlot, INT8 bCode);
 static void HandleStealthChangeFromUIKeys(void);
 static void HandleTalkingMenuKeys(InputAtom*, UIEventKind*);
-static void ObliterateSector(void);
+static void ObliterateSector();
 static void RefreshSoldier(void);
 static void SetBurstMode(void);
 static void TeleportSelectedSoldier(void);
@@ -2744,30 +2744,15 @@ static void SetBurstMode(void)
 }
 
 
-static void ObliterateSector(void)
+static void ObliterateSector()
 {
-	#ifdef JA2BETAVERSION
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Obliterating Sector!" );
-	#endif
-
-	FOR_ALL_NON_PLAYER_SOLDIERS(pTSoldier)
+#ifdef JA2BETAVERSION
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Obliterating Sector!");
+#endif
+	FOR_ALL_NON_PLAYER_SOLDIERS(s)
 	{
-		if (!pTSoldier->bNeutral && pTSoldier->bSide != gbPlayerNum)
-		{
-				//	ANITILE_PARAMS	AniParams;
-			//		memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
-			//		AniParams.sGridNo							= pTSoldier->sGridNo;
-			//		AniParams.ubLevelID						= ANI_STRUCT_LEVEL;
-				//	AniParams.usTileIndex					= FIRSTEXPLOSION1;
-				//	AniParams.sDelay							= 80;
-				//	AniParams.sStartFrame					= 0;
-				//	AniParams.uiFlags							= ANITILE_FORWARD;
-
-				//	CreateAnimationTile( &AniParams );
-					//PlayJA2Sample(EXPLOSION_1, MIDVOLUME, 1, MIDDLEPAN);
-
-			EVENT_SoldierGotHit(pTSoldier, 0, 400, 0, pTSoldier->bDirection, 320, NULL, FIRE_WEAPON_NO_SPECIAL, pTSoldier->bAimShotLocation, NOWHERE);
-		}
+		if (s->bNeutral || s->bSide == gbPlayerNum) continue;
+		EVENT_SoldierGotHit(s, 0, 400, 0, s->bDirection, 320, 0, FIRE_WEAPON_NO_SPECIAL, s->bAimShotLocation, NOWHERE);
 	}
 }
 
