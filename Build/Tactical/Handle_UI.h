@@ -80,7 +80,7 @@ struct UI_EVENT
 
 
 // EVENT ENUMERATION
-enum UI_EVENT_DEFINES
+enum UIEventKind
 {
 	I_DO_NOTHING,
 	I_NEW_MERC,
@@ -160,12 +160,12 @@ typedef BOOLEAN (*UIKEYBOARD_HOOK)( InputAtom *pInputEvent );
 
 
 // GLOBAL STATUS VARS
-extern UI_MODE gCurrentUIMode;
-extern UINT32  guiCurrentEvent;
-extern UICursorID guiCurrentUICursor;
-extern INT16   gsSelectedLevel;
-extern BOOLEAN gfPlotNewMovement;
-extern UINT32  guiPendingOverrideEvent;
+extern UI_MODE     gCurrentUIMode;
+extern UIEventKind guiCurrentEvent;
+extern UICursorID  guiCurrentUICursor;
+extern INT16       gsSelectedLevel;
+extern BOOLEAN     gfPlotNewMovement;
+extern UIEventKind guiPendingOverrideEvent;
 
 
 // GLOBALS
@@ -225,11 +225,11 @@ void SetUIKeyboardHook( UIKEYBOARD_HOOK KeyboardHookFnc );
 extern BOOLEAN gfUIForceReExamineCursorData;
 
 // FUNCTIONS IN INPUT MODULES
-void GetKeyboardInput( UINT32 *puiNewEvent );
-void GetPolledKeyboardInput( UINT32 *puiNewEvent );
+void GetKeyboardInput(UIEventKind* puiNewEvent);
+void GetPolledKeyboardInput(UIEventKind* puiNewEvent);
 
-void GetTBMouseButtonInput( UINT32 *puiNewEvent );
-void GetTBMousePositionInput( UINT32 *puiNewEvent );
+void GetTBMouseButtonInput(UIEventKind* puiNewEvent);
+void GetTBMousePositionInput(UIEventKind* puiNewEvent);
 void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight );
 void HandleKeyInputOnEnemyTurn(void);
 
@@ -237,8 +237,8 @@ void HandleKeyInputOnEnemyTurn(void);
 BOOLEAN SelectedMercCanAffordAttack(void);
 BOOLEAN SelectedMercCanAffordMove(void);
 
-void ToggleHandCursorMode( UINT32 *puiNewEvent );
-void ToggleTalkCursorMode( UINT32 *puiNewEvent );
+void ToggleHandCursorMode(UIEventKind* puiNewEvent);
+void ToggleTalkCursorMode(UIEventKind* puiNewEvent);
 void ToggleLookCursorMode( UINT32 *puiNewEvent );
 
 void UIHandleSoldierStanceChange(SOLDIERTYPE* s, INT8 bNewStance);
@@ -263,7 +263,7 @@ ScreenID UIHandleLUIEndLock(UI_EVENT*);
 
 void BeginDisplayTimedCursor(UICursorID, UINT32 uiDelay);
 
-void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent );
+void HandleHandCursorClick(UINT16 usMapPos, UIEventKind* puiNewEvent);
 
 ScreenID UIHandleChangeLevel(UI_EVENT*);
 BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode );

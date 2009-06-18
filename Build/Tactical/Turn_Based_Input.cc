@@ -120,18 +120,18 @@ static char const cheat_code[] =
 #endif
 
 
-static void QueryTBLeftButton(UINT32* puiNewEvent);
-static void QueryTBRightButton(UINT32* puiNewEvent);
+static void QueryTBLeftButton(UIEventKind*);
+static void QueryTBRightButton(UIEventKind*);
 
 
-void	GetTBMouseButtonInput( UINT32 *puiNewEvent )
+void GetTBMouseButtonInput(UIEventKind* const puiNewEvent)
 {
 	 QueryTBLeftButton( puiNewEvent );
 	 QueryTBRightButton( puiNewEvent );
 }
 
 
-static void QueryTBLeftButton(UINT32* puiNewEvent)
+static void QueryTBLeftButton(UIEventKind* const puiNewEvent)
 {
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
 	static BOOLEAN  fCanCheckForSpeechAdvance = FALSE;
@@ -545,7 +545,7 @@ static void QueryTBLeftButton(UINT32* puiNewEvent)
 }
 
 
-static void QueryTBRightButton(UINT32* puiNewEvent)
+static void QueryTBRightButton(UIEventKind* const puiNewEvent)
 {
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
 	static BOOLEAN	fClickIntercepted = FALSE;
@@ -754,7 +754,7 @@ static void QueryTBRightButton(UINT32* puiNewEvent)
 }
 
 
-void GetTBMousePositionInput( UINT32 *puiNewEvent )
+void GetTBMousePositionInput(UIEventKind* const puiNewEvent)
 {
 	static const SOLDIERTYPE* MoveTargetSoldier = NULL;
 
@@ -1015,7 +1015,7 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 }
 
 
-void GetPolledKeyboardInput( UINT32 *puiNewEvent )
+void GetPolledKeyboardInput(UIEventKind* puiNewEvent)
 {
 	//static BOOLEAN fShifted = FALSE;
 	static BOOLEAN	fShifted2 = FALSE;
@@ -1170,13 +1170,13 @@ static void CycleSelectedMercsItem(void);
 static void EscapeUILock(void);
 static void GrenadeTest1(void);
 static void GrenadeTest2(void);
-static void HandleItemMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent);
-static void HandleMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent);
-static void HandleOpenDoorMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent);
-static void HandleSectorExitMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent);
+static void HandleItemMenuKeys(InputAtom*, UIEventKind*);
+static void HandleMenuKeys(InputAtom*, UIEventKind*);
+static void HandleOpenDoorMenuKeys(InputAtom*, UIEventKind*);
+static void HandleSectorExitMenuKeys(InputAtom*, UIEventKind*);
 static void HandleSelectMercSlot(UINT8 ubPanelSlot, INT8 bCode);
 static void HandleStealthChangeFromUIKeys(void);
-static void HandleTalkingMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent);
+static void HandleTalkingMenuKeys(InputAtom*, UIEventKind*);
 static void ObliterateSector(void);
 static void RefreshSoldier(void);
 static void SetBurstMode(void);
@@ -1195,7 +1195,7 @@ static void ToggleMapEdgepoints(void);
 #endif
 
 
-static void HandleModNone(UINT32 const key, UINT32* const new_event)
+static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 {
 	switch (key)
 	{
@@ -1530,7 +1530,7 @@ static void HandleModNone(UINT32 const key, UINT32* const new_event)
 }
 
 
-static void HandleModShift(UINT32 const key, UINT32* const new_event)
+static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 {
 	switch (key)
 	{
@@ -1588,7 +1588,7 @@ static void HandleModShift(UINT32 const key, UINT32* const new_event)
 }
 
 
-static void HandleModCtrl(UINT32 const key, UINT32* const new_event)
+static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 {
 	switch (key)
 	{
@@ -1731,7 +1731,7 @@ static void HandleModCtrl(UINT32 const key, UINT32* const new_event)
 }
 
 
-static void HandleModAlt(UINT32 const key, UINT32* const new_event)
+static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 {
 	switch (key)
 	{
@@ -2005,7 +2005,7 @@ static void HandleModAlt(UINT32 const key, UINT32* const new_event)
 }
 
 
-void GetKeyboardInput( UINT32 *puiNewEvent )
+void GetKeyboardInput(UIEventKind* const puiNewEvent)
 {
   InputAtom					InputEvent;
 	BOOLEAN						fKeyTaken = FALSE;
@@ -2344,7 +2344,7 @@ void GetKeyboardInput( UINT32 *puiNewEvent )
 }
 
 
-static void HandleTalkingMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
+static void HandleTalkingMenuKeys(InputAtom* const pInputEvent, UIEventKind* const puiNewEvent)
 {
 	// CHECK ESC KEYS HERE....
 	if ( pInputEvent->usEvent == KEY_UP )
@@ -2366,7 +2366,7 @@ static void HandleTalkingMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 }
 
 
-static void HandleSectorExitMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
+static void HandleSectorExitMenuKeys(InputAtom* const pInputEvent, UIEventKind* const puiNewEvent)
 {
 	// CHECK ESC KEYS HERE....
   if (pInputEvent->usEvent == KEY_UP && pInputEvent->usParam == SDLK_ESCAPE)
@@ -2379,7 +2379,7 @@ static void HandleSectorExitMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent
 }
 
 
-static void HandleOpenDoorMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
+static void HandleOpenDoorMenuKeys(InputAtom* const pInputEvent, UIEventKind* const puiNewEvent)
 {
 	// CHECK ESC KEYS HERE....
   if (pInputEvent->usEvent == KEY_UP && pInputEvent->usParam == SDLK_ESCAPE)
@@ -2392,7 +2392,7 @@ static void HandleOpenDoorMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 }
 
 
-static void HandleMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
+static void HandleMenuKeys(InputAtom* const pInputEvent, UIEventKind* const puiNewEvent)
 {
 	// CHECK ESC KEYS HERE....
   if (pInputEvent->usEvent == KEY_UP && pInputEvent->usParam == SDLK_ESCAPE)
@@ -2405,7 +2405,7 @@ static void HandleMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
 }
 
 
-static void HandleItemMenuKeys(InputAtom* pInputEvent, UINT32* puiNewEvent)
+static void HandleItemMenuKeys(InputAtom* const pInputEvent, UIEventKind* const puiNewEvent)
 {
 	// CHECK ESC KEYS HERE....
   if (pInputEvent->usEvent == KEY_UP && pInputEvent->usParam == SDLK_ESCAPE)
@@ -2916,7 +2916,7 @@ static bool CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* const s,
 }
 
 
-void HandleHandCursorClick( UINT16 usMapPos, UINT32 *puiNewEvent )
+void HandleHandCursorClick(UINT16 const usMapPos, UIEventKind* const puiNewEvent)
 {
 	LEVELNODE					*pIntTile;
   INT16							sIntTileGridNo;

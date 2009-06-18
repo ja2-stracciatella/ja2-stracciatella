@@ -56,18 +56,18 @@ BOOLEAN	gfRTClickLeftHoldIntercepted = FALSE;
 static BOOLEAN gfRTHaveClickedRightWhileLeftDown = FALSE;
 
 
-static void QueryRTLeftButton(UINT32* puiNewEvent);
-static void QueryRTRightButton(UINT32* puiNewEvent);
+static void QueryRTLeftButton(UIEventKind* puiNewEvent);
+static void QueryRTRightButton(UIEventKind* puiNewEvent);
 
 
-void GetRTMouseButtonInput(UINT32* puiNewEvent)
+void GetRTMouseButtonInput(UIEventKind* puiNewEvent)
 {
 	 QueryRTLeftButton( puiNewEvent );
 	 QueryRTRightButton( puiNewEvent );
 }
 
 
-static void QueryRTLeftButton(UINT32* puiNewEvent)
+static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 {
 	static	UINT32 uiSingleClickTime;
 	static BOOLEAN	fDoubleClickIntercepted = FALSE;
@@ -724,7 +724,7 @@ static void QueryRTLeftButton(UINT32* puiNewEvent)
 }
 
 
-static void QueryRTRightButton(UINT32* puiNewEvent)
+static void QueryRTRightButton(UIEventKind* const puiNewEvent)
 {
 	static BOOLEAN	fClickHoldIntercepted = FALSE;
 	static BOOLEAN	fClickIntercepted = FALSE;
@@ -1017,7 +1017,7 @@ static void QueryRTRightButton(UINT32* puiNewEvent)
 }
 
 
-void GetRTMousePositionInput(UINT32* puiNewEvent)
+void GetRTMousePositionInput(UIEventKind* const puiNewEvent)
 {
 	static const SOLDIERTYPE* MoveTargetSoldier = NULL;
 

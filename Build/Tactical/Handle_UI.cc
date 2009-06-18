@@ -264,11 +264,11 @@ static UI_EVENT gEvents[NUM_UI_EVENTS] =
 
 UI_MODE									gCurrentUIMode					= IDLE_MODE;
 static UI_MODE gOldUIMode            = IDLE_MODE;
-UINT32									guiCurrentEvent					= I_DO_NOTHING;
-UINT32									guiOldEvent							= I_DO_NOTHING;
+UIEventKind             guiCurrentEvent         = I_DO_NOTHING;
+static UIEventKind      guiOldEvent             = I_DO_NOTHING;
 UICursorID        guiCurrentUICursor = NO_UICURSOR;
 static UICursorID guiNewUICursor     = NORMAL_SNAPUICURSOR;
-UINT32									guiPendingOverrideEvent	= I_DO_NOTHING;
+UIEventKind             guiPendingOverrideEvent = I_DO_NOTHING;
 UINT16									gusSavedMouseX;
 UINT16									gusSavedMouseY;
 UIKEYBOARD_HOOK					gUIKeyboardHook			= NULL;
@@ -369,7 +369,6 @@ static void SetUIMouseCursor(void);
 // MAIN TACTICAL UI HANDLER
 ScreenID HandleTacticalUI(void)
 {
-		UINT32 uiNewEvent;
 		LEVELNODE					*pIntTile;
 		static LEVELNODE *pOldIntTile = NULL;
 
@@ -395,7 +394,8 @@ ScreenID HandleTacticalUI(void)
     gfIgnoreOnSelectedGuy           = FALSE;
 
 		// Set old event value
-		guiOldEvent							= uiNewEvent = guiCurrentEvent;
+		UIEventKind uiNewEvent = guiCurrentEvent;
+		guiOldEvent            = uiNewEvent;
 
 		if ( gfUIInterfaceSetBusy )
 		{
@@ -2500,7 +2500,8 @@ static ScreenID UIHandleOpenDoorMenu(UI_EVENT* pUIEvent)
 	return( GAME_SCREEN );
 }
 
-void ToggleHandCursorMode( UINT32 *puiNewEvent  )
+
+void ToggleHandCursorMode(UIEventKind* const puiNewEvent)
 {
 	// Toggle modes
 	if ( gCurrentUIMode == HANDCURSOR_MODE )
@@ -2514,7 +2515,8 @@ void ToggleHandCursorMode( UINT32 *puiNewEvent  )
 	}
 }
 
-void ToggleTalkCursorMode( UINT32 *puiNewEvent  )
+
+void ToggleTalkCursorMode(UIEventKind* const puiNewEvent)
 {
 	// Toggle modes
 	if ( gCurrentUIMode == TALKCURSOR_MODE )
