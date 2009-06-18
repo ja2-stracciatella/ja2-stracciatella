@@ -537,26 +537,32 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 								// Set valid tile elem!
 								fUseTileElem = TRUE;
 
-								if (fDynamic || fPixelate)
+								if (!fPixelate)
 								{
-									if (!fPixelate && !(uiLevelNodeFlags & LEVELNODE_DYNAMIC) && !(uiLevelNodeFlags & LEVELNODE_LASTDYNAMIC) && !(uiTileElemFlags & DYNAMIC_TILE))
+									if (fDynamic)
 									{
-										if (!(uiTileElemFlags & ANIMATED_TILE))
+										if (!(uiLevelNodeFlags & LEVELNODE_DYNAMIC) && !(uiLevelNodeFlags & LEVELNODE_LASTDYNAMIC) && !(uiTileElemFlags & DYNAMIC_TILE))
+										{
+											if (uiTileElemFlags & ANIMATED_TILE)
+											{
+												Assert(TileElem->pAnimData);
+												TileElem        = &gTileDatabase[TileElem->pAnimData->pusFrames[TileElem->pAnimData->bCurrentFrame]];
+												uiTileElemFlags = TileElem->uiFlags;
+											}
+											else
+											{
+												fRenderTile = FALSE;
+											}
+										}
+									}
+									else
+									{
+										if (uiTileElemFlags & ANIMATED_TILE ||
+												((uiTileElemFlags & DYNAMIC_TILE || uiLevelNodeFlags & LEVELNODE_DYNAMIC) && !(uiFlags & TILES_OBSCURED)))
 										{
 											fRenderTile = FALSE;
 										}
-										else
-										{
-											Assert(TileElem->pAnimData != NULL);
-											TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[TileElem->pAnimData->bCurrentFrame]];
-											uiTileElemFlags = TileElem->uiFlags;
-										}
 									}
-								}
-								else if (uiTileElemFlags & ANIMATED_TILE ||
-										((uiTileElemFlags & DYNAMIC_TILE || uiLevelNodeFlags & LEVELNODE_DYNAMIC) && !(uiFlags & TILES_OBSCURED)))
-								{
-									fRenderTile = FALSE;
 								}
 							}
 
