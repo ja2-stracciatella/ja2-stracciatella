@@ -2733,7 +2733,7 @@ static void ToggleZBuffer(void)
 {
 	UINT32& flags = gTacticalStatus.uiFlags;
 	flags ^= SHOW_Z_BUFFER;
-	if (!(flags & SHOW_Z_BUFFER)) SetRenderFlags(SHOW_Z_BUFFER);
+	if (!(flags & SHOW_Z_BUFFER)) SetRenderFlags(RENDER_FLAG_FULL);
 }
 
 
