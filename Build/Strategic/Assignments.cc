@@ -5768,7 +5768,7 @@ static void RepositionMouseRegions(void)
 		r->RegionBottomRightY += sDeltaY;
 	}
 
-	gfPausedTacticalRenderFlags = RENDER_FLAG_FULL;
+	gfPausedTacticalRenderFlags = TRUE;
 }
 
 

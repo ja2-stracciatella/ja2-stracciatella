@@ -187,7 +187,7 @@ INT16 gsScrollYIncrement;
 
 
 // Rendering flags (full, partial, etc.)
-static UINT32 gRenderFlags = 0;
+static RenderFlags gRenderFlags = RENDER_FLAG_NONE;
 
 static SGPRect gClippingRect = { 0, 0, SCREEN_WIDTH, 360 };
 static SGPRect gOldClipRect;
@@ -291,13 +291,13 @@ static void SumAddiviveLayerOptimization(void)
 }
 
 
-void SetRenderFlags(UINT32 uiFlags)
+void SetRenderFlags(RenderFlags const uiFlags)
 {
 	gRenderFlags |= uiFlags;
 }
 
 
-void ClearRenderFlags(UINT32 uiFlags)
+void ClearRenderFlags(RenderFlags const uiFlags)
 {
 	gRenderFlags &= ~uiFlags;
 }

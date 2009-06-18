@@ -125,7 +125,7 @@ static void HandlePausedTacticalRender(void)
 	// for a one frame paused render of tactical
 	if( gfPausedTacticalRenderFlags )
 	{
-		SetRenderFlags(gfPausedTacticalRenderFlags);
+		SetRenderFlags(RENDER_FLAG_FULL);
 		gfPausedTacticalRenderFlags = FALSE;
 	}
 

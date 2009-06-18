@@ -4,15 +4,19 @@
 extern BOOLEAN gfDoVideoScroll;
 extern UINT8   gubCurScrollSpeedID;
 
-// RENDERING FLAGS
-#define RENDER_FLAG_FULL     0x00000001
-#define RENDER_FLAG_SHADOWS  0x00000002
-#define RENDER_FLAG_MARKED   0x00000004
-#define RENDER_FLAG_SAVEOFF  0x00000008
-#define RENDER_FLAG_NOZ      0x00000010
-#define RENDER_FLAG_ROOMIDS  0x00000020
-#define RENDER_FLAG_CHECKZ   0x00000040
-#define RENDER_FLAG_FOVDEBUG 0x00000200
+enum RenderFlags
+{
+	RENDER_FLAG_NONE     = 0,
+	RENDER_FLAG_FULL     = 0x00000001,
+	RENDER_FLAG_SHADOWS  = 0x00000002,
+	RENDER_FLAG_MARKED   = 0x00000004,
+	RENDER_FLAG_SAVEOFF  = 0x00000008,
+	RENDER_FLAG_NOZ      = 0x00000010,
+	RENDER_FLAG_ROOMIDS  = 0x00000020,
+	RENDER_FLAG_CHECKZ   = 0x00000040,
+	RENDER_FLAG_FOVDEBUG = 0x00000200
+};
+ENUM_BITSET(RenderFlags)
 
 #define SCROLL_UP    0x00000001
 #define SCROLL_DOWN  0x00000002
@@ -107,8 +111,8 @@ void RenderWorld(void);
 
 void ResetSpecificLayerOptimizing(RenderLayerFlags);
 
-void SetRenderFlags(UINT32 uiFlags);
-void ClearRenderFlags(UINT32 uiFlags);
+void SetRenderFlags(RenderFlags);
+void ClearRenderFlags(RenderFlags);
 
 void RenderSetShadows(BOOLEAN fShadows);
 
