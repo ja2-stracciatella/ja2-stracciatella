@@ -372,16 +372,8 @@ static UINT8 NumFreeEnemySlots(void)
 static void PrepareEnemyForUndergroundBattle();
 
 
-//Called when entering a sector so the campaign AI can automatically insert the
-//correct number of troops of each type based on the current number in the sector
-//in global focus (gWorldSectorX/Y)
 void PrepareEnemyForSectorBattle()
 {
-	SECTORINFO *pSector;
-	UINT8 ubTotalAdmins, ubTotalElites, ubTotalTroops;
-	UINT8 ubStationaryEnemies;
-	INT16 sNumSlots;
-
 	gfPendingEnemies = FALSE;
 
 	if (gbWorldSectorZ > 0)
@@ -390,224 +382,232 @@ void PrepareEnemyForSectorBattle()
 		return;
 	}
 
-	if( gpBattleGroup && !gpBattleGroup->fPlayer )
-	{ //The enemy has instigated the battle which means they are the ones entering the conflict.
-		//The player was actually in the sector first, and the enemy doesn't use reinforced placements
-		HandleArrivalOfReinforcements( gpBattleGroup );
-		//It is possible that other enemy groups have also arrived.  Add them in the same manner.
-		FOR_ALL_ENEMY_GROUPS(pGroup)
+	GROUP* const bg = gpBattleGroup;
+	if (bg && !bg->fPlayer)
+	{ /* The enemy has instigated the battle which means they are the ones
+		 * entering the conflict. The player was actually in the sector first, and
+		 * the enemy doesn't use reinforced placements */
+		HandleArrivalOfReinforcements(bg);
+		/* It is possible that other enemy groups have also arrived. Add them in the
+		 * same manner. */
+		FOR_ALL_ENEMY_GROUPS(g)
 		{
-			if (pGroup != gpBattleGroup &&
-					!pGroup->fVehicle       &&
-				  pGroup->ubSectorX == gpBattleGroup->ubSectorX &&
-					pGroup->ubSectorY == gpBattleGroup->ubSectorY &&
-					!pGroup->pEnemyGroup->ubAdminsInBattle &&
-					!pGroup->pEnemyGroup->ubTroopsInBattle &&
-					!pGroup->pEnemyGroup->ubElitesInBattle )
-			{
-				HandleArrivalOfReinforcements( pGroup );
-			}
+			if (g == bg)                               continue;
+			if (g->fVehicle)                           continue;
+			if (g->ubSectorX != bg->ubSectorX)         continue;
+			if (g->ubSectorY != bg->ubSectorY)         continue;
+			if (g->pEnemyGroup->ubAdminsInBattle != 0) continue;
+			if (g->pEnemyGroup->ubTroopsInBattle != 0) continue;
+			if (g->pEnemyGroup->ubElitesInBattle != 0) continue;
+			HandleArrivalOfReinforcements(g);
 		}
 		ValidateEnemiesHaveWeapons();
 		return;
 	}
 
-	if( !gbWorldSectorZ )
+	INT16 const x = gWorldSectorX;
+	INT16 const y = gWorldSectorY;
+
+	if (gbWorldSectorZ == 0 && NumEnemiesInSector(x, y) > 32)
 	{
-		if( NumEnemiesInSector( gWorldSectorX, gWorldSectorY ) > 32 )
-		{
-			gfPendingEnemies = TRUE;
-		}
+		gfPendingEnemies = TRUE;
 	}
 
-	pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
-	if( pSector->uiFlags & SF_USE_MAP_SETTINGS )
-	{ //count the number of enemy placements in a map and use those
-		ubTotalAdmins = ubTotalTroops = ubTotalElites = 0;
+	UINT8       total_admins;
+	UINT8       total_troops;
+	UINT8       total_elites;
+	SECTORINFO& sector = SectorInfo[SECTOR(x, y)];
+	if (sector.uiFlags & SF_USE_MAP_SETTINGS)
+	{ // Count the number of enemy placements in a map and use those
+		total_admins = 0;
+		total_troops = 0;
+		total_elites = 0;
 		CFOR_ALL_SOLDIERINITNODES(curr)
 		{
-			if( curr->pBasicPlacement->bTeam == ENEMY_TEAM )
+			BASIC_SOLDIERCREATE_STRUCT const& bp = *curr->pBasicPlacement;
+			if (bp.bTeam != ENEMY_TEAM) continue;
+			switch (bp.ubSoldierClass)
 			{
-				switch( curr->pBasicPlacement->ubSoldierClass )
-				{
-					case SOLDIER_CLASS_ADMINISTRATOR:		ubTotalAdmins++;	break;
-					case SOLDIER_CLASS_ARMY:						ubTotalTroops++;	break;
-					case SOLDIER_CLASS_ELITE:						ubTotalElites++;	break;
-				}
+				case SOLDIER_CLASS_ADMINISTRATOR: ++total_admins; break;
+				case SOLDIER_CLASS_ARMY:          ++total_troops; break;
+				case SOLDIER_CLASS_ELITE:         ++total_elites; break;
 			}
 		}
-		pSector->ubNumAdmins = ubTotalAdmins;
-		pSector->ubNumTroops = ubTotalTroops;
-		pSector->ubNumElites = ubTotalElites;
-		pSector->ubAdminsInBattle = 0;
-		pSector->ubTroopsInBattle = 0;
-		pSector->ubElitesInBattle = 0;
+		sector.ubNumAdmins      = total_admins;
+		sector.ubNumTroops      = total_troops;
+		sector.ubNumElites      = total_elites;
+		sector.ubAdminsInBattle = 0;
+		sector.ubTroopsInBattle = 0;
+		sector.ubElitesInBattle = 0;
 	}
 	else
 	{
-		ubTotalAdmins = (UINT8)(pSector->ubNumAdmins - pSector->ubAdminsInBattle);
-		ubTotalTroops = (UINT8)(pSector->ubNumTroops - pSector->ubTroopsInBattle);
-		ubTotalElites = (UINT8)(pSector->ubNumElites - pSector->ubElitesInBattle);
-	}
-	ubStationaryEnemies = (UINT8)(ubTotalAdmins + ubTotalTroops + ubTotalElites);
-
-	if( ubTotalAdmins + ubTotalTroops + ubTotalElites > 32 )
-	{
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_RED, MSG_ERROR, L"The total stationary enemy forces in sector %c%d is %d. (max %d)",
-				gWorldSectorY + 'A' - 1, gWorldSectorX, ubTotalAdmins + ubTotalTroops + ubTotalElites, 32 );
-		#endif
-
-		ubTotalAdmins = MIN( 32, ubTotalAdmins );
-		ubTotalTroops = MIN( 32-ubTotalAdmins, ubTotalTroops );
-		ubTotalElites = MIN( 32-ubTotalAdmins+ubTotalTroops, ubTotalElites );
+		total_admins = sector.ubNumAdmins - sector.ubAdminsInBattle;
+		total_troops = sector.ubNumTroops - sector.ubTroopsInBattle;
+		total_elites = sector.ubNumElites - sector.ubElitesInBattle;
 	}
 
-	pSector->ubAdminsInBattle += ubTotalAdmins;
-	pSector->ubTroopsInBattle += ubTotalTroops;
-	pSector->ubElitesInBattle += ubTotalElites;
-
-	#ifdef JA2TESTVERSION
-	if( gfOverrideSector )
+	UINT8 const n_stationary_enemies = total_admins + total_troops + total_elites;
+	if (n_stationary_enemies > 32)
 	{
-		//if there are no troops in the current groups, then we're done.
-		if (ubTotalAdmins == 0 && ubTotalTroops == 0 && ubTotalElites == 0) return;
-		AddSoldierInitListEnemyDefenceSoldiers( ubTotalAdmins, ubTotalTroops, ubTotalElites );
+#ifdef JA2BETAVERSION
+		ScreenMsg(FONT_RED, MSG_ERROR, L"The total stationary enemy forces in sector %c%d is %d. (max %d)", y + 'A' - 1, x, total_admins + total_troops + total_elites, 32);
+#endif
+		total_admins = MIN(total_admins, 32);
+		total_troops = MIN(total_troops, 32 - total_admins);
+		total_elites = MIN(total_elites, 32 - total_admins + total_troops);
+	}
+
+	sector.ubAdminsInBattle += total_admins;
+	sector.ubTroopsInBattle += total_troops;
+	sector.ubElitesInBattle += total_elites;
+
+#ifdef JA2TESTVERSION
+	if (gfOverrideSector)
+	{ // If there are no troops in the current groups, then we're done.
+		if (total_admins == 0 && total_troops == 0 && total_elites == 0) return;
+		AddSoldierInitListEnemyDefenceSoldiers(total_admins, total_troops, total_elites);
 		ValidateEnemiesHaveWeapons();
 		return;
 	}
-	#endif
+#endif
 
-	//Search for movement groups that happen to be in the sector.
-	sNumSlots = NumFreeEnemySlots();
+	// Search for movement groups that happen to be in the sector.
+	INT16 n_slots = NumFreeEnemySlots();
 	//Test:  All slots should be free at this point!
-	if( sNumSlots != gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1 )
+	if (n_slots != gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1)
 	{
-		#ifdef JA2BETAVERSION
-			ScreenMsg( FONT_RED, MSG_ERROR, L"All enemy slots should be free at this point.  Only %d of %d are available.\nTrying to add %d admins, %d troops, and %d elites.",
-				sNumSlots, gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1 ,
-				ubTotalAdmins, ubTotalTroops, ubTotalElites );
-		#endif
+#ifdef JA2BETAVERSION
+		ScreenMsg(FONT_RED, MSG_ERROR, L"All enemy slots should be free at this point.  Only %d of %d are available.\nTrying to add %d admins, %d troops, and %d elites.",
+				n_slots, gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1 ,
+				total_admins, total_troops, total_elites);
+#endif
 	}
-	//Subtract the total number of stationary enemies from the available slots, as stationary forces take
-	//precendence in combat.  The mobile forces that could also be in the same sector are considered later if
-	//all the slots fill up.
-	sNumSlots -= ubTotalAdmins + ubTotalTroops + ubTotalElites;
-	//Now, process all of the groups and search for both enemy and player groups in the sector.
-	//For enemy groups, we fill up the slots until we have none left or all of the groups have been
-	//processed.
-	FOR_ALL_GROUPS(pGroup)
+	/* Subtract the total number of stationary enemies from the available slots,
+	 * as stationary forces take precendence in combat. The mobile forces that
+	 * could also be in the same sector are considered later if all the slots fill
+	 * up. */
+	n_slots -= total_admins + total_troops + total_elites;
+	/* Now, process all of the groups and search for both enemy and player groups
+	 * in the sector. For enemy groups, we fill up the slots until we have none
+	 * left or all of the groups have been processed. */
+	FOR_ALL_GROUPS(g)
 	{
-		if (sNumSlots == 0) break;
+		if (n_slots == 0) break;
 
-		if( !pGroup->fPlayer && !pGroup->fVehicle &&
-				 pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ )
-		{ //Process enemy group in sector.
-			if( sNumSlots > 0 )
+		if (g->fVehicle)         continue;
+		if (g->ubSectorX   != x) continue;
+		if (g->ubSectorY   != y) continue;
+		if (gbWorldSectorZ != 0) continue;
+
+		if (!g->fPlayer)
+		{ // Process enemy group in sector
+			ENEMYGROUP& eg = *g->pEnemyGroup;
+			if (n_slots > 0)
 			{
-				UINT8 ubNumAdmins = (UINT8)(pGroup->pEnemyGroup->ubNumAdmins - pGroup->pEnemyGroup->ubAdminsInBattle);
-				sNumSlots -= ubNumAdmins;
-				if( sNumSlots < 0 )
-				{ //adjust the value to zero
-					ubNumAdmins += sNumSlots;
-					sNumSlots = 0;
+				UINT8 n_admins = eg.ubNumAdmins - eg.ubAdminsInBattle;
+				n_slots -= n_admins;
+				if (n_slots < 0)
+				{ // Adjust the value to zero
+					n_admins        += n_slots;
+					n_slots          = 0;
 					gfPendingEnemies = TRUE;
 				}
-				pGroup->pEnemyGroup->ubAdminsInBattle += ubNumAdmins;
-				ubTotalAdmins += ubNumAdmins;
+				eg.ubAdminsInBattle += n_admins;
+				total_admins        += n_admins;
 			}
-			if( sNumSlots > 0 )
-			{ //Add regular army forces.
-				UINT8 ubNumTroops = (UINT8)(pGroup->pEnemyGroup->ubNumTroops - pGroup->pEnemyGroup->ubTroopsInBattle);
-				sNumSlots -= ubNumTroops;
-				if( sNumSlots < 0 )
-				{ //adjust the value to zero
-					ubNumTroops += sNumSlots;
-					sNumSlots = 0;
+			if (n_slots > 0)
+			{ // Add regular army forces
+				UINT8 n_troops = eg.ubNumTroops - eg.ubTroopsInBattle;
+				n_slots -= n_troops;
+				if (n_slots < 0)
+				{ // Adjust the value to zero
+					n_troops        += n_slots;
+					n_slots          = 0;
 					gfPendingEnemies = TRUE;
 				}
-				pGroup->pEnemyGroup->ubTroopsInBattle += ubNumTroops;
-				ubTotalTroops += ubNumTroops;
+				eg.ubTroopsInBattle += n_troops;
+				total_troops        += n_troops;
 			}
-			if( sNumSlots > 0 )
-			{ //Add elite troops
-				UINT8 ubNumElites = (UINT8)(pGroup->pEnemyGroup->ubNumElites - pGroup->pEnemyGroup->ubElitesInBattle);
-				sNumSlots -= ubNumElites;
-				if( sNumSlots < 0 )
-				{ //adjust the value to zero
-					ubNumElites += sNumSlots;
-					sNumSlots = 0;
+			if (n_slots > 0)
+			{ // Add elite troops
+				UINT8 n_elites = eg.ubNumElites - eg.ubElitesInBattle;
+				n_slots -= n_elites;
+				if (n_slots < 0)
+				{ // Adjust the value to zero
+					n_elites        += n_slots;
+					n_slots          = 0;
 					gfPendingEnemies = TRUE;
 				}
-				pGroup->pEnemyGroup->ubElitesInBattle += ubNumElites;
-				ubTotalElites += ubNumElites;
+				eg.ubElitesInBattle += n_elites;
+				total_elites        += n_elites;
 			}
-			//NOTE:
-			//no provisions for profile troop leader or retreat groups yet.
+			// NOTE: No provisions for profile troop leader or retreat groups yet
 		}
-		if( pGroup->fPlayer && !pGroup->fVehicle && !pGroup->fBetweenSectors &&
-				pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ )
-		{ //TEMP:  The player path needs to get destroyed, otherwise, it'll be impossible to move the
-			//			 group after the battle is resolved.
+		else if (!g->fBetweenSectors)
+		{ /* TEMP: The player path needs to get destroyed, otherwise, it'll be
+			 * impossible to move the group after the battle is resolved. */
+			// XXX TODO001F This does not work, when n_slots drops to 0 before all player groups are handled.
 
-			// no one in the group any more continue loop
-			if (pGroup->pPlayerList == NULL) continue;
+			// No one in the group any more continue loop
+			if (!g->pPlayerList) continue;
 
-			// clear the movt for this grunt and his buddies
-			RemoveGroupWaypoints(pGroup);
+			RemoveGroupWaypoints(g);
 		}
 	}
 
-	//if there are no troops in the current groups, then we're done.
-	if (ubTotalAdmins == 0 && ubTotalTroops == 0 && ubTotalElites == 0) return;
+	// If there are no troops in the current groups, then we're done.
+	if (total_admins == 0 && total_troops == 0 && total_elites == 0) return;
 
-	AddSoldierInitListEnemyDefenceSoldiers( ubTotalAdmins, ubTotalTroops, ubTotalElites );
+	AddSoldierInitListEnemyDefenceSoldiers(total_admins, total_troops, total_elites);
 
-	//Now, we have to go through all of the enemies in the new map, and assign their respective groups if
-	//in a mobile group, but only for the ones that were assigned from the
-	sNumSlots = 32 - ubStationaryEnemies;
-
+	/* Now, we have to go through all of the enemies in the new map and assign
+	 * their respective groups if in a mobile group, but only for the ones that
+	 * were assigned from the */
+	n_slots = 32 - n_stationary_enemies;
 	CFOR_ALL_ENEMY_GROUPS(g)
 	{
-		if (sNumSlots == 0) break;
+		if (n_slots == 0) break;
 
 		if (g->fVehicle) continue;
-		if (g->ubSectorX != gWorldSectorX || g->ubSectorY != gWorldSectorY || gbWorldSectorZ) continue;
+		if (g->ubSectorX   != x) continue;
+		if (g->ubSectorY   != y) continue;
+		if (gbWorldSectorZ != 0) continue;
 
-		INT32 num        = g->ubGroupSize;
-		UINT8 num_admins = g->pEnemyGroup->ubAdminsInBattle;
-		UINT8 num_troops = g->pEnemyGroup->ubTroopsInBattle;
-		UINT8 num_elites = g->pEnemyGroup->ubElitesInBattle;
+		INT32 n        = g->ubGroupSize;
+		UINT8 n_admins = g->pEnemyGroup->ubAdminsInBattle;
+		UINT8 n_troops = g->pEnemyGroup->ubTroopsInBattle;
+		UINT8 n_elites = g->pEnemyGroup->ubElitesInBattle;
 		FOR_ALL_IN_TEAM(s, ENEMY_TEAM)
 		{
-			if (num == 0 || sNumSlots == 0) break;
+			if (n == 0 || n_slots == 0) break;
 			if (s->ubGroupID != 0) continue;
 
 			switch (s->ubSoldierClass)
 			{
 				case SOLDIER_CLASS_ADMINISTRATOR:
-					if (num_admins == 0) continue;
-					--num_admins;
+					if (n_admins == 0) continue;
+					--n_admins;
 					break;
 
 				case SOLDIER_CLASS_ARMY:
-					if (num_troops == 0) continue;
-					--num_troops;
+					if (n_troops == 0) continue;
+					--n_troops;
 					break;
 
 				case SOLDIER_CLASS_ELITE:
-					if (num_elites == 0) continue;
-					--num_elites;
+					if (n_elites == 0) continue;
+					--n_elites;
 					break;
 
 				default: continue;
 			}
 
-			--num;
-			--sNumSlots;
+			--n;
+			--n_slots;
 			s->ubGroupID = g->ubGroupID;
 		}
-		AssertMsg(num == 0 || sNumSlots == 0, "Failed to assign battle counters for enemies properly. Please send save. KM:0.");
+		AssertMsg(n == 0 || n_slots == 0, "Failed to assign battle counters for enemies properly. Please send save. KM:0.");
 	}
 
 	ValidateEnemiesHaveWeapons();

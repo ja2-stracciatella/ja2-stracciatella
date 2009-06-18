@@ -1,5 +1,5 @@
 HACK0010
-TODO001E
+TODO001F
 
 - HACK0001 put the process properly to sleep during idle phases instead of SDL_Delay(1)
 - HACK0007 Stop PreRandom always returning 0 or 1 without ensuring an equal distribution, which would be a rather complex task with pregenerated randoms
@@ -37,3 +37,4 @@ TODO001E
 - TODO001C Buffer overflow when plotting long (> 256 tiles) paths
 - TODO001D When a merc leaves the helicopter, he is placed in the center of the map. But for the first merc (who creates a new squad) PlaceGroupInSector() is called, which moves him to an edge. The later call to SetSoldierExitHelicopterInsertionData() corrects this. Investigate if this can be simplified (maybe removing the PlaceGroupInSector() is possible)
 - TODO001E The union in FACETYPE is ugly.
+- TODO001F This does not work, when n_slots drops to 0 before all player groups are handled.
