@@ -20,20 +20,20 @@
 // Struct for backgrounds
 struct BACKGROUND_SAVE
 {
-	BOOLEAN fAllocated;
-	BOOLEAN fFilled;
-	BOOLEAN fFreeMemory;
-	UINT32  uiFlags;
-	UINT16* pSaveArea;
-	UINT16* pZSaveArea;
-	INT16   sLeft;
-	INT16   sTop;
-	INT16   sRight;
-	INT16   sBottom;
-	INT16   sWidth;
-	INT16   sHeight;
-	BOOLEAN fPendingDelete;
-	BOOLEAN fDisabled;
+	BOOLEAN         fAllocated;
+	BOOLEAN         fFilled;
+	BOOLEAN         fFreeMemory;
+	BackgroundFlags uiFlags;
+	UINT16*         pSaveArea;
+	UINT16*         pZSaveArea;
+	INT16           sLeft;
+	INT16           sTop;
+	INT16           sRight;
+	INT16           sBottom;
+	INT16           sWidth;
+	INT16           sHeight;
+	BOOLEAN         fPendingDelete;
+	BOOLEAN         fDisabled;
 };
 
 
@@ -127,7 +127,7 @@ static void RecountBackgrounds(void)
 }
 
 
-BACKGROUND_SAVE* RegisterBackgroundRect(const UINT32 uiFlags, INT16 sLeft, INT16 sTop, INT16 const usWidth, INT16 const usHeight)
+BACKGROUND_SAVE* RegisterBackgroundRect(BackgroundFlags const uiFlags, INT16 sLeft, INT16 sTop, INT16 const usWidth, INT16 const usHeight)
 try
 {
 	const INT32 ClipX1 = gDirtyClipRect.iLeft;
@@ -329,7 +329,7 @@ static void FreeBackgroundRectNow(BACKGROUND_SAVE* const b)
 }
 
 
-void FreeBackgroundRectType(const UINT32 uiFlags)
+void FreeBackgroundRectType(BackgroundFlags const uiFlags)
 {
 	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
 	{

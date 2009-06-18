@@ -6,11 +6,16 @@
 
 #define NO_BGND_RECT NULL
 
-#define BGND_FLAG_PERMANENT		0x80000000
-#define BGND_FLAG_SINGLE			0x40000000
-#define BGND_FLAG_SAVE_Z			0x20000000
-#define BGND_FLAG_SAVERECT		0x08000000
-#define BGND_FLAG_ANIMATED		0x00000001
+enum BackgroundFlags
+{
+	BGND_FLAG_NONE      = 0,
+	BGND_FLAG_PERMANENT = 0x80000000,
+	BGND_FLAG_SINGLE    = 0x40000000,
+	BGND_FLAG_SAVE_Z    = 0x20000000,
+	BGND_FLAG_SAVERECT  = 0x08000000,
+	BGND_FLAG_ANIMATED  = 0x00000001
+};
+ENUM_BITSET(BackgroundFlags)
 
 
 // Callback for topmost blitters
@@ -50,10 +55,10 @@ void ExecuteBaseDirtyRectQueue(void);
 // BACKGROUND RECT BUFFERING STUFF
 void             InitializeBackgroundRects(void);
 void             ShutdownBackgroundRects(void);
-BACKGROUND_SAVE* RegisterBackgroundRect(UINT32 uiFlags, INT16 x, INT16 y, INT16 w, INT16 h);
+BACKGROUND_SAVE* RegisterBackgroundRect(BackgroundFlags, INT16 x, INT16 y, INT16 w, INT16 h);
 void             FreeBackgroundRect(BACKGROUND_SAVE*);
 void             FreeBackgroundRectPending(BACKGROUND_SAVE*);
-void             FreeBackgroundRectType(UINT32 uiFlags);
+void             FreeBackgroundRectType(BackgroundFlags);
 void             RestoreBackgroundRects(void);
 void             SaveBackgroundRects(void);
 void             InvalidateBackgroundRects(void);

@@ -332,10 +332,10 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 	const ROTTING_CORPSE* pCorpse = NULL;
 	UINT32 uiTileElemFlags = 0;
 
-	UINT16        usImageIndex = 0;
-	INT16         sZLevel      = 0;
-	UINT32        uiDirtyFlags = 0;
-	const UINT16* pShadeTable  = NULL;
+	UINT16          usImageIndex = 0;
+	INT16           sZLevel      = 0;
+	BackgroundFlags uiDirtyFlags = BGND_FLAG_NONE;
+	UINT16 const*   pShadeTable  = 0;
 
 	INT32 iAnchorPosX_M = iStartPointX_M;
 	INT32 iAnchorPosY_M = iStartPointY_M;
