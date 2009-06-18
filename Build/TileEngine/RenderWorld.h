@@ -31,28 +31,31 @@ extern UINT8   gubCurScrollSpeedID;
 #define TOPMOST_Z_LEVEL 32767
 
 
-// highest bit value is rendered first!
-#define TILES_STATIC_LAND       0x00040000
-#define TILES_STATIC_OBJECTS    0x00020000
-#define TILES_STATIC_SHADOWS    0x00008000
-#define TILES_STATIC_STRUCTURES 0x00004000
-#define TILES_STATIC_ROOF       0x00002000
-#define TILES_STATIC_ONROOF     0x00001000
-#define TILES_STATIC_TOPMOST    0x00000800
-
-
-// highest bit value is rendered first!
-#define TILES_ALL_DYNAMICS              0x00000fff
-#define TILES_DYNAMIC_LAND              0x00000200
-#define TILES_DYNAMIC_OBJECTS           0x00000100
-#define TILES_DYNAMIC_SHADOWS           0x00000080
-#define TILES_DYNAMIC_STRUCT_MERCS      0x00000040
-#define TILES_DYNAMIC_MERCS             0x00000020
-#define TILES_DYNAMIC_STRUCTURES        0x00000010
-#define TILES_DYNAMIC_ROOF              0x00000008
-#define TILES_DYNAMIC_HIGHMERCS         0x00000004
-#define TILES_DYNAMIC_ONROOF            0x00000002
-#define TILES_DYNAMIC_TOPMOST           0x00000001
+enum RenderLayerFlags
+{
+	// Highest bit value is rendered first
+	TILES_LAYER_ALL            = 0xFFFFFFFF,
+	TILES_STATIC_LAND          = 0x00040000,
+	TILES_STATIC_OBJECTS       = 0x00020000,
+	TILES_STATIC_SHADOWS       = 0x00008000,
+	TILES_STATIC_STRUCTURES    = 0x00004000,
+	TILES_STATIC_ROOF          = 0x00002000,
+	TILES_STATIC_ONROOF        = 0x00001000,
+	TILES_STATIC_TOPMOST       = 0x00000800,
+	TILES_ALL_DYNAMICS         = 0x00000FFF,
+	TILES_DYNAMIC_LAND         = 0x00000200,
+	TILES_DYNAMIC_OBJECTS      = 0x00000100,
+	TILES_DYNAMIC_SHADOWS      = 0x00000080,
+	TILES_DYNAMIC_STRUCT_MERCS = 0x00000040,
+	TILES_DYNAMIC_MERCS        = 0x00000020,
+	TILES_DYNAMIC_STRUCTURES   = 0x00000010,
+	TILES_DYNAMIC_ROOF         = 0x00000008,
+	TILES_DYNAMIC_HIGHMERCS    = 0x00000004,
+	TILES_DYNAMIC_ONROOF       = 0x00000002,
+	TILES_DYNAMIC_TOPMOST      = 0x00000001,
+	TILES_LAYER_NONE           = 0
+};
+ENUM_BITSET(RenderLayerFlags)
 
 
 extern INT16 gsScrollXIncrement;
@@ -102,7 +105,7 @@ void ScrollWorld(void);
 void InitRenderParams(UINT8 ubRestrictionID);
 void RenderWorld(void);
 
-void ResetSpecificLayerOptimizing(UINT32 uiRowFlag);
+void ResetSpecificLayerOptimizing(RenderLayerFlags);
 
 void SetRenderFlags(UINT32 uiFlags);
 void ClearRenderFlags(UINT32 uiFlags);

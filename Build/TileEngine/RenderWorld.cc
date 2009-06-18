@@ -112,8 +112,8 @@ UINT8   gubCurScrollSpeedID = 1;
 BOOLEAN gfDoVideoScroll     = TRUE;
 BOOLEAN gfScrollPending     = FALSE;
 
-static UINT32 uiLayerUsedFlags         = 0xFFFFFFFF;
-static UINT32 uiAdditiveLayerUsedFlags = 0xFFFFFFFF;
+static RenderLayerFlags uiLayerUsedFlags         = TILES_LAYER_ALL;
+static RenderLayerFlags uiAdditiveLayerUsedFlags = TILES_LAYER_ALL;
 
 
 static const UINT8 gsGlowFrames[] =
@@ -274,12 +274,12 @@ static void RenderGridNoVisibleDebugInfo(INT16 sStartPointX_M, INT16 sStartPoint
 
 static void ResetLayerOptimizing(void)
 {
-	uiLayerUsedFlags = 0xffffffff;
-	uiAdditiveLayerUsedFlags = 0;
+	uiLayerUsedFlags         = TILES_LAYER_ALL;
+	uiAdditiveLayerUsedFlags = TILES_LAYER_NONE;
 }
 
 
-void ResetSpecificLayerOptimizing(UINT32 uiRowFlag)
+void ResetSpecificLayerOptimizing(RenderLayerFlags const uiRowFlag)
 {
 	uiLayerUsedFlags |= uiRowFlag;
 }
@@ -323,7 +323,7 @@ static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer,
 static BOOLEAN Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuffer, UINT32 uiDestPitchBYTES, UINT16* pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect* clipregion, INT16 sZIndex, const UINT16* p16BPPPalette);
 
 
-static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX_M, INT32 const iStartPointY_M, INT32 const iStartPointX_S, INT32 const iStartPointY_S, INT32 const iEndXS, INT32 const iEndYS, UINT8 const ubNumLevels, UINT32 const* const puiLevels, UINT16 const* const psLevelIDs)
+static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX_M, INT32 const iStartPointY_M, INT32 const iStartPointX_S, INT32 const iStartPointY_S, INT32 const iEndXS, INT32 const iEndYS, UINT8 const ubNumLevels, RenderLayerFlags const* const puiLevels, UINT16 const* const psLevelIDs)
 {
 	static UINT8        ubLevelNodeStartIndex[NUM_RENDER_FX_TYPES];
 	static RenderFXType RenderFXList[NUM_RENDER_FX_TYPES];
@@ -400,7 +400,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 
 		for (UINT32 cnt = 0; cnt < ubNumLevels; cnt++)
 		{
-			const UINT32 uiRowFlags = puiLevels[cnt];
+			RenderLayerFlags const uiRowFlags = puiLevels[cnt];
 
 			if (uiRowFlags & TILES_ALL_DYNAMICS && !(uiLayerUsedFlags & uiRowFlags) && !(uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE)) continue;
 
@@ -1717,8 +1717,8 @@ static void ResetRenderParameters(void);
 // Then render away!
 void RenderStaticWorldRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom, BOOLEAN fDynamicsToo)
 {
-	UINT32 uiLevelFlags[10];
-	UINT16 sLevelIDs[10];
+	RenderLayerFlags uiLevelFlags[10];
+	UINT16           sLevelIDs[10];
 
 	// Calculate render starting parameters
 	CalcRenderParameters(sLeft, sTop, sRight, sBottom);
@@ -1799,8 +1799,8 @@ void RenderStaticWorldRect(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom,
 
 static void RenderStaticWorld(void)
 {
-	UINT32 uiLevelFlags[9];
-	UINT16 sLevelIDs[9];
+	RenderLayerFlags uiLevelFlags[9];
+	UINT16           sLevelIDs[9];
 
 	// Calculate render starting parameters
 	CalcRenderParameters(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y);
@@ -1853,8 +1853,8 @@ static void RenderStaticWorld(void)
 
 static void RenderMarkedWorld(void)
 {
-	UINT32 uiLevelFlags[4];
-	UINT16 sLevelIDs[4];
+	RenderLayerFlags uiLevelFlags[4];
+	UINT16           sLevelIDs[4];
 
 	CalcRenderParameters(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y);
 
@@ -1901,8 +1901,8 @@ static void RenderMarkedWorld(void)
 
 static void RenderDynamicWorld(void)
 {
-	UINT32 uiLevelFlags[10];
-	UINT16 sLevelIDs[10];
+	RenderLayerFlags uiLevelFlags[10];
+	UINT16           sLevelIDs[10];
 
 	CalcRenderParameters(gsVIEWPORT_START_X, gsVIEWPORT_START_Y, gsVIEWPORT_END_X, gsVIEWPORT_END_Y);
 
