@@ -553,12 +553,10 @@ static void RenderTiles(const UINT32 uiFlags, const INT32 iStartPointX_M, const 
 										}
 									}
 								}
-								else if (uiTileElemFlags & ANIMATED_TILE || uiTileElemFlags & DYNAMIC_TILE || uiLevelNodeFlags & LEVELNODE_DYNAMIC)
+								else if (uiTileElemFlags & ANIMATED_TILE ||
+										((uiTileElemFlags & DYNAMIC_TILE || uiLevelNodeFlags & LEVELNODE_DYNAMIC) && !(uiFlags & TILES_OBSCURED)))
 								{
-									if (!(uiFlags & TILES_OBSCURED) || uiTileElemFlags & ANIMATED_TILE)
-									{
-										fRenderTile = FALSE;
-									}
+									fRenderTile = FALSE;
 								}
 							}
 
