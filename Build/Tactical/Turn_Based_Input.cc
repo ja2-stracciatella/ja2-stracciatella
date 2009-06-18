@@ -1183,7 +1183,7 @@ static void SetBurstMode(void);
 static void TeleportSelectedSoldier(void);
 static void TestCapture(void);
 static void TestMeanWhile(INT32 iID);
-static void ToggleCliffDebug(void);
+static void ToggleCliffDebug();
 static void ToggleTreeTops(void);
 static void ToggleViewAllItems(void);
 static void ToggleViewAllMercs(void);
@@ -2790,22 +2790,20 @@ static void CreateNextCivType(void)
 }
 
 
-static void ToggleCliffDebug(void)
+static void ToggleCliffDebug()
 {
-	// Set option to show all mercs
-	if ( gTacticalStatus.uiFlags&DEBUGCLIFFS )
+	wchar_t const* msg;
+	gTacticalStatus.uiFlags ^= DEBUGCLIFFS;
+	if (gTacticalStatus.uiFlags & DEBUGCLIFFS)
 	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Cliff debug OFF." );
-
-		gTacticalStatus.uiFlags&= (~DEBUGCLIFFS );
-		SetRenderFlags(RENDER_FLAG_FULL);
+		msg = L"Cliff debug ON.";
 	}
 	else
 	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Cliff debug ON." );
-
-		gTacticalStatus.uiFlags|= DEBUGCLIFFS;
+		SetRenderFlags(RENDER_FLAG_FULL);
+		msg = L"Cliff debug OFF.";
 	}
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, msg);
 }
 
 
