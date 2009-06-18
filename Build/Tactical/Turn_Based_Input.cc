@@ -2899,158 +2899,103 @@ static bool CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* const s,
 }
 
 
-void HandleHandCursorClick(UINT16 const usMapPos, UIEventKind* const puiNewEvent)
+void HandleHandCursorClick(UINT16 const map_pos, UIEventKind* const new_event)
 {
-	LEVELNODE					*pIntTile;
-  INT16							sIntTileGridNo;
-	INT16							sActionGridNo;
-	INT16							sAPCost;
-	INT16							sAdjustedGridNo;
-	STRUCTURE					*pStructure = NULL;
-	BOOLEAN						fIgnoreItems = FALSE;
+	SOLDIERTYPE* const s = GetSelectedMan();
+	if (!s) return;
 
-	SOLDIERTYPE* const pSoldier = GetSelectedMan();
-	if (pSoldier != NULL)
+	// If we are out of breath, no cursor
+	if (s->bBreath < OKBREATH && s->bCollapsed) return;
+
+	if (CheckForAndHandleHandleVehicleInteractiveClick(s, map_pos, FALSE)) return;
+
+	// Check if we are on a merc... if so.. steal!
+	SOLDIERTYPE const* const tgt = gUIFullTarget;
+	if (tgt && guiUIFullTargetFlags & ENEMY_MERC && !(guiUIFullTargetFlags & UNCONSCIOUS_MERC))
 	{
-	  // If we are out of breath, no cursor...
-	  if ( pSoldier->bBreath < OKBREATH && pSoldier->bCollapsed )
-	  {
-		  return;
-	  }
+		GridNo adjusted_gridno;
+		GridNo action_gridno = FindAdjacentGridEx(s, tgt->sGridNo, 0, &adjusted_gridno, TRUE, FALSE);
+		if (action_gridno == -1) action_gridno = adjusted_gridno;
 
-		if (CheckForAndHandleHandleVehicleInteractiveClick(pSoldier, usMapPos, FALSE))
+		// Steal!
+		INT16 const ap_cost = GetAPsToStealItem(s, action_gridno);
+		if (EnoughPoints(s, ap_cost, 0, TRUE))
 		{
-			return;
+			MercStealFromMerc(s, tgt);
+			*new_event = A_CHANGE_TO_MOVE;
 		}
+		return;
+	}
 
-		// Check if we are on a merc... if so.. steal!
-		const SOLDIERTYPE* const tgt = gUIFullTarget;
-		if (tgt != NULL)
+	// Default action gridno to mouse
+	GridNo action_gridno = map_pos;
+
+	// If we are over an interactive struct, adjust gridno to this
+	GridNo                 int_tile_gridno;
+	STRUCTURE*             structure;
+	LEVELNODE const* const int_tile     = ConditionalGetCurInteractiveTileGridNoAndStructure(&int_tile_gridno, &structure, FALSE);
+	bool                   ignore_items = false;
+	if (int_tile)
+	{
+		action_gridno = int_tile_gridno;
+
+		if ((structure->fFlags & STRUCTURE_SWITCH) ||
+				(structure->fFlags & STRUCTURE_ANYDOOR && action_gridno != map_pos))
 		{
-			 if ( ( guiUIFullTargetFlags & ENEMY_MERC ) && !( guiUIFullTargetFlags & UNCONSCIOUS_MERC ) )
-			 {
-				sActionGridNo = FindAdjacentGridEx(pSoldier, tgt->sGridNo, NULL, &sAdjustedGridNo, TRUE, FALSE);
-				if ( sActionGridNo == -1 )
-				{
-					sActionGridNo = sAdjustedGridNo;
-				}
-
-				// Steal!
-				sAPCost = GetAPsToStealItem( pSoldier, sActionGridNo );
-
-				if ( EnoughPoints( pSoldier, sAPCost, 0, TRUE ) )
-				{
-					MercStealFromMerc(pSoldier, tgt);
-
-						*puiNewEvent = A_CHANGE_TO_MOVE;
-
-						return;
-				}
-        else
-        {
-           return;
-        }
-			 }
+			ignore_items = true;
 		}
+	}
 
-		// Default action gridno to mouse....
-		sActionGridNo = usMapPos;
-
-		// If we are over an interactive struct, adjust gridno to this....
-		pIntTile = ConditionalGetCurInteractiveTileGridNoAndStructure( &sIntTileGridNo , &pStructure, FALSE );
-		if ( pIntTile != NULL )
+	// Check if we are over an item pool
+	// ATE: Ignore items will be set if over a switch interactive tile
+	ITEM_POOL const* const item_pool = ignore_items ? 0 : GetItemPool(action_gridno, s->bLevel);
+	if (item_pool && IsItemPoolVisible(item_pool))
+	{
+		if (AM_AN_EPC(s))
 		{
-			sActionGridNo = sIntTileGridNo;
-
-			//if ( pStructure->fFlags & ( STRUCTURE_SWITCH | STRUCTURE_ANYDOOR ) )
-			if ( pStructure->fFlags & ( STRUCTURE_SWITCH ) )
-			{
-				fIgnoreItems = TRUE;
-			}
-
-			if ( pStructure->fFlags & ( STRUCTURE_ANYDOOR ) && sActionGridNo != usMapPos )
-			{
-				fIgnoreItems = TRUE;
-			}
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[EPC_CANNOT_DO_THAT]);
 		}
-
-		// Check if we are over an item pool
-		// ATE: Ignore items will be set if over a switch interactive tile...
-		const ITEM_POOL* pItemPool = GetItemPool(sActionGridNo, pSoldier->bLevel);
-		if (pItemPool && IsItemPoolVisible(pItemPool) && !fIgnoreItems)
+		else if (UIOkForItemPickup(s, action_gridno))
 		{
-			if ( AM_AN_EPC( pSoldier ) )
-			{
-				// Display message
-				// ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ EPC_CANNOT_DO_THAT ] );
-			}
-			else if ( UIOkForItemPickup( pSoldier, sActionGridNo ) )
-			{
-				INT8 bZLevel;
+			INT8 const zlevel = GetZLevelOfItemPoolGivenStructure(action_gridno, s->bLevel, structure);
+			SoldierPickupItem(s, -1, action_gridno, zlevel);
+			*new_event = A_CHANGE_TO_MOVE;
+		}
+	}
+	else if (int_tile && !(structure->fFlags & STRUCTURE_HASITEMONTOP))
+	{
+		GridNo const adjacent_gridno = FindAdjacentGridEx(s, action_gridno, 0, 0, FALSE, TRUE);
+		if (adjacent_gridno != -1) action_gridno = adjacent_gridno;
 
-				bZLevel = GetZLevelOfItemPoolGivenStructure( sActionGridNo, pSoldier->bLevel, pStructure );
-
-				SoldierPickupItem(pSoldier, -1, sActionGridNo, bZLevel);
-
-				*puiNewEvent = A_CHANGE_TO_MOVE;
-
-			}
+		// If this is not the same tile as ours, check if we can get to dest!
+		if (action_gridno != s->sGridNo && gsCurrentActionPoints == 0)
+		{
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NO_PATH]);
+		}
+		else if (SelectedMercCanAffordMove())
+		{
+			*new_event = C_MOVE_MERC;
+		}
+	}
+	else
+	{ /* ATE: Here, the poor player wants to search something that does not
+		 * exist. Why should we not let them make fools of themselves? */
+		if (AM_AN_EPC(s))
+		{
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[EPC_CANNOT_DO_THAT]);
+		}
+		else if (s->bMorale < 30) // Check morale, if < threashold, refuse
+		{
+			TacticalCharacterDialogue(s, QUOTE_REFUSING_ORDER);
+		}
+		else if (gsCurrentActionPoints == 0)
+		{
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NO_PATH]);
 		}
 		else
 		{
-			if ( pIntTile != NULL && !( pStructure->fFlags & STRUCTURE_HASITEMONTOP ) )
-			{
-				sActionGridNo = FindAdjacentGridEx(pSoldier, sIntTileGridNo, NULL, NULL, FALSE, TRUE);
-				if ( sActionGridNo == -1 )
-				{
-					sActionGridNo = sIntTileGridNo;
-				}
-
-				// If this is not the same tile as ours, check if we can get to dest!
-				if ( sActionGridNo != pSoldier->sGridNo && gsCurrentActionPoints == 0 )
-				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
-				}
-				else
-				{
-					if ( SelectedMercCanAffordMove(  )  )
-					{
-						*puiNewEvent = C_MOVE_MERC;
-					}
-				}
-			}
-			else
-			{
-				// ATE: Here, the poor player wants to search something that does not exist...
-				// Why should we not let them make fools of themselves....?
-			  if ( AM_AN_EPC( pSoldier ) )
-			  {
-				  // Display message
-				  // ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
-				  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ EPC_CANNOT_DO_THAT ] );
-        }
-        else
-        {
-				  // Check morale, if < threashold, refuse...
-				  if ( pSoldier->bMorale < 30 )
-				  {
-					  TacticalCharacterDialogue( pSoldier, QUOTE_REFUSING_ORDER );
-				  }
-				  else
-				  {
-					  if ( gsCurrentActionPoints == 0 )
-					  {
-						  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ NO_PATH ] );
-					  }
-					  else
-					  {
-						  SoldierPickupItem(pSoldier, -1, sActionGridNo, 0);
-						  *puiNewEvent = A_CHANGE_TO_MOVE;
-					  }
-				  }
-        }
-			}
+			SoldierPickupItem(s, -1, action_gridno, 0);
+			*new_event = A_CHANGE_TO_MOVE;
 		}
 	}
 }
