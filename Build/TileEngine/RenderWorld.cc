@@ -613,16 +613,17 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 
 								if (uiLevelNodeFlags & LEVELNODE_CACHEDANITILE)
 								{
-									hVObject       = gpTileCache[pNode->pAniTile->sCachedTileID].pImagery->vo;
-									usImageIndex   = pNode->pAniTile->sCurrentFrame;
-									uiAniTileFlags = pNode->pAniTile->uiFlags;
+									ANITILE const& a = *pNode->pAniTile;
+									hVObject         = gpTileCache[a.sCachedTileID].pImagery->vo;
+									usImageIndex     = a.sCurrentFrame;
+									uiAniTileFlags   = a.uiFlags;
 
 									float dOffsetX;
 									float dOffsetY;
 									// Position corpse based on it's float position
 									if (uiLevelNodeFlags & LEVELNODE_ROTTINGCORPSE)
 									{
-										pCorpse     = ID2CORPSE(pNode->pAniTile->v.user.uiData);
+										pCorpse     = ID2CORPSE(a.v.user.uiData);
 										pShadeTable = pCorpse->pShades[pNode->ubShadeLevel];
 
 										// OK, if this is a corpse.... stop if not visible
@@ -636,8 +637,8 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 									}
 									else
 									{
-										dOffsetX = pNode->pAniTile->sRelativeX - gsRenderCenterX;
-										dOffsetY = pNode->pAniTile->sRelativeY - gsRenderCenterY;
+										dOffsetX = a.sRelativeX - gsRenderCenterX;
+										dOffsetY = a.sRelativeY - gsRenderCenterY;
 									}
 
 									// Calculate guy's position
