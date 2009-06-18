@@ -662,8 +662,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 									{
 										sYPos -= sModifiedTileHeight;
 									}
-
-									if (!(uiLevelNodeFlags & LEVELNODE_IGNOREHEIGHT) && !(TileElem->uiFlags & IGNORE_WORLD_HEIGHT))
+									else if (!(uiLevelNodeFlags & LEVELNODE_IGNOREHEIGHT))
 									{
 										sYPos -= sTileHeight;
 									}
