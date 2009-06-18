@@ -2257,7 +2257,7 @@ static void BtnLookCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		ToggleLookCursorMode(NULL);
+		ToggleLookCursorMode();
 	}
 }
 

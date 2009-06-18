@@ -2529,19 +2529,13 @@ void ToggleTalkCursorMode(UIEventKind* const puiNewEvent)
 	}
 }
 
-void ToggleLookCursorMode( UINT32 *puiNewEvent  )
+
+void ToggleLookCursorMode()
 {
-	// Toggle modes
-	if ( gCurrentUIMode == LOOKCURSOR_MODE )
-	{
-		guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
-		HandleTacticalUI( );
-	}
-	else
-	{
-		guiPendingOverrideEvent = LC_CHANGE_TO_LOOK;
-		HandleTacticalUI( );
-	}
+	guiPendingOverrideEvent =
+		gCurrentUIMode == LOOKCURSOR_MODE ? A_CHANGE_TO_MOVE :
+		LC_CHANGE_TO_LOOK;
+	HandleTacticalUI();
 }
 
 
