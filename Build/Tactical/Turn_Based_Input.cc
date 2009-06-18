@@ -759,7 +759,6 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 	static const SOLDIERTYPE* MoveTargetSoldier = NULL;
 
 	static UINT16			usOldMapPos = 0;
-	BOOLEAN						bHandleCode;
 	static BOOLEAN		fOnValidGuy = FALSE;
 
 	const GridNo usMapPos = GetMouseMapPos();
@@ -904,19 +903,15 @@ void GetTBMousePositionInput( UINT32 *puiNewEvent )
 				break;
 
 			case OPENDOOR_MENU_MODE:
-
-				if ( ( bHandleCode = HandleOpenDoorMenu( ) ) )
+			{
+				BOOLEAN const bHandleCode = HandleOpenDoorMenu();
+				// If we are not canceling, set UI back!
+				if (bHandleCode == 2)
 				{
-					// OK, IF we are not canceling, set ui back!
-					if ( bHandleCode == 2 )
-					{
-						*puiNewEvent = A_CHANGE_TO_MOVE;
-					}
-					else
-					{
-					}
+					*puiNewEvent = A_CHANGE_TO_MOVE;
 				}
 				break;
+			}
 
 			case JUMPOVER_MODE:
 
