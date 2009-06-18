@@ -375,7 +375,7 @@ static BOOLEAN PrepareEnemyForUndergroundBattle(void);
 //Called when entering a sector so the campaign AI can automatically insert the
 //correct number of troops of each type based on the current number in the sector
 //in global focus (gWorldSectorX/Y)
-BOOLEAN PrepareEnemyForSectorBattle()
+void PrepareEnemyForSectorBattle()
 {
 	SECTORINFO *pSector;
 	UINT8 ubTotalAdmins, ubTotalElites, ubTotalTroops;
@@ -384,8 +384,11 @@ BOOLEAN PrepareEnemyForSectorBattle()
 
 	gfPendingEnemies = FALSE;
 
-	if( gbWorldSectorZ > 0 )
-		return PrepareEnemyForUndergroundBattle();
+	if (gbWorldSectorZ > 0)
+	{
+		PrepareEnemyForUndergroundBattle();
+		return;
+	}
 
 	if( gpBattleGroup && !gpBattleGroup->fPlayer )
 	{ //The enemy has instigated the battle which means they are the ones entering the conflict.
@@ -406,7 +409,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 			}
 		}
 		ValidateEnemiesHaveWeapons();
-		return ( ( BOOLEAN) ( gpBattleGroup->ubGroupSize > 0 ) );
+		return;
 	}
 
 	if( !gbWorldSectorZ )
@@ -468,11 +471,10 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	if( gfOverrideSector )
 	{
 		//if there are no troops in the current groups, then we're done.
-		if( !ubTotalAdmins && !ubTotalTroops && !ubTotalElites )
-			return FALSE;
+		if (ubTotalAdmins == 0 && ubTotalTroops == 0 && ubTotalElites == 0) return;
 		AddSoldierInitListEnemyDefenceSoldiers( ubTotalAdmins, ubTotalTroops, ubTotalElites );
 		ValidateEnemiesHaveWeapons();
-		return TRUE;
+		return;
 	}
 	#endif
 
@@ -557,10 +559,7 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	}
 
 	//if there are no troops in the current groups, then we're done.
-	if( !ubTotalAdmins && !ubTotalTroops && !ubTotalElites )
-	{
-		return FALSE;
-	}
+	if (ubTotalAdmins == 0 && ubTotalTroops == 0 && ubTotalElites == 0) return;
 
 	AddSoldierInitListEnemyDefenceSoldiers( ubTotalAdmins, ubTotalTroops, ubTotalElites );
 
@@ -612,8 +611,6 @@ BOOLEAN PrepareEnemyForSectorBattle()
 	}
 
 	ValidateEnemiesHaveWeapons();
-
-	return TRUE;
 }
 
 

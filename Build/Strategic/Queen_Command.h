@@ -22,7 +22,7 @@ void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAd
 //Called when entering a sector so the campaign AI can automatically insert the
 //correct number of troops of each type based on the current number in the sector
 //in global focus (gWorldSectorX/Y)
-BOOLEAN PrepareEnemyForSectorBattle(void);
+void PrepareEnemyForSectorBattle();
 
 void AddPossiblePendingEnemiesToBattle(void);
 void EndTacticalBattleForEnemy(void);
