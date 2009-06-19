@@ -327,80 +327,65 @@ void SetActionModeDoorCursorText()
 }
 
 
-static void GetLevelNodeScreenRect(LEVELNODE const* const pNode, SGPRect* const pRect, INT16 const sXPos, INT16 const sYPos, INT16 const sGridNo)
+static void GetLevelNodeScreenRect(LEVELNODE const& n, SGPRect& rect, INT16 const x, INT16 const y, GridNo const gridno)
 {
-		INT16 sScreenX, sScreenY;
-		INT16 sOffsetX, sOffsetY;
-		INT16 sTempX_S, sTempY_S;
-		UINT32 usHeight, usWidth;
-		TILE_ELEMENT *TileElem;
+	// Get 'TRUE' merc position
+	INT16 sTempX_S;
+	INT16 sTempY_S;
+	INT16 const offset_x = x - gsRenderCenterX;
+	INT16 const offset_y = y - gsRenderCenterY;
+	FromCellToScreenCoordinates(offset_x, offset_y, &sTempX_S, &sTempY_S);
 
-		// Get 'TRUE' merc position
-		sOffsetX = sXPos - gsRenderCenterX;
-		sOffsetY = sYPos - gsRenderCenterY;
-
-		FromCellToScreenCoordinates( sOffsetX, sOffsetY, &sTempX_S, &sTempY_S );
-
-		ETRLEObject const* pTrav;
-		if ( pNode->uiFlags & LEVELNODE_CACHEDANITILE )
+	ETRLEObject const* pTrav;
+	if (n.uiFlags & LEVELNODE_CACHEDANITILE)
+	{
+		ANITILE const& a = *n.pAniTile;
+		pTrav = &gpTileCache[a.sCachedTileID].pImagery->vo->SubregionProperties(a.sCurrentFrame);
+	}
+	else
+	{
+		TILE_ELEMENT const* te = &gTileDatabase[n.usIndex];
+		// Adjust for current frames and animations
+		if (te->uiFlags & ANIMATED_TILE)
 		{
-			pTrav = &gpTileCache[pNode->pAniTile->sCachedTileID].pImagery->vo->SubregionProperties(pNode->pAniTile->sCurrentFrame);
+			TILE_ANIMATION_DATA const& a = *te->pAnimData;
+			te = &gTileDatabase[a.pusFrames[a.bCurrentFrame]];
 		}
-		else
+		else if (n.uiFlags & LEVELNODE_ANIMATION && n.sCurrentFrame != -1)
 		{
-			TileElem = &(gTileDatabase[pNode->usIndex]);
-
-			//Adjust for current frames and animations....
-			if ( TileElem->uiFlags & ANIMATED_TILE)
-			{
-				Assert( TileElem->pAnimData != NULL );
-				TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[TileElem->pAnimData->bCurrentFrame]];
-			}
-			else if( ( pNode->uiFlags & LEVELNODE_ANIMATION ) )
-			{
-				if ( pNode->sCurrentFrame != -1  )
-				{
-					Assert( TileElem->pAnimData != NULL );
-					TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[pNode->sCurrentFrame]];
-				}
-			}
-
-			pTrav = &TileElem->hTileSurface->SubregionProperties(TileElem->usRegionIndex);
+			te = &gTileDatabase[te->pAnimData->pusFrames[n.sCurrentFrame]];
 		}
+		pTrav = &te->hTileSurface->SubregionProperties(te->usRegionIndex);
+	}
 
-		sScreenX = ( ( gsVIEWPORT_END_X - gsVIEWPORT_START_X ) /2 ) + (INT16)sTempX_S;
-		sScreenY = ( ( gsVIEWPORT_END_Y - gsVIEWPORT_START_Y ) /2 ) + (INT16)sTempY_S;
+	INT16 sScreenX = ((gsVIEWPORT_END_X - gsVIEWPORT_START_X) / 2) + (INT16)sTempX_S;
+	INT16 sScreenY = ((gsVIEWPORT_END_Y - gsVIEWPORT_START_Y) / 2) + (INT16)sTempY_S;
 
-		// Adjust for offset position on screen
-		sScreenX -= gsRenderWorldOffsetX;
-		sScreenY -= gsRenderWorldOffsetY;
-		sScreenY -=	gpWorldLevelData[ sGridNo ].sHeight;
+	// Adjust for offset position on screen
+	sScreenX -= gsRenderWorldOffsetX;
+	sScreenY -= gsRenderWorldOffsetY;
+	sScreenY -=	gpWorldLevelData[gridno].sHeight;
 
-		// Adjust based on interface level
-		if ( gsInterfaceLevel > 0 )
-		{
-			sScreenY += ROOF_LEVEL_HEIGHT;
-		}
+	// Adjust based on interface level
+	if (gsInterfaceLevel > 0)
+	{
+		sScreenY += ROOF_LEVEL_HEIGHT;
+	}
 
-		// Adjust for render height
-		sScreenY += gsRenderHeight;
+	// Adjust for render height
+	sScreenY += gsRenderHeight;
 
+	// Add to start position of dest buffer
+	sScreenX += pTrav->sOffsetX - WORLD_TILE_X / 2;
+	sScreenY += pTrav->sOffsetY - WORLD_TILE_Y / 2;
 
+	// Adjust y offset!
+	sScreenY += WORLD_TILE_Y / 2;
 
-		usHeight				= (UINT32)pTrav->usHeight;
-		usWidth					= (UINT32)pTrav->usWidth;
-
-		// Add to start position of dest buffer
-		sScreenX += ( pTrav->sOffsetX - ( WORLD_TILE_X/2 ) );
-		sScreenY += ( pTrav->sOffsetY - ( WORLD_TILE_Y/2 ) );
-
-		// Adjust y offset!
-		sScreenY += ( WORLD_TILE_Y/2);
-
-		pRect->iLeft		= sScreenX;
-		pRect->iTop			= sScreenY;
-		pRect->iBottom	= sScreenY + usHeight;
-		pRect->iRight		= sScreenX + usWidth;
+	rect.iLeft   = sScreenX;
+	rect.iTop    = sScreenY;
+	rect.iRight  = sScreenX + pTrav->usWidth;
+	rect.iBottom = sScreenY + pTrav->usHeight;
 }
 
 
@@ -429,7 +414,7 @@ void LogMouseOverInteractiveTile(INT16 const sGridNo)
 	for (LEVELNODE const* n = gpWorldLevelData[sGridNo].pStructHead; n; n = n->pNext)
 	{
 		SGPRect aRect;
-		GetLevelNodeScreenRect(n, &aRect, sXMapPos, sYMapPos, sGridNo);
+		GetLevelNodeScreenRect(*n, aRect, sXMapPos, sYMapPos, sGridNo);
 
 		// Make sure we are always on guy if we are on same gridno
 		if (!IsPointInScreenRect(sScreenX, sScreenY, aRect)) continue;
