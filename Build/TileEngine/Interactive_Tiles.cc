@@ -390,7 +390,7 @@ static void GetLevelNodeScreenRect(LEVELNODE const& n, SGPRect& rect, INT16 cons
 
 
 static bool RefineLogicOnStruct(GridNo, LEVELNODE const&);
-static BOOLEAN RefinePointCollisionOnStruct(INT16 sGridNo, INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE const* pNode);
+static BOOLEAN RefinePointCollisionOnStruct(INT16 sTestX, INT16 sTestY, INT16 sSrcX, INT16 sSrcY, LEVELNODE const&);
 
 
 void LogMouseOverInteractiveTile(INT16 const sGridNo)
@@ -419,7 +419,7 @@ void LogMouseOverInteractiveTile(INT16 const sGridNo)
 		// Make sure we are always on guy if we are on same gridno
 		if (!IsPointInScreenRect(sScreenX, sScreenY, aRect)) continue;
 
-		if (!RefinePointCollisionOnStruct(sGridNo, sScreenX, sScreenY, aRect.iLeft, aRect.iBottom, n)) continue;
+		if (!RefinePointCollisionOnStruct(sScreenX, sScreenY, aRect.iLeft, aRect.iBottom, *n)) continue;
 
 		if (!RefineLogicOnStruct(sGridNo, *n)) continue;
 
@@ -619,38 +619,33 @@ static bool RefineLogicOnStruct(INT16 gridno, LEVELNODE const& n)
 }
 
 
-static BOOLEAN RefinePointCollisionOnStruct(INT16 const sGridNo, INT16 const sTestX, INT16 const sTestY, INT16 const sSrcX, INT16 const sSrcY, LEVELNODE const* const pNode)
+static BOOLEAN RefinePointCollisionOnStruct(INT16 const test_x, INT16 const test_y, INT16 const src_x, INT16 const src_y, LEVELNODE const& n)
 {
-	TILE_ELEMENT *TileElem;
-
-	if ( pNode->uiFlags & LEVELNODE_CACHEDANITILE )
+	HVOBJECT vo;
+	UINT16   idx;
+	if (n.uiFlags & LEVELNODE_CACHEDANITILE)
 	{
-		//Check it!
-		return ( CheckVideoObjectScreenCoordinateInData( gpTileCache[ pNode->pAniTile->sCachedTileID ].pImagery->vo, pNode->pAniTile->sCurrentFrame, (INT32)( sTestX - sSrcX  ), (INT32)( -1 * ( sTestY - sSrcY  ) ) ) );
-
+		ANITILE const& a = *n.pAniTile;
+		vo  = gpTileCache[a.sCachedTileID].pImagery->vo;
+		idx = a.sCurrentFrame;
 	}
 	else
 	{
-		TileElem = &( gTileDatabase[pNode->usIndex] );
-
-		//Adjust for current frames and animations....
-		if ( TileElem->uiFlags & ANIMATED_TILE)
+		TILE_ELEMENT const* te = &gTileDatabase[n.usIndex];
+		// Adjust for current frames and animations
+		if (te->uiFlags & ANIMATED_TILE)
 		{
-				Assert( TileElem->pAnimData != NULL );
-				TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[TileElem->pAnimData->bCurrentFrame]];
+			TILE_ANIMATION_DATA const& a = *te->pAnimData;
+			te = &gTileDatabase[a.pusFrames[a.bCurrentFrame]];
 		}
-		else if( ( pNode->uiFlags & LEVELNODE_ANIMATION ) )
+		else if (n.uiFlags & LEVELNODE_ANIMATION && n.sCurrentFrame != -1)
 		{
-			if ( pNode->sCurrentFrame != -1  )
-			{
-				Assert( TileElem->pAnimData != NULL );
-				TileElem = &gTileDatabase[TileElem->pAnimData->pusFrames[pNode->sCurrentFrame]];
-			}
+			te = &gTileDatabase[te->pAnimData->pusFrames[n.sCurrentFrame]];
 		}
-
-		//Check it!
-		return ( CheckVideoObjectScreenCoordinateInData( TileElem->hTileSurface, TileElem->usRegionIndex, (INT32)( sTestX - sSrcX  ), (INT32)( -1 * ( sTestY - sSrcY  ) ) ) );
+		vo  = te->hTileSurface;
+		idx = te->usRegionIndex;
 	}
+	return CheckVideoObjectScreenCoordinateInData(vo, idx, test_x - src_x, -(test_y - src_y));
 }
 
 
