@@ -538,48 +538,33 @@ void BeginCurInteractiveTileCheck(void)
 
 }
 
-void EndCurInteractiveTileCheck( )
+
+void EndCurInteractiveTileCheck()
 {
-	CUR_INTERACTIVE_TILE		*pCurIntTile;
+	if (gCurIntTile.fFound)
+	{ // We are over this cycled node or levelnode
+		CUR_INTERACTIVE_TILE const& cur_int_tile =
+			gfCycleIntTile ? gCurIntTileStack.bTiles[gCurIntTileStack.bCur] :
+			gCurIntTile;
 
-	if ( gCurIntTile.fFound )
-	{
-		// Set our currently cycled guy.....
-		if ( gfCycleIntTile )
+		gCurIntTile.sGridNo    = cur_int_tile.sFoundGridNo;
+		gCurIntTile.sTileIndex = cur_int_tile.pFoundNode->usIndex;
+
+		if (cur_int_tile.pFoundNode->pStructureData)
 		{
-			// OK, we're over this cycled node
-			pCurIntTile = &( gCurIntTileStack.bTiles[ gCurIntTileStack.bCur ] );
+			gCurIntTile.usStructureID = cur_int_tile.pFoundNode->pStructureData->usStructureID;
+			gCurIntTile.fStructure    = TRUE;
 		}
 		else
 		{
-			// OK, we're over this levelnode,
-			pCurIntTile = &gCurIntTile;
+			gCurIntTile.fStructure = FALSE;
 		}
 
-		gCurIntTile.sGridNo				= pCurIntTile->sFoundGridNo;
-		gCurIntTile.sTileIndex    = pCurIntTile->pFoundNode->usIndex;
-
-		if ( pCurIntTile->pFoundNode->pStructureData != NULL )
-		{
-			gCurIntTile.usStructureID			= pCurIntTile->pFoundNode->pStructureData->usStructureID;
-			gCurIntTile.fStructure				= TRUE;
-		}
-		else
-		{
-			gCurIntTile.fStructure				= FALSE;
-		}
-
-
-		gfOverIntTile							= TRUE;
-
+		gfOverIntTile = TRUE;
 	}
 	else
-	{
-		// If we are in cycle mode, end it
-		if ( gfCycleIntTile )
-		{
-			gfCycleIntTile = FALSE;
-		}
+	{ // If we are in cycle mode, end it
+		gfCycleIntTile = FALSE;
 	}
 }
 
