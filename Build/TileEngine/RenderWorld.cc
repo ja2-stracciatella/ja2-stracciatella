@@ -358,13 +358,13 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 		uiDestPitchBYTES = lock.Pitch();
 	}
 
-	BOOLEAN fCheckForMouseDetections = FALSE;
+	bool check_for_mouse_detections = false;
 	if (uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE &&
 			ShouldCheckForMouseDetections())
 	{
 		BeginCurInteractiveTileCheck();
-		// If we are in edit mode, don't do this...
-		fCheckForMouseDetections = !gfEditMode;
+		// If we are in edit mode, don't do this
+		check_for_mouse_detections = !gfEditMode;
 	}
 
 	for (UINT32 i = 0; i < ubNumLevels; i++)
@@ -422,11 +422,8 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 					MAP_ELEMENT const& me = gpWorldLevelData[uiTileIndex];
 
 					/* OK, we're searching through this loop anyway, might as well check
-					 * for mouse position over objects...
-					 * Experimental! */
-					if (uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE &&
-							fCheckForMouseDetections                  &&
-							me.pStructHead)
+					 * for mouse position over objects. Experimental! */
+					if (check_for_mouse_detections && me.pStructHead)
 					{
 						LogMouseOverInteractiveTile(uiTileIndex);
 					}
