@@ -2348,38 +2348,26 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 }
 
 
-static INT8 GetAttachmentComboMerge(OBJECTTYPE* pObj)
+static INT8 GetAttachmentComboMerge(OBJECTTYPE const& o)
 {
-	INT8		bIndex = 0;
-	INT8		bAttachLoop, bAttachPos;
-
-	while( AttachmentComboMerge[ bIndex ].usItem != NOTHING )
+	for (INT8 i = 0;; ++i)
 	{
-		if ( pObj->usItem == AttachmentComboMerge[ bIndex ].usItem )
-		{
-			// search for all the appropriate attachments
-			for ( bAttachLoop = 0; bAttachLoop < 2; bAttachLoop++ )
-			{
-				if ( AttachmentComboMerge[ bIndex ].usAttachment[ bAttachLoop ] == NOTHING )
-				{
-					continue;
-				}
+		ComboMergeInfoStruct const& m = AttachmentComboMerge[i];
+		if (m.usItem == NOTHING) break;
+		if (m.usItem != o.usItem) continue;
 
-				bAttachPos = FindAttachment( pObj, AttachmentComboMerge[ bIndex ].usAttachment[ bAttachLoop ] );
-				if ( bAttachPos == -1 )
-				{
-					// didn't find something required
-					return( -1 );
-				}
-			}
-			// found everything required!
-			return( bIndex );
+		// Search for all the appropriate attachments
+		for (UINT16 const* k = m.usAttachment; k != endof(m.usAttachment); ++k)
+		{
+			UINT16 const attachment = *k;
+			if (attachment == NOTHING) continue;
+			if (FindAttachment(&o, attachment) == -1) return -1; // Didn't find something required
 		}
 
-		bIndex++;
+		return i; // Found everything required
 	}
 
-	return( -1 );
+	return -1;
 }
 
 
@@ -2518,7 +2506,7 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 		}
 
 		// Check for attachment merge combos here
-		INT8 const bAttachComboMerge = GetAttachmentComboMerge(&target);
+		INT8 const bAttachComboMerge = GetAttachmentComboMerge(target);
 		if (bAttachComboMerge != -1)
 		{
 			PerformAttachmentComboMerge(&target, bAttachComboMerge);
