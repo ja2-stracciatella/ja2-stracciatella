@@ -2745,7 +2745,7 @@ static UINT16 GetWireframeGraphicNumToUseForWall(const INT16 sGridNo, STRUCTURE*
 
 
 static bool IsHiddenTileMarkerThere(GridNo);
-static BOOLEAN IsRoofVisibleForWireframe(INT16 sMapPos);
+static bool IsRoofVisibleForWireframe(GridNo);
 static void RemoveWireFrameTiles(INT16 sGridNo);
 
 
@@ -3093,9 +3093,7 @@ static void LoadMapLights(INT8** hBuffer)
 }
 
 
-static BOOLEAN IsRoofVisibleForWireframe(const INT16 sMapPos)
+static bool IsRoofVisibleForWireframe(GridNo const sMapPos)
 {
-	return
-		gfBasement ||
-		FindStructure(sMapPos, STRUCTURE_ROOF) != NULL;
+	return gfBasement || FindStructure(sMapPos, STRUCTURE_ROOF);
 }
