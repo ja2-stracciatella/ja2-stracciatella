@@ -2236,26 +2236,19 @@ BOOLEAN ReloadLauncher( OBJECTTYPE * pLauncher, OBJECTTYPE * pAmmo )
 */
 
 
-INT8 FindAmmo(SOLDIERTYPE const* const pSoldier, AmmoKind const ubCalibre, UINT8 const ubMagSize, INT8 const bExcludeSlot)
+INT8 FindAmmo(SOLDIERTYPE const* const s, AmmoKind const calibre, UINT8 const mag_size, INT8 const exclude_slot)
 {
-	INT8				bLoop;
-
-	for (bLoop = HANDPOS; bLoop < NUM_INV_SLOTS; bLoop++)
+	for (INT8 slot = HANDPOS; slot != NUM_INV_SLOTS; ++slot)
 	{
-		if (bLoop == bExcludeSlot)
-		{
-			continue;
-		}
-		const INVTYPE* const pItem = &Item[pSoldier->inv[bLoop].usItem];
-		if (pItem->usItemClass == IC_AMMO)
-		{
-			if (Magazine[pItem->ubClassIndex].ubCalibre == ubCalibre && (Magazine[pItem->ubClassIndex].ubMagSize == ubMagSize || ubMagSize == ANY_MAGSIZE))
-			{
-				return( bLoop );
-			}
-		}
+		if (slot == exclude_slot) continue;
+		INVTYPE const& item = Item[s->inv[slot].usItem];
+		if (item.usItemClass != IC_AMMO) continue;
+		MAGTYPE const& m = Magazine[item.ubClassIndex];
+		if (m.ubCalibre != calibre) continue;
+		if (m.ubMagSize != mag_size && mag_size != ANY_MAGSIZE) continue;
+		return slot;
 	}
-	return( NO_SLOT );
+	return NO_SLOT;
 }
 
 
