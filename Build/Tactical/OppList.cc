@@ -3730,7 +3730,7 @@ UINT8 DoorOpeningNoise( SOLDIERTYPE *pSoldier )
 }
 
 
-void MakeNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubVolume, const UINT8 ubNoiseType)
+void MakeNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, INT8 const bLevel, UINT8 const ubVolume, NoiseKind const ubNoiseType)
 {
 	if ( gTacticalStatus.ubAttackBusyCount )
 	{
@@ -3750,10 +3750,10 @@ void MakeNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 b
 }
 
 
-static void ProcessNoise(SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubBaseVolume, UINT8 ubNoiseType);
+static void ProcessNoise(SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubBaseVolume, NoiseKind);
 
 
-void OurNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubVolume, const UINT8 ubNoiseType)
+void OurNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, INT8 const bLevel, UINT8 const ubVolume, NoiseKind const ubNoiseType)
 {
 #ifdef BYPASSNOISE
 	return;
@@ -3774,12 +3774,12 @@ void OurNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bL
 }
 
 
-static void HearNoise(SOLDIERTYPE* pSoldier, SOLDIERTYPE* noise_maker, UINT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, BOOLEAN* ubSeen);
-static UINT8 CalcEffVolume(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubNoiseType, UINT8 ubBaseVolume, UINT8 bCheckTerrain, UINT8 ubTerrType1, UINT8 ubTerrType2);
-static void TellPlayerAboutNoise(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, UINT8 ubNoiseType, UINT8 ubNoiseDir);
+static void HearNoise(SOLDIERTYPE* pSoldier, SOLDIERTYPE* noise_maker, UINT16 sGridNo, INT8 bLevel, UINT8 ubVolume, NoiseKind, BOOLEAN* ubSeen);
+static UINT8 CalcEffVolume(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLevel, NoiseKind, UINT8 ubBaseVolume, UINT8 bCheckTerrain, UINT8 ubTerrType1, UINT8 ubTerrType2);
+static void TellPlayerAboutNoise(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, NoiseKind, UINT8 ubNoiseDir);
 
 
-static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubBaseVolume, const UINT8 ubNoiseType)
+static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, INT8 const bLevel, UINT8 const ubBaseVolume, NoiseKind const ubNoiseType)
 {
 	UINT8 ubLoudestEffVolume, ubEffVolume;
 //	UINT8 ubPlayVolume;
@@ -4152,7 +4152,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, const INT16 sGridNo, co
 }
 
 
-static UINT8 CalcEffVolume(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLevel, UINT8 ubNoiseType, UINT8 ubBaseVolume, UINT8 bCheckTerrain, UINT8 ubTerrType1, UINT8 ubTerrType2)
+static UINT8 CalcEffVolume(SOLDIERTYPE const* const pSoldier, INT16 const sGridNo, INT8 const bLevel, NoiseKind const ubNoiseType, UINT8 const ubBaseVolume, UINT8 const bCheckTerrain, UINT8 const ubTerrType1, UINT8 const ubTerrType2)
 {
 	INT32 iEffVolume, iDistance;
 
@@ -4292,7 +4292,7 @@ static UINT8 CalcEffVolume(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLev
 }
 
 
-static void HearNoise(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const noise_maker, const UINT16 sGridNo, const INT8 bLevel, const UINT8 ubVolume, const UINT8 ubNoiseType, BOOLEAN* const ubSeen)
+static void HearNoise(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const noise_maker, UINT16 const sGridNo, INT8 const bLevel, UINT8 const ubVolume, NoiseKind const ubNoiseType, BOOLEAN* const ubSeen)
 {
 	INT16		sNoiseX, sNoiseY;
 	INT8		bHadToTurn = FALSE, bSourceSeen = FALSE;
@@ -4626,7 +4626,7 @@ static void HearNoise(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const noise_make
 }
 
 
-static void TellPlayerAboutNoise(SOLDIERTYPE* const s, SOLDIERTYPE const* const noise_maker, INT16 const sGridNo, INT8 const level, UINT8 const volume, UINT8 const noise_type, UINT8 const noise_dir)
+static void TellPlayerAboutNoise(SOLDIERTYPE* const s, SOLDIERTYPE const* const noise_maker, INT16 const sGridNo, INT8 const level, UINT8 const volume, NoiseKind const noise_type, UINT8 const noise_dir)
 {
 	/* CJC: tweaked the noise categories upwards a bit because our movement noises
 	 * can be louder now. */

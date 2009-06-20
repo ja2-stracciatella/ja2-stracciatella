@@ -276,7 +276,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 			EV_S_NOISE SNoise;
 			memcpy(&SNoise, pEvent->Data, pEvent->uiDataSize);
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Event Pump: Noise from %d at %d/%d, type %d volume %d", SNoise.ubNoiseMaker, SNoise.sGridNo, SNoise.bLevel, SNoise.ubNoiseType, SNoise.ubVolume));
-			OurNoise(ID2SOLDIER(SNoise.ubNoiseMaker), SNoise.sGridNo, SNoise.bLevel, SNoise.ubVolume, SNoise.ubNoiseType);
+			OurNoise(ID2SOLDIER(SNoise.ubNoiseMaker), SNoise.sGridNo, SNoise.bLevel, SNoise.ubVolume, static_cast<NoiseKind>(SNoise.ubNoiseType));
 			break;
 		}
 
