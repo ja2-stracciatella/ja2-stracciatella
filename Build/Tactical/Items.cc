@@ -2371,39 +2371,31 @@ static INT8 GetAttachmentComboMerge(OBJECTTYPE const& o)
 }
 
 
-static void PerformAttachmentComboMerge(OBJECTTYPE* pObj, INT8 bAttachmentComboMerge)
+static void PerformAttachmentComboMerge(OBJECTTYPE& o, INT8 const bAttachmentComboMerge)
 {
-	INT8		bAttachLoop, bAttachPos;
-	UINT32	uiStatusTotal = 0;
-	INT8		bNumStatusContributors = 0;
-
-	// This object has been validated as available for an attachment combo merge.
-	// - find all attachments in list and destroy them
-	// - status of new object should be average of items including attachments
-	// - change object
-
-	for ( bAttachLoop = 0; bAttachLoop < 2; bAttachLoop++ )
+	/* This object has been validated as available for an attachment combo merge.
+	 * - Find all attachments in list and destroy them
+	 * - Status of new object should be average of items including attachments
+	 * - Change object */
+	UINT32 total_status          = o.bStatus[0];
+	INT8   n_status_contributors = 1;
+	ComboMergeInfoStruct const& m = AttachmentComboMerge[bAttachmentComboMerge];
+	for (UINT16 const* i = m.usAttachment; i != endof(m.usAttachment); ++i)
 	{
-		if ( AttachmentComboMerge[ bAttachmentComboMerge ].usAttachment[ bAttachLoop ] == NOTHING )
-		{
-			continue;
-		}
+		if (*i == NOTHING) continue;
 
-		bAttachPos = FindAttachment( pObj, AttachmentComboMerge[ bAttachmentComboMerge ].usAttachment[ bAttachLoop ] );
-		AssertMsg(bAttachPos != -1, "Attachment combo merge couldn't find a necessary attachment");
+		INT8 const attach_pos = FindAttachment(&o, *i);
+		AssertMsg(attach_pos != -1, "Attachment combo merge couldn't find a necessary attachment");
 
-		uiStatusTotal += pObj->bAttachStatus[ bAttachPos ];
-		bNumStatusContributors++;
+		total_status += o.bAttachStatus[attach_pos];
+		++n_status_contributors;
 
-		pObj->usAttachItem[ bAttachPos ] = NOTHING;
-		pObj->bAttachStatus[ bAttachPos ] = 0;
+		o.usAttachItem[attach_pos]  = NOTHING;
+		o.bAttachStatus[attach_pos] = 0;
 	}
 
-	uiStatusTotal += pObj->bStatus[ 0 ];
-	bNumStatusContributors++;
-
-	pObj->usItem = AttachmentComboMerge[ bAttachmentComboMerge ].usResult;
-	pObj->bStatus[ 0 ] = (INT8) (uiStatusTotal / bNumStatusContributors );
+	o.usItem     = m.usResult;
+	o.bStatus[0] = total_status / n_status_contributors;
 }
 
 
@@ -2509,7 +2501,7 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 		INT8 const bAttachComboMerge = GetAttachmentComboMerge(target);
 		if (bAttachComboMerge != -1)
 		{
-			PerformAttachmentComboMerge(&target, bAttachComboMerge);
+			PerformAttachmentComboMerge(target, bAttachComboMerge);
 			if (attach_info && attach_info->bAttachmentSkillCheckMod < 20)
 			{
 				StatChange(s, MECHANAMT, 20 - attach_info->bAttachmentSkillCheckMod, FALSE);
