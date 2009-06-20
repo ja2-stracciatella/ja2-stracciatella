@@ -1662,36 +1662,33 @@ UINT8 CalculateObjectWeight(OBJECTTYPE const* const o)
 }
 
 
-UINT32 CalculateCarriedWeight(const SOLDIERTYPE* pSoldier)
+UINT32 CalculateCarriedWeight(SOLDIERTYPE const* const s)
 {
-	UINT32	uiTotalWeight = 0;
-	UINT32	uiPercent;
-	UINT16  usWeight;
-	UINT8		ubStrengthForCarrying;
-
-	CFOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
+	UINT32 total_weight = 0;
+	CFOR_ALL_SOLDIER_INV_SLOTS(i, *s)
 	{
-		usWeight = i->ubWeight;
+		UINT16 weight = i->ubWeight;
 		if (Item[i->usItem].ubPerPocket > 1)
-		{
-			// account for # of items
-			usWeight *= i->ubNumberOfObjects;
+		{ // Account for # of items
+			weight *= i->ubNumberOfObjects;
 		}
-		uiTotalWeight += usWeight;
-
+		total_weight += weight;
 	}
-	// for now, assume soldiers can carry 1/2 their strength in KGs without penalty.
-	// instead of multiplying by 100 for percent, and then dividing by 10 to account
-	// for weight units being in 10ths of kilos, not kilos... we just start with 10 instead of 100!
-	ubStrengthForCarrying = EffectiveStrength( pSoldier );
-	if ( ubStrengthForCarrying > 80 )
+
+	UINT8 strength_for_carrying = EffectiveStrength(s);
+	if (strength_for_carrying > 80)
 	{
-		ubStrengthForCarrying += (ubStrengthForCarrying - 80);
+		strength_for_carrying += strength_for_carrying - 80;
 	}
-	uiPercent = (10 * uiTotalWeight) / ( ubStrengthForCarrying / 2 );
-	return( uiPercent );
 
+	/* For now, assume soldiers can carry 1/2 their strength in kg without
+	 * penalty. Instead of multiplying by 100 for percent, and then dividing by 10
+	 * to account for weight units being in 10ths of kilos, not kilos... we just
+	 * start with 10 instead of 100! */
+	UINT32 const percent = 10 * total_weight / (strength_for_carrying / 2);
+	return percent;
 }
+
 
 void DeleteObj(OBJECTTYPE * pObj )
 {
