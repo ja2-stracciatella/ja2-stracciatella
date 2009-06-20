@@ -2348,11 +2348,11 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 }
 
 
-static INT8 GetAttachmentComboMerge(OBJECTTYPE const& o)
+static ComboMergeInfoStruct const* GetAttachmentComboMerge(OBJECTTYPE const& o)
 {
-	for (INT8 i = 0;; ++i)
+	for (ComboMergeInfoStruct const* i = AttachmentComboMerge;; ++i)
 	{
-		ComboMergeInfoStruct const& m = AttachmentComboMerge[i];
+		ComboMergeInfoStruct const& m = *i;
 		if (m.usItem == NOTHING) break;
 		if (m.usItem != o.usItem) continue;
 
@@ -2361,17 +2361,17 @@ static INT8 GetAttachmentComboMerge(OBJECTTYPE const& o)
 		{
 			UINT16 const attachment = *k;
 			if (attachment == NOTHING) continue;
-			if (FindAttachment(&o, attachment) == -1) return -1; // Didn't find something required
+			if (FindAttachment(&o, attachment) == -1) return 0; // Didn't find something required
 		}
 
-		return i; // Found everything required
+		return &m; // Found everything required
 	}
 
-	return -1;
+	return 0;
 }
 
 
-static void PerformAttachmentComboMerge(OBJECTTYPE& o, INT8 const bAttachmentComboMerge)
+static void PerformAttachmentComboMerge(OBJECTTYPE& o, ComboMergeInfoStruct const& m)
 {
 	/* This object has been validated as available for an attachment combo merge.
 	 * - Find all attachments in list and destroy them
@@ -2379,7 +2379,6 @@ static void PerformAttachmentComboMerge(OBJECTTYPE& o, INT8 const bAttachmentCom
 	 * - Change object */
 	UINT32 total_status          = o.bStatus[0];
 	INT8   n_status_contributors = 1;
-	ComboMergeInfoStruct const& m = AttachmentComboMerge[bAttachmentComboMerge];
 	for (UINT16 const* i = m.usAttachment; i != endof(m.usAttachment); ++i)
 	{
 		if (*i == NOTHING) continue;
@@ -2498,10 +2497,9 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 		}
 
 		// Check for attachment merge combos here
-		INT8 const bAttachComboMerge = GetAttachmentComboMerge(target);
-		if (bAttachComboMerge != -1)
+		if (ComboMergeInfoStruct const* const m = GetAttachmentComboMerge(target))
 		{
-			PerformAttachmentComboMerge(target, bAttachComboMerge);
+			PerformAttachmentComboMerge(target, *m);
 			if (attach_info && attach_info->bAttachmentSkillCheckMod < 20)
 			{
 				StatChange(s, MECHANAMT, 20 - attach_info->bAttachmentSkillCheckMod, FALSE);
