@@ -1334,7 +1334,7 @@ static void WriteLevelNode(HWFILE const f, LEVELNODE const* const n)
 }
 
 
-static void RemoveWorldWireFrameTiles(void);
+static void RemoveWorldWireFrameTiles();
 static void SaveMapLights(HWFILE);
 
 
@@ -2938,14 +2938,11 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 
 #ifdef JA2EDITOR
 
-static void RemoveWorldWireFrameTiles(void)
+static void RemoveWorldWireFrameTiles()
 {
-	INT32					cnt;
-
-	// Create world randomly from tiles
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 	{
-		RemoveWireFrameTiles( (INT16)cnt );
+		RemoveWireFrameTiles(cnt);
 	}
 }
 
