@@ -2744,7 +2744,7 @@ static UINT16 GetWireframeGraphicNumToUseForWall(const INT16 sGridNo, STRUCTURE*
 }
 
 
-static INT8 IsHiddenTileMarkerThere(INT16 sGridNo);
+static INT8 IsHiddenTileMarkerThere(GridNo);
 static BOOLEAN IsRoofVisibleForWireframe(INT16 sMapPos);
 static void RemoveWireFrameTiles(INT16 sGridNo);
 
@@ -2984,39 +2984,9 @@ static void RemoveWireFrameTiles(INT16 sGridNo)
 }
 
 
-static INT8 IsHiddenTileMarkerThere(INT16 sGridNo)
+static INT8 IsHiddenTileMarkerThere(GridNo const gridno)
 {
-	STRUCTURE * pStructure;
-
-	if ( !gfBasement )
-	{
-		pStructure = FindStructure( sGridNo, STRUCTURE_ROOF );
-
-		if ( pStructure != NULL )
-		{
-			//if ( !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
-			{
-				return( 2 );
-			}
-
-			// if we are here, a roof exists but has been revealed
-			return( 1 );
-		}
-	}
-	else
-	{
-		//if (GetRoom(sGridNo) != NO_ROOM)
-		{
-			//if ( !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) )
-			{
-				return( 2 );
-			}
-
-			return( 1 );
-		}
-	}
-
-	return( -1 );
+	return gfBasement || FindStructure(gridno, STRUCTURE_ROOF) ? 2 : -1;
 }
 
 
