@@ -2641,39 +2641,37 @@ static void TrashMapTile(const INT16 MapTile)
 }
 
 
-void LoadMapTileset(TileSetID const iTilesetID)
+void LoadMapTileset(TileSetID const id)
 {
-	if ( iTilesetID >= NUM_TILESETS )
+	if (id >= NUM_TILESETS)
 	{
 		throw std::logic_error("Tried to load tileset with invalid ID");
 	}
 
 	// Init tile surface used values
-	memset( gbNewTileSurfaceLoaded, 0, sizeof( gbNewTileSurfaceLoaded ) );
+	memset(gbNewTileSurfaceLoaded, 0, sizeof(gbNewTileSurfaceLoaded));
 
-	if (iTilesetID == giCurrentTilesetID) return;
+	if (id == giCurrentTilesetID) return;
 
-	// LOAD SURFACES
-	LoadTileSurfaces(&gTilesets[iTilesetID].TileSurfaceFilenames[0], iTilesetID);
+	TILESET const& t = gTilesets[id];
+	LoadTileSurfaces(&t.TileSurfaceFilenames[0], id);
 
-	// SET TERRAIN COSTS
-	if ( gTilesets[ iTilesetID ].MovementCostFnc != NULL )
+	// Set terrain costs
+	if (t.MovementCostFnc)
 	{
-		gTilesets[ iTilesetID ].MovementCostFnc( );
+		t.MovementCostFnc();
 	}
 	else
 	{
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Tileset %d has no callback function for movement costs. Using default.", iTilesetID) );
-		SetTilesetOneTerrainValues( );
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Tileset %d has no callback function for movement costs. Using default.", id));
+		SetTilesetOneTerrainValues();
 	}
 
-	// RESET TILE DATABASE
-	DeallocateTileDatabase( );
+	DeallocateTileDatabase();
+	CreateTileDatabase();
 
-	CreateTileDatabase( );
-
-	// SET GLOBAL ID FOR TILESET ( FOR SAVING! )
-	giCurrentTilesetID = iTilesetID;
+	// Set global id for tileset (for saving!)
+	giCurrentTilesetID = id;
 }
 
 
