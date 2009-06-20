@@ -1611,43 +1611,31 @@ catch (...) { return FALSE; }
 #endif
 
 
-#define NUM_DIR_SEARCHES				5
-INT8	bDirectionsForShadowSearch[ NUM_DIR_SEARCHES ] =
+static void OptimizeMapForShadows()
 {
-	 WEST,
-	 SOUTHWEST,
-	 SOUTH,
-	 SOUTHEAST,
-	 EAST
-};
-
-
-static void OptimizeMapForShadows(void)
-{
-	INT32 cnt, dir;
-	INT16 sNewGridNo;
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	INT8 const bDirectionsForShadowSearch[] =
 	{
-		// CHECK IF WE ARE A TREE HERE
-		if ( IsTreePresentAtGridno( (INT16)cnt ) )
-		{
-			// CHECK FOR A STRUCTURE A FOOTPRINT AWAY
-			for ( dir = 0; dir < NUM_DIR_SEARCHES; dir++ )
-			{
-				sNewGridNo = NewGridNo( (INT16)cnt, (UINT16)DirectionInc( bDirectionsForShadowSearch[ dir ] ) );
+		WEST,
+		SOUTHWEST,
+		SOUTH,
+		SOUTHEAST,
+		EAST
+	};
 
-				if ( gpWorldLevelData[ sNewGridNo ].pStructureHead == NULL )
-				{
-					break;
-				}
+	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
+	{
+		if (!IsTreePresentAtGridno(cnt)) continue;
+
+		// Check for a structure a footprint away
+		for (INT8 const* dir = bDirectionsForShadowSearch;; ++dir)
+		{
+			if (dir == endof(bDirectionsForShadowSearch))
+			{ // We're full of structures
+				RemoveAllShadows(cnt);
+				break;
 			}
-			// If we made it here, remove shadow!
-			// We're full of structures
-			if ( dir == NUM_DIR_SEARCHES )
-			{
-				RemoveAllShadows( cnt );
-				// Display message to effect
-			}
+			GridNo const gridno = NewGridNo(cnt, DirectionInc(*dir));
+			if (!gpWorldLevelData[gridno].pStructureHead) break;
 		}
 	}
 }
