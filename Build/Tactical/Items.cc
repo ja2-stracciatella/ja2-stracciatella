@@ -1635,38 +1635,30 @@ BOOLEAN ValidMerge( UINT16 usMerge, UINT16 usItem )
 }
 
 
-UINT8 CalculateObjectWeight(const OBJECTTYPE* const pObject)
+UINT8 CalculateObjectWeight(OBJECTTYPE const* const o)
 {
-	INT32 cnt;
-	UINT16 usWeight;
+	INVTYPE const& item   = Item[o->usItem];
+	UINT16         weight = item.ubWeight; // Start with base weight
 
-	const INVTYPE* const pItem = &Item[pObject->usItem];
-
-	// Start with base weight
-	usWeight = pItem->ubWeight;
-
-	if (pItem->ubPerPocket < 2)
+	if (item.ubPerPocket <= 1)
 	{
-		// account for any attachments
-		for ( cnt = 0; cnt < MAX_ATTACHMENTS; cnt++ )
+		// Account for any attachments
+		for (UINT16 const* i = o->usAttachItem; i != endof(o->usAttachItem); ++i)
 		{
-			if (pObject->usAttachItem[cnt] != NOTHING )
-			{
-				usWeight += Item[ pObject->usAttachItem[cnt] ].ubWeight;
-			}
+			if (*i == NOTHING) continue;
+			weight += Item[*i].ubWeight;
 		}
 
-		// add in weight of ammo
-		if (Item[ pObject->usItem ].usItemClass == IC_GUN && pObject->ubGunShotsLeft > 0)
-		{
-			usWeight += Item[ pObject->usGunAmmoItem ].ubWeight;
+		if (Item[o->usItem].usItemClass == IC_GUN && o->ubGunShotsLeft > 0)
+		{ // Add in weight of ammo
+			weight += Item[o->usGunAmmoItem].ubWeight;
 		}
 	}
 
-	// make sure it really fits into that UINT8, in case we ever add anything real heavy with attachments/ammo
-	Assert(usWeight <= 255);
-
-	return( (UINT8) usWeight );
+	/* Make sure it really fits into that UINT8, in case we ever add anything real
+	 * heavy with attachments/ammo */
+	Assert(weight <= 255);
+	return weight;
 }
 
 
