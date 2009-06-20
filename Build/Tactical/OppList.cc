@@ -4626,74 +4626,47 @@ static void HearNoise(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const noise_make
 }
 
 
-static void TellPlayerAboutNoise(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const noise_maker, const INT16 sGridNo, const INT8 bLevel, const UINT8 ubVolume, const UINT8 ubNoiseType, const UINT8 ubNoiseDir)
+static void TellPlayerAboutNoise(SOLDIERTYPE* const s, SOLDIERTYPE const* const noise_maker, INT16 const sGridNo, INT8 const level, UINT8 const volume, UINT8 const noise_type, UINT8 const noise_dir)
 {
-	UINT8 ubVolumeIndex;
-
-	// CJC: tweaked the noise categories upwards a bit because our movement noises can be louder now.
-	if (ubVolume < 4)
-	{
-		ubVolumeIndex = 0;		// 1-3: faint noise
-	}
-	else if (ubVolume < 8)	// 4-7: definite noise
-	{
-		ubVolumeIndex = 1;
-	}
-	else if (ubVolume < 12)	// 8-11: loud noise
-	{
-		ubVolumeIndex = 2;
-	}
-	else										// 12+: very loud noise
-	{
-		ubVolumeIndex = 3;
-	}
-
-	// display a message about a noise...
-	// e.g. Sidney hears a loud splash from/to? the north.
+	/* CJC: tweaked the noise categories upwards a bit because our movement noises
+	 * can be louder now. */
+	UINT8 const volume_idx =
+		volume <  4 ? 0 : // 1-3:  faint noise
+		volume <  8 ? 1 : // 4-7:  definite noise
+		volume < 12 ? 2 : // 8-11: loud noise
+		3;                // 12+:  very loud noise
 
 #ifdef JA2BETAVERSION
-	if (noise_maker != NULL && pSoldier->bTeam == gbPlayerNum && pSoldier->bTeam == noise_maker->bTeam)
+	if (noise_maker && s->bTeam == gbPlayerNum && s->bTeam == noise_maker->bTeam)
 	{
 		ScreenMsg(MSG_FONT_RED, MSG_ERROR, L"ERROR! TAKE SCREEN CAPTURE AND TELL CAMFIELD NOW!");
-		ScreenMsg(MSG_FONT_RED, MSG_ERROR, L"%ls (%d) heard noise from %ls (%d), noise at %dL%d, type %d", pSoldier->name, pSoldier->ubID, noise_maker->name, noise_maker->ubID, sGridNo, bLevel, ubNoiseType);
+		ScreenMsg(MSG_FONT_RED, MSG_ERROR, L"%ls (%d) heard noise from %ls (%d), noise at %dL%d, type %d", s->name, s->ubID, noise_maker->name, noise_maker->ubID, sGridNo, level, noise_type);
 	}
 #endif
 
-	if ( bLevel == pSoldier->bLevel || ubNoiseType == NOISE_EXPLOSION || ubNoiseType == NOISE_SCREAM || ubNoiseType == NOISE_ROCK_IMPACT || ubNoiseType == NOISE_GRENADE_IMPACT )
-	{
-		ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, pNewNoiseStr[ubNoiseType], pSoldier->name, pNoiseVolStr[ubVolumeIndex], pDirectionStr[ubNoiseDir] );
-	}
-	else if ( bLevel > pSoldier->bLevel )
-	{
-		// from above!
-		ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, pNewNoiseStr[ubNoiseType], pSoldier->name, pNoiseVolStr[ubVolumeIndex], gzLateLocalizedString[6] );
-	}
-	else
-	{
-		// from below!
-		ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, pNewNoiseStr[ubNoiseType], pSoldier->name, pNoiseVolStr[ubVolumeIndex], gzLateLocalizedString[7] );
-	}
+	/* display a message about a noise, e.g. Sidney hears a loud splash from/to?
+	 * the north. */
+	wchar_t const* const direction =
+		level      == s->bLevel            ||
+		noise_type == NOISE_EXPLOSION      ||
+		noise_type == NOISE_SCREAM         ||
+		noise_type == NOISE_ROCK_IMPACT    ||
+		noise_type == NOISE_GRENADE_IMPACT ? pDirectionStr[noise_dir] :
+		level      >  s->bLevel            ? pDirectionStr[6]         : // From above
+		pDirectionStr[7];                                               // From below
+	ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, pNewNoiseStr[noise_type], s->name, pNoiseVolStr[volume_idx], direction);
 
-	// if the quote was faint, say something
-	if (ubVolumeIndex == 0)
+	// If the sound was faint, say something
+	if (volume_idx == 0                              &&
+			!AreInMeanwhile()                            &&
+			!(gTacticalStatus.uiFlags & ENGAGED_IN_CONV) &&
+			s->ubTurnsUntilCanSayHeardNoise == 0)
 	{
-		if ( !AreInMeanwhile( ) && !( gTacticalStatus.uiFlags & ENGAGED_IN_CONV) && pSoldier->ubTurnsUntilCanSayHeardNoise == 0)
-		{
-			TacticalCharacterDialogue( pSoldier, QUOTE_HEARD_SOMETHING );
-			if ( gTacticalStatus.uiFlags & INCOMBAT )
-			{
-				pSoldier->ubTurnsUntilCanSayHeardNoise = 2;
-			}
-			else
-			{
-				pSoldier->ubTurnsUntilCanSayHeardNoise = 5;
-			}
-		}
+		TacticalCharacterDialogue(s, QUOTE_HEARD_SOMETHING);
+		s->ubTurnsUntilCanSayHeardNoise = gTacticalStatus.uiFlags & INCOMBAT ? 2 : 5;
 	}
-
-	// flag soldier as having reported noise in a particular direction
-
 }
+
 
 void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier)
 {
