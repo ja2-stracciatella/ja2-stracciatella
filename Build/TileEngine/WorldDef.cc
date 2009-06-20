@@ -2501,26 +2501,20 @@ catch (...)
 
 #ifdef JA2EDITOR
 
-void NewWorld(void)
+void NewWorld()
 {
-	UINT16				NewIndex;
-	INT32					cnt;
-
-	SetSelectedMan(NULL);
-
+	SetSelectedMan(0);
 	TrashWorld();
 
 	// Create world randomly from tiles
-	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
+	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 	{
 		// Set land index
-		NewIndex = (UINT16)(rand( ) % 10);
-		AddLandToHead( cnt, NewIndex );
+		UINT16 const idx = rand() % 10;
+		AddLandToHead(cnt, idx);
 	}
 
-
-	InitRoomDatabase( );
-
+	InitRoomDatabase();
 	gfWorldLoaded = TRUE;
 }
 
