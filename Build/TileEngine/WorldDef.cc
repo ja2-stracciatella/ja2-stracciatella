@@ -2746,7 +2746,7 @@ static UINT16 GetWireframeGraphicNumToUseForWall(const INT16 sGridNo, STRUCTURE*
 
 static bool IsHiddenTileMarkerThere(GridNo);
 static bool IsRoofVisibleForWireframe(GridNo);
-static void RemoveWireFrameTiles(INT16 sGridNo);
+static void RemoveWireFrameTiles(GridNo);
 
 
 void CalculateWorldWireFrameTiles( BOOLEAN fForce )
@@ -2952,30 +2952,20 @@ static void RemoveWorldWireFrameTiles(void)
 #endif
 
 
-static void RemoveWireFrameTiles(INT16 sGridNo)
+static void RemoveWireFrameTiles(GridNo const gridno)
 {
-	LEVELNODE			*pTopmost, *pNewTopmost;
-	TILE_ELEMENT *	pTileElement;
-
-	pTopmost = gpWorldLevelData[ sGridNo ].pTopmostHead;
-
-	while ( pTopmost != NULL )
+	for (LEVELNODE* i = gpWorldLevelData[gridno].pTopmostHead; i;)
 	{
-		pNewTopmost = pTopmost->pNext;
+		LEVELNODE* const next = i->pNext;
 
-		if ( pTopmost->usIndex < NUMBEROFTILES )
+		if (i->usIndex < NUMBEROFTILES &&
+				gTileDatabase[i->usIndex].fType == WIREFRAMES)
 		{
-			pTileElement = &(gTileDatabase[ pTopmost->usIndex ]);
-
-			if ( pTileElement->fType == WIREFRAMES )
-			{
-				RemoveTopmost( sGridNo, pTopmost->usIndex );
-			}
+			RemoveTopmost(gridno, i->usIndex);
 		}
 
-		pTopmost = pNewTopmost;
+		i = next;
 	}
-
 }
 
 
