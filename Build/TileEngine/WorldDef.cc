@@ -2744,7 +2744,7 @@ static UINT16 GetWireframeGraphicNumToUseForWall(const INT16 sGridNo, STRUCTURE*
 }
 
 
-static INT8 IsHiddenTileMarkerThere(GridNo);
+static bool IsHiddenTileMarkerThere(GridNo);
 static BOOLEAN IsRoofVisibleForWireframe(INT16 sMapPos);
 static void RemoveWireFrameTiles(INT16 sGridNo);
 
@@ -2755,7 +2755,6 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 	STRUCTURE		 *pStructure;
 	INT16					sGridNo;
 	UINT8					ubWallOrientation;
-	INT8					bHiddenVal;
 	INT8					bNumWallsSameGridNo;
   UINT16        usWireFrameIndex;
 
@@ -2886,9 +2885,7 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 								   // Check along our direction to see if we are a corner
 								   sGridNo = NewGridNo( (INT16)cnt, DirectionInc( WEST ) );
 								   sGridNo = NewGridNo( sGridNo, DirectionInc( SOUTH ) );
-								   bHiddenVal = IsHiddenTileMarkerThere( sGridNo );
-								   // If we do not exist ( -1 ) or are revealed ( 1 )
-								   if ( bHiddenVal == -1 || bHiddenVal == 1 )
+								   if (!IsHiddenTileMarkerThere(sGridNo))
 								   {
 									   // Place corner!
 									   AddWireFrame((INT16)cnt, WIREFRAMES9, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
@@ -2911,9 +2908,7 @@ void CalculateWorldWireFrameTiles( BOOLEAN fForce )
 								   // Check along our direction to see if we are a corner
 								   sGridNo = NewGridNo( (INT16)cnt, DirectionInc( NORTH ) );
 								   sGridNo = NewGridNo( sGridNo, DirectionInc( EAST ) );
-								   bHiddenVal = IsHiddenTileMarkerThere( sGridNo );
-								   // If we do not exist ( -1 ) or are revealed ( 1 )
-								   if ( bHiddenVal == -1 || bHiddenVal == 1 )
+								   if (!IsHiddenTileMarkerThere(sGridNo))
 								   {
 									   // Place corner!
 									   AddWireFrame((INT16)cnt, WIREFRAMES8, (gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) != 0);
@@ -2984,9 +2979,9 @@ static void RemoveWireFrameTiles(INT16 sGridNo)
 }
 
 
-static INT8 IsHiddenTileMarkerThere(GridNo const gridno)
+static bool IsHiddenTileMarkerThere(GridNo const gridno)
 {
-	return gfBasement || FindStructure(gridno, STRUCTURE_ROOF) ? 2 : -1;
+	return gfBasement || FindStructure(gridno, STRUCTURE_ROOF);
 }
 
 
