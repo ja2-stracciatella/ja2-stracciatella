@@ -2677,30 +2677,15 @@ void LoadMapTileset(TileSetID const iTilesetID)
 }
 
 
-static void AddWireFrame(INT16 sGridNo, UINT16 usIndex, BOOLEAN fForced)
+static void AddWireFrame(GridNo const gridno, UINT16 const idx, bool const forced)
 {
-	LEVELNODE			*pTopmost, *pTopmostTail;
-
-
-	pTopmost = gpWorldLevelData[ sGridNo ].pTopmostHead;
-
-	while ( pTopmost != NULL )
-	{
-		// Check if one of the samer type exists!
-		if ( pTopmost->usIndex == usIndex )
-		{
-			return;
-		}
-		pTopmost = pTopmost->pNext;
+	for (LEVELNODE* i = gpWorldLevelData[gridno].pTopmostHead; i; i = i->pNext)
+	{ // Check if one of the same type exists!
+		if (i->usIndex == idx) return;
 	}
 
-	pTopmostTail = AddTopmostToTail( sGridNo, usIndex );
-
-	if ( fForced )
-	{
-		pTopmostTail->uiFlags |= LEVELNODE_WIREFRAME;
-	}
-
+	LEVELNODE* const n = AddTopmostToTail(gridno, idx);
+	if (forced) n->uiFlags |= LEVELNODE_WIREFRAME;
 }
 
 
