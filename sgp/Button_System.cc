@@ -418,12 +418,6 @@ void InitButtonSystem(void)
 {
 	ButtonDestBuffer = FRAME_BUFFER;
 
-	// Clear out button list
-	for (INT32 x = 0; x < MAX_BUTTONS; ++x)
-	{
-		ButtonList[x] = NULL;
-	}
-
 	// Initialize the button image manager sub-system
 	InitializeButtonImageManager();
 }
