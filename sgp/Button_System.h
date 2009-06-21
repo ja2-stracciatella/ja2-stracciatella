@@ -267,7 +267,6 @@ GUIButtonRef CreateLabel(const wchar_t* text, Font, INT16 forecolor, INT16 shado
 void SpecifyButtonText(GUIButtonRef, const wchar_t* string);
 
 void MSYS_SetBtnUserData(GUIButtonRef, INT32 userdata);
-INT32 MSYS_GetBtnUserData(const GUI_BUTTON* b);
 void MarkAButtonDirty(GUIButtonRef); // will mark only selected button dirty
 void MarkButtonsDirty(void);// Function to mark buttons dirty ( all will redraw at next RenderButtons )
 void UnMarkButtonDirty(GUIButtonRef);  // unmark button

@@ -1289,7 +1289,7 @@ void ExtractAndUpdateMercSchedule()
 	for( i = 0; i < 4; i++ )
 	{
 		gCurrSchedule.usTime[i]	= GetExclusive24HourTimeValueFromField( (UINT8)(i+1) );
-		gCurrSchedule.ubAction[i] = MSYS_GetBtnUserData(iEditorButton[MERCS_SCHEDULE_ACTION1 + i]);
+		gCurrSchedule.ubAction[i] = iEditorButton[MERCS_SCHEDULE_ACTION1 + i]->GetUserData();
 		if( gCurrSchedule.ubAction[i] )
 			fValidSchedule = TRUE;
 	}

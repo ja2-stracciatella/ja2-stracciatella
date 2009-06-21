@@ -1655,12 +1655,6 @@ void MSYS_SetBtnUserData(GUIButtonRef const b, INT32 userdata)
 }
 
 
-INT32 MSYS_GetBtnUserData(const GUI_BUTTON* b)
-{
-	return b->User.Data;
-}
-
-
 /* Generic Button Movement Callback to reset the mouse button if the mouse is no
  * longer in the button region.
  */
