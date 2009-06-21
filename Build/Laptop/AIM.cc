@@ -516,7 +516,7 @@ static void BtnAimBottomButtonsCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		ResetAimButtons(guiBottomButtons, NUM_AIM_BOTTOMBUTTONS);
-		guiCurrentLaptopMode = MSYS_GetBtnUserData(btn);
+		guiCurrentLaptopMode = btn->GetUserData();
 	}
 	DisableAimButton();
 }

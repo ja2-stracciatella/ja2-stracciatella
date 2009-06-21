@@ -1119,7 +1119,7 @@ static void BtnContractLengthButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		gubContractLength = MSYS_GetBtnUserData(btn);
+		gubContractLength = btn->GetUserData();
 		DisplaySelectLights();
 		guiMercAttitudeTime = GetJA2Clock();
 		DisplayMercChargeAmount();
@@ -1135,7 +1135,7 @@ static void BtnBuyEquipmentButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		gfBuyEquipment = MSYS_GetBtnUserData(btn);
+		gfBuyEquipment = btn->GetUserData();
 		DisplaySelectLights();
 		DisplayMercChargeAmount();
 		guiMercAttitudeTime = GetJA2Clock();
@@ -1154,7 +1154,7 @@ static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	ubRetValue = MSYS_GetBtnUserData(btn);
+		UINT8	ubRetValue = btn->GetUserData();
 
 		gfStopMercFromTalking = TRUE;
 		gubMercAttitudeLevel = QUOTE_DELAY_NO_ACTION;
@@ -1546,7 +1546,7 @@ static void BtnPopUpOkButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		{
-			UINT8 ubCurPageNum = MSYS_GetBtnUserData(btn);
+			UINT8 const ubCurPageNum = btn->GetUserData();
 
 			fInCallback = FALSE;
 
@@ -1577,7 +1577,7 @@ static void BtnFirstContactButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	ubRetValue = MSYS_GetBtnUserData(btn);
+		UINT8	const ubRetValue = btn->GetUserData();
 
 //		gfStopMercFromTalking = TRUE;
 		StopMercTalking();
@@ -1603,7 +1603,7 @@ static void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	ubRetValue = MSYS_GetBtnUserData(btn);
+		UINT8	const ubRetValue = btn->GetUserData();
 
 		if (ubRetValue == 0)
 		{

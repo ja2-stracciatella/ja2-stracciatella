@@ -280,7 +280,7 @@ static void ResetAimArchiveButtons(void);
 
 static void BtnAlumniPageButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	UINT8	ubRetValue = MSYS_GetBtnUserData(btn);
+	UINT8	const ubRetValue = btn->GetUserData();
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{

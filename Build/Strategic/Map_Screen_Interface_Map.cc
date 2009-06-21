@@ -4302,7 +4302,7 @@ static void SetMilitiaMapButtonsText(void)
 
 static void MilitiaButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	INT32 iValue = MSYS_GetBtnUserData(btn);
+	INT32 const iValue = btn->GetUserData();
 
 	// get the sector value for the upper left corner
 	INT16 sBaseSectorValue = GetBaseSectorForCurrentTown();

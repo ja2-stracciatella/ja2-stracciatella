@@ -331,7 +331,7 @@ static void NumberedMsgBoxCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		gMsgBox.bHandled = static_cast<MessageBoxReturnValue>(MSYS_GetBtnUserData(btn));
+		gMsgBox.bHandled = static_cast<MessageBoxReturnValue>(btn->GetUserData());
 	}
 }
 

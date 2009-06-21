@@ -247,7 +247,7 @@ static void MenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		INT8 bID = MSYS_GetBtnUserData(btn);
+		INT8 const bID = btn->GetUserData();
 
 		gbHandledMainMenu = bID;
 		RenderMainMenu();

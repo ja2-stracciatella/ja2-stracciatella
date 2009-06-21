@@ -623,7 +623,7 @@ static void BtnPoliciesAgreeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		{
-			UINT8 ubRetValue = MSYS_GetBtnUserData(btn);
+			UINT8 const ubRetValue = btn->GetUserData();
 
 			fOnPage = FALSE;
 			if (ubRetValue == 1)
@@ -651,8 +651,7 @@ static void BtnPoliciesMenuButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 		{
-			UINT8 ubRetValue = MSYS_GetBtnUserData(btn);
-
+			UINT8 const ubRetValue = btn->GetUserData();
 			switch (ubRetValue)
 			{
 				case 0: // If previous Page

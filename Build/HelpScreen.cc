@@ -1208,7 +1208,7 @@ static void BtnHelpScreenBtnsCallback(GUI_BUTTON* btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		//Get the btn id
-		INT8 bRetValue = MSYS_GetBtnUserData(btn);
+		INT8 const bRetValue = btn->GetUserData();
 
 		ChangeToHelpScreenSubPage( bRetValue );
 /*
@@ -2238,7 +2238,7 @@ static void BtnHelpScreenScrollArrowsCallback(GUI_BUTTON* btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
 			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
-		INT32 iButtonID = MSYS_GetBtnUserData(btn);
+		INT32 const iButtonID = btn->GetUserData();
 
 		//if up
 		if( iButtonID == 0 )

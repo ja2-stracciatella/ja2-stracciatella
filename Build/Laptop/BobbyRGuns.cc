@@ -391,7 +391,7 @@ static void BtnBobbyRPageMenuCallback(GUI_BUTTON* btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		UpdateButtonText(guiCurrentLaptopMode);
-		guiCurrentLaptopMode = MSYS_GetBtnUserData(btn);
+		guiCurrentLaptopMode = btn->GetUserData();
 	}
 }
 

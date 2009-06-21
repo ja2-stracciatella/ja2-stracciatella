@@ -106,7 +106,8 @@ struct GUI_BUTTON
 	INT16 RelativeX() const { return Area.RelativeXPos; }
 	INT16 RelativeY() const { return Area.RelativeYPos; }
 
-	void SetUserData(INT32 const data) { User.Data = data; }
+	INT32 GetUserData() const { return User.Data; }
+	void  SetUserData(INT32 const data) { User.Data = data; }
 
 	INT32        IDNum;         // ID Number, contains it's own button number
 	BUTTON_PICS* image;         // Image to use (see DOCs for details)

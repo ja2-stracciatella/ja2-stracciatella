@@ -914,8 +914,7 @@ void MercsInventorySlotCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		INT32 uiSlot;
-		uiSlot = MSYS_GetBtnUserData(btn);
+		INT32 const uiSlot = btn->GetUserData();
 		if( btn->uiFlags & BUTTON_CLICKED_ON )
 			SetEnemyDroppableStatus( uiSlot, TRUE );
 		else
@@ -927,8 +926,7 @@ void MercsSetEnemyColorCodeCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		UINT8 ubColorCode;
-		ubColorCode = MSYS_GetBtnUserData(btn);
+		UINT8 const ubColorCode = btn->GetUserData();
 		SetEnemyColorCode( ubColorCode );
 	}
 }
@@ -1242,21 +1240,21 @@ void MercsScheduleModeCallback( GUI_BUTTON *btn, INT32 reason )
 void MercsSetOrdersCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-		SetMercOrders(MSYS_GetBtnUserData(btn));
+		SetMercOrders(btn->GetUserData());
 }
 
 //multiple attitude buttons
 void MercsSetAttitudeCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-		SetMercAttitude(MSYS_GetBtnUserData(btn));
+		SetMercAttitude(btn->GetUserData());
 }
 
 //multiple direction buttons
 void MercsDirectionSetCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-		SetMercDirection(MSYS_GetBtnUserData(btn));
+		SetMercDirection(btn->GetUserData());
 }
 
 void MercsFindSelectedMercCallback( GUI_BUTTON *btn, INT32 reason )
@@ -1272,13 +1270,13 @@ void MercsFindSelectedMercCallback( GUI_BUTTON *btn, INT32 reason )
 void MercsSetRelativeEquipmentCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-		SetMercRelativeEquipment(MSYS_GetBtnUserData(btn));
+		SetMercRelativeEquipment(btn->GetUserData());
 }
 
 void MercsSetRelativeAttributesCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-		SetMercRelativeAttributes(MSYS_GetBtnUserData(btn));
+		SetMercRelativeAttributes(btn->GetUserData());
 }
 
 void MouseMovedInMercRegion( MOUSE_REGION *reg, INT32 reason )

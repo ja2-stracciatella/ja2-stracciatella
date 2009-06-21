@@ -660,7 +660,7 @@ static void BtnOptionsTogglesCallback(GUI_BUTTON* btn, INT32 reason)
 		return;
 	}
 	const BOOLEAN clicked  = (btn->uiFlags & BUTTON_CLICKED_ON) != 0;
-	const UINT8   ubButton = MSYS_GetBtnUserData(btn);
+	const UINT8   ubButton = btn->GetUserData();
 	HandleOptionToggle(ubButton, clicked, down, FALSE);
 }
 

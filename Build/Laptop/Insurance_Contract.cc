@@ -586,8 +586,8 @@ static void BtnInsuranceAcceptClearFormButtonCallback(GUI_BUTTON* btn, INT32 rea
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		const UINT idx = MSYS_GetBtnUserData(btn);
-		SOLDIERTYPE* const s = insurance_info[idx].soldier;
+		UINT         const idx = btn->GetUserData();
+		SOLDIERTYPE* const s   = insurance_info[idx].soldier;
 
 		HandleAcceptButton(s);
 

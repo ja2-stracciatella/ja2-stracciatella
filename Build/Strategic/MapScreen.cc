@@ -7195,7 +7195,7 @@ void MapScreenDefaultOkBoxCallback(MessageBoxReturnValue const bExitValue)
 static void MapSortBtnCallback(GUI_BUTTON *btn, INT32 reason)
 {
 	// grab the button index value for the sort buttons
-	INT32 iValue = MSYS_GetBtnUserData(btn);
+	INT32 const iValue = btn->GetUserData();
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
   {

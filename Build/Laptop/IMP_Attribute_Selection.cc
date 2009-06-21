@@ -486,7 +486,7 @@ static void BtnIMPAttributeSliderLeftCallback(GUI_BUTTON* btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
 			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
-		INT32 iValue = MSYS_GetBtnUserData(btn);
+		INT32 const iValue = btn->GetUserData();
 		DecrementStat(iValue);
 		fHasAnySlidingBarMoved = TRUE;
 		uiBarToReRender = iValue;
@@ -499,7 +499,7 @@ static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN ||
 			reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
-		INT32 iValue = MSYS_GetBtnUserData(btn);
+		INT32 const iValue = btn->GetUserData();
 		IncrementStat(iValue);
 		fHasAnySlidingBarMoved = TRUE;
 		uiBarToReRender = iValue;
