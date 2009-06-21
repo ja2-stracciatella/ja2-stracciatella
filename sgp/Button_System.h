@@ -187,9 +187,6 @@ void InitButtonSystem(void);
  */
 void ShutdownButtonSystem(void);
 
-// Set the text that will be displayed as the FastHelp
-void SetButtonFastHelpText(GUIButtonRef, wchar_t const* text);
-
 #if defined _JA2_RENDER_DIRTY
 
 void RenderButtonsFastHelp(void);

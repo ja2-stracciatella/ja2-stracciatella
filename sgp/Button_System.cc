@@ -768,13 +768,6 @@ void GUI_BUTTON::SetFastHelpText(const wchar_t* const text)
 }
 
 
-void SetButtonFastHelpText(GUIButtonRef const b, const wchar_t* Text)
-{
-	CHECKV(b != NULL); // XXX HACK000C
-	b->SetFastHelpText(Text);
-}
-
-
 /* Dispatches all button callbacks for mouse movement. This function gets
  * called by the Mouse System. *DO NOT CALL DIRECTLY*
  */

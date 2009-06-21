@@ -2104,7 +2104,7 @@ static void DetermineBandageButtonState(void)
 	}
 	GUI_BUTTON* const b = gpAR->iButton[BANDAGE_BUTTON];
 	enable ? EnableButton(b) : DisableButton(b);
-	SetButtonFastHelpText(b, help);
+	b->SetFastHelpText(help);
 }
 
 
