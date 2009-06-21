@@ -6,8 +6,6 @@ namespace SGP
 	template<typename T, void (*dealloc)(T*)> class AutoObj
 	{
 		public:
-			typedef AutoObj<T, dealloc> Type;
-
 			explicit AutoObj(T* const p = 0) : p_(p) {}
 
 			~AutoObj() { if (p_) dealloc(p_); }

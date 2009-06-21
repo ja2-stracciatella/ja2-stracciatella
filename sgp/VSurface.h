@@ -154,6 +154,6 @@ static inline void DeleteVideoSurface(SGPVSurface* const vs)
 
 void BltVideoSurfaceOnce(SGPVSurface* dst, const char* filename, INT32 x, INT32 y);
 
-typedef SGP::AutoPtr<SGPVSurface>::Type AutoSGPVSurface;
+typedef SGP::AutoPtr<SGPVSurface> AutoSGPVSurface;
 
 #endif

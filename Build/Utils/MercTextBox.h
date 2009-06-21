@@ -44,6 +44,6 @@ void RemoveMercPopupBox(MercPopUpBox*);
 
 void RenderMercPopUpBox(MercPopUpBox const*, INT16 sDestX, INT16 sDestY, SGPVSurface* buffer);
 
-typedef SGP::AutoObj<MercPopUpBox, RemoveMercPopupBox>::Type AutoMercPopUpBox;
+typedef SGP::AutoObj<MercPopUpBox, RemoveMercPopupBox> AutoMercPopUpBox;
 
 #endif

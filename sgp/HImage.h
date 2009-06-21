@@ -137,6 +137,6 @@ void ConvertRGBDistribution565To655( UINT16 * p16BPPData, UINT32 uiNumberOfPixel
 void ConvertRGBDistribution565To556( UINT16 * p16BPPData, UINT32 uiNumberOfPixels );
 void ConvertRGBDistribution565ToAny( UINT16 * p16BPPData, UINT32 uiNumberOfPixels );
 
-typedef SGP::AutoPtr<SGPImage>::Type AutoSGPImage;
+typedef SGP::AutoPtr<SGPImage> AutoSGPImage;
 
 #endif

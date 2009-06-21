@@ -685,7 +685,7 @@ namespace
 		}
 	}
 
-	typedef SGP::AutoObj<FileString, ClearFileStringList>::Type AutoStringList;
+	typedef SGP::AutoObj<FileString, ClearFileStringList> AutoStringList;
 }
 
 

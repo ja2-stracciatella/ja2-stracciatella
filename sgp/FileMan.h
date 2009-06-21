@@ -125,6 +125,6 @@ UINT32 GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
 
 const char* GetBinDataPath(void);
 
-typedef SGP::AutoObj<SGPFile, FileClose>::Type AutoSGPFile;
+typedef SGP::AutoObj<SGPFile, FileClose> AutoSGPFile;
 
 #endif

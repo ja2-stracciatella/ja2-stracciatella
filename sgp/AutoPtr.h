@@ -6,8 +6,6 @@ namespace SGP
 	template<typename T> class AutoPtr
 	{
 		public:
-			typedef AutoPtr<T> Type;
-
 			explicit AutoPtr(T* const p = 0) : p_(p) {}
 
 			~AutoPtr() { if (p_) delete p_; }

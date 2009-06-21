@@ -132,6 +132,6 @@ SoundID GetStructureOpenSound(STRUCTURE const*, bool closing);
 
 extern const UINT8 gubMaterialArmour[];
 
-typedef SGP::AutoObj<STRUCTURE_FILE_REF, FreeStructureFile>::Type AutoStructureFileRef;
+typedef SGP::AutoObj<STRUCTURE_FILE_REF, FreeStructureFile> AutoStructureFileRef;
 
 #endif

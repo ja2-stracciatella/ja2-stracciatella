@@ -131,6 +131,6 @@ BOOLEAN BltVideoObjectOutlineShadow(SGPVSurface* dst, const SGPVObject* src, UIN
 /* Loads a video object, blits it once and frees it */
 void BltVideoObjectOnce(SGPVSurface* dst, char const* filename, UINT16 region, INT32 x, INT32 y);
 
-typedef SGP::AutoPtr<SGPVObject>::Type AutoSGPVObject;
+typedef SGP::AutoPtr<SGPVObject> AutoSGPVObject;
 
 #endif
