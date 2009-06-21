@@ -1,3 +1,4 @@
+(r6071) Fix a vanilla glitch: A merge recipe for the guardian vest was missing.
 (r6043) Fix a vanilla display glitch in debug mode: When turning of the Z-buffer display, the screen was not redrawn.
 
 v0.12.1 - 2009-06-15
