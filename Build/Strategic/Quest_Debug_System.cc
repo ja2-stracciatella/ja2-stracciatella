@@ -1717,7 +1717,7 @@ static void DisplaySelectedNPC(void)
 
 		swprintf(zButtonName, lengthof(zButtonName), L"%d - %ls", pid, p.zNickname);
 
-		SpecifyButtonText( guiQuestDebugCurNPCButton, zButtonName );
+		guiQuestDebugCurNPCButton->SpecifyText(zButtonName);
 	}
 
 	SetFontShadow( DEFAULT_SHADOW );
@@ -1763,8 +1763,7 @@ static void DisplaySelectedItem(void)
 		SetFontShadow(DEFAULT_SHADOW);
 
 		swprintf(zButtonName, lengthof(zButtonName), L"%d - %ls", gpActiveListBox->sCurSelectedItem, ItemName);
-
-		SpecifyButtonText( guiQuestDebugCurItemButton, zButtonName );
+		guiQuestDebugCurItemButton->SpecifyText(zButtonName);
 	}
 
 	SetFontShadow(DEFAULT_SHADOW);
@@ -2165,7 +2164,7 @@ static void BtnQuestDebugNPCLogButtonButtonCallback(GUI_BUTTON* btn, INT32 reaso
 		}
 
 		swprintf(zName, lengthof(zName), L"%ls - (%ls)", QuestDebugText[QUEST_DBS_NPC_LOG_BUTTON], gfNpcLogButton ? L"On" : L"Off");
-		SpecifyButtonText( guiQuestDebugNPCLogButtonButton, zName );
+		btn->SpecifyText(zName);
 	}
 }
 
@@ -2672,12 +2671,6 @@ static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, INT32 rea
 			EnableQDSButtons();
 		}
 
-/*
-		if( gubNumNPCinSector == 0 )
-			SpecifyButtonText( guiQuestDebugCurNPCButton, QuestDebugText[ QUEST_DBS_NO_NPC_IN_SECTOR ] );
-		else
-			SpecifyButtonText( guiQuestDebugCurNPCButton, QuestDebugText[ QUEST_DBS_SELECTED_NPC ] );
-*/
 		gfRedrawQuestDebugSystem = TRUE;
 	}
 }

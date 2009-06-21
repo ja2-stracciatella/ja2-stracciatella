@@ -2500,7 +2500,7 @@ void ChangeCivGroup( UINT8 ubNewCivGroup )
 		gpSelected->pSoldier->ubCivilianGroup = gubCivGroup;
 	}
 	//Adjust the text on the button
-	SpecifyButtonText( iEditorButton[ MERCS_CIVILIAN_GROUP ], gszCivGroupNames[ gubCivGroup ] );
+	iEditorButton[MERCS_CIVILIAN_GROUP]->SpecifyText(gszCivGroupNames[gubCivGroup]);
 }
 
 
@@ -2662,7 +2662,7 @@ void RegisterCurrentScheduleAction( INT32 iMapIndex )
 			return;
 		iDrawMode = DRAW_MODE_PLAYER + gpSelected->pBasicPlacement->bTeam;
 		gCurrSchedule.usData2[ gubCurrentScheduleActionIndex ] = (UINT16)iMapIndex;
-		SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1B + gubCurrentScheduleActionIndex ], str );
+		iEditorButton[MERCS_SCHEDULE_DATA1B + gubCurrentScheduleActionIndex]->SpecifyText(str);
 		DetermineScheduleEditability();
 		gubScheduleInstructions = SCHEDULE_INSTRUCTIONS_NONE;
 		gfRenderTaskbar = TRUE;
@@ -2705,7 +2705,7 @@ void RegisterCurrentScheduleAction( INT32 iMapIndex )
 				break;
 		}
 		gCurrSchedule.usData1[ gubCurrentScheduleActionIndex ] = (UINT16)iMapIndex;
-		SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1A + gubCurrentScheduleActionIndex ], str );
+		iEditorButton[MERCS_SCHEDULE_DATA1A + gubCurrentScheduleActionIndex]->SpecifyText(str);
 	}
 }
 
@@ -2764,8 +2764,7 @@ void StartScheduleAction()
 void UpdateScheduleAction( UINT8 ubNewAction )
 {
 	gCurrSchedule.ubAction[ gubCurrentScheduleActionIndex ] = ubNewAction;
-	SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + gubCurrentScheduleActionIndex ],
-		gszScheduleActions[ ubNewAction ] );
+	iEditorButton[MERCS_SCHEDULE_ACTION1 + gubCurrentScheduleActionIndex]->SpecifyText(gszScheduleActions[ubNewAction]);
 	iEditorButton[MERCS_SCHEDULE_ACTION1 + gubCurrentScheduleActionIndex]->SetUserData(ubNewAction);
 	//Now, based on this action, disable the other buttons
 	StartScheduleAction();
@@ -2819,13 +2818,13 @@ void ClearCurrentSchedule()
 	for( i = 0; i < 4; i++ )
 	{
 		iEditorButton[MERCS_SCHEDULE_ACTION1 + i]->SetUserData(0);
-		SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], L"No action" );
+		iEditorButton[MERCS_SCHEDULE_ACTION1 + i]->SpecifyText(L"No action");
 		gCurrSchedule.usTime[i] = 0xffff;
 		SetExclusive24HourTimeValue( (UINT8)(i+1), gCurrSchedule.usTime[ i ] ); //blanks the field
 		gCurrSchedule.usData1[i] = 0xffff;
-		SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1A + i ], L"" );
+		iEditorButton[MERCS_SCHEDULE_DATA1A + i]->SpecifyText(L"");
 		gCurrSchedule.usData2[i] = 0xffff;
-		SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1B + i ], L"" );
+		iEditorButton[MERCS_SCHEDULE_DATA1B + i]->SpecifyText(L"");
 	}
 	//Remove the variance stuff
 	gCurrSchedule.usFlags = 0;
@@ -2901,15 +2900,15 @@ static void UpdateScheduleInfo(void)
 		for( i = 0; i < 4; i++ )
 		{ //Update the text and buttons
 			iEditorButton[MERCS_SCHEDULE_ACTION1 + i]->SetUserData(pSchedule->ubAction[i]);
-			SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], gszScheduleActions[ pSchedule->ubAction[i] ] );
+			iEditorButton[MERCS_SCHEDULE_ACTION1 + i]->SpecifyText(gszScheduleActions[pSchedule->ubAction[i]]);
 			swprintf(str, lengthof(str), L"");
 			if( pSchedule->usData1[i] != 0xffff )
 				swprintf(str, lengthof(str), L"%d", pSchedule->usData1[i]);
-			SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1A + i ], str );
+			iEditorButton[MERCS_SCHEDULE_DATA1A + i]->SpecifyText(str);
 			swprintf(str, lengthof(str), L"");
 			if( pSchedule->usData2[i] != 0xffff )
 				swprintf(str, lengthof(str), L"%d", pSchedule->usData2[i]);
-			SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_DATA1B + i ], str );
+			iEditorButton[MERCS_SCHEDULE_DATA1B + i]->SpecifyText(str);
 			if( gubCurrMercMode == MERC_SCHEDULEMODE )
 			{ //Update the text input fields too!
 				SetExclusive24HourTimeValue( (UINT8)(i+1), pSchedule->usTime[i] );

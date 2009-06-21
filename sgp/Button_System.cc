@@ -673,13 +673,6 @@ void GUI_BUTTON::SpecifyText(wchar_t const* const text)
 }
 
 
-void SpecifyButtonText(GUIButtonRef const b, const wchar_t* string)
-{
-	CHECKV(b != NULL); // XXX HACK000C
-	b->SpecifyText(string);
-}
-
-
 void GUI_BUTTON::SpecifyDownTextColors(INT16 const fore_colour_down, INT16 const shadow_colour_down)
 {
 	sForeColorDown    = fore_colour_down;

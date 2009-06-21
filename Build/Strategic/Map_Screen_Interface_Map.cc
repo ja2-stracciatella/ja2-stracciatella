@@ -4288,15 +4288,15 @@ static void SetMilitiaMapButtonsText(void)
 
 	// the greens in this sector
 	swprintf( sString, lengthof(sString), L"%d", iNumberOfGreens );
-	SpecifyButtonText( giMapMilitiaButton[ 0 ], sString );
+	giMapMilitiaButton[0]->SpecifyText(sString);
 
 	// the regulars in this sector
 	swprintf( sString, lengthof(sString), L"%d", iNumberOfRegulars );
-	SpecifyButtonText( giMapMilitiaButton[ 1 ], sString );
+	giMapMilitiaButton[1]->SpecifyText(sString);
 
 	// the number of elites in this sector
 	swprintf( sString, lengthof(sString), L"%d", iNumberOfElites );
-	SpecifyButtonText( giMapMilitiaButton[ 2 ], sString );
+	giMapMilitiaButton[2]->SpecifyText(sString);
 }
 
 

@@ -261,8 +261,6 @@ GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const wchar_t* string, 
  * implemented as button */
 GUIButtonRef CreateLabel(const wchar_t* text, Font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority);
 
-void SpecifyButtonText(GUIButtonRef, const wchar_t* string);
-
 void MarkAButtonDirty(GUIButtonRef); // will mark only selected button dirty
 void MarkButtonsDirty(void);// Function to mark buttons dirty ( all will redraw at next RenderButtons )
 void UnMarkButtonDirty(GUIButtonRef);  // unmark button

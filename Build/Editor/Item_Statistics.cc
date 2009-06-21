@@ -989,7 +989,7 @@ static void OwnershipGroupButtonCallback(GUI_BUTTON* btn, INT32 reason)
 void SetOwnershipGroup( UINT8 ubNewGroup )
 {
 	gpItem->ubOwnerCivGroup = ubNewGroup;
-	SpecifyButtonText( giOwnershipGroupButton, gszCivGroupNames[ ubNewGroup ] );
+	giOwnershipGroupButton->SpecifyText(gszCivGroupNames[ubNewGroup]);
 }
 
 
@@ -1418,7 +1418,7 @@ void UpdateActionItem( INT8 bActionItemIndex )
 	}
 
 	ChangeActionItem( gpItem, gbActionItemIndex );
-	SpecifyButtonText( guiActionItemButton,	GetActionItemName( gpItem ) );
+	guiActionItemButton->SpecifyText(GetActionItemName(gpItem));
 
 	//If the new item is a pit, add it so we can see how it looks.
 	if( gpItem->usItem == ACTION_ITEM )
