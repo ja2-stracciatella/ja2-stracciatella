@@ -2766,7 +2766,7 @@ void UpdateScheduleAction( UINT8 ubNewAction )
 	gCurrSchedule.ubAction[ gubCurrentScheduleActionIndex ] = ubNewAction;
 	SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + gubCurrentScheduleActionIndex ],
 		gszScheduleActions[ ubNewAction ] );
-	MSYS_SetBtnUserData(iEditorButton[MERCS_SCHEDULE_ACTION1 + gubCurrentScheduleActionIndex], ubNewAction);
+	iEditorButton[MERCS_SCHEDULE_ACTION1 + gubCurrentScheduleActionIndex]->SetUserData(ubNewAction);
 	//Now, based on this action, disable the other buttons
 	StartScheduleAction();
 	gfSingleAction = FALSE;
@@ -2818,7 +2818,7 @@ void ClearCurrentSchedule()
 	memset( &gCurrSchedule, 0, sizeof( SCHEDULENODE ) );
 	for( i = 0; i < 4; i++ )
 	{
-		MSYS_SetBtnUserData(iEditorButton[MERCS_SCHEDULE_ACTION1 + i], 0);
+		iEditorButton[MERCS_SCHEDULE_ACTION1 + i]->SetUserData(0);
 		SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], L"No action" );
 		gCurrSchedule.usTime[i] = 0xffff;
 		SetExclusive24HourTimeValue( (UINT8)(i+1), gCurrSchedule.usTime[ i ] ); //blanks the field
@@ -2900,7 +2900,7 @@ static void UpdateScheduleInfo(void)
 		}
 		for( i = 0; i < 4; i++ )
 		{ //Update the text and buttons
-			MSYS_SetBtnUserData(iEditorButton[MERCS_SCHEDULE_ACTION1 + i], pSchedule->ubAction[i]);
+			iEditorButton[MERCS_SCHEDULE_ACTION1 + i]->SetUserData(pSchedule->ubAction[i]);
 			SpecifyButtonText( iEditorButton[ MERCS_SCHEDULE_ACTION1 + i ], gszScheduleActions[ pSchedule->ubAction[i] ] );
 			swprintf(str, lengthof(str), L"");
 			if( pSchedule->usData1[i] != 0xffff )

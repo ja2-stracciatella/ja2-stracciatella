@@ -1648,13 +1648,6 @@ GUIButtonRef CreateCheckBoxButton(INT16 x, INT16 y, const char* filename, INT16 
 }
 
 
-void MSYS_SetBtnUserData(GUIButtonRef const b, INT32 userdata)
-{
-	CHECKV(b != NULL); // XXX HACK000C
-	b->User.Data = userdata;
-}
-
-
 /* Generic Button Movement Callback to reset the mouse button if the mouse is no
  * longer in the button region.
  */
