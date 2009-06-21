@@ -290,7 +290,7 @@ static void EnterGIOScreen(void)
 		guiDifficultySettingsToggles[ cnt ] = CreateCheckBoxButton(	GIO_DIF_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
 																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnDifficultyTogglesCallback );
-		MSYS_SetBtnUserData(guiDifficultySettingsToggles[cnt], cnt);
+		guiDifficultySettingsToggles[cnt]->SetUserData(cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
 	UINT diff_btn;
@@ -310,7 +310,7 @@ static void EnterGIOScreen(void)
 		guiGameStyleToggles[ cnt ] = CreateCheckBoxButton(	GIO_GAME_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
 																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGameStyleTogglesCallback );
-		MSYS_SetBtnUserData(guiGameStyleToggles[cnt], cnt);
+		guiGameStyleToggles[cnt]->SetUserData(cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
 	const UINT style_btn = (gGameOptions.fSciFi ? GIO_SCI_FI : GIO_REALISTIC);
@@ -323,7 +323,7 @@ static void EnterGIOScreen(void)
 		guiGameSaveToggles[ cnt ] = CreateCheckBoxButton(	GIO_IRON_MAN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
 																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGameSaveTogglesCallback );
-		MSYS_SetBtnUserData(guiGameSaveToggles[cnt], cnt);
+		guiGameSaveToggles[cnt]->SetUserData(cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
 	const UINT mode_btn = (gGameOptions.fIronManMode ? GIO_IRON_MAN : GIO_CAN_SAVE);
@@ -336,7 +336,7 @@ static void EnterGIOScreen(void)
 		guiGunOptionToggles[ cnt ] = CreateCheckBoxButton(	GIO_GUN_SETTINGS_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
 																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnGunOptionsTogglesCallback);
-		MSYS_SetBtnUserData(guiGunOptionToggles[cnt], cnt);
+		guiGunOptionToggles[cnt]->SetUserData(cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
 
@@ -366,7 +366,7 @@ static void EnterGIOScreen(void)
 		guiTimedTurnToggles[ cnt ] = CreateCheckBoxButton(	GIO_TIMED_TURN_SETTING_X+GIO_OFFSET_TO_TOGGLE_BOX, usPosY,
 																		"INTERFACE/OptionsCheck.sti", MSYS_PRIORITY_HIGH+10,
 																		BtnTimedTurnsTogglesCallback );
-		MSYS_SetBtnUserData(guiTimedTurnToggles[cnt], cnt);
+		guiTimedTurnToggles[cnt]->SetUserData(cnt);
 		usPosY += GIO_GAP_BN_SETTINGS;
 	}
 	const UINT time_btn = (gGameOptions.fGunNut ? GIO_TIMED_TURNS : GIO_NO_TIMED_TURNS);

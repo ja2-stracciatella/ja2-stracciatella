@@ -316,7 +316,7 @@ static void EnterOptionsScreen(void)
 		//Check box to toggle tracking mode
 		GUIButtonRef const check = CreateCheckBoxButton(pos_x, pos_y, "INTERFACE/OptionsCheckBoxes.sti", MSYS_PRIORITY_HIGH + 10, BtnOptionsTogglesCallback);
 		guiOptionsToggles[cnt] = check;
-		MSYS_SetBtnUserData(check, cnt);
+		check->SetUserData(cnt);
 
 		UINT32 height;
 		UINT16 usTextWidth = StringPixLength(zOptionsToggleText[cnt], OPT_MAIN_FONT);

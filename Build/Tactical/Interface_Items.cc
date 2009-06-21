@@ -2044,7 +2044,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 				loc->x + gMoneyButtonOffsets[i].x, loc->y + gMoneyButtonOffsets[i].y, MSYS_PRIORITY_HIGHEST,
 				BtnMoneyButtonCallback
 			);
-			MSYS_SetBtnUserData(guiMoneyButtonBtn[i], i);
+			guiMoneyButtonBtn[i]->SetUserData(i);
 		}
 		if (gRemoveMoney.uiTotalAmount < 1000) DisableButton(guiMoneyButtonBtn[M_1000]);
 		if (gRemoveMoney.uiTotalAmount <  100) DisableButton(guiMoneyButtonBtn[M_100]);
@@ -2059,7 +2059,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 			loc->x + gMoneyButtonOffsets[i].x, loc->y + gMoneyButtonOffsets[i].y, MSYS_PRIORITY_HIGHEST,
 			BtnMoneyButtonCallback
 		);
-		MSYS_SetBtnUserData(guiMoneyButtonBtn[i], i);
+		guiMoneyButtonBtn[i]->SetUserData(i);
 	}
 
 	fInterfacePanelDirty = DIRTYLEVEL2;

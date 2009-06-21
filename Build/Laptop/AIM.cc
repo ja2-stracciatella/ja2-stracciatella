@@ -488,7 +488,7 @@ void InitAimMenuBar(void)
 														 usPosX, BOTTOM_BUTTON_START_Y, MSYS_PRIORITY_HIGH,
 														 BtnAimBottomButtonsCallback);
 		guiBottomButtons[i]->SetCursor(CURSOR_LAPTOP_SCREEN);
-		MSYS_SetBtnUserData(guiBottomButtons[i], gCurrentAimPage[i]);
+		guiBottomButtons[i]->SetUserData(gCurrentAimPage[i]);
 
 		usPosX += BOTTOM_BUTTON_START_WIDTH;
 	}

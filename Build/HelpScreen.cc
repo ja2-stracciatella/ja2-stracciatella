@@ -877,7 +877,7 @@ static void CreateHelpScreenButtons(void)
 															 BtnHelpScreenBtnsCallback);
 
 			guiHelpScreenBtns[i]->SetCursor(gHelpScreen.usCursor);
-			MSYS_SetBtnUserData(guiHelpScreenBtns[i], i);
+			guiHelpScreenBtns[i]->SetUserData(i);
 
 			usPosY += HELP_SCREEN_BTN_HEIGHT + HELP_SCREEN_GAP_BN_BTNS;
 		}
@@ -2077,14 +2077,14 @@ static void CreateScrollAreaButtons(void)
 
 	//Create the scroll arrows
 	giHelpScreenScrollArrows[0] = QuickCreateButton(guiHelpScreenScrollArrowImage[0], usPosX, usPosY, MSYS_PRIORITY_HIGHEST, BtnHelpScreenScrollArrowsCallback);
-	MSYS_SetBtnUserData(giHelpScreenScrollArrows[0], 0);
+	giHelpScreenScrollArrows[0]->SetUserData(0);
 	giHelpScreenScrollArrows[0]->SetCursor(gHelpScreen.usCursor);
 
 	usPosY = gHelpScreen.usScreenLocY + HLP_SCRN__SCROLL_DWN_ARROW_Y;
 
 	//Create the scroll arrows
 	giHelpScreenScrollArrows[1] = QuickCreateButton(guiHelpScreenScrollArrowImage[1], usPosX, usPosY, MSYS_PRIORITY_HIGHEST, BtnHelpScreenScrollArrowsCallback);
-	MSYS_SetBtnUserData(giHelpScreenScrollArrows[1], 1);
+	giHelpScreenScrollArrows[1]->SetUserData(1);
 	giHelpScreenScrollArrows[1]->SetCursor(gHelpScreen.usCursor);
 }
 

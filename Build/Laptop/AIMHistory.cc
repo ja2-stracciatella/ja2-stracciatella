@@ -235,7 +235,7 @@ static void InitAimHistoryMenuBar(void)
 														 usPosX, AIM_HISTORY_MENU_Y, MSYS_PRIORITY_HIGH,
 														 BtnHistoryMenuButtonCallback);
 		guiHistoryMenuButton[i]->SetCursor(CURSOR_WWW);
-		MSYS_SetBtnUserData(guiHistoryMenuButton[i], i + 1);
+		guiHistoryMenuButton[i]->SetUserData(i + 1);
 
 
 		usPosX += AIM_HISTORY_GAP_X;

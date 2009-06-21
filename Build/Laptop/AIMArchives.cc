@@ -165,7 +165,7 @@ void EnterAimArchives()
 		);
 		guiAlumniPageButton[i] = btn;
 		btn->SetCursor(CURSOR_WWW);
-		MSYS_SetBtnUserData(btn, i);
+		btn->SetUserData(i);
 		x += AIM_ALUMNI_PAGE_GAP;
 	}
 

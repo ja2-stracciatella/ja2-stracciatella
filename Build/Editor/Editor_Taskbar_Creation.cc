@@ -68,7 +68,7 @@ static void MakeButtonEquipment(UINT idx, UINT level, INT16 colour, const wchar_
 	GUIButtonRef const btn = MakeTextButton(text, FONT_GRAY1, 480, 20 + 15 * level, 40, 15, MercsSetRelativeEquipmentCallback);
 	iEditorButton[idx] = btn;
 	btn->SpecifyDownTextColors(colour, FONT_BLACK);
-	MSYS_SetBtnUserData(btn, level);
+	btn->SetUserData(level);
 }
 
 
@@ -77,7 +77,7 @@ static void MakeButtonAttribute(UINT idx, UINT level, INT16 colour, const wchar_
 	GUIButtonRef const btn = MakeTextButton(text, FONT_GRAY1, 530, TASKBAR_Y + 20 + 15 * level, 40, 15, MercsSetRelativeAttributesCallback);
 	iEditorButton[idx] = btn;
 	btn->SpecifyDownTextColors(colour, FONT_BLACK);
-	MSYS_SetBtnUserData(btn, level);
+	btn->SetUserData(level);
 }
 
 
@@ -99,7 +99,7 @@ static void MakeButtonDir(UINT idx, UINT dir, INT16 x, INT16 y)
 	wchar_t str[30];
 	swprintf(str, lengthof(str), L"Set merc to face %ls", FaceDirs[dir]);
 	btn->SetFastHelpText(str);
-	MSYS_SetBtnUserData(  btn, dir);
+	btn->SetUserData(dir);
 }
 
 
@@ -107,7 +107,7 @@ static void MakeButtonRank(UINT idx, INT16 y, INT32 rank)
 {
 	GUIButtonRef const btn = MakeRadio(575, y, MercsSetEnemyColorCodeCallback);
 	iEditorButton[idx] = btn;
-	MSYS_SetBtnUserData(btn, rank);
+	btn->SetUserData(rank);
 }
 
 
@@ -121,7 +121,7 @@ static void MakeButtonInventory(UINT idx, INT16 x, INT16 y, INT32 pos)
 {
 	GUIButtonRef const btn = CreateCheckBoxButton(x, y, "EDITOR/smCheckbox.sti", MSYS_PRIORITY_NORMAL + 1, MercsInventorySlotCallback);
 	iEditorButton[idx] = btn;
-	MSYS_SetBtnUserData(btn, pos);
+	btn->SetUserData(pos);
 }
 
 
@@ -186,7 +186,7 @@ static void InitEditorMercsToolbar(void)
 	iEditorButton[MERCS_ORDERS_RNDPTPATROL] = MakeTextButton(L"RND PT PATROL", FONT_GRAY2, 270, 44, 70, 12, MercsSetOrdersCallback);
 	for (INT32 x = 0; x < 8; x++)
 	{
-		MSYS_SetBtnUserData(iEditorButton[FIRST_MERCS_ORDERS_BUTTON + x], x);
+		iEditorButton[FIRST_MERCS_ORDERS_BUTTON + x]->SetUserData(x);
 	}
 
 	//Attitudes
@@ -198,7 +198,7 @@ static void InitEditorMercsToolbar(void)
 	iEditorButton[MERCS_ATTITUDE_CUNNINGAID]  = MakeTextButton(L"CUNNING AID",  FONT_GRAY4, 270, 88, 70, 12, MercsSetAttitudeCallback);
 	for (INT32 x = 0; x < 6; x++)
 	{
-		MSYS_SetBtnUserData(iEditorButton[FIRST_MERCS_ATTITUDE_BUTTON + x], x);
+		iEditorButton[FIRST_MERCS_ATTITUDE_BUTTON + x]->SetUserData(x);
 	}
 
 	MakeButtonDir(MERCS_DIRECTION_N,  0, 420,  5);

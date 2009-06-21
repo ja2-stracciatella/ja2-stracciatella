@@ -1476,7 +1476,7 @@ static void CreateAimPopUpBox(wchar_t const* const sString1, wchar_t const* cons
 	INT16 const y      = usPosY + AIM_POPUP_BOX_BUTTON_OFFSET_Y;
 	guiPopUpOkButton = CreateIconAndTextButton(guiPopUpImage, VideoConfercingText[AIM_MEMBER_OK], FONT14ARIAL, colour, shadow, colour, shadow, x, y, MSYS_PRIORITY_HIGH + 5, BtnPopUpOkButtonCallback);
 	guiPopUpOkButton->SetCursor(CURSOR_LAPTOP_SCREEN);
-	MSYS_SetBtnUserData(guiPopUpOkButton, ubData);
+	guiPopUpOkButton->SetUserData(ubData);
 
 	fPopUpBoxActive   = TRUE;
 	gubPopUpBoxAction = AIM_POPUP_DISPLAY;
@@ -2426,7 +2426,7 @@ static void InitDeleteVideoConferencePopUp(void)
 			for (UINT8 i = 0; i < 2; ++i)
 			{
 				giAuthorizeButton[i] = MakeButtonVideo(img, VideoConfercingText[AIM_MEMBER_HIRE + i], usPosX, AIM_MEMBER_HANG_UP_Y, BtnFirstContactButtonCallback);
-				MSYS_SetBtnUserData(giAuthorizeButton[i], i);
+				giAuthorizeButton[i]->SetUserData(i);
 				usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
 			}
 
@@ -2453,7 +2453,7 @@ static void InitDeleteVideoConferencePopUp(void)
 					giContractLengthButton[i] = btn;
 					btn->SpecifyTextJustification(GUI_BUTTON::TEXT_LEFT);
 					btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
-					MSYS_SetBtnUserData(btn, i);
+					btn->SetUserData(i);
 					usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
 				}
 			}
@@ -2466,7 +2466,7 @@ static void InitDeleteVideoConferencePopUp(void)
 					giBuyEquipmentButton[i] = btn;
 					btn->SpecifyTextJustification(GUI_BUTTON::TEXT_LEFT);
 					btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
-					MSYS_SetBtnUserData(btn, i);
+					btn->SetUserData(i);
 					usPosY += AIM_MEMBER_BUY_EQUIPMENT_GAP;
 				}
 			}
@@ -2484,7 +2484,7 @@ static void InitDeleteVideoConferencePopUp(void)
 				GUIButtonRef const btn = MakeButtonVideo(img1, VideoConfercingText[AIM_MEMBER_TRANSFER_FUNDS + i], usPosX, AIM_MEMBER_AUTHORIZE_PAY_Y, BtnAuthorizeButtonCallback);
 				giAuthorizeButton[i] = btn;
 				btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
-				MSYS_SetBtnUserData(btn, i);
+				btn->SetUserData(i);
 				usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
 			}
 
@@ -2504,7 +2504,7 @@ static void InitDeleteVideoConferencePopUp(void)
 			guiVideoConferenceButtonImage[2] = img;
 
 			giAnsweringMachineButton[0] = MakeButtonVideo(img, VideoConfercingText[AIM_MEMBER_LEAVE_MESSAGE], usPosX, AIM_MEMBER_HANG_UP_Y, BtnAnsweringMachineButtonCallback);
-			MSYS_SetBtnUserData(giAnsweringMachineButton[0], 0);
+			giAnsweringMachineButton[0]->SetUserData(0);
 
 			//if the user has already left a message, disable the button
 			if (GetProfile(gbCurrentSoldier).ubMiscFlags3 & PROFILE_MISC_FLAG3_PLAYER_LEFT_MSG_FOR_MERC_AT_AIM)
@@ -2515,7 +2515,7 @@ static void InitDeleteVideoConferencePopUp(void)
 			usPosX += AIM_MEMBER_AUTHORIZE_PAY_GAP;
 
 			giAnsweringMachineButton[1] = MakeButtonVideo(img, VideoConfercingText[AIM_MEMBER_HANG_UP], usPosX, AIM_MEMBER_HANG_UP_Y, BtnAnsweringMachineButtonCallback);
-			MSYS_SetBtnUserData(giAnsweringMachineButton[1], 1);
+			giAnsweringMachineButton[1]->SetUserData(1);
 
 			//The face must be inited even though the face wont appear.  It is so the voice is played
 			InitVideoFace(gbCurrentSoldier);
@@ -2535,7 +2535,7 @@ static void InitDeleteVideoConferencePopUp(void)
 			BUTTON_PICS* const img = LoadButtonImage("LAPTOP/VideoConfButtons.sti", -1, 2, -1, 3, -1);
 			guiVideoConferenceButtonImage[2] = img;
 			giHangUpButton = MakeButtonVideo(img, VideoConfercingText[AIM_MEMBER_HANG_UP], AIM_MEMBER_HANG_UP_X, AIM_MEMBER_HANG_UP_Y, BtnHangUpButtonCallback);
-			MSYS_SetBtnUserData(giHangUpButton, 1);
+			giHangUpButton->SetUserData(1);
 
 			//set the flag saying specifying that merc is busy
 			gubMercAttitudeLevel = QUOTE_MERC_BUSY;

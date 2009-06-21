@@ -382,7 +382,7 @@ static void InitAimPolicyMenuBar(void)
 														 usPosX, AIM_POLICY_MENU_Y, MSYS_PRIORITY_HIGH,
 														 BtnPoliciesMenuButtonCallback);
 		guiPoliciesMenuButton[i]->SetCursor(CURSOR_WWW);
-		MSYS_SetBtnUserData(guiPoliciesMenuButton[i], i);
+		guiPoliciesMenuButton[i]->SetUserData(i);
 
 
 
@@ -541,7 +541,7 @@ static void InitAgreementRegion(void)
 														 usPosX, AIM_POLICY_AGREEMENT_Y, MSYS_PRIORITY_HIGH,
 														 BtnPoliciesAgreeButtonCallback);
 		guiPoliciesAgreeButton[i]->SetCursor(CURSOR_WWW);
-		MSYS_SetBtnUserData(guiPoliciesAgreeButton[i], i);
+		guiPoliciesAgreeButton[i]->SetUserData(i);
 
 
 

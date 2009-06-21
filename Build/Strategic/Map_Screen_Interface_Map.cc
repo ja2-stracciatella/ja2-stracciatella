@@ -4227,7 +4227,7 @@ void CreateDestroyMilitiaSectorButtons(void)
 			giMapMilitiaButton[iCounter] = QuickCreateButtonImg("INTERFACE/militia.sti", -1, 3, -1, 4, -1, sX, sY, MSYS_PRIORITY_HIGHEST - 1, MilitiaButtonCallback);
 
 			// set button user data
-			MSYS_SetBtnUserData(giMapMilitiaButton[iCounter], iCounter);
+			giMapMilitiaButton[iCounter]->SetUserData(iCounter);
 			giMapMilitiaButton[iCounter]->SpecifyGeneralTextAttributes(NULL, FONT10ARIAL, gsMilitiaSectorButtonColors[iCounter], FONT_BLACK);
 
 			giMapMilitiaButton[iCounter]->SetFastHelpText(pMilitiaButtonsHelpText[iCounter]);

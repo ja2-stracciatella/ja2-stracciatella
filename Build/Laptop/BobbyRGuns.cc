@@ -348,7 +348,7 @@ void InitBobbyMenuBar(void)
 	{
 		// Catalogue Buttons button
 		guiBobbyRPageMenu[i] = MakeButton(guiBobbyRPageMenuImage, BobbyRText[BOBBYR_GUNS_GUNS + i], usPosX, BOBBYR_CATALOGUE_BUTTON_Y, BtnBobbyRPageMenuCallback);
-		MSYS_SetBtnUserData(guiBobbyRPageMenu[i], ubCatalogueButtonValues[bCurMode]);
+		guiBobbyRPageMenu[i]->SetUserData(ubCatalogueButtonValues[bCurMode]);
 
 		usPosX += BOBBYR_CATALOGUE_BUTTON_GAP;
 		bCurMode++;

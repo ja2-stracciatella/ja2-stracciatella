@@ -352,7 +352,7 @@ static void CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 			const INT16        y   = MAINMENU_Y + cnt * MAINMENU_Y_SPACE;
 			GUIButtonRef const b = QuickCreateButton(img, x, y, MSYS_PRIORITY_HIGHEST, MenuButtonCallback);
 			iMenuButtons[cnt] = b;
-			MSYS_SetBtnUserData(b, cnt);
+			b->SetUserData(cnt);
 		}
 
 		fButtonsCreated = TRUE;

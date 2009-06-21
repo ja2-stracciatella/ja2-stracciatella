@@ -458,8 +458,8 @@ static void CreateAttributeSliderButtons(void)
 		giIMPAttributeSelectionSliderButton[iCounter    ]->SetCursor(CURSOR_WWW);
 		giIMPAttributeSelectionSliderButton[iCounter + 1]->SetCursor(CURSOR_WWW);
 		// set user data
-		MSYS_SetBtnUserData(giIMPAttributeSelectionSliderButton[iCounter],     iCounter / 2);
-		MSYS_SetBtnUserData(giIMPAttributeSelectionSliderButton[iCounter + 1], iCounter / 2);
+		giIMPAttributeSelectionSliderButton[iCounter    ]->SetUserData(iCounter / 2);
+		giIMPAttributeSelectionSliderButton[iCounter + 1]->SetUserData(iCounter / 2);
 	}
 
 	MarkButtonsDirty();

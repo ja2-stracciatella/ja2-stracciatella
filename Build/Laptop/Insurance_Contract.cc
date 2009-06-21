@@ -652,7 +652,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 			GUIButtonRef const btn = CreateIconAndTextButton(guiInsuranceAcceptClearFormButtonImage, text, INS_FONT_MED, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, BtnInsuranceAcceptClearFormButtonCallback);
 			insurance_info[i].button = btn;
 			btn->SetCursor(CURSOR_LAPTOP_SCREEN);
-			MSYS_SetBtnUserData(btn, i);
+			btn->SetUserData(i);
 		}
 
 		fButtonsCreated = TRUE;

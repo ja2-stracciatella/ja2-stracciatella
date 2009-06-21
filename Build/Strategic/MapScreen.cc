@@ -7213,7 +7213,7 @@ static void AddTeamPanelSortButtonsForMapScreen(void)
 	for (INT32 i = 0; i < MAX_SORT_METHODS; ++i)
 	{
 		giMapSortButton[i] = QuickCreateButtonImg(filename, -1, iImageIndex[i], -1, iImageIndex[i] + 6, -1, gMapSortButtons[i].iX, gMapSortButtons[i].iY, MSYS_PRIORITY_HIGHEST - 5, MapSortBtnCallback);
-		MSYS_SetBtnUserData(giMapSortButton[i], i);
+		giMapSortButton[i]->SetUserData(i);
 		giMapSortButton[i]->SetFastHelpText(wMapScreenSortButtonHelpText[i]);
 	}
 }

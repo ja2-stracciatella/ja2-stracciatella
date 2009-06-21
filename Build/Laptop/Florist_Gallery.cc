@@ -242,7 +242,7 @@ static void InitFlowerButtons(void)
 	{
 		guiGalleryButton[j] = QuickCreateButton(guiGalleryButtonImage, FLOR_GALLERY_FLOWER_BUTTON_X, usPosY, MSYS_PRIORITY_HIGH, BtnGalleryFlowerButtonCallback);
 		guiGalleryButton[j]->SetCursor(CURSOR_WWW);
-		MSYS_SetBtnUserData(guiGalleryButton[j], count);
+		guiGalleryButton[j]->SetUserData(count);
 		guiGalleryButton[j]->SpecifyIcon(guiFlowerImages[j], 0, 5, 5, FALSE);
 
 		usPosY += FLOR_GALLERY_FLOWER_BUTTON_OFFSET_Y;
