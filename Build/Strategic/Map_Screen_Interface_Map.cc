@@ -2848,20 +2848,11 @@ void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY )
 }
 
 
-BOOLEAN IsTheCursorAllowedToHighLightThisSector( INT16 sSectorX, INT16 sSectorY )
+bool IsTheCursorAllowedToHighLightThisSector(INT16 const x, INT16 const y)
 {
-	// check to see if this sector is a blocked out sector?
-
-	if( sBadSectorsList[ sSectorX ][ sSectorY ] )
-	{
-		return  ( FALSE );
-	}
-	else
-	{
-		// return cursor is allowed to highlight this sector
-		return ( TRUE );
-	}
+	return !sBadSectorsList[x][y];
 }
+
 
 void SetUpBadSectorsList( void )
 {

@@ -53,7 +53,7 @@ UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY );
 
 
 // check to see if sector is highlightable
-BOOLEAN IsTheCursorAllowedToHighLightThisSector( INT16 sSectorX, INT16 sSectorY );
+bool IsTheCursorAllowedToHighLightThisSector(INT16 x, INT16 y);
 
 // set bad sectors list
 void SetUpBadSectorsList( void );
