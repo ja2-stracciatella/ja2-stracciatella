@@ -142,7 +142,7 @@ INT32 GetNumberOfSAMSitesUnderPlayerControl( void );
 // is there a FUNCTIONAL SAM site in this sector?
 BOOLEAN IsThereAFunctionalSAMSiteInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
-BOOLEAN IsSectorDesert( INT16 sSectorX, INT16 sSectorY );
+bool IsSectorDesert(INT16 x, INT16 y);
 
 // sam site under players control?
 INT32 SAMSitesUnderPlayerControl( INT16 sX, INT16 sY );

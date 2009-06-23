@@ -3846,18 +3846,9 @@ void HandleSlayDailyEvent( void )
 }
 
 
-
-BOOLEAN IsSectorDesert( INT16 sSectorX, INT16 sSectorY )
+bool IsSectorDesert(INT16 const x, INT16 const y)
 {
-	if ( SectorInfo[ SECTOR(sSectorX, sSectorY) ].ubTraversability[ THROUGH_STRATEGIC_MOVE ] == SAND )
-	{
-		// desert
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
+	return SectorInfo[SECTOR(x, y)].ubTraversability[THROUGH_STRATEGIC_MOVE] == SAND;
 }
 
 
