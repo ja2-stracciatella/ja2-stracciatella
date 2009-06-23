@@ -371,33 +371,6 @@ static UINT16* pMapDKGreenPalette;
 // heli pop up
 static SGPVObject* guiMapBorderHeliSectors;
 
-// List of map sectors that player isn't allowed to even highlight
-#define X 1
-#define _ 0
-static BOOLEAN const g_bad_sectors[WORLD_MAP_X][WORLD_MAP_X] =
-{
-	{ X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X },
-	{ X, _, _, _, X, X, _, _, _, _, _, _, _, _, _, _, X, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, X, X, X, X, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X, X, X },
-	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X, X, X },
-	{ X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X }
-};
-#undef _
-#undef X
-
 
 INT16 sBaseSectorList[]={
 	// NOTE: These co-ordinates must match the top left corner of the 3x3 town tiles cutouts in Interface/MilitiaMaps.sti!
@@ -2874,7 +2847,7 @@ void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY )
 
 bool IsTheCursorAllowedToHighLightThisSector(INT16 const x, INT16 const y)
 {
-	return !g_bad_sectors[y][x];
+	return SectorInfo[SECTOR(x, y)].ubTraversability[THROUGH_STRATEGIC_MOVE] != EDGEOFWORLD;
 }
 
 
