@@ -371,8 +371,32 @@ static UINT16* pMapDKGreenPalette;
 // heli pop up
 static SGPVObject* guiMapBorderHeliSectors;
 
-// list of map sectors that player isn't allowed to even highlight
-BOOLEAN sBadSectorsList[ WORLD_MAP_X ][ WORLD_MAP_X ];
+// List of map sectors that player isn't allowed to even highlight
+#define X 1
+#define _ 0
+static BOOLEAN const g_bad_sectors[WORLD_MAP_X][WORLD_MAP_X] =
+{
+	{ X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X },
+	{ X, _, _, _, X, X, _, _, _, _, _, _, _, _, _, _, X, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, X, X, X, X, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X, X, X },
+	{ X, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X, X, X },
+	{ X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X }
+};
+#undef _
+#undef X
 
 
 INT16 sBaseSectorList[]={
@@ -2850,51 +2874,8 @@ void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY )
 
 bool IsTheCursorAllowedToHighLightThisSector(INT16 const x, INT16 const y)
 {
-	return !sBadSectorsList[x][y];
+	return !g_bad_sectors[y][x];
 }
-
-
-void SetUpBadSectorsList( void )
-{
-	// initalizes all sectors to highlighable and then the ones non highlightable are marked as such
-	INT8 bY;
-
-	memset( &sBadSectorsList, 0, sizeof( sBadSectorsList ) );
-
-	// the border regions
-	for( bY = 0; bY < WORLD_MAP_X; bY++ )
-	{
-	  sBadSectorsList[ 0 ][ bY ] = sBadSectorsList[ WORLD_MAP_X - 1 ][ bY ] = sBadSectorsList[ bY ][ 0 ] = sBadSectorsList[ bY ][ WORLD_MAP_X - 1 ] = TRUE;
-	}
-
-
-	sBadSectorsList[ 4 ][ 1 ] = TRUE;
-	sBadSectorsList[ 5 ][ 1 ] = TRUE;
-	sBadSectorsList[ 16 ][ 1 ] = TRUE;
-	sBadSectorsList[ 16 ][ 5 ] = TRUE;
-	sBadSectorsList[ 16 ][ 6 ] = TRUE;
-
-
-	sBadSectorsList[ 16 ][ 10 ] = TRUE;
-	sBadSectorsList[ 16 ][ 11 ] = TRUE;
-	sBadSectorsList[ 16 ][ 12 ] = TRUE;
-	sBadSectorsList[ 16 ][ 13 ] = TRUE;
-	sBadSectorsList[ 16 ][ 14 ] = TRUE;
-	sBadSectorsList[ 16 ][ 15 ] = TRUE;
-	sBadSectorsList[ 16 ][ 16 ] = TRUE;
-
-	sBadSectorsList[ 15 ][ 13 ] = TRUE;
-	sBadSectorsList[ 15 ][ 14 ] = TRUE;
-	sBadSectorsList[ 15 ][ 15 ] = TRUE;
-	sBadSectorsList[ 15 ][ 16 ] = TRUE;
-
-	sBadSectorsList[ 14 ][ 14 ] = TRUE;
-	sBadSectorsList[ 14 ][ 15 ] = TRUE;
-	sBadSectorsList[ 14 ][ 16 ] = TRUE;
-
-	sBadSectorsList[ 13 ][ 14 ] = TRUE;
-}
-
 
 
 void RestoreBackgroundForMapGrid( INT16 sMapX, INT16 sMapY )

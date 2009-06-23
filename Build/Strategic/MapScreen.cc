@@ -1414,8 +1414,6 @@ static void DisplayCharacterList(void)
 // THIS IS STUFF THAT RUNS *ONCE* DURING APPLICATION EXECUTION, AT INITIAL STARTUP
 void MapScreenInit(void)
 {
-	SetUpBadSectorsList( );
-
 	// init palettes for big map
 	InitializePalettesForMap( );
 
