@@ -4,6 +4,7 @@
 #include "MapScreen.h"
 #include "GameLoop.h"
 #include "Merc_Hiring.h"
+#include "Strategic_Movement_Costs.h"
 #include "VObject.h"
 #include "WorldDef.h"
 #include "Input.h"
@@ -2504,8 +2505,7 @@ static UINT32 HandleMapUI(void)
 								// fMapPanelDirty = TRUE;
 							 }
 
-							if (IsTheCursorAllowedToHighLightThisSector(sMapX, sMapY) &&
-									( SectorInfo[ ( SECTOR( sMapX, sMapY ) ) ].ubTraversability[ THROUGH_STRATEGIC_MOVE ] != GROUNDBARRIER ) )
+							if (!SectorIsImpassable(SECTOR(sMapX, sMapY)))
 							{
 								// Can we get go there?  (NULL temp character path)
 								if ( GetLengthOfPath( pTempCharacterPath ) > 0 )
