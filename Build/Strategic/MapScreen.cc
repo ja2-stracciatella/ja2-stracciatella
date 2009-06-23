@@ -2505,7 +2505,7 @@ static UINT32 HandleMapUI(void)
 								// fMapPanelDirty = TRUE;
 							 }
 
-							if (!SectorIsImpassable(SECTOR(sMapX, sMapY)))
+							if (SectorIsPassable(SECTOR(sMapX, sMapY)))
 							{
 								// Can we get go there?  (NULL temp character path)
 								if ( GetLengthOfPath( pTempCharacterPath ) > 0 )

@@ -318,7 +318,7 @@ ENUM_BITSET(AssignmentConditions)
 
 static BOOLEAN AreAssignmentConditionsMet(const SOLDIERTYPE* const s, const AssignmentConditions c)
 {
-	if (!(c & AC_IMPASSABLE) && SectorIsImpassable(SECTOR(s->sSectorX, s->sSectorY)))   return FALSE;
+	if (!(c & AC_IMPASSABLE) && !SectorIsPassable(SECTOR(s->sSectorX, s->sSectorY)))    return FALSE;
 	if (!(c & AC_UNCONSCIOUS) && s->bLife < OKLIFE)                                     return FALSE;
 	if (!(c & AC_COMBAT) && s->bInSector && gTacticalStatus.fEnemyInSector)             return FALSE;
 	if (!(c & AC_EPC) && s->ubWhatKindOfMercAmI == MERC_TYPE__EPC)                      return FALSE;

@@ -192,9 +192,9 @@ UINT8 GetTraversability( INT16 sStartSector, INT16 sEndSector )
 }
 
 
-BOOLEAN SectorIsImpassable(INT16 sSector)
+bool SectorIsPassable(INT16 const sSector)
 {
 	// returns true if the sector is impassable in all directions
 	const UINT8 t = SectorInfo[sSector].ubTraversability[THROUGH_STRATEGIC_MOVE];
-	return t == GROUNDBARRIER || t == EDGEOFWORLD;
+	return t != GROUNDBARRIER && t != EDGEOFWORLD;
 }

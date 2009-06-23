@@ -8,6 +8,6 @@ void InitStrategicMovementCosts(void);
 
 UINT8 GetTraversability(INT16 sStartSector, INT16 sEndSector);
 
-BOOLEAN SectorIsImpassable(INT16 sSector);
+bool SectorIsPassable(INT16 sSector);
 
 #endif
