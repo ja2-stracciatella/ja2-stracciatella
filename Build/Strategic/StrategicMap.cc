@@ -646,57 +646,43 @@ void GetShortSectorString(const INT16 sMapX, const INT16 sMapY, wchar_t* const s
 }
 
 
-void GetMapFileName(INT16 sMapX, INT16 sMapY, INT8 bSectorZ, char* bString, BOOLEAN fUsePlaceholder, BOOLEAN fAddAlternateMapLetter)
+void GetMapFileName(INT16 const x, INT16 const y, INT8 const z, char* const buf, BOOLEAN const use_placeholder, BOOLEAN const add_alternate_map_letter)
 {
-	CHAR8	 bTestString[ 150 ];
-	CHAR8	 bExtensionString[ 15 ];
+	size_t n = sprintf(buf, "%s%s", pVertStrings[y], pHortStrings[x]);
 
-	if ( bSectorZ != 0 )
-	{
-		sprintf( bExtensionString, "_b%d", bSectorZ );
-	}
-	else
-	{
-		strcpy( bExtensionString, "" );
-	}
+	if (z != 0) n += sprintf(buf + n, "_b%d", z);
 
-	// the gfUseAlternateMap flag is set in the loading saved games.  When starting a new game the underground sector
-	//info has not been initialized, so we need the flag to load an alternate sector.
-	if( gfUseAlternateMap | GetSectorFlagStatus( sMapX, sMapY, bSectorZ, SF_USE_ALTERNATE_MAP ) )
+	/* The gfUseAlternateMap flag is set while loading saved games. When starting
+	 * a new game the underground sector info has not been initialized, so we need
+	 * the flag to load an alternate sector. */
+	if (GetSectorFlagStatus(x, y, z, SF_USE_ALTERNATE_MAP) || gfUseAlternateMap)
 	{
 		gfUseAlternateMap = FALSE;
-
-		//if we ARE to use the a map, or if we are saving AND the save game version is before 80, add the a
-		if( fAddAlternateMapLetter )
-		{
-			strcat( bExtensionString, "_a" );
-		}
+		if (add_alternate_map_letter) n += sprintf(buf + n, "_a");
 	}
 
-	// If we are in a meanwhile...
-	if ( AreInMeanwhile( ) && sMapX == 3 && sMapY == 16 && !bSectorZ )//GetMeanwhileID() != INTERROGATION )
+	if (AreInMeanwhile() && x == 3 && y == 16 && z == 0)
 	{
-		if( fAddAlternateMapLetter )
-		{
-			strcat( bExtensionString, "_m" );
-		}
+		if (add_alternate_map_letter) n += sprintf(buf + n, "_m");
 	}
 
-	// This is the string to return, but...
-	sprintf( bString, "%s%s%s.DAT", pVertStrings[sMapY], pHortStrings[sMapX], bExtensionString );
+	sprintf(buf + n, ".DAT");
 
-	// We will test against this string
-	sprintf( bTestString, "MAPS/%s", bString );
-
-	if( fUsePlaceholder && !FileExists( bTestString ) )
+	if (use_placeholder)
 	{
-		// Debug str
-		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String( "Map does not exist for %s, using default.", bTestString ) );
-		// Set to a string we know!
-		sprintf(bString, "H10.DAT",pVertStrings[sMapY],pHortStrings[sMapX]);
-		ScreenMsg( FONT_YELLOW, MSG_DEBUG, L"Using PLACEHOLDER map!");
+		// We will test against this string
+		char test_string[150];
+		sprintf(test_string, "MAPS/%s", buf);
+		if (!FileExists(test_string))
+		{
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Map does not exist for %s, using default.", test_string));
+			// Set to a string we know!
+			strcpy(buf, "H10.DAT");
+			ScreenMsg(FONT_YELLOW, MSG_DEBUG, L"Using PLACEHOLDER map!");
+		}
 	}
 }
+
 
 void GetCurrentWorldSector( INT16 *psMapX, INT16 *psMapY )
 {
