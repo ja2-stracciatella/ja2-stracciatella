@@ -174,7 +174,7 @@ gubCurrentNpcInSector[giHaveSelectedNPC]: complicated
 gubWorldRoomHidden: static?
 guiMemTotal: remove
 gzFilename: wchar_t[] -> char[]?
-pMapErrorString[4]: unused
+pMapErrorString[4], pMapErrorString[17]: unused
 pMapInventoryErrorString[0]: probably unused
 pSoldier = pSoldier: strange
 pSoldier->pShades[16 ... 31]: unused?

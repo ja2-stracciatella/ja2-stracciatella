@@ -4036,86 +4036,50 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 }
 
 
-BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
+BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 const x, INT16 const y, INT8 const z)
 {
-	CHAR16 sString[ 128 ], sStringA[ 64 ], sStringB[ 256 ], sStringC[ 64 ];
-	INT32 iValue = 0;
-	INT8 bTownId = 0;
-	INT16 sSector = 0;
+	// There is nothing important to player below ground
+	if (z != 0) return FALSE;
 
-	// are we below ground?
-	if( bSectorZ != 0 )
+	wchar_t sector_desc[128];
+	GetSectorIDString(x, y, z, sector_desc, lengthof(sector_desc), TRUE);
+
+	wchar_t buf[256];
+	if (IsThisSectorASAMSector(x, y, z))
 	{
-		// yes we are..there is nothing important to player here
-		return( FALSE );
+		swprintf(buf, lengthof(buf), pMapErrorString[15], sector_desc);
 	}
-
-	// get the name of the sector
-	GetSectorIDString( sSectorX, sSectorY, bSectorZ, sString, lengthof(sString), TRUE );
-
-	bTownId = GetTownIdForSector( sSectorX, sSectorY );
-
-	// check if SAM site here
-	if( IsThisSectorASAMSector( sSectorX, sSectorY, bSectorZ ) )
+	else
 	{
-		swprintf( sStringB, lengthof(sStringB), pMapErrorString[ 15 ], sString );
-
-		// put up the message informing the player of the event
-		DoScreenIndependantMessageBox( sStringB, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
-		return( TRUE );
-	}
-
-
-	// check if a mine is here
-	INT8 const bMineIndex = GetMineIndexForSector( sSectorX, sSectorY );
-	if (bMineIndex != -1)
-	{
-		// if it was producing for us
-		if ( ( GetMaxDailyRemovalFromMine( bMineIndex ) > 0 ) && SpokenToHeadMiner( bMineIndex ) )
+		INT8 const mine_id = GetMineIndexForSector(x, y);
+		if (mine_id != -1                           &&
+				GetMaxDailyRemovalFromMine(mine_id) > 0 &&
+				SpokenToHeadMiner(mine_id))
+		{ // There is a mine and it was producing for us
+			// Get how much we now will get from the mines
+			INT32 const income = GetProjectedTotalDailyIncome();
+			wchar_t     income_string[64];
+			SPrintMoney(income_string, income);
+			swprintf(buf, lengthof(buf), pMapErrorString[16], sector_desc, income_string);
+		}
+		else
 		{
-			// get how much we now will get from the mines
-			iValue = GetProjectedTotalDailyIncome( );
+			INT8 const town_id = GetTownIdForSector(x, y);
+			if (town_id != BLANK_SECTOR)
+			{
+				// San Mona isn't important
+				if (town_id == SAN_MONA) return TRUE;
 
-			SPrintMoney(sStringC, iValue);
-			swprintf( sStringB, lengthof(sStringB), pMapErrorString[ 16 ], sString, sStringC );
-
-			// put up the message informing the player of the event
-			DoScreenIndependantMessageBox( sStringB, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
-			return( TRUE );
+				swprintf(buf, lengthof(buf), pMapErrorString[25], sector_desc);
+			}
+			else
+			{
+				return FALSE;
+			}
 		}
 	}
-
-	if (bTownId)
-	{
-		if( bTownId == SAN_MONA )
-		{ //San Mona isn't important.
-			return( TRUE );
-		}
-		swprintf( sStringB, lengthof(sStringB), pMapErrorString[ 25 ], sString );
-
-		// put up the message informing the player of the event
-		DoScreenIndependantMessageBox( sStringB, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
-		return( TRUE );
-	}
-
-	// get the strategic sector value
-	sSector = sSectorX + MAP_WORLD_X * sSectorY;
-
-	if( StrategicMap[ sSector ].bNameId == BLANK_SECTOR )
-	{
-		return( FALSE );
-	}
-
-	// get the name of the sector
-	GetSectorIDString( sSectorX, sSectorY, bSectorZ, sStringA, lengthof(sStringA), TRUE );
-
-	// now build the string
-	swprintf( sString, lengthof(sString), pMapErrorString[ 17 ], sStringA );
-
-	// put up the message box
-	DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
-
-	return( TRUE );
+	DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback);
+	return TRUE;
 }
 
 
