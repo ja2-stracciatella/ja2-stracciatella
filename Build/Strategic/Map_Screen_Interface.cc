@@ -4083,55 +4083,34 @@ BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 const x, INT16 
 }
 
 
-void NotifyPlayerOfInvasionByEnemyForces( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, MSGBOX_CALLBACK ReturnCallback )
+void NotifyPlayerOfInvasionByEnemyForces(INT16 const x, INT16 const y, INT8 const z, MSGBOX_CALLBACK const return_callback)
 {
-	INT16 sSector = 0;
-	INT8 bTownId = 0;
-	CHAR16 sString[ 128 ], sStringA[ 128 ];
+	if (z != 0) return;
 
+	// If enemy controlled anyways, leave
+	if (StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].fEnemyControlled) return;
 
-	// check if below ground
-	if( bSectorZ != 0 )
-	{
-		return;
-	}
-
-	// grab sector value
-	sSector = sSectorX + MAP_WORLD_X * sSectorY;
-
-	if (StrategicMap[sSector].fEnemyControlled)
-	{
-		// enemy controlled any ways, leave
-		return;
-	}
-
-	// get the town id
-	bTownId = StrategicMap[ sSector ].bNameId;
+	wchar_t buf[128];
+	wchar_t sector_desc[128];
 
 	// check if SAM site here
-	if( IsThisSectorASAMSector( sSectorX, sSectorY, bSectorZ ) )
+	if (IsThisSectorASAMSector(x, y, z))
 	{
-		// get sector id value
-		GetShortSectorString( sSectorX, sSectorY, sStringA, lengthof(sStringA));
-
-		swprintf( sString, lengthof(sString), pMapErrorString[ 22 ], sStringA );
-		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, ReturnCallback );
+		GetShortSectorString(x, y, sector_desc, lengthof(sector_desc));
+		swprintf(buf, lengthof(buf), pMapErrorString[22], sector_desc);
+		DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, return_callback);
 	}
-	else if( bTownId )
+	else if (GetTownIdForSector(x, y) != BLANK_SECTOR)
 	{
-		// get the name of the sector
-		GetSectorIDString( sSectorX, sSectorY, bSectorZ, sStringA, lengthof(sStringA), TRUE );
-
-		swprintf( sString, lengthof(sString), pMapErrorString[ 23 ], sStringA );
-		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, ReturnCallback );
+		GetSectorIDString(x, y, z, sector_desc, lengthof(sector_desc), TRUE);
+		swprintf(buf, lengthof(buf), pMapErrorString[23], sector_desc);
+		DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, return_callback);
 	}
 	else
 	{
-		// get sector id value
-		GetShortSectorString( sSectorX, sSectorY, sStringA, lengthof(sStringA));
-
-		swprintf( sString, lengthof(sString), pMapErrorString[ 24 ], sStringA );
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sString );
+		GetShortSectorString(x, y, sector_desc, lengthof(sector_desc));
+		swprintf(buf, lengthof(buf), pMapErrorString[24], sector_desc);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, buf);
 	}
 }
 
