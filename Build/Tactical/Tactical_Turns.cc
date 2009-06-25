@@ -26,86 +26,63 @@
 #include "Items.h"
 
 
-void HandleRPCDescription(  )
+void HandleRPCDescription()
 {
-	UINT8	ubNumMercs = 0;
-  BOOLEAN fSAMSite = FALSE;
+	TacticalStatusType& ts = gTacticalStatus;
+	if (!ts.fCountingDownForGuideDescription) return;
 
-	if ( !gTacticalStatus.fCountingDownForGuideDescription )
+	// ATE: postpone if we are not in tactical
+	if (guiCurrentScreen != GAME_SCREEN) return;
+
+	if (ts.uiFlags & ENGAGED_IN_CONV) return;
+
+	// Are we a SAM site?
+	if (ts.ubGuideDescriptionToUse == 25 ||
+			ts.ubGuideDescriptionToUse == 27 ||
+			ts.ubGuideDescriptionToUse == 30 ||
+			ts.ubGuideDescriptionToUse == 31 ||
+			ts.ubGuideDescriptionToUse == 32)
 	{
-		return;
+		ts.bGuideDescriptionCountDown = 1;
+	}
+	else
+	{
+		// ATE; Don't do in combat
+		if (ts.uiFlags & INCOMBAT) return;
+
+		// Don't do if enemy in sector
+		if (NumEnemyInSector()) return;
 	}
 
-  // ATE: postpone if we are not in tactical
-  if ( guiCurrentScreen != GAME_SCREEN )
-  {
-    return;
-  }
+	if (--ts.bGuideDescriptionCountDown != 0) return;
+	ts.fCountingDownForGuideDescription = FALSE;
 
-  if ( ( gTacticalStatus.uiFlags & ENGAGED_IN_CONV ) )
-  {
-    return;
-  }
-
-  // Are we a SAM site?
-  if ( gTacticalStatus.ubGuideDescriptionToUse == 27 ||
-       gTacticalStatus.ubGuideDescriptionToUse == 30 ||
-       gTacticalStatus.ubGuideDescriptionToUse == 32 ||
-       gTacticalStatus.ubGuideDescriptionToUse == 25 ||
-       gTacticalStatus.ubGuideDescriptionToUse == 31 )
-  {
-     fSAMSite = TRUE;
-     gTacticalStatus.bGuideDescriptionCountDown = 1;
-  }
-
-	// ATE; Don't do in combat
-	if ( ( gTacticalStatus.uiFlags & INCOMBAT ) && !fSAMSite )
+	// Count how many RPC guys we have
+	UINT8        n_mercs = 0;
+	SOLDIERTYPE* mercs_in_sector[20];
+	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		return;
-	}
+		// Add guy if he's a candidate
+		if (!RPC_RECRUITED(s))                          continue;
+		if (s->bLife < OKLIFE)                          continue;
+		if (s->sSectorX != ts.bGuideDescriptionSectorX) continue;
+		if (s->sSectorY != ts.bGuideDescriptionSectorY) continue;
+		if (s->bSectorZ != gbWorldSectorZ)              continue;
+		if (s->fBetweenSectors)                         continue;
 
-	// Don't do if enemy in sector
-	if ( NumEnemyInSector( ) && !fSAMSite )
-	{
-		return;
-	}
-
-
-	gTacticalStatus.bGuideDescriptionCountDown--;
-
-	if ( gTacticalStatus.bGuideDescriptionCountDown == 0 )
-	{
-		gTacticalStatus.fCountingDownForGuideDescription = FALSE;
-
-		// OK, count how many rpc guys we have....
-		SOLDIERTYPE* mercs_in_sector[20];
-		FOR_ALL_IN_TEAM(s, gbPlayerNum)
+		if (s->ubProfile == IRA    ||
+				s->ubProfile == MIGUEL ||
+				s->ubProfile == CARLOS ||
+				s->ubProfile == DIMITRI)
 		{
-			// Add guy if he's a candidate...
-			if (RPC_RECRUITED(s) &&
-					s->bLife >= OKLIFE &&
-					s->sSectorX == gTacticalStatus.bGuideDescriptionSectorX &&
-					s->sSectorY == gTacticalStatus.bGuideDescriptionSectorY &&
-					s->bSectorZ == gbWorldSectorZ &&
-					!s->fBetweenSectors)
-			{
-				if (s->ubProfile == IRA    ||
-						s->ubProfile == MIGUEL ||
-						s->ubProfile == CARLOS ||
-						s->ubProfile == DIMITRI)
-				{
-					mercs_in_sector[ubNumMercs++] = s;
-				}
-			}
-		}
-
-		// If we are > 0
-		if ( ubNumMercs > 0 )
-		{
-			SOLDIERTYPE& chosen = *mercs_in_sector[Random(ubNumMercs)];
-			CharacterDialogueUsingAlternateFile(chosen, gTacticalStatus.ubGuideDescriptionToUse, DIALOGUE_TACTICAL_UI);
+			mercs_in_sector[n_mercs++] = s;
 		}
 	}
+
+	if (n_mercs == 0) return;
+
+	SOLDIERTYPE& chosen = *mercs_in_sector[Random(n_mercs)];
+	CharacterDialogueUsingAlternateFile(chosen, ts.ubGuideDescriptionToUse, DIALOGUE_TACTICAL_UI);
 }
 
 
