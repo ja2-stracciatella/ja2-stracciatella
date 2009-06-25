@@ -1758,7 +1758,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 					}
 				}
 
-				SetThisSectorAsEnemyControlled( pGroup->ubSectorX, pGroup->ubSectorY, 0, TRUE );
+				SetThisSectorAsEnemyControlled(pGroup->ubSectorX, pGroup->ubSectorY, 0);
 				RemovePGroup( pGroup );
 				RecalculateGarrisonWeight( i );
 

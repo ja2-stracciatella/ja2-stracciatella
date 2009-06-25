@@ -8583,7 +8583,7 @@ static void HandlePostAutoresolveMessages(void)
 	}
 	else if( gsEnemyGainedControlOfSectorID >= 0 )
 	{ //bring up the dialog box
-		SetThisSectorAsEnemyControlled( (UINT8)SECTORX( gsEnemyGainedControlOfSectorID ), (UINT8)SECTORY( gsEnemyGainedControlOfSectorID ), 0, TRUE );
+		SetThisSectorAsEnemyControlled(SECTORX(gsEnemyGainedControlOfSectorID), SECTORY(gsEnemyGainedControlOfSectorID), 0);
 		gsEnemyGainedControlOfSectorID = -2;
 	}
 	else if( gsEnemyGainedControlOfSectorID == -2 )

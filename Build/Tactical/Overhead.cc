@@ -4660,7 +4660,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 
 		if( NumEnemyInSectorExceptCreatures() )
 		{
-			SetThisSectorAsEnemyControlled( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE );
+			SetThisSectorAsEnemyControlled(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 		}
 
 		// ATE: Important! THis is delayed until music ends so we can have proper effect!
