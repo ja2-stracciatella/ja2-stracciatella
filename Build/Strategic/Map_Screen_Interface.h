@@ -428,7 +428,7 @@ void CreateDestroyInsuranceMouseRegionForMercs( BOOLEAN fCreate );
 BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void );
 
 // handle sector being taken over uncontested
-BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, BOOLEAN fContested );
+BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 // handle notifying player of invasion by enemy
 void NotifyPlayerOfInvasionByEnemyForces( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, MSGBOX_CALLBACK ReturnCallback );

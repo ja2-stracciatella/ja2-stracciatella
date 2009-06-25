@@ -4036,7 +4036,7 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 }
 
 
-BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, BOOLEAN fContested )
+BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
 {
 	CHAR16 sString[ 128 ], sStringA[ 64 ], sStringB[ 256 ], sStringC[ 64 ];
 	INT32 iValue = 0;
@@ -4085,8 +4085,7 @@ BOOLEAN NotifyPlayerWhenEnemyTakesControlOfImportantSector( INT16 sSectorX, INT1
 		}
 	}
 
-
-	if( fContested && bTownId )
+	if (bTownId)
 	{
 		if( bTownId == SAN_MONA )
 		{ //San Mona isn't important.

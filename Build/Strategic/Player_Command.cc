@@ -283,7 +283,7 @@ BOOLEAN SetThisSectorAsEnemyControlled(INT16 const sMapX, INT16 const sMapY, INT
 			}
 
 			// ARM: this must be AFTER all resulting loyalty effects are resolved, or reduced mine income shown won't be accurate
-			NotifyPlayerWhenEnemyTakesControlOfImportantSector(sMapX, sMapY, 0, TRUE);
+			NotifyPlayerWhenEnemyTakesControlOfImportantSector(sMapX, sMapY, 0);
 		}
 
 		// NOTE: Stealing is intentionally OUTSIDE the fWasPlayerControlled branch.  This function gets called if new
