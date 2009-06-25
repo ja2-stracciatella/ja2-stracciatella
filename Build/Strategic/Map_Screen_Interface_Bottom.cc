@@ -204,7 +204,7 @@ static void DisplayCurrentBalanceForMapBottom(void);
 static void DisplayCurrentBalanceTitleForMapBottom(void);
 static void DisplayProjectedDailyMineIncome(void);
 static void DisplayScrollBarSlider(void);
-static void DrawNameOfLoadedSector(void);
+static void DrawNameOfLoadedSector();
 static void EnableDisableBottomButtonsAndRegions(void);
 static void EnableDisableMessageScrollButtonsAndRegions(void);
 
@@ -369,19 +369,20 @@ static void BtnOptionsFromMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void DrawNameOfLoadedSector(void)
+static void DrawNameOfLoadedSector()
 {
-	wchar_t sString[ 128 ];
-  INT16 sFontX, sFontY;
-
 	SetFontDestBuffer(FRAME_BUFFER);
-	SetFontAttributes(COMPFONT, 183);
+	Font const font = COMPFONT;
+	SetFontAttributes(font, 183);
 
-	GetSectorIDString( sSelMapX, sSelMapY, ( INT8 )( iCurrentMapSectorZ ),sString, lengthof(sString), TRUE );
-	ReduceStringLength( sString, lengthof(sString), 80, COMPFONT );
+	wchar_t buf[128];
+	GetSectorIDString(sSelMapX, sSelMapY, iCurrentMapSectorZ, buf, lengthof(buf), TRUE);
+	ReduceStringLength(buf, lengthof(buf), 80, font);
 
-	FindFontCenterCoordinates(548, 426, 80, 16, sString, COMPFONT, &sFontX, &sFontY);
-	MPrint(sFontX, sFontY, sString);
+	INT16 x;
+	INT16 y;
+	FindFontCenterCoordinates(548, 426, 80, 16, buf, font, &x, &y);
+	MPrint(x, y, buf);
 }
 
 
