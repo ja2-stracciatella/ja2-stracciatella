@@ -88,7 +88,7 @@ void GetShortSectorString(INT16 sMapX, INT16 sMapY, wchar_t* sString, size_t Len
 // Return a string like 'A9: Omerta'
 void GetSectorIDString(INT16 x, INT16 y, INT8 z, wchar_t* buf, size_t length, BOOLEAN detailed);
 
-void GetMapFileName(INT16 x, INT16 y, INT8 z, char* buf, BOOLEAN use_placeholder, BOOLEAN add_alternate_map_letter);
+void GetMapFileName(INT16 x, INT16 y, INT8 z, char* buf, BOOLEAN add_alternate_map_letter);
 
 // Called from within tactical.....
 void JumpIntoAdjacentSector( UINT8 ubDirection, UINT8 ubJumpCode, INT16 sAdditionalData );

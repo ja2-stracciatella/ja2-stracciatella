@@ -1246,7 +1246,7 @@ void GetMapTempFileName(SectorFlags const uiType, char* const pMapName, INT16 co
 {
 	// Convert the current sector location into a file name
 	char zTempName[512];
-	GetMapFileName(sMapX, sMapY, bMapZ, zTempName, FALSE, FALSE);
+	GetMapFileName(sMapX, sMapY, bMapZ, zTempName, FALSE);
 
 	const char* prefix;
 	switch (uiType)

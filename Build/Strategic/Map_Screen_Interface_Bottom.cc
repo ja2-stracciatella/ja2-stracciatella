@@ -222,7 +222,7 @@ void RenderMapScreenInterfaceBottom( void )
 
 		if (GetSectorFlagStatus(sSelMapX, sSelMapY, iCurrentMapSectorZ, SF_ALREADY_VISITED))
 		{
-			GetMapFileName( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ, bFilename, TRUE, TRUE );
+			GetMapFileName(sSelMapX, sSelMapY, iCurrentMapSectorZ, bFilename, TRUE);
 			LoadRadarScreenBitmap( bFilename );
 		}
 		else

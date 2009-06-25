@@ -646,7 +646,7 @@ void GetShortSectorString(const INT16 sMapX, const INT16 sMapY, wchar_t* const s
 }
 
 
-void GetMapFileName(INT16 const x, INT16 const y, INT8 const z, char* const buf, BOOLEAN const use_placeholder, BOOLEAN const add_alternate_map_letter)
+void GetMapFileName(INT16 const x, INT16 const y, INT8 const z, char* const buf, BOOLEAN const add_alternate_map_letter)
 {
 	size_t n = sprintf(buf, "%s%s", pVertStrings[y], pHortStrings[x]);
 
@@ -667,20 +667,6 @@ void GetMapFileName(INT16 const x, INT16 const y, INT8 const z, char* const buf,
 	}
 
 	sprintf(buf + n, ".DAT");
-
-	if (use_placeholder)
-	{
-		// We will test against this string
-		char test_string[150];
-		sprintf(test_string, "MAPS/%s", buf);
-		if (!FileExists(test_string))
-		{
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Map does not exist for %s, using default.", test_string));
-			// Set to a string we know!
-			strcpy(buf, "H10.DAT");
-			ScreenMsg(FONT_YELLOW, MSG_DEBUG, L"Using PLACEHOLDER map!");
-		}
-	}
 }
 
 
@@ -1296,7 +1282,7 @@ static void EnterSector(INT16 const x, INT16 const y, INT8 const z)
 #endif
 
 	char filename[50];
-	GetMapFileName(x, y, z, filename, TRUE, TRUE);
+	GetMapFileName(x, y, z, filename, TRUE);
 	LoadWorld(filename);
 
 	/* ATE: Moved this form above, so that we can have the benefit of changing the
