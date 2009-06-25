@@ -677,87 +677,82 @@ void GetCurrentWorldSector( INT16 *psMapX, INT16 *psMapY )
 }
 
 
-static void HandleRPCDescriptionOfSector(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ)
+static void HandleRPCDescriptionOfSector(INT16 const x, INT16 const y, INT16 const z)
 {
-	UINT32	cnt;
-	UINT8		ubSectorDescription[33][3] =
+	struct SectorDescriptionInfo
 	{
-		 // row (letter), column, quote #
-		 { 2, 13,  0 },	// b13	Drassen
-		 { 3, 13,  1 },	// c13	Drassen
-		 { 4, 13,  2 },	// d13	Drassen
-		 { 8, 13,  3 },	// h13	Alma
-		 { 8, 14,  4 },	// h14	Alma
-		 { 9, 13,  5 },	// i13	Alma * (extra quote 6 if Sci-fi ) *
-		 { 9, 14,  7 },	// i14	Alma
-		 { 6,  8,  8 },	// f8	Cambria
-		 { 6,  9,  9 }, 	// f9	Cambria
-		 { 7,  8, 10 },	// g8	Cambria
-
-		 { 7,  9, 11 },	// g9	Cambria
-		 { 3,  6, 12 },	// c6	San Mona
-		 { 3,  5, 13 },	// c5	San Mona
-		 { 4,  5, 14 },	// d5	San Mona
-		 { 2,  2, 15 },	// b2	Chitzena
-		 { 1,  2, 16 },	// a2	Chitzena
-		 { 7,  1, 17 },	// g1	Grumm
-		 { 8,  1, 18 },	// h1	Grumm
-		 { 7,  2, 19 },	// g2 	Grumm
-		 { 8,  2, 20 },	// h2	Grumm
-
-		 { 9,  6, 21 },	// i6	Estoni
-		 {11,	 4, 22 },	// k4	Orta
-		 {12,	 11, 23 },	// l11	Balime
-		 {12,	 12, 24 },	// l12	Balime
-		 {15,  3, 25 },	// o3	Meduna
-		 {16,  3, 26 },	// p3	Meduna
-		 {14,  4, 27 },	// n4	Meduna
-		 {14,  3, 28 },	// n3	Meduna
-		 {15,  4, 30 },	// o4	Meduna
-		 {10,  9, 31 },	// j9	Tixa
-
-		 {4,	15, 32 },	// d15	NE SAM
-		 {4,  2, 33 },	// d2	NW SAM
-		 {9,  8, 34 }	// i8	CENTRAL SAM
+		UINT8 y;
+		UINT8 x;
+		UINT8 quote;
 	};
 
-  // Default to false
-	gTacticalStatus.fCountingDownForGuideDescription = FALSE;
-
-
-	// OK, if the first time in...
-	if (!GetSectorFlagStatus(sSectorX, sSectorY, sSectorZ, SF_HAVE_USED_GUIDE_QUOTE))
+	SectorDescriptionInfo const sector_description[] =
 	{
-		if ( sSectorZ != 0 )
-		{
-			return;
-		}
+		{  2, 13,  0 }, // B13 Drassen
+		{  3, 13,  1 }, // C13 Drassen
+		{  4, 13,  2 }, // D13 Drassen
+		{  8, 13,  3 }, // H13 Alma
+		{  8, 14,  4 }, // H14 Alma
+		{  9, 13,  5 }, // I13 Alma (extra quote 6 if Sci-fi)
+		{  9, 14,  7 }, // I14 Alma
+		{  6,  8,  8 }, // F8  Cambria
+		{  6,  9,  9 }, // F9  Cambria
+		{  7,  8, 10 }, // G8  Cambria
 
-		// OK, check if we are in a good sector....
-		for ( cnt = 0; cnt < 33; cnt++ )
-		{
-			if ( sSectorX == ubSectorDescription[ cnt ][ 1 ] && sSectorY == ubSectorDescription[ cnt ][ 0 ] )
-			{
-				// If we're not scifi, skip some
-				if ( !gGameOptions.fSciFi && cnt == 3 )
-				{
-					continue;
-				}
+		{  7,  9, 11 }, // G9  Cambria
+		{  3,  6, 12 }, // C6  San Mona
+		{  3,  5, 13 }, // C5  San Mona
+		{  4,  5, 14 }, // D5  San Mona
+		{  2,  2, 15 }, // B2  Chitzena
+		{  1,  2, 16 }, // A2  Chitzena
+		{  7,  1, 17 }, // G1  Grumm
+		{  8,  1, 18 }, // H1  Grumm
+		{  7,  2, 19 }, // G2  Grumm
+		{  8,  2, 20 }, // H2  Grumm
 
-				SetSectorFlag( sSectorX, sSectorY, ( UINT8 )sSectorZ, SF_HAVE_USED_GUIDE_QUOTE );
+		{  9,  6, 21 }, // I6  Estoni
+		{ 11,  4, 22 }, // K4  Orta
+		{ 12, 11, 23 }, // L11 Balime
+		{ 12, 12, 24 }, // L12 Balime
+		{ 15,  3, 25 }, // O3  Meduna
+		{ 16,  3, 26 }, // P3  Meduna
+		{ 14,  4, 27 }, // N4  Meduna
+		{ 14,  3, 28 }, // N3  Meduna
+		{ 15,  4, 30 }, // O4  Meduna
+		{ 10,  9, 31 }, // J9  Tixa
 
-				gTacticalStatus.fCountingDownForGuideDescription = TRUE;
-				gTacticalStatus.bGuideDescriptionCountDown			 = (INT8)( 4 + Random( 5 ) ); // 4 to 8 tactical turns...
-				gTacticalStatus.ubGuideDescriptionToUse					 = ubSectorDescription[ cnt ][ 2 ];
-				gTacticalStatus.bGuideDescriptionSectorX				 =  (INT8)sSectorX;
-				gTacticalStatus.bGuideDescriptionSectorY				 =  (INT8)sSectorY;
-			}
-		}
+		{  4, 15, 32 }, // D15 NE SAM
+		{  4,  2, 33 }, // D2  NW SAM
+		{  9,  8, 34 }  // I8  CENTRAL SAM
+	};
+
+	TacticalStatusType& ts = gTacticalStatus;
+	// Default to false
+	ts.fCountingDownForGuideDescription = FALSE;
+
+	if (GetSectorFlagStatus(x, y, z, SF_HAVE_USED_GUIDE_QUOTE)) return;
+	if (z != 0) return;
+
+	// Check if we are in a good sector
+	for (SectorDescriptionInfo const* i = sector_description; i != endof(sector_description); ++i)
+	{
+		if (x != i->x || y != i->y) continue;
+
+		// If we're not scifi, skip some
+		if (i == &sector_description[3] && !gGameOptions.fSciFi) continue;
+
+		SetSectorFlag(x, y, z, SF_HAVE_USED_GUIDE_QUOTE);
+
+		ts.fCountingDownForGuideDescription = TRUE;
+		ts.bGuideDescriptionCountDown       = 4 + Random(5); // 4 to 8 tactical turns
+		ts.ubGuideDescriptionToUse          = i->quote;
+		ts.bGuideDescriptionSectorX         = x;
+		ts.bGuideDescriptionSectorY         = y;
+
+		// Handle guide description (will be needed if a SAM one)
+		HandleRPCDescription();
+		break;
 	}
-
-  // Handle guide description ( will be needed if a SAM one )
-	HandleRPCDescription( );
-
 }
 
 
