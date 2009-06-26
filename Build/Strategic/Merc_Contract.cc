@@ -606,7 +606,7 @@ void CheckIfMercGetsAnotherContract( SOLDIERTYPE *pSoldier )
 
 
 static void HandleUniqueEventWhenPlayerLeavesTeam(SOLDIERTYPE* pSoldier);
-static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* pSoldier, BOOLEAN fAddRehireButton);
+static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE&, bool add_rehire_button);
 
 
 void MakeCharacterDialogueEventContractEnding(SOLDIERTYPE& s, bool const add_rehire_button)
@@ -638,7 +638,7 @@ void MakeCharacterDialogueEventContractEnding(SOLDIERTYPE& s, bool const add_reh
 				}
 				else
 				{
-					NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(&s, add_rehire_button_);
+					NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(s, add_rehire_button_);
 				}
 				return false;
 			}
@@ -818,86 +818,72 @@ static void CalculateMedicalDepositRefund(SOLDIERTYPE* pSoldier)
 static void MercDepartEquipmentBoxCallBack(MessageBoxReturnValue);
 
 
-static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE* pSoldier, BOOLEAN fAddRehireButton)
+/* Tell player this character is leaving and ask where they want the equipment
+ * left */
+static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& s, bool add_rehire_button)
 {
-	// will tell player this character is leaving and ask where they want the equipment left
-	CHAR16 sString[ 1024 ];
-	BOOLEAN fInSector = FALSE;
-//	INT16					zTownIDString[50];
-	CHAR16				zShortTownIDString[ 50 ];
+	pLeaveSoldier = &s;
 
-	//GetSectorIDString( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, zTownIDString, TRUE );
-
-	GetShortSectorString( pSoldier->sSectorX ,pSoldier->sSectorY, zShortTownIDString, lengthof(zShortTownIDString));
-
-	// Set string for generic button
-	wcslcpy(gzUserDefinedButton1, zShortTownIDString, lengthof(gzUserDefinedButton1));
-
-	pLeaveSoldier = pSoldier;
-
-	if (pSoldier->fSignedAnotherContract) fAddRehireButton = FALSE;
-
-	if( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
+	if (s.fSignedAnotherContract || s.ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC)
 	{
-		fAddRehireButton = FALSE;
+		add_rehire_button = false;
 	}
 
-	//if the character is an RPC
-	const INT8 sex = gMercProfiles[pSoldier->ubProfile].bSex;
-	if( pSoldier->ubProfile >= FIRST_RPC && pSoldier->ubProfile < FIRST_NPC )
-	{
-		const wchar_t* const text = (sex == MALE ? str_he_leaves_drops_equipment : str_she_leaves_drops_equipment);
-		swprintf(sString, lengthof(sString), text, pSoldier->name, zShortTownIDString);
-		fInSector = TRUE;
-	}
-
-	// check if drassen controlled
-	else if (!StrategicMap[AIRPORT_X + MAP_WORLD_X * AIRPORT_Y].fEnemyControlled)
-	{
-		if( ( pSoldier->sSectorX == AIRPORT_X ) && ( pSoldier->sSectorY == AIRPORT_Y ) && ( pSoldier->bSectorZ == 0 ) )
-		{
-			const wchar_t* const text = (sex == MALE ? str_he_leaves_drops_equipment : str_she_leaves_drops_equipment);
-			swprintf(sString, lengthof(sString), text, pSoldier->name, zShortTownIDString, str_location_drassen);
-			fInSector = TRUE;
+	INT16   const  x         = s.sSectorX;
+	INT16   const  y         = s.sSectorY;
+	INT8    const  z         = s.bSectorZ;
+	wchar_t const* elsewhere = 0;
+	if (s.ubProfile < FIRST_RPC || FIRST_NPC <= s.ubProfile)
+	{ // The character is not an RPC
+		if (!StrategicMap[CALCULATE_STRATEGIC_INDEX(AIRPORT_X, AIRPORT_Y)].fEnemyControlled)
+		{ // Drassen is player controlled
+			if (x != AIRPORT_X || y != AIRPORT_Y || z != 0)
+			{
+				// Set string for generic button
+				wcslcpy(gzUserDefinedButton2, L"B13", lengthof(gzUserDefinedButton2));
+				elsewhere = str_location_drassen;
+			}
 		}
 		else
 		{
-			// Set string for generic button
-			wcslcpy(gzUserDefinedButton2, L"B13", lengthof(gzUserDefinedButton2));
-
-			const wchar_t* const text = (sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment);
-			swprintf(sString, lengthof(sString), text, pSoldier->name, zShortTownIDString, str_location_drassen);
+			if (x != OMERTA_LEAVE_EQUIP_SECTOR_X || y != OMERTA_LEAVE_EQUIP_SECTOR_Y || z != 0)
+			{
+				// Set string for generic button
+				wcslcpy(gzUserDefinedButton2, L"A9", lengthof(gzUserDefinedButton2));
+				elsewhere = str_location_omerta;
+			}
 		}
+	}
+
+	wchar_t town_sector[16];
+	GetShortSectorString(x, y, town_sector, lengthof(town_sector));
+
+	wchar_t         msg[1024];
+	MessageBoxFlags flags;
+	INT8 const      sex = GetProfile(s.ubProfile).bSex;
+	if (elsewhere)
+	{
+		// Set string for generic button
+		wcslcpy(gzUserDefinedButton1, town_sector, lengthof(gzUserDefinedButton1));
+
+		wchar_t const* const text = sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment;
+		swprintf(msg, lengthof(msg), text, s.name, town_sector, elsewhere);
+		flags = add_rehire_button ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC;
 	}
 	else
 	{
-		if( ( pSoldier->sSectorX == OMERTA_LEAVE_EQUIP_SECTOR_X ) && ( pSoldier->sSectorY == OMERTA_LEAVE_EQUIP_SECTOR_Y ) && ( pSoldier->bSectorZ == 0 ) )
-		{
-			const wchar_t* const text = (sex == MALE ? str_he_leaves_drops_equipment : str_she_leaves_drops_equipment);
-			swprintf(sString, lengthof(sString), text, pSoldier->name, zShortTownIDString, str_location_omerta);
-			fInSector = TRUE;
-		}
-		else
-		{
-			// Set string for generic button
-			wcslcpy(gzUserDefinedButton2, L"A9", lengthof(gzUserDefinedButton2));
-
-			const wchar_t* const text = (sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment);
-			swprintf(sString, lengthof(sString), text, pSoldier->name, zShortTownIDString, str_location_omerta);
-		}
+		wchar_t const* const text = sex == MALE ? str_he_leaves_drops_equipment : str_she_leaves_drops_equipment;
+		swprintf(msg, lengthof(msg), text, s.name, town_sector);
+		flags = add_rehire_button ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK;
 	}
 
-	MessageBoxFlags const flags = fInSector ?
-		(fAddRehireButton ? MSG_BOX_FLAG_OKCONTRACT      : MSG_BOX_FLAG_OK) :
-		(fAddRehireButton ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC);
-	/// which screen are we in?
-	if ( (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN ) )
+	if (guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN)
 	{
-		DoMapMessageBox(MSG_BOX_BASIC_STYLE, sString, MAP_SCREEN, flags, MercDepartEquipmentBoxCallBack);
+		DoMapMessageBox(MSG_BOX_BASIC_STYLE, msg, MAP_SCREEN, flags, MercDepartEquipmentBoxCallBack);
 	}
 	else
 	{
-		DoMessageBox(MSG_BOX_BASIC_STYLE, sString, guiCurrentScreen, flags, MercDepartEquipmentBoxCallBack, NULL);
+		DoMessageBox(MSG_BOX_BASIC_STYLE, msg, guiCurrentScreen, flags, MercDepartEquipmentBoxCallBack, 0);
 	}
 }
 
