@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Font.h"
 #include "Font_Control.h"
 #include "HImage.h"
@@ -3752,66 +3754,31 @@ static BOOLEAN PickUpATownPersonFromSector(UINT8 ubType, INT16 sX, INT16 sY)
 }
 
 
-static BOOLEAN DropAPersonInASector(UINT8 ubType, INT16 sX, INT16 sY)
+static void DropAPersonInASector(UINT8 const type, INT16 const x, INT16 const y)
 {
+	// Are they in the same town as they were picked up from?
+	if (GetTownIdForSector(x, y) != sSelectedMilitiaTown) return;
 
-	// are they in the same town as they were pickedup from
-	if( GetTownIdForSector( sX, sY ) != sSelectedMilitiaTown )
+	if (!SectorOursAndPeaceful(x, y, 0)) return;
+
+	UINT8 (&n_milita)[MAX_MILITIA_LEVELS] = SectorInfo[SECTOR(x, y)].ubNumberOfCivsAtLevel;
+	if (n_milita[GREEN_MILITIA] + n_milita[REGULAR_MILITIA] + n_milita[ELITE_MILITIA] >= MAX_ALLOWABLE_MILITIA_PER_SECTOR) return;
+
+	// Drop the guy into this sector
+	INT16* n_type;
+	switch (type)
 	{
-		return( FALSE );
+		case GREEN_MILITIA:   n_type = &sGreensOnCursor;   break;
+		case REGULAR_MILITIA: n_type = &sRegularsOnCursor; break;
+		case ELITE_MILITIA:   n_type = &sElitesOnCursor;   break;
+		default:              throw std::logic_error("invalid militia type");
 	}
+	if (*n_type == 0) return;
 
-	if( SectorInfo[ SECTOR( sX, sY )].ubNumberOfCivsAtLevel[ GREEN_MILITIA ] +  SectorInfo[ SECTOR( sX, sY )].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ]
-		+  SectorInfo[ SECTOR( sX, sY )].ubNumberOfCivsAtLevel[ ELITE_MILITIA ] >= MAX_ALLOWABLE_MILITIA_PER_SECTOR )
-	{
-		return( FALSE );
-	}
-
-	if( !SectorOursAndPeaceful(sX, sY, 0 ) )
-	{
-		return( FALSE );
-	}
-
-	if( SECTOR( sX, sY ) == SECTOR( gWorldSectorX, gWorldSectorY ) )
-	{
-		gfStrategicMilitiaChangesMade = TRUE;
-	}
-
-	// drop the guy into this sector
-	switch( ubType )
-	{
-		case( GREEN_MILITIA ):
-
-			if( !sGreensOnCursor )
-			{
-				return( FALSE );
-			}
-
-			sGreensOnCursor--;
-		break;
-		case( REGULAR_MILITIA ):
-			if( !sRegularsOnCursor )
-			{
-				return( FALSE );
-			}
-			sRegularsOnCursor--;
-		break;
-		case( ELITE_MILITIA ):
-			if( !sElitesOnCursor )
-			{
-				return( FALSE );
-			}
-
-			sElitesOnCursor--;
-		break;
-	}
-
-	// up the number in this sector of this type of militia
-	SectorInfo[ SECTOR( sX, sY )].ubNumberOfCivsAtLevel[ ubType ]++;
-
+	--*n_type;
+	++n_milita[type]; // Up the number in this sector of this type of militia
 	fMapPanelDirty = TRUE;
-
-	return( TRUE );
+	if (SECTOR(x, y) == SECTOR(gWorldSectorX, gWorldSectorY)) gfStrategicMilitiaChangesMade = TRUE;
 }
 
 
