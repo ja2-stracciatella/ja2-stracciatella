@@ -1127,18 +1127,17 @@ void HandleMercLeavingEquipmentInDrassen(SOLDIERTYPE* const s)
 static void FreeLeaveListSlot(UINT32 uiSlotIndex);
 
 
-static void HandleEquipmentLeft(const UINT32 uiSlotIndex, const UINT sector, const GridNo grid, const wchar_t* const dest_town_name)
+static void HandleEquipmentLeft(UINT32 const slot_idx, UINT const sector, GridNo const grid, wchar_t const* const dest_town_name)
 {
-	Assert(uiSlotIndex < NUM_LEAVE_LIST_SLOTS);
+	Assert(slot_idx < NUM_LEAVE_LIST_SLOTS);
 
-	MERC_LEAVE_ITEM* pItem = gpLeaveListHead[uiSlotIndex];
-	if (pItem != NULL)
+	if (MERC_LEAVE_ITEM* i = gpLeaveListHead[slot_idx])
 	{
 		wchar_t sString[128];
-		const ProfileID id = guiLeaveListOwnerProfileId[uiSlotIndex];
+		ProfileID const id = guiLeaveListOwnerProfileId[slot_idx];
 		if (id != NO_PROFILE)
 		{
-			swprintf(sString, lengthof(sString), str_left_equipment, gMercProfiles[id].zNickname, dest_town_name);
+			swprintf(sString, lengthof(sString), str_left_equipment, GetProfile(id).zNickname, dest_town_name);
 		}
 		else
 		{
@@ -1146,21 +1145,21 @@ static void HandleEquipmentLeft(const UINT32 uiSlotIndex, const UINT sector, con
 		}
 		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sString);
 
-		for (; pItem != NULL; pItem = pItem->pNext)
+		bool const is_sector_loaded = gWorldSectorX == SECTORX(sector) && gWorldSectorY == SECTORY(sector) && gbWorldSectorZ == 0;
+		for (; i; i = i->pNext)
 		{
-			if (gWorldSectorX != SECTORX(sector) || gWorldSectorY != SECTORY(sector) || gbWorldSectorZ != 0)
+			if (is_sector_loaded)
 			{
-				// given this slot value, add to sector item list
-				AddItemsToUnLoadedSector(SECTORX(sector), SECTORY(sector), 0, grid, 1, &pItem->o, 0, WORLD_ITEM_REACHABLE, 0, VISIBLE);
+				AddItemToPool(grid, &i->o, VISIBLE, 0, WORLD_ITEM_REACHABLE, 0);
 			}
 			else
-			{
-				AddItemToPool(grid, &pItem->o, VISIBLE, 0, WORLD_ITEM_REACHABLE, 0);
+			{ // Given this slot value, add to sector item list
+				AddItemsToUnLoadedSector(SECTORX(sector), SECTORY(sector), 0, grid, 1, &i->o, 0, WORLD_ITEM_REACHABLE, 0, VISIBLE);
 			}
 		}
 	}
 
-	FreeLeaveListSlot(uiSlotIndex);
+	FreeLeaveListSlot(slot_idx);
 }
 
 
