@@ -3705,52 +3705,34 @@ static void DisplayLevelString(void)
 }
 
 
-// function to manipulate the number of towns people on the cursor
-static BOOLEAN PickUpATownPersonFromSector(UINT8 ubType, INT16 sX, INT16 sY)
+static INT16& GetPickedUpMilitia(UINT8 const type)
 {
-	// see if there are any militia of this type in this sector
-	if( !SectorInfo[ SECTOR( sX, sY ) ].ubNumberOfCivsAtLevel[ ubType ] )
+	switch (type)
 	{
-		// failed, no one here
-		return( FALSE );
+		case GREEN_MILITIA:   return sGreensOnCursor;
+		case REGULAR_MILITIA: return sRegularsOnCursor;
+		case ELITE_MILITIA:   return sElitesOnCursor;
+		default: throw std::logic_error("invalid militia type");
 	}
+}
 
-	// are they in the same town as they were pickedup from
-	if( GetTownIdForSector( sX, sY ) != sSelectedMilitiaTown )
-	{
-		return( FALSE );
-	}
 
-	if( !SectorOursAndPeaceful( sX, sY, 0 ) )
-	{
-		return( FALSE );
-	}
+// function to manipulate the number of towns people on the cursor
+static void PickUpATownPersonFromSector(UINT8 const type, INT16 const x, INT16 const y)
+{
+	// Are they in the same town as they were picked up from?
+	if (GetTownIdForSector(x, y) != sSelectedMilitiaTown) return;
 
-	if( SECTOR( sX, sY ) == SECTOR( gWorldSectorX, gWorldSectorY ) )
-	{
-		gfStrategicMilitiaChangesMade = TRUE;
-	}
+	if (!SectorOursAndPeaceful(x, y, 0)) return;
 
-	// otherwise pick this guy up
-	switch( ubType )
-	{
-		case( GREEN_MILITIA ):
-			sGreensOnCursor++;
-		break;
-		case( REGULAR_MILITIA ):
-			sRegularsOnCursor++;
-		break;
-		case( ELITE_MILITIA ):
-			sElitesOnCursor++;
-		break;
-	}
+	UINT8& n_type = SectorInfo[SECTOR(x, y)].ubNumberOfCivsAtLevel[type];
+	// See if there are any militia of this type in this sector
+	if (n_type == 0) return;
 
-	// reduce number in this sector
-	SectorInfo[ SECTOR( sX, sY )].ubNumberOfCivsAtLevel[ ubType ]--;
-
+	--n_type;                   // Reduce number in this sector
+	++GetPickedUpMilitia(type); // Pick this guy up
 	fMapPanelDirty = TRUE;
-
-	return( TRUE );
+	if (SECTOR(x, y) == SECTOR(gWorldSectorX, gWorldSectorY)) gfStrategicMilitiaChangesMade = TRUE;
 }
 
 
@@ -3765,17 +3747,10 @@ static void DropAPersonInASector(UINT8 const type, INT16 const x, INT16 const y)
 	if (n_milita[GREEN_MILITIA] + n_milita[REGULAR_MILITIA] + n_milita[ELITE_MILITIA] >= MAX_ALLOWABLE_MILITIA_PER_SECTOR) return;
 
 	// Drop the guy into this sector
-	INT16* n_type;
-	switch (type)
-	{
-		case GREEN_MILITIA:   n_type = &sGreensOnCursor;   break;
-		case REGULAR_MILITIA: n_type = &sRegularsOnCursor; break;
-		case ELITE_MILITIA:   n_type = &sElitesOnCursor;   break;
-		default:              throw std::logic_error("invalid militia type");
-	}
-	if (*n_type == 0) return;
+	INT16& n_type = GetPickedUpMilitia(type);
+	if (n_type == 0) return;
 
-	--*n_type;
+	--n_type;
 	++n_milita[type]; // Up the number in this sector of this type of militia
 	fMapPanelDirty = TRUE;
 	if (SECTOR(x, y) == SECTOR(gWorldSectorX, gWorldSectorY)) gfStrategicMilitiaChangesMade = TRUE;
