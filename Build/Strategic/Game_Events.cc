@@ -450,41 +450,28 @@ static BOOLEAN AddPeriodStrategicEventUsingSecondsWithOffset(StrategicEventKind 
 	return FALSE;
 }
 
-void DeleteAllStrategicEventsOfType(StrategicEventKind const ubCallbackID)
+
+void DeleteAllStrategicEventsOfType(StrategicEventKind const callback_id)
 {
-	STRATEGICEVENT	*curr, *prev, *temp;
-	prev = NULL;
-	curr = gpEventList;
-	while( curr )
+	for (STRATEGICEVENT** anchor = &gpEventList; *anchor;)
 	{
-		if( curr->ubCallbackID == ubCallbackID && !(curr->ubFlags & SEF_DELETION_PENDING) )
+		STRATEGICEVENT* const e = *anchor;
+		if (e->ubCallbackID == callback_id && !(e->ubFlags & SEF_DELETION_PENDING))
 		{
-			if( gfPreventDeletionOfAnyEvent )
-			{
-				curr->ubFlags |= SEF_DELETION_PENDING;
-				gfEventDeletionPending = TRUE;
-				prev = curr;
-				curr = curr->next;
+			if (!gfPreventDeletionOfAnyEvent)
+			{ // Detach and delete the node
+				*anchor = e->next;
+				MemFree(e);
 				continue;
 			}
-			//Detach the node
-			if( prev )
-				prev->next = curr->next;
-			else
-				gpEventList = curr->next;
 
-			//isolate and remove curr
-			temp = curr;
-			curr = curr->next;
-			MemFree( temp );
+			e->ubFlags |= SEF_DELETION_PENDING;
+			gfEventDeletionPending = TRUE;
 		}
-		else
-		{	//Advance all the nodes
-			prev = curr;
-			curr = curr->next;
-		}
+		anchor = &e->next;
 	}
 }
+
 
 void DeleteAllStrategicEvents()
 {
