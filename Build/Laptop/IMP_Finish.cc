@@ -118,7 +118,6 @@ static void MakeButton(UINT idx, const char* img_file, const wchar_t* text, INT1
 static void BtnIMPFinishAttributesCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnIMPFinishDoneCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnIMPFinishPersonalityCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPFinishPortraitCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnIMPFinishStartOverCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnIMPFinishVoiceCallback(GUI_BUTTON* btn, INT32 reason);
 
@@ -266,19 +265,6 @@ static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, INT32 reason)
 		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
 		fButtonPendingFlag = TRUE;
 		giIMPFinishButton[2]->SpecifyText(pImpButtonText[2]);
-	}
-}
-
-
-static void BtnIMPFinishPortraitCallback(GUI_BUTTON *btn, INT32 reason)
-{
-	// btn callback for Main Page Begin Profiling
-
-  // if not this far in char generation, don't alot ANY action
-	if (iCurrentProfileMode < 3)
-	{
-		btn->uiFlags &= ~BUTTON_CLICKED_ON;
-		return;
 	}
 }
 
