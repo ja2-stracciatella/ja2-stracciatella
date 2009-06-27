@@ -445,42 +445,26 @@ static void BeginMeanwhileCallBack(MessageBoxReturnValue const bExitValue)
 }
 
 
-BOOLEAN AreInMeanwhile( )
+bool AreInMeanwhile()
 {
-	STRATEGICEVENT *curr;
+	/* KM: April 6, 1999
+	 * Tactical traversal needs to take precedence over meanwhile events. When
+	 * tactically traversing, we expect to make it to the other side without
+	 * interruption. */
+	if (gfTacticalTraversal) return false;
 
-	//KM:  April 6, 1999
-	//Tactical traversal needs to take precedence over meanwhile events.  When tactically traversing, we
-	//expect to make it to the other side without interruption.
-	if( gfTacticalTraversal )
+	if (gfInMeanwhile) return true;
+
+	/* Check to make sure a meanwhile scene isn't in the event list occurring at
+	 * the exact same time as this call. Meanwhile scenes have precedence over a
+	 * new battle if they occur in the same second. */
+	for (STRATEGICEVENT const* i = gpEventList; i; i = i->next)
 	{
-		return FALSE;
+		if (i->uiTimeStamp != GetWorldTotalSeconds()) return false;
+		if (i->ubCallbackID == EVENT_MEANWHILE)       return true;
 	}
 
-	if( gfInMeanwhile )
-	{
-		return TRUE;
-	}
-	//Check to make sure a meanwhile scene isn't in the event list occurring at the exact same time as this call.  Meanwhile
-	//scenes have precedence over a new battle if they occur in the same second.
-	curr = gpEventList;
-	while( curr )
-	{
-		if( curr->uiTimeStamp == GetWorldTotalSeconds() )
-		{
-			if( curr->ubCallbackID == EVENT_MEANWHILE )
-			{
-				return TRUE;
-			}
-		}
-		else
-		{
-			return FALSE;
-		}
-		curr = curr->next;
-	}
-
-	return( FALSE );
+	return false;
 }
 
 

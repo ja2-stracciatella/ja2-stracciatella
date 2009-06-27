@@ -48,7 +48,7 @@ void EndMeanwhile(void);
 
 
 
-BOOLEAN AreInMeanwhile(void);
+bool AreInMeanwhile();
 UINT8 GetMeanwhileID(void);
 BOOLEAN AreReloadingFromMeanwhile(void);
 
