@@ -286,80 +286,37 @@ static BOOLEAN AddFutureDayStrategicEventUsingSeconds(StrategicEventKind const u
 	return( AddStrategicEventUsingSeconds( ubCallbackID, uiSecondStamp + GetFutureDayInMinutes( uiDay + uiNumDaysFromPresent ) * 60, uiParam ) );
 }
 
-STRATEGICEVENT* AddAdvancedStrategicEvent(StrategicEventFrequency const ubEventType, StrategicEventKind const ubCallbackID, UINT32 const uiTimeStamp, UINT32 const uiParam)
-{
-	STRATEGICEVENT		*pNode, *pPrevNode;
 
-	if( gfProcessingGameEvents && uiTimeStamp <= guiTimeStampOfCurrentlyExecutingEvent )
-	{ //Prevents infinite loops of posting events that are the same time or earlier than the event
-		//currently being processed.
-		#ifdef JA2TESTVERSION
-			//if( ubCallbackID == EVENT_PROCESS_TACTICAL_SCHEDULE )
-			{
-				ScreenMsg(FONT_RED, MSG_DEBUG, L"%ls Event Rejected:  Can't post events <= time while inside an event callback.  This is a special case situation that isn't a bug.", gEventName[ubCallbackID]);
-			}
-			//else
-			//{
-			//	AssertMsg( 0, String( "%ls Event Rejected:  Can't post events <= time while inside an event callback.", gEventName[ ubCallbackID ] ) );
-			//}
-		#endif
-		return NULL;
+STRATEGICEVENT* AddAdvancedStrategicEvent(StrategicEventFrequency const event_type, StrategicEventKind const callback_id, UINT32 const timestamp, UINT32 const param)
+{
+	if (gfProcessingGameEvents && timestamp <= guiTimeStampOfCurrentlyExecutingEvent)
+	{ /* Prevent infinite loops of posting events that are the same time or
+		 * earlier than the event currently being processed */
+#ifdef JA2TESTVERSION
+		ScreenMsg(FONT_RED, MSG_DEBUG, L"%ls Event Rejected: Can't post events <= time while inside an event callback. This is a special case situation that isn't a bug.", gEventName[callback_id]);
+#endif
+		return 0;
 	}
 
-	STRATEGICEVENT* const pNewNode = MALLOCZ(STRATEGICEVENT);
-	pNewNode->ubCallbackID		= ubCallbackID;
-	pNewNode->uiParam					= uiParam;
-	pNewNode->ubEventType			= ubEventType;
-	pNewNode->uiTimeStamp			= uiTimeStamp;
-	pNewNode->uiTimeOffset			= 0;
+	STRATEGICEVENT* const n = MALLOCZ(STRATEGICEVENT);
+	n->ubCallbackID = callback_id;
+	n->uiParam      = param;
+	n->ubEventType  = event_type;
+	n->uiTimeStamp  = timestamp;
+	n->uiTimeOffset = 0;
 
 	// Search list for a place to insert
-	pNode = gpEventList;
-
-	// If it's the first head, do this!
-	if( !pNode )
+	STRATEGICEVENT** anchor = &gpEventList;
+	for (; *anchor; anchor = &(*anchor)->next)
 	{
-		gpEventList = pNewNode;
-		pNewNode->next = NULL;
+		if (timestamp < (*anchor)->uiTimeStamp) break;
 	}
-	else
-	{
-		pPrevNode = NULL;
-		while( pNode )
-		{
-			if( uiTimeStamp < pNode->uiTimeStamp )
-			{
-				break;
-			}
-			pPrevNode = pNode;
-			pNode = pNode->next;
-		}
+	n->next = *anchor;
+	*anchor = n;
 
-		// If we are at the end, set at the end!
-		if ( !pNode )
-		{
-			pPrevNode->next = pNewNode;
-			pNewNode->next  = NULL;
-		}
-		else
-		{
-			// We have a previous node here
-			// Insert IN FRONT!
-			if ( pPrevNode )
-			{
-				pNewNode->next = pPrevNode->next;
-				pPrevNode->next = pNewNode;
-			}
-			else
-			{	// It's the head
-				pNewNode->next = gpEventList;
-				gpEventList = pNewNode;
-			}
-		}
-	}
-
-	return pNewNode ;
+	return n;
 }
+
 
 BOOLEAN AddStrategicEvent(StrategicEventKind const ubCallbackID, UINT32 const uiMinStamp, UINT32 const uiParam)
 {
