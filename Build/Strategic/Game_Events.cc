@@ -480,40 +480,31 @@ void DeleteAllStrategicEvents()
 }
 
 
-//Searches for and removes the first event matching the supplied information.  There may very well be a need
-//for more specific event removal, so let me know (Kris), of any support needs.  Function returns FALSE if
-//no events were found or if the event wasn't deleted due to delete lock,
-BOOLEAN DeleteStrategicEvent(StrategicEventKind const ubCallbackID, UINT32 const uiParam)
+/* Search for and remove the first event matching the supplied information.
+ * There may very well be a need for more specific event removal, so let me know
+ * (Kris), of any support needs. Returns FALSE if no events were found or if the
+ * event wasn't deleted due to delete lock. */
+BOOLEAN DeleteStrategicEvent(StrategicEventKind const callback_id, UINT32 const param)
 {
-	STRATEGICEVENT *curr, *prev;
-	curr = gpEventList;
-	prev = NULL;
-	while( curr )
-	{ //deleting middle
-		if( curr->ubCallbackID == ubCallbackID && curr->uiParam == uiParam )
+	for (STRATEGICEVENT** anchor = &gpEventList; *anchor; anchor = &(*anchor)->next)
+	{
+		STRATEGICEVENT* const e = *anchor;
+		if (e->ubCallbackID != callback_id)    continue;
+		if (e->uiParam != param)               continue;
+		if (e->ubFlags & SEF_DELETION_PENDING) continue;
+
+		if (gfPreventDeletionOfAnyEvent)
 		{
-			if( !(curr->ubFlags & SEF_DELETION_PENDING) )
-			{
-				if( gfPreventDeletionOfAnyEvent )
-				{
-					curr->ubFlags |= SEF_DELETION_PENDING;
-					gfEventDeletionPending = TRUE;
-					return FALSE;
-				}
-				if( prev )
-				{
-					prev->next = curr->next;
-				}
-				else
-				{
-					gpEventList = gpEventList->next;
-				}
-				MemFree( curr );
-				return TRUE;
-			}
+			e->ubFlags |= SEF_DELETION_PENDING;
+			gfEventDeletionPending = TRUE;
+			return FALSE;
 		}
-		prev = curr;
-		curr = curr->next;
+		else
+		{
+			*anchor = e->next;
+			MemFree(e);
+			return TRUE;
+		}
 	}
 	return FALSE;
 }
