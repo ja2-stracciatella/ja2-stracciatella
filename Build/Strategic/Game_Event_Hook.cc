@@ -162,9 +162,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			break;
 		//Whenever any group (player or enemy) arrives in a new sector during movement.
 		case EVENT_GROUP_ARRIVAL:
-			//ValidateGameEvents();
 			GroupArrivedAtSector(GetGroup((UINT8)pEvent->uiParam), TRUE, FALSE);
-			//ValidateGameEvents();
 			break;
 		case EVENT_MERC_COMPLAIN_EQUIPMENT:
 			MercComplainAboutEquipment( (UINT8) pEvent->uiParam );

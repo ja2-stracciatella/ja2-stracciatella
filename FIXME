@@ -141,7 +141,6 @@ TurnSoldierIntoCorpse(): one caller
 TwoHandedItem(): complicated
 UseGun(): code duplication
 VIDEO_NO_CURSOR: MSYS_NO_CURSOR? strange
-ValidateGameEvents(): questionable
 ValidateSkillsList(), RemoveSkillFromSkillsList(): complicated
 VehicleHasFuel(): inline
 WaitForSelectionWindowResponse(): fallthrough SDLK_ESCAPE -> SDLK_RETURN?

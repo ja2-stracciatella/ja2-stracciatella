@@ -235,7 +235,6 @@ void ProcessPendingGameEvents(UINT32 uiAdjustment, const UINT8 ubWarpCode)
 				MemFree( curr );
 				curr = gpEventList;
 				prev = NULL;
-				//ValidateGameEvents();
 			}
 			else
 			{
@@ -243,7 +242,6 @@ void ProcessPendingGameEvents(UINT32 uiAdjustment, const UINT8 ubWarpCode)
 				prev->next = curr->next;
 				curr = curr->next;
 				MemFree( temp );
-				//ValidateGameEvents();
 			}
 		}
 		else
@@ -522,7 +520,6 @@ void DeleteAllStrategicEventsOfType(StrategicEventKind const ubCallbackID)
 			temp = curr;
 			curr = curr->next;
 			MemFree( temp );
-			//ValidateGameEvents();
 		}
 		else
 		{	//Advance all the nodes
@@ -540,7 +537,6 @@ void DeleteAllStrategicEvents()
 		temp = gpEventList;
 		gpEventList = gpEventList->next;
 		MemFree( temp );
-		//ValidateGameEvents();
 		temp = NULL;
 	}
 	gpEventList = NULL;
@@ -575,7 +571,6 @@ BOOLEAN DeleteStrategicEvent(StrategicEventKind const ubCallbackID, UINT32 const
 					gpEventList = gpEventList->next;
 				}
 				MemFree( curr );
-				//ValidateGameEvents();
 				return TRUE;
 			}
 		}
@@ -645,20 +640,5 @@ void LoadStrategicEventsFromSavedGame(HWFILE const f)
 
 		*anchor = sev;
 		anchor  = &sev->next;
-	}
-}
-
-
-static void ValidateGameEvents(void)
-{
-	STRATEGICEVENT *curr;
-	curr = gpEventList;
-	while( curr )
-	{
-		curr = curr->next;
-		if( curr == (STRATEGICEVENT*)0xdddddddd )
-		{
-			return;
-		}
 	}
 }
