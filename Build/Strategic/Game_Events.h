@@ -40,7 +40,7 @@ extern STRATEGICEVENT *gpEventList;
 
 /* Determines if there are any events that will be processed between the current
  * global time, and the beginning of the next global time. */
-BOOLEAN GameEventsPending(UINT32 uiAdjustment);
+bool GameEventsPending(UINT32 adjustment);
 
 /* If there are any events pending, they are processed, until the time limit is
  * reached, or a major event is processed (one that requires the player's

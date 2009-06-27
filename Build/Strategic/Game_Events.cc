@@ -108,13 +108,10 @@ static BOOLEAN gfProcessingGameEvents = FALSE;
 UINT32	guiTimeStampOfCurrentlyExecutingEvent = 0;
 
 
-BOOLEAN GameEventsPending(const UINT32 uiAdjustment)
+bool GameEventsPending(UINT32 const adjustment)
 {
-	if( !gpEventList )
-		return FALSE;
-	if( gpEventList->uiTimeStamp <= GetWorldTotalSeconds() + uiAdjustment )
-		return TRUE;
-	return FALSE;
+	STRATEGICEVENT* const e = gpEventList;
+	return e && e->uiTimeStamp <= GetWorldTotalSeconds() + adjustment;
 }
 
 
