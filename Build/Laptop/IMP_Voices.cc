@@ -18,22 +18,22 @@
 
 //current and last pages
 INT32 iCurrentVoices = 0;
-INT32 iLastVoice = 2;
+static INT32 const iLastVoice = 2;
 
 //INT32 iVoiceId = 0;
 
 
 static UINT32 uiVocVoiceSound = 0;
 // buttons needed for the IMP Voices screen
-GUIButtonRef giIMPVoicesButton[3];
+static GUIButtonRef giIMPVoicesButton[3];
 static BUTTON_PICS* giIMPVoicesButtonImage[3];
 
 
 // redraw protrait screen
-BOOLEAN fReDrawVoicesScreenFlag = FALSE;
+static BOOLEAN fReDrawVoicesScreenFlag = FALSE;
 
 // the portrait region, for player to click on and re-hear voice
-MOUSE_REGION gVoicePortraitRegion;
+static MOUSE_REGION gVoicePortraitRegion;
 
 
 static void CreateIMPVoiceMouseRegions(void);
