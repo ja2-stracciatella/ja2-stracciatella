@@ -3645,7 +3645,7 @@ static UINT8 const g_encryption_array[][NEW_ROTATION_ARRAY_SIZE] =
 		71,142,46,234,237,200,4
 	}
 };
-CASSERT(lengthof(g_encryption_array) == BASE_NUMBER_OF_ROTATION_ARRAYS * 12);
+CASSERT(lengthof(g_encryption_array) == BASE_NUMBER_OF_ROTATION_ARRAYS * 12)
 
 
 static UINT8 const* GetRotationArray()
