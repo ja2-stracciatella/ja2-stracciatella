@@ -539,13 +539,13 @@ ScreenID SexScreenHandle(void)
 }
 
 
+#ifdef JA2DEMOADS
 static void DoneFadeOutForDemoExitScreen(void)
 {
 	gfProgramIsRunning = FALSE;
 }
 
 
-#ifdef JA2DEMOADS
 void DoDemoIntroduction(void)
 {
 	static BOOLEAN gfDemoIntro = FALSE;
