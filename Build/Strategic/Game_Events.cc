@@ -480,11 +480,7 @@ void DeleteAllStrategicEvents()
 }
 
 
-/* Search for and remove the first event matching the supplied information.
- * There may very well be a need for more specific event removal, so let me know
- * (Kris), of any support needs. Returns FALSE if no events were found or if the
- * event wasn't deleted due to delete lock. */
-BOOLEAN DeleteStrategicEvent(StrategicEventKind const callback_id, UINT32 const param)
+void DeleteStrategicEvent(StrategicEventKind const callback_id, UINT32 const param)
 {
 	for (STRATEGICEVENT** anchor = &gpEventList; *anchor; anchor = &(*anchor)->next)
 	{
@@ -497,16 +493,14 @@ BOOLEAN DeleteStrategicEvent(StrategicEventKind const callback_id, UINT32 const 
 		{
 			e->ubFlags |= SEF_DELETION_PENDING;
 			gfEventDeletionPending = TRUE;
-			return FALSE;
 		}
 		else
 		{
 			*anchor = e->next;
 			MemFree(e);
-			return TRUE;
 		}
+		return;
 	}
-	return FALSE;
 }
 
 
