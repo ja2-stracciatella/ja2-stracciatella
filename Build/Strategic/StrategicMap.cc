@@ -923,7 +923,7 @@ void PrepareLoadedSector()
 
 	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{
-		UpdateMercsInSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+		UpdateMercsInSector();
 	}
 
 	// Reset ambients!
@@ -1315,7 +1315,7 @@ static void EnterSector(INT16 const x, INT16 const y, INT8 const z)
 }
 
 
-void UpdateMercsInSector(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
+void UpdateMercsInSector()
 {
 	// Remove from interface slot
 	RemoveAllPlayersFromSlot();
@@ -1341,6 +1341,9 @@ void UpdateMercsInSector(INT16 const sSectorX, INT16 const sSectorY, INT8 const 
 	UINT8       pow_squad   = NO_CURRENT_SQUAD;
 	UINT8 const first_enemy = gTacticalStatus.Team[ENEMY_TEAM].bFirstID;
 	UINT8 const last_enemy  = gTacticalStatus.Team[CREATURE_TEAM].bLastID;
+	INT16 const sSectorX    = gWorldSectorX;
+	INT16 const sSectorY    = gWorldSectorY;
+	INT8  const bSectorZ    = gbWorldSectorZ;
 	for (INT32 i = 0; i != MAX_NUM_SOLDIERS; ++i)
 	{
 		if (gfRestoringEnemySoldiersFromTempFile &&

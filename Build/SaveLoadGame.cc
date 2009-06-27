@@ -1051,7 +1051,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	InitAI();
 
 	// Update the mercs in the sector with the new soldier info
-	UpdateMercsInSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+	UpdateMercsInSector();
 
 	PostSchedules();
 

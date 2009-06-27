@@ -193,8 +193,6 @@ void EnterTacticalScreen(void)
 	//SetDefaultSquadOnSectorEntry( FALSE );
 	//ExamineCurrentSquadLights( );
 
-	//UpdateMercsInSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-
 	// Init interface ( ALWAYS TO TEAM PANEL.  DEF changed it to go back to the previous panel )
 	if( !gfTacticalPlacementGUIActive )
 	{

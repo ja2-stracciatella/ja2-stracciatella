@@ -940,9 +940,6 @@ static ScreenID ProcessFileIO(void)
 
 			//Load successful, update necessary information.
 
-			//ATE: Any current mercs are transfered here...
-			//UpdateMercsInSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-
 			AddSoldierInitListTeamToWorld( ENEMY_TEAM,		255 );
 			AddSoldierInitListTeamToWorld( CREATURE_TEAM, 255 );
 			AddSoldierInitListTeamToWorld( MILITIA_TEAM,	255 );

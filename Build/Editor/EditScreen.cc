@@ -470,7 +470,7 @@ static BOOLEAN EditModeShutdown(void)
 	{
 		if( !gfBasement && !gfCaves )
 			LightSetBaseLevel( (UINT8)gusGameLightLevel );
-		UpdateMercsInSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+		UpdateMercsInSector();
 	}
 
 	gGameOptions.fGunNut = gfRealGunNut;
