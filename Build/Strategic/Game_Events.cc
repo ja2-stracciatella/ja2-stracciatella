@@ -475,16 +475,15 @@ void DeleteAllStrategicEventsOfType(StrategicEventKind const callback_id)
 
 void DeleteAllStrategicEvents()
 {
-	STRATEGICEVENT *temp;
-	while( gpEventList )
+	for (STRATEGICEVENT* i = gpEventList; i;)
 	{
-		temp = gpEventList;
-		gpEventList = gpEventList->next;
-		MemFree( temp );
-		temp = NULL;
+		STRATEGICEVENT* const del = i;
+		i = i->next;
+		MemFree(del);
 	}
-	gpEventList = NULL;
+	gpEventList = 0;
 }
+
 
 //Searches for and removes the first event matching the supplied information.  There may very well be a need
 //for more specific event removal, so let me know (Kris), of any support needs.  Function returns FALSE if
