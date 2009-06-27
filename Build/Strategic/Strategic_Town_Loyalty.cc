@@ -1559,15 +1559,11 @@ void SetTheFirstBattleSector( INT16 sSectorValue )
 	}
 }
 
-// did first battle take place here
-BOOLEAN DidFirstBattleTakePlaceInThisTown( INT8 bTownId )
+
+// Did first battle take place here?
+bool DidFirstBattleTakePlaceInThisTown(INT8 const town)
 {
-	INT8 bTownBattleId = 0;
-
-	// get town id for sector
-	bTownBattleId = GetTownIdForSector( ( INT16 ) ( sWorldSectorLocationOfFirstBattle % MAP_WORLD_X ), ( INT16 ) ( sWorldSectorLocationOfFirstBattle / MAP_WORLD_X ) );
-
-	return( bTownId == bTownBattleId );
+	return GetTownIdForSector(sWorldSectorLocationOfFirstBattle % MAP_WORLD_X, sWorldSectorLocationOfFirstBattle / MAP_WORLD_X) == town;
 }
 
 

@@ -143,7 +143,7 @@ void CheckIfEntireTownHasBeenLost( INT8 bTownId, INT16 sSectorX, INT16 sSectorY 
 
 void HandleLoyaltyChangeForNPCAction( UINT8 ubNPCProfileId );
 
-BOOLEAN  DidFirstBattleTakePlaceInThisTown( INT8 bTownId );
+bool DidFirstBattleTakePlaceInThisTown(INT8 town);
 void SetTheFirstBattleSector( INT16 sSectorValue );
 
 // gte number of whole towns but exclude this one
