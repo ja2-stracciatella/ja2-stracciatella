@@ -552,22 +552,6 @@ void SetGameMinutesPerSecond( UINT32 uiGameMinutesPerSecond )
 }
 
 
-static void SetGameSecondsPerSecond(UINT32 uiGameSecondsPerSecond)
-{
-	giTimeCompressMode = NOT_USING_TIME_COMPRESSION;
-	guiGameSecondsPerRealSecond = uiGameSecondsPerSecond;
-//	SetClockResolutionPerSecond( (UINT8)(guiGameSecondsPerRealSecond / 60) );
-	if ( guiGameSecondsPerRealSecond == 0 )
-	{
-		SetClockResolutionPerSecond( 0 );
-	}
-	else
-	{
-		SetClockResolutionPerSecond( (UINT8) MAX( 1, (UINT8)(guiGameSecondsPerRealSecond / 60) ) );
-	}
-}
-
-
 // call this to prevent player from changing the time compression state via the interface
 
 void LockPauseState(LockPauseReason const uiUniqueReasonId)
