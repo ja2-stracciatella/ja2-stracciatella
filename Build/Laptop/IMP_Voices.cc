@@ -23,7 +23,7 @@ INT32 iLastVoice = 2;
 //INT32 iVoiceId = 0;
 
 
-UINT32 uiVocVoiceSound = 0;
+static UINT32 uiVocVoiceSound = 0;
 // buttons needed for the IMP Voices screen
 GUIButtonRef giIMPVoicesButton[3];
 static BUTTON_PICS* giIMPVoicesButtonImage[3];
@@ -38,7 +38,7 @@ MOUSE_REGION gVoicePortraitRegion;
 
 static void CreateIMPVoiceMouseRegions(void);
 static void CreateIMPVoicesButtons(void);
-static UINT32 PlayVoice();
+static void PlayVoice();
 
 
 void EnterIMPVoices( void )
@@ -53,7 +53,7 @@ void EnterIMPVoices( void )
 	RenderIMPVoices( );
 
 	// play voice once
-	uiVocVoiceSound = PlayVoice( );
+	PlayVoice();
 }
 
 
@@ -191,7 +191,7 @@ static void BtnIMPVoicesNextCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		IncrementVoice();
 		if (SoundIsPlaying(uiVocVoiceSound)) SoundStop(uiVocVoiceSound);
-		uiVocVoiceSound = PlayVoice();
+		PlayVoice();
 		fReDrawVoicesScreenFlag = TRUE;
 	}
 }
@@ -203,7 +203,7 @@ static void BtnIMPVoicesPreviousCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		DecrementVoice();
 		if (SoundIsPlaying(uiVocVoiceSound)) SoundStop(uiVocVoiceSound);
-		uiVocVoiceSound = PlayVoice();
+		PlayVoice();
 		fReDrawVoicesScreenFlag = TRUE;
 	}
 }
@@ -241,7 +241,7 @@ static void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static UINT32 PlayVoice()
+static void PlayVoice()
 {
 	char const* filename;
 	if (fCharacterIsMale)
@@ -251,7 +251,7 @@ static UINT32 PlayVoice()
 			case 0:  filename = "Speech/051_001.wav"; break;
 			case 1:  filename = "Speech/052_001.wav"; break;
 			case 2:  filename = "Speech/053_001.wav"; break;
-			default: return 0;
+			default: return;
 		}
 	}
 	else
@@ -261,10 +261,10 @@ static UINT32 PlayVoice()
 			case 0:  filename = "Speech/054_001.wav"; break;
 			case 1:  filename = "Speech/055_001.wav"; break;
 			case 2:  filename = "Speech/056_001.wav"; break;
-			default: return 0;
+			default: return;
 		}
 	}
-	return PlayJA2SampleFromFile(filename, MIDVOLUME, 1, MIDDLEPAN);
+	uiVocVoiceSound = PlayJA2SampleFromFile(filename, MIDVOLUME, 1, MIDDLEPAN);
 }
 
 
@@ -293,7 +293,7 @@ static void IMPPortraitRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason
   {
     if( ! SoundIsPlaying( uiVocVoiceSound ) )
 		{
-       uiVocVoiceSound = PlayVoice( );
+			PlayVoice();
 		}
   }
 }
