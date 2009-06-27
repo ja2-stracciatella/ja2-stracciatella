@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Creature_Spreading.h"
 #include "Font_Control.h"
 #include "LoadSaveUndergroundSectorInfo.h"
@@ -1180,129 +1182,88 @@ static void NotifyPlayersOfNewEnemies(void)
 }
 
 
-static void AddEnemiesToBattle(GROUP* pGroup, UINT8 ubStrategicInsertionCode, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites, BOOLEAN fMagicallyAppeared)
+static void AddEnemiesToBattle(GROUP* const g, UINT8 const strategic_insertion_code, UINT8 n_admins, UINT8 n_troops, UINT8 n_elites, BOOLEAN const magically_appeared)
 {
-	SOLDIERTYPE *pSoldier;
-	MAPEDGEPOINTINFO MapEdgepointInfo;
-	UINT8 ubCurrSlot;
-	UINT8 ubTotalSoldiers;
-	UINT8 bDesiredDirection=0;
-	switch( ubStrategicInsertionCode )
-	{
-		case INSERTION_CODE_NORTH:	bDesiredDirection = SOUTHEAST;										break;
-		case INSERTION_CODE_EAST:		bDesiredDirection = SOUTHWEST;										break;
-		case INSERTION_CODE_SOUTH:	bDesiredDirection = NORTHWEST;										break;
-		case INSERTION_CODE_WEST:		bDesiredDirection = NORTHEAST;										break;
-		default:  AssertMsg( 0, "Illegal direction passed to AddEnemiesToBattle()" );	break;
-	}
-	#ifdef JA2TESTVERSION
-		ScreenMsg( FONT_RED, MSG_INTERFACE, L"Enemy reinforcements have arrived!  (%d admins, %d troops, %d elite)", ubNumAdmins, ubNumTroops, ubNumElites );
-	#endif
+#ifdef JA2TESTVERSION
+	ScreenMsg(FONT_RED, MSG_INTERFACE, L"Enemy reinforcements have arrived! (%d admins, %d troops, %d elite)", n_admins, n_troops, n_elites);
+#endif
 
-	if( fMagicallyAppeared )
-	{ //update the strategic counters
-		if( !gbWorldSectorZ )
+	UINT8 desired_direction;
+	switch (strategic_insertion_code)
+	{
+		case INSERTION_CODE_NORTH: desired_direction = SOUTHEAST; break;
+		case INSERTION_CODE_EAST:  desired_direction = SOUTHWEST; break;
+		case INSERTION_CODE_SOUTH: desired_direction = NORTHWEST; break;
+		case INSERTION_CODE_WEST:  desired_direction = NORTHEAST; break;
+		default: throw std::logic_error("Illegal direction passed to AddEnemiesToBattle()");
+	}
+
+	if (magically_appeared)
+	{ // Update the strategic counters
+		if (gbWorldSectorZ == 0)
 		{
-			SECTORINFO *pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
-			pSector->ubNumAdmins			+= ubNumAdmins;
-			pSector->ubAdminsInBattle	+= ubNumAdmins;
-			pSector->ubNumTroops			+= ubNumTroops;
-			pSector->ubTroopsInBattle	+= ubNumTroops;
-			pSector->ubNumElites			+= ubNumElites;
-			pSector->ubElitesInBattle	+= ubNumElites;
+			SECTORINFO& sector = SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)];
+			sector.ubNumAdmins      += n_admins;
+			sector.ubAdminsInBattle += n_admins;
+			sector.ubNumTroops      += n_troops;
+			sector.ubTroopsInBattle += n_troops;
+			sector.ubNumElites      += n_elites;
+			sector.ubElitesInBattle += n_elites;
 		}
-		else
+		else if (UNDERGROUND_SECTORINFO* const sector = FindUnderGroundSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ))
 		{
-			UNDERGROUND_SECTORINFO *pSector = FindUnderGroundSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-			if( pSector )
-			{
-				pSector->ubNumAdmins			+= ubNumAdmins;
-				pSector->ubAdminsInBattle	+= ubNumAdmins;
-				pSector->ubNumTroops			+= ubNumTroops;
-				pSector->ubTroopsInBattle	+= ubNumTroops;
-				pSector->ubNumElites			+= ubNumElites;
-				pSector->ubElitesInBattle	+= ubNumElites;
-			}
+			sector->ubNumAdmins      += n_admins;
+			sector->ubAdminsInBattle += n_admins;
+			sector->ubNumTroops      += n_troops;
+			sector->ubTroopsInBattle += n_troops;
+			sector->ubNumElites      += n_elites;
+			sector->ubElitesInBattle += n_elites;
 		}
-		//Because the enemies magically appeared, have one of our soldiers say something...
+		// Because the enemies magically appeared, have one of our soldiers say something
 		NotifyPlayersOfNewEnemies();
 	}
 
-	ubTotalSoldiers = ubNumAdmins + ubNumTroops + ubNumElites;
-
-	ChooseMapEdgepoints( &MapEdgepointInfo, ubStrategicInsertionCode, (UINT8)(ubNumAdmins+ubNumElites+ubNumTroops) );
-	ubCurrSlot = 0;
-	while( ubTotalSoldiers )
+	UINT8            n_total   = n_admins + n_troops + n_elites;
+	UINT8            curr_slot = 0;
+	MAPEDGEPOINTINFO edgepoint_info;
+	ChooseMapEdgepoints(&edgepoint_info, strategic_insertion_code, n_total);
+	while (n_total != 0)
 	{
-		if( ubNumElites && Random( ubTotalSoldiers ) < ubNumElites )
+		SOLDIERTYPE* s;
+		if (n_elites != 0 && Random(n_total) < n_elites)
 		{
-			ubNumElites--;
-			ubTotalSoldiers--;
-			pSoldier = TacticalCreateEliteEnemy();
-			if( pGroup )
-			{
-				pSoldier->ubGroupID = pGroup->ubGroupID;
-			}
-
-			pSoldier->ubInsertionDirection = bDesiredDirection;
-			//Setup the position
-			if( ubCurrSlot < MapEdgepointInfo.ubNumPoints )
-			{ //using an edgepoint
-				pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-				pSoldier->usStrategicInsertionData = MapEdgepointInfo.sGridNo[ ubCurrSlot++ ];
-			}
-			else
-			{ //no edgepoints left, so put him at the entrypoint.
-				pSoldier->ubStrategicInsertionCode = ubStrategicInsertionCode;
-			}
-			UpdateMercInSector( pSoldier, gWorldSectorX, gWorldSectorY, 0 );
+			--n_elites;
+			s = TacticalCreateEliteEnemy();
 		}
-		else if( ubNumTroops && (UINT8)Random( ubTotalSoldiers ) < (UINT8)(ubNumElites + ubNumTroops) )
+		else if (n_troops != 0 && Random(n_total) < n_elites + n_troops)
 		{
-			ubNumTroops--;
-			ubTotalSoldiers--;
-			pSoldier = TacticalCreateArmyTroop();
-			if( pGroup )
-			{
-				pSoldier->ubGroupID = pGroup->ubGroupID;
-			}
-
-			pSoldier->ubInsertionDirection = bDesiredDirection;
-			//Setup the position
-			if( ubCurrSlot < MapEdgepointInfo.ubNumPoints )
-			{ //using an edgepoint
-				pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-				pSoldier->usStrategicInsertionData = MapEdgepointInfo.sGridNo[ ubCurrSlot++ ];
-			}
-			else
-			{ //no edgepoints left, so put him at the entrypoint.
-				pSoldier->ubStrategicInsertionCode = ubStrategicInsertionCode;
-			}
-			UpdateMercInSector( pSoldier, gWorldSectorX, gWorldSectorY, 0 );
+			--n_troops;
+			s = TacticalCreateArmyTroop();
 		}
-		else if( ubNumAdmins && (UINT8)Random( ubTotalSoldiers ) < (UINT8)(ubNumElites + ubNumTroops + ubNumAdmins) )
+		else if (n_admins != 0 && Random(n_total) < n_elites + n_troops + n_admins)
 		{
-			ubNumAdmins--;
-			ubTotalSoldiers--;
-			pSoldier = TacticalCreateAdministrator();
-			if( pGroup )
-			{
-				pSoldier->ubGroupID = pGroup->ubGroupID;
-			}
-
-			pSoldier->ubInsertionDirection = bDesiredDirection;
-			//Setup the position
-			if( ubCurrSlot < MapEdgepointInfo.ubNumPoints )
-			{ //using an edgepoint
-				pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-				pSoldier->usStrategicInsertionData = MapEdgepointInfo.sGridNo[ ubCurrSlot++ ];
-			}
-			else
-			{ //no edgepoints left, so put him at the entrypoint.
-				pSoldier->ubStrategicInsertionCode = ubStrategicInsertionCode;
-			}
-			UpdateMercInSector( pSoldier, gWorldSectorX, gWorldSectorY, 0 );
+			--n_admins;
+			s = TacticalCreateAdministrator();
 		}
+		else
+		{
+			continue;
+		}
+		--n_total;
+
+		if (g) s->ubGroupID = g->ubGroupID;
+		s->ubInsertionDirection = desired_direction;
+		// Setup the position
+		if (curr_slot < edgepoint_info.ubNumPoints)
+		{ // Use an edgepoint
+			s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+			s->usStrategicInsertionData = edgepoint_info.sGridNo[curr_slot++];
+		}
+		else
+		{ // No edgepoints left, so put him at the entrypoint
+			s->ubStrategicInsertionCode = strategic_insertion_code;
+		}
+		UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, 0);
 	}
 }
 
