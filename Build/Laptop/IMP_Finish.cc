@@ -32,9 +32,6 @@ GUIButtonRef giIMPFinishButton[6];
 // we are in fact done
 BOOLEAN fFinishedCharGeneration = FALSE;
 
-// what voice are we playing?
-UINT32 uiVoiceSound = 0;
-
 // image handle
 SGPVObject* guiCHARACTERPORTRAIT;
 extern INT32 iCurrentVoices;
@@ -119,7 +116,6 @@ static void BtnIMPFinishAttributesCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnIMPFinishDoneCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnIMPFinishPersonalityCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnIMPFinishStartOverCallback(GUI_BUTTON* btn, INT32 reason);
-static void BtnIMPFinishVoiceCallback(GUI_BUTTON* btn, INT32 reason);
 
 
 static void CreateIMPFinishButtons(void)
@@ -265,30 +261,6 @@ static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, INT32 reason)
 		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
 		fButtonPendingFlag = TRUE;
 		giIMPFinishButton[2]->SpecifyText(pImpButtonText[2]);
-	}
-}
-
-
-static void BtnIMPFinishVoiceCallback(GUI_BUTTON *btn, INT32 reason)
-{
-	// btn callback for Main Page Begin Profiling
-
-  // if not this far in char generation, don't alot ANY action
-	if (iCurrentProfileMode < 4)
-	{
-		btn->uiFlags &= ~BUTTON_CLICKED_ON;
-		fButtonPendingFlag = TRUE;
-		return;
-	}
-
-	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
-	{
-		// play voice
-		if (!SoundIsPlaying(uiVoiceSound))
-		{
-			uiVoiceSound = PlayVoice();
-		}
-		fButtonPendingFlag = TRUE;
 	}
 }
 

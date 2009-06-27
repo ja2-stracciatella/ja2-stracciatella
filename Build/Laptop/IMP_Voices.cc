@@ -38,6 +38,7 @@ MOUSE_REGION gVoicePortraitRegion;
 
 static void CreateIMPVoiceMouseRegions(void);
 static void CreateIMPVoicesButtons(void);
+static UINT32 PlayVoice();
 
 
 void EnterIMPVoices( void )
@@ -240,7 +241,7 @@ static void BtnIMPVoicesDoneCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-UINT32 PlayVoice(void)
+static UINT32 PlayVoice()
 {
 	char const* filename;
 	if (fCharacterIsMale)
