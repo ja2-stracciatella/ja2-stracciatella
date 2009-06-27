@@ -1059,30 +1059,23 @@ void HandleTownTheft( void )
 */
 
 
-
-void BuildListOfTownSectors( void )
+void BuildListOfTownSectors()
 {
-	INT32 iCounterX = 0, iCounterY = 0, iCounter = 0;
-	UINT16 usSector;
+	memset(pTownNamesList,     BLANK_SECTOR, sizeof(pTownNamesList));
+	memset(pTownLocationsList, 0xFF,         sizeof(pTownLocationsList));
 
-	// initialize
-	memset( pTownNamesList, BLANK_SECTOR, sizeof( pTownNamesList ) );
-	memset( pTownLocationsList, 0xFF, sizeof( pTownLocationsList ) );
-
-	// run through list
-	for( iCounterX = 0; iCounterX < MAP_WORLD_X; iCounterX++ )
+	INT32 n = 0;
+	for (INT32 x = 0; x != MAP_WORLD_X; ++x)
 	{
-		for( iCounterY = 0; iCounterY < MAP_WORLD_Y; iCounterY++ )
+		for (INT32 y = 0; y != MAP_WORLD_Y; ++y)
 		{
-			usSector = iCounterX + iCounterY * MAP_WORLD_X;
+			UINT16 const sector = x + y * MAP_WORLD_X;
+			INT8   const town   = StrategicMap[sector].bNameId;
+			if (town < FIRST_TOWN || NUM_TOWNS <= town) continue;
 
-			if( ( StrategicMap[ usSector ].bNameId >= FIRST_TOWN ) && ( StrategicMap[ usSector ].bNameId < NUM_TOWNS ) )
-			{
-				pTownNamesList[ iCounter] = StrategicMap[ usSector ].bNameId;
-				pTownLocationsList[ iCounter ] = usSector;
-
-				iCounter++;
-			}
+			pTownNamesList[n]     = town;
+			pTownLocationsList[n] = sector;
+			++n;
 		}
 	}
 }
