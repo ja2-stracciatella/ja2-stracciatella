@@ -486,7 +486,7 @@ static void EndLoadScreen(void)
 		uiHundreths = (uiTotalFileReadTime / 10) % 100;
 		fprintf( fp, "FileRead:  %d.%02d (called %d times)\n", uiSeconds, uiHundreths, uiTotalFileReadCalls );
 
-		fprintf( fp, "\n\nSECTIONS OF LOADWORLD (all parts should add up to 100%)\n" );
+		fprintf(fp, "\n\nSECTIONS OF LOADWORLD (all parts should add up to 100%%)\n");
 		//TrashWorld()
 		uiSeconds = uiTrashWorldTime / 1000;
 		uiHundreths = (uiTrashWorldTime / 10) % 100;
