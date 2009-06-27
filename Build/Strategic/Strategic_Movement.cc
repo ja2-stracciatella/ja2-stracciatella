@@ -2461,51 +2461,40 @@ BOOLEAN PlayerGroupInMotion(GROUP const* const pGroup)
 }
 
 
-//Add this group to the current battle fray!
-//NOTE:  For enemies, only MAX_STRATEGIC_TEAM_SIZE at a time can be in a battle, so
-//if it ever gets past that, god help the player, but we'll have to insert them
-//as those slots free up.
-void HandleArrivalOfReinforcements(GROUP const* const pGroup)
+/* Add this group to the current battle fray!
+ * NOTE: For enemies, only MAX_STRATEGIC_TEAM_SIZE at a time can be in a battle,
+ * so if it ever gets past that, god help the player, but we'll have to insert
+ * them as those slots free up. */
+void HandleArrivalOfReinforcements(GROUP const* const g)
 {
-	SOLDIERTYPE *pSoldier;
-	INT32	cnt;
+	if (g->fPlayer)
+	{ /* We don't have to worry about filling up the player slots, because it is
+		 * impossible to have more player's in the game than the number of slots
+		 * available for the player. */
 
-	if( pGroup->fPlayer )
-	{ //We don't have to worry about filling up the player slots, because it is impossible
-		//to have more player's in the game then the number of slots available for the player.
-		UINT8 ubStrategicInsertionCode;
-		//First, determine which entrypoint to use, based on the travel direction of the group.
-		if( pGroup->ubSectorX < pGroup->ubPrevX )
-			ubStrategicInsertionCode = INSERTION_CODE_EAST;
-		else if( pGroup->ubSectorX > pGroup->ubPrevX )
-			ubStrategicInsertionCode = INSERTION_CODE_WEST;
-		else if( pGroup->ubSectorY < pGroup->ubPrevY )
-			ubStrategicInsertionCode = INSERTION_CODE_SOUTH;
-		else if( pGroup->ubSectorY > pGroup->ubPrevY )
-			ubStrategicInsertionCode = INSERTION_CODE_NORTH;
-		else
+		/* First, determine which entrypoint to use, based on the travel direction
+		 * of the group */
+		UINT8         const x = g->ubSectorX;
+		UINT8         const y = g->ubSectorY;
+		InsertionCode const strategic_insertion_code =
+			x < g->ubPrevX ? INSERTION_CODE_EAST  :
+			x > g->ubPrevX ? INSERTION_CODE_WEST  :
+			y < g->ubPrevY ? INSERTION_CODE_SOUTH :
+			y > g->ubPrevY ? INSERTION_CODE_NORTH :
+			throw std::logic_error("reinforcements come from same sector");
+
+		bool first = true;
+		CFOR_ALL_PLAYERS_IN_GROUP(p, g)
 		{
-			Assert( 0 );
-			return;
+			SOLDIERTYPE& s = *p->pSoldier;
+			s.ubStrategicInsertionCode = strategic_insertion_code;
+			UpdateMercInSector(&s, x, y, 0);
+
+			// Do arrives quote
+			if (first) TacticalCharacterDialogue(&s, QUOTE_MERC_REACHED_DESTINATION);
+			first = false;
 		}
-
-		cnt = 0;
-		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
-		{
-			pSoldier = pPlayer->pSoldier;
-			Assert( pSoldier );
-			pSoldier->ubStrategicInsertionCode = ubStrategicInsertionCode;
-			UpdateMercInSector( pSoldier, pGroup->ubSectorX, pGroup->ubSectorY, 0 );
-
-			// DO arrives quote....
-			if ( cnt == 0 )
-			{
-				TacticalCharacterDialogue( pSoldier, QUOTE_MERC_REACHED_DESTINATION );
-			}
-			cnt++;
-		}
-		ScreenMsg( FONT_YELLOW, MSG_INTERFACE, Message[ STR_PLAYER_REINFORCEMENTS ] );
-
+		ScreenMsg(FONT_YELLOW, MSG_INTERFACE, Message[STR_PLAYER_REINFORCEMENTS]);
 	}
 	else
 	{

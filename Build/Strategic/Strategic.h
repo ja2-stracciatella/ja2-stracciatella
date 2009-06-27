@@ -5,7 +5,7 @@
 #include "JA2Types.h"
 
 
-enum
+enum InsertionCode
 {
 	INSERTION_CODE_NORTH,
 	INSERTION_CODE_SOUTH,
