@@ -115,25 +115,23 @@ bool GameEventsPending(UINT32 const adjustment)
 }
 
 
-static void DeleteEventsWithDeletionPending(void)
+static void DeleteEventsWithDeletionPending()
 {
 	if (!gfEventDeletionPending) return;
 	gfEventDeletionPending = FALSE;
 
-	STRATEGICEVENT** anchor = &gpEventList;
-	for (STRATEGICEVENT* curr = gpEventList; curr;)
+	for (STRATEGICEVENT** anchor = &gpEventList; *anchor;)
 	{
-		STRATEGICEVENT* const next = curr->next;
-		if (curr->ubFlags & SEF_DELETION_PENDING)
+		STRATEGICEVENT* const i = *anchor;
+		if (i->ubFlags & SEF_DELETION_PENDING)
 		{
-			*anchor = next;
-			MemFree(curr);
+			*anchor = i->next;
+			MemFree(i);
 		}
 		else
 		{
-			anchor = &curr->next;
+			anchor = &i->next;
 		}
-		curr = next;
 	}
 }
 
