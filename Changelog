@@ -1,3 +1,4 @@
+(r6126) Fix a vanilla glitch: Only enable the next page button in the personnel screen when there are more than 20 past mercs.
 (r6125) Fix vanilla bugs (wrong portraits, out of bounds access) for displaying the portraits of past merc in the personnel screen when there are more than 20 past mercs.
 (r6071) Fix a vanilla glitch: A merge recipe for the guardian vest was missing.
 (r6043) Fix a vanilla display glitch in debug mode: When turning of the Z-buffer display, the screen was not redrawn.

@@ -1965,7 +1965,7 @@ static void EnableDisableDeparturesButtons(void)
 		// enable up button
 		EnableButton(g_personnel.depart_up);
 	}
-	if (GetNumberOfPastMercsOnPlayersTeam() - giCurrentUpperLeftPortraitNumber >= PERSONNEL_PORTRAIT_NUMBER)
+	if (GetNumberOfPastMercsOnPlayersTeam() - giCurrentUpperLeftPortraitNumber > PERSONNEL_PORTRAIT_NUMBER)
 	{
 		// enable down button
 		EnableButton(g_personnel.depart_dn);
