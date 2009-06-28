@@ -28,7 +28,7 @@
 
 #define NUMSOLDIERBODYTYPES	4
 
-enum SoldierBodyTypes
+enum SoldierBodyType
 {
 	REGMALE = 0,
 	BIGMALE,
