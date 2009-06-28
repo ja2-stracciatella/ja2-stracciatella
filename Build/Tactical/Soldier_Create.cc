@@ -1719,107 +1719,69 @@ try
 catch (...) { return 0; }
 
 
+static SOLDIERTYPE* TacticalCreateEnemySoldier(SoldierClass const soldier_class)
+{
+	if (guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI)
+	{
+		return ReserveTacticalSoldierForAutoresolve(soldier_class);
+	}
+
+	BASIC_SOLDIERCREATE_STRUCT bp;
+	memset(&bp, 0, sizeof(bp));
+	RandomizeRelativeLevel(&bp.bRelativeAttributeLevel, soldier_class);
+	RandomizeRelativeLevel(&bp.bRelativeEquipmentLevel, soldier_class);
+	bp.bTeam          = ENEMY_TEAM;
+	bp.bOrders        = SEEKENEMY;
+	bp.bAttitude      = Random(MAXATTITUDES);
+	bp.bBodyType      = -1;
+	bp.ubSoldierClass = soldier_class;
+
+	SOLDIERCREATE_STRUCT pp;
+	memset(&pp, 0, sizeof(pp));
+	CreateDetailedPlacementGivenBasicPlacementInfo(&pp, &bp);
+
+	if (soldier_class == SOLDIER_CLASS_ELITE)
+	{ /* SPECIAL! Certain events in the game can cause profiled NPCs to become
+		 * enemies. The two cases are adding Mike and Iggy. We will only add one NPC
+		 * in any given combat and the conditions for setting the associated facts
+		 * are done elsewhere. There is also another place where NPCs can get
+		 * added, which is in AddPlacementToWorld() used for inserting defensive
+		 * enemies.
+		 * NOTE: We don't want to add Mike or Iggy if this is being called from
+		 * autoresolve! */
+		OkayToUpgradeEliteToSpecialProfiledEnemy(&pp);
+	}
+
+	SOLDIERTYPE* const s = TacticalCreateSoldier(pp);
+	if (s)
+	{ // Send soldier to centre of map, roughly
+		s->sNoiseGridno  = CENTRAL_GRIDNO + (Random(CENTRAL_RADIUS * 2 + 1) - CENTRAL_RADIUS) + (Random(CENTRAL_RADIUS * 2 + 1) - CENTRAL_RADIUS) * WORLD_COLS;
+		s->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
+	}
+	return s;
+}
+
+
 //USED BY STRATEGIC AI and AUTORESOLVE
 SOLDIERTYPE* TacticalCreateAdministrator()
 {
-	BASIC_SOLDIERCREATE_STRUCT bp;
-	SOLDIERCREATE_STRUCT pp;
-
-	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
-	{
-		return ReserveTacticalSoldierForAutoresolve( SOLDIER_CLASS_ADMINISTRATOR );
-	}
-
-	memset( &bp, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
-	memset( &pp, 0, sizeof( SOLDIERCREATE_STRUCT ) );
-	RandomizeRelativeLevel( &( bp.bRelativeAttributeLevel ), SOLDIER_CLASS_ADMINISTRATOR );
-	RandomizeRelativeLevel( &( bp.bRelativeEquipmentLevel ), SOLDIER_CLASS_ADMINISTRATOR );
-	bp.bTeam = ENEMY_TEAM;
-	bp.bOrders = SEEKENEMY;
-	bp.bAttitude = (INT8) Random( MAXATTITUDES );
-	bp.bBodyType = -1;
-	bp.ubSoldierClass = SOLDIER_CLASS_ADMINISTRATOR;
-	CreateDetailedPlacementGivenBasicPlacementInfo( &pp, &bp );
-	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(pp);
-	if ( pSoldier )
-	{
-		// send soldier to centre of map, roughly
-		pSoldier->sNoiseGridno = (INT16) (CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-		pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
-	}
-	return( pSoldier );
+	return TacticalCreateEnemySoldier(SOLDIER_CLASS_ADMINISTRATOR);
 }
+
 
 //USED BY STRATEGIC AI and AUTORESOLVE
 SOLDIERTYPE* TacticalCreateArmyTroop()
 {
-	BASIC_SOLDIERCREATE_STRUCT bp;
-	SOLDIERCREATE_STRUCT pp;
-
-	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
-	{
-		return ReserveTacticalSoldierForAutoresolve( SOLDIER_CLASS_ARMY );
-	}
-
-	memset( &bp, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
-	memset( &pp, 0, sizeof( SOLDIERCREATE_STRUCT ) );
-	RandomizeRelativeLevel( &( bp.bRelativeAttributeLevel ), SOLDIER_CLASS_ARMY );
-	RandomizeRelativeLevel( &( bp.bRelativeEquipmentLevel ), SOLDIER_CLASS_ARMY );
-	bp.bTeam = ENEMY_TEAM;
-	bp.bOrders	= SEEKENEMY;
-	bp.bAttitude = (INT8) Random( MAXATTITUDES );
-	bp.bBodyType = -1;
-	bp.ubSoldierClass = SOLDIER_CLASS_ARMY;
-	CreateDetailedPlacementGivenBasicPlacementInfo( &pp, &bp );
-	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(pp);
-	if ( pSoldier )
-	{
-		// send soldier to centre of map, roughly
-		pSoldier->sNoiseGridno = (INT16) (CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-		pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
-	}
-	return( pSoldier );
+	return TacticalCreateEnemySoldier(SOLDIER_CLASS_ARMY);
 }
+
 
 //USED BY STRATEGIC AI and AUTORESOLVE
 SOLDIERTYPE* TacticalCreateEliteEnemy()
 {
-	BASIC_SOLDIERCREATE_STRUCT bp;
-	SOLDIERCREATE_STRUCT pp;
-
-	if( guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI )
-	{
-		return ReserveTacticalSoldierForAutoresolve( SOLDIER_CLASS_ELITE );
-	}
-
-	memset( &bp, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
-	memset( &pp, 0, sizeof( SOLDIERCREATE_STRUCT ) );
-
-	RandomizeRelativeLevel( &( bp.bRelativeAttributeLevel ), SOLDIER_CLASS_ELITE );
-	RandomizeRelativeLevel( &( bp.bRelativeEquipmentLevel ), SOLDIER_CLASS_ELITE );
-	bp.bTeam = ENEMY_TEAM;
-	bp.bOrders	= SEEKENEMY;
-	bp.bAttitude = (INT8) Random( MAXATTITUDES );
-	bp.bBodyType = -1;
-	bp.ubSoldierClass = SOLDIER_CLASS_ELITE;
-	CreateDetailedPlacementGivenBasicPlacementInfo( &pp, &bp );
-
-	//SPECIAL!  Certain events in the game can cause profiled NPCs to become enemies.  The two cases are
-	//adding Mike and Iggy.  We will only add one NPC in any given combat and the conditions for setting
-	//the associated facts are done elsewhere.  There is also another place where NPCs can get added, which
-	//is in AddPlacementToWorld() used for inserting defensive enemies.
-	//NOTE:  We don't want to add Mike or Iggy if this is being called from autoresolve!
-	OkayToUpgradeEliteToSpecialProfiledEnemy( &pp );
-
-	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(pp);
-	if ( pSoldier )
-	{
-		// send soldier to centre of map, roughly
-		pSoldier->sNoiseGridno = (INT16)(CENTRAL_GRIDNO + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) + ( Random( CENTRAL_RADIUS * 2 + 1 ) - CENTRAL_RADIUS ) * WORLD_COLS);
-		pSoldier->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
-	}
-	return( pSoldier );
+	return TacticalCreateEnemySoldier(SOLDIER_CLASS_ELITE);
 }
+
 
 SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 {

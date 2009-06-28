@@ -244,7 +244,7 @@ enum InvSlotPos
 };
 
 //used for color codes, but also shows the enemy type for debugging purposes
-enum
+enum SoldierClass
 {
 	SOLDIER_CLASS_NONE,
 	SOLDIER_CLASS_ADMINISTRATOR,
