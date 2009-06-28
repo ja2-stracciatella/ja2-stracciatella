@@ -1175,7 +1175,7 @@ static void HandleMenuKeys(InputAtom*, UIEventKind*);
 static void HandleOpenDoorMenuKeys(InputAtom*, UIEventKind*);
 static void HandleSectorExitMenuKeys(InputAtom*, UIEventKind*);
 static void HandleSelectMercSlot(UINT8 ubPanelSlot, INT8 bCode);
-static void HandleStealthChangeFromUIKeys(void);
+static void HandleStealthChangeFromUIKeys();
 static void HandleTalkingMenuKeys(InputAtom*, UIEventKind*);
 static void ObliterateSector();
 static void RefreshSoldier(void);
@@ -3268,25 +3268,23 @@ static void ToggleStealthMode(SOLDIERTYPE* pSoldier)
 }
 
 
-static void HandleStealthChangeFromUIKeys(void)
+static void HandleStealthChangeFromUIKeys()
 {
 	// If we have multiple guys selected, make all change stance!
-	if ( gTacticalStatus.fAtLeastOneGuyOnMultiSelect )
+	if (gTacticalStatus.fAtLeastOneGuyOnMultiSelect)
 	{
 		FOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			if (!AM_A_ROBOT(s) &&
-					s->bInSector &&
-					s->uiStatusFlags & SOLDIER_MULTI_SELECTED)
-			{
-				ToggleStealthMode(s);
-			}
+			if (AM_A_ROBOT(s)) continue;
+			if (!s->bInSector) continue;
+			if (!(s->uiStatusFlags & SOLDIER_MULTI_SELECTED)) continue;
+			ToggleStealthMode(s);
 		}
 	}
 	else
 	{
 		SOLDIERTYPE* const sel = GetSelectedMan();
-		if (sel != NULL && !AM_A_ROBOT(sel)) ToggleStealthMode(sel);
+		if (sel && !AM_A_ROBOT(sel)) ToggleStealthMode(sel);
 	}
 }
 
