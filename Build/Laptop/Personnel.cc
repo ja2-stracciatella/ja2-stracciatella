@@ -1029,7 +1029,7 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 		else
 		{
-			if (iPortraitId >= GetNumberOfPastMercsOnPlayersTeam())
+			if (iPortraitId >= GetNumberOfPastMercsOnPlayersTeam() - giCurrentUpperLeftPortraitNumber)
 			{
 				return;
 			}
