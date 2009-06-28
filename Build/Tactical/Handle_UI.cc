@@ -946,61 +946,53 @@ static ScreenID UIHandleNewMerc(UI_EVENT* pUIEvent)
 }
 
 
-static ScreenID UIHandleNewBadMerc(UI_EVENT* pUIEvent)
+static ScreenID UIHandleNewBadMerc(UI_EVENT*)
 {
-	UINT16 usRandom;
+	// Get map postion and place the enemy there
+	GridNo const map_pos = GetMouseMapPos();
+	if (map_pos == NOWHERE) return GAME_SCREEN;
 
-	//Get map postion and place the enemy there.
-	const GridNo usMapPos = GetMouseMapPos();
-	if (usMapPos != NOWHERE)
+	// Are we an OK dest?
+	if (!IsLocationSittable(map_pos, 0)) return GAME_SCREEN;
+
+	UINT32       const roll = Random(10);
+	SoldierClass const sc   =
+		roll < 4 ? SOLDIER_CLASS_ADMINISTRATOR :
+		roll < 8 ? SOLDIER_CLASS_ARMY          :
+		SOLDIER_CLASS_ELITE;
+	SOLDIERTYPE* const s = TacticalCreateEnemySoldier(sc);
+	if (!s) return GAME_SCREEN;
+
+	// Add soldier strategic info, so it doesn't break the counters
+	if (gbWorldSectorZ == 0)
 	{
-		// Are we an OK dest?
-		if ( !IsLocationSittable( usMapPos, 0 ) )
+		SECTORINFO& sector = SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)];
+		switch (s->ubSoldierClass)
 		{
-			return( GAME_SCREEN );
-		}
-
-		usRandom = (UINT16)Random( 10 );
-		SoldierClass const sc =
-			usRandom < 4 ? SOLDIER_CLASS_ADMINISTRATOR :
-			usRandom < 8 ? SOLDIER_CLASS_ARMY          :
-			SOLDIER_CLASS_ELITE;
-		SOLDIERTYPE* const pSoldier = TacticalCreateEnemySoldier(sc);
-
-		//Add soldier strategic info, so it doesn't break the counters!
-		if( pSoldier )
-		{
-			if( !gbWorldSectorZ )
-			{
-				SECTORINFO *pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
-				switch( pSoldier->ubSoldierClass )
-				{
-					case SOLDIER_CLASS_ADMINISTRATOR:	pSector->ubNumAdmins++; pSector->ubAdminsInBattle++; break;
-					case SOLDIER_CLASS_ARMY:					pSector->ubNumTroops++; pSector->ubTroopsInBattle++; break;
-					case SOLDIER_CLASS_ELITE:					pSector->ubNumElites++; pSector->ubElitesInBattle++; break;
-				}
-			}
-			else
-			{
-				UNDERGROUND_SECTORINFO *pSector = FindUnderGroundSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-				if( pSector )
-				{
-					switch( pSoldier->ubSoldierClass )
-					{
-						case SOLDIER_CLASS_ADMINISTRATOR:	pSector->ubNumAdmins++; pSector->ubAdminsInBattle++; break;
-						case SOLDIER_CLASS_ARMY:					pSector->ubNumTroops++; pSector->ubTroopsInBattle++; break;
-						case SOLDIER_CLASS_ELITE:					pSector->ubNumElites++; pSector->ubElitesInBattle++; break;
-					}
-				}
-			}
-
-			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-			pSoldier->usStrategicInsertionData = usMapPos;
-			UpdateMercInSector( pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-			AllTeamsLookForAll( NO_INTERRUPTS );
+			case SOLDIER_CLASS_ADMINISTRATOR: ++sector.ubNumAdmins; ++sector.ubAdminsInBattle; break;
+			case SOLDIER_CLASS_ARMY:          ++sector.ubNumTroops; ++sector.ubTroopsInBattle; break;
+			case SOLDIER_CLASS_ELITE:         ++sector.ubNumElites; ++sector.ubElitesInBattle; break;
 		}
 	}
-	return( GAME_SCREEN );
+	else
+	{
+		if (UNDERGROUND_SECTORINFO* const sector = FindUnderGroundSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ))
+		{
+			switch (s->ubSoldierClass)
+			{
+				case SOLDIER_CLASS_ADMINISTRATOR: ++sector->ubNumAdmins; ++sector->ubAdminsInBattle; break;
+				case SOLDIER_CLASS_ARMY:          ++sector->ubNumTroops; ++sector->ubTroopsInBattle; break;
+				case SOLDIER_CLASS_ELITE:         ++sector->ubNumElites; ++sector->ubElitesInBattle; break;
+			}
+		}
+	}
+
+	s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+	s->usStrategicInsertionData = map_pos;
+	UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+	AllTeamsLookForAll(NO_INTERRUPTS);
+
+	return GAME_SCREEN;
 }
 
 
