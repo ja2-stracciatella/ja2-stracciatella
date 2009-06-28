@@ -291,30 +291,11 @@ static void DestroyPersonalityQuizButtons(void)
 }
 
 
-static void BtnIMPPersonalityQuizAnswer0Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer1Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer2Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer3Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer4Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer5Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer6Callback(GUI_BUTTON *btn, INT32 reason);
-static void BtnIMPPersonalityQuizAnswer7Callback(GUI_BUTTON *btn, INT32 reason);
+static void BtnQuizAnswerCallback(GUI_BUTTON*, INT32 reason);
 
 
 static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 {
-	static const GUI_CALLBACK Callback[] =
-	{
-		BtnIMPPersonalityQuizAnswer0Callback,
-		BtnIMPPersonalityQuizAnswer1Callback,
-		BtnIMPPersonalityQuizAnswer2Callback,
-		BtnIMPPersonalityQuizAnswer3Callback,
-		BtnIMPPersonalityQuizAnswer4Callback,
-		BtnIMPPersonalityQuizAnswer5Callback,
-		BtnIMPPersonalityQuizAnswer6Callback,
-		BtnIMPPersonalityQuizAnswer7Callback
-	};
-
   // will add iNumberofbuttons to the answer button list
 	for (UINT32 i = 0; i < iNumberOfButtons; i++)
 	{
@@ -322,9 +303,9 @@ static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 		INT32 YLoc = LAPTOP_SCREEN_WEB_UL_Y + 97 + i % 4 * 50;
 		BUTTON_PICS* const Image = LoadButtonImage("LAPTOP/button_6.sti", -1, 0, -1, 1, -1);
 		giIMPPersonalityQuizAnswerButtonImage[i] = Image;
-		Assert(i < lengthof(Callback));
-		GUIButtonRef const Button = QuickCreateButtonNoMove(Image, XLoc, YLoc, MSYS_PRIORITY_HIGHEST - 3, Callback[i]);
+		GUIButtonRef const Button = QuickCreateButtonNoMove(Image, XLoc, YLoc, MSYS_PRIORITY_HIGHEST - 3, BtnQuizAnswerCallback);
 		giIMPPersonalityQuizAnswerButton[i] = Button;
+		Button->SetUserData(i);
 		Button->SpecifyTextOffsets(23, 12, TRUE);
 		wchar_t sString[32];
 		swprintf(sString, lengthof(sString), L"%d", i + 1);
@@ -351,65 +332,18 @@ static void DestroyIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 static void CheckStateOfTheConfirmButton(void);
 
 
-static void QuizAnswerCallback(INT32 Answer, GUI_BUTTON* btn, INT32 reason)
+static void BtnQuizAnswerCallback(GUI_BUTTON* const btn, INT32 const reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		ResetQuizAnswerButtons();
 		btn->uiFlags |= BUTTON_CLICKED_ON;
 		CheckStateOfTheConfirmButton();
-		iCurrentAnswer = Answer;
+		iCurrentAnswer = btn->GetUserData();
 		PrintImpText();
 		PrintQuizQuestionNumber();
 		fReDrawCharProfile = TRUE;
 	}
-}
-
-
-static void BtnIMPPersonalityQuizAnswer0Callback(GUI_BUTTON *btn, INT32 reason)
-{
-	QuizAnswerCallback(0, btn, reason);
-}
-
-
-static void BtnIMPPersonalityQuizAnswer1Callback(GUI_BUTTON *btn, INT32 reason)
-{
-	QuizAnswerCallback(1, btn, reason);
-}
-
-
-static void BtnIMPPersonalityQuizAnswer2Callback(GUI_BUTTON *btn, INT32 reason)
-{
-	QuizAnswerCallback(2, btn, reason);
-}
-
-
-static void BtnIMPPersonalityQuizAnswer3Callback(GUI_BUTTON *btn, INT32 reason)
-{
-	QuizAnswerCallback(3, btn, reason);
-}
-
-
-static void BtnIMPPersonalityQuizAnswer4Callback(GUI_BUTTON *btn, INT32 reason)
-{
-	QuizAnswerCallback(4, btn, reason);
-}
-
-
-static void BtnIMPPersonalityQuizAnswer5Callback(GUI_BUTTON *btn, INT32 reason)
-{
-	QuizAnswerCallback(5, btn, reason);
-}
-
-static void BtnIMPPersonalityQuizAnswer6Callback(GUI_BUTTON *btn, INT32 reason)
-{
-	QuizAnswerCallback(6, btn, reason);
-}
-
-
-static void BtnIMPPersonalityQuizAnswer7Callback(GUI_BUTTON *btn, INT32 reason)
-{
-	QuizAnswerCallback(7, btn, reason);
 }
 
 
