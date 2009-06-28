@@ -266,8 +266,6 @@ static MOUSE_REGION gTogglePastCurrentTeam[2];
 
 static MOUSE_REGION gMouseScrollPersonnelINV;
 
-static INT32 iCurPortraitId = 0;
-
 
 static void InitPastCharactersList(void);
 
@@ -295,8 +293,6 @@ void EnterPersonnel(void)
 
 	uiCurrentInventoryIndex = 0;
 	guiSliderPosition = 0;
-
-	iCurPortraitId = 0;
 
 	// load graphics for screen
 	LoadPersonnelGraphics();
@@ -524,23 +520,21 @@ static void NextPersonnelFace(void)
 	}
 	else
 	{
-		if (iCurPortraitId + 1 == GetNumberOfPastMercsOnPlayersTeam() - giCurrentUpperLeftPortraitNumber)
+		if (iCurrentPersonSelectedId + 1 == GetNumberOfPastMercsOnPlayersTeam() - giCurrentUpperLeftPortraitNumber)
 		{
 			// about to go off the end
 			giCurrentUpperLeftPortraitNumber = 0;
-			iCurPortraitId = 0;
+			iCurrentPersonSelectedId         = 0;
 		}
-		else if (iCurPortraitId == 19)
+		else if (iCurrentPersonSelectedId == 19)
 		{
 			giCurrentUpperLeftPortraitNumber += PERSONNEL_PORTRAIT_NUMBER;
-			iCurPortraitId = 0;
+			iCurrentPersonSelectedId          = 0;
 		}
 		else
 		{
-			iCurPortraitId++;
+			++iCurrentPersonSelectedId;
 		}
-		// get of this merc in this slot
-		iCurrentPersonSelectedId =  iCurPortraitId;
 		fReDrawScreenFlag = TRUE;
 	}
 }
@@ -564,26 +558,22 @@ static void PrevPersonnelFace(void)
 	}
 	else
 	{
-		if (iCurPortraitId == 0 && giCurrentUpperLeftPortraitNumber == 0)
+		if (iCurrentPersonSelectedId == 0 && giCurrentUpperLeftPortraitNumber == 0)
 		{
 			// about to go off the end
 			INT32 count_past = GetNumberOfPastMercsOnPlayersTeam();
 			giCurrentUpperLeftPortraitNumber = count_past - count_past % PERSONNEL_PORTRAIT_NUMBER;
-			iCurPortraitId = count_past % PERSONNEL_PORTRAIT_NUMBER;
-			iCurPortraitId--;
+			iCurrentPersonSelectedId = count_past % PERSONNEL_PORTRAIT_NUMBER - 1;
 		}
-		else if (iCurPortraitId == 0)
+		else if (iCurrentPersonSelectedId == 0)
 		{
 			giCurrentUpperLeftPortraitNumber -= PERSONNEL_PORTRAIT_NUMBER;
-			iCurPortraitId = 19;
+			iCurrentPersonSelectedId          = 19;
 		}
 		else
 		{
-			iCurPortraitId--;
+			--iCurrentPersonSelectedId;
 		}
-		// get of this merc in this slot
-
-		iCurrentPersonSelectedId = iCurPortraitId;
 		fReDrawScreenFlag = TRUE;
 	}
 }
@@ -1035,7 +1025,6 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			}
 			iCurrentPersonSelectedId = iPortraitId;
 			fReDrawScreenFlag = TRUE;
-			iCurPortraitId = iPortraitId;
 		}
 
 		if (iOldPortraitId != iPortraitId)
