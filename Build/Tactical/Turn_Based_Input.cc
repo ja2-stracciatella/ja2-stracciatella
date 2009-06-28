@@ -3244,27 +3244,21 @@ void HandleStanceChangeFromUIKeys( UINT8 ubAnimHeight )
 }
 
 
-static void ToggleStealthMode(SOLDIERTYPE* pSoldier)
+static void ToggleStealthMode(SOLDIERTYPE& s)
 {
-	// nothing in hand and either not in SM panel, or the matching button is enabled if we are in SM panel
-	if (gsCurInterfacePanel != SM_PANEL || giSMStealthButton->uiFlags & BUTTON_ENABLED)
-  {
-	  // ATE: Toggle stealth
-	  if (pSoldier == gpSMCurrentMerc) gfUIStanceDifferent = TRUE;
+	if (gsCurInterfacePanel == SM_PANEL && !(giSMStealthButton->uiFlags & BUTTON_ENABLED)) return;
+	// Either not in SM panel or the matching button is enabled
 
-	  pSoldier->bStealthMode = ! pSoldier->bStealthMode;
-	  gfPlotNewMovement   = TRUE;
-	  fInterfacePanelDirty = DIRTYLEVEL2;
+	if (&s == gpSMCurrentMerc) gfUIStanceDifferent = TRUE;
 
-	  if ( pSoldier->bStealthMode )
-	  {
-		  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_MERC_ON_STEALTHMODE ], pSoldier->name );
-	  }
-	  else
-	  {
-		  ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_MERC_OFF_STEALTHMODE ], pSoldier->name );
-	  }
-  }
+	gfPlotNewMovement    = TRUE;
+	fInterfacePanelDirty = DIRTYLEVEL2;
+	s.bStealthMode       = !s.bStealthMode;
+
+	wchar_t const* const msg =
+		s.bStealthMode ? pMessageStrings[MSG_MERC_ON_STEALTHMODE] :
+		pMessageStrings[MSG_MERC_OFF_STEALTHMODE];
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg, s.name);
 }
 
 
@@ -3278,13 +3272,13 @@ static void HandleStealthChangeFromUIKeys()
 			if (AM_A_ROBOT(s)) continue;
 			if (!s->bInSector) continue;
 			if (!(s->uiStatusFlags & SOLDIER_MULTI_SELECTED)) continue;
-			ToggleStealthMode(s);
+			ToggleStealthMode(*s);
 		}
 	}
 	else
 	{
 		SOLDIERTYPE* const sel = GetSelectedMan();
-		if (sel && !AM_A_ROBOT(sel)) ToggleStealthMode(sel);
+		if (sel && !AM_A_ROBOT(sel)) ToggleStealthMode(*sel);
 	}
 }
 
