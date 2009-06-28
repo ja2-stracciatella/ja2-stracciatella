@@ -1181,7 +1181,7 @@ static void ObliterateSector();
 static void RefreshSoldier(void);
 static void SetBurstMode(void);
 static void TeleportSelectedSoldier(void);
-static void TestCapture(void);
+static void TestCapture();
 static void TestMeanWhile(INT32 iID);
 static void ToggleCliffDebug();
 static void ToggleTreeTops(void);
@@ -3291,32 +3291,25 @@ static void HandleStealthChangeFromUIKeys(void)
 }
 
 
-static void TestCapture(void)
+static void TestCapture()
 {
-	UINT32					uiNumChosen = 0;
+	BeginCaptureSquence();
 
-	//StartQuest( QUEST_HELD_IN_ALMA, gWorldSectorX, gWorldSectorY );
-	//EndQuest( QUEST_HELD_IN_ALMA, gWorldSectorX, gWorldSectorY );
+	gStrategicStatus.uiFlags &= ~STRATEGIC_PLAYER_CAPTURED_FOR_RESCUE;
 
-	BeginCaptureSquence( );
-
-	gStrategicStatus.uiFlags &= (~STRATEGIC_PLAYER_CAPTURED_FOR_RESCUE );
-
-	// loop through sodliers and pick 3 lucky ones....
+	// Loop through sodliers and pick 3 lucky ones
+	UINT32 n = 3;
 	FOR_ALL_IN_TEAM(s, gbPlayerNum)
 	{
-		if (s->bLife >= OKLIFE && s->bInSector && uiNumChosen < 3)
-		{
-			EnemyCapturesPlayerSoldier(s);
+		if (s->bLife < OKLIFE) continue;
+		if (!s->bInSector)     continue;
 
-			// Remove them from tectical....
-			RemoveSoldierFromGridNo(s);
-
-			uiNumChosen++;
-		}
+		EnemyCapturesPlayerSoldier(s);
+		RemoveSoldierFromGridNo(s);
+		if (--n == 0) break;
 	}
 
-	EndCaptureSequence( );
+	EndCaptureSequence();
 }
 
 
