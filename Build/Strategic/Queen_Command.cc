@@ -1229,21 +1229,21 @@ static void AddEnemiesToBattle(GROUP* const g, UINT8 const strategic_insertion_c
 	ChooseMapEdgepoints(&edgepoint_info, strategic_insertion_code, n_total);
 	while (n_total != 0)
 	{
-		SOLDIERTYPE* s;
+		SoldierClass sc;
 		if (n_elites != 0 && Random(n_total) < n_elites)
 		{
 			--n_elites;
-			s = TacticalCreateEliteEnemy();
+			sc = SOLDIER_CLASS_ELITE;
 		}
 		else if (n_troops != 0 && Random(n_total) < n_elites + n_troops)
 		{
 			--n_troops;
-			s = TacticalCreateArmyTroop();
+			sc = SOLDIER_CLASS_ARMY;
 		}
 		else if (n_admins != 0 && Random(n_total) < n_elites + n_troops + n_admins)
 		{
 			--n_admins;
-			s = TacticalCreateAdministrator();
+			sc = SOLDIER_CLASS_ADMINISTRATOR;
 		}
 		else
 		{
@@ -1251,6 +1251,7 @@ static void AddEnemiesToBattle(GROUP* const g, UINT8 const strategic_insertion_c
 		}
 		--n_total;
 
+		SOLDIERTYPE* const s = TacticalCreateEnemySoldier(sc);
 		if (g) s->ubGroupID = g->ubGroupID;
 		s->ubInsertionDirection = desired_direction;
 		// Setup the position

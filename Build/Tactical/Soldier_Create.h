@@ -135,9 +135,7 @@ SOLDIERTYPE* TacticalCreateSoldier(SOLDIERCREATE_STRUCT const&);
 SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE*);
 
 //Randomly generated enemies used by strategic AI.
-SOLDIERTYPE* TacticalCreateAdministrator(void);
-SOLDIERTYPE* TacticalCreateEliteEnemy(void);
-SOLDIERTYPE* TacticalCreateArmyTroop(void);
+SOLDIERTYPE* TacticalCreateEnemySoldier(SoldierClass);
 SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass );
 SOLDIERTYPE* TacticalCreateCreature( INT8 bCreatureBodyType );
 

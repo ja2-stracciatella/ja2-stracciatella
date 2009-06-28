@@ -1719,28 +1719,29 @@ try
 catch (...) { return 0; }
 
 
-static SOLDIERTYPE* TacticalCreateEnemySoldier(SoldierClass const soldier_class)
+//USED BY STRATEGIC AI and AUTORESOLVE
+SOLDIERTYPE* TacticalCreateEnemySoldier(SoldierClass const sc)
 {
 	if (guiCurrentScreen == AUTORESOLVE_SCREEN && !gfPersistantPBI)
 	{
-		return ReserveTacticalSoldierForAutoresolve(soldier_class);
+		return ReserveTacticalSoldierForAutoresolve(sc);
 	}
 
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	memset(&bp, 0, sizeof(bp));
-	RandomizeRelativeLevel(&bp.bRelativeAttributeLevel, soldier_class);
-	RandomizeRelativeLevel(&bp.bRelativeEquipmentLevel, soldier_class);
+	RandomizeRelativeLevel(&bp.bRelativeAttributeLevel, sc);
+	RandomizeRelativeLevel(&bp.bRelativeEquipmentLevel, sc);
 	bp.bTeam          = ENEMY_TEAM;
 	bp.bOrders        = SEEKENEMY;
 	bp.bAttitude      = Random(MAXATTITUDES);
 	bp.bBodyType      = -1;
-	bp.ubSoldierClass = soldier_class;
+	bp.ubSoldierClass = sc;
 
 	SOLDIERCREATE_STRUCT pp;
 	memset(&pp, 0, sizeof(pp));
 	CreateDetailedPlacementGivenBasicPlacementInfo(&pp, &bp);
 
-	if (soldier_class == SOLDIER_CLASS_ELITE)
+	if (sc == SOLDIER_CLASS_ELITE)
 	{ /* SPECIAL! Certain events in the game can cause profiled NPCs to become
 		 * enemies. The two cases are adding Mike and Iggy. We will only add one NPC
 		 * in any given combat and the conditions for setting the associated facts
@@ -1759,27 +1760,6 @@ static SOLDIERTYPE* TacticalCreateEnemySoldier(SoldierClass const soldier_class)
 		s->ubNoiseVolume = MAX_MISC_NOISE_DURATION;
 	}
 	return s;
-}
-
-
-//USED BY STRATEGIC AI and AUTORESOLVE
-SOLDIERTYPE* TacticalCreateAdministrator()
-{
-	return TacticalCreateEnemySoldier(SOLDIER_CLASS_ADMINISTRATOR);
-}
-
-
-//USED BY STRATEGIC AI and AUTORESOLVE
-SOLDIERTYPE* TacticalCreateArmyTroop()
-{
-	return TacticalCreateEnemySoldier(SOLDIER_CLASS_ARMY);
-}
-
-
-//USED BY STRATEGIC AI and AUTORESOLVE
-SOLDIERTYPE* TacticalCreateEliteEnemy()
-{
-	return TacticalCreateEnemySoldier(SOLDIER_CLASS_ELITE);
 }
 
 

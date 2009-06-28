@@ -1534,17 +1534,17 @@ static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, BOOLEAN h
 }
 
 
-static SOLDIERCELL* MakeEnemyTroops(SOLDIERCELL* cell, size_t n, AUTORESOLVE_STRUCT* const ar, SOLDIERTYPE* (*create)(void), UINT16 const face, wchar_t const* const name)
+static SOLDIERCELL* MakeEnemyTroops(SOLDIERCELL* cell, size_t n, AUTORESOLVE_STRUCT* const ar, SoldierClass const sc, UINT16 const face, wchar_t const* const name)
 {
 	for (; n != 0; --n, ++cell)
 	{
-		SOLDIERTYPE* const s     = create();
-		cell->pSoldier           = s;
-		cell->uiVObjectID        = ar->iFaces;
+		SOLDIERTYPE* const s = TacticalCreateEnemySoldier(sc);
+		cell->pSoldier       = s;
+		cell->uiVObjectID    = ar->iFaces;
 		// Only elite troops have women
-		cell->usIndex            = s->ubBodyType == REGFEMALE ? ELITEF_FACE : face;
-		s->sSectorX              = ar->ubSectorX;
-		s->sSectorY              = ar->ubSectorY;
+		cell->usIndex        = s->ubBodyType == REGFEMALE ? ELITEF_FACE : face;
+		s->sSectorX          = ar->ubSectorX;
+		s->sSectorY          = ar->ubSectorY;
 		wcslcpy(s->name, name, lengthof(s->name));
 	}
 	return cell;
@@ -1689,9 +1689,9 @@ static void CreateAutoResolveInterface(void)
 	if (gubEnemyEncounterCode != CREATURE_ATTACK_CODE)
 	{
 		SOLDIERCELL* cell = gpEnemies;
-		cell = MakeEnemyTroops(cell, ar->ubElites, ar, TacticalCreateEliteEnemy,    ELITE_FACE, gpStrategicString[STR_AR_ELITE_NAME]);
-		cell = MakeEnemyTroops(cell, ar->ubTroops, ar, TacticalCreateArmyTroop,     TROOP_FACE, gpStrategicString[STR_AR_TROOP_NAME]);
-		cell = MakeEnemyTroops(cell, ar->ubAdmins, ar, TacticalCreateAdministrator, ADMIN_FACE, gpStrategicString[STR_AR_ADMINISTRATOR_NAME]);
+		cell = MakeEnemyTroops(cell, ar->ubElites, ar, SOLDIER_CLASS_ELITE,         ELITE_FACE, gpStrategicString[STR_AR_ELITE_NAME]);
+		cell = MakeEnemyTroops(cell, ar->ubTroops, ar, SOLDIER_CLASS_ARMY,          TROOP_FACE, gpStrategicString[STR_AR_TROOP_NAME]);
+		cell = MakeEnemyTroops(cell, ar->ubAdmins, ar, SOLDIER_CLASS_ADMINISTRATOR, ADMIN_FACE, gpStrategicString[STR_AR_ADMINISTRATOR_NAME]);
 		AssociateEnemiesWithStrategicGroups();
 	}
 	else

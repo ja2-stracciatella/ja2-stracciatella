@@ -948,7 +948,6 @@ static ScreenID UIHandleNewMerc(UI_EVENT* pUIEvent)
 
 static ScreenID UIHandleNewBadMerc(UI_EVENT* pUIEvent)
 {
-	SOLDIERTYPE *pSoldier;
 	UINT16 usRandom;
 
 	//Get map postion and place the enemy there.
@@ -962,12 +961,11 @@ static ScreenID UIHandleNewBadMerc(UI_EVENT* pUIEvent)
 		}
 
 		usRandom = (UINT16)Random( 10 );
-		if( usRandom < 4 )
-			pSoldier = TacticalCreateAdministrator();
-		else if( usRandom < 8 )
-			pSoldier = TacticalCreateArmyTroop();
-		else
-			pSoldier = TacticalCreateEliteEnemy();
+		SoldierClass const sc =
+			usRandom < 4 ? SOLDIER_CLASS_ADMINISTRATOR :
+			usRandom < 8 ? SOLDIER_CLASS_ARMY          :
+			SOLDIER_CLASS_ELITE;
+		SOLDIERTYPE* const pSoldier = TacticalCreateEnemySoldier(sc);
 
 		//Add soldier strategic info, so it doesn't break the counters!
 		if( pSoldier )
