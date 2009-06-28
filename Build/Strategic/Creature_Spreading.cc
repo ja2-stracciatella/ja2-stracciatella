@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Campaign_Init.h"
 #include "Overhead.h"
 #include "FileMan.h"
@@ -576,103 +578,69 @@ void SpreadCreatures()
 }
 
 
-static void AddCreaturesToBattle(UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales, UINT8 ubNumAdultMales, UINT8 ubNumAdultFemales)
+static void AddCreaturesToBattle(UINT8 n_young_males, UINT8 n_young_females, UINT8 n_adult_males, UINT8 n_adult_females)
 {
-	INT32 iRandom;
-	SOLDIERTYPE *pSoldier;
-	MAPEDGEPOINTINFO MapEdgepointInfo;
-	UINT8 bDesiredDirection=0;
-	UINT8 ubCurrSlot = 0;
-
-	switch( gsCreatureInsertionCode )
+	INT16 const insertion_code = gsCreatureInsertionCode;
+	UINT8       desired_direction;
+	switch (insertion_code)
 	{
-		case INSERTION_CODE_NORTH:	bDesiredDirection = SOUTHEAST;										break;
-		case INSERTION_CODE_EAST:		bDesiredDirection = SOUTHWEST;										break;
-		case INSERTION_CODE_SOUTH:	bDesiredDirection = NORTHWEST;										break;
-		case INSERTION_CODE_WEST:		bDesiredDirection = NORTHEAST;										break;
-		case INSERTION_CODE_GRIDNO:																										break;
-		default:  AssertMsg( 0, "Illegal direction passed to AddCreaturesToBattle()" );	break;
+		case INSERTION_CODE_NORTH:  desired_direction = SOUTHEAST; break;
+		case INSERTION_CODE_EAST:   desired_direction = SOUTHWEST; break;
+		case INSERTION_CODE_SOUTH:  desired_direction = NORTHWEST; break;
+		case INSERTION_CODE_WEST:   desired_direction = NORTHEAST; break;
+		case INSERTION_CODE_GRIDNO: desired_direction = 0;         break;
+		default: throw std::logic_error("Invalid direction passed to AddCreaturesToBattle()");
 	}
 
-	#ifdef JA2TESTVERSION
-		ScreenMsg( FONT_RED, MSG_INTERFACE, L"Creature attackers have arrived!" );
-	#endif
+#ifdef JA2TESTVERSION
+	ScreenMsg(FONT_RED, MSG_INTERFACE, L"Creature attackers have arrived!");
+#endif
 
-	if( gsCreatureInsertionCode != INSERTION_CODE_GRIDNO )
+	MAPEDGEPOINTINFO edgepoint_info;
+	if (insertion_code != INSERTION_CODE_GRIDNO)
 	{
-		ChooseMapEdgepoints( &MapEdgepointInfo, (UINT8)gsCreatureInsertionCode, (UINT8)(ubNumYoungMales+ubNumYoungFemales+ubNumAdultMales+ubNumAdultFemales) );
-		ubCurrSlot = 0;
+		ChooseMapEdgepoints(&edgepoint_info, insertion_code, n_young_males + n_young_females + n_adult_males + n_adult_females);
 	}
-	while( ubNumYoungMales || ubNumYoungFemales || ubNumAdultMales || ubNumAdultFemales )
+
+	UINT8 slot = 0;
+	while (n_young_males + n_young_females + n_adult_males + n_adult_females != 0)
 	{
-		iRandom = (INT32)Random( ubNumYoungMales + ubNumYoungFemales + ubNumAdultMales + ubNumAdultFemales );
-		if( ubNumYoungMales &&  iRandom < (INT32)ubNumYoungMales )
+		UINT32          const roll = Random(n_young_males + n_young_females + n_adult_males + n_adult_females);
+		SoldierBodyType const body =
+			roll < n_young_males                                   ? --n_young_males,   YAM_MONSTER :
+			roll < n_young_males + n_young_females                 ? --n_young_females, YAF_MONSTER :
+			roll < n_young_males + n_young_females + n_adult_males ? --n_adult_males,   AM_MONSTER  :
+			(--n_adult_females, ADULTFEMALEMONSTER);
+
+		SOLDIERTYPE* const s = TacticalCreateCreature(body);
+		s->bHunting                 = TRUE;
+		s->ubInsertionDirection     = desired_direction;
+		s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+		if (insertion_code == INSERTION_CODE_GRIDNO)
 		{
-			ubNumYoungMales--;
-			pSoldier = TacticalCreateCreature( YAM_MONSTER );
+			s->usStrategicInsertionData = gsCreatureInsertionGridNo;
 		}
-		else if( ubNumYoungFemales && iRandom < (INT32)(ubNumYoungMales + ubNumYoungFemales) )
-		{
-			ubNumYoungFemales--;
-			pSoldier = TacticalCreateCreature( YAF_MONSTER );
-		}
-		else if( ubNumAdultMales && iRandom < (INT32)(ubNumYoungMales + ubNumYoungFemales + ubNumAdultMales) )
-		{
-			ubNumAdultMales--;
-			pSoldier = TacticalCreateCreature( AM_MONSTER );
-		}
-		else if( ubNumAdultFemales && iRandom < (INT32)(ubNumYoungMales + ubNumYoungFemales + ubNumAdultMales + ubNumAdultFemales ) )
-		{
-			ubNumAdultFemales--;
-			pSoldier = TacticalCreateCreature( ADULTFEMALEMONSTER );
+		else if (slot < edgepoint_info.ubNumPoints)
+		{ // Use an edgepoint
+			s->usStrategicInsertionData = edgepoint_info.sGridNo[slot++];
 		}
 		else
-		{
-			gsCreatureInsertionCode = 0;
-			gsCreatureInsertionGridNo = 0;
-			gubNumCreaturesAttackingTown = 0;
-			gubYoungMalesAttackingTown = 0;
-			gubYoungFemalesAttackingTown = 0;
-			gubAdultMalesAttackingTown = 0;
-			gubAdultFemalesAttackingTown = 0;
-			gubCreatureBattleCode = CREATURE_BATTLE_CODE_NONE;
-			gubSectorIDOfCreatureAttack = 0;
-			AllTeamsLookForAll( FALSE );
-
-			Assert(0);
-			return;
+		{ // No edgepoints left, so put him at the entrypoint
+			s->ubStrategicInsertionCode = insertion_code;
 		}
-		pSoldier->ubInsertionDirection = bDesiredDirection;
-		//Setup the position
-		pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-		pSoldier->bHunting = TRUE;
-		if( gsCreatureInsertionCode != INSERTION_CODE_GRIDNO )
-		{
-			if( ubCurrSlot < MapEdgepointInfo.ubNumPoints )
-			{ //using an edgepoint
-				pSoldier->usStrategicInsertionData = MapEdgepointInfo.sGridNo[ ubCurrSlot++ ];
-			}
-			else
-			{ //no edgepoints left, so put him at the entrypoint.
-				pSoldier->ubStrategicInsertionCode = (UINT8)gsCreatureInsertionCode;
-			}
-		}
-		else
-		{
-			pSoldier->usStrategicInsertionData = gsCreatureInsertionGridNo;
-		}
-		UpdateMercInSector( pSoldier, gWorldSectorX, gWorldSectorY, 0 );
+		UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, 0);
 	}
-	gsCreatureInsertionCode = 0;
-	gsCreatureInsertionGridNo = 0;
+
+	gsCreatureInsertionCode      = 0;
+	gsCreatureInsertionGridNo    = 0;
 	gubNumCreaturesAttackingTown = 0;
-	gubYoungMalesAttackingTown = 0;
+	gubYoungMalesAttackingTown   = 0;
 	gubYoungFemalesAttackingTown = 0;
-	gubAdultMalesAttackingTown = 0;
+	gubAdultMalesAttackingTown   = 0;
 	gubAdultFemalesAttackingTown = 0;
-	gubCreatureBattleCode = CREATURE_BATTLE_CODE_NONE;
-	gubSectorIDOfCreatureAttack = 0;
-	AllTeamsLookForAll( FALSE );
+	gubCreatureBattleCode        = CREATURE_BATTLE_CODE_NONE;
+	gubSectorIDOfCreatureAttack  = 0;
+	AllTeamsLookForAll(FALSE);
 }
 
 
