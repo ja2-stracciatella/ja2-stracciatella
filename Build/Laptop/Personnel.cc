@@ -401,7 +401,7 @@ static void RemovePersonnelGraphics(void)
 
 
 static void DisplayFaceOfDisplayedMerc(void);
-static void DisplayPastMercsPortraits(void);
+static void DisplayPastMercsPortraits();
 static void DisplayPersonnelSummary(void);
 static void DisplayPersonnelTextOnTitleBar(void);
 static void DisplayPicturesOfCurrentTeam(void);
@@ -1820,104 +1820,35 @@ static void DepartedDownCallBack(GUI_BUTTON *btn, INT32 reason)
 static void DisplayPortraitOfPastMerc(INT32 iId, INT32 iCounter, BOOLEAN fDead);
 
 
-static void DisplayPastMercsPortraits(void)
+/* Display past mercs portraits, starting at giCurrentUpperLeftPortraitNumber
+ * and going up PERSONNEL_PORTRAIT_NUMBER mercs. Start at dead mercs, then
+ * fired, then other */
+static void DisplayPastMercsPortraits()
 {
-	/* display past mercs portraits, starting at giCurrentUpperLeftPortraitNumber
-	 * and going up PERSONNEL_PORTRAIT_NUMBER mercs start at dead mercs, then
-	 * fired, then other */
-	INT32 iCounter = 0;
-	INT32 iCounterA;
-	INT32 iStartArray; // 0 = dead list, 1 = fired list, 2 = other list
+	if (fCurrentTeamMode) return; // Not time to display
 
-	// not time to display
-	if (fCurrentTeamMode) return;
+	LaptopSaveInfoStruct const& l   = LaptopSaveInfo;
+	INT32                       pos = -giCurrentUpperLeftPortraitNumber;
 
-	// go through dead list
-	for (iCounterA = 0; iCounter < giCurrentUpperLeftPortraitNumber; iCounterA++)
+	for (INT16 const* i = l.ubDeadCharactersList; i != endof(l.ubDeadCharactersList); ++i)
 	{
-		if (LaptopSaveInfo.ubDeadCharactersList[iCounterA] != -1)
-			iCounter++;
+		if (*i == -1) continue;
+		if (pos >= 0) DisplayPortraitOfPastMerc(*i, pos, TRUE);
+		if (++pos == PERSONNEL_PORTRAIT_NUMBER) return;
 	}
 
-	if (iCounter < giCurrentUpperLeftPortraitNumber)
+	for (INT16 const* i = l.ubLeftCharactersList; i != endof(l.ubLeftCharactersList); ++i)
 	{
-		// now the fired list
-		for (iCounterA = 0; iCounter < giCurrentUpperLeftPortraitNumber; iCounterA++)
-		{
-			if (LaptopSaveInfo.ubLeftCharactersList[iCounterA] != -1)
-			{
-				iCounter++;
-			}
-		}
-
-		iStartArray = (iCounter < PERSONNEL_PORTRAIT_NUMBER ? 0 : 1);
-	}
-	else
-	{
-		iStartArray = 0;
+		if (*i == -1) continue;
+		if (pos >= 0) DisplayPortraitOfPastMerc(*i, pos, FALSE);
+		if (++pos == PERSONNEL_PORTRAIT_NUMBER) return;
 	}
 
-	if (iCounter < giCurrentUpperLeftPortraitNumber && iStartArray != 0)
+	for (INT16 const* i = l.ubOtherCharactersList; i != endof(l.ubOtherCharactersList); ++i)
 	{
-		// now the fired list
-		for (iCounterA = 0; iCounter < giCurrentUpperLeftPortraitNumber; iCounterA++)
-		{
-			if (LaptopSaveInfo.ubOtherCharactersList[iCounterA] != -1)
-				iCounter++;
-		}
-
-		iStartArray = (iCounter < PERSONNEL_PORTRAIT_NUMBER ? 1 : 2);
-	}
-	else if (iStartArray != 0)
-	{
-		iStartArray = 1;
-	}
-
-	// We now have the array to start in, the position
-	iCounter = 0;
-
-	if (iStartArray == 0)
-	{
-		// run through list and display
-		for (iCounterA; iCounter < PERSONNEL_PORTRAIT_NUMBER && iCounterA < 256; iCounterA++)
-		{
-			// show dead pictures
-			if (LaptopSaveInfo.ubDeadCharactersList[iCounterA] != -1)
-			{
-				DisplayPortraitOfPastMerc(LaptopSaveInfo.ubDeadCharactersList[iCounterA], iCounter, TRUE);
-				iCounter++;
-			}
-		}
-		// reset counter A for the next array, if applicable
-		iCounterA = 0;
-	}
-
-	if (iStartArray <= 1)
-	{
-		for (iCounterA; iCounter < PERSONNEL_PORTRAIT_NUMBER  && iCounterA < 256; iCounterA++)
-		{
-			// show fired pics
-			if (LaptopSaveInfo.ubLeftCharactersList[iCounterA] != -1)
-			{
-				DisplayPortraitOfPastMerc(LaptopSaveInfo.ubLeftCharactersList[iCounterA], iCounter, FALSE);
-				iCounter++;
-			}
-		}
-		// reset counter A for the next array, if applicable
-		iCounterA = 0;
-	}
-
-	if (iStartArray <= 2)
-	{
-		for (iCounterA; iCounter < PERSONNEL_PORTRAIT_NUMBER  && iCounterA < 256; iCounterA++)
-		{
-			// show other pics
-			if (LaptopSaveInfo.ubOtherCharactersList[iCounterA] != -1)
-			{
-				DisplayPortraitOfPastMerc(LaptopSaveInfo.ubOtherCharactersList[iCounterA], iCounter, FALSE);
-				iCounter++;
-			}
-		}
+		if (*i == -1) continue;
+		if (pos >= 0) DisplayPortraitOfPastMerc(*i, pos, FALSE);
+		if (++pos == PERSONNEL_PORTRAIT_NUMBER) return;
 	}
 }
 
