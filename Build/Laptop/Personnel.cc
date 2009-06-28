@@ -1797,9 +1797,14 @@ static void DepartedDownCallBack(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if (giCurrentUpperLeftPortraitNumber + PERSONNEL_PORTRAIT_NUMBER < GetNumberOfPastMercsOnPlayersTeam())
+		INT32 const n_past = GetNumberOfPastMercsOnPlayersTeam();
+		if (n_past - giCurrentUpperLeftPortraitNumber > PERSONNEL_PORTRAIT_NUMBER)
 		{
 			giCurrentUpperLeftPortraitNumber += PERSONNEL_PORTRAIT_NUMBER;
+			if (iCurrentPersonSelectedId >= n_past - giCurrentUpperLeftPortraitNumber)
+			{
+				iCurrentPersonSelectedId = n_past - giCurrentUpperLeftPortraitNumber - 1;
+			}
 			fReDrawScreenFlag = TRUE;
 		}
 	}

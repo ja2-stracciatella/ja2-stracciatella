@@ -1,4 +1,4 @@
-(r6127) Fix a vanilla glitch: Prevent selecting an empty slot when looking at past mercs.
+(r6127, r6129) Fix a vanilla glitch: Prevent selecting an empty slot when looking at past mercs.
 (r6126) Fix a vanilla glitch: Only enable the next page button in the personnel screen when there are more than 20 past mercs.
 (r6125) Fix vanilla bugs (wrong portraits, out of bounds access) for displaying the portraits of past merc in the personnel screen when there are more than 20 past mercs.
 (r6071) Fix a vanilla glitch: A merge recipe for the guardian vest was missing.
