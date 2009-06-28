@@ -1726,6 +1726,7 @@ static void PersonnelCurrentTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		fCurrentTeamMode = TRUE;
 
 		SelectFirstDisplayedMerc();
+		SetPersonnelButtonStates();
 		fReDrawScreenFlag = TRUE;
 	}
 }
@@ -1739,6 +1740,7 @@ static void PersonnelDepartedTeamCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		fCurrentTeamMode = FALSE;
 
 		SelectFirstDisplayedMerc();
+		SetPersonnelButtonStates();
 
 		//Switch the panel on the right to be the stat panel
 		gubPersonnelInfoState = PRSNL_STATS;
