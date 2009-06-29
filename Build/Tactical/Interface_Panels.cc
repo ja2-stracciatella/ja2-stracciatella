@@ -1992,7 +1992,7 @@ static void SelectedMercButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			if ( gpSMCurrentMerc->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) )
 			{
 				SOLDIERTYPE* const v = GetSoldierStructureForVehicle(GetVehicle(gpSMCurrentMerc->iVehicleId));
-				HandleLocateSelectMerc(v, 0);
+				HandleLocateSelectMerc(v, false);
 			}
 			else
 			{
@@ -2004,7 +2004,7 @@ static void SelectedMercButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				}
 				else
 				{
-					HandleLocateSelectMerc(gpSMCurrentMerc, 0);
+					HandleLocateSelectMerc(gpSMCurrentMerc, false);
 				}
 			}
 		}
@@ -2710,7 +2710,7 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			if (s->uiStatusFlags & (SOLDIER_DRIVER | SOLDIER_PASSENGER))
 			{
 				SOLDIERTYPE* const v = GetSoldierStructureForVehicle(GetVehicle(s->iVehicleId));
-				HandleLocateSelectMerc(v, 0);
+				HandleLocateSelectMerc(v, false);
 			}
 			else
 			{
@@ -2725,7 +2725,7 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					}
 					else
 					{
-						HandleLocateSelectMerc(s, 0);
+						HandleLocateSelectMerc(s, false);
 					}
 				}
 				else
@@ -2753,7 +2753,7 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-void HandleLocateSelectMerc(SOLDIERTYPE* const s, const INT8 bFlag)
+void HandleLocateSelectMerc(SOLDIERTYPE* const s, bool const force_select)
 {
 	if (!s->bActive) return;
 
@@ -2787,7 +2787,7 @@ void HandleLocateSelectMerc(SOLDIERTYPE* const s, const INT8 bFlag)
 	}
 	else
 	{
-		BOOLEAN fSelect = FALSE;
+		BOOLEAN fSelect = force_select;
 
 		if (s->fFlashLocator == FALSE)
 		{
@@ -2836,8 +2836,6 @@ void HandleLocateSelectMerc(SOLDIERTYPE* const s, const INT8 bFlag)
 				}
 			}
 		}
-
-		if (bFlag == LOCATEANDSELECT_MERC) fSelect = TRUE;
 
 		if (fSelect)
 		{

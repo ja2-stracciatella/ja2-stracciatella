@@ -1174,7 +1174,7 @@ static void HandleItemMenuKeys(InputAtom*, UIEventKind*);
 static void HandleMenuKeys(InputAtom*, UIEventKind*);
 static void HandleOpenDoorMenuKeys(InputAtom*, UIEventKind*);
 static void HandleSectorExitMenuKeys(InputAtom*, UIEventKind*);
-static void HandleSelectMercSlot(UINT8 ubPanelSlot, INT8 bCode);
+static void HandleSelectMercSlot(UINT8 ubPanelSlot, bool force_select);
 static void HandleStealthChangeFromUIKeys();
 static void HandleTalkingMenuKeys(InputAtom*, UIEventKind*);
 static void ObliterateSector();
@@ -1219,7 +1219,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 				{
 					// Select next merc
 					SOLDIERTYPE* const next = FindNextMercInTeamPanel(sel);
-					HandleLocateSelectMerc(next, LOCATEANDSELECT_MERC);
+					HandleLocateSelectMerc(next, true);
 					// Center to guy
 					LocateSoldier(GetSelectedMan(), SETLOCATOR);
 				}
@@ -1506,7 +1506,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 		case SDLK_F6:
 		{
 			UINT const idx = key - SDLK_F1;
-			HandleSelectMercSlot(idx, LOCATEANDSELECT_MERC);
+			HandleSelectMercSlot(idx, true);
 			break;
 		}
 
@@ -1549,7 +1549,7 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 						SOLDIERTYPE* const new_soldier   = FindNextActiveSquad(sel);
 						if (new_soldier->bAssignment != current_squad)
 						{
-							HandleLocateSelectMerc(new_soldier, LOCATEANDSELECT_MERC);
+							HandleLocateSelectMerc(new_soldier, true);
 							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[MSG_SQUAD_ACTIVE], CurrentSquad() + 1);
 							// Center to guy
 							LocateSoldier(GetSelectedMan(), SETLOCATOR);
@@ -1581,7 +1581,7 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 		case SDLK_F6:
 		{
 			UINT const idx = key - SDLK_F1;
-			HandleSelectMercSlot(idx, LOCATE_MERC_ONCE);
+			HandleSelectMercSlot(idx, false);
 			break;
 		}
 	}
@@ -3144,12 +3144,12 @@ static void ChangeCurrentSquad(INT32 iSquad)
 }
 
 
-static void HandleSelectMercSlot(UINT8 ubPanelSlot, INT8 bCode)
+static void HandleSelectMercSlot(UINT8 const ubPanelSlot, bool const force_select)
 {
 	SOLDIERTYPE* const s = GetPlayerFromInterfaceTeamSlot(ubPanelSlot);
 	if (s != NULL)
 	{
-		HandleLocateSelectMerc(s, bCode);
+		HandleLocateSelectMerc(s, force_select);
 		ErasePath();
 		gfPlotNewMovement = TRUE;
 	}

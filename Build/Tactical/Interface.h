@@ -49,9 +49,6 @@
 
 #define		ROOF_LEVEL_HEIGHT						50
 
-#define			LOCATEANDSELECT_MERC			1
-#define			LOCATE_MERC_ONCE					2
-
 
 // Interface level enums
 enum

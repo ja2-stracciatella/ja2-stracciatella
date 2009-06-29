@@ -109,7 +109,7 @@ void BeginKeyPanelFromKeyShortcut(void);
 
 void UpdateForContOverPortrait(SOLDIERTYPE* s, BOOLEAN fOn);
 
-void HandleLocateSelectMerc(SOLDIERTYPE* s, INT8 bFlag);
+void HandleLocateSelectMerc(SOLDIERTYPE*, bool force_select);
 
 BOOLEAN HandleNailsVestFetish(const SOLDIERTYPE* pSoldier, UINT32 uiHandPos, UINT16 usReplaceItem);
 
