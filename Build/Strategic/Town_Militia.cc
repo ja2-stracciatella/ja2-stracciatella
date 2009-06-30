@@ -49,7 +49,7 @@ INT16 gsUnpaidStrategicSector[ MAX_CHARACTER_COUNT ];
 
 static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrainer);
 static void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT16 sSkipSectorY);
-static BOOLEAN ServeNextFriendlySectorInTown(INT16* sNeighbourX, INT16* sNeighbourY);
+static bool ServeNextFriendlySectorInTown(INT16* neighbour_x, INT16* neighbour_y);
 static void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany);
 static void StrategicPromoteMilitiaInSector(INT16 sMapX, INT16 sMapY, UINT8 ubCurrentRank, UINT8 ubHowMany);
 
@@ -409,56 +409,33 @@ static void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT
 }
 
 
-// this feeds the X,Y of the next town sector on the town list for the town specified at initialization
-// it will skip an entry that matches the skip X/Y value if one was specified at initialization
-// MUST CALL InitFriendlyTownSectorServer() before using!!!
-static BOOLEAN ServeNextFriendlySectorInTown(INT16* sNeighbourX, INT16* sNeighbourY)
+/* Fetch the X,Y of the next town sector on the town list for the town specified
+ * at initialization. It will skip an entry that matches the skip X/Y value, if
+ * one was specified at initialization.
+ * MUST CALL InitFriendlyTownSectorServer() before using! */
+static bool ServeNextFriendlySectorInTown(INT16* const neighbour_x, INT16* const neighbour_y)
 {
-	INT32 iTownSector;
-	INT16 sMapX, sMapY;
-	BOOLEAN fStopLooking = FALSE;
-
-	do
+	while (pTownNamesList[gubTownSectorServerIndex] != BLANK_SECTOR)
 	{
-		// have we reached the end of the town list?
-		if (pTownNamesList[ gubTownSectorServerIndex ] == BLANK_SECTOR)
-		{
-			// end of list reached
-			return(FALSE);
-		}
-
-		iTownSector = pTownLocationsList[ gubTownSectorServerIndex ];
+		INT32 const loc = pTownLocationsList[gubTownSectorServerIndex++];
 
 		// if this sector is in the town we're looking for
-		if( StrategicMap[ iTownSector ].bNameId == gubTownSectorServerTownId )
-		{
-			// A sector in the specified town.  Calculate its X & Y sector compotents
-			sMapX = iTownSector % MAP_WORLD_X;
-			sMapY = iTownSector / MAP_WORLD_X;
+		if (StrategicMap[loc].bNameId != gubTownSectorServerTownId) continue;
 
-			// Make sure we're not supposed to skip it
-			if ( ( sMapX != gsTownSectorServerSkipX ) || ( sMapY != gsTownSectorServerSkipY ) )
-			{
-				// check if it's "friendly" - not enemy controlled, no enemies in it, no combat in progress
-				if (SectorOursAndPeaceful( sMapX, sMapY, 0 ))
-				{
-					// then that's it!
-					*sNeighbourX = sMapX;
-					*sNeighbourY = sMapY;
+		INT16 const x = loc % MAP_WORLD_X;
+		INT16 const y = loc / MAP_WORLD_X;
 
-					fStopLooking = TRUE;
-				}
-			}
-		}
+		// Make sure we're not supposed to skip it
+		if (x == gsTownSectorServerSkipX && y == gsTownSectorServerSkipY) continue;
 
-		// advance to next entry in town list
-		gubTownSectorServerIndex++;
+		// check if it's "friendly" - not enemy controlled, no enemies in it, no combat in progress
+		if (!SectorOursAndPeaceful(x, y, 0)) continue;
 
-	} while ( !fStopLooking );
-
-
-	// found & returning a valid sector
-	return(TRUE);
+		*neighbour_x = x;
+		*neighbour_y = y;
+		return true;
+	}
+	return false;
 }
 
 
