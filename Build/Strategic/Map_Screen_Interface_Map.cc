@@ -4291,96 +4291,82 @@ static void DrawTownMilitiaName(void)
 }
 
 
-static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 sTownValue)
+static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 {
-	INT32 iCounter = 0, iCounterB = 0, iNumberUnderControl = 0, iNumberThatCanFitInSector= 0, iCount = 0;
-	BOOLEAN fLastOne = FALSE;
-
 	// check if anyone still on the cursor
-	if( !sGreensOnCursor && !sRegularsOnCursor && !sElitesOnCursor )
-	{
-		return;
-	}
+	if (sGreensOnCursor == 0 && sRegularsOnCursor == 0 && sElitesOnCursor == 0) return;
 
-	// yep someone left
-	iNumberUnderControl = GetTownSectorsUnderControl( ( INT8 ) sTownValue );
+	INT32 const n_under_control = GetTownSectorsUnderControl(town);
 
-	// find number of sectors under player's control
-	while( pTownNamesList[ iCounter ] != 0 )
+	for (INT32 i = 0; pTownNamesList[i] != 0; ++i)
 	{
-		if( pTownNamesList[ iCounter] == sTownValue )
+		if (pTownNamesList[i] != town) continue;
+
+		INT32 const loc = pTownLocationsList[i];
+		SECTORINFO& si  = SectorInfo[STRATEGIC_INDEX_TO_SECTOR_INFO(loc)];
+		UINT8       n_green   = si.ubNumberOfCivsAtLevel[GREEN_MILITIA];
+		UINT8       n_regular = si.ubNumberOfCivsAtLevel[REGULAR_MILITIA];
+		UINT8       n_elite   = si.ubNumberOfCivsAtLevel[ELITE_MILITIA];
+		if (SectorOursAndPeaceful(loc % MAP_WORLD_X, loc / MAP_WORLD_X, 0))
 		{
-			if( SectorOursAndPeaceful( ( INT16 )( pTownLocationsList[ iCounter ] % MAP_WORLD_X ) , ( INT16 )( pTownLocationsList[ iCounter ] / MAP_WORLD_X ), 0 ) )
+			INT32 n = MAX_ALLOWABLE_MILITIA_PER_SECTOR;
+			n -= n_green;
+			n -= n_regular;
+			n -= n_elite;
+
+			if (n != 0)
 			{
-				iCount = 0;
-				iNumberThatCanFitInSector = MAX_ALLOWABLE_MILITIA_PER_SECTOR;
-				iNumberThatCanFitInSector -= SectorInfo[ STRATEGIC_INDEX_TO_SECTOR_INFO( pTownLocationsList[ iCounter ] ) ].ubNumberOfCivsAtLevel[ GREEN_MILITIA ];
-				iNumberThatCanFitInSector -= SectorInfo[ STRATEGIC_INDEX_TO_SECTOR_INFO( pTownLocationsList[ iCounter ] ) ].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ];
-				iNumberThatCanFitInSector -= SectorInfo[ STRATEGIC_INDEX_TO_SECTOR_INFO( pTownLocationsList[ iCounter ] ) ].ubNumberOfCivsAtLevel[ ELITE_MILITIA ];
-
-				while( ( iCount < iNumberThatCanFitInSector )&&( ( sGreensOnCursor ) || ( sRegularsOnCursor ) || ( sElitesOnCursor ) ) )
+				while (sGreensOnCursor != 0 || sRegularsOnCursor != 0 || sElitesOnCursor != 0)
 				{
-					// green
-					if( ( iCount + 1 <= iNumberThatCanFitInSector )&&( sGreensOnCursor ) )
+					if (sGreensOnCursor != 0)
 					{
-						SectorInfo[ STRATEGIC_INDEX_TO_SECTOR_INFO( pTownLocationsList[ iCounter ] ) ].ubNumberOfCivsAtLevel[ GREEN_MILITIA ]++;
-						iCount++;
-						sGreensOnCursor--;
+						++n_green;
+						--sGreensOnCursor;
+						if (--n == 0) break;
 					}
 
-					// regular
-					if( ( iCount + 1 <= iNumberThatCanFitInSector ) && ( sRegularsOnCursor ) )
+					if (sRegularsOnCursor != 0)
 					{
-						SectorInfo[ STRATEGIC_INDEX_TO_SECTOR_INFO( pTownLocationsList[ iCounter ] ) ].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ]++;
-						iCount++;
-						sRegularsOnCursor--;
+						++n_regular;
+						--sRegularsOnCursor;
+						if (--n == 0) break;
 					}
 
-					// elite
-					if( ( iCount + 1 <= iNumberThatCanFitInSector ) && ( sElitesOnCursor ) )
+					if (sElitesOnCursor != 0)
 					{
-						SectorInfo[ STRATEGIC_INDEX_TO_SECTOR_INFO( pTownLocationsList[ iCounter ] ) ].ubNumberOfCivsAtLevel[ ELITE_MILITIA ]++;
-						iCount++;
-						sElitesOnCursor--;
+						++n_elite;
+						--sElitesOnCursor;
+						if (--n == 0) break;
 					}
 				}
-
-				if( STRATEGIC_INDEX_TO_SECTOR_INFO( pTownLocationsList[ iCounter ] ) == SECTOR( gWorldSectorX, gWorldSectorY ) )
-				{
-					gfStrategicMilitiaChangesMade = TRUE;
-				}
-
 			}
 
-			fLastOne = TRUE;
-
-			iCounterB = iCounter + 1;
-
-			while( pTownNamesList[ iCounterB ] != 0 )
+			if (STRATEGIC_INDEX_TO_SECTOR_INFO(loc) == SECTOR(gWorldSectorX, gWorldSectorY))
 			{
-				if( pTownNamesList[ iCounterB ] ==  sTownValue )
-				{
-					fLastOne = FALSE;
-				}
-
-				iCounterB++;
-			}
-
-			if( fLastOne )
-			{
-				SectorInfo[ STRATEGIC_INDEX_TO_SECTOR_INFO( pTownLocationsList[ iCounter ] ) ].ubNumberOfCivsAtLevel[ GREEN_MILITIA ] +=  ( UINT8 )( sGreensOnCursor % iNumberUnderControl );
-				SectorInfo[ STRATEGIC_INDEX_TO_SECTOR_INFO( pTownLocationsList[ iCounter ] ) ].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ] +=  ( UINT8 )( sRegularsOnCursor % iNumberUnderControl );
-				SectorInfo[ STRATEGIC_INDEX_TO_SECTOR_INFO( pTownLocationsList[ iCounter ] ) ].ubNumberOfCivsAtLevel[ ELITE_MILITIA ] +=  ( UINT8 )( sElitesOnCursor % iNumberUnderControl );
+				gfStrategicMilitiaChangesMade = TRUE;
 			}
 		}
 
-		iCounter++;
+		bool last_one = true;
+		for (INT32 const* k = pTownNamesList; *k != 0; ++k)
+		{
+			if (*k != town) continue;
+			last_one = false;
+			break;
+		}
+		if (last_one)
+		{ // XXX is sGreensOnCursor + sRegularsOnCursor + sElitesOnCursor != 0 here?
+			n_green   += sGreensOnCursor   % n_under_control;
+			n_regular += sRegularsOnCursor % n_under_control;
+			n_elite   += sElitesOnCursor   % n_under_control;
+		}
 	}
 
+	// XXX is sGreensOnCursor + sRegularsOnCursor + sElitesOnCursor != 0 here?
 	// zero out numbers on the cursor
-	sGreensOnCursor = 0;
+	sGreensOnCursor   = 0;
 	sRegularsOnCursor = 0;
-	sElitesOnCursor = 0;
+	sElitesOnCursor   = 0;
 }
 
 
