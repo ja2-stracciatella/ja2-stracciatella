@@ -566,22 +566,15 @@ UINT8 GetTownSectorSize( INT8 bTownId )
 }
 
 
-static UINT8 GetMilitiaCountAtLevelAnywhereInTown(UINT8 ubTownValue, UINT8 ubLevelValue)
+static UINT8 GetMilitiaCountAtLevelAnywhereInTown(UINT8 const town, UINT8 const level)
 {
-	INT32 iCounter = 0;
-	UINT8 ubCount =0;
-
-	while( pTownNamesList[ iCounter ] != 0 )
+	UINT8 n = 0;
+	for (INT32 i = 0; pTownNamesList[i] != 0; i++)
 	{
-		if( StrategicMap[ pTownLocationsList[ iCounter ] ].bNameId == ubTownValue )
-		{
-			// match.  Add the number of civs at this level
-			ubCount += SectorInfo[ STRATEGIC_INDEX_TO_SECTOR_INFO( pTownLocationsList[ iCounter ] ) ].ubNumberOfCivsAtLevel[ ubLevelValue ];
-		}
-
-		iCounter++;
+		if (pTownNamesList[i] != town) continue;
+		n += SectorInfo[STRATEGIC_INDEX_TO_SECTOR_INFO(pTownLocationsList[i])].ubNumberOfCivsAtLevel[level];
 	}
-	return( ubCount );
+	return n;
 }
 
 
