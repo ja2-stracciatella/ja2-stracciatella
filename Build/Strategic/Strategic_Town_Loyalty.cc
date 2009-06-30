@@ -344,12 +344,6 @@ static void UpdateTownLoyaltyRating(INT8 bTownId)
 }
 
 
-// strategic handler, goes through and handles all strategic events for town loyalty updates...player controlled, monsters
-void HandleTownLoyalty( void )
-{
-}
-
-
 static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 

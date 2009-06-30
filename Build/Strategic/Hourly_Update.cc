@@ -38,15 +38,12 @@ static void UpdateRegenCounters(void);
 
 // This function gets called every hour, on the hour.
 // It spawns the handling of all sorts of stuff:
-// Morale changes, assignment progress, town loyalties, etc.
+// Morale changes, assignment progress, etc.
 void HandleHourlyUpdate()
 {
 	//if the game hasnt even started yet ( we havent arrived in the sector ) dont process this
 	if ( DidGameJustStart() )
 		return;
-
-	// hourly update of town loyalty
-	HandleTownLoyalty();
 
 	// hourly update of team assignments
 	UpdateAssignments();
