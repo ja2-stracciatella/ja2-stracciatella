@@ -4,7 +4,6 @@
 #include "Strategic_Town_Loyalty.h"
 #include "StrategicMap.h"
 #include "Overhead.h"
-#include "Assignments.h"
 #include "Queen_Command.h"
 #include "Animation_Data.h"
 #include "Quests.h"
@@ -38,9 +37,6 @@
 
 // loyalty Omerta drops to and maxes out at if the player betrays the rebels
 #define HOSTILE_OMERTA_LOYALTY_RATING		10
-
-// the loyalty threshold below which theft of unsupervised items in a town sector can occur
-#define THRESHOLD_FOR_TOWN_THEFT 50
 
 #define LOYALTY_EVENT_DISTANCE_THRESHOLD		3			// in sectors
 
@@ -133,14 +129,6 @@ BOOLEAN gfTownUsesLoyalty[ NUM_TOWNS ] =
 // location of first enocunter with enemy
 INT16 sWorldSectorLocationOfFirstBattle = 0;
 
-
-/* ARM: Civilian theft of items was removed
-// handle theft by civi in a town sector
-void HandleTheftByCiviliansInSector( INT16 sX, INT16 sY, INT32 iLoyalty );
-
-// handle theft in all towns
-void HandleTownTheft( void );
-*/
 
 void InitTownLoyalty( void )
 {
@@ -359,13 +347,6 @@ static void UpdateTownLoyaltyRating(INT8 bTownId)
 // strategic handler, goes through and handles all strategic events for town loyalty updates...player controlled, monsters
 void HandleTownLoyalty( void )
 {
-/* ARM: Civilian theft of items was removed
-	// only check for theft every 12 hours, otherwise it's way too slow
-	if ( (GetWorldHour() % 12) == 0)
-	{
-		HandleTownTheft( );
-	}
-*/
 }
 
 
@@ -762,57 +743,6 @@ void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16
 		}
 	}
 }
-
-
-/* ARM: Civilian theft of items was removed
-void HandleTheftByCiviliansInSector( INT16 sX, INT16 sY, INT32 iLoyalty )
-{
-	UINT8 ubChance = 0;
-
-	// any loyalty under the theft threshhold is chance that thefts will occur
-	if( iLoyalty < THRESHOLD_FOR_TOWN_THEFT )
-	{
-		// sectors with mercs are immune
-		if (!fSectorsWithSoldiers[sX + MAP_WORLD_X * sY][0])
-		{
-			// sectors not yet visited by player are also immune (other sectors in town could have been visited)
-			if (GetSectorFlagStatus(sX, sY, 0, SF_ALREADY_VISITED))
-			{
-				ubChance = 5 + ( THRESHOLD_FOR_TOWN_THEFT - iLoyalty ) / 2;
-
-				// remove items from sector
-				RemoveRandomItemsInSector( sX, sY, 0, ubChance);
-			}
-		}
-	}
-}
-
-void HandleTownTheft( void )
-{
-	INT32 iCounter = 0;
-	UINT8 ubTown;
-
-	// init sectors with soldiers list
-	InitSectorsWithSoldiersList( );
-
-	// build list
-	BuildSectorsWithSoldiersList(  );
-
-	while( pTownNamesList[ iCounter ] != 0 )
-	{
-		ubTown = StrategicMap[ pTownLocationsList[ iCounter ] ].bNameId;
-
-		// if this town tracks loyalty, and tracking has started
-		if ( ( ubTown != BLANK_SECTOR ) && gfTownUsesLoyalty[ ubTown ] && gTownLoyalty[ ubTown ].fStarted )
-		{
-			// handle theft in this town sector
-			HandleTheftByCiviliansInSector( ( INT16 )( pTownLocationsList[ iCounter ] % MAP_WORLD_X ), ( INT16 )( pTownLocationsList[ iCounter ] / MAP_WORLD_X ), gTownLoyalty[ ubTown ].ubRating );
-		}
-
-		iCounter++;
-	}
-}
-*/
 
 
 void BuildListOfTownSectors()
