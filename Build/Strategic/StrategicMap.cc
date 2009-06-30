@@ -566,18 +566,6 @@ UINT8 GetTownSectorSize( INT8 bTownId )
 }
 
 
-static UINT8 GetMilitiaCountAtLevelAnywhereInTown(UINT8 const town, UINT8 const level)
-{
-	UINT8 n = 0;
-	for (INT32 i = 0; pTownNamesList[i] != 0; i++)
-	{
-		if (pTownNamesList[i] != town) continue;
-		n += SectorInfo[STRATEGIC_INDEX_TO_SECTOR_INFO(pTownLocationsList[i])].ubNumberOfCivsAtLevel[level];
-	}
-	return n;
-}
-
-
 // return number of sectors under player control for this town
 UINT8 GetTownSectorsUnderControl( INT8 bTownId )
 {

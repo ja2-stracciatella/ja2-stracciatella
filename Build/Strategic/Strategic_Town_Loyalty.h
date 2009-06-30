@@ -96,9 +96,6 @@ void IncrementTownLoyalty( INT8 bTownId, UINT32 uiLoyaltyIncrease );
 // decrement the town loyalty rating (hundredths!)
 void DecrementTownLoyalty( INT8 bTownId, UINT32 uiLoyaltyDecrease );
 
-// update the loyalty based on current % control of the town
-void UpdateLoyaltyBasedOnControl( INT8 bTownId );
-
 // strategic handler, goes through and handles all strategic events for town loyalty updates...player controlled, monsters
 void HandleTownLoyalty( void );
 
