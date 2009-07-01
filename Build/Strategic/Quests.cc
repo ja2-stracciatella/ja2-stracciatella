@@ -39,9 +39,6 @@ extern SOLDIERTYPE * gpDestSoldier;
 UINT8 gubQuest[MAX_QUESTS];
 UINT8 gubFact[ NUM_FACTS ]; // this has to be updated when we figure out how many facts we have
 
-INT16	gsFoodQuestSectorX;
-INT16	gsFoodQuestSectorY;
-
 
 void SetFactTrue(Fact const usFact)
 {
