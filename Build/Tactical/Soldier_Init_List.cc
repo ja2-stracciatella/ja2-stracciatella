@@ -1527,13 +1527,13 @@ SOLDIERINITNODE* FindSoldierInitNodeWithID( UINT16 usID )
 }
 
 
-SOLDIERINITNODE* FindSoldierInitNodeBySoldier(const SOLDIERTYPE* const s)
+SOLDIERINITNODE* FindSoldierInitNodeBySoldier(SOLDIERTYPE const& s)
 {
 	FOR_ALL_SOLDIERINITNODES(i)
 	{
-		if (i->pSoldier == s) return i;
+		if (i->pSoldier == &s) return i;
 	}
-	return NULL;
+	return 0;
 }
 
 
@@ -1574,7 +1574,7 @@ void EvaluateDeathEffectsToSoldierInitList(const SOLDIERTYPE* const pSoldier)
 {
 	if( pSoldier->bTeam == MILITIA_TEAM )
 		return;
-	SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(pSoldier);
+	SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(*pSoldier);
 	if (curr != NULL)
 	{ //Matching soldier found
 		if (curr->pDetailedPlacement)

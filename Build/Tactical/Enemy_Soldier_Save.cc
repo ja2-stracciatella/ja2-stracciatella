@@ -688,7 +688,7 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 		// Make sure the person is active, alive, and is not a profiled person
 		if (!s.bActive || s.bLife == 0 || s.ubProfile != NO_PROFILE) continue;
 		// Soldier is valid, so find the matching soldier init list entry for modification.
-		SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(&s);
+		SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(s);
 		if (!curr) continue;
 
 		// Increment the counter, so we know how many there are.
@@ -816,7 +816,7 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 			if (!s.bActive || s.bLife == 0 || s.ubProfile != NO_PROFILE) continue;
 
 			// Soldier is valid, so find the matching soldier init list entry for modification.
-			SOLDIERINITNODE const* const curr = FindSoldierInitNodeBySoldier(&s);
+			SOLDIERINITNODE const* const curr = FindSoldierInitNodeBySoldier(s);
 			if (!curr) continue;
 
 			SOLDIERCREATE_STRUCT const* const dp = curr->pDetailedPlacement;

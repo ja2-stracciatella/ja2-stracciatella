@@ -434,7 +434,7 @@ void HandleRightClickOnMerc( INT32 iMapIndex )
 		if (g_selected_merc != this_merc)
 		{ // We want to edit a new merc (or different merc)
 			//We need to avoid the editing of player mercs.
-			if (FindSoldierInitNodeBySoldier(this_merc) == NULL)
+			if (!FindSoldierInitNodeBySoldier(*this_merc))
 				return;		//this is a player merc (which isn't in the list), or an error in logic.
 			IndicateSelectedMerc(this_merc->ubID);
 		}

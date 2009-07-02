@@ -3507,7 +3507,7 @@ void DebugSoldierPage4()
 				default:          attitude = L"UNKNOWN";      break;
 			}
 			SetFontShade(LARGEFONT1, FONT_SHADE_NEUTRAL);
-			const SOLDIERINITNODE* const node = FindSoldierInitNodeBySoldier(s);
+			SOLDIERINITNODE const* const node = FindSoldierInitNodeBySoldier(*s);
 			y += h;
 			if (node)
 			{
