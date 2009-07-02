@@ -199,7 +199,7 @@ try
 	if (profile != NO_PROFILE)
 	{
 		CopyProfileItems(*s, c);
-		if (team_id == OUR_TEAM) InitSoldierFace(s);
+		if (team_id == OUR_TEAM) InitSoldierFace(*s);
 	}
 
 	s->bActionPoints        = CalcActionPoints(s);
@@ -465,7 +465,7 @@ SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE* const existing
 			s.bTeam     == OUR_TEAM   &&
 			!(s.uiStatusFlags & SOLDIER_VEHICLE))
 	{
-		InitSoldierFace(&s);
+		InitSoldierFace(s);
 	}
 
 	if (s.ubBodyType == HUMVEE || s.ubBodyType == ICECREAMTRUCK)
@@ -1673,7 +1673,7 @@ void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
 	DeleteSoldierFace( pSoldier );
 
 	// Init face
-	InitSoldierFace(pSoldier);
+	InitSoldierFace(*pSoldier);
 
 	// Update animation, palettes
 	SetSoldierAnimationSurface( pSoldier, pSoldier->usAnimState );

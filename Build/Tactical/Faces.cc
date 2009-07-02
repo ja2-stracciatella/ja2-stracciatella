@@ -130,11 +130,11 @@ INT32 uiCount;
 }
 
 
-void InitSoldierFace(SOLDIERTYPE* const s)
+void InitSoldierFace(SOLDIERTYPE& s)
 {
 	// Check if we have a face init already
-	if (s->face != NULL) return;
-	s->face = InitFace(s->ubProfile, s, 0);
+	if (s.face) return;
+	s.face = InitFace(s.ubProfile, &s, 0);
 }
 
 

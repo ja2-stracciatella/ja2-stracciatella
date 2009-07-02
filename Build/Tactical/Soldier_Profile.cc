@@ -1199,7 +1199,7 @@ SOLDIERTYPE* SwapLarrysProfiles(SOLDIERTYPE* const s)
 
 	DeleteSoldierFace(s);
 	s->ubProfile = dst_id;
-	InitSoldierFace(s);
+	InitSoldierFace(*s);
 
 	s->bStrength     = dst.bStrength     + dst.bStrengthDelta;
 	s->bDexterity    = dst.bDexterity    + dst.bDexterityDelta;
