@@ -1614,15 +1614,15 @@ static bool IsGunUsable(OBJECTTYPE const& o, SOLDIERTYPE const& s)
 
 #define MINIMUM_REQUIRED_STATUS 70
 
-INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 const usItem)
+INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const usItem)
 {
-	if (s->bActionPoints < AP_PICKUP_ITEM) return AI_ACTION_NONE;
+	if (s.bActionPoints < AP_PICKUP_ITEM) return AI_ACTION_NONE;
 
-	if (!IS_MERC_BODY_TYPE(s)) return AI_ACTION_NONE;
+	if (!IS_MERC_BODY_TYPE(&s)) return AI_ACTION_NONE;
 
-	INT32 search_range = gbDiff[DIFF_MAX_COVER_RANGE][SoldierDifficultyLevel(s)];
+	INT32 search_range = gbDiff[DIFF_MAX_COVER_RANGE][SoldierDifficultyLevel(&s)];
 
-	switch (s->bAttitude)
+	switch (s.bAttitude)
 	{
 		case DEFENSIVE:   search_range -= 1; break;
 		case BRAVESOLO:   search_range += 2; break;
@@ -1633,9 +1633,9 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 	}
 
 	// Maximum search range is 1 tile / 10 pts of wisdom
-	if (search_range > s->bWisdom / 10)
+	if (search_range > s.bWisdom / 10)
 	{
-		search_range = s->bWisdom / 10;
+		search_range = s.bWisdom / 10;
 	}
 
 	if (!gfTurnBasedAI)
@@ -1647,12 +1647,12 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 	search_range /= 2;
 
 	// determine maximum horizontal limits
-	INT16 const max_left  = MIN(search_range, s->sGridNo % MAXCOL);
-	INT16 const max_right = MIN(search_range, MAXCOL - ((s->sGridNo % MAXCOL) + 1));
+	INT16 const max_left  = MIN(search_range, s.sGridNo % MAXCOL);
+	INT16 const max_right = MIN(search_range, MAXCOL - (s.sGridNo % MAXCOL + 1));
 
 	// determine maximum vertical limits
-	INT16 const max_up   = MIN(search_range, s->sGridNo / MAXROW);
-	INT16 const max_down = MIN(search_range, MAXROW - ((s->sGridNo / MAXROW) + 1));
+	INT16 const max_up   = MIN(search_range, s.sGridNo / MAXROW);
+	INT16 const max_down = MIN(search_range, MAXROW - (s.sGridNo / MAXROW + 1));
 
 	// Call FindBestPath to set flags in all locations that we can
 	// walk into within range.  We have to set some things up first...
@@ -1662,20 +1662,20 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 
 	// set an AP limit too, to our APs less the cost of picking up an item
 	// and less the cost of dropping an item since we might need to do that
-	gubNPCAPBudget = s->bActionPoints - AP_PICKUP_ITEM;
+	gubNPCAPBudget = s.bActionPoints - AP_PICKUP_ITEM;
 
 	// reset the "reachable" flags in the region we're looking at
 	for (INT16 dy = -max_up; dy <= max_down; ++dy)
 	{
 		for (INT16 dx = -max_left; dx <= max_right; ++dx)
 		{
-			GridNo const grid_no = s->sGridNo + dx + MAXCOL * dy;
+			GridNo const grid_no = s.sGridNo + dx + MAXCOL * dy;
 			if (grid_no < 0 || WORLD_MAX <= grid_no) continue;
 			gpWorldLevelData[grid_no].uiFlags &= ~MAPELEMENT_REACHABLE;
 		}
 	}
 
-	FindBestPath(s, NOWHERE, s->bLevel, DetermineMovementMode(s, AI_ACTION_PICKUP_ITEM), COPYREACHABLE, 0);
+	FindBestPath(&s, NOWHERE, s.bLevel, DetermineMovementMode(&s, AI_ACTION_PICKUP_ITEM), COPYREACHABLE, 0);
 
 	GridNo best_spot     = NOWHERE;
 	INT32  best_value    =  0;
@@ -1686,20 +1686,20 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 		for (INT16 dx = -max_left; dx <= max_right; ++dx)
 		{
 			// calculate the next potential gridno
-			INT16 const grid_no = s->sGridNo + dx + (MAXCOL * dy);
+			INT16 const grid_no = s.sGridNo + dx + (MAXCOL * dy);
 			if (grid_no < 0 || WORLD_MAX <= grid_no) continue;
 
 			// exclude locations with tear/mustard gas (at this point, smoke is cool!)
-			if (InGasOrSmoke(s, grid_no)) continue;
+			if (InGasOrSmoke(&s, grid_no)) continue;
 
 			if (!(gpWorldLevelData[grid_no].uiFlags & MAPELEMENT_ITEMPOOL_PRESENT)) continue;
 			if (!(gpWorldLevelData[grid_no].uiFlags & MAPELEMENT_REACHABLE))        continue;
 
 			// ignore blacklisted spot
-			if (grid_no == s->sBlackList) continue;
+			if (grid_no == s.sBlackList) continue;
 
 			INT32 value = 0;
-			for (ITEM_POOL const* pItemPool = GetItemPool(grid_no, s->bLevel); pItemPool; pItemPool = pItemPool->pNext)
+			for (ITEM_POOL const* pItemPool = GetItemPool(grid_no, s.bLevel); pItemPool; pItemPool = pItemPool->pNext)
 			{
 				OBJECTTYPE const& o    = GetWorldItem(pItemPool->iItemIndex).o;
 				INVTYPE    const& item = Item[o.usItem];
@@ -1710,7 +1710,7 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 						// We are looking for ammo to match the gun in usItem
 						if (item.usItemClass == IC_GUN && o.bStatus[0] >= MINIMUM_REQUIRED_STATUS)
 						{ // Maybe this gun has ammo (adjust for whether it is better than ours!)
-							if (!IsGunUsable(o, *s)) continue;
+							if (!IsGunUsable(o, s)) continue;
 							temp_value = o.ubGunShotsLeft * Weapon[o.usItem].ubDeadliness / Weapon[usItem].ubDeadliness;
 						}
 						else
@@ -1731,7 +1731,7 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 								case ARMOURCLASS_LEGGINGS: pos = LEGPOS;    break;
 								default: continue;
 							}
-							OBJECTTYPE const& cur_armour = s->inv[pos];
+							OBJECTTYPE const& cur_armour = s.inv[pos];
 							if (cur_armour.usItem == NOTHING)
 							{
 								temp_value = 200 + EffectiveArmour(&o);
@@ -1739,7 +1739,7 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 							else
 							{
 								INT8 const new_rating = EffectiveArmour(&o);
-								if (EffectiveArmour(&s->inv[HELMETPOS]) <= new_rating) continue; // XXX makes no sense: always compare with helmet and only consider when worse
+								if (EffectiveArmour(&s.inv[HELMETPOS]) <= new_rating) continue; // XXX makes no sense: always compare with helmet and only consider when worse
 								temp_value = 100 * new_rating / EffectiveArmour(&cur_armour);
 							}
 						}
@@ -1747,11 +1747,11 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 
 					case SEARCH_WEAPONS:
 					{
-						if (!(item.usItemClass & IC_WEAPON))                  continue;
-						if (o.bStatus[0] < MINIMUM_REQUIRED_STATUS)           continue;
-						if (item.usItemClass & IC_GUN && !IsGunUsable(o, *s)) continue;
+						if (!(item.usItemClass & IC_WEAPON))                 continue;
+						if (o.bStatus[0] < MINIMUM_REQUIRED_STATUS)          continue;
+						if (item.usItemClass & IC_GUN && !IsGunUsable(o, s)) continue;
 						WEAPONTYPE const& new_wpn = Weapon[o.usItem];
-						OBJECTTYPE const& in_hand = s->inv[HANDPOS];
+						OBJECTTYPE const& in_hand = s.inv[HANDPOS];
 						if (Item[in_hand.usItem].usItemClass & IC_WEAPON)
 						{
 							WEAPONTYPE const& cur_wpn = Weapon[in_hand.usItem];
@@ -1772,7 +1772,7 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 					item_idx = pItemPool->iItemIndex;
 				}
 			}
-			value = 3 * value / (3 + PythSpacesAway(grid_no, s->sGridNo));
+			value = 3 * value / (3 + PythSpacesAway(grid_no, s.sGridNo));
 			if (best_value < value)
 			{
 				best_value    = value;
@@ -1785,31 +1785,31 @@ INT8 SearchForItems(SOLDIERTYPE* const s, ItemSearchReason const reason, UINT16 
 	if (best_spot == NOWHERE) return AI_ACTION_NONE;
 
 	OBJECTTYPE const& o = GetWorldItem(best_item_idx).o;
-	DebugAI(String("%d decides to pick up %ls", s->ubID, ItemNames[o.usItem]));
+	DebugAI(String("%d decides to pick up %ls", s.ubID, ItemNames[o.usItem]));
 	if (Item[o.usItem].usItemClass == IC_GUN &&
-			!FindBetterSpotForItem(s, HANDPOS))
+			!FindBetterSpotForItem(&s, HANDPOS))
 	{
-		if (s->bActionPoints < AP_PICKUP_ITEM + AP_PICKUP_ITEM)
+		if (s.bActionPoints < AP_PICKUP_ITEM + AP_PICKUP_ITEM)
 		{
 			return AI_ACTION_NONE;
 		}
-		if (s->inv[HANDPOS].fFlags & OBJECT_UNDROPPABLE)
+		if (s.inv[HANDPOS].fFlags & OBJECT_UNDROPPABLE)
 		{ // Destroy this item
-			DebugAI(String("%d decides he must drop %ls first so destroys it", s->ubID, ItemNames[s->inv[HANDPOS].usItem]));
-			DeleteObj(&s->inv[HANDPOS]);
-			DeductPoints(s, AP_PICKUP_ITEM, 0);
+			DebugAI(String("%d decides he must drop %ls first so destroys it", s.ubID, ItemNames[s.inv[HANDPOS].usItem]));
+			DeleteObj(&s.inv[HANDPOS]);
+			DeductPoints(&s, AP_PICKUP_ITEM, 0);
 		}
 		else
 		{ // We want to drop this item
-			DebugAI(String("%d decides he must drop %ls first", s->ubID, ItemNames[s->inv[HANDPOS].usItem]));
-			s->bNextAction            = AI_ACTION_PICKUP_ITEM;
-			s->usNextActionData       = best_spot;
-			s->iNextActionSpecialData = best_item_idx;
+			DebugAI(String("%d decides he must drop %ls first", s.ubID, ItemNames[s.inv[HANDPOS].usItem]));
+			s.bNextAction            = AI_ACTION_PICKUP_ITEM;
+			s.usNextActionData       = best_spot;
+			s.iNextActionSpecialData = best_item_idx;
 			return AI_ACTION_DROP_ITEM;
 		}
 	}
-	s->uiPendingActionData1 = best_item_idx;
-	s->usActionData         = best_spot;
+	s.uiPendingActionData1 = best_item_idx;
+	s.usActionData         = best_spot;
 	return AI_ACTION_PICKUP_ITEM;
 }
 

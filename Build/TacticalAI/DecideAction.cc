@@ -2492,8 +2492,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 	if ( ubCanMove && !pSoldier->bNeutral && (gfTurnBasedAI || pSoldier->bTeam == ENEMY_TEAM ) )
 	{
-
-		pSoldier->bAction = SearchForItems( pSoldier, SEARCH_GENERAL_ITEMS, pSoldier->inv[HANDPOS].usItem );
+		pSoldier->bAction = SearchForItems(*pSoldier, SEARCH_GENERAL_ITEMS, pSoldier->inv[HANDPOS].usItem);
 
 		if (pSoldier->bAction != AI_ACTION_NONE)
 		{
@@ -2888,7 +2887,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 				else if (bCanAttack == NOSHOOT_NOAMMO && ubCanMove && !pSoldier->bNeutral)
 				{
 					// try to find more ammo
-					pSoldier->bAction = SearchForItems( pSoldier, SEARCH_AMMO, pSoldier->inv[HANDPOS].usItem );
+					pSoldier->bAction = SearchForItems(*pSoldier, SEARCH_AMMO, pSoldier->inv[HANDPOS].usItem);
 
 					if (pSoldier->bAction == AI_ACTION_NONE)
 					{
@@ -2935,7 +2934,7 @@ bCanAttack = FALSE;
 	if (FindAIUsableObjClass( pSoldier, IC_GUN ) == ITEM_NOT_FOUND && ubCanMove && !pSoldier->bNeutral)
 	{
 		// look around for a gun...
-		pSoldier->bAction = SearchForItems( pSoldier, SEARCH_WEAPONS, pSoldier->inv[HANDPOS].usItem );
+		pSoldier->bAction = SearchForItems(*pSoldier, SEARCH_WEAPONS, pSoldier->inv[HANDPOS].usItem);
 		if (pSoldier->bAction != AI_ACTION_NONE )
 		{
 			return( pSoldier->bAction );
