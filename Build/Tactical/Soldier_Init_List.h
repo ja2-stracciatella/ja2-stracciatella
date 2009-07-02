@@ -62,7 +62,10 @@ void AddSoldierInitListBloodcats(void);
 void UseEditorOriginalList(void);
 void UseEditorAlternateList(void);
 
-void EvaluateDeathEffectsToSoldierInitList(const SOLDIERTYPE*);
+/* Any killed people that used detailed placement information must prevent that
+ * from occurring again in the future.  Otherwise, the sniper guy with 99
+ * marksmanship could appear again if the map was loaded again! */
+void EvaluateDeathEffectsToSoldierInitList(SOLDIERTYPE const&);
 
 void AddProfilesUsingProfileInsertionData(void);
 void AddProfilesNotUsingProfileInsertionData(void);

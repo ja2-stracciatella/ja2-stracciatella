@@ -637,7 +637,7 @@ static void PrepareEnemyForUndergroundBattle()
 //The queen AI layer must process the event by subtracting forces, etc.
 void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 {
-	EvaluateDeathEffectsToSoldierInitList( pSoldier );
+	EvaluateDeathEffectsToSoldierInitList(*pSoldier);
 
 	switch( pSoldier->ubProfile )
 	{

@@ -1567,27 +1567,15 @@ void UseEditorAlternateList()
 		gSoldierInitTail = curr;
 }
 
-//Any killed people that used detailed placement information must prevent that from occurring
-//again in the future.  Otherwise, the sniper guy with 99 marksmanship could appear again
-//if the map was loaded again!
-void EvaluateDeathEffectsToSoldierInitList(const SOLDIERTYPE* const pSoldier)
+
+void EvaluateDeathEffectsToSoldierInitList(SOLDIERTYPE const& s)
 {
-	if( pSoldier->bTeam == MILITIA_TEAM )
-		return;
-	SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(*pSoldier);
-	if (curr != NULL)
-	{ //Matching soldier found
-		if (curr->pDetailedPlacement)
-		{ //This soldier used detailed placement information, so we must save the
-			//node ID into the temp file which signifies that the
-
-			//RECORD UBNODEID IN TEMP FILE.
-
-			curr->pSoldier = NULL;
-			MemFree(curr->pDetailedPlacement);
-			curr->pDetailedPlacement = NULL;
-		}
-	}
+	if (s.bTeam == MILITIA_TEAM) return;
+	SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(s);
+	if (!curr || !curr->pDetailedPlacement) return;
+	MemFree(curr->pDetailedPlacement);
+	curr->pDetailedPlacement = 0;
+	curr->pSoldier           = 0;
 }
 
 
