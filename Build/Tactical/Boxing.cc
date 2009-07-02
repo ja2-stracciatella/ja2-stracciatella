@@ -329,19 +329,16 @@ static void PickABoxer()
 }
 
 
-BOOLEAN BoxerAvailable( void )
+bool BoxerAvailable()
 {
-	UINT8			ubLoop;
-
 	// No way around this, BoxerAvailable will have to go find boxer IDs if they aren't set.
-	if (!CheckOnBoxers()) return FALSE;
+	if (!CheckOnBoxers()) return false;
 
-	for( ubLoop = 0; ubLoop < NUM_BOXERS; ubLoop++ )
+	for (UINT8 i = 0; i != NUM_BOXERS; ++i)
 	{
-		if (gBoxer[ubLoop] != NULL && !gfBoxerFought[ubLoop]) return TRUE;
+		if (gBoxer[i] && !gfBoxerFought[i]) return true;
 	}
-
-	return( FALSE );
+	return false;
 }
 
 

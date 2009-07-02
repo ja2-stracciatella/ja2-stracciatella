@@ -31,7 +31,7 @@ extern BOOLEAN gfBoxersResting;
 extern void BoxingPlayerDisqualified( SOLDIERTYPE * pOffender, INT8 bReason );
 bool CheckOnBoxers();
 extern void EndBoxingMatch( SOLDIERTYPE * pLoser );
-extern BOOLEAN BoxerAvailable( void );
+bool BoxerAvailable();
 extern BOOLEAN AnotherFightPossible( void );
 extern void TriggerEndOfBoxingRecord( SOLDIERTYPE * pSolier );
 extern void BoxingMovementCheck( SOLDIERTYPE * pSoldier );
