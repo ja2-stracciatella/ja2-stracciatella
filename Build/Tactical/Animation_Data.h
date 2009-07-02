@@ -23,8 +23,8 @@
 // RGM = Regular Male
 // (RG) = Body desc ( Regular - RG, Short Stocky ( SS ), etc
 // (M) = Sex, Male, female
-#define	IS_MERC_BODY_TYPE( p )   ( ( p->ubBodyType <= REGFEMALE ) ? ( TRUE ) : ( FALSE ) )
-#define IS_CIV_BODY_TYPE( p ) ( (p->ubBodyType >= FATCIV) && (p->ubBodyType <= CRIPPLECIV) )
+#define	IS_MERC_BODY_TYPE(p) ((p)->ubBodyType <= REGFEMALE)
+#define IS_CIV_BODY_TYPE(p)  (FATCIV <= (p)->ubBodyType && (p)->ubBodyType <= CRIPPLECIV)
 
 #define NUMSOLDIERBODYTYPES	4
 
