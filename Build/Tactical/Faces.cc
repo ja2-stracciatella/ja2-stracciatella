@@ -1076,11 +1076,9 @@ void RenderAutoFace(FACETYPE* const f)
 static void ExternRenderFace(SGPVSurface* buffer, FACETYPE*, INT16 sX, INT16 sY);
 
 
-void ExternRenderFaceFromSoldier(SGPVSurface* const buffer, SOLDIERTYPE const* const s, INT16 const sX, INT16 const sY)
+void ExternRenderFaceFromSoldier(SGPVSurface* const buffer, SOLDIERTYPE const& s, INT16 const sX, INT16 const sY)
 {
-	// Check for valid soldier
-	CHECKV(s);
-	ExternRenderFace(buffer, s->face, sX, sY);
+	ExternRenderFace(buffer, s.face, sX, sY);
 }
 
 
