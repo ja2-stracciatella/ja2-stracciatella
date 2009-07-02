@@ -76,7 +76,7 @@ void DebugAI(const char* szOutput)
 	FILE *		DebugFile;
 
 	DebugMsg( TOPIC_JA2, DBG_LEVEL_3, szOutput );
-	if ((DebugFile = fopen( "aidebug.txt", "a+t" )) != NULL)
+	if ((DebugFile = fopen("aidebug.txt", "a+")) != NULL)
 	{
 		fputs( szOutput, DebugFile );
 		fputs( "\n", DebugFile );

@@ -1387,7 +1387,7 @@ void TestDumpStatChanges(void)
 
   // open output file
  	strcpy(zPrintFileName, "C:\\Temp\\StatChanges.TXT");
-  FDump = fopen(zPrintFileName, "wt");
+  FDump = fopen(zPrintFileName, "w");
 
   if (FDump == NULL)
     return;

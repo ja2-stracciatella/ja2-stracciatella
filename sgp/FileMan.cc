@@ -165,8 +165,6 @@ void SetBinDataDirFromBundle(void)
 void InitializeFileManager(void)
 {
 #ifdef _WIN32
-	_fmode = O_BINARY;
-
 	char home[MAX_PATH];
 	if (FAILED(SHGetFolderPath(NULL, CSIDL_PERSONAL | CSIDL_FLAG_CREATE, NULL, 0, home)))
 	{
@@ -270,14 +268,17 @@ void FileDelete(char const* const path)
 
 HWFILE FileOpen(const char* const filename, const FileOpenFlags flags)
 {
+#ifndef _WIN32
+#	define O_BINARY 0
+#endif
 	const char* fmode;
-	int         mode;
+	int         mode = O_BINARY;
 	switch (flags & (FILE_ACCESS_READWRITE | FILE_ACCESS_APPEND))
 	{
-		case FILE_ACCESS_READ:      fmode = "rb";  mode = O_RDONLY;            break;
-		case FILE_ACCESS_WRITE:     fmode = "wb";  mode = O_WRONLY;            break;
-		case FILE_ACCESS_READWRITE: fmode = "r+b"; mode = O_RDWR;              break;
-		case FILE_ACCESS_APPEND:    fmode = "ab";  mode = O_WRONLY | O_APPEND; break;
+		case FILE_ACCESS_READ:      fmode = "rb";  mode |= O_RDONLY;            break;
+		case FILE_ACCESS_WRITE:     fmode = "wb";  mode |= O_WRONLY;            break;
+		case FILE_ACCESS_READWRITE: fmode = "r+b"; mode |= O_RDWR;              break;
+		case FILE_ACCESS_APPEND:    fmode = "ab";  mode |= O_WRONLY | O_APPEND; break;
 
 		default: abort();
 	}

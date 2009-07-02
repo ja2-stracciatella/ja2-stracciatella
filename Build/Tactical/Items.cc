@@ -4649,7 +4649,7 @@ void DumpItemsList( void )
 
   // open output file
  	strcpy(zPrintFileName, "ItemDump.txt");
-  FDump = fopen(zPrintFileName, "wt");
+  FDump = fopen(zPrintFileName, "w");
 
   if (FDump == NULL)
     return;

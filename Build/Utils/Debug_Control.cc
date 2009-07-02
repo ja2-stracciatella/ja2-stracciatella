@@ -8,7 +8,7 @@ void AnimDbgMessage( CHAR8 *strMessage)
 {
   FILE      *OutFile;
 
-	if ((OutFile = fopen("AnimDebug.txt", "a+t")) != NULL)
+	if ((OutFile = fopen("AnimDebug.txt", "a+")) != NULL)
 	{
 	  fprintf(OutFile, "%s\n", strMessage);
 		fclose(OutFile);
@@ -24,7 +24,7 @@ void PhysicsDbgMessage( CHAR8 *strMessage)
 {
   FILE      *OutFile;
 
-	if ((OutFile = fopen("PhysicsDebug.txt", "a+t")) != NULL)
+	if ((OutFile = fopen("PhysicsDebug.txt", "a+")) != NULL)
 	{
 	  fprintf(OutFile, "%s\n", strMessage);
 		fclose(OutFile);
@@ -41,7 +41,7 @@ void AiDbgMessage( CHAR8 *strMessage)
 {
   FILE      *OutFile;
 
-	if ((OutFile = fopen("AiDebug.txt", "a+t")) != NULL)
+	if ((OutFile = fopen("AiDebug.txt", "a+")) != NULL)
 	{
 	  fprintf(OutFile, "%s\n", strMessage);
 		fclose(OutFile);
@@ -55,7 +55,7 @@ void LiveMessage(const char *strMessage)
 {
   FILE      *OutFile;
 
-	if ((OutFile = fopen("Log.txt", "a+t")) != NULL)
+	if ((OutFile = fopen("Log.txt", "a+")) != NULL)
 	{
 	  fprintf(OutFile, "%s\n", strMessage);
 		fclose(OutFile);

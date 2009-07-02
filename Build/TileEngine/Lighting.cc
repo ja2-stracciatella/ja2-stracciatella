@@ -183,7 +183,7 @@ void LoadShadeTablesFromTextFile()
 	INT32 num;
 	if( gfLoadShadeTablesFromTextFile )
 	{
-		fp = fopen( "ShadeTables.txt", "r" );
+		fp = fopen("ShadeTables.txt", "r");
 		Assert( fp );
 		if( fp )
 		{

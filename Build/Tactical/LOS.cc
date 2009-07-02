@@ -218,7 +218,7 @@ static void DebugLOS(const char* const szOutput)
 {
 	FILE *		DebugFile;
 
-	if ((DebugFile = fopen( "losdebug.txt", "a+t" )) != NULL)
+	if ((DebugFile = fopen("losdebug.txt", "a+")) != NULL)
 	{
 		fputs( szOutput, DebugFile );
 		fputs( "\n", DebugFile );

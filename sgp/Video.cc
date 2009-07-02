@@ -474,7 +474,10 @@ static FILE* CreateScreenshotFile(void)
 	{
 		char filename[2048];
 		sprintf(filename, "%s/SCREEN%03d.TGA", exec_dir, guiPrintFrameBufferIndex++);
-		const int fd = open(filename, O_WRONLY | O_CREAT | O_EXCL, 0644);
+#ifndef _WIN32
+#	define O_BINARY 0
+#endif
+		int const fd = open(filename, O_WRONLY | O_CREAT | O_EXCL | O_BINARY, 0644);
 		if (fd >= 0)
 		{
 			FILE* const f = fdopen(fd, "wb");
