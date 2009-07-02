@@ -1,3 +1,4 @@
+(r6152) Instead of displaying nothing (vanilla) or asserting (till now) show "Unknown" if a weapon has an imprint by a nameless enemy soldier.
 (r6147) Fix a vanilla out of bounds array access (now a null-pointer access) when not all three boxers are there.
 (r6130) Fix a vanilla glitch: When switching between current and past mercs in the personnel screen, properly disable/enable the next/previous merc buttons.
 (r6127, r6129) Fix a vanilla glitch: Prevent selecting an empty slot when looking at past mercs.

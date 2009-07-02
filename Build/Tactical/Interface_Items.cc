@@ -2324,6 +2324,15 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
+static wchar_t const* GetObjectImprint(OBJECTTYPE const& o)
+{
+	return
+		!HasObjectImprint(o)            ? 0                      :
+		o.ubImprintID == NO_PROFILE + 1 ? pwMiscSectorStrings[3] :
+		GetProfile(o.ubImprintID).zNickname;
+}
+
+
 static void HighlightIf(const BOOLEAN cond)
 {
 	SetFontForeground(cond ? ITEMDESC_FONTHIGHLIGHT : 5);
@@ -2476,9 +2485,9 @@ void RenderItemDescriptionBox(void)
 				n += swprintf(pStr, lengthof(pStr), L"%ls ", AmmoCaliber[w.ubCalibre]);
 			}
 			n += swprintf(pStr + n, lengthof(pStr) - n, L"%ls", WeaponType[w.ubWeaponType]);
-			if (HasObjectImprint(obj))
+			if (wchar_t const* const imprint = GetObjectImprint(obj))
 			{ // Add name noting imprint
-				n += swprintf(pStr + n, lengthof(pStr) - n, L" (%ls)", GetProfile(obj.ubImprintID).zNickname);
+				n += swprintf(pStr + n, lengthof(pStr) - n, L" (%ls)", imprint);
 			}
 
 			SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
@@ -5347,9 +5356,9 @@ void GetHelpTextForItem(wchar_t* const dst, size_t const length, OBJECTTYPE cons
 			}
 		}
 
-		if (HasObjectImprint(obj))
+		if (wchar_t const* const imprint = GetObjectImprint(obj))
 		{
-			n += swprintf(dst + n, length - n, L" [%ls]", GetProfile(obj.ubImprintID).zNickname);
+			n += swprintf(dst + n, length - n, L" [%ls]", imprint);
 		}
 
 		// Add attachment string....
