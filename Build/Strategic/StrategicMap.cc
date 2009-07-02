@@ -9,6 +9,7 @@
 #include "MapScreen.h"
 #include "Merc_Contract.h"
 #include "Merc_Hiring.h"
+#include "Radar_Screen.h"
 #include "StrategicMap.h"
 #include "Strategic.h"
 #include "Strategic_Mines.h"
@@ -1260,6 +1261,7 @@ static void EnterSector(INT16 const x, INT16 const y, INT8 const z)
 	char filename[50];
 	GetMapFileName(x, y, z, filename, TRUE);
 	LoadWorld(filename);
+	LoadRadarScreenBitmap(filename);
 
 	/* ATE: Moved this form above, so that we can have the benefit of changing the
 	 * world BEFORE adding guys to it. */

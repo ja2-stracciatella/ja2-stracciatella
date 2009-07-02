@@ -28,7 +28,6 @@
 #include "OppList.h"
 #include "World_Items.h"
 #include "RenderWorld.h"
-#include "Radar_Screen.h"
 #include "Soldier_Create.h"
 #include "Soldier_Init_List.h"
 #include "Exit_Grids.h"
@@ -2459,8 +2458,6 @@ try
 	RenderProgressBar(0, 60);
 
 	InvalidateWorldRedundency();
-
-	LoadRadarScreenBitmap(filename);
 
 	RenderProgressBar(0, 80);
 
