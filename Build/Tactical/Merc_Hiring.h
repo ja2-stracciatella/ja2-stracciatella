@@ -41,7 +41,7 @@ extern INT16	gsMercArriveSectorY;
 
 
 INT8		HireMerc( MERC_HIRE_STRUCT *pHireMerc);
-void    MercArrivesCallback(SOLDIERTYPE* s);
+void MercArrivesCallback(SOLDIERTYPE&);
 bool IsMercHireable(MERCPROFILESTRUCT const&);
 bool IsMercDead(MERCPROFILESTRUCT const&);
 void		HandleMercArrivesQuotes( SOLDIERTYPE *pSoldier );

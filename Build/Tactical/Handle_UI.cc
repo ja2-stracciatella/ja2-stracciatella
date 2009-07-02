@@ -937,7 +937,7 @@ static ScreenID UIHandleNewMerc(UI_EVENT* pUIEvent)
 			{
 				// Get soldier from profile
 				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTemp);
-				MercArrivesCallback(pSoldier);
+				MercArrivesCallback(*pSoldier);
 				SelectSoldier(pSoldier, SELSOLDIER_FORCE_RESELECT);
 			}
 

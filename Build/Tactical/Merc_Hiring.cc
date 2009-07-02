@@ -238,7 +238,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT* const h)
 static void CheckForValidArrivalSector(void);
 
 
-void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
+void MercArrivesCallback(SOLDIERTYPE& s)
 {
 	UINT32									uiTimeOfPost;
 
@@ -258,26 +258,26 @@ void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
 	// stop time compression until player restarts it
 	StopTimeCompression();
 
-	MERCPROFILESTRUCT& p = GetProfile(pSoldier->ubProfile);
+	MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
 
 	// add the guy to a squad
-	AddCharacterToAnySquad( pSoldier );
+	AddCharacterToAnySquad(&s);
 
 	// ATE: Make sure we use global.....
-	if ( pSoldier->fUseLandingZoneForArrival )
+	if (s.fUseLandingZoneForArrival)
 	{
-		pSoldier->sSectorX	= gsMercArriveSectorX;
-		pSoldier->sSectorY	= gsMercArriveSectorY;
-		pSoldier->bSectorZ	= 0;
+		s.sSectorX = gsMercArriveSectorX;
+		s.sSectorY = gsMercArriveSectorY;
+		s.bSectorZ = 0;
 	}
 
 	// Add merc to sector ( if it's the current one )
-	if ( gWorldSectorX == pSoldier->sSectorX && gWorldSectorY == pSoldier->sSectorY && pSoldier->bSectorZ == gbWorldSectorZ )
+	if (gWorldSectorX == s.sSectorX && gWorldSectorY == s.sSectorY && s.bSectorZ == gbWorldSectorZ)
 	{
 		// OK, If this sector is currently loaded, and guy does not have CHOPPER insertion code....
 		// ( which means we are at beginning of game if so )
 		// Setup chopper....
-		if ( pSoldier->ubStrategicInsertionCode != INSERTION_CODE_CHOPPER && pSoldier->sSectorX == 9 && pSoldier->sSectorY == 1 )
+		if (s.ubStrategicInsertionCode != INSERTION_CODE_CHOPPER && s.sSectorX == 9 && s.sSectorY == 1)
 		{
 			gfTacticalDoHeliRun = TRUE;
 
@@ -290,29 +290,29 @@ void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
 				RequestTriggerExitFromMapscreen( MAP_EXIT_TO_TACTICAL );
 			}
 
-			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_CHOPPER;
+			s.ubStrategicInsertionCode = INSERTION_CODE_CHOPPER;
 		}
 
-		UpdateMercInSector( pSoldier, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
+		UpdateMercInSector(&s, s.sSectorX, s.sSectorY, s.bSectorZ );
 	}
 	else
 	{
 		// OK, otherwise, set them in north area, so once we load again, they are here.
-		pSoldier->ubStrategicInsertionCode = INSERTION_CODE_NORTH;
+		s.ubStrategicInsertionCode = INSERTION_CODE_NORTH;
 	}
 
 
 #ifndef JA2DEMO
-	if ( pSoldier->ubStrategicInsertionCode != INSERTION_CODE_CHOPPER )
+	if (s.ubStrategicInsertionCode != INSERTION_CODE_CHOPPER)
 	{
-		ScreenMsg( FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[ MERC_HAS_ARRIVED_STR ], pSoldier->name );
+		ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[MERC_HAS_ARRIVED_STR], s.name);
 
 		// ATE: He's going to say something, now that they've arrived...
 		if (!gTacticalStatus.bMercArrivingQuoteBeingUsed && !gfFirstHeliRun)
 		{
 			gTacticalStatus.bMercArrivingQuoteBeingUsed = TRUE;
 
-			TacticalCharacterDialogue( pSoldier, QUOTE_MERC_REACHED_DESTINATION );
+			TacticalCharacterDialogue(&s, QUOTE_MERC_REACHED_DESTINATION);
 
 			class DialogueEventUnsetArrivesFlag : public DialogueEvent
 			{
@@ -330,38 +330,38 @@ void MercArrivesCallback(SOLDIERTYPE* const pSoldier)
 #endif
 
 	//record how long the merc will be gone for
-	p.bMercStatus = (UINT8)pSoldier->iTotalContractLength;
+	p.bMercStatus = (UINT8)s.iTotalContractLength;
 
 	// remember when excatly he ARRIVED in Arulco, in case he gets fired early
-	pSoldier->uiTimeOfLastContractUpdate = GetWorldTotalMin();
+	s.uiTimeOfLastContractUpdate = GetWorldTotalMin();
 
 	//set when the merc's contract is finished
-	pSoldier->iEndofContractTime = GetMidnightOfFutureDayInMinutes( pSoldier->iTotalContractLength ) + ( GetHourWhenContractDone( pSoldier ) * 60 );
+	s.iEndofContractTime = GetMidnightOfFutureDayInMinutes(s.iTotalContractLength) + GetHourWhenContractDone(&s) * 60;
 
 	// Do initial check for bad items
-	if ( pSoldier->bTeam == gbPlayerNum )
+	if (s.bTeam == gbPlayerNum)
 	{
 		//ATE: Try to see if our equipment sucks!
-		if ( SoldierHasWorseEquipmentThanUsedTo( pSoldier ) )
+		if (SoldierHasWorseEquipmentThanUsedTo(&s))
 		{
 			// Randomly anytime between 9:00, and 10:00
 			uiTimeOfPost =  540 + Random( 660 );
 
 			if ( GetWorldMinutesInDay() < uiTimeOfPost )
 			{
-				AddSameDayStrategicEvent( EVENT_MERC_COMPLAIN_EQUIPMENT, uiTimeOfPost , pSoldier->ubProfile );
+				AddSameDayStrategicEvent(EVENT_MERC_COMPLAIN_EQUIPMENT, uiTimeOfPost, s.ubProfile);
 			}
 		}
 	}
 
-	HandleMercArrivesQuotes( pSoldier );
+	HandleMercArrivesQuotes(&s);
 
 	fTeamPanelDirty = TRUE;
 
 	// if the currently selected sector has no one in it, select this one instead
 	if ( !CanGoToTacticalInSector( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ ) )
 	{
-		ChangeSelectedMapSector( pSoldier->sSectorX, pSoldier->sSectorY, 0 );
+		ChangeSelectedMapSector(s.sSectorX, s.sSectorY, 0);
 	}
 }
 
