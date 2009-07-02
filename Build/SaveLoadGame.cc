@@ -1263,11 +1263,11 @@ static void SaveSoldierStructure(HWFILE const f)
 		JA2EncryptedFileWrite : NewJA2EncryptedFileWrite;
 	for (UINT16 i = 0; i < TOTAL_SOLDIERS; ++i)
 	{
-		SOLDIERTYPE const* const s = GetMan(i);
+		SOLDIERTYPE const& s = GetMan(i);
 
 		// If the soldier isn't active, don't add them to the saved game file.
-		FileWrite(f, &s->bActive, 1);
-		if (!s->bActive) continue;
+		FileWrite(f, &s.bActive, 1);
+		if (!s.bActive) continue;
 
 		// Save the soldier structure
 #ifdef _WIN32 // XXX HACK000A
@@ -1275,17 +1275,17 @@ static void SaveSoldierStructure(HWFILE const f)
 #else
 		BYTE data[2352];
 #endif
-		InjectSoldierType(data, s);
+		InjectSoldierType(data, &s);
 		writer(f, data, sizeof(data));
 
 		// Save all the pointer info from the structure
-		SaveMercPath(f, s->pMercPath);
+		SaveMercPath(f, s.pMercPath);
 
 		// Save the key ring
-		UINT8 const has_keyring = s->pKeyRing != 0;
+		UINT8 const has_keyring = s.pKeyRing != 0;
 		FileWrite(f, &has_keyring, sizeof(has_keyring));
 		if (!has_keyring) continue;
-		FileWrite(f, s->pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING));
+		FileWrite(f, s.pKeyRing, NUM_KEYS * sizeof(KEY_ON_RING));
 	}
 }
 
@@ -1971,7 +1971,7 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	EXTR_BOOL( d, gfSkyriderSaidCongratsOnTakingSAM)
 	INT16 contract_rehire_soldier;
 	EXTR_I16(  d, contract_rehire_soldier)
-	pContractReHireSoldier = contract_rehire_soldier != -1 ? GetMan(contract_rehire_soldier) : 0;
+	pContractReHireSoldier = contract_rehire_soldier != -1 ? &GetMan(contract_rehire_soldier) : 0;
 	d = ExtractGameOptions(d, gGameOptions);
 #ifdef JA2BETAVERSION
 	// Everytime we save get, and set a seed value, when reload, seed again
@@ -1987,7 +1987,7 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	EXTR_I16(  d, cur_interface_panel)
 	UINT8 sm_current_merc;
 	EXTR_U8(   d, sm_current_merc)
-	gpSMCurrentMerc = sm_current_merc != 255 ? GetMan(sm_current_merc) : 0;
+	gpSMCurrentMerc = sm_current_merc != 255 ? &GetMan(sm_current_merc) : 0;
 	// Set the interface panel to the team panel
 	ShutdownCurrentPanel();
 	gsCurInterfacePanel = static_cast<InterfacePanelKind>(cur_interface_panel); // XXX TODO001A unchecked conversion

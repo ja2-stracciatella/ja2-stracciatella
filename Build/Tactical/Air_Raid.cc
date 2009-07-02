@@ -284,15 +284,16 @@ BOOLEAN BeginAirRaid( )
 		gbNumDives				= 0;
 		gfAirRaidHasHadTurn = FALSE;
 
-		gpRaidSoldier = GetMan(MAX_NUM_SOLDIERS - 1);
-		memset( gpRaidSoldier, 0, sizeof( SOLDIERTYPE ) );
-		gpRaidSoldier->bLevel = 0;
-		gpRaidSoldier->bTeam = 1;
-		gpRaidSoldier->bSide = 1;
-		gpRaidSoldier->ubID	 = MAX_NUM_SOLDIERS - 1;
-		gpRaidSoldier->attacker = NULL;
-		gpRaidSoldier->usAttackingWeapon = HK21E;
-		gpRaidSoldier->inv[HANDPOS].usItem = HK21E;
+		SOLDIERTYPE& s = GetMan(MAX_NUM_SOLDIERS - 1);
+		memset(&s, 0, sizeof(s));
+		s.bLevel              = 0;
+		s.bTeam               = 1;
+		s.bSide               = 1;
+		s.ubID                = MAX_NUM_SOLDIERS - 1;
+		s.attacker            = 0;
+		s.usAttackingWeapon   = HK21E;
+		s.inv[HANDPOS].usItem = HK21E;
+		gpRaidSoldier = &s;
 
 		// Determine how many dives this one will be....
 		gbMaxDives				= (INT8)( gAirRaidDef.bIntensity + Random( gAirRaidDef.bIntensity - 1 ) );
@@ -1280,18 +1281,18 @@ void LoadAirRaidInfoFromSaveGameFile(HWFILE const hFile)
 
 	if( sAirRaidSaveStruct.sRaidSoldierID != -1 )
 	{
-		gpRaidSoldier = GetMan(sAirRaidSaveStruct.sRaidSoldierID);
-
-		gpRaidSoldier->bLevel = sAirRaidSaveStruct.bLevel;
-		gpRaidSoldier->bTeam = sAirRaidSaveStruct.bTeam;
-		gpRaidSoldier->bSide = sAirRaidSaveStruct.bSide;
-		gpRaidSoldier->attacker = ID2Soldier(sAirRaidSaveStruct.ubAttackerID);
-		gpRaidSoldier->usAttackingWeapon = sAirRaidSaveStruct.usAttackingWeapon;
-		gpRaidSoldier->dXPos = sAirRaidSaveStruct.dXPos;
-		gpRaidSoldier->dYPos = sAirRaidSaveStruct.dYPos;
-		gpRaidSoldier->sX = sAirRaidSaveStruct.sX;
-		gpRaidSoldier->sY = sAirRaidSaveStruct.sY;
-		gpRaidSoldier->sGridNo = sAirRaidSaveStruct.sGridNo;
+		SOLDIERTYPE& s = GetMan(sAirRaidSaveStruct.sRaidSoldierID);
+		s.bLevel            = sAirRaidSaveStruct.bLevel;
+		s.bTeam             = sAirRaidSaveStruct.bTeam;
+		s.bSide             = sAirRaidSaveStruct.bSide;
+		s.attacker          = ID2Soldier(sAirRaidSaveStruct.ubAttackerID);
+		s.usAttackingWeapon = sAirRaidSaveStruct.usAttackingWeapon;
+		s.dXPos             = sAirRaidSaveStruct.dXPos;
+		s.dYPos             = sAirRaidSaveStruct.dYPos;
+		s.sX                = sAirRaidSaveStruct.sX;
+		s.sY                = sAirRaidSaveStruct.sY;
+		s.sGridNo           = sAirRaidSaveStruct.sGridNo;
+		gpRaidSoldier = &s;
 	}
 	else
 		gpRaidSoldier = NULL;

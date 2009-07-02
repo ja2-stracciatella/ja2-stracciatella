@@ -758,36 +758,36 @@ static void RenderOverheadOverlays(void)
 	UINT16             const end    = gfTacticalPlacementGUIActive ? gTacticalStatus.Team[OUR_TEAM].bLastID : MAX_NUM_SOLDIERS;
 	for (UINT32 i = 0; i < end; ++i)
 	{
-		const SOLDIERTYPE* const s = GetMan(i);
-		if (!s->bActive || !s->bInSector) continue;
+		SOLDIERTYPE const& s = GetMan(i);
+		if (!s.bActive || !s.bInSector) continue;
 
-		if (!gfTacticalPlacementGUIActive && s->bLastRenderVisibleValue == -1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
+		if (!gfTacticalPlacementGUIActive && s.bLastRenderVisibleValue == -1 && !(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))
 		{
 			continue;
 		}
 
-		if (s->sGridNo == NOWHERE) continue;
+		if (s.sGridNo == NOWHERE) continue;
 
 		//Soldier is here.  Calculate his screen position based on his current gridno.
 		INT16 sX;
 		INT16 sY;
-		GetOverheadScreenXYFromGridNo(s->sGridNo, &sX, &sY);
+		GetOverheadScreenXYFromGridNo(s.sGridNo, &sX, &sY);
 		//Now, draw his "doll"
 
 		//adjust for position.
 		sX += 2;
 		sY -= 5;
 
-		sY -= s->sHeightAdjustment / 5; // Adjust for height
+		sY -= s.sHeightAdjustment / 5; // Adjust for height
 
 		UINT32 const shade =
-			s == sel             ? 2 :
-			s->sHeightAdjustment ? 1 : // On roof
+			&s == sel           ? 2 :
+			s.sHeightAdjustment ? 1 : // On roof
 			0;
 		marker->CurrentShade(shade);
 
 #ifdef JA2EDITOR
-		if (gfEditMode && gpSelected && gpSelected->pSoldier == s)
+		if (gfEditMode && gpSelected && gpSelected->pSoldier == &s)
 		{ //editor:  show the selected edited merc as the yellow one.
 			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, 0);
 		}
@@ -795,11 +795,11 @@ static void RenderOverheadOverlays(void)
 #endif
 		{
 			UINT16 const region =
-				!gfTacticalPlacementGUIActive                                ? s->bTeam :
-				s->uiStatusFlags & SOLDIER_VEHICLE                           ? 9        :
-				s == gpTacticalPlacementSelectedSoldier                      ? 7        :
-				s == gpTacticalPlacementHilightedSoldier && s->uiStatusFlags ? 8        :
-				s->bTeam;
+				!gfTacticalPlacementGUIActive                                ? s.bTeam :
+				s.uiStatusFlags & SOLDIER_VEHICLE                            ? 9       :
+				&s == gpTacticalPlacementSelectedSoldier                     ? 7       :
+				&s == gpTacticalPlacementHilightedSoldier && s.uiStatusFlags ? 8       :
+				s.bTeam;
 			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, region);
 			ETRLEObject const& e = marker->SubregionProperties(region);
 			RegisterBackgroundRect(BGND_FLAG_SINGLE, sX + e.sOffsetX, sY + e.sOffsetY, e.usWidth, e.usHeight);

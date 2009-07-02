@@ -1970,7 +1970,7 @@ static BOOLEAN CheckForCatcher(REAL_OBJECT* const o, UINT16 const structure_id)
 	// Is it a guy?
 	if (structure_id    >= INVALID_STRUCTURE_ID)    return FALSE;
 	// Is it the same guy?
-	if (o->target       != GetMan(structure_id))    return FALSE;
+	if (o->target       != &GetMan(structure_id))   return FALSE;
 	if (!DoCatchObject(o))                          return FALSE;
 
 	o->fAlive = FALSE;
@@ -1986,10 +1986,10 @@ static void CheckForObjectHittingMerc(REAL_OBJECT* const o, UINT16 const structu
 	if (structure_id   >= INVALID_STRUCTURE_ID)       return;
 	if (structure_id   == o->ubLastTargetTakenDamage) return;
 
-	SOLDIERTYPE* const s      = GetMan(structure_id);
-	INT16        const damage = 1;
-	INT16        const breath = 0;
-	EVENT_SoldierGotHit(s, NOTHING, damage, breath, s->bDirection, 0, o->owner, FIRE_WEAPON_TOSSED_OBJECT_SPECIAL, 0, NOWHERE);
+	SOLDIERTYPE& s      = GetMan(structure_id);
+	INT16 const  damage = 1;
+	INT16 const  breath = 0;
+	EVENT_SoldierGotHit(&s, NOTHING, damage, breath, s.bDirection, 0, o->owner, FIRE_WEAPON_TOSSED_OBJECT_SPECIAL, 0, NOWHERE);
 
 	o->ubLastTargetTakenDamage = structure_id;
 }

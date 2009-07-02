@@ -2383,7 +2383,7 @@ void DecayBombTimers( void )
           // ATE: CC black magic....
 			    if (o.ubBombOwner > 1)
           {
-            gPersonToSetOffExplosions = GetMan(o.ubBombOwner - 2);
+            gPersonToSetOffExplosions = &GetMan(o.ubBombOwner - 2);
           }
           else
           {

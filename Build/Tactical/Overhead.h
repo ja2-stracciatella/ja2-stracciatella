@@ -133,10 +133,10 @@ extern const char* const gzActionStr[];
 // Soldier List used for all soldier overhead interaction
 extern SOLDIERTYPE Menptr[TOTAL_SOLDIERS];
 
-static inline SOLDIERTYPE* GetMan(UINT idx)
+static inline SOLDIERTYPE& GetMan(UINT const idx)
 {
 	Assert(idx < lengthof(Menptr));
-	return &Menptr[idx];
+	return Menptr[idx];
 }
 
 typedef UINT8 SoldierID;
@@ -148,7 +148,7 @@ static inline SoldierID Soldier2ID(const SOLDIERTYPE* const s)
 
 static inline SOLDIERTYPE* ID2Soldier(const SoldierID id)
 {
-	return id != NOBODY ? GetMan(id) : NULL;
+	return id != NOBODY ? &GetMan(id) : 0;
 }
 
 // For temporary use

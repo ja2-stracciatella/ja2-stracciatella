@@ -683,7 +683,7 @@ void LoadSquadInfoFromSavedGameFile(HWFILE const f)
 			INT16 id;
 			EXTR_I16(d, id)
 			EXTR_SKIP(d, 10)
-			*slot = id != -1 ? GetMan(id) : NULL;
+			*slot = id != -1 ? &GetMan(id) : 0;
 		}
 	}
 	Assert(d == endof(data));

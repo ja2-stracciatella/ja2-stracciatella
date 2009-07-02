@@ -1710,16 +1710,16 @@ SOLDIERTYPE* WhoIsThere2(INT16 const gridno, INT8 const level)
 	{
 		if (!(structure->fFlags & STRUCTURE_PERSON)) continue;
 
-		SOLDIERTYPE* const tgt = GetMan(structure->usStructureID);
+		SOLDIERTYPE& tgt = GetMan(structure->usStructureID);
 		// person must either have their pSoldier->sGridNo here or be non-passable
-		if (structure->fFlags & STRUCTURE_PASSABLE && tgt->sGridNo != gridno) continue;
+		if (structure->fFlags & STRUCTURE_PASSABLE && tgt.sGridNo != gridno) continue;
 
 		if ((level == 0 && structure->sCubeOffset == 0) ||
 				(level >  0 && structure->sCubeOffset >  0))
 		{
 			// found a person, on the right level!
 			// structure ID and merc ID are identical for merc structures
-			return tgt;
+			return &tgt;
 		}
 	}
 

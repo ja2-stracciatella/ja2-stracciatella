@@ -96,7 +96,7 @@ void SetDelayedTileWaiting( SOLDIERTYPE *pSoldier, INT16 sCauseGridNo, INT8 bVal
 	// There may not be anybody there, but it's reserved by them!
 	if ( ( gpWorldLevelData[ sCauseGridNo ].uiFlags & MAPELEMENT_MOVEMENT_RESERVED ) )
 	{
-		person = GetMan(gpWorldLevelData[sCauseGridNo].ubReservedSoldierID);
+		person = &GetMan(gpWorldLevelData[sCauseGridNo].ubReservedSoldierID);
 	}
 
 	if (person != NULL)

@@ -1637,7 +1637,7 @@ void LoadSoldierInitListLinks(HWFILE const f)
 			if ((team[ENEMY_TEAM].bFirstID <= soldier_id && soldier_id <= team[CREATURE_TEAM].bLastID) ||
 					(team[CIV_TEAM  ].bFirstID <= soldier_id && soldier_id <= team[CIV_TEAM     ].bLastID))
 			{ // only enemies, creatures and civilians
-				curr->pSoldier = GetMan(soldier_id);
+				curr->pSoldier = &GetMan(soldier_id);
 			}
 		}
 	}
@@ -1966,7 +1966,7 @@ void NewWayOfLoadingEnemySoldierInitListLinks(HWFILE const f)
 			TacticalTeamType const* const team = gTacticalStatus.Team;
 			if (soldier_id < team[ENEMY_TEAM].bFirstID || team[CREATURE_TEAM].bLastID < soldier_id) continue;
 			// only enemies and creatures
-			curr->pSoldier = GetMan(soldier_id);
+			curr->pSoldier = &GetMan(soldier_id);
 		}
 	}
 }
@@ -1993,7 +1993,7 @@ void NewWayOfLoadingCivilianInitListLinks(HWFILE const f)
 			TacticalTeamType const* const team = gTacticalStatus.Team;
 			if (soldier_id < team[CIV_TEAM].bFirstID || team[CIV_TEAM].bLastID < soldier_id) continue;
 			// only civilians
-			curr->pSoldier = GetMan(soldier_id);
+			curr->pSoldier = &GetMan(soldier_id);
 		}
 	}
 }

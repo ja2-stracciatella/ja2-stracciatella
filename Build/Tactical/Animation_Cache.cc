@@ -78,7 +78,7 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 		AnimDebugMsg( String( "Anim Cache: Determining Bump Candidate ( Soldier %d )", usSoldierID ) );
 
 		// Determine exisiting surface used by merc
-		usCurrentAnimSurface = DetermineSoldierAnimationSurface(GetMan(usSoldierID), usCurrentAnimation);
+		usCurrentAnimSurface = DetermineSoldierAnimationSurface(&GetMan(usSoldierID), usCurrentAnimation);
 		// If the surface we are going to bump is our existing animation, reject it as a candidate
 
 		// If we get here, we need to remove an animation, pick the best one

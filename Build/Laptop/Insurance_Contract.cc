@@ -985,11 +985,11 @@ void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8 ubPayoutID )
 {
 	LIFE_INSURANCE_PAYOUT* const lip = &LaptopSaveInfo.pLifeInsurancePayouts[ubPayoutID];
 	//if the mercs id number is the same what is in the soldier array
-	SOLDIERTYPE* const s = GetMan(lip->ubSoldierID);
-	if (lip->ubSoldierID == s->ubID)
+	SOLDIERTYPE& s = GetMan(lip->ubSoldierID);
+	if (lip->ubSoldierID == s.ubID)
 	{
 		// and if the soldier is still active ( player hasn't removed carcass yet ), reset insurance flag
-		if (s->bActive) s->usLifeInsurance = 0;
+		if (s.bActive) s.usLifeInsurance = 0;
 	}
 
 	//add transaction to players account

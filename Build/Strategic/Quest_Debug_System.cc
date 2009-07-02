@@ -3192,7 +3192,7 @@ static void SetQDSMercProfile(void)
 		gfNpcPanelIsUsedForTalkingMerc = TRUE;
 
 		InternalInitTalkingMenu( gTalkingMercSoldier->ubProfile, 10, 10 );
-		gpDestSoldier = GetMan(21);
+		gpDestSoldier = &GetMan(21);
 	}
 }
 

@@ -145,8 +145,8 @@ BOOLEAN DequeueAllDemandGameEvents(void)
 static SOLDIERTYPE* GetSoldier(const UINT16 soldier_idx)
 {
 	if (soldier_idx >= TOTAL_SOLDIERS) return NULL; // XXX assert?
-	SOLDIERTYPE* const s = GetMan(soldier_idx);
-	return s->bActive ? s : NULL;
+	SOLDIERTYPE& s = GetMan(soldier_idx);
+	return s.bActive ? &s : 0;
 }
 
 
@@ -267,7 +267,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 			EV_S_WEAPONHIT SWeaponHit;
 			memcpy(&SWeaponHit, pEvent->Data, pEvent->uiDataSize);
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Event Pump: WeaponHit %d Damage", SWeaponHit.sDamage));
-			WeaponHit(GetMan(SWeaponHit.usSoldierID), SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, GetMan(SWeaponHit.ubAttackerID), SWeaponHit.ubSpecial, SWeaponHit.ubLocation);
+			WeaponHit(&GetMan(SWeaponHit.usSoldierID), SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, &GetMan(SWeaponHit.ubAttackerID), SWeaponHit.ubSpecial, SWeaponHit.ubLocation);
 			break;
 		}
 

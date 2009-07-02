@@ -1424,9 +1424,9 @@ static void CheckIfNearbyGroundSeemsWrong(SOLDIERTYPE* const s, UINT16 const gri
 		{ // Not in combat, stop them all
 			for (INT32 i = gTacticalStatus.Team[gbPlayerNum].bLastID; i >= gTacticalStatus.Team[gbPlayerNum].bFirstID; i--)
 			{
-				SOLDIERTYPE* const s2 = GetMan(i);
-				if (!s2->bActive) continue;
-				EVENT_StopMerc(s2);
+				SOLDIERTYPE& s2 = GetMan(i);
+				if (!s2.bActive) continue;
+				EVENT_StopMerc(&s2);
 			}
 		}
 
@@ -3094,7 +3094,7 @@ static SOLDIERTYPE* FindActiveAndAliveMerc(const SOLDIERTYPE* const curr, const 
 		UINT di = step;
 		if (i > t->bLastID - di) di -= t->bLastID - t->bFirstID + 1; // modulo, subtract span
 		i += di;
-		s = GetMan(i);
+		s = &GetMan(i);
 		if (!s->bActive) continue;
 
 		if (fOnlyRegularMercs && (AM_AN_EPC(s) || AM_A_ROBOT(s))) continue;

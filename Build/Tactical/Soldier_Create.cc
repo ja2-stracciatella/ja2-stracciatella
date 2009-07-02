@@ -161,7 +161,7 @@ try
 		UINT8 const last_id = team.bLastID;
 		for (;;)
 		{
-			s = GetMan(id);
+			s = &GetMan(id);
 			if (!s->bActive) break;
 			if (++id > last_id) return 0;
 		}
@@ -458,23 +458,23 @@ SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE* const existing
 	Assert(existing->face  == NULL);
 	Assert(existing->light == NULL);
 
-	SOLDIERTYPE* const s = GetMan(existing->ubID);
-	*s = *existing;
+	SOLDIERTYPE& s = GetMan(existing->ubID);
+	s = *existing;
 
-	if (s->ubProfile != NO_PROFILE &&
-			s->bTeam     == OUR_TEAM   &&
-			!(s->uiStatusFlags & SOLDIER_VEHICLE))
+	if (s.ubProfile != NO_PROFILE &&
+			s.bTeam     == OUR_TEAM   &&
+			!(s.uiStatusFlags & SOLDIER_VEHICLE))
 	{
-		InitSoldierFace(s);
+		InitSoldierFace(&s);
 	}
 
-	if (s->ubBodyType == HUMVEE || s->ubBodyType == ICECREAMTRUCK)
+	if (s.ubBodyType == HUMVEE || s.ubBodyType == ICECREAMTRUCK)
 	{
-		s->bNeutral = TRUE;
+		s.bNeutral = TRUE;
 	}
 
-	CreateSoldierCommon(s);
-	return s;
+	CreateSoldierCommon(&s);
+	return &s;
 }
 
 

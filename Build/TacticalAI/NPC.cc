@@ -1997,12 +1997,12 @@ INT16 NPCConsiderInitiatingConv(const SOLDIERTYPE* const pNPC)
 		{
 			ubHighestTalkDesire = ubTalkDesire;
 			ubDesiredMerc       = ubMerc;
-			pDesiredMerc        = GetMan(ubMerc);
+			pDesiredMerc        = &GetMan(ubMerc);
 			sDesiredMercDist    = PythSpacesAway(sMyGridNo, pDesiredMerc->sGridNo);
 		}
 		else if (ubTalkDesire == ubHighestTalkDesire)
 		{
-			const INT16 sDist = PythSpacesAway(sMyGridNo, GetMan(ubMerc)->sGridNo);
+			INT16 const sDist = PythSpacesAway(sMyGridNo, GetMan(ubMerc).sGridNo);
 			if (sDist < sDesiredMercDist)
 			{
 				// we can say the same thing to this merc, and they're closer!

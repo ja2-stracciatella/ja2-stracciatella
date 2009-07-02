@@ -2716,7 +2716,7 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
  // hang a pointer to the start of this guy's opponents in the public opplist
  pbPublOL = &(gbPublicOpplist[ubTeamToRadioTo][start]);
 
-	SOLDIERTYPE* pOpponent = GetMan(start);
+	SOLDIERTYPE* pOpponent = &GetMan(start);
 
  // loop through every one of this guy's opponents
  for (iLoop = start; iLoop < end; iLoop++,pOpponent++,pPersOL++,pbPublOL++)

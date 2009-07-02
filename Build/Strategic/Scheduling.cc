@@ -1171,10 +1171,10 @@ static void SecureSleepSpot(SOLDIERTYPE* const pSoldier, UINT16 const usSleepSpo
 	// start after this soldier's ID so we don't duplicate work done in previous passes
 	for (UINT32 i = pSoldier->ubID + 1; i <= gTacticalStatus.Team[CIV_TEAM].bLastID; ++i)
 	{
-		SOLDIERTYPE const* const pSoldier2 = GetMan(i);
-		if (!pSoldier2->bActive || !pSoldier2->bInSector || pSoldier2->ubScheduleID == 0) continue;
+		SOLDIERTYPE const& s2 = GetMan(i);
+		if (!s2.bActive || !s2.bInSector || s2.ubScheduleID == 0) continue;
 
-		SCHEDULENODE* const pSchedule = GetSchedule(pSoldier2->ubScheduleID);
+		SCHEDULENODE* const pSchedule = GetSchedule(s2.ubScheduleID);
 		if (!pSchedule) continue;
 
 		UINT16 const usSleepSpot2 = FindSleepSpot(pSchedule);
@@ -1182,8 +1182,8 @@ static void SecureSleepSpot(SOLDIERTYPE* const pSoldier, UINT16 const usSleepSpo
 
 		// conflict!
 		//UINT8 ubDirection;
-		//const UINT16 usNewSleepSpot = FindGridNoFromSweetSpotWithStructData(pSoldier2, pSoldier2->usAnimState, usSleepSpot2, 3, &ubDirection, FALSE);
-		UINT16 const usNewSleepSpot = FindGridNoFromSweetSpotExcludingSweetSpot(pSoldier2, usSleepSpot2, 3);
+		//const UINT16 usNewSleepSpot = FindGridNoFromSweetSpotWithStructData(&s2, s2.usAnimState, usSleepSpot2, 3, &ubDirection, FALSE);
+		UINT16 const usNewSleepSpot = FindGridNoFromSweetSpotExcludingSweetSpot(&s2, usSleepSpot2, 3);
 		if (usNewSleepSpot == NOWHERE) continue;
 
 		ReplaceSleepSpot(pSchedule, usNewSleepSpot);

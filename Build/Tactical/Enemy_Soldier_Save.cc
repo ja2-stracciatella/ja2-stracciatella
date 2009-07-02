@@ -683,12 +683,12 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 	INT32 slots = 0;
 	for (INT32 i = first; i <= last; ++i)
 	{
-		SOLDIERTYPE const* const s = GetMan(i);
+		SOLDIERTYPE const& s = GetMan(i);
 
 		// Make sure the person is active, alive, and is not a profiled person
-		if (!s->bActive || s->bLife == 0 || s->ubProfile != NO_PROFILE) continue;
+		if (!s.bActive || s.bLife == 0 || s.ubProfile != NO_PROFILE) continue;
 		// Soldier is valid, so find the matching soldier init list entry for modification.
-		SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(s);
+		SOLDIERINITNODE* const curr = FindSoldierInitNodeBySoldier(&s);
 		if (!curr) continue;
 
 		// Increment the counter, so we know how many there are.
@@ -707,40 +707,40 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 
 		//Copy over the data of the soldier.
 		dp->ubProfile       = NO_PROFILE;
-		dp->bLife           = s->bLife;
-		dp->bLifeMax        = s->bLifeMax;
-		dp->bAgility        = s->bAgility;
-		dp->bDexterity      = s->bDexterity;
-		dp->bExpLevel       = s->bExpLevel;
-		dp->bMarksmanship   = s->bMarksmanship;
-		dp->bMedical        = s->bMedical;
-		dp->bMechanical     = s->bMechanical;
-		dp->bExplosive      = s->bExplosive;
-		dp->bLeadership     = s->bLeadership;
-		dp->bStrength       = s->bStrength;
-		dp->bWisdom         = s->bWisdom;
-		dp->bAttitude       = s->bAttitude;
-		dp->bOrders         = s->bOrders;
-		dp->bMorale         = s->bMorale;
-		dp->bAIMorale       = s->bAIMorale;
-		dp->bBodyType       = s->ubBodyType;
-		dp->ubCivilianGroup = s->ubCivilianGroup;
-		dp->ubScheduleID    = s->ubScheduleID;
-		dp->fHasKeys        = s->bHasKeys;
-		dp->sSectorX        = s->sSectorX;
-		dp->sSectorY        = s->sSectorY;
-		dp->bSectorZ        = s->bSectorZ;
-		dp->ubSoldierClass  = s->ubSoldierClass;
-		dp->bTeam           = s->bTeam;
-		dp->bDirection      = s->bDirection;
+		dp->bLife           = s.bLife;
+		dp->bLifeMax        = s.bLifeMax;
+		dp->bAgility        = s.bAgility;
+		dp->bDexterity      = s.bDexterity;
+		dp->bExpLevel       = s.bExpLevel;
+		dp->bMarksmanship   = s.bMarksmanship;
+		dp->bMedical        = s.bMedical;
+		dp->bMechanical     = s.bMechanical;
+		dp->bExplosive      = s.bExplosive;
+		dp->bLeadership     = s.bLeadership;
+		dp->bStrength       = s.bStrength;
+		dp->bWisdom         = s.bWisdom;
+		dp->bAttitude       = s.bAttitude;
+		dp->bOrders         = s.bOrders;
+		dp->bMorale         = s.bMorale;
+		dp->bAIMorale       = s.bAIMorale;
+		dp->bBodyType       = s.ubBodyType;
+		dp->ubCivilianGroup = s.ubCivilianGroup;
+		dp->ubScheduleID    = s.ubScheduleID;
+		dp->fHasKeys        = s.bHasKeys;
+		dp->sSectorX        = s.sSectorX;
+		dp->sSectorY        = s.sSectorY;
+		dp->bSectorZ        = s.bSectorZ;
+		dp->ubSoldierClass  = s.ubSoldierClass;
+		dp->bTeam           = s.bTeam;
+		dp->bDirection      = s.bDirection;
 
 		/* We don't want the player to think that all the enemies start in the exact
 		 * position when we left the map, so randomize the start locations either
 		 * current position or original position. */
 		if (PreRandom(2))
 		{ // Use current position
-			dp->fOnRoof          = s->bLevel;
-			dp->sInsertionGridNo = s->sGridNo;
+			dp->fOnRoof          = s.bLevel;
+			dp->sInsertionGridNo = s.sGridNo;
 		}
 		else
 		{ // Use original position
@@ -748,20 +748,20 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 			dp->sInsertionGridNo = curr->pBasicPlacement->usStartingGridNo;
 		}
 
-		wcslcpy(dp->name, s->name, lengthof(dp->name));
+		wcslcpy(dp->name, s.name, lengthof(dp->name));
 
 		// Copy patrol points
-		dp->bPatrolCnt = s->bPatrolCnt;
-		memcpy(dp->sPatrolGrid, s->usPatrolGrid, sizeof(dp->sPatrolGrid));
+		dp->bPatrolCnt = s.bPatrolCnt;
+		memcpy(dp->sPatrolGrid, s.usPatrolGrid, sizeof(dp->sPatrolGrid));
 
 		// Copy colors for soldier based on the body type.
-		strcpy(dp->HeadPal,  s->HeadPal);
-		strcpy(dp->VestPal,  s->VestPal);
-		strcpy(dp->SkinPal,  s->SkinPal);
-		strcpy(dp->PantsPal, s->PantsPal);
+		strcpy(dp->HeadPal,  s.HeadPal);
+		strcpy(dp->VestPal,  s.VestPal);
+		strcpy(dp->SkinPal,  s.SkinPal);
+		strcpy(dp->PantsPal, s.PantsPal);
 
 		// Copy soldier's inventory
-		memcpy(dp->Inv, s->inv, sizeof(dp->Inv));
+		memcpy(dp->Inv, s.inv, sizeof(dp->Inv));
 	}
 
 	if (slots == 0)
@@ -811,12 +811,12 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 	{
 		for (INT32 i = first; i <= last; ++i)
 		{
-			SOLDIERTYPE const* const s = GetMan(i);
+			SOLDIERTYPE const& s = GetMan(i);
 			// CJC: note that bInSector is not required; the civ could be offmap!
-			if (!s->bActive || s->bLife == 0 || s->ubProfile != NO_PROFILE) continue;
+			if (!s.bActive || s.bLife == 0 || s.ubProfile != NO_PROFILE) continue;
 
 			// Soldier is valid, so find the matching soldier init list entry for modification.
-			SOLDIERINITNODE const* const curr = FindSoldierInitNodeBySoldier(s);
+			SOLDIERINITNODE const* const curr = FindSoldierInitNodeBySoldier(&s);
 			if (!curr) continue;
 
 			SOLDIERCREATE_STRUCT const* const dp = curr->pDetailedPlacement;

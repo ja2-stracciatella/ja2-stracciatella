@@ -845,7 +845,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 
 			// rebuild list for this team if anyone on the team is still available
 			INT32 cnt = gTacticalStatus.Team[ENEMY_TEAM].bFirstID;
-			for (SOLDIERTYPE* pTempSoldier = GetMan(cnt); cnt <= gTacticalStatus.Team[gTacticalStatus.ubCurrentTeam].bLastID; cnt++, pTempSoldier++)
+			for (SOLDIERTYPE* pTempSoldier = &GetMan(cnt); cnt <= gTacticalStatus.Team[gTacticalStatus.ubCurrentTeam].bLastID; cnt++, pTempSoldier++)
 			{
 				if ( pTempSoldier->bActive && pTempSoldier->bInSector && pTempSoldier->bLife >= OKLIFE )
 				{

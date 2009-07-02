@@ -363,9 +363,7 @@ static UINT8 NumFreeEnemySlots(void)
 	//Count the number of free enemy slots.  It is possible to have multiple groups exceed the maximum.
 	for( i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; i <= gTacticalStatus.Team[ ENEMY_TEAM].bLastID; i++ )
 	{
-		const SOLDIERTYPE* const pSoldier = GetMan(i);
-		if( !pSoldier->bActive )
-			ubNumFreeSlots++;
+		if (!GetMan(i).bActive) ++ubNumFreeSlots;
 	}
 	return ubNumFreeSlots;
 }

@@ -1810,27 +1810,27 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
   INT8                bSpewBloodLevel;
 
 	// structure IDs for mercs match their merc IDs
-	SOLDIERTYPE* const pTarget = GetMan(pStructure->usStructureID);
+	SOLDIERTYPE& tgt = GetMan(pStructure->usStructureID);
 
 	if (pBullet->usFlags & BULLET_FLAG_KNIFE)
 	{
 		// Place knife on guy....
 
 		// See if they have room ( and make sure it's not in hand pos?
-		bSlot = FindEmptySlotWithin( pTarget, BIGPOCK1POS, SMALLPOCK8POS );
+		bSlot = FindEmptySlotWithin(&tgt, BIGPOCK1POS, SMALLPOCK8POS );
 		if (bSlot == NO_SLOT)
 		{
 			// Add item
 			CreateItem( THROWING_KNIFE, (INT8) pBullet->ubItemStatus, &Object );
 
-			AddItemToPool(pTarget->sGridNo, &Object, INVISIBLE, pTarget->bLevel, 0, 0);
+			AddItemToPool(tgt.sGridNo, &Object, INVISIBLE, tgt.bLevel, 0, 0);
 
 			// Make team look for items
 			NotifySoldiersToLookforItems( );
 		}
 		else
 		{
-			CreateItem( BLOODY_THROWING_KNIFE, (INT8) pBullet->ubItemStatus, &(pTarget->inv[bSlot]) );
+			CreateItem(BLOODY_THROWING_KNIFE, (INT8) pBullet->ubItemStatus, &tgt.inv[bSlot]);
 		}
 
 		ubAmmoType = AMMO_KNIFE;
@@ -1844,9 +1844,9 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 	// actually hit him!
 	// take this out for now at least... no longer certain that he was awarded a suppression pt
 	// when the bullet got near him
-	//pTarget->ubSuppressionPoints--;
+	//--tgt.ubSuppressionPoints;
 
-	if ( pTarget->uiStatusFlags & SOLDIER_VEHICLE || (pTarget->ubBodyType == COW || pTarget->ubBodyType == CROW || pTarget->ubBodyType == BLOODCAT) )
+	if (tgt.uiStatusFlags & SOLDIER_VEHICLE || (tgt.ubBodyType == COW || tgt.ubBodyType == CROW || tgt.ubBodyType == BLOODCAT))
 	{
 		//ubHitLocation = pStructure->ubVehicleHitLocation;
 		ubHitLocation = AIM_SHOT_TORSO;
@@ -1855,17 +1855,17 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 	{
 		// Determine where the person was hit...
 
-		if ( CREATURE_OR_BLOODCAT( pTarget )  )
+		if (CREATURE_OR_BLOODCAT(&tgt))
 		{
 			ubHitLocation = AIM_SHOT_TORSO;
 
 			// adult monster types have a weak spot
-			if ( (pTarget->ubBodyType >= ADULTFEMALEMONSTER) && (pTarget->ubBodyType <=	YAM_MONSTER) )
+			if (ADULTFEMALEMONSTER <= tgt.ubBodyType && tgt.ubBodyType <= YAM_MONSTER)
 			{
-				ubAttackDirection = (UINT8) GetDirectionToGridNoFromGridNo( pBullet->pFirer->sGridNo, pTarget->sGridNo );
-				if (ubAttackDirection == pTarget->bDirection ||
-						ubAttackDirection == OneCCDirection(pTarget->bDirection) ||
-						ubAttackDirection == OneCDirection(pTarget->bDirection))
+				ubAttackDirection = (UINT8)GetDirectionToGridNoFromGridNo( pBullet->pFirer->sGridNo, tgt.sGridNo);
+				if (ubAttackDirection == tgt.bDirection                 ||
+						ubAttackDirection == OneCCDirection(tgt.bDirection) ||
+						ubAttackDirection == OneCDirection(tgt.bDirection))
 				{
 					// may hit weak spot!
 					if (0) // check fact
@@ -1887,15 +1887,14 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 
 		if (ubHitLocation == AIM_SHOT_RANDOM) // i.e. if not set yet
 		{
-
-			if (pTarget->bOverTerrainType == DEEP_WATER)
+			if (tgt.bOverTerrainType == DEEP_WATER)
 			{
 				// automatic head hit!
 				ubHitLocation = AIM_SHOT_HEAD;
 			}
 			else
 			{
-				switch (gAnimControl[ pTarget->usAnimState ].ubEndHeight)
+				switch (gAnimControl[tgt.usAnimState].ubEndHeight)
 				{
 					case ANIM_STAND:
 						dZPosRelToMerc = FixedToFloat( pBullet->qCurrZ ) - CONVERT_PIXELS_TO_HEIGHTUNITS( gpWorldLevelData[pBullet->sGridNo].sHeight );
@@ -1944,25 +1943,27 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 			}
 		}
 
-		if ( (ubAmmoType == AMMO_MONSTER) && (ubHitLocation == AIM_SHOT_HEAD) && ( ! (pTarget->uiStatusFlags & SOLDIER_MONSTER) ) )
+		if (ubAmmoType == AMMO_MONSTER && (ubHitLocation == AIM_SHOT_HEAD) && !(tgt.uiStatusFlags & SOLDIER_MONSTER))
 		{
 			UINT8			ubOppositeDirection;
 
-			ubAttackDirection = (UINT8) GetDirectionToGridNoFromGridNo( pBullet->pFirer->sGridNo, pTarget->sGridNo );
+			ubAttackDirection   = (UINT8)GetDirectionToGridNoFromGridNo(pBullet->pFirer->sGridNo, tgt.sGridNo);
 			ubOppositeDirection = OppositeDirection(ubAttackDirection);
 
-			if (ubOppositeDirection != pTarget->bDirection &&
-					ubAttackDirection != OneCCDirection(pTarget->bDirection) &&
-					ubAttackDirection != OneCDirection(pTarget->bDirection))
+			if (ubOppositeDirection != tgt.bDirection                 &&
+					ubAttackDirection   != OneCCDirection(tgt.bDirection) &&
+					ubAttackDirection   != OneCDirection(tgt.bDirection))
 			{
 				// lucky bastard was facing away!
 			}
-			else if ( ( (pTarget->inv[HEAD1POS].usItem == NIGHTGOGGLES) || (pTarget->inv[HEAD1POS].usItem == SUNGOGGLES) || (pTarget->inv[HEAD1POS].usItem == GASMASK) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD1POS].bStatus[ 0 ]) ) )
+			else if ((tgt.inv[HEAD1POS].usItem == NIGHTGOGGLES || tgt.inv[HEAD1POS].usItem == SUNGOGGLES || tgt.inv[HEAD1POS].usItem == GASMASK) &&
+					PreRandom(100) < tgt.inv[HEAD1POS].bStatus[0])
 			{
 				// lucky bastard was wearing protective stuff
 				bHeadSlot = HEAD1POS;
 			}
-			else if ( ( (pTarget->inv[HEAD2POS].usItem == NIGHTGOGGLES) || (pTarget->inv[HEAD2POS].usItem == SUNGOGGLES) || (pTarget->inv[HEAD2POS].usItem == GASMASK) ) && ( PreRandom( 100 ) < (UINT32) (pTarget->inv[HEAD2POS].bStatus[ 0 ]) ) )
+			else if ((tgt.inv[HEAD2POS].usItem == NIGHTGOGGLES || tgt.inv[HEAD2POS].usItem == SUNGOGGLES || tgt.inv[HEAD2POS].usItem == GASMASK) &&
+					PreRandom(100) < tgt.inv[HEAD2POS].bStatus[0])
 			{
 				// lucky bastard was wearing protective stuff
 				bHeadSlot = HEAD2POS;
@@ -1978,7 +1979,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 	}
 
 	// Determine damage, checking guy's armour, etc
-	const INT16 sRange = GetRangeInCellCoordsFromGridNoDiff(pFirer->sGridNo, pTarget->sGridNo);
+	INT16 const sRange = GetRangeInCellCoordsFromGridNoDiff(pFirer->sGridNo, tgt.sGridNo);
 	if ( gTacticalStatus.uiFlags & GODMODE  && !(pFirer->uiStatusFlags & SOLDIER_PC))
 	{
 		// in god mode, and firer is computer controlled
@@ -1987,7 +1988,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 	}
 	else if (fIntended)
 	{
-		if (pFirer->bOppList[pTarget->ubID] == SEEN_CURRENTLY)
+		if (pFirer->bOppList[tgt.ubID] == SEEN_CURRENTLY)
 		{
 			sHitBy = pBullet->sHitBy;
 		}
@@ -2005,7 +2006,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 			// shouldn't happen but
 			iImpact = 0;
 		}
-		iDamage = BulletImpact( pFirer, pTarget, ubHitLocation, iImpact, sHitBy, &ubSpecial );
+		iDamage = BulletImpact(pFirer, &tgt, ubHitLocation, iImpact, sHitBy, &ubSpecial);
 		// handle hit here...
 		if( ( pFirer->bTeam == 0 ) )
 		{
@@ -2013,11 +2014,11 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 		}
 
 		// intentionally shot
-		pTarget->fIntendedTarget = TRUE;
+		tgt.fIntendedTarget = TRUE;
 
-		if (pBullet->usFlags & BULLET_FLAG_BUCKSHOT && pTarget == pFirer->target)
+		if (pBullet->usFlags & BULLET_FLAG_BUCKSHOT && &tgt == pFirer->target)
 		{
-			pTarget->bNumPelletsHitBy++;
+			++tgt.bNumPelletsHitBy;
 		}
 	}
 	else
@@ -2032,23 +2033,23 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 			// shouldn't happen but
 			iImpact = 0;
 		}
-		iDamage = BulletImpact( pFirer, pTarget, ubHitLocation, iImpact, sHitBy, &ubSpecial );
+		iDamage = BulletImpact(pFirer, &tgt, ubHitLocation, iImpact, sHitBy, &ubSpecial);
 
 		// accidentally shot
-		pTarget->fIntendedTarget = FALSE;
+		tgt.fIntendedTarget = FALSE;
 	}
 
 	if ( ubAmmoType == AMMO_MONSTER )
 	{
 		if (bHeadSlot != NO_SLOT)
 		{
-			pTarget->inv[ bHeadSlot ].bStatus[ 0 ] -= (INT8) ( (iImpact / 2) + Random( (iImpact / 2) ) );
-			if ( pTarget->inv[ bHeadSlot ].bStatus[ 0 ] <= USABLE )
+			tgt.inv[bHeadSlot].bStatus[0] -= (INT8)(iImpact / 2 + Random(iImpact / 2));
+			if (tgt.inv[bHeadSlot].bStatus[0] <= USABLE)
 			{
-				if ( pTarget->inv[ bHeadSlot ].bStatus[ 0 ] <= 0 )
+				if (tgt.inv[bHeadSlot].bStatus[0] <= 0)
 				{
-					DeleteObj( &(pTarget->inv[ bHeadSlot ]) );
-					DirtyMercPanelInterface( pTarget, DIRTYLEVEL2 );
+					DeleteObj(&tgt.inv[bHeadSlot]);
+					DirtyMercPanelInterface(&tgt, DIRTYLEVEL2);
 				}
 				// say curse?
 			}
@@ -2058,35 +2059,35 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 	{
 		// bullet to the head may damage any head item
 		bHeadSlot = HEAD1POS + (INT8) Random( 2 );
-		if ( pTarget->inv[ bHeadSlot ].usItem != NOTHING )
+		if (tgt.inv[bHeadSlot].usItem != NOTHING)
 		{
-			pTarget->inv[ bHeadSlot ].bStatus[ 0 ] -= (INT8) ( Random( iImpact / 2 ) );
-			if ( pTarget->inv[ bHeadSlot ].bStatus[ 0 ] < 0 )
+			tgt.inv[bHeadSlot].bStatus[0] -= (INT8)(Random(iImpact / 2));
+			if (tgt.inv[bHeadSlot].bStatus[0] < 0)
 			{
 				// just break it...
-				pTarget->inv[ bHeadSlot ].bStatus[ 0 ] = 1;
+				tgt.inv[bHeadSlot].bStatus[0] = 1;
 			}
 		}
 	}
 
 	// check to see if the guy is a friendly?..if so, up the number of times wounded
-	if( ( pTarget->bTeam == gbPlayerNum ) )
+	if (tgt.bTeam == gbPlayerNum)
 	{
-		gMercProfiles[ pTarget->ubProfile ].usTimesWounded++;
+		++gMercProfiles[tgt.ubProfile].usTimesWounded;
 	}
 
 	// check to see if someone was accidentally hit when no target was specified by the player
-	if (pFirer->bTeam == gbPlayerNum && pFirer->target == NULL && pTarget->bNeutral)
+	if (pFirer->bTeam == gbPlayerNum && pFirer->target == NULL && tgt.bNeutral)
 	{
-		if ( pTarget->ubCivilianGroup == KINGPIN_CIV_GROUP || pTarget->ubCivilianGroup == HICKS_CIV_GROUP )
+		if (tgt.ubCivilianGroup == KINGPIN_CIV_GROUP || tgt.ubCivilianGroup == HICKS_CIV_GROUP)
 		{
 			// hicks and kingpin are touchy!
-			pFirer->target = pTarget;
+			pFirer->target = &tgt;
 		}
 		else if ( Random( 100 ) < 60 )
 		{
 			// get touchy
-			pFirer->target = pTarget;
+			pFirer->target = &tgt;
 		}
 
 	}
@@ -2099,11 +2100,13 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 	}
 
 	// breath loss is based on original impact of bullet
-	const INT16  breath_loss   = (iImpact * BP_GET_WOUNDED * (pTarget->bBreathMax * 100 - pTarget->sBreathRed)) / 10000;
-	const UINT16 hit_direction = GetDirectionFromGridNo(pFirer->sGridNo, pTarget);
+	INT16  const breath_loss   = (iImpact * BP_GET_WOUNDED * (tgt.bBreathMax * 100 - tgt.sBreathRed)) / 10000;
+	UINT16 const hit_direction = GetDirectionFromGridNo(pFirer->sGridNo, &tgt);
 
 	// now check to see if the bullet goes THROUGH this person! (not vehicles)
-	if ( !(pTarget->uiStatusFlags & SOLDIER_VEHICLE) && (ubAmmoType == AMMO_REGULAR || ubAmmoType == AMMO_AP || ubAmmoType == AMMO_SUPER_AP) && !EXPLOSIVE_GUN( pFirer->usAttackingWeapon ) )
+	if (!(tgt.uiStatusFlags & SOLDIER_VEHICLE) &&
+			(ubAmmoType == AMMO_REGULAR || ubAmmoType == AMMO_AP || ubAmmoType == AMMO_SUPER_AP) &&
+			!EXPLOSIVE_GUN(pFirer->usAttackingWeapon))
 	{
 		// if we do more damage than expected, then the bullet will be more likely
 		// to be lodged in the body
@@ -2126,7 +2129,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 			// adjust for bullet going through person
 			iImpact -= CalcBodyImpactReduction( ubAmmoType, ubHitLocation );
 			// adjust for other side of armour!
-			iImpact -= TotalArmourProtection(pTarget, ubHitLocation, iImpact, ubAmmoType);
+			iImpact -= TotalArmourProtection(&tgt, ubHitLocation, iImpact, ubAmmoType);
 			if (iImpact > 0)
 			{
 				pBullet->iImpact = (INT8) iImpact;
@@ -2150,7 +2153,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
     // be legal, but the bLevel May change...
 		sNewGridNo = NewGridNo(pBullet->sGridNo, DirectionInc(OppositeDirection(hit_direction)));
 
-		bSpewBloodLevel = pTarget->bLevel;
+		bSpewBloodLevel = tgt.bLevel;
     fCanSpewBlood   = TRUE;
 
     // If on anything other than bLevel of 0, we can pretty much freely spew blood
@@ -2177,14 +2180,14 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
     }
   }
 
-  if ( gTacticalStatus.ubCurrentTeam != OUR_TEAM && pTarget->bTeam == gbPlayerNum )
+  if (gTacticalStatus.ubCurrentTeam != OUR_TEAM && tgt.bTeam == gbPlayerNum)
   {
 	  // someone has been hit so no close-call quotes
 	  gTacticalStatus.fSomeoneHit = TRUE;
   }
 
 	// handle hit!
-	WeaponHit(pTarget, pFirer->usAttackingWeapon, iDamage, breath_loss, hit_direction, pTarget->dXPos, pTarget->dYPos, 20, sRange, pFirer, ubSpecial, ubHitLocation);
+	WeaponHit(&tgt, pFirer->usAttackingWeapon, iDamage, breath_loss, hit_direction, tgt.dXPos, tgt.dYPos, 20, sRange, pFirer, ubSpecial, ubHitLocation);
 	return( fStopped );
 }
 
@@ -2572,20 +2575,20 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 			}
 			else if (pStructure->fFlags & STRUCTURE_PERSON)
 			{
-				const SOLDIERTYPE* const person = GetMan(pStructure->usStructureID);
-				if (person != pBullet->pFirer && person != pBullet->target)
+				SOLDIERTYPE const& person = GetMan(pStructure->usStructureID);
+				if (&person != pBullet->pFirer && &person != pBullet->target)
 				{
 					// ignore intended target since we will get closure upon reaching the center
 					// of the destination tile
 
 					// ignore intervening target if not visible; PCs are always visible so AI will never skip them on that
 					// basis
-					if (!fIntended && person->bVisible == TRUE)
+					if (!fIntended && person.bVisible == TRUE)
 					{
 						// in actually moving the bullet, we consider only count friends as targets if the bullet is unaimed
 						// (buckshot), if they are the intended target, or beyond the range of automatic friendly fire hits
 						// OR a 1 in 30 chance occurs
-						if (gAnimControl[person->usAnimState].ubEndHeight == ANIM_STAND &&
+						if (gAnimControl[person.usAnimState].ubEndHeight == ANIM_STAND &&
 									( (pBullet->fAimed && pBullet->iLoop > MIN_DIST_FOR_HIT_FRIENDS) ||
 										(!pBullet->fAimed && pBullet->iLoop > MIN_DIST_FOR_HIT_FRIENDS_UNAIMED)
 									)
@@ -3709,8 +3712,8 @@ void MoveBullet(BULLET* const pBullet)
 			}
 			else if (pStructure->fFlags & STRUCTURE_PERSON)
 			{
-				SOLDIERTYPE* const tgt = GetMan(pStructure->usStructureID);
-				if (tgt != pBullet->pFirer)
+				SOLDIERTYPE& tgt = GetMan(pStructure->usStructureID);
+				if (&tgt != pBullet->pFirer)
 				{
 					// in actually moving the bullet, we consider only count friends as targets if the bullet is unaimed
 					// (buckshot), if they are the intended target, or beyond the range of automatic friendly fire hits
@@ -3728,14 +3731,14 @@ void MoveBullet(BULLET* const pBullet)
 					else if ( pBullet->pFirer->uiStatusFlags & SOLDIER_MONSTER )
 					{
 						// monsters firing will always accidentally hit people but never accidentally hit each other.
-						if (!(tgt->uiStatusFlags & SOLDIER_MONSTER))
+						if (!(tgt.uiStatusFlags & SOLDIER_MONSTER))
 						{
 							gpLocalStructure[iNumLocalStructures] = pStructure;
 							iNumLocalStructures++;
 						}
 					}
-					else if (tgt->bVisible == TRUE &&
-										gAnimControl[tgt->usAnimState].ubEndHeight == ANIM_STAND &&
+					else if (tgt.bVisible == TRUE &&
+										gAnimControl[tgt.usAnimState].ubEndHeight == ANIM_STAND &&
 										( (pBullet->fAimed && pBullet->iLoop > MIN_DIST_FOR_HIT_FRIENDS) ||
 											(!pBullet->fAimed && pBullet->iLoop > MIN_DIST_FOR_HIT_FRIENDS_UNAIMED) ||
 											PreRandom( 100 ) < MIN_CHANCE_TO_ACCIDENTALLY_HIT_SOMEONE
@@ -3748,22 +3751,22 @@ void MoveBullet(BULLET* const pBullet)
 					}
 
 					// this might be a close call
-					if (tgt->bTeam == gbPlayerNum && pBullet->pFirer->bTeam != gbPlayerNum && sDesiredLevel == tgt->bLevel)
+					if (tgt.bTeam == gbPlayerNum && pBullet->pFirer->bTeam != gbPlayerNum && sDesiredLevel == tgt.bLevel)
 					{
-						tgt->fCloseCall = TRUE;
+						tgt.fCloseCall = TRUE;
 					}
 
-					if (IS_MERC_BODY_TYPE(tgt))
+					if (IS_MERC_BODY_TYPE(&tgt))
 					{
 						// apply suppression, regardless of friendly or enemy
 						// except if friendly, not within a few tiles of shooter
-						if (tgt->bSide != pBullet->pFirer->bSide || pBullet->iLoop > MIN_DIST_FOR_HIT_FRIENDS)
+						if (tgt.bSide != pBullet->pFirer->bSide || pBullet->iLoop > MIN_DIST_FOR_HIT_FRIENDS)
 						{
 							// buckshot has only a 1 in 2 chance of applying a suppression point
 							if ( !(pBullet->usFlags & BULLET_FLAG_BUCKSHOT) || Random( 2 ) )
 							{
 								// bullet goes whizzing by this guy!
-								switch (gAnimControl[tgt->usAnimState].ubEndHeight)
+								switch (gAnimControl[tgt.usAnimState].ubEndHeight)
 								{
 									case ANIM_PRONE:
 										// two 1/4 chances of avoiding suppression pt - one below
@@ -3780,8 +3783,8 @@ void MoveBullet(BULLET* const pBullet)
 										}
 										// else fall through
 									default:
-										tgt->ubSuppressionPoints++;
-										tgt->suppressor = pBullet->pFirer;
+										tgt.ubSuppressionPoints++;
+										tgt.suppressor = pBullet->pFirer;
 										break;
 								}
 							}

@@ -1695,7 +1695,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 			{
 				case MERC_GIVEITEM:
 					// Unset target as enaged
-					GetMan(pSoldier->uiPendingActionData4)->uiStatusFlags &= ~SOLDIER_ENGAGEDINACTION;
+					GetMan(pSoldier->uiPendingActionData4).uiStatusFlags &= ~SOLDIER_ENGAGEDINACTION;
 					break;
 			}
 			pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
@@ -4980,7 +4980,7 @@ void SetSoldierAniSpeed(SOLDIERTYPE* pSoldier)
 
 	if ( pSoldier->fUseMoverrideMoveSpeed )
 	{
-		pStatsSoldier = GetMan(pSoldier->bOverrideMoveSpeed);
+		pStatsSoldier = &GetMan(pSoldier->bOverrideMoveSpeed);
 	}
 
 	// Only calculate if set to zero
@@ -8660,16 +8660,16 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 		return( FALSE );
 	}
 
-	SOLDIERTYPE* const pTSoldier = GetMan(ubTargetID);
+	SOLDIERTYPE& tgt = GetMan(ubTargetID);
 
 	// Check distance again, to be sure
 	if ( fValidate )
 	{
 		// OK, since we locked this guy from moving
 		// we should be close enough, so talk ( unless he is now dead )
-		if (!IsValidTalkableNPC(pTSoldier, FALSE, FALSE, FALSE)) return FALSE;
+		if (!IsValidTalkableNPC(&tgt, FALSE, FALSE, FALSE)) return FALSE;
 
-		uiRange = GetRangeFromGridNoDiff( pSoldier->sGridNo, pTSoldier->sGridNo );
+		uiRange = GetRangeFromGridNoDiff(pSoldier->sGridNo, tgt.sGridNo);
 
 		if ( uiRange > ( NPC_TALK_RADIUS * 2 ) )
 		{
@@ -8686,33 +8686,33 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 	// Deduct points from our guy....
 	DeductPoints( pSoldier, sAPCost, 0 );
 
-	const INT16 sFacingDir = GetDirectionFromGridNo(pTSoldier->sGridNo, pSoldier);
+	INT16 const sFacingDir = GetDirectionFromGridNo(tgt.sGridNo, pSoldier);
 
 	// Set our guy facing
 	SendSoldierSetDesiredDirectionEvent( pSoldier, sFacingDir );
 
 	// Set NPC facing
-	SendSoldierSetDesiredDirectionEvent(pTSoldier, OppositeDirection(sFacingDir));
+	SendSoldierSetDesiredDirectionEvent(&tgt, OppositeDirection(sFacingDir));
 
 	// Stop our guys...
 	EVENT_StopMerc(pSoldier);
 
 	// ATE; Check for normal civs...
-	if ( GetCivType( pTSoldier ) != CIV_TYPE_NA )
+	if (GetCivType(&tgt) != CIV_TYPE_NA)
 	{
-		StartCivQuote( pTSoldier );
+		StartCivQuote(&tgt);
 		return( FALSE );
 	}
 
 
 	// Are we an EPC that is being escorted?
-	if ( pTSoldier->ubProfile != NO_PROFILE && pTSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC )
+	if (tgt.ubProfile != NO_PROFILE && tgt.ubWhatKindOfMercAmI == MERC_TYPE__EPC)
 	{
-		return InitiateConversation(pTSoldier, pSoldier, APPROACH_EPC_WHO_IS_RECRUITED);
+		return InitiateConversation(&tgt, pSoldier, APPROACH_EPC_WHO_IS_RECRUITED);
 	}
-	else if (pTSoldier->bNeutral)
+	else if (tgt.bNeutral)
 	{
-		switch( pTSoldier->ubProfile )
+		switch (tgt.ubProfile)
 		{
 			case JIM:
 			case JACK:
@@ -8722,18 +8722,18 @@ BOOLEAN PlayerSoldierStartTalking( SOLDIERTYPE *pSoldier, UINT8 ubTargetID, BOOL
 			case TYRONE:
 				// Start combat etc
 				DeleteTalkingMenu();
-				CancelAIAction(pTSoldier);
-				AddToShouldBecomeHostileOrSayQuoteList(pTSoldier);
+				CancelAIAction(&tgt);
+				AddToShouldBecomeHostileOrSayQuoteList(&tgt);
 				break;
 			default:
 				// Start talking!
-				return InitiateConversation(pTSoldier, pSoldier, NPC_INITIAL_QUOTE);
+				return InitiateConversation(&tgt, pSoldier, NPC_INITIAL_QUOTE);
 		}
 	}
 	else
 	{
 		// Start talking with hostile NPC
-		return InitiateConversation(pTSoldier, pSoldier, APPROACH_ENEMY_NPC_QUOTE);
+		return InitiateConversation(&tgt, pSoldier, APPROACH_ENEMY_NPC_QUOTE);
 	}
 
 	return( TRUE );

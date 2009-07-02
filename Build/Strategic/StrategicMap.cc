@@ -1334,41 +1334,41 @@ void UpdateMercsInSector()
 			continue;
 		}
 
-		SOLDIERTYPE* const s = GetMan(i);
-		RemoveMercSlot(s);
+		SOLDIERTYPE& s = GetMan(i);
+		RemoveMercSlot(&s);
 
-		s->bInSector = FALSE;
+		s.bInSector = FALSE;
 
-		if (!s->bActive)             continue;
-		if (s->sSectorX != sSectorX) continue;
-		if (s->sSectorY != sSectorY) continue;
-		if (s->bSectorZ != bSectorZ) continue;
-		if (s->fBetweenSectors)      continue;
+		if (!s.bActive)             continue;
+		if (s.sSectorX != sSectorX) continue;
+		if (s.sSectorY != sSectorY) continue;
+		if (s.bSectorZ != bSectorZ) continue;
+		if (s.fBetweenSectors)      continue;
 
 		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 		{
 			if (gMapInformation.sCenterGridNo != -1 &&
 					gfBlitBattleSectorLocator           &&
-					s->bTeam != CIV_TEAM                &&
+					s.bTeam != CIV_TEAM                 &&
 					(
 						gubEnemyEncounterCode == ENEMY_AMBUSH_CODE ||
 						gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE
 					))
 			{
-				s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-				s->usStrategicInsertionData = gMapInformation.sCenterGridNo;
+				s.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+				s.usStrategicInsertionData = gMapInformation.sCenterGridNo;
 			}
 			else if (gfOverrideInsertionWithExitGrid)
 			{
-				s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-				s->usStrategicInsertionData = gExitGrid.usGridNo;
+				s.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
+				s.usStrategicInsertionData = gExitGrid.usGridNo;
 			}
 		}
 
-		UpdateMercInSector(s, sSectorX, sSectorY, bSectorZ);
+		UpdateMercInSector(&s, sSectorX, sSectorY, bSectorZ);
 
 		if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) continue;
-		if (s->bAssignment != ASSIGNMENT_POW)             continue;
+		if (s.bAssignment != ASSIGNMENT_POW)              continue;
 
 		if (pow_squad == NO_CURRENT_SQUAD)
 		{
@@ -1379,16 +1379,16 @@ void UpdateMercsInSector()
 			}
 			else
 			{
-				AddCharacterToUniqueSquad(s);
-				pow_squad   = s->bAssignment;
-				s->bNeutral = FALSE;
+				AddCharacterToUniqueSquad(&s);
+				pow_squad  = s.bAssignment;
+				s.bNeutral = FALSE;
 			}
 		}
 		else
 		{
 			if (sSectorY != MAP_ROW_I && sSectorX != 13)
 			{
-				AddCharacterToSquad(s, pow_squad);
+				AddCharacterToSquad(&s, pow_squad);
 			}
 		}
 
@@ -3830,22 +3830,22 @@ BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
 	//co-exist in the sector, then make them fight for control of the sector via autoresolve.
 	for( i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; i++ )
 	{
-		const SOLDIERTYPE* const creature = GetMan(i);
-		if (creature->bActive &&
-				creature->bLife != 0 &&
-				creature->sSectorX == gWorldSectorX &&
-				creature->sSectorY == gWorldSectorY &&
-				creature->bSectorZ == gbWorldSectorZ)
+		SOLDIERTYPE const& creature = GetMan(i);
+		if (creature.bActive &&
+				creature.bLife != 0 &&
+				creature.sSectorX == gWorldSectorX &&
+				creature.sSectorY == gWorldSectorY &&
+				creature.bSectorZ == gbWorldSectorZ)
 		{ //We have enemies, now look for militia!
 			for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
 			{
-				const SOLDIERTYPE* const milita = GetMan(i);
-				if (milita->bActive &&
-						milita->bLife != 0 &&
-						milita->bSide    == OUR_TEAM &&
-						milita->sSectorX == gWorldSectorX &&
-						milita->sSectorY == gWorldSectorY &&
-						milita->bSectorZ == gbWorldSectorZ)
+				SOLDIERTYPE const& milita = GetMan(i);
+				if (milita.bActive &&
+						milita.bLife != 0 &&
+						milita.bSide    == OUR_TEAM &&
+						milita.sSectorX == gWorldSectorX &&
+						milita.sSectorY == gWorldSectorY &&
+						milita.bSectorZ == gbWorldSectorZ)
 				{ //We have militia and enemies and no mercs!  Let's finish this battle in autoresolve.
 					gfEnteringMapScreen = TRUE;
 					gfEnteringMapScreenToEnterPreBattleInterface = TRUE;
