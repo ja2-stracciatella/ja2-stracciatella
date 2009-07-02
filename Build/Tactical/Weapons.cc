@@ -2862,13 +2862,13 @@ INT32 CalcBodyImpactReduction( UINT8 ubAmmoType, UINT8 ubHitLocation )
 }
 
 
-static INT32 ArmourProtection(SOLDIERTYPE* pTarget, UINT8 ubArmourType, INT8* pbStatus, INT32 iImpact, UINT8 ubAmmoType)
+static INT32 ArmourProtection(SOLDIERTYPE const& pTarget, UINT8 const ubArmourType, INT8* const pbStatus, INT32 const iImpact, UINT8 const ubAmmoType)
 {
 	INT32		iProtection, iAppliedProtection, iFailure;
 
 	iProtection = Armour[ ubArmourType ].ubProtection;
 
-	if ( !AM_A_ROBOT( pTarget ) )
+	if (!AM_A_ROBOT(&pTarget))
 	{
 		// check for the bullet hitting a weak spot in the armour
 		iFailure = PreRandom( 100 ) + 1 - *pbStatus;
@@ -2930,7 +2930,7 @@ static INT32 ArmourProtection(SOLDIERTYPE* pTarget, UINT8 ubArmourType, INT8* pb
 		iProtection /= 2;
 	}
 
-	if ( !AM_A_ROBOT( pTarget ) )
+	if (!AM_A_ROBOT(&pTarget))
 	{
 		*pbStatus -= (iAppliedProtection * Armour[ubArmourType].ubDegradePercent) / 100;
 	}
@@ -2940,16 +2940,16 @@ static INT32 ArmourProtection(SOLDIERTYPE* pTarget, UINT8 ubArmourType, INT8* pb
 }
 
 
-INT32 TotalArmourProtection(SOLDIERTYPE* const pTarget, const UINT8 ubHitLocation, const INT32 iImpact, const UINT8 ubAmmoType)
+INT32 TotalArmourProtection(SOLDIERTYPE& pTarget, const UINT8 ubHitLocation, const INT32 iImpact, const UINT8 ubAmmoType)
 {
 	INT32					iTotalProtection = 0, iSlot;
 	OBJECTTYPE *	pArmour;
 	INT8					bPlatePos = -1;
 
-	if (pTarget->uiStatusFlags & SOLDIER_VEHICLE)
+	if (pTarget.uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		INT8 bDummyStatus = 100;
-		iTotalProtection += ArmourProtection(pTarget, GetVehicleArmourType(pTarget->bVehicleID), &bDummyStatus, iImpact, ubAmmoType);
+		iTotalProtection += ArmourProtection(pTarget, GetVehicleArmourType(pTarget.bVehicleID), &bDummyStatus, iImpact, ubAmmoType);
 	}
 	else
 	{
@@ -2971,7 +2971,7 @@ INT32 TotalArmourProtection(SOLDIERTYPE* const pTarget, const UINT8 ubHitLocatio
 
 		}
 
-		pArmour = &(pTarget->inv[ iSlot ]);
+		pArmour = &pTarget.inv[iSlot];
 		if (pArmour->usItem != NOTHING)
 		{
 			// check plates first
@@ -2987,11 +2987,11 @@ INT32 TotalArmourProtection(SOLDIERTYPE* const pTarget, const UINT8 ubHitLocatio
 						// destroy plates!
 						pArmour->usAttachItem[ bPlatePos ] = NOTHING;
 						pArmour->bAttachStatus[ bPlatePos ] = 0;
-						DirtyMercPanelInterface( pTarget, DIRTYLEVEL2 );
-						if (pTarget->bTeam == gbPlayerNum)
+						DirtyMercPanelInterface(&pTarget, DIRTYLEVEL2);
+						if (pTarget.bTeam == gbPlayerNum)
 						{
 							// report plates destroyed!
-							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, str_ceramic_plates_smashed, pTarget->name);
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, str_ceramic_plates_smashed, pTarget.name);
 						}
 					}
 				}
@@ -3004,7 +3004,7 @@ INT32 TotalArmourProtection(SOLDIERTYPE* const pTarget, const UINT8 ubHitLocatio
 				if ( pArmour->bStatus[ 0 ] < USABLE )
 				{
 					DeleteObj( pArmour );
-					DirtyMercPanelInterface( pTarget, DIRTYLEVEL2 );
+					DirtyMercPanelInterface(&pTarget, DIRTYLEVEL2);
 				}
 			}
 		}
@@ -3075,7 +3075,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 	}
 	else
 	{
-		iImpact = iOrigImpact - TotalArmourProtection(pTarget, ubHitLocation, iOrigImpact, ubAmmoType);
+		iImpact = iOrigImpact - TotalArmourProtection(*pTarget, ubHitLocation, iOrigImpact, ubAmmoType);
 	}
 
 	// calc minimum damage
