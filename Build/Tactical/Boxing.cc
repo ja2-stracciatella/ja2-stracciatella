@@ -270,7 +270,7 @@ bool CheckOnBoxers()
 		for (UINT32 i = 0; i != NUM_BOXERS; ++i)
 		{
 			SOLDIERTYPE* const s = WhoIsThere2(gsBoxerGridNo[i], 0);
-			if (FindObjClass(s, IC_WEAPON) != NO_SLOT) continue;
+			if (!s || FindObjClass(s, IC_WEAPON) != NO_SLOT) continue;
 			// No weapon so this guy is a boxer
 			gBoxer[i] = s;
 		}
