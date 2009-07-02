@@ -439,7 +439,7 @@ try
 	Assert(s->usAnimState == STANDING);
 
 	// We are set to create the merc, stuff after here can fail
-	CreateSoldierCommon(s);
+	CreateSoldierCommon(*s);
 
 	if (c.fOnRoof && FlatRoofAboveGridNo(c.sInsertionGridNo))
 	{
@@ -473,7 +473,7 @@ SOLDIERTYPE* TacticalCreateSoldierFromExisting(const SOLDIERTYPE* const existing
 		s.bNeutral = TRUE;
 	}
 
-	CreateSoldierCommon(&s);
+	CreateSoldierCommon(s);
 	return &s;
 }
 

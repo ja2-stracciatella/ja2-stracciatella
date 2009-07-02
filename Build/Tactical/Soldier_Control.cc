@@ -570,60 +570,60 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 }
 
 
-void CreateSoldierCommon(SOLDIERTYPE* const s)
+void CreateSoldierCommon(SOLDIERTYPE& s)
 try
 {
 	//if we are loading a saved game, we DO NOT want to reset the opplist, look for enemies, or say a dying commnet
 	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 	{
 		// Set initial values for opplist!
-		InitSoldierOppList(s);
-		HandleSight(s, SIGHT_LOOK);
+		InitSoldierOppList(&s);
+		HandleSight(&s, SIGHT_LOOK);
 
 		// Set some quote flags
-		s->fDyingComment = (s->bLife < OKLIFE);
+		s.fDyingComment = s.bLife < OKLIFE;
 	}
 
 	// ATE: Reset some timer flags...
-	s->uiTimeSameBattleSndDone   = 0;
+	s.uiTimeSameBattleSndDone   = 0;
 	// ATE: Reset every time.....
-	s->fSoldierWasMoving         = TRUE;
-  s->iTuringSoundID            = NO_SAMPLE;
-  s->uiTimeSinceLastBleedGrunt = 0;
+	s.fSoldierWasMoving         = TRUE;
+	s.iTuringSoundID            = NO_SAMPLE;
+	s.uiTimeSinceLastBleedGrunt = 0;
 
-  if (s->ubBodyType == QUEENMONSTER)
-  {
-    s->iPositionSndID = NewPositionSnd(NOWHERE, s, QUEEN_AMBIENT_NOISE);
-  }
+	if (s.ubBodyType == QUEENMONSTER)
+	{
+		s.iPositionSndID = NewPositionSnd(NOWHERE, &s, QUEEN_AMBIENT_NOISE);
+	}
 
 	// ANYTHING AFTER HERE CAN FAIL
-	if (IsOnOurTeam(s))
+	if (IsOnOurTeam(&s))
 	{
-		s->pKeyRing = MALLOCNZ(KEY_ON_RING, NUM_KEYS);
+		s.pKeyRing = MALLOCNZ(KEY_ON_RING, NUM_KEYS);
 		for (UINT32 i = 0; i < NUM_KEYS; ++i)
 		{
-			s->pKeyRing[i].ubKeyID = INVALID_KEY_NUMBER;
+			s.pKeyRing[i].ubKeyID = INVALID_KEY_NUMBER;
 		}
 	}
 	else
 	{
-		s->pKeyRing = NULL;
+		s.pKeyRing = NULL;
 	}
 
 	// Create frame cache
-	InitAnimationCache(s->ubID, &s->AnimCache);
+	InitAnimationCache(s.ubID, &s.AnimCache);
 
-	UINT16 ani_state = s->usAnimState;
+	UINT16 ani_state = s.usAnimState;
 	if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
 	{
 		// Init new soldier state
 		// OFFSET FIRST ANIMATION FRAME FOR NEW MERCS
-		EVENT_InitNewSoldierAnim(s, ani_state, ani_state == STANDING ? Random(10) : 0, TRUE);
+		EVENT_InitNewSoldierAnim(&s, ani_state, ani_state == STANDING ? Random(10) : 0, TRUE);
 	}
 	else
 	{
 		/// if we don't have a world loaded, and are in a bad anim, goto standing.
-		UINT16 ani_code = s->usAniCode;
+		UINT16 ani_code = s.usAniCode;
 		if (!gfWorldLoaded)
 		{
 			switch (ani_state)
@@ -638,14 +638,14 @@ try
 					break;
 			}
 		}
-		EVENT_InitNewSoldierAnim(s, ani_state, ani_code, TRUE);
+		EVENT_InitNewSoldierAnim(&s, ani_state, ani_code, TRUE);
 	}
 
-	CreateSoldierPalettes(s);
+	CreateSoldierPalettes(&s);
 }
 catch (...)
 {
-	DeleteSoldier(s);
+	DeleteSoldier(&s);
 	throw;
 }
 

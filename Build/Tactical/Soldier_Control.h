@@ -875,7 +875,7 @@ extern UINT8	bHealthStrRanges[];
 void DeleteSoldier(SOLDIERTYPE*);
 void DeleteSoldierLight(SOLDIERTYPE*);
 
-void CreateSoldierCommon(SOLDIERTYPE*);
+void CreateSoldierCommon(SOLDIERTYPE&);
 
 
 // Soldier Management functions, called by Event Pump.c
