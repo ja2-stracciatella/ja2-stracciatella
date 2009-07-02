@@ -432,21 +432,16 @@ void MercsContractIsFinished(SOLDIERTYPE* const pSoldier)
 }
 
 
-// ATE: Called for RPCs who should now complain about no pay...
-void RPCWhineAboutNoPay(SOLDIERTYPE* const pSoldier)
+// ATE: Called for RPCs who should now complain about no pay
+void RPCWhineAboutNoPay(SOLDIERTYPE& s)
 {
-	#ifndef JA2DEMO
-	//if the soldier was removed before getting into this function, return
-	if( !pSoldier->bActive )
-		return;
+#ifndef JA2DEMO
+	// If the soldier was removed before getting into this function, return
+	if (!s.bActive) return;
+	if (s.ubWhatKindOfMercAmI != MERC_TYPE__NPC) return;
 
-	if( pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC )
-	{
-		// Say quote for needing pay!
-		TacticalCharacterDialogue( pSoldier, QUOTE_NOT_GETTING_PAID );
-	}
-
-	#endif
+	TacticalCharacterDialogue(&s, QUOTE_NOT_GETTING_PAID);
+#endif
 }
 
 
