@@ -1787,7 +1787,7 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 	OBJECTTYPE const& o = GetWorldItem(best_item_idx).o;
 	DebugAI(String("%d decides to pick up %ls", s.ubID, ItemNames[o.usItem]));
 	if (Item[o.usItem].usItemClass == IC_GUN &&
-			!FindBetterSpotForItem(&s, HANDPOS))
+			!FindBetterSpotForItem(s, HANDPOS))
 	{
 		if (s.bActionPoints < AP_PICKUP_ITEM + AP_PICKUP_ITEM)
 		{

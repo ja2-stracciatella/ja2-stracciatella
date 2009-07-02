@@ -2080,41 +2080,33 @@ void RearrangePocket(SOLDIERTYPE *pSoldier, INT8 bPocket1, INT8 bPocket2, UINT8 
 	SwapObjs( &(pSoldier->inv[bPocket1]), &(pSoldier->inv[bPocket2]) );
 }
 
-BOOLEAN FindBetterSpotForItem( SOLDIERTYPE * pSoldier, INT8 bSlot )
-{
-	// looks for a place in the slots to put an item in a hand or armour
-	// position, and moves it there.
-	if (bSlot >= BIGPOCK1POS)
-	{
-		return( FALSE );
-	}
-	if (pSoldier->inv[bSlot].usItem == NOTHING)
-	{
-		// well that's just fine then!
-		return( TRUE );
-	}
 
-	if (Item[pSoldier->inv[bSlot].usItem].ubPerPocket == 0)
-	{
-		// then we're looking for a big pocket
-		bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, BIGPOCK4POS );
+bool FindBetterSpotForItem(SOLDIERTYPE& s, INT8 const slot)
+{
+	/* Look for a place in the slots to put an item in a hand or armour position,
+	 * and move it there. */
+	if (slot >= BIGPOCK1POS) return false;
+
+	UINT16 const item = s.inv[slot].usItem;
+	if (item == NOTHING) return true; // That's just fine
+
+	INT8 new_slot;
+	if (Item[item].ubPerPocket != 0)
+	{ // Try a small pocket first
+		new_slot = FindEmptySlotWithin(&s, SMALLPOCK1POS, SMALLPOCK8POS);
+		if (new_slot == NO_SLOT) goto try_big_pocket;
 	}
 	else
-	{
-		// try a small pocket first
-		bSlot = FindEmptySlotWithin( pSoldier, SMALLPOCK1POS, SMALLPOCK8POS );
-		if (bSlot == NO_SLOT)
-		{
-			bSlot = FindEmptySlotWithin( pSoldier, BIGPOCK1POS, BIGPOCK4POS );
-		}
+	{ // Look for a big pocket
+try_big_pocket:
+		new_slot = FindEmptySlotWithin(&s, BIGPOCK1POS, BIGPOCK4POS);
+		if (new_slot == NO_SLOT) return false;
 	}
-	if (bSlot == NO_SLOT)
-	{
-		return( FALSE );
-	}
-	RearrangePocket(pSoldier, HANDPOS, bSlot, FOREVER );
-	return( TRUE );
+
+	RearrangePocket(&s, HANDPOS, new_slot, FOREVER);
+	return true;
 }
+
 
 UINT8 GetTraversalQuoteActionID( INT8 bDirection )
 {
