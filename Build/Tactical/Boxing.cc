@@ -280,18 +280,13 @@ bool CheckOnBoxers()
 }
 
 
-BOOLEAN BoxerExists( void )
+bool BoxerExists()
 {
-	UINT32	uiLoop;
-
-	for( uiLoop = 0; uiLoop < NUM_BOXERS; uiLoop++ )
+	for (GridNo const* i = gsBoxerGridNo; i != endof(gsBoxerGridNo); ++i)
 	{
-		if (WhoIsThere2(gsBoxerGridNo[uiLoop], 0) != NULL)
-		{
-			return( TRUE );
-		}
+		if (WhoIsThere2(*i, 0)) return true;
 	}
-	return( FALSE );
+	return false;
 }
 
 

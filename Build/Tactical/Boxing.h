@@ -37,7 +37,7 @@ extern void TriggerEndOfBoxingRecord( SOLDIERTYPE * pSolier );
 extern void BoxingMovementCheck( SOLDIERTYPE * pSoldier );
 extern void ExitBoxing( void );
 extern void SetBoxingState( INT8 bNewState );
-extern BOOLEAN BoxerExists( void );
+bool BoxerExists();
 extern UINT8 CountPeopleInBoxingRing( void );
 extern void ClearAllBoxerFlags( void );
 
