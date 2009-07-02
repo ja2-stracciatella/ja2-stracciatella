@@ -165,7 +165,7 @@ UINT8 CountPeopleInBoxingRing( void )
 }
 
 
-static BOOLEAN PickABoxer(void);
+static void PickABoxer();
 
 
 static void CountPeopleInBoxingRingAndDoActions(void)
@@ -295,49 +295,39 @@ BOOLEAN BoxerExists( void )
 }
 
 
-static BOOLEAN PickABoxer(void)
+static void PickABoxer()
 {
-	UINT32					uiLoop;
-
-	for( uiLoop = 0; uiLoop < NUM_BOXERS; uiLoop++ )
+	for (UINT32 i = 0; i != NUM_BOXERS; ++i)
 	{
-		SOLDIERTYPE* const pBoxer = gBoxer[uiLoop];
-		if (pBoxer != NULL)
-		{
-			if ( gfBoxerFought[ uiLoop ] )
+		SOLDIERTYPE* const boxer = gBoxer[i];
+		if (!boxer) continue;
+
+		if (gfBoxerFought[i])
+		{ // pathetic attempt to prevent multiple AI boxers
+			boxer->uiStatusFlags &= ~SOLDIER_BOXER;
+		}
+		else if (boxer->bActive && boxer->bInSector && boxer->bLife >= OKLIFE)
+		{ // Pick this boxer
+			boxer->uiStatusFlags |= SOLDIER_BOXER;
+			SetSoldierNonNeutral(boxer);
+			RecalculateOppCntsDueToNoLongerNeutral(boxer);
+			CancelAIAction(boxer);
+			RESETTIMECOUNTER(boxer->AICounter, 0);
+			gfBoxerFought[i] = TRUE;
+			// Improve stats based on the # of rests these guys have had
+			boxer->bStrength  = __min(100, boxer->bStrength  + gubBoxersRests * 5);
+			boxer->bDexterity = __min(100, boxer->bDexterity + gubBoxersRests * 5);
+			boxer->bAgility   = __min(100, boxer->bAgility   + gubBoxersRests * 5);
+			boxer->bLifeMax   = __min(100, boxer->bLifeMax   + gubBoxersRests * 5);
+			// Give the 3rd boxer martial arts
+			if (i == NUM_BOXERS - 1 && boxer->ubBodyType == REGMALE)
 			{
-				// pathetic attempt to prevent multiple AI boxers
-				pBoxer->uiStatusFlags &= ~SOLDIER_BOXER;
-			}
-			else
-			{
-				// pick this boxer!
-				if ( pBoxer->bActive && pBoxer->bInSector && pBoxer->bLife >= OKLIFE )
-				{
-					pBoxer->uiStatusFlags |= SOLDIER_BOXER;
-					SetSoldierNonNeutral( pBoxer );
-					RecalculateOppCntsDueToNoLongerNeutral( pBoxer );
-					CancelAIAction(pBoxer);
-					RESETTIMECOUNTER( pBoxer->AICounter, 0 );
-					gfBoxerFought[ uiLoop ] = TRUE;
-					// improve stats based on the # of rests these guys have had
-					pBoxer->bStrength = __min( 100, pBoxer->bStrength += gubBoxersRests * 5 );
-					pBoxer->bDexterity = __min( 100, pBoxer->bDexterity + gubBoxersRests * 5 );
-					pBoxer->bAgility = __min( 100, pBoxer->bAgility + gubBoxersRests * 5 );
-					pBoxer->bLifeMax = __min( 100, pBoxer->bLifeMax + gubBoxersRests * 5 );
-					// give the 3rd boxer martial arts
-					if ( (uiLoop == NUM_BOXERS - 1) && pBoxer->ubBodyType == REGMALE )
-					{
-						pBoxer->ubSkillTrait1 = MARTIALARTS;
-					}
-					return( TRUE );
-				}
+				boxer->ubSkillTrait1 = MARTIALARTS;
 			}
 		}
 	}
-
-	return( FALSE );
 }
+
 
 BOOLEAN BoxerAvailable( void )
 {
