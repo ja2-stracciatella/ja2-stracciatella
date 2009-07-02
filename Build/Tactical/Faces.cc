@@ -1073,30 +1073,30 @@ void RenderAutoFace(FACETYPE* const f)
 }
 
 
-static BOOLEAN ExternRenderFace(SGPVSurface* buffer, FACETYPE*, INT16 sX, INT16 sY);
+static void ExternRenderFace(SGPVSurface* buffer, FACETYPE*, INT16 sX, INT16 sY);
 
 
-BOOLEAN ExternRenderFaceFromSoldier(SGPVSurface* const buffer, const SOLDIERTYPE* s, const INT16 sX, const INT16 sY)
+void ExternRenderFaceFromSoldier(SGPVSurface* const buffer, SOLDIERTYPE const* const s, INT16 const sX, INT16 const sY)
 {
 	// Check for valid soldier
-	CHECKF(s != NULL);
-	return ExternRenderFace(buffer, s->face, sX, sY);
+	CHECKV(s);
+	ExternRenderFace(buffer, s->face, sX, sY);
 }
 
 
 /* To render an allocated face, but one that is independent of its active
  * status and does not require eye blinking or mouth movements, call */
-static BOOLEAN ExternRenderFace(SGPVSurface* const buffer, FACETYPE* const pFace, const INT16 sX, const INT16 sY)
+static void ExternRenderFace(SGPVSurface* const buffer, FACETYPE* const pFace, INT16 const sX, INT16 const sY)
 {
 	UINT16						usEyesX;
 	UINT16						usEyesY;
 	UINT16						usMouthX;
 	UINT16						usMouthY;
 
-	CHECKF(pFace != NULL);
+	CHECKV(pFace);
 
 	// Check for a valid slot!
-	CHECKF(pFace->fAllocated);
+	CHECKV(pFace->fAllocated);
 
 	// Here, any face can be rendered, even if disabled
 
@@ -1114,8 +1114,6 @@ static BOOLEAN ExternRenderFace(SGPVSurface* const buffer, FACETYPE* const pFace
 	{
 		RestoreExternBackgroundRect( sX, sY, pFace->usFaceWidth, pFace->usFaceWidth );
 	}
-
-	return( TRUE );
 }
 
 
