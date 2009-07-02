@@ -258,35 +258,27 @@ static void CountPeopleInBoxingRingAndDoActions(void)
 		}
 	}
 	*/
-
 }
 
-BOOLEAN CheckOnBoxers( void )
-{
-	UINT32					uiLoop;
 
+bool CheckOnBoxers()
+{
 	// repick boxer IDs every time
-	if (gBoxer[0] == NULL)
+	if (!gBoxer[0])
 	{
 		// get boxer soldier IDs!
-		for( uiLoop = 0; uiLoop < NUM_BOXERS; uiLoop++ )
+		for (UINT32 i = 0; i != NUM_BOXERS; ++i)
 		{
-			SOLDIERTYPE* const s = WhoIsThere2(gsBoxerGridNo[uiLoop], 0);
-			if (FindObjClass(s, IC_WEAPON) == NO_SLOT)
-			{
-				// no weapon so this guy is a boxer
-				gBoxer[uiLoop] = s;
-			}
+			SOLDIERTYPE* const s = WhoIsThere2(gsBoxerGridNo[i], 0);
+			if (FindObjClass(s, IC_WEAPON) != NO_SLOT) continue;
+			// No weapon so this guy is a boxer
+			gBoxer[i] = s;
 		}
 	}
 
-	if (gBoxer[0] == NULL && gBoxer[1] == NULL && gBoxer[2] == NULL)
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return gBoxer[0] || gBoxer[1] || gBoxer[2];
 }
+
 
 BOOLEAN BoxerExists( void )
 {

@@ -29,7 +29,7 @@ extern UINT8 gubBoxersRests;
 extern BOOLEAN gfBoxersResting;
 
 extern void BoxingPlayerDisqualified( SOLDIERTYPE * pOffender, INT8 bReason );
-extern BOOLEAN CheckOnBoxers( void );
+bool CheckOnBoxers();
 extern void EndBoxingMatch( SOLDIERTYPE * pLoser );
 extern BOOLEAN BoxerAvailable( void );
 extern BOOLEAN AnotherFightPossible( void );
