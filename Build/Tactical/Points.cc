@@ -897,7 +897,7 @@ UINT8 CalcTotalAPsToAttack(SOLDIERTYPE* const s, INT16 const grid_no, UINT8 cons
 }
 
 
-static UINT8 MinAPsToPunch(const SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT8 ubAddTurningCost);
+static UINT8 MinAPsToPunch(SOLDIERTYPE const&, GridNo, bool add_turning_cost);
 
 
 UINT8 MinAPsToAttack(SOLDIERTYPE* const s, GridNo const grid_no, UINT8 const add_turning_cost)
@@ -919,7 +919,7 @@ UINT8 MinAPsToAttack(SOLDIERTYPE* const s, GridNo const grid_no, UINT8 const add
 		case IC_THROWING_KNIFE: return MinAPsToShootOrStab(s, grid_no, add_turning_cost);
 		case IC_GRENADE:
 		case IC_THROWN:         return MinAPsToThrow(s, grid_no, add_turning_cost);
-		case IC_PUNCH:          return MinAPsToPunch(s, grid_no, add_turning_cost);
+		case IC_PUNCH:          return MinAPsToPunch(*s, grid_no, add_turning_cost);
 		default:                return 0;
 	}
 }
@@ -1101,55 +1101,34 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE* const s, INT16 grid_no, UINT8 const add_t
 }
 
 
-static UINT8 MinAPsToPunch(const SOLDIERTYPE* const pSoldier, INT16 sGridNo, const UINT8 ubAddTurningCost)
+static UINT8 MinAPsToPunch(SOLDIERTYPE const& s, GridNo gridno, bool const add_turning_cost)
 {
- UINT8	bAPCost = 0;
- UINT8	ubDirection;
+	UINT8	ap = 4;
 
- //  bAimSkill = ( pSoldier->bDexterity + pSoldier->bAgility) / 2;
- if ( sGridNo != NOWHERE )
- {
-	 // Given a gridno here, check if we are on a guy - if so - get his gridno
-		const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, pSoldier->bTargetLevel);
-		if (tgt != NULL)
-	 {
-			sGridNo = tgt->sGridNo;
+	if (gridno == NOWHERE) return ap;
 
-		 // Check if target is prone, if so, calc cost...
-			if (gAnimControl[tgt->usAnimState].ubEndHeight == ANIM_PRONE)
-		 {
-			 bAPCost += GetAPsToChangeStance( pSoldier, ANIM_CROUCH );
-		 }
-		 else
-		 {
-       if ( pSoldier->sGridNo == sGridNo )
-       {
-			    bAPCost += GetAPsToChangeStance( pSoldier, ANIM_STAND );
-       }
-		 }
+	if (SOLDIERTYPE const* const tgt = WhoIsThere2(gridno, s.bTargetLevel))
+	{ // On a guy, get his gridno
+		gridno = tgt->sGridNo;
 
-	 }
+		// Check if target is prone, if so, calc cost
+		if (gAnimControl[tgt->usAnimState].ubEndHeight == ANIM_PRONE)
+		{
+			ap += GetAPsToChangeStance(&s, ANIM_CROUCH);
+		}
+		else if (s.sGridNo == gridno)
+		{
+			ap += GetAPsToChangeStance(&s, ANIM_STAND);
+		}
+	}
 
-	 if (ubAddTurningCost)
-	 {
-     if ( pSoldier->sGridNo == sGridNo )
-     {
-       // ATE: Use standing turn cost....
-		   ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
+	if (add_turning_cost && s.sGridNo == gridno)
+	{ // Is it the same as he's facing?
+		UINT8 const direction = GetDirectionFromGridNo(gridno, &s);
+		if (direction != s.bDirection) ap += AP_LOOK_STANDING; // ATE: Use standing turn cost
+	}
 
-		   // Is it the same as he's facing?
-		   if ( ubDirection != pSoldier->bDirection )
-		   {
-				  bAPCost += AP_LOOK_STANDING;
-		   }
-     }
-	 }
-
- }
-
- bAPCost += 4;
-
- return ( bAPCost );
+	return ap;
 }
 
 
