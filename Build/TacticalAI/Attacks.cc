@@ -960,7 +960,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				else
 				{
 					// NB grenade launcher is NOT a direct fire weapon!
-					ubRawAPCost = (UINT8) MinAPsToThrow( pSoldier, sGridNo, FALSE );
+					ubRawAPCost   = MinAPsToThrow(*pSoldier, sGridNo, FALSE);
 					ubChanceToHit = (UINT8) CalcThrownChanceToHit( pSoldier, sGridNo, ubMaxPossibleAimTime, AIM_SHOT_TORSO );
 				}
 

@@ -782,7 +782,7 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo cons
 	{
 		gsCurrentActionPoints =
 			ubItemCursor == TRAJECTORYCURS ? CalcTotalAPsToAttack(s, map_pos, TRUE, s->bShownAimTime / 2) :
-			MinAPsToThrow(s, map_pos, TRUE);
+			MinAPsToThrow(*s, map_pos, TRUE);
 
 		gfUIDisplayActionPoints       = TRUE;
 		gfUIDisplayActionPointsCenter = TRUE;

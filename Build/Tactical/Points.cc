@@ -918,7 +918,7 @@ UINT8 MinAPsToAttack(SOLDIERTYPE* const s, GridNo const grid_no, UINT8 const add
 		case IC_TENTACLES:
 		case IC_THROWING_KNIFE: return MinAPsToShootOrStab(s, grid_no, add_turning_cost);
 		case IC_GRENADE:
-		case IC_THROWN:         return MinAPsToThrow(s, grid_no, add_turning_cost);
+		case IC_THROWN:         return MinAPsToThrow(*s, grid_no, add_turning_cost);
 		case IC_PUNCH:          return MinAPsToPunch(*s, grid_no, add_turning_cost);
 		default:                return 0;
 	}
@@ -1662,91 +1662,66 @@ INT8 GetAPsToRefuelVehicle( SOLDIERTYPE *pSoldier )
 #define AP_MAX_AIM_ATTACK       4       // maximum permitted extra aiming
 
 
-INT16 MinAPsToThrow(const SOLDIERTYPE* const pSoldier, INT16 sGridNo, const UINT8 ubAddTurningCost)
+INT16 MinAPsToThrow(SOLDIERTYPE const& s, GridNo gridno, bool const add_turning_cost)
 {
-	INT32 iTop, iBottom;
-	INT32	iFullAPs;
-	INT32 iAPCost = AP_MIN_AIM_ATTACK;
-	UINT16 usInHand;
-  UINT8 ubDirection;
+	INT32 ap = AP_MIN_AIM_ATTACK;
 
-	// make sure the guy's actually got a throwable item in his hand!
-	usInHand = pSoldier->inv[ HANDPOS ].usItem;
-
-  if ( ( !Item[ usInHand ].usItemClass & IC_GRENADE ) )
+	// Make sure the guy's actually got a throwable item in his hand
+	UINT16 const in_hand = s.inv[HANDPOS].usItem;
+	if (!Item[in_hand].usItemClass & IC_GRENADE)
 	{
 #ifdef JA2TESTVERSION
-	 ScreenMsg( MSG_FONT_YELLOW, MSG_DEBUG, L"MinAPsToThrow - Called when in-hand item is %s", usInHand );
+		ScreenMsg(MSG_FONT_YELLOW, MSG_DEBUG, L"MinAPsToThrow - Called when in-hand item is %s", in_hand);
 #endif
-	 return(0);
+		return 0;
 	}
 
- if ( sGridNo != NOWHERE )
- {
-	 // Given a gridno here, check if we are on a guy - if so - get his gridno
-		const SOLDIERTYPE* const tgt = FindSoldier(sGridNo, FIND_SOLDIER_GRIDNO);
-		if (tgt != NULL) sGridNo = tgt->sGridNo;
+	if (gridno != NOWHERE)
+	{
+		SOLDIERTYPE const* const tgt = FindSoldier(gridno, FIND_SOLDIER_GRIDNO);
+		if (tgt) gridno = tgt->sGridNo; // On a guy, get his gridno
 
-	 // OK, get a direction and see if we need to turn...
-	 if (ubAddTurningCost)
-	 {
-		 ubDirection = (UINT8)GetDirectionFromGridNo( sGridNo, pSoldier );
+		if (add_turning_cost)
+		{ // Get a direction and see if we need to turn
+			UINT8 const direction = GetDirectionFromGridNo(gridno, &s);
+			if (direction != s.bDirection) /* ap += GetAPsToLook(&s) */;
+		}
+	}
+	else
+	{ // Assume we need to add cost!
+		// ap += GetAPsToLook(&s);
+	}
 
-		 // Is it the same as he's facing?
-		 if ( ubDirection != pSoldier->bDirection )
-		 {
-				//iAPCost += GetAPsToLook( pSoldier );
-		 }
-	 }
- }
- else
- {
-		// Assume we need to add cost!
-		//iAPCost += GetAPsToLook( pSoldier );
- }
+	// if attacking a new target (or if the specific target is uncertain)
+	if (gridno != s.sLastTarget) ap += AP_CHANGE_TARGET;
 
- // if attacking a new target (or if the specific target is uncertain)
- if ( ( sGridNo != pSoldier->sLastTarget ) )
- {
-   iAPCost += AP_CHANGE_TARGET;
- }
-
- iAPCost += GetAPsToChangeStance( pSoldier, ANIM_STAND );
-
+	ap += GetAPsToChangeStance(&s, ANIM_STAND);
 
 	// Calculate default top & bottom of the magic "aiming" formula)
 
-	// get this man's maximum possible action points (ignoring carryovers)
-	iFullAPs = CalcActionPoints( pSoldier );
+	// Get this man's maximum possible action points (ignoring carryovers)
+	INT32 const full_ap = CalcActionPoints(&s);
 
-	// the 2 times is here only to around rounding off using integer math later
-	iTop = 2 * iFullAPs;
+	// The 2 times is here only to around rounding off using integer math later
+	INT32 const top = 2 * full_ap;
 
-	// if it's anything but a mortar
-//	if ( usInHand != MORTAR)
-   // tosses per turn is for max dexterity, drops down to 1/2 at dexterity = 0
-  // bottom = (TOSSES_PER_10TURNS * (50 + (ptr->dexterity / 2)) / 10);
- //else
-   iBottom = ( TOSSES_PER_10TURNS * (50 + ( pSoldier->bDexterity / 2 ) ) / 10 );
+	// Tosses per turn is for max dexterity, drops down to 1/2 at dexterity = 0
+	INT32 const bottom = TOSSES_PER_10TURNS * (50 + s.bDexterity / 2) / 10;
 
+	/* Add minimum aiming time to the overall minimum AP_cost
+	 * This here ROUNDS UP fractions of 0.5 or higher using integer math
+	 * This works because 'top' is 2x what it really should be throughout */
+	ap += (100 * top / bottom + 1) / 2;
 
- // add minimum aiming time to the overall minimum AP_cost
- //     This here ROUNDS UP fractions of 0.5 or higher using integer math
- //     This works because 'top' is 2x what it really should be throughout
-	iAPCost += ( ( ( 100 * iTop ) / iBottom) + 1) / 2;
+	// The minimum AP cost of ANY throw can NEVER be more than merc has APs!
+	if (ap > full_ap) ap = full_ap;
 
+	// This SHOULD be impossible, but nevertheless
+	if (ap < 1) ap = 1;
 
- // the minimum AP cost of ANY throw can NEVER be more than merc has APs!
- if ( iAPCost > iFullAPs )
-   iAPCost = iFullAPs;
-
- // this SHOULD be impossible, but nevertheless...
- if ( iAPCost < 1 )
-   iAPCost = 1;
-
-
- return ( (INT16)iAPCost );
+	return ap;
 }
+
 
 UINT16 GetAPsToDropBomb( SOLDIERTYPE *pSoldier )
 {

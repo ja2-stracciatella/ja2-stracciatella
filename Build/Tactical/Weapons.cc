@@ -1745,7 +1745,7 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	else
 	{
 		// Throw....
-		sAPCost = MinAPsToThrow( pSoldier, sTargetGridNo, FALSE );
+		sAPCost = MinAPsToThrow(*pSoldier, sTargetGridNo, FALSE);
 	}
 
 	DeductPoints( pSoldier, sAPCost, 0 );
