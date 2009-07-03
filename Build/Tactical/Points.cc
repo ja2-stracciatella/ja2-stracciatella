@@ -925,24 +925,19 @@ UINT8 MinAPsToAttack(SOLDIERTYPE* const s, GridNo const grid_no, UINT8 const add
 }
 
 
-static INT8 CalcAimSkill(const SOLDIERTYPE* pSoldier, UINT16 usWeapon)
+static INT8 CalcAimSkill(SOLDIERTYPE const& s, UINT16 const weapon)
 {
-	INT8 bAimSkill;
+	switch (Item[weapon].usItemClass)
+	{
+		case IC_GUN:
+		case IC_LAUNCHER:
+			// Guns: Modify aiming cost by shooter's marksmanship
+			return EffectiveMarksmanship(&s);
 
-	if ( Item[ usWeapon ].usItemClass == IC_GUN || Item[ usWeapon ].usItemClass == IC_LAUNCHER )
-	{
-		// GUNS: modify aiming cost by shooter's MARKSMANSHIP
-		bAimSkill = EffectiveMarksmanship( pSoldier );
+		default:
+			// Knives: Modify aiming cost by avg of attacker's dexterity & agility
+			return (EffectiveDexterity(&s) + EffectiveAgility(&s)) / 2;
 	}
-	else
-	// for now use this for all other weapons
-	//if ( Item[ usInHand ].usItemClass == IC_BLADE )
-	{
-		// KNIVES: modify aiming cost by avg of attacker's DEXTERITY & AGILITY
-		bAimSkill = ( EffectiveDexterity( pSoldier ) + EffectiveAgility( pSoldier ) ) / 2;
-		//return( 4 );
-	}
-	return( bAimSkill );
 }
 
 
@@ -1066,7 +1061,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_
 
 	INT8 const full_aps  = CalcActionPoints(&s);
 	// Aim skill is the same whether we are using 1 or 2 guns
-	INT8 const aim_skill = CalcAimSkill(&s, item);
+	INT8 const aim_skill = CalcAimSkill(s, item);
 
 	if (s.bWeaponMode == WM_ATTACHED)
 	{
