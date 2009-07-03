@@ -4222,7 +4222,7 @@ static void BltCharInvPanel(void)
 	SetFontDestBuffer(guiSAVEBUFFER);
 
 	// render items in each of chars slots
-  HandleRenderInvSlots( pSoldier, DIRTYLEVEL2 );
+	HandleRenderInvSlots(*pSoldier, DIRTYLEVEL2);
 
 	// Render Values for stats!
 	SetFontAttributes(BLOCKFONT2, MAP_INV_STATS_TITLE_FONT_COLOR);

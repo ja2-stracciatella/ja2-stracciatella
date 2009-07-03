@@ -804,49 +804,41 @@ void RenderInvBodyPanel(const SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY)
 static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UINT8 fDirtyLevel);
 
 
-void HandleRenderInvSlots(const SOLDIERTYPE* pSoldier, UINT8 fDirtyLevel)
+void HandleRenderInvSlots(SOLDIERTYPE const& s, UINT8 const dirty_level)
 {
-	INT32									cnt;
+	if (!InItemDescriptionBox() && !InItemStackPopup() && !InKeyRingPopup()) return;
 
-	if ( InItemDescriptionBox( ) || InItemStackPopup( ) || InKeyRingPopup( ) )
+	for (INT32 i = 0; i != NUM_INV_SLOTS; ++i)
 	{
-
-	}
-	else
-	{
-		for ( cnt = 0; cnt < NUM_INV_SLOTS; cnt++ )
+		if (dirty_level == DIRTYLEVEL2)
 		{
-			if ( fDirtyLevel == DIRTYLEVEL2 )
-			{
-				wchar_t pStr[150];
-				GetHelpTextForItem(pStr, lengthof(pStr), pSoldier->inv[cnt]);
-				gSMInvRegion[cnt].SetFastHelpText(pStr);
-			}
-
-			INVRenderINVPanelItem( pSoldier, (INT16)cnt, fDirtyLevel );
+			wchar_t buf[150];
+			GetHelpTextForItem(buf, lengthof(buf), s.inv[i]);
+			gSMInvRegion[i].SetFastHelpText(buf);
 		}
+		INVRenderINVPanelItem(&s, i, dirty_level);
+	}
 
 #ifndef JA2DEMO
-		if ( KeyExistsInKeyRing( pSoldier, ANYKEY, NULL ) )
+	if (KeyExistsInKeyRing(&s, ANYKEY, 0))
+	{
+		// blit gold key here?
+		INT32 x;
+		INT32 y;
+		if (guiCurrentItemDescriptionScreen == MAP_SCREEN)
 		{
-			// blit gold key here?
-			INT32 x;
-			INT32 y;
-			if (guiCurrentItemDescriptionScreen == MAP_SCREEN)
-			{
-				x = MAP_KEYRING_X;
-				y = MAP_KEYRING_Y;
-			}
-			else
-			{
-				x = KEYRING_X;
-				y = KEYRING_Y;
-			}
-			BltVideoObject(guiSAVEBUFFER, guiGoldKeyVO, 0, x, y);
-			RestoreExternBackgroundRect(x, y, KEYRING_WIDTH, KEYRING_HEIGHT);
+			x = MAP_KEYRING_X;
+			y = MAP_KEYRING_Y;
 		}
-#endif
+		else
+		{
+			x = KEYRING_X;
+			y = KEYRING_Y;
+		}
+		BltVideoObject(guiSAVEBUFFER, guiGoldKeyVO, 0, x, y);
+		RestoreExternBackgroundRect(x, y, KEYRING_WIDTH, KEYRING_HEIGHT);
 	}
+#endif
 }
 
 
@@ -1139,7 +1131,6 @@ BOOLEAN HandleCompatibleAmmoUIForMapScreen(const SOLDIERTYPE* pSoldier, INT32 bI
 		if ( fFound )
 		{
 			fInterfacePanelDirty = DIRTYLEVEL2;
-			//HandleRenderInvSlots( pSoldier, DIRTYLEVEL2 );
 		}
 
 		return( fFound );
@@ -1362,7 +1353,6 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 		if ( fFound )
 		{
 			fInterfacePanelDirty = DIRTYLEVEL2;
-			//HandleRenderInvSlots( pSoldier, DIRTYLEVEL2 );
 		}
 
 		return( fFound );
@@ -1470,7 +1460,6 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 	if ( fFound )
 	{
 		fInterfacePanelDirty = DIRTYLEVEL2;
-		//HandleRenderInvSlots( pSoldier, DIRTYLEVEL2 );
 	}
 
 	return( fFound );

@@ -1347,7 +1347,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 	//HandlePanelFaceAnimations( gpSMCurrentMerc );
 
 	// Render items in guy's hand!
-	HandleRenderInvSlots( gpSMCurrentMerc, *pfDirty );
+	HandleRenderInvSlots(*gpSMCurrentMerc, *pfDirty);
 
 	if ( gfSMDisableForItems && (*pfDirty) != DIRTYLEVEL0 )
 	{
