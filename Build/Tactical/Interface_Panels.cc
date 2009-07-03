@@ -1161,12 +1161,17 @@ static void SetStatsHelp(MOUSE_REGION* r, const SOLDIERTYPE* s)
 }
 
 
-static void UpdateStatColor(UINT32 uiTimer, BOOLEAN fIncrease);
-
-
 static void PrintStat(UINT32 change_time, UINT16 stat_bit, INT8 stat_val, INT16 x, INT16 y)
 {
-	UpdateStatColor(change_time, (gpSMCurrentMerc->usValueGoneUp & stat_bit) != 0);
+	SOLDIERTYPE const& s  = *gpSMCurrentMerc;
+	UINT8       const  fg =
+		s.bLife < OKLIFE                                             ? FONT_MCOLOR_DKGRAY    :
+		GetJA2Clock() >= CHANGE_STAT_RECENTLY_DURATION + change_time ? STATS_TEXT_FONT_COLOR :
+		change_time == 0                                             ? STATS_TEXT_FONT_COLOR :
+		s.usValueGoneUp & stat_bit                                   ? FONT_LTGREEN          :
+		FONT_RED;
+	SetFontForeground(fg);
+
 	wchar_t str[9];
 	swprintf(str, lengthof(str), L"%2d", stat_val);
 	INT16 usX;
@@ -1356,35 +1361,6 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 		Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
 	}
 
-}
-
-
-static void UpdateStatColor(UINT32 uiTimer, BOOLEAN fIncrease)
-{
-	if ( gpSMCurrentMerc->bLife >= OKLIFE )
-	{
-		if( ( GetJA2Clock()  < CHANGE_STAT_RECENTLY_DURATION + uiTimer) && ( uiTimer != 0 ) )
-		{
-			if( fIncrease )
-			{
-				SetFontForeground( FONT_LTGREEN );
-			}
-			else
-			{
-				SetFontForeground( FONT_RED );
-			}
-		}
-		else
-		{
-			SetFontBackground( FONT_MCOLOR_BLACK );
-			SetFontForeground( STATS_TEXT_FONT_COLOR );
-		}
-	}
-	else
-	{
-		SetFontBackground( FONT_MCOLOR_BLACK );
-		SetFontForeground( FONT_MCOLOR_DKGRAY );
-	}
 }
 
 
