@@ -201,7 +201,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 	 }
 
    // calc next attack's minimum shooting cost (excludes readying & turning)
-   ubRawAPCost = MinAPsToShootOrStab(pSoldier,pOpponent->sGridNo,FALSE);
+   ubRawAPCost = MinAPsToShootOrStab(*pSoldier, pOpponent->sGridNo, FALSE);
 
 	 if (pOpponent->sGridNo != pSoldier->sLastTarget)
 	 {
@@ -954,7 +954,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 
 				if ( EXPLOSIVE_GUN( usInHand ) )
 				{
-					ubRawAPCost = MinAPsToShootOrStab( pSoldier, sGridNo, FALSE);
+					ubRawAPCost   = MinAPsToShootOrStab(*pSoldier, sGridNo, FALSE);
 					ubChanceToHit = (UINT8) AICalcChanceToHitGun(pSoldier, sGridNo, ubMaxPossibleAimTime, AIM_SHOT_TORSO );
 				}
 				else
@@ -1124,7 +1124,6 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 	 }
 
    // calc next attack's minimum stabbing cost (excludes movement & turning)
-   //ubRawAPCost = MinAPsToShootOrStab(pSoldier,pOpponent->sGridNo, FALSE) - AP_CHANGE_TARGET;
 	 ubRawAPCost = MinAPsToAttack(pSoldier,pOpponent->sGridNo, FALSE) - AP_CHANGE_TARGET;
    //NumMessage("ubRawAPCost to stab this opponent = ",ubRawAPCost);
 
@@ -1307,7 +1306,6 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 
 
    // calc next attack's minimum stabbing cost (excludes movement & turning)
-   //ubRawAPCost = MinAPsToShootOrStab(pSoldier,pOpponent->sGridNo, FALSE) - AP_CHANGE_TARGET;
 	 ubRawAPCost = MinAPsToAttack(pSoldier,pOpponent->sGridNo, FALSE) - AP_CHANGE_TARGET;
    //NumMessage("ubRawAPCost to stab this opponent = ",ubRawAPCost);
 

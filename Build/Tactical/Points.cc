@@ -916,7 +916,7 @@ UINT8 MinAPsToAttack(SOLDIERTYPE* const s, GridNo const grid_no, UINT8 const add
 		case IC_GUN:
 		case IC_LAUNCHER:
 		case IC_TENTACLES:
-		case IC_THROWING_KNIFE: return MinAPsToShootOrStab(s, grid_no, add_turning_cost);
+		case IC_THROWING_KNIFE: return MinAPsToShootOrStab(*s, grid_no, add_turning_cost);
 		case IC_GRENADE:
 		case IC_THROWN:         return MinAPsToThrow(*s, grid_no, add_turning_cost);
 		case IC_PUNCH:          return MinAPsToPunch(*s, grid_no, add_turning_cost);
@@ -1003,27 +1003,27 @@ void GetAPChargeForShootOrStabWRTGunRaises(SOLDIERTYPE const* const s, GridNo gr
 }
 
 
-UINT8 MinAPsToShootOrStab(SOLDIERTYPE* const s, INT16 grid_no, UINT8 const add_turning_cost)
+UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_cost)
 {
-	OBJECTTYPE const& in_hand = s->inv[HANDPOS];
+	OBJECTTYPE const& in_hand = s.inv[HANDPOS];
 	UINT16     const  item =
-		s->bWeaponMode == WM_ATTACHED ? UNDER_GLAUNCHER :
+		s.bWeaponMode == WM_ATTACHED ? UNDER_GLAUNCHER :
 		in_hand.usItem;
 
 	BOOLEAN	adding_turning_cost;
 	BOOLEAN	adding_raise_gun_cost;
-	GetAPChargeForShootOrStabWRTGunRaises(s, grid_no, add_turning_cost, &adding_turning_cost, &adding_raise_gun_cost);
+	GetAPChargeForShootOrStabWRTGunRaises(&s, gridno, add_turning_cost, &adding_turning_cost, &adding_raise_gun_cost);
 
 	UINT8	ap_cost = AP_MIN_AIM_ATTACK;
 
 	if (Item[item].usItemClass == IC_THROWING_KNIFE ||
 			item                   == ROCKET_LAUNCHER)
 	{ // Do we need to stand up?
-		ap_cost += GetAPsToChangeStance(s, ANIM_STAND);
+		ap_cost += GetAPsToChangeStance(&s, ANIM_STAND);
 	}
 
 	// ATE: Look at stance
-	if (gAnimControl[s->usAnimState].ubHeight == ANIM_STAND)
+	if (gAnimControl[s.usAnimState].ubHeight == ANIM_STAND)
 	{ // Don't charge turning if gun-ready
 		if (adding_raise_gun_cost) adding_turning_cost = FALSE;
 	}
@@ -1032,7 +1032,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE* const s, INT16 grid_no, UINT8 const add_t
 		if (adding_turning_cost) adding_raise_gun_cost = FALSE;
 	}
 
-	if (AM_A_ROBOT(s)) adding_raise_gun_cost = FALSE;
+	if (AM_A_ROBOT(&s)) adding_raise_gun_cost = FALSE;
 
 	if (adding_turning_cost)
 	{
@@ -1042,33 +1042,33 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE* const s, INT16 grid_no, UINT8 const add_t
 		}
 		else
 		{
-			ap_cost += GetAPsToLook(s);
+			ap_cost += GetAPsToLook(&s);
 		}
 	}
 
 	if (adding_raise_gun_cost)
 	{
-		ap_cost += GetAPsToReadyWeapon(s, s->usAnimState);
-		s->fDontChargeReadyAPs = FALSE;
+		ap_cost += GetAPsToReadyWeapon(&s, s.usAnimState);
+		s.fDontChargeReadyAPs = FALSE;
 	}
 
-	if (grid_no != NOWHERE)
+	if (gridno != NOWHERE)
 	{ // Given a gridno here, check if we are on a guy - if so - get his gridno
-		SOLDIERTYPE const* const tgt = FindSoldier(grid_no, FIND_SOLDIER_GRIDNO);
-		if (tgt) grid_no = tgt->sGridNo;
+		SOLDIERTYPE const* const tgt = FindSoldier(gridno, FIND_SOLDIER_GRIDNO);
+		if (tgt) gridno = tgt->sGridNo;
 	}
 
 	// if attacking a new target (or if the specific target is uncertain)
-	if (grid_no != s->sLastTarget && item != ROCKET_LAUNCHER)
+	if (gridno != s.sLastTarget && item != ROCKET_LAUNCHER)
 	{
 		ap_cost += AP_CHANGE_TARGET;
 	}
 
-	INT8 const full_aps  = CalcActionPoints(s);
+	INT8 const full_aps  = CalcActionPoints(&s);
 	// Aim skill is the same whether we are using 1 or 2 guns
-	INT8 const aim_skill = CalcAimSkill(s, item);
+	INT8 const aim_skill = CalcAimSkill(&s, item);
 
-	if (s->bWeaponMode == WM_ATTACHED)
+	if (s.bWeaponMode == WM_ATTACHED)
 	{
 		// Create temporary grenade launcher and use that
 		INT8 const attach_slot = FindAttachment(&in_hand, UNDER_GLAUNCHER);
@@ -1080,10 +1080,10 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE* const s, INT16 grid_no, UINT8 const add_t
 
 		ap_cost += BaseAPsToShootOrStab(full_aps, aim_skill, grenade_launcher);
 	}
-	else if (IsValidSecondHandShot(s))
+	else if (IsValidSecondHandShot(&s))
 	{ // Charge the maximum of the two
 		UINT8 const ap_1st = BaseAPsToShootOrStab(full_aps, aim_skill, in_hand);
-		UINT8 const ap_2nd = BaseAPsToShootOrStab(full_aps, aim_skill, s->inv[SECONDHANDPOS]);
+		UINT8 const ap_2nd = BaseAPsToShootOrStab(full_aps, aim_skill, s.inv[SECONDHANDPOS]);
 		ap_cost += __max(ap_1st, ap_2nd);
 	}
 	else
