@@ -146,10 +146,10 @@ INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo
 }
 
 
-void RemoveVehicleFromList(VEHICLETYPE* const v)
+void RemoveVehicleFromList(VEHICLETYPE& v)
 {
-	v->pMercPath = ClearStrategicPathList(v->pMercPath, 0);
-	memset(v, 0, sizeof(*v));
+	v.pMercPath = ClearStrategicPathList(v.pMercPath, 0);
+	memset(&v, 0, sizeof(v));
 }
 
 

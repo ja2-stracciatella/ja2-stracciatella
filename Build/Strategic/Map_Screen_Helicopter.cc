@@ -404,7 +404,7 @@ static void SkyriderDestroyed(void)
 	iTotalAccumulatedCostByPlayer = 0;
 
 	// remove vehicle and reset
-	RemoveVehicleFromList(&v);
+	RemoveVehicleFromList(v);
 	iHelicopterVehicleId = -1;
 }
 

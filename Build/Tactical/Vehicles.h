@@ -68,7 +68,7 @@ void SetVehicleValuesIntoSoldierType( SOLDIERTYPE *pVehicle );
 INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType );
 
 // remove this vehicle from the list
-void RemoveVehicleFromList(VEHICLETYPE*);
+void RemoveVehicleFromList(VEHICLETYPE&);
 
 // clear out the vehicle list
 void ClearOutVehicleList( void );
