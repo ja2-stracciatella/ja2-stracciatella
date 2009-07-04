@@ -83,7 +83,7 @@ BOOLEAN IsThisVehicleAccessibleToSoldier(const SOLDIERTYPE*, const VEHICLETYPE*)
 BOOLEAN MoveCharactersPathToVehicle( SOLDIERTYPE *pSoldier );
 
 // Return the vehicle, iff the vehicle ID is valid, NULL otherwise
-VEHICLETYPE* GetVehicle(INT32 vehicle_id);
+VEHICLETYPE& GetVehicle(INT32 vehicle_id);
 
 /* Given this grunt, find out if asscoiated vehicle has a mvt group, if so,
  * set this grunts mvt group to the vehicle.  For pathing purposes, will be

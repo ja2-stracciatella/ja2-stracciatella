@@ -7076,8 +7076,8 @@ void EVENT_SoldierEnterVehicle(SOLDIERTYPE* const s, const INT16 sGridNo)
 	const SOLDIERTYPE* const tgt = FindSoldier(sGridNo, FIND_SOLDIER_GRIDNO);
 	if (tgt != NULL && tgt->uiStatusFlags & SOLDIER_VEHICLE)
 	{
-		VEHICLETYPE* const v = GetVehicle(tgt->bVehicleID);
-		PutSoldierInVehicle(s, v);
+		VEHICLETYPE& v = GetVehicle(tgt->bVehicleID);
+		PutSoldierInVehicle(s, &v);
 	}
 
 	UnSetUIBusy(s);

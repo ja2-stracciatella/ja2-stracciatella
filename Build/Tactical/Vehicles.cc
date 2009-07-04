@@ -334,25 +334,25 @@ static void TeleportVehicleToItsClosestSector(UINT8 ubGroupID);
 // remove soldier from vehicle
 static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 {
-	INT32        const iId = s.iVehicleId;
-	VEHICLETYPE* const v   = GetVehicle(iId);
+	INT32 const  iId = s.iVehicleId;
+	VEHICLETYPE& v   = GetVehicle(iId);
 
 	// now look for the grunt
-	INT32 const seats = GetVehicleSeats(v);
+	INT32 const seats = GetVehicleSeats(&v);
 	for (INT32 i = 0;; ++i)
 	{
 		if (i == seats) return false;
-		if (v->pPassengers[i] != &s) continue;
-		v->pPassengers[i] = 0;
+		if (v.pPassengers[i] != &s) continue;
+		v.pPassengers[i] = 0;
 		break;
 	}
 
 	RemovePlayerFromGroup(&s);
 
 	s.ubGroupID      = 0;
-	s.sSectorY       = v->sSectorY;
-	s.sSectorX       = v->sSectorX;
-	s.bSectorZ       = v->sSectorZ;
+	s.sSectorY       = v.sSectorY;
+	s.sSectorX       = v.sSectorX;
+	s.bSectorZ       = v.sSectorZ;
 	s.uiStatusFlags &= ~(SOLDIER_DRIVER | SOLDIER_PASSENGER);
 
 	if (iId == iHelicopterVehicleId)
@@ -377,18 +377,18 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 	else
 	{
 		// check if anyone left in vehicle
-		CFOR_ALL_PASSENGERS(v, i) return true;
+		CFOR_ALL_PASSENGERS(&v, i) return true;
 
-		SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
+		SOLDIERTYPE& vs = GetSoldierStructureForVehicle(&v);
 
 		// and he has a route set
 		if (GetLengthOfMercPath(&vs) > 0)
 		{
 			// cancel the entire path (also handles reversing directions)
-			CancelPathForVehicle(v, FALSE);
+			CancelPathForVehicle(&v, FALSE);
 		}
 
-		if (v->fBetweenSectors)
+		if (v.fBetweenSectors)
 		{ /* The vehicle was abandoned between sectors. Teleport it to the closer of
 			 * its current and next sectors (it beats having it arrive empty later) */
 			TeleportVehicleToItsClosestSector(vs.ubGroupID);
@@ -397,7 +397,7 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 		// Remove vehicle from squad
 		RemoveCharacterFromSquads(&vs);
 		// ATE: Add him back to vehicle group!
-		GROUP* const g = GetGroup(v->ubMovementGroup);
+		GROUP* const g = GetGroup(v.ubMovementGroup);
 		if (!DoesPlayerExistInPGroup(g, &vs)) AddPlayerToGroup(g, &vs);
 		ChangeSoldiersAssignment(&vs, ASSIGNMENT_EMPTY);
 	}
@@ -425,10 +425,10 @@ BOOLEAN MoveCharactersPathToVehicle(SOLDIERTYPE* const s)
 		return FALSE;
 	}
 
-	VEHICLETYPE* const v = GetVehicle(vid);
+	VEHICLETYPE& v = GetVehicle(vid);
 
-	ClearStrategicPathList(v->pMercPath, v->ubMovementGroup);
-	v->pMercPath = CopyPaths(s->pMercPath);
+	ClearStrategicPathList(v.pMercPath, v.ubMovementGroup);
+	v.pMercPath = CopyPaths(s->pMercPath);
 
 	s->pMercPath = ClearStrategicPathList(s->pMercPath, 0);
 	return TRUE;
@@ -442,19 +442,19 @@ void SetUpMvtGroupForVehicle(SOLDIERTYPE* const s)
 	if      (s->uiStatusFlags &  SOLDIER_VEHICLE) vid = s->bVehicleID;
 	else if (s->bAssignment   == VEHICLE)         vid = s->iVehicleId;
 	else                                          return;
-	VEHICLETYPE* const v = GetVehicle(vid);
+	VEHICLETYPE& v = GetVehicle(vid);
 	ClearStrategicPathList(s->pMercPath, s->ubGroupID);
-	s->pMercPath = CopyPaths(v->pMercPath);
-	s->ubGroupID = v->ubMovementGroup;
+	s->pMercPath = CopyPaths(v.pMercPath);
+	s->ubGroupID = v.ubMovementGroup;
 }
 
 
-VEHICLETYPE* GetVehicle(INT32 const vehicle_id)
+VEHICLETYPE& GetVehicle(INT32 const vehicle_id)
 {
 	if (0 <= vehicle_id && vehicle_id < ubNumberOfVehicles)
 	{
-		VEHICLETYPE* const v = &pVehicleList[vehicle_id];
-		if (v->fValid) return v;
+		VEHICLETYPE& v = pVehicleList[vehicle_id];
+		if (v.fValid) return v;
 	}
 	throw std::logic_error("Invalid vehicle ID");
 }
@@ -526,10 +526,10 @@ INT32 GetNumberInVehicle(const VEHICLETYPE* const v)
 INT32 GetNumberOfNonEPCsInVehicle( INT32 iId )
 {
 	// go through list of occupants in vehicles and count them
-	VEHICLETYPE const* const v = GetVehicle(iId);
+	VEHICLETYPE const& v = GetVehicle(iId);
 
 	INT32 count = 0;
-	CFOR_ALL_PASSENGERS(v, i)
+	CFOR_ALL_PASSENGERS(&v, i)
 	{
 		const SOLDIERTYPE* const s = *i;
 		if (!AM_AN_EPC(s)) ++count;
@@ -540,9 +540,8 @@ INT32 GetNumberOfNonEPCsInVehicle( INT32 iId )
 
 BOOLEAN IsRobotControllerInVehicle( INT32 iId )
 {
-	VEHICLETYPE const* const v = GetVehicle(iId);
-
-	CFOR_ALL_PASSENGERS(v, i)
+	VEHICLETYPE const& v = GetVehicle(iId);
+	CFOR_ALL_PASSENGERS(&v, i)
 	{
 		if (ControllingRobot(*i)) return TRUE;
 	}
@@ -605,7 +604,7 @@ BOOLEAN PutSoldierInVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 
 BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 {
-	SOLDIERTYPE& vs = GetSoldierStructureForVehicle(GetVehicle(s->iVehicleId));
+	SOLDIERTYPE& vs = GetSoldierStructureForVehicle(&GetVehicle(s->iVehicleId));
 
 	INT16 sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 5, 3, &vs);
 	if (sGridNo == NOWHERE)
@@ -1024,11 +1023,11 @@ BOOLEAN SoldierMustDriveVehicle(const SOLDIERTYPE* const pSoldier, const INT32 i
 {
 	Assert( pSoldier );
 
-	VEHICLETYPE const* const v = GetVehicle(iVehicleId);
+	VEHICLETYPE const& v = GetVehicle(iVehicleId);
 
 	// if vehicle is not going anywhere, then nobody has to be driving it!
 	// need the path length check in case we're doing a test while actually in a sector even though we're moving!
-	if (!fTryingToTravel && !v->fBetweenSectors && GetLengthOfPath(v->pMercPath) == 0)
+	if (!fTryingToTravel && !v.fBetweenSectors && GetLengthOfPath(v.pMercPath) == 0)
 	{
 		return( FALSE );
 	}
@@ -1095,7 +1094,7 @@ BOOLEAN IsSoldierInThisVehicleSquad(const SOLDIERTYPE* const pSoldier, const INT
 		return( FALSE );
 	}
 
-	SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(GetVehicle(iVehicleId));
+	SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(&GetVehicle(iVehicleId));
 
 	// check squad vehicle is on
 	if (vs.bAssignment != bSquadNumber)

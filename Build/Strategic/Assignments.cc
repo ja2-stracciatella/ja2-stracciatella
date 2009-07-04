@@ -415,7 +415,7 @@ static BOOLEAN HasCharacterFinishedRepairing(SOLDIERTYPE* pSoldier)
 	// check if we are repairing a vehicle
 	if ( pSoldier->bVehicleUnderRepairID != -1 )
 	{
-		fCanStillRepair = CanCharacterRepairVehicle(pSoldier, GetVehicle(pSoldier->bVehicleUnderRepairID));
+		fCanStillRepair = CanCharacterRepairVehicle(pSoldier, &GetVehicle(pSoldier->bVehicleUnderRepairID));
 	}
 	// check if we are repairing a robot
 	else if( pSoldier -> fFixingRobot )
@@ -1950,11 +1950,11 @@ static void HandleRepairBySoldier(SOLDIERTYPE* pSoldier)
 	// check if we are repairing a vehicle
 	if ( pSoldier->bVehicleUnderRepairID != -1 )
 	{
-		VEHICLETYPE const* const v = GetVehicle(pSoldier->bVehicleUnderRepairID);
-		if (CanCharacterRepairVehicle(pSoldier, v))
+		VEHICLETYPE const& v = GetVehicle(pSoldier->bVehicleUnderRepairID);
+		if (CanCharacterRepairVehicle(pSoldier, &v))
 		{
 			// attempt to fix vehicle
-			ubRepairPtsLeft -= RepairVehicle(v, ubRepairPtsLeft, &fNothingLeftToRepair);
+			ubRepairPtsLeft -= RepairVehicle(&v, ubRepairPtsLeft, &fNothingLeftToRepair);
 		}
 	}
 	// check if we are repairing a robot
@@ -7093,11 +7093,11 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 			case VEHICLE:
 				if (CanCharacterVehicle(s))
 				{
-					VEHICLETYPE* const v = GetVehicle(bParam);
-					if (IsThisVehicleAccessibleToSoldier(s, v))
+					VEHICLETYPE& v = GetVehicle(bParam);
+					if (IsThisVehicleAccessibleToSoldier(s, &v))
 					{
 						// if the vehicle is FULL, then this will return FALSE!
-						fItWorked = PutSoldierInVehicle(s, v);
+						fItWorked = PutSoldierInVehicle(s, &v);
 						// failure produces its own error popup
 						fNotifiedOfFailure = TRUE;
 					}
@@ -7110,10 +7110,10 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 					// make sure he can repair the SPECIFIC thing being repaired too (must be in its sector, for example)
 					BOOLEAN const fCanFixSpecificTarget =
 #if 0
-						sel->fFixingSAMSite              ? CanSoldierRepairSAM(s, SAM_SITE_REPAIR_DIVISOR)                      :
+						sel->fFixingSAMSite              ? CanSoldierRepairSAM(s, SAM_SITE_REPAIR_DIVISOR)                       :
 #endif
-						sel->bVehicleUnderRepairID != -1 ? CanCharacterRepairVehicle(s, GetVehicle(sel->bVehicleUnderRepairID)) :
-						s->fFixingRobot                  ? CanCharacterRepairRobot(s)                                           : // XXX s in condition seems wrong, should probably be sel
+						sel->bVehicleUnderRepairID != -1 ? CanCharacterRepairVehicle(s, &GetVehicle(sel->bVehicleUnderRepairID)) :
+						s->fFixingRobot                  ? CanCharacterRepairRobot(s)                                            : // XXX s in condition seems wrong, should probably be sel
 						                                   TRUE;
 					if (fCanFixSpecificTarget)
 					{

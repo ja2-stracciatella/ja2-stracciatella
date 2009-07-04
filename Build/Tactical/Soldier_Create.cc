@@ -959,7 +959,7 @@ void InternalTacticalRemoveSoldier(SOLDIERTYPE* const s, BOOLEAN const fRemoveVe
 
 	if (s->uiStatusFlags & SOLDIER_VEHICLE && fRemoveVehicle)
 	{
-		RemoveVehicleFromList(GetVehicle(s->bVehicleID));
+		RemoveVehicleFromList(&GetVehicle(s->bVehicleID));
 	}
 
 	if (s->ubBodyType == CROW) HandleCrowLeave(s);

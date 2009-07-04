@@ -2867,8 +2867,8 @@ static bool CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* const s,
 	if (tgt->bVisible == -1)           return false;
 	if (!OKUseVehicle(tgt->ubProfile)) return false;
 
-	VEHICLETYPE* const v = GetVehicle(tgt->bVehicleID);
-	if (GetNumberInVehicle(v) != 0 && fMovementMode) return false;
+	VEHICLETYPE& v = GetVehicle(tgt->bVehicleID);
+	if (GetNumberInVehicle(&v) != 0 && fMovementMode) return false;
 
 	// Find a gridno closest to sweetspot
 	GridNo const action_pos = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 5, 0, tgt);
@@ -2893,7 +2893,7 @@ static bool CheckForAndHandleHandleVehicleInteractiveClick(SOLDIERTYPE* const s,
 	}
 	else
 	{
-		PutSoldierInVehicle(s, v);
+		PutSoldierInVehicle(s, &v);
 	}
 	return true;
 }
