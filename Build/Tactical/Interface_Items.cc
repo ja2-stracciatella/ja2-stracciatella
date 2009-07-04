@@ -849,7 +849,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, UINT
 	UINT8 const render_dirty_level =
 		s.bNewItemCount[pocket] <= 0           ||
 		gsCurInterfacePanel     != SM_PANEL    ||
-		fInterfacePanelDirty    != DIRTYLEVEL2 ? dirty_level :
+		fInterfacePanelDirty    == DIRTYLEVEL2 ? dirty_level :
 		DIRTYLEVEL0; // We have a new item and we are in the right panel
 	INVRenderItem(guiSAVEBUFFER, &s, o, x, y, xy.sWidth, xy.sHeight, render_dirty_level, 0, outline);
 
@@ -884,7 +884,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, UINT
 
 void HandleRenderInvSlots(SOLDIERTYPE const& s, UINT8 const dirty_level)
 {
-	if (!InItemDescriptionBox() && !InItemStackPopup() && !InKeyRingPopup()) return;
+	if (InItemDescriptionBox() || InItemStackPopup() || InKeyRingPopup()) return;
 
 	for (INT32 i = 0; i != NUM_INV_SLOTS; ++i)
 	{
