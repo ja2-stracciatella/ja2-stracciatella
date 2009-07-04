@@ -375,7 +375,7 @@ static INT8 GetUIApsToDisplay(SOLDIERTYPE const* s)
 {
 	if (s->uiStatusFlags & SOLDIER_DRIVER)
 	{
-		return GetSoldierStructureForVehicle(&GetVehicle(s->iVehicleId)).bActionPoints;
+		return GetSoldierStructureForVehicle(GetVehicle(s->iVehicleId)).bActionPoints;
 	}
 	return s->bActionPoints;
 }
@@ -1967,7 +1967,7 @@ static void SelectedMercButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		{
 			if ( gpSMCurrentMerc->uiStatusFlags & ( SOLDIER_DRIVER | SOLDIER_PASSENGER ) )
 			{
-				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(&GetVehicle(gpSMCurrentMerc->iVehicleId));
+				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(GetVehicle(gpSMCurrentMerc->iVehicleId));
 				HandleLocateSelectMerc(&vs, false);
 			}
 			else
@@ -2383,7 +2383,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				if (s->uiStatusFlags & SOLDIER_DRIVER)
 				{
 					// Get soldier pointer for vehicle.....
-					SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(&GetVehicle(s->iVehicleId));
+					SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(GetVehicle(s->iVehicleId));
 					swprintf(help_buf, lengthof(help_buf), TacticalStr[DRIVER_POPUPTEXT], vs.bLife, vs.bLifeMax, vs.bBreath, vs.bBreathMax);
 					help = help_buf;
 				}
@@ -2685,7 +2685,7 @@ static void MercFacePanelCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		{
 			if (s->uiStatusFlags & (SOLDIER_DRIVER | SOLDIER_PASSENGER))
 			{
-				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(&GetVehicle(s->iVehicleId));
+				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(GetVehicle(s->iVehicleId));
 				HandleLocateSelectMerc(&vs, false);
 			}
 			else

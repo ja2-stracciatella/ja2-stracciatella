@@ -1276,7 +1276,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 		else if( !IsGroupTheHelicopterGroup( pGroup ) )
 		{
 			VEHICLETYPE const* const v  = GetVehicleFromMvtGroup(pGroup);
-			SOLDIERTYPE&             vs = GetSoldierStructureForVehicle(v);
+			SOLDIERTYPE&             vs = GetSoldierStructureForVehicle(*v);
 
 			SpendVehicleFuel(vs, pGroup->uiTraverseTime * 6);
 
@@ -1419,7 +1419,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 
 			if (VEHICLE2ID(v) != iHelicopterVehicleId)
 			{
-				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
+				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(*v);
 
 				vs.fBetweenSectors = FALSE;
 				vs.sSectorX = pGroup->ubSectorX;
@@ -1707,7 +1707,7 @@ static void PrepareGroupsForSimultaneousArrival(void)
 
 		if (VEHICLE2ID(v) != iHelicopterVehicleId)
 		{
-			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
+			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(*v);
 			vs.fBetweenSectors = TRUE;
 		}
 	}
@@ -1954,7 +1954,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 
 		if (VEHICLE2ID(v) != iHelicopterVehicleId)
 		{
-			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
+			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(*v);
 			vs.fBetweenSectors = TRUE;
 			RemoveSoldierFromTacticalSector(&vs);
 		}
@@ -3396,7 +3396,7 @@ static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const* const pGroup, INT
 		// if it ain't the chopper
 		if (VEHICLE2ID(v) != iHelicopterVehicleId)
 		{
-			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
+			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(*v);
 			// these are apparently unnecessary, since vehicles are part of the pPlayerList in a vehicle group.  Oh well.
 			vs.sSectorX = sSectorX;
 			vs.sSectorY = sSectorY;

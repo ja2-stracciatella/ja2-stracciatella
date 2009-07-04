@@ -903,7 +903,7 @@ static INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 icon_pos)
 		if (v->sSectorZ != iCurrentMapSectorZ)         continue;
 		if (PlayerIDGroupInMotion(v->ubMovementGroup)) continue;
 
-		SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(v);
+		SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(*v);
 		if (vs.bTeam != gbPlayerNum) continue;
 
 		DrawMapBoxIcon(guiCHARICONS, SMALL_WHITE_BOX, sMapX, sMapY, icon_pos++);
