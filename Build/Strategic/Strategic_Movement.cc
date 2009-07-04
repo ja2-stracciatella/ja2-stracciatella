@@ -1154,7 +1154,7 @@ static void AddCorpsesToBloodcatLair(INT16 sSectorX, INT16 sSectorY)
 
 
 static void HandleNonCombatGroupArrival(GROUP* pGroup, BOOLEAN fMainGroup, BOOLEAN fNeverLeft);
-static void ReportVehicleOutOfGas(const VEHICLETYPE*, UINT8 ubSectorX, UINT8 ubSectorY);
+static void ReportVehicleOutOfGas(VEHICLETYPE const&, UINT8 x, UINT8 y);
 static void SpendVehicleFuel(SOLDIERTYPE&, INT16 fuel_spent);
 static INT16 VehicleFuelRemaining(SOLDIERTYPE const&);
 
@@ -1282,7 +1282,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 
 			if (VehicleFuelRemaining(vs) == 0)
 			{
-				ReportVehicleOutOfGas(&v, pGroup->ubSectorX, pGroup->ubSectorY);
+				ReportVehicleOutOfGas(v, pGroup->ubSectorX, pGroup->ubSectorY);
 				//Nuke the group's path, so they don't continue moving.
 				ClearMercPathsAndWaypointsForAllInGroup( pGroup );
 			}
@@ -3357,12 +3357,12 @@ void AddFuelToVehicle(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVehicle)
 }
 
 
-static void ReportVehicleOutOfGas(const VEHICLETYPE* const v, const UINT8 ubSectorX, const UINT8 ubSectorY)
+static void ReportVehicleOutOfGas(VEHICLETYPE const& v, UINT8 const x, UINT8 const y)
 {
+	// Report that the vehicle that just arrived is out of gas
 	wchar_t str[255];
-	//Report that the vehicle that just arrived is out of gas.
-	swprintf(str, lengthof(str), gzLateLocalizedString[5], pVehicleStrings[v->ubVehicleType], ubSectorY + 'A' - 1, ubSectorX);
-	DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
+	swprintf(str, lengthof(str), gzLateLocalizedString[5], pVehicleStrings[v.ubVehicleType], y + 'A' - 1, x);
+	DoScreenIndependantMessageBox(str, MSG_BOX_FLAG_OK, 0);
 }
 
 
