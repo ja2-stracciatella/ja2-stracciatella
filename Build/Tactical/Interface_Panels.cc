@@ -1337,7 +1337,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 		if (!(gpSMCurrentMerc->uiStatusFlags & SOLDIER_DEAD))
 		{
 			PrintAP(gpSMCurrentMerc, SM_SELMERC_AP_X, dy + SM_SELMERC_AP_Y, SM_SELMERC_AP_WIDTH, SM_SELMERC_AP_HEIGHT);
-			DrawSoldierUIBars(gpSMCurrentMerc, SM_SELMERC_HEALTH_X, dy + SM_SELMERC_HEALTH_Y, TRUE, FRAME_BUFFER);
+			DrawSoldierUIBars(*gpSMCurrentMerc, SM_SELMERC_HEALTH_X, dy + SM_SELMERC_HEALTH_Y, TRUE, FRAME_BUFFER);
 		}
 	}
 
@@ -2465,7 +2465,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 				if (!(s->uiStatusFlags & SOLDIER_DEAD))
 				{
 					PrintAP(s, x, y, w, h);
-					DrawSoldierUIBars(s, dx + TM_BARS_X + 2, dy + TM_BARS_Y + 2 + TM_LIFEBAR_HEIGHT, TRUE, FRAME_BUFFER);
+					DrawSoldierUIBars(*s, dx + TM_BARS_X + 2, dy + TM_BARS_Y + 2 + TM_LIFEBAR_HEIGHT, TRUE, FRAME_BUFFER);
 				}
 				else
 				{

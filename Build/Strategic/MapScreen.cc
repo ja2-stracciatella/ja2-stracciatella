@@ -6599,7 +6599,7 @@ static void HandleCharBarRender(void)
 			s->bAssignment != ASSIGNMENT_DEAD &&
 			s->bAssignment != ASSIGNMENT_POW)
 	{
-		DrawSoldierUIBars(s, BAR_INFO_X, BAR_INFO_Y, TRUE, FRAME_BUFFER);
+		DrawSoldierUIBars(*s, BAR_INFO_X, BAR_INFO_Y, TRUE, FRAME_BUFFER);
 	}
 
 	UpdateCharRegionHelpText();

@@ -1354,7 +1354,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
 		  //reset the font dest buffer
 			SetFontDestBuffer(FRAME_BUFFER);
 
-			DrawSoldierUIBars(pSoldier, pBlitter->sX + 69, pBlitter->sY + 47, FALSE, pBlitter->uiDestBuff);
+			DrawSoldierUIBars(*pSoldier, pBlitter->sX + 69, pBlitter->sY + 47, FALSE, pBlitter->uiDestBuff);
 		}
 		else
 		{

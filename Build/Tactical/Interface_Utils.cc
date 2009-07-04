@@ -151,7 +151,7 @@ static void DrawMoraleUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 cons
 }
 
 
-void DrawSoldierUIBars(const SOLDIERTYPE* const pSoldier, const INT16 sXPos, const INT16 sYPos, const BOOLEAN fErase, SGPVSurface* const uiBuffer)
+void DrawSoldierUIBars(SOLDIERTYPE const& s, INT16 const sXPos, INT16 const sYPos, BOOLEAN const fErase, SGPVSurface* const uiBuffer)
 {
 	const UINT32 BarWidth  =  3;
 	const UINT32 BarHeight = 42;
@@ -164,17 +164,17 @@ void DrawSoldierUIBars(const SOLDIERTYPE* const pSoldier, const INT16 sXPos, con
 		RestoreExternBackgroundRect(sXPos, sYPos - BarHeight, MoraleOff + BarWidth, BarHeight + 1);
 	}
 
-	if (pSoldier->bLife == 0) return;
+	if (s.bLife == 0) return;
 
-	if (!(pSoldier->uiStatusFlags & SOLDIER_ROBOT))
+	if (!(s.uiStatusFlags & SOLDIER_ROBOT))
 	{
 		// DO MAX BREATH
 		// brown guy
 		UINT16 Region;
-		if (guiCurrentScreen != MAP_SCREEN &&
-				GetSelectedMan() == pSoldier &&
+		if (guiCurrentScreen != MAP_SCREEN            &&
+				GetSelectedMan() == &s                    &&
 				gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
-				OK_INTERRUPT_MERC(pSoldier))
+				OK_INTERRUPT_MERC(&s))
 		{
 			Region = 1; // gold, the second entry in the .sti
 		}
@@ -189,13 +189,13 @@ void DrawSoldierUIBars(const SOLDIERTYPE* const pSoldier, const INT16 sXPos, con
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	UINT16* const pDestBuf = l.Buffer<UINT16>();
 
-	DrawLifeUIBar(*pSoldier, sXPos, sYPos, BarHeight, pDestBuf);
-	if (!(pSoldier->uiStatusFlags & SOLDIER_ROBOT))
+	DrawLifeUIBar(s, sXPos, sYPos, BarHeight, pDestBuf);
+	if (!(s.uiStatusFlags & SOLDIER_ROBOT))
 	{
-		DrawBreathUIBar(*pSoldier, sXPos + BreathOff, sYPos, BarHeight, pDestBuf);
-		if (!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
+		DrawBreathUIBar(s, sXPos + BreathOff, sYPos, BarHeight, pDestBuf);
+		if (!(s.uiStatusFlags & SOLDIER_VEHICLE))
 		{
-			DrawMoraleUIBar(*pSoldier, sXPos + MoraleOff, sYPos, BarHeight, pDestBuf);
+			DrawMoraleUIBar(s, sXPos + MoraleOff, sYPos, BarHeight, pDestBuf);
 		}
 	}
 }
