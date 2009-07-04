@@ -824,12 +824,12 @@ void LoadVehicleInformationFromSavedGameFile(HWFILE const hFile, UINT32 const ui
 }
 
 
-void SetVehicleSectorValues(VEHICLETYPE* const v, const UINT8 ubSectorX, const UINT8 ubSectorY)
+void SetVehicleSectorValues(VEHICLETYPE& v, UINT8 const ubSectorX, UINT8 const ubSectorY)
 {
-	v->sSectorX = ubSectorX;
-	v->sSectorY = ubSectorY;
+	v.sSectorX = ubSectorX;
+	v.sSectorY = ubSectorY;
 
-	MERCPROFILESTRUCT& p = GetProfile(g_vehicle_type_info[v->ubVehicleType].profile);
+	MERCPROFILESTRUCT& p = GetProfile(g_vehicle_type_info[v.ubVehicleType].profile);
 	p.sSectorX = ubSectorX;
 	p.sSectorY = ubSectorY;
 }

@@ -1411,7 +1411,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 			}
 
 			// update vehicle position
-			SetVehicleSectorValues(&v, pGroup->ubSectorX, pGroup->ubSectorY);
+			SetVehicleSectorValues(v, pGroup->ubSectorX, pGroup->ubSectorY);
 			v.fBetweenSectors = FALSE;
 
 			// update passengers position

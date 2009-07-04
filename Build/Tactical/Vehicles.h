@@ -134,7 +134,7 @@ BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier );
 // put soldier in vehicle
 BOOLEAN PutSoldierInVehicle(SOLDIERTYPE*, VEHICLETYPE*);
 
-void SetVehicleSectorValues(VEHICLETYPE*, UINT8 ubSectorX, UINT8 ubSectorY);
+void SetVehicleSectorValues(VEHICLETYPE&, UINT8 x, UINT8 y);
 
 void UpdateAllVehiclePassengersGridNo( SOLDIERTYPE *pSoldier );
 
