@@ -801,7 +801,85 @@ void RenderInvBodyPanel(const SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY)
 }
 
 
-static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UINT8 fDirtyLevel);
+static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, UINT8 const dirty_level)
+{
+	guiCurrentItemDescriptionScreen = guiCurrentScreen;
+	bool        const  in_map = guiCurrentScreen == MAP_SCREEN;
+	OBJECTTYPE  const& o      = s.inv[pocket];
+
+	bool   hatch_out = false;
+	UINT16 outline   = TRANSPARENT;
+	if (dirty_level == DIRTYLEVEL2)
+	{
+		wchar_t buf[150];
+		GetHelpTextForItem(buf, lengthof(buf), o);
+		gSMInvRegion[pocket].SetFastHelpText(buf);
+
+		/* If it's the second hand and this hand cannot contain anything, remove the
+		 * second hand position graphic */
+		if (pocket == SECONDHANDPOS && Item[s.inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED)
+		{
+			if (in_map)
+			{
+#ifdef JA2DEMO
+				hatch_out = true;
+#else
+				BltVideoObject(guiSAVEBUFFER, guiMapInvSecondHandBlockout, 0, 14, 218);
+				RestoreExternBackgroundRect(14, 218, 102, 24);
+#endif
+			}
+			else
+			{
+				INT32 const x = 217;
+				INT32 const y = INV_INTERFACE_START_Y + 108;
+				BltVideoObject(guiSAVEBUFFER, guiSecItemHiddenVO, 0, x, y);
+				RestoreExternBackgroundRect(x, y, 72, 28);
+			}
+		}
+
+		// Check for compatibility with magazines
+		if (gbCompatibleAmmo[pocket]) outline = Get16BPPColor(FROMRGB(255, 255, 255));
+	}
+
+	INV_REGIONS const& xy = gSMInvData[pocket];
+	INT16       const  x  = xy.sX;
+	INT16       const  y  = xy.sY;
+
+	// Now render as normal
+	UINT8 const render_dirty_level =
+		s.bNewItemCount[pocket] <= 0           ||
+		gsCurInterfacePanel     != SM_PANEL    ||
+		fInterfacePanelDirty    != DIRTYLEVEL2 ? dirty_level :
+		DIRTYLEVEL0; // We have a new item and we are in the right panel
+	INVRenderItem(guiSAVEBUFFER, &s, o, x, y, xy.sWidth, xy.sHeight, render_dirty_level, 0, outline);
+
+	if (gbInvalidPlacementSlot[pocket])
+	{
+		if (pocket != SECONDHANDPOS && !gfSMDisableForItems)
+		{ // We are in inv panel and our guy is not = cursor guy
+			hatch_out = true;
+		}
+	}
+	else
+	{
+		if (guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE &&
+				ShouldSoldierDisplayHatchOnItem(s.ubProfile, pocket))
+		{
+			hatch_out = true;
+		}
+	}
+
+	if (hatch_out)
+	{
+		SGPVSurface* const dst = in_map ? guiSAVEBUFFER : FRAME_BUFFER;
+		DrawHatchOnInventory(dst, x, y, xy.sWidth, xy.sHeight);
+	}
+
+	if (o.usItem != NOTHING)
+	{ // Add item status bar
+		DrawItemUIBarEx(o, 0, x - INV_BAR_DX, y + INV_BAR_DY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
+	}
+}
 
 
 void HandleRenderInvSlots(SOLDIERTYPE const& s, UINT8 const dirty_level)
@@ -810,13 +888,7 @@ void HandleRenderInvSlots(SOLDIERTYPE const& s, UINT8 const dirty_level)
 
 	for (INT32 i = 0; i != NUM_INV_SLOTS; ++i)
 	{
-		if (dirty_level == DIRTYLEVEL2)
-		{
-			wchar_t buf[150];
-			GetHelpTextForItem(buf, lengthof(buf), s.inv[i]);
-			gSMInvRegion[i].SetFastHelpText(buf);
-		}
-		INVRenderINVPanelItem(&s, i, dirty_level);
+		INVRenderINVPanelItem(s, i, dirty_level);
 	}
 
 #ifndef JA2DEMO
@@ -839,130 +911,6 @@ void HandleRenderInvSlots(SOLDIERTYPE const& s, UINT8 const dirty_level)
 		RestoreExternBackgroundRect(x, y, KEYRING_WIDTH, KEYRING_HEIGHT);
 	}
 #endif
-}
-
-
-static void INVRenderINVPanelItem(const SOLDIERTYPE* pSoldier, INT16 sPocket, UINT8 fDirtyLevel)
-{
-	INT16 sX, sY;
-	UINT8		fRenderDirtyLevel;
-	BOOLEAN fHatchItOut = FALSE;
-
-
-	//Assign the screen
-	guiCurrentItemDescriptionScreen = guiCurrentScreen;
-
-	OBJECTTYPE const& o = pSoldier->inv[sPocket];
-
-	sX = gSMInvData[ sPocket ].sX;
-	sY = gSMInvData[ sPocket ].sY;
-
-	UINT16 outline = TRANSPARENT;
-	if ( fDirtyLevel == DIRTYLEVEL2 )
-	{
-		// CHECK FOR COMPATIBILITY WITH MAGAZINES
-
-/*	OLD VERSION OF GUN/AMMO MATCH HIGHLIGHTING
-		UINT16	usLineColor;
-
-		if (Item[pSoldier->inv[HANDPOS].usItem].usItemClass & IC_GUN && Item[o.usItem].usItemClass & IC_AMMO)
-		{
-			// CHECK
-			if (Weapon[pSoldier->inv[HANDPOS].usItem].ubCalibre == Magazine[Item[o.usItem].ubClassIndex].ubCalibre)
-			{
-				// IT's an OK calibre ammo, do something!
-				// Render Item with specific color
-				//outline = Get16BPPColor(FROMRGB(96, 104, 128));
-				//outline = Get16BPPColor(FROMRGB(20,  20, 120));
-
-				// Draw rectangle!
-				SGPVSurface::Lock l(guiSAVEBUFFER);
-				UINT32 const uiDestPitchBYTES = l.Pitch();
-				SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-				//usLineColor = Get16BPPColor( FROMRGB( 255, 255, 0 ) );
-				usLineColor = Get16BPPColor( FROMRGB( 230, 215, 196 ) );
-				RectangleDraw(TRUE, sX + 1, sY + 1, sX + gSMInvData[sPocket].sWidth - 2, sY + gSMInvData[sPocket].sHeight - 2, usLineColor, l.Buffer<UINT16>());
-
-				SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			}
-		}
-*/
-
-		if (gbCompatibleAmmo[sPocket]) outline = Get16BPPColor(FROMRGB(255, 255, 255));
-
-		// IF it's the second hand and this hand cannot contain anything, remove the second hand position graphic
-		if (sPocket == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED)
-		{
-//			if( guiCurrentScreen != MAP_SCREEN )
-			if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
-			{
-				const INT32 x = 217;
-				const INT32 y = INV_INTERFACE_START_Y + 108;
-				BltVideoObject(guiSAVEBUFFER, guiSecItemHiddenVO, 0, x, y);
-				RestoreExternBackgroundRect(x, y, 72, 28);
-			}
-			else
-			{
-#ifdef JA2DEMO
-				fHatchItOut = TRUE;
-#else
-				BltVideoObject(guiSAVEBUFFER, guiMapInvSecondHandBlockout, 0, 14, 218);
-				RestoreExternBackgroundRect( 14, 218, 102, 24 );
-#endif
-			}
-		}
-	}
-
-	// If we have a new item and we are in the right panel...
-	if ( pSoldier->bNewItemCount[ sPocket ] > 0 && gsCurInterfacePanel == SM_PANEL && fInterfacePanelDirty != DIRTYLEVEL2 )
-	{
-		fRenderDirtyLevel = DIRTYLEVEL0;
-		//fRenderDirtyLevel = fDirtyLevel;
-	}
-	else
-	{
-		fRenderDirtyLevel = fDirtyLevel;
-	}
-
-	//Now render as normal
-	INVRenderItem(guiSAVEBUFFER, pSoldier, o, sX, sY, gSMInvData[sPocket].sWidth, gSMInvData[sPocket].sHeight, fRenderDirtyLevel, 0, outline);
-
-	if ( gbInvalidPlacementSlot[ sPocket ] )
-	{
-		if ( sPocket != SECONDHANDPOS )
-		{
-			// If we are in inv panel and our guy is not = cursor guy...
-			if ( !gfSMDisableForItems )
-			{
-				fHatchItOut = TRUE;
-			}
-		}
-	}
-
-	//if we are in the shop keeper interface
-	if( guiTacticalInterfaceFlags & INTERFACE_SHOPKEEP_INTERFACE )
-	{
-		if( ShouldSoldierDisplayHatchOnItem( pSoldier->ubProfile, sPocket ) && !gbInvalidPlacementSlot[ sPocket ] )
-		{
-			fHatchItOut = TRUE;
-		}
-	}
-
-	if ( fHatchItOut )
-	{
-		SGPVSurface* const uiWhichBuffer = (guiCurrentItemDescriptionScreen == MAP_SCREEN ? guiSAVEBUFFER : FRAME_BUFFER);
-		DrawHatchOnInventory(uiWhichBuffer, sX, sY, gSMInvData[sPocket].sWidth, gSMInvData[sPocket].sHeight);
-	}
-
-	// if there's an item in there
-	if (o.usItem != NOTHING)
-	{
-		// Add item status bar
-		INT16 const sBarX = sX - INV_BAR_DX;
-		INT16 const sBarY = sY + INV_BAR_DY;
-		DrawItemUIBarEx(o, 0, sBarX, sBarY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
-	}
 }
 
 
