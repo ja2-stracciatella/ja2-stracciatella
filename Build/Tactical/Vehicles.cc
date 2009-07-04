@@ -181,14 +181,14 @@ BOOLEAN IsThisVehicleAccessibleToSoldier(const SOLDIERTYPE* const s, const VEHIC
 }
 
 
-static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
+static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE& v)
 {
 	// ok now check if any free slots in the vehicle
 
 	SOLDIERTYPE* vs = 0;
-	if (VEHICLE2ID(v) != iHelicopterVehicleId)
+	if (VEHICLE2ID(&v) != iHelicopterVehicleId)
 	{
-		vs = &GetSoldierStructureForVehicle(*v);
+		vs = &GetSoldierStructureForVehicle(v);
 		if (vs->bTeam != gbPlayerNum)
 		{
 			// Change sides
@@ -198,7 +198,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 		}
 
 		// If vehicle is empty, add to unique squad now that it has somebody in it!
-		if (GetNumberInVehicle(*v) == 0)
+		if (GetNumberInVehicle(v) == 0)
 		{
 			// 2 ) Add to unique squad...
 			AddCharacterToUniqueSquad(vs);
@@ -209,7 +209,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 
 			// I really have vehicles.
 			// ONLY add to vehicle group once!
-			GROUP* const g = GetGroup(v->ubMovementGroup);
+			GROUP* const g = GetGroup(v.ubMovementGroup);
 			if (!DoesPlayerExistInPGroup(g, vs))
 			{
 				//NOW.. add guy to vehicle group....
@@ -217,13 +217,13 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 			}
 			else
 			{
-				vs->ubGroupID = v->ubMovementGroup;
+				vs->ubGroupID = v.ubMovementGroup;
 			}
 		}
 	}
 
 	// check if the grunt is already here
-	CFOR_ALL_PASSENGERS(v, i)
+	CFOR_ALL_PASSENGERS(&v, i)
 	{
 		if (*i == s) return TRUE; // guy found, no need to add
 	}
@@ -236,14 +236,14 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 			SelectSoldier(vs, SELSOLDIER_FORCE_RESELECT);
 		}
 
-		PlayLocationJA2Sample(vs->sGridNo, g_vehicle_type_info[v->ubVehicleType].enter_sound, HIGHVOLUME, 1);
+		PlayLocationJA2Sample(vs->sGridNo, g_vehicle_type_info[v.ubVehicleType].enter_sound, HIGHVOLUME, 1);
 	}
 
-	INT32 const seats = GetVehicleSeats(*v);
+	INT32 const seats = GetVehicleSeats(v);
 	for (INT32 i = 0; i < seats; ++i)
 	{
-		if (v->pPassengers[i]) continue;
-		v->pPassengers[i] = s;
+		if (v.pPassengers[i]) continue;
+		v.pPassengers[i] = s;
 
 		if (s->bAssignment == VEHICLE)
 		{
@@ -266,23 +266,23 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 			s->ubGroupID = 0;
 		}
 
-		if (s->bAssignment != VEHICLE || s->iVehicleId != VEHICLE2ID(v))
+		if (s->bAssignment != VEHICLE || s->iVehicleId != VEHICLE2ID(&v))
 		{
 			SetTimeOfAssignmentChangeForMerc(s);
 		}
 
 		ChangeSoldiersAssignment(s, VEHICLE);
 
-		s->iVehicleId = VEHICLE2ID(v);
+		s->iVehicleId = VEHICLE2ID(&v);
 
 		// if vehicle is part of mvt group, then add character to mvt group
-		if (v->ubMovementGroup != 0)
+		if (v.ubMovementGroup != 0)
 		{
-			AddPlayerToGroup(GetGroup(v->ubMovementGroup), s);
+			AddPlayerToGroup(GetGroup(v.ubMovementGroup), s);
 		}
 
 		// Are we the first?
-		s->uiStatusFlags |= GetNumberInVehicle(*v) == 1 ?
+		s->uiStatusFlags |= GetNumberInVehicle(v) == 1 ?
 			SOLDIER_DRIVER : SOLDIER_PASSENGER;
 
 		RemoveSoldierFromGridNo(s);
@@ -572,7 +572,7 @@ BOOLEAN TakeSoldierOutOfVehicle(SOLDIERTYPE* const s)
 
 bool PutSoldierInVehicle(SOLDIERTYPE* const s, VEHICLETYPE& v)
 {
-	if (!AddSoldierToVehicle(s, &v)) return false;
+	if (!AddSoldierToVehicle(s, v)) return false;
 
 	if (s->sSectorX    == gWorldSectorX        &&
 			s->sSectorY    == gWorldSectorY        &&
