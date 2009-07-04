@@ -834,7 +834,7 @@ static void ShowTownText(void)
 }
 
 
-static void DrawMapBoxIcon(HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, INT16 sMapY, UINT8 ubIconPosition);
+static void DrawMapBoxIcon(HVOBJECT, UINT16 icon, INT16 sec_x, INT16 sec_y, UINT8 icon_pos);
 
 
 // "on duty" includes mercs inside vehicles
@@ -5107,50 +5107,36 @@ static void ShowItemsOnMap(void)
 }
 
 
-static void DrawMapBoxIcon(HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, INT16 sMapY, UINT8 ubIconPosition)
+static void DrawMapBoxIcon(HVOBJECT const vo, UINT16 const icon, INT16 const sec_x, INT16 const sec_y, UINT8 const icon_pos)
 {
-  INT32 iRowNumber, iColumnNumber;
-	INT32 iX, iY;
+	/* Don't show any more icons than will fit into one sector, to keep them from
+	 * spilling into sector(s) beneath */
+	if (icon_pos >= MERC_ICONS_PER_LINE * ROWS_PER_SECTOR) return;
 
-
-	// don't show any more icons than will fit into one sector, to keep them from spilling into sector(s) beneath
-	if ( ubIconPosition >= ( MERC_ICONS_PER_LINE * ROWS_PER_SECTOR ) )
+	INT32 const col = icon_pos % MERC_ICONS_PER_LINE;
+	INT32 const row = icon_pos / MERC_ICONS_PER_LINE;
+	if (!fZoomFlag)
 	{
-		return;
+		INT32 const x = MAP_VIEW_START_X + sec_x * MAP_GRID_X + MAP_X_ICON_OFFSET + 3 * col;
+		INT32 const y = MAP_VIEW_START_Y + sec_y * MAP_GRID_Y + MAP_Y_ICON_OFFSET + 3 * row;
+		BltVideoObject(guiSAVEBUFFER, vo, icon, x, y);
+		InvalidateRegion(x, y, x + DMAP_GRID_X, y + DMAP_GRID_Y);
 	}
-
-
-	iColumnNumber = ubIconPosition % MERC_ICONS_PER_LINE;
-	iRowNumber    = ubIconPosition / MERC_ICONS_PER_LINE;
-
-	if ( !fZoomFlag )
-	{
-		iX = MAP_VIEW_START_X + ( sMapX * MAP_GRID_X ) + MAP_X_ICON_OFFSET + ( 3 * iColumnNumber );
-		iY = MAP_VIEW_START_Y + ( sMapY * MAP_GRID_Y ) + MAP_Y_ICON_OFFSET + ( 3 * iRowNumber );
-
-		BltVideoObject( guiSAVEBUFFER, hIconHandle, usVOIndex , iX, iY);
-		InvalidateRegion( iX, iY, iX + DMAP_GRID_X, iY + DMAP_GRID_Y );
-	}
-/*
+#if 0 // XXX was commented out
 	else
 	{
-		INT sX, sY;
+		INT sX;
+		INT sY;
+		GetScreenXYFromMapXYStationary((UINT16)sX, (UINT16)sY, &sX, &sY); // XXX first two parameters should be sector x/y
+		INT32 const x = MAP_X_ICON_OFFSET + sX - MAP_GRID_X + 6 * col + 2;
+ 	 	INT32 const y = MAP_Y_ICON_OFFSET + sY - MAP_GRID_Y + 6 * row;
 
-		GetScreenXYFromMapXYStationary( ( UINT16 ) sX,( UINT16 ) sY, &sX, &sY );
- 	 	iY = sY-MAP_GRID_Y;
-		iX = sX-MAP_GRID_X;
-
-		// clip blits to mapscreen region
-		ClipBlitsToMapViewRegion( );
-
-		BltVideoObject(guiSAVEBUFFER, hIconHandle,BIG_YELLOW_BOX,MAP_X_ICON_OFFSET+iX+6*iColumnNumber+2,MAP_Y_ICON_OFFSET+iY+6*iRowNumber);
-
-		// restore clip blits
-		RestoreClipRegionToFullScreen( );
-
-		InvalidateRegion(MAP_X_ICON_OFFSET+iX+6*iColumnNumber+2, MAP_Y_ICON_OFFSET+iY+6*iRowNumber,MAP_X_ICON_OFFSET+iX+6*iColumnNumber+2+ DMAP_GRID_ZOOM_X, MAP_Y_ICON_OFFSET+iY+6*iRowNumber + DMAP_GRID_ZOOM_Y );
+		ClipBlitsToMapViewRegion();
+		BltVideoObject(guiSAVEBUFFER, vo, BIG_YELLOW_BOX, x, y); // XXX should use icon instead of hardcoding BIG_YELLOW_BOX
+		RestoreClipRegionToFullScreen();
+		InvalidateRegion(x, y, x + DMAP_GRID_ZOOM_X, y + DMAP_GRID_ZOOM_Y);
 	}
-*/
+#endif
 }
 
 
