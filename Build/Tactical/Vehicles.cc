@@ -168,16 +168,16 @@ void ClearOutVehicleList(void)
 }
 
 
-BOOLEAN IsThisVehicleAccessibleToSoldier(const SOLDIERTYPE* const s, const VEHICLETYPE* const v)
+bool IsThisVehicleAccessibleToSoldier(SOLDIERTYPE const* const s, VEHICLETYPE const& v)
 {
 	return
-		s != NULL                  &&
-		!s->fBetweenSectors        &&
-		!v->fBetweenSectors        &&
-		s->sSectorX == v->sSectorX &&
-		s->sSectorY == v->sSectorY &&
-		s->bSectorZ == v->sSectorZ &&
-		OKUseVehicle(g_vehicle_type_info[v->ubVehicleType].profile);
+		s != NULL                 &&
+		!s->fBetweenSectors       &&
+		!v.fBetweenSectors        &&
+		s->sSectorX == v.sSectorX &&
+		s->sSectorY == v.sSectorY &&
+		s->bSectorZ == v.sSectorZ &&
+		OKUseVehicle(g_vehicle_type_info[v.ubVehicleType].profile);
 }
 
 
@@ -538,7 +538,7 @@ BOOLEAN AnyAccessibleVehiclesInSoldiersSector(const SOLDIERTYPE* const s)
 {
 	CFOR_ALL_VEHICLES(v)
 	{
-		if (IsThisVehicleAccessibleToSoldier(s, v)) return TRUE;
+		if (IsThisVehicleAccessibleToSoldier(s, *v)) return TRUE;
 	}
 	return FALSE;
 }

@@ -388,16 +388,15 @@ static BOOLEAN IsAnythingAroundForSoldierToRepair(SOLDIERTYPE const* const pSold
 	// vehicles?
 	if ( pSoldier->bSectorZ == 0 )
 	{
-		CFOR_ALL_VEHICLES(v)
+		CFOR_ALL_VEHICLES(i)
 		{
+			VEHICLETYPE const& v = *i;
 			// the helicopter, is NEVER repairable...
-			if (VEHICLE2ID(v) != iHelicopterVehicleId &&
-					IsThisVehicleAccessibleToSoldier(pSoldier, v) &&
-					CanCharacterRepairVehicle(pSoldier, *v))
-			{
-				// there is a repairable vehicle here
-				return TRUE;
-			}
+			if (VEHICLE2ID(&v) == iHelicopterVehicleId)         continue;
+			if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) continue;
+			if (!CanCharacterRepairVehicle(pSoldier, v))        continue;
+			// there is a repairable vehicle here
+			return TRUE;
 		}
 	}
 
@@ -3138,13 +3137,14 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 		UINT16             const h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
 		MOUSE_REGION*            r    = gVehicleMenuRegion;
 		SOLDIERTYPE const* const s    = GetSelectedAssignSoldier(FALSE);
-		FOR_ALL_VEHICLES(v)
+		FOR_ALL_VEHICLES(i)
 		{
+			VEHICLETYPE& v = *i;
 			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 
 			// add mouse region for each accessible vehicle
 			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, VehicleMenuMvtCallback, VehicleMenuBtnCallback);
-			r->SetUserPtr(v);
+			r->SetUserPtr(&v);
 			y += h;
 			++r;
 		}
@@ -3185,14 +3185,15 @@ static void HandleShadingOfLinesForVehicleMenu()
 	PopUpBox* const box = ghVehicleBox;
 	if (box == NO_POPUP_BOX) return;
 
-	SOLDIERTYPE const * const s    = GetSelectedAssignSoldier(FALSE);
-	UINT32                    line = 0;
-	CFOR_ALL_VEHICLES(v)
+	SOLDIERTYPE const* const s    = GetSelectedAssignSoldier(FALSE);
+	UINT32                   line = 0;
+	CFOR_ALL_VEHICLES(i)
 	{
+		VEHICLETYPE const& v = *i;
 		// inaccessible vehicles aren't listed at all!
 		if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 
-		PopUpShade const shade = IsEnoughSpaceInVehicle(*v) ?
+		PopUpShade const shade = IsEnoughSpaceInVehicle(v) ?
 			POPUP_SHADE_NONE : POPUP_SHADE_SECONDARY;
 		ShadeStringInBox(box, line++, shade);
 	}
@@ -3208,7 +3209,7 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		VEHICLETYPE&       v = *pRegion->GetUserPtr<VEHICLETYPE>();
 
 		// inaccessible vehicles shouldn't be listed in the menu!
-		Assert(IsThisVehicleAccessibleToSoldier(s, &v));
+		Assert(IsThisVehicleAccessibleToSoldier(s, v));
 
 		if (IsEnoughSpaceInVehicle(v))
 		{
@@ -3293,16 +3294,13 @@ static void DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 	if( pSoldier->bSectorZ == 0 )
 	{
 		// run through list of vehicles and see if any in sector
-		CFOR_ALL_VEHICLES(v)
+		CFOR_ALL_VEHICLES(i)
 		{
+			VEHICLETYPE const& v = *i;
 			// don't even list the helicopter, because it's NEVER repairable...
-			if (VEHICLE2ID(v) != iHelicopterVehicleId)
-			{
-				if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
-				{
-					AddMonoString(box, pVehicleStrings[v->ubVehicleType]);
-				}
-			}
+			if (VEHICLE2ID(&v) == iHelicopterVehicleId)         continue;
+			if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) continue;
+			AddMonoString(box, pVehicleStrings[v.ubVehicleType]);
 		}
 	}
 
@@ -3358,13 +3356,13 @@ static void HandleShadingOfLinesForRepairMenu()
 
 	if (s->bSectorZ == 0)
 	{
-		CFOR_ALL_VEHICLES(v)
+		CFOR_ALL_VEHICLES(i)
 		{
+			VEHICLETYPE const& v = *i;
 			// don't even list the helicopter, because it's NEVER repairable...
-			if (VEHICLE2ID(v) == iHelicopterVehicleId)   continue;
+			if (VEHICLE2ID(&v) == iHelicopterVehicleId)  continue;
 			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
-
-			ShadeStringInBox(box, line++, !CanCharacterRepairVehicle(s, *v));
+			ShadeStringInBox(box, line++, !CanCharacterRepairVehicle(s, v));
 		}
 	}
 
@@ -3424,16 +3422,17 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 		if (s->bSectorZ == 0)
 		{
 			// vehicles
-			CFOR_ALL_VEHICLES(v)
+			CFOR_ALL_VEHICLES(i)
 			{
+				VEHICLETYPE const& v = *i;
 				// don't even list the helicopter, because it's NEVER repairable...
-				if (VEHICLE2ID(v) == iHelicopterVehicleId) continue;
+				if (VEHICLE2ID(&v) == iHelicopterVehicleId) continue;
 
 				// other vehicles *in the sector* are listed, but later shaded dark if they're not repairable
 				if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 
 				// add mouse region for each line of text..and set user data
-				MakeRepairRegion(idx++, x, y, w, h, VEHICLE2ID(v));
+				MakeRepairRegion(idx++, x, y, w, h, VEHICLE2ID(&v));
 				y += h;
 			}
 		}
@@ -5466,13 +5465,12 @@ static BOOLEAN DisplayVehicleMenu(SOLDIERTYPE* pSoldier)
 	PopUpBox* const box = CreateVehicleBox();
 
 	// run through list of vehicles in sector and add them to pop up box
-	CFOR_ALL_VEHICLES(v)
+	CFOR_ALL_VEHICLES(i)
 	{
-		if (IsThisVehicleAccessibleToSoldier(pSoldier, v))
-		{
-			AddMonoString(box, pVehicleStrings[v->ubVehicleType]);
-			fVehiclePresent = TRUE;
-		}
+		VEHICLETYPE const& v = *i;
+		if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) continue;
+		AddMonoString(box, pVehicleStrings[v.ubVehicleType]);
+		fVehiclePresent = TRUE;
 	}
 
 	// cancel string (borrow the one in the squad menu)
@@ -6070,7 +6068,7 @@ static bool CanCharacterRepairVehicle(SOLDIERTYPE const* const pSoldier, VEHICLE
 	if (!DoesVehicleNeedAnyRepairs(v)) return FALSE;
 
 	// same sector, neither is between sectors, and OK To Use (player owns it) ?
-	if (!IsThisVehicleAccessibleToSoldier(pSoldier, &v)) return FALSE;
+	if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) return FALSE;
 
 /* Assignment distance limits removed.  Sep/11/98.  ARM
 	// if currently loaded sector, are we close enough?
@@ -7094,7 +7092,7 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 				if (CanCharacterVehicle(s))
 				{
 					VEHICLETYPE& v = GetVehicle(bParam);
-					if (IsThisVehicleAccessibleToSoldier(s, &v))
+					if (IsThisVehicleAccessibleToSoldier(s, v))
 					{
 						// if the vehicle is FULL, then this will return FALSE!
 						fItWorked = PutSoldierInVehicle(s, v);
