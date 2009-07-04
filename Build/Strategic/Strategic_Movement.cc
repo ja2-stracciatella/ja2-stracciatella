@@ -1188,8 +1188,8 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 
 		if( pGroup->fVehicle )
 		{
-			VEHICLETYPE const* const v = GetVehicleFromMvtGroup(pGroup);
-			if (VEHICLE2ID(v) != iHelicopterVehicleId &&
+			VEHICLETYPE const& v = GetVehicleFromMvtGroup(pGroup);
+			if (VEHICLE2ID(&v) != iHelicopterVehicleId &&
 					pGroup->pPlayerList == NULL)
 			{
 				// nobody here, better just get out now
@@ -1275,14 +1275,14 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 		}
 		else if( !IsGroupTheHelicopterGroup( pGroup ) )
 		{
-			VEHICLETYPE const* const v  = GetVehicleFromMvtGroup(pGroup);
-			SOLDIERTYPE&             vs = GetSoldierStructureForVehicle(*v);
+			VEHICLETYPE const& v  = GetVehicleFromMvtGroup(pGroup);
+			SOLDIERTYPE&       vs = GetSoldierStructureForVehicle(v);
 
 			SpendVehicleFuel(vs, pGroup->uiTraverseTime * 6);
 
 			if (VehicleFuelRemaining(vs) == 0)
 			{
-				ReportVehicleOutOfGas(v, pGroup->ubSectorX, pGroup->ubSectorY);
+				ReportVehicleOutOfGas(&v, pGroup->ubSectorX, pGroup->ubSectorY);
 				//Nuke the group's path, so they don't continue moving.
 				ClearMercPathsAndWaypointsForAllInGroup( pGroup );
 			}
@@ -1403,23 +1403,23 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 		}
 		else	// vehicle player group
 		{
-			VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-			if (v->pMercPath  )
+			VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
+			if (v.pMercPath )
 			{
 				// remove head from vehicle's mapscreen path list
-				v->pMercPath = RemoveHeadFromStrategicPath(v->pMercPath);
+				v.pMercPath = RemoveHeadFromStrategicPath(v.pMercPath);
 			}
 
 			// update vehicle position
-			SetVehicleSectorValues(v, pGroup->ubSectorX, pGroup->ubSectorY);
-			v->fBetweenSectors = FALSE;
+			SetVehicleSectorValues(&v, pGroup->ubSectorX, pGroup->ubSectorY);
+			v.fBetweenSectors = FALSE;
 
 			// update passengers position
-			UpdatePositionOfMercsInVehicle(v);
+			UpdatePositionOfMercsInVehicle(&v);
 
-			if (VEHICLE2ID(v) != iHelicopterVehicleId)
+			if (VEHICLE2ID(&v) != iHelicopterVehicleId)
 			{
-				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(*v);
+				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 
 				vs.fBetweenSectors = FALSE;
 				vs.sSectorX = pGroup->ubSectorX;
@@ -1463,7 +1463,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 			}
 			else
 			{
-				if (HandleHeliEnteringSector(v->sSectorX, v->sSectorY))
+				if (HandleHeliEnteringSector(v.sSectorX, v.sSectorY))
 				{
 					// helicopter destroyed
 					fGroupDestroyed = TRUE;
@@ -1476,7 +1476,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 				// don't print any messages when arriving underground, there's no delay involved
 				if ( GroupAtFinalDestination( pGroup ) && ( pGroup->ubSectorZ == 0 ) && !fNeverLeft )
 				{
-					ScreenMsg(FONT_MCOLOR_DKRED, MSG_INTERFACE, pMessageStrings[MSG_ARRIVE], pVehicleStrings[v->ubVehicleType], pMapVertIndex[pGroup->ubSectorY], pMapHortIndex[pGroup->ubSectorX]);
+					ScreenMsg(FONT_MCOLOR_DKRED, MSG_INTERFACE, pMessageStrings[MSG_ARRIVE], pVehicleStrings[v.ubVehicleType], pMapVertIndex[pGroup->ubSectorY], pMapHortIndex[pGroup->ubSectorX]);
 				}
 			}
 		}
@@ -1702,12 +1702,12 @@ static void PrepareGroupsForSimultaneousArrival(void)
 
 	if( pGroup->fVehicle )
 	{
-		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-		v->fBetweenSectors = TRUE;
+		VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
+		v.fBetweenSectors = TRUE;
 
-		if (VEHICLE2ID(v) != iHelicopterVehicleId)
+		if (VEHICLE2ID(&v) != iHelicopterVehicleId)
 		{
-			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(*v);
+			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 			vs.fBetweenSectors = TRUE;
 		}
 	}
@@ -1949,12 +1949,12 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	if (pGroup->fVehicle)
 	{
 		// vehicle, set fact it is between sectors too
-		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-		v->fBetweenSectors = TRUE;
+		VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
+		v.fBetweenSectors = TRUE;
 
-		if (VEHICLE2ID(v) != iHelicopterVehicleId)
+		if (VEHICLE2ID(&v) != iHelicopterVehicleId)
 		{
-			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(*v);
+			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 			vs.fBetweenSectors = TRUE;
 			RemoveSoldierFromTacticalSector(&vs);
 		}
@@ -2973,8 +2973,8 @@ void RetreatGroupToPreviousSector( GROUP *pGroup )
 	if (pGroup->fVehicle)
 	{
 		// vehicle, set fact it is between sectors too
-		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-		v->fBetweenSectors = TRUE;
+		VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
+		v.fBetweenSectors = TRUE;
 	}
 
 	//Post the event!
@@ -3388,15 +3388,15 @@ static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const* const pGroup, INT
 	// if it's a vehicle
 	if ( pGroup->fVehicle )
 	{
-		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
-		v->sSectorX = sSectorX;
-		v->sSectorY = sSectorY;
-		v->sSectorZ = bSectorZ;
+		VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
+		v.sSectorX = sSectorX;
+		v.sSectorY = sSectorY;
+		v.sSectorZ = bSectorZ;
 
 		// if it ain't the chopper
-		if (VEHICLE2ID(v) != iHelicopterVehicleId)
+		if (VEHICLE2ID(&v) != iHelicopterVehicleId)
 		{
-			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(*v);
+			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 			// these are apparently unnecessary, since vehicles are part of the pPlayerList in a vehicle group.  Oh well.
 			vs.sSectorX = sSectorX;
 			vs.sSectorY = sSectorY;

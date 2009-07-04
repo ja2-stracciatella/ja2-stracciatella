@@ -1093,8 +1093,7 @@ PathSt* GetGroupMercPathPtr(GROUP const* const g)
 
 	if (g->fVehicle)
 	{
-		VEHICLETYPE const* const v = GetVehicleFromMvtGroup(g);
-		return v->pMercPath;
+		return GetVehicleFromMvtGroup(g).pMercPath;
 	}
 
 	if (g->pPlayerList && g->pPlayerList->pSoldier) // XXX pSoldier test necessary?
@@ -1140,9 +1139,9 @@ void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup )
 	// if it's a vehicle
 	if ( pGroup->fVehicle )
 	{
-		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
+		VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
 		// clear the path for that vehicle
-		v->pMercPath = ClearStrategicPathList(v->pMercPath, v->ubMovementGroup);
+		v.pMercPath = ClearStrategicPathList(v.pMercPath, v.ubMovementGroup);
 	}
 
 	// clear the waypoints for this group too - no mercpath = no waypoints!
@@ -1199,9 +1198,9 @@ void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSec
 	// if it's a vehicle
 	if ( pGroup->fVehicle )
 	{
-		VEHICLETYPE* const v = GetVehicleFromMvtGroup(pGroup);
+		VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
 		// add it to that vehicle's path
-		AddSectorToFrontOfMercPath(&v->pMercPath, ubSectorX, ubSectorY);
+		AddSectorToFrontOfMercPath(&v.pMercPath, ubSectorX, ubSectorY);
 	}
 }
 

@@ -473,15 +473,13 @@ void UpdatePositionOfMercsInVehicle(const VEHICLETYPE* const v)
 }
 
 
-VEHICLETYPE* GetVehicleFromMvtGroup(const GROUP* const group)
+VEHICLETYPE& GetVehicleFromMvtGroup(GROUP const* const g)
 {
 	// given the id of a mvt group, find a vehicle in this group
-	FOR_ALL_VEHICLES(v)
+	FOR_ALL_VEHICLES(i)
 	{
-		if (v->ubMovementGroup == group->ubGroupID)
-		{
-			return v;
-		}
+		VEHICLETYPE& v = *i;
+		if (v.ubMovementGroup == g->ubGroupID) return v;
 	}
 	throw std::logic_error("Group does not contain a vehicle");
 }
@@ -1125,7 +1123,7 @@ SOLDIERTYPE* PickRandomPassengerFromVehicle(SOLDIERTYPE* const pSoldier)
 
 BOOLEAN DoesVehicleGroupHaveAnyPassengers(GROUP const* const g)
 {
-	return GetNumberInVehicle(GetVehicleFromMvtGroup(g)) != 0;
+	return GetNumberInVehicle(&GetVehicleFromMvtGroup(g)) != 0;
 }
 
 

@@ -94,7 +94,7 @@ void SetUpMvtGroupForVehicle(SOLDIERTYPE*);
 void UpdatePositionOfMercsInVehicle(const VEHICLETYPE*);
 
 // find vehicle id of group with this vehicle
-VEHICLETYPE* GetVehicleFromMvtGroup(const GROUP*);
+VEHICLETYPE& GetVehicleFromMvtGroup(GROUP const*);
 
 // kill everyone in vehicle
 BOOLEAN KillAllInVehicle(const VEHICLETYPE*);
