@@ -116,7 +116,7 @@ SOLDIERTYPE& GetSoldierStructureForVehicle(VEHICLETYPE const&);
 bool DoesVehicleNeedAnyRepairs(VEHICLETYPE const&);
 
 // repair the vehicle
-INT8 RepairVehicle(VEHICLETYPE const*, INT8 bTotalPts, BOOLEAN* pfNothingToRepair);
+INT8 RepairVehicle(VEHICLETYPE const&, INT8 bTotalPts, BOOLEAN* pfNothingToRepair);
 
 
 //Save all the vehicle information to the saved game file

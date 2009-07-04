@@ -1954,7 +1954,7 @@ static void HandleRepairBySoldier(SOLDIERTYPE* pSoldier)
 		if (CanCharacterRepairVehicle(pSoldier, v))
 		{
 			// attempt to fix vehicle
-			ubRepairPtsLeft -= RepairVehicle(&v, ubRepairPtsLeft, &fNothingLeftToRepair);
+			ubRepairPtsLeft -= RepairVehicle(v, ubRepairPtsLeft, &fNothingLeftToRepair);
 		}
 	}
 	// check if we are repairing a robot

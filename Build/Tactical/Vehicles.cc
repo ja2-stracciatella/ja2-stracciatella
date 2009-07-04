@@ -726,15 +726,15 @@ bool DoesVehicleNeedAnyRepairs(VEHICLETYPE const& v)
 }
 
 
-INT8 RepairVehicle(VEHICLETYPE const* const v, INT8 const bRepairPtsLeft, BOOLEAN* const pfNothingToRepair)
+INT8 RepairVehicle(VEHICLETYPE const& v, INT8 const bRepairPtsLeft, BOOLEAN* const pfNothingToRepair)
 {
 	INT8					bRepairPtsUsed = 0;
 	INT8					bOldLife;
 
-	if (!DoesVehicleNeedAnyRepairs(*v)) return bRepairPtsUsed;
+	if (!DoesVehicleNeedAnyRepairs(v)) return bRepairPtsUsed;
 
 	// get the vehicle soldiertype
-	SOLDIERTYPE& vs = GetSoldierStructureForVehicle(*v);
+	SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 
 	bOldLife = vs.bLife;
 
@@ -748,7 +748,7 @@ INT8 RepairVehicle(VEHICLETYPE const* const v, INT8 const bRepairPtsLeft, BOOLEA
 	bRepairPtsUsed = (vs.bLife - bOldLife) * VEHICLE_REPAIR_POINTS_DIVISOR;
 
 	// ARM: personally, I'd love to know where in Arulco the mechanic gets the PARTS to do this stuff, but hey, it's a game!
-	*pfNothingToRepair = !DoesVehicleNeedAnyRepairs(*v);
+	*pfNothingToRepair = !DoesVehicleNeedAnyRepairs(v);
 
 	return( bRepairPtsUsed );
 }
