@@ -152,14 +152,14 @@ catch (...)
 }
 
 
-static BOOLEAN KeyExistsInInventory(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID);
+static bool KeyExistsInInventory(SOLDIERTYPE const&, UINT8 key_id);
 
 
 bool SoldierHasKey(SOLDIERTYPE const& s, UINT8 const key_id)
 {
 	return
 		KeyExistsInKeyRing(s, key_id) ||
-		KeyExistsInInventory(&s, key_id);
+		KeyExistsInInventory(s, key_id);
 }
 
 
@@ -178,20 +178,15 @@ bool KeyExistsInKeyRing(SOLDIERTYPE const& s, UINT8 const key_id)
 }
 
 
-static BOOLEAN KeyExistsInInventory(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID)
+static bool KeyExistsInInventory(SOLDIERTYPE const& s, UINT8 const key_id)
 {
-	CFOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
+	CFOR_ALL_SOLDIER_INV_SLOTS(i, s)
 	{
-		if (Item[i->usItem].usItemClass == IC_KEY)
-		{
-			if (i->ubKeyID == ubKeyID || ubKeyID == ANYKEY)
-			{
-				// there's the key we want!
-				return( TRUE );
-			}
-		}
+		if (Item[i->usItem].usItemClass != IC_KEY)    continue;
+		if (i->ubKeyID != key_id && key_id != ANYKEY) continue;
+		return true;
 	}
-	return( FALSE );
+	return false;
 }
 
 
