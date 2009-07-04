@@ -912,50 +912,30 @@ static void ShowEnemiesInSector(INT16 const x, INT16 const y, INT16 n_enemies, U
 }
 
 
-static void ShowUncertainNumberEnemiesInSector(INT16 sSectorX, INT16 sSectorY)
+static void ShowUncertainNumberEnemiesInSector(INT16 const sec_x, INT16 const sec_y)
 {
-	INT16 sXPosition = 0, sYPosition = 0;
-
-	// grab the x and y postions
-	sXPosition = sSectorX;
-	sYPosition = sSectorY;
-
-	// check if we are zoomed in...need to offset in case for scrolling purposes
-	if(!fZoomFlag)
+	if (!fZoomFlag)
 	{
-		sXPosition = ( INT16 )( MAP_X_ICON_OFFSET + ( MAP_VIEW_START_X + ( sSectorX * MAP_GRID_X + 1 )  ) - 1 );
-		sYPosition = ( INT16 )( ( ( MAP_VIEW_START_Y + ( sSectorY * MAP_GRID_Y ) + 1 )  ) );
-		sYPosition -= 2;
-
-		// small question mark
-		BltVideoObject(guiSAVEBUFFER, guiCHARICONS, SMALL_QUESTION_MARK, sXPosition, sYPosition);
-		InvalidateRegion( sXPosition ,sYPosition, sXPosition + DMAP_GRID_X, sYPosition + DMAP_GRID_Y );
+		INT16 const x = MAP_VIEW_START_X + sec_x * MAP_GRID_X + MAP_X_ICON_OFFSET;
+		INT16 const y = MAP_VIEW_START_Y + sec_y * MAP_GRID_Y - 1;
+		BltVideoObject(guiSAVEBUFFER, guiCHARICONS, SMALL_QUESTION_MARK, x, y);
+		InvalidateRegion(x, y, x + DMAP_GRID_X, y + DMAP_GRID_Y);
 	}
-/*
+#if 0 // XXX was commented out
 	else
 	{
-		INT16 sX = 0, sY = 0;
+		INT16 sX;
+		INT16 sY;
+		GetScreenXYFromMapXYStationary(sec_x, sec_y, &sX, &sY);
+		INT16 const x = sX - MAP_GRID_X + MAP_X_ICON_OFFSET;
+ 	 	INT16 const y = sY - MAP_GRID_Y - 1;
 
-		GetScreenXYFromMapXYStationary( sSectorX, sSectorY, &sX, &sY );
- 	 	sYPosition = sY-MAP_GRID_Y;
-		sXPosition = sX-MAP_GRID_X;
-
-		// get the x and y position
-		sXPosition = MAP_X_ICON_OFFSET + sXPosition ;
-		sYPosition = sYPosition - 1;
-
-		// clip blits to mapscreen region
-		ClipBlitsToMapViewRegion( );
-
-		// large question mark
-		BltVideoObject(guiSAVEBUFFER, guiCHARICONS, BIG_QUESTION_MARK, sXPosition, sYPosition);
-
-		// restore clip blits
-		RestoreClipRegionToFullScreen( );
-
-		InvalidateRegion( sXPosition, sYPosition, sXPosition + DMAP_GRID_ZOOM_X, sYPosition + DMAP_GRID_ZOOM_Y );
+		ClipBlitsToMapViewRegion();
+		BltVideoObject(guiSAVEBUFFER, guiCHARICONS, BIG_QUESTION_MARK, x, y);
+		RestoreClipRegionToFullScreen();
+		InvalidateRegion(x, y, x + DMAP_GRID_ZOOM_X, y + DMAP_GRID_ZOOM_Y);
 	}
-*/
+#endif
 }
 
 
