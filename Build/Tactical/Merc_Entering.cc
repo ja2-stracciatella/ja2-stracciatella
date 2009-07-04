@@ -459,7 +459,7 @@ void HandleHeliDrop( )
 				UpdateMercInSector(s, 9, 1, 0);
 
 				// Check for merc arrives quotes...
-				HandleMercArrivesQuotes(s);
+				HandleMercArrivesQuotes(*s);
 
 				ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[MERC_HAS_ARRIVED_STR], s->name);
 			}

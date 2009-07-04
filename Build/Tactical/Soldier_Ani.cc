@@ -999,7 +999,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					sNewGridNo = FindGridNoFromSweetSpotExcludingSweetSpotInQuardent(pSoldier, pSoldier->sGridNo, 3, SOUTHEAST);
 
 					// Check for merc arrives quotes...
-					HandleMercArrivesQuotes( pSoldier );
+					HandleMercArrivesQuotes(*pSoldier);
 
 					// Find a path to it!
 					EVENT_GetNewSoldierPath( pSoldier, sNewGridNo, WALKING );

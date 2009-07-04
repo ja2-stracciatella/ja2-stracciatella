@@ -44,7 +44,7 @@ INT8		HireMerc( MERC_HIRE_STRUCT *pHireMerc);
 void MercArrivesCallback(SOLDIERTYPE&);
 bool IsMercHireable(MERCPROFILESTRUCT const&);
 bool IsMercDead(MERCPROFILESTRUCT const&);
-void		HandleMercArrivesQuotes( SOLDIERTYPE *pSoldier );
+void HandleMercArrivesQuotes(SOLDIERTYPE&);
 void UpdateAnyInTransitMercsWithGlobalArrivalSector(void);
 
 

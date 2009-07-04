@@ -354,7 +354,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 		}
 	}
 
-	HandleMercArrivesQuotes(&s);
+	HandleMercArrivesQuotes(s);
 
 	fTeamPanelDirty = TRUE;
 
@@ -388,16 +388,16 @@ bool IsMercDead(MERCPROFILESTRUCT const& p)
 }
 
 
-void HandleMercArrivesQuotes(SOLDIERTYPE* const s)
+void HandleMercArrivesQuotes(SOLDIERTYPE& s)
 {
 	// If we are approaching with helicopter, don't say any ( yet )
-	if (s->ubStrategicInsertionCode == INSERTION_CODE_CHOPPER) return;
+	if (s.ubStrategicInsertionCode == INSERTION_CODE_CHOPPER) return;
 
 	// Player-generated characters issue a comment about arriving in Omerta.
-	if (s->ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER &&
+	if (s.ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER &&
 			gubQuest[QUEST_DELIVER_LETTER] == QUESTINPROGRESS)
 	{
-		TacticalCharacterDialogue(s, QUOTE_PC_DROPPED_OMERTA);
+		TacticalCharacterDialogue(&s, QUOTE_PC_DROPPED_OMERTA);
 	}
 
 	// Check to see if anyone hates this merc and will now complain
@@ -406,7 +406,7 @@ void HandleMercArrivesQuotes(SOLDIERTYPE* const s)
 		if (other->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) continue;
 
 		// hates the merc who has arrived and is going to gripe about it!
-		switch (WhichHated(other->ubProfile, s->ubProfile))
+		switch (WhichHated(other->ubProfile, s.ubProfile))
 		{
 			case 0:  TacticalCharacterDialogue(other, QUOTE_HATED_1_ARRIVES); break;
 			case 1:  TacticalCharacterDialogue(other, QUOTE_HATED_2_ARRIVES); break;
