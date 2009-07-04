@@ -762,8 +762,7 @@ void SaveDoorTableToMap( HWFILE fp )
 		else
 			i++;
 	}
-	FileWrite(fp, &gubNumDoors, 1);
-	FileWrite(fp, DoorTable, sizeof(DOOR) * gubNumDoors);
+	FileWriteArray(fp, gubNumDoors, DoorTable);
 }
 
 #endif
@@ -1367,17 +1366,8 @@ void SaveDoorStatusArrayToDoorStatusTempFile(INT16 const sSectorX, INT16 const s
 
 	GetMapTempFileName( SF_DOOR_STATUS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
 
-	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-
-	//Save the number of elements in the door array
-	FileWrite(hFile, &gubNumDoorStatus, sizeof(UINT8));
-
-	//if there is some to save
-	if( gubNumDoorStatus != 0 )
-	{
-		//Save the door array
-		FileWrite(hFile, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus);
-	}
+	AutoSGPFile f(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	FileWriteArray(f, gubNumDoorStatus, gpDoorStatus);
 
 	//Set the flag indicating that there is a door status array
 	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_DOOR_STATUS_TEMP_FILE_EXISTS );

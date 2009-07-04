@@ -233,15 +233,7 @@ void SaveWorldItemsToTempItemFile(INT16 const sMapX, INT16 const sMapY, INT8 con
 		char filename[128];
 		GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, sMapX, sMapY, bMapZ);
 		AutoSGPFile f(FileOpen(filename, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-
-		// Save the size of the item table
-		FileWrite(f, &uiNumberOfItems, sizeof(UINT32));
-
-		// Are there items to save?
-		if (uiNumberOfItems != 0)
-		{
-			FileWrite(f, pData, uiNumberOfItems * sizeof(WORLDITEM));
-		}
+		FileWriteArray(f, uiNumberOfItems, pData);
 		/* Close the file before
 		 * SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems() reads it */
 	}

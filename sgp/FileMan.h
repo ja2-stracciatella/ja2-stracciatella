@@ -52,6 +52,12 @@ void   FileClose(HWFILE);
 void FileRead( HWFILE, void*       pDest, UINT32 uiBytesToRead);
 void FileWrite(HWFILE, void const* pDest, UINT32 uiBytesToWrite);
 
+template<typename T, typename U> static inline void FileWriteArray(HWFILE const f, T const& n, U const* const data)
+{
+	FileWrite(f, &n, sizeof(n));
+	if (n != 0) FileWrite(f, data, sizeof(*data) * n);
+}
+
 void  FileSeek(HWFILE, INT32 distance, FileSeekMode);
 INT32 FileGetPos(HWFILE);
 
