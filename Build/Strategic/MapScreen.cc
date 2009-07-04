@@ -566,7 +566,7 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 }
 
 
-static void RenderHandPosItem(void);
+static void RenderHandPosItem();
 
 
 static void GlowItem(void)
@@ -696,29 +696,17 @@ void DrawFace(void)
 }
 
 
-static void RenderHandPosItem(void)
+// Render the inventory item in char's main hand
+static void RenderHandPosItem()
 {
-	// renders the inventory item in char's right hand
+	/* ARM: if already in the inventory panel, don't show the item again here,
+	 * seeing it twice is confusing */
+	if (fShowInventoryFlag) return;
 
-	// ARM: if already in the inventory panel, don't show the item again here, seeing it twice is confusing
-	if ( fShowInventoryFlag )
-	{
-		return;
-	}
+	SOLDIERTYPE const* const s = GetSelectedInfoChar();
+	if (!s || s->bLife == 0) return;
 
-	const SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
-	if( pSoldier == NULL )
-	{
-		return;
-	}
-
-	// check if still alive?
-	if( pSoldier -> bLife == 0 )
-	{
-		return;
-	}
-
-	INVRenderItem(guiSAVEBUFFER, pSoldier, pSoldier->inv[HANDPOS], SOLDIER_HAND_X, SOLDIER_HAND_Y, 58, 23, DIRTYLEVEL2, 0, TRANSPARENT);
+	INVRenderItem(guiSAVEBUFFER, s, s->inv[HANDPOS], SOLDIER_HAND_X, SOLDIER_HAND_Y, 58, 23, DIRTYLEVEL2, 0, TRANSPARENT);
 }
 
 
