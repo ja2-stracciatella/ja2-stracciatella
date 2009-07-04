@@ -50,7 +50,7 @@ extern VEHICLETYPE *pVehicleList;
 // number of vehicles on the list
 extern UINT8 ubNumberOfVehicles;
 
-#define VEHICLE2ID(v) ((v) - pVehicleList)
+#define VEHICLE2ID(v) (&(v) - pVehicleList)
 
 #define BASE_FOR_ALL_VEHICLES(type, iter)                           \
 	for (type*       iter        = pVehicleList,                      \

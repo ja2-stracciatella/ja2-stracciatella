@@ -186,7 +186,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE& v)
 	// ok now check if any free slots in the vehicle
 
 	SOLDIERTYPE* vs = 0;
-	if (VEHICLE2ID(&v) != iHelicopterVehicleId)
+	if (VEHICLE2ID(v) != iHelicopterVehicleId)
 	{
 		vs = &GetSoldierStructureForVehicle(v);
 		if (vs->bTeam != gbPlayerNum)
@@ -266,14 +266,14 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE& v)
 			s->ubGroupID = 0;
 		}
 
-		if (s->bAssignment != VEHICLE || s->iVehicleId != VEHICLE2ID(&v))
+		if (s->bAssignment != VEHICLE || s->iVehicleId != VEHICLE2ID(v))
 		{
 			SetTimeOfAssignmentChangeForMerc(s);
 		}
 
 		ChangeSoldiersAssignment(s, VEHICLE);
 
-		s->iVehicleId = VEHICLE2ID(&v);
+		s->iVehicleId = VEHICLE2ID(v);
 
 		// if vehicle is part of mvt group, then add character to mvt group
 		if (v.ubMovementGroup != 0)
@@ -574,10 +574,10 @@ bool PutSoldierInVehicle(SOLDIERTYPE* const s, VEHICLETYPE& v)
 {
 	if (!AddSoldierToVehicle(s, v)) return false;
 
-	if (s->sSectorX    == gWorldSectorX        &&
-			s->sSectorY    == gWorldSectorY        &&
-			s->bSectorZ    == 0                    &&
-			VEHICLE2ID(&v) != iHelicopterVehicleId &&
+	if (s->sSectorX   == gWorldSectorX        &&
+			s->sSectorY   == gWorldSectorY        &&
+			s->bSectorZ   == 0                    &&
+			VEHICLE2ID(v) != iHelicopterVehicleId &&
 			!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
 	{
 		SetCurrentInterfacePanel(TEAM_PANEL);
@@ -718,7 +718,7 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 bool DoesVehicleNeedAnyRepairs(VEHICLETYPE const& v)
 {
 	// Skyrider isn't damagable/repairable
-	if (VEHICLE2ID(&v) == iHelicopterVehicleId) return false;
+	if (VEHICLE2ID(v) == iHelicopterVehicleId) return false;
 
 	// get the vehicle soldiertype
 	SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(v);
@@ -759,7 +759,7 @@ SOLDIERTYPE& GetSoldierStructureForVehicle(VEHICLETYPE const& v)
 	FOR_ALL_SOLDIERS(s)
 	{
 		if (!(s->uiStatusFlags & SOLDIER_VEHICLE)) continue;
-		if (s->bVehicleID != VEHICLE2ID(&v))       continue;
+		if (s->bVehicleID != VEHICLE2ID(v))        continue;
 		return *s;
 	}
 	throw std::logic_error("Vehicle has no corresponding soldier");
@@ -947,10 +947,11 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 
 void AddVehicleFuelToSave( )
 {
-	CFOR_ALL_VEHICLES(v)
+	CFOR_ALL_VEHICLES(i)
 	{
+		VEHICLETYPE const& v = *i;
 		if (VEHICLE2ID(v) == iHelicopterVehicleId) continue;
-		SOLDIERTYPE& vs = GetSoldierStructureForVehicle(*v);
+		SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 		// Init fuel!
 		vs.sBreathRed = 10000;
 		vs.bBreath    = 100;

@@ -392,7 +392,7 @@ static BOOLEAN IsAnythingAroundForSoldierToRepair(SOLDIERTYPE const* const pSold
 		{
 			VEHICLETYPE const& v = *i;
 			// the helicopter, is NEVER repairable...
-			if (VEHICLE2ID(&v) == iHelicopterVehicleId)         continue;
+			if (VEHICLE2ID(v) == iHelicopterVehicleId)          continue;
 			if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) continue;
 			if (!CanCharacterRepairVehicle(pSoldier, v))        continue;
 			// there is a repairable vehicle here
@@ -3228,7 +3228,7 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		fMapScreenBottomDirty    = TRUE;
 		giAssignHighLine         = -1;
 
-		SetAssignmentForList(VEHICLE, VEHICLE2ID(&v));
+		SetAssignmentForList(VEHICLE, VEHICLE2ID(v));
 	}
 }
 
@@ -3298,7 +3298,7 @@ static void DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 		{
 			VEHICLETYPE const& v = *i;
 			// don't even list the helicopter, because it's NEVER repairable...
-			if (VEHICLE2ID(&v) == iHelicopterVehicleId)         continue;
+			if (VEHICLE2ID(v) == iHelicopterVehicleId)          continue;
 			if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) continue;
 			AddMonoString(box, pVehicleStrings[v.ubVehicleType]);
 		}
@@ -3360,7 +3360,7 @@ static void HandleShadingOfLinesForRepairMenu()
 		{
 			VEHICLETYPE const& v = *i;
 			// don't even list the helicopter, because it's NEVER repairable...
-			if (VEHICLE2ID(&v) == iHelicopterVehicleId)  continue;
+			if (VEHICLE2ID(v) == iHelicopterVehicleId)   continue;
 			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 			ShadeStringInBox(box, line++, !CanCharacterRepairVehicle(s, v));
 		}
@@ -3426,13 +3426,13 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 			{
 				VEHICLETYPE const& v = *i;
 				// don't even list the helicopter, because it's NEVER repairable...
-				if (VEHICLE2ID(&v) == iHelicopterVehicleId) continue;
+				if (VEHICLE2ID(v) == iHelicopterVehicleId) continue;
 
 				// other vehicles *in the sector* are listed, but later shaded dark if they're not repairable
 				if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 
 				// add mouse region for each line of text..and set user data
-				MakeRepairRegion(idx++, x, y, w, h, VEHICLE2ID(&v));
+				MakeRepairRegion(idx++, x, y, w, h, VEHICLE2ID(v));
 				y += h;
 			}
 		}
