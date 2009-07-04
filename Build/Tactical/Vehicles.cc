@@ -460,19 +460,6 @@ VEHICLETYPE& GetVehicle(INT32 const vehicle_id)
 }
 
 
-void UpdatePositionOfMercsInVehicle(VEHICLETYPE const& v)
-{
-	// go through list of mercs in vehicle and set all thier states as arrived
-	CFOR_ALL_PASSENGERS(&v, i)
-	{
-		SOLDIERTYPE* const s = *i;
-		s->sSectorY        = v.sSectorY;
-		s->sSectorX        = v.sSectorX;
-		s->fBetweenSectors = FALSE;
-	}
-}
-
-
 VEHICLETYPE& GetVehicleFromMvtGroup(GROUP const* const g)
 {
 	// given the id of a mvt group, find a vehicle in this group
@@ -824,14 +811,23 @@ void LoadVehicleInformationFromSavedGameFile(HWFILE const hFile, UINT32 const ui
 }
 
 
-void SetVehicleSectorValues(VEHICLETYPE& v, UINT8 const ubSectorX, UINT8 const ubSectorY)
+void SetVehicleSectorValues(VEHICLETYPE& v, UINT8 const x, UINT8 const y)
 {
-	v.sSectorX = ubSectorX;
-	v.sSectorY = ubSectorY;
+	v.sSectorX = x;
+	v.sSectorY = y;
 
 	MERCPROFILESTRUCT& p = GetProfile(g_vehicle_type_info[v.ubVehicleType].profile);
-	p.sSectorX = ubSectorX;
-	p.sSectorY = ubSectorY;
+	p.sSectorX = x;
+	p.sSectorY = y;
+
+	// Go through list of mercs in vehicle and set all their states as arrived
+	CFOR_ALL_PASSENGERS(&v, i)
+	{
+		SOLDIERTYPE& s = **i;
+		s.sSectorX        = x;
+		s.sSectorY        = y;
+		s.fBetweenSectors = FALSE;
+	}
 }
 
 

@@ -90,9 +90,6 @@ VEHICLETYPE& GetVehicle(INT32 vehicle_id);
  * reset to zero in copying of path */
 void SetUpMvtGroupForVehicle(SOLDIERTYPE*);
 
-// update mercs position when vehicle arrives
-void UpdatePositionOfMercsInVehicle(VEHICLETYPE const&);
-
 // find vehicle id of group with this vehicle
 VEHICLETYPE& GetVehicleFromMvtGroup(GROUP const*);
 

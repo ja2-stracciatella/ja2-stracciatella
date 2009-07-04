@@ -1414,9 +1414,6 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 			SetVehicleSectorValues(v, pGroup->ubSectorX, pGroup->ubSectorY);
 			v.fBetweenSectors = FALSE;
 
-			// update passengers position
-			UpdatePositionOfMercsInVehicle(v);
-
 			if (VEHICLE2ID(&v) != iHelicopterVehicleId)
 			{
 				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
