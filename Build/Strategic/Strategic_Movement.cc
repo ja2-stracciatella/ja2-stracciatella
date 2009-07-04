@@ -1155,7 +1155,7 @@ static void AddCorpsesToBloodcatLair(INT16 sSectorX, INT16 sSectorY)
 
 static void HandleNonCombatGroupArrival(GROUP* pGroup, BOOLEAN fMainGroup, BOOLEAN fNeverLeft);
 static void ReportVehicleOutOfGas(const VEHICLETYPE*, UINT8 ubSectorX, UINT8 ubSectorY);
-static BOOLEAN SpendVehicleFuel(SOLDIERTYPE* pSoldier, INT16 sFuelSpent);
+static void SpendVehicleFuel(SOLDIERTYPE&, INT16 fuel_spent);
 static INT16 VehicleFuelRemaining(SOLDIERTYPE* pSoldier);
 
 
@@ -1278,7 +1278,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 			VEHICLETYPE const* const v  = GetVehicleFromMvtGroup(pGroup);
 			SOLDIERTYPE&             vs = GetSoldierStructureForVehicle(v);
 
-			SpendVehicleFuel(&vs, pGroup->uiTraverseTime * 6);
+			SpendVehicleFuel(vs, pGroup->uiTraverseTime * 6);
 
 			if (!VehicleFuelRemaining(&vs))
 			{
@@ -3314,13 +3314,11 @@ static INT16 VehicleFuelRemaining(SOLDIERTYPE* pSoldier)
 }
 
 
-static BOOLEAN SpendVehicleFuel(SOLDIERTYPE* pSoldier, INT16 sFuelSpent)
+static void SpendVehicleFuel(SOLDIERTYPE& vs, INT16 const fuel_spent)
 {
-	Assert( pSoldier->uiStatusFlags & SOLDIER_VEHICLE );
-	pSoldier->sBreathRed -= sFuelSpent;
-	pSoldier->sBreathRed = (INT16)MAX( 0, pSoldier->sBreathRed );
-	pSoldier->bBreath = (INT8)((pSoldier->sBreathRed+99) / 100);
-	return( FALSE );
+	Assert(vs.uiStatusFlags & SOLDIER_VEHICLE);
+	vs.sBreathRed  = MAX(0, vs.sBreathRed - fuel_spent);
+	vs.bBreath     = (vs.sBreathRed + 99) / 100;
 }
 
 
