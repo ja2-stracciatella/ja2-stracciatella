@@ -100,7 +100,7 @@ VEHICLETYPE& GetVehicleFromMvtGroup(GROUP const*);
 BOOLEAN KillAllInVehicle(const VEHICLETYPE*);
 
 // grab number of occupants in vehicles
-INT32 GetNumberInVehicle(const VEHICLETYPE*);
+INT32 GetNumberInVehicle(VEHICLETYPE const&);
 
 // grab # in vehicle skipping EPCs (who aren't allowed to drive :-)
 INT32 GetNumberOfNonEPCsInVehicle( INT32 iId );

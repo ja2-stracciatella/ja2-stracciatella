@@ -198,7 +198,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 		}
 
 		// If vehicle is empty, add to unique squad now that it has somebody in it!
-		if (GetNumberInVehicle(v) == 0)
+		if (GetNumberInVehicle(*v) == 0)
 		{
 			// 2 ) Add to unique squad...
 			AddCharacterToUniqueSquad(vs);
@@ -282,7 +282,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 		}
 
 		// Are we the first?
-		s->uiStatusFlags |= GetNumberInVehicle(v) == 1 ?
+		s->uiStatusFlags |= GetNumberInVehicle(*v) == 1 ?
 			SOLDIER_DRIVER : SOLDIER_PASSENGER;
 
 		RemoveSoldierFromGridNo(s);
@@ -512,11 +512,11 @@ BOOLEAN KillAllInVehicle(const VEHICLETYPE* const v)
 }
 
 
-INT32 GetNumberInVehicle(const VEHICLETYPE* const v)
+INT32 GetNumberInVehicle(VEHICLETYPE const& v)
 {
 	// go through list of occupants in vehicles and count them
 	INT32 count = 0;
-	CFOR_ALL_PASSENGERS(v, i) ++count;
+	CFOR_ALL_PASSENGERS(&v, i) ++count;
 	return count;
 }
 
@@ -559,7 +559,7 @@ BOOLEAN AnyAccessibleVehiclesInSoldiersSector(const SOLDIERTYPE* const s)
 
 BOOLEAN IsEnoughSpaceInVehicle(const VEHICLETYPE* const v)
 {
-	return GetNumberInVehicle(v) != GetVehicleSeats(v);
+	return GetNumberInVehicle(*v) != GetVehicleSeats(v);
 }
 
 
@@ -1123,7 +1123,7 @@ SOLDIERTYPE* PickRandomPassengerFromVehicle(SOLDIERTYPE* const pSoldier)
 
 BOOLEAN DoesVehicleGroupHaveAnyPassengers(GROUP const* const g)
 {
-	return GetNumberInVehicle(&GetVehicleFromMvtGroup(g)) != 0;
+	return GetNumberInVehicle(GetVehicleFromMvtGroup(g)) != 0;
 }
 
 

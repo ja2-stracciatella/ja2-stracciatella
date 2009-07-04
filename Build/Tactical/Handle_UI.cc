@@ -4762,7 +4762,7 @@ static bool UIHandleInteractiveTilesAndItemsOnTerrain(SOLDIERTYPE* const pSoldie
 				gfBeginVehicleCursor = TRUE;
 				return true;
 			}
-			else if (GetNumberInVehicle(&GetVehicle(tgt->bVehicleID)) == 0)
+			else if (GetNumberInVehicle(GetVehicle(tgt->bVehicleID)) == 0)
 			{
 				guiNewUICursor       = ENTER_VEHICLE_UICURSOR;
 				gfBeginVehicleCursor = TRUE;

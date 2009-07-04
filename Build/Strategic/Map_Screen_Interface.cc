@@ -2507,7 +2507,7 @@ void SetUpMovingListsForSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 				VEHICLETYPE const& v = GetVehicle(pSoldier->bVehicleID);
 				// vehicle
 				// if it can move (can't be empty)
-				if (GetNumberInVehicle(&v) > 0)
+				if (GetNumberInVehicle(v) > 0)
 				{
 					// add vehicle
 					AddVehicleToMovingLists( pSoldier->bVehicleID );
@@ -4124,7 +4124,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE* const pSoldier)
 	{
 		VEHICLETYPE const& v = GetVehicle(pSoldier->bVehicleID);
 		// empty (needs a driver!)?
-		if (GetNumberInVehicle(&v) == 0) return ME_VEHICLE_EMPTY;
+		if (GetNumberInVehicle(v) == 0) return ME_VEHICLE_EMPTY;
 
 		// too damaged?
 		if (pSoldier->bLife < OKLIFE) return ME_VEHICLE_DAMAGED;

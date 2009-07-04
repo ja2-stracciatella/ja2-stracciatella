@@ -736,7 +736,7 @@ void StartNPCAI(SOLDIERTYPE *pSoldier)
 
 		if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 		{
-			if (GetNumberInVehicle(&GetVehicle(pSoldier->bVehicleID)) == 0)
+			if (GetNumberInVehicle(GetVehicle(pSoldier->bVehicleID)) == 0)
 			{
 				fInValidSoldier = TRUE;
 			}

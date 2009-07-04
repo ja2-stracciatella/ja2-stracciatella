@@ -80,7 +80,7 @@ BOOLEAN IsOwnedMerc(const SOLDIERTYPE* const s)
 	if (!IsOnOurTeam(s)) return FALSE;
 	if (s->uiStatusFlags & SOLDIER_VEHICLE)
 	{
-		return GetNumberInVehicle(&GetVehicle(s->bVehicleID)) != 0;
+		return GetNumberInVehicle(GetVehicle(s->bVehicleID)) != 0;
 	}
 	return TRUE;
 }
@@ -96,7 +96,7 @@ UINT32 GetSoldierFindFlags(const SOLDIERTYPE* const s)
 	{
 		if (s->uiStatusFlags & SOLDIER_VEHICLE)
 		{
-			if (GetNumberInVehicle(&GetVehicle(s->bVehicleID)) != 0)
+			if (GetNumberInVehicle(GetVehicle(s->bVehicleID)) != 0)
 			{
 				goto own_merc;
 			}

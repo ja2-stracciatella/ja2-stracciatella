@@ -710,7 +710,7 @@ static void HeliCharacterDialogue(UINT16 const usQuoteNum)
 
 INT32 GetNumberOfPassengersInHelicopter( void )
 {
-	return GetNumberInVehicle(&GetHelicopter());
+	return GetNumberInVehicle(GetHelicopter());
 }
 
 
