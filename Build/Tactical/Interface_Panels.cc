@@ -1152,7 +1152,7 @@ static void SetStatsHelp(MOUSE_REGION& r, SOLDIERTYPE const& s)
 		}
 		else
 		{
-			wchar_t const* const morale = GetMoraleString(&s);
+			wchar_t const* const morale = GetMoraleString(s);
 			swprintf(text, lengthof(text), TacticalStr[MERC_VITAL_STATS_POPUPTEXT], s.bLife, s.bLifeMax, s.bBreath, s.bBreathMax, morale);
 		}
 		help = text;

@@ -995,34 +995,15 @@ void HandleDisplayOfSelectedMercArrows( void )
 }
 
 
-const wchar_t* GetMoraleString(const SOLDIERTYPE* pSoldier)
+wchar_t const* GetMoraleString(SOLDIERTYPE const& s)
 {
-	INT8 bMorale = pSoldier->bMorale;
-
-	if ( pSoldier->uiStatusFlags & SOLDIER_DEAD )
-	{
-    return pMoralStrings[5];
-	}
-	else if( bMorale > 80 )
-	{
-		return pMoralStrings[0];
-	}
-	else if( bMorale > 65 )
-	{
-    return pMoralStrings[1];
-	}
-	else if( bMorale > 35 )
-	{
-    return pMoralStrings[2];
-	}
-	else if( bMorale > 20 )
-	{
-		return pMoralStrings[3];
-	}
-	else
-	{
-    return pMoralStrings[4];
-	}
+	return
+		s.uiStatusFlags & SOLDIER_DEAD ? pMoralStrings[5] :
+		s.bMorale > 80                 ? pMoralStrings[0] :
+		s.bMorale > 65                 ? pMoralStrings[1] :
+		s.bMorale > 35                 ? pMoralStrings[2] :
+		s.bMorale > 20                 ? pMoralStrings[3] :
+		pMoralStrings[4];
 }
 
 
@@ -1376,7 +1357,7 @@ void UpdateCharRegionHelpText(void)
 	else
 	{
 		// person (health/energy/morale)
-		wchar_t const* const morale = GetMoraleString(s);
+		wchar_t const* const morale = GetMoraleString(*s);
 		swprintf(status, lengthof(status), L"%ls: %d/%d, %ls: %d/%d, %ls: %ls",
 			pMapScreenStatusStrings[0], s->bLife,   s->bLifeMax,
 			pMapScreenStatusStrings[1], s->bBreath, s->bBreathMax,

@@ -1032,7 +1032,7 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 	}
 	else
 	{
-		morale = GetMoraleString(s);
+		morale = GetMoraleString(*s);
 	}
 	DrawStringCentered(morale, CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, CHAR_FONT);
 }
