@@ -3192,7 +3192,7 @@ static void HandleShadingOfLinesForVehicleMenu()
 		// inaccessible vehicles aren't listed at all!
 		if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 
-		PopUpShade const shade = IsEnoughSpaceInVehicle(v) ?
+		PopUpShade const shade = IsEnoughSpaceInVehicle(*v) ?
 			POPUP_SHADE_NONE : POPUP_SHADE_SECONDARY;
 		ShadeStringInBox(box, line++, shade);
 	}
@@ -3210,7 +3210,7 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		// inaccessible vehicles shouldn't be listed in the menu!
 		Assert(IsThisVehicleAccessibleToSoldier(s, v));
 
-		if (IsEnoughSpaceInVehicle(v))
+		if (IsEnoughSpaceInVehicle(*v))
 		{
 			PutSoldierInVehicle(s, v);
 		}

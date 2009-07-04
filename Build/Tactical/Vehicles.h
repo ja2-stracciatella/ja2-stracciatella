@@ -150,7 +150,7 @@ void AddVehicleFuelToSave(void);
 
 BOOLEAN SoldierMustDriveVehicle(const SOLDIERTYPE* s, INT32 iVehicleId, BOOLEAN fTryingToTravel);
 
-BOOLEAN IsEnoughSpaceInVehicle(const VEHICLETYPE*);
+bool IsEnoughSpaceInVehicle(VEHICLETYPE const&);
 
 BOOLEAN IsSoldierInThisVehicleSquad(const SOLDIERTYPE* pSoldier, INT8 bSquadNumber);
 

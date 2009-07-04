@@ -557,9 +557,9 @@ BOOLEAN AnyAccessibleVehiclesInSoldiersSector(const SOLDIERTYPE* const s)
 }
 
 
-BOOLEAN IsEnoughSpaceInVehicle(const VEHICLETYPE* const v)
+bool IsEnoughSpaceInVehicle(VEHICLETYPE const& v)
 {
-	return GetNumberInVehicle(*v) != GetVehicleSeats(v);
+	return GetNumberInVehicle(v) != GetVehicleSeats(&v);
 }
 
 
