@@ -1189,7 +1189,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 		if( pGroup->fVehicle )
 		{
 			VEHICLETYPE const& v = GetVehicleFromMvtGroup(pGroup);
-			if (VEHICLE2ID(v) != iHelicopterVehicleId && !pGroup->pPlayerList)
+			if (!IsHelicopter(v) && !pGroup->pPlayerList)
 			{
 				// nobody here, better just get out now
 				// with vehicles, arriving empty is probably ok, since passengers might have been killed but vehicle lived.
@@ -1413,7 +1413,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 			SetVehicleSectorValues(v, pGroup->ubSectorX, pGroup->ubSectorY);
 			v.fBetweenSectors = FALSE;
 
-			if (VEHICLE2ID(v) != iHelicopterVehicleId)
+			if (!IsHelicopter(v))
 			{
 				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 
@@ -1701,7 +1701,7 @@ static void PrepareGroupsForSimultaneousArrival(void)
 		VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
 		v.fBetweenSectors = TRUE;
 
-		if (VEHICLE2ID(v) != iHelicopterVehicleId)
+		if (!IsHelicopter(v))
 		{
 			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 			vs.fBetweenSectors = TRUE;
@@ -1948,7 +1948,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 		VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
 		v.fBetweenSectors = TRUE;
 
-		if (VEHICLE2ID(v) != iHelicopterVehicleId)
+		if (!IsHelicopter(v))
 		{
 			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 			vs.fBetweenSectors = TRUE;
@@ -3390,7 +3390,7 @@ static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const* const pGroup, INT
 		v.sSectorZ = bSectorZ;
 
 		// if it ain't the chopper
-		if (VEHICLE2ID(v) != iHelicopterVehicleId)
+		if (!IsHelicopter(v))
 		{
 			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 			// these are apparently unnecessary, since vehicles are part of the pPlayerList in a vehicle group.  Oh well.

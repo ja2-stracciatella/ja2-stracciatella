@@ -898,7 +898,7 @@ static INT32 ShowVehicles(INT16 sMapX, INT16 sMapY, INT32 icon_pos)
 	{
 		VEHICLETYPE const& v = *i;
 		// skip the chopper, it has its own icon and displays in airspace mode
-		if (VEHICLE2ID(v) == iHelicopterVehicleId)    continue;
+		if (IsHelicopter(v))                          continue;
 		if (v.sSectorX != sMapX)                      continue;
 		if (v.sSectorY != sMapY)                      continue;
 		if (v.sSectorZ != iCurrentMapSectorZ)         continue;

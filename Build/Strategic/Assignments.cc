@@ -392,7 +392,7 @@ static BOOLEAN IsAnythingAroundForSoldierToRepair(SOLDIERTYPE const* const pSold
 		{
 			VEHICLETYPE const& v = *i;
 			// the helicopter, is NEVER repairable...
-			if (VEHICLE2ID(v) == iHelicopterVehicleId)          continue;
+			if (IsHelicopter(v))                                continue;
 			if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) continue;
 			if (!CanCharacterRepairVehicle(pSoldier, v))        continue;
 			// there is a repairable vehicle here
@@ -3298,7 +3298,7 @@ static void DisplayRepairMenu(SOLDIERTYPE* pSoldier)
 		{
 			VEHICLETYPE const& v = *i;
 			// don't even list the helicopter, because it's NEVER repairable...
-			if (VEHICLE2ID(v) == iHelicopterVehicleId)          continue;
+			if (IsHelicopter(v))                                continue;
 			if (!IsThisVehicleAccessibleToSoldier(pSoldier, v)) continue;
 			AddMonoString(box, pVehicleStrings[v.ubVehicleType]);
 		}
@@ -3360,7 +3360,7 @@ static void HandleShadingOfLinesForRepairMenu()
 		{
 			VEHICLETYPE const& v = *i;
 			// don't even list the helicopter, because it's NEVER repairable...
-			if (VEHICLE2ID(v) == iHelicopterVehicleId)   continue;
+			if (IsHelicopter(v))                         continue;
 			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 			ShadeStringInBox(box, line++, !CanCharacterRepairVehicle(s, v));
 		}
@@ -3426,7 +3426,7 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 			{
 				VEHICLETYPE const& v = *i;
 				// don't even list the helicopter, because it's NEVER repairable...
-				if (VEHICLE2ID(v) == iHelicopterVehicleId) continue;
+				if (IsHelicopter(v)) continue;
 
 				// other vehicles *in the sector* are listed, but later shaded dark if they're not repairable
 				if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;

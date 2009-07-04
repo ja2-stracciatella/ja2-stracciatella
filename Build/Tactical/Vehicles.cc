@@ -186,7 +186,7 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 	// ok now check if any free slots in the vehicle
 
 	SOLDIERTYPE* vs = 0;
-	if (VEHICLE2ID(v) != iHelicopterVehicleId)
+	if (!IsHelicopter(v))
 	{
 		vs = &GetSoldierStructureForVehicle(v);
 		if (vs->bTeam != gbPlayerNum)
@@ -334,8 +334,7 @@ static void TeleportVehicleToItsClosestSector(UINT8 ubGroupID);
 // remove soldier from vehicle
 static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 {
-	INT32 const  iId = s.iVehicleId;
-	VEHICLETYPE& v   = GetVehicle(iId);
+	VEHICLETYPE& v = GetVehicle(s.iVehicleId);
 
 	// now look for the grunt
 	INT32 const seats = GetVehicleSeats(v);
@@ -355,7 +354,7 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 	s.bSectorZ       = v.sSectorZ;
 	s.uiStatusFlags &= ~(SOLDIER_DRIVER | SOLDIER_PASSENGER);
 
-	if (iId == iHelicopterVehicleId)
+	if (IsHelicopter(v))
 	{ /* The vehicle the helicopter? It can continue moving when no soldiers
 		 * aboard (Skyrider remains) */
 		if (s.bLife >= OKLIFE)
@@ -571,7 +570,7 @@ bool PutSoldierInVehicle(SOLDIERTYPE* const s, VEHICLETYPE& v)
 	if (s->sSectorX   == gWorldSectorX        &&
 			s->sSectorY   == gWorldSectorY        &&
 			s->bSectorZ   == 0                    &&
-			VEHICLE2ID(v) != iHelicopterVehicleId &&
+			!IsHelicopter(v)                      &&
 			!(guiTacticalInterfaceFlags & INTERFACE_MAPSCREEN))
 	{
 		SetCurrentInterfacePanel(TEAM_PANEL);
@@ -712,7 +711,7 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 bool DoesVehicleNeedAnyRepairs(VEHICLETYPE const& v)
 {
 	// Skyrider isn't damagable/repairable
-	if (VEHICLE2ID(v) == iHelicopterVehicleId) return false;
+	if (IsHelicopter(v)) return false;
 
 	// get the vehicle soldiertype
 	SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(v);
@@ -944,7 +943,7 @@ void AddVehicleFuelToSave( )
 	CFOR_ALL_VEHICLES(i)
 	{
 		VEHICLETYPE const& v = *i;
-		if (VEHICLE2ID(v) == iHelicopterVehicleId) continue;
+		if (IsHelicopter(v)) continue;
 		SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 		// Init fuel!
 		vs.sBreathRed = 10000;

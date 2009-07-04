@@ -73,6 +73,11 @@ static inline VEHICLETYPE& GetHelicopter(void)
 	return v;
 }
 
+static inline bool IsHelicopter(VEHICLETYPE const& v)
+{
+	return VEHICLE2ID(v) == iHelicopterVehicleId;
+}
+
 // heli is hovering
 extern BOOLEAN fHoveringHelicopter;
 
