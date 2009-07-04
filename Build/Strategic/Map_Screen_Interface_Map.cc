@@ -903,14 +903,11 @@ static INT32 ShowVehicles(INT16 const x, INT16 const y, INT32 icon_pos)
 }
 
 
-static void ShowEnemiesInSector(INT16 sSectorX, INT16 sSectorY, INT16 sNumberOfEnemies, UINT8 ubIconPosition)
+static void ShowEnemiesInSector(INT16 const x, INT16 const y, INT16 n_enemies, UINT8 icon_pos)
 {
-	UINT8 ubEnemy = 0;
-
-	for( ubEnemy = 0; ubEnemy < sNumberOfEnemies; ubEnemy++ )
+	while (n_enemies-- != 0)
 	{
-		DrawMapBoxIcon(guiCHARICONS, SMALL_RED_BOX, sSectorX, sSectorY, ubIconPosition);
-		ubIconPosition++;
+		DrawMapBoxIcon(guiCHARICONS, SMALL_RED_BOX, x, y, icon_pos++);
 	}
 }
 
