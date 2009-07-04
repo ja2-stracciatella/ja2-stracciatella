@@ -5264,21 +5264,15 @@ static void TeamListDestinationRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iR
 				// turn off sector inventory, turn on show teams filter, etc.
 				MakeMapModesSuitableForDestPlotting(s);
 
-				// check if person is in a vehicle
-				if (s->bAssignment == VEHICLE)
+				if (InHelicopter(*s))
 				{
-					// if he's in the helicopter
-					if (s->iVehicleId == iHelicopterVehicleId)
+					TurnOnAirSpaceMode();
+					if (!RequestGiveSkyriderNewDestination())
 					{
-						TurnOnAirSpaceMode( );
-						if (!RequestGiveSkyriderNewDestination())
-						{
-							// not allowed to change destination of the helicopter
-							return;
-						}
+						// not allowed to change destination of the helicopter
+						return;
 					}
 				}
-
 
 				// select this character as the one plotting strategic movement
 				bSelectedDestChar = ( INT8 )iValue;
@@ -8007,9 +8001,7 @@ void CancelPathsOfAllSelectedCharacters()
 		if ( GetLengthOfMercPath( pSoldier ) > 0 )
 		{
 			// if he's in the chopper, but player can't redirect it
-			if (pSoldier->bAssignment == VEHICLE              &&
-					pSoldier->iVehicleId  == iHelicopterVehicleId &&
-					!CanHelicopterFly())
+			if (InHelicopter(*pSoldier) && !CanHelicopterFly())
 			{
 				if ( !fSkyriderMsgShown )
 				{
@@ -8095,7 +8087,7 @@ static void MakeMapModesSuitableForDestPlotting(const SOLDIERTYPE* const pSoldie
 
 	TurnOnShowTeamsMode();
 
-	if (pSoldier->bAssignment == VEHICLE && pSoldier->iVehicleId == iHelicopterVehicleId)
+	if (InHelicopter(*pSoldier))
 	{
 		if (!fShowAircraftFlag)
 		{
@@ -8135,10 +8127,7 @@ static BOOLEAN AnyMovableCharsInOrBetweenThisSector(INT16 sSectorX, INT16 sSecto
 		}
 
 		// don't count mercs aboard Skyrider
-		if ( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier->iVehicleId == iHelicopterVehicleId ) )
-		{
-			continue;
-		}
+		if (InHelicopter(*pSoldier)) continue;
 
 		// don't count vehicles - in order for them to move, somebody must be in the sector with them
 		if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )

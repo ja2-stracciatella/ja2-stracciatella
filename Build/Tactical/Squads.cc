@@ -153,7 +153,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 			AddPlayerToGroup(g, s);
 			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, g);
 		}
-		else if (s->iVehicleId == iHelicopterVehicleId)
+		else if (InHelicopter(*s))
 		{
 			// if creating a new squad from guys exiting the chopper
 			BOOLEAN const fNewSquad = SquadIsEmpty(bSquadValue);

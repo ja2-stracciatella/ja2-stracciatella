@@ -2516,8 +2516,7 @@ void SetUpMovingListsForSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 			else // soldier
 			{
 				// alive, not aboard Skyrider (airborne or not!)
-				if ( ( pSoldier->bLife >= OKLIFE ) &&
-						 ( ( pSoldier->bAssignment != VEHICLE ) || ( pSoldier->iVehicleId != iHelicopterVehicleId ) ) )
+				if (pSoldier->bLife >= OKLIFE && !InHelicopter(*pSoldier))
 				{
 					// add soldier
 					AddSoldierToMovingLists( pSoldier );

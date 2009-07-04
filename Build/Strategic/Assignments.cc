@@ -293,9 +293,7 @@ void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 static BOOLEAN IsSoldierInHelicopterInHostileSector(const SOLDIERTYPE* const s)
 {
 	return
-		s->bAssignment       == VEHICLE       &&
-		iHelicopterVehicleId != -1            &&
-		iHelicopterVehicleId == s->iVehicleId &&
+		InHelicopter(*s) &&
 		NumEnemiesInSector(s->sSectorX, s->sSectorY) > 0;
 }
 
@@ -4791,9 +4789,7 @@ static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, INT32 const reason
 		{
 			case CHARACTER_CAN_JOIN_SQUAD: // able to add, do it
 			{
-				bool const exiting_helicopter =
-					s->bAssignment == VEHICLE &&
-					s->iVehicleId  == iHelicopterVehicleId;
+				bool const exiting_helicopter = InHelicopter(*s);
 				PreChangeAssignment(s);
 				AddCharacterToSquad(s, value);
 				if (exiting_helicopter) SetSoldierExitHelicopterInsertionData(s); // XXX TODO001D

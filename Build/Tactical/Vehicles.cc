@@ -552,7 +552,7 @@ BOOLEAN TakeSoldierOutOfVehicle(SOLDIERTYPE* const s)
 			s->sSectorY == gWorldSectorY &&
 			s->bSectorZ == 0             &&
 			s->bInSector                 &&
-			s->iVehicleId != iHelicopterVehicleId) // helicopter isn't a soldiertype instance
+			!InHelicopter(*s)) // helicopter isn't a soldiertype instance
 	{
 		return ExitVehicle(s);
 	}
@@ -1060,9 +1060,6 @@ static BOOLEAN OnlyThisSoldierCanDriveVehicle(const SOLDIERTYPE* const pThisSold
 
 BOOLEAN IsSoldierInThisVehicleSquad(const SOLDIERTYPE* const pSoldier, const INT8 bSquadNumber)
 {
-	INT32 iVehicleId;
-
-
 	Assert( pSoldier );
 	Assert( ( bSquadNumber >= 0 ) && ( bSquadNumber < NUMBER_OF_SQUADS ) );
 
@@ -1072,17 +1069,9 @@ BOOLEAN IsSoldierInThisVehicleSquad(const SOLDIERTYPE* const pSoldier, const INT
 		return( FALSE );
 	}
 
-	// get vehicle ID
-	iVehicleId = pSoldier->iVehicleId;
+	if (InHelicopter(*pSoldier)) return FALSE; // they don't get a squad #
 
-	// if in helicopter
-	if ( iVehicleId == iHelicopterVehicleId )
-	{
-		// they don't get a squad #
-		return( FALSE );
-	}
-
-	SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(GetVehicle(iVehicleId));
+	SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(GetVehicle(pSoldier->iVehicleId));
 
 	// check squad vehicle is on
 	if (vs.bAssignment != bSquadNumber)

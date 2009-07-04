@@ -786,10 +786,7 @@ void MoveAllInHelicopterToFootMovementGroup(void)
 	CFOR_ALL_PASSENGERS(v, i)
 	{
 		SOLDIERTYPE* const pSoldier = *i;
-
-		// better really be in there!
-		Assert ( pSoldier->bAssignment == VEHICLE );
-		Assert ( pSoldier->iVehicleId == iHelicopterVehicleId );
+		Assert(InHelicopter(*pSoldier));
 
 		fSuccess = RemoveSoldierFromHelicopter( pSoldier );
 		Assert( fSuccess );
@@ -1733,11 +1730,7 @@ BOOLEAN SoldierAboardAirborneHeli(const SOLDIERTYPE* s)
 {
 	Assert(s);
 
-	// if not in a vehicle, or not aboard the helicopter
-	if (s->bAssignment != VEHICLE || s->iVehicleId != iHelicopterVehicleId)
-	{
-		return( FALSE );
-	}
+	if (!InHelicopter(*s)) return FALSE;
 
 	// he's in the heli - is it airborne?
 	if ( !fHelicopterIsAirBorne )

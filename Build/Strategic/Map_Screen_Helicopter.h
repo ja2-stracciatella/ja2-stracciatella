@@ -1,8 +1,10 @@
 #ifndef __MAP_SCREEN_HELICOPTER_H
 #define __MAP_SCREEN_HELICOPTER_H
 
+#include "Assignments.h"
 #include "Debug.h"
 #include "JA2Types.h"
+#include "Soldier_Control.h"
 #include "Strategic_Movement.h"
 #include "Vehicles.h"
 
@@ -76,6 +78,11 @@ static inline VEHICLETYPE& GetHelicopter(void)
 static inline bool IsHelicopter(VEHICLETYPE const& v)
 {
 	return VEHICLE2ID(v) == iHelicopterVehicleId;
+}
+
+static inline bool InHelicopter(SOLDIERTYPE const& s)
+{
+	return s.bAssignment == VEHICLE && s.iVehicleId == iHelicopterVehicleId;
 }
 
 // heli is hovering

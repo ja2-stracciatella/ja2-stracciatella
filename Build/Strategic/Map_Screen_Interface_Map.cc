@@ -881,7 +881,7 @@ static INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
 				 ( !PlayerIDGroupInMotion( pSoldier->ubGroupID ) ) )
 		{
 			// skip mercs inside the helicopter if we're showing airspace level - they show up inside chopper icon instead
-			if ( !fShowAircraftFlag || ( pSoldier->bAssignment != VEHICLE ) || ( pSoldier->iVehicleId != iHelicopterVehicleId ) )
+			if (!fShowAircraftFlag || !InHelicopter(*pSoldier))
 			{
 				DrawMapBoxIcon(guiCHARICONS, SMALL_DULL_YELLOW_BOX, sMapX, sMapY, ubIconPosition);
 				ubIconPosition++;
@@ -4850,10 +4850,7 @@ static BOOLEAN CanMercsScoutThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSec
 		}
 
 		// don't count mercs aboard Skyrider
-		if ( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier->iVehicleId == iHelicopterVehicleId ) )
-		{
-			continue;
-		}
+		if (InHelicopter(*pSoldier)) continue;
 
 		// mercs on the move can't scout
 		if ( pSoldier->fBetweenSectors )
