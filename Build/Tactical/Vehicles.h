@@ -128,8 +128,7 @@ void LoadVehicleInformationFromSavedGameFile(HWFILE, UINT32 uiSavedGameVersion);
 // take soldier out of vehicle
 BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier );
 
-// put soldier in vehicle
-BOOLEAN PutSoldierInVehicle(SOLDIERTYPE*, VEHICLETYPE*);
+bool PutSoldierInVehicle(SOLDIERTYPE*, VEHICLETYPE&);
 
 void SetVehicleSectorValues(VEHICLETYPE&, UINT8 x, UINT8 y);
 

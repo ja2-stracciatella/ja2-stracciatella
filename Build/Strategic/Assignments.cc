@@ -3205,18 +3205,18 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		SOLDIERTYPE* const s = GetSelectedAssignSoldier(FALSE);
-		VEHICLETYPE* const v = pRegion->GetUserPtr<VEHICLETYPE>();
+		VEHICLETYPE&       v = *pRegion->GetUserPtr<VEHICLETYPE>();
 
 		// inaccessible vehicles shouldn't be listed in the menu!
-		Assert(IsThisVehicleAccessibleToSoldier(s, v));
+		Assert(IsThisVehicleAccessibleToSoldier(s, &v));
 
-		if (IsEnoughSpaceInVehicle(*v))
+		if (IsEnoughSpaceInVehicle(v))
 		{
 			PutSoldierInVehicle(s, v);
 		}
 		else
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[18], zVehicleName[v->ubVehicleType]);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[18], zVehicleName[v.ubVehicleType]);
 		}
 
 		fShowAssignmentMenu = FALSE;
@@ -3227,7 +3227,7 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		fMapScreenBottomDirty    = TRUE;
 		giAssignHighLine         = -1;
 
-		SetAssignmentForList(VEHICLE, VEHICLE2ID(v));
+		SetAssignmentForList(VEHICLE, VEHICLE2ID(&v));
 	}
 }
 
@@ -7097,7 +7097,7 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 					if (IsThisVehicleAccessibleToSoldier(s, &v))
 					{
 						// if the vehicle is FULL, then this will return FALSE!
-						fItWorked = PutSoldierInVehicle(s, &v);
+						fItWorked = PutSoldierInVehicle(s, v);
 						// failure produces its own error popup
 						fNotifiedOfFailure = TRUE;
 					}
