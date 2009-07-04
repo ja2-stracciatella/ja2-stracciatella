@@ -96,17 +96,17 @@ static void DrawBar(UINT32 const XPos, UINT32 const YPos, UINT32 const Height, U
 }
 
 
-static void DrawLifeUIBar(SOLDIERTYPE const* const pSoldier, UINT32 const XPos, UINT32 YPos, UINT32 const MaxHeight, UINT16* const pDestBuf)
+static void DrawLifeUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 YPos, UINT32 const MaxHeight, UINT16* const pDestBuf)
 {
 	UINT32 Height;
 
 	// FIRST DO MAX LIFE
-	Height = MaxHeight * pSoldier->bLife / 100;
+	Height = MaxHeight * s.bLife / 100;
 	DrawBar(XPos, YPos, Height, Get16BPPColor(LIFE_BAR), Get16BPPColor(LIFE_BAR_SHADOW), pDestBuf);
 
 	// NOW DO BANDAGE
 	// Calculate bandage
-	UINT32 Bandage = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
+	UINT32 Bandage = s.bLifeMax - s.bLife - s.bBleeding;
 	if (Bandage != 0)
 	{
 		YPos   -= Height;
@@ -115,10 +115,10 @@ static void DrawLifeUIBar(SOLDIERTYPE const* const pSoldier, UINT32 const XPos, 
 	}
 
 	// NOW DO BLEEDING
-	if (pSoldier->bBleeding != 0)
+	if (s.bBleeding != 0)
 	{
 		YPos   -= Height;
-		Height  = MaxHeight * pSoldier->bBleeding / 100;
+		Height  = MaxHeight * s.bBleeding / 100;
 		DrawBar(XPos, YPos, Height, Get16BPPColor(BLEEDING_BAR), Get16BPPColor(BLEEDING_BAR_SHADOW), pDestBuf);
 	}
 }
@@ -189,7 +189,7 @@ void DrawSoldierUIBars(const SOLDIERTYPE* const pSoldier, const INT16 sXPos, con
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	UINT16* const pDestBuf = l.Buffer<UINT16>();
 
-	DrawLifeUIBar(pSoldier, sXPos, sYPos, BarHeight, pDestBuf);
+	DrawLifeUIBar(*pSoldier, sXPos, sYPos, BarHeight, pDestBuf);
 	if (!(pSoldier->uiStatusFlags & SOLDIER_ROBOT))
 	{
 		DrawBreathUIBar(pSoldier, sXPos + BreathOff, sYPos, BarHeight, pDestBuf);
