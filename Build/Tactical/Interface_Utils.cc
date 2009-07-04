@@ -144,9 +144,9 @@ static void DrawBreathUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 cons
 }
 
 
-static void DrawMoraleUIBar(SOLDIERTYPE const* const pSoldier, UINT32 const XPos, UINT32 const YPos, UINT32 const MaxHeight, UINT16* const pDestBuf)
+static void DrawMoraleUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 const YPos, UINT32 const MaxHeight, UINT16* const pDestBuf)
 {
-	UINT32 Height = MaxHeight * pSoldier->bMorale / 100;
+	UINT32 const Height = MaxHeight * s.bMorale / 100;
 	DrawBar(XPos, YPos, Height, Get16BPPColor(MORALE_BAR), Get16BPPColor(MORALE_BAR_SHADOW), pDestBuf);
 }
 
@@ -195,7 +195,7 @@ void DrawSoldierUIBars(const SOLDIERTYPE* const pSoldier, const INT16 sXPos, con
 		DrawBreathUIBar(*pSoldier, sXPos + BreathOff, sYPos, BarHeight, pDestBuf);
 		if (!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 		{
-			DrawMoraleUIBar(pSoldier, sXPos + MoraleOff, sYPos, BarHeight, pDestBuf);
+			DrawMoraleUIBar(*pSoldier, sXPos + MoraleOff, sYPos, BarHeight, pDestBuf);
 		}
 	}
 }
