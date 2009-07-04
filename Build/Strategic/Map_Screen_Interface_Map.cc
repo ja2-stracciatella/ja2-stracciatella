@@ -858,34 +858,27 @@ static INT32 ShowOnDutyTeam(INT16 const x, INT16 const y)
 }
 
 
-static INT32 ShowAssignedTeam(INT16 sMapX, INT16 sMapY, INT32 iCount)
+static INT32 ShowAssignedTeam(INT16 const x, INT16 const y, INT32 icon_pos)
 {
-  // run through list
-	UINT8 ubIconPosition = iCount;
 	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		const SOLDIERTYPE* const pSoldier = c->merc;
-    // given number of on duty members, find number of assigned chars
+		SOLDIERTYPE const& s = *c->merc;
+		// given number of on duty members, find number of assigned chars
 		// start at beginning of list, look for people who are in sector and assigned
-		if( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
-				 ( pSoldier->sSectorX == sMapX) &&
-				 ( pSoldier->sSectorY == sMapY) &&
-				 ( pSoldier->bSectorZ == iCurrentMapSectorZ ) &&
-				 ( pSoldier->bAssignment >= ON_DUTY ) && ( pSoldier->bAssignment != VEHICLE ) &&
-				 ( pSoldier->bAssignment != IN_TRANSIT ) &&
-				 ( pSoldier->bAssignment != ASSIGNMENT_POW ) &&
-				 ( pSoldier->bLife > 0 ) &&
-				 ( !PlayerIDGroupInMotion( pSoldier->ubGroupID ) ) )
-		{
-			// skip mercs inside the helicopter if we're showing airspace level - they show up inside chopper icon instead
-			if (!fShowAircraftFlag || !InHelicopter(*pSoldier))
-			{
-				DrawMapBoxIcon(guiCHARICONS, SMALL_DULL_YELLOW_BOX, sMapX, sMapY, ubIconPosition);
-				ubIconPosition++;
-			}
-		}
+		if (s.uiStatusFlags & SOLDIER_VEHICLE)  continue;
+		if (s.sSectorX != x)                    continue;
+		if (s.sSectorY != y)                    continue;
+		if (s.bSectorZ != iCurrentMapSectorZ)   continue;
+		if (s.bAssignment <  ON_DUTY)           continue;
+		if (s.bAssignment == VEHICLE)           continue;
+		if (s.bAssignment == IN_TRANSIT)        continue;
+		if (s.bAssignment == ASSIGNMENT_POW)    continue;
+		if (s.bLife       <= 0)                 continue;
+		if (PlayerIDGroupInMotion(s.ubGroupID)) continue;
+
+		DrawMapBoxIcon(guiCHARICONS, SMALL_DULL_YELLOW_BOX, x, y, icon_pos++);
 	}
-	return ubIconPosition;
+	return icon_pos;
 }
 
 
