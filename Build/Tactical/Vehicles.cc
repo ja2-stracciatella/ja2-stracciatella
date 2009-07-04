@@ -385,7 +385,7 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 		if (GetLengthOfMercPath(&vs) > 0)
 		{
 			// cancel the entire path (also handles reversing directions)
-			CancelPathForVehicle(&v, FALSE);
+			CancelPathForVehicle(v, FALSE);
 		}
 
 		if (v.fBetweenSectors)

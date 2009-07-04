@@ -1342,7 +1342,7 @@ void CancelPathForCharacter( SOLDIERTYPE *pCharacter )
 	// if he's in a vehicle, clear out the vehicle, too
 	if( pCharacter->bAssignment == VEHICLE )
 	{
-		CancelPathForVehicle( &( pVehicleList[ pCharacter->iVehicleId ] ), TRUE );
+		CancelPathForVehicle(pVehicleList[pCharacter->iVehicleId], TRUE);
 	}
 	else
 	{
@@ -1359,11 +1359,11 @@ void CancelPathForCharacter( SOLDIERTYPE *pCharacter )
 }
 
 
-void CancelPathForVehicle( VEHICLETYPE *pVehicle, BOOLEAN fAlreadyReversed )
+void CancelPathForVehicle(VEHICLETYPE& v, BOOLEAN const fAlreadyReversed)
 {
 	// we're clearing everything beyond the *current* sector, that's quite different.  Since we're basically cancelling
 	// his movement completely, we must also make sure his next X,Y are changed and he officially "returns" to his sector
-	pVehicle->pMercPath = ClearStrategicPathList( pVehicle->pMercPath, pVehicle->ubMovementGroup );
+	v.pMercPath = ClearStrategicPathList(v.pMercPath, v.ubMovementGroup);
 	// NOTE: This automatically calls RemoveGroupWaypoints() internally for valid movement groups
 
 	// if we already reversed one of the passengers, flag will be TRUE,
@@ -1372,8 +1372,7 @@ void CancelPathForVehicle( VEHICLETYPE *pVehicle, BOOLEAN fAlreadyReversed )
 	{
 		// This causes the group to effectively reverse directions (even if they've never actually left), so handle that.
 		// They are going to return to their current X,Y sector.
-		RebuildWayPointsForGroupPath(pVehicle->pMercPath, GetGroup(pVehicle->ubMovementGroup));
-//		GroupReversingDirectionsBetweenSectors( GetGroup( pVehicle->ubMovementGroup ), ( UINT8 ) ( pVehicle->sSectorX ), ( UINT8 ) ( pVehicle->sSectorY ), FALSE );
+		RebuildWayPointsForGroupPath(v.pMercPath, GetGroup(v.ubMovementGroup));
 	}
 
 	// display "travel route canceled" message
@@ -1509,7 +1508,7 @@ UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY )
 		// if we're in confirm map move mode, cancel that (before new UI messages are issued)
 		EndConfirmMapMoveMode( );
 
-		CancelPathForVehicle(&v, FALSE);
+		CancelPathForVehicle(v, FALSE);
 		return( PATH_CLEARED );
 	}
 	else	// click not in the current sector

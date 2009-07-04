@@ -8026,7 +8026,7 @@ void CancelPathsOfAllSelectedCharacters()
 			// cancel the entire path (also clears vehicles for any passengers selected, and handles reversing directions)
 			if( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
 			{
-				CancelPathForVehicle( &( pVehicleList[ pSoldier->bVehicleID ] ), FALSE );
+				CancelPathForVehicle(pVehicleList[pSoldier->bVehicleID], FALSE);
 			}
 			else
 			{

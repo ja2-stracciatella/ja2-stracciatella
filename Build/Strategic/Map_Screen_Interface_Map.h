@@ -43,7 +43,7 @@ UINT32 ClearPathAfterThisSectorForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, 
 
 // cancel path : clear the path completely and gives player feedback message that the route was canceled
 void CancelPathForCharacter( SOLDIERTYPE *pCharacter );
-void CancelPathForVehicle( VEHICLETYPE *pVehicle, BOOLEAN fAlreadyReversed );
+void CancelPathForVehicle(VEHICLETYPE&, BOOLEAN fAlreadyReversed);
 
 // check if we have waited long enought o update temp path
 void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY );
