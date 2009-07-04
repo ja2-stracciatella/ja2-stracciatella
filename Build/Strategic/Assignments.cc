@@ -6067,7 +6067,7 @@ static bool CanCharacterRepairVehicle(SOLDIERTYPE const* const pSoldier, VEHICLE
 	if (v.fDestroyed) return FALSE;
 
 	// is it damaged at all?
-	if (!DoesVehicleNeedAnyRepairs(&v)) return FALSE;
+	if (!DoesVehicleNeedAnyRepairs(v)) return FALSE;
 
 	// same sector, neither is between sectors, and OK To Use (player owns it) ?
 	if (!IsThisVehicleAccessibleToSoldier(pSoldier, &v)) return FALSE;

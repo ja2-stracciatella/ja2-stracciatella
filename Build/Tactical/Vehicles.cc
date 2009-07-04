@@ -715,13 +715,13 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 }
 
 
-BOOLEAN DoesVehicleNeedAnyRepairs(const VEHICLETYPE* const v)
+bool DoesVehicleNeedAnyRepairs(VEHICLETYPE const& v)
 {
 	// Skyrider isn't damagable/repairable
-	if (VEHICLE2ID(v) == iHelicopterVehicleId) return FALSE;
+	if (VEHICLE2ID(&v) == iHelicopterVehicleId) return false;
 
 	// get the vehicle soldiertype
-	SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(*v);
+	SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(v);
 	return vs.bLife != vs.bLifeMax;
 }
 
@@ -731,7 +731,7 @@ INT8 RepairVehicle(VEHICLETYPE const* const v, INT8 const bRepairPtsLeft, BOOLEA
 	INT8					bRepairPtsUsed = 0;
 	INT8					bOldLife;
 
-	if (!DoesVehicleNeedAnyRepairs(v)) return bRepairPtsUsed;
+	if (!DoesVehicleNeedAnyRepairs(*v)) return bRepairPtsUsed;
 
 	// get the vehicle soldiertype
 	SOLDIERTYPE& vs = GetSoldierStructureForVehicle(*v);
@@ -748,7 +748,7 @@ INT8 RepairVehicle(VEHICLETYPE const* const v, INT8 const bRepairPtsLeft, BOOLEA
 	bRepairPtsUsed = (vs.bLife - bOldLife) * VEHICLE_REPAIR_POINTS_DIVISOR;
 
 	// ARM: personally, I'd love to know where in Arulco the mechanic gets the PARTS to do this stuff, but hey, it's a game!
-	*pfNothingToRepair = !DoesVehicleNeedAnyRepairs(v);
+	*pfNothingToRepair = !DoesVehicleNeedAnyRepairs(*v);
 
 	return( bRepairPtsUsed );
 }
