@@ -892,7 +892,7 @@ void HandleRenderInvSlots(SOLDIERTYPE const& s, UINT8 const dirty_level)
 	}
 
 #ifndef JA2DEMO
-	if (KeyExistsInKeyRing(&s, ANYKEY, 0))
+	if (KeyExistsInKeyRing(s, ANYKEY))
 	{
 		// blit gold key here?
 		INT32 x;

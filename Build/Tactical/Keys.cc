@@ -158,39 +158,23 @@ static BOOLEAN KeyExistsInInventory(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID);
 BOOLEAN SoldierHasKey(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID)
 {
 	return
-		KeyExistsInKeyRing(pSoldier, ubKeyID, NULL) ||
+		KeyExistsInKeyRing(*pSoldier, ubKeyID) ||
 		KeyExistsInInventory(pSoldier, ubKeyID);
 }
 
 
-BOOLEAN KeyExistsInKeyRing(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID, UINT8* pubPos)
+bool KeyExistsInKeyRing(SOLDIERTYPE const& s, UINT8 const key_id)
 {
-	// returns the index into the key ring where the key can be found
-	UINT8		ubLoop;
+	if (!s.pKeyRing) return FALSE; // No key ring
 
-	if (!(pSoldier->pKeyRing))
+	KEY_ON_RING const* const end = s.pKeyRing + NUM_KEYS;
+	for (KEY_ON_RING const* i = s.pKeyRing; i != end; ++i)
 	{
-		// no key ring!
-		return( FALSE );
+		if (i->ubNumber == 0) continue;
+		if (i->ubKeyID != key_id && key_id != ANYKEY) continue;
+		return true;
 	}
-	for (ubLoop = 0; ubLoop < NUM_KEYS; ubLoop++)
-	{
-		if (pSoldier->pKeyRing[ubLoop].ubNumber == 0)
-		{
-			continue;
-		}
-		if (pSoldier->pKeyRing[ubLoop].ubKeyID == ubKeyID || (ubKeyID == ANYKEY) )
-		{
-			// found it!
-			if (pubPos)
-			{
-				*pubPos = ubLoop;
-			}
-			return( TRUE );
-		}
-	}
-	// exhausted key ring
-	return( FALSE );
+	return false;
 }
 
 
