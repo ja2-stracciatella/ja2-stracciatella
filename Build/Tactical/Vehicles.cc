@@ -460,14 +460,14 @@ VEHICLETYPE& GetVehicle(INT32 const vehicle_id)
 }
 
 
-void UpdatePositionOfMercsInVehicle(const VEHICLETYPE* const v)
+void UpdatePositionOfMercsInVehicle(VEHICLETYPE const& v)
 {
 	// go through list of mercs in vehicle and set all thier states as arrived
-	CFOR_ALL_PASSENGERS(v, i)
+	CFOR_ALL_PASSENGERS(&v, i)
 	{
 		SOLDIERTYPE* const s = *i;
-		s->sSectorY        = v->sSectorY;
-		s->sSectorX        = v->sSectorX;
+		s->sSectorY        = v.sSectorY;
+		s->sSectorX        = v.sSectorX;
 		s->fBetweenSectors = FALSE;
 	}
 }

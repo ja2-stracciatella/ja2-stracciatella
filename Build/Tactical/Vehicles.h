@@ -91,7 +91,7 @@ VEHICLETYPE& GetVehicle(INT32 vehicle_id);
 void SetUpMvtGroupForVehicle(SOLDIERTYPE*);
 
 // update mercs position when vehicle arrives
-void UpdatePositionOfMercsInVehicle(const VEHICLETYPE*);
+void UpdatePositionOfMercsInVehicle(VEHICLETYPE const&);
 
 // find vehicle id of group with this vehicle
 VEHICLETYPE& GetVehicleFromMvtGroup(GROUP const*);
