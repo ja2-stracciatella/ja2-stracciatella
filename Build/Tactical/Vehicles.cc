@@ -181,7 +181,7 @@ bool IsThisVehicleAccessibleToSoldier(SOLDIERTYPE const* const s, VEHICLETYPE co
 }
 
 
-static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE& v)
+static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 {
 	// ok now check if any free slots in the vehicle
 
@@ -225,7 +225,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE& v)
 	// check if the grunt is already here
 	CFOR_ALL_PASSENGERS(v, i)
 	{
-		if (*i == s) return TRUE; // guy found, no need to add
+		if (*i == &s) return true; // guy found, no need to add
 	}
 
 	if (vs)
@@ -243,11 +243,11 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE& v)
 	for (INT32 i = 0; i < seats; ++i)
 	{
 		if (v.pPassengers[i]) continue;
-		v.pPassengers[i] = s;
+		v.pPassengers[i] = &s;
 
-		if (s->bAssignment == VEHICLE)
+		if (s.bAssignment == VEHICLE)
 		{
-			TakeSoldierOutOfVehicle(s);
+			TakeSoldierOutOfVehicle(&s);
 			/* NOTE: This will leave the soldier on a squad.  Must be done PRIOR TO
 			 * and in AS WELL AS the call to RemoveCharacterFromSquads() that's coming
 			 * up, to permit direct vehicle->vehicle reassignment! */
@@ -255,45 +255,45 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE& v)
 
 		/* if in a squad, remove from squad, if not, then check if in mvt group, if
 		 * so, move and destroy group */
-		if (s->bAssignment < ON_DUTY)
+		if (s.bAssignment < ON_DUTY)
 		{
-			RemoveCharacterFromSquads(s);
+			RemoveCharacterFromSquads(&s);
 		}
-		else if (s->ubGroupID != 0)
+		else if (s.ubGroupID != 0)
 		{
 			// destroy group and set to zero
-			RemoveGroup(s->ubGroupID);
-			s->ubGroupID = 0;
+			RemoveGroup(s.ubGroupID);
+			s.ubGroupID = 0;
 		}
 
-		if (s->bAssignment != VEHICLE || s->iVehicleId != VEHICLE2ID(v))
+		if (s.bAssignment != VEHICLE || s.iVehicleId != VEHICLE2ID(v))
 		{
-			SetTimeOfAssignmentChangeForMerc(s);
+			SetTimeOfAssignmentChangeForMerc(&s);
 		}
 
-		ChangeSoldiersAssignment(s, VEHICLE);
+		ChangeSoldiersAssignment(&s, VEHICLE);
 
-		s->iVehicleId = VEHICLE2ID(v);
+		s.iVehicleId = VEHICLE2ID(v);
 
 		// if vehicle is part of mvt group, then add character to mvt group
 		if (v.ubMovementGroup != 0)
 		{
-			AddPlayerToGroup(GetGroup(v.ubMovementGroup), s);
+			AddPlayerToGroup(GetGroup(v.ubMovementGroup), &s);
 		}
 
 		// Are we the first?
-		s->uiStatusFlags |= GetNumberInVehicle(v) == 1 ?
+		s.uiStatusFlags |= GetNumberInVehicle(v) == 1 ?
 			SOLDIER_DRIVER : SOLDIER_PASSENGER;
 
-		RemoveSoldierFromGridNo(s);
+		RemoveSoldierFromGridNo(&s);
 
 		if (vs)
 		{
 			// Set gridno for vehicle.....
-			EVENT_SetSoldierPositionXY(s, vs->dXPos, vs->dYPos, SSP_NONE);
+			EVENT_SetSoldierPositionXY(&s, vs->dXPos, vs->dYPos, SSP_NONE);
 
 			// Stop from any movement.....
-			EVENT_StopMerc(s);
+			EVENT_StopMerc(&s);
 
 			// can't call SetCurrentSquad OR SelectSoldier in mapscreen, that will initialize interface panels!!!
 			if (guiCurrentScreen == GAME_SCREEN)
@@ -302,11 +302,11 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE& v)
 			}
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	// no slots, leave
-	return FALSE;
+	return false;
 }
 
 
@@ -572,7 +572,7 @@ BOOLEAN TakeSoldierOutOfVehicle(SOLDIERTYPE* const s)
 
 bool PutSoldierInVehicle(SOLDIERTYPE* const s, VEHICLETYPE& v)
 {
-	if (!AddSoldierToVehicle(s, v)) return false;
+	if (!AddSoldierToVehicle(*s, v)) return false;
 
 	if (s->sSectorX   == gWorldSectorX        &&
 			s->sSectorY   == gWorldSectorY        &&
