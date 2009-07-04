@@ -1136,28 +1136,28 @@ static void PrintAP(SOLDIERTYPE* const s, INT16 const x, INT16 const y, INT16 co
 }
 
 
-static void SetStatsHelp(MOUSE_REGION* r, const SOLDIERTYPE* s)
+static void SetStatsHelp(MOUSE_REGION& r, SOLDIERTYPE const& s)
 {
 	wchar_t const* help = L"";
 	wchar_t        text[200];
-	if (s->bLife != 0)
+	if (s.bLife != 0)
 	{
-		if (s->uiStatusFlags & SOLDIER_VEHICLE)
+		if (s.uiStatusFlags & SOLDIER_VEHICLE)
 		{
-			swprintf(text, lengthof(text), TacticalStr[VEHICLE_VITAL_STATS_POPUPTEXT], s->bLife, s->bLifeMax, s->bBreath, s->bBreathMax);
+			swprintf(text, lengthof(text), TacticalStr[VEHICLE_VITAL_STATS_POPUPTEXT], s.bLife, s.bLifeMax, s.bBreath, s.bBreathMax);
 		}
-		else if (s->uiStatusFlags & SOLDIER_ROBOT)
+		else if (s.uiStatusFlags & SOLDIER_ROBOT)
 		{
-			swprintf(text, lengthof(text), gzLateLocalizedString[16], s->bLife, s->bLifeMax);
+			swprintf(text, lengthof(text), gzLateLocalizedString[16], s.bLife, s.bLifeMax);
 		}
 		else
 		{
-			const wchar_t* Morale = GetMoraleString(s);
-			swprintf(text, lengthof(text), TacticalStr[MERC_VITAL_STATS_POPUPTEXT], s->bLife, s->bLifeMax, s->bBreath, s->bBreathMax, Morale);
+			wchar_t const* const morale = GetMoraleString(&s);
+			swprintf(text, lengthof(text), TacticalStr[MERC_VITAL_STATS_POPUPTEXT], s.bLife, s.bLifeMax, s.bBreath, s.bBreathMax, morale);
 		}
 		help = text;
 	}
-	r->SetFastHelpText(help);
+	r.SetFastHelpText(help);
 }
 
 
@@ -1331,7 +1331,7 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 
 	if (*pfDirty != DIRTYLEVEL0)
 	{
-		SetStatsHelp(&gSM_SELMERCBarsRegion, gpSMCurrentMerc);
+		SetStatsHelp(gSM_SELMERCBarsRegion, *gpSMCurrentMerc);
 
 		// display AP
 		if (!(gpSMCurrentMerc->uiStatusFlags & SOLDIER_DEAD))
@@ -2456,7 +2456,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 			if (fDirty != DIRTYLEVEL0)
 			{
 				// Update stats!
-				if (fDirty == DIRTYLEVEL2) SetStatsHelp(&i->bars, s);
+				if (fDirty == DIRTYLEVEL2) SetStatsHelp(i->bars, *s);
 
 				const INT32 x = dx + TM_AP_X;
 				const INT32 y = dy + TM_AP_Y;
