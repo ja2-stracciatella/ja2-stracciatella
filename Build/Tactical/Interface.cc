@@ -1440,7 +1440,7 @@ static void PopupDoorOpenMenu(BOOLEAN fClosingDoor)
 	const BOOLEAN d0 = fClosingDoor || AM_AN_EPC(gOpenDoorMenu.pSoldier);
 	BOOLEAN d;
 
-	d = d0 || !SoldierHasKey(gOpenDoorMenu.pSoldier, ANYKEY);
+	d = d0 || !SoldierHasKey(*gOpenDoorMenu.pSoldier, ANYKEY);
 	MakeButtonDoor(USE_KEYRING_ICON, USE_KEYRING_IMAGES, dx + 20, dy, AP_UNLOCK_DOOR, BP_UNLOCK_DOOR, d, pTacticalPopupButtonStrings[USE_KEYRING_ICON]);
 
 	d = fClosingDoor || FindUsableObj(gOpenDoorMenu.pSoldier, CROWBAR) == NO_SLOT;

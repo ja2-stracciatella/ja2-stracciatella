@@ -126,7 +126,7 @@ extern BOOLEAN AddKeysToKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubKeyID, UINT8 ubN
 extern BOOLEAN RemoveKeyFromKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubPos, OBJECTTYPE * pObj );
 extern BOOLEAN RemoveAllOfKeyFromKeyRing( SOLDIERTYPE *pSoldier, UINT8 ubPos, OBJECTTYPE * pObj );
 bool KeyExistsInKeyRing(SOLDIERTYPE const&, UINT8 key_id);
-BOOLEAN SoldierHasKey(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID);
+bool SoldierHasKey(SOLDIERTYPE const&, UINT8 key_id);
 
 /**********************************
  * Door utils add by Kris Morness *

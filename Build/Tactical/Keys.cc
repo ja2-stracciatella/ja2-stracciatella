@@ -155,11 +155,11 @@ catch (...)
 static BOOLEAN KeyExistsInInventory(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID);
 
 
-BOOLEAN SoldierHasKey(const SOLDIERTYPE* pSoldier, UINT8 ubKeyID)
+bool SoldierHasKey(SOLDIERTYPE const& s, UINT8 const key_id)
 {
 	return
-		KeyExistsInKeyRing(*pSoldier, ubKeyID) ||
-		KeyExistsInInventory(pSoldier, ubKeyID);
+		KeyExistsInKeyRing(s, key_id) ||
+		KeyExistsInInventory(&s, key_id);
 }
 
 
@@ -227,7 +227,7 @@ static void DoUnlockDoor(DOOR* pDoor, UINT8 ubKeyID)
 BOOLEAN AttemptToUnlockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor)
 {
 	const UINT8 ubKeyID = pDoor->ubLockID;
-	if (SoldierHasKey(pSoldier, ubKeyID))
+	if (SoldierHasKey(*pSoldier, ubKeyID))
 	{
 		DoUnlockDoor(pDoor, ubKeyID);
 		return TRUE;
@@ -243,7 +243,7 @@ BOOLEAN AttemptToUnlockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor)
 BOOLEAN AttemptToLockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor)
 {
 	const UINT8 ubKeyID = pDoor->ubLockID;
-	if (SoldierHasKey(pSoldier, ubKeyID))
+	if (SoldierHasKey(*pSoldier, ubKeyID))
 	{
 		DoLockDoor(pDoor, ubKeyID);
 		return TRUE;
