@@ -188,7 +188,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 	SOLDIERTYPE* vs = 0;
 	if (VEHICLE2ID(v) != iHelicopterVehicleId)
 	{
-		vs = GetSoldierStructureForVehicle(v);
+		vs = &GetSoldierStructureForVehicle(v);
 		if (vs->bTeam != gbPlayerNum)
 		{
 			// Change sides
@@ -379,10 +379,10 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 		// check if anyone left in vehicle
 		CFOR_ALL_PASSENGERS(v, i) return true;
 
-		SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(v);
+		SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 
 		// and he has a route set
-		if (GetLengthOfMercPath(vs) > 0)
+		if (GetLengthOfMercPath(&vs) > 0)
 		{
 			// cancel the entire path (also handles reversing directions)
 			CancelPathForVehicle(v, FALSE);
@@ -391,15 +391,15 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 		if (v->fBetweenSectors)
 		{ /* The vehicle was abandoned between sectors. Teleport it to the closer of
 			 * its current and next sectors (it beats having it arrive empty later) */
-			TeleportVehicleToItsClosestSector(vs->ubGroupID);
+			TeleportVehicleToItsClosestSector(vs.ubGroupID);
 		}
 
 		// Remove vehicle from squad
-		RemoveCharacterFromSquads(vs);
+		RemoveCharacterFromSquads(&vs);
 		// ATE: Add him back to vehicle group!
 		GROUP* const g = GetGroup(v->ubMovementGroup);
-		if (!DoesPlayerExistInPGroup(g, vs)) AddPlayerToGroup(g, vs);
-		ChangeSoldiersAssignment(vs, ASSIGNMENT_EMPTY);
+		if (!DoesPlayerExistInPGroup(g, &vs)) AddPlayerToGroup(g, &vs);
+		ChangeSoldiersAssignment(&vs, ASSIGNMENT_EMPTY);
 	}
 	return true;
 }
@@ -605,13 +605,13 @@ BOOLEAN PutSoldierInVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 
 BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 {
-	SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(GetVehicle(s->iVehicleId));
+	SOLDIERTYPE& vs = GetSoldierStructureForVehicle(GetVehicle(s->iVehicleId));
 
-	INT16 sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 5, 3, vs);
+	INT16 sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 5, 3, &vs);
 	if (sGridNo == NOWHERE)
 	{
 		// ATE: BUT we need a place, widen the search
-		sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 20, 3, vs);
+		sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 20, 3, &vs);
 	}
 
 	RemoveSoldierFromVehicle(*s);
@@ -622,7 +622,7 @@ BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 	s->iVehicleId               = -1;
 
 	//AllTeamsLookForAll( FALSE );
-	s->bOppList[vs->ubID] = 1;
+	s->bOppList[vs.ubID] = 1;
 
 	// Add to sector....
 	EVENT_SetSoldierPosition(s, sGridNo, SSP_NONE);
@@ -639,7 +639,7 @@ BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 		SelectSoldier(s, SELSOLDIER_FORCE_RESELECT);
 	}
 
-	PlayLocationJA2Sample(vs->sGridNo, g_vehicle_type_info[pVehicleList[vs->bVehicleID].ubVehicleType].enter_sound, HIGHVOLUME, 1);
+	PlayLocationJA2Sample(vs.sGridNo, g_vehicle_type_info[pVehicleList[vs.bVehicleID].ubVehicleType].enter_sound, HIGHVOLUME, 1);
 	return TRUE;
 }
 
@@ -683,28 +683,25 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 	// that a critical hit will occur
 	BOOLEAN	fMadeCorpse = FALSE;
 
-	VEHICLETYPE* const v        = &pVehicleList[ubID];
-	SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(v);
+	VEHICLETYPE* const v  = &pVehicleList[ubID];
+	SOLDIERTYPE&       vs = GetSoldierStructureForVehicle(v);
 
-	if ( sDmg > pSoldier->bLife )
+	if (sDmg > vs.bLife)
 	{
-		pSoldier->bLife = 0;
+		vs.bLife = 0;
 	}
 	else
 	{
 		// Decrease Health
-		pSoldier->bLife -= sDmg;
+		vs.bLife -= sDmg;
 	}
 
-	if ( pSoldier->bLife < OKLIFE )
-	{
-		pSoldier->bLife = 0;
-	}
+	if (vs.bLife < OKLIFE) vs.bLife = 0;
 
 	//Show damage
-	pSoldier->sDamage += sDmg;
+	vs.sDamage += sDmg;
 
-	if ( pSoldier->bInSector && pSoldier->bVisible != -1 )
+	if (vs.bInSector && vs.bVisible != -1)
 	{
 		// If we are already dead, don't show damage!
 		if ( sDmg != 0 )
@@ -712,29 +709,22 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 			// Display damage
 
 			// Set Damage display counter
-			pSoldier->fDisplayDamage = TRUE;
-			pSoldier->bDisplayDamageCount = 0;
+			vs.fDisplayDamage = TRUE;
+			vs.bDisplayDamageCount = 0;
 
-			pSoldier->sDamageX = pSoldier->sBoundingBoxOffsetX;
-			pSoldier->sDamageY = pSoldier->sBoundingBoxOffsetY;
+			vs.sDamageX = vs.sBoundingBoxOffsetX;
+			vs.sDamageY = vs.sBoundingBoxOffsetY;
 		}
 	}
 
-	if (pSoldier->bLife == 0 && !v->fDestroyed)
+	if (vs.bLife == 0 && !v->fDestroyed)
 	{
 		v->fDestroyed = TRUE;
 
 		// Explode vehicle...
 		IgniteExplosion(att, 0, sGridNo, GREAT_BIG_EXPLOSION, 0);
 
-		if ( pSoldier != NULL )
-		{
-			// Tacticlly remove soldier....
-			// EVENT_InitNewSoldierAnim( pSoldier, VEHICLE_DIE, 0, FALSE );
-			//TacticalRemoveSoldier(pSoldier);
-
-			CheckForAndHandleSoldierDeath( pSoldier, &fMadeCorpse );
-		}
+		CheckForAndHandleSoldierDeath(&vs, &fMadeCorpse);
 
     KillAllInVehicle(v);
 	}
@@ -747,35 +737,31 @@ BOOLEAN DoesVehicleNeedAnyRepairs(const VEHICLETYPE* const v)
 	if (VEHICLE2ID(v) == iHelicopterVehicleId) return FALSE;
 
 	// get the vehicle soldiertype
-	const SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(v);
-	return vs->bLife != vs->bLifeMax;
+	SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(v);
+	return vs.bLife != vs.bLifeMax;
 }
 
 
 INT8 RepairVehicle(VEHICLETYPE const* const v, INT8 const bRepairPtsLeft, BOOLEAN* const pfNothingToRepair)
 {
-	SOLDIERTYPE		*pVehicleSoldier = NULL;
 	INT8					bRepairPtsUsed = 0;
 	INT8					bOldLife;
 
 	if (!DoesVehicleNeedAnyRepairs(v)) return bRepairPtsUsed;
 
 	// get the vehicle soldiertype
-	pVehicleSoldier = GetSoldierStructureForVehicle(v);
+	SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 
-	bOldLife = pVehicleSoldier->bLife;
+	bOldLife = vs.bLife;
 
 	// Repair
-	pVehicleSoldier->bLife += ( bRepairPtsLeft / VEHICLE_REPAIR_POINTS_DIVISOR );
+	vs.bLife += bRepairPtsLeft / VEHICLE_REPAIR_POINTS_DIVISOR;
 
 	// Check
-	if ( pVehicleSoldier->bLife > pVehicleSoldier->bLifeMax )
-	{
-		pVehicleSoldier->bLife = pVehicleSoldier->bLifeMax;
-	}
+	if (vs.bLife > vs.bLifeMax) vs.bLife = vs.bLifeMax;
 
 	// Calculate pts used;
-	bRepairPtsUsed = ( pVehicleSoldier->bLife - bOldLife ) * VEHICLE_REPAIR_POINTS_DIVISOR;
+	bRepairPtsUsed = (vs.bLife - bOldLife) * VEHICLE_REPAIR_POINTS_DIVISOR;
 
 	// ARM: personally, I'd love to know where in Arulco the mechanic gets the PARTS to do this stuff, but hey, it's a game!
 	*pfNothingToRepair = !DoesVehicleNeedAnyRepairs(v);
@@ -784,13 +770,13 @@ INT8 RepairVehicle(VEHICLETYPE const* const v, INT8 const bRepairPtsLeft, BOOLEA
 }
 
 
-SOLDIERTYPE* GetSoldierStructureForVehicle(VEHICLETYPE const* const v)
+SOLDIERTYPE& GetSoldierStructureForVehicle(VEHICLETYPE const* const v)
 {
 	FOR_ALL_SOLDIERS(s)
 	{
 		if (!(s->uiStatusFlags & SOLDIER_VEHICLE)) continue;
 		if (s->bVehicleID != VEHICLE2ID(v))        continue;
-		return s;
+		return *s;
 	}
 	throw std::logic_error("Vehicle has no corresponding soldier");
 }
@@ -971,10 +957,10 @@ void AddVehicleFuelToSave( )
 	CFOR_ALL_VEHICLES(v)
 	{
 		if (VEHICLE2ID(v) == iHelicopterVehicleId) continue;
-		SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(v);
+		SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 		// Init fuel!
-		vs->sBreathRed = 10000;
-		vs->bBreath    = 100;
+		vs.sBreathRed = 10000;
+		vs.bBreath    = 100;
 	}
 }
 
@@ -1088,7 +1074,6 @@ static BOOLEAN OnlyThisSoldierCanDriveVehicle(const SOLDIERTYPE* const pThisSold
 BOOLEAN IsSoldierInThisVehicleSquad(const SOLDIERTYPE* const pSoldier, const INT8 bSquadNumber)
 {
 	INT32 iVehicleId;
-	SOLDIERTYPE *pVehicleSoldier;
 
 
 	Assert( pSoldier );
@@ -1110,10 +1095,10 @@ BOOLEAN IsSoldierInThisVehicleSquad(const SOLDIERTYPE* const pSoldier, const INT
 		return( FALSE );
 	}
 
-	pVehicleSoldier = GetSoldierStructureForVehicle(GetVehicle(iVehicleId));
+	SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(GetVehicle(iVehicleId));
 
 	// check squad vehicle is on
-	if ( pVehicleSoldier->bAssignment != bSquadNumber )
+	if (vs.bAssignment != bSquadNumber)
 	{
 		return( FALSE );
 	}

@@ -113,7 +113,7 @@ BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier );
 void VehicleTakeDamage(UINT8 ubID, UINT8 ubReason, INT16 sDamage, INT16 sGridNo, SOLDIERTYPE* att);
 
 // the soldiertype containing this tactical incarnation of this vehicle
-SOLDIERTYPE* GetSoldierStructureForVehicle(VEHICLETYPE const*);
+SOLDIERTYPE& GetSoldierStructureForVehicle(VEHICLETYPE const*);
 
 // does it need fixing?
 BOOLEAN DoesVehicleNeedAnyRepairs(const VEHICLETYPE*);

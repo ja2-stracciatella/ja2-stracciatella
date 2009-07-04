@@ -1276,11 +1276,11 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 		else if( !IsGroupTheHelicopterGroup( pGroup ) )
 		{
 			VEHICLETYPE const* const v  = GetVehicleFromMvtGroup(pGroup);
-			SOLDIERTYPE*       const vs = GetSoldierStructureForVehicle(v);
+			SOLDIERTYPE&             vs = GetSoldierStructureForVehicle(v);
 
-			SpendVehicleFuel(vs, pGroup->uiTraverseTime * 6);
+			SpendVehicleFuel(&vs, pGroup->uiTraverseTime * 6);
 
-			if (!VehicleFuelRemaining(vs))
+			if (!VehicleFuelRemaining(&vs))
 			{
 				ReportVehicleOutOfGas(v, pGroup->ubSectorX, pGroup->ubSectorY);
 				//Nuke the group's path, so they don't continue moving.
@@ -1419,24 +1419,24 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 
 			if (VEHICLE2ID(v) != iHelicopterVehicleId)
 			{
-				SOLDIERTYPE* const pSoldier = GetSoldierStructureForVehicle(v);
+				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 
-				pSoldier->fBetweenSectors = FALSE;
-				pSoldier->sSectorX = pGroup->ubSectorX;
-				pSoldier->sSectorY = pGroup->ubSectorY;
-				pSoldier->bSectorZ = pGroup->ubSectorZ;
-				pSoldier->ubInsertionDirection = ubInsertionDirection;
+				vs.fBetweenSectors = FALSE;
+				vs.sSectorX = pGroup->ubSectorX;
+				vs.sSectorY = pGroup->ubSectorY;
+				vs.bSectorZ = pGroup->ubSectorZ;
+				vs.ubInsertionDirection = ubInsertionDirection;
 
 				// ATE: Removed, may 21 - sufficient to use insertion direction...
-				//pSoldier->bDesiredDirection = ubInsertionDirection;
+				//vs.bDesiredDirection = ubInsertionDirection;
 
-				pSoldier->ubStrategicInsertionCode = ubStrategicInsertionCode;
+				vs.ubStrategicInsertionCode = ubStrategicInsertionCode;
 
 				// if this sector is currently loaded
 				if ( pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && pGroup->ubSectorZ == gbWorldSectorZ )
 				{
 					// add vehicle to the tactical engine!
-					UpdateMercInSector(*pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+					UpdateMercInSector(vs, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 				}
 
 				// set directions of insertion
@@ -1707,8 +1707,8 @@ static void PrepareGroupsForSimultaneousArrival(void)
 
 		if (VEHICLE2ID(v) != iHelicopterVehicleId)
 		{
-			SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(v);
-			vs->fBetweenSectors = TRUE;
+			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
+			vs.fBetweenSectors = TRUE;
 		}
 	}
 
@@ -1954,9 +1954,9 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 
 		if (VEHICLE2ID(v) != iHelicopterVehicleId)
 		{
-			SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(v);
-			vs->fBetweenSectors = TRUE;
-			RemoveSoldierFromTacticalSector(vs);
+			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
+			vs.fBetweenSectors = TRUE;
+			RemoveSoldierFromTacticalSector(&vs);
 		}
 	}
 
@@ -3398,11 +3398,11 @@ static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const* const pGroup, INT
 		// if it ain't the chopper
 		if (VEHICLE2ID(v) != iHelicopterVehicleId)
 		{
-			pSoldier = GetSoldierStructureForVehicle(v);
+			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 			// these are apparently unnecessary, since vehicles are part of the pPlayerList in a vehicle group.  Oh well.
-			pSoldier->sSectorX = sSectorX;
-			pSoldier->sSectorY = sSectorY;
-			pSoldier->bSectorZ = bSectorZ;
+			vs.sSectorX = sSectorX;
+			vs.sSectorY = sSectorY;
+			vs.bSectorZ = bSectorZ;
 		}
 	}
 }
