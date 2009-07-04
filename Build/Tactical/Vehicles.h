@@ -102,8 +102,6 @@ INT32 GetNumberInVehicle(VEHICLETYPE const&);
 // grab # in vehicle skipping EPCs (who aren't allowed to drive :-)
 INT32 GetNumberOfNonEPCsInVehicle( INT32 iId );
 
-void SetVehicleName( SOLDIERTYPE *pVehicle );
-
 BOOLEAN ExitVehicle( SOLDIERTYPE *pSoldier );
 
 
