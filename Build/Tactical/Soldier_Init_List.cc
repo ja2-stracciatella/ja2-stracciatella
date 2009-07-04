@@ -1784,85 +1784,76 @@ static SOLDIERINITNODE* FindSoldierInitListNodeByProfile(UINT8 ubProfile)
 	return( NULL );
 }
 
-//This is the code that loops through the profiles starting at the RPCs, and adds them using strategic insertion
-//information, and not editor placements.  The key flag involved for doing it this way is the gMercProfiles[i].fUseProfileInsertionInfo.
+
+/* Loop through the profiles starting at the RPCs, add them using strategic
+ * insertion information and not editor placements. The key flag involved for
+ * doing it this way is the GetProfile(i).fUseProfileInsertionInfo. */
 void AddProfilesUsingProfileInsertionData()
 {
-	INT32 i;
-	SOLDIERINITNODE * curr;
-
-	for( i = FIRST_RPC; i < ( PROF_HUMMER ); i++ )
+	for (INT32 i = FIRST_RPC; i != PROF_HUMMER; ++i)
 	{
-		//Perform various checks to make sure the soldier is actually in the same sector, alive, and so on.
-		//More importantly, the flag to use profile insertion data must be set.
-		if( gMercProfiles[ i ].sSectorX != gWorldSectorX ||
-				gMercProfiles[ i ].sSectorY != gWorldSectorY ||
-				gMercProfiles[ i ].bSectorZ != gbWorldSectorZ ||
-				gMercProfiles[ i ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED ||
-				gMercProfiles[ i ].ubMiscFlags & PROFILE_MISC_FLAG_EPCACTIVE ||
-//			gMercProfiles[ i ].ubMiscFlags2 & PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR ||
-				!gMercProfiles[ i ].bLife ||
-				!gMercProfiles[ i ].fUseProfileInsertionInfo
-			)
-		{ //Don't add, so skip to the next soldier.
-			continue;
+		/* Perform various checks to make sure the soldier is actually in the same
+		 * sector, alive and so on. More importantly, the flag to use profile
+		 * insertion data must be set. */
+		MERCPROFILESTRUCT const& p = GetProfile(i);
+		if (p.sSectorX != gWorldSectorX)                 continue;
+		if (p.sSectorY != gWorldSectorY)                 continue;
+		if (p.bSectorZ != gbWorldSectorZ)                continue;
+		if (p.ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED) continue;
+		if (p.ubMiscFlags & PROFILE_MISC_FLAG_EPCACTIVE) continue;
+		if (p.bLife == 0)                                continue;
+		if (!p.fUseProfileInsertionInfo)                 continue;
+
+		SOLDIERTYPE* ps = FindSoldierByProfileID(i);
+		if (!ps)
+		{ // Create a new soldier, as this one doesn't exist
+			SOLDIERCREATE_STRUCT c;
+			memset(&c, 0, sizeof(c));
+			c.bTeam     = CIV_TEAM;
+			c.ubProfile = i;
+			c.sSectorX  = gWorldSectorX;
+			c.sSectorY  = gWorldSectorY;
+			c.bSectorZ  = gbWorldSectorZ;
+			ps = TacticalCreateSoldier(c);
+			if (!ps) continue; // XXX exception?
 		}
-		SOLDIERTYPE* pSoldier = FindSoldierByProfileID((UINT8)i);
-		if( !pSoldier )
-		{ //Create a new soldier, as this one doesn't exist
-			SOLDIERCREATE_STRUCT		MercCreateStruct;
+		SOLDIERTYPE& s = *ps;
 
-			//Set up the create struct so that we can properly create the profile soldier.
-			memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
-			MercCreateStruct.bTeam						= CIV_TEAM;
-			MercCreateStruct.ubProfile				= (UINT8)i;
-			MercCreateStruct.sSectorX					= gWorldSectorX;
-			MercCreateStruct.sSectorY					= gWorldSectorY;
-			MercCreateStruct.bSectorZ					= gbWorldSectorZ;
+		// Insert the soldier
+		s.ubStrategicInsertionCode = p.ubStrategicInsertionCode;
+		s.usStrategicInsertionData = p.usStrategicInsertionData;
+		UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 
-			pSoldier = TacticalCreateSoldier(MercCreateStruct);
-		}
-		if ( pSoldier )
-		{ //Now, insert the soldier.
-			pSoldier->ubStrategicInsertionCode = gMercProfiles[ i ].ubStrategicInsertionCode;
-			pSoldier->usStrategicInsertionData = gMercProfiles[ i ].usStrategicInsertionData;
-			UpdateMercInSector(*pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-			// CJC: Note well that unless an error occurs, UpdateMercInSector calls
-			// AddSoldierToSector
-			// AddSoldierToSector(pSoldier);
-
-			// check action ID values
-			if ( gMercProfiles[ i ].ubQuoteRecord )
-			{
-				pSoldier->ubQuoteRecord = gMercProfiles[ i ].ubQuoteRecord;
-				pSoldier->ubQuoteActionID = gMercProfiles[ i ].ubQuoteActionID;
-				if ( pSoldier->ubQuoteActionID == QUOTE_ACTION_ID_CHECKFORDEST )
-				{
-					// gridno will have been changed to destination... so we're there...
-					NPCReachedDestination( pSoldier, FALSE );
-				}
+		// check action ID values
+		if (p.ubQuoteRecord != 0)
+		{
+			s.ubQuoteRecord   = p.ubQuoteRecord;
+			s.ubQuoteActionID = p.ubQuoteActionID;
+			if (s.ubQuoteActionID == QUOTE_ACTION_ID_CHECKFORDEST)
+			{ // Gridno will have been changed to destination, so we're there
+				NPCReachedDestination(&s, FALSE);
 			}
+		}
 
-			// make sure this person's pointer is set properly in the init list
-			curr = FindSoldierInitListNodeByProfile( pSoldier->ubProfile );
-			if ( curr )
+		// Make sure this person's pointer is set properly in the init list
+		if (SOLDIERINITNODE* const init = FindSoldierInitListNodeByProfile(s.ubProfile))
+		{
+			init->pSoldier    = &s;
+			init->ubSoldierID = s.ubID;
+			// Also connect schedules here
+			SOLDIERCREATE_STRUCT& dp = *init->pDetailedPlacement;
+			if (dp.ubScheduleID != 0)
 			{
-				curr->pSoldier = pSoldier;
-				curr->ubSoldierID = pSoldier->ubID;
-				// also connect schedules here
-				if ( curr->pDetailedPlacement->ubScheduleID != 0 )
+				if (SCHEDULENODE* const sched = GetSchedule(dp.ubScheduleID))
 				{
-					SCHEDULENODE * pSchedule = GetSchedule( curr->pDetailedPlacement->ubScheduleID );
-					if ( pSchedule )
-					{
-						pSchedule->soldier     = pSoldier;
-						pSoldier->ubScheduleID = curr->pDetailedPlacement->ubScheduleID;
-					}
+					sched->soldier = &s;
+					s.ubScheduleID = dp.ubScheduleID;
 				}
 			}
 		}
 	}
 }
+
 
 void AddProfilesNotUsingProfileInsertionData()
 {
