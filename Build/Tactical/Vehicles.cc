@@ -373,7 +373,7 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* const s)
 				s->sSectorY == gWorldSectorY &&
 				s->bSectorZ == gbWorldSectorZ)
 		{
-			UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+			UpdateMercInSector(*s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 		}
 		return TRUE;
 	}

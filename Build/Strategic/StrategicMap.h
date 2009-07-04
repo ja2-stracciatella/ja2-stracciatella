@@ -80,7 +80,7 @@ void GetCurrentWorldSector( INT16 *psMapX, INT16 *psMapY );
 void SetCurrentWorldSector(INT16 x, INT16 y, INT8 z);
 
 void UpdateMercsInSector();
-void UpdateMercInSector( SOLDIERTYPE *pSoldier, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
+void UpdateMercInSector(SOLDIERTYPE&, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 // get short sector name without town name
 void GetShortSectorString(INT16 sMapX, INT16 sMapY, wchar_t* sString, size_t Length);

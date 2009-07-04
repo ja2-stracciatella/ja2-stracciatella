@@ -989,7 +989,7 @@ static ScreenID UIHandleNewBadMerc(UI_EVENT*)
 
 	s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 	s->usStrategicInsertionData = map_pos;
-	UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+	UpdateMercInSector(*s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 	AllTeamsLookForAll(NO_INTERRUPTS);
 
 	return GAME_SCREEN;

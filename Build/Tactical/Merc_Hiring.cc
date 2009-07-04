@@ -293,7 +293,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 			s.ubStrategicInsertionCode = INSERTION_CODE_CHOPPER;
 		}
 
-		UpdateMercInSector(&s, s.sSectorX, s.sSectorY, s.bSectorZ );
+		UpdateMercInSector(s, s.sSectorX, s.sSectorY, s.bSectorZ);
 	}
 	else
 	{

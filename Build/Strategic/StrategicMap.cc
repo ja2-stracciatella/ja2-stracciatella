@@ -1367,7 +1367,7 @@ void UpdateMercsInSector()
 			}
 		}
 
-		UpdateMercInSector(&s, sSectorX, sSectorY, bSectorZ);
+		UpdateMercInSector(s, sSectorX, sSectorY, bSectorZ);
 
 		if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) continue;
 		if (s.bAssignment != ASSIGNMENT_POW)              continue;
@@ -1413,33 +1413,33 @@ void UpdateMercsInSector()
 static void GetLoadedSectorString(wchar_t* pString, size_t Length);
 
 
-void UpdateMercInSector(SOLDIERTYPE* const s, INT16 const x, INT16 const y, INT8 const z)
+void UpdateMercInSector(SOLDIERTYPE& s, INT16 const x, INT16 const y, INT8 const z)
 {
 	// Determine entrance direction and get sweetspot
 	// Some checks here must be fleshed out
 
-	if (!s->bActive) return;
+	if (!s.bActive) return;
 
-	if (s->bAssignment == IN_TRANSIT) return;
+	if (s.bAssignment == IN_TRANSIT) return;
 
-	if (s->ubProfile != NO_PROFILE && GetProfile(s->ubProfile).ubMiscFlags3 & PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE)
+	if (s.ubProfile != NO_PROFILE && GetProfile(s.ubProfile).ubMiscFlags3 & PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE)
 	{ // Override orders
-		s->bOrders = STATIONARY;
+		s.bOrders = STATIONARY;
 	}
 
-	if (s->ubStrategicInsertionCode == INSERTION_CODE_PRIMARY_EDGEINDEX ||
-			s->ubStrategicInsertionCode == INSERTION_CODE_SECONDARY_EDGEINDEX)
+	if (s.ubStrategicInsertionCode == INSERTION_CODE_PRIMARY_EDGEINDEX ||
+			s.ubStrategicInsertionCode == INSERTION_CODE_SECONDARY_EDGEINDEX)
 	{
 		if (!fUsingEdgePointsForStrategicEntry)
 		{ // If we are not supposed to use this now, pick something better
-			s->ubStrategicInsertionCode = (UINT8)s->usStrategicInsertionData;
+			s.ubStrategicInsertionCode = (UINT8)s.usStrategicInsertionData;
 		}
 	}
 
 MAPEDGEPOINT_SEARCH_FAILED:
 	// Use insertion direction from loaded map
 	GridNo gridno;
-	switch (s->ubStrategicInsertionCode)
+	switch (s.ubStrategicInsertionCode)
 	{
 		case INSERTION_CODE_NORTH:  gridno = gMapInformation.sNorthGridNo;  goto check_entry;
 		case INSERTION_CODE_SOUTH:  gridno = gMapInformation.sSouthGridNo;  goto check_entry;
@@ -1482,11 +1482,11 @@ check_entry:
 				}
 				else
 				{
-					ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls has NO entrypoints -- using precise center of map for %ls.", sector, s->name);
+					ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls has NO entrypoints -- using precise center of map for %ls.", sector, s.name);
 					goto place_in_center;
 				}
 				wchar_t const* no_entry = 0;
-				switch (s->ubStrategicInsertionCode)
+				switch (s.ubStrategicInsertionCode)
 				{
 					case INSERTION_CODE_NORTH:  no_entry = L"north";  break;
 					case INSERTION_CODE_EAST:   no_entry = L"east";   break;
@@ -1496,27 +1496,27 @@ check_entry:
 				}
 				if (no_entry)
 				{
-					ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a %ls entrypoint -- substituting %ls entrypoint for %ls.", sector, no_entry, entry, s->name);
+					ScreenMsg(FONT_RED, MSG_BETAVERSION, L"Sector %ls doesn't have a %ls entrypoint -- substituting %ls entrypoint for %ls.", sector, no_entry, entry, s.name);
 				}
 			}
 			break;
 
 		case INSERTION_CODE_GRIDNO:
-			gridno = s->usStrategicInsertionData;
+			gridno = s.usStrategicInsertionData;
 			break;
 
 		case INSERTION_CODE_PRIMARY_EDGEINDEX:
 		{
-			gridno = SearchForClosestPrimaryMapEdgepoint(s->sPendingActionData2, (UINT8)s->usStrategicInsertionData);
+			gridno = SearchForClosestPrimaryMapEdgepoint(s.sPendingActionData2, (UINT8)s.usStrategicInsertionData);
 #ifdef JA2BETAVERSION
 			char str[256];
-			sprintf(str, "%ls's primary insertion gridno is %d using %d as initial search gridno and %d insertion code.", s->name, gridno, s->sPendingActionData2, s->usStrategicInsertionData);
+			sprintf(str, "%ls's primary insertion gridno is %d using %d as initial search gridno and %d insertion code.", s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, str);
 #endif
 			if (gridno == NOWHERE)
 			{
-				ScreenMsg(FONT_RED, MSG_ERROR, L"Main edgepoint search failed for %ls -- substituting entrypoint.", s->name);
-				s->ubStrategicInsertionCode = (UINT8)s->usStrategicInsertionData;
+				ScreenMsg(FONT_RED, MSG_ERROR, L"Main edgepoint search failed for %ls -- substituting entrypoint.", s.name);
+				s.ubStrategicInsertionCode = (UINT8)s.usStrategicInsertionData;
 				goto MAPEDGEPOINT_SEARCH_FAILED;
 			}
 			break;
@@ -1524,16 +1524,16 @@ check_entry:
 
 		case INSERTION_CODE_SECONDARY_EDGEINDEX:
 		{
-			gridno = SearchForClosestSecondaryMapEdgepoint(s->sPendingActionData2, (UINT8)s->usStrategicInsertionData);
+			gridno = SearchForClosestSecondaryMapEdgepoint(s.sPendingActionData2, (UINT8)s.usStrategicInsertionData);
 #ifdef JA2BETAVERSION
 			char str[256];
-			sprintf(str, "%ls's isolated insertion gridno is %d using %d as initial search gridno and %d insertion code.", s->name, gridno, s->sPendingActionData2, s->usStrategicInsertionData);
+			sprintf(str, "%ls's isolated insertion gridno is %d using %d as initial search gridno and %d insertion code.", s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, str);
 #endif
 			if (gridno == NOWHERE)
 			{
-				ScreenMsg(FONT_RED, MSG_ERROR, L"Isolated edgepoint search failed for %ls -- substituting entrypoint.", s->name);
-				s->ubStrategicInsertionCode = (UINT8)s->usStrategicInsertionData;
+				ScreenMsg(FONT_RED, MSG_ERROR, L"Isolated edgepoint search failed for %ls -- substituting entrypoint.", s.name);
+				s.ubStrategicInsertionCode = (UINT8)s.usStrategicInsertionData;
 				goto MAPEDGEPOINT_SEARCH_FAILED;
 			}
 			break;
@@ -1547,30 +1547,30 @@ check_entry:
 			}
 			else
 			{
-				s->ubStrategicInsertionCode = INSERTION_CODE_NORTH;
-				gridno                      = gMapInformation.sNorthGridNo;
+				s.ubStrategicInsertionCode = INSERTION_CODE_NORTH;
+				gridno                     = gMapInformation.sNorthGridNo;
 			}
 			break;
 
 		case INSERTION_CODE_CHOPPER:
-			AddMercToHeli(s);
+			AddMercToHeli(&s);
 			return;
 
 		default:
-			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Improper insertion code %d given to UpdateMercsInSector", s->ubStrategicInsertionCode));
+			DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Improper insertion code %d given to UpdateMercsInSector", s.ubStrategicInsertionCode));
 			goto place_in_center;
 	}
 
 	// If no insertion direction exists, this is bad!
 	if (gridno == -1)
 	{
-		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Insertion gridno for direction %d not added to map sector %d %d", s->ubStrategicInsertionCode, x, y));
+		DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Insertion gridno for direction %d not added to map sector %d %d", s.ubStrategicInsertionCode, x, y));
 place_in_center:
 		gridno = WORLD_ROWS / 2 * WORLD_COLS + WORLD_COLS / 2;
 	}
 
-	s->sInsertionGridNo = gridno;
-	AddSoldierToSector(s);
+	s.sInsertionGridNo = gridno;
+	AddSoldierToSector(&s);
 }
 
 

@@ -1246,7 +1246,7 @@ static void AddEnemiesToBattle(GROUP* const g, UINT8 const strategic_insertion_c
 		{ // No edgepoints left, so put him at the entrypoint
 			s->ubStrategicInsertionCode = strategic_insertion_code;
 		}
-		UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, 0);
+		UpdateMercInSector(*s, gWorldSectorX, gWorldSectorY, 0);
 	}
 }
 

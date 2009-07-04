@@ -628,7 +628,7 @@ static void AddCreaturesToBattle(UINT8 n_young_males, UINT8 n_young_females, UIN
 		{ // No edgepoints left, so put him at the entrypoint
 			s->ubStrategicInsertionCode = insertion_code;
 		}
-		UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, 0);
+		UpdateMercInSector(*s, gWorldSectorX, gWorldSectorY, 0);
 	}
 
 	gsCreatureInsertionCode      = 0;

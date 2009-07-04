@@ -1377,7 +1377,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 				// add them to the tactical engine!
 				if ( pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && pGroup->ubSectorZ == gbWorldSectorZ )
 				{
-					UpdateMercInSector( curr->pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+					UpdateMercInSector(*curr->pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 				}
 			}
 
@@ -1436,7 +1436,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 				if ( pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && pGroup->ubSectorZ == gbWorldSectorZ )
 				{
 					// add vehicle to the tactical engine!
-					UpdateMercInSector( pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+					UpdateMercInSector(*pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 				}
 
 				// set directions of insertion
@@ -1457,7 +1457,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 					if ( pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && pGroup->ubSectorZ == gbWorldSectorZ )
 					{
 						// add passenger to the tactical engine!
-						UpdateMercInSector( curr->pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+						UpdateMercInSector(*curr->pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 					}
 				}
 			}
@@ -2488,7 +2488,7 @@ void HandleArrivalOfReinforcements(GROUP const* const g)
 		{
 			SOLDIERTYPE& s = *p->pSoldier;
 			s.ubStrategicInsertionCode = strategic_insertion_code;
-			UpdateMercInSector(&s, x, y, 0);
+			UpdateMercInSector(s, x, y, 0);
 
 			// Do arrives quote
 			if (first) TacticalCharacterDialogue(&s, QUOTE_MERC_REACHED_DESTINATION);

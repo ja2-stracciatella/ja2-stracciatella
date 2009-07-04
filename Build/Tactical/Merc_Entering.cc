@@ -454,14 +454,14 @@ void HandleHeliDrop( )
 			for ( cnt = gbCurDrop; cnt < gbNumHeliSeatsOccupied; cnt++ )
 			{
 				// Add merc to sector
-				SOLDIERTYPE* const s = gHeliSeats[cnt];
-				s->ubStrategicInsertionCode = INSERTION_CODE_NORTH;
+				SOLDIERTYPE& s = *gHeliSeats[cnt];
+				s.ubStrategicInsertionCode = INSERTION_CODE_NORTH;
 				UpdateMercInSector(s, 9, 1, 0);
 
 				// Check for merc arrives quotes...
-				HandleMercArrivesQuotes(*s);
+				HandleMercArrivesQuotes(s);
 
-				ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[MERC_HAS_ARRIVED_STR], s->name);
+				ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[MERC_HAS_ARRIVED_STR], s.name);
 			}
 
 			// Remove heli
@@ -583,22 +583,21 @@ void HandleHeliDrop( )
 					// OK, Check if we have anybody left to send!
 					if ( gbCurDrop < bEndVal )
 					{
-						SOLDIERTYPE* const s = gHeliSeats[gbCurDrop];
-						EVENT_InitNewSoldierAnim(s, HELIDROP, 0 , FALSE);
+						SOLDIERTYPE& s = *gHeliSeats[gbCurDrop];
+						EVENT_InitNewSoldierAnim(&s, HELIDROP, 0 , FALSE);
 
 						// Change insertion code
-						s->ubStrategicInsertionCode = INSERTION_CODE_NORTH;
+						s.ubStrategicInsertionCode = INSERTION_CODE_NORTH;
 
 						UpdateMercInSector(s, 9, 1, 0);
-						//EVENT_SetSoldierPosition(s, gsGridNoSweetSpot, SSP_NONE);
 
 						// IF the first guy down, set squad!
 						if ( gfFirstGuyDown )
 						{
 							gfFirstGuyDown = FALSE;
-							SetCurrentSquad(s->bAssignment, TRUE );
+							SetCurrentSquad(s.bAssignment, TRUE );
 						}
-						ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[MERC_HAS_ARRIVED_STR], s->name);
+						ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[MERC_HAS_ARRIVED_STR], s.name);
 
 						gbCurDrop++;
 
