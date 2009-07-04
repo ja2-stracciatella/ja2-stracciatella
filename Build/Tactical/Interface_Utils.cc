@@ -124,22 +124,22 @@ static void DrawLifeUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 YPos, 
 }
 
 
-static void DrawBreathUIBar(SOLDIERTYPE const* const pSoldier, UINT32 const XPos, UINT32 const sYPos, UINT32 const MaxHeight, UINT16* const pDestBuf)
+static void DrawBreathUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 const sYPos, UINT32 const MaxHeight, UINT16* const pDestBuf)
 {
 	UINT32 Height;
 
-	if (pSoldier->bBreathMax <= 97)
+	if (s.bBreathMax <= 97)
 	{
-		Height = MaxHeight * (pSoldier->bBreathMax + 3) / 100;
+		Height = MaxHeight * (s.bBreathMax + 3) / 100;
 		// the old background colors for breath max diff
 		DrawBar(XPos, sYPos, Height, Get16BPPColor(BREATH_BAR_SHAD_BACK), Get16BPPColor(BREATH_BAR_SHAD_BACK), pDestBuf);
 	}
 
-	Height = MaxHeight * pSoldier->bBreathMax / 100;
+	Height = MaxHeight * s.bBreathMax / 100;
 	DrawBar(XPos, sYPos, Height, Get16BPPColor(CURR_MAX_BREATH), Get16BPPColor(CURR_MAX_BREATH_SHADOW), pDestBuf);
 
 	// NOW DO BREATH
-	Height = MaxHeight * pSoldier->bBreath / 100;
+	Height = MaxHeight * s.bBreath / 100;
 	DrawBar(XPos, sYPos, Height, Get16BPPColor(CURR_BREATH_BAR), Get16BPPColor(CURR_BREATH_BAR_SHADOW), pDestBuf);
 }
 
@@ -192,7 +192,7 @@ void DrawSoldierUIBars(const SOLDIERTYPE* const pSoldier, const INT16 sXPos, con
 	DrawLifeUIBar(*pSoldier, sXPos, sYPos, BarHeight, pDestBuf);
 	if (!(pSoldier->uiStatusFlags & SOLDIER_ROBOT))
 	{
-		DrawBreathUIBar(pSoldier, sXPos + BreathOff, sYPos, BarHeight, pDestBuf);
+		DrawBreathUIBar(*pSoldier, sXPos + BreathOff, sYPos, BarHeight, pDestBuf);
 		if (!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE))
 		{
 			DrawMoraleUIBar(pSoldier, sXPos + MoraleOff, sYPos, BarHeight, pDestBuf);
