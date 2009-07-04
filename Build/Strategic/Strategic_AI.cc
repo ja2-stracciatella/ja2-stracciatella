@@ -2953,7 +2953,7 @@ void SaveStrategicAI(HWFILE const hFile)
 		FileWrite(hFile, &gTempArmyComp, sizeof(ARMY_COMPOSITION));
 	}
 	//Save the patrol group definitions
-	FileWrite(hFile, gPatrolGroup, giPatrolArraySize * sizeof(PATROL_GROUP));
+	if (giPatrolArraySize != 0) FileWrite(hFile, gPatrolGroup, giPatrolArraySize * sizeof(PATROL_GROUP));
 	i = SAVED_PATROL_GROUPS - giPatrolArraySize;
 	while( i-- )
 	{
@@ -2961,7 +2961,7 @@ void SaveStrategicAI(HWFILE const hFile)
 	}
 	//Save the garrison information!
 	memset( &gTempGarrisonGroup, 0, sizeof( GARRISON_GROUP ) );
-	FileWrite(hFile, gGarrisonGroup, giGarrisonArraySize * sizeof(GARRISON_GROUP));
+	if (giGarrisonArraySize != 0) FileWrite(hFile, gGarrisonGroup, giGarrisonArraySize * sizeof(GARRISON_GROUP));
 	i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
 	while( i-- )
 	{
