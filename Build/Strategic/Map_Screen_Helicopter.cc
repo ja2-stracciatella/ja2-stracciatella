@@ -391,7 +391,7 @@ static void SkyriderDestroyed(void)
 	VEHICLETYPE& v = GetHelicopter();
 	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, v.ubMovementGroup);
 
-	KillAllInVehicle(&v);
+	KillAllInVehicle(v);
 
 	// kill skyrider
 	gMercProfiles[ SKYRIDER ].bLife = 0;

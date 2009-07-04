@@ -488,10 +488,10 @@ static BOOLEAN KillPersonInVehicle(SOLDIERTYPE* pSoldier)
 }
 
 
-BOOLEAN KillAllInVehicle(const VEHICLETYPE* const v)
+BOOLEAN KillAllInVehicle(VEHICLETYPE const& v)
 {
 	// go through list of occupants and kill them
-	CFOR_ALL_PASSENGERS(v, i)
+	CFOR_ALL_PASSENGERS(&v, i)
 	{
 		if (!KillPersonInVehicle(*i)) return FALSE;
 	}
@@ -710,7 +710,7 @@ static void HandleCriticalHitForVehicleInLocation(const UINT8 ubID, const INT16 
 
 		CheckForAndHandleSoldierDeath(&vs, &fMadeCorpse);
 
-    KillAllInVehicle(&v);
+		KillAllInVehicle(v);
 	}
 }
 

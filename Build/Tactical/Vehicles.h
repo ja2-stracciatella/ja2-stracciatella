@@ -94,7 +94,7 @@ void SetUpMvtGroupForVehicle(SOLDIERTYPE*);
 VEHICLETYPE& GetVehicleFromMvtGroup(GROUP const*);
 
 // kill everyone in vehicle
-BOOLEAN KillAllInVehicle(const VEHICLETYPE*);
+BOOLEAN KillAllInVehicle(VEHICLETYPE const&);
 
 // grab number of occupants in vehicles
 INT32 GetNumberInVehicle(VEHICLETYPE const&);
