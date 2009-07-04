@@ -332,55 +332,52 @@ static void TeleportVehicleToItsClosestSector(UINT8 ubGroupID);
 
 
 // remove soldier from vehicle
-static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* const s)
+static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 {
-	const INT32        iId = s->iVehicleId;
+	INT32        const iId = s.iVehicleId;
 	VEHICLETYPE* const v   = GetVehicle(iId);
 
 	// now look for the grunt
-	const INT32 seats = GetVehicleSeats(v);
+	INT32 const seats = GetVehicleSeats(v);
 	for (INT32 i = 0;; ++i)
 	{
-		if (i == seats)             return FALSE;
-		if (v->pPassengers[i] != s) continue;
-
-		v->pPassengers[i] = NULL;
+		if (i == seats) return false;
+		if (v->pPassengers[i] != &s) continue;
+		v->pPassengers[i] = 0;
 		break;
 	}
 
-	RemovePlayerFromGroup(s);
+	RemovePlayerFromGroup(&s);
 
-	s->ubGroupID      = 0;
-	s->sSectorY       = v->sSectorY;
-	s->sSectorX       = v->sSectorX;
-	s->bSectorZ       = v->sSectorZ;
-	s->uiStatusFlags &= ~(SOLDIER_DRIVER | SOLDIER_PASSENGER);
+	s.ubGroupID      = 0;
+	s.sSectorY       = v->sSectorY;
+	s.sSectorX       = v->sSectorX;
+	s.bSectorZ       = v->sSectorZ;
+	s.uiStatusFlags &= ~(SOLDIER_DRIVER | SOLDIER_PASSENGER);
 
-	// is the vehicle the helicopter?..it can continue moving when no soldiers aboard (Skyrider remains)
 	if (iId == iHelicopterVehicleId)
-	{
-		// and he's alive
-		if (s->bLife >= OKLIFE)
-		{
-			// mark the sector as visited (flying around in the chopper doesn't, so this does it as soon as we get off it)
-			SetSectorFlag(s->sSectorX, s->sSectorY, s->bSectorZ, SF_ALREADY_VISITED);
+	{ /* The vehicle the helicopter? It can continue moving when no soldiers
+		 * aboard (Skyrider remains) */
+		if (s.bLife >= OKLIFE)
+		{ /* Mark the sector as visited (flying around in the chopper doesn't, so
+			 * this does it as soon as we get off it) */
+			SetSectorFlag(s.sSectorX, s.sSectorY, s.bSectorZ, SF_ALREADY_VISITED);
 		}
 
-		SetSoldierExitHelicopterInsertionData(s);
+		SetSoldierExitHelicopterInsertionData(&s);
 
-    // Update in sector if this is the current sector.....
-		if (s->sSectorX == gWorldSectorX &&
-				s->sSectorY == gWorldSectorY &&
-				s->bSectorZ == gbWorldSectorZ)
+    // Update in sector if this is the current sector
+		if (s.sSectorX == gWorldSectorX &&
+				s.sSectorY == gWorldSectorY &&
+				s.bSectorZ == gbWorldSectorZ)
 		{
-			UpdateMercInSector(*s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+			UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 		}
-		return TRUE;
 	}
 	else
 	{
 		// check if anyone left in vehicle
-		CFOR_ALL_PASSENGERS(v, i) return TRUE;
+		CFOR_ALL_PASSENGERS(v, i) return true;
 
 		SOLDIERTYPE* const vs = GetSoldierStructureForVehicle(v);
 
@@ -391,24 +388,20 @@ static BOOLEAN RemoveSoldierFromVehicle(SOLDIERTYPE* const s)
 			CancelPathForVehicle(v, FALSE);
 		}
 
-		// if the vehicle was abandoned between sectors
 		if (v->fBetweenSectors)
-		{
-			// teleport it to the closer of its current and next sectors (it beats having it arrive empty later)
+		{ /* The vehicle was abandoned between sectors. Teleport it to the closer of
+			 * its current and next sectors (it beats having it arrive empty later) */
 			TeleportVehicleToItsClosestSector(vs->ubGroupID);
 		}
 
-		// Remove vehicle from squad.....
+		// Remove vehicle from squad
 		RemoveCharacterFromSquads(vs);
 		// ATE: Add him back to vehicle group!
 		GROUP* const g = GetGroup(v->ubMovementGroup);
-		if (!DoesPlayerExistInPGroup(g, vs))
-		{
-			AddPlayerToGroup(g, vs);
-		}
+		if (!DoesPlayerExistInPGroup(g, vs)) AddPlayerToGroup(g, vs);
 		ChangeSoldiersAssignment(vs, ASSIGNMENT_EMPTY);
-		return TRUE;
 	}
+	return true;
 }
 
 
@@ -588,7 +581,7 @@ BOOLEAN TakeSoldierOutOfVehicle(SOLDIERTYPE* const s)
 	}
 	else
 	{
-		return RemoveSoldierFromVehicle(s);
+		return RemoveSoldierFromVehicle(*s);
 	}
 }
 
@@ -621,7 +614,7 @@ BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 		sGridNo = FindGridNoFromSweetSpotWithStructDataFromSoldier(s, s->usUIMovementMode, 20, 3, vs);
 	}
 
-	RemoveSoldierFromVehicle(s);
+	RemoveSoldierFromVehicle(*s);
 
 	s->sInsertionGridNo         = sGridNo;
 	s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
