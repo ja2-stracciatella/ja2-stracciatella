@@ -472,19 +472,13 @@ VEHICLETYPE& GetVehicleFromMvtGroup(GROUP const* const g)
 }
 
 
-// kill this person in the vehicle
-static BOOLEAN KillPersonInVehicle(SOLDIERTYPE* pSoldier)
+// Kill this person in the vehicle
+static bool KillPersonInVehicle(SOLDIERTYPE& s)
 {
-	// now check hpts of merc
-	if (pSoldier->bLife == 0)
-	{
-		// guy is dead, leave
-		return FALSE;
-	}
-
-	// otherwise hurt them
-	SoldierTakeDamage(pSoldier, 100, 100, TAKE_DAMAGE_BLOODLOSS, NULL);
-	return TRUE;
+	if (s.bLife == 0) return false; // Guy is dead, leave
+	// Otherwise hurt him
+	SoldierTakeDamage(&s, 100, 100, TAKE_DAMAGE_BLOODLOSS, 0);
+	return true;
 }
 
 
@@ -493,7 +487,7 @@ BOOLEAN KillAllInVehicle(VEHICLETYPE const& v)
 	// go through list of occupants and kill them
 	CFOR_ALL_PASSENGERS(v, i)
 	{
-		if (!KillPersonInVehicle(*i)) return FALSE;
+		if (!KillPersonInVehicle(**i)) return FALSE;
 	}
 	return TRUE;
 }
