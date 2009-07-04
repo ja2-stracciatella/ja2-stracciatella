@@ -1156,7 +1156,7 @@ static void AddCorpsesToBloodcatLair(INT16 sSectorX, INT16 sSectorY)
 static void HandleNonCombatGroupArrival(GROUP* pGroup, BOOLEAN fMainGroup, BOOLEAN fNeverLeft);
 static void ReportVehicleOutOfGas(const VEHICLETYPE*, UINT8 ubSectorX, UINT8 ubSectorY);
 static void SpendVehicleFuel(SOLDIERTYPE&, INT16 fuel_spent);
-static INT16 VehicleFuelRemaining(SOLDIERTYPE* pSoldier);
+static INT16 VehicleFuelRemaining(SOLDIERTYPE const&);
 
 
 //ARRIVALCALLBACK
@@ -1280,7 +1280,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 
 			SpendVehicleFuel(vs, pGroup->uiTraverseTime * 6);
 
-			if (!VehicleFuelRemaining(&vs))
+			if (VehicleFuelRemaining(vs) == 0)
 			{
 				ReportVehicleOutOfGas(v, pGroup->ubSectorX, pGroup->ubSectorY);
 				//Nuke the group's path, so they don't continue moving.
@@ -3307,10 +3307,10 @@ BOOLEAN VehicleHasFuel(const SOLDIERTYPE* const pSoldier)
 }
 
 
-static INT16 VehicleFuelRemaining(SOLDIERTYPE* pSoldier)
+static INT16 VehicleFuelRemaining(SOLDIERTYPE const& vs)
 {
-	Assert( pSoldier->uiStatusFlags & SOLDIER_VEHICLE );
-	return pSoldier->sBreathRed;
+	Assert(vs.uiStatusFlags & SOLDIER_VEHICLE);
+	return vs.sBreathRed;
 }
 
 
