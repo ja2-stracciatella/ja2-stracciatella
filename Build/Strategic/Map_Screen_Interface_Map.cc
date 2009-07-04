@@ -3399,15 +3399,8 @@ BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSe
 	INT16 sSectorX;
 	INT16 sSectorY;
 
-	if (iHelicopterVehicleId == -1 || !fShowAircraftFlag)
-	{
-		return( FALSE );
-	}
-
-	if ( iHelicopterVehicleId == -1 )
-	{
-		return( FALSE );
-	}
+	if (!fShowAircraftFlag)         return FALSE;
+	if (iHelicopterVehicleId == -1) return FALSE;
 
 	VEHICLETYPE const& v = GetHelicopter();
 
