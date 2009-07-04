@@ -2171,7 +2171,7 @@ static void SelectVehicleForMovement(INT32 iVehicleId, BOOLEAN fAndAllOnBoard)
 
 			fFirstFailure = TRUE;
 
-			const VEHICLETYPE* const v = &pVehicleList[iVehicleId];
+			VEHICLETYPE const& v = pVehicleList[iVehicleId];
 			CFOR_ALL_PASSENGERS(v, i)
 			{
 				SOLDIERTYPE* const pPassenger = *i;
@@ -2222,7 +2222,7 @@ static void DeselectVehicleForMovement(INT32 iVehicleId)
 			fVehicleIsMoving[ iCounter ] = FALSE;
 
 			// now deselect everyone in vehicle
-			const VEHICLETYPE* const v = &pVehicleList[iVehicleId];
+			VEHICLETYPE const& v = pVehicleList[iVehicleId];
 			CFOR_ALL_PASSENGERS(v, i)
 			{
 				SOLDIERTYPE* const s = *i;

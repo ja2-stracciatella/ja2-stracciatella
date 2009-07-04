@@ -3209,7 +3209,7 @@ void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* const s)
 			if (s->uiStatusFlags & SOLDIER_VEHICLE)
 			{
 				VEHICLETYPE const& v = GetVehicle(s->bVehicleID);
-				CFOR_ALL_PASSENGERS(&v, i) AddPlayerToInterfaceTeamSlot(*i);
+				CFOR_ALL_PASSENGERS(v, i) AddPlayerToInterfaceTeamSlot(*i);
 			}
 			else if (s->ubStrategicInsertionCode != INSERTION_CODE_CHOPPER)
 			{ /* ATE: If we have the insertion code of helicopter, don't add just yet!

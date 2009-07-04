@@ -223,7 +223,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE& v)
 	}
 
 	// check if the grunt is already here
-	CFOR_ALL_PASSENGERS(&v, i)
+	CFOR_ALL_PASSENGERS(v, i)
 	{
 		if (*i == s) return TRUE; // guy found, no need to add
 	}
@@ -377,7 +377,7 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 	else
 	{
 		// check if anyone left in vehicle
-		CFOR_ALL_PASSENGERS(&v, i) return true;
+		CFOR_ALL_PASSENGERS(v, i) return true;
 
 		SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 
@@ -491,7 +491,7 @@ static BOOLEAN KillPersonInVehicle(SOLDIERTYPE* pSoldier)
 BOOLEAN KillAllInVehicle(VEHICLETYPE const& v)
 {
 	// go through list of occupants and kill them
-	CFOR_ALL_PASSENGERS(&v, i)
+	CFOR_ALL_PASSENGERS(v, i)
 	{
 		if (!KillPersonInVehicle(*i)) return FALSE;
 	}
@@ -503,7 +503,7 @@ INT32 GetNumberInVehicle(VEHICLETYPE const& v)
 {
 	// go through list of occupants in vehicles and count them
 	INT32 count = 0;
-	CFOR_ALL_PASSENGERS(&v, i) ++count;
+	CFOR_ALL_PASSENGERS(v, i) ++count;
 	return count;
 }
 
@@ -514,7 +514,7 @@ INT32 GetNumberOfNonEPCsInVehicle( INT32 iId )
 	VEHICLETYPE const& v = GetVehicle(iId);
 
 	INT32 count = 0;
-	CFOR_ALL_PASSENGERS(&v, i)
+	CFOR_ALL_PASSENGERS(v, i)
 	{
 		const SOLDIERTYPE* const s = *i;
 		if (!AM_AN_EPC(s)) ++count;
@@ -526,7 +526,7 @@ INT32 GetNumberOfNonEPCsInVehicle( INT32 iId )
 BOOLEAN IsRobotControllerInVehicle( INT32 iId )
 {
 	VEHICLETYPE const& v = GetVehicle(iId);
-	CFOR_ALL_PASSENGERS(&v, i)
+	CFOR_ALL_PASSENGERS(v, i)
 	{
 		if (ControllingRobot(*i)) return TRUE;
 	}
@@ -821,7 +821,7 @@ void SetVehicleSectorValues(VEHICLETYPE& v, UINT8 const x, UINT8 const y)
 	p.sSectorY = y;
 
 	// Go through list of mercs in vehicle and set all their states as arrived
-	CFOR_ALL_PASSENGERS(&v, i)
+	CFOR_ALL_PASSENGERS(v, i)
 	{
 		SOLDIERTYPE& s = **i;
 		s.sSectorX        = x;
@@ -835,7 +835,7 @@ void UpdateAllVehiclePassengersGridNo(SOLDIERTYPE* const vs)
 {
 	// If not a vehicle, ignore!
 	if (!(vs->uiStatusFlags & SOLDIER_VEHICLE)) return;
-	const VEHICLETYPE* const v = &pVehicleList[vs->bVehicleID];
+	VEHICLETYPE const& v = pVehicleList[vs->bVehicleID];
 
 	// Loop through passengers and update each guy's position
 	CFOR_ALL_PASSENGERS(v, i)
@@ -1108,7 +1108,7 @@ SOLDIERTYPE* PickRandomPassengerFromVehicle(SOLDIERTYPE* const pSoldier)
 	// If not a vehicle, ignore!
 	if (!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE)) return NULL;
 
-	const VEHICLETYPE* const v = &pVehicleList[pSoldier->bVehicleID];
+	VEHICLETYPE const& v = pVehicleList[pSoldier->bVehicleID];
 
 	size_t       n_mercs = 0;
 	SOLDIERTYPE* mercs_in_vehicle[20];
