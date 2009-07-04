@@ -838,26 +838,23 @@ static void DrawMapBoxIcon(HVOBJECT hIconHandle, UINT16 usVOIndex, INT16 sMapX, 
 
 
 // "on duty" includes mercs inside vehicles
-static INT32 ShowOnDutyTeam(INT16 sMapX, INT16 sMapY)
+static INT32 ShowOnDutyTeam(INT16 const x, INT16 const y)
 {
-  // run through list
-  UINT8 ubIconPosition = 0;
+	UINT8 icon_pos = 0;
 	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		const SOLDIERTYPE* const pSoldier = c->merc;
-		if( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
-				 ( pSoldier->sSectorX == sMapX) &&
-				 ( pSoldier->sSectorY == sMapY) &&
-				 ( pSoldier->bSectorZ == iCurrentMapSectorZ ) &&
-				 ( ( pSoldier->bAssignment < ON_DUTY ) || ( ( pSoldier->bAssignment == VEHICLE ) && ( pSoldier->iVehicleId != iHelicopterVehicleId ) ) ) &&
-				 ( pSoldier->bLife > 0) &&
-				 ( !PlayerIDGroupInMotion( pSoldier->ubGroupID ) ) )
-		{
-			DrawMapBoxIcon(guiCHARICONS, SMALL_YELLOW_BOX, sMapX, sMapY, ubIconPosition);
-			ubIconPosition++;
-		}
+		SOLDIERTYPE const& s = *c->merc;
+		if (s.uiStatusFlags & SOLDIER_VEHICLE)                    continue;
+		if (s.sSectorX != x)                                      continue;
+		if (s.sSectorY != y)                                      continue;
+		if (s.bSectorZ != iCurrentMapSectorZ)                     continue;
+		if (s.bLife    <= 0)                                      continue;
+		if (s.bAssignment >= ON_DUTY && s.bAssignment != VEHICLE) continue;
+		if (InHelicopter(s))                                      continue;
+		if (PlayerIDGroupInMotion(s.ubGroupID))                   continue;
+		DrawMapBoxIcon(guiCHARICONS, SMALL_YELLOW_BOX, x, y, icon_pos++);
 	}
-	return ubIconPosition;
+	return icon_pos;
 }
 
 
