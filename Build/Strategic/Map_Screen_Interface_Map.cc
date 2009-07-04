@@ -599,7 +599,7 @@ static void HandleLowerLevelMapBlit(void);
 static void ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor);
 static void ShowItemsOnMap(void);
 static void ShowSAMSitesOnStrategicMap(void);
-static void ShowTeamAndVehicles(INT32 fShowFlags);
+static void ShowTeamAndVehicles();
 static void ShowTownText(void);
 
 
@@ -725,7 +725,7 @@ void DrawMap(void)
 
 	if (fShowTeamFlag)
 	{
-		ShowTeamAndVehicles(SHOW_TEAMMATES | SHOW_VEHICLES);
+		ShowTeamAndVehicles();
 	}
 	else if (fShowMilitia)
 	{
@@ -962,38 +962,26 @@ static void ShowUncertainNumberEnemiesInSector(INT16 sSectorX, INT16 sSectorY)
 static void ShowPeopleInMotion(INT16 sX, INT16 sY);
 
 
-static void ShowTeamAndVehicles(INT32 fShowFlags)
+static void ShowTeamAndVehicles()
 {
-	// go through each sector, display the on duty, assigned, and vehicles
-	INT32         iIconOffset              = 0;
-	const BOOLEAN fContemplatingRetreating = gfDisplayPotentialRetreatPaths && gpBattleGroup;
-	for (INT16 sMapX = 1; sMapX < MAP_WORLD_X - 1; ++sMapX)
+	// Go through each sector, display the on duty, assigned, and vehicles
+	INT32              icon_pos = 0;
+	GROUP const* const g        = gfDisplayPotentialRetreatPaths ? gpBattleGroup : 0;
+	for (INT16 x = 1; x != MAP_WORLD_X - 1; ++x)
 	{
-		for (INT16 sMapY = 1; sMapY < MAP_WORLD_Y - 1; ++sMapY)
+		for (INT16 y = 1; y != MAP_WORLD_Y - 1; ++y)
 		{
-			/* don't show mercs/vehicles currently in this sector if player is
+			/* Don't show mercs/vehicles currently in this sector if player is
 			 * contemplating retreating from THIS sector */
-			if (!fContemplatingRetreating         ||
-					sMapX != gpBattleGroup->ubSectorX ||
-					sMapY != gpBattleGroup->ubSectorY)
+			if (!g || x != g->ubSectorX || y != g->ubSectorY)
 			{
-				if (fShowFlags & SHOW_TEAMMATES)
-				{
-					iIconOffset = ShowOnDutyTeam(sMapX, sMapY);
-					iIconOffset = ShowAssignedTeam(sMapX, sMapY, iIconOffset);
-				}
-
-				if (fShowFlags & SHOW_VEHICLES)
-				{
-					iIconOffset = ShowVehicles(sMapX, sMapY, iIconOffset);
-				}
+				icon_pos = ShowOnDutyTeam(x, y);
+				icon_pos = ShowAssignedTeam(x, y, icon_pos);
+				icon_pos = ShowVehicles(x, y, icon_pos);
 			}
 
-			if (fShowFlags & SHOW_TEAMMATES)
-			{
-				HandleShowingOfEnemyForcesInSector(sMapX, sMapY, iCurrentMapSectorZ, iIconOffset);
-				ShowPeopleInMotion(sMapX, sMapY);
-			}
+			HandleShowingOfEnemyForcesInSector(x, y, iCurrentMapSectorZ, icon_pos);
+			ShowPeopleInMotion(x, y);
 		}
 	}
 }

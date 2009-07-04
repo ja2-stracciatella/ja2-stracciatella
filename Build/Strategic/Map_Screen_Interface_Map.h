@@ -159,11 +159,6 @@ enum {
 #define TIXA_SECTOR_X 9
 #define TIXA_SECTOR_Y 10
 
-// what are we showing?..teams/vehicles
-// Show values
-#define SHOW_TEAMMATES 1
-#define SHOW_VEHICLES  2
-
 
 // wait time until temp path is drawn, from placing cursor on a map grid
 #define MIN_WAIT_TIME_FOR_TEMP_PATH 200
