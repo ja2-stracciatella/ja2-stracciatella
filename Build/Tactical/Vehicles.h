@@ -36,11 +36,11 @@ struct VEHICLETYPE
  BOOLEAN fValid;
 };
 
-#define CFOR_ALL_PASSENGERS(v, iter)                                                    \
-	for (SOLDIERTYPE* const*       iter        = (v)->pPassengers,                        \
-	                * const* const end__##iter = (v)->pPassengers + GetVehicleSeats((v)); \
-	     iter != end__##iter;                                                             \
-	     ++iter)                                                                          \
+#define CFOR_ALL_PASSENGERS(v, iter)                                                     \
+	for (SOLDIERTYPE* const*       iter        = (v)->pPassengers,                         \
+	                * const* const end__##iter = (v)->pPassengers + GetVehicleSeats(*(v)); \
+	     iter != end__##iter;                                                              \
+	     ++iter)                                                                           \
 		if (*iter == NULL) continue; else
 
 
@@ -161,7 +161,7 @@ void HandleVehicleMovementSound(const SOLDIERTYPE*, BOOLEAN fOn);
 
 UINT8 GetVehicleArmourType(UINT8 vehicle_id);
 
-UINT8 GetVehicleSeats(const VEHICLETYPE*);
+UINT8 GetVehicleSeats(VEHICLETYPE const&);
 
 void InitVehicles(void);
 

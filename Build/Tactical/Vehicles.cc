@@ -239,7 +239,7 @@ static BOOLEAN AddSoldierToVehicle(SOLDIERTYPE* const s, VEHICLETYPE* const v)
 		PlayLocationJA2Sample(vs->sGridNo, g_vehicle_type_info[v->ubVehicleType].enter_sound, HIGHVOLUME, 1);
 	}
 
-	INT32 const seats = GetVehicleSeats(v);
+	INT32 const seats = GetVehicleSeats(*v);
 	for (INT32 i = 0; i < seats; ++i)
 	{
 		if (v->pPassengers[i]) continue;
@@ -338,7 +338,7 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 	VEHICLETYPE& v   = GetVehicle(iId);
 
 	// now look for the grunt
-	INT32 const seats = GetVehicleSeats(&v);
+	INT32 const seats = GetVehicleSeats(v);
 	for (INT32 i = 0;; ++i)
 	{
 		if (i == seats) return false;
@@ -546,7 +546,7 @@ BOOLEAN AnyAccessibleVehiclesInSoldiersSector(const SOLDIERTYPE* const s)
 
 bool IsEnoughSpaceInVehicle(VEHICLETYPE const& v)
 {
-	return GetNumberInVehicle(v) != GetVehicleSeats(&v);
+	return GetNumberInVehicle(v) != GetVehicleSeats(v);
 }
 
 
@@ -1150,7 +1150,7 @@ UINT8 GetVehicleArmourType(const UINT8 vehicle_id)
 }
 
 
-UINT8 GetVehicleSeats(const VEHICLETYPE* const v)
+UINT8 GetVehicleSeats(VEHICLETYPE const& v)
 {
-	return g_vehicle_type_info[v->ubVehicleType].seats;
+	return g_vehicle_type_info[v.ubVehicleType].seats;
 }
