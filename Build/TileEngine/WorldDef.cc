@@ -1753,43 +1753,24 @@ try
 	// Skip soldier size and height values
 	FileSeek(f, sizeof(UINT32) + (1 + 1) * WORLD_MAX, FILE_SEEK_FROM_CURRENT);
 
-	//read layer counts
-	INT32 cnt = 0;
-	UINT8	bCounts[WORLD_MAX][8];
+	// Skip all layers
+	INT32 skip = 0;
 	for (UINT32 row = 0; row != WORLD_ROWS; ++row)
 	{
-		if (row % 16 == 0) RenderProgressBar(0, row / 16 + 1); // 1 - 10
+		if (row % 16 == 0) RenderProgressBar(0, row * 90 / WORLD_ROWS + 1); // 1 - 90
 
 		UINT8 combine[WORLD_COLS][4];
 		FileRead(f, combine, sizeof(combine));
-		for (UINT32 col = 0; col != WORLD_COLS; ++cnt, ++col)
+		for (UINT8 const (*i)[4] = combine; i != endof(combine); ++i)
 		{
-			// Read combination of land/world flags
-			bCounts[cnt][0] = combine[col][0] & 0x0F;
-			// Read #objects, structs
-			bCounts[cnt][1] = combine[col][1] & 0x0F;
-			bCounts[cnt][2] = combine[col][1] >> 4;
-			// Read shadows, roof
-			bCounts[cnt][3] = combine[col][2] & 0x0F;
-			bCounts[cnt][4] = combine[col][2] >> 4;
-			// Read OnRoof, nothing
-			bCounts[cnt][5] = combine[col][3] & 0x0F;
-
-			bCounts[cnt][6] =
-				bCounts[cnt][0] + bCounts[cnt][1] +
-				bCounts[cnt][2] + bCounts[cnt][3] +
-				bCounts[cnt][4] + bCounts[cnt][5];
+			skip +=
+				((*i)[0] & 0x0F) * 2 + // #land
+				((*i)[1] & 0x0F) * 3 + // #objects
+				((*i)[1] >> 4)   * 2 + // #structs
+				((*i)[2] & 0x0F) * 2 + // #shadows
+				((*i)[2] >> 4)   * 2 + // #roof
+				((*i)[3] & 0x0F) * 2;  // #on roof
 		}
-	}
-
-	//skip all layers
-	INT32 skip = 0;
-	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
-	{
-		if (cnt % 320 == 0) RenderProgressBar(0, cnt / 320 + 11); //11 - 90
-
-		skip += sizeof(UINT16) * bCounts[cnt][6];
-		skip += bCounts[cnt][1];
 	}
 	FileSeek(f, skip, FILE_SEEK_FROM_CURRENT);
 
