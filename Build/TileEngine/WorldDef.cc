@@ -1765,16 +1765,15 @@ try
 		for (UINT32 col = 0; col != WORLD_COLS; ++cnt, ++col)
 		{
 			// Read combination of land/world flags
-			bCounts[cnt][0]                = combine[col][0] & 0x0F;
-			gpWorldLevelData[cnt].uiFlags |= combine[col][0] >> 4;
+			bCounts[cnt][0] = combine[col][0] & 0x0F;
 			// Read #objects, structs
-			bCounts[cnt][1]                = combine[col][1] & 0x0F;
-			bCounts[cnt][2]                = combine[col][1] >> 4;
+			bCounts[cnt][1] = combine[col][1] & 0x0F;
+			bCounts[cnt][2] = combine[col][1] >> 4;
 			// Read shadows, roof
-			bCounts[cnt][3]                = combine[col][2] & 0x0F;
-			bCounts[cnt][4]                = combine[col][2] >> 4;
+			bCounts[cnt][3] = combine[col][2] & 0x0F;
+			bCounts[cnt][4] = combine[col][2] >> 4;
 			// Read OnRoof, nothing
-			bCounts[cnt][5]                = combine[col][3] & 0x0F;
+			bCounts[cnt][5] = combine[col][3] & 0x0F;
 
 			bCounts[cnt][6] =
 				bCounts[cnt][0] + bCounts[cnt][1] +
