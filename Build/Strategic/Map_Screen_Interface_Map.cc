@@ -4817,48 +4817,30 @@ static BOOLEAN CanMercsScoutThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSec
 }
 
 
-static void HandleShowingOfEnemyForcesInSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubIconPosition)
+static void HandleShowingOfEnemyForcesInSector(INT16 const x, INT16 const y, INT8 const z, UINT8 const icon_pos)
 {
-	INT16 sNumberOfEnemies = 0;
+	// ATE: If game has just started, don't do it
+	if (DidGameJustStart()) return;
 
+	// Never display enemies underground - sector info doesn't have support for it
+	if (z != 0) return;
 
-	// ATE: If game has just started, don't do it!
-	if ( DidGameJustStart() )
+	INT16 const n_enemies = NumEnemiesInSector(x, y);
+	if (n_enemies == 0) return; // No enemies here, display nothing
+
+	switch (WhatPlayerKnowsAboutEnemiesInSector(x, y))
 	{
-		return;
-	}
-
-	// never display enemies underground - sector info doesn't have support for it!
-	if( bSectorZ != 0 )
-	{
-		return;
-	}
-
-	// get total number of badguys here
-	sNumberOfEnemies = NumEnemiesInSector( sSectorX, sSectorY );
-
-	// anyone here?
-	if( !sNumberOfEnemies )
-	{
-		// nope - display nothing
-		return;
-	}
-
-
-	switch ( WhatPlayerKnowsAboutEnemiesInSector( sSectorX, sSectorY ) )
-	{
-		case KNOWS_NOTHING:
-			// display nothing
+		case KNOWS_NOTHING: // Display nothing
 			break;
 
-		case KNOWS_THEYRE_THERE:
-			// display a question mark
-			ShowUncertainNumberEnemiesInSector( sSectorX, sSectorY );
+		case KNOWS_THEYRE_THERE: // Display a question mark
+			ShowUncertainNumberEnemiesInSector(x, y);
 			break;
 
 		case KNOWS_HOW_MANY:
-			// display individual icons for each enemy, starting at the received icon position index
-			ShowEnemiesInSector( sSectorX, sSectorY, sNumberOfEnemies, ubIconPosition );
+			/* Display individual icons for each enemy, starting at the received icon
+			 * position index */
+			ShowEnemiesInSector(x, y, n_enemies, icon_pos);
 			break;
 	}
 }
