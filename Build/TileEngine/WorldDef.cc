@@ -1713,16 +1713,7 @@ try
 		SaveWorld(filename);
 	}
 
-	SGP::Buffer<INT8> pBufferHead;
-	{
-		AutoSGPFile f(FileOpen(szDirFilename, FILE_ACCESS_READ));
-
-		const UINT32 uiFileSize = FileGetSize(f);
-		pBufferHead.Allocate(uiFileSize);
-		FileRead(f, pBufferHead, uiFileSize);
-	}
-
-	INT8* pBuffer = pBufferHead;
+	AutoSGPFile f(FileOpen(szDirFilename, FILE_ACCESS_READ));
 
 	wchar_t str[40];
 	swprintf(str, lengthof(str), L"Analyzing map %hs", filename);
@@ -1744,132 +1735,128 @@ try
 
 	//skip JA2 Version ID
 	FLOAT	dMajorMapVersion;
-	LOADDATA(&dMajorMapVersion, pBuffer, sizeof(FLOAT));
+	FileRead(f, &dMajorMapVersion, sizeof(dMajorMapVersion));
 	if (dMajorMapVersion >= 4.00)
 	{
-		UINT8 ubMinorMapVersion;
-		LOADDATA(&ubMinorMapVersion, pBuffer, sizeof(UINT8));
+		FileSeek(f, sizeof(UINT8), FILE_SEEK_FROM_CURRENT);
 	}
 
 	//Read FLAGS FOR WORLD
 	UINT32 uiFlags;
-	LOADDATA(&uiFlags, pBuffer, sizeof(INT32));
+	FileRead(f, &uiFlags, sizeof(uiFlags));
 
 	//Read tilesetID
 	INT32 iTilesetID;
-	LOADDATA(&iTilesetID, pBuffer, sizeof(INT32));
+	FileRead(f, &iTilesetID, sizeof(iTilesetID));
 	pSummary->ubTilesetID = (UINT8)iTilesetID;
 
-	//skip soldier size
-	pBuffer += sizeof(INT32);
-
-	//skip height values
-	pBuffer += sizeof(INT16) * WORLD_MAX;
+	// Skip soldier size and height values
+	FileSeek(f, sizeof(UINT32) + (1 + 1) * WORLD_MAX, FILE_SEEK_FROM_CURRENT);
 
 	//read layer counts
+	INT32 cnt = 0;
 	UINT8	bCounts[WORLD_MAX][8];
-	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
-  {
-		if (cnt % 2560 == 0) RenderProgressBar(0, cnt / 2560 + 1); //1 - 10
-		UINT8 ubCombine;
+	for (UINT32 row = 0; row != WORLD_ROWS; ++row)
+	{
+		if (row % 16 == 0) RenderProgressBar(0, row / 16 + 1); // 1 - 10
 
-		// Read combination of land/world flags
-		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
-		// split
-		bCounts[cnt][0]                = (ubCombine & 0x0F);
-		gpWorldLevelData[cnt].uiFlags |= (ubCombine & 0xF0) >> 4;
-		// Read #objects, structs
-		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
-		// split
-		bCounts[cnt][1] = (ubCombine & 0x0F);
-		bCounts[cnt][2] = (ubCombine & 0xF0) >> 4;
-		// Read shadows, roof
-		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
-		// split
-		bCounts[cnt][3] = (ubCombine & 0x0F);
-		bCounts[cnt][4] = (ubCombine & 0xF0) >> 4;
-  	// Read OnRoof, nothing
-		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
-		// split
-		bCounts[cnt][5] = (ubCombine & 0x0F);
+		UINT8 combine[WORLD_COLS][4];
+		FileRead(f, combine, sizeof(combine));
+		for (UINT32 col = 0; col != WORLD_COLS; ++cnt, ++col)
+		{
+			// Read combination of land/world flags
+			bCounts[cnt][0]                = combine[col][0] & 0x0F;
+			gpWorldLevelData[cnt].uiFlags |= combine[col][0] >> 4;
+			// Read #objects, structs
+			bCounts[cnt][1]                = combine[col][1] & 0x0F;
+			bCounts[cnt][2]                = combine[col][1] >> 4;
+			// Read shadows, roof
+			bCounts[cnt][3]                = combine[col][2] & 0x0F;
+			bCounts[cnt][4]                = combine[col][2] >> 4;
+			// Read OnRoof, nothing
+			bCounts[cnt][5]                = combine[col][3] & 0x0F;
 
-		bCounts[cnt][6] =
-			bCounts[cnt][0] + bCounts[cnt][1] +
-			bCounts[cnt][2] + bCounts[cnt][3] +
-			bCounts[cnt][4] + bCounts[cnt][5];
+			bCounts[cnt][6] =
+				bCounts[cnt][0] + bCounts[cnt][1] +
+				bCounts[cnt][2] + bCounts[cnt][3] +
+				bCounts[cnt][4] + bCounts[cnt][5];
+		}
 	}
 
 	//skip all layers
+	INT32 skip = 0;
 	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
 	{
 		if (cnt % 320 == 0) RenderProgressBar(0, cnt / 320 + 11); //11 - 90
 
-		pBuffer += sizeof(UINT16) * bCounts[cnt][6];
-		pBuffer += bCounts[cnt][1];
+		skip += sizeof(UINT16) * bCounts[cnt][6];
+		skip += bCounts[cnt][1];
 	}
+	FileSeek(f, skip, FILE_SEEK_FROM_CURRENT);
 
 	//extract highest room number
-	for (INT32 cnt = 0; cnt < WORLD_MAX; ++cnt)
+	UINT8 max_room = 0;
+	for (INT32 row = 0; row != WORLD_ROWS; ++row)
 	{
-		UINT8 ubRoomNum;
-		LOADDATA(&ubRoomNum, pBuffer, 1);
-		if (ubRoomNum > pSummary->ubNumRooms)
+		UINT8 room[WORLD_COLS];
+		FileRead(f, room, sizeof(room));
+		for (INT32 col = 0; col != WORLD_COLS; ++col)
 		{
-			pSummary->ubNumRooms = ubRoomNum;
+			if (max_room < room[col]) max_room = room[col];
 		}
 	}
+	pSummary->ubNumRooms = max_room;
 
 	if (uiFlags & MAP_WORLDITEMS_SAVED)
 	{
 		RenderProgressBar(0, 91);
-		//get number of items (for now)
-		UINT32 temp;
-		LOADDATA(&temp, pBuffer, 4);
-		pSummary->usNumItems = (UINT16)temp;
 		//Important:  Saves the file position (byte offset) of the position where the numitems
 		//            resides.  Checking this value and comparing to usNumItems will ensure validity.
-		pSummary->uiNumItemsPosition = pBuffer - pBufferHead - 4;
+		pSummary->uiNumItemsPosition = FileGetPos(f);
+		//get number of items (for now)
+		UINT32 n_items;
+		FileRead(f, &n_items, sizeof(n_items));
+		pSummary->usNumItems = n_items;
 		//Skip the contents of the world items.
-		pBuffer += sizeof(WORLDITEM) * pSummary->usNumItems;
+		FileSeek(f, sizeof(WORLDITEM) * n_items, FILE_SEEK_FROM_CURRENT);
 	}
 
-	if (uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED) pBuffer += 3;
+	if (uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED) FileSeek(f, 3, FILE_SEEK_FROM_CURRENT);
 
 	if (uiFlags & MAP_WORLDLIGHTS_SAVED)
 	{
 		RenderProgressBar(0, 92);
+
 		//skip number of light palette entries
-		UINT8 ubTemp;
-		LOADDATA(&ubTemp, pBuffer, 1);
-		pBuffer += sizeof(SGPPaletteEntry) * ubTemp;
+		UINT8 n_light_colours;
+		FileRead(f, &n_light_colours, sizeof(n_light_colours));
+		FileSeek(f, sizeof(SGPPaletteEntry) * n_light_colours, FILE_SEEK_FROM_CURRENT);
+
 		//get number of lights
-		LOADDATA(&pSummary->usNumLights, pBuffer, 2);
+		FileRead(f, &pSummary->usNumLights, sizeof(pSummary->usNumLights));
 		//skip the light loading
-		for (INT32 cnt = 0; cnt < pSummary->usNumLights; ++cnt)
+		for (INT32 n = pSummary->usNumLights; n != 0; --n)
 		{
-			pBuffer += 24; // size of a LIGHT_SPRITE on disk
+			FileSeek(f, 24 /* size of a LIGHT_SPRITE on disk */, FILE_SEEK_FROM_CURRENT);
 			UINT8 ubStrLen;
-			LOADDATA(&ubStrLen, pBuffer, 1);
-			pBuffer += ubStrLen;
+			FileRead(f, &ubStrLen, sizeof(ubStrLen));
+			FileSeek(f, ubStrLen, FILE_SEEK_FROM_CURRENT);
 		}
 	}
 
 	//read the mapinformation
-	MAPCREATE_STRUCT mapInfo;
-	LOADDATA(&mapInfo, pBuffer, sizeof(MAPCREATE_STRUCT));
-
-	pSummary->MapInfo = mapInfo;
+	FileRead(f, &pSummary->MapInfo, sizeof(pSummary->MapInfo));
 
 	if (uiFlags & MAP_FULLSOLDIER_SAVED)
 	{
 		RenderProgressBar(0, 94);
 
-		pSummary->uiEnemyPlacementPosition = pBuffer - pBufferHead;
+		pSummary->uiEnemyPlacementPosition = FileGetPos(f);
 
 		for (INT32 i = 0; i < pSummary->MapInfo.ubNumIndividuals; ++i)
 		{
 			BASIC_SOLDIERCREATE_STRUCT basic;
-			LOADDATA(&basic, pBuffer, sizeof(BASIC_SOLDIERCREATE_STRUCT));
+			FileRead(f, &basic, sizeof(basic));
 
 			TEAMSUMMARY* pTeam = NULL;
 			switch (basic.bTeam)
@@ -1915,9 +1902,7 @@ try
 			SOLDIERCREATE_STRUCT priority;
 			if (basic.fDetailedPlacement)
 			{ //skip static priority placement
-				BYTE Data[1040];
-				LOADDATA(Data, pBuffer, sizeof(Data));
-				ExtractSoldierCreateUTF16(Data, &priority);
+				ExtractSoldierCreateFromFileUTF16(f, &priority);
 
 				if (priority.ubProfile != NO_PROFILE)
 					++pTeam->ubProfile;
@@ -1990,14 +1975,14 @@ try
 		RenderProgressBar(0, 98);
 
 		UINT16 cnt;
-		LOADDATA(&cnt, pBuffer, 2);
+		FileRead(f, &cnt, sizeof(cnt));
 
-		for (INT32 i = 0; i < cnt; i++)
+		for (INT32 n = cnt; n != 0; --n)
 		{
 			UINT16 usMapIndex;
-			LOADDATA(&usMapIndex, pBuffer, 2);
+			FileRead(f, &usMapIndex, sizeof(usMapIndex));
 			EXITGRID exitGrid;
-			LOADDATA(&exitGrid, pBuffer, 5);
+			FileRead(f, &exitGrid, 5 /* XXX sic! The 6th byte luckily is padding */);
 			for (INT32 loop = 0;; ++loop)
 			{
 				if (loop >= pSummary->ubNumExitGridDests)
@@ -2039,12 +2024,12 @@ try
 
 	if (uiFlags & MAP_DOORTABLE_SAVED)
 	{
-		LOADDATA(&pSummary->ubNumDoors, pBuffer, 1);
+		FileRead(f, &pSummary->ubNumDoors, sizeof(pSummary->ubNumDoors));
 
-		for (INT32 cnt = 0; cnt < pSummary->ubNumDoors; ++cnt)
+		for (INT32 n = pSummary->ubNumDoors; n != 0; --n)
 		{
 			DOOR Door;
-			LOADDATA(&Door, pBuffer, sizeof(DOOR));
+			FileRead(f, &Door, sizeof(Door));
 
 			if      (Door.ubLockID && Door.ubTrapID) ++pSummary->ubNumDoorsLockedAndTrapped;
 			else if (Door.ubLockID)                  ++pSummary->ubNumDoorsLocked;
