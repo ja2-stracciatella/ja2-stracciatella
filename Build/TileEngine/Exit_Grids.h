@@ -11,6 +11,7 @@ struct EXITGRID //for exit grids (object level)
 	UINT8 ubGotoSectorY;
 	UINT8 ubGotoSectorZ;
 };
+CASSERT(sizeof(EXITGRID) == 6)
 
 BOOLEAN	ExitGridAtGridNo( UINT16 usMapIndex );
 BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid );

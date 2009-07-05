@@ -115,6 +115,7 @@ struct SGPPoint
 
 struct SDL_Color;
 typedef SDL_Color SGPPaletteEntry;
+CASSERT(sizeof(SGPPaletteEntry) == 4);
 
 
 typedef UINT32 COLORVAL;
