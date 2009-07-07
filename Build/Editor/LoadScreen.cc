@@ -804,7 +804,7 @@ static bool ValidCoordinate();
 
 
 //editor doesn't care about the z value.  It uses it's own methods.
-static void SetGlobalSectorValues(const wchar_t* szFilename)
+static void SetGlobalSectorValues()
 {
 	const wchar_t* pStr;
 	if( ValidCoordinate() )
@@ -887,7 +887,7 @@ static ScreenID ProcessFileIO(void)
 			if( gfShowPits )
 				AddAllPits();
 
-			SetGlobalSectorValues( gzFilename );
+			SetGlobalSectorValues();
 
 			if( gfGlobalSummaryExists )
 				UpdateSectorSummary( gzFilename, gfUpdateSummaryInfo );
@@ -934,7 +934,7 @@ static ScreenID ProcessFileIO(void)
 				CreateMessageBox( L" Error loading file.  Try another filename?" );
 				return LOADSAVE_SCREEN;
 			}
-			SetGlobalSectorValues( gzFilename );
+			SetGlobalSectorValues();
 
 			RestoreFontSettings();
 
