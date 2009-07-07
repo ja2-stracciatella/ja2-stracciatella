@@ -800,43 +800,51 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 }
 
 
-static bool ValidCoordinate();
-
-
-//editor doesn't care about the z value.  It uses it's own methods.
+// Editor doesn't care about the z value. It uses its own methods.
 static void SetGlobalSectorValues()
 {
-	const wchar_t* pStr;
-	if( ValidCoordinate() )
-	{
-		//convert the coordinate string into into the actual global sector coordinates.
-		if( gzFilename[0] >= 'A' && gzFilename[0] <= 'P' )
-			gWorldSectorY = gzFilename[0] - 'A' + 1;
-		else
-			gWorldSectorY = gzFilename[0] - 'a' + 1;
-		if( gzFilename[1] == '1' && gzFilename[2] >= '0' && gzFilename[2] <= '6' )
-			gWorldSectorX = ( gzFilename[1] - 0x30 ) * 10 + ( gzFilename[2] - 0x30 );
-		else
-			gWorldSectorX = ( gzFilename[1] - 0x30 );
-		pStr = wcsstr( gzFilename, L"_b" );
-		if( pStr )
+	{ wchar_t const* f = gzFilename;
+
+		INT16 y;
+		if ('A' <= f[0] && f[0] <= 'P')
 		{
-			if( pStr[ 2 ] >= '1' && pStr[ 2 ] <= '3' )
-			{
-				gbWorldSectorZ = (INT8)(pStr[ 2 ] - 0x30);
-			}
+			y = f[0] - 'A' + 1;
 		}
-		else
+		else if ('a' <= f[0] && f[0] <= 'p')
 		{
-			gbWorldSectorZ = 0;
+			y = f[0] - 'a' + 1;
 		}
+		else goto invalid;
+		++f;
+
+		INT16 x;
+		if ('1' <= f[0] && f[0] <= '9' && (f[1] < '0' || '9' < f[1]))
+		{ // 1 ... 9
+			x = f[0] - '0';
+			++f;
+		}
+		else if (f[0] == '1' && '0' <= f[1] && f[1] <= '6')
+		{ // 10 ... 16
+			x = (f[0] - '0') * 10 + f[1] - '0';
+			f += 2;
+		}
+		else goto invalid;
+
+		INT8 z = 0;
+		if (f[0] == '_' && f[1] == 'b' && '1' <= f[2] && f[2] <= '3')
+		{
+			z = f[2] - '0';
+		}
+
+		gWorldSectorX  = x;
+		gWorldSectorY  = y;
+		gbWorldSectorZ = z;
+		return;
 	}
-	else
-	{
-		gWorldSectorX = -1;
-		gWorldSectorY = -1;
-		gbWorldSectorZ = 0;
-	}
+invalid:
+	gWorldSectorX  = -1;
+	gWorldSectorY  = -1;
+	gbWorldSectorZ =  0;
 }
 
 
@@ -1049,22 +1057,6 @@ static BOOLEAN ExtractFilenameFromFields(void)
 {
 	wcslcpy(gzFilename, GetStringFromField(0), lengthof(gzFilename));
 	return ValidFilename();
-}
-
-
-static bool ValidCoordinate()
-{
-	wchar_t const* const f = gzFilename;
-	return
-		(
-			('A' <= f[0] && f[0] <= 'P') ||
-			('a' <= f[0] && f[0] <= 'p')
-		)
-		&&
-		(
-			(f[1] == '1' && '0' <= f[2] && f[2] <= '6') ||             // 10 ... 16
-			('1' <= f[1] && f[1] <= '9' && (f[2] < '0' || '9' < f[2])) //  1 ...  9
-		);
 }
 
 
