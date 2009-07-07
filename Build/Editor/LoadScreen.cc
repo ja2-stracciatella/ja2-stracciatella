@@ -800,7 +800,7 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 }
 
 
-static BOOLEAN ValidCoordinate(void);
+static bool ValidCoordinate();
 
 
 //editor doesn't care about the z value.  It uses it's own methods.
@@ -1052,37 +1052,19 @@ static BOOLEAN ExtractFilenameFromFields(void)
 }
 
 
-static BOOLEAN ValidCoordinate(void)
+static bool ValidCoordinate()
 {
-	if( gzFilename[0] >= 'A' && gzFilename[0] <= 'P' ||
-		gzFilename[0] >= 'a' && gzFilename[0] <='p' )
-	{
-		UINT16 usTotal; // XXX HACK000E
-		if( gzFilename[1] == '1' && gzFilename[2] >= '0' && gzFilename[2] <= '6' )
-		{
-			usTotal = ( gzFilename[1] - 0x30 ) * 10 + ( gzFilename[2] - 0x30 );
-		}
-		else if( gzFilename[1] >= '1' && gzFilename[1] <= '9')
-		{
-			if( gzFilename[2] < '0' || gzFilename[2] > '9' )
-			{
-				usTotal = ( gzFilename[1] - 0x30 );
-			}
-			else
-			{
-				return FALSE;
-			}
-		}
-		else
-		{
-			abort(); // XXX HACK000E
-		}
-		if( usTotal >= 1 && usTotal <= 16 )
-		{
-			return TRUE;
-		}
-	}
-	return FALSE;
+	wchar_t const* const f = gzFilename;
+	return
+		(
+			('A' <= f[0] && f[0] <= 'P') ||
+			('a' <= f[0] && f[0] <= 'p')
+		)
+		&&
+		(
+			(f[1] == '1' && '0' <= f[2] && f[2] <= '6') ||             // 10 ... 16
+			('1' <= f[1] && f[1] <= '9' && (f[2] < '0' || '9' < f[2])) //  1 ...  9
+		);
 }
 
 
