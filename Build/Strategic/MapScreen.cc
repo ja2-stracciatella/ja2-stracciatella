@@ -282,7 +282,7 @@
 
 
 // ARM: NOTE that these map "events" are never actually saved in a player's game in any way
-enum
+enum MapEvent
 {
 	MAP_EVENT_NONE,
 	MAP_EVENT_CLICK_SECTOR,
@@ -2419,9 +2419,9 @@ static BOOLEAN CanMoveBullseyeAndClickedOnIt(INT16 sMapX, INT16 sMapY);
 static void CancelChangeArrivalSectorMode(void);
 static void CancelOrShortenPlottedPath(void);
 static void CreateBullsEyeOrChopperSelectionPopup(void);
-static void GetMapKeyboardInput(UINT32* puiNewEvent);
-static void PollLeftButtonInMapView(UINT32* puiNewEvent);
-static void PollRightButtonInMapView(UINT32* puiNewEvent);
+static void GetMapKeyboardInput(MapEvent&);
+static void PollLeftButtonInMapView(MapEvent&);
+static void PollRightButtonInMapView(MapEvent&);
 static void StartChangeSectorArrivalMode(void);
 static void StartConfirmMapMoveMode(INT16 sMapY);
 
@@ -2429,7 +2429,7 @@ static void StartConfirmMapMoveMode(INT16 sMapY);
 // Drawing the Map
 static UINT32 HandleMapUI(void)
 {
-	UINT32 uiNewEvent = MAP_EVENT_NONE;
+	MapEvent new_event = MAP_EVENT_NONE;
 	INT16 sMapX = 0, sMapY = 0;
 	INT16 sX, sY;
 	UINT32 uiNewScreen = MAP_SCREEN;
@@ -2437,17 +2437,17 @@ static UINT32 HandleMapUI(void)
 
 
 	// Get Input from keyboard
-	GetMapKeyboardInput( &uiNewEvent );
+	GetMapKeyboardInput(new_event);
 
 
 	CreateDestroyMapInvButton();
 
 	// Get mouse
-	PollLeftButtonInMapView( &uiNewEvent );
-	PollRightButtonInMapView( &uiNewEvent );
+	PollLeftButtonInMapView(new_event);
+	PollRightButtonInMapView(new_event);
 
 	// Switch on event
-	switch( uiNewEvent )
+	switch (new_event)
 	{
 		case MAP_EVENT_NONE:
 			break;
@@ -2971,7 +2971,7 @@ static void RequestToggleMercInventoryPanel(void);
 static void SelectAllCharactersInSquad(INT8 bSquadNumber);
 
 
-static void HandleModNone(UINT32 const key, UINT32* const new_event)
+static void HandleModNone(UINT32 const key, MapEvent& new_event)
 {
 	switch (key)
 	{
@@ -3008,7 +3008,7 @@ static void HandleModNone(UINT32 const key, UINT32* const new_event)
 		case SDLK_F6: ChangeCharacterListSortMethod(key - SDLK_F1); break;
 
 #if defined JA2BETAVERSION
-		case SDLK_F12: *new_event = MAP_EVENT_VIEWAI; break;
+		case SDLK_F12: new_event = MAP_EVENT_VIEWAI; break;
 #endif
 
 #if !defined JA2DEMO
@@ -3466,7 +3466,7 @@ static void HandleModAlt(UINT32 const key)
 }
 
 
-static void GetMapKeyboardInput(UINT32* const puiNewEvent)
+static void GetMapKeyboardInput(MapEvent& new_event)
 {
   InputAtom InputEvent;
   while (DequeueEvent(&InputEvent))
@@ -3493,10 +3493,10 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 			UINT32 const key = InputEvent.usParam;
 			switch (InputEvent.usKeyState)
 			{
-				case 0:          HandleModNone( key, puiNewEvent); break;
-				case SHIFT_DOWN: HandleModShift(key);              break;
-				case CTRL_DOWN:  HandleModCtrl( key);              break;
-				case ALT_DOWN:   HandleModAlt(  key);              break;
+				case 0:          HandleModNone( key, new_event); break;
+				case SHIFT_DOWN: HandleModShift(key);            break;
+				case CTRL_DOWN:  HandleModCtrl( key);            break;
+				case ALT_DOWN:   HandleModAlt(  key);            break;
 			}
 		}
 		else if (InputEvent.usEvent == KEY_REPEAT)
@@ -3842,7 +3842,7 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY);
 static void DestinationPlottingCompleted(void);
 
 
-static void PollLeftButtonInMapView(UINT32* puiNewEvent)
+static void PollLeftButtonInMapView(MapEvent& new_event)
 {
 #ifndef JA2DEMO
 	static BOOLEAN	fLBBeenPressedInMapView = FALSE;
@@ -3919,7 +3919,7 @@ static void PollLeftButtonInMapView(UINT32* puiNewEvent)
 					else	// clicked on a new sector
 					{
 						// draw new map route
-						*puiNewEvent = MAP_EVENT_PLOT_PATH;
+						new_event = MAP_EVENT_PLOT_PATH;
 					}
 				}
 	      else	// not plotting movement
@@ -3928,7 +3928,7 @@ static void PollLeftButtonInMapView(UINT32* puiNewEvent)
 					if (!fEndPlotting && !fJustFinishedPlotting)
 					{
 						// make this sector selected / trigger movement box / start helicopter plotting / changing arrival sector
-						*puiNewEvent = MAP_EVENT_CLICK_SECTOR;
+						new_event = MAP_EVENT_CLICK_SECTOR;
 					}
 
 					fEndPlotting = FALSE;
@@ -3948,7 +3948,7 @@ static void PollLeftButtonInMapView(UINT32* puiNewEvent)
 static void HandleMilitiaRedistributionClick(void);
 
 
-static void PollRightButtonInMapView(UINT32* puiNewEvent)
+static void PollRightButtonInMapView(MapEvent& new_event)
 {
 #ifndef JA2DEMO
 	static BOOLEAN	fRBBeenPressedInMapView = FALSE;
@@ -4007,7 +4007,7 @@ static void PollRightButtonInMapView(UINT32* puiNewEvent)
 				if (bSelectedDestChar != -1 || fPlotForHelicopter)
 				{
 					// cancel/shorten the path
-					*puiNewEvent = MAP_EVENT_CANCEL_PATH;
+					new_event = MAP_EVENT_CANCEL_PATH;
 				}
 				else
 				{
