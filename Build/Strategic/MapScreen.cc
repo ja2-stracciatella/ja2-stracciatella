@@ -2971,11 +2971,503 @@ static void RequestToggleMercInventoryPanel(void);
 static void SelectAllCharactersInSquad(INT8 bSquadNumber);
 
 
+static void HandleModNone(UINT32 const key, UINT32* const new_event)
+{
+	switch (key)
+	{
+		case SDLK_ESCAPE: if (HandleKeyESC()) return; break;
+
+		case SDLK_PAUSE: HandlePlayerPauseUnPauseOfGame(); break;
+
+		case SDLK_LEFT:  GoToPrevCharacterInList(); break;
+		case SDLK_RIGHT: GoToNextCharacterInList(); break;
+
+		case SDLK_UP:   MapScreenMsgScrollUp(1);   break;
+		case SDLK_DOWN: MapScreenMsgScrollDown(1); break;
+
+		case SDLK_PAGEUP:   MapScreenMsgScrollUp(MAX_MESSAGES_ON_MAP_BOTTOM);   break;
+		case SDLK_PAGEDOWN: MapScreenMsgScrollDown(MAX_MESSAGES_ON_MAP_BOTTOM); break;
+
+		case SDLK_HOME: ChangeCurrentMapscreenMessageIndex(0); break;
+		case SDLK_END:  MoveToEndOfMapScreenMessageList();     break;
+
+#if !defined JA2DEMO
+		case SDLK_INSERT: GoUpOneLevelInMap();   break;
+		case SDLK_DELETE: GoDownOneLevelInMap(); break;
+#endif
+
+		case SDLK_RETURN: RequestToggleMercInventoryPanel(); break;
+
+		case SDLK_BACKSPACE: StopAnyCurrentlyTalkingSpeech(); break;
+
+		case SDLK_F1:
+		case SDLK_F2:
+		case SDLK_F3:
+		case SDLK_F4:
+		case SDLK_F5:
+		case SDLK_F6: ChangeCharacterListSortMethod(key - SDLK_F1); break;
+
+#if defined JA2BETAVERSION
+		case SDLK_F12: *new_event = MAP_EVENT_VIEWAI; break;
+#endif
+
+#if !defined JA2DEMO
+		case '+':
+		case '=':
+			if (!CommonTimeCompressionChecks()) RequestIncreaseInTimeCompression();
+			break;
+
+		case '-':
+		case '_':
+			if (!CommonTimeCompressionChecks()) RequestDecreaseInTimeCompression();
+			break;
+
+		case SDLK_SPACE:
+			if (fShowUpdateBox)
+			{ // Restart time compression
+				EndUpdateBox(TRUE);
+			}
+			else
+			{ // Toggle time compression
+				if (!CommonTimeCompressionChecks()) RequestToggleTimeCompression();
+			}
+			break;
+#endif
+
+#if defined JA2TESTVERSION
+		case '?':
+			MapScreenMessage(0, MSG_DEBUG, L"Mouse X,Y = %d,%d", MSYS_CurrentMX, MSYS_CurrentMY);
+			break;
+#endif
+
+		case '0':
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+		{ // Select all characters in squad 1-10
+			UINT const squad_no = (key - SDLK_0 + 9) % 10U;
+			SelectAllCharactersInSquad(squad_no);
+			break;
+		}
+
+#if !defined JA2DEMO
+		case 'a':
+			if (gfPreBattleInterfaceActive)
+			{ // Activate autoresolve in prebattle interface.
+				ActivatePreBattleAutoresolveAction();
+			}
+			else if (!fShowMapInventoryPool) // only handle border button keyboard equivalents if the button is visible!
+			{
+				ToggleAirspaceMode();
+			}
+			break;
+
+		case 'c': RequestContractMenu(); break;
+#endif
+
+		case 'e':
+			// Activate enter sector in prebattle interface.
+			if (gfPreBattleInterfaceActive) gfHotKeyEnterSector = TRUE;
+			break;
+
+		case 'h':
+			// ARM: Feb01/98 - Cancel out of mapscreen movement plotting if Help subscreen is coming up
+			if (bSelectedDestChar != -1 || fPlotForHelicopter)
+			{
+				AbortMovementPlottingMode();
+			}
+			ShouldTheHelpScreenComeUp(HELP_SCREEN_MAPSCREEN, TRUE);
+			break;
+
+#if !defined JA2DEMO
+		case 'i':
+			// Only handle border button keyboard equivalents if the button is visible
+			if (!fShowMapInventoryPool) ToggleItemsFilter();
+			break;
+
+		case 'l': RequestTriggerExitFromMapscreen(MAP_EXIT_TO_LAPTOP); break;
+
+		case 'm':
+			// Only handle border button keyboard equivalents if the button is visible
+			if (!fShowMapInventoryPool) ToggleShowMinesMode();
+			break;
+#endif
+
+		case 'o': RequestTriggerExitFromMapscreen(MAP_EXIT_TO_OPTIONS); break;
+
+		case 'r':
+			if (gfPreBattleInterfaceActive) ActivatePreBattleRetreatAction();
+			break;
+
+#if !defined JA2DEMO
+		case 't':
+			// Only handle border button keyboard equivalents if the button is visible
+			if (!fShowMapInventoryPool) ToggleShowTeamsMode();
+			break;
+#endif
+
+		case 'v': DisplayGameSettings(); break;
+
+#if !defined JA2DEMO
+		case 'w':
+			// Only handle border button keyboard equivalents if the button is visible
+			if (!fShowMapInventoryPool) ToggleShowTownsMode();
+			break;
+
+		case 'z':
+			// Only handle border button keyboard equivalents if the button is visible
+			if (!fShowMapInventoryPool) ToggleShowMilitiaMode();
+			break;
+#endif
+	}
+}
+
+
+static void HandleModShift(UINT const key)
+{
+	switch (key)
+	{
+		case '0':
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+		{ // Select all characters in squad 11-20
+			UINT const squad_no = 10 + (key - SDLK_0 + 9) % 10U;
+			SelectAllCharactersInSquad(squad_no);
+			break;
+		}
+	}
+}
+
+
+static void HandleModCtrl(UINT const key)
+{
+	switch (key)
+	{
+#if defined JA2TESTVERSION
+		case SDLK_F7:
+			if (SOLDIERTYPE* const s = GetSelectedInfoChar())
+			{
+				OBJECTTYPE& o = s->inv[HANDPOS];
+				if (o.usItem != 0) o.usItem = GUN_BARREL_EXTENDER;
+			}
+			break;
+
+		case '`':
+		{
+			SOLDIERTYPE* const s = GetSelectedInfoChar();
+			if (s) TownMilitiaTrainingCompleted(s, sSelMapX, sSelMapY);
+			break;
+		}
+
+		case '\\': DumpItemsList(); break;
+
+		case '?':
+			MapScreenMessage(0, MSG_DEBUG, L"JA2Clock = %d", GetJA2Clock());
+			break;
+#endif
+
+#if !defined JA2DEMO
+		case 'a':
+			if (CHEATER_CHEAT_LEVEL())
+			{
+				gfAutoAmbush ^= 1;
+				wchar_t const* const msg = gfAutoAmbush ?
+					L"Enemy ambush test mode enabled." :
+					L"Enemy ambush test mode disabled.";
+				ScreenMsg(FONT_WHITE, MSG_TESTVERSION, msg);
+			}
+			break;
+#endif
+
+#if defined JA2TESTVERSION
+		case 'f':
+		{ // Refuel vehicle
+			SOLDIERTYPE* const s = GetSelectedInfoChar();
+			if (s && s->uiStatusFlags & SOLDIER_VEHICLE)
+			{
+				s->sBreathRed = 10000;
+				s->bBreath    = 100;
+				ScreenMsg(FONT_MCOLOR_RED, MSG_TESTVERSION, L"Vehicle refueled");
+
+				fTeamPanelDirty = TRUE;
+				fCharacterInfoPanelDirty = TRUE;
+			}
+			break;
+		}
+#endif
+
+#if !defined JA2DEMO && defined JA2TESTVERSION
+		case 'i': fDisableJustForIan = !fDisableJustForIan; break;
+#endif
+
+		case 'l':
+			// go to LOAD screen
+			gfSaveGame = FALSE;
+			RequestTriggerExitFromMapscreen(MAP_EXIT_TO_LOAD);
+			break;
+
+#if defined JA2TESTVERSION
+		case 'n':
+		{
+			static UINT16 gQuoteNum = 0;
+			// Get Soldier
+			if (giHighLine != -1)
+			{
+				TacticalCharacterDialogue(gCharactersList[giHighLine].merc, gQuoteNum++);
+			}
+			break;
+		}
+
+		// Display player's highest progress percentage
+		case 'p': DumpSectorDifficultyInfo(); break;
+#endif
+
+		case 's':
+			// go to SAVE screen
+			gfSaveGame = TRUE;
+			RequestTriggerExitFromMapscreen(MAP_EXIT_TO_SAVE);
+			break;
+
+#if !defined JA2DEMO
+		case 't': if (CHEATER_CHEAT_LEVEL()) Teleport(); break;
+#endif
+
+#if defined SGP_VIDEO_DEBUGGING
+		case 'v':
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VObjects:  %d",  guiVObjectSize);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VSurfaces:  %d", guiVSurfaceSize);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"SGPVideoDump.txt updated...");
+			PerformVideoInfoDumpIntoFile("SGPVideoDump.txt", TRUE);
+			break;
+#endif
+
+#if !defined JA2DEMO
+		case 'z':
+			if (CHEATER_CHEAT_LEVEL())
+			{
+				gfAutoAIAware ^= 1;
+				wchar_t const* const msg = gfAutoAIAware ?
+					L"Strategic AI awareness maxed." :
+					L"Strategic AI awareness normal.";
+				ScreenMsg(FONT_WHITE, MSG_TESTVERSION, msg);
+			}
+			break;
+#endif
+	}
+}
+
+
+static void HandleModAlt(UINT32 const key)
+{
+	switch (key)
+	{
+#if defined JA2TESTVERSION
+		case SDLK_F7:
+			if (SOLDIERTYPE* const s = GetSelectedInfoChar())
+			{
+				OBJECTTYPE& o = s->inv[HANDPOS];
+				if (o.usItem != NOTHING) o.bStatus[0] = 2;
+			}
+			break;
+
+		case SDLK_F8:
+			// Reduce balance to $500
+			AddTransactionToPlayersBook(PAYMENT_TO_NPC, SKYRIDER, GetWorldTotalMin(), -LaptopSaveInfo.iCurrentBalance + 500);
+			break;
+
+		case SDLK_F9:
+			// Reveal all SAM sites
+			for (UINT8 i = 0; i != NUMBER_OF_SAM_SITES; ++i) SetSAMSiteAsFound(i);
+			break;
+
+		case SDLK_F10:
+		{ // Force selected character asleep (ignores breathmax)
+			SOLDIERTYPE* const s = GetSelectedInfoChar();
+			if (s) PutMercInAsleepState(s);
+			break;
+		}
+
+#if 0 // XXX was commented out
+		case SDLK_F11:
+			// Make all sectors player controlled
+			ClearMapControlledFlags();
+			fMapPanelDirty = TRUE;
+			break;
+#endif
+#endif
+
+#if defined JA2TESTVERSION
+		case '/':
+		{
+			SOLDIERTYPE* const s = GetSelectedInfoChar();
+			if (s) StatChange(s, EXPERAMT, 1000, FROM_SUCCESS);
+			break;
+		}
+#endif
+
+#if !defined JA2DEMO
+		case 'a':
+			if (giHighLine != -1)
+			{
+				if (gCharactersList[giHighLine].merc)
+				{
+					bSelectedAssignChar = (INT8)giHighLine;
+					RebuildAssignmentsBox();
+					ChangeSelectedInfoChar((INT8)giHighLine, FALSE);
+					fShowAssignmentMenu = TRUE;
+				}
+			}
+			else if (GetSelectedInfoChar())
+			{
+				bSelectedAssignChar = bSelectedInfoChar;
+				RebuildAssignmentsBox();
+				fShowAssignmentMenu = TRUE;
+			}
+			break;
+#endif
+
+#if defined JA2TESTVERSION
+		case 'd':
+			// prints out a text file in C:\TEMP telling you how many stat change chances/successes each profile merc got
+			TestDumpStatChanges();
+			break;
+#endif
+
+		case 'f':
+			if (INFORMATION_CHEAT_LEVEL())
+			{ // Toggle Frame Rate Display
+				gbFPSDisplay = !gbFPSDisplay;
+				EnableFPSOverlay(gbFPSDisplay);
+			}
+			break;
+
+#if defined JA2TESTVERSION
+		case 'h':
+			// set up the helicopter over Omerta (if it's not already set up)
+			SetUpHelicopterForPlayer(9, 1);
+			// raise Drassen loyalty to minimum that will allow Skyrider to fly
+			if (gTownLoyalty[DRASSEN].fStarted && gTownLoyalty[DRASSEN].ubRating < LOYALTY_LOW_THRESHOLD)
+			{
+				SetTownLoyalty(DRASSEN, LOYALTY_LOW_THRESHOLD);
+			}
+			TurnOnAirSpaceMode();
+			break;
+#endif
+
+#if !defined JA2DEMO && defined JA2TESTVERSION
+#if 0 // XXX was commented out
+		case 'i':
+			if (fAlt)
+			{
+				InitializeMines();
+				fMapPanelDirty = TRUE;
+			}
+			else
+			break;
+#endif
+#endif
+
+		case 'l':
+			// Although we're not actually going anywhere, we must still be in a state where this is permitted
+			if (AllowedToExitFromMapscreenTo(MAP_EXIT_TO_LOAD)) DoQuickLoad();
+			break;
+
+#if defined JA2TESTVERSION
+		case 'n':
+		{
+			static UINT16 gQuoteNum = 0;
+			TacticalCharacterDialogue(GetSelectedInfoChar(), gQuoteNum);
+			gQuoteNum++;
+			break;
+		}
+#endif
+
+#if defined JA2TESTVERSION
+		case 'o':
+			// Toggle if Orta & Tixa have been found
+			fFoundOrta     = !fFoundOrta;
+			fFoundTixa     = !fFoundTixa;
+			fMapPanelDirty = TRUE;
+			break;
+#endif
+
+#if defined JA2TESTVERSION
+		case 'p':
+			if (SOLDIERTYPE* const s = GetSelectedInfoChar())
+			{ // Make the selected character a POW
+				EnemyCapturesPlayerSoldier(s);
+				if (s->bInSector) RemoveSoldierFromTacticalSector(s);
+				fTeamPanelDirty          = TRUE;
+				fCharacterInfoPanelDirty = TRUE;
+				fMapPanelDirty           = TRUE;
+			}
+			break;
+
+		case 'q':
+			// initialize miners if not already done so (fakes entering Drassen mine first)
+			HandleQuestCodeOnSectorEntry(13, 4, 0);
+			// test miner quote system
+			IssueHeadMinerQuote(1 + Random(MAX_NUMBER_OF_MINES - 1), static_cast<HeadMinerQuote>(1 + Random(2)));
+			break;
+#endif
+
+		case 's':
+			// although we're not actually going anywhere, we must still be in a state where this is permitted
+			if (AllowedToExitFromMapscreenTo(MAP_EXIT_TO_SAVE))
+			{
+				//if the game CAN be saved
+				if (CanGameBeSaved())
+				{
+					guiPreviousOptionScreen = guiCurrentScreen;
+					DoQuickSave();
+				}
+				else
+				{
+					//Display a message saying the player cant save now
+					DoMapMessageBox(MSG_BOX_BASIC_STYLE, zNewTacticalMessages[TCTL_MSG__IRON_MAN_CANT_SAVE_NOW], MAP_SCREEN, MSG_BOX_FLAG_OK, 0);
+				}
+			}
+			break;
+
+#if defined JA2TESTVERSION
+		case 'u':
+			// Initialize miners if not already done so (fakes entering Drassen mine first)
+			HandleQuestCodeOnSectorEntry(13, 4, 0);
+			// Test running out
+			for (UINT32 i = 0; i != 10; ++i)
+			{
+				HandleIncomeFromMines();
+			}
+			break;
+#endif
+
+		case 'x': HandleShortCutExitState(); break;
+
+#if defined JA2TESTVERSION
+		case 'y':
+			// Toggle SAM sites disable
+			fSAMSitesDisabledFromAttackingPlayer = !fSAMSitesDisabledFromAttackingPlayer;
+			break;
+#endif
+	}
+}
+
+
 static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 {
-	BOOLEAN const fCtrl = _KeyDown(CTRL);
-	BOOLEAN const fAlt  = _KeyDown(ALT);
-
   InputAtom InputEvent;
   while (DequeueEvent(&InputEvent))
 	{
@@ -2998,573 +3490,13 @@ static void GetMapKeyboardInput(UINT32* const puiNewEvent)
 				ShutDownUserDefineHelpTextRegions();
 			}
 
-			switch (InputEvent.usParam)
+			UINT32 const key = InputEvent.usParam;
+			switch (InputEvent.usKeyState)
 			{
-				case SDLK_ESCAPE:
-					if (HandleKeyESC()) return;
-					break;
-
-				case SDLK_PAUSE: HandlePlayerPauseUnPauseOfGame(); break;
-
-				case SDLK_LEFT:  GoToPrevCharacterInList(); break;
-				case SDLK_RIGHT: GoToNextCharacterInList(); break;
-
-				case SDLK_UP:   MapScreenMsgScrollUp(1);   break;
-				case SDLK_DOWN: MapScreenMsgScrollDown(1); break;
-
-				case SDLK_PAGEUP:   MapScreenMsgScrollUp(MAX_MESSAGES_ON_MAP_BOTTOM);   break;
-				case SDLK_PAGEDOWN: MapScreenMsgScrollDown(MAX_MESSAGES_ON_MAP_BOTTOM); break;
-
-				case SDLK_HOME: ChangeCurrentMapscreenMessageIndex(0); break;
-				case SDLK_END:  MoveToEndOfMapScreenMessageList();     break;
-
-#if !defined JA2DEMO
-				case SDLK_INSERT: GoUpOneLevelInMap();   break;
-				case SDLK_DELETE: GoDownOneLevelInMap(); break;
-#endif
-
-				case SDLK_RETURN: RequestToggleMercInventoryPanel(); break;
-
-				case SDLK_BACKSPACE: StopAnyCurrentlyTalkingSpeech(); break;
-
-				case SDLK_F1:
-				case SDLK_F2:
-				case SDLK_F3:
-				case SDLK_F4:
-				case SDLK_F5:
-				case SDLK_F6:
-					ChangeCharacterListSortMethod(InputEvent.usParam - SDLK_F1);
-					break;
-
-#if defined JA2TESTVERSION
-				case SDLK_F7:
-					if (fAlt)
-					{
-						SOLDIERTYPE* const s = GetSelectedInfoChar();
-						if (s && s->inv[HANDPOS].usItem != 0)
-						{
-							s->inv[HANDPOS].bStatus[0] = 2;
-						}
-					}
-					if (fCtrl)
-					{
-						SOLDIERTYPE* const s = GetSelectedInfoChar();
-						if (s && s->inv[HANDPOS].usItem != 0)
-						{
-							s->inv[HANDPOS].usItem = GUN_BARREL_EXTENDER;
-						}
-					}
-					break;
-
-				case SDLK_F8:
-					if (fAlt)
-					{
-						// reduce balance to $500
-						AddTransactionToPlayersBook(PAYMENT_TO_NPC, SKYRIDER, GetWorldTotalMin(), -LaptopSaveInfo.iCurrentBalance + 500);
-					}
-					break;
-
-				case SDLK_F9:
-					if (fAlt)
-					{
-						// ALT-F9: Reveal all SAM sites
-						for (UINT8 ubSamIndex = 0; ubSamIndex < NUMBER_OF_SAM_SITES; ++ubSamIndex)
-						{
-							SetSAMSiteAsFound(ubSamIndex);
-						}
-					}
-					break;
-
-				case SDLK_F10:
-					if (fAlt)
-					{
-						// ALT-F10: force selected character asleep (ignores breathmax)
-						SOLDIERTYPE* const s = GetSelectedInfoChar();
-						if (s) PutMercInAsleepState(s);
-					}
-					break;
-
-#if 0 // XXX was commented out
-				case SDLK_F11:
-					if (fAlt)
-					{
-						// ALT-F11: make all sectors player controlled
-						ClearMapControlledFlags();
-						fMapPanelDirty = TRUE;
-					}
-					break;
-#endif
-#endif
-
-				case SDLK_F12:
-#if defined JA2BETAVERSION
-					*puiNewEvent = MAP_EVENT_VIEWAI;
-#endif
-					break;
-
-#if !defined JA2DEMO
-				case '+':
-				case '=':
-					if (!CommonTimeCompressionChecks())
-					{
-						RequestIncreaseInTimeCompression();
-					}
-					break;
-
-				case '-':
-				case '_':
-					if (!CommonTimeCompressionChecks())
-					{
-						RequestDecreaseInTimeCompression();
-					}
-					break;
-
-				case SDLK_SPACE:
-					if (fShowUpdateBox)
-					{
-						EndUpdateBox(TRUE); // restart time compression
-					}
-					else
-					{
-						// toggle time compression
-						if (!CommonTimeCompressionChecks())
-							RequestToggleTimeCompression();
-					}
-					break;
-#endif
-
-#if defined JA2TESTVERSION
-				case '`':
-					if (fCtrl)
-					{
-						SOLDIERTYPE* const s = GetSelectedInfoChar();
-						if (s) TownMilitiaTrainingCompleted(s, sSelMapX, sSelMapY);
-					}
-					break;
-
-				case '\\':
-					if (fCtrl)
-					{
-						DumpItemsList();
-					}
-					break;
-
-				case '?':
-					if (fCtrl)
-					{
-						MapScreenMessage(0, MSG_DEBUG, L"JA2Clock = %d", GetJA2Clock());
-					}
-					else
-					{
-						MapScreenMessage(0, MSG_DEBUG, L"Mouse X,Y = %d,%d", MSYS_CurrentMX, MSYS_CurrentMY);
-					}
-					break;
-
-				case '/':
-					if (fAlt)
-					{
-						SOLDIERTYPE* const s = GetSelectedInfoChar();
-						if (s) StatChange(s, EXPERAMT, 1000, FROM_SUCCESS);
-					}
-					break;
-#endif
-
-				case SDLK_1:
-				case SDLK_2:
-				case SDLK_3:
-				case SDLK_4:
-				case SDLK_5:
-				case SDLK_6:
-				case SDLK_7:
-				case SDLK_8:
-				case SDLK_9:
-				case SDLK_0:
-				{
-					// Select all characters in squad 1-10 (+10 if SHIFT is pressed)
-					UINT squad_no = (InputEvent.usParam - SDLK_0 + 9) % 10U;
-					if (_KeyDown(SHIFT)) squad_no += 10;
-					SelectAllCharactersInSquad(squad_no);
-					break;
-				}
-
-#if !defined JA2DEMO
-				case 'a':
-					if (fAlt)
-					{
-						if (giHighLine != -1)
-						{
-							if (gCharactersList[giHighLine].merc != NULL)
-							{
-								bSelectedAssignChar = (INT8)giHighLine;
-								RebuildAssignmentsBox();
-								ChangeSelectedInfoChar((INT8)giHighLine, FALSE);
-								fShowAssignmentMenu = TRUE;
-							}
-						}
-						else if (GetSelectedInfoChar() != NULL)
-						{
-							bSelectedAssignChar = bSelectedInfoChar;
-							RebuildAssignmentsBox();
-							fShowAssignmentMenu = TRUE;
-						}
-					}
-					else if (fCtrl)
-					{
-						if (CHEATER_CHEAT_LEVEL())
-						{
-							gfAutoAmbush ^= 1;
-							wchar_t const* const msg = gfAutoAmbush ?
-								L"Enemy ambush test mode enabled." :
-								L"Enemy ambush test mode disabled.";
-							ScreenMsg(FONT_WHITE, MSG_TESTVERSION, msg);
-						}
-					}
-					else
-					{
-						if (gfPreBattleInterfaceActive)
-						{
-							//activate autoresolve in prebattle interface.
-							ActivatePreBattleAutoresolveAction();
-						}
-						else if (!fShowMapInventoryPool) // only handle border button keyboard equivalents if the button is visible!
-						{
-							ToggleAirspaceMode();
-						}
-					}
-					break;
-
-				case 'c':
-					RequestContractMenu();
-					break;
-#endif
-
-				case 'd':
-#if defined JA2TESTVERSION
-					if (fAlt)
-					{
-						// prints out a text file in C:\TEMP telling you how many stat change chances/successes each profile merc got
-						TestDumpStatChanges();
-					}
-#endif
-					break;
-
-				case 'e':
-					if (gfPreBattleInterfaceActive)
-					{ //activate enter sector in prebattle interface.
-						gfHotKeyEnterSector = TRUE;
-					}
-					break;
-
-				case 'f':
-#if defined JA2TESTVERSION
-					// CTRL-F: Refuel vehicle
-					if (fCtrl)
-					{
-						SOLDIERTYPE* const s = GetSelectedInfoChar();
-						if (s && s->uiStatusFlags & SOLDIER_VEHICLE)
-						{
-							s->sBreathRed = 10000;
-							s->bBreath    = 100;
-							ScreenMsg(FONT_MCOLOR_RED, MSG_TESTVERSION, L"Vehicle refueled");
-
-							fTeamPanelDirty = TRUE;
-							fCharacterInfoPanelDirty = TRUE;
-						}
-					}
-#endif
-					if (fAlt)
-					{
-						if (INFORMATION_CHEAT_LEVEL())
-						{
-							//Toggle Frame Rate Display
-							gbFPSDisplay = !gbFPSDisplay;
-							EnableFPSOverlay(gbFPSDisplay);
-						}
-					}
-					break;
-
-				case 'h':
-#if defined JA2TESTVERSION
-					if (fAlt)
-					{
-						// set up the helicopter over Omerta (if it's not already set up)
-						SetUpHelicopterForPlayer(9, 1);
-						// raise Drassen loyalty to minimum that will allow Skyrider to fly
-						if (gTownLoyalty[DRASSEN].fStarted && gTownLoyalty[DRASSEN].ubRating < LOYALTY_LOW_THRESHOLD)
-						{
-							SetTownLoyalty(DRASSEN, LOYALTY_LOW_THRESHOLD);
-						}
-						TurnOnAirSpaceMode();
-					}
-					else
-#endif
-					{
-						// ARM: Feb01/98 - Cancel out of mapscreen movement plotting if Help subscreen is coming up
-						if (bSelectedDestChar != -1 || fPlotForHelicopter)
-						{
-							AbortMovementPlottingMode();
-						}
-
-						ShouldTheHelpScreenComeUp(HELP_SCREEN_MAPSCREEN, TRUE);
-					}
-					break;
-
-#if !defined JA2DEMO
-				case 'i':
-#if defined JA2TESTVERSION
-#if 0 // XXX was commented out
-					if (fAlt)
-					{
-						InitializeMines();
-						fMapPanelDirty = TRUE;
-					}
-					else
-#endif
-					if (fCtrl)
-					{
-						fDisableJustForIan = !fDisableJustForIan;
-					}
-					else
-#endif
-					{
-						// only handle border button keyboard equivalents if the button is visible!
-						if (!fShowMapInventoryPool)
-						{
-							ToggleItemsFilter();
-						}
-					}
-					break;
-#endif
-
-				case 'l':
-					if (fAlt)
-					{
-						// although we're not actually going anywhere, we must still be in a state where this is permitted
-						if (AllowedToExitFromMapscreenTo(MAP_EXIT_TO_LOAD))
-						{
-							DoQuickLoad();
-						}
-					}
-					else if (fCtrl)
-					{
-						// go to LOAD screen
-						gfSaveGame = FALSE;
-						RequestTriggerExitFromMapscreen(MAP_EXIT_TO_LOAD);
-					}
-#if !defined JA2DEMO
-					else
-					{
-						// go to LAPTOP
-						RequestTriggerExitFromMapscreen(MAP_EXIT_TO_LAPTOP);
-					}
-#endif
-					break;
-
-#if !defined JA2DEMO
-				case 'm':
-					// only handle border button keyboard equivalents if the button is visible!
-					if (!fShowMapInventoryPool)
-					{
-						// toggle show mines flag
-						ToggleShowMinesMode();
-					}
-					break;
-#endif
-
-				case 'n':
-#if defined JA2TESTVERSION
-					if (fAlt)
-					{
-						static UINT16 gQuoteNum = 0;
-						TacticalCharacterDialogue(GetSelectedInfoChar(), gQuoteNum);
-						gQuoteNum++;
-					}
-					else if (fCtrl)
-					{
-						static UINT16 gQuoteNum = 0;
-						// Get Soldier
-						if (giHighLine != -1)
-						{
-							TacticalCharacterDialogue(gCharactersList[giHighLine].merc, gQuoteNum++);
-						}
-					}
-#endif
-					break;
-
-				case 'o':
-					if (fAlt)
-					{	// toggle if Orta & Tixa have been found
-#if defined JA2TESTVERSION
-						fFoundOrta     = !fFoundOrta;
-						fFoundTixa     = !fFoundTixa;
-						fMapPanelDirty = TRUE;
-#endif
-					}
-					else
-					{
-						// go to OPTIONS screen
-						RequestTriggerExitFromMapscreen(MAP_EXIT_TO_OPTIONS);
-					}
-					break;
-
-#if defined JA2TESTVERSION
-				case 'p':
-					if (fCtrl)
-					{
-						// CTRL-P: Display player's highest progress percentage
-						DumpSectorDifficultyInfo();
-					}
-					// ALT-P: Make the selected character a POW!
-					if (fAlt)
-					{
-						SOLDIERTYPE* const s = GetSelectedInfoChar();
-						if (s)
-						{
-							EnemyCapturesPlayerSoldier(s);
-							if (s->bInSector) RemoveSoldierFromTacticalSector(s);
-							fTeamPanelDirty          = TRUE;
-							fCharacterInfoPanelDirty = TRUE;
-							fMapPanelDirty           = TRUE;
-						}
-					}
-					break;
-
-				case 'q':
-					if (fAlt)
-					{
-						// initialize miners if not already done so (fakes entering Drassen mine first)
-						HandleQuestCodeOnSectorEntry(13, 4, 0);
-						// test miner quote system
-						IssueHeadMinerQuote(1 + Random(MAX_NUMBER_OF_MINES - 1), static_cast<HeadMinerQuote>(1 + Random(2)));
-					}
-					break;
-#endif
-
-				case 'r':
-					if (gfPreBattleInterfaceActive)
-					{
-						ActivatePreBattleRetreatAction();
-					}
-					break;
-
-				case 's':
-					if (fAlt)
-					{
-						// although we're not actually going anywhere, we must still be in a state where this is permitted
-						if (AllowedToExitFromMapscreenTo(MAP_EXIT_TO_SAVE))
-						{
-							//if the game CAN be saved
-							if (CanGameBeSaved())
-							{
-								guiPreviousOptionScreen = guiCurrentScreen;
-								DoQuickSave();
-							}
-							else
-							{
-								//Display a message saying the player cant save now
-								DoMapMessageBox(MSG_BOX_BASIC_STYLE, zNewTacticalMessages[TCTL_MSG__IRON_MAN_CANT_SAVE_NOW], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-							}
-						}
-					}
-					else if (fCtrl)
-					{
-						// go to SAVE screen
-						gfSaveGame = TRUE;
-						RequestTriggerExitFromMapscreen(MAP_EXIT_TO_SAVE);
-					}
-					break;
-
-#if !defined JA2DEMO
-				case 't':
-					// Teleport: CTRL-T
-					if (fCtrl && CHEATER_CHEAT_LEVEL())
-					{
-						Teleport();
-					}
-					else if (!fShowMapInventoryPool) // only handle border button keyboard equivalents if the button is visible!
-					{
-						ToggleShowTeamsMode();
-					}
-					break;
-#endif
-
-				case 'u':
-#if defined JA2TESTVERSION
-					if (fAlt)
-					{
-						// initialize miners if not already done so (fakes entering Drassen mine first)
-						HandleQuestCodeOnSectorEntry(13, 4, 0);
-						// test running out
-						for (UINT32 i = 0; i < 10; ++i)
-						{
-							HandleIncomeFromMines();
-						}
-					}
-#endif
-					break;
-
-				case 'v':
-					if (fCtrl)
-					{
-#if defined SGP_VIDEO_DEBUGGING
-						ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VObjects:  %d",  guiVObjectSize);
-						ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VSurfaces:  %d", guiVSurfaceSize);
-						ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"SGPVideoDump.txt updated...");
-						PerformVideoInfoDumpIntoFile("SGPVideoDump.txt", TRUE);
-#endif
-					}
-					else
-					{
-						DisplayGameSettings();
-					}
-					break;
-
-#if !defined JA2DEMO
-				case 'w':
-					// only handle border button keyboard equivalents if the button is visible!
-					if (!fShowMapInventoryPool)
-					{
-						ToggleShowTownsMode();
-					}
-					break;
-#endif
-
-				case 'x':
-					if (fAlt)
-					{
-						HandleShortCutExitState();
-					}
-					break;
-
-#if defined JA2TESTVERSION
-				case 'y':
-					// ALT-Y: toggles SAM sites disable
-					if (fAlt)
-					{
-						fSAMSitesDisabledFromAttackingPlayer = !fSAMSitesDisabledFromAttackingPlayer;
-					}
-					break;
-#endif
-
-#if !defined JA2DEMO
-				case 'z':
-					if (fCtrl)
-					{
-						if (CHEATER_CHEAT_LEVEL())
-						{
-							gfAutoAIAware ^= 1;
-							wchar_t const* const msg = gfAutoAIAware ?
-								L"Strategic AI awareness maxed." :
-								L"Strategic AI awareness normal.";
-							ScreenMsg(FONT_WHITE, MSG_TESTVERSION, msg);
-						}
-					}
-					else if (!fShowMapInventoryPool) // only handle border button keyboard equivalents if the button is visible!
-					{
-						ToggleShowMilitiaMode();
-					}
-					break;
-#endif
+				case 0:          HandleModNone( key, puiNewEvent); break;
+				case SHIFT_DOWN: HandleModShift(key);              break;
+				case CTRL_DOWN:  HandleModCtrl( key);              break;
+				case ALT_DOWN:   HandleModAlt(  key);              break;
 			}
 		}
 		else if (InputEvent.usEvent == KEY_REPEAT)
