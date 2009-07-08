@@ -328,15 +328,23 @@ try
 catch (std::exception const& e)
 {
 	guiPreviousOptionScreen = guiCurrentScreen;
-	bool const saved = SaveGame(SAVE__ERROR_NUM, L"error savegame");
+	bool const edit_mode = gfEditMode;
+	bool const saved     =
+		edit_mode ? SaveWorld("error.dat") :
+		SaveGame(SAVE__ERROR_NUM, L"error savegame");
 	char msg[2048];
 	snprintf(msg, lengthof(msg),
 		"%s\n"
-		"Creating an emergency savegame %s.\n"
+		"Creating an emergency %s %s.\n"
 		"Please report this error with a description of the circumstances.%s",
 		e.what(),
-		saved ? "succeeded (error.sav)" : "failed",
-		saved ? " Do not forget to attach the savegame." : ""
+		edit_mode ? "map" : "savegame",
+		!saved    ? "failed"                :
+		edit_mode ? "succeeded (error.dat)" :
+		"succeeded (error.sav)",
+		!saved    ? ""                                  :
+		edit_mode ? " Do not forget to attach the map." :
+		" Do not forget to attach the savegame."
 	);
 	throw std::runtime_error(msg);
 }
