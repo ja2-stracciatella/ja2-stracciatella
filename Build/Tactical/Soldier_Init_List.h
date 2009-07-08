@@ -50,7 +50,7 @@ void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode );
 SOLDIERINITNODE* FindSoldierInitNodeWithID( UINT16 usID );
 SOLDIERINITNODE* FindSoldierInitNodeBySoldier(SOLDIERTYPE const&);
 
-UINT8 AddSoldierInitListTeamToWorld( INT8 bTeam, UINT8 ubMaxNum );
+UINT8 AddSoldierInitListTeamToWorld(INT8 team);
 void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTroops, UINT8 ubTotalElite );
 void AddSoldierInitListCreatures( BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNumInfants,
 																	UINT8 ubNumYoungMales, UINT8 ubNumYoungFemales, UINT8 ubNumAdultMales,

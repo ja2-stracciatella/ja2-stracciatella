@@ -628,8 +628,9 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 }
 
 
-UINT8 AddSoldierInitListTeamToWorld( INT8 bTeam, UINT8 ubMaxNum )
+UINT8 AddSoldierInitListTeamToWorld(INT8 const bTeam)
 {
+	UINT8 const ubMaxNum = 255;
 	UINT8 ubNumAdded = 0;
 	SOLDIERINITNODE *mark;
 	UINT8 ubSlotsToFill;

@@ -938,10 +938,10 @@ void PrepareLoadedSector()
 		}
 		if( fAddCivs )
 		{
-			AddSoldierInitListTeamToWorld( CIV_TEAM, 255 );
+			AddSoldierInitListTeamToWorld(CIV_TEAM);
 		}
 
-		AddSoldierInitListTeamToWorld( MILITIA_TEAM, 255 );
+		AddSoldierInitListTeamToWorld(MILITIA_TEAM);
 		AddSoldierInitListBloodcats();
 		//Creatures are only added if there are actually some of them.  It has to go through some
 		//additional checking.

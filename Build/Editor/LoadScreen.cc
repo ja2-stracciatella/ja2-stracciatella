@@ -948,10 +948,10 @@ static ScreenID ProcessFileIO(void)
 
 			//Load successful, update necessary information.
 
-			AddSoldierInitListTeamToWorld( ENEMY_TEAM,		255 );
-			AddSoldierInitListTeamToWorld( CREATURE_TEAM, 255 );
-			AddSoldierInitListTeamToWorld( MILITIA_TEAM,	255 );
-			AddSoldierInitListTeamToWorld( CIV_TEAM,			255 );
+			AddSoldierInitListTeamToWorld(ENEMY_TEAM);
+			AddSoldierInitListTeamToWorld(CREATURE_TEAM);
+			AddSoldierInitListTeamToWorld(MILITIA_TEAM);
+			AddSoldierInitListTeamToWorld(CIV_TEAM);
 			iCurrentAction = ACTION_NULL;
 			gbCurrentFileIOStatus = IOSTATUS_NONE;
 			if( !gfCaves && !gfBasement )

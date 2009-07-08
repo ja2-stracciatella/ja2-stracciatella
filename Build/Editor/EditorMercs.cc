@@ -492,10 +492,10 @@ void ResetAllMercPositions()
 		//	SetMercDirection( gpSelected->pBasicPlacement->bDirection );
 		//}
 	}
-	AddSoldierInitListTeamToWorld( ENEMY_TEAM,		255 );
-	AddSoldierInitListTeamToWorld( CREATURE_TEAM, 255 );
-	AddSoldierInitListTeamToWorld( MILITIA_TEAM,		255 );
-	AddSoldierInitListTeamToWorld( CIV_TEAM,			255 );
+	AddSoldierInitListTeamToWorld(ENEMY_TEAM);
+	AddSoldierInitListTeamToWorld(CREATURE_TEAM);
+	AddSoldierInitListTeamToWorld(MILITIA_TEAM);
+	AddSoldierInitListTeamToWorld(CIV_TEAM);
 	gpSelected = NULL;
 	g_selected_merc = NULL;
 }
