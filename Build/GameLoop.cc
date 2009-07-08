@@ -328,23 +328,35 @@ try
 catch (std::exception const& e)
 {
 	guiPreviousOptionScreen = guiCurrentScreen;
-	bool const edit_mode = gfEditMode;
-	bool const saved     =
-		edit_mode ? SaveWorld("error.dat") :
-		SaveGame(SAVE__ERROR_NUM, L"error savegame");
+	char const* what;
+	char const* success = "failed";
+	char const* attach  = "";
+#if defined JA2EDITOR
+	if (gfEditMode)
+	{
+		what = "map";
+		if (SaveWorld("error.dat"))
+		{
+			success = "succeeded (error.dat)";
+			attach  = " Do not forget to attach the map.";
+		}
+	}
+	else
+#endif
+	{
+		what = "savegame";
+		if (SaveGame(SAVE__ERROR_NUM, L"error savegame"))
+		{
+			success = "succeeded (error.sav)";
+			attach  = " Do not forget to attach the savegame.";
+		}
+	}
 	char msg[2048];
 	snprintf(msg, lengthof(msg),
 		"%s\n"
 		"Creating an emergency %s %s.\n"
 		"Please report this error with a description of the circumstances.%s",
-		e.what(),
-		edit_mode ? "map" : "savegame",
-		!saved    ? "failed"                :
-		edit_mode ? "succeeded (error.dat)" :
-		"succeeded (error.sav)",
-		!saved    ? ""                                  :
-		edit_mode ? " Do not forget to attach the map." :
-		" Do not forget to attach the savegame."
+		e.what(), what, success, attach
 	);
 	throw std::runtime_error(msg);
 }
