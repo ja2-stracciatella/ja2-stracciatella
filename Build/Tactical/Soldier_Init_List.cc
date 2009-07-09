@@ -73,44 +73,36 @@ void KillSoldierInitList()
 
 SOLDIERINITNODE* AddBasicPlacementToSoldierInitList(BASIC_SOLDIERCREATE_STRUCT const& bp)
 {
-	//Allocate memory for node
-	SOLDIERINITNODE* const curr = MALLOCZ(SOLDIERINITNODE);
+	SOLDIERINITNODE* const si = MALLOCZ(SOLDIERINITNODE);
 
-	//Allocate memory for basic placement
-	curr->pBasicPlacement = MALLOC(BASIC_SOLDIERCREATE_STRUCT);
+	si->pBasicPlacement  = MALLOC(BASIC_SOLDIERCREATE_STRUCT);
+	*si->pBasicPlacement = bp;
 
-	//Copy memory for basic placement
-	*curr->pBasicPlacement = bp;
+	/* It is impossible to set up detailed placement stuff now. If there is any
+	 * detailed placement information during map load, it will be added
+	 * immediately after this function call. */
+	si->pDetailedPlacement = 0;
+	si->pSoldier           = 0;
+	si->next               = 0;
+	si->prev               = gSoldierInitTail;
 
-	//It is impossible to set up detailed placement stuff now.
-	//If there is any detailed placement information during map load, it will be added
-	//immediately after this function call.
-	curr->pDetailedPlacement = NULL;
-	curr->pSoldier = NULL;
-
-	//Insert the new node in the list in its proper place.
-	if( !gSoldierInitHead )
+	// Insert the new node in the list in its proper place
+	if (!gSoldierInitTail)
 	{
-		gSoldierInitHead = curr;
-		if( gfOriginalList )
-			gOriginalSoldierInitListHead = curr;
+		gSoldierInitHead = si;
+		if (gfOriginalList)
+			gOriginalSoldierInitListHead = si;
 		else
-			gAlternateSoldierInitListHead = curr;
-		gSoldierInitTail = curr;
-		gSoldierInitHead->next = NULL;
-		gSoldierInitHead->prev = NULL;
+			gAlternateSoldierInitListHead = si;
 	}
 	else
-	{
-		//TEMP:  no sorting, just enemies
-		curr->prev = gSoldierInitTail;
-		curr->next = NULL;
-		gSoldierInitTail->next = curr;
-		gSoldierInitTail = gSoldierInitTail->next;
+	{ // TEMP: no sorting, just enemies
+		gSoldierInitTail->next = si;
 	}
-	if( gfOriginalList )
-		gMapInformation.ubNumIndividuals++;
-	return curr;
+	gSoldierInitTail = si;
+
+	if (gfOriginalList) ++gMapInformation.ubNumIndividuals;
+	return si;
 }
 
 
