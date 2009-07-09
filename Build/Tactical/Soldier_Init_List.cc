@@ -630,9 +630,6 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 
 void AddSoldierInitListTeamToWorld(INT8 const bTeam)
 {
-	SOLDIERINITNODE *mark;
-	UINT8 ubSlotsAvailable;
-
 	//Sort the list in the following manner:
 	//-Priority placements first
 	//-Basic placements next
@@ -664,22 +661,9 @@ void AddSoldierInitListTeamToWorld(INT8 const bTeam)
 		curr = curr->next;
 	}
 
-	//Now count the number of nodes that are basic placements of desired team
-	//This information will be used to randomly determine which of these placements
-	//will be added based on the number of slots we can still add.
-	mark = curr;
-	ubSlotsAvailable = 0;
-	while (curr && !curr->pSoldier)
-	{
-		if( curr->pBasicPlacement->bTeam == bTeam )
-			ubSlotsAvailable++;
-		curr = curr->next;
-	}
-
-	curr = mark;
 	//while we have a list, with no active soldiers, the num added is less than the max num requested, and
 	//we have slots available, process the list to add new soldiers.
-	while (curr && !curr->pSoldier && ubSlotsAvailable)
+	while (curr && !curr->pSoldier)
 	{
 		if( curr->pBasicPlacement->bTeam == bTeam )
 		{
@@ -692,9 +676,6 @@ void AddSoldierInitListTeamToWorld(INT8 const bTeam)
 				//except for the player which is 20.  Players aren't processed in this list anyway.
 				break;
 			}
-			ubSlotsAvailable--;
-			//With the decrementing of the slot vars in this manner, the chances increase so that all slots
-			//will be full by the time the end of the list comes up.
 		}
 		curr = curr->next;
 	}
