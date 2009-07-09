@@ -675,6 +675,7 @@ static void RenderDoorLockInfo()
 			case ELECTRIC:       trap_type = L"Electric Trap";       break;
 			case SIREN:          trap_type = L"Siren Trap";          break;
 			case SILENT_ALARM:   trap_type = L"Silent Alarm";        break;
+			case BROTHEL_SIREN:  trap_type = L"Brothel Siren Trap";  break;
 			case SUPER_ELECTRIC: trap_type = L"Super Electric Trap"; break;
 
 			default: abort(); // HACK000E
