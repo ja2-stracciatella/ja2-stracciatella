@@ -676,10 +676,6 @@ void AddSoldierInitListTeamToWorld(INT8 const bTeam)
 		curr = curr->next;
 	}
 
-	//we now have the number, so compared it to the num we can add, and determine how we will
-	//randomly determine which nodes to add.
-	if (ubSlotsAvailable == 0) // There aren't any basic placements of desired team, so exit.
-
 	curr = mark;
 	//while we have a list, with no active soldiers, the num added is less than the max num requested, and
 	//we have slots available, process the list to add new soldiers.
