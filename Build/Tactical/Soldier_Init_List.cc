@@ -209,66 +209,59 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 
 void LoadSoldiersFromMap(INT8** const hBuffer)
 {
-	UINT32 i;
-	UINT8 ubNumIndividuals;
-	BASIC_SOLDIERCREATE_STRUCT tempBasicPlacement;
-	SOLDIERINITNODE *pNode;
-	BOOLEAN fCowInSector = FALSE;
-
-	ubNumIndividuals = gMapInformation.ubNumIndividuals;
+	UINT8 const n_individuals = gMapInformation.ubNumIndividuals;
 
 	UseEditorAlternateList();
 	KillSoldierInitList();
 	UseEditorOriginalList();
 	KillSoldierInitList();
-
 	InitSoldierInitList();
 
-	if (ubNumIndividuals > MAX_INDIVIDUALS)
+	if (n_individuals > MAX_INDIVIDUALS)
 	{
 		throw std::runtime_error("Corrupt map check failed.  ubNumIndividuals is greater than MAX_INDIVIDUALS.");
 	}
-	if (ubNumIndividuals == 0) return; // no mercs
 
-	//Because we are loading the map, we needed to know how many
-	//guys are being loaded, but when we add them to the list here, it
-	//automatically increments that number, effectively doubling it, which
-	//would be a problem.  Now that we know the number, we clear it here, so
-	//it gets built again.
-	gMapInformation.ubNumIndividuals = 0;		//MUST BE CLEARED HERE!!!
+	/* Because we are loading the map, we needed to know how many guys are being
+	 * loaded, but when we add them to the list here, it automatically increments
+	 * that number, effectively doubling it, which would be a problem. Now that we
+	 * know the number, we clear it here, so it gets built again. */
+	gMapInformation.ubNumIndividuals = 0; // Must be cleared here
 
-	for( i=0; i < ubNumIndividuals; i++ )
+	bool cow_in_sector = false;
+	for (UINT32 i = 0; i != n_individuals; ++i)
 	{
-		LOADDATA( &tempBasicPlacement, *hBuffer, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
-		pNode = AddBasicPlacementToSoldierInitList( &tempBasicPlacement );
-		pNode->ubNodeID = (UINT8)i;
-		if( tempBasicPlacement.fDetailedPlacement )
-		{ //Add the static detailed placement information in the same newly created node as the basic placement.
-			//read static detailed placement from file
-			SOLDIERCREATE_STRUCT* const Soldier = MALLOC(SOLDIERCREATE_STRUCT);
+		BASIC_SOLDIERCREATE_STRUCT bp;
+		LOADDATA(&bp, *hBuffer, sizeof(bp));
+		SOLDIERINITNODE* const n = AddBasicPlacementToSoldierInitList(&bp);
+		n->ubNodeID = i;
 
-			BYTE Data[1040];
-			LOADDATA(Data, *hBuffer, sizeof(Data));
-			ExtractSoldierCreateUTF16(Data, Soldier);
+		if (bp.fDetailedPlacement)
+		{ /* Add the static detailed placement information in the same newly created
+			 * node as the basic placement. */
+			BYTE data[1040];
+			LOADDATA(data, *hBuffer, sizeof(data));
 
-			if (Soldier->ubProfile != NO_PROFILE)
+			SOLDIERCREATE_STRUCT* const sc = MALLOC(SOLDIERCREATE_STRUCT);
+			ExtractSoldierCreateUTF16(data, sc);
+
+			if (sc->ubProfile != NO_PROFILE)
 			{
-				UINT8 CivilianGroup = gMercProfiles[Soldier->ubProfile].ubCivilianGroup;
-				Soldier->ubCivilianGroup                = CivilianGroup;
-				pNode->pBasicPlacement->ubCivilianGroup = CivilianGroup;
+				UINT8 const civ_group = GetProfile(sc->ubProfile).ubCivilianGroup;
+				sc->ubCivilianGroup                 = civ_group;
+				n->pBasicPlacement->ubCivilianGroup = civ_group;
 			}
 
-			pNode->pDetailedPlacement = Soldier;
+			n->pDetailedPlacement = sc;
 		}
-		if( tempBasicPlacement.bBodyType == COW )
-		{
-			fCowInSector = TRUE;
-		}
+
+		if (bp.bBodyType == COW) cow_in_sector = true;
 	}
-	if( fCowInSector )
+
+	if (cow_in_sector)
 	{
 		char str[40];
-		sprintf( str, "Sounds/cowmoo%d.wav", Random( 3 ) + 1 );
+		sprintf(str, "Sounds/cowmoo%d.wav", Random(3) + 1);
 		PlayJA2SampleFromFile(str, MIDVOLUME, 1, MIDDLEPAN);
 	}
 }
