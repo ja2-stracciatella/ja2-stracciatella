@@ -76,6 +76,6 @@ void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated(void);
 BOOLEAN ValidateSoldierInitLinks(UINT8 ubCode);
 #endif
 
-BOOLEAN AddPlacementToWorld(SOLDIERINITNODE* curr);
+bool AddPlacementToWorld(SOLDIERINITNODE*);
 
 #endif

@@ -441,190 +441,168 @@ static void SortSoldierInitList(void)
 	//			 basic placements are in the middle.
 }
 
-BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
+
+bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 {
-	UINT8 ubProfile;
-	SOLDIERCREATE_STRUCT tempDetailedPlacement;
-	// First check if this guy has a profile and if so check his location such that it matches!
-	// Get profile from placement info
-	memset( &tempDetailedPlacement, 0, sizeof( SOLDIERCREATE_STRUCT ) );
+	SOLDIERCREATE_STRUCT dp;
+	memset(&dp, 0, sizeof(dp));
 
-	if( curr->pDetailedPlacement )
+	// First check if this guy has a profile and if so check his location such that it matches
+	if (SOLDIERCREATE_STRUCT* const init_dp = init->pDetailedPlacement)
 	{
-		ubProfile = curr->pDetailedPlacement->ubProfile;
+		if (!gfEditMode)
+		{
+			ProfileID const pid = init_dp->ubProfile;
+			if (pid != NO_PROFILE)
+			{
+				MERCPROFILESTRUCT& p = GetProfile(pid);
+				if (p.sSectorX != gWorldSectorX)  return false;
+				if (p.sSectorY != gWorldSectorY)  return false;
+				if (p.bSectorZ != gbWorldSectorZ) return false;
+				if (p.ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE)) return false;
+				if (p.bLife == 0)                 return false;
+				if (p.fUseProfileInsertionInfo)   return false;
+			}
 
-		if( ubProfile != NO_PROFILE && !gfEditMode )
-		{
-			if( gMercProfiles[ ubProfile ].sSectorX != gWorldSectorX ||
-				  gMercProfiles[ ubProfile ].sSectorY != gWorldSectorY ||
-					gMercProfiles[ ubProfile ].bSectorZ != gbWorldSectorZ ||
-					gMercProfiles[ ubProfile ].ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE) ||
-//				gMercProfiles[ ubProfile ].ubMiscFlags2 & PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR ||
-					!gMercProfiles[ ubProfile ].bLife	||
-					gMercProfiles[ ubProfile ].fUseProfileInsertionInfo
-				 )
-			{
-				return FALSE;
-			}
-		}
-		//Special case code when adding icecream truck.
-		if( !gfEditMode )
-		{
+			// Special case code when adding icecream truck.
 			// CJC, August 18, 1999: don't do this code unless the ice cream truck is on our team
-			if (FindSoldierByProfileIDOnPlayerTeam(ICECREAMTRUCK) != NULL)
-			{
-				if( curr->pDetailedPlacement->bBodyType == ICECREAMTRUCK )
-				{ //Check to see if Hamous is here and not recruited.  If so, add truck
-					if( gMercProfiles[ HAMOUS ].sSectorX != gWorldSectorX ||
-							gMercProfiles[ HAMOUS ].sSectorY != gWorldSectorY ||
-							gMercProfiles[ HAMOUS ].bSectorZ )
-					{ //not here, so don't add
-						return TRUE;
-					}
-					//Hamous is here.  Check to make sure he isn't recruited.
-					if( gMercProfiles[ HAMOUS ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED )
-					{
-						return TRUE;
-					}
-				}
+			if (init_dp->bBodyType == ICECREAMTRUCK &&
+					FindSoldierByProfileIDOnPlayerTeam(ICECREAMTRUCK))
+			{ // Check to see if Hamous is here and not recruited. If so, add truck
+				MERCPROFILESTRUCT& hamous = GetProfile(HAMOUS);
+				// If not here, do not add
+				if (hamous.sSectorX != gWorldSectorX) return true;
+				if (hamous.sSectorY != gWorldSectorY) return true;
+				if (hamous.bSectorZ != 0)             return true;
+				// Check to make sure he isn't recruited.
+				if (hamous.ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED) return true;
 			}
 		}
-		CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
-			&tempDetailedPlacement, curr->pDetailedPlacement, curr->pBasicPlacement );
+		CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(&dp, init_dp, init->pBasicPlacement);
 	}
 	else
 	{
-		CreateDetailedPlacementGivenBasicPlacementInfo( &tempDetailedPlacement, curr->pBasicPlacement );
+		CreateDetailedPlacementGivenBasicPlacementInfo(&dp, init->pBasicPlacement);
 	}
 
-	if ( !gfEditMode )
+	if (!gfEditMode)
 	{
-		if( tempDetailedPlacement.bTeam == CIV_TEAM )
+		if (dp.bTeam == CIV_TEAM)
 		{
-			// quest-related overrides
-			if ( gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C )
+			// Quest-related overrides
+			INT16 const x = gWorldSectorX;
+			INT16 const y = gWorldSectorY;
+			INT8  const z = gbWorldSectorZ;
+			if (x == 5 && y == MAP_ROW_C)
 			{
 				// Kinpin guys might be guarding Tony
-				if ( tempDetailedPlacement.ubCivilianGroup == KINGPIN_CIV_GROUP && ( gTacticalStatus.fCivGroupHostile[ KINGPIN_CIV_GROUP ] == CIV_GROUP_WILL_BECOME_HOSTILE || ( (gubQuest[ QUEST_KINGPIN_MONEY ] == QUESTINPROGRESS) && (CheckFact( FACT_KINGPIN_CAN_SEND_ASSASSINS, KINGPIN )) ) ) )
+				if (dp.ubCivilianGroup == KINGPIN_CIV_GROUP &&
+						(
+							gTacticalStatus.fCivGroupHostile[KINGPIN_CIV_GROUP] == CIV_GROUP_WILL_BECOME_HOSTILE ||
+							(
+								gubQuest[QUEST_KINGPIN_MONEY] == QUESTINPROGRESS &&
+								CheckFact(FACT_KINGPIN_CAN_SEND_ASSASSINS, KINGPIN)
+							)
+						))
 				{
-					if (tempDetailedPlacement.ubProfile == NO_PROFILE)
-					{
-						// these guys should be guarding Tony!
-						tempDetailedPlacement.sInsertionGridNo = 13531 +
-							(INT16) ( PreRandom( 8 ) * ( PreRandom( 1 ) ? -1 : 1)
-							+ PreRandom( 8 ) * ( PreRandom( 1 ) ? -1 : 1) * WORLD_ROWS );
+					if (dp.ubProfile == NO_PROFILE)
+					{ // These guys should be guarding Tony
+						dp.sInsertionGridNo =
+							13531 +
+							PreRandom(8) * (PreRandom(1) ? -1 : 1) +
+							PreRandom(8) * (PreRandom(1) ? -1 : 1) * WORLD_ROWS;
 
-						switch( PreRandom( 3 ) )
+						switch (PreRandom(3))
 						{
-							case 0:
-								tempDetailedPlacement.bOrders = ONGUARD;
-								break;
-							case 1:
-								tempDetailedPlacement.bOrders = CLOSEPATROL;
-								break;
-							case 2:
-								tempDetailedPlacement.bOrders = ONCALL;
-								break;
-
+							case 0: dp.bOrders = ONGUARD;     break;
+							case 1: dp.bOrders = CLOSEPATROL; break;
+							case 2: dp.bOrders = ONCALL;      break;
 						}
 					}
-					else if (tempDetailedPlacement.ubProfile == BILLY )
-					{
-						// billy should now be able to roam around
-						tempDetailedPlacement.sInsertionGridNo = 13531 +
-							(INT16) ( PreRandom( 30 ) * ( PreRandom( 1 ) ? -1 : 1)
-							+ PreRandom( 30 ) * ( PreRandom( 1 ) ? -1 : 1) * WORLD_ROWS );
-						tempDetailedPlacement.bOrders = SEEKENEMY;
+					else if (dp.ubProfile == BILLY)
+					{ // Billy should now be able to roam around
+						dp.sInsertionGridNo =
+							13531 +
+							PreRandom(30) * (PreRandom(1) ? -1 : 1) +
+							PreRandom(30) * (PreRandom(1) ? -1 : 1) * WORLD_ROWS;
+						dp.bOrders = SEEKENEMY;
 					}
-					else if ( tempDetailedPlacement.ubProfile == MADAME )
-					{
-						// she shouldn't be here!
-						return( TRUE );
+					else if (dp.ubProfile == MADAME)
+					{ // She shouldn't be here
+						return true;
 					}
-					else if (tempDetailedPlacement.ubProfile == NO_PROFILE)
-					{
-						UINT8 const room = GetRoom(tempDetailedPlacement.sInsertionGridNo);
+					else if (dp.ubProfile == NO_PROFILE)
+					{ // XXX unreachable due to same condition above
+						UINT8 const room = GetRoom(dp.sInsertionGridNo);
 						if (IN_BROTHEL(room))
-						{
-							// must be a hooker, shouldn't be there
-							return TRUE;
+						{ // Must be a hooker, shouldn't be here
+							return true;
 						}
 					}
 				}
 			}
-			else if ( !gfInMeanwhile && gWorldSectorX == 3 && gWorldSectorY == 16 && !gbWorldSectorZ )
-			{ //Special civilian setup for queen's palace.
-				if( gubFact[ FACT_QUEEN_DEAD ] )
+			else if (x == 3 && y == MAP_ROW_P && z == 0 && !gfInMeanwhile)
+			{ // Special civilian setup for queen's palace
+				if (gubFact[FACT_QUEEN_DEAD])
 				{
-					if( tempDetailedPlacement.ubCivilianGroup == QUEENS_CIV_GROUP )
-					{ //The queen's civs aren't added if queen is dead
-						return TRUE;
-					}
+					// The queen's civs aren't added if queen is dead
+					if (dp.ubCivilianGroup == QUEENS_CIV_GROUP) return true;
 				}
 				else
 				{
-					if( gfUseAlternateQueenPosition && tempDetailedPlacement.ubProfile == QUEEN )
+					if (gfUseAlternateQueenPosition && dp.ubProfile == QUEEN)
 					{
-						tempDetailedPlacement.sInsertionGridNo = 11448;
+						dp.sInsertionGridNo = 11448;
 					}
-					if( tempDetailedPlacement.ubCivilianGroup != QUEENS_CIV_GROUP )
-					{ //The free civilians aren't added if queen is alive
-						return TRUE;
+					if (dp.ubCivilianGroup != QUEENS_CIV_GROUP)
+					{ // The free civilians aren't added if queen is alive
+						return true;
 					}
 				}
 			}
-			else if ( gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y  && gbWorldSectorZ == 0 )
-			{
-				// Tixa prison, once liberated, should not have any civs without profiles unless
-				// they are kids
-				if( !StrategicMap[ TIXA_SECTOR_X + TIXA_SECTOR_Y * MAP_WORLD_X ].fEnemyControlled && tempDetailedPlacement.ubProfile == NO_PROFILE && tempDetailedPlacement.bBodyType != HATKIDCIV && tempDetailedPlacement.bBodyType != KIDCIV )
-				{
-					// not there
-					return( TRUE );
+			else if (x == TIXA_SECTOR_X && y == TIXA_SECTOR_Y && z == 0)
+			{ /* Tixa prison, once liberated, should not have any civs without
+				 * profiles unless they are kids */
+				if (!StrategicMap[TIXA_SECTOR_X + TIXA_SECTOR_Y * MAP_WORLD_X].fEnemyControlled &&
+						dp.ubProfile == NO_PROFILE                                                  &&
+						dp.bBodyType != HATKIDCIV                                                   &&
+						dp.bBodyType != KIDCIV)
+				{ // not there
+					return true;
 				}
 			}
-			else if ( gWorldSectorX == 13 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0 )
+			else if (x == 13 && y == MAP_ROW_C && z == 0)
 			{
-				if ( CheckFact( FACT_KIDS_ARE_FREE, 0 ) )
-				{
-					if ( tempDetailedPlacement.bBodyType == HATKIDCIV || tempDetailedPlacement.bBodyType == KIDCIV )
-					{
-						// not there any more!  kids have been freeeeed!
-						return( TRUE );
-					}
+				if (CheckFact(FACT_KIDS_ARE_FREE, 0) &&
+						(dp.bBodyType == HATKIDCIV || dp.bBodyType == KIDCIV))
+				{ // Not there any more, kids have been freed.
+					return true;
 				}
 			}
 		}
-
-		//SPECIAL!  Certain events in the game can cause profiled NPCs to become enemies.  The two cases are
-		//adding Mike and Iggy.  We will only add one NPC in any given combat and the conditions for setting
-		//the associated facts are done elsewhere.  There is also another place where NPCs can get added, which
-		//is in TacticalCreateElite() used for inserting offensive enemies.
-		if( tempDetailedPlacement.bTeam == ENEMY_TEAM && tempDetailedPlacement.ubSoldierClass == SOLDIER_CLASS_ELITE )
-		{
-			OkayToUpgradeEliteToSpecialProfiledEnemy( &tempDetailedPlacement );
+		else if (dp.bTeam == ENEMY_TEAM && dp.ubSoldierClass == SOLDIER_CLASS_ELITE)
+		{ /* Special! Certain events in the game can cause profiled NPCs to become
+			 * enemies. The two cases are adding Mike and Iggy. We will only add one
+			 * NPC in any given combat and the conditions for setting the associated
+			 * facts are done elsewhere. There is also another place where NPCs can
+			 * get added, which is in TacticalCreateElite() used for inserting
+			 * offensive enemies.  */
+			OkayToUpgradeEliteToSpecialProfiledEnemy(&dp);
 		}
 	}
 
-	SOLDIERTYPE* pSoldier = TacticalCreateSoldier(tempDetailedPlacement);
-	if (pSoldier != NULL)
+	if (SOLDIERTYPE* const s = TacticalCreateSoldier(dp))
 	{
-		curr->pSoldier = pSoldier;
-		curr->ubSoldierID = pSoldier->ubID;
-		AddSoldierToSectorNoCalculateDirection(pSoldier);
-
-		if (pSoldier->bInSector && pSoldier->bTeam == ENEMY_TEAM && !pSoldier->inv[HANDPOS].usItem)
-		{
-			pSoldier = pSoldier;
-		}
-
-		return TRUE;
+		init->pSoldier    = s;
+		init->ubSoldierID = s->ubID;
+		AddSoldierToSectorNoCalculateDirection(s);
+		return true;
 	}
 	else
 	{
-		LiveMessage( "Failed to create soldier using TacticalCreateSoldier within AddPlacementToWorld" );
+		LiveMessage("Failed to create soldier using TacticalCreateSoldier within AddPlacementToWorld");
+		return false;
 	}
-	return FALSE;
 }
 
 
