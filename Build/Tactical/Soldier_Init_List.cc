@@ -628,9 +628,8 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 }
 
 
-UINT8 AddSoldierInitListTeamToWorld(INT8 const bTeam)
+void AddSoldierInitListTeamToWorld(INT8 const bTeam)
 {
-	UINT8 ubNumAdded = 0;
 	SOLDIERINITNODE *mark;
 	UINT8 ubSlotsAvailable;
 
@@ -652,13 +651,6 @@ UINT8 AddSoldierInitListTeamToWorld(INT8 const bTeam)
 		}
 	}
 
-	//Count the current number of soldiers of the specified team
-	CFOR_ALL_SOLDIERINITNODES(curr)
-	{
-		if( curr->pBasicPlacement->bTeam == bTeam && curr->pSoldier )
-			ubNumAdded++;  //already one here!
-	}
-
 	SOLDIERINITNODE* curr = gSoldierInitHead;
 
 	//First fill up all of the priority existance slots...
@@ -667,10 +659,7 @@ UINT8 AddSoldierInitListTeamToWorld(INT8 const bTeam)
 		if( curr->pBasicPlacement->bTeam == bTeam )
 		{
 			//Matching team, so add this placement.
-			if( AddPlacementToWorld( curr ) )
-			{
-				ubNumAdded++;
-			}
+			AddPlacementToWorld(curr);
 		}
 		curr = curr->next;
 	}
@@ -689,10 +678,8 @@ UINT8 AddSoldierInitListTeamToWorld(INT8 const bTeam)
 
 	//we now have the number, so compared it to the num we can add, and determine how we will
 	//randomly determine which nodes to add.
-	if( !ubSlotsAvailable )
-	{	//There aren't any basic placements of desired team, so exit.
-		return ubNumAdded;
-	}
+	if (ubSlotsAvailable == 0) // There aren't any basic placements of desired team, so exit.
+
 	curr = mark;
 	//while we have a list, with no active soldiers, the num added is less than the max num requested, and
 	//we have slots available, process the list to add new soldiers.
@@ -701,17 +688,13 @@ UINT8 AddSoldierInitListTeamToWorld(INT8 const bTeam)
 		if( curr->pBasicPlacement->bTeam == bTeam )
 		{
 			//found matching team, so add this soldier to the game.
-			if( AddPlacementToWorld( curr ) )
-			{
-				ubNumAdded++;
-			}
-			else
+			if (!AddPlacementToWorld(curr))
 			{
 				//if it fails to create the soldier, it is likely that it is because the slots in the tactical
 				//engine are already full.  Besides, the strategic AI shouldn't be trying to fill a map with
 				//more than the maximum allowable soldiers of team.  All teams can have a max of 32 individuals,
 				//except for the player which is 20.  Players aren't processed in this list anyway.
-				return ubNumAdded;
+				break;
 			}
 			ubSlotsAvailable--;
 			//With the decrementing of the slot vars in this manner, the chances increase so that all slots
@@ -719,7 +702,6 @@ UINT8 AddSoldierInitListTeamToWorld(INT8 const bTeam)
 		}
 		curr = curr->next;
 	}
-	return ubNumAdded;
 }
 
 void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTroops, UINT8 ubTotalElite )
