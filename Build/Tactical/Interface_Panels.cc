@@ -1181,64 +1181,60 @@ static void PrintStat(UINT32 change_time, UINT16 stat_bit, INT8 stat_val, INT16 
 }
 
 
-void RenderSMPanel(BOOLEAN* pfDirty)
+void RenderSMPanel(BOOLEAN* const pfDirty)
 {
-	wchar_t sString[9];
-	UINT32	cnt;
+	// Give him the panel
+	if (gSelectSMPanelToMerc) SetSMPanelCurrentMerc(gSelectSMPanelToMerc);
 
-	// Give him the panel!
-	if (gSelectSMPanelToMerc != NULL) SetSMPanelCurrentMerc(gSelectSMPanelToMerc);
+	// ATE: Don't do anything if we are in stack popup and are refreshing stuff
+	if ((InItemStackPopup() || InKeyRingPopup()) && *pfDirty == DIRTYLEVEL1) return;
 
-	// ATE: Don't do anything if we are in stack popup and are refreshing stuff....
-	if ( ( InItemStackPopup( ) || ( InKeyRingPopup( ) ) ) && (*pfDirty) == DIRTYLEVEL1 )
+	SOLDIERTYPE& s = *gpSMCurrentMerc;
+
+	if (gfCheckForMouseOverItem && GetJA2Clock() - guiMouseOverItemTime > 100)
 	{
-		return;
-	}
-
-	if ( gfCheckForMouseOverItem )
-	{
-		if ( ( GetJA2Clock( ) - guiMouseOverItemTime ) > 100 )
+		if (HandleCompatibleAmmoUI(&s, (INT8)gbCheckForMouseOverItemPos, TRUE))
 		{
-			if ( HandleCompatibleAmmoUI( gpSMCurrentMerc, (INT8)gbCheckForMouseOverItemPos, TRUE ) )
-			{
-				(*pfDirty) = DIRTYLEVEL2;
-			}
-
-			gfCheckForMouseOverItem = FALSE;
+			*pfDirty = DIRTYLEVEL2;
 		}
+
+		gfCheckForMouseOverItem = FALSE;
 	}
 
-	HandleNewlyAddedItems( gpSMCurrentMerc, pfDirty );
+	HandleNewlyAddedItems(&s, pfDirty);
 
-	if ( InItemDescriptionBox( ) )
-	{
-		HandleItemDescriptionBox( pfDirty );
-	}
+	if (InItemDescriptionBox()) HandleItemDescriptionBox(pfDirty);
 
-	const INT32 dy = INV_INTERFACE_START_Y;
+	INT32 const dy = INV_INTERFACE_START_Y;
 
-	if ( *pfDirty == DIRTYLEVEL2 )
+	if (*pfDirty == DIRTYLEVEL2)
 	{
 		BltVideoObject(guiSAVEBUFFER, guiSMPanel, 0, INTERFACE_START_X, dy);
 
-		if (gfSMDisableForItems)
 		{
-			const INT32 x = SM_SELMERC_PLATE_X;
-			const INT32 y = dy + SM_SELMERC_PLATE_Y;
-			BltVideoObject(guiSAVEBUFFER, guiSMObjects2, 0, x, y);
+			SGPVObject const* gfx;
+			if (gfSMDisableForItems)
+			{
+				gfx = guiSMObjects2;
+			}
+			else if (gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
+					&s == GetSelectedMan()                         &&
+					OK_INTERRUPT_MERC(&s))
+			{
+				gfx = guiSMObjects;
+			}
+			else
+			{
+				goto no_plate;
+			}
+			INT32 const x = SM_SELMERC_PLATE_X;
+			INT32 const y = SM_SELMERC_PLATE_Y + dy;
+			BltVideoObject(guiSAVEBUFFER, gfx, 0, x, y);
 			RestoreExternBackgroundRect(x, y, SM_SELMERC_PLATE_WIDTH, SM_SELMERC_PLATE_HEIGHT);
 		}
-		else if (gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
-				gpSMCurrentMerc == GetSelectedMan()            &&
-				OK_INTERRUPT_MERC(gpSMCurrentMerc))
-		{
-			const INT32 x = SM_SELMERC_PLATE_X;
-			const INT32 y = dy + SM_SELMERC_PLATE_Y;
-			BltVideoObject(guiSAVEBUFFER, guiSMObjects, 0, x, y);
-			RestoreExternBackgroundRect(x, y, SM_SELMERC_PLATE_WIDTH, SM_SELMERC_PLATE_HEIGHT);
-		}
+no_plate:
 
-		RenderSoldierFace(gpSMCurrentMerc, SM_SELMERC_FACE_X, dy + SM_SELMERC_FACE_Y);
+		RenderSoldierFace(&s, SM_SELMERC_FACE_X, dy + SM_SELMERC_FACE_Y);
 
 		if (InItemDescriptionBox())
 		{
@@ -1246,17 +1242,16 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 		}
 		else
 		{
-			RenderInvBodyPanel(gpSMCurrentMerc, SM_BODYINV_X, SM_BODYINV_Y);
+			RenderInvBodyPanel(&s, SM_BODYINV_X, SM_BODYINV_Y);
 
-			// Render Values for stats!
-			// Set font drawing to saved buffer
+			// Render Values for stats
 			SetFontDestBuffer(guiSAVEBUFFER);
 			SetFontAttributes(BLOCKFONT2, STATS_TITLE_FONT_COLOR);
-			for( cnt = 0; cnt < 5; cnt++ )
+			for (UINT32 i = 0; i != 5; ++i)
 			{
-				const INT32 y = dy + 7 + cnt * 10;
-				MPrint( 92, y, pShortAttributeStrings[cnt]);
-				MPrint(137, y, pShortAttributeStrings[cnt + 5]);
+				INT32 const y = dy + 7 + i * 10;
+				MPrint( 92, y, pShortAttributeStrings[i]);
+				MPrint(137, y, pShortAttributeStrings[i + 5]);
 			}
 
 			MPrint(SM_ARMOR_LABEL_X - StringPixLength(pInvPanelTitleStrings[0], BLOCKFONT2) / 2, dy + SM_ARMOR_LABEL_Y, pInvPanelTitleStrings[0]);
@@ -1268,91 +1263,78 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 			MPrint(SM_CAMO_LABEL_X - StringPixLength(pInvPanelTitleStrings[2], BLOCKFONT2), dy + SM_CAMO_LABEL_Y, pInvPanelTitleStrings[2]);
 			MPrint(SM_CAMO_PERCENT_X, dy + SM_CAMO_PERCENT_Y, L"%");
 
-			const SOLDIERTYPE* const s = gpSMCurrentMerc;
-			PrintStat(s->uiChangeAgilityTime,      AGIL_INCREASE,     s->bAgility,      SM_AGI_X,    dy + SM_AGI_Y);
-			PrintStat(s->uiChangeDexterityTime,    DEX_INCREASE,      s->bDexterity,    SM_DEX_X,    dy + SM_DEX_Y);
-			PrintStat(s->uiChangeStrengthTime,     STRENGTH_INCREASE, s->bStrength,     SM_STR_X,    dy + SM_STR_Y);
-			PrintStat(s->uiChangeLeadershipTime,   LDR_INCREASE,      s->bLeadership,   SM_CHAR_X,   dy + SM_CHAR_Y);
-			PrintStat(s->uiChangeWisdomTime,       WIS_INCREASE,      s->bWisdom,       SM_WIS_X,    dy + SM_WIS_Y);
-			PrintStat(s->uiChangeLevelTime,        LVL_INCREASE,      s->bExpLevel,     SM_EXPLVL_X, dy + SM_EXPLVL_Y);
-			PrintStat(s->uiChangeMarksmanshipTime, MRK_INCREASE,      s->bMarksmanship, SM_MRKM_X,   dy + SM_MRKM_Y);
-			PrintStat(s->uiChangeExplosivesTime,   EXP_INCREASE,      s->bExplosive,    SM_EXPL_X,   dy + SM_EXPL_Y);
-			PrintStat(s->uiChangeMechanicalTime,   MECH_INCREASE,     s->bMechanical,   SM_MECH_X,   dy + SM_MECH_Y);
-			PrintStat(s->uiChangeMedicalTime,      MED_INCREASE,      s->bMedical,      SM_MED_X,    dy + SM_MED_Y);
+			PrintStat(s.uiChangeAgilityTime,      AGIL_INCREASE,     s.bAgility,      SM_AGI_X,    dy + SM_AGI_Y);
+			PrintStat(s.uiChangeDexterityTime,    DEX_INCREASE,      s.bDexterity,    SM_DEX_X,    dy + SM_DEX_Y);
+			PrintStat(s.uiChangeStrengthTime,     STRENGTH_INCREASE, s.bStrength,     SM_STR_X,    dy + SM_STR_Y);
+			PrintStat(s.uiChangeLeadershipTime,   LDR_INCREASE,      s.bLeadership,   SM_CHAR_X,   dy + SM_CHAR_Y);
+			PrintStat(s.uiChangeWisdomTime,       WIS_INCREASE,      s.bWisdom,       SM_WIS_X,    dy + SM_WIS_Y);
+			PrintStat(s.uiChangeLevelTime,        LVL_INCREASE,      s.bExpLevel,     SM_EXPLVL_X, dy + SM_EXPLVL_Y);
+			PrintStat(s.uiChangeMarksmanshipTime, MRK_INCREASE,      s.bMarksmanship, SM_MRKM_X,   dy + SM_MRKM_Y);
+			PrintStat(s.uiChangeExplosivesTime,   EXP_INCREASE,      s.bExplosive,    SM_EXPL_X,   dy + SM_EXPL_Y);
+			PrintStat(s.uiChangeMechanicalTime,   MECH_INCREASE,     s.bMechanical,   SM_MECH_X,   dy + SM_MECH_Y);
+			PrintStat(s.uiChangeMedicalTime,      MED_INCREASE,      s.bMedical,      SM_MED_X,    dy + SM_MED_Y);
 
-			if ( gpSMCurrentMerc->bLife >= OKLIFE )
-			{
-				SetFontForeground(STATS_TEXT_FONT_COLOR);
-			}
-			else
-			{
-				SetFontForeground(FONT_MCOLOR_DKGRAY);
-			}
-			SetFontBackground(FONT_MCOLOR_BLACK);
+			SetFontForeground(s.bLife >= OKLIFE ? STATS_TEXT_FONT_COLOR : FONT_MCOLOR_DKGRAY);
 
-			INT16 usX;
-			INT16 usY;
+			INT16   usX;
+			INT16   usY;
+			wchar_t sString[9];
 
-			// Display armour value!
-			swprintf( sString, lengthof(sString), L"%3d", ArmourPercent( gpSMCurrentMerc ) );
+			// Display armour value
+			swprintf(sString, lengthof(sString), L"%3d", ArmourPercent(&s));
 			FindFontRightCoordinates(SM_ARMOR_X, dy + SM_ARMOR_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY , sString);
 
-			// Display wieght value!
-			swprintf( sString, lengthof(sString), L"%3d", CalculateCarriedWeight( gpSMCurrentMerc ) );
+			// Display weight value
+			swprintf(sString, lengthof(sString), L"%3d", CalculateCarriedWeight(&s));
 			FindFontRightCoordinates(SM_WEIGHT_X, dy + SM_WEIGHT_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, sString);
 
-			// Display camo value!
-			swprintf( sString, lengthof(sString), L"%3d", gpSMCurrentMerc->bCamo );
+			// Display camo value
+			swprintf(sString, lengthof(sString), L"%3d", s.bCamo);
 			FindFontRightCoordinates(SM_CAMO_X, dy + SM_CAMO_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, sString);
 
-			// reset to frame buffer!
 			SetFontDestBuffer(FRAME_BUFFER);
 
 			RestoreExternBackgroundRect(INTERFACE_START_X, INV_INTERFACE_START_Y, SCREEN_WIDTH - INTERFACE_START_X, SCREEN_HEIGHT - INV_INTERFACE_START_Y);
 		}
 
-		// Render Name!
-		UINT8 const foreground = gpSMCurrentMerc->bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
-		SetFontAttributes(BLOCKFONT2, foreground);
+		// Render name
+		UINT8 const fg = s.bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
+		SetFontAttributes(BLOCKFONT2, fg);
 
-		const INT32 x = SM_SELMERCNAME_X;
-		const INT32 y = dy + SM_SELMERCNAME_Y;
-		const INT32 w = SM_SELMERCNAME_WIDTH;
-		const INT32 h = SM_SELMERCNAME_HEIGHT;
+		INT32 const x = SM_SELMERCNAME_X;
+		INT32 const y = SM_SELMERCNAME_Y + dy;
+		INT32 const w = SM_SELMERCNAME_WIDTH;
+		INT32 const h = SM_SELMERCNAME_HEIGHT;
 		RestoreExternBackgroundRect(x, y, w, h);
 		INT16 sFontX;
 		INT16 sFontY;
-		FindFontCenterCoordinates(x, y, w, h, gpSMCurrentMerc->name, BLOCKFONT2, &sFontX, &sFontY);
-		MPrint(sFontX, sFontY, gpSMCurrentMerc->name);
+		FindFontCenterCoordinates(x, y, w, h, s.name, BLOCKFONT2, &sFontX, &sFontY);
+		MPrint(sFontX, sFontY, s.name);
 	}
 
 	if (*pfDirty != DIRTYLEVEL0)
 	{
-		SetStatsHelp(gSM_SELMERCBarsRegion, *gpSMCurrentMerc);
+		SetStatsHelp(gSM_SELMERCBarsRegion, s);
 
-		// display AP
-		if (!(gpSMCurrentMerc->uiStatusFlags & SOLDIER_DEAD))
+		// Display AP
+		if (!(s.uiStatusFlags & SOLDIER_DEAD))
 		{
-			PrintAP(gpSMCurrentMerc, SM_SELMERC_AP_X, dy + SM_SELMERC_AP_Y, SM_SELMERC_AP_WIDTH, SM_SELMERC_AP_HEIGHT);
-			DrawSoldierUIBars(*gpSMCurrentMerc, SM_SELMERC_HEALTH_X, dy + SM_SELMERC_HEALTH_Y, TRUE, FRAME_BUFFER);
+			PrintAP(&s, SM_SELMERC_AP_X, dy + SM_SELMERC_AP_Y, SM_SELMERC_AP_WIDTH, SM_SELMERC_AP_HEIGHT);
+			DrawSoldierUIBars(s, SM_SELMERC_HEALTH_X, dy + SM_SELMERC_HEALTH_Y, TRUE, FRAME_BUFFER);
 		}
 	}
 
-	UpdateSMPanel( );
+	UpdateSMPanel();
 
+	// Render items in guy's hand
+	HandleRenderInvSlots(s, *pfDirty);
 
-	//HandlePanelFaceAnimations( gpSMCurrentMerc );
-
-	// Render items in guy's hand!
-	HandleRenderInvSlots(*gpSMCurrentMerc, *pfDirty);
-
-	if ( gfSMDisableForItems && (*pfDirty) != DIRTYLEVEL0 )
+	if (gfSMDisableForItems && *pfDirty != DIRTYLEVEL0)
 	{
 		SGPRect ClipRect;
-
 		ClipRect.iLeft	 = 87;
 		ClipRect.iRight  = 536;
 		ClipRect.iTop		 = INV_INTERFACE_START_Y;
@@ -1360,7 +1342,6 @@ void RenderSMPanel(BOOLEAN* pfDirty)
 		SGPVSurface::Lock l(FRAME_BUFFER);
 		Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
 	}
-
 }
 
 
