@@ -628,45 +628,43 @@ BOOLEAN AddPlacementToWorld( SOLDIERINITNODE *curr )
 }
 
 
-void AddSoldierInitListTeamToWorld(INT8 const bTeam)
+void AddSoldierInitListTeamToWorld(INT8 const team)
 {
-	//Sort the list in the following manner:
-	//-Priority placements first
-	//-Basic placements next
-	//-Any placements with existing soldiers last (overrides others)
+	/* Sort the list in the following manner:
+	 * - Priority placements first
+	 * - Basic placements next
+	 * - Any placements with existing soldiers last (overrides others) */
 	SortSoldierInitList();
 
-	if (giCurrentTilesetID == CAVES_1) //cave/mine tileset only
-	{ //convert all civilians to miners which use uniforms and more masculine body types.
-		CFOR_ALL_SOLDIERINITNODES(curr)
+	if (giCurrentTilesetID == CAVES_1) // Cave/mine tileset only
+	{ /* Convert all civilians to miners which use uniforms and more masculine
+		 * body types. */
+		CFOR_ALL_SOLDIERINITNODES(i)
 		{
-			if( curr->pBasicPlacement->bTeam == CIV_TEAM && !curr->pDetailedPlacement )
-			{
-				curr->pBasicPlacement->ubSoldierClass = SOLDIER_CLASS_MINER;
-				curr->pBasicPlacement->bBodyType = -1;
-			}
+			BASIC_SOLDIERCREATE_STRUCT& bp = *i->pBasicPlacement;
+			if (bp.bTeam != CIV_TEAM || i->pDetailedPlacement) continue;
+			bp.ubSoldierClass = SOLDIER_CLASS_MINER;
+			bp.bBodyType      = -1;
 		}
 	}
 
-	//while we have a list, with no active soldiers, the num added is less than the max num requested, and
-	//we have slots available, process the list to add new soldiers.
-	for (SOLDIERINITNODE* curr = gSoldierInitHead; curr && !curr->pSoldier;)
+	/* While we have a list, with no active soldiers, process the list to add new
+	 * soldiers. */
+	for (SOLDIERINITNODE* i = gSoldierInitHead; i && !i->pSoldier; i = i->next)
 	{
-		if( curr->pBasicPlacement->bTeam == bTeam )
-		{
-			//found matching team, so add this soldier to the game.
-			if (!AddPlacementToWorld(curr))
-			{
-				//if it fails to create the soldier, it is likely that it is because the slots in the tactical
-				//engine are already full.  Besides, the strategic AI shouldn't be trying to fill a map with
-				//more than the maximum allowable soldiers of team.  All teams can have a max of 32 individuals,
-				//except for the player which is 20.  Players aren't processed in this list anyway.
-				break;
-			}
+		if (i->pBasicPlacement->bTeam != team) continue;
+		if (!AddPlacementToWorld(i))
+		{ /* If it fails to create the soldier, it is likely that it is because the
+			 * slots in the tactical engine are already full. Besides, the strategic
+			 * AI shouldn't be trying to fill a map with more than the maximum
+			 * allowable soldiers of team. All teams can have a max of 32 individuals,
+			 * except for the player which is 20. Players aren't processed in this
+			 * list anyway. */
+			break;
 		}
-		curr = curr->next;
 	}
 }
+
 
 void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTroops, UINT8 ubTotalElite )
 {
