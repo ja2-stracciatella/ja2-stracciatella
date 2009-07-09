@@ -647,44 +647,42 @@ static wchar_t const* BuildTriggerName(OBJECTTYPE const& o, wchar_t* const buf, 
 }
 
 
-static void RenderDoorLockInfo(void)
+static void RenderDoorLockInfo()
 {
-	INT16 i, xp, yp;
-	INT16 sScreenX, sScreenY;
 	wchar_t str[50];
-	for( i = 0; i < gubNumDoors; i++ )
+	for (DOOR const* i = DoorTable, * const end = i + gubNumDoors; i != end; ++i)
 	{
-		GetGridNoScreenPos( DoorTable[ i ].sGridNo, 0, &sScreenX, &sScreenY );
-		if( sScreenY > 390 )
-			continue;
-		if( DoorTable[ i ].ubLockID != 255 )
-			swprintf(str, lengthof(str), L"%hs", LockTable[DoorTable[i].ubLockID].ubEditorName);
+		DOOR const& d = *i;
+
+		INT16 screen_x;
+		INT16 screen_y;
+		GetGridNoScreenPos(d.sGridNo, 0, &screen_x, &screen_y);
+		INT16 const x = screen_x;
+		INT16 const y = screen_y;
+		if (y > 390) continue;
+
+		if (d.ubLockID != 255)
+			swprintf(str, lengthof(str), L"%hs", LockTable[d.ubLockID].ubEditorName);
 		else
 			wcslcpy(str, L"No Lock ID", lengthof(str));
-		xp = sScreenX - 10;
-		yp = sScreenY - 40;
-		DisplayWrappedString(xp, yp, 60, 2, FONT10ARIAL, FONT_LTKHAKI, str, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
-		if( DoorTable[ i ].ubTrapID )
-		{
-			SetFontAttributes(FONT10ARIAL, FONT_RED);
-			const wchar_t* TrapType; // HACK000E
-			switch( DoorTable[ i ].ubTrapID )
-			{
-				case EXPLOSION:      TrapType = L"Explosion Trap"; break;
-				case ELECTRIC:       TrapType = L"Electric Trap"; break;
-				case SIREN:          TrapType = L"Siren Trap"; break;
-				case SILENT_ALARM:   TrapType = L"Silent Alarm"; break;
-				case SUPER_ELECTRIC: TrapType = L"Super Electric Trap"; break;
+		DisplayWrappedString(x - 10, y - 40, 60, 2, FONT10ARIAL, FONT_LTKHAKI, str, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
-				default: abort(); // HACK000E
-			}
-			xp = sScreenX + 20 - StringPixLength(TrapType, FONT10ARIAL) / 2;
-			yp = sScreenY;
-			MPrint(xp, yp, TrapType);
-			swprintf(str, lengthof(str), L"Trap Level %d", DoorTable[i].ubTrapLevel);
-			xp = sScreenX + 20 - StringPixLength( str, FONT10ARIAL ) / 2;
-			MPrint(xp, yp + 10, str);
+		wchar_t const* trap_type; // HACK000E
+		switch (d.ubTrapID)
+		{
+			case NO_TRAP:        continue;
+			case EXPLOSION:      trap_type = L"Explosion Trap";      break;
+			case ELECTRIC:       trap_type = L"Electric Trap";       break;
+			case SIREN:          trap_type = L"Siren Trap";          break;
+			case SILENT_ALARM:   trap_type = L"Silent Alarm";        break;
+			case SUPER_ELECTRIC: trap_type = L"Super Electric Trap"; break;
+
+			default: abort(); // HACK000E
 		}
+		SetFontAttributes(FONT10ARIAL, FONT_RED);
+		MPrint(x + 20 - StringPixLength(trap_type, FONT10ARIAL) / 2, y, trap_type);
+		swprintf(str, lengthof(str), L"Trap Level %d", d.ubTrapLevel);
+		MPrint(x + 20 - StringPixLength(str, FONT10ARIAL) / 2, y + 10, str);
 	}
 }
 
