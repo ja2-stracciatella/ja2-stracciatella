@@ -648,22 +648,9 @@ void AddSoldierInitListTeamToWorld(INT8 const bTeam)
 		}
 	}
 
-	SOLDIERINITNODE* curr = gSoldierInitHead;
-
-	//First fill up all of the priority existance slots...
-	while (curr && curr->pBasicPlacement->fPriorityExistance)
-	{
-		if( curr->pBasicPlacement->bTeam == bTeam )
-		{
-			//Matching team, so add this placement.
-			AddPlacementToWorld(curr);
-		}
-		curr = curr->next;
-	}
-
 	//while we have a list, with no active soldiers, the num added is less than the max num requested, and
 	//we have slots available, process the list to add new soldiers.
-	while (curr && !curr->pSoldier)
+	for (SOLDIERINITNODE* curr = gSoldierInitHead; curr && !curr->pSoldier;)
 	{
 		if( curr->pBasicPlacement->bTeam == bTeam )
 		{
