@@ -398,7 +398,7 @@ void AddMercToWorld( INT32 iMapIndex )
 			pSoldier->bLastRenderVisibleValue = 1;
 			//Set up the soldier in the list, so we can track the soldier in the
 			//future (saving, loading, strategic AI)
-			pNode = AddBasicPlacementToSoldierInitList( &gTempBasicPlacement );
+			pNode = AddBasicPlacementToSoldierInitList(gTempBasicPlacement);
 			pNode->pSoldier = pSoldier;
 
 			//Add the soldier to physically appear on the map now.
@@ -3042,7 +3042,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 			pSoldier->bLastRenderVisibleValue = 1;
 			//Set up the soldier in the list, so we can track the soldier in the
 			//future (saving, loading, strategic AI)
-			pNode = AddBasicPlacementToSoldierInitList( &gTempBasicPlacement );
+			pNode = AddBasicPlacementToSoldierInitList(gTempBasicPlacement);
 			pNode->pSoldier = pSoldier;
 			if( gSaveBufferBasicPlacement.fDetailedPlacement )
 			{ //Add the static detailed placement information in the same newly created node as the basic placement.

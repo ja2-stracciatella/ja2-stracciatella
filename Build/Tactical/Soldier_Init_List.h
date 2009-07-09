@@ -45,7 +45,7 @@ void NewWayOfLoadingCivilianInitListLinks(HWFILE);
 
 void InitSoldierInitList(void);
 void KillSoldierInitList(void);
-SOLDIERINITNODE* AddBasicPlacementToSoldierInitList( BASIC_SOLDIERCREATE_STRUCT *pBasicPlacement );
+SOLDIERINITNODE* AddBasicPlacementToSoldierInitList(BASIC_SOLDIERCREATE_STRUCT const&);
 void RemoveSoldierNodeFromInitList( SOLDIERINITNODE *pNode );
 SOLDIERINITNODE* FindSoldierInitNodeWithID( UINT16 usID );
 SOLDIERINITNODE* FindSoldierInitNodeBySoldier(SOLDIERTYPE const&);

@@ -70,7 +70,8 @@ void KillSoldierInitList()
 		gAlternateSoldierInitListHead = NULL;
 }
 
-SOLDIERINITNODE* AddBasicPlacementToSoldierInitList( BASIC_SOLDIERCREATE_STRUCT *pBasicPlacement )
+
+SOLDIERINITNODE* AddBasicPlacementToSoldierInitList(BASIC_SOLDIERCREATE_STRUCT const& bp)
 {
 	//Allocate memory for node
 	SOLDIERINITNODE* const curr = MALLOCZ(SOLDIERINITNODE);
@@ -79,7 +80,7 @@ SOLDIERINITNODE* AddBasicPlacementToSoldierInitList( BASIC_SOLDIERCREATE_STRUCT 
 	curr->pBasicPlacement = MALLOC(BASIC_SOLDIERCREATE_STRUCT);
 
 	//Copy memory for basic placement
-	*curr->pBasicPlacement = *pBasicPlacement;
+	*curr->pBasicPlacement = bp;
 
 	//It is impossible to set up detailed placement stuff now.
 	//If there is any detailed placement information during map load, it will be added
@@ -233,7 +234,7 @@ void LoadSoldiersFromMap(INT8** const hBuffer)
 	{
 		BASIC_SOLDIERCREATE_STRUCT bp;
 		LOADDATA(&bp, *hBuffer, sizeof(bp));
-		SOLDIERINITNODE* const n = AddBasicPlacementToSoldierInitList(&bp);
+		SOLDIERINITNODE* const n = AddBasicPlacementToSoldierInitList(bp);
 		n->ubNodeID = i;
 
 		if (bp.fDetailedPlacement)
