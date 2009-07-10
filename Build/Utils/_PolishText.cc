@@ -2969,7 +2969,7 @@ const wchar_t* pMilitiaConfirmStrings[] =
 	L"( T/N )",   // abbreviated yes/no
 	L"Szkolenie samoobrony w %d sektorach będzie kosztowało $ %d. %ls", // cost to train sveral sectors at once
 	L"Nie masz %d$, aby wyszkolić samoobronę w tym mieście.",
-	L"%ls musi mieć %d% lojalności, aby można było kontynuować szkolenie samoobrony.",
+	L"%ls musi mieć %d%% lojalności, aby można było kontynuować szkolenie samoobrony.",
 	L"Nie możesz już dłużej szkolić samoobrony w mieście %ls.",
 };
 
