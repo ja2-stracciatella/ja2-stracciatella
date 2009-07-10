@@ -1653,7 +1653,7 @@ const wchar_t* pMoralStrings[] =
 };
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
-const wchar_t str_left_equipment[]   = L"%ls - jego/jej sprzęt jest już w %ls.";
+const wchar_t str_left_equipment[]   = L"%ls - jego/jej sprzęt jest już w %ls (%c%d).";
 
 const wchar_t str_location_omerta[]  = L"Omercie (A9)";
 const wchar_t str_location_drassen[] = L"Drassen (B13)";

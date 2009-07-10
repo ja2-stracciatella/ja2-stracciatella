@@ -1600,7 +1600,7 @@ const wchar_t *pMoralStrings[] =
 };
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
-const wchar_t str_left_equipment[]   = L"%lss Ausrüstung ist in %ls angekommen.";
+const wchar_t str_left_equipment[]   = L"%lss Ausrüstung ist in %ls (%c%d) angekommen.";
 
 const wchar_t str_location_omerta[]  = L"Omerta (A9)";
 const wchar_t str_location_drassen[] = L"Drassen (B13)";
@@ -2737,7 +2737,7 @@ const wchar_t *zMarksMapScreenText[] =
 {
 	L"Map-Level",
 	L"Sie haben gar keine Miliz. Sie müssen Bewohner der Stadt trainieren, wenn Sie dort eine Miliz aufstellen wollen.",
-	L"Tägl. Einkommen",
+	L"Tägliches Einkommen",
 	L"Söldner hat Lebensversicherung",
 	L"%ls ist nicht müde.",
 	L"%ls ist unterwegs und kann nicht schlafen.",

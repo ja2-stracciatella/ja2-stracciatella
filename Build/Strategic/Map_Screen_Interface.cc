@@ -1108,21 +1108,24 @@ void HandleMercLeavingEquipmentInDrassen(SOLDIERTYPE* const s)
 static void FreeLeaveListSlot(UINT32 uiSlotIndex);
 
 
-static void HandleEquipmentLeft(UINT32 const slot_idx, UINT const sector, GridNo const grid, wchar_t const* const dest_town_name)
+static void HandleEquipmentLeft(UINT32 const slot_idx, UINT const sector, GridNo const grid)
 {
 	Assert(slot_idx < NUM_LEAVE_LIST_SLOTS);
 
 	if (MERC_LEAVE_ITEM* i = gpLeaveListHead[slot_idx])
 	{
 		wchar_t sString[128];
-		ProfileID const id = guiLeaveListOwnerProfileId[slot_idx];
+		wchar_t const* const town = pTownNames[GetTownIdForSector(SECTORX(sector), SECTORY(sector))];
+		int            const x    = SECTORX(sector);
+		char           const y    = SECTORY(sector) - 1 + 'A';
+		ProfileID      const id   = guiLeaveListOwnerProfileId[slot_idx];
 		if (id != NO_PROFILE)
 		{
-			swprintf(sString, lengthof(sString), str_left_equipment, GetProfile(id).zNickname, dest_town_name);
+			swprintf(sString, lengthof(sString), str_left_equipment, GetProfile(id).zNickname, town, y, x);
 		}
 		else
 		{
-			swprintf(sString, lengthof(sString), L"A departing merc has left their equipment in %ls.", dest_town_name);
+			swprintf(sString, lengthof(sString), L"A departing merc has left their equipment in %ls (%c%d).", town, y, x);
 		}
 		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sString);
 
@@ -1146,13 +1149,13 @@ static void HandleEquipmentLeft(UINT32 const slot_idx, UINT const sector, GridNo
 
 void HandleEquipmentLeftInOmerta(const UINT32 uiSlotIndex)
 {
-	HandleEquipmentLeft(uiSlotIndex, OMERTA_LEAVE_EQUIP_SECTOR, OMERTA_LEAVE_EQUIP_GRIDNO, str_location_omerta);
+	HandleEquipmentLeft(uiSlotIndex, OMERTA_LEAVE_EQUIP_SECTOR, OMERTA_LEAVE_EQUIP_GRIDNO);
 }
 
 
 void HandleEquipmentLeftInDrassen(const UINT32 uiSlotIndex)
 {
-	HandleEquipmentLeft(uiSlotIndex, BOBBYR_SHIPPING_DEST_SECTOR, 10433, str_location_drassen);
+	HandleEquipmentLeft(uiSlotIndex, BOBBYR_SHIPPING_DEST_SECTOR, 10433);
 }
 
 
