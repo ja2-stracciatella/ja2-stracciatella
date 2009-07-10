@@ -23,6 +23,7 @@ extern const wchar_t *pContractStrings[];
 extern const wchar_t *pAssignmentStrings[];
 extern const wchar_t *pConditionStrings[];
 extern const wchar_t *pTownNames[];
+extern wchar_t const* const g_towns_locative[];
 extern const wchar_t *pPersonnelScreenStrings[];
 extern const wchar_t *pUpperLeftMapScreenStrings[];
 extern const wchar_t *pTacticalPopupButtonStrings[];

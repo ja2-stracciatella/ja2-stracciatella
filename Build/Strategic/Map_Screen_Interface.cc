@@ -1115,7 +1115,7 @@ static void HandleEquipmentLeft(UINT32 const slot_idx, UINT const sector, GridNo
 	if (MERC_LEAVE_ITEM* i = gpLeaveListHead[slot_idx])
 	{
 		wchar_t sString[128];
-		wchar_t const* const town = pTownNames[GetTownIdForSector(SECTORX(sector), SECTORY(sector))];
+		wchar_t const* const town = g_towns_locative[GetTownIdForSector(SECTORX(sector), SECTORY(sector))];
 		int            const x    = SECTORX(sector);
 		char           const y    = SECTORY(sector) - 1 + 'A';
 		ProfileID      const id   = guiLeaveListOwnerProfileId[slot_idx];

@@ -284,6 +284,23 @@ const wchar_t* pTownNames[] =
 	L"Chitzena",
 };
 
+wchar_t const* const g_towns_locative[] =
+{
+	L"",
+	L"Omerta",
+	L"Drassen",
+	L"Alma",
+	L"Grumm",
+	L"Tixa",
+	L"Cambria",
+	L"San Mona",
+	L"Estoni",
+	L"Orta",
+	L"Balime",
+	L"Meduna",
+	L"Chitzena"
+};
+
 // the types of time compression. For example: is the timer paused? at normal speed, 5 minutes per second, etc.
 // min is an abbreviation for minutes
 
