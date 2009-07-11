@@ -489,16 +489,14 @@ static void HandleSoldierLeavingWithLowMorale(SOLDIERTYPE* pSoldier)
 }
 
 
-static void HandleSoldierLeavingForAnotherContract(SOLDIERTYPE* pSoldier)
+static void HandleSoldierLeavingForAnotherContract(SOLDIERTYPE& s)
 {
-	if (pSoldier->fSignedAnotherContract)
-	{
-		// merc goes to work elsewhere
-		gMercProfiles[ pSoldier->ubProfile ].bMercStatus = MERC_WORKING_ELSEWHERE;
-		gMercProfiles[ pSoldier->ubProfile ].uiDayBecomesAvailable += 1 + Random(6 + (pSoldier->bExpLevel / 2) );		// 1-(6 to 11) days
-	}
+	if (!s.fSignedAnotherContract) return;
+	// Merc goes to work elsewhere
+	MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
+	p.bMercStatus            = MERC_WORKING_ELSEWHERE;
+	p.uiDayBecomesAvailable += 1 + Random(6 + s.bExpLevel / 2); // 1-(6 to 11) days
 }
-
 
 
 /*
@@ -696,7 +694,7 @@ void StrategicRemoveMerc(SOLDIERTYPE* const s)
 		p.uiDayBecomesAvailable = 1 + Random(2); // 1-2 days
 
 		HandleSoldierLeavingWithLowMorale(s);
-		HandleSoldierLeavingForAnotherContract(s);
+		HandleSoldierLeavingForAnotherContract(*s);
 	}
 
 	//add an entry in the history page for the firing/quiting of the merc
