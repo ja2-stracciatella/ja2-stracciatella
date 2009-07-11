@@ -49,7 +49,7 @@ UINT16 GetVerticalWallType( UINT32 iMapIndex );
 void EraseHorizontalWall( UINT32 iMapIndex );
 void EraseVerticalWall( UINT32 iMapIndex );
 void ChangeVerticalWall( UINT32 iMapIndex, UINT16 usNewPiece );
-BOOLEAN ValidDecalPlacement( UINT32 iMapIndex );
+bool ValidDecalPlacement(UINT32 map_idx);
 
 UINT16 GetWallType(LEVELNODE const* wall, UINT32 map_idx);
 

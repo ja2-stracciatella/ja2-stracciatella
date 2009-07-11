@@ -119,12 +119,13 @@ static LEVELNODE* GetHorizontalFence(UINT32 map_idx);
 static LEVELNODE* GetVerticalFence(UINT32 map_idx);
 
 
-BOOLEAN ValidDecalPlacement( UINT32 iMapIndex )
+bool ValidDecalPlacement(UINT32 const map_idx)
 {
-	if( GetVerticalWall( iMapIndex ) || GetHorizontalWall( iMapIndex )
-			|| GetVerticalFence( iMapIndex ) || GetHorizontalFence( iMapIndex ) )
-		return TRUE;
-	return FALSE;
+	return
+		GetVerticalWall(map_idx)   ||
+		GetHorizontalWall(map_idx) ||
+		GetVerticalFence(map_idx)  ||
+		GetHorizontalFence(map_idx);
 }
 
 
