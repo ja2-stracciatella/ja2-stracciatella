@@ -1310,65 +1310,59 @@ void HandleDialogueEnd( FACETYPE *pFace )
 }
 
 
-static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter)
+static void RenderFaceOverlay(VIDEO_OVERLAY* const blt)
 {
-	INT16 sFontX, sFontY;
-	wchar_t					zTownIDString[50];
+	INT16 sFontX;
+	INT16 sFontY;
 
+	if (!gfFacePanelActive) return;
 
-	if ( gpCurrentTalkingFace == NULL )
+	if (!gpCurrentTalkingFace) return;
+	FACETYPE    const&       f   = *gpCurrentTalkingFace;
+	SOLDIERTYPE const* const s   = FindSoldierByProfileID(f.ubCharacterNum);
+	INT16              const x   = blt->sX;
+	INT16              const y   = blt->sY;
+	SGPVSurface*       const dst = blt->uiDestBuff;
+
+	// a living soldier?..or external NPC?..choose panel based on this
+	SGPVObject const* const vo = s ? guiCOMPANEL : guiCOMPANELB;
+	BltVideoObject(dst, vo, 0, x, y);
+
+	// Display name, location ( if not current )
+	SetFontAttributes(BLOCKFONT2, FONT_MCOLOR_LTGRAY);
+
+	if (s)
 	{
-		return;
-	}
+		SetFontDestBuffer(dst);
 
-	if ( gfFacePanelActive )
-	{
-		const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(gpCurrentTalkingFace->ubCharacterNum);
+		FindFontCenterCoordinates(x + 12, y + 55, 73, 9, s->name, BLOCKFONT2, &sFontX, &sFontY);
+		MPrint(sFontX, sFontY, s->name);
 
-		// a living soldier?..or external NPC?..choose panel based on this
-		const SGPVObject* const vo = (pSoldier ? guiCOMPANEL : guiCOMPANELB);
-		BltVideoObject(pBlitter->uiDestBuff, vo, 0, pBlitter->sX, pBlitter->sY);
-
-		// Display name, location ( if not current )
-		SetFontAttributes(BLOCKFONT2, FONT_MCOLOR_LTGRAY);
-
-		if ( pSoldier )
+		// What sector are we in, (and is it the same as ours?)
+		if (s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY || s->bSectorZ != gbWorldSectorZ || s->fBetweenSectors)
 		{
-		  //reset the font dest buffer
-		  SetFontDestBuffer(pBlitter->uiDestBuff);
-
-			FindFontCenterCoordinates(pBlitter->sX + 12, pBlitter->sY + 55, 73, 9, pSoldier->name, BLOCKFONT2, &sFontX, &sFontY);
-			MPrint(sFontX, sFontY, pSoldier->name);
-
-			// What sector are we in, ( and is it the same as ours? )
-			if ( pSoldier->sSectorX != gWorldSectorX || pSoldier->sSectorY != gWorldSectorY || pSoldier->bSectorZ != gbWorldSectorZ || pSoldier->fBetweenSectors )
-			{
-				GetSectorIDString( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, zTownIDString, lengthof(zTownIDString), FALSE );
-
-        ReduceStringLength( zTownIDString, lengthof(zTownIDString), 64 , BLOCKFONT2 );
-
-				FindFontCenterCoordinates(pBlitter->sX + 12, pBlitter->sY + 68, 73, 9, zTownIDString, BLOCKFONT2, &sFontX, &sFontY);
-				MPrint(sFontX, sFontY, zTownIDString);
-			}
-
-		  //reset the font dest buffer
-			SetFontDestBuffer(FRAME_BUFFER);
-
-			DrawSoldierUIBars(*pSoldier, pBlitter->sX + 69, pBlitter->sY + 47, FALSE, pBlitter->uiDestBuff);
-		}
-		else
-		{
-			FindFontCenterCoordinates(pBlitter->sX + 9, pBlitter->sY + 55, 73, 9, gMercProfiles[gpCurrentTalkingFace->ubCharacterNum].zNickname, BLOCKFONT2, &sFontX, &sFontY);
-			MPrint(sFontX, sFontY, gMercProfiles[gpCurrentTalkingFace->ubCharacterNum].zNickname);
+			wchar_t sector_id[50];
+			GetSectorIDString(s->sSectorX, s->sSectorY, s->bSectorZ, sector_id, lengthof(sector_id), FALSE);
+			ReduceStringLength(sector_id, lengthof(sector_id), 64, BLOCKFONT2);
+			FindFontCenterCoordinates(x + 12, y + 68, 73, 9, sector_id, BLOCKFONT2, &sFontX, &sFontY);
+			MPrint(sFontX, sFontY, sector_id);
 		}
 
-		//RenderAutoFace( gpCurrentTalkingFace->iID );
+		SetFontDestBuffer(FRAME_BUFFER);
 
-		SGPBox const r = { 0, 0, gpCurrentTalkingFace->usFaceWidth, gpCurrentTalkingFace->usFaceHeight };
-		BltVideoSurface(pBlitter->uiDestBuff, gpCurrentTalkingFace->uiAutoDisplayBuffer, pBlitter->sX + 14, pBlitter->sY + 6, &r);
-
-		InvalidateRegion( pBlitter->sX, pBlitter->sY, pBlitter->sX + 99, pBlitter->sY + 98 );
+		DrawSoldierUIBars(*s, x + 69, y + 47, FALSE, dst);
 	}
+	else
+	{
+		wchar_t const* const name = GetProfile(f.ubCharacterNum).zNickname;
+		FindFontCenterCoordinates(x + 9, y + 55, 73, 9, name, BLOCKFONT2, &sFontX, &sFontY);
+		MPrint(sFontX, sFontY, name);
+	}
+
+	SGPBox const r = { 0, 0, f.usFaceWidth, f.usFaceHeight };
+	BltVideoSurface(dst, f.uiAutoDisplayBuffer, x + 14, y + 6, &r);
+
+	InvalidateRegion(x, y, x + 99, y + 98);
 }
 
 
