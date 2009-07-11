@@ -2749,67 +2749,65 @@ static void EnsureStatusOfEditorButtons(void)
 static void DrawObjectsBasedOnSelectionRegion(void);
 
 
-static void HandleMouseClicksInGameScreen(void)
+static void HandleMouseClicksInGameScreen()
 {
-	INT16 sX, sY;
-	BOOLEAN fPrevState;
+	GridNo const map_idx = GetMouseMapPos();
+	if (map_idx == NOWHERE) return;
 
-	const GridNo iMapIndex = GetMouseMapPos();
-	if (iMapIndex == NOWHERE) return;
+	// If in taskbar modes which don't process clicks in the world
+	if (iCurrentTaskbar == TASK_OPTIONS) return;
+	if (iCurrentTaskbar == TASK_NONE)    return;
 
-	if( iCurrentTaskbar == TASK_OPTIONS || iCurrentTaskbar == TASK_NONE )
-	{ //if in taskbar modes which don't process clicks in the world.
-		return;
-	}
-	if( !(gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA ) )
-	{	//if mouse cursor not in the game screen.
-		return;
-	}
+	// If mouse cursor not in the game screen.
+	if (!(gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA)) return;
 
-	fPrevState = gfRenderWorld;
+	BOOLEAN const prev_state = gfRenderWorld;
 
-	if( _LeftButtonDown )
+	if (_LeftButtonDown)
 	{
 		gfRenderWorld = TRUE;
 		// Are we trying to erase something?
-		if ( iDrawMode >= DRAW_MODE_ERASE )
+		if (iDrawMode >= DRAW_MODE_ERASE)
 		{
 			// Erasing can have a brush size larger than 1 tile
-			for ( sY = (INT16)gSelectRegion.iTop; sY <= (INT16)gSelectRegion.iBottom; sY++ )
+			for (INT16 y = gSelectRegion.iTop; y <= gSelectRegion.iBottom; ++y)
 			{
-				for ( sX = (INT16)gSelectRegion.iLeft; sX <= (INT16)gSelectRegion.iRight; sX++ )
+				for (INT16 x = gSelectRegion.iLeft; x <= gSelectRegion.iRight; ++x)
 				{
-					const GridNo pos = MAPROWCOLTOPOS(sY, sX);
-					if ( iDrawMode == (DRAW_MODE_LIGHT + DRAW_MODE_ERASE) )
+					GridNo const pos = MAPROWCOLTOPOS(y, x);
+					if (iDrawMode == DRAW_MODE_LIGHT + DRAW_MODE_ERASE)
 					{
 						RemoveLight(pos);
 					}
 					else
+					{
 						EraseMapTile(pos);
+					}
 				}
 			}
 
-			if( iDrawMode == DRAW_MODE_LIGHT + DRAW_MODE_ERASE )
+			if (iDrawMode == DRAW_MODE_LIGHT + DRAW_MODE_ERASE)
 				LightSpriteRenderAll();	// To adjust building's lighting
 			return;
 		}
 
-		switch ( iDrawMode )
+		switch (iDrawMode)
 		{
 			case DRAW_MODE_SCHEDULEACTION:
-				if( IsLocationSittableExcludingPeople( iMapIndex, FALSE ) )
+				if (IsLocationSittableExcludingPeople(map_idx, FALSE))
 				{
 					iDrawMode = DRAW_MODE_SCHEDULECONFIRM;
 					gfFirstPlacement = FALSE;
 				}
 				break;
+
 			case DRAW_MODE_NORTHPOINT:
 			case DRAW_MODE_WESTPOINT:
 			case DRAW_MODE_EASTPOINT:
 			case DRAW_MODE_SOUTHPOINT:
 			case DRAW_MODE_CENTERPOINT:
 			case DRAW_MODE_ISOLATEDPOINT:
-				SpecifyEntryPoint( iMapIndex );
+				SpecifyEntryPoint(map_idx);
 				break;
 
 			case DRAW_MODE_ENEMY:
@@ -2817,18 +2815,18 @@ static void HandleMouseClicksInGameScreen(void)
 			case DRAW_MODE_REBEL:
 			case DRAW_MODE_CIVILIAN:
 				// Handle adding mercs to the world
-				if( gfFirstPlacement )
+				if (gfFirstPlacement)
 				{
-					AddMercToWorld( iMapIndex );
+					AddMercToWorld(map_idx);
 					gfFirstPlacement = FALSE;
 				}
 				break;
 
 			case DRAW_MODE_LIGHT:
 				// Add a normal light to the world
-				if( gfFirstPlacement )
+				if (gfFirstPlacement)
 				{
-					PlaceLight(gsLightRadius, iMapIndex);
+					PlaceLight(gsLightRadius, map_idx);
 					gfFirstPlacement = FALSE;
 				}
 				break;
@@ -2836,28 +2834,30 @@ static void HandleMouseClicksInGameScreen(void)
 			case DRAW_MODE_SAW_ROOM:
 			case DRAW_MODE_ROOM:
 			case DRAW_MODE_CAVES:
-				if (gusSelectionType <= XLARGESELECTION)
-					ProcessAreaSelection( TRUE );
-				break;
-			case DRAW_MODE_NEWROOF:
-				ReplaceBuildingWithNewRoof( iMapIndex );
+				if (gusSelectionType <= XLARGESELECTION) ProcessAreaSelection(TRUE);
 				break;
 
-			case DRAW_MODE_WALLS:								PasteSingleWall( iMapIndex );					break;
-			case DRAW_MODE_DOORS:								PasteSingleDoor( iMapIndex );					break;
-			case DRAW_MODE_WINDOWS:							PasteSingleWindow( iMapIndex );				break;
-			case DRAW_MODE_ROOFS:								PasteSingleRoof( iMapIndex );					break;
-			case DRAW_MODE_BROKEN_WALLS:				PasteSingleBrokenWall( iMapIndex );		break;
-			case DRAW_MODE_DECOR:								PasteSingleDecoration( iMapIndex );		break;
-			case DRAW_MODE_DECALS:
-				if( ValidDecalPlacement( iMapIndex ) )
-					PasteSingleDecal( iMapIndex );
+			case DRAW_MODE_NEWROOF:
+				ReplaceBuildingWithNewRoof(map_idx);
 				break;
-			case DRAW_MODE_TOILET:							PasteSingleToilet( iMapIndex );				break;
-			case DRAW_MODE_SMART_WALLS:					PasteSmartWall( iMapIndex );					break;
-			case DRAW_MODE_SMART_DOORS:					PasteSmartDoor( iMapIndex );					break;
-			case DRAW_MODE_SMART_WINDOWS:				PasteSmartWindow( iMapIndex );				break;
-			case DRAW_MODE_SMART_BROKEN_WALLS:	PasteSmartBrokenWall( iMapIndex );		break;
+
+			case DRAW_MODE_WALLS:              PasteSingleWall(      map_idx); break;
+			case DRAW_MODE_DOORS:              PasteSingleDoor(      map_idx); break;
+			case DRAW_MODE_WINDOWS:            PasteSingleWindow(    map_idx); break;
+			case DRAW_MODE_ROOFS:              PasteSingleRoof(      map_idx); break;
+			case DRAW_MODE_BROKEN_WALLS:       PasteSingleBrokenWall(map_idx); break;
+			case DRAW_MODE_DECOR:              PasteSingleDecoration(map_idx); break;
+
+			case DRAW_MODE_DECALS:
+				if (ValidDecalPlacement(map_idx)) PasteSingleDecal(map_idx);
+				break;
+
+			case DRAW_MODE_TOILET:             PasteSingleToilet(    map_idx); break;
+			case DRAW_MODE_SMART_WALLS:        PasteSmartWall(       map_idx); break;
+			case DRAW_MODE_SMART_DOORS:        PasteSmartDoor(       map_idx); break;
+			case DRAW_MODE_SMART_WINDOWS:      PasteSmartWindow(     map_idx); break;
+			case DRAW_MODE_SMART_BROKEN_WALLS: PasteSmartBrokenWall( map_idx); break;
+
 			case DRAW_MODE_EXITGRID:
 			case DRAW_MODE_FLOORS:
 			case DRAW_MODE_GROUND:
@@ -2870,120 +2870,128 @@ static void HandleMouseClicksInGameScreen(void)
 					DrawObjectsBasedOnSelectionRegion();
 				}
 				else
-					gfRenderWorld = fPrevState;
+				{
+					gfRenderWorld = prev_state;
+				}
 				break;
+
 			case DRAW_MODE_DOORKEYS:
-				InitDoorEditing( iMapIndex );
+				InitDoorEditing(map_idx);
 				break;
+
 			case DRAW_MODE_KILL_BUILDING:
-				KillBuilding( iMapIndex );
+				KillBuilding(map_idx);
 				break;
+
 			case DRAW_MODE_COPY_BUILDING:
 			case DRAW_MODE_MOVE_BUILDING:
-				if( gfFirstPlacement )
+				if (gfFirstPlacement)
 				{
-					CopyBuilding( iMapIndex );
+					CopyBuilding(map_idx);
 					gfFirstPlacement = FALSE;
 				}
-				gfRenderWorld = fPrevState;
+				gfRenderWorld = prev_state;
 				break;
+
 			case DRAW_MODE_BANKS:
-				PasteBanks( iMapIndex, gsBanksSubIndex, TRUE );
+				PasteBanks(map_idx, gsBanksSubIndex, TRUE);
 				break;
+
 			case DRAW_MODE_ROADS:
-				PasteRoads( iMapIndex );
+				PasteRoads(map_idx);
 				break;
-			case (DRAW_MODE_GROUND + DRAW_MODE_FILL_AREA):
-				TerrainFill( iMapIndex );
-				//BeginFill( iMapIndex );
+
+			case DRAW_MODE_GROUND + DRAW_MODE_FILL_AREA:
+				TerrainFill(map_idx);
 				break;
+
 			case DRAW_MODE_PLACE_ITEM:
-				if( gfFirstPlacement )
+				if (gfFirstPlacement)
 				{
-					AddSelectedItemToWorld( (UINT16)iMapIndex );
+					AddSelectedItemToWorld(map_idx);
 					gfFirstPlacement = FALSE;
 				}
 				break;
+
 			default:
-				gfRenderWorld = fPrevState;
+				gfRenderWorld = prev_state;
 				break;
 		}
 	}
-	else if ( _RightButtonDown )
+	else if (_RightButtonDown)
 	{
 		gfRenderWorld = TRUE;
-		switch( iDrawMode )
+		switch (iDrawMode)
 		{
 			// Handle right clicking on a merc (for editing/moving him)
 			case DRAW_MODE_ENEMY:
 			case DRAW_MODE_CREATURE:
 			case DRAW_MODE_REBEL:
 			case DRAW_MODE_CIVILIAN:
-				HandleRightClickOnMerc( iMapIndex );
+				HandleRightClickOnMerc(map_idx);
 				break;
+
 			case DRAW_MODE_PLACE_ITEM:
-				HandleRightClickOnItem( (UINT16)iMapIndex );
+				HandleRightClickOnItem(map_idx);
 				break;
 
 			// Handle the right clicks in the main window to bring up the appropriate selection window
-			case DRAW_MODE_WALLS:					iEditorToolbarState = TBAR_MODE_GET_WALL;					break;
-			case DRAW_MODE_DOORS:					iEditorToolbarState = TBAR_MODE_GET_DOOR;					break;
-			case DRAW_MODE_WINDOWS:				iEditorToolbarState = TBAR_MODE_GET_WINDOW;				break;
-			case DRAW_MODE_ROOFS:					iEditorToolbarState = TBAR_MODE_GET_ROOF;					break;
-			case DRAW_MODE_BROKEN_WALLS:	iEditorToolbarState = TBAR_MODE_GET_BROKEN_WALL;	break;
-			case DRAW_MODE_DECOR:					iEditorToolbarState = TBAR_MODE_GET_DECOR;				break;
-			case DRAW_MODE_DECALS:				iEditorToolbarState = TBAR_MODE_GET_DECAL;				break;
-			case DRAW_MODE_FLOORS:				iEditorToolbarState = TBAR_MODE_GET_FLOOR;				break;
-			case DRAW_MODE_TOILET:				iEditorToolbarState = TBAR_MODE_GET_TOILET;				break;
+			case DRAW_MODE_WALLS:        iEditorToolbarState = TBAR_MODE_GET_WALL;        break;
+			case DRAW_MODE_DOORS:        iEditorToolbarState = TBAR_MODE_GET_DOOR;        break;
+			case DRAW_MODE_WINDOWS:      iEditorToolbarState = TBAR_MODE_GET_WINDOW;      break;
+			case DRAW_MODE_ROOFS:        iEditorToolbarState = TBAR_MODE_GET_ROOF;        break;
+			case DRAW_MODE_BROKEN_WALLS: iEditorToolbarState = TBAR_MODE_GET_BROKEN_WALL; break;
+			case DRAW_MODE_DECOR:        iEditorToolbarState = TBAR_MODE_GET_DECOR;       break;
+			case DRAW_MODE_DECALS:       iEditorToolbarState = TBAR_MODE_GET_DECAL;       break;
+			case DRAW_MODE_FLOORS:       iEditorToolbarState = TBAR_MODE_GET_FLOOR;       break;
+			case DRAW_MODE_TOILET:       iEditorToolbarState = TBAR_MODE_GET_TOILET;      break;
 
-			case DRAW_MODE_ROOM:					iEditorToolbarState = TBAR_MODE_GET_ROOM;					break;
-			case DRAW_MODE_NEWROOF:				iEditorToolbarState = TBAR_MODE_GET_NEW_ROOF;			break;
-			case DRAW_MODE_SLANTED_ROOF:	iEditorToolbarState = TBAR_MODE_GET_ROOM;					break;
-			case DRAW_MODE_DEBRIS:				iEditorToolbarState = TBAR_MODE_GET_DEBRIS;				break;
-			case DRAW_MODE_OSTRUCTS:			iEditorToolbarState = TBAR_MODE_GET_OSTRUCTS;			break;
-			case DRAW_MODE_OSTRUCTS1:			iEditorToolbarState = TBAR_MODE_GET_OSTRUCTS1;		break;
-			case DRAW_MODE_OSTRUCTS2:			iEditorToolbarState = TBAR_MODE_GET_OSTRUCTS2;		break;
-			case DRAW_MODE_BANKS:					iEditorToolbarState = TBAR_MODE_GET_BANKS;				break;
-			case DRAW_MODE_ROADS:					iEditorToolbarState = TBAR_MODE_GET_ROADS;				break;
+			case DRAW_MODE_ROOM:         iEditorToolbarState = TBAR_MODE_GET_ROOM;        break;
+			case DRAW_MODE_NEWROOF:      iEditorToolbarState = TBAR_MODE_GET_NEW_ROOF;    break;
+			case DRAW_MODE_SLANTED_ROOF: iEditorToolbarState = TBAR_MODE_GET_ROOM;        break;
+			case DRAW_MODE_DEBRIS:       iEditorToolbarState = TBAR_MODE_GET_DEBRIS;      break;
+			case DRAW_MODE_OSTRUCTS:     iEditorToolbarState = TBAR_MODE_GET_OSTRUCTS;    break;
+			case DRAW_MODE_OSTRUCTS1:    iEditorToolbarState = TBAR_MODE_GET_OSTRUCTS1;   break;
+			case DRAW_MODE_OSTRUCTS2:    iEditorToolbarState = TBAR_MODE_GET_OSTRUCTS2;   break;
+			case DRAW_MODE_BANKS:        iEditorToolbarState = TBAR_MODE_GET_BANKS;       break;
+			case DRAW_MODE_ROADS:        iEditorToolbarState = TBAR_MODE_GET_ROADS;       break;
 
 			case DRAW_MODE_CAVES:
-				if (gusSelectionType <= XLARGESELECTION)
-					ProcessAreaSelection( FALSE );
+				if (gusSelectionType <= XLARGESELECTION) ProcessAreaSelection(FALSE);
 				break;
 
 			case DRAW_MODE_SMART_WALLS:
-				EraseWalls( iMapIndex );
+				EraseWalls(map_idx);
 				break;
+
 			case DRAW_MODE_SMART_BROKEN_WALLS:
 			case DRAW_MODE_SMART_WINDOWS:
 			case DRAW_MODE_SMART_DOORS:
-				RestoreWalls( iMapIndex );
+				RestoreWalls(map_idx);
 				break;
+
 			case DRAW_MODE_EXITGRID:
-				if( GetExitGrid( (UINT16)iMapIndex, &gExitGrid ) )
-					ApplyNewExitGridValuesToTextFields();
+				if (GetExitGrid(map_idx, &gExitGrid)) ApplyNewExitGridValuesToTextFields();
 				break;
+
 			default:
-				gfRenderWorld = fPrevState;
+				gfRenderWorld = prev_state;
 				break;
 		}
 	}
-	else if( !_LeftButtonDown && !gfFirstPlacement )
+	else if (!gfFirstPlacement)
 	{
-		switch( iDrawMode )
+		switch (iDrawMode)
 		{
 			case DRAW_MODE_SCHEDULECONFIRM:
-				if( IsLocationSittableExcludingPeople( iMapIndex, FALSE ) )
+				if (IsLocationSittableExcludingPeople(map_idx, FALSE))
 				{
-					RegisterCurrentScheduleAction( iMapIndex );
+					RegisterCurrentScheduleAction(map_idx);
 				}
 				break;
-			case DRAW_MODE_COPY_BUILDING:
-				PasteBuilding( iMapIndex );
-				break;
-			case DRAW_MODE_MOVE_BUILDING:
-				MoveBuilding( iMapIndex );
-				break;
+
+			case DRAW_MODE_COPY_BUILDING: PasteBuilding(map_idx); break;
+			case DRAW_MODE_MOVE_BUILDING: MoveBuilding(map_idx);  break;
 		}
 	}
 }
