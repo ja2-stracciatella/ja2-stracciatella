@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Font.h"
 #include "HImage.h"
 #include "Laptop.h"
@@ -442,12 +444,12 @@ void RenderPersonnel(void)
 }
 
 
-static void DisplayCharStats(const SOLDIERTYPE* s);
-static void DisplayEmploymentinformation(const SOLDIERTYPE* s);
-static void DisplayCharInventory(const SOLDIERTYPE*);
+static void DisplayCharStats(SOLDIERTYPE const& s);
+static void DisplayEmploymentinformation(SOLDIERTYPE const& s);
+static void DisplayCharInventory(SOLDIERTYPE const&);
 
 
-static void RenderPersonnelStats(const SOLDIERTYPE* const s)
+static void RenderPersonnelStats(SOLDIERTYPE const& s)
 {
 	// will render the stats of person iId
 	SetFontAttributes(PERS_FONT, PERS_TEXT_FONT_COLOR);
@@ -625,7 +627,7 @@ static void RightButtonCallBack(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void DisplayCharName(const SOLDIERTYPE* const s)
+static void DisplayCharName(SOLDIERTYPE const& s)
 {
 	// get merc's nickName, assignment, and sector location info
 	INT16 sX, sY;
@@ -633,11 +635,11 @@ static void DisplayCharName(const SOLDIERTYPE* const s)
 	SetFontAttributes(CHAR_NAME_FONT, PERS_TEXT_FONT_COLOR);
 
 	const wchar_t* sTownName = NULL;
-	if (s->bAssignment != ASSIGNMENT_POW &&
-			s->bAssignment != IN_TRANSIT)
+	if (s.bAssignment != ASSIGNMENT_POW &&
+			s.bAssignment != IN_TRANSIT)
 	{
 		// name of town, if any
-		INT8 bTownId = GetTownIdForSector(s->sSectorX, s->sSectorY);
+		INT8 bTownId = GetTownIdForSector(s.sSectorX, s.sSectorY);
 		if (bTownId != BLANK_SECTOR) sTownName = pTownNames[bTownId];
 	}
 
@@ -645,17 +647,17 @@ static void DisplayCharName(const SOLDIERTYPE* const s)
 	if (sTownName != NULL)
 	{
 		//nick name - town name
-		swprintf(sString, lengthof(sString), L"%ls - %ls", s->name, sTownName);
+		swprintf(sString, lengthof(sString), L"%ls - %ls", s.name, sTownName);
 	}
 	else
 	{
 		//nick name
-		wcslcpy(sString, s->name, lengthof(sString));
+		wcslcpy(sString, s.name, lengthof(sString));
 	}
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, sString, CHAR_NAME_FONT, &sX, &sY);
 	MPrint(sX, CHAR_NAME_Y, sString);
 
-	const wchar_t* Assignment = pPersonnelAssignmentStrings[s->bAssignment];
+	const wchar_t* Assignment = pPersonnelAssignmentStrings[s.bAssignment];
 	FindFontCenterCoordinates(CHAR_NAME_LOC_X, 0, CHAR_NAME_LOC_WIDTH, 0, Assignment, CHAR_NAME_FONT, &sX, &sY);
 	MPrint(sX, CHAR_LOC_Y, Assignment);
 }
@@ -710,17 +712,17 @@ static void PrintStat(UINT16 stat, INT32 y, const wchar_t* text)
 }
 
 
-static void DisplayCharStats(const SOLDIERTYPE* const s)
+static void DisplayCharStats(SOLDIERTYPE const& s)
 {
 	wchar_t sString[50];
 	INT16 sX;
 	INT16 sY;
 
-	MERCPROFILESTRUCT const& p          = GetProfile(s->ubProfile);
-	BOOLEAN           const  fAmIaRobot = AM_A_ROBOT(s);
+	MERCPROFILESTRUCT const& p          = GetProfile(s.ubProfile);
+	BOOLEAN           const  fAmIaRobot = AM_A_ROBOT(&s);
 
 	// Health
-	if (s->bAssignment != ASSIGNMENT_POW)
+	if (s.bAssignment != ASSIGNMENT_POW)
 	{
 		if (p.bLifeDelta > 0)
 		{
@@ -728,7 +730,7 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 			FindFontRightCoordinates(pers_stat_delta_x, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
 			MPrint(sX, pers_stat_y[0], sString);
 		}
-		swprintf(sString, lengthof(sString), L"%d/%d", s->bLife, s->bLifeMax);
+		swprintf(sString, lengthof(sString), L"%d/%d", s.bLife, s.bLifeMax);
 	}
 	else
 	{
@@ -983,7 +985,7 @@ try
 catch (...) { /* XXX ignore */ }
 
 
-static const SOLDIERTYPE* GetSoldierOfCurrentSlot(void);
+static SOLDIERTYPE const& GetSoldierOfCurrentSlot(void);
 
 
 static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
@@ -1011,7 +1013,7 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			fReDrawScreenFlag = TRUE;
 
 			if (iCurrentPersonSelectedId != -1 &&
-					GetSoldierOfCurrentSlot()->bAssignment == ASSIGNMENT_POW &&
+					GetSoldierOfCurrentSlot().bAssignment == ASSIGNMENT_POW &&
 					gubPersonnelInfoState == PRSNL_INV)
 			{
 				gubPersonnelInfoState = PRSNL_STATS;
@@ -1063,7 +1065,7 @@ static void PersonnelPortraitCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 			//if the selected merc is valid, and they are a POW, change to the inventory display
 			if (iCurrentPersonSelectedId != -1 &&
-					GetSoldierOfCurrentSlot()->bAssignment == ASSIGNMENT_POW &&
+					GetSoldierOfCurrentSlot().bAssignment == ASSIGNMENT_POW &&
 					gubPersonnelInfoState == PRSNL_INV)
 			{
 				gubPersonnelInfoState = PRSNL_STATS;
@@ -1085,7 +1087,7 @@ struct PastMercInfo
 };
 
 
-static void DisplayAmountOnChar(const SOLDIERTYPE*);
+static void DisplayAmountOnChar(SOLDIERTYPE const&);
 static void DisplayDepartedCharName(MERCPROFILESTRUCT const&, INT32 iState);
 static void DisplayDepartedCharStats(MERCPROFILESTRUCT const&, INT32 iState);
 static void DisplayHighLightBox(INT32 sel_id);
@@ -1103,8 +1105,8 @@ static void DisplayFaceOfDisplayedMerc(void)
 	// if showing inventory, leave
 	if (fCurrentTeamMode)
 	{
-		const SOLDIERTYPE* const s = GetSoldierOfCurrentSlot();
-		RenderPersonnelFace(GetProfile(s->ubProfile), s->bLife > 0);
+		SOLDIERTYPE const& s = GetSoldierOfCurrentSlot();
+		RenderPersonnelFace(GetProfile(s.ubProfile), s.bLife > 0);
 		DisplayCharName(s);
 		RenderPersonnelStats(s);
 		DisplayAmountOnChar(s);
@@ -1125,7 +1127,7 @@ static void RenderSliderBarForPersonnelInventory(void);
 
 
 // display the inventory for this merc
-static void DisplayCharInventory(const SOLDIERTYPE* const s)
+static void DisplayCharInventory(SOLDIERTYPE const& s)
 {
 	CreateDestroyPersonnelInventoryScrollButtons();
 
@@ -1135,15 +1137,15 @@ static void DisplayCharInventory(const SOLDIERTYPE* const s)
 	RenderSliderBarForPersonnelInventory();
 
 	// if this is a robot, don't display any inventory
-	if (AM_A_ROBOT(s)) return;
+	if (AM_A_ROBOT(&s)) return;
 
 	INT32 item_count = -(INT32)uiCurrentInventoryIndex;
 	for (UINT pos = 0; pos < NUM_INV_SLOTS; ++pos)
 	{
 		//if the character is a robot, only display the inv for the hand pos
-		if (s->ubProfile == ROBOT && pos != HANDPOS) continue; // XXX can this ever be true? before is if (AM_A_ROBOT()) return;
+		if (s.ubProfile == ROBOT && pos != HANDPOS) continue; // XXX can this ever be true? before is if (AM_A_ROBOT()) return;
 
-		OBJECTTYPE const& o       = s->inv[pos];
+		OBJECTTYPE const& o       = s.inv[pos];
 		INT32      const  o_count = o.ubNumberOfObjects;
 		if (o_count == 0) continue;
 
@@ -1294,7 +1296,7 @@ static INT32 GetNumberOfInventoryItemsOnCurrentMerc(void)
 	if (!fCurrentTeamMode) return 0;
 
 	UINT32             ubCount = 0;
-	SOLDIERTYPE const& s       = *GetSoldierOfCurrentSlot();
+	SOLDIERTYPE const& s       = GetSoldierOfCurrentSlot();
 	CFOR_ALL_SOLDIER_INV_SLOTS(i, s)
 	{
 		OBJECTTYPE const& o = *i;
@@ -2120,17 +2122,17 @@ static void SelectFirstDisplayedMerc(void)
 }
 
 
-static const SOLDIERTYPE* GetSoldierOfCurrentSlot(void)
+static SOLDIERTYPE const& GetSoldierOfCurrentSlot(void)
 {
 	Assert(fCurrentTeamMode);
 
 	INT32 slot = iCurrentPersonSelectedId;
 	CFOR_ALL_PERSONNEL(s)
 	{
-		if (slot-- == 0) return s;
+		if (slot-- == 0) return *s;
 	}
 
-	return NULL;
+	throw std::logic_error("nobody selected");
 }
 
 
@@ -2281,13 +2283,13 @@ static void EmployementInfoButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 
 // get the total amt of money on this guy
-static INT32 GetFundsOnMerc(const SOLDIERTYPE* pSoldier)
+static INT32 GetFundsOnMerc(SOLDIERTYPE const& s)
 {
 	INT32 iCurrentAmount = 0;
 	// run through mercs pockets, if any money in them, add to total
 
 	// run through grunts pockets and count all the spare change
-	CFOR_ALL_SOLDIER_INV_SLOTS(i, *pSoldier)
+	CFOR_ALL_SOLDIER_INV_SLOTS(i, s)
 	{
 		if (Item[i->usItem].usItemClass == IC_MONEY)
 		{
@@ -2331,8 +2333,7 @@ static void UpDateStateOfStartButton(void)
 			EnableButton(giPersonnelATMStartButton[PERSONNEL_INV_BTN]);
 			EnableButton(giPersonnelATMStartButton[PERSONNEL_EMPLOYMENT_BTN]);
 
-			const SOLDIERTYPE* const s = GetSoldierOfCurrentSlot();
-			if (s != NULL && s->bAssignment == ASSIGNMENT_POW)
+			if (GetSoldierOfCurrentSlot().bAssignment == ASSIGNMENT_POW)
 			{
 				DisableButton(giPersonnelATMStartButton[PERSONNEL_INV_BTN]);
 
@@ -2361,7 +2362,7 @@ static void UpDateStateOfStartButton(void)
 }
 
 
-static void DisplayAmountOnChar(const SOLDIERTYPE* const s)
+static void DisplayAmountOnChar(SOLDIERTYPE const& s)
 {
 	// will display the amount that the merc is carrying on him or herself
 	CHAR16 sString[64];
@@ -2386,13 +2387,13 @@ static void HandlePersonnelKeyboard(void)
 }
 
 
-static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
+static void DisplayEmploymentinformation(SOLDIERTYPE const& s)
 {
 	wchar_t sString[50];
 	wchar_t sStringA[50];
 	INT16 sX, sY;
 
-	MERCPROFILESTRUCT const& p = GetProfile(s->ubProfile);
+	MERCPROFILESTRUCT const& p = GetProfile(s.ubProfile);
 
 	// display the stats for a char
 	for (INT32 i = 0; i < MAX_STATS; i++)
@@ -2401,19 +2402,19 @@ static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 		{
 			case 0: //Remaining Contract:
 			{
-				if (s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC || s->ubProfile == SLAY)
+				if (s.ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC || s.ubProfile == SLAY)
 				{
 					const UINT32 uiMinutesInDay = 24 * 60;
-					INT32 iTimeLeftOnContract = s->iEndofContractTime - GetWorldTotalMin();
+					INT32 iTimeLeftOnContract = s.iEndofContractTime - GetWorldTotalMin();
 					if (iTimeLeftOnContract < 0) iTimeLeftOnContract = 0;
 
 					//if the merc is in transit
-					if (s->bAssignment == IN_TRANSIT)
+					if (s.bAssignment == IN_TRANSIT)
 					{
 						//and if the ttime left on the cotract is greater then the contract time
-						if (iTimeLeftOnContract > (INT32)(s->iTotalContractLength * uiMinutesInDay))
+						if (iTimeLeftOnContract > (INT32)(s.iTotalContractLength * uiMinutesInDay))
 						{
-							iTimeLeftOnContract = (s->iTotalContractLength * uiMinutesInDay);
+							iTimeLeftOnContract = (s.iTotalContractLength * uiMinutesInDay);
 						}
 					}
 					// if there is going to be a both days and hours left on the contract
@@ -2421,15 +2422,15 @@ static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 					const INT hours = iTimeLeftOnContract % uiMinutesInDay / 60;
 					if (days > 0)
 					{
-						swprintf(sString, lengthof(sString), L"%d%ls %d%ls / %d%ls", days, gpStrategicString[STR_PB_DAYS_ABBREVIATION], hours, gpStrategicString[STR_PB_HOURS_ABBREVIATION], s->iTotalContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
+						swprintf(sString, lengthof(sString), L"%d%ls %d%ls / %d%ls", days, gpStrategicString[STR_PB_DAYS_ABBREVIATION], hours, gpStrategicString[STR_PB_HOURS_ABBREVIATION], s.iTotalContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 					}
 					else //else there is under a day left
 					{
 						//DEF: removed 2/7/99
-						swprintf(sString, lengthof(sString), L"%d%ls / %d%ls", hours, gpStrategicString[STR_PB_HOURS_ABBREVIATION], s->iTotalContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
+						swprintf(sString, lengthof(sString), L"%d%ls / %d%ls", hours, gpStrategicString[STR_PB_HOURS_ABBREVIATION], s.iTotalContractLength, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 					}
 				}
-				else if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
+				else if (s.ubWhatKindOfMercAmI == MERC_TYPE__MERC)
 				{
 					wcscpy(sString, gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION]);
 				}
@@ -2462,10 +2463,10 @@ static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 				MPrint(sX, pers_stat_y[i], sString);
 
 				INT32 salary;
-				switch (s->ubWhatKindOfMercAmI)
+				switch (s.ubWhatKindOfMercAmI)
 				{
 					case MERC_TYPE__AIM_MERC:
-						switch (s->bTypeOfLastContract)
+						switch (s.bTypeOfLastContract)
 						{
 							case CONTRACT_EXTEND_2_WEEK: salary = p.uiBiWeeklySalary / 14; break;
 							case CONTRACT_EXTEND_1_WEEK: salary = p.uiWeeklySalary   /  7; break;
@@ -2489,7 +2490,7 @@ static void DisplayEmploymentinformation(const SOLDIERTYPE* const s)
 
 			case 5: // medical deposit
 				//if its a merc merc, display the salary oweing
-				if (s->ubWhatKindOfMercAmI == MERC_TYPE__MERC)
+				if (s.ubWhatKindOfMercAmI == MERC_TYPE__MERC)
 				{
 					MPrint(pers_stat_x, pers_stat_y[i - 1], pPersonnelScreenStrings[PRSNL_TXT_UNPAID_AMOUNT]);
 					SPrintMoney(sString, p.sSalary * p.iMercMercContractLength);
