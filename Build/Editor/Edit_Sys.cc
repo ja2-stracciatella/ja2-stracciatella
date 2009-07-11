@@ -321,104 +321,91 @@ void PasteSingleToilet( UINT32 iMapIndex )
 }
 
 
-//	Common paste routine for PasteSingleWall, PasteSingleDoor, PasteSingleDecoration, and
-//	PasteSingleDecor (above).
-static void PasteSingleWallCommon(UINT32 iMapIndex)
+/* Common paste routine for PasteSingleWall, PasteSingleDoor,
+ * PasteSingleDecoration, and PasteSingleDecor (above). */
+static void PasteSingleWallCommon(UINT32 const map_idx)
 {
-	UINT16				usUseIndex;
-	UINT16				usUseObjIndex;
+	if (map_idx >= 0x8000) return;
 
-	if ( iMapIndex < 0x8000 )
+	AddToUndoList(map_idx);
+
+	UINT16 const use_idx     = pSelList[iCurBank].usIndex;
+	UINT16 const use_obj_idx = pSelList[iCurBank].uiObject;
+	UINT16 const idx         = gTileTypeStartIndex[use_obj_idx] + use_idx;
+
+	// Temp stuff for onroof things
+	if (FIRSTONROOF <= use_obj_idx && use_obj_idx <= SECONDONROOF)
 	{
-		AddToUndoList( iMapIndex );
+		// Add to onroof section
+		AddOnRoofToTail(map_idx, idx);
 
-		usUseIndex = pSelList[ iCurBank ].usIndex;
-		usUseObjIndex = (UINT16)pSelList[ iCurBank ].uiObject;
+		INT16 const buddy_num = gTileDatabase[idx].sBuddyNum;
+		if (buddy_num != -1) AddOnRoofToTail(map_idx, buddy_num);
+		return;
+	}
 
-		// TEMP STUFF FOR ONROOF THINGS!
-		if ( (usUseObjIndex >= FIRSTONROOF) && (usUseObjIndex <= SECONDONROOF ) )
-		{
-			// Add to onroof section!
-			AddOnRoofToTail( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) );
+	// Make sure A-frames are on roof level
+	if (WALL_AFRAME_START <= use_idx && use_idx <= WALL_AFRAME_END)
+	{
+		AddRoofToTail(map_idx, idx);
+		return;
+	}
 
-			const INT16 buddy_num = gTileDatabase[gTileTypeStartIndex[usUseObjIndex] + usUseIndex].sBuddyNum;
-			if (buddy_num != -1) AddOnRoofToTail(iMapIndex, buddy_num);
-			return;
-		}
+	if (FIRSTDOOR <= use_obj_idx && use_obj_idx <= LASTDOOR)
+	{
+		// Place shadow for doors
+		if (!gfBasement)
+			AddExclusiveShadow(map_idx, gTileTypeStartIndex[use_obj_idx - FIRSTDOOR + FIRSTDOORSHADOW] + use_idx);
+	}
 
-		// Make sure A-frames are on roof level!
-		if ( ( usUseIndex >= WALL_AFRAME_START && usUseIndex <= WALL_AFRAME_END ) )
+	// Is it a wall?
+	if (FIRSTWALL <= use_obj_idx && use_obj_idx <= LASTWALL)
+	{
+		// ATE: If it is a wall shadow, place differenty!
+		if (use_idx == 29 || use_idx == 30)
 		{
-			AddRoofToTail( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) );
-			return;
+			if (!gfBasement) AddExclusiveShadow(map_idx, idx);
 		}
-
-		if ( (usUseObjIndex >= FIRSTDOOR) && (usUseObjIndex <= LASTDOOR) )
+		else
+		{ // Slap down wall/window/door/decoration (no smoothing)
+			AddWallToStructLayer(map_idx, idx, TRUE);
+		}
+	}
+	else if ((FIRSTDOOR <= use_obj_idx && use_obj_idx <= LASTDOOR) ||
+			(FIRSTDECORATIONS <= use_obj_idx && use_obj_idx <= LASTDECORATIONS))
+	{ // Slap down wall/window/door/decoration (no smoothing)
+		AddWallToStructLayer(map_idx, idx, TRUE);
+	}
+	else if ((FIRSTROOF <= use_obj_idx && use_obj_idx <= LASTROOF) ||
+			(FIRSTSLANTROOF <= use_obj_idx && use_obj_idx <= LASTSLANTROOF))
+	{ // Put a roof on this tile (even if nothing else is here)
+		RemoveAllRoofsOfTypeRange(map_idx, FIRSTROOF, LASTROOF);
+		AddRoofToTail(map_idx, idx);
+	}
+	else if (FIRSTFLOOR <= use_obj_idx && use_obj_idx <= LASTFLOOR)
+	{ // Drop a floor on this tile
+		if (LEVELNODE const* const land = FindTypeInLandLayer(map_idx, use_obj_idx))
 		{
-			// PLace shadow for doors
-			if( !gfBasement )
-				AddExclusiveShadow( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex - FIRSTDOOR + FIRSTDOORSHADOW ] + usUseIndex  ) );
+			RemoveLand(map_idx, land->usIndex);
 		}
-
-		// Is it a wall?
-		if ( ((usUseObjIndex >= FIRSTWALL) && (usUseObjIndex <= LASTWALL)) )
-		{
-			// ATE		If it is a wall shadow, place differenty!
-			if ( usUseIndex == 29 || usUseIndex == 30 )
-			{
-				if( !gfBasement )
-					AddExclusiveShadow( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) );
-			}
-			else
-			{
-				// Slap down wall/window/door/decoration (no smoothing)
-				AddWallToStructLayer( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex), TRUE );
-			}
-		}
-		// Is it a door/window/decoration?
-		else if ( ( (usUseObjIndex >= FIRSTDOOR) && (usUseObjIndex <= LASTDOOR)) ||
-				 ((usUseObjIndex >= FIRSTDECORATIONS) && (usUseObjIndex <= LASTDECORATIONS)) )
-		{
-			// Slap down wall/window/door/decoration (no smoothing)
-			AddWallToStructLayer( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex), TRUE );
-		}
-		else if ( ((usUseObjIndex >= FIRSTROOF) && (usUseObjIndex <= LASTROOF))  ||
-							((usUseObjIndex >= FIRSTSLANTROOF) && (usUseObjIndex <= LASTSLANTROOF)) )
-		{
-			// Put a roof on this tile (even if nothing else is here)
-			RemoveAllRoofsOfTypeRange( iMapIndex, FIRSTROOF, LASTROOF );
-			AddRoofToTail( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) );
-		}
-		else if ( (usUseObjIndex >= FIRSTFLOOR) && (usUseObjIndex <= LASTFLOOR) )
-		{
-			// Drop a floor on this tile
-			if (LEVELNODE const* const land = FindTypeInLandLayer(iMapIndex, usUseObjIndex))
-			{
-				RemoveLand(iMapIndex, land->usIndex);
-			}
-
-			AddLandToHead( iMapIndex, (UINT16)(gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex) );
-		}
-		else if( usUseObjIndex >= FIRSTWALLDECAL && usUseObjIndex <= LASTWALLDECAL ||
-						 usUseObjIndex >= FIFTHWALLDECAL && usUseObjIndex <= EIGTHWALLDECAL )
-		{
-			// Plop a decal here
-			RemoveAllStructsOfTypeRange( iMapIndex, FIRSTWALLDECAL, LASTWALLDECAL );
-			RemoveAllStructsOfTypeRange( iMapIndex, FIFTHWALLDECAL, EIGTHWALLDECAL );
-
-			AddStructToTail( iMapIndex, (UINT16)( gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex ) );
-		}
-		else if ( usUseObjIndex >= FIRSTISTRUCT && usUseObjIndex <= LASTISTRUCT ||
-							usUseObjIndex >= FIFTHISTRUCT && usUseObjIndex <= EIGHTISTRUCT )
-		{
-			AddStructToHead( iMapIndex, (UINT16)( gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex ) );
-		}
-		else if( usUseObjIndex == FIRSTSWITCHES )
-		{
-			AddStructToTail( iMapIndex, (UINT16)( gTileTypeStartIndex[ usUseObjIndex ] + usUseIndex ) );
-		}
-
- 	}
+		AddLandToHead(map_idx, idx);
+	}
+	else if (FIRSTWALLDECAL <= use_obj_idx && use_obj_idx <= LASTWALLDECAL ||
+			FIFTHWALLDECAL <= use_obj_idx && use_obj_idx <= EIGTHWALLDECAL)
+	{ // Plop a decal here
+		RemoveAllStructsOfTypeRange(map_idx, FIRSTWALLDECAL, LASTWALLDECAL);
+		RemoveAllStructsOfTypeRange(map_idx, FIFTHWALLDECAL, EIGTHWALLDECAL);
+		AddStructToTail(map_idx, idx);
+	}
+	else if (FIRSTISTRUCT <= use_obj_idx && use_obj_idx <= LASTISTRUCT ||
+			FIFTHISTRUCT <= use_obj_idx && use_obj_idx <= EIGHTISTRUCT)
+	{
+		AddStructToHead(map_idx, idx);
+	}
+	else if (use_obj_idx == FIRSTSWITCHES)
+	{
+		AddStructToTail(map_idx, idx);
+	}
 }
 
 
