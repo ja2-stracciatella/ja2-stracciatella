@@ -1688,9 +1688,6 @@ const wchar_t* pMoralStrings[] =
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
 const wchar_t str_left_equipment[]   = L"%ls оставляет снаряжение в %ls (%c%d).";
 
-const wchar_t str_location_omerta[]  = L"Омерте (A9)";
-const wchar_t str_location_drassen[] = L"Драссене (B13)";
-
 // Status that appears on the Map Screen
 
 const wchar_t* pMapScreenStatusStrings[] =
@@ -1817,8 +1814,8 @@ const wchar_t* pMiscMapScreenMouseRegionHelpText[] =
 };
 
 
-const wchar_t str_he_leaves_where_drop_equipment[]  = L"%ls должен оставить снаряжение в (%ls) или потом, в %ls, перед вылетом из Арулько?";
-const wchar_t str_she_leaves_where_drop_equipment[] = L"%ls должна оставить свое снаряжение в (%ls) или потом, в %ls, перед вылетом из Арулько?";
+const wchar_t str_he_leaves_where_drop_equipment[]  = L"%ls должен оставить снаряжение в (%ls) или потом, в %ls (%ls), перед вылетом из Арулько?";
+const wchar_t str_she_leaves_where_drop_equipment[] = L"%ls должна оставить свое снаряжение в (%ls) или потом, в %ls (%ls), перед вылетом из Арулько?";
 const wchar_t str_he_leaves_drops_equipment[]       = L"%ls собрался уйти, оставив свое снаряжение в %ls.";
 const wchar_t str_she_leaves_drops_equipment[]      = L"%ls собралась уйти, оставив свое снаряжение в %ls.";
 

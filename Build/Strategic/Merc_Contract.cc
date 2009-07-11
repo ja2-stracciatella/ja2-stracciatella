@@ -829,31 +829,9 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 		add_rehire_button = false;
 	}
 
-	INT16   const  x         = s.sSectorX;
-	INT16   const  y         = s.sSectorY;
-	INT8    const  z         = s.bSectorZ;
-	wchar_t const* elsewhere = 0;
-	if (s.ubProfile < FIRST_RPC || FIRST_NPC <= s.ubProfile)
-	{ // The character is not an RPC
-		if (!StrategicMap[CALCULATE_STRATEGIC_INDEX(AIRPORT_X, AIRPORT_Y)].fEnemyControlled)
-		{ // Drassen is player controlled
-			if (x != AIRPORT_X || y != AIRPORT_Y || z != 0)
-			{
-				// Set string for generic button
-				wcslcpy(gzUserDefinedButton2, L"B13", lengthof(gzUserDefinedButton2));
-				elsewhere = str_location_drassen;
-			}
-		}
-		else
-		{
-			if (x != OMERTA_LEAVE_EQUIP_SECTOR_X || y != OMERTA_LEAVE_EQUIP_SECTOR_Y || z != 0)
-			{
-				// Set string for generic button
-				wcslcpy(gzUserDefinedButton2, L"A9", lengthof(gzUserDefinedButton2));
-				elsewhere = str_location_omerta;
-			}
-		}
-	}
+	INT16 const  x = s.sSectorX;
+	INT16 const  y = s.sSectorY;
+	INT8  const  z = s.bSectorZ;
 
 	wchar_t town_sector[16];
 	GetShortSectorString(x, y, town_sector, lengthof(town_sector));
@@ -861,17 +839,25 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 	wchar_t         msg[1024];
 	MessageBoxFlags flags;
 	INT8 const      sex = GetProfile(s.ubProfile).bSex;
-	if (elsewhere)
-	{
-		// Set string for generic button
-		wcslcpy(gzUserDefinedButton1, town_sector, lengthof(gzUserDefinedButton1));
+	if (s.ubProfile < FIRST_RPC || FIRST_NPC <= s.ubProfile)
+	{ // The character is not an RPC
+		INT16 const elsewhere =
+			!StrategicMap[CALCULATE_STRATEGIC_INDEX(AIRPORT_X, AIRPORT_Y)].fEnemyControlled ? SECTOR(AIRPORT_X, AIRPORT_Y) :
+			SECTOR(OMERTA_LEAVE_EQUIP_SECTOR_X, OMERTA_LEAVE_EQUIP_SECTOR_Y);
+		if (elsewhere == SECTOR(x, y) && z == 0) goto no_choice;
 
+		// Set strings for generic buttons
+		wcslcpy(gzUserDefinedButton1, town_sector, lengthof(gzUserDefinedButton1));
+		GetShortSectorString(SECTORX(elsewhere), SECTORY(elsewhere), gzUserDefinedButton2, lengthof(gzUserDefinedButton2));
+
+		wchar_t const* const town = g_towns_locative[GetTownIdForSector(SECTORX(elsewhere), SECTORY(elsewhere))];
 		wchar_t const* const text = sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment;
-		swprintf(msg, lengthof(msg), text, s.name, town_sector, elsewhere);
+		swprintf(msg, lengthof(msg), text, s.name, town_sector, town, gzUserDefinedButton2);
 		flags = add_rehire_button ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC;
 	}
 	else
 	{
+no_choice:
 		wchar_t const* const text = sex == MALE ? str_he_leaves_drops_equipment : str_she_leaves_drops_equipment;
 		swprintf(msg, lengthof(msg), text, s.name, town_sector);
 		flags = add_rehire_button ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK;

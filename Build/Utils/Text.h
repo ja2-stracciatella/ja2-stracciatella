@@ -77,8 +77,6 @@ extern const wchar_t *pTransactionText[];
 extern const wchar_t *pMoralStrings[];
 extern const wchar_t *pSkyriderText[];
 extern const wchar_t  str_left_equipment[];
-extern const wchar_t  str_location_omerta[];
-extern const wchar_t  str_location_drassen[];
 extern const wchar_t *pMapScreenStatusStrings[];
 extern const wchar_t *pMapScreenPrevNextCharButtonHelpText[];
 extern const wchar_t  pEtaString[];
