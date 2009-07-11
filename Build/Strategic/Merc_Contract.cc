@@ -86,50 +86,28 @@ void LoadContractRenewalDataFromSaveGameFile(HWFILE const hFile)
 static BOOLEAN ContractIsExpiring(SOLDIERTYPE* pSoldier);
 
 
-void BeginContractRenewalSequence( )
+void BeginContractRenewalSequence()
 {
-	INT32 cnt;
-	BOOLEAN			fFoundAtLeastOne = FALSE;
-
-	if ( ubNumContractRenewals > 0)
+	for (CONTRACT_NEWAL_LIST_NODE const* i = ContractRenewalList, * const end = i + ubNumContractRenewals; i != end; ++i)
 	{
-		for ( cnt = 0; cnt < ubNumContractRenewals; cnt++ )
-		{
-			// Get soldier - if there is none, adavance to next
-			SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ContractRenewalList[cnt].ubProfileID); // Steve Willis, 80
-			if ( pSoldier )
-			{
-				if (pSoldier->bLife == 0 || pSoldier->bAssignment == IN_TRANSIT || pSoldier->bAssignment == ASSIGNMENT_POW)
-				{
-					// no
-					continue;
-				}
+		SOLDIERTYPE* const s = FindSoldierByProfileID(i->ubProfileID);
+		if (!s)                               continue;
+		if (s->bLife == 0)                    continue;
+		if (s->bAssignment == IN_TRANSIT)     continue;
+		if (s->bAssignment == ASSIGNMENT_POW) continue;
 
-				// Double check there are valid people here that still want to renew...
-				//if the user hasnt renewed yet, and is still leaving today
-				if ( ContractIsExpiring( pSoldier ) )
-				{
-					fFoundAtLeastOne = TRUE;
-				}
-			}
-		}
+		// Double check there are valid people here that still want to renew
+		if (!ContractIsExpiring(s)) continue;
+		// The user hasn't renewed yet, and is still leaving today
 
-		if ( fFoundAtLeastOne )
-		{
-			// Set sequence on...
-			gfContractRenewalSquenceOn = TRUE;
-
-			// Start at first one....
-			ubCurrentContractRenewal = 0;
-			ubCurrentContractRenewalInProgress = 0;
-
-			PauseGame( );
-			LockPauseState(LOCK_PAUSE_07);
-			InterruptTime( );
-
-			// Go into mapscreen if not already...
-			MakeDialogueEventEnterMapScreen();
-		}
+		gfContractRenewalSquenceOn         = TRUE;
+		ubCurrentContractRenewal           = 0;
+		ubCurrentContractRenewalInProgress = 0;
+		PauseGame();
+		LockPauseState(LOCK_PAUSE_07);
+		InterruptTime();
+		MakeDialogueEventEnterMapScreen();
+		break;
 	}
 }
 
