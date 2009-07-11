@@ -142,7 +142,7 @@ extern UINT8 gubNumDoors;
 //File I/O for loading the door information from the map.  This automatically allocates
 //the exact number of slots when loading.
 
-extern void LoadDoorTableFromMap( INT8 **hBuffer );
+void LoadDoorTableFromMap(HWFILE);
 
 #ifdef JA2EDITOR
 //Saves the existing door information to the map.  Before it actually saves, it'll verify that the

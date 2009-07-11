@@ -141,21 +141,18 @@ void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 #endif
 
 
-void LoadExitGrids( INT8 **hBuffer )
+void LoadExitGrids(HWFILE const f)
 {
 	EXITGRID exitGrid;
 	UINT16 x;
 	UINT16 usNumSaved;
 	UINT16 usMapIndex;
 	gfLoadingExitGrids = TRUE;
-	LOADDATA( &usNumSaved, *hBuffer, 2 );
-	//FileRead(hfile, &usNumSaved, 2);
+	FileRead(f, &usNumSaved, sizeof(usNumSaved));
 	for( x = 0; x < usNumSaved; x++ )
 	{
-		LOADDATA( &usMapIndex, *hBuffer, 2 );
-		//FileRead(hfile, &usMapIndex, 2);
-		LOADDATA( &exitGrid, *hBuffer, 5 );
-		//FileRead(hfile, &exitGrid, 5);
+		FileRead(f, &usMapIndex, sizeof(usMapIndex));
+		FileRead(f, &exitGrid,   5);
 		AddExitGridToWorld( usMapIndex, &exitGrid );
 	}
 	gfLoadingExitGrids = FALSE;

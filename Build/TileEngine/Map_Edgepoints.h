@@ -18,7 +18,7 @@ void GenerateMapEdgepoints(void);
 void SaveMapEdgepoints(HWFILE);
 #endif
 
-bool LoadMapEdgepoints(INT8** buf);
+bool LoadMapEdgepoints(HWFILE);
 void TrashMapEdgepoints(void);
 
 //dynamic arrays that contain the valid gridno's for each edge

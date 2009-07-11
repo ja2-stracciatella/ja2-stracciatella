@@ -8,24 +8,27 @@
 #include "Sys_Globals.h"
 
 
-void ExtractLightSprite(const BYTE** const data, const UINT32 light_time)
+void ExtractLightSprite(HWFILE const f, UINT32 const light_time)
 {
 	INT16  x;
 	INT16  y;
 	UINT32 flags;
+	UINT8  str_len;
 
-	const BYTE* d = *data;
+	BYTE data[25];
+	FileRead(f, data, sizeof(data));
+
+	BYTE const* d = data;
 	EXTR_I16(d, x)
 	EXTR_I16(d, y)
 	EXTR_SKIP(d, 12)
 	EXTR_U32(d, flags)
 	EXTR_SKIP(d, 4)
-	Assert(d == *data + 24);
-
-	UINT8 str_len;
 	EXTR_U8(d, str_len)
+	Assert(d == endof(data));
+
 	char template_name[str_len];
-	EXTR_STR(d, template_name, str_len)
+	FileRead(f, template_name, str_len);
 	template_name[str_len - 1] = '\0';
 
 	LIGHT_SPRITE* const l = LightSpriteCreate(template_name);
@@ -52,8 +55,6 @@ void ExtractLightSprite(const BYTE** const data, const UINT32 light_time)
 			l->uiFlags |= LIGHT_NIGHTTIME;
 		}
 	}
-
-	*data = d;
 }
 
 

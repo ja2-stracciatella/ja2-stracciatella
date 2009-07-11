@@ -929,7 +929,9 @@ static ScreenID ProcessFileIO(void)
 
 			try
 			{
+				UINT32 const start = SDL_GetTicks();
 				LoadWorld(ubNewFilename);
+				fprintf(stderr, "---> %u\n", SDL_GetTicks() - start);
 			}
 			catch (...)
 			{ //Want to override crash, so user can do something else.

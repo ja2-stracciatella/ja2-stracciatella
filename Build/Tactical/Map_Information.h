@@ -48,7 +48,7 @@ void UpdateSummaryInfo(SUMMARYFILE*);
 
 #endif
 
-void LoadMapInformation( INT8 **hBuffer );
+void LoadMapInformation(HWFILE);
 void ValidateAndUpdateMapVersionIfNecessary(void);
 BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo );
 

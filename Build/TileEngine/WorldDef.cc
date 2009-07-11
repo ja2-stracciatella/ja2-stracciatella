@@ -2027,7 +2027,7 @@ catch (...) { return FALSE; }
 #endif
 
 
-static void LoadMapLights(INT8** hBuffer);
+static void LoadMapLights(HWFILE);
 
 
 void LoadWorld(char const* const filename)
@@ -2044,35 +2044,24 @@ try
 	gfBasement = FALSE;
 	gfCaves    = FALSE;
 
-	SGP::Buffer<INT8> pBufferHead;
-	{
-		char full_filename[50];
-		sprintf(full_filename, "MAPS/%s", filename);
-		AutoSGPFile f(FileOpen(full_filename, FILE_ACCESS_READ));
+	char full_filename[50];
+	sprintf(full_filename, "MAPS/%s", filename);
+	AutoSGPFile f(FileOpen(full_filename, FILE_ACCESS_READ));
 
-		SetRelativeStartAndEndPercentage(0, 0, 1, L"Trashing world...");
+	SetRelativeStartAndEndPercentage(0, 0, 1, L"Trashing world...");
 #ifdef JA2TESTVERSION
-		uiStartTime = GetJA2Clock();
+	uiStartTime = GetJA2Clock();
 #endif
-		TrashWorld();
+	TrashWorld();
 #ifdef JA2TESTVERSION
-		uiTrashWorldTime = GetJA2Clock() - uiStartTime;
+	uiTrashWorldTime = GetJA2Clock() - uiStartTime;
 #endif
 
-		LightReset();
-
-		/* Get the file size and alloc one huge buffer for it. We will use this
-		 * buffer to transfer all of the data from. */
-		UINT32 const file_size = FileGetSize(f);
-		pBufferHead.Allocate(file_size);
-		FileRead(f, pBufferHead, file_size);
-	}
-
-	INT8* pBuffer = pBufferHead;
+	LightReset();
 
 	// Read JA2 Version ID
 	FLOAT dMajorMapVersion;
-	LOADDATA(&dMajorMapVersion, pBuffer, sizeof(FLOAT));
+	FileRead(f, &dMajorMapVersion, sizeof(dMajorMapVersion));
 
 #if defined RUSSIAN
 	if (dMajorMapVersion != 6.00) throw std::runtime_error("Incompatible major map version");
@@ -2081,7 +2070,7 @@ try
 	UINT8 ubMinorMapVersion;
 	if (dMajorMapVersion >= 4.00)
 	{
-		LOADDATA(&ubMinorMapVersion, pBuffer, sizeof(UINT8));
+		FileRead(f, &ubMinorMapVersion, sizeof(ubMinorMapVersion));
 	}
 	else
 	{
@@ -2090,10 +2079,10 @@ try
 
 	// Read flags for world
 	UINT32 uiFlags;
-	LOADDATA(&uiFlags, pBuffer, sizeof(INT32));
+	FileRead(f, &uiFlags, sizeof(uiFlags));
 
 	INT32 iTilesetID;
-	LOADDATA(&iTilesetID, pBuffer, sizeof(INT32));
+	FileRead(f, &iTilesetID, sizeof(iTilesetID));
 
 #ifdef JA2TESTVERSION
 	uiStartTime = GetJA2Clock();
@@ -2103,43 +2092,51 @@ try
 	uiLoadMapTilesetTime = GetJA2Clock() - uiStartTime;
 #endif
 
-	// Load soldier size
-	UINT32 uiSoldierSize;
-	LOADDATA(&uiSoldierSize, pBuffer, sizeof(INT32));
+	// Skip soldier size
+	FileSeek(f, 4, FILE_SEEK_FROM_CURRENT);
 
-	FOR_ALL_WORLD_TILES(i)
-  { // Read height values
-		i->sHeight = *pBuffer++;
-		++pBuffer; // Skip filler byte
+	{ // Read height values
+		MAP_ELEMENT* world = gpWorldLevelData;
+		for (UINT32 row = 0; row != WORLD_ROWS; ++row)
+		{
+			BYTE height[WORLD_COLS * 2];
+			FileRead(f, height, sizeof(height));
+			for (BYTE const* i = height; i != endof(height); i += 2)
+			{
+				(world++)->sHeight = *i;
+			}
+		}
 	}
 
 	SetRelativeStartAndEndPercentage(0, 35, 40, L"Counting layers...");
 	RenderProgressBar(0, 100);
 
-	// Read layer counts
-	UINT8 bCounts[WORLD_MAX][8];
-	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
-  {
-		UINT8 ubCombine;
+	UINT8 bCounts[WORLD_MAX][6];
+	{ // Read layer counts
+		UINT8        (*cnt)[6] = bCounts;
+		MAP_ELEMENT* world     = gpWorldLevelData;
+		for (UINT32 row = 0; row != WORLD_ROWS; ++row)
+		{
+			BYTE combine[WORLD_COLS][4];
+			FileRead(f, combine, sizeof(combine));
+			for (UINT8 const (*i)[4] = combine; i != endof(combine); ++world, ++cnt, ++i)
+			{
+				// Read combination of land/world flags
+				(*cnt)[0]       = (*i)[0] & 0x0F;
+				world->uiFlags |= (*i)[0] >> 4;
 
-		// Read combination of land/world flags
-		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
-		bCounts[cnt][0]                =  ubCombine & 0x0F;
-		gpWorldLevelData[cnt].uiFlags |= (ubCombine & 0xF0) >> 4;
+				// Read #objects, structs
+				(*cnt)[1] = (*i)[1] & 0x0F;
+				(*cnt)[2] = (*i)[1] >> 4;
 
-		// Read #objects, structs
-		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
-		bCounts[cnt][1] =  ubCombine & 0x0F;
-		bCounts[cnt][2] = (ubCombine & 0xF0) >> 4;
+				// Read shadows, roof
+				(*cnt)[3] = (*i)[2] & 0x0F;
+				(*cnt)[4] = (*i)[2] >> 4;
 
-		// Read shadows, roof
-		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
-		bCounts[cnt][3] =  ubCombine & 0x0F;
-		bCounts[cnt][4] = (ubCombine & 0xF0) >> 4;
-
-   	// Read OnRoof, nothing
-		LOADDATA(&ubCombine, pBuffer, sizeof(UINT8));
-		bCounts[cnt][5] = ubCombine & 0x0F;
+				// Read OnRoof, nothing
+				(*cnt)[5] = (*i)[3] & 0x0F;
+			}
+		}
 	}
 
 	SetRelativeStartAndEndPercentage(0, 40, 43, L"Loading land layers...");
@@ -2147,12 +2144,17 @@ try
 
 	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 	{
-		for (INT32 cnt2 = 0; cnt2 != bCounts[cnt][0]; ++cnt2)
+		for (INT32 n = bCounts[cnt][0]; n != 0; --n)
 		{
-			UINT8 ubType;
-			UINT8 ubSubIndex;
-			LOADDATA(&ubType,     pBuffer, sizeof(UINT8));
-			LOADDATA(&ubSubIndex, pBuffer, sizeof(UINT8));
+			BYTE data[2];
+			FileRead(f, data, sizeof(data));
+
+			UINT8       ubType;
+			UINT8       ubSubIndex;
+			BYTE const* d = data;
+			EXTR_U8(d, ubType)
+			EXTR_U8(d, ubSubIndex)
+
 			UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 			AddLandToHead(cnt, usTileIndex);
 		}
@@ -2165,12 +2167,17 @@ try
 	{ // Old loads
 		for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 		{
-			for (INT32 cnt2 = 0; cnt2 != bCounts[cnt][1]; ++cnt2)
+			for (INT32 n = bCounts[cnt][1]; n != 0; --n)
 			{
-				UINT8 ubType;
-				UINT8 ubSubIndex;
-				LOADDATA(&ubType,     pBuffer, sizeof(UINT8));
-				LOADDATA(&ubSubIndex, pBuffer, sizeof(UINT8));
+				BYTE data[2];
+				FileRead(f, data, sizeof(data));
+
+				UINT8       ubType;
+				UINT8       ubSubIndex;
+				BYTE const* d = data;
+				EXTR_U8(d, ubType)
+				EXTR_U8(d, ubSubIndex)
+
 				if (ubType >= FIRSTPOINTERS) continue;
 				UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 				AddObjectToTail(cnt, usTileIndex);
@@ -2182,12 +2189,17 @@ try
 		 * ROADPIECES contains over 300 type subindices. */
 		for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 		{
-			for (INT32 cnt2 = 0; cnt2 != bCounts[cnt][1]; ++cnt2)
+			for (INT32 n = bCounts[cnt][1]; n != 0; --n)
 			{
-				UINT8  ubType;
-				UINT16 usTypeSubIndex;
-				LOADDATA(&ubType,         pBuffer, sizeof(UINT8));
-				LOADDATA(&usTypeSubIndex, pBuffer, sizeof(UINT16));
+				BYTE data[3];
+				FileRead(f, data, sizeof(data));
+
+				UINT8       ubType;
+				UINT16      usTypeSubIndex;
+				BYTE const* d = data;
+				EXTR_U8( d, ubType)
+				EXTR_U16(d, usTypeSubIndex)
+
 				if (ubType >= FIRSTPOINTERS) continue;
 				UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, usTypeSubIndex);
 				AddObjectToTail(cnt, usTileIndex);
@@ -2200,12 +2212,16 @@ try
 
 	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 	{ // Set structs
-		for (INT32 cnt2 = 0; cnt2 != bCounts[cnt][2]; ++cnt2)
+		for (INT32 n = bCounts[cnt][2]; n != 0; --n)
 		{
-			UINT8 ubType;
-			UINT8 ubSubIndex;
-			LOADDATA(&ubType,     pBuffer, sizeof(UINT8));
-			LOADDATA(&ubSubIndex, pBuffer, sizeof(UINT8));
+			BYTE data[2];
+			FileRead(f, data, sizeof(data));
+
+			UINT8       ubType;
+			UINT8       ubSubIndex;
+			BYTE const* d = data;
+			EXTR_U8(d, ubType)
+			EXTR_U8(d, ubSubIndex)
 
 			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 
@@ -2238,12 +2254,17 @@ try
 
 	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 	{
-		for (INT32 cnt2 = 0; cnt2 != bCounts[cnt][3]; ++cnt2)
+		for (INT32 n = bCounts[cnt][3]; n != 0; --n)
 		{
-			UINT8 ubType;
-			UINT8 ubSubIndex;
-			LOADDATA(&ubType,     pBuffer, sizeof(UINT8));
-			LOADDATA(&ubSubIndex, pBuffer, sizeof(UINT8));
+			BYTE data[2];
+			FileRead(f, data, sizeof(data));
+
+			UINT8       ubType;
+			UINT8       ubSubIndex;
+			BYTE const* d = data;
+			EXTR_U8(d, ubType)
+			EXTR_U8(d, ubSubIndex)
+
 			UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 			AddShadowToTail(cnt, usTileIndex);
 		}
@@ -2254,12 +2275,17 @@ try
 
 	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 	{
-		for (INT32 cnt2 = 0; cnt2 != bCounts[cnt][4]; ++cnt2)
+		for (INT32 n = bCounts[cnt][4]; n != 0; --n)
 		{
-			UINT8 ubType;
-			UINT8 ubSubIndex;
-			LOADDATA(&ubType,     pBuffer, sizeof(UINT8));
-			LOADDATA(&ubSubIndex, pBuffer, sizeof(UINT8));
+			BYTE data[2];
+			FileRead(f, data, sizeof(data));
+
+			UINT8       ubType;
+			UINT8       ubSubIndex;
+			BYTE const* d = data;
+			EXTR_U8(d, ubType)
+			EXTR_U8(d, ubSubIndex)
+
 			UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 			AddRoofToTail(cnt, usTileIndex);
 		}
@@ -2270,25 +2296,30 @@ try
 
 	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 	{
-		for (INT32 cnt2 = 0; cnt2 != bCounts[cnt][5]; ++cnt2)
+		for (INT32 n = bCounts[cnt][5]; n != 0; --n)
 		{
-			UINT8 ubType;
-			UINT8 ubSubIndex;
-			LOADDATA(&ubType,     pBuffer, sizeof(UINT8));
-			LOADDATA(&ubSubIndex, pBuffer, sizeof(UINT8));
+			BYTE data[2];
+			FileRead(f, data, sizeof(data));
+
+			UINT8       ubType;
+			UINT8       ubSubIndex;
+			BYTE const* d = data;
+			EXTR_U8(d, ubType)
+			EXTR_U8(d, ubSubIndex)
+
 			UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 			AddOnRoofToTail(cnt, usTileIndex);
 		}
 	}
 
 #if defined RUSSIAN
-	pBuffer += 148;
+	FileSeek(f, 148, FILE_SEEK_FROM_CURRENT);
 #endif
 
 	SetRelativeStartAndEndPercentage(0, 58, 59, L"Loading room information...");
 	RenderProgressBar(0, 100);
 
-	LOADDATA(gubWorldRoomInfo, pBuffer, sizeof(INT8) * WORLD_MAX);
+	FileRead(f, gubWorldRoomInfo, sizeof(gubWorldRoomInfo));
 #ifdef JA2EDITOR
 	UINT8 max_room_no = 0;
 	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
@@ -2307,7 +2338,7 @@ try
 
 	if (uiFlags & MAP_WORLDITEMS_SAVED)
 	{ // Load out item information
-		LoadWorldItemsFromMap(&pBuffer);
+		LoadWorldItemsFromMap(f);
 	}
 
 	SetRelativeStartAndEndPercentage(0, 62, 85, L"Loading lights...");
@@ -2315,9 +2346,9 @@ try
 
 	if (uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED)
 	{ // Ambient light levels are only saved in underground levels
-		LOADDATA(&gfBasement,          pBuffer, 1);
-		LOADDATA(&gfCaves,             pBuffer, 1);
-		LOADDATA(&ubAmbientLightLevel, pBuffer, 1);
+		FileRead(f, &gfBasement,          sizeof(gfBasement));
+		FileRead(f, &gfCaves,             sizeof(gfCaves));
+		FileRead(f, &ubAmbientLightLevel, sizeof(ubAmbientLightLevel));
 	}
 	else
 	{ // We are above ground.
@@ -2337,7 +2368,7 @@ try
 #endif
 	if (uiFlags & MAP_WORLDLIGHTS_SAVED)
 	{
-		LoadMapLights(&pBuffer);
+		LoadMapLights(f);
 	}
 	else
 	{ // Set some default value for lighting
@@ -2352,25 +2383,25 @@ try
 	SetRelativeStartAndEndPercentage(0, 85, 86, L"Loading map information...");
 	RenderProgressBar(0, 0);
 
-	LoadMapInformation(&pBuffer);
+	LoadMapInformation(f);
 
 	if (uiFlags & MAP_FULLSOLDIER_SAVED)
 	{
 		SetRelativeStartAndEndPercentage(0, 86, 87, L"Loading placements...");
 		RenderProgressBar(0, 0);
-		LoadSoldiersFromMap(&pBuffer);
+		LoadSoldiersFromMap(f);
 	}
 	if (uiFlags & MAP_EXITGRIDS_SAVED)
 	{
 		SetRelativeStartAndEndPercentage(0, 87, 88, L"Loading exit grids...");
 		RenderProgressBar(0, 0);
-		LoadExitGrids(&pBuffer);
+		LoadExitGrids(f);
 	}
 	if (uiFlags & MAP_DOORTABLE_SAVED)
 	{
 		SetRelativeStartAndEndPercentage(0, 89, 90, L"Loading door tables...");
 		RenderProgressBar(0, 0);
-		LoadDoorTableFromMap(&pBuffer);
+		LoadDoorTableFromMap(f);
 	}
 	bool generate_edge_points;
 	if (uiFlags & MAP_EDGEPOINTS_SAVED)
@@ -2378,7 +2409,7 @@ try
 		SetRelativeStartAndEndPercentage(0, 90, 91, L"Loading edgepoints...");
 		RenderProgressBar(0, 0);
 		// Only if the map had the older edgepoint system
-		generate_edge_points = !LoadMapEdgepoints(&pBuffer);
+		generate_edge_points = !LoadMapEdgepoints(f);
 	}
 	else
 	{
@@ -2388,7 +2419,7 @@ try
 	{
 		SetRelativeStartAndEndPercentage(0, 91, 92, L"Loading NPC schedules...");
 		RenderProgressBar(0, 0);
-		LoadSchedules(&pBuffer);
+		LoadSchedules(f);
 	}
 
 	ValidateAndUpdateMapVersionIfNecessary();
@@ -2968,7 +2999,7 @@ static void SaveMapLights(HWFILE hfile)
 #endif
 
 
-static void LoadMapLights(INT8** hBuffer)
+static void LoadMapLights(HWFILE const f)
 {
 	SGPPaletteEntry	LColors[3];
 	UINT8 ubNumColors;
@@ -2978,10 +3009,8 @@ static void LoadMapLights(INT8** hBuffer)
 	LightReset();
 
 	// read in the light colors!
-	LOADDATA( &ubNumColors, *hBuffer, 1 );
-	LOADDATA( LColors, *hBuffer, sizeof(SGPPaletteEntry)*ubNumColors );
-
-	LOADDATA( &usNumLights, *hBuffer, 2 );
+	FileRead(f, &ubNumColors, sizeof(ubNumColors));
+	FileRead(f, LColors,      sizeof(*LColors) * ubNumColors); // XXX buffer overflow if ubNumColors is too large
 
 	LightSetColor(LColors);
 
@@ -3000,9 +3029,10 @@ static void LoadMapLights(INT8** hBuffer)
 		}
 	}
 
+	FileRead(f, &usNumLights, sizeof(usNumLights));
 	for (INT32 cnt = 0; cnt < usNumLights; ++cnt)
 	{
-		ExtractLightSprite((const BYTE**)hBuffer, light_time);
+		ExtractLightSprite(f, light_time);
 	}
 }
 

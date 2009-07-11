@@ -5,9 +5,12 @@
 #include "LoadSaveObjectType.h"
 
 
-const BYTE* ExtractSoldierCreateUTF16(const BYTE* const data, SOLDIERCREATE_STRUCT* const c)
+void ExtractSoldierCreateFromFileUTF16(HWFILE const f, SOLDIERCREATE_STRUCT* const c)
 {
-	const BYTE* d = data;
+	BYTE data[1040];
+	FileRead(f, data, sizeof(data));
+
+	BYTE const* d = data;
 	EXTR_BOOL(d, c->fStatic)
 	EXTR_U8(d, c->ubProfile)
 	EXTR_SKIP(d, 2)
@@ -60,17 +63,7 @@ const BYTE* ExtractSoldierCreateUTF16(const BYTE* const data, SOLDIERCREATE_STRU
 	EXTR_I8(d, c->bUseGivenVehicleID)
 	EXTR_BOOL(d, c->fHasKeys)
 	EXTR_SKIP(d, 117)
-	Assert(d == data + 1040);
-
-	return d;
-}
-
-
-void ExtractSoldierCreateFromFileUTF16(HWFILE const f, SOLDIERCREATE_STRUCT* const c)
-{
-	BYTE data[1040];
-	FileRead(f, data, sizeof(data));
-	ExtractSoldierCreateUTF16(data, c);
+	Assert(d == endof(data));
 }
 
 

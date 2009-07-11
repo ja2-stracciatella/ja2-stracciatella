@@ -345,21 +345,21 @@ void PrepareSchedulesForEditorExit()
 }
 
 
-void LoadSchedules(INT8** const hBuffer)
+void LoadSchedules(HWFILE const f)
 {
 	/* Delete all the schedules we might have loaded (though we shouldn't have any
 	 * loaded!) */
 	if (gpScheduleList) DestroyAllSchedules();
 
 	UINT8 n_schedules;
-	LOADDATA(&n_schedules, *hBuffer, sizeof(UINT8));
+	FileRead(f, &n_schedules, sizeof(n_schedules));
 
 	gubScheduleID = 1;
 	SCHEDULENODE** anchor = &gpScheduleList;
 	for (UINT8 n = n_schedules; n != 0; --n)
 	{
 		BYTE data[36];
-		LOADDATA(data, *hBuffer, sizeof(data));
+		FileRead(f, data, sizeof(data));
 
 		SCHEDULENODE* const node = MALLOCZ(SCHEDULENODE);
 

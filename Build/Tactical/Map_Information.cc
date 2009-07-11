@@ -114,10 +114,9 @@ void SaveMapInformation( HWFILE fp )
 #endif
 
 
-void LoadMapInformation( INT8 **hBuffer )
+void LoadMapInformation(HWFILE const f)
 {
-	LOADDATA( &gMapInformation, *hBuffer, sizeof( MAPCREATE_STRUCT ) );
-	//FileRead(hfile, &gMapInformation, sizeof(MAPCREATE_STRUCT));
+	FileRead(f, &gMapInformation, sizeof(gMapInformation));
 
 	// ATE: OK, do some handling here for basement level scroll restrictions
 	// Calcuate world scrolling restrictions

@@ -200,7 +200,7 @@ BOOLEAN SaveSoldiersToMap( HWFILE fp )
 #endif
 
 
-void LoadSoldiersFromMap(INT8** const hBuffer)
+void LoadSoldiersFromMap(HWFILE const f)
 {
 	UINT8 const n_individuals = gMapInformation.ubNumIndividuals;
 
@@ -225,18 +225,15 @@ void LoadSoldiersFromMap(INT8** const hBuffer)
 	for (UINT32 i = 0; i != n_individuals; ++i)
 	{
 		BASIC_SOLDIERCREATE_STRUCT bp;
-		LOADDATA(&bp, *hBuffer, sizeof(bp));
+		FileRead(f, &bp, sizeof(bp));
 		SOLDIERINITNODE* const n = AddBasicPlacementToSoldierInitList(bp);
 		n->ubNodeID = i;
 
 		if (bp.fDetailedPlacement)
 		{ /* Add the static detailed placement information in the same newly created
 			 * node as the basic placement. */
-			BYTE data[1040];
-			LOADDATA(data, *hBuffer, sizeof(data));
-
 			SOLDIERCREATE_STRUCT* const sc = MALLOC(SOLDIERCREATE_STRUCT);
-			ExtractSoldierCreateUTF16(data, sc);
+			ExtractSoldierCreateFromFileUTF16(f, sc);
 
 			if (sc->ubProfile != NO_PROFILE)
 			{

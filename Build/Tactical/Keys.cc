@@ -704,17 +704,18 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 
 //File I/O for loading the door information from the map.  This automatically allocates
 //the exact number of slots when loading.
-void LoadDoorTableFromMap( INT8 **hBuffer )
+void LoadDoorTableFromMap(HWFILE const f)
 {
 	INT32 cnt;
 
 	TrashDoorTable();
-	LOADDATA( &gubNumDoors, *hBuffer, 1 );
+
+	FileRead(f, &gubNumDoors, sizeof(gubNumDoors));
+	if (gubNumDoors == 0) return;
 
 	gubMaxDoors = gubNumDoors;
 	DoorTable = MALLOCN(DOOR, gubMaxDoors);
-
-	LOADDATA( DoorTable, *hBuffer, sizeof( DOOR )*gubMaxDoors );
+	FileRead(f, DoorTable, sizeof(*DoorTable) * gubMaxDoors);
 
 	// OK, reset perceived values to nothing...
 	for ( cnt = 0; cnt < gubNumDoors; cnt++ )

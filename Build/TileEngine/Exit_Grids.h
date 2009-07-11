@@ -23,7 +23,7 @@ void RemoveExitGridFromWorld( INT32 iMapIndex );
 void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids );
 #endif
 
-void LoadExitGrids( INT8 **hBuffer );
+void LoadExitGrids(HWFILE);
 
 void AttemptToChangeFloorLevel( INT8 bRelativeZLevel );
 

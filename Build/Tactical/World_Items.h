@@ -58,7 +58,7 @@ INT32 AddItemToWorld(INT16 sGridNo, const OBJECTTYPE* pObject, UINT8 ubLevel, UI
 void RemoveItemFromWorld( INT32 iItemIndex );
 INT32 FindWorldItem( UINT16 usItem );
 
-void LoadWorldItemsFromMap( INT8 **hBuffer );
+void LoadWorldItemsFromMap(HWFILE);
 
 #ifdef JA2EDITOR
 void SaveWorldItemsToMap( HWFILE fp );

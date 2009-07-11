@@ -68,7 +68,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID );
 
 void DeleteSchedule( UINT8 ubScheduleID );
 
-void LoadSchedules( INT8 **hBuffer );
+void LoadSchedules(HWFILE);
 void LoadSchedulesFromSave(HWFILE);
 void SaveSchedules(HWFILE);
 
