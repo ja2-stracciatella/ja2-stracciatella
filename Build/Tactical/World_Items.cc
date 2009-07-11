@@ -259,16 +259,12 @@ void TrashWorldItems()
 
 #ifdef JA2EDITOR
 
-void SaveWorldItemsToMap( HWFILE fp )
+void SaveWorldItemsToMap(HWFILE const f)
 {
-	UINT32		uiActualNumWorldItems;
+	UINT32 const n_actual_world_items = GetNumUsedWorldItems();
+	FileWrite(f, &n_actual_world_items, sizeof(n_actual_world_items));
 
-
-	uiActualNumWorldItems = GetNumUsedWorldItems( );
-
-	FileWrite(fp, &uiActualNumWorldItems, 4);
-
-	CFOR_ALL_WORLD_ITEMS(wi) FileWrite(fp, wi, sizeof(WORLDITEM));
+	CFOR_ALL_WORLD_ITEMS(wi) FileWrite(f, wi, sizeof(WORLDITEM));
 }
 
 #endif
