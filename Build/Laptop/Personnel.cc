@@ -743,7 +743,7 @@ static void DisplayCharStats(const SOLDIERTYPE* const s)
 		for (INT32 i = 1; i < 11; ++i)
 		{
 			const INT32 y = pers_stat_y[i];
-			MPrint(pers_stat_x, y, str_stat[i]);
+			mprintf(pers_stat_x, y, L"%ls:", str_stat[i]);
 			const wchar_t* const na = gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION];
 			FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, na, PERS_FONT, &sX, &sY);
 			MPrint(sX, y, na);
