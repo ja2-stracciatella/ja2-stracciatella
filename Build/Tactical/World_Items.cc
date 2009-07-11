@@ -280,118 +280,111 @@ static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void);
 
 void LoadWorldItemsFromMap(HWFILE const f)
 {
-	// Start loading itmes...
-
-	UINT32			i;
-	WORLDITEM		dummyItem;
-	UINT32			uiNumWorldItems;
-
-	//If any world items exist, we must delete them now.
+	// If any world items exist, we must delete them now
 	TrashWorldItems();
 
-	//Read the number of items that were saved in the map.
-	FileRead(f, &uiNumWorldItems, sizeof(uiNumWorldItems));
+	// Read the number of items that were saved in the map
+	UINT32 n_world_items;
+	FileRead(f, &n_world_items, sizeof(n_world_items));
 
-	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME && !gfEditMode )
-	{ //The sector has already been visited.  The items are saved in a different format that will be
-		//loaded later on.  So, all we need to do is skip the data entirely.
-		FileSeek(f, sizeof(WORLDITEM) * uiNumWorldItems, FILE_SEEK_FROM_CURRENT);
+	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME && !gfEditMode)
+	{ /* The sector has already been visited. The items are saved in a different
+		 * format that will be loaded later on. So, all we need to do is skip the
+		 * data entirely. */
+		FileSeek(f, sizeof(WORLDITEM) * n_world_items, FILE_SEEK_FROM_CURRENT);
 		return;
 	}
-	else for ( i = 0; i < uiNumWorldItems; i++ )
-	{	//Add all of the items to the world indirectly through AddItemToPool, but only if the chance
-		//associated with them succeed.
-		FileRead(f, &dummyItem, sizeof(dummyItem));
-		if( dummyItem.o.usItem == OWNERSHIP )
+
+	for (UINT32 n = n_world_items; n != 0; --n)
+	{	/* Add all of the items to the world indirectly through AddItemToPool, but
+		 * only if the chance associated with them succeed. */
+		WORLDITEM wi;
+		FileRead(f, &wi, sizeof(wi));
+		OBJECTTYPE& o = wi.o;
+
+		if (o.usItem == OWNERSHIP) wi.ubNonExistChance = 0;
+
+		if (!gfEditMode && PreRandom(100) < wi.ubNonExistChance) continue;
+
+		if (!gfEditMode)
 		{
-			dummyItem.ubNonExistChance = 0;
-		}
-		if( gfEditMode || dummyItem.ubNonExistChance <= PreRandom( 100 ) )
-		{
-			if( !gfEditMode )
+			// Check for matching item existance modes and only add if there is a match
+			if (wi.usFlags & (gGameOptions.fSciFi ? WORLD_ITEM_SCIFI_ONLY : WORLD_ITEM_REALISTIC_ONLY)) continue;
+
+			if (!gGameOptions.fGunNut)
 			{
-				//check for matching item existance modes and only add if there is a match!
-				if( dummyItem.usFlags & WORLD_ITEM_SCIFI_ONLY && !gGameOptions.fSciFi ||
-					  dummyItem.usFlags & WORLD_ITEM_REALISTIC_ONLY && gGameOptions.fSciFi )
-				{ //no match, so don't add item to world
-					continue;
-				}
-
-				if ( !gGameOptions.fGunNut )
+				// do replacements?
+				INVTYPE const& item = Item[o.usItem];
+				if (item.usItemClass == IC_GUN)
 				{
-					UINT16	usReplacement;
-
-					// do replacements?
-					if ( Item[ dummyItem.o.usItem ].usItemClass == IC_GUN )
+					UINT16 const replacement = StandardGunListReplacement(o.usItem);
+					if (replacement != NOTHING)
 					{
-						INT8		bAmmo, bNewAmmo;
-
-						usReplacement = StandardGunListReplacement( dummyItem.o.usItem );
-						if ( usReplacement )
-						{
-							// everything else can be the same? no.
-							bAmmo = dummyItem.o.ubGunShotsLeft;
-							bNewAmmo = (Weapon[ usReplacement ].ubMagSize * bAmmo) / Weapon[ dummyItem.o.usItem ].ubMagSize;
-							if ( bAmmo > 0 && bNewAmmo == 0 )
-							{
-								bNewAmmo = 1;
-							}
-
-							dummyItem.o.usItem = usReplacement;
-							dummyItem.o.ubGunShotsLeft = bNewAmmo;
-						}
+						// everything else can be the same? no.
+						INT8 const ammo     = o.ubGunShotsLeft;
+						INT8       new_ammo = Weapon[replacement].ubMagSize * ammo / Weapon[o.usItem].ubMagSize;
+						if (new_ammo == 0 && ammo > 0) new_ammo = 1;
+						o.usItem         = replacement;
+						o.ubGunShotsLeft = new_ammo;
 					}
-					if ( Item[ dummyItem.o.usItem ].usItemClass == IC_AMMO )
+				}
+				else if (item.usItemClass == IC_AMMO)
+				{
+					UINT16 const replacement = StandardGunListAmmoReplacement(o.usItem);
+					if (replacement != NOTHING)
 					{
-						usReplacement = StandardGunListAmmoReplacement( dummyItem.o.usItem );
-						if ( usReplacement )
+						// Go through status values and scale up/down
+						UINT8 const mag_size     = Magazine[item.ubClassIndex].ubMagSize;
+						UINT8 const new_mag_size = Magazine[Item[replacement].ubClassIndex].ubMagSize;
+						for (UINT8 i = 0; i != o.ubNumberOfObjects; ++i)
 						{
-							UINT8		ubLoop;
-
-							// go through status values and scale up/down
-							for ( ubLoop = 0; ubLoop < dummyItem.o.ubNumberOfObjects; ubLoop++ )
-							{
-								dummyItem.o.bStatus[ ubLoop ] = dummyItem.o.bStatus[ ubLoop ] * Magazine[ Item[ usReplacement ].ubClassIndex ].ubMagSize / Magazine[ Item[ dummyItem.o.usItem ].ubClassIndex ].ubMagSize;
-							}
-
-							// then replace item #
-							dummyItem.o.usItem = usReplacement;
+							o.bStatus[i] = o.bStatus[i] * new_mag_size / mag_size;
 						}
+
+						// then replace item #
+						o.usItem = replacement;
 					}
 				}
 			}
-			if (dummyItem.o.usItem == ACTION_ITEM)
-			{ //if we are loading a pit, they are typically loaded without being armed.
-				if( dummyItem.o.bActionValue == ACTION_ITEM_SMALL_PIT || dummyItem.o.bActionValue == ACTION_ITEM_LARGE_PIT )
-				{
-					dummyItem.usFlags &= ~WORLD_ITEM_ARMED_BOMB;
-					dummyItem.bVisible = BURIED;
-					dummyItem.o.bDetonatorType = 0;
-				}
-			}
-
-			else if ( dummyItem.bVisible == HIDDEN_ITEM && dummyItem.o.bTrap > 0 && ( dummyItem.o.usItem == MINE || dummyItem.o.usItem == TRIP_FLARE || dummyItem.o.usItem == TRIP_KLAXON) )
-			{
-				ArmBomb( &dummyItem.o, BOMB_PRESSURE );
-				dummyItem.usFlags |= WORLD_ITEM_ARMED_BOMB;
-				// this is coming from the map so the enemy must know about it.
-				gpWorldLevelData[ dummyItem.sGridNo ].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
-
-			}
-
-			if ( dummyItem.usFlags & WORLD_ITEM_ARMED_BOMB )
-			{ //all armed bombs are buried
-				dummyItem.bVisible = BURIED;
-			}
-			INT32 const iItemIndex = AddItemToPool(dummyItem.sGridNo, &dummyItem.o, static_cast<Visibility>(dummyItem.bVisible), dummyItem.ubLevel, dummyItem.usFlags, dummyItem.bRenderZHeightAboveLevel);
-			GetWorldItem(iItemIndex).ubNonExistChance = dummyItem.ubNonExistChance;
 		}
+
+		switch (o.usItem)
+		{
+			case ACTION_ITEM:
+				// If we are loading a pit, they are typically loaded without being armed.
+				if (o.bActionValue == ACTION_ITEM_SMALL_PIT ||
+						o.bActionValue == ACTION_ITEM_LARGE_PIT)
+				{
+					wi.usFlags      &= ~WORLD_ITEM_ARMED_BOMB;
+					wi.bVisible      = BURIED;
+					o.bDetonatorType = 0;
+				}
+				break;
+
+			case MINE:
+			case TRIP_FLARE:
+			case TRIP_KLAXON:
+				if (wi.bVisible == HIDDEN_ITEM && o.bTrap > 0)
+				{
+					ArmBomb(&o, BOMB_PRESSURE);
+					wi.usFlags |= WORLD_ITEM_ARMED_BOMB;
+					// this is coming from the map so the enemy must know about it.
+					gpWorldLevelData[wi.sGridNo].uiFlags |= MAPELEMENT_ENEMY_MINE_PRESENT;
+				}
+				break;
+		}
+
+		// All armed bombs are buried
+		if (wi.usFlags & WORLD_ITEM_ARMED_BOMB) wi.bVisible = BURIED;
+
+		INT32 const item_idx = AddItemToPool(wi.sGridNo, &o, static_cast<Visibility>(wi.bVisible), wi.ubLevel, wi.usFlags, wi.bRenderZHeightAboveLevel);
+		GetWorldItem(item_idx).ubNonExistChance = wi.ubNonExistChance;
 	}
 
-	if ( !gfEditMode )
+	if (!gfEditMode)
 	{
 		DeleteWorldItemsBelongingToTerroristsWhoAreNotThere();
-		if ( gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_P && gbWorldSectorZ == 1 )
+		if (gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_P && gbWorldSectorZ == 1)
 		{
 			DeleteWorldItemsBelongingToQueenIfThere();
 		}
