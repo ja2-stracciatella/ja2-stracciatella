@@ -6795,7 +6795,7 @@ static void InterruptTimeForMenus(void)
 }
 
 
-static BOOLEAN AnyMercsLeavingRealSoon(void);
+static bool AnyMercsLeavingRealSoon();
 
 
 static void HandleContractTimeFlashForMercThatIsAboutLeave(void)
@@ -6823,21 +6823,15 @@ static void HandleContractTimeFlashForMercThatIsAboutLeave(void)
 
 
 // merc about to leave, flash contract time
-static BOOLEAN AnyMercsLeavingRealSoon(void)
+static bool AnyMercsLeavingRealSoon()
 {
-	UINT32 uiTimeInMin = GetWorldTotalMin();
-	BOOLEAN fFoundOne = FALSE;
-
+	UINT32 const now = GetWorldTotalMin();
 	CFOR_ALL_IN_CHAR_LIST(c)
 	{
-		if (c->merc->iEndofContractTime - uiTimeInMin <= MINS_TO_FLASH_CONTRACT_TIME)
-		{
-			fFoundOne = TRUE;
-			break;
-		}
+		if (c->merc->iEndofContractTime - now > MINS_TO_FLASH_CONTRACT_TIME) continue;
+		return true;
 	}
-
-	return( fFoundOne );
+	return false;
 }
 
 
