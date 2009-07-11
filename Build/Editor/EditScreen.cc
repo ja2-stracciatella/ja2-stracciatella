@@ -106,8 +106,7 @@ static BOOLEAN gfConfirmExitPending      = FALSE;
 BOOLEAN			gfIntendOnEnteringEditor = FALSE;
 
 //original
-static INT16 gsBanksSubIndex = 0;
-static FLOAT gShadePercent   = 0.65f;
+static FLOAT gShadePercent = 0.65f;
 
 UINT16			gusLightLevel = 0;
 static UINT16 gusGameLightLevel  = 0;
@@ -2894,7 +2893,7 @@ static void HandleMouseClicksInGameScreen()
 				break;
 
 			case DRAW_MODE_BANKS:
-				PasteBanks(map_idx, gsBanksSubIndex, TRUE);
+				PasteBanks(map_idx, TRUE);
 				break;
 
 			case DRAW_MODE_ROADS:

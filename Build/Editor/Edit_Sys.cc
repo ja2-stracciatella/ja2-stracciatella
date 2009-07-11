@@ -491,7 +491,7 @@ static void PasteStructureCommon(const UINT32 iMapIndex)
 //
 //	Places a river bank or cliff into the world
 //
-void PasteBanks( UINT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace)
+void PasteBanks(UINT32 const iMapIndex, BOOLEAN const fReplace)
 {
 	BOOLEAN				fDoPaste = FALSE;
 	UINT16				usUseIndex;

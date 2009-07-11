@@ -45,7 +45,7 @@ UINT16 GetRandomIndexByRange( UINT16 usRangeStart, UINT16 usRangeEnd );
 
 void PasteFloor( UINT32 iMapIndex, UINT16 usFloorIndex , BOOLEAN fReplace);
 
-void PasteBanks( UINT32 iMapIndex, UINT16 usStructIndex, BOOLEAN fReplace );
+void PasteBanks(UINT32 iMapIndex, BOOLEAN fReplace);
 void PasteRoads( UINT32 iMapIndex );
 void PasteCliffs( UINT32 iMapIndex, UINT16 usStructIndex , BOOLEAN fReplace);
 
