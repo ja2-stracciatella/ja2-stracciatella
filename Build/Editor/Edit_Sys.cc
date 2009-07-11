@@ -234,35 +234,27 @@ void PasteDebris( UINT32 iMapIndex )
 }
 
 
-static void PasteSingleWallCommon(UINT32 iMapIndex);
+static void PasteSingleWallCommon(UINT32 map_idx, Selections* sel_list, INT32& n_sel_list);
 
 
 void PasteSingleWall( UINT32 iMapIndex )
 {
-	pSelList = SelSingleWall;
-	pNumSelList = &iNumWallsSelected;
-	PasteSingleWallCommon( iMapIndex );
+	PasteSingleWallCommon(iMapIndex, SelSingleWall, iNumWallsSelected);
 }
 
 void PasteSingleDoor( UINT32 iMapIndex )
 {
-	pSelList = SelSingleDoor;
-	pNumSelList = &iNumDoorsSelected;
-	PasteSingleWallCommon( iMapIndex );
+	PasteSingleWallCommon(iMapIndex, SelSingleDoor, iNumDoorsSelected);
 }
 
 void PasteSingleWindow( UINT32 iMapIndex )
 {
-	pSelList = SelSingleWindow;
-	pNumSelList = &iNumWindowsSelected;
-	PasteSingleWallCommon( iMapIndex );
+	PasteSingleWallCommon(iMapIndex, SelSingleWindow, iNumWindowsSelected);
 }
 
 void PasteSingleRoof( UINT32 iMapIndex )
 {
-	pSelList = SelSingleRoof;
-	pNumSelList = &iNumRoofsSelected;
-	PasteSingleWallCommon( iMapIndex );
+	PasteSingleWallCommon(iMapIndex, SelSingleRoof, iNumRoofsSelected);
 }
 
 void PasteRoomNumber( UINT32 iMapIndex, UINT8 ubRoomNumber )
@@ -277,11 +269,9 @@ void PasteRoomNumber( UINT32 iMapIndex, UINT8 ubRoomNumber )
 
 void PasteSingleBrokenWall( UINT32 iMapIndex )
 {
-	pSelList = SelSingleBrokenWall;
-	pNumSelList = &iNumBrokenWallsSelected;
-
-	UINT16 usIndex           = pSelList[iCurBank].usIndex;
-	UINT16 usObjIndex        = pSelList[iCurBank].uiObject;
+	Selections* const sel_list = SelSingleBrokenWall;
+	UINT16 usIndex           = sel_list[iCurBank].usIndex;
+	UINT16 usObjIndex        = sel_list[iCurBank].uiObject;
 	UINT16 usTileIndex       = GetTileIndexFromTypeSubIndex(usObjIndex, usIndex);
 	UINT16 usWallOrientation = GetWallOrientation(usTileIndex);
 	if( usWallOrientation == INSIDE_TOP_LEFT || usWallOrientation == INSIDE_TOP_RIGHT )
@@ -289,48 +279,43 @@ void PasteSingleBrokenWall( UINT32 iMapIndex )
 	else
 		EraseVerticalWall( iMapIndex );
 
-	PasteSingleWallCommon( iMapIndex );
+	PasteSingleWallCommon(iMapIndex, sel_list, iNumBrokenWallsSelected);
 }
 
 void PasteSingleDecoration( UINT32 iMapIndex )
 {
-	pSelList = SelSingleDecor;
-	pNumSelList = &iNumDecorSelected;
-	PasteSingleWallCommon( iMapIndex );
+	PasteSingleWallCommon(iMapIndex, SelSingleDecor, iNumDecorSelected);
 }
 
 void PasteSingleDecal( UINT32 iMapIndex )
 {
-	pSelList = SelSingleDecal;
-	pNumSelList = &iNumDecalsSelected;
-	PasteSingleWallCommon( iMapIndex );
+	PasteSingleWallCommon(iMapIndex, SelSingleDecal, iNumDecalsSelected);
 }
 
 void PasteSingleFloor( UINT32 iMapIndex )
 {
-	pSelList = SelSingleFloor;
-	pNumSelList = &iNumFloorsSelected;
-	PasteSingleWallCommon( iMapIndex );
+	PasteSingleWallCommon(iMapIndex, SelSingleFloor, iNumFloorsSelected);
 }
 
 void PasteSingleToilet( UINT32 iMapIndex )
 {
-	pSelList = SelSingleToilet;
-	pNumSelList = &iNumToiletsSelected;
-	PasteSingleWallCommon( iMapIndex );
+	PasteSingleWallCommon(iMapIndex, SelSingleToilet, iNumToiletsSelected);
 }
 
 
 /* Common paste routine for PasteSingleWall, PasteSingleDoor,
  * PasteSingleDecoration, and PasteSingleDecor (above). */
-static void PasteSingleWallCommon(UINT32 const map_idx)
+static void PasteSingleWallCommon(UINT32 const map_idx, Selections* const sel_list, INT32& n_sel_list)
 {
+	pSelList    = sel_list;
+	pNumSelList = &n_sel_list;
+
 	if (map_idx >= 0x8000) return;
 
 	AddToUndoList(map_idx);
 
-	UINT16 const use_idx     = pSelList[iCurBank].usIndex;
-	UINT16 const use_obj_idx = pSelList[iCurBank].uiObject;
+	UINT16 const use_idx     = sel_list[iCurBank].usIndex;
+	UINT16 const use_obj_idx = sel_list[iCurBank].uiObject;
 	UINT16 const idx         = gTileTypeStartIndex[use_obj_idx] + use_idx;
 
 	// Temp stuff for onroof things
