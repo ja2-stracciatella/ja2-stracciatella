@@ -671,7 +671,7 @@ void MakeCharacterDialogueEventContractEndingNoAskEquip(SOLDIERTYPE& s)
 }
 
 
-static void CalculateMedicalDepositRefund(SOLDIERTYPE* pSoldier);
+static void CalculateMedicalDepositRefund(SOLDIERTYPE const&);
 
 
 void StrategicRemoveMerc(SOLDIERTYPE* const s)
@@ -749,7 +749,7 @@ void StrategicRemoveMerc(SOLDIERTYPE* const s)
 	else //else the merc CAN get his medical deposit back
 	{
 		//Determine how much of a Medical deposit is going to be refunded to the player
-		CalculateMedicalDepositRefund(s);
+		CalculateMedicalDepositRefund(*s);
 	}
 
 	TacticalRemoveSoldier(s);
@@ -772,46 +772,37 @@ void StrategicRemoveMerc(SOLDIERTYPE* const s)
 }
 
 
-static void CalculateMedicalDepositRefund(SOLDIERTYPE* pSoldier)
+static void CalculateMedicalDepositRefund(SOLDIERTYPE const& s)
 {
-	INT32		iRefundAmount=0;
+	ProfileID const pid = s.ubProfile;
+	// If the merc didnt have any medical deposit, exit
+	if (!GetProfile(pid).bMedicalDeposit) return;
 
-	//if the merc didnt have any medical deposit, exit
-	if( !gMercProfiles[ pSoldier->ubProfile ].bMedicalDeposit )
-		return;
-
-	//if the merc is at full health, refund the full medical deposit
-	if( pSoldier->bLife == pSoldier->bLifeMax )
-	{
-		//add an entry in the finacial page for the FULL refund of the medical deposit
-		// use the medical deposit in pSoldier, not in profile, which goes up with leveling
-		AddTransactionToPlayersBook(FULL_MEDICAL_REFUND, pSoldier->ubProfile, GetWorldTotalMin(), pSoldier->usMedicalDeposit );
-
-		//add an email
-		AddEmailWithSpecialData( AIM_MEDICAL_DEPOSIT_REFUND, AIM_MEDICAL_DEPOSIT_REFUND_LENGTH, AIM_SITE, GetWorldTotalMin(), pSoldier->usMedicalDeposit, pSoldier->ubProfile );
+	UINT32 const now    = GetWorldTotalMin();
+	// Use the medical deposit in soldier, not in profile, which goes up with leveling
+	INT32        refund = s.usMedicalDeposit;
+	INT32        msg_offset;
+	INT32        msg_length;
+	if (s.bLife == s.bLifeMax)
+	{ // The merc is at full health, refund the full medical deposit
+		AddTransactionToPlayersBook(FULL_MEDICAL_REFUND, pid, now, refund);
+		msg_offset = AIM_MEDICAL_DEPOSIT_REFUND;
+		msg_length = AIM_MEDICAL_DEPOSIT_REFUND_LENGTH;
 	}
-	//else if the merc is a dead, refund NOTHING!!
-	else if( pSoldier->bLife <= 0 )
-	{
-		//add an entry in the finacial page for NO refund of the medical deposit
-		//AddTransactionToPlayersBook( NO_MEDICAL_REFUND, pSoldier->ubProfile, GetWorldTotalMin(), 0 );
-
-		//add an email
-		AddEmailWithSpecialData( AIM_MEDICAL_DEPOSIT_NO_REFUND, AIM_MEDICAL_DEPOSIT_NO_REFUND_LENGTH, AIM_SITE, GetWorldTotalMin(), pSoldier->usMedicalDeposit, pSoldier->ubProfile );
-
+	else if (s.bLife > 0)
+	{ // The merc is injured, refund a partial amount
+		refund = (2 * refund * s.bLifeMax / s.bLifeMax + 1) / 2;
+		AddTransactionToPlayersBook(PARTIAL_MEDICAL_REFUND, pid, now, refund);
+		msg_offset = AIM_MEDICAL_DEPOSIT_PARTIAL_REFUND;
+		msg_length = AIM_MEDICAL_DEPOSIT_PARTIAL_REFUND_LENGTH;
 	}
-	//else the player is injured, refund a partial amount
 	else
-	{
-		// use the medical deposit in pSoldier, not in profile, which goes up with leveling
-		iRefundAmount = (INT32) ( ( pSoldier->bLife / ( FLOAT ) pSoldier->bLifeMax ) * pSoldier->usMedicalDeposit + 0.5 );
-
-		//add an entry in the finacial page for a PARTIAL refund of the medical deposit
-		AddTransactionToPlayersBook( PARTIAL_MEDICAL_REFUND, pSoldier->ubProfile, GetWorldTotalMin(), iRefundAmount );
-
-		//add an email
-		AddEmailWithSpecialData( AIM_MEDICAL_DEPOSIT_PARTIAL_REFUND, AIM_MEDICAL_DEPOSIT_PARTIAL_REFUND_LENGTH, AIM_SITE, GetWorldTotalMin(), iRefundAmount, pSoldier->ubProfile );
+	{ // The merc is dead, refund nothing
+		//AddTransactionToPlayersBook(NO_MEDICAL_REFUND, pid, now, 0);
+		msg_offset = AIM_MEDICAL_DEPOSIT_NO_REFUND;
+		msg_length = AIM_MEDICAL_DEPOSIT_NO_REFUND_LENGTH;
 	}
+	AddEmailWithSpecialData(msg_offset, msg_length, AIM_SITE, now, refund, pid);
 }
 
 
