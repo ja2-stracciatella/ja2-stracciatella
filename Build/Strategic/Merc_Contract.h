@@ -48,7 +48,7 @@ void MakeCharacterDialogueEventContractEndingNoAskEquip(SOLDIERTYPE&);
 
 
 BOOLEAN WillMercRenew( SOLDIERTYPE	*pSoldier, BOOLEAN fSayQuote );
-void CheckIfMercGetsAnotherContract( SOLDIERTYPE *pSoldier );
+void CheckIfMercGetsAnotherContract(SOLDIERTYPE&);
 void FindOutIfAnyMercAboutToLeaveIsGonnaRenew( void );
 
 void BeginContractRenewalSequence(void);

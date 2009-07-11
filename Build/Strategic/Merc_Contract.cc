@@ -548,60 +548,25 @@ BOOLEAN SoldierWantsToDelayRenewalOfContract( SOLDIERTYPE *pSoldier )
 
 
 // this is called once a day (daily update) for every merc working for the player
-void CheckIfMercGetsAnotherContract( SOLDIERTYPE *pSoldier )
+void CheckIfMercGetsAnotherContract(SOLDIERTYPE& s)
 {
-	UINT32 uiFullDaysRemaining = 0;
-	INT32 iChance = 0;
+	// AIM merc?
+	if (s.ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC) return;
 
-	// aim merc?
-	if( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC )
-		return;
+  UINT32 const now = GetWorldTotalMin();
+  // ATE: Check time we have and see if we can accept new contracts
+  if (now <= (UINT32)s.iTimeCanSignElsewhere) return;
 
-  // ATE: check time we have and see if we can accept new contracts....
-  if ( GetWorldTotalMin() <= (UINT32) pSoldier->iTimeCanSignElsewhere )
-  {
-    return;
-  }
+	if (s.fSignedAnotherContract) return;
+	// He doesn't already have another contract
 
-	// if he doesn't already have another contract
-	if (!pSoldier->fSignedAnotherContract)
-	{
-		// chance depends on how much time he has left in his contract, and his experience level (determines demand)
-		uiFullDaysRemaining = (pSoldier->iEndofContractTime - GetWorldTotalMin()) / (24 * 60);
+	/* Chance depends on how much time he has left in his contract and his
+	 * experience level (determines demand) */
+	UINT32 const full_days_remaining = (s.iEndofContractTime - now) / (24 * 60);
+	if (full_days_remaining >= 3) return;
 
-		if (uiFullDaysRemaining == 0)
-		{
-			// less than a full day left on contract
-			// calc the chance merc will get another contract while working for ya (this is rolled once/day)
-			iChance = 3;
-		}
-		else
-		if (uiFullDaysRemaining == 1)
-		{
-			// < 2 days left
-			iChance = 2;
-		}
-		else
-		if (uiFullDaysRemaining == 2)
-		{
-			// < 3 days left
-			iChance = 1;
-		}
-		else
-		{
-			// 3+ days
-			iChance = 0;
-		}
-
-		// multiply by experience level
-		iChance *= pSoldier->bExpLevel;
-
-		if( (INT32) Random( 100 ) < iChance )
-		{
-			// B'bye!
-			pSoldier->fSignedAnotherContract = TRUE;
-		}
-	}
+	UINT32 const chance = (3 - full_days_remaining) * s.bExpLevel;
+	if (Chance(chance)) s.fSignedAnotherContract = TRUE;
 }
 
 

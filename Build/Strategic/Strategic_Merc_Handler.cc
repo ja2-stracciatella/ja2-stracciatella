@@ -264,7 +264,7 @@ void MercDailyUpdate()
 			}
 
 			DailyMoraleUpdate(s);
-			CheckIfMercGetsAnotherContract(s);
+			CheckIfMercGetsAnotherContract(*s);
 		}
 
 		// if active, here, & alive (POW is ok, don't care)
