@@ -1,5 +1,5 @@
 HACK0010
-TODO0020
+TODO0021
 
 - HACK0001 put the process properly to sleep during idle phases instead of SDL_Delay(1)
 - HACK0007 Stop PreRandom always returning 0 or 1 without ensuring an equal distribution, which would be a rather complex task with pregenerated randoms
@@ -39,3 +39,4 @@ TODO0020
 - TODO001E The union in FACETYPE is ugly.
 - TODO001F This does not work, when n_slots drops to 0 before all player groups are handled.
 - TODO0020 This is the only place where TILES_* and RENDER_* do not match. Investigate whether this is correct.
+- TODO0021 It is crude to ignore FailedToAddNode. If multiple nodes are added, rollback is needed.

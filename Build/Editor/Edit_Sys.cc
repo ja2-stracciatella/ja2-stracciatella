@@ -306,6 +306,7 @@ void PasteSingleToilet( UINT32 iMapIndex )
 /* Common paste routine for PasteSingleWall, PasteSingleDoor,
  * PasteSingleDecoration, and PasteSingleDecor (above). */
 static void PasteSingleWallCommon(UINT32 const map_idx, Selections* const sel_list, INT32& n_sel_list)
+try
 {
 	pSelList    = sel_list;
 	pNumSelList = &n_sel_list;
@@ -392,6 +393,7 @@ static void PasteSingleWallCommon(UINT32 const map_idx, Selections* const sel_li
 		AddStructToTail(map_idx, idx);
 	}
 }
+catch (FailedToAddNode const&) { /* XXX TODO0021 ignore */ }
 
 
 //---------------------------------------------------------------------------------------------------------------
