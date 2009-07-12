@@ -501,17 +501,16 @@ static void RenderSquadList(void)
 		INT16 const h = 2 * (SQUAD_REGION_HEIGHT - SUBTRACTOR_FOR_SQUAD_LIST) / NUMBER_OF_SQUADS;
 		if (i < NUMBER_OF_SQUADS / 2)
 		{
+			x += 2;
 			y += i * h;
 		}
 		else
 		{
-			x += RADAR_WINDOW_WIDTH / 2;
+			x += RADAR_WINDOW_WIDTH / 2 - 2;
 			y += (i - NUMBER_OF_SQUADS / 2) * h;
 		}
 		FindFontCenterCoordinates(x, y, w, h, pSquadMenuStrings[i], SQUAD_FONT, &sX, &sY);
-
-		sX = dx + (i < NUMBER_OF_SQUADS / 2 ? 2 : RADAR_WINDOW_WIDTH / 2 - 2);
-		MPrint(sX, sY, pSquadMenuStrings[i]);
+		MPrint(x, sY, pSquadMenuStrings[i]);
 	}
 }
 
