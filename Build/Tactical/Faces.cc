@@ -279,7 +279,7 @@ void DeleteFace(FACETYPE* const pFace)
 		// Call dialogue handler function
 		pFace->fTalking = FALSE;
 
-		HandleDialogueEnd( pFace );
+		HandleDialogueEnd(*pFace);
 	}
 
 	// Delete vo
@@ -693,7 +693,7 @@ static void HandleTalkingAutoFace(FACETYPE& f)
 			f.fTalking          = FALSE;
 			f.fAnimatingTalking = FALSE;
 			AudioGapListDone(&f.GapList); // Remove gap info
-			HandleDialogueEnd(&f);          // Call dialogue handler function
+			HandleDialogueEnd(f);          // Call dialogue handler function
 		}
 	}
 }
@@ -1363,7 +1363,7 @@ void InternalShutupaYoFace(FACETYPE* const pFace, const BOOLEAN fForce)
 		pFace->fTalking = FALSE;
 
 		// Call dialogue handler function
-		HandleDialogueEnd( pFace );
+		HandleDialogueEnd(*pFace);
 
 		pFace->fTalking = FALSE;
 		pFace->fAnimatingTalking = FALSE;

@@ -1194,18 +1194,18 @@ static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE* const f
 }
 
 
-void HandleDialogueEnd( FACETYPE *pFace )
+void HandleDialogueEnd(FACETYPE& f)
 {
 	if ( gGameSettings.fOptions[ TOPTION_SPEECH ] )
 	{
 
-		if ( pFace != gpCurrentTalkingFace )
+		if (&f != gpCurrentTalkingFace)
 		{
 			//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"HandleDialogueEnd() face mismatch." );
 			return;
 		}
 
-		if ( pFace->fTalking )
+		if (f.fTalking)
 		{
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"HandleDialogueEnd() face still talking." );
 			return;
@@ -1218,8 +1218,8 @@ void HandleDialogueEnd( FACETYPE *pFace )
 			if ( gfFacePanelActive )
 			{
 				// Set face inactive!
-				pFace->fCanHandleInactiveNow = TRUE;
-				SetAutoFaceInActive(pFace);
+				f.fCanHandleInactiveNow = TRUE;
+				SetAutoFaceInActive(&f);
 				gfFacePanelActive = FALSE;
 
 				if ( fExternFaceBoxRegionCreated )
@@ -1232,8 +1232,8 @@ void HandleDialogueEnd( FACETYPE *pFace )
 			case DIALOGUE_NPC_UI:
 			break;
 			case DIALOGUE_EXTERNAL_NPC_UI:
-				pFace->fCanHandleInactiveNow = TRUE;
-				SetAutoFaceInActive(pFace);
+				f.fCanHandleInactiveNow = TRUE;
+				SetAutoFaceInActive(&f);
 				gfFacePanelActive = FALSE;
 
 				if ( fExternFaceBoxRegionCreated )
@@ -1247,7 +1247,7 @@ void HandleDialogueEnd( FACETYPE *pFace )
 	}
 
 
-  if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] || !pFace->fValidSpeech )
+  if (gGameSettings.fOptions[TOPTION_SUBTITLES] || !f.fValidSpeech)
 	{
 		switch( gbUIHandlerID )
 		{

@@ -213,7 +213,7 @@ void CharacterDialogueUsingAlternateFile(SOLDIERTYPE&, UINT16 quote, DialogueHan
 BOOLEAN ExecuteCharacterDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, FACETYPE* face, DialogueHandler, BOOLEAN fFromSoldier);
 
 // Called when a face stops talking...
-void HandleDialogueEnd( FACETYPE *pFace );
+void HandleDialogueEnd(FACETYPE&);
 
 // Called to advance speech
 // Used for option when no speech sound file
