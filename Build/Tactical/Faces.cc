@@ -134,11 +134,11 @@ void InitSoldierFace(SOLDIERTYPE& s)
 {
 	// Check if we have a face init already
 	if (s.face) return;
-	s.face = InitFace(s.ubProfile, &s, 0);
+	s.face = &InitFace(s.ubProfile, &s, 0);
 }
 
 
-FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInitFlags)
+FACETYPE& InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInitFlags)
 {
 	if (id == NO_PROFILE) throw std::logic_error("Tried to load face for invalid profile");
 	MERCPROFILESTRUCT const& p = GetProfile(id);
@@ -251,7 +251,7 @@ FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 		f.fInvalidAnim = TRUE;
 	}
 
-	return &f;
+	return f;
 }
 
 

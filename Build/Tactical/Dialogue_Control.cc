@@ -187,7 +187,7 @@ void InitalizeStaticExternalNPCFaces( void )
 
 	for( iCounter = 0; iCounter < NUMBER_OF_EXTERNAL_NPC_FACES; iCounter++ )
 	{
-		uiExternalStaticNPCFaces[iCounter] = InitFace(g_external_face_profile_ids[iCounter], NULL, FACE_FORCE_SMALL);
+		uiExternalStaticNPCFaces[iCounter] = &InitFace(g_external_face_profile_ids[iCounter], 0, FACE_FORCE_SMALL);
 	}
 #endif
 }

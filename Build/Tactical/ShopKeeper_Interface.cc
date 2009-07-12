@@ -752,14 +752,15 @@ static BOOLEAN InitShopKeepersFace(UINT8 ubMercID)
 	if (pSoldier == NULL) return FALSE;
 #endif
 
-	giShopKeeperFaceIndex = InitFace(ubMercID, pSoldier, FACE_BIGFACE);
+	FACETYPE& f = InitFace(ubMercID, pSoldier, FACE_BIGFACE);
+	giShopKeeperFaceIndex = &f;
 
-	SetAutoFaceActive(FRAME_BUFFER, FACE_AUTO_RESTORE_BUFFER, *giShopKeeperFaceIndex, SKI_FACE_X, SKI_FACE_Y);
+	SetAutoFaceActive(FRAME_BUFFER, FACE_AUTO_RESTORE_BUFFER, f, SKI_FACE_X, SKI_FACE_Y);
 
 	//Set it so the face cannot be set InActive
-	giShopKeeperFaceIndex->uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
+	f.uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
-	RenderAutoFace( giShopKeeperFaceIndex );
+	RenderAutoFace(&f);
 
 	return(TRUE);
 }

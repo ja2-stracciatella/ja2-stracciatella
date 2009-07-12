@@ -146,7 +146,7 @@ struct FACETYPE
 // FACE HANDLING
 //
 // Faces are done like this: Call
-FACETYPE* InitFace(ProfileID id, SOLDIERTYPE* s, UINT32 uiInitFlags);
+FACETYPE& InitFace(ProfileID id, SOLDIERTYPE* s, UINT32 uiInitFlags);
 /* The first parameter is the profile ID and the second is the soldier (which
  * for most cases will be NULL if the face is not created from a SOLDIERTYPE).
  * This function allocates a slot in the table for the face, loads its STI file,

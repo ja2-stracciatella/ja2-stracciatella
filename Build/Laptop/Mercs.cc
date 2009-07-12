@@ -719,10 +719,11 @@ UINT8 GetMercIDFromMERCArray(UINT8 ubMercID)
 static void InitMercVideoFace(void)
 {
 	// Allocates space, and loads the sti for SPECK
-	g_video_speck_face = InitFace(SPECK, NULL, 0);
+	FACETYPE& f = InitFace(SPECK, 0, 0);
+	g_video_speck_face = &f;
 
 	// Sets up the eyes blinking and the mouth moving
-	SetAutoFaceActive(guiMercVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER, *g_video_speck_face, 0, 0);
+	SetAutoFaceActive(guiMercVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER, f, 0, 0);
 
 	//Renders the face to the background
 	RenderAutoFace(g_video_speck_face);

@@ -421,8 +421,8 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 	CalculatePopupTextOrientation( TALK_PANEL_CALC_SUBTITLE_WIDTH, TALK_PANEL_CALC_SUBTITLE_HEIGHT );
 
 	// Create face ( a big face! )....
-	FACETYPE* const pFace = InitFace(ubCharacterNum, NULL, FACE_BIGFACE | FACE_POTENTIAL_KEYWAIT);
-	gTalkPanel.face = pFace;
+	FACETYPE& f = InitFace(ubCharacterNum, 0, FACE_BIGFACE | FACE_POTENTIAL_KEYWAIT);
+	gTalkPanel.face = &f;
 
 	// Create mouse regions...
 	sX = gTalkPanel.sX + TALK_PANEL_REGION_STARTX;
@@ -453,11 +453,11 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 	// Build save buffer
 	// Create a buffer for him to go!
 	// OK, ignore screen widths, height, only use BPP
-	gTalkPanel.uiSaveBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, PIXEL_DEPTH);
+	gTalkPanel.uiSaveBuffer = AddVideoSurface(f.usFaceWidth, f.usFaceHeight, PIXEL_DEPTH);
 
 	// Set face to auto
-	SetAutoFaceActive(gTalkPanel.uiSaveBuffer, FACE_AUTO_RESTORE_BUFFER, *pFace, 0, 0);
-	pFace->uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
+	SetAutoFaceActive(gTalkPanel.uiSaveBuffer, FACE_AUTO_RESTORE_BUFFER, f, 0, 0);
+	f.uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
 	// Load buttons, create button
 	gTalkPanel.iButtonImages = LoadButtonImage("INTERFACE/talkbox2.sti", -1, 3, -1, 4, -1);
@@ -474,7 +474,7 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 	gTalkPanel.uiCancelButton->uiFlags &= ~BUTTON_DIRTY;
 
 	// Render once!
-	RenderAutoFace(pFace);
+	RenderAutoFace(&f);
 
 	gfInTalkPanel = TRUE;
 

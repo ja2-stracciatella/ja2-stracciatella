@@ -1643,9 +1643,10 @@ static void BtnHangUpButtonCallback(GUI_BUTTON *btn, INT32 reason)
 static void InitVideoFace(UINT8 ubMercID)
 {
 	//Create the facial index
-	giMercFaceIndex = InitFace(ubMercID, NULL, 0);
+	FACETYPE& f = InitFace(ubMercID, 0, 0);
+	giMercFaceIndex = &f;
 
-	SetAutoFaceActive(guiVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER, *giMercFaceIndex, 0, 0);
+	SetAutoFaceActive(guiVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER, f, 0, 0);
 
 	RenderAutoFace( giMercFaceIndex );
 
