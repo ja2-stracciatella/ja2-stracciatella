@@ -173,12 +173,12 @@ void RenderAutoFace(FACETYPE*);
 
 // If you want to setup the face to talking, ( most times this call is done in JA2 by other functions, not
 //directly), you call
-void SetFaceTalking(FACETYPE*, const char* zSoundFile, const wchar_t* zTextString);
+void SetFaceTalking(FACETYPE&, char const* zSoundFile, wchar_t const* zTextString);
 // This function will setup appropriate face data and begin the speech process. It can fail if the sound
 //cannot be played for any reason.
 
 // Set some face talking flags without need to play sound
-void ExternSetFaceTalking(FACETYPE*, UINT32 uiSoundID);
+void ExternSetFaceTalking(FACETYPE&, UINT32 sound_id);
 
 // Once this is done, this function must be called overy gameloop that you want to handle the sprite:
 void HandleAutoFaces(void);

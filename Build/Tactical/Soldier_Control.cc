@@ -563,7 +563,7 @@ void	DoNinjaAttack( SOLDIERTYPE *pSoldier )
 			if ( pSoldier->ubProfile != NO_PROFILE )
 			{
 				FACETYPE* const face = pSoldier->face;
-				if (face != NULL) ExternSetFaceTalking(face, uiSoundID);
+				if (face != NULL) ExternSetFaceTalking(*face, uiSoundID);
 			}
 		}
 	}
@@ -6081,7 +6081,7 @@ file_exists:;
 	if (s->ubProfile != NO_PROFILE)
 	{
 		FACETYPE* const face = s->face;
-		if (face) ExternSetFaceTalking(face, uiSoundID);
+		if (face) ExternSetFaceTalking(*face, uiSoundID);
 	}
 
 	return TRUE;

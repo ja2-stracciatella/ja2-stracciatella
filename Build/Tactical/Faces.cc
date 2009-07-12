@@ -104,13 +104,13 @@ static const RPC_SMALL_FACE_VALUES gRPCSmallFaceValues[] =
 };
 
 
-static FACETYPE* GetFreeFace(void)
+static FACETYPE& GetFreeFace(void)
 {
 	for (FACETYPE* i = gFacesData; i != gFacesData + guiNumFaces; ++i)
 	{
-		if (!i->fAllocated) return i;
+		if (!i->fAllocated) return *i;
 	}
-	if (guiNumFaces < NUM_FACE_SLOTS) return &gFacesData[guiNumFaces++];
+	if (guiNumFaces < NUM_FACE_SLOTS) return gFacesData[guiNumFaces++];
 	throw std::runtime_error("Out of face slots");
 }
 
@@ -143,7 +143,7 @@ FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 	if (id == NO_PROFILE) throw std::logic_error("Tried to load face for invalid profile");
 	MERCPROFILESTRUCT const& p = GetProfile(id);
 
-	FACETYPE* const face = GetFreeFace();
+	FACETYPE& f = GetFreeFace();
 
 	const char* face_file;
 	// Check if we are a big-face....
@@ -182,24 +182,24 @@ FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 		vo = AddVideoObjectFromFile("FACES/placeholder.sti");
 	}
 
-	memset(face, 0, sizeof(*face));
-	face->uiFlags               = uiInitFlags;
-	face->fAllocated            = TRUE;
-	face->fDisabled             = TRUE; // default to off!
-	face->video_overlay         = NULL;
-	face->soldier               = s;
-	face->ubCharacterNum        = id;
-	face->sEyeFrame             = 0;
-	face->uiEyeDelay            = 50 + Random(30);
+	memset(&f, 0, sizeof(f));
+	f.uiFlags               = uiInitFlags;
+	f.fAllocated            = TRUE;
+	f.fDisabled             = TRUE; // default to off!
+	f.video_overlay         = NULL;
+	f.soldier               = s;
+	f.ubCharacterNum        = id;
+	f.sEyeFrame             = 0;
+	f.uiEyeDelay            = 50 + Random(30);
 
 	UINT32 blink_freq = p.uiBlinkFrequency;
 	blink_freq = (Random(2) ? blink_freq + Random(2000) : blink_freq - Random(2000));
-	face->uiBlinkFrequency      = blink_freq;
+	f.uiBlinkFrequency      = blink_freq;
 
-	face->uiExpressionFrequency = p.uiExpressionFrequency;
-	face->sMouthFrame           = 0;
-	face->uiMouthDelay          = 120;
-	face->uiVideoObject         = vo;
+	f.uiExpressionFrequency = p.uiExpressionFrequency;
+	f.sMouthFrame           = 0;
+	f.uiMouthDelay          = 120;
+	f.uiVideoObject         = vo;
 
 	// Set palette
 	SGPPaletteEntry pal[256];
@@ -228,30 +228,30 @@ FACETYPE* InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 
 	// Get FACE height, width
 	ETRLEObject const& face_gfx = vo->SubregionProperties(0);
-	face->usFaceWidth  = face_gfx.usWidth;
-	face->usFaceHeight = face_gfx.usHeight;
+	f.usFaceWidth  = face_gfx.usWidth;
+	f.usFaceHeight = face_gfx.usHeight;
 
 	// OK, check # of items
 	if (vo->SubregionCount() == 8)
 	{
 		// Get EYE height, width
 		ETRLEObject const& eyes_gfx = vo->SubregionProperties(1);
-		face->usEyesWidth  = eyes_gfx.usWidth;
-		face->usEyesHeight = eyes_gfx.usHeight;
+		f.usEyesWidth  = eyes_gfx.usWidth;
+		f.usEyesHeight = eyes_gfx.usHeight;
 
 		// Get Mouth height, width
 		ETRLEObject const& mouth_gfx = vo->SubregionProperties(5);
-		face->usMouthWidth  = mouth_gfx.usWidth;
-		face->usMouthHeight = mouth_gfx.usHeight;
+		f.usMouthWidth  = mouth_gfx.usWidth;
+		f.usMouthHeight = mouth_gfx.usHeight;
 
-		face->fInvalidAnim = FALSE;
+		f.fInvalidAnim = FALSE;
 	}
 	else
 	{
-		face->fInvalidAnim = TRUE;
+		f.fInvalidAnim = TRUE;
 	}
 
-	return face;
+	return &f;
 }
 
 
@@ -299,15 +299,15 @@ void SetAutoFaceActiveFromSoldier(SGPVSurface* const display, SGPVSurface* const
 }
 
 
-static void GetFaceRelativeCoordinates(const FACETYPE* const f, UINT16* const pusEyesX, UINT16* const pusEyesY, UINT16* const pusMouthX, UINT16* const pusMouthY)
+static void GetFaceRelativeCoordinates(FACETYPE const& f, UINT16* const pusEyesX, UINT16* const pusEyesY, UINT16* const pusMouthX, UINT16* const pusMouthY)
 {
-	ProfileID         const  pid = f->ubCharacterNum;
+	ProfileID         const  pid = f.ubCharacterNum;
 	MERCPROFILESTRUCT const& p   = GetProfile(pid);
 
 	// Take eyes x,y from profile unless we are an RPC and we are small faced
 	// Are we a recruited merc or small?
-	if (f->uiFlags & FACE_FORCE_SMALL ||
-			(!(f->uiFlags & FACE_BIGFACE) && p.ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE)))
+	if (f.uiFlags & FACE_FORCE_SMALL ||
+			(!(f.uiFlags & FACE_BIGFACE) && p.ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE)))
 	{
 		// Loop through all values of available profiles to find ours
 		for (const RPC_SMALL_FACE_VALUES* i = gRPCSmallFaceValues; i != endof(gRPCSmallFaceValues); ++i)
@@ -328,7 +328,7 @@ static void GetFaceRelativeCoordinates(const FACETYPE* const f, UINT16* const pu
 }
 
 
-static void InternalSetAutoFaceActive(SGPVSurface* display, SGPVSurface* restore, FACETYPE*, UINT16 usFaceX, UINT16 usFaceY, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY);
+static void InternalSetAutoFaceActive(SGPVSurface* display, SGPVSurface* restore, FACETYPE&, UINT16 usFaceX, UINT16 usFaceY, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY);
 
 
 void SetAutoFaceActive(SGPVSurface* const display, SGPVSurface* const restore, FACETYPE* const face, const UINT16 usFaceX, const UINT16 usFaceY)
@@ -338,80 +338,74 @@ void SetAutoFaceActive(SGPVSurface* const display, SGPVSurface* const restore, F
 	UINT16 usEyesY;
 	UINT16 usMouthX;
 	UINT16 usMouthY;
-	GetFaceRelativeCoordinates(face, &usEyesX, &usEyesY, &usMouthX, &usMouthY);
-	InternalSetAutoFaceActive(display, restore, face, usFaceX, usFaceY, usEyesX, usEyesY, usMouthX, usMouthY);
+	GetFaceRelativeCoordinates(*face, &usEyesX, &usEyesY, &usMouthX, &usMouthY);
+	InternalSetAutoFaceActive(display, restore, *face, usFaceX, usFaceY, usEyesX, usEyesY, usMouthX, usMouthY);
 }
 
 
-static void InternalSetAutoFaceActive(SGPVSurface* const display, SGPVSurface* const restore, FACETYPE* const pFace, const UINT16 usFaceX, const UINT16 usFaceY, const UINT16 usEyesX, const UINT16 usEyesY, const UINT16 usMouthX, const UINT16 usMouthY)
+static void InternalSetAutoFaceActive(SGPVSurface* const display, SGPVSurface* const restore, FACETYPE& f, UINT16 const usFaceX, UINT16 const usFaceY, UINT16 const usEyesX, UINT16 const usEyesY, UINT16 const usMouthX, UINT16 const usMouthY)
 {
 	// IF we are already being contained elsewhere, return without doing anything!
 
 	// ATE: Don't allow another activity from setting active....
-	if ( pFace->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE )
+	if (f.uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE)
 	{
 		return;
 	}
 
 	// Check if we are active already, remove if so!
-	SetAutoFaceInActive(pFace);
+	SetAutoFaceInActive(&f);
 
 	if (restore == FACE_AUTO_RESTORE_BUFFER)
 	{
-		pFace->fAutoRestoreBuffer  = TRUE;
-		pFace->uiAutoRestoreBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, PIXEL_DEPTH);
+		f.fAutoRestoreBuffer  = TRUE;
+		f.uiAutoRestoreBuffer = AddVideoSurface(f.usFaceWidth, f.usFaceHeight, PIXEL_DEPTH);
 	}
 	else
 	{
-		pFace->fAutoRestoreBuffer  = FALSE;
-		pFace->uiAutoRestoreBuffer = restore;
+		f.fAutoRestoreBuffer  = FALSE;
+		f.uiAutoRestoreBuffer = restore;
 	}
 
 	if (display == FACE_AUTO_DISPLAY_BUFFER)
 	{
-		pFace->fAutoDisplayBuffer  = TRUE;
-		pFace->uiAutoDisplayBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, PIXEL_DEPTH);
+		f.fAutoDisplayBuffer  = TRUE;
+		f.uiAutoDisplayBuffer = AddVideoSurface(f.usFaceWidth, f.usFaceHeight, PIXEL_DEPTH);
 	}
 	else
 	{
-		pFace->fAutoDisplayBuffer  = FALSE;
-		pFace->uiAutoDisplayBuffer = display;
+		f.fAutoDisplayBuffer  = FALSE;
+		f.uiAutoDisplayBuffer = display;
 	}
 
-
-	pFace->usFaceX				= usFaceX;
-	pFace->usFaceY				= usFaceY;
-	pFace->fCanHandleInactiveNow = FALSE;
-
+	f.usFaceX               = usFaceX;
+	f.usFaceY               = usFaceY;
+	f.fCanHandleInactiveNow = FALSE;
 
 	//Take eyes x,y from profile unless we are an RPC and we are small faced.....
-	pFace->usEyesX				= usEyesX + usFaceX;
-	pFace->usEyesY				= usEyesY + usFaceY;
-	pFace->usMouthY				=	usMouthY + usFaceY;
-	pFace->usMouthX				= usMouthX + usFaceX;
+	f.usEyesX  = usEyesX  + usFaceX;
+	f.usEyesY  = usEyesY  + usFaceY;
+	f.usMouthY = usMouthY + usFaceY;
+	f.usMouthX = usMouthX + usFaceX;
 
 	// Save offset values
-	pFace->usEyesOffsetX				= usEyesX;
-	pFace->usEyesOffsetY				= usEyesY;
-	pFace->usMouthOffsetY				=	usMouthY;
-	pFace->usMouthOffsetX				= usMouthX;
+	f.usEyesOffsetX  = usEyesX;
+	f.usEyesOffsetY  = usEyesY;
+	f.usMouthOffsetY = usMouthY;
+	f.usMouthOffsetX = usMouthX;
 
-
-	if ( pFace->usEyesY == usFaceY || pFace->usMouthY == usFaceY )
+	if (f.usEyesY == usFaceY || f.usMouthY == usFaceY)
 	{
-		pFace->fInvalidAnim = TRUE;
+		f.fInvalidAnim = TRUE;
 	}
 
-	pFace->fDisabled			=	FALSE;
-	pFace->uiLastBlink			=		GetJA2Clock();
-	pFace->uiLastExpression	=		GetJA2Clock();
-	pFace->uiEyelast				=		GetJA2Clock();
+	f.fDisabled        = FALSE;
+	f.uiLastBlink      = GetJA2Clock();
+	f.uiLastExpression = GetJA2Clock();
+	f.uiEyelast        = GetJA2Clock();
 
 	// Are we a soldier?
-	if (pFace->soldier != NULL)
-	{
-		pFace->bOldSoldierLife = pFace->soldier->bLife;
-	}
+	if (f.soldier) f.bOldSoldierLife = f.soldier->bLife;
 }
 
 
@@ -490,20 +484,20 @@ void SetAllAutoFacesInactive(  )
 }
 
 
-static void NewEye(FACETYPE* pFace);
-static void HandleRenderFaceAdjustments(FACETYPE* pFace, BOOLEAN fDisplayBuffer, SGPVSurface* buffer, INT16 sFaceX, INT16 sFaceY, UINT16 usEyesX, UINT16 usEyesY);
-static void FaceRestoreSavedBackgroundRect(FACETYPE const*, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight);
+static void NewEye(FACETYPE&);
+static void HandleRenderFaceAdjustments(FACETYPE&, BOOLEAN fDisplayBuffer, SGPVSurface* buffer, INT16 sFaceX, INT16 sFaceY, UINT16 usEyesX, UINT16 usEyesY);
+static void FaceRestoreSavedBackgroundRect(FACETYPE const&, INT16 sDestLeft, INT16 sDestTop, INT16 sSrcLeft, INT16 sSrcTop, INT16 sWidth, INT16 sHeight);
 
 
-static void BlinkAutoFace(FACETYPE* const f)
+static void BlinkAutoFace(FACETYPE& f)
 {
-	Assert(f->fAllocated);
-	Assert(!f->fDisabled);
+	Assert(f.fAllocated);
+	Assert(!f.fDisabled);
 
-	if (f->fInvalidAnim) return;
+	if (f.fInvalidAnim) return;
 
 	// CHECK IF BUDDY IS DEAD, UNCONSCIOUS, ASLEEP, OR POW!
-	const SOLDIERTYPE* const s = f->soldier;
+	SOLDIERTYPE const* const s = f.soldier;
 	if (s != NULL &&
 			(
 				s->fMercAsleep           ||
@@ -514,92 +508,92 @@ static void BlinkAutoFace(FACETYPE* const f)
 		return;
 	}
 
-	if (f->ubExpression == NO_EXPRESSION)
+	if (f.ubExpression == NO_EXPRESSION)
 	{
 		// Get Delay time, if the first frame, use a different delay
-		if (GetJA2Clock() - f->uiLastBlink > f->uiBlinkFrequency)
+		if (GetJA2Clock() - f.uiLastBlink > f.uiBlinkFrequency)
 		{
-			f->uiLastBlink  = GetJA2Clock();
-			f->ubExpression = BLINKING;
-			f->uiEyelast    = GetJA2Clock();
+			f.uiLastBlink  = GetJA2Clock();
+			f.ubExpression = BLINKING;
+			f.uiEyelast    = GetJA2Clock();
 		}
 
-		if (f->fAnimatingTalking &&
-				GetJA2Clock() - f->uiLastExpression > f->uiExpressionFrequency)
+		if (f.fAnimatingTalking &&
+				GetJA2Clock() - f.uiLastExpression > f.uiExpressionFrequency)
 		{
-			f->uiLastExpression = GetJA2Clock();
-			f->ubExpression     = (Random(2) == 0 ? ANGRY : SURPRISED);
+			f.uiLastExpression = GetJA2Clock();
+			f.ubExpression     = (Random(2) == 0 ? ANGRY : SURPRISED);
 		}
 	}
 
-	if (f->ubExpression != NO_EXPRESSION &&
-			GetJA2Clock() - f->uiEyelast > f->uiEyeDelay) // Are we going to blink?
+	if (f.ubExpression != NO_EXPRESSION &&
+			GetJA2Clock() - f.uiEyelast > f.uiEyeDelay) // Are we going to blink?
 	{
-		f->uiEyelast = GetJA2Clock();
+		f.uiEyelast = GetJA2Clock();
 
 		NewEye(f);
 
-		INT16 sFrame = f->sEyeFrame;
+		INT16 sFrame = f.sEyeFrame;
 		if (sFrame > 4) sFrame = 4;
 
 		if (sFrame > 0)
 		{
 			// Blit Accordingly!
-			BltVideoObject(f->uiAutoDisplayBuffer, f->uiVideoObject, sFrame, f->usEyesX, f->usEyesY);
+			BltVideoObject(f.uiAutoDisplayBuffer, f.uiVideoObject, sFrame, f.usEyesX, f.usEyesY);
 
-			if (f->uiAutoDisplayBuffer == FRAME_BUFFER)
+			if (f.uiAutoDisplayBuffer == FRAME_BUFFER)
 			{
-				InvalidateRegion(f->usEyesX, f->usEyesY, f->usEyesX + f->usEyesWidth, f->usEyesY + f->usEyesHeight);
+				InvalidateRegion(f.usEyesX, f.usEyesY, f.usEyesX + f.usEyesWidth, f.usEyesY + f.usEyesHeight);
 			}
 		}
 		else
 		{
-			f->ubExpression = NO_EXPRESSION;
+			f.ubExpression = NO_EXPRESSION;
 			// Update rects just for eyes
 
-			if (f->uiAutoRestoreBuffer == guiSAVEBUFFER)
+			if (f.uiAutoRestoreBuffer == guiSAVEBUFFER)
 			{
-				FaceRestoreSavedBackgroundRect(f, f->usEyesX, f->usEyesY, f->usEyesX, f->usEyesY, f->usEyesWidth, f->usEyesHeight);
+				FaceRestoreSavedBackgroundRect(f, f.usEyesX, f.usEyesY, f.usEyesX, f.usEyesY, f.usEyesWidth, f.usEyesHeight);
 			}
 			else
 			{
-				FaceRestoreSavedBackgroundRect(f, f->usEyesX, f->usEyesY, f->usEyesOffsetX, f->usEyesOffsetY, f->usEyesWidth, f->usEyesHeight);
+				FaceRestoreSavedBackgroundRect(f, f.usEyesX, f.usEyesY, f.usEyesOffsetX, f.usEyesOffsetY, f.usEyesWidth, f.usEyesHeight);
 			}
 		}
 
-		HandleRenderFaceAdjustments(f, TRUE, 0, f->usFaceX, f->usFaceY, f->usEyesX, f->usEyesY);
+		HandleRenderFaceAdjustments(f, TRUE, 0, f.usFaceX, f.usFaceY, f.usEyesX, f.usEyesY);
 	}
 }
 
 
-static void DrawFaceRect(const FACETYPE* const f, SGPVSurface* const buffer, const INT16 x, const INT16 y, const UINT32 colour)
+static void DrawFaceRect(FACETYPE const& f, SGPVSurface* const buffer, const INT16 x, const INT16 y, const UINT32 colour)
 {
 	SGPVSurface::Lock l(buffer);
 	UINT32 const uiDestPitchBYTES = l.Pitch();
 
-	SetClippingRegionAndImageWidth(uiDestPitchBYTES, x - 2, y - 1, x + f->usFaceWidth + 4, y + f->usFaceHeight + 4);
+	SetClippingRegionAndImageWidth(uiDestPitchBYTES, x - 2, y - 1, x + f.usFaceWidth + 4, y + f.usFaceHeight + 4);
 
 	const UINT16 usLineColor = Get16BPPColor(colour);
-	RectangleDraw(TRUE, x - 2, y - 1, x + f->usFaceWidth + 1, y + f->usFaceHeight, usLineColor, l.Buffer<UINT16>());
+	RectangleDraw(TRUE, x - 2, y - 1, x + f.usFaceWidth + 1, y + f.usFaceHeight, usLineColor, l.Buffer<UINT16>());
 
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 
-static void HandleFaceHilights(const FACETYPE* const f, SGPVSurface* const uiBuffer, const INT16 sFaceX, const INT16 sFaceY)
+static void HandleFaceHilights(FACETYPE const& f, SGPVSurface* const uiBuffer, const INT16 sFaceX, const INT16 sFaceY)
 {
-	if (f->fDisabled) return;
+	if (f.fDisabled) return;
 
-	if (f->uiAutoDisplayBuffer == FRAME_BUFFER && guiCurrentScreen == GAME_SCREEN)
+	if (f.uiAutoDisplayBuffer == FRAME_BUFFER && guiCurrentScreen == GAME_SCREEN)
 	{
 		// If we are highlighted, do this now!
-		if (f->uiFlags & FACE_SHOW_WHITE_HILIGHT)
+		if (f.uiFlags & FACE_SHOW_WHITE_HILIGHT)
 		{
 			DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, FROMRGB(255, 255, 255));
 		}
-		else if (f->uiFlags & FACE_SHOW_MOVING_HILIGHT)
+		else if (f.uiFlags & FACE_SHOW_MOVING_HILIGHT)
 		{
-			const SOLDIERTYPE* const s = f->soldier;
+			SOLDIERTYPE const* const s = f.soldier;
 			if (s != NULL && s->bLife >= OKLIFE)
 			{
 				const UINT32 color = (s->bStealthMode ? FROMRGB(158, 158, 12) : FROMRGB(8, 12, 118));
@@ -609,122 +603,120 @@ static void HandleFaceHilights(const FACETYPE* const f, SGPVSurface* const uiBuf
 		else
 		{
 			// ATE: Zero out any highlight boxzes....
-			DrawFaceRect(f, f->uiAutoDisplayBuffer, f->usFaceX, f->usFaceY, FROMRGB(0, 0, 0));
+			DrawFaceRect(f, f.uiAutoDisplayBuffer, f.usFaceX, f.usFaceY, FROMRGB(0, 0, 0));
 		}
 	}
 
-	if (f->fCompatibleItems)
+	if (f.fCompatibleItems)
 	{
 		DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, FROMRGB(255, 0, 0));
 	}
 }
 
 
-static void NewMouth(FACETYPE* pFace);
+static void NewMouth(FACETYPE&);
 
 
-static void MouthAutoFace(FACETYPE* const f)
+static void MouthAutoFace(FACETYPE& f)
 {
-	Assert(f->fAllocated);
-	Assert(!f->fDisabled);
+	Assert(f.fAllocated);
+	Assert(!f.fDisabled);
 
-	if (f->fTalking      &&
-			!f->fInvalidAnim &&
-			f->fAnimatingTalking)
+	if (f.fTalking && !f.fInvalidAnim && f.fAnimatingTalking)
 	{
 		// Check if we have an audio gap
-		if (PollAudioGap(f->uiSoundID, &f->GapList))
+		if (PollAudioGap(f.uiSoundID, &f.GapList))
 		{
-			f->sMouthFrame = 0;
+			f.sMouthFrame = 0;
 
-			if (f->uiAutoRestoreBuffer == guiSAVEBUFFER)
+			if (f.uiAutoRestoreBuffer == guiSAVEBUFFER)
 			{
-				FaceRestoreSavedBackgroundRect(f, f->usMouthX, f->usMouthY, f->usMouthX, f->usMouthY, f->usMouthWidth, f->usMouthHeight);
+				FaceRestoreSavedBackgroundRect(f, f.usMouthX, f.usMouthY, f.usMouthX, f.usMouthY, f.usMouthWidth, f.usMouthHeight);
 			}
 			else
 			{
-				FaceRestoreSavedBackgroundRect(f, f->usMouthX, f->usMouthY, f->usMouthOffsetX, f->usMouthOffsetY, f->usMouthWidth, f->usMouthHeight);
+				FaceRestoreSavedBackgroundRect(f, f.usMouthX, f.usMouthY, f.usMouthOffsetX, f.usMouthOffsetY, f.usMouthWidth, f.usMouthHeight);
 			}
 		}
-		else if (GetJA2Clock() - f->uiMouthlast > f->uiMouthDelay)
+		else if (GetJA2Clock() - f.uiMouthlast > f.uiMouthDelay)
 		{
-			f->uiMouthlast = GetJA2Clock();
+			f.uiMouthlast = GetJA2Clock();
 
 			NewMouth(f);
 
-			const INT16 sFrame = f->sMouthFrame;
+			INT16 const sFrame = f.sMouthFrame;
 			if (sFrame > 0)
 			{
 				// Blit Accordingly!
-				BltVideoObject(f->uiAutoDisplayBuffer, f->uiVideoObject, sFrame + 4, f->usMouthX, f->usMouthY);
+				BltVideoObject(f.uiAutoDisplayBuffer, f.uiVideoObject, sFrame + 4, f.usMouthX, f.usMouthY);
 
 				// Update rects
-				if (f->uiAutoDisplayBuffer == FRAME_BUFFER)
+				if (f.uiAutoDisplayBuffer == FRAME_BUFFER)
 				{
-					InvalidateRegion(f->usMouthX, f->usMouthY, f->usMouthX + f->usMouthWidth, f->usMouthY + f->usMouthHeight);
+					InvalidateRegion(f.usMouthX, f.usMouthY, f.usMouthX + f.usMouthWidth, f.usMouthY + f.usMouthHeight);
 				}
 			}
 			else
 			{
 				// Update rects just for Mouth
-				if (f->uiAutoRestoreBuffer == guiSAVEBUFFER)
+				if (f.uiAutoRestoreBuffer == guiSAVEBUFFER)
 				{
-					FaceRestoreSavedBackgroundRect(f, f->usMouthX, f->usMouthY, f->usMouthX, f->usMouthY, f->usMouthWidth, f->usMouthHeight);
+					FaceRestoreSavedBackgroundRect(f, f.usMouthX, f.usMouthY, f.usMouthX, f.usMouthY, f.usMouthWidth, f.usMouthHeight);
 				}
 				else
 				{
-					FaceRestoreSavedBackgroundRect(f, f->usMouthX, f->usMouthY, f->usMouthOffsetX, f->usMouthOffsetY, f->usMouthWidth, f->usMouthHeight);
+					FaceRestoreSavedBackgroundRect(f, f.usMouthX, f.usMouthY, f.usMouthOffsetX, f.usMouthOffsetY, f.usMouthWidth, f.usMouthHeight);
 				}
 			}
 
-			HandleRenderFaceAdjustments(f, TRUE, 0, f->usFaceX, f->usFaceY, f->usEyesX, f->usEyesY);
+			HandleRenderFaceAdjustments(f, TRUE, 0, f.usFaceX, f.usFaceY, f.usEyesX, f.usEyesY);
 		}
 	}
 
-	if  (!(f->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE))
+	if  (!(f.uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE))
 	{
-		HandleFaceHilights(f, f->uiAutoDisplayBuffer, f->usFaceX, f->usFaceY);
+		HandleFaceHilights(f, f.uiAutoDisplayBuffer, f.usFaceX, f.usFaceY);
 	}
 }
 
 
-static void SetupFinalTalkingDelay(FACETYPE* pFace);
+static void SetupFinalTalkingDelay(FACETYPE&);
 
 
-static void HandleTalkingAutoFace(FACETYPE* const f)
+static void HandleTalkingAutoFace(FACETYPE& f)
 {
-	Assert(f->fAllocated);
+	Assert(f.fAllocated);
 
-	if (!f->fTalking) return;
+	if (!f.fTalking) return;
 
-	if (!f->fFinishTalking)
+	if (!f.fFinishTalking)
 	{
 		// Check if we are done talking
-		if (f->fValidSpeech ?
-		      !SoundIsPlaying(f->uiSoundID) :
-		      GetJA2Clock() - f->uiTalkingTimer > f->uiTalkingDuration)
+		if (f.fValidSpeech ?
+		      !SoundIsPlaying(f.uiSoundID) :
+		      GetJA2Clock() - f.uiTalkingTimer > f.uiTalkingDuration)
 		{
 			SetupFinalTalkingDelay(f);
 		}
 	}
 	else
 	{
-		if (GetJA2Clock() - f->uiTalkingTimer > f->uiTalkingDuration)
+		if (GetJA2Clock() - f.uiTalkingTimer > f.uiTalkingDuration)
 		{
 			// end of talking
-			f->fTalking          = FALSE;
-			f->fAnimatingTalking = FALSE;
-			AudioGapListDone(&f->GapList); // Remove gap info
-			HandleDialogueEnd(f);          // Call dialogue handler function
+			f.fTalking          = FALSE;
+			f.fAnimatingTalking = FALSE;
+			AudioGapListDone(&f.GapList); // Remove gap info
+			HandleDialogueEnd(&f);          // Call dialogue handler function
 		}
 	}
 }
 
 
 // Local function - uses these variables because they have already been validated
-static void SetFaceShade(FACETYPE* const f, const BOOLEAN fExternBlit)
+static void SetFaceShade(FACETYPE const& f, BOOLEAN const fExternBlit)
 {
-	const SOLDIERTYPE* const s = f->soldier;
+	SOLDIERTYPE const* const s = f.soldier;
 	if (s == NULL) return;
 
 	UINT32 shade;
@@ -738,7 +730,7 @@ static void SetFaceShade(FACETYPE* const f, const BOOLEAN fExternBlit)
 		shade = FLASH_PORTRAIT_DARKSHADE;
 	}
 	else if (!fExternBlit                     &&
-			f->video_overlay == NULL              &&
+			!f.video_overlay                      &&
 			s->bActionPoints == 0                 &&
 			!(gTacticalStatus.uiFlags & REALTIME) &&
 			gTacticalStatus.uiFlags & INCOMBAT)
@@ -749,7 +741,7 @@ static void SetFaceShade(FACETYPE* const f, const BOOLEAN fExternBlit)
 	{
 		shade = FLASH_PORTRAIT_NOSHADE; // Set to default
 	}
-	f->uiVideoObject->CurrentShade(shade);
+	f.uiVideoObject->CurrentShade(shade);
 }
 
 
@@ -761,47 +753,47 @@ void RenderAutoFaceFromSoldier(SOLDIERTYPE const* const s)
 }
 
 
-static void GetXYForIconPlacement(const FACETYPE* pFace, UINT16 ubIndex, INT16 sFaceX, INT16 sFaceY, INT16* psX, INT16* psY)
+static void GetXYForIconPlacement(FACETYPE const& f, UINT16 const ubIndex, INT16 const sFaceX, INT16 const sFaceY, INT16* const psX, INT16* const psY)
 {
 	// Get height, width of icon...
 	ETRLEObject const& pTrav    = guiPORTRAITICONS->SubregionProperties(ubIndex);
 	UINT16      const  usHeight = pTrav.usHeight;
 	UINT16      const  usWidth  = pTrav.usWidth;
 
-	INT16 sX = sFaceX + pFace->usFaceWidth  - usWidth  - 1;
-	INT16 sY = sFaceY + pFace->usFaceHeight - usHeight - 1;
+	INT16 const sX = sFaceX + f.usFaceWidth  - usWidth  - 1;
+	INT16 const sY = sFaceY + f.usFaceHeight - usHeight - 1;
 
 	*psX = sX;
 	*psY = sY;
 }
 
 
-static void GetXYForRightIconPlacement(const FACETYPE* pFace, UINT16 ubIndex, INT16 sFaceX, INT16 sFaceY, INT16* psX, INT16* psY, INT8 bNumIcons)
+static void GetXYForRightIconPlacement(FACETYPE const& f, UINT16 ubIndex, INT16 sFaceX, INT16 sFaceY, INT16* psX, INT16* psY, INT8 bNumIcons)
 {
 	// Get height, width of icon...
 	ETRLEObject const& pTrav    = guiPORTRAITICONS->SubregionProperties(ubIndex);
 	UINT16      const  usHeight = pTrav.usHeight;
 	UINT16      const  usWidth  = pTrav.usWidth;
 
-	INT16 sX = sFaceX + usWidth * bNumIcons + 1;
-	INT16 sY = sFaceY + pFace->usFaceHeight - usHeight - 1;
+	INT16 const sX = sFaceX + usWidth * bNumIcons + 1;
+	INT16 const sY = sFaceY + f.usFaceHeight - usHeight - 1;
 
 	*psX = sX;
 	*psY = sY;
 }
 
 
-static void DoRightIcon(SGPVSurface* const dst, FACETYPE* const pFace, const INT16 sFaceX, const INT16 sFaceY, const INT8 bNumIcons, const INT8 sIconIndex)
+static void DoRightIcon(SGPVSurface* const dst, FACETYPE const& f, const INT16 sFaceX, const INT16 sFaceY, const INT8 bNumIcons, const INT8 sIconIndex)
 {
 	INT16						sIconX, sIconY;
 
 	// Find X, y for placement
-	GetXYForRightIconPlacement( pFace, sIconIndex, sFaceX, sFaceY, &sIconX, &sIconY, bNumIcons );
+	GetXYForRightIconPlacement(f, sIconIndex, sFaceX, sFaceY, &sIconX, &sIconY, bNumIcons);
 	BltVideoObject(dst, guiPORTRAITICONS, sIconIndex, sIconX, sIconY);
 }
 
 
-static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDisplayBuffer, SGPVSurface* const buffer, const INT16 sFaceX, const INT16 sFaceY, const UINT16 usEyesX, const UINT16 usEyesY)
+static void HandleRenderFaceAdjustments(FACETYPE& f, BOOLEAN const fDisplayBuffer, SGPVSurface* const buffer, INT16 const sFaceX, INT16 const sFaceY, UINT16 const usEyesX, UINT16 const usEyesY)
 {
 	// If we are using an extern buffer...
 	SGPVSurface* uiRenderBuffer;
@@ -811,21 +803,21 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 	}
 	else if (fDisplayBuffer)
 	{
-		uiRenderBuffer = f->uiAutoDisplayBuffer;
+		uiRenderBuffer = f.uiAutoDisplayBuffer;
 	}
 	else
 	{
-		uiRenderBuffer = f->uiAutoRestoreBuffer;
+		uiRenderBuffer = f.uiAutoRestoreBuffer;
 	}
 
 	// BLIT HATCH
-	SOLDIERTYPE* const s = f->soldier;
+	SOLDIERTYPE* const s = f.soldier;
 	if (s != NULL)
 	{
 		if (s->bLife < CONSCIOUSNESS || s->fDeadPanel)
 		{
 			// Blit Closed eyes here!
-			BltVideoObject(uiRenderBuffer, f->uiVideoObject, 1, usEyesX, usEyesY);
+			BltVideoObject(uiRenderBuffer, f.uiVideoObject, 1, usEyesX, usEyesY);
 
 			// Blit hatch!
 			BltVideoObject(uiRenderBuffer, guiHATCH, 0, sFaceX, sFaceY);
@@ -834,7 +826,7 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 		if (s->fMercAsleep)
 		{
 			// blit eyes closed
-			BltVideoObject(uiRenderBuffer, f->uiVideoObject, 1, usEyesX, usEyesY);
+			BltVideoObject(uiRenderBuffer, f.uiVideoObject, 1, usEyesX, usEyesY);
 		}
 
 		if (s->uiStatusFlags & SOLDIER_DEAD)
@@ -851,14 +843,14 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 		}
 
     // ATE: If talking in popup, don't do the other things.....
-    if (f->fTalking && gTacticalStatus.uiFlags & IN_ENDGAME_SEQUENCE)
+    if (f.fTalking && gTacticalStatus.uiFlags & IN_ENDGAME_SEQUENCE)
     {
       return;
     }
 
 		// ATE: Only do this, because we can be talking during an interrupt....
 		// Don't do this if we are being handled elsewhere and it's not an extern buffer...
-		if (!(f->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE) || buffer)
+		if (!(f.uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE) || buffer)
 		{
 			HandleFaceHilights(f, uiRenderBuffer, sFaceX, sFaceY);
 
@@ -899,27 +891,27 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 			}
 
 			// Render text above here if that's what was asked for
-			if (!f->fDisabled    &&
-					!f->fInvalidAnim &&
-					f->fDisplayTextOver != FACE_NO_TEXT_OVER)
+			if (!f.fDisabled    &&
+					!f.fInvalidAnim &&
+					f.fDisplayTextOver != FACE_NO_TEXT_OVER)
 			{
 				SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
 				SetFontDestBuffer(uiRenderBuffer);
 
 				INT16 sFontX;
 				INT16 sFontY;
-				FindFontCenterCoordinates(sFaceX, sFaceY, f->usFaceWidth, f->usFaceHeight, f->zDisplayText, TINYFONT1, &sFontX, &sFontY);
+				FindFontCenterCoordinates(sFaceX, sFaceY, f.usFaceWidth, f.usFaceHeight, f.zDisplayText, TINYFONT1, &sFontX, &sFontY);
 
-				if (f->fDisplayTextOver == FACE_DRAW_TEXT_OVER)
+				if (f.fDisplayTextOver == FACE_DRAW_TEXT_OVER)
 				{
-					GPrintInvalidate(sFontX, sFontY, f->zDisplayText);
+					GPrintInvalidate(sFontX, sFontY, f.zDisplayText);
 				}
-				else if (f->fDisplayTextOver == FACE_ERASE_TEXT_OVER)
+				else if (f.fDisplayTextOver == FACE_ERASE_TEXT_OVER)
 				{
-					const INT16 w = StringPixLength(f->zDisplayText, TINYFONT1);
-					const INT16 h = GetFontHeight(TINYFONT1);
+					INT16 const w = StringPixLength(f.zDisplayText, TINYFONT1);
+					INT16 const h = GetFontHeight(TINYFONT1);
 					RestoreExternBackgroundRect(sFontX, sFontY, w, h);
-					f->fDisplayTextOver = FACE_NO_TEXT_OVER;
+					f.fDisplayTextOver = FACE_NO_TEXT_OVER;
 				}
 
 				SetFontDestBuffer(FRAME_BUFFER);
@@ -1033,13 +1025,13 @@ static void HandleRenderFaceAdjustments(FACETYPE* const f, const BOOLEAN fDispla
 				SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 
 				const UINT16 usTextWidth = StringPixLength(sString, FONT10ARIAL) + 1;
-				MPrint(sFaceX + f->usFaceWidth - usTextWidth, sFaceY + 3, sString);
+				MPrint(sFaceX + f.usFaceWidth - usTextWidth, sFaceY + 3, sString);
 				SetFontDestBuffer(FRAME_BUFFER);
 			}
 		}
 	}
-  else if ((f->ubCharacterNum == FATHER || f->ubCharacterNum == MICKY) &&
-			gMercProfiles[f->ubCharacterNum].bNPCData >= 5)
+  else if ((f.ubCharacterNum == FATHER || f.ubCharacterNum == MICKY) &&
+			gMercProfiles[f.ubCharacterNum].bNPCData >= 5)
 	{
 		DoRightIcon(uiRenderBuffer, f, sFaceX, sFaceY, 0, 8);
 	}
@@ -1052,7 +1044,7 @@ void RenderAutoFace(FACETYPE* const f)
 	CHECKV(f->fAllocated);
 	CHECKV(!f->fDisabled);
 
-	SetFaceShade(f, FALSE);
+	SetFaceShade(*f, FALSE);
 
 	INT32 x;
 	INT32 y;
@@ -1068,135 +1060,134 @@ void RenderAutoFace(FACETYPE* const f)
 	}
 
 	BltVideoObject(f->uiAutoRestoreBuffer, f->uiVideoObject, 0, x, y);
-	HandleRenderFaceAdjustments(f, FALSE, 0, f->usFaceX, f->usFaceY, f->usEyesX, f->usEyesY);
-	FaceRestoreSavedBackgroundRect(f, f->usFaceX, f->usFaceY, x, y, f->usFaceWidth, f->usFaceHeight);
+	HandleRenderFaceAdjustments(*f, FALSE, 0, f->usFaceX, f->usFaceY, f->usEyesX, f->usEyesY);
+	FaceRestoreSavedBackgroundRect(*f, f->usFaceX, f->usFaceY, x, y, f->usFaceWidth, f->usFaceHeight);
 }
 
 
-static void ExternRenderFace(SGPVSurface* buffer, FACETYPE*, INT16 sX, INT16 sY);
+static void ExternRenderFace(SGPVSurface* buffer, FACETYPE&, INT16 sX, INT16 sY);
 
 
 void ExternRenderFaceFromSoldier(SGPVSurface* const buffer, SOLDIERTYPE const& s, INT16 const sX, INT16 const sY)
 {
-	ExternRenderFace(buffer, s.face, sX, sY);
+	CHECKV(s.face);
+	ExternRenderFace(buffer, *s.face, sX, sY);
 }
 
 
 /* To render an allocated face, but one that is independent of its active
  * status and does not require eye blinking or mouth movements, call */
-static void ExternRenderFace(SGPVSurface* const buffer, FACETYPE* const pFace, INT16 const sX, INT16 const sY)
+static void ExternRenderFace(SGPVSurface* const buffer, FACETYPE& f, INT16 const sX, INT16 const sY)
 {
 	UINT16						usEyesX;
 	UINT16						usEyesY;
 	UINT16						usMouthX;
 	UINT16						usMouthY;
 
-	CHECKV(pFace);
-
 	// Check for a valid slot!
-	CHECKV(pFace->fAllocated);
+	CHECKV(f.fAllocated);
 
 	// Here, any face can be rendered, even if disabled
 
-	SetFaceShade(pFace, TRUE);
+	SetFaceShade(f, TRUE);
 
 	// Blit face to save buffer!
-	BltVideoObject(buffer, pFace->uiVideoObject, 0, sX, sY);
+	BltVideoObject(buffer, f.uiVideoObject, 0, sX, sY);
 
-	GetFaceRelativeCoordinates( pFace, &usEyesX, &usEyesY, &usMouthX, &usMouthY );
+	GetFaceRelativeCoordinates(f, &usEyesX, &usEyesY, &usMouthX, &usMouthY);
 
-	HandleRenderFaceAdjustments(pFace, FALSE, buffer, sX, sY, sX + usEyesX, sY + usEyesY);
+	HandleRenderFaceAdjustments(f, FALSE, buffer, sX, sY, sX + usEyesX, sY + usEyesY);
 
 	// Restore extern rect
 	if (buffer == guiSAVEBUFFER)
 	{
-		RestoreExternBackgroundRect( sX, sY, pFace->usFaceWidth, pFace->usFaceWidth );
+		RestoreExternBackgroundRect(sX, sY, f.usFaceWidth, f.usFaceWidth);
 	}
 }
 
 
-static void NewEye(FACETYPE* pFace)
+static void NewEye(FACETYPE& f)
 {
 
- switch(pFace->sEyeFrame)
+ switch(f.sEyeFrame)
  {
-  case 0 : //pFace->sEyeFrame = (INT16)Random(2);	// normal - can blink or frown
-			if ( pFace->ubExpression == ANGRY )
+  case 0 : //f.sEyeFrame = (INT16)Random(2);	// normal - can blink or frown
+			if ( f.ubExpression == ANGRY )
 			{
-				pFace->ubEyeWait = 0;
-				pFace->sEyeFrame = 3;
+				f.ubEyeWait = 0;
+				f.sEyeFrame = 3;
 			}
-			else if ( pFace->ubExpression == SURPRISED )
+			else if ( f.ubExpression == SURPRISED )
 			{
-				pFace->ubEyeWait = 0;
-				pFace->sEyeFrame = 4;
+				f.ubEyeWait = 0;
+				f.sEyeFrame = 4;
 			}
 			else
-	   //if (pFace->sEyeFrame && Talk.talking && Talk.expression != DYING)
-	   ///    pFace->sEyeFrame = 3;
+	   //if (f.sEyeFrame && Talk.talking && Talk.expression != DYING)
+	   ///    f.sEyeFrame = 3;
 	   //else
-	       pFace->sEyeFrame = 1;
+	       f.sEyeFrame = 1;
 	   break;
   case 1 : // starting to blink  - has to finish unless dying
 	   //if (Talk.expression == DYING)
-	   //    pFace->sEyeFrame = 1;
+	   //    f.sEyeFrame = 1;
 	   //else
-	       pFace->sEyeFrame = 2;
+	       f.sEyeFrame = 2;
 	   break;
-  case 2 : //pFace->sEyeFrame = (INT16)Random(2);	// finishing blink - can go normal or frown
-	   //if (pFace->sEyeFrame && Talk.talking)
-	   //    pFace->sEyeFrame = 3;
+  case 2 : //f.sEyeFrame = (INT16)Random(2);	// finishing blink - can go normal or frown
+	   //if (f.sEyeFrame && Talk.talking)
+	   //    f.sEyeFrame = 3;
 	   //else
 	   //   if (Talk.expression == ANGRY)
-		 // pFace->sEyeFrame = 3;
+		 // f.sEyeFrame = 3;
 	   //   else
-		  pFace->sEyeFrame = 0;
+		  f.sEyeFrame = 0;
 	   break;
 
-  case 3 : //pFace->sEyeFrame = 4; break;	// frown
+  case 3 : //f.sEyeFrame = 4; break;	// frown
 
-			pFace->ubEyeWait++;
+			f.ubEyeWait++;
 
-			if ( pFace->ubEyeWait > 6 )
+			if ( f.ubEyeWait > 6 )
 			{
-				pFace->sEyeFrame = 0;
+				f.sEyeFrame = 0;
 			}
 			break;
 
   case 4 :
 
-			pFace->ubEyeWait++;
+			f.ubEyeWait++;
 
-			if ( pFace->ubEyeWait > 6 )
+			if ( f.ubEyeWait > 6 )
 			{
-				pFace->sEyeFrame = 0;
+				f.sEyeFrame = 0;
 			}
 			break;
 
-  case 5 : pFace->sEyeFrame = 6;
+  case 5 : f.sEyeFrame = 6;
 
-		pFace->sEyeFrame = 0;
+		f.sEyeFrame = 0;
 	   break;
 
-  case 6 : pFace->sEyeFrame = 7; break;
-  case 7 : pFace->sEyeFrame = (INT16)Random(2);	// can stop frowning or continue
-	   //if (pFace->sEyeFrame && Talk.expression != DYING)
-	    //   pFace->sEyeFrame = 8;
+  case 6 : f.sEyeFrame = 7; break;
+  case 7 : f.sEyeFrame = (INT16)Random(2);	// can stop frowning or continue
+	   //if (f.sEyeFrame && Talk.expression != DYING)
+	    //   f.sEyeFrame = 8;
 	   //else
-	   //    pFace->sEyeFrame = 0;
+	   //    f.sEyeFrame = 0;
 	   //break;
-  case 8 : pFace->sEyeFrame =  9; break;
-  case 9 : pFace->sEyeFrame = 10; break;
-  case 10: pFace->sEyeFrame = 11; break;
-  case 11: pFace->sEyeFrame = 12; break;
-  case 12: pFace->sEyeFrame =  0; break;
+  case 8 : f.sEyeFrame =  9; break;
+  case 9 : f.sEyeFrame = 10; break;
+  case 10: f.sEyeFrame = 11; break;
+  case 11: f.sEyeFrame = 12; break;
+  case 12: f.sEyeFrame =  0; break;
  }
 }
 
 
-static void NewMouth(FACETYPE* pFace)
+static void NewMouth(FACETYPE& f)
 {
-	const UINT16 old_frame = pFace->sMouthFrame;
+	UINT16 const old_frame = f.sMouthFrame;
 	UINT16       new_frame;
 	do
 	{
@@ -1204,73 +1195,74 @@ static void NewMouth(FACETYPE* pFace)
 		if (new_frame > 3) new_frame = 0;
 	}
 	while (new_frame == old_frame);
-	pFace->sMouthFrame = new_frame;
+	f.sMouthFrame = new_frame;
 }
 
 
 void HandleAutoFaces(void)
 {
-	FOR_ALL_FACES(f)
+	FOR_ALL_FACES(i)
 	{
-		if (f->fDisabled) continue;
+		FACETYPE& f = *i;
+		if (f.fDisabled) continue;
 
-		SOLDIERTYPE* const s = f->soldier;
+		SOLDIERTYPE* const s = f.soldier;
 		if (s != NULL)
 		{
 			BOOLEAN render = FALSE;
 
-			UINT32 new_flags = f->uiFlags & ~(FACE_SHOW_WHITE_HILIGHT | FACE_SHOW_MOVING_HILIGHT | FACE_REDRAW_WHOLE_FACE_NEXT_FRAME);
+			UINT32 new_flags = f.uiFlags & ~(FACE_SHOW_WHITE_HILIGHT | FACE_SHOW_MOVING_HILIGHT | FACE_REDRAW_WHOLE_FACE_NEXT_FRAME);
 			if (s == gSelectedGuy)                                           new_flags |= FACE_SHOW_WHITE_HILIGHT;
 			if (s->sGridNo != s->sFinalDestination && s->sGridNo != NOWHERE) new_flags |= FACE_SHOW_MOVING_HILIGHT;
-			if (f->uiFlags != new_flags)                                     render     = TRUE;
-			f->uiFlags = new_flags;
+			if (f.uiFlags != new_flags)                                      render     = TRUE;
+			f.uiFlags = new_flags;
 
-			if (s->bStealthMode != f->bOldStealthMode)
+			if (s->bStealthMode != f.bOldStealthMode)
 			{
-				f->bOldStealthMode = s->bStealthMode;
+				f.bOldStealthMode = s->bStealthMode;
 				render             = TRUE;
 			}
 
 			const INT8 bLife = s->bLife;
 			// Check if we have fallen below OKLIFE/CONSCIOUSNESS
-			if ((bLife < OKLIFE)        != (f->bOldSoldierLife < OKLIFE))        render = TRUE;
-			if ((bLife < CONSCIOUSNESS) != (f->bOldSoldierLife < CONSCIOUSNESS)) render = TRUE;
-			f->bOldSoldierLife  = bLife;
+			if ((bLife < OKLIFE)        != (f.bOldSoldierLife < OKLIFE))        render = TRUE;
+			if ((bLife < CONSCIOUSNESS) != (f.bOldSoldierLife < CONSCIOUSNESS)) render = TRUE;
+			f.bOldSoldierLife  = bLife;
 
-			if (s->bOppCnt != f->bOldOppCnt)
+			if (s->bOppCnt != f.bOldOppCnt)
 			{
-				f->bOldOppCnt = s->bOppCnt;
-				render        = TRUE;
+				f.bOldOppCnt = s->bOppCnt;
+				render       = TRUE;
 			}
 
 			// Check if assignment is idfferent....
-			if (s->bAssignment != f->bOldAssignment)
+			if (s->bAssignment != f.bOldAssignment)
 			{
-				f->bOldAssignment = s->bAssignment;
-				render            = TRUE;
+				f.bOldAssignment = s->bAssignment;
+				render           = TRUE;
 			}
 
 			const INT8 bAPs  = s->bActionPoints;
-			if (bAPs == 0 && f->bOldActionPoints >  0) render = TRUE;
-			if (bAPs >  0 && f->bOldActionPoints == 0) render = TRUE;
-			f->bOldActionPoints = bAPs;
+			if (bAPs == 0 && f.bOldActionPoints >  0) render = TRUE;
+			if (bAPs >  0 && f.bOldActionPoints == 0) render = TRUE;
+			f.bOldActionPoints = bAPs;
 
-			if (f->ubOldServiceCount != s->ubServiceCount)
+			if (f.ubOldServiceCount != s->ubServiceCount)
 			{
-				f->ubOldServiceCount = s->ubServiceCount;
-				render               = TRUE;
+				f.ubOldServiceCount = s->ubServiceCount;
+				render              = TRUE;
 			}
 
-			if (f->fOldCompatibleItems != f->fCompatibleItems || gfInItemPickupMenu || gpItemPointer != NULL)
+			if (f.fOldCompatibleItems != f.fCompatibleItems || gfInItemPickupMenu || gpItemPointer != NULL)
 			{
-				f->fOldCompatibleItems = f->fCompatibleItems;
-				render                 = TRUE;
+				f.fOldCompatibleItems = f.fCompatibleItems;
+				render                = TRUE;
 			}
 
-			if (f->old_service_partner != s->service_partner)
+			if (f.old_service_partner != s->service_partner)
 			{
-				f->old_service_partner = s->service_partner;
-				render                 = TRUE;
+				f.old_service_partner = s->service_partner;
+				render                = TRUE;
 			}
 
 			switch (s->fFlashPortrait)
@@ -1308,7 +1300,7 @@ void HandleAutoFaces(void)
 
 			if (fInterfacePanelDirty == DIRTYLEVEL2 && guiCurrentScreen == GAME_SCREEN) render = TRUE;
 
-			if (render) RenderAutoFace(f);
+			if (render) RenderAutoFace(&f);
 		}
 
 		BlinkAutoFace(f);
@@ -1319,71 +1311,65 @@ void HandleAutoFaces(void)
 
 void HandleTalkingAutoFaces( )
 {
-	FOR_ALL_FACES(f)
+	FOR_ALL_FACES(i)
 	{
-		HandleTalkingAutoFace(f);
+		HandleTalkingAutoFace(*i);
 	}
 }
 
 
-static void FaceRestoreSavedBackgroundRect(FACETYPE const* const pFace, INT16 const sDestLeft, INT16 const sDestTop, INT16 const sSrcLeft, INT16 const sSrcTop, INT16 const sWidth, INT16 const sHeight)
+static void FaceRestoreSavedBackgroundRect(FACETYPE const& f, INT16 const sDestLeft, INT16 const sDestTop, INT16 const sSrcLeft, INT16 const sSrcTop, INT16 const sWidth, INT16 const sHeight)
 {
 	SGPBox const r = { sSrcLeft, sSrcTop, sWidth, sHeight };
-	BltVideoSurface(pFace->uiAutoDisplayBuffer, pFace->uiAutoRestoreBuffer, sDestLeft, sDestTop, &r);
+	BltVideoSurface(f.uiAutoDisplayBuffer, f.uiAutoRestoreBuffer, sDestLeft, sDestTop, &r);
 
 	// Add rect to frame buffer queue
-	if ( pFace->uiAutoDisplayBuffer == FRAME_BUFFER )
+	if (f.uiAutoDisplayBuffer == FRAME_BUFFER)
 	{
 		InvalidateRegionEx(sDestLeft - 2, sDestTop - 2, sDestLeft + sWidth + 3, sDestTop + sHeight + 2);
 	}
 }
 
 
-void SetFaceTalking(FACETYPE* const pFace, const char* const zSoundFile, const wchar_t* const zTextString)
+void SetFaceTalking(FACETYPE& f, char const* const zSoundFile, wchar_t const* const zTextString)
 {
 	// Set face to talking
-	pFace->fTalking = TRUE;
-	pFace->fAnimatingTalking = TRUE;
-	pFace->fFinishTalking = FALSE;
+	f.fTalking          = TRUE;
+	f.fAnimatingTalking = TRUE;
+	f.fFinishTalking    = FALSE;
 
   if ( !AreInMeanwhile( ) )
   {
-    TurnOnSectorLocator( pFace->ubCharacterNum );
+    TurnOnSectorLocator(f.ubCharacterNum);
   }
 
 	// Play sample
 	if( gGameSettings.fOptions[ TOPTION_SPEECH ] )
-		pFace->uiSoundID = PlayJA2GapSample(zSoundFile, HIGHVOLUME, 1, MIDDLEPAN, &pFace->GapList);
+		f.uiSoundID = PlayJA2GapSample(zSoundFile, HIGHVOLUME, 1, MIDDLEPAN, &f.GapList);
 	else
-		pFace->uiSoundID = SOUND_ERROR;
+		f.uiSoundID = SOUND_ERROR;
 
-	if ( pFace->uiSoundID != SOUND_ERROR )
+	if (f.uiSoundID != SOUND_ERROR)
 	{
-		pFace->fValidSpeech	= TRUE;
-
-		pFace->uiTalkingFromVeryBeginningTimer = GetJA2Clock( );
+		f.fValidSpeech                    = TRUE;
+		f.uiTalkingFromVeryBeginningTimer = GetJA2Clock();
 	}
 	else
 	{
-		pFace->fValidSpeech	= FALSE;
-
-		// Set delay based on sound...
-		pFace->uiTalkingTimer = pFace->uiTalkingFromVeryBeginningTimer = GetJA2Clock( );
-
-		pFace->uiTalkingDuration = FindDelayForString( zTextString );
+		f.fValidSpeech      = FALSE;
+		f.uiTalkingTimer    = f.uiTalkingFromVeryBeginningTimer = GetJA2Clock();
+		f.uiTalkingDuration = FindDelayForString(zTextString);
 	}
 }
 
 
-void ExternSetFaceTalking(FACETYPE* const pFace, const UINT32 uiSoundID)
+void ExternSetFaceTalking(FACETYPE& f, UINT32 const sound_id)
 {
-	// Set face to talki	ng
-	pFace->fTalking = TRUE;
-	pFace->fAnimatingTalking = TRUE;
-	pFace->fFinishTalking = FALSE;
-	pFace->fValidSpeech	= TRUE;
-
-	pFace->uiSoundID = uiSoundID;
+	f.fTalking          = TRUE;
+	f.fAnimatingTalking = TRUE;
+	f.fFinishTalking    = FALSE;
+	f.fValidSpeech      = TRUE;
+	f.uiSoundID         = sound_id;
 }
 
 
@@ -1415,11 +1401,11 @@ void InternalShutupaYoFace(FACETYPE* const pFace, const BOOLEAN fForce)
 		{
 			if ( pFace->uiAutoRestoreBuffer == guiSAVEBUFFER )
 			{
-				FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthX, pFace->usMouthY, pFace->usMouthWidth, pFace->usMouthHeight);
+				FaceRestoreSavedBackgroundRect(*pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthX, pFace->usMouthY, pFace->usMouthWidth, pFace->usMouthHeight);
 			}
 			else
 			{
-				FaceRestoreSavedBackgroundRect(pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthOffsetX, pFace->usMouthOffsetY,  pFace->usMouthWidth, pFace->usMouthHeight);
+				FaceRestoreSavedBackgroundRect(*pFace, pFace->usMouthX, pFace->usMouthY, pFace->usMouthOffsetX, pFace->usMouthOffsetY,  pFace->usMouthWidth, pFace->usMouthHeight);
 			}
 		}
 		// OK, smart guy, make sure this guy has finished talking,
@@ -1443,38 +1429,38 @@ void ShutupaYoFace(FACETYPE* const face)
 }
 
 
-static void SetupFinalTalkingDelay(FACETYPE* const f)
+static void SetupFinalTalkingDelay(FACETYPE& f)
 {
-	f->fFinishTalking    = TRUE;
-	f->fAnimatingTalking = FALSE;
-	f->uiTalkingTimer    = GetJA2Clock();
-	f->uiTalkingDuration = 300;
-	f->sMouthFrame       = 0;
+	f.fFinishTalking    = TRUE;
+	f.fAnimatingTalking = FALSE;
+	f.uiTalkingTimer    = GetJA2Clock();
+	f.uiTalkingDuration = 300;
+	f.sMouthFrame       = 0;
 
 	// Close mouth!
-	if (!f->fDisabled)
+	if (!f.fDisabled)
 	{
-		if (f->uiAutoRestoreBuffer == guiSAVEBUFFER)
+		if (f.uiAutoRestoreBuffer == guiSAVEBUFFER)
 		{
-			FaceRestoreSavedBackgroundRect(f, f->usMouthX, f->usMouthY, f->usMouthX, f->usMouthY, f->usMouthWidth, f->usMouthHeight);
+			FaceRestoreSavedBackgroundRect(f, f.usMouthX, f.usMouthY, f.usMouthX, f.usMouthY, f.usMouthWidth, f.usMouthHeight);
 		}
 		else
 		{
-			FaceRestoreSavedBackgroundRect(f, f->usMouthX, f->usMouthY, f->usMouthOffsetX, f->usMouthOffsetY, f->usMouthWidth, f->usMouthHeight);
+			FaceRestoreSavedBackgroundRect(f, f.usMouthX, f.usMouthY, f.usMouthOffsetX, f.usMouthOffsetY, f.usMouthWidth, f.usMouthHeight);
 		}
 	}
 
 	// Setup flag to wait for advance (because we have no text!)
-	if (gGameSettings.fOptions[TOPTION_KEY_ADVANCE_SPEECH] && f->uiFlags & FACE_POTENTIAL_KEYWAIT)
+	if (gGameSettings.fOptions[TOPTION_KEY_ADVANCE_SPEECH] && f.uiFlags & FACE_POTENTIAL_KEYWAIT)
 	{
 		// Check if we have had valid speech!
-		if (!f->fValidSpeech || gGameSettings.fOptions[TOPTION_SUBTITLES])
+		if (!f.fValidSpeech || gGameSettings.fOptions[TOPTION_SUBTITLES])
 		{
-			f->fFinishTalking = FALSE;
+			f.fFinishTalking = FALSE;
 			// Set waiting for advance to true!
 			gfUIWaitingForUserSpeechAdvance = TRUE;
 		}
 	}
 
-	f->fValidSpeech = FALSE;
+	f.fValidSpeech = FALSE;
 }
