@@ -474,7 +474,7 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 	gTalkPanel.uiCancelButton->uiFlags &= ~BUTTON_DIRTY;
 
 	// Render once!
-	RenderAutoFace(&f);
+	RenderAutoFace(f);
 
 	gfInTalkPanel = TRUE;
 

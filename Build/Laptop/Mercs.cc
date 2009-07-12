@@ -726,7 +726,7 @@ static void InitMercVideoFace(void)
 	SetAutoFaceActive(guiMercVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER, f, 0, 0);
 
 	//Renders the face to the background
-	RenderAutoFace(g_video_speck_face);
+	RenderAutoFace(f);
 
 	//enables the global flag indicating the the video is being displayed
 	gfMercVideoIsBeingDisplayed = TRUE;

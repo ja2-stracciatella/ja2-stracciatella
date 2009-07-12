@@ -996,20 +996,19 @@ static void HandleRenderFaceAdjustments(FACETYPE& f, BOOLEAN const fDisplayBuffe
 }
 
 
-void RenderAutoFace(FACETYPE* const f)
+void RenderAutoFace(FACETYPE& f)
 {
-	CHECKV(f);
-	CHECKV(f->fAllocated);
-	CHECKV(!f->fDisabled);
+	CHECKV(f.fAllocated);
+	CHECKV(!f.fDisabled);
 
-	SetFaceShade(*f, FALSE);
+	SetFaceShade(f, FALSE);
 
 	INT32 x;
 	INT32 y;
-	if (f->uiAutoRestoreBuffer == guiSAVEBUFFER)
+	if (f.uiAutoRestoreBuffer == guiSAVEBUFFER)
 	{
-		x = f->usFaceX;
-		y = f->usFaceY;
+		x = f.usFaceX;
+		y = f.usFaceY;
 	}
 	else
 	{
@@ -1017,9 +1016,9 @@ void RenderAutoFace(FACETYPE* const f)
 		y = 0;
 	}
 
-	BltVideoObject(f->uiAutoRestoreBuffer, f->uiVideoObject, 0, x, y);
-	HandleRenderFaceAdjustments(*f, FALSE, 0, f->usFaceX, f->usFaceY, f->usEyesX, f->usEyesY);
-	FaceRestoreSavedBackgroundRect(*f, f->usFaceX, f->usFaceY, x, y, f->usFaceWidth, f->usFaceHeight);
+	BltVideoObject(f.uiAutoRestoreBuffer, f.uiVideoObject, 0, x, y);
+	HandleRenderFaceAdjustments(f, FALSE, 0, f.usFaceX, f.usFaceY, f.usEyesX, f.usEyesY);
+	FaceRestoreSavedBackgroundRect(f, f.usFaceX, f.usFaceY, x, y, f.usFaceWidth, f.usFaceHeight);
 }
 
 
@@ -1246,7 +1245,7 @@ void HandleAutoFaces(void)
 
 			if (fInterfacePanelDirty == DIRTYLEVEL2 && guiCurrentScreen == GAME_SCREEN) render = TRUE;
 
-			if (render) RenderAutoFace(&f);
+			if (render) RenderAutoFace(f);
 		}
 
 		BlinkAutoFace(f);

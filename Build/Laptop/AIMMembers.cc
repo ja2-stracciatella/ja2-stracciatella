@@ -1648,7 +1648,7 @@ static void InitVideoFace(UINT8 ubMercID)
 
 	SetAutoFaceActive(guiVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER, f, 0, 0);
 
-	RenderAutoFace( giMercFaceIndex );
+	RenderAutoFace(f);
 
 	gubCurrentStaticMode = VC_NO_STATIC;
 

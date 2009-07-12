@@ -1107,7 +1107,7 @@ static void HandleExternNPCSpeechFace(FACETYPE& f)
 
 	gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(RenderFaceOverlay, x, y, w, h);
 
-	RenderAutoFace(&f);
+	RenderAutoFace(f);
 
 	// ATE: Create mouse region.......
 	if ( !fExternFaceBoxRegionCreated )
@@ -1167,7 +1167,7 @@ static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE& f)
 
 		gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(RenderFaceOverlay, x, y, w, h);
 
-		RenderAutoFace(&f);
+		RenderAutoFace(f);
 
 		// ATE: Create mouse region.......
 		if ( !fExternFaceBoxRegionCreated )

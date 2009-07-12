@@ -760,7 +760,7 @@ static BOOLEAN InitShopKeepersFace(UINT8 ubMercID)
 	//Set it so the face cannot be set InActive
 	f.uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
-	RenderAutoFace(&f);
+	RenderAutoFace(f);
 
 	return(TRUE);
 }
