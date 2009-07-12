@@ -5969,7 +5969,7 @@ static void HandleChangeOfInfoChar(void)
 		if( bOldInfoChar != -1 )
 		{
 			const SOLDIERTYPE* const s = gCharactersList[bOldInfoChar].merc;
-			if (s != NULL) SetAutoFaceInActiveFromSoldier(s);
+			if (s) SetAutoFaceInActive(s->face);
 		}
 
 		// stop showing contract box

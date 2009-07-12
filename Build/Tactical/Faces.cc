@@ -402,13 +402,6 @@ static void InternalSetAutoFaceActive(SGPVSurface* const display, SGPVSurface* c
 }
 
 
-void SetAutoFaceInActiveFromSoldier(const SOLDIERTYPE* const s)
-{
-	CHECKV(s != NULL);
-	SetAutoFaceInActive(s->face);
-}
-
-
 void SetAutoFaceInActive(FACETYPE* const pFace)
 {
 	CHECKV(pFace != NULL);

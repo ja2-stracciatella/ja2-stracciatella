@@ -207,7 +207,6 @@ void HandleTalkingAutoFaces(void);
 // Same Functions but taking soldier first to get profile
 void InitSoldierFace(SOLDIERTYPE&);
 void DeleteSoldierFace( SOLDIERTYPE *pSoldier );
-void SetAutoFaceInActiveFromSoldier(const SOLDIERTYPE* s);
 
 /* To render an allocated face, but one that is independent of its active
  * status and does not require eye blinking or mouth movements, call */
