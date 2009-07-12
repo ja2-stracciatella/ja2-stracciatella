@@ -208,6 +208,9 @@ void HandleTalkingAutoFaces(void);
 void InitSoldierFace(SOLDIERTYPE&);
 void DeleteSoldierFace( SOLDIERTYPE *pSoldier );
 void SetAutoFaceInActiveFromSoldier(const SOLDIERTYPE* s);
-void ExternRenderFaceFromSoldier(SGPVSurface* buffer, SOLDIERTYPE const&, INT16 sX, INT16 sY);
+
+/* To render an allocated face, but one that is independent of its active
+ * status and does not require eye blinking or mouth movements, call */
+void ExternRenderFace(SGPVSurface* buffer, FACETYPE&, INT16 x, INT16 y);
 
 #endif

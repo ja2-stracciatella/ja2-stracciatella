@@ -1034,19 +1034,7 @@ void RenderAutoFace(FACETYPE* const f)
 }
 
 
-static void ExternRenderFace(SGPVSurface* buffer, FACETYPE&, INT16 sX, INT16 sY);
-
-
-void ExternRenderFaceFromSoldier(SGPVSurface* const buffer, SOLDIERTYPE const& s, INT16 const sX, INT16 const sY)
-{
-	CHECKV(s.face);
-	ExternRenderFace(buffer, *s.face, sX, sY);
-}
-
-
-/* To render an allocated face, but one that is independent of its active
- * status and does not require eye blinking or mouth movements, call */
-static void ExternRenderFace(SGPVSurface* const buffer, FACETYPE& f, INT16 const sX, INT16 const sY)
+void ExternRenderFace(SGPVSurface* const buffer, FACETYPE& f, INT16 const sX, INT16 const sY)
 {
 	UINT16						usEyesX;
 	UINT16						usEyesY;

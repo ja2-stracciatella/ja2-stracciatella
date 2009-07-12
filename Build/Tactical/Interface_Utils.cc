@@ -262,7 +262,7 @@ void RenderSoldierFace(SOLDIERTYPE const& s, INT16 const sFaceX, INT16 const sFa
 	}
 	else if (s.face->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE) // OK, check if this face actually went active
 	{
-		ExternRenderFaceFromSoldier(guiSAVEBUFFER, s, sFaceX, sFaceY);
+		ExternRenderFace(guiSAVEBUFFER, *s.face, sFaceX, sFaceY);
 	}
 	else
 	{
