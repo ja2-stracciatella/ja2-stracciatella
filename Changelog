@@ -1,3 +1,4 @@
+(r6293) Enable scrolling in the help screen with the mouse wheel.
 (r6270) Fix a vanilla glitch: Disable the prev/next buttons in the personnel screen not only when there is exactly one merc in the list, but also if there is none.
 (r6253) Fix a vanilla glitch in the editor: The text for the brothel siren trap was missing.
 (r6152) Instead of displaying nothing (vanilla) or asserting (till now) show "Unknown" if a weapon has an imprint by a nameless enemy soldier.

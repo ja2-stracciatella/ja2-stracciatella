@@ -2151,6 +2151,14 @@ static void SelectHelpScrollAreaCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 		gfScrollBoxIsScrolling = TRUE;
 		HelpScreenMouseMoveScrollBox( pRegion->MouseYPos );
 	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		ChangeTopLineInTextBufferByAmount(3);
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		ChangeTopLineInTextBufferByAmount(-3);
+	}
 }
 
 
