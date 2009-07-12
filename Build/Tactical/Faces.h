@@ -207,7 +207,6 @@ void HandleTalkingAutoFaces(void);
 // Same Functions but taking soldier first to get profile
 void InitSoldierFace(SOLDIERTYPE&);
 void DeleteSoldierFace( SOLDIERTYPE *pSoldier );
-void SetAutoFaceActiveFromSoldier(SGPVSurface* display, SGPVSurface* restore, const SOLDIERTYPE* s, UINT16 usFaceX, UINT16 usFaceY);
 void SetAutoFaceInActiveFromSoldier(const SOLDIERTYPE* s);
 void ExternRenderFaceFromSoldier(SGPVSurface* buffer, SOLDIERTYPE const&, INT16 sX, INT16 sY);
 

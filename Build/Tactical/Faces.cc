@@ -292,13 +292,6 @@ void DeleteFace(FACETYPE* const pFace)
 }
 
 
-void SetAutoFaceActiveFromSoldier(SGPVSurface* const display, SGPVSurface* const restore, const SOLDIERTYPE* const s, const UINT16 usFaceX, const UINT16 usFaceY)
-{
-	CHECKV(s != NULL);
-	SetAutoFaceActive(display, restore, s->face, usFaceX, usFaceY);
-}
-
-
 static void GetFaceRelativeCoordinates(FACETYPE const& f, UINT16* const pusEyesX, UINT16* const pusEyesY, UINT16* const pusMouthX, UINT16* const pusMouthY)
 {
 	ProfileID         const  pid = f.ubCharacterNum;
