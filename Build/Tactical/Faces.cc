@@ -768,28 +768,12 @@ static void GetXYForIconPlacement(FACETYPE const& f, UINT16 const ubIndex, INT16
 }
 
 
-static void GetXYForRightIconPlacement(FACETYPE const& f, UINT16 ubIndex, INT16 sFaceX, INT16 sFaceY, INT16* psX, INT16* psY, INT8 bNumIcons)
+static void DoRightIcon(SGPVSurface* const dst, FACETYPE const& f, INT16 const face_x, INT16 const face_y, INT8 const n_icons, INT8 const icon_idx)
 {
-	// Get height, width of icon...
-	ETRLEObject const& pTrav    = guiPORTRAITICONS->SubregionProperties(ubIndex);
-	UINT16      const  usHeight = pTrav.usHeight;
-	UINT16      const  usWidth  = pTrav.usWidth;
-
-	INT16 const sX = sFaceX + usWidth * bNumIcons + 1;
-	INT16 const sY = sFaceY + f.usFaceHeight - usHeight - 1;
-
-	*psX = sX;
-	*psY = sY;
-}
-
-
-static void DoRightIcon(SGPVSurface* const dst, FACETYPE const& f, const INT16 sFaceX, const INT16 sFaceY, const INT8 bNumIcons, const INT8 sIconIndex)
-{
-	INT16						sIconX, sIconY;
-
-	// Find X, y for placement
-	GetXYForRightIconPlacement(f, sIconIndex, sFaceX, sFaceY, &sIconX, &sIconY, bNumIcons);
-	BltVideoObject(dst, guiPORTRAITICONS, sIconIndex, sIconX, sIconY);
+	ETRLEObject const& e = guiPORTRAITICONS->SubregionProperties(icon_idx);
+	INT16       const  x = face_x + e.usWidth * n_icons + 1;
+	INT16       const  y = face_y + f.usFaceHeight - e.usHeight - 1;
+	BltVideoObject(dst, guiPORTRAITICONS, icon_idx, x, y);
 }
 
 
