@@ -1234,7 +1234,7 @@ void RenderSMPanel(BOOLEAN* const pfDirty)
 		}
 no_plate:
 
-		RenderSoldierFace(&s, SM_SELMERC_FACE_X, dy + SM_SELMERC_FACE_Y);
+		RenderSoldierFace(s, SM_SELMERC_FACE_X, dy + SM_SELMERC_FACE_Y);
 
 		if (InItemDescriptionBox())
 		{
@@ -2345,7 +2345,7 @@ void RenderTEAMPanel(BOOLEAN fDirty)
 			SOLDIERTYPE const* const s  = i->merc;
 			if (s)
 			{
-				RenderSoldierFace(s, dx + TM_FACE_X, dy + TM_FACE_Y);
+				RenderSoldierFace(*s, dx + TM_FACE_X, dy + TM_FACE_Y);
 			}
 			else
 			{

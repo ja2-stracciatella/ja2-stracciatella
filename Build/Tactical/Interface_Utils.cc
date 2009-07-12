@@ -245,29 +245,29 @@ void DrawItemUIBarEx(OBJECTTYPE const& o, const UINT8 ubStatus, const INT16 x, c
 }
 
 
-void RenderSoldierFace(const SOLDIERTYPE* const s, const INT16 sFaceX, const INT16 sFaceY)
+void RenderSoldierFace(SOLDIERTYPE const& s, INT16 const sFaceX, INT16 const sFaceY)
 {
-	if (!s->bActive)
+	if (!s.bActive)
 	{
 		// Put close panel there
 		BltVideoObject(guiSAVEBUFFER, guiCLOSE, 5, sFaceX, sFaceY);
 		RestoreExternBackgroundRect(sFaceX, sFaceY, FACE_WIDTH, FACE_HEIGHT);
 	}
-	else if (s->uiStatusFlags & SOLDIER_VEHICLE)
+	else if (s.uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		// just draw the vehicle
-		const UINT8 vehicle_type = pVehicleList[s->bVehicleID].ubVehicleType;
+		const UINT8 vehicle_type = pVehicleList[s.bVehicleID].ubVehicleType;
 		BltVideoObject(guiSAVEBUFFER, giCarPortraits[vehicle_type], 0, sFaceX, sFaceY);
 		RestoreExternBackgroundRect(sFaceX, sFaceY, FACE_WIDTH, FACE_HEIGHT);
 	}
-	else if (s->face->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE) // OK, check if this face actually went active
+	else if (s.face->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE) // OK, check if this face actually went active
 	{
-		ExternRenderFaceFromSoldier(guiSAVEBUFFER, *s, sFaceX, sFaceY);
+		ExternRenderFaceFromSoldier(guiSAVEBUFFER, s, sFaceX, sFaceY);
 	}
 	else
 	{
-		SetAutoFaceActiveFromSoldier(FRAME_BUFFER, guiSAVEBUFFER, s, sFaceX, sFaceY);
-		RenderAutoFace(s->face);
+		SetAutoFaceActiveFromSoldier(FRAME_BUFFER, guiSAVEBUFFER, &s, sFaceX, sFaceY);
+		RenderAutoFace(s.face);
 	}
 }
 
