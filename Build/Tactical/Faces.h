@@ -192,8 +192,9 @@ void InternalShutupaYoFace(FACETYPE*, BOOLEAN fForce);
 // This can be used to times when you need process the user hitting <ESC> to cancel the speech, etc. It will
 // shutoff any playing sound sample
 
-// If you still want the face in moemory but want to stop if from being displayed, or handled call
-void SetAutoFaceInActive(FACETYPE*);
+/* If you still want the face in memory but want to stop if from being
+ * displayed, or handled call */
+void SetAutoFaceInActive(FACETYPE&);
 
 // To set all currently allocated faces to either active or incactive, call these
 void SetAllAutoFacesInactive(void);

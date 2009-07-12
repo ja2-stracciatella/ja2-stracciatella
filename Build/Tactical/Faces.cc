@@ -271,7 +271,7 @@ void DeleteFace(FACETYPE* const pFace)
 
   pFace->fCanHandleInactiveNow = TRUE;
 
-	SetAutoFaceInActive(pFace);
+	SetAutoFaceInActive(*pFace);
 
 	// If we are still talking, stop!
 	if ( pFace->fTalking )
@@ -347,7 +347,7 @@ static void InternalSetAutoFaceActive(SGPVSurface* const display, SGPVSurface* c
 	}
 
 	// Check if we are active already, remove if so!
-	SetAutoFaceInActive(&f);
+	SetAutoFaceInActive(f);
 
 	if (restore == FACE_AUTO_RESTORE_BUFFER)
 	{
@@ -402,27 +402,25 @@ static void InternalSetAutoFaceActive(SGPVSurface* const display, SGPVSurface* c
 }
 
 
-void SetAutoFaceInActive(FACETYPE* const pFace)
+void SetAutoFaceInActive(FACETYPE& f)
 {
-	CHECKV(pFace != NULL);
-
 	// Check for a valid slot!
-	CHECKV(pFace->fAllocated);
+	CHECKV(f.fAllocated);
 
-	if (pFace->fDisabled) return;
+	if (f.fDisabled) return;
 
 	// Turn off some flags
-	if ( pFace->uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE )
+	if (f.uiFlags & FACE_INACTIVE_HANDLED_ELSEWHERE)
 	{
-		if ( !pFace->fCanHandleInactiveNow )
+		if (!f.fCanHandleInactiveNow)
 		{
 			return;
 		}
 	}
 
-	if ( pFace->uiFlags & FACE_MAKEACTIVE_ONCE_DONE )
+	if (f.uiFlags & FACE_MAKEACTIVE_ONCE_DONE)
 	{
-		const SOLDIERTYPE* const pSoldier = pFace->soldier;
+		SOLDIERTYPE const* const pSoldier = f.soldier;
 		if (pSoldier != NULL)
 		{
 			// IF we are in tactical
@@ -435,29 +433,28 @@ void SetAutoFaceInActive(FACETYPE* const pFace)
 		}
 	}
 
-	if (pFace->fAutoRestoreBuffer)
+	if (f.fAutoRestoreBuffer)
 	{
-		DeleteVideoSurface(pFace->uiAutoRestoreBuffer);
-		pFace->uiAutoRestoreBuffer = NULL;
+		DeleteVideoSurface(f.uiAutoRestoreBuffer);
+		f.uiAutoRestoreBuffer = 0;
 	}
-	if (pFace->fAutoDisplayBuffer)
+	if (f.fAutoDisplayBuffer)
 	{
-		DeleteVideoSurface(pFace->uiAutoDisplayBuffer);
-		pFace->uiAutoDisplayBuffer = NULL;
+		DeleteVideoSurface(f.uiAutoDisplayBuffer);
+		f.uiAutoDisplayBuffer = 0;
 	}
 
-	if (pFace->video_overlay != NULL)
+	if (f.video_overlay)
 	{
-		RemoveVideoOverlay(pFace->video_overlay);
-		pFace->video_overlay = NULL;
+		RemoveVideoOverlay(f.video_overlay);
+		f.video_overlay = 0;
 	}
 
 	// Turn off some flags
-	pFace->uiFlags &= ( ~FACE_INACTIVE_HANDLED_ELSEWHERE );
+	f.uiFlags &= ~FACE_INACTIVE_HANDLED_ELSEWHERE;
 
 	// Disable!
-	pFace->fDisabled = TRUE;
-
+	f.fDisabled = TRUE;
 }
 
 
@@ -465,7 +462,7 @@ void SetAllAutoFacesInactive(  )
 {
 	FOR_ALL_FACES(i)
 	{
-		SetAutoFaceInActive(i);
+		SetAutoFaceInActive(*i);
 	}
 }
 

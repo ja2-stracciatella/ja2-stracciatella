@@ -3148,7 +3148,7 @@ static void RemovePlayerFromInterfaceTeamSlot(TeamPanelSlot& tp)
 	}
 
 	// Set face to inactive...
-	SetAutoFaceInActive(s->face);
+	if (s->face) SetAutoFaceInActive(*s->face);
 
 	// DIRTY INTERFACE
 	fInterfacePanelDirty = DIRTYLEVEL2;

@@ -371,7 +371,7 @@ void HandleDialogue()
 
 					// Set face inactive....
 					gpCurrentTalkingFace->fCanHandleInactiveNow = TRUE;
-					SetAutoFaceInActive(gpCurrentTalkingFace);
+					SetAutoFaceInActive(*gpCurrentTalkingFace);
 					HandleTacticalSpeechUI(gubCurrentTalkingID, gpCurrentTalkingFace);
 
           // ATE: Force mapscreen to set face active again.....
@@ -1219,7 +1219,7 @@ void HandleDialogueEnd(FACETYPE& f)
 			{
 				// Set face inactive!
 				f.fCanHandleInactiveNow = TRUE;
-				SetAutoFaceInActive(&f);
+				SetAutoFaceInActive(f);
 				gfFacePanelActive = FALSE;
 
 				if ( fExternFaceBoxRegionCreated )
@@ -1233,7 +1233,7 @@ void HandleDialogueEnd(FACETYPE& f)
 			break;
 			case DIALOGUE_EXTERNAL_NPC_UI:
 				f.fCanHandleInactiveNow = TRUE;
-				SetAutoFaceInActive(&f);
+				SetAutoFaceInActive(f);
 				gfFacePanelActive = FALSE;
 
 				if ( fExternFaceBoxRegionCreated )
