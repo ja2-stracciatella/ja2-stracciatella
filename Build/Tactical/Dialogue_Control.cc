@@ -261,7 +261,7 @@ void StopAnyCurrentlyTalkingSpeech( )
 
 
 static void CheckForStopTimeQuotes(UINT16 usQuoteNum);
-static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, FACETYPE* face);
+static void HandleTacticalSpeechUI(UINT8 ubCharacterNum, FACETYPE&);
 
 
 void HandleDialogue()
@@ -373,7 +373,7 @@ void HandleDialogue()
 					// Set face inactive....
 					f.fCanHandleInactiveNow = TRUE;
 					SetAutoFaceInActive(f);
-					HandleTacticalSpeechUI(gubCurrentTalkingID, &f);
+					HandleTacticalSpeechUI(gubCurrentTalkingID, f);
 
           // ATE: Force mapscreen to set face active again.....
         	fReDrawFace = TRUE;
@@ -386,7 +386,7 @@ void HandleDialogue()
 			}
 			else if (guiScreenIDUsedWhenUICreated == MAP_SCREEN && guiCurrentScreen == GAME_SCREEN)
 			{
-				HandleTacticalSpeechUI(gubCurrentTalkingID, &f);
+				HandleTacticalSpeechUI(gubCurrentTalkingID, f);
 				guiScreenIDUsedWhenUICreated = guiCurrentScreen;
 			}
 			return;
@@ -709,7 +709,7 @@ void CharacterDialogueUsingAlternateFile(SOLDIERTYPE& s, UINT16 const quote, Dia
 }
 
 
-static void    CreateTalkingUI(DialogueHandler, FACETYPE* face, UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
+static void    CreateTalkingUI(DialogueHandler, FACETYPE&, UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
 static BOOLEAN GetDialogue(UINT8 ubCharacterNum, UINT16 usQuoteNum, UINT32 iDataSize, wchar_t* zDialogueText, size_t Length, CHAR8* zSoundString);
 
 
@@ -831,7 +831,7 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 		// start "talking" system (portrait animation and start wav sample)
 		SetFaceTalking(*face, zSoundString, gzQuoteStr);
 	}
-	CreateTalkingUI(bUIHandlerID, face, ubCharacterNum, gzQuoteStr);
+	CreateTalkingUI(bUIHandlerID, *face, ubCharacterNum, gzQuoteStr);
 
 	// Set global handleer ID value, used when face desides it's done...
 	gbUIHandlerID = bUIHandlerID;
@@ -843,15 +843,15 @@ BOOLEAN ExecuteCharacterDialogue(UINT8 const ubCharacterNum, UINT16 const usQuot
 
 
 static void DisplayTextForExternalNPC(UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
-static void HandleExternNPCSpeechFace(FACETYPE* face);
+static void HandleExternNPCSpeechFace(FACETYPE&);
 static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, const wchar_t* zQuoteStr);
 static void HandleTacticalTextUI(ProfileID profile_id, const wchar_t* zQuoteStr);
 
 
-static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE* const face, UINT8 const ubCharacterNum, wchar_t const* const zQuoteStr)
+static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE& f, UINT8 const ubCharacterNum, wchar_t const* const zQuoteStr)
 {
 	// Show text, if on
-	if (gGameSettings.fOptions[TOPTION_SUBTITLES] || !face->fValidSpeech)
+	if (gGameSettings.fOptions[TOPTION_SUBTITLES] || !f.fValidSpeech)
 	{
 		switch (bUIHandlerID)
 		{
@@ -868,10 +868,10 @@ static void CreateTalkingUI(DialogueHandler const bUIHandlerID, FACETYPE* const 
 	{
 		switch (bUIHandlerID)
 		{
-			case DIALOGUE_TACTICAL_UI:           HandleTacticalSpeechUI(ubCharacterNum, face); break;
-			case DIALOGUE_CONTACTPAGE_UI:                                                      break;
-			case DIALOGUE_SPECK_CONTACT_PAGE_UI:                                               break;
-			case DIALOGUE_EXTERNAL_NPC_UI:       HandleExternNPCSpeechFace(face);              break;
+			case DIALOGUE_TACTICAL_UI:           HandleTacticalSpeechUI(ubCharacterNum, f); break;
+			case DIALOGUE_CONTACTPAGE_UI:        break;
+			case DIALOGUE_SPECK_CONTACT_PAGE_UI: break;
+			case DIALOGUE_EXTERNAL_NPC_UI:       HandleExternNPCSpeechFace(f); break;
 		}
 	}
 }
@@ -1082,13 +1082,13 @@ static void FaceOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter);
 
 
-static void HandleExternNPCSpeechFace(FACETYPE* const face)
+static void HandleExternNPCSpeechFace(FACETYPE& f)
 {
 	// Enable it!
-	SetAutoFaceActive(FACE_AUTO_DISPLAY_BUFFER, FACE_AUTO_RESTORE_BUFFER, face, 0, 0);
+	SetAutoFaceActive(FACE_AUTO_DISPLAY_BUFFER, FACE_AUTO_RESTORE_BUFFER, &f, 0, 0);
 
 	// Set flag to say WE control when to set inactive!
-	face->uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
+	f.uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
 	INT16       x;
 	INT16       y;
@@ -1107,7 +1107,7 @@ static void HandleExternNPCSpeechFace(FACETYPE* const face)
 
 	gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(RenderFaceOverlay, x, y, w, h);
 
-	RenderAutoFace(face);
+	RenderAutoFace(&f);
 
 	// ATE: Create mouse region.......
 	if ( !fExternFaceBoxRegionCreated )
@@ -1122,7 +1122,7 @@ static void HandleExternNPCSpeechFace(FACETYPE* const face)
 }
 
 
-static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE* const face)
+static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE& f)
 {
 	BOOLEAN								fDoExternPanel = FALSE;
 
@@ -1147,10 +1147,10 @@ static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE* const f
 	if ( fDoExternPanel )
 	{
 		// Enable it!
-		SetAutoFaceActive(FACE_AUTO_DISPLAY_BUFFER, FACE_AUTO_RESTORE_BUFFER, face, 0, 0);
+		SetAutoFaceActive(FACE_AUTO_DISPLAY_BUFFER, FACE_AUTO_RESTORE_BUFFER, &f, 0, 0);
 
 		// Set flag to say WE control when to set inactive!
-		face->uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE | FACE_MAKEACTIVE_ONCE_DONE;
+		f.uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE | FACE_MAKEACTIVE_ONCE_DONE;
 
 		// IF we are in tactical and this soldier is on the current squad
 		if ( ( guiCurrentScreen == GAME_SCREEN ) && ( pSoldier != NULL ) && ( pSoldier->bAssignment == iCurrentTacticalSquad ) )
@@ -1167,7 +1167,7 @@ static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE* const f
 
 		gpCurrentTalkingFace->video_overlay = RegisterVideoOverlay(RenderFaceOverlay, x, y, w, h);
 
-		RenderAutoFace(face);
+		RenderAutoFace(&f);
 
 		// ATE: Create mouse region.......
 		if ( !fExternFaceBoxRegionCreated )
