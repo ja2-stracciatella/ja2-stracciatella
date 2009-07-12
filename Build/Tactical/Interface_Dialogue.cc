@@ -456,7 +456,7 @@ void InternalInitTalkingMenu(UINT8 const ubCharacterNum, INT16 sX, INT16 sY)
 	gTalkPanel.uiSaveBuffer = AddVideoSurface(pFace->usFaceWidth, pFace->usFaceHeight, PIXEL_DEPTH);
 
 	// Set face to auto
-	SetAutoFaceActive(gTalkPanel.uiSaveBuffer, FACE_AUTO_RESTORE_BUFFER, pFace , 0, 0);
+	SetAutoFaceActive(gTalkPanel.uiSaveBuffer, FACE_AUTO_RESTORE_BUFFER, *pFace, 0, 0);
 	pFace->uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
 
 	// Load buttons, create button

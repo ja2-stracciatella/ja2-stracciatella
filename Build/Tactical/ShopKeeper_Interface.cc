@@ -754,7 +754,7 @@ static BOOLEAN InitShopKeepersFace(UINT8 ubMercID)
 
 	giShopKeeperFaceIndex = InitFace(ubMercID, pSoldier, FACE_BIGFACE);
 
-	SetAutoFaceActive( FRAME_BUFFER, FACE_AUTO_RESTORE_BUFFER, giShopKeeperFaceIndex, SKI_FACE_X, SKI_FACE_Y );
+	SetAutoFaceActive(FRAME_BUFFER, FACE_AUTO_RESTORE_BUFFER, *giShopKeeperFaceIndex, SKI_FACE_X, SKI_FACE_Y);
 
 	//Set it so the face cannot be set InActive
 	giShopKeeperFaceIndex->uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;

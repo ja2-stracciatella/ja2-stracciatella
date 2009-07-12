@@ -324,15 +324,14 @@ static void GetFaceRelativeCoordinates(FACETYPE const& f, UINT16* const pusEyesX
 static void InternalSetAutoFaceActive(SGPVSurface* display, SGPVSurface* restore, FACETYPE&, UINT16 usFaceX, UINT16 usFaceY, UINT16 usEyesX, UINT16 usEyesY, UINT16 usMouthX, UINT16 usMouthY);
 
 
-void SetAutoFaceActive(SGPVSurface* const display, SGPVSurface* const restore, FACETYPE* const face, const UINT16 usFaceX, const UINT16 usFaceY)
+void SetAutoFaceActive(SGPVSurface* const display, SGPVSurface* const restore, FACETYPE& f, UINT16 const usFaceX, UINT16 const usFaceY)
 {
-	CHECKV(face != NULL);
 	UINT16 usEyesX;
 	UINT16 usEyesY;
 	UINT16 usMouthX;
 	UINT16 usMouthY;
-	GetFaceRelativeCoordinates(*face, &usEyesX, &usEyesY, &usMouthX, &usMouthY);
-	InternalSetAutoFaceActive(display, restore, *face, usFaceX, usFaceY, usEyesX, usEyesY, usMouthX, usMouthY);
+	GetFaceRelativeCoordinates(f, &usEyesX, &usEyesY, &usMouthX, &usMouthY);
+	InternalSetAutoFaceActive(display, restore, f, usFaceX, usFaceY, usEyesX, usEyesY, usMouthX, usMouthY);
 }
 
 

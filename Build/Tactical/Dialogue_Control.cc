@@ -1085,7 +1085,7 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* pBlitter);
 static void HandleExternNPCSpeechFace(FACETYPE& f)
 {
 	// Enable it!
-	SetAutoFaceActive(FACE_AUTO_DISPLAY_BUFFER, FACE_AUTO_RESTORE_BUFFER, &f, 0, 0);
+	SetAutoFaceActive(FACE_AUTO_DISPLAY_BUFFER, FACE_AUTO_RESTORE_BUFFER, f, 0, 0);
 
 	// Set flag to say WE control when to set inactive!
 	f.uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE;
@@ -1147,7 +1147,7 @@ static void HandleTacticalSpeechUI(const UINT8 ubCharacterNum, FACETYPE& f)
 	if ( fDoExternPanel )
 	{
 		// Enable it!
-		SetAutoFaceActive(FACE_AUTO_DISPLAY_BUFFER, FACE_AUTO_RESTORE_BUFFER, &f, 0, 0);
+		SetAutoFaceActive(FACE_AUTO_DISPLAY_BUFFER, FACE_AUTO_RESTORE_BUFFER, f, 0, 0);
 
 		// Set flag to say WE control when to set inactive!
 		f.uiFlags |= FACE_INACTIVE_HANDLED_ELSEWHERE | FACE_MAKEACTIVE_ONCE_DONE;

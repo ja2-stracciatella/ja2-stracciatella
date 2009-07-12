@@ -158,7 +158,7 @@ FACETYPE* InitFace(ProfileID id, SOLDIERTYPE* s, UINT32 uiInitFlags);
 void DeleteFace(FACETYPE*);
 
 // IF you want to setup the face for automatic eye blinking, mouth movement, you need to call
-void SetAutoFaceActive(SGPVSurface* display, SGPVSurface* restore, FACETYPE*, UINT16 usFaceX, UINT16 usFaceY);
+void SetAutoFaceActive(SGPVSurface* display, SGPVSurface* restore, FACETYPE&, UINT16 usFaceX, UINT16 usFaceY);
 // The first paramter is the display buffer you wish the face to be rendered on. The second is the
 // Internal savebuffer which is used to facilitate the rendering of only things which have changed when
 // blinking. IF the value of FACE_AUTO_RESTORE_BUFFER is given, the system will allocate it's own memory for

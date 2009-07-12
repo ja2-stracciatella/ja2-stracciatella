@@ -1645,7 +1645,7 @@ static void InitVideoFace(UINT8 ubMercID)
 	//Create the facial index
 	giMercFaceIndex = InitFace(ubMercID, NULL, 0);
 
-	SetAutoFaceActive( guiVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER , giMercFaceIndex, 0, 0);
+	SetAutoFaceActive(guiVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER, *giMercFaceIndex, 0, 0);
 
 	RenderAutoFace( giMercFaceIndex );
 

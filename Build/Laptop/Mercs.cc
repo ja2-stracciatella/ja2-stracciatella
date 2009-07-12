@@ -722,8 +722,7 @@ static void InitMercVideoFace(void)
 	g_video_speck_face = InitFace(SPECK, NULL, 0);
 
 	// Sets up the eyes blinking and the mouth moving
-	SetAutoFaceActive(guiMercVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER, g_video_speck_face, 0, 0);
-
+	SetAutoFaceActive(guiMercVideoFaceBackground, FACE_AUTO_RESTORE_BUFFER, *g_video_speck_face, 0, 0);
 
 	//Renders the face to the background
 	RenderAutoFace(g_video_speck_face);
