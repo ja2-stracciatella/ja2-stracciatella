@@ -267,7 +267,7 @@ void RenderSoldierFace(const SOLDIERTYPE* const s, const INT16 sFaceX, const INT
 	else
 	{
 		SetAutoFaceActiveFromSoldier(FRAME_BUFFER, guiSAVEBUFFER, s, sFaceX, sFaceY);
-		RenderAutoFaceFromSoldier(s);
+		RenderAutoFace(s->face);
 	}
 }
 

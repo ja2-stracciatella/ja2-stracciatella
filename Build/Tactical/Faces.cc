@@ -745,14 +745,6 @@ static void SetFaceShade(FACETYPE const& f, BOOLEAN const fExternBlit)
 }
 
 
-void RenderAutoFaceFromSoldier(SOLDIERTYPE const* const s)
-{
-	// Check for valid soldier
-	CHECKV(s);
-	RenderAutoFace(s->face);
-}
-
-
 static void GetXYForIconPlacement(FACETYPE const& f, UINT16 const ubIndex, INT16 const sFaceX, INT16 const sFaceY, INT16* const psX, INT16* const psY)
 {
 	// Get height, width of icon...
