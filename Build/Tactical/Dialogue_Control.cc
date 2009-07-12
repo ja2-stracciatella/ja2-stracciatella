@@ -337,9 +337,10 @@ void HandleDialogue()
 	}
 
 	// OK, check if we are still taking
-	if (gpCurrentTalkingFace != NULL)
+	if (gpCurrentTalkingFace)
 	{
-		if (gpCurrentTalkingFace->fTalking)
+		FACETYPE& f = *gpCurrentTalkingFace;
+		if (f.fTalking)
 		{
 			// ATE: OK, MANAGE THE DISPLAY OF OUR CURRENTLY ACTIVE FACE IF WE / IT CHANGES STATUS
 			// THINGS THAT CAN CHANGE STATUS:
@@ -357,10 +358,10 @@ void HandleDialogue()
 				if (gfFacePanelActive)
 				{
 					// Set face inactive!
-					if (gpCurrentTalkingFace->video_overlay != NULL)
+					if (f.video_overlay)
 					{
-						RemoveVideoOverlay(gpCurrentTalkingFace->video_overlay);
-						gpCurrentTalkingFace->video_overlay = NULL;
+						RemoveVideoOverlay(f.video_overlay);
+						f.video_overlay = 0;
 					}
 
 					if (fExternFaceBoxRegionCreated)
@@ -370,9 +371,9 @@ void HandleDialogue()
 					}
 
 					// Set face inactive....
-					gpCurrentTalkingFace->fCanHandleInactiveNow = TRUE;
-					SetAutoFaceInActive(*gpCurrentTalkingFace);
-					HandleTacticalSpeechUI(gubCurrentTalkingID, gpCurrentTalkingFace);
+					f.fCanHandleInactiveNow = TRUE;
+					SetAutoFaceInActive(f);
+					HandleTacticalSpeechUI(gubCurrentTalkingID, &f);
 
           // ATE: Force mapscreen to set face active again.....
         	fReDrawFace = TRUE;
@@ -385,7 +386,7 @@ void HandleDialogue()
 			}
 			else if (guiScreenIDUsedWhenUICreated == MAP_SCREEN && guiCurrentScreen == GAME_SCREEN)
 			{
-				HandleTacticalSpeechUI(gubCurrentTalkingID, gpCurrentTalkingFace);
+				HandleTacticalSpeechUI(gubCurrentTalkingID, &f);
 				guiScreenIDUsedWhenUICreated = guiCurrentScreen;
 			}
 			return;
@@ -393,30 +394,29 @@ void HandleDialogue()
 
 		// Check special flags
 		// If we are done, check special face flag for trigger NPC!
-		if (gpCurrentTalkingFace->uiFlags & FACE_PCTRIGGER_NPC)
+		if (f.uiFlags & FACE_PCTRIGGER_NPC)
 		{
 			 // Decrement refrence count...
 			 giNPCReferenceCount--;
 
-			 FACETYPE& f = *gpCurrentTalkingFace;
 			 TriggerNPCRecord(f.u.trigger.npc, f.u.trigger.record);
 			 //Reset flag!
-			 gpCurrentTalkingFace->uiFlags &= ~FACE_PCTRIGGER_NPC;
+			 f.uiFlags &= ~FACE_PCTRIGGER_NPC;
 		}
 
-		if (gpCurrentTalkingFace->uiFlags & FACE_MODAL)
+		if (f.uiFlags & FACE_MODAL)
 		{
-			gpCurrentTalkingFace->uiFlags &= ~FACE_MODAL;
+			f.uiFlags &= ~FACE_MODAL;
 			EndModalTactical();
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_TESTVERSION, L"Ending Modal Tactical Quote.");
 		}
 
-		if (gpCurrentTalkingFace->uiFlags & FACE_TRIGGER_PREBATTLE_INT)
+		if (f.uiFlags & FACE_TRIGGER_PREBATTLE_INT)
 		{
 			UnLockPauseState();
-			InitPreBattleInterface(gpCurrentTalkingFace->u.initiating_battle.group, TRUE);
+			InitPreBattleInterface(f.u.initiating_battle.group, TRUE);
 			//Reset flag!
-			gpCurrentTalkingFace->uiFlags &= ~FACE_TRIGGER_PREBATTLE_INT;
+			f.uiFlags &= ~FACE_TRIGGER_PREBATTLE_INT;
 		}
 
 		gpCurrentTalkingFace = NULL;
