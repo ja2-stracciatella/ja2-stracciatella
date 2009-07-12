@@ -2174,68 +2174,33 @@ static void SelectHelpScrollAreaMovementCallBack(MOUSE_REGION* pRegion, INT32 iR
 }
 
 
-static void HelpScreenMouseMoveScrollBox(INT32 usMousePosY)
+static void HelpScreenMouseMoveScrollBox(INT32 const mouse_y)
 {
-	INT32 iPosY, iHeight;
-	INT32 iNumberOfIncrements=0;
-	FLOAT dSizeOfIncrement = ( HLP_SCRN__HEIGHT_OF_SCROLL_AREA / ( FLOAT ) gHelpScreen.usTotalNumberOfLinesInBuffer );
-	FLOAT dTemp;
-	INT32 iNewPosition;
+	INT32 bar_h;
+	INT32 bar_y;
+	CalculateHeightAndPositionForHelpScreenScrollBox(&bar_h, &bar_y);
 
-	CalculateHeightAndPositionForHelpScreenScrollBox( &iHeight, &iPosY );
-
-	if ((iPosY <= usMousePosY && usMousePosY < iPosY + iHeight) ||
-			gHelpScreen.iLastMouseClickY != -1)
+	HELP_SCREEN_STRUCT& hlp = gHelpScreen;
+	INT32               dy;
+	if ((bar_y <= mouse_y && mouse_y < bar_y + bar_h) || hlp.iLastMouseClickY != -1)
 	{
-		if( gHelpScreen.iLastMouseClickY == -1 )
-			gHelpScreen.iLastMouseClickY = usMousePosY;
+		if (hlp.iLastMouseClickY == -1) hlp.iLastMouseClickY = mouse_y;
 
-		if( usMousePosY < gHelpScreen.iLastMouseClickY )
-		{
-//			iNewPosition = iPosY - ( UINT16)( dSizeOfIncrement + .5);
-			iNewPosition = iPosY - ( gHelpScreen.iLastMouseClickY - usMousePosY );
+		if (mouse_y == hlp.iLastMouseClickY) return;
 
-		}
-		else if( usMousePosY > gHelpScreen.iLastMouseClickY )
-		{
-//			iNewPosition = iPosY + ( UINT16)( dSizeOfIncrement + .5);
-			iNewPosition = iPosY + usMousePosY - gHelpScreen.iLastMouseClickY;
-		}
-		else
-		{
-			return;
-		}
-
-		dTemp = ( iNewPosition - iPosY ) / dSizeOfIncrement;
-
-		if( dTemp < 0 )
-			iNumberOfIncrements = (INT32)( dTemp - 0.5 );
-		else
-			iNumberOfIncrements = (INT32)( dTemp + 0.5 );
-
-		gHelpScreen.iLastMouseClickY = usMousePosY;
-
-//		return;
+		dy = mouse_y - hlp.iLastMouseClickY;
+		gHelpScreen.iLastMouseClickY = mouse_y;
 	}
 	else
 	{
-		//if the mouse is higher then the top of the scroll area, set it to the top of the scroll area
-		if( usMousePosY < HLP_SCRN__SCROLL_POSY )
-			usMousePosY = HLP_SCRN__SCROLL_POSY;
-
-		dTemp = ( usMousePosY - iPosY ) / dSizeOfIncrement;
-
-		if( dTemp < 0 )
-			iNumberOfIncrements = (INT32)( dTemp - 0.5 );
-		else
-			iNumberOfIncrements = (INT32)( dTemp + 0.5 );
+		/* If the mouse is higher than the top of the scroll area, set it to the top
+		 * of the scroll area */
+		dy = MAX(HLP_SCRN__SCROLL_POSY, mouse_y) - bar_y;
 	}
 
-	//if there has been a change
-	if( iNumberOfIncrements != 0 )
-	{
-		ChangeTopLineInTextBufferByAmount( iNumberOfIncrements );
-	}
+	FLOAT const temp        = (FLOAT)dy * hlp.usTotalNumberOfLinesInBuffer / HLP_SCRN__HEIGHT_OF_SCROLL_AREA;
+	INT32 const delta_lines = (INT32)(temp + (temp < 0 ?  -0.5 : +0.5));
+	if (delta_lines != 0) ChangeTopLineInTextBufferByAmount(delta_lines);
 }
 
 
