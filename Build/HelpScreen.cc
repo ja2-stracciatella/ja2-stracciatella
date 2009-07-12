@@ -2174,9 +2174,6 @@ static void SelectHelpScrollAreaMovementCallBack(MOUSE_REGION* pRegion, INT32 iR
 }
 
 
-static BOOLEAN AreWeClickingOnScrollBar(INT32 usMousePosY);
-
-
 static void HelpScreenMouseMoveScrollBox(INT32 usMousePosY)
 {
 	INT32 iPosY, iHeight;
@@ -2187,7 +2184,8 @@ static void HelpScreenMouseMoveScrollBox(INT32 usMousePosY)
 
 	CalculateHeightAndPositionForHelpScreenScrollBox( &iHeight, &iPosY );
 
-	if( AreWeClickingOnScrollBar( usMousePosY ) || gHelpScreen.iLastMouseClickY != -1 )
+	if ((iPosY <= usMousePosY && usMousePosY < iPosY + iHeight) ||
+			gHelpScreen.iLastMouseClickY != -1)
 	{
 		if( gHelpScreen.iLastMouseClickY == -1 )
 			gHelpScreen.iLastMouseClickY = usMousePosY;
@@ -2258,17 +2256,4 @@ static void BtnHelpScreenScrollArrowsCallback(GUI_BUTTON* btn, INT32 reason)
 			ChangeTopLineInTextBufferByAmount( 1 );
 		}
 	}
-}
-
-
-static BOOLEAN AreWeClickingOnScrollBar(INT32 usMousePosY)
-{
-	INT32 iPosY, iHeight;
-
-	CalculateHeightAndPositionForHelpScreenScrollBox( &iHeight, &iPosY );
-
-	if( usMousePosY >= iPosY && usMousePosY < ( iPosY + iHeight ) )
-		return( TRUE );
-	else
-		return( FALSE );
 }
