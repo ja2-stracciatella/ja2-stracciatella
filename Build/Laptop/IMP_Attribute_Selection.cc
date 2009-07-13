@@ -100,7 +100,7 @@ void SetGeneratedCharacterAttributes(void);
 
 static void CreateAttributeSliderButtons(void);
 static void CreateIMPAttributeSelectionButtons(void);
-static void CreateSlideRegionMouseRegions(void);
+static void CreateSlideRegionMouseRegions();
 
 
 void EnterIMPAttributeSelection(void)
@@ -149,7 +149,7 @@ void RenderIMPAttributeSelection(void)
 
 static void DestroyAttributeSliderButtons(void);
 static void DestroyIMPAttributeSelectionButtons(void);
-static void DestroySlideRegionMouseRegions(void);
+static void DestroySlideRegionMouseRegions();
 
 
 void ExitIMPAttributeSelection(void)
@@ -510,33 +510,27 @@ static void BtnIMPAttributeSliderRightCallback(GUI_BUTTON* btn, INT32 reason)
 static void SliderRegionButtonCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static void CreateSlideRegionMouseRegions(void)
+static void CreateSlideRegionMouseRegions()
 {
-	// Create that mouse regions on the sliding area, that, if the player clicks on, the bar will automatically jump to
-	for (INT32 iCounter = 0; iCounter < 10; iCounter++)
+	/* Create the mouse regions on the sliding area, that, if the player clicks
+	 * on, the bar will automatically jump to */
+	for (size_t i = 0; i != lengthof(pSliderRegions); ++i)
 	{
-		// define the region
-		MSYS_DefineRegion
-		(
-			&pSliderRegions[iCounter],
-			LAPTOP_SCREEN_UL_X + SKILL_SLIDE_START_X,             LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT,
-			LAPTOP_SCREEN_UL_X + SKILL_SLIDE_START_X + BAR_WIDTH, LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + iCounter * SKILL_SLIDE_HEIGHT + 15,
-			MSYS_PRIORITY_HIGH + 2, CURSOR_WWW, MSYS_NO_CALLBACK, SliderRegionButtonCallback
-		);
-
-		// define user data
-		MSYS_SetRegionUserData(&pSliderRegions[iCounter], 0, iCounter);
+		MOUSE_REGION& r = pSliderRegions[i];
+		UINT16 const  x = LAPTOP_SCREEN_UL_X + SKILL_SLIDE_START_X;
+		UINT16 const  y = LAPTOP_SCREEN_WEB_UL_Y + SKILL_SLIDE_START_Y + i * SKILL_SLIDE_HEIGHT;
+		MSYS_DefineRegion(&r, x, y, x + BAR_WIDTH, y + 15, MSYS_PRIORITY_HIGH + 2, CURSOR_WWW, MSYS_NO_CALLBACK, SliderRegionButtonCallback);
+		MSYS_SetRegionUserData(&r, 0, i);
 	}
 }
 
 
-static void DestroySlideRegionMouseRegions(void)
+static void DestroySlideRegionMouseRegions()
 {
 	// Destroy the regions user for the slider 'jumping'
-	// delete the regions
-	for (INT32 iCounter = 0; iCounter < 10; iCounter++)
+	for (size_t i = 0; i != lengthof(pSliderRegions); ++i)
 	{
-		MSYS_RemoveRegion(&pSliderRegions[iCounter]);
+		MSYS_RemoveRegion(&pSliderRegions[i]);
 	}
 }
 
