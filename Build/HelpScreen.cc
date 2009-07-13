@@ -1935,55 +1935,19 @@ static void ClearHelpScreenTextBuffer(void)
 
 
 // - is up, + is down
-static void ChangeTopLineInTextBufferByAmount(INT32 iAmouontToMove)
+static void ChangeTopLineInTextBufferByAmount(INT32 const delta)
 {
-	//if we are moving up
-	if( iAmouontToMove < 0 )
-	{
-		if( gHelpScreen.iLineAtTopOfTextBuffer + iAmouontToMove >= 0 )
-		{
-			//if we can move up by the requested amount
-			if( ( gHelpScreen.usTotalNumberOfLinesInBuffer - gHelpScreen.iLineAtTopOfTextBuffer ) > iAmouontToMove )
-			{
-				gHelpScreen.iLineAtTopOfTextBuffer += iAmouontToMove;
-			}
+	HELP_SCREEN_STRUCT& hlp     = gHelpScreen;
+	INT32&              top     = hlp.iLineAtTopOfTextBuffer;
+	INT32 const         max_top = hlp.usTotalNumberOfLinesInBuffer - HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER;
+	INT32               new_top = top + delta;
+	if (new_top > max_top) new_top = max_top;
+	if (new_top < 0)       new_top = 0;
 
-			//else, trying to move past the top
-			else
-			{
-				gHelpScreen.iLineAtTopOfTextBuffer = 0;
-			}
-		}
-		else
-		{
-			gHelpScreen.iLineAtTopOfTextBuffer = 0;
-		}
-	}
+	if (new_top == top) return;
 
-	//else we are moving down
-	else
-	{
-		//if we dont have to scroll cause there is not enough text
-		if( gHelpScreen.usTotalNumberOfLinesInBuffer <= HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER )
-		{
-			gHelpScreen.iLineAtTopOfTextBuffer = 0;
-		}
-		else
-		{
-			if( ( gHelpScreen.iLineAtTopOfTextBuffer + HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER + iAmouontToMove ) <= gHelpScreen.usTotalNumberOfLinesInBuffer )
-			{
-				gHelpScreen.iLineAtTopOfTextBuffer += iAmouontToMove;
-			}
-			else
-			{
-				gHelpScreen.iLineAtTopOfTextBuffer = gHelpScreen.usTotalNumberOfLinesInBuffer - HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER;
-			}
-		}
-	}
-
-//	RenderCurrentHelpScreenTextToBuffer();
-
-	gHelpScreen.ubHelpScreenDirty = HLP_SCRN_DRTY_LVL_REFRESH_TEXT;
+	top                   = new_top;
+	hlp.ubHelpScreenDirty = HLP_SCRN_DRTY_LVL_REFRESH_TEXT;
 }
 
 
