@@ -18,9 +18,7 @@ enum StatKind
 	MARKAMT    =  8,
 	EXPERAMT   =  9,
 	STRAMT     = 10,
-	LDRAMT     = 11,
-	ASSIGNAMT  = 12,
-	NAMEAMT    = 13
+	LDRAMT     = 11
 };
 
 template<typename T> static inline StatKind operator +(StatKind const s, T const delta)
