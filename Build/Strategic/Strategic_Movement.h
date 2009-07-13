@@ -142,7 +142,7 @@ extern GROUP *gpGroupList;
 
 
 #define CFOR_ALL_PLAYERS_IN_GROUP(iter, group) \
-	for (const PLAYERGROUP* iter = (Assert(group->fPlayer), group->pPlayerList); iter != NULL; iter = iter->next)
+	for (PLAYERGROUP const* iter = (Assert((group)->fPlayer), (group)->pPlayerList); iter; iter = iter->next)
 
 
 //General utility functions

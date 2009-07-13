@@ -1066,44 +1066,35 @@ void CalculateNextMoveIntention( GROUP *pGroup )
 }
 
 
-static void AwardExperienceForTravelling(GROUP* pGroup)
+/* Based on how long movement took, mercs gain a bit of life experience for
+ * travelling */
+static void AwardExperienceForTravelling(GROUP& g)
 {
-	// based on how long movement took, mercs gain a bit of life experience for travelling
-	SOLDIERTYPE	*	pSoldier;
-	UINT32				uiPoints;
-	UINT32				uiCarriedPercent;
-
-	if ( !pGroup || !pGroup->fPlayer )
+	UINT32 const traverse_time = g.uiTraverseTime;
+	CFOR_ALL_PLAYERS_IN_GROUP(i, &g)
 	{
-		return;
-	}
+		if (!i->pSoldier)                      continue;
+		SOLDIERTYPE& s = *i->pSoldier;
+		if (AM_A_ROBOT(&s))                    continue;
+		if (AM_AN_EPC(&s))                     continue;
+		if (s.uiStatusFlags & SOLDIER_VEHICLE) continue;
 
-	CFOR_ALL_PLAYERS_IN_GROUP(pPlayerGroup, pGroup)
-	{
-		pSoldier = pPlayerGroup->pSoldier;
-		if( pSoldier  && !AM_A_ROBOT( pSoldier ) &&
-				!AM_AN_EPC( pSoldier ) && !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE) )
+		if (s.bLifeMax < 100)
 		{
-			if ( pSoldier->bLifeMax < 100 )
-			{
-				// award exp...
-				// amount was originally based on getting 100-bLifeMax points for 12 hours of travel (720)
-				// but changed to flat rate since StatChange makes roll vs 100-lifemax as well!
-				uiPoints = pGroup->uiTraverseTime / (450 / 100 - pSoldier->bLifeMax );
-				if ( uiPoints > 0 )
-				{
-					StatChange( pSoldier, HEALTHAMT, (UINT8) uiPoints, FALSE );
-				}
-			}
+			/* Amount was originally based on getting 100 - bLifeMax points for 12
+			 * hours of travel (720), but changed to flat rate since StatChange makes
+			 * roll vs 100-lifemax as well */
+			UINT32 const points = traverse_time / (450 / 100 - s.bLifeMax);
+			if (points > 0) StatChange(&s, HEALTHAMT, (UINT8)points, FALSE);
+		}
 
-			if ( pSoldier->bStrength < 100 )
+		if (s.bStrength < 100)
+		{
+			UINT32 const carried_percent = CalculateCarriedWeight(&s);
+			if (carried_percent > 50)
 			{
-				uiCarriedPercent = CalculateCarriedWeight( pSoldier );
-				if ( uiCarriedPercent > 50 )
-				{
-					uiPoints = pGroup->uiTraverseTime / (450 / (100 - pSoldier->bStrength ) );
-					StatChange( pSoldier, STRAMT, ( UINT16 ) ( uiPoints * ( uiCarriedPercent - 50) / 100 ), FALSE );
-				}
+				UINT32 const points = traverse_time / (450 / (100 - s.bStrength));
+				StatChange(&s, STRAMT, points * (carried_percent - 50) / 100, FALSE);
 			}
 		}
 	}
@@ -1270,7 +1261,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 		if ( !pGroup->fVehicle )
 		{
 			// gotta be walking to get tougher
-			AwardExperienceForTravelling( pGroup );
+			AwardExperienceForTravelling(*pGroup);
 		}
 		else if( !IsGroupTheHelicopterGroup( pGroup ) )
 		{
