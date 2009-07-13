@@ -52,11 +52,11 @@ const wchar_t* const  wDebugStatStrings[] = {
 
 
 static void UpdateStats(SOLDIERTYPE* pSoldier);
-static void ProcessStatChange(MERCPROFILESTRUCT&, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason);
+static void ProcessStatChange(MERCPROFILESTRUCT&, StatKind, UINT16 usNumChances, UINT8 ubReason);
 
 
 // give pSoldier usNumChances to improve ubStat.  If it's from training, it doesn't count towards experience level gain
-void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason)
+void StatChange(SOLDIERTYPE* const pSoldier, StatKind const ubStat, UINT16 const usNumChances, UINT8 const ubReason)
 {
 	Assert(pSoldier != NULL);
 	Assert(pSoldier->bActive);
@@ -94,7 +94,7 @@ static void ProfileUpdateStats(MERCPROFILESTRUCT&);
 
 // this is the equivalent of StatChange(), but for use with mercs not currently on player's team
 // give pProfile usNumChances to improve ubStat.  If it's from training, it doesn't count towards experience level gain
-static void ProfileStatChange(MERCPROFILESTRUCT& p, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason)
+static void ProfileStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT16 const usNumChances, UINT8 const ubReason)
 {
 	// dead guys don't do nuthin' !
 	if (p.bMercStatus == MERC_IS_DEAD)
@@ -110,10 +110,10 @@ static void ProfileStatChange(MERCPROFILESTRUCT& p, UINT8 ubStat, UINT16 usNumCh
 }
 
 
-static UINT16 SubpointsPerPoint(UINT8 ubStat, INT8 bExpLevel);
+static UINT16 SubpointsPerPoint(StatKind, INT8 bExpLevel);
 
 
-static void ProcessStatChange(MERCPROFILESTRUCT& p, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason)
+static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT16 const usNumChances, UINT8 const ubReason)
 {
   UINT32 uiCnt,uiEffLevel;
   INT16 sSubPointChange = 0;
@@ -404,7 +404,7 @@ static void ProfileUpdateStats(MERCPROFILESTRUCT& p)
 static UINT32 CalcNewSalary(UINT32 uiOldSalary, BOOLEAN fIncrease, UINT32 uiMaxLimit);
 
 
-static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* pSoldier, UINT8 ubStat, INT16 sPtsChanged)
+static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKind const ubStat, INT16 const sPtsChanged)
 {
 	// this function changes the stat a given amount...
 	INT16 *psStatGainPtr = NULL;
@@ -611,7 +611,7 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* pSoldier, UINT8 ubStat
 				class CharacterDialogueEventDisplayStatChange : public CharacterDialogueEvent
 				{
 					public:
-						CharacterDialogueEventDisplayStatChange(SOLDIERTYPE& soldier, BOOLEAN const change_type_increase, UINT16 const pts_changed, UINT8 const stat) :
+						CharacterDialogueEventDisplayStatChange(SOLDIERTYPE& soldier, BOOLEAN const change_type_increase, UINT16 const pts_changed, StatKind const stat) :
 							CharacterDialogueEvent(soldier),
 							change_type_increase_(change_type_increase),
 							pts_changed_(pts_changed),
@@ -630,9 +630,9 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* pSoldier, UINT8 ubStat
 						}
 
 					private:
-						BOOLEAN const change_type_increase_;
-						UINT16  const pts_changed_;
-						UINT8   const stat_;
+						BOOLEAN  const change_type_increase_;
+						UINT16   const pts_changed_;
+						StatKind const stat_;
 				};
 
 				DialogueEvent::Add(new CharacterDialogueEventDisplayStatChange(*pSoldier, fChangeTypeIncrease, sPtsChanged, ubStat));
@@ -768,7 +768,6 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* pSoldier, UINT8 ubStat
 static void ProcessUpdateStats(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier)
 {
 	// this function will run through the soldier's profile and update their stats based on any accumulated gain pts.
-	UINT8 ubStat = 0;
 	INT16 *psStatGainPtr = NULL;
 	INT8 *pbStatPtr = NULL;
 	INT8 *pbSoldierStatPtr = NULL;
@@ -818,7 +817,7 @@ static void ProcessUpdateStats(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier
 
 
 	// check every attribute, skill, and exp.level, too
-	for( ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ubStat++ )
+	for (StatKind ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ++ubStat)
 	{
 		// set default min & max, subpoints/pt.
 		bMinStatValue = 1;
@@ -1058,7 +1057,7 @@ static UINT32 RoundOffSalary(UINT32 uiSalary)
 }
 
 
-static UINT16 SubpointsPerPoint(UINT8 ubStat, INT8 bExpLevel)
+static UINT16 SubpointsPerPoint(StatKind const ubStat, INT8 const bExpLevel)
 {
 	UINT16 usSubpointsPerPoint;
 
@@ -1101,7 +1100,6 @@ static UINT16 SubpointsPerPoint(UINT8 ubStat, INT8 bExpLevel)
 void HandleUnhiredMercImprovement(MERCPROFILESTRUCT& p)
 {
 	UINT8 ubNumStats;
-	UINT8 ubStat;
 	UINT16 usNumChances;
 
 	ubNumStats = LAST_CHANGEABLE_STAT - FIRST_CHANGEABLE_STAT + 1;
@@ -1123,7 +1121,7 @@ void HandleUnhiredMercImprovement(MERCPROFILESTRUCT& p)
 		// so about 10 working days to hit lvl 2.  This seems high, but mercs don't actually "work" that often, and it's twice
 		// as long to hit level 3.  If we go lower, attribs & skills will barely move.
 		usNumChances = p.bWisdom / 10;
-		for (ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ubStat++)
+		for (StatKind ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ++ubStat)
 		{
 			ProfileStatChange(p, ubStat, usNumChances, FALSE);
 		}
@@ -1138,10 +1136,11 @@ void HandleUnhiredMercImprovement(MERCPROFILESTRUCT& p)
 		}
 
 		// it's just practise/training back home
+		StatKind ubStat;
 		do
 		{
 			// pick ONE stat at random to focus on (it may be beyond training cap, but so what, too hard to weed those out)
-			ubStat = (UINT8) (FIRST_CHANGEABLE_STAT + Random(ubNumStats));
+			ubStat = static_cast<StatKind>(FIRST_CHANGEABLE_STAT + Random(ubNumStats));
 			// except experience - can't practise that!
 		} while (ubStat == EXPERAMT);
 
@@ -1372,7 +1371,6 @@ void HourlyProgressUpdate(void)
 void TestDumpStatChanges(void)
 {
   UINT32 uiProfileId;
-	UINT8 ubStat;
   CHAR8 zPrintFileName[60];
   FILE *FDump;
 	BOOLEAN fMercUsed;
@@ -1407,7 +1405,7 @@ void TestDumpStatChanges(void)
 		fMercUsed = FALSE;
 
 		// see if this guy should be printed at all (only mercs actually used are dumped)
-		for( ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ubStat++ )
+		for (StatKind ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ++ubStat)
 		{
 			if (p.usStatChangeChances[ubStat] > 0)
 			{
@@ -1426,7 +1424,7 @@ void TestDumpStatChanges(void)
 			fprintf(FDump, "%c ", cEvolutionChars[p.bEvolution]);
 
 			// now print all non-zero stats
-			for( ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ubStat++ )
+			for (StatKind ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ++ubStat)
 			{
 				if (p.usStatChangeChances[ubStat] > 0)
 				{
@@ -1452,7 +1450,7 @@ void TestDumpStatChanges(void)
 	// print totals:
 	fprintf(FDump, "TOTAL        ");
 
-	for( ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ubStat++ )
+	for (StatKind ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ++ubStat)
 	{
 		fprintf(FDump, " %5d/%-5d", uiTotalSuccesses[ ubStat ], uiTotalChances[ ubStat ]);
 	}
@@ -1496,7 +1494,7 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 }
 
 
-void BuildStatChangeString(wchar_t* const wString, size_t Length, const wchar_t* const wName, const BOOLEAN fIncrease, const INT16 sPtsChanged, const UINT8 ubStat)
+void BuildStatChangeString(wchar_t* const wString, size_t const Length, wchar_t const* const wName, BOOLEAN const fIncrease, INT16 const sPtsChanged, StatKind const ubStat)
 {
 	UINT8 ubStringIndex;
 

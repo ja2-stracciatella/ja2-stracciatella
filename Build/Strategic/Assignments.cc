@@ -2656,7 +2656,7 @@ static void TrainSoldierWithPts(SOLDIERTYPE* const s, const INT16 train_pts)
 	if (train_pts <= 0) return;
 
 	// which stat to modify?
-	UINT8 stat;
+	StatKind stat;
 	switch (s->bTrainStat)
 	{
 		case STRENGTH:         stat = STRAMT;     break;

@@ -5,20 +5,33 @@
 #include "Soldier_Profile_Type.h"
 
 
-#define SALARYAMT               0
-#define HEALTHAMT               1
-#define AGILAMT                 2
-#define DEXTAMT                 3
-#define WISDOMAMT               4
-#define MEDICALAMT              5
-#define EXPLODEAMT              6
-#define MECHANAMT               7
-#define MARKAMT                 8
-#define EXPERAMT                9
-#define STRAMT									10
-#define LDRAMT									11
-#define ASSIGNAMT               12
-#define NAMEAMT                 13
+enum StatKind
+{
+	SALARYAMT  =  0,
+	HEALTHAMT  =  1,
+	AGILAMT    =  2,
+	DEXTAMT    =  3,
+	WISDOMAMT  =  4,
+	MEDICALAMT =  5,
+	EXPLODEAMT =  6,
+	MECHANAMT  =  7,
+	MARKAMT    =  8,
+	EXPERAMT   =  9,
+	STRAMT     = 10,
+	LDRAMT     = 11,
+	ASSIGNAMT  = 12,
+	NAMEAMT    = 13
+};
+
+template<typename T> static inline StatKind operator +(StatKind const s, T const delta)
+{
+	return static_cast<StatKind>(s + delta);
+}
+
+static inline StatKind operator ++(StatKind& s)
+{
+	return s = s + 1;
+}
 
 #define FIRST_CHANGEABLE_STAT		HEALTHAMT
 #define LAST_CHANGEABLE_STAT		LDRAMT
@@ -58,7 +71,7 @@ enum
 };
 
 
-void StatChange(SOLDIERTYPE *pSoldier, UINT8 ubStat, UINT16 usNumChances, UINT8 ubReason);
+void StatChange(SOLDIERTYPE*, StatKind, UINT16 usNumChances, UINT8 ubReason);
 
 void HandleUnhiredMercImprovement(MERCPROFILESTRUCT&);
 void HandleUnhiredMercDeaths( INT32 iProfileID );
@@ -72,7 +85,7 @@ void HandleAnyStatChangesAfterAttack( void );
 
 void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType );
 
-void BuildStatChangeString(wchar_t* wString, size_t Length, const wchar_t* wName, BOOLEAN fIncrease, INT16 sPtsChanged, UINT8 ubStat);
+void BuildStatChangeString(wchar_t* wString, size_t Length, wchar_t const* wName, BOOLEAN fIncrease, INT16 sPtsChanged, StatKind);
 
 void MERCMercWentUpALevelSendEmail( UINT8 ubMercMercIdValue );
 
