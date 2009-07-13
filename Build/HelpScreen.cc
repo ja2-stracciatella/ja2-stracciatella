@@ -2144,27 +2144,22 @@ static void HelpScreenMouseMoveScrollBox(INT32 const mouse_y)
 	INT32 bar_y;
 	CalculateHeightAndPositionForHelpScreenScrollBox(&bar_h, &bar_y);
 
+	INT32 const max_h = HLP_SCRN__HEIGHT_OF_SCROLL_AREA - bar_h;
+	if (max_h == 0) return;
+
 	HELP_SCREEN_STRUCT& hlp = gHelpScreen;
-	INT32               dy;
-	if ((bar_y <= mouse_y && mouse_y < bar_y + bar_h) || hlp.iLastMouseClickY != -1)
+	if (hlp.iLastMouseClickY == -1)
 	{
-		if (hlp.iLastMouseClickY == -1) hlp.iLastMouseClickY = mouse_y;
-
-		if (mouse_y == hlp.iLastMouseClickY) return;
-
-		dy = mouse_y - hlp.iLastMouseClickY;
-		gHelpScreen.iLastMouseClickY = mouse_y;
-	}
-	else
-	{
-		/* If the mouse is higher than the top of the scroll area, set it to the top
-		 * of the scroll area */
-		dy = MAX(HLP_SCRN__SCROLL_POSY, mouse_y) - bar_y;
+		hlp.iLastMouseClickY =
+			bar_y <= mouse_y && mouse_y < bar_y + bar_h ? mouse_y - bar_y :
+			bar_h / 2;
 	}
 
-	FLOAT const temp        = (FLOAT)dy * hlp.usTotalNumberOfLinesInBuffer / HLP_SCRN__HEIGHT_OF_SCROLL_AREA;
-	INT32 const delta_lines = (INT32)(temp + (temp < 0 ?  -0.5 : +0.5));
-	if (delta_lines != 0) ChangeTopLineInTextBufferByAmount(delta_lines);
+	INT32 const min_y = HLP_SCRN__SCROLL_POSY + hlp.iLastMouseClickY;
+	INT32 const txt_h = hlp.usTotalNumberOfLinesInBuffer - HLP_SCRN__MAX_NUMBER_DISPLAYED_LINES_IN_BUFFER;
+	INT32 const pos   = txt_h * (mouse_y - min_y) / max_h;
+	INT32 const delta = pos - hlp.iLineAtTopOfTextBuffer;
+	ChangeTopLineInTextBufferByAmount(delta);
 }
 
 

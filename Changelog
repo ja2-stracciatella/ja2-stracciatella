@@ -1,3 +1,4 @@
+(r6298) Improve the vanilla behaviour of the scroll bar in the help screen: Now moving the mouse slowly does not cause it to hang anymore and the relative position of the mouse cursor to the bar is fixed.
 (r6293) Enable scrolling in the help screen with the mouse wheel.
 (r6270) Fix a vanilla glitch: Disable the prev/next buttons in the personnel screen not only when there is exactly one merc in the list, but also if there is none.
 (r6253) Fix a vanilla glitch in the editor: The text for the brothel siren trap was missing.
