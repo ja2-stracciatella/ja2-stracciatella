@@ -1686,23 +1686,24 @@ static void HandleRepairBySoldier(SOLDIERTYPE* pSoldier);
 
 
 // handle any repair man in sector
-static void HandleRepairmenInSector(INT16 sX, INT16 sY, INT8 bZ)
+static void HandleRepairmenInSector(INT16 const x, INT16 const y, INT8 const z)
 {
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_ALL_IN_TEAM(i, OUR_TEAM)
 	{
-		if (s->sSectorX == sX &&
-				s->sSectorY == sY &&
-				s->bSectorZ == bZ &&
-				s->bAssignment == REPAIR &&
-				!s->fMercAsleep)
-		{
-			MakeSureToolKitIsInHand(s);
-			// character is in sector, check if can repair
-			if (CanCharacterRepair(s) && EnoughTimeOnAssignment(s))
-			{
-				HandleRepairBySoldier(s);
-			}
-		}
+		SOLDIERTYPE& s = *i;
+		if (s.sSectorX    != x)      continue;
+		if (s.sSectorY    != y)      continue;
+		if (s.bSectorZ    != z)      continue;
+		if (s.bAssignment != REPAIR) continue;
+		if (s.fMercAsleep)           continue;
+
+		MakeSureToolKitIsInHand(&s);
+
+		// character is in sector, check if can repair
+		if (!CanCharacterRepair(&s))     continue;
+		if (!EnoughTimeOnAssignment(&s)) continue;
+
+		HandleRepairBySoldier(&s);
 	}
 }
 
