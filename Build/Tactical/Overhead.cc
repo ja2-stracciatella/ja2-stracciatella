@@ -2736,7 +2736,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 		if (killer != NULL && killer->bTeam == gbPlayerNum)
 		{
 			// EXPERIENCE CLASS GAIN:  Earned a kill
-			StatChange(killer, EXPERAMT, 10 * pSoldierOld->bExpLevel, FALSE);
+			StatChange(killer, EXPERAMT, 10 * pSoldierOld->bExpLevel, FROM_SUCCESS);
 		}
 
 		// JA2 Gold: if previous and current attackers are the same, the next-to-previous attacker gets the assist
@@ -2747,7 +2747,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 		if (assister != NULL && assister->bActive && assister->bTeam == gbPlayerNum)
 		{
 			// EXPERIENCE CLASS GAIN:  Earned an assist
-			StatChange(assister, EXPERAMT, 5 * pSoldierOld->bExpLevel, FALSE);
+			StatChange(assister, EXPERAMT, 5 * pSoldierOld->bExpLevel, FROM_SUCCESS);
 		}
 	}
 

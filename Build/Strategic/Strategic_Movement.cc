@@ -1085,7 +1085,7 @@ static void AwardExperienceForTravelling(GROUP& g)
 			 * hours of travel (720), but changed to flat rate since StatChange makes
 			 * roll vs 100-lifemax as well */
 			UINT32 const points = traverse_time / (450 / 100 - s.bLifeMax);
-			if (points > 0) StatChange(&s, HEALTHAMT, (UINT8)points, FALSE);
+			if (points > 0) StatChange(&s, HEALTHAMT, (UINT8)points, FROM_SUCCESS);
 		}
 
 		if (s.bStrength < 100)
@@ -1094,7 +1094,7 @@ static void AwardExperienceForTravelling(GROUP& g)
 			if (carried_percent > 50)
 			{
 				UINT32 const points = traverse_time / (450 / (100 - s.bStrength));
-				StatChange(&s, STRAMT, points * (carried_percent - 50) / 100, FALSE);
+				StatChange(&s, STRAMT, points * (carried_percent - 50) / 100, FROM_SUCCESS);
 			}
 		}
 	}

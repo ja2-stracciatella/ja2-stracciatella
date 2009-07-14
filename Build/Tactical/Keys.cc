@@ -305,7 +305,7 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	if (iResult > 0)
 	{
     // STR GAIN (20) - Pried open a lock
-    StatChange( pSoldier, STRAMT, 20, FALSE );
+    StatChange(pSoldier, STRAMT, 20, FROM_SUCCESS);
 
 		// succeeded! door can never be locked again, so remove from door list...
 		RemoveDoorInfoFromTable( pDoor->sGridNo );
@@ -320,7 +320,7 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		if (iResult > -10)
 		{
 			// STR GAIN - Damaged a lock by prying
-			StatChange( pSoldier, STRAMT, 5, FALSE );
+			StatChange(pSoldier, STRAMT, 5, FROM_SUCCESS);
 
 			// we came close... so do some damage to the lock
 			pDoor->bLockDamage += (INT8) (10 + iResult);
@@ -328,7 +328,7 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		else if ( iResult > -40 && pSoldier->sGridNo != pSoldier->sSkillCheckGridNo )
 		{
 			// give token point for effort :-)
-			StatChange( pSoldier, STRAMT, 1, FALSE );
+			StatChange(pSoldier, STRAMT, 1, FROM_SUCCESS);
 		}
 
 		return( FALSE );
@@ -382,7 +382,7 @@ BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	if (iResult > 0)
 	{
     // STR GAIN (20) - Pried open a lock
-    StatChange( pSoldier, STRAMT, 20, FALSE );
+    StatChange(pSoldier, STRAMT, 20, FROM_SUCCESS);
 
 		// succeeded! door can never be locked again, so remove from door list...
 		RemoveDoorInfoFromTable( pDoor->sGridNo );
@@ -398,7 +398,7 @@ BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		if (iResult > -10)
 		{
 			// STR GAIN - Damaged a lock by prying
-			StatChange( pSoldier, STRAMT, 5, FALSE );
+			StatChange(pSoldier, STRAMT, 5, FROM_SUCCESS);
 
 			// we came close... so do some damage to the lock
 			pDoor->bLockDamage += (INT8) (10 + iResult);
@@ -406,7 +406,7 @@ BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 		else if ( iResult > -40 && pSoldier->sGridNo != pSoldier->sSkillCheckGridNo )
 		{
 			// give token point for effort :-)
-			StatChange( pSoldier, STRAMT, 1, FALSE );
+			StatChange(pSoldier, STRAMT, 1, FROM_SUCCESS);
 		}
 		return( FALSE );
 	}
@@ -455,10 +455,10 @@ BOOLEAN AttemptToPickLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	if (iResult > 0)
 	{
 	  // MECHANICAL GAIN:  Picked open a lock
-    StatChange( pSoldier, MECHANAMT, ( UINT16 ) ( pLock->ubPickDifficulty / 5 ), FALSE );
+    StatChange(pSoldier, MECHANAMT, pLock->ubPickDifficulty / 5, FROM_SUCCESS);
 
 	  // DEXTERITY GAIN:  Picked open a lock
-    StatChange( pSoldier, DEXTAMT, ( UINT16 ) ( pLock->ubPickDifficulty / 10 ), FALSE );
+    StatChange(pSoldier, DEXTAMT, pLock->ubPickDifficulty / 10, FROM_SUCCESS);
 
 		// succeeded!
 		pDoor->fLocked = FALSE;

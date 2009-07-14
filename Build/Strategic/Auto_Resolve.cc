@@ -1155,11 +1155,11 @@ UINT32 VirtualSoldierDressWound(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVictim, OBJ
 
 	if ( uiActual / 2)
 		// MEDICAL GAIN (actual / 2):  Helped someone by giving first aid
-		StatChange(pSoldier,MEDICALAMT,( (UINT16)(uiActual / 2) ),FALSE);
+		StatChange(pSoldier, MEDICALAMT, uiActual / 2, FROM_SUCCESS);
 
 	if ( uiActual / 4)
 		// DEXTERITY GAIN (actual / 4):  Helped someone by giving first aid
-		StatChange(pSoldier,DEXTAMT,(UINT16)( ( uiActual / 4) ),FALSE);
+		StatChange(pSoldier, DEXTAMT, uiActual / 4, FROM_SUCCESS);
 
 	return uiMedcost;
 }
@@ -3241,8 +3241,7 @@ static BOOLEAN FireAShot(SOLDIERCELL* pAttacker)
 				{
 					gMercProfiles[ pAttacker->pSoldier->ubProfile ].usShotsFired++;
 					// MARKSMANSHIP GAIN: Attacker fires a shot
-
-					StatChange( pAttacker->pSoldier, MARKAMT, 3, FALSE );
+					StatChange(pAttacker->pSoldier, MARKAMT, 3, FROM_SUCCESS);
 				}
 				pItem->ubGunShotsLeft--;
 				return TRUE;
@@ -3377,7 +3376,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 					PlayAutoResolveSample(SoundRange<SWOOSH_1, SWOOSH_6>(), 50, 1, MIDDLEPAN);
 				if( pTarget->uiFlags & CELL_MERC )
 					// AGILITY GAIN: Target "dodged" an attack
-					StatChange( pTarget->pSoldier, AGILAMT, 5, FALSE );
+					StatChange(pTarget->pSoldier, AGILAMT, 5, FROM_SUCCESS);
 			}
 			return;
 		}
@@ -3435,13 +3434,13 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 		{ //Attacker is a player, so increment the number of shots that hit.
 			gMercProfiles[ pAttacker->pSoldier->ubProfile ].usShotsHit++;
 			// MARKSMANSHIP GAIN: Attacker's shot hits
-			StatChange( pAttacker->pSoldier, MARKAMT, 6, FALSE );		// in addition to 3 for taking a shot
+			StatChange(pAttacker->pSoldier, MARKAMT, 6, FROM_SUCCESS); // in addition to 3 for taking a shot
 		}
 		if( pTarget->uiFlags & CELL_MERC )
 		{ //Target is a player, so increment the times he has been wounded.
 			gMercProfiles[ pTarget->pSoldier->ubProfile ].usTimesWounded++;
 			// EXPERIENCE GAIN: Took some damage
-			StatChange( pTarget->pSoldier, EXPERAMT, ( UINT16 )( 5 * ( iImpact / 10 ) ), FALSE );
+			StatChange(pTarget->pSoldier, EXPERAMT, 5 * (iImpact / 10), FROM_SUCCESS);
 		}
 		if( pTarget->pSoldier->bLife >= CONSCIOUSNESS || pTarget->uiFlags & CELL_CREATURE )
 		{
@@ -3555,7 +3554,7 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 	{ //bullet missed -- play a ricochet sound.
 		if( pTarget->uiFlags & CELL_MERC )
 			// AGILITY GAIN: Target "dodged" an attack
-			StatChange( pTarget->pSoldier, AGILAMT, 5, FALSE );
+			StatChange(pTarget->pSoldier, AGILAMT, 5, FROM_SUCCESS);
 		PlayAutoResolveSample(SoundRange<MISS_1, MISS_8>(), 50, 1, MIDDLEPAN);
 		return;
 	}
@@ -3564,13 +3563,13 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 	{ //Attacker is a player, so increment the number of shots that hit.
 		gMercProfiles[ pAttacker->pSoldier->ubProfile ].usShotsHit++;
 		// MARKSMANSHIP GAIN: Attacker's shot hits
-		StatChange( pAttacker->pSoldier, MARKAMT, 6, FALSE );		// in addition to 3 for taking a shot
+		StatChange(pAttacker->pSoldier, MARKAMT, 6, FROM_SUCCESS); // in addition to 3 for taking a shot
 	}
 	if( pTarget->uiFlags & CELL_MERC && pTarget->usHitDamage[ index ] )
 	{ //Target is a player, so increment the times he has been wounded.
 		gMercProfiles[ pTarget->pSoldier->ubProfile ].usTimesWounded++;
 		// EXPERIENCE GAIN: Took some damage
-		StatChange( pTarget->pSoldier, EXPERAMT, ( UINT16 )( 5 * ( pTarget->usHitDamage[ index ] / 10 ) ), FALSE );
+		StatChange(pTarget->pSoldier, EXPERAMT, 5 * (pTarget->usHitDamage[index] / 10), FROM_SUCCESS);
 	}
 
 	//bullet hit -- play an impact sound and a merc hit sound
@@ -3608,7 +3607,7 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 					gMercProfiles[ pKiller->pSoldier->ubProfile ].usKills++;
 					gStrategicStatus.usPlayerKills++;
 					// EXPERIENCE CLASS GAIN:  Earned a kill
-					StatChange( pKiller->pSoldier, EXPERAMT, ( UINT16 )( 10 * pTarget->pSoldier->bLevel ), FALSE );
+					StatChange(pKiller->pSoldier, EXPERAMT, 10 * pTarget->pSoldier->bLevel, FROM_SUCCESS);
 					HandleMoraleEvent( pKiller->pSoldier, MORALE_KILLED_ENEMY, gpAR->ubSectorX, gpAR->ubSectorY, 0  );
 				}
 				else if( pKiller->uiFlags & CELL_MILITIA )
@@ -3620,7 +3619,7 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 				{
 					gMercProfiles[ pAssister1->pSoldier->ubProfile ].usAssists++;
 					// EXPERIENCE CLASS GAIN:  Earned an assist
-					StatChange( pAssister1->pSoldier, EXPERAMT, ( UINT16 )( 5 * pTarget->pSoldier->bLevel ), FALSE );
+					StatChange(pAssister1->pSoldier, EXPERAMT, 5 * pTarget->pSoldier->bLevel, FROM_SUCCESS);
 				}
 				else if( pAssister1->uiFlags & CELL_MILITIA )
 					pAssister1->pSoldier->ubMilitiaKills++;
@@ -3631,7 +3630,7 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 				{
 					gMercProfiles[ pAssister2->pSoldier->ubProfile ].usAssists++;
 					// EXPERIENCE CLASS GAIN:  Earned an assist
-					StatChange( pAssister2->pSoldier, EXPERAMT, ( UINT16 )( 5 * pTarget->pSoldier->bLevel ), FALSE );
+					StatChange(pAssister2->pSoldier, EXPERAMT, 5 * pTarget->pSoldier->bLevel, FROM_SUCCESS);
 				}
 				else if( pAssister2->uiFlags & CELL_MILITIA )
 					pAssister2->pSoldier->ubMilitiaKills++;

@@ -2101,7 +2101,7 @@ static void SetSoldierGridNo(SOLDIERTYPE* const s, GridNo new_grid_no, BOOLEAN c
 			if (PythSpacesAway(new_grid_no, enemy->sGridNo) >= DistanceVisible(enemy, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, new_grid_no, s->bLevel)) continue;
 
 			// AGILITY (5):  Soldier snuck 1 square past unaware enemy
-			StatChange(s, AGILAMT, 5, FALSE);
+			StatChange(s, AGILAMT, 5, FROM_SUCCESS);
 			// Keep looping, we'll give'em 1 point for EACH such enemy!
 		}
 	}
@@ -7277,10 +7277,10 @@ UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKi
 	if (IsOnOurTeam(pSoldier))
  {
 	 // MEDICAL GAIN   (actual / 2):  Helped someone by giving first aid
-	 StatChange(pSoldier, MEDICALAMT, (UINT16)(uiActual / 2), FALSE);
+	 StatChange(pSoldier, MEDICALAMT, uiActual / 2, FROM_SUCCESS);
 
 	 // DEXTERITY GAIN (actual / 6):  Helped someone by giving first aid
-	 StatChange(pSoldier, DEXTAMT,    (UINT16)(uiActual / 6), FALSE);
+	 StatChange(pSoldier, DEXTAMT,    uiActual / 6, FROM_SUCCESS);
  }
 
  return( uiMedcost );

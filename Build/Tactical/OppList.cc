@@ -2822,7 +2822,7 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 	   			if (pOpponent->bOppList[pSoldier->ubID] != SEEN_CURRENTLY)
 	    		{
 	     			// EXPERIENCE GAIN (10): Discovered a new enemy without being seen
-	     			StatChange(pSoldier,EXPERAMT,10,FALSE);
+	     			StatChange(pSoldier, EXPERAMT, 10, FROM_SUCCESS);
 	    		}
 				}
 	 			else
@@ -5137,7 +5137,7 @@ void NoticeUnseenAttacker( SOLDIERTYPE * pAttacker, SOLDIERTYPE * pDefender, INT
 		if (pDefender->bTeam == gbPlayerNum)
 		{
 			// EXPERIENCE GAIN (5): Victim notices/sees a previously UNSEEN attacker
-			StatChange( pDefender, EXPERAMT, 5, FALSE );
+			StatChange(pDefender, EXPERAMT, 5, FROM_SUCCESS);
 
 			// mark attacker as being SEEN right now
 			RadioSightings(pDefender, pAttacker, pDefender->bTeam);

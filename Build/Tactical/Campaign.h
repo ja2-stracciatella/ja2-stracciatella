@@ -53,9 +53,12 @@ static inline StatKind operator ++(StatKind& s)
 #define TRAINING_RATING_CAP	85
 
 // stat change causes
-#define FROM_SUCCESS		0
-#define FROM_TRAINING		1
-#define FROM_FAILURE		2
+enum StatChangeCause
+{
+	FROM_SUCCESS  = 0,
+	FROM_TRAINING = 1,
+	FROM_FAILURE  = 2
+};
 
 // types of experience bonus awards
 enum
@@ -69,7 +72,7 @@ enum
 };
 
 
-void StatChange(SOLDIERTYPE*, StatKind, UINT16 usNumChances, UINT8 ubReason);
+void StatChange(SOLDIERTYPE*, StatKind, UINT16 usNumChances, StatChangeCause);
 
 void HandleUnhiredMercImprovement(MERCPROFILESTRUCT&);
 void HandleUnhiredMercDeaths( INT32 iProfileID );

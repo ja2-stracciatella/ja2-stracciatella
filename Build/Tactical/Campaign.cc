@@ -52,11 +52,11 @@ const wchar_t* const  wDebugStatStrings[] = {
 
 
 static void UpdateStats(SOLDIERTYPE* pSoldier);
-static void ProcessStatChange(MERCPROFILESTRUCT&, StatKind, UINT16 usNumChances, UINT8 ubReason);
+static void ProcessStatChange(MERCPROFILESTRUCT&, StatKind, UINT16 usNumChances, StatChangeCause);
 
 
 // give pSoldier usNumChances to improve ubStat.  If it's from training, it doesn't count towards experience level gain
-void StatChange(SOLDIERTYPE* const pSoldier, StatKind const ubStat, UINT16 const usNumChances, UINT8 const ubReason)
+void StatChange(SOLDIERTYPE* const pSoldier, StatKind const ubStat, UINT16 const usNumChances, StatChangeCause const ubReason)
 {
 	Assert(pSoldier != NULL);
 	Assert(pSoldier->bActive);
@@ -94,7 +94,7 @@ static void ProfileUpdateStats(MERCPROFILESTRUCT&);
 
 // this is the equivalent of StatChange(), but for use with mercs not currently on player's team
 // give pProfile usNumChances to improve ubStat.  If it's from training, it doesn't count towards experience level gain
-static void ProfileStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT16 const usNumChances, UINT8 const ubReason)
+static void ProfileStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT16 const usNumChances, StatChangeCause const ubReason)
 {
 	// dead guys don't do nuthin' !
 	if (p.bMercStatus == MERC_IS_DEAD)
@@ -113,7 +113,7 @@ static void ProfileStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 static UINT16 SubpointsPerPoint(StatKind, INT8 bExpLevel);
 
 
-static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT16 const usNumChances, UINT8 const ubReason)
+static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT16 const usNumChances, StatChangeCause const ubReason)
 {
   UINT32 uiCnt,uiEffLevel;
   INT16 sSubPointChange = 0;
@@ -1123,7 +1123,7 @@ void HandleUnhiredMercImprovement(MERCPROFILESTRUCT& p)
 		usNumChances = p.bWisdom / 10;
 		for (StatKind ubStat = FIRST_CHANGEABLE_STAT; ubStat <= LAST_CHANGEABLE_STAT; ++ubStat)
 		{
-			ProfileStatChange(p, ubStat, usNumChances, FALSE);
+			ProfileStatChange(p, ubStat, usNumChances, FROM_SUCCESS);
 		}
 	}
 	else
@@ -1488,7 +1488,7 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 				!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
 				!AM_A_ROBOT(s))
 		{
-			StatChange(s, EXPERAMT, usXPs, FALSE);
+			StatChange(s, EXPERAMT, usXPs, FROM_SUCCESS);
 		}
 	}
 }

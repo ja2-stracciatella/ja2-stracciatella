@@ -1404,9 +1404,9 @@ static void HealCharacters(SOLDIERTYPE* pDoctor, INT16 sX, INT16 sY, INT8 bZ)
 		usUsedHealingPts = usAvailableHealingPts - usRemainingHealingPts;
 
 		// increment skills based on healing pts used
-		StatChange(pDoctor, MEDICALAMT,	(UINT16) (usUsedHealingPts / 100), FALSE);
-		StatChange(pDoctor, DEXTAMT,		(UINT16) (usUsedHealingPts / 200), FALSE);
-		StatChange(pDoctor, WISDOMAMT,	(UINT16) (usUsedHealingPts / 200), FALSE);
+		StatChange(pDoctor, MEDICALAMT, usUsedHealingPts / 100, FROM_SUCCESS);
+		StatChange(pDoctor, DEXTAMT,    usUsedHealingPts / 200, FROM_SUCCESS);
+		StatChange(pDoctor, WISDOMAMT,  usUsedHealingPts / 200, FROM_SUCCESS);
 	}
 
 
@@ -2026,8 +2026,8 @@ static void HandleRepairBySoldier(SOLDIERTYPE* pSoldier)
 	if( ubRepairPtsUsed > 0 )
 	{
 		// improve stats
-		StatChange( pSoldier, MECHANAMT, ( UINT16 ) (ubRepairPtsUsed / 2), FALSE );
-		StatChange( pSoldier, DEXTAMT,	 ( UINT16 ) (ubRepairPtsUsed / 2), FALSE );
+		StatChange(pSoldier, MECHANAMT, ubRepairPtsUsed / 2, FROM_SUCCESS);
+		StatChange(pSoldier, DEXTAMT,   ubRepairPtsUsed / 2, FROM_SUCCESS);
 
 		// check if kit damaged/depleted
 		if( ( Random( 100 ) ) < (UINT32) (ubRepairPtsUsed * 5) ) // CJC: added a x5 as this wasn't going down anywhere fast enough
@@ -2689,10 +2689,8 @@ static BOOLEAN TrainTownInSector(SOLDIERTYPE* pTrainer, INT16 sMapX, INT16 sMapY
 
 	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
-	// trainer gains leadership - training argument is FALSE, because the trainer is not the one training!
-	StatChange( pTrainer, LDRAMT,		 (UINT16) ( 1 + ( sTrainingPts / 200 ) ), FALSE );
-//	StatChange( pTrainer, WISDOMAMT, (UINT16) ( 1 + ( sTrainingPts / 400 ) ), FALSE );
-
+	// trainer gains leadership - training argument is FROM_SUCCESS, because the trainer is not the one training!
+	StatChange(pTrainer, LDRAMT, 1 + sTrainingPts / 200, FROM_SUCCESS);
 
 	// increase town's training completed percentage
 	pSectorInfo -> ubMilitiaTrainingPercentDone += (sTrainingPts / 100);
@@ -7639,8 +7637,8 @@ static BOOLEAN UnjamGunsOnSoldier(SOLDIERTYPE* pOwnerSoldier, SOLDIERTYPE* pRepa
 				pOwnerSoldier->inv [ bPocket ].bGunAmmoStatus *= -1;
 
 				// MECHANICAL/DEXTERITY GAIN: Unjammed a gun
-				StatChange( pRepairSoldier, MECHANAMT, 5, FALSE );
-				StatChange( pRepairSoldier, DEXTAMT, 5, FALSE );
+				StatChange(pRepairSoldier, MECHANAMT, 5, FROM_SUCCESS);
+				StatChange(pRepairSoldier, DEXTAMT,   5, FROM_SUCCESS);
 
 				// report it as unjammed
 				if ( pRepairSoldier == pOwnerSoldier )

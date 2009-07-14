@@ -594,8 +594,8 @@ BOOLEAN CheckForGunJam( SOLDIERTYPE * pSoldier )
 					pObj->bGunAmmoStatus *= -1;
 
 					// MECHANICAL/DEXTERITY GAIN: Unjammed a gun
-					StatChange( pSoldier, MECHANAMT, 5, FALSE );
-					StatChange( pSoldier, DEXTAMT, 5, FALSE );
+					StatChange(pSoldier, MECHANAMT, 5, FROM_SUCCESS);
+					StatChange(pSoldier, DEXTAMT,   5, FROM_SUCCESS);
 
 					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 
@@ -1060,7 +1060,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 				usExpGain = ModifyExpGainByTarget(usExpGain, tgt);
 
 				// MARKSMANSHIP GAIN: gun attack
-				StatChange( pSoldier, MARKAMT, usExpGain, ( UINT8 )( fGonnaHit ? FALSE : FROM_FAILURE ) );
+				StatChange(pSoldier, MARKAMT, usExpGain, fGonnaHit ? FROM_SUCCESS : FROM_FAILURE);
 			}
 		}
 
@@ -1114,8 +1114,9 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			usExpGain = ModifyExpGainByTarget(usExpGain, pSoldier->target);
 
 			// MARKSMANSHIP/DEXTERITY GAIN: throwing knife attack
-			StatChange( pSoldier, MARKAMT, ( UINT16 )( usExpGain / 2 ), ( UINT8 )( fGonnaHit ? FALSE : FROM_FAILURE ) );
-			StatChange( pSoldier, DEXTAMT, ( UINT16 )( usExpGain / 2 ), ( UINT8 )( fGonnaHit ? FALSE : FROM_FAILURE ) );
+			StatChangeCause const cause = fGonnaHit ? FROM_SUCCESS : FROM_FAILURE;
+			StatChange(pSoldier, MARKAMT, usExpGain / 2, cause);
+			StatChange(pSoldier, DEXTAMT, usExpGain / 2, cause);
 		}
 	}
 
@@ -1213,7 +1214,7 @@ static void AgilityForEnemyMissingPlayer(const SOLDIERTYPE* const attacker, SOLD
 	if (target->bTeam != attacker->bTeam &&
 			target->bTeam == gbPlayerNum)
 	{
-		StatChange(target, AGILAMT, agil_amt, FALSE);
+		StatChange(target, AGILAMT, agil_amt, FROM_SUCCESS);
 	}
 }
 
@@ -1344,7 +1345,7 @@ static void UseBlade(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 			usExpGain = ModifyExpGainByTarget(usExpGain, pSoldier->target);
 
 			// DEXTERITY GAIN:  Made a knife attack, successful or not
-			StatChange( pSoldier, DEXTAMT, usExpGain, ( UINT8 )( fGonnaHit ? FALSE : FROM_FAILURE ) );
+			StatChange(pSoldier, DEXTAMT, usExpGain, fGonnaHit ? FROM_SUCCESS : FROM_FAILURE);
 		}
 	}
 	else
@@ -1449,7 +1450,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 					if ( pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum && !(pTargetSoldier->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT( pTargetSoldier ) && !TANK( pTargetSoldier ) )
 					{
 						// made a steal; give experience
-						StatChange( pSoldier, STRAMT, 8, FALSE );
+						StatChange(pSoldier, STRAMT, 8, FROM_SUCCESS);
 					}
 
 					if ( iDiceRoll <= iHitChance * 2 / 3)
@@ -1531,12 +1532,12 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 			if ( pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum )
 			{
 				// made an HTH attack; give experience
-				UINT8 ubExpGain;
-				UINT8 reason;
+				UINT8           ubExpGain;
+				StatChangeCause reason;
 				if (iDiceRoll <= iHitChance)
 				{
 					ubExpGain = 8;
-					reason    = FALSE;
+					reason    = FROM_SUCCESS;
 				}
 				else
 				{
@@ -1629,11 +1630,11 @@ static void UseThrown(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 		if ( pTargetSoldier )
 		{
 			// ok this is a real attack on someone, grant experience
-			StatChange( pSoldier, STRAMT, 5, FALSE );
+			StatChange(pSoldier, STRAMT, 5, FROM_SUCCESS);
 			if ( uiDiceRoll < uiHitChance )
 			{
-				StatChange( pSoldier, DEXTAMT, 5, FALSE );
-				StatChange( pSoldier, MARKAMT, 5, FALSE );
+				StatChange(pSoldier, DEXTAMT, 5, FROM_SUCCESS);
+				StatChange(pSoldier, MARKAMT, 5, FROM_SUCCESS);
 			}
 			else
 			{

@@ -991,7 +991,7 @@ void HandleSoldierDropBomb(SOLDIERTYPE* const s, INT16 const sGridNo)
 	else if (ArmBomb(&o, 0)) // We have something, all we do is place
 	{
 		// EXPLOSIVES GAIN (25):  Place a bomb, or buried and armed a mine
-		StatChange(s, EXPLODEAMT, 25, FALSE);
+		StatChange(s, EXPLODEAMT, 25, FROM_SUCCESS);
 
 		INT8 const trap_lvl = EffectiveExplosive(s) / 20 + EffectiveExpLevel(s) / 3;
 		o.bTrap       = __min(trap_lvl, 10);
@@ -1344,7 +1344,7 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 		if (LookForHiddenItems(sGridNo, s->bLevel))
 		{
 			// WISDOM GAIN (5):  Found a hidden object
-			StatChange(s, WISDOMAMT, 5, FALSE);
+			StatChange(s, WISDOMAMT, 5, FROM_SUCCESS);
 
 			// We've found something!
 			TacticalCharacterDialogue(s, QUOTE_SPOTTED_SOMETHING_ONE + Random(2));
@@ -1413,7 +1413,7 @@ void HandleSoldierPickupItem(SOLDIERTYPE* const s, INT32 const item_idx, INT16 c
 	else if (all_hidden && LookForHiddenItems(gridno, s->bLevel))
 	{
 		// Wisdom gain (5):  Found a hidden object
-		StatChange(s, WISDOMAMT, 5, FALSE);
+		StatChange(s, WISDOMAMT, 5, FROM_SUCCESS);
 		// We've found something!
 		TacticalCharacterDialogue(s, QUOTE_SPOTTED_SOMETHING_ONE + Random(2));
 	}
@@ -2622,7 +2622,7 @@ static void BombMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 			if ( iResult >= 0 )
 			{
 				// EXPLOSIVES GAIN (25):  Place a bomb, or buried and armed a mine
-				StatChange( gpTempSoldier, EXPLODEAMT, 25, FALSE );
+				StatChange(gpTempSoldier, EXPLODEAMT, 25, FROM_SUCCESS);
 			}
 			else
 			{
@@ -2854,9 +2854,9 @@ static void BoobyTrapMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 	{
 		// NOW award for finding boobytrap
 		// WISDOM GAIN:  Detected a booby-trap
-		StatChange( gpBoobyTrapSoldier, WISDOMAMT, (UINT16) (3 * gbTrapDifficulty), FALSE );
+		StatChange(gpBoobyTrapSoldier, WISDOMAMT, 3 * gbTrapDifficulty, FROM_SUCCESS);
 		// EXPLOSIVES GAIN:  Detected a booby-trap
-		StatChange( gpBoobyTrapSoldier, EXPLODEAMT, (UINT16) (3 * gbTrapDifficulty), FALSE );
+		StatChange(gpBoobyTrapSoldier, EXPLODEAMT, 3 * gbTrapDifficulty, FROM_SUCCESS);
 		gfJustFoundBoobyTrap = FALSE;
 	}
 
@@ -2883,7 +2883,7 @@ static void BoobyTrapMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 			else
 			{
 				// disarmed a boobytrap!
-				StatChange( gpBoobyTrapSoldier, EXPLODEAMT, (UINT16) (6 * gbTrapDifficulty), FALSE );
+				StatChange(gpBoobyTrapSoldier, EXPLODEAMT, 6 * gbTrapDifficulty, FROM_SUCCESS);
 				// have merc say this is good
 				DoMercBattleSound( gpBoobyTrapSoldier, BATTLE_SOUND_COOL1 );
 			}
@@ -2969,9 +2969,9 @@ static void BoobyTrapInMapScreenMessageBoxCallBack(MessageBoxReturnValue const u
 		// NOW award for finding boobytrap
 
 		// WISDOM GAIN:  Detected a booby-trap
-		StatChange( gpBoobyTrapSoldier, WISDOMAMT, (UINT16) (3 * gbTrapDifficulty), FALSE );
+		StatChange(gpBoobyTrapSoldier, WISDOMAMT, 3 * gbTrapDifficulty, FROM_SUCCESS);
 		// EXPLOSIVES GAIN:  Detected a booby-trap
-		StatChange( gpBoobyTrapSoldier, EXPLODEAMT, (UINT16) (3 * gbTrapDifficulty), FALSE );
+		StatChange(gpBoobyTrapSoldier, EXPLODEAMT, 3 * gbTrapDifficulty, FROM_SUCCESS);
 		gfJustFoundBoobyTrap = FALSE;
 	}
 
@@ -2985,8 +2985,7 @@ static void BoobyTrapInMapScreenMessageBoxCallBack(MessageBoxReturnValue const u
 		if (iCheckResult >= 0)
 		{
 			// disarmed a boobytrap!
-      StatChange( gpBoobyTrapSoldier, EXPLODEAMT, (UINT16) (6 * gbTrapDifficulty), FALSE );
-
+      StatChange(gpBoobyTrapSoldier, EXPLODEAMT, 6 * gbTrapDifficulty, FROM_SUCCESS);
 
 			// have merc say this is good
 			DoMercBattleSound( gpBoobyTrapSoldier, BATTLE_SOUND_COOL1 );
@@ -3139,7 +3138,7 @@ BOOLEAN NearbyGroundSeemsWrong(SOLDIERTYPE* const s, const INT16 sGridNo, const 
 				if (s->uiStatusFlags & SOLDIER_PC)
 				{
 					// detected explosives buried nearby...
-					StatChange(s, EXPLODEAMT, (UINT16)o.bTrap, FALSE);
+					StatChange(s, EXPLODEAMT, o.bTrap, FROM_SUCCESS);
 
 					// set item as known
 					o.fFlags |= OBJECT_KNOWN_TO_BE_TRAPPED;
