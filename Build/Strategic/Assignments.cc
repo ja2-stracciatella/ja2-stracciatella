@@ -1682,7 +1682,7 @@ static void HealHospitalPatient(SOLDIERTYPE* pPatient, UINT16 usHealingPtsLeft)
 }
 
 
-static void HandleRepairBySoldier(SOLDIERTYPE* pSoldier);
+static void HandleRepairBySoldier(SOLDIERTYPE&);
 
 
 // handle any repair man in sector
@@ -1703,7 +1703,7 @@ static void HandleRepairmenInSector(INT16 const x, INT16 const y, INT8 const z)
 		if (!CanCharacterRepair(&s))     continue;
 		if (!EnoughTimeOnAssignment(&s)) continue;
 
-		HandleRepairBySoldier(&s);
+		HandleRepairBySoldier(s);
 	}
 }
 
@@ -1918,100 +1918,86 @@ static void RepairItemsOnOthers(SOLDIERTYPE* pSoldier, UINT8* pubRepairPtsLeft);
 static BOOLEAN UnjamGunsOnSoldier(SOLDIERTYPE* pOwnerSoldier, SOLDIERTYPE* pRepairSoldier, UINT8* pubRepairPtsLeft);
 
 
-// repair stuff
-static void HandleRepairBySoldier(SOLDIERTYPE* pSoldier)
+// Repair stuff
+static void HandleRepairBySoldier(SOLDIERTYPE& s)
 {
-	UINT16 usMax=0;
-	UINT8 ubRepairPtsLeft =0;
-	UINT8 ubInitialRepairPts = 0;
-	UINT8 ubRepairPtsUsed = 0;
-	INT8 bPocket =0;
-	BOOLEAN fNothingLeftToRepair = FALSE;
-	INT8	bLoop, bLoopStart, bLoopEnd;
-	BOOLEAN fAnyOfSoldiersOwnItemsWereFixed = FALSE;
-	OBJECTTYPE * pObj;
-
+	BOOLEAN nothing_left_to_repair;
 
 	// grab max number of repair pts open to this soldier
-	ubRepairPtsLeft = CalculateRepairPointsForRepairman(pSoldier, &usMax, TRUE);
-
-	// no points
-	if (ubRepairPtsLeft == 0)
-	{
-		AssignmentDone( pSoldier, TRUE, TRUE );
+	UINT16 usMax;
+	UINT8  initial_repair_pts = CalculateRepairPointsForRepairman(&s, &usMax, TRUE);
+	if (initial_repair_pts == 0)
+	{ // No points
+		AssignmentDone(&s, TRUE, TRUE);
 		return;
 	}
-
-	// remember what we've started off with
-	ubInitialRepairPts = ubRepairPtsLeft;
+	UINT8 repair_pts_left = initial_repair_pts;
 
 	// check if we are repairing a vehicle
-	if ( pSoldier->bVehicleUnderRepairID != -1 )
+	if (s.bVehicleUnderRepairID != -1)
 	{
-		VEHICLETYPE const& v = GetVehicle(pSoldier->bVehicleUnderRepairID);
-		if (CanCharacterRepairVehicle(pSoldier, v))
-		{
-			// attempt to fix vehicle
-			ubRepairPtsLeft -= RepairVehicle(v, ubRepairPtsLeft, &fNothingLeftToRepair);
+		VEHICLETYPE const& v = GetVehicle(s.bVehicleUnderRepairID);
+		if (CanCharacterRepairVehicle(&s, v))
+		{ // Attempt to fix vehicle
+			repair_pts_left -= RepairVehicle(v, repair_pts_left, &nothing_left_to_repair);
 		}
 	}
 	// check if we are repairing a robot
-	else if( pSoldier->fFixingRobot )
+	else if (s.fFixingRobot)
 	{
-		if ( CanCharacterRepairRobot( pSoldier ) )
+		if (CanCharacterRepairRobot(&s))
 		{
 			// repairing the robot is very slow & difficult
-			ubRepairPtsLeft /= 2;
-			ubInitialRepairPts /= 2;
+			repair_pts_left    /= 2;
+			initial_repair_pts /= 2;
 
-			if( !( HAS_SKILL_TRAIT( pSoldier, ELECTRONICS ) ) )
+			if (!(HAS_SKILL_TRAIT(&s, ELECTRONICS)))
 			{
-				ubRepairPtsLeft /= 2;
-				ubInitialRepairPts /= 2;
+				repair_pts_left    /= 2;
+				initial_repair_pts /= 2;
 			}
 
-			// robot
-			ubRepairPtsLeft -= HandleRepairOfRobotBySoldier( pSoldier, ubRepairPtsLeft, &fNothingLeftToRepair );
+			// Robot
+			repair_pts_left -= HandleRepairOfRobotBySoldier(&s, repair_pts_left, &nothing_left_to_repair);
 		}
 	}
 	else
 	{
-		fAnyOfSoldiersOwnItemsWereFixed = UnjamGunsOnSoldier( pSoldier, pSoldier, &ubRepairPtsLeft );
+		BOOLEAN fAnyOfSoldiersOwnItemsWereFixed = UnjamGunsOnSoldier(&s, &s, &repair_pts_left);
 
-		// repair items on self
-		for( bLoop = 0; bLoop < 2; bLoop++ )
+		// Repair items on self
+		for (INT8 i = 0; i != 2; ++i)
 		{
-			if ( bLoop == 0 )
+			INT8 start;
+			INT8 end;
+			if (i == 0)
 			{
-				bLoopStart = SECONDHANDPOS;
-				bLoopEnd = SMALLPOCK8POS;
+				start = SECONDHANDPOS;
+				end   = SMALLPOCK8POS;
 			}
 			else
 			{
-				bLoopStart = HELMETPOS;
-				bLoopEnd = HEAD2POS;
+				start = HELMETPOS;
+				end   = HEAD2POS;
 			}
 
 			// now repair objects running from left hand to small pocket
-			for( bPocket = bLoopStart; bPocket <= bLoopEnd; bPocket++ )
+			for (INT8 pocket = start; pocket <= end; ++pocket)
 			{
-				pObj = &(pSoldier->inv[ bPocket ]);
-
-				if ( RepairObject( pSoldier, pSoldier, pObj, &ubRepairPtsLeft ) )
+				if (RepairObject(&s, &s, &s.inv[pocket], &repair_pts_left))
 				{
 					fAnyOfSoldiersOwnItemsWereFixed = TRUE;
 
 					// quit looking if we're already out
-					if ( ubRepairPtsLeft == 0 )
-						break;
+					if (repair_pts_left == 0) break;
 				}
 			}
 		}
 
 		// if he fixed something of his, and now has no more of his own items to fix
-		if ( fAnyOfSoldiersOwnItemsWereFixed && !DoesCharacterHaveAnyItemsToRepair( pSoldier, -1 ) )
+		if (fAnyOfSoldiersOwnItemsWereFixed && !DoesCharacterHaveAnyItemsToRepair(&s, -1))
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sRepairsDoneString[ 0 ], pSoldier->name );
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sRepairsDoneString[0], s.name);
 
 			// let player react
 			StopTimeCompression();
@@ -2019,47 +2005,47 @@ static void HandleRepairBySoldier(SOLDIERTYPE* pSoldier)
 
 
 		// repair items on others
-		RepairItemsOnOthers( pSoldier, &ubRepairPtsLeft );
+		RepairItemsOnOthers(&s, &repair_pts_left);
 	}
 
 	// what are the total amount of pts used by character?
-	ubRepairPtsUsed = ubInitialRepairPts - ubRepairPtsLeft;
-	if( ubRepairPtsUsed > 0 )
+	UINT8 const repair_pts_used = initial_repair_pts - repair_pts_left;
+	if (repair_pts_used > 0)
 	{
 		// improve stats
-		StatChange(pSoldier, MECHANAMT, ubRepairPtsUsed / 2, FROM_SUCCESS);
-		StatChange(pSoldier, DEXTAMT,   ubRepairPtsUsed / 2, FROM_SUCCESS);
+		StatChange(&s, MECHANAMT, repair_pts_used / 2, FROM_SUCCESS);
+		StatChange(&s, DEXTAMT,   repair_pts_used / 2, FROM_SUCCESS);
 
 		// check if kit damaged/depleted
-		if( ( Random( 100 ) ) < (UINT32) (ubRepairPtsUsed * 5) ) // CJC: added a x5 as this wasn't going down anywhere fast enough
+		if (Random(100) < repair_pts_used * 5) // CJC: added a x5 as this wasn't going down anywhere fast enough
 		{
 			// kit item damaged/depleted, burn up points of toolkit..which is in right hand
-			UseKitPoints( &( pSoldier -> inv[ HANDPOS ] ), 1, pSoldier );
+			UseKitPoints(&s.inv[HANDPOS], 1, &s);
 		}
 	}
 
 
 	// if he really done
-	if ( HasCharacterFinishedRepairing( pSoldier ) )
+	if (HasCharacterFinishedRepairing(&s))
 	{
 		// yup, that's all folks
-		AssignmentDone( pSoldier, TRUE, TRUE );
+		AssignmentDone(&s, TRUE, TRUE);
 	}
-	else	// still has stuff to repair
+	else // still has stuff to repair
 	{
 		// if nothing got repaired, there's a problem
-		if ( ubRepairPtsUsed == 0 )
+		if (repair_pts_used == 0)
 		{
 			// see if not having a toolkit is the problem
-			if ( FindObj( pSoldier, TOOLKIT ) == NO_SLOT )
+			if (FindObj(&s, TOOLKIT) == NO_SLOT)
 			{
 				// he could (maybe) repair something, but can't because he doesn't have a tool kit!
-				AssignmentAborted( pSoldier, NO_MORE_TOOL_KITS );
+				AssignmentAborted(&s, NO_MORE_TOOL_KITS);
 			}
 			else
 			{
 				// he can't repair anything because he doesn't have enough skill!
-				AssignmentAborted( pSoldier, INSUF_REPAIR_SKILL );
+				AssignmentAborted(&s, INSUF_REPAIR_SKILL);
 			}
 		}
 	}
