@@ -1913,7 +1913,7 @@ static bool RepairObject(SOLDIERTYPE* const repairer, SOLDIERTYPE const* const o
 }
 
 
-static UINT8 HandleRepairOfRobotBySoldier(SOLDIERTYPE* pSoldier, UINT8 ubRepairPts, BOOLEAN* pfNothingLeftToRepair);
+static UINT8 HandleRepairOfRobotBySoldier(UINT8 ubRepairPts, BOOLEAN* pfNothingLeftToRepair);
 static void RepairItemsOnOthers(SOLDIERTYPE* pSoldier, UINT8* pubRepairPtsLeft);
 static BOOLEAN UnjamGunsOnSoldier(SOLDIERTYPE* pOwnerSoldier, SOLDIERTYPE* pRepairSoldier, UINT8* pubRepairPtsLeft);
 
@@ -1958,7 +1958,7 @@ static void HandleRepairBySoldier(SOLDIERTYPE& s)
 			}
 
 			// Robot
-			repair_pts_left -= HandleRepairOfRobotBySoldier(&s, repair_pts_left, &nothing_left_to_repair);
+			repair_pts_left -= HandleRepairOfRobotBySoldier(repair_pts_left, &nothing_left_to_repair);
 		}
 	}
 	else
@@ -6133,7 +6133,7 @@ static BOOLEAN CanCharacterRepairRobot(SOLDIERTYPE const* const pSoldier)
 static UINT8 RepairRobot(SOLDIERTYPE* pRobot, UINT8 ubRepairPts, BOOLEAN* pfNothingLeftToRepair);
 
 
-static UINT8 HandleRepairOfRobotBySoldier(SOLDIERTYPE* pSoldier, UINT8 ubRepairPts, BOOLEAN* pfNothingLeftToRepair)
+static UINT8 HandleRepairOfRobotBySoldier(UINT8 const ubRepairPts, BOOLEAN* const pfNothingLeftToRepair)
 {
 	SOLDIERTYPE *pRobot = NULL;
 
