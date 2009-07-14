@@ -3936,6 +3936,7 @@ static void RenderIconsPerSectorForSelectedTown(void)
 }
 
 
+// Get the sector value for the upper left corner
 static INT16 GetBaseSectorForCurrentTown(void)
 {
 	INT16 sBaseSector = 0;
@@ -4317,128 +4318,102 @@ static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 }
 
 
-static void HandleEveningOutOfTroopsAmongstSectors(void)
+// Even out troops among the town
+static void HandleEveningOutOfTroopsAmongstSectors()
 {
-	// even out troops among the town
-	INT32 iCounter = 0, iNumberUnderControl = 0, iNumberOfGreens = 0, iNumberOfRegulars = 0, iNumberOfElites = 0, iTotalNumberOfTroops = 0;
-	INT32 iNumberLeftOverGreen = 0, iNumberLeftOverRegular = 0, iNumberLeftOverElite = 0;
-	INT16 sBaseSectorValue = 0, sCurrentSectorValue = 0;
-	INT16 sSectorX = 0, sSectorY = 0, sSector = 0;
-	INT16 sTotalSoFar = 0;
+	INT8 const town = sSelectedMilitiaTown;
 
+	// How many sectors in the selected town do we control?
+	INT32 const n_under_control = GetTownSectorsUnderControl(town);
+	if (n_under_control == 0) return; // If none, there's nothing to be done
 
-	// how many sectors in the selected town do we control?
-	iNumberUnderControl = GetTownSectorsUnderControl( ( INT8 ) sSelectedMilitiaTown );
-
-	// if none, there's nothing to be done!
-	if( !iNumberUnderControl )
+	INT32       n_green     = 0;
+	INT32       n_regular   = 0;
+	INT32       n_elite     = 0;
+	INT16 const base_sector = GetBaseSectorForCurrentTown();
+	for (INT32 i = 0; i != 9; ++i)
 	{
-		return;
+		INT16 const sector = base_sector + i % MILITIA_BOX_ROWS + i / MILITIA_BOX_ROWS * 16;
+		INT16 const x      = SECTORX(sector);
+		INT16 const y      = SECTORY(sector);
+
+		// Skip sectors not in the selected town (nearby other towns or wilderness SAM Sites)
+		if (GetTownIdForSector(x, y) != town) continue;
+
+		if (StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].fEnemyControlled) continue;
+
+		SECTORINFO const& si = SectorInfo[sector];
+		n_green   += si.ubNumberOfCivsAtLevel[GREEN_MILITIA];
+		n_regular += si.ubNumberOfCivsAtLevel[REGULAR_MILITIA];
+		n_elite   += si.ubNumberOfCivsAtLevel[ELITE_MILITIA];
 	}
 
+	// Grab those on the cursor
+	n_green   += sGreensOnCursor;
+	n_regular += sRegularsOnCursor;
+	n_elite   += sElitesOnCursor;
 
-	// get the sector value for the upper left corner
-	sBaseSectorValue = GetBaseSectorForCurrentTown( );
+	if (n_green + n_regular + n_elite == 0) return;
 
-	// render icons for map
-	for( iCounter = 0; iCounter < 9; iCounter++ )
+	INT32 const n_green_per_sector   = n_green   / n_under_control;
+	INT32 const n_regular_per_sector = n_regular / n_under_control;
+	INT32 const n_elite_per_sector   = n_elite   / n_under_control;
+
+	// Get the left overs
+	INT32 n_left_over_green   = n_green   % n_under_control;
+	INT32 n_left_over_regular = n_regular % n_under_control;
+	INT32 n_left_over_elite   = n_elite   % n_under_control;
+
+	for (INT32 i = 0; pTownNamesList[i] != BLANK_SECTOR; ++i)
 	{
-		// grab current sector value
-		sCurrentSectorValue = sBaseSectorValue + ( ( iCounter % MILITIA_BOX_ROWS ) + ( iCounter / MILITIA_BOX_ROWS ) * ( 16 ) );
+		if (pTownNamesList[i] != town) continue;
 
-		sSectorX = SECTORX( sCurrentSectorValue );
-		sSectorY = SECTORY( sCurrentSectorValue );
+		INT32 const loc = pTownLocationsList[i];
+		INT16 const x   = GET_X_FROM_STRATEGIC_INDEX(loc);
+		INT16 const y   = GET_Y_FROM_STRATEGIC_INDEX(loc);
 
-		// skip sectors not in the selected town (nearby other towns or wilderness SAM Sites)
-		if( GetTownIdForSector( sSectorX, sSectorY ) != sSelectedMilitiaTown )
+		if (StrategicMap[loc].fEnemyControlled) continue;
+		if (NumHostilesInSector(x, y, 0) != 0) continue;
+
+		INT16 const sector = SECTOR(x, y);
+		SECTORINFO& si     = SectorInfo[sector];
+
+		// Distribute here
+		si.ubNumberOfCivsAtLevel[GREEN_MILITIA]   = n_green_per_sector;
+		si.ubNumberOfCivsAtLevel[REGULAR_MILITIA] = n_regular_per_sector;
+		si.ubNumberOfCivsAtLevel[ELITE_MILITIA]   = n_elite_per_sector;
+
+		// Add leftovers that weren't included in the div operation
+		INT16 total_so_far = n_green_per_sector + n_regular_per_sector + n_elite_per_sector;
+		if (n_left_over_green != 0 && total_so_far < MAX_ALLOWABLE_MILITIA_PER_SECTOR)
 		{
-			continue;
+			++si.ubNumberOfCivsAtLevel[GREEN_MILITIA];
+			++total_so_far;
+			--n_left_over_green;
+		}
+		if (n_left_over_regular != 0 && total_so_far < MAX_ALLOWABLE_MILITIA_PER_SECTOR)
+		{
+			++si.ubNumberOfCivsAtLevel[REGULAR_MILITIA];
+			++total_so_far;
+			--n_left_over_regular;
+		}
+		if (n_left_over_elite && total_so_far < MAX_ALLOWABLE_MILITIA_PER_SECTOR)
+		{
+			++si.ubNumberOfCivsAtLevel[ELITE_MILITIA];
+			++total_so_far;
+			--n_left_over_elite;
 		}
 
-		if( !StrategicMap[ CALCULATE_STRATEGIC_INDEX( sSectorX, sSectorY ) ].fEnemyControlled )
-		{
-			// get number of each
-			iNumberOfGreens += SectorInfo[ sCurrentSectorValue ].ubNumberOfCivsAtLevel[ GREEN_MILITIA ];
-			iNumberOfRegulars += SectorInfo[ sCurrentSectorValue ].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ];
-			iNumberOfElites += SectorInfo[ sCurrentSectorValue ].ubNumberOfCivsAtLevel[ ELITE_MILITIA ];
+		if (sector == SECTOR(gWorldSectorX, gWorldSectorY) && gWorldSectorY != 0)
+		{ // This sector is currently loaded
+			gfStrategicMilitiaChangesMade = TRUE;
 		}
 	}
 
-	// now grab those on the cursor
-	iNumberOfGreens += sGreensOnCursor;
-	iNumberOfRegulars += sRegularsOnCursor;
-	iNumberOfElites += sElitesOnCursor;
-
-	// now get the left overs
-	iNumberLeftOverGreen = iNumberOfGreens % iNumberUnderControl;
-	iNumberLeftOverRegular = iNumberOfRegulars % iNumberUnderControl;
-	iNumberLeftOverElite = iNumberOfElites % iNumberUnderControl;
-
-	// get total
-	iTotalNumberOfTroops = iNumberOfGreens + iNumberOfRegulars + iNumberOfElites;
-
-	if( !iTotalNumberOfTroops )
-	{
-		return;
-	}
-
-	iCounter = 0;
-
-	while( pTownNamesList[ iCounter ] != 0 )
-	{
-		if( pTownNamesList[ iCounter] == sSelectedMilitiaTown )
-		{
-			sSectorX = GET_X_FROM_STRATEGIC_INDEX( pTownLocationsList[ iCounter ] );
-			sSectorY = GET_Y_FROM_STRATEGIC_INDEX( pTownLocationsList[ iCounter ] );
-
-			if( !StrategicMap[ pTownLocationsList[ iCounter ] ].fEnemyControlled && !NumHostilesInSector( sSectorX, sSectorY, 0 ) )
-			{
-				sSector = SECTOR( sSectorX, sSectorY );
-
-				// distribute here
-				SectorInfo[ sSector ].ubNumberOfCivsAtLevel[ GREEN_MILITIA ] =  ( UINT8 )( iNumberOfGreens / iNumberUnderControl );
-				SectorInfo[ sSector ].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ] =  ( UINT8 )( iNumberOfRegulars / iNumberUnderControl );
-				SectorInfo[ sSector ].ubNumberOfCivsAtLevel[ ELITE_MILITIA ] =  ( UINT8 )( iNumberOfElites / iNumberUnderControl );
-				sTotalSoFar = ( INT8 )( ( iNumberOfGreens / iNumberUnderControl ) + ( iNumberOfRegulars / iNumberUnderControl ) + ( iNumberOfElites / iNumberUnderControl ) );
-
-				// add leftovers that weren't included in the div operation
-				if( ( iNumberLeftOverGreen ) && ( sTotalSoFar < MAX_ALLOWABLE_MILITIA_PER_SECTOR ) )
-				{
-					SectorInfo[ sSector ].ubNumberOfCivsAtLevel[ GREEN_MILITIA ]++;
-					sTotalSoFar++;
-					iNumberLeftOverGreen--;
-				}
-
-				if( ( iNumberLeftOverRegular )&&( sTotalSoFar < MAX_ALLOWABLE_MILITIA_PER_SECTOR ) )
-				{
-					SectorInfo[ sSector ].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ]++;
-					sTotalSoFar++;
-					iNumberLeftOverRegular--;
-				}
-
-				if( ( iNumberLeftOverElite )&&( sTotalSoFar < MAX_ALLOWABLE_MILITIA_PER_SECTOR ) )
-				{
-					SectorInfo[ sSector ].ubNumberOfCivsAtLevel[ ELITE_MILITIA ]++;
-					sTotalSoFar++;
-					iNumberLeftOverElite--;
-				}
-
-				// if this sector is currently loaded
-				if( sSector == SECTOR( gWorldSectorX, gWorldSectorY ) && gWorldSectorY != 0 )
-				{
-					gfStrategicMilitiaChangesMade = TRUE;
-				}
-			}
-		}
-
-		iCounter++;
-	}
-
-
-	// zero out numbers on the cursor
-	sGreensOnCursor = 0;
+	// Zero out numbers on the cursor
+	sGreensOnCursor   = 0;
 	sRegularsOnCursor = 0;
-	sElitesOnCursor = 0;
+	sElitesOnCursor   = 0;
 }
 
 
