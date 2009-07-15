@@ -3973,7 +3973,7 @@ static void ShowHighLightedSectorOnMilitiaMap(void)
 }
 
 
-static BOOLEAN IsThisMilitiaTownSectorAllowable(INT16 sSectorIndexValue);
+static bool IsThisMilitiaTownSectorAllowable(INT16 sSectorIndexValue);
 
 
 static void MilitiaRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
@@ -4194,31 +4194,16 @@ static void DisplayUnallocatedMilitia(void)
 }
 
 
-static BOOLEAN IsThisMilitiaTownSectorAllowable(INT16 sSectorIndexValue)
+// Is this sector allowed to be clicked on?
+static bool IsThisMilitiaTownSectorAllowable(INT16 const sSectorIndexValue)
 {
-	INT16 sBaseSectorValue = 0, sGlobalMapSector = 0;
-	INT16 sSectorX, sSectorY;
-
-	// is this sector allowed to be clicked on?
-	sBaseSectorValue = GetBaseSectorForCurrentTown( );
-	sGlobalMapSector = sBaseSectorValue + ( ( sSectorIndexValue % MILITIA_BOX_ROWS ) + ( sSectorIndexValue / MILITIA_BOX_ROWS ) * 16 );
-
-	sSectorX = SECTORX( sGlobalMapSector );
-	sSectorY = SECTORY( sGlobalMapSector );
-
-	// is this in fact part of a town?
-	if( StrategicMap[ CALCULATE_STRATEGIC_INDEX( sSectorX, sSectorY ) ].bNameId == BLANK_SECTOR )
-	{
-		return( FALSE );
-	}
-
-	if( !SectorOursAndPeaceful( sSectorX, sSectorY, 0 ) )
-	{
-		return( FALSE );
-	}
-
-	// valid
-	return( TRUE );
+	INT16 const base_sector = GetBaseSectorForCurrentTown();
+	INT16 const sector      = base_sector + sSectorIndexValue % MILITIA_BOX_ROWS + sSectorIndexValue / MILITIA_BOX_ROWS * 16;
+	INT16 const x           = SECTORX(sector);
+	INT16 const y           = SECTORY(sector);
+	return
+		StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId != BLANK_SECTOR &&
+		SectorOursAndPeaceful(x, y, 0);
 }
 
 
