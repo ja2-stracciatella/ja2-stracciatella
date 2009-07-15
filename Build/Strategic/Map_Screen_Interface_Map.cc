@@ -4296,7 +4296,7 @@ static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 		}
 
 		bool last_one = true;
-		for (INT32 const* k = pTownNamesList; *k != 0; ++k)
+		for (INT32 const* k = pTownNamesList + i + 1; *k != 0; ++k)
 		{
 			if (*k != town) continue;
 			last_one = false;
