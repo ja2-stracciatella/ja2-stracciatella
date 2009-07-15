@@ -3823,8 +3823,8 @@ BOOLEAN DrawMilitiaPopUpBox( void )
 static void CreateMilitiaPanelBottomButton(void);
 static void DeleteMilitiaPanelBottomButton(void);
 static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 sTownValue);
-static void MilitiaRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
-static void MilitiaRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason);
+static void MilitiaRegionClickCallback(MOUSE_REGION*, INT32 reason);
+static void MilitiaRegionMoveCallback(MOUSE_REGION*, INT32 reason);
 
 
 void CreateDestroyMilitiaPopUPRegions(void)
@@ -3976,56 +3976,33 @@ static void ShowHighLightedSectorOnMilitiaMap(void)
 static bool IsThisMilitiaTownSectorAllowable(INT16 sSectorIndexValue);
 
 
-static void MilitiaRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void MilitiaRegionClickCallback(MOUSE_REGION* const r, INT32 const reason)
 {
-	INT32 iValue = 0;
-
-	iValue = MSYS_GetRegionUserData( pRegion, 0 );
-
-	if( ( iReason & MSYS_CALLBACK_REASON_LBUTTON_UP ) )
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		if( IsThisMilitiaTownSectorAllowable( (INT16)iValue ) )
-		{
-			if( sSectorMilitiaMapSector == (INT16)iValue )
-			{
-				sSectorMilitiaMapSector = -1;
-			}
-			else
-			{
-				sSectorMilitiaMapSector = ( INT16 )iValue;
-			}
-		}
-		else
-		{
-			sSectorMilitiaMapSector = -1;
-		}
+		INT16 const val = MSYS_GetRegionUserData(r, 0);
+		sSectorMilitiaMapSector =
+			!IsThisMilitiaTownSectorAllowable(val) ? -1 :
+			sSectorMilitiaMapSector == val         ? -1 :
+			val;
 	}
-
-	if( ( iReason & MSYS_CALLBACK_REASON_RBUTTON_UP ) )
+	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		sSectorMilitiaMapSector = -1;
 	}
 }
 
 
-static void MilitiaRegionMoveCallback(MOUSE_REGION* pRegion, INT32 iReason)
+static void MilitiaRegionMoveCallback(MOUSE_REGION* const r, INT32 const reason)
 {
-	INT32 iValue = 0;
-
-	iValue = MSYS_GetRegionUserData( pRegion, 0 );
-
-	if( ( iReason & MSYS_CALLBACK_REASON_GAIN_MOUSE ) )
+	if (reason & MSYS_CALLBACK_REASON_GAIN_MOUSE)
 	{
-		if( IsThisMilitiaTownSectorAllowable( ( INT16 )iValue ) )
-		{
-			sSectorMilitiaMapSectorOutline = ( INT16 )iValue;
-		}
-		else
-		{
-			sSectorMilitiaMapSectorOutline = -1;
-		}
+		INT16 const val = MSYS_GetRegionUserData(r, 0);
+		sSectorMilitiaMapSectorOutline =
+			!IsThisMilitiaTownSectorAllowable(val) ? -1 :
+			val;
 	}
-	else if( iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
+	else if (reason & MSYS_CALLBACK_REASON_LOST_MOUSE)
 	{
 		sSectorMilitiaMapSectorOutline = -1;
 	}
