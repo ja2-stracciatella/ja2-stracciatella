@@ -3756,7 +3756,7 @@ void DeleteMapScreenInterfaceMapGraphics()
 }
 
 
-static void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons(void);
+static void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons();
 static void DisplayUnallocatedMilitia(void);
 static void DrawTownMilitiaName();
 static void RenderIconsPerSectorForSelectedTown(void);
@@ -3784,7 +3784,7 @@ BOOLEAN DrawMilitiaPopUpBox( void )
 	}
 
 	// update states of militia selected sector buttons
-	CheckAndUpdateStatesOfSelectedMilitiaSectorButtons( );
+	CheckAndUpdateStatesOfSelectedMilitiaSectorButtons();
 
 	BltVideoObject(FRAME_BUFFER, guiMilitia,     0,                        MAP_MILITIA_BOX_POS_X,                     MAP_MILITIA_BOX_POS_Y);
 	BltVideoObject(FRAME_BUFFER, guiMilitiaMaps, sSelectedMilitiaTown - 1, MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y);
@@ -4498,65 +4498,30 @@ static void DrawTownMilitiaForcesOnMap(void)
 }
 
 
-static void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons(void)
+static void EnableDisableButton(GUIButtonRef const b, bool const enable)
 {
-	// now set the militia map button text
-	INT32 iNumberOfGreens = 0, iNumberOfRegulars = 0, iNumberOfElites = 0;
-	INT16 sBaseSectorValue = 0, sGlobalMapSector = 0;
+	enable ? EnableButton(b) : DisableButton(b);
+}
 
 
-	if( !fMilitiaMapButtonsCreated )
+static void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons()
+{
+	if (!fMilitiaMapButtonsCreated)
 	{
-		EnableButton( giMapMilitiaButton[ 4 ] );
+		EnableButton(giMapMilitiaButton[4]);
 		return;
 	}
 
-	// grab the appropriate global sector value in the world
-	sBaseSectorValue = GetBaseSectorForCurrentTown( );
-	sGlobalMapSector = sBaseSectorValue + ( ( sSectorMilitiaMapSector % MILITIA_BOX_ROWS ) + ( sSectorMilitiaMapSector / MILITIA_BOX_ROWS ) * ( 16 ) );
-
-	iNumberOfGreens =  SectorInfo[ sGlobalMapSector ].ubNumberOfCivsAtLevel[ GREEN_MILITIA ] + sGreensOnCursor;
-	iNumberOfRegulars = SectorInfo[ sGlobalMapSector ].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ] + sRegularsOnCursor;
-	iNumberOfElites = SectorInfo[ sGlobalMapSector ].ubNumberOfCivsAtLevel[ ELITE_MILITIA ] + sElitesOnCursor;
-
-	if( ( sGreensOnCursor > 0 ) || ( sRegularsOnCursor > 0 ) || ( sElitesOnCursor > 0 ) )
-	{
-		DisableButton( giMapMilitiaButton[ 4 ] );	// DONE
-	}
-	else
-	{
-		EnableButton( giMapMilitiaButton[ 4 ] );	// DONE
-	}
-
-	// greens button
-	if( !iNumberOfGreens )
-	{
-		DisableButton( giMapMilitiaButton[ 0 ] );
-	}
-	else
-	{
-		EnableButton( giMapMilitiaButton[ 1 ] );
-	}
-
-	// regulars button
-	if( !iNumberOfRegulars )
-	{
-		DisableButton( giMapMilitiaButton[ 1 ] );
-	}
-	else
-	{
-		EnableButton( giMapMilitiaButton[ 1 ] );
-	}
-
-	// elites button
-	if( !iNumberOfElites )
-	{
-		DisableButton( giMapMilitiaButton[ 2 ] );
-	}
-	else
-	{
-		EnableButton( giMapMilitiaButton[ 2 ] );
-	}
+	INT16      const  base_sector = GetBaseSectorForCurrentTown();
+	INT16      const  sector      = base_sector + (sSectorMilitiaMapSector % MILITIA_BOX_ROWS + sSectorMilitiaMapSector / MILITIA_BOX_ROWS * 16);
+	SECTORINFO const& si          = SectorInfo[sector];
+	INT32      const  n_green     = si.ubNumberOfCivsAtLevel[GREEN_MILITIA]   + sGreensOnCursor;
+	INT32      const  n_regular   = si.ubNumberOfCivsAtLevel[REGULAR_MILITIA] + sRegularsOnCursor;
+	INT32      const  n_elite     = si.ubNumberOfCivsAtLevel[ELITE_MILITIA]   + sElitesOnCursor;
+	EnableDisableButton(giMapMilitiaButton[4], sGreensOnCursor + sRegularsOnCursor + sElitesOnCursor == 0); // Done
+	EnableDisableButton(giMapMilitiaButton[0], n_green   != 0); // greens button
+	EnableDisableButton(giMapMilitiaButton[1], n_regular != 0); // regulars button
+	EnableDisableButton(giMapMilitiaButton[2], n_elite   != 0); // elites button
 }
 
 
