@@ -4061,38 +4061,27 @@ void CreateDestroyMilitiaSectorButtons()
 }
 
 
-static void SetMilitiaMapButtonsText(void)
+static void SetMilitiaMapButtonsText()
 {
-	// now set the militia map button text
-	CHAR16 sString[ 64 ];
-	INT32 iNumberOfGreens = 0, iNumberOfRegulars = 0, iNumberOfElites = 0;
-	INT16 sBaseSectorValue = 0, sGlobalMapSector = 0;
-
-
-	if( !fMilitiaMapButtonsCreated )
-	{
-		return;
-	}
+	if (!fMilitiaMapButtonsCreated) return;
 
 	// grab the appropriate global sector value in the world
-	sBaseSectorValue = GetBaseSectorForCurrentTown( );
-	sGlobalMapSector = sBaseSectorValue + ( ( sSectorMilitiaMapSector % MILITIA_BOX_ROWS ) + ( sSectorMilitiaMapSector / MILITIA_BOX_ROWS ) * ( 16 ) );
-
-	iNumberOfGreens =  SectorInfo[ sGlobalMapSector ].ubNumberOfCivsAtLevel[ GREEN_MILITIA ];
-	iNumberOfRegulars = SectorInfo[ sGlobalMapSector ].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ];
-	iNumberOfElites = SectorInfo[ sGlobalMapSector ].ubNumberOfCivsAtLevel[ ELITE_MILITIA ];
+	INT16      const  base_sector = GetBaseSectorForCurrentTown();
+	INT16      const  sector      = base_sector + (sSectorMilitiaMapSector % MILITIA_BOX_ROWS + sSectorMilitiaMapSector / MILITIA_BOX_ROWS * 16);
+	SECTORINFO const& si          = SectorInfo[sector];
+	wchar_t           buf[64];
 
 	// the greens in this sector
-	swprintf( sString, lengthof(sString), L"%d", iNumberOfGreens );
-	giMapMilitiaButton[0]->SpecifyText(sString);
+	swprintf(buf, lengthof(buf), L"%d", si.ubNumberOfCivsAtLevel[GREEN_MILITIA]);
+	giMapMilitiaButton[0]->SpecifyText(buf);
 
 	// the regulars in this sector
-	swprintf( sString, lengthof(sString), L"%d", iNumberOfRegulars );
-	giMapMilitiaButton[1]->SpecifyText(sString);
+	swprintf(buf, lengthof(buf), L"%d", si.ubNumberOfCivsAtLevel[REGULAR_MILITIA]);
+	giMapMilitiaButton[1]->SpecifyText(buf);
 
 	// the number of elites in this sector
-	swprintf( sString, lengthof(sString), L"%d", iNumberOfElites );
-	giMapMilitiaButton[2]->SpecifyText(sString);
+	swprintf(buf, lengthof(buf), L"%d", si.ubNumberOfCivsAtLevel[ELITE_MILITIA]);
+	giMapMilitiaButton[2]->SpecifyText(buf);
 }
 
 
