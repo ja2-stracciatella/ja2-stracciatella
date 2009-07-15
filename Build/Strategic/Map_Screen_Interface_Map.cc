@@ -324,7 +324,7 @@ static SGPVObject* guiBULLSEYE;
 static GUIButtonRef giMapMilitiaButton[5];
 
 
-static const INT16 gsMilitiaSectorButtonColors[] =
+static INT16 const gsMilitiaSectorButtonColors[] =
 {
 	FONT_LTGREEN,
 	FONT_LTBLUE,
@@ -374,7 +374,8 @@ static UINT16* pMapDKGreenPalette;
 static SGPVObject* guiMapBorderHeliSectors;
 
 
-INT16 sBaseSectorList[]={
+static INT16 const sBaseSectorList[] =
+{
 	// NOTE: These co-ordinates must match the top left corner of the 3x3 town tiles cutouts in Interface/MilitiaMaps.sti!
 	SECTOR(  9, 1 ), // Omerta
 	SECTOR( 13, 2 ), // Drassen
@@ -392,7 +393,7 @@ INT16 sBaseSectorList[]={
 
 // position of town names on the map
 // these are no longer PIXELS, but 10 * the X,Y position in SECTORS (fractions possible) to the X-CENTER of the town
-static const SGPPoint pTownPoints[] =
+static SGPPoint const pTownPoints[] =
 {
 	{ 0 ,  0 },
 	{ 90, 10}, // Omerta
@@ -410,8 +411,8 @@ static const SGPPoint pTownPoints[] =
 };
 
 
-INT16 gpSamSectorX[] = { SAM_1_X, SAM_2_X, SAM_3_X, SAM_4_X };
-INT16 gpSamSectorY[] = { SAM_1_Y, SAM_2_Y, SAM_3_Y, SAM_4_Y };
+static INT16 const gpSamSectorX[] = { SAM_1_X, SAM_2_X, SAM_3_X, SAM_4_X };
+static INT16 const gpSamSectorY[] = { SAM_1_Y, SAM_2_Y, SAM_3_Y, SAM_4_Y };
 
 
 // map region
@@ -420,7 +421,7 @@ SGPRect MapScreenRect={	(MAP_VIEW_START_X+MAP_GRID_X - 2),	( MAP_VIEW_START_Y+MA
 static SGPRect gOldClipRect;
 
 // screen region
-SGPRect FullScreenRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+static SGPRect FullScreenRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 // temp helicopter path
 PathSt* pTempHelicopterPath = NULL;
@@ -448,7 +449,7 @@ INT8 bSelectedContractChar = -1;
 BOOLEAN   fTempPathAlreadyDrawn = FALSE;
 
 // the regions for the mapscreen militia box
-MOUSE_REGION gMapScreenMilitiaBoxRegions[ 9 ];
+static MOUSE_REGION gMapScreenMilitiaBoxRegions[9];
 
 // the mine icon
 static SGPVObject* guiMINEICON;
@@ -468,7 +469,7 @@ static INT16 sSectorMilitiaMapSectorOutline = -1;
 // have any nodes in the current path list been deleted?
 BOOLEAN fDeletedNode = FALSE;
 
-UINT16 gusUndergroundNearBlack;
+static UINT16 gusUndergroundNearBlack;
 
 BOOLEAN gfMilitiaPopupCreated = FALSE;
 
