@@ -3765,7 +3765,7 @@ static void SetMilitiaMapButtonsText(void);
 static void ShowHighLightedSectorOnMilitiaMap(void);
 
 
-BOOLEAN DrawMilitiaPopUpBox( void )
+void DrawMilitiaPopUpBox()
 {
 	if( !fShowMilitia )
 	{
@@ -3778,10 +3778,7 @@ BOOLEAN DrawMilitiaPopUpBox( void )
 	// create mouse regions if we need to
 	CreateDestroyMilitiaPopUPRegions( );
 
-	if( !sSelectedMilitiaTown )
-	{
-		return( FALSE );
-	}
+	if (!sSelectedMilitiaTown) return;
 
 	// update states of militia selected sector buttons
 	CheckAndUpdateStatesOfSelectedMilitiaSectorButtons();
@@ -3815,8 +3812,6 @@ BOOLEAN DrawMilitiaPopUpBox( void )
 
 	// render buttons
 	MarkButtonsDirty( );
-
-	return( TRUE );
 }
 
 

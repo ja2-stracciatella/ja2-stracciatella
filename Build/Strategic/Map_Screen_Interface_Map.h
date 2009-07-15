@@ -90,7 +90,7 @@ INT32 GetNumberOfMilitiaInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ 
 void CreateDestroyMilitiaPopUPRegions( void );
 
 // draw the militia box
-BOOLEAN DrawMilitiaPopUpBox( void );
+void DrawMilitiaPopUpBox();
 
 
 //Returns true if the player knows how many enemies are in the sector if that number is greater than 0.
