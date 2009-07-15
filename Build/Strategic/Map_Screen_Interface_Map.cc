@@ -3758,7 +3758,7 @@ void DeleteMapScreenInterfaceMapGraphics()
 
 static void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons(void);
 static void DisplayUnallocatedMilitia(void);
-static void DrawTownMilitiaName(void);
+static void DrawTownMilitiaName();
 static void RenderIconsPerSectorForSelectedTown(void);
 static void RenderShadingForUnControlledSectors(void);
 static void SetMilitiaMapButtonsText(void);
@@ -3793,7 +3793,7 @@ BOOLEAN DrawMilitiaPopUpBox( void )
 	SetFontForeground(FONT_WHITE);
 
 	// draw name of town, and the "unassigned" label
-	DrawTownMilitiaName( );
+	DrawTownMilitiaName();
 
 	// render the icons for each sector in the town
 	RenderIconsPerSectorForSelectedTown( );
@@ -4222,20 +4222,25 @@ static BOOLEAN IsThisMilitiaTownSectorAllowable(INT16 sSectorIndexValue)
 }
 
 
-static void DrawTownMilitiaName(void)
+static void DrawTownMilitiaName()
 {
-	CHAR16 sString[ 64 ];
-	INT16 sX, sY;
+	wchar_t const* const town = pTownNames[sSelectedMilitiaTown];
+	INT16          const x    = MAP_MILITIA_BOX_POS_X;
+	INT16          const y    = MAP_MILITIA_BOX_POS_Y;
+	INT16          const w    = MILITIA_BOX_WIDTH;
+	wchar_t              buf[64];
+	INT16                sX;
+	INT16                sY;
 
 	// get the name for the current militia town
-	swprintf( sString, lengthof(sString), L"%ls %ls", pTownNames[ sSelectedMilitiaTown ], pMilitiaString[ 0 ] );
-	FindFontCenterCoordinates( MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y + MILITIA_BOX_TEXT_OFFSET_Y, MILITIA_BOX_WIDTH, MILITIA_BOX_TEXT_TITLE_HEIGHT, sString, FONT10ARIAL, &sX, &sY );
-	MPrint(sX, sY, sString);
+	swprintf(buf, lengthof(buf), L"%ls %ls", town, pMilitiaString[0]);
+	FindFontCenterCoordinates(x, y + MILITIA_BOX_TEXT_OFFSET_Y, w, MILITIA_BOX_TEXT_TITLE_HEIGHT, buf, FONT10ARIAL, &sX, &sY);
+	MPrint(sX, sY, buf);
 
 	// might as well show the unassigned string
-	swprintf( sString, lengthof(sString), L"%ls %ls", pTownNames[ sSelectedMilitiaTown ], pMilitiaString[ 1 ] );
-	FindFontCenterCoordinates( MAP_MILITIA_BOX_POS_X, MAP_MILITIA_BOX_POS_Y + MILITIA_BOX_UNASSIGNED_TEXT_OFFSET_Y, MILITIA_BOX_WIDTH, GetFontHeight( FONT10ARIAL ), sString, FONT10ARIAL, &sX, &sY );
-	MPrint(sX, sY, sString);
+	swprintf(buf, lengthof(buf), L"%ls %ls", town, pMilitiaString[1]);
+	FindFontCenterCoordinates(x, y + MILITIA_BOX_UNASSIGNED_TEXT_OFFSET_Y, w, GetFontHeight(FONT10ARIAL), buf, FONT10ARIAL, &sX, &sY);
+	MPrint(sX, sY, buf);
 }
 
 
