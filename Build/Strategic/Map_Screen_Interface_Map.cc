@@ -460,9 +460,9 @@ static SGPVObject* guiMilitiaSectorHighLight;
 static SGPVObject* guiMilitiaSectorOutline;
 
 // the sector that is highlighted on the militia map
-INT16 sSectorMilitiaMapSector = -1;
-BOOLEAN fMilitiaMapButtonsCreated = FALSE;
-INT16 sSectorMilitiaMapSectorOutline = -1;
+static INT16 sSectorMilitiaMapSector        = -1;
+static bool  fMilitiaMapButtonsCreated      = false;
+static INT16 sSectorMilitiaMapSectorOutline = -1;
 
 
 // have any nodes in the current path list been deleted?
@@ -4012,65 +4012,49 @@ static void MilitiaRegionMoveCallback(MOUSE_REGION* const r, INT32 const reason)
 static void MilitiaButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-void CreateDestroyMilitiaSectorButtons(void)
+void CreateDestroyMilitiaSectorButtons()
 {
-	static BOOLEAN fCreated = FALSE;
 	static INT16 sOldSectorValue = -1;
-	INT16 sX = 0, sY = 0;
-	INT32 iCounter = 0;
 
-	if( sOldSectorValue == sSectorMilitiaMapSector && fShowMilitia && sSelectedMilitiaTown && !fCreated && sSectorMilitiaMapSector != -1 )
+	if (!fMilitiaMapButtonsCreated && sOldSectorValue == sSectorMilitiaMapSector && fShowMilitia && sSelectedMilitiaTown && sSectorMilitiaMapSector != -1)
 	{
-		fCreated = TRUE;
-
 		// given sector..place down the 3 buttons
-
-		for( iCounter = 0; iCounter < 3; iCounter++ )
+		INT16 const x = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + sSectorMilitiaMapSector % MILITIA_BOX_ROWS * MILITIA_BOX_BOX_WIDTH  + MILITIA_BTN_OFFSET_X;
+		INT16       y = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + sSectorMilitiaMapSector / MILITIA_BOX_ROWS * MILITIA_BOX_BOX_HEIGHT + 2;
+		for (INT32 i = 0; i != 3; y += MILITIA_BTN_HEIGHT, ++i)
 		{
-
-			// set screen x and y positions
-			sX = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + ( ( sSectorMilitiaMapSector % MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_WIDTH );
-			sY = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + ( ( sSectorMilitiaMapSector / MILITIA_BOX_ROWS ) * MILITIA_BOX_BOX_HEIGHT );
-
-			// adjust offsets
-			sX += MILITIA_BTN_OFFSET_X;
-			sY += ( iCounter * ( MILITIA_BTN_HEIGHT ) + 2 );
-
-			giMapMilitiaButton[iCounter] = QuickCreateButtonImg("INTERFACE/militia.sti", -1, 3, -1, 4, -1, sX, sY, MSYS_PRIORITY_HIGHEST - 1, MilitiaButtonCallback);
-
-			// set button user data
-			giMapMilitiaButton[iCounter]->SetUserData(iCounter);
-			giMapMilitiaButton[iCounter]->SpecifyGeneralTextAttributes(NULL, FONT10ARIAL, gsMilitiaSectorButtonColors[iCounter], FONT_BLACK);
-
-			giMapMilitiaButton[iCounter]->SetFastHelpText(pMilitiaButtonsHelpText[iCounter]);
+			GUIButtonRef b = QuickCreateButtonImg("INTERFACE/militia.sti", -1, 3, -1, 4, -1, x, y, MSYS_PRIORITY_HIGHEST - 1, MilitiaButtonCallback);
+			giMapMilitiaButton[i] = b;
+			b->SetUserData(i);
+			b->SpecifyGeneralTextAttributes(0, FONT10ARIAL, gsMilitiaSectorButtonColors[i], FONT_BLACK);
+			b->SetFastHelpText(pMilitiaButtonsHelpText[i]);
 		}
 
-		CreateScreenMaskForMoveBox( );
+		CreateScreenMaskForMoveBox();
 
-		// ste the fact that the buttons were in fact created
-		fMilitiaMapButtonsCreated = TRUE;
+		// Set the fact that the buttons are created
+		fMilitiaMapButtonsCreated = true;
 	}
-	else if( fCreated && ( sOldSectorValue != sSectorMilitiaMapSector || !fShowMilitia || !sSelectedMilitiaTown || sSectorMilitiaMapSector == -1 ) )
+	else if (fMilitiaMapButtonsCreated && (sOldSectorValue != sSectorMilitiaMapSector || !fShowMilitia || !sSelectedMilitiaTown || sSectorMilitiaMapSector == -1))
 	{
 		sOldSectorValue = sSectorMilitiaMapSector;
-		fCreated = FALSE;
 
 		// get rid of the buttons
-		for( iCounter = 0 ; iCounter < 3; iCounter++ )
+		for (INT32 i = 0; i != 3; ++i)
 		{
-			RemoveButton( giMapMilitiaButton[ iCounter ] );
+			RemoveButton(giMapMilitiaButton[i]);
 		}
 
-		if( !fShowMilitia || !sSelectedMilitiaTown )
+		if (!fShowMilitia || !sSelectedMilitiaTown)
 		{
 			sSectorMilitiaMapSector = -1;
-			sSelectedMilitiaTown = 0;
+			sSelectedMilitiaTown    =  0;
 		}
 
-		RemoveScreenMaskForMoveBox( );
+		RemoveScreenMaskForMoveBox();
 
-		// set the fact that the buttons were destroyed
-		fMilitiaMapButtonsCreated = FALSE;
+		// Set the fact that the buttons are destroyed
+		fMilitiaMapButtonsCreated = false;
 	}
 
 	sOldSectorValue = sSectorMilitiaMapSector;
