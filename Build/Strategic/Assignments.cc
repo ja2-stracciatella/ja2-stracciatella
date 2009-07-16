@@ -2059,7 +2059,7 @@ static bool IsItemRepairable(UINT16 const item_id, INT8 const status)
 }
 
 
-static UINT8 CalcSoldierNeedForSleep(SOLDIERTYPE* pSoldier);
+static UINT8 CalcSoldierNeedForSleep(SOLDIERTYPE const&);
 
 
 // rest the character
@@ -2068,7 +2068,7 @@ static void RestCharacter(SOLDIERTYPE* pSoldier)
 	// handle the sleep of this character, update bBreathMax based on sleep they have
 	INT8 bMaxBreathRegain = 0;
 
-	bMaxBreathRegain = 50 / CalcSoldierNeedForSleep( pSoldier );
+	bMaxBreathRegain = 50 / CalcSoldierNeedForSleep(*pSoldier);
 
 	// if breath max is below the "really tired" threshold
 	if( pSoldier -> bBreathMax < BREATHMAX_PRETTY_TIRED )
@@ -2123,7 +2123,7 @@ static void FatigueCharacter(SOLDIERTYPE* pSoldier)
 	}
 
 
-	bDivisor = 24 - CalcSoldierNeedForSleep( pSoldier );
+	bDivisor = 24 - CalcSoldierNeedForSleep(*pSoldier);
 	bMaxBreathLoss = 50 / bDivisor;
 
 	if( bMaxBreathLoss < 2 )
@@ -7369,48 +7369,25 @@ static BOOLEAN CharacterIsTakingItEasy(SOLDIERTYPE* pSoldier)
 }
 
 
-static UINT8 CalcSoldierNeedForSleep(SOLDIERTYPE* pSoldier)
+static UINT8 CalcSoldierNeedForSleep(SOLDIERTYPE const& s)
 {
-	UINT8 ubNeedForSleep;
-	UINT8 ubPercentHealth;
+	// Base comes from profile
+	UINT8 need_for_sleep = GetProfile(s.ubProfile).ubNeedForSleep;
 
+	UINT8 const percent_health = s.bLife / s.bLifeMax; // XXX always 0 or 1
+	need_for_sleep +=
+		percent_health < 25 ? 4 :
+		percent_health < 50 ? 2 :
+		percent_health < 75 ? 1 :
+		0;
 
-	// base comes from profile
-	ubNeedForSleep = gMercProfiles[ pSoldier -> ubProfile ].ubNeedForSleep;
+	// Reduce for each Night Ops or Martial Arts trait
+	need_for_sleep -= NUM_SKILL_TRAITS(&s, NIGHTOPS);
+	need_for_sleep -= NUM_SKILL_TRAITS(&s, MARTIALARTS);
 
-
-	ubPercentHealth = pSoldier->bLife / pSoldier->bLifeMax;
-
-	if ( ubPercentHealth < 75 )
-	{
-		ubNeedForSleep++;
-
-		if ( ubPercentHealth < 50 )
-		{
-			ubNeedForSleep++;
-
-			if ( ubPercentHealth < 25 )
-			{
-				ubNeedForSleep += 2;
-			}
-		}
-	}
-
-	// reduce for each Night Ops or Martial Arts trait
-	ubNeedForSleep -= NUM_SKILL_TRAITS( pSoldier, NIGHTOPS );
-	ubNeedForSleep -= NUM_SKILL_TRAITS( pSoldier, MARTIALARTS );
-
-	if ( ubNeedForSleep < 4 )
-	{
-		ubNeedForSleep = 4;
-	}
-
-	if ( ubNeedForSleep > 12 )
-	{
-		ubNeedForSleep = 12;
-	}
-
-	return( ubNeedForSleep );
+	if (need_for_sleep <  4) return  4;
+	if (need_for_sleep > 12) return 12;
+	return need_for_sleep;
 }
 
 
