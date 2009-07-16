@@ -23,7 +23,7 @@ enum StatKind
 
 template<typename T> static inline StatKind operator +(StatKind const s, T const delta)
 {
-	return static_cast<StatKind>(s + delta);
+	return static_cast<StatKind>((int)s + delta);
 }
 
 static inline StatKind operator ++(StatKind& s)
