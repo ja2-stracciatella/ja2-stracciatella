@@ -60,12 +60,12 @@ int LegalNPCDestination(SOLDIERTYPE *pSoldier, INT16 sGridno, UINT8 ubPathMode, 
 				( sGridno != pSoldier->sBlackList ) )
  /*
  if ( ( NewOKDestination(pSoldier, sGridno, FALSE, pSoldier->bLevel ) ) &&
-				( !(gpWorldLevelData[ sGridno ].ubExtFlags[0] & (MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) || ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK || pSoldier->inv[ HEAD2POS ].usItem == GASMASK ) ) &&
+				( !(gpWorldLevelData[ sGridno ].ubExtFlags[0] & (MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) || IsWearingHeadGear(*pSoldier, GASMASK)) &&
 				( sGridno != pSoldier->sGridNo ) &&
 				( sGridno != pSoldier->sBlackList ) )*/
  /*
  if ( ( NewOKDestination(pSoldier,sGridno,ALLPEOPLE, pSoldier->bLevel ) ) &&
-				( !(gpWorldLevelData[ sGridno ].ubExtFlags[0] & (MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) || ( pSoldier->inv[ HEAD1POS ].usItem == GASMASK || pSoldier->inv[ HEAD2POS ].usItem == GASMASK ) ) &&
+				( !(gpWorldLevelData[ sGridno ].ubExtFlags[0] & (MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS)) || IsWearingHeadGear(*pSoldier, GASMASK)) &&
 				( sGridno != pSoldier->sGridNo ) &&
 				( sGridno != pSoldier->sBlackList ) )
 				*/

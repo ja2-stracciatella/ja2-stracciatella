@@ -989,7 +989,7 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 	if (bLightLevel < NORMAL_LIGHTLEVEL_DAY)
 	{
 		// greater than normal daylight level; check for sun goggles
-		if (pSoldier->inv[HEAD1POS].usItem == SUNGOGGLES || pSoldier->inv[HEAD2POS].usItem == SUNGOGGLES)
+		if (IsWearingHeadGear(*pSoldier, SUNGOGGLES))
 		{
 			// increase sighting distance by up to 2 tiles
 			sDistVisible++;
@@ -1001,9 +1001,9 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 	}
 	else if (bLightLevel > NORMAL_LIGHTLEVEL_DAY + 5)
 	{
-		if ( (pSoldier->inv[HEAD1POS].usItem == NIGHTGOGGLES || pSoldier->inv[HEAD2POS].usItem == NIGHTGOGGLES || pSoldier->inv[HEAD1POS].usItem == UVGOGGLES || pSoldier->inv[HEAD2POS].usItem == UVGOGGLES) || (pSoldier->ubBodyType == BLOODCAT || AM_A_ROBOT( pSoldier ) ) )
+		if (IsWearingHeadGear(*pSoldier, NIGHTGOGGLES) || IsWearingHeadGear(*pSoldier, UVGOGGLES) || pSoldier->ubBodyType == BLOODCAT || AM_A_ROBOT(pSoldier))
 		{
-			if ( pSoldier->inv[HEAD1POS].usItem == NIGHTGOGGLES || pSoldier->inv[HEAD2POS].usItem == NIGHTGOGGLES || AM_A_ROBOT( pSoldier ) )
+			if (IsWearingHeadGear(*pSoldier, NIGHTGOGGLES) || AM_A_ROBOT(pSoldier))
 			{
 				if (bLightLevel > NORMAL_LIGHTLEVEL_NIGHT)
 				{
@@ -1041,7 +1041,7 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 
 	if ( gpWorldLevelData[ pSoldier->sGridNo ].ubExtFlags[ bLevel ] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS) )
 	{
-		if ( pSoldier->inv[HEAD1POS].usItem != GASMASK && pSoldier->inv[HEAD2POS].usItem != GASMASK )
+		if (!IsWearingHeadGear(*pSoldier, GASMASK))
 		{
 			// in gas without a gas mask; reduce max distance visible to 2 tiles at most
 			sDistVisible = __min( sDistVisible, 2 );
@@ -4156,7 +4156,7 @@ static UINT8 CalcEffVolume(SOLDIERTYPE const* const pSoldier, INT16 const sGridN
 {
 	INT32 iEffVolume, iDistance;
 
-	if ( pSoldier->inv[HEAD1POS].usItem == WALKMAN || pSoldier->inv[HEAD2POS].usItem == WALKMAN )
+	if (IsWearingHeadGear(*pSoldier, WALKMAN))
 	{
 		return( 0 );
 	}

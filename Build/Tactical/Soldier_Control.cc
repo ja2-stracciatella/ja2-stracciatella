@@ -721,21 +721,10 @@ static BOOLEAN CreateSoldierLight(SOLDIERTYPE* pSoldier)
 	if (pSoldier->light == NULL)
 	{
 		// ATE: Check for goggles in headpos....
-		const char* light_file;
-		if (pSoldier->inv[HEAD1POS].usItem == NIGHTGOGGLES ||
-				pSoldier->inv[HEAD2POS].usItem == NIGHTGOGGLES)
-		{
-			light_file = "Light3";
-		}
-		else if (pSoldier->inv[HEAD1POS].usItem == UVGOGGLES ||
-			pSoldier->inv[HEAD2POS].usItem == UVGOGGLES)
-		{
-			light_file = "Light4";
-		}
-		else
-		{
-			light_file = "Light2";
-		}
+		char const* light_file =
+			IsWearingHeadGear(*pSoldier, UVGOGGLES)    ? "Light4" :
+			IsWearingHeadGear(*pSoldier, NIGHTGOGGLES) ? "Light3" :
+			"Light2";
 
 		LIGHT_SPRITE* const l = LightSpriteCreate(light_file);
 		pSoldier->light = l;
@@ -4071,8 +4060,7 @@ void EVENT_BeginMercTurn(SOLDIERTYPE* const pSoldier)
 		if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
 		{
 			 // then must get a gas mask or leave the gassed area to get over it
-			if (pSoldier->inv[HEAD1POS].usItem == GASMASK ||
-					pSoldier->inv[HEAD2POS].usItem == GASMASK ||
+			if (IsWearingHeadGear(*pSoldier, GASMASK) ||
 					GetSmokeEffectOnTile(pSoldier->sGridNo, pSoldier->bLevel) == NO_SMOKE_EFFECT)
 			 {
 				 // Turn off gassed flag....
@@ -8777,8 +8765,6 @@ BOOLEAN CanRobotBeControlled(const SOLDIERTYPE* const robot)
 
 BOOLEAN ControllingRobot(const SOLDIERTYPE* s)
 {
-	INT8				bPos;
-
 	if (!s->bActive) return FALSE;
 
 	// EPCs can't control the robot (no inventory to hold remote, for one)
@@ -8799,8 +8785,7 @@ BOOLEAN ControllingRobot(const SOLDIERTYPE* s)
 	}
 
 	// is the soldier wearing a robot remote control?
-	bPos = FindObj(s, ROBOT_REMOTE_CONTROL);
-	if ( bPos != HEAD1POS && bPos != HEAD2POS )
+	if (!IsWearingHeadGear(*s, ROBOT_REMOTE_CONTROL))
 	{
 		return( FALSE );
 	}

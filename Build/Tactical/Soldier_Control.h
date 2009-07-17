@@ -1055,4 +1055,9 @@ extern BOOLEAN gfGetNewPathThroughPeople;
 
 void FlashSoldierPortrait(SOLDIERTYPE*);
 
+static inline bool IsWearingHeadGear(SOLDIERTYPE const& s, UINT16 const item)
+{
+	return s.inv[HEAD1POS].usItem == item || s.inv[HEAD2POS].usItem == item;
+}
+
 #endif

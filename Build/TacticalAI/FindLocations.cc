@@ -532,7 +532,6 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 	INT16	*		pusLastLoc;
 	INT8 *		pbPersOL;
 	INT8 *		pbPublOL;
-	INT8	fHasGasMask;
 
 	UINT8	ubBackgroundLightLevel;
 	UINT8	ubBackgroundLightPercent = 0;
@@ -541,16 +540,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 	INT32 iBestCoverScale = 0; // XXX HACK000E
 
-	switch( FindObj( pSoldier, GASMASK ) )
-	{
-		case HEAD1POS:
-		case HEAD2POS:
-			fHasGasMask = TRUE;
-			break;
-		default:
-			fHasGasMask = FALSE;
-			break;
-	}
+	bool const fHasGasMask = IsWearingHeadGear(*pSoldier, GASMASK);
 
 	if ( gbWorldSectorZ > 0 )
 	{
@@ -1071,18 +1061,7 @@ INT16 FindSpotMaxDistFromOpponents(SOLDIERTYPE *pSoldier)
 	INT16	sOrigin;
 	INT32	iRoamRange;
 
-	INT8	fHasGasMask;
-
-	switch( FindObj( pSoldier, GASMASK ) )
-	{
-		case HEAD1POS:
-		case HEAD2POS:
-			fHasGasMask = TRUE;
-			break;
-		default:
-			fHasGasMask = FALSE;
-			break;
-	}
+	bool const fHasGasMask = IsWearingHeadGear(*pSoldier, GASMASK);
 
 	// BUILD A LIST OF THREATENING GRID #s FROM PERSONAL & PUBLIC opplistS
 

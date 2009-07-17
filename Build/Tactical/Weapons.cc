@@ -2515,7 +2515,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	if ( iSightRange > 0 )
 	{
 
-		if (pSoldier->inv[HEAD1POS].usItem == SUNGOGGLES || pSoldier->inv[HEAD2POS].usItem == SUNGOGGLES)
+		if (IsWearingHeadGear(*pSoldier, SUNGOGGLES))
 		{
 			// decrease effective range by 10% when using sungoggles (w or w/o scope)
 			iSightRange -= iRange / 10;	//basically, +1% to hit per every 2 squares
@@ -3948,7 +3948,7 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 
 	//NumMessage("ACTUAL RANGE = ",range);
 
-	if (pSoldier->inv[HEAD1POS].usItem == SUNGOGGLES || pSoldier->inv[HEAD2POS].usItem == SUNGOGGLES)
+	if (IsWearingHeadGear(*pSoldier, SUNGOGGLES))
 	{
 		// decrease effective range by 10% when using sungoggles (w or w/o scope)
 		iRange -= iRange / 10;	//basically, +1% to hit per every 2 squares
