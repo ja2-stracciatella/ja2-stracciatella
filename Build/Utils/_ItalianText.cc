@@ -1060,7 +1060,6 @@ const wchar_t* const TacticalStr[] =
 	L"Vittoria!",
 	L"Fallimento",
 	L"La serratura non presenta trappole",
-	L"Vittoria!",
 	// The %ls is a merc name
 	L"%ls non ha la chiave giusta",
 	L"La serratura non presenta trappole",
