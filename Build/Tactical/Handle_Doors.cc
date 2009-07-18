@@ -170,26 +170,22 @@ void InteractWithClosedDoor( SOLDIERTYPE *pSoldier, UINT8 ubHandleCode )
 }
 
 
-static BOOLEAN DoTrapCheckOnStartingMenu(SOLDIERTYPE* pSoldier, DOOR* pDoor)
+static bool DoTrapCheckOnStartingMenu(SOLDIERTYPE& s, DOOR& d)
 {
-	INT8	bDetectLevel;
+	if (!d.fLocked)                                    return false;
+	if (d.ubTrapID == NO_TRAP)                         return false;
+	if (d.bPerceivedTrapped != DOOR_PERCEIVED_UNKNOWN) return false;
 
-	if ( pDoor && pDoor->fLocked && pDoor->ubTrapID != NO_TRAP && pDoor->bPerceivedTrapped == DOOR_PERCEIVED_UNKNOWN )
-	{
-		// check for noticing the trap
-		bDetectLevel = CalcTrapDetectLevel( pSoldier, FALSE );
-		if (bDetectLevel >= pDoor->ubTrapLevel)
-		{
-			// say quote, update status
-			TacticalCharacterDialogue( pSoldier, QUOTE_BOOBYTRAP_ITEM );
-			UpdateDoorPerceivedValue( pDoor );
+	// check for noticing the trap
+	INT8 const detect_level = CalcTrapDetectLevel(&s, FALSE);
+	if (detect_level < d.ubTrapLevel) return false;
 
-      return( TRUE );
-		}
-	}
-
-  return( FALSE );
+	// say quote, update status
+	TacticalCharacterDialogue(&s, QUOTE_BOOBYTRAP_ITEM);
+	UpdateDoorPerceivedValue(&d);
+	return true;
 }
+
 
 void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection, BOOLEAN fDoor )
 {
@@ -233,7 +229,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 			DOOR* const pDoor = FindDoorInfoAtGridNo(pBaseStructure->sGridNo);
 			if ( pDoor )
 			{
-				if ( DoTrapCheckOnStartingMenu( pSoldier, pDoor ) )
+				if (DoTrapCheckOnStartingMenu(*pSoldier, *pDoor))
         {
           fTrapsFound = TRUE;
         }
@@ -261,7 +257,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 				// Bring up menu to decide what to do....
 				SoldierGotoStationaryStance(pSoldier);
 
-				if (DoTrapCheckOnStartingMenu(pSoldier, pDoor))
+				if (DoTrapCheckOnStartingMenu(*pSoldier, *pDoor))
 				{
 					fTrapsFound = TRUE;
 				}
