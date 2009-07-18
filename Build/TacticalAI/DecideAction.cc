@@ -3959,23 +3959,6 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 }
 
 
-static INT8 DecideActionEscort(SOLDIERTYPE* pSoldier)
-{
- // if he has a place to go, and isn't already there... go!
- if (pSoldier->usActionData != NOWHERE && (pSoldier->sGridNo != pSoldier->usActionData))
-  {
-#ifdef DEBUGDECISIONS
-   sprintf(tempstr,"%s - ESCORTED NPC GOING to grid %d",pSoldier->name,pSoldier->usActionData);
-   AIPopMessage(tempstr);
-#endif
-
-   return(AI_ACTION_ESCORTED_MOVE);
-  }
- else
-   return(AI_ACTION_NONE);
-}
-
-
 void DecideAlertStatus( SOLDIERTYPE *pSoldier )
 {
 	INT8	bOldStatus;
