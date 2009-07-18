@@ -599,12 +599,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							if ( AttemptToPickLock( pSoldier, pDoor ) )
 							{
 								DoMercBattleSound( pSoldier, BATTLE_SOUND_COOL1 );
-								//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_HAS_BEEN_PICKED_STR ] );
 								fHandleDoor = TRUE;
-							}
-							else
-							{
-								//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_HAS_NOT_BEEN_PICKED_STR ] );
 							}
 							ProcessImplicationsOfPCMessingWithDoor( pSoldier );
 						}

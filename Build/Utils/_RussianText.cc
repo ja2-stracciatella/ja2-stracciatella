@@ -1057,8 +1057,6 @@ const wchar_t* const TacticalStr[] =
 
 	L"К замку присоединена %ls.", ///TRNSL_ASSUME all traps are female gender words
 	L"Тут нет замка.",
-	L"Успех!",
-	L"Неудача.",
 	L"Замок без ловушки.",
 	// The %ls is a merc name
 	L"%ls не имеет нужного ключа.",
