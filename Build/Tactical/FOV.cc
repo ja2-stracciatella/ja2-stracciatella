@@ -327,10 +327,8 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 		gubGridNoValue = 1;
  }
 
-
 	// OK, look for doors
-	MercLooksForDoors( pSoldier, TRUE );
-
+	MercLooksForDoors(*pSoldier, true);
 
   dir = pSoldier->bDirection;
 
