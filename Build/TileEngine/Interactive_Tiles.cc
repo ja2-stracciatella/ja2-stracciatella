@@ -167,25 +167,13 @@ BOOLEAN InteractWithInteractiveObject( SOLDIERTYPE *pSoldier, STRUCTURE *pStruct
 }
 
 
-BOOLEAN SoldierHandleInteractiveObject( SOLDIERTYPE *pSoldier )
+bool SoldierHandleInteractiveObject(SOLDIERTYPE& s)
 {
-	STRUCTURE			*pStructure;
-	UINT16				usStructureID;
-	INT16					sGridNo;
-
-
-	sGridNo					= pSoldier->sPendingActionData2;
-	usStructureID		= (UINT16)pSoldier->uiPendingActionData1;
-
-	// HANDLE SOLDIER ACTIONS
-	pStructure = FindStructureByID( sGridNo, usStructureID );
-	if (pStructure == NULL)
-	{
-		//DEBUG MSG!
-		return( FALSE );
-	}
-
-  return( HandleOpenableStruct( pSoldier, sGridNo, pStructure ) );
+	GridNo     const gridno       = s.sPendingActionData2;
+	UINT16     const structure_id = (UINT16)s.uiPendingActionData1;
+	STRUCTURE* const structure    = FindStructureByID(gridno, structure_id);
+	if (!structure) return false;
+	return HandleOpenableStruct(&s, gridno, structure);
 }
 
 

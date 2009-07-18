@@ -1577,7 +1577,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					// CHECK IF THIS EVENT HAS BEEN SETUP
 					//if ( pSoldier->ubPendingAction == MERC_OPENSTRUCT )
 					//{
-						SoldierHandleInteractiveObject( pSoldier );
+						SoldierHandleInteractiveObject(*pSoldier);
 
 						// EVENT HAS BEEN HANDLED
 						pSoldier->ubPendingAction		 = NO_PENDING_ACTION;
@@ -1605,7 +1605,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 							pSoldier->ubDoorOpeningNoise = DoorOpeningNoise( pSoldier );
 
-							if ( SoldierHandleInteractiveObject( pSoldier ) )
+							if (SoldierHandleInteractiveObject(*pSoldier))
               {
 							  // HANDLE SIGHT!
 							  //HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO | SIGHT_INTERRUPT );
