@@ -710,8 +710,6 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 //the exact number of slots when loading.
 void LoadDoorTableFromMap(HWFILE const f)
 {
-	INT32 cnt;
-
 	TrashDoorTable();
 
 	FileRead(f, &gubNumDoors, sizeof(gubNumDoors));
@@ -722,10 +720,11 @@ void LoadDoorTableFromMap(HWFILE const f)
 	FileRead(f, DoorTable, sizeof(*DoorTable) * gubMaxDoors);
 
 	// OK, reset perceived values to nothing...
-	for ( cnt = 0; cnt < gubNumDoors; cnt++ )
+	FOR_EACH_DOOR(i)
 	{
-		DoorTable[ cnt ].bPerceivedLocked = DOOR_PERCEIVED_UNKNOWN;
-		DoorTable[ cnt ].bPerceivedTrapped = DOOR_PERCEIVED_UNKNOWN;
+		DOOR& d = *i;
+		d.bPerceivedLocked  = DOOR_PERCEIVED_UNKNOWN;
+		d.bPerceivedTrapped = DOOR_PERCEIVED_UNKNOWN;
 	}
 }
 
@@ -756,15 +755,14 @@ void SaveDoorTableToMap( HWFILE fp )
 //information is overwritten.
 void AddDoorInfoToTable( DOOR *pDoor )
 {
-	INT32 i;
-	for( i = 0; i < gubNumDoors; i++ )
+	FOR_EACH_DOOR(i)
 	{
-		if( DoorTable[ i ].sGridNo == pDoor->sGridNo )
-		{
-			DoorTable[i] = *pDoor;
-			return;
-		}
+		DOOR& d = *i;
+		if (d.sGridNo != pDoor->sGridNo) continue;
+		d = *pDoor;
+		return;
 	}
+
 	//no existing door found, so add a new one.
 	if( gubNumDoors < gubMaxDoors )
 	{
@@ -814,11 +812,10 @@ void RemoveDoorInfoFromTable( INT32 iMapIndex )
 //This is the link to see if a door exists at a gridno.
 DOOR* FindDoorInfoAtGridNo( INT32 iMapIndex )
 {
-	INT32 i;
-	for( i = 0; i < gubNumDoors; i++ )
+	FOR_EACH_DOOR(i)
 	{
-		if( DoorTable[ i ].sGridNo == iMapIndex )
-			return &DoorTable[ i ];
+		DOOR& d = *i;
+		if (d.sGridNo == iMapIndex) return &d;
 	}
 	return NULL;
 }

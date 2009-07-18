@@ -650,7 +650,7 @@ static wchar_t const* BuildTriggerName(OBJECTTYPE const& o, wchar_t* const buf, 
 static void RenderDoorLockInfo()
 {
 	wchar_t str[50];
-	for (DOOR const* i = DoorTable, * const end = i + gubNumDoors; i != end; ++i)
+	FOR_EACH_DOOR(i)
 	{
 		DOOR const& d = *i;
 

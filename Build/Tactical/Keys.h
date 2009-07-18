@@ -142,6 +142,9 @@ extern UINT8 gubNumDoors;
 //File I/O for loading the door information from the map.  This automatically allocates
 //the exact number of slots when loading.
 
+#define FOR_EACH_DOOR(iter) \
+	for (DOOR* iter = DoorTable, * const iter##__end = iter + gubNumDoors; iter != iter##__end; ++iter)
+
 void LoadDoorTableFromMap(HWFILE);
 
 #ifdef JA2EDITOR
