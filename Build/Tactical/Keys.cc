@@ -40,6 +40,10 @@ static DOOR_STATUS* gpDoorStatus     = NULL;
 static UINT8        gubNumDoorStatus = 0;
 
 
+#define FOR_EACH_DOOR_STATUS(iter) \
+	for (DOOR_STATUS* iter = gpDoorStatus, * const iter##__end = iter + gubNumDoorStatus; iter != iter##__end; ++iter)
+
+
 KEY KeyTable[NUM_KEYS] =
 {
 	// Item #			Flags		Sector, Date Found
@@ -907,9 +911,9 @@ try
 	GridNo const base_gridno = base->sGridNo;
 
 	// Check to see if the user is adding an existing door
-	for (UINT8 i = 0; i != gubNumDoorStatus; ++i)
+	FOR_EACH_DOOR_STATUS(i)
 	{
-		DOOR_STATUS& d = gpDoorStatus[i];
+		DOOR_STATUS& d = *i;
 		if (d.sGridNo != base_gridno) continue;
 
 		// Set the status
@@ -988,10 +992,10 @@ DOOR_STATUS* GetDoorStatus(INT16 const sGridNo)
 	STRUCTURE const* const base = FindBaseStructure(structure);
 	if (!base) return 0;
 
-	DOOR_STATUS* const end = gpDoorStatus + gubNumDoorStatus;
-	for (DOOR_STATUS* i = gpDoorStatus; i != end; ++i)
+	FOR_EACH_DOOR_STATUS(i)
 	{
-		if (i->sGridNo == base->sGridNo) return i;
+		DOOR_STATUS& d = *i;
+		if (d.sGridNo == base->sGridNo) return &d;
 	}
 
 	return 0;
@@ -1046,9 +1050,9 @@ static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS&);
 
 void MercLooksForDoors(SOLDIERTYPE const& s)
 {
-	for (INT32 i = 0; i != gubNumDoorStatus; ++i)
+	FOR_EACH_DOOR_STATUS(i)
 	{
-		DOOR_STATUS& d = gpDoorStatus[i];
+		DOOR_STATUS& d = *i;
 
 		if (!InternalIsPerceivedDifferentThanReality(d)) continue;
 
@@ -1096,9 +1100,9 @@ static void SynchronizeDoorStatusToStructureData(DOOR_STATUS const& d)
 
 void UpdateDoorGraphicsFromStatus()
 {
-	for (INT32 i = 0; i != gubNumDoorStatus; ++i)
+	FOR_EACH_DOOR_STATUS(i)
 	{
-		DOOR_STATUS& d = gpDoorStatus[i];
+		DOOR_STATUS const& d = *i;
 		// ATE: Make sure door status flag and struct info are synchronized
 		SynchronizeDoorStatusToStructureData(d);
 		InternalUpdateDoorGraphicFromStatus(d, false);
@@ -1234,10 +1238,7 @@ static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS& d)
 void SaveDoorStatusArrayToDoorStatusTempFile(INT16 const x, INT16 const y, INT8 const z)
 {
 	// Turn off any door busy flags
-	for (DOOR_STATUS* i = gpDoorStatus, * const end = i + gubNumDoorStatus; i != end; ++i)
-	{
-		i->ubFlags &= ~DOOR_BUSY;
-	}
+	FOR_EACH_DOOR_STATUS(i) i->ubFlags &= ~DOOR_BUSY;
 
 	char map_name[128];
 	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, x, y, z);
@@ -1252,7 +1253,6 @@ void SaveDoorStatusArrayToDoorStatusTempFile(INT16 const x, INT16 const y, INT8 
 void LoadDoorStatusArrayFromDoorStatusTempFile()
 {
 	CHAR8		zMapName[ 128 ];
-	UINT8		ubLoop;
 
 	GetMapTempFileName( SF_DOOR_STATUS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
@@ -1275,9 +1275,9 @@ void LoadDoorStatusArrayFromDoorStatusTempFile()
 	// the graphics will be updated later in the loading process.
 
 	// set flags in map for containing a door status
-	for (ubLoop = 0; ubLoop < gubNumDoorStatus; ubLoop++)
+	FOR_EACH_DOOR_STATUS(i)
 	{
-		gpWorldLevelData[ gpDoorStatus[ ubLoop ].sGridNo ].ubExtFlags[0] |= MAPELEMENT_EXT_DOOR_STATUS_PRESENT;
+		gpWorldLevelData[i->sGridNo].ubExtFlags[0] |= MAPELEMENT_EXT_DOOR_STATUS_PRESENT;
 	}
 
 	UpdateDoorGraphicsFromStatus();
@@ -1311,9 +1311,9 @@ void ExamineDoorsOnEnteringSector()
 	{
 		if (!s->bInSector) continue;
 
-		for (INT32 i = 0; i != gubNumDoorStatus; ++i)
+		FOR_EACH_DOOR_STATUS(i)
 		{ // If open, close
-			DOOR_STATUS const& d = gpDoorStatus[i];
+			DOOR_STATUS const& d = *i;
 			if (!(d.ubFlags & DOOR_OPEN)) continue;
 			HandleDoorChangeFromGridNo(0, d.sGridNo, TRUE);
 		}
