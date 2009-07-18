@@ -198,7 +198,7 @@ void TrashDoorStatusArray(void);
 void SaveDoorStatusArrayToDoorStatusTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 //Load the door status from the door status temp file
-void LoadDoorStatusArrayFromDoorStatusTempFile(void);
+void LoadDoorStatusArrayFromDoorStatusTempFile();
 
 
 //Save the key table to the saved game file

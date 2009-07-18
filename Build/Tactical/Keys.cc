@@ -1250,34 +1250,26 @@ void SaveDoorStatusArrayToDoorStatusTempFile(INT16 const x, INT16 const y, INT8 
 
 void LoadDoorStatusArrayFromDoorStatusTempFile()
 {
-	CHAR8		zMapName[ 128 ];
+	TrashDoorStatusArray();
 
-	GetMapTempFileName( SF_DOOR_STATUS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
-
-	//Get rid of the existing door array
-	TrashDoorStatusArray( );
-
-	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_READ));
+	char map_name[128];
+	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_READ));
 
 	// Load the number of elements in the door status array
-	FileRead(hFile, &gubNumDoorStatus, sizeof(UINT8));
-
+	FileRead(f, &gubNumDoorStatus, sizeof(UINT8));
 	if (gubNumDoorStatus == 0) return;
 
-	//Allocate space for the door status array
 	gpDoorStatus = MALLOCNZ(DOOR_STATUS, gubNumDoorStatus);
+	FileRead(f, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus);
 
-	// Load the number of elements in the door status array
-	FileRead(hFile, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus);
-
-	// the graphics will be updated later in the loading process.
-
-	// set flags in map for containing a door status
+	// Set flags in map for containing a door status
 	FOR_EACH_DOOR_STATUS(i)
 	{
 		gpWorldLevelData[i->sGridNo].ubExtFlags[0] |= MAPELEMENT_EXT_DOOR_STATUS_PRESENT;
 	}
 
+	// The graphics will be updated later in the loading process
 	UpdateDoorGraphicsFromStatus();
 }
 
