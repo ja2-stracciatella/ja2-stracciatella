@@ -683,16 +683,15 @@ static void DoorToggleLockedCallback(GUI_BUTTON* btn, INT32 reason)
 	//handled in ExtractAndUpdateDoorInfo();
 }
 
+
 void AddLockedDoorCursors()
 {
-	DOOR *pDoor;
-	INT i;
-	for( i = 0; i < gubNumDoors; i++ )
+	for (INT i = 0; i != gubNumDoors; ++i)
 	{
-		pDoor = &DoorTable[ i ];
-		AddTopmostToHead( pDoor->sGridNo, ROTATINGKEY1 );
+		AddTopmostToHead(DoorTable[i].sGridNo, ROTATINGKEY1);
 	}
 }
+
 
 void RemoveLockedDoorCursors()
 {

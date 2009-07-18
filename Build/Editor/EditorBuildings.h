@@ -42,7 +42,7 @@ void ExtractAndUpdateDoorInfo(void);
 void KillDoorEditing(void);
 void RenderDoorEditingWindow(void);
 
-void AddLockedDoorCursors(void);
+void AddLockedDoorCursors();
 void RemoveLockedDoorCursors(void);
 void FindNextLockedDoor(void);
 
