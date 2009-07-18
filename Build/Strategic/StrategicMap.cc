@@ -2966,20 +2966,6 @@ BOOLEAN IsThisSectorASAMSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 }
 
 
-// is this sector part of the town?
-static BOOLEAN SectorIsPartOfTown(INT8 bTownId, INT16 sSectorX, INT16 sSectorY)
-{
-	if( StrategicMap[CALCULATE_STRATEGIC_INDEX( sSectorX, sSectorY ) ].bNameId == bTownId )
-	{
-		// is in the town
-		return ( TRUE );
-	}
-
-	// not in the town
-	return ( FALSE );
-}
-
-
 void SaveStrategicInfoToSavedFile(HWFILE const hFile)
 {
 	// Save the strategic map information
