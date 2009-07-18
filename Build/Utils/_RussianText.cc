@@ -1059,8 +1059,6 @@ const wchar_t* const TacticalStr[] =
 	L"Тут нет замка.",
 	L"Успех!",
 	L"Неудача.",
-	L"Успех!",
-	L"Неудача.",
 	L"Замок без ловушки.",
 	L"Успех!",
 	// The %ls is a merc name

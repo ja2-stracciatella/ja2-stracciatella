@@ -514,13 +514,11 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							// Attempt to force door
 							if ( AttemptToSmashDoor( pSoldier, pDoor ) )
 							{
-								//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_DESTROYED_STR ] );
 								// DoMercBattleSound( pSoldier, BATTLE_SOUND_COOL1 );
 								fHandleDoor = TRUE;
 							}
 							else
 							{
-								//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_NOT_DESTROYED_STR ] );
 								UpdateDoorPerceivedValue( pDoor );
 							}
 							ProcessImplicationsOfPCMessingWithDoor( pSoldier );
@@ -547,13 +545,11 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							// Attempt to force door
 							if ( AttemptToCrowbarLock( pSoldier, pDoor ) )
 							{
-								//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_DESTROYED_STR ] );
 								//DoMercBattleSound( pSoldier, BATTLE_SOUND_COOL1 );
 								fHandleDoor = TRUE;
 							}
 							else
 							{
-								//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_NOT_DESTROYED_STR ] );
 								UpdateDoorPerceivedValue( pDoor );
 							}
 
@@ -577,12 +573,10 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							if ( AttemptToBlowUpLock( pSoldier, pDoor ) )
 							{
 								//DoMercBattleSound( pSoldier, BATTLE_SOUND_COOL1 );
-								//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_DESTROYED_STR ] );
 								fHandleDoor = TRUE;
 							}
 							else
 							{
-								//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_NOT_DESTROYED_STR ] );
 								UpdateDoorPerceivedValue( pDoor );
 							}
 							ProcessImplicationsOfPCMessingWithDoor( pSoldier );

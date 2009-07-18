@@ -1074,8 +1074,6 @@ const wchar_t* const TacticalStr[] =
 	L"Er is geen slot.",
 	L"Gelukt!",
 	L"Mislukt.",
-	L"Gelukt!",
-	L"Mislukt.",
 	L"Geen boobytrap op het slot.",
 	L"Gelukt!",
 	// The %ls is a merc name
