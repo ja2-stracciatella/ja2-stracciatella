@@ -1031,7 +1031,6 @@ const wchar_t* const TacticalStr[] =
 	L"Erfolg!",
 	// The %s is a merc name
 	L"%ls hat nicht den richtigen Schlüssel.",
-	L"Die Falle am Schloss ist entschärft.",
 	L"Das Schloss hat keine Falle.",
 	L"Geschl.",
 	L"TÜR",

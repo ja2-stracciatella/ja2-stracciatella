@@ -726,7 +726,6 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							{
 								if ( AttemptToUntrapDoor( pSoldier, pDoor ) )
 								{
-									//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_HAS_BEEN_UNTRAPPED_STR ] );
 									DoMercBattleSound( pSoldier, BATTLE_SOUND_COOL1 );
 									ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
 									UpdateDoorPerceivedValue( pDoor );
