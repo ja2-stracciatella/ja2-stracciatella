@@ -1057,7 +1057,7 @@ void MercLooksForDoors(SOLDIERTYPE const& s)
 		GridNo const gridno       = d.sGridNo;
 		INT16  const dist_visible = DistanceVisible(&s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gridno, 0);
 
-		if (IsCloseEnoughAndHasLOS(s, gridno, dist_visible)) goto sees_door;
+		if (IsCloseEnoughAndHasLOS(s, gridno, dist_visible))
 		{
 sees_door:
 			InternalUpdateDoorsPerceivedValue(d);
