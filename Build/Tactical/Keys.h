@@ -185,11 +185,11 @@ void SaveDoorTableToDoorTableTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSect
 void LoadDoorTableFromDoorTableTempFile(void);
 
 
-//	Adds a door to the Door status array.  As the user comes across the door, they are added.
-//  if the door already exists, nothing happens
-// fOpen is True if the door is to be initially open, false if it is closed
-// fInitiallyPercieveOpen is true if the door is to be initially open, else false
-BOOLEAN ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fInitiallyPercieveOpen );
+/* Add a door to the door status array. As the user comes across the door, they
+ * are added. If the door already exists, nothing happens.
+ * is_open is True if the door is to be initially open, false if it is closed
+ * perceived_open is true if the door is to be initially open, else false */
+bool ModifyDoorStatus(GridNo, BOOLEAN is_open, BOOLEAN perceived_open);
 
 //Deletes the door status array
 void TrashDoorStatusArray(void);
