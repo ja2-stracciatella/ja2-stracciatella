@@ -334,7 +334,6 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 	BOOLEAN fHandleDoor = FALSE;
 	INT16		sAPCost = 0, sBPCost = 0;
 	DOOR		*pDoor;
-	BOOLEAN	fTrapFound = FALSE;
 	BOOLEAN	fDoAction = TRUE;
 	BOOLEAN	fDoor     = FALSE;
 
@@ -372,9 +371,6 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 					// Do we have a trap? NB if door is unlocked disable all traps
 					if (pDoor->fLocked && pDoor->ubTrapID != NO_TRAP)
 					{
-
-						fTrapFound = TRUE;
-
 						// Set costs for these
 						// Set AP costs to that of opening a door
 						sAPCost = AP_OPEN_DOOR;
@@ -712,11 +708,6 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 						{
 							// Do we have a trap?
 							if (pDoor->ubTrapID != NO_TRAP)
-							{
-								fTrapFound = TRUE;
-							}
-
-							if ( fTrapFound )
 							{
 								if ( AttemptToUntrapDoor( pSoldier, pDoor ) )
 								{
