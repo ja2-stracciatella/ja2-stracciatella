@@ -220,7 +220,7 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor );
 
 void LoadLockTable(void);
 
-void ExamineDoorsOnEnteringSector(void);
+void ExamineDoorsOnEnteringSector();
 
 void AttachStringToDoor( INT16 sGridNo );
 

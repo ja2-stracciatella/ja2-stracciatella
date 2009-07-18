@@ -1345,52 +1345,26 @@ void LoadKeyTableFromSaveedGameFile(HWFILE const hFile)
 }
 
 
-void ExamineDoorsOnEnteringSector( )
+void ExamineDoorsOnEnteringSector()
 {
-	DOOR_STATUS							 *pDoorStatus;
-	BOOLEAN									 fOK = FALSE;
-	INT8										 bTownId;
+	// If this is Omerta, don't do it
+	if (GetTownIdForSector(gWorldSectorX, gWorldSectorY) == OMERTA) return;
 
-	// OK, only do this if conditions are met....
-	// If this is any omerta tow, don't do it...
-	bTownId = GetTownIdForSector( gWorldSectorX, gWorldSectorY );
+	// Check time
+	if (GetWorldTotalMin() - gTacticalStatus.uiTimeSinceLastInTactical < 30) return;
 
-	if ( bTownId == OMERTA )
-	{
-		return;
-	}
-
-	// Check time...
-	if ( ( GetWorldTotalMin( ) - gTacticalStatus.uiTimeSinceLastInTactical ) < 30 )
-	{
-		return;
-	}
-
-	// there is at least one human being in that sector.
-	// check for civ
+	// If there is at least one human being in that sector, close doors.
 	CFOR_ALL_NON_PLAYER_SOLDIERS(s)
 	{
-		if (s->bInSector)
-		{
-			fOK = TRUE;
-			break;
-		}
-	}
+		if (!s->bInSector) continue;
 
-	// Let's do it!
-	if ( fOK )
-	{
-		for (INT32 cnt = 0; cnt < gubNumDoorStatus; ++cnt)
-		{
-			pDoorStatus = &( gpDoorStatus[ cnt ] );
-
-			// Get status of door....
-			if ( pDoorStatus->ubFlags & DOOR_OPEN )
-			{
-				// If open, close!
-				HandleDoorChangeFromGridNo( NULL, pDoorStatus->sGridNo, TRUE );
-			}
+		for (INT32 i = 0; i != gubNumDoorStatus; ++i)
+		{ // If open, close
+			DOOR_STATUS const& d = gpDoorStatus[i];
+			if (!(d.ubFlags & DOOR_OPEN)) continue;
+			HandleDoorChangeFromGridNo(0, d.sGridNo, TRUE);
 		}
+		break;
 	}
 }
 
