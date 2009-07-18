@@ -998,55 +998,6 @@ DOOR_STATUS* GetDoorStatus(INT16 const sGridNo)
 }
 
 
-BOOLEAN AllMercsLookForDoor(INT16 sGridNo)
-{
-	INT8										 bDirs[ 8 ] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
-	INT16										 sDistVisible;
-	INT16											usNewGridNo;
-
-	if (GetDoorStatus(sGridNo) == NULL) return FALSE;
-
-	CFOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
-	{
-		// ATE: Ok, lets check for some basic things here!
-		if (pSoldier->bLife >= OKLIFE && pSoldier->sGridNo != NOWHERE && pSoldier->bInSector)
-		{
-			// is he close enough to see that gridno if he turns his head?
-			sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, sGridNo, 0 );
-
-			if (PythSpacesAway( pSoldier->sGridNo, sGridNo ) <= sDistVisible )
-			{
-				// and we can trace a line of sight to his x,y coordinates?
-				// (taking into account we are definitely aware of this guy now)
-				if ( SoldierTo3DLocationLineOfSightTest( pSoldier, sGridNo, 0, 0, (UINT8) sDistVisible, TRUE ) )
-				{
-					return( TRUE );
-				}
-			}
-
-			// Now try other adjacent gridnos...
-			for (INT32 cnt2 = 0; cnt2 < 8; ++cnt2)
-			{
-					usNewGridNo = NewGridNo( sGridNo, DirectionInc( bDirs[ cnt2 ] ) );
-					sDistVisible = DistanceVisible( pSoldier, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, usNewGridNo, 0 );
-
-					if (PythSpacesAway( pSoldier->sGridNo, usNewGridNo ) <= sDistVisible )
-					{
-						// and we can trace a line of sight to his x,y coordinates?
-						// (taking into account we are definitely aware of this guy now)
-						if ( SoldierTo3DLocationLineOfSightTest( pSoldier, usNewGridNo, 0, 0, (UINT8) sDistVisible, TRUE ) )
-						{
-							return( TRUE );
-						}
-					}
-			}
-		}
-	}
-
-	return( FALSE );
-}
-
-
 static bool IsCloseEnoughAndHasLOS(SOLDIERTYPE const& s, GridNo const gridno, INT16 const dist_visible)
 {
 	return
@@ -1058,6 +1009,36 @@ static bool IsCloseEnoughAndHasLOS(SOLDIERTYPE const& s, GridNo const gridno, IN
 }
 
 
+static INT8 const g_dirs[] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
+
+
+bool AllMercsLookForDoor(GridNo const gridno)
+{
+	if (!GetDoorStatus(gridno)) return false;
+
+	CFOR_ALL_IN_TEAM(i, gbPlayerNum)
+	{
+		SOLDIERTYPE const& s = *i;
+		if (s.bLife < OKLIFE)     continue;
+		if (s.sGridNo == NOWHERE) continue;
+		if (!s.bInSector)         continue;
+
+		INT16 const dist_visible = DistanceVisible(&s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, gridno, 0);
+		if (IsCloseEnoughAndHasLOS(s, gridno, dist_visible)) return true;
+
+		// Now try other adjacent gridnos
+		for (INT32 dir = 0; dir != 8; ++dir)
+		{
+			GridNo const new_gridno   = NewGridNo(gridno, DirectionInc(g_dirs[dir]));
+			INT16  const dist_visible = DistanceVisible(&s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, new_gridno, 0);
+			if (IsCloseEnoughAndHasLOS(s, new_gridno, dist_visible)) return true;
+		}
+	}
+
+	return false;
+}
+
+
 static bool InternalIsPerceivedDifferentThanReality(DOOR_STATUS const&);
 static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS const&, bool dirty);
 static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS&);
@@ -1065,8 +1046,6 @@ static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS&);
 
 void MercLooksForDoors(SOLDIERTYPE const& s)
 {
-	static INT8 const dirs[] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
-
 	for (INT32 i = 0; i != gubNumDoorStatus; ++i)
 	{
 		DOOR_STATUS& d = gpDoorStatus[i];
@@ -1087,7 +1066,8 @@ sees_door:
 		// Now try other adjacent gridnos
 		for (INT32 dir = 0; dir != 8; ++dir)
 		{
-			GridNo const new_gridno = NewGridNo(gridno, DirectionInc(dirs[dir]));
+			GridNo const new_gridno = NewGridNo(gridno, DirectionInc(g_dirs[dir]));
+			// XXX It seems strage that AllMercsLookForDoor() calculates a new dist_visible, but MercLooksForDoors() does not
 			if (IsCloseEnoughAndHasLOS(s, new_gridno, dist_visible)) goto sees_door;
 		}
 	}
