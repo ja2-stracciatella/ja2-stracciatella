@@ -2966,55 +2966,47 @@ BOOLEAN IsThisSectorASAMSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 }
 
 
-void SaveStrategicInfoToSavedFile(HWFILE const hFile)
+void SaveStrategicInfoToSavedFile(HWFILE const f)
 {
 	// Save the strategic map information
-	for (const StrategicMapElement* i = StrategicMap; i != endof(StrategicMap); ++i)
+	for (StrategicMapElement const* i = StrategicMap; i != endof(StrategicMap); ++i)
 	{
-		InjectStrategicMapElementIntoFile(hFile, i);
+		InjectStrategicMapElementIntoFile(f, *i);
 	}
 
 	// Save the Sector Info
-	for (const SECTORINFO* i = SectorInfo; i != endof(SectorInfo); ++i)
+	for (SECTORINFO const* i = SectorInfo; i != endof(SectorInfo); ++i)
 	{
-		InjectSectorInfoIntoFile(hFile, i);
+		InjectSectorInfoIntoFile(f, *i);
 	}
 
-	// Save the SAM Controlled Sector Information
-	const UINT32 uiSize = MAP_WORLD_X * MAP_WORLD_Y;
-/*
-	FileWrite(hFile, ubSAMControlledSectors, uiSize);
-*/
-	FileSeek( hFile, uiSize, FILE_SEEK_FROM_CURRENT );
+	// Skip the SAM controlled sector information
+	FileSeek(f, MAP_WORLD_X * MAP_WORLD_Y, FILE_SEEK_FROM_CURRENT);
 
-	// Save the fFoundOrta
-	FileWrite(hFile, &fFoundOrta, sizeof(BOOLEAN));
+	// Save fFoundOrta
+	FileWrite(f, &fFoundOrta, sizeof(BOOLEAN));
 }
 
 
-void LoadStrategicInfoFromSavedFile(HWFILE const hFile)
+void LoadStrategicInfoFromSavedFile(HWFILE const f)
 {
 	// Load the strategic map information
 	for (StrategicMapElement* i = StrategicMap; i != endof(StrategicMap); ++i)
 	{
-		ExtractStrategicMapElementFromFile(hFile, i);
+		ExtractStrategicMapElementFromFile(f, *i);
 	}
 
 	// Load the Sector Info
 	for (SECTORINFO* i = SectorInfo; i != endof(SectorInfo); ++i)
 	{
-		ExtractSectorInfoFromFile(hFile, i);
+		ExtractSectorInfoFromFile(f, *i);
 	}
 
-	// Load the SAM Controlled Sector Information
-	const UINT32 uiSize = MAP_WORLD_X * MAP_WORLD_Y;
-/*
-	FileRead(hFile, ubSAMControlledSectors, uiSize);
-*/
-	FileSeek( hFile, uiSize, FILE_SEEK_FROM_CURRENT );
+	// Skip the SAM controlled sector information
+	FileSeek(f, MAP_WORLD_X * MAP_WORLD_Y, FILE_SEEK_FROM_CURRENT);
 
-	// Load the fFoundOrta
-	FileRead(hFile, &fFoundOrta, sizeof(BOOLEAN));
+	// Load fFoundOrta
+	FileRead(f, &fFoundOrta, sizeof(BOOLEAN));
 }
 
 
