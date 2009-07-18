@@ -1074,7 +1074,7 @@ sees_door:
 }
 
 
-static void SyncronizeDoorStatusToStructureData(DOOR_STATUS const& d)
+static void SynchronizeDoorStatusToStructureData(DOOR_STATUS const& d)
 {
 	// First look for a door structure here
 	STRUCTURE* const s = FindStructure(d.sGridNo, STRUCTURE_ANYDOOR);
@@ -1100,7 +1100,7 @@ void UpdateDoorGraphicsFromStatus()
 	{
 		DOOR_STATUS& d = gpDoorStatus[i];
 		// ATE: Make sure door status flag and struct info are synchronized
-		SyncronizeDoorStatusToStructureData(d);
+		SynchronizeDoorStatusToStructureData(d);
 		InternalUpdateDoorGraphicFromStatus(d, false);
 	}
 }
