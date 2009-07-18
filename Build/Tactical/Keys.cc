@@ -1047,7 +1047,7 @@ BOOLEAN AllMercsLookForDoor(INT16 sGridNo)
 }
 
 
-static BOOLEAN InternalIsPerceivedDifferentThanReality(const DOOR_STATUS* d);
+static bool InternalIsPerceivedDifferentThanReality(DOOR_STATUS const&);
 static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS const&, bool dirty);
 static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* d);
 
@@ -1061,10 +1061,7 @@ BOOLEAN MercLooksForDoors(const SOLDIERTYPE* s, BOOLEAN fUpdateValue)
 	{
 		DOOR_STATUS* d = &gpDoorStatus[cnt];
 
-		if (!InternalIsPerceivedDifferentThanReality(d))
-		{
-			continue;
-		}
+		if (!InternalIsPerceivedDifferentThanReality(*d)) continue;
 
 		const INT16 sGridNo = d->sGridNo;
 
@@ -1262,11 +1259,11 @@ dirty_end:
 }
 
 
-static BOOLEAN InternalIsPerceivedDifferentThanReality(const DOOR_STATUS* d)
+static bool InternalIsPerceivedDifferentThanReality(DOOR_STATUS const& d)
 {
 	return
-		d->ubFlags & DOOR_PERCEIVED_NOTSET ||
-		((d->ubFlags & DOOR_OPEN) != 0) != ((d->ubFlags & DOOR_PERCEIVED_OPEN) != 0);
+		d.ubFlags & DOOR_PERCEIVED_NOTSET ||
+		((d.ubFlags & DOOR_OPEN) != 0) != ((d.ubFlags & DOOR_PERCEIVED_OPEN) != 0);
 }
 
 
