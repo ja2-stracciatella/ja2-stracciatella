@@ -43,7 +43,7 @@ void KillDoorEditing(void);
 void RenderDoorEditingWindow(void);
 
 void AddLockedDoorCursors();
-void RemoveLockedDoorCursors(void);
+void RemoveLockedDoorCursors();
 void FindNextLockedDoor(void);
 
 extern BOOLEAN gfEditingDoor;

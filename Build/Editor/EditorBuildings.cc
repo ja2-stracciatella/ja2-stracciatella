@@ -695,27 +695,18 @@ void AddLockedDoorCursors()
 
 void RemoveLockedDoorCursors()
 {
-	DOOR *pDoor;
-	INT i;
-	LEVELNODE* pNode;
-	LEVELNODE* pTemp;
-	for( i = 0; i < gubNumDoors; i++ )
+	for (INT i = 0; i != gubNumDoors; ++i)
 	{
-		pDoor = &DoorTable[ i ];
-		pNode = gpWorldLevelData[ pDoor->sGridNo ].pTopmostHead;
-		while( pNode )
+		GridNo const gridno = DoorTable[i].sGridNo;
+		for (LEVELNODE* k = gpWorldLevelData[gridno].pTopmostHead; k;)
 		{
-			if( pNode->usIndex == ROTATINGKEY1 )
-			{
-				pTemp = pNode;
-				pNode = pNode->pNext;
-				RemoveTopmost( pDoor->sGridNo, pTemp->usIndex );
-			}
-			else
-				pNode = pNode->pNext;
+			LEVELNODE* const next = k->pNext;
+			if (k->usIndex == ROTATINGKEY1) RemoveTopmostFromLevelNode(gridno, k);
+			k = next;
 		}
 	}
 }
+
 
 void SetupTextInputForBuildings()
 {
