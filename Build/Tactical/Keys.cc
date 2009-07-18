@@ -853,27 +853,14 @@ void UpdateDoorPerceivedValue( DOOR *pDoor )
 }
 
 
-void SaveDoorTableToDoorTableTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
+void SaveDoorTableToDoorTableTempFile(INT16 const x, INT16 const y, INT8 const z)
 {
-	UINT32	uiSizeToSave=0;
-	CHAR8		zMapName[ 128 ];
-
-//	return( TRUE );
-
-	uiSizeToSave = gubNumDoors * sizeof( DOOR );
-
-	GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
-
-	AutoSGPFile hFile(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
-
-	//Save the number of doors
-	FileWrite(hFile, &gubNumDoors, sizeof(UINT8));
-
-	//if there are doors to save
-	if (uiSizeToSave != 0) FileWrite(hFile, DoorTable, uiSizeToSave);
-
-	//Set the sector flag indicating that there is a Door table temp file present
-	SetSectorFlag( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_DOOR_TABLE_TEMP_FILES_EXISTS );
+	char map_name[128];
+	GetMapTempFileName(SF_DOOR_TABLE_TEMP_FILES_EXISTS, map_name, x, y, z);
+	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	FileWriteArray(f, gubNumDoors, DoorTable);
+	// Set the sector flag indicating that there is a Door table temp file present
+	SetSectorFlag(x, y, z, SF_DOOR_TABLE_TEMP_FILES_EXISTS);
 }
 
 
