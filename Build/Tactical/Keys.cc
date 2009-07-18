@@ -894,117 +894,75 @@ void LoadDoorTableFromDoorTableTempFile()
 }
 
 
-// fOpen is True if the door is open, false if it is closed
-BOOLEAN ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fPerceivedOpen )
+// is_open is True if the door is open, false if it is closed
+bool ModifyDoorStatus(GridNo const gridno, BOOLEAN const is_open, BOOLEAN const perceived_open)
 try
 {
-	UINT8	ubCnt;
-	STRUCTURE * pStructure;
-	STRUCTURE * pBaseStructure;
-
-	//Set the gridno for the door
-
 	// Find the base tile for the door structure and use that gridno
-	pStructure = FindStructure( sGridNo, STRUCTURE_ANYDOOR );
-	if (pStructure)
-	{
-		pBaseStructure = FindBaseStructure( pStructure );
-	}
-	else
-	{
-		pBaseStructure = NULL;
-	}
+	STRUCTURE* const structure = FindStructure(gridno, STRUCTURE_ANYDOOR);
+	if (!structure) return false;
 
-	if ( pBaseStructure == NULL )
-	{
-#if 0
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_BETAVERSION, L"Door structure data at %d was not found", sGridNo );
-#endif
-		return( FALSE );
-	}
+	STRUCTURE* const base = FindBaseStructure(structure);
+	if (!base) return false;
+	GridNo const base_gridno = base->sGridNo;
 
-	//if there is an array
-	if( gpDoorStatus )
+	// Check to see if the user is adding an existing door
+	for (UINT8 i = 0; i != gubNumDoorStatus; ++i)
 	{
-		//Check to see if the user is adding an existing door
-		for( ubCnt=0; ubCnt<gubNumDoorStatus; ubCnt++)
+		DOOR_STATUS& d = gpDoorStatus[i];
+		if (d.sGridNo != base_gridno) continue;
+
+		// Set the status
+		if (perceived_open != DONTSETDOORSTATUS)
 		{
-			//if the door is already in the array
-			if( gpDoorStatus[ ubCnt ].sGridNo == 	pBaseStructure->sGridNo )
-			{
-				//set the status
-				// ATE: Don't set if set to DONTSET
-				if ( fPerceivedOpen != DONTSETDOORSTATUS )
-				{
-					if( fPerceivedOpen )
-						gpDoorStatus[ ubCnt ].ubFlags |= DOOR_PERCEIVED_OPEN;
-					else
-						gpDoorStatus[ ubCnt ].ubFlags &= ~DOOR_PERCEIVED_OPEN;
+			if (perceived_open)
+				d.ubFlags |= DOOR_PERCEIVED_OPEN;
+			else
+				d.ubFlags &= ~DOOR_PERCEIVED_OPEN;
 
-					// Turn off perceived not set flag....
-						gpDoorStatus[ ubCnt ].ubFlags &= ~DOOR_PERCEIVED_NOTSET;
-
-				}
-
-				if ( fOpen != DONTSETDOORSTATUS )
-				{
-					if( fOpen )
-						gpDoorStatus[ ubCnt ].ubFlags |= DOOR_OPEN;
-					else
-						gpDoorStatus[ ubCnt ].ubFlags &= ~DOOR_OPEN;
-				}
-
-				//Dont add it
-				return( TRUE );
-			}
+			// Turn off perceived not set flag
+			d.ubFlags &= ~DOOR_PERCEIVED_NOTSET;
 		}
+
+		if (is_open != DONTSETDOORSTATUS)
+		{
+			if (is_open)
+				d.ubFlags |= DOOR_OPEN;
+			else
+				d.ubFlags &= ~DOOR_OPEN;
+		}
+
+		return true;
 	}
 
-	// add a new door status structure
+	// Add a new door status structure
+	UINT8 const n = gubNumDoorStatus;
+	gpDoorStatus     = REALLOC(gpDoorStatus, DOOR_STATUS, n + 1);
+	gubNumDoorStatus = n + 1;
 
-	//if there is an array
-	if( gpDoorStatus )
+	DOOR_STATUS& d = gpDoorStatus[n];
+	d.sGridNo = base_gridno;
+
+	// Init the flags
+	d.ubFlags = 0;
+
+	if (is_open) d.ubFlags |= DOOR_OPEN;
+
+	// if a new door, use same as actual
+	if (perceived_open == DONTSETDOORSTATUS)
 	{
-		//Increment the number of doors
-		gubNumDoorStatus++;
-
-		//reallocate memory to hold the new door
-		gpDoorStatus = REALLOC(gpDoorStatus, DOOR_STATUS, gubNumDoorStatus);
+		d.ubFlags |= DOOR_PERCEIVED_NOTSET;
 	}
-	else
+	else if (is_open)
 	{
-		//Set the initial number of doors
-		gubNumDoorStatus = 1;
-
-		gpDoorStatus = MALLOC(DOOR_STATUS);
+		d.ubFlags |= DOOR_PERCEIVED_OPEN;
 	}
 
-	gpDoorStatus[ gubNumDoorStatus-1 ].sGridNo = pBaseStructure->sGridNo;
-
-	//Init the flags
-	gpDoorStatus[ gubNumDoorStatus-1 ].ubFlags = 0;
-
-	//If the door is to be initially open
-	if( fOpen )
-		gpDoorStatus[ gubNumDoorStatus-1 ].ubFlags |= DOOR_OPEN;
-
-	// IF A NEW DOOR, USE SAME AS ACTUAL
-	if ( fPerceivedOpen != DONTSETDOORSTATUS )
-	{
-		if( fOpen )
-			gpDoorStatus[ gubNumDoorStatus-1 ].ubFlags |= DOOR_PERCEIVED_OPEN;
-	}
-	else
-	{
-		gpDoorStatus[ gubNumDoorStatus-1 ].ubFlags |= DOOR_PERCEIVED_NOTSET;
-	}
-
-	// flag the tile as containing a door status
-	gpWorldLevelData[ pBaseStructure->sGridNo ].ubExtFlags[0] |= MAPELEMENT_EXT_DOOR_STATUS_PRESENT;
-
-	return( TRUE );
+	// Flag the tile as containing a door status
+	gpWorldLevelData[base_gridno].ubExtFlags[0] |= MAPELEMENT_EXT_DOOR_STATUS_PRESENT;
+	return true;
 }
-catch (...) { return FALSE; }
+catch (...) { return false; }
 
 
 void TrashDoorStatusArray( )
