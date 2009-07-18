@@ -1135,16 +1135,14 @@ static void SyncronizeDoorStatusToStructureData(DOOR_STATUS const& d)
 }
 
 
-void UpdateDoorGraphicsFromStatus(void)
+void UpdateDoorGraphicsFromStatus()
 {
-	for (INT32 cnt = 0; cnt < gubNumDoorStatus; ++cnt)
+	for (INT32 i = 0; i != gubNumDoorStatus; ++i)
 	{
-		DOOR_STATUS* pDoorStatus = &gpDoorStatus[cnt];
-
-		// ATE: Make sure door status flag and struct info are syncronized....
-		SyncronizeDoorStatusToStructureData(*pDoorStatus);
-
-		InternalUpdateDoorGraphicFromStatus(*pDoorStatus, false);
+		DOOR_STATUS& d = gpDoorStatus[i];
+		// ATE: Make sure door status flag and struct info are synchronized
+		SyncronizeDoorStatusToStructureData(d);
+		InternalUpdateDoorGraphicFromStatus(d, false);
 	}
 }
 
