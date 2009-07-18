@@ -860,12 +860,6 @@ static UINT8 GetHeadMinerIndexForMine(INT8 bMineIndex)
 }
 
 
-static UINT16 GetHeadMinerProfileIdForMine(INT8 bMineIndex)
-{
-	return(gHeadMinerData[ GetHeadMinerIndexForMine( bMineIndex ) ].usProfileId);
-}
-
-
 void IssueHeadMinerQuote(INT8 const mine_idx, HeadMinerQuote const quote_type)
 {
 	Assert(0 <= mine_idx && mine_idx < MAX_NUMBER_OF_MINES);
@@ -1142,34 +1136,6 @@ INT8 GetIdOfMineForSector(INT16 const x, INT16 const y, INT8 const z)
 	}
 	return -1;
 }
-
-
-// use this for miner (civilian) quotes when *underground* in a mine
-static BOOLEAN PlayerForgotToTakeOverMine(UINT8 ubMineIndex)
-{
-	MINE_STATUS_TYPE *pMineStatus;
-
-
-	Assert(ubMineIndex < MAX_NUMBER_OF_MINES);
-
-	pMineStatus = &(gMineStatus[ ubMineIndex ]);
-
-	// mine surface sector is player controlled
-	// mine not empty
-	// player hasn't spoken to the head miner, but hasn't attacked him either
-	// miner is alive
-	if (!StrategicMap[gMineLocation[ubMineIndex].sSectorX + MAP_WORLD_X * gMineLocation[ubMineIndex].sSectorY].fEnemyControlled &&
-		 ( !pMineStatus->fEmpty ) &&
-		 ( !pMineStatus->fSpokeToHeadMiner ) &&
-		 ( !pMineStatus->fAttackedHeadMiner ) &&
-		 ( gMercProfiles[ GetHeadMinerProfileIdForMine( ubMineIndex ) ].bLife > 0 ) )
-	{
-		return( TRUE );
-	}
-
-	return( FALSE );
-}
-
 
 
 // use this to determine whether or not to place miners into a underground mine level
