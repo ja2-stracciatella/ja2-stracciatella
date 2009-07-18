@@ -1063,7 +1063,7 @@ static void InternalUpdateDoorGraphicFromStatus(DOOR_STATUS const&, bool dirty);
 static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS&);
 
 
-bool MercLooksForDoors(SOLDIERTYPE const& s)
+void MercLooksForDoors(SOLDIERTYPE const& s)
 {
 	static INT8 const dirs[] = { NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST };
 
@@ -1081,7 +1081,7 @@ bool MercLooksForDoors(SOLDIERTYPE const& s)
 sees_door:
 			InternalUpdateDoorsPerceivedValue(d);
 			InternalUpdateDoorGraphicFromStatus(d, true);
-			return true;
+			break;
 		}
 
 		// Now try other adjacent gridnos
@@ -1091,8 +1091,6 @@ sees_door:
 			if (IsCloseEnoughAndHasLOS(s, new_gridno, dist_visible)) goto sees_door;
 		}
 	}
-
-	return false;
 }
 
 

@@ -212,7 +212,7 @@ DOOR_STATUS	*GetDoorStatus( INT16 sGridNo );
 
 BOOLEAN AllMercsLookForDoor(INT16 sGridNo);
 
-bool MercLooksForDoors(SOLDIERTYPE const&);
+void MercLooksForDoors(SOLDIERTYPE const&);
 
 void UpdateDoorGraphicsFromStatus();
 
