@@ -1320,24 +1320,21 @@ static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS* d)
 }
 
 
-void SaveDoorStatusArrayToDoorStatusTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
+void SaveDoorStatusArrayToDoorStatusTempFile(INT16 const x, INT16 const y, INT8 const z)
 {
-	CHAR8		zMapName[ 128 ];
-	UINT8		ubCnt;
-
-	// Turn off any DOOR BUSY flags....
-	for( ubCnt=0; ubCnt < gubNumDoorStatus; ubCnt++)
+	// Turn off any door busy flags
+	for (DOOR_STATUS* i = gpDoorStatus, * const end = i + gubNumDoorStatus; i != end; ++i)
 	{
-		gpDoorStatus[ ubCnt ].ubFlags &= ( ~DOOR_BUSY );
+		i->ubFlags &= ~DOOR_BUSY;
 	}
 
-	GetMapTempFileName( SF_DOOR_STATUS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
-
-	AutoSGPFile f(FileOpen(zMapName, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
+	char map_name[128];
+	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, x, y, z);
+	AutoSGPFile f(FileOpen(map_name, FILE_ACCESS_WRITE | FILE_CREATE_ALWAYS));
 	FileWriteArray(f, gubNumDoorStatus, gpDoorStatus);
 
-	//Set the flag indicating that there is a door status array
-	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_DOOR_STATUS_TEMP_FILE_EXISTS );
+	// Set the flag indicating that there is a door status array
+	SetSectorFlag(x, y, z, SF_DOOR_STATUS_TEMP_FILE_EXISTS);
 }
 
 
