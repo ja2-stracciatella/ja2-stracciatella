@@ -900,7 +900,6 @@ void LoadDoorTableFromDoorTableTempFile()
 
 // is_open is True if the door is open, false if it is closed
 bool ModifyDoorStatus(GridNo const gridno, BOOLEAN const is_open, BOOLEAN const perceived_open)
-try
 {
 	// Find the base tile for the door structure and use that gridno
 	STRUCTURE* const structure = FindStructure(gridno, STRUCTURE_ANYDOOR);
@@ -966,7 +965,6 @@ try
 	gpWorldLevelData[base_gridno].ubExtFlags[0] |= MAPELEMENT_EXT_DOOR_STATUS_PRESENT;
 	return true;
 }
-catch (...) { return false; }
 
 
 void TrashDoorStatusArray( )
