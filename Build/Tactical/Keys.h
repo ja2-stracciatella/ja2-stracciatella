@@ -176,7 +176,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor );
 BOOLEAN AttemptToUntrapDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor );
 BOOLEAN ExamineDoorForTraps( SOLDIERTYPE * pSoldier, DOOR * pDoor );
 BOOLEAN HasDoorTrapGoneOff( SOLDIERTYPE * pSoldier, DOOR * pDoor );
-void HandleDoorTrap(SOLDIERTYPE*, const DOOR*);
+void HandleDoorTrap(SOLDIERTYPE&, DOOR const&);
 
 
 // Updates the perceived value to the user of the state of the door

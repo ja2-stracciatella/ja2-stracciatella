@@ -383,7 +383,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 						{
 							// Kaboom
 							// Code to handle trap here...
-							HandleDoorTrap( pSoldier, pDoor );
+							HandleDoorTrap(*pSoldier, *pDoor);
 							if (DoorTrapTable[pDoor->ubTrapID].fFlags & DOOR_TRAP_STOPS_ACTION)
 							{
 								// trap stops person from opening door!
@@ -416,7 +416,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							else
 							{
 								// Set it off!
-								HandleDoorTrap( pSoldier, pDoor );
+								HandleDoorTrap(*pSoldier, *pDoor);
 								if (DoorTrapTable[pDoor->ubTrapID].fFlags & DOOR_TRAP_STOPS_ACTION)
 								{
 									// trap stops person from opening door!
@@ -700,7 +700,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 								{
 									ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_LOCKED_DOOR ), 0, FALSE );
 									// Now just show on message bar
-									HandleDoorTrap( pSoldier, pDoor );
+									HandleDoorTrap(*pSoldier, *pDoor);
 
 									if (!( DoorTrapTable[pDoor->ubTrapID].fFlags & DOOR_TRAP_RECURRING ) )
 									{
