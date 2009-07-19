@@ -166,6 +166,8 @@ DOOR * FindDoorInfoAtGridNo( INT32 iMapIndex );
 //Upon world deallocation, the door table needs to be deallocated.
 void TrashDoorTable(void);
 
+wchar_t const* GetTrapName(DOOR const&);
+
 BOOLEAN AttemptToUnlockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor);
 BOOLEAN AttemptToLockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor);
 BOOLEAN AttemptToSmashDoor( SOLDIERTYPE * pSoldier, DOOR * pDoor );

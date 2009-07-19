@@ -404,18 +404,8 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							// do we know it's trapped?
 							if ( pDoor->bPerceivedTrapped == DOOR_PERCEIVED_UNKNOWN )
 							{
-								switch( pDoor->ubTrapID )
-								{
-									case BROTHEL_SIREN:
-										ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_DESCRIPTION_STR ], pDoorTrapStrings[ SIREN ] );
-										break;
-									case SUPER_ELECTRIC:
-										ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_DESCRIPTION_STR ], pDoorTrapStrings[ ELECTRIC ] );
-										break;
-									default:
-										ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_DESCRIPTION_STR ], pDoorTrapStrings[ pDoor->ubTrapID ] );
-										break;
-								}
+								wchar_t const* const trap_name = GetTrapName(*pDoor);
+								ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[DOOR_LOCK_DESCRIPTION_STR], trap_name);
 
 								// Stop action this time....
 								fDoAction	 = FALSE;
@@ -622,18 +612,8 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							{
 								// We have a trap. Use door pointer to determine what type, etc
 								TacticalCharacterDialogue( pSoldier, QUOTE_BOOBYTRAP_ITEM );
-								switch( pDoor->ubTrapID )
-								{
-									case BROTHEL_SIREN:
-										ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_DESCRIPTION_STR ], pDoorTrapStrings[ SIREN ] );
-										break;
-									case SUPER_ELECTRIC:
-										ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_DESCRIPTION_STR ], pDoorTrapStrings[ ELECTRIC ] );
-										break;
-									default:
-										ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_DESCRIPTION_STR ], pDoorTrapStrings[ pDoor->ubTrapID ] );
-										break;
-								}
+								wchar_t const* const trap_name = GetTrapName(*pDoor);
+								ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[DOOR_LOCK_DESCRIPTION_STR], trap_name);
 
 								UpdateDoorPerceivedValue( pDoor );
 							}
