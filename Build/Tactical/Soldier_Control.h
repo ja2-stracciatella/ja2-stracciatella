@@ -263,7 +263,7 @@ enum SoldierClass
 // This macro should be used whenever we want to see if someone is neutral
 // IF WE ARE CONSIDERING ATTACKING THEM.  Creatures & bloodcats will attack neutrals
 // but they can't attack empty vehicles!!
-#define CONSIDERED_NEUTRAL( me, them ) ( (them->bNeutral) && ( me->bTeam != CREATURE_TEAM || (them->uiStatusFlags & SOLDIER_VEHICLE) ) )
+#define CONSIDERED_NEUTRAL(me, them) ((them)->bNeutral && ((me)->bTeam != CREATURE_TEAM || (them)->uiStatusFlags & SOLDIER_VEHICLE))
 
 struct KEY_ON_RING
 {
