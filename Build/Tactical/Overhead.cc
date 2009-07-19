@@ -947,10 +947,7 @@ void ExecuteOverhead(void)
 											}
 											else
 											{
-												INT16 sAPCost;
-												INT16 sBPCost;
-												CalcInteractiveObjectAPs(&sAPCost, &sBPCost);
-												if (EnoughPoints(pSoldier, sAPCost, sBPCost, TRUE))
+												if (EnoughPoints(pSoldier, AP_OPEN_DOOR, BP_OPEN_DOOR, TRUE))
 												{
 													InteractWithOpenableStruct(*pSoldier, *pStructure, pSoldier->bPendingActionData3);
 												}

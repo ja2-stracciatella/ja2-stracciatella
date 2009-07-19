@@ -91,13 +91,6 @@ void StartInteractiveObject(GridNo const gridno, STRUCTURE const& structure, SOL
 }
 
 
-void CalcInteractiveObjectAPs(INT16* const psAPCost, INT16* const psBPCost)
-{
-	*psAPCost = AP_OPEN_DOOR;
-	*psBPCost = AP_OPEN_DOOR;
-}
-
-
 bool SoldierHandleInteractiveObject(SOLDIERTYPE& s)
 {
 	GridNo     const gridno       = s.sPendingActionData2;

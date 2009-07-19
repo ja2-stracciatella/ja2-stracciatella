@@ -3024,7 +3024,7 @@ BOOLEAN HandleUIMovementCursor(SOLDIERTYPE* const pSoldier, MouseMoveState const
 
 static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, MoveUITarget const uiFlags)
 {
-	INT16							sAPCost, sBPCost;
+	INT16							sAPCost;
 	INT16							sActionGridNo;
 	STRUCTURE					*pStructure;
 	INT16							sAdjustedGridNo;
@@ -3061,7 +3061,7 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, Mov
 				{
 					sActionGridNo = sIntTileGridNo;
 				}
-				CalcInteractiveObjectAPs(&sAPCost, &sBPCost);
+				sAPCost  = AP_OPEN_DOOR;
 				sAPCost += UIPlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, fPlot, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 
 				if ( sActionGridNo != pSoldier->sGridNo )
