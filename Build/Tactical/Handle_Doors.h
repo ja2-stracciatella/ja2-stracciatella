@@ -17,7 +17,7 @@ enum HandleDoor
 
 BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *pStructure );
 
-void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection, BOOLEAN fDoor );
+void InteractWithOpenableStruct(SOLDIERTYPE&, STRUCTURE&, UINT8 direction, bool is_door);
 
 void InteractWithClosedDoor(SOLDIERTYPE*, HandleDoor);
 

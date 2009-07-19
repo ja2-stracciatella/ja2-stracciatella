@@ -187,96 +187,72 @@ static bool DoTrapCheckOnStartingMenu(SOLDIERTYPE& s, DOOR& d)
 }
 
 
-void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection, BOOLEAN fDoor )
+void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 const direction, bool const is_door)
 {
-	STRUCTURE *			pBaseStructure;
-	DOOR_STATUS *		pDoorStatus;
-  BOOLEAN         fTrapsFound = FALSE;
+	STRUCTURE& base = *FindBaseStructure(&structure);
 
-	pBaseStructure = FindBaseStructure( pStructure );
-
-	if ( fDoor )
+	if (is_door)
 	{
 		// get door status, if busy then just return!
-		pDoorStatus = GetDoorStatus( pBaseStructure->sGridNo );
-		if ( pDoorStatus && (pDoorStatus->ubFlags & DOOR_BUSY) )
+		DOOR_STATUS const* const ds = GetDoorStatus(base.sGridNo);
+		if (ds && ds->ubFlags & DOOR_BUSY)
 		{
-			// Send this guy into stationary stance....
-			EVENT_StopMerc(pSoldier);
+			// Send this guy into stationary stance
+			EVENT_StopMerc(&s);
 
-			if ( pSoldier->bTeam == gbPlayerNum )
+			if (s.bTeam == gbPlayerNum)
 			{
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ DOOR_IS_BUSY ] );
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[DOOR_IS_BUSY]);
 			}
-      else
-      {
-    		DebugMsg( TOPIC_JA2, DBG_LEVEL_3, String("Trying to open door and door is busy: %d", pSoldier->ubID ) );
-      }
+			else
+			{
+				DebugMsg(TOPIC_JA2, DBG_LEVEL_3, String("Trying to open door and door is busy: %d", s.ubID));
+			}
 			return;
 		}
 	}
 
-	EVENT_SetSoldierDesiredDirectionForward(pSoldier, ubDirection);
+	EVENT_SetSoldierDesiredDirectionForward(&s, direction);
 
 	// Is the door opened?
-	if ( pStructure->fFlags & STRUCTURE_OPEN )
+	if (structure.fFlags & STRUCTURE_OPEN)
 	{
-		if (IsOnOurTeam(*pSoldier) && !(pStructure->fFlags & STRUCTURE_SWITCH))
+		if (IsOnOurTeam(s) && !(structure.fFlags & STRUCTURE_SWITCH))
 		{
-			// Bring up menu to decide what to do....
-			SoldierGotoStationaryStance( pSoldier );
-
-			DOOR* const pDoor = FindDoorInfoAtGridNo(pBaseStructure->sGridNo);
-			if ( pDoor )
-			{
-				if (DoTrapCheckOnStartingMenu(*pSoldier, *pDoor))
-        {
-          fTrapsFound = TRUE;
-        }
-			}
-
-			// Pull Up Menu
-      if ( !fTrapsFound )
-      {
-				InitDoorOpenMenu(pSoldier, TRUE);
-      }
+			// Bring up menu to decide what to do
+			SoldierGotoStationaryStance(&s);
+			DOOR* const d = FindDoorInfoAtGridNo(base.sGridNo);
+			if (!d || !DoTrapCheckOnStartingMenu(s, *d)) InitDoorOpenMenu(&s, TRUE);
 		}
 		else
-		{
-			// Easily close door....
-			ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, CLOSE_DOOR), 0, FALSE);
+		{ // Easily close door
+			ChangeSoldierState(&s, GetAnimStateForInteraction(s, is_door, CLOSE_DOOR), 0, FALSE);
 		}
 	}
 	else
 	{
-		if (IsOnOurTeam(*pSoldier))
+		if (IsOnOurTeam(s))
 		{
-			DOOR* const pDoor = FindDoorInfoAtGridNo(pBaseStructure->sGridNo);
-			if (pDoor != NULL && pDoor->fLocked) // Bring up the menu, only if it has a lock!
+			DOOR* const d = FindDoorInfoAtGridNo(base.sGridNo);
+			if (d && d->fLocked) // Bring up the menu, only if it has a lock
 			{
-				// Bring up menu to decide what to do....
-				SoldierGotoStationaryStance(pSoldier);
+				// Bring up menu to decide what to do
+				SoldierGotoStationaryStance(&s);
 
-				if (DoTrapCheckOnStartingMenu(*pSoldier, *pDoor))
+				if (!DoTrapCheckOnStartingMenu(s, *d))
 				{
-					fTrapsFound = TRUE;
-				}
-
-				// Pull Up Menu
-				if (!fTrapsFound)
-				{
-					InitDoorOpenMenu(pSoldier, FALSE);
+					InitDoorOpenMenu(&s, FALSE);
 				}
 				else
 				{
-					UnSetUIBusy(pSoldier);
+					UnSetUIBusy(&s);
 				}
 				return;
 			}
 		}
 
-		pSoldier->ubDoorHandleCode = HANDLE_DOOR_OPEN;
-		ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, OPEN_DOOR), 0, FALSE);
+		s.ubDoorHandleCode = HANDLE_DOOR_OPEN;
+		ChangeSoldierState(&s, GetAnimStateForInteraction(s, is_door, OPEN_DOOR), 0, FALSE);
 	}
 }
 
