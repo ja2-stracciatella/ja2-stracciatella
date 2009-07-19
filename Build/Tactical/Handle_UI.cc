@@ -3061,7 +3061,7 @@ static INT8 DrawUIMovementPath(SOLDIERTYPE* const pSoldier, UINT16 usMapPos, Mov
 				{
 					sActionGridNo = sIntTileGridNo;
 				}
-				CalcInteractiveObjectAPs(pStructure, &sAPCost, &sBPCost);
+				CalcInteractiveObjectAPs(&sAPCost, &sBPCost);
 				sAPCost += UIPlotPath(pSoldier, sActionGridNo, NO_COPYROUTE, fPlot, pSoldier->usUIMovementMode, pSoldier->bActionPoints);
 
 				if ( sActionGridNo != pSoldier->sGridNo )

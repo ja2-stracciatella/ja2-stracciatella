@@ -14,7 +14,7 @@ BOOLEAN StartInteractiveObjectFromMouse( SOLDIERTYPE *pSoldier, UINT8 ubDirectio
 UICursorID GetInteractiveTileCursor(UICursorID old_cursor, BOOLEAN fConfirm);
 bool SoldierHandleInteractiveObject(SOLDIERTYPE&);
 
-BOOLEAN CalcInteractiveObjectAPs(STRUCTURE const*, INT16* psAPCost, INT16* psBPCost);
+void CalcInteractiveObjectAPs(INT16* psAPCost, INT16* psBPCost);
 
 void HandleStructChangeFromGridNo(SOLDIERTYPE*, GridNo);
 

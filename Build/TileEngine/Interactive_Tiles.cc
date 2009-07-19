@@ -91,34 +91,10 @@ void StartInteractiveObject(GridNo const gridno, STRUCTURE const& structure, SOL
 }
 
 
-BOOLEAN CalcInteractiveObjectAPs(STRUCTURE const* const pStructure, INT16* const psAPCost, INT16* const psBPCost)
+void CalcInteractiveObjectAPs(INT16* const psAPCost, INT16* const psBPCost)
 {
-	if (pStructure == NULL)
-	{
-		return( FALSE );
-	}
-	if (pStructure->fFlags & STRUCTURE_ANYDOOR)
-	{
-		// For doors, if open, we can safely add APs for closing
-		// If closed, we do not know what to do yet...
-		//if ( pStructure->fFlags & STRUCTURE_OPEN )
-		//{
-			*psAPCost = AP_OPEN_DOOR;
-			*psBPCost = AP_OPEN_DOOR;
-		//}
-		//else
-		//{
-		//	*psAPCost = 0;
-		//	*psBPCost = 0;
-		//}
-	}
-	else
-	{
-		*psAPCost = AP_OPEN_DOOR;
-		*psBPCost = AP_OPEN_DOOR;
-	}
-
-	return( TRUE );
+	*psAPCost = AP_OPEN_DOOR;
+	*psBPCost = AP_OPEN_DOOR;
 }
 
 

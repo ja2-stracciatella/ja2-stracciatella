@@ -7,7 +7,6 @@ BeginMapUIMessage(): move from tactical to strategic
 BlitMineText(): code duplication
 Blt8BPPDataTo16BPPBufferHalf(), Blt8BPPDataTo16BPPBufferHalfRect(): almost identical
 BtnHelpScreenDontShowHelpAgainCallback(): empty
-CalcInteractiveObjectAPs(): first parameter unnecessary
 CalculateOverrideStatus(): szFilename yuck
 CaptureTimerCallback(): complicated
 CenterX(): use %
