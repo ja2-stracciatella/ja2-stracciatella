@@ -358,8 +358,8 @@ BOOLEAN		gfUINewStateForIntTile						= FALSE;
 BOOLEAN		gfUIForceReExamineCursorData		= FALSE;
 
 
-SOLDIERTYPE* gUIFullTarget = NULL;
-UINT32       guiUIFullTargetFlags;
+SOLDIERTYPE*     gUIFullTarget;
+SoldierFindFlags guiUIFullTargetFlags;
 
 
 static void ClearEvent(UI_EVENT* pUIEvent);
@@ -493,7 +493,7 @@ ScreenID HandleTacticalUI(void)
 			// Look for soldier full
 			SOLDIERTYPE* const s = FindSoldier(usMapPos, FINDSOLDIERSAMELEVEL(gsInterfaceLevel));
 			gUIFullTarget        = s;
-			guiUIFullTargetFlags = s ? GetSoldierFindFlags(*s) : 0;
+			guiUIFullTargetFlags = s ? GetSoldierFindFlags(*s) : NO_MERC;
 		}
 
 		// Check if current event has changed and clear event if so, to prepare it for execution
@@ -2531,12 +2531,10 @@ void ToggleLookCursorMode()
 
 BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode )
 {
-	UINT32						uiMercFlags;
-
 	const GridNo usMapPos = GetMouseMapPos();
 	if (usMapPos == NOWHERE) return GAME_SCREEN;
 
-	uiMercFlags    = guiUIFullTargetFlags;
+	SoldierFindFlags const uiMercFlags = guiUIFullTargetFlags;
 
 	// CHECK IF WE'RE ON A GUY ( EITHER SELECTED, OURS, OR THEIRS
 	SOLDIERTYPE* const pSoldier = gUIFullTarget;

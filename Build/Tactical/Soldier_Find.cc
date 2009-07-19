@@ -86,9 +86,9 @@ bool IsOwnedMerc(SOLDIERTYPE const& s)
 }
 
 
-UINT32 GetSoldierFindFlags(SOLDIERTYPE const& s)
+SoldierFindFlags GetSoldierFindFlags(SOLDIERTYPE const& s)
 {
-	UINT32 flags = 0;
+	SoldierFindFlags flags = NO_MERC;
 
 	if (&s == GetSelectedMan()) flags |= SELECTED_MERC;
 	if (IsOnOurTeam(&s))
@@ -386,7 +386,7 @@ BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 		else
 		{
 			gUIFullTarget        = NULL;
-			guiUIFullTargetFlags = 0;
+			guiUIFullTargetFlags = NO_MERC;
 		}
 	}
 

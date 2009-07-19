@@ -6,6 +6,7 @@
 #include "JA2Types.h"
 #include "MouseSystem.h"
 #include "ScreenIDs.h"
+#include "Soldier_Find.h"
 
 
 #define		UIEVENT_SINGLEEVENT					0x00000002
@@ -205,8 +206,8 @@ extern BOOLEAN gfUIHandlePhysicsTrajectory;
 
 
 // GLOBALS FOR FAST LOOKUP FOR FINDING MERCS FROM THE MOUSE
-extern SOLDIERTYPE* gUIFullTarget;
-extern UINT32       guiUIFullTargetFlags;
+extern SOLDIERTYPE*     gUIFullTarget;
+extern SoldierFindFlags guiUIFullTargetFlags;
 
 extern BOOLEAN gfUIConfirmExitArrows;
 extern INT16   gsJumpOverGridNo;
