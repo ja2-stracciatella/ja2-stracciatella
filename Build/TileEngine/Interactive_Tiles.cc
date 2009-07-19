@@ -74,45 +74,20 @@ static UINT16 gusINTOldMousePosX    = 0;
 static UINT16 gusINTOldMousePosY    = 0;
 
 
-BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE *pSoldier, UINT8 ubDirection )
+void StartInteractiveObject(GridNo const gridno, STRUCTURE const& structure, SOLDIERTYPE& s, UINT8 const direction)
 {
-	STRUCTURE * pStructure;
+	// ATE: Patch fix: Don't allow if alreay in animation
+	if (s.usAnimState == OPEN_STRUCT)               return;
+	if (s.usAnimState == OPEN_STRUCT_CROUCHED)      return;
+	if (s.usAnimState == BEGIN_OPENSTRUCT)          return;
+	if (s.usAnimState == BEGIN_OPENSTRUCT_CROUCHED) return;
 
-  // ATE: Patch fix: Don't allow if alreay in animation
-  if ( pSoldier->usAnimState == OPEN_STRUCT || pSoldier->usAnimState == OPEN_STRUCT_CROUCHED ||
-       pSoldier->usAnimState == BEGIN_OPENSTRUCT || pSoldier->usAnimState == BEGIN_OPENSTRUCT_CROUCHED )
-  {
-    return( FALSE );
-  }
-
-	pStructure = FindStructureByID( sGridNo, usStructureID );
-	if (pStructure == NULL)
-	{
-		return( FALSE );
-	}
-	if (pStructure->fFlags & STRUCTURE_ANYDOOR)
-	{
-		// Add soldier event for opening door....
-		pSoldier->ubPendingAction = MERC_OPENDOOR;
-		pSoldier->uiPendingActionData1 = usStructureID;
-		pSoldier->sPendingActionData2  = sGridNo;
-		pSoldier->bPendingActionData3  = ubDirection;
-		pSoldier->ubPendingActionAnimCount = 0;
-
-
-	}
-	else
-	{
-		// Add soldier event for opening door....
-		pSoldier->ubPendingAction = MERC_OPENSTRUCT;
-		pSoldier->uiPendingActionData1 = usStructureID;
-		pSoldier->sPendingActionData2  = sGridNo;
-		pSoldier->bPendingActionData3  = ubDirection;
-		pSoldier->ubPendingActionAnimCount = 0;
-
-	}
-
-	return( TRUE );
+	// Add soldier event for opening door/struct
+	s.ubPendingAction          = structure.fFlags & STRUCTURE_ANYDOOR ? MERC_OPENDOOR : MERC_OPENSTRUCT;
+	s.uiPendingActionData1     = structure.usStructureID;
+	s.sPendingActionData2      = gridno;
+	s.bPendingActionData3      = direction;
+	s.ubPendingActionAnimCount = 0;
 }
 
 

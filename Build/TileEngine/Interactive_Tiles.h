@@ -9,7 +9,7 @@
 #define INTTILE_DOOR_OPENSPEED	70
 
 
-BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE *pSoldier, UINT8 ubDirection );
+void StartInteractiveObject(GridNo, STRUCTURE const&, SOLDIERTYPE&, UINT8 direction);
 BOOLEAN StartInteractiveObjectFromMouse( SOLDIERTYPE *pSoldier, UINT8 ubDirection );
 UICursorID GetInteractiveTileCursor(UICursorID old_cursor, BOOLEAN fConfirm);
 bool SoldierHandleInteractiveObject(SOLDIERTYPE&);

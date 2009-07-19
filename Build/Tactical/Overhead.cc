@@ -1590,7 +1590,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		}
 
 		// OK, open!
-		StartInteractiveObject(sDoorGridNo, pStructure->usStructureID, pSoldier, bDirection);
+		StartInteractiveObject(sDoorGridNo, *pStructure, *pSoldier, bDirection);
 		InteractWithOpenableStruct(*pSoldier, *pStructure, bDirection);
 
 		// One needs to walk after....

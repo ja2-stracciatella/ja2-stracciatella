@@ -1661,7 +1661,7 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 					// check if we are at this location
 					if (sel->sGridNo == sDestGridNo)
 					{
-						StartInteractiveObject(sIntTileGridNo, pStructure->usStructureID, sel, ubDirection);
+						StartInteractiveObject(sIntTileGridNo, *pStructure, *sel, ubDirection);
 						InteractWithOpenableStruct(*sel, *pStructure, ubDirection);
 						return GAME_SCREEN;
 					}
@@ -1707,7 +1707,7 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 				// HANDLE ANY INTERACTIVE OBJECTS HERE!
 				if (pIntTile != NULL)
 				{
-					StartInteractiveObject(sIntTileGridNo, pStructure->usStructureID, sel, ubDirection);
+					StartInteractiveObject(sIntTileGridNo, *pStructure, *sel, ubDirection);
 				}
 			}
 		}

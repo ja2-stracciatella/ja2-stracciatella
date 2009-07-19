@@ -2015,7 +2015,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 					EndAIGuysTurn( pSoldier );
 				}
 
-				StartInteractiveObject( sDoorGridNo, pStructure->usStructureID, pSoldier, bDirection );
+				StartInteractiveObject(sDoorGridNo, *pStructure, *pSoldier, bDirection);
 				InteractWithOpenableStruct(*pSoldier, *pStructure, bDirection);
 			}
 			break;

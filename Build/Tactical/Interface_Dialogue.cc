@@ -4588,7 +4588,7 @@ static BOOLEAN NPCOpenThing(SOLDIERTYPE* pSoldier, BOOLEAN fDoor)
 	// Set dest gridno
 	sGridNo = sActionGridNo;
 
-	StartInteractiveObject( sStructGridNo, pStructure->usStructureID, pSoldier, ubDirection );
+	StartInteractiveObject(sStructGridNo, *pStructure, *pSoldier, ubDirection);
 
 	// check if we are at this location
 	if ( pSoldier->sGridNo == sGridNo )
