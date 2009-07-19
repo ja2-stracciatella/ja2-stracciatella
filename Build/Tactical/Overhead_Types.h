@@ -152,11 +152,15 @@ enum
 #define ALLOW_INTERRUPTS        1
 
 
-#define SIGHT_LOOK      0x1
-//#define SIGHT_SEND      0x2   // no longer needed using LOCAL OPPLISTs
-#define SIGHT_RADIO     0x4
-#define SIGHT_INTERRUPT 0x8
-#define SIGHT_ALL       0xF
+enum SightFlags
+{
+	SIGHT_LOOK      = 0x1,
+	//SIGHT_SEND      = 0x2, // No longer needed using LOCAL OPPLISTs
+	SIGHT_RADIO     = 0x4,
+	SIGHT_INTERRUPT = 0x8,
+	SIGHT_ALL       = 0xF
+};
+ENUM_BITSET(SightFlags)
 
 
 // CHANGE THIS VALUE TO AFFECT TOTAL SIGHT RANGE

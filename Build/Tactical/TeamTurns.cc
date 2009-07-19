@@ -58,7 +58,7 @@ static inline SOLDIERTYPE* LatestInterruptGuy(void)
 BOOLEAN gfHiddenInterrupt = FALSE;
 static SOLDIERTYPE* gLastInterruptedGuy = NULL;
 
-extern UINT8 gubSightFlags;
+extern SightFlags gubSightFlags;
 
 
 #define MIN_APS_TO_INTERRUPT 4

@@ -208,7 +208,7 @@ INT8 gbLightSighting[1][16] =
 };
 */
 
-UINT8			gubSightFlags = 0;
+SightFlags gubSightFlags;
 
 #define DECAY_OPPLIST_VALUE( value )\
 {\
@@ -620,7 +620,7 @@ static void OurTeamRadiosRandomlyAbout(SOLDIERTYPE* about);
 static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent);
 
 
-void HandleSight(SOLDIERTYPE& s, UINT8 const sight_flags)
+void HandleSight(SOLDIERTYPE& s, SightFlags const sight_flags)
 {
 	if (!s.bActive)                     return;
 	if (!s.bInSector)                   return;
