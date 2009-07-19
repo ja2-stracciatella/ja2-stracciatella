@@ -86,54 +86,42 @@ bool IsOwnedMerc(SOLDIERTYPE const& s)
 }
 
 
-UINT32 GetSoldierFindFlags(const SOLDIERTYPE* const s)
+UINT32 GetSoldierFindFlags(SOLDIERTYPE const& s)
 {
-	UINT32 MercFlags = 0;
+	UINT32 flags = 0;
 
- // FInd out and set flags
-	if (s == GetSelectedMan()) MercFlags |= SELECTED_MERC;
-	if (IsOnOurTeam(s))
+	if (&s == GetSelectedMan()) flags |= SELECTED_MERC;
+	if (IsOnOurTeam(&s))
 	{
-		if (s->uiStatusFlags & SOLDIER_VEHICLE)
-		{
-			if (GetNumberInVehicle(GetVehicle(s->bVehicleID)) != 0)
-			{
-				goto own_merc;
-			}
+		if (!(s.uiStatusFlags & SOLDIER_VEHICLE) ||
+				GetNumberInVehicle(GetVehicle(s.bVehicleID)) != 0)
+		{ // It's our own merc
+			flags |= OWNED_MERC;
+		}
+	}
+	else
+	{ // Check the side, etc
+		if (!s.bNeutral && s.bSide != gbPlayerNum)
+		{ // It's an enemy merc
+			flags |= ENEMY_MERC;
 		}
 		else
-		{
-own_merc:
-			// It's our own merc
-			MercFlags |= OWNED_MERC;
+		{ // It's not an enemy merc
+			flags |= NEUTRAL_MERC;
 		}
- }
- else
- {
-	 // Check the side, etc
-		if (!s->bNeutral && s->bSide != gbPlayerNum)
-	 {
-			// It's an enemy merc
-		 MercFlags  |= ENEMY_MERC;
-	 }
-	 else
-	 {
-			// It's not an enemy merc
-		 MercFlags  |= NEUTRAL_MERC;
-	 }
- }
-
-	// Check for a guy who does not have an iterrupt ( when applicable! )
-	if (!OK_INTERRUPT_MERC(s)) MercFlags |= NOINTERRUPT_MERC;
-	if (s->bLife < OKLIFE)     MercFlags |= UNCONSCIOUS_MERC;
-	if (s->bLife == 0)         MercFlags |= DEAD_MERC;
-
-	if (s->bVisible != -1 || gTacticalStatus.uiFlags & SHOW_ALL_MERCS)
-	{
-		MercFlags  |=	VISIBLE_MERC;
 	}
 
-	return( MercFlags );
+	// Check for a guy who does not have an iterrupt (when applicable!)
+	if (!OK_INTERRUPT_MERC(&s)) flags |= NOINTERRUPT_MERC;
+	if (s.bLife < OKLIFE)       flags |= UNCONSCIOUS_MERC;
+	if (s.bLife == 0)           flags |= DEAD_MERC;
+
+	if (s.bVisible != -1 || gTacticalStatus.uiFlags & SHOW_ALL_MERCS)
+	{
+		flags |= VISIBLE_MERC;
+	}
+
+	return flags;
 }
 
 
@@ -392,7 +380,7 @@ BOOLEAN CycleSoldierFindStack( UINT16 usMapPos )
 		if ( !gSoldierStack.fUseGridNo )
 		{
 			gUIFullTarget        = gSoldierStack.mercs[gSoldierStack.bCur];
-			guiUIFullTargetFlags = GetSoldierFindFlags(gUIFullTarget);
+			guiUIFullTargetFlags = GetSoldierFindFlags(*gUIFullTarget);
 			gUITargetSoldier     = gUIFullTarget;
 		}
 		else

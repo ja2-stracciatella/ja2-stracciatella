@@ -493,7 +493,7 @@ ScreenID HandleTacticalUI(void)
 			// Look for soldier full
 			SOLDIERTYPE* const s = FindSoldier(usMapPos, FINDSOLDIERSAMELEVEL(gsInterfaceLevel));
 			gUIFullTarget        = s;
-			guiUIFullTargetFlags = (s != NULL ? GetSoldierFindFlags(s) : 0);
+			guiUIFullTargetFlags = s ? GetSoldierFindFlags(*s) : 0;
 		}
 
 		// Check if current event has changed and clear event if so, to prepare it for execution

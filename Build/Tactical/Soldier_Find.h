@@ -26,7 +26,7 @@ SOLDIERTYPE* FindSoldierFromMouse(void);
 SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags);
 
 bool IsOwnedMerc(SOLDIERTYPE const&);
-UINT32 GetSoldierFindFlags(const SOLDIERTYPE* s);
+UINT32 GetSoldierFindFlags(SOLDIERTYPE const&);
 
 BOOLEAN CycleSoldierFindStack( UINT16 usMapPos );
 
