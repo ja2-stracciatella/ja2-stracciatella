@@ -717,7 +717,7 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 
 			// if it's our local player's merc
 			// revealing roofs and looking for items handled here, too
-			if (IsOnOurTeam(pSoldier)) RevealRoofsAndItems(pSoldier, TRUE);
+			if (IsOnOurTeam(*pSoldier)) RevealRoofsAndItems(pSoldier, TRUE);
 		}
 		// unless in easy mode allow alerted enemies to radio
 		else if ( gGameOptions.ubDifficultyLevel >= DIF_LEVEL_MEDIUM )
@@ -734,7 +734,7 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 // Temporary for opplist synching - disable random order radioing
 #ifndef RECORDOPPLIST
 		// if this soldier's NOT on our team (MAY be under our control, though!)
-		if (!IsOnOurTeam(pSoldier))
+		if (!IsOnOurTeam(*pSoldier))
 			OurTeamRadiosRandomlyAbout(pSoldier);	// radio about him only
 #endif
 
@@ -2037,9 +2037,9 @@ else
  // if looker is on local team, and the enemy was invisible or "maybe"
  // visible just prior to this
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-	if ((IsOnOurTeam(pSoldier) || pSoldier->bTeam == MILITIA_TEAM) && pOpponent->bVisible <= 0)
+	if ((IsOnOurTeam(*pSoldier) || pSoldier->bTeam == MILITIA_TEAM) && pOpponent->bVisible <= 0)
 #else
-	if (IsOnOurTeam(pSoldier) && pOpponent->bVisible <= 0)
+	if (IsOnOurTeam(*pSoldier) && pOpponent->bVisible <= 0)
 #endif
   {
    // if opponent was truly invisible, not just turned off temporarily (FALSE)
@@ -2111,7 +2111,7 @@ else
 		 }
     }
   }
-	else if (!IsOnOurTeam(pSoldier))
+	else if (!IsOnOurTeam(*pSoldier))
 	{
 	 // ATE: Check stance, change to threatending
 	 ReevaluateEnemyStance( pSoldier, pSoldier->usAnimState );
@@ -2480,7 +2480,7 @@ void BetweenTurnsVisibilityAdjustments()
 		SOLDIERTYPE& s = *i;
 		if (!s.bInSector)            continue;
 		if (s.bLife == 0)            continue;
-		if (IsOnOurTeam(&s))         continue;
+		if (IsOnOurTeam(s))          continue;
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
 		if (s.bTeam == MILITIA_TEAM) continue;
 #endif
@@ -2789,7 +2789,7 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 
 
    // if it's our merc, and he currently sees this opponent
-		if (IsOnOurTeam(pSoldier)               &&
+		if (IsOnOurTeam(*pSoldier)              &&
 				*pPersOL         == SEEN_CURRENTLY  &&
 				pOpponent->bSide != pSoldier->bSide &&
 				!pOpponent->bNeutral)
@@ -2916,7 +2916,7 @@ void RadioSightings(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* const about, UINT8
 
 
  // if this soldier is on the local team
-	if (IsOnOurTeam(pSoldier))
+	if (IsOnOurTeam(*pSoldier))
   {
    // don't trigger sighting quotes or stop merc's movement if everyone visible
    //if (!(gTacticalStatus.uiFlags & SHOW_ALL_MERCS))

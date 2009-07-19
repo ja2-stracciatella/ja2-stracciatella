@@ -597,7 +597,7 @@ try
 	}
 
 	// ANYTHING AFTER HERE CAN FAIL
-	if (IsOnOurTeam(&s))
+	if (IsOnOurTeam(s))
 	{
 		s.pKeyRing = MALLOCNZ(KEY_ON_RING, NUM_KEYS);
 		for (UINT32 i = 0; i < NUM_KEYS; ++i)
@@ -5823,7 +5823,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 		}
 	}
 
-	if (IsOnOurTeam(pSoldier))
+	if (IsOnOurTeam(*pSoldier))
 	{
 		// EXPERIENCE GAIN: Took some damage
 	  StatChange(*pSoldier, EXPERAMT, 5 * ubCombinedLoss, FROM_FAILURE);
@@ -7262,7 +7262,7 @@ UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKi
 
  DeductPoints( pSoldier, (INT16)uiUsedAPs, (INT16)( ( uiUsedAPs * BP_PER_AP_LT_EFFORT) ) );
 
-	if (IsOnOurTeam(pSoldier))
+	if (IsOnOurTeam(*pSoldier))
  {
 	 // MEDICAL GAIN   (actual / 2):  Helped someone by giving first aid
 		StatChange(*pSoldier, MEDICALAMT, uiActual / 2, FROM_SUCCESS);

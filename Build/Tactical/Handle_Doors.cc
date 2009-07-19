@@ -221,7 +221,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 	// Is the door opened?
 	if ( pStructure->fFlags & STRUCTURE_OPEN )
 	{
-		if (IsOnOurTeam(pSoldier) && !(pStructure->fFlags & STRUCTURE_SWITCH))
+		if (IsOnOurTeam(*pSoldier) && !(pStructure->fFlags & STRUCTURE_SWITCH))
 		{
 			// Bring up menu to decide what to do....
 			SoldierGotoStationaryStance( pSoldier );
@@ -249,7 +249,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 	}
 	else
 	{
-		if (IsOnOurTeam(pSoldier))
+		if (IsOnOurTeam(*pSoldier))
 		{
 			DOOR* const pDoor = FindDoorInfoAtGridNo(pBaseStructure->sGridNo);
 			if (pDoor != NULL && pDoor->fLocked) // Bring up the menu, only if it has a lock!
@@ -358,7 +358,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 	}
 	else
 	{
-		if (IsOnOurTeam(pSoldier))
+		if (IsOnOurTeam(*pSoldier))
 		{
 			// Find locked door here....
 			pDoor = FindDoorInfoAtGridNo( sGridNo );

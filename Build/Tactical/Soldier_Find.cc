@@ -78,7 +78,7 @@ SOLDIERTYPE* FindSoldierFromMouse(void)
 bool IsOwnedMerc(SOLDIERTYPE const& s)
 {
 	return
-		IsOnOurTeam(&s) &&
+		IsOnOurTeam(s) &&
 		(
 			!(s.uiStatusFlags & SOLDIER_VEHICLE) ||
 			GetNumberInVehicle(GetVehicle(s.bVehicleID)) != 0
@@ -91,7 +91,7 @@ SoldierFindFlags GetSoldierFindFlags(SOLDIERTYPE const& s)
 	SoldierFindFlags flags = NO_MERC;
 
 	if (&s == GetSelectedMan()) flags |= SELECTED_MERC;
-	if (IsOnOurTeam(&s))
+	if (IsOnOurTeam(s))
 	{
 		if (!(s.uiStatusFlags & SOLDIER_VEHICLE) ||
 				GetNumberInVehicle(GetVehicle(s.bVehicleID)) != 0)
@@ -199,7 +199,7 @@ SOLDIERTYPE* FindSoldier(INT16 sGridNo, UINT32 uiFlags)
 
 			// ATE: If we are an enemy....
 			if (!gGameSettings.fOptions[TOPTION_SMART_CURSOR] &&
-					IsOnOurTeam(pSoldier))
+					IsOnOurTeam(*pSoldier))
 			{
 				// ATE: NOT if we are in action or comfirm action mode
 				if ( gCurrentUIMode != ACTION_MODE && gCurrentUIMode != CONFIRM_ACTION_MODE || gUIActionModeChangeDueToMouseOver )

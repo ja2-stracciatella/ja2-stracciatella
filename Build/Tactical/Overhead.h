@@ -121,9 +121,9 @@ struct TacticalStatusType
 
 extern UINT8 gbPlayerNum;
 
-static inline BOOLEAN IsOnOurTeam(const SOLDIERTYPE* const s)
+static inline bool IsOnOurTeam(SOLDIERTYPE const& s)
 {
-	return s->bTeam == gbPlayerNum;
+	return s.bTeam == gbPlayerNum;
 }
 
 extern SOLDIERTYPE* g_selected_man;
