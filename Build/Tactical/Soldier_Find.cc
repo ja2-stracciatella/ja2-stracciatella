@@ -75,14 +75,14 @@ SOLDIERTYPE* FindSoldierFromMouse(void)
 }
 
 
-BOOLEAN IsOwnedMerc(const SOLDIERTYPE* const s)
+bool IsOwnedMerc(SOLDIERTYPE const& s)
 {
-	if (!IsOnOurTeam(s)) return FALSE;
-	if (s->uiStatusFlags & SOLDIER_VEHICLE)
-	{
-		return GetNumberInVehicle(GetVehicle(s->bVehicleID)) != 0;
-	}
-	return TRUE;
+	return
+		IsOnOurTeam(&s) &&
+		(
+			!(s.uiStatusFlags & SOLDIER_VEHICLE) ||
+			GetNumberInVehicle(GetVehicle(s.bVehicleID)) != 0
+		);
 }
 
 

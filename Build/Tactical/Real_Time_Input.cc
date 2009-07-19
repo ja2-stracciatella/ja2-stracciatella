@@ -408,7 +408,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 														{
 															// First check if we clicked on a guy, if so, make selected if it's ours
 															const SOLDIERTYPE* const s = FindSoldierFromMouse();
-															if (s != NULL && IsOwnedMerc(s))
+															if (s && IsOwnedMerc(*s))
 															{
 																*puiNewEvent = I_SELECT_MERC;
 															}
@@ -571,7 +571,7 @@ static void QueryRTLeftButton(UIEventKind* const puiNewEvent)
 																			{
 																				// First check if we clicked on a guy, if so, make selected if it's ours
 																				const SOLDIERTYPE* const s = FindSoldierFromMouse();
-																				if (s != NULL && IsOwnedMerc(s))
+																				if (s && IsOwnedMerc(*s))
 																				{
 																					 // Select guy
 																						*puiNewEvent = I_SELECT_MERC;
