@@ -2472,29 +2472,22 @@ void InitSoldierOppList(SOLDIERTYPE *pSoldier)
 }
 
 
-void BetweenTurnsVisibilityAdjustments(void)
+void BetweenTurnsVisibilityAdjustments()
 {
-  // make all soldiers on other teams that are no longer seen not visible
-	FOR_ALL_SOLDIERS(pSoldier)
+	// Make all soldiers on other teams, that are no longer seen, not visible
+	FOR_ALL_SOLDIERS(i)
 	{
-		if (pSoldier->bInSector && pSoldier->bLife)
-		{
+		SOLDIERTYPE& s = *i;
+		if (!s.bInSector)            continue;
+		if (s.bLife == 0)            continue;
+		if (IsOnOurTeam(&s))         continue;
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-			if (!IsOnOurTeam(pSoldier) && pSoldier->bTeam != MILITIA_TEAM)
-#else
-			if (!IsOnOurTeam(pSoldier))
+		if (s.bTeam == MILITIA_TEAM) continue;
 #endif
-			{
-				// check if anyone on our team currently sees him (exclude NOBODY)
-				if (TeamNoLongerSeesMan(gbPlayerNum, pSoldier, NULL, 0))
-				{
-					// then our team has lost sight of him
-					pSoldier->bVisible = -1;		// make him fully invisible
-
-					// Allow fade to adjust anim speed
-				}
-			}
-		}
+		// Check if anyone on our team currently sees him (exclude NOBODY)
+		if (!TeamNoLongerSeesMan(gbPlayerNum, &s, 0, 0)) continue;
+		// then our team has lost sight of him
+		s.bVisible = -1; // Make him fully invisible
 	}
 }
 
