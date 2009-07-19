@@ -605,7 +605,7 @@ BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 	EVENT_SetSoldierPosition(s, sGridNo, SSP_NONE);
 
 	// Update visiblity.....
-	HandleSight(s, SIGHT_LOOK | SIGHT_RADIO);
+	HandleSight(*s, SIGHT_LOOK | SIGHT_RADIO);
 
 	AddCharacterToUniqueSquad(s);
 

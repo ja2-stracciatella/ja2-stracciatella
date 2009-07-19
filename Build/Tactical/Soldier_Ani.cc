@@ -273,7 +273,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					}
 
 					// ATE: Handle sight...
-					HandleSight( pSoldier,SIGHT_LOOK | SIGHT_RADIO | SIGHT_INTERRUPT );
+					HandleSight(*pSoldier, SIGHT_LOOK | SIGHT_RADIO | SIGHT_INTERRUPT);
 					break;
 
 				case 409:
@@ -1176,7 +1176,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
           pSoldier->usUIMovementMode = WALKING;
 
 					// ATE: Handle sight...
-					HandleSight( pSoldier,SIGHT_LOOK | SIGHT_RADIO | SIGHT_INTERRUPT );
+					HandleSight(*pSoldier, SIGHT_LOOK | SIGHT_RADIO | SIGHT_INTERRUPT);
 					break;
 
 				case 476:
@@ -1607,9 +1607,6 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 							if (SoldierHandleInteractiveObject(*pSoldier))
               {
-							  // HANDLE SIGHT!
-							  //HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO | SIGHT_INTERRUPT );
-
 							  InitOpplistForDoorOpening();
 
 								MakeNoise(pSoldier, pSoldier->sGridNo, pSoldier->bLevel, pSoldier->ubDoorOpeningNoise, NOISE_CREAKING);
@@ -1808,11 +1805,11 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						{
 							if ( pSoldier->usPendingAnimation == NO_PENDING_ANIMATION && gTacticalStatus.ubAttackBusyCount == 0 && pSoldier->fTurningFromPronePosition != 3 && pSoldier->fTurningFromPronePosition != 1 )
 							{
-								HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO | SIGHT_INTERRUPT );
+								HandleSight(*pSoldier, SIGHT_LOOK | SIGHT_RADIO | SIGHT_INTERRUPT);
 							}
 							else
 							{
-								HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO );
+								HandleSight(*pSoldier, SIGHT_LOOK | SIGHT_RADIO );
 							}
 
               // Keep ui busy if we are now in a hidden interrupt
@@ -3349,7 +3346,7 @@ void HandleCheckForDeathCommonCode(SOLDIERTYPE* const pSoldier)
 	pSoldier->bCollapsed = TRUE;
 
   // CC has requested - handle sight here...
-	HandleSight( pSoldier, SIGHT_LOOK );
+	HandleSight(*pSoldier, SIGHT_LOOK);
 
 	// ATE: If it is our turn, make them try to getup...
 	if ( gTacticalStatus.ubCurrentTeam == pSoldier->bTeam )

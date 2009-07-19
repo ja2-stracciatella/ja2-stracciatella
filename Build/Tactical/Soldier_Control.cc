@@ -578,7 +578,7 @@ try
 	{
 		// Set initial values for opplist!
 		InitSoldierOppList(&s);
-		HandleSight(&s, SIGHT_LOOK);
+		HandleSight(s, SIGHT_LOOK);
 
 		// Set some quote flags
 		s.fDyingComment = s.bLife < OKLIFE;
@@ -4074,7 +4074,7 @@ void EVENT_BeginMercTurn(SOLDIERTYPE* const pSoldier)
 			if (pSoldier->bBlindedCounter == 0)
 			{
 				// we can SEE!!!!!
-				HandleSight( pSoldier, SIGHT_LOOK );
+				HandleSight(*pSoldier, SIGHT_LOOK);
         // Dirty panel
         fInterfacePanelDirty = DIRTYLEVEL2;
 			}
@@ -4280,7 +4280,7 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 		if ( ( gAnimControl[ pSoldier->usAnimState ].uiFlags & ANIM_STATIONARY && pSoldier->usAnimState != CLIMBUPROOF && pSoldier->usAnimState != CLIMBDOWNROOF ) )
 		{
 		  // HANDLE SIGHT!
-			HandleSight( pSoldier,SIGHT_LOOK | SIGHT_RADIO );
+			HandleSight(*pSoldier, SIGHT_LOOK | SIGHT_RADIO);
 		}
 		// Turn off!
 		pSoldier->uiStatusFlags &= (~SOLDIER_LOOK_NEXT_TURNSOLDIER );
@@ -8020,7 +8020,7 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 	ReceivingSoldierCancelServices( pSoldier );
 
   // CC has requested - handle sight here...
-	HandleSight( pSoldier, SIGHT_LOOK );
+	HandleSight(*pSoldier, SIGHT_LOOK);
 
 	// Check height
 	switch( gAnimControl[ pSoldier->usAnimState ].ubEndHeight )

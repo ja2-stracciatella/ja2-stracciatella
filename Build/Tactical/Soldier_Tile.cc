@@ -711,7 +711,7 @@ BOOLEAN TeleportSoldier( SOLDIERTYPE *pSoldier, INT16 sGridNo, BOOLEAN fForce )
 		RevealRoofsAndItems(pSoldier, TRUE);
 
 		// Handle sight!
-		HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO);
+		HandleSight(*pSoldier, SIGHT_LOOK | SIGHT_RADIO);
 
 		// Cancel services...
 		GivingSoldierCancelServices( pSoldier );

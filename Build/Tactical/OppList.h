@@ -83,7 +83,7 @@ extern BOOLEAN		gfWatchedLocReset[ TOTAL_SOLDIERS ][ NUM_WATCHED_LOCS ];
 extern UINT8 gubBestToMakeSightingSize;
 
 INT16 AdjustMaxSightRangeForEnvEffects(INT8 bLightLevel, INT16 sDistVisible);
-void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags);
+void HandleSight(SOLDIERTYPE&, UINT8 ubSightFlags);
 void AllTeamsLookForAll(UINT8 ubAllowInterrupts);
 void GloballyDecideWhoSeesWho(void);
 UINT16 GetClosestMerc( UINT16 usSoldierIndex );

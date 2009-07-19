@@ -878,9 +878,6 @@ void ExecuteOverhead(void)
 									const float dYPos = pSoldier->sDestYPos;
 									EVENT_SetSoldierPositionXY(pSoldier, dXPos, dYPos, SSP_NONE);
 
-									// Handle New sight
-									//HandleSight(pSoldier,SIGHT_LOOK | SIGHT_RADIO );
-
 									// CHECK IF WE HAVE A PENDING ANIMATION
 									if (pSoldier->usPendingAnimation != NO_PENDING_ANIMATION)
 									{
@@ -2041,7 +2038,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 	if (!gTacticalStatus.fInterruptOccurred)
 	{
 		// Handle New sight
-		HandleSight(pSoldier, SIGHT_LOOK | SIGHT_RADIO | SIGHT_INTERRUPT);
+		HandleSight(*pSoldier, SIGHT_LOOK | SIGHT_RADIO | SIGHT_INTERRUPT);
 	}
 
 	// ATE: Check if we have sighted anyone, if so, don't do anything else...

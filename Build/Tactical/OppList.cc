@@ -606,7 +606,7 @@ void CheckHostileOrSayQuoteList( void )
 			if (speaker->bVisible != TRUE)
 			{
 				gbPublicOpplist[gbPlayerNum][speaker->ubID] = HEARD_THIS_TURN;
-				HandleSight(speaker, SIGHT_LOOK | SIGHT_RADIO);
+				HandleSight(*speaker, SIGHT_LOOK | SIGHT_RADIO);
 			}
 			// trigger hater
 			TriggerNPCWithIHateYouQuote(speaker->ubProfile);
@@ -620,24 +620,20 @@ static void OurTeamRadiosRandomlyAbout(SOLDIERTYPE* about);
 static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent);
 
 
-void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
+void HandleSight(SOLDIERTYPE& s, UINT8 const sight_flags)
 {
- INT8			bTempNewSituation;
+	if (!s.bActive)                     return;
+	if (!s.bInSector)                   return;
+	if (s.uiStatusFlags & SOLDIER_DEAD) return;
 
- if (!pSoldier->bActive || !pSoldier->bInSector || pSoldier->uiStatusFlags & SOLDIER_DEAD )
- {
-	// I DON'T THINK SO!
-	return;
- }
+	gubSightFlags = sight_flags;
 
- gubSightFlags = ubSightFlags;
-
-	if ( gubBestToMakeSightingSize != BEST_SIGHTING_ARRAY_SIZE_ALL_TEAMS_LOOK_FOR_ALL )
+	if (gubBestToMakeSightingSize != BEST_SIGHTING_ARRAY_SIZE_ALL_TEAMS_LOOK_FOR_ALL)
 	{
-		// if this is not being called as a result of all teams look for all, reset array size
-		if ( (gTacticalStatus.uiFlags & INCOMBAT) )
-		{
-			// NB the incombat size is 0
+		/* If this is not being called as a result of all teams look for all, reset
+		 * array size */
+		if (gTacticalStatus.uiFlags & INCOMBAT)
+		{ // NB the incombat size is 0
 			gubBestToMakeSightingSize = BEST_SIGHTING_ARRAY_SIZE_INCOMBAT;
 		}
 		else
@@ -648,139 +644,125 @@ void HandleSight(SOLDIERTYPE *pSoldier, UINT8 ubSightFlags)
 		InitSightArrays();
 	}
 
-	for (UINT32 uiLoop = 0; uiLoop < NUM_WATCHED_LOCS; ++uiLoop)
+	for (UINT32 i = 0; i != NUM_WATCHED_LOCS; ++i)
 	{
-		gfWatchedLocHasBeenIncremented[ pSoldier->ubID ][ uiLoop ] = FALSE;
+		gfWatchedLocHasBeenIncremented[s.ubID][i] = FALSE;
 	}
 
 	gfPlayerTeamSawCreatures = FALSE;
 
 	// store new situation value
-	bTempNewSituation = pSoldier->bNewSituation;
-	pSoldier->bNewSituation = FALSE;
+	INT8 const temp_new_situation = s.bNewSituation;
+	s.bNewSituation = FALSE;
 
-	// if we've been told to make this soldier look (& others look back at him)
-	if (ubSightFlags & SIGHT_LOOK)
+	// If we've been told to make this soldier look (& others look back at him)
+	if (sight_flags & SIGHT_LOOK)
 	{
-
-		// if this soldier's under our control and well enough to look
-		if (pSoldier->bLife >= OKLIFE )
-		{
-		 /*
-#ifdef RECORDOPPLIST
-     fprintf(OpplistFile,"ManLooksForOtherTeams (HandleSight/Look) for %d\n",pSoldier->guynum);
-#endif
-		*/
-			// he looks for all other soldiers not on his own team
-			ManLooksForOtherTeams(pSoldier);
+		// If this soldier's under our control and well enough to look
+		if (s.bLife >= OKLIFE)
+		{ // He looks for all other soldiers not on his own team
+			ManLooksForOtherTeams(&s);
 		}
 
+		// All soldiers under our control but not on ptr's team look for him
+		OtherTeamsLookForMan(&s);
+	}
 
-	 /*
-#ifdef RECORDOPPLIST
-   fprintf(OpplistFile,"OtherTeamsLookForMan (HandleSight/Look) for %d\n",ptr->guynum);
-#endif
-	 */
-
-		// all soldiers under our control but not on ptr's team look for him
-		OtherTeamsLookForMan(pSoldier);
-	} // end of SIGHT_LOOK
-
-	// if we've been told that interrupts are possible as a result of sighting
-	if ((gTacticalStatus.uiFlags & TURNBASED) && (gTacticalStatus.uiFlags & INCOMBAT) && (ubSightFlags & SIGHT_INTERRUPT))
+	// If we've been told that interrupts are possible as a result of sighting
+	if (gTacticalStatus.uiFlags & TURNBASED &&
+			gTacticalStatus.uiFlags & INCOMBAT  &&
+			sight_flags & SIGHT_INTERRUPT)
 	{
-		ResolveInterruptsVs( pSoldier, SIGHTINTERRUPT );
-  }
+		ResolveInterruptsVs(&s, SIGHTINTERRUPT);
+	}
 
-	if ( gubBestToMakeSightingSize == BEST_SIGHTING_ARRAY_SIZE_NONCOMBAT )
+	if (gubBestToMakeSightingSize == BEST_SIGHTING_ARRAY_SIZE_NONCOMBAT)
 	{
 		HandleBestSightingPositionInRealtime();
 	}
 
-	if ( pSoldier->bNewSituation && !(pSoldier->uiStatusFlags & SOLDIER_PC) )
+	if (s.bNewSituation && !(s.uiStatusFlags & SOLDIER_PC))
 	{
-		HaultSoldierFromSighting( pSoldier, TRUE );
+		HaultSoldierFromSighting(&s, TRUE);
 	}
-	pSoldier->bNewSituation = __max( pSoldier->bNewSituation, bTempNewSituation );
+	s.bNewSituation = __max(s.bNewSituation, temp_new_situation);
 
-	// if we've been told to radio the results
-	if (ubSightFlags & SIGHT_RADIO)
+	// If we've been told to radio the results
+	if (sight_flags & SIGHT_RADIO)
 	{
-		if (pSoldier->uiStatusFlags & SOLDIER_PC )
+		if (s.uiStatusFlags & SOLDIER_PC)
 		{
 			// update our team's public knowledge
-			RadioSightings(pSoldier,EVERYBODY, pSoldier->bTeam );
+			RadioSightings(&s, EVERYBODY, s.bTeam);
 
 #ifdef WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
-			RadioSightings(pSoldier,EVERYBODY, MILITIA_TEAM);
+			RadioSightings(&s, EVERYBODY, MILITIA_TEAM);
 #endif
 
-			// if it's our local player's merc
-			// revealing roofs and looking for items handled here, too
-			if (IsOnOurTeam(*pSoldier)) RevealRoofsAndItems(pSoldier, TRUE);
+			/* If it's our local player's merc, revealing roofs and looking for items
+			 * is handled here, too */
+			if (IsOnOurTeam(s)) RevealRoofsAndItems(&s, TRUE);
 		}
-		// unless in easy mode allow alerted enemies to radio
-		else if ( gGameOptions.ubDifficultyLevel >= DIF_LEVEL_MEDIUM )
-		{
-			// don't allow admins to radio
-			if ( pSoldier->bTeam == ENEMY_TEAM && gTacticalStatus.Team[ ENEMY_TEAM ].bAwareOfOpposition && pSoldier->ubSoldierClass != 	SOLDIER_CLASS_ADMINISTRATOR )
+		else if (gGameOptions.ubDifficultyLevel >= DIF_LEVEL_MEDIUM)
+		{ // Unless in easy mode allow alerted enemies to radio
+			// Don't allow admins to radio
+			if (s.bTeam == ENEMY_TEAM &&
+					gTacticalStatus.Team[ENEMY_TEAM].bAwareOfOpposition &&
+					s.ubSoldierClass != SOLDIER_CLASS_ADMINISTRATOR)
 			{
-				RadioSightings(pSoldier,EVERYBODY, pSoldier->bTeam );
+				RadioSightings(&s, EVERYBODY, s.bTeam);
 			}
 		}
 
-		pSoldier->bNewOppCnt = 0;
+		s.bNewOppCnt = 0;
 
-// Temporary for opplist synching - disable random order radioing
+		// Temporary for opplist synching - disable random order radioing
 #ifndef RECORDOPPLIST
-		// if this soldier's NOT on our team (MAY be under our control, though!)
-		if (!IsOnOurTeam(*pSoldier))
-			OurTeamRadiosRandomlyAbout(pSoldier);	// radio about him only
+		// If this soldier's NOT on our team (MAY be under our control, though!)
+		if (!IsOnOurTeam(s)) OurTeamRadiosRandomlyAbout(&s); // radio about him only
 #endif
 
-
-		// all non-humans under our control would now radio, if they were allowed
-		// to radio automatically (but they're not).  So just nuke new opp cnt
+		/* All non-humans under our control would now radio, if they were allowed to
+		 * radio automatically (but they're not). So just nuke new opp cnt. */
 		// NEW: under LOCALOPPLIST, humans on other teams now also radio in here
 		FOR_ALL_MERCS(i)
 		{
-			SOLDIERTYPE* const pThem = *i;
-			if (pThem->bLife >= OKLIFE)
+			SOLDIERTYPE& them = **i;
+			if (them.bLife < OKLIFE) continue;
+
+			// if this merc is on the same team as the target soldier
+			if (them.bTeam == s.bTeam) continue; // he doesn't look (he ALWAYS knows about him)
+
+			// Other human team's merc report sightings to their teams now
+			if (them.uiStatusFlags & SOLDIER_PC)
 			{
-				// if this merc is on the same team as the target soldier
-				if (pThem->bTeam == pSoldier->bTeam)
-					continue;        // he doesn't look (he ALWAYS knows about him)
-
-				// other human team's merc report sightings to their teams now
-				if (pThem->uiStatusFlags & SOLDIER_PC)
-				{
-// Temporary for opplist synching - disable random order radioing
+				// Temporary for opplist synching - disable random order radioing
 #ifdef RECORDOPPLIST
-					// do our own team, too, since we've bypassed random radioing
-					if (TRUE)
+				// Do our own team, too, since we've bypassed random radioing
 #else
-					// exclude our own team, we've already done them, randomly
-					if (pThem->bTeam != gbPlayerNum)
+				// Exclude our own team, we've already done them, randomly
+				if (them.bTeam != gbPlayerNum)
 #endif
-						RadioSightings(pThem, pSoldier, pThem->bTeam);
-				}
-				// unless in easy mode allow alerted enemies to radio
-				else if ( gGameOptions.ubDifficultyLevel >= DIF_LEVEL_MEDIUM )
-				{
-					// don't allow admins to radio
-					if ( pThem->bTeam == ENEMY_TEAM && gTacticalStatus.Team[ ENEMY_TEAM ].bAwareOfOpposition && pThem->ubSoldierClass != 	SOLDIER_CLASS_ADMINISTRATOR )
-					{
-						RadioSightings(pThem,EVERYBODY, pThem->bTeam );
-					}
-				}
-
-				pThem->bNewOppCnt = 0;
+					RadioSightings(&them, &s, them.bTeam);
 			}
+			else if (gGameOptions.ubDifficultyLevel >= DIF_LEVEL_MEDIUM)
+			{ // Unless in easy mode allow alerted enemies to radio
+				// Don't allow admins to radio
+				if (them.bTeam == ENEMY_TEAM &&
+						gTacticalStatus.Team[ENEMY_TEAM].bAwareOfOpposition &&
+						them.ubSoldierClass != SOLDIER_CLASS_ADMINISTRATOR)
+				{
+					RadioSightings(&them, EVERYBODY, them.bTeam);
+				}
+			}
+
+			them.bNewOppCnt = 0;
 		}
 	}
 
-	// CJC August 13 2002: at the end of handling sight, reset sight flags to allow interrupts in case an audio cue should
-	// cause someone to see an enemy
+	/* CJC August 13 2002: At the end of handling sight, reset sight flags to
+	 * allow interrupts in case an audio cue should cause someone to see an enemy
+	 */
 	gubSightFlags |= SIGHT_INTERRUPT;
 }
 
@@ -1211,14 +1193,14 @@ void AllTeamsLookForAll(UINT8 ubAllowInterrupts)
 
   FOR_ALL_MERCS(i)
   {
-  	SOLDIERTYPE* const s = *i;
-  	if (s->bLife >= OKLIFE) HandleSight(s, SIGHT_LOOK); // no radio or interrupts yet
+  	SOLDIERTYPE& s = **i;
+  	if (s.bLife >= OKLIFE) HandleSight(s, SIGHT_LOOK); // no radio or interrupts yet
   }
 
 	// the player team now radios about all sightings
-	FOR_ALL_IN_TEAM(s, gbPlayerNum)
+	FOR_ALL_IN_TEAM(i, gbPlayerNum)
 	{
-		HandleSight(s, SIGHT_RADIO); // looking was done above
+		HandleSight(*i, SIGHT_RADIO); // looking was done above
 	}
 
 	if ( !(gTacticalStatus.uiFlags & INCOMBAT) )

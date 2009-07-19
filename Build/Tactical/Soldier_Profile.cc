@@ -784,7 +784,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 		 )
 		{
 			AddSoldierToSectorNoCalculateDirectionUseAnimation(pNewSoldier, pSoldier->usAnimState, pSoldier->usAniCode);
-			HandleSight(pNewSoldier, SIGHT_LOOK | SIGHT_RADIO);
+			HandleSight(*pNewSoldier, SIGHT_LOOK | SIGHT_RADIO);
 		}
 
 		if ( pNewSoldier->ubProfile != NO_PROFILE )
