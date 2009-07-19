@@ -2090,7 +2090,7 @@ static void SetSoldierGridNo(SOLDIERTYPE* const s, GridNo new_grid_no, BOOLEAN c
 			if (PythSpacesAway(new_grid_no, enemy->sGridNo) >= DistanceVisible(enemy, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, new_grid_no, s->bLevel)) continue;
 
 			// AGILITY (5):  Soldier snuck 1 square past unaware enemy
-			StatChange(s, AGILAMT, 5, FROM_SUCCESS);
+			StatChange(*s, AGILAMT, 5, FROM_SUCCESS);
 			// Keep looping, we'll give'em 1 point for EACH such enemy!
 		}
 	}
@@ -5811,13 +5811,13 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 			if ( ubReason == TAKE_DAMAGE_EXPLOSION )
 			{
 				// EXPLOSIVES GAIN (combLoss):  Causing wounds in battle
-				StatChange(attacker, EXPLODEAMT, 10 * ubCombinedLoss, FROM_FAILURE);
+				StatChange(*attacker, EXPLODEAMT, 10 * ubCombinedLoss, FROM_FAILURE);
 			}
 			/*
 			else if ( ubReason == TAKE_DAMAGE_GUNFIRE )
 			{
 				// MARKSMANSHIP GAIN (combLoss):  Causing wounds in battle
-				StatChange(attacker, MARKAMT, 5 * ubCombinedLoss, FALSE);
+				StatChange(*attacker, MARKAMT, 5 * ubCombinedLoss, FALSE);
 			}
 			*/
 		}
@@ -5826,7 +5826,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 	if (IsOnOurTeam(pSoldier))
 	{
 		// EXPERIENCE GAIN: Took some damage
-	  StatChange( pSoldier, EXPERAMT, ( UINT16 )( 5 * ubCombinedLoss ), FROM_FAILURE );
+	  StatChange(*pSoldier, EXPERAMT, 5 * ubCombinedLoss, FROM_FAILURE);
 
 		// Check for quote
 		if ( !(pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_BEING_PUMMELED ) )
@@ -7265,10 +7265,10 @@ UINT32 SoldierDressWound( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pVictim, INT16 sKi
 	if (IsOnOurTeam(pSoldier))
  {
 	 // MEDICAL GAIN   (actual / 2):  Helped someone by giving first aid
-	 StatChange(pSoldier, MEDICALAMT, uiActual / 2, FROM_SUCCESS);
+		StatChange(*pSoldier, MEDICALAMT, uiActual / 2, FROM_SUCCESS);
 
 	 // DEXTERITY GAIN (actual / 6):  Helped someone by giving first aid
-	 StatChange(pSoldier, DEXTAMT,    uiActual / 6, FROM_SUCCESS);
+		StatChange(*pSoldier, DEXTAMT,    uiActual / 6, FROM_SUCCESS);
  }
 
  return( uiMedcost );
@@ -7654,7 +7654,7 @@ BOOLEAN CheckForBreathCollapse( SOLDIERTYPE *pSoldier )
 	//	pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_DROWNING;
 
     // WISDOM GAIN (25):  Starting to drown
-  //  StatChange( pSoldier, WISDOMAMT, 25, FALSE );
+  //  StatChange(*pSoldier, WISDOMAMT, 25, FALSE );
 
 	//}
 

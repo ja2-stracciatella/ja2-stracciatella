@@ -3313,7 +3313,7 @@ static void HandleModAlt(UINT32 const key)
 		case '/':
 		{
 			SOLDIERTYPE* const s = GetSelectedInfoChar();
-			if (s) StatChange(s, EXPERAMT, 1000, FROM_SUCCESS);
+			if (s) StatChange(*s, EXPERAMT, 1000, FROM_SUCCESS);
 			break;
 		}
 #endif

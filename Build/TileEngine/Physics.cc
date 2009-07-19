@@ -2230,7 +2230,7 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 				// EXPLOSIVES GAIN (10):  Tossing grenade
 				if (pObject->owner != NULL)
         {
-					StatChange(pObject->owner, EXPLODEAMT, 10, FALSE);
+					StatChange(*pObject->owner, EXPLODEAMT, 10, FALSE);
         }
 			}
 */

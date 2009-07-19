@@ -594,8 +594,8 @@ BOOLEAN CheckForGunJam( SOLDIERTYPE * pSoldier )
 					pObj->bGunAmmoStatus *= -1;
 
 					// MECHANICAL/DEXTERITY GAIN: Unjammed a gun
-					StatChange(pSoldier, MECHANAMT, 5, FROM_SUCCESS);
-					StatChange(pSoldier, DEXTAMT,   5, FROM_SUCCESS);
+					StatChange(*pSoldier, MECHANAMT, 5, FROM_SUCCESS);
+					StatChange(*pSoldier, DEXTAMT,   5, FROM_SUCCESS);
 
 					DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 
@@ -1060,7 +1060,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 				usExpGain = ModifyExpGainByTarget(usExpGain, tgt);
 
 				// MARKSMANSHIP GAIN: gun attack
-				StatChange(pSoldier, MARKAMT, usExpGain, fGonnaHit ? FROM_SUCCESS : FROM_FAILURE);
+				StatChange(*pSoldier, MARKAMT, usExpGain, fGonnaHit ? FROM_SUCCESS : FROM_FAILURE);
 			}
 		}
 
@@ -1115,8 +1115,8 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 			// MARKSMANSHIP/DEXTERITY GAIN: throwing knife attack
 			StatChangeCause const cause = fGonnaHit ? FROM_SUCCESS : FROM_FAILURE;
-			StatChange(pSoldier, MARKAMT, usExpGain / 2, cause);
-			StatChange(pSoldier, DEXTAMT, usExpGain / 2, cause);
+			StatChange(*pSoldier, MARKAMT, usExpGain / 2, cause);
+			StatChange(*pSoldier, DEXTAMT, usExpGain / 2, cause);
 		}
 	}
 
@@ -1214,7 +1214,7 @@ static void AgilityForEnemyMissingPlayer(const SOLDIERTYPE* const attacker, SOLD
 	if (target->bTeam != attacker->bTeam &&
 			target->bTeam == gbPlayerNum)
 	{
-		StatChange(target, AGILAMT, agil_amt, FROM_SUCCESS);
+		StatChange(*target, AGILAMT, agil_amt, FROM_SUCCESS);
 	}
 }
 
@@ -1345,7 +1345,7 @@ static void UseBlade(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 			usExpGain = ModifyExpGainByTarget(usExpGain, pSoldier->target);
 
 			// DEXTERITY GAIN:  Made a knife attack, successful or not
-			StatChange(pSoldier, DEXTAMT, usExpGain, fGonnaHit ? FROM_SUCCESS : FROM_FAILURE);
+			StatChange(*pSoldier, DEXTAMT, usExpGain, fGonnaHit ? FROM_SUCCESS : FROM_FAILURE);
 		}
 	}
 	else
@@ -1450,7 +1450,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 					if ( pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum && !(pTargetSoldier->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT( pTargetSoldier ) && !TANK( pTargetSoldier ) )
 					{
 						// made a steal; give experience
-						StatChange(pSoldier, STRAMT, 8, FROM_SUCCESS);
+						StatChange(*pSoldier, STRAMT, 8, FROM_SUCCESS);
 					}
 
 					if ( iDiceRoll <= iHitChance * 2 / 3)
@@ -1508,7 +1508,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 					if ( iHitChance > 0 && pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum && !(pTargetSoldier->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT( pTargetSoldier ) && !TANK( pTargetSoldier ) )
 					{
 						// failed a steal; give some experience
-						StatChange( pSoldier, STRAMT, 4, FROM_FAILURE );
+						StatChange(*pSoldier, STRAMT, 4, FROM_FAILURE);
 					}
 
 				}
@@ -1547,8 +1547,8 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 
 				ubExpGain = ModifyExpGainByTarget(ubExpGain, pTargetSoldier);
 
-				StatChange(pSoldier, STRAMT,  ubExpGain, reason);
-				StatChange(pSoldier, DEXTAMT, ubExpGain, reason);
+				StatChange(*pSoldier, STRAMT,  ubExpGain, reason);
+				StatChange(*pSoldier, DEXTAMT, ubExpGain, reason);
 			}
 			else if (iDiceRoll > iHitChance)
 			{
@@ -1630,16 +1630,16 @@ static void UseThrown(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 		if ( pTargetSoldier )
 		{
 			// ok this is a real attack on someone, grant experience
-			StatChange(pSoldier, STRAMT, 5, FROM_SUCCESS);
+			StatChange(*pSoldier, STRAMT, 5, FROM_SUCCESS);
 			if ( uiDiceRoll < uiHitChance )
 			{
-				StatChange(pSoldier, DEXTAMT, 5, FROM_SUCCESS);
-				StatChange(pSoldier, MARKAMT, 5, FROM_SUCCESS);
+				StatChange(*pSoldier, DEXTAMT, 5, FROM_SUCCESS);
+				StatChange(*pSoldier, MARKAMT, 5, FROM_SUCCESS);
 			}
 			else
 			{
-				StatChange( pSoldier, DEXTAMT, 2, FROM_FAILURE );
-				StatChange( pSoldier, MARKAMT, 2, FROM_FAILURE );
+				StatChange(*pSoldier, DEXTAMT, 2, FROM_FAILURE);
+				StatChange(*pSoldier, MARKAMT, 2, FROM_FAILURE);
 			}
 		}
 	}

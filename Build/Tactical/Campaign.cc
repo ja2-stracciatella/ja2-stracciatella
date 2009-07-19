@@ -51,41 +51,41 @@ const wchar_t* const  wDebugStatStrings[] = {
 #endif
 
 
-static void UpdateStats(SOLDIERTYPE* pSoldier);
+// Convert hired mercs' stats subpoint changes into actual point changes where warranted
+static void ProcessUpdateStats(MERCPROFILESTRUCT&, SOLDIERTYPE*);
+
 static void ProcessStatChange(MERCPROFILESTRUCT&, StatKind, UINT16 usNumChances, StatChangeCause);
 
 
-// give pSoldier usNumChances to improve ubStat.  If it's from training, it doesn't count towards experience level gain
-void StatChange(SOLDIERTYPE* const pSoldier, StatKind const ubStat, UINT16 const usNumChances, StatChangeCause const ubReason)
+/* Give soldier n_chances to improve stat. If it's from training, it doesn't
+ * count towards experience level gain */
+void StatChange(SOLDIERTYPE& s, StatKind const stat, UINT16 const n_chances, StatChangeCause const reason)
 {
-	Assert(pSoldier != NULL);
-	Assert(pSoldier->bActive);
+	Assert(s.bActive);
 
-	// ignore non-player soldiers
-	if (!IsOnOurTeam(pSoldier)) return;
+	// Ignore non-player soldiers
+	if (!IsOnOurTeam(&s)) return;
 
-	// ignore anything without a profile
-	if (pSoldier->ubProfile == NO_PROFILE)
-		return;
+	// Ignore anything without a profile
+	if (s.ubProfile == NO_PROFILE) return;
 
-	// ignore vehicles and robots
-	if( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || ( pSoldier->uiStatusFlags & SOLDIER_ROBOT ) )
-		return;
+	// Ignore vehicles and robots
+	if (s.uiStatusFlags & SOLDIER_VEHICLE) return;
+	if (s.uiStatusFlags & SOLDIER_ROBOT)   return;
 
-	if( pSoldier->bAssignment == ASSIGNMENT_POW )
+	if (s.bAssignment == ASSIGNMENT_POW)
 	{
-		ScreenMsg( FONT_ORANGE, MSG_BETAVERSION, L"ERROR: StatChange: %ls improving stats while POW! ubStat %d", pSoldier->name, ubStat );
+		ScreenMsg(FONT_ORANGE, MSG_BETAVERSION, L"ERROR: StatChange: %ls improving stats while POW! stat %d", s.name, stat);
 		return;
 	}
 
-	// no points earned while somebody is unconscious (for assist XPs, and such)
-	if ( pSoldier->bLife < CONSCIOUSNESS )
-		return;
+	// No points earned while somebody is unconscious (for assist XPs, and such)
+	if (s.bLife < CONSCIOUSNESS) return;
 
-	ProcessStatChange(GetProfile(pSoldier->ubProfile), ubStat, usNumChances, ubReason);
-
-	// Update stats....right away... ATE
-	UpdateStats( pSoldier );
+	MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
+	ProcessStatChange(p, stat, n_chances, reason);
+	// ATE: Update stats right away
+	ProcessUpdateStats(p, &s);
 }
 
 
@@ -381,16 +381,6 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 		p.usStatChangeChances[ubStat]   += usNumChances;
 		p.usStatChangeSuccesses[ubStat] += abs(sSubPointChange);
 	}
-}
-
-
-static void ProcessUpdateStats(MERCPROFILESTRUCT&, SOLDIERTYPE* pSoldier);
-
-
-// convert hired mercs' stats subpoint changes into actual point changes where warranted
-static void UpdateStats(SOLDIERTYPE* pSoldier)
-{
-	ProcessUpdateStats(GetProfile(pSoldier->ubProfile), pSoldier);
 }
 
 
@@ -1488,7 +1478,7 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 				!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
 				!AM_A_ROBOT(s))
 		{
-			StatChange(s, EXPERAMT, usXPs, FROM_SUCCESS);
+			StatChange(*s, EXPERAMT, usXPs, FROM_SUCCESS);
 		}
 	}
 }

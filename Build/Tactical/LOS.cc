@@ -2322,7 +2322,7 @@ static INT32 HandleBulletStructureInteraction(BULLET* pBullet, STRUCTURE* pStruc
 					RemoveDoorInfoFromTable( pDoor->sGridNo );
 
 					// MARKSMANSHIP GAIN (marksPts): Opened/Damaged a door
-					StatChange(pBullet->pFirer, MARKAMT, 10, FROM_SUCCESS);
+					StatChange(*pBullet->pFirer, MARKAMT, 10, FROM_SUCCESS);
 				}
 			}
 		}

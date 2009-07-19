@@ -2503,7 +2503,7 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 			PerformAttachmentComboMerge(target, *m);
 			if (attach_info && attach_info->bAttachmentSkillCheckMod < 20)
 			{
-				StatChange(s, MECHANAMT, 20 - attach_info->bAttachmentSkillCheckMod, FROM_SUCCESS);
+				StatChange(*s, MECHANAMT, 20 - attach_info->bAttachmentSkillCheckMod, FROM_SUCCESS);
 			}
 		}
 
@@ -2588,7 +2588,7 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 					DoMercBattleSound(s, BATTLE_SOUND_CURSE1);
 					return false;
 				}
-				StatChange(s, EXPLODEAMT, 25, FROM_SUCCESS);
+				StatChange(*s, EXPLODEAMT, 25, FROM_SUCCESS);
 			}
 			goto default_merge;
 

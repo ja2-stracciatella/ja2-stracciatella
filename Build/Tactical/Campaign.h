@@ -72,7 +72,7 @@ enum
 };
 
 
-void StatChange(SOLDIERTYPE*, StatKind, UINT16 usNumChances, StatChangeCause);
+void StatChange(SOLDIERTYPE&, StatKind, UINT16 n_chances, StatChangeCause);
 
 void HandleUnhiredMercImprovement(MERCPROFILESTRUCT&);
 void HandleUnhiredMercDeaths( INT32 iProfileID );
