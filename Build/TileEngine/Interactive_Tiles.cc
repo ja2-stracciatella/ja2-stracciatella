@@ -91,7 +91,7 @@ void StartInteractiveObject(GridNo const gridno, STRUCTURE const& structure, SOL
 }
 
 
-BOOLEAN CalcInteractiveObjectAPs(INT16 sGridNo, const STRUCTURE* pStructure, INT16* psAPCost, INT16* psBPCost)
+BOOLEAN CalcInteractiveObjectAPs(STRUCTURE const* const pStructure, INT16* const psAPCost, INT16* const psBPCost)
 {
 	if (pStructure == NULL)
 	{
