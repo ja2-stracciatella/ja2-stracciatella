@@ -1181,7 +1181,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
     if ( usNewState == CLIMBUPROOF || usNewState == CLIMBDOWNROOF || usNewState == HOPFENCE )
     {
       // Check for breath collapse if a given animation like
-		  if ( CheckForBreathCollapse( pSoldier ) || pSoldier->bCollapsed )
+		  if (CheckForBreathCollapse(*pSoldier) || pSoldier->bCollapsed)
 		  {
 				// UNset UI
 				UnSetUIBusy(pSoldier);
@@ -4107,7 +4107,7 @@ void EVENT_BeginMercTurn(SOLDIERTYPE* const pSoldier)
 
 		if ( pSoldier->bInSector )
 		{
-			CheckForBreathCollapse( pSoldier );
+			CheckForBreathCollapse(*pSoldier);
 		}
 
 		CalcNewActionPoints( pSoldier );
@@ -5795,7 +5795,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 
 	if ( pSoldier->bInSector )
 	{
-		CheckForBreathCollapse( pSoldier );
+		CheckForBreathCollapse(*pSoldier);
 	}
 
   // EXPERIENCE CLASS GAIN (combLoss): Getting wounded in battle
@@ -7627,47 +7627,43 @@ void ContinueMercMovement( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN CheckForBreathCollapse( SOLDIERTYPE *pSoldier )
+bool CheckForBreathCollapse(SOLDIERTYPE& s)
 {
-	// Check if we are out of breath!
-	// Only check if > 70
-	if ( pSoldier->bBreathMax > 70 )
-	{
-		if ( pSoldier->bBreath < 20 && !(pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_LOW_BREATH ) &&
-				gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_STAND )
-		{
-			// WARN!
-			TacticalCharacterDialogue( pSoldier, QUOTE_OUT_OF_BREATH );
-
-			// Set flag indicating we were warned!
-			pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_LOW_BREATH;
-		}
+	// Check if we are out of breath
+	if (s.bBreathMax > 70 &&
+			s.bBreath    < 20 &&
+			!(s.usQuoteSaidFlags & SOLDIER_QUOTE_SAID_LOW_BREATH) &&
+			gAnimControl[s.usAnimState].ubEndHeight == ANIM_STAND)
+	{ // Warn
+		TacticalCharacterDialogue(&s, QUOTE_OUT_OF_BREATH);
+		// Set flag indicating we were warned
+		s.usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_LOW_BREATH;
 	}
 
-	// Check for drowing.....
-	//if ( pSoldier->bBreath < 10 && !(pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_DROWNING ) && pSoldier->bOverTerrainType == DEEP_WATER )
-	//{
-		// WARN!
-	//	TacticalCharacterDialogue( pSoldier, QUOTE_DROWNING );
-
-		// Set flag indicating we were warned!
-	//	pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_DROWNING;
-
-    // WISDOM GAIN (25):  Starting to drown
-  //  StatChange(*pSoldier, WISDOMAMT, 25, FALSE );
-
-	//}
-
-	if ( pSoldier->bBreath == 0 && !pSoldier->bCollapsed && !( pSoldier->uiStatusFlags & ( SOLDIER_VEHICLE | SOLDIER_ANIMAL | SOLDIER_MONSTER ) ) )
+#if 0 // XXX was commented out
+	// Check for drowning
+	if (s.bBreath < 10 &&
+			!(s.usQuoteSaidFlags & SOLDIER_QUOTE_SAID_DROWNING) &&
+			s.bOverTerrainType == DEEP_WATER)
 	{
-		// Collapse!
-		// OK, Set a flag, because we may still be in the middle of an animation what is not interruptable...
-		pSoldier->bBreathCollapsed = TRUE;
-
-		return( TRUE );
+		// Warn
+		TacticalCharacterDialogue(&s, QUOTE_DROWNING);
+		// Set flag indicating we were warned
+		s.usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_DROWNING;
+		// WISDOM GAIN (25): Starting to drown
+		StatChange(s, WISDOMAMT, 25, FALSE);
 	}
+#endif
 
-	return( FALSE );
+	if (s.bBreath != 0) return false;
+	if (s.bCollapsed)   return false;
+	if (s.uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_ANIMAL | SOLDIER_MONSTER)) return false;
+
+	// Collapse
+	/* Set a flag, because we may still be in the middle of an animation what is
+	 * not interruptable */
+	s.bBreathCollapsed = TRUE;
+	return true;
 }
 
 

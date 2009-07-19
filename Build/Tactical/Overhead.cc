@@ -2007,7 +2007,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 	}
 
 	// Check if they are out of breath
-	if (CheckForBreathCollapse(pSoldier))
+	if (CheckForBreathCollapse(*pSoldier))
 	{
 		*pfKeepMoving = TRUE;
 		return FALSE;

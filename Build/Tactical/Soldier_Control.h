@@ -974,7 +974,7 @@ void SendBeginFireWeaponEvent( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo );
 void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy );
 void ReLoadSoldierAnimationDueToHandItemChange( SOLDIERTYPE *pSoldier, UINT16 usOldItem, UINT16 usNewItem );
 
-BOOLEAN CheckForBreathCollapse( SOLDIERTYPE *pSoldier );
+bool CheckForBreathCollapse(SOLDIERTYPE&);
 
 static inline BOOLEAN IsOnCivTeam(const SOLDIERTYPE* const s)
 {
