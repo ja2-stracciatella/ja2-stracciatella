@@ -1577,7 +1577,7 @@ static void BtnDoorMenuCallback(GUI_BUTTON* btn, INT32 reason)
 
 				if (gOpenDoorMenu.fClosingDoor)
 				{
-					ChangeSoldierState(gOpenDoorMenu.pSoldier, GetAnimStateForInteraction(gOpenDoorMenu.pSoldier, TRUE, CLOSE_DOOR), 0, FALSE);
+					ChangeSoldierState(gOpenDoorMenu.pSoldier, GetAnimStateForInteraction(*gOpenDoorMenu.pSoldier, TRUE, CLOSE_DOOR), 0, FALSE);
 				}
 				else
 				{

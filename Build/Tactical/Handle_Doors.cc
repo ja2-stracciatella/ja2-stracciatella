@@ -67,13 +67,13 @@ void HandleDoorChangeFromGridNo(SOLDIERTYPE* const s, INT16 const grid_no, BOOLE
 }
 
 
-UINT16 GetAnimStateForInteraction(SOLDIERTYPE const* s, BOOLEAN const door, UINT16 const anim_state)
+UINT16 GetAnimStateForInteraction(SOLDIERTYPE const& s, BOOLEAN const door, UINT16 const anim_state)
 {
-	bool const standing = gAnimControl[s->usAnimState].ubEndHeight == ANIM_STAND;
+	bool const standing = gAnimControl[s.usAnimState].ubEndHeight == ANIM_STAND;
 	switch (anim_state)
 	{
 		case OPEN_DOOR:
-			if (s->ubBodyType == CRIPPLECIV)
+			if (s.ubBodyType == CRIPPLECIV)
 			{
 				return CRIPPLE_OPEN_DOOR;
 			}
@@ -87,7 +87,7 @@ UINT16 GetAnimStateForInteraction(SOLDIERTYPE const* s, BOOLEAN const door, UINT
 			}
 
 		case CLOSE_DOOR:
-			if (s->ubBodyType == CRIPPLECIV)
+			if (s.ubBodyType == CRIPPLECIV)
 			{
 				return CRIPPLE_CLOSE_DOOR;
 			}
@@ -101,7 +101,7 @@ UINT16 GetAnimStateForInteraction(SOLDIERTYPE const* s, BOOLEAN const door, UINT
 			}
 
 		case END_OPEN_DOOR:
-			if (s->ubBodyType == CRIPPLECIV)
+			if (s.ubBodyType == CRIPPLECIV)
 			{
 				return CRIPPLE_END_OPEN_DOOR;
 			}
@@ -115,7 +115,7 @@ UINT16 GetAnimStateForInteraction(SOLDIERTYPE const* s, BOOLEAN const door, UINT
 			}
 
 		case END_OPEN_LOCKED_DOOR:
-			if (s->ubBodyType == CRIPPLECIV)
+			if (s.ubBodyType == CRIPPLECIV)
 			{
 				return CRIPPLE_END_OPEN_LOCKED_DOOR;
 			}
@@ -153,7 +153,7 @@ void InteractWithClosedDoor( SOLDIERTYPE *pSoldier, UINT8 ubHandleCode )
 		case HANDLE_DOOR_LOCK:
 		case HANDLE_DOOR_UNTRAP:
 		case HANDLE_DOOR_CROWBAR:
-			state = GetAnimStateForInteraction(pSoldier, TRUE, OPEN_DOOR);
+			state = GetAnimStateForInteraction(*pSoldier, TRUE, OPEN_DOOR);
 			break;
 
 		case HANDLE_DOOR_FORCE:
@@ -161,7 +161,7 @@ void InteractWithClosedDoor( SOLDIERTYPE *pSoldier, UINT8 ubHandleCode )
 			break;
 
 		case HANDLE_DOOR_LOCKPICK:
-			state = GetAnimStateForInteraction(pSoldier, TRUE, PICK_LOCK);
+			state = GetAnimStateForInteraction(*pSoldier, TRUE, PICK_LOCK);
 			break;
 
 		default: return;
@@ -244,7 +244,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 		else
 		{
 			// Easily close door....
-			ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, CLOSE_DOOR ), 0, FALSE );
+			ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, CLOSE_DOOR), 0, FALSE);
 		}
 	}
 	else
@@ -276,7 +276,7 @@ void InteractWithOpenableStruct( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, U
 		}
 
 		pSoldier->ubDoorHandleCode = HANDLE_DOOR_OPEN;
-		ChangeSoldierState(pSoldier, GetAnimStateForInteraction(pSoldier, fDoor, OPEN_DOOR), 0, FALSE);
+		ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, OPEN_DOOR), 0, FALSE);
 	}
 }
 
@@ -376,7 +376,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 						sAPCost = AP_OPEN_DOOR;
 						sBPCost = BP_OPEN_DOOR;
 
-						ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
+						ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
 
 						// Did we inadvertently set it off?
 						if ( HasDoorTrapGoneOff( pSoldier, pDoor ) )
@@ -451,7 +451,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							sBPCost = BP_OPEN_DOOR;
 
 							// Open if it's not locked....
-							ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
+							ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
 							fHandleDoor = TRUE;
 						}
 						else
@@ -459,7 +459,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							if ( pDoor->fLocked )
 							{
 								// it's locked....
-								ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_LOCKED_DOOR ), 0, FALSE );
+								ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_LOCKED_DOOR), 0, FALSE);
 
 								// Do we have a quote for locked stuff?
 								// Now just show on message bar
@@ -474,7 +474,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							}
 							else
 							{
-								ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
+								ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
 								fHandleDoor = TRUE;
 							}
 							UpdateDoorPerceivedValue( pDoor );
@@ -490,7 +490,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 						// OK, using force, if we have no lock, just open the door!
 						if ( pDoor == NULL )
 						{
-							ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
+							ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
 							fHandleDoor = TRUE;
 
 							ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_THERE_IS_NO_LOCK_STR ] );
@@ -521,7 +521,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 						// OK, using force, if we have no lock, just open the door!
 						if ( pDoor == NULL )
 						{
-							ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
+							ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
 							fHandleDoor = TRUE;
 
 							ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_THERE_IS_NO_LOCK_STR ] );
@@ -600,7 +600,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 
 						// Attempt to examine door
 						// Whatever the result, end the open animation
-						ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
+						ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
 
 						if ( pDoor == NULL )
 						{
@@ -636,7 +636,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 						{
 							// Open if it's not locked....
 							//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_THERE_IS_NO_LOCK_STR ] );
-							ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
+							ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
 							break;
 						}
 						else
@@ -648,14 +648,14 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							{
 								//DoMercBattleSound( pSoldier, BATTLE_SOUND_COOL1 );
 
-								ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
+								ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
 								UpdateDoorPerceivedValue( pDoor );
 
 								fHandleDoor = TRUE;
 							}
 							else
 							{
-								ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_LOCKED_DOOR ), 0, FALSE );
+								ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_LOCKED_DOOR), 0, FALSE);
 								// Do we have a quote for locked stuff?
 								// Now just show on message bar
 								//ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_NOT_PROPER_KEY_STR ], pSoldier->name );
@@ -681,7 +681,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 						{
 							// Open if it's not locked....
 							ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_THERE_IS_NO_LOCK_STR ] );
-							ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
+							ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
 							break;
 						}
 						else
@@ -692,13 +692,13 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 								if ( AttemptToUntrapDoor( pSoldier, pDoor ) )
 								{
 									DoMercBattleSound( pSoldier, BATTLE_SOUND_COOL1 );
-									ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
+									ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
 									UpdateDoorPerceivedValue( pDoor );
 									//fHandleDoor = TRUE;
 								}
 								else
 								{
-									ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_LOCKED_DOOR ), 0, FALSE );
+									ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_LOCKED_DOOR), 0, FALSE);
 									// Now just show on message bar
 									HandleDoorTrap(*pSoldier, *pDoor);
 
@@ -732,7 +732,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 						{
 							// Open if it's not locked....
 							ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_THERE_IS_NO_LOCK_STR ] );
-							ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
+							ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
 							break;
 						}
 						else
@@ -743,12 +743,12 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							if ( AttemptToLockDoor( pSoldier, pDoor ) )
 							{
 								ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_LOCK_HAS_BEEN_LOCKED_STR ] );
-								ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
+								ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
 								UpdateDoorPerceivedValue( pDoor );
 							}
 							else
 							{
-								ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_LOCKED_DOOR ), 0, FALSE );
+								ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_LOCKED_DOOR), 0, FALSE);
 								// Do we have a quote for locked stuff?
 								// Now just show on message bar
 								ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_NOT_PROPER_KEY_STR ], pSoldier->name );
@@ -768,7 +768,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 			sBPCost = BP_OPEN_DOOR;
 
 			// Open if it's not locked....
-			ChangeSoldierState( pSoldier, GetAnimStateForInteraction( pSoldier, fDoor, END_OPEN_DOOR ), 0, FALSE );
+			ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_DOOR), 0, FALSE);
 			fHandleDoor = TRUE;
 		}
 	}
