@@ -4593,7 +4593,7 @@ static BOOLEAN NPCOpenThing(SOLDIERTYPE* pSoldier, BOOLEAN fDoor)
 	// check if we are at this location
 	if ( pSoldier->sGridNo == sGridNo )
 	{
-		InteractWithInteractiveObject(*pSoldier, *pStructure, ubDirection);
+		InteractWithOpenableStruct(*pSoldier, *pStructure, ubDirection);
 	}
 	else
 	{

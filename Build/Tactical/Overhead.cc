@@ -1,3 +1,4 @@
+#include "Handle_Doors.h"
 #include "Handle_Items.h"
 #include "MapScreen.h"
 #include "Soldier_Find.h"
@@ -951,7 +952,7 @@ void ExecuteOverhead(void)
 												CalcInteractiveObjectAPs(sGridNo, pStructure, &sAPCost, &sBPCost);
 												if (EnoughPoints(pSoldier, sAPCost, sBPCost, TRUE))
 												{
-													InteractWithInteractiveObject(*pSoldier, *pStructure, pSoldier->bPendingActionData3);
+													InteractWithOpenableStruct(*pSoldier, *pStructure, pSoldier->bPendingActionData3);
 												}
 												else
 												{
@@ -1590,7 +1591,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 
 		// OK, open!
 		StartInteractiveObject(sDoorGridNo, pStructure->usStructureID, pSoldier, bDirection);
-		InteractWithInteractiveObject(*pSoldier, *pStructure, bDirection);
+		InteractWithOpenableStruct(*pSoldier, *pStructure, bDirection);
 
 		// One needs to walk after....
 		if (pSoldier->bTeam != gbPlayerNum || gTacticalStatus.fAutoBandageMode || pSoldier->uiStatusFlags & SOLDIER_PCUNDERAICONTROL)

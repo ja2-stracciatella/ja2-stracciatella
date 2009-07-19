@@ -1,3 +1,4 @@
+#include "Handle_Doors.h"
 #include "Structure.h"
 #include "Timer_Control.h"
 #include "AI.h"
@@ -2015,7 +2016,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				}
 
 				StartInteractiveObject( sDoorGridNo, pStructure->usStructureID, pSoldier, bDirection );
-				InteractWithInteractiveObject(*pSoldier, *pStructure, bDirection);
+				InteractWithOpenableStruct(*pSoldier, *pStructure, bDirection);
 			}
 			break;
 

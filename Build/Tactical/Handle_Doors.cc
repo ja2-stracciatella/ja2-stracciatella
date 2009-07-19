@@ -187,9 +187,10 @@ static bool DoTrapCheckOnStartingMenu(SOLDIERTYPE& s, DOOR& d)
 }
 
 
-void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 const direction, bool const is_door)
+void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 const direction)
 {
-	STRUCTURE& base = *FindBaseStructure(&structure);
+	STRUCTURE& base    = *FindBaseStructure(&structure);
+	bool const is_door = structure.fFlags & STRUCTURE_ANYDOOR;
 
 	if (is_door)
 	{

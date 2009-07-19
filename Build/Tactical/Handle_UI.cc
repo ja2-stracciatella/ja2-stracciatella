@@ -1,5 +1,6 @@
 #include "FileMan.h"
 #include "Font_Control.h"
+#include "Handle_Doors.h"
 #include "Items.h"
 #include "Local.h"
 #include "Merc_Hiring.h"
@@ -1661,7 +1662,7 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 					if (sel->sGridNo == sDestGridNo)
 					{
 						StartInteractiveObject(sIntTileGridNo, pStructure->usStructureID, sel, ubDirection);
-						InteractWithInteractiveObject(*sel, *pStructure, ubDirection);
+						InteractWithOpenableStruct(*sel, *pStructure, ubDirection);
 						return GAME_SCREEN;
 					}
 				}

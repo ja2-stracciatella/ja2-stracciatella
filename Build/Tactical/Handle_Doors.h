@@ -1,6 +1,8 @@
 #ifndef _DOORS_H
 #define _DOORS_H
 
+#include "JA2Types.h"
+
 enum HandleDoor
 {
 	HANDLE_DOOR_OPEN     = 1,
@@ -17,7 +19,7 @@ enum HandleDoor
 
 BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *pStructure );
 
-void InteractWithOpenableStruct(SOLDIERTYPE&, STRUCTURE&, UINT8 direction, bool is_door);
+void InteractWithOpenableStruct(SOLDIERTYPE&, STRUCTURE&, UINT8 direction);
 
 void InteractWithClosedDoor(SOLDIERTYPE*, HandleDoor);
 
