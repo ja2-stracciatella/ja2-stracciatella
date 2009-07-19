@@ -139,7 +139,7 @@ UINT16 GetAnimStateForInteraction(SOLDIERTYPE const& s, BOOLEAN const door, UINT
 }
 
 
-void InteractWithClosedDoor( SOLDIERTYPE *pSoldier, UINT8 ubHandleCode )
+void InteractWithClosedDoor(SOLDIERTYPE* const pSoldier, HandleDoor const ubHandleCode)
 {
 	pSoldier->ubDoorHandleCode = ubHandleCode;
 
@@ -439,7 +439,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 			if ( fDoAction )
 			{
 				// OK, switch based on how we are going to open door....
-				switch( pSoldier->ubDoorHandleCode )
+				switch (pSoldier->ubDoorHandleCode)
 				{
 					case HANDLE_DOOR_OPEN:
 

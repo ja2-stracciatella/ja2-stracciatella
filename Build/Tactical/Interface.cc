@@ -1536,7 +1536,7 @@ void CancelOpenDoorMenu( )
 }
 
 
-static void DoorAction(const INT16 ap, const INT16 bp, const UINT8 action)
+static void DoorAction(INT16 const ap, INT16 const bp, HandleDoor const action)
 {
 	SOLDIERTYPE* const s = gOpenDoorMenu.pSoldier;
 	if (EnoughPoints(s, ap, bp, FALSE))
