@@ -12,7 +12,7 @@
 BOOLEAN StartInteractiveObject( INT16 sGridNo, UINT16 usStructureID, SOLDIERTYPE *pSoldier, UINT8 ubDirection );
 BOOLEAN StartInteractiveObjectFromMouse( SOLDIERTYPE *pSoldier, UINT8 ubDirection );
 UICursorID GetInteractiveTileCursor(UICursorID old_cursor, BOOLEAN fConfirm);
-BOOLEAN InteractWithInteractiveObject( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection );
+void InteractWithInteractiveObject(SOLDIERTYPE&, STRUCTURE&, UINT8 direction);
 bool SoldierHandleInteractiveObject(SOLDIERTYPE&);
 
 BOOLEAN CalcInteractiveObjectAPs(INT16 sGridNo, const STRUCTURE* pStructure, INT16* psAPCost, INT16* psBPCost);

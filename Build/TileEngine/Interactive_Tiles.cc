@@ -147,23 +147,10 @@ BOOLEAN CalcInteractiveObjectAPs(INT16 sGridNo, const STRUCTURE* pStructure, INT
 }
 
 
-BOOLEAN InteractWithInteractiveObject( SOLDIERTYPE *pSoldier, STRUCTURE *pStructure, UINT8 ubDirection )
+void InteractWithInteractiveObject(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 const direction)
 {
-	BOOLEAN	fDoor = FALSE;
-
-	if (pStructure == NULL)
-	{
-		return( FALSE );
-	}
-
-	if (pStructure->fFlags & STRUCTURE_ANYDOOR)
-	{
-		fDoor = TRUE;
-	}
-
-	InteractWithOpenableStruct( pSoldier, pStructure, ubDirection, fDoor );
-
-	return( TRUE );
+	bool const is_door = structure.fFlags & STRUCTURE_ANYDOOR;
+	InteractWithOpenableStruct(&s, &structure, direction, is_door);
 }
 
 

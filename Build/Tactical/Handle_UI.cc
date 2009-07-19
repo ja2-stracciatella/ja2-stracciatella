@@ -1661,7 +1661,7 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 					if (sel->sGridNo == sDestGridNo)
 					{
 						StartInteractiveObject(sIntTileGridNo, pStructure->usStructureID, sel, ubDirection);
-						InteractWithInteractiveObject(sel, pStructure, ubDirection);
+						InteractWithInteractiveObject(*sel, *pStructure, ubDirection);
 						return GAME_SCREEN;
 					}
 				}

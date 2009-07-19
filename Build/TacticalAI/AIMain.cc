@@ -2015,7 +2015,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				}
 
 				StartInteractiveObject( sDoorGridNo, pStructure->usStructureID, pSoldier, bDirection );
-				InteractWithInteractiveObject( pSoldier, pStructure, bDirection );
+				InteractWithInteractiveObject(*pSoldier, *pStructure, bDirection);
 			}
 			break;
 

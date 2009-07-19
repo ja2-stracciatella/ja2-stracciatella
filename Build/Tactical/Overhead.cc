@@ -951,7 +951,7 @@ void ExecuteOverhead(void)
 												CalcInteractiveObjectAPs(sGridNo, pStructure, &sAPCost, &sBPCost);
 												if (EnoughPoints(pSoldier, sAPCost, sBPCost, TRUE))
 												{
-													InteractWithInteractiveObject(pSoldier, pStructure, pSoldier->bPendingActionData3);
+													InteractWithInteractiveObject(*pSoldier, *pStructure, pSoldier->bPendingActionData3);
 												}
 												else
 												{
@@ -1590,7 +1590,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 
 		// OK, open!
 		StartInteractiveObject(sDoorGridNo, pStructure->usStructureID, pSoldier, bDirection);
-		InteractWithInteractiveObject(pSoldier, pStructure, bDirection);
+		InteractWithInteractiveObject(*pSoldier, *pStructure, bDirection);
 
 		// One needs to walk after....
 		if (pSoldier->bTeam != gbPlayerNum || gTacticalStatus.fAutoBandageMode || pSoldier->uiStatusFlags & SOLDIER_PCUNDERAICONTROL)
