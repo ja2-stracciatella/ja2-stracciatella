@@ -123,7 +123,7 @@ struct SOLDIERCREATE_STRUCT
 
 
 //Original functions currently used throughout the game.
-void TacticalRemoveSoldier(SOLDIERTYPE* s);
+void TacticalRemoveSoldier(SOLDIERTYPE&);
 
 INT8 CalcDifficultyModifier( UINT8 ubSoldierClass );
 

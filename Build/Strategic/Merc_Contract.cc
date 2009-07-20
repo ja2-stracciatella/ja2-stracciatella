@@ -693,7 +693,7 @@ void StrategicRemoveMerc(SOLDIERTYPE* const s)
 		CalculateMedicalDepositRefund(*s);
 	}
 
-	TacticalRemoveSoldier(s);
+	TacticalRemoveSoldier(*s);
 
 	CheckAndHandleUnloadingOfCurrentWorld();
 

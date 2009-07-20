@@ -2375,17 +2375,17 @@ unlock:
 			{
 				// Find queen and joe and remove from sector...
 				SOLDIERTYPE* const queen = FindSoldierByProfileID(QUEEN);
-				if (queen != NULL) TacticalRemoveSoldier(queen);
+				if (queen) TacticalRemoveSoldier(*queen);
 
 				SOLDIERTYPE* const joe = FindSoldierByProfileID(JOE);
-				if (joe != NULL) TacticalRemoveSoldier(joe);
+				if (joe) TacticalRemoveSoldier(*joe);
 				break;
 			}
 
 			case NPC_ACTION_REMOVE_ELLIOT_END_MEANWHILE:
 			{
-				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ELLIOT);
-				if (pSoldier != NULL) TacticalRemoveSoldier(pSoldier);
+				SOLDIERTYPE* const elliot = FindSoldierByProfileID(ELLIOT);
+				if (elliot) TacticalRemoveSoldier(*elliot);
 
 				// End meanwhile....
 				// End meanwhile....
@@ -3832,7 +3832,7 @@ action_punch_pc:
 				{
 					EndAIGuysTurn( pSoldier );
 					RemoveManAsTarget( pSoldier );
-					TacticalRemoveSoldier(pSoldier);
+					TacticalRemoveSoldier(*pSoldier);
 					gMercProfiles[ ubTargetNPC ].sSectorX = 0;
 					gMercProfiles[ ubTargetNPC ].sSectorY = 0;
 					CheckForEndOfBattle( TRUE );

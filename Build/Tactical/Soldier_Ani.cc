@@ -978,7 +978,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						else
 						{
 							// We should leave now!
-							TacticalRemoveSoldier(pSoldier);
+							TacticalRemoveSoldier(*pSoldier);
 							return( FALSE );
 						}
 						return( TRUE );
@@ -1357,7 +1357,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					//ChangeSoldierState( pSoldier, RAISE_RIFLE, 0 , FALSE );
 					//return( TRUE );
 					//Delete guy
-					//TacticalRemoveSoldier(pSoldier);
+					//TacticalRemoveSoldier(*pSoldier);
 					//return( FALSE );
 					break;
 

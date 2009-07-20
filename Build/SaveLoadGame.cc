@@ -1132,7 +1132,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	{
 		// see if we can find him and remove him if so....
 		SOLDIERTYPE* const s = FindSoldierByProfileID(SKYRIDER);
-		if (s) TacticalRemoveSoldier(s);
+		if (s) TacticalRemoveSoldier(*s);
 
 		// add the pilot at a random location!
 		INT16 x;
@@ -1293,7 +1293,7 @@ static void SaveSoldierStructure(HWFILE const f)
 static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version)
 {
 	// Loop through all the soldier and delete them all
-	FOR_ALL_SOLDIERS(s) TacticalRemoveSoldier(s);
+	FOR_ALL_SOLDIERS(i) TacticalRemoveSoldier(*i);
 
 	// Loop through all the soldier structs to load
 	void (&reader)(HWFILE, BYTE*, UINT32) = savegame_version < 87 ?

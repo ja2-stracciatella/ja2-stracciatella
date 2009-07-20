@@ -993,9 +993,9 @@ void InternalTacticalRemoveSoldier(SOLDIERTYPE& s, BOOLEAN const fRemoveVehicle)
 }
 
 
-void TacticalRemoveSoldier(SOLDIERTYPE* const s)
+void TacticalRemoveSoldier(SOLDIERTYPE& s)
 {
-	InternalTacticalRemoveSoldier(*s, TRUE);
+	InternalTacticalRemoveSoldier(s, TRUE);
 }
 
 
@@ -2062,7 +2062,7 @@ void OkayToUpgradeEliteToSpecialProfiledEnemy( SOLDIERCREATE_STRUCT *pp )
 
 void TrashAllSoldiers( )
 {
-	FOR_ALL_SOLDIERS(s) TacticalRemoveSoldier(s);
+	FOR_ALL_SOLDIERS(i) TacticalRemoveSoldier(*i);
 }
 
 

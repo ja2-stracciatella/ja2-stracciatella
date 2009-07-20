@@ -2534,7 +2534,7 @@ void TrashWorld(void)
 		}
 		else
 		{
-			TacticalRemoveSoldier(s); // Delete from world
+			TacticalRemoveSoldier(*s); // Delete from world
 		}
 	}
 

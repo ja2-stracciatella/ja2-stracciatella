@@ -2054,7 +2054,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				gMercProfiles[ pSoldier->ubProfile ].bSectorZ++;
 				gMercProfiles[ pSoldier->ubProfile ].fUseProfileInsertionInfo = FALSE;
 			}
-			TacticalRemoveSoldier(pSoldier);
+			TacticalRemoveSoldier(*pSoldier);
 			CheckForEndOfBattle( TRUE );
 
 			return( FALSE );         // nothing is in progress
@@ -2299,7 +2299,7 @@ static void HandleAITacticalTraversal(SOLDIERTYPE* pSoldier)
 	else
 	{
 		ProcessQueenCmdImplicationsOfDeath( pSoldier );
-		TacticalRemoveSoldier(pSoldier);
+		TacticalRemoveSoldier(*pSoldier);
 	}
 	CheckForEndOfBattle( TRUE );
 }

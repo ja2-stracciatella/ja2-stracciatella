@@ -480,7 +480,7 @@ void ResetAllMercPositions()
 	{
 		if( curr->pSoldier )
 		{
-			TacticalRemoveSoldier(curr->pSoldier);
+			TacticalRemoveSoldier(*curr->pSoldier);
 			curr->pSoldier = NULL;
 		}
 		//usMapIndex = gpSelected->pBasicPlacement->usStartingGridNo;

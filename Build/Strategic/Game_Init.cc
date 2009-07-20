@@ -684,7 +684,7 @@ void ReStartingGame()
 	InitTacticalSave( TRUE );
 
 	//Loop through all the soldier and delete them all
-	FOR_ALL_SOLDIERS(s) TacticalRemoveSoldier(s);
+	FOR_ALL_SOLDIERS(i) TacticalRemoveSoldier(*i);
 
 	// Re-init overhead...
 	InitOverhead( );
