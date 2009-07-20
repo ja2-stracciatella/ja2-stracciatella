@@ -557,33 +557,30 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 			Assert( pSoldier );
 
 			// affects everyone, in sector differently than not, extra bonuses if it's a buddy or hated merc
-			FOR_ALL_IN_TEAM(pTeamSoldier, gbPlayerNum)
+			FOR_ALL_IN_TEAM(i, gbPlayerNum)
 			{
-				if (pTeamSoldier->ubProfile != NO_PROFILE)
+				SOLDIERTYPE& other = *i;
+				if (other.ubProfile == NO_PROFILE) continue;
+				MERCPROFILESTRUCT const& p = GetProfile(other.ubProfile);
+
+				if (HATED_MERC(p, pSoldier->ubProfile))
 				{
-					MERCPROFILESTRUCT const& p = GetProfile(pTeamSoldier->ubProfile);
-
-					if (HATED_MERC(p, pSoldier->ubProfile))
-					{
-						// yesss!
-						HandleMoraleEventForSoldier( pTeamSoldier, MORALE_HATED_DIED );
+					HandleMoraleEventForSoldier(&other, MORALE_HATED_DIED);
+				}
+				else
+				{
+					if (SOLDIER_IN_SECTOR(&other, sMapX, sMapY, bMapZ))
+					{ // Mate died in my sector! tactical morale mod
+						HandleMoraleEventForSoldier(&other, MORALE_SQUADMATE_DIED);
 					}
-					else
+
+					/* This is handled for everyone even if in sector, as it's a strategic
+					 * morale mod */
+					HandleMoraleEventForSoldier(&other, MORALE_TEAMMATE_DIED);
+
+					if (BUDDY_MERC(p, pSoldier->ubProfile))
 					{
-						if ( SOLDIER_IN_SECTOR( pTeamSoldier, sMapX, sMapY, bMapZ ) )
-						{
-							// mate died in my sector!  tactical morale mod
-							HandleMoraleEventForSoldier( pTeamSoldier, MORALE_SQUADMATE_DIED );
-						}
-
-						// this is handled for everyone even if in sector, as it's a strategic morale mod
-						HandleMoraleEventForSoldier( pTeamSoldier, MORALE_TEAMMATE_DIED );
-
-						if (BUDDY_MERC(p, pSoldier->ubProfile))
-						{
-							// oh no!  buddy died!
-							HandleMoraleEventForSoldier( pTeamSoldier, MORALE_BUDDY_DIED );
-						}
+						HandleMoraleEventForSoldier(&other, MORALE_BUDDY_DIED);
 					}
 				}
 			}
