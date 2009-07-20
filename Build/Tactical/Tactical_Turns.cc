@@ -86,113 +86,84 @@ void HandleRPCDescription()
 }
 
 
-void HandleTacticalEndTurn(void)
+void HandleTacticalEndTurn()
 {
-	UINT32				uiTime;
-  static UINT32 uiTimeSinceLastStrategicUpdate = 0;
+	static UINT32 uiTimeSinceLastStrategicUpdate = 0;
 
-	// OK, Do a number of things here....
-	// Every few turns......
+	UINT32 const now = GetWorldTotalSeconds();
 
-	// Get time elasped
-	uiTime = GetWorldTotalSeconds( );
+	if (uiTimeSinceLastStrategicUpdate - now > 1200)
+	{
+		HandleRottingCorpses();
+		uiTimeSinceLastStrategicUpdate = now;
+	}
 
-  if ( ( uiTimeSinceLastStrategicUpdate - uiTime ) > 1200 )
-  {
-		HandleRottingCorpses( );
-  	//DecayTacticalMoraleModifiers();
-
-    uiTimeSinceLastStrategicUpdate = uiTime;
-  }
-
-	DecayBombTimers( );
-
-	DecaySmokeEffects( uiTime );
-
-	DecayLightEffects( uiTime );
-
-	// Decay smells
-	//DecaySmells();
-
-	// Decay blood
-	DecayBloodAndSmells( uiTime );
-
-	// decay AI warning values from corpses
+	DecayBombTimers();
+	DecaySmokeEffects(now);
+	DecayLightEffects(now);
+	DecayBloodAndSmells(now);
 	DecayRottingCorpseAIWarnings();
 
-	//Check for enemy pooling (add enemies if there happens to be more than the max in the
-	//current battle.  If one or more slots have freed up, we can add them now.
+	/* Check for enemy pooling: Add enemies if there happens to be more than the
+	 * max in the current battle. If one or more slots have freed up, we can add
+	 * them now. */
 	AddPossiblePendingEnemiesToBattle();
 
-	// Loop through each active team and decay public opplist...
+	// Loop through each active team and decay public opplist
 	// May want this done every few times too
-	NonCombatDecayPublicOpplist( uiTime );
-	/*
-	for (UINT32 cnt = 0; cnt < MAXTEAMS; ++cnt)
-	{
-		if (IsTeamActive(cnt))
-		{
-			// decay team's public opplist
-			DecayPublicOpplist( (INT8)cnt );
-		}
-	}
-*/
-
-	// First pass:
-	// Loop through our own mercs:
-	//	Check things like ( even if not in our sector )
-	//		1 ) All updates of breath, shock, bleeding, etc
-	//    2 ) Updating First AID, etc
-	//  ( If in our sector: )
-	//		3 ) Update things like decayed opplist, etc
-
-	// Second pass:
-	//  Loop through all mercs in tactical engine
-	//  If not a player merc ( ubTeam ) , do things like 1 , 2 , 3 above
-
+	NonCombatDecayPublicOpplist(now);
 
 	// First exit if we are not in realtime combat or realtime noncombat
-	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT ) )
+	if (!(gTacticalStatus.uiFlags & TURNBASED) || !(gTacticalStatus.uiFlags & INCOMBAT))
 	{
-		BeginLoggingForBleedMeToos( TRUE );
+		BeginLoggingForBleedMeToos(TRUE);
 
-		FOR_ALL_IN_TEAM(s, gbPlayerNum)
+		/* First pass:
+		 * Loop through our own mercs:
+		 *	Check things like (even if not in our sector)
+		 *		1. All updates of breath, shock, bleeding, etc.
+		 *    2. Updating First aid, etc.
+		 *  (If in our sector:)
+		 *		3. Update things like decayed opplist, etc.
+		 * Second pass:
+		 *  Loop through all mercs in tactical engine
+		 *  If not a player merc (ubTeam), do things like 1, 2, 3 above
+		 */
+
+		FOR_ALL_IN_TEAM(i, gbPlayerNum)
 		{
-			if (s->bLife > 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT(s))
+			SOLDIERTYPE& s = *i;
+			if (s.bLife <= 0)                      continue;
+			if (s.uiStatusFlags & SOLDIER_VEHICLE) continue;
+			if (AM_A_ROBOT(&s))                    continue;
+
+			// Handle everything from getting breath back, to bleeding, etc.
+			EVENT_BeginMercTurn(&s);
+
+			HandlePlayerServices(s);
+
+			// If time is up, turn off xray
+			if (s.uiXRayActivatedTime != 0 && now > s.uiXRayActivatedTime + XRAY_TIME)
 			{
-				// Handle everything from getting breath back, to bleeding, etc
-				EVENT_BeginMercTurn(s);
-
-				// Handle Player services
-				HandlePlayerServices(*s);
-
-				// if time is up, turn off xray
-				if (s->uiXRayActivatedTime && uiTime > s->uiXRayActivatedTime + XRAY_TIME)
-				{
-					TurnOffXRayEffects(s);
-				}
+				TurnOffXRayEffects(&s);
 			}
 		}
 
-		BeginLoggingForBleedMeToos( FALSE );
+		BeginLoggingForBleedMeToos(FALSE);
 
-		// OK, loop through the mercs to perform 'end turn' events on each...
-		// We're looping through only mercs in tactical engine, ignoring our mercs
-		// because they were done earilier...
+		/* We're looping through only mercs in tactical engine, ignoring our mercs
+		 * because they were done earlier */
 		FOR_ALL_MERCS(i)
 		{
-			SOLDIERTYPE* const pSoldier = *i;
-			if ( pSoldier->bTeam != gbPlayerNum )
-			{
-				// Handle everything from getting breath back, to bleeding, etc
-				EVENT_BeginMercTurn(pSoldier);
+			SOLDIERTYPE& s = **i;
+			if (s.bTeam == gbPlayerNum) continue;
 
-				// Handle Player services
-				HandlePlayerServices(*pSoldier);
-			}
+			// Handle everything from getting breath back, to bleeding, etc.
+			EVENT_BeginMercTurn(&s);
+
+			HandlePlayerServices(s);
 		}
 	}
 
-	HandleRPCDescription( );
-
+	HandleRPCDescription();
 }

@@ -2,6 +2,6 @@
 #define _TACTICAL_TURNS_H
 
 void HandleRPCDescription(void);
-void HandleTacticalEndTurn(void);
+void HandleTacticalEndTurn();
 
 #endif
