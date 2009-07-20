@@ -4525,7 +4525,7 @@ static void DeathNoMessageTimerCallback(void)
 
 
 static BOOLEAN CheckForLosingEndOfBattle(void);
-static BOOLEAN KillIncompacitatedEnemyInSector(void);
+static bool  KillIncompacitatedEnemyInSector();
 static UINT8 NumEnemyInSectorExceptCreatures();
 
 
@@ -5231,26 +5231,22 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 }
 
 
-static BOOLEAN KillIncompacitatedEnemyInSector(void)
+static bool KillIncompacitatedEnemyInSector()
 {
-	BOOLEAN			fReturnVal = FALSE;
-
-	// Check if the battle is won!
-	// Loop through all mercs and make go
-	FOR_ALL_SOLDIERS(pTeamSoldier)
+	bool ret = false;
+	FOR_ALL_SOLDIERS(i)
 	{
-		if (pTeamSoldier->bInSector && pTeamSoldier->bLife < OKLIFE && !(pTeamSoldier->uiStatusFlags & SOLDIER_DEAD))
-		{
-			// Checkf for any more bacguys
-			if ( !pTeamSoldier->bNeutral && (pTeamSoldier->bSide != gbPlayerNum ) )
-			{
-				// KIll......
-				SoldierTakeDamage(pTeamSoldier, pTeamSoldier->bLife, 100, TAKE_DAMAGE_BLOODLOSS, NULL);
-				fReturnVal = TRUE;
-			}
-		}
+		SOLDIERTYPE& s = *i;
+		if (!s.bInSector)                   continue;
+		if (s.bLife >= OKLIFE)              continue;
+		if (s.uiStatusFlags & SOLDIER_DEAD) continue;
+		if (s.bNeutral)                     continue;
+		if (s.bSide == gbPlayerNum)         continue;
+		// Kill
+		SoldierTakeDamage(&s, s.bLife, 100, TAKE_DAMAGE_BLOODLOSS, 0);
+		ret = true;
 	}
-	return( fReturnVal );
+	return ret;
 }
 
 
