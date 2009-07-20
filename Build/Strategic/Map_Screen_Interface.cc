@@ -1060,36 +1060,18 @@ void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE& s)
 static INT32 SetUpDropItemListForMerc(SOLDIERTYPE* s);
 
 
-void HandleMercLeavingEquipmentInOmerta(SOLDIERTYPE* const s)
+void HandleMercLeavingEquipment(SOLDIERTYPE& s, bool const in_drassen)
 {
-	// stash the items into a linked list hanging of a free "leave item list" slot
-	const INT32 iSlotIndex = SetUpDropItemListForMerc(s);
-	if (iSlotIndex != -1)
-	{
-		// post event to drop it there 6 hours later
-		AddStrategicEvent( EVENT_MERC_LEAVE_EQUIP_IN_OMERTA, GetWorldTotalMin() + ( 6 * 60 ), iSlotIndex );
+	// Stash the items into a linked list hanging of a free "leave item list" slot
+	INT32 const slot = SetUpDropItemListForMerc(&s);
+	if (slot != -1)
+	{ // Post event to drop it there 6 hours later
+		StrategicEventKind const e = in_drassen ? EVENT_MERC_LEAVE_EQUIP_IN_DRASSEN : EVENT_MERC_LEAVE_EQUIP_IN_OMERTA;
+		AddStrategicEvent(e, GetWorldTotalMin() + 6 * 60, slot);
 	}
 	else
-	{
-		// otherwise there's no free slots left (shouldn't ever happen)
-		AssertMsg( FALSE, "HandleMercLeavingEquipmentInOmerta: No more free slots, equipment lost" );
-	}
-}
-
-
-void HandleMercLeavingEquipmentInDrassen(SOLDIERTYPE* const s)
-{
-	// stash the items into a linked list hanging of a free "leave item list" slot
-	const INT32 iSlotIndex = SetUpDropItemListForMerc(s);
-	if (iSlotIndex != -1)
-	{
-		// post event to drop it there 6 hours later
-		AddStrategicEvent( EVENT_MERC_LEAVE_EQUIP_IN_DRASSEN, GetWorldTotalMin() + ( 6 * 60 ), iSlotIndex );
-	}
-	else
-	{
-		// otherwise there's no free slots left (shouldn't ever happen)
-		AssertMsg( FALSE, "HandleMercLeavingEquipmentInDrassen: No more free slots, equipment lost" );
+	{ // Otherwise there's no free slots left (shouldn't ever happen)
+		AssertMsg(FALSE, "HandleMercLeavingEquipment: No more free slots, equipment lost");
 	}
 }
 

@@ -826,15 +826,11 @@ static void MercDepartEquipmentBoxCallBack(MessageBoxReturnValue const exit_valu
 			return;
 
 		default:
-			if (!StrategicMap[BOBBYR_SHIPPING_DEST_SECTOR_X + BOBBYR_SHIPPING_DEST_SECTOR_Y * MAP_WORLD_X].fEnemyControlled)
-			{
-				HandleMercLeavingEquipmentInDrassen(&s);
-			}
-			else
-			{
-				HandleMercLeavingEquipmentInOmerta(&s);
-			}
+		{
+			bool const in_drassen = !StrategicMap[BOBBYR_SHIPPING_DEST_SECTOR_X + BOBBYR_SHIPPING_DEST_SECTOR_Y * MAP_WORLD_X].fEnemyControlled;
+			HandleMercLeavingEquipment(s, in_drassen);
 			break;
+		}
 	}
 
 	StrategicRemoveMerc(s);
