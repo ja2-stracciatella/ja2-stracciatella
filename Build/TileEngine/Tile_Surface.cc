@@ -120,7 +120,7 @@ void SetRaisedObjectFlag(char const* const filename, TILE_IMAGERY* const t)
 
 	// Loop through array of RAISED objecttype imagery and set global value
 	char rootfile[128];
-	GetRootName(rootfile, filename);
+	GetRootName(rootfile, lengthof(rootfile), filename);
 	for (char const (*i)[9] = RaisedObjectFiles; i != endof(RaisedObjectFiles); ++i)
 	{
 		if (strcasecmp(*i, rootfile) != 0) continue;

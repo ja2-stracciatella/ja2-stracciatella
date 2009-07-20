@@ -57,7 +57,7 @@ void InitTileCache(void)
 		sprintf(filename, "%s/Data/TILECACHE/%s", data_path, find_filename);
 
 		TILE_CACHE_STRUCT tc;
-		GetRootName(tc.zRootName, filename);
+		GetRootName(tc.zRootName, lengthof(tc.zRootName), filename);
 		tc.pStructureFileRef = LoadStructureFile(filename);
 
 		if (strcasecmp(tc.zRootName, "l_dead1") == 0)
@@ -153,7 +153,7 @@ INT32 GetCachedTile(const char* const filename)
 	tce->sHits = 1;
 
 	char root_name[30];
-	GetRootName(root_name, filename);
+	GetRootName(root_name, lengthof(root_name), filename);
 	STRUCTURE_FILE_REF* const sfr = GetCachedTileStructureRefFromFilename(root_name);
 	tce->struct_file_ref = sfr;
 	if (sfr) AddZStripInfoToVObject(tce->pImagery->vo, sfr, TRUE, 0);
@@ -234,8 +234,8 @@ void CheckForAndDeleteTileCacheStructInfo( LEVELNODE *pNode, UINT16 usIndex )
 }
 
 
-void GetRootName(char* pDestStr, const char* pSrcStr)
+void GetRootName(char* const pDestStr, size_t const n, char const* const pSrcStr)
 {
 	// Remove path and extension
-	ReplacePath(pDestStr, (size_t)-1, "", pSrcStr, "");
+	ReplacePath(pDestStr, n, "", pSrcStr, "");
 }

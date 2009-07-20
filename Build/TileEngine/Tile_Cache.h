@@ -29,7 +29,7 @@ STRUCTURE_FILE_REF* GetCachedTileStructureRefFromFilename(const char* cFilename)
 
 void CheckForAndAddTileCacheStructInfo( LEVELNODE *pNode, INT16 sGridNo, UINT16 usIndex, UINT16 usSubIndex );
 void CheckForAndDeleteTileCacheStructInfo( LEVELNODE *pNode, UINT16 usIndex );
-void GetRootName(char* pDestStr, const char* pSrcStr);
+void GetRootName(char* pDestStr, size_t n, char const* pSrcStr);
 
 
 // OF COURSE, FOR SPEED, WE EXPORT OUR ARRAY

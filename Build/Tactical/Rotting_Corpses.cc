@@ -506,7 +506,7 @@ try
 	// Get root filename... this removes path and extension
 	// Used to find struct data for this corpse...
 	char zFilename[150];
-	GetRootName(zFilename, AniParams.zCachedFile);
+	GetRootName(zFilename, lengthof(zFilename), AniParams.zCachedFile);
 
 	// Add structure data.....
 	CheckForAndAddTileCacheStructInfo(n, c->def.sGridNo, ani->sCachedTileID, GetCorpseStructIndex(pCorpseDef, TRUE));
@@ -1097,7 +1097,7 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 	// Get root filename... this removes path and extension
 	// USed to find struct data fo rthis corpse...
 	char zFilename[150];
-	GetRootName( zFilename, zCorpseFilenames[pDef->ubType ] );
+	GetRootName(zFilename, lengthof(zFilename), zCorpseFilenames[pDef->ubType]);
 
 	pStructureFileRef = GetCachedTileStructureRefFromFilename( zFilename );
 
