@@ -947,55 +947,55 @@ static void InitSoldierStruct(SOLDIERTYPE& s)
 }
 
 
-void InternalTacticalRemoveSoldier(SOLDIERTYPE* const s, BOOLEAN const fRemoveVehicle)
+void InternalTacticalRemoveSoldier(SOLDIERTYPE& s, BOOLEAN const fRemoveVehicle)
 {
-	if (GetSelectedMan() == s) SetSelectedMan(0);
-	if (gUIFullTarget    == s) gUIFullTarget   = 0;
-	if (gpSMCurrentMerc  == s) gpSMCurrentMerc = 0;
+	if (GetSelectedMan() == &s) SetSelectedMan(0);
+	if (gUIFullTarget    == &s) gUIFullTarget   = 0;
+	if (gpSMCurrentMerc  == &s) gpSMCurrentMerc = 0;
 
-	if (!s->bActive) return;
+	if (!s.bActive) return;
 
-	if (s->ubScheduleID) DeleteSchedule(s->ubScheduleID);
+	if (s.ubScheduleID) DeleteSchedule(s.ubScheduleID);
 
-	if (s->uiStatusFlags & SOLDIER_VEHICLE && fRemoveVehicle)
+	if (s.uiStatusFlags & SOLDIER_VEHICLE && fRemoveVehicle)
 	{
-		RemoveVehicleFromList(GetVehicle(s->bVehicleID));
+		RemoveVehicleFromList(GetVehicle(s.bVehicleID));
 	}
 
-	if (s->ubBodyType == CROW) HandleCrowLeave(s);
+	if (s.ubBodyType == CROW) HandleCrowLeave(&s);
 
 	if (guiCurrentScreen != AUTORESOLVE_SCREEN)
 	{
-		RemoveCharacterFromSquads(s);
-		RemovePlayerFromTeamSlot(s);
-		RemoveSoldierFromGridNo(s);
+		RemoveCharacterFromSquads(&s);
+		RemovePlayerFromTeamSlot(&s);
+		RemoveSoldierFromGridNo(&s);
 
 		// Delete shadow of crow....
-		if (s->pAniTile)
+		if (s.pAniTile)
 		{
-			DeleteAniTile(s->pAniTile);
-			s->pAniTile = 0;
+			DeleteAniTile(s.pAniTile);
+			s.pAniTile = 0;
 		}
 
-		if (!(s->uiStatusFlags & SOLDIER_OFF_MAP))
+		if (!(s.uiStatusFlags & SOLDIER_OFF_MAP))
 		{
 			// Decrement men in sector number!
-			RemoveManFromTeam(s->bTeam);
+			RemoveManFromTeam(s.bTeam);
 		} // people specified off-map have already been removed from their team count
 
-		DeleteSoldier(*s);
+		DeleteSoldier(s);
 	}
 	else
 	{
-		if (gfPersistantPBI) DeleteSoldier(*s);
-		MemFree(s);
+		if (gfPersistantPBI) DeleteSoldier(s);
+		MemFree(&s);
 	}
 }
 
 
 void TacticalRemoveSoldier(SOLDIERTYPE* const s)
 {
-	InternalTacticalRemoveSoldier(s, TRUE);
+	InternalTacticalRemoveSoldier(*s, TRUE);
 }
 
 

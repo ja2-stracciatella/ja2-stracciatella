@@ -200,7 +200,7 @@ void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID );
 
 void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID );
 
-void InternalTacticalRemoveSoldier(SOLDIERTYPE* s, BOOLEAN fRemoveVehicle);
+void InternalTacticalRemoveSoldier(SOLDIERTYPE&, BOOLEAN fRemoveVehicle);
 
 //SPECIAL!  Certain events in the game can cause profiled NPCs to become enemies.  The two cases are
 //adding Mike and Iggy.  We will only add one NPC in any given combat and the conditions for setting

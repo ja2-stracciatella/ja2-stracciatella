@@ -713,7 +713,7 @@ SOLDIERTYPE *ChangeSoldierTeam( SOLDIERTYPE *pSoldier, UINT8 ubTeam )
 	sOldGridNo = pSoldier->sGridNo;
 
 	// Remove him from the game!
-	InternalTacticalRemoveSoldier(pSoldier, FALSE);
+	InternalTacticalRemoveSoldier(*pSoldier, FALSE);
 
 	// Create a new one!
 	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
