@@ -4989,26 +4989,19 @@ UINT8 NumPCsInSector(void)
 }
 
 
-UINT8 NumEnemyInSector( )
+UINT8 NumEnemyInSector()
 {
-	UINT8				ubNumEnemies = 0;
-
-	// Check if the battle is won!
-	// Loop through all mercs and make go
-	CFOR_ALL_SOLDIERS(pTeamSoldier)
+	UINT8 n_enemies = 0;
+	CFOR_ALL_SOLDIERS(i)
 	{
-		if (pTeamSoldier->bInSector && pTeamSoldier->bLife > 0)
-		{
-			// Checkf for any more bacguys
-			if ( !pTeamSoldier->bNeutral && (pTeamSoldier->bSide != 0 ) )
-			{
-				ubNumEnemies++;
-			}
-		}
+		SOLDIERTYPE const& s = *i;
+		if (!s.bInSector) continue;
+		if (s.bLife <= 0) continue;
+		if (s.bNeutral)   continue;
+		if (s.bSide == 0) continue;
+		++n_enemies;
 	}
-
-	return( ubNumEnemies );
-
+	return n_enemies;
 }
 
 

@@ -342,7 +342,7 @@ void DoPOWPathChecks( void );
 BOOLEAN HostileCiviliansPresent( void );
 BOOLEAN HostileBloodcatsPresent( void );
 UINT8 NumPCsInSector( void );
-UINT8 NumEnemyInSector(void);
+UINT8 NumEnemyInSector();
 
 void SetSoldierNonNeutral( SOLDIERTYPE * pSoldier );
 void SetSoldierNeutral( SOLDIERTYPE * pSoldier );
