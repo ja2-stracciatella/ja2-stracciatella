@@ -138,7 +138,7 @@ void HandleTacticalEndTurn()
 			if (AM_A_ROBOT(&s))                    continue;
 
 			// Handle everything from getting breath back, to bleeding, etc.
-			EVENT_BeginMercTurn(&s);
+			EVENT_BeginMercTurn(s);
 
 			HandlePlayerServices(s);
 
@@ -159,7 +159,7 @@ void HandleTacticalEndTurn()
 			if (s.bTeam == gbPlayerNum) continue;
 
 			// Handle everything from getting breath back, to bleeding, etc.
-			EVENT_BeginMercTurn(&s);
+			EVENT_BeginMercTurn(s);
 
 			HandlePlayerServices(s);
 		}

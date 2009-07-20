@@ -3988,218 +3988,152 @@ void EVENT_SetSoldierDirection( SOLDIERTYPE *pSoldier, UINT16	usNewDirection )
 static INT32 CheckBleeding(SOLDIERTYPE* pSoldier);
 
 
-void EVENT_BeginMercTurn(SOLDIERTYPE* const pSoldier)
+void EVENT_BeginMercTurn(SOLDIERTYPE& s)
 {
-	// NB realtimecounter is not used, always passed in as 0 now!
+	/* UnderFire now starts at 2 for "under fire this turn", down to 1 for "under
+	 * fire last turn", to 0 */
+	if (s.bUnderFire != 0) --s.bUnderFire;
 
-	INT32 iBlood;
+	// ATE: Add decay effect for drugs
+	HandleEndTurnDrugAdjustments(&s);
 
-	if (pSoldier->bUnderFire)
-	{
-		// UnderFire now starts at 2 for "under fire this turn",
-		// down to 1 for "under fire last turn", to 0.
-		pSoldier->bUnderFire--;
-	}
-
-	// ATE: Add decay effect sfor drugs...
-	HandleEndTurnDrugAdjustments(pSoldier);
-
-	// ATE: Don't bleed if in AUTO BANDAGE!
-	if ( !gTacticalStatus.fAutoBandageMode )
+	// ATE: Don't bleed if in auto bandage!
+	if (!gTacticalStatus.fAutoBandageMode)
 	{
 		// Blood is not for the weak of heart, or mechanical
-		if ( !( pSoldier->uiStatusFlags & ( SOLDIER_VEHICLE | SOLDIER_ROBOT ) ) )
+		if (!(s.uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_ROBOT)))
 		{
-			if ( pSoldier->bBleeding || pSoldier->bLife < OKLIFE ) // is he bleeding or dying?
+			if (s.bBleeding != 0 || s.bLife < OKLIFE) // is he bleeding or dying?
 			{
-				iBlood = CheckBleeding( pSoldier );	// check if he might lose another life point
-
-				// ATE: Only if in sector!
-				if ( pSoldier->bInSector )
+				INT32 const blood = CheckBleeding(&s); // check if he might lose another life point
+				// ATE: Only if in sector
+				if (blood != NOBLOOD && s.bInSector)
 				{
-					if ( iBlood != NOBLOOD )
-					{
-						DropBlood( pSoldier, (INT8)iBlood, pSoldier->bVisible );
-					}
+					DropBlood(&s, blood, s.bVisible);
 				}
 			}
 		}
 	}
 
-  // survived bleeding, but is he out of breath?
-  if ( pSoldier->bLife && !pSoldier->bBreath && MercInWater( pSoldier ) )
+	if (s.bLife == 0) return;
+	// He is still alive (didn't bleed to death)
+
+	// Reduce the effects of any residual shock from past injuries by half
+	s.bShock /= 2;
+
+	// If this person has heard a noise that hasn't been investigated
+	if (s.sNoiseGridno != NOWHERE && s.ubNoiseVolume != 0)
+	{ // The volume of the noise "decays" by 1 point
+		if (--s.ubNoiseVolume == 0)
+		{ // The volume has reached zero, forget about the noise
+			s.sNoiseGridno = NOWHERE;
+		}
+	}
+
+	if (s.uiStatusFlags & SOLDIER_GASSED)
+	{ // Must get a gas mask or leave the gassed area to get over it
+		if (IsWearingHeadGear(s, GASMASK) ||
+				GetSmokeEffectOnTile(s.sGridNo, s.bLevel) == NO_SMOKE_EFFECT)
+		{ // Turn off gassed flag
+			s.uiStatusFlags &= ~SOLDIER_GASSED;
+		}
+	}
+
+	if (s.bBlindedCounter > 0 && --s.bBlindedCounter == 0)
 	{
-		// Drowning...
+		HandleSight(s, SIGHT_LOOK);         // We can see
+		fInterfacePanelDirty = DIRTYLEVEL2; // Dirty panel
 	}
 
-  // if he is still alive (didn't bleed to death)
-  if ( pSoldier->bLife )
-  {
-		// reduce the effects of any residual shock from past injuries by half
-		pSoldier->bShock /= 2;
+	s.sWeightCarriedAtTurnStart = CalculateCarriedWeight(&s);
 
-		// if this person has heard a noise that hasn't been investigated
-		if (pSoldier->sNoiseGridno != NOWHERE)
+	UnusedAPsToBreath(&s);
+
+	// Set flag back to normal, after reaching a certain statge
+	if (s.bBreath > 80) s.usQuoteSaidFlags &= ~SOLDIER_QUOTE_SAID_LOW_BREATH;
+	if (s.bBreath > 50) s.usQuoteSaidFlags &= ~SOLDIER_QUOTE_SAID_DROWNING;
+
+	if (s.ubTurnsUntilCanSayHeardNoise > 0) --s.ubTurnsUntilCanSayHeardNoise;
+
+	if (s.bInSector) CheckForBreathCollapse(s);
+
+	CalcNewActionPoints(&s);
+
+	s.bTilesMoved = 0;
+
+	if (s.bInSector)
+	{
+		BeginSoldierGetup(&s);
+
+		// CJC Nov 30: handle RT opplist decaying in another function which operates less often
+		if (gTacticalStatus.uiFlags & INCOMBAT)
 		{
-			if (pSoldier->ubNoiseVolume)	// and the noise volume is still positive
+			VerifyAndDecayOpplist(&s);
+			if (s.uiXRayActivatedTime != 0) TurnOffXRayEffects(&s);
+		}
+
+		if (s.bTeam == gbPlayerNum && s.ubProfile != NO_PROFILE)
+		{
+			switch (GetProfile(s.ubProfile).bPersonalityTrait)
 			{
-				pSoldier->ubNoiseVolume--;	// the volume of the noise "decays" by 1 point
+				case FEAR_OF_INSECTS:
+					if (MercSeesCreature(&s))
+					{
+						HandleMoraleEvent(&s, MORALE_INSECT_PHOBIC_SEES_CREATURE, s.sSectorX, s.sSectorY, s.bSectorZ);
+						goto say_personality_quote;
+					}
+					break;
 
-				if (!pSoldier->ubNoiseVolume)	// if the volume has reached zero
-				{
-					pSoldier->sNoiseGridno = NOWHERE;		// forget about the noise!
-				}
-			}
-		}
+				case CLAUSTROPHOBIC:
+					if (gbWorldSectorZ > 0 && Random(6 - gbWorldSectorZ) == 0)
+					{
+						HandleMoraleEvent(&s, MORALE_CLAUSTROPHOBE_UNDERGROUND, s.sSectorX, s.sSectorY, s.bSectorZ);
+						goto say_personality_quote;
+					}
+					break;
 
-     // save unused action points up to a maximum
-		 /*
-     if ((savedPts = pSoldier->bActionPts) > MAX_AP_CARRIED)
-       savedPts = MAX_AP_CARRIED;
-			*/
-		if ( pSoldier->uiStatusFlags & SOLDIER_GASSED )
-		{
-			 // then must get a gas mask or leave the gassed area to get over it
-			if (IsWearingHeadGear(*pSoldier, GASMASK) ||
-					GetSmokeEffectOnTile(pSoldier->sGridNo, pSoldier->bLevel) == NO_SMOKE_EFFECT)
-			 {
-				 // Turn off gassed flag....
-				 pSoldier->uiStatusFlags &= (~SOLDIER_GASSED );
-			}
-		}
-
-		if ( pSoldier->bBlindedCounter > 0 )
-		{
-			pSoldier->bBlindedCounter--;
-			if (pSoldier->bBlindedCounter == 0)
-			{
-				// we can SEE!!!!!
-				HandleSight(*pSoldier, SIGHT_LOOK);
-        // Dirty panel
-        fInterfacePanelDirty = DIRTYLEVEL2;
-			}
-		}
-
-		// ATE: To get around a problem...
-		// If an AI guy, and we have 0 life, and are still at higher hieght,
-		// Kill them.....
-
-
-		pSoldier->sWeightCarriedAtTurnStart = (INT16) CalculateCarriedWeight( pSoldier );
-
-		UnusedAPsToBreath( pSoldier );
-
-		// Set flag back to normal, after reaching a certain statge
-		if ( pSoldier->bBreath > 80 )
-		{
-			pSoldier->usQuoteSaidFlags &= ( ~SOLDIER_QUOTE_SAID_LOW_BREATH );
-		}
-		if ( pSoldier->bBreath > 50 )
-		{
-			pSoldier->usQuoteSaidFlags &= ( ~SOLDIER_QUOTE_SAID_DROWNING );
-		}
-
-
-		if ( pSoldier->ubTurnsUntilCanSayHeardNoise > 0)
-		{
-			pSoldier->ubTurnsUntilCanSayHeardNoise--;
-		}
-
-		if ( pSoldier->bInSector )
-		{
-			CheckForBreathCollapse(*pSoldier);
-		}
-
-		CalcNewActionPoints( pSoldier );
-
-		pSoldier->bTilesMoved						= 0;
-
-		if ( pSoldier->bInSector )
-		{
-			BeginSoldierGetup( pSoldier );
-
-			// CJC Nov 30: handle RT opplist decaying in another function which operates less often
-			if ( gTacticalStatus.uiFlags & INCOMBAT )
-			{
-				VerifyAndDecayOpplist( pSoldier );
-
-				// turn off xray
-				if ( pSoldier->uiXRayActivatedTime )
-				{
-					TurnOffXRayEffects( pSoldier );
-				}
-			}
-
-			if ( (pSoldier->bTeam == gbPlayerNum) && (pSoldier->ubProfile != NO_PROFILE) )
-			{
-				switch( gMercProfiles[ pSoldier->ubProfile ].bPersonalityTrait )
-				{
-					case FEAR_OF_INSECTS:
-						if ( MercSeesCreature( pSoldier ) )
+				case NERVOUS:
+					if (DistanceToClosestFriend(&s) > NERVOUS_RADIUS)
+					{
+						if (s.bMorale < 50)
 						{
-							HandleMoraleEvent( pSoldier, MORALE_INSECT_PHOBIC_SEES_CREATURE, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
-							if ( !(pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_PERSONALITY) )
-							{
-								TacticalCharacterDialogue( pSoldier, QUOTE_PERSONALITY_TRAIT );
-								pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_PERSONALITY;
-							}
+							HandleMoraleEvent(&s, MORALE_NERVOUS_ALONE, s.sSectorX, s.sSectorY, s.bSectorZ);
+							goto say_personality_quote;
 						}
-						break;
-					case CLAUSTROPHOBIC:
-						if ( gbWorldSectorZ > 0 && Random( 6 - gbWorldSectorZ ) == 0 )
-						{
-							// underground!
-							HandleMoraleEvent( pSoldier, MORALE_CLAUSTROPHOBE_UNDERGROUND, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
-							if ( !(pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_PERSONALITY) )
-							{
-								TacticalCharacterDialogue( pSoldier, QUOTE_PERSONALITY_TRAIT );
-								pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_PERSONALITY;
-							}
+					}
+					else
+					{
+						if (s.bMorale > 45)
+						{ // Turn flag off, so that we say it every two turns
+							s.usQuoteSaidFlags &= ~SOLDIER_QUOTE_SAID_PERSONALITY;
+						}
+					}
+					break;
 
-						}
-						break;
-					case NERVOUS:
-						if ( DistanceToClosestFriend( pSoldier ) > NERVOUS_RADIUS )
-						{
-							// augh!!
-							if ( pSoldier->bMorale < 50 )
-							{
-								HandleMoraleEvent( pSoldier, MORALE_NERVOUS_ALONE, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
-								if ( !(pSoldier->usQuoteSaidFlags & SOLDIER_QUOTE_SAID_PERSONALITY) )
-								{
-									TacticalCharacterDialogue( pSoldier, QUOTE_PERSONALITY_TRAIT );
-									pSoldier->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_PERSONALITY;
-								}
-							}
-						}
-						else
-						{
-							if ( pSoldier->bMorale > 45 )
-							{
-								// turn flag off, so that we say it every two turns
-								pSoldier->usQuoteSaidFlags &= ~SOLDIER_QUOTE_SAID_PERSONALITY;
-							}
-						}
-						break;
-				}
+say_personality_quote:
+					if (!(s.usQuoteSaidFlags & SOLDIER_QUOTE_SAID_PERSONALITY))
+					{
+						TacticalCharacterDialogue(&s, QUOTE_PERSONALITY_TRAIT);
+						s.usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_PERSONALITY;
+					}
+					break;
 			}
 		}
+	}
 
-		// Reset quote flags for under heavy fire and close call!
-		pSoldier->usQuoteSaidFlags &= ( ~SOLDIER_QUOTE_SAID_BEING_PUMMELED );
-		pSoldier->usQuoteSaidExtFlags &= ( ~SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL );
-		pSoldier->bNumHitsThisTurn = 0;
-		pSoldier->ubSuppressionPoints = 0;
-		pSoldier->fCloseCall = FALSE;
+	// Reset quote flags for under heavy fire and close call
+	s.usQuoteSaidFlags    &= ~SOLDIER_QUOTE_SAID_BEING_PUMMELED;
+	s.usQuoteSaidExtFlags &= ~SOLDIER_QUOTE_SAID_EXT_CLOSE_CALL;
+	s.bNumHitsThisTurn     = 0;
+	s.ubSuppressionPoints  = 0;
+	s.fCloseCall           = FALSE;
+	s.ubMovementNoiseHeard = 0;
 
-		pSoldier->ubMovementNoiseHeard = 0;
-
-		// If soldier has new APs, reset flags!
-		if ( pSoldier->bActionPoints > 0 )
-		{
-			pSoldier->bMoved = FALSE;
-			pSoldier->bPassedLastInterrupt = FALSE;
-		}
+	// If soldier has new APs, reset flags
+	if (s.bActionPoints > 0)
+	{
+		s.bMoved               = FALSE;
+		s.bPassedLastInterrupt = FALSE;
 	}
 }
 

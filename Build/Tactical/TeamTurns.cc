@@ -315,13 +315,12 @@ void BeginTeamTurn( UINT8 ubTeam )
 			// decay team's public opplist
 			DecayPublicOpplist( ubTeam );
 
-			FOR_ALL_IN_TEAM(s, ubTeam)
+			FOR_ALL_IN_TEAM(i, ubTeam)
 			{
-				if (s->bLife > 0)
-				{
-					// decay personal opplist, and refresh APs and BPs
-					EVENT_BeginMercTurn(s);
-				}
+				SOLDIERTYPE& s = *i;
+				if (s.bLife <= 0) continue;
+				// decay personal opplist, and refresh APs and BPs
+				EVENT_BeginMercTurn(s);
 			}
 
 			if (gTacticalStatus.bBoxingState == LOST_ROUND || gTacticalStatus.bBoxingState == WON_ROUND || gTacticalStatus.bBoxingState == DISQUALIFIED )

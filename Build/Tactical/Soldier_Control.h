@@ -926,7 +926,7 @@ void BeginSoldierGetup( SOLDIERTYPE *pSoldier );
 // Soldier Management functions called by Overhead.c
 BOOLEAN ConvertAniCodeToAniFrame( SOLDIERTYPE *pSoldier, UINT16 usAniFrame );
 void TurnSoldier( SOLDIERTYPE *pSold);
-void EVENT_BeginMercTurn(SOLDIERTYPE* pSoldier);
+void EVENT_BeginMercTurn(SOLDIERTYPE&);
 void ChangeSoldierStance( SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance );
 void ModifySoldierAniSpeed( SOLDIERTYPE *pSoldier );
 void StopSoldier( SOLDIERTYPE *pSoldier );
