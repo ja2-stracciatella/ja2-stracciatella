@@ -645,19 +645,19 @@ try
 }
 catch (...)
 {
-	DeleteSoldier(&s);
+	DeleteSoldier(s);
 	throw;
 }
 
 
-void DeleteSoldier(SOLDIERTYPE* const s)
+void DeleteSoldier(SOLDIERTYPE& s)
 {
-	if (s->sGridNo != NOWHERE)
+	if (s.sGridNo != NOWHERE)
 	{
 		// Remove adjacency records
 		for (INT8 bDir = 0; bDir < NUM_WORLD_DIRECTIONS; ++bDir)
 		{
-			const INT32 iGridNo = s->sGridNo + DirIncrementer[bDir];
+			INT32 const iGridNo = s.sGridNo + DirIncrementer[bDir];
 			if (0 <= iGridNo && iGridNo < WORLD_MAX)
 			{
 				--gpWorldLevelData[iGridNo].ubAdjacentSoldierCnt;
@@ -665,48 +665,48 @@ void DeleteSoldier(SOLDIERTYPE* const s)
 		}
 	}
 
-	if (s->pKeyRing)
+	if (s.pKeyRing)
 	{
-		MemFree(s->pKeyRing);
-		s->pKeyRing = NULL;
+		MemFree(s.pKeyRing);
+		s.pKeyRing = 0;
 	}
 
-	DeleteSoldierFace(s);
+	DeleteSoldierFace(&s);
 
-	for (UINT16** i = s->pShades; i != endof(s->pShades); ++i)
+	for (UINT16** i = s.pShades; i != endof(s.pShades); ++i)
 	{
 		if (*i == NULL) continue;
 		MemFree(*i);
 		*i = NULL;
 	}
 
-	if (s->effect_shade)
+	if (s.effect_shade)
 	{
-		MemFree(s->effect_shade);
-		s->effect_shade = 0;
+		MemFree(s.effect_shade);
+		s.effect_shade = 0;
 	}
 
-	for (UINT16** i = s->pGlowShades; i != endof(s->pGlowShades); ++i)
+	for (UINT16** i = s.pGlowShades; i != endof(s.pGlowShades); ++i)
 	{
 		if (*i == NULL) continue;
 		MemFree(*i);
 		*i = NULL;
 	}
 
-	if (s->ubBodyType == QUEENMONSTER)
+	if (s.ubBodyType == QUEENMONSTER)
 	{
-		DeletePositionSnd(s->iPositionSndID);
+		DeletePositionSnd(s.iPositionSndID);
 	}
 
 	// Free any animations we may have locked...
-	UnLoadCachedAnimationSurfaces(s->ubID, &s->AnimCache);
-	DeleteAnimationCache(s->ubID, &s->AnimCache);
+	UnLoadCachedAnimationSurfaces(s.ubID, &s.AnimCache);
+	DeleteAnimationCache(s.ubID, &s.AnimCache);
 
-	DeleteSoldierLight(s);
-	UnMarkMovementReserved(s);
-	if (!RemoveMercSlot(s)) RemoveAwaySlot(s);
+	DeleteSoldierLight(&s);
+	UnMarkMovementReserved(&s);
+	if (!RemoveMercSlot(&s)) RemoveAwaySlot(&s);
 
-	s->bActive = FALSE;
+	s.bActive = FALSE;
 }
 
 

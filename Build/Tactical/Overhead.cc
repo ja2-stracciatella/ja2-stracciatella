@@ -473,7 +473,7 @@ void InitOverhead(void)
 void ShutdownOverhead(void)
 {
 	// Delete any soldiers which have been created!
-	FOR_ALL_SOLDIERS(s) DeleteSoldier(s);
+	FOR_ALL_SOLDIERS(i) DeleteSoldier(*i);
 }
 
 

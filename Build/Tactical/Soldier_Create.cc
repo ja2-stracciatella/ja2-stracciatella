@@ -983,11 +983,11 @@ void InternalTacticalRemoveSoldier(SOLDIERTYPE* const s, BOOLEAN const fRemoveVe
 			RemoveManFromTeam(s->bTeam);
 		} // people specified off-map have already been removed from their team count
 
-		DeleteSoldier(s);
+		DeleteSoldier(*s);
 	}
 	else
 	{
-		if (gfPersistantPBI) DeleteSoldier(s);
+		if (gfPersistantPBI) DeleteSoldier(*s);
 		MemFree(s);
 	}
 }

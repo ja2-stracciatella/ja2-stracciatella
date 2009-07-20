@@ -872,7 +872,7 @@ extern PaletteReplacementType* gpPalRep;
 extern UINT8	bHealthStrRanges[];
 
 
-void DeleteSoldier(SOLDIERTYPE*);
+void DeleteSoldier(SOLDIERTYPE&);
 void DeleteSoldierLight(SOLDIERTYPE*);
 
 void CreateSoldierCommon(SOLDIERTYPE&);
