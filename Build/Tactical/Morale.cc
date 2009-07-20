@@ -29,7 +29,7 @@
 
 
 // macros
-#define SOLDIER_IN_SECTOR( pSoldier, sX, sY, bZ )		( !pSoldier->fBetweenSectors && ( pSoldier->sSectorX == sX ) && ( pSoldier->sSectorY == sY ) && ( pSoldier->bSectorZ == bZ ) )
+#define SOLDIER_IN_SECTOR(s, x, y, z) (!(s)->fBetweenSectors && (s)->sSectorX == (x) && (s)->sSectorY == (y) && (s)->bSectorZ == (z))
 
 
 
@@ -473,36 +473,38 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 
 		case MORALE_RAN_AWAY:
 			// affects everyone to varying degrees
-			FOR_ALL_IN_TEAM(pTeamSoldier, gbPlayerNum)
+			FOR_ALL_IN_TEAM(i, gbPlayerNum)
 			{
-				// CJC: adding to SOLDIER_IN_SECTOR check special stuff because the old sector values might
-				// be appropriate (because in transit going out of that sector!)
-				if (SOLDIER_IN_SECTOR(pTeamSoldier, sMapX, sMapY, bMapZ) ||
+				SOLDIERTYPE& s = *i;
+				/* CJC: adding to SOLDIER_IN_SECTOR check special stuff because the old
+				 * sector values might be appropriate (because in transit going out of
+				 * that sector!) */
+				if (SOLDIER_IN_SECTOR(&s, sMapX, sMapY, bMapZ) ||
 						(
-							pTeamSoldier->fBetweenSectors &&
-							pTeamSoldier->ubPrevSectorID % 16 + 1 == sMapX &&
-							pTeamSoldier->ubPrevSectorID / 16 + 1 == sMapY &&
-							pTeamSoldier->bSectorZ == bMapZ
+							s.fBetweenSectors &&
+							s.ubPrevSectorID % 16 + 1 == sMapX &&
+							s.ubPrevSectorID / 16 + 1 == sMapY &&
+							s.bSectorZ == bMapZ
 						))
 				{
-					switch ( gMercProfiles[ pTeamSoldier->ubProfile ].bAttitude )
+					switch (GetProfile(s.ubProfile).bAttitude)
 					{
 						case ATT_AGGRESSIVE:
-							// double the penalty - these guys REALLY hate running away
-							HandleMoraleEventForSoldier( pTeamSoldier, MORALE_RAN_AWAY );
-							HandleMoraleEventForSoldier( pTeamSoldier, MORALE_RAN_AWAY );
-							break;
-						case ATT_COWARD:
-							// no penalty - cowards are perfectly happy to avoid fights!
-							break;
+							// Double the penalty - these guys REALLY hate running away
+							HandleMoraleEventForSoldier(&s, MORALE_RAN_AWAY);
+							/* FALLTHROUGH */
 						default:
-							HandleMoraleEventForSoldier( pTeamSoldier, MORALE_RAN_AWAY );
+							HandleMoraleEventForSoldier(&s, MORALE_RAN_AWAY);
+							break;
+
+						case ATT_COWARD:
+							// No penalty - cowards are perfectly happy to avoid fights
 							break;
 					}
 				}
 				else
 				{
-					HandleMoraleEventForSoldier( pTeamSoldier, MORALE_HEARD_BATTLE_LOST );
+					HandleMoraleEventForSoldier(&s, MORALE_HEARD_BATTLE_LOST);
 				}
 			}
 			break;
