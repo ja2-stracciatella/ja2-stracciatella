@@ -5273,10 +5273,6 @@ static BOOLEAN CheckForLosingEndOfBattle(void)
 							pTeamSoldier->bLife = 0;
 
 							HandleSoldierDeath( pTeamSoldier, &fMadeCorpse );
-
-							//HandlePlayerTeamMemberDeath( pTeamSoldier );
-							// Make corpse..
-							//TurnSoldierIntoCorpse(pTeamSoldier);
 						}
 					}
 

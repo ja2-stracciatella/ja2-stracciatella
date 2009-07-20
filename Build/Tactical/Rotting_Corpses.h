@@ -125,7 +125,7 @@ ROTTING_CORPSE* AddRottingCorpse(ROTTING_CORPSE_DEFINITION* pCorpseDef);
 void RemoveCorpses(void);
 
 
-BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* pSoldier);
+BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE&);
 
 INT16 FindNearestRottingCorpse( SOLDIERTYPE *pSoldier );
 

@@ -598,7 +598,7 @@ static void CreateCorpsePalette(ROTTING_CORPSE* const c)
 }
 
 
-BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
+BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 {
 	ROTTING_CORPSE_DEFINITION		Corpse;
 	UINT8												ubType;
@@ -608,50 +608,50 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
   OBJECTTYPE                  ItemObject;
 
 
-	if ( pSoldier->sGridNo == NOWHERE )
+	if (s.sGridNo == NOWHERE)
 	{
 		return( FALSE );
 	}
 
   // ATE: Change to fix crash when item in hand
-  if ( gpItemPointer != NULL && gpItemPointerSoldier == pSoldier )
+  if (gpItemPointer && gpItemPointerSoldier == &s)
   {
     CancelItemPointer( );
   }
 
 	// Setup some values!
 	memset( &Corpse, 0, sizeof( Corpse ) );
-	Corpse.ubBodyType							= pSoldier->ubBodyType;
-	Corpse.sGridNo								= pSoldier->sGridNo;
-	Corpse.bLevel									= pSoldier->bLevel;
-	Corpse.ubProfile							= pSoldier->ubProfile;
+	Corpse.ubBodyType = s.ubBodyType;
+	Corpse.sGridNo    = s.sGridNo;
+	Corpse.bLevel     = s.bLevel;
+	Corpse.ubProfile  = s.ubProfile;
 
 	if ( Corpse.bLevel > 0 )
 	{
-		Corpse.sHeightAdjustment			= (INT16)( pSoldier->sHeightAdjustment - WALL_HEIGHT );
+		Corpse.sHeightAdjustment = s.sHeightAdjustment - WALL_HEIGHT;
 	}
 
-	SET_PALETTEREP_ID ( Corpse.HeadPal,		pSoldier->HeadPal );
-	SET_PALETTEREP_ID ( Corpse.VestPal,		pSoldier->VestPal );
-	SET_PALETTEREP_ID ( Corpse.SkinPal,		pSoldier->SkinPal );
-	SET_PALETTEREP_ID ( Corpse.PantsPal,   pSoldier->PantsPal );
+	SET_PALETTEREP_ID(Corpse.HeadPal,  s.HeadPal);
+	SET_PALETTEREP_ID(Corpse.VestPal,  s.VestPal);
+	SET_PALETTEREP_ID(Corpse.SkinPal,  s.SkinPal);
+	SET_PALETTEREP_ID(Corpse.PantsPal, s.PantsPal);
 
-	if ( pSoldier->bCamo != 0 )
+	if (s.bCamo != 0)
 	{
 		Corpse.usFlags |= ROTTING_CORPSE_USE_CAMO_PALETTE;
 	}
 
 	// Determine corpse type!
-	ubType = (UINT8)gubAnimSurfaceCorpseID[ pSoldier->ubBodyType][ pSoldier->usAnimState ];
+	ubType = gubAnimSurfaceCorpseID[s.ubBodyType][s.usAnimState];
 
-	Corpse.bDirection	= pSoldier->bDirection;
+	Corpse.bDirection	= s.bDirection;
 
 	// If we are a vehicle.... only use 1 direction....
-	if ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE )
+	if (s.uiStatusFlags & SOLDIER_VEHICLE)
 	{
 		Corpse.usFlags |= ROTTING_CORPSE_VEHICLE;
 
-    if ( pSoldier->ubBodyType != ICECREAMTRUCK && pSoldier->ubBodyType != HUMVEE )
+    if (s.ubBodyType != ICECREAMTRUCK && s.ubBodyType != HUMVEE)
     {
       Corpse.bDirection = 7;
     }
@@ -677,7 +677,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
 	Corpse.uiTimeOfDeath = GetWorldTotalMin( );
 
 	// If corpse is not valid. make items visible
-	if ( ubType == NO_CORPSE && pSoldier->bTeam != gbPlayerNum )
+	if (ubType == NO_CORPSE && s.bTeam != gbPlayerNum)
 	{
 		usItemFlags &= (~WORLD_ITEM_DONTRENDER );
 	}
@@ -686,11 +686,11 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
 	// ATE: If the queen is killed, she should
 	// make items visible because it ruins end sequence....
 	Visibility const bVisible =
-		pSoldier->bTeam == gbPlayerNum || pSoldier->ubProfile == QUEEN ?
+		s.bTeam == gbPlayerNum || s.ubProfile == QUEEN ?
 			VISIBLE : INVISIBLE;
 
   // Not for a robot...
-  if ( AM_A_ROBOT( pSoldier ) )
+  if (AM_A_ROBOT(&s))
   {
 
   }
@@ -700,36 +700,36 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
 
     ubNumGoo = 6 - ( gGameOptions.ubDifficultyLevel - DIF_LEVEL_EASY );
 
-    sNewGridNo = pSoldier->sGridNo + ( WORLD_COLS * 2 );
+    sNewGridNo = s.sGridNo + WORLD_COLS * 2;
 
     for (INT32 cnt = 0; cnt < ubNumGoo; ++cnt)
     {
 			CreateItem( JAR_QUEEN_CREATURE_BLOOD, 100, &ItemObject );
 
-		  AddItemToPool( sNewGridNo, &ItemObject, bVisible , pSoldier->bLevel, usItemFlags, -1 );
+		  AddItemToPool(sNewGridNo, &ItemObject, bVisible, s.bLevel, usItemFlags, -1);
     }
   }
   else
   {
 	  // OK, Place what objects this guy was carrying on the ground!
-	  FOR_ALL_SOLDIER_INV_SLOTS(pObj, *pSoldier)
+	  FOR_ALL_SOLDIER_INV_SLOTS(pObj, s)
 	  {
 		  if ( pObj->usItem != NOTHING )
 		  {
 			  // Check if it's supposed to be dropped
-			  if ( !( pObj->fFlags & OBJECT_UNDROPPABLE ) || pSoldier->bTeam == gbPlayerNum )
+			  if (!(pObj->fFlags & OBJECT_UNDROPPABLE) || s.bTeam == gbPlayerNum)
 			  {
 				  // and make sure that it really is a droppable item type
 				  if ( !(Item[ pObj->usItem ].fFlags & ITEM_DEFAULT_UNDROPPABLE) )
 				  {
-					  ReduceAmmoDroppedByNonPlayerSoldiers(*pSoldier, *pObj);
-					  AddItemToPool( pSoldier->sGridNo, pObj, bVisible , pSoldier->bLevel, usItemFlags, -1 );
+					  ReduceAmmoDroppedByNonPlayerSoldiers(s, *pObj);
+					  AddItemToPool(s.sGridNo, pObj, bVisible, s.bLevel, usItemFlags, -1);
 				  }
 			  }
 		  }
     }
 
-    DropKeysInKeyRing( pSoldier, pSoldier->sGridNo, pSoldier->bLevel, bVisible, FALSE, 0, FALSE );
+    DropKeysInKeyRing(&s, s.sGridNo, s.bLevel, bVisible, FALSE, 0, FALSE);
 	}
 
 	// Make team look for items
@@ -737,15 +737,15 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
 
 	// If not a player, you can completely remove soldiertype
 	// otherwise, just remove their graphic
-	if (pSoldier->bTeam != gbPlayerNum)
+	if (s.bTeam != gbPlayerNum)
 	{
 		// Remove merc!
 		// ATE: Remove merc slot first - will disappear if no corpse data found!
-		TacticalRemoveSoldier(*pSoldier);
+		TacticalRemoveSoldier(s);
 	}
 	else
 	{
-		RemoveSoldierFromGridNo(pSoldier);
+		RemoveSoldierFromGridNo(&s);
 	}
 
 	if (ubType == NO_CORPSE)
@@ -758,7 +758,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE* const pSoldier)
 	ROTTING_CORPSE* const added_corpse = AddRottingCorpse(&Corpse);
 
 	// If this is our guy......make visible...
-	//if ( pSoldier->bTeam == gbPlayerNum )
+	//if (s.bTeam == gbPlayerNum)
 	{
 		added_corpse->def.bVisible = 1;
 	}

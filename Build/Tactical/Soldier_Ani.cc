@@ -2950,7 +2950,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 			}
 		}
 
-		if (TurnSoldierIntoCorpse(pSoldier))
+		if (TurnSoldierIntoCorpse(*pSoldier))
 		{
 			*pfMadeCorpse = TRUE;
 		}
