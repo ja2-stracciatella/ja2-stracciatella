@@ -1057,13 +1057,13 @@ void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE& s)
 }
 
 
-static INT32 SetUpDropItemListForMerc(SOLDIERTYPE* s);
+static INT32 SetUpDropItemListForMerc(SOLDIERTYPE&);
 
 
 void HandleMercLeavingEquipment(SOLDIERTYPE& s, bool const in_drassen)
 {
 	// Stash the items into a linked list hanging of a free "leave item list" slot
-	INT32 const slot = SetUpDropItemListForMerc(&s);
+	INT32 const slot = SetUpDropItemListForMerc(s);
 	if (slot != -1)
 	{ // Post event to drop it there 6 hours later
 		StrategicEventKind const e = in_drassen ? EVENT_MERC_LEAVE_EQUIP_IN_DRASSEN : EVENT_MERC_LEAVE_EQUIP_IN_OMERTA;
@@ -1216,42 +1216,33 @@ static INT32 FindFreeSlotInLeaveList(void)
 static void SetUpMercAboutToLeaveEquipment(UINT32 ubProfileId, UINT32 uiSlotIndex);
 
 
-static INT32 SetUpDropItemListForMerc(SOLDIERTYPE* const s)
+// Set up a drop list for this grunt, remove items from inventory and profile
+static INT32 SetUpDropItemListForMerc(SOLDIERTYPE& s)
 {
-	// will set up a drop list for this grunt, remove items from inventory, and profile
-	INT32 iSlotIndex = -1;
+	INT32 const slot = FindFreeSlotInLeaveList();
+	if (slot == -1) return -1;
 
-	iSlotIndex = FindFreeSlotInLeaveList( );
-	if( iSlotIndex == -1 )
+	CFOR_ALL_SOLDIER_INV_SLOTS(i, s)
 	{
-		return( -1 );
+		if (i->ubNumberOfObjects == 0) continue;
+
+		// Make a linked list of the items left behind, with the ptr to its head in this free slot
+		AddItemToLeaveIndex(i, slot);
+		// Store owner's profile id for the items added to this leave slot index
+		SetUpMercAboutToLeaveEquipment(s.ubProfile, slot);
 	}
 
-	CFOR_ALL_SOLDIER_INV_SLOTS(i, *s)
-	{
-		// slot found,
-		// check if actual item
-		if (i->ubNumberOfObjects > 0)
-		{
-			// make a linked list of the items left behind, with the ptr to its head in this free slot
-			AddItemToLeaveIndex(i, iSlotIndex);
+  /* ATE: Added this to drop keyring keys - the 2nd last paramter says to add it
+   * to a leave list; the gridno, level and visiblity are ignored */
+	DropKeysInKeyRing(s, NOWHERE, 0, VISIBILITY_0, true, slot, false);
 
-			// store owner's profile id for the items added to this leave slot index
-			SetUpMercAboutToLeaveEquipment(s->ubProfile, iSlotIndex);
-		}
-	}
+	// Zero out profiles
+	MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
+	memset(p.bInvStatus, 0, sizeof(p.bInvStatus));
+	memset(p.bInvNumber, 0, sizeof(p.bInvNumber));
+	memset(p.inv,        0, sizeof(p.inv));
 
-  // ATE: Added this to drop keyring keys - the 2nd last paramter says to add it to a leave list...
-  // the gridno, level and visiblity are ignored
-	DropKeysInKeyRing(*s, NOWHERE, 0, VISIBILITY_0, true, iSlotIndex, false);
-
-	// zero out profiles
-	MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
-	memset(p.bInvStatus, 0, sizeof(*p.bInvStatus) * 19);
-	memset(p.bInvNumber, 0, sizeof(*p.bInvNumber) * 19);
-	memset(p.inv,        0, sizeof(*p.inv)        * 19);
-
-	return( iSlotIndex );
+	return slot;
 }
 
 
