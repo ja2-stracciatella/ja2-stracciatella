@@ -290,11 +290,9 @@ void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 }
 
 
-static BOOLEAN IsSoldierInHelicopterInHostileSector(const SOLDIERTYPE* const s)
+static BOOLEAN IsSoldierInHelicopterInHostileSector(SOLDIERTYPE const& s)
 {
-	return
-		InHelicopter(*s) &&
-		NumEnemiesInSector(s->sSectorX, s->sSectorY) > 0;
+	return InHelicopter(s) && NumEnemiesInSector(s.sSectorX, s.sSectorY) > 0;
 }
 
 
@@ -321,7 +319,7 @@ static bool AreAssignmentConditionsMet(SOLDIERTYPE const& s, AssignmentCondition
 		(c & AC_UNCONSCIOUS || s.bLife >= OKLIFE)                                         &&
 		(c & AC_COMBAT      || !s.bInSector || !gTacticalStatus.fEnemyInSector)           &&
 		(c & AC_EPC         || s.ubWhatKindOfMercAmI != MERC_TYPE__EPC)                   &&
-		(c & AC_IN_HELI_IN_HOSTILE_SECTOR || !IsSoldierInHelicopterInHostileSector(&s))   &&
+		(c & AC_IN_HELI_IN_HOSTILE_SECTOR || !IsSoldierInHelicopterInHostileSector(s))    &&
 		(c & AC_MECHANICAL  || (!(s.uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT(&s))) &&
 		(c & AC_MOVING      || !s.fBetweenSectors)                                        &&
 		(c & AC_UNDERGROUND || s.bSectorZ == 0)                                           &&
