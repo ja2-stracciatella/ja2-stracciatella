@@ -354,7 +354,7 @@ extern BOOLEAN gfSurrendered;
 extern BOOLEAN gfKillingGuysForLosingBattle;
 extern UINT8   gubWaitingForAllMercsToExitCode;
 
-UINT8        NumCapableEnemyInSector(void);
+UINT8        NumCapableEnemyInSector();
 SOLDIERTYPE* FreeUpAttackerGivenTarget(SOLDIERTYPE* target);
 SOLDIERTYPE* ReduceAttackBusyGivenTarget(SOLDIERTYPE* target);
 
