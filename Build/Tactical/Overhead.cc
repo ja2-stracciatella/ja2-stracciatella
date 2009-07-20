@@ -4274,32 +4274,30 @@ void SetEnemyPresence( )
 }
 
 
-static BOOLEAN SoldierHasSeenEnemiesLastFewTurns(SOLDIERTYPE* pTeamSoldier)
+static bool SoldierHasSeenEnemiesLastFewTurns(SOLDIERTYPE const& s)
 {
-	for (INT32 cnt = 0; cnt < MAXTEAMS; ++cnt)
+	for (INT32 team = 0; team != MAXTEAMS; ++team)
 	{
-		if (gTacticalStatus.Team[cnt].bSide == pTeamSoldier->bSide) continue;
+		if (gTacticalStatus.Team[team].bSide == s.bSide) continue;
 
-		// check this team for possible enemies
-		CFOR_ALL_IN_TEAM(s, cnt)
+		// Check this team for possible enemies
+		CFOR_ALL_IN_TEAM(i, team)
 		{
-			if (s->bInSector &&
-					(s->bTeam == gbPlayerNum || s->bLife >= OKLIFE) &&
-					!CONSIDERED_NEUTRAL(pTeamSoldier, s) &&
-					pTeamSoldier->bSide != s->bSide)
-			{
-				// Have we not seen this guy.....
-				if (pTeamSoldier->bOppList[s->ubID] >= SEEN_CURRENTLY &&
-						pTeamSoldier->bOppList[s->ubID] <= SEEN_THIS_TURN)
-				{
-					gTacticalStatus.bConsNumTurnsNotSeen = 0;
-					return TRUE;
-				}
-			}
+			SOLDIERTYPE const& other = *i;
+			if (!other.bInSector)                                   continue;
+			if (other.bTeam != gbPlayerNum && other.bLife < OKLIFE) continue;
+			if (CONSIDERED_NEUTRAL(&s, &other))                     continue;
+			if (s.bSide == other.bSide)                             continue;
+			// Have we not seen this guy
+			INT8 const seen = s.bOppList[other.ubID];
+			if (seen < SEEN_CURRENTLY || SEEN_THIS_TURN < seen)     continue;
+
+			gTacticalStatus.bConsNumTurnsNotSeen = 0;
+			return true;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -4416,14 +4414,14 @@ BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
 		// we have to loop through EVERYONE to see if anyone sees a hostile... if so, stay in turnbased...
 		FOR_ALL_MERCS(i)
 		{
-			SOLDIERTYPE* const s = *i;
-			if (s->bLife >= OKLIFE &&
-					!s->bNeutral       &&
+			SOLDIERTYPE const& s = **i;
+			if (s.bLife >= OKLIFE &&
+					!s.bNeutral       &&
 					SoldierHasSeenEnemiesLastFewTurns(s))
 			{
 				gTacticalStatus.bConsNumTurnsNotSeen = 0;
 				fSomeoneSawSomeoneRecently = TRUE;
-				if (s->bTeam == gbPlayerNum || (s->bTeam == MILITIA_TEAM && s->bSide == 0)) // or friendly militia
+				if (s.bTeam == gbPlayerNum || (s.bTeam == MILITIA_TEAM && s.bSide == 0)) // or friendly militia
 				{
 					fWeSawSomeoneRecently = TRUE;
 					break;
