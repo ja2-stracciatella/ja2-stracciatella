@@ -4528,7 +4528,7 @@ static void DeathNoMessageTimerCallback(void)
 
 static BOOLEAN CheckForLosingEndOfBattle(void);
 static BOOLEAN KillIncompacitatedEnemyInSector(void);
-static UINT8 NumEnemyInSectorExceptCreatures(void);
+static UINT8 NumEnemyInSectorExceptCreatures();
 
 
 //!!!!
@@ -5005,26 +5005,20 @@ UINT8 NumEnemyInSector()
 }
 
 
-static UINT8 NumEnemyInSectorExceptCreatures(void)
+static UINT8 NumEnemyInSectorExceptCreatures()
 {
-	UINT8				ubNumEnemies = 0;
-
-	// Check if the battle is won!
-	// Loop through all mercs and make go
-	CFOR_ALL_SOLDIERS(pTeamSoldier)
+	UINT8 n_enemies = 0;
+	CFOR_ALL_SOLDIERS(i)
 	{
-		if (pTeamSoldier->bInSector && pTeamSoldier->bLife > 0 && pTeamSoldier->bTeam != CREATURE_TEAM)
-		{
-			// Checkf for any more bacguys
-			if ( !pTeamSoldier->bNeutral && (pTeamSoldier->bSide != 0 ) )
-			{
-				ubNumEnemies++;
-			}
-		}
+		SOLDIERTYPE const& s = *i;
+		if (!s.bInSector)             continue;
+		if (s.bLife <= 0)             continue;
+		if (s.bNeutral)               continue;
+		if (s.bSide == 0)             continue;
+		if (s.bTeam == CREATURE_TEAM) continue;
+		++n_enemies;
 	}
-
-	return( ubNumEnemies );
-
+	return n_enemies;
 }
 
 
