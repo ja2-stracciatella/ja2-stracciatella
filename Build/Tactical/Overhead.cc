@@ -4375,7 +4375,7 @@ static void SayBattleSoundFromAnyBodyInSector(BattleSound const iBattleSnd)
 
 
 static UINT8 NumBloodcatsInSectorNotDeadOrDying(void);
-static UINT8 NumEnemyInSectorNotDeadOrDying(void);
+static UINT8 NumEnemyInSectorNotDeadOrDying();
 
 
 BOOLEAN CheckForEndOfCombatMode( BOOLEAN fIncrementTurnsNotSeen )
@@ -5022,36 +5022,23 @@ static UINT8 NumEnemyInSectorExceptCreatures()
 }
 
 
-static UINT8 NumEnemyInSectorNotDeadOrDying(void)
+static UINT8 NumEnemyInSectorNotDeadOrDying()
 {
-	UINT8				ubNumEnemies = 0;
-
-	// Check if the battle is won!
-	// Loop through all mercs and make go
-	CFOR_ALL_SOLDIERS(pTeamSoldier)
+	UINT8 n_enemies = 0;
+	CFOR_ALL_SOLDIERS(i)
 	{
-		if (pTeamSoldier->bInSector)
-		{
-			// For sure for flag thet they are dead is not set
-			if ( !( pTeamSoldier->uiStatusFlags & SOLDIER_DEAD ) )
-			{
-				// Also, we want to pick up unconcious guys as NOT being capable,
-				// but we want to make sure we don't get those ones that are in the
-				// process of dying
-				if ( pTeamSoldier->bLife >= OKLIFE )
-				{
-					// Check for any more badguys
-					if ( !pTeamSoldier->bNeutral && (pTeamSoldier->bSide != 0 ) )
-					{
-						ubNumEnemies++;
-					}
-				}
-			}
-		}
+		SOLDIERTYPE const& s = *i;
+		if (!s.bInSector)                   continue;
+		if (s.uiStatusFlags & SOLDIER_DEAD) continue;
+		/* Also, we want to pick up unconcious guys as NOT being capable, but we
+		 * want to make sure we don't get those ones that are in the process of
+		 * dying */
+		if (s.bLife < OKLIFE) continue;
+		if (s.bNeutral)       continue;
+		if (s.bSide == 0)     continue;
+		++n_enemies;
 	}
-
-	return( ubNumEnemies );
-
+	return n_enemies;
 }
 
 
