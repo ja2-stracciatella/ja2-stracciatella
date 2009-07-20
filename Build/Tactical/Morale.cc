@@ -590,46 +590,37 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 			break;
 
 		case MORALE_MERC_MARRIED:
-			// female mercs get unhappy based on how sexist they are (=hate men)
-			// gentlemen males get unhappy too
-			FOR_ALL_IN_TEAM(pTeamSoldier, gbPlayerNum)
+			/* Female mercs get unhappy based on how sexist they are (=hate men),
+			 * gentlemen males get unhappy too */
+			FOR_ALL_IN_TEAM(i, gbPlayerNum)
 			{
-				if (pTeamSoldier->ubProfile != NO_PROFILE)
+				SOLDIERTYPE& other = *i;
+				if (other.ubProfile == NO_PROFILE) continue;
+
+				// We hate 'em anyways
+				if (WhichHated(other.ubProfile, pSoldier->ubProfile) != -1) continue;
+
+				MERCPROFILESTRUCT const& p = GetProfile(other.ubProfile);
+				if (p.bSex == FEMALE)
 				{
-					if ( WhichHated( pTeamSoldier->ubProfile, pSoldier->ubProfile ) != -1 )
+					switch (p.bSexist)
 					{
-						// we hate 'em anyways
-						continue;
+						case VERY_SEXIST: // handle twice
+							HandleMoraleEventForSoldier(&other, MORALE_MERC_MARRIED);
+							/* FALLTHROUGH */
+						case SOMEWHAT_SEXIST:
+							HandleMoraleEventForSoldier(&other, MORALE_MERC_MARRIED);
+							break;
 					}
-
-					if ( gMercProfiles[ pTeamSoldier->ubProfile ].bSex == FEMALE )
+				}
+				else
+				{
+					switch (p.bSexist)
 					{
-						switch( gMercProfiles[ pTeamSoldier->ubProfile ].bSexist )
-						{
-							case SOMEWHAT_SEXIST:
-								HandleMoraleEventForSoldier( pTeamSoldier, MORALE_MERC_MARRIED );
-								break;
-							case VERY_SEXIST:
-								// handle TWICE!
-								HandleMoraleEventForSoldier( pTeamSoldier, MORALE_MERC_MARRIED );
-								HandleMoraleEventForSoldier( pTeamSoldier, MORALE_MERC_MARRIED );
-								break;
-							default:
-								break;
-						}
+						case GENTLEMAN:
+							HandleMoraleEventForSoldier(&other, MORALE_MERC_MARRIED);
+							break;
 					}
-					else
-					{
-						switch( gMercProfiles[ pTeamSoldier->ubProfile ].bSexist )
-						{
-							case GENTLEMAN:
-								HandleMoraleEventForSoldier( pTeamSoldier, MORALE_MERC_MARRIED );
-								break;
-							default:
-								break;
-						}
-					}
-
 				}
 			}
 			break;
