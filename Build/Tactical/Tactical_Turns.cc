@@ -164,7 +164,7 @@ void HandleTacticalEndTurn(void)
 				EVENT_BeginMercTurn(s);
 
 				// Handle Player services
-				HandlePlayerServices(s);
+				HandlePlayerServices(*s);
 
 				// if time is up, turn off xray
 				if (s->uiXRayActivatedTime && uiTime > s->uiXRayActivatedTime + XRAY_TIME)
@@ -188,7 +188,7 @@ void HandleTacticalEndTurn(void)
 				EVENT_BeginMercTurn(pSoldier);
 
 				// Handle Player services
-				HandlePlayerServices( pSoldier );
+				HandlePlayerServices(*pSoldier);
 			}
 		}
 	}

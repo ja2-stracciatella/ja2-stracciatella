@@ -3954,88 +3954,72 @@ BOOLEAN UIOKMoveDestination(const SOLDIERTYPE* pSoldier, UINT16 usMapPos)
 
 void HandleTeamServices( UINT8 ubTeamNum )
 {
-	FOR_ALL_IN_TEAM(s, ubTeamNum)
+	FOR_ALL_IN_TEAM(i, ubTeamNum)
 	{
-		if (s->bInSector) HandlePlayerServices(s);
+		SOLDIERTYPE& s = *i;
+		if (s.bInSector) HandlePlayerServices(s);
 	}
 }
 
 
-void HandlePlayerServices( SOLDIERTYPE *pTeamSoldier )
+void HandlePlayerServices(SOLDIERTYPE& s)
 {
-	UINT32                  uiPointsUsed;
-	UINT16                  usKitPts;
-	INT8										bSlot;
-	BOOLEAN									fDone = FALSE;
+	if (s.bLife < OKLIFE)            return;
+	if (s.usAnimState != GIVING_AID) return;
 
-	if (pTeamSoldier->bLife >= OKLIFE)
+	SOLDIERTYPE* const tgt = WhoIsThere2(s.sTargetGridNo, s.bLevel);
+	if (!tgt) return;
+	if (tgt->ubServiceCount == 0) return;
+
+	OBJECTTYPE&  in_hand     = s.inv[HANDPOS];
+	UINT16 const kit_pts     = TotalPoints(&in_hand);
+	UINT32 const points_used = SoldierDressWound(&s, tgt, kit_pts, kit_pts);
+
+	// Determine if they are all banagded
+	bool done = FALSE;
+	if (tgt->bBleeding == 0 && tgt->bLife >= OKLIFE)
 	{
-		// Check for different events!
-		// FOR DOING AID
-		if ( pTeamSoldier->usAnimState == GIVING_AID )
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[MERC_IS_ALL_BANDAGED_STR], tgt->name);
+		// Cancel all services for this guy!
+		ReceivingSoldierCancelServices(tgt);
+		done = TRUE;
+	}
+
+	UseKitPoints(&in_hand, points_used, &s);
+
+	// Whether or not recipient is all bandaged, check if we've used them up
+	if (TotalPoints(&in_hand) > 0) return;
+	// No more bandages
+
+	INT8 slot;
+	if (done)
+	{ // Don't swap if we're done
+		slot = NO_SLOT;
+	}
+	else
+	{
+		slot = FindObj(&s, FIRSTAIDKIT);
+		if (slot == NO_SLOT)
 		{
-			// Get victim pointer
-			SOLDIERTYPE* const pTargetSoldier = WhoIsThere2(pTeamSoldier->sTargetGridNo, pTeamSoldier->bLevel);
-			if (pTargetSoldier != NULL)
-			{
-				if ( pTargetSoldier->ubServiceCount )
-				{
-					usKitPts = TotalPoints( &(pTeamSoldier->inv[ HANDPOS ] ) );
+			slot = FindObj(&s, MEDICKIT);
+		}
+	}
 
-					uiPointsUsed = SoldierDressWound( pTeamSoldier, pTargetSoldier, usKitPts, usKitPts );
-
-					// Determine if they are all banagded
-					if ( !pTargetSoldier->bBleeding && pTargetSoldier->bLife >= OKLIFE )
-					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ MERC_IS_ALL_BANDAGED_STR ], pTargetSoldier->name );
-
-						// Cancel all services for this guy!
-						ReceivingSoldierCancelServices( pTargetSoldier );
-						fDone = TRUE;
-					}
-
-					UseKitPoints( &(pTeamSoldier->inv[ HANDPOS ] ), (UINT16)uiPointsUsed, pTeamSoldier );
-
-					// Get new total
-					usKitPts = TotalPoints( &(pTeamSoldier->inv[ HANDPOS ] ) );
-
-					// WHETHER OR NOT recipient is all bandaged, check if we've used them up!
-					if ( usKitPts <= 0)     // no more bandages
-					{
-						if ( fDone )
-						{
-							// don't swap if we're done
-							bSlot = NO_SLOT;
-						}
-						else
-						{
-							bSlot = FindObj( pTeamSoldier, FIRSTAIDKIT );
-							if ( bSlot == NO_SLOT )
-							{
-								bSlot = FindObj( pTeamSoldier, MEDICKIT );
-							}
-						}
-
-						if ( bSlot != NO_SLOT )
-						{
-							SwapObjs( &(pTeamSoldier->inv[HANDPOS]), &(pTeamSoldier->inv[bSlot] ) );
-						}
-						else
-						{
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ MERC_IS_OUT_OF_BANDAGES_STR ], pTeamSoldier->name );
-							GivingSoldierCancelServices( pTeamSoldier );
-
-							if ( !gTacticalStatus.fAutoBandageMode )
-							{
-								DoMercBattleSound(pTeamSoldier, BATTLE_SOUND_CURSE1);
-							}
-						}
-					}
-				}
-			}
+	if (slot != NO_SLOT)
+	{
+		SwapObjs(&in_hand, &s.inv[slot]);
+	}
+	else
+	{
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[MERC_IS_OUT_OF_BANDAGES_STR], s.name);
+		GivingSoldierCancelServices(&s);
+		if (!gTacticalStatus.fAutoBandageMode)
+		{
+			DoMercBattleSound(&s, BATTLE_SOUND_CURSE1);
 		}
 	}
 }
+
 
 void CommonEnterCombatModeCode( )
 {

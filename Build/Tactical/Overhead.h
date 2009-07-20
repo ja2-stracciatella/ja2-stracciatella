@@ -284,7 +284,7 @@ void EnterCombatMode( UINT8 ubStartingTeam );
 void ExitCombatMode(void);
 
 void HandleTeamServices( UINT8 ubTeamNum );
-void HandlePlayerServices( SOLDIERTYPE *pTeamSoldier );
+void HandlePlayerServices(SOLDIERTYPE&);
 
 void SetEnemyPresence(void);
 
