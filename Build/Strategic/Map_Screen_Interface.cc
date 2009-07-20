@@ -1008,63 +1008,52 @@ wchar_t const* GetMoraleString(SOLDIERTYPE const& s)
 
 
 // NOTE: This doesn't use the "LeaveList" system at all!
-void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE* const s)
+void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE& s)
 {
-	// just drop the stuff in the current sector
-  INT16 sGridNo, sTempGridNo;
-
-	if (s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY || s->bSectorZ != gbWorldSectorZ)
+	// Just drop the stuff in the current sector
+	GridNo gridno;
+	bool const here = s.sSectorX == gWorldSectorX && s.sSectorY == gWorldSectorY && s.bSectorZ == gbWorldSectorZ;
+	if (here)
 	{
-    // ATE: Use insertion gridno if not nowhere and insertion is gridno
-   if (s->ubStrategicInsertionCode == INSERTION_CODE_GRIDNO && s->usStrategicInsertionData != NOWHERE)
-   {
-		  sGridNo = s->usStrategicInsertionData;
-   }
-   else
-   {
-      // Set flag for item...
-      sGridNo = RandomGridNo();
-   }
-	}
-  else
-  {
-    // ATE: Mercs can have a gridno of NOWHERE.....
-    sGridNo = s->sGridNo;
-
-    if ( sGridNo == NOWHERE )
-    {
-      sGridNo = RandomGridNo();
-
-			sTempGridNo = FindNearestAvailableGridNoForItem( sGridNo, 5 );
-			if( sTempGridNo == NOWHERE )
-				sTempGridNo = FindNearestAvailableGridNoForItem( sGridNo, 15 );
-
-      if ( sTempGridNo != NOWHERE )
-      {
-        sGridNo = sTempGridNo;
-      }
-    }
-  }
-
-	FOR_ALL_SOLDIER_INV_SLOTS(i, *s)
-	{
-		// slot found,
-		// check if actual item
-		if (i->ubNumberOfObjects > 0)
+		// ATE: Mercs can have a gridno of NOWHERE
+		gridno = s.sGridNo;
+		if (gridno == NOWHERE)
 		{
-	    if (s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY || s->bSectorZ != gbWorldSectorZ)
-	    {
-        // Set flag for item...
-				AddItemsToUnLoadedSector(s->sSectorX, s->sSectorY, s->bSectorZ , sGridNo, 1, i, s->bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, VISIBLE);
-      }
-			else
-			{
-				AddItemToPool(sGridNo, i, VISIBLE, s->bLevel, WORLD_ITEM_REACHABLE, 0);
-			}
+			gridno = RandomGridNo();
+
+			GridNo tmp_gridno = FindNearestAvailableGridNoForItem(gridno, 5);
+			if (tmp_gridno == NOWHERE) tmp_gridno = FindNearestAvailableGridNoForItem(gridno, 15);
+			if (tmp_gridno != NOWHERE) gridno = tmp_gridno;
+		}
+	}
+	else
+	{
+		// ATE: Use insertion gridno if not nowhere and insertion is gridno
+		if (s.ubStrategicInsertionCode == INSERTION_CODE_GRIDNO && s.usStrategicInsertionData != NOWHERE)
+		{
+			gridno = s.usStrategicInsertionData;
+		}
+		else
+		{
+			gridno = RandomGridNo();
 		}
 	}
 
-	DropKeysInKeyRing(*s, sGridNo, s->bLevel, VISIBLE, false, 0, false);
+	FOR_ALL_SOLDIER_INV_SLOTS(i, s)
+	{
+		if (i->ubNumberOfObjects == 0) continue;
+
+		if (here)
+		{
+			AddItemToPool(gridno, i, VISIBLE, s.bLevel, WORLD_ITEM_REACHABLE, 0);
+		}
+		else
+		{
+			AddItemsToUnLoadedSector(s.sSectorX, s.sSectorY, s.bSectorZ, gridno, 1, i, s.bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, VISIBLE);
+		}
+	}
+
+	DropKeysInKeyRing(s, gridno, s.bLevel, VISIBLE, false, 0, false);
 }
 
 

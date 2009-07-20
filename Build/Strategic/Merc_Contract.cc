@@ -818,7 +818,7 @@ static void MercDepartEquipmentBoxCallBack(MessageBoxReturnValue const exit_valu
 	{
 		case MSG_BOX_RETURN_OK:
 		case MSG_BOX_RETURN_YES:
-			HandleLeavingOfEquipmentInCurrentSector(&s);
+			HandleLeavingOfEquipmentInCurrentSector(s);
 			break;
 
 		case MSG_BOX_RETURN_CONTRACT:
