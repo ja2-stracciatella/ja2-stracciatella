@@ -748,46 +748,30 @@ void UpdateBuddyAndHatedCounters(void)
 }
 
 
-void HourlyCamouflageUpdate( void )
+void HourlyCamouflageUpdate()
 {
-	FOR_ALL_IN_TEAM(pSoldier, gbPlayerNum)
+	FOR_ALL_IN_TEAM(i, gbPlayerNum)
 	{
-		// if the merc has non-zero camo, degrade it by 1%
-		if( ( pSoldier->bCamo > 0) && ( !( HAS_SKILL_TRAIT( pSoldier, CAMOUFLAGED) ) ) )
-		{
-			pSoldier->bCamo -= 2;
-			if (pSoldier->bCamo <= 0)
-			{
-				pSoldier->bCamo = 0;
-				// Reload palettes....
-				if ( pSoldier->bInSector )
-				{
-					CreateSoldierPalettes( pSoldier );
-				}
+		SOLDIERTYPE& s = *i;
 
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMO_WORN_OFF], pSoldier->name);
-				DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
+		// If the merc has non-zero camo, degrade it by 1%
+		if (s.bCamo > 0 && !HAS_SKILL_TRAIT(&s, CAMOUFLAGED))
+		{
+			if (s.bCamo <= 2)
+			{
+				s.bCamo = 0;
+				if (s.bInSector) CreateSoldierPalettes(&s);
+
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMO_WORN_OFF], s.name);
+				DirtyMercPanelInterface(&s, DIRTYLEVEL2);
+			}
+			else
+			{
+				s.bCamo -= 2;
 			}
 		}
-		// if the merc has non-zero monster smell, degrade it by 1
-		if ( pSoldier->bMonsterSmell > 0 )
-		{
-			pSoldier->bMonsterSmell--;
 
-			/*
-			if (pSoldier->bMonsterSmell == 0)
-			{
-				// Reload palettes....
-
-				if ( pSoldier->bInSector )
-				{
-					CreateSoldierPalettes( pSoldier );
-				}
-
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, Message[STR_CAMO_WORN_OFF], pSoldier->name);
-				DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
-			}
-			*/
-		}
+		// If the merc has non-zero monster smell, degrade it by 1
+		if (s.bMonsterSmell > 0) --s.bMonsterSmell;
 	}
 }
