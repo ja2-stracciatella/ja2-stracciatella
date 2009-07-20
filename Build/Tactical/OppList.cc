@@ -5113,19 +5113,17 @@ void CheckForAlertWhenEnemyDies(SOLDIERTYPE* pDyingSoldier)
 }
 
 
-BOOLEAN MercSeesCreature(const SOLDIERTYPE* const pSoldier)
+bool MercSeesCreature(SOLDIERTYPE const& s)
 {
-	if (pSoldier->bOppCnt > 0)
+	if (s.bOppCnt <= 0) return false;
+	CFOR_ALL_IN_TEAM(i, CREATURE_TEAM)
 	{
-		CFOR_ALL_IN_TEAM(tgt, CREATURE_TEAM)
-		{
-			if (tgt->uiStatusFlags & SOLDIER_MONSTER && pSoldier->bOppList[tgt->ubID])
-			{
-				return TRUE;
-			}
-		}
+		SOLDIERTYPE const& tgt = *i;
+		if (!tgt.uiStatusFlags & SOLDIER_MONSTER) continue;
+		if (!s.bOppList[tgt.ubID])                continue;
+		return true;
 	}
-	return( FALSE );
+	return false;
 }
 
 

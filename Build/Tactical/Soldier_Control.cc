@@ -419,7 +419,7 @@ INT8 CalcActionPoints(const SOLDIERTYPE* const pSold)
 		{
 			ubPoints = (ubPoints * AP_CLAUSTROPHOBE) / 10;
 		}
-		else if ( (gMercProfiles[ pSold->ubProfile ].bPersonalityTrait == FEAR_OF_INSECTS) && (MercSeesCreature( pSold ) ) )
+		else if (gMercProfiles[pSold->ubProfile].bPersonalityTrait == FEAR_OF_INSECTS && MercSeesCreature(*pSold))
 		{
 			ubPoints = (ubPoints * AP_AFRAID_OF_INSECTS) / 10;
 		}
@@ -4077,7 +4077,7 @@ void EVENT_BeginMercTurn(SOLDIERTYPE& s)
 			switch (GetProfile(s.ubProfile).bPersonalityTrait)
 			{
 				case FEAR_OF_INSECTS:
-					if (MercSeesCreature(&s))
+					if (MercSeesCreature(s))
 					{
 						HandleMoraleEvent(&s, MORALE_INSECT_PHOBIC_SEES_CREATURE, s.sSectorX, s.sSectorY, s.bSectorZ);
 						goto say_personality_quote;
