@@ -809,43 +809,36 @@ no_choice:
 static void HandleExtendMercsContract(SOLDIERTYPE* pSoldier);
 
 
-static void MercDepartEquipmentBoxCallBack(MessageBoxReturnValue const bExitValue)
+static void MercDepartEquipmentBoxCallBack(MessageBoxReturnValue const exit_value)
 {
-	// gear left in current sector?
-	if( pLeaveSoldier == NULL )
+	if (!pLeaveSoldier) return;
+	SOLDIERTYPE& s = *pLeaveSoldier;
+
+	switch (exit_value)
 	{
-		return;
+		case MSG_BOX_RETURN_OK:
+		case MSG_BOX_RETURN_YES:
+			HandleLeavingOfEquipmentInCurrentSector(&s);
+			break;
+
+		case MSG_BOX_RETURN_CONTRACT:
+			HandleExtendMercsContract(&s);
+			return;
+
+		default:
+			if (!StrategicMap[BOBBYR_SHIPPING_DEST_SECTOR_X + BOBBYR_SHIPPING_DEST_SECTOR_Y * MAP_WORLD_X].fEnemyControlled)
+			{
+				HandleMercLeavingEquipmentInDrassen(&s);
+			}
+			else
+			{
+				HandleMercLeavingEquipmentInOmerta(&s);
+			}
+			break;
 	}
 
-	if( bExitValue == MSG_BOX_RETURN_OK )
-	{
-		HandleLeavingOfEquipmentInCurrentSector(pLeaveSoldier);
-	}
-	else if( bExitValue == MSG_BOX_RETURN_CONTRACT )
-	{
-		HandleExtendMercsContract( pLeaveSoldier );
-		return;
-	}
-  else if( bExitValue == MSG_BOX_RETURN_YES )
-	{
-		HandleLeavingOfEquipmentInCurrentSector(pLeaveSoldier);
-	}
-	else
-	{
-		// no
-		if (!StrategicMap[BOBBYR_SHIPPING_DEST_SECTOR_X + BOBBYR_SHIPPING_DEST_SECTOR_Y * MAP_WORLD_X].fEnemyControlled)
-		{
-			HandleMercLeavingEquipmentInDrassen(pLeaveSoldier);
-		}
-		else
-		{
-			HandleMercLeavingEquipmentInOmerta(pLeaveSoldier);
-		}
-	}
-
-	StrategicRemoveMerc(*pLeaveSoldier);
-
-	pLeaveSoldier = NULL;
+	StrategicRemoveMerc(s);
+	pLeaveSoldier = 0;
 }
 
 
