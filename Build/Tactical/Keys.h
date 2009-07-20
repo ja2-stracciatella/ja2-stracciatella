@@ -229,6 +229,6 @@ void ExamineDoorsOnEnteringSector();
 
 void AttachStringToDoor( INT16 sGridNo );
 
-void DropKeysInKeyRing(SOLDIERTYPE*, INT16 sGridNo, INT8 bLevel, Visibility, BOOLEAN fAddToDropList, INT32 iDropListSlot, BOOLEAN fUseUnLoaded);
+void DropKeysInKeyRing(SOLDIERTYPE&, GridNo, INT8 level, Visibility, bool add_to_drop_list, INT32 drop_list_slot, bool use_unloaded);
 
 #endif

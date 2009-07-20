@@ -1315,46 +1315,35 @@ void ExamineDoorsOnEnteringSector()
 }
 
 
-void DropKeysInKeyRing(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, INT8 const bLevel, Visibility const bVisible, BOOLEAN const fAddToDropList, INT32 const iDropListSlot, BOOLEAN const fUseUnLoaded)
+void DropKeysInKeyRing(SOLDIERTYPE& s, GridNo const gridno, INT8 const level, Visibility const visible, bool const add_to_drop_list, INT32 const drop_list_slot, bool const use_unloaded)
 {
-	UINT8		    ubLoop;
-  UINT8       ubItem;
-  OBJECTTYPE  Object;
+	KEY_ON_RING* const key_ring = s.pKeyRing;
+	if (!key_ring) return; // No key ring
 
-	if (!(pSoldier->pKeyRing))
+	bool const here = !use_unloaded && s.sSectorX == gWorldSectorX && s.sSectorY == gWorldSectorY && s.bSectorZ == gbWorldSectorZ;
+	for (KEY_ON_RING* i = key_ring; i != key_ring + NUM_KEYS; ++i)
 	{
-		// no key ring!
-		return;
-	}
-	for (ubLoop = 0; ubLoop < NUM_KEYS; ubLoop++)
-	{
-  	ubItem = pSoldier->pKeyRing[ ubLoop ].ubKeyID;
+		KEY_ON_RING& k = *i;
+		if (k.ubNumber == 0) continue;
 
-    if ( pSoldier->pKeyRing[ubLoop].ubNumber > 0 )
-    {
-  	  CreateKeyObject( &Object, pSoldier->pKeyRing[ubLoop].ubNumber, ubItem );
+		OBJECTTYPE o;
+		CreateKeyObject(&o, k.ubNumber, k.ubKeyID);
 
-      // Zero out entry
-		  pSoldier->pKeyRing[ ubLoop ].ubNumber = 0;
-		  pSoldier->pKeyRing[ ubLoop ].ubKeyID = INVALID_KEY_NUMBER;
+		// Zero out entry
+		k.ubNumber = 0;
+		k.ubKeyID  = INVALID_KEY_NUMBER;
 
-      if ( fAddToDropList )
-      {
-        AddItemToLeaveIndex( &Object, iDropListSlot );
-      }
-      else
-      {
-	      if( pSoldier->sSectorX != gWorldSectorX || pSoldier->sSectorY != gWorldSectorY || pSoldier->bSectorZ != gbWorldSectorZ || fUseUnLoaded )
-	      {
-          // Set flag for item...
-					AddItemsToUnLoadedSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ , sGridNo, 1, &Object , bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, bVisible);
-        }
-			  else
-			  {
-          // Add to pool
-          AddItemToPool( sGridNo, &Object, bVisible, bLevel, 0, 0 );
-			  }
-      }
-    }
+		if (add_to_drop_list)
+		{
+			AddItemToLeaveIndex(&o, drop_list_slot);
+		}
+		else if (here)
+		{
+			AddItemToPool(gridno, &o, visible, level, 0, 0);
+		}
+		else
+		{
+			AddItemsToUnLoadedSector(s.sSectorX, s.sSectorY, s.bSectorZ, gridno, 1, &o, level, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, visible);
+		}
 	}
 }

@@ -1049,7 +1049,7 @@ void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z,
 		}
 	}
 
-	DropKeysInKeyRing(s, grid_no, s->bLevel, VISIBLE, FALSE, 0, TRUE);
+	DropKeysInKeyRing(*s, grid_no, s->bLevel, VISIBLE, false, 0, true);
 
 	// Convert the soldier into a rotting corpse
 	ROTTING_CORPSE_DEFINITION c;

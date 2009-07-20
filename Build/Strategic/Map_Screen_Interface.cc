@@ -1064,7 +1064,7 @@ void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE* const s)
 		}
 	}
 
-	DropKeysInKeyRing(s, sGridNo, s->bLevel, VISIBLE, FALSE, 0, FALSE);
+	DropKeysInKeyRing(*s, sGridNo, s->bLevel, VISIBLE, false, 0, false);
 }
 
 
@@ -1272,7 +1272,7 @@ static INT32 SetUpDropItemListForMerc(SOLDIERTYPE* const s)
 
   // ATE: Added this to drop keyring keys - the 2nd last paramter says to add it to a leave list...
   // the gridno, level and visiblity are ignored
-	DropKeysInKeyRing(s, NOWHERE, 0, VISIBILITY_0, TRUE, iSlotIndex, FALSE);
+	DropKeysInKeyRing(*s, NOWHERE, 0, VISIBILITY_0, true, iSlotIndex, false);
 
 	// zero out profiles
 	MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);

@@ -729,7 +729,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 		  }
     }
 
-    DropKeysInKeyRing(&s, s.sGridNo, s.bLevel, bVisible, FALSE, 0, FALSE);
+    DropKeysInKeyRing(s, s.sGridNo, s.bLevel, bVisible, false, 0, false);
 	}
 
 	// Make team look for items
