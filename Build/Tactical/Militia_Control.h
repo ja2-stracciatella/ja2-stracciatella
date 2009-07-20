@@ -3,7 +3,7 @@
 
 void PrepareMilitiaForTactical(void);
 void ResetMilitia(void);
-void HandleMilitiaPromotions(void);
+void HandleMilitiaPromotions();
 
 extern BOOLEAN gfStrategicMilitiaChangesMade;
 

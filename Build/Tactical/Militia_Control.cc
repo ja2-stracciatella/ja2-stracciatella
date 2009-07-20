@@ -57,53 +57,41 @@ void PrepareMilitiaForTactical()
 }
 
 
-void HandleMilitiaPromotions( void )
+void HandleMilitiaPromotions()
 {
-	UINT8						ubMilitiaRank;
-	UINT8						ubPromotions;
-
 	gbGreenToElitePromotions = 0;
-	gbGreenToRegPromotions = 0;
-	gbRegToElitePromotions = 0;
-	gbMilitiaPromotions = 0;
+	gbGreenToRegPromotions   = 0;
+	gbRegToElitePromotions   = 0;
+	gbMilitiaPromotions      = 0;
 
-	FOR_ALL_IN_TEAM(pTeamSoldier, MILITIA_TEAM)
+	FOR_ALL_IN_TEAM(i, MILITIA_TEAM)
 	{
-		if (pTeamSoldier->bInSector && pTeamSoldier->bLife > 0)
-		{
-			if ( pTeamSoldier->ubMilitiaKills > 0 )
-			{
-				ubMilitiaRank = SoldierClassToMilitiaRank( pTeamSoldier->ubSoldierClass );
-				ubPromotions = CheckOneMilitiaForPromotion( gWorldSectorX, gWorldSectorY, ubMilitiaRank, pTeamSoldier->ubMilitiaKills );
-				if( ubPromotions )
-				{
-					if( ubPromotions == 2 )
-					{
-						gbGreenToElitePromotions++;
-						gbMilitiaPromotions++;
-					}
-					else if( pTeamSoldier->ubSoldierClass == SOLDIER_CLASS_GREEN_MILITIA )
-					{
-						gbGreenToRegPromotions++;
-						gbMilitiaPromotions++;
-					}
-					else if( pTeamSoldier->ubSoldierClass == SOLDIER_CLASS_REG_MILITIA )
-					{
-						gbRegToElitePromotions++;
-						gbMilitiaPromotions++;
-					}
-				}
+		SOLDIERTYPE& s = *i;
+		if (!s.bInSector)          continue;
+		if (s.bLife <= 0)          continue;
+		if (s.ubMilitiaKills == 0) continue;
 
-				pTeamSoldier->ubMilitiaKills = 0;
+		UINT8 const militia_rank = SoldierClassToMilitiaRank(s.ubSoldierClass);
+		UINT8 const promotions   = CheckOneMilitiaForPromotion(gWorldSectorX, gWorldSectorY, militia_rank, s.ubMilitiaKills);
+		if (promotions != 0)
+		{
+			if (promotions == 2)
+			{
+				++gbGreenToElitePromotions;
+				++gbMilitiaPromotions;
+			}
+			else if (s.ubSoldierClass == SOLDIER_CLASS_GREEN_MILITIA)
+			{
+				++gbGreenToRegPromotions;
+				++gbMilitiaPromotions;
+			}
+			else if (s.ubSoldierClass == SOLDIER_CLASS_REG_MILITIA)
+			{
+				++gbRegToElitePromotions;
+				++gbMilitiaPromotions;
 			}
 		}
-	}
-	if( gbMilitiaPromotions )
-	{
-    // ATE: Problems here with bringing up message box...
 
-		// UINT16 str[ 512 ];
-		// BuildMilitiaPromotionsString( str );
-		// DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, NULL );
+		s.ubMilitiaKills = 0;
 	}
 }
