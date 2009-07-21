@@ -7362,12 +7362,11 @@ static UINT8 CalcSoldierNeedForSleep(SOLDIERTYPE const& s)
 	// Base comes from profile
 	UINT8 need_for_sleep = GetProfile(s.ubProfile).ubNeedForSleep;
 
-	UINT8 const percent_health = s.bLife / s.bLifeMax; // XXX always 0 or 1
-	need_for_sleep +=
-		percent_health < 25 ? 4 :
-		percent_health < 50 ? 2 :
-		percent_health < 75 ? 1 :
-		0;
+	/* < 1/4 health -> 4 more
+	 * < 2/4 health -> 2 more
+	 * < 3/4 health -> 1 more */
+	UINT8 const part_health = 4 * s.bLife / s.bLifeMax;
+	need_for_sleep += 4U >> part_health;
 
 	// Reduce for each Night Ops or Martial Arts trait
 	need_for_sleep -= NUM_SKILL_TRAITS(&s, NIGHTOPS);
