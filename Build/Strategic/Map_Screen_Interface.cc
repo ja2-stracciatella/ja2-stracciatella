@@ -1466,8 +1466,10 @@ void RandomMercInGroupSaysQuote( GROUP *pGroup, UINT16 usQuoteNum )
 		pSoldier = pPlayer->pSoldier;
 		Assert( pSoldier );
 
-		if ( pSoldier->bLife >= OKLIFE && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
-					!AM_A_ROBOT( pSoldier ) && !AM_AN_EPC( pSoldier ) && !pSoldier->fMercAsleep )
+		if (pSoldier->bLife >= OKLIFE &&
+				!IsMechanical(*pSoldier)  &&
+				!AM_AN_EPC(pSoldier)      &&
+				!pSoldier->fMercAsleep)
 		{
 			mercs_in_group[ubNumMercs++] = pSoldier;
 		}

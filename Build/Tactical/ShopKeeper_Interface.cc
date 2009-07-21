@@ -571,9 +571,7 @@ static void EnterShopKeeperInterface(void)
 	gubNumberMercsInArray = 0;
 	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		if (pSoldier->ubProfile != NO_PROFILE &&
-				!(pSoldier->uiStatusFlags & SOLDIER_VEHICLE) &&
-				!AM_A_ROBOT(pSoldier))
+		if (pSoldier->ubProfile != NO_PROFILE && !IsMechanical(*pSoldier))
 		{
 			// remember whose face is in this slot
 			gubArrayOfEmployedMercs[ gubNumberMercsInArray ] = pSoldier->ubProfile;
@@ -5929,7 +5927,7 @@ BOOLEAN CanMercInteractWithSelectedShopkeeper(const SOLDIERTYPE* pSoldier)
 	}
 
 	if ( pSoldier->bActive && pSoldier->bInSector && IsMercOnCurrentSquad( pSoldier ) && ( pSoldier->bLife >= OKLIFE ) &&
-		!( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) )
+			!IsMechanical(*pSoldier))
 	{
 		sDestGridNo = pShopkeeper->sGridNo;
 		bDestLevel	= pShopkeeper->bLevel;

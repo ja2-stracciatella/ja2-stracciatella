@@ -934,7 +934,7 @@ static void DrawCharacterInfo(const SOLDIERTYPE* const s)
 	DrawCharHealth(s);
 
 	// if a vehicle or robot, we're done - the remainder applies only to people
-	if (s->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(s)) return;
+	if (IsMechanical(*s)) return;
 
 	DrawCharStats(s);
 
@@ -4555,7 +4555,7 @@ static void RenderAttributeStringsForUpperLeftHandCorner(SGPVSurface* const uiBu
 
 	// vehicles and robot don't have attributes, contracts, or morale
 	const SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
-	if ( ( pSoldier == NULL ) || ( !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) ) )
+	if (!pSoldier || !IsMechanical(*pSoldier))
 	{
 		// health
 		DrawString(pUpperLeftMapScreenStrings[1], 87, 80, CHAR_FONT);
@@ -7513,8 +7513,7 @@ BOOLEAN MapCharacterHasAccessibleInventory(const SOLDIERTYPE* const s)
 	return
 		s->bAssignment         != IN_TRANSIT     &&
 		s->bAssignment         != ASSIGNMENT_POW &&
-		!(s->uiStatusFlags & SOLDIER_VEHICLE)    &&
-		!AM_A_ROBOT(s)                           &&
+		!IsMechanical(*s)                        &&
 		s->ubWhatKindOfMercAmI != MERC_TYPE__EPC &&
 		s->bLife               >= OKLIFE;
 }
@@ -7621,7 +7620,7 @@ BOOLEAN CanChangeSleepStatusForSoldier(const SOLDIERTYPE* const pSoldier)
 	Assert( pSoldier->bActive );
 
 	// if a vehicle, robot, in transit, or a POW
-	if( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) ||
+	if (IsMechanical(*pSoldier) ||
 			( pSoldier->bAssignment == IN_TRANSIT ) || ( pSoldier->bAssignment == ASSIGNMENT_POW ) )
 	{
 		// can't change the sleep status of such mercs
@@ -8251,8 +8250,10 @@ static void RandomAwakeSelectedMercConfirmsStrategicMove(void)
 		if (!c->selected) continue;
 
 		SOLDIERTYPE* const pSoldier = c->merc;
-		if ( pSoldier->bLife >= OKLIFE && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
-					!AM_A_ROBOT( pSoldier ) && !AM_AN_EPC( pSoldier ) && !pSoldier->fMercAsleep )
+		if (pSoldier->bLife >= OKLIFE &&
+				!IsMechanical(*pSoldier)  &&
+				!AM_AN_EPC(pSoldier)      &&
+				!pSoldier->fMercAsleep)
 		{
 			selected_merc[ubNumMercs] = pSoldier;
 			ubSelectedMercIndex[ ubNumMercs ] = (UINT8)iCounter;

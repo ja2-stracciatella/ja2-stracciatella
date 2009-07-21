@@ -315,15 +315,15 @@ ENUM_BITSET(AssignmentConditions)
 static bool AreAssignmentConditionsMet(SOLDIERTYPE const& s, AssignmentConditions const c)
 {
 	return
-		(c & AC_IMPASSABLE  || SectorIsPassable(SECTOR(s.sSectorX, s.sSectorY)))          &&
-		(c & AC_UNCONSCIOUS || s.bLife >= OKLIFE)                                         &&
-		(c & AC_COMBAT      || !s.bInSector || !gTacticalStatus.fEnemyInSector)           &&
-		(c & AC_EPC         || s.ubWhatKindOfMercAmI != MERC_TYPE__EPC)                   &&
-		(c & AC_IN_HELI_IN_HOSTILE_SECTOR || !IsSoldierInHelicopterInHostileSector(s))    &&
-		(c & AC_MECHANICAL  || (!(s.uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT(&s))) &&
-		(c & AC_MOVING      || !s.fBetweenSectors)                                        &&
-		(c & AC_UNDERGROUND || s.bSectorZ == 0)                                           &&
-		!IsCharacterInTransit(&s)                                                         &&
+		(c & AC_IMPASSABLE  || SectorIsPassable(SECTOR(s.sSectorX, s.sSectorY)))       &&
+		(c & AC_UNCONSCIOUS || s.bLife >= OKLIFE)                                      &&
+		(c & AC_COMBAT      || !s.bInSector || !gTacticalStatus.fEnemyInSector)        &&
+		(c & AC_EPC         || s.ubWhatKindOfMercAmI != MERC_TYPE__EPC)                &&
+		(c & AC_IN_HELI_IN_HOSTILE_SECTOR || !IsSoldierInHelicopterInHostileSector(s)) &&
+		(c & AC_MECHANICAL  || !IsMechanical(s))                                       &&
+		(c & AC_MOVING      || !s.fBetweenSectors)                                     &&
+		(c & AC_UNDERGROUND || s.bSectorZ == 0)                                        &&
+		!IsCharacterInTransit(&s)                                                      &&
 		s.bAssignment != ASSIGNMENT_POW;
 }
 
@@ -2106,10 +2106,7 @@ static void FatigueCharacter(SOLDIERTYPE* pSoldier)
 
 
 	// vehicle or robot?
-	if( ( pSoldier -> uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) )
-	{
-		return;
-	}
+	if (IsMechanical(*pSoldier)) return;
 
 	// check if in transit, do not wear out
 	if (IsCharacterInTransit(pSoldier)) return;
@@ -2880,13 +2877,12 @@ static void HandleHealingByNaturalCauses(SOLDIERTYPE* pSoldier);
 // handle natural healing for all mercs on players team
 static void HandleNaturalHealing(void)
 {
-	FOR_ALL_IN_TEAM(s, OUR_TEAM)
+	FOR_ALL_IN_TEAM(i, OUR_TEAM)
 	{
+		SOLDIERTYPE& s = *i;
 		// mechanical members don't regenerate!
-		if (!(s->uiStatusFlags & SOLDIER_VEHICLE) && !(AM_A_ROBOT(s)))
-		{
-			HandleHealingByNaturalCauses(s);
-		}
+		if (IsMechanical(s)) continue;
+		HandleHealingByNaturalCauses(&s);
 	}
 }
 
@@ -5870,10 +5866,7 @@ static void HandleRestFatigueAndSleepStatus(void)
 	// run through all player characters and handle their rest, fatigue, and going to sleep
 	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		if (pSoldier->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(pSoldier))
-		{
-			continue;
-		}
+		if (IsMechanical(*pSoldier)) continue;
 
 		if (pSoldier->bAssignment == ASSIGNMENT_POW || pSoldier->bAssignment == IN_TRANSIT)
 		{
@@ -5980,10 +5973,7 @@ static void HandleRestFatigueAndSleepStatus(void)
 	// now handle waking (needs seperate list queue, that's why it has its own loop)
 	FOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
-		if (pSoldier->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(pSoldier))
-		{
-			continue;
-		}
+		if (IsMechanical(*pSoldier)) continue;
 
 		if (pSoldier->bAssignment == ASSIGNMENT_POW || pSoldier->bAssignment == IN_TRANSIT)
 		{
@@ -7429,8 +7419,7 @@ static BOOLEAN CanCharacterRepairAnotherSoldiersStuff(const SOLDIERTYPE* const p
 	if (pOtherSoldier->bAssignment == IN_TRANSIT ||
 			pOtherSoldier->bAssignment == ASSIGNMENT_POW ||
 			pOtherSoldier->bAssignment == ASSIGNMENT_DEAD ||
-			pSoldier->uiStatusFlags & SOLDIER_VEHICLE ||
-			AM_A_ROBOT(pSoldier) ||
+			IsMechanical(*pSoldier) ||
 			pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC)
 	{
 		return( FALSE );

@@ -844,7 +844,7 @@ static UINT16 ModifyExpGainByTarget(const UINT16 exp_gain, const SOLDIERTYPE* co
 	{
 		return exp_gain / 2;
 	}
-	else if (tgt->uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(tgt) || TANK(tgt))
+	else if (IsMechanical(*tgt) || TANK(tgt))
 	{
 		// no exp from shooting a vehicle that you can't damage and can't move!
 		return 0;
@@ -1447,7 +1447,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 
 					usOldItem = pTargetSoldier->inv[HANDPOS].usItem;
 
-					if ( pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum && !(pTargetSoldier->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT( pTargetSoldier ) && !TANK( pTargetSoldier ) )
+					if (pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum && !IsMechanical(*pTargetSoldier) && !TANK(pTargetSoldier))
 					{
 						// made a steal; give experience
 						StatChange(*pSoldier, STRAMT, 8, FROM_SUCCESS);
@@ -1505,7 +1505,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 						DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
 					}
 
-					if ( iHitChance > 0 && pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum && !(pTargetSoldier->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT( pTargetSoldier ) && !TANK( pTargetSoldier ) )
+					if (iHitChance > 0 && pSoldier->bTeam == gbPlayerNum && pTargetSoldier->bTeam != gbPlayerNum && !IsMechanical(*pTargetSoldier) && !TANK(pTargetSoldier))
 					{
 						// failed a steal; give some experience
 						StatChange(*pSoldier, STRAMT, 4, FROM_FAILURE);

@@ -282,11 +282,10 @@ static void UpdateSoldierMorale(SOLDIERTYPE* pSoldier, UINT8 ubType, INT8 bMoral
 {
 	INT32									iMoraleModTotal;
 
-	if ( !pSoldier->bActive || ( pSoldier->bLife < CONSCIOUSNESS ) ||
-		 ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) || AM_AN_EPC( pSoldier ) )
-	{
-		return;
-	}
+	if (!pSoldier->bActive)              return;
+	if (pSoldier->bLife < CONSCIOUSNESS) return;
+	if (IsMechanical(*pSoldier))         return;
+	if (AM_AN_EPC(pSoldier))             return;
 
 	if ( ( pSoldier->bAssignment == ASSIGNMENT_DEAD ) ||
 			 ( pSoldier->bAssignment == ASSIGNMENT_POW ) ||

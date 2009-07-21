@@ -25,6 +25,11 @@ static inline bool AM_A_ROBOT(SOLDIERTYPE const* const s)
 	return pid != NO_PROFILE && GetProfile(pid).ubBodyType == ROBOTNOWEAPON;
 }
 
+static inline bool IsMechanical(SOLDIERTYPE const& s)
+{
+	return s.uiStatusFlags & SOLDIER_VEHICLE || AM_A_ROBOT(&s);
+}
+
 static inline bool OK_ENEMY_MERC(SOLDIERTYPE const* const s)
 {
 	return !s->bNeutral && s->bSide != gbPlayerNum && s->bLife >= OKLIFE;

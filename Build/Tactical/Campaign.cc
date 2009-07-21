@@ -1475,8 +1475,7 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 		if (s->bInSector &&
 				IsMercOnCurrentSquad(s) &&
 				s->bLife >= CONSCIOUSNESS &&
-				!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
-				!AM_A_ROBOT(s))
+				!IsMechanical(*s))
 		{
 			StatChange(*s, EXPERAMT, usXPs, FROM_SUCCESS);
 		}

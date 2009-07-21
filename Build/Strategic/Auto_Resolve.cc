@@ -1414,14 +1414,15 @@ static void RenderAutoResolve(void)
 
 				case BATTLE_SURRENDERED:
 				case BATTLE_CAPTURED:
-					FOR_ALL_IN_TEAM(s, OUR_TEAM)
+					FOR_ALL_IN_TEAM(i, OUR_TEAM)
 					{
-						if (s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT(s))
+						SOLDIERTYPE& s = *i;
+						if (s.bLife != 0 && !IsMechanical(s))
 						{ //Merc is alive and not a vehicle or robot
-							if (PlayerMercInvolvedInThisCombat(s))
+							if (PlayerMercInvolvedInThisCombat(&s))
 							{
 								// This morale event is PER INDIVIDUAL SOLDIER
-								HandleMoraleEvent(s, MORALE_MERC_CAPTURED, gpAR->ubSectorX, gpAR->ubSectorY, 0);
+								HandleMoraleEvent(&s, MORALE_MERC_CAPTURED, gpAR->ubSectorX, gpAR->ubSectorY, 0);
 							}
 						}
 					}

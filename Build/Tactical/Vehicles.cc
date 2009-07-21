@@ -980,11 +980,9 @@ static BOOLEAN CanSoldierDriveVehicle(const SOLDIERTYPE* const pSoldier, const I
 		return( FALSE );
 	}
 
-	if( ( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) || AM_A_ROBOT( pSoldier ) || AM_AN_EPC( pSoldier ) )
-	{
-		// vehicles, robot, and EPCs can't drive!
-		return (FALSE);
-	}
+	// Vehicles, robot, and EPCs can't drive!
+	if (IsMechanical(*pSoldier)) return FALSE;
+	if (AM_AN_EPC(pSoldier))     return FALSE;
 
 	// too wounded to drive
 	if( pSoldier->bLife < OKLIFE )

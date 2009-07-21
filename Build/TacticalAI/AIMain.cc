@@ -300,7 +300,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 		return;
 	}
 
-	if ( ( (pSoldier->uiStatusFlags & SOLDIER_VEHICLE) && !TANK( pSoldier ) ) || AM_A_ROBOT( pSoldier ) )
+	if (IsMechanical(*pSoldier) && !TANK(pSoldier))
 	{
 		// bail out!
 		#ifdef TESTAICONTROL

@@ -3881,8 +3881,7 @@ try
 			{ //If we have a live and valid soldier
 				if (s->bLife != 0 &&
 						!s->fBetweenSectors &&
-						!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
-						!AM_A_ROBOT(s) &&
+						!IsMechanical(*s) &&
 						!AM_AN_EPC(s) &&
 						s->sSectorX == gWorldSectorX &&
 						s->sSectorY == gWorldSectorY &&
@@ -3900,8 +3899,7 @@ try
 		{ //If we have a live and valid soldier
 			if (s->bLife != 0 &&
 					!s->fBetweenSectors &&
-					!(s->uiStatusFlags & SOLDIER_VEHICLE) &&
-					!AM_A_ROBOT(s) &&
+					!IsMechanical(*s) &&
 					!AM_AN_EPC(s) &&
 					s->sSectorX == gWorldSectorX &&
 					s->sSectorY == gWorldSectorY &&

@@ -133,9 +133,8 @@ void HandleTacticalEndTurn()
 		FOR_ALL_IN_TEAM(i, gbPlayerNum)
 		{
 			SOLDIERTYPE& s = *i;
-			if (s.bLife <= 0)                      continue;
-			if (s.uiStatusFlags & SOLDIER_VEHICLE) continue;
-			if (AM_A_ROBOT(&s))                    continue;
+			if (s.bLife <= 0)    continue;
+			if (IsMechanical(s)) continue;
 
 			// Handle everything from getting breath back, to bleeding, etc.
 			EVENT_BeginMercTurn(s);

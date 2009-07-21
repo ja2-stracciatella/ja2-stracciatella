@@ -674,8 +674,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 	{
 		SOLDIERTYPE* const pSoldier = pPlayer->pSoldier;
 
-		if ( pSoldier->bLife >= OKLIFE && !( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) &&
-					!AM_A_ROBOT( pSoldier ) && !AM_AN_EPC( pSoldier ) )
+		if (pSoldier->bLife >= OKLIFE && !IsMechanical(*pSoldier) && !AM_AN_EPC(pSoldier))
 		{
 			mercs_in_group[ubNumMercs++] = pSoldier;
 		}
@@ -1073,11 +1072,10 @@ static void AwardExperienceForTravelling(GROUP& g)
 	UINT32 const traverse_time = g.uiTraverseTime;
 	CFOR_ALL_PLAYERS_IN_GROUP(i, &g)
 	{
-		if (!i->pSoldier)                      continue;
+		if (!i->pSoldier)    continue;
 		SOLDIERTYPE& s = *i->pSoldier;
-		if (AM_A_ROBOT(&s))                    continue;
-		if (AM_AN_EPC(&s))                     continue;
-		if (s.uiStatusFlags & SOLDIER_VEHICLE) continue;
+		if (IsMechanical(s)) continue;
+		if (AM_AN_EPC(&s))   continue;
 
 		if (s.bLifeMax < 100)
 		{

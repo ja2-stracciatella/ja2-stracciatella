@@ -401,7 +401,7 @@ void CheckForDisabledForGiveItem(void)
 		// Go through each merc and see if there is one closeby....
 		CFOR_ALL_IN_TEAM(s, gbPlayerNum)
 		{
-			if (s->bLife >= OKLIFE && !(s->uiStatusFlags & SOLDIER_VEHICLE) && !AM_A_ROBOT(s) && s->bInSector && IsMercOnCurrentSquad(s))
+			if (s->bLife >= OKLIFE && !IsMechanical(*s) && s->bInSector && IsMercOnCurrentSquad(s))
 			{
 				const INT16 sDist        = PythSpacesAway(cur->sGridNo, s->sGridNo);
 				const INT16 sDistVisible = DistanceVisible(s, DIRECTION_IRRELEVANT, DIRECTION_IRRELEVANT, cur->sGridNo, cur->bLevel);

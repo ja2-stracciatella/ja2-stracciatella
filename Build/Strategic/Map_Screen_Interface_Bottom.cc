@@ -1115,7 +1115,7 @@ BOOLEAN AnyUsableRealMercenariesOnTeam( void )
 	CFOR_ALL_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		if (pSoldier->bLife > 0 &&
-				!( pSoldier->uiStatusFlags & SOLDIER_VEHICLE ) && !AM_A_ROBOT( pSoldier ) &&
+				!IsMechanical(*pSoldier) &&
 				( pSoldier->bAssignment != ASSIGNMENT_POW ) &&
 				( pSoldier->bAssignment != ASSIGNMENT_DEAD ) &&
 				( pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__EPC ) )
