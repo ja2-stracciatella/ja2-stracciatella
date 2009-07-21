@@ -856,7 +856,7 @@ static void RenderPBHeader(INT32* piX, INT32* piWidth)
 }
 
 
-static const wchar_t* GetSoldierConditionInfo(const SOLDIERTYPE* pSoldier);
+static wchar_t const* GetSoldierConditionInfo(SOLDIERTYPE const&);
 
 
 void RenderPreBattleInterface()
@@ -1029,36 +1029,35 @@ void RenderPreBattleInterface()
 		//print out the participants of the battle.
 		// |  NAME  | ASSIGN |  COND  |   HP   |   BP   |
 		y = TOP_Y + 1;
-		CFOR_ALL_IN_TEAM(s, OUR_TEAM)
+		CFOR_ALL_IN_TEAM(i, OUR_TEAM)
 		{
-			if (s->bLife != 0 && !(s->uiStatusFlags & SOLDIER_VEHICLE))
-			{
-				if (PlayerMercInvolvedInThisCombat(s))
-				{ //involved
-					//NAME
-					const wchar_t* const Name = s->name;
-					x = 17 + (52-StringPixLength(Name, BLOCKFONT2)) / 2;
-					MPrint(x, y, Name);
-					//ASSIGN
-					const wchar_t* const Assignment = GetMapscreenMercAssignmentString(s);
-					x = 72 + (54 - StringPixLength(Assignment, BLOCKFONT2)) / 2;
-					MPrint(x, y, Assignment);
-					//COND
-					const wchar_t* const Condition = GetSoldierConditionInfo(s);
-					x = 129 + (58 - StringPixLength(Condition, BLOCKFONT2)) / 2;
-					MPrint(x, y, Condition);
-					//HP
-					swprintf(str, lengthof(str), L"%d%%", s->bLife * 100 / s->bLifeMax);
-					x = 189 + (25-StringPixLength( str, BLOCKFONT2)) / 2;
-					MPrint(x, y, str);
-					//BP
-					swprintf(str, lengthof(str), L"%d%%", s->bBreath);
-					x = 217 + (25-StringPixLength( str, BLOCKFONT2)) / 2;
-					MPrint(x, y, str);
+			SOLDIERTYPE const& s = *i;
+			if (s.bLife == 0)                        continue;
+			if (s.uiStatusFlags & SOLDIER_VEHICLE)   continue;
+			if (!PlayerMercInvolvedInThisCombat(&s)) continue;
 
-					y += ROW_HEIGHT;
-				}
-			}
+			// Name
+			wchar_t const* const name = s.name;
+			x = 17 + (52-StringPixLength(name, BLOCKFONT2)) / 2;
+			MPrint(x, y, name);
+			// Assignment
+			wchar_t const* const assignment = GetMapscreenMercAssignmentString(&s);
+			x = 72 + (54 - StringPixLength(assignment, BLOCKFONT2)) / 2;
+			MPrint(x, y, assignment);
+			// Condition
+			wchar_t const* const condition = GetSoldierConditionInfo(s);
+			x = 129 + (58 - StringPixLength(condition, BLOCKFONT2)) / 2;
+			MPrint(x, y, condition);
+			// HP
+			swprintf(str, lengthof(str), L"%d%%", s.bLife * 100 / s.bLifeMax);
+			x = 189 + (25 - StringPixLength(str, BLOCKFONT2)) / 2;
+			MPrint(x, y, str);
+			// BP
+			swprintf(str, lengthof(str), L"%d%%", s.bBreath);
+			x = 217 + (25 - StringPixLength(str, BLOCKFONT2)) / 2;
+			MPrint(x, y, str);
+
+			y += ROW_HEIGHT;
 		}
 
 		//print out the uninvolved members of the battle
@@ -1299,46 +1298,19 @@ enum
 };
 
 
-static const wchar_t* GetSoldierConditionInfo(const SOLDIERTYPE* pSoldier)
+static wchar_t const* GetSoldierConditionInfo(SOLDIERTYPE const& s)
 {
-	Assert( pSoldier );
-	//Go from the worst condition to the best.
-	if( !pSoldier->bLife )
-	{ //0 life
-		return pConditionStrings[COND_DEAD];
-	}
-	else if( pSoldier->bLife < OKLIFE && pSoldier->bBleeding )
-	{ //life less than OKLIFE and bleeding
-		return pConditionStrings[COND_DYING];
-	}
-	else if( pSoldier->bBreath < OKBREATH && pSoldier->bCollapsed )
-	{ //breath less than OKBREATH
-		return pConditionStrings[COND_UNCONCIOUS];
-	}
-	else if( pSoldier->bBleeding > MIN_BLEEDING_THRESHOLD)
-	{ //bleeding
-		return pConditionStrings[COND_BLEEDING];
-	}
-	else if( pSoldier->bLife*100 < pSoldier->bLifeMax*50 )
-	{ //less than 50% life
-		return pConditionStrings[COND_WOUNDED];
-	}
-	else if( pSoldier->bBreath < 50 )
-	{ //breath less than half
-		return pConditionStrings[COND_FATIGUED];
-	}
-	else if( pSoldier->bLife*100 < pSoldier->bLifeMax*67 )
-	{ //less than 67% life
-		return pConditionStrings[COND_FAIR];
-	}
-	else if( pSoldier->bLife*100 < pSoldier->bLifeMax*86 )
-	{ //less than 86% life
-		return pConditionStrings[COND_GOOD];
-	}
-	else
-	{ //86%+ life
-		return pConditionStrings[COND_EXCELLENT];
-	}
+	// Go from the worst condition to the best
+	return
+		s.bLife == 0                         ? pConditionStrings[COND_DEAD]       :
+		s.bLife < OKLIFE && s.bBleeding != 0 ? pConditionStrings[COND_DYING]      :
+		s.bBreath < OKBREATH && s.bCollapsed ? pConditionStrings[COND_UNCONCIOUS] :
+		s.bBleeding > MIN_BLEEDING_THRESHOLD ? pConditionStrings[COND_BLEEDING]   :
+		s.bLife * 100 < s.bLifeMax * 50      ? pConditionStrings[COND_WOUNDED]    :
+		s.bBreath < 50                       ? pConditionStrings[COND_FATIGUED]   :
+		s.bLife * 100 < s.bLifeMax * 67      ? pConditionStrings[COND_FAIR]       :
+		s.bLife * 100 < s.bLifeMax * 86      ? pConditionStrings[COND_GOOD]       :
+		pConditionStrings[COND_EXCELLENT];
 }
 
 
