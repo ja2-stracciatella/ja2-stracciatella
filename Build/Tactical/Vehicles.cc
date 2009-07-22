@@ -213,7 +213,7 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 			if (!DoesPlayerExistInPGroup(g, *vs))
 			{
 				//NOW.. add guy to vehicle group....
-				AddPlayerToGroup(&g, vs);
+				AddPlayerToGroup(g, *vs);
 			}
 			else
 			{
@@ -278,7 +278,7 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 		// if vehicle is part of mvt group, then add character to mvt group
 		if (v.ubMovementGroup != 0)
 		{
-			AddPlayerToGroup(GetGroup(v.ubMovementGroup), &s);
+			AddPlayerToGroup(*GetGroup(v.ubMovementGroup), s);
 		}
 
 		// Are we the first?
@@ -397,7 +397,7 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 		RemoveCharacterFromSquads(&vs);
 		// ATE: Add him back to vehicle group!
 		GROUP& g = *GetGroup(v.ubMovementGroup);
-		if (!DoesPlayerExistInPGroup(g, vs)) AddPlayerToGroup(&g, &vs);
+		if (!DoesPlayerExistInPGroup(g, vs)) AddPlayerToGroup(g, vs);
 		ChangeSoldiersAssignment(&vs, ASSIGNMENT_EMPTY);
 	}
 	return true;

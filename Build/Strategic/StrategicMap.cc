@@ -2074,8 +2074,8 @@ void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier )
 	if( pSoldier->ubGroupID == 0 )
 	{
 	  // create independant group
-	  GROUP* const g = CreateNewPlayerGroupDepartingFromSector(pSoldier->sSectorX, pSoldier->sSectorY);
-	  AddPlayerToGroup(g, pSoldier);
+	  GROUP& g = *CreateNewPlayerGroupDepartingFromSector(pSoldier->sSectorX, pSoldier->sSectorY);
+	  AddPlayerToGroup(g, *pSoldier);
 	}
 }
 

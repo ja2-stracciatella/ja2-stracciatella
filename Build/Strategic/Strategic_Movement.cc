@@ -162,37 +162,36 @@ GROUP* CreateNewVehicleGroupDepartingFromSector(UINT8 const ubSectorX, UINT8 con
 }
 
 
-void AddPlayerToGroup(GROUP* const g, SOLDIERTYPE* const s)
+void AddPlayerToGroup(GROUP& g, SOLDIERTYPE& s)
 {
-	Assert(g);
-	AssertMsg(g->fPlayer, "Attempting AddPlayerToGroup() on an ENEMY group!");
+	AssertMsg(g.fPlayer, "Attempting AddPlayerToGroup() on an ENEMY group!");
 
 	PLAYERGROUP* const p = MALLOC(PLAYERGROUP);
-	p->pSoldier = s;
-	p->next     = NULL;
+	p->pSoldier = &s;
+	p->next     = 0;
 
-	s->ubGroupID = g->ubGroupID;
+	s.ubGroupID = g.ubGroupID;
 
-	PLAYERGROUP* i = g->pPlayerList;
+	PLAYERGROUP* i = g.pPlayerList;
 	if (!i)
 	{
-		g->pPlayerList = p;
-		g->ubGroupSize = 1;
-		g->ubPrevX     = s->ubPrevSectorID % 16 + 1;
-		g->ubPrevY     = s->ubPrevSectorID / 16 + 1;
-		g->ubSectorX   = s->sSectorX;
-		g->ubSectorY   = s->sSectorY;
-		g->ubSectorZ   = s->bSectorZ;
+		g.pPlayerList = p;
+		g.ubGroupSize = 1;
+		g.ubPrevX     = s.ubPrevSectorID % 16 + 1;
+		g.ubPrevY     = s.ubPrevSectorID / 16 + 1;
+		g.ubSectorX   = s.sSectorX;
+		g.ubSectorY   = s.sSectorY;
+		g.ubSectorZ   = s.bSectorZ;
 	}
 	else
 	{
 		for (; i->next; i = i->next)
 		{
-			AssertMsg(i->pSoldier->ubProfile != s->ubProfile, String("Attempting to add an already existing merc to group (ubProfile=%d).", s->ubProfile));
+			AssertMsg(i->pSoldier->ubProfile != s.ubProfile, String("Attempting to add an already existing merc to group (ubProfile=%d).", s.ubProfile));
 		}
 		i->next = p;
 
-		g->ubGroupSize++;
+		++g.ubGroupSize;
 	}
 }
 

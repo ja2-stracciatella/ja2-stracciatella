@@ -6788,8 +6788,8 @@ static BOOLEAN AssignMercToAMovementGroup(SOLDIERTYPE* pSoldier)
 		return( FALSE );
 	}
 
-	GROUP* const g = CreateNewPlayerGroupDepartingFromSector(pSoldier->sSectorX, pSoldier->sSectorY);
-	AddPlayerToGroup(g, pSoldier);
+	GROUP& g = *CreateNewPlayerGroupDepartingFromSector(pSoldier->sSectorX, pSoldier->sSectorY);
+	AddPlayerToGroup(g, *pSoldier);
 	return( TRUE );
 }
 

@@ -2886,10 +2886,10 @@ static void Teleport()
 	INT16 sMapY;
 	if (!GetMouseMapXY(&sMapX, &sMapY)) return;
 
-	SOLDIERTYPE* const s = gCharactersList[bSelectedDestChar].merc;
+	SOLDIERTYPE& s = *gCharactersList[bSelectedDestChar].merc;
 
 	// can't teleport to where we already are
-	if (sMapX == s->sSectorX && sMapY == s->sSectorY) return;
+	if (sMapX == s.sSectorX && sMapY == s.sSectorY) return;
 
 #if 0 // XXX was commented out
 	if (fZoomFlag)
@@ -2907,21 +2907,21 @@ static void Teleport()
 	CancelMapUIMessage();
 
 	// clear their strategic movement (mercpaths and waypoints)
-	ClearMvtForThisSoldierAndGang(s);
+	ClearMvtForThisSoldierAndGang(&s);
 
 	// select this sector
 	ChangeSelectedMapSector(sMapX, sMapY, 0);
 
 	// check to see if this person is moving, if not...then assign them to mvt group
-	if (s->ubGroupID  == 0)
+	if (s.ubGroupID  == 0)
 	{
-		GROUP* const g = CreateNewPlayerGroupDepartingFromSector(s->sSectorX, s->sSectorY);
+		GROUP& g = *CreateNewPlayerGroupDepartingFromSector(s.sSectorX, s.sSectorY);
 		AddPlayerToGroup(g, s);
 	}
 
 	// figure out where they would've come from
-	INT16 const sDeltaX = sMapX - s->sSectorX;
-	INT16 const sDeltaY = sMapY - s->sSectorY;
+	INT16 const sDeltaX = sMapX - s.sSectorX;
+	INT16 const sDeltaY = sMapY - s.sSectorY;
 	INT16       sPrevX;
 	INT16       sPrevY;
 	if (abs(sDeltaX) >= abs(sDeltaY))
@@ -2958,7 +2958,7 @@ static void Teleport()
 	}
 
 	// set where they are, were/are going, then make them arrive there and check for battle
-	PlaceGroupInSector(GetGroup(s->ubGroupID), sPrevX, sPrevY, sMapX, sMapY, 0, TRUE);
+	PlaceGroupInSector(GetGroup(s.ubGroupID), sPrevX, sPrevY, sMapX, sMapY, 0, TRUE);
 
 	// unload the sector they teleported out of
 	CheckAndHandleUnloadingOfCurrentWorld();

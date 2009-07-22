@@ -165,7 +165,7 @@ void RemoveGroupWaypoints(GROUP*);
 GROUP* CreateNewPlayerGroupDepartingFromSector(UINT8 ubSectorX, UINT8 ubSectorY);
 
 //Allows you to add or remove players from the group.
-void AddPlayerToGroup(GROUP*, SOLDIERTYPE*);
+void AddPlayerToGroup(GROUP&, SOLDIERTYPE&);
 
 void RemovePlayerFromGroup(SOLDIERTYPE*);
 void RemovePlayerFromPGroup(GROUP*, SOLDIERTYPE*);

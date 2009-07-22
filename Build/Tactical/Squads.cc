@@ -147,11 +147,11 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 			}
 		}
 
-		GROUP* const g = GetGroup(SquadMovementGroups[bSquadValue]);
+		GROUP& g = *GetGroup(SquadMovementGroups[bSquadValue]);
 		if (s->bAssignment != VEHICLE || s->iVehicleId == -1)
 		{
-			AddPlayerToGroup(g, s);
-			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, g);
+			AddPlayerToGroup(g, *s);
+			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, &g);
 		}
 		else if (InHelicopter(*s))
 		{
@@ -160,8 +160,8 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 
 			RemoveSoldierFromHelicopter(s);
 
-			AddPlayerToGroup(g, s);
-			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, g);
+			AddPlayerToGroup(g, *s);
+			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, &g);
 
 			// if we've just started a new squad
 			if (fNewSquad)
@@ -172,7 +172,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 				if (pGroup)
 				{
 					// set where it is and where it's going, then make it arrive there.  Don't check for battle
-					PlaceGroupInSector(g, pGroup->ubPrevX, pGroup->ubPrevY, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ, FALSE); // XXX TODO001D
+					PlaceGroupInSector(&g, pGroup->ubPrevX, pGroup->ubPrevY, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ, FALSE); // XXX TODO001D
 				}
 			}
 		}
@@ -183,8 +183,8 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 			TakeSoldierOutOfVehicle(s);
 			fExitingVehicleToSquad = FALSE;
 
-			AddPlayerToGroup(g, s);
-			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, g);
+			AddPlayerToGroup(g, *s);
+			SetGroupSectorValue(s->sSectorX, s->sSectorY, s->bSectorZ, &g);
 		}
 
 		*i = s;
@@ -303,8 +303,8 @@ BOOLEAN RemoveCharacterFromSquads(SOLDIERTYPE* const s)
 
 			if (s->fBetweenSectors && s->uiStatusFlags & SOLDIER_VEHICLE)
 			{
-				GROUP* const g = CreateNewPlayerGroupDepartingFromSector(s->sSectorX, s->sSectorY);
-				AddPlayerToGroup(g, s);
+				GROUP& g = *CreateNewPlayerGroupDepartingFromSector(s->sSectorX, s->sSectorY);
+				AddPlayerToGroup(g, *s);
 			}
 
 			RebuildSquad(squad);
