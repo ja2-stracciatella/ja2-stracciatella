@@ -1617,7 +1617,7 @@ static void HandleOtherGroupsArrivingSimultaneously(UINT8 ubSectorX, UINT8 ubSec
 }
 
 
-static void DelayEnemyGroupsIfPathsCross(GROUP* pPlayerGroup);
+static void DelayEnemyGroupsIfPathsCross(GROUP& player_group);
 
 
 /* The user has just approved to plan a simultaneous arrival. So we will
@@ -1662,7 +1662,7 @@ static void PrepareGroupsForSimultaneousArrival()
 			AddStrategicEvent(EVENT_GROUP_ABOUT_TO_ARRIVE, g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY, g.ubGroupID);
 		}
 
-		DelayEnemyGroupsIfPathsCross(&g);
+		DelayEnemyGroupsIfPathsCross(g);
 		g.uiFlags &= ~GROUPFLAG_MARKER;
 	}
 
@@ -1694,7 +1694,7 @@ static void PrepareGroupsForSimultaneousArrival()
 	{
 		AddStrategicEvent(EVENT_GROUP_ABOUT_TO_ARRIVE, first_group.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY, first_group.ubGroupID);
 	}
-	DelayEnemyGroupsIfPathsCross(&first_group);
+	DelayEnemyGroupsIfPathsCross(first_group);
 }
 
 
@@ -1768,28 +1768,30 @@ static void PlanSimultaneousGroupArrivalCallback(MessageBoxReturnValue const bMe
 }
 
 
-static void DelayEnemyGroupsIfPathsCross(GROUP* pPlayerGroup)
+static void DelayEnemyGroupsIfPathsCross(GROUP& player_group)
 {
-	FOR_ALL_ENEMY_GROUPS(pGroup)
+	FOR_ALL_ENEMY_GROUPS(i)
 	{
+		GROUP& g = *i;
 		// Check to see if this group will arrive in next sector before the player group.
-		if( pGroup->uiArrivalTime < pPlayerGroup->uiArrivalTime )
-		{ //check to see if enemy group will cross paths with player group.
-			if( pGroup->ubNextX == pPlayerGroup->ubSectorX &&
-					pGroup->ubNextY == pPlayerGroup->ubSectorY &&
-					pGroup->ubSectorX == pPlayerGroup->ubNextX &&
-					pGroup->ubSectorY == pPlayerGroup->ubNextY )
-			{ //Okay, the enemy group will cross paths with the player, so find and delete the arrival event
-				//and repost it in the future (like a minute or so after the player arrives)
-				DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
+		if (g.uiArrivalTime >= player_group.uiArrivalTime) continue;
+		// Check to see if enemy group will cross paths with player group.
+		if (g.ubNextX   != player_group.ubSectorX) continue;
+		if (g.ubNextY   != player_group.ubSectorY) continue;
+		if (g.ubSectorX != player_group.ubNextX)   continue;
+		if (g.ubSectorY != player_group.ubNextY)   continue;
 
-				// NOTE: This can cause the arrival time to be > GetWorldTotalMin() + TraverseTime, so keep that in mind
-				// if you have any code that uses these 3 values to figure out how far along its route a group is!
-				SetGroupArrivalTime( pGroup, pPlayerGroup->uiArrivalTime + 1 + Random( 10 ) );
-				if( !AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID ) )
-					AssertMsg( 0, "Failed to add movement event." );
-			}
-		}
+		/* The enemy group will cross paths with the player, so find and delete the
+		 * arrival event and repost it in the future (like a minute or so after the
+		 * player arrives) */
+		DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g.ubGroupID);
+
+		/* NOTE: This can cause the arrival time to be > GetWorldTotalMin() +
+		 * TraverseTime, so keep that in mind if you have any code that uses these 3
+		 * values to figure out how far along its route a group is! */
+		SetGroupArrivalTime(&g, player_group.uiArrivalTime + 1 + Random(10));
+		if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
+			AssertMsg(0, "Failed to add movement event.");
 	}
 }
 
@@ -1959,7 +1961,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 		//the player will always encounter that group.
 		if( !pGroup->ubSectorZ )
 		{
-			DelayEnemyGroupsIfPathsCross( pGroup );
+			DelayEnemyGroupsIfPathsCross(*pGroup);
 		}
 	}
 }
