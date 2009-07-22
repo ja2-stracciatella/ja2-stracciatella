@@ -4892,7 +4892,7 @@ static void MoveSAIGroupToSector(GROUP** pGroup, UINT8 ubSectorID, UINT32 uiMove
 			break;
 		case DIRECT:
 		default:
-			MoveGroupFromSectorToSector(*pGroup, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY);
+			MoveGroupFromSectorToSector(**pGroup, (*pGroup)->ubSectorX, (*pGroup)->ubSectorY, ubDstSectorX, ubDstSectorY);
 			break;
 	}
 	//Make sure that the group is moving.  If this fails, then the pathing may have failed for some reason.

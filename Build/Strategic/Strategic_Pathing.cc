@@ -941,9 +941,9 @@ void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN MoveGroupFromSectorToSector(GROUP* const g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
+BOOLEAN MoveGroupFromSectorToSector(GROUP& g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
 {
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), *g, FALSE);
+	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
 
 	if( pNode == NULL )
 	{
@@ -951,7 +951,7 @@ BOOLEAN MoveGroupFromSectorToSector(GROUP* const g, INT16 const sStartX, INT16 c
 	}
 
 	// start movement to next sector
-	RebuildWayPointsForGroupPath(pNode, g);
+	RebuildWayPointsForGroupPath(pNode, &g);
 
 	// now clear out the mess
 	pNode = ClearStrategicPathList( pNode, -1 );
@@ -1000,7 +1000,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP* const 
 
 	if( pNode == NULL )
 	{
-		return MoveGroupFromSectorToSector(g, sStartX, sStartY, sDestX, sDestY);
+		return MoveGroupFromSectorToSector(*g, sStartX, sStartY, sDestX, sDestY);
 	}
 
 	// start movement to next sector
