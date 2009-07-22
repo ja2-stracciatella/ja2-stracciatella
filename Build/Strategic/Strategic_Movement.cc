@@ -1620,64 +1620,65 @@ static void HandleOtherGroupsArrivingSimultaneously(UINT8 ubSectorX, UINT8 ubSec
 static void DelayEnemyGroupsIfPathsCross(GROUP* pPlayerGroup);
 
 
-//The user has just approved to plan a simultaneous arrival.  So we will syncronize all of the involved
-//groups so that they arrive at the same time (which is the time the final group would arrive).
-static void PrepareGroupsForSimultaneousArrival(void)
+/* The user has just approved to plan a simultaneous arrival. So we will
+ * syncronize all of the involved groups so that they arrive at the same time
+ * (which is the time the final group would arrive). */
+static void PrepareGroupsForSimultaneousArrival()
 {
-	UINT32 uiLatestArrivalTime = 0;
+	GROUP& first_group = *gpPendingSimultaneousGroup;
 
+	/* For all of the groups that haven't arrived yet, determine which one is
+	 * going to take the longest. */
+	UINT32 latest_arrival_time = 0;
 	FOR_ALL_PLAYER_GROUPS(i)
-	{ //For all of the groups that haven't arrived yet, determine which one is going to take the longest.
+	{
 		GROUP& g = *i;
-		if (&g != gpPendingSimultaneousGroup
-				&& g.fBetweenSectors
-				&& g.ubNextX == gpPendingSimultaneousGroup->ubSectorX
-				&& g.ubNextY == gpPendingSimultaneousGroup->ubSectorY &&
-				!IsGroupTheHelicopterGroup(g))
-		{
-			uiLatestArrivalTime = MAX(g.uiArrivalTime, uiLatestArrivalTime);
-			g.uiFlags |= GROUPFLAG_SIMULTANEOUSARRIVAL_APPROVED | GROUPFLAG_MARKER;
-		}
-	}
-	//Now, go through the list again, and reset their arrival event to the latest arrival time.
-	FOR_ALL_GROUPS(pGroup)
-	{
-		if( pGroup->uiFlags & GROUPFLAG_MARKER )
-		{
-			DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
-
-			// NOTE: This can cause the arrival time to be > GetWorldTotalMin() + TraverseTime, so keep that in mind
-			// if you have any code that uses these 3 values to figure out how far along its route a group is!
-			SetGroupArrivalTime( pGroup, uiLatestArrivalTime );
-			AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID );
-
-			if( pGroup->fPlayer )
-			{
-				if( pGroup->uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin( ) )
-				{
-					AddStrategicEvent( EVENT_GROUP_ABOUT_TO_ARRIVE, pGroup->uiArrivalTime - ABOUT_TO_ARRIVE_DELAY, pGroup->ubGroupID );
-				}
-			}
-
-			DelayEnemyGroupsIfPathsCross( pGroup );
-
-			pGroup->uiFlags &= ~GROUPFLAG_MARKER;
-		}
+		if (&g == &first_group)                 continue;
+		if (!g.fBetweenSectors)                 continue;
+		if (g.ubNextX != first_group.ubSectorX) continue;
+		if (g.ubNextY != first_group.ubSectorY) continue;
+		if (IsGroupTheHelicopterGroup(g))       continue;
+		latest_arrival_time = MAX(g.uiArrivalTime, latest_arrival_time);
+		g.uiFlags |= GROUPFLAG_SIMULTANEOUSARRIVAL_APPROVED | GROUPFLAG_MARKER;
 	}
 
-	//We still have the first group that has arrived.  Because they are set up to be in the destination
-	//sector, we will "warp" them back to the last sector, and also setup a new arrival time for them.
-	GROUP& g = *gpPendingSimultaneousGroup;
-	g.ubNextX   = g.ubSectorX;
-	g.ubNextY   = g.ubSectorY;
-	g.ubSectorX = g.ubPrevX;
-	g.ubSectorY = g.ubPrevY;
-	SetGroupArrivalTime(&g, uiLatestArrivalTime);
-	g.fBetweenSectors = TRUE;
-
-	if (g.fVehicle)
+	/* Now, go through the list again, and reset their arrival event to the latest
+	 * arrival time. */
+	FOR_ALL_GROUPS(i)
 	{
-		VEHICLETYPE& v = GetVehicleFromMvtGroup(g);
+		GROUP& g = *i;
+		if ((!g.uiFlags & GROUPFLAG_MARKER)) continue;
+
+		DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g.ubGroupID);
+
+		/* NOTE: This can cause the arrival time to be > GetWorldTotalMin() +
+		 * TraverseTime, so keep that in mind if you have any code that uses these 3
+		 * values to figure out how far along its route a group is! */
+		SetGroupArrivalTime(&g, latest_arrival_time);
+		AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID);
+
+		if (g.fPlayer && g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin())
+		{
+			AddStrategicEvent(EVENT_GROUP_ABOUT_TO_ARRIVE, g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY, g.ubGroupID);
+		}
+
+		DelayEnemyGroupsIfPathsCross(&g);
+		g.uiFlags &= ~GROUPFLAG_MARKER;
+	}
+
+	/* We still have the first group that has arrived. Because they are set up to
+	 * be in the destination sector, we will "warp" them back to the last sector,
+	 * and also setup a new arrival time for them. */
+	first_group.ubNextX         = first_group.ubSectorX;
+	first_group.ubNextY         = first_group.ubSectorY;
+	first_group.ubSectorX       = first_group.ubPrevX;
+	first_group.ubSectorY       = first_group.ubPrevY;
+	SetGroupArrivalTime(&first_group, latest_arrival_time);
+	first_group.fBetweenSectors = TRUE;
+
+	if (first_group.fVehicle)
+	{
+		VEHICLETYPE& v = GetVehicleFromMvtGroup(first_group);
 		v.fBetweenSectors = TRUE;
 
 		if (!IsHelicopter(v))
@@ -1687,16 +1688,13 @@ static void PrepareGroupsForSimultaneousArrival(void)
 		}
 	}
 
-	AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID);
+	AddStrategicEvent(EVENT_GROUP_ARRIVAL, first_group.uiArrivalTime, first_group.ubGroupID);
 
-	if (g.fPlayer)
+	if (first_group.fPlayer && first_group.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin())
 	{
-		if (g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin())
-		{
-			AddStrategicEvent(EVENT_GROUP_ABOUT_TO_ARRIVE, g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY, g.ubGroupID);
-		}
+		AddStrategicEvent(EVENT_GROUP_ABOUT_TO_ARRIVE, first_group.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY, first_group.ubGroupID);
 	}
-	DelayEnemyGroupsIfPathsCross(&g);
+	DelayEnemyGroupsIfPathsCross(&first_group);
 }
 
 
