@@ -1013,7 +1013,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP& g, INT
 }
 
 
-BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(GROUP* const g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
+BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(GROUP& g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
 {
 	// init sectors with soldiers in them
 	InitSectorsWithSoldiersList( );
@@ -1024,21 +1024,21 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 	// turn on the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = TRUE;
 
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), *g, FALSE);
+	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
 
 	// turn off the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = FALSE;
 
 	if( pNode == NULL )
 	{
-		return MoveGroupFromSectorToSectorButAvoidLastSector(*g, sStartX, sStartY, sDestX, sDestY);
+		return MoveGroupFromSectorToSectorButAvoidLastSector(g, sStartX, sStartY, sDestX, sDestY);
 	}
 
 	// remove tail from path
 	pNode = RemoveTailFromStrategicPath( pNode );
 
 	// start movement to next sector
-	RebuildWayPointsForGroupPath(pNode, g);
+	RebuildWayPointsForGroupPath(pNode, &g);
 
 	// now clear out the mess
 	pNode = ClearStrategicPathList( pNode, -1 );

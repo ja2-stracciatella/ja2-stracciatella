@@ -61,7 +61,7 @@ void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier );
 BOOLEAN MoveGroupFromSectorToSector(GROUP&, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY);
 
 BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP&, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY);
-BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(GROUP*, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY);
+BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(GROUP&, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY);
 
 
 // get length of path
