@@ -971,17 +971,6 @@ static void TriggerPrebattleInterface(MessageBoxReturnValue const ubResult)
 }
 
 
-static void DeployGroupToSector(GROUP* pGroup)
-{
-	Assert( pGroup );
-	if( pGroup->fPlayer )
-	{
-		//Update the sector positions of the players...
-		return;
-	}
-	//Assuming enemy code from here on...
-}
-
 //This will get called after a battle is auto-resolved or automatically after arriving
 //at the next sector during a move and the area is clear.
 void CalculateNextMoveIntention( GROUP *pGroup )
@@ -1022,7 +1011,6 @@ void CalculateNextMoveIntention( GROUP *pGroup )
 			case ONE_WAY:
 				if( !wp->next )
 				{ //No more waypoints, so we've reached the destination.
-					DeployGroupToSector( pGroup );
 					return;
 				}
 				//Advance destination to next waypoint ID
