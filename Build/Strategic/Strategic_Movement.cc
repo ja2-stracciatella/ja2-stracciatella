@@ -1259,7 +1259,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 			{
 				ReportVehicleOutOfGas(v, pGroup->ubSectorX, pGroup->ubSectorY);
 				//Nuke the group's path, so they don't continue moving.
-				ClearMercPathsAndWaypointsForAllInGroup( pGroup );
+				ClearMercPathsAndWaypointsForAllInGroup(*pGroup);
 			}
 		}
 	}
@@ -1279,7 +1279,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 		if ( GroupAtFinalDestination( pGroup ) )
 		{
 			// clear their strategic movement (mercpaths and waypoints)
-			ClearMercPathsAndWaypointsForAllInGroup( pGroup );
+			ClearMercPathsAndWaypointsForAllInGroup(*pGroup);
 		}
 
 		// if on surface
@@ -3577,7 +3577,7 @@ static void NotifyPlayerOfBloodcatBattle(UINT8 ubSectorX, UINT8 ubSectorY)
 
 void PlaceGroupInSector(GROUP* const g, INT16 const sPrevX, INT16 const sPrevY, INT16 const sNextX, INT16 const sNextY, INT8 const bZ, BOOLEAN const fCheckForBattle)
 {
-	ClearMercPathsAndWaypointsForAllInGroup(g);
+	ClearMercPathsAndWaypointsForAllInGroup(*g);
 
 	// change where they are and where they're going
 	SetGroupPrevSectors(g, sPrevX, sPrevY);
@@ -3677,7 +3677,7 @@ void PlayerGroupArrivedSafelyInSector(GROUP& g, BOOLEAN const fCheckForNPCs)
 			if (AnyMercInGroupCantContinueMoving(g))
 			{
 				// stop: clear their strategic movement (mercpaths and waypoints)
-				ClearMercPathsAndWaypointsForAllInGroup(&g);
+				ClearMercPathsAndWaypointsForAllInGroup(g);
 
 				// NOTE: Of course, it would be better if they continued onwards once everyone was ready to go again, in which
 				// case we'd want to preserve the plotted path, but since the player can mess with the squads, etc.
@@ -3845,7 +3845,7 @@ static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageB
 
 		case MSG_BOX_RETURN_NO:
 			// Stop here
-			ClearMercPathsAndWaypointsForAllInGroup(&g);
+			ClearMercPathsAndWaypointsForAllInGroup(g);
 			ChangeSelectedMapSector(g.ubSectorX, g.ubSectorY, g.ubSectorZ);
 			StopTimeCompression();
 			break;

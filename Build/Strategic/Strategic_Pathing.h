@@ -74,7 +74,7 @@ PathSt* GetGroupMercPathPtr(GROUP const&);
 GROUP* GetSoldierGroup(SOLDIERTYPE const&);
 
 // clears this groups strategic movement (mercpaths and waypoints), include those in the vehicle structs(!)
-void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup );
+void ClearMercPathsAndWaypointsForAllInGroup(GROUP&);
 
 void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY );
 

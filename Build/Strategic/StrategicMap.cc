@@ -2240,7 +2240,7 @@ void AllMercsHaveWalkedOffSector( )
 			gfUndergroundTacticalTraversal = TRUE;
 		}
 	}
-	ClearMercPathsAndWaypointsForAllInGroup( gpAdjacentGroup );
+	ClearMercPathsAndWaypointsForAllInGroup(*gpAdjacentGroup);
 	AddWaypointToPGroup( gpAdjacentGroup, (UINT8)gsAdjacentSectorX, (UINT8)gsAdjacentSectorY );
 	if( gbAdjacentSectorZ > 0 && guiAdjacentTraverseTime <= 5 )
 	{	//Nasty strategic movement logic doesn't like underground sectors!

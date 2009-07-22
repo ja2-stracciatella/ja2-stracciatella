@@ -1506,13 +1506,12 @@ void WakeUpAllMercsInSectorUnderAttack( void )
 // we are entering the sector, clear out all mvt orders for grunts
 static void ClearMovementForAllInvolvedPlayerGroups(void)
 {
-	FOR_ALL_GROUPS(pGroup)
+	FOR_ALL_GROUPS(i)
 	{
-		if ( PlayerGroupInvolvedInThisCombat( pGroup ) )
-		{
-			// clear their strategic movement (mercpaths and waypoints)
-			ClearMercPathsAndWaypointsForAllInGroup( pGroup );
-		}
+		GROUP& g = *i;
+		if (!PlayerGroupInvolvedInThisCombat(&g)) continue;
+		// clear their strategic movement (mercpaths and waypoints)
+		ClearMercPathsAndWaypointsForAllInGroup(g);
 	}
 }
 
@@ -1522,17 +1521,14 @@ void RetreatAllInvolvedPlayerGroups( void )
 	// but don't exit vehicles - drive off in them!
 	PutNonSquadMercsInBattleSectorOnSquads( FALSE );
 
-	FOR_ALL_GROUPS(pGroup)
+	FOR_ALL_GROUPS(i)
 	{
-		if ( PlayerGroupInvolvedInThisCombat( pGroup ) )
-		{
-			// don't retreat empty vehicle groups!
-			if (!pGroup->fVehicle || DoesVehicleGroupHaveAnyPassengers(pGroup))
-			{
-				ClearMercPathsAndWaypointsForAllInGroup( pGroup );
-				RetreatGroupToPreviousSector( pGroup );
-			}
-		}
+		GROUP& g = *i;
+		if (!PlayerGroupInvolvedInThisCombat(&g)) continue;
+		// Don't retreat empty vehicle groups!
+		if (g.fVehicle && !DoesVehicleGroupHaveAnyPassengers(&g)) continue;
+		ClearMercPathsAndWaypointsForAllInGroup(g);
+		RetreatGroupToPreviousSector(&g);
 	}
 }
 

@@ -936,7 +936,7 @@ void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier )
 	Assert( pGroup );
 
 	// clear their strategic movement (mercpaths and waypoints)
-	ClearMercPathsAndWaypointsForAllInGroup( pGroup );
+	ClearMercPathsAndWaypointsForAllInGroup(*pGroup);
 }
 
 
@@ -1120,11 +1120,11 @@ static void ClearPathForSoldier(SOLDIERTYPE* pSoldier);
 
 
 // clears this groups strategic movement (mercpaths and waypoints), include those in the vehicle structs(!)
-void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup )
+void ClearMercPathsAndWaypointsForAllInGroup(GROUP& g)
 {
 	SOLDIERTYPE *pSoldier = NULL;
 
-	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, &g)
 	{
 		pSoldier = pPlayer->pSoldier;
 
@@ -1135,15 +1135,15 @@ void ClearMercPathsAndWaypointsForAllInGroup( GROUP *pGroup )
 	}
 
 	// if it's a vehicle
-	if ( pGroup->fVehicle )
+	if (g.fVehicle)
 	{
-		VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
+		VEHICLETYPE& v = GetVehicleFromMvtGroup(&g);
 		// clear the path for that vehicle
 		v.pMercPath = ClearStrategicPathList(v.pMercPath, v.ubMovementGroup);
 	}
 
 	// clear the waypoints for this group too - no mercpath = no waypoints!
-	RemoveGroupWaypoints(pGroup);
+	RemoveGroupWaypoints(&g);
 }
 
 
