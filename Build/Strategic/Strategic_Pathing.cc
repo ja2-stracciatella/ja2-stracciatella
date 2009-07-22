@@ -960,9 +960,9 @@ BOOLEAN MoveGroupFromSectorToSector(GROUP& g, INT16 const sStartX, INT16 const s
 }
 
 
-static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP* const g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
+static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP& g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
 {
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), *g, FALSE);
+	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
 
 	if( pNode == NULL )
 	{
@@ -973,7 +973,7 @@ static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP* const g, INT
 	pNode = RemoveTailFromStrategicPath( pNode );
 
 	// start movement to next sector
-	RebuildWayPointsForGroupPath(pNode, g);
+	RebuildWayPointsForGroupPath(pNode, &g);
 
 	// now clear out the mess
 	pNode = ClearStrategicPathList( pNode, -1 );
@@ -1031,7 +1031,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 
 	if( pNode == NULL )
 	{
-		return MoveGroupFromSectorToSectorButAvoidLastSector(g, sStartX, sStartY, sDestX, sDestY);
+		return MoveGroupFromSectorToSectorButAvoidLastSector(*g, sStartX, sStartY, sDestX, sDestY);
 	}
 
 	// remove tail from path
