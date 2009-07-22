@@ -2252,30 +2252,30 @@ static void CalculateAutoResolveInfo(void)
 	gfTransferTacticalOppositionToAutoResolve = FALSE;
 	gpAR->ubCivs = CountAllMilitiaInSector( gpAR->ubSectorX, gpAR->ubSectorY );
 	gpAR->ubMercs = 0;
-	CFOR_ALL_GROUPS(pGroup)
+	CFOR_ALL_GROUPS(i)
 	{
-		if ( PlayerGroupInvolvedInThisCombat( pGroup ) )
+		GROUP const& g = *i;
+		if (!PlayerGroupInvolvedInThisCombat(g)) continue;
+
+		CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, &g)
 		{
-			CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
+			// NOTE: Must check each merc individually, e.g. Robot without controller is an uninvolved merc on an involved group!
+			if ( PlayerMercInvolvedInThisCombat( pPlayer->pSoldier ) )
 			{
-				// NOTE: Must check each merc individually, e.g. Robot without controller is an uninvolved merc on an involved group!
-				if ( PlayerMercInvolvedInThisCombat( pPlayer->pSoldier ) )
+				gpMercs[ gpAR->ubMercs ].pSoldier = pPlayer->pSoldier;
+
+				//!!! CLEAR OPPCOUNT HERE.  All of these soldiers are guaranteed to not be in tactical anymore.
+				//ClearOppCount( pPlayer->pSoldier );
+
+				gpAR->ubMercs++;
+				if( AM_AN_EPC( pPlayer->pSoldier ) )
 				{
-					gpMercs[ gpAR->ubMercs ].pSoldier = pPlayer->pSoldier;
-
-					//!!! CLEAR OPPCOUNT HERE.  All of these soldiers are guaranteed to not be in tactical anymore.
-					//ClearOppCount( pPlayer->pSoldier );
-
-					gpAR->ubMercs++;
-					if( AM_AN_EPC( pPlayer->pSoldier ) )
-					{
-						gpAR->fCaptureNotPermittedDueToEPCs = TRUE;
-					}
-					if( AM_A_ROBOT( pPlayer->pSoldier ) )
-					{
-						gpAR->pRobotCell = &gpMercs[ gpAR->ubMercs - 1 ];
-						UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
-					}
+					gpAR->fCaptureNotPermittedDueToEPCs = TRUE;
+				}
+				if( AM_A_ROBOT( pPlayer->pSoldier ) )
+				{
+					gpAR->pRobotCell = &gpMercs[ gpAR->ubMercs - 1 ];
+					UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
 				}
 			}
 		}

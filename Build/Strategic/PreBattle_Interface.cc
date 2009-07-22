@@ -1411,23 +1411,23 @@ static void PutNonSquadMercsInBattleSectorOnSquads(BOOLEAN fExitVehicles)
 {
 	// IMPORTANT: Have to do this by group, so everyone inside vehicles gets assigned to the same squad.  Needed for
 	// the tactical placement interface to work in case of simultaneous multi-vehicle arrivals!
-	FOR_ALL_GROUPS_SAFE(pGroup)
+	FOR_ALL_GROUPS_SAFE(i)
 	{
-		if ( PlayerGroupInvolvedInThisCombat( pGroup ) )
-		{
-			// the helicopter group CAN be involved, if it's on the ground, in which case everybody must get out of it
-			if ( IsGroupTheHelicopterGroup( pGroup ) )
-			{
-				// only happens if chopper is on the ground...
-				Assert( !fHelicopterIsAirBorne );
+		GROUP& g = *i;
+		if (!PlayerGroupInvolvedInThisCombat(g)) continue;
 
-				// put anyone in it into movement group
-				MoveAllInHelicopterToFootMovementGroup( );
-			}
-			else
-			{
-				PutNonSquadMercsInPlayerGroupOnSquads( pGroup, fExitVehicles );
-			}
+		// the helicopter group CAN be involved, if it's on the ground, in which case everybody must get out of it
+		if (IsGroupTheHelicopterGroup(&g))
+		{
+			// only happens if chopper is on the ground...
+			Assert( !fHelicopterIsAirBorne );
+
+			// put anyone in it into movement group
+			MoveAllInHelicopterToFootMovementGroup( );
+		}
+		else
+		{
+			PutNonSquadMercsInPlayerGroupOnSquads(&g, fExitVehicles);
 		}
 	}
 }
@@ -1509,7 +1509,7 @@ static void ClearMovementForAllInvolvedPlayerGroups(void)
 	FOR_ALL_GROUPS(i)
 	{
 		GROUP& g = *i;
-		if (!PlayerGroupInvolvedInThisCombat(&g)) continue;
+		if (!PlayerGroupInvolvedInThisCombat(g)) continue;
 		// clear their strategic movement (mercpaths and waypoints)
 		ClearMercPathsAndWaypointsForAllInGroup(g);
 	}
@@ -1524,7 +1524,7 @@ void RetreatAllInvolvedPlayerGroups( void )
 	FOR_ALL_GROUPS(i)
 	{
 		GROUP& g = *i;
-		if (!PlayerGroupInvolvedInThisCombat(&g)) continue;
+		if (!PlayerGroupInvolvedInThisCombat(g)) continue;
 		// Don't retreat empty vehicle groups!
 		if (g.fVehicle && !DoesVehicleGroupHaveAnyPassengers(&g)) continue;
 		ClearMercPathsAndWaypointsForAllInGroup(g);
@@ -1562,26 +1562,18 @@ BOOLEAN PlayerMercInvolvedInThisCombat(const SOLDIERTYPE* s)
 }
 
 
-BOOLEAN PlayerGroupInvolvedInThisCombat(const GROUP* const pGroup)
+bool PlayerGroupInvolvedInThisCombat(GROUP const& g)
 {
-	Assert( pGroup );
-
-	// player group, non-empty, not between sectors, in the right sector, isn't a group of in transit, dead, or POW mercs,
-	// and either not the helicopter group, or the heli is on the ground
-	if( pGroup->fPlayer && pGroup->ubGroupSize &&
-			!pGroup->fBetweenSectors &&
-			!GroupHasInTransitDeadOrPOWMercs(*pGroup) &&
-			( !IsGroupTheHelicopterGroup( pGroup ) ||	!fHelicopterIsAirBorne ) )
-	{
-		if ( CurrentBattleSectorIs( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ ) )
-		{
-			// involved
-			return( TRUE );
-		}
-	}
-
-	// not involved
-	return( FALSE );
+	/* Player group, non-empty, not between sectors, in the right sector, isn't a
+	 * group of in transit, dead, or POW mercs, and either not the helicopter
+	 * group, or the heli is on the ground */
+	return
+		g.fPlayer                                                  &&
+		g.ubGroupSize != 0                                         &&
+		!g.fBetweenSectors                                         &&
+		!GroupHasInTransitDeadOrPOWMercs(g)                        &&
+		(!IsGroupTheHelicopterGroup(&g) || !fHelicopterIsAirBorne) &&
+		CurrentBattleSectorIs(g.ubSectorX, g.ubSectorY, g.ubSectorZ);
 }
 
 
