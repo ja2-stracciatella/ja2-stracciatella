@@ -209,11 +209,11 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 
 			// I really have vehicles.
 			// ONLY add to vehicle group once!
-			GROUP* const g = GetGroup(v.ubMovementGroup);
-			if (!DoesPlayerExistInPGroup(g, vs))
+			GROUP& g = *GetGroup(v.ubMovementGroup);
+			if (!DoesPlayerExistInPGroup(g, *vs))
 			{
 				//NOW.. add guy to vehicle group....
-				AddPlayerToGroup(g, vs);
+				AddPlayerToGroup(&g, vs);
 			}
 			else
 			{
@@ -396,8 +396,8 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 		// Remove vehicle from squad
 		RemoveCharacterFromSquads(&vs);
 		// ATE: Add him back to vehicle group!
-		GROUP* const g = GetGroup(v.ubMovementGroup);
-		if (!DoesPlayerExistInPGroup(g, &vs)) AddPlayerToGroup(g, &vs);
+		GROUP& g = *GetGroup(v.ubMovementGroup);
+		if (!DoesPlayerExistInPGroup(g, vs)) AddPlayerToGroup(&g, &vs);
 		ChangeSoldiersAssignment(&vs, ASSIGNMENT_EMPTY);
 	}
 	return true;
