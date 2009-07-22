@@ -793,7 +793,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 			{
 				if( curr->ubSectorX == pGroup->ubSectorX && curr->ubSectorY == pGroup->ubSectorY && !curr->ubSectorZ )
 				{
-					if( !GroupHasInTransitDeadOrPOWMercs( curr ) &&
+					if (!GroupHasInTransitDeadOrPOWMercs(*curr) &&
 							(!IsGroupTheHelicopterGroup( curr ) || !fHelicopterIsAirBorne) &&
 							(!curr->fVehicle || DoesVehicleGroupHaveAnyPassengers(curr)))
 					{
@@ -2990,18 +2990,19 @@ GROUP* FindEnemyMovementGroupInSector(const UINT8 ubSectorX, const UINT8 ubSecto
 
 GROUP* FindPlayerMovementGroupInSector(const UINT8 x, const UINT8 y)
 {
-	FOR_ALL_PLAYER_GROUPS(g)
+	FOR_ALL_PLAYER_GROUPS(i)
 	{
+		GROUP& g = *i;
 		// NOTE: These checks must always match the INVOLVED group checks in PBI!!!
-		if (g->ubGroupSize != 0                 &&
-				!g->fBetweenSectors                 &&
-				g->ubSectorX   == x                 &&
-				g->ubSectorY   == y                 &&
-				g->ubSectorZ   == 0                 &&
+		if (g.ubGroupSize != 0                  &&
+				!g.fBetweenSectors                  &&
+				g.ubSectorX   == x                  &&
+				g.ubSectorY   == y                  &&
+				g.ubSectorZ   == 0                  &&
 				!GroupHasInTransitDeadOrPOWMercs(g) &&
-				(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne))
+				(!IsGroupTheHelicopterGroup(&g) || !fHelicopterIsAirBorne))
 		{
-			return g;
+			return &g;
 		}
 	}
 	return NULL;
@@ -3865,24 +3866,20 @@ bool DoesPlayerExistInPGroup(GROUP const& g, SOLDIERTYPE const& s)
 }
 
 
-BOOLEAN GroupHasInTransitDeadOrPOWMercs(const GROUP* const pGroup)
+bool GroupHasInTransitDeadOrPOWMercs(GROUP const& g)
 {
-	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
+	CFOR_ALL_PLAYERS_IN_GROUP(i, &g)
 	{
-		if ( pPlayer->pSoldier )
+		if (!i->pSoldier) continue;
+		switch (i->pSoldier->bAssignment)
 		{
-			if( ( pPlayer->pSoldier->bAssignment == IN_TRANSIT ) ||
-					( pPlayer->pSoldier->bAssignment == ASSIGNMENT_POW ) ||
-					( pPlayer->pSoldier->bAssignment == ASSIGNMENT_DEAD ) )
-			{
-				// yup!
-				return( TRUE );
-			}
+			case IN_TRANSIT:
+			case ASSIGNMENT_POW:
+			case ASSIGNMENT_DEAD:
+				return true;
 		}
 	}
-
-	// nope
-	return( FALSE );
+	return false;
 }
 
 

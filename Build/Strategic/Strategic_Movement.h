@@ -269,7 +269,7 @@ void PlayerGroupArrivedSafelyInSector(GROUP&, BOOLEAN fCheckForNPCs);
 
 bool DoesPlayerExistInPGroup(GROUP const&, SOLDIERTYPE const&);
 
-BOOLEAN GroupHasInTransitDeadOrPOWMercs(const GROUP*);
+bool GroupHasInTransitDeadOrPOWMercs(GROUP const&);
 
 void AddFuelToVehicle(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVehicle);
 

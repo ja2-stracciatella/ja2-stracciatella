@@ -1574,7 +1574,7 @@ BOOLEAN PlayerGroupInvolvedInThisCombat(const GROUP* const pGroup)
 	// and either not the helicopter group, or the heli is on the ground
 	if( pGroup->fPlayer && pGroup->ubGroupSize &&
 			!pGroup->fBetweenSectors &&
-			!GroupHasInTransitDeadOrPOWMercs( pGroup ) &&
+			!GroupHasInTransitDeadOrPOWMercs(*pGroup) &&
 			( !IsGroupTheHelicopterGroup( pGroup ) ||	!fHelicopterIsAirBorne ) )
 	{
 		if ( CurrentBattleSectorIs( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ ) )
