@@ -1477,77 +1477,59 @@ BOOLEAN IsGroupTheHelicopterGroup(const GROUP* const pGroup)
 }
 
 
-INT16 GetNumSafeSectorsInPath( void )
+INT16 GetNumSafeSectorsInPath()
 {
-	// get the last sector value in the helictoper's path
-	UINT32 uiLocation = 0;
-  UINT32  uiCount = 0;
-
-	// if the heli is on the move, what is the distance it will move..the length of the merc path, less the first node
 	if (!CanHelicopterFly()) return 0;
 
-	VEHICLETYPE const& v = GetHelicopter();
-	// may need to skip the sector the chopper is currently in
-	INT32 const iHeliSector = CALCULATE_STRATEGIC_INDEX(v.sSectorX, v.sSectorY);
+	VEHICLETYPE const& v      = GetHelicopter();
+	INT32       const  sector = CALCULATE_STRATEGIC_INDEX(v.sSectorX, v.sSectorY);
+	GROUP*      const  g      = GetGroup(v.ubMovementGroup);
+  UINT32             n      = 0;
 
-	// get chopper's group ptr
-	GROUP* const pGroup = GetGroup(v.ubMovementGroup);
-
-	PathSt const* pNode = v.pMercPath;
-
-	// any path yet?
-	if( pNode != NULL )
+	if (PathSt const* i = v.pMercPath)
 	{
-		// first node: skip it if that's the sector the chopper is currently in, AND
-		// we're NOT gonna be changing directions (not actually performed until waypoints are rebuilt AFTER plotting is done)
-		if ( ( ( INT32 ) pNode->uiSectorId == iHeliSector ) && ( pNode->pNext != NULL ) &&
-				!GroupBetweenSectorsAndSectorXYIsInDifferentDirection( pGroup, ( UINT8 ) GET_X_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ), ( UINT8 ) GET_Y_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ) ) )
+		/* First node: Skip it if that's the sector the chopper is currently in, AND
+		 * we're NOT gonna be changing directions (not actually performed until
+		 * waypoints are rebuilt AFTER plotting is done) */
+		if ((INT32)i->uiSectorId == sector &&
+				i->pNext &&
+				!GroupBetweenSectorsAndSectorXYIsInDifferentDirection(g, GET_X_FROM_STRATEGIC_INDEX(i->pNext->uiSectorId), GET_Y_FROM_STRATEGIC_INDEX(i->pNext->uiSectorId)))
 		{
-			pNode = pNode->pNext;
+			i = i->pNext;
 		}
 
-		while( pNode)
+		for (; i; i = i->pNext)
 		{
-			uiLocation = pNode -> uiSectorId;
-
-      if ( !StrategicMap[ uiLocation ].fEnemyAirControlled )
-      {
-        uiCount++;
-      }
-
-			pNode = pNode ->pNext;
+      if (StrategicMap[i->uiSectorId].fEnemyAirControlled) continue;
+			++n;
 		}
 	}
 
-
-	pNode = pTempHelicopterPath;
-	// any path yet?
-	if( pNode != NULL )
+	if (PathSt const* i = pTempHelicopterPath)
 	{
-		// first node: skip it if that's the sector the chopper is currently in, AND
-		// we're NOT gonna be changing directions (not actually performed until waypoints are rebuilt AFTER plotting is done)
-		// OR if the chopper has a mercpath, in which case this a continuation of it that would count the sector twice
-		if ( ( ( ( INT32 ) pNode->uiSectorId == iHeliSector ) && ( pNode->pNext != NULL ) &&
- 				!GroupBetweenSectorsAndSectorXYIsInDifferentDirection( pGroup, ( UINT8 ) GET_X_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ), ( UINT8 ) GET_Y_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ) ) ) ||
+		/* First node: Skip it if that's the sector the chopper is currently in, AND
+		 * we're NOT gonna be changing directions (not actually performed until
+		 * waypoints are rebuilt AFTER plotting is done) OR if the chopper has a
+		 * mercpath, in which case this a continuation of it that would count the
+		 * sector twice */
+		if ((
+					(INT32)i->uiSectorId == sector &&
+					i->pNext &&
+					!GroupBetweenSectorsAndSectorXYIsInDifferentDirection(g, GET_X_FROM_STRATEGIC_INDEX(i->pNext->uiSectorId), GET_Y_FROM_STRATEGIC_INDEX(i->pNext->uiSectorId))
+				) ||
 				GetLengthOfPath(v.pMercPath) > 0)
 		{
-			pNode = pNode->pNext;
+			i = i->pNext;
 		}
 
-		while( pNode)
+		for (; i; i = i->pNext)
 		{
-			uiLocation = pNode -> uiSectorId;
-
-      if ( !StrategicMap[ uiLocation ].fEnemyAirControlled )
-      {
-        uiCount++;
-      }
-
-			pNode = pNode ->pNext;
+      if (StrategicMap[i->uiSectorId].fEnemyAirControlled) continue;
+			++n;
 		}
 	}
 
-	return( (INT16)uiCount );
+	return n;
 }
 
 

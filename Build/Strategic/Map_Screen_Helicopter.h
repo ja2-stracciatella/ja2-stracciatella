@@ -199,7 +199,7 @@ BOOLEAN IsSkyriderIsFlyingInSector( INT16 sSectorX, INT16 sSectorY );
 
 BOOLEAN IsGroupTheHelicopterGroup(const GROUP*);
 
-INT16 GetNumSafeSectorsInPath( void );
+INT16 GetNumSafeSectorsInPath();
 
 INT16 GetNumUnSafeSectorsInPath( void );
 
