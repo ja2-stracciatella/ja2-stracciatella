@@ -3651,7 +3651,7 @@ static void CancelEmptyPersistentGroupMovement(GROUP* pGroup)
 }
 
 
-static BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP* pGroup);
+static BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP&);
 
 
 // look for NPCs to stop for, anyone is too tired to keep going, if all OK rebuild waypoints & continue movement
@@ -3662,7 +3662,7 @@ void PlayerGroupArrivedSafelyInSector(GROUP& g, BOOLEAN const fCheckForNPCs)
 	Assert(g.fPlayer);
 
 	// if we haven't already checked for NPCs, and the group isn't empty
-	if (fCheckForNPCs && HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(&g))
+	if (fCheckForNPCs && HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(g))
 	{
 		// wait for player to answer/confirm prompt before doing anything else
 		fPlayerPrompted = TRUE;
@@ -3702,7 +3702,7 @@ static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageB
 static BOOLEAN WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 
-static BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP* pGroup)
+static BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP& g)
 {
 	INT16 sSectorX = 0, sSectorY = 0;
 	INT8 bSectorZ = 0;
@@ -3710,18 +3710,16 @@ static BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP* pGroup
 	CHAR16 wSectorName[ 128 ];
 	INT16 sStrategicSector;
 
-
-	Assert( pGroup );
-	Assert( pGroup->fPlayer );
+	Assert(g.fPlayer);
 
 	// nobody in the group (perfectly legal with the chopper)
-	if ( pGroup->pPlayerList == NULL )
+	if (g.pPlayerList == NULL)
 	{
 		return( FALSE );
 	}
 
 	// chopper doesn't stop for NPCs
-	if ( IsGroupTheHelicopterGroup( pGroup ) )
+	if (IsGroupTheHelicopterGroup(&g))
 	{
 		return( FALSE );
 	}
@@ -3732,12 +3730,10 @@ static BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP* pGroup
 		return( FALSE );
 	}
 
-
 	// get the sector values
-	sSectorX = pGroup->ubSectorX;
-	sSectorY = pGroup->ubSectorY;
-	bSectorZ = pGroup->ubSectorZ;
-
+	sSectorX = g.ubSectorX;
+	sSectorY = g.ubSectorY;
+	bSectorZ = g.ubSectorZ;
 
 	// don't do this for underground sectors
 	if ( bSectorZ != 0 )
@@ -3768,13 +3764,13 @@ static BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP* pGroup
 
 
 	// store the group ptr for use by the callback function
-	gpGroupPrompting = pGroup;
+	gpGroupPrompting = &g;
 
 	// build string for squad
 	GetSectorIDString( sSectorX, sSectorY, bSectorZ, wSectorName, lengthof(wSectorName), FALSE );
-	swprintf(sString, lengthof(sString), pLandMarkInSectorString, pGroup->pPlayerList->pSoldier->bAssignment + 1, wSectorName);
+	swprintf(sString, lengthof(sString), pLandMarkInSectorString, g.pPlayerList->pSoldier->bAssignment + 1, wSectorName);
 
-	if ( GroupAtFinalDestination( pGroup ) )
+	if (GroupAtFinalDestination(&g))
 	{
 		// do an OK message box
 		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback );
