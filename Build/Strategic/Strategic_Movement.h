@@ -186,12 +186,11 @@ BOOLEAN AddWaypointStrategicIDToPGroup( GROUP *pGroup, UINT32 uiSectorID );
 //............................................................
 GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites );
 
-//ARRIVALCALLBACK -- None of these functions should be called directly.
-//...............
-//This is called whenever any group arrives in the next sector (player or enemy)
-//This function will first check to see if a battle should start, or if they
-//aren't at the final destination, they will move to the next sector.
-void GroupArrivedAtSector(GROUP*, BOOLEAN fCheckForBattle, BOOLEAN fNeverLeft);
+/* Arrival callback -- None of these functions should be called directly.
+ * This is called whenever any group arrives in the next sector (player or
+ * enemy). This function will first check to see if a battle should start, or if
+ * they aren't at the final destination, they will move to the next sector. */
+void GroupArrivedAtSector(GROUP&, BOOLEAN check_for_battle, BOOLEAN never_left);
 void CalculateNextMoveIntention( GROUP *pGroup );
 
 

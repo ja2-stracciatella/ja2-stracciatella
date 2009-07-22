@@ -309,7 +309,7 @@ BOOLEAN GroupReversingDirectionsBetweenSectors( GROUP *pGroup, UINT8 ubSectorX, 
 		if ( !fBuildingWaypoints )
 		{
 			// never really left.  Must set check for battle TRUE in order for HandleNonCombatGroupArrival() to run!
-			GroupArrivedAtSector(pGroup, TRUE, TRUE);
+			GroupArrivedAtSector(*pGroup, TRUE, TRUE);
 		}
 	}
 
@@ -1136,187 +1136,167 @@ static void SpendVehicleFuel(SOLDIERTYPE&, INT16 fuel_spent);
 static INT16 VehicleFuelRemaining(SOLDIERTYPE const&);
 
 
-//ARRIVALCALLBACK
-//...............
-//This is called whenever any group arrives in the next sector (player or enemy)
-//This function will first check to see if a battle should start, or if they
-//aren't at the final destination, they will move to the next sector.
-void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BOOLEAN const fNeverLeft)
+void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN const never_left)
 {
-	UINT8 ubInsertionDirection, ubStrategicInsertionCode;
-	BOOLEAN fExceptionQueue = FALSE;
-	BOOLEAN fFirstTimeInSector = FALSE;
-	BOOLEAN fGroupDestroyed = FALSE;
-
-	// reset
 	gfWaitingForInput = FALSE;
 
-	if( pGroup->fPlayer )
+	if (g.fPlayer)
 	{
-		//Set the fact we have visited the  sector
-		const PLAYERGROUP* curr = pGroup->pPlayerList;
-		if( curr )
+		// Set the fact we have visited the sector
+		if (PLAYERGROUP const* curr = g.pPlayerList)
 		{
-			if( curr->pSoldier->bAssignment < ON_DUTY )
-			{
-				ResetDeadSquadMemberList( curr->pSoldier->bAssignment );
-			}
+			INT8 const assignment = curr->pSoldier->bAssignment;
+			if (assignment < ON_DUTY) ResetDeadSquadMemberList(assignment);
 		}
 
-		if( pGroup->fVehicle )
+		if (g.fVehicle)
 		{
-			VEHICLETYPE const& v = GetVehicleFromMvtGroup(*pGroup);
-			if (!IsHelicopter(v) && !pGroup->pPlayerList)
-			{
-				// nobody here, better just get out now
-				// with vehicles, arriving empty is probably ok, since passengers might have been killed but vehicle lived.
+			VEHICLETYPE const& v = GetVehicleFromMvtGroup(g);
+			if (!IsHelicopter(v) && !g.pPlayerList)
+			{ /* Nobody here, better just get out now. With vehicles, arriving empty
+				 * is probably ok, since passengers might have been killed but vehicle
+				 * lived. */
 				return;
 			}
 		}
 		else
 		{
-			if( pGroup->pPlayerList == NULL )
-			{
-				// nobody here, better just get out now
-				AssertMsg(0, String("Player group %d arrived in sector empty.  KM 0", pGroup->ubGroupID));
+			if (!g.pPlayerList)
+			{ // Nobody here, better just get out now
+				AssertMsg(0, String("Player group %d arrived in sector empty.  KM 0", g.ubGroupID));
 				return;
 			}
 		}
 	}
-	//Check for exception cases which
-	if( gTacticalStatus.bBoxingState != NOT_BOXING )
-	{
-		if( !pGroup->fPlayer && pGroup->ubNextX == 5 && pGroup->ubNextY == 4 && pGroup->ubSectorZ == 0 )
-		{
-			fExceptionQueue = TRUE;
-		}
-	}
-	//First check if the group arriving is going to queue another battle.
-	//NOTE:  We can't have more than one battle ongoing at a time.
-	if( fExceptionQueue || fCheckForBattle && gTacticalStatus.fEnemyInSector &&
-			FindPlayerMovementGroupInSector(gWorldSectorX, gWorldSectorY) &&
-		  (pGroup->ubNextX != gWorldSectorX || pGroup->ubNextY != gWorldSectorY || gbWorldSectorZ > 0 ) ||
+
+	UINT8 const x = g.ubNextX;
+	UINT8 const y = g.ubNextY;
+	UINT8 const z = g.ubSectorZ;
+
+	// Check for exception cases which
+	bool const exception_queue =
+		gTacticalStatus.bBoxingState != NOT_BOXING &&
+		!g.fPlayer                                 &&
+		x == 5 && y == 4 && z == 0;
+
+	/* First check if the group arriving is going to queue another battle.
+	 * NOTE: We can't have more than one battle ongoing at a time. */
+	if (exception_queue ||
+			check_for_battle && gTacticalStatus.fEnemyInSector && FindPlayerMovementGroupInSector(gWorldSectorX, gWorldSectorY) && (x != gWorldSectorX || y != gWorldSectorY || gbWorldSectorZ > 0) ||
 			AreInMeanwhile() ||
-			//KM : Aug 11, 1999 -- Patch fix:  Added additional checks to prevent a 2nd battle in the case
-			//     where the player is involved in a potential battle with bloodcats/civilians
-			fCheckForBattle && HostileCiviliansPresent() ||
-			fCheckForBattle && HostileBloodcatsPresent()
-		)
-	{
-		//QUEUE BATTLE!
-		//Delay arrival by a random value ranging from 3-5 minutes, so it doesn't get the player
-		//too suspicious after it happens to him a few times, which, by the way, is a rare occurrence.
-		if( AreInMeanwhile() )
-		{
-			pGroup->uiArrivalTime ++; //tack on only 1 minute if we are in a meanwhile scene.  This effectively
-			                          //prevents any battle from occurring while inside a meanwhile scene.
+			/* KM: Aug 11, 1999 -- Patch fix: Added additional checks to prevent a 2nd
+			 * battle in the case where the player is involved in a potential battle
+			 * with bloodcats/civilians */
+			check_for_battle && HostileCiviliansPresent() ||
+			check_for_battle && HostileBloodcatsPresent())
+	{ /* Queue battle! Delay arrival by a random value ranging from 3-5 minutes,
+		 * so it doesn't get the player too suspicious after it happens to him a few
+		 * times, which, by the way, is a rare occurrence. */
+		if (AreInMeanwhile())
+		{ /* Tack on only 1 minute if we are in a meanwhile scene. This effectively
+			 * prevents any battle from occurring while inside a meanwhile scene. */
+			++g.uiArrivalTime;
 		}
 		else
 		{
-			pGroup->uiArrivalTime += Random(3) + 3;
+			g.uiArrivalTime += Random(3) + 3;
 		}
 
+		if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
+			AssertMsg(0, "Failed to add movement event.");
 
-		if( !AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID ) )
-			AssertMsg( 0, "Failed to add movement event." );
-
-		if( pGroup->fPlayer )
+		if (g.fPlayer && g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin())
 		{
-			if( pGroup->uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin( ) )
-			{
-				AddStrategicEvent( EVENT_GROUP_ABOUT_TO_ARRIVE, pGroup->uiArrivalTime - ABOUT_TO_ARRIVE_DELAY, pGroup->ubGroupID );
-			}
+			AddStrategicEvent(EVENT_GROUP_ABOUT_TO_ARRIVE, g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY, g.ubGroupID);
 		}
-
 		return;
 	}
 
+	// Update the position of the group
+	g.ubPrevX   = g.ubSectorX;
+	g.ubPrevY   = g.ubSectorY;
+	g.ubSectorX = x;
+	g.ubSectorY = y;
+	g.ubNextX   = 0;
+	g.ubNextY   = 0;
 
-	//Update the position of the group
-	pGroup->ubPrevX = pGroup->ubSectorX;
-	pGroup->ubPrevY = pGroup->ubSectorY;
-	pGroup->ubSectorX = pGroup->ubNextX;
-	pGroup->ubSectorY = pGroup->ubNextY;
-	pGroup->ubNextX = 0;
-	pGroup->ubNextY = 0;
-
-
-	if( pGroup->fPlayer )
+	if (g.fPlayer)
 	{
-		// award life 'experience' for travelling, based on travel time!
-		if ( !pGroup->fVehicle )
-		{
-			// gotta be walking to get tougher
-			AwardExperienceForTravelling(*pGroup);
+		// Award life 'experience' for traveling, based on travel time.
+		if (!g.fVehicle)
+		{ // Gotta be walking to get tougher
+			AwardExperienceForTravelling(g);
 		}
-		else if (!IsGroupTheHelicopterGroup(*pGroup))
+		else if (!IsGroupTheHelicopterGroup(g))
 		{
-			VEHICLETYPE const& v  = GetVehicleFromMvtGroup(*pGroup);
+			VEHICLETYPE const& v  = GetVehicleFromMvtGroup(g);
 			SOLDIERTYPE&       vs = GetSoldierStructureForVehicle(v);
 
-			SpendVehicleFuel(vs, pGroup->uiTraverseTime * 6);
+			SpendVehicleFuel(vs, g.uiTraverseTime * 6);
 
 			if (VehicleFuelRemaining(vs) == 0)
 			{
-				ReportVehicleOutOfGas(v, pGroup->ubSectorX, pGroup->ubSectorY);
-				//Nuke the group's path, so they don't continue moving.
-				ClearMercPathsAndWaypointsForAllInGroup(*pGroup);
+				ReportVehicleOutOfGas(v, x, y);
+				// Nuke the group's path, so they don't continue moving.
+				ClearMercPathsAndWaypointsForAllInGroup(g);
 			}
 		}
 	}
 
-	pGroup->uiTraverseTime = 0;
-	SetGroupArrivalTime(*pGroup, 0);
-	pGroup->fBetweenSectors = FALSE;
-
-	fMapPanelDirty = TRUE;
+	g.uiTraverseTime      = 0;
+	SetGroupArrivalTime(g, 0);
+	g.fBetweenSectors     = FALSE;
+	fMapPanelDirty        = TRUE;
 	fMapScreenBottomDirty = TRUE;
 
-
-	// if a player group
-	if( pGroup->fPlayer )
+	bool group_destroyed = false;
+	if (g.fPlayer)
 	{
-		// if this is the last sector along player group's movement path (no more waypoints)
-		if ( GroupAtFinalDestination( pGroup ) )
-		{
-			// clear their strategic movement (mercpaths and waypoints)
-			ClearMercPathsAndWaypointsForAllInGroup(*pGroup);
+		// If this is the last sector along player group's movement path (no more waypoints)
+		if (GroupAtFinalDestination(&g))
+		{ // Clear their strategic movement (mercpaths and waypoints)
+			ClearMercPathsAndWaypointsForAllInGroup(g);
 		}
 
-		// if on surface
-		if( pGroup->ubSectorZ == 0 )
+		// If on surface
+		if (z == 0)
 		{
 			// check for discovering secret locations
-			INT8 bTownId = GetTownIdForSector( pGroup->ubSectorX, pGroup->ubSectorY );
+			switch (GetTownIdForSector(x, y))
+			{
+				case ORTA: SetOrtaAsFound(); break;
+				case TIXA: SetTixaAsFound(); break;
 
-			if( bTownId == TIXA )
-				SetTixaAsFound();
-			else if( bTownId == ORTA )
-				SetOrtaAsFound();
-			else if( IsThisSectorASAMSector( pGroup->ubSectorX, pGroup->ubSectorY, 0 ) )
-				SetSAMSiteAsFound( GetSAMIdFromSector( pGroup->ubSectorX, pGroup->ubSectorY, 0 ) );
+				default:
+					if (IsThisSectorASAMSector(x, y, 0))
+					{
+						SetSAMSiteAsFound(GetSAMIdFromSector(x, y, 0));
+					}
+					break;
+			}
 		}
 
-
-		if( pGroup->ubSectorX < pGroup->ubPrevX )
+		UINT8 insertion_direction;
+		UINT8 strategic_insertion_code;
+		if (x < g.ubPrevX)
 		{
-			ubInsertionDirection = SOUTHWEST;
-			ubStrategicInsertionCode = INSERTION_CODE_EAST;
+			insertion_direction      = SOUTHWEST;
+			strategic_insertion_code = INSERTION_CODE_EAST;
 		}
-		else if( pGroup->ubSectorX > pGroup->ubPrevX )
+		else if (x > g.ubPrevX)
 		{
-			ubInsertionDirection = NORTHEAST;
-			ubStrategicInsertionCode = INSERTION_CODE_WEST;
+			insertion_direction      = NORTHEAST;
+			strategic_insertion_code = INSERTION_CODE_WEST;
 		}
-		else if( pGroup->ubSectorY < pGroup->ubPrevY )
+		else if (y < g.ubPrevY)
 		{
-			ubInsertionDirection = NORTHWEST;
-			ubStrategicInsertionCode = INSERTION_CODE_SOUTH;
+			insertion_direction      = NORTHWEST;
+			strategic_insertion_code = INSERTION_CODE_SOUTH;
 		}
-		else if( pGroup->ubSectorY > pGroup->ubPrevY )
+		else if (y > g.ubPrevY)
 		{
-			ubInsertionDirection = SOUTHEAST;
-			ubStrategicInsertionCode = INSERTION_CODE_NORTH;
+			insertion_direction      = SOUTHEAST;
+			strategic_insertion_code = INSERTION_CODE_NORTH;
 		}
 		else
 		{
@@ -1324,192 +1304,155 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 			return;
 		}
 
-		if (!pGroup->fVehicle)
+		bool    const  here = x == gWorldSectorX && y == gWorldSectorY && z == gbWorldSectorZ;
+		wchar_t const* who  = 0;
+		if (!g.fVehicle)
 		{
 			// non-vehicle player group
-			CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
+			CFOR_ALL_PLAYERS_IN_GROUP(i, &g)
 			{
-				curr->pSoldier->fBetweenSectors = FALSE;
-				curr->pSoldier->sSectorX = pGroup->ubSectorX;
-				curr->pSoldier->sSectorY = pGroup->ubSectorY;
-				curr->pSoldier->bSectorZ = pGroup->ubSectorZ;
-				curr->pSoldier->ubPrevSectorID = (UINT8)SECTOR( pGroup->ubPrevX, pGroup->ubPrevY );
-				curr->pSoldier->ubInsertionDirection = ubInsertionDirection;
+				SOLDIERTYPE& s = *i->pSoldier;
+				s.fBetweenSectors      = FALSE;
+				s.sSectorX             = x;
+				s.sSectorY             = y;
+				s.bSectorZ             = z;
+				s.ubPrevSectorID       = SECTOR(g.ubPrevX, g.ubPrevY);
+				s.ubInsertionDirection = insertion_direction;
 
 				// don't override if a tactical traversal
-				if( curr->pSoldier->ubStrategicInsertionCode != INSERTION_CODE_PRIMARY_EDGEINDEX &&
-						curr->pSoldier->ubStrategicInsertionCode != INSERTION_CODE_SECONDARY_EDGEINDEX )
+				if (s.ubStrategicInsertionCode != INSERTION_CODE_PRIMARY_EDGEINDEX &&
+						s.ubStrategicInsertionCode != INSERTION_CODE_SECONDARY_EDGEINDEX)
 				{
-					curr->pSoldier->ubStrategicInsertionCode = ubStrategicInsertionCode;
+					s.ubStrategicInsertionCode = strategic_insertion_code;
 				}
 
-				if( curr->pSoldier->pMercPath )
-				{
-					// remove head from their mapscreen path list
-					curr->pSoldier->pMercPath = RemoveHeadFromStrategicPath( curr->pSoldier->pMercPath );
-				}
+				// Remove head from their mapscreen path list
+				if (s.pMercPath) s.pMercPath = RemoveHeadFromStrategicPath(s.pMercPath);
 
-				// ATE: Alrighty, check if this sector is currently loaded, if so,
-				// add them to the tactical engine!
-				if ( pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && pGroup->ubSectorZ == gbWorldSectorZ )
-				{
-					UpdateMercInSector(*curr->pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-				}
+				/* ATE: Check if this sector is currently loaded, if so, add them to the
+				 * tactical engine */
+				if (here) UpdateMercInSector(s, x, y, z);
 			}
 
-			// if there's anybody in the group
-			if( pGroup->pPlayerList )
+			// If there's anybody in the group
+			if (g.pPlayerList)
 			{
-				// don't print any messages when arriving underground (there's no delay involved) or if we never left (cancel)
-				if ( GroupAtFinalDestination( pGroup ) && ( pGroup->ubSectorZ == 0 ) && !fNeverLeft )
-				{
-					// if assigned to a squad
-					if( pGroup->pPlayerList->pSoldier->bAssignment < ON_DUTY )
-					{
-						// squad
-						ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, pMessageStrings[ MSG_ARRIVE ], pAssignmentStrings[ pGroup->pPlayerList->pSoldier->bAssignment ], pMapVertIndex[ pGroup->pPlayerList->pSoldier->sSectorY ], pMapHortIndex[ pGroup->pPlayerList->pSoldier->sSectorX ]);
-					}
-					else
-					{
-						// a loner
-						ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, pMessageStrings[ MSG_ARRIVE ], pGroup->pPlayerList->pSoldier->name, pMapVertIndex[ pGroup->pPlayerList->pSoldier->sSectorY  ], pMapHortIndex[ pGroup->pPlayerList->pSoldier->sSectorX  ] );
-					}
-				}
+				SOLDIERTYPE const& s = *g.pPlayerList->pSoldier;
+				who =
+					s.bAssignment >= ON_DUTY ? s.name : // A loner
+					pAssignmentStrings[s.bAssignment];  // Squad
 			}
 		}
-		else	// vehicle player group
-		{
-			VEHICLETYPE& v = GetVehicleFromMvtGroup(*pGroup);
-			if (v.pMercPath )
-			{
-				// remove head from vehicle's mapscreen path list
-				v.pMercPath = RemoveHeadFromStrategicPath(v.pMercPath);
-			}
+		else
+		{ // Vehicle player group
+			VEHICLETYPE& v = GetVehicleFromMvtGroup(g);
+			// Remove head from vehicle's mapscreen path list
+			if (v.pMercPath) v.pMercPath = RemoveHeadFromStrategicPath(v.pMercPath);
 
-			// update vehicle position
-			SetVehicleSectorValues(v, pGroup->ubSectorX, pGroup->ubSectorY);
+			// Update vehicle position
+			SetVehicleSectorValues(v, x, y);
 			v.fBetweenSectors = FALSE;
 
 			if (!IsHelicopter(v))
 			{
 				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
+				vs.fBetweenSectors          = FALSE;
+				vs.sSectorX                 = x;
+				vs.sSectorY                 = y;
+				vs.bSectorZ                 = z;
+				vs.ubInsertionDirection     = insertion_direction;
+				vs.ubStrategicInsertionCode = strategic_insertion_code;
 
-				vs.fBetweenSectors = FALSE;
-				vs.sSectorX = pGroup->ubSectorX;
-				vs.sSectorY = pGroup->ubSectorY;
-				vs.bSectorZ = pGroup->ubSectorZ;
-				vs.ubInsertionDirection = ubInsertionDirection;
+				// If this sector is currently loaded, add vehicle to the tactical engine
+				if (here) UpdateMercInSector(vs, x, y, z);
 
-				// ATE: Removed, may 21 - sufficient to use insertion direction...
-				//vs.bDesiredDirection = ubInsertionDirection;
-
-				vs.ubStrategicInsertionCode = ubStrategicInsertionCode;
-
-				// if this sector is currently loaded
-				if ( pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && pGroup->ubSectorZ == gbWorldSectorZ )
+				// Set directions of insertion
+				CFOR_ALL_PLAYERS_IN_GROUP(i, &g)
 				{
-					// add vehicle to the tactical engine!
-					UpdateMercInSector(vs, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-				}
+					SOLDIERTYPE& s = *i->pSoldier;
+					s.fBetweenSectors = FALSE;
+					s.sSectorX = x;
+					s.sSectorY = y;
+					s.bSectorZ = z;
+					s.ubInsertionDirection = insertion_direction;
+					s.ubStrategicInsertionCode = strategic_insertion_code;
 
-				// set directions of insertion
-				CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
-				{
-					curr->pSoldier->fBetweenSectors = FALSE;
-					curr->pSoldier->sSectorX = pGroup->ubSectorX;
-					curr->pSoldier->sSectorY = pGroup->ubSectorY;
-					curr->pSoldier->bSectorZ = pGroup->ubSectorZ;
-					curr->pSoldier->ubInsertionDirection = ubInsertionDirection;
-
-					// ATE: Removed, may 21 - sufficient to use insertion direction...
-					// curr->pSoldier->bDesiredDirection = ubInsertionDirection;
-
-					curr->pSoldier->ubStrategicInsertionCode = ubStrategicInsertionCode;
-
-					// if this sector is currently loaded
-					if ( pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY && pGroup->ubSectorZ == gbWorldSectorZ )
-					{
-						// add passenger to the tactical engine!
-						UpdateMercInSector(*curr->pSoldier, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-					}
+					// If this sector is currently loaded, add passenger to the tactical engine
+					if (here) UpdateMercInSector(s, x, y, z);
 				}
 			}
 			else
 			{
 				if (HandleHeliEnteringSector(v.sSectorX, v.sSectorY))
-				{
-					// helicopter destroyed
-					fGroupDestroyed = TRUE;
+				{ // Helicopter destroyed
+					group_destroyed = true;
 				}
 			}
 
+			if (!group_destroyed) who = pVehicleStrings[v.ubVehicleType];
+		}
 
-			if ( !fGroupDestroyed )
+		if (who)
+		{ /* Don't print any messages when arriving underground (there's no delay
+			 * involved) or if we never left (cancel) */
+			if (GroupAtFinalDestination(&g) && z == 0 && !never_left)
 			{
-				// don't print any messages when arriving underground, there's no delay involved
-				if ( GroupAtFinalDestination( pGroup ) && ( pGroup->ubSectorZ == 0 ) && !fNeverLeft )
-				{
-					ScreenMsg(FONT_MCOLOR_DKRED, MSG_INTERFACE, pMessageStrings[MSG_ARRIVE], pVehicleStrings[v.ubVehicleType], pMapVertIndex[pGroup->ubSectorY], pMapHortIndex[pGroup->ubSectorX]);
-				}
+				ScreenMsg(FONT_MCOLOR_DKRED, MSG_INTERFACE, pMessageStrings[MSG_ARRIVE], who, pMapVertIndex[y], pMapHortIndex[x]);
 			}
 		}
 
-
-		if ( !fGroupDestroyed )
+		if (!group_destroyed)
 		{
-			// check if sector had been visited previously
-			fFirstTimeInSector = !GetSectorFlagStatus( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ, SF_ALREADY_VISITED );
-
-			// on foot, or in a vehicle other than the chopper
-			if (!pGroup->fVehicle || !IsGroupTheHelicopterGroup(*pGroup))
+			// On foot, or in a vehicle other than the chopper
+			if (!g.fVehicle || !IsGroupTheHelicopterGroup(g))
 			{
-
-        // ATE: Add a few corpse to the bloodcat lair...
-        if ( SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ) == SEC_I16 && fFirstTimeInSector )
+        // ATE: Add a few corpse to the bloodcat lair
+        if (SECTOR(x, y) == SEC_I16 &&
+        		!GetSectorFlagStatus(x, y, z, SF_ALREADY_VISITED))
         {
-          AddCorpsesToBloodcatLair( pGroup->ubSectorX, pGroup->ubSectorY );
+          AddCorpsesToBloodcatLair(x, y);
         }
 
-				// mark the sector as visited already
-				SetSectorFlag( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ, SF_ALREADY_VISITED );
+				// Mark the sector as visited already
+				SetSectorFlag(x, y, z, SF_ALREADY_VISITED);
 			}
 		}
 
-		// update character info
-		fTeamPanelDirty = TRUE;
+		// Update character info
+		fTeamPanelDirty          = TRUE;
 		fCharacterInfoPanelDirty = TRUE;
 	}
 
-	if ( !fGroupDestroyed )
+	if (!group_destroyed)
 	{
-		//Determine if a battle should start.
-		//if a battle does start, or get's delayed, then we will keep the group in memory including
-		//all waypoints, until after the battle is resolved.  At that point, we will continue the processing.
-		if( fCheckForBattle && !CheckConditionsForBattle( pGroup ) && !gfWaitingForInput )
+		/* Determine if a battle should start. If a battle does start, or get's
+		 * delayed, then we will keep the group in memory including all waypoints,
+		 * until after the battle is resolved.  At that point, we will continue the
+		 * processing. */
+		if (check_for_battle && !CheckConditionsForBattle(&g) && !gfWaitingForInput)
 		{
-			HandleNonCombatGroupArrival( pGroup, TRUE, fNeverLeft );
+			HandleNonCombatGroupArrival(&g, TRUE, never_left);
 
-			if( gubNumGroupsArrivedSimultaneously )
+			if (gubNumGroupsArrivedSimultaneously != 0)
 			{
-				FOR_ALL_GROUPS_SAFE(g)
+				FOR_ALL_GROUPS_SAFE(i)
 				{
+					GROUP& g = *i;
+					if (!(g.uiFlags & GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY)) continue;
+					--gubNumGroupsArrivedSimultaneously;
+					HandleNonCombatGroupArrival(&g, FALSE, FALSE);
 					if (gubNumGroupsArrivedSimultaneously == 0) break;
-
-					if (g->uiFlags & GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY)
-					{
-						gubNumGroupsArrivedSimultaneously--;
-						HandleNonCombatGroupArrival(g, FALSE, FALSE);
-					}
 				}
 			}
 		}
 		else
-		{ //Handle cases for pre battle conditions
-			pGroup->uiFlags = 0;
-			if( gubNumAwareBattles )
-			{ //When the AI is looking for the players, and a battle is initiated, then
-				//decrement the value, otherwise the queen will continue searching to infinity.
-				gubNumAwareBattles--;
+		{ // Handle cases for pre-battle conditions
+			g.uiFlags = 0;
+			if (gubNumAwareBattles != 0)
+			{ /* When the AI is looking for the players, and a battle is initiated,
+				 * then decrement the value, otherwise the queen will continue searching
+				 * to infinity. */
+				--gubNumAwareBattles;
 			}
 		}
 	}
@@ -1598,7 +1541,7 @@ restart:
 		if (g.ubNextX != x || g.ubNextY != y || g.ubSectorZ != z) continue;
 		if (!g.fBetweenSectors) continue;
 
-		GroupArrivedAtSector(&g, FALSE, FALSE);
+		GroupArrivedAtSector(g, FALSE, FALSE);
 		g.uiFlags |= GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY;
 		++gubNumGroupsArrivedSimultaneously;
 		DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g.ubGroupID);
@@ -3560,7 +3503,7 @@ void PlaceGroupInSector(GROUP* const g, INT16 const sPrevX, INT16 const sPrevY, 
 	SetGroupNextSectorValue(sNextX, sNextY, g);
 
 	// call arrive event
-	GroupArrivedAtSector(g, fCheckForBattle, FALSE);
+	GroupArrivedAtSector(*g, fCheckForBattle, FALSE);
 }
 
 
