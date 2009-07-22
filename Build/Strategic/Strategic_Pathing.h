@@ -29,7 +29,7 @@ enum{
 INT32 FindStratPath(INT16 sStart, INT16 sDestination, GROUP const&, BOOLEAN fTacticalTraversal);
 
 // build a stategic path
-PathSt* BuildAStrategicPath(INT16 iStartSectorNum, INT16 iEndSectorNum, GROUP const*, BOOLEAN fTacticalTraversal);
+PathSt* BuildAStrategicPath(INT16 iStartSectorNum, INT16 iEndSectorNum, GROUP const&, BOOLEAN fTacticalTraversal);
 
 
 // append onto path list

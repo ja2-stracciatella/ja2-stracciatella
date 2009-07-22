@@ -434,11 +434,11 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 }
 
 
-PathSt* BuildAStrategicPath(INT16 const start_sector, INT16 const end_sector, GROUP const* const g, BOOLEAN const fTacticalTraversal)
+PathSt* BuildAStrategicPath(INT16 const start_sector, INT16 const end_sector, GROUP const& g, BOOLEAN const fTacticalTraversal)
 {
 	if (end_sector < MAP_WORLD_X - 1) return NULL;
 
-	const INT32 path_len = FindStratPath(start_sector, end_sector, *g, fTacticalTraversal);
+	const INT32 path_len = FindStratPath(start_sector, end_sector, g, fTacticalTraversal);
 	if (path_len == 0) return NULL;
 
 	// start new path list
@@ -943,7 +943,7 @@ void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier )
 
 BOOLEAN MoveGroupFromSectorToSector(GROUP* const g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
 {
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), *g, FALSE);
 
 	if( pNode == NULL )
 	{
@@ -962,7 +962,7 @@ BOOLEAN MoveGroupFromSectorToSector(GROUP* const g, INT16 const sStartX, INT16 c
 
 static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP* const g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
 {
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), *g, FALSE);
 
 	if( pNode == NULL )
 	{
@@ -993,7 +993,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP* const 
 	// turn on the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = TRUE;
 
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), *g, FALSE);
 
 	// turn off the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = FALSE;
@@ -1024,7 +1024,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 	// turn on the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = TRUE;
 
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), *g, FALSE);
 
 	// turn off the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = FALSE;
