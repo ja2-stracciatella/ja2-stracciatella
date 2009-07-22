@@ -1130,7 +1130,7 @@ static void AddCorpsesToBloodcatLair(INT16 sSectorX, INT16 sSectorY)
 }
 
 
-static void HandleNonCombatGroupArrival(GROUP* pGroup, BOOLEAN fMainGroup, BOOLEAN fNeverLeft);
+static void HandleNonCombatGroupArrival(GROUP&, bool main_group, bool never_left);
 static void ReportVehicleOutOfGas(VEHICLETYPE const&, UINT8 x, UINT8 y);
 static void SpendVehicleFuel(SOLDIERTYPE&, INT16 fuel_spent);
 static INT16 VehicleFuelRemaining(SOLDIERTYPE const&);
@@ -1431,7 +1431,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		 * processing. */
 		if (check_for_battle && !CheckConditionsForBattle(&g) && !gfWaitingForInput)
 		{
-			HandleNonCombatGroupArrival(&g, TRUE, never_left);
+			HandleNonCombatGroupArrival(g, true, never_left);
 
 			if (gubNumGroupsArrivedSimultaneously != 0)
 			{
@@ -1440,7 +1440,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 					GROUP& g = *i;
 					if (!(g.uiFlags & GROUPFLAG_GROUP_ARRIVED_SIMULTANEOUSLY)) continue;
 					--gubNumGroupsArrivedSimultaneously;
-					HandleNonCombatGroupArrival(&g, FALSE, FALSE);
+					HandleNonCombatGroupArrival(g, false, false);
 					if (gubNumGroupsArrivedSimultaneously == 0) break;
 				}
 			}
@@ -1460,66 +1460,62 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 }
 
 
-static void HandleNonCombatGroupArrival(GROUP* pGroup, BOOLEAN fMainGroup, BOOLEAN fNeverLeft)
+static void HandleNonCombatGroupArrival(GROUP& g, bool const main_group, bool const never_left)
 {
-	// if any mercs are actually in the group
-
-	if( StrategicAILookForAdjacentGroups( pGroup ) )
-	{ //The routine actually just deleted the enemy group (player's don't get deleted), so we are done!
+	if (StrategicAILookForAdjacentGroups(&g))
+	{ /* The routine actually just deleted the enemy group (player's don't get
+		 * deleted), so we are done! */
 		return;
 	}
 
-	if( pGroup->fPlayer )
-	{
-		//The group will always exist after the AI was processed.
+	if (g.fPlayer)
+	{ // The group will always exist after the AI was processed.
 
-		//Determine if the group should rest, change routes, or continue moving.
-		// if on foot, or in a vehicle other than the helicopter
-		if (!pGroup->fVehicle || !IsGroupTheHelicopterGroup(*pGroup))
-		{
-			// take control of sector
-			SetThisSectorAsPlayerControlled( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ, FALSE );
+		bool const is_heli_group = g.fVehicle && IsGroupTheHelicopterGroup(g);
+		if (!is_heli_group)
+		{ // Take control of sector
+			SetThisSectorAsPlayerControlled(g.ubSectorX, g.ubSectorY, g.ubSectorZ, FALSE);
 		}
 
-		// if this is the last sector along their movement path (no more waypoints)
-		if ( GroupAtFinalDestination( pGroup ) )
+		// If this is the last sector along their movement path (no more waypoints)
+		if (GroupAtFinalDestination(&g))
 		{
-			// if currently selected sector has nobody in it
-			if ( PlayerMercsInSector( ( UINT8 ) sSelMapX, ( UINT8 ) sSelMapY, ( UINT8 ) iCurrentMapSectorZ ) == 0 )
-			{
-				// make this sector strategically selected
-				ChangeSelectedMapSector( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ );
+			// If currently selected sector has nobody in it
+			if (PlayerMercsInSector(sSelMapX, sSelMapY, iCurrentMapSectorZ) == 0)
+			{ // Make this sector strategically selected
+				ChangeSelectedMapSector(g.ubSectorX, g.ubSectorY, g.ubSectorZ);
 			}
 
-			// if on foot or in a vehicle other than the helicopter (Skyrider speaks for heli movement)
-			if (!pGroup->fVehicle || !IsGroupTheHelicopterGroup(*pGroup))
+			if (!is_heli_group) // Else Skyrider speaks for heli movement
 			{
 				StopTimeCompression();
 
-				// if traversing tactically, or we never left (just canceling), don't do this
-				if( !gfTacticalTraversal && !fNeverLeft )
+				// If traversing tactically, or we never left (just canceling), don't do this
+				if (!gfTacticalTraversal && !never_left)
 				{
-					RandomMercInGroupSaysQuote( pGroup, QUOTE_MERC_REACHED_DESTINATION );
+					RandomMercInGroupSaysQuote(&g, QUOTE_MERC_REACHED_DESTINATION);
 				}
 			}
 		}
-		// look for NPCs to stop for, anyone is too tired to keep going, if all OK rebuild waypoints & continue movement
-		// NOTE: Only the main group (first group arriving) will stop for NPCs, it's just too much hassle to stop them all
-		PlayerGroupArrivedSafelyInSector(*pGroup, fMainGroup);
+		/* Look for NPCs to stop for, anyone is too tired to keep going, if all OK
+		 * rebuild waypoints & continue movement
+		 * NOTE: Only the main group (first group arriving) will stop for NPCs, it's
+		 * just too much hassle to stop them all */
+		PlayerGroupArrivedSafelyInSector(g, main_group);
 	}
 	else
 	{
-		if( !pGroup->fDebugGroup )
+		if (!g.fDebugGroup)
 		{
-			CalculateNextMoveIntention( pGroup );
+			CalculateNextMoveIntention(&g);
 		}
 		else
 		{
-			RemovePGroup( pGroup );
+			RemovePGroup(&g);
 		}
 	}
-	//Clear the non-persistant flags.
-	pGroup->uiFlags = 0;
+
+	g.uiFlags = 0; // Clear the non-persistant flags
 }
 
 
