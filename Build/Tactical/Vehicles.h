@@ -91,7 +91,7 @@ VEHICLETYPE& GetVehicle(INT32 vehicle_id);
 void SetUpMvtGroupForVehicle(SOLDIERTYPE*);
 
 // find vehicle id of group with this vehicle
-VEHICLETYPE& GetVehicleFromMvtGroup(GROUP const*);
+VEHICLETYPE& GetVehicleFromMvtGroup(GROUP const&);
 
 // kill everyone in vehicle
 BOOLEAN KillAllInVehicle(VEHICLETYPE const&);

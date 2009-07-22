@@ -1165,7 +1165,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 
 		if( pGroup->fVehicle )
 		{
-			VEHICLETYPE const& v = GetVehicleFromMvtGroup(pGroup);
+			VEHICLETYPE const& v = GetVehicleFromMvtGroup(*pGroup);
 			if (!IsHelicopter(v) && !pGroup->pPlayerList)
 			{
 				// nobody here, better just get out now
@@ -1251,7 +1251,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 		}
 		else if (!IsGroupTheHelicopterGroup(*pGroup))
 		{
-			VEHICLETYPE const& v  = GetVehicleFromMvtGroup(pGroup);
+			VEHICLETYPE const& v  = GetVehicleFromMvtGroup(*pGroup);
 			SOLDIERTYPE&       vs = GetSoldierStructureForVehicle(v);
 
 			SpendVehicleFuel(vs, pGroup->uiTraverseTime * 6);
@@ -1379,7 +1379,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 		}
 		else	// vehicle player group
 		{
-			VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
+			VEHICLETYPE& v = GetVehicleFromMvtGroup(*pGroup);
 			if (v.pMercPath )
 			{
 				// remove head from vehicle's mapscreen path list
@@ -1664,19 +1664,20 @@ static void PrepareGroupsForSimultaneousArrival(void)
 			pGroup->uiFlags &= ~GROUPFLAG_MARKER;
 		}
 	}
+
 	//We still have the first group that has arrived.  Because they are set up to be in the destination
 	//sector, we will "warp" them back to the last sector, and also setup a new arrival time for them.
-	GROUP* const pGroup = gpPendingSimultaneousGroup;
-	pGroup->ubNextX = pGroup->ubSectorX;
-	pGroup->ubNextY = pGroup->ubSectorY;
-	pGroup->ubSectorX = pGroup->ubPrevX;
-	pGroup->ubSectorY = pGroup->ubPrevY;
-	SetGroupArrivalTime( pGroup, uiLatestArrivalTime );
-	pGroup->fBetweenSectors = TRUE;
+	GROUP& g = *gpPendingSimultaneousGroup;
+	g.ubNextX   = g.ubSectorX;
+	g.ubNextY   = g.ubSectorY;
+	g.ubSectorX = g.ubPrevX;
+	g.ubSectorY = g.ubPrevY;
+	SetGroupArrivalTime(&g, uiLatestArrivalTime);
+	g.fBetweenSectors = TRUE;
 
-	if( pGroup->fVehicle )
+	if (g.fVehicle)
 	{
-		VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
+		VEHICLETYPE& v = GetVehicleFromMvtGroup(g);
 		v.fBetweenSectors = TRUE;
 
 		if (!IsHelicopter(v))
@@ -1686,16 +1687,16 @@ static void PrepareGroupsForSimultaneousArrival(void)
 		}
 	}
 
-	AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID );
+	AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID);
 
-	if( pGroup->fPlayer )
+	if (g.fPlayer)
 	{
-		if( pGroup->uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin( ) )
+		if (g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin())
 		{
-			AddStrategicEvent( EVENT_GROUP_ABOUT_TO_ARRIVE, pGroup->uiArrivalTime - ABOUT_TO_ARRIVE_DELAY, pGroup->ubGroupID );
+			AddStrategicEvent(EVENT_GROUP_ABOUT_TO_ARRIVE, g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY, g.ubGroupID);
 		}
 	}
-	DelayEnemyGroupsIfPathsCross( pGroup );
+	DelayEnemyGroupsIfPathsCross(&g);
 }
 
 
@@ -1924,7 +1925,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	if (pGroup->fVehicle)
 	{
 		// vehicle, set fact it is between sectors too
-		VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
+		VEHICLETYPE& v = GetVehicleFromMvtGroup(*pGroup);
 		v.fBetweenSectors = TRUE;
 
 		if (!IsHelicopter(v))
@@ -2937,7 +2938,7 @@ void RetreatGroupToPreviousSector(GROUP& g)
 
 	if (g.fVehicle)
 	{ // Vehicle, set fact it is between sectors too
-		VEHICLETYPE& v = GetVehicleFromMvtGroup(&g);
+		VEHICLETYPE& v = GetVehicleFromMvtGroup(g);
 		v.fBetweenSectors = TRUE;
 	}
 
@@ -3351,7 +3352,7 @@ static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const* const pGroup, INT
 	// if it's a vehicle
 	if ( pGroup->fVehicle )
 	{
-		VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
+		VEHICLETYPE& v = GetVehicleFromMvtGroup(*pGroup);
 		v.sSectorX = sSectorX;
 		v.sSectorY = sSectorY;
 		v.sSectorZ = bSectorZ;
