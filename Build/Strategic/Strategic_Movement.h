@@ -233,7 +233,7 @@ void HandleArrivalOfReinforcements(GROUP const*);
 
 //Called when all checks have been made for the group (if possible to retreat, etc.)  This function
 //blindly determines where to move the group.
-void RetreatGroupToPreviousSector( GROUP *pGroup );
+void RetreatGroupToPreviousSector(GROUP&);
 
 GROUP* FindEnemyMovementGroupInSector(UINT8 x, UINT8 y);
 GROUP* FindPlayerMovementGroupInSector(UINT8 x, UINT8 y);

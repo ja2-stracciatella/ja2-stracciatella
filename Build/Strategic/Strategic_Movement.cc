@@ -2894,83 +2894,69 @@ void CalculateGroupRetreatSector( GROUP *pGroup )
 
 //Called when all checks have been made for the group (if possible to retreat, etc.)  This function
 //blindly determines where to move the group.
-void RetreatGroupToPreviousSector( GROUP *pGroup )
+void RetreatGroupToPreviousSector(GROUP& g)
 {
-	UINT8 ubSector, ubDirection = 255;
-	Assert( pGroup );
-	AssertMsg( !pGroup->fBetweenSectors, "Can't retreat a group when between sectors!" );
+	AssertMsg(!g.fBetweenSectors, "Can't retreat a group when between sectors!");
 
-	if( pGroup->ubPrevX != 16 || pGroup->ubPrevY != 16 )
-	{ //Group has a previous sector
-		pGroup->ubNextX = pGroup->ubPrevX;
-		pGroup->ubNextY = pGroup->ubPrevY;
+	UINT8 direction = 255;
+	if (g.ubPrevX != 16 || g.ubPrevY != 16)
+	{ // Group has a previous sector
+		g.ubNextX = g.ubPrevX;
+		g.ubNextY = g.ubPrevY;
 
-		//Determine the correct direction.
-		const INT32 dx = pGroup->ubNextX - pGroup->ubSectorX;
-		const INT32 dy = pGroup->ubNextY - pGroup->ubSectorY;
-		if( dy == -1 && !dx )
-			ubDirection = NORTH_STRATEGIC_MOVE;
-		else if( dx == 1 && !dy )
-			ubDirection = EAST_STRATEGIC_MOVE;
-		else if( dy == 1 && !dx )
-			ubDirection = SOUTH_STRATEGIC_MOVE;
-		else if( dx == -1 && !dy )
-			ubDirection = WEST_STRATEGIC_MOVE;
+		// Determine the correct direction
+		INT32 const dx = g.ubNextX - g.ubSectorX;
+		INT32 const dy = g.ubNextY - g.ubSectorY;
+		if      (dx ==  0 && dy == -1) direction = NORTH_STRATEGIC_MOVE;
+		else if (dx ==  1 && dy ==  0) direction = EAST_STRATEGIC_MOVE;
+		else if (dx ==  0 && dy ==  1) direction = SOUTH_STRATEGIC_MOVE;
+		else if (dx == -1 && dy ==  0) direction = WEST_STRATEGIC_MOVE;
 		else
 		{
-
-			AssertMsg( 0, String("Player group attempting illegal retreat from %c%d to %c%d.",
-				pGroup->ubSectorY+'A'-1, pGroup->ubSectorX, pGroup->ubNextY+'A'-1, pGroup->ubNextX ) );
+			AssertMsg(0, String("Player group attempting illegal retreat from %c%d to %c%d.", g.ubSectorY + 'A' - 1, g.ubSectorX, g.ubNextY + 'A' - 1, g.ubNextX));
 		}
 	}
 	else
-	{ //Group doesn't have a previous sector.  Create one, then recurse
-		CalculateGroupRetreatSector( pGroup );
-		RetreatGroupToPreviousSector( pGroup );
+	{ // Group doesn't have a previous sector. Create one, then recurse
+		CalculateGroupRetreatSector(&g);
+		RetreatGroupToPreviousSector(g);
+		// XXX direction is invalid, causes out-of-bounds access below
 	}
 
-	//Calc time to get to next waypoint...
-	ubSector = (UINT8)SECTOR( pGroup->ubSectorX, pGroup->ubSectorY );
-	pGroup->uiTraverseTime = GetSectorMvtTimeForGroup( ubSector, ubDirection, pGroup );
-	AssertMsg(pGroup->uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE, String("Group %d (%s) attempting illegal move from %c%d to %c%d (%s).",
-				pGroup->ubGroupID, ( pGroup->fPlayer ) ? "Player" : "AI",
-				pGroup->ubSectorY+'A', pGroup->ubSectorX, pGroup->ubNextY+'A', pGroup->ubNextX,
-				gszTerrain[SectorInfo[ubSector].ubTraversability[ubDirection]] ) );
+	// Calc time to get to next waypoint
+	UINT8 const sector = SECTOR(g.ubSectorX, g.ubSectorY);
+	g.uiTraverseTime = GetSectorMvtTimeForGroup(sector, direction, &g);
+	AssertMsg(g.uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE, String("Group %d (%s) attempting illegal move from %c%d to %c%d (%s).", g.ubGroupID, g.fPlayer ? "Player" : "AI", g.ubSectorY + 'A', g.ubSectorX, g.ubNextY + 'A', g.ubNextX, gszTerrain[SectorInfo[sector].ubTraversability[direction]]));
 
-	if( !pGroup->uiTraverseTime )
-	{ //Because we are in the strategic layer, don't make the arrival instantaneous (towns).
-		pGroup->uiTraverseTime = 5;
-	}
+	// Because we are in the strategic layer, don't make the arrival instantaneous (towns)
+	if (g.uiTraverseTime == 0) g.uiTraverseTime = 5;
 
-	SetGroupArrivalTime( pGroup, GetWorldTotalMin() + pGroup->uiTraverseTime );
-	pGroup->fBetweenSectors = TRUE;
-	pGroup->uiFlags |= GROUPFLAG_JUST_RETREATED_FROM_BATTLE;
+	SetGroupArrivalTime(&g, GetWorldTotalMin() + g.uiTraverseTime);
+	g.fBetweenSectors = TRUE;
+	g.uiFlags        |= GROUPFLAG_JUST_RETREATED_FROM_BATTLE;
 
-	if (pGroup->fVehicle)
-	{
-		// vehicle, set fact it is between sectors too
-		VEHICLETYPE& v = GetVehicleFromMvtGroup(pGroup);
+	if (g.fVehicle)
+	{ // Vehicle, set fact it is between sectors too
+		VEHICLETYPE& v = GetVehicleFromMvtGroup(&g);
 		v.fBetweenSectors = TRUE;
 	}
 
-	//Post the event!
-	if( !AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID ) )
-		AssertMsg( 0, "Failed to add movement event." );
+	if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
+		AssertMsg(0, "Failed to add movement event.");
 
-	//For the case of player groups, we need to update the information of the soldiers.
-	if( pGroup->fPlayer )
+	// For the case of player groups, we need to update the information of the soldiers.
+	if (g.fPlayer)
 	{
-		if( pGroup->uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin( ) )
+		if (g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin())
 		{
-			AddStrategicEvent( EVENT_GROUP_ABOUT_TO_ARRIVE, pGroup->uiArrivalTime - ABOUT_TO_ARRIVE_DELAY, pGroup->ubGroupID );
+			AddStrategicEvent(EVENT_GROUP_ABOUT_TO_ARRIVE, g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY, g.ubGroupID);
 		}
 
-		CFOR_ALL_PLAYERS_IN_GROUP(curr, pGroup)
+		CFOR_ALL_PLAYERS_IN_GROUP(i, &g)
 		{
-			curr->pSoldier->fBetweenSectors = TRUE;
-
-			// OK, Remove the guy from tactical engine!
-			RemoveSoldierFromTacticalSector(curr->pSoldier);
+			SOLDIERTYPE& s = *i->pSoldier;
+			s.fBetweenSectors = TRUE;
+			RemoveSoldierFromTacticalSector(&s);
 		}
 	}
 }

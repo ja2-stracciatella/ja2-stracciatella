@@ -1528,7 +1528,7 @@ void RetreatAllInvolvedPlayerGroups( void )
 		// Don't retreat empty vehicle groups!
 		if (g.fVehicle && !DoesVehicleGroupHaveAnyPassengers(&g)) continue;
 		ClearMercPathsAndWaypointsForAllInGroup(g);
-		RetreatGroupToPreviousSector(&g);
+		RetreatGroupToPreviousSector(g);
 	}
 }
 
