@@ -797,13 +797,13 @@ PathSt* CopyPaths(PathSt* src)
 
 
 #ifdef BETA_VERSION
-static void VerifyAllMercsInGroupAreOnSameSquad(GROUP* const pGroup)
+static void VerifyAllMercsInGroupAreOnSameSquad(GROUP const& g)
 {
 	SOLDIERTYPE *pSoldier;
 	INT8 bSquad = -1;
 
 	// Let's choose somebody in group.....
-	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
+	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, &g)
 	{
 		pSoldier = pPlayer->pSoldier;
 		Assert( pSoldier );
@@ -842,7 +842,7 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 	if (g.fPlayer)
 	{
 #ifdef BETA_VERSION
-	VerifyAllMercsInGroupAreOnSameSquad(&g);
+	VerifyAllMercsInGroupAreOnSameSquad(g);
 #endif
 
 		// update the destination(s) in the team list
