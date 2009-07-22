@@ -265,7 +265,7 @@ void PlaceGroupInSector(GROUP*, INT16 sPrevX, INT16 sPrevY, INT16 sNextX, INT16 
 
 void SetGroupArrivalTime( GROUP *pGroup, UINT32 uiArrivalTime );
 
-void PlayerGroupArrivedSafelyInSector( GROUP *pGroup, BOOLEAN fCheckForNPCs );
+void PlayerGroupArrivedSafelyInSector(GROUP&, BOOLEAN fCheckForNPCs);
 
 BOOLEAN DoesPlayerExistInPGroup(GROUP const*, SOLDIERTYPE const*);
 

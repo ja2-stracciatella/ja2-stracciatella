@@ -1562,7 +1562,7 @@ static void HandleNonCombatGroupArrival(GROUP* pGroup, BOOLEAN fMainGroup, BOOLE
 		}
 		// look for NPCs to stop for, anyone is too tired to keep going, if all OK rebuild waypoints & continue movement
 		// NOTE: Only the main group (first group arriving) will stop for NPCs, it's just too much hassle to stop them all
-		PlayerGroupArrivedSafelyInSector( pGroup, fMainGroup );
+		PlayerGroupArrivedSafelyInSector(*pGroup, fMainGroup);
 	}
 	else
 	{
@@ -3655,17 +3655,14 @@ static BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP* pGroup
 
 
 // look for NPCs to stop for, anyone is too tired to keep going, if all OK rebuild waypoints & continue movement
-void PlayerGroupArrivedSafelyInSector( GROUP *pGroup, BOOLEAN fCheckForNPCs )
+void PlayerGroupArrivedSafelyInSector(GROUP& g, BOOLEAN const fCheckForNPCs)
 {
 	BOOLEAN fPlayerPrompted = FALSE;
 
-
-	Assert( pGroup );
-	Assert( pGroup->fPlayer );
-
+	Assert(g.fPlayer);
 
 	// if we haven't already checked for NPCs, and the group isn't empty
-	if (fCheckForNPCs && HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(pGroup))
+	if (fCheckForNPCs && HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(&g))
 	{
 		// wait for player to answer/confirm prompt before doing anything else
 		fPlayerPrompted = TRUE;
@@ -3675,12 +3672,12 @@ void PlayerGroupArrivedSafelyInSector( GROUP *pGroup, BOOLEAN fCheckForNPCs )
 	if ( !fPlayerPrompted )
 	{
 		// and we're not at the end of our road
-		if ( !GroupAtFinalDestination( pGroup ) )
+		if (!GroupAtFinalDestination(&g))
 		{
-			if ( AnyMercInGroupCantContinueMoving( pGroup ) )
+			if (AnyMercInGroupCantContinueMoving(&g))
 			{
 				// stop: clear their strategic movement (mercpaths and waypoints)
-				ClearMercPathsAndWaypointsForAllInGroup( pGroup );
+				ClearMercPathsAndWaypointsForAllInGroup(&g);
 
 				// NOTE: Of course, it would be better if they continued onwards once everyone was ready to go again, in which
 				// case we'd want to preserve the plotted path, but since the player can mess with the squads, etc.
@@ -3694,7 +3691,7 @@ void PlayerGroupArrivedSafelyInSector( GROUP *pGroup, BOOLEAN fCheckForNPCs )
 			else
 			{
 				// continue onwards: rebuild way points, initiate movement
-				RebuildWayPointsForGroupPath(GetGroupMercPathPtr(pGroup), *pGroup);
+				RebuildWayPointsForGroupPath(GetGroupMercPathPtr(&g), g);
 			}
 		}
 	}
@@ -3845,7 +3842,7 @@ static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageB
 			 (ubExitValue == MSG_BOX_RETURN_OK) )
 	{
 		// NPCs now checked, continue moving if appropriate
-		PlayerGroupArrivedSafelyInSector( gpGroupPrompting, FALSE );
+		PlayerGroupArrivedSafelyInSector(*gpGroupPrompting, FALSE);
 	}
 	else if( ubExitValue == MSG_BOX_RETURN_NO )
 	{

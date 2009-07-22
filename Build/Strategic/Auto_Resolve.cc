@@ -1820,7 +1820,7 @@ static void RemoveAutoResolveInterface(BOOLEAN fDeleteForGood)
 
 					// look for NPCs to stop for, anyone is too tired to keep going, if all OK rebuild waypoints & continue movement
 					// NOTE: Only the first group found will stop for NPCs, it's just too much hassle to stop them all
-					PlayerGroupArrivedSafelyInSector( GetGroup( gpMercs[ i ].pSoldier->ubGroupID ), fFirstGroup );
+					PlayerGroupArrivedSafelyInSector(*GetGroup(gpMercs[i].pSoldier->ubGroupID), fFirstGroup);
 					fFirstGroup = FALSE;
 				}
 			}
