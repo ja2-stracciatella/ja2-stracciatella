@@ -784,21 +784,22 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 
 	HandleOtherGroupsArrivingSimultaneously( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ );
 
-	FOR_ALL_PLAYER_GROUPS(curr)
+	FOR_ALL_PLAYER_GROUPS(i)
 	{
-		if (curr->ubGroupSize)
+		GROUP& g = *i;
+		if (g.ubGroupSize)
 		{
-			if( !curr->fBetweenSectors )
+			if (!g.fBetweenSectors)
 			{
-				if( curr->ubSectorX == pGroup->ubSectorX && curr->ubSectorY == pGroup->ubSectorY && !curr->ubSectorZ )
+				if (g.ubSectorX == pGroup->ubSectorX && g.ubSectorY == pGroup->ubSectorY && !g.ubSectorZ)
 				{
-					if (!GroupHasInTransitDeadOrPOWMercs(*curr) &&
-							(!IsGroupTheHelicopterGroup( curr ) || !fHelicopterIsAirBorne) &&
-							(!curr->fVehicle || DoesVehicleGroupHaveAnyPassengers(curr)))
+					if (!GroupHasInTransitDeadOrPOWMercs(g) &&
+							(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne) &&
+							(!g.fVehicle || DoesVehicleGroupHaveAnyPassengers(&g)))
 					{
 						//Now, a player group is in this sector.  Determine if the group contains any mercs that can fight.
 						//Vehicles, EPCs and the robot doesn't count.  Mercs below OKLIFE do.
-						CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, curr)
+						CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, &g)
 						{
 							pSoldier = pPlayer->pSoldier;
 							if( !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE) )
@@ -817,7 +818,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 						}
 						if( !pPlayerDialogGroup && fCombatAbleMerc )
 						{
-							pPlayerDialogGroup = curr;
+							pPlayerDialogGroup = &g;
 						}
 						if( fCombatAbleMerc )
 						{
@@ -1248,7 +1249,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 			// gotta be walking to get tougher
 			AwardExperienceForTravelling(*pGroup);
 		}
-		else if( !IsGroupTheHelicopterGroup( pGroup ) )
+		else if (!IsGroupTheHelicopterGroup(*pGroup))
 		{
 			VEHICLETYPE const& v  = GetVehicleFromMvtGroup(pGroup);
 			SOLDIERTYPE&       vs = GetSoldierStructureForVehicle(v);
@@ -1460,7 +1461,7 @@ void GroupArrivedAtSector(GROUP* const pGroup, BOOLEAN const fCheckForBattle, BO
 			fFirstTimeInSector = !GetSectorFlagStatus( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ, SF_ALREADY_VISITED );
 
 			// on foot, or in a vehicle other than the chopper
-			if ( !pGroup->fVehicle || !IsGroupTheHelicopterGroup( pGroup ) )
+			if (!pGroup->fVehicle || !IsGroupTheHelicopterGroup(*pGroup))
 			{
 
         // ATE: Add a few corpse to the bloodcat lair...
@@ -1531,7 +1532,7 @@ static void HandleNonCombatGroupArrival(GROUP* pGroup, BOOLEAN fMainGroup, BOOLE
 
 		//Determine if the group should rest, change routes, or continue moving.
 		// if on foot, or in a vehicle other than the helicopter
-		if( !pGroup->fVehicle || !IsGroupTheHelicopterGroup( pGroup ) )
+		if (!pGroup->fVehicle || !IsGroupTheHelicopterGroup(*pGroup))
 		{
 			// take control of sector
 			SetThisSectorAsPlayerControlled( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ, FALSE );
@@ -1548,7 +1549,7 @@ static void HandleNonCombatGroupArrival(GROUP* pGroup, BOOLEAN fMainGroup, BOOLE
 			}
 
 			// if on foot or in a vehicle other than the helicopter (Skyrider speaks for heli movement)
-			if ( !pGroup->fVehicle || !IsGroupTheHelicopterGroup( pGroup ) )
+			if (!pGroup->fVehicle || !IsGroupTheHelicopterGroup(*pGroup))
 			{
 				StopTimeCompression();
 
@@ -1625,16 +1626,17 @@ static void PrepareGroupsForSimultaneousArrival(void)
 {
 	UINT32 uiLatestArrivalTime = 0;
 
-	FOR_ALL_PLAYER_GROUPS(pGroup)
+	FOR_ALL_PLAYER_GROUPS(i)
 	{ //For all of the groups that haven't arrived yet, determine which one is going to take the longest.
-		if( pGroup != gpPendingSimultaneousGroup
-				&& pGroup->fBetweenSectors
-				&& pGroup->ubNextX == gpPendingSimultaneousGroup->ubSectorX
-				&& pGroup->ubNextY == gpPendingSimultaneousGroup->ubSectorY &&
-				!IsGroupTheHelicopterGroup( pGroup ) )
+		GROUP& g = *i;
+		if (&g != gpPendingSimultaneousGroup
+				&& g.fBetweenSectors
+				&& g.ubNextX == gpPendingSimultaneousGroup->ubSectorX
+				&& g.ubNextY == gpPendingSimultaneousGroup->ubSectorY &&
+				!IsGroupTheHelicopterGroup(g))
 		{
-			uiLatestArrivalTime = MAX( pGroup->uiArrivalTime, uiLatestArrivalTime );
-			pGroup->uiFlags |= GROUPFLAG_SIMULTANEOUSARRIVAL_APPROVED | GROUPFLAG_MARKER;
+			uiLatestArrivalTime = MAX(g.uiArrivalTime, uiLatestArrivalTime);
+			g.uiFlags |= GROUPFLAG_SIMULTANEOUSARRIVAL_APPROVED | GROUPFLAG_MARKER;
 		}
 	}
 	//Now, go through the list again, and reset their arrival event to the latest arrival time.
@@ -1708,20 +1710,21 @@ static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* const first_
 {
 	// If the user has already been asked, then don't ask the question again!
 	if (first_group->uiFlags & (GROUPFLAG_SIMULTANEOUSARRIVAL_APPROVED | GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED)) return FALSE;
-	if (IsGroupTheHelicopterGroup(first_group)) return FALSE;
+	if (IsGroupTheHelicopterGroup(*first_group)) return FALSE;
 
 	/* Count the number of groups that are scheduled to arrive in the same sector
 	 * and are currently adjacent to the sector in question. */
 	UINT8 n_nearby_groups = 0;
-	FOR_ALL_PLAYER_GROUPS(g)
+	FOR_ALL_PLAYER_GROUPS(i)
 	{
-		if (g == first_group)                                   continue;
-		if (!g->fBetweenSectors)                                continue;
-		if (g->ubNextX != first_group->ubSectorX)               continue;
-		if (g->ubNextY != first_group->ubSectorY)               continue;
-		if (g->uiFlags & GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED) continue;
-		if (IsGroupTheHelicopterGroup(g))                       continue;
-		g->uiFlags |= GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED;
+		GROUP& g = *i;
+		if (&g == first_group)                                 continue;
+		if (!g.fBetweenSectors)                                continue;
+		if (g.ubNextX != first_group->ubSectorX)               continue;
+		if (g.ubNextY != first_group->ubSectorY)               continue;
+		if (g.uiFlags & GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED) continue;
+		if (IsGroupTheHelicopterGroup(g))                      continue;
+		g.uiFlags |= GROUPFLAG_SIMULTANEOUSARRIVAL_CHECKED;
 		++n_nearby_groups;
 	}
 
@@ -2490,9 +2493,10 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 	 * Special conditions during pre-battle interface to return where this
 	 * function is used to show potential retreating directions instead! */
 
-	CFOR_ALL_PLAYER_GROUPS(curr)
+	CFOR_ALL_PLAYER_GROUPS(i)
 	{
-		bool const is_heli_group = IsGroupTheHelicopterGroup(curr);
+		GROUP const& g = *i;
+		bool  const is_heli_group = IsGroupTheHelicopterGroup(g);
 
 		/* If this group is aboard the helicopter and we're showing the airspace
 		 * layer, don't count any mercs aboard the chopper, because the chopper icon
@@ -2501,18 +2505,18 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 
 		/* If only showing retreat paths, ignore groups not in the battle sector.
 		 * If NOT showing retreat paths, ignore groups not between sectors. */
-		if (gfDisplayPotentialRetreatPaths ? sec_battle != sec_src : !curr->fBetweenSectors) continue;
+		if (gfDisplayPotentialRetreatPaths ? sec_battle != sec_src : !g.fBetweenSectors) continue;
 
-		UINT8 n_mercs = curr->ubGroupSize;
+		UINT8 n_mercs = g.ubGroupSize;
 		if (n_mercs == 0) // Skip empty persistent groups
 		{
-			Assert(curr->fPersistant);
+			Assert(g.fPersistant);
 			continue;
 		}
 
-		INT16 const sec_prev = SECTOR(curr->ubPrevX,   curr->ubPrevY);
-		INT16 const sec_cur  = SECTOR(curr->ubSectorX, curr->ubSectorY);
-		INT16 const sec_next = SECTOR(curr->ubNextX,   curr->ubNextY);
+		INT16 const sec_prev = SECTOR(g.ubPrevX,   g.ubPrevY);
+		INT16 const sec_cur  = SECTOR(g.ubSectorX, g.ubSectorY);
+		INT16 const sec_next = SECTOR(g.ubNextX,   g.ubNextY);
 
 		bool const may_retreat_from_battle =
 			sec_battle == sec_src && sec_cur == sec_src && sec_prev == sec_dst;
@@ -2523,7 +2527,7 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 		if (may_retreat_from_battle || (sec_cur == sec_src && sec_next == sec_dst))
 		{
 			// If it's a valid vehicle, but not the helicopter (which can fly empty)
-			if (curr->fVehicle && !is_heli_group)
+			if (g.fVehicle && !is_heli_group)
 			{ // subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
 				n_mercs--;
 			}
@@ -2531,7 +2535,7 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 			*n_enter += n_mercs;
 
 			if (may_retreat_from_battle ||
-					curr->uiArrivalTime - GetWorldTotalMin() <= ABOUT_TO_ARRIVE_DELAY)
+					g.uiArrivalTime - GetWorldTotalMin() <= ABOUT_TO_ARRIVE_DELAY)
 			{
 				*about_to_arrive_enter = TRUE;
 			}
@@ -2539,7 +2543,7 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 		else if (retreating_from_battle || (sec_cur == sec_dst && sec_next == sec_src))
 		{
 			// If it's a valid vehicle, but not the helicopter (which can fly empty)
-			if (curr->fVehicle && !is_heli_group)
+			if (g.fVehicle && !is_heli_group)
 			{ // subtract 1, we don't wanna count the vehicle itself for purposes of showing a number on the map
 				n_mercs--;
 			}
@@ -2999,7 +3003,7 @@ GROUP* FindPlayerMovementGroupInSector(const UINT8 x, const UINT8 y)
 				g.ubSectorY   == y                  &&
 				g.ubSectorZ   == 0                  &&
 				!GroupHasInTransitDeadOrPOWMercs(g) &&
-				(!IsGroupTheHelicopterGroup(&g) || !fHelicopterIsAirBorne))
+				(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne))
 		{
 			return &g;
 		}
@@ -3602,7 +3606,7 @@ void SetGroupArrivalTime( GROUP *pGroup, UINT32 uiArrivalTime )
 	// Also note that non-chopper groups can currently be delayed such that this assetion would fail - enemy groups by
 	// DelayEnemyGroupsIfPathsCross(), and player groups via PrepareGroupsForSimultaneousArrival().  So we skip the assert.
 
-	if ( IsGroupTheHelicopterGroup( pGroup ) )
+	if (IsGroupTheHelicopterGroup(*pGroup))
 	{
 		// make sure it's valid (NOTE: the correct traverse time must be set first!)
 		if ( uiArrivalTime > ( GetWorldTotalMin() + pGroup->uiTraverseTime ) )
@@ -3719,7 +3723,7 @@ static BOOLEAN HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP& g)
 	}
 
 	// chopper doesn't stop for NPCs
-	if (IsGroupTheHelicopterGroup(&g))
+	if (IsGroupTheHelicopterGroup(g))
 	{
 		return( FALSE );
 	}

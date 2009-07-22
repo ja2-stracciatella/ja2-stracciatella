@@ -1417,7 +1417,7 @@ static void PutNonSquadMercsInBattleSectorOnSquads(BOOLEAN fExitVehicles)
 		if (!PlayerGroupInvolvedInThisCombat(g)) continue;
 
 		// the helicopter group CAN be involved, if it's on the ground, in which case everybody must get out of it
-		if (IsGroupTheHelicopterGroup(&g))
+		if (IsGroupTheHelicopterGroup(g))
 		{
 			// only happens if chopper is on the ground...
 			Assert( !fHelicopterIsAirBorne );
@@ -1568,11 +1568,11 @@ bool PlayerGroupInvolvedInThisCombat(GROUP const& g)
 	 * group of in transit, dead, or POW mercs, and either not the helicopter
 	 * group, or the heli is on the ground */
 	return
-		g.fPlayer                                                  &&
-		g.ubGroupSize != 0                                         &&
-		!g.fBetweenSectors                                         &&
-		!GroupHasInTransitDeadOrPOWMercs(g)                        &&
-		(!IsGroupTheHelicopterGroup(&g) || !fHelicopterIsAirBorne) &&
+		g.fPlayer                                                 &&
+		g.ubGroupSize != 0                                        &&
+		!g.fBetweenSectors                                        &&
+		!GroupHasInTransitDeadOrPOWMercs(g)                       &&
+		(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne) &&
 		CurrentBattleSectorIs(g.ubSectorX, g.ubSectorY, g.ubSectorZ);
 }
 
