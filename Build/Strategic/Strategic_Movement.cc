@@ -246,7 +246,7 @@ void RemovePlayerFromGroup(SOLDIERTYPE* const s)
 }
 
 
-static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const*, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const&, INT16 x, INT16 y, INT8 z);
 
 
 BOOLEAN GroupReversingDirectionsBetweenSectors( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY, BOOLEAN fBuildingWaypoints )
@@ -276,7 +276,7 @@ BOOLEAN GroupReversingDirectionsBetweenSectors( GROUP *pGroup, UINT8 ubSectorX, 
 		// ARM: because we've changed the group's ubSectoryX and ubSectorY, we must now also go and change the sSectorX and
 		// sSectorY of all the soldiers in this group so that they stay in synch.  Otherwise pathing and movement problems
 		// will result since the group is in one place while the merc is in another...
-		SetLocationOfAllPlayerSoldiersInGroup( pGroup, pGroup->ubSectorX, pGroup->ubSectorY, 0 );
+		SetLocationOfAllPlayerSoldiersInGroup(*pGroup, pGroup->ubSectorX, pGroup->ubSectorY, 0);
 	}
 
 
@@ -3333,38 +3333,32 @@ static void ReportVehicleOutOfGas(VEHICLETYPE const& v, UINT8 const x, UINT8 con
 }
 
 
-static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const* const pGroup, INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
+static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const& g, INT16 const x, INT16 const y, INT8 const z)
 {
-	SOLDIERTYPE *pSoldier = NULL;
-
-	CFOR_ALL_PLAYERS_IN_GROUP(pPlayer, pGroup)
+	CFOR_ALL_PLAYERS_IN_GROUP(i, &g)
 	{
-		pSoldier = pPlayer->pSoldier;
-
-		if ( pSoldier != NULL )
-		{
-			pSoldier->sSectorX = sSectorX;
-			pSoldier->sSectorY = sSectorY;
-			pSoldier->bSectorZ = bSectorZ;
-		}
+		if (!i->pSoldier) continue;
+		SOLDIERTYPE& s = *i->pSoldier;
+		s.sSectorX = x;
+		s.sSectorY = y;
+		s.bSectorZ = z;
 	}
 
-	// if it's a vehicle
-	if ( pGroup->fVehicle )
+	if (g.fVehicle)
 	{
-		VEHICLETYPE& v = GetVehicleFromMvtGroup(*pGroup);
-		v.sSectorX = sSectorX;
-		v.sSectorY = sSectorY;
-		v.sSectorZ = bSectorZ;
+		VEHICLETYPE& v = GetVehicleFromMvtGroup(g);
+		v.sSectorX = x;
+		v.sSectorY = y;
+		v.sSectorZ = z;
 
-		// if it ain't the chopper
 		if (!IsHelicopter(v))
 		{
 			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
-			// these are apparently unnecessary, since vehicles are part of the pPlayerList in a vehicle group.  Oh well.
-			vs.sSectorX = sSectorX;
-			vs.sSectorY = sSectorY;
-			vs.bSectorZ = bSectorZ;
+			/* These are apparently unnecessary, since vehicles are part of the
+			 * pPlayerList in a vehicle group. Oh well. */
+			vs.sSectorX = x;
+			vs.sSectorY = y;
+			vs.bSectorZ = z;
 		}
 	}
 }
