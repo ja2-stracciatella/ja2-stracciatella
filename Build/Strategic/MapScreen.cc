@@ -6220,7 +6220,7 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 			// rebuild waypoints - helicopter
 			VEHICLETYPE& v = GetHelicopter();
 			ppMovePath     = &v.pMercPath;
-			RebuildWayPointsForGroupPath(*ppMovePath, GetGroup(v.ubMovementGroup));
+			RebuildWayPointsForGroupPath(*ppMovePath, *GetGroup(v.ubMovementGroup));
 
 			fLastSectorInPath = TRUE;
 		}
@@ -6356,7 +6356,7 @@ static void RebuildWayPointsForAllSelectedCharsGroups(void)
 		if ( !fGroupIDRebuilt[ ubGroupId ] )
 		{
 			// rebuild it now
-			RebuildWayPointsForGroupPath(*ppMovePath, GetGroup(ubGroupId));
+			RebuildWayPointsForGroupPath(*ppMovePath, *GetGroup(ubGroupId));
 
 			// mark it as rebuilt
 			fGroupIDRebuilt[ ubGroupId ] = TRUE;
@@ -8664,7 +8664,7 @@ static bool RestorePath(PathSt*& path, UINT8 const group_id)
 		return false;
 	}
 
-	RebuildWayPointsForGroupPath(path, GetGroup(group_id));
+	RebuildWayPointsForGroupPath(path, *GetGroup(group_id));
 	return true;
 }
 

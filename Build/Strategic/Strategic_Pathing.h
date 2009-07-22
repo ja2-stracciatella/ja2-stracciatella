@@ -52,7 +52,7 @@ INT16 GetLastSectorIdInCharactersPath(const SOLDIERTYPE* pCharacter);
 PathSt* CopyPaths(PathSt* src);
 
 // rebuild way points for strategic mapscreen path changes
-void RebuildWayPointsForGroupPath(PathSt* pHeadOfPath, GROUP*);
+void RebuildWayPointsForGroupPath(PathSt* pHeadOfPath, GROUP&);
 
 // clear strategic movement (mercpaths and waypoints) for this soldier, and his group (including its vehicles)
 void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier );

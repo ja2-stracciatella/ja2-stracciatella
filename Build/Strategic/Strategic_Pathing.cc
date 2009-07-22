@@ -825,7 +825,7 @@ static void VerifyAllMercsInGroupAreOnSameSquad(GROUP* const pGroup)
 #endif
 
 
-void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP* const pGroup)
+void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 {
 	INT32 iDelta = 0;
 	INT32 iOldDelta = 0;
@@ -835,14 +835,14 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP* const pGroup
 
 	//KRIS!  Added this because it was possible to plot a new course to the same destination, and the
 	//       group would add new arrival events without removing the existing one(s).
-	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, pGroup->ubGroupID);
+	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g.ubGroupID);
 
-	RemoveGroupWaypoints(pGroup);
+	RemoveGroupWaypoints(&g);
 
-	if( pGroup->fPlayer )
+	if (g.fPlayer)
 	{
 #ifdef BETA_VERSION
-	VerifyAllMercsInGroupAreOnSameSquad( pGroup );
+	VerifyAllMercsInGroupAreOnSameSquad(&g);
 #endif
 
 		// update the destination(s) in the team list
@@ -862,10 +862,10 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP* const pGroup
 	{
 		// and it's a player group, and it's between sectors
 		// NOTE: AI groups never reverse direction between sectors, Kris cheats & teleports them back to their current sector!
-		if( pGroup->fPlayer && pGroup->fBetweenSectors )
+		if (g.fPlayer && g.fBetweenSectors)
 		{
 			// send the group right back to its current sector by reversing directions
-			GroupReversingDirectionsBetweenSectors( pGroup, pGroup->ubSectorX, pGroup->ubSectorY, FALSE );
+			GroupReversingDirectionsBetweenSectors(&g, g.ubSectorX, g.ubSectorY, FALSE);
 		}
 
 		return;
@@ -873,10 +873,10 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP* const pGroup
 
 
 	// if we're currently between sectors
-	if( pGroup->fBetweenSectors )
+	if (g.fBetweenSectors)
 	{
 		// figure out which direction we're already going in  (Otherwise iOldDelta starts at 0)
-		iOldDelta = CALCULATE_STRATEGIC_INDEX( pGroup->ubNextX, pGroup->ubNextY ) - CALCULATE_STRATEGIC_INDEX( pGroup->ubSectorX, pGroup->ubSectorY );
+		iOldDelta = CALCULATE_STRATEGIC_INDEX(g.ubNextX, g.ubNextY) - CALCULATE_STRATEGIC_INDEX(g.ubSectorX, g.ubSectorY);
 	}
 
 	// build a brand new list of waypoints, one for initial direction, and another for every "direction change" thereafter
@@ -891,7 +891,7 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP* const pGroup
 		if( ( iOldDelta != 0 ) && ( iDelta != iOldDelta ) )
 		{
 			// add this strategic sector as a waypoint
-			AddWaypointStrategicIDToPGroup( pGroup, pNode->uiSectorId );
+			AddWaypointStrategicIDToPGroup(&g, pNode->uiSectorId);
 		}
 
 		// remember this delta
@@ -906,22 +906,21 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP* const pGroup
 	Assert( !fFirstNode );
 
 	// the final destination sector - always add a waypoint for it
-	AddWaypointStrategicIDToPGroup( pGroup, pNode->uiSectorId );
+	AddWaypointStrategicIDToPGroup(&g, pNode->uiSectorId);
 
 	// at this point, the final sector in the path must be identical to this group's last waypoint
-	wp = GetFinalWaypoint( pGroup );
+	wp = GetFinalWaypoint(&g);
 	AssertMsg( wp, "Path exists, but no waypoints were added!  AM-0" );
 	AssertMsg( pNode->uiSectorId == ( UINT32 ) CALCULATE_STRATEGIC_INDEX( wp->x, wp->y ), "Last waypoint differs from final path sector!  AM-0" );
 
 
 	// see if we've already reached the first sector in the path (we never actually left the sector and reversed back to it)
-	if( pGroup->uiArrivalTime == GetWorldTotalMin() )
+	if (g.uiArrivalTime == GetWorldTotalMin())
 	{
 		// never really left.  Must set check for battle TRUE in order for HandleNonCombatGroupArrival() to run!
-		GroupArrivedAtSector(pGroup, TRUE, TRUE);
+		GroupArrivedAtSector(&g, TRUE, TRUE);
 	}
 }
-
 
 
 // clear strategic movement (mercpaths and waypoints) for this soldier, and his group (including its vehicles)
@@ -951,7 +950,7 @@ BOOLEAN MoveGroupFromSectorToSector(GROUP& g, INT16 const sStartX, INT16 const s
 	}
 
 	// start movement to next sector
-	RebuildWayPointsForGroupPath(pNode, &g);
+	RebuildWayPointsForGroupPath(pNode, g);
 
 	// now clear out the mess
 	pNode = ClearStrategicPathList( pNode, -1 );
@@ -973,7 +972,7 @@ static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP& g, INT16 con
 	pNode = RemoveTailFromStrategicPath( pNode );
 
 	// start movement to next sector
-	RebuildWayPointsForGroupPath(pNode, &g);
+	RebuildWayPointsForGroupPath(pNode, g);
 
 	// now clear out the mess
 	pNode = ClearStrategicPathList( pNode, -1 );
@@ -1004,7 +1003,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP& g, INT
 	}
 
 	// start movement to next sector
-	RebuildWayPointsForGroupPath(pNode, &g);
+	RebuildWayPointsForGroupPath(pNode, g);
 
 	// now clear out the mess
 	pNode = ClearStrategicPathList( pNode, -1 );
@@ -1038,7 +1037,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 	pNode = RemoveTailFromStrategicPath( pNode );
 
 	// start movement to next sector
-	RebuildWayPointsForGroupPath(pNode, &g);
+	RebuildWayPointsForGroupPath(pNode, g);
 
 	// now clear out the mess
 	pNode = ClearStrategicPathList( pNode, -1 );
