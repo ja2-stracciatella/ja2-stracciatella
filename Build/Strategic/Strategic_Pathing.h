@@ -26,7 +26,7 @@ enum{
 	MVT_MODE_FOOT,
 };
 
-INT32 FindStratPath(INT16 sStart, INT16 sDestination, GROUP const*, BOOLEAN fTacticalTraversal);
+INT32 FindStratPath(INT16 sStart, INT16 sDestination, GROUP const&, BOOLEAN fTacticalTraversal);
 
 // build a stategic path
 PathSt* BuildAStrategicPath(INT16 iStartSectorNum, INT16 iEndSectorNum, GROUP const*, BOOLEAN fTacticalTraversal);

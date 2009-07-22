@@ -331,7 +331,7 @@ static RefuelSite const* FindClosestRefuelSite(bool const must_be_available)
 		VEHICLETYPE const& v        = GetHelicopter();
 		RefuelSite  const& r        = g_refuel_site[i];
 		INT16       const  dest     = r.sector;
-		INT32       const  distance = FindStratPath(CALCULATE_STRATEGIC_INDEX(v.sSectorX , v.sSectorY), dest, GetGroup(v.ubMovementGroup), FALSE);
+		INT32       const  distance = FindStratPath(CALCULATE_STRATEGIC_INDEX(v.sSectorX , v.sSectorY), dest, *GetGroup(v.ubMovementGroup), FALSE);
 		if (distance >= shortest_distance) continue;
 
 		// shorter, copy over
@@ -349,7 +349,7 @@ static INT32 DistanceToNearestRefuelPoint(VEHICLETYPE const& heli)
 	// Don't notify player during these checks!
 	INT16 const start    = CALCULATE_STRATEGIC_INDEX(heli.sSectorX, heli.sSectorY);
 	INT16 const dest     = NearestRefuelPoint(false).sector;
-	INT32 const distance = FindStratPath(start, dest, GetGroup(heli.ubMovementGroup), FALSE);
+	INT32 const distance = FindStratPath(start, dest, *GetGroup(heli.ubMovementGroup), FALSE);
 	return distance;
 }
 

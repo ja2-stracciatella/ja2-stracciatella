@@ -175,7 +175,7 @@ static INT16 const diStratDelta[]=
 
 // this will find if a shortest strategic path
 
-INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const* const pGroup, BOOLEAN const fTacticalTraversal)
+INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g, BOOLEAN const fTacticalTraversal)
 {
 	INT32 iCnt,ndx,insertNdx,qNewNdx;
 	INT32 iDestX,iDestY,locX,locY,dx,dy;
@@ -190,7 +190,7 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const* c
 	// so this is just to keep things happy!
 
 	// for player groups only!
-	if ( pGroup->fPlayer )
+	if (g.fPlayer)
 	{
 		// if player is holding down SHIFT key, find the shortest route instead of the quickest route!
 		if ( _KeyDown( SHIFT ) )
@@ -305,10 +305,10 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const* c
 			}
 
 			// are we plotting path or checking for existance of one?
-			nextCost = GetSectorMvtTimeForGroup(SECTOR(curLoc % MAP_WORLD_X, curLoc / MAP_WORLD_X), iCnt / 2, pGroup);
+			nextCost = GetSectorMvtTimeForGroup(SECTOR(curLoc % MAP_WORLD_X, curLoc / MAP_WORLD_X), iCnt / 2, &g);
 			if (nextCost == TRAVERSE_TIME_IMPOSSIBLE) continue;
 
-			if (pGroup == heli_group)
+			if (&g == heli_group)
 			{
 				// is a heli, its pathing is determined not by time (it's always the same) but by total cost
 				// Skyrider will avoid uncontrolled airspace as much as possible...
@@ -438,7 +438,7 @@ PathSt* BuildAStrategicPath(INT16 const start_sector, INT16 const end_sector, GR
 {
 	if (end_sector < MAP_WORLD_X - 1) return NULL;
 
-	const INT32 path_len = FindStratPath(start_sector, end_sector, g, fTacticalTraversal);
+	const INT32 path_len = FindStratPath(start_sector, end_sector, *g, fTacticalTraversal);
 	if (path_len == 0) return NULL;
 
 	// start new path list

@@ -1046,7 +1046,7 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 		if (iShortestDistance[ bTownId ] > 0 )
 		{
 			// calculate across how many sectors the fastest travel path from event to this town sector
-			iThisDistance = FindStratPath(sEventSector, pTownLocationsList[uiIndex], g, FALSE);
+			iThisDistance = FindStratPath(sEventSector, pTownLocationsList[uiIndex], *g, FALSE);
 
 			if (iThisDistance < iShortestDistance[ bTownId ])
 			{
